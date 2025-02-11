@@ -1,180 +1,154 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29AC1EDA07
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30601EDA37;
+	Tue, 11 Feb 2025 07:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739258610; cv=none; b=jMOstHwDLOG9YHDlWCBVqkfLIgo3sZZPaQj8MOmeJ3JGRGdci6zzgsWEHOV1ysI0rGm+qanWMQXQBD4/IdGI4eVX7HMcqpJ45mIDG0zGbwViLh7gZWRg6DKwhhAiJEBGiRkYLm0fmTecSfDU6yHm95yYlrC/VlLlRjh+600qNTA=
+	t=1739258612; cv=none; b=PZXpsmvZNZO+IEKuCJxbmhaQr2kjtvjpQ2TtMmCTDGGF7HzZuDb6/BeJynYQAHmoRFs8pSdMOqOIYfI7RMRg9zoiCdMf9wvICObEezLEr6ZkggIYzmEosmY7g/0sEsJyPtmgMSdNpTGv/sOlbyPT+9epEcJ2mvCkq2+POf5slcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739258610; c=relaxed/simple;
-	bh=92f3+0RBOUMWYn5GM2mPefl+n3IpS+jV8ykj5futLfo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=lVExG4MwAqve/N2gJZpzQVhVW1N2HK4f+cfJ1eBN9umbx7z0a6Ot35JZQ5ypSWo3Tvjgu1Fmq9kRRYtEinziukmgECeEKIoTbAw5EVO1VrVGXify8t5d96WPhFX/NFJjXkYYj+I30fgchdEir9FE2+7HbrXr8quTOSyA4ocNgi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=utN2ObWg; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1739258612; c=relaxed/simple;
+	bh=UWJM5C0X6jg73GF3CAKzpkI5JGcapvJ3PDDVYAlgRc0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Tkir7h7cQCfySEbXYU/7bmWXDgCq/BYSOzS26CjtLbX0J/pJ9fX3rzMJbYJuGhCVj6J3Aq/uSgvQjmnpTc5dShiM8Emb28+nZTXIIvykCrjf2hHbSat49syVyG0Qh3daEUKJ+qFtd8GFPzvw0EoGhSAYUcikHkpmjn7E6dpe/38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=Nko3S0IT; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="utN2ObWg"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250211072321epoutp049613a42aa97f4f20102b99a981b2d40c~jFnuOVuDv0803908039epoutp04H
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:23:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250211072321epoutp049613a42aa97f4f20102b99a981b2d40c~jFnuOVuDv0803908039epoutp04H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1739258601;
-	bh=cqWyoyjcojczVymuxqFKCi8tbnQu4vhX9fzr84A8Q98=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=utN2ObWgVgdp9qtI9MNhpO+81PNVt/if4nWYq3Ukz60xMNHSwdYRsY5dcvMycXk2O
-	 iRjSD2Ql/jmmtqeWnJgN7QjiougfGdmTtfjLFx/3ktA44FKUU2If9dciJmyuxmtten
-	 UKfAIf1a0KBRR7LvyL+4TkWtv7LXfEYgA1rLridY=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20250211072320epcas5p1db2e22adb0ac79aaf423a1aad1a69edc~jFntu0T_y0209902099epcas5p1s;
-	Tue, 11 Feb 2025 07:23:20 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.178]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4YsXwk1x2hz4x9Q9; Tue, 11 Feb
-	2025 07:23:18 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	12.D9.20052.6EAFAA76; Tue, 11 Feb 2025 16:23:18 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250211071941epcas5p308a13898102cf851bc9988c0e2766c5e~jFkiB3tyK2383023830epcas5p3_;
-	Tue, 11 Feb 2025 07:19:41 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250211071941epsmtrp23491956d55b1bb2cbddf4dccbbd7c004~jFkiAxTf20103201032epsmtrp2_;
-	Tue, 11 Feb 2025 07:19:41 +0000 (GMT)
-X-AuditID: b6c32a49-3d20270000004e54-54-67aafae64171
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	56.DE.18729.D0AFAA76; Tue, 11 Feb 2025 16:19:41 +0900 (KST)
-Received: from asg29.. (unknown [109.105.129.29]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250211071938epsmtip1d1635c3ad7f2a04d629821b117d3b7a4~jFke9gp1p1180211802epsmtip1Q;
-	Tue, 11 Feb 2025 07:19:38 +0000 (GMT)
-From: Junnan Wu <junnan01.wu@samsung.com>
-To: stefanha@redhat.com, sgarzare@redhat.com, mst@redhat.com,
-	jasowang@redhat.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com
-Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com, horms@kernel.org,
-	kvm@vger.kernel.org, virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, q1.huang@samsung.com, ying01.gao@samsung.com,
-	ying123.xu@samsung.com, lei19.wang@samsung.com, Junnan Wu
-	<junnan01.wu@samsung.com>
-Subject: [Patch net 1/2] vsock/virtio: initialize rx_buf_nr and
- rx_buf_max_nr when resuming
-Date: Tue, 11 Feb 2025 15:19:21 +0800
-Message-Id: <20250211071922.2311873-2-junnan01.wu@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250211071922.2311873-1-junnan01.wu@samsung.com>
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="Nko3S0IT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gXAxZaL3ngoWD1PltbbXQgbkIXLOLON/P4Nk8X4kGkY=; t=1739258609; x=1739863409; 
+	b=Nko3S0ITgh1+CDQWxBwJuX7fcsmQAsjjDSbVVOPkaADjdY4HQjuzqObLaiLxMkkzgLQIhUGotE+
+	VcDvMgG6x/aU0zsbmvnI1g/sy2rc173GpBrHy1IdusOXTxAD5c8s6CbyMkUwRzZsVCU0w4tUB0jXZ
+	yy1K6bQpMI13KuXC8ib8kxCI30x1G/7auP1mQqmjVW1kzKkGT+mPfEFcKOIjbgd7by2lS8C5QEsiD
+	K2ec8MLyHO5eodrIq2ffIOtGPvT2vo5+CnBF17ueM+keeH4Y+AFlLDZvMdhq5T2FYeM6i/vmJ7NE2
+	o6rdlp57BPqc7h+A+PN0xYoA+mo0FsA8Y4rg==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1thkYo-00000003Hlj-0Vvt; Tue, 11 Feb 2025 08:19:58 +0100
+Received: from p5dc5515a.dip0.t-ipconnect.de ([93.197.81.90] helo=suse-laptop.fritz.box)
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1thkYn-00000000VEl-3bs6; Tue, 11 Feb 2025 08:19:58 +0100
+Message-ID: <9a70a5806083499db5649f8c76167a1a61cde058.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH v3 0/3] alpha: stack fixes
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Ivan Kokshaysky <ink@unseen.parts>, Richard Henderson	
+ <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, Oleg
+ Nesterov	 <oleg@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>, Arnd
+ Bergmann	 <arnd@arndb.de>, "Paul E. McKenney" <paulmck@kernel.org>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Magnus Lindholm
+ <linmag7@gmail.com>, 	linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	stable@vger.kernel.org
+Date: Tue, 11 Feb 2025 08:19:57 +0100
+In-Reply-To: <20250204223524.6207-1-ink@unseen.parts>
+References: <20250204223524.6207-1-ink@unseen.parts>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCJsWRmVeSWpSXmKPExsWy7bCmhu6zX6vSDab1cFjMOd/CYvH02CN2
-	i8dzV7JbPOo/wWax7NJnJou719wtLmzrY7WYM7XQom3HZVaLy7vmsFlcWdLDbvH/1ytWi2ML
-	xCy+nX7DaLH07Vlmi7MTPrBanJ/zn9ni9aT/rBZHt69ktbjWZGFx4QjQ1P2PZrI6iHlsWXmT
-	yWPBplKPTas62Tx2PrT0eLF5JqPH+31X2Tz6tqxi9Pi8SS6AIyrbJiM1MSW1SCE1Lzk/JTMv
-	3VbJOzjeOd7UzMBQ19DSwlxJIS8xN9VWycUnQNctMwfoNSWFssScUqBQQGJxsZK+nU1RfmlJ
-	qkJGfnGJrVJqQUpOgUmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdsb/9uOsBUf5K+bd2MfcwDiB
-	t4uRk0NCwETiyI03jF2MXBxCArsZJWZ032GGcD4xStyasooJwvkG5HR+ZYdpmdzfBGYLCexl
-	lLhxKg6i6BmjxNO3D5lAEmwCmhIn9qxgA0mICCxmlDi/4isriMMssJtJYuGtz4wgVcICsRLn
-	vq8Hs1kEVCVO3F7PCmLzCthJPDz9ixVinbzE/oNnmUFsTgF7iSsztrFD1AhKnJz5hAXEZgaq
-	ad46G+xwCYEHHBLLF26DutVFYuHxO1CDhCVeHd8CFZeS+PxuLxuEnS3Re/QXlF0i0f3uElS9
-	tcT5de1AQzmAFmhKrN+lDxGWlZh6ah0TxF4+id7fT5gg4rwSO+aB2BxAtqrE+wk1EGFpiZWb
-	NrFDhD0kZky0gwTWJEaJt0vfME5gVJiF5JtZSL6ZhbB4ASPzKkbJ1ILi3PTUYtMCw7zUcngs
-	J+fnbmIEJ3ctzx2Mdx980DvEyMTBeIhRgoNZSYTXZOGKdCHelMTKqtSi/Pii0pzU4kOMpsDg
-	nsgsJZqcD8wveSXxhiaWBiZmZmYmlsZmhkrivM07W9KFBNITS1KzU1MLUotg+pg4OKUamNTq
-	n1kcV53oVtUYvmBrdEZu+/TJuvnOKy77TqvpNeZNzYzVnx9xxdyITeqnlY+DyZ/JsupcP3tC
-	tc5NOGpVHl6dPk/wqm9tydsd4r8XycRs4NrCtvn6oun7/1bv/qa+re14p9fK/9Hij5h1svps
-	zPtqA7516t7ezeqVtsJZWSFNymll6sfn08492TRHR8HZe8bJJUwyvIeD91htmmUVsmF64LW7
-	03dqbJC7Ps/jcSBnf09/glfyzr+n6qqYVgn76/hzlUTbSZZv+ZRfOIc5YEb+moh5hXPaz/xe
-	fPvv8m6uxcubNii7yTlLeTIsXnLmlpTzNwO2yG52gXaB6x2pktPffVsluWfZU4UOlT9/lFiK
-	MxINtZiLihMB/yiRoHcEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDIsWRmVeSWpSXmKPExsWy7bCSnC7vr1XpBjc+qlvMOd/CYvH02CN2
-	i8dzV7JbPOo/wWax7NJnJou719wtLmzrY7WYM7XQom3HZVaLy7vmsFlcWdLDbvH/1ytWi2ML
-	xCy+nX7DaLH07Vlmi7MTPrBanJ/zn9ni9aT/rBZHt69ktbjWZGFx4QjQ1P2PZrI6iHlsWXmT
-	yWPBplKPTas62Tx2PrT0eLF5JqPH+31X2Tz6tqxi9Pi8SS6AI4rLJiU1J7MstUjfLoEr43/7
-	cdaCo/wV827sY25gnMDbxcjJISFgIjG5v4m9i5GLQ0hgN6PEmzkPWCAS0hJdv9uYIWxhiZX/
-	nkMVPWGUmLh2BStIgk1AU+LEnhVsILaIwFpGiU37DEGKmAVOMkncmjEBrFtYIFri7fMzYDaL
-	gKrEidvrwZp5BewkHp7+xQqxQV5i/8GzYDWcAvYSV2ZsYwexhYBqds1fxgJRLyhxcuYTMJsZ
-	qL5562zmCYwCs5CkZiFJLWBkWsUomVpQnJueW2xYYJiXWq5XnJhbXJqXrpecn7uJERyBWpo7
-	GLev+qB3iJGJg/EQowQHs5IIr8nCFelCvCmJlVWpRfnxRaU5qcWHGKU5WJTEecVf9KYICaQn
-	lqRmp6YWpBbBZJk4OKUamNKO3NyV1Xy1MSHwdU6w8UqFnTeP9vgc0F272zasU/SF5tnazw8X
-	7P1xQfHUm63GIXPudHYuPnh61j4juXk1rGLvv+cFzNXJj9E7O3PdxHtT79joGiVH7eL0OTv9
-	bej3Lx/+Ljz/Oe8g6w6f/3e9CwueR1c23rrxrDpgdtlTPZFQvXcykw6pLrWK+fNg8f+vlr7B
-	d9iZztS2Ln4qIXhc6Y5e4/qo1X2zhJqTN11I2v56RWhcuHJurwdLT2ep1YakLK6w7bFC5RK3
-	hSPc/h1Uayqom1zwwjkzQ+PqxsqXR+saI7gDE84z/67QWpRZ3BfmNOt8/q1ijoD5u2sE1Y3O
-	tPtM1c5JEDvgv+TrGsG4OiWW4oxEQy3mouJEAJdyMKMvAwAA
-X-CMS-MailID: 20250211071941epcas5p308a13898102cf851bc9988c0e2766c5e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250211071941epcas5p308a13898102cf851bc9988c0e2766c5e
-References: <20250211071922.2311873-1-junnan01.wu@samsung.com>
-	<CGME20250211071941epcas5p308a13898102cf851bc9988c0e2766c5e@epcas5p3.samsung.com>
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-When executing suspend to ram twice in a row,
-the `rx_buf_nr` and `rx_buf_max_nr` increase to three times vq->num_free.
-Then after virtqueue_get_buf and `rx_buf_nr` decreased
-in function virtio_transport_rx_work,
-the condition to fill rx buffer
-(rx_buf_nr < rx_buf_max_nr / 2) will never be met.
+Hi,
 
-It is because that `rx_buf_nr` and `rx_buf_max_nr`
-are initialized only in virtio_vsock_probe(),
-but they should be reset whenever virtqueues are recreated,
-like after a suspend/resume.
+On Tue, 2025-02-04 at 23:35 +0100, Ivan Kokshaysky wrote:
+> This series fixes oopses on Alpha/SMP observed since kernel v6.9. [1]
+> Thanks to Magnus Lindholm for identifying that remarkably longstanding
+> bug.
+>=20
+> The problem is that GCC expects 16-byte alignment of the incoming stack
+> since early 2004, as Maciej found out [2]:
+>   Having actually dug speculatively I can see that the psABI was changed =
+in
+>  GCC 3.5 with commit e5e10fb4a350 ("re PR target/14539 (128-bit long doub=
+le
+>  improperly aligned)") back in Mar 2004, when the stack pointer alignment
+>  was increased from 8 bytes to 16 bytes, and arch/alpha/kernel/entry.S ha=
+s
+>  various suspicious stack pointer adjustments, starting with SP_OFF which
+>  is not a whole multiple of 16.
+>=20
+> Also, as Magnus noted, "ALPHA Calling Standard" [3] required the same:
+>  D.3.1 Stack Alignment
+>   This standard requires that stacks be octaword aligned at the time a
+>   new procedure is invoked.
+>=20
+> However:
+> - the "normal" kernel stack is always misaligned by 8 bytes, thanks to
+>   the odd number of 64-bit words in 'struct pt_regs', which is the very
+>   first thing pushed onto the kernel thread stack;
+> - syscall, fault, interrupt etc. handlers may, or may not, receive aligne=
+d
+>   stack depending on numerous factors.
+>=20
+> Somehow we got away with it until recently, when we ended up with
+> a stack corruption in kernel/smp.c:smp_call_function_single() due to
+> its use of 32-byte aligned local data and the compiler doing clever
+> things allocating it on the stack.
+>=20
+> Patche 1 is preparatory; 2 - the main fix; 3 - fixes remaining
+> special cases.
+>=20
+> Ivan.
+>=20
+> [1] https://lore.kernel.org/rcu/CA+=3DFv5R9NG+1SHU9QV9hjmavycHKpnNyerQ=3D=
+Ei90G98ukRcRJA@mail.gmail.com/#r
+> [2] https://lore.kernel.org/rcu/alpine.DEB.2.21.2501130248010.18889@angie=
+.orcam.me.uk/
+> [3] https://bitsavers.org/pdf/dec/alpha/Alpha_Calling_Standard_Rev_2.0_19=
+900427.pdf
+> ---
+> Changes in v2:
+> - patch #1: provide empty 'struct pt_regs' to fix compile failure in libb=
+pf,
+>   reported by John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>;
+>   update comment and commit message accordingly;
+> - cc'ed <stable@vger.kernel.org> as older kernels ought to be fixed as we=
+ll.
+>=20
+> Changes in v3:
+> - patch #1 dropped for the time being;
+> - updated commit messages as Maciej suggested.
+> ---
+> Ivan Kokshaysky (3):
+>   alpha: replace hardcoded stack offsets with autogenerated ones
+>   alpha: make stack 16-byte aligned (most cases)
+>   alpha: align stack for page fault and user unaligned trap handlers
+>=20
+>  arch/alpha/include/uapi/asm/ptrace.h |  2 ++
+>  arch/alpha/kernel/asm-offsets.c      |  4 ++++
+>  arch/alpha/kernel/entry.S            | 24 ++++++++++--------------
+>  arch/alpha/kernel/traps.c            |  2 +-
+>  arch/alpha/mm/fault.c                |  4 ++--
+>  5 files changed, 19 insertions(+), 17 deletions(-)
 
-Move the `rx_buf_nr` and `rx_buf_max_nr` initialization in
-virtio_vsock_vqs_init(), so we are sure that they are properly
-initialized, every time we initialize the virtqueues, either when we
-load the driver or after a suspend/resume.
-At the same time, also move `queued_replies`.
+Can we get this landed this week, maybe for v6.14-rc3? This way it will qui=
+ckly
+backported to various stable kernels which means it will reach Debian unsta=
+ble
+within a few days.
 
-Fixes: bd50c5dc182b ("vsock/virtio: add support for device suspend/resume")
-Co-developed-by: Ying Gao <ying01.gao@samsung.com>
-Signed-off-by: Ying Gao <ying01.gao@samsung.com>
-Signed-off-by: Junnan Wu <junnan01.wu@samsung.com>
----
- net/vmw_vsock/virtio_transport.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+Thanks,
+Adrian
 
-diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-index b58c3818f284..f0e48e6911fc 100644
---- a/net/vmw_vsock/virtio_transport.c
-+++ b/net/vmw_vsock/virtio_transport.c
-@@ -670,6 +670,13 @@ static int virtio_vsock_vqs_init(struct virtio_vsock *vsock)
- 	};
- 	int ret;
- 
-+	mutex_lock(&vsock->rx_lock);
-+	vsock->rx_buf_nr = 0;
-+	vsock->rx_buf_max_nr = 0;
-+	mutex_unlock(&vsock->rx_lock);
-+
-+	atomic_set(&vsock->queued_replies, 0);
-+
- 	ret = virtio_find_vqs(vdev, VSOCK_VQ_MAX, vsock->vqs, vqs_info, NULL);
- 	if (ret < 0)
- 		return ret;
-@@ -779,9 +786,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
- 
- 	vsock->vdev = vdev;
- 
--	vsock->rx_buf_nr = 0;
--	vsock->rx_buf_max_nr = 0;
--	atomic_set(&vsock->queued_replies, 0);
- 
- 	mutex_init(&vsock->tx_lock);
- 	mutex_init(&vsock->rx_lock);
--- 
-2.34.1
-
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
