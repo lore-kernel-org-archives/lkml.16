@@ -1,115 +1,163 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB6E2512E1;
-	Tue, 11 Feb 2025 14:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA1B250BE8
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739285013; cv=none; b=LN1c2GJeUhskCbX2MJ3Lvfcmi4/XyXlrRLnZR0lWW57YDVKUyfEeMz3hvJND7/mHo+v60TPWmS7Ufv0PixZUtH/dvnFEF1irRxkotojK22kJYh8BTrB8fxSeqW+x2vOyD+oFmelh1znxuT3uHyd2CG387mIWvUQ7z5q5stqEL9Q=
+	t=1739285057; cv=none; b=vGTWQozIHfY8/ZOWgD0nVzST1mp11jiTZ57b2HcvX/DjdH9EbQcNRuSMPLzsyGOoeY80pMAX9u/Gj3pgzbU1Xz0PZhu4TPWEpzTu3z4akSZiXZZ57R4ooiWStwVuJfHfPYx3ELMoS2DcaLWo4874jS0VHVNdA1keJPBLZ1LayDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739285013; c=relaxed/simple;
-	bh=WYmAOvqRIYf82ypdSCw/uxoeQOIr/XjKVn6Y0BmmznI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YyUgiietS/ZCOyIajNIpPvw7Xl9pD8Pjzb6vFZB3lv1d5ElYw4oD4Yt+muFxw9QmXteaEIRqrMIP6S3iE9tXQFojB2cS/Z5+rqXeuAOgzIY0NUmnZ4RxKB+Hqj10dMqFpA2UncGqIY40uGbblGZiGZR4pe+6qu/rS2g0yIsIJ2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowAB3f6MEYqtnXm84DA--.38982S2;
-	Tue, 11 Feb 2025 22:43:17 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com
-Cc: linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH] gpio: stmpe: Check return value of stmpe_reg_read in stmpe_gpio_irq_sync_unlock
-Date: Tue, 11 Feb 2025 22:43:00 +0800
-Message-ID: <20250211144300.964-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1739285057; c=relaxed/simple;
+	bh=vjfDnYaWCZpLDC56FJHXYZRMFRPgV3w+WCdNlEZ3lvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rpIm5U6mspVx+RGSthIwa4g9LbUWU6XNimsYcnpkNTafckYwFFzqaO4rfdz07cjjWARsUCf9IPhnor1bS/GgYZhxxRXTiajyKUuMEWZSi8FBJ/nzpUz+z+qPVFgDK8+rIPeYytk51X9/wL/b3xlcTZd6g3zX4h1yWmeQZ265/Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CGs2qt6H; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xNoomN6g; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CGs2qt6H; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xNoomN6g; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CGs2qt6H";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xNoomN6g";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CGs2qt6H";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xNoomN6g"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0D51837BB9;
+	Tue, 11 Feb 2025 09:07:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739264821; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8EHwpFMgnQTMFDGbQ7ioc0kI0aQeegDwSdSybRlzhvk=;
+	b=CGs2qt6HbYEaxiFdCLfq7v+gdMKNAnBRzjzM2FGasNSFSoxBC4OiuG22I04W3ps1rrDPaL
+	WrvYIeTz1rB2/sdThex5OV9Afyh7xf51ROHfJWvxPqi9faxAxRZpyy4waZWVXFFrKAXDp0
+	YnP0I5ILY6ZzZbp/PQSDJeuhhT/fUi4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739264821;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8EHwpFMgnQTMFDGbQ7ioc0kI0aQeegDwSdSybRlzhvk=;
+	b=xNoomN6gjpilQeBMGVFZEEnDsJ9U5D5d030LD2dh5DtVwMgRoF8dtPH44y16Op0E5mIi0A
+	Tlj/2b3wZdujOVDQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=CGs2qt6H;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=xNoomN6g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739264821; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8EHwpFMgnQTMFDGbQ7ioc0kI0aQeegDwSdSybRlzhvk=;
+	b=CGs2qt6HbYEaxiFdCLfq7v+gdMKNAnBRzjzM2FGasNSFSoxBC4OiuG22I04W3ps1rrDPaL
+	WrvYIeTz1rB2/sdThex5OV9Afyh7xf51ROHfJWvxPqi9faxAxRZpyy4waZWVXFFrKAXDp0
+	YnP0I5ILY6ZzZbp/PQSDJeuhhT/fUi4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739264821;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8EHwpFMgnQTMFDGbQ7ioc0kI0aQeegDwSdSybRlzhvk=;
+	b=xNoomN6gjpilQeBMGVFZEEnDsJ9U5D5d030LD2dh5DtVwMgRoF8dtPH44y16Op0E5mIi0A
+	Tlj/2b3wZdujOVDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7DA5E13782;
+	Tue, 11 Feb 2025 09:07:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vTezGzQTq2cqXgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 11 Feb 2025 09:07:00 +0000
+Date: Tue, 11 Feb 2025 10:06:54 +0100
+From: Oscar Salvador <osalvador@suse.de>
+To: Luiz Capitulino <luizcap@redhat.com>
+Cc: linux-kernel@vger.kernel.org, yaozhenguo1@gmail.com,
+	muchun.song@linux.dev, linux-mm@kvack.org,
+	akpm@linux-foundation.org, david@redhat.com, rppt@kernel.org,
+	fvdl@google.com
+Subject: Re: [PATCH] mm: hugetlb: avoid fallback for specific node allocation
+ of 1G pages
+Message-ID: <Z6sTLjKlX39s0Mo_@localhost.localdomain>
+References: <20250211034856.629371-1-luizcap@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAB3f6MEYqtnXm84DA--.38982S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AFy3tF17Aw4rCF4UWF48WFg_yoW8AFyrpF
-	Wqqr98CrWDJa18ZryYyF4rZrnakay8KFW7C3s7Wrs3Wr1Fvr9rGFW8XFyaqF98trWkWw47
-	ZF1UtF95tF1kZF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r1q
-	6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb8hL5UUUU
-	U==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBg0KA2erVk4dfQAAs2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211034856.629371-1-luizcap@redhat.com>
+X-Rspamd-Queue-Id: 0D51837BB9
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,linux.dev,kvack.org,linux-foundation.org,redhat.com,kernel.org,google.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-The stmpe_reg_read function can fail, but its return value is not checked
-in stmpe_gpio_irq_sync_unlock. This can lead to silent failures and
-incorrect behavior if the hardware access fails.
+On Mon, Feb 10, 2025 at 10:48:56PM -0500, Luiz Capitulino wrote:
+> When using the HugeTLB kernel command-line to allocate 1G pages from
+> a specific node, such as:
+> 
+>    default_hugepagesz=1G hugepages=1:1
+> 
+> If node 1 happens to not have enough memory for the requested number of
+> 1G pages, the allocation falls back to other nodes. A quick way to
+> reproduce this is by creating a KVM guest with a memory-less node and
+> trying to allocate 1 1G page from it. Instead of failing, the allocation
+> will fallback to other nodes.
+> 
+> This defeats the purpose of node specific allocation. Also, specific
+> node allocation for 2M pages don't have this behavior: the allocation
+> will just fail for the pages it can't satisfy.
+> 
+> This issue happens because HugeTLB calls memblock_alloc_try_nid_raw()
+> for 1G boot-time allocation as this function falls back to other nodes
+> if the allocation can't be satisfied. Use memblock_alloc_exact_nid_raw()
+> instead, which ensures that the allocation will only be satisfied from
+> the specified node.
+> 
+> Fixes: b5389086ad7b ("hugetlbfs: extend the definition of hugepages parameter to support node allocation")
+> 
+> Signed-off-by: Luiz Capitulino <luizcap@redhat.com>
 
-This patch adds checks for the return value of stmpe_reg_read. If the
-function fails, an error message is logged and the function returns
-early to avoid further issues.
+Acked-by: Oscar Salvador <osalvador@suse.de>
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/gpio/gpio-stmpe.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+This was discussed yesterday in [1], ccing Frank for awareness.
 
-diff --git a/drivers/gpio/gpio-stmpe.c b/drivers/gpio/gpio-stmpe.c
-index 75a3633ceddb..9c3bd5c98ec2 100644
---- a/drivers/gpio/gpio-stmpe.c
-+++ b/drivers/gpio/gpio-stmpe.c
-@@ -191,7 +191,7 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
- 		[REG_IE][CSB] = STMPE_IDX_IEGPIOR_CSB,
- 		[REG_IE][MSB] = STMPE_IDX_IEGPIOR_MSB,
- 	};
--	int i, j;
-+	int ret, i, j;
- 
- 	/*
- 	 * STMPE1600: to be able to get IRQ from pins,
-@@ -199,8 +199,17 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
- 	 * GPSR or GPCR registers
- 	 */
- 	if (stmpe->partnum == STMPE1600) {
--		stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_LSB]);
--		stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_CSB]);
-+		ret = stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_LSB]);
-+		if (ret < 0) {
-+			dev_err(stmpe->dev, "Failed to read GPMR_LSB: %d\n", ret);
-+			goto err;
-+		}
-+
-+		ret = stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_CSB]);
-+		if (ret < 0) {
-+			dev_err(stmpe->dev, "Failed to read GPMR_CSB: %d\n", ret);
-+			goto err;
-+		}
- 	}
- 
- 	for (i = 0; i < CACHE_NR_REGS; i++) {
-@@ -222,6 +231,7 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
- 		}
- 	}
- 
-+err:
- 	mutex_unlock(&stmpe_gpio->irq_lock);
- }
- 
+[1] https://patchwork.kernel.org/project/linux-mm/patch/20250206185109.1210657-6-fvdl@google.com/
+
+
 -- 
-2.42.0.windows.2
-
+Oscar Salvador
+SUSE Labs
