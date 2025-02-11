@@ -1,119 +1,62 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECCA24C68A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F231F1908;
+	Tue, 11 Feb 2025 14:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739282986; cv=none; b=aUGg6cFdH01Knp/W+1Gv9ER9hCoSHNd7Tphuhr/hZbBy7iDlAq197B4MPs+e136edhnvbib3R4HA6hRbREnk4n93QYOmwV2ru3gt9P5rwvZJbWgsepufP+GNvlmkT7C/q/xqKhVrg9kqTIC3fUtP5r/NmIu+SMJ0GpQBzN1VXN8=
+	t=1739283073; cv=none; b=XfbeXNy3Fa83d3X0iHvmepBKmmif4Z4Nsg8omcbKSWSPXLkanDF1Ic7kSfrdWxnijQaGwGPJIIi6nPnr914wrKr1At8/Z/PiJt4MRaXFQ9b0Mj0AACXYLNsHYZpoUiSACG1DegIqxmJPYn2lffg+Qwc9/9OTnrldjeROGnqn2ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739282986; c=relaxed/simple;
-	bh=gzPr48ZVkkfELeWekydsxFqDfYNLXetRXKYYCbvXUPo=;
+	s=arc-20240116; t=1739283073; c=relaxed/simple;
+	bh=v0XjR7wKS7vmy7/txNxgU72aZrpmETgvpsKegYPQTT4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=es/LdL8P2rel4hFrJCuy9HcEel5E09dn+J/qpiWNLuwNUMluNIZCxjMeejpdJunBY/DQFb4oG8nWHw8/5/58faYG+xf+xNw53AFaxyIqMhMo+Bm+7pvbXL4QElZKlGNj1urfb04aRj1e7Krz0PloHyaArew+uqljH94qy0+Ovk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZwELRqUi; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IlstorC2LLhM/B9LM6v+/CRFyGJpoUe8QYWDtjIW5KZ4QubBLaIJcumiSuRGu6QUH0guHmMdGcFPNKlT5+H7CpN9prExRPNnh7U6KFhV4QRdafeBwqGURc25fj5ulKror6UlyUXlPnEDUMRNts2qq5Yh2DNZOtZ3hfqPWcruDYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OleQUF3y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZwELRqUi"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5de4f4b0e31so6943677a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:09:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1739282983; x=1739887783; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gzPr48ZVkkfELeWekydsxFqDfYNLXetRXKYYCbvXUPo=;
-        b=ZwELRqUiKrMpJ72b0YjUyQuq5JmDLT8bccAyAV4CZog9/LVTdQt8NvS3624QISeKF8
-         psPQ56jshMitSH1yVJmBfPzaOJ3+skmgUkS+JEZBxB5UYnuEJC+vLMh6Blat4AlRQhQj
-         ZajNmH4rMpWaVxPaTYzC0k5eSNKYy/piScsc46OQSnfcjz+xd6Zgu2v/YjotId7SSui0
-         2uUNVWswN0+yN52/OVUzae1fU1pQ0SjKwEvDG6WYbDaJXMGlNf6gABMVWH6wfjuZgB4l
-         d349EFYxALdi5medWevfa00rNIvgnip4aeKqcrZNgVyUteCcPe5nZe/j+HKXwzpOuN4k
-         cD5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739282983; x=1739887783;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gzPr48ZVkkfELeWekydsxFqDfYNLXetRXKYYCbvXUPo=;
-        b=HIxfb5nPev/AH4nQzpUWqydCSJjRoiV8Ygailwbia9leG5OctWjClze7yckSwXuxXM
-         RUk0EhwXgEFHGBBo6eyExBs28dkd6U35vW+B4miybjgqJjYRPVFcEKtC485u0vTd0JnV
-         7YbYJgx+7rPEWHx1pTd+klrXbY+YdgeUkCS1p1dVunouunBSZI7O+4RIfkRaYHDHEgHM
-         jbsJCn8hUbn07w0Ea4z9ZkRYwl6PB5CO5l0P3nAm2td9YVzq47OctqBiYVlKcUVau7ht
-         FhadvPnPVnwCUV+6jV1v2Z2mFumdiy2RVXCBmRT1SYE95GKPvpPvTopTpEfXSokfkFLD
-         FYQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGro+mYhVoy6tOKJWzb982AWD0LqjLlxWuebsF+j1qNWBUmAWTaFHxxQeHqnJodJGXPaw53M+xMX2Whys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpKiAtL1xWMLCqN/tLltJMlscb2pBp7NZIosxboFi+LpfdDv89
-	2cMpyW0nvNTflqTUgdTH2vkzDMc3OnIID3QXmv+VpYlf61VtzwiUdqjPay/bnfI=
-X-Gm-Gg: ASbGncvhOAiL+qoeKZfPPAuJqqZkwEETZ0jgvu1NH9T3U3wxcywwObIned/NBVUCTap
-	tm2OvFngHNXpaX3Ixf2rKoxd+wUHTEL7YvMjsAfcbQ2DK9yES3rv1tJ1XSwXufOpbpNHki3ZaGx
-	oS+bnGWmENEwMwrRdebzPEEQhhLzgwTG8IP1yZrtbDYrpBNxKEKDExcSK/TloFh87UVtA1xxR9R
-	hpdEYJMVFNNBbeq918/ptHzRF6/lOMwqLGcNQN5ezKnLBX6++e1TnZClTXNOBSTMEm70PIyGVHU
-	YEFAPMQFgQf/mNnLqA==
-X-Google-Smtp-Source: AGHT+IHbzo7gzW1TGGADGeSXW3cTzBVGtenI66+tOJ/vbJjB6aL3crDJ+y/TLZy7jx8zgR2NlYS5Ng==
-X-Received: by 2002:a05:6402:43c3:b0:5de:45b5:bacc with SMTP id 4fb4d7f45d1cf-5de45b5baefmr17804385a12.20.1739282983008;
-        Tue, 11 Feb 2025 06:09:43 -0800 (PST)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de6e5880b6sm4969773a12.37.2025.02.11.06.09.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 06:09:42 -0800 (PST)
-Date: Tue, 11 Feb 2025 15:09:40 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: David Reaver <me@davidreaver.com>
-Cc: Umar Pathan <cynexium@gmail.com>, tj@kernel.org, 
-	lizefan.x@bytedance.com, hannes@cmpxchg.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Umar Pathan <cynexium@proton.me>
-Subject: Re: [PATCH cgroup] https://github.com/raspberrypi/linux/issues/6631
-Message-ID: <uu3uzopzwhsbplpdafqmd3eep5mzrubyuo2ct5bfp56ftbjjwf@a55wr6k7n4kv>
-References: <20250201095145.32300-1-cynexium@proton.me>
- <86cyg1bvuw.fsf@davidreaver.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OleQUF3y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6558C4CEDD;
+	Tue, 11 Feb 2025 14:11:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739283073;
+	bh=v0XjR7wKS7vmy7/txNxgU72aZrpmETgvpsKegYPQTT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OleQUF3yPK+Qe9gXYfq/X6pwvLWYOiA4dFckPykBYmx7w/UTwvYISPvvcwazKDAp+
+	 cOG77Mdeg3h8SC41D2N3okELmySEE4JrAQoga1GGhIAaIZ9hErQs/9g82OTXzhtNVm
+	 2diFBrUfzFimC3J70V0mLjPxSNy6eC3r0tRtwcKNpn5m/GyOwLKZtM0a2rk/3zRER0
+	 VJ1Lg5DwJ8Ba2s7SxxDYEPSkpVQe+4q3qbI1UOUPKYJW/pYiSFnC/2uga6U9fJ9CVX
+	 vSLGXea/UMn9jr0QrKabC4r5VOwXJXKsAxQoXaOeSTYIkCjYMgpI7eXR8+6sSU6y+j
+	 R/2jJDD1UiwXg==
+Date: Tue, 11 Feb 2025 14:11:09 +0000
+From: Lee Jones <lee@kernel.org>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: kernel list <linux-kernel@vger.kernel.org>, rafael@kernel.org,
+	linux-leds@vger.kernel.org, torvalds@linux-foundation.org
+Subject: Re: MAINTAINERS: Move Pavel to kernel.org address
+Message-ID: <20250211141109.GV1868108@google.com>
+References: <Z6Ow+T/uSv128wdR@duo.ucw.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5lqqtfhoh6lsmyy5"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <86cyg1bvuw.fsf@davidreaver.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6Ow+T/uSv128wdR@duo.ucw.cz>
 
+On Wed, 05 Feb 2025, Pavel Machek wrote:
 
---5lqqtfhoh6lsmyy5
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH cgroup] https://github.com/raspberrypi/linux/issues/6631
-MIME-Version: 1.0
+> I need to filter my emails better, switch to pavel@kernel.org address
+> to help with that.
+>     
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> ---
+> I guess this should go through the LED tree?
 
-Hello both.
+I'm struggling to apply this.
 
-On Sat, Feb 01, 2025 at 06:08:55AM -0800, David Reaver <me@davidreaver.com> wrote:
-> I dug around Github and I think I found the patch you intended to submit
-> https://github.com/raspberrypi/linux/pull/6632/commits/711f76376ae7e11f48a1c22a4a04828a24d6a87a
+Something is up with your Message-ID.  How is it crafted?
 
-Heh, thanks.
-
-> Unfortunately, your email only contains the inverse of your PR's
-> whitespace change removing a line in freezer.c, not the rest of the
-> patch. Did you perhaps revert that whitespace change in a new commit and
-> accidentally only submit that commit instead of the whole change?
-
-There was little freezing counting rework in v6.13. If you can still
-reproduce the issue, it'd be something to look into. (I'm not sure about
-interpretation of the direct/propagate freezing in the reproduction
-steps, if there were sample commands, it'd be nice.)
-
-Thanks,
-Michal
-
---5lqqtfhoh6lsmyy5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ6taIgAKCRAt3Wney77B
-SRSBAQDqXePAIAVSyhhwQp267lealFHqVlBkn8tH6ddc3YE3DgEAu54uuv+OPlaR
-mHdsDUDPgzkIiCdSS7+Z84OrTXObGQs=
-=Xxe7
------END PGP SIGNATURE-----
-
---5lqqtfhoh6lsmyy5--
+-- 
+Lee Jones [李琼斯]
