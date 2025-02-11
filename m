@@ -1,28 +1,72 @@
-Received: from n169-113.mail.139.com (n169-113.mail.139.com [120.232.169.113])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0062528FD;
-	Tue, 11 Feb 2025 15:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=120.232.169.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D58F1FBC9C
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739287502; cv=none; b=mnSLAyFNsBWa7BlKAx7W4j/Sy0p3jdZKFIg2k1Iq94EVZDJhhd260Tb+v/zB4WNK7SwCLW3DhSHm6ZSZlAMMoVL6xyYhBIqkoINw6fweDjpL3kRh4JPkBey9lxcD9XW3mBHBzbKDeQMPOsoAGBA7NyGgcfWNvfJTDFPvzJcb8WM=
+	t=1739287528; cv=none; b=s9ZX9V/mktaehxJt/vBce5dWxenIZ0zxs7j7ez4Lq+jStWLsCMPhS5M+USHhitswY0uQB6vIbOEYXqP0ar7FubbpizeSpKrWCN8eDlje012nudNzoZnK6F5MAdQgBbcLO2LJynYYUpcB/egsi9MUY13/KOFpw/YLI3iydcbqRlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739287502; c=relaxed/simple;
-	bh=VoQ6GdNbE2L5Z/K5jOUNXIa3QLfaqQ67rbzU54si2Ek=;
+	s=arc-20240116; t=1739287528; c=relaxed/simple;
+	bh=1r6/ff2BnZEC2dHTV91S6QSEwAKkbJoNvRcUTFrd0AE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cw0eurcAbGYw59/zUWVAp9IT6Q3dS1o/QNJ5b4X6H6I5AGrBmGj+Lu3gSEfG4kp9V1/551HaGAQG0Mncbu4XgGwqT9sktClSSoSDMPVAA1zGtTWverfW7HjPENpZ8mOQRrgHaqdggL1IvYkqGSRemRC/1aeeLZ2JXyXg59KCCos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com; spf=pass smtp.mailfrom=139.com; arc=none smtp.client-ip=120.232.169.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=139.com
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM:                                                                                        
-X-RM-SPAM-FLAG:00000000
-Received:from [IPV6:2409:8a00:7877:4fa0:3ef7:31e6:f407:990] (unknown[2409:8A00:7877:4FA0:3EF7:31E6:F407:990])
-	by rmsmtp-lg-appmail-30-12044 (RichMail) with SMTP id 2f0c67ab6bc1f2b-25297;
-	Tue, 11 Feb 2025 23:24:55 +0800 (CST)
-X-RM-TRANSID:2f0c67ab6bc1f2b-25297
-Message-ID: <813232b2-4afe-4ff5-857d-a96361307631@139.com>
-Date: Tue, 11 Feb 2025 23:24:55 +0800
+	 In-Reply-To:Content-Type; b=DkxzrpzppGciI+TyiNJNQoUuYkMS2MhlK8IqSSjP9eB2/h0e224UpmcfjeUYchu8oi9yh4YqQIz9UUEI6tRB+Qbg+JnnYshQ8PbOtIV0SXnbBeT9JVVKKBVDHRpz5Ag1zrdgl4tzA5UJRn+npe4Usj2tOKa7p5C2Lt/be/0bvUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h36W9d9u; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h36W9d9u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739287525;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=GSesOkdL5QsCdaxIx1+Y96CVYiQSc0zcD5FyngU75P0=;
+	b=h36W9d9uqO3a/Z4E7ZZ4nZfjBV/iC0Yg58IGbvve/BUAWKXxE+QzHt0SLbPsn3LPCUIjrV
+	0yjKbKEuq/HGwU+e+9BtgXjBsab3TCSe5JnTQ02bIXvQD4LSaj+bDEi1w0RqpbNVUcDX/6
+	xGkow+I2NoxSPmiB20oqY3LtfSmyF4A=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-590-RRFHIdGqNi27SZN0CuX3nw-1; Tue, 11 Feb 2025 10:25:21 -0500
+X-MC-Unique: RRFHIdGqNi27SZN0CuX3nw-1
+X-Mimecast-MFC-AGG-ID: RRFHIdGqNi27SZN0CuX3nw
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43943bd1409so16341835e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:25:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739287520; x=1739892320;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GSesOkdL5QsCdaxIx1+Y96CVYiQSc0zcD5FyngU75P0=;
+        b=YjU00NOHtrtq6NmC4O+h366PAGgJpljTk0cK3HuLQDWe26DjdY8Qn7qTn9wnwrL7O5
+         uPqz6B2WaE33lr9ixmjLsplJVZZfnuNv9jBw0W4SKpfZvkbbvxmFFyg8KI34JvufncwW
+         KfuM2xsPR/4TtIl7FPo3OJww3l3GsEULhFPN+v4whHJTnhwl/BgKsIaInAn9AHNoKKQF
+         KZJ2lcN8Htu8LBYr7fG+uSU6ZT1OkjE188a7lKzAwFeFwjuL+D42UWa/O6D7ZaM1AjcX
+         uG0e5sImdomJTnCsKSt4+vj7e32iuayTdi8qZkBpuV/GZ6l1ReS2nTSTS568PoX7gqRP
+         PzQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVCIUOjQKDVFVt163n5fB5kj2etyKDnVz+KZQQhx3USKt9pF0m4Yna/okzccwiHhYHYQyUZpfgD1QeoSWw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIBSgo9MZ0zuBq5zCMJmP3V57TLP4HmTnNocXRR9iUWGtgQM67
+	Ui6xkX12LjBs93QmULqz7+F4cnZx1UGceS+ls7oyPHvx1rozYBrbEULxBII+PSoxB7XvAfoAcfC
+	Y+rhrI2+bWEm5YKCu8kX35q1ryHPli+ENztxHRjYx6m3edy9PHF4y4WB3dCm0cQ==
+X-Gm-Gg: ASbGncur70hxQwBRrlcvDIQMMlaPzXHiY2qQH1+CYNbRBS3OZvqUNvxFPr9XCy6m/kx
+	bdi0zQRHp5dC6K89XDzs2lJ1O+dKWcQ69HKVs8svYmwqIuTFO78OuCjmWnUtNJxbAcV+bMnvCuA
+	hPammnSN7KUG53MbCH33YouPNly/hIZo0zIkDoPP4ZI0jmUAfHtqVN0DTGRF+85PFuJ1HDy/cKf
+	jtBbLvTPrrQIXV8zDdcaUB+Xn0P+SUe70ZcfgVINyd5815NLbZispw6kzrB8aB7/Rz8fheavINJ
+	vt35uPJukUHK6l0Fk+NBhLXHSMM24gc3ZCdzV8fIWQ36vQ==
+X-Received: by 2002:a5d:5846:0:b0:38d:e3a9:d652 with SMTP id ffacd0b85a97d-38de3a9d7d7mr4405773f8f.18.1739287520288;
+        Tue, 11 Feb 2025 07:25:20 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGQRfPQGnapB/aSMSS/BRqzopIgis/KzJRJEU/g8PdB694ngR9gdDv9WaDY/NZ2lZeu16oiaA==
+X-Received: by 2002:a5d:5846:0:b0:38d:e3a9:d652 with SMTP id ffacd0b85a97d-38de3a9d7d7mr4405746f8f.18.1739287519870;
+        Tue, 11 Feb 2025 07:25:19 -0800 (PST)
+Received: from ?IPV6:2a01:599:929:885b:12c0:a824:1abd:41c4? ([2a01:599:929:885b:12c0:a824:1abd:41c4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc6b89ef5sm13324732f8f.31.2025.02.11.07.25.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 07:25:18 -0800 (PST)
+Message-ID: <192c5383-2be5-48da-b0f5-eda602505b70@redhat.com>
+Date: Tue, 11 Feb 2025 16:25:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,401 +74,312 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] platform/x86: lenovo-super-hotkey-wmi.c: Support
- formic and audio mute LEDs
-To: Kurt Borja <kuurtb@gmail.com>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- dongeg1@lenovo.com, Mark Pearson <mpearson-lenovo@squebb.ca>
-References: <20250208144114.11685-1-xy-jackie@139.com>
- <D7OGRYOVJDJR.1JJOZXO4FIAZC@gmail.com>
+Subject: Re: [RFC 1/4] mm: page_ext: add an iteration API for page extensions
+To: Luiz Capitulino <luizcap@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, yuzhao@google.com
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, muchun.song@linux.dev,
+ lcapitulino@gmail.com
+References: <cover.1737754625.git.luizcap@redhat.com>
+ <70bc5513e599d3386533fcc25dfe33685d2ca1bb.1737754625.git.luizcap@redhat.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Jackie Dong <xy-jackie@139.com>
-In-Reply-To: <D7OGRYOVJDJR.1JJOZXO4FIAZC@gmail.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <70bc5513e599d3386533fcc25dfe33685d2ca1bb.1737754625.git.luizcap@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2/10/25 12:00, Kurt Borja wrote:
-> Hi Jackie,
+On 24.01.25 22:37, Luiz Capitulino wrote:
+> The page extension implementation assumes that all page extensions of a
+> given page order are stored in the same memory section. The function
+> page_ext_next() relies on this assumption by adding an offset to the
+> current object to return the next adjacent page extension.
 > 
-> I noticed a few things while going through your patch:
+> This behavior works as expected for flatmem but fails for sparsemem when
+> using 1G pages. Commit e98337d11bbd ("mm/contig_alloc: support
+> __GFP_COMP") exposes this issue, making it possible for a crash when
+> using page_owner or page_table_check page extensions.
 > 
-> On Sat Feb 8, 2025 at 9:41 AM -05, Jackie Dong wrote:
->> Implement Lenovo utility data WMI calls needed to make LEDs
->> work on Ideapads that support this GUID.
->> This enables the mic and audio LEDs to be updated correctly.
->>
->> Tested on below samples.
->> ThinkBook 13X Gen4 IMH
->> ThinkBook 14 G6 ABP
->> ThinkBook 16p Gen4-21J8
->> ThinkBook 16p Gen8-IRL
->> ThinkBook 16p G7+ ASP
->>
->> Signed-off-by: Jackie Dong <xy-jackie@139.com>
->> Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> ---
->> Changes in v3:
->>   - Changed the name of the Kconfig entry to LENOVO_SUPER_HOTKEY_WMI
->>   - Renamed everything in this driver which contains the name "ideapad"
->>     to instead contain the name of this driver.
->>   - Moved struct wmi_device *led_wdev in lenovo_super_hotkey_wmi_private,
->>     and use container_of() to the led_wdev pointer.
->>   - Replaced sizeof(struct wmi_led_args) by sizeof(led_arg)
->>   - Added condtions checking for obj && obj->type == ACPI_TYPE_INTEGER
->>     and free the ACPI object after get the required value.
->>   - Removed led_classdev_unregister() after led_reg_failed label, but
->>     add lenovo_super_hotkey_wmi_remove(struct wmi_device *wdev) to free
->>     resource.
->>   - Removed IDEAPAD_WMI_EVENT_FN_KEYS/IDEAPAD_WMI_EVENT_LUD_KEYS related
->>     source codes and only keep LUD_WMI_METHOD_GUID.
->>
->> Changes in v2:
->>   - Update code layout and formatting as recommended in review
->>   - Improved error handling in ideapad_wmi_led_init
->>   - Separated a WMI driver named lenovo-super-hotkey-wmi.c from
->>     ideapad-lap.c, it's only for Lenovo Super Hotkey WMI devices.
->>
->>   drivers/platform/x86/Kconfig                  |   9 +
->>   drivers/platform/x86/Makefile                 |   1 +
->>   .../platform/x86/lenovo-super-hotkey-wmi.c    | 248 ++++++++++++++++++
->>   3 files changed, 258 insertions(+)
->>   create mode 100644 drivers/platform/x86/lenovo-super-hotkey-wmi.c
->>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index 0258dd879d64..c1792e8f04e1 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -475,6 +475,15 @@ config IDEAPAD_LAPTOP
->>   	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
->>   	  rfkill switch, hotkey, fan control and backlight control.
->>   
->> +config LENOVO_SUPER_HOTKEY_WMI
->> +	tristate "Lenovo Super Hotkey Utility WMI extras driver"
->> +	depends on ACPI_WMI
->> +	depends on IDEAPAD_LAPTOP
->> +	help
->> +	  This driver provides WMI support for Lenovo customized hotkeys function
->> +	  of Lenovo NoteBooks which are for Consumer and SMB customers, such as
->> +	  Ideapad/YOGA/XiaoXin/Gaming/ThinkBook and so on.
->> +
->>   config LENOVO_YMC
->>   	tristate "Lenovo Yoga Tablet Mode Control"
->>   	depends on ACPI_WMI
->> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
->> index e1b142947067..598335da9f55 100644
->> --- a/drivers/platform/x86/Makefile
->> +++ b/drivers/platform/x86/Makefile
->> @@ -61,6 +61,7 @@ obj-$(CONFIG_UV_SYSFS)       += uv_sysfs.o
->>   # IBM Thinkpad and Lenovo
->>   obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
->>   obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
->> +obj-$(CONFIG_LENOVO_SUPER_HOTKEY_WMI)	+= lenovo-super-hotkey-wmi.o
->>   obj-$(CONFIG_LENOVO_YMC)	+= lenovo-ymc.o
->>   obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
->>   obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
->> diff --git a/drivers/platform/x86/lenovo-super-hotkey-wmi.c b/drivers/platform/x86/lenovo-super-hotkey-wmi.c
->> new file mode 100644
->> index 000000000000..e677bd11fa2f
->> --- /dev/null
->> +++ b/drivers/platform/x86/lenovo-super-hotkey-wmi.c
->> @@ -0,0 +1,248 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + *  Lenovo Super Hotkey Utility WMI extras driver for Ideapad laptop
->> + *
->> + *  Copyright (C) 2025	Lenovo
->> + */
->> +
->> +#include <linux/leds.h>
->> +#include <linux/wmi.h>
->> +#include "ideapad-laptop.h"
->> +
->> +/* Lenovo Super Hotkey WMI GUIDs */
->> +#define LUD_WMI_METHOD_GUID	"CE6C0974-0407-4F50-88BA-4FC3B6559AD8"
->> +
->> +/* Lenovo Utility Data WMI method_id */
->> +#define WMI_LUD_GET_SUPPORT 1
->> +#define WMI_LUD_SET_FEATURE 2
->> +
->> +#define WMI_LUD_GET_MICMUTE_LED_VER   20
->> +#define WMI_LUD_GET_AUDIOMUTE_LED_VER 26
->> +
->> +#define WMI_LUD_SUPPORT_MICMUTE_LED_VER   25
->> +#define WMI_LUD_SUPPORT_AUDIOMUTE_LED_VER 27
->> +
->> +/* Input parameters to mute/unmute audio LED and Mic LED */
->> +struct wmi_led_args {
->> +	u8 id;
->> +	u8 subid;
->> +	u16 value;
->> +};
->> +
->> +/* Values of input parameters to SetFeature of audio LED and Mic LED */
->> +enum hotkey_set_feature {
->> +	MIC_MUTE_LED_ON = 1,
->> +	MIC_MUTE_LED_OFF,
->> +	AUDIO_MUTE_LED_ON = 4,
->> +	AUDIO_MUTE_LED_OFF,
->> +};
->> +
->> +#define LSH_ACPI_LED_MAX 2
->> +
->> +enum lenovo_super_hotkey_wmi_event_type {
->> +	LSH_WMI_EVENT_LUD_KEYS = 2,
->> +};
->> +
->> +struct lenovo_super_hotkey_wmi_private {
->> +	enum lenovo_super_hotkey_wmi_event_type event;
->> +	struct led_classdev cdev[LSH_ACPI_LED_MAX];
->> +	struct wmi_device *led_wdev;
->> +};
->> +
->> +enum mute_led_type {
->> +	MIC_MUTE,
->> +	AUDIO_MUTE,
->> +};
->> +
->> +static int lsh_wmi_mute_led_set(enum mute_led_type led_type, struct led_classdev *led_cdev,
->> +				enum led_brightness brightness)
->> +
->> +{
->> +	struct lenovo_super_hotkey_wmi_private *wpriv = container_of(led_cdev,
->> +			struct lenovo_super_hotkey_wmi_private, cdev[led_type]);
->> +	struct wmi_led_args led_arg = {0, 0, 0};
->> +	struct acpi_buffer input;
->> +	acpi_status status;
->> +
->> +	switch (led_type) {
->> +	case MIC_MUTE:
->> +		led_arg.id = brightness == LED_ON ? MIC_MUTE_LED_ON : MIC_MUTE_LED_OFF;
->> +		break;
->> +	case AUDIO_MUTE:
->> +		led_arg.id = brightness == LED_ON ? AUDIO_MUTE_LED_ON : AUDIO_MUTE_LED_OFF;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	input.length = sizeof(led_arg);
->> +	input.pointer = &led_arg;
->> +	status = wmidev_evaluate_method(wpriv->led_wdev, 0, WMI_LUD_SET_FEATURE, &input, NULL);
->> +	if (ACPI_FAILURE(status))
->> +		return -EIO;
->> +
->> +	return 0;
->> +}
->> +
->> +static int lsh_wmi_audiomute_led_set(struct led_classdev *led_cdev,
->> +				     enum led_brightness brightness)
->> +
->> +{
->> +	return lsh_wmi_mute_led_set(AUDIO_MUTE, led_cdev, brightness);
->> +}
->> +
->> +static int lsh_wmi_micmute_led_set(struct led_classdev *led_cdev,
->> +				   enum led_brightness brightness)
->> +{
->> +	return lsh_wmi_mute_led_set(MIC_MUTE, led_cdev, brightness);
->> +}
->> +
->> +static int lenovo_super_hotkey_wmi_led_init(enum mute_led_type led_type, struct device *dev)
->> +{
->> +	struct lenovo_super_hotkey_wmi_private *wpriv = dev_get_drvdata(dev);
->> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->> +	struct acpi_buffer input;
->> +	union acpi_object *obj;
->> +	int led_version, err = 0;
->> +	unsigned int wmiarg;
->> +	acpi_status status;
->> +
->> +	switch (led_type) {
->> +	case MIC_MUTE:
->> +		wmiarg = WMI_LUD_GET_MICMUTE_LED_VER;
->> +		break;
->> +	case AUDIO_MUTE:
->> +		wmiarg = WMI_LUD_GET_AUDIOMUTE_LED_VER;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	input.length = sizeof(wmiarg);
->> +	input.pointer = &wmiarg;
->> +	status = wmidev_evaluate_method(wpriv->led_wdev, 0, WMI_LUD_GET_SUPPORT, &input, &output);
->> +	if (ACPI_FAILURE(status))
->> +		return -EIO;
->> +
->> +	obj = output.pointer;
->> +	if (obj && obj->type == ACPI_TYPE_INTEGER) {
->> +		led_version = obj->integer.value;
->> +		kfree(output.pointer);
+> The problem is that for 1G pages, the page extensions may span memory
+> section boundaries and be stored in different memory sections. This issue
+> was not visible before commit e98337d11bbd ("mm/contig_alloc: support
+> __GFP_COMP") because alloc_contig_pages() never passed more than
+> MAX_PAGE_ORDER to post_alloc_hook(). However, the mentioned commit
+> changed this behavior allowing the full 1G page order to be passed.
 > 
-> Maybe you should use <linux/cleanup.h> instead, to avoid memory bugs.
-> Something like:
+> Reproducer:
 > 
-> 	union acpi_object *obj __free(kfree) = out.pointer
+>   1. Build the kernel with CONFIG_SPARSEMEM=y and the table extensions
+>   2. Pass 'default_hugepagesz=1 page_owner=on' in the kernel command-line
+>   3. Reserve one 1G page at run-time, this should crash (backtrace below)
 > 
->> +	} else {
->> +		err = -EIO;
->> +		goto led_error;
->> +	}
->> +
->> +	wpriv->cdev[led_type].max_brightness = LED_ON;
->> +	wpriv->cdev[led_type].dev = dev;
+> To address this issue, this commit introduces a new API for iterating
+> through page extensions. In page_ext_iter_next(), we always go through
+> page_ext_get() to guarantee that we do a new memory section lookup for
+> the next page extension. In the future, this API could be used as a basis
+> to implement for_each_page_ext() type of macro.
 > 
-> The .dev field in led_classdev is where the class device is stored by
-> the LED core. Drivers should not set this.
+> Thanks to David Hildenbrand for helping identify the root cause and
+> providing suggestions on how to fix it (final implementation and bugs are
+> all mine though).
 > 
->> +	wpriv->cdev[led_type].flags = LED_CORE_SUSPENDRESUME;
->> +
->> +	switch (led_type) {
->> +	case MIC_MUTE:
->> +		if (led_version != WMI_LUD_SUPPORT_MICMUTE_LED_VER) {
->> +			err = -EIO;
->> +			goto led_error;
+> Here's the backtrace, without kasan you can get random crashes:
 > 
-> Double free.
+> [   76.052526] BUG: KASAN: slab-out-of-bounds in __update_page_owner_handle+0x238/0x298
+> [   76.060283] Write of size 4 at addr ffff07ff96240038 by task tee/3598
+> [   76.066714]
+> [   76.068203] CPU: 88 UID: 0 PID: 3598 Comm: tee Kdump: loaded Not tainted 6.13.0-rep1 #3
+> [   76.076202] Hardware name: WIWYNN Mt.Jade Server System B81.030Z1.0007/Mt.Jade Motherboard, BIOS 2.10.20220810 (SCP: 2.10.20220810) 2022/08/10
+> [   76.088972] Call trace:
+> [   76.091411]  show_stack+0x20/0x38 (C)
+> [   76.095073]  dump_stack_lvl+0x80/0xf8
+> [   76.098733]  print_address_description.constprop.0+0x88/0x398
+> [   76.104476]  print_report+0xa8/0x278
+> [   76.108041]  kasan_report+0xa8/0xf8
+> [   76.111520]  __asan_report_store4_noabort+0x20/0x30
+> [   76.116391]  __update_page_owner_handle+0x238/0x298
+> [   76.121259]  __set_page_owner+0xdc/0x140
+> [   76.125173]  post_alloc_hook+0x190/0x1d8
+> [   76.129090]  alloc_contig_range_noprof+0x54c/0x890
+> [   76.133874]  alloc_contig_pages_noprof+0x35c/0x4a8
+> [   76.138656]  alloc_gigantic_folio.isra.0+0x2c0/0x368
+> [   76.143616]  only_alloc_fresh_hugetlb_folio.isra.0+0x24/0x150
+> [   76.149353]  alloc_pool_huge_folio+0x11c/0x1f8
+> [   76.153787]  set_max_huge_pages+0x364/0xca8
+> [   76.157961]  __nr_hugepages_store_common+0xb0/0x1a0
+> [   76.162829]  nr_hugepages_store+0x108/0x118
+> [   76.167003]  kobj_attr_store+0x3c/0x70
+> [   76.170745]  sysfs_kf_write+0xfc/0x188
+> [   76.174492]  kernfs_fop_write_iter+0x274/0x3e0
+> [   76.178927]  vfs_write+0x64c/0x8e0
+> [   76.182323]  ksys_write+0xf8/0x1f0
+> [   76.185716]  __arm64_sys_write+0x74/0xb0
+> [   76.189630]  invoke_syscall.constprop.0+0xd8/0x1e0
+> [   76.194412]  do_el0_svc+0x164/0x1e0
+> [   76.197891]  el0_svc+0x40/0xe0
+> [   76.200939]  el0t_64_sync_handler+0x144/0x168
+> [   76.205287]  el0t_64_sync+0x1ac/0x1b0
 > 
->> +		}
->> +		wpriv->cdev[led_type].name = "platform::micmute";
->> +		wpriv->cdev[led_type].brightness_set_blocking = &lsh_wmi_micmute_led_set;
->> +		wpriv->cdev[led_type].default_trigger = "audio-micmute";
->> +
->> +		err = devm_led_classdev_register(dev, &wpriv->cdev[led_type]);
->> +		if (err < 0)
->> +			goto led_reg_failed;
+> Fixes: e98337d11bbd ("mm/contig_alloc: support __GFP_COMP")
+> Signed-off-by: Luiz Capitulino <luizcap@redhat.com>
+> ---
+>   include/linux/page_ext.h | 10 ++++++++
+>   mm/page_ext.c            | 55 ++++++++++++++++++++++++++++++++++++++++
+>   2 files changed, 65 insertions(+)
 > 
-> Double free.
-> 
->> +
->> +		break;
->> +	case AUDIO_MUTE:
->> +		if (led_version != WMI_LUD_SUPPORT_AUDIOMUTE_LED_VER) {
->> +			err = -EIO;
->> +			goto led_error;
-> 
-> Double free.
-> 
->> +		}
->> +		wpriv->cdev[led_type].name = "platform::mute";
->> +		wpriv->cdev[led_type].brightness_set_blocking = &lsh_wmi_audiomute_led_set;
->> +		wpriv->cdev[led_type].default_trigger = "audio-mute";
->> +
->> +		err = devm_led_classdev_register(dev, &wpriv->cdev[led_type]);
->> +		if (err < 0)
->> +			goto led_reg_failed;
-> 
-> Double free.
-> 
->> +
->> +		break;
->> +	default:
->> +		err = -EINVAL;
->> +		dev_err(dev, "Unknown LED type %d\n", led_type);
->> +		goto led_error;
-> 
-> Double free.
-> 
->> +	}
->> +
->> +	return 0;
->> +
->> +led_reg_failed:
->> +	dev_err(dev, "Could not register mute LED %d : %d\n", led_type, err);
->> +
->> +led_error:
->> +	kfree(obj);
->> +	return err;
->> +}
->> +
->> +static void lenovo_super_hotkey_wmi_leds_setup(struct device *dev)
->> +{
->> +	lenovo_super_hotkey_wmi_led_init(MIC_MUTE, dev);
->> +	lenovo_super_hotkey_wmi_led_init(AUDIO_MUTE, dev);
->> +}
->> +
->> +static int lenovo_super_hotkey_wmi_probe(struct wmi_device *wdev, const void *context)
->> +{
->> +	struct lenovo_super_hotkey_wmi_private *wpriv;
->> +
->> +	wpriv = devm_kzalloc(&wdev->dev, sizeof(*wpriv), GFP_KERNEL);
->> +	if (!wpriv)
->> +		return -ENOMEM;
->> +
->> +	*wpriv = *(const struct lenovo_super_hotkey_wmi_private *)context;
-> 
-> The .event context is only used inside this function, so I believe this
-> copy is unnecessary.
-> 
->> +
->> +	dev_set_drvdata(&wdev->dev, wpriv);
->> +
->> +	if (wpriv->event == LSH_WMI_EVENT_LUD_KEYS) {
-> 
-> This check is maybe unnecessary.
-> 
->> +		wpriv->led_wdev = wdev;
->> +		lenovo_super_hotkey_wmi_leds_setup(&wdev->dev);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static void lenovo_super_hotkey_wmi_remove(struct wmi_device *wdev)
->> +{
->> +	struct lenovo_super_hotkey_wmi_private *wpriv = dev_get_drvdata(&wdev->dev);
->> +	unsigned int i;
->> +
->> +	for (i = 0; i < LSH_ACPI_LED_MAX; i++)
->> +		led_classdev_unregister(&wpriv->cdev[i]);
-> 
-> devm_led_classdev_register() was used so this is not needed.
-> 
->> +
->> +	kfree(wpriv);
-> 
-> devm_kzalloc() was used to allocate wpriv so this is not needed and
-> probably double free.
-> 
-> --
-> ~ Kurt
-Hi Kurt,
-    Thanks for your detail comments and professional guide. I have 
-updated them based on your comments and sent mail with the version 4 
-patch, pls review it again.
+> diff --git a/include/linux/page_ext.h b/include/linux/page_ext.h
+> index e4b48a0dda244..df904544d3fac 100644
+> --- a/include/linux/page_ext.h
+> +++ b/include/linux/page_ext.h
+> @@ -93,6 +93,16 @@ static inline struct page_ext *page_ext_next(struct page_ext *curr)
+>   	return next;
+>   }
+>   
+> +struct page_ext_iter {
+> +	unsigned long pfn;
+> +	struct page_ext *page_ext;
+> +};
+> +
+> +struct page_ext *page_ext_iter_begin(struct page_ext_iter *iter, struct page *page);
+> +struct page_ext *page_ext_iter_get(const struct page_ext_iter *iter);
+> +struct page_ext *page_ext_iter_next(struct page_ext_iter *iter);
+> +void page_ext_iter_end(struct page_ext_iter *iter);
+> +
+>   #else /* !CONFIG_PAGE_EXTENSION */
+>   struct page_ext;
+>   
+> diff --git a/mm/page_ext.c b/mm/page_ext.c
+> index 641d93f6af4c1..0b6eb5524cb2c 100644
+> --- a/mm/page_ext.c
+> +++ b/mm/page_ext.c
+> @@ -549,3 +549,58 @@ void page_ext_put(struct page_ext *page_ext)
+>   
+>   	rcu_read_unlock();
+>   }
+> +
+> +/**
+> + * page_ext_iter_begin() - Prepare for iterating through page extensions.
+> + * @iter: page extension iterator.
+> + * @page: The page we're interested in.
+> + *
+> + * Return: NULL if no page_ext exists for this page.
+> + */
+> +struct page_ext *page_ext_iter_begin(struct page_ext_iter *iter, struct page *page)
+> +{
+> +	iter->pfn = page_to_pfn(page);
+> +	iter->page_ext = page_ext_get(page);
+> +
+> +	return iter->page_ext;
+> +}
+> +
+> +/**
+> + * page_ext_iter_get() - Get current page extension
+> + * @iter: page extension iterator.
+> + *
+> + * Return: NULL if no page_ext exists for this iterator.
+> + */
+> +struct page_ext *page_ext_iter_get(const struct page_ext_iter *iter)
+> +{
+> +	return iter->page_ext;
+> +}
+> +
+> +/**
+> + * page_ext_iter_next() - Get next page extension
+> + * @iter: page extension iterator.
+> + *
+> + * Return: NULL if no next page_ext exists.
+> + */
+> +struct page_ext *page_ext_iter_next(struct page_ext_iter *iter)
+> +{
+> +	if (!iter->page_ext)
+> +		return NULL;
+> +
+> +	page_ext_put(iter->page_ext);
+> +
+> +	iter->pfn++;
+> +	iter->page_ext = page_ext_get(pfn_to_page(iter->pfn));
+> +
+> +	return iter->page_ext;
+> +}
+> +
+> +/**
+> + * page_ext_iter_end() - End iteration through page extensions.
+> + * @iter: page extension iterator.
+> + */
+> +void page_ext_iter_end(struct page_ext_iter *iter)
+> +{
+> +	page_ext_put(iter->page_ext);
+> +	iter->page_ext = NULL;
+> +}
 
-   Jackie Dong
-> 
->> +}
->> +static const struct lenovo_super_hotkey_wmi_private lsk_wmi_context_lud_keys = {
->> +	.event = LSH_WMI_EVENT_LUD_KEYS
->> +};
->> +
->> +static const struct wmi_device_id lenovo_super_hotkey_wmi_id_table[] = {
->> +	{ LUD_WMI_METHOD_GUID, &lsk_wmi_context_lud_keys }, /* Utility data */
->> +	{ }
->> +};
->> +
->> +MODULE_DEVICE_TABLE(wmi, lenovo_super_hotkey_wmi_id_table);
->> +
->> +static struct wmi_driver lenovo_super_hotkey_wmi_driver = {
->> +	 .driver = {
->> +		 .name = "lenovo_super_hotkey_wmi",
->> +		 .probe_type = PROBE_PREFER_ASYNCHRONOUS
->> +	 },
->> +	 .id_table = lenovo_super_hotkey_wmi_id_table,
->> +	 .probe = lenovo_super_hotkey_wmi_probe,
->> +	 .remove = lenovo_super_hotkey_wmi_remove,
->> +	 .no_singleton = true,
->> +};
->> +
->> +module_wmi_driver(lenovo_super_hotkey_wmi_driver);
->> +
->> +MODULE_INFO(depends, "wmi,ideapad-laptop");
->> +MODULE_AUTHOR("Jackie Dong <dongeg1@lenovo.com>");
->> +MODULE_DESCRIPTION("Lenovo Super Hotkey Utility WMI extras driver");
->> +MODULE_LICENSE("GPL");
-> 
+We should likely move all these to the header file, and implement
+page_ext_iter_next() without dropping the RCU lock. Further, we should add
+the optimization where possible right away.
 
+
+Maybe something like this might work:
+
+
+diff --git a/include/linux/page_ext.h b/include/linux/page_ext.h
+index df904544d3fac..4a79820cfe63e 100644
+--- a/include/linux/page_ext.h
++++ b/include/linux/page_ext.h
+@@ -69,12 +69,24 @@ extern void page_ext_init(void);
+  static inline void page_ext_init_flatmem_late(void)
+  {
+  }
++static inline bool page_ext_next_possible(unsigned long next_pfn)
++{
++       /*
++        * page_ext is allocated per memory section. Once we cross a
++        * memory section, we have to fetch the new pointer.
++        */
++       return next_pfn % PAGES_PER_SECTION;
++}
+  #else
+  extern void page_ext_init_flatmem(void);
+  extern void page_ext_init_flatmem_late(void);
+  static inline void page_ext_init(void)
+  {
+  }
++static inline bool page_ext_next_possible(unsigned long pfn)
++{
++       return true;
++}
+  #endif
+  
+  extern struct page_ext *page_ext_get(const struct page *page);
+@@ -100,9 +112,32 @@ struct page_ext_iter {
+  
+  struct page_ext *page_ext_iter_begin(struct page_ext_iter *iter, struct page *page);
+  struct page_ext *page_ext_iter_get(const struct page_ext_iter *iter);
+-struct page_ext *page_ext_iter_next(struct page_ext_iter *iter);
+  void page_ext_iter_end(struct page_ext_iter *iter);
+  
++/**
++ * page_ext_iter_next() - Get next page extension
++ * @iter: page extension iterator.
++ *
++ * Return: NULL if no next page_ext exists.
++ */
++struct page_ext *__page_ext_iter_next(struct page_ext_iter *iter)
++{
++       if (WARN_ON_ONCE(!iter->page_ext))
++               return NULL;
++
++       iter->pfn++;
++       if (page_exit_iter_next_fast_possible(iter)) {
++               iter->page_ext = page_ext_next(iter->page_ext);
++       } else {
++               /*
++		 * Grabbing the new one before putting the old one makes sure
++                * that we won't be dropping the RCU read lock.
++                */
++               iter->page_ext = page_ext_get(pfn_to_page(iter->pfn));
++               page_ext_put(iter->page_ext);
++       }
++	WARN_ON_ONCE(!iter->page_ext)
++       return iter->page_ext;
++}
++
+  #else /* !CONFIG_PAGE_EXTENSION */
+
+
+We should just assume that if the first page_ext exists, then the
+other ones must exist as well (thus the WARN_ON_ONCE()).
+
+If the page_ext_get+page_ext_put thingy regarding RCU does not work,
+we should have a new function that looks up the page_ext, assuming
+we already hold the rcu lock. (but I think this should work)
+
+
+In general, I think this iterator API will be a lot cleaner to use.
+
+-- 
+Cheers,
+
+David / dhildenb
 
