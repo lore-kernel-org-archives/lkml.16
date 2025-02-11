@@ -1,123 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BB470807;
-	Tue, 11 Feb 2025 11:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A9D1EF09C;
+	Tue, 11 Feb 2025 11:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739271821; cv=none; b=qW3Mws9uFIU16CZCsXKlxqTgBKo0dfpgHkPNgC9GqqpdpPn/0IecpZ7GWOWC1YPYFpvCSDM7ybCro2eBOQe/SwlFbwhfEe9oYyJaMW+SpBmROXAopC/0RJITd5WmFZ84I6gPLLl/lIdlHWqU4NwXTDfwRgzx7t7SnA7GBAohluc=
+	t=1739271842; cv=none; b=AV5+MTQhwrG3hBNdEp45s3mjcYezDH3NhunkcWDzGHhaNqXneL7JDyqfVeAQJQZwZwGpfWS05hbmfkK7tUr0T31YBJlxWc+Xp0e19x5hPJzk1tbsVEeSwQmOw6JTYCBx6kdglYVUBYBmKBeC9JZ10X6mlBbblzN1/dnTINTFAt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739271821; c=relaxed/simple;
-	bh=s6iQXUAYkOwopoAWbm13JQfX9Z0V2mxvtPKSMMtYBBk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TobjPwMO3xt1LzGbD1/h77vWIFg6a++Q/XJHHfSHIZERlpr0Bmf6+3Pk9Tlt1i+hSB/fjkiElrR0M8w44D1SCuMQm+mlLia/6H5sgA85QcJ2AlA8dfkm0yds7RmZ5JGw/+hIgQqDyhGbQCJa+CRbR53QPaB/17Bjj7anYfm4wUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vu5XUBfL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739271842; c=relaxed/simple;
+	bh=HR1cTfPtrYMFL/U4XOfH554Bii/BquLSLW6LMqX7uEs=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=DhMBYOTd9Jr5V7POxicSkR9FByyNL6TKyL570SoRK8BXyVnygCuo26hPBMueSK1a4B6D2CKDxalQFZpkN3ER7GI/5btRgKruTYi8CyvHP5CjnnhkEkPcKbjuh4dVqKjLfgawn6PjHkFDBY+KnCdRTLuVhYZ8Y5SuuMv2Dkfg9bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=xlPf9l4s; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vu5XUBfL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17E37C4CEE6;
-	Tue, 11 Feb 2025 11:03:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739271820;
-	bh=s6iQXUAYkOwopoAWbm13JQfX9Z0V2mxvtPKSMMtYBBk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Vu5XUBfLevZTYolk8FVU3wpalNit/hlK5HSjux5Tjd+i0Usifr2sDHXUr40jxkmTf
-	 3apu8C2CyRRYRRdrTEasRnOWBVjxN6CknrbOEXlxMSV+qyHD+VfYSsU3M5b5J7XO4g
-	 cboMuQgcMVTQw+2tKeQ5A7Lpw4r4pplsb6Olg274WZZOB8ieNIdd2+C78SJ06h06rx
-	 y6YcpPxFjshi2inIjaoVTUe6duVAFXq9az5weduXtGRhr+fFubiszH8K1MzhaYMW1f
-	 liw79lsOWI8H1OGIcCNkye3cWpLzvcUtmq57JDX5mpSX0IPXekG91Qw+Umzt1r6RA+
-	 l/1GGsez43mhg==
-Message-ID: <eebcc0e7-4f87-45d5-8ad4-9d24145ef5b2@kernel.org>
-Date: Tue, 11 Feb 2025 12:03:36 +0100
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="xlPf9l4s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1739271832;
+	bh=7vU21O8iptioA5gcEabn8Xg1heHT33nvWJUkTyHR0os=;
+	h=From:To:Cc:Subject:Date;
+	b=xlPf9l4su4JlE7qUG3AhCWEJYGWyeRMKhkv7nE57xnrT1q6fHCFbe9fQjASYt5ADs
+	 +whwWbE5ashqrD5wC01aa9Kt8ppGl/p0w6rYcHS/ntzIm3sIzOY/t3aXLbo7EPei92
+	 NUqxTC3bh455BTUYfWs0FIgKcDAV+AzwWFEVM2OM=
+Received: from NUC10.. ([39.156.73.10])
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id 995B283F; Tue, 11 Feb 2025 18:38:21 +0800
+X-QQ-mid: xmsmtpt1739270301tjrgpmued
+Message-ID: <tencent_26592A2BAF08A3A688A50600421559929708@qq.com>
+X-QQ-XMAILINFO: OATpkVjS499u55ORrONqKpZxP8ux/uuWT7idW6LGyoibpoEN688/lCMWtE5foc
+	 6S/5M7RK+I29VWAXxV1/s/lO7SS+fyn9c6/33F5wiWtvSzJvp+KNtsPDgcubbyjMLixV9lpyILCg
+	 EKnkH1jB8TZyJcXKmZCuFteUT3ljiDrTCZB542O5sEv6uNgDzbT3qkIFTvv6IKosj+M6mgKLmIri
+	 u1v4XW9t7XQQP9B+/+DbgiBAJz0DOruDUNq2sCgFzQ522LhNl62hOAnsqMfhBCgwes3R8Xbd0U4g
+	 7eNTSUYDmGbbkiWZVtpA0yAWc5H/lg7dqBYtcJNqwqHaaA2xf3P9gbVwMSpje62q3EJGGNkcCeZg
+	 xyhPmjyds33AniBjJ/f2IwotpxQEfVNLIw6VdOl+t3u/bYM3ibkrQrrdjj+OP2H6P+G717ddQmlG
+	 14EAFddtQuMdcjfeCgA6xyQAAlRr42HrEmgbFizowK+NiB3PodwfEeA1NvvrgwT01VOXmBPjjZPd
+	 T5SGFvUYxDXP5Qbb1ehTFBkQOQid9DqKy7EVvganIkOIDbvsfbG89HA7+g/dqWFq0Uk9peBqHCB/
+	 q3BZGzovsaZRSBo8mx/qIvUyR1toO4neY0MLfiLETUtsqPn0avW4FOwvv92nLb3RnsQm0/qsHr+T
+	 ChTsMoFlTi1aYY0kW5bYFVcRnTlOL7KZxjfb45pLO1NmJCTPgDXryJ7hyzkTLaNzDm2tiOwHWiTJ
+	 EsXF2Hd4YeyrhvT3hZzncraAWFQcRL5FVfcFCJJZu6ireJuL8vWZ6CZsR8wSMINWgephbnDqmU9C
+	 LH/Ai9oWgkVD8RXlESuvDVZTx9YotBCcD7h6W7FqjCezzYGyxy+ZWz/mAuNmcr2iM0qbY2l3QQt9
+	 +eqamtZ9pfapIwB0TBszYqVTnafUI26aU6GWA9dcLGYmpP59cRMBh6CJP0ZJEZDs5iklKqfKs9D4
+	 Sfs2Z95pfXQ/p7/LG5kRuF3RvYHdBZLEkdm8NcIpoVA5UlRPCq0g==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Rong Tao <rtoax@foxmail.com>
+To: qmo@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net
+Cc: rongtao@cestc.cn,
+	rtoax@foxmail.com,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	bpf@vger.kernel.org (open list:BPF [TOOLING] (bpftool)),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH bpf-next v2] bpftool: Check map name length when map create
+Date: Tue, 11 Feb 2025 18:38:20 +0800
+X-OQ-MSGID: <20250211103820.61883-1-rtoax@foxmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] arm64: dts: qcom: qcs8300-ride: enable BT on
- qcs8300-ride
-To: Cheng Jiang <quic_chejiang@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, quic_jiaymao@quicinc.com,
- quic_shuaz@quicinc.com, quic_zijuhu@quicinc.com, quic_mohamull@quicinc.com
-References: <20250211104421.1172892-1-quic_chejiang@quicinc.com>
- <20250211104421.1172892-2-quic_chejiang@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250211104421.1172892-2-quic_chejiang@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/02/2025 11:44, Cheng Jiang wrote:
->  	};
->  };
->  
-> +&uart2 {
-> +	status = "okay";
-> +	bluetooth: bluetooth {
+From: Rong Tao <rongtao@cestc.cn>
 
-Why do you need the label?
+The size of struct bpf_map::name is BPF_OBJ_NAME_LEN (16).
 
-> +		compatible = "qcom,wcn6855-bt";
-> +		firmware-name = "QCA6698/hpnv21", "QCA6698/hpbtfw21.tlv";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&bt_en_state>;
-> +		enable-gpios = <&tlmm 55 GPIO_ACTIVE_HIGH>; /* BT_EN */
-> +
-> +		vddio-supply       = <&vreg_conn_pa>;         /* bt-vdd-ctrl1-supply */
-> +		vddbtcxmx-supply   = <&vreg_conn_1p8>;        /* bt-vdd-ctrl2-supply */
+bpf(2) {
+  map_create() {
+    bpf_obj_name_cpy(map->name, attr->map_name, sizeof(attr->map_name));
+  }
+}
 
-Only one space before '='.
+When specifying a map name using bpftool map create name, no error is
+reported if the name length is greater than 15.
 
-I think this has multiple test failures.
+    $ sudo bpftool map create /sys/fs/bpf/12345678901234567890 \
+        type array key 4 value 4 entries 5 name 12345678901234567890
 
-Best regards,
-Krzysztof
+Users will think that 12345678901234567890 is legal, but this name cannot
+be used to index a map.
+
+    $ sudo bpftool map show name 12345678901234567890
+    Error: can't parse name
+
+    $ sudo bpftool map show
+    ...
+    1249: array  name 123456789012345  flags 0x0
+    	key 4B  value 4B  max_entries 5  memlock 304B
+
+    $ sudo bpftool map show name 123456789012345
+    1249: array  name 123456789012345  flags 0x0
+    	key 4B  value 4B  max_entries 5  memlock 304B
+
+The map name provided in the command line is truncated, but no error is
+reported. This submission checks the length of the map name.
+
+Signed-off-by: Rong Tao <rongtao@cestc.cn>
+---
+ tools/bpf/bpftool/map.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
+index ed4a9bd82931..bd5df44e2420 100644
+--- a/tools/bpf/bpftool/map.c
++++ b/tools/bpf/bpftool/map.c
+@@ -1270,6 +1270,11 @@ static int do_create(int argc, char **argv)
+ 		} else if (is_prefix(*argv, "name")) {
+ 			NEXT_ARG();
+ 			map_name = GET_ARG();
++			if (strlen(map_name) > BPF_OBJ_NAME_LEN - 1) {
++				p_err("map name must be no longer than %d characters\n",
++				      BPF_OBJ_NAME_LEN - 1);
++				goto exit;
++			}
+ 		} else if (is_prefix(*argv, "key")) {
+ 			if (parse_u32_arg(&argc, &argv, &key_size,
+ 					  "key size"))
+-- 
+2.48.1
+
