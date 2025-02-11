@@ -1,210 +1,118 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268AE1F9A9C
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADC81EEA38
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739274177; cv=none; b=EigK5TSOfof7km38XkdAkPbMKdgUmyk+IzwBi87zrsNyh8h9/JqQpbTiXbqJp4Q4Tja+KFTrxZXNyfUmeEbhMXOT/HNfhAlpJOkWJ+jk9FfTNzMEztGNbq8xB1Do3B/KFXFbDOQ8dcA1zmv8UUkrmY5TqavDwjhOrchSBNoYggY=
+	t=1739274246; cv=none; b=aTns3EVe/sHy8WqJ4lgcZQHB9sp7/IOExDyI60ztD5UGXX9NkKU9Wzh2gUklEnx/lrW3KHVPChxHxstdGevz7F++zGyb6hmQeHA4GDxALQQUX0nG5mdjJEYclRNKBCbkqWukkbwxQugOyaMkN1WNyV2qmiUOf4PHVYx6RIo93zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739274177; c=relaxed/simple;
-	bh=q2ER+H/uXCXVKISmQ5pI6JtncMW+jYrzUku5FAQJa7Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lsp2erEl146E8VhaSmTGC1+nD5DWaEWSdlWzzQ4GDrQmw2i5gXmS/pflweBojdSo+ksq9pk1YOPGziUXI1uvUiAXyziysr5fydlK792eOqQOVoyQPlwQ8Yhs0706PtPDV72ILKu0Y/Yy1RRYtAP2uNtI/ne4FzlbDHw/Wk/Sqig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RA1LeiBv; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RA1LeiBv"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ab744d5e567so1060603266b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:42:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1739274173; x=1739878973; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yImLolx1dYvJiGok8R/MgSIPH3BQANa0TBwOjxPIHfk=;
-        b=RA1LeiBv+RY9Z4ZjINUbFuNqeTbZuteoH1FUlsaxDE/ZMIyxDV1pBrI1Cy1vwXtv8n
-         dfYlAjyZGVr57s1B19NKsXwHGMLjr0f+9eGMk6EFOntaWUfm0mOClIdE35KnOxmqaEFn
-         SZqEgdBOH/yovQh7hd1SRbERT417ruwbszDXEVC1hfpcmARYk2WK+/uCKmBUM1tjIT4C
-         NboQvM03/4JcHSERRub0Ad+uMa3apyA3wJqrspJcZ0gE3ZxB+qQISgLU5DVZODh0OcQj
-         sz1IgKC6Y0/Eh3MXzO0Kl6wxklRxHi/ZF3SjsCJKwWUiV58Y3iLlzOTuhGtv+ykSDvwn
-         vOHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739274173; x=1739878973;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yImLolx1dYvJiGok8R/MgSIPH3BQANa0TBwOjxPIHfk=;
-        b=ZgV6lXTqgkEnbFTI9XpERRx76y/6CdcC+3lHBy/ZeQpJhLYa7fY3GqGoTlim1l2Dnd
-         LFpig/+US4q3o5ce4P7LwBazCYlZINrqCgKeYzaZDT/7zQ2txO2glQIBosS00ZinIcYV
-         59IlSocKd11pEWqrIxu6YJ0eVLEfc3VweI5rUFi5+IOi/zxaEZRnJ2ylsVo6zcbqZdzj
-         vhHuKLbIDinHtHdsXXrHwaMR9/hUGdGadInUJHv6X9HE+9NQNDvuGJUy2M+adEwzi7zM
-         yOSqerIG+D3yxVbY/JGS29Soshh04OLriU2wnLf9tPQXj7C5CNc026FOCdr6O77QC9s5
-         pd+g==
-X-Gm-Message-State: AOJu0YwGyDDfRp+qwsDtwDs/Z6IL9ODZxv+lQSLwLZNS98L/rlvkw+66
-	yQKP31hrPrIIe9I0LOrTHeG27ZAKcrKN8lWbRt1yZUM2C6Our6tEZZdDQJjvQlw=
-X-Gm-Gg: ASbGncu38+ophrXoPjsJ4VcwhEWKw16VlbP7TsNkrznFI5ffXzl1c8xKSCDmQrJthqS
-	JLEc6VX8kU3TySTLQHB3OfJI8urYA/HpDhhpyC+LUxntM7E31YwzU3fJmVESvQ+MgacUUc8kzQH
-	AsMU8snJE0HU4QHfMZTz1VG6TRMROpeMTvJX2WMMv7thBSPjjK5P6Ik/S2JLmbye9R5kMe1AQPk
-	BWZZl3/OM+9MxOH1a7iP0TzU3/e5jYb/n8Kd75YC91cv4Gz8HGl8RKP1/t+3bNZaCT2Ene+AHuY
-	XdFjxSEF0pJe788Sjmy9OKjgEqpy
-X-Google-Smtp-Source: AGHT+IGTBrnKOFw0mPFN3Fmkl3m/QpO51+eGneSiPtw1xqy5fXne9PL8xZ6RDr/Hk6A2GN3TQ+maoQ==
-X-Received: by 2002:a17:906:2983:b0:ab7:d34a:8f83 with SMTP id a640c23a62f3a-ab7daf85005mr240137366b.17.1739274173134;
-        Tue, 11 Feb 2025 03:42:53 -0800 (PST)
-Received: from localhost (109-81-84-135.rct.o2.cz. [109.81.84.135])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ab79378ee30sm808155066b.160.2025.02.11.03.42.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 03:42:52 -0800 (PST)
-Date: Tue, 11 Feb 2025 12:42:51 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Oleg Nesterov <oleg@redhat.com>, linux-mm@kvack.org
-Subject: Re: [PATCH 6/6 v2] mm: Drain LRUs upon resume to userspace on
- nohz_full CPUs
-Message-ID: <Z6s3u6Uu8I7r2Jox@tiehlicka>
-References: <20250209223005.11519-1-frederic@kernel.org>
- <20250209223005.11519-7-frederic@kernel.org>
+	s=arc-20240116; t=1739274246; c=relaxed/simple;
+	bh=YCKM+UgvTxR13x8TG0MIV0MC3d0Smm9a/zTCnF3RNUI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XemmIXykHXcq5kyjuU2RG0oZiPqmzILFs++2M8S0vJbIl9Pjo1utNbLoUQpw662UB30FaPcvehUuIhSe653QeDb+VYAq9W4onT5v5G7fMluS2Say1mIj4G+wgjjrkqyQOGeAmv0eEYoA37qkus2bhc0NJoiD1D4dppseC4XDI+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Ysfjx48WNz20qDJ;
+	Tue, 11 Feb 2025 19:44:21 +0800 (CST)
+Received: from kwepemg200008.china.huawei.com (unknown [7.202.181.35])
+	by mail.maildlp.com (Postfix) with ESMTPS id 52E87140153;
+	Tue, 11 Feb 2025 19:43:52 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ kwepemg200008.china.huawei.com (7.202.181.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 11 Feb 2025 19:43:50 +0800
+Message-ID: <a715dd5d-f353-371c-f542-7430668f2e12@huawei.com>
+Date: Tue, 11 Feb 2025 19:43:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250209223005.11519-7-frederic@kernel.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH -next v5 00/22] arm64: entry: Convert to generic entry
+Content-Language: en-US
+To: Mark Rutland <mark.rutland@arm.com>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <oleg@redhat.com>,
+	<sstabellini@kernel.org>, <tglx@linutronix.de>, <peterz@infradead.org>,
+	<luto@kernel.org>, <mingo@redhat.com>, <juri.lelli@redhat.com>,
+	<vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>,
+	<rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
+	<vschneid@redhat.com>, <kees@kernel.org>, <wad@chromium.org>,
+	<akpm@linux-foundation.org>, <samitolvanen@google.com>,
+	<masahiroy@kernel.org>, <hca@linux.ibm.com>, <aliceryhl@google.com>,
+	<rppt@kernel.org>, <xur@google.com>, <paulmck@kernel.org>, <arnd@arndb.de>,
+	<mbenes@suse.cz>, <puranjay@kernel.org>, <pcc@google.com>, <ardb@kernel.org>,
+	<sudeep.holla@arm.com>, <guohanjun@huawei.com>, <rafael@kernel.org>,
+	<liuwei09@cestc.cn>, <dwmw@amazon.co.uk>, <Jonathan.Cameron@huawei.com>,
+	<liaochang1@huawei.com>, <kristina.martsenko@arm.com>, <ptosi@google.com>,
+	<broonie@kernel.org>, <thiago.bauermann@linaro.org>, <kevin.brodsky@arm.com>,
+	<joey.gouly@arm.com>, <liuyuntao12@huawei.com>, <leobras@redhat.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<xen-devel@lists.xenproject.org>
+References: <20241206101744.4161990-1-ruanjinjie@huawei.com>
+ <c34ebe3f-b78a-1a17-0c6a-48d3874f8be9@huawei.com>
+ <Z6nxWM8cnhd32yfW@J2N7QTR9R3>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <Z6nxWM8cnhd32yfW@J2N7QTR9R3>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemg200008.china.huawei.com (7.202.181.35)
 
-On Sun 09-02-25 23:30:04, Frederic Weisbecker wrote:
-> LRUs can be drained through several ways. One of them may add disturbances
-> to isolated workloads while queuing a work at any time to any target,
-> whether running in nohz_full mode or not.
+
+
+On 2025/2/10 20:30, Mark Rutland wrote:
+> On Sat, Feb 08, 2025 at 09:15:08AM +0800, Jinjie Ruan wrote:
+>> On 2024/12/6 18:17, Jinjie Ruan wrote:
+>>> Currently, x86, Riscv, Loongarch use the generic entry. Convert arm64
+>>> to use the generic entry infrastructure from kernel/entry/*. The generic
+>>> entry makes maintainers' work easier and codes more elegant, which aslo
+>>> removed a lot of duplicate code.
+>>>
+>>> The main steps are as follows:
+>>> - Make arm64 easier to use irqentry_enter/exit().
+>>> - Make arm64 closer to the PREEMPT_DYNAMIC code of generic entry.
+>>> - Split generic entry into generic irq entry and generic syscall to
+>>>   make the single patch more concentrated in switching to one thing.
+>>> - Switch to generic irq entry.
+>>> - Make arm64 closer to the generic syscall code.
+>>> - Switch to generic entry completely.
+>>>
+>>> Changes in v5:
+>>> - Not change arm32 and keep inerrupts_enabled() macro for gicv3 driver.
+>>> - Move irqentry_state definition into arch/arm64/kernel/entry-common.c.
+>>> - Avoid removing the __enter_from_*() and __exit_to_*() wrappers.
+>>> - Update "irqentry_state_t ret/irq_state" to "state"
+>>>   to keep it consistently.
+>>> - Use generic irq entry header for PREEMPT_DYNAMIC after split
+>>>   the generic entry.
+>>> - Also refactor the ARM64 syscall code.
+>>> - Introduce arch_ptrace_report_syscall_entry/exit(), instead of
+>>>   arch_pre/post_report_syscall_entry/exit() to simplify code.
+>>> - Make the syscall patches clear separation.
+>>> - Update the commit message.
+>>
+>> Gentle Ping.
 > 
-> Prevent from that on isolated tasks with defering LRUs drains upon
-> resuming to userspace using the isolated task work framework.
+> I've left soem comments.
+> 
+> As I mentioned previously, I'd very much prefer that we do the syscall
+> entry logic changes *later* (i.e. as a follow-up patch series), after
+> we've got the irq/exception entry logic sorted.
+> 
+> I reckon we've got just enough time to get the irq/exception entry
+> changes ready this cycle, with another round or two of review. So can we
+> please put the syscall bits aside for now? ... that and run all the
+> tests you mention in patch 22 on the irq/exception entry changes alone.
 
-I have to say this is rather cryptic description of the udnerlying
-problem. What do you think about the following:
-
-LRU batching can be source of disturbances for isolated workloads
-running in the userspace because it requires kernel worker to handle
-that and that would preempt the said task. The primary source for such
-disruption would be __lru_add_drain_all which could be triggered from
-non-isolated CPUs.
-
-Why would an isolated CPU have anything on the pcp cache? Many syscalls
-allocate pages that might end there. A typical and unavoidable one would
-be fork/exec leaving pages on the cache behind just waiting for somebody
-to drain.
-
-This patch addresses the problem by noting a patch has been added to the
-cache and schedule draining to the return path to the userspace so the
-work is done while the syscall is still executing and there are no
-suprises while the task runs in the userspace where it doesn't want to
-be preempted.
+Sure, it is ok to put the syscall bits aside and split it out .
 
 > 
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> ---
->  include/linux/swap.h     | 1 +
->  kernel/sched/isolation.c | 3 +++
->  mm/swap.c                | 8 +++++++-
->  3 files changed, 11 insertions(+), 1 deletion(-)
+> Mark.
 > 
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index b13b72645db3..a6fdcc04403e 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -406,6 +406,7 @@ extern void lru_add_drain(void);
->  extern void lru_add_drain_cpu(int cpu);
->  extern void lru_add_drain_cpu_zone(struct zone *zone);
->  extern void lru_add_drain_all(void);
-> +extern void lru_add_and_bh_lrus_drain(void);
->  void folio_deactivate(struct folio *folio);
->  void folio_mark_lazyfree(struct folio *folio);
->  extern void swap_setup(void);
-> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-> index f25a5cb33c0d..1f9ec201864c 100644
-> --- a/kernel/sched/isolation.c
-> +++ b/kernel/sched/isolation.c
-> @@ -8,6 +8,8 @@
->   *
->   */
->  
-> +#include <linux/swap.h>
-> +
->  enum hk_flags {
->  	HK_FLAG_DOMAIN		= BIT(HK_TYPE_DOMAIN),
->  	HK_FLAG_MANAGED_IRQ	= BIT(HK_TYPE_MANAGED_IRQ),
-> @@ -253,6 +255,7 @@ __setup("isolcpus=", housekeeping_isolcpus_setup);
->  #if defined(CONFIG_NO_HZ_FULL)
->  static void isolated_task_work(struct callback_head *head)
->  {
-> +	lru_add_and_bh_lrus_drain();
->  }
->  
->  int __isolated_task_work_queue(void)
-> diff --git a/mm/swap.c b/mm/swap.c
-> index fc8281ef4241..da1e569ee3ce 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -37,6 +37,7 @@
->  #include <linux/page_idle.h>
->  #include <linux/local_lock.h>
->  #include <linux/buffer_head.h>
-> +#include <linux/sched/isolation.h>
->  
->  #include "internal.h"
->  
-> @@ -376,6 +377,8 @@ static void __lru_cache_activate_folio(struct folio *folio)
->  	}
->  
->  	local_unlock(&cpu_fbatches.lock);
-> +
-> +	isolated_task_work_queue();
->  }
-
-This placement doens't make much sense to me. I would put
-isolated_task_work_queue when we queue something up. That would be
-folio_batch_add if folio_batch_space(fbatch) > 0.
-
->  
->  #ifdef CONFIG_LRU_GEN
-> @@ -738,7 +741,7 @@ void lru_add_drain(void)
->   * the same cpu. It shouldn't be a problem in !SMP case since
->   * the core is only one and the locks will disable preemption.
->   */
-> -static void lru_add_and_bh_lrus_drain(void)
-> +void lru_add_and_bh_lrus_drain(void)
->  {
->  	local_lock(&cpu_fbatches.lock);
->  	lru_add_drain_cpu(smp_processor_id());
-> @@ -769,6 +772,9 @@ static bool cpu_needs_drain(unsigned int cpu)
->  {
->  	struct cpu_fbatches *fbatches = &per_cpu(cpu_fbatches, cpu);
->  
-> +	if (!housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE))
-> +		return false;
-> +
-
-Would it make more sense to use cpu_is_isolated() and use it explicitly
-in __lru_add_drain_all so that it is clearly visible - with a comment
-that isolated workloads are dealing with cache on their return to
-userspace.
-
->  	/* Check these in order of likelihood that they're not zero */
->  	return folio_batch_count(&fbatches->lru_add) ||
->  		folio_batch_count(&fbatches->lru_move_tail) ||
-> -- 
-> 2.46.0
-
--- 
-Michal Hocko
-SUSE Labs
+> 
