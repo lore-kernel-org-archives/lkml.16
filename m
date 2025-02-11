@@ -1,136 +1,193 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD71126BD9C
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C082512C7;
+	Tue, 11 Feb 2025 15:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739286795; cv=none; b=kD+E6mAqN5c7Jz3WiPDBbSzwhp+a72/MdHSD6cSd76IlWrFWPyn41RzpqnZ02oPmWEiYJWSV4POLv5YO+gN6N2qu9wHYQC/uR4w5/uLfb8nPOxKj7MROnk3+L57WioBQm3Ttvr5ZvEy3+gPaEZ/o7UIKmywqkQo5U8E3iG6IvgA=
+	t=1739286820; cv=none; b=bAGFsKiEt0skBuQ4kuKif2FS66b/EpdgjQ+ch+JE0/7cLHzI9m7zQE6QVOEr/OCCqej0yiqur3Ss5Nr4TclFmUW6xwgPq7ZPOSYX7KTF8s74NOGMbO0/f6uFvgncRu63Up1mWm11nD1vTjPpXlR0jHCPeExQy/RZ/NNN+LA2b88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739286795; c=relaxed/simple;
-	bh=SzpZB68mJtafxjD6jMIYoJsLxP06RagzsBfoAx4Ek38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kPbtjz5VzZQmY41rhavfvckYaikN9lNkwmpA4qWSCLK6r/tfMEpFpSZ1OoICBxQKiMO1nyjMsIHxLwjbw/+gsX03yiTRRTIgUv38Ixczv3zxil2ngaZyMetkA9xil51AlF4RGsqgYjlyuPHhV47WSum5kgFXquiYhTHkFSOyN4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Pme/+Vj/; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739286820; c=relaxed/simple;
+	bh=3rchmxc6w2X7e6g+kY+aEf5j7mS7EwQMvXvTeDNIY60=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B6wBH/JpqWobjBqJ+XOLg+/8LQfjGgP0/m8zHNKUlIRUWji4M/fb5Z7xbPw3yI/RIl6eqgvQPgVqr4dGF5Wu1SR2wv5RPuO7kkTM5gCCI68rv8QKQxGX0ovspPOou2DREkApkWm12hFpJMoReeooPQ1ObfzdFydtQ3lQMgGBE2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=fY7aMPoF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Kij4aL7u; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=fY7aMPoF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Kij4aL7u; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Pme/+Vj/"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B9ndHf017425
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:13:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	o3ptLIxI2GDJlgvE4iDhhe0gDDPLD6Y0/FQeZw9uDu0=; b=Pme/+Vj/0UaMd7U2
-	usnZBDBkw/EJROGERztqdr3mQV+DrIJAOs2Hqr2gfO7lemKwATF8/JewnmJkRVcj
-	gvQ0RIZGcbguhZxec/KX1OievNMmkD0HQLmsSAivWQPF6lXAR5dHuj5xDx/kpxPG
-	yMyQHcyx1e5k3sQx8Agdd5EYiFxzDvQ6uTlqkxO35w/2WrMzuad6FFrzwBWSnFVk
-	PPRofxEI+JCy02mEy8UnSy0+2zcSb38A7iFAFNgDiva8v17jWsLuCztkKUUODGpL
-	u/A6dOoMoQUVJ7y2YrF7jl8/OQgyMC3wBHaXNcMQhCdbUPGfVy1i9fyZf24Kz9y2
-	+bqXbQ==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0gv05bg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:13:12 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-47181a14d8bso9777891cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:13:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739286791; x=1739891591;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o3ptLIxI2GDJlgvE4iDhhe0gDDPLD6Y0/FQeZw9uDu0=;
-        b=YMMMiK0uzpEjxyMb82yeKCWLT5zwe28QcM++1p83ojAdKwTWgnETuk1qNBoTR0flID
-         eyBd4AD8stbhie3bwstNg37f1UHvbTqsYsO2S1pUhVIdloEbakPnK9MIFUxr6hm8CIkl
-         9uUIusVVp1RVdWrDPdfzqdC7QIRFX4JK+yYffJJ0/NEfd0uP+RrxkTWcgQnjszGcJl1w
-         VOmG7Css13ZNAv8Y6LcLJ2fsXrO7bJvJU9tSVcQ3t8gVfwz9UQfPXB1f+qlMtzw+DyTA
-         /vzFthUoV4KYvIi5yssVIKhMYlQuGycjYM40NZWkwDsV+m9KRR7BO+YTGrS5+sm7/rGC
-         LurA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrhsOMkf6UamKEsLDCEWPpy1cFNCkyrSFnzzonczLFc+I8ygTc3BYjpeAdJzC8ABUlDO19YzEPnQ9R4Kk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfQpK2kcz2S8ymz8p5NDKPLDjRQFgRdWXb/LQlu9CKZeY7wcEX
-	cHUg/pML9hGDeVJTjJ1nNZ1t5u3Y+1PJ5jk5G/0zJqTa2VrVFvZhXVc8hXuDqp8GGPwd77RMgb5
-	+o+L1JOd/8WahfVwRoau6nVDIAbVumYQ1rDzDGhk3IhDpJ/gWmgaE1eXoK05ZpntKi0yu4uM=
-X-Gm-Gg: ASbGncttu7mLc9y+GuQau9s1zmd/NGBBS1L05qTZ/onbpQ3S2fZg5IJWhTeNoQ54Er3
-	/pDKdERk1iTjKvytKlrRA7bLNP/NlXIydKVSy2CjS6PTAHQZ2pUxWA3kKbE2xOvPo1Vb7ly8cNa
-	tZXpXTvMBuLj5fUCqXcnlWfYl7Dq1Rebg366XKTB633glIlhJzXSZ29VVzcPxKZKxBnUEHVD5dU
-	Oi/8s/xcBOuAbeE96OUrFDKCpv/ZUOpsIkyhG3F2ATlj/StZzZPn4YWx3UBl1sMoEVFzsgjGkD3
-	ie3k3ROfQnf2i54QyOLFHDuJmMTnmns/YZDhbMnchoKul1RlkFWBVtkFdj0=
-X-Received: by 2002:a05:622a:138f:b0:471:962e:2302 with SMTP id d75a77b69052e-471a3d77ae6mr15268041cf.2.1739286791282;
-        Tue, 11 Feb 2025 07:13:11 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEbaYhtVsfvrRBBMgTO+TLZoVbUvzKTD9jlKqJcBMoq8LTiiKXgnQ7YVQgUGvGJJ5VzVmrldQ==
-X-Received: by 2002:a05:622a:138f:b0:471:962e:2302 with SMTP id d75a77b69052e-471a3d77ae6mr15267751cf.2.1739286790711;
-        Tue, 11 Feb 2025 07:13:10 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de483407efsm8239642a12.75.2025.02.11.07.13.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 07:13:09 -0800 (PST)
-Message-ID: <3f77d118-ae98-41a3-8a15-c8b5cada0e96@oss.qualcomm.com>
-Date: Tue, 11 Feb 2025 16:13:08 +0100
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="fY7aMPoF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Kij4aL7u";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="fY7aMPoF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Kij4aL7u"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4AA69223F9;
+	Tue, 11 Feb 2025 14:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1739284278; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P29SWT9WKmcoXdWr7QD8CSXyU8iw0S3dfYxkCJQQTnA=;
+	b=fY7aMPoFucAS/1/YvosPa59qyNAwMHOJKEGIVgyqYuX1XdDud+goHMlcYzjtCbjcH5Ox4F
+	ZqpDAo4+M5NS6Qh+ErdrKFEY6ZbHOb8Q3al7y8tfTzkg4Jq3s8elJNaeu+amnUXAahd084
+	8vMKrE6frse8ExNp3KeeGWQi+qjedE4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1739284278;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P29SWT9WKmcoXdWr7QD8CSXyU8iw0S3dfYxkCJQQTnA=;
+	b=Kij4aL7usxLX0SWUbSe3fGexxYT9BU+lbFt7NgfwZapuErc5qoqmy1uJtJEHWCQNvvf4DR
+	dH4oAkOnkkkrS/BA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1739284278; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P29SWT9WKmcoXdWr7QD8CSXyU8iw0S3dfYxkCJQQTnA=;
+	b=fY7aMPoFucAS/1/YvosPa59qyNAwMHOJKEGIVgyqYuX1XdDud+goHMlcYzjtCbjcH5Ox4F
+	ZqpDAo4+M5NS6Qh+ErdrKFEY6ZbHOb8Q3al7y8tfTzkg4Jq3s8elJNaeu+amnUXAahd084
+	8vMKrE6frse8ExNp3KeeGWQi+qjedE4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1739284278;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P29SWT9WKmcoXdWr7QD8CSXyU8iw0S3dfYxkCJQQTnA=;
+	b=Kij4aL7usxLX0SWUbSe3fGexxYT9BU+lbFt7NgfwZapuErc5qoqmy1uJtJEHWCQNvvf4DR
+	dH4oAkOnkkkrS/BA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3FEAD13782;
+	Tue, 11 Feb 2025 14:31:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id aCyZDzZfq2f/TwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 11 Feb 2025 14:31:18 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id A4841A095C; Tue, 11 Feb 2025 15:31:09 +0100 (CET)
+Date: Tue, 11 Feb 2025 15:31:09 +0100
+From: Jan Kara <jack@suse.cz>
+To: libaokun@huaweicloud.com
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, 
+	jack@suse.cz, linux-kernel@vger.kernel.org, yi.zhang@huawei.com, 
+	yangerkun@huawei.com, Baokun Li <libaokun1@huawei.com>
+Subject: Re: [PATCH v2 5/7] ext4: correct behavior under errors=remount-ro
+ mode
+Message-ID: <v4k7pgwfeaa2drgkdpkyzl2qyemicnwyhvo3zcyn53frj3b2w5@3wpniv2edlfk>
+References: <20250122114130.229709-1-libaokun@huaweicloud.com>
+ <20250122114130.229709-6-libaokun@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: qcom: x1e80100-qcp: Add WiFi/BT pwrseq
-To: Stephan Gerhold <stephan.gerhold@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Abel Vesa <abel.vesa@linaro.org>, Johan Hovold <johan@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-References: <20250211-x1e80100-pwrseq-qcp-v2-1-c4349ca974ab@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250211-x1e80100-pwrseq-qcp-v2-1-c4349ca974ab@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: kXIg4-4HXBshfxolnC1ZG8DgFRb1DM63
-X-Proofpoint-GUID: kXIg4-4HXBshfxolnC1ZG8DgFRb1DM63
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_06,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 phishscore=0
- clxscore=1015 adultscore=0 bulkscore=0 mlxscore=0 spamscore=0
- mlxlogscore=999 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502110101
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250122114130.229709-6-libaokun@huaweicloud.com>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,huaweicloud.com:email,suse.cz:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 11.02.2025 4:01 PM, Stephan Gerhold wrote:
-> Add the WiFi/BT nodes for QCP and describe the regulators for the WCN7850
-> combo chip using the new power sequencing bindings. All voltages are
-> derived from chained fixed regulators controlled using a single GPIO.
+On Wed 22-01-25 19:41:28, libaokun@huaweicloud.com wrote:
+> From: Baokun Li <libaokun1@huawei.com>
 > 
-> The same setup also works for CRD (and likely most of the other X1E80100
-> laptops). However, unlike the QCP they use soldered or removable M.2 cards
-> supplied by a single 3.3V fixed regulator. The other necessary voltages are
-> then derived inside the M.2 card. Describing this properly requires
-> new bindings, so this commit only adds QCP for now.
+> And after commit 95257987a638 ("ext4: drop EXT4_MF_FS_ABORTED flag") in
+> v6.6-rc1, the EXT4_FLAGS_SHUTDOWN bit is set in ext4_handle_error() under
+> errors=remount-ro mode. This causes the read to fail even when the error
+> is triggered in errors=remount-ro mode.
 > 
-> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> To correct the behavior under errors=remount-ro, EXT4_FLAGS_SHUTDOWN is
+> replaced by the newly introduced EXT4_FLAGS_EMERGENCY_RO. This new flag
+> only prevents writes, matching the previous behavior with SB_RDONLY.
+> 
+> Fixes: 95257987a638 ("ext4: drop EXT4_MF_FS_ABORTED flag")
+> Closes: https://lore.kernel.org/all/22d652f6-cb3c-43f5-b2fe-0a4bb6516a04@huawei.com/
+> Suggested-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> Reviewed-by: Zhang Yi <yi.zhang@huawei.com>
+
+Looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 > ---
-> Changes in v2:
-> - Rebase on qcom for-next, patch 1-2 were applied already
-> - Mention dummy regulator warning
-> - Link to v1: https://lore.kernel.org/r/20241007-x1e80100-pwrseq-qcp-v1-0-f7166510ab17@linaro.org
-> ---
-> The Linux driver currently warns about a missing regulator supply:
+>  fs/ext4/super.c | 19 ++++++++-----------
+>  1 file changed, 8 insertions(+), 11 deletions(-)
 > 
->   pwrseq-qcom_wcn wcn7850-pmu: supply vddio1p2 not found, using dummy regulator
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index d8116c9c2bd0..098e62727aec 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -708,11 +708,8 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
+>  	if (test_opt(sb, WARN_ON_ERROR))
+>  		WARN_ON_ONCE(1);
+>  
+> -	if (!continue_fs && !sb_rdonly(sb)) {
+> -		set_bit(EXT4_FLAGS_SHUTDOWN, &EXT4_SB(sb)->s_ext4_flags);
+> -		if (journal)
+> -			jbd2_journal_abort(journal, -EIO);
+> -	}
+> +	if (!continue_fs && !ext4_emergency_ro(sb) && journal)
+> +		jbd2_journal_abort(journal, -EIO);
+>  
+>  	if (!bdev_read_only(sb->s_bdev)) {
+>  		save_error_info(sb, error, ino, block, func, line);
+> @@ -738,17 +735,17 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
+>  			sb->s_id);
+>  	}
+>  
+> -	if (sb_rdonly(sb) || continue_fs)
+> +	if (ext4_emergency_ro(sb) || continue_fs)
+>  		return;
+>  
+>  	ext4_msg(sb, KERN_CRIT, "Remounting filesystem read-only");
+>  	/*
+> -	 * EXT4_FLAGS_SHUTDOWN was set which stops all filesystem
+> -	 * modifications. We don't set SB_RDONLY because that requires
+> -	 * sb->s_umount semaphore and setting it without proper remount
+> -	 * procedure is confusing code such as freeze_super() leading to
+> -	 * deadlocks and other problems.
+> +	 * We don't set SB_RDONLY because that requires sb->s_umount
+> +	 * semaphore and setting it without proper remount procedure is
+> +	 * confusing code such as freeze_super() leading to deadlocks
+> +	 * and other problems.
+>  	 */
+> +	set_bit(EXT4_FLAGS_EMERGENCY_RO, &EXT4_SB(sb)->s_ext4_flags);
+>  }
+>  
+>  static void update_super_work(struct work_struct *work)
+> -- 
+> 2.39.2
 > 
-> This supply exists on the WCN7850 chip, but nothing is connected there on
-> the QCP. Discussion is still open how to hide this warning in the driver,
-> but since the DT is correct and the same setup is already used on SM8550
-> upstream, this shouldn't block this patch.
-> ---
-
-Even with this warning:
-
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
-Konrad
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
