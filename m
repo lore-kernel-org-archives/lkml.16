@@ -1,69 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5DF1D61A5;
-	Tue, 11 Feb 2025 02:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5521D63CA
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739242408; cv=none; b=C08JkLbbjyh1Ln9wpky8PtpGqE1HWatza6NA/eDQhmUqSsXShLmF58dyFkTuGyIhzrS4R5l8txn9z+9HfKq/xflBM/1L+KgMQLpQPAuGCZzwDsfjsAlpfb2zQKZIxeBafkwTn92OAnpQYn1PMPIaLQPUBw8nxm9EKF+Xp6ejZOg=
+	t=1739242411; cv=none; b=Sc/ZMeXUnNvJeU8veliccPHRP+IRGe9eEiwjG3aZ+TCtCyzvCUgn1BggRnBL1g5PLdBqSCTFfNol+Npk6Ugl+e1+HjIQkhgZczOPHYz7I3Bd6ExXjkM4raSUnCcWfeUn+LGPJ1dX1fke0U0MZqt3lSilAa9/3FzEarK2euSGbRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739242408; c=relaxed/simple;
-	bh=YMWpCMl+AIpwqEPlHAIvt12kPvItzQgcwNKb/CTy/5I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nkqCpOlEizvMIpBnCL9tyEOzE7vxsIcn7x/Z9WVNggfuQWs1Jc0ZHKWsgyIRB8Nujy6LV6nvVejjxda/RNWuR0G89CINIP1UUyjDPVynKuAGvmDeTKqS/v1eIy1OZzvxWL3Q3lWASXVzkt6h63PT/jBSqPSkIj9dYqW7+uHyi/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PYo3keyw; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739242411; c=relaxed/simple;
+	bh=krQevm+hXTalcD8VAeW0Io0/fzqS0IsZiv6OMMQGNU8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VmF4Tmnx5P8jEbajItLEWIqOL8MaTY8XbP5Ox7rpxpMdZ1Gm5xYxtxxuADqmWirhTfn4cOB96G5bqLmAvr7EruKdfA888ZCrks2VF0WJ3rMFfbjbWzV6mxfpUB9MkwnB9Iw1EF/21mVTUlkdqmH26QktxcmMOMIMiej2EMJbCVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=ckVtcGyy; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PYo3keyw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739242408; x=1770778408;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YMWpCMl+AIpwqEPlHAIvt12kPvItzQgcwNKb/CTy/5I=;
-  b=PYo3keywFZuHhtyfJjaOAbRxhhZLvvS+ej9vwCj4gN3r/1Pur2GfJDxu
-   8B31hETTN5YfshOraIzHmxAfN7fff7nOhNK7PmxR7n4FwUd+dEzERzCpy
-   yT+VNnKFGnZpL9Xu8bOfMUYl00AEM32f+xSOhHzgo6i88sxxOYl60eNMq
-   j42rpPu/NzE9AmdYkKTz1vNgcMEcj+QATO09Pxau4Igl4ZtS/dEEDthNP
-   ou194tgKXP/AqDTzOkQlrEK3RotA6wIB8Hif8Ntf1vVzemgrkXFUTLUeB
-   ULxqtewngai1yKBpRjJH+20i0p0QTBWsLM8G5aA4OzDwnXCMjlu8eVDal
-   Q==;
-X-CSE-ConnectionGUID: 7xrK4v4KQFykzmtR29uI/w==
-X-CSE-MsgGUID: X9WEOIB0SN6w/MpnO7dwJg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="43506625"
-X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
-   d="scan'208";a="43506625"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:53:28 -0800
-X-CSE-ConnectionGUID: pKk/uTvFQQmRDSQX+ZEBuw==
-X-CSE-MsgGUID: tVbpFlurSnmVyd1gc+sG6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112236456"
-Received: from litbin-desktop.sh.intel.com ([10.239.156.93])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:53:23 -0800
-From: Binbin Wu <binbin.wu@linux.intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com,
-	kvm@vger.kernel.org
-Cc: rick.p.edgecombe@intel.com,
-	kai.huang@intel.com,
-	adrian.hunter@intel.com,
-	reinette.chatre@intel.com,
-	xiaoyao.li@intel.com,
-	tony.lindgren@intel.com,
-	isaku.yamahata@intel.com,
-	yan.y.zhao@intel.com,
-	chao.gao@intel.com,
-	linux-kernel@vger.kernel.org,
-	binbin.wu@linux.intel.com
-Subject: [PATCH v2 6/8] KVM: TDX: Handle TDG.VP.VMCALL<ReportFatalError>
-Date: Tue, 11 Feb 2025 10:54:40 +0800
-Message-ID: <20250211025442.3071607-7-binbin.wu@linux.intel.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250211025442.3071607-1-binbin.wu@linux.intel.com>
-References: <20250211025442.3071607-1-binbin.wu@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ckVtcGyy"
+X-UUID: 5bf29f4ce82311efb8f9918b5fc74e19-20250211
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=keKohg8hOTFLfdJBLpLuY7turgd/R5WQW4fSD4VLxnc=;
+	b=ckVtcGyyfuGvs8EvIuNFqLOdKfoH4F9ewySkQK9dei/0FiDISPWoK5fbfRGU3uR+o1NktwiIN/fb6t3FkES6ROpYpx3UmH0nfctnSX5y/u4zdAJ0U/wTZjGKHs9CHVr1fGun3BLMNrI3cZBdUBbiFNeYWg1BpsCx1hJFLRkNTnE=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.46,REQID:35cb6343-fc81-4559-a73a-ae1d5c12c3d0,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:60aa074,CLOUDID:06d76b92-d651-4ec6-81e1-a3deb10c9ff8,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: 5bf29f4ce82311efb8f9918b5fc74e19-20250211
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+	(envelope-from <sunny.shen@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 921413999; Tue, 11 Feb 2025 10:53:23 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 11 Feb 2025 10:53:22 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Tue, 11 Feb 2025 10:53:22 +0800
+From: Sunny Shen <sunny.shen@mediatek.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+CC: Matthias Brugger <matthias.bgg@gmail.com>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Fei Shao <fshao@chromium.org>, Pin-yen Lin
+	<treapking@chromium.org>, "Jason-JH . Lin" <jason-jh.lin@mediatek.com>, Nancy
+ Lin <nancy.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, "Paul
+ Chen --cc=devicetree @ vger . kernel . org" <paul-pl.chen@mediatek.com>,
+	<linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Sunny Shen
+	<sunny.shen@mediatek.com>
+Subject: [PATCH 0/5] Add components to support PQ in display path for MT8196
+Date: Tue, 11 Feb 2025 10:52:49 +0800
+Message-ID: <20250211025317.399534-1-sunny.shen@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,138 +66,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Convert TDG.VP.VMCALL<ReportFatalError> to KVM_EXIT_SYSTEM_EVENT with
-a new type KVM_SYSTEM_EVENT_TDX_FATAL and forward it to userspace for
-handling.
+Due to the path mux design of the MT8196, the following components need to be configured to support Picture Quality (PQ) in the display path:CCORR0, CCORR1, DITHER0, GAMMA0, MDP_RSZ0, POSTMASK0, TDSHP0.
 
-TD guest can use TDG.VP.VMCALL<ReportFatalError> to report the fatal
-error it has experienced.  This hypercall is special because TD guest
-is requesting a termination with the error information, KVM needs to
-forward the hypercall to userspace anyway, KVM doesn't do sanity checks
-and let userspace decide what to do.
+This patch series is based on [1]
+[1] Add Mediatek Soc DRM Soc support for mt8196
+    - https://patchwork.kernel.org/project/linux-mediatek/list/?series=924191
 
-Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
----
-Hypercalls exit to userspace v2:
-- Use vp_enter_args instead of x86 registers.
-- vcpu->run->system_event.ndata is not hardcoded to 10. (Xiaoyao)
-- Undefine COPY_REG after use. (Yilun)
-- Updated the document about KVM_SYSTEM_EVENT_TDX_FATAL. (Chao)
+Sunny Shen (5):
+  dt-bindings: display: mediatek: mdp-rsz: Add rules for MT8196
+  dt-bindings: display: mediatek: postmask: Modify rules for MT8196
+  soc: mediatek: Add components to support PQ in display path for MT8196
+  drm/mediatek: Add MDP-RSZ component support for MT8196
+  drm/mediatek: Change main display path to support PQ for MT8196
 
-Hypercalls exit to userspace v1:
-- New added.
-  Implement one of the hypercalls need to exit to userspace for handling after
-  reverting "KVM: TDX: Add KVM Exit for TDX TDG.VP.VMCALL", which tries to resolve
-  Sean's comment.
-  https://lore.kernel.org/kvm/Zg18ul8Q4PGQMWam@google.com/
-- Use TDVMCALL_STATUS prefix for TDX call status codes (Binbin)
----
- Documentation/virt/kvm/api.rst |  9 +++++++
- arch/x86/kvm/vmx/tdx.c         | 45 ++++++++++++++++++++++++++++++++++
- include/uapi/linux/kvm.h       |  1 +
- 3 files changed, 55 insertions(+)
+ .../display/mediatek/mediatek,mdp-rsz.yaml    | 46 ++++++++++++
+ .../display/mediatek/mediatek,postmask.yaml   |  1 +
+ drivers/gpu/drm/mediatek/mtk_ddp_comp.c       | 24 +++++++
+ drivers/gpu/drm/mediatek/mtk_ddp_comp.h       |  1 +
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c        |  9 +++
+ drivers/soc/mediatek/mt8196-mmsys.h           | 70 ++++++++++++++++++-
+ drivers/soc/mediatek/mtk-mutex.c              | 17 +++++
+ include/linux/soc/mediatek/mtk-mmsys.h        |  5 ++
+ 8 files changed, 171 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,mdp-rsz.yaml
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 2ba70c1fad51..5e415b312ab0 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -6823,6 +6823,7 @@ should put the acknowledged interrupt vector into the 'epr' field.
-   #define KVM_SYSTEM_EVENT_WAKEUP         4
-   #define KVM_SYSTEM_EVENT_SUSPEND        5
-   #define KVM_SYSTEM_EVENT_SEV_TERM       6
-+  #define KVM_SYSTEM_EVENT_TDX_FATAL      7
- 			__u32 type;
-                         __u32 ndata;
-                         __u64 data[16];
-@@ -6849,6 +6850,14 @@ Valid values for 'type' are:
-    reset/shutdown of the VM.
-  - KVM_SYSTEM_EVENT_SEV_TERM -- an AMD SEV guest requested termination.
-    The guest physical address of the guest's GHCB is stored in `data[0]`.
-+ - KVM_SYSTEM_EVENT_TDX_FATAL -- a TDX guest reported a fatal error state.
-+   The error code reported by the TDX guest is stored in `data[0]`, the error
-+   code format is defined in TDX GHCI specification.
-+   If the bit 63 of `data[0]` is set, it indicates there is TD specified
-+   additional information provided in a page, which is shared memory. The
-+   guest physical address of the information page is stored in `data[1]`.
-+   An optional error message is provided by `data[2]` ~ `data[9]`, which is
-+   byte sequence, LSB filled first. Typically, ASCII code(0x20-0x7e) is filled.
-  - KVM_SYSTEM_EVENT_WAKEUP -- the exiting vCPU is in a suspended state and
-    KVM has recognized a wakeup event. Userspace may honor this event by
-    marking the exiting vCPU as runnable, or deny it and call KVM_RUN again.
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 8b51b4c937e9..85956768c515 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1092,11 +1092,56 @@ static int tdx_map_gpa(struct kvm_vcpu *vcpu)
- 	return 1;
- }
- 
-+static int tdx_report_fatal_error(struct kvm_vcpu *vcpu)
-+{
-+	struct vcpu_tdx *tdx = to_tdx(vcpu);
-+	u64 reg_mask = tdx->vp_enter_args.rcx;
-+	u64 *opt_regs;
-+
-+	/*
-+	 * Skip sanity checks and let userspace decide what to do if sanity
-+	 * checks fail.
-+	 */
-+	vcpu->run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
-+	vcpu->run->system_event.type = KVM_SYSTEM_EVENT_TDX_FATAL;
-+	/* Error codes. */
-+	vcpu->run->system_event.data[0] = tdx->vp_enter_args.r12;
-+	/* GPA of additional information page. */
-+	vcpu->run->system_event.data[1] = tdx->vp_enter_args.r13;
-+	/* Information passed via registers (up to 64 bytes). */
-+	opt_regs = &vcpu->run->system_event.data[2];
-+
-+#define COPY_REG(REG, MASK)						\
-+	do {								\
-+		if (reg_mask & MASK) {					\
-+			*opt_regs = tdx->vp_enter_args.REG;		\
-+			opt_regs++;					\
-+		}							\
-+	} while (0)
-+
-+	/* The order is defined in GHCI. */
-+	COPY_REG(r14, BIT_ULL(14));
-+	COPY_REG(r15, BIT_ULL(15));
-+	COPY_REG(rbx, BIT_ULL(3));
-+	COPY_REG(rdi, BIT_ULL(7));
-+	COPY_REG(rsi, BIT_ULL(6));
-+	COPY_REG(r8, BIT_ULL(8));
-+	COPY_REG(r9, BIT_ULL(9));
-+	COPY_REG(rdx, BIT_ULL(2));
-+#undef COPY_REG
-+
-+	vcpu->run->system_event.ndata = opt_regs - vcpu->run->system_event.data;
-+
-+	return 0;
-+}
-+
- static int handle_tdvmcall(struct kvm_vcpu *vcpu)
- {
- 	switch (tdvmcall_leaf(vcpu)) {
- 	case TDVMCALL_MAP_GPA:
- 		return tdx_map_gpa(vcpu);
-+	case TDVMCALL_REPORT_FATAL_ERROR:
-+		return tdx_report_fatal_error(vcpu);
- 	default:
- 		break;
- 	}
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 45e6d8fca9b9..937400350317 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -375,6 +375,7 @@ struct kvm_run {
- #define KVM_SYSTEM_EVENT_WAKEUP         4
- #define KVM_SYSTEM_EVENT_SUSPEND        5
- #define KVM_SYSTEM_EVENT_SEV_TERM       6
-+#define KVM_SYSTEM_EVENT_TDX_FATAL      7
- 			__u32 type;
- 			__u32 ndata;
- 			union {
 -- 
-2.46.0
+2.34.1
 
