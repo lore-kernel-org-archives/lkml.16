@@ -1,143 +1,114 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97432F5E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF601D7E26;
+	Tue, 11 Feb 2025 04:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739249746; cv=none; b=jMh/BxoTWN9mb44LGG9xgj2Z8WapaOvI1Iv5lZ4oeN7QCBAZD2xrvjKUtBPXmfkbfkuE6AsqgyF5CtYewRURaXfQ/qnTpjzLLrABgwmHGeedwn1liypGALpY33Gd0BbNga8lqr89Ka5i70TTrv3/TotxQw9Qn9eBZyFM5QAQktg=
+	t=1739249771; cv=none; b=HbNjCbISlVQfvbKlSy65Z/8pEVbQiYe/KfN9Nx8vyBq+am+hS/9QBRBMEl6p9w9crN0j21wnhpCD07iC1LSARqXB/xRq/yhaiqSffaXq6F7kXDgeo+qOxu0yYbbpyOd4i+jP2I+JFo6ca4zvXV0J94dJ+Kz+y1FcVVpxxMwfigU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739249746; c=relaxed/simple;
-	bh=cLtgGtKvPbFDEQDs/LpZUgRuq6+tRZHziHlcJWA47PU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oPNgpNNgt0BjAdjdR/updZ0y3ZL7NjUNFaZLtbzygbirrxd9/96shQJlp5X0iZ0ix1HatuLXPQFuxS8t7CWu1mjM9bTjmLFpIKa2PdbMARtLfd4M2mQCzVFF9YrlPvcA07vGy9Cs4B8GVFztij5RFfc0MzghJyzJrq3dO4q+1BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=d2Tme3vf; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739249771; c=relaxed/simple;
+	bh=Dd8pJU4mAkz8oOTBw+33Ba9v2QIfFz/TQnaizVzJwyE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WR4OzGU5ZIAbd0lFkh2llyZTZS5GHIW2Z9HcdPlsLm52UlrF1rLZxKzWiRBMW6t6xBkUVAyXWhuj2Pj4xcn+8dLuNpW1doz1WcrUT5crt7EsjuiTWvYnYNu8pExogTfG9f9seb2Nk6NqXePgB991dfHkQipfJRVyeiDUoOzwqdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j9Uhky7d; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="d2Tme3vf"
-Date: Tue, 11 Feb 2025 04:55:33 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739249740;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GbFheEIJWIPlRA0WvVrzoCQgek7LQL12pV6Kk2aGtLI=;
-	b=d2Tme3vfjKZx5BN1uMvyC2RJnV4sSCx4QGgXr2Kbv9tdc9y9ItQa9/KW8tcD2OZiffMoNH
-	iwxyWbt2bewidWowUCUVcbPykBmuC2eGaWNyhIQq0gv+fvWqjR5MZlb6ogx0tFLxpPgRfu
-	JNpegVJZl1wwTmvliwB3v0+XsF6LU3E=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	"T.J. Mercier" <tjmercier@google.com>, Tejun Heo <tj@kernel.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: add hierarchical effective limits for v2
-Message-ID: <Z6rYReNBVNyYq-Sg@google.com>
-References: <20250205222029.2979048-1-shakeel.butt@linux.dev>
- <mshcu3puv5zjsnendao73nxnvb2yiprml7aqgndc37d7k4f2em@vqq2l6dj7pxh>
- <ctuqkowzqhxvpgij762dcuf24i57exuhjjhuh243qhngxi5ymg@lazsczjvy4yd>
- <5jwdklebrnbym6c7ynd5y53t3wq453lg2iup6rj4yux5i72own@ay52cqthg3hy>
- <20250210225234.GB2484@cmpxchg.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j9Uhky7d"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-436281c8a38so33476675e9.3;
+        Mon, 10 Feb 2025 20:56:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739249768; x=1739854568; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YvlqG2mdUySN91b26Hc4Mi8+p6b99eBWTzCbfUz6Rb0=;
+        b=j9Uhky7dAVu9rHGTiRy6s0XgQ1wTh5aW5ypBvjovFl6mQt+nvrTo6KMrECVPuK98ka
+         VZkH6EK/SIfXkklBy7o5NLa9K34tkgVcsPuw5yzd6rza5XT6UpYaG2lEVAqaR5fU7Awg
+         dC1rapn/witJEkXCZ3NqKKlGnq3tvFn4Z3IjTbX0MsALMCQzIPF7DdO+bQ+YvH7DNoSP
+         A0UofhaUkDlIbho/mww3c1I9jLVgPWHD7XHDhfPdPYBHrMHPDrZtKQVWghQmbmWKvSDX
+         7+YwOiVK8gs2eLqR3zeJje/WX9uevjOfG2mQV3k6WASkBYa3cze1UM9KcRCT0epa8l8T
+         Tuhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739249768; x=1739854568;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YvlqG2mdUySN91b26Hc4Mi8+p6b99eBWTzCbfUz6Rb0=;
+        b=jdFkxiSodNFEaZ2tYS9Yb9qArN9hSQ1IFDIbir/Yzz5aQ5cqfRuUaHlVNgNwgniFP6
+         br2cZhJhCMkf+1U0Lza4plAKuyfncbv1amBE0uHEE9galdjWUVVyIHQNXDyFO6aZENzE
+         YW07c55wiJYHlUeDHvnE5Fn5y/q79XrWh+n1iCHFcCBcpcFLNEtjR/aoysuGZnKoCUiB
+         TqQT00D/SbDP4fOBP/pkqrcm0nkR6KphTPAV4X1ZWAMB6Gj5G4VHa2BtmziXE1wr0tjc
+         xUP26oFpKKlRXOERu8JsU8jdA6gPDmvC3zo+Fep8O3fXdFnaUrpupybMTVDyGdw9F6wj
+         WzRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOJlEFdFNhjQRaEeFqoc2BiNRc71HxX18yaUEluvMUTUcNV3/pfLn44Ktl/39SK+0UE5E=@vger.kernel.org, AJvYcCVWi2HG7IDTMlvJL8e+NO7brtL1Uk3fHTFdDr8/qmmDymGJXep+wHabhV8pjBx2Hac9Oxj/S2qiY68Nw87i@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw73cirIG5XMrfA2eVhabJ2X5tlkYIXoy020upZFbR6VokoL2uH
+	iGxwH450dS44hnX/rYhy4b9loEa7hnOLqhQHb6F1sY5zH/wP2XXCUGVDJsWobU8mAaXbg8bC/0x
+	9QbwkmYuNSaAh9jquI1N0Jnj2120=
+X-Gm-Gg: ASbGncsEPrMn/meeE9Ojxs8ScBMQIVd5YH8QMRK9jJbp8ZGSkopaBN9aXGzWjHqmyaA
+	naolh/CSxl3MhmnB1ubl75jeVFR+rVCO8OOn7Q4vxRV0pj4ay9KxmhcPktF1iMDpuPbqOeSTNVe
+	PMwhsT5sYypKGq0MGqUwdERm3fatcY
+X-Google-Smtp-Source: AGHT+IHVPH3y5XcET08qxG5mfIoe0bM1mbFDx4OVs43sslrkWwEXHC/aB8TK7KhECghuwskKJMQ5E/+WP1m+09AjE1g=
+X-Received: by 2002:a05:600c:1e02:b0:434:9e1d:7626 with SMTP id
+ 5b1f17b1804b1-439249c02e2mr103937525e9.25.1739249767385; Mon, 10 Feb 2025
+ 20:56:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250210225234.GB2484@cmpxchg.org>
-X-Migadu-Flow: FLOW_OUT
+References: <20250206105435.2159977-1-memxor@gmail.com> <20250206105435.2159977-8-memxor@gmail.com>
+ <20250210095607.GH10324@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250210095607.GH10324@noisy.programming.kicks-ass.net>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 10 Feb 2025 20:55:56 -0800
+X-Gm-Features: AWEUYZm_Ui-VlaR__Qfx0UBZP1wEkQULBhyDCk20ZqOu4LAS3ChHbdZQZd4xhLk
+Message-ID: <CAADnVQKefT6iQVQ66QTCeRCMs_am4cC3pBt1Ym1fxfeeQVDDWA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 07/26] rqspinlock: Add support for timeouts
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Barret Rhoden <brho@google.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Will Deacon <will@kernel.org>, 
+	Waiman Long <llong@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Josh Don <joshdon@google.com>, Dohyun Kim <dohyunkim@google.com>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kernel Team <kernel-team@meta.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 10, 2025 at 05:52:34PM -0500, Johannes Weiner wrote:
-> On Mon, Feb 10, 2025 at 05:24:17PM +0100, Michal Koutný wrote:
-> > Hello.
-> > 
-> > On Thu, Feb 06, 2025 at 11:09:05AM -0800, Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> > > Oh I totally forgot about your series. In my use-case, it is not about
-> > > dynamically knowning how much they can expand and adjust themselves but
-> > > rather knowing statically upfront what resources they have been given.
-> > 
-> > From the memcg PoV, the effective value doesn't tell how much they were
-> > given (because of sharing).
-> 
-> It's definitely true that if you have an ancestral limit for several
-> otherwise unlimited siblings, then interpreting this number as "this
-> is how much memory I have available" will be completely misleading.
-> 
-> I would also say that sharing a limit with several siblings requires a
-> certain degree of awareness and cooperation between them. From that
-> POV, IMO it would be fine to provide a metric with contextual caveats.
-> 
-> The problem is, what do we do with canned, unaware, maybe untrusted
-> applications? And they don't necessarily know which they are.
-> 
-> It depends heavily on the judgement of the administrator of any given
-> deployment. Some workloads might be completely untrusted and hard
-> limited. Another deployment might consider the same workload
-> reasonably predictable that it's configured only with a failsafe max
-> limit that is much higher than where the workload is *expected* to
-> operate. The allotment might happen altogether with min/low
-> protections and no max limit. Or there could be a combination of
-> protection slightly below and a limit slightly above the expected
-> workload size.
-> 
-> It seems basically impossible to write portable code against this
-> without knowing the intent of the person setting it up.
-> 
-> But how do we communicate intent down to the container? The two broad
-> options are implicitly or explicitly:
-> 
-> a) Provide a cgroup file that automatically derives intended target
->    size from how min/low/high/max are set up.
-> 
->    Right now those can be set up super loosely depending on what the
->    administrator thinks about the application. In order for this to
->    work, we'd likely have to define an idiomatic way of configuring
->    the controller. E.g. if you set max by itself, we assume this is
->    the target size. If you set low, with or without max, then low is
->    the target size. Or if you set both, target is in between.
-> 
->    I'm not completely convinced this is workable.
+On Mon, Feb 10, 2025 at 1:56=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Thu, Feb 06, 2025 at 02:54:15AM -0800, Kumar Kartikeya Dwivedi wrote:
+> > @@ -68,6 +71,44 @@
+> >
+> >  #include "mcs_spinlock.h"
+> >
+> > +struct rqspinlock_timeout {
+> > +     u64 timeout_end;
+> > +     u64 duration;
+> > +     u16 spin;
+> > +};
+> > +
+> > +static noinline int check_timeout(struct rqspinlock_timeout *ts)
+> > +{
+> > +     u64 time =3D ktime_get_mono_fast_ns();
+>
+> This is only sane if you have a TSC clocksource. If you ever manage to
+> hit the HPET fallback, you're *really* sad.
 
-This sounds like memory.available.
-
-It's hard to implement well, especially taking into account things like
-numa, memory sharing, estimating how much can be reclaimed, etc.
-
-But at the same time there is a value in providing such metric.
-There is a clear use case. And it's even harder to implement this
-in userspace.
-
-> b) Provide a cgroup file that is freely configurable by the
->    administrator with the target size of the container.
-> 
->    This has obvious drawbacks as well. What's the default value? Also,
->    a lot of setups are dead simple: set a hard limit and expect the
->    workload to adhere to that, period. Nobody is going to reliably set
->    another cgroup file that a workload may or may not consume.
-
-Yeah, this is a weird option.
-
-> 
-> The third option is to wash our hands of all of this, provide the
-> static hierarchy settings to the leaves (like this patch, plus do it
-> for the other knobs as well) and let userspace figure it out.
-
-Idk, I see a very little value in it. I'm not necessarily opposing this patchset,
-just not seeing a lot of value.
-
-Maybe I'm missing something, but somehow it wasn't a problem for many years.
-Nothing really changed here.
-
-So maybe someone can come up with a better explanation of a specific problem
-we're trying to solve here?
-
-Thanks!
+ktime_get_mono_fast_ns() is the best NMI safe time source we're aware of.
+perf, rcu, even hardlockup detector are using it.
+The clock source can drop to hpet on buggy hw and everything is indeed
+sad in that case, but not like we have a choice.
+Note that the timeout detection is the last resort.
+The logic goes through AA and ABBA detection first.
+So timeout means that the locking dependency is quite complex.
+Periodically checking "are we spinning too long" via
+ktime_get_mono_fast_ns() is what lets us abort the lock.
+Maybe I'm missing the concern.
+Should we use
+__arch_get_hw_counter(VDSO_CLOCKMODE_TSC, NULL) instead ?
