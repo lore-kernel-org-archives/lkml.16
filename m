@@ -1,34 +1,59 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A71301FAC5F
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551CA1FAC4C;
+	Tue, 11 Feb 2025 11:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739273870; cv=none; b=QyKvJBeh5B4pBxvtsMFSVghbLqwQur5T29uI1HMhe+EQJ9wqY/ENe4POeodq97S3LUy6WxNA5qA5mP2yvlQ+++LDEk3qqmozMI5BEnULtt3sBzo4dJc/Q8CHpe7GO1NiGDCCahHbnsVWLAQjeYrW5msR5UN+DoDwqLNTISHmR3g=
+	t=1739273930; cv=none; b=gtaWDSiG4D74Je+GE98qKosOHYdEXEow2/sQlkMRAVek1v8PaWTOpNUtHA+WC+A3vsCnZPqDRj4czz1xBNQPgF/J8nWiiO8lUPxv8digPQEx8WelOFFm0c83MJ8rJyv+JPQ5gXayymv87+lhGJnDS3yUWBjdGTkrqqBXwd75IIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739273870; c=relaxed/simple;
-	bh=aWV10uWkY4w+gAmHyX/AesKJcmHthKZlI+oIxpvDdZE=;
+	s=arc-20240116; t=1739273930; c=relaxed/simple;
+	bh=esQJSFSJV2MG7fXcEILK8/cHlzRX1o0YSbO38OG4iqE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=riMJ31pguZTpqSanIdGbykdJBoUAeytqTkmTMyEAQxM9d5S/keJhgTjOAn78+IHsAnpEMFPGOhy7ZL82tfld5FG2SJ4+0SQ5f7jUIptNXAoitf26Fhigmt7o9kbL3mUdrE+BxAPRlp6uH+n0EFi9WD1sqWk39OXPZFVJ8rIzZEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E3C11424;
-	Tue, 11 Feb 2025 03:38:09 -0800 (PST)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23B183F5A1;
-	Tue, 11 Feb 2025 03:37:47 -0800 (PST)
-Date: Tue, 11 Feb 2025 11:37:44 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: Add missing registrations of SF8MMx hwcaps
-Message-ID: <Z6s2iMP1LbdsYX12@J2N7QTR9R3>
-References: <20250210-arm64-fix-2024-dpisa-v1-1-d77f43c7b253@kernel.org>
- <Z6pHPKXXnQ1whg57@J2N7QTR9R3>
- <dae7f7b2-f066-4adc-974b-54649ba69306@sirena.org.uk>
+	 Content-Type:Content-Disposition:In-Reply-To; b=s79OPO97PGNalNKpSnUDNNUkhwoJxL1Qohe9IfdE8RojEpDxRKICGcEpIexknpBvepfzEySWzIsi2g4SAkaItL9Lp/Fe/FhzltoCFFcw0oLx4ihhh27KI9kw4+h+R+wZcSels2Ue3dXWnUwcanZYA0iRNtype378MS2suX+0Mxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab7483b9bf7so798619266b.3;
+        Tue, 11 Feb 2025 03:38:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739273926; x=1739878726;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tlFZY5aoGndg2I6TKYoK0BWp/w/zJ2eEctwHPxY091A=;
+        b=C4L6cCmGzOWfzaS2aOAyJBHww6O0hBwUhfsITjNNHgObP+SwU8KH1K3FDzVUf+nqfh
+         PjwSs4tjogLCKOimLsrRroLuODuptr0zq7/4+rbW/40cHkefVBuje+yI6piqwA+6sFqS
+         wI5VpE/i16r1+EerECzp0rnxmYAfqWjp0E8TPcrpvr0GYVDIF3EPwueeKKDGqHJH1+At
+         SQ0oimlxYl6SRmzblEqvbml/OxIescdKlS7Orgmo17N1eOaJjZqTaVK7jQO7cu6Beotl
+         +aBrtH3WMtSGBMsG7PuXr+NyfdmfjmjcaWkAZyQFo89/mBFq/iHTbl8RxmjjNYyU/ya8
+         GHog==
+X-Forwarded-Encrypted: i=1; AJvYcCXdxCCwF5Ow+wy5e8QTGYryO/P61c6CLXPOwBmoDzvDrEvtNNKlq4HjKSAlhfFs8HcoWUStE+zc@vger.kernel.org, AJvYcCXmukCxEOhOtTSMVXz+mpPriwzEwtbC+YPvu27rALcVo9pzFrcDX8RCQY1+/b4xrE05YHbYPTMm2eNNd2k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGXy4MyhXCPzvbDYmy9uH0uQbXP+cJQopu7Y9VzdcWhReXaPHF
+	w6wrarE5K6VNOiBsMR5HBHjUCWBwTk4xjSBSpTSIuG4aOyySmKVS
+X-Gm-Gg: ASbGncuXbyi14I0jeOwC0rC6R2c+LZ7NAyop0fv4ojiDGl2bN5LCghBDIho3XbaL6Kg
+	7AEfBtJNyurFQwr3gcqqV3idYl0XBqY/lP/IvlroyzI0dMAwO1t6j00L47dOeUPVOvoquOBJNkx
+	dUa591A8yQ7YCb0Mu61h43CYVayrTND9rRGO73fX7fHQSJHH3PfYHgd5Zy1WrSjFtFtwPa3eLu1
+	9kpszA0H7BnVuE/NH2u1Xel2L+vq3zlawaLUr2SiOPNmZM2iIzQEo/lgoOHQBXKYGokIhSfi9zP
+	svzVn/4=
+X-Google-Smtp-Source: AGHT+IFAaYlQ0X+EVXcjwvyQ1GsIu9atYNX3qJEy3O+izH+5QuVer79XDz54pV7B0HFjCBwmJMuC6A==
+X-Received: by 2002:a17:907:980c:b0:ab7:758c:b398 with SMTP id a640c23a62f3a-ab789ac0dacmr1784562766b.20.1739273926350;
+        Tue, 11 Feb 2025 03:38:46 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:74::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7ced6fe0dsm264676366b.179.2025.02.11.03.38.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 03:38:45 -0800 (PST)
+Date: Tue, 11 Feb 2025 03:38:43 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	horms@kernel.org, kernel-team@meta.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	pabeni@redhat.com, ushankar@purestorage.com
+Subject: Re: [PATCH net-next v2 2/2] net: Add dev_getbyhwaddr_rtnl() helper
+Message-ID: <20250211-zippy-inquisitive-frog-8e7cf9@leitao>
+References: <20250210-arm_fix_selftest-v2-2-ba84b5bc58c8@debian.org>
+ <20250211010300.84678-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,20 +62,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dae7f7b2-f066-4adc-974b-54649ba69306@sirena.org.uk>
+In-Reply-To: <20250211010300.84678-1-kuniyu@amazon.com>
 
-On Mon, Feb 10, 2025 at 07:14:58PM +0000, Mark Brown wrote:
-> On Mon, Feb 10, 2025 at 06:41:09PM +0000, Mark Rutland wrote:
-> > On Mon, Feb 10, 2025 at 05:49:33PM +0000, Mark Brown wrote:
-> > > Commit 819935464cb2 ("arm64/hwcap: Describe 2024 dpISA extensions to
-> > > userspace") added definitions for HWCAP_F8MM8 and HWCAP_F8MM4 but did
-> > > not include the crucial registration in arm64_elf_hwcaps.  Add it.
+On Tue, Feb 11, 2025 at 10:03:00AM +0900, Kuniyuki Iwashima wrote:
+> From: Breno Leitao <leitao@debian.org>
+> Date: Mon, 10 Feb 2025 03:56:14 -0800
+> > Add dedicated helper for finding devices by hardware address when
+> > holding rtnl_lock, similar to existing dev_getbyhwaddr_rcu(). This prevents
+> > PROVE_LOCKING warnings when rtnl_lock is held but RCU read lock is not.
 > 
-> > Looking again, it looks like KERNEL_HWCAP_FPRCVT also isn't wired up?
+> No one uses dev_getbyhwaddr() yet, so this patch itself doens't fix
+> the warninig.
 > 
-> Indeed.  I'll add that separately.
+> You are missing patch 3 to convert arp_req_set_public().  Other call
+> sites are under RCU.
 
-Given that KERNEL_HWCAP_FPRCVT was also added by commit 819935464cb2,
-I assume you mean you'll send a v2 of this patch doing that.
+That will come later. For now, the goal is to solve the current
+netconsole patch by Uday.
 
-Mark.
+So, my suggestion is that Uday's patchset merges this fix, and fix their
+own curent problem. Later we can convert dev_getbyhwaddr_rcu() users
+back to dev_getbyhwaddr()
+
+how does it sound?
+
+Thanks
+--breno
