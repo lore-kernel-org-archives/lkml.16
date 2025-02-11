@@ -1,46 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45131E9B03;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C211B1E9B06;
 	Tue, 11 Feb 2025 06:19:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739254777; cv=none; b=CKsMJGpMZeBry1OqJlEQQobHX2K0yVVK+3M7559m35sQabgFwQ4lNFhBshSHif9W4AZYdQllNUDvSOF9WR8HIvoiwRSNDE83DJfLawhEqZnD8gI3g54G7u0tPOmu2yF8m1arycbNdK+BsXcge8fhFKHoaVH2IB1NZFOZ303Gzpc=
+	t=1739254777; cv=none; b=nrgRgr28HdgpsyDzWFkEER8UEvuhNdxi0Xp3RyytPQPL4gSQPFltJDabD1bnsbRPL5mDCVrseJtPup0HMZJXOYtmnJtKdR59oe21cIOtE8Ojhsw6fz/+jWeQe1tXR2XEjxKlN8afPfMY2FAu8N5suKLwUdcZIw+OXE6TMa6o3lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739254777; c=relaxed/simple;
-	bh=fXjChbkoWttk6b9zeSDqzMhiiSdcMPZNU6a7c0viQdU=;
+	bh=p/Z2Ab/2lyYQoWXm0SaYttyW5aZICXXJG85lswoPWzo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A5U5rOasH3h8QsJKXV4c4/VZe6S8pxdC0AfFd+56ay3F9KKaR6ByLgMgB07JGnvEyn9r/U9QyY3QnxJPD/49arxUi4wsYbZt61080RkwYPrcMwJxcxVZH2jGJiAd62mEcvwsTiV84qIpBKMOr4LQeb1pd5wjhaBDk7PVp9a/E7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfYkE78e; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ELyfpNd0ltzRxZJGWp1cEhH2ypCx9ygjG7FLAPGmwQW5Yyw266BNUiJNF5IE3NOmlbO0i16SY/yuZIVxtJPJwLr1Emzg8F2Afw4f4+LD9ZmgUEjIYR/Hg5bAIU+Dck/lTkl0r4UkS2TEphR3N4hWx94SqHP3wYxN+ZKySzy13r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DD9772i5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfYkE78e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 328B4C4CEE5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DD9772i5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CC26C4AF09;
 	Tue, 11 Feb 2025 06:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1739254777;
-	bh=fXjChbkoWttk6b9zeSDqzMhiiSdcMPZNU6a7c0viQdU=;
+	bh=p/Z2Ab/2lyYQoWXm0SaYttyW5aZICXXJG85lswoPWzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QfYkE78eA/95JRsvfRtfwA6YvgcHiAeCcrPz7tJTvnQaEPBgGqz4iVekj6AW/sv9n
-	 60Lx/LyvhDhRfOuai11AQVH50vWx0xQOhKmucA39BLARmsKN9W1RZxN/uoa7z2l/TO
-	 OI0TDitdorbWiFzVEbqHdl572Z3ZNkthrg8ZOluu+l+Ej5g+/Jf+3nl2dNXK+ybhIs
-	 9h1sMXvJHg74qAsmsKAa6flLs2/FC7YrR6O1EH72U6exI4vz4KYGoWRrrwBks86yi+
-	 SVreaPkMP6fhDBcXPUNH5CrPNJEnYjXSW5XOFlZpKMbWdJHmXnhjwpBjUBKe1kGNQV
-	 RWGuN2dotMeYg==
+	b=DD9772i5e81KhyKNMc8XBSZXjBl5TVAk2U6RhD491ygXQaApAvsZq8rhla9j/ihRD
+	 6JR4wlt5HhMn/STVYnD0ozwhKIkvjBiaziFpI2athuEsEpv+NKn8QoQJxIFfmUasYU
+	 /P9+L3iGfOBxbt92bggXDWVxE1tNNuFsWljdw3P3fQ/l8GEjDX1vocE885P/BQXeR/
+	 m9GyWIxy+PihOKuEX0NZ1QGOMHz6ZYtchyToPw7XZi66cnfrNoSMA3j/EOOF8tb0ei
+	 N1FBmN8oO0fe0xbEcY2ailwmdv+prnHRK3zmCOkql1Tj6+mHeDLA+0SBuuBrxYEaRW
+	 Me6E76P0iE3XQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1thjcN-00000008Y6i-1RMX;
+	id 1thjcN-00000008Y6e-1KMf;
 	Tue, 11 Feb 2025 07:19:35 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
+	Akira Yokosawa <akiyks@gmail.com>,
 	Vegard Nossum <vegard.nossum@oracle.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] scripts/kernel-doc: drop Sphinx version check
-Date: Tue, 11 Feb 2025 07:19:04 +0100
-Message-ID: <0d002e7550476a68547ee53ad06cfd8fdcaf7c3a.1739254187.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 3/4] docs: extensions: don't use utf-8 syntax for descriptions
+Date: Tue, 11 Feb 2025 07:19:03 +0100
+Message-ID: <8a42f6be53464af4b866492a7e9ddf29c0429997.1739254187.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1739254187.git.mchehab+huawei@kernel.org>
 References: <cover.1739254187.git.mchehab+huawei@kernel.org>
@@ -53,268 +53,257 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-As the current minimal supported Sphinx version is 3.4.3, drop
-support for older versions.
+None of the descriptions at the Sphinx extensions are using
+non-ascii characters, so no need to place them under u"""
+notation.
+
+Also, according with:
+	https://docs.python.org/3/deprecations/pending-removal-in-3.16.html
+
+the 'u' format code is scheduled to be removed in Python 3.16.
+
+So, let's just use """.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/sphinx/cdomain.py   |   3 -
- Documentation/sphinx/kerneldoc.py |   5 --
- scripts/kernel-doc                | 129 ++++--------------------------
- 3 files changed, 16 insertions(+), 121 deletions(-)
+ Documentation/sphinx/cdomain.py             |  4 ++--
+ Documentation/sphinx/kernel_abi.py          |  6 +++---
+ Documentation/sphinx/kernel_feat.py         |  4 ++--
+ Documentation/sphinx/kernel_include.py      |  4 ++--
+ Documentation/sphinx/kfigure.py             | 10 +++++-----
+ Documentation/sphinx/load_config.py         |  2 +-
+ Documentation/sphinx/maintainers_include.py |  4 ++--
+ Documentation/sphinx/rstFlatTable.py        | 10 +++++-----
+ 8 files changed, 22 insertions(+), 22 deletions(-)
 
 diff --git a/Documentation/sphinx/cdomain.py b/Documentation/sphinx/cdomain.py
-index 6596fd00663f..e8ea80d4324c 100644
+index e6959af25402..6596fd00663f 100644
 --- a/Documentation/sphinx/cdomain.py
 +++ b/Documentation/sphinx/cdomain.py
-@@ -45,9 +45,6 @@ import re
+@@ -1,6 +1,6 @@
+ # -*- coding: utf-8; mode: python -*-
+ # pylint: disable=W0141,C0113,C0103,C0325
+-u"""
++"""
+     cdomain
+     ~~~~~~~
  
- __version__  = '1.1'
+@@ -145,7 +145,7 @@ class CObject(Base_CObject):
+     }
  
--# Get Sphinx version
--major, minor, patch = sphinx.version_info[:3]
--
- # Namespace to be prepended to the full name
- namespace = None
+     def handle_func_like_macro(self, sig, signode):
+-        u"""Handles signatures of function-like macros.
++        """Handles signatures of function-like macros.
  
-diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
-index be5b8fbf373f..39ddae6ae7dd 100644
---- a/Documentation/sphinx/kerneldoc.py
-+++ b/Documentation/sphinx/kerneldoc.py
-@@ -62,11 +62,6 @@ class KernelDocDirective(Directive):
+         If the objtype is 'function' and the signature ``sig`` is a
+         function-like macro, the name of the macro is returned. Otherwise
+diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
+index e017b0299953..db6f0380de94 100644
+--- a/Documentation/sphinx/kernel_abi.py
++++ b/Documentation/sphinx/kernel_abi.py
+@@ -2,7 +2,7 @@
+ # coding=utf-8
+ # SPDX-License-Identifier: GPL-2.0
+ #
+-u"""
++"""
+     kernel-abi
+     ~~~~~~~~~~
+ 
+@@ -55,7 +55,7 @@ path = os.path.join(srctree, "Documentation/ABI")
+ _kernel_abi = None
+ 
+ def get_kernel_abi():
+-    u"""
++    """
+     Initialize kernel_abi global var, if not initialized yet.
+ 
+     This is needed to avoid warnings during Sphinx module initialization.
+@@ -81,7 +81,7 @@ def setup(app):
+ 
+ 
+ class KernelCmd(Directive):
+-    u"""KernelABI (``kernel-abi``) directive"""
++    """KernelABI (``kernel-abi``) directive"""
+ 
+     required_arguments = 1
+     optional_arguments = 3
+diff --git a/Documentation/sphinx/kernel_feat.py b/Documentation/sphinx/kernel_feat.py
+index 03ace5f01b5c..e3a51867f27b 100644
+--- a/Documentation/sphinx/kernel_feat.py
++++ b/Documentation/sphinx/kernel_feat.py
+@@ -1,7 +1,7 @@
+ # coding=utf-8
+ # SPDX-License-Identifier: GPL-2.0
+ #
+-u"""
++"""
+     kernel-feat
+     ~~~~~~~~~~~
+ 
+@@ -56,7 +56,7 @@ def setup(app):
+ 
+ class KernelFeat(Directive):
+ 
+-    u"""KernelFeat (``kernel-feat``) directive"""
++    """KernelFeat (``kernel-feat``) directive"""
+ 
+     required_arguments = 1
+     optional_arguments = 2
+diff --git a/Documentation/sphinx/kernel_include.py b/Documentation/sphinx/kernel_include.py
+index 638762442336..8db176045bc5 100755
+--- a/Documentation/sphinx/kernel_include.py
++++ b/Documentation/sphinx/kernel_include.py
+@@ -2,7 +2,7 @@
+ # -*- coding: utf-8; mode: python -*-
+ # pylint: disable=R0903, C0330, R0914, R0912, E0401
+ 
+-u"""
++"""
+     kernel-include
+     ~~~~~~~~~~~~~~
+ 
+@@ -56,7 +56,7 @@ def setup(app):
+ class KernelInclude(Include):
+ # ==============================================================================
+ 
+-    u"""KernelInclude (``kernel-include``) directive"""
++    """KernelInclude (``kernel-include``) directive"""
+ 
+     def run(self):
          env = self.state.document.settings.env
-         cmd = [env.config.kerneldoc_bin, '-rst', '-enable-lineno']
+diff --git a/Documentation/sphinx/kfigure.py b/Documentation/sphinx/kfigure.py
+index 383f9a695b08..f1a7f13c9c60 100644
+--- a/Documentation/sphinx/kfigure.py
++++ b/Documentation/sphinx/kfigure.py
+@@ -1,6 +1,6 @@
+ # -*- coding: utf-8; mode: python -*-
+ # pylint: disable=C0103, R0903, R0912, R0915
+-u"""
++"""
+     scalable figure and image handling
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
--        # Pass the version string to kernel-doc, as it needs to use a different
--        # dialect, depending what the C domain supports for each specific
--        # Sphinx versions
--        cmd += ['-sphinx-version', sphinx.__version__]
--
-         filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
-         export_file_patterns = []
+@@ -165,7 +165,7 @@ def setup(app):
  
-diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-index e57c5e989a0a..9b1e28426c0e 100755
---- a/scripts/kernel-doc
-+++ b/scripts/kernel-doc
-@@ -26,7 +26,7 @@ kernel-doc - Print formatted kernel documentation to stdout
  
-  kernel-doc [-h] [-v] [-Werror] [-Wall] [-Wreturn] [-Wshort-desc[ription]] [-Wcontents-before-sections]
-    [ -man |
--     -rst [-sphinx-version VERSION] [-enable-lineno] |
-+     -rst [-enable-lineno] |
-      -none
-    ]
-    [
-@@ -130,7 +130,6 @@ if ($#ARGV == -1) {
- }
+ def setupTools(app):
+-    u"""
++    """
+     Check available build tools and log some *verbose* messages.
  
- my $kernelversion;
--my ($sphinx_major, $sphinx_minor, $sphinx_patch);
+     This function is called once, when the builder is initiated.
+@@ -445,7 +445,7 @@ class kernel_image(nodes.image):
+     pass
  
- my $dohighlight = "";
+ class KernelImage(images.Image):
+-    u"""KernelImage directive
++    """KernelImage directive
  
-@@ -347,23 +346,6 @@ while ($ARGV[0] =~ m/^--?(.*)/) {
-         $enable_lineno = 1;
-     } elsif ($cmd eq 'show-not-found') {
-         $show_not_found = 1;  # A no-op but don't fail
--    } elsif ($cmd eq "sphinx-version") {
--        my $ver_string = shift @ARGV;
--        if ($ver_string =~ m/^(\d+)(\.\d+)?(\.\d+)?/) {
--            $sphinx_major = $1;
--            if (defined($2)) {
--                $sphinx_minor = substr($2,1);
--            } else {
--                $sphinx_minor = 0;
--            }
--            if (defined($3)) {
--                $sphinx_patch = substr($3,1)
--            } else {
--                $sphinx_patch = 0;
--            }
--        } else {
--            die "Sphinx version should either major.minor or major.minor.patch format\n";
--        }
-     } else {
-         # Unknown argument
-         pod2usage(
-@@ -387,8 +369,6 @@ while ($ARGV[0] =~ m/^--?(.*)/) {
+     Earns everything from ``.. image::`` directive, except *remote URI* and
+     *glob* pattern. The KernelImage wraps a image node into a
+@@ -481,7 +481,7 @@ class kernel_figure(nodes.figure):
+     """Node for ``kernel-figure`` directive."""
  
- # continue execution near EOF;
+ class KernelFigure(Figure):
+-    u"""KernelImage directive
++    """KernelImage directive
  
--# The C domain dialect changed on Sphinx 3. So, we need to check the
--# version in order to produce the right tags.
- sub findprog($)
- {
-     foreach(split(/:/, $ENV{PATH})) {
-@@ -396,42 +376,6 @@ sub findprog($)
-     }
- }
+     Earns everything from ``.. figure::`` directive, except *remote URI* and
+     *glob* pattern.  The KernelFigure wraps a figure node into a kernel_figure
+@@ -557,7 +557,7 @@ class kernel_render(nodes.General, nodes.Inline, nodes.Element):
+     pass
  
--sub get_sphinx_version()
--{
--    my $ver;
--
--    my $cmd = "sphinx-build";
--    if (!findprog($cmd)) {
--        my $cmd = "sphinx-build3";
--        if (!findprog($cmd)) {
--            $sphinx_major = 1;
--            $sphinx_minor = 2;
--            $sphinx_patch = 0;
--            printf STDERR "Warning: Sphinx version not found. Using default (Sphinx version %d.%d.%d)\n",
--                   $sphinx_major, $sphinx_minor, $sphinx_patch;
--            return;
--        }
--    }
--
--    open IN, "$cmd --version 2>&1 |";
--    while (<IN>) {
--        if (m/^\s*sphinx-build\s+([\d]+)\.([\d\.]+)(\+\/[\da-f]+)?$/) {
--            $sphinx_major = $1;
--            $sphinx_minor = $2;
--            $sphinx_patch = $3;
--            last;
--        }
--        # Sphinx 1.2.x uses a different format
--        if (m/^\s*Sphinx.*\s+([\d]+)\.([\d\.]+)$/) {
--            $sphinx_major = $1;
--            $sphinx_minor = $2;
--            $sphinx_patch = $3;
--            last;
--        }
--    }
--    close IN;
--}
--
- # get kernel version from env
- sub get_kernel_version() {
-     my $version = 'unknown kernel version';
-@@ -859,9 +803,10 @@ sub output_function_rst(%) {
-     	$signature .= ")";
-     }
+ class KernelRender(Figure):
+-    u"""KernelRender directive
++    """KernelRender directive
  
--    if ($sphinx_major < 3) {
-+    if ($args{'typedef'} || $args{'functiontype'} eq "") {
-+        print ".. c:macro:: ". $args{'function'} . "\n\n";
-+
-         if ($args{'typedef'}) {
--            print ".. c:type:: ". $args{'function'} . "\n\n";
-             print_lineno($declaration_start_line);
-             print "   **Typedef**: ";
-             $lineprefix = "";
-@@ -869,25 +814,10 @@ sub output_function_rst(%) {
-             print "\n\n**Syntax**\n\n";
-             print "  ``$signature``\n\n";
-         } else {
--            print ".. c:function:: $signature\n\n";
-+            print "``$signature``\n\n";
-         }
-     } else {
--        if ($args{'typedef'} || $args{'functiontype'} eq "") {
--            print ".. c:macro:: ". $args{'function'} . "\n\n";
--
--            if ($args{'typedef'}) {
--                print_lineno($declaration_start_line);
--                print "   **Typedef**: ";
--                $lineprefix = "";
--                output_highlight_rst($args{'purpose'});
--                print "\n\n**Syntax**\n\n";
--                print "  ``$signature``\n\n";
--            } else {
--                print "``$signature``\n\n";
--            }
--        } else {
--            print ".. c:function:: $signature\n\n";
--        }
-+        print ".. c:function:: $signature\n\n";
-     }
+     Render content by external tool.  Has all the options known from the
+     *figure*  directive, plus option ``caption``.  If ``caption`` has a
+diff --git a/Documentation/sphinx/load_config.py b/Documentation/sphinx/load_config.py
+index 8b416bfd75ac..ec50e1ee5223 100644
+--- a/Documentation/sphinx/load_config.py
++++ b/Documentation/sphinx/load_config.py
+@@ -9,7 +9,7 @@ from sphinx.util.osutil import fs_encoding
+ def loadConfig(namespace):
+ # ------------------------------------------------------------------------------
  
-     if (!$args{'typedef'}) {
-@@ -955,13 +885,9 @@ sub output_enum_rst(%) {
-     my $count;
-     my $outer;
+-    u"""Load an additional configuration file into *namespace*.
++    """Load an additional configuration file into *namespace*.
  
--    if ($sphinx_major < 3) {
--        my $name = "enum " . $args{'enum'};
--        print "\n\n.. c:type:: " . $name . "\n\n";
--    } else {
--        my $name = $args{'enum'};
--        print "\n\n.. c:enum:: " . $name . "\n\n";
--    }
-+    my $name = $args{'enum'};
-+    print "\n\n.. c:enum:: " . $name . "\n\n";
-+
-     print_lineno($declaration_start_line);
-     $lineprefix = "  ";
-     output_highlight_rst($args{'purpose'});
-@@ -992,11 +918,8 @@ sub output_typedef_rst(%) {
-     my $oldprefix = $lineprefix;
-     my $name;
+     The name of the configuration file is taken from the environment
+     ``SPHINX_CONF``. The external configuration file extends (or overwrites) the
+diff --git a/Documentation/sphinx/maintainers_include.py b/Documentation/sphinx/maintainers_include.py
+index dcad0fff4723..d31cff867436 100755
+--- a/Documentation/sphinx/maintainers_include.py
++++ b/Documentation/sphinx/maintainers_include.py
+@@ -3,7 +3,7 @@
+ # -*- coding: utf-8; mode: python -*-
+ # pylint: disable=R0903, C0330, R0914, R0912, E0401
  
--    if ($sphinx_major < 3) {
--        $name = "typedef " . $args{'typedef'};
--    } else {
--        $name = $args{'typedef'};
--    }
-+    $name = $args{'typedef'};
-+
-     print "\n\n.. c:type:: " . $name . "\n\n";
-     print_lineno($declaration_start_line);
-     $lineprefix = "   ";
-@@ -1012,17 +935,13 @@ sub output_struct_rst(%) {
-     my ($parameter);
-     my $oldprefix = $lineprefix;
+-u"""
++"""
+     maintainers-include
+     ~~~~~~~~~~~~~~~~~~~
  
--    if ($sphinx_major < 3) {
--        my $name = $args{'type'} . " " . $args{'struct'};
--        print "\n\n.. c:type:: " . $name . "\n\n";
-+    my $name = $args{'struct'};
-+    if ($args{'type'} eq 'union') {
-+        print "\n\n.. c:union:: " . $name . "\n\n";
-     } else {
--        my $name = $args{'struct'};
--        if ($args{'type'} eq 'union') {
--            print "\n\n.. c:union:: " . $name . "\n\n";
--        } else {
--            print "\n\n.. c:struct:: " . $name . "\n\n";
--        }
-+        print "\n\n.. c:struct:: " . $name . "\n\n";
-     }
-+
-     print_lineno($declaration_start_line);
-     $lineprefix = "  ";
-     output_highlight_rst($args{'purpose'});
-@@ -2387,11 +2306,6 @@ sub process_file($) {
-     close IN_FILE;
- }
+@@ -37,7 +37,7 @@ def setup(app):
+     )
  
--
--if ($output_mode eq "rst") {
--    get_sphinx_version() if (!$sphinx_major);
--}
--
- $kernelversion = get_kernel_version();
+ class MaintainersInclude(Include):
+-    u"""MaintainersInclude (``maintainers-include``) directive"""
++    """MaintainersInclude (``maintainers-include``) directive"""
+     required_arguments = 0
  
- # generate a sequence of code that will splice in highlighting information
-@@ -2471,17 +2385,6 @@ Do not output documentation, only warnings.
+     def parse_maintainers(self, path):
+diff --git a/Documentation/sphinx/rstFlatTable.py b/Documentation/sphinx/rstFlatTable.py
+index 16bea0632555..180fbb50c337 100755
+--- a/Documentation/sphinx/rstFlatTable.py
++++ b/Documentation/sphinx/rstFlatTable.py
+@@ -2,7 +2,7 @@
+ # -*- coding: utf-8; mode: python -*-
+ # pylint: disable=C0330, R0903, R0912
  
- =head3 reStructuredText only
+-u"""
++"""
+     flat-table
+     ~~~~~~~~~~
  
--=over 8
--
--=item -sphinx-version VERSION
--
--Use the ReST C domain dialect compatible with a specific Sphinx Version.
--
--If not specified, kernel-doc will auto-detect using the sphinx-build version
--found on PATH.
--
--=back
--
- =head2 Output selection (mutually exclusive):
+@@ -99,7 +99,7 @@ class colSpan(nodes.General, nodes.Element): pass # pylint: disable=C0103,C0321
+ class FlatTable(Table):
+ # ==============================================================================
  
- =over 8
+-    u"""FlatTable (``flat-table``) directive"""
++    """FlatTable (``flat-table``) directive"""
+ 
+     option_spec = {
+         'name': directives.unchanged
+@@ -135,7 +135,7 @@ class FlatTable(Table):
+ class ListTableBuilder(object):
+ # ==============================================================================
+ 
+-    u"""Builds a table from a double-stage list"""
++    """Builds a table from a double-stage list"""
+ 
+     def __init__(self, directive):
+         self.directive = directive
+@@ -212,7 +212,7 @@ class ListTableBuilder(object):
+         raise SystemMessagePropagation(error)
+ 
+     def parseFlatTableNode(self, node):
+-        u"""parses the node from a :py:class:`FlatTable` directive's body"""
++        """parses the node from a :py:class:`FlatTable` directive's body"""
+ 
+         if len(node) != 1 or not isinstance(node[0], nodes.bullet_list):
+             self.raiseError(
+@@ -225,7 +225,7 @@ class ListTableBuilder(object):
+         self.roundOffTableDefinition()
+ 
+     def roundOffTableDefinition(self):
+-        u"""Round off the table definition.
++        """Round off the table definition.
+ 
+         This method rounds off the table definition in :py:member:`rows`.
+ 
 -- 
 2.48.1
 
