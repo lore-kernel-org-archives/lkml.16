@@ -1,133 +1,95 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B386B25A321
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06CC25EFB0
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739293372; cv=none; b=n6GenVuOE6jgU7ygK0QpUS6UNTFrGIQyDrZESo4E8uaKpS0kk8NFNDVgz2ClmhyGLZlv52WJj7Mvx24MlNjfBNPw12syHUIWLzirGK1u/Ag9toC/nEclHE+NW+vVzLih0ljV5ljPlwgdbuAsW8foEA/7CGGYMDAt1Sxe/8LSZDM=
+	t=1739293419; cv=none; b=pIuzg7vii+Q6GMKeUh5omkv9XYoQlL50s/Xgnq4i0K2z7kUN+7NnTF09TRz3rtu+0+M1NX32YEWNLfnMafb+dPLwDJ7zwdr/9QzywiySLBiJ7WtRrNaeekQQfBeTHMShN3tLhGTSUCogC0rsO9J/TG4qd/UhQy9Uc/3DzzELfeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739293372; c=relaxed/simple;
-	bh=cl5VRTIaQVhnhX7Mp5CHjRfQCdJZoCwXZgpTFNL919I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CBQHXtcdwagdSRKQrJxqYNT3IZPbWB/i0p7YqUiAn5eM7pFSsnu1N6C2beuq96kH6kJxUwiSU4AWjonv7Z/1UQUXaTmLjmU7Kxtwzm+7bPLlsUWoKq/eaxPr0/MqlwxHNGY+7usyM+2v2/jHS6tSNjp4+jJg49Uel6EsOUuXiC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=OjLotQ+E; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1739293419; c=relaxed/simple;
+	bh=LYW0vv1jWtX0lL7jFULpWEAdG0RJMZHQx4oMb1v2F60=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=npYLY8SxOs3D4oUAaXj9uvBPXHDx4lH769e9rHvPdHwgvtxWME41nqrnzCbwzeNoK6ICM1sx4w8mJx3i6YOiGHlZIBbUX01i4vqs9wXYZZdwZnMy0gyK66FU3RVPtkMVM7Wl36+c5b9iO0bYOWJI3B5xTkht6QmlM/gAjG6TD+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xHntbBuR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=veO11Ebz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="OjLotQ+E"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab771575040so1118276066b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:02:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1739293369; x=1739898169; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=b/56BFQCA/x0+5Zxz4AvQg+9pW1+xObkEyrqUGNwQiI=;
-        b=OjLotQ+EkgIV5vISUancQJtc0eeKOZMXVXSwgZe1m02PQqh3xxy0+mjYejvNijgYIV
-         HXVtilq0D0SNYs8MA+VdjeVP1kmJ7sbs2MMPHKGHTwvrLKPnQXdAujeq1TBvdzIMzXLT
-         W39uk+w4ZO8v5FCohIufqK28hcPTo3akvGGxH4c+39LgmS6HAMvJ5Rve8ep9cmIdjfVJ
-         Zui4M562F11y15q9kICaksgfb6p+Br1A1Ue0kyW37GS8ZTkTdeTHmQjGs/mKTM8reVUY
-         GWFxw+Jvw4ae1cS8RUVunFgMHKQvuBZv8n8AMfMMBY3MR8YR1nGIBRWbB+NYognomjUa
-         JYyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739293369; x=1739898169;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b/56BFQCA/x0+5Zxz4AvQg+9pW1+xObkEyrqUGNwQiI=;
-        b=ve2yombbt2fe3hWiU/QxWUUO3FTEaaGPIBJHZKEHMxfCjnQAAW+AksvVRA4nnsf6L3
-         dbHvNvk0DDbqAIFR2uScyyYv36mnQ8T5+IpJPMVUk5TUa98UKyV4XvAt8EN9Qup8TLbr
-         MgMVnYhfrr3EUkVwVbxz9lfMYvT53Nzt+c1CpMcsBPn6pT8PkBeZZ9vbOFTAjyNp6p4n
-         pGn+S3bRaJzNsC4JNos+RKrbNmls92FRo8it3nTxrDXnQYU9jQKHiCUjbxaMmmyJd0kR
-         7l2lZN1oBplejGgMF4JuI5+f9ReuvhSRnPpu2yGDfc6pkBhextQ0/VlQ0wfYPaOlQrW+
-         DEGA==
-X-Forwarded-Encrypted: i=1; AJvYcCWa4mvOkZZexZFs8e4GyhzI0mkbWKD9O9Add/46tCcHEc/eRZZABR0MjXTXRM54jVkRCvLXWrqTFNuvYN0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2Q4/eRMa00XrC5FGlLoCENirP3taQx1K4zBzkeNN9tt6W/MYa
-	FIXlgJuAKo4hjK7AnvoeQVNnq26+JEx1R2xrHNJRiHLMIEnnfQYk3c1T+74R9Zk=
-X-Gm-Gg: ASbGncutUtaQbVd6VWrmFaeIUKJB5uQThYBOcPysnPvMwhapEjKxVrmVoXjcR89XL2s
-	UgyvfaybfiRhEn52MIoEnOoyq2z+lZnyOTrx8nvz5CJlHCnItU5/Vbl4REWEvm4dvuXIHRmn/oz
-	vusBgn1qqmCllWIK2QfYlZQS7o3LsPxBsnwWRdytZsBtJ+3kkwkF4Qq1Gb/KBR0pk7R2H+CJn3t
-	rv0cs9TQa6XHMyfq0bYbFhpsokPdbYLnz3t2Tg8NG0EqsmEnYQ8Nla5U33F4DY+c3/bqBZysuAN
-	GZyIUxNJ5U3c9GKWr3qi0XzfhZpKltzxnspmGlUW/yn/JMI=
-X-Google-Smtp-Source: AGHT+IGAPbzjetBMyKn9xpkEx6mNiLaz6Iu+7FJStrC2CQYkHtGpuLCTUuKU+eMJA/ubyZG+xRvimw==
-X-Received: by 2002:a17:907:7fac:b0:ab7:cd14:2472 with SMTP id a640c23a62f3a-ab7dafca27emr340636066b.23.1739293367291;
-        Tue, 11 Feb 2025 09:02:47 -0800 (PST)
-Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7b4e96185sm543848166b.86.2025.02.11.09.02.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 09:02:46 -0800 (PST)
-Message-ID: <2609939e-fce9-42ff-93ee-890598437f25@blackwall.org>
-Date: Tue, 11 Feb 2025 19:02:45 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xHntbBuR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="veO11Ebz"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739293415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=dRp7orxxQr05a9e88VKTirgWAyYAbi2CZTRHfeYXBaU=;
+	b=xHntbBuRPcyor33ICstkRqXubQQaMhrrwWVbYe0OMcx8TBITEgae37W8BLuDiLGp/JB96N
+	uttqxvCUGrJXaboznALLxUy+c1EuvHovvkhZxWD6gi5ljvcAohNLRqMhDsx2edv6CYawFo
+	LeGIqV4a83CqvFo+91hfQOnd77zz28x4eudaGJSz9S8p83yLj2hwfv3Ymme/p3cLmlXyB8
+	pNen23EPJn4YgraFaD22kidrL5xFZrRgTnO/F+FHbZao5UU6Qtk60W5oajQ+u3ugM1+7h1
+	0zEKycS0e2qq92DkebLdo42uucEakjIo3lTXssR5GFi8oRuLnCExgVuSVpjsTg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739293415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=dRp7orxxQr05a9e88VKTirgWAyYAbi2CZTRHfeYXBaU=;
+	b=veO11EbzToyInK0BrRlM5RcryjvGi2T52QIYuVOgdhnqub5nrRYCNnPImtgerbByeyKCX3
+	lqAcvd/jCrW24hBA==
+Subject: [PATCH 0/2] firmware: cs_dsp: Remove usage of GFP_DMA
+Date: Tue, 11 Feb 2025 18:03:27 +0100
+Message-Id: <20250211-cs_dsp-gfp_dma-v1-0-afc346363832@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 net-next 05/14] bridge: Add filling forward path from
- port to port
-To: Eric Woudstra <ericwouds@gmail.com>, Vladimir Oltean <olteanv@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Pablo Neira Ayuso
- <pablo@netfilter.org>, Jozsef Kadlecsik <kadlec@netfilter.org>,
- Jiri Pirko <jiri@resnulli.us>, Ivan Vecera <ivecera@redhat.com>,
- Roopa Prabhu <roopa@nvidia.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Joe Damato <jdamato@fastly.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Frank Wunderlich <frank-w@public-files.de>,
- Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, bridge@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250209111034.241571-1-ericwouds@gmail.com>
- <20250209111034.241571-6-ericwouds@gmail.com>
- <20250211132832.aiy6ocvqppoqkd65@skbuf>
- <91d709aa-2414-4fb4-b3e1-94e0e330d33c@blackwall.org>
- <1aa60578-ba4c-458b-b020-cff59b119bdc@gmail.com>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <1aa60578-ba4c-458b-b020-cff59b119bdc@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAN+Cq2cC/x3MQQqAIBBA0avIrBNUEKqrRIg5U80iEwciiO6et
+ HyL/x8QqkwCo3qg0sXCZ26wnYK0x7yRZmwGZ5w3zlqdJKAUva0l4BG18b1dEM2A6KFFpdLK9z+
+ c5vf9AB7NO5tgAAAA
+X-Change-ID: 20250211-cs_dsp-gfp_dma-0581bdd09dd5
+To: Simon Trimmer <simont@opensource.cirrus.com>, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Mark Brown <broonie@kernel.org>
+Cc: patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739293413; l=1009;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=LYW0vv1jWtX0lL7jFULpWEAdG0RJMZHQx4oMb1v2F60=;
+ b=NnKj/pl+DYlgF7x+MEUCGiDHyC8YT6L1aGTaoBHulcDbOcdIwy4oKt8BLgJFNdwOwSf0Xbp7d
+ d6uH8wB4T1KDq/0igNAhNcfqsxiCuyDrU3B8OVXzj1dh/lWdP73ZTWG
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On 2/11/25 18:35, Eric Woudstra wrote:
-> 
-> 
-> On 2/11/25 5:00 PM, Nikolay Aleksandrov wrote:
->> On 2/11/25 15:28, Vladimir Oltean wrote:
->>> On Sun, Feb 09, 2025 at 12:10:25PM +0100, Eric Woudstra wrote:
->>>> @@ -1453,7 +1454,10 @@ void br_vlan_fill_forward_path_pvid(struct net_bridge *br,
->>>>  	if (!br_opt_get(br, BROPT_VLAN_ENABLED))
->>>>  		return;
->>>>  
->>>> -	vg = br_vlan_group(br);
->>>> +	if (p)
->>>> +		vg = nbp_vlan_group(p);
->>>> +	else
->>>> +		vg = br_vlan_group(br);
->>>>  
->>>>  	if (idx >= 0 &&
->>>>  	    ctx->vlan[idx].proto == br->vlan_proto) {
->>>
->>> I think the original usage of br_vlan_group() here was incorrect, and so
->>> is the new usage of nbp_vlan_group(). They should be br_vlan_group_rcu()
->>> and nbp_vlan_group_rcu().
->>>
->>
->> Oops, right. Nice catch!
->>
-> 
-> Hi Nikolay,
-> 
-> I gather that I can include your Acked-by also in the corrected patch.
-> 
+Also drop the bounce buffer in cs_dsp_coeff_write_ctrl_raw().
 
-Yes, thanks.
+The bounce buffer in cs_dsp_coeff_write_ctrl_raw() could theoretically
+also be removed. That would be a functional change as the output may be
+modified in error cases.
+As I don't know the driver very well I left that part out.
+
+Not tested on real hardware.
+This came up while porting kunit to mips64.
+Apparently GFP_DMA does not work there, but IMO the usage of GFP_DMA by
+cs_dsp is unnecessary in the first place.
+
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Thomas Weißschuh (2):
+      firmware: cs_dsp: Remove usage of GFP_DMA
+      firmware: cs_dsp: Remove bounce buffer in cs_dsp_coeff_write_ctrl_raw()
+
+ drivers/firmware/cirrus/cs_dsp.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250211-cs_dsp-gfp_dma-0581bdd09dd5
+
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
