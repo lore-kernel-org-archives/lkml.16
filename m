@@ -1,77 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC21126BD81;
-	Tue, 11 Feb 2025 14:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 596B026BD81;
+	Tue, 11 Feb 2025 14:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739283660; cv=none; b=kSkRjctjPITU4PfdY6ERWFKNelXQfkxRG4vji21YH2GdfLbpAUuCKFFWcW/6LQ0BUugqPHChGozh3cCbhRI4CAc9Jv4vEzZwCGP7pWrpV0XXnufJkeqRCTRF+kg4koh3xnYYUPefFjZril+cy/Kda7hx8Er4o4KhpBHzJqN7zQg=
+	t=1739283702; cv=none; b=RGxsxWQupwSggJmHAIXBKMD0H0F9ECvYlJI+5aZRiGByMdBTU1yiZCtW7EpLewYotQw7za7BUvFIunXABtwef/ecfcIVcmYjGcw5NQWnyYKL+mqEIYaQt9LLp2FX4NdxyvCHZoAraE4ZQz7tbTGm8bD9XUTqHmerXiRiFI57WyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739283660; c=relaxed/simple;
-	bh=OYsXNePOc28HVCwdFOtd1/2ZJAauSegfz82bvBw887Q=;
+	s=arc-20240116; t=1739283702; c=relaxed/simple;
+	bh=4YshOykQygPBx9uY/mWjqVXM/FYn4AgBD8BiH/Jtu0w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZKDKXqMqToBFhMqzOzn2NjQuOHcmndplSkH8Xf/cXacB7671xwecGwV2+d5wP/esFRmeX3FvK7C0qvc2mjmLUyTAdOGaAhyzYtrNCic5HnTAZtjd3jdFpOAZn7WxOPjAiKs3c0e4tqIagaAzSHZGr4KzYQYo4xSf3okTzwcll3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J+30KbHg; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=f3yYbNoN4IUylAlh4ikiOhc9tATfDq3nFGTVNo0l2OpyCRsF863l2/1gEyWsiuxl7Y7mPeLgQ4ISVnKc8UnCzWWaK7VsH6u3foPmbDEk1k2XNtbaEMpw3cslEWnnXoC8E5P01FuSwgVFKSYeG0NoUTxGe+ijeEJrxokFT9OjUqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RgFva9OM; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J+30KbHg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739283659; x=1770819659;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OYsXNePOc28HVCwdFOtd1/2ZJAauSegfz82bvBw887Q=;
-  b=J+30KbHgKTTvQYEaDG+dnZCF2E5BPmPIAW+asR+KcfjKv7cRhVwDVxBD
-   1+SaMv5oizz9bBiD4k3pSiB7tuDd7l5IwWtXNPzpuL4njBBLWI5+zLs4G
-   dTK0nusEPDp9u47jfdYl/caxb5Ew7D8vAUJ7nrmUcas0JNqF9pSJ/THgA
-   rCxCkB7Ej/BDAoSZsol43DdylLt7KhBVw/I5nImLrovAsQYa74QURcAGE
-   /peajsmam02x0ZJmzI2O83NjqzAhujwUrhsI/hhFgibKl1VEocaFDCSst
-   vht0gUDfp43uPccHByNWFP5IPnS93uQz3Tr6tgwCgY0yJaC99Dqm1Nw0i
-   g==;
-X-CSE-ConnectionGUID: H0pWMYZRSF6AfDfOBmN6sw==
-X-CSE-MsgGUID: BljAkxR6QBuNqtjyMhiZmg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="57441068"
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="57441068"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 06:20:57 -0800
-X-CSE-ConnectionGUID: hy+Y1dg0QiW7iXFxXF5slQ==
-X-CSE-MsgGUID: r7ETOtSSQ6u5ydEmJV737A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113009984"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 06:20:54 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1thr86-0000000AWdo-1xHY;
-	Tue, 11 Feb 2025 16:20:50 +0200
-Date: Tue, 11 Feb 2025 16:20:50 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	David Jander <david@protonic.nl>,
-	Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v8 01/17] spi: add basic support for SPI offloading
-Message-ID: <Z6tcwg7QgQwytoSb@smile.fi.intel.com>
-References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
- <20250207-dlech-mainline-spi-engine-offload-2-v8-1-e48a489be48c@baylibre.com>
- <Z6otFlsmEikIbI__@black.fi.intel.com>
- <27d2a88c-b44a-4712-b066-b999e41774f0@baylibre.com>
- <b1dcbb19-190a-45e7-8e94-cb5ef65f1f1b@sirena.org.uk>
- <Z6pim_nLct33LzfN@smile.fi.intel.com>
- <b000d3fd-754a-43e8-ab10-82677eeee1d2@sirena.org.uk>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RgFva9OM"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id E39672107A9E; Tue, 11 Feb 2025 06:21:40 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E39672107A9E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739283700;
+	bh=TLqJ9wdS7eZDzRW6bb8bC8nDRew1xQ5RwuLtrAYt6xk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RgFva9OM28hG7VhnJXq+jdS8w90nMSb/4Zx3EVuGFApeAmI+7yy0o2VXoP+CWWNhf
+	 GX5NZAgp+qpL0u3JdDaw+ErqAmARiglOUFcmg2e3NYkD1W78ZLlnYA0s32hHruFcYf
+	 805obfGrQ5GNd/GTUf+kYQR125oAeqwRvsvm9XhQ=
+Date: Tue, 11 Feb 2025 06:21:40 -0800
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
+	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+	"mripard@kernel.org" <mripard@kernel.org>,
+	"tzimmermann@suse.de" <tzimmermann@suse.de>,
+	"airlied@gmail.com" <airlied@gmail.com>,
+	"simona@ffwll.ch" <simona@ffwll.ch>,
+	"christophe.jaillet@wanadoo.fr" <christophe.jaillet@wanadoo.fr>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: [PATCH 1/1] drm/hyperv: Fix address space leak when Hyper-V DRM
+ device is removed
+Message-ID: <20250211142140.GA2330@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20250210193441.2414-1-mhklinux@outlook.com>
+ <20250211033326.GA17799@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SN6PR02MB41575726CE86AAB16FF6C365D4FD2@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,52 +52,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b000d3fd-754a-43e8-ab10-82677eeee1d2@sirena.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <SN6PR02MB41575726CE86AAB16FF6C365D4FD2@SN6PR02MB4157.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Tue, Feb 11, 2025 at 01:00:08PM +0000, Mark Brown wrote:
-> On Mon, Feb 10, 2025 at 10:33:31PM +0200, Andy Shevchenko wrote:
-> > On Mon, Feb 10, 2025 at 05:48:00PM +0000, Mark Brown wrote:
-> > > On Mon, Feb 10, 2025 at 11:11:23AM -0600, David Lechner wrote:
+On Tue, Feb 11, 2025 at 03:46:51AM +0000, Michael Kelley wrote:
+> From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Monday, February 10, 2025 7:33 PM
+> > 
+> > On Mon, Feb 10, 2025 at 11:34:41AM -0800, mhkelley58@gmail.com wrote:
+> > > From: Michael Kelley <mhklinux@outlook.com>
+> > >
+> > > When a Hyper-V DRM device is probed, the driver allocates MMIO space for
+> > > the vram, and maps it cacheable. If the device removed, or in the error
+> > > path for device probing, the MMIO space is released but no unmap is done.
+> > > Consequently the kernel address space for the mapping is leaked.
+> > >
+> > > Fix this by adding iounmap() calls in the device removal path, and in the
+> > > error path during device probing.
+> > >
+> > > Fixes: f1f63cbb705d ("drm/hyperv: Fix an error handling path in hyperv_vmbus_probe()")
+> > > Fixes: a0ab5abced55 ("drm/hyperv : Removing the restruction of VRAM allocation with PCI bar size")
+> > > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > > ---
+> > >  drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> > b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> > > index e0953777a206..b491827941f1 100644
+> > > --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> > > +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> > > @@ -156,6 +156,7 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
+> > >  	return 0;
+> > >
+> > >  err_free_mmio:
+> > > +	iounmap(hv->vram);
+> > >  	vmbus_free_mmio(hv->mem->start, hv->fb_size);
+> > >  err_vmbus_close:
+> > >  	vmbus_close(hdev->channel);
+> > > @@ -174,6 +175,7 @@ static void hyperv_vmbus_remove(struct hv_device *hdev)
+> > >  	vmbus_close(hdev->channel);
+> > >  	hv_set_drvdata(hdev, NULL);
+> > >
+> > > +	iounmap(hv->vram);
+> > >  	vmbus_free_mmio(hv->mem->start, hv->fb_size);
+> > >  }
+> > >
+> > > --
+> > > 2.25.1
+> > >
+> > 
+> > Thanks for the fix. May I know how do you find such issues ?
 > 
-> > > > In this case, we specifically split up the headers so that the only time you
-> > > > would ever include this header is if you need to call functions in this
-> > > > namespace (i.e. struct definitions are in linux/spi/offload/types.h which
-> > > > doesn't import the namespace). So this doesn't actually seem like a problem
-> > > > to me.
+> I think it was that I was looking at the Hyper-V FB driver for the
+> vmbus_free_mmio() call sites, and realizing that such call sites
+> should probably also have an associated iounmap(). Then I was
+> looking at the same thing in the Hyper-V DRM driver, and
+> realizing there were no calls to iounmap()!
 > 
-> > > Indeed - I can't see any case where a user would need the header without
-> > > needing the namespace.
+> To confirm, the contents of /proc/vmallocinfo can be filtered
+> for ioremap calls with size 8 MiB (which actually show up as
+> 8 MiB + 4KiB because the address space allocator adds a guard
+> page to each allocation). When doing repeated unbind/bind
+> sequences on the DRM driver, those 8 MiB entries in
+> /proc/vmallocinfo kept accumulating and were never freed.
 > 
-> > You are looking from the other end. What I'm telling is that anyone who adds
-> > a header, automatically gets a namespace. What's the point to have namespace
-> > if it won't easily prevent from (ab)using it in the code. I consider putting
-> > MODULE_IMPORT_NS() in the headers a bit weird.
-> 
-> Sure, but there's no case where anyone should ever be adding the header
-> without adding the namespace which does rather sound like the sort of
-> thing where you should just move the namespace addition to the header.
+> Michael
 
-$ git grep -lw MODULE_IMPORT_NS | wc -l
-651
+Thank you!
 
-$ git grep -lw MODULE_IMPORT_NS | grep '\.h$'
-
-drivers/base/firmware_loader/sysfs.h
-drivers/iio/adc/ltc2497.h
-drivers/pwm/pwm-dwc.h
-^^^ These ones are probably fine as they are not in include/
-
-include/kunit/visibility.h
-include/linux/module.h
-include/linux/pwm.h
-
-I believe these three are misuses of MODULE_IMPORT_NS(). Because one may add
-a header just as a "proxy" one (copy'n'paste, for example) and we know that is
-real as we saw a lot of code that has semi-random header inclusion blocks.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Regards,
+Saurabh
