@@ -1,130 +1,151 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44301FCD06
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9096FB9;
+	Tue, 11 Feb 2025 12:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739276944; cv=none; b=AL3Wrl5YyyyZO3ytw+Ozma1A3hkuOxN7ydAQaIpfAWDTCFFYPUvFnVGUQBe8mfPGfYYWG1d+m6zD73e35g4E+tO1tSZ4rS9Cbb4+02G5zLZZNdR720ifjVNEvvm4h3wdz87dfkdUyQVK13tAPYfJubJs1eUhFsZlb0bFPiwk1xQ=
+	t=1739277302; cv=none; b=TavpuWnTDj2uceOR452pjj4rsAoEKTlsJZRy3RfR03QYlnvLwybqkDRkrai/ifbLIU0+GgWy/zH0+8PGVQRZtou2O5z0o1Miawdp+1LaWBFDPVbMIoOuXbgZSaEJ72Xl20xsdp4dNf/imivkkPK2IAiksAeWQ4RaufgBIllLOWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739276944; c=relaxed/simple;
-	bh=RcqBaJ+EL7CCfV/bFegfRimyJtpwi2rMY3RrvnBDwkY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U/bYt6E/r7dGJaFt5gAXkWqpavoQcL2tcecbBYMqS97Vj6mpKEr8d6Me+3ED4ojpCkgUqwU4GvN99ScTqpOK2CHGhLs+r21kvPo24kDtzmN7o9bobVUNFdpSPzjbpWAXQFmupfcZZFo42YqiKKo9pyKwP9bvxgGUqX23jzh06gM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=mG5KJkJE; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=mG5KJkJE; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1739277302; c=relaxed/simple;
+	bh=MA14njnJTflw/O+wK7u99/DEzkLn82WquM8a6RvG0Kk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GD6QKXjp1LWGm4yNBHo99i+fyPdC+mCr2JszHmuwWbBXmX+toD7arc3hz5FOT8Ia1z0c+9HKDqL0dKapGejBZUIjgzuJT0xrCQOol4uRe6o3BBPKfTz5f9R9x1rKymti6eZOKS3dohLo0JicxAcyGT7LOH/QEkAizLjMJdQ6ypo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FOjrMX6L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="mG5KJkJE";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="mG5KJkJE"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E68A937B3E;
-	Tue, 11 Feb 2025 12:04:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1739275475; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=zxuVAvyzkp6zq60Y3IIgw3a0N6EBZB0/ewpeFUtjxfE=;
-	b=mG5KJkJEA9cENgXVVW1/b1jxBw55qBBByi9PqzfHzpewCvY3NEQwN486QwswigWR3z3MaO
-	5RV9+Cpgb3JBOuZf7DOhtGxjiRbMQmmRdcShemoF4qnQwJsM6EDshp0HbF+ORTW7Gu3afx
-	DdhHDp5aJLMzmzDwtMCbwbIAsgo2hUY=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=mG5KJkJE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1739275475; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=zxuVAvyzkp6zq60Y3IIgw3a0N6EBZB0/ewpeFUtjxfE=;
-	b=mG5KJkJEA9cENgXVVW1/b1jxBw55qBBByi9PqzfHzpewCvY3NEQwN486QwswigWR3z3MaO
-	5RV9+Cpgb3JBOuZf7DOhtGxjiRbMQmmRdcShemoF4qnQwJsM6EDshp0HbF+ORTW7Gu3afx
-	DdhHDp5aJLMzmzDwtMCbwbIAsgo2hUY=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7ECAB13782;
-	Tue, 11 Feb 2025 12:04:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id njSKHdM8q2egGgAAD6G6ig
-	(envelope-from <jgross@suse.com>); Tue, 11 Feb 2025 12:04:35 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev,
-	x86@kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	xen-devel@lists.xenproject.org,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 0/2] xen/swiotlb: one fix and one optimization
-Date: Tue, 11 Feb 2025 13:04:30 +0100
-Message-ID: <20250211120432.29493-1-jgross@suse.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FOjrMX6L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AFAC4CEDD;
+	Tue, 11 Feb 2025 12:34:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739277302;
+	bh=MA14njnJTflw/O+wK7u99/DEzkLn82WquM8a6RvG0Kk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FOjrMX6LCFqH0i2YuNm9+qyiW/Eb92E4QreqJ2T9+GlDiXgX0Jte8aGHcOXFbLmxU
+	 gQ1FfAm54IJx1GhDUrrdjH9AIggQvdCusC3fd1kDlkCVNHxIhJj5b2aG7ddaErmAsw
+	 SKZjQCI59+Vm0NVrZ+wjJt9cquceo3ChPd0QGEg3DcSvZ59tXQfJnSRGMHhtqzQ3LW
+	 cRr2VhUJauJVgc0rulls9zzoMF9hrFZ+OB0fQ+a99AMpgwkh+8RcMxCvrZOemrBJ1r
+	 LHVP06OAVbozyEKNRRUey2NkYmJo0FjUSDwT54h8h7pPxJRJex5recJzei7hoixe/P
+	 RT/tET6XJS7jg==
+Date: Tue, 11 Feb 2025 12:34:57 +0000
+From: Conor Dooley <conor@kernel.org>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Eric Biggers <ebiggers@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Andy Chiu <andybnac@gmail.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] RISC-V: add vector crypto extension validation
+ checks
+Message-ID: <20250211-implode-mute-8ff31f44bdf9@spud>
+References: <20250205-cobbler-unpadded-5580c1f5d946@spud>
+ <20250205-quench-entrench-09bed8c8c823@spud>
+ <f1ce7aa9-63e3-41bd-9bb0-a54ebc714dff@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: E68A937B3E
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:dkim,suse.com:mid]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2QQXwfJwMNFQMRKG"
+Content-Disposition: inline
+In-Reply-To: <f1ce7aa9-63e3-41bd-9bb0-a54ebc714dff@rivosinc.com>
 
-Patch 1 removes an unneeded alignment requirement, which resulted in
-exhausting the SWIOTLB with normal use cases.
 
-Patch 2 is an optimization to avoid destroying a contiguous region
-without any need to do so.
+--2QQXwfJwMNFQMRKG
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There will be probably another patch following to allow larger
-contiguous regions to be created, but this one isn't ready yet.
+On Tue, Feb 11, 2025 at 09:45:44AM +0100, Cl=E9ment L=E9ger wrote:
+>=20
+>=20
+> On 05/02/2025 17:05, Conor Dooley wrote:
+> > From: Conor Dooley <conor.dooley@microchip.com>
+> >=20
+> > Using Clement's new validation callbacks, support checking that
+> > dependencies have been satisfied for the vector crpyto extensions.
+> > Currently riscv_isa_extension_available(<vector crypto>) will return
+> > true on systems that support the extensions but vector itself has been
+> > disabled by the kernel, adding validation callbacks will prevent such a
+> > scenario from occuring and make the behaviour of the extension detection
+> > functions more consistent with user expectations - it's not expected to
+> > have to check for vector AND the specific crypto extension.
+> >=20
+> > The 1.0.0 Vector crypto spec states:
+> > 	The Zvknhb and Zvbc Vector Crypto Extensions --and accordingly
+> > 	the composite extensions Zvkn and Zvks-- require a Zve64x base,
+> > 	or application ("V") base Vector Extension. All of the other
+> > 	Vector Crypto Extensions can be built on any embedded (Zve*) or
+> > 	application ("V") base Vector Extension.
+> > and this could be used as the basis for checking that the correct base
+> > for individual crypto extensions, but that's not really the kernel's job
+> > in my opinion and it is sufficient to leave that sort of precision to
+> > the dt-bindings. The kernel only needs to make sure that vector, in some
+> > form, is available.
+> >=20
+> > Since vector will now be disabled proactively, there's no need to clear
+> > the bit in elf_hwcap in riscv_fill_hwcap() any longer.
+> >=20
+> > Link: https://github.com/riscv/riscv-crypto/releases/tag/v1.0.0
+> > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> > ---
+> >  arch/riscv/kernel/cpufeature.c | 49 +++++++++++++++++++++++-----------
+> >  1 file changed, 33 insertions(+), 16 deletions(-)
+> >=20
+> > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeat=
+ure.c
+> > index 40a24b08d905..1c148ecea612 100644
+> > --- a/arch/riscv/kernel/cpufeature.c
+> > +++ b/arch/riscv/kernel/cpufeature.c
+> > @@ -138,6 +138,23 @@ static int riscv_ext_vector_float_validate(const s=
+truct riscv_isa_ext_data *data
+> >  	return 0;
+> >  }
+> > =20
+> > +static int riscv_ext_vector_crypto_validate(const struct riscv_isa_ext=
+_data *data,
+> > +					    const unsigned long *isa_bitmap)
+> > +{
+> > +	if (!IS_ENABLED(CONFIG_RISCV_ISA_V))
+> > +		return -EINVAL;
+> > +
+> > +	/*
+> > +	 * It isn't the kernel's job to check that the binding is correct, so
+> > +	 * it should be enough to check that any of the vector extensions are
+> > +	 * enabled, which in-turn means that vector is usable in this kernel
+> > +	 */
+> > +	if (!__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZVE32X=
+))
+> > +		return -EINVAL;
+>=20
+> After a second thought, I think it should be this:
+>=20
+> if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZVE32X))
+> 	return 0;
+>=20
+> return -EPROBEDEFER;
+>=20
+> Extensions can be enabled later (but can not be "reverted") so check for
+> the extension to be present (in which case it's ok), or wait for it to
+> be (potentially) enabled.
 
-Juergen Gross (2):
-  xen/swiotlb: relax alignment requirements
-  xen/swiotlb: don't destroy contiguous region in all cases
+Ah, of course it is operating on the /resolved/ isa, not the source one.
+Makes me thing the parameter of all the validate callbacks should be
+"resolved_isa_bitmap" instead of "isa_bitmap" to make things clearer?
 
- arch/x86/include/asm/xen/swiotlb-xen.h |  5 +++--
- arch/x86/xen/mmu_pv.c                  | 18 ++++++++++-----
- drivers/xen/swiotlb-xen.c              | 31 ++++++++++++++++----------
- 3 files changed, 34 insertions(+), 20 deletions(-)
 
--- 
-2.43.0
+--2QQXwfJwMNFQMRKG
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6tD8QAKCRB4tDGHoIJi
+0rbMAP4r/yeGzY8gnolAtoXxntJZm835aG220lRMaGrFycBfywD/dVqx4BlphFDL
+rdGYdaDO/nBthbezTn7ZCNX4CIT5QAM=
+=5wwm
+-----END PGP SIGNATURE-----
+
+--2QQXwfJwMNFQMRKG--
