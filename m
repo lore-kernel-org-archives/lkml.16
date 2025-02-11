@@ -1,146 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A17026B2AC;
-	Tue, 11 Feb 2025 19:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B0126562F;
+	Tue, 11 Feb 2025 19:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739303204; cv=none; b=EDyAsPt1KLBrKVEv8GPFWL/3KX4AAIKV2oCUMvjMxKno908eJIoBWs7Jh4ATsKDHEnCqGDmEw6NFl6IDWG8JqA7mvdd2zwnQfuNB0VCQdS5lMrjrI6Q6dfotc7Q/OYYVk/4whlbRpiPW9PQNrZtJb2mCyUbtqnJfkB9JEqI637M=
+	t=1739303234; cv=none; b=GffLN5LwqzZw4z+YYs2MryQ8L/9Si+vfrzcgWu2GEt0ITboQejxj1z5G++NtMi4V43MbHbJiy64U30L2Ey3Nkcd7tVwYG6JRo0BUU0t8F+SQUC0xziUqx5n6rgVhXmZLGmRMMJR9x2FtuDLTib4iFSCFCCr5ntPuww0Dnw/Kuig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739303204; c=relaxed/simple;
-	bh=DQwsDRYYrr2LZYYckCXDgcjmwkOtY0NcULIdRKXH9mQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L3B0RmixylSIA5UZo0AVam5mx6qSO9+D1Es6gnMgXCDaW4LSW7gelNaw3l73KV2UgUo079QLm6JAKNlLu2IH7eIGnDKnjC0FNTtxsyoBgEzfGS/noyQEd8PRbwWOJZYOIBnNF4wUq0i5nneBcbwulLCYxAIcbF5LSbVJekRBki0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eLHt9ppD; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739303234; c=relaxed/simple;
+	bh=l+iielRDD1bT9pM6nGbHot5GG7rZbmttCOx/HN/goU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ai7Bo58oPVLetAIkrnXyZ3CjO8Yh0SbiStOI9oK9kmdlCHZegviRGvWFJyIK3xZ37TRL+q9sWRSgRr3yaZ+QkjdiNXkOc0c7Q2F0/1uYgGo1LcmZPOrz8+PuY0sdXwBmwCziJbrudKqFK4wM87cU0IwtBn4kqdGCM3pnD9BEqgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bqXsQQAK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eLHt9ppD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739303203; x=1770839203;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=DQwsDRYYrr2LZYYckCXDgcjmwkOtY0NcULIdRKXH9mQ=;
-  b=eLHt9ppDWIofwTI/lHNugJzmHlhzWnXXjFVW7Emr4KzKWLTY87ozG7PO
-   7uHGwXVA4YLTeCLTukmM0uUYa4YB1C7wTkISO8rJvVnauOb7jfOjJFyG7
-   rveOoMp3uaVUFqJy9kyoKnlfAbelLkwjhqj3pBmMHxtnJh8NsFkyRmVVS
-   Lq2IfPbudK1IMXrGP9nyOA+781z3aqYF2e1BlZKzgWs1xfs8bjid+BF+6
-   +NOvmB8QfDTSVIs9hzzRqUg6+oUp4knXytgCP6A4DVM6LCesvl2Swcgm9
-   1PqIMBXFL3o2LxumxMLvVcJndji0k4h6TGq6sQLYm7zgm1b1npTbkI24/
-   A==;
-X-CSE-ConnectionGUID: VHL467KWRL+KuSqf3oMG2g==
-X-CSE-MsgGUID: lUn8LA1fSpK+XJwmhAMtcw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="39855043"
-X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="39855043"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 11:46:37 -0800
-X-CSE-ConnectionGUID: NhdnOQf9TjKVdH141SRtvg==
-X-CSE-MsgGUID: tzy2/R7sSESU1esiHFRL0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="143519318"
-Received: from sohilmeh.sc.intel.com ([172.25.103.65])
-  by fmviesa001.fm.intel.com with ESMTP; 11 Feb 2025 11:46:37 -0800
-From: Sohil Mehta <sohil.mehta@intel.com>
-To: x86@kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-hwmon@vger.kernel.org
-Subject: [PATCH v2 17/17] perf/x86/p4: Replace Pentium 4 model checks with VFM ones
-Date: Tue, 11 Feb 2025 19:44:07 +0000
-Message-ID: <20250211194407.2577252-18-sohil.mehta@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250211194407.2577252-1-sohil.mehta@intel.com>
-References: <20250211194407.2577252-1-sohil.mehta@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bqXsQQAK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99459C4CEDD;
+	Tue, 11 Feb 2025 19:47:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739303233;
+	bh=l+iielRDD1bT9pM6nGbHot5GG7rZbmttCOx/HN/goU4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bqXsQQAKXNpcPIx/WGsrVudBGjDBJGYDzYGupkC/m/yjeYFTzw//u+4Rcck6JDRoN
+	 XRlVHoP6LL6Vpc++j6YQOc1DsslK488cxUTfjBxpEC9c9UZzchUrygtiU6dT9hnxAY
+	 YeMSdBEC7VF2X/KfFSzw41R+5Sh2XKND46lfId60Qm+76moulNskmn+88svpHL6ufB
+	 Tc730P46NE7W8EqNRAMkR6ro+ggaQ9xhIXaDusCaeBzYw2MaMshFiCra/pAFgWAYb2
+	 9qMHCJbUev6uUvd2s5BPOd+3p/QMKeWkkoYArIchnm9txu416uQI81b6hl/ueMlP81
+	 ik8UmeTWMLfHg==
+Date: Tue, 11 Feb 2025 19:46:58 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Ulf Hansson
+ <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, Kishon Vijay
+ Abraham I <kishon@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
+ netdev@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-sound@vger.kernel.org
+Subject: Re: [PATCH v3 10/15] iio: resolver: ad2s1210: use bitmap_write
+Message-ID: <20250211194658.0cfb437b@jic23-huawei>
+In-Reply-To: <20250210-gpio-set-array-helper-v3-10-d6a673674da8@baylibre.com>
+References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
+	<20250210-gpio-set-array-helper-v3-10-d6a673674da8@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Introduce names for some old pentium 4 models and replace x86_model
-checks with VFM ones.
+On Mon, 10 Feb 2025 16:33:36 -0600
+David Lechner <dlechner@baylibre.com> wrote:
 
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+> Replace bitmap array access with bitmap_write.
+> 
+> Accessing the bitmap array directly is not recommended and now there is
+> a helper function that can be used.
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
----
 
-v2: No change.
-
----
- arch/x86/events/intel/p4.c          | 7 ++++---
- arch/x86/include/asm/intel-family.h | 1 +
- 2 files changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/events/intel/p4.c b/arch/x86/events/intel/p4.c
-index 844bc4fc4724..fb726c6fc6e7 100644
---- a/arch/x86/events/intel/p4.c
-+++ b/arch/x86/events/intel/p4.c
-@@ -10,6 +10,7 @@
- #include <linux/perf_event.h>
- 
- #include <asm/perf_event_p4.h>
-+#include <asm/cpu_device_id.h>
- #include <asm/hardirq.h>
- #include <asm/apic.h>
- 
-@@ -732,9 +733,9 @@ static bool p4_event_match_cpu_model(unsigned int event_idx)
- {
- 	/* INSTR_COMPLETED event only exist for model 3, 4, 6 (Prescott) */
- 	if (event_idx == P4_EVENT_INSTR_COMPLETED) {
--		if (boot_cpu_data.x86_model != 3 &&
--			boot_cpu_data.x86_model != 4 &&
--			boot_cpu_data.x86_model != 6)
-+		if (boot_cpu_data.x86_vfm != INTEL_P4_PRESCOTT &&
-+		    boot_cpu_data.x86_vfm != INTEL_P4_PRESCOTT_2M &&
-+		    boot_cpu_data.x86_vfm != INTEL_P4_CEDARMILL)
- 			return false;
- 	}
- 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index fae52a15d9b9..af2979850d62 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -193,6 +193,7 @@
- /* Family 15 - NetBurst */
- #define INTEL_P4_WILLAMETTE		IFM(15, 0x01) /* Also Xeon Foster */
- #define INTEL_P4_PRESCOTT		IFM(15, 0x03)
-+#define INTEL_P4_PRESCOTT_2M		IFM(15, 0x04)
- #define INTEL_P4_CEDARMILL		IFM(15, 0x06) /* Also Xeon Dempsey */
- 
- /* Family 19 */
--- 
-2.43.0
+> ---
+>  drivers/iio/resolver/ad2s1210.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/resolver/ad2s1210.c b/drivers/iio/resolver/ad2s1210.c
+> index 7f18df790157f1e411fb70de193a49f0677c999f..04879e6d538bce664469c5f6759d8b1cedea16e9 100644
+> --- a/drivers/iio/resolver/ad2s1210.c
+> +++ b/drivers/iio/resolver/ad2s1210.c
+> @@ -46,6 +46,7 @@
+>   */
+>  
+>  #include <linux/bitfield.h>
+> +#include <linux/bitmap.h>
+>  #include <linux/bits.h>
+>  #include <linux/cleanup.h>
+>  #include <linux/clk.h>
+> @@ -180,7 +181,7 @@ static int ad2s1210_set_mode(struct ad2s1210_state *st, enum ad2s1210_mode mode)
+>  	if (!gpios)
+>  		return mode == st->fixed_mode ? 0 : -EOPNOTSUPP;
+>  
+> -	bitmap[0] = mode;
+> +	bitmap_write(bitmap, mode, 0, 2);
+>  
+>  	return gpiod_multi_set_value_cansleep(gpios, bitmap);
+>  }
+> @@ -1470,7 +1471,7 @@ static int ad2s1210_setup_gpios(struct ad2s1210_state *st)
+>  			return dev_err_probe(dev, -EINVAL,
+>  				      "requires exactly 2 resolution-gpios\n");
+>  
+> -		bitmap[0] = st->resolution;
+> +		bitmap_write(bitmap, st->resolution, 0, 2);
+>  
+>  		ret = gpiod_multi_set_value_cansleep(resolution_gpios, bitmap);
+>  		if (ret < 0)
+> 
 
