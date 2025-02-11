@@ -1,62 +1,80 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB622144C5;
-	Tue, 11 Feb 2025 11:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9221F8BBF;
+	Tue, 11 Feb 2025 11:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739273810; cv=none; b=d+oDLv4eJ6kS5Yw7PMC0ADOWjLVTfiSRWBqtlDt1W3a2Tjgo2YTnpH1AvfQpClddTfB/E8u/pgwY1qwsH/v3NQ6ff5jEg4PG/Bppf4VKUZgJXsF9nWDMWQfQOB5DT1T8Qj4LoJBRXqZ9c4mVPp0ZWVW7/yEJWcVss2wefT9ckt8=
+	t=1739273850; cv=none; b=FdWgDA9L+tArFNbdOYHbUIUI/JYCR34XwGJH8LNnPTr+cpFDPxkbVVqN7+CFmc5D0NJNqDoioqn20pHJiyF+NYEXrWIxDHadhNz3WTmM4tiQGvQAMABuApiWIFQ8+aC06rT5xPw9D7Qnbvf526yYch6BSSzK1sTWpc5T5J5AJvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739273810; c=relaxed/simple;
-	bh=E7oh2SjjGR1Mn5hcxaRTc4mk07uSnr6Aryfek8+tegg=;
+	s=arc-20240116; t=1739273850; c=relaxed/simple;
+	bh=I5AdoWmvDU3PLEQCbDE5u9wLf7B+tx82l9Cux6XsAos=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gb6vWhasTw4hViSIEWVsP6KMRMHaQD392fOsR6+9vWD/LcWij+P0UlOksHtuagTWigbkZ6i3p61MPeWQftoWKyZBHmZ050+ktwxvT9yOEqqHZAxe5LPzw8IimNFa6WTtT0JcUEWtqsquEXorgv1NPE+6BMXZuob+VWrCWZVtC3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab7e9254bb6so38544766b.1;
-        Tue, 11 Feb 2025 03:36:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739273807; x=1739878607;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mYyw0APdT+rf83fedE72h4J9b7YA2HwXPp+MMP73iXo=;
-        b=rmJItvhCsU2GgD1pjbloGPNitjOmbGkwGzNo9baTtHX4kKYlkCSWGkMS6UiAW/jIO9
-         nszgtfypHqXOagGf8u1pNKwuiY2fLyXjh2nVI0sQnTag7T3HGtEg7c2NN3ak04GxHYhX
-         Gs3hyGvmqsf/ej7D3Gb+/S4834tRp8VKjI+KSNIxMzOPkwbBjwVrO3z4ra/PueibFJZ9
-         bKikW0nE2bSaUr+3au2/bK9SutWL9fLsIfpgbDgs2852s3v4fhaJnhTDTa97gitRB2gs
-         LiG6loalWvjCCts7joiZe3+8tSdL0zccMqFI6/jUOj/8lzEslCwgAsTaPf/Zl434sLpN
-         jHeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUcmNNeREK/V9W1JoeXolEvOCjmZmWI7H85ndwynNfdPiHKzEG/FDgw7KgMeNoYD6i4kmUJVk8h@vger.kernel.org, AJvYcCX+uXIM+LnoAQKGN3Qb0/d2AwfERtPgK5ZnINF3OGzidsc9S0LuWLOCcWYFfm04q6XcRCvTv/cLx2PNdjE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn9sPnSm/7T22CNy2yj9VLfMAs1pHx6go9fYNRQkVYhq5tY4vO
-	G60N1rVzdsSRENMJ5fQWOodQ9xYc1NLPe9ppSXXpzHwGiXTYdZJU
-X-Gm-Gg: ASbGncs7kVp/MRlgRRCkBgVJMqPBtVpq2YJRgmdaFyXthFvzwi5zvxnBGtcRui04HTm
-	8ndu078YcYu6D75SADz+mxf1Maj2EtBdxUdGq2QCigd0sX1o4cE1komHG78gEwjSGVrghYjXDq0
-	rToMzeT7KLLTumvifxtYWCXSLWlZLZTyaNAGtGdOwyn5anNcaPPIE6G/L5ADi88QRUrXvWeASrT
-	aFMFkpAiJ7aINT3fEqK5IzMHW0/AsXBck4JPdq6cGDvtGLnjGDStSxoGPcZbFCFUBig13hlltG5
-	V+O8u5U=
-X-Google-Smtp-Source: AGHT+IGzPsFBJKgnh+006HX3RnUxVF10Oj5CmIofHbgv3TvQgbAI1Q1gXjymKBCrjbHAzMtV53JFkw==
-X-Received: by 2002:a17:907:9447:b0:ab7:b043:bebd with SMTP id a640c23a62f3a-ab7b0449e02mr1100079666b.5.1739273806641;
-        Tue, 11 Feb 2025 03:36:46 -0800 (PST)
-Received: from gmail.com ([2a03:2880:30ff:71::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7d4d291bdsm203125766b.17.2025.02.11.03.36.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 03:36:45 -0800 (PST)
-Date: Tue, 11 Feb 2025 03:36:43 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, kernel-team@meta.com, kuniyu@amazon.com
-Subject: Re: [PATCH net-next v2 2/2] net: Add dev_getbyhwaddr_rtnl() helper
-Message-ID: <20250211-discerning-greedy-nuthatch-b20c4b@leitao>
-References: <20250210-arm_fix_selftest-v2-0-ba84b5bc58c8@debian.org>
- <20250210-arm_fix_selftest-v2-2-ba84b5bc58c8@debian.org>
- <Z6sF2RZRdqnH6MQR@dev-ushankar.dev.purestorage.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=NCIvWbIle2Y1uKk7KwTSC5aseynXNNefNi1z2W6OH1ff4lw19et1jqD1KS1k2RjFG6jT+VLw51yrnwlRYgfU/i+3/W1KQgu6mbq/5pSgI5A0/kUrs76PlhS2mfqKUJ/i+k9w27CyjjTH5VzMwN2ZxQkPw1bMR179eDDA29Kl2Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l3P0zPTl; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l3P0zPTl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739273849; x=1770809849;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=I5AdoWmvDU3PLEQCbDE5u9wLf7B+tx82l9Cux6XsAos=;
+  b=l3P0zPTli0n8CwFc60929ER0eF3mT0lfl7v5dYHZqlS5G2TC3ECeIkDA
+   gsML5n356sdLz4zVf8uB1fQduqnNsRNgsYmdmSoQSCeTBphBXfPq1/mRb
+   JBgKsmiyBlCh8hzLQxXg1oxc9Pk2+5uCs7jZTV3K6vJpZnlkS1n4p/Hbg
+   5Y/BxkuyffCMnbwN2Ug9SQKirOad7Q5HOM8gfNE83Wy/qW0IrJkcmMmU5
+   QNn1tKViOCgLhd0hWtwdc8uJJfFGMLEiWo0ql+bFt2OoIzV1xn+Q7d1JP
+   oIKYqS+OxtbRxQetBE5Iyuq75peY6vLnGd4p9kQyhunor+7259Y3Te5Op
+   w==;
+X-CSE-ConnectionGUID: kizH9LRyRA6FGI8f1xGP7Q==
+X-CSE-MsgGUID: YYCMM1ToSw6BiQ0G8kt9kg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40155613"
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="40155613"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 03:37:28 -0800
+X-CSE-ConnectionGUID: TJ+sGaBPSISuK0fXAhAI6w==
+X-CSE-MsgGUID: GJZ279LaR/u2M3O1nsWMMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="113123900"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 03:37:24 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1thoZt-0000000AUGl-0uDM;
+	Tue, 11 Feb 2025 13:37:21 +0200
+Date: Tue, 11 Feb 2025 13:37:20 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: kernel test robot <lkp@intel.com>, Raag Jadav <raag.jadav@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, lgirdwood@gmail.com,
+	Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	oe-kbuild-all@lists.linux.dev,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 01/20] driver core: Split devres APIs to
+ device/devres.h
+Message-ID: <Z6s2cGMM9R6SZ9Le@smile.fi.intel.com>
+References: <20250210064906.2181867-2-raag.jadav@intel.com>
+ <202502102201.zLWaJC6V-lkp@intel.com>
+ <Z6oZ9dnYrlp5djiQ@smile.fi.intel.com>
+ <7c42e438-22f9-40d9-bb8e-24feb7d58e64@app.fastmail.com>
+ <Z6sYAxRIeCzw12nY@smile.fi.intel.com>
+ <c1184a91-e216-423d-b956-d4b22116a171@app.fastmail.com>
+ <Z6siYlWfvfUvNLpX@smile.fi.intel.com>
+ <279d9f32-a1c9-41aa-b15a-e1485877b2d5@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,48 +83,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z6sF2RZRdqnH6MQR@dev-ushankar.dev.purestorage.com>
+In-Reply-To: <279d9f32-a1c9-41aa-b15a-e1485877b2d5@app.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello Uday,
-
-On Tue, Feb 11, 2025 at 01:10:01AM -0700, Uday Shankar wrote:
-> On Mon, Feb 10, 2025 at 03:56:14AM -0800, Breno Leitao wrote:
-> > +/**
-> > + *	dev_getbyhwaddr - find a device by its hardware address
-> > + *	@net: the applicable net namespace
-> > + *	@type: media type of device
-> > + *	@ha: hardware address
-> > + *
-> > + *	Similar to dev_getbyhwaddr_rcu(), but the owner needs to hold
-> > + *	rtnl_lock.
-> > + *
-> > + *	Return: pointer to the net_device, or NULL if not found
-> > + */
-> > +struct net_device *dev_getbyhwaddr(struct net *net, unsigned short type,
-> > +				   const char *ha)
-> > +{
-> > +	struct net_device *dev;
-> > +
-> > +	ASSERT_RTNL();
-> > +	for_each_netdev(net, dev)
-> > +		if (dev_comp_addr(dev, type, ha))
-> > +			return dev;
-> > +
-> > +	return NULL;
-> > +}
-> > +EXPORT_SYMBOL(dev_getbyhwaddr);
+On Tue, Feb 11, 2025 at 11:23:07AM +0100, Arnd Bergmann wrote:
+> On Tue, Feb 11, 2025, at 11:11, Andy Shevchenko wrote:
+> > On Tue, Feb 11, 2025 at 10:39:16AM +0100, Arnd Bergmann wrote:
+> >> On Tue, Feb 11, 2025, at 10:27, Andy Shevchenko wrote:
+> >
+> >> I don't mind moving that if it helps you, but don't see what
+> >> the problem is here. Is this missing because of a circular
+> >> #include list with linux/device.h including asm/io.h and vice
+> >> versa? If that is the root cause, then I assume there will be
+> >> additional problems either way until the loop can be broken.
+> >
+> > I don't see how. io.h already includes err.h, so whoever includes io.h should
+> > have that as previously.
 > 
-> Commit title should change to reflect the new function name in v2.
-> 
-> Separately - how should I combine this with
-> https://lore.kernel.org/netdev/20250205-netconsole-v3-0-132a31f17199@purestorage.com/?
-> I see three options:
-> - combine the two series into one
+> I mean I never understood what problem you are trying to solve
+> exactly. From the log, it appears that the problem is an include
+> loop between linux/device.h, linux/device/devres.h and asm/io.h,
+> and anything that breaks the loop should work. Your suggestion of
+> stopping asm/io.h from including linux/device.h sounds like
+> the most promising here, but this should be possible regardless
+> of whether IOMEM_ERR_PTR() gets moved.
 
-I would suggest you combine the two series into one.
+The problem this series solves at the beginning is that not all the consumers
+of device.h needs it, in many cases the device/devres.h (or subset of
+device/*.h) is enough to include. While solving this, it appears that
+the current code uses ERR_PTR() instead of IOMEM_ERR_PTR() in devm_*io*() APIs
+and kernel test robot found this and complained about. While solving
+this new issue, LKP found another issue that is circular dependency.
+But the original code only wants to have an access to IOMEM_ERR_PTR() which
+is in io.h and can be moved to err.h AFAICS. Does this sound reasonable?
 
-I will send a v3 today adjusting the comments, and you can integrated
-them into your patchset.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Thanks
---breno
+
