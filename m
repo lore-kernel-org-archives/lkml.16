@@ -1,215 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481961D54FE
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03B11D54FE;
+	Tue, 11 Feb 2025 18:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739297279; cv=none; b=EmCvAosmMRk3bDZa9sL400f++XpzQp4K9xAKXxLzNmOomqmiwQw0f/3yx8AhH3Dee2j/0LmD2N/Ver5+6Ls87hC/0jg+ZrEXxcap2K3dPnmaubojyOgZ5j6gRhjyWeOxF4PePFGCYjFXmJwN6cOTSY89OcuWGbyeBHem9d/7Oeg=
+	t=1739297390; cv=none; b=cnWw4j8SgpKGfJX1y7EhZA8miP6S40Sefdrnbvrn+Pj5LlssFqFShwtmHLvZi6c0zMTCSag7xX0iizWL08aRNLbuLwOsYAkK5nihyU+cLpmJTzTrxkWCq1ctYL5PBlMq4mgfLxNNINN0WU94NHS1+hg2m9tyhpUftG3afWF0h+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739297279; c=relaxed/simple;
-	bh=qmler+I90pvNUtay43C9/PfAUR+W7075zQKpIXXi7sk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OJ0cFHANhO4FuhU5KlnZTM+2SAsPUtu7VvgLWbx2Yr85af/0LgCagNUsX4acHNYbM+vORleLMkKPZF8VAYyE34jVu5QPehE18FPh19fHxCyVhgBcjVqs/Zpk/B4svRloIsPZrzngtBYLW+rhtU7RzC+f5QUZ496CReNnle4x3fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eYgrCHCP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739297390; c=relaxed/simple;
+	bh=ExmzPTj1pzjf8r4g9NpGXJqnaxjrwPjVcOTvwBwtuW8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=TW51TAGoImqa3TVi9p5WhOPTlckhzRulyPzGliW3I6qktRL6wakQMXM0fEFza5pYe4hP46K02hfKYW4+0hZjb93qo+fnZMKgsC4/lyD+1YaGDzRYN3SkTYsbOay55L/EI0ftqtAozWjmU3UCn3Kvxw6BtQFhwFhzNEZDxM+lc5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mJrIf8LP; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eYgrCHCP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F405C4CEDD;
-	Tue, 11 Feb 2025 18:07:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739297278;
-	bh=qmler+I90pvNUtay43C9/PfAUR+W7075zQKpIXXi7sk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eYgrCHCPXCsHabBTusYJ35h+8Qd8HRI4/KtRrrek0b9LAvtSHikzUMVLqX/BWT8er
-	 zG5nAc0RQkWueaiD+mGxDLHm9I/qsuI/jiiB5wveclflpWDxFpfSiEz8DsjdXdNZ5R
-	 PBOlXmXWWL4pBUV1usKNVRTyGbRzhwPmvju87KkT/5iSEm/lur00b+NI0BfioqLCaJ
-	 kD3zwu+rF8vWwRJxPIhyOrzVK0gztdTlX4CbHj8LyAaQyl0SCrThGukt4pxrzeKnTc
-	 6WJG2fAJghmmWLPC7lnyuHRdqcD7ABSy0irVXCvBGimFXwqmIZo7Pmx83EbEsN7+Xb
-	 lYL1wX/mXb2Xw==
-Date: Tue, 11 Feb 2025 10:07:52 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 20/35] x86/bugs: Define attack vectors
-Message-ID: <20250211180752.pfsjvz62bztpnmoi@jpoimboe>
-References: <20250108202515.385902-1-david.kaplan@amd.com>
- <20250108202515.385902-21-david.kaplan@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mJrIf8LP"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e479e529ebcso4264350276.3;
+        Tue, 11 Feb 2025 10:09:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739297387; x=1739902187; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lP7pCBXVAdfHdq7JWRC4CjyuB8WA8wXJThmwlLAczFI=;
+        b=mJrIf8LPD+fBwkEEIRUzt/ie/opDQngky62L2fVrnlmt4IjqIbMEvbUqK+FGNYriN/
+         xpJit9P8rAA0uKiGMnvjY0KaOIiewyBlkbtqCmDkbBXgZQXWjiF5Ekj4Bb5VtVeZlgzS
+         stCVPkGKWvBENotBaFJZKtaEDDWm1appbxba+tJXgQU7RsYwEm82LBP9Yy3y0GFfdOk4
+         ExxHfT+JG1bZJn4+yNsuQHU6yVIzTaMbxexUkJu0wO9b4TJbTxlJPUcShdotqs4yByJc
+         nqBR3Al/VO4AePczcBWUrn7F/wjSyll4T51IdBYyPS0zdM/hXiWOpbSaetst6VfThpHw
+         Q0UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739297387; x=1739902187;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lP7pCBXVAdfHdq7JWRC4CjyuB8WA8wXJThmwlLAczFI=;
+        b=KC5ZXbvkNmNxdPFHKai1YM8f/j33BzA3BBib/l0mxt03pTevpNtpx6xPdbCzkkTYah
+         +WgWpDf4WmBVfAhFic8munWjU1S9qDGAxwP7OIp4Gl6ig1aaks9Wva6h9OTnSUc5fXf2
+         jajjM7LAF/MMypTEkGdu3eGmPB3eVlrcsD4KnSOno3ZSJB77Z4UdvPdJoAJExNvl/2Cv
+         nKVi8tGUqzWnwxiWbXmDZal1k/8Xlu7tD+23Di5CCECf8Vxts9BswzGkyJvBhBLfLUGP
+         dwr+it1MtUA+iiHnOCr0OizeVd4C40Q+bMqvH4Qr1T10gUNVM2/IVE+nmWnvq7ktICTF
+         ZdKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPNUiFsroURlzus7G1tJ+sUJp9gpifFBNOPDq15oB1XDqv1LMarJXqr6pdd3MAi3loOEuYOke+oBQiCPhFAhQjwONJ1Q==@vger.kernel.org, AJvYcCXeEhhxM72KgMPTk80SGTinXgN4HRJMMoRyfmA62HrlO1cuRr12PXmswTvIIxe5i8ce/eJHVibfJ6WH5R8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrBOCeunkZv5rPLstkDljljl8I+J88Lajtng6XJ/M7jOZocnTv
+	c1Guho8T4y1zHbOC2uxs4e/oR4mmaFk7Epm1sWpc6WxhU4754rq4
+X-Gm-Gg: ASbGnct/n7nb8Dhpjzs+GwQ/NOtfhd/hhFGwH8AB3gUD+NUot2t/ORxyCr1CzNWSkmQ
+	lSicNs9N5OFi0pOB36xfXDXT27uc8YH7P49H84B5lAF+gAqapElEK0SFa5AxzmA9m5+fGFXJ3cu
+	U8LDTAmBeG9/WZuJ1K7TVTamjx+tLvRC/ovLPv8scrVeC4w9CsInveuvrSCPqrYFdv2TvQ/nsr1
+	fRfVz78kRc+BTYWmSvue1+zAPav1S19R6K3R3t7Mhd04wgZOdSphyXx1rppBEyJF/qm8oVjT2Nc
+	WeY+xiEt
+X-Google-Smtp-Source: AGHT+IHAZrm0t8YEScmXmbjBL+rsDXloW9wiOe8XlecxEScd4bdHtrt5hYPSbuBnQn5cZhzdJvW/hw==
+X-Received: by 2002:a05:6902:723:b0:e5d:92ad:8e75 with SMTP id 3f1490d57ef6-e5d9f0cc9bamr381876276.10.1739297387499;
+        Tue, 11 Feb 2025 10:09:47 -0800 (PST)
+Received: from localhost ([2800:bf0:61:1288:72d5:e7e1:d832:2e3d])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5b3a2343c9sm3335231276.34.2025.02.11.10.09.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 10:09:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250108202515.385902-21-david.kaplan@amd.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 11 Feb 2025 13:09:45 -0500
+Message-Id: <D7PTGS79ZMT6.WRYZ7J20YSDU@gmail.com>
+Cc: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ <platform-driver-x86@vger.kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
+ "Mario Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
+ <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>, "LKML"
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 00/14] platform/x86: alienware-wmi driver rework
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250207154610.13675-1-kuurtb@gmail.com>
+ <fd4524a6-0b1f-d929-61a5-b1ad188c938a@linux.intel.com>
+ <D7OT9WA7NKIG.1HK94X2IR7ZBX@gmail.com>
+ <Z6uBtEg7DZtWPn4r@black.fi.intel.com>
+In-Reply-To: <Z6uBtEg7DZtWPn4r@black.fi.intel.com>
 
-On Wed, Jan 08, 2025 at 02:25:00PM -0600, David Kaplan wrote:
-> Define 5 new attack vectors that are used for controlling CPU
-> speculation mitigations and associated command line options.  Each
-> attack vector may be enabled or disabled, which affects the CPU
-> mitigations enabled.
-> 
-> The default settings for these attack vectors are consistent with
-> existing kernel defaults, other than the automatic disabling of VM-based
-> attack vectors if KVM support is not present.
-> 
-> Signed-off-by: David Kaplan <david.kaplan@amd.com>
-> ---
->  arch/x86/include/asm/bugs.h | 11 +++++++
->  arch/x86/kernel/cpu/bugs.c  | 60 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 71 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/bugs.h b/arch/x86/include/asm/bugs.h
-> index f25ca2d709d4..354d04a964f0 100644
-> --- a/arch/x86/include/asm/bugs.h
-> +++ b/arch/x86/include/asm/bugs.h
-> @@ -12,4 +12,15 @@ static inline int ppro_with_ram_bug(void) { return 0; }
->  
->  extern void cpu_bugs_smt_update(void);
->  
-> +enum cpu_attack_vectors {
-> +	CPU_MITIGATE_USER_KERNEL,
-> +	CPU_MITIGATE_USER_USER,
-> +	CPU_MITIGATE_GUEST_HOST,
-> +	CPU_MITIGATE_GUEST_GUEST,
-> +	CPU_MITIGATE_CROSS_THREAD,
-> +	NR_CPU_ATTACK_VECTORS,
-> +};
-> +
-> +bool cpu_mitigate_attack_vector(enum cpu_attack_vectors v);
-> +
->  #endif /* _ASM_X86_BUGS_H */
-> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> index aee2945bdef9..88eba8e4c7fb 100644
-> --- a/arch/x86/kernel/cpu/bugs.c
-> +++ b/arch/x86/kernel/cpu/bugs.c
-> @@ -169,6 +169,66 @@ DEFINE_STATIC_KEY_FALSE(switch_mm_cond_l1d_flush);
->  DEFINE_STATIC_KEY_FALSE(mmio_stale_data_clear);
->  EXPORT_SYMBOL_GPL(mmio_stale_data_clear);
->  
-> +#ifdef CONFIG_CPU_MITIGATIONS
-> +/*
-> + * All except the cross-thread attack vector are mitigated by default.
-> + * Cross-thread mitigation often requires disabling SMT which is too expensive
-> + * to be enabled by default.
-> + *
-> + * Guest-to-Host and Guest-to-Guest vectors are only needed if KVM support is
-> + * present.
-> + */
-> +static bool cpu_mitigate_attack_vectors[NR_CPU_ATTACK_VECTORS] __ro_after_init = {
-> +	[CPU_MITIGATE_USER_KERNEL] = true,
-> +	[CPU_MITIGATE_USER_USER] = true,
-> +	[CPU_MITIGATE_GUEST_HOST] = IS_ENABLED(CONFIG_KVM),
-> +	[CPU_MITIGATE_GUEST_GUEST] = IS_ENABLED(CONFIG_KVM),
-> +	[CPU_MITIGATE_CROSS_THREAD] = false
-> +};
-> +
-> +#define DEFINE_ATTACK_VECTOR(opt, v) \
+Hi all,
 
-s/opt/name/ to distinguish it from v.
+On Tue Feb 11, 2025 at 11:58 AM -05, Andy Shevchenko wrote:
+> On Mon, Feb 10, 2025 at 08:48:05AM -0500, Kurt Borja wrote:
+>> On Mon Feb 10, 2025 at 6:53 AM -05, Ilpo J=C3=A4rvinen wrote:
+>> > On Fri, 7 Feb 2025, Kurt Borja wrote:
+>> >
+>> >> One more correction. I apologize for the noise!
+>> >
+>> > Applied to review-ilpo-next. Thanks.
+>>=20
+>> Thank you so much for reviewing this, Ilpo :)=20
+>
+> Please address my concerns in the followup patches.
+>
+> (Main concern is abuse of objs, others are more like cleanups to improve
+>  readability and maintenance)
 
-> +	static int __init v##_parse_cmdline(char *arg) \
+I agree with most of your coments. Some require additional patches tho,
+which is fine but are outside the scope of this series. I still have a
+lot of doubts about how to proceed with the Makefile stuff, I don't
+understand the root of the problem and a lot of drivers already do this
+so I'm a bit confused.
 
-Instead of "CPU_MITIGATE_USER_KERNEL_parse_cmdline" it should really be
-"mitigate_user_kernel_cmdline".
+Ilpo, how should we proceed here? I see this series has not hit
+linux-next so, is it fine to send a v11 incorporating Andy's comments?
+Obviously after understanding the Makefile problems.
 
-Also this line shouldn't be indented.
+Also with all this fixes problems I'm having seconds thoughts about
+splitting the file (patch 11). I'd also like to know your opinion on
+that, Ilpo.
 
-Also it's more readable to tab align all the line continuation
-backslashes.
+Thank you again for your review Andy!
 
-> +{ \
-> +	if (!strcmp(arg, "off")) \
-> +		cpu_mitigate_attack_vectors[v] = false; \
-> +	else if (!strcmp(arg, "on")) \
-> +		cpu_mitigate_attack_vectors[v] = true; \
-> +	else \
-> +		pr_warn("Unsupported " opt "=%s\n", arg); \
-> +	return 0; \
-> +} \
-> +early_param(opt, v##_parse_cmdline)
-> +
-> +bool cpu_mitigate_attack_vector(enum cpu_attack_vectors v)
-> +{
-> +	if (v < NR_CPU_ATTACK_VECTORS)
-> +		return cpu_mitigate_attack_vectors[v];
-> +
-> +	WARN_ON_ONCE(v >= NR_CPU_ATTACK_VECTORS);
-> +	return false;
-> +}
-
-This error can be checked at build time.
-
-> +#else
-
-This needs a /* !CONFIG_CPU_MITIGATIONS */ comment.
-
-> #endif
-
-As does this.
-
-
-So, something like so:
-
-#ifdef CONFIG_CPU_MITIGATIONS
-/*
- * All except the cross-thread attack vector are mitigated by default.
- * Cross-thread mitigation often requires disabling SMT which is too expensive
- * to be enabled by default.
- *
- * Guest-to-Host and Guest-to-Guest vectors are only needed if KVM support is
- * present.
- */
-static bool cpu_mitigate_attack_vectors[NR_CPU_ATTACK_VECTORS] __ro_after_init = {
-	[CPU_MITIGATE_USER_KERNEL] = true,
-	[CPU_MITIGATE_USER_USER] = true,
-	[CPU_MITIGATE_GUEST_HOST] = IS_ENABLED(CONFIG_KVM),
-	[CPU_MITIGATE_GUEST_GUEST] = IS_ENABLED(CONFIG_KVM),
-	[CPU_MITIGATE_CROSS_THREAD] = false
-};
-
-#define DEFINE_ATTACK_VECTOR(name, v)					\
-static int __init name##_parse_cmdline(char *arg)			\
-{									\
-	if (!strcmp(arg, "off"))					\
-		cpu_mitigate_attack_vectors[v] = false;			\
-	else if (!strcmp(arg, "on"))					\
-		cpu_mitigate_attack_vectors[v] = true;			\
-	else								\
-		pr_warn("Unsupported " __stringify(name) "=%s\n", arg);	\
-	return 0;							\
-}									\
-early_param(__stringify(name), name##_parse_cmdline)
-
-#define cpu_mitigate_attack_vector(v)					\
-({									\
-	BUILD_BUG_ON(v >= NR_CPU_ATTACK_VECTORS);			\
-	cpu_mitigate_attack_vectors[v];					\
-})
-
-#else /* !CONFIG_CPU_MITIGATIONS */
-
-#define DEFINE_ATTACK_VECTOR(name, v)					\
-static int __init name##_parse_cmdline(char *arg)			\
-{									\
-	pr_crit("Kernel compiled without mitigations, ignoring %s; system may still be vulnerable\n", \
-		__stringify(name));					\
-	return 0;							\
-}									\
-early_param(__stringify(name), name##_parse_cmdline)
-
-#define cpu_mitigate_attack_vector(v) false
-
-#endif /* !CONFIG_CPU_MITIGATIONS */
-
-DEFINE_ATTACK_VECTOR(mitigate_user_kernel, CPU_MITIGATE_USER_KERNEL);
-DEFINE_ATTACK_VECTOR(mitigate_user_user, CPU_MITIGATE_USER_USER);
-DEFINE_ATTACK_VECTOR(mitigate_guest_host, CPU_MITIGATE_GUEST_HOST);
-DEFINE_ATTACK_VECTOR(mitigate_guest_guest, CPU_MITIGATE_GUEST_GUEST);
-DEFINE_ATTACK_VECTOR(mitigate_cross_thread, CPU_MITIGATE_CROSS_THREAD);
+--=20
+ ~ Kurt
