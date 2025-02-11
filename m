@@ -1,116 +1,159 @@
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B836B26157E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC15219AD99
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739295951; cv=none; b=B+4SAI2xcZmXaQBzEZVxdxBQBRV6i3ejUDLdC64C2v6w36FWywjFvxe+quE2Xp1gOuieD73NzTxEXUMzNHuiCT79ryzCEqfB/RuJxoRFsmeYUCmYLs8kLXMaiXMr/OgQt66+CX8K04njI2BfWmOuvhD/Ir2uaesmB57nmCk77aI=
+	t=1739295962; cv=none; b=NZVl0VJxOWy0MHcNlQw5j70Fu1Fku85ArSvm0UpfPfjmbqkH4gxLVWQEsI/UN5X9mcjogmOQbplN3aHKKVUq9UcSZ9UJ9p2VlRKvfHpN5vTI/iQF3bnaF01tuVh0ZGNPPcsNCnPWL+M7Ya3punr1K7/4HXLQHX6FqrmuP5uDNkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739295951; c=relaxed/simple;
-	bh=dTvy6fyffzRxcgF5lIWtfRUlZwl2If8HDMDUsHDXjdQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o1m3x1EnU3hE1Q3mP0oojuQgheF0gnbjtuq3m1yHrbTyeprGwYFTR9wchNMal2Aekj/WEt0UeBh3tab7CFJzH0bpDv/hwjq0RWlRU1fIOCbSia1Wfm6qYqhXTGbPtdmCiWhd+QyML6leUFEegx/WDzkjdLbaw/rkVUF4Bp3aWEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=Aldn1XbG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=n5B9lcZt; arc=none smtp.client-ip=202.12.124.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1739295962; c=relaxed/simple;
+	bh=u0XrVF8iTTm5UaCKcKl+IQNCx5OX+tUX5xKCetplVyo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ktdGQE2wVNY2fQJwkXyKduFxph6T0NxNgocnFOrNHY7T6LLKi92UMzsvEDwCKcEkj/MaNgAaY3PbEf9oxTrqPHdw0D/wPl/5bWZxjiGSWpQg+aeYYq1jge1aDWnj/ky79uR2d4fQRcvCqp6B5PESHpMZCR0ObWZ/hbiqEAaEoi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=XH1xgEOh; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="Aldn1XbG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="n5B9lcZt"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id D0DAD2540127;
-	Tue, 11 Feb 2025 12:45:48 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Tue, 11 Feb 2025 12:45:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1739295948; x=
-	1739382348; bh=GIFexkCqrPd7tVDQwCNayNvdGfiWwZdap6JG7M+32EQ=; b=A
-	ldn1XbGXUu6jVcjs3gNrDALJgmlqpszVE+hxqPCa1aqIsuunwnUZMaGuXutmKJJz
-	ENDPCnJ9ElKxOjYsi916aL7Ovvf+wcOP5uPcf6aQPf8Tg3gG06VJzSbuTxRuxhsf
-	PW85v8iy1hUsKccGgqv3SP+1uDZ2sp1dKb/bsZOVTCO4wyss46xTVVJ/V5BeP7Si
-	X41v03Q0U3PTmuZcDGcxHT9aqN+9XF0MrcI/jxcdKWuC6d/hgHcsGJpN1lzCh+FM
-	Ej/SJr/6DWzLG9n+/c5Z8eTbOh++iPikE+Ay64TKN37tgS+6Nw4c3k+Ld5lGqwNm
-	YRrMa4lCsGd89mUcvs6GQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1739295948; x=1739382348; bh=G
-	IFexkCqrPd7tVDQwCNayNvdGfiWwZdap6JG7M+32EQ=; b=n5B9lcZtkAHbC9Rcp
-	6uZbzJo5j1KjlgC1mv+26Do1YBujpr4cwUm4oxz7bavWc8WkeOffbxf6NAOdZ7PY
-	aw1WJAG9olRykDEL/ox3aOosYLb54/fdOTBMsVK+zyGVitP13OkaKDwT4RN2qYcm
-	jrOT9r+1IPF2Xeu5uFG+6TGLRCOpUDFOAxzFslXl7c5zgqB+mWcVnXdm3ApaRSQo
-	hexAdsE+3ZvdMaE9sf0M8sv7NVCMeUG2//9/8N3BJbu7zzNkjMyl0uEdd5j1GJGs
-	BHg//akq82oT2y79L4lBRuVOhtBVaMKzvzrwpidQ6IFY5ocP91DDEDhp7NJYl71S
-	vR2kw==
-X-ME-Sender: <xms:zIyrZ2ZcH1Y0wP7RnmPNChzQfQz22UAydSzCZgOiiS4OVBf4fTF4VQ>
-    <xme:zIyrZ5YXXMKEK5m7V9GmLGM4mzPPJlcudd3cERxNYbHQTKd4UGO6fi1F2UoNCB0gX
-    MH-NZLriA0NRu-alUU>
-X-ME-Received: <xmr:zIyrZw8nD0hEvVFg7UcsHqKdIBde5WprW1RYMmk5gi8ZclAtmGAw7UN8lpfZxMl61iak6571qlp1wcyZ0LrE9tOiVdCgMZBcGGHkfzP4zhkHsmHR>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudeigecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecuogetfedtuddqtdduuc
-    dludehmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhm
-    peforghrkhcurfgvrghrshhonhcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvg
-    gssgdrtggrqeenucggtffrrghtthgvrhhnpeegkeegfeegieduuddukefgudeffffgffdv
-    ueekheevvefgiefgfffgffffueejheenucffohhmrghinhepohhrrdgtiienucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdq
-    lhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeefpdhmohguvgepsh
-    hmthhpohhuthdprhgtphhtthhopehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggs
-    sgdrtggrpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtohepmhgrrhhkphgvrghrshhonheslhgvnhhovhhordgtohhm
-X-ME-Proxy: <xmx:zIyrZ4qHQpRu2zH0Ekc00rD4iEaA26TIvs_JCi01Lg-qIC5JvzrJvw>
-    <xmx:zIyrZxp2lcE9v_x6-jfCsUbI30hW4uhaA1_M7WP5pCYHHOAPWcR06A>
-    <xmx:zIyrZ2RBnaF4CouOTnHq4f93aKKQT84WdlEB3r08NiCO-GprfelSog>
-    <xmx:zIyrZxpBgosNOBxtC-0-8dLoh2wsaklYYEnlHKsZUWdwcbTZFBWlYA>
-    <xmx:zIyrZ4Xv_vWf9OHnOS391G-9lXRjdX8IA8HL_UgtbY-vdG6DRSnP6sov>
-Feedback-ID: ibe194615:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 11 Feb 2025 12:45:48 -0500 (EST)
-From: Mark Pearson <mpearson-lenovo@squebb.ca>
-To: mpearson-lenovo@squebb.ca
-Cc: linux-kernel@vger.kernel.org,
-	markpearson@lenovo.com
-Subject: [PATCH] MAINTAINERS: Update email address for think-lmi maintainer
-Date: Tue, 11 Feb 2025 12:44:58 -0500
-Message-ID: <20250211174521.17542-1-mpearson-lenovo@squebb.ca>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="XH1xgEOh"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f49837d36so68441145ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:46:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1739295960; x=1739900760; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hU0k36QB1XU8Cts/gsb6V0Pakg2qWpL/o6Sf1GbitsM=;
+        b=XH1xgEOhDENpheNQveaJb4KLCeCzJm9EjxEHmPPgRbHIlriRz0vak7hBRdxK78EmDE
+         QknjrOid6eSGRIryu48ME5qnumlV0sB/N5AE3QUuKPLmeH0IlkIe6/zUn7N15Vqa56wj
+         rPYydxek/8UkSZLtb1IWkvb1MByGX9M7ORXjE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739295960; x=1739900760;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hU0k36QB1XU8Cts/gsb6V0Pakg2qWpL/o6Sf1GbitsM=;
+        b=ZxWz9S7VQTMOitB7J9AEYexd9QrlI298JRnQzqPpjeN9xjyj/gySpE6tlx5L752Smv
+         Pc+7YtcODRzGsMkqr6m1TFqKO6FV7/HYdvFwQU1KoFJFObHYVulZ+HKEDkDh2jOM3Ll5
+         pn7ohI9OchnLL9mbZnAFMe+1AhAfmMREp99et39CEkWg7WJOLwdGLjMGeQpI+moIslcj
+         +gblrXsVtKy1qmv2SMQUgQWRE3dSQu+yjn4//ouBOTHVIUzI3AwSDhBtHibk46Ld1pj+
+         7BLuTpXF3c/tPAnjtlE1Ht6VXoO7GPK/4ugXHpvuSdcxbNrPhJSQyXibkUC3SWdcrutL
+         oulQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHrr7h3yoUYa/diAVssKvK1jOrlSqO/f4/goiWu3sM6ECvt6V6eYdZSQ4DWIO/7hq3fjdj+lEGd+QHKrc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw85yTQTZiDxS/G2ls0m+wi1aT2Y9PFYEN/6bmfVudpgWcuNAGk
+	AtYvPEgnd48GppqEv4SA5zXnQyidrg3LF5+iISYPUpiuTw/mOUfkpg6txgTGhf0=
+X-Gm-Gg: ASbGnctMzjyqpE32o/sGWIeXBORbK0bScFEV0gwTPVQBdbrQMgjwF6jbnHfatqVWQmf
+	iXeEihPVXr9XxmVLYBvMSE75Q/6zxyw5njX3u+sxpHLsbVP6isW8pyM0XWRna9X9jFOm+bQUtBQ
+	2+c9VcpUxHCn1LjSmAgelUzl42n+7V7fc10l1QBxDh5guy1RIbFRfayZoMzaxwAYB3sG2MhsWBu
+	/agQPwoNyFiHJkIwm2IOVSI+3iC9drxFHqAmvTwCkQg1lAxbfMvKvU/qGQmBrN+0XxzDomv2XU5
+	Wf0T+WM1tdX2qgd6L1gjxwbEeGI1YARlGOR2FZVIIbUFL9lWLrxhMsdcqw==
+X-Google-Smtp-Source: AGHT+IG3/CAcTS3CiCjU9yipQAdPsOj3aLbPkEZBQL3ZsInksDgw155tgyytgR1Oc/LgBs+GNy+uXQ==
+X-Received: by 2002:a17:902:e846:b0:215:9470:7e82 with SMTP id d9443c01a7336-220bbb112e9mr2596865ad.4.1739295959965;
+        Tue, 11 Feb 2025 09:45:59 -0800 (PST)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51aecd55esm9673581a12.29.2025.02.11.09.45.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 09:45:59 -0800 (PST)
+Date: Tue, 11 Feb 2025 09:45:56 -0800
+From: Joe Damato <jdamato@fastly.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, stfomichev@gmail.com, horms@kernel.org,
+	kuba@kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Shuah Khan <shuah@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
+Subject: Re: [PATCH net-next v6 3/3] selftests: drv-net: Test queue xsk
+ attribute
+Message-ID: <Z6uM1IDP9JgvGvev@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+	stfomichev@gmail.com, horms@kernel.org, kuba@kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Shuah Khan <shuah@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
+References: <20250210193903.16235-1-jdamato@fastly.com>
+ <20250210193903.16235-4-jdamato@fastly.com>
+ <13afab27-2066-4912-b8f6-15ee4846e802@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <13afab27-2066-4912-b8f6-15ee4846e802@redhat.com>
 
-I no longer use my markpearson@lenovo.com email address as the Lenovo
-email servers are garbage.
-Switching to my personal account that is more open-source friendly.
-I am still a Lenovo employee (if that makes any difference)
+On Tue, Feb 11, 2025 at 12:09:50PM +0100, Paolo Abeni wrote:
+> On 2/10/25 8:38 PM, Joe Damato wrote:
+> > +def check_xdp(cfg, nl, xdp_queue_id=0) -> None:
+> > +    test_dir = os.path.dirname(os.path.realpath(__file__))
+> > +    xdp = subprocess.Popen([f"{test_dir}/xdp_helper", f"{cfg.ifindex}", f"{xdp_queue_id}"],
+> > +                           stdin=subprocess.PIPE, stdout=subprocess.PIPE, bufsize=1,
+> > +                           text=True)
+> > +    defer(xdp.kill)
+> > +
+> > +    stdout, stderr = xdp.communicate(timeout=10)
+> > +    rx = tx = False
+> > +
+> > +    queues = nl.queue_get({'ifindex': cfg.ifindex}, dump=True)
+> > +    if not queues:
+> > +        raise KsftSkipEx("Netlink reports no queues")
+> > +
+> > +    for q in queues:
+> > +        if q['id'] == 0:
+> > +            if q['type'] == 'rx':
+> > +                rx = True
+> > +            if q['type'] == 'tx':
+> > +                tx = True
+> > +
+> > +            ksft_eq(q['xsk'], {})
+> > +        else:
+> > +            if 'xsk' in q:
+> > +                _fail("Check failed: xsk attribute set.")
+> > +
+> > +    ksft_eq(rx, True)
+> > +    ksft_eq(tx, True)
+> 
+> This causes self-test failures:
+> 
+> https://netdev-3.bots.linux.dev/vmksft-net-drv/results/987742/4-queues-py/stdout
+> 
+> but I really haven't done any real investigation here.
 
-Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think it's because the test kernel in this case has
+CONFIG_XDP_SOCKETS undefined [1].
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 25c86f47353d..5a819b2a333b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23588,7 +23588,7 @@ T:	git git://repo.or.cz/linux-2.6/linux-acpi-2.6/ibm-acpi-2.6.git
- F:	drivers/platform/x86/thinkpad_acpi.c
- 
- THINKPAD LMI DRIVER
--M:	Mark Pearson <markpearson@lenovo.com>
-+M:	Mark Pearson <mpearson-lenovo@squebb.ca>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	Documentation/ABI/testing/sysfs-class-firmware-attributes
--- 
-2.48.1
+The error printed in the link you mentioned:
 
+  socket creation failed: Address family not supported by protocol
+
+is coming from the C program, which fails to create the AF_XDP
+socket.
+
+I think the immediate reaction is to add more error checking to the
+python to make sure that the subprocess succeeded and if it failed,
+skip.
+
+But, we may want it to fail for other error states instead of
+skipping? Not sure if there's general guidance on this, but my plan
+was to have the AF_XDP socket creation failure return a different
+error code (I dunno maybe -1?) and only skip the test in that case.
+
+Will that work or is there a better way? I only want to skip if
+AF_XDP doesn't exist in the test kernel.
+
+[1]: https://netdev-3.bots.linux.dev/vmksft-net-drv/results/987742/config
