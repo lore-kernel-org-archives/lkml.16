@@ -1,124 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403BC26BDA1;
-	Tue, 11 Feb 2025 14:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6896E26BD8C
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=137.74.80.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739283915; cv=none; b=TZkNElZWxTb8t0tyGVSbmrzvV/fHVOXmOZAMonbegNRqS7DD8VUtBdh6ywBJkmnN+UrsTcLlG0GTktO3efu8q2Fjqawl5e1GUcrYdVw0JCGWCVz9lVjtNYUFZPjKuw4KIOuKwaeGVheuSNYP77nddtVWUJ1VoigW4HgltVAv7Z8=
+	t=1739284070; cv=none; b=V4MgZ9POgQVE8JMyJWbb938KAUUQBav0kjAPryDB241ldiP7pGN9cSmDLTp4Y+4uj8XfyrWrCOpHoh2pPxgs9xvQk9j/0wFdqg3JR6ilntlzNBSG0rtGsG7b0OIWmCYOaMkUlONrwuOgaIZl2nxfyAJfbLePsXNZTZCA6JJuKFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739283915; c=relaxed/simple;
-	bh=joOhHQs7N3k2V7iD1a05eNhSfWZS61s1us9jgWnob3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R4u62T7i/cj79/CGJ2xJP6uSX/xQQENy5Z5Q/DU3pm4owHuY1Ial1VB+/0SJSAVFKd5X1QFRkYcaCQQNuEee5Nd0Uicrn/aIWlwkBgnNYD7gfuvH0rHILw2fIA2DOBlqeKW6Ju5LBbMOymEpcksLMJZgW4ulElq/B1PNbhbRpIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHvKgC8z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739284070; c=relaxed/simple;
+	bh=ykaLlg8HghwqKHvMRIYVlPnOo3Hdw86rjso/x8RKXFM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NMledtO3VtogbQBOiCKUi/h9UC83I5ZR6LIeGtJ9mH5hsPKhPo1QGuKzgN5FU3w7kK42ymHzppMDFe8nTgqU7XjTDqaCEgGOgpbRiHUicNg+GjSQ5UN0gsRAmFv1p/skY0o022547zmcHpvR4+5XQ6jztEN9X7iqyxBHcoBd8zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=e/gML5h+; arc=none smtp.client-ip=137.74.80.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHvKgC8z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0AACC4CEDD;
-	Tue, 11 Feb 2025 14:25:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739283914;
-	bh=joOhHQs7N3k2V7iD1a05eNhSfWZS61s1us9jgWnob3U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EHvKgC8zXDfnrIHYpY+hs/TYfaMJjXhE8bkB05fftOoZd3yejl8he4KQUF46vcT7r
-	 OgOEWngZnmpAwoGodY5uAEPp0OJ69OZ2m0AAbNR6u40Pjqmak4OxVBQzfzYMWXryVy
-	 so9a2XOQz4+FLF7l1x3uXiMTdJ9KTLOnpLlGOjqSjjCLmYU2U4y3yYoSls36xt29Ow
-	 33vhuH0F4ncPiJlRgYEsGiWi1UoYDCmswgahcb7e+WWzbgrBdmGWzpIwjQe6cNkA4S
-	 aiPFF0QVA/ojWQlm6vfNQQNcBLT/LFINDAIq0l1T2ajIfNarRO7y4dH8UYuEWQ/7y2
-	 c6qHtt8tl29mA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1thrCT-000000008OV-3Fjr;
-	Tue, 11 Feb 2025 15:25:22 +0100
-Date: Tue, 11 Feb 2025 15:25:21 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Ulv Michel <ulv@on2.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: AW: [PATCH 2/2] USB: serial: option: add Wistron NeWeb M18QW
- support
-Message-ID: <Z6td0Tqp4RTZebe3@hovoldconsulting.com>
-References: <20250125094005.1132785-1-ulv@on2.de>
- <2025020308-anemic-sasquatch-efbe@gregkh>
- <AS2PR10MB75024C662CA4E5EE7DBF06A689F52@AS2PR10MB7502.EURPRD10.PROD.OUTLOOK.COM>
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="e/gML5h+"
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay4.mymailcheap.com (Postfix) with ESMTPS id 12A6E20319;
+	Tue, 11 Feb 2025 14:27:40 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id A3F544023E;
+	Tue, 11 Feb 2025 14:27:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1739284059; bh=ykaLlg8HghwqKHvMRIYVlPnOo3Hdw86rjso/x8RKXFM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=e/gML5h+N4T5zFb+89aGoEeB/kIkhHUwClhA3fowiCFNwMwkWZpegyDva+y/A5YtS
+	 xsnvAzxxLoF+9PncyXNOsdEOxUdZVvbemNQKpiNT9T/tkbZMIZ1LklvXGqX4Is2ROr
+	 lANBFZsaWBqOIwuL5e1aR0edV2QwiWKWu8tf/TDo=
+Received: from localhost.localdomain (unknown [58.32.42.120])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id A4F99406D3;
+	Tue, 11 Feb 2025 14:27:36 +0000 (UTC)
+From: Kexy Biscuit <kexybiscuit@aosc.io>
+To: yangtiezhu@loongson.cn
+Cc: amd-gfx@lists.freedesktop.org,
+	chenhuacai@kernel.org,
+	jpoimboe@kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	peterz@infradead.org,
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: [PATCH] objtool: remove duplicate case value R_PPC64_REL32
+Date: Tue, 11 Feb 2025 22:19:57 +0800
+Message-ID: <20250211141956.553850-2-kexybiscuit@aosc.io>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20241217010905.13054-3-yangtiezhu@loongson.cn>
+References: <20241217010905.13054-3-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS2PR10MB75024C662CA4E5EE7DBF06A689F52@AS2PR10MB7502.EURPRD10.PROD.OUTLOOK.COM>
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Rspamd-Queue-Id: A3F544023E
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [0.90 / 10.00];
+	MID_CONTAINS_FROM(1.00)[];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[kexybiscuit.aosc.io:server fail];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	TO_DN_SOME(0.00)[]
 
-On Mon, Feb 03, 2025 at 03:51:52PM +0000, Ulv Michel wrote:
-> Hello Greg,
-> 
-> > We need a full name, sorry.
-> the full name is Ulv Michel.
-> 
-> > And where is patch 1/2 of this series?
+In arch/powerpc/include/uapi/asm/elf.h, R_PPC64_REL32 is defined as a
+macro to R_PPC_REL32, makes the case value here being duplicate and
+creates the following error...
 
-> Part 1 is this: https://lore.kernel.org/linux-usb/2025012501-pediatric-abide-b802@gregkh/T/#t
+arch/powerpc/decode.c: In function ‘arch_reloc_size’:
+arch/powerpc/decode.c:114:9: error: duplicate case value
+  114 |         case R_PPC64_REL32:
+      |         ^~~~
+arch/powerpc/decode.c:113:9: note: previously used here
+  113 |         case R_PPC_REL32:
+      |         ^~~~
 
-Looks like something went wrong with the threading when you submitted
-this series.
+Remove the duplicate case value to fix the error.
 
-You can resend the patches individually if you prefer since they go
-through different trees anyway, but you should get your mail setup fixed
-for future contributions anyway.
+Fixes: "FROMLIST: objtool: Handle different entry size of rodata"
+Signed-off-by: Kexy Biscuit <kexybiscuit@aosc.io>
+---
+This patch is required for this series to build on powerpc, however I'm
+not sure if it's the preferred way... Please advise.
 
-Try sending it to yourself first.
+ tools/objtool/arch/powerpc/decode.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> > >  	  .driver_info = RSVD(1) | RSVD(4) },
-> > > +	{ USB_DEVICE_AND_INTERFACE_INFO(0x1435, 0x3185, 0xff, 0x00, 0x00) },   /* Wistron Neweb M18QW */
-> 
-> > You forgot a tab before the comment :(
+diff --git a/tools/objtool/arch/powerpc/decode.c b/tools/objtool/arch/powerpc/decode.c
+index 3c95dd74fca0..7c0bf2429067 100644
+--- a/tools/objtool/arch/powerpc/decode.c
++++ b/tools/objtool/arch/powerpc/decode.c
+@@ -111,7 +111,6 @@ unsigned int arch_reloc_size(struct reloc *reloc)
+ {
+ 	switch (reloc_type(reloc)) {
+ 	case R_PPC_REL32:
+-	case R_PPC64_REL32:
+ 	case R_PPC_ADDR32:
+ 	case R_PPC_UADDR32:
+ 	case R_PPC_PLT32:
+-- 
+2.48.1
 
-> :( I removed the tab because the checkpatch.pl complained the length of the line being more than 100 columns...
-> What would be you suggestion? Resubmit? Or keep it?
-
-It's ok with lines longer than 100 columns here in these tables.
-
-Please submit a v2 with your full name in From and in the SoB tags as
-well.
-
-One more comment below.
-
-> -----Ursprüngliche Nachricht-----
-> Von: Greg Kroah-Hartman <gregkh@linuxfoundation.org> 
-> Gesendet: Montag, 3. Februar 2025 16:17
-> An: Ulv Michel <ulv@on2.de>
-> Cc: Johan Hovold <johan@kernel.org>; linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org
-> Betreff: Re: [PATCH 2/2] USB: serial: option: add Wistron NeWeb M18QW support
-> 
-> On Sat, Jan 25, 2025 at 10:40:05AM +0100, U Michel wrote:
-> > From: U M <ulv@on2.de>
-> 
-> We need a full name, sorry.
-> 
-> And where is patch 1/2 of this series?
-
-> > Signed-off-by: U M <ulv@on2.de>
-> > ---
-> >  drivers/usb/serial/option.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c 
-> > index 1e2ae0c6c41c..b166f1607b0e 100644
-> > --- a/drivers/usb/serial/option.c
-> > +++ b/drivers/usb/serial/option.c
-> > @@ -2285,6 +2285,7 @@ static const struct usb_device_id option_ids[] = {
-> >  	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
-> >  	{ USB_DEVICE_INTERFACE_CLASS(0x1435, 0xd191, 0xff),			/* Wistron Neweb D19Q1 */
-> >  	  .driver_info = RSVD(1) | RSVD(4) },
-> > +	{ USB_DEVICE_AND_INTERFACE_INFO(0x1435, 0x3185, 0xff, 0x00, 0x00) },   /* Wistron Neweb M18QW */
-
-And try to keep the entries sorted by VID/PID when possible (e.g. within
-this Wistron subsection).
-
-> You forgot a tab before the comment :(
-
-Johan
