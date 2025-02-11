@@ -1,87 +1,117 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DF125A323
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFDF25A2DB;
+	Tue, 11 Feb 2025 18:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739299995; cv=none; b=ph+qX2hPiIOmwifluFhnzkhh2iXAOMEvRrWwSqFMvwH7UG1NI15Xck6oNGfpUjar7bw52MmO5DHhfK8F2+CoXaquDsdVw05fAyHTqB/PgcXoUpW7Y2eu9DBdC83L3JKM8uVKh7iXuJ7OP/cK/fAtj8Pj2Xi7mwdsN/Dh8Yx3+l4=
+	t=1739300004; cv=none; b=S/8vqU37CslYo3Ec6jcrgJjUHdcND1B0amdgExeoXvUeMaZvz/QPzEkM31cRLo+IE+VjztjUbqntq2s43tKGjIUpaBm+uHv+rpqeLFtknHNDITQ1Sy/0fvyD07hwFPrdfJCJDjDEEeMXeC6xX6btTiMoXiMeZPq0kujLJX/uui0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739299995; c=relaxed/simple;
-	bh=yYcU2JZAoQo0PdjybSDTkRZ6mPUenfDV1ftO6rPg5Uc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ea9TPfgKBtrUHrnVnZJlJjX3MhzwzDayKhiq4JvA2Tao/mHOZtTu+TVf7zRzY7167imL5R6pvz9oPiJ2JW2/yoa7IJ3fSbc5V03FqaJNnwvrTSjjVRyojk2b5ZgpegEZTxjpvn723p/ybCy2tVRo3MWwGUOgFvQ1RJ2D4/eQ/I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wVfmklPW; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1739300004; c=relaxed/simple;
+	bh=zx+mq+gVP1WF5okPzWakDErC34wKoMoME9IDfsfi93Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nwCEeYY0kUoNV0L7zxxm+MAhOJOSxIddOJ7p6Wl9NRBd94bCuJF/SssgrPpSww7hdcdrxyPB+lBRkYf07AzBp0T2x/OYeyLEceQkILVgaOlgFR+JiGt/78p6+9P6uuwzLVT96nrv8TDojVDgR0lXKkDQ3k6S/wk3ENHmVT4u3pU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZYKwDpG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wVfmklPW"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21f61a983ddso146146205ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:53:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739299993; x=1739904793; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hSdXzw5i+XGLoyBoJnanrigNUDo0sEg9JmDuJ0DaxPQ=;
-        b=wVfmklPWmdKqL1wwIhnKrVwNMDsl8ft9pm3I3k5WtiVdqR1raSyrxwFcTtogrLTCWl
-         IZXbLBjggkMZ/2owg48P+BHLt5hAS6vcWE6q4s+3mMwOtBue6PzJUGbFCojkbcId9pl/
-         MrIqm49u17Jh27PIZuO66G3rLKFZH0Hr0wOPBj5jwZ8WSLBkAycysuegAZwX65rFtXVj
-         CPnkpIRc4Nl+k1NvOmIkUaKSEXXSGcOkGyyIxpAou1ahisovocJKRiM252/E+xDUo3oo
-         unrQxnMO4zqR0gTNwmnBxa/kaqjKMGmcpUi+QpyZOu6ZWZmLYWyjYzV8FMMefpEhZICI
-         lZhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739299993; x=1739904793;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hSdXzw5i+XGLoyBoJnanrigNUDo0sEg9JmDuJ0DaxPQ=;
-        b=Ss2iz4lPS8TSi0J8EFIfzYvPXjlJ5GLK5u0U6dNvsyiUYC3vkcgDTq9+sokijK59rQ
-         7KNMeZuPBl3hUZX6ykQc/rto1zlI1q6iyRosrtc1m+Y16BVTeUivlGozZ2Oa3yuHzEby
-         ehQ4GZZ88EYq/RwWEcgKer3x1Dcc00gx0AbNnqAsUV9osQxcY1b0yWsUgxejKYUTFz7c
-         FHt2bMtidZqZ45nobEeSXAhWV6PcCIcT5OLuO+t/SGrP+/GOa6u6cxnlJYzVKOaST5s2
-         42BHmTOa9xI/qcuk6f0HJKWwQ51OK64SpujmJfneOCMj5l/IV+TZ/vGRKqyAuJDvKjsO
-         n3tw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9JXbkPVOZQfVEdYrkQ3ydD4GCibkGXmWEk7cj5bgAEZ+VAy7kmmfowZ3K0hmDpYmveJ4GJ7n8K9O7ro8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPx9W4XWEJYNH/CIDXLSSeBvNtRa/mtKyratcBeDPlTVfTbFY6
-	DGrNK+NWNWaXyuqM516Ykh9OfZ/9ohSJCCzkKx60XzN4BrPG/FjY8uW9h7JUkCKHbjmM7aAs1Ye
-	SZA==
-X-Google-Smtp-Source: AGHT+IFX8Gb8h6J+XoaDUIOL0BfhgtQAHFbQcWrM3kh7lUuCjN0+4w5jTeoVicZi2AD+wRaXv1IpPGRPdQY=
-X-Received: from pgc1.prod.google.com ([2002:a05:6a02:2f81:b0:ad8:6337:811d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:7314:b0:1ed:7540:45d5
- with SMTP id adf61e73a8af0-1ee5c74ccf3mr617940637.17.1739299992823; Tue, 11
- Feb 2025 10:53:12 -0800 (PST)
-Date: Tue, 11 Feb 2025 10:53:11 -0800
-In-Reply-To: <20241127172654.1024-2-kalyazin@amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZYKwDpG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34661C4CEDD;
+	Tue, 11 Feb 2025 18:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739300003;
+	bh=zx+mq+gVP1WF5okPzWakDErC34wKoMoME9IDfsfi93Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qZYKwDpGHCa6m2Qod0KOc6E8lLYCFHvspX9+CuIgvCF8ILv1Mqg9jqR+Ib7D9nwwX
+	 YsQ1oarEWWd8RloAJg9ezbrtu66Xb3tOq1s67O1Mx19qqOA8OYtDvJhOZp2Apyz4zi
+	 7elTz8QzkUxneevUqRBSa/vdyxS5SrMhAPNNY6MK0jUZw0kwp9Pkz7u+R/iLlhk58R
+	 BP8RhRJYDqsUnZjtECldbgQSWBL4RcWom4DovKv4guZJlbZveWap2tyfKMOotXr8Kf
+	 jaXzDWR9RIfKL0iBgLLJYERtMMwdWq3Sn1UJfg5crWf7qQHgbw0vaHsMCzkOvSmD/u
+	 oRKlw7jQgSXPQ==
+Date: Tue, 11 Feb 2025 18:53:17 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	David Jander <david@protonic.nl>,
+	Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v8 01/17] spi: add basic support for SPI offloading
+Message-ID: <094f00bc-1001-425f-87ca-84646b68bd70@sirena.org.uk>
+References: <Z6otFlsmEikIbI__@black.fi.intel.com>
+ <27d2a88c-b44a-4712-b066-b999e41774f0@baylibre.com>
+ <b1dcbb19-190a-45e7-8e94-cb5ef65f1f1b@sirena.org.uk>
+ <Z6pim_nLct33LzfN@smile.fi.intel.com>
+ <b000d3fd-754a-43e8-ab10-82677eeee1d2@sirena.org.uk>
+ <Z6tcwg7QgQwytoSb@smile.fi.intel.com>
+ <Z6tezVXVxVCwXuds@smile.fi.intel.com>
+ <Z6tfUfHilO2KLmxv@smile.fi.intel.com>
+ <Z6tgNjH6Qq5pe9Gt@smile.fi.intel.com>
+ <tnjsrq3trijh4agmbhrfnqeq4iojhwybtg45bwt5n7mg7qqgcx@s7gw7idjuxgd>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241127172654.1024-1-kalyazin@amazon.com> <20241127172654.1024-2-kalyazin@amazon.com>
-Message-ID: <Z6ucl7U79RuBsYJt@google.com>
-Subject: Re: [PATCH 1/2] KVM: x86: async_pf: remove support for KVM_ASYNC_PF_SEND_ALWAYS
-From: Sean Christopherson <seanjc@google.com>
-To: Nikita Kalyazin <kalyazin@amazon.com>
-Cc: pbonzini@redhat.com, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	vkuznets@redhat.com, xiaoyao.li@intel.com, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, roypat@amazon.co.uk, 
-	xmarcalx@amazon.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="UVnWZBsUYOnPBs3q"
+Content-Disposition: inline
+In-Reply-To: <tnjsrq3trijh4agmbhrfnqeq4iojhwybtg45bwt5n7mg7qqgcx@s7gw7idjuxgd>
+X-Cookie: Printed on recycled paper.
 
-On Wed, Nov 27, 2024, Nikita Kalyazin wrote:
-> 3a7c8fafd1b42adea229fd204132f6a2fb3cd2d9 ("x86/kvm: Restrict
-> ASYNC_PF to user space") stopped setting KVM_ASYNC_PF_SEND_ALWAYS in
-> Linux guests.  While the flag can still be used by legacy guests, the
-> mechanism is best effort so KVM is not obliged to use it.
 
-What's the actual motivation to remove it from KVM?  I agreed KVM isn't required
-to honor KVM_ASYNC_PF_SEND_ALWAYS from a guest/host ABI perspective, but that
-doesn't mean that dropping a feature has no impact.  E.g. it's entirely possible
-removing this support could negatively affect a workload running on an old kernel.
+--UVnWZBsUYOnPBs3q
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looking back at the discussion[*] where Vitaly made this suggestion, I don't see
-anything that justifies dropping this code.  It costs KVM practically nothing to
-maintain this code.
+On Tue, Feb 11, 2025 at 07:45:30PM +0100, Uwe Kleine-K=F6nig wrote:
 
-[*] https://lore.kernel.org/all/20241118130403.23184-1-kalyazin@amazon.com
+> There was a similar discussion some time ago about the lpss pwm driver
+> (https://lore.kernel.org/linux-pwm/Z09YJGifvpENYNPy@smile.fi.intel.com/).
+> The arguments that you didn't accept back then already are similar to
+> the ones that were brought forward here.
+> The TL;DR; is: Adding MODULE_IMPORT_NS() to a header makes it easier for
+> code to use the exported symbols. Yes, that includes abusers of the
+> code.
+
+> But if you mostly care about the regular users of an API/ABI, making
+> things easy for those is the thing that matters. Agreed, if you think
+> that module namespaces are primarily a line of defence against abusers,
+> adding the import to the header weakens that defence (a bit). However a
+> typical header includes function prototypes and macros. Those also make
+> it easier for abusers. With your argumentation we better don't create
+> headers at all?
+
+> There are other benefits of module namespaces like reducing the set of
+> globally available symbols which speeds up module loading or the
+> ability to see in the module meta data that a namespace is used.
+
+FWIW I fully endorse what Uwe is saying here, forcing every user of the
+API to separately import the symbols seems more likely to create
+busywork than to avoid problems.
+
+--UVnWZBsUYOnPBs3q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmernJwACgkQJNaLcl1U
+h9ByhAf/fckjqFNct4SZp/CU5FQltdeSJfJEoKDht7PifSmQ7Toy768CqAlb8t/m
+OWP8BQ0Y2N3EM2M/Myoat+PjbGSFQNgR8jiwSv5sQR3e2YlIoKw84jOgjbVdtDrP
+GBo4Z9D+s1+qzphUu+qijAjy5ZKb1FT6bdexXJQFIHG9Y2Wjn00T5LiaTORW1q7z
+Nbk0HgaBV07H/qkL/KV9IegbwI+NQ8aVxioFH5ciAa3Dvb+tjlZuh8eLrnnYNLAm
+yQdE4OJ/60QR5cQNWn7fdoodbCxOm5m1OXbgPyUuykV5e38FIvb9l2JwxC/4IuVe
+ctROaAu0kN4p09y2O6wHf1FsRcBVKQ==
+=dReo
+-----END PGP SIGNATURE-----
+
+--UVnWZBsUYOnPBs3q--
