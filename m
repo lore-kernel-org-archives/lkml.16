@@ -1,115 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2DE1F03F9
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CA61F0E25
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739264085; cv=none; b=gz7ZhazDlL2nzG9DPztXdtWW4KMNI6+gYYawitTUehS29tqMSUCR7TKwPBDc+ZdBBBUHTvTVuYWXbLwj+N/Vddh2/RBETIhHVHY3krXVI4BIkQUyVEwU3XJ9wdOaWrdXK5Gyxl3Up4abtcuPLquwsMX7JSnjbyemfVml4ZmUuWs=
+	t=1739264136; cv=none; b=N+3rEVMPxAA456GaDB+OtzGH1ZUMC7YvTvLcuzB/NoIDGv+vqlvCNosSY6rRZKOAfFIBYIkMbD/8BeZQ1h3igKPnSJwByJV8ujvUXXZUQKKL3gAiGtELE3iGvk4bdiw+nm1VOrXG5o5SssruBoO9dP3fYQhSnYbUGmjIyDA3z5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739264085; c=relaxed/simple;
-	bh=A9OGoTsHrjtvyBc5Q07ZgbbmAyoBumXm7SUvVbyvJc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t5uPcFdHkOMjLxAMPlT80NPA0jv9jHFDlCNGWH9pLfpkobj1XVZmh1/LCOXcpXSuGWS/urjuIlCp/6UAxzia3h+KdjqaoI9umPHlBQWp9W5/m6jqETntlMiRXYuUM7WWNnGnPdBNk3ZdlCALRtcnFvQZndSlQAS8zQzxWm3bObE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GZq3/7Bu; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739264136; c=relaxed/simple;
+	bh=so3608nuzu2Z4wPWCdEL2Kh4q3DiMgLd3JHw50uJwm4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=VpqI/J65FUIDgzRN8X+JlPo9sAvtkXP5gy1s+Ukpo8NlFuH4iGv0BizO4exfFPIDF6kKYrlz0oilS+gnxWnY1MmQN3IhhcAYDOO+5r9GfZslQt25RKghRqDsUGvU0mJ6L8OF7BvVZhZH/+XGuEuOFUNFTZA2zL/cnF1TwwpgEWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ipt3mM2B; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZq3/7Bu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739264081;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+JLq8TzMXCM9fnXbwXAYKIjuUWhuJvIj9pOn4Osk/Hg=;
-	b=GZq3/7Buua4e4xWI7jRkfUghkVpbsyf2KBHk/uEQi+KHCIoljcmDDc5URwia7Lu9PQ6SZJ
-	BsdOpyrXh5EjxB04vUZ2/9ZSd2KkzXwv2yQstrmQNd1WEVv4+MQrtkavCNOYrU5H5ytqjZ
-	QNfLPxm0kKqIWYOi3Vdu2t8j+iyVmZc=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-606-mG47wWKiPtq7aPlWGvZA-w-1; Tue, 11 Feb 2025 03:54:40 -0500
-X-MC-Unique: mG47wWKiPtq7aPlWGvZA-w-1
-X-Mimecast-MFC-AGG-ID: mG47wWKiPtq7aPlWGvZA-w
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38dc88ed7caso2374775f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:54:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ipt3mM2B"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38dcf8009f0so1846262f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:55:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739264133; x=1739868933; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=2ATS9kH3JOXqCDIar73OnrkF9ilRSB+64NK3pHta400=;
+        b=Ipt3mM2BzfG8lgSS2kohFvQxHtDPdXzQ2CpG+8Igq/BwRimRwi9w2TdVQwBbOeIy6Y
+         oRAbXfvKqfNB3noJUdnOCxO01Rk34EM6tzSDhbrHkXANNvpx8hYEbGI/2Z9n6ZuRL3HG
+         keuAlx4Nr/UzoGmyiK+Dc6GUu4SzzkloKAYHomVTVzGYZavF+S1pqqj/bQf+3wrh+NTR
+         9MwfN0kdza2HsFy1jzBD1bvpB4eUqqvdw/yamDgg3igrDsHgyYBT285oI3c+fY5uiEEf
+         XGBuMeKysdiRYtyHvbgvTY4S3DSvxQeEaOSTKZEdO3vLV6AyM1TiQt+LEip1B7cxsY5u
+         ychA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739264079; x=1739868879;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+JLq8TzMXCM9fnXbwXAYKIjuUWhuJvIj9pOn4Osk/Hg=;
-        b=WpHO4yfWjgsBK7jrXYKNi/JjRs7M4IIqhCRBIWgJmIzX7DyQinZQRHFIqRpoiLOQfg
-         i/K8mAEdJvSS1sQSBjjYEWQ+rxn8LMRvIc5IKUJY7aKL8W+c4oGHVHzXmzlyY7MPIooj
-         aFTd1chhp6a9ODXDi7vcrNek0ggeeEx/5UzXvuBWeR/CLHPFj09NEyLsMC5RAv/YSQ0l
-         Tyn6DdsrOR7NDd5hQ2HsZohlD+3dnoncv7awfOEH9MzuO3h5VNiJR23iNtQBaGCqMzRM
-         S8YKSkm7S7zKco8uC6NF1Wwtvml3sExFClmSx8Ogorc49jIH+YQQ8Z+AeSAjLLKDxQYK
-         1g7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXUxyEwVZK8YUcjgfuqIKbGZdmAGhTSdboBTJtyo/ah1iIDG8xsy3EP4flUI4DkvmD9g6R97yZfxCDXwoI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMzNxwonlAZybK8kgXFHXw5FVDX2f5VJyK2pS+FLZeIZjSi/XD
-	gZOCcXtk1uIb5pl0WL0iK7xipFYrUJw3mu6IXzzRF4HFvsUrTk0cP+I68OH/xFCDCNIZ61LiCox
-	JBK+zwt+NEu4Zqr9QZ9tU1bWZGMNPAkFql4MCe0vFeJJb6ECxdCDHE8Y9HFaHfw==
-X-Gm-Gg: ASbGnctU3mOxezqYm/fRpqtB9RONMjhUKghc53N0ES0AsUraPBruTrvgVfayIqqUbWR
-	ay/R5sMkZsbvXtnAI6hOl9xTA1FKLTYrs6r4n2RaGn6GSRp2v0od4pspzGTvuHGf20WjRSmELbf
-	k3akc6Y0RzUPqcq679iVopXNU4zvyDTVfpqaynSzd9J+wsCMKzbGhHZ9hpRQ5oFlWYukPcoM1ST
-	Odl+8sHzDcoHETkn3+2tZIoZeYIuRyjXD5MAHmDowpQWmFiNlSyRBrM3uCsm8DCwBbeAwX6/CNM
-	C4n//ghZf6ZInvLX+O4fyR5wt51zSi5Rnw+QaxkiM3MBPQFg+Nb3QQ==
-X-Received: by 2002:a05:6000:1a85:b0:38d:d906:dbb0 with SMTP id ffacd0b85a97d-38dd906dcbcmr7731122f8f.7.1739264079235;
-        Tue, 11 Feb 2025 00:54:39 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH+FXQlM4sVQQqQ6bfC1MLrVyaITtJSDcEgeRD57O/EtV7ZEKzfLqyRzc94bzpSoemBGMAbgw==
-X-Received: by 2002:a05:6000:1a85:b0:38d:d906:dbb0 with SMTP id ffacd0b85a97d-38dd906dcbcmr7731090f8f.7.1739264078600;
-        Tue, 11 Feb 2025 00:54:38 -0800 (PST)
-Received: from sgarzare-redhat (host-79-46-200-29.retail.telecomitalia.it. [79.46.200.29])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394df55f51sm12596505e9.0.2025.02.11.00.54.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 00:54:37 -0800 (PST)
-Date: Tue, 11 Feb 2025 09:54:32 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Junnan Wu <junnan01.wu@samsung.com>
-Cc: stefanha@redhat.com, mst@redhat.com, jasowang@redhat.com, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	xuanzhuo@linux.alibaba.com, eperezma@redhat.com, horms@kernel.org, kvm@vger.kernel.org, 
-	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	q1.huang@samsung.com, ying01.gao@samsung.com, ying123.xu@samsung.com, 
-	lei19.wang@samsung.com
-Subject: Re: [Patch net 0/2] vsock suspend/resume fix
-Message-ID: <jeqyqnuqklvk4ozyfhi4x4zadb5wxjvnefmk7w4ktvjna4psix@fc244relosif>
-References: <CGME20250211071930epcas5p2dbb3a4171fbe04574c0fa7b3a6f1a0c2@epcas5p2.samsung.com>
- <20250211071922.2311873-1-junnan01.wu@samsung.com>
+        d=1e100.net; s=20230601; t=1739264133; x=1739868933;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ATS9kH3JOXqCDIar73OnrkF9ilRSB+64NK3pHta400=;
+        b=DjPfUk0u4J2KGCGBJx8ZDGVp5tOlasx7iT7a3b0M07MNzTzM9VQh8LWaBa5qDMArbV
+         uOdnfewDa1tjKXrbd2JjWLbnLR9FWMClQlxTI5uey0eBiEFmWqNUGcsNdghgY5YKBOvb
+         e44MqmDgqjLJISG6r8/NSVHgZ2eHqN5TkcA1p6ld2ZMfJGTfr9wXDBfVxcuos8ofJ0vN
+         EPpdkESvY0muW/n5DAEH40xlbgLFm52se5d4y6ow8QNg7DEHAL/K98z/gGNg5Dj/ocYB
+         9wQBpgC8R/2MlINcjWSQ3CCNtEQDeSVno5YrU8MaL5loBJNeUVLCkU1F1JQTSRk6auc8
+         AdyA==
+X-Forwarded-Encrypted: i=1; AJvYcCXElJh9AtnKR1g6dqB8WeopZqEokarAlq1b80e3hueypMLCCyZC4ov0yISVbseSHf/ORI1Iw4GBD4Dw890=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG7Dgc5UDCCpXSUyfHnFpxIx6FhlW9LAIJT/WQ0YgAxwpGnr3r
+	vHz7pkXWGIZzdloilltQIBXtD2+0GEfqZtcH+prt1jUQPgphxhD97hsGncI2Els=
+X-Gm-Gg: ASbGncvlwdweU/awOgk6cEc+/c5gMzW4a0+hhKQgww/R5xLFJpQPvuoGTtlIVqlE2I7
+	LkrCgfXRNIytTfO7Zui1k2kD/Tk/bpQY41ilM4WV19bO9SP/UK6kqeyWIUH1wu+kkIP/enSCnhj
+	KlOn8zuIjoBe+QwokexCW5gF+Lx+K7Kn9kbYJeuRGJNeuTybHlZ19nKmWXqe2oN4pT2G72ZU7YS
+	HdMLZPKLSGLSHMkysTu4pXC/SAV4bYtc5y1eyFbDSBvUvx0pswxWikbfuem/PKLDHA0Ecp4Pc20
+	A86xhrD4x0Pk59Y7e+fFU3iDQ4SNHkVOypGFRfYeoYT9YtZRKuX/ib8=
+X-Google-Smtp-Source: AGHT+IGlpUgTYtIiheMDAuizrYUdnfwTiXvy3+Z24hKU84ausw4miBggLrIYHvGUHbl0rw2KWztuoA==
+X-Received: by 2002:a05:6000:1865:b0:385:e105:d884 with SMTP id ffacd0b85a97d-38dc9371e85mr13413888f8f.46.1739264132995;
+        Tue, 11 Feb 2025 00:55:32 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-38dd187360asm9452225f8f.43.2025.02.11.00.55.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 00:55:32 -0800 (PST)
+Message-ID: <bdd94f9c-e751-4a16-848c-bb83cf1be569@linaro.org>
+Date: Tue, 11 Feb 2025 09:55:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250211071922.2311873-1-junnan01.wu@samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: thermal: Correct indentation and style in
+ DTS example
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Vasily Khoruzhick <anarsoul@gmail.com>, Yangtao Li <tiny.windzz@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev
+References: <20250107131027.246608-1-krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20250107131027.246608-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-For the third time, please READ this link:
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+On 07/01/2025 14:10, Krzysztof Kozlowski wrote:
+> DTS example in the bindings should be indented with 2- or 4-spaces and
+> aligned with opening '- |', so correct any differences like 3-spaces or
+> mixtures 2- and 4-spaces in one binding.
+> 
+> No functional changes here, but saves some comments during reviews of
+> new patches built on existing code.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
 
-This is a v2, so you should put it in the tags [PATCH net v2 ...]
+Applied, thanks
 
-And also include a changelog and a link to the v1:
+   -- D.
 
-v1: https://lore.kernel.org/virtualization/20250207052033.2222629-1-junnan01.wu@samsung.com/
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-On Tue, Feb 11, 2025 at 03:19:20PM +0800, Junnan Wu wrote:
->CC all maintainers and reviews.
->Modify commits accroding to reviewers' comments.
->Re-organize the patches, cover letter, tag, Signed-Off, Co-worker etc.
->
->Junnan Wu (2):
->  vsock/virtio: initialize rx_buf_nr and rx_buf_max_nr when resuming
->  vsock/virtio: Don't reset the created SOCKET during suspend to ram
->
-> net/vmw_vsock/virtio_transport.c | 28 +++++++++++++++++++---------
-> 1 file changed, 19 insertions(+), 9 deletions(-)
->
->
->base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
->-- 
->2.34.1
->
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
