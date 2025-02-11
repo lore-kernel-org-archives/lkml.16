@@ -1,204 +1,136 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B00E253B5A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C49253B47;
 	Tue, 11 Feb 2025 16:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739289821; cv=pass; b=AAhp0kggMtpSnrzdfq89AGglQAENqBblvRGnXCQpUA/NLxka2HT9A5ZA0aWAtGT1Bi5IdOgMUDwVsm4FcNRWMyBXECRV4hQsv1BhdkllYKonBkCVXEYY9BBmue2wJEAeX53Pq9pBfr4f+PkvCPBNZdLJg5WNnPb1Fs+OSl85Jcw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739289821; c=relaxed/simple;
-	bh=tpoPNHnNCy+zTkxRlA3RTyTSyZS8bccCMEDfupDRbuU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EwvE5AacSsGchXaPturMH5Eak7gQ7MEa6PzqztZMiAALUQjbzk9fsgg9u6HgJTBS6pwrWCffIK6663B3eZuODv+nqBgzccotKcDeMTkGtDOSR/xrE2YhuNHd3RBXv8XPIq7kHYnmmbzNE5O86s6WT8PRGOwUdne1ShVvCOtEdgk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=iQxBb7tC; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739289822; cv=none; b=HXnGuSVxJQnUAHn77Mwz5IgsfIib1QjjbCdk7nuZR7bP0WbXqyf8FuPGOs9VBbegfdBQ/9dZtD8iDsWLzEIemrwFecUuDmA2PHdqAA8ZbFroenT+VMmE3v+Hrfh066TwEVYiLnuvp0BtKutskH+5TA9nqeUX1MoyDpR79b2noQU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739289822; c=relaxed/simple;
+	bh=y2quUKlQp3YDpfsFJEd9u2apBzN0pPoo+ubar++p7XY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IvB9LtnBoQ7oJhvqBM0MtFJWgnIJIq7hbFg/k8bfdL90T5wDnc7DpNx4h9z+c2Tl8Sae4t5TO0ePvo1JnQVzy1EKwH6xcqfcutQMwAy7qAd6cHXu+37kOYqF1XluApSBrvl6/TLWRZQA3TMTDtKtlE+Pcz5HBf4+oRgEWwGufuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HUGk6FHB; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="iQxBb7tC"
-ARC-Seal: i=1; a=rsa-sha256; t=1739289784; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=QSjSAVX2EjM0Zkd4t3XxNiDwxfY5+9s3grENOIXcAKKTLAAxTSULL7cYBGYfuyA++2l/A6ei0G3wEAi2TARhCscUM8HGLD0zz0bM5g8U2fohtTwiUeqdUKUAisprotOTwjl0Vz/PCHmI+tZWhXfiIKXsocXABnSZBYp2v6/puKM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739289784; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=681ubr2yNewIQqxC054xPg8+eBAOGYYdn+NBIKKdGdE=; 
-	b=CxXWXC+2+CoQDHM1+VTzIrn1O48zJzrD1fTy+um0LKvljz6PnSsQnF0xh4RP+m/SxuGWo2ZvGoP1mH2ux/6jf2ZGCQHAALMShnu1sB0PpP2v0KmmHWUpGdMWV8DmK5dEkJkEp/6Cz0Nnezcb2tREb9tFudIOlN58e6dPv8LHQBs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739289784;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=681ubr2yNewIQqxC054xPg8+eBAOGYYdn+NBIKKdGdE=;
-	b=iQxBb7tCOEFCGiOuMrO42BS2uKeduRpsKygpLIiaenhuke650/Qi/ZWm7c5LX7jU
-	2WQ01zzgqpxtNFAiGZYptUkqrcriCKHetHsE4xX07j+hg+W9RQCfE0nq/H2GcKd2Guu
-	bxYbJBVrawrKFxk2nyBLcobTb0yW++773DNvtIlU=
-Received: by mx.zohomail.com with SMTPS id 1739289781881942.8989499803911;
-	Tue, 11 Feb 2025 08:03:01 -0800 (PST)
-Message-ID: <dd41b33d-e73a-4ff8-803f-00a3ab7c9c4b@collabora.com>
-Date: Tue, 11 Feb 2025 19:02:55 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUGk6FHB"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-307325f2436so53584891fa.0;
+        Tue, 11 Feb 2025 08:03:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739289818; x=1739894618; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7M65DyXElWxbMxO2kjGuVsr5LRLQGqgQ6Ttqv8xb7Q8=;
+        b=HUGk6FHBaWaBQvBcGD5w0lYhdj/6IQDuQ8o5JVnCJHITu3ryr1/e4DI7MLi+YxPh+b
+         uK4zdliW6a64WVOP2AdM3hSe/7rmbSJP0um59Ly76lC5ZnqHdlFIbHNgYWHdiznL6LFp
+         9X5R/sUoQTxTs5Xy5gjzy0iwVOW17Mf/ZI/ctoFCb0K2m6WxeOc37tjMdSNH5+RmZ113
+         p338N/cmBRs6bJL+lReO+PDbp2NZdXcWqfezOSG48WED3t7ZNHwDay2Db5EaAAGztoUP
+         yOukjmPjSxHIu6Zd/6qvHADPlU2q5trbYRh8fcS20EqDNanrmKrGb3wcDtgj4RQuGkv+
+         297Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739289818; x=1739894618;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7M65DyXElWxbMxO2kjGuVsr5LRLQGqgQ6Ttqv8xb7Q8=;
+        b=bW7lDtzYQ7ZZQHfuVndnxnNNbV4AvsohrwsZ34f1+v91XdFdu03K0QWOmnPYvv4NhK
+         GyhzlvGsJtSvjHFkv/rUATtu0oH70SwGBHqJf8sdrabk+KVPsf9BGZMPj94U1NNT+qav
+         qD6v5JCQKrvYyXgBe87SzdTvV5Kb+VVPLoA7+NZTqpXVjWj10/f0fpKbPpO7elytA80m
+         oXPtEXxVbEoHrrqMSXqN6E5ZIhjk5VW/zYShSsVAKne79iS3IKio8JIlWFs7iJ/NtFyW
+         M4L2rkojycypdIEJ4N1jUb46ZCJZs4L+SY272TDmBEr6dgn6EzQd8Ua50VPh0CvP1bRg
+         8rEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEYHq9pt0ecwCsudzTJki3dMm53lt+1S6S9uvKROT3bnN89XES7vVHQaGaxzMu6YBWaq6BmjFhXHPSoKs=@vger.kernel.org, AJvYcCVuIAMD849/MR0YQzR7/T5OlHp1TbBcMm+i5bfu/RwQJd7o1s4uuDvzso/Swf0faYy0VrscgMkqK22EOAxanfui@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/t0d0h0M3C/lz3/4EodG1qbKrcwHPGytOZH3qtUy1DAiOrHIo
+	tR4HfHHyXkzlKqSOWTaKde2ynBgig34R+V2Pq4dIaixFU6ysHzo3fKzw3sg3+qDCNA3CbLQ3yVE
+	Pw06mKnaCt6BWsgwNRc3pSxKPXBY=
+X-Gm-Gg: ASbGncu+jvXG51DuhVZbLSD+KGHBLzPX6U8t1eVAhkFfIT5qQCbQ662KpdnvhCsy2BL
+	G6YY2QG3de74auTo7VPYNyyIJZGupahdOpqyyorcPhwMfNDBRxHWMWeHLq7dnAQFTBfuMFq4Fxn
+	bC2dxV7eM/U14F
+X-Google-Smtp-Source: AGHT+IEn0gXdg0osprKgTY4h+XEMzhka+2ZdcfY9w1vp1y6oDsG8p27snUZ/R6BJt+rZfVPUv/exrweGRnMrfX5KW4E=
+X-Received: by 2002:a2e:b8c7:0:b0:300:26bc:4311 with SMTP id
+ 38308e7fff4ca-309036d8fb2mr265091fa.18.1739289816347; Tue, 11 Feb 2025
+ 08:03:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH v5 4/4] media: platform: synopsys: Add support for
- HDMI input driver
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- Shreeya Patel <shreeya.patel@collabora.com>, heiko@sntech.de,
- mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
- p.zabel@pengutronix.de, jose.abreu@synopsys.com, nelson.costa@synopsys.com,
- shawn.wen@rock-chips.com, nicolas.dufresne@collabora.com,
- hverkuil-cisco@xs4all.nl
-References: <20241210193904.883225-1-shreeya.patel@collabora.com>
- <20241210193904.883225-5-shreeya.patel@collabora.com>
- <b6ee761c-6941-473b-aa5e-2dadb69767f2@xs4all.nl>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <b6ee761c-6941-473b-aa5e-2dadb69767f2@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+References: <20250211-scanf-kunit-convert-v7-0-c057f0a3d9d8@gmail.com>
+ <20250211-scanf-kunit-convert-v7-1-c057f0a3d9d8@gmail.com>
+ <Z6tvzhZIMVKWH8kK@smile.fi.intel.com> <CAJ-ks9=Bf42eojROr1X+BnmeQLa=zF7EAr4Y3n2exwZXum+rbQ@mail.gmail.com>
+ <Z6tzkY375ffTVEXQ@smile.fi.intel.com>
+In-Reply-To: <Z6tzkY375ffTVEXQ@smile.fi.intel.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 11 Feb 2025 11:02:59 -0500
+X-Gm-Features: AWEUYZlu4jSeZi9UmOoyqtKCnQIyEWkScacMVCQG1SkWycxDVHy6dwNFcwQ4M5Q
+Message-ID: <CAJ-ks9=xqXsEp1_PP82qr_WDm_OF_uW2eKQfqC5+aDapWdoJ2w@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] scanf: remove redundant debug logs
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/10/25 16:46, Hans Verkuil wrote:
-...
->> +static bool hdmirx_check_timing_valid(struct v4l2_bt_timings *bt)
->> +{
->> +	if (bt->width < 100 || bt->width > 5000 ||
->> +	    bt->height < 100 || bt->height > 5000)
->> +		return false;
->> +
->> +	if (!bt->hsync || bt->hsync > 200 ||
->> +	    !bt->vsync || bt->vsync > 100)
->> +		return false;
->> +
->> +	if (!bt->hbackporch || bt->hbackporch > 2000 ||
->> +	    !bt->vbackporch || bt->vbackporch > 2000)
->> +		return false;
->> +
->> +	if (!bt->hfrontporch || bt->hfrontporch > 2000 ||
->> +	    !bt->vfrontporch || bt->vfrontporch > 2000)
->> +		return false;
-> 
-> I asked before, but are these hardware limitations or just sanity checks?
-> Please document.
+On Tue, Feb 11, 2025 at 10:58=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Feb 11, 2025 at 10:50:33AM -0500, Tamir Duberstein wrote:
+> > On Tue, Feb 11, 2025 at 10:42=E2=80=AFAM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Tue, Feb 11, 2025 at 10:13:37AM -0500, Tamir Duberstein wrote:
+> > > > The test already prints the same information on failure; remove
+> > > > redundant pr_debug() logs.
+>
+> ...
+>
+> > > > -     pr_debug("\"%s\", \"%s\" ->\n", str, fmt);                   =
+           \
+> > >
+> > > What *if* the n_args =3D=3D 0 here?
+> >
+> > Then there's no assertion in this block, so the test cannot possibly fa=
+il here.
+>
+> Correct, but I'm talking about this in a scope of the removed debug print=
+.
+> I.o.w. how would we even know that this was the case?
+>
+> (I'm not objecting removal, what I want from you is to have a descriptive=
+ and
+>  explanatory commit message that's answers to "why is this needed?" and "=
+why is
+>  it safe to do?")
 
-These should be sanity checks. We added comment explaining what this
-code does, telling that we need to repeat checking the timing values
-until they become valid. This is borrowed from downstream driver,
-whether these values are tied to hw limits is unknown, we couldn't find
-the exact limits documented in TRM.
+The true answer to "why is this needed" is Petr requested it in
+https://lore.kernel.org/all/Z6s2eqh0jkYHntUL@pathway.suse.cz/ (again,
+lore is having issues):
 
-...
->> +static int hdmirx_set_edid(struct file *file, void *fh, struct v4l2_edid *edid)
->> +{
->> +	struct hdmirx_stream *stream = video_drvdata(file);
->> +	struct snps_hdmirx_dev *hdmirx_dev = stream->hdmirx_dev;
->> +	u16 phys_addr;
->> +	int ret;
->> +
->> +	if (edid->pad)
->> +		return -EINVAL;
->> +
->> +	if (edid->start_block)
->> +		return -EINVAL;
->> +
->> +	if (edid->blocks > EDID_NUM_BLOCKS_MAX) {
->> +		edid->blocks = EDID_NUM_BLOCKS_MAX;
->> +		return -E2BIG;
->> +	}
->> +
->> +	if (!edid->blocks) {
->> +		cec_phys_addr_invalidate(hdmirx_dev->cec->adap);
->> +		hdmirx_dev->edid_blocks_written = 0;
-> 
-> This must pull the HPD low, but that doesn't happen.
+On Tue, Feb 11, 2025 at 6:37=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
+e:
+>
+> [...]
+>
+> But when thinking more about it. I think that even pr_debug() is not
+> the right solution.
+>
+> IMHO, we really want to print these details only when the test fails.
+>
+> Best Regards,
+> Petr
 
-Good catch, will fix.
+The commit message already answers "why is it safe to do":
 
-...
->> +static void hdmirx_get_avi_infoframe(struct snps_hdmirx_dev *hdmirx_dev)
->> +{
->> +	struct v4l2_device *v4l2_dev = &hdmirx_dev->v4l2_dev;
->> +	union hdmi_infoframe frame = {};
->> +	int err, i, b, itr = 0;
->> +	u8 aviif[3 + 7 * 4];
->> +	u32 val;
->> +
->> +	aviif[itr++] = HDMI_INFOFRAME_TYPE_AVI;
->> +	val = hdmirx_readl(hdmirx_dev, PKTDEC_AVIIF_PH2_1);
->> +	aviif[itr++] = val & 0xff;
->> +	aviif[itr++] = (val >> 8) & 0xff;
->> +
->> +	for (i = 0; i < 7; i++) {
->> +		val = hdmirx_readl(hdmirx_dev, PKTDEC_AVIIF_PB3_0 + 4 * i);
->> +
->> +		for (b = 0; b < 4; b++)
->> +			aviif[itr++] = (val >> (8 * b)) & 0xff;
->> +	}
->> +
->> +	err = hdmi_infoframe_unpack(&frame, aviif, sizeof(aviif));
->> +	if (err) {
->> +		v4l2_err(v4l2_dev, "failed to unpack AVI infoframe\n");
->> +		return;
->> +	}
->> +
->> +	v4l2_ctrl_s_ctrl(hdmirx_dev->rgb_range, frame.avi.quantization_range);
->> +
->> +	if (frame.avi.itc)
->> +		v4l2_ctrl_s_ctrl(hdmirx_dev->content_type,
->> +				 frame.avi.content_type);
->> +	else
->> +		v4l2_ctrl_s_ctrl(hdmirx_dev->content_type,
->> +				 V4L2_DV_IT_CONTENT_TYPE_NO_ITC);
-> 
-> InfoFrames must now also be exported to debugfs. See e.g. drivers/media/i2c/tc358743.c
-> and include/media/v4l2-dv-timings.h (search for V4L2_DEBUGFS_IF_MAX_LEN).
-> 
-> This is a recent change: both drm and v4l2 can now export InfoFrames to debugfs,
-> and this is handy for debugging issues.
-> 
-> The edid-decode utility (part of v4l-utils) can parse these InfoFrames.
+> The test already prints the same information on failure; remove
+> redundant pr_debug() logs.
 
-Ack, will add the InfoFrame debugfs.
+Perhaps what you're asking for is an assertion to be added if n_args
+=3D=3D 0? I think that would make sense. Does it belong in this series?
 
-...
->> +static void hdmirx_load_default_edid(struct snps_hdmirx_dev *hdmirx_dev)
->> +{
->> +	struct v4l2_edid def_edid;
->> +
->> +	hdmirx_hpd_ctrl(hdmirx_dev, false);
->> +
->> +	/* disable hpd and write edid */
->> +	def_edid.pad = 0;
->> +	def_edid.start_block = 0;
->> +	def_edid.blocks = EDID_NUM_BLOCKS_MAX;
->> +
->> +	if (IS_ENABLED(CONFIG_VIDEO_SYNOPSYS_HDMIRX_LOAD_DEFAULT_EDID))
->> +		def_edid.edid = edid_default;
->> +	else
->> +		def_edid.edid = hdmirx_dev->edid;
-> 
-> So if you are not loading the default EDID, then you load a zeroed EDID?
-> 
-> This is much too complicated: if there is no default EDID, then just
-> pull the HPD low (you do that already at the start) and return.
-> 
-> BTW, please check with CONFIG_VIDEO_SYNOPSYS_HDMIRX_LOAD_DEFAULT_EDID set
-> and unset and make sure there are no compile warnings/errors relating to that.
-
-Now I see what you meant previously. Keeping HPD pulled low if there is
-no valid EDID will work. Will change it in the next iteration.
-
-Thanks for the review!
-
--- 
-Best regards,
-Dmitry
+Tamir
