@@ -1,105 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253761FAC5E;
-	Tue, 11 Feb 2025 12:00:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483251FDE1B
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:00:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739275208; cv=none; b=CI81fppTL0VbPJfy4CqmTqZI17knb9txLr2rdENuQA3COo6j160G6EeAEJlsey3bD3UaNi+VZpK8iFVlksMIdwZXNGLKDDLqcZFZNea3bIksyUJiHCtnqEm9mwe23p0jG97rhyP/3Ev2sVEtmWOXfqfEDMbAI/sWniXBGn27rEs=
+	t=1739275212; cv=none; b=TVNqLuAiONBa30cXghGQ6vNYBiD8dqg/Ix3xs1L30DCs4vOp6MmbyTRJz8wumPy9hH2GfhSbDEjGa9we4xtenepaHpSyCI8mbB9zubm7bhIwW+gdxNDJgdceZ0fMiqeTP9maAT7HdMX072+eoQtiNmJsBCY7eM6dO9it5t/mwtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739275208; c=relaxed/simple;
-	bh=DxNubQ82BSZPNr9Q4aWGZXDD+6hlE4NvdnH2GOjIkYo=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=G0ALPTfkgcdOiF7h0IdBxC4rg0BEzZj/F5qfxejJbBRsYmasAYOdyTb6wymvz8A4g2fkL4RgSfJqfo+JI9P0lQk8pXet6sIIryuFI5o5GlUc4VC4ZVSGNljWPnSjXWN/C/RwXpw5mywB9u3WyABKkr3nH5aXxWoMokfUxWUqFv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jf0Un9f6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739275212; c=relaxed/simple;
+	bh=TA/0R93IHQ5a5+EgaK8V4VBeM1CqKJGCSR6MePdrRSI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pegbggzZ+I0zM/h9qBfodrh0oVxL12EmfkIJnIt0E8hBg7rLNnD9+cGvC5VQyjFgO5QNFvB/Bv/AcWu7I7YZZfp7uTyGV2zDt+U6wdwiVkO1nfK2lpo5KMv4cUimEt1HeulMIvLQu31AMS1E+GLORgEkrYv9vtJxTzg4S1kPWA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJy3YIZ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jf0Un9f6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86DE0C4CEDD;
-	Tue, 11 Feb 2025 12:00:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJy3YIZ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2124C4CEE6
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739275207;
-	bh=DxNubQ82BSZPNr9Q4aWGZXDD+6hlE4NvdnH2GOjIkYo=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Jf0Un9f6fgt+xsHQoEewcvtt/PmxnSTl1blNMwfN5II1phCl8yqyQwLCLS9JlxK0G
-	 4kP0z5LkzO9/9hwJZI6uCBHiVJG6SiMgnWNf3LXnqBNLZRVVdhd2nskkNBBaxNIh2V
-	 yfyPpKnTO1tp/dQl3nUTpQa96DdWrEHHRyWZQiPpPHaeKV7zW9fCA+19Rt4qK5NFG8
-	 1M+vxEyQioFukQ7S4Hbas7Dp9SIsc7ozN3ilbrUrXnsHmZpuLnNBBCDUeTjvMGbn95
-	 l6yMnhw7cZj6BCy1oh2fQH8cXEDx0YRWpoRDgLRC+FdS37SJ5W9Ab8qrIwlnF65UDR
-	 buECrlJffpq1Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70F61380AA7A;
-	Tue, 11 Feb 2025 12:00:37 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1739275211;
+	bh=TA/0R93IHQ5a5+EgaK8V4VBeM1CqKJGCSR6MePdrRSI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UJy3YIZ9fCzPNCmneEjKfEMaIUNOq291JlFZ7Eaix6faH1/8mlqH+lsCbGLKUFFth
+	 5y+/Qf+64SNXGnUuBUdaj6deqjP3B17hVMFzfyfJzEX6UL3xp4qI/i0JdB21I9cibC
+	 93YzdS20pHugLhcA/F/F0g1yJoNSR4xP+pPKGmdEbyUYko4bbYYuFzw/EzXUAhrRTI
+	 cFbdSe3vlDSDHCRYbRUDvpeFEH3lCY2M5MW1sJzG9Odo+hx0+ICGP4FvXPisZI1vQW
+	 rw5uBQM6SDSyDueaNvCKvCX0C6Wq9cWgvKSWEEx02m8B+T5eSnaKXVBWg2tl/UnZem
+	 UwdT4DbJJ8JFg==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5de56ff9851so6645245a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:00:11 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWShW1/JDFfXFsa/HQU9de+iW6MaUR10vopctoRv/6rGZgJCzfHUXHYgZvFbKDvkwt4VgLb60BLZOedYzk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe+kXpi0+cLAqu6/12aG0UEqDqysHQ//Xod41eZ2zviqwWQSsp
+	5/HjL9YUb2jf66P6bJYgigHMZdfpzimflfSyaGUx2PfiRy5uXIZJUh+15UfsBJpiMPm6jLBFkzA
+	n4V5/Zrs9EYSWVHAShG6zN3Zas94=
+X-Google-Smtp-Source: AGHT+IGHNVu0tpCqBhu4Mn6yiKyLBRk68octjzuRqFLITUadZkfqBm0qT5yqHWB/5lCGcOlApRkFsS/UArIYCQrmr1k=
+X-Received: by 2002:a05:6402:2381:b0:5dc:1273:63fd with SMTP id
+ 4fb4d7f45d1cf-5de9a4646eamr2670591a12.20.1739275210215; Tue, 11 Feb 2025
+ 04:00:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3 00/15] mptcp: pm: misc cleanups, part 2
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173927523626.4027827.1076693017347574469.git-patchwork-notify@kernel.org>
-Date: Tue, 11 Feb 2025 12:00:36 +0000
-References: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
-In-Reply-To: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
+ <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn> <20250115013444.anzoct6gvs56m225@jpoimboe>
+ <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn> <20250210212653.oidcl4aqyrcu3yzi@jpoimboe>
+In-Reply-To: <20250210212653.oidcl4aqyrcu3yzi@jpoimboe>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 11 Feb 2025 19:59:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7MVDj0CbXfwveb7GDn+D=O4N6oUT6rpGrbGmYPLPpRPg@mail.gmail.com>
+X-Gm-Features: AWEUYZm-JyjLlJb0diDoeBFwWO6Ti4dJ5QC9IXpt6JgfAfQvWaJ4NXEm6A9WSfc
+Message-ID: <CAAhV-H7MVDj0CbXfwveb7GDn+D=O4N6oUT6rpGrbGmYPLPpRPg@mail.gmail.com>
+Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
+	loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+Hi, Josh,
 
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+On Tue, Feb 11, 2025 at 5:26=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
+> wrote:
+>
+> On Mon, Feb 10, 2025 at 02:07:43PM +0800, Tiezhu Yang wrote:
+> > On 01/15/2025 09:34 AM, Josh Poimboeuf wrote:
+> > > On Sat, Jan 11, 2025 at 02:57:42PM +0800, Tiezhu Yang wrote:
+> > > > Hi Josh and Peter,
+> > > >
+> > > > On 12/17/2024 09:08 AM, Tiezhu Yang wrote:
+> > > > > This version is based on tip/tip.git objtool/core branch [1], add=
+ some weak
+> > > > > and arch-specific functions to make the generic code more readabl=
+e, tested
+> > > > > with the latest upstream mainline Binutils, GCC and Clang.
+> > > >
+> > > > ...
+> > > >
+> > > > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/l=
+og/?h=3Dobjtool/core
+> > > > >
+> > > > > Tiezhu Yang (9):
+> > > > >   objtool: Handle various symbol types of rodata
+> > > > >   objtool: Handle different entry size of rodata
+> > > > >   objtool: Handle PC relative relocation type
+> > > > >   objtool: Handle unreachable entry of rodata
+> > > > >   objtool/LoongArch: Add support for switch table
+> > > > >   objtool/LoongArch: Add support for goto table
+> > > > >   LoongArch: Enable jump table for objtool
+> > > > >   LoongArch: Convert unreachable() to BUG()
+> > > > >   drm/amd/display: Mark dc_fixpt_from_fraction() noinline
+> > > >
+> > > > Are you OK with the first 8 patches?
+> > > > What's the merge plan for this series?
+> > >
+> > > Sorry, my inbox is still reeling from the holidays.  I will review th=
+is
+> > > soon.
+> >
+> > What are the status of the first 8 patches?
+> > What is the next step? Is there anything else to be done here?
+> > I would really appreciate any advice on how to get this merged.
+>
+> Please post a new revision rebased on tip/master, with patch 4 dropped,
+> and I'll queue them up for -tip.  Thanks for your patience.
+You will queue the whole series, or the first 5 patches, or the first 3 pat=
+ches?
 
-On Fri, 07 Feb 2025 14:59:18 +0100 you wrote:
-> These cleanups lead the way to the unification of the path-manager
-> interfaces, and allow future extensions. The following patches are not
-> all linked to each others, but are all related to the path-managers.
-> 
-> - Patch 1: drop unneeded parameter in a function helper.
-> 
-> - Patch 2: clearer NL error message when an NL attribute is missing.
-> 
-> [...]
+Huacai
 
-Here is the summary with links:
-  - [net-next,v3,01/15] mptcp: pm: drop info of userspace_pm_remove_id_zero_address
-    https://git.kernel.org/netdev/net-next/c/a9d71b5de76c
-  - [net-next,v3,02/15] mptcp: pm: userspace: flags: clearer msg if no remote addr
-    https://git.kernel.org/netdev/net-next/c/58b21309f97b
-  - [net-next,v3,03/15] mptcp: pm: more precise error messages
-    https://git.kernel.org/netdev/net-next/c/891a87f7a76c
-  - [net-next,v3,04/15] mptcp: pm: improve error messages
-    https://git.kernel.org/netdev/net-next/c/b2bdec19beec
-  - [net-next,v3,05/15] mptcp: pm: userspace: use GENL_REQ_ATTR_CHECK
-    https://git.kernel.org/netdev/net-next/c/07bfabf8407b
-  - [net-next,v3,06/15] mptcp: pm: remove duplicated error messages
-    https://git.kernel.org/netdev/net-next/c/60097f03fc7a
-  - [net-next,v3,07/15] mptcp: pm: mark missing address attributes
-    https://git.kernel.org/netdev/net-next/c/8cdc56f99e6c
-  - [net-next,v3,08/15] mptcp: pm: use NL_SET_ERR_MSG_ATTR when possible
-    https://git.kernel.org/netdev/net-next/c/a25a8b10491b
-  - [net-next,v3,09/15] mptcp: pm: make three pm wrappers static
-    https://git.kernel.org/netdev/net-next/c/7aeab89b090f
-  - [net-next,v3,10/15] mptcp: pm: drop skb parameter of get_addr
-    https://git.kernel.org/netdev/net-next/c/67dcf6592544
-  - [net-next,v3,11/15] mptcp: pm: add id parameter for get_addr
-    https://git.kernel.org/netdev/net-next/c/d47b80758f4c
-  - [net-next,v3,12/15] mptcp: pm: reuse sending nlmsg code in get_addr
-    https://git.kernel.org/netdev/net-next/c/8556f4aecc9a
-  - [net-next,v3,13/15] mptcp: pm: drop skb parameter of set_flags
-    https://git.kernel.org/netdev/net-next/c/2c8971c04f74
-  - [net-next,v3,14/15] mptcp: pm: change rem type of set_flags
-    https://git.kernel.org/netdev/net-next/c/ab5723599cfd
-  - [net-next,v3,15/15] mptcp: pm: add local parameter for set_flags
-    https://git.kernel.org/netdev/net-next/c/c7f25f7987c0
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+>
+> --
+> Josh
