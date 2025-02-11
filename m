@@ -1,147 +1,262 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C2425A347
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5592425A343;
+	Tue, 11 Feb 2025 16:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290119; cv=none; b=SeD2NmmYzOSsFDPAgIc76+1atjRrKyPiUtp3oFlwbZq/Hh6aAxcxNSN58eBBDxQG8ggXeYvSvZ84YdZ1tg14wxtB26rDC4kW9OK7d8DiqVnnbqSfispcekkRdGGW6NQLQx/Haix+yAbM2Vhnn5U21dR2MWJl/zFNrDPXpnEyKYs=
+	t=1739290119; cv=none; b=Za/uwmNTRVKkih5uMd3gLfQlhHLKqGXRS/sVCnqnh1Y8satbQIwdHaBo5JOvB2bWUvRAJMpu2+OtAYWf7JLdzh+zHgUwaYTZ81YFiY7vHwktJvPLakDelPfS7hI8BAg8zKlEVvhIhypyDh1rn9rIlZwUQW5/EdX900akkdBpi28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739290119; c=relaxed/simple;
-	bh=ml0xQgdCLasCwsDWWoirjYy2G9OXDcBgWmJPS+yMwFQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TKzoa2ztsnp3NHwX75IcRpP1KxeCXKL0PGdUcGVg8cU+FMSHoATOggeJuypIMu6bENQNIISwuIS11MC+MBCSU7puWXmgGE7y5jGaux9jseLIdZg9kyO+RXpAVzjzIaQL+06X0BSNyzbibl3cWrtRGl7IjhHz5oe9T7iWONEQ35o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JamOGWSb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=cRVX0qZipF1a3qWrtGdJGv2+CmNHVPkTZK8m87LPi7s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UoOCgFLi0DxvndlJfhjgaIfkSIxiK0xzQYmO1fsQBXIXGxD0QYByz9ocUazHQzu12dze0o4qCr3o3zjl0IXtVtLrhshfT/Ba+6iseetQ27NorQaEQlGkRZPcR7nZc1LFWJWGirhfzm6LHPrVyfg6Z27EWdv57loTaaC24OXA1W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mb2jS6Et; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JamOGWSb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739290116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UipiODYFsFgVF8vxMUdu6AW5VgLIbfrFFLlK7TYmKsA=;
-	b=JamOGWSbHQ31ypVZmE6Yh03oBayJkPHpl0J7PIzwQwHrapK+ylKgqBARWoxIetsbhpJ1cI
-	N3cmMGtRIkf3e84KAGTdf0c3b4m+2bP1z0ddJG4VYf+HA8scT2tX0ZRbUluWXQHtVnuvLA
-	k02w0sOYIOSLEMICjL+yMMRXIo6gr/U=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-487-o45N5vneMBKaSqLBsS2KlA-1; Tue,
- 11 Feb 2025 11:08:33 -0500
-X-MC-Unique: o45N5vneMBKaSqLBsS2KlA-1
-X-Mimecast-MFC-AGG-ID: o45N5vneMBKaSqLBsS2KlA
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4F35C19560A5;
-	Tue, 11 Feb 2025 16:08:31 +0000 (UTC)
-Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.88.207])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8964A19560A3;
-	Tue, 11 Feb 2025 16:08:27 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: kasan-dev@googlegroups.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev,
-	Nico Pache <npache@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH] kasan: Don't call find_vm_area() in RT kernel
-Date: Tue, 11 Feb 2025 11:07:50 -0500
-Message-ID: <20250211160750.1301353-1-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mb2jS6Et"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2fa2eb7eb45so6453559a91.1;
+        Tue, 11 Feb 2025 08:08:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739290116; x=1739894916; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=98z2XYYRzQ8D8svX8siNUPVhrLU1wb1YkFqSoCD4z3Y=;
+        b=mb2jS6EthZ9fV27UxjnPz+doXo0BGuyn/kRj83sl6gMxkM6ekGN8Lim+tDO1DC83HD
+         owoQZo8e3xFEai5Ymoa1shqmtoL+BF2aE9IAufVZOMu9lUG7Oiy57BLNjmtxNUh0bmHj
+         rg7yosjRom8P59pjfsycBSeXgO22co0CUC5JjwTwPiwYDaZ87DtkO6pWm4syiEHRF5Sb
+         6dpnS3PcpYOzT+d5lCU+cn/qyfXZvlaQTPQAmsLMT6+R7opHF630irF0Ke40sj0G80eg
+         HALiBTYULxb0AmsuCoCOTGCofdAzczbCW7/dOrmPPAyJZ7zDN9B4PwID6HfUNJ0KyvQI
+         fRKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739290116; x=1739894916;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=98z2XYYRzQ8D8svX8siNUPVhrLU1wb1YkFqSoCD4z3Y=;
+        b=s38QF/nvshYUkMyCHcJf6h1JZOQlapKU4AWabvDG1hWhLAlmdhQ+4kmvZ71aDxkfiI
+         oXBRuJsN+FJRx4RViF7P4BO3BmeKgQdweCX+h3o3OpZ7rBkFLiRJKgX51sa6NW6t8Tkx
+         fXmMgAzn9C2QgnW48vSuia0r24yS6jGnkOnKOc8+tPn5R7HdiRMiiGGNbfUhbB78Q+OT
+         ajlRKX8fTVZJZ9uDN8pUap97dGAl2xDNevtffao3TY6n60jUZ0lzJXErwmnfzzbW9fa5
+         0eFR/Vx6aMfxRJnVM4n7Na9HNkPtzNeXv0CeH3JCgFbEMjCd9VEqgj7ARkmzvK+ILUZN
+         5kwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+pNPEgj972ygKS6dItKnQWPnf79YSz+pxvx7+fS1/8xZdph5gDpdYKz0hAa+36e4BTUUsRNpSE1z6@vger.kernel.org, AJvYcCVFiUTyMMhAbivLcJpVJlBIr77jbltLm75NvEA+UVp5nd7XooR3z7kr12/74EaEWEu/IKXNu2Hov1GuaV/DFdJF6A==@vger.kernel.org, AJvYcCVRlGBa56qIiYE4eddIJ4fW3m67Ia5vn09dpT/DC7u3BS/PgOAwC5CBK2XX9TZRV/RHqCO76UC17tBb95Ky@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/1fP+JuxDEaBWobgNdN5U3ctfQajAKxMsygNJKCrrCsdSMk8H
+	kcGq8kcWlRwlzpTrDmlQlGCHhiSygNg8H9kEgcXIoQ6WkXyAuJ6A
+X-Gm-Gg: ASbGnctlOaKWN6e6CHNPmSWv8wos/ho0CM73HIDLs/VrfPCs6w4UP0E/WbS+24O6cwb
+	Qaz3ePoDjc1kSAUvIMBtosKTGymCh56c09jnvc8p/IG9RiSEIWM4Xod8/MsiiSRpSbey2coMGaK
+	8JI2AeSCR0QjKgkp3FtjCANUloa54WFX8oYWaHWMdz1mxUrJnMWfHI7n8kJ8Ve9wOeAXqeFiDyU
+	MBgvKlnmrm3GM/oXEJsSVP8VAGj+rwzWbTdxthpz/EdZ8yzAqN7vLVmaJ08m5QzA9Sik3zSyBMV
+	Xpo5UcHC7Q0GHQ3j7A==
+X-Google-Smtp-Source: AGHT+IHi+DuLcWnvWwCfZG64M7w8IG53o28CoOE0thaWDG5+fhlXqzhYXMbqXOqlnumqzWro3qMUeQ==
+X-Received: by 2002:a17:90b:548b:b0:2ee:8cbb:de28 with SMTP id 98e67ed59e1d1-2faa090abccmr6691971a91.8.1739290116404;
+        Tue, 11 Feb 2025 08:08:36 -0800 (PST)
+Received: from [127.0.1.1] ([59.188.211.160])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2fa618e5e18sm6040478a91.41.2025.02.11.08.08.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 08:08:35 -0800 (PST)
+From: Nick Chan <towinchenmi@gmail.com>
+Date: Wed, 12 Feb 2025 00:07:29 +0800
+Subject: [PATCH 08/10] drivers/perf: apple_m1: Add A9/A9X support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250212-apple-cpmu-v1-8-f8c7f2ac1743@gmail.com>
+References: <20250212-apple-cpmu-v1-0-f8c7f2ac1743@gmail.com>
+In-Reply-To: <20250212-apple-cpmu-v1-0-f8c7f2ac1743@gmail.com>
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Nick Chan <towinchenmi@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6966; i=towinchenmi@gmail.com;
+ h=from:subject:message-id; bh=cRVX0qZipF1a3qWrtGdJGv2+CmNHVPkTZK8m87LPi7s=;
+ b=owEBbQKS/ZANAwAIAQHKCLemxQgkAcsmYgBnq3XnjBL/eF/qM9ZzewOPxmTq6+xz/CEO25x90
+ JyKoYwfN7yJAjMEAAEIAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCZ6t15wAKCRABygi3psUI
+ JLPgD/9QPg1m+0AjFRkhm0c1a+zqKZyDbxlFH5th2Gq/uDzH+7W7sJ9MZN8TZKLADaGqmYNEIod
+ UJspSGZxFjwcM0LavEWWMqSftpFZOUUapgQdpAOgEpYp1hwMHj5ehTndgxCyoyqffSrNkBcvjFf
+ Trdd2ugjFNHZPgjGF4kZI0ozccILRbCqv/nsj+JGS6lrM5NXnO9T83LRcS7MYKY29SS0WhMT3Yh
+ y5rFYJbg31krQbLwA/CP0W44NSQ3+kSN5B/6GJwDfuiuD7sC+WZ/XLogdsttdL1tJbIidwO+Mxf
+ NgvcvcHbF0XJsK7u0Po6srgppN/hWE+Pf7c61MWruwJE+iPLj5thgRRnGYGqysMTUXzcrvJ0m5o
+ we/I4m5tNaIMMq2xDv9Tb0eoTBJR8fzdoyYSM9jAId3QzgJdKuoxgTDP3+p+zLpjpe03Gx4rTWG
+ r9xs46Klf6O5dQYTgNu7q6QyPUHiDPcFu/gJPrlE8PYeozK8wh6XhN4r9pTG2n0S+APyIYQNIVt
+ KhU/2pAWaUznetQVr5UFM2PRvybGnM0yC4trruA4ZCSVvFy2MC0ulZV6LaiLMgz32SZAEpFMwwA
+ 29Vcm4/GPqTsletCoAzg5bFp7/17JntCVQJVER1vpZoX/ipTGTl09PvTu7Buq34rnS3TfQ8xgmk
+ bcKtrul1A/qNIwg==
+X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
+ fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
 
-The following bug report appeared with a test run in a RT debug kernel.
+Add support for CPU PMU found in the Apple A9 and A9X SoCs.
 
-[ 3359.353842] BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
-[ 3359.353848] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 140605, name: kunit_try_catch
-[ 3359.353853] preempt_count: 1, expected: 0
-  :
-[ 3359.353933] Call trace:
-  :
-[ 3359.353955]  rt_spin_lock+0x70/0x140
-[ 3359.353959]  find_vmap_area+0x84/0x168
-[ 3359.353963]  find_vm_area+0x1c/0x50
-[ 3359.353966]  print_address_description.constprop.0+0x2a0/0x320
-[ 3359.353972]  print_report+0x108/0x1f8
-[ 3359.353976]  kasan_report+0x90/0xc8
-[ 3359.353980]  __asan_load1+0x60/0x70
-
-The print_address_description() is run with a raw_spinlock_t acquired
-and interrupt disabled. The find_vm_area() function needs to acquire
-a spinlock_t which becomes a sleeping lock in the RT kernel. IOW,
-we can't call find_vm_area() in a RT kernel. Fix this bug report
-by skipping the find_vm_area() call in this case and just print out
-the address as is.
-
-For !RT kernel, follow the example set in commit 0cce06ba859a
-("debugobjects,locking: Annotate debug_object_fill_pool() wait type
-violation") and use DEFINE_WAIT_OVERRIDE_MAP() to avoid a spinlock_t
-inside raw_spinlock_t warning.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Nick Chan <towinchenmi@gmail.com>
 ---
- mm/kasan/report.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ drivers/perf/apple_m1_cpu_pmu.c | 120 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 120 insertions(+)
 
-diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-index 3fe77a360f1c..e1ee687966aa 100644
---- a/mm/kasan/report.c
-+++ b/mm/kasan/report.c
-@@ -398,9 +398,20 @@ static void print_address_description(void *addr, u8 tag,
- 		pr_err("\n");
- 	}
+diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_pmu.c
+index 0adad923d50f05db1f977342c66f2b70d5e0de9a..1575f8eda874345eb56c00f8243833308c63a84a 100644
+--- a/drivers/perf/apple_m1_cpu_pmu.c
++++ b/drivers/perf/apple_m1_cpu_pmu.c
+@@ -288,6 +288,109 @@ static const u16 a8_pmu_event_affinity[A8_PMU_PERFCTR_LAST + 1] = {
+ 	[A8_PMU_PERFCTR_UNKNOWN_f7]				= ONLY_3_5_7,
+ };
  
--	if (is_vmalloc_addr(addr)) {
--		struct vm_struct *va = find_vm_area(addr);
-+	if (!is_vmalloc_addr(addr))
-+		goto print_page;
- 
-+	/*
-+	 * RT kernel cannot call find_vm_area() in atomic context.
-+	 * For !RT kernel, prevent spinlock_t inside raw_spinlock_t warning
-+	 * by raising wait-type to WAIT_SLEEP.
-+	 */
-+	if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
-+		static DEFINE_WAIT_OVERRIDE_MAP(vmalloc_map, LD_WAIT_SLEEP);
-+		struct vm_struct *va;
 +
-+		lock_map_acquire_try(&vmalloc_map);
-+		va = find_vm_area(addr);
- 		if (va) {
- 			pr_err("The buggy address belongs to the virtual mapping at\n"
- 			       " [%px, %px) created by:\n"
-@@ -410,8 +421,13 @@ static void print_address_description(void *addr, u8 tag,
++enum a9_pmu_events {
++	A9_PMU_PERFCTR_UNKNOWN_1				= 0x1,
++	A9_PMU_PERFCTR_CORE_ACTIVE_CYCLE			= 0x2,
++	A9_PMU_PERFCTR_L2_TLB_MISS_INSTRUCTION			= 0xa,
++	A9_PMU_PERFCTR_L2_TLB_MISS_DATA				= 0xb,
++	A9_PMU_PERFCTR_L2C_AGENT_LD				= 0x1a,
++	A9_PMU_PERFCTR_L2C_AGENT_LD_MISS			= 0x1b,
++	A9_PMU_PERFCTR_L2C_AGENT_ST				= 0x1c,
++	A9_PMU_PERFCTR_L2C_AGENT_ST_MISS			= 0x1d,
++	A9_PMU_PERFCTR_SCHEDULE_UOP				= 0x52,
++	A9_PMU_PERFCTR_MAP_REWIND				= 0x75,
++	A9_PMU_PERFCTR_MAP_STALL				= 0x76,
++	A9_PMU_PERFCTR_MAP_INT_UOP				= 0x7c,
++	A9_PMU_PERFCTR_MAP_LDST_UOP				= 0x7d,
++	A9_PMU_PERFCTR_MAP_SIMD_UOP				= 0x7e,
++	A9_PMU_PERFCTR_FLUSH_RESTART_OTHER_NONSPEC		= 0x84,
++	A9_PMU_PERFCTR_INST_ALL					= 0x8c,
++	A9_PMU_PERFCTR_INST_BRANCH				= 0x8d,
++	A9_PMU_PERFCTR_INST_BRANCH_CALL				= 0x8e,
++	A9_PMU_PERFCTR_INST_BRANCH_RET				= 0x8f,
++	A9_PMU_PERFCTR_INST_BRANCH_TAKEN			= 0x90,
++	A9_PMU_PERFCTR_INST_BRANCH_INDIR			= 0x93,
++	A9_PMU_PERFCTR_INST_BRANCH_COND				= 0x94,
++	A9_PMU_PERFCTR_INST_INT_LD				= 0x95,
++	A9_PMU_PERFCTR_INST_INT_ST				= 0x96,
++	A9_PMU_PERFCTR_INST_INT_ALU				= 0x97,
++	A9_PMU_PERFCTR_INST_SIMD_LD				= 0x98,
++	A9_PMU_PERFCTR_INST_SIMD_ST				= 0x99,
++	A9_PMU_PERFCTR_INST_SIMD_ALU				= 0x9a,
++	A9_PMU_PERFCTR_INST_LDST				= 0x9b,
++	A9_PMU_PERFCTR_INST_BARRIER				= 0x9c,
++	A9_PMU_PERFCTR_UNKNOWN_9f				= 0x9f,
++	A9_PMU_PERFCTR_L1D_TLB_ACCESS				= 0xa0,
++	A9_PMU_PERFCTR_L1D_TLB_MISS				= 0xa1,
++	A9_PMU_PERFCTR_L1D_CACHE_MISS_ST			= 0xa2,
++	A9_PMU_PERFCTR_L1D_CACHE_MISS_LD			= 0xa3,
++	A9_PMU_PERFCTR_LD_UNIT_UOP				= 0xa6,
++	A9_PMU_PERFCTR_ST_UNIT_UOP				= 0xa7,
++	A9_PMU_PERFCTR_L1D_CACHE_WRITEBACK			= 0xa8,
++	A9_PMU_PERFCTR_LDST_X64_UOP				= 0xb1,
++	A9_PMU_PERFCTR_ATOMIC_OR_EXCLUSIVE_SUCC			= 0xb3,
++	A9_PMU_PERFCTR_ATOMIC_OR_EXCLUSIVE_FAIL			= 0xb4,
++	A9_PMU_PERFCTR_L1D_CACHE_MISS_LD_NONSPEC		= 0xbf,
++	A9_PMU_PERFCTR_L1D_CACHE_MISS_ST_NONSPEC		= 0xc0,
++	A9_PMU_PERFCTR_L1D_TLB_MISS_NONSPEC			= 0xc1,
++	A9_PMU_PERFCTR_ST_MEMORY_ORDER_VIOLATION_NONSPEC	= 0xc4,
++	A9_PMU_PERFCTR_BRANCH_COND_MISPRED_NONSPEC		= 0xc5,
++	A9_PMU_PERFCTR_BRANCH_INDIR_MISPRED_NONSPEC		= 0xc6,
++	A9_PMU_PERFCTR_BRANCH_RET_INDIR_MISPRED_NONSPEC		= 0xc8,
++	A9_PMU_PERFCTR_BRANCH_CALL_INDIR_MISPRED_NONSPEC	= 0xca,
++	A9_PMU_PERFCTR_BRANCH_MISPRED_NONSPEC			= 0xcb,
++	A9_PMU_PERFCTR_FED_IC_MISS_DEMAND			= 0xd3,
++	A9_PMU_PERFCTR_L1I_TLB_MISS_DEMAND			= 0xd4,
++	A9_PMU_PERFCTR_MAP_DISPATCH_BUBBLE			= 0xd6,
++	A9_PMU_PERFCTR_FETCH_RESTART				= 0xde,
++	A9_PMU_PERFCTR_ST_NT_UOP				= 0xe5,
++	A9_PMU_PERFCTR_LD_NT_UOP				= 0xe6,
++	A9_PMU_PERFCTR_UNKNOWN_f6				= 0xf6,
++	A9_PMU_PERFCTR_UNKNOWN_f7				= 0xf7,
++	A9_PMU_PERFCTR_LAST					= M1_PMU_CFG_EVENT,
++
++	/*
++	 * From this point onwards, these are not actual HW events,
++	 * but attributes that get stored in hw->config_base.
++	 */
++	A9_PMU_CFG_COUNT_USER					= BIT(8),
++	A9_PMU_CFG_COUNT_KERNEL					= BIT(9),
++};
++
++static const u16 a9_pmu_event_affinity[A9_PMU_PERFCTR_LAST + 1] = {
++	[0 ... A9_PMU_PERFCTR_LAST]				= ANY_BUT_0_1,
++	[A9_PMU_PERFCTR_UNKNOWN_1]				= BIT(7),
++	[A9_PMU_PERFCTR_CORE_ACTIVE_CYCLE]			= ANY_BUT_0_1 | BIT(0),
++	[A9_PMU_PERFCTR_INST_ALL]				= BIT(7) | BIT(1),
++	[A9_PMU_PERFCTR_INST_BRANCH]				= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_INST_BRANCH_CALL]			= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_INST_BRANCH_RET]			= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_INST_BRANCH_TAKEN]			= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_INST_BRANCH_INDIR]			= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_INST_BRANCH_COND]			= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_INST_INT_LD]				= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_INST_INT_ST]				= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_INST_INT_ALU]				= BIT(7),
++	[A9_PMU_PERFCTR_INST_SIMD_LD]				= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_INST_SIMD_ST]				= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_INST_SIMD_ALU]				= BIT(7),
++	[A9_PMU_PERFCTR_INST_LDST]				= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_INST_BARRIER]				= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_UNKNOWN_9f]				= BIT(7),
++	[A9_PMU_PERFCTR_L1D_CACHE_MISS_LD_NONSPEC]		= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_L1D_CACHE_MISS_ST_NONSPEC]		= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_L1D_TLB_MISS_NONSPEC]			= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_ST_MEMORY_ORDER_VIOLATION_NONSPEC]	= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_BRANCH_COND_MISPRED_NONSPEC]		= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_BRANCH_INDIR_MISPRED_NONSPEC]		= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_BRANCH_RET_INDIR_MISPRED_NONSPEC]	= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_BRANCH_CALL_INDIR_MISPRED_NONSPEC]	= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_BRANCH_MISPRED_NONSPEC]			= ONLY_5_6_7,
++	[A9_PMU_PERFCTR_UNKNOWN_f6]				= ONLY_3_5_7,
++	[A9_PMU_PERFCTR_UNKNOWN_f7]				= ONLY_3_5_7,
++};
++
+ enum m1_pmu_events {
+ 	M1_PMU_PERFCTR_RETIRE_UOP				= 0x1,
+ 	M1_PMU_PERFCTR_CORE_ACTIVE_CYCLE			= 0x2,
+@@ -755,6 +858,12 @@ static int a8_pmu_get_event_idx(struct pmu_hw_events *cpuc,
+ 	return apple_pmu_get_event_idx(cpuc, event, a8_pmu_event_affinity);
+ }
  
- 			page = vmalloc_to_page(addr);
- 		}
-+		lock_map_release(&vmalloc_map);
-+	} else {
-+		pr_err("The buggy address %px belongs to a vmalloc virtual mapping\n",
-+			addr);
- 	}
++static int a9_pmu_get_event_idx(struct pmu_hw_events *cpuc,
++				struct perf_event *event)
++{
++	return apple_pmu_get_event_idx(cpuc, event, a9_pmu_event_affinity);
++}
++
+ static int m1_pmu_get_event_idx(struct pmu_hw_events *cpuc,
+ 				struct perf_event *event)
+ {
+@@ -914,6 +1023,16 @@ static int a8_pmu_typhoon_init(struct arm_pmu *cpu_pmu)
+ 	return apple_pmu_init_common(cpu_pmu, ARMPMU_EVT_47BIT, A7_PMU_NR_COUNTERS);
+ }
  
-+print_page:
- 	if (page) {
- 		pr_err("The buggy address belongs to the physical page:\n");
- 		dump_page(page, "kasan: bad access detected");
++static int a9_pmu_twister_init(struct arm_pmu *cpu_pmu)
++{
++	cpu_pmu->name = "apple_twister_pmu";
++	cpu_pmu->get_event_idx	  = a9_pmu_get_event_idx;
++	cpu_pmu->map_event	  = m1_pmu_map_event;
++	cpu_pmu->reset		  = a7_pmu_reset;
++	cpu_pmu->start		  = a7_pmu_start;
++	return apple_pmu_init_common(cpu_pmu, ARMPMU_EVT_47BIT, A7_PMU_NR_COUNTERS);
++}
++
+ static int m1_pmu_ice_init(struct arm_pmu *cpu_pmu)
+ {
+ 	cpu_pmu->name = "apple_icestorm_pmu";
+@@ -959,6 +1078,7 @@ static const struct of_device_id m1_pmu_of_device_ids[] = {
+ 	{ .compatible = "apple,blizzard-pmu",	.data = m2_pmu_blizzard_init, },
+ 	{ .compatible = "apple,icestorm-pmu",	.data = m1_pmu_ice_init, },
+ 	{ .compatible = "apple,firestorm-pmu",	.data = m1_pmu_fire_init, },
++	{ .compatible = "apple,twister-pmu",	.data = a9_pmu_twister_init, },
+ 	{ .compatible = "apple,typhoon-pmu",	.data = a8_pmu_typhoon_init, },
+ 	{ .compatible = "apple,cyclone-pmu",	.data = a7_pmu_cyclone_init, },
+ 	{ },
+
 -- 
 2.48.1
 
