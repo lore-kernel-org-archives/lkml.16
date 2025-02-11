@@ -1,102 +1,212 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDAC1E7C28
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0571F03EF
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739263546; cv=none; b=FQ8k3TU7r8tkHCJGejFrDUlq1G0fRoRs87DSKitiwm8In2RhNkmkG1UM+d93QaNiM5UjZpPl1iUueEfbxmr1WMcBGneNCG2sUtd7yf7ygwxoxkjQ4k4oQXt+LLesB2iE2ehIE4WlZDt7UiU9/NHeqHEG5MfLNZVN601rDOplJ+w=
+	t=1739263549; cv=none; b=KUfOHvVMFerwsaJoqJOhtEqMzk4zdQ3SB3ZQ2n5GIqmPlbUkEyBSQkxmADdWMFH7uWxoqPGFqySHW7jqneY12++DamUB154ebXJbKqM8ThAQx5zPaQ5AvHKLGAVA6fjQz4dh7+WB6uYNFZsHIIRUstfKZAjMVCSz0IL2u9lIfPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739263546; c=relaxed/simple;
-	bh=81BIQZ+L2Ch4Nlpf2eDVFnu52Ewfxa2CaawfkZdW9QU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q7ZwFsJQHN125lOG/hyZ5yHb4f+LDTmgQ3R3X6ooHPM7dENu635sN8jXZa8fEdMGDUZFKa1/nJQkJz7GCOcwuGFZV/Z7WmeOHnlyMlM6+XYRoc7+08FgtcPwv1Vfrz/DlKjJ6pL9CIZnzDSJuMaMQ3//yTO0tBzWTf/agvBH8k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kkV2Oing; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1739263549; c=relaxed/simple;
+	bh=8t4cGCz3NnbpxYs66KaHyja9JlE3mJSfzjdIyhtAp5c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N8gbY5N8lufn2Rl1KdikP7kcK6kVweUwLtgC7v8Ro5D+JigRlh4R7ChOevGtehDbUz1Bk0rTY0TmJ5OBVAona+x4l7/HcLjYbttbab25qwY053F4wyD8yMPjwR72DKb3dF1sw50yZ8fM1uaXwgXj9elz05bMG4ntpNc3qlF4eEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=sZ0beSTR; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kkV2Oing"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-439350f1a0bso16035245e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:45:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="sZ0beSTR"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38ddc36b81dso1383898f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:45:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739263543; x=1739868343; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9d7922w6HvmLNtdn/s3Y8OkZGdDlZZOo2h8DhGQAboI=;
-        b=kkV2OingIFhU4n8O7bU/hNskzI0D+wK+SjMIk+lmrwaCgRQ7/EOfiI26zporbzBfVb
-         DIXnfi9rYjVdjbiSoi1aKjCj2++m6Y+MBpsuyLsjsy8yq6tEGsy/oEhVVUhQ6sCC+t1z
-         2wFwwwlosd29y9Kp8PhHwDe3b5FBz+vkQe0Dv+DoGsAdYec1NZ2QfyQyhgoquVfDoZ74
-         7ZPEkOivx6znxUEMODXrdplXlOKzy+BmbUIvK16JzweAEHTxUGCJL+3BhhzwjD1P5ztF
-         DlCjTfyeJ9bUly2vBk/Aurm3g/0Yl/PnVo7f+6foC3j/Cf6RcZ7nL2LPYYQzganQ5U4B
-         NOQA==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739263546; x=1739868346; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CjaMyifJmxRVCZcsee8t2l5V7O9x/XFbm7eqaPh0L0A=;
+        b=sZ0beSTRW+zLsqi42L6tmfhZZ2wpD9edTCmAwwOCA1ySVtcx7zVCAfuV3kFNGNmlyE
+         ofqCeRP4qN5eCHdm9owMYvr2l0/PZsARNheQxdCnA7LMU27mnOCAvoRv1fH8Zvs5SYP5
+         p3vbDRSVmIy0qBADYHeWx0zlC2ITfkLJcb7Jpr+5Tp15MmtvswZKS7UIlpUq6I9pE8Di
+         JBj1UfH+4ELM7I82c79uOwOjo8PmduTU+NA8iqXFyXnMwjRQMXIreVRI1/+CBds8P+oV
+         j6Y/gV/7M4+2gr586r9nSEixo+Csehpb0H5xN49ySOCUh2Tgd3dQ2BSDYHlscvVDlMre
+         vxxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739263543; x=1739868343;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9d7922w6HvmLNtdn/s3Y8OkZGdDlZZOo2h8DhGQAboI=;
-        b=ezyQMb1LJ983v3yfPDTmxoIntOUpPDZHPSm9pHLWNLPsVczNLqwJoLKOQt9w1gSBOT
-         WfLT+GSJVaDkW99KJE0NVeqIKG9GyOnHzueLCezYzgDpnngAvnBr4iTU8eKXKHlAGiRp
-         fqBfhwQCoq4w9/sknHa06z9VGyoCf96Aa0u85Mw4fPJ8PpH40abUonKSlthIf7J5wfrd
-         uBjpYMoPPR6V9lhYZa3ixC8QMHiRitpcUpBx84UivdJG5D5qHreap4BvXXxmA6VsKNf+
-         shZBuhKcM7wcr8rklRwcCMohH3SroL3RrWsvhwe7cevPTjR5B2+VOls/tUvECXY9zsnZ
-         XEVg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHveHrDintSW0HTGbD62Fps/Z9H5XBVOkK/mhORgYi1mN5wt6EC7dEn5B3VJdrCl0DHlzoOuVXQTh0JtA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSk0jq3wmVQVzek5bW0EDjqt9p4p24BNwPmvWXcFAUt8VsWKD9
-	Dhe6Pi76v9KMwTTgy+uTBjezfVwYvFBS2SrnxZ6bRCrZ6OkmbnzFiQH1843CEVxpvKgLHKMJVG3
-	xXtA=
-X-Gm-Gg: ASbGncuOo0nuG3iCmdjH+kr9+6jBWMLbxD2bT/lXWEO2cQIPIpdw+1MSgoyl4pIjXLQ
-	sayZ6SEdSCD9wm192I2x0hjFiCFI+aAQBiQbtJqJEgc/FwV5ZYVZs2M9O/3V0J3W3P8AtEl913/
-	MIM7A6z4F6cMraBxtZEieGf+AA8G6/o0axzvN1/66j8IhxR3UPoxr3FtuVywYxbqxG4luYIyIFS
-	RDQ3sSBz2Efx62FjbIYfCKkXh8vRDNaz2D7wqU2ekz/6lB6SVDVKYG+C9eoL6g7RNUkgEF3leLm
-	429GQdJubII1vA==
-X-Google-Smtp-Source: AGHT+IFXJ0r2yebE99B410tw3/63I9kwAbNgDKK2YOK7VmlZreYyxF70Qh69gndHZ9U2mRTCFlj+wQ==
-X-Received: by 2002:a05:600c:3b23:b0:439:4b23:9e8e with SMTP id 5b1f17b1804b1-4394ceb0eeamr20266405e9.3.1739263542886;
-        Tue, 11 Feb 2025 00:45:42 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:561:8978:1d41:636a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43946bff4d4sm46216755e9.3.2025.02.11.00.45.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 00:45:42 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v1 1/1] gpiolib: Even more opportunities to use str_high_low() helper
-Date: Tue, 11 Feb 2025 09:45:41 +0100
-Message-ID: <173926353972.23713.2175303106968169247.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250205112936.575493-1-andriy.shevchenko@linux.intel.com>
-References: <20250205112936.575493-1-andriy.shevchenko@linux.intel.com>
+        d=1e100.net; s=20230601; t=1739263546; x=1739868346;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CjaMyifJmxRVCZcsee8t2l5V7O9x/XFbm7eqaPh0L0A=;
+        b=eqVVhCiYwzA/4g1fTEIqw6UkXPTuyhmabu3Acz8ZAkGbXyNQlu5vyAh+l6a3GJsjPo
+         WZQAmopViHe7wYxyyzdybx6DkSK2lsioOv8rSO0B2djwF2kY6HE38mWoRUbxBFEsv1oy
+         f/hbH/JhdW+qHA3SvmZ7RysyW1k/28KeLa4evjsN041xJFJXzQj9I3976ZNW6ccmU0/g
+         rkDdxa0gnvPIWtGwIty7D/t0dlbCbnOquZR4YAOesed0JID7odmELi9lX21muQK38iXB
+         J9IwI64HDH7RO2vmNYZBkkQI8WYs/o6ySZLhUerZuuGsvaDdTI/Th5PIq2wvjw9ulWWO
+         ejpw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4jlD237G7Lw/s3ZF0P/HxNUGMajjhdFgZ8RODOQj/ZL7elBE+uFVsvf41+UJcSiffxikcI4bUtp1TPKY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/iKz38lh6aCEFJcvG2xEOwTLiHLQHrP/pt7KpUx8Y8t4OEE6c
+	wfi2kOcxzweAmbYYmXLZU4HtznDVq25EJdvKOzCRQB0cAFiG7C3BeIhgApsBZFw=
+X-Gm-Gg: ASbGnctvxoZ4kwUAJw41UyvyDxcYppztkMpMr+vZ4uq0iR0W/HMD6CfefdGix8mM4uB
+	V0Fx/tkqhauqb0kd+zljuSOWFXHesXzdoJLu31SDGkCmaNczXk5+h8Rp7YBkNdxtKaJYZDP51Ak
+	80OpvBbHxzRHryIPq0qBC7vj3HgIECMC89FBL50E19kW1BfzQtDi+dh2VZ16AWEJF4EbXbcyqpz
+	JKCHav63SR3wZFTua0xy/1d6hj/isBggyIs0T129KS5ufJC0tpvxdHZgHD4qk00TEtI8aZgOqaH
+	mGjOhQWcBgW/v8TfplUbuC5TY3pBWwx4Fk7/83ScqENvXdPQ84fNm5A33zUh
+X-Google-Smtp-Source: AGHT+IG+SmfGJVYOShNgqHCPCd07PbXxZneGcwo88AcQulZIQpXxaJaOeME1U8Vd0E5f2m5egCZc7A==
+X-Received: by 2002:a05:6000:1f85:b0:38d:d8c0:1f7f with SMTP id ffacd0b85a97d-38de439d6aamr1776720f8f.9.1739263546052;
+        Tue, 11 Feb 2025 00:45:46 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc565d62dsm13024751f8f.93.2025.02.11.00.45.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 00:45:45 -0800 (PST)
+Message-ID: <f1ce7aa9-63e3-41bd-9bb0-a54ebc714dff@rivosinc.com>
+Date: Tue, 11 Feb 2025 09:45:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/6] RISC-V: add vector crypto extension validation
+ checks
+To: Conor Dooley <conor@kernel.org>, linux-riscv@lists.infradead.org
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+ Eric Biggers <ebiggers@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Andy Chiu <andybnac@gmail.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250205-cobbler-unpadded-5580c1f5d946@spud>
+ <20250205-quench-entrench-09bed8c8c823@spud>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20250205-quench-entrench-09bed8c8c823@spud>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Wed, 05 Feb 2025 13:29:36 +0200, Andy Shevchenko wrote:
-> The one of previous changes modified the library code to use
-> helpers from string_choices.h. Nevertheless it misses more
-> opportunities to convert the code. Here is the second part
-> of the conversion.
+On 05/02/2025 17:05, Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
 > 
+> Using Clement's new validation callbacks, support checking that
+> dependencies have been satisfied for the vector crpyto extensions.
+> Currently riscv_isa_extension_available(<vector crypto>) will return
+> true on systems that support the extensions but vector itself has been
+> disabled by the kernel, adding validation callbacks will prevent such a
+> scenario from occuring and make the behaviour of the extension detection
+> functions more consistent with user expectations - it's not expected to
+> have to check for vector AND the specific crypto extension.
 > 
+> The 1.0.0 Vector crypto spec states:
+> 	The Zvknhb and Zvbc Vector Crypto Extensions --and accordingly
+> 	the composite extensions Zvkn and Zvks-- require a Zve64x base,
+> 	or application ("V") base Vector Extension. All of the other
+> 	Vector Crypto Extensions can be built on any embedded (Zve*) or
+> 	application ("V") base Vector Extension.
+> and this could be used as the basis for checking that the correct base
+> for individual crypto extensions, but that's not really the kernel's job
+> in my opinion and it is sufficient to leave that sort of precision to
+> the dt-bindings. The kernel only needs to make sure that vector, in some
+> form, is available.
+> 
+> Since vector will now be disabled proactively, there's no need to clear
+> the bit in elf_hwcap in riscv_fill_hwcap() any longer.
+> 
+> Link: https://github.com/riscv/riscv-crypto/releases/tag/v1.0.0
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  arch/riscv/kernel/cpufeature.c | 49 +++++++++++++++++++++++-----------
+>  1 file changed, 33 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> index 40a24b08d905..1c148ecea612 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -138,6 +138,23 @@ static int riscv_ext_vector_float_validate(const struct riscv_isa_ext_data *data
+>  	return 0;
+>  }
+>  
+> +static int riscv_ext_vector_crypto_validate(const struct riscv_isa_ext_data *data,
+> +					    const unsigned long *isa_bitmap)
+> +{
+> +	if (!IS_ENABLED(CONFIG_RISCV_ISA_V))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * It isn't the kernel's job to check that the binding is correct, so
+> +	 * it should be enough to check that any of the vector extensions are
+> +	 * enabled, which in-turn means that vector is usable in this kernel
+> +	 */
+> +	if (!__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZVE32X))
+> +		return -EINVAL;
 
-Applied, thanks!
+After a second thought, I think it should be this:
 
-[1/1] gpiolib: Even more opportunities to use str_high_low() helper
-      commit: 5f05e9194ada5609edbefb542c0dbfdbae984958
+if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZVE32X))
+	return 0;
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+return -EPROBEDEFER;
+
+Extensions can be enabled later (but can not be "reverted") so check for
+the extension to be present (in which case it's ok), or wait for it to
+be (potentially) enabled.
+
+Thanks,
+
+Clément
+
+> +
+> +	return 0;
+> +}
+
+> +
+>  static int riscv_ext_zca_depends(const struct riscv_isa_ext_data *data,
+>  				 const unsigned long *isa_bitmap)
+>  {
+> @@ -397,8 +414,8 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+>  	__RISCV_ISA_EXT_DATA(zksed, RISCV_ISA_EXT_ZKSED),
+>  	__RISCV_ISA_EXT_DATA(zksh, RISCV_ISA_EXT_ZKSH),
+>  	__RISCV_ISA_EXT_DATA(ztso, RISCV_ISA_EXT_ZTSO),
+> -	__RISCV_ISA_EXT_SUPERSET(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvbb_exts),
+> -	__RISCV_ISA_EXT_DATA(zvbc, RISCV_ISA_EXT_ZVBC),
+> +	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvbb_exts, riscv_ext_vector_x_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvbc, RISCV_ISA_EXT_ZVBC, riscv_ext_vector_crypto_validate),
+>  	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zve32f, RISCV_ISA_EXT_ZVE32F, riscv_zve32f_exts, riscv_ext_vector_float_validate),
+>  	__RISCV_ISA_EXT_DATA_VALIDATE(zve32x, RISCV_ISA_EXT_ZVE32X, riscv_ext_vector_x_validate),
+>  	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zve64d, RISCV_ISA_EXT_ZVE64D, riscv_zve64d_exts, riscv_ext_vector_float_validate),
+> @@ -406,20 +423,20 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+>  	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zve64x, RISCV_ISA_EXT_ZVE64X, riscv_zve64x_exts, riscv_ext_vector_x_validate),
+>  	__RISCV_ISA_EXT_DATA(zvfh, RISCV_ISA_EXT_ZVFH),
+>  	__RISCV_ISA_EXT_DATA(zvfhmin, RISCV_ISA_EXT_ZVFHMIN),
+> -	__RISCV_ISA_EXT_DATA(zvkb, RISCV_ISA_EXT_ZVKB),
+> -	__RISCV_ISA_EXT_DATA(zvkg, RISCV_ISA_EXT_ZVKG),
+> -	__RISCV_ISA_EXT_BUNDLE(zvkn, riscv_zvkn_bundled_exts),
+> -	__RISCV_ISA_EXT_BUNDLE(zvknc, riscv_zvknc_bundled_exts),
+> -	__RISCV_ISA_EXT_DATA(zvkned, RISCV_ISA_EXT_ZVKNED),
+> -	__RISCV_ISA_EXT_BUNDLE(zvkng, riscv_zvkng_bundled_exts),
+> -	__RISCV_ISA_EXT_DATA(zvknha, RISCV_ISA_EXT_ZVKNHA),
+> -	__RISCV_ISA_EXT_DATA(zvknhb, RISCV_ISA_EXT_ZVKNHB),
+> -	__RISCV_ISA_EXT_BUNDLE(zvks, riscv_zvks_bundled_exts),
+> -	__RISCV_ISA_EXT_BUNDLE(zvksc, riscv_zvksc_bundled_exts),
+> -	__RISCV_ISA_EXT_DATA(zvksed, RISCV_ISA_EXT_ZVKSED),
+> -	__RISCV_ISA_EXT_DATA(zvksh, RISCV_ISA_EXT_ZVKSH),
+> -	__RISCV_ISA_EXT_BUNDLE(zvksg, riscv_zvksg_bundled_exts),
+> -	__RISCV_ISA_EXT_DATA(zvkt, RISCV_ISA_EXT_ZVKT),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkb, RISCV_ISA_EXT_ZVKB, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkg, RISCV_ISA_EXT_ZVKG, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvkn, riscv_zvkn_bundled_exts, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvknc, riscv_zvknc_bundled_exts, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkned, RISCV_ISA_EXT_ZVKNED, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvkng, riscv_zvkng_bundled_exts, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvknha, RISCV_ISA_EXT_ZVKNHA, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvknhb, RISCV_ISA_EXT_ZVKNHB, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvks, riscv_zvks_bundled_exts, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvksc, riscv_zvksc_bundled_exts, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvksed, RISCV_ISA_EXT_ZVKSED, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvksh, RISCV_ISA_EXT_ZVKSH, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvksg, riscv_zvksg_bundled_exts, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkt, RISCV_ISA_EXT_ZVKT, riscv_ext_vector_crypto_validate),
+>  	__RISCV_ISA_EXT_DATA(smaia, RISCV_ISA_EXT_SMAIA),
+>  	__RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
+>  	__RISCV_ISA_EXT_SUPERSET(smnpm, RISCV_ISA_EXT_SMNPM, riscv_xlinuxenvcfg_exts),
+
