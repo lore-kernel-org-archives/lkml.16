@@ -1,185 +1,191 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591961D63FC
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7B226BDA6
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739264574; cv=none; b=gMy+bSxFQvNbwjiBMxZxVF/HEZUfXIgKWOCsjrWcGxRReQ+gTZiavwix5Spa6VvPeQMJQ8nltNOwPEqxf06/CTEhqlp6JufpIa1loBa7g+GSVUETW2LzS6LKNegrhiG7oc6yBurmMkbvCPbmrniS+Sa7OF3NfpZEjX4sDcYvKL4=
+	t=1739264686; cv=none; b=gpZbTKkTenIw0yO3CrOBIiDVhxKcPaX8W/62X+DG1gcOWiL90YNwKufEkLGTyNc/VV+O5gBXHwOM+AuV2csNZvrTAh1zWqcTir0pm3QDOGkvsWJkZXiPBroCv7uSNAcS7kIkn5Yzqr8DNiCyNXG+qKhf5yPlLfmxhrmoqVqg5HA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739264574; c=relaxed/simple;
-	bh=BdRh917jP9pkcKVarbSB7GYmPZFJRYMqTBZ5edCrPec=;
+	s=arc-20240116; t=1739264686; c=relaxed/simple;
+	bh=ejYZ6yNeyBXmiFK353aLAl8zXZRsfmM5p0F8KuhBomc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RtcuzjUOmn0TE8AhogNyCtiIuNJQDiaHZMVJd/ZJQh2rLsD1qJ1HUvyOiGgsNHYPfCSnEEroXVVwwzcGM2r2dZNJEB+5nop/peVCks27nyxW6QP745oWGVydtOeP8xpjAysVUAoawl4zmA55A/9GdJZI7juUeLpAKk7FfT2RlG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=aXMI1PXI; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IucfcyEyKf6rFiELSNKmtVZhy5FCzUB+aeaDxk6k9bDeeeEtie5aanhpPP9tBqLtLH28gVP785DI3T2wVjDxCi3e9AWtrP/3SN/kKfbFyMVPz6UZf0MhgVH7CP5e72YpIqbEcqlrziecruUYx3MOvf3M4ytx603yOYTevTqxoek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=cOvXktm/; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="aXMI1PXI"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab78bcb4b19so699799766b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:02:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="cOvXktm/"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4394829ef0fso9222275e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:04:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1739264569; x=1739869369; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a/vcWSwoaK4yZZjIRRGK2GqLaY/dehgjARDfk7E0I8c=;
-        b=aXMI1PXI/NhA7v/jtd/QVBECe3s1zlnzlCpe2ZqbQfdPQdgyKriUqB+M/uOnVZZ1A7
-         6FRm70Cefiq872PQ1ZloYNBr7G4zqTSvr+trhfrJAKMPOLlNOI9fBWsHCRjZaHk8jqMW
-         B/ZzU4G66EBODPTXIGzEt6yQW9dvQrhDhVgO5eGYcUG6ItOxu4lQE+Xsa2P/K2ZMaZDy
-         6RGmpalAfxXh0tFtgee4mR9sixzBfkN1Spfjg/uCLDHRXwcCCugutGUgHVEc6g7g8Aom
-         6vo43YrSve2t36FR/8pycH4qJU4R6geoVLCiieQgteIxDjUSsCe1Jl2QflxmjJqls7ab
-         D5CQ==
+        d=ventanamicro.com; s=google; t=1739264683; x=1739869483; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1ayvVDmrwmcN9il9K7YbVSe6dt66ENiQTnWfgs8AYN4=;
+        b=cOvXktm/taJgMrAhZiMEM5szyPqwRW+TtWUC3VJ5Svl7UXsZSRGUKYFQD/EPOSL1hg
+         ki4oBNJDXkydhfKmVSxOaajd5vVx5McjDH9WxYyFfjPKB8Er77DamVBGzxjo1kQy8yp3
+         9WDdtrZE0wq3QHm2zSYEfL6pxk3raacOPapOdgnl251c7Kll95DePXe0T98DIc0kPJMU
+         xeN85FC5n7IO9huipJ74Ybo2OS1zARQT0fNTS/DmYKyzs/vClHTtxJBSsJ84rPNQ/I+W
+         MxZc5zU9U2RuNJYaI9f9jE0aE+VUZjOwiRgEu0yDHHBb1iuOwHNJR/InY77MKSqc68Lr
+         UU2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739264569; x=1739869369;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a/vcWSwoaK4yZZjIRRGK2GqLaY/dehgjARDfk7E0I8c=;
-        b=cKflK5kwg6y5rviV2z523rwGCyoI4Q/UEdqLuvkGj40AIxHq8BP+TGcs45MbzhjVi9
-         QQkQrj9PtDoJUc4WOeC+aqCM3GPlLw/Do2o525oeVc4WlCqXxISUKjPQceCKk0RYTtW3
-         ieTnflK6uUrKI61J4Nx+Ocwoo0MUvrVjezt3QkLTqXIBoPzSGgpH6f/LJINeFWNnh9fK
-         y3pZRY7Bz0LfARhXWDpErqYvI/lCL0thO9cEFWjCIMWWlWfcRvD+VHYfIAQtt8uGhWKb
-         JXlPW2UvTIJjuDW4z/QCj6qAd6QKTmHrugiEU+dEvFDnbXFGHglQK33CjheWM+4bh/9Y
-         AyoA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKYj0xSDZPKhqcAH9RHDeFhl51gsRr4prq0Xe3Zl2QULXH07LBxRkib8MkhzyU/W6HSnjxr4+Vg73GW/I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbYclXSTxRHhvqYy90NrFJJtlO7Wqk0UjWovt3w0DVhP7KC9FT
-	OggZHKabRwgXCC5kZDcTH5EEVPc0oM1mBIlCttIwy1P+//0mrhpDW8/1Kf7/9Ss=
-X-Gm-Gg: ASbGncs82HIWWHzHqnAGMt81P/GLN5dMawe1TSAz9GHP6Pl8fMYERrGlA0HB64/MbO2
-	UHSStmHNjAp8oYy3Yxsm5KATN7HzllkU2X6I83A3SmxvyHWZVP7kjeHRIa7FJ3B1+6zII8mlNMi
-	qwXrotkex0bqMbJvmYpQg8QVD7LrXza4iYsZktzG72jaJtLd9/4B+P5wkT2alyl+NAEnB+Qbz2L
-	Qa6dv5eeKtUn5pgfpjAI5nLL756e6Az19xk2CEEnK3xd2146ZIadqm/lFTglkg7Cev8eeOLxVjy
-	UjC0Zp9URc7NNtupt3dv6d5lRL+1
-X-Google-Smtp-Source: AGHT+IHGiJT3lxoSX40Aod01sSIdr1IyEhGNC4ww2vOluNg3CLMKYJKm4clhF7IDwG5sMxFtt1ZuyA==
-X-Received: by 2002:a17:907:968b:b0:ab7:d801:86a7 with SMTP id a640c23a62f3a-ab7d80187cemr283211766b.3.1739264569562;
-        Tue, 11 Feb 2025 01:02:49 -0800 (PST)
-Received: from localhost (109-81-84-135.rct.o2.cz. [109.81.84.135])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ab7c8b5a784sm294568966b.75.2025.02.11.01.02.48
+        d=1e100.net; s=20230601; t=1739264683; x=1739869483;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ayvVDmrwmcN9il9K7YbVSe6dt66ENiQTnWfgs8AYN4=;
+        b=WQnbfgMmlFq320I62P/VOH9WpS4qBLvDmSaPlETiyqg7TCCbliJeBeTaBcUSxtkgUl
+         vEvQwcnrYMzO+8k4mVius0WMd+qkdI3SJ2n16ctKRb8XKc27Sci6vMytrdXX4uX44R2o
+         cQlRnelRxPOe7MAzzaJHbnSE0bYCtGZhM57LC14A/E9+zHMZTp7mgEGY1vLvi+TMmDdA
+         Ahop1t1kYDwnOPEtvz85MwGx3boJb0g3EYDnQc40rjaU8BArlWYWTDHRTIJlCj7lzrYo
+         OpWFniWK3+7gKzGJOXOb5ZjKZcJRiI9ZPcG7KZ7uJzh2FuPf5kDq7bkQvkZMqeB6PpWI
+         MS9g==
+X-Forwarded-Encrypted: i=1; AJvYcCV2msbByEkN1IcxVFd9z5Cl911irwdRrFpH92g9pdaYLv9J0m5DWZvCN7ent3e3dbpXoFGMNGQIR3zAQtA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7QoVAqrn+a4id4/ojDAM8M+g7E99/hXKqsXPHbZhBdUrNZZi5
+	TdbwRFDqMXfICfzIkGqzWMqzBlqOQ6sCNOsYt4++O7WK8+VwTIAdgUyBlWlF8q8=
+X-Gm-Gg: ASbGncsDZyL/DuFa/dhcB7I+PWN4UpQQf5gJN4RzSkxtWDjo4RDKypZomCSmiX9ZElC
+	DEmkD9VJq94hoGLgKL+2klgTbaPyUZcnvt1C/RO0aTRwV4Cw30WhGbVOmFean+VpczuTCivdV3x
+	xhGjI+ENbgEKVGjEfASGca3Sb62RXbGDnp9lFsw/7Nziej+a6PqVdrjIO9Ec5vyEAs2GB1Ilx4Z
+	PVcNOw8AdlUGDbD+7K9NWhUS8vrO6xX19tW92ebFVbj0l9Kg52hByOpBeiMGBeiIhwqE1M3CWa+
+	sTg=
+X-Google-Smtp-Source: AGHT+IEfz4udPottet3K2ickkfVAL1NPauK4J7aoUebSrapujfts7RLgM9V3b4aTiUJhAZmdmGqebA==
+X-Received: by 2002:a7b:cd17:0:b0:439:33ac:ba49 with SMTP id 5b1f17b1804b1-4394ceaf87fmr20886665e9.1.1739264682546;
+        Tue, 11 Feb 2025 01:04:42 -0800 (PST)
+Received: from localhost ([2a02:8308:a00c:e200::766e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43947bdc5c4sm42522365e9.23.2025.02.11.01.04.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 01:02:49 -0800 (PST)
-Date: Tue, 11 Feb 2025 10:02:48 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Chen Ridong <chenridong@huaweicloud.com>
-Cc: hannes@cmpxchg.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	muchun.song@linux.dev, akpm@linux-foundation.org,
-	cgroups@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, chenridong@huawei.com,
-	wangweiyang2@huawei.com
-Subject: Re: [PATCH] memcg: avoid dead loop when setting memory.max
-Message-ID: <Z6sSOC0YWWZLMhtO@tiehlicka>
-References: <20250211081819.33307-1-chenridong@huaweicloud.com>
+        Tue, 11 Feb 2025 01:04:41 -0800 (PST)
+Date: Tue, 11 Feb 2025 10:04:40 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+Cc: Charlie Jenkins <charlie@rivosinc.com>, 
+	Anup Patel <anup@brainfault.org>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, jesse@rivosinc.com, 
+	Anup Patel <apatel@ventanamicro.com>
+Subject: Re: [PATCH 7/9] riscv: Prepare for unaligned access type table
+ lookups
+Message-ID: <20250211-0a44854789bf8588ded25288@orel>
+References: <20250207161939.46139-11-ajones@ventanamicro.com>
+ <20250207161939.46139-18-ajones@ventanamicro.com>
+ <Z6ax7B45OsGerjfA@ghost>
+ <CAAhSdy2tjOE5aajzydFs8A_drHdBSbWrYTX3CX4e7B6Rm107Bw@mail.gmail.com>
+ <Z6o1NCo5nLPwBsUT@ghost>
+ <65f48829-56d2-47fc-8f61-074ff122d964@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250211081819.33307-1-chenridong@huaweicloud.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <65f48829-56d2-47fc-8f61-074ff122d964@rivosinc.com>
 
-On Tue 11-02-25 08:18:19, Chen Ridong wrote:
-> From: Chen Ridong <chenridong@huawei.com>
+On Mon, Feb 10, 2025 at 09:37:10PM +0100, Clément Léger wrote:
 > 
-> A softlockup issue was found with stress test:
->  watchdog: BUG: soft lockup - CPU#27 stuck for 26s! [migration/27:181]
->  CPU: 27 UID: 0 PID: 181 Comm: migration/27 6.14.0-rc2-next-20250210 #1
->  Stopper: multi_cpu_stop <- stop_machine_from_inactive_cpu
->  RIP: 0010:stop_machine_yield+0x2/0x10
->  RSP: 0000:ff4a0dcecd19be48 EFLAGS: 00000246
->  RAX: ffffffff89c0108f RBX: ff4a0dcec03afe44 RCX: 0000000000000000
->  RDX: ff1cdaaf6eba5808 RSI: 0000000000000282 RDI: ff1cda80c1775a40
->  RBP: 0000000000000001 R08: 00000011620096c6 R09: 7fffffffffffffff
->  R10: 0000000000000001 R11: 0000000000000100 R12: ff1cda80c1775a40
->  R13: 0000000000000000 R14: 0000000000000001 R15: ff4a0dcec03afe20
->  FS:  0000000000000000(0000) GS:ff1cdaaf6eb80000(0000)
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 0000000000000000 CR3: 00000025e2c2a001 CR4: 0000000000773ef0
->  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->  PKRU: 55555554
->  Call Trace:
->   multi_cpu_stop+0x8f/0x100
->   cpu_stopper_thread+0x90/0x140
->   smpboot_thread_fn+0xad/0x150
->   kthread+0xc2/0x100
->   ret_from_fork+0x2d/0x50
 > 
-> The stress test involves CPU hotplug operations and memory control group
-> (memcg) operations. The scenario can be described as follows:
+> On 10/02/2025 18:19, Charlie Jenkins wrote:
+> > On Mon, Feb 10, 2025 at 03:46:46PM +0530, Anup Patel wrote:
+> >> On Sat, Feb 8, 2025 at 6:53 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> >>>
+> >>> On Fri, Feb 07, 2025 at 05:19:47PM +0100, Andrew Jones wrote:
+> >>>> Probing unaligned accesses on boot is time consuming. Provide a
+> >>>> function which will be used to look up the access type in a table
+> >>>> by id registers. Vendors which provide table entries can then skip
+> >>>> the probing.
+> >>>
+> >>> The access checker in my experience is only time consuming on slow
+> >>> hardware. Hardware that supports fast unaligned accesses isn't really
+> >>> impacted by this? Avoiding a list of hardware that has slow/fast
+> >>> unaligned accesses in the kernel was the main reason for dynamically
+> >>> checking. We did introduce the config option to compile the kernel with
+> >>> assumed slow/fast accesses, which of course has the downside of
+> >>> recompiling the kernel and I assume that you already considered that.
+> >>
+> >> The kconfig option does not align with the vision of running the same
+> >> kernel image across platforms.
+> > 
+> > I just don't think that vision is realistic.
+> > 
+> > I am a proponent for compile time defines because ri ght now we are
+> > catering the kernel to both microcontrollers and for high performance
+> > platforms. I am in favor of having a set of configur ations that are
+> > ideal for these microcontrollers and a different set for high
+> > performance platforms. This is where the RVI profile s would ideally
+> > come in, having different configs for different profiles that target low
+> > performance/high performance.
+> > 
+> > Compiler optimizations for extensions are not possib le to do by just
+> > having these different methods of selecting at runti me. By enabling
+> > extra extensions like the bitmanip extensions during compilation via a
+> > config flag we can optimize the entire kernel. It is not possible to
+> > push all optimizations off to runtime detection.
 > 
->  echo xx > memory.max 	cache_ap_online			oom_reaper
->  (CPU23)						(CPU50)
->  xx < usage		stop_machine_from_inactive_cpu
->  for(;;)			// all active cpus
->  trigger OOM		queue_stop_cpus_work
->  // waiting oom_reaper
->  			multi_cpu_stop(migration/xx)
->  			// sync all active cpus ack
->  			// waiting cpu23 ack
->  			// CPU50 loops in multi_cpu_stop
->  							waiting cpu50
+> While this might be true for the bitmanip extension and other extensions
+> that the compiler can take advantage of, that isn't true for the
+> misaligned speed probing code. The only meaningful misaligned access
+> configuration option for kernel "speed" optimization is
+> RISCV_EFFICIENT_UNALIGNED_ACCESS (which is ironically not easily
+> selectable since it is under NON_PORTABLE).
 > 
-> Detailed explanation:
-> 1. When the usage is larger than xx, an OOM may be triggered. If the
->    process does not handle with ths kill signal immediately, it will loop
->    in the memory_max_write.
+> Currently all the config options that have been added around misaligned
+> support "just" allows to get rid of the probing code at compile time and
+> set a predefined speed. That does not really improve the kernel
+> performance itself, just allows for a faster boot. That could as well be
+> supported using a command line option as suggested.
 
-Do I get it right that the issue is that mem_cgroup_out_of_memory which
-doesn't have any cond_resched so it cannot yield to stopped kthread?
-oom itself cannot make any progress because the oom victim is blocked as
-per 3).
+I agree. I'll look into stripping config options and picking up Jesse's
+command line option for v2. I'll also drop the table approach of this
+series since I don't have a strong enough justification for it over the
+command line at this time.
 
-> 2. When cache_ap_online is triggered, the multi_cpu_stop is queued to the
->    active cpus. Within the multi_cpu_stop function,  it attempts to
->    synchronize the CPU states. However, the CPU23 didn't acknowledge
->    because it is stuck in a loop within the for(;;).
-> 3. The oom_reaper process is blocked because CPU50 is in a loop, waiting
->    for CPU23 to acknowledge the synchronization request.
-> 4. Finally, it formed cyclic dependency and lead to softlockup and dead
->    loop.
+Thanks,
+drew
+
 > 
-> To fix this issue, add cond_resched() in the memory_max_write, so that
-> it will not block migration task.
-
-My first question was why this is not a problem in other
-allocation/charge paths but this one is different because it doesn't
-ever try to reclaim after MAX_RECLAIM_RETRIES reclaim rounds.
-We do have scheduling points in the reclaim path which are no longer
-triggered after we hit oom situation in this case.
-
-I was thinking about having a guranteed cond_resched when oom killer
-fails to find a victim but it seems the simplest fix for this particular
-corner case is to add cond_resched as you did here. Hopefully we will
-get rid of it very soon when !PREEMPT is removed.
-
-Btw. this could be a problem on a single CPU machine even without CPU
-hotplug as the oom repear won't run until memory_max_write yields the
-cpu.
-
-> Fixes: b6e6edcfa405 ("mm: memcontrol: reclaim and OOM kill when shrinking memory.max below usage")
-> Signed-off-by: Chen Ridong <chenridong@huawei.com>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  mm/memcontrol.c | 1 +
->  1 file changed, 1 insertion(+)
+> That being said, I agree that some additional configuration options
+> should be added to enable additional extension support at compile time,
+> enabling a faster kernel. Having a single image for all hardware is as
+> you said not realistic but profiles configuration as you proposed might
+> be the key for this support.
 > 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 8d21c1a44220..16f3bdbd37d8 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -4213,6 +4213,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
->  		memcg_memory_event(memcg, MEMCG_OOM);
->  		if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
->  			break;
-> +		cond_resched();
->  	}
->  
->  	memcg_wb_domain_size_changed(memcg);
-> -- 
-> 2.34.1
-
--- 
-Michal Hocko
-SUSE Labs
+> Clément
+> 
+> > 
+> >>
+> >>>
+> >>> Instead of having a table in the kernel, something that would be more
+> >>> platform agnostic would be to have an extension that signals this
+> >>> information. That seems like it would accomplish the same goal and
+> >>> leverage the existing infrastructure in the kernel, albeit with the need
+> >>> to make a new extension.
+> >>>
+> >>
+> >> IMO, expecting an ISA extension to be defined for all possible
+> >> microarchitectural choices is not going to scale so it is better
+> >> to have infrastructure in kernel itself to infer microarchitectural
+> >> choices based on RISC-V implementation ID.
+> > 
+> > How is keeping tables in the kernel for all microarchitectural details
+> > any more scalable than having extensions that do the same thing? I would
+> > argue that having it in the kernel is less scalable since it needs to be
+> > described for all implementation IDs, and all changes require going
+> > through the kernel review process. Dynamic probing avoids these issues.
+> > Having an extension has the one-time process of getting the extension
+> > into something like a profile, but then anybody could use it without
+> > needing a kernel patch.
+> > 
+> > - Charlie
+> > 
+> >>
+> >> Regards,
+> >> Anup
+> > 
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 
