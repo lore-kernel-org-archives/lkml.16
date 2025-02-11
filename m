@@ -1,171 +1,80 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32413EA98
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054DA1805E
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739235281; cv=none; b=Epgx6Aaui77Fi1iIadN+wHYg1VtPgVKq7SUBIX6UZPHnVLLrPEcLPfWvtRlah98gh/MeVuYzmX0r5+yAWJaW3ZslbdBoj2wOr21v3l1eSwTfl+N98NTvtu/+nKqMkREfvy5F7fTQMEuVoMah/wkKJ+6WB59h9V4V3Uk09jZZkoo=
+	t=1739235306; cv=none; b=sWDy6PQtdYF6j7LqCn5PcmdQU4gQGOFzlz/noF7laf+pg29BKCzS8xRzZG8Twg07TFNmQhSEdl8Oo/0sCEiQYSIWMym3W8Rtn1uG9BLMGuSByRVoxFrJDqfhpLTv0keFTWYkSgn2HEhsoSsoON3yIZ7OYwStrCPo2VNbsFtB+Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739235281; c=relaxed/simple;
-	bh=RZ8eFCh4V/SoIarOEinEaswqTqbkgU8QuFJ1FEXGQGA=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=dnDOXkftGZc8gT8EgPqntRW4s0EJLJn/nxEjFn6cuME/ZtoWsX/qSEie6Jwj2urhGtdxiavMGQXcoWrJH9pArgV5UursjacBbpPfh1Kt5jZ1xFW9MvYs//0Krq9bfdQebOhvbO6vtDoL7R/dv3JZS/D6oV+N1y0gkHAeqrjaa90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xew9GMqb; arc=none smtp.client-ip=91.218.175.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739235306; c=relaxed/simple;
+	bh=DVK1BM6fsgQdcrJqVs9z4/2JlTjuP1XLF668jqOTA2c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hf4KeS0KypIS4/7g/ldybsgpTvQqh966/urMcx6skXVMvrzED4nqJHl3pIjRvsDLj4QO+AObUV2Rrq737LesiUMCFJew+o/a6GvC9mSZ3OCf2S3Ss74bWDxgTalTORdlHp6TP1zvmOEObfr1D7znhsMLs9UYIHVvgPWkYRNcpl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jmRPetxe; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xew9GMqb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jmRPetxe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739235305; x=1770771305;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=DVK1BM6fsgQdcrJqVs9z4/2JlTjuP1XLF668jqOTA2c=;
+  b=jmRPetxeTGiTEHbO6pJTALkqOaGFTp6SuiqtqtGx/3h1nQE0B1T6X0ku
+   3niMIKXl9nbfc3c2qHp47GKj1n3ijNlReah/kJRQTLR2HPMttEXpk9Usk
+   z2BMBJDwn0QpPblhYOsnE8NrET53kgOmxIckze45JAM1MyLaj78VE8kgF
+   AYF7w/WOes6sIuPObrfRvVY2E2o4GyTNUd+Ik22DhoTaeKWR11ObSPVz1
+   3gG3BWlIUhzLPdhb4TVKEiZh0TPDoKwdC4CYSpmSyQAYxWNLCRJvmbqaH
+   LFDYhWuWEoeNQswIIDLUSB6xBBYZV0AmDxajYI8md3eiWh4QJAl9fHwJo
+   A==;
+X-CSE-ConnectionGUID: pBEtuiuXTqKPMMVN9PANpA==
+X-CSE-MsgGUID: LUU9XtNWSKOf7ckp+P3apA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="39756003"
+X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
+   d="scan'208";a="39756003"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 16:55:05 -0800
+X-CSE-ConnectionGUID: FobcnFARQG2swwv7OZQ6HA==
+X-CSE-MsgGUID: 25lPm/0AR0OgfDN0Y1zmLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
+   d="scan'208";a="112186399"
+Received: from allen-box.sh.intel.com ([10.239.159.52])
+  by fmviesa006.fm.intel.com with ESMTP; 10 Feb 2025 16:55:03 -0800
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1][PULL REQUEST] iommu/vt-d: Fixes for v6.14-rc
+Date: Tue, 11 Feb 2025 08:55:11 +0800
+Message-ID: <20250211005512.985563-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739235275;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7MPriy2oqUpTiqI5i/JMHT2p0Ii9dY/LdlrCBRZmpjw=;
-	b=xew9GMqbE8xgfZEKcOax9eSSQELiDijA9iX4/o7RWAzh2FD5urcg1Ckw0eT4oaE0/Vdy0Z
-	thqkfNrnWUvFd7y15LAKQN8Ljb0LhHlRH4wHDEJ8A2uSh34mAwN60nWGZ/7A7CWvfXzEmJ
-	q18pvZYn8j7/kOTrKU7g8tQDKcfDM1c=
-Date: Tue, 11 Feb 2025 00:54:33 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Ihor Solodrai" <ihor.solodrai@linux.dev>
-Message-ID: <84a8e6737fca05dd3ec234760f1c77901d915ef9@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH] netfs: Add retry stat counters
-To: "David Howells" <dhowells@redhat.com>
-Cc: dhowells@redhat.com, "Marc Dionne" <marc.dionne@auristor.com>, "Steve 
- French" <stfrench@microsoft.com>, "Eric Van Hensbergen"
- <ericvh@kernel.org>, "Latchesar  Ionkov" <lucho@ionkov.net>, "Dominique
- Martinet" <asmadeus@codewreck.org>, "Christian Schoenebeck"
- <linux_oss@crudebyte.com>, "Paulo Alcantara" <pc@manguebit.com>, "Jeff
- Layton" <jlayton@kernel.org>, "Christian Brauner" <brauner@kernel.org>,
- v9fs@lists.linux.dev, linux-cifs@vger.kernel.org, netfs@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- ast@kernel.org, bpf@vger.kernel.org
-In-Reply-To: <3210864.1739229537@warthog.procyon.org.uk>
-References: <8d8a5d5b00688ea553b106db690e8a01f15b1410@linux.dev>
- <335ad811ae2cf5ebdfc494c185b9f02e9ca40c3e@linux.dev>
- <3173328.1738024385@warthog.procyon.org.uk>
- <3187377.1738056789@warthog.procyon.org.uk>
- <2986469.1739185956@warthog.procyon.org.uk>
- <3210864.1739229537@warthog.procyon.org.uk>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On 2/10/25 3:18 PM, David Howells wrote:
-> Ihor Solodrai <ihor.solodrai@linux.dev> wrote:
->
->> Done. I pushed the logs to the previously mentioned github branch:
->> https://github.com/kernel-patches/bpf/commit/699a3bb95e2291d877737438f=
-b641628702fd18f
->
-> Perfect, thanks.
->
-> Looking at the last record of /proc/fs/netfs/requests, I see:
->
-> 	REQUEST  OR REF FL ERR  OPS COVERAGE
-> 	=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D =3D=3D=3D =3D=3D =3D=3D=3D=3D =3D=3D=
-=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D
-> 	00000a98 RA   1 2001    0   0 @0000 2000/2000
->
-> So the request of interest is R=3D00000a98 in the trace.  Grepping for =
-that, I
-> see (with a few columns cut out):
->
->  test_progs-no_a-97: netfs_rreq_ref: R=3D00000a98 NEW         r=3D1
->  test_progs-no_a-97: netfs_read: R=3D00000a98 READAHEAD c=3D00000000 ni=
-=3D2ec02f16 s=3D0 l=3D2000 sz=3D17a8
->  test_progs-no_a-97: netfs_rreq_ref: R=3D00000a98 GET SUBREQ  r=3D2
->  test_progs-no_a-97: netfs_sreq: R=3D00000a98[1] DOWN TERM  f=3D192 s=
-=3D0 17a8/17a8 s=3D1 e=3D0
->  test_progs-no_a-97: netfs_rreq_ref: R=3D00000a98 GET WORK    r=3D3
->  test_progs-no_a-97: netfs_sreq_ref: R=3D00000a98[1] PUT TERM    r=3D1
->  test_progs-no_a-97: netfs_rreq_ref: R=3D00000a98 GET SUBREQ  r=3D4
->  test_progs-no_a-97: netfs_sreq: R=3D00000a98[2] ZERO SUBMT f=3D00 s=3D=
-17a8 0/858 s=3D0 e=3D0
->     kworker/u8:2-36: netfs_rreq_ref: R=3D00000a98 SEE WORK    r=3D4
->     kworker/u8:2-36: netfs_rreq: R=3D00000a98 RA COLLECT f=3D2021
->     kworker/u8:2-36: netfs_sreq: R=3D00000a98[1] DOWN DSCRD f=3D92 s=3D=
-0 17a8/17a8 s=3D1 e=3D0
->     kworker/u8:2-36: netfs_sreq_ref: R=3D00000a98[1] PUT DONE    r=3D0
->     kworker/u8:2-36: netfs_sreq: R=3D00000a98[1] DOWN FREE  f=3D92 s=3D=
-0 17a8/17a8 s=3D1 e=3D0
->     kworker/u8:2-36: netfs_rreq_ref: R=3D00000a98 PUT SUBREQ  r=3D3
->     kworker/u8:2-36: netfs_rreq: R=3D00000a98 RA COMPLET f=3D2021
->     kworker/u8:2-36: netfs_rreq: R=3D00000a98 RA WAKE-IP f=3D2021
->     kworker/u8:2-36: netfs_rreq: R=3D00000a98 RA DONE    f=3D2001
->     kworker/u8:2-36: netfs_rreq_ref: R=3D00000a98 PUT WORK    r=3D2
->  test_progs-no_a-97: netfs_sreq: R=3D00000a98[2] ZERO TERM  f=3D102 s=
-=3D17a8 858/858 s=3D1 e=3D0
->  test_progs-no_a-97: netfs_rreq_ref: R=3D00000a98 GET WORK    r=3D3
->  test_progs-no_a-97: netfs_sreq_ref: R=3D00000a98[2] PUT TERM    r=3D1
->  test_progs-no_a-97: netfs_rreq_ref: R=3D00000a98 PUT RETURN  r=3D2
->     kworker/u8:2-36: netfs_rreq_ref: R=3D00000a98 SEE WORK    r=3D2
->     kworker/u8:2-36: netfs_rreq_ref: R=3D00000a98 PUT WORK    r=3D1
->
-> You can see subrequest 1 completes fine, the subrequest is freed and th=
-e ref
-> it had on the request is put:
->
-> 	netfs_sreq: R=3D00000a98[1] DOWN FREE  f=3D92 s=3D0 17a8/17a8 s=3D1 e=
-=3D0
-> 	netfs_rreq_ref: R=3D00000a98 PUT SUBREQ  r=3D3
->
-> Subrequest 2, however isn't collected:
->
-> 	netfs_sreq: R=3D00000a98[2] ZERO SUBMT f=3D00 s=3D17a8 0/858 s=3D0 e=
-=3D0
-> 	netfs_sreq: R=3D00000a98[2] ZERO TERM  f=3D102 s=3D17a8 858/858 s=3D1 =
-e=3D0
-> 	netfs_sreq_ref: R=3D00000a98[2] PUT TERM    r=3D1
->
-> and the work happens again in kworker/u8:2-36 right at the end:
->
-> 	netfs_rreq_ref: R=3D00000a98 SEE WORK    r=3D2
-> 	netfs_rreq_ref: R=3D00000a98 PUT WORK    r=3D1
->
-> but this doesn't do anything.
->
-> The excess buffer clearance happened in the app thread (test_progs-no_a=
--97):
->
-> 	netfs_sreq: R=3D00000a98[2] ZERO TERM  f=3D102 s=3D17a8 858/858 s=3D1 =
-e=3D0
->
->> Let me know if I can help with anything else.
->
-> Can you add some more tracepoints?
->
-> echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_collect/enable
-> echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_collect_sreq/enabl=
-e
-> echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_collect_state/enab=
-le
+Hi Joerg,
 
-See here: https://github.com/kernel-patches/bpf/commit/517f51d1f6c09ebab9=
-df3e3d17bb669601ab14ef
+The following fix has been queued for v6.14-rc:
 
-Beware, uncompressed trace-cmd.log is 37Mb
+- Add a missed check in intel_iommu_drain_pasid_prq()
 
->
-> However, I think I may have spotted the issue: I'm mixing
-> clear_and_wake_up_bit() for NETFS_RREQ_IN_PROGRESS (which will use a co=
-mmon
-> system waitqueue) with waiting on an rreq-specific waitqueue in such as
-> netfs_wait_for_read().
->
-> I'll work up a fix patch for that tomorrow.
+It has been reviewed and tested. Can you please consider it?
 
-Great! Thank you.
+Best regards,
+baolu
 
->
-> Thanks,
-> David
->
+Lu Baolu (1):
+  iommu/vt-d: Make intel_iommu_drain_pasid_prq() cover faults for RID
+
+ drivers/iommu/intel/prq.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+-- 
+2.43.0
+
