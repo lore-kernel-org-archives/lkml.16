@@ -1,141 +1,108 @@
-Received: from mail-io1-f98.google.com (mail-io1-f98.google.com [209.85.166.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49E026562D
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 20:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D0A26562D
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 20:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739305252; cv=none; b=GL4+SmlXg2/FzL+4MD15CKkVNXP0VV7VjQcuuVl69VDoSOng9Y0Wh7i2lUXpPkrL8ZyxS7SYLXOYrAs1aWQelU4rKcqFLHV5FjHHN4P+EE0Y6yq20Vsb77oeywucVcjR4ioF8Y+Z8/YRtJtnNoyuXwbKyPGXLra7o8Q/Ps6PafM=
+	t=1739305305; cv=none; b=oc6sPyEYMF0MQXnN2n9j8hoaLxGcicexa/MBBCxofpVQrKojyGwQ5sFOSz3d4/zbdwwphc18d3IOmKQOIzwD760J5RU8XZzOxC0Q2PNxg/AtqENNuwxbYC8+7bE8W95utO3merVGuq4PacqSkrkgfEzWlmWyY8XE4hm0jQTzib8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739305252; c=relaxed/simple;
-	bh=PU/4T9e5pHugUm+/ZNeeDqDdiuPHBuEOUvo8/mnQE9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uh5yf8TksGNHs2XmRhL1KExn8hTV6pRWZ3a38Y1aYjP9O3a7BTcy1xqOgh/hFSAaT00Lk0sC14rpnvE5LRBmofLz70aC3+F91bhDW8u3YcnVRJHdK5CfbpidbOVIAjfy1v9dNPInJvtmu7RqCFIOwxZrXK8Dwahmq7JLLfSXNbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=e25u7Awp; arc=none smtp.client-ip=209.85.166.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="e25u7Awp"
-Received: by mail-io1-f98.google.com with SMTP id ca18e2360f4ac-8552944e0b4so8515839f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:20:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1739305250; x=1739910050; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=csJ7f6rdwklnGRErPjOt9JKitwpK8CwkZyN2fZNR+N8=;
-        b=e25u7AwpN460hhdt4i2ViH9/bz6ojk36ckyTWTl7Ql7+BGhj49LhsG90/+Hw0AUJwX
-         /HRN2//HYcjsk3HsjojPoGVO/L6xgjA7RG4CLSY9QjOksAsMuG7CCfKKv0L7PVlCT5Wb
-         g4k02gDZ8ehX4ozE1oo3j1cNwbAjaxpVJcXvSX7liBVARqd+3KUXab1BbNmoxP61ML6G
-         JkFo1DYw/kVAX2TdRgJMR10O3TGLaksoAy9aEZNsoiv1gvAay0xeOitCFLx6Tikz3ZFt
-         4fmJcRr2mcCvbnB+fAtOaEDjWh/oSFwJYGHq5vBPU3CjEzoWHsutOX+fG/GsojpwhvfH
-         8CbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739305250; x=1739910050;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=csJ7f6rdwklnGRErPjOt9JKitwpK8CwkZyN2fZNR+N8=;
-        b=ozce+uWtI2By0yzmMHrBFvsdMssoEmeeUFSNilScweJCTU1YS1k0eTgiYlgW54uZT5
-         HeEGBxi9DriKz0zJmh2jhag1gYFHeIWhxBoCxGrSjRM8QBlBUuYOYAaPH+JDooV3bvKK
-         roDnGCF9radkvsFHpNK1ymtFJ9pLODS3rGOuiFFqk8DdAUVXRB7yqFvg8hDxBXRsu9cf
-         nQfIumBK7/HsP88BqT9MunA86zTscsDBZ7M095AiLKe1oONBO5YSuaZnlyx/jmn/ehf9
-         g8oMV2Rb2fzbMIlBRxJRIORXTHNvt2QdI3+Qk3k00Csrv0isloNn9pFy40vnmEuJvqoT
-         GsQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtqOXwBRfZJlRzJzG6X9KkG+DTyV+JrHDlWV0i4u+c+dmUKXJdF4Vafdkg5QO+Iy8VLdYsfhumrLN4A8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ3qbGshRqrIdjFu0U1z44pnV+p2H31Kc9F7lXR4RL0SQRNRef
-	m/ylZctE5nq2/xd/VHbedg6NbDckQk8y3HF6q9NfTPV3aGa9QbOPw/STPJnfXz2qaCDnHsbfzv7
-	gnQLlLddByYEyJ64qMJjN+YtgVw8+jUdq
-X-Gm-Gg: ASbGncvsDt8sCXAIQhw2EnuyG3zef1rtzKOmgJO+41aQMR7TahiWveg0kiCp9KPpbA3
-	3PzQb2VrBqafGOr7ic7NdoCU64EOSVs6SeNCamL+pkAAv94apSst8KqNClANLhM4J5IG3XIAyUT
-	+jQ3Dary2Nr4+b2M4Lp42LHHa+Tnk3uhaBC24A8K6g06ltM6puJbVayKyG2Kz6Em9n16owJyZUs
-	zDOnTLgufGn+Ufrf+vz9AGNR9FeDnzP4vTZ/dEoeHC005KQaBrNToGPnNR7w4+v5JJMdcm0kAKm
-	smv5TRWsj/C4/3AnScOGWzU1E/YPJvRGF/aKyQ==
-X-Google-Smtp-Source: AGHT+IHsTrPbdU/3vEFLg/XqPk1UsqIU4VwKugBocGrCcrJHn8lsYoNhUdDT/80cjTS/VgudnAQcEG0cfPfN
-X-Received: by 2002:a05:6602:13c2:b0:854:a5e8:3294 with SMTP id ca18e2360f4ac-85555dad5ebmr23112439f.3.1739305249960;
-        Tue, 11 Feb 2025 12:20:49 -0800 (PST)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
-        by smtp-relay.gmail.com with ESMTPS id ca18e2360f4ac-854f669af2asm61994339f.18.2025.02.11.12.20.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 12:20:49 -0800 (PST)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id E2C543404B6;
-	Tue, 11 Feb 2025 13:20:48 -0700 (MST)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id D1687E40DF3; Tue, 11 Feb 2025 13:20:18 -0700 (MST)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>
-Cc: Caleb Sander Mateos <csander@purestorage.com>,
-	io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] io_uring: use IO_REQ_LINK_FLAGS more
-Date: Tue, 11 Feb 2025 13:19:56 -0700
-Message-ID: <20250211202002.3316324-1-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1739305305; c=relaxed/simple;
+	bh=sFkhB2tQiPOfHp1RZdvQ2uGxidw5nbYCgxULFFMUepw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mFrB+ctLvonPozyqzmYbiOLMthE4gzQGM6Q9zqqmcRD97roNKfSbCPXvHAhHeAmcj7OS5zps9bCQPHoNHb7mngjfB7XvMOcINR1NUZkByOMCm+SRp4iYsrZM5P+5DBuf75ziDqI6VYj8H6F56lfuOoNE5ac6NBSiLLUGLGQTHEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1thwku-000000007J8-3SrU;
+	Tue, 11 Feb 2025 15:21:16 -0500
+Message-ID: <e8a156d4c8f5db07cf03b55fb81c75d523cac680.camel@surriel.com>
+Subject: Re: [PATCH v9 10/12] x86/mm: do targeted broadcast flushing from
+ tlbbatch code
+From: Rik van Riel <riel@surriel.com>
+To: Brendan Jackman <jackmanb@google.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
+	peterz@infradead.org, dave.hansen@linux.intel.com,
+ zhengqi.arch@bytedance.com, 	nadav.amit@gmail.com, thomas.lendacky@amd.com,
+ kernel-team@meta.com, 	linux-mm@kvack.org, akpm@linux-foundation.org,
+ jannh@google.com, 	mhklinux@outlook.com, andrew.cooper3@citrix.com, Manali
+ Shukla	 <Manali.Shukla@amd.com>
+Date: Tue, 11 Feb 2025 15:21:16 -0500
+In-Reply-To: <CA+i-1C16x5u-1qAqDPSONgs+pGWrfUTO1zq2r6Rrvq=q48NHpw@mail.gmail.com>
+References: <20250206044346.3810242-1-riel@surriel.com>
+	 <20250206044346.3810242-11-riel@surriel.com>
+	 <CA+i-1C2zuctxx6oPVVu0zBJ=Q=Hs73mgrWs5jsp8obARNcUS9g@mail.gmail.com>
+	 <2d20c333400b890f4983cf799576435abf1d8824.camel@surriel.com>
+	 <CA+i-1C16x5u-1qAqDPSONgs+pGWrfUTO1zq2r6Rrvq=q48NHpw@mail.gmail.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.1 (3.54.1-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Sender: riel@surriel.com
 
-Replace the 2 instances of REQ_F_LINK | REQ_F_HARDLINK with
-the more commonly used IO_REQ_LINK_FLAGS.
+On Tue, 2025-02-11 at 11:02 +0100, Brendan Jackman wrote:
+>=20
+> So I think here we're encoding the assumption that context_switch()
+> always calls either enter_lazy_tlb() or switch_mm_irqs_off(), which
+> is
+> a little awkward, plus the job of these functions is already kinda
+> hazy and this makes it even hazier. What about doing it in
+> arch_start_context_switch() instead?
+>=20
+> That would mean a bit of plumbing since we'd still wanna have the
+> tlbsync() in tlb.c, but that seems worth it to me. Plus, having it in
+> one place would give us a spot to add a comment. Now that you point
+> it
+> out it does indeed seem obvious but it didn't seem so yesterday.
+>=20
+While that would be a little bit cleaner to maintain,
+in theory, I'm not convinced that adding an extra
+function call to the context switch path is worthwhile
+for that small maintenance benefit.
 
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
----
- io_uring/io_uring.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+I'd rather add more comments than an extra function call :)
 
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index ec98a0ec6f34..8bb8c099c3e1 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -108,15 +108,17 @@
- 			  IOSQE_IO_HARDLINK | IOSQE_ASYNC)
- 
- #define SQE_VALID_FLAGS	(SQE_COMMON_FLAGS | IOSQE_BUFFER_SELECT | \
- 			IOSQE_IO_DRAIN | IOSQE_CQE_SKIP_SUCCESS)
- 
-+#define IO_REQ_LINK_FLAGS (REQ_F_LINK | REQ_F_HARDLINK)
-+
- #define IO_REQ_CLEAN_FLAGS (REQ_F_BUFFER_SELECTED | REQ_F_NEED_CLEANUP | \
- 				REQ_F_POLLED | REQ_F_INFLIGHT | REQ_F_CREDS | \
- 				REQ_F_ASYNC_DATA)
- 
--#define IO_REQ_CLEAN_SLOW_FLAGS (REQ_F_REFCOUNT | REQ_F_LINK | REQ_F_HARDLINK |\
-+#define IO_REQ_CLEAN_SLOW_FLAGS (REQ_F_REFCOUNT | IO_REQ_LINK_FLAGS | \
- 				 REQ_F_REISSUE | IO_REQ_CLEAN_FLAGS)
- 
- #define IO_TCTX_REFS_CACHE_NR	(1U << 10)
- 
- #define IO_COMPL_BATCH			32
-@@ -129,11 +131,10 @@ struct io_defer_entry {
- 	u32			seq;
- };
- 
- /* requests with any of those set should undergo io_disarm_next() */
- #define IO_DISARM_MASK (REQ_F_ARM_LTIMEOUT | REQ_F_LINK_TIMEOUT | REQ_F_FAIL)
--#define IO_REQ_LINK_FLAGS (REQ_F_LINK | REQ_F_HARDLINK)
- 
- /*
-  * No waiters. It's larger than any valid value of the tw counter
-  * so that tests against ->cq_wait_nr would fail and skip wake_up().
-  */
-@@ -1155,11 +1156,11 @@ static inline void io_req_local_work_add(struct io_kiocb *req,
- 
- 	/*
- 	 * We don't know how many reuqests is there in the link and whether
- 	 * they can even be queued lazily, fall back to non-lazy.
- 	 */
--	if (req->flags & (REQ_F_LINK | REQ_F_HARDLINK))
-+	if (req->flags & IO_REQ_LINK_FLAGS)
- 		flags &= ~IOU_F_TWQ_LAZY_WAKE;
- 
- 	guard(rcu)();
- 
- 	head = READ_ONCE(ctx->work_llist.first);
--- 
-2.45.2
+> Now I think about it... if we always tlbsync() before a context
+> switch, is the cant_migrate() above actually required?
 
+Probably not, but I guess it won't hurt?
+
+I'm running tests right now on a kernel with a bunch
+of debug options enabled, and I'm getting all sorts
+of warnings, but not this one :)
+
+--=20
+All Rights Reversed.
