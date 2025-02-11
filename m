@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6B9A1E5B87
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C69EF1B86F7
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:14:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739272447; cv=none; b=LuFdNZZ2rbvKxu04Mhko1sSG3w/FoR9vo4wj/I/OuNI5Gj20pg7AoDErDtc5QLAB6u10V6AxSWkQB2tuIFlBKd7FBJnxlXKb29ogM+ykb/lGaTd8xMmqMg40X2DyReLjG9pFwG2LlhvzEtNoPv6ccZMldZB+bIXqWKT+9/752ts=
+	t=1739272457; cv=none; b=sN92ctePNF4l+QJqiThFr3bEq0iLfuhbHWRxUUeRwmnGM2dxcXDyL10NWWDhQg1OQkEhJ4og2Sq5pX6MHu5JTU3wYCwQCmnq457rz/fzs9oYguoX4C5+qMqb854PkKLQ5WU55pNMurmfRakEXctdfevbaMhTLpAE42z7flymTEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739272447; c=relaxed/simple;
-	bh=/65vJoihApvUgvDROmmUZvN0G6FgIuNpyCBBsJDqLos=;
+	s=arc-20240116; t=1739272457; c=relaxed/simple;
+	bh=n2OUYq4x9pVNwaL+7Sz7Igqpu0iQoNzw8pLK5Jma/xw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=l5GflIH4fhKKj7SFvPvI2K4NKfLU6bZerQMrQdpJTlfd7YyuYpATQv+Gq1JKNxV9lewDeXsnewaH/AqwmQbtod9PLxby4YGhuGFT/ANYT4RnbES8vYT54Hcqxmk6obfu9GUuo/s0ezGJixksq6dMU4KkGFLRtMw0EGzRAd4ZWzk=
+	 MIME-Version; b=iyACe+/9h2Y7nYNgYuU6Vf73z5kSDV+qQMwOHepgqHRbwmHUp5iqxG6239f2JMZCEY7y4rsLi4k+dONamFwNSC/Ed7fqmz5ci27gQc48k/jiscBvwvrUJwZSY46Vc3EtuFjSsN7SmwjT4myaItR3OiAF8MK/TE0GUhhvQlVHQ5I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 556BF13D5;
-	Tue, 11 Feb 2025 03:14:26 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D2761477;
+	Tue, 11 Feb 2025 03:14:36 -0800 (PST)
 Received: from K4MQJ0H1H2.emea.arm.com (K4MQJ0H1H2.blr.arm.com [10.162.40.80])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A73603F5A1;
-	Tue, 11 Feb 2025 03:13:55 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 61B503F5A1;
+	Tue, 11 Feb 2025 03:14:05 -0800 (PST)
 From: Dev Jain <dev.jain@arm.com>
 To: akpm@linux-foundation.org,
 	david@redhat.com,
@@ -54,9 +54,9 @@ Cc: npache@redhat.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v2 02/17] khugepaged: Generalize hugepage_vma_revalidate()
-Date: Tue, 11 Feb 2025 16:43:11 +0530
-Message-Id: <20250211111326.14295-3-dev.jain@arm.com>
+Subject: [PATCH v2 03/17] khugepaged: Generalize __collapse_huge_page_swapin()
+Date: Tue, 11 Feb 2025 16:43:12 +0530
+Message-Id: <20250211111326.14295-4-dev.jain@arm.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 In-Reply-To: <20250211111326.14295-1-dev.jain@arm.com>
 References: <20250211111326.14295-1-dev.jain@arm.com>
@@ -68,66 +68,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Post retaking the lock, it must be checked that the VMA is suitable for our
-scan order. Hence, generalize hugepage_vma_revalidate().
+If any PTE in our scan range is a swap entry, then use do_swap_page() to swap-in
+the corresponding folio.
 
 Signed-off-by: Dev Jain <dev.jain@arm.com>
 ---
- mm/khugepaged.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ mm/khugepaged.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 4342003b1c33..3d105cacf855 100644
+index 3d105cacf855..221823c0d95f 100644
 --- a/mm/khugepaged.c
 +++ b/mm/khugepaged.c
-@@ -919,7 +919,7 @@ static int hpage_collapse_find_target_node(struct collapse_control *cc)
- 
- static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
- 				   bool expect_anon,
--				   struct vm_area_struct **vmap,
-+				   struct vm_area_struct **vmap, int order,
- 				   struct collapse_control *cc)
+@@ -999,17 +999,17 @@ static int check_pmd_still_valid(struct mm_struct *mm,
+  */
+ static int __collapse_huge_page_swapin(struct mm_struct *mm,
+ 				       struct vm_area_struct *vma,
+-				       unsigned long haddr, pmd_t *pmd,
+-				       int referenced)
++				       unsigned long addr, pmd_t *pmd,
++				       int referenced, int order)
  {
- 	struct vm_area_struct *vma;
-@@ -932,9 +932,9 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
- 	if (!vma)
- 		return SCAN_VMA_NULL;
+ 	int swapped_in = 0;
+ 	vm_fault_t ret = 0;
+-	unsigned long address, end = haddr + (HPAGE_PMD_NR * PAGE_SIZE);
++	unsigned long address, end = addr + (PAGE_SIZE << order);
+ 	int result;
+ 	pte_t *pte = NULL;
+ 	spinlock_t *ptl;
  
--	if (!thp_vma_suitable_order(vma, address, PMD_ORDER))
-+	if (!thp_vma_suitable_order(vma, address, order))
- 		return SCAN_ADDRESS_RANGE;
--	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, PMD_ORDER))
-+	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, order))
- 		return SCAN_VMA_CHECK;
- 	/*
- 	 * Anon VMA expected, the address may be unmapped then
-@@ -1135,7 +1135,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
- 		goto out_nolock;
- 
- 	mmap_read_lock(mm);
--	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
-+	result = hugepage_vma_revalidate(mm, address, true, &vma, HPAGE_PMD_ORDER, cc);
- 	if (result != SCAN_SUCCEED) {
- 		mmap_read_unlock(mm);
- 		goto out_nolock;
-@@ -1169,7 +1169,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
- 	 * mmap_lock.
- 	 */
- 	mmap_write_lock(mm);
--	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
-+	result = hugepage_vma_revalidate(mm, address, true, &vma, HPAGE_PMD_ORDER, cc);
- 	if (result != SCAN_SUCCEED)
- 		goto out_up_write;
- 	/* check if the pmd is still valid */
-@@ -2779,7 +2779,7 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
- 			mmap_read_lock(mm);
- 			mmap_locked = true;
- 			result = hugepage_vma_revalidate(mm, addr, false, &vma,
--							 cc);
-+							 HPAGE_PMD_ORDER, cc);
- 			if (result  != SCAN_SUCCEED) {
- 				last_fail = result;
- 				goto out_nolock;
+-	for (address = haddr; address < end; address += PAGE_SIZE) {
++	for (address = addr; address < end; address += PAGE_SIZE) {
+ 		struct vm_fault vmf = {
+ 			.vma = vma,
+ 			.address = address,
+@@ -1154,7 +1154,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+ 		 * that case.  Continuing to collapse causes inconsistency.
+ 		 */
+ 		result = __collapse_huge_page_swapin(mm, vma, address, pmd,
+-						     referenced);
++						     referenced, HPAGE_PMD_ORDER);
+ 		if (result != SCAN_SUCCEED)
+ 			goto out_nolock;
+ 	}
 -- 
 2.30.2
 
