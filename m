@@ -1,95 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005781F2BAF;
-	Tue, 11 Feb 2025 10:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7221F2BA6;
+	Tue, 11 Feb 2025 10:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739268254; cv=none; b=WoQcIkGjvmhntJabN1yA7L6Fxqqg9rh16Ep0McExP5oFYXOmeRQxpnFt2MTYTnZoLUlGerBG/Id18NyJbAbxjGXbJ0WfR1fC+u+jnuYPZb3zoZZTafTJG6ruCIHZ/UMcnqLdG8pCZyG+vskvwrkM5fUgVb84MY4Qqgb9kxYROkw=
+	t=1739268327; cv=none; b=g4tSWiqxcvPWNGjXn+91rN93oUBrDI9hwYmsXKbVxa1aDTYydIPgftba+QEr9xOychLMzz8qB2z6sCCMF/Lr0eEqKawRmae/l0DCwTd84B/2wPPUXxTElIAv3OhvRZdiUbQI7TBdM6bBHoAC9TTQ5rg4iOhwQAEyUx16eHdF/ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739268254; c=relaxed/simple;
-	bh=MMdhM2PCYrwcCpaZ5LdDu5P1WhORMrCUj31a4hpCOKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H34hkkIeYMNJ8Iuuf+ukXbUv0BkXfXsHMoTYigr7iGJjZTZ+ecY64Nx1Qhmpj8ypnhg7hiBtovQhCM5hI9IR42i5i4slz2+uJQLFT/h9Z1RkJd01TryTWqOiiVLiak6qtO93nNLAuB+uBa6RkbkvkhIth/Otx5BPfwMwfum5E9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MdvuKrP1; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739268327; c=relaxed/simple;
+	bh=sADgoTXuEP0KALTyFFSeEHMG91tk4FqPryvxBrfYI+4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mKP/7KfYBg9A0c2EykeNzkg2TI87ct+t7XSvqlAe1J6XmibmOOKGMKxyjLo7Ekyim2jv5KtJYwAT788qVvKJJ1QDnwPEsmouGsM7+kE8SBJQm8/ISZpTpTO1R6H7s92XbXFn8fEp6OleVinXbpT1a2LRxm8YfmG2MXW6dJxt7Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nbOJkTXk; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MdvuKrP1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739268253; x=1770804253;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MMdhM2PCYrwcCpaZ5LdDu5P1WhORMrCUj31a4hpCOKc=;
-  b=MdvuKrP1c8V9x92g/OFFlnv2ixPPbtKekkKfPM4v3WsyWnEfp5bcJJRV
-   AGMIv3le15of3jbuOocLvpthZ4NQRB4jmEaBr2VOrW/EXdXWjpaPrO2ro
-   gYGZKXSew3TBN4NsORU5CBYm5rJUGw1id7SwBvkhQVzfpR5BqGh0FjclB
-   DqpxqYJQtdtQ6WTlz7VwYEONWoxHGAOadGQLCjveKjJVJYDyqD6Fn3ePr
-   CzogI7jO73vSfx9J8s0YXAp/HUri6ud2JyWLyXGeGBR+Fz2cynuOUrryT
-   dPTVazkZ1SJdvumSXn96F9jxOT6L7DsZAw+Nu/TNXAEHIbHraDIV1VZTm
-   Q==;
-X-CSE-ConnectionGUID: fhkF4c0STHOSiu4HhojoNw==
-X-CSE-MsgGUID: t49wnCc4SraOHWG+jKxKjw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="27477567"
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="27477567"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 02:04:12 -0800
-X-CSE-ConnectionGUID: AenVwpHaT8WtXmPJpO5V0w==
-X-CSE-MsgGUID: /RG7ppNdT6Cs9KPXbzL0pg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="112679482"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 02:04:08 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1thn7d-0000000ASsk-2U9m;
-	Tue, 11 Feb 2025 12:04:05 +0200
-Date: Tue, 11 Feb 2025 12:04:02 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Kartik Rajput <kkartik@nvidia.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, thierry.reding@gmail.com,
-	jonathanh@nvidia.com, hvilleneuve@dimonoff.com, arnd@kernel.org,
-	geert+renesas@glider.be, robert.marko@sartura.hr,
-	schnelle@linux.ibm.com, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] serial: tegra-utc: Add driver for Tegra UART
- Trace Controller (UTC)
-Message-ID: <Z6sgkiHSQtojdQ9L@smile.fi.intel.com>
-References: <20250211061945.18836-1-kkartik@nvidia.com>
- <20250211061945.18836-3-kkartik@nvidia.com>
- <Z6sf58j4HJH4OCX9@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nbOJkTXk"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B3G1dh030181;
+	Tue, 11 Feb 2025 10:04:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	jG+Kg4b36hIqapcRxzijjOB7mGphZe8juAjsg0omT0k=; b=nbOJkTXkkzIidNzh
+	Kmp7MAqQ2eYvZNiQ3nk83QnBysYUc8zIze/E4CsGB7XeeVipSiim5VfmNHC7ROcn
+	8rsQldPzU2KkvMC+vwrOFYtW0wLNkpEpbpLoex+829WLpgKl7FeXAof8RE6FpCIR
+	s1SVHHY6uelob2ag1qxpABhhyBBBQOp4e/Dn+NzG7jr95d1AwDm8YRCnVp5Huq/7
+	zB0QaS3Qx0dGO121eGV3682kb1fRWEAi5tMgjUByD/PAwVphIYWe2/7slI4NzvQX
+	Qw360PdOCfD5PNRiWWG4a8T1Bp9y589wmvxCWW0bY/rj0yn9DNRNSG6rKklTrNLT
+	+Xr+NA==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qxg9gxt3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 10:04:47 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51BA4kGs013495
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 10:04:46 GMT
+Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Feb
+ 2025 02:04:39 -0800
+Message-ID: <dfc6e506-bfe8-4c68-9991-13140eeab1ea@quicinc.com>
+Date: Tue, 11 Feb 2025 18:04:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6sf58j4HJH4OCX9@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/8] scsi: ufs: core: Pass target_freq to
+ clk_scale_notify() vop
+To: =?UTF-8?B?UGV0ZXIgV2FuZyAo546L5L+h5Y+LKQ==?= <peter.wang@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "avri.altman@wdc.com"
+	<avri.altman@wdc.com>,
+        "quic_rampraka@quicinc.com"
+	<quic_rampraka@quicinc.com>,
+        "quic_cang@quicinc.com" <quic_cang@quicinc.com>,
+        "quic_nguyenb@quicinc.com" <quic_nguyenb@quicinc.com>,
+        "quic_nitirawa@quicinc.com" <quic_nitirawa@quicinc.com>,
+        "bvanassche@acm.org"
+	<bvanassche@acm.org>,
+        "junwoo80.lee@samsung.com" <junwoo80.lee@samsung.com>,
+        "mani@kernel.org" <mani@kernel.org>,
+        "martin.petersen@oracle.com"
+	<martin.petersen@oracle.com>
+CC: "ahalaney@redhat.com" <ahalaney@redhat.com>,
+        "ebiggers@google.com"
+	<ebiggers@google.com>,
+        "neil.armstrong@linaro.org"
+	<neil.armstrong@linaro.org>,
+        "chu.stanley@gmail.com" <chu.stanley@gmail.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "minwoo.im@samsung.com" <minwoo.im@samsung.com>,
+        "matthias.bgg@gmail.com"
+	<matthias.bgg@gmail.com>,
+        "James.Bottomley@HansenPartnership.com"
+	<James.Bottomley@HansenPartnership.com>,
+        "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org"
+	<linux-mediatek@lists.infradead.org>,
+        AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+References: <20250210100212.855127-1-quic_ziqichen@quicinc.com>
+ <20250210100212.855127-2-quic_ziqichen@quicinc.com>
+ <6dc8849886ff4ac6ceca7d8e36b853b27f337cb9.camel@mediatek.com>
+Content-Language: en-US
+From: Ziqi Chen <quic_ziqichen@quicinc.com>
+In-Reply-To: <6dc8849886ff4ac6ceca7d8e36b853b27f337cb9.camel@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: qD3RD_wXC4qR4Uv2ZT-5mpbsMfZAlM5U
+X-Proofpoint-GUID: qD3RD_wXC4qR4Uv2ZT-5mpbsMfZAlM5U
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_04,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxscore=0 priorityscore=1501 malwarescore=0 spamscore=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 phishscore=0 clxscore=1015
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502110062
 
-On Tue, Feb 11, 2025 at 12:01:11PM +0200, Andy Shevchenko wrote:
-> On Tue, Feb 11, 2025 at 11:49:45AM +0530, Kartik Rajput wrote:
 
-...
 
-> > +#include <linux/of.h>
+On 2/11/2025 11:52 AM, Peter Wang (王信友) wrote:
+> On Mon, 2025-02-10 at 18:02 +0800, Ziqi Chen wrote:
+>>
+>> diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
+>> index d7aca9e61684..f51d425696e7 100644
+>> --- a/include/ufs/ufshcd.h
+>> +++ b/include/ufs/ufshcd.h
+>> @@ -344,8 +344,8 @@ struct ufs_hba_variant_ops {
+>>          void    (*exit)(struct ufs_hba *);
+>>          u32     (*get_ufs_hci_version)(struct ufs_hba *);
+>>          int     (*set_dma_mask)(struct ufs_hba *);
+>> -       int     (*clk_scale_notify)(struct ufs_hba *, bool,
+>> -                                   enum ufs_notify_change_status);
+>> +       int (*clk_scale_notify)(struct ufs_hba *, bool, unsigned
+>> long,
+>> +                                                       enum
+>> ufs_notify_change_status);
+>>
 > 
-> > +#include <linux/of_device.h>
+> Hi Ziqi,
 > 
-> Use property.h (see also below).
+> Please keep the identation consistent.
+> 
+> Thanks.
+> Peter
 
-To be more precise. The above proposal is to _replace_ linux/of*.h with
-linux/property.h and use APIs from there.
+Sure, thank Peter.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+-Ziqi
+> 
+> 
+> 
+> 
+>>          int     (*setup_clocks)(struct ufs_hba *, bool,
+>>                                  enum ufs_notify_change_status);
+>>          int     (*hce_enable_notify)(struct ufs_hba *,
+>> --
+>> 2.34.1
+>>
+> 
 
