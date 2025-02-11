@@ -1,454 +1,678 @@
-Received: from n169-113.mail.139.com (n169-113.mail.139.com [120.232.169.113])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7BD1E3785;
-	Tue, 11 Feb 2025 05:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=120.232.169.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B531E3DCF;
+	Tue, 11 Feb 2025 05:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739251118; cv=none; b=ookOXJCmZwgBFbVXFiOWJs4iz58oTEr37gWXWJB2irrL9W+eNZfOQOjlE3sYC816d4wYHPCL8PDzmMocdtua/2cCjDETWvi8wn/40+f59z35SJfN/Uj+Fhu/3J2R0EGF5X2zlBw5f2VKO0Ozx5LGZHQc8aatgFWRP6PHToYfW2M=
+	t=1739251116; cv=none; b=HDjvyWoijPelX7YYpWgKcpLKJF07WMoouQ4wI0PThWEeERgC8D+gnO0EtP6FG3/9G5a2lbS3qLTDisiaWYlUnrnMZ1JY9idIkgriioXUgRDacNWFJ27pkapq+Nb7AxdF3BYpXakQz9hq0PxSRLoc4qsD1fY4FT6WvH/c6+BI2ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739251118; c=relaxed/simple;
-	bh=hv/VG3i+YFBFI3MkVyM0efwxFUC5Ym0qHC6A1RNrNtQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DYw/snXB5tkbSzfei9PLGUYiKcn6qVD2sCmDBvFv0VJ96ERVUStayJ7MsclbceWiuXiUWDVimEhadRx32G6vd4PCHl0x6oD5yoPTa/IxPsbXseJIceT1EJf9DDL/3LsQfXiN2UNlQ6bQPk5Kdku7ScqYL3AQfrZSaSCDxFtpdKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com; spf=pass smtp.mailfrom=139.com; arc=none smtp.client-ip=120.232.169.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=139.com
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM:                                                                                        
-X-RM-SPAM-FLAG:00000000
-Received:from [10.103.132.232] (unknown[123.114.236.252])
-	by rmsmtp-lg-appmail-29-12034 (RichMail) with SMTP id 2f0267aadce3f17-3613b;
-	Tue, 11 Feb 2025 13:15:17 +0800 (CST)
-X-RM-TRANSID:2f0267aadce3f17-3613b
-Message-ID: <437086da-f14e-474a-ac4b-9a235ab89d18@139.com>
-Date: Tue, 11 Feb 2025 13:15:16 +0800
+	s=arc-20240116; t=1739251116; c=relaxed/simple;
+	bh=AWg8lA7RbcxOI35s/rAr8ab46t0cz+eTemUw27TA4Tk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=p0AcwQMVXCOFnBo57Kw8kXXnzphSPwZ0F8h8DgXexAIcmG114e3uIe2TnR36uKEUkJ5o7p4gVBNivhq5Bpo9B1G51W1+RYJmnQbIJkxA1EesiED3MruHnbDLrBNQxK4mSsULWtNDsnaspn7tKmzIhx6K0JGF+qS+sYYRl/kFb8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HSGY9Vzx; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HSGY9Vzx"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e1a41935c3so75038306d6.3;
+        Mon, 10 Feb 2025 21:18:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739251113; x=1739855913; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qmcLxmiQxevWfWC+Z1wpMunE+iuI6aQmEijBRLMKdcQ=;
+        b=HSGY9VzxTmuR7jaQEd8kn2J/eWLO1MJnUCOxHkjyZAZPgts2nn4PFcGsxCRFs/wrVz
+         8BnmY/dhKXBUIAfkYsGwOA3TG2UWJsdcivM1TCDjhj4CU2V8RlUdSIpnNxuljQozXb2U
+         DODiifVrRCc/XH7meCUxYL3G6A24DnW90IC0zBOPxYLP5BzHSrfXswx+VmZaWxdEFAhq
+         lxKk8UrvdIxvSrnQ61IOsrph1ygcZRlUZ7YR043a0eP3s32L676rGokOuhyEQN6jhQ2O
+         FeuyxBXjlL1n2nhC+2tar7XDG8v4O9F6Q+wUTT8PC5vJYkWMiDTlWo4smydx9VhtPe9g
+         2nNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739251113; x=1739855913;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qmcLxmiQxevWfWC+Z1wpMunE+iuI6aQmEijBRLMKdcQ=;
+        b=EG64RCR0gI99rooK4KUHGPDQG5At76aHchWcTw5iOK+sMyHmIvjDOYt51kS1kYcmk8
+         cE+TPQKu9KybGbfSJ3mGs6vfDAuYp4DqkqVxeZO38949HyIwA90kgk8+4+7s84fDWmEl
+         zdGZUfa/8B9ebKFy8zb8qQmrgOICfa++UxJDvd3kJEZUM0EZD8N8kDzcYACjRXkMbbEY
+         QkS/A03DtTe9R5b3I8gZqezIyVrRDtc7pq76w7d71LMWF5AKVqUkZ6KY/Ye4HlMPXJZq
+         32OIjqoES9JyHWvvw8o9xPGwZom+1wxzpviRkyEFeSMNbJ31fxevyT3JQ3n/c756SYUS
+         XKkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBzC/onVVYhJ42IFTNiLE2nZVU6/VYJgOFuJfr3uQx/yqPDVFwUYgcrCHKoRBzU/k3f9iLHue3vtIHMA==@vger.kernel.org, AJvYcCURfC+E58v0bB+G9sIbHrVcsttiEN53RL5WgKdwX8JmUj+JFM5Mmh4NBakyhO2Vx2Tk0D/v+8UlT0YrgJ4Z@vger.kernel.org, AJvYcCVjMuW/Mlj9SF/s04eHHAw4hMrqqne6mfke/U9Rb+m4duBB0h5C37AaemmuLVc0YNRH0JhDQJnhuSlg@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywfet2mhAEeNqh3nKEYriDUkwEk8C/JqIR2TEtP/Tq/TIGhmY8Y
+	JNZro1e+pVanT1mxNxCS9Vy8bVFRSnfC5TXw9csZACBy8fnJYOaP
+X-Gm-Gg: ASbGncvuMW6pPXXaoVExXGzflwFsp4VLWCaVSBTV626g6kceuXW0URBs7f/WbDSOc7I
+	BJSZuNN6BYzUiDh1LGUdgoErAgggwJh6+hoaqN5vtazrWw6mw2m5hI1garOivbHOTIUi4Z5OpGn
+	UNA89TrMFExUVGkUq3lm7bMZCW59JceqIs5OIlQ2Ve3Y3b10GvwIhSmP7PsJ2WZK2K1gZxX3Dqs
+	hxeub0J+R7BqKFeR1DjbfebbLUrr8LdWkKbSK0f/EZ0vDNXZ91m1zY4AzOUADiJPtI=
+X-Google-Smtp-Source: AGHT+IGf1dHMES6FiJRXGoHXc/Ox6GEGzLR8RiRIRa71dUUszfoPgdlmu1fU4FiJemM2f9Q4xv/LjA==
+X-Received: by 2002:ad4:576b:0:b0:6d8:8466:d205 with SMTP id 6a1803df08f44-6e4455d2ec1mr201376456d6.6.1739251112673;
+        Mon, 10 Feb 2025 21:18:32 -0800 (PST)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e44150c6e9sm51838016d6.6.2025.02.10.21.18.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 21:18:32 -0800 (PST)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Guo Ren <guoren@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Cc: Inochi Amaoto <inochiama@gmail.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: [PATCH v2 5/8] dt-bindings: pinctrl: Add pinctrl for Sophgo SG2042 series SoC
+Date: Tue, 11 Feb 2025 13:17:53 +0800
+Message-ID: <20250211051801.470800-6-inochiama@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250211051801.470800-1-inochiama@gmail.com>
+References: <20250211051801.470800-1-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] platform/x86: lenovo-super-hotkey-wmi.c: Support
- formic and audio mute LEDs
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org, dongeg1@lenovo.com,
- Mark Pearson <mpearson-lenovo@squebb.ca>
-References: <20250208144114.11685-1-xy-jackie@139.com>
- <59c73f9e-2b3c-0a52-3328-257dcbb52a90@linux.intel.com>
-Content-Language: en-US
-From: Jackie Dong <xy-jackie@139.com>
-In-Reply-To: <59c73f9e-2b3c-0a52-3328-257dcbb52a90@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 2/10/25 18:45, Ilpo Järvinen wrote:
-> On Sat, 8 Feb 2025, Jackie Dong wrote:
-> 
->> Implement Lenovo utility data WMI calls needed to make LEDs
->> work on Ideapads that support this GUID.
->> This enables the mic and audio LEDs to be updated correctly.
->>
->> Tested on below samples.
->> ThinkBook 13X Gen4 IMH
->> ThinkBook 14 G6 ABP
->> ThinkBook 16p Gen4-21J8
->> ThinkBook 16p Gen8-IRL
->> ThinkBook 16p G7+ ASP
->>
->> Signed-off-by: Jackie Dong <xy-jackie@139.com>
->> Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> ---
->> Changes in v3:
->>   - Changed the name of the Kconfig entry to LENOVO_SUPER_HOTKEY_WMI
->>   - Renamed everything in this driver which contains the name "ideapad"
->>     to instead contain the name of this driver.
->>   - Moved struct wmi_device *led_wdev in lenovo_super_hotkey_wmi_private,
->>     and use container_of() to the led_wdev pointer.
->>   - Replaced sizeof(struct wmi_led_args) by sizeof(led_arg)
->>   - Added condtions checking for obj && obj->type == ACPI_TYPE_INTEGER
->>     and free the ACPI object after get the required value.
->>   - Removed led_classdev_unregister() after led_reg_failed label, but
->>     add lenovo_super_hotkey_wmi_remove(struct wmi_device *wdev) to free
->>     resource.
->>   - Removed IDEAPAD_WMI_EVENT_FN_KEYS/IDEAPAD_WMI_EVENT_LUD_KEYS related
->>     source codes and only keep LUD_WMI_METHOD_GUID.
->>
->> Changes in v2:
->>   - Update code layout and formatting as recommended in review
->>   - Improved error handling in ideapad_wmi_led_init
->>   - Separated a WMI driver named lenovo-super-hotkey-wmi.c from
->>     ideapad-lap.c, it's only for Lenovo Super Hotkey WMI devices.
->>
->>   drivers/platform/x86/Kconfig                  |   9 +
->>   drivers/platform/x86/Makefile                 |   1 +
->>   .../platform/x86/lenovo-super-hotkey-wmi.c    | 248 ++++++++++++++++++
->>   3 files changed, 258 insertions(+)
->>   create mode 100644 drivers/platform/x86/lenovo-super-hotkey-wmi.c
->>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index 0258dd879d64..c1792e8f04e1 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -475,6 +475,15 @@ config IDEAPAD_LAPTOP
->>   	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
->>   	  rfkill switch, hotkey, fan control and backlight control.
->>   
->> +config LENOVO_SUPER_HOTKEY_WMI
->> +	tristate "Lenovo Super Hotkey Utility WMI extras driver"
->> +	depends on ACPI_WMI
->> +	depends on IDEAPAD_LAPTOP
->> +	help
->> +	  This driver provides WMI support for Lenovo customized hotkeys function
->> +	  of Lenovo NoteBooks which are for Consumer and SMB customers, such as
->> +	  Ideapad/YOGA/XiaoXin/Gaming/ThinkBook and so on.
->> +
->>   config LENOVO_YMC
->>   	tristate "Lenovo Yoga Tablet Mode Control"
->>   	depends on ACPI_WMI
->> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
->> index e1b142947067..598335da9f55 100644
->> --- a/drivers/platform/x86/Makefile
->> +++ b/drivers/platform/x86/Makefile
->> @@ -61,6 +61,7 @@ obj-$(CONFIG_UV_SYSFS)       += uv_sysfs.o
->>   # IBM Thinkpad and Lenovo
->>   obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
->>   obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
->> +obj-$(CONFIG_LENOVO_SUPER_HOTKEY_WMI)	+= lenovo-super-hotkey-wmi.o
->>   obj-$(CONFIG_LENOVO_YMC)	+= lenovo-ymc.o
->>   obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
->>   obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
->> diff --git a/drivers/platform/x86/lenovo-super-hotkey-wmi.c b/drivers/platform/x86/lenovo-super-hotkey-wmi.c
->> new file mode 100644
->> index 000000000000..e677bd11fa2f
->> --- /dev/null
->> +++ b/drivers/platform/x86/lenovo-super-hotkey-wmi.c
->> @@ -0,0 +1,248 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + *  Lenovo Super Hotkey Utility WMI extras driver for Ideapad laptop
->> + *
->> + *  Copyright (C) 2025	Lenovo
->> + */
->> +
->> +#include <linux/leds.h>
->> +#include <linux/wmi.h>
->> +#include "ideapad-laptop.h"
-> 
-> Add an empty line before the local includes.
-Hi Ilpo,
-    Thanks for your review and comments.
-    I'll update it in next version patch.
-> 
->> +
->> +/* Lenovo Super Hotkey WMI GUIDs */
->> +#define LUD_WMI_METHOD_GUID	"CE6C0974-0407-4F50-88BA-4FC3B6559AD8"
->> +
->> +/* Lenovo Utility Data WMI method_id */
->> +#define WMI_LUD_GET_SUPPORT 1
->> +#define WMI_LUD_SET_FEATURE 2
->> +
->> +#define WMI_LUD_GET_MICMUTE_LED_VER   20
->> +#define WMI_LUD_GET_AUDIOMUTE_LED_VER 26
->> +
->> +#define WMI_LUD_SUPPORT_MICMUTE_LED_VER   25
->> +#define WMI_LUD_SUPPORT_AUDIOMUTE_LED_VER 27
->> +
->> +/* Input parameters to mute/unmute audio LED and Mic LED */
->> +struct wmi_led_args {
->> +	u8 id;
->> +	u8 subid;
->> +	u16 value;
->> +};
->> +
->> +/* Values of input parameters to SetFeature of audio LED and Mic LED */
->> +enum hotkey_set_feature {
->> +	MIC_MUTE_LED_ON = 1,
->> +	MIC_MUTE_LED_OFF,
->> +	AUDIO_MUTE_LED_ON = 4,
->> +	AUDIO_MUTE_LED_OFF,
->> +};
->> +
->> +#define LSH_ACPI_LED_MAX 2
->> +
->> +enum lenovo_super_hotkey_wmi_event_type {
->> +	LSH_WMI_EVENT_LUD_KEYS = 2,
->> +};
->> +
->> +struct lenovo_super_hotkey_wmi_private {
->> +	enum lenovo_super_hotkey_wmi_event_type event;
->> +	struct led_classdev cdev[LSH_ACPI_LED_MAX];
->> +	struct wmi_device *led_wdev;
->> +};
->> +
->> +enum mute_led_type {
->> +	MIC_MUTE,
->> +	AUDIO_MUTE,
->> +};
->> +
->> +static int lsh_wmi_mute_led_set(enum mute_led_type led_type, struct led_classdev *led_cdev,
->> +				enum led_brightness brightness)
->> +
->> +{
->> +	struct lenovo_super_hotkey_wmi_private *wpriv = container_of(led_cdev,
->> +			struct lenovo_super_hotkey_wmi_private, cdev[led_type]);
->> +	struct wmi_led_args led_arg = {0, 0, 0};
->> +	struct acpi_buffer input;
->> +	acpi_status status;
->> +
->> +	switch (led_type) {
->> +	case MIC_MUTE:
->> +		led_arg.id = brightness == LED_ON ? MIC_MUTE_LED_ON : MIC_MUTE_LED_OFF;
->> +		break;
->> +	case AUDIO_MUTE:
->> +		led_arg.id = brightness == LED_ON ? AUDIO_MUTE_LED_ON : AUDIO_MUTE_LED_OFF;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	input.length = sizeof(led_arg);
->> +	input.pointer = &led_arg;
->> +	status = wmidev_evaluate_method(wpriv->led_wdev, 0, WMI_LUD_SET_FEATURE, &input, NULL);
->> +	if (ACPI_FAILURE(status))
->> +		return -EIO;
->> +
->> +	return 0;
->> +}
->> +
->> +static int lsh_wmi_audiomute_led_set(struct led_classdev *led_cdev,
->> +				     enum led_brightness brightness)
->> +
->> +{
->> +	return lsh_wmi_mute_led_set(AUDIO_MUTE, led_cdev, brightness);
->> +}
->> +
->> +static int lsh_wmi_micmute_led_set(struct led_classdev *led_cdev,
->> +				   enum led_brightness brightness)
->> +{
->> +	return lsh_wmi_mute_led_set(MIC_MUTE, led_cdev, brightness);
->> +}
->> +
->> +static int lenovo_super_hotkey_wmi_led_init(enum mute_led_type led_type, struct device *dev)
->> +{
->> +	struct lenovo_super_hotkey_wmi_private *wpriv = dev_get_drvdata(dev);
->> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->> +	struct acpi_buffer input;
->> +	union acpi_object *obj;
->> +	int led_version, err = 0;
->> +	unsigned int wmiarg;
->> +	acpi_status status;
->> +
->> +	switch (led_type) {
->> +	case MIC_MUTE:
->> +		wmiarg = WMI_LUD_GET_MICMUTE_LED_VER;
->> +		break;
->> +	case AUDIO_MUTE:
->> +		wmiarg = WMI_LUD_GET_AUDIOMUTE_LED_VER;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	input.length = sizeof(wmiarg);
->> +	input.pointer = &wmiarg;
->> +	status = wmidev_evaluate_method(wpriv->led_wdev, 0, WMI_LUD_GET_SUPPORT, &input, &output);
->> +	if (ACPI_FAILURE(status))
->> +		return -EIO;
->> +
->> +	obj = output.pointer;
->> +	if (obj && obj->type == ACPI_TYPE_INTEGER) {
->> +		led_version = obj->integer.value;
->> +		kfree(output.pointer);
->> +	} else {
->> +		err = -EIO;
->> +		goto led_error;
->> +	}
->> +
->> +	wpriv->cdev[led_type].max_brightness = LED_ON;
->> +	wpriv->cdev[led_type].dev = dev;
->> +	wpriv->cdev[led_type].flags = LED_CORE_SUSPENDRESUME;
->> +
->> +	switch (led_type) {
->> +	case MIC_MUTE:
->> +		if (led_version != WMI_LUD_SUPPORT_MICMUTE_LED_VER) {
->> +			err = -EIO;
->> +			goto led_error;
->> +		}
->> +		wpriv->cdev[led_type].name = "platform::micmute";
->> +		wpriv->cdev[led_type].brightness_set_blocking = &lsh_wmi_micmute_led_set;
->> +		wpriv->cdev[led_type].default_trigger = "audio-micmute";
->> +
->> +		err = devm_led_classdev_register(dev, &wpriv->cdev[led_type]);
->> +		if (err < 0)
->> +			goto led_reg_failed;
->> +
->> +		break;
->> +	case AUDIO_MUTE:
->> +		if (led_version != WMI_LUD_SUPPORT_AUDIOMUTE_LED_VER) {
->> +			err = -EIO;
->> +			goto led_error;
->> +		}
->> +		wpriv->cdev[led_type].name = "platform::mute";
->> +		wpriv->cdev[led_type].brightness_set_blocking = &lsh_wmi_audiomute_led_set;
->> +		wpriv->cdev[led_type].default_trigger = "audio-mute";
->> +
->> +		err = devm_led_classdev_register(dev, &wpriv->cdev[led_type]);
->> +		if (err < 0)
->> +			goto led_reg_failed;
->> +
->> +		break;
->> +	default:
->> +		err = -EINVAL;
->> +		dev_err(dev, "Unknown LED type %d\n", led_type);
-> 
-> Add include.
-For this comment, I understand that it need to add include for 
-dev_err(). If so, my comments is below. If you think that it still need 
-to add the include include/linux/dev_printk.h, pls comfirm it again, 
-I'll add it in next version patch.
-dev_err() is defined in include/linux/dev_printk.h which is included by 
-include/linux/device.h which is included by include/linux/wmi.h which is 
-included by this file as below.
+SG2042 introduces a simple pinctrl device for all configurable pins.
+For the SG2042 pinctl register file, each register (32 bits) is
+responsible for two pins, each occupying the upper 16 bits and lower
+16 bits of the register. It supports setting pull up/down, drive
+strength and input schmitt trigger.
 
- >> @@ -0,0 +1,248 @@
- >> +// SPDX-License-Identifier: GPL-2.0
- >> +/*
- >> + *  Lenovo Super Hotkey Utility WMI extras driver for Ideapad laptop
- >> + *
- >> + *  Copyright (C) 2025	Lenovo
- >> + */
- >> +
- >> +#include <linux/leds.h>
- >> +#include <linux/wmi.h>
+Add support for SG2042 pinctrl device.
 
-> 
->> +		goto led_error;
->> +	}
->> +
->> +	return 0;
->> +
->> +led_reg_failed:
->> +	dev_err(dev, "Could not register mute LED %d : %d\n", led_type, err);
->> +
->> +led_error:
->> +	kfree(obj);
-> 
-> Add include.
-For this comment, I understand that it need to add include for kfree(). 
-If so, my comments is below. If you think that it still need to add the 
-include include/linux/slab.h, pls comfirm it again, I'll add it in next 
-version patch or change to another function.
-kfree() is defined in include/linux/slab.h and the include chain is below.
-include/linux/slab.h -> include/acpi/platform/aclinux.h ->
-include/acpi/platform/acenv.h -> include/linux/acpi.h ->
-include/linux/wmi.h
-  and wmi.h is included by this file as below.
+Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+---
+ .../pinctrl/sophgo,sg2042-pinctrl.yaml        | 129 ++++++++++
+ include/dt-bindings/pinctrl/pinctrl-sg2042.h  | 196 ++++++++++++++++
+ include/dt-bindings/pinctrl/pinctrl-sg2044.h  | 221 ++++++++++++++++++
+ 3 files changed, 546 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/sophgo,sg2042-pinctrl.yaml
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-sg2042.h
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-sg2044.h
 
- >> @@ -0,0 +1,248 @@
- >> +// SPDX-License-Identifier: GPL-2.0
- >> +/*
- >> + *  Lenovo Super Hotkey Utility WMI extras driver for Ideapad laptop
- >> + *
- >> + *  Copyright (C) 2025	Lenovo
- >> + */
- >> +
- >> +#include <linux/leds.h>
- >> +#include <linux/wmi.h>
-
-> 
->> +	return err;
->> +}
->> +
->> +static void lenovo_super_hotkey_wmi_leds_setup(struct device *dev)
->> +{
->> +	lenovo_super_hotkey_wmi_led_init(MIC_MUTE, dev);
->> +	lenovo_super_hotkey_wmi_led_init(AUDIO_MUTE, dev);
->> +}
->> +
->> +static int lenovo_super_hotkey_wmi_probe(struct wmi_device *wdev, const void *context)
->> +{
->> +	struct lenovo_super_hotkey_wmi_private *wpriv;
->> +
->> +	wpriv = devm_kzalloc(&wdev->dev, sizeof(*wpriv), GFP_KERNEL);
->> +	if (!wpriv)
->> +		return -ENOMEM;
->> +
->> +	*wpriv = *(const struct lenovo_super_hotkey_wmi_private *)context;
->> +
->> +	dev_set_drvdata(&wdev->dev, wpriv);
->> +
->> +	if (wpriv->event == LSH_WMI_EVENT_LUD_KEYS) {
->> +		wpriv->led_wdev = wdev;
->> +		lenovo_super_hotkey_wmi_leds_setup(&wdev->dev);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static void lenovo_super_hotkey_wmi_remove(struct wmi_device *wdev)
->> +{
->> +	struct lenovo_super_hotkey_wmi_private *wpriv = dev_get_drvdata(&wdev->dev);
->> +	unsigned int i;
->> +
->> +	for (i = 0; i < LSH_ACPI_LED_MAX; i++)
->> +		led_classdev_unregister(&wpriv->cdev[i]);
->> +
->> +	kfree(wpriv);
->> +}
->> +static const struct lenovo_super_hotkey_wmi_private lsk_wmi_context_lud_keys = {
->> +	.event = LSH_WMI_EVENT_LUD_KEYS
->> +};
->> +
->> +static const struct wmi_device_id lenovo_super_hotkey_wmi_id_table[] = {
->> +	{ LUD_WMI_METHOD_GUID, &lsk_wmi_context_lud_keys }, /* Utility data */
->> +	{ }
->> +};
->> +
->> +MODULE_DEVICE_TABLE(wmi, lenovo_super_hotkey_wmi_id_table);
-> 
-> Add include.
-For this comment, I understand that it need to add include for 
-MODULE_DEVICE_TABLE(). If so, my comment is below. If you think that it 
-still need to add the include/linux/module.h, pls comfirm it again, I'll 
-add it in next version patch.
-MODULE_DEVICE_TABLE() is defined in include/linux/module.h which is 
-included by include/linux/acpi.h which is included by 
-include/linux/wmi.h which is included by this file as below.
-
- >> @@ -0,0 +1,248 @@
- >> +// SPDX-License-Identifier: GPL-2.0
- >> +/*
- >> + *  Lenovo Super Hotkey Utility WMI extras driver for Ideapad laptop
- >> + *
- >> + *  Copyright (C) 2025	Lenovo
- >> + */
- >> +
- >> +#include <linux/leds.h>
- >> +#include <linux/wmi.h>
-
-
-> 
->> +static struct wmi_driver lenovo_super_hotkey_wmi_driver = {
->> +	 .driver = {
->> +		 .name = "lenovo_super_hotkey_wmi",
->> +		 .probe_type = PROBE_PREFER_ASYNCHRONOUS
->> +	 },
->> +	 .id_table = lenovo_super_hotkey_wmi_id_table,
->> +	 .probe = lenovo_super_hotkey_wmi_probe,
->> +	 .remove = lenovo_super_hotkey_wmi_remove,
->> +	 .no_singleton = true,
->> +};
->> +
->> +module_wmi_driver(lenovo_super_hotkey_wmi_driver);
->> +
->> +MODULE_INFO(depends, "wmi,ideapad-laptop");
->> +MODULE_AUTHOR("Jackie Dong <dongeg1@lenovo.com>");
->> +MODULE_DESCRIPTION("Lenovo Super Hotkey Utility WMI extras driver");
->> +MODULE_LICENSE("GPL");
->>
-> 
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/sophgo,sg2042-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/sophgo,sg2042-pinctrl.yaml
+new file mode 100644
+index 000000000000..924dfe1404a5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/sophgo,sg2042-pinctrl.yaml
+@@ -0,0 +1,129 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/sophgo,sg2042-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Sophgo SG2042 Pin Controller
++
++maintainers:
++  - Inochi Amaoto <inochiama@outlook.com>
++
++properties:
++  compatible:
++    enum:
++      - sophgo,sg2042-pinctrl
++      - sophgo,sg2044-pinctrl
++
++  reg:
++    maxItems: 1
++
++patternProperties:
++  '-cfg$':
++    type: object
++    description:
++      A pinctrl node should contain at least one subnode representing the
++      pinctrl groups available on the machine.
++
++    additionalProperties: false
++
++    patternProperties:
++      '-pins$':
++        type: object
++        description: |
++          Each subnode will list the pins it needs, and how they should
++          be configured, with regard to muxer configuration, bias input
++          enable/disable, input schmitt trigger enable, drive strength
++          output enable/disable state. For configuration detail,
++          refer to https://github.com/sophgo/sophgo-doc/.
++
++        allOf:
++          - $ref: pincfg-node.yaml#
++          - $ref: pinmux-node.yaml#
++
++        properties:
++          pinmux:
++            description: |
++              The list of GPIOs and their mux settings that properties in the
++              node apply to. This should be set using the PINMUX macro.
++
++          bias-disable: true
++
++          bias-pull-up:
++            type: boolean
++
++          bias-pull-down:
++            type: boolean
++
++          drive-strength-microamp:
++            description: typical current when output low level.
++
++          input-schmitt-enable: true
++
++          input-schmitt-disable: true
++
++        required:
++          - pinmux
++
++        additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: sophgo,sg2042-pinctrl
++    then:
++      patternProperties:
++        '-cfg$':
++          patternProperties:
++            '-pins$':
++              properties:
++                drive-strength-microamp:
++                  enum: [ 5400, 8100, 10700, 13400,
++                          16100, 18800, 21400, 24100,
++                          26800, 29400, 32100, 34800,
++                          37400, 40100, 42800, 45400 ]
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: sophgo,sg2044-pinctrl
++    then:
++      patternProperties:
++        '-cfg$':
++          patternProperties:
++            '-pins$':
++              properties:
++                drive-strength-microamp:
++                  enum: [ 3200, 6400, 9600, 12700,
++                          15900, 19100, 22200, 25300,
++                          29500, 32700, 35900, 39000,
++                          42000, 45200, 48300, 51400]
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/pinctrl/pinctrl-sg2042.h>
++
++    pinctrl@30011000 {
++        compatible = "sophgo,sg2042-pinctrl";
++        reg = <30011000 0x1000>;
++
++        uart0_cfg: uart0-cfg {
++            uart0-pins {
++                pinmux = <PINMUX(PIN_UART0_TX, 0)>,
++                         <PINMUX(PIN_UART0_RX, 0)>;
++                bias-pull-up;
++                drive-strength-microamp = <13400>;
++            };
++        };
++    };
++
++...
+diff --git a/include/dt-bindings/pinctrl/pinctrl-sg2042.h b/include/dt-bindings/pinctrl/pinctrl-sg2042.h
+new file mode 100644
+index 000000000000..79d5bb8e04f8
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/pinctrl-sg2042.h
+@@ -0,0 +1,196 @@
++/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
++/*
++ * Copyright (C) 2024 Inochi Amaoto <inochiama@outlook.com>
++ *
++ */
++
++#ifndef _DT_BINDINGS_PINCTRL_SG2042_H
++#define _DT_BINDINGS_PINCTRL_SG2042_H
++
++#define PINMUX(pin, mux) \
++	(((pin) & 0xffff) | (((mux) & 0xff) << 16))
++
++#define PIN_LPC_LCLK			0
++#define PIN_LPC_LFRAME			1
++#define PIN_LPC_LAD0			2
++#define PIN_LPC_LAD1			3
++#define PIN_LPC_LAD2			4
++#define PIN_LPC_LAD3			5
++#define PIN_LPC_LDRQ0			6
++#define PIN_LPC_LDRQ1			7
++#define PIN_LPC_SERIRQ			8
++#define PIN_LPC_CLKRUN			9
++#define PIN_LPC_LPME			10
++#define PIN_LPC_LPCPD			11
++#define PIN_LPC_LSMI			12
++#define PIN_PCIE0_L0_RESET		13
++#define PIN_PCIE0_L1_RESET		14
++#define PIN_PCIE0_L0_WAKEUP		15
++#define PIN_PCIE0_L1_WAKEUP		16
++#define PIN_PCIE0_L0_CLKREQ_IN		17
++#define PIN_PCIE0_L1_CLKREQ_IN		18
++#define PIN_PCIE1_L0_RESET		19
++#define PIN_PCIE1_L1_RESET		20
++#define PIN_PCIE1_L0_WAKEUP		21
++#define PIN_PCIE1_L1_WAKEUP		22
++#define PIN_PCIE1_L0_CLKREQ_IN		23
++#define PIN_PCIE1_L1_CLKREQ_IN		24
++#define PIN_SPIF0_CLK_SEL1		25
++#define PIN_SPIF0_CLK_SEL0		26
++#define PIN_SPIF0_WP			27
++#define PIN_SPIF0_HOLD			28
++#define PIN_SPIF0_SDI			29
++#define PIN_SPIF0_CS			30
++#define PIN_SPIF0_SCK			31
++#define PIN_SPIF0_SDO			32
++#define PIN_SPIF1_CLK_SEL1		33
++#define PIN_SPIF1_CLK_SEL0		34
++#define PIN_SPIF1_WP			35
++#define PIN_SPIF1_HOLD			36
++#define PIN_SPIF1_SDI			37
++#define PIN_SPIF1_CS			38
++#define PIN_SPIF1_SCK			39
++#define PIN_SPIF1_SDO			40
++#define PIN_EMMC_WP			41
++#define PIN_EMMC_CD			42
++#define PIN_EMMC_RST			43
++#define PIN_EMMC_PWR_EN			44
++#define PIN_SDIO_CD			45
++#define PIN_SDIO_WP			46
++#define PIN_SDIO_RST			47
++#define PIN_SDIO_PWR_EN			48
++#define PIN_RGMII0_TXD0			49
++#define PIN_RGMII0_TXD1			50
++#define PIN_RGMII0_TXD2			51
++#define PIN_RGMII0_TXD3			52
++#define PIN_RGMII0_TXCTRL		53
++#define PIN_RGMII0_RXD0			54
++#define PIN_RGMII0_RXD1			55
++#define PIN_RGMII0_RXD2			56
++#define PIN_RGMII0_RXD3			57
++#define PIN_RGMII0_RXCTRL		58
++#define PIN_RGMII0_TXC			59
++#define PIN_RGMII0_RXC			60
++#define PIN_RGMII0_REFCLKO		61
++#define PIN_RGMII0_IRQ			62
++#define PIN_RGMII0_MDC			63
++#define PIN_RGMII0_MDIO			64
++#define PIN_PWM0			65
++#define PIN_PWM1			66
++#define PIN_PWM2			67
++#define PIN_PWM3			68
++#define PIN_FAN0			69
++#define PIN_FAN1			70
++#define PIN_FAN2			71
++#define PIN_FAN3			72
++#define PIN_IIC0_SDA			73
++#define PIN_IIC0_SCL			74
++#define PIN_IIC1_SDA			75
++#define PIN_IIC1_SCL			76
++#define PIN_IIC2_SDA			77
++#define PIN_IIC2_SCL			78
++#define PIN_IIC3_SDA			79
++#define PIN_IIC3_SCL			80
++#define PIN_UART0_TX			81
++#define PIN_UART0_RX			82
++#define PIN_UART0_RTS			83
++#define PIN_UART0_CTS			84
++#define PIN_UART1_TX			85
++#define PIN_UART1_RX			86
++#define PIN_UART1_RTS			87
++#define PIN_UART1_CTS			88
++#define PIN_UART2_TX			89
++#define PIN_UART2_RX			90
++#define PIN_UART2_RTS			91
++#define PIN_UART2_CTS			92
++#define PIN_UART3_TX			93
++#define PIN_UART3_RX			94
++#define PIN_UART3_RTS			95
++#define PIN_UART3_CTS			96
++#define PIN_SPI0_CS0			97
++#define PIN_SPI0_CS1			98
++#define PIN_SPI0_SDI			99
++#define PIN_SPI0_SDO			100
++#define PIN_SPI0_SCK			101
++#define PIN_SPI1_CS0			102
++#define PIN_SPI1_CS1			103
++#define PIN_SPI1_SDI			104
++#define PIN_SPI1_SDO			105
++#define PIN_SPI1_SCK			106
++#define PIN_JTAG0_TDO			107
++#define PIN_JTAG0_TCK			108
++#define PIN_JTAG0_TDI			109
++#define PIN_JTAG0_TMS			110
++#define PIN_JTAG0_TRST			111
++#define PIN_JTAG0_SRST			112
++#define PIN_JTAG1_TDO			113
++#define PIN_JTAG1_TCK			114
++#define PIN_JTAG1_TDI			115
++#define PIN_JTAG1_TMS			116
++#define PIN_JTAG1_TRST			117
++#define PIN_JTAG1_SRST			118
++#define PIN_JTAG2_TDO			119
++#define PIN_JTAG2_TCK			120
++#define PIN_JTAG2_TDI			121
++#define PIN_JTAG2_TMS			122
++#define PIN_JTAG2_TRST			123
++#define PIN_JTAG2_SRST			124
++#define PIN_GPIO0			125
++#define PIN_GPIO1			126
++#define PIN_GPIO2			127
++#define PIN_GPIO3			128
++#define PIN_GPIO4			129
++#define PIN_GPIO5			130
++#define PIN_GPIO6			131
++#define PIN_GPIO7			132
++#define PIN_GPIO8			133
++#define PIN_GPIO9			134
++#define PIN_GPIO10			135
++#define PIN_GPIO11			136
++#define PIN_GPIO12			137
++#define PIN_GPIO13			138
++#define PIN_GPIO14			139
++#define PIN_GPIO15			140
++#define PIN_GPIO16			141
++#define PIN_GPIO17			142
++#define PIN_GPIO18			143
++#define PIN_GPIO19			144
++#define PIN_GPIO20			145
++#define PIN_GPIO21			146
++#define PIN_GPIO22			147
++#define PIN_GPIO23			148
++#define PIN_GPIO24			149
++#define PIN_GPIO25			150
++#define PIN_GPIO26			151
++#define PIN_GPIO27			152
++#define PIN_GPIO28			153
++#define PIN_GPIO29			154
++#define PIN_GPIO30			155
++#define PIN_GPIO31			156
++#define PIN_MODE_SEL0			157
++#define PIN_MODE_SEL1			158
++#define PIN_MODE_SEL2			159
++#define PIN_BOOT_SEL0			160
++#define PIN_BOOT_SEL1			161
++#define PIN_BOOT_SEL2			162
++#define PIN_BOOT_SEL3			163
++#define PIN_BOOT_SEL4			164
++#define PIN_BOOT_SEL5			165
++#define PIN_BOOT_SEL6			166
++#define PIN_BOOT_SEL7			167
++#define PIN_MULTI_SCKT			168
++#define PIN_SCKT_ID0			169
++#define PIN_SCKT_ID1			170
++#define PIN_PLL_CLK_IN_MAIN		171
++#define PIN_PLL_CLK_IN_DDR_L		172
++#define PIN_PLL_CLK_IN_DDR_R		173
++#define PIN_XTAL_32K			174
++#define PIN_SYS_RST			175
++#define PIN_PWR_BUTTON			176
++#define PIN_TEST_EN			177
++#define PIN_TEST_MODE_MBIST		178
++#define PIN_TEST_MODE_SCAN		179
++#define PIN_TEST_MODE_BSD		180
++#define PIN_BISR_BYP			181
++
++#endif /* _DT_BINDINGS_PINCTRL_SG2042_H */
+diff --git a/include/dt-bindings/pinctrl/pinctrl-sg2044.h b/include/dt-bindings/pinctrl/pinctrl-sg2044.h
+new file mode 100644
+index 000000000000..2a619f681c39
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/pinctrl-sg2044.h
+@@ -0,0 +1,221 @@
++/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
++/*
++ * Copyright (C) 2024 Inochi Amaoto <inochiama@outlook.com>
++ *
++ */
++
++#ifndef _DT_BINDINGS_PINCTRL_SG2044_H
++#define _DT_BINDINGS_PINCTRL_SG2044_H
++
++#define PINMUX(pin, mux) \
++	(((pin) & 0xffff) | (((mux) & 0xff) << 16))
++
++#define PIN_IIC0_SMBSUS_IN		0
++#define PIN_IIC0_SMBSUS_OUT		1
++#define PIN_IIC0_SMBALERT		2
++#define PIN_IIC1_SMBSUS_IN		3
++#define PIN_IIC1_SMBSUS_OUT		4
++#define PIN_IIC1_SMBALERT		5
++#define PIN_IIC2_SMBSUS_IN		6
++#define PIN_IIC2_SMBSUS_OUT		7
++#define PIN_IIC2_SMBALERT		8
++#define PIN_IIC3_SMBSUS_IN		9
++#define PIN_IIC3_SMBSUS_OUT		10
++#define PIN_IIC3_SMBALERT		11
++#define PIN_PCIE0_L0_RESET		12
++#define PIN_PCIE0_L1_RESET		13
++#define PIN_PCIE0_L0_WAKEUP		14
++#define PIN_PCIE0_L1_WAKEUP		15
++#define PIN_PCIE0_L0_CLKREQ_IN		16
++#define PIN_PCIE0_L1_CLKREQ_IN		17
++#define PIN_PCIE1_L0_RESET		18
++#define PIN_PCIE1_L1_RESET		19
++#define PIN_PCIE1_L0_WAKEUP		20
++#define PIN_PCIE1_L1_WAKEUP		21
++#define PIN_PCIE1_L0_CLKREQ_IN		22
++#define PIN_PCIE1_L1_CLKREQ_IN		23
++#define PIN_PCIE2_L0_RESET		24
++#define PIN_PCIE2_L1_RESET		25
++#define PIN_PCIE2_L0_WAKEUP		26
++#define PIN_PCIE2_L1_WAKEUP		27
++#define PIN_PCIE2_L0_CLKREQ_IN		28
++#define PIN_PCIE2_L1_CLKREQ_IN		29
++#define PIN_PCIE3_L0_RESET		30
++#define PIN_PCIE3_L1_RESET		31
++#define PIN_PCIE3_L0_WAKEUP		32
++#define PIN_PCIE3_L1_WAKEUP		33
++#define PIN_PCIE3_L0_CLKREQ_IN		34
++#define PIN_PCIE3_L1_CLKREQ_IN		35
++#define PIN_PCIE4_L0_RESET		36
++#define PIN_PCIE4_L1_RESET		37
++#define PIN_PCIE4_L0_WAKEUP		38
++#define PIN_PCIE4_L1_WAKEUP		39
++#define PIN_PCIE4_L0_CLKREQ_IN		40
++#define PIN_PCIE4_L1_CLKREQ_IN		41
++#define PIN_SPIF0_CLK_SEL1		42
++#define PIN_SPIF0_CLK_SEL0		43
++#define PIN_SPIF0_WP			44
++#define PIN_SPIF0_HOLD			45
++#define PIN_SPIF0_SDI			46
++#define PIN_SPIF0_CS			47
++#define PIN_SPIF0_SCK			48
++#define PIN_SPIF0_SDO			49
++#define PIN_SPIF1_CLK_SEL1		50
++#define PIN_SPIF1_CLK_SEL0		51
++#define PIN_SPIF1_WP			52
++#define PIN_SPIF1_HOLD			53
++#define PIN_SPIF1_SDI			54
++#define PIN_SPIF1_CS			55
++#define PIN_SPIF1_SCK			56
++#define PIN_SPIF1_SDO			57
++#define PIN_EMMC_WP			58
++#define PIN_EMMC_CD			59
++#define PIN_EMMC_RST			60
++#define PIN_EMMC_PWR_EN			61
++#define PIN_SDIO_CD			62
++#define PIN_SDIO_WP			63
++#define PIN_SDIO_RST			64
++#define PIN_SDIO_PWR_EN			65
++#define PIN_RGMII0_TXD0			66
++#define PIN_RGMII0_TXD1			67
++#define PIN_RGMII0_TXD2			68
++#define PIN_RGMII0_TXD3			69
++#define PIN_RGMII0_TXCTRL		70
++#define PIN_RGMII0_RXD0			71
++#define PIN_RGMII0_RXD1			72
++#define PIN_RGMII0_RXD2			73
++#define PIN_RGMII0_RXD3			74
++#define PIN_RGMII0_RXCTRL		75
++#define PIN_RGMII0_TXC			76
++#define PIN_RGMII0_RXC			77
++#define PIN_RGMII0_REFCLKO		78
++#define PIN_RGMII0_IRQ			79
++#define PIN_RGMII0_MDC			80
++#define PIN_RGMII0_MDIO			81
++#define PIN_PWM0			82
++#define PIN_PWM1			83
++#define PIN_PWM2			84
++#define PIN_PWM3			85
++#define PIN_FAN0			86
++#define PIN_FAN1			87
++#define PIN_FAN2			88
++#define PIN_FAN3			89
++#define PIN_IIC0_SDA			90
++#define PIN_IIC0_SCL			91
++#define PIN_IIC1_SDA			92
++#define PIN_IIC1_SCL			93
++#define PIN_IIC2_SDA			94
++#define PIN_IIC2_SCL			95
++#define PIN_IIC3_SDA			96
++#define PIN_IIC3_SCL			97
++#define PIN_UART0_TX			98
++#define PIN_UART0_RX			99
++#define PIN_UART0_RTS			100
++#define PIN_UART0_CTS			101
++#define PIN_UART1_TX			102
++#define PIN_UART1_RX			103
++#define PIN_UART1_RTS			104
++#define PIN_UART1_CTS			105
++#define PIN_UART2_TX			106
++#define PIN_UART2_RX			107
++#define PIN_UART2_RTS			108
++#define PIN_UART2_CTS			109
++#define PIN_UART3_TX			110
++#define PIN_UART3_RX			111
++#define PIN_UART3_RTS			112
++#define PIN_UART3_CTS			113
++#define PIN_SPI0_CS0			114
++#define PIN_SPI0_CS1			115
++#define PIN_SPI0_SDI			116
++#define PIN_SPI0_SDO			117
++#define PIN_SPI0_SCK			118
++#define PIN_SPI1_CS0			119
++#define PIN_SPI1_CS1			120
++#define PIN_SPI1_SDI			121
++#define PIN_SPI1_SDO			122
++#define PIN_SPI1_SCK			123
++#define PIN_JTAG0_TDO			124
++#define PIN_JTAG0_TCK			125
++#define PIN_JTAG0_TDI			126
++#define PIN_JTAG0_TMS			127
++#define PIN_JTAG0_TRST			128
++#define PIN_JTAG0_SRST			129
++#define PIN_JTAG1_TDO			130
++#define PIN_JTAG1_TCK			131
++#define PIN_JTAG1_TDI			132
++#define PIN_JTAG1_TMS			133
++#define PIN_JTAG1_TRST			134
++#define PIN_JTAG1_SRST			135
++#define PIN_JTAG2_TDO			136
++#define PIN_JTAG2_TCK			137
++#define PIN_JTAG2_TDI			138
++#define PIN_JTAG2_TMS			139
++#define PIN_JTAG2_TRST			140
++#define PIN_JTAG2_SRST			141
++#define PIN_JTAG3_TDO			142
++#define PIN_JTAG3_TCK			143
++#define PIN_JTAG3_TDI			144
++#define PIN_JTAG3_TMS			145
++#define PIN_JTAG3_TRST			146
++#define PIN_JTAG3_SRST			147
++#define PIN_GPIO0			148
++#define PIN_GPIO1			149
++#define PIN_GPIO2			150
++#define PIN_GPIO3			151
++#define PIN_GPIO4			152
++#define PIN_GPIO5			153
++#define PIN_GPIO6			154
++#define PIN_GPIO7			155
++#define PIN_GPIO8			156
++#define PIN_GPIO9			157
++#define PIN_GPIO10			158
++#define PIN_GPIO11			159
++#define PIN_GPIO12			160
++#define PIN_GPIO13			161
++#define PIN_GPIO14			162
++#define PIN_GPIO15			163
++#define PIN_GPIO16			164
++#define PIN_GPIO17			165
++#define PIN_GPIO18			166
++#define PIN_GPIO19			167
++#define PIN_GPIO20			168
++#define PIN_GPIO21			169
++#define PIN_GPIO22			170
++#define PIN_GPIO23			171
++#define PIN_GPIO24			172
++#define PIN_GPIO25			173
++#define PIN_GPIO26			174
++#define PIN_GPIO27			175
++#define PIN_GPIO28			176
++#define PIN_GPIO29			177
++#define PIN_GPIO30			178
++#define PIN_GPIO31			179
++#define PIN_MODE_SEL0			180
++#define PIN_MODE_SEL1			181
++#define PIN_MODE_SEL2			182
++#define PIN_BOOT_SEL0			183
++#define PIN_BOOT_SEL1			184
++#define PIN_BOOT_SEL2			185
++#define PIN_BOOT_SEL3			186
++#define PIN_BOOT_SEL4			187
++#define PIN_BOOT_SEL5			188
++#define PIN_BOOT_SEL6			189
++#define PIN_BOOT_SEL7			190
++#define PIN_MULTI_SCKT			191
++#define PIN_SCKT_ID0			192
++#define PIN_SCKT_ID1			193
++#define PIN_PLL_CLK_IN_MAIN		194
++#define PIN_PLL_CLK_IN_DDR_0		195
++#define PIN_PLL_CLK_IN_DDR_1		196
++#define PIN_PLL_CLK_IN_DDR_2		197
++#define PIN_PLL_CLK_IN_DDR_3		198
++#define PIN_XTAL_32K			199
++#define PIN_SYS_RST			200
++#define PIN_PWR_BUTTON			201
++#define PIN_TEST_EN			202
++#define PIN_TEST_MODE_MBIST		203
++#define PIN_TEST_MODE_SCAN		204
++#define PIN_TEST_MODE_BSD		205
++#define PIN_BISR_BYP			206
++
++#endif /* _DT_BINDINGS_PINCTRL_SG2044_H */
+-- 
+2.48.1
 
