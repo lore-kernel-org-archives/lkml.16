@@ -1,149 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF3D253B7D
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F6C1EF088;
+	Tue, 11 Feb 2025 16:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290295; cv=none; b=nSMQ/H8EmJJqGitayoaIC6wNHGiV1jgHTMI+5EvqWwzv33amvXNjUU8PoNdiOtdKtW+oFXvWuogOxgCxl7K6GEgF6oy147f4OSiR7lwPARXk9jfYyfgz9JM81nKhkjocA34NcRMXPvRY9gF0qn++luhXGn0ATZPoFBi+V1v4KXc=
+	t=1739290413; cv=none; b=Kdf2QNYY/jOT7Ob0EXVQLI5iZQo00vlJw0S6rvP2kG+hLUqm5hwogNQv0CEpLFQiY4C9fhAH/32O5U+jZn6RWsFpFiurT0WcUEnQM9RerKL3QlFTA3oszsprLJnOaywsbn2A6IRCOYTx2F6jg4tVcUg0EELZZLVWkEjcduoIW94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290295; c=relaxed/simple;
-	bh=cS70XGk1+sLAYhKj1uQAW9UASWnFX0MpKMElTx9v8hk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tLZIM3qRej1YNUlmlo/eYaD2tOKuewyPBWthhm1kgRlaBJZG+zP1AFt40s2xyQVY8yRQAYxHesr2UknCPODeIK/4haa8ojU6N0bPcgR7siQedRw8tVnQ0PyTJth2PA3heItNmGdSAcE0fSLArCQBplHpBZc89qH9maeYq01yp+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G3U8dDGm; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G3U8dDGm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739290293; x=1770826293;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=cS70XGk1+sLAYhKj1uQAW9UASWnFX0MpKMElTx9v8hk=;
-  b=G3U8dDGm9/T7YW0QnLrvdvMqDmcZ/Upd0Y+dV3xf++BJP4J0WTrrZUWd
-   Pw1MqgGIx5vdI8KVy7nJSD7adSPx+I2DCHecKXQRPz+SYxjN9v8CBbMww
-   q/tFPY4wg4lUrxqDFRCv5EKOv46gejHaj6h0SzFFnyHfV6qXTzO0avLwE
-   UdqZSew8QJa3+DNEcH8+f3LACewFubXryy/BPUPRHgx7iOwci+slNKNnF
-   lccNfQW6N9Q3042bOPRdtdjK/2r9IqqfFHxpykbJvRRHFSB5W3e2YSbuX
-   nrJAVSfmKSFfNaoxJXr6qazsi2HLLZUvukgpku4MsN4GiIkw2rzgWNNmL
-   g==;
-X-CSE-ConnectionGUID: pb/P1Q3PSuO6L4IHqPUOug==
-X-CSE-MsgGUID: hwo+gUphTWSoYdQeZQ7FLw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50551770"
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="50551770"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 08:11:32 -0800
-X-CSE-ConnectionGUID: sJkk/VkhQs2Rwl/eqIIfbQ==
-X-CSE-MsgGUID: x05H8EayRVWwPL/wRMM1Bw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="143409992"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 11 Feb 2025 08:11:31 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1thsrA-0014Ph-1m;
-	Tue, 11 Feb 2025 16:11:28 +0000
-Date: Wed, 12 Feb 2025 00:10:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Piotr Kwapulinski <piotr.kwapulinski@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>
-Subject: drivers/net/ethernet/intel/i40e/i40e_ptp.c:1375:27: warning: '%s'
- directive output may be truncated writing up to 287 bytes into a region of
- size 64
-Message-ID: <202502120046.MLa5sPZW-lkp@intel.com>
+	s=arc-20240116; t=1739290413; c=relaxed/simple;
+	bh=T15Mx9ZuiwR6vVMrQDZVNExHxsiOFJWhmUatt2oISjQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=mABWLAX1zZNBsc9RBUL2/O0a9h8rqTyPevU5xgHayeletvTz/XUv/Lj1Pt6oup6zJF84FnBT+J5n5Xm9J71AUdlXAZWbMaD9nt8Humaw/s332Nlj5wX3GSEysqE48b6co+K0cGvn8IYWfAKRpDUB4CFrX/7r+uEgeLDHv+bQ74I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id AC8D461E64870;
+	Tue, 11 Feb 2025 17:12:47 +0100 (CET)
+Message-ID: <3ded4075-e2f9-4231-9c3f-49a14fbbde1e@molgen.mpg.de>
+Date: Tue, 11 Feb 2025 17:12:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: Warnings `Could not retrieve perf counters (-19)` and
+ `amd_pstate: the _CPC object is not present in SBIOS or ACPI disabled` (Dell
+ PowerEdge R7625, AMD EPYC 9174F)
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+To: Gautham Ranjal Shenoy <gautham.shenoy@amd.com>,
+ Mario Limonciello <Mario.Limonciello@amd.com>, Ray Huang
+ <Ray.Huang@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <2b811df7-5278-4cfc-b8a0-7d6d72d3358d@molgen.mpg.de>
+ <5dff1719-c4e9-4ebf-ae0b-73b9de98df05@amd.com>
+ <DS7PR12MB82528A694056F1FBA20CE01E96EF2@DS7PR12MB8252.namprd12.prod.outlook.com>
+ <d09f52d8-e084-4875-9608-5b3db2554f3d@molgen.mpg.de>
+ <e26bc00f-1675-4aac-bd02-60774ff5901a@molgen.mpg.de>
+Content-Language: en-US
+In-Reply-To: <e26bc00f-1675-4aac-bd02-60774ff5901a@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Piotr,
-
-FYI, the error/warning still remains.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   febbc555cf0fff895546ddb8ba2c9a523692fb55
-commit: 1050713026a08d605b61f039700b67aab646371f i40e: add support for PTP external synchronization clock
-date:   3 years, 7 months ago
-config: alpha-randconfig-p001-20211207 (https://download.01.org/0day-ci/archive/20250212/202502120046.MLa5sPZW-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250212/202502120046.MLa5sPZW-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502120046.MLa5sPZW-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/net/ethernet/intel/i40e/i40e_ptp.c: In function 'i40e_ptp_init':
->> drivers/net/ethernet/intel/i40e/i40e_ptp.c:1375:27: warning: '%s' directive output may be truncated writing up to 287 bytes into a region of size 64 [-Wformat-truncation=]
-    1375 |                          "%s", sdp_desc[i].name);
-         |                           ^~
-   In function 'i40e_init_pin_config',
-       inlined from 'i40e_ptp_create_clock' at drivers/net/ethernet/intel/i40e/i40e_ptp.c:1414:13,
-       inlined from 'i40e_ptp_init' at drivers/net/ethernet/intel/i40e/i40e_ptp.c:1519:8:
-   drivers/net/ethernet/intel/i40e/i40e_ptp.c:1373:17: note: 'snprintf' output between 1 and 288 bytes into a destination of size 64
-    1373 |                 snprintf(pf->ptp_caps.pin_config[i].name,
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    1374 |                          sizeof(pf->ptp_caps.pin_config[i].name),
-         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    1375 |                          "%s", sdp_desc[i].name);
-         |                          ~~~~~~~~~~~~~~~~~~~~~~~
+Dear Linux folks,
 
 
-vim +1375 drivers/net/ethernet/intel/i40e/i40e_ptp.c
+Am 28.01.25 um 16:08 schrieb Paul Menzel:
+> [Cc: +x86 maintainers and ACPI list]
 
-  1349	
-  1350	/**
-  1351	 * i40e_init_pin_config - initialize pins.
-  1352	 * @pf: private board structure
-  1353	 *
-  1354	 * Initialize pins for external clock source.
-  1355	 * Return 0 on success or error code on failure.
-  1356	 **/
-  1357	static int i40e_init_pin_config(struct i40e_pf *pf)
-  1358	{
-  1359		int i;
-  1360	
-  1361		pf->ptp_caps.n_pins = 3;
-  1362		pf->ptp_caps.n_ext_ts = 2;
-  1363		pf->ptp_caps.pps = 1;
-  1364		pf->ptp_caps.n_per_out = 2;
-  1365	
-  1366		pf->ptp_caps.pin_config = kcalloc(pf->ptp_caps.n_pins,
-  1367						  sizeof(*pf->ptp_caps.pin_config),
-  1368						  GFP_KERNEL);
-  1369		if (!pf->ptp_caps.pin_config)
-  1370			return -ENOMEM;
-  1371	
-  1372		for (i = 0; i < pf->ptp_caps.n_pins; i++) {
-  1373			snprintf(pf->ptp_caps.pin_config[i].name,
-  1374				 sizeof(pf->ptp_caps.pin_config[i].name),
-> 1375				 "%s", sdp_desc[i].name);
-  1376			pf->ptp_caps.pin_config[i].index = sdp_desc[i].index;
-  1377			pf->ptp_caps.pin_config[i].func = PTP_PF_NONE;
-  1378			pf->ptp_caps.pin_config[i].chan = sdp_desc[i].chan;
-  1379		}
-  1380	
-  1381		pf->ptp_caps.verify = i40e_ptp_verify;
-  1382		pf->ptp_caps.enable = i40e_ptp_feature_enable;
-  1383	
-  1384		pf->ptp_caps.pps = 1;
-  1385	
-  1386		return 0;
-  1387	}
-  1388	
+> Am 28.01.25 um 11:49 schrieb Paul Menzel:
+> 
+>> Thank you for your quick replies. Gautham, messages with HTML are 
+>> rejected by Linux kernel lists.
+>>
+>>
+>> Am 28.01.25 um 04:51 schrieb Shenoy, Gautham Ranjal:
+>>
+>>> As Mario mentioned, you need to enable the CPPC option. Looking for 
+>>> some of the Dell PowerEdge documentation, there is an option called 
+>>> "Collaborative CPU Performance Control" (https://www.dell.com/ 
+>>> support/manuals/en-in/poweredge-r730/r730_ompublication/system- 
+>>> profile-settings-details?guid=guid-2e9b46a1-71e3-4072-9d86- 
+>>> db648757f0e6&lang=en-us).
+>>>
+>>> [cid:fe57df8f-3d99-4ea0-8f6e-b0daae49bb0e]
+>>> Can you please try enabling it ?
+>>
+>> You quoted the Dell PowerEdge R730. I couldn’t find it in the *Dell 
+>> PowerEdge R7625 Installation and Service Manual* [1], and also it’s 
+>> not listed in the iDRAC9 Web site (attached with added `.txt` 
+>> extension to trick the Linux list).
+> 
+> The amd_pstate warning seems to be related to the perf counters warning 
+> Linux prints earlier:
+> 
+>      $ dmesg --level alert,crit,err,warn
+>      [    2.666393] Spectre V2 : WARNING: Unprivileged eBPF is enabled with eIBRS on, data leaks possible via Spectre v2 BHB attacks!
+>      [    8.109446] Could not retrieve perf counters (-19)
+>      [    9.386551] scsi 0:0:4:0: set ignore_delay_remove for handle(0x0012)
+>      [    9.487804] amd_pstate: the _CPC object is not present in SBIOS or ACPI disabled
+>      [   14.726193] wmi_bus wmi_bus-PNP0C14:00: [Firmware Bug]: WQBC data block query control method not found
+> 
+> x86 maintainers, the original report with the Linux logs attached is in 
+> the archive [3].
+> 
+> It looks like, there is something missing in the Dell firmware to enable 
+> the feature.
+> 
+> The perf counters warning is from `amd_set_max_freq_ratio()` in `arch/ 
+> x86/kernel/acpi/cppc.c`:
+> 
+> ```
+> static void amd_set_max_freq_ratio(void)
+> {
+>          struct cppc_perf_caps perf_caps;
+>          u64 numerator, nominal_perf;
+>          u64 perf_ratio;
+>          int rc;
+> 
+>          rc = cppc_get_perf_caps(0, &perf_caps);
+>          if (rc) {
+>                  pr_warn("Could not retrieve perf counters (%d)\n", rc);
+>                  return;
+>          }
+>          […]
+> }
+> ```
+> 
+> With
+> 
+>      include/uapi/asm-generic/errno-base.h:#define    ENODEV        19    /* No such device */
+> 
+> this is returned by in `drivers/acpi/cppc_acpi.c`:
+> 
+> ```
+> /**
+>   * cppc_get_perf_caps - Get a CPU's performance capabilities.
+>   * @cpunum: CPU from which to get capabilities info.
+>   * @perf_caps: ptr to cppc_perf_caps. See cppc_acpi.h
+>   *
+>   * Return: 0 for success with perf_caps populated else -ERRNO.
+>   */
+> int cppc_get_perf_caps(int cpunum, struct cppc_perf_caps *perf_caps)
+> {
+>          struct cpc_desc *cpc_desc = per_cpu(cpc_desc_ptr, cpunum);
+>          […]
+>          if (!cpc_desc) {
+>                  pr_debug("No CPC descriptor for CPU:%d\n", cpunum);
+>                  return -ENODEV;
+>          }
+>          […]
+> }
+> ```
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+@AMD folks, just for clarity. Did Dell something with their firmware? If 
+so, are you going to work with Dell on a solution, or do I need to 
+report the issue to them?
+
+
+Kind regards,
+
+Paul
+
+
+>> PS:
+>>
+>>> -- 
+>>>
+>>> Thanks and Regards
+>>>
+>>> Gautham.
+>>
+>> Only if you care: Your signature delimiter misses a space at the end [2].
+>>
+>>
+>> [1]: https://www.dell.com/support/manuals/de-de/poweredge-r7625/per7625_ism_pub/system-profile-settings?guid=guid-9f6b6652-4079-45e7-90f5-1c8feee08ec0&lang=en-us
+>> [2]: https://en.wikipedia.org/wiki/Signature_block#Standard_delimiter
+> [3]: https://lore.kernel.org/linux-pm/d09f52d8-e084-4875-9608-5b3db2554f3d@molgen.mpg.de/T/#t
