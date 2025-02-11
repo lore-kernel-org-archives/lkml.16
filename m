@@ -1,86 +1,86 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF601F03E2;
-	Tue, 11 Feb 2025 13:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264101F3D58;
+	Tue, 11 Feb 2025 13:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739280738; cv=none; b=Upc2cLAs0GBOydDk/bD2rGesWWR7FpR4bz9o1LHA2bX1Yci3Mbhh8Cii5Z4mreiwZuklGzNizTL+PRHBCRb0vDr6t1qCDe0RLmN8Ld8VLWFfTh4RezcxsbGnrRzWZRITX6CsC6usf4kiOL2WQ9sxgIqNLt4Vj9YqDL4klfGOT1M=
+	t=1739280744; cv=none; b=XJbRVSYlWr/zQRKkrgJ0eboJBLZFVXqdcJ1fFqFF8wBwRCpOfBHVblRtRIVVlWZhPZ1eJcJzfg2OkYJKlSthZyEqJJV1HeNul1lDrP5IifHQ99QOtja27Q6TUeWHQXgFgxWxrD9LieUvs3clZC7QrRtEapBN5q73j7qsnpJThSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739280738; c=relaxed/simple;
-	bh=iblFUqfFN7d6iW/DvwtRFMBHAXoJS+rlnKGUZSuP+eo=;
+	s=arc-20240116; t=1739280744; c=relaxed/simple;
+	bh=0ML6mdqwu+QYUFAwx0ZLdXCCCnCYA+w0iflWHWhRn24=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LnTKVHjG8l42l5l6K2ISD3o+91XbXlhbkl33OsQYpp+WiiE6DUArqrGa53gEXr4VJQ89xQtZS1QbN0GQY8zziumvSgvagupC3KNAR9+/8p3IJLAeYw4yRph92e6u/83GRaxDjh/gpa7iNFnkhNp1kRLzaC1zpMesZcOpxWUuKww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=U4zvpwon; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=UNeV8LliFULPGKbJKGeXPdPLBAeIb9QEFrNK5nBIvXnVDXdHBqzSoXlozfpPxelJKbfIUnrirbL5HVXVKNcqIwBJCWj7shB2bCzPl6yGJz1giGVEEzpkkIrvjC/rwKfnyvQ59bi8M42eDYK0mVaMsin8m+cwwcAUGnz6QdSCOS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wlw6Yshh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="U4zvpwon"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=ov1w7hbGSo+7ZZmwYvIYEyViiZM3fh+QAdoSLNmScKo=; b=U4zvpwonp0ObNX9gO169W88LHC
-	SfAud6VbkHOQd8nm6OmV1sEvAPL31fYu0fIMpJURooNlxkVaLmB104doUfo2Suhs/VfFmyiXtjtqn
-	GDjPTL6fGzTFeaHUeFL9n0ZA42vT51LGMTusgtl6qxfMF6KDL2Y8ORN9o53kaqfrGKfM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1thqMx-00D4M7-3L; Tue, 11 Feb 2025 14:32:07 +0100
-Date: Tue, 11 Feb 2025 14:32:07 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Luo Jie <quic_luoj@quicinc.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lei Wei <quic_leiwei@quicinc.com>,
-	Suruchi Agarwal <quic_suruchia@quicinc.com>,
-	Pavithra R <quic_pavir@quicinc.com>,
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-	quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
-	srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
-	john@phrozen.org
-Subject: Re: [PATCH net-next v3 06/14] net: ethernet: qualcomm: Initialize
- the PPE scheduler settings
-Message-ID: <f8d30195-1ee9-42f2-be82-819c7f7bd219@lunn.ch>
-References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-6-453ea18d3271@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wlw6Yshh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38A73C4CEE5;
+	Tue, 11 Feb 2025 13:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739280743;
+	bh=0ML6mdqwu+QYUFAwx0ZLdXCCCnCYA+w0iflWHWhRn24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Wlw6YshhbdPv3S0jvOC8NiICWTX/yE9S3Igbutd578MzNTN1HciR+hXqCsPixcr2F
+	 cBvrCcd4WB/dhU52ITSFFhzytW6VKjzlq0WLm69ReJGtTyCjPv7iLsu2Npy+ql5gmD
+	 BHer8TS6pOBdYmFaHaqIRDtRRs73/OjYJvPcbZHMMamU3gfaTG8TVk0hjXd2FQ47tn
+	 Ia7aqx9pjVKbcnJ7BrcFIdjjrLjBVA7XJul6ePztiYHbyoy0F1/Pdz2LkL2DAMetGn
+	 5Oyaqi7Bs7VPhh+d1CrlneqqaRZUtWpQ0huD/ALG/TLbyuFKvJHoM+eZHGBM0CHROT
+	 ZaTZaduGYWPcg==
+Date: Tue, 11 Feb 2025 13:32:19 +0000
+From: Lee Jones <lee@kernel.org>
+To: Manuel Fombuena <fombuena@outlook.com>
+Cc: pavel@ucw.cz, corbet@lwn.net, linux-leds@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 2/5] leds: leds-st1202: initialize hardware before
+ DT node child operations
+Message-ID: <20250211133219.GO1868108@google.com>
+References: <CWLP123MB5473933B9B97137828ACC6A6C5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+ <CWLP123MB54732954D59EFDB0D344A6DAC5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250209-qcom_ipq_ppe-v3-6-453ea18d3271@quicinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CWLP123MB54732954D59EFDB0D344A6DAC5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
 
-> +/* Scheduler configuration for the assigning and releasing buffers for the
-> + * packet passing through PPE, which is different per SoC.
-> + */
-> +static const struct ppe_scheduler_bm_config ipq9574_ppe_sch_bm_config[] = {
-> +	{1, 0, 0, 0, 0},
-> +	{1, 1, 0, 0, 0},
-> +	{1, 0, 5, 0, 0},
-> +	{1, 1, 5, 0, 0},
-> +	{1, 0, 6, 0, 0},
-> +	{1, 1, 6, 0, 0},
-> +	{1, 0, 1, 0, 0},
-> +	{1, 1, 1, 0, 0},
+On Sat, 01 Feb 2025, Manuel Fombuena wrote:
 
-Rather than add a comment what it is, add a comment what it means.
+> Arguably, there are more chances of errors occurring during the
+> initialization of the hardware, so this should complete successfully
+> before the DT node childreen are initialized.
 
-It also looks like the first, 3 and 4 value are fixed, so do they even
-need to be in the table? And the second value flip-flops?
+Okay.  And you're sure nothing in Setup needs the DT info?
 
-	Andrew
+> Signed-off-by: Manuel Fombuena <fombuena@outlook.com>
+> ---
+>  drivers/leds/leds-st1202.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-st1202.c b/drivers/leds/leds-st1202.c
+> index e894b3f9a0f4..927874f20839 100644
+> --- a/drivers/leds/leds-st1202.c
+> +++ b/drivers/leds/leds-st1202.c
+> @@ -348,11 +348,11 @@ static int st1202_probe(struct i2c_client *client)
+>  	devm_mutex_init(&client->dev, &chip->lock);
+>  	chip->client = client;
+>  
+> -	ret = st1202_dt_init(chip);
+> +	ret = st1202_setup(chip);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	ret = st1202_setup(chip);
+> +	ret = st1202_dt_init(chip);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -- 
+> 2.48.1
+> 
+
+-- 
+Lee Jones [李琼斯]
