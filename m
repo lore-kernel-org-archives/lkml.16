@@ -1,113 +1,106 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92AB3260A48
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF7B1FDA9C;
+	Tue, 11 Feb 2025 17:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739294340; cv=none; b=igRsdKWDO17C02w0dEwEuKy8iSKgqMmImnn+HcNGbAQILbrVfu+FCvmXddgtrhTEwVuZYsV82BjAw3GuCMXlluNgAW7Ma6GpUH0VCYeDySzmPVJqqb3m/MLNEkI4irT4jK1j+xbNEzr+CZaXSHKE170tpqCJCLYgV9V7l4eDYcI=
+	t=1739294380; cv=none; b=djzgRqwRXzOnSpRLafflJO1FiHRFeweGfxRTreUNkmndk+gm4XnbkPUecSipiZmjEo9KSUzSjhiJV0WcY1Zb1QmWKLdmSrYHiV1/qwqK053HIiHt4qlxINqqyiDqQ5XJuZ3OSfXPXXSyniPbvjtQwszMftmSfcl57SUQrtSAQbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739294340; c=relaxed/simple;
-	bh=46fylAvEHtnXMlyZUGGrL1coSoEAkjdGaGeULPheuaE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nw0m9pQB26xqIOo5QTjgFB5rrbYTQuV1Rlxoa6AH7889MG2+A0kE+1LP7SlpsAxE5WWOEo3uOiTVgiTJEkXrGcoflfZ04tMGN4REAkAzq6pmmYvC2kJzH2cwKA79jjCgJHcM9IjOD2qr0zK9sIGXudYmo3hQ5OIeWMeieLnXI9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OzIgmVIR; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739294380; c=relaxed/simple;
+	bh=IZPB7B9pB5EmnE+s+dDrcMGlv6lnxdK4n4Q/SkwmeHw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p/swAgCu7oamMp69A0ArCZODmeUmf95dOCWoklt/32fYH0ZCqQpbH+0Exq2dLxQDavQg+o1ySwMEoE8qFnKJgeORgrJNAXYGtKxrvyqaJrOtcS1dbM+e4mtNv3QnmBqfHV4nDhRPVfPkMHyARhCg8V6zdIiaQfzJZk8Sjjd5/pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HxQ35Jvy; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OzIgmVIR"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f74c4e586so62416455ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:18:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739294338; x=1739899138; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IvTs3sUoPdnFwabnWM6p9qo099kdAYJODbc1UEXBy8U=;
-        b=OzIgmVIRUCGd3evk2QJF4mJrsKBeoVFPNMygUbVMpPW7clq2PMRiWQXCGZmyymLKIc
-         yObRYHtwDWr6/1Sztze1XNIZU4yxKRI0oZQLI74VMpf4goKGCF44Ihys1Eycqf6LdQL9
-         di+DzqB98EVbIWbtJ59k+neiUt+L98iriaXZzLGvf3loeFkyuB91274b42EhurR6Zup+
-         ew5Lh1MALE+nW/Q7x+B0R42sXf2hrr5M82Wlz0Q7WNwhAIJMZDii6CbKHSzuJC5zKV0B
-         Z7vACVsfwOlFRG7jORF7SSMwf0A2R4mOndglwQC9xUAM19n4xVQPNFtpt5y2mUIVsW9T
-         VXMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739294338; x=1739899138;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IvTs3sUoPdnFwabnWM6p9qo099kdAYJODbc1UEXBy8U=;
-        b=Lk3EKi4N/RI4SGde6qg7vGRHeeWOgwVsD7k9nRLJDpvlmkguPLpwAdUVLJrwVBqqwL
-         8Y15rm11NF8UkQ0pv0it8A+1+GZ4w1pVQprMev/mD6xXE6usfrUy+wGKd4Z2tGv6ltVl
-         ioESsUHHvaNbOfcLbfccN99JiDd2izY5rdpDnW8zsRewrQOVZMbdgdmBFc8SYmPdit29
-         lbUuNgED4sQ0EMuQqC/jh2r7hKsB5Pm41PwUjC/JZ2uBx2Nq3/OeN6m0PfuKN7YVSIIv
-         sFq40s2XWpVMfNs6vukN0nFX3jCQ86cq1zsn2URZskFS5gt3VxGq+McNDkzKnR3YvNH2
-         ZeCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfGltyr9eIBdExd0CWm8L77dMmA0csBxy5pyctnZ+KAw5AbOfRj37eqejgAU9/MtWJQW8s4c0u0yZzydI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+0pE7cCLbuRxhAlMtKv1YB4WQ3+FQgsNNRIcv+/hWVTLyiAwl
-	cJ02APQH7fiUizmC3NGKS+AZVEf2TPcdJ30U1F1h8GV3cet+MQy9
-X-Gm-Gg: ASbGncuk4Ocn+wX4RztIxcSOkw31pdFFyNUnuUNWm9NSw8HDZrssyP1INn4/JC8yy2q
-	Q/JVcwELmp1A866lgS9Sm1Nt5GSoqh/f/ARa/77L56z5TFsSurqqmnXn6ezgmRFobebdwPjaJaF
-	u1WSokml0VWZN+Bdy9ub0+6kCunz4UcJLMlTUtnz5wsNAOn+kbl24eeKFv+S/vD6rFyY48TlQdi
-	QYDCpUzxZZIdHpYhxe01Jpfx28TrDTY4EUqlvcawTgo9Wfth4Aa+sTuyaol+8cOrxD7uV4OTXCA
-	SM8neSHwYu8raQ==
-X-Google-Smtp-Source: AGHT+IHGyEMJg6t4z4hfLWHpwGxDh0+tcPeAiBL2zQ2M1KTtye6HXBjLORl4c29q3fPTksaPmwVmBQ==
-X-Received: by 2002:a05:6a00:1884:b0:730:927c:d451 with SMTP id d2e1a72fcca58-73217f8cb8amr7070819b3a.20.1739294337814;
-        Tue, 11 Feb 2025 09:18:57 -0800 (PST)
-Received: from fedora.nitk.ac.in ([2400:4f20:11:c00::100:3432])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7308540cb30sm4802452b3a.115.2025.02.11.09.18.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 09:18:57 -0800 (PST)
-From: Devaansh Kumar <devaanshk840@gmail.com>
-To: tj@kernel.org,
-	void@manifault.com
-Cc: Devaansh Kumar <devaanshk840@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] sched_ext: selftests: Fix grammar in tests description
-Date: Tue, 11 Feb 2025 22:48:48 +0530
-Message-ID: <20250211171851.1518556-1-devaanshk840@gmail.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HxQ35Jvy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739294378; x=1770830378;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=IZPB7B9pB5EmnE+s+dDrcMGlv6lnxdK4n4Q/SkwmeHw=;
+  b=HxQ35JvyVf2rnKYPoJPalNLeGd1Q9VmCtJLPJq4YM6UDi6RLOon3HEUT
+   PsM/0kS3vHWTx7tFw0UbnsQfk3Idv2KmcXMAu3UA0VRnUe7aaMFBercSq
+   S+BLdwsiN5ifCeIUfp8Y6n1BnoTcaNkzKoYqciyhFOTqjKpS+9NBR2/d4
+   U5coSlexO9bYIgsOD0Pt6jR/FkFHm96/VVKJHFiIYUNzpzwitcWR7IoIx
+   WA0h/4hkCuFgqo0s8moq5roiOcATnaFOe/R2ZrW5b4EF9PCA5xYs4FeGC
+   o/3gaFvdblJFa0+yjANBNSe0kbZf5tdDcMx4HuYbPOO9WLU5fA1JWTvh0
+   Q==;
+X-CSE-ConnectionGUID: kW/WpR3NTNWpehhtAqHQKw==
+X-CSE-MsgGUID: 4At8vwkeQWmu+TIXNJ31kw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50565579"
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="50565579"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 09:19:38 -0800
+X-CSE-ConnectionGUID: 546fX6IPS/SWbTMH2DDVSw==
+X-CSE-MsgGUID: 9olfBPfjSBSxXw+q+o36sQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="143423382"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 09:19:35 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1thtv2-0000000AZvt-0SIl;
+	Tue, 11 Feb 2025 19:19:32 +0200
+Date: Tue, 11 Feb 2025 19:19:31 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
+	Armin Wolf <W_Armin@gmx.de>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 10/14] platform/x86: Add alienware-wmi.h
+Message-ID: <Z6uGo2UWit61bD7v@smile.fi.intel.com>
+References: <20250207154610.13675-1-kuurtb@gmail.com>
+ <20250207154610.13675-11-kuurtb@gmail.com>
+ <Z6t-msAAi1lVHzN9@black.fi.intel.com>
+ <2c56e2de-02eb-d653-987f-69e674aab3c7@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <2c56e2de-02eb-d653-987f-69e674aab3c7@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Fixed grammar for a few tests of sched_ext.
+On Tue, Feb 11, 2025 at 06:51:03PM +0200, Ilpo Järvinen wrote:
+> On Tue, 11 Feb 2025, Andy Shevchenko wrote:
+> > On Fri, Feb 07, 2025 at 10:46:06AM -0500, Kurt Borja wrote:
+> > > Add a header file for alienware-wmi with shared resources to support the
+> > > upcoming file split.
 
-Signed-off-by: Devaansh Kumar <devaanshk840@gmail.com>
----
- tools/testing/selftests/sched_ext/init_enable_count.c | 2 +-
- tools/testing/selftests/sched_ext/maybe_null.c        | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+...
 
-diff --git a/tools/testing/selftests/sched_ext/init_enable_count.c b/tools/testing/selftests/sched_ext/init_enable_count.c
-index 0f3eddc7a17a..eddf9e0e26e7 100644
---- a/tools/testing/selftests/sched_ext/init_enable_count.c
-+++ b/tools/testing/selftests/sched_ext/init_enable_count.c
-@@ -150,7 +150,7 @@ static enum scx_test_status run(void *ctx)
- 
- struct scx_test init_enable_count = {
- 	.name = "init_enable_count",
--	.description = "Verify we do the correct amount of counting of init, "
-+	.description = "Verify we correctly count the occurrences of init, "
- 		       "enable, etc callbacks.",
- 	.run = run,
- };
-diff --git a/tools/testing/selftests/sched_ext/maybe_null.c b/tools/testing/selftests/sched_ext/maybe_null.c
-index 31cfafb0cf65..aacf0c58ca4f 100644
---- a/tools/testing/selftests/sched_ext/maybe_null.c
-+++ b/tools/testing/selftests/sched_ext/maybe_null.c
-@@ -43,7 +43,7 @@ static enum scx_test_status run(void *ctx)
- 
- struct scx_test maybe_null = {
- 	.name = "maybe_null",
--	.description = "Verify if PTR_MAYBE_NULL work for .dispatch",
-+	.description = "Verify if PTR_MAYBE_NULL works for .dispatch",
- 	.run = run,
- };
- REGISTER_SCX_TEST(&maybe_null)
+> > >  static const struct attribute_group *alienfx_groups[] = {
+> > >  	&zone_attribute_group,
+> > > -	&hdmi_attribute_group,
+> > > -	&amplifier_attribute_group,
+> > > -	&deepsleep_attribute_group,
+> > > +	WMAX_DEV_GROUPS
+> > >  	NULL
+> > 
+> > I don't like this change as it makes code harder to understand (at one glance
+> > you can't answer the question "what are the groups that being listed here?".
+> 
+> Over having #ifdeffery here, I've no problem whatsoever with it (and in 
+> fact I suggested goingthis way). It's pretty much boilerplate anyway 
+> having to list them yet in another place.
+
+As I said in the reply to the cover letter subthread this is not my main
+concern anyway. Let it be then.
+
 -- 
-2.47.1
+With Best Regards,
+Andy Shevchenko
+
 
