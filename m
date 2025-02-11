@@ -1,77 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08751C5F26;
-	Tue, 11 Feb 2025 02:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id D6D4226BD8B;
+	Tue, 11 Feb 2025 02:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739239207; cv=none; b=mcPpioY06ceF9kgyLuE6/LmS1X2PLkIMvzhgeFIEGU7YUDtXB4pfQlTEN/fghXwoxdZi5SwXBweR1EZ/oIyaGaTk7LUo3S6oiBIL5CUzcVGwdmM74/FZdolEXdsGv484UAx0J0pgf6hKwIN7IDecl3PHSMyz95zZGaaUAAdmQtI=
+	t=1739239287; cv=none; b=O8J/qhhdKGDdNRdTMGfWwckmSzLeT6ijfWK43EIn548BRqD6YJXWSjf9rP+tP2KE1DrW/H77KO6inUd9RhAx3wjuxtPQHOASNHUkUoQqXej8idXypNUqlqZX6zAVl/xncZobn63fEbnN3GTN+W94haQIA3iKwhqDkw7I8iZc0DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739239207; c=relaxed/simple;
-	bh=atbq5gGaQJhG/f9qRXyS6T4mf5Vi8I+Sp3R2VsFrCR0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=dvL5yEHo5OhlwkAlKBcvJ3VE+7JA/DCUbDSyDWdb+Hidd53xAsBU6JnUL3oI//Ihp0BvtNwsj1fHVp+ECwibkV8Y51vjZhBVjdi3PxlAfyPY0XUEEwXrrOvLNgLdfhu9WVGvtpWQR44C3j+mu8CtI2b8QPmIt/77WX+EkDD/dMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b4LHJvei; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b4LHJvei"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16C59C4CEE5;
-	Tue, 11 Feb 2025 02:00:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739239207;
-	bh=atbq5gGaQJhG/f9qRXyS6T4mf5Vi8I+Sp3R2VsFrCR0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=b4LHJveiJwR2C5B2I263dkH3Qtyocai0kZ3Av1LcP/MyXAykK8h1Ios3iKFBI+Co9
-	 cr4fjzqdDk+2QJ09f/O4WmpQMboUPcbGui/cMHa/pmrKvhQGLqPiF3h5RUX86enEt9
-	 9awX7ORzDjL06eQapJ38wg9SvUw+7QqDeQlJ+qQw6ouCNOe5BaXTWlY1zz0jHtckIi
-	 aPQjMj6fyp6wQ1txNXdaQ0LLM4XxeVg7tkPXECxREn/mbX9kenUg69+C4XQ00ZJSVT
-	 Y6SEhiQvA097Uq88PU5j/rAbCQ34+udkuLoGtWeUl50eDm2Bgk+Bvn1w3/SEdrJsDo
-	 ihWmSSVsr5pLg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB3C3380AA7A;
-	Tue, 11 Feb 2025 02:00:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1739239287; c=relaxed/simple;
+	bh=3ax8vtqSe9pTLglNHy6vFAddA/Wf6iiGjIJ5CuYXdik=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=tgFHA6vc8hc94OYMbEJPHJRVlU6gAKVjqD36tJGNC/Gp5ssSsmOvIZ+nGH+nQ0eTwL7wUrancb9GHRsJc5o+cxc0XIJXCSt107CTZPNFfBZ+4k697ilMzCh7WhSCSFGwvy2FgThg4QbOEpQrPZ7hI2JCUSxmWSHs2iCGz7XIImg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from localhost.localdomain (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id A0DBA602A7271;
+	Tue, 11 Feb 2025 10:01:19 +0800 (CST)
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+To: jacek.lawrynowicz@linux.intel.com,
+	min.ma@amd.com,
+	lizhi.hou@amd.com,
+	ogabbay@kernel.org
+Cc: Su Hui <suhui@nfschina.com>,
+	quic_jhugo@quicinc.com,
+	George.Yang@amd.com,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH v2] accel/amdxdna: Add missing include linux/slab.h
+Date: Tue, 11 Feb 2025 09:53:55 +0800
+Message-Id: <20250211015354.3388171-1-suhui@nfschina.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v1 1/1] net: phy: dp83td510: introduce LED framework
- support
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173923923552.3912925.4342744972876594638.git-patchwork-notify@kernel.org>
-Date: Tue, 11 Feb 2025 02:00:35 +0000
-References: <20250205103846.2273833-1-o.rempel@pengutronix.de>
-In-Reply-To: <20250205103846.2273833-1-o.rempel@pengutronix.de>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net,
- kernel@pengutronix.de, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux@armlinux.org.uk
 
-Hello:
+When compiling without CONFIG_IA32_EMULATION, there can be some errors:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+drivers/accel/amdxdna/amdxdna_mailbox.c: In function ‘mailbox_release_msg’:
+drivers/accel/amdxdna/amdxdna_mailbox.c:197:2: error: implicit declaration
+of function ‘kfree’.
+  197 |  kfree(mb_msg);
+      |  ^~~~~
+drivers/accel/amdxdna/amdxdna_mailbox.c: In function ‘xdna_mailbox_send_msg’:
+drivers/accel/amdxdna/amdxdna_mailbox.c:418:11: error:implicit declaration
+of function ‘kzalloc’.
+  418 |  mb_msg = kzalloc(sizeof(*mb_msg) + pkg_size, GFP_KERNEL);
+      |           ^~~~~~~
 
-On Wed,  5 Feb 2025 11:38:46 +0100 you wrote:
-> Add LED brightness, mode, HW control and polarity functions to enable
-> external LED control in the TI DP83TD510 PHY.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  drivers/net/phy/dp83td510.c | 187 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 187 insertions(+)
+Add the missing include.
 
-Here is the summary with links:
-  - [net-next,v1,1/1] net: phy: dp83td510: introduce LED framework support
-    https://git.kernel.org/netdev/net-next/c/5b281fe7e396
+Fixes: b87f920b9344 ("accel/amdxdna: Support hardware mailbox")
+Signed-off-by: Su Hui <suhui@nfschina.com>
+Reviewed-by: Lizhi Hou <lizhi.hou@amd.com>
+---
+v2:
+ - move the header to the include block above and keep it sorted(Jacek Lawrynowicz).
 
-You are awesome, thank you!
+ drivers/accel/amdxdna/amdxdna_mailbox.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/accel/amdxdna/amdxdna_mailbox.c b/drivers/accel/amdxdna/amdxdna_mailbox.c
+index 814b16bb1953..e5301fac1397 100644
+--- a/drivers/accel/amdxdna/amdxdna_mailbox.c
++++ b/drivers/accel/amdxdna/amdxdna_mailbox.c
+@@ -8,6 +8,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/interrupt.h>
+ #include <linux/iopoll.h>
++#include <linux/slab.h>
+ #include <linux/xarray.h>
+ 
+ #define CREATE_TRACE_POINTS
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.30.2
 
