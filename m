@@ -1,134 +1,380 @@
-Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C13D1D63F7;
-	Tue, 11 Feb 2025 07:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAA21D63F7;
+	Tue, 11 Feb 2025 07:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739258779; cv=none; b=VEk8J3BE5t2/L4pmYhDIBZui0xp4APDbDslQgS3udXIbklBUXmHGRQYyNbadw8QYemHMT92Ld9CMOyY8LdY2IW0JT+1fk0FVkIFbygTi3JsVw8YJGGokqbwuGcJa5wYVi/PcJseIUVh8t5dJUe1OwJTcKGIK24sWb5uV5OpcfnU=
+	t=1739258851; cv=none; b=PjmwuAjrPEk/to61DdmpdmDfZxjuH/wPCymKR/+6/bZ3qoMMuNbqi0Wd59/BWGi8+wEz6y9W1UkqyWMhafPia1HCc07mqTZCvLBxCTC8RWw2fs7VUVOidaKE19aUm5IBKKchfArWuJoUeq1/+BwF2QmheT5TajjJTvGHxcmFKNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739258779; c=relaxed/simple;
-	bh=TcIarT3JO97cH1N3JAkDmFIDszTxj4BeqZagTWuxUrs=;
+	s=arc-20240116; t=1739258851; c=relaxed/simple;
+	bh=rXqLEIQdjG+1hUyu4wbaNDCYjGFe2VrktaWcvWbvdUU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tQwAUhf5zSJ7ZOFkZz6aVOi1MU6aPMsTvu5T48H2vpOPvFrgdsKy+Bx6oL3/jhRA9SqwzII+f3mm6QFaGZFMOrfyTxPJjHTyn9WzHd1h+Pcu8pnrG15WAyDyvbwbkfxT7ZQcZNQzzKmzgio0QpyXsAXto+xXLdz18AAU53HrWgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=wlhlPoTs; arc=none smtp.client-ip=217.92.40.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZBOdKoFBT/Ut/1mqkHcADUFmIp/iJ2bVjqTWxf+yVwQ8XM+e203bCoFEvzZbJY0IV8OzMtJyEADrzwuf21iIwb+NzZytkan8ybtbHwdGN5YkFGf4sWziOzeLyrRAslH6JqJQx4GArsQFvn3MPh+yjw7qZ7e3tSq7Tx4eVrdlAUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gLpgENQy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="wlhlPoTs"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3C04914802D4;
-	Tue, 11 Feb 2025 08:26:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
-	t=1739258774;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RYs4aAcJHRJkvxcIeHsULbx8GQp917z9kJzRH+pky5g=;
-	b=wlhlPoTsjWnIE1TnJpa4gc8z69bjupLBcLpg3tULPnmnMK3ESwl93cxYL3s/uveVJ2eDPV
-	WuGtImGJhZf7W0YOdqGxHftl19rIlXL3GDGN3N/5sqB5rNw4FzNQ1FCPqBPyBFe81CGm1W
-	MLyJQeg4MHlGJbdu40Xiswyzvo/hKa3Bi/rIkKZtYa/SQOl9m//foimXIAN792EA6mYDyZ
-	FYLZ7j4Yrka9oI4oGlHBpF+cplMyk/nRX81AzOrkrY7/MkQc1NFFTtml8iI4wtu7cjqSEc
-	WIKLcCYvXrs79+3sCLgUCP6gnJfr1Kuuz32MDKokrhgMLb23D92kdwVmPgC9Iw==
-Date: Tue, 11 Feb 2025 08:26:11 +0100
-From: Alexander Dahl <ada@thorsis.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Alexander Dahl <ada@thorsis.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Ryan Wanner <ryan.wanner@microchip.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Subject: Re: [PATCH v2 04/16] dt-bindings: clock: at91: Allow referencing
- main rc oscillator in DT
-Message-ID: <20250211-deprive-relocate-353ad26f46b7@thorsis.com>
-Mail-Followup-To: Krzysztof Kozlowski <krzk@kernel.org>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Ryan Wanner <ryan.wanner@microchip.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-References: <20250210164506.495747-1-ada@thorsis.com>
- <20250210164506.495747-5-ada@thorsis.com>
- <89d51ac4-0690-42a7-b5fb-2887363e8a8b@kernel.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gLpgENQy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C35CC4CEDD;
+	Tue, 11 Feb 2025 07:27:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739258850;
+	bh=rXqLEIQdjG+1hUyu4wbaNDCYjGFe2VrktaWcvWbvdUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gLpgENQyaWvxnT8R3BAVVAEygOp/doipjo1do1nrahghKPcpIqJ5r/enxhznFyAHA
+	 Ul+P06K7z8SO3PcCAIpsZ8Orh7PryQoK2oBxhl3o0NJhcK3RmraSi9akbqlEVQ3O3Y
+	 8ttHkRPZlOjgRIvxt3u2q5ITfTkn7YdrDDsO7Qnc=
+Date: Tue, 11 Feb 2025 08:27:26 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+	Mark Brown <broonie@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Subject: Re: [PATCH v4 1/9] driver core: add a faux bus for use when a simple
+ device/bus is needed
+Message-ID: <2025021111-landowner-gleaming-5971@gregkh>
+References: <2025021023-sandstorm-precise-9f5d@gregkh>
+ <2025021026-atlantic-gibberish-3f0c@gregkh>
+ <D7OYKAYV14AZ.2D8Q4XP557FSR@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <89d51ac4-0690-42a7-b5fb-2887363e8a8b@kernel.org>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D7OYKAYV14AZ.2D8Q4XP557FSR@gmail.com>
 
-Hello Krzysztof,
-
-Am Mon, Feb 10, 2025 at 06:07:10PM +0100 schrieb Krzysztof Kozlowski:
-> On 10/02/2025 17:44, Alexander Dahl wrote:
-> > The main rc oscillator will be needed for the OTPC to work properly.
-> > 
-> > The new index introduced here was not used on the four affected SoC
-> > clock drivers before, but for sama5d2 only (PMC_I2S1_MUX).
-> > 
-> > Link: https://lore.kernel.org/linux-devicetree/20250207-jailbird-circus-bcc04ee90e05@thorsis.com/T/#u
-> > Signed-off-by: Alexander Dahl <ada@thorsis.com>
+On Mon, Feb 10, 2025 at 12:56:46PM -0500, Kurt Borja wrote:
+> On Mon Feb 10, 2025 at 7:30 AM -05, Greg Kroah-Hartman wrote:
+> > Many drivers abuse the platform driver/bus system as it provides a
+> > simple way to create and bind a device to a driver-specific set of
+> > probe/release functions.  Instead of doing that, and wasting all of the
+> > memory associated with a platform device, here is a "faux" bus that
+> > can be used instead.
+> >
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> > Reviewed-by: Lyude Paul <lyude@redhat.com>
+> > Reviewed-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > > ---
-> > 
-> > Notes:
-> >     v2:
-> >     - new patch, not present in v1
-> > 
-> >  include/dt-bindings/clock/microchip,sam9x60-pmc.h  | 3 +++
-> >  include/dt-bindings/clock/microchip,sam9x7-pmc.h   | 3 +++
-> >  include/dt-bindings/clock/microchip,sama7d65-pmc.h | 3 +++
-> >  include/dt-bindings/clock/microchip,sama7g5-pmc.h  | 3 +++
-> >  4 files changed, 12 insertions(+)
-> > 
-> > diff --git a/include/dt-bindings/clock/microchip,sam9x60-pmc.h b/include/dt-bindings/clock/microchip,sam9x60-pmc.h
-> > index e01e867e8c4da..dcd3c74f75b54 100644
-> > --- a/include/dt-bindings/clock/microchip,sam9x60-pmc.h
-> > +++ b/include/dt-bindings/clock/microchip,sam9x60-pmc.h
-> > @@ -16,4 +16,7 @@
+> > v4: - really removed the name logic
+> >     - added #include <linux/container_of.h> to faux.h
+> >     - added parent pointer to api call
+> >     - minor documentation updates
+> >     - made probe synchronous
+> > v3: - loads of documentation updates and rewrites
+> >     - added to the documentation build
+> >     - removed name[] array as it's no longer needed
+> >     - added faux_device_create_with_groups()
+> >     - added functions to get/set devdata
+> >     - renamed faux_driver_ops -> faux_device_ops
+> >     - made faux_device_ops a const *
+> >     - minor cleanups
+> >     - tested it, again.
+> >
+> > v2: - renamed bus and root device to just "faux" thanks to Thomas
+> >     - removed the one-driver-per-device and now just have one driver
+> >       entirely thanks to Danilo
+> >     - kerneldoc fixups and additions and string handling bounds checks
+> >       thanks to Andy
+> >     - coding style fix thanks to Jonathan
+> >     - tested that the destroy path actually works
+> >  Documentation/driver-api/infrastructure.rst |   6 +
+> >  drivers/base/Makefile                       |   2 +-
+> >  drivers/base/base.h                         |   1 +
+> >  drivers/base/faux.c                         | 232 ++++++++++++++++++++
+> >  drivers/base/init.c                         |   1 +
+> >  include/linux/device/faux.h                 |  69 ++++++
+> >  6 files changed, 310 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/base/faux.c
+> >  create mode 100644 include/linux/device/faux.h
+> >
+> > diff --git a/Documentation/driver-api/infrastructure.rst b/Documentation/driver-api/infrastructure.rst
+> > index 3d52dfdfa9fd..35e36fee4238 100644
+> > --- a/Documentation/driver-api/infrastructure.rst
+> > +++ b/Documentation/driver-api/infrastructure.rst
+> > @@ -41,6 +41,12 @@ Device Drivers Base
+> >  .. kernel-doc:: drivers/base/class.c
+> >     :export:
 > >  
-> >  #define SAM9X60_PMC_PLLACK	PMC_PLLACK	/* 7 */
+> > +.. kernel-doc:: include/linux/device/faux.h
+> > +   :internal:
+> > +
+> > +.. kernel-doc:: drivers/base/faux.c
+> > +   :export:
+> > +
+> >  .. kernel-doc:: drivers/base/node.c
+> >     :internal:
 > >  
-> > +/* new from after bindings splitup */
-> > +#define SAM9X60_PMC_MAIN_RC	6
+> > diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+> > index 7fb21768ca36..8074a10183dc 100644
+> > --- a/drivers/base/Makefile
+> > +++ b/drivers/base/Makefile
+> > @@ -6,7 +6,7 @@ obj-y			:= component.o core.o bus.o dd.o syscore.o \
+> >  			   cpu.o firmware.o init.o map.o devres.o \
+> >  			   attribute_container.o transport_class.o \
+> >  			   topology.o container.o property.o cacheinfo.o \
+> > -			   swnode.o
+> > +			   swnode.o faux.o
+> >  obj-$(CONFIG_AUXILIARY_BUS) += auxiliary.o
+> >  obj-$(CONFIG_DEVTMPFS)	+= devtmpfs.o
+> >  obj-y			+= power/
+> > diff --git a/drivers/base/base.h b/drivers/base/base.h
+> > index 8cf04a557bdb..0042e4774b0c 100644
+> > --- a/drivers/base/base.h
+> > +++ b/drivers/base/base.h
+> > @@ -137,6 +137,7 @@ int hypervisor_init(void);
+> >  static inline int hypervisor_init(void) { return 0; }
+> >  #endif
+> >  int platform_bus_init(void);
+> > +int faux_bus_init(void);
+> >  void cpu_dev_init(void);
+> >  void container_dev_init(void);
+> >  #ifdef CONFIG_AUXILIARY_BUS
+> > diff --git a/drivers/base/faux.c b/drivers/base/faux.c
+> > new file mode 100644
+> > index 000000000000..531e9d789ee0
+> > --- /dev/null
+> > +++ b/drivers/base/faux.c
+> > @@ -0,0 +1,232 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > + * Copyright (c) 2025 The Linux Foundation
+> > + *
+> > + * A "simple" faux bus that allows devices to be created and added
+> > + * automatically to it.  This is to be used whenever you need to create a
+> > + * device that is not associated with any "real" system resources, and do
+> > + * not want to have to deal with a bus/driver binding logic.  It is
+> > + * intended to be very simple, with only a create and a destroy function
+> > + * available.
+> > + */
+> > +#include <linux/err.h>
+> > +#include <linux/init.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/string.h>
+> > +#include <linux/container_of.h>
+> > +#include <linux/device/faux.h>
+> > +#include "base.h"
+> > +
+> > +/*
+> > + * Internal wrapper structure so we can hold a pointer to the
+> > + * faux_device_ops for this device.
+> > + */
+> > +struct faux_object {
+> > +	struct faux_device faux_dev;
+> > +	const struct faux_device_ops *faux_ops;
+> > +};
+> > +#define to_faux_object(dev) container_of_const(dev, struct faux_object, faux_dev.dev)
+> > +
+> > +static struct device faux_bus_root = {
+> > +	.init_name	= "faux",
+> > +};
+> > +
+> > +static int faux_match(struct device *dev, const struct device_driver *drv)
+> > +{
+> > +	/* Match always succeeds, we only have one driver */
+> > +	return 1;
+> > +}
+> > +
+> > +static int faux_probe(struct device *dev)
+> > +{
+> > +	struct faux_object *faux_obj = to_faux_object(dev);
+> > +	struct faux_device *faux_dev = &faux_obj->faux_dev;
+> > +	const struct faux_device_ops *faux_ops = faux_obj->faux_ops;
+> > +	int ret = 0;
+> > +
+> > +	if (faux_ops && faux_ops->probe)
+> > +		ret = faux_ops->probe(faux_dev);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static void faux_remove(struct device *dev)
+> > +{
+> > +	struct faux_object *faux_obj = to_faux_object(dev);
+> > +	struct faux_device *faux_dev = &faux_obj->faux_dev;
+> > +	const struct faux_device_ops *faux_ops = faux_obj->faux_ops;
+> > +
+> > +	if (faux_ops && faux_ops->remove)
+> > +		faux_ops->remove(faux_dev);
+> > +}
+> > +
+> > +static const struct bus_type faux_bus_type = {
+> > +	.name		= "faux",
+> > +	.match		= faux_match,
+> > +	.probe		= faux_probe,
+> > +	.remove		= faux_remove,
+> > +};
+> > +
+> > +static struct device_driver faux_driver = {
+> > +	.name		= "faux_driver",
+> > +	.bus		= &faux_bus_type,
+> > +	.probe_type	= PROBE_FORCE_SYNCHRONOUS,
+> > +};
+> > +
+> > +static void faux_device_release(struct device *dev)
+> > +{
+> > +	struct faux_object *faux_obj = to_faux_object(dev);
+> > +
+> > +	kfree(faux_obj);
+> > +}
+> > +
+> > +/**
+> > + * faux_device_create_with_groups - Create and register with the driver
+> > + *		core a faux device and populate the device with an initial
+> > + *		set of sysfs attributes.
+> > + * @name:	The name of the device we are adding, must be unique for
+> > + *		all faux devices.
+> > + * @parent:	Pointer to a potential parent struct device.  If set to
+> > + *		NULL, the device will be created in the "root" of the faux
+> > + *		device tree in sysfs.
+> > + * @faux_ops:	struct faux_device_ops that the new device will call back
+> > + *		into, can be NULL.
+> > + * @groups:	The set of sysfs attributes that will be created for this
+> > + *		device when it is registered with the driver core.
+> > + *
+> > + * Create a new faux device and register it in the driver core properly.
+> > + * If present, callbacks in @faux_ops will be called with the device that
+> > + * for the caller to do something with at the proper time given the
+> > + * device's lifecycle.
+> > + *
+> > + * Note, when this function is called, the functions specified in struct
+> > + * faux_ops can be called before the function returns, so be prepared for
+> > + * everything to be properly initialized before that point in time.
+> > + *
+> > + * Return:
+> > + * * NULL if an error happened with creating the device
+> > + * * pointer to a valid struct faux_device that is registered with sysfs
+> > + */
+> > +struct faux_device *faux_device_create_with_groups(const char *name,
+> > +						   struct device *parent,
+> > +						   const struct faux_device_ops *faux_ops,
+> > +						   const struct attribute_group **groups)
+> > +{
+> > +	struct faux_object *faux_obj;
+> > +	struct faux_device *faux_dev;
+> > +	struct device *dev;
+> > +	int ret;
+> > +
+> > +	faux_obj = kzalloc(sizeof(*faux_obj), GFP_KERNEL);
+> > +	if (!faux_obj)
+> > +		return NULL;
+> > +
+> > +	/* Save off the callbacks so we can use them in the future */
+> > +	faux_obj->faux_ops = faux_ops;
+> > +
+> > +	/* Initialize the device portion and register it with the driver core */
+> > +	faux_dev = &faux_obj->faux_dev;
+> > +	dev = &faux_dev->dev;
+> > +
+> > +	device_initialize(dev);
+> > +	dev->release = faux_device_release;
+> > +	if (parent)
+> > +		dev->parent = parent;
+> > +	else
+> > +		dev->parent = &faux_bus_root;
+> > +	dev->bus = &faux_bus_type;
+> > +	dev->groups = groups;
 > 
-> This is confusing me, because:
-> 1. You still have holes in IDs
+> Just as I feared, adding groups this way is bug prone if we don't check
+> if the device attached to the driver successfully. Consider the
+> following example module:
+> 
+> static attr1_show(...)
+> {
+> 	struct priv *priv = dev_get_drvdata(dev);
+> 	...
+> }
+> DEVICE_ATTR_RO(attr1)
+> 
+> ...
+> 
+> static const struct attribute_group faux_groups[] = {
+> 	...
+> }
+> 
+> /* It would be nice to have the probe in __init */
+> static int __init faux_probe(struct faux_device *fdev)
+> {
+> 	...
+> 	/* Probe may fail */
+> 	if (con)
+> 		return -EINVAL;
+> 	...
+> 	faux_device_set_drvdata(fdev, priv);
+> 	...
+> }
+> 
+> static struct faux_device_ops faux_ops = {
+> 	...
+> }
+> 
+> static int __init module_init()
+> {
+> 	...
+> 	fdev = faux_device_create_with_groups("foo", NULL, &faux_ops,
+> 					      &faux_groups);
+> 	if (!fdev)
+> 		return -ENODEV;
+> }
+> 
+> In this example we have no way of knowing if the probe failed, so the
+> module as well as the device will remain loaded. Furthermore, the sysfs
+> groups WILL be added anyway, which is dangerous because we have no
+> gurantee about drvdata's lifetime nor if it was even initialized
+> correctly, which sysfs show/store methods may assume is the case.
+> 
+> So we have two problems here. First, this module only cares about the
+> probe succeeding so keeping the device alive after it fails wastes
+> resources. Second, we don't have any gurantee about drvdata validity.
+> 
+> > +	dev_set_name(dev, "%s", name);
+> > +
+> > +	ret = device_add(dev);
+> > +	if (ret) {
+> > +		pr_err("%s: device_add for faux device '%s' failed with %d\n",
+> > +		       __func__, name, ret);
+> > +		put_device(dev);
+> > +		return NULL;
+> > +	}
+> 
+> To solve this, I suggest we do this here:
+> 
+> 	/* Check if the device attached correctly */
+> 	if (dev->driver != &faux_driver)
+> 		return ERR_PTR(-ENODEV); /* or NULL */
+> 
+> 	/* 
+> 	 * Add groups after the driver is attached, to avoid lifetime
+> 	 * issues 
+> 	 */
+> 	device_add_groups(dev, groups);
 
-Yes, I was told to maintain the old values for interface stability in
-series v1 feedback.
+Nope, sorry, let the driver core handle the group creation/removal at
+the proper time.
 
-> 2. This should be placed in proper order by ID
+I'll work on adding "if probe failed, don't let the device be created"
+logic as it's a simple change, BUT it is a functionally different change
+from what the current api that this code is replacing is doing (i.e. the
+current platform device creation code does this today and no one has
+ever hit this in their use of it in the past few decades.)
 
-Okay, no problem.
+thanks,
 
-> 3. Why not using 4 - the next available empty ID?
-
-The MAIN_RC clock is used on four out of thirteen (?) SoC variants
-which all used the same IDs before.  6 is the first ID which is free
-on all of sam9x60, sam9x7, sama7g5, and sama7d65.  The last two
-already use 4 for a different clock.
-
-The whole splitup is to avoid even more and/or bigger holes, but is it
-important where the existent holes are filled?
-
-Technically if the next available empty ID should be used it would be
-4 for sam9x60 and sam9x7, 2 for sama7d65, and 6 for sama7g5.  I
-thought it would be nice to use the same value instead to make
-somewhat compatible to the old approach.
-
-Greets
-Alex
-
+greg k-h
