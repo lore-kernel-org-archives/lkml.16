@@ -1,364 +1,144 @@
-Received: from SLXP216CU001.outbound.protection.outlook.com (mail-koreacentralazon11021117.outbound.protection.outlook.com [40.107.42.117])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1FC1EE039;
-	Tue, 11 Feb 2025 08:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.42.117
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739262535; cv=fail; b=rTVbXg0rGoTOtM+VFhiN35qdCiV89qAoGSXgWKMyMPklmXKq6M+PnPbozjBxuj2kA0Qm1quOfy0hQgAnx59SeojaD2ZPmYLUQDTDOyWSWIpYA89tsPxoKIgtLy9RZp3ZySytZo2QajJPS0f/VkTT4N12OenK35cZ/amJ8ZILNRE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739262535; c=relaxed/simple;
-	bh=1VOBRUsF3BYMRDm8SGHXN4cnvo/yNcidWI1ys/pLJD4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Jc9UbB1bple4Or5jTERqyigyO8yzPehubVjiz2KqIlKItLUNXXetsoeJbTLxhACjyqnJXnEodzxsnG4P1tagO8yg2kWFqBaEpjL2inul/ecsQ1AfJvHG7MfoPC/x1UzrVdLotT/8M48izsD/I7/qBff0jtR8zL2hkkti0Slg7vQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com; spf=fail smtp.mailfrom=chipsnmedia.com; dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b=OL3Kb8ZG; arc=fail smtp.client-ip=40.107.42.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=chipsnmedia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b="OL3Kb8ZG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GgcPzCJpEW7J/CMNHjFbqr7BuhN+Nk57hVHIWbIFnmzB4x4ePDUUsp9wsafYKCoAa5+0ZqMozRussYQMpSN0+sc1p99NqqtvY/T5f0SHNPzs6dVM4u1GCTL9kZzdkjPROsn3rzFdTPUCbqESaZGGStkdai8kgAa83Xtq8glefP+unXNFo49VoFjZw4gMNoPwj71/YYEMYUPRs8S89RJzww3BtGJBQOzUEl4YFVjmOwAtt9MF7XX2s5PHp5dD8avt6sWJkTlT63kftPnuh0AEyvvInn/kHi0YK97Abh/qCXu3atQyoc0DsQPbxSR0X3lpvZohmINFQ3MTvochIAaL6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wJxI6EuD0aaPhENQ9zY8fkmGelho6cFx3RapluMcLUg=;
- b=TMlJ4ijVs/47N7S5+wTXNelMdJifI+VjiNRZCk1GgsFfDim30jg/0wJWHIyQqzkJ92pxgZ8cnoSrW0nlIxyqXEANi1jNnpBVAdJP57bY1URRi12wCzNPvWvHH8q2pRpcrQygMzbwdYfmrqhb8ICfsN0U+33XCnJpYRcs5ew1UpUN6f9IvTJLK+Q7IsmyiLt5sE7Fddczk53+BH2tFklhzR6xjMvQROnLjqBeh/lK5TnvzvShLhpm+uLtgK2FjcKG9sjO7miAD09gaaMTviyCZPkuCzHgQCCIGX6mqusqUkazVc6nGsCu5otvie96C5/CtTHXFaUKziKCe+5MaAxURA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=chipsnmedia.com; dmarc=pass action=none
- header.from=chipsnmedia.com; dkim=pass header.d=chipsnmedia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chipsnmedia.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wJxI6EuD0aaPhENQ9zY8fkmGelho6cFx3RapluMcLUg=;
- b=OL3Kb8ZGgaqvSbKriCMvfaacAPODsJJxczpq9q4g9oBm0h+xVmPl08a6B5TJqQTbvKbmHpelcRzM4t+5rowpk/tSNL+u90Fx0JWLgHeOjrjXILqxL0uP4ILy8oqkjeMcnCR0wdEK4ILvmA6JV+qG2Pp7QTtex0I0sGmMrujnCqo=
-Received: from SL2P216MB1246.KORP216.PROD.OUTLOOK.COM (2603:1096:101:a::9) by
- SE1P216MB2041.KORP216.PROD.OUTLOOK.COM (2603:1096:101:161::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8422.19; Tue, 11 Feb 2025 08:28:50 +0000
-Received: from SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
- ([fe80::9e3d:ee20:8cc7:3c07]) by SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
- ([fe80::9e3d:ee20:8cc7:3c07%4]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
- 08:28:49 +0000
-From: Nas Chung <nas.chung@chipsnmedia.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, "mchehab@kernel.org"
-	<mchehab@kernel.org>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>,
-	"sebastian.fricke@collabora.com" <sebastian.fricke@collabora.com>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>
-CC: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-imx@nxp.com" <linux-imx@nxp.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, jackson.lee
-	<jackson.lee@chipsnmedia.com>, lafley.kim <lafley.kim@chipsnmedia.com>
-Subject: RE: [PATCH 4/8] media: chips-media: wave6: Add Wave6 codec driver
-Thread-Topic: [PATCH 4/8] media: chips-media: wave6: Add Wave6 codec driver
-Thread-Index: AQHbe5s6TIh4rto0wEORrmYeUFOifbNAzpsAgAD2lwA=
-Date: Tue, 11 Feb 2025 08:28:49 +0000
-Message-ID:
- <SL2P216MB1246CB5966183FE8E17541D5FBFD2@SL2P216MB1246.KORP216.PROD.OUTLOOK.COM>
-References: <20250210090725.4580-1-nas.chung@chipsnmedia.com>
- <20250210090725.4580-5-nas.chung@chipsnmedia.com>
- <7373c956-216a-43a6-939c-4a9be5564c57@kernel.org>
-In-Reply-To: <7373c956-216a-43a6-939c-4a9be5564c57@kernel.org>
-Accept-Language: ko-KR, en-US
-Content-Language: ko-KR
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=chipsnmedia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SL2P216MB1246:EE_|SE1P216MB2041:EE_
-x-ms-office365-filtering-correlation-id: 0d8596ee-4953-4899-ac7c-08dd4a761c4d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|1800799024|366016|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?t5LnNTHLGUnqCnzk7jVs3WKzIZ0zpYvUHkOkjXYUjLu98umggZXeCf3+A8H4?=
- =?us-ascii?Q?kWJ5vo2aWq1K4rA+2YaH2aUqgnOzYDmwodDyXJNnip1e29RLCuFv7ieLqwrC?=
- =?us-ascii?Q?KfyCGg9oczgQhVmam8xIymyPq2E4jKkvCuDl01amyUd/mW12ExRvYzChp0JU?=
- =?us-ascii?Q?Klq9BucvH0kVtln92s/g0DGxK5QwM/gPk2bA6NDXEbxiKfU7Vhnl7dgzCb+O?=
- =?us-ascii?Q?M8x3sQgdETAzghrTqZDKZNJT/AIfGZP6xQXqBq8V5KsvtOapoZZz+wgc365H?=
- =?us-ascii?Q?kWDXlicPUh/uPf8dcCjKNrhGDCZaawbx9zRyOGTB1utA9PfXgZCLyMTwbkBk?=
- =?us-ascii?Q?f7YujMaISoBFlQTyq3BV8Ll+oqswreLxnDG3tJWS2YXYi2uRdUINZoFKWX+v?=
- =?us-ascii?Q?exXl9CJ+UoVn1jdefeybJcZy/qobpbc1ZCPapNeMgRgzk0Xhbc5k0YAAUQQI?=
- =?us-ascii?Q?b44ugxGGFAq+ZmfTiuT7vbOfYp+ZIPjGkG9H7nR8s6PnHXLinTPLTNcYkmhV?=
- =?us-ascii?Q?P6pb1f7wv09z1SljU5xdprjfwpo3FnyZ5vmG2Z7ss+XXbT3qXW/rXymbHHNK?=
- =?us-ascii?Q?n0oxey83cUhlNhjCpvn5u3/QmJr60IJfbKGcbZ7jTiiRTmdLtQNOI9jfnFyV?=
- =?us-ascii?Q?DUdX03vmgYbDrzpIP7upL8tOH8yMSGL/DcxQ7ztIFDMGnuqJQ2kCGCWdADPL?=
- =?us-ascii?Q?I3T4EHwriUUNe1/qhxNin0sH3OjGA5KxBkEaQtdUiOMOgPkYJRUehkNm53Hi?=
- =?us-ascii?Q?tk+FB05wh/N5hJlBjGSQ7UWljpQZzOfi2jNUSMAHlbt87utFcUJFprA9ZN7E?=
- =?us-ascii?Q?ZSCQ8rVzeOCfqU/su0ZokddUir17R08v1acDWSGlxOJUO5fLa4AUA2Yt6AHG?=
- =?us-ascii?Q?JfwObdHzrm6mlLM34mwoG+1bkK/QNw6OL1Xw+jYuPZ3Entlt5+SPVlisohYw?=
- =?us-ascii?Q?LuejPUnV483C0nRe9NV4kupVYTZUIywEUFLTeZnFdA9ziQIdDmCjK9NQhRb2?=
- =?us-ascii?Q?7FJ1HGLNzgCU/inafcUYaUeNxs/1s6tXXLOg8/SIOby/o+CE7TMtigBi0WGF?=
- =?us-ascii?Q?pguiGk0Yzv99rkm+kPxE+T2HUdrXtEv5R+G/B86raKYxLF4F2v1s0F5TGLMU?=
- =?us-ascii?Q?wSv348U2DqREJbh4+5rVdCLXf8fp0W6nFGmBcOiZJpvsEzm/KSpSOTRJb+bf?=
- =?us-ascii?Q?M+kVQ6P+5PUQfDmCyr7zqZGA/K16dEpxjL+wTB4o/KlVKcfmY9fDpYm1jat4?=
- =?us-ascii?Q?mBMR3qGGDWThwU9zxET7eQiN7Dybmcam076P7uR8WQYIO0M/5lFe04kOzCAM?=
- =?us-ascii?Q?TfVI+diWiYpTQXUdWfUElxSImCxwpziZ8ttc7FsjCQvZ/3GUyyq8OyEzTR1M?=
- =?us-ascii?Q?3KW8Lp+hzrCKFtYY1VTjIbOmKE9ixf260Eb0DMSPsnrz9i/cdz2hPolv4iPX?=
- =?us-ascii?Q?JHDhU8kCcMlPj6DEOi0000+YGcIq/Yto?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SL2P216MB1246.KORP216.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7416014)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?/9ugfNy45wyXIHuMGO+cOZTtTpWNTmlWX5ZBHdb/Bch0qcC/ezfGsitv7KaD?=
- =?us-ascii?Q?saEvg67vx2I8CR6ubiyqgL81VJSZrmMTGjUGOvwWPCJVorr2CWuj1G78hIo6?=
- =?us-ascii?Q?13V6uACsUiJTW5ghehlkAjbb/AqPgv56LHRFTNbwa5Jrvwil+8JwblSKiTJH?=
- =?us-ascii?Q?2P0C5aAF+oP15KvSF0nYmug3gI750iMt4AcQyc33ahuWkiKSNvVgvP/Z1K84?=
- =?us-ascii?Q?1uKWqIqsbvpRPXnsFTxcEOP55Niex/VHnhiu9F5Nes70vLv30tHJ5qVsPSGU?=
- =?us-ascii?Q?DAzrIpDlh3eNgNgFjN4bpsKOGduHDictLOA/JOP3T7qSNn84g01mO4wzPo/O?=
- =?us-ascii?Q?glkaR+ahuAAVWU17MktHz4MgAT6Qn/ZHGAzWCk555gtt8yWl499cco0Xnt9I?=
- =?us-ascii?Q?OCuUSvyOaDDTFVFUNJ2YPcdY4TKgXgpIjmmZpm9t965R8moYThRwW/eEa3Ol?=
- =?us-ascii?Q?fvICnMQW/zX/8U8kDUT1qUtoB+y31A3UEHnL26jtbNrxfLkUbKozoQWktqdU?=
- =?us-ascii?Q?twfWOGVFh6Xw9HCRR9kuEjry1Gx4uXXtX/kqTuXvmlp+B4RvZ7r1m1lzoJvm?=
- =?us-ascii?Q?OmZaxPfJv+QGhZl1wVGlHKh2+XwIylHFHO/lcJqwRcBb2XnuV0QydC96FUUZ?=
- =?us-ascii?Q?jWoT+Zxq1Eh8W5R/9zR2gDk5r8F1Ku9mhElHrZgf+RQM5qrww8dwp4FoI25M?=
- =?us-ascii?Q?p+CHfAzWWSBiI3yHqibPLwOiTp+a4gPPtd8xvzAXOG0exeQzwr4KHold7Cqc?=
- =?us-ascii?Q?9O4/iKl4zYfSFf9UVL7AHjvvgpISsYfgPAOV60dGexvYuQgtrrEEdCi/01MH?=
- =?us-ascii?Q?KyBcCFVhSOo3e6+qi6jPyvs/c3r48oF4OJAqriE8leRTH7NSDaaHshMLauzE?=
- =?us-ascii?Q?kRMAu5RPyNgvaSODbLgSlV5Fz9CM+KQeB9bw0Tvr6UJIunow0AduHyEtaqOL?=
- =?us-ascii?Q?/5+/ro+7yDgctocyRaw5nuPrTwMPdZihyO6lNXTY1lvxPx9a+G/RI8IAjvTq?=
- =?us-ascii?Q?e4W2CK1P+Rg1tA0UroXhR/EmV08ftaTx8VCBgS5JjBKM1E8PWxUK1LIsWGJ9?=
- =?us-ascii?Q?3WbFvqFwKyrBEraLspsZD3xyvi0m/NJ5b0z1x6HyJbczsoO3refAuR2eUHTT?=
- =?us-ascii?Q?eauY/jGLUQncEnHGJbUgxJJRWv0ge62WOAsz8QrDA/ft7WZbMjgB7s19LU7E?=
- =?us-ascii?Q?sKZq3sZScZ8IGiBlaArsLDcwQp3zJPMRWdjzgF4viY0u6e8DR4MkeWtVbVSy?=
- =?us-ascii?Q?+MFL7WCq/edSjc4hkqRbpcRpt7aXNy5VsOccPDsNHV9DnsFBgfEC3mvJFNn2?=
- =?us-ascii?Q?eZLYPhmFzlA+75g4rCWAPMhEKjJz1ngOrK+EkSG0t8dRV+TVqwOAJvykgq4v?=
- =?us-ascii?Q?9HneF49EhlWaw1unDaGazVDnT78GhrdsIYWCF37Dt6Sp1+XCnRm028PaQ+Ni?=
- =?us-ascii?Q?hjl1VicyhJQGHZ7HX0khGGRszVVbksbDEa434h4M6n2PLf5XPqou9Kpf87ow?=
- =?us-ascii?Q?W1ycOPnjvlqMoOsd8h0lq+u6zxmpXSSdTV9zNm1be0AbofkLOktkNL3cuEBq?=
- =?us-ascii?Q?gH0eGICLBsn+WTiq0duy1YLyOCknEY0LLX6GvFrE?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D83E1EEA47;
+	Tue, 11 Feb 2025 08:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739262566; cv=none; b=ptKoUhR2iDKrbpn97t3SnZJ2mKAns15+ECCuZMDYqioXuFGdwrbgu251UNtUCSKYrHChTv8/BjqVBiDg43Pc8fxgJCFD7uEorsKsQ+89IbaUY6tEkVHISYO3F7C+6SqiT9i02QZSzu4sfhS5EtdFnDyIEPrLyldRp9xHjCOMk0A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739262566; c=relaxed/simple;
+	bh=5mLlG7UJKSNSJiUN+gLdBG8mvz50NDCZxBPd4G5dwuU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gaJLs1yqPLF6o1WrcV1BaPueZdJ0WeHnB1S3Ji0Mg+Ygis8coq8np0zoQGrMOabAM0Xk4V2Jo0ZnYsElNSnO60sk6kEYANsT1akEbKVP7TfIODlrKKvUYFCC6/+xPxYGCVQnpAzVVviJwdfP/p+S8y4aQYYuVS7aUv2iEW7QwOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YsZNL4kw6z4f3lCm;
+	Tue, 11 Feb 2025 16:28:50 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 55B631A0CA9;
+	Tue, 11 Feb 2025 16:29:13 +0800 (CST)
+Received: from hulk-vt.huawei.com (unknown [10.67.174.121])
+	by APP3 (Coremail) with SMTP id _Ch0CgAHp8FICqtnfiPrDQ--.42730S2;
+	Tue, 11 Feb 2025 16:29:13 +0800 (CST)
+From: Chen Ridong <chenridong@huaweicloud.com>
+To: hannes@cmpxchg.org,
+	mhocko@kernel.org,
+	roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev,
+	muchun.song@linux.dev,
+	akpm@linux-foundation.org
+Cc: cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	chenridong@huawei.com,
+	wangweiyang2@huawei.com
+Subject: [PATCH] memcg: avoid dead loop when setting memory.max
+Date: Tue, 11 Feb 2025 08:18:19 +0000
+Message-Id: <20250211081819.33307-1-chenridong@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: chipsnmedia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d8596ee-4953-4899-ac7c-08dd4a761c4d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2025 08:28:49.7728
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4d70c8e9-142b-4389-b7f2-fa8a3c68c467
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7GopREXElwoRbuPdWM3xTO84xXj/eIOJUvYf0s4Gsg3UdjOSGviMpjJdEDHeXx/cZvx7yFuO2OK8BPLb1pXay1H4mVdaJiy/ZGyaVtYaASg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SE1P216MB2041
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgAHp8FICqtnfiPrDQ--.42730S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw1fZr4DXw15ZF4ftw1kXwb_yoW5Cw1DpF
+	13Jw1UGF48Jr1kXr4UJF1fWr15Ga1kCFy7JrW7ur1rA3ZxG3WUJ34rK3yUXryDXr1rZr1a
+	vF1DJw4xtw4DJaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
+	n4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+	tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IUbmii3UUUUU==
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
-Hi, Krzysztof.
+From: Chen Ridong <chenridong@huawei.com>
 
->-----Original Message-----
->From: Krzysztof Kozlowski <krzk@kernel.org>
->Sent: Tuesday, February 11, 2025 2:41 AM
->To: Nas Chung <nas.chung@chipsnmedia.com>; mchehab@kernel.org;
->hverkuil@xs4all.nl; sebastian.fricke@collabora.com; robh@kernel.org;
->krzk+dt@kernel.org; conor+dt@kernel.org
->Cc: linux-media@vger.kernel.org; devicetree@vger.kernel.org; linux-
->kernel@vger.kernel.org; linux-imx@nxp.com; linux-arm-
->kernel@lists.infradead.org; jackson.lee <jackson.lee@chipsnmedia.com>;
->lafley.kim <lafley.kim@chipsnmedia.com>
->Subject: Re: [PATCH 4/8] media: chips-media: wave6: Add Wave6 codec driver
->
->On 10/02/2025 10:07, Nas Chung wrote:
->> +
->> +	dev->debugfs =3D debugfs_lookup(WAVE6_VPU_DEBUGFS_DIR, NULL);
->> +	if (IS_ERR_OR_NULL(dev->debugfs))
->> +		dev->debugfs =3D debugfs_create_dir(WAVE6_VPU_DEBUGFS_DIR,
->NULL);
->> +
->> +	pm_runtime_enable(&pdev->dev);
->> +
->> +	if (dev->res->codec_types & WAVE6_IS_DEC) {
->> +		ret =3D wave6_vpu_dec_register_device(dev);
->> +		if (ret) {
->> +			dev_err(&pdev->dev, "wave6_vpu_dec_register_device
->fail: %d\n", ret);
->> +			goto err_temp_vbuf_free;
->> +		}
->> +	}
->> +	if (dev->res->codec_types & WAVE6_IS_ENC) {
->> +		ret =3D wave6_vpu_enc_register_device(dev);
->> +		if (ret) {
->> +			dev_err(&pdev->dev, "wave6_vpu_enc_register_device
->fail: %d\n", ret);
->> +			goto err_dec_unreg;
->> +		}
->> +	}
->> +
->> +	if (dev->ctrl && wave6_vpu_ctrl_support_follower(dev->ctrl)) {
->> +		wave6_vpu_activate(dev);
->> +		ret =3D pm_runtime_resume_and_get(dev->dev);
->> +		if (ret)
->> +			goto err_enc_unreg;
->> +	}
->> +
->> +	dev_dbg(&pdev->dev, "Added wave6 driver with caps %s %s\n",
->> +		dev->res->codec_types & WAVE6_IS_ENC ? "'ENCODE'" : "",
->> +		dev->res->codec_types & WAVE6_IS_DEC ? "'DECODE'" : "");
->> +
->> +	return 0;
->> +
->> +err_enc_unreg:
->> +	if (dev->res->codec_types & WAVE6_IS_ENC)
->> +		wave6_vpu_enc_unregister_device(dev);
->> +err_dec_unreg:
->> +	if (dev->res->codec_types & WAVE6_IS_DEC)
->> +		wave6_vpu_dec_unregister_device(dev);
->> +err_temp_vbuf_free:
->> +	wave6_free_dma(&dev->temp_vbuf);
->> +err_kfifo_free:
->> +	kfifo_free(&dev->irq_status);
->> +err_m2m_dev_release:
->> +	wave6_vpu_release_m2m_dev(dev);
->> +err_v4l2_unregister:
->> +	v4l2_device_unregister(&dev->v4l2_dev);
->> +
->> +	return ret;
->> +}
->> +
->> +static void wave6_vpu_remove(struct platform_device *pdev)
->> +{
->> +	struct vpu_device *dev =3D dev_get_drvdata(&pdev->dev);
->> +
->> +	if (dev->ctrl && wave6_vpu_ctrl_support_follower(dev->ctrl)) {
->> +		if (!pm_runtime_suspended(&pdev->dev))
->> +			pm_runtime_put_sync(&pdev->dev);
->> +	}
->> +	pm_runtime_disable(&pdev->dev);
->> +
->> +	wave6_vpu_enc_unregister_device(dev);
->> +	wave6_vpu_dec_unregister_device(dev);
->> +	wave6_free_dma(&dev->temp_vbuf);
->> +	kfifo_free(&dev->irq_status);
->> +	wave6_vpu_release_m2m_dev(dev);
->> +	v4l2_device_unregister(&dev->v4l2_dev);
->> +}
->> +
->> +#ifdef CONFIG_PM
->> +static int wave6_vpu_runtime_suspend(struct device *dev)
->> +{
->> +	struct vpu_device *vpu_dev =3D dev_get_drvdata(dev);
->> +
->> +	if (!vpu_dev)
->> +		return -ENODEV;
->> +
->> +	dprintk(dev, "runtime suspend\n");
->
->Drop
->
->> +	if (vpu_dev->ctrl && vpu_dev->active)
->> +		wave6_vpu_ctrl_put_sync(vpu_dev->ctrl, &vpu_dev->entity);
->> +	if (vpu_dev->num_clks)
->> +		clk_bulk_disable_unprepare(vpu_dev->num_clks, vpu_dev->clks);
->> +
->> +	return 0;
->> +}
->> +
->> +static int wave6_vpu_runtime_resume(struct device *dev)
->> +{
->> +	struct vpu_device *vpu_dev =3D dev_get_drvdata(dev);
->> +	int ret =3D 0;
->> +
->> +	if (!vpu_dev)
->> +		return -ENODEV;
->> +
->> +	dprintk(dev, "runtime resume\n");
->
->Drop
->
->> +	if (vpu_dev->num_clks) {
->> +		ret =3D clk_bulk_prepare_enable(vpu_dev->num_clks, vpu_dev-
->>clks);
->> +		if (ret) {
->> +			dev_err(dev, "failed to enable clocks: %d\n", ret);
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	if (vpu_dev->ctrl && vpu_dev->active) {
->> +		ret =3D wave6_vpu_ctrl_resume_and_get(vpu_dev->ctrl, &vpu_dev-
->>entity);
->> +		if (ret && vpu_dev->num_clks)
->> +			clk_bulk_disable_unprepare(vpu_dev->num_clks, vpu_dev-
->>clks);
->> +	} else {
->> +		wave6_vpu_check_state(vpu_dev);
->> +	}
->> +
->> +	return ret;
->> +}
->> +#endif
->> +
->> +#ifdef CONFIG_PM_SLEEP
->> +static int wave6_vpu_suspend(struct device *dev)
->> +{
->> +	int ret;
->> +
->> +	dprintk(dev, "suspend\n");
->
->Drop. Don't re-implement existing tracing.
->
->> +	wave6_vpu_pause(dev, 0);
->> +
->> +	ret =3D pm_runtime_force_suspend(dev);
->> +	if (ret)
->> +		wave6_vpu_pause(dev, 1);
->> +
->> +	return ret;
->> +}
->> +
->> +static int wave6_vpu_resume(struct device *dev)
->> +{
->> +	int ret;
->> +
->> +	dprintk(dev, "resume\n");
->
->Drop, useless.
+A softlockup issue was found with stress test:
+ watchdog: BUG: soft lockup - CPU#27 stuck for 26s! [migration/27:181]
+ CPU: 27 UID: 0 PID: 181 Comm: migration/27 6.14.0-rc2-next-20250210 #1
+ Stopper: multi_cpu_stop <- stop_machine_from_inactive_cpu
+ RIP: 0010:stop_machine_yield+0x2/0x10
+ RSP: 0000:ff4a0dcecd19be48 EFLAGS: 00000246
+ RAX: ffffffff89c0108f RBX: ff4a0dcec03afe44 RCX: 0000000000000000
+ RDX: ff1cdaaf6eba5808 RSI: 0000000000000282 RDI: ff1cda80c1775a40
+ RBP: 0000000000000001 R08: 00000011620096c6 R09: 7fffffffffffffff
+ R10: 0000000000000001 R11: 0000000000000100 R12: ff1cda80c1775a40
+ R13: 0000000000000000 R14: 0000000000000001 R15: ff4a0dcec03afe20
+ FS:  0000000000000000(0000) GS:ff1cdaaf6eb80000(0000)
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000000 CR3: 00000025e2c2a001 CR4: 0000000000773ef0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ PKRU: 55555554
+ Call Trace:
+  multi_cpu_stop+0x8f/0x100
+  cpu_stopper_thread+0x90/0x140
+  smpboot_thread_fn+0xad/0x150
+  kthread+0xc2/0x100
+  ret_from_fork+0x2d/0x50
 
-Okay. I will remove the redundant debug message and dprintk in v2.
+The stress test involves CPU hotplug operations and memory control group
+(memcg) operations. The scenario can be described as follows:
 
->
->> +	ret =3D pm_runtime_force_resume(dev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	wave6_vpu_pause(dev, 1);
->> +	return 0;
->> +}
->> +#endif
->> +static const struct dev_pm_ops wave6_vpu_pm_ops =3D {
->> +	SET_RUNTIME_PM_OPS(wave6_vpu_runtime_suspend,
->wave6_vpu_runtime_resume, NULL)
->> +	SET_SYSTEM_SLEEP_PM_OPS(wave6_vpu_suspend, wave6_vpu_resume)
->> +};
->> +
->> +static const struct of_device_id wave6_dt_ids[] =3D {
->> +	{ .compatible =3D "nxp,imx95-wave633c", .data =3D &wave633c_data },
->> +	{ /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, wave6_dt_ids);
->> +
->> +static struct platform_driver wave6_vpu_driver =3D {
->> +	.driver =3D {
->> +		.name =3D VPU_PLATFORM_DEVICE_NAME,
->> +		.of_match_table =3D of_match_ptr(wave6_dt_ids),
->
->
->Drop of_match_ptr, you have here warnings.
+ echo xx > memory.max 	cache_ap_online			oom_reaper
+ (CPU23)						(CPU50)
+ xx < usage		stop_machine_from_inactive_cpu
+ for(;;)			// all active cpus
+ trigger OOM		queue_stop_cpus_work
+ // waiting oom_reaper
+ 			multi_cpu_stop(migration/xx)
+ 			// sync all active cpus ack
+ 			// waiting cpu23 ack
+ 			// CPU50 loops in multi_cpu_stop
+ 							waiting cpu50
 
-I will address this in v2.
+Detailed explanation:
+1. When the usage is larger than xx, an OOM may be triggered. If the
+   process does not handle with ths kill signal immediately, it will loop
+   in the memory_max_write.
+2. When cache_ap_online is triggered, the multi_cpu_stop is queued to the
+   active cpus. Within the multi_cpu_stop function,  it attempts to
+   synchronize the CPU states. However, the CPU23 didn't acknowledge
+   because it is stuck in a loop within the for(;;).
+3. The oom_reaper process is blocked because CPU50 is in a loop, waiting
+   for CPU23 to acknowledge the synchronization request.
+4. Finally, it formed cyclic dependency and lead to softlockup and dead
+   loop.
 
-Thanks.
-Nas.
+To fix this issue, add cond_resched() in the memory_max_write, so that
+it will not block migration task.
 
->
->
->Best regards,
->Krzysztof
+Fixes: b6e6edcfa405 ("mm: memcontrol: reclaim and OOM kill when shrinking memory.max below usage")
+Signed-off-by: Chen Ridong <chenridong@huawei.com>
+---
+ mm/memcontrol.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 8d21c1a44220..16f3bdbd37d8 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -4213,6 +4213,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
+ 		memcg_memory_event(memcg, MEMCG_OOM);
+ 		if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
+ 			break;
++		cond_resched();
+ 	}
+ 
+ 	memcg_wb_domain_size_changed(memcg);
+-- 
+2.34.1
+
