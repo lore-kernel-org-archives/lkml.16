@@ -1,144 +1,78 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D83E1EEA47;
-	Tue, 11 Feb 2025 08:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887591EF0A6;
+	Tue, 11 Feb 2025 08:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739262566; cv=none; b=ptKoUhR2iDKrbpn97t3SnZJ2mKAns15+ECCuZMDYqioXuFGdwrbgu251UNtUCSKYrHChTv8/BjqVBiDg43Pc8fxgJCFD7uEorsKsQ+89IbaUY6tEkVHISYO3F7C+6SqiT9i02QZSzu4sfhS5EtdFnDyIEPrLyldRp9xHjCOMk0A=
+	t=1739262603; cv=none; b=HpGkg0EDNlA+ecUO28FZz0GZssH0Xyy1pwgO7x0+RINRW+tGIFQHvyY/RArrkeTEkseRwVvGhUUu5QEskjeo15sgVIAH4F/5KGqmH1mCh6L42AiZ09hXQzh1/yzvD9M95q4hu44h2nF8mC+be+7oPj6+8pMPLepc+qXNTPKIiUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739262566; c=relaxed/simple;
-	bh=5mLlG7UJKSNSJiUN+gLdBG8mvz50NDCZxBPd4G5dwuU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gaJLs1yqPLF6o1WrcV1BaPueZdJ0WeHnB1S3Ji0Mg+Ygis8coq8np0zoQGrMOabAM0Xk4V2Jo0ZnYsElNSnO60sk6kEYANsT1akEbKVP7TfIODlrKKvUYFCC6/+xPxYGCVQnpAzVVviJwdfP/p+S8y4aQYYuVS7aUv2iEW7QwOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YsZNL4kw6z4f3lCm;
-	Tue, 11 Feb 2025 16:28:50 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 55B631A0CA9;
-	Tue, 11 Feb 2025 16:29:13 +0800 (CST)
-Received: from hulk-vt.huawei.com (unknown [10.67.174.121])
-	by APP3 (Coremail) with SMTP id _Ch0CgAHp8FICqtnfiPrDQ--.42730S2;
-	Tue, 11 Feb 2025 16:29:13 +0800 (CST)
-From: Chen Ridong <chenridong@huaweicloud.com>
-To: hannes@cmpxchg.org,
-	mhocko@kernel.org,
-	roman.gushchin@linux.dev,
-	shakeel.butt@linux.dev,
-	muchun.song@linux.dev,
-	akpm@linux-foundation.org
-Cc: cgroups@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	chenridong@huawei.com,
-	wangweiyang2@huawei.com
-Subject: [PATCH] memcg: avoid dead loop when setting memory.max
-Date: Tue, 11 Feb 2025 08:18:19 +0000
-Message-Id: <20250211081819.33307-1-chenridong@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1739262603; c=relaxed/simple;
+	bh=KkOLO3+N7FDczkhby7I7NSNhK0zE55+iVoHuoQGhHfU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CtPW/HYBBnrqxQ2BQdPxFRdBpJjQRXttRmukhPO2XHpQ4Ew6LB3HyvXXzCmiZJs2wzB+DcqqhjxmTF1nebjbU0Kyw0nnyqx3RoJBPZ9r8jKcEgBJVraBr2ChJlP9STXYlmf6aSehujInb6q/H32wKVE6YjgZqOvDyC2/tfubhls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GPsM920z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GPsM920z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18BD5C4CEDD;
+	Tue, 11 Feb 2025 08:30:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739262603;
+	bh=KkOLO3+N7FDczkhby7I7NSNhK0zE55+iVoHuoQGhHfU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GPsM920zDczb0Yxbv7ZH2WHn+G3xOMFEpF64NBqd6gsSIm5tbxc1IKsEdAfvHv2Fw
+	 0W++zDfDwxRFm66KqDgAtlEydhrenhMuobv6sz8L+ACiLe13VptrzGPOWk5z7XADrX
+	 +3cgoSS6WfiH7G5PmPuX+HpYdMlTM+VbPGejhQZOcJ4OdMv8h0VICBos6cZvJDU6Y5
+	 IVe/TmIqD4eHPMzO4XKk0YkpPkCe2gs3S8H76b4tmE42OXc0huuELbovx04aoD0Zol
+	 DoTkj8SHhx8n8GuOJgYIGT+upF+Q78k/WbBj/LcnUgUzVZ7MEQdhHIa9WF66oXtfq4
+	 Fw2UlaZeNpYhw==
+Date: Tue, 11 Feb 2025 09:29:59 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Boris Brezillon <boris.brezillon@collabora.com>, 
+	Steven Price <steven.price@arm.com>, kernel@collabora.com, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v3 1/3] dt-bindings: gpu: mali-bifrost: Add compatible
+ for MT8370 SoC
+Message-ID: <20250211-judicious-tentacled-chihuahua-9bb5b6@krzk-bin>
+References: <20250207-mt8370-enable-gpu-v3-0-75e9b902f9c1@collabora.com>
+ <20250207-mt8370-enable-gpu-v3-1-75e9b902f9c1@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAHp8FICqtnfiPrDQ--.42730S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJw1fZr4DXw15ZF4ftw1kXwb_yoW5Cw1DpF
-	13Jw1UGF48Jr1kXr4UJF1fWr15Ga1kCFy7JrW7ur1rA3ZxG3WUJ34rK3yUXryDXr1rZr1a
-	vF1DJw4xtw4DJaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
-	n4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
-	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
-	tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
-	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
-	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
-	7IUbmii3UUUUU==
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250207-mt8370-enable-gpu-v3-1-75e9b902f9c1@collabora.com>
 
-From: Chen Ridong <chenridong@huawei.com>
+On Fri, Feb 07, 2025 at 04:18:30PM +0100, Louis-Alexis Eyraud wrote:
+> Add a compatible for the MediaTek MT8370 SoC, with an
+> integrated ARM Mali G57 MC2 GPU (Valhall-JM, dual core).
+> This new compatible is needed for this SoC support, as the other
 
-A softlockup issue was found with stress test:
- watchdog: BUG: soft lockup - CPU#27 stuck for 26s! [migration/27:181]
- CPU: 27 UID: 0 PID: 181 Comm: migration/27 6.14.0-rc2-next-20250210 #1
- Stopper: multi_cpu_stop <- stop_machine_from_inactive_cpu
- RIP: 0010:stop_machine_yield+0x2/0x10
- RSP: 0000:ff4a0dcecd19be48 EFLAGS: 00000246
- RAX: ffffffff89c0108f RBX: ff4a0dcec03afe44 RCX: 0000000000000000
- RDX: ff1cdaaf6eba5808 RSI: 0000000000000282 RDI: ff1cda80c1775a40
- RBP: 0000000000000001 R08: 00000011620096c6 R09: 7fffffffffffffff
- R10: 0000000000000001 R11: 0000000000000100 R12: ff1cda80c1775a40
- R13: 0000000000000000 R14: 0000000000000001 R15: ff4a0dcec03afe20
- FS:  0000000000000000(0000) GS:ff1cdaaf6eb80000(0000)
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000000000000000 CR3: 00000025e2c2a001 CR4: 0000000000773ef0
- DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- PKRU: 55555554
- Call Trace:
-  multi_cpu_stop+0x8f/0x100
-  cpu_stopper_thread+0x90/0x140
-  smpboot_thread_fn+0xad/0x150
-  kthread+0xc2/0x100
-  ret_from_fork+0x2d/0x50
+You *always* need new compatible.
 
-The stress test involves CPU hotplug operations and memory control group
-(memcg) operations. The scenario can be described as follows:
+> existing compatibles for the same GPU architecture (MT8188, MT8192) do
+> not match the required power domain number.
+> The other compatibles (especially MT8186) cannot be reused because of
+> GPU architecture difference.
 
- echo xx > memory.max 	cache_ap_online			oom_reaper
- (CPU23)						(CPU50)
- xx < usage		stop_machine_from_inactive_cpu
- for(;;)			// all active cpus
- trigger OOM		queue_stop_cpus_work
- // waiting oom_reaper
- 			multi_cpu_stop(migration/xx)
- 			// sync all active cpus ack
- 			// waiting cpu23 ack
- 			// CPU50 loops in multi_cpu_stop
- 							waiting cpu50
+Just FYI: you must not *ever* reuse compatibles. What you wanted is to
+mark devices compatible and not. You claim devices are not compatible
+because of this and that.
 
-Detailed explanation:
-1. When the usage is larger than xx, an OOM may be triggered. If the
-   process does not handle with ths kill signal immediately, it will loop
-   in the memory_max_write.
-2. When cache_ap_online is triggered, the multi_cpu_stop is queued to the
-   active cpus. Within the multi_cpu_stop function,  it attempts to
-   synchronize the CPU states. However, the CPU23 didn't acknowledge
-   because it is stuck in a loop within the for(;;).
-3. The oom_reaper process is blocked because CPU50 is in a loop, waiting
-   for CPU23 to acknowledge the synchronization request.
-4. Finally, it formed cyclic dependency and lead to softlockup and dead
-   loop.
+Please fix the commit msg because I am afraid later people will use it:
+"I can reuse the compatible because that commit msg was acked".
 
-To fix this issue, add cond_resched() in the memory_max_write, so that
-it will not block migration task.
 
-Fixes: b6e6edcfa405 ("mm: memcontrol: reclaim and OOM kill when shrinking memory.max below usage")
-Signed-off-by: Chen Ridong <chenridong@huawei.com>
----
- mm/memcontrol.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 8d21c1a44220..16f3bdbd37d8 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4213,6 +4213,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
- 		memcg_memory_event(memcg, MEMCG_OOM);
- 		if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
- 			break;
-+		cond_resched();
- 	}
- 
- 	memcg_wb_domain_size_changed(memcg);
--- 
-2.34.1
+Best regards,
+Krzysztof
 
