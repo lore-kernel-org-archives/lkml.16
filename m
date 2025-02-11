@@ -1,72 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37AE043AA1;
-	Tue, 11 Feb 2025 02:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2A526BDBF;
+	Tue, 11 Feb 2025 02:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739241446; cv=none; b=dOSXPqvpz8/IxrTWV1F+e/NwCAysQFaK7/yFPOUGSbsa2RxFTfO4rFxvISJapM1SN+XknpuIRrgfmDnt0klqA764uz7dmnEU9bxqyNWRBG2jFnTMOjsWUMzTs1SUZfUdG09v1mF4t0XHynFVOPNG/RxpYvyAZqwON8dOtTYw9aE=
+	t=1739241544; cv=none; b=uO1byaWGDSUc0gCyaScmswvt723VbxKEs1ZwI1rCqRU7V7IIsBALZgsCkTTm4hR2h9HHXAdOw0YJGhecNfRwdsBKXtLRbQ0VLz/hUzBVovxR+jgdDpx66r3k1Jxi5qEu0Mu0wkTiuDYM5lJz/Il0PYjKdroo1hljHwgpXcxwEtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739241446; c=relaxed/simple;
-	bh=/nh38VH3RUeFVnEms/rFcvaBjtX6qP9VQp0unQP9LtY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ERkSgYfKz8mIo2Uk8lb6FPdwcnQZ9e4PwFB4MchkfrYyfEWNHsled30vFCf/KSNiQq74zw47ZT6GV6zt+ZhHsGPzLdaIVal2TmUnoP4yjufNV2u1ZfW3g1PZibBqjMkoLkPOWo2rev7jWwK6F7Wxk0pyIUVyRYQuCFctIM8ygWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aKD1XJhh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739241544; c=relaxed/simple;
+	bh=5JDfHicwmMEPruu4CfflG+XzYIWbKrLxuaPw0b0Af9U=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=YYUnTwe+0WyjJmbz0XsAoSvpJ+GpyQpkytMyfsSyCfhMY3aYdC+fyiUzBDpOtOT9KRP0g+XnGV0Mx0eitLvOSm112iZTlzanKOKJDUY8qx4xz4lKobbOfAonRQ2gtXrPbDAaiYmFMmrdn8bbNMq3noIwtLmybg27I5ym4/3bYnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mw2ffws9; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aKD1XJhh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CAADC4CED1;
-	Tue, 11 Feb 2025 02:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739241445;
-	bh=/nh38VH3RUeFVnEms/rFcvaBjtX6qP9VQp0unQP9LtY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aKD1XJhhVVFuXuZZQCq318mBjivsRJLvZGWHyw3ENdIleqa4h9kaFjK9hLdFHTmGU
-	 PtXKEYPew/+hvpdHfQlUkP1u7mshSYDxSQbUSW48mK66E4ft71uLTa1v4ewRMQNXsn
-	 tyG7Dc53b5Tgc9FP+Uvh8FinYWgZYigCSC3EUPNRrDxucJin0vwK6S7kYB8/aaGixn
-	 2tmio+NiSPsyjk7qiiDUb78IXLjI0rNY7vULWcaFApQ5VzmvnROQ7vQFHfRKlLZ64J
-	 9FBdfnHIFqt8mCJJ+DSnOSuofkUd9KIlNcCLQxUzSXWQ+RSAdPu33rSvSgwW0hwDcC
-	 m9isMa2qzDtNw==
-Date: Mon, 10 Feb 2025 18:37:25 -0800
-From: Kees Cook <kees@kernel.org>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>,
-	Luis Felipe Hernandez <luis.hernandez093@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] lib/prime_numbers: convert self-test to KUnit
-Message-ID: <202502101836.2B3E7BC4@keescook>
-References: <20250208-prime_numbers-kunit-convert-v5-0-b0cb82ae7c7d@gmail.com>
- <20250208-prime_numbers-kunit-convert-v5-2-b0cb82ae7c7d@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mw2ffws9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=UW7SVyypLT3sDcwZQm79Hbi5R9Lu26flFJ24Hl9wWv4=; b=mw2ffws9btnhS3ETGd5CAUHOuW
+	8lQtPqGr5da44FZnK1Qh2dF5QWz7fa7lBfukjJc8tVraI0xgJwgqduGxA0mF5IKmYN2YVL92BCrIt
+	NuUphRIaqongLujdCfgxz372z8RAbLwJOmJNoesYGF3C48xh8I18DtHhYhVkwin7sUqNvBU36q93O
+	clPcc6++iUr82eUeZ9eXHz+xd+WY62xl801sz/67LklTQjcuG1m9Lo/QNSfHdOkHG8jhNG2gvbLtq
+	ly0ty0fGqUF4yp/AItQ21TGgELgW9pS3Gaobtxtv2MOBSiun4chZ6JrYZLwe/W4AAEK58y0TxwCFD
+	6Rp/lbUw==;
+Received: from [50.53.2.24] (helo=[127.0.0.1])
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1thgAm-00000000SAa-3vEs;
+	Tue, 11 Feb 2025 02:38:53 +0000
+Date: Mon, 10 Feb 2025 18:38:49 -0800
+From: Randy Dunlap <rdunlap@infradead.org>
+To: Jakub Kicinski <kuba@kernel.org>, Joe Damato <jdamato@fastly.com>
+CC: netdev@vger.kernel.org, ahmed.zaki@intel.com,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] documentation: networking: Add NAPI config
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250210181635.2c84f2e1@kernel.org>
+References: <20250208012822.34327-1-jdamato@fastly.com> <20250210181635.2c84f2e1@kernel.org>
+Message-ID: <CB01BC60-A7ED-484C-A766-BF6D37BF48CE@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250208-prime_numbers-kunit-convert-v5-2-b0cb82ae7c7d@gmail.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 08, 2025 at 09:44:39PM -0500, Tamir Duberstein wrote:
-> Extract a private header and convert the prime_numbers self-test to a
-> KUnit test. I considered parameterizing the test using
-> `KUNIT_CASE_PARAM` but didn't see how it was possible since the test
-> logic is entangled with the test parameter generation logic.
-> 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
->  lib/Kconfig.debug                            | 14 +++++
->  lib/math/prime_numbers.c                     | 87 +++++-----------------------
->  lib/math/prime_numbers_private.h             | 17 ++++++
->  lib/math/tests/Makefile                      |  1 +
->  lib/math/tests/prime_numbers_kunit.c         | 59 +++++++++++++++++++
->  tools/testing/selftests/lib/config           |  1 -
->  tools/testing/selftests/lib/prime_numbers.sh |  4 --
->  7 files changed, 106 insertions(+), 77 deletions(-)
+On February 10, 2025 6:16:35 PM PST, Jakub Kicinski <kuba@kernel=2Eorg> wro=
+te:
+>On Sat,  8 Feb 2025 01:28:21 +0000 Joe Damato wrote:
+>> +Persistent NAPI config
+>> +----------------------
+>> +
+>> +Drivers can opt-in to using a persistent NAPI configuration space by c=
+alling
+>
+>Should we be more forceful? I think for new drivers the _add_config()=20
+>API should always be preferred given the benefits=2E
+>
+>> +netif_napi_add_config=2E This API maps a NAPI instance to a configurat=
+ion
+>> +structure using a driver defined index value, like a queue number=2E I=
+f the
+>> +driver were to destroy and recreate NAPI instances (if a user requeste=
+d a queue
+>
+>"were" is correct here?
 
-Thanks! I've applied this and rebased it onto:
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=for-next/move-kunit-tests
+Yes, subjunctive mood=2E
 
--- 
-Kees Cook
+
+>> +count change, for example), the new NAPI instances will inherit the co=
+nfiguration
+>> +settings of the NAPI configuration structure they are mapped to=2E
+>
+
+
+~Randy
