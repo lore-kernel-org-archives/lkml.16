@@ -1,44 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5CA1D7989;
-	Tue, 11 Feb 2025 18:46:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC5E26157D;
+	Tue, 11 Feb 2025 18:46:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739299576; cv=none; b=iOl3VE5bw8IFjEfu+FbneHSRid78Xwo5CZvpY4V+dtAhjslCuYv8XOjIEjaRc0pxnq0KeRm30WCSzTcTAQ9hK++XzLiw//6+EB5YfvcMmE5TooR6R1W/3iEyH8w7PcbBYrIO9AEUQDY8FIiG2n+JQdSeSff2oDrleBA59IZonC4=
+	t=1739299618; cv=none; b=brLD1oJ8lHaj390TERXSw0KjW6nSL9ZPOmixyomW+SdIyL9X9+p7e2xpFM/ZPA8PzARF2Yqq5yeIJPPiCeQ4EY82+OAX0nQPTO1/fqgvuYiMa5OGUtT4BDk72Mi8oxZuSQdyXTTe1ESGvUYZbpvUAz3j/acEobhwF5FsZmf0NIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739299576; c=relaxed/simple;
-	bh=/Q8nPQOdh4pnjecQT5SDR+UvXcomMmyjZMV67DY4plQ=;
+	s=arc-20240116; t=1739299618; c=relaxed/simple;
+	bh=1tmYJwzpiN82GM9eC7S0KdCW2m2qZCsDfpaJowDAzto=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CrFCWdbPzTvOjP0Z+OiJYVjZXwvvDVefPnApqr3xyQvO3kLCRX+f82JsVmEOLH3DeP4fFqrTxyDfF5QXSIBlhiZH866K1PvwOiYGqcLqRM/OYPExjIYQ2ZbWTomPU1HpU+eJ9HkkGw+vHmZre5FYsEIcrZnEF72owZm3dMjRiZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dl4d6UA9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XqWGUxQ8dUjhxoYBGcDPBnYwFJAH1jQMjRDDOAITLtmxd5OJo4h35hHAF7g5Eni3GrtRri3sNsijSWUkZrgFmCeSvtetdOl4K7cOTCDyzF7sbCnGAoTnQ6SOTfiKChSCsmdo7gc0vxNjgEDh3m5G2NaIn2sRzz48tLjA++vW4oI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3vHm80V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dl4d6UA9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 241D9C4CEDD;
-	Tue, 11 Feb 2025 18:46:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3vHm80V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE34FC4CEDD;
+	Tue, 11 Feb 2025 18:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739299575;
-	bh=/Q8nPQOdh4pnjecQT5SDR+UvXcomMmyjZMV67DY4plQ=;
+	s=k20201202; t=1739299617;
+	bh=1tmYJwzpiN82GM9eC7S0KdCW2m2qZCsDfpaJowDAzto=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dl4d6UA9VXiaKUc4ASuUZqJqgZwNLN+RMCP6WhjXj+eOBUTMWZgBttNFJR2VR2yg6
-	 cpgHMhkCX5Laf6CvWYxizFdFJN8eCWUA8sYSI8yjWVanc4clAksIr+4rTaNir4KQUD
-	 vC5zZI7QtkMfETXdO4glwj4U2mQTR4Oz0CXViYn1RWcCB1dqQmTiGTceFp3mc2SaZK
-	 yWIvdX3r26O8yr9UZ2nfI5QJVxAsuF7ZuYdofvecnlirtDVUzwNEvIbmqc8vUDsSqB
-	 DASjHxRBfS2enAfDhlv8w3jTR8uFOZgPtk7QJZJWFqpGmWGAvCZ2/L7s/R4UgAby4h
-	 Am1FToArZEkXg==
-Date: Tue, 11 Feb 2025 18:46:10 +0000
+	b=W3vHm80V1MxuMz39kk4NM3szzMx4rPzzpzJotXcuUGH1lNYPtr1/oNQfbTpmBxqSn
+	 yyIhrhosdxMk1GpUczZiiFJeVj1TqHuY98YF26akFbzplQhjXQXaXw+SoHf7ADsuOn
+	 6CovGx+JH+3xYSPePtXxkPS/XstrF9VgyWbcIOkuRJi+fcAZ6q3IRvwhknLgvcJrLQ
+	 eWEDPG2Tdw0UUgnEpEW+/EIqPnOrwWf9ushBGXa3DAzvJpwpkUX0zLOJxIaqitcIto
+	 2Su4xegMFmqsDKAawORio6fpzyRFohGe42nYAELKovZkjOXbMii0TUjslLOv5xuEDo
+	 ttrVwZslzkgFw==
+Date: Tue, 11 Feb 2025 18:46:52 +0000
 From: Conor Dooley <conor@kernel.org>
-To: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-Cc: Julien Massot <julien.massot@collabora.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
+To: Robert Nelson <robertcnelson@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH 3/5] dt-bindings: i2c: maxim,max96717: add new properties
-Message-ID: <20250211-ecard-dallying-94ced9b29fd9@spud>
-References: <20250207112958.2571600-1-laurentiu.palcu@oss.nxp.com>
- <20250207112958.2571600-4-laurentiu.palcu@oss.nxp.com>
+	Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+	Andrei Aldea <a-aldea@ti.com>,
+	Jason Kridner <jkridner@beagleboard.org>,
+	Deepak Khatri <lorforlinux@beagleboard.org>,
+	Ayush Singh <ayush@beagleboard.org>
+Subject: Re: [PATCH] dt-bindings: arm: ti: Add PocketBeagle2
+Message-ID: <20250211-pegboard-dividing-24a17e921e33@spud>
+References: <20250211181839.1575497-1-robertcnelson@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,101 +49,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2YN4dnJkh2x99pN8"
+	protocol="application/pgp-signature"; boundary="dYxPXg4CmGsnpMpq"
 Content-Disposition: inline
-In-Reply-To: <20250207112958.2571600-4-laurentiu.palcu@oss.nxp.com>
+In-Reply-To: <20250211181839.1575497-1-robertcnelson@gmail.com>
 
 
---2YN4dnJkh2x99pN8
+--dYxPXg4CmGsnpMpq
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 07, 2025 at 01:29:55PM +0200, Laurentiu Palcu wrote:
-> Add 'maxim,override-mode' property to allow the user to toggle the pin
-> configured chip operation mode and 'maxim,fsync-config' to configure the
-> chip for relaying a frame synchronization signal, received from
-> deserializer, to the attached sensor. The latter is needed for
-> synchronizing the images in multi-sensor setups.
+On Tue, Feb 11, 2025 at 12:18:38PM -0600, Robert Nelson wrote:
+> This board is based on ti,am625 family using the am6232 variation.
 >=20
-> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-> ---
->  .../bindings/media/i2c/maxim,max96717.yaml    | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
+> https://www.beagleboard.org/boards/pocketbeagle-2
+> https://openbeagle.org/pocketbeagle/pocketbeagle-2
 >=20
-> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.y=
-aml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> index d1e8ba6e368ec..fae578d55fd4d 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> @@ -42,10 +42,35 @@ properties:
->        number must be in range of [0, 10].
-> =20
->    gpio-controller: true
-> +  gpio-reserved-ranges: true
-> =20
->    '#clock-cells':
->      const: 0
-> =20
-> +  maxim,override-mode:
-> +    description: Toggle the operation mode from the pin configured one.
-> +    type: boolean
+> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 
-type: flag
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-
-> +  maxim,fsync-config:
-> +    description:
-> +      Frame synchronization (FSYNC) is used to align images sent from mu=
-ltiple
-> +      sources in surround-view applications and is required for concaten=
-ation.
-> +      In FSYNC mode, the deserializer sends a sync signal to each serial=
-izer;
-> +      the serializers then send the signal to the connected sensor.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    items:
-> +      - description: FSYNC RX ID, needs to match the TX ID configured in=
- the deserializer.
-> +        minimum: 0
-> +        maximum: 31
-> +        default: 0
-> +      - description:
-> +          Output GPIO pin used for sending the FSYNC to the sensor. The =
-pin, however, needs
-> +          to be excluded from the gpiochip using the gpio-reserved-range=
-s property since
-> +          it will be used exclusively for FSYNC generation.
-> +        minimum: 0
-> +        maximum: 10
-> +        default: 0
-> +
->    reg:
->      maxItems: 1
-> =20
-> @@ -113,6 +138,9 @@ examples:
->              #gpio-cells =3D <2>;
->              #clock-cells =3D <0>;
-> =20
-> +            gpio-reserved-ranges =3D <0 1>;
-> +            maxim,fsync-config =3D <0 0>;
-> +
->              ports {
->                  #address-cells =3D <1>;
->                  #size-cells =3D <0>;
-> --=20
-> 2.34.1
->=20
-
---2YN4dnJkh2x99pN8
+--dYxPXg4CmGsnpMpq
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6ua8gAKCRB4tDGHoIJi
-0rWUAQC7DyKCXVN0UfP18uwC+5p5DYlNrG9wUl0Z9TRcFSMCpgD+N35w7t2QP+rl
-NJPsEV3Cc+Uy4iJB4fuKjWiNCvDFFQI=
-=NM+F
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6ubHAAKCRB4tDGHoIJi
+0srsAP0Raa76KzHP+t2mgKgp6YI9TNmYt2kXcJp0WcLoGAIXQgD9GaqOVcAWXDOd
+Yu4ORkcOtXC6NV57PqJssUkKe9nyAgw=
+=Y8Ed
 -----END PGP SIGNATURE-----
 
---2YN4dnJkh2x99pN8--
+--dYxPXg4CmGsnpMpq--
