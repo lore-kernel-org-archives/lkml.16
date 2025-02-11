@@ -1,129 +1,212 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CA323099C;
-	Tue, 11 Feb 2025 13:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739282260; cv=none; b=BK7OH9cKR3u3gKMgiT0OvxlPSssI3uBRl0Wg/6u3zE7jExBxLPqxHDv+BACj7o9LC2uae/BmdTH/fBe+AsaKIPVE37FqtFk+ef7lHMbnXW4PuQRTBRPFHrlcgt6xdUWigpWogDXoh/olfhqyKbTD9sYX0h3TLYtob05fA6bN7SU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739282260; c=relaxed/simple;
-	bh=XnACgguGEi7l2F/dWtns8iHU9CdKd5Rbri/Os+TWzuE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rmALtIR0MWRns5Z4uYfHXBSln7C7dgIgPXblW+T90O4QrEd0MH7RxYsarfM6VJgnucCAdPdZtFPYZySpafQx02lcEU1GztQy6y/wo57Z1Ux0GWUUUYDYGV/DSFMgw6EkJTHXHaVYbAUnUBq9ohiVM46dMAeKzGJQsLEWaZghT+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=WtM57xM+; arc=none smtp.client-ip=54.207.19.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A3423099C;
+	Tue, 11 Feb 2025 13:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739282289; cv=fail; b=BEh6FmOqICTzeodQMFSwJ+3nIDZmmX9senxuff83Xk86bONSI7mf3BkNjouJdQ/TprUPhcrPHGivosJwwxDzAM1/7CsmZI8ntrUQ0dWRWVxENYlSWu2Vy8XxZE5BBPjEoBZx6dlyMXZYzWTX8B8RL5FPSF3FtbPuGUoMqaQMLl8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739282289; c=relaxed/simple;
+	bh=++fWvm+s/xer+/qFM9NQKvCbKlLF+n55Sl8QZgwYuRw=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=YCO2k8dQqpQg1e0KwaCU6y6+4xehL+wCduowdOT8Bk521ZRnA32MZIxydpw8nMC6/2QouC6Wl/+23xat5E7gbCoktpvyH4nADawH3NCiRn7yYNdMfpyOGE6irp2Vgufe++5zG2PsHX6532+tOfXJUbGoYn9uDeuFr1bIqQjlVlQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QOQAA3XE; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="WtM57xM+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739282194;
-	bh=MOQCraMni4cLE1auXuOnn748f2GO/MU4imVh9/6YM1A=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=WtM57xM+S873o5QSDorJ4alNrM8tMSW1tFzPZSyVQuFYzWYIarJX+a5nN6VpnrBDo
-	 dkAbwjk+sycF2N4Id5aKIHbnMomtVsAgUfY66IgiirlL+BLjq5QJ8DGaYqbw2LfBr5
-	 iUqQPeyrQtM4lamEXm2YBSa4Njk+qFkPgFjzSMS8=
-X-QQ-mid: bizesmtpip2t1739282184t243xhs
-X-QQ-Originating-IP: npKmLwuEa8p5dg5WWLccJs9AiidgISrmzEcpd0HuIow=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 11 Feb 2025 21:56:22 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 15678477366880975103
-From: WangYuli <wangyuli@uniontech.com>
-To: tsbogend@alpha.franken.de
-Cc: linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	macro@orcam.me.uk,
-	masahiroy@kernel.org,
-	jiaxun.yang@flygoat.com,
-	zhanjun@uniontech.com,
-	guanwentao@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [PATCH 0/2] MIPS: Explicitly check KBUILD_SYM32=n
-Date: Tue, 11 Feb 2025 21:56:16 +0800
-Message-ID: <41107E6D3A125047+20250211135616.1807966-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QOQAA3XE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739282288; x=1770818288;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=++fWvm+s/xer+/qFM9NQKvCbKlLF+n55Sl8QZgwYuRw=;
+  b=QOQAA3XEue3W7qovVjeyJLLywGxEBER2Mxp0DIGybChThOXYsmap0AsD
+   J2aiVXTNV4KJhR1k3bmwKKZqbGInPVe3Gdw9cOEP+HL39xDXX1ju/1l0o
+   6Xk3qrslqU/jQGE65fLYxjRuJu5SlyPOue7sdGhB0Cno3yJrqgeW+klEI
+   xGmk9hl6YBtpqez8yCwA5DTKZPyEQuizeKNyMJ9lIYMagql/HG8vxAHdj
+   PnovaB9qkTtWjDC1NL6SDoMQ8RhM1HUiW2xJtg/L8R/k4vFj+zeVg8I1k
+   WBlmlJgvkU9IsGjhQ2saR7wULO00Z0+1NcLEOp8hn/HO3Opp+oIJDLbJv
+   A==;
+X-CSE-ConnectionGUID: eWt+8q+DR6ayJ5mAi+V5ng==
+X-CSE-MsgGUID: 3ywV9QXISW+QGvynbRK9jw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40026584"
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="40026584"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 05:58:07 -0800
+X-CSE-ConnectionGUID: T3DKGfCYR76CA9NX6Y9QVg==
+X-CSE-MsgGUID: a4HXbBeyRs66EMxkVVELTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="143371453"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Feb 2025 05:58:07 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 11 Feb 2025 05:58:06 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Tue, 11 Feb 2025 05:58:06 -0800
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.49) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 11 Feb 2025 05:58:05 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=H8Hj0VJBoHZ46W46O6JU5Y0D1yTc0YskjjUMWTKfwz/n52H+2xh7d5O05TO5JeScnYVn7lMOuh7rkx+h3dFZguDl0re9N4DP7SJBOOvL8XM5cJ3kVzUzcSGVoFoo14Qplb5BjN6I9c1cFu+N/oJfY8MR54tOJNmSg8EX/asiEcwnWROpuk/r5cxDr23yrxbrGAOw4Ia0QeMZ8zfyTSOvtbOCI0D7Rq9C/VQHWSJsUKJMkW1/efRvkJHe7HTAsAQzTNNSUnkc7hUMF46e8tDRGK/yDVAIieEPU1DloKUw9tjVyvK9wW55fX3cx140TJYOBu/LDRcvUv1KOPaMkIuHxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KRiOebsabvPy2UjI7Oipcysgzu60cG4hJUXO2vtWTjA=;
+ b=o3IsueJECRDSENTppTlEDPZiuuj2de+z50RryxqxsvwrBJ18XXK4tcjsr/X6KNolOaFbVIn69zDxQSoxj0tGaZHWd1Pve7QjqL7hZz4/B9HErOk2snjI3+a1/VYAIw2R4t85J99CbOeL6oVHrgyUcWUmEsQ606xwBTSsGc+ptNZcXPvMItLgbrN1Hpwbc5HwANAtbdc4pyr8IkC+AKbYKpjsvQs2th2uJrmhQio/I7HDLu8pzmywKiqtARzhDuW/p4CYDy/harhOnqMiyMCI+M6WFlfrKCCqX8bMIArIxFjgJ9iXQzlGytzj1nOK9eJnc2O+aftkC6AnSI8sqaxK5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6307.namprd11.prod.outlook.com (2603:10b6:930:21::20)
+ by DS7PR11MB7905.namprd11.prod.outlook.com (2603:10b6:8:ed::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.11; Tue, 11 Feb
+ 2025 13:58:03 +0000
+Received: from CY5PR11MB6307.namprd11.prod.outlook.com
+ ([fe80::1fa2:d2f9:5904:2a14]) by CY5PR11MB6307.namprd11.prod.outlook.com
+ ([fe80::1fa2:d2f9:5904:2a14%6]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
+ 13:58:03 +0000
+Message-ID: <d043fc1b-b1f6-47a7-af6e-43372ef4872f@intel.com>
+Date: Tue, 11 Feb 2025 15:57:57 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH iwl-net v1 1/1] igc: Set buffer type for
+ empty frames in igc_init_empty_frame
+To: Song Yoong Siang <yoong.siang.song@intel.com>, Tony Nguyen
+	<anthony.l.nguyen@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vinicius Costa Gomes
+	<vinicius.gomes@intel.com>, Malli C <mallikarjuna.chilakala@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+CC: <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+References: <20250205023603.798819-1-yoong.siang.song@intel.com>
+Content-Language: en-US
+From: Mor Bar-Gabay <morx.bar.gabay@intel.com>
+In-Reply-To: <20250205023603.798819-1-yoong.siang.song@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TL2P290CA0027.ISRP290.PROD.OUTLOOK.COM
+ (2603:1096:950:3::11) To CY5PR11MB6307.namprd11.prod.outlook.com
+ (2603:10b6:930:21::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MABkn+BX1UZ4G3K0qeU6agR7N6YNCQFxFCQmfLXDozDQwWlVwnZBXNre
-	brH5Z3/Gxmkxz7d5sUMfOHtYSR/XRv7oT85z0CtDfUUJ8PFshzkh36MfCYHuV9rLRiNNXCI
-	GWDhgemMqTzbGq0hW69qZQkpZtBoOqVkzlpKZECOsjXJhDRI7K2tQQVcRKv3YKC80kv+grh
-	X3TlUXG/pgMBJp4b0NGbrO6QyfvYAsjZs4+hxmohTNdzv6EnMAH89881PQjOrpuwB8Juqr7
-	Nxf0Mp48oWzrNjOoBGc8BCTSpAgImzSEZulMBIZ7LC4B61FrPYz1c9/DK0MObhpNSIAVp9B
-	miotA3ZNnusRWLoYWU0zslW/pjWvKfEr/TEHy41Kcx+UBibATpSCfH0bcRwGxs9FxeNRAdb
-	Misti0kkLEUj4Esl4dN+OXpUXjcOgXyHGcdm91mTbYYo6hTwWM5EZplsZbFIeGAvt6C0o35
-	IGC6+mhnWDYwGeFrqiksIL1IQpeMZu5Ey3lOAQdEnp/IBAXGY17yVNUpUZbJ+s67uuFFKUd
-	g1mWDWQeXSOiGmMYobo/x1oBrHd2NQhy761ufPD778OkqeCx+yvqmazGxhQ0gCUgkKNZaTn
-	f8OsXC7CFgX3DZZC3REXZ2gChKQGg/Ka68yjPKeyasytlthh06p+kjbCnoLBFHXaQjA5zNY
-	W2GnoCl29jFEUb8DCd8XD3zwbsGnJmrgGJO3/SiWylLBHO5bdeEaiu5XEXnqLG57sfL+YVb
-	qr9hJy//+y3OuaT8crTjclc6/upPzSnOiEJbEDP38AVRIRg7Dk4HYH2NSM186Et5iPbGPD0
-	VmMjLM9j3HfpacOYWdbKXhJ6A+rqEXaOIKRKeFkK0idtFjGT+0ZZWhNztdSIJQVhvoDQw2X
-	ADYTNU7vCTqHmO2caPvDYZt4JOW8Rid9K69DlnNHFWSv8ht/wYy/jFt6dykZNA9p7ORtnSL
-	GfkzDLSlDVIjFjO6v1JPi9Q4nyVmJMXuS5qvmFaOjXX+jfnXSEgTGMFHC
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6307:EE_|DS7PR11MB7905:EE_
+X-MS-Office365-Filtering-Correlation-Id: acbd30b4-b290-492e-8f33-08dd4aa41a3e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|921020;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?em40ZWlCZmM2bGFTd1ZsYXpYeFJrRkxWSWhsczRsUS9QRHA0NG9XWllndlB0?=
+ =?utf-8?B?LzRyTlAvQ0xFZjByd3NiRVRNTHBDekUwa2dUaUtrTXRXZklKVXJyZkxFVWxS?=
+ =?utf-8?B?QUR5L1NJampVQm5obGFjZmxJMUF2TG1Kencwakc2V2xUNndQZVJNejhWQ0N3?=
+ =?utf-8?B?bmVqMTA5WVJ0MFBkWXhSaWdLNWdlamx4bXFkYWNpWDlURXdmVFFBZmtscTJD?=
+ =?utf-8?B?RXYvcXV4VGNDSDFsTVFmcUduMnJ6S2JLYnlEbWplZGtCd1hLRkdaeVJ2TEJS?=
+ =?utf-8?B?allvSzlXVDhxY0g3TUJENGRtNFZQK1NWaTBDakEzYnhwenBUQ0lraE53RHR5?=
+ =?utf-8?B?amVsWUpFN3hBb3IyVTByZ0dRcTZDeG10Qmt0MTNFTlAwcklEZTRPdzZYTnRT?=
+ =?utf-8?B?WjMyK3B1YVl4dUhsYXY3N1pGNDQyeWNMbVkwOGhVSnBkME93eXBYUkFZOStx?=
+ =?utf-8?B?T0hjN2hpMmg1L2tjWVV2Z0E3VnBSSGcvcU1yYnRHMmFVaUJiTkRUTWcrR2pu?=
+ =?utf-8?B?RUNzdjR3SVhFMVEzU2xiTjY1VE56OGRUT0ZlVE4vcENWUzhubElUa2tHNitl?=
+ =?utf-8?B?eE51M3Mva0pZa0VjdHJHblRFM2ZqV1dxellYOXFjQmE0S3Jjakp6dVB1dHl1?=
+ =?utf-8?B?ZVhHUWlpNDJOVkpCMlR6d1ZNTnFGazhuZ3ZGelJQOFZDUHNVVFRyL1I5YW9w?=
+ =?utf-8?B?ZmVXU0J0V0Qrb1pXTS9IZzlPb0pTczhEQ2pSRXhzTzdvakxKQXZueXVJbE5p?=
+ =?utf-8?B?VkZTSGo3akV0bGxLc2pFNnVrKzVYa1gwbnEwOG1xUFRUMFpnMXVKU3BwdDBy?=
+ =?utf-8?B?akNCdWpHdDJxbURDWk4vekEwOFhqUFNBUWJSazhxck9RWW5VTGQvbUJnTkVS?=
+ =?utf-8?B?R2pHc1lERmduUmJlSzArcDBrejJEQ0JkalJXZU1SUHd4M0JpcUVzTkpubVZQ?=
+ =?utf-8?B?a3laZ3drc3FSUzNBdzkwcmhRUlFRcHBBRUdCalJ1L2VieFR3TW1TSm45OVJL?=
+ =?utf-8?B?RFFuL3c0RFVzWkJmYWlBSWlXQ3BLREdjQ2p2ejFNNzVZRURyaktGTXdESVlP?=
+ =?utf-8?B?L0lvMEFtMTJzZGlsTnNGMU9ydkNHM0VBZ2k2Lzh1bXNOdXlScVluYkRsQ2Jz?=
+ =?utf-8?B?QUN2NjRGd21YdUxtS0luMmR4TjRiNVNNeWYwOUU4c0NhZlc5cVZoaHFSdEpq?=
+ =?utf-8?B?cTBST0V4MFpmT0NwL2RZampwanJ6T3ZNUWpYK1doQkQrbzY5Q1NrNVVma1pr?=
+ =?utf-8?B?K0NnRkFiLzgwMXR4dTFkdzZFZWwwQmpXcnV0ZXIzcVlQY1B0dy9ObUZxK3Bh?=
+ =?utf-8?B?ODgwcnNkMGhUTVBZdDVnaE1PN1hvNkp5S2NsYkcxOC9vV3B6dUhXcU8wck4r?=
+ =?utf-8?B?VEJnZEJtMk9Fc3JyeWRac1FFWFlJTis5V2w2cFNoNzJ0by94bXlCeXBZSDlC?=
+ =?utf-8?B?THhNakk1elFORkZkTWF5Y2dCaHZkaWtpck9rYyswU3BNTmd6TnZGOW5Nb1BS?=
+ =?utf-8?B?MytzTEdRNVk5cUVrVVBIR0U0bEVkMTEray9nVDhiN0VuYjVMK2pORS9tVDZO?=
+ =?utf-8?B?NmFVS1pyRHdLb1lMMUVWb29YakJqcmFFTVg0MmdEWktPd1F4ZVI3UG9iaUU0?=
+ =?utf-8?B?VjB6azFURkttZkZpYms3ZGwxNmpmU1RhOXRtNjNBS1ZVOGpCU0Rmbi9QYzU2?=
+ =?utf-8?B?bzdBalNkR0xyaEFyY1NNY3R3cFlYdUphVFB1bU83aHZ0Z2NRN05uMVhoK1FC?=
+ =?utf-8?B?K3drZ0ZRRzE0MDB2MGIyMGo1YXZkLzZoRHdBRTh6dmIxc1hOeVFDNmNhaWNi?=
+ =?utf-8?B?SXd5a3ByTVhJaGZDOVE3eHhBdllLSHpNd2hzUEY0SE5CUHRTM1dkSENxZm1t?=
+ =?utf-8?B?OHNVczZ1SHc5OC9MalpuTkFtWFBVTE9tck12OUllZDhnWGxQbXJrS2tTRWdz?=
+ =?utf-8?Q?NYS8uASPoiI=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6307.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OHpoNlh4RE11TS90Yzk1MWo4eUFVeUNaVkFBQUxEcElvajlyYTFJcGp0Tk5C?=
+ =?utf-8?B?dmloSit2K1I4SktWL1F0RzhJREVnWndQeWg2RnhDRFlpemEwcjBXekdTZU9Z?=
+ =?utf-8?B?TEx4cFNxM21kUDBzWHkwdjk0dVN6VjhpQU5oSGhuVmxmVXNtbGEzMFBFdzh5?=
+ =?utf-8?B?eW05czk5dXBSYjduTlYwa0ozYm85SUR3cVVFNDJFVUNTbm9xcXFFWHVmWFpG?=
+ =?utf-8?B?MWtpWUJCS0pTc0pERHVmRmtSK1Z5cWVKZHRGNmZ4c2RIZXV3MTVTQmczdE5F?=
+ =?utf-8?B?VGhsalluVUlHMjFnYzJDYm9UZWpNYi9BWjhLdVZlK3JPcHZZbEsra1M2YUNP?=
+ =?utf-8?B?c2NPQXVnci92Znp4VitidGYwQkdrZWZNd3VPak9ZaDBoOHU2ZForb2FQLzlh?=
+ =?utf-8?B?SjYxaUZYcjBmZ3dLb2srTS81cW1YSEpjMEszMHlld3J2UmRCb1VybldRRDVx?=
+ =?utf-8?B?U3l0V0lObXhuTXFNTFBYZzZhTFR5bTBJQ3RzU0xvMG1obk1ZamhlSU1sMGhh?=
+ =?utf-8?B?TmNPRXR6Q0RCVlFZVmd4M0w5R1oxQjl5dlpTVjZVbWMwYXEwb2lkM0NVbFc1?=
+ =?utf-8?B?K0NZU0ltb3ppREppRWRuNjM0ZWFNbk9rSzhNNld6NDVsR1JNdkpPQ3VYZWcv?=
+ =?utf-8?B?WEhnQ01pQUFTTWczTEZNMEJpd2Z6c1ZMVHB5OGdkd21TV3h6SSt4M2VoVWFU?=
+ =?utf-8?B?ek5JM3NlRzM4dlY4c1JEdnRJL3Rvcm8zV0cxbzZrbXJJSVRIci8rOUNjdzFT?=
+ =?utf-8?B?NkY0aW1EdFNDNTJWdHB4eFBnbXkyNGZVV2kvb3BVZmtTcmZhd2FUQnE2UnZr?=
+ =?utf-8?B?SjVaMHEvcjBNUU9iVXovNGdDanh6QVdzaENjUysrQWhlU0MrWHY2ZEhlZ0RV?=
+ =?utf-8?B?b3U4ajdNNVdyM25KZDJmVzZkWHJXMkVCaitManpjcEIyZFpSelF2U094dEJB?=
+ =?utf-8?B?R2J1V09Ld2hVTlVURmg1dDQ2MXkwY1JNRm93bXY3aUIzenFVSy9OMTFKWC93?=
+ =?utf-8?B?eXVvSVRjQldHU1Z6OStPeXRxb28ycG5BRlFpZi9NeG1BQXZIaS9oclVzU1Fj?=
+ =?utf-8?B?c3NIS2dSS2ZJV3hRQ0tSOWpVRWNJVktuaDNNY2lNTlg0TUJpeUVmZ3U4OXVa?=
+ =?utf-8?B?dHFTNUN3Y09XOGlPMFZkRVlJdXgySXc1eGZPK3ZTTGhhL09seVk1OXNLUXRG?=
+ =?utf-8?B?OUQ1NEsra1ZmTUx3WGFpTmp1ZU1tUytETGhxcmtEVCsxdWM3dXd0MHBENkJi?=
+ =?utf-8?B?OUUxcHN2ejUxcnZ3ZzEwTnBMbEF0c1h1L1FlWEFKY1BhakU1NkxRemFQOHRi?=
+ =?utf-8?B?bTRlRk1qakl1RHI5UVhmRndSVEVkZnlTTk0zZFhCT1NoelFlcjZlVUlETW5Z?=
+ =?utf-8?B?NkpsajlrbURoSjMxbHFZMWZGUWNvNVZtMy9XSTVvSVhLUk4ydWN1OGdKL04w?=
+ =?utf-8?B?My9sZlZzd3BLUTdTZjFqVldQcEwwdTRraThldnduSzlZU3Y5U3ZzUTEyUDV1?=
+ =?utf-8?B?UTVQVVM4L01KeGVlc1VyajZheVNqakRjV3hWSit0WWFJVUM0aEU2MEZ4eUZS?=
+ =?utf-8?B?NTVZRCtFM3B2K0wwdDVVNDVxd2krbDk3MlBOQzdmQWNXTWozU0dtMWJtY1ky?=
+ =?utf-8?B?L0pVT2VEOXF1cGE5d05ZSmkzcGJ1QS82bUhqdi9ZYlB6bjNIRC9vMjk3Y0JP?=
+ =?utf-8?B?RlFoTkJBRzZSeUZoWWhRY0gyYWRxZ093V0xLN2p4d0I0cVdPY3ZqVFF1L2hq?=
+ =?utf-8?B?SS9FelNLWmFRaFNMcUNqaGNIOVdHcUZ2OU11T2VINDVtQldBQWdqZkRwK3Va?=
+ =?utf-8?B?S2M5Tk1VOWJUL2p6d0svYWd3bkpSKzFYZ2tvbkRzN0NmemNDanRBQ1kzQkM1?=
+ =?utf-8?B?c3RnN2xrU004Y1FHcXJ0anNLdkpUb0tsWjJ4QlRTcExsZ3cxSnNOdDJSWDNr?=
+ =?utf-8?B?THVVQVBVSzVVR3BHWGdOREpDZW1IaDBzNVAxL3lkTWJBVWI5emZ3bVlzek5S?=
+ =?utf-8?B?NS9DakJqSldGZFpXSEljUWsrKy8zcmlIQTNyL05YTVlsbDVIRkhZWk9RTTA2?=
+ =?utf-8?B?UHM3bXU1eHo4cm9XM3h5NFVhK2t1N3RSTTZwWjlWcnYrVHExVFNRRk9jN1FH?=
+ =?utf-8?B?VWtPNk9DUngyTWVxRzM1ZzlMQmNic2kycWNHaVR6OXpqRndzaG45Szd6U0Yx?=
+ =?utf-8?B?Nmc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: acbd30b4-b290-492e-8f33-08dd4aa41a3e
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6307.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 13:58:03.5275
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B09srijcr5uVze77GlsYu1hmuu3sDhg8ZNCwg+XtfX9KzDKWfAumfb3MuGEDdhI2cOCBG46nZv2YqqAi/mRSVMQrtsLQqguye3idnOULmFU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB7905
+X-OriginatorOrg: intel.com
 
-During make module_install, the need_compiler variable becomes 0,
-so Makefile.compiler isn't included.
-    
-This results in call cc-option-yn returning nothing.
-    
-Add a check for KBUILD_SYM32=n to avoid the
-"CONFIG_CPU_DADDI_WORKAROUNDS unsupported without -msym32" error
-when KBUILD_SYM32 is unset (meaning it's not 'y' or 'n').
-
-Moreover, I also identified an unnecessary check for KBUILD_SYM32
-in this Makefile section. Eliminate it for code simplification.
-
-
-
-NOTE:
-
-It is particularly important to note that this code fix does not
-imply that we have resolved the problem entirely.
-
-In fact, the entire application of cc-option and its auxiliary
-commands within the kernel codebase currently carries significant
-risk.
-
-When we execute make modules_install, the Makefile for the
-corresponding architecture under arch/subarches/Makefile is
-invariably included. Within these files, there are numerous
-usages of cc-option and its auxiliary commands, all of which will
-return empty strings. The reason other architectures can
-successfully complete compilation under these circumstances is
-purely because they do not, unlike MIPS, check the return values
-of cc-option and its auxiliary commands within their Makefiles
-and halt the compilation process when the expected results are
-not received.
-
-A feasible approach to remediation might be to encapsulate all
-usages of cc-option and its auxiliary commands within conditional
-statements across all architecture Makefiles, preventing their
-execution entirely during make modules_install.
-
-However, this would lead to a massive number of inelegant
-modifications, and these broader implications may require
-deliberation by Masahiro Yamada.
-
-Regardless, this does not preclude us from addressing the
-issue on MIPS first.
-
-WangYuli (2):
-  MIPS: Eliminate Redundant KBUILD_SYM32 Checks
-  MIPS: Explicitly check KBUILD_SYM32=n
-
- arch/mips/Makefile | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
--- 
-2.47.2
-
+On 05/02/2025 4:36, Song Yoong Siang wrote:
+> Set the buffer type to IGC_TX_BUFFER_TYPE_SKB for empty frame in the
+> igc_init_empty_frame function. This ensures that the buffer type is
+> correctly identified and handled during Tx ring cleanup.
+> 
+> Fixes: db0b124f02ba ("igc: Enhance Qbv scheduling by using first flag bit")
+> Cc: stable@vger.kernel.org # 6.2+
+> Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
+> Acked-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+> Reviewed-by: Simon Horman <horms@kernel.org>
+> ---
+>   drivers/net/ethernet/intel/igc/igc_main.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+Tested-by: Mor Bar-Gabay <morx.bar.gabay@intel.com>
