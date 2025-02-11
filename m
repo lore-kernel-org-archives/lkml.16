@@ -1,246 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A0A1F12ED;
-	Tue, 11 Feb 2025 09:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338911E4106;
+	Tue, 11 Feb 2025 09:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739265905; cv=none; b=mjireCsmNKyvqDlYxTTHgDJYo28c3Ui/2DQ6AsA4tnkrnHtPzXq1T1BzIqKP+bJ8Ab59dsh1dmFKl0dQ8trAoNl/jyTZ/W7MoxfzmP0FZxGsT93K/z12c0dFO42PnOuDDbw7zWYj8yGi+j7EnlJJlQyGKt+PG0DTSJQCQiaTiFg=
+	t=1739265973; cv=none; b=mJW4w6Xx3Ka4rzbdBQdLUG37OAYNBJyiGgjmoSJsEMI5pW4aMAp40fyEve4OaqZzITRQCgjpA2bUMusH9e/ndh3EYURLvsLYd1wlNL18ciG1J1zoEzZf2pktDNvSS93UzSUOQsTlAnOsMyw462S3xHxIYkfVh4x7CNaPjwBA5Zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739265905; c=relaxed/simple;
-	bh=SR5LwxmHxJbxL8Gifp96GYWy5xT2GbIst98vLDN4fPM=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P2S2XNbwVIlam8pjTatyOrxNpI1bxdjHdDrM2Y95qlsfiA1tbI6QxR41a8OkTynPMpVh5bMbWCo6ub1+ucWoB+h6bWYUP3TF8IX0JbtFL0/N/WfdRQHobwb2hWOibAObe3okgPUy7rlld2lV1aQ+Gyky7UHzUZ2cAHySWcALflU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nKQSqQbl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739265973; c=relaxed/simple;
+	bh=0/6SlMvqxzhB7Qlw/3nmpge/TZTMVnJdiiMq8WXc0i8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EC5EA0YiGghmUNeY0UHQOrHHK4BXI4kCUeAFRvH1qPV2d8UjtPy0g18OsqWMqEOZXuol936JGwIzKj1fJefUI61BmLypjz3GQ/0YRotOeQd782GlhyYVeGMU8iwfJPt685PCwVVwiZ5hQuoWuE3SpLOjYtjGMbr0cAVU8mLpNxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=sxQ81AtR; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nKQSqQbl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA367C4CEDD;
-	Tue, 11 Feb 2025 09:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739265904;
-	bh=SR5LwxmHxJbxL8Gifp96GYWy5xT2GbIst98vLDN4fPM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nKQSqQblbizWzWsqck6Hc+bJ/6neD3u0R68/NnK5rihuQCNG77Xa8rUqHiFr6zsvw
-	 uaKplYQY9Mq/jgzYt0q5jiqsb7lU7WgWIOEScwVGVTAcNch+Q+f4I7ZBk0RDjyX0qr
-	 5sKta5E6pe+eqebn+Jk2rhlerAUMmr4GQyf7GrEusSZaOt645nVnyjvmE7hR3ET6dz
-	 teUdrQa7OcInc4drcdmLbmzwL7OqFhVNL5E/KjRg9zBUys3rsFMF5zL6oGZJSj02YP
-	 hp6pnbkEbr9ptXSbTIO07SqrSm068K3hQSrzRfqxQ6oLfetn9pv5Je0vmN0KZvrkSQ
-	 MvZ043GdJFFhQ==
-Received: from [104.132.45.111] (helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1thmVp-002uM5-Fz;
-	Tue, 11 Feb 2025 09:25:01 +0000
-Date: Tue, 11 Feb 2025 09:24:54 +0000
-Message-ID: <87seok25qx.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: kvm@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jing Zhang <jingzhangos@google.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="sxQ81AtR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=OEfvOJJA+O1fPUax0iJ9whI9+BMjOivJ72Lg/TWzn/c=; b=sxQ81AtRIcHkT5S5isVmbl9i1l
+	4ACoSmRN5Oz/c4UHiaRF87Fc+eBzKGLsLThI5d8CkCQtPw8fl8pI6nNZEAygpHZa2rhdEwRRBp6RV
+	UJXwY9E1At0p3CKxM3m7K1fcYuaAkTJGMi2Ckh5kuXrntl/Ne4bcJTKW2mSbKtfcPT5F3iifUkzXC
+	dib8gh3SEVkbL4llbbd7TwiudA6yRhcbeXAnHIWLnofntoVkFSwILF/XIC1/JFmCWKfGcHSMpyfZM
+	poO/CwB4UCEtFXb90HUMpJAJdAZMIT/X93GyRtm0OdOy2H9Ts3S2TIdORqLGR53nuIhaBlgUlXK7P
+	gaC3O9sw==;
+Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1thmWm-007fB4-3W; Tue, 11 Feb 2025 10:26:05 +0100
+From: Luis Henriques <luis@igalia.com>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	kvm-riscv@lists.infradead.org,
-	Ingo Molnar <mingo@redhat.com>,
-	linux-riscv@lists.infradead.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	kvmarm@lists.linux.dev,
-	Alexander Potapenko <glider@google.com>,
-	x86@kernel.org,
-	Sean Christopherson <seanjc@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Kunkun Jiang <jiangkunkun@huawei.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH 2/3] KVM: arm64: switch to using kvm_lock/unlock_all_vcpus
-In-Reply-To: <20250211000917.166856-3-mlevitsk@redhat.com>
-References: <20250211000917.166856-1-mlevitsk@redhat.com>	<20250211000917.166856-3-mlevitsk@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	Matt Harvey <mharvey@jumptrading.com>,
+	Bernd Schubert <bschubert@ddn.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Luis Henriques <luis@igalia.com>
+Subject: [PATCH v4] fuse: add new function to invalidate cache for all inodes
+Date: Tue, 11 Feb 2025 09:26:04 +0000
+Message-ID: <20250211092604.15160-1-luis@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 104.132.45.111
-X-SA-Exim-Rcpt-To: mlevitsk@redhat.com, kvm@vger.kernel.org, pbonzini@redhat.com, jingzhangos@google.com, oliver.upton@linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rdunlap@infradead.org, suzuki.poulose@arm.com, palmer@dabbelt.com, yuzenghui@huawei.com, kvm-riscv@lists.infradead.org, mingo@redhat.com, linux-riscv@lists.infradead.org, joey.gouly@arm.com, paul.walmsley@sifive.com, tglx@linutronix.de, bhelgaas@google.com, aou@eecs.berkeley.edu, kvmarm@lists.linux.dev, glider@google.com, x86@kernel.org, seanjc@google.com, anup@brainfault.org, jiangkunkun@huawei.com, atishp@atishpatra.org, catalin.marinas@arm.com, will@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 11 Feb 2025 00:09:16 +0000,
-Maxim Levitsky <mlevitsk@redhat.com> wrote:
-> 
-> Switch to kvm_lock/unlock_all_vcpus instead of arm's own
-> version.
-> 
-> This fixes lockdep warning about reaching maximum lock depth:
-> 
-> [  328.171264] BUG: MAX_LOCK_DEPTH too low!
-> [  328.175227] turning off the locking correctness validator.
-> [  328.180726] Please attach the output of /proc/lock_stat to the bug report
-> [  328.187531] depth: 48  max: 48!
-> [  328.190678] 48 locks held by qemu-kvm/11664:
-> [  328.194957]  #0: ffff800086de5ba0 (&kvm->lock){+.+.}-{3:3}, at: kvm_ioctl_create_device+0x174/0x5b0
-> [  328.204048]  #1: ffff0800e78800b8 (&vcpu->mutex){+.+.}-{3:3}, at: lock_all_vcpus+0x16c/0x2a0
-> [  328.212521]  #2: ffff07ffeee51e98 (&vcpu->mutex){+.+.}-{3:3}, at: lock_all_vcpus+0x16c/0x2a0
-> [  328.220991]  #3: ffff0800dc7d80b8 (&vcpu->mutex){+.+.}-{3:3}, at: lock_all_vcpus+0x16c/0x2a0
-> [  328.229463]  #4: ffff07ffe0c980b8 (&vcpu->mutex){+.+.}-{3:3}, at: lock_all_vcpus+0x16c/0x2a0
-> [  328.237934]  #5: ffff0800a3883c78 (&vcpu->mutex){+.+.}-{3:3}, at: lock_all_vcpus+0x16c/0x2a0
-> [  328.246405]  #6: ffff07fffbe480b8 (&vcpu->mutex){+.+.}-{3:3}, at: lock_all_vcpus+0x16c/0x2a0
-> 
-> No functional change intended.
+Currently userspace is able to notify the kernel to invalidate the cache
+for an inode.  This means that, if all the inodes in a filesystem need to
+be invalidated, then userspace needs to iterate through all of them and do
+this kernel notification separately.
 
-Actually plenty of it. This sort of broad assertion is really an
-indication of the contrary.
+This patch adds a new option that allows userspace to invalidate all the
+inodes with a single notification operation.  In addition to invalidate
+all the inodes, it also shrinks the sb dcache.
 
-> 
-> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> ---
->  arch/arm64/include/asm/kvm_host.h     |  3 ---
->  arch/arm64/kvm/arch_timer.c           |  8 +++----
->  arch/arm64/kvm/arm.c                  | 32 ---------------------------
->  arch/arm64/kvm/vgic/vgic-init.c       | 11 +++++----
->  arch/arm64/kvm/vgic/vgic-its.c        | 18 ++++++++-------
->  arch/arm64/kvm/vgic/vgic-kvm-device.c | 21 ++++++++++--------
->  6 files changed, 33 insertions(+), 60 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 7cfa024de4e3..bba97ea700ca 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -1234,9 +1234,6 @@ int __init populate_sysreg_config(const struct sys_reg_desc *sr,
->  				  unsigned int idx);
->  int __init populate_nv_trap_config(void);
->  
-> -bool lock_all_vcpus(struct kvm *kvm);
-> -void unlock_all_vcpus(struct kvm *kvm);
-> -
->  void kvm_calculate_traps(struct kvm_vcpu *vcpu);
->  
->  /* MMIO helpers */
-> diff --git a/arch/arm64/kvm/arch_timer.c b/arch/arm64/kvm/arch_timer.c
-> index 231c0cd9c7b4..3af1da807f9c 100644
-> --- a/arch/arm64/kvm/arch_timer.c
-> +++ b/arch/arm64/kvm/arch_timer.c
-> @@ -1769,7 +1769,9 @@ int kvm_vm_ioctl_set_counter_offset(struct kvm *kvm,
->  
->  	mutex_lock(&kvm->lock);
->  
-> -	if (lock_all_vcpus(kvm)) {
-> +	ret = kvm_lock_all_vcpus(kvm);
-> +
-> +	if (!ret) {
->  		set_bit(KVM_ARCH_FLAG_VM_COUNTER_OFFSET, &kvm->arch.flags);
->  
->  		/*
-> @@ -1781,9 +1783,7 @@ int kvm_vm_ioctl_set_counter_offset(struct kvm *kvm,
->  		kvm->arch.timer_data.voffset = offset->counter_offset;
->  		kvm->arch.timer_data.poffset = offset->counter_offset;
->  
-> -		unlock_all_vcpus(kvm);
-> -	} else {
-> -		ret = -EBUSY;
-> +		kvm_unlock_all_vcpus(kvm);
->  	}
+Signed-off-by: Luis Henriques <luis@igalia.com>
+---
+* Changes since v3
+- Added comments to clarify semantic changes in fuse_reverse_inval_inode()
+  when called with FUSE_INVAL_ALL_INODES (suggested by Bernd).
+- Added comments to inodes iteration loop to clarify __iget/iput usage
+  (suggested by Joanne)
+- Dropped get_fuse_mount() call -- fuse_mount can be obtained from
+  fuse_ilookup() directly (suggested by Joanne)
 
-This is a userspace ABI change. This ioctl is documented as being able
-to return -EINVAL or -EBUSY, and nothing else other than 0. Yet the
-new helper returns -EINTR, which you blindly forward to userspace.
+(Also dropped the RFC from the subject.)
 
->  
->  	mutex_unlock(&kvm->lock);
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index 071a7d75be68..f58849c5b4f0 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -1895,38 +1895,6 @@ static void unlock_vcpus(struct kvm *kvm, int vcpu_lock_idx)
->  	}
->  }
->  
-> -void unlock_all_vcpus(struct kvm *kvm)
-> -{
-> -	lockdep_assert_held(&kvm->lock);
-> -
-> -	unlock_vcpus(kvm, atomic_read(&kvm->online_vcpus) - 1);
-> -}
-> -
-> -/* Returns true if all vcpus were locked, false otherwise */
-> -bool lock_all_vcpus(struct kvm *kvm)
-> -{
-> -	struct kvm_vcpu *tmp_vcpu;
-> -	unsigned long c;
-> -
-> -	lockdep_assert_held(&kvm->lock);
-> -
-> -	/*
-> -	 * Any time a vcpu is in an ioctl (including running), the
-> -	 * core KVM code tries to grab the vcpu->mutex.
-> -	 *
-> -	 * By grabbing the vcpu->mutex of all VCPUs we ensure that no
-> -	 * other VCPUs can fiddle with the state while we access it.
-> -	 */
-> -	kvm_for_each_vcpu(c, tmp_vcpu, kvm) {
-> -		if (!mutex_trylock(&tmp_vcpu->mutex)) {
-> -			unlock_vcpus(kvm, c - 1);
-> -			return false;
-> -		}
-> -	}
-> -
-> -	return true;
-> -}
+* Changes since v2
+- Use the new helper from fuse_reverse_inval_inode(), as suggested by Bernd.
+- Also updated patch description as per checkpatch.pl suggestion.
 
-The semantics are different.
+* Changes since v1
+As suggested by Bernd, this patch v2 simply adds an helper function that
+will make it easier to replace most of it's code by a call to function
+super_iter_inodes() when Dave Chinner's patch[1] eventually gets merged.
 
-Other than the return values mentioned above, the new version fails on
-signal delivery, which isn't expected.  The guarantee given to
-userspace is that unless a vcpu thread is currently in KVM, the
-locking will succeed. Not "will succeed unless something that is
-outside of your control happens".
+[1] https://lore.kernel.org/r/20241002014017.3801899-3-david@fromorbit.com
 
-The arm64 version is also built around a mutex_trylock() because we
-don't want to wait forever until the vcpu's mutex is released. We want
-it now, or never. That's consistent with the above requirement on
-userspace.
+ fs/fuse/inode.c           | 83 +++++++++++++++++++++++++++++++++++----
+ include/uapi/linux/fuse.h |  3 ++
+ 2 files changed, 79 insertions(+), 7 deletions(-)
 
-We can argue whether or not these are good guarantees (or
-requirements) to give to (or demand from) userspace, but that's what
-we have, and I'm not prepared to break any of it.
-
-At the end of the day, the x86 locking serves completely different
-purposes. It wants to gracefully wait for vcpus to exit and is happy
-to replay things, because migration (which is what x86 seems to be
-using this for) is a stupidly long process. Our locking is designed to
-either succeed or fail quickly, because some of the lock paths are on
-the critical path for VM startup and configuration.
-
-So for this series to be acceptable, you'd have to provide the same
-semantics. It is probably doable with a bit of macro magic, at the
-expense of readability.
-
-What I would also like to see is for this primitive to be usable with
-scoped_cond_guard(), which would make the code much more readable.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index e9db2cb8c150..5aa49856731a 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -547,25 +547,94 @@ struct inode *fuse_ilookup(struct fuse_conn *fc, u64 nodeid,
+ 	return NULL;
+ }
+ 
++static void inval_single_inode(struct inode *inode, struct fuse_conn *fc)
++{
++	struct fuse_inode *fi;
++
++	fi = get_fuse_inode(inode);
++	spin_lock(&fi->lock);
++	fi->attr_version = atomic64_inc_return(&fc->attr_version);
++	spin_unlock(&fi->lock);
++	fuse_invalidate_attr(inode);
++	forget_all_cached_acls(inode);
++}
++
++static int fuse_reverse_inval_all(struct fuse_conn *fc)
++{
++	struct fuse_mount *fm;
++	struct super_block *sb;
++	struct inode *inode, *old_inode = NULL;
++
++	inode = fuse_ilookup(fc, FUSE_ROOT_ID, &fm);
++	if (!inode || !fm)
++		return -ENOENT;
++
++	iput(inode);
++	sb = fm->sb;
++
++	spin_lock(&sb->s_inode_list_lock);
++	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
++		spin_lock(&inode->i_lock);
++		if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
++		    !atomic_read(&inode->i_count)) {
++			spin_unlock(&inode->i_lock);
++			continue;
++		}
++
++		/*
++		 * This __iget()/iput() dance is required so that we can release
++		 * the sb lock and continue the iteration on the previous
++		 * inode.  If we don't keep a ref to the old inode it could have
++		 * disappear.  This way we can safely call cond_resched() when
++		 * there's a huge amount of inodes to iterate.
++		 */
++		__iget(inode);
++		spin_unlock(&inode->i_lock);
++		spin_unlock(&sb->s_inode_list_lock);
++		iput(old_inode);
++
++		inval_single_inode(inode, fc);
++
++		old_inode = inode;
++		cond_resched();
++		spin_lock(&sb->s_inode_list_lock);
++	}
++	spin_unlock(&sb->s_inode_list_lock);
++	iput(old_inode);
++
++	shrink_dcache_sb(sb);
++
++	return 0;
++}
++
++/*
++ * Notify to invalidate inodes cache.  It can be called with @nodeid set to
++ * either:
++ *
++ * - An inode number - Any pending writebacks within the rage [@offset @len]
++ *   will be triggered and the inode will be validated.  To invalidate the whole
++ *   cache @offset has to be set to '0' and @len needs to be <= '0'; if @offset
++ *   is negative, only the inode attributes are invalidated.
++ *
++ * - FUSE_INVAL_ALL_INODES - All the inodes in the superblock are invalidated
++ *   and the whole dcache is shrinked.
++ */
+ int fuse_reverse_inval_inode(struct fuse_conn *fc, u64 nodeid,
+ 			     loff_t offset, loff_t len)
+ {
+-	struct fuse_inode *fi;
+ 	struct inode *inode;
+ 	pgoff_t pg_start;
+ 	pgoff_t pg_end;
+ 
++	if (nodeid == FUSE_INVAL_ALL_INODES)
++		return fuse_reverse_inval_all(fc);
++
+ 	inode = fuse_ilookup(fc, nodeid, NULL);
+ 	if (!inode)
+ 		return -ENOENT;
+ 
+-	fi = get_fuse_inode(inode);
+-	spin_lock(&fi->lock);
+-	fi->attr_version = atomic64_inc_return(&fc->attr_version);
+-	spin_unlock(&fi->lock);
++	inval_single_inode(inode, fc);
+ 
+-	fuse_invalidate_attr(inode);
+-	forget_all_cached_acls(inode);
+ 	if (offset >= 0) {
+ 		pg_start = offset >> PAGE_SHIFT;
+ 		if (len <= 0)
+diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+index 5e0eb41d967e..e5852b63f99f 100644
+--- a/include/uapi/linux/fuse.h
++++ b/include/uapi/linux/fuse.h
+@@ -669,6 +669,9 @@ enum fuse_notify_code {
+ 	FUSE_NOTIFY_CODE_MAX,
+ };
+ 
++/* The nodeid to request to invalidate all inodes */
++#define FUSE_INVAL_ALL_INODES 0
++
+ /* The read buffer is required to be at least 8k, but may be much larger */
+ #define FUSE_MIN_READ_BUFFER 8192
+ 
