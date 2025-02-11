@@ -1,273 +1,197 @@
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2BF261571;
-	Tue, 11 Feb 2025 17:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16884261573;
+	Tue, 11 Feb 2025 17:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739295710; cv=none; b=RZ8LhBD+zi4cxLDibSfdQGOzT2A+3JxxMxNxuqH9smwYi90La6mLcF9QHokxLQVa1eWXQSEi+NnvwgGLZzmiK0gmRgjQg1gOMrqWgEB11DXXXCBa3g7tAFnwxQ//5ZxaAmtYKOwHQhHBQhanD3s6/uDWzFeTNi0CS8bTu8i9P4o=
+	t=1739295751; cv=none; b=Lde9eKwZ4DbgeP6RMLFbdm91iIC8l0S1NtzFkLb0+hYCEq9SVncnD4ok5bNy6muxY/4TTQs5WhFZS/TQSJ0jQ1bZrM2WLMrLgLRWCMJZlDPX8duaNM09nnlvHmx1WpwiUFXT9ryc2dhwS/ncu+0RWJr1Oj3suuc9s6+j7PKxBGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739295710; c=relaxed/simple;
-	bh=5aQ92cdC4eJfVEoFmrdzyqjx6f3bfVgQOkqs4X/GeOg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=u+obR53rPwHjZTovb8MXs8kaCA2TKoxKj/+Qh4lQCyRPOm7wN3p+Y7xYf21h46MS6dN/Qe+jTvJN0BIEC+M7+rkbGPO2BXr8GZUN7YdvdIlXbuiPlN4QmprH/ZOK+qNSWdVq6/a+nk/8Ce0/gqzdW6Uh0BqFvf0wOFR4vHOikvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=Bx4ECKGQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=klWqRZJO; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1739295751; c=relaxed/simple;
+	bh=1UsSa4/f/v9TaRHxWYvjmMgEEdOP7dXjZe2KyzvJqkE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d5NoheSK39211xEfv+5/fBogDW3AwzMGlIKvGl81mqvls2J7TN/AQ/T5L7fFgPzwcXuXP+KPopSpPWPzuvA78m/azInz1Z25K+Ce9YSTzIrMe/OUhbpi6tZNzCbb9ffX9EqbG2kRsN4izmTJpPRtOG7LPdaYgmD/NNfFhbnFjKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LW7kT8Wk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="Bx4ECKGQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="klWqRZJO"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id 581C011400EA;
-	Tue, 11 Feb 2025 12:41:46 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Tue, 11 Feb 2025 12:41:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1739295706;
-	 x=1739382106; bh=nv/+K3v73BFIxVV/VmtwVsySnWMnTNl2C8GVI0us/tw=; b=
-	Bx4ECKGQT4jbM9xgSSk0gAiEG03RWAgQXPy4GmuzYP1pGgEQjPNunsCRA3v3SFiy
-	D1o/idHOIw2YZteeSKtr0P5/3zvEMCzp1v1k3d6rAfd4LX/+YLGrlnFP3STQGJWx
-	BRPchl8nxX01c2wsbXCrcbhPXYCcCbYeLjeZ2kKr3Yn0hVmxUQbUFyCjsdLq2h1Y
-	2QzbDps83v2LqY7TZqOChrZZJIjWx8Uvq4o7SWNz9OiyFqUqc5lObNHIwlQnVGEF
-	73oVc4+h+UHLC++JLvv78m58PQ5NMlVEvumqzadewXNy01EmwkNpWL/ieAmkkMGz
-	sHfeQbBgo3D+74bWgHDz7A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739295706; x=
-	1739382106; bh=nv/+K3v73BFIxVV/VmtwVsySnWMnTNl2C8GVI0us/tw=; b=k
-	lWqRZJOaFsPCFes+fjuriXVuqKdOhVzGr5rnQ+XgGshqmrGToiYbdG/0eAh+4nT2
-	odSp4WaHqjHtcHPiC8ODRPyp4RgcjX3XNGOPrYXY7p07i1kC8DOAHX22FiDrRroX
-	u7wdHN03Ys40PxhBQT8XLdBpP24ENrCKzT2r1+hCj0BYcCqgSUL8xFgzn2NCyIIu
-	3qpa5wb+HFRvZ3JvFIpBorQv0UxBB/vACG7nmIz8Ic/j/erRowDqzHujk0wCmE3k
-	5F+KQIDh0YCLNZyNwrfWal39RMOpMOKQzPY5WLtp4lpr5phQThKr3NPk2ZgWYQCW
-	ngKZE7z/bgc1TiMVgI45Q==
-X-ME-Sender: <xms:2YurZ2SBjG-oDIbfC1NklnnDkCDYultpWZarcKdilxytBKI4oT54MQ>
-    <xme:2YurZ7wLOQP0tBokBBfBuJpja5m1rLcUibJZ9bykEImnPHEiW8gCtP8UPE2GiCWNy
-    eOu0T8AF6QSfYmiIuM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudeivdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhepleevvdeihfffgeel
-    ieeugedtiefggeelledtheektdduudeggeefheeuleduvdehnecuffhomhgrihhnpehgih
-    hthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquh
-    gvsggsrdgtrgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgurdgtohhmpdhrtghpth
-    htohepshgrmhhithholhhvrghnvghnsehgohhoghhlvgdrtghomhdprhgtphhtthhopehl
-    khhmlhesjhhohhhnrhhofihlvgihrdhmvgdprhgtphhtthhopehkvggvsheskhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtoheplhgvnhgssehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehllhhvmheslhhishhtshdrlhhinhhugidruggv
-    vhdprhgtphhtthhopehprghttghhvghssehlihhsthhsrdhlihhnuhigrdguvghv
-X-ME-Proxy: <xmx:2YurZz0_hXD_ut2rIRPTag6aCQEgpM322OuflG9o4gvypQdfsSUolA>
-    <xmx:2YurZyAnrBYlhNEmY-kXK_SO-OjgFC4-3UkfLWqYUfLlaGIYhU_8hw>
-    <xmx:2YurZ_gsN2CjfcV29-sAIwAcr5pFb1zSre-PtG13YhS6PVdy-sMDtA>
-    <xmx:2YurZ-qRa49YoFR7S09TteGigx9HjHYhpGCen0LpM7ZZeBKjpiDczg>
-    <xmx:2ourZ4bInq3Wxcg_sVANOlqFbeNIVJBQ-JsI0m4MsEWmB0VJYetfxVPr>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 9B53C3C0066; Tue, 11 Feb 2025 12:41:45 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LW7kT8Wk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6009EC4CEDD;
+	Tue, 11 Feb 2025 17:42:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739295750;
+	bh=1UsSa4/f/v9TaRHxWYvjmMgEEdOP7dXjZe2KyzvJqkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LW7kT8WkmOHtL0Z30DwsIVkregzvde02eXxSyWeZX3qnfU4U3FBcV2gucG+gCtDNx
+	 QmLB9YODxGorHq8O1/zg+h9DmedKJbpyUViAwCPhNW/VKSYzHtL3XrpFNlw78XY/pO
+	 oBcrDPmOME4V12yXxFye9iAPJHxul2uf00rEwTh/Iyyh+28R5nBSTmGeKRQEdI+fbT
+	 nu6efZsZWwh3ugYa19gj3kBEVWR32AWOFXIcKnyKZyYETpzbm97T73CPNa+r+SnC3x
+	 LEhc0sB8I0xTkcpZjXlWEb0oJplmlYgmva4n/PDdBYH6U6F1vxB6kTcqqySZBus41X
+	 Y1IGaZJOaBQvA==
+Date: Tue, 11 Feb 2025 09:42:28 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v5 6/8] perf report: Add --latency flag
+Message-ID: <Z6uMBAG0hePL9JV3@google.com>
+References: <cover.1738772628.git.dvyukov@google.com>
+ <eb32b9b13856b0d508836b61b3e8377aef9163a3.1738772628.git.dvyukov@google.com>
+ <Z6WBsruddcx0SFV5@google.com>
+ <CACT4Y+afC5WfTMaKGtg760PS5oXkkurzAyHVyKr9TsPs9RU2DQ@mail.gmail.com>
+ <Z6qhjFs0YOMTzk9W@google.com>
+ <CACT4Y+brgj5vRoxQtZ76hUVcHWUJJ2u_8n89EwuTAoyXXbGDCw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 11 Feb 2025 12:41:25 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Nathan Chancellor" <nathan@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Len Brown" <lenb@kernel.org>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- "Limonciello, Mario" <mario.limonciello@amd.com>,
- "Kees Cook" <kees@kernel.org>, "Sami Tolvanen" <samitolvanen@google.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, patches@lists.linux.dev,
- stable@vger.kernel.org, "John Rowley" <lkml@johnrowley.me>
-Message-Id: <f9bae655-2835-4623-b18e-1d370dd220d5@app.fastmail.com>
-In-Reply-To: <52c49252-7a81-4d27-a8a9-b2f1e5f837df@app.fastmail.com>
-References: 
- <20250210-acpi-platform_profile-fix-cfi-violation-v3-1-ed9e9901c33a@kernel.org>
- <52c49252-7a81-4d27-a8a9-b2f1e5f837df@app.fastmail.com>
-Subject: Re: [PATCH v3] ACPI: platform-profile: Fix CFI violation when accessing sysfs
- files
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+brgj5vRoxQtZ76hUVcHWUJJ2u_8n89EwuTAoyXXbGDCw@mail.gmail.com>
+
+On Tue, Feb 11, 2025 at 09:42:16AM +0100, Dmitry Vyukov wrote:
+> On Tue, 11 Feb 2025 at 02:02, Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Fri, Feb 07, 2025 at 08:23:58AM +0100, Dmitry Vyukov wrote:
+> > > On Fri, 7 Feb 2025 at 04:44, Namhyung Kim <namhyung@kernel.org> wrote:
+[SNIP]
+> > > > > @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
+> > > > >       return 0;
+> > > > >  }
+> > > > >
+> > > > > -int hpp_dimension__add_output(unsigned col)
+> > > > > +int hpp_dimension__add_output(unsigned col, bool implicit)
+> > > > >  {
+> > > > > +     struct hpp_dimension *hd;
+> > > > > +
+> > > > >       BUG_ON(col >= PERF_HPP__MAX_INDEX);
+> > > > > -     return __hpp_dimension__add_output(&perf_hpp_list, &hpp_sort_dimensions[col]);
+> > > > > +     hd = &hpp_sort_dimensions[col];
+> > > > > +     if (implicit && !hd->was_taken)
+> > > > > +             return 0;
+> > > >
+> > > > I don't think you need these implicit and was_taken things.
+> > > > Just removing from the sort list when it's unregistered seems to work.
+> > > >
+> > > > ---8<---
+> > > > @@ -685,6 +685,7 @@ void perf_hpp_list__prepend_sort_field(struct perf_hpp_list *list,
+> > > >  static void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
+> > > >  {
+> > > >         list_del_init(&format->list);
+> > > > +       list_del_init(&format->sort_list);
+> > > >         fmt_free(format);
+> > > >  }
+> > > >
+> > > > ---8<---
+> > >
+> > > It merely suppresses the warning, but does not work the same way. See
+> > > this for details:
+> > > https://lore.kernel.org/all/CACT4Y+ZREdDL7a+DMKGFGae1ZjX1C8uNRwCGF0c8iUJtTTq0Lw@mail.gmail.com/
+> >
+> > But I think it's better to pass --latency option rather than adding it
+> > to -s option.  If you really want to have specific output fields, then
+> > please use -F latency,sym instead.
+> >
+> > Also I've realized that it should add one sort key in setup_overhead()
+> > to support hierarchy mode properly.  Something like this?
+> >
+> > Thanks,
+> > Namhyung
+> >
+> >
+> > ---8<---
+> > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > index 2b6023de7a53ae2e..329c2e9bbc69a725 100644
+> > --- a/tools/perf/util/sort.c
+> > +++ b/tools/perf/util/sort.c
+> > @@ -3817,22 +3817,15 @@ static char *setup_overhead(char *keys)
+> >                 return keys;
+> >
+> >         if (symbol_conf.prefer_latency) {
+> > -               keys = prefix_if_not_in("overhead", keys);
+> > -               keys = prefix_if_not_in("latency", keys);
+> > -               if (symbol_conf.cumulate_callchain) {
+> > -                       keys = prefix_if_not_in("overhead_children", keys);
+> > +               if (symbol_conf.cumulate_callchain)
+> >                         keys = prefix_if_not_in("latency_children", keys);
+> > -               }
+> > -       } else if (!keys || (!strstr(keys, "overhead") &&
+> > -                       !strstr(keys, "latency"))) {
+> > -               if (symbol_conf.enable_latency)
+> > +               else
+> >                         keys = prefix_if_not_in("latency", keys);
+> > -               keys = prefix_if_not_in("overhead", keys);
+> > -               if (symbol_conf.cumulate_callchain) {
+> > -                       if (symbol_conf.enable_latency)
+> > -                               keys = prefix_if_not_in("latency_children", keys);
+> > +       } else {
+> > +               if (symbol_conf.cumulate_callchain)
+> >                         keys = prefix_if_not_in("overhead_children", keys);
+> > -               }
+> > +               else
+> > +                       keys = prefix_if_not_in("overhead", keys);
+> >         }
+> >
+> >         return keys;
+> 
+> 
+> Have I decoded the patch correctly?
+> 
+>         if (symbol_conf.prefer_latency) {
+>                 if (symbol_conf.cumulate_callchain)
+>                         keys = prefix_if_not_in("latency_children", keys);
+>                 else
+>                         keys = prefix_if_not_in("latency", keys);
+>         } else {
+>                 if (symbol_conf.cumulate_callchain)
+>                         keys = prefix_if_not_in("overhead_children", keys);
+>                 else
+>                         keys = prefix_if_not_in("overhead", keys);
+>         }
+> 
+
+Yep, that's correct.
 
 
+> If I decoded the patch correctly, it's not what we want.
+> 
+> For the default prefer_latency case we also want to add overhead, that
+> was intentional for the --latency preset. It does not harm, and allows
+> to see/compare differences in latency and overhead.
+> Again, if a user wants something custom, there is no way to second
+> guess all possible intentions. For non-default cases, we just let the
+> user say what exactly they want, and we will follow that.
+> 
+> "latency" should be added even if cumulate_callchain.
 
-On Tue, Feb 11, 2025, at 10:05 AM, Mark Pearson wrote:
-> Hi Nathan
->
-> On Mon, Feb 10, 2025, at 9:28 PM, Nathan Chancellor wrote:
->> When an attribute group is created with sysfs_create_group(), the
->> ->sysfs_ops() callback is set to kobj_sysfs_ops, which sets the ->show()
->> and ->store() callbacks to kobj_attr_show() and kobj_attr_store()
->> respectively. These functions use container_of() to get the respective
->> callback from the passed attribute, meaning that these callbacks need to
->> be the same type as the callbacks in 'struct kobj_attribute'.
->>
->> However, the platform_profile sysfs functions have the type of the
->> ->show() and ->store() callbacks in 'struct device_attribute', which
->> results a CFI violation when accessing platform_profile or
->> platform_profile_choices under /sys/firmware/acpi because the types do
->> not match:
->>
->>   CFI failure at kobj_attr_show+0x19/0x30 (target: 
->> platform_profile_choices_show+0x0/0x140; expected type: 0x7a69590c)
->>
->> There is no functional issue from the type mismatch because the layout
->> of 'struct kobj_attribute' and 'struct device_attribute' are the same,
->> so the container_of() cast does not break anything aside from CFI.
->>
->> Change the type of platform_profile_choices_show() and
->> platform_profile_{show,store}() to match the callbacks in
->> 'struct kobj_attribute' and update the attribute variables to match,
->> which resolves the CFI violation.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: a2ff95e018f1 ("ACPI: platform: Add platform profile support")
->> Reported-by: John Rowley <lkml@johnrowley.me>
->> Closes: https://github.com/ClangBuiltLinux/linux/issues/2047
->> Tested-by: John Rowley <lkml@johnrowley.me>
->> Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
->> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
->> ---
->> Changes in v3:
->> - Rebase on 6.14-rc1, which includes updates to the driver to address
->>   Greg's previous concerns but this change is still needed for the
->>   legacy sysfs interface. v2 can be used for the stable backport.
->> - Link to v2: 
->> https://lore.kernel.org/r/20241118-acpi-platform_profile-fix-cfi-violation-v2-1-62ff952804de@kernel.org
->>
->> Changes in v2:
->> - Rebase on linux-pm/acpi
->> - Pick up Sami's reviewed-by tag
->> - Adjust wording around why there is no functional issue from the
->>   mismatched types
->> - Link to v1: 
->> https://lore.kernel.org/r/20240819-acpi-platform_profile-fix-cfi-violation-v1-1-479365d848f6@kernel.org
->> ---
->>  drivers/acpi/platform_profile.c | 26 +++++++++++++-------------
->>  1 file changed, 13 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/acpi/platform_profile.c 
->> b/drivers/acpi/platform_profile.c
->> index fc92e43d0fe9..1b6317f759f9 100644
->> --- a/drivers/acpi/platform_profile.c
->> +++ b/drivers/acpi/platform_profile.c
->> @@ -260,14 +260,14 @@ static int _aggregate_choices(struct device *dev, 
->> void *data)
->> 
->>  /**
->>   * platform_profile_choices_show - Show the available profile choices 
->> for legacy sysfs interface
->> - * @dev: The device
->> + * @kobj: The kobject
->>   * @attr: The attribute
->>   * @buf: The buffer to write to
->>   *
->>   * Return: The number of bytes written
->>   */
->> -static ssize_t platform_profile_choices_show(struct device *dev,
->> -					     struct device_attribute *attr,
->> +static ssize_t platform_profile_choices_show(struct kobject *kobj,
->> +					     struct kobj_attribute *attr,
->>  					     char *buf)
->>  {
->>  	unsigned long aggregate[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
->> @@ -333,14 +333,14 @@ static int _store_and_notify(struct device *dev, 
->> void *data)
->> 
->>  /**
->>   * platform_profile_show - Show the current profile for legacy sysfs interface
->> - * @dev: The device
->> + * @kobj: The kobject
->>   * @attr: The attribute
->>   * @buf: The buffer to write to
->>   *
->>   * Return: The number of bytes written
->>   */
->> -static ssize_t platform_profile_show(struct device *dev,
->> -				     struct device_attribute *attr,
->> +static ssize_t platform_profile_show(struct kobject *kobj,
->> +				     struct kobj_attribute *attr,
->>  				     char *buf)
->>  {
->>  	enum platform_profile_option profile = PLATFORM_PROFILE_LAST;
->> @@ -362,15 +362,15 @@ static ssize_t platform_profile_show(struct device *dev,
->> 
->>  /**
->>   * platform_profile_store - Set the profile for legacy sysfs interface
->> - * @dev: The device
->> + * @kobj: The kobject
->>   * @attr: The attribute
->>   * @buf: The buffer to read from
->>   * @count: The number of bytes to read
->>   *
->>   * Return: The number of bytes read
->>   */
->> -static ssize_t platform_profile_store(struct device *dev,
->> -				      struct device_attribute *attr,
->> +static ssize_t platform_profile_store(struct kobject *kobj,
->> +				      struct kobj_attribute *attr,
->>  				      const char *buf, size_t count)
->>  {
->>  	unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
->> @@ -401,12 +401,12 @@ static ssize_t platform_profile_store(struct device *dev,
->>  	return count;
->>  }
->> 
->> -static DEVICE_ATTR_RO(platform_profile_choices);
->> -static DEVICE_ATTR_RW(platform_profile);
->> +static struct kobj_attribute attr_platform_profile_choices = 
->> __ATTR_RO(platform_profile_choices);
->> +static struct kobj_attribute attr_platform_profile = 
->> __ATTR_RW(platform_profile);
->> 
->>  static struct attribute *platform_profile_attrs[] = {
->> -	&dev_attr_platform_profile_choices.attr,
->> -	&dev_attr_platform_profile.attr,
->> +	&attr_platform_profile_choices.attr,
->> +	&attr_platform_profile.attr,
->>  	NULL
->>  };
->> 
->>
->> ---
->> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
->> change-id: 20240819-acpi-platform_profile-fix-cfi-violation-de278753bd5f
->>
->> Best regards,
->> -- 
->> Nathan Chancellor <nathan@kernel.org>
->
-> Just a note to say thank you for noticing my email address change - the 
-> old lenovo one was awful to use so I dropped it a while back, but it 
-> meant I missed your first two patches (my mail filters for the list 
-> should have caught it and I'll have to figure out why not...)
->
-> From the V1 patch there was a question about why it was done this way: 
-> I believe I just copied how it seems to be done everywhere else in the 
-> kernel. I can't remember what I used as a reference exactly, but I went 
-> and checked a few random drivers and it seems to be everywhere.
->
-> Patch looks fine (I'd like to try it out on my system - will aim to do 
-> that today). I didn't know what CFI was (and have lightly educated 
-> myself now). 
-> Is there a better way to fix this so it's common across all drivers 
-> somehow? Updating every individual instance is going to be a lot.
->
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->
-Also:
-Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Please note that it just sets the sort key - which column you want to
+order the result.  The output fields for overhead and children will be
+added in perf_hpp__init() if you remove the 'was_taken' logic.  So I
+think this change will have the same output with that.
 
-Mark
+> 
+> For the !prefer_latency case, we don't want to mess with
+> overhead/latency fields if the user specified any of them explicitly.
+> Otherwise this convenience part gets in the user's way and does not
+> allow them to do what they want. User says "I want X" and perf says
+> "screw you, I will give you Y instead, and won't allow you to possibly
+> do X".
+
+That's what -F option does.  The -s option used to specify how to group
+the histogram entries and it will add 'overhead' (and/or 'latency') if
+it's not even requested.  So I think it's ok to add more output column
+when -s option is used.
+
+But unfortunately, using -F and -s together is confusing and change the
+meaning of -s option - it now says how it sort the result.
+
+> 
+> And see above: -F does not work with --hierarchy, so this part is unskippable.
+
+Yep, but I mean it fixes --hierarchy and --latency.  I'm thinking of a
+way to support -F and --hierarchy in general.
+
+Thanks,
+Namhyung
+
