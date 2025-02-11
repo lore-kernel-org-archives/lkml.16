@@ -1,35 +1,35 @@
 Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5F31E9B17;
-	Tue, 11 Feb 2025 06:53:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24E61E9B23;
+	Tue, 11 Feb 2025 06:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739256793; cv=none; b=lWYrkHDvnNTfteFdcdCcLFf68ntWkxXV+itMUDbLTAhyXeKvAo4BWDhzDE5YimeWA5Zw3juC5EjCx6XuM2vGFFUbnj4B5sqAElYBtzObvfgOA3aI98FpVYR15ZgFUzQjIMqIioEXFL5qv+xLCL63BoF/cLDJUOykbPaULUC3cUg=
+	t=1739256794; cv=none; b=HenSZiyYDUlictnKuPOtZtGBw+yP5oBqEqr18oamGmd+q3hF4LhfjSJx4BaP14xlUlGIgUk+CL3lhJk0JmQSU45TYDPW2zDgdj2y+dquyPtbSxy0wgwRuREfqCler/ENIg4s3VLLRiN3eUdfbL+GxRy/hBkM554mbRiftVG996w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739256793; c=relaxed/simple;
-	bh=IB7avKqpVovtyYt3B+xnMLSza+KzVisN0RPkQRbQuS8=;
+	s=arc-20240116; t=1739256794; c=relaxed/simple;
+	bh=VRmUa/s3Nl9xiy/3IgREQzt2mmD318TmEYFUI0lfwDQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sTkwHOQ38r0h0jjM0ICuoCjbPByUn0Vrs8cUEAKO0sPYHNcQSrVPB2GTLVL0nyO9XV05ulK9l0bSZ4AKSZXdmFve5xBBQBpcuzBrE3Iu/HXxOG7TTSMKDItUvbZDcuOE6TnCGjWt7JR2y5yafNeR8Mi1LnACtpkG39pIbEUxKFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=NIe33w8+; arc=none smtp.client-ip=217.92.40.78
+	 MIME-Version; b=Sg06lYjcLTflAke1nz2u/T3aOYinVz3sN47fiUaDRqg0UKR4decReSXkeWl6HLjLHQUaFHSKyJRFItskPFE8PsssocZnun7O8KKIhCwtS4fvftXABquyjuP9DUd0rOIU1aV6XCaQ+1/gFmfv/XASDNGN/F93AfOUtMip8VnbBUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=Uj41sTPV; arc=none smtp.client-ip=217.92.40.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="NIe33w8+"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7DA1E1480388;
-	Tue, 11 Feb 2025 07:53:09 +0100 (CET)
+	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="Uj41sTPV"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 372FF1487178;
+	Tue, 11 Feb 2025 07:53:10 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
-	t=1739256789;
+	t=1739256790;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RpKbxzsb7RKOzJwg1Uq2SN9OBeCYnqQPSZz6F1//cF8=;
-	b=NIe33w8+6L1Z4pJRrUOakrYKPKkAMwv0sWpdx5l+3bIRD1REV744LKrimk8dzE67GmIIz0
-	gDLYzeMDCtZ4aGIWUuk8FGpnTFiNXzh41xY4HcwIjk+FOdoOSJ6D+6fph9X3EoS1hXIYvW
-	9GnU9C6nZtk8HgoaiwcU6MH8klqK+1HmD0wv7T+WeUmksq/NoDYpGs2bbL9qfdw5+yrMz/
-	gPstDeXz04Hb8YHPcYhQeNIzSCygeKKy4ro1py8nEropB22myO/5p/y0XuUBC8qmy4lxA3
-	NwWa2506ksdgOsW6dW/JjKTDqBbK5tx3tmIl6bV4aaI6ixPuti/fnG/LfB25yg==
+	bh=kcrBcoZxZD0KOSfIajrWXKnkY7Tho0NlrAQP/789iY8=;
+	b=Uj41sTPVbuELc7zWPiWuQOLNaPqUKRlyhq7COUvGzHhUjh4zIP9i1BucViH/E6nL7iezJ/
+	u06N3hZn7t+yzEdzw/0kEeiZjBAJWn16TO8Z7Mmuv2MyUhwPRyY4mRviZ2Xz7yjzTjrAug
+	jBzigh7V2l4XHPK54bBjG2r2c0CfHhDxig+XDrCO5GstJPEtcWlOzKgPS8Ez+MXYtpqDU6
+	RhY+is7N+3QPE3EChkE+Kn5Rh/ZZ1ssauiFM4FfZV/1H3y3ZuBSOsQtReuzFOkaME875Fx
+	zG2iqSZpUAWIR9vIJ0eAHd03RzQOx1xDQNpGzPfgAX28PUgGlzDiEHVe1dSRhg==
 From: Alexander Dahl <ada@thorsis.com>
 To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
@@ -38,16 +38,17 @@ Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
 	devicetree@vger.kernel.org,
 	linux-clk@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Subject: [PATCH v2 13/16] ARM: dts: microchip: sam9x60: Add OTPC node
-Date: Tue, 11 Feb 2025 07:53:01 +0100
-Message-Id: <20250211065304.5019-1-ada@thorsis.com>
+	Conor Dooley <conor+dt@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 14/16] ARM: dts: microchip: sam9x60_curiosity: Enable OTP Controller
+Date: Tue, 11 Feb 2025 07:53:02 +0100
+Message-Id: <20250211065304.5019-2-ada@thorsis.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250210164506.495747-1-ada@thorsis.com>
+In-Reply-To: <20250211065304.5019-1-ada@thorsis.com>
 References: <20250210164506.495747-1-ada@thorsis.com>
+ <20250211065304.5019-1-ada@thorsis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,51 +58,33 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-The One-Time Programmable (OTP) Memory Controller (OTPC) is the secure
-interface between the system and the OTP memory.  It also features the
-Unique Product ID (UID) registers containing a unique serial number.
-
-See datasheet (DS60001579G) sections "7. Memories" and "23. OTP Memory
-Controller (OTPC)" for reference.
+Allows to access the OTP memory now, and Product UID later.
 
 Signed-off-by: Alexander Dahl <ada@thorsis.com>
 ---
 
 Notes:
     v2:
-    - squashed with patch adding the clock properties
+    - same as in v1, no changes
 
- arch/arm/boot/dts/microchip/sam9x60.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/microchip/at91-sam9x60_curiosity.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/microchip/sam9x60.dtsi b/arch/arm/boot/dts/microchip/sam9x60.dtsi
-index 1724b79967a17..af859f0b83a0f 100644
---- a/arch/arm/boot/dts/microchip/sam9x60.dtsi
-+++ b/arch/arm/boot/dts/microchip/sam9x60.dtsi
-@@ -15,6 +15,7 @@
- #include <dt-bindings/clock/microchip,sam9x60-pmc.h>
- #include <dt-bindings/mfd/at91-usart.h>
- #include <dt-bindings/mfd/atmel-flexcom.h>
-+#include <dt-bindings/nvmem/microchip,sama7g5-otpc.h>
+diff --git a/arch/arm/boot/dts/microchip/at91-sam9x60_curiosity.dts b/arch/arm/boot/dts/microchip/at91-sam9x60_curiosity.dts
+index b9ffd9e5faacc..c110a8e87568a 100644
+--- a/arch/arm/boot/dts/microchip/at91-sam9x60_curiosity.dts
++++ b/arch/arm/boot/dts/microchip/at91-sam9x60_curiosity.dts
+@@ -252,6 +252,10 @@ ethernet-phy@0 {
+ 	};
+ };
  
- / {
- 	#address-cells = <1>;
-@@ -157,6 +158,15 @@ sdmmc1: sdio-host@90000000 {
- 			status = "disabled";
- 		};
- 
-+		otpc: efuse@eff00000 {
-+			compatible = "microchip,sam9x60-otpc", "syscon";
-+			reg = <0xeff00000 0xec>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			clocks = <&pmc PMC_TYPE_CORE SAM9X60_PMC_MAIN_RC>, <&pmc PMC_TYPE_PERIPHERAL 46>;
-+			clock-names = "main_rc_osc", "otpc_clk";
-+		};
++&otpc {
++	status = "okay";
++};
 +
- 		apb {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
+ &pinctrl {
+ 	adc {
+ 		pinctrl_adc_default: adc-default {
 -- 
 2.39.5
 
