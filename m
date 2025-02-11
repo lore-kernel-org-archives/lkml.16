@@ -1,219 +1,102 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280921E4106;
-	Tue, 11 Feb 2025 10:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E1A1F3FE7
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739268883; cv=none; b=OAO0oCUB+o6mtFovi0YLHysnumpCh8k/NBHxVbn1KpapNvSbGHA793hdz/Q27BUoBraEPdGRtIAyr3Bs9OTaJRGOmbYWL6nA6TvLVol8vbwTeIHUf8ewj0E3lCpynEIASUaysSc8g5Xr51u6GFE+f254zxTyQewlZuI8TSrlzXY=
+	t=1739268907; cv=none; b=TuwZZJ+j/caGr2h9frgIrd1Yow67t7oPN5z2IN28oNewo5Gw7SE1fCHxyvquW79rxgxJvxXtdd83iIYOtgoUjR3ziGyQtO6s5w3kW1p77b+P0SGLu+19MTQzmEe2K+rnqpVxFfO5iyOwslNZJounVUa+pmSv/3XWfqvPBdVnyT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739268883; c=relaxed/simple;
-	bh=FdlKOc8KBQzo2vzoUlO3ARAx1VI01bXrJQ9aJ5HAfVs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FTsI/UMgFXwdLD/RE/T8AbVx6YUCFK7t3M7RoIu7JForOmC4nyVmN30a1ZTlFxOANhLloSYl2rdgkSg5EaYUlkPjSEiEKs//xOMNoPGwFVrMgAf4kokHn0XE/cACIJbgu9eSkNr1JX/Bk7PSFa9/V2LQPUlRZTrxiW0yrHtCtlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oZ94Bng3; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739268907; c=relaxed/simple;
+	bh=+C96UP0QRfYDESgtwQi/x7lVhO/8MtE4PRXHDqVSHDs=;
+	h=Mime-Version:Subject:From:To:CC:Message-ID:Date:Content-Type:
+	 References; b=WJjCJavRbWaMqesq8gCR1niiB0V+dezmN0oww9fSKEARZnUl0VaD19Zjck9gHT0U2FM9NzQfuWIWdGU7R5+9qqsosfn0qCIb9hp1QZTQDLg+HxtjhYXrpMfAnS/VzG79Ufy/qGiOCTH3J0SvPN/qIPZ9jUG7gI0+3L1+ROrdJys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JteXxFBf; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oZ94Bng3"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B8vDth001448;
-	Tue, 11 Feb 2025 10:14:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hvearNOGES36ne3L//usoK4/zvPHiBAzHvBkYWI1NSE=; b=oZ94Bng387yK7UzO
-	4x5sAat/VWCliV7aLFvq8/ywV8Cb+Bu73pxzTIHW2HYGIyApOT4e7tDY44INj3ax
-	K346rxry25lLdgA6MtXfhMpcy1tMd+lv8aaKSfwuyDGMH59lngcCJLsBdH6wjnn8
-	y5CILiReIZ9hrQs1/+vyXEkmcpBzU3bP2G0aHY891W7RtrV7tPdQXW4VyTrTL+qw
-	CylVJvdTYs17PuscYBTf/wxAcxjzwyqVxuIGVab+Yj+5IGJQHga4ffU53tpjo0nf
-	xGeCGae31ipSAi2qjcgGLLsR6wKmUwtMCj0n0+yiqDA0S6blqWqV55ZSL36ioieM
-	2oiG6Q==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qepxkj8s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 10:14:24 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51BAENPo015150
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 10:14:23 GMT
-Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Feb
- 2025 02:14:16 -0800
-Message-ID: <c20ff2ea-5546-4e4a-b813-f5736696b042@quicinc.com>
-Date: Tue, 11 Feb 2025 18:14:14 +0800
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JteXxFBf"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250211101503epoutp03ce9fe862a3f8c3dc312e69471f8b59a8~jH9oz5uWf0872508725epoutp034
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:15:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250211101503epoutp03ce9fe862a3f8c3dc312e69471f8b59a8~jH9oz5uWf0872508725epoutp034
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739268903;
+	bh=+C96UP0QRfYDESgtwQi/x7lVhO/8MtE4PRXHDqVSHDs=;
+	h=Subject:Reply-To:From:To:CC:Date:References:From;
+	b=JteXxFBflGsKYe384luaIDCQoV6M/BC4DO34hxQECn4fqU40qdeHyUAqfQcwxqebM
+	 xUqDwKA0+k++EzMKZ/q2eZ6/EsIW+t7f+f+K9h/OrhI1Gioq6YuwLkVa2lVLdt/FOX
+	 z4yla37sMai6Mve4cKVyoW1d0YqJoWnTwSE/g47M=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20250211101502epcas5p4d71ddd73c52f1bc78fe7e3c9d534d650~jH9oUHowL2637626376epcas5p4z;
+	Tue, 11 Feb 2025 10:15:02 +0000 (GMT)
+Received: from epcpadp1new (unknown [182.195.40.141]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4Ysckt3zLCz4x9Q3; Tue, 11 Feb
+	2025 10:15:02 +0000 (GMT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/8] scsi: ufs: core: Add a vop to map clock frequency
- to gear speed
-To: =?UTF-8?B?UGV0ZXIgV2FuZyAo546L5L+h5Y+LKQ==?= <peter.wang@mediatek.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "avri.altman@wdc.com"
-	<avri.altman@wdc.com>,
-        "quic_rampraka@quicinc.com"
-	<quic_rampraka@quicinc.com>,
-        "quic_cang@quicinc.com" <quic_cang@quicinc.com>,
-        "quic_nguyenb@quicinc.com" <quic_nguyenb@quicinc.com>,
-        "quic_nitirawa@quicinc.com" <quic_nitirawa@quicinc.com>,
-        "bvanassche@acm.org"
-	<bvanassche@acm.org>,
-        "junwoo80.lee@samsung.com" <junwoo80.lee@samsung.com>,
-        "mani@kernel.org" <mani@kernel.org>,
-        "martin.petersen@oracle.com"
-	<martin.petersen@oracle.com>
-CC: "ebiggers@google.com" <ebiggers@google.com>,
-        "neil.armstrong@linaro.org"
-	<neil.armstrong@linaro.org>,
-        "linux-scsi@vger.kernel.org"
-	<linux-scsi@vger.kernel.org>,
-        "manivannan.sadhasivam@linaro.org"
-	<manivannan.sadhasivam@linaro.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "alim.akhtar@samsung.com"
-	<alim.akhtar@samsung.com>,
-        "linux-arm-msm@vger.kernel.org"
-	<linux-arm-msm@vger.kernel.org>,
-        "minwoo.im@samsung.com"
-	<minwoo.im@samsung.com>,
-        "James.Bottomley@HansenPartnership.com"
-	<James.Bottomley@HansenPartnership.com>
-References: <20250210100212.855127-1-quic_ziqichen@quicinc.com>
- <20250210100212.855127-4-quic_ziqichen@quicinc.com>
- <cb88b16e4207c649da8eba66f976c5039df7c77c.camel@mediatek.com>
-Content-Language: en-US
-From: Ziqi Chen <quic_ziqichen@quicinc.com>
-In-Reply-To: <cb88b16e4207c649da8eba66f976c5039df7c77c.camel@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: LN0kZQBdk9jqH1K5WUf7gOy93Bp8v9NC
-X-Proofpoint-ORIG-GUID: LN0kZQBdk9jqH1K5WUf7gOy93Bp8v9NC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_04,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- phishscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 impostorscore=0
- mlxlogscore=999 clxscore=1015 lowpriorityscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502110064
+Mime-Version: 1.0
+Subject: Re: [PATCH] usb: xhci: Initialize unassigned variables to fix
+ possible errors
+Reply-To: selvarasu.g@samsung.com
+Sender: Selvarasu G <selvarasu.g@samsung.com>
+From: Selvarasu G <selvarasu.g@samsung.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: "mathias.nyman@intel.com" <mathias.nyman@intel.com>,
+	"WeitaoWang-oc@zhaoxin.com" <WeitaoWang-oc@zhaoxin.com>,
+	"Thinh.Nguyen@synopsys.com" <Thinh.Nguyen@synopsys.com>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, JaeHun Jung
+	<jh0801.jung@samsung.com>, JUNG Daehwan <dh10.jung@samsung.com>, NAUSHAD
+	KOLLIKKARA <naushad@samsung.com>, Akash M <akash.m5@samsung.com>, Hyunsoon
+	Kim <h10.kim@samsung.com>, OH Eomji <eomji.oh@samsung.com>, ALIM AKHTAR
+	<alim.akhtar@samsung.com>, Thiagu Ramalingam <thiagu.r@samsung.com>,
+	Muhammed Ali K P <muhammed.ali@samsung.com>, Pritam Manohar Sutar
+	<pritam.sutar@samsung.com>, CPGS <cpgs@samsung.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <1296674576.21739268902551.JavaMail.epsvc@epcpadp1new>
+Date: Tue, 11 Feb 2025 17:37:13 +0900
+X-CMS-MailID: 20250211083713epcms5p719a589a7a973e0c81fca9c9c506f9d85
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250210131144epcas5p4a0599050f5973b495db0371021c21e27
+References: <CGME20250210131144epcas5p4a0599050f5973b495db0371021c21e27@epcms5p7>
+
+On 2/11/2025 11:28 AM, Greg KH wrote:
+> On Mon, Feb 10, 2025 at 06:41:23PM +0530, Selvarasu Ganesan wrote:
+>> Fix the following smatch errors:
+>>
+>> drivers/usb/host/xhci-mem.c:2060 xhci_add_in_port() error: unassigned variable 'tmp_minor_revision'
+>> drivers/usb/host/xhci-hub.c:71 xhci_create_usb3x_bos_desc() error: unassigned variable 'bcdUSB'
+>>
+>> Fixes: d9b0328d0b8b ("xhci: Show ZHAOXIN xHCI root hub speed correctly")
+>> Fixes: eb02aaf21f29 ("usb: xhci: Rewrite xhci_create_usb3_bos_desc()")
+> This should be two different changes, right?
+>
+> Please break it up and send as a patch series.
+>
+> thanks,
+>
+> greg k-h
 
 
+Hi Greg,
 
-On 2/11/2025 2:02 PM, Peter Wang (王信友) wrote:
-> On Mon, 2025-02-10 at 18:02 +0800, Ziqi Chen wrote:
->>
->> External email : Please do not click links or open attachments until
->> you have verified the sender or the content.
->>
->>
->> From: Can Guo <quic_cang@quicinc.com>
->>
->> Add a vop to map UFS host controller clock frequencies to the
->> corresponding
->> maximum supported UFS high speed gear speeds. During clock scaling,
->> we can
->> map the target clock frequency, demanded by devfreq, to the maximum
->> supported gear speed, so that devfreq can scale the gear to the
->> highest
->> gear speed supported at the target clock frequency, instead of just
->> scaling
->> up/down the gear between the min and max gear speeds.
->>
->> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
->> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
->> Signed-off-by: Can Guo <quic_cang@quicinc.com>
->> Reviewed-by: Bean Huo <beanhuo@micron.com>
->> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
->> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
->> ---
->> v2 ->v3:
->> 1. Remove the parameter 'gear' and use it as function return result.
->> 2. Change "vops" into "vop" in commit message.
->> ---
->>   drivers/ufs/core/ufshcd-priv.h | 8 ++++++++
->>   include/ufs/ufshcd.h           | 2 ++
->>   2 files changed, 10 insertions(+)
->>
->> diff --git a/drivers/ufs/core/ufshcd-priv.h
->> b/drivers/ufs/core/ufshcd-priv.h
->> index 0549b65f71ed..4da3e65c6735 100644
->> --- a/drivers/ufs/core/ufshcd-priv.h
->> +++ b/drivers/ufs/core/ufshcd-priv.h
->> @@ -277,6 +277,14 @@ static inline int
->> ufshcd_mcq_vops_config_esi(struct ufs_hba *hba)
->>          return -EOPNOTSUPP;
->>   }
->>
->> +static inline int ufshcd_vops_freq_to_gear_speed(struct ufs_hba
-> 
-> Hi Ziqi,
-> 
-> Gear speed type in struct ufs_pa_layer_attr is u32.
-> I think it would be better to unify the type here.
-> 
-> 
-Hi Peter,
+Thanks for your comments. Sure i will send as a patch series.
 
-I changed the type of new_gear since V3 sue to I use it as return result 
-of vop ufshcd_vops_freq_to_gear_speed(). I think you already find the 
-reason in patch 4/8 and 5/8. I think your suggestion in patch 5/8 is 
-make sense. Let me discuss more with you in the patch 5/8.
-
--Ziqi
-
-> 
->> *hba, unsigned long freq)
->> +{
->> +       if (hba->vops && hba->vops->freq_to_gear_speed)
->> +               return hba->vops->freq_to_gear_speed(hba, freq);
->> +
->> +       return -EOPNOTSUPP;
->> +}
->> +
->>   extern const struct ufs_pm_lvl_states ufs_pm_lvl_states[];
->>
->>   /**
->> diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
->> index f51d425696e7..cdb853f5b871 100644
->> --- a/include/ufs/ufshcd.h
->> +++ b/include/ufs/ufshcd.h
->> @@ -336,6 +336,7 @@ struct ufs_pwr_mode_info {
->>    * @get_outstanding_cqs: called to get outstanding completion queues
->>    * @config_esi: called to config Event Specific Interrupt
->>    * @config_scsi_dev: called to configure SCSI device parameters
->> + * @freq_to_gear_speed: called to map clock frequency to the max
->> supported gear speed
->>    */
->>   struct ufs_hba_variant_ops {
->>          const char *name;
->> @@ -387,6 +388,7 @@ struct ufs_hba_variant_ops {
->>                                         unsigned long *ocqs);
->>          int     (*config_esi)(struct ufs_hba *hba);
->>          void    (*config_scsi_dev)(struct scsi_device *sdev);
->> +       int (*freq_to_gear_speed)(struct ufs_hba *hba, unsigned long
->> freq);
->>
-> 
-> Please keep the indentation consistent too.
-> 
-> Thanks
-> Peter
-> 
->>   };
->>
->>   /* clock gating state  */
->> --
->> 2.34.1
->>
-> 
-
+Thanks,
+Selva
