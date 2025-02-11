@@ -1,106 +1,127 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53F624E4A0;
-	Tue, 11 Feb 2025 14:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EC324CEE7
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739283269; cv=none; b=aszJ5DREru+O0nD4T0FofyZF0wiaGatqrQNwjo4lsbMJ5H/GIRi/nfQ2fpAUvnK6WeUCDSHWjkujNjDz3wLS7v2ic3fXhNO7bQJduWFkWa0vTgreL0JIpXfSm3uSPjSQmjB6GJcQKhJavNfHgHbg6fB0NSK1OSDEKrzdjMeJwDQ=
+	t=1739283289; cv=none; b=PCHMKRSwGuZa1bWPEe2NFi0AMXTB9cIt+bauj3n11RJvEtw1bZKizLn2BcjSnqJwip6UxcUOaBNmZC+9hmus/NDszWr/LotpK0rp4wHaeOCPf/g3tJL1HSZ8NgOex2hy6KX7VH6J6cFHaNfJ+AgRDpQ1VFHzmU1dBUE1ltMRPxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739283269; c=relaxed/simple;
-	bh=SRlaHOYyJkMSzTpbixqpKGHDSFkBJLV3ojeT27kdJus=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VDRAsNHNRObFb8GBoUTBxHX8PlzyPkrFrKUcNuBcl+meq1sr0s2RHbYb4QWQirpbyx/63iUvYtPgwGAiQhyQy8tmXO3ZtmSLuvEChdkW88/MJrvXtx2lnOPTxaq8oBT6PD/s9tSGP1ndETruuXHmT/cl8W0+JXrDmbEpPSFrA5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pCc4SUw/; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739283289; c=relaxed/simple;
+	bh=4CVdvOldhfydbr6XKr0LsIeiOe+5c3WoavOE6Bs2Lms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nWR6Gk63f390GhsDUX86JzNqVWarp2gmz+OTBUoQu/uA2NS5b32Eb7usVz/KdBXMOoCxJ6z4yQxba6juUqjCf4ejLK6R9fY4vtpJOz2OGM8j27NkOsCi/N8ExArYFP9cQVvzRMOj3vc0NKWSUx1HgbIDl8AnVxueZzPT0AR2dwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Eo0iWBY4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pCc4SUw/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739283264;
-	bh=SRlaHOYyJkMSzTpbixqpKGHDSFkBJLV3ojeT27kdJus=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=pCc4SUw/Ubu6yJksuXeS2qH18Y2cxh6fWvR0tXevbQtqHbrzgUZZRIe6/56l30Mui
-	 gqZzzp5EYZriNBjXZHXvtwzOlSx1wQT4XtfUtaRS0xBYMVrK530G1Yj0YE+to2ji9U
-	 Y6G9FU3b3j3uO938jLkFyeBwRWFh77gcwpzg6kCikcjc+3R6NA2me6ddnohjdJAh43
-	 QvCTiCrcfBEWTRz7jFgNMY5uA2PKIf470tIFOR+KVQ4Er74VZYiah3TdRNt4OvzXtp
-	 Yj9/IPiciyHOaYL9GXjMPA1mi/Q3+1Q1YSPVgda1u7VXrvw4WDoqj5qObF3VsdOcep
-	 IuzInnMZCxjVA==
-Received: from yukiji.home (lfbn-tou-1-1147-231.w90-76.abo.wanadoo.fr [90.76.208.231])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eo0iWBY4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739283286;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CjgS7RmEbhQybrUkJqJ00BMkViVSCB7WiBicD2p7Lyk=;
+	b=Eo0iWBY4DOQfX7AlXLuqpA1q7LiLb5nXODfLoqnQApI9e9Y0dBKAN08NN8tOXa4ryVVGYy
+	/GFKPoRB6W7BMQAm1PBqedlKRuYjU5aCE1dEEqcTTHiM9+q0kDVLkwicGXGvkAJv3PIKnD
+	wHij7NaDMX5oAPGG7FW9w7rnc12c/sw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-339-1adu70kHMzS5NjeUYlOhVA-1; Tue,
+ 11 Feb 2025 09:14:43 -0500
+X-MC-Unique: 1adu70kHMzS5NjeUYlOhVA-1
+X-Mimecast-MFC-AGG-ID: 1adu70kHMzS5NjeUYlOhVA
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: laeyraud)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id D2DD217E1249;
-	Tue, 11 Feb 2025 15:14:23 +0100 (CET)
-From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Date: Tue, 11 Feb 2025 15:13:09 +0100
-Subject: [PATCH v4 2/3] drm/panfrost: Add support for Mali on the MT8370
- SoC
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 581BD1801BE7;
+	Tue, 11 Feb 2025 14:14:42 +0000 (UTC)
+Received: from pauld.westford.csb (unknown [10.22.65.9])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 35A4F1801756;
+	Tue, 11 Feb 2025 14:14:39 +0000 (UTC)
+Date: Tue, 11 Feb 2025 09:14:37 -0500
+From: Phil Auld <pauld@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH] sched/isolation: Make use of more than one housekeeping
+ cpu
+Message-ID: <20250211141437.GA349314@pauld.westford.csb>
+References: <20250211140104.420739-1-pauld@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250211-mt8370-enable-gpu-v4-2-77deb7a75c23@collabora.com>
-References: <20250211-mt8370-enable-gpu-v4-0-77deb7a75c23@collabora.com>
-In-Reply-To: <20250211-mt8370-enable-gpu-v4-0-77deb7a75c23@collabora.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Boris Brezillon <boris.brezillon@collabora.com>, 
- Steven Price <steven.price@arm.com>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739283261; l=1520;
- i=louisalexis.eyraud@collabora.com; s=20250113; h=from:subject:message-id;
- bh=SRlaHOYyJkMSzTpbixqpKGHDSFkBJLV3ojeT27kdJus=;
- b=t2jBv0Ox2nQXf4CZADMRuWiWUJA5JF75wfksRsCTyUeretvmJbzYufNJV+n62u4Df3Qh9Ck7a
- JL+X+MmYIzSAuvmzH9CpjOqYyIqmdgBC5NK/yBhLdJW4JMYDzTAhxDi
-X-Developer-Key: i=louisalexis.eyraud@collabora.com; a=ed25519;
- pk=CHFBDB2Kqh4EHc6JIqFn69GhxJJAzc0Zr4e8QxtumuM=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211140104.420739-1-pauld@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Add a compatible for the MediaTek MT8370 SoC, with an
-integrated ARM Mali G57 MC2 GPU (Valhall-JM, dual core),
-with the same platform data as MT8186 (one regulator, two power
-domains).
-Despite their different GPU architecture (making them not being
-compatible), the MT8186 platform data can still be used for MT8370
-because it only describes supplies, pm_domains and enablement of power
-management features in the panfrost driver.
 
-Reviewed-by: Steven Price <steven.price@arm.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
----
- drivers/gpu/drm/panfrost/panfrost_drv.c | 1 +
- 1 file changed, 1 insertion(+)
+Oops, sorry... meant "[PATCH]"
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index 0f3935556ac761adcd80197d87e8e478df436fd5..7b7e9f6f620659a7fdcb5d907ebc4f01eca876e0 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -859,6 +859,7 @@ static const struct of_device_id dt_match[] = {
- 	{ .compatible = "mediatek,mt8186-mali", .data = &mediatek_mt8186_data },
- 	{ .compatible = "mediatek,mt8188-mali", .data = &mediatek_mt8188_data },
- 	{ .compatible = "mediatek,mt8192-mali", .data = &mediatek_mt8192_data },
-+	{ .compatible = "mediatek,mt8370-mali", .data = &mediatek_mt8186_data },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, dt_match);
+On Tue, Feb 11, 2025 at 02:01:04PM +0000 Phil Auld wrote:
+> The exising code uses housekeeping_any_cpu() to select a cpu for
+> a given housekeeping task. However, this often ends up calling
+> cpumask_any_and() which is defined as cpumask_first_and() which has
+> the effect of alyways using the first cpu among those available.
+> 
+> The same applies when multiple NUMA nodes are involved. In that
+> case the first cpu in the local node is chosen which does provide
+> a bit of spreading but with multiple HK cpus per node the same
+> issues arise.
+> 
+> Spread the HK work out by having housekeeping_any_cpu() and
+> sched_numa_find_closest() use cpumask_any_and_distribute()
+> instead of cpumask_any_and().
+> 
+> Signed-off-by: Phil Auld <pauld@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Frederic Weisbecker <frederic@kernel.org>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  kernel/sched/isolation.c | 2 +-
+>  kernel/sched/topology.c  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+> index 81bc8b329ef1..93b038d48900 100644
+> --- a/kernel/sched/isolation.c
+> +++ b/kernel/sched/isolation.c
+> @@ -40,7 +40,7 @@ int housekeeping_any_cpu(enum hk_type type)
+>  			if (cpu < nr_cpu_ids)
+>  				return cpu;
+>  
+> -			cpu = cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
+> +			cpu = cpumask_any_and_distribute(housekeeping.cpumasks[type], cpu_online_mask);
+>  			if (likely(cpu < nr_cpu_ids))
+>  				return cpu;
+>  			/*
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index c49aea8c1025..94133f843485 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -2101,7 +2101,7 @@ int sched_numa_find_closest(const struct cpumask *cpus, int cpu)
+>  	for (i = 0; i < sched_domains_numa_levels; i++) {
+>  		if (!masks[i][j])
+>  			break;
+> -		cpu = cpumask_any_and(cpus, masks[i][j]);
+> +		cpu = cpumask_any_and_distribute(cpus, masks[i][j]);
+>  		if (cpu < nr_cpu_ids) {
+>  			found = cpu;
+>  			break;
+> -- 
+> 2.47.1
+> 
+> 
 
 -- 
-2.48.1
 
