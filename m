@@ -1,546 +1,304 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC432505A8
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C521F940A
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739294612; cv=none; b=T+bUBw0+Cnx0cpL4aqOjL9uOKwUksORKeinjwxT4jLXCp6y/edu+9dYbqWfwwgIulBsZcC8zirWb3mqkf9MYl6aVWWJupRoa9nuyoaRZucFjoBQ5SGxJYywKvmharhTsQwENbhKNBsBuCasQRKfL5K6rsXTbLAoOypi/2qS004k=
+	t=1739294682; cv=none; b=ncL+FKaEaezWs2Phg6XYMJDXzt8RSFAT8OSZXNfNY/vw81+l06ByLR9unQuWs+HJIZ3MeoQqkkrTxX+deHizhzajEwEQDnRVr+c86EMKnhxGRh4H9zlLQjL5KvVXFAn3xafmi+DcO6l7C+gKEZikm85KfAEnpA2z7kWzxfE4GIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739294612; c=relaxed/simple;
-	bh=kGtMUPBaQz4no6nA4w6zGTadql4DwRADhnQm8m//J80=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CfPSSyjKDynsvVfUrsZBuIauDpLiRx68E7bP15PPIhMj9HLeL12d57LdlNpBkNHZPJJtwrQhAZ/cNCP6CeW9hkLSTzn8MMArbLwt2yVlsD0GGzG18sKvfwqclAp2WcWzDRzfxskRCDMRI9Q/Yx4bzMsiA7HoR2z8Yiv1CIT1r5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L5WV6Pce; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739294682; c=relaxed/simple;
+	bh=KWS+cifqAmXXgbqnEdYquTPah30qhdgIioGdq82FNYk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZWzzzlfzor0WeC/l2Zre6w4as18AeTfX4MSOLuow6UJvZcqkQDNr3UPK/c9qBi6znRg2Roo3Nvji/JxN6wVF2AOvENS6l90NwFsKhkSAXb3UIN0G3u8DyunAkWfsNxvmALAiT7zEYgybrArVlQpIoOMVvj7+EJp2bhmiYSYlE+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=THQfb/Sq; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L5WV6Pce"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739294608;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=IFdI0HqM2qo96dlnrQjV65Xo80Jupeznp9WF8f62DyM=;
-	b=L5WV6PceHoKjg5+TceQ5QGgYWyX1zqasplA5jbDubJBAwvSC87PF2t+UHB0z18JlEjCAgP
-	h/eOwSIT8fqHFQidMf6Z64oRo7hTJtVBY6T/uZmyYiTqmuxguYj8VTTnDV4Zf2LlcTfQ32
-	xQJFADcc+/ayJIJlSZu+q0WNZX3bFdw=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-410-glD3PGuAP3GT0PC8Fj6ajg-1; Tue, 11 Feb 2025 12:23:26 -0500
-X-MC-Unique: glD3PGuAP3GT0PC8Fj6ajg-1
-X-Mimecast-MFC-AGG-ID: glD3PGuAP3GT0PC8Fj6ajg
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ab7ee92898fso33384566b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:23:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="THQfb/Sq"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f62cc4088so68673325ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:24:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739294679; x=1739899479; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=U6SXgYg7esmTxhwZTlIjFXRPb6oCtU1ku3PB/lUUVzA=;
+        b=THQfb/SqdVaN9LwYu3lHpQt6Bg6+3i0Pvo08vyyWl6KeJRipG42EKB3VE4bskYCa3l
+         qWksE2HmpUTKMxIiCBjIG/3iLJPlcDZ/0Rx2J2MDrmcq9weeu4CsH85rqnO1nXcZjYx7
+         RMi4tpiWNGJQE9u2JYrwzDUcYje5/HzsBT3MkhhU4yXGsY+4HycxEiIJ6J7ev7Gt5sn2
+         NxpSeARbAjDvAWpgYM8EjBLjDJimHVr1BHf743vALDCXAg06Gkg7BWBaiI7Ms7/CMm+7
+         FyO0jGC3eb7uCHcSY1ht2NACAB0fYbzMA8SZUGjy+ur/v5QiqKoqoDHdnTFxMtBQZR9t
+         GxjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739294605; x=1739899405;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1739294679; x=1739899479;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IFdI0HqM2qo96dlnrQjV65Xo80Jupeznp9WF8f62DyM=;
-        b=PtZZs275V4pueo15NZoPlsSPluVLqjamwbraP/52vsM20Hj+ulyIRwvG4kb84Qf7H4
-         Ey/mRqimnub/8laKFkHiNd6EFA+ueFm1exIp4TKJxkoUgxV6Up1BO7jrlTKiISeZ2UfM
-         BlWhmTsIc1n+5x8Skh7PG7+971hgnrrin0BKzU4rQsQol8kA0SPtcVs72lRvgfL3Iy42
-         wAFCPX93d0naiMAfaGZ5WVbTqv+GCafh9OM22zBK470WxhcMozN5J/eXiBvsGSAYjdmT
-         2Hl+WfO40Yp40lVeE9BVhs9mwlvsmFhvkxGI5ZcuTtZPuMJJSZQtpR/4Din05qT2Kr8i
-         cpfg==
-X-Forwarded-Encrypted: i=1; AJvYcCU96pxR2BR0tka55/+5FLRbBAujT+OANFpWNhFDqCr2j35bjMWtbtklr6DNCy+4vVaBRv7I6PyLfsseVCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxgaD5jIxGZH0GJXgxvUnM9VQv1dD6kjDUvbMRU2cNEfmwiHrA
-	GTDmNz+b9OCTxmoCSbeba4vp/A30CWuyuQL4w5R9XHpib4n/C8v3qXJrrEho05lztEgekL2v+uq
-	pVRQSvr92pblnYFaQ5yhsB6gQ+5p0RxTsTF3QfQVPLXIvIiE1w/V2+8fOcAtm
-X-Gm-Gg: ASbGncuxnd7iLyKLUHUthetaomMZiRgvr8LEzJiYKfLtjInidLbVj4IxSiKQ94Etb+d
-	RTzFApTYTAvCL+Ea5Rmw+r6fgR7/RDxFlw37VuenO2Ir2BKdCfBeXy7K6y3FnC3FBqZ914QlBYG
-	VWUH0IMw/P6LxvKeweleHQPoG3CmEX9ydcCw8/HU4oFOMJRGZV00BuhAA+Hw33y/CJaQ4gVBW2P
-	NsOqz/WEKIgTYyz/Ghv1kQwozFlL/6tcaIL7LksFA8L1u8y+lENBKMX5N6Pwn2c2MDKd1AbnKLe
-	UxMAcT+ncCJmI2XA+xIsJkuDC78pYDw=
-X-Received: by 2002:a17:907:3da7:b0:aaf:ada2:181e with SMTP id a640c23a62f3a-ab789b93692mr1572110366b.26.1739294604948;
-        Tue, 11 Feb 2025 09:23:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEjNIJYfhY0I/itQzKA3sjEyIYAGe+auhIUkvxbu2qr/21E+hlW9oj/R3HXbaF+nCqJevoX5w==
-X-Received: by 2002:a17:907:3da7:b0:aaf:ada2:181e with SMTP id a640c23a62f3a-ab789b93692mr1572104366b.26.1739294604396;
-        Tue, 11 Feb 2025 09:23:24 -0800 (PST)
-Received: from [127.0.0.2] (ip-217-030-074-039.aim-net.cz. [217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7ce2e91e9sm319924066b.117.2025.02.11.09.23.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 09:23:23 -0800 (PST)
-From: Andrey Albershteyn <aalbersh@redhat.com>
-X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
-Date: Tue, 11 Feb 2025 18:22:47 +0100
-Subject: [PATCH v3] fs: introduce getfsxattrat and setfsxattrat syscalls
+        bh=U6SXgYg7esmTxhwZTlIjFXRPb6oCtU1ku3PB/lUUVzA=;
+        b=hBTJsQFHwmwSpIKg/dGKY9O4agmgi+ozmA9rOpSlTTzEn1Tm3s3w829lscdzZMNvvX
+         JU7aOc2CmO+63/2tsvHZIqHctbACXVLQdqilRE+tTIgMT5UG1mai+MSQT/Q1ZSsmtZBh
+         Hbmzvvqv3mM8qW2Hkk/VRYsgpiBj25PaBYBKs5ABUaMnU6mf7wVgTwh5FKxyIvybY2wn
+         24JJOB+8Hf6FL1rCttijN6dN8ZeodGi4qIS30P/Cnb2xmjMaBMZRuxfUcK+JPI7mAYRP
+         1rpoqbpR2OIBxzfiIn6yaiFXufhd3IVBAY6io4IyRKeLrnIkxjpBomMDazutG/W6Bxwb
+         cpIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVKOfynpgKMTRsFbXPZHLaNdM9dc3dNQR613oQOJ/i7UsmyWYaCmvMNkq+4c4rnRXl5R9BNHRLM0fzjnq0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3Ev1O/+QSRraRfW4eeg4pnl/gN4iQ2GnnY3yIFrLptWVGTj/+
+	CtFvemX59a898ucoKXJJCNA/WKc2yu+2BbIa48RBtVN+S+/rj5DPWOkP7ZSYipRNh37hffRusEU
+	c/7NdoyNo6xVJpPvGQDfEBrKVtWMPwT+dfKwHqg==
+X-Gm-Gg: ASbGnctwn5w7lvji7M/45FfTA9/7qnG7ctx7J9TLy/evcIpWZnekksr5n2vQaaH4B4J
+	lzXn0xyscpgcDPZvK3vCMahdijZYCI5Ua/ypRnLwiCrCRUtwL2V6xdFWzaky/9RwjqBpAZaK2CT
+	0TDTV5NjOvtg3mM00QrljZDl5xEdQEow==
+X-Google-Smtp-Source: AGHT+IGmRUXrQTlIf9W4HKabU/xBKx/DTJE7QzDhgMGQDvFVAUo/kz1vNcNccn/atrBA/7YiFzEFo4a1RxFVzd8BNaI=
+X-Received: by 2002:a05:6a21:6b17:b0:1ed:a80e:932 with SMTP id
+ adf61e73a8af0-1ee5c83de1bmr74737637.34.1739294679456; Tue, 11 Feb 2025
+ 09:24:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250211-xattrat-syscall-v3-1-a07d15f898b2@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAGaHq2cC/2WNQQqDMBBFryKzboqZaKBd9R7FRWJGDRUtkxAUy
- d2bSnddvgf//QMCsacA9+oApuSDX5cC6lJBP5llJOFdYcAa21rKRmwmRjZRhD30Zp6FNlIq7dD
- Z9gZl9WYa/HYWn13hyYe48n4eJPzaXwvxr5VQSNFapWvXDLa3+HgRLzRfVx6hyzl/AJ7jsCKvA
- AAA
-X-Change-ID: 20250114-xattrat-syscall-6a1136d2db59
-To: Richard Henderson <richard.henderson@linaro.org>, 
- Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
- Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- "David S. Miller" <davem@davemloft.net>, 
- Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- =?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
- =?utf-8?q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
- Arnd Bergmann <arnd@arndb.de>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, 
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, 
- linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
- Andrey Albershteyn <aalbersh@redhat.com>, linux-xfs@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=17878; i=aalbersh@kernel.org;
- h=from:subject:message-id; bh=SqkP8/G1oYDx+Bj6L5gX0/0BdVjlyTqgdZDUwL5cxsI=;
- b=owJ4nJvAy8zAJea2/JXEGuOHHIyn1ZIY0le3d829OKMwJsJ35mVZg5JmR6FtW6u+zuDxO7PZy
- jzzctPtn6s6SlkYxLgYZMUUWdZJa01NKpLKP2JQIw8zh5UJZAgDF6cATOS5MsNvFsNokcuPPb5n
- HshtY1ngenvGK55NJ/h27pdWvb1D+/OaZwz/NB9NfsV0pLZd8WB+cWLkhD9vRJgXV87dKTs5a/b
- +D/47mQAyd0vW
-X-Developer-Key: i=aalbersh@kernel.org; a=openpgp;
- fpr=AE1B2A9562721A6FC4307C1F46A7EA18AC33E108
+References: <20250103-fix_cpu_hung-v1-1-a7b9b3893d44@quicinc.com>
+ <20250206103213.GB8855@e132581.arm.com> <a2d221a7-ca6d-4956-8537-bee39e89f61c@quicinc.com>
+In-Reply-To: <a2d221a7-ca6d-4956-8537-bee39e89f61c@quicinc.com>
+From: Mike Leach <mike.leach@linaro.org>
+Date: Tue, 11 Feb 2025 17:24:28 +0000
+X-Gm-Features: AWEUYZnowpZtnynJFEXqjgvxW0cjB3n9o8gMcQxWCocSbFlTqxgJUzvvcjSrNt4
+Message-ID: <CAJ9a7Vgre_3mkXB_xeVx5N9BqPTa2Ai4_8E+daDZ-yAUv44A9g@mail.gmail.com>
+Subject: Re: [PATCH] coresight-tmc: stop disabling tmc when flush timeout
+To: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Cc: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	James Clark <james.clark@linaro.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, kernel@quicinc.com, 
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Andrey Albershteyn <aalbersh@redhat.com>
+Hi,
 
-Introduce getfsxattrat and setfsxattrat syscalls to manipulate inode
-extended attributes/flags. The syscalls take parent directory fd and
-path to the child together with struct fsxattr.
+We are not seeing these problems on other systems with multiple ETMs.
 
-This is an alternative to FS_IOC_FSSETXATTR ioctl with a difference
-that file don't need to be open as we can reference it with a path
-instead of fd. By having this we can manipulated inode extended
-attributes not only on regular files but also on special ones. This
-is not possible with FS_IOC_FSSETXATTR ioctl as with special files
-we can not call ioctl() directly on the filesystem inode using fd.
+How are you using the system?
 
-This patch adds two new syscalls which allows userspace to get/set
-extended inode attributes on special files by using parent directory
-and a path - *at() like syscall.
+ Perf will strictly disable sources before sinks - which would mean
+that the ETMs will flush before the TMC requests a manual flush on
+stop.
+For sysfs use, we recommend the same, but even halting the TMC first
+should result in all sources being requested to flush at the same time
+(subject to propagation through connected trace funnels).
 
-Also, as vfs_fileattr_set() is now will be called on special files
-too, let's forbid any other attributes except projid and nextents
-(symlink can have an extent).
+On Fri, 7 Feb 2025 at 07:25, Yuanfang Zhang <quic_yuanfang@quicinc.com> wrote:
+>
+>
+>
+> On 2/6/2025 6:32 PM, Leo Yan wrote:
+> > Hi Yuanfang,
+> >
+> > On Fri, Jan 03, 2025 at 04:01:54PM +0800, Yuanfang Zhang wrote:
+> >>
+> >> When multiple ETMs are enabled simultaneously, the time required
+> >> to complete a flush in the process of reading the TMC device node
+> >> may exceed the default wait time of 100us.
+> >
 
-CC: linux-api@vger.kernel.org
-CC: linux-fsdevel@vger.kernel.org
-CC: linux-xfs@vger.kernel.org
-Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
----
-v1:
-https://lore.kernel.org/linuxppc-dev/20250109174540.893098-1-aalbersh@kernel.org/
+How do you know that it is the ETM flush process that is the issue?
+TMC ready can be delayed by issues in the memory system that prevent
+write to the memory buffer.
 
-Previous discussion:
-https://lore.kernel.org/linux-xfs/20240520164624.665269-2-aalbersh@redhat.com/
+The TMC flush complete will indicate completion of flush for all
+connected devices - so if flush complete is indicated by the TMC then
+a flush request cannot be the issue.
+With multiple ETMs, then the connected trace funnels arbitration will
+ensure flush is indicated complete on all connected inputs before
+transmitting to the output.
 
-XFS has project quotas which could be attached to a directory. All
-new inodes in these directories inherit project ID set on parent
-directory.
+The driver code to stop the TMC will first wait on flush complete
+before waiting on TMC ready.
 
-The project is created from userspace by opening and calling
-FS_IOC_FSSETXATTR on each inode. This is not possible for special
-files such as FIFO, SOCK, BLK etc. Therefore, some inodes are left
-with empty project ID. Those inodes then are not shown in the quota
-accounting but still exist in the directory. Moreover, in the case
-when special files are created in the directory with already
-existing project quota, these inode inherit extended attributes.
-This than leaves them with these attributes without the possibility
-to clear them out. This, in turn, prevents userspace from
-re-creating quota project on these existing files.
----
-Changes in v3:
-- Remove unnecessary "dfd is dir" check as it checked in user_path_at()
-- Remove unnecessary "same filesystem" check
-- Use CLASS() instead of directly calling fdget/fdput
-- Link to v2: https://lore.kernel.org/r/20250122-xattrat-syscall-v2-1-5b360d4fbcb2@kernel.org
----
- arch/alpha/kernel/syscalls/syscall.tbl      |  2 +
- arch/arm/tools/syscall.tbl                  |  2 +
- arch/arm64/tools/syscall_32.tbl             |  2 +
- arch/m68k/kernel/syscalls/syscall.tbl       |  2 +
- arch/microblaze/kernel/syscalls/syscall.tbl |  2 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   |  2 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   |  2 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   |  2 +
- arch/parisc/kernel/syscalls/syscall.tbl     |  2 +
- arch/powerpc/kernel/syscalls/syscall.tbl    |  2 +
- arch/s390/kernel/syscalls/syscall.tbl       |  2 +
- arch/sh/kernel/syscalls/syscall.tbl         |  2 +
- arch/sparc/kernel/syscalls/syscall.tbl      |  2 +
- arch/x86/entry/syscalls/syscall_32.tbl      |  2 +
- arch/x86/entry/syscalls/syscall_64.tbl      |  2 +
- arch/xtensa/kernel/syscalls/syscall.tbl     |  2 +
- fs/inode.c                                  | 75 +++++++++++++++++++++++++++++
- fs/ioctl.c                                  | 16 +++++-
- include/linux/fileattr.h                    |  1 +
- include/linux/syscalls.h                    |  4 ++
- include/uapi/asm-generic/unistd.h           |  8 ++-
- 21 files changed, 133 insertions(+), 3 deletions(-)
 
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index c59d53d6d3f3490f976ca179ddfe02e69265ae4d..4b9e687494c16b60c6fd6ca1dc4d6564706a7e25 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -506,3 +506,5 @@
- 574	common	getxattrat			sys_getxattrat
- 575	common	listxattrat			sys_listxattrat
- 576	common	removexattrat			sys_removexattrat
-+577	common	getfsxattrat			sys_getfsxattrat
-+578	common	setfsxattrat			sys_setfsxattrat
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 49eeb2ad8dbd8e074c6240417693f23fb328afa8..66466257f3c2debb3e2299f0b608c6740c98cab2 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -481,3 +481,5 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	getfsxattrat			sys_getfsxattrat
-+468	common	setfsxattrat			sys_setfsxattrat
-diff --git a/arch/arm64/tools/syscall_32.tbl b/arch/arm64/tools/syscall_32.tbl
-index 69a829912a05eb8a3e21ed701d1030e31c0148bc..9c516118b154811d8d11d5696f32817430320dbf 100644
---- a/arch/arm64/tools/syscall_32.tbl
-+++ b/arch/arm64/tools/syscall_32.tbl
-@@ -478,3 +478,5 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	getfsxattrat			sys_getfsxattrat
-+468	common	setfsxattrat			sys_setfsxattrat
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index f5ed71f1910d09769c845c2d062d99ee0449437c..159476387f394a92ee5e29db89b118c630372db2 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -466,3 +466,5 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	getfsxattrat			sys_getfsxattrat
-+468	common	setfsxattrat			sys_setfsxattrat
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 680f568b77f2cbefc3eacb2517f276041f229b1e..a6d59ee740b58cacf823702003cf9bad17c0d3b7 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -472,3 +472,5 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	getfsxattrat			sys_getfsxattrat
-+468	common	setfsxattrat			sys_setfsxattrat
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index 0b9b7e25b69ad592642f8533bee9ccfe95ce9626..cfe38fcebe1a0279e11751378d3e71c5ec6b6569 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -405,3 +405,5 @@
- 464	n32	getxattrat			sys_getxattrat
- 465	n32	listxattrat			sys_listxattrat
- 466	n32	removexattrat			sys_removexattrat
-+467	n32	getfsxattrat			sys_getfsxattrat
-+468	n32	setfsxattrat			sys_setfsxattrat
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index c844cd5cda620b2809a397cdd6f4315ab6a1bfe2..29a0c5974d1aa2f01e33edc0252d75fb97abe230 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -381,3 +381,5 @@
- 464	n64	getxattrat			sys_getxattrat
- 465	n64	listxattrat			sys_listxattrat
- 466	n64	removexattrat			sys_removexattrat
-+467	n64	getfsxattrat			sys_getfsxattrat
-+468	n64	setfsxattrat			sys_setfsxattrat
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index 349b8aad1159f404103bd2057a1e64e9bf309f18..6c00436807c57c492ba957fcd59af1202231cf80 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -454,3 +454,5 @@
- 464	o32	getxattrat			sys_getxattrat
- 465	o32	listxattrat			sys_listxattrat
- 466	o32	removexattrat			sys_removexattrat
-+467	o32	getfsxattrat			sys_getfsxattrat
-+468	o32	setfsxattrat			sys_setfsxattrat
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index d9fc94c869657fcfbd7aca1d5f5abc9fae2fb9d8..b3578fac43d6b65167787fcc97d2d09f5a9828e7 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -465,3 +465,5 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	getfsxattrat			sys_getfsxattrat
-+468	common	setfsxattrat			sys_setfsxattrat
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index d8b4ab78bef076bd50d49b87dea5060fd8c1686a..808045d82c9465c3bfa96b15947546efe5851e9a 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -557,3 +557,5 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	getfsxattrat			sys_getfsxattrat
-+468	common	setfsxattrat			sys_setfsxattrat
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index e9115b4d8b635b846e5c9ad6ce229605323723a5..78dfc2c184d4815baf8a9e61c546c9936d58a47c 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -469,3 +469,5 @@
- 464  common	getxattrat		sys_getxattrat			sys_getxattrat
- 465  common	listxattrat		sys_listxattrat			sys_listxattrat
- 466  common	removexattrat		sys_removexattrat		sys_removexattrat
-+467  common	getfsxattrat		sys_getfsxattrat		sys_getfsxattrat
-+468  common	setfsxattrat		sys_setfsxattrat		sys_setfsxattrat
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index c8cad33bf250ea110de37bd1407f5a43ec5e38f2..d5a5c8339f0ed25ea07c4aba90351d352033c8a0 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -470,3 +470,5 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	getfsxattrat			sys_getfsxattrat
-+468	common	setfsxattrat			sys_setfsxattrat
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index 727f99d333b304b3db0711953a3d91ece18a28eb..817dcd8603bcbffc47f3f59aa3b74b16486453d0 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -512,3 +512,5 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	getfsxattrat			sys_getfsxattrat
-+468	common	setfsxattrat			sys_setfsxattrat
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 4d0fb2fba7e208ae9455459afe11e277321d9f74..b4842c027c5d00c0236b2ba89387c5e2267447bd 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -472,3 +472,5 @@
- 464	i386	getxattrat		sys_getxattrat
- 465	i386	listxattrat		sys_listxattrat
- 466	i386	removexattrat		sys_removexattrat
-+467	i386	getfsxattrat		sys_getfsxattrat
-+468	i386	setfsxattrat		sys_setfsxattrat
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 5eb708bff1c791debd6cfc5322583b2ae53f6437..b6f0a7236aaee624cf9b484239a1068085a8ffe1 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -390,6 +390,8 @@
- 464	common	getxattrat		sys_getxattrat
- 465	common	listxattrat		sys_listxattrat
- 466	common	removexattrat		sys_removexattrat
-+467	common	getfsxattrat		sys_getfsxattrat
-+468	common	setfsxattrat		sys_setfsxattrat
- 
- #
- # Due to a historical design error, certain syscalls are numbered differently
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 37effc1b134eea061f2c350c1d68b4436b65a4dd..425d56be337d1de22f205ac503df61ff86224fee 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -437,3 +437,5 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	getfsxattrat			sys_getfsxattrat
-+468	common	setfsxattrat			sys_setfsxattrat
-diff --git a/fs/inode.c b/fs/inode.c
-index 6b4c77268fc0ecace4ac78a9ca777fbffc277f4a..b2dddd9db4fabaf67a6cbf541a86978b290411ec 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -23,6 +23,9 @@
- #include <linux/rw_hint.h>
- #include <linux/seq_file.h>
- #include <linux/debugfs.h>
-+#include <linux/syscalls.h>
-+#include <linux/fileattr.h>
-+#include <linux/namei.h>
- #include <trace/events/writeback.h>
- #define CREATE_TRACE_POINTS
- #include <trace/events/timestamp.h>
-@@ -2953,3 +2956,75 @@ umode_t mode_strip_sgid(struct mnt_idmap *idmap,
- 	return mode & ~S_ISGID;
- }
- EXPORT_SYMBOL(mode_strip_sgid);
-+
-+SYSCALL_DEFINE4(getfsxattrat, int, dfd, const char __user *, filename,
-+		struct fsxattr __user *, fsx, unsigned int, at_flags)
-+{
-+	CLASS(fd, dir)(dfd);
-+	struct fileattr fa;
-+	struct path filepath;
-+	int error;
-+	unsigned int lookup_flags = 0;
-+
-+	if ((at_flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
-+		return -EINVAL;
-+
-+	if (at_flags & AT_SYMLINK_FOLLOW)
-+		lookup_flags |= LOOKUP_FOLLOW;
-+
-+	if (at_flags & AT_EMPTY_PATH)
-+		lookup_flags |= LOOKUP_EMPTY;
-+
-+	if (fd_empty(dir))
-+		return -EBADF;
-+
-+	error = user_path_at(dfd, filename, lookup_flags, &filepath);
-+	if (error)
-+		return error;
-+
-+	error = vfs_fileattr_get(filepath.dentry, &fa);
-+	if (!error)
-+		error = copy_fsxattr_to_user(&fa, fsx);
-+
-+	path_put(&filepath);
-+	return error;
-+}
-+
-+SYSCALL_DEFINE4(setfsxattrat, int, dfd, const char __user *, filename,
-+		struct fsxattr __user *, fsx, unsigned int, at_flags)
-+{
-+	CLASS(fd, dir)(dfd);
-+	struct fileattr fa;
-+	struct path filepath;
-+	int error;
-+	unsigned int lookup_flags = 0;
-+
-+	if ((at_flags & ~(AT_SYMLINK_FOLLOW | AT_EMPTY_PATH)) != 0)
-+		return -EINVAL;
-+
-+	if (at_flags & AT_SYMLINK_FOLLOW)
-+		lookup_flags |= LOOKUP_FOLLOW;
-+
-+	if (at_flags & AT_EMPTY_PATH)
-+		lookup_flags |= LOOKUP_EMPTY;
-+
-+	if (fd_empty(dir))
-+		return -EBADF;
-+
-+	if (copy_fsxattr_from_user(&fa, fsx))
-+		return -EFAULT;
-+
-+	error = user_path_at(dfd, filename, lookup_flags, &filepath);
-+	if (error)
-+		return error;
-+
-+	error = mnt_want_write(filepath.mnt);
-+	if (!error) {
-+		error = vfs_fileattr_set(file_mnt_idmap(fd_file(dir)),
-+					 filepath.dentry, &fa);
-+		mnt_drop_write(filepath.mnt);
-+	}
-+
-+	path_put(&filepath);
-+	return error;
-+}
-diff --git a/fs/ioctl.c b/fs/ioctl.c
-index 638a36be31c14afc66a7fd6eb237d9545e8ad997..dc160c2ef145e4931d625f1f93c2a8ae7f87abf3 100644
---- a/fs/ioctl.c
-+++ b/fs/ioctl.c
-@@ -558,8 +558,7 @@ int copy_fsxattr_to_user(const struct fileattr *fa, struct fsxattr __user *ufa)
- }
- EXPORT_SYMBOL(copy_fsxattr_to_user);
- 
--static int copy_fsxattr_from_user(struct fileattr *fa,
--				  struct fsxattr __user *ufa)
-+int copy_fsxattr_from_user(struct fileattr *fa, struct fsxattr __user *ufa)
- {
- 	struct fsxattr xfa;
- 
-@@ -646,6 +645,19 @@ static int fileattr_set_prepare(struct inode *inode,
- 	if (fa->fsx_cowextsize == 0)
- 		fa->fsx_xflags &= ~FS_XFLAG_COWEXTSIZE;
- 
-+	/*
-+	 * The only use case for special files is to set project ID, forbid any
-+	 * other attributes
-+	 */
-+	if (!(S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode))) {
-+		if (fa->fsx_xflags & ~FS_XFLAG_PROJINHERIT)
-+			return -EINVAL;
-+		if (!S_ISLNK(inode->i_mode) && fa->fsx_nextents)
-+			return -EINVAL;
-+		if (fa->fsx_extsize || fa->fsx_cowextsize)
-+			return -EINVAL;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/include/linux/fileattr.h b/include/linux/fileattr.h
-index 47c05a9851d0600964b644c9c7218faacfd865f8..8598e94b530b8b280a2697eaf918dd60f573d6ee 100644
---- a/include/linux/fileattr.h
-+++ b/include/linux/fileattr.h
-@@ -34,6 +34,7 @@ struct fileattr {
- };
- 
- int copy_fsxattr_to_user(const struct fileattr *fa, struct fsxattr __user *ufa);
-+int copy_fsxattr_from_user(struct fileattr *fa, struct fsxattr __user *ufa);
- 
- void fileattr_fill_xflags(struct fileattr *fa, u32 xflags);
- void fileattr_fill_flags(struct fileattr *fa, u32 flags);
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index c6333204d45130eb022f6db460eea34a1f6e91db..3134d463d9af64c6e78adb37bff4b91f77b5305f 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -371,6 +371,10 @@ asmlinkage long sys_removexattrat(int dfd, const char __user *path,
- asmlinkage long sys_lremovexattr(const char __user *path,
- 				 const char __user *name);
- asmlinkage long sys_fremovexattr(int fd, const char __user *name);
-+asmlinkage long sys_getfsxattrat(int dfd, const char __user *filename,
-+				 struct fsxattr *fsx, unsigned int at_flags);
-+asmlinkage long sys_setfsxattrat(int dfd, const char __user *filename,
-+				 struct fsxattr *fsx, unsigned int at_flags);
- asmlinkage long sys_getcwd(char __user *buf, unsigned long size);
- asmlinkage long sys_eventfd2(unsigned int count, int flags);
- asmlinkage long sys_epoll_create1(int flags);
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index 88dc393c2bca38c0fa1b3fae579f7cfe4931223c..50be2e1007bc2779120d05c6e9512a689f86779c 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -850,8 +850,14 @@ __SYSCALL(__NR_listxattrat, sys_listxattrat)
- #define __NR_removexattrat 466
- __SYSCALL(__NR_removexattrat, sys_removexattrat)
- 
-+/* fs/inode.c */
-+#define __NR_getfsxattrat 467
-+__SYSCALL(__NR_getfsxattrat, sys_getfsxattrat)
-+#define __NR_setfsxattrat 468
-+__SYSCALL(__NR_setfsxattrat, sys_setfsxattrat)
-+
- #undef __NR_syscalls
--#define __NR_syscalls 467
-+#define __NR_syscalls 469
- 
- /*
-  * 32 bit systems traditionally used different
+> > Have you tried how long time would be safe to wait for the
+> > TMCREADY_BIT bit to be set on your platform?
+> yes, 400000us.
 
----
-base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
-change-id: 20250114-xattrat-syscall-6a1136d2db59
+This is a huge amount of latency for a coresight system.  This
+suggests some sort of contention issue.
 
-Best regards,
--- 
-Andrey Albershteyn <aalbersh@kernel.org>
+> >
+> >> If the TMC capture is stopped while any ETM has not completed its
+> >> flush, it can cause the corresponding CPU to hang.
+> >>
 
+There is nothing in the ETMv4 hardware specification /design that
+should cause an CPU to hang. There is an implementation dependent
+stall mechanism that if implemented can stall a PE when the ETM fifo
+approaches overflow, but this is switch off on the drivers, if
+implemented on the hardware.
+
+The flush process for the ETM is a purely internal process of clearing
+out all trace currently in the ETM, and is not dependent on the PE.
+
+> >> Fix the by checking the TMCReady bit after the flush. If TMCReady
+> >> bit is set, TraceCaptEn bit can be clear; otherwise, return directly
+> >> and stop the TMC read.
+> >
+> > When a timeout for TMC flush and stop is detected, if the driver
+> > arbitrarily bails out without disabling TMC, this would leave the
+> > hardware always on.
+> >
+
+I agree that this is not an acceptable solution - we cannot leave the
+TMC in an indeterminate state.
+
+Where clients such as perf are using the hardware there is no
+mechanism for re-trying if halt fails.
+The functions you have changed seem to relate to  reading the buffer
+via sysfs. Do you see similar problems using perf to collect trace
+data?
+
+
+> > I would like first know if a longer timeout can fix the issue.
+> >
+> > Thanks,
+> > Leo
+> >
+> yes, longer timeout can fix this issue.
+>
+
+I think that a longer timeout will mask some underlying contention
+issue, but it should be possible to make the coresight driver timeout
+configurable, and set the value appropriately for your system.
+
+There is a new TMC logging patchset here:
+https://lists.linaro.org/archives/list/coresight@lists.linaro.org/thread/7Y6NPTNKKIPERUUBHG5UEUNVR7ZMFUGM/
+which improves the error reporting around timeouts.  This might help
+establish if the error is in waiting for flush complete, or TMC ready.
+
+This API could be extended to add a timeout value parameter, that can
+be configured from the TMC driver, set via sysfs for the TMC in the
+initial case to further debugging of this issue on your system
+
+Regards
+
+Mike
+
+
+> >> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+> >> ---
+> >>  drivers/hwtracing/coresight/coresight-tmc-etf.c | 17 +++++++++++++++--
+> >>  drivers/hwtracing/coresight/coresight-tmc-etr.c | 22 +++++++++++++++++-----
+> >>  2 files changed, 32 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> >> index d4f641cd9de69488fe3d1c1dc9b5a9eafb55ed59..bded290c42891d782344d9a6e63ebdbed6719133 100644
+> >> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> >> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> >> @@ -80,11 +80,21 @@ static void tmc_etb_dump_hw(struct tmc_drvdata *drvdata)
+> >>         return;
+> >>  }
+> >>
+> >> -static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+> >> +static int __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+> >>  {
+> >> +       int rc;
+> >> +
+> >>         CS_UNLOCK(drvdata->base);
+> >>
+> >>         tmc_flush_and_stop(drvdata);
+> >> +
+> >> +       rc = tmc_wait_for_tmcready(drvdata);
+> >> +       if (rc) {
+> >> +               dev_err(&drvdata->csdev->dev,
+> >> +                       "Failed to disable : TMC is not ready\n");
+> >> +               CS_LOCK(drvdata->base);
+> >> +               return rc;
+> >> +       }
+> >>         /*
+> >>          * When operating in sysFS mode the content of the buffer needs to be
+> >>          * read before the TMC is disabled.
+> >> @@ -94,6 +104,7 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+> >>         tmc_disable_hw(drvdata);
+> >>
+> >>         CS_LOCK(drvdata->base);
+> >> +       return 0;
+> >>  }
+> >>
+> >>  static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+> >> @@ -650,7 +661,9 @@ int tmc_read_prepare_etb(struct tmc_drvdata *drvdata)
+> >>                         ret = -EINVAL;
+> >>                         goto out;
+> >>                 }
+> >> -               __tmc_etb_disable_hw(drvdata);
+> >> +               ret = __tmc_etb_disable_hw(drvdata);
+> >> +               if (ret)
+> >> +                       goto out;
+> >>         }
+> >>
+> >>         drvdata->reading = true;
+> >> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> >> index a48bb85d0e7f44a25b813f3c828cc3d705d16012..63a1f7501562fa0b5c2fe6ea53dce4d82842bec3 100644
+> >> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> >> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> >> @@ -1135,11 +1135,21 @@ static void tmc_etr_sync_sysfs_buf(struct tmc_drvdata *drvdata)
+> >>         }
+> >>  }
+> >>
+> >> -static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+> >> +static int __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+> >>  {
+> >> +       int rc;
+> >> +
+> >>         CS_UNLOCK(drvdata->base);
+> >>
+> >>         tmc_flush_and_stop(drvdata);
+> >> +
+> >> +       rc = tmc_wait_for_tmcready(drvdata);
+> >> +       if (rc) {
+> >> +               dev_err(&drvdata->csdev->dev,
+> >> +                       "Failed to disable : TMC is not ready\n");
+> >> +               CS_LOCK(drvdata->base);
+> >> +               return rc;
+> >> +       }
+> >>         /*
+> >>          * When operating in sysFS mode the content of the buffer needs to be
+> >>          * read before the TMC is disabled.
+> >> @@ -1150,7 +1160,7 @@ static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+> >>         tmc_disable_hw(drvdata);
+> >>
+> >>         CS_LOCK(drvdata->base);
+> >> -
+> >> +       return 0;
+> >>  }
+> >>
+> >>  void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+> >> @@ -1779,9 +1789,11 @@ int tmc_read_prepare_etr(struct tmc_drvdata *drvdata)
+> >>         }
+> >>
+> >>         /* Disable the TMC if we are trying to read from a running session. */
+> >> -       if (coresight_get_mode(drvdata->csdev) == CS_MODE_SYSFS)
+> >> -               __tmc_etr_disable_hw(drvdata);
+> >> -
+> >> +       if (coresight_get_mode(drvdata->csdev) == CS_MODE_SYSFS) {
+> >> +               ret = __tmc_etr_disable_hw(drvdata);
+> >> +               if (ret)
+> >> +                       goto out;
+> >> +       }
+> >>         drvdata->reading = true;
+> >>  out:
+> >>         spin_unlock_irqrestore(&drvdata->spinlock, flags);
+> >>
+> >> ---
+> >> base-commit: fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
+> >> change-id: 20250103-fix_cpu_hung-b5a95179ada4
+> >>
+> >> Best regards,
+> >> --
+> >> Yuanfang Zhang <quic_yuanfang@quicinc.com>
+> >>
+> >>
+>
+
+
+--
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
