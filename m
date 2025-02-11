@@ -1,64 +1,69 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5521D63CA
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:53:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC63C1E412A;
+	Tue, 11 Feb 2025 02:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739242411; cv=none; b=Sc/ZMeXUnNvJeU8veliccPHRP+IRGe9eEiwjG3aZ+TCtCyzvCUgn1BggRnBL1g5PLdBqSCTFfNol+Npk6Ugl+e1+HjIQkhgZczOPHYz7I3Bd6ExXjkM4raSUnCcWfeUn+LGPJ1dX1fke0U0MZqt3lSilAa9/3FzEarK2euSGbRU=
+	t=1739242412; cv=none; b=I3/ipOfkAQNgoA6d1g5R1rEcNSQgMqYINrUCwAxShsx0VZFLoHCpZLufjVXFzM9jKOzCHiA3ZJO6gqn13nuTGGzTc5XEQeffbMgED2/+WL4w4hkuCUth3ac8HX7unJF3sqc+enD+WHKb/A6cvYAP4yy+d/gEo9HGaJ11cVlqCLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739242411; c=relaxed/simple;
-	bh=krQevm+hXTalcD8VAeW0Io0/fzqS0IsZiv6OMMQGNU8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VmF4Tmnx5P8jEbajItLEWIqOL8MaTY8XbP5Ox7rpxpMdZ1Gm5xYxtxxuADqmWirhTfn4cOB96G5bqLmAvr7EruKdfA888ZCrks2VF0WJ3rMFfbjbWzV6mxfpUB9MkwnB9Iw1EF/21mVTUlkdqmH26QktxcmMOMIMiej2EMJbCVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=ckVtcGyy; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1739242412; c=relaxed/simple;
+	bh=z/5Bed58RE9KjC8zRoI9EixAQOU33U2F+6O/XNNHdTo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E7jlkJtga3RT1dBkGjd81c6DlQLHRhLGhyPWp5siw2dIvVa2qwnzTFIycVJcajTgA/9pMgb313nx0HGtyHgNfxgdnIo6fzJbsUg270hm0WzZKs1fEX3+2LhsLlEYUgGaxtPb2y1mLPWp3GCrAgH0Qnr0OyayIoBNDGmuDn8G4fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LclGEA6c; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ckVtcGyy"
-X-UUID: 5bf29f4ce82311efb8f9918b5fc74e19-20250211
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=keKohg8hOTFLfdJBLpLuY7turgd/R5WQW4fSD4VLxnc=;
-	b=ckVtcGyyfuGvs8EvIuNFqLOdKfoH4F9ewySkQK9dei/0FiDISPWoK5fbfRGU3uR+o1NktwiIN/fb6t3FkES6ROpYpx3UmH0nfctnSX5y/u4zdAJ0U/wTZjGKHs9CHVr1fGun3BLMNrI3cZBdUBbiFNeYWg1BpsCx1hJFLRkNTnE=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:35cb6343-fc81-4559-a73a-ae1d5c12c3d0,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:60aa074,CLOUDID:06d76b92-d651-4ec6-81e1-a3deb10c9ff8,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-UUID: 5bf29f4ce82311efb8f9918b5fc74e19-20250211
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
-	(envelope-from <sunny.shen@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 921413999; Tue, 11 Feb 2025 10:53:23 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 11 Feb 2025 10:53:22 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Tue, 11 Feb 2025 10:53:22 +0800
-From: Sunny Shen <sunny.shen@mediatek.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-CC: Matthias Brugger <matthias.bgg@gmail.com>, Philipp Zabel
-	<p.zabel@pengutronix.de>, Fei Shao <fshao@chromium.org>, Pin-yen Lin
-	<treapking@chromium.org>, "Jason-JH . Lin" <jason-jh.lin@mediatek.com>, Nancy
- Lin <nancy.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, "Paul
- Chen --cc=devicetree @ vger . kernel . org" <paul-pl.chen@mediatek.com>,
-	<linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Sunny Shen
-	<sunny.shen@mediatek.com>
-Subject: [PATCH 0/5] Add components to support PQ in display path for MT8196
-Date: Tue, 11 Feb 2025 10:52:49 +0800
-Message-ID: <20250211025317.399534-1-sunny.shen@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LclGEA6c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739242412; x=1770778412;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=z/5Bed58RE9KjC8zRoI9EixAQOU33U2F+6O/XNNHdTo=;
+  b=LclGEA6cpWNZHDoD14UkdtkH5u9rbLwDBycYNDCpHoh9QQUNFZoPq+w4
+   9oBQSbyMpZdEiRsMKHBY0QLqpdYtdqgYGih6/pi+CMEFjoofi+yY3m8d+
+   rFpxX4dRlIt282tJHvjhYEp8sYj/6g5QibgXF+3Lx0AsxXoiSu0ZPxy9M
+   DH0HD5+qPZzCSJSlcVVh1NDJvi8OQILI97ds48fwDRv4N/3/RmGflR9vD
+   MyEeySUgYYhw9zFans/EU6qJ9EksVP/2T3YI8HQQQt/U8dpNzRuCqG6S4
+   L4k879KPADFfIL1ER6h01WWXZcGf4Xb+vzndRnKEuScTgi0YmbRa/SZms
+   g==;
+X-CSE-ConnectionGUID: zSFkclmfSsyy2kzeKokzFw==
+X-CSE-MsgGUID: U5XBPrcZSx+OpnXmveCGBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="43506629"
+X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
+   d="scan'208";a="43506629"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:53:31 -0800
+X-CSE-ConnectionGUID: NZ+142KPQcKnn5+W8TMeiw==
+X-CSE-MsgGUID: LK/1cOQRTxGmbsU8QOSYJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="112236466"
+Received: from litbin-desktop.sh.intel.com ([10.239.156.93])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:53:27 -0800
+From: Binbin Wu <binbin.wu@linux.intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com,
+	kvm@vger.kernel.org
+Cc: rick.p.edgecombe@intel.com,
+	kai.huang@intel.com,
+	adrian.hunter@intel.com,
+	reinette.chatre@intel.com,
+	xiaoyao.li@intel.com,
+	tony.lindgren@intel.com,
+	isaku.yamahata@intel.com,
+	yan.y.zhao@intel.com,
+	chao.gao@intel.com,
+	linux-kernel@vger.kernel.org,
+	binbin.wu@linux.intel.com
+Subject: [PATCH v2 7/8] KVM: TDX: Handle TDX PV port I/O hypercall
+Date: Tue, 11 Feb 2025 10:54:41 +0800
+Message-ID: <20250211025442.3071607-8-binbin.wu@linux.intel.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250211025442.3071607-1-binbin.wu@linux.intel.com>
+References: <20250211025442.3071607-1-binbin.wu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,32 +71,131 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-Due to the path mux design of the MT8196, the following components need to be configured to support Picture Quality (PQ) in the display path:CCORR0, CCORR1, DITHER0, GAMMA0, MDP_RSZ0, POSTMASK0, TDSHP0.
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-This patch series is based on [1]
-[1] Add Mediatek Soc DRM Soc support for mt8196
-    - https://patchwork.kernel.org/project/linux-mediatek/list/?series=924191
+Emulate port I/O requested by TDX guest via TDVMCALL with leaf
+Instruction.IO (same value as EXIT_REASON_IO_INSTRUCTION) according to
+TDX Guest Host Communication Interface (GHCI).
 
-Sunny Shen (5):
-  dt-bindings: display: mediatek: mdp-rsz: Add rules for MT8196
-  dt-bindings: display: mediatek: postmask: Modify rules for MT8196
-  soc: mediatek: Add components to support PQ in display path for MT8196
-  drm/mediatek: Add MDP-RSZ component support for MT8196
-  drm/mediatek: Change main display path to support PQ for MT8196
+All port I/O instructions inside the TDX guest trigger the #VE exception.
+On #VE triggered by I/O instructions, TDX guest can call TDVMCALL with
+leaf Instruction.IO to request VMM to emulate I/O instructions.
 
- .../display/mediatek/mediatek,mdp-rsz.yaml    | 46 ++++++++++++
- .../display/mediatek/mediatek,postmask.yaml   |  1 +
- drivers/gpu/drm/mediatek/mtk_ddp_comp.c       | 24 +++++++
- drivers/gpu/drm/mediatek/mtk_ddp_comp.h       |  1 +
- drivers/gpu/drm/mediatek/mtk_drm_drv.c        |  9 +++
- drivers/soc/mediatek/mt8196-mmsys.h           | 70 ++++++++++++++++++-
- drivers/soc/mediatek/mtk-mutex.c              | 17 +++++
- include/linux/soc/mediatek/mtk-mmsys.h        |  5 ++
- 8 files changed, 171 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,mdp-rsz.yaml
+Similar to normal port I/O emulation, try to handle the port I/O in kernel
+first, if kernel can't support it, forward the request to userspace.
 
+Note string I/O operations are not supported in TDX.  Guest should unroll
+them before calling the TDVMCALL.
+
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Co-developed-by: Binbin Wu <binbin.wu@linux.intel.com>
+Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+Hypercalls exit to userspace v2:
+- Morph PV port I/O hypercall to EXIT_REASON_IO_INSTRUCTION. (Sean)
+- Use vp_enter_args instead of x86 registers.
+- Check write is either 0 or 1. (Chao)
+- Skip setting return code as TDVMCALL_STATUS_SUCCESS. (Sean)
+
+Hypercalls exit to userspace v1:
+- Renamed from "KVM: TDX: Handle TDX PV port io hypercall" to
+  "KVM: TDX: Handle TDX PV port I/O hypercall".
+- Update changelog.
+- Add missing curly brackets.
+- Move reset of pio.count to tdx_complete_pio_out() and remove the stale
+  comment. (binbin)
+- Use TDVMCALL_STATUS prefix for TDX call status codes (Binbin)
+- Set status code to TDVMCALL_STATUS_SUCCESS when PIO is handled in kernel.
+- Don't write to R11 when it is a write operation for output.
+
+v18:
+- Fix out case to set R10 and R11 correctly when user space handled port
+  out.
+---
+ arch/x86/kvm/vmx/tdx.c | 60 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index 85956768c515..f13da28dd4a2 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -1135,6 +1135,64 @@ static int tdx_report_fatal_error(struct kvm_vcpu *vcpu)
+ 	return 0;
+ }
+ 
++static int tdx_complete_pio_out(struct kvm_vcpu *vcpu)
++{
++	vcpu->arch.pio.count = 0;
++	return 1;
++}
++
++static int tdx_complete_pio_in(struct kvm_vcpu *vcpu)
++{
++	struct x86_emulate_ctxt *ctxt = vcpu->arch.emulate_ctxt;
++	unsigned long val = 0;
++	int ret;
++
++	ret = ctxt->ops->pio_in_emulated(ctxt, vcpu->arch.pio.size,
++					 vcpu->arch.pio.port, &val, 1);
++
++	WARN_ON_ONCE(!ret);
++
++	tdvmcall_set_return_val(vcpu, val);
++
++	return 1;
++}
++
++static int tdx_emulate_io(struct kvm_vcpu *vcpu)
++{
++	struct vcpu_tdx *tdx = to_tdx(vcpu);
++	struct x86_emulate_ctxt *ctxt = vcpu->arch.emulate_ctxt;
++	unsigned long val = 0;
++	unsigned int port;
++	u64 size, write;
++	int ret;
++
++	++vcpu->stat.io_exits;
++
++	size = tdx->vp_enter_args.r12;
++	write = tdx->vp_enter_args.r13;
++	port = tdx->vp_enter_args.r14;
++
++	if ((write != 0 && write != 1) || (size != 1 && size != 2 && size != 4)) {
++		tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_INVALID_OPERAND);
++		return 1;
++	}
++
++	if (write) {
++		val = tdx->vp_enter_args.r15;
++		ret = ctxt->ops->pio_out_emulated(ctxt, size, port, &val, 1);
++	} else {
++		ret = ctxt->ops->pio_in_emulated(ctxt, size, port, &val, 1);
++	}
++
++	if (!ret)
++		vcpu->arch.complete_userspace_io = write ? tdx_complete_pio_out :
++							   tdx_complete_pio_in;
++	else if (!write)
++		tdvmcall_set_return_val(vcpu, val);
++
++	return ret;
++}
++
+ static int handle_tdvmcall(struct kvm_vcpu *vcpu)
+ {
+ 	switch (tdvmcall_leaf(vcpu)) {
+@@ -1486,6 +1544,8 @@ int tdx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t fastpath)
+ 		return handle_tdvmcall(vcpu);
+ 	case EXIT_REASON_VMCALL:
+ 		return tdx_emulate_vmcall(vcpu);
++	case EXIT_REASON_IO_INSTRUCTION:
++		return tdx_emulate_io(vcpu);
+ 	default:
+ 		break;
+ 	}
 -- 
-2.34.1
+2.46.0
 
