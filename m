@@ -1,173 +1,156 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BBD1F8AC5;
-	Tue, 11 Feb 2025 11:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AF0B1F0E2C
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739274709; cv=none; b=ESsEaa0kRbORm7/jD1Bl26GiFpDNKLwdDG+wQ2Y5FbHsLmKHJyeiHkDYMWw+bNYPIIoycWBAkHkgWbfMBSouvuP09sLC7Zq5fvL+nSlow+9j4O8hkLO0F9nkbftEJxuzH982RRJakzS4UY6GvIC/8ao+Y7svUgSfRHn2HZYy3Tg=
+	t=1739274737; cv=none; b=Avwnt/mhRj3vGMhMfVGderQMqKeLpAVXjfi5zJU8Z4Hd6LLVHUDxFqnhz+d7427wMiNjSIfl66X7CHLr5Qjns86gYNgEEF1wkim1a0MItTaeO1t64sRZ2Uw7zVXGg3dAIWh4gTd5whMwdKHbsk9hC0DxU3vMVxgVxe4AWGlZdfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739274709; c=relaxed/simple;
-	bh=GiOlrHymRtTnbNW11P2v4jLd7s8W8V1jFSq+UdT9D6E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=buY38PwBGcHA56fyWXGIkx2xY3bm1wvcB9clW1klXHW5n9mMA+6O3A/LmDvP7kFBfOM/JU9UT/gNnlsiyGRjoZMf3/Llfbbv9jcMBQAeop5ohGf0i6mP/HsvgwYQ6euKveEfyio8V9ild+XSQZ7f59cAC1ohkVKgnPDZPAKIUz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KkSKv2GY; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KkSKv2GY"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30737db1aa9so56054041fa.1;
-        Tue, 11 Feb 2025 03:51:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739274706; x=1739879506; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zrD/WybHb9roCdO2wW/GzOOL/NJbgM9+aimPlnjkmkw=;
-        b=KkSKv2GYo9ZvNUEOvRYDFla+A6Z1dTFWP1TVvKJ+LdnLkCqwhrEbIfvOqE06kOsRAB
-         Fa+CnWbgDOtD3mQd8oFRoz5izhjcE2jBAfNm5XDMt4hBLMExZrO2ajc79IK3+dFWiOVM
-         kiQxFZ+ShPjFR8999htTeDghKxV0WXxToX6H7fAgWeP8WCLdFPnrdVqQNpyD8cQf7EAn
-         Uct0toyWjiaSPPqCiSXaxnw68LK1dhykX1aQob18ssp0Q55eZj1vz42JgTzJfRtTYtE9
-         AOD7PNKiUMIre/dvWR7eDarLENYrKt+dq+Zo7B1WO7adcrTp0dYJ6kcjsEnJUS2LU9hv
-         IBfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739274706; x=1739879506;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zrD/WybHb9roCdO2wW/GzOOL/NJbgM9+aimPlnjkmkw=;
-        b=JN0an0dA9f073IkrQm4qfaHN8NuoSbsUPaaRcrT2HXirZFKOmtodyD0gSt+H2HJQLH
-         0wLDEWTY4xNFDcU9d0i/L5OjU1jiZUwsej98BuNC2ML3Yr3K3mUINckPJwNirHQF5xVa
-         nNe6a6WnBmuvoTNhiDffvgodSuqrKF56RDVRnW1yZTgXtZn3LwBuMOUgfkiD6oneK9vC
-         D4UwhoSK5TgJOlzVrBoi/USDx49p1oSZY0lTKCE6GQwRkWrggwt4UgMuKBMi/I/uftZR
-         bhnwHgae3XvyzJpuXAWEF8TnQF/ESYm3/nM9XrZZ7EOCEKT7UjtOi2dj3ODh53/NoYq+
-         YQ+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWbKaz/nW1KjXXcS0iLe7CP9Vbj4mxQmWhUW2TmRgkXNtyBW98K9cGToD4sQPD/gceihYKzd1Fn//J3pFs=@vger.kernel.org, AJvYcCXQMpNX6Tsf0rDLZhYygSl3HbGjegVFApipOdxkgg44oFPJog+imVSSwZ/ycCIuDHHfclgj9NaCM0DZrS2zoom+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+MGl5BpTd5KX7E+rBNJHUGDroMKxXtkn3JklLVZ8iNS6KpPrm
-	yh2JS4c6FateIrql+mkio2tDT6zzr8AbpQfa7Pz6TSWId27dpt92mCgWwr1Ynpj19skTd/lU3Lt
-	p3b4OZ8LW8UoI1srwWw+RUtJ4Kf0=
-X-Gm-Gg: ASbGnct+UB6lgPdfrRgZds49PkwYIUr+dSg9/GmZssjuTCjDcc0nTMvfcmLV++kjg2L
-	5ttHUtu+zLqR8RUC+o+FqyOSa4nlVmD4k5AfeoxAbsXkKAgPX/Ud+MLnCI3k/dHuIE8pUgaP5SP
-	qIpU+3mSHmMgzXTJXtFQahoLwIM3UZ
-X-Google-Smtp-Source: AGHT+IH08XVqwqToptyJwAIYZWbhNv9d/Df3YJD+L+AXe0Ds71S1k+GwZFoMghLe0DNxhUeaE5fxXhkXIdqu834EGdw=
-X-Received: by 2002:a05:651c:2208:b0:308:f827:f8e4 with SMTP id
- 38308e7fff4ca-308f827fa79mr11235141fa.7.1739274705696; Tue, 11 Feb 2025
- 03:51:45 -0800 (PST)
+	s=arc-20240116; t=1739274737; c=relaxed/simple;
+	bh=VNhZx1RSKoKpE+uds6M9R6tlg953Re2Ndu7s2C/UrQs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IVSgvNmGrkPcFP1Cd7iNlGnk4YdcdK2V+LC/RQhU9Tpex+7Bv3QCm4Y7TFFuLXz2MgJGb95K2S+Vlm2Xa/SIkJX6jejgnOHcaIxBD1eJZSXKFhlCDEbVwwph7V27i+sllumr7bnIQfVfX66U1XqKpjYSARywxUb2Ax+S/YGZKS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxjXKBOatnZCJyAA--.2046S3;
+	Tue, 11 Feb 2025 19:50:25 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMBx3MR6OatnNPMLAA--.43600S7;
+	Tue, 11 Feb 2025 19:50:24 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v7 5/7] objtool/LoongArch: Add support for goto table
+Date: Tue, 11 Feb 2025 19:50:14 +0800
+Message-ID: <20250211115016.26913-6-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20250211115016.26913-1-yangtiezhu@loongson.cn>
+References: <20250211115016.26913-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208-prime_numbers-kunit-convert-v5-0-b0cb82ae7c7d@gmail.com>
- <20250208-prime_numbers-kunit-convert-v5-2-b0cb82ae7c7d@gmail.com>
- <202502101836.2B3E7BC4@keescook> <CAJ-ks9=pU6FsOfMk+fSwG2oLG95L2C-jwBDNad1FTGzQ5seiuw@mail.gmail.com>
- <CAJ-ks9nDH9Zk9vaiBP599LN-Jx3aN+JyxFXP16ikV0cayc01SQ@mail.gmail.com>
-In-Reply-To: <CAJ-ks9nDH9Zk9vaiBP599LN-Jx3aN+JyxFXP16ikV0cayc01SQ@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 11 Feb 2025 06:51:09 -0500
-X-Gm-Features: AWEUYZnxQAyz6N_1zd_0U9tUq541QFPZHqCTnbbCQo_Dy8ukCVZPWTGX4saYWyU
-Message-ID: <CAJ-ks9nK2oNz7s+QW5eF=W_SRZuuu5j4_DNQj9WM5iqH2ECZnw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] lib/prime_numbers: convert self-test to KUnit
-To: Kees Cook <kees@kernel.org>
-Cc: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Luis Felipe Hernandez <luis.hernandez093@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBx3MR6OatnNPMLAA--.43600S7
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCw4rWw18Wr1fWr43Zw43Jwc_yoWrXFy5pF
+	W3C345Kr45ZrWSgr47tay09ryaya1IgFy7JrW7t34fAw43Xr1FyF1SvF9IyFWrCrZ5Jr4I
+	qrs5Kr18CF4DAacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
+	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
+	CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0
+	I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
+	8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73
+	UjIFyTuYvjxU4AhLUUUUU
 
-Kees, it looks like the private header didn't make it to your tree.
-This bit is missing:
+The objtool program need to analysis the control flow of each object file
+generated by compiler toolchain, it needs to know all the locations that
+a branch instruction may jump into, if a jump table is used, objtool has
+to correlate the jump instruction with the table.
 
-diff --git a/lib/math/prime_numbers.c b/lib/math/prime_numbers.c
-index f88d6e64dbdc..de59f001c8c7 100644
---- a/lib/math/prime_numbers.c
-+++ b/lib/math/prime_numbers.c
-@@ -58,6 +58,7 @@ static DEFINE_MUTEX(lock);
- static const struct primes __rcu *primes =3D RCU_INITIALIZER(&small_primes=
-);
+On x86 (which is the only port supported by objtool before LoongArch),
+there is a relocation type on the jump instruction and directly points
+to the table. But on LoongArch, the relocation is on another kind of
+instruction prior to the jump instruction, and also with scheduling it
+is not very easy to tell the offset of that instruction from the jump
+instruction. Furthermore, because LoongArch has -fsection-anchors (often
+enabled at -O1 or above) the relocation may actually points to a section
+anchor instead of the table itself.
 
- #if IS_ENABLED(CONFIG_PRIME_NUMBERS_KUNIT_TEST)
-+// Calls the callback under RCU lock. The callback must not retain
-the primes pointer.
- void with_primes(void *ctx, primes_fn fn)
- {
-        rcu_read_lock();
-diff --git a/lib/math/prime_numbers_private.h b/lib/math/prime_numbers_priv=
-ate.h
-new file mode 100644
-index 000000000000..f3ebf5386e6b
---- /dev/null
-+++ b/lib/math/prime_numbers_private.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
+For the jump table of switch cases, a GCC patch "LoongArch: Add support
+to annotate tablejump" and a Clang patch "[LoongArch] Add options for
+annotate tablejump" have been merged into the upstream mainline, it can
+parse the additional section ".discard.tablejump_annotate" which stores
+the jump info as pairs of addresses, each pair contains the address of
+jump instruction and the address of jump table.
+
+For the jump table of computed gotos, it is indeed not easy to implement
+in the compiler, especially if there is more than one computed goto in a
+function such as ___bpf_prog_run(). objdump kernel/bpf/core.o shows that
+there are many table jump instructions in ___bpf_prog_run(), but there are
+no relocations on the table jump instructions and to the table directly on
+LoongArch.
+
+Without the help of compiler, in order to figure out the address of goto
+table for the special case of ___bpf_prog_run(), since the instruction
+sequence is relatively single and stable, it makes sense to add a helper
+find_reloc_of_rodata_c_jump_table() to find the relocation which points
+to the section ".rodata..c_jump_table".
+
+If find_reloc_by_table_annotate() failed, it means there is no relocation
+info of switch table address in ".rela.discard.tablejump_annotate", then
+objtool may find the relocation info of goto table ".rodata..c_jump_table"
+with find_reloc_of_rodata_c_jump_table().
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/objtool/arch/loongarch/special.c | 32 ++++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
+
+diff --git a/tools/objtool/arch/loongarch/special.c b/tools/objtool/arch/loongarch/special.c
+index 4fa6877d5b2b..27c6473608f3 100644
+--- a/tools/objtool/arch/loongarch/special.c
++++ b/tools/objtool/arch/loongarch/special.c
+@@ -116,6 +116,30 @@ static struct reloc *find_reloc_by_table_annotate(struct objtool_file *file,
+ 	return NULL;
+ }
+ 
++static struct reloc *find_reloc_of_rodata_c_jump_table(struct section *sec,
++						       unsigned long offset,
++						       unsigned long *table_size)
++{
++	struct section *rsec;
++	struct reloc *reloc;
 +
-+#include <linux/types.h>
++	rsec = sec->rsec;
++	if (!rsec)
++		return NULL;
 +
-+struct primes {
-+       struct rcu_head rcu;
-+       unsigned long last, sz;
-+       unsigned long primes[];
-+};
++	for_each_reloc(rsec, reloc) {
++		if (reloc_offset(reloc) > offset)
++			break;
 +
-+#if IS_ENABLED(CONFIG_PRIME_NUMBERS_KUNIT_TEST)
-+typedef void (*primes_fn)(void *, const struct primes *);
++		if (!strncmp(reloc->sym->sec->name, ".rodata..c_jump_table", 21)) {
++			*table_size = 0;
++			return reloc;
++		}
++	}
 +
-+void with_primes(void *ctx, primes_fn fn);
-+bool slow_is_prime_number(unsigned long x);
-+#endif
++	return NULL;
++}
++
+ struct reloc *arch_find_switch_table(struct objtool_file *file,
+ 				     struct instruction *insn,
+ 				     unsigned long *table_size)
+@@ -126,8 +150,12 @@ struct reloc *arch_find_switch_table(struct objtool_file *file,
+ 	unsigned long table_offset;
+ 
+ 	annotate_reloc = find_reloc_by_table_annotate(file, insn, table_size);
+-	if (!annotate_reloc)
+-		return NULL;
++	if (!annotate_reloc) {
++		annotate_reloc = find_reloc_of_rodata_c_jump_table(
++				 insn->sec, insn->offset, table_size);
++		if (!annotate_reloc)
++			return NULL;
++	}
+ 
+ 	table_sec = annotate_reloc->sym->sec;
+ 	table_offset = annotate_reloc->sym->offset + reloc_addend(annotate_reloc);
+-- 
+2.42.0
 
-Tamir
-
-On Mon, Feb 10, 2025 at 9:52=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> Ah, I see https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/=
-commit/?h=3Dfor-next/move-kunit-tests&id=3D3e50ba8fc834cadead733e4feeb969fc=
-e2f3b6e1
-> now.
->
-> On Mon, Feb 10, 2025 at 9:47=E2=80=AFPM Tamir Duberstein <tamird@gmail.co=
-m> wrote:
-> >
-> > On Mon, Feb 10, 2025 at 9:37=E2=80=AFPM Kees Cook <kees@kernel.org> wro=
-te:
-> > >
-> > > On Sat, Feb 08, 2025 at 09:44:39PM -0500, Tamir Duberstein wrote:
-> > > > Extract a private header and convert the prime_numbers self-test to=
- a
-> > > > KUnit test. I considered parameterizing the test using
-> > > > `KUNIT_CASE_PARAM` but didn't see how it was possible since the tes=
-t
-> > > > logic is entangled with the test parameter generation logic.
-> > > >
-> > > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > > > ---
-> > > >  lib/Kconfig.debug                            | 14 +++++
-> > > >  lib/math/prime_numbers.c                     | 87 +++++-----------=
-------------
-> > > >  lib/math/prime_numbers_private.h             | 17 ++++++
-> > > >  lib/math/tests/Makefile                      |  1 +
-> > > >  lib/math/tests/prime_numbers_kunit.c         | 59 ++++++++++++++++=
-+++
-> > > >  tools/testing/selftests/lib/config           |  1 -
-> > > >  tools/testing/selftests/lib/prime_numbers.sh |  4 --
-> > > >  7 files changed, 106 insertions(+), 77 deletions(-)
-> > >
-> > > Thanks! I've applied this and rebased it onto:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=
-=3Dfor-next/move-kunit-tests
-> > >
-> > > --
-> > > Kees Cook
-> >
-> > Thanks! Could you also take the first patch in the series[0]? The new
-> > test won't build without it because lib/math/tests/Makefile is dead
-> > code.
-> >
-> > [0] https://lore.kernel.org/all/20250208-prime_numbers-kunit-convert-v5=
--1-b0cb82ae7c7d@gmail.com/
-> >
-> > Cheers.
-> > Tamir
