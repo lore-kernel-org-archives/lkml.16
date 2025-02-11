@@ -1,298 +1,140 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9D7253331
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09B01F9ED2;
+	Tue, 11 Feb 2025 15:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739286135; cv=none; b=lD07eiJa0/3gk+PkZKNsdudkPKzWl+T4yha5yiRpfY97+VFSLoLMwjJvWeZxsx7HzIohg6I9fS0siur/oeWnBiEIa/mRPt+9wt0SbG8wMRaNbTh44/bp3+pYl0dSWNSZxn21zwCy9l5k6Ak0jkmYR2+y/18nQEBaonUt0KrkkPg=
+	t=1739286156; cv=none; b=roE/IaBj1KCAgm5zw22yPr91WKelCTzC0sTcza4YL8TxbOLCTD45cXWDMJxHV5YLqt0ATYd6TITh1oUha4zlO7SwuOPv7rOfWO0n01lANUIvA+kHcZW2iaFUD5cnBc8kkHFk1fhC0/Gpa41n+F+RPiNV0BqEN/JsGan1dSyvrFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739286135; c=relaxed/simple;
-	bh=dvYWvYpE3Jvxu+gXiYuB1dF3brHIeiUKLaI0UmHV/zU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=odllCFz4eogxcK4JvJAWtXoNblqb7Vww+aALoUldlMOOTjCzvBy3a/Rd1L1Te4ndhX/5Fmo5Tli6o1cLB0U0s4LJo/62lDx0WeWOfEZXy1MgDIj1gWhVJhmLUFxyyox6sSwYvnRg/GKltEevpdu9OZnVsa26BuOW5GIhEpksn1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uR70z4Nt; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739286156; c=relaxed/simple;
+	bh=iU3UXr58kiiQAoh2LCXTPFFO47tqLfuoMZ4ANShnnhg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HAUAi6IZoXYNz+vbyRI+pSlLlLcYMnqLZpbmeJdnBlMEG7SLpTmt1sejBDewJq+r+rpjJXbGpSul7QwCAs7XuQ8ZwKE+2auQ9iVVmXFCQ90S73CrGLDc0F5Omc5+Ql18+uZQBNdJ7GqS3r3Keh6WUXEr0TSsUSKTSlf3riLmxoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BJhbuZ83; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uR70z4Nt"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43956fcd608so1800575e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:02:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739286130; x=1739890930; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+0dC8Epp040zryKszPUJtEjy9aGy98jeZ8PAn2t0IV0=;
-        b=uR70z4NtJfIFKJZQnB3+tyt1aEfuYo2//4nEP6tZzFN2wM8X41czcA+VxuulpzppOB
-         qi2lultx/XdS7sDJZdYBaqGkVHLI7ZNSPTbiSBg20V90e6Qwrw9s2xuOsMAFSY5vWv4y
-         boZZin69uMidYSysOrSf8vdIMRZaQUfBKaBTqZxMHvlAZ+biLg0s6dANIRBz0QDQqjQM
-         nfNryHkmqRB/f5Z9U+Y8+7N24Zvqksgdv8BGDyM1oLEn/6hixpg0ElLghNKfZMgDZFdQ
-         xbmNBWPUG9nLWsU/JJpiX7lxJ+eiKaBn2lPl3ix8AvRIeU+vLceweNhXNS5K0wcSxvdO
-         Iz6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739286130; x=1739890930;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+0dC8Epp040zryKszPUJtEjy9aGy98jeZ8PAn2t0IV0=;
-        b=WDrZ5AZFXnV6k8/CUuofO39ONhj8orrNBrZTHrtIDR2qX1jCfHE+NLBdQ3CAFX+BbV
-         fBdxciQu9Ez35cnO2TZNf1E0eeNqGWByyKdX4wupziQq69B4QLpZMq1hNPyQnUE/MDOz
-         u7NbqktMeFUZ8CYoqinskl9oJqZ+gvaE6NzJIOQxhbh3zjUbNniqTwXaR25mRqXA/r+3
-         eFmqFGSGO2ycfZL8MhkS2cMa6cufQdX8B4r2DH/wyME9MK5paxS/POZ7IiCTYtXi+3da
-         +CO+svLxJTS7XU/8RgGjWPKtWrqXclSQu05mRtxHtAzZL7HcaEXiuT8XJ57ekOFb9dmh
-         aa4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUpjQpfYNVKyytHkVDmliIwgm9NIXdk48irsbrE48a5Hn2m5V4KzeZDpIVgos99NUE5XZ3ih8lqjIq23sM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHxjAIyWZuiHNcUsme2ecYaB/xjWrTfLCJpwBIQUhRcc9wiuFH
-	pdrQynD6mVtJPxlZmMj758U36HxzhFAg8/n7vqJLNnAmc7CJ2IYjZnJAzkzrinM=
-X-Gm-Gg: ASbGncv2KN9l6pO4ZpoJNFhQ7NdxqqSmaK1IqlGdBrsBCN0Wc0in7qwQq7HaxTv0nFH
-	MPpF4lcl0Wox09iWXKw6/ztPuTHgNt4913NJhSWYh1B3sjj1XGZ6JkIgVpaG9skubUX3Pc3d9NE
-	WnhWF0ZUMuHYgs/yyXQaoOGlzvTnicHeVHm+q3/z5f+DzUITz5V9Is5FZyz8jqpJZFNBG4lgUiJ
-	wBGECvjPwNmjuefNfY+vSxAEae3Z6LZcZFqtH0bH9vu/FKQBSZOjDpsFqg02s15Awd3HLppl7vL
-	gDfwwmFHVJCtg8cKqkesXO//E+zWrA==
-X-Google-Smtp-Source: AGHT+IE3hOhZQU5ZeJLEQpHMlcLHeykRfe1aYsIU6hPc4YIbHN0eMAEFBWd7Mya11+12QdoFN1ukmQ==
-X-Received: by 2002:a05:600c:8408:b0:439:554e:70da with SMTP id 5b1f17b1804b1-439554e74f3mr24840185e9.31.1739286130051;
-        Tue, 11 Feb 2025 07:02:10 -0800 (PST)
-Received: from [127.0.0.2] ([2a02:2454:ff21:ef41:d246:cdb8:d31f:c898])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390daf3c70sm213721975e9.26.2025.02.11.07.02.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 07:02:09 -0800 (PST)
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-Date: Tue, 11 Feb 2025 16:01:56 +0100
-Subject: [PATCH v2] arm64: dts: qcom: x1e80100-qcp: Add WiFi/BT pwrseq
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BJhbuZ83"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BDxaJp021613;
+	Tue, 11 Feb 2025 15:02:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=XtVxv8
+	uayeOQPpY2VGV3WMS8dQJbNqXyl/Qmv7QvjPg=; b=BJhbuZ83cDOxXmKrYstVCz
+	9kVG3MwWtIKh/E+LT4/5k8JE779nPv7RxObbq3HHC4vWzqNff+F1b8rJ4nItPLv8
+	+FqMjTuLfQxGJYoLuWGopyjb8hNjWyWKK3v9WhJ4xav0vdLOrQOt9pHkWGvwpVfj
+	Afu8gmO0Be7ye+18iFxsUzxbh5yaEy+dI9rLAJvrJk9AFvRquthkFIfRQk17PhWk
+	jC/0UHgwNH/OEfODcPuPQreo4nAtTqPd4fdWFgNoRqtagwavZt9zUjiCm4Y2Q2i7
+	QafT6NZ1tnPfM8Z1E25BURt95EFkq4TJROG9xgzJZpU5wv9ATudwiNDPuyoMNQTQ
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44qwd1b4s3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 15:02:25 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51BEnmk1011677;
+	Tue, 11 Feb 2025 15:02:24 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44pktjujjp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 15:02:24 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51BF2N4b23462526
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Feb 2025 15:02:23 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A6B8658055;
+	Tue, 11 Feb 2025 15:02:23 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2176158043;
+	Tue, 11 Feb 2025 15:02:23 +0000 (GMT)
+Received: from [9.12.79.21] (unknown [9.12.79.21])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 11 Feb 2025 15:02:23 +0000 (GMT)
+Message-ID: <e5ca9a2c-ec7d-4e0e-ad06-2d312b511b90@linux.ibm.com>
+Date: Tue, 11 Feb 2025 10:02:22 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250211-x1e80100-pwrseq-qcp-v2-1-c4349ca974ab@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAGNmq2cC/32NSw6CQBBEr2J6bZvuQT668h6GBWADnRgGegxiC
- Hd35ADu6lVSr1YIYioBrocVTGYN6ocI7niApq+GTlAfkcGROzNRjgtLQTHh+LYgE07NiK5ui0v
- RZJSkCcTlaNLqslvvZeRew8vbZz+Z+df+982MhG3OWZYyVTXnt6cOlfmTtw7Kbdu+jrSFa7cAA
- AA=
-X-Change-ID: 20241007-x1e80100-pwrseq-qcp-2bf898c60353
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Abel Vesa <abel.vesa@linaro.org>, Johan Hovold <johan@kernel.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-X-Mailer: b4 0.14.2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] s390/vfio-ap: Signal eventfd when guest AP
+ configuration is changed
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Anthony Krowiak <akrowiak@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, borntraeger@de.ibm.com, pasic@linux.ibm.com,
+        jjherne@linux.ibm.com, alex.williamson@redhat.com
+References: <20250107183645.90082-1-rreyes@linux.ibm.com>
+ <Z4U6iu5JidJUxDgX@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <f69bba4b-a97e-4166-9ce1-c8a2ad634696@linux.ibm.com>
+ <f1af50b3-f966-445d-ab89-3d213f55b93a@linux.ibm.com>
+ <Z6RnfwawWop0v1CW@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <02675184-0ce5-4f08-9d5d-f42987b77b5b@linux.ibm.com>
+ <Z6sDKeA6WzAgagiZ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Content-Language: en-US
+From: Rorie Reyes <rreyes@linux.ibm.com>
+In-Reply-To: <Z6sDKeA6WzAgagiZ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: E-WnUjyJWL3aFF9DY6I6dNCAiQw_U9gy
+X-Proofpoint-ORIG-GUID: E-WnUjyJWL3aFF9DY6I6dNCAiQw_U9gy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_06,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ adultscore=0 impostorscore=0 mlxlogscore=999 clxscore=1015
+ priorityscore=1501 spamscore=0 lowpriorityscore=0 phishscore=0
+ malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502110100
 
-Add the WiFi/BT nodes for QCP and describe the regulators for the WCN7850
-combo chip using the new power sequencing bindings. All voltages are
-derived from chained fixed regulators controlled using a single GPIO.
 
-The same setup also works for CRD (and likely most of the other X1E80100
-laptops). However, unlike the QCP they use soldered or removable M.2 cards
-supplied by a single 3.3V fixed regulator. The other necessary voltages are
-then derived inside the M.2 card. Describing this properly requires
-new bindings, so this commit only adds QCP for now.
+On 2/11/25 2:58 AM, Alexander Gordeev wrote:
+> On Thu, Feb 06, 2025 at 09:12:27AM -0500, Rorie Reyes wrote:
+>
+> Hi Rorie,
+>
+>> On 2/6/25 2:40 AM, Alexander Gordeev wrote:
+>>> On Wed, Feb 05, 2025 at 12:47:55PM -0500, Anthony Krowiak wrote:
+>>>>>> How this patch is synchronized with the mentioned QEMU series?
+>>>>>> What is the series status, especially with the comment from Cédric
+>>>>>> Le Goater [1]?
+>>>>>>
+>>>>>> 1. https://lore.kernel.org/all/20250107184354.91079-1-rreyes@linux.ibm.com/T/#mb0d37909c5f69bdff96289094ac0bad0922a7cce
+> ...
+>>>> I don't think that is what Alex was asking. I believe he is asking how the
+>>>> QEMU and kernel patch series are going to be synchronized.
+>>>> Given the kernel series changes a value in vfio.h which is used by QEMU, the
+>>>> two series need to be coordinated since the vfio.h file
+>>>> used by QEMU can not be updated until the kernel code is available. So these
+>>>> two sets of code have
+>>>> to be merged upstream during a merge window. which is different for the
+>>>> kernel and QEMU. At least I think that is what Alex is asking.
+>>> Correct.
+>>> Thanks for the clarification, Anthony!
+>> Tony, thank you for the back up!
+>>
+>> Alexander, is there anything else you need from my end for clarification?
+> The original question still stays - is it safe to pull this patch now,
+> before the corresponding QEMU change is integrated?
+>
+> Thanks!
 
-Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
----
-Changes in v2:
-- Rebase on qcom for-next, patch 1-2 were applied already
-- Mention dummy regulator warning
-- Link to v1: https://lore.kernel.org/r/20241007-x1e80100-pwrseq-qcp-v1-0-f7166510ab17@linaro.org
----
-The Linux driver currently warns about a missing regulator supply:
+If there are no other concerns from anyone else, and Tony is ok to sign 
+off, then I would say it's safe to pull the patch.
 
-  pwrseq-qcom_wcn wcn7850-pmu: supply vddio1p2 not found, using dummy regulator
+I do have a v2 of my QEMU changes that need to be reviewed so it would 
+probably ok to pull the kernel patches now.
 
-This supply exists on the WCN7850 chip, but nothing is connected there on
-the QCP. Discussion is still open how to hide this warning in the driver,
-but since the DT is correct and the same setup is already used on SM8550
-upstream, this shouldn't block this patch.
----
- arch/arm64/boot/dts/qcom/x1e80100-qcp.dts | 144 ++++++++++++++++++++++++++++++
- 1 file changed, 144 insertions(+)
+QEMU v2 patches: [RFC PATCH v2 0/5] Report vfio-ap configuration changes
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-index ec594628304a9ab9fe2dd7cdc0467953cd82dc1f..4240c608a4087d8173c1e92565e3c729fd15bed6 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-@@ -17,6 +17,7 @@ / {
- 
- 	aliases {
- 		serial0 = &uart21;
-+		serial1 = &uart14;
- 	};
- 
- 	wcd938x: audio-codec {
-@@ -337,6 +338,101 @@ usb_1_ss2_sbu_mux: endpoint {
- 			};
- 		};
- 	};
-+
-+	vreg_wcn_3p3: regulator-wcn-3p3 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "VREG_WCN_3P3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&tlmm 214 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-0 = <&wcn_sw_en>;
-+		pinctrl-names = "default";
-+
-+		regulator-boot-on;
-+	};
-+
-+	vreg_wcn_0p95: regulator-wcn-0p95 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "VREG_WCN_0P95";
-+		regulator-min-microvolt = <950000>;
-+		regulator-max-microvolt = <950000>;
-+
-+		vin-supply = <&vreg_wcn_3p3>;
-+	};
-+
-+	vreg_wcn_1p9: regulator-wcn-1p9 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "VREG_WCN_1P9";
-+		regulator-min-microvolt = <1900000>;
-+		regulator-max-microvolt = <1900000>;
-+
-+		vin-supply = <&vreg_wcn_3p3>;
-+	};
-+
-+	wcn7850-pmu {
-+		compatible = "qcom,wcn7850-pmu";
-+
-+		vdd-supply = <&vreg_wcn_0p95>;
-+		vddio-supply = <&vreg_l15b_1p8>;
-+		vddaon-supply = <&vreg_wcn_0p95>;
-+		vdddig-supply = <&vreg_wcn_0p95>;
-+		vddrfa1p2-supply = <&vreg_wcn_1p9>;
-+		vddrfa1p8-supply = <&vreg_wcn_1p9>;
-+
-+		wlan-enable-gpios = <&tlmm 117 GPIO_ACTIVE_HIGH>;
-+		bt-enable-gpios = <&tlmm 116 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-0 = <&wcn_wlan_bt_en>;
-+		pinctrl-names = "default";
-+
-+		regulators {
-+			vreg_pmu_rfa_cmn: ldo0 {
-+				regulator-name = "vreg_pmu_rfa_cmn";
-+			};
-+
-+			vreg_pmu_aon_0p59: ldo1 {
-+				regulator-name = "vreg_pmu_aon_0p59";
-+			};
-+
-+			vreg_pmu_wlcx_0p8: ldo2 {
-+				regulator-name = "vreg_pmu_wlcx_0p8";
-+			};
-+
-+			vreg_pmu_wlmx_0p85: ldo3 {
-+				regulator-name = "vreg_pmu_wlmx_0p85";
-+			};
-+
-+			vreg_pmu_btcmx_0p85: ldo4 {
-+				regulator-name = "vreg_pmu_btcmx_0p85";
-+			};
-+
-+			vreg_pmu_rfa_0p8: ldo5 {
-+				regulator-name = "vreg_pmu_rfa_0p8";
-+			};
-+
-+			vreg_pmu_rfa_1p2: ldo6 {
-+				regulator-name = "vreg_pmu_rfa_1p2";
-+			};
-+
-+			vreg_pmu_rfa_1p8: ldo7 {
-+				regulator-name = "vreg_pmu_rfa_1p8";
-+			};
-+
-+			vreg_pmu_pcie_0p9: ldo8 {
-+				regulator-name = "vreg_pmu_pcie_0p9";
-+			};
-+
-+			vreg_pmu_pcie_1p8: ldo9 {
-+				regulator-name = "vreg_pmu_pcie_1p8";
-+			};
-+		};
-+	};
- };
- 
- &apps_rsc {
-@@ -825,6 +921,23 @@ &pcie4_phy {
- 	status = "okay";
- };
- 
-+&pcie4_port0 {
-+	wifi@0 {
-+		compatible = "pci17cb,1107";
-+		reg = <0x10000 0x0 0x0 0x0 0x0>;
-+
-+		vddaon-supply = <&vreg_pmu_aon_0p59>;
-+		vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
-+		vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
-+		vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
-+		vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
-+		vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
-+		vddrfa1p8-supply = <&vreg_pmu_rfa_1p8>;
-+		vddpcie0p9-supply = <&vreg_pmu_pcie_0p9>;
-+		vddpcie1p8-supply = <&vreg_pmu_pcie_1p8>;
-+	};
-+};
-+
- &pcie6a {
- 	perst-gpios = <&tlmm 152 GPIO_ACTIVE_LOW>;
- 	wake-gpios = <&tlmm 154 GPIO_ACTIVE_LOW>;
-@@ -1135,6 +1248,37 @@ wcd_default: wcd-reset-n-active-state {
- 		bias-disable;
- 		output-low;
- 	};
-+
-+	wcn_wlan_bt_en: wcn-wlan-bt-en-state {
-+		pins = "gpio116", "gpio117";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	wcn_sw_en: wcn-sw-en-state {
-+		pins = "gpio214";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-+
-+&uart14 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn7850-bt";
-+		max-speed = <3200000>;
-+
-+		vddaon-supply = <&vreg_pmu_aon_0p59>;
-+		vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
-+		vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
-+		vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
-+		vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
-+		vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
-+		vddrfa1p8-supply = <&vreg_pmu_rfa_1p8>;
-+	};
- };
- 
- &uart21 {
+Unless someone else has any concerns with my kernal changes?
 
----
-base-commit: 18f0a0ac2430a17949aa3b393ee22f7ad0de37e0
-change-id: 20241007-x1e80100-pwrseq-qcp-2bf898c60353
-
-Best regards,
--- 
-Stephan Gerhold <stephan.gerhold@linaro.org>
+Thanks!
 
