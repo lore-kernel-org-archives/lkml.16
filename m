@@ -1,121 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B5F26158B;
-	Tue, 11 Feb 2025 18:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69322262168
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739299491; cv=none; b=rgVq4wB53HwIMFAueZCE3J0rWpE8tXhHYpmY8tQfu0goxDamrde2p2K4l1B8f3/A79p39v5FJ6NUOiFQqcHpaYq7z065QK/bscEkZkFghzVugZy51NCg5FFahVO/CnaOE3Sg5YFJDLrCBc2ksUM4ZsVEVTyvq18MuveyN91K1Cc=
+	t=1739299513; cv=none; b=gZQ+zDoEXWrzWAiMvUHYZaJx6sYekF5lDnLuKS5w+IOzyOCgKP97vfgT4YDO9SczQwhljkBAQ2q4tRFOnN2FixPP0u/6T9fGRwJj1+LCb98IEll+oA1ILrNK53Ec016DpWTy3udOXMGyWNqQeNM8KLdLnDQhUVdbrCSuONSWS9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739299491; c=relaxed/simple;
-	bh=ghRP+gbuDImmJVKfK6iB47GOeRo/vdl5Vcb10WIKFQo=;
+	s=arc-20240116; t=1739299513; c=relaxed/simple;
+	bh=oAD576S9n1J0vyvxAsNYW6OhHuVIozQD3eVwmTLQ3Zo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z5qg1kPLXi40MF37vmtyg34itDDVSllnIVkLua1MBCJOFxaUKvf+++jQHDCftObYuvWdJgIja+PSamT3fa+LU3pTB3icE0ZSUQVHFNSZ06ok4lJ4OyKvds6wh5RhUal0navaNjcbv7Ro08/IlsP7A/JWyYjv7UGVUDiAkK6ml24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z38cMeTI; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KlNTMPUIO9iGr1vlAo+LfFOOt3bYxm+T0RRYRrI+IhvrxtSk1gXtKHHZXuQVI5MbHLPFEV1Qxo0QAoyjeVozYTwrIRQV5zc+VNRcEljiZX6CF04AXnsa4zVva7hmEsaMBdBXFBPe03ga9Lk5xFiVcLoUrBlYRuW7EUUzwUUFR4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=jgNtjRIL; arc=none smtp.client-ip=95.215.58.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z38cMeTI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32128C4CEDD;
-	Tue, 11 Feb 2025 18:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739299490;
-	bh=ghRP+gbuDImmJVKfK6iB47GOeRo/vdl5Vcb10WIKFQo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z38cMeTIrsRh5tu+xqU2wkig5A7UiGan1ekOmWhmPUsiFDONHpIrL8wkko8rcztF/
-	 qLkFw5NqoH4FfQvINlZc7mF6MUx4PyVLsrRrzGnziSglK9FRgqW2iav61WHcGdqETF
-	 McEYisAtrC9xaGTRYAG0Htt6JPP9D7ZDwhV0zlGEOK/qYz/9JhT40FEtu31Ghfl8Se
-	 HSTaJzIgoh8758KSVNgX0Nuc1xqxbkarsUzS1RRASPDXjOrFlUpZERpwZmCl2FHjYt
-	 fVXA+uxCfgTLTGb3AZhcEaUFhsOn+FfikIYWSuERqCd29EFZzqZMDbPjQQeiLSL1+l
-	 48f1mnJiAl2Xg==
-Date: Tue, 11 Feb 2025 18:44:46 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Hermes Zhang <chenhuiz@axis.com>
-Cc: Hermes Zhang <Hermes.Zhang@axis.com>, jic23@kernel.org, robh@kernel.org,
-	lars@metafoo.de, krzk+dt@kernel.org,
-	Conor Dooley <conor+dt@kernel.org>, kernel@axis.com,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: iio: chemical: sensirion,senxx: Add
- yaml description
-Message-ID: <20250211-whiff-handsfree-a21486cf67c7@spud>
-References: <20250206061521.2546108-1-Hermes.Zhang@axis.com>
- <20250206061521.2546108-3-Hermes.Zhang@axis.com>
- <20250206-italics-reproduce-35d554c38751@spud>
- <21dd4902-7d24-6d1a-1144-2dfd7cabe9e2@axis.com>
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="jgNtjRIL"
+Date: Tue, 11 Feb 2025 13:44:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1739299499;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U4tuzbNamXDhTB3CQeJRBV8whPYczSlBM97G6IiYYkg=;
+	b=jgNtjRIL7zbY+GY9njC7eEcP6A0gx18yDzEH72va/9CgiZRmY6E2TLKfZ41WrP5VinrLqj
+	EJLdUxUnQcKN2bMzSk4BAaHBLbIf+AJxrUhZAoN5tCAWoUVTDGOOQxEvCD+KeQqsfLIom0
+	X6KKHl2Km/bpOqw6pKCrH+JXaRlAPwJw16tnUGLTr+yo+gVAo9SSalkZxdt8IQOMoKJl5c
+	VvkwE1USxSHFwndQ46VRk5fwWpZN4Rt0RH/sqkp0Fkm2JoxIaQeU309KlLGv+6z0ksOZfj
+	8aCrn2ByVUZgjdCVxCw8c04Sy83DT7wZnV5TDUcFFyv2cyP2IUhqUXUiDdRAZw==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Hector Martin <marcan@marcan.st>
+Subject: Re: [PATCH 2/5] iommu/dart: Skip reset for locked DARTs
+Message-ID: <Z6uao2OnBcg9zkrc@blossom>
+References: <20250210-locked-dart-v1-0-5d97fe247f35@rosenzweig.io>
+ <20250210-locked-dart-v1-2-5d97fe247f35@rosenzweig.io>
+ <98af5c02-5006-4272-aaf0-a0e30c312059@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="phNxZwqCbmj0chLs"
-Content-Disposition: inline
-In-Reply-To: <21dd4902-7d24-6d1a-1144-2dfd7cabe9e2@axis.com>
-
-
---phNxZwqCbmj0chLs
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <98af5c02-5006-4272-aaf0-a0e30c312059@arm.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, Feb 08, 2025 at 03:07:08PM +0800, Hermes Zhang wrote:
-> Hi,
->=20
-> On 2025/2/7 2:20, Conor Dooley wrote:
-> > diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,s=
-enxx.yaml b/Documentation/devicetree/bindings/iio/chemical/sensirion,senxx.=
-yaml
-> > new file mode 100644
-> > index 000000000000..4d998eabe441
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,senxx.ya=
-ml
-> > filename matching a compatible please.
-> So sensirion,sen66.yaml?
-> > +  https://sensirion.com/media/documents/6791EFA0/62A1F68F/Sensirion_Da=
-tasheet_Environmental_Node_SEN5x.pdf
-> > +  https://sensirion.com/media/documents/FAFC548D/6731FFFA/Sensirion_Da=
-tasheet_SEN6x.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - sensirion,sen50
-> > +      - sensirion,sen54
-> > +      - sensirion,sen55
-> > +      - sensirion,sen60
-> > +      - sensirion,sen65
-> > +      - sensirion,sen66
-> > I'd like a note in the commit message as to how all of these devices are
-> > different please.
-> Sure, will fix in v2.
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > No supplies needed for this device? Seems like you would need at least
-> > one, no?
->=20
-> You mean the vdd-supply? The chip require a e.g. 3.3v VDD, but in our HW,=
- we
-> have no gpio/regulator to control it, connect directly by the HW, should I
-> still need to have one vdd-supply here?
+> >   	struct apple_dart *dart = platform_get_drvdata(pdev);
+> > -	apple_dart_hw_reset(dart);
+> > +	if (!dart->locked)
+> > +		apple_dart_hw_reset(dart);
+> 
+> Not much point saving anything on suspend either, in that case.
 
-Might not be controllable in your case, but if the device needs power
-=66rom somewhere it should have one in the binding.
-
---phNxZwqCbmj0chLs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6uangAKCRB4tDGHoIJi
-0v+LAQDUHgR6IiHcxmIJj3tANEKTn/Kdnt0M3QU7xolt80zJ0AEA8P4k1xW4qYIm
-1PfYq9yqfP2LSUqg4Q2S4XiTG8/klQ8=
-=FNxR
------END PGP SIGNATURE-----
-
---phNxZwqCbmj0chLs--
+Quite right. Fixed in v2, thanks!
