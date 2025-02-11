@@ -1,96 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794761F0E4E;
-	Tue, 11 Feb 2025 15:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6873C3C
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739287680; cv=none; b=G4/ChQyQoxYri+uG43ta2tYeT47f73ltFK1I20Rr6ZDZ32Rkch74B0cm59Rhf7/j0XrRu35eOIodUW7tskBITKAFBbBtqNNSyoYDzfQiI6bgobhZtrn/J+4v1l5+8NeiOkVNO7oZt7xiPyZovG0bsQ6Xg+EDLXivBT9A7JAgESc=
+	t=1739287735; cv=none; b=GAWhuJuND6EtD0+aB/fI2ueVdLP6zMDWeQL/O4rXQiAfGnuMsRu+8vgHTcW9jl8wLIxMcYT7kkD7gMXqHaVg7wSf9X+hYjVX2OjPXrCqKIcZ+NS7UeLfP9MBwUxPMahrvp4C4/sk8M6n8Cl5tg2uvkCYAKw4zKQy+/TRKxDDrW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739287680; c=relaxed/simple;
-	bh=ZOFCgQqHmE5mPF2tRhaxFQ1i76aEb/IlE1b/4Rfz6EI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AXanHUXNnU3TVDqhHHOtgmScs9C2bHfywozN/nZ3NLB+fsEcnbfpUrH0/cvcSL2zaofH8SPw/l8dQ+VV03gEKSIcyrWi+F0LbGXDZ4hqcaLQIsEX5jKwyKPMH33JofcKKm6ETceBGmSB0P9ZuIFK3TtT7UP7dbpqbeZHVXdHukQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 650FAC4CEDD;
-	Tue, 11 Feb 2025 15:27:56 +0000 (UTC)
-Date: Tue, 11 Feb 2025 10:28:01 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Joel Fernandes <joel@joelfernandes.org>, Prakash Sangappa
- <prakash.sangappa@oracle.com>, Peter Zijlstra <peterz@infradead.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
- Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
- x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>, luto@kernel.org,
- bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org,
- mgorman@suse.de, jon.grimm@amd.com, bharata@amd.com,
- raghavendra.kt@amd.com, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
- Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>, Suleiman
- Souhlal <suleiman@google.com>, Ingo Molnar <mingo@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Clark Williams
- <clark.williams@gmail.com>, daniel.wagner@suse.com, Joseph Salisbury
- <joseph.salisbury@oracle.com>, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250211102801.5b32d610@gandalf.local.home>
-In-Reply-To: <20250211082138.iqvedSfG@linutronix.de>
-References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
-	<9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
-	<20250204220418.35949317@gandalf.local.home>
-	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
-	<20250205081635.397eacb0@gandalf.local.home>
-	<CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
-	<20250206083039.0916ad24@gandalf.local.home>
-	<20250206134408.lD_POjuG@linutronix.de>
-	<20250210144321.1f5974a6@gandalf.local.home>
-	<20250211082138.iqvedSfG@linutronix.de>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739287735; c=relaxed/simple;
+	bh=g/VzPgjMTUf8b4KZq8wW7K14EeqxaK8deIugM6ijxdc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oOdicqGYeWKXeGuk9/Xu3Q0CcJGkIHV2RZQjVDHOUAdFPpqwjpqv6QqMaPE97XgIXNrhNQs07czQ/1NwngtRwpZ2hfrmCTGNeRdfu+SOCWVTXsw1hCqrFrNOkewri90Re4rkG2vpIp1PcbHugN1XmH+bW1r2xbjyIhrWmCbpNrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Nj4bO6lQ; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Nj4bO6lQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739287731;
+	bh=g/VzPgjMTUf8b4KZq8wW7K14EeqxaK8deIugM6ijxdc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Nj4bO6lQijRHRd5TqwliuF33tQ5gK5ernjeZp67nLCx5mPOt98Uge9263E377n8+d
+	 wAOkh7e1NGSXpLHpUR7eXo2CMV6tzCDW3POi2snbciX8On3OPqUwyghDhDRKCkcyvg
+	 UEOqFqfMLWc3adTEGjy0iwhDNtYqEVr4k/peliTTCiwbcPVh4si/GG9jIP6gd+UTBf
+	 DDKmSRTHDLK4qkkncJUNMMQnCjGMyDekIi3793c9VwYsL/QbUngPYd6YIokjPGd+qS
+	 S+gDg4E7AHPlSN1UN836dzpE2qwAFvZOYSNfydj8Y8YCxbVwi4GFSZmuahw+q0GNqm
+	 lLkRY7gZ5zHmQ==
+Received: from localhost.localdomain (unknown [171.76.80.66])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9984717E014F;
+	Tue, 11 Feb 2025 16:28:46 +0100 (CET)
+From: Vignesh Raman <vignesh.raman@collabora.com>
+To: dri-devel@lists.freedesktop.org
+Cc: daniels@collabora.com,
+	helen.fornazier@gmail.com,
+	airlied@gmail.com,
+	simona.vetter@ffwll.ch,
+	robdclark@gmail.com,
+	guilherme.gallo@collabora.com,
+	sergi.blanch.torne@collabora.com,
+	valentine.burley@collabora.com,
+	jani.nikula@linux.intel.com,
+	dmitry.baryshkov@linaro.org,
+	mripard@kernel.org,
+	boqun.feng@gmail.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] drm/ci: enable lockdep detection
+Date: Tue, 11 Feb 2025 20:58:03 +0530
+Message-ID: <20250211152812.54018-1-vignesh.raman@collabora.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 11 Feb 2025 09:21:38 +0100
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+This patch series enables lockdep detection in drm-ci. Any lockdep
+failures will be shown as warnings in the pipeline. This series
+also enables CONFIG_DEBUG_WW_MUTEX_SLOWPATH for mutex slowpath
+debugging and refactors software-driver stage jobs.
 
-> We don't follow this behaviour exactly today.
-> 
-> Adding this behaviour back vs the behaviour we have now, doesn't seem to
-> improve anything at visible levels. We don't have a counter but we can
-> look at the RCU nesting counter which should be zero once locks have
-> been dropped. So this can be used for testing.
-> 
-> But as I said: using "run to completion" and preempt on the return
-> userland rather than once the lazy flag is seen and all locks have been
-> released appears to be better.
-> 
-> It is (now) possible that you run for a long time and get preempted
-> while holding a spinlock_t. It is however more likely that you release
-> all locks and get preempted while returning to userland.
+Test run with this series,
+https://gitlab.freedesktop.org/vigneshraman/linux/-/pipelines/1362134
 
-IIUC, today, LAZY causes all SCHED_OTHER tasks to act more like
-PREEMPT_NONE. Is that correct?
+Link to v1:
+https://lore.kernel.org/all/20240812112030.81774-1-vignesh.raman@collabora.com/
 
-Now that the PREEMPT_RT is not one of the preemption selections, when you
-select PREEMPT_RT, you can pick between CONFIG_PREEMPT and
-CONFIG_PREEMPT_LAZY. Where CONFIG_PREEMPT will preempt the kernel at the
-scheduler tick if preemption is enabled and CONFIG_PREEMPT_LAZY will
-not preempt the kernel on a scheduler tick and wait for exit to user space.
+Vignesh Raman (3):
+  drm/ci: refactor software-driver stage jobs
+  drm/ci: enable CONFIG_DEBUG_WW_MUTEX_SLOWPATH
+  drm/ci: enable lockdep detection
 
-Sebastian,
+ Documentation/gpu/automated_testing.rst |  4 ++
+ drivers/gpu/drm/ci/build.yml            |  6 +-
+ drivers/gpu/drm/ci/igt_runner.sh        | 11 ++++
+ drivers/gpu/drm/ci/test.yml             | 78 +++++++++++++------------
+ 4 files changed, 58 insertions(+), 41 deletions(-)
 
-It appears you only tested the CONFIG_PREEMPT_LAZY selection. Have you
-tested the difference of how CONFIG_PREEMPT behaves between PREEMPT_RT and
-no PREEMPT_RT? I think that will show a difference like we had in the past.
+-- 
+2.43.0
 
-I can see people picking both PREEMPT_RT and CONFIG_PREEMPT (Full), but
-then wondering why their non RT tasks are suffering from a performance
-penalty from that.
-
--- Steve
