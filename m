@@ -1,29 +1,28 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543961D5CD9;
-	Tue, 11 Feb 2025 06:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5391E5B87;
+	Tue, 11 Feb 2025 06:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739253731; cv=none; b=lbG7mzYbF6LgnnuPMJzANiu+Wk3AC/kk+e9p6PnuX8e1KOVzR5V+/jxRYftp3+s6ZoA4qndWXxKukkp1xGC4oKB3fG5yU17HDUzN4x7HdYH/+SbVLLWN+0RBWrhDHyWKISxMS2oUSp98hSLlUGbzsjLUF7/XJ4jCr0A+X+iWRU8=
+	t=1739253734; cv=none; b=n8m6z2w6C2e/AuVfFVQdO48i6z6d8qiCjSPbIc553YKEZC0vyGehzO+XA9ZmlyYN2w36ddUqLMKuKrdcQu9zRbLtRuUFJ7UAiHm6xptuh7mZmrF6g0kOyKZJe2A90Gth9FKGrIzaNqBN0ZJ+qhhLNPN8sFP2VK9opzDQf63YaHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739253731; c=relaxed/simple;
-	bh=/cLBrEIhLQ3n08yvWEKwzxH0hYx0q6II9tU6JMD/8f0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nlrqxFnvMz4a4hHxmhmV5bHOy2QLqHln/AXE6yxGzwdm98NYMRGgeRYRZpXlFATITS3Hpm6szT+CSkt+kMAv7Dbx4pZBIBDetsyhVHKcwJUfFzoDRCZYaGwM9YVjxxvNoW5WaaxIJXrGGipBUP7nT1iAEgd4OFjOCpV0Is5KNj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=IBv4NDd/; arc=none smtp.client-ip=115.124.30.99
+	s=arc-20240116; t=1739253734; c=relaxed/simple;
+	bh=m9tJe05NWad9zWzoKlpEUgZsTJGCSwZkoTLQsSwq4fE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X2pEAqrwlukNY3Tli1uV+LwXDOKagOnTzeJwJIf8Hgr5I60dn7KgkhgWzPn/5AsJWmsVDOhHsJNtMCkR2QolvkbmsJCSyRsW26c7gcxOGlSLyVLZ0YzVlwZWdyDbRTQvjpIEcZRmWFVBnxHWVNviPjAaGQxkOp9PPgk1gI+1qXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aUWibNCV; arc=none smtp.client-ip=115.124.30.113
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="IBv4NDd/"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aUWibNCV"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1739253726; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=hfmiBx8OqSwf83Pjl+Ndh5ksVZvALy8DLh1zZo/PfR0=;
-	b=IBv4NDd/IZMNMZ3ebccSd1/tyOAXFlXZDmAtA2WvCQZYNW4tKXLSJ5lkWDkS4cbqE1Ae/SxDxrEdbvjjTV2j3qobKEjyQZTG+2IAmWPJsxj4sHQmnPcn2tYg2rh4vJlLZ1oOriBra4dc2u1+FSaRsVZ6rsOhDwjwwBWjbT26BXU=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPFiSIJ_1739253724 cluster:ay36)
+	t=1739253724; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=jiGp5PhnCpH/e44Wh/mkAafmjAyKfVlWuH9hcSORWag=;
+	b=aUWibNCVIsSUNNEWQ3H/EfrMYAo6rM7F+2BwVXeCURpeRFUx3nImh+a9wG7yvS5jeb9btjc/xNvODyGPWTYZo4GyH/Bufqs9p1lDzxYw495G2QODjud0N4UCRBUKE4k/KKZTpEVO/YWznu9SCU6//+AYds1y5NrpG6x3AXqCniI=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPFiSHJ_1739253721 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 11 Feb 2025 14:02:05 +0800
+          Tue, 11 Feb 2025 14:02:02 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
 To: tony.luck@intel.com,
 	bp@alien8.de,
@@ -40,12 +39,10 @@ Cc: tglx@linutronix.de,
 	linux-mm@kvack.org,
 	baolin.wang@linux.alibaba.com,
 	tianruidong@linux.alibaba.com
-Subject: [PATCH v1 3/4] x86/mce: add EX_TYPE_EFAULT_REG as in-kernel recovery context to fix copy-from-user operations regression
-Date: Tue, 11 Feb 2025 14:01:59 +0800
-Message-ID: <20250211060200.33845-4-xueshuai@linux.alibaba.com>
+Subject: [PATCH v1 0/4] fmm/hwpoison: Fix regressions in memory failure handling
+Date: Tue, 11 Feb 2025 14:01:56 +0800
+Message-ID: <20250211060200.33845-1-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20250211060200.33845-1-xueshuai@linux.alibaba.com>
-References: <20250211060200.33845-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,82 +51,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit 4c132d1d844a ("x86/futex: Remove .fixup usage") introduced a new
-extable fixup type, EX_TYPE_EFAULT_REG, and later patches updated the
-extable fixup type for copy-from-user operations, changing it from
-EX_TYPE_UACCESS to EX_TYPE_EFAULT_REG.
+This patch addresses three regressions identified in memory failure
+handling, as discovered using ras-tools[1]:
 
-Specifically, commit 99641e094d6c ("x86/uaccess: Remove .fixup usage")
-altered the extable fixup type for the get_user family, while commit
-4c132d1d844a ("x86/futex: Remove .fixup usage") addressed the futex
-operations. This change inadvertently caused a regression where the error
-context for some copy-from-user operations no longer functions as an
-in-kernel recovery context, leading to kernel panics with the message:
-"Machine check: Data load in unrecoverable area of kernel."
+- `./einj_mem_uc copyin -f`
+- `./einj_mem_uc futex -f`
+- `./einj_mem_uc instr`
 
-To fix the regression, add EX_TYPE_EFAULT_REG as a in-kernel recovery
-context for copy-from-user operations.
+The regressions in the copyin and futex cases were caused by the
+replacement of `EX_TYPE_UACCESS` with `EX_TYPE_EFAULT_REG` in some
+copy-from-user operations, leading to kernel panics. The instr case
+regression resulted from the PTE entry not being marked as hwpoison,
+causing the system to send unnecessary SIGBUS signals.
 
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
----
+These fixes ensure proper handling of memory errors and prevent kernel
+panics and unnecessary signal dispatch.
+
+[1]https://git.kernel.org/pub/scm/linux/kernel/git/aegl/ras-tools.git
+
+Shuai Xue (4):
+  x86/mce: Collect error message for severities below MCE_PANIC_SEVERITY
+  x86/mce: dump error msg from severities
+  x86/mce: add EX_TYPE_EFAULT_REG as in-kernel recovery context to fix
+    copy-from-user operations regression
+  mm/hwpoison: Fix incorrect "not recovered" report for recovered clean
+    pages
+
+ arch/x86/kernel/cpu/mce/core.c     | 19 +++++++++++++------
  arch/x86/kernel/cpu/mce/severity.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ mm/memory-failure.c                |  5 ++---
+ 3 files changed, 31 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/severity.c b/arch/x86/kernel/cpu/mce/severity.c
-index dac4d64dfb2a..14c2d71c3ce1 100644
---- a/arch/x86/kernel/cpu/mce/severity.c
-+++ b/arch/x86/kernel/cpu/mce/severity.c
-@@ -16,6 +16,7 @@
- #include <asm/traps.h>
- #include <asm/insn.h>
- #include <asm/insn-eval.h>
-+#include <linux/extable.h>
- 
- #include "internal.h"
- 
-@@ -285,7 +286,8 @@ static bool is_copy_from_user(struct pt_regs *regs)
-  */
- static noinstr int error_context(struct mce *m, struct pt_regs *regs)
- {
--	int fixup_type;
-+	const struct exception_table_entry *e;
-+	int fixup_type, imm;
- 	bool copy_user;
- 
- 	if ((m->cs & 3) == 3)
-@@ -294,9 +296,14 @@ static noinstr int error_context(struct mce *m, struct pt_regs *regs)
- 	if (!mc_recoverable(m->mcgstatus))
- 		return IN_KERNEL;
- 
-+	e = search_exception_tables(m->ip);
-+	if (!e)
-+		return IN_KERNEL;
-+
- 	/* Allow instrumentation around external facilities usage. */
- 	instrumentation_begin();
--	fixup_type = ex_get_fixup_type(m->ip);
-+	fixup_type = FIELD_GET(EX_DATA_TYPE_MASK, e->data);
-+	imm  = FIELD_GET(EX_DATA_IMM_MASK,  e->data);
- 	copy_user  = is_copy_from_user(regs);
- 	instrumentation_end();
- 
-@@ -304,9 +311,13 @@ static noinstr int error_context(struct mce *m, struct pt_regs *regs)
- 	case EX_TYPE_UACCESS:
- 		if (!copy_user)
- 			return IN_KERNEL;
--		m->kflags |= MCE_IN_KERNEL_COPYIN;
--		fallthrough;
--
-+		m->kflags |= MCE_IN_KERNEL_COPYIN | MCE_IN_KERNEL_RECOV;
-+		return IN_KERNEL_RECOV;
-+	case EX_TYPE_IMM_REG:
-+		if (!copy_user || imm != -EFAULT)
-+			return IN_KERNEL;
-+		m->kflags |= MCE_IN_KERNEL_COPYIN | MCE_IN_KERNEL_RECOV;
-+		return IN_KERNEL_RECOV;
- 	case EX_TYPE_FAULT_MCE_SAFE:
- 	case EX_TYPE_DEFAULT_MCE_SAFE:
- 		m->kflags |= MCE_IN_KERNEL_RECOV;
 -- 
 2.39.3
 
