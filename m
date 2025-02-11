@@ -1,86 +1,127 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B21724E4B6;
-	Tue, 11 Feb 2025 14:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C9F24C671;
+	Tue, 11 Feb 2025 14:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739284633; cv=none; b=SIZeNtJ5+c70b43OvXncG0VpnGOsO+UFN60+fLojr9tnH7fi/UtPF15Hk3EPd1DYPhmR60TkhMfUvPRxDqkxFRG2IFMMgGTBhUCz1hnBbd52aQAv/a4SM1E2P3i9D4jikwWit3Zbwck4SARIXWg3CcjEGP/l0USH2V1vHlVX+Mg=
+	t=1739284666; cv=none; b=ZP+qNOFYop543TxWoASTJksR3hGgg+rte3o1qSh5EwR710CdwrTjxE5NGly6GGxh4KD9KqkeuKDJra60zS90nQ7UANGcgpHjBAOoD6PM6d6WTFGI3/oXZeSMHsBaM0a3Ahv42rDwrct7I5YXhj/DOwFRJOtFAYpMbQNwSXEkPoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739284633; c=relaxed/simple;
-	bh=CZIzb9cGr4/AVgH4hhj7syt7mWnqAPJKgrgJZPvCORI=;
+	s=arc-20240116; t=1739284666; c=relaxed/simple;
+	bh=zZUX3dcU+L2kq2852aFMoMk3aZLTjDr55brLUK+tEGY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o3VXe1UGbWfkekShCSLDogsnj3ubdh2jdD9Dds5kvi9ygqnuqQts4zEIhirNVmmAURA17bLzcKM4sXNwRJejEr1ApAcUKbzIS5XMDPFmVVWOrf7PRkxE/UTRFk+FmvF46ELhVKqUzjHYmUH/BsmQ769+AZaR21YX4eyqRnjiG/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dN9lSTek; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=G0j9T09K0eYHAr/t3OWzE0o9r/uk9S7R9QZpzf+qShQUNSNjSYXAfVsgR1BcPy03xB35LIqSRMEsS5CaKzIjEK7Yauveb496+aOIUruF/u6cSZYXBRGP8sVr9AWreQ6sFtaV/VkRpnGgwLU/GMv+Va7sQP64D9nt/Cge6priDv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=utkVcdLp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dN9lSTek"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=pFk5fpEDLWS5KnQvb1kAqi7O5mIQDtL8WY1RZ4xQVrE=; b=dN9lSTekfUpvOIgXLOQfyOH+xw
-	VuYQSHTsp1HTBYiyaDFSnKleML4WBXujYlgCRGPzQ82eI1uzmLF9ipUmBusxUAPH1euU0ye9JsMH+
-	Eq7JrEPgS8G7Jd7WunIxseMcaqXluXKyY3N8NfOv4rtrkQXjMLlvjCMoSadMmG23pTDLODTK8p6D0
-	7pD9cumkoVGRpeOLY2vqtc+ogV7uv9Znr0FuxzYTFXNkK7HxBfSSeL+EZ7SztAhID0/qH5x97m4s8
-	ZuaphDGCa8OfOuLBaeBvOjZKS1wyUCMA/4sRPmOpQmbAOADPHotu6bW9b7oGNIiEILc4kxQksULne
-	yHhlAyeg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1thrNt-00000000bZv-0IcX;
-	Tue, 11 Feb 2025 14:37:09 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 18FA73004AF; Tue, 11 Feb 2025 15:37:08 +0100 (CET)
-Date: Tue, 11 Feb 2025 15:37:07 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH v1 03/11] sched: Add sched tracepoints for RV task model
-Message-ID: <20250211143707.GH29593@noisy.programming.kicks-ass.net>
-References: <20250211074622.58590-1-gmonaco@redhat.com>
- <20250211074622.58590-4-gmonaco@redhat.com>
- <20250211110307.GE29593@noisy.programming.kicks-ass.net>
- <56aad1c92224c624f7404c4ef6076a6ec7299b13.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="utkVcdLp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B03C4CEDD;
+	Tue, 11 Feb 2025 14:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739284665;
+	bh=zZUX3dcU+L2kq2852aFMoMk3aZLTjDr55brLUK+tEGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=utkVcdLpn7mhlzeCQlCl0e5CSJBIx+gf4u7jOBBevgdb45xMvhkBwJB+o5T9MpQTL
+	 vEwtRn3d7j8uRTqJH6W6XMArk/IA1fwUV5T95bV25LlkWM7ReXsysLWLtNaEj7//Pw
+	 Ls+AiG04rqk5FfEJgL0EPOr4FgCOl36qq5968KjCG3MeK//m7mRtx5sL+qGjEcrLUs
+	 F93GmqBVws5cymC7IBVr2rFnjT0ORoAV9r3m1ZpBZTGsFdlW8WTijxVl3jmWb/kyHK
+	 UGfgO2aHTysXes1+IaCbiklFGuv+LH6h2Fbbp9G9i9ztSO+fGEZjPwXWl1UQxtdESv
+	 Xir8rjnFJ8zdg==
+Date: Tue, 11 Feb 2025 20:07:02 +0530
+From: Naveen N Rao <naveen@kernel.org>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, 
+	Vasant Hegde <vasant.hegde@amd.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 3/3] KVM: x86: Decouple APICv activation state from
+ apicv_inhibit_reasons
+Message-ID: <6y4yuwuz4twz7gc6farvpuekl5ryx3sk2j6mw4howdwz42nwoo@hyecnb3nobmu>
+References: <cover.1738595289.git.naveen@kernel.org>
+ <405a98c2f21b9fe73eddbc35c80b60d6523db70c.1738595289.git.naveen@kernel.org>
+ <Z6EOxxZA9XLdXvrA@google.com>
+ <60cef3e4-8e94-4cf1-92ae-34089e78a82d@redhat.com>
+ <Z6FVaLOsPqmAPNWu@google.com>
+ <uroh6wvlhfj4whlf2ull4iob6k7nr4igeplcfvax7nksav6mtf@ek5ja23dkjtn>
+ <CABgObfbZYBRx96Cye9HdF=TMkrVMcGa7hJiyYZ4KY3WvbD+4nw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <56aad1c92224c624f7404c4ef6076a6ec7299b13.camel@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABgObfbZYBRx96Cye9HdF=TMkrVMcGa7hJiyYZ4KY3WvbD+4nw@mail.gmail.com>
 
-On Tue, Feb 11, 2025 at 01:54:44PM +0100, Gabriele Monaco wrote:
-
-> > > +void do_trace_set_current_state(int state_value)
-> > > +{
-> > > + trace_sched_set_state_tp(current, current->__state, state_value);
-> > 
-> > Should this be:
-> > 
-> >  __do_trace_sched_set_state_tp() ?
-> > 
+On Tue, Feb 04, 2025 at 03:08:57PM +0100, Paolo Bonzini wrote:
+> On Tue, Feb 4, 2025 at 12:15 PM Naveen N Rao <naveen@kernel.org> wrote:
+> > As a separate change, I have been testing a patch that moves the
+> > PIT_REINJ inhibit from PIT creation to the point at which the guest
+> > actually programs it so that default guest configurations can utilize
+> > AVIC:
 > 
-> Mmh, you mean avoiding the static_branch_unlikely in the helper
-> function, since it's supposed to be used before calling it?
+> In-kernel PIC and PIT is sort of a legacy setup; the so-called
+> "split irqchip" (LAPIC in KVM, PIC/PIT in userspace) is strongly
+> preferred.  So I don't think it's particularly important to cater
+> for PIT_REINJ.
 
-Yep, seems pointless to repeat that.
+Sure, though it would be nice if we can enable AVIC to function in wider 
+configurations especially if the guest doesn't use the PIT :)
 
-> > > +}
-> > > +EXPORT_SYMBOL(do_trace_set_current_state);
-> > 
-> > _GPL
-> > 
 > 
-> I'm absolutely not against this change but, out of curiosity, would
-> that imply non-GPL modules are not going to be able to sleep going
-> forward? At least not using this pattern.
+> > If it is, or if we choose to delay PIT_REINJ inhibit to vcpu creation time,
+> > then making PT_REINJ or IRQWIN inhibits sticky will prevent AVIC from being
+> > enabled later on. I can see in my tests that BIOS (both seabios and edk2)
+> > programs the PIT though Linux guest itself doesn't (unless -no-hpet is used).
+> 
+> Even with -no-hpet, Linux should turn off the PIT relatively soon
+> and only rely on the local APIC's timer.
 
-Bah, you're right. Killing non-GPL modules seems like a worthy goal
-though, but perhaps another day ;-)
+I am not seeing that. With -no-hpet, I see that the guest continues to 
+use the PIT, as well as the local APIC timer.
+
+> 
+> > You're right -- APICv isn't actually being toggled, but IRQWIN inhibit is
+> > constantly being set and cleared while trying to inject device interrupts into
+> > the guests. The places where we set/clear IRQWIN inhibit has comments
+> > indicating that it is only required for ExtINT, though that's not actually the
+> > case here.
+> >
+> > What is actually happening is that since the PIT is in reinject mode, APICv is
+> > not active in the guest. When that happens, kvm_cpu_has_injectable_intr()
+> > returns true when any interrupt is pending:
+> >
+> >     /*
+> >      * check if there is injectable interrupt:
+> >      * when virtual interrupt delivery enabled,
+> >      * interrupt from apic will handled by hardware,
+> >      * we don't need to check it here.
+> >      */
+> >     int kvm_cpu_has_injectable_intr(struct kvm_vcpu *v)
+> >     {
+> >             if (kvm_cpu_has_extint(v))
+> >                     return 1;
+> >
+> >             if (!is_guest_mode(v) && kvm_vcpu_apicv_active(v))
+> >                     return 0;
+> >
+> >             return kvm_apic_has_interrupt(v) != -1; /* LAPIC */
+> >     }
+> >
+> > The second if condition fails since APICv is not active. So,
+> > kvm_check_and_inject_events() calls enable_irq_window() to request for an IRQ
+> > window to inject those interrupts.
+> 
+> Ok, that's due solely to the presence of *another* active inhibit.
+> Since sticky inhibits cannot work, making the IRQWIN inhibit per-CPU
+> will still cause vCPUs to pound on the apicv_update_lock, but only on
+> the read side of the rwsem so that should be more tolerable.
+> 
+> Using atomics is considerably more complicated and I'd rather avoid it.
+
+Understood, thanks!
+
+
+- Naveen
+
