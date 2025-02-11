@@ -1,179 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0D7254B11
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF3D253B7D
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290247; cv=none; b=nqOBP2H2jSUMoi2nBrakkJ8NWXpyu2+aFnJke6K2dKwOpKKQ9TxcubEVhGLksydWEXF9uVR9ON7N8nB0EP2ZVD/4PFhGoEkYZZzCGQgnTGj2BeNTyP+Cek0za+y8pICs8bQlJxWbWBhgRqGedBRHPw6bNDH3KnwtDFielsAJY84=
+	t=1739290295; cv=none; b=nSMQ/H8EmJJqGitayoaIC6wNHGiV1jgHTMI+5EvqWwzv33amvXNjUU8PoNdiOtdKtW+oFXvWuogOxgCxl7K6GEgF6oy147f4OSiR7lwPARXk9jfYyfgz9JM81nKhkjocA34NcRMXPvRY9gF0qn++luhXGn0ATZPoFBi+V1v4KXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290247; c=relaxed/simple;
-	bh=nE7GJqZw+gIEdhcV99Kpd2q5ds+/vCptECGTizt6klE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DKtTDhaOBh/xm0Mz2ZrF5Fj7aR6tNSXZqEPwA7tR/GhoVvtypYdnxZ+nVc5zZ3fUEucRjRZ+Xw9qglsnarU0HVzo3m8Ksyf6420SIFqkYGh0MXrENcUXBm6XS0kep5VyO/lMWdiDxBBi1VhPtcwNaTcBkNiGGhIG4tCLwyCPync=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i1HUBeyt; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739290295; c=relaxed/simple;
+	bh=cS70XGk1+sLAYhKj1uQAW9UASWnFX0MpKMElTx9v8hk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=tLZIM3qRej1YNUlmlo/eYaD2tOKuewyPBWthhm1kgRlaBJZG+zP1AFt40s2xyQVY8yRQAYxHesr2UknCPODeIK/4haa8ojU6N0bPcgR7siQedRw8tVnQ0PyTJth2PA3heItNmGdSAcE0fSLArCQBplHpBZc89qH9maeYq01yp+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G3U8dDGm; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i1HUBeyt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739290243;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DkXKKRZIZ3B6nMXAUQwqba2hAbiJWDhaRaBNOU6/fJw=;
-	b=i1HUBeytVZQfuTjrexbgjP7YEuXhfQTbb6pRe91MQPsrHrNvdDzSOfyC/EERd6n8ZWPDjF
-	+lZ5tsIl54r4itAaxVJ7JLggTgV7punI/95D8cHSFkAUzbdWyJUgYCJxsfKBbdpQAXbDp7
-	n1YwDMda2zzuC6MFCw8XkhNYDMwIpOc=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-280-XW2bq20lPrml0lxaZJGXBA-1; Tue, 11 Feb 2025 11:10:42 -0500
-X-MC-Unique: XW2bq20lPrml0lxaZJGXBA-1
-X-Mimecast-MFC-AGG-ID: XW2bq20lPrml0lxaZJGXBA
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4393ed818ccso19011015e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:10:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739290241; x=1739895041;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DkXKKRZIZ3B6nMXAUQwqba2hAbiJWDhaRaBNOU6/fJw=;
-        b=e5nHQGoe+np4SQv1eC+f6tzFFuRRTjT1wq0bMTGrHxTYOivDahEMJ+Jf/jIjRR0Wv3
-         FjntvFWxoyJTA31BqddFdGIDGpLH4IS3sa3Z4kZmjMObdjljZHwQsmtdef0aTFSfQRJX
-         9uZRsxnUuCkz0uDNtv9gpDWwIomtu0WEoBJ1wd6AGgdOaJoeuGzAwUbHwms/gdYLHKsR
-         gOqoWhxnab/1Zes1043L2vx5HAsRvJ1giYTpqzgoaGwu7WBFHDBlxf0K+SVg5N8wM1h6
-         joVS4qG45ihe9ud9YyNroJ+rSF5D7g1KRdNBeEFbs7Av3RvGe0GGgWykYnOg7Q1iyLK1
-         I9xQ==
-X-Gm-Message-State: AOJu0YwOX3yY6X6mwDP4EhCv2Ol21Z7naygtTs4NUeOkkfg9U0m3Ef29
-	RdeoD0QASsplG0gKZ0L8tq/gceqHTbuHnhrqmoU9VHDZYUp4iDNptq9nw95POvkIInj6x0aGFvx
-	2vI5SVcjRT0ML6lw+MKxgp4F43v//8cFpQaW7aNTcmsJDQvjcu/NYC0bzzPbhtA==
-X-Gm-Gg: ASbGnctKO0oARw+H6S0ee0yTQduTTUQrXuJ2FcK0mxSS58TPajipGxVmI/dztUvF/CS
-	D4B1gmt8KzixDDe7EWtdSqUGcPvYRoZ6if2gMLgyq+C8jUycfHfowfDMAqiSX259YBdjsRKMUzC
-	eUlfeXEpFKue9vkWWjkKl6R/182wgfKbgzpghAK4f5Pp5qbEEbdADkA98Hdugf1bdtWpp0E/T63
-	S9Se1xTV4Y8Lz0dEJErV9iw4SpcCgbSbmmODvCaXp3FuOBD0ntIgovFmFm2vGDpblQeD/b5S8/q
-	Vl8NsOW5lwVtYH1LQus+T9zKpczdb3kfNrnDXDzzPTW7mqZbD4y+1ORQtIlGJ5dffQ==
-X-Received: by 2002:a05:600c:500b:b0:439:48d9:d8b0 with SMTP id 5b1f17b1804b1-43948d9dd41mr73108665e9.16.1739290240854;
-        Tue, 11 Feb 2025 08:10:40 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGxNXfn5PLr2I3O9shVB9BLvMIo6l6XNn4GHuv5+NRtXPlNDWEKqGeQnOp/tv15slnT46loqA==
-X-Received: by 2002:a05:600c:500b:b0:439:48d9:d8b0 with SMTP id 5b1f17b1804b1-43948d9dd41mr73107295e9.16.1739290240325;
-        Tue, 11 Feb 2025 08:10:40 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc9ef8ac6sm12561610f8f.27.2025.02.11.08.10.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 08:10:39 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Dave Hansen <dave.hansen@intel.com>, Jann Horn <jannh@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
- Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
- Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-In-Reply-To: <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
- <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
- <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
-Date: Tue, 11 Feb 2025 17:10:36 +0100
-Message-ID: <xhsmhv7tgihs3.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G3U8dDGm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739290293; x=1770826293;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=cS70XGk1+sLAYhKj1uQAW9UASWnFX0MpKMElTx9v8hk=;
+  b=G3U8dDGm9/T7YW0QnLrvdvMqDmcZ/Upd0Y+dV3xf++BJP4J0WTrrZUWd
+   Pw1MqgGIx5vdI8KVy7nJSD7adSPx+I2DCHecKXQRPz+SYxjN9v8CBbMww
+   q/tFPY4wg4lUrxqDFRCv5EKOv46gejHaj6h0SzFFnyHfV6qXTzO0avLwE
+   UdqZSew8QJa3+DNEcH8+f3LACewFubXryy/BPUPRHgx7iOwci+slNKNnF
+   lccNfQW6N9Q3042bOPRdtdjK/2r9IqqfFHxpykbJvRRHFSB5W3e2YSbuX
+   nrJAVSfmKSFfNaoxJXr6qazsi2HLLZUvukgpku4MsN4GiIkw2rzgWNNmL
+   g==;
+X-CSE-ConnectionGUID: pb/P1Q3PSuO6L4IHqPUOug==
+X-CSE-MsgGUID: hwo+gUphTWSoYdQeZQ7FLw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50551770"
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="50551770"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 08:11:32 -0800
+X-CSE-ConnectionGUID: sJkk/VkhQs2Rwl/eqIIfbQ==
+X-CSE-MsgGUID: x05H8EayRVWwPL/wRMM1Bw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="143409992"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 11 Feb 2025 08:11:31 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1thsrA-0014Ph-1m;
+	Tue, 11 Feb 2025 16:11:28 +0000
+Date: Wed, 12 Feb 2025 00:10:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Piotr Kwapulinski <piotr.kwapulinski@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>
+Subject: drivers/net/ethernet/intel/i40e/i40e_ptp.c:1375:27: warning: '%s'
+ directive output may be truncated writing up to 287 bytes into a region of
+ size 64
+Message-ID: <202502120046.MLa5sPZW-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 11/02/25 06:22, Dave Hansen wrote:
-> On 2/11/25 05:33, Valentin Schneider wrote:
->>> 2. It's wrong to assume that TLB entries are only populated for
->>> addresses you access - thanks to speculative execution, you have to
->>> assume that the CPU might be populating random TLB entries all over
->>> the place.
->> Gotta love speculation. Now it is supposed to be limited to genuinely
->> accessible data & code, right? Say theoretically we have a full TLBi as
->> literally the last thing before doing the return-to-userspace, speculation
->> should be limited to executing maybe bits of the return-from-userspace
->> code?
->
-> In practice, it's mostly limited like that.
->
-> Architecturally, there are no promises from the CPU. It is within its
-> rights to cache anything from the page tables at any time. If it's in
-> the CR3 tree, it's fair game.
->
->> Furthermore, I would hope that once a CPU is executing in userspace, it's
->> not going to populate the TLB with kernel address translations - AIUI the
->> whole vulnerability mitigation debacle was about preventing this sort of
->> thing.
->
-> Nope, unfortunately. There's two big exception to this. First, "implicit
-> supervisor-mode accesses". There are structures for which the CPU gets a
-> virtual address and accesses it even while userspace is running. The LDT
-> and GDT are the most obvious examples, but there are some less
-> ubiquitous ones like the buffers for PEBS events.
->
-> Second, remember that user versus supervisor is determined *BY* the page
-> tables. Before Linear Address Space Separation (LASS), all virtual
-> memory accesses walk the page tables, even userspace accesses to kernel
-> addresses.  The User/Supervisor bit is *in* the page tables, of course.
->
-> A userspace access to a kernel address results in a page walk and the
-> CPU is completely free to cache all or part of that page walk. A
-> Meltdown-style _speculative_ userspace access to kernel memory won't
-> generate a fault either. It won't leak data like it used to, of course,
-> but it can still walk the page tables. That's one reason LASS is needed.
+Hi Piotr,
 
-Bummer, now I have at least two architectures proving me wrong :-) Thank
-you as well for the education, I really appreciate it.
+FYI, the error/warning still remains.
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   febbc555cf0fff895546ddb8ba2c9a523692fb55
+commit: 1050713026a08d605b61f039700b67aab646371f i40e: add support for PTP external synchronization clock
+date:   3 years, 7 months ago
+config: alpha-randconfig-p001-20211207 (https://download.01.org/0day-ci/archive/20250212/202502120046.MLa5sPZW-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250212/202502120046.MLa5sPZW-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502120046.MLa5sPZW-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/net/ethernet/intel/i40e/i40e_ptp.c: In function 'i40e_ptp_init':
+>> drivers/net/ethernet/intel/i40e/i40e_ptp.c:1375:27: warning: '%s' directive output may be truncated writing up to 287 bytes into a region of size 64 [-Wformat-truncation=]
+    1375 |                          "%s", sdp_desc[i].name);
+         |                           ^~
+   In function 'i40e_init_pin_config',
+       inlined from 'i40e_ptp_create_clock' at drivers/net/ethernet/intel/i40e/i40e_ptp.c:1414:13,
+       inlined from 'i40e_ptp_init' at drivers/net/ethernet/intel/i40e/i40e_ptp.c:1519:8:
+   drivers/net/ethernet/intel/i40e/i40e_ptp.c:1373:17: note: 'snprintf' output between 1 and 288 bytes into a destination of size 64
+    1373 |                 snprintf(pf->ptp_caps.pin_config[i].name,
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1374 |                          sizeof(pf->ptp_caps.pin_config[i].name),
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1375 |                          "%s", sdp_desc[i].name);
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +1375 drivers/net/ethernet/intel/i40e/i40e_ptp.c
+
+  1349	
+  1350	/**
+  1351	 * i40e_init_pin_config - initialize pins.
+  1352	 * @pf: private board structure
+  1353	 *
+  1354	 * Initialize pins for external clock source.
+  1355	 * Return 0 on success or error code on failure.
+  1356	 **/
+  1357	static int i40e_init_pin_config(struct i40e_pf *pf)
+  1358	{
+  1359		int i;
+  1360	
+  1361		pf->ptp_caps.n_pins = 3;
+  1362		pf->ptp_caps.n_ext_ts = 2;
+  1363		pf->ptp_caps.pps = 1;
+  1364		pf->ptp_caps.n_per_out = 2;
+  1365	
+  1366		pf->ptp_caps.pin_config = kcalloc(pf->ptp_caps.n_pins,
+  1367						  sizeof(*pf->ptp_caps.pin_config),
+  1368						  GFP_KERNEL);
+  1369		if (!pf->ptp_caps.pin_config)
+  1370			return -ENOMEM;
+  1371	
+  1372		for (i = 0; i < pf->ptp_caps.n_pins; i++) {
+  1373			snprintf(pf->ptp_caps.pin_config[i].name,
+  1374				 sizeof(pf->ptp_caps.pin_config[i].name),
+> 1375				 "%s", sdp_desc[i].name);
+  1376			pf->ptp_caps.pin_config[i].index = sdp_desc[i].index;
+  1377			pf->ptp_caps.pin_config[i].func = PTP_PF_NONE;
+  1378			pf->ptp_caps.pin_config[i].chan = sdp_desc[i].chan;
+  1379		}
+  1380	
+  1381		pf->ptp_caps.verify = i40e_ptp_verify;
+  1382		pf->ptp_caps.enable = i40e_ptp_feature_enable;
+  1383	
+  1384		pf->ptp_caps.pps = 1;
+  1385	
+  1386		return 0;
+  1387	}
+  1388	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
