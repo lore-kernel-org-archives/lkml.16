@@ -1,86 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264101F3D58;
-	Tue, 11 Feb 2025 13:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668ED24CEF8
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739280744; cv=none; b=XJbRVSYlWr/zQRKkrgJ0eboJBLZFVXqdcJ1fFqFF8wBwRCpOfBHVblRtRIVVlWZhPZ1eJcJzfg2OkYJKlSthZyEqJJV1HeNul1lDrP5IifHQ99QOtja27Q6TUeWHQXgFgxWxrD9LieUvs3clZC7QrRtEapBN5q73j7qsnpJThSw=
+	t=1739280748; cv=none; b=WKOopNthy/omZNb+Y6SV9T/mssURK0uGyJM4/df2E1Sew6YZV/sEdRzXrRq6DGBMxFDOrtFY4mpYL+snOOur1GvuHKexKgJ/Prfu6nNtaGfpK2nnXAu1Y+6MMSUoVEn0AyIA8QNgmgff1NPwFrriozBmzlKZGAJOZzdL0Q9DKrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739280744; c=relaxed/simple;
-	bh=0ML6mdqwu+QYUFAwx0ZLdXCCCnCYA+w0iflWHWhRn24=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UNeV8LliFULPGKbJKGeXPdPLBAeIb9QEFrNK5nBIvXnVDXdHBqzSoXlozfpPxelJKbfIUnrirbL5HVXVKNcqIwBJCWj7shB2bCzPl6yGJz1giGVEEzpkkIrvjC/rwKfnyvQ59bi8M42eDYK0mVaMsin8m+cwwcAUGnz6QdSCOS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wlw6Yshh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wlw6Yshh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38A73C4CEE5;
-	Tue, 11 Feb 2025 13:32:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739280743;
-	bh=0ML6mdqwu+QYUFAwx0ZLdXCCCnCYA+w0iflWHWhRn24=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Wlw6YshhbdPv3S0jvOC8NiICWTX/yE9S3Igbutd578MzNTN1HciR+hXqCsPixcr2F
-	 cBvrCcd4WB/dhU52ITSFFhzytW6VKjzlq0WLm69ReJGtTyCjPv7iLsu2Npy+ql5gmD
-	 BHer8TS6pOBdYmFaHaqIRDtRRs73/OjYJvPcbZHMMamU3gfaTG8TVk0hjXd2FQ47tn
-	 Ia7aqx9pjVKbcnJ7BrcFIdjjrLjBVA7XJul6ePztiYHbyoy0F1/Pdz2LkL2DAMetGn
-	 5Oyaqi7Bs7VPhh+d1CrlneqqaRZUtWpQ0huD/ALG/TLbyuFKvJHoM+eZHGBM0CHROT
-	 ZaTZaduGYWPcg==
-Date: Tue, 11 Feb 2025 13:32:19 +0000
-From: Lee Jones <lee@kernel.org>
-To: Manuel Fombuena <fombuena@outlook.com>
-Cc: pavel@ucw.cz, corbet@lwn.net, linux-leds@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 2/5] leds: leds-st1202: initialize hardware before
- DT node child operations
-Message-ID: <20250211133219.GO1868108@google.com>
-References: <CWLP123MB5473933B9B97137828ACC6A6C5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
- <CWLP123MB54732954D59EFDB0D344A6DAC5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+	s=arc-20240116; t=1739280748; c=relaxed/simple;
+	bh=9p2nBK45yC0kBtiR9JflsXngBVCnbuGhsfR3KrP4+Rw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=duvQlF8aSZAeaodF97l+PawNM3yVHJZpASREIOeHuoWZ6nEevuC5eVGOEmE6q1j8aum2Cgm1FcLnVnq3THBpMrFiRoyxAf8J0g7jfgn9QpiR6So4gYfaMDMVS5A5XQNyCHIlCVXu//aZMXw4yE/mSaSVZHXei+82ReSPoBmISho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d058142573so41092445ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:32:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739280746; x=1739885546;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=evizQsq3nnwBs0+D8L3GWY6Q7PjanGj/b/RM8+YJTyE=;
+        b=X0z2bN5Yi16eYNiucdGen4crF3ffVwqMwo5Tywk+lkSuAB1M5OgRdApcv8S5o9zfRJ
+         1JJwosrOncQU1gmeitjlh6MGZNulV+94910wcAOkkg3881WyJYIH/ssatU+FPOe792lL
+         6z4lhfwMoWtT9tahoVPEtOqaP2a3x1VUwcVzowDGGv0c3qTfZM8BGTdGFMS33oiL9eHy
+         2s/hRmGFakKq3ksZBgqY5Q9rEQwJEb0VmJ32J4tdHnFHyExcb9W5tXhzYAGaNuu6V0fj
+         n0URmMDx9dkCHrh807BfsPZPwfeKcIicR7eF9qNRgQUbE/efikpzFNVurJKv2KOrvazl
+         2spw==
+X-Forwarded-Encrypted: i=1; AJvYcCVTtmYtH3lfXUBKegbqwv5bqgX+h2MkksC+WYtyYUopPMdqfE5hJUfVFA5ZFaBw1Ev9Ph4WVB/zBMIkis0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5+qRYiR1Hem1jXBIjYDc7eZk2fSO5huZiH198HR2MWoya3QQ3
+	vcn1V/S3aWdHsDK2sxnJJkKxrY7PnWTrji94sLvntHzb+zX5AKIqnskVI6olDJ2metBZxFgooUg
+	6Zlpgy5pk+mjg1/0eoebmrOashlZBzTiEMKwsSzwpDPemT+PDnAnn21o=
+X-Google-Smtp-Source: AGHT+IG0OkctezPm/Jtvc4JlTMMPiWAtA7MsSbaWgMj7NY/n/1W9N3UtCWGff+aXyjQDHZJo6bCWvY+9G2T11b7T+EKdyzu5QjUW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CWLP123MB54732954D59EFDB0D344A6DAC5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+X-Received: by 2002:a05:6e02:1a24:b0:3cf:b2ca:39b7 with SMTP id
+ e9e14a558f8ab-3d16f40ac30mr27560865ab.3.1739280746542; Tue, 11 Feb 2025
+ 05:32:26 -0800 (PST)
+Date: Tue, 11 Feb 2025 05:32:26 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ab516a.050a0220.110943.003f.GAE@google.com>
+Subject: [syzbot] Monthly kvm report (Feb 2025)
+From: syzbot <syzbot+list2039ca2416c8ea9fe8ef@syzkaller.appspotmail.com>
+To: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 01 Feb 2025, Manuel Fombuena wrote:
+Hello kvm maintainers/developers,
 
-> Arguably, there are more chances of errors occurring during the
-> initialization of the hardware, so this should complete successfully
-> before the DT node childreen are initialized.
+This is a 31-day syzbot report for the kvm subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/kvm
 
-Okay.  And you're sure nothing in Setup needs the DT info?
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 7 issues are still open and 125 have already been fixed.
 
-> Signed-off-by: Manuel Fombuena <fombuena@outlook.com>
-> ---
->  drivers/leds/leds-st1202.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/leds/leds-st1202.c b/drivers/leds/leds-st1202.c
-> index e894b3f9a0f4..927874f20839 100644
-> --- a/drivers/leds/leds-st1202.c
-> +++ b/drivers/leds/leds-st1202.c
-> @@ -348,11 +348,11 @@ static int st1202_probe(struct i2c_client *client)
->  	devm_mutex_init(&client->dev, &chip->lock);
->  	chip->client = client;
->  
-> -	ret = st1202_dt_init(chip);
-> +	ret = st1202_setup(chip);
->  	if (ret < 0)
->  		return ret;
->  
-> -	ret = st1202_setup(chip);
-> +	ret = st1202_dt_init(chip);
->  	if (ret < 0)
->  		return ret;
->  
-> -- 
-> 2.48.1
-> 
+Some of the still happening issues:
 
--- 
-Lee Jones [李琼斯]
+Ref Crashes Repro Title
+<1> 274     Yes   WARNING: locking bug in kvm_xen_set_evtchn_fast
+                  https://syzkaller.appspot.com/bug?extid=919877893c9d28162dc2
+<2> 147     Yes   WARNING in handle_exception_nmi (2)
+                  https://syzkaller.appspot.com/bug?extid=4688c50a9c8e68e7aaa1
+<3> 6       Yes   WARNING in vcpu_run
+                  https://syzkaller.appspot.com/bug?extid=1522459a74d26b0ac33a
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
