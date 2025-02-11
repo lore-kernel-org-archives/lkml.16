@@ -1,154 +1,218 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2058.outbound.protection.outlook.com [40.107.244.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B6A2F5E;
-	Tue, 11 Feb 2025 05:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739252795; cv=none; b=RUHdG8jRzUlWqMxZlib9RkhwRZiMJdP3RgjG5xUgL/M9ePJKPwWj0+0f1WWmEw9YufohOWAQvfk5+Smzijztv+TsOTLnPe8u7W25SQFpGQjd+KmEl3nNb1OHOBKynD7H91oZx1M2D6JUKoI0HZJAFmKPq31NoFr/s5vWkUAADXQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739252795; c=relaxed/simple;
-	bh=aDVCUTPGW3J74vVSYJ1HTC+bsu+y9lCjR3mOgNaEKcI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o0hCiu4zRaP/6smrGZzSNTNb0W3r/SLKy+JLzB2LFyhLBiHMx199NpdtrzqinxysI1iY4GviYGRu0F7Z15FkkxMOLsFYx6nlx2apCSQJguoZrXSrAeUhAUE6rSC5HZdcWLsP8GMnCONxA5NqCJV2YxQe4Rq56xHBJwG5jOW789M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Apobd/wV; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADBB2F5E;
+	Tue, 11 Feb 2025 05:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739252824; cv=fail; b=Q01YZXQj7HRAJnoeexxl+IIopXLeZWuSo7kMce17cY4M0B3XqqAQ499q7A0tvGqQyqvcP9ATvVYOkl6HcfUFCgfaOtdxEaGx6UoxAHWD233zwiOtPKumhvSEWv9XNrfMekzCylzl6aK99C5NAMclfzFe0mHaDf2FL6AYmeR/Mn4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739252824; c=relaxed/simple;
+	bh=3mmD2xJ2Orsg6zgxlSYUVoj0XYR0RhjXLORQDsEResw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=JmDyiino9XrPgE0uAHtjAZlaozRwBIzI9r99tWO8C4EApozUU89L6nXT0P3Utw5SkHFup5Py1J/9Uc7uervILTHWEEqq3OYnod/FprwOWkQjo4GqUrWihkQy3bBWk/nZRJ4XplT9K8CZ9eAd/got9/BHNhsKWfPMx5NunbALrnI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jLWJFWWj; arc=fail smtp.client-ip=40.107.244.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Apobd/wV"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-867129fdb0aso2117249241.1;
-        Mon, 10 Feb 2025 21:46:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739252792; x=1739857592; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RNElTNu6sqcvjdUtzkTAHmhDqJhBhVf7/OzwWAdWVmU=;
-        b=Apobd/wVFxWa7wktShV3RlMn4r70T93VF6pygpYbDcl4DaROnZgLZXZs7x7yL5juWg
-         VL7eXQ7DEWY5ETbgDEm3mv5aMEEoGpLC/Ma3/syHkIsFrhKiULJAQ0hRhd/AyC/6Pe31
-         JRTcztHTZ1d0FcUSVMPP4sVvft6ugY5xs4B5QgbdHGLAHUdIAVNrqE2UotgNzbRu4PoF
-         XfWjQRiy33GzB6FGSC7Pwr31+Y0j30x9T1RJ8i8HHu3tjL85ayJjcLMW2SgT2z0EZ1YV
-         5lp7WDNYkTHhv5EpnsczGU7Whek+XpCKl+komB/i9v5ekx70xLhOmfqqUy1Xz0CGUTCk
-         18bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739252792; x=1739857592;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RNElTNu6sqcvjdUtzkTAHmhDqJhBhVf7/OzwWAdWVmU=;
-        b=w9QALAtInQ4UJL539OFu5Oa5YZJ+92w/dry3Lj5iEcAvEN9sugJfU8WaMhL2KSHtuU
-         X/R3l33ljfJfMVzXrR4Hzlk7OCeNKsjk3u+xO4KKsniT+R2j8GVObIgD0ST0DXWt4Un/
-         Qdp+fxD8/4xe9vsm2zz5GKZKyp0//zU61I0wU6iz76vqPaxyhVZ0YgCl3EdOqIWTKjZ3
-         3MvqzoRi6pbjJrb5LvQwgr4v2B5nBmiFuTBGGHzdFSK2lBXdTlbRuUnfbXTzEl7xlkv9
-         hgWCXjdNxNg0yXzJXjSzASzrbiILnaxd2IiF7KXEaQcm+UPpcGdUeA4pDhKXOCgoWSNR
-         X/kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4fKm8L8Lz2aHI7yDf/03KopC2XrKTmssmUHtCPv0hQu0P0tHAnBFJRDIaJhc6iyLE9X9KhrBWkQWCZ4F1@vger.kernel.org, AJvYcCVQuo6or94icAQJcWXw41/l0PLMiom3JFfkwP63BSt2pe4WJwdpwNQ68klHmXplzHZjUF+8cGdsRTAsFRAUPd7+iJ5o7w==@vger.kernel.org, AJvYcCXHYGkBuyp5X+ol2C6Aj5vlPSdLluC9xyJSH1Z1i4Ihkxhr+fEcoVbGN290fkkcJePtcLj424bhJ8+a@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYXL1QPnbkNSEcZXHG1SGefNulwye4KG/93FuAOr7m8zlUqjYx
-	FT0jD4i7zGsVXrdEgRhIWMYwe/E02Kr/HYBGDewqMpr2n23QCpzx
-X-Gm-Gg: ASbGncsbINTjP+PF4F3MnfGKzxql+7SGUUbyZeLVDlJH4xFULCf1WXtXNonwK91i6sp
-	QW3+J4wKNybPxWFn0vOgbuOtuVFjAr8Zn8Q1afZ1nHXVp9y3L8bzCm9XirGoonsf+KbrsUe8mKv
-	9aRHblQffyz79U1kJ1n8BJShI2BZfiYV7Z7pc7zsKsrq4mNsD+50TAoToVoMtRnTh4izzbb/khr
-	pSLKmFhVO5WzJijJXIpwpE4xA9uYmAEDBP5ndOV/iBEfKSyjOuf1SJniHq4VynQnZkOIkK1pIFi
-	So+iMttAE7QaonJvOFgqK5M=
-X-Google-Smtp-Source: AGHT+IGpCycxeHiwIkdQyJmFgzjzfjrOWUvHTwR+SUeC0c35B+tfnHuLh92U7uKVsTqUzGtr4bgN1w==
-X-Received: by 2002:a05:6102:205c:b0:4ba:99b5:60f5 with SMTP id ada2fe7eead31-4ba99b567d4mr5620870137.23.1739252792542;
-        Mon, 10 Feb 2025 21:46:32 -0800 (PST)
-Received: from localhost.localdomain ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f96809besm1717371241.13.2025.02.10.21.46.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 21:46:31 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	platform-driver-x86@vger.kernel.org,
-	Kurt Borja <kuurtb@gmail.com>
-Subject: [PATCH] ACPI: platform_profile: Improve platform_profile_unregister
-Date: Tue, 11 Feb 2025 00:46:13 -0500
-Message-ID: <20250211054613.15609-1-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jLWJFWWj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=o7JuJaRNw4M64MSZn0qT05P4db9XX1PCcwtRELJIcgyq4EgYMpHwrwhi3TT+9QrdtE+IKHMz6qD1qi6nNwxTQChB6hVFR05xSXGUcusA/M8RMxVLbb5EU+3UK4Co3HVbstpHQYjr8wEsntHCVTfIZ00RxAtSilkVvcLDuI89ezMjOl3xgh90xD6UhlnNBfBJ5tJoN+53dB5uzNsw1ytPhZ/JH0K7rFCyDzKRWK0G7qtyg6M7PgXkdvFsJQYc1nfOlVVBLHn2ia1xpMdjoBYIfRKcHcG3igE7Nui0xYSpFyrf5IcbrjkgyQhLr3TUO14SCV/vvKsHVcjANpgNDdvtwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=v3GIymWxtV64qUA9VqdH5wIVqD3an7DSwmzfWzZkx9A=;
+ b=ZWPquteKc3ndQv/lKmGJ0Ov7vAEW028wqhNqyQdeXsLsTFoEFJCFAWqVvEZxYuO7oxebnNZJ+oikzzCUCAx/hebQBcBL+HlBaBeyL0PZZ8NCLGK7ajA4FWhHv8LXvru/1LtiFwCt4vIFcohbRpftVqnpNK2mJYf89BNmQ3DNXw7r5EQImCLP+QAEDB+5Ylq3NWOghJF6R4SzyrtrzUdlxrjsKjDYcpzPsk1XO7FQoFruoNxmjUeeIva9S+1fCMdTba3YALUnJ4Mv32YqhGuUYiEeJbCM8SSozeuYeWSNPlus5KvXDL78HtYABSqD81np+DKr4vfs/44u16XT8BTUVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v3GIymWxtV64qUA9VqdH5wIVqD3an7DSwmzfWzZkx9A=;
+ b=jLWJFWWjYi6OVSXk98LAGC7RsBQ3lZQtHgtt1PBNvZzn6WG49S7NA6KS97NJR3G8vUwyVpXvBAt+VeZDIxmPqEVxDKDnK8iEvKJ+X1YMh7vXJOr0e7YjZl3yTj+73SwA0Tt15YwEsqfPTQJlqELHX1jeL9Edcf3XgCywGbAthEs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
+ by PH8PR12MB7446.namprd12.prod.outlook.com (2603:10b6:510:216::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Tue, 11 Feb
+ 2025 05:47:00 +0000
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9%6]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
+ 05:46:59 +0000
+Message-ID: <66346ce9-8b75-4642-a755-22591188784f@amd.com>
+Date: Tue, 11 Feb 2025 11:16:47 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/14] cpufreq/amd-pstate: Drop `cppc_cap1_cached`
+To: Mario Limonciello <superm1@kernel.org>,
+ "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>
+Cc: "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
+ <linux-kernel@vger.kernel.org>,
+ "open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250206215659.3350066-1-superm1@kernel.org>
+ <20250206215659.3350066-6-superm1@kernel.org>
+Content-Language: en-US
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+In-Reply-To: <20250206215659.3350066-6-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0050.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:22::25) To LV8PR12MB9207.namprd12.prod.outlook.com
+ (2603:10b6:408:187::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|PH8PR12MB7446:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7237b901-afd5-458e-ba3e-08dd4a5f8087
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Sy9CSkxtNVlhV2oxaVppdUlRRlNobEJydkc2UExJc011Y0lzaGJsS2pLSFlI?=
+ =?utf-8?B?WVhVaWpqcHI3OXBZTUVPYmdtcDA3cVowVWh0dm44bnJBOTR3UXovc0p1YldN?=
+ =?utf-8?B?d1V5MkdlNGQwYk1pdm5VUGVJTUxTTDlPQ3p4TGY5TWNXbExqV0lnYTBxY1Bp?=
+ =?utf-8?B?WkN0NS9DVGs4T1BadnpzRnlCSmgzd2MrR0g1UEZxc0xyUm5QN3FjeFB2bnY2?=
+ =?utf-8?B?QmRSR3d2b2dzbXdsOEdYbzU1bkRqM1ZoM1FtK21KYU5TRkYvM2VVUDhBZmp4?=
+ =?utf-8?B?R1VKdHF6aFZFajg4ZUJzaTNpbEZIYTlZandXdks4RVBTNEZ5b3dmL3ZDRldX?=
+ =?utf-8?B?aDNkWVJqdWI1eWcwcDgrcEVBQUpHN1UvRnRDVWFRT3ZaTUZqNjhWUGREZ2po?=
+ =?utf-8?B?MGsyZGxlRUZmL0JhMzhwbzh1VzhGZXBpdVYxRS9VZUxZVFJ0N3lIb2FURGFH?=
+ =?utf-8?B?U24vZG1VcDY2c2FEaVUreGszbGJmZDd0ZERMa1BSTnNXdDRjUk9EQlBVY0Fy?=
+ =?utf-8?B?MTFsS0J1NzA4Vkt6dzM1WUwvMTViTDVKb2c1bmdsbkhRdDRNKzdpS25RMXNj?=
+ =?utf-8?B?UVlHR3F2d3E2cGRhSDVsMEh6L2tUKytsc0N4K1RZLzlrYTJYL0g1bDJnd3lD?=
+ =?utf-8?B?R2pvVXpSUjExMGNFOUZkL3MyT00vRlpBN1dpdVd4NjlCOVMxay9SQlRNS0Yr?=
+ =?utf-8?B?K3J3ZUY1Q3AwTDQwMlY5K256WU1HK2I0SUxpKy9rb2gzYTNWb2FPT2ZYWHBT?=
+ =?utf-8?B?eDdMWkNDTkpHSDZyeXoySEorNXFJYjVXWDNSa2dRL0tnQjAwMEJZbXRlTVRF?=
+ =?utf-8?B?U09Ra3dONk1NVlFrcEZySnY4M2szT21zaFdHN0FCc2ROMTBuNkx0bVd1dnoz?=
+ =?utf-8?B?ekhjQVNPaVFpYVNFTGg5U0huWEVlK0FWd2hXQXlMeVZUUzYzTFM5US9CY05l?=
+ =?utf-8?B?dGJsbWdld0g2S2lQb2RKZzJyTDJhMjNJSDVkbDVjbnhDVm9IVmI2YzNiS25Z?=
+ =?utf-8?B?bEU2a0U5cmtFT25iZzRydlVWZDZSc1RTK0tuVi9FaW9vYnpGNFhFM0l6VW56?=
+ =?utf-8?B?K3pUeWZRYWR2V2pqaHlpbFE5eUNhNkRWczlKRHpKVDNxaGtzTjJydElkQ1lI?=
+ =?utf-8?B?b3FPWXI2MVErTm40ZXpLbGU1OEl5Qm9yRU1GZ3ZoVVBJcHhsdzg3MVMzYk1L?=
+ =?utf-8?B?WkM4dmVFTU9IS0RhY0FiWWowVkRiMnplR0J5dkh0V2xoT3A4NmhZN3orSXFF?=
+ =?utf-8?B?ZG9sUDV3aytjOVBnYlVsS2lwaGFkZ0R0aS9pZHhJZHFINXZnM0xJT04zMmpI?=
+ =?utf-8?B?NzJiVWhjQUdQS00xMDZpbm4zREMyQ3JYeFduMVdla0h0MmtScm5SVUNlSnBt?=
+ =?utf-8?B?R2dZRlhDczI5RlVPcyt3bGtBSncyZk9ydUJ6MkR3UUhnZzZqMi81NDhkVmth?=
+ =?utf-8?B?NUs4UDB5U0JheUNUQzZNcVRUdXVYd2RFSmg1R1ZOVnJBUk5RTmgwekdPbXNV?=
+ =?utf-8?B?RDI1emc1dW9zT0RYU01qUW11Q0pkcnB4ciswaWU2MU5UUGVqMkVaTXBDL3cw?=
+ =?utf-8?B?SHg5RElsNFdVa2RDK1ZUemZkMXdaWFpYb3pJYzUzWE5jZ1hxTDZ5djVLRkpR?=
+ =?utf-8?B?UFF3VkNGSUd2Z0dvcDNBVDFiM25EOEtpSm93VUxPWUJxRFNzWlFNQmZiSCtY?=
+ =?utf-8?B?OEx4UTJqY0dCL0hoNE9JRC8ycXd1dExUTUFoakMwUnJidlQ1bzVabzFOMzlX?=
+ =?utf-8?B?Y3pLYkE4STZoUkgyWXBYck5JNjZFb3FxTG14YlJ4Tk9Jb1JvYzdsZC9JWTAz?=
+ =?utf-8?B?cnkzVytpcTMrOVI0WlZMaVQ0ek5qL0szbnBscXBUVWlTVktvc0xzVzJLU1lU?=
+ =?utf-8?Q?k3bHjrRlyi2VB?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eFg5Z2N0RjJtQzFydk51NGp3Nlp1bHJldUt5bkxpWkxCY0RrR0x2QUdTZEl4?=
+ =?utf-8?B?WXZQWkYyR2pXbWt1ejl5OUVjOU54bCszOUZmSXc3ODZvb28zZzBzOGQ4b0VQ?=
+ =?utf-8?B?R1BPWEc3VjdFYnU1MVJUREw4VDBmQzJGb0JzUmErVG54UnhReTRLdVBPQ2tT?=
+ =?utf-8?B?bjJielN2VWhhQVM2ZDhXZ2dYaGxZekNuQW85M3hmMUFTL0hzcXdyT28zVXdy?=
+ =?utf-8?B?MDNERFJTMUZZUm5mdjhVUy9UdEk2bmFsNDhSNWlmaVQyZWJMb1Z5Q2U3QTk3?=
+ =?utf-8?B?NXVmc3U2NFRjb2VEUDFHRWhoNERkamlqeGZFamRYRmxRcXAvR2o2NVpNZUhh?=
+ =?utf-8?B?ZzZYcVZ0ZU05amNMYTI5Y0MvajBBUWpYdHF2Umt0eFluR1RaN09VRjJBdXM4?=
+ =?utf-8?B?VHE1RC9TSWt2SUlLYkpDakdVaXpqQU5nbTdTdkZBVG5RWjR4U2pwZGlsbGow?=
+ =?utf-8?B?WEdXWUNiT1dEZXZvSzJOSFc4TzR1RlNINjZNdk15TmwrWWVHbnZBbUExUEdB?=
+ =?utf-8?B?Z2pud0Vsc2FDWDhmMmR2TXIweEwxUDJudUE0NVhDZE1LazNMS3E5VlJiRk5C?=
+ =?utf-8?B?dzFhZEFWNmljUXNIUHB6RU83cDQxeU5UTHlFTlFzM1ExL0pNWlhJUnR3ZVNr?=
+ =?utf-8?B?N1VEdld3WjlzcFFjREdxNDM1YzZ0TUd6TkVkMU9CMldkbDRvMG4rb2lEUi9N?=
+ =?utf-8?B?UG5DR0Q2aktJOXBmcE1XV0lXSDJEUlB4dTA1VzNsR0gzcEY2aDB3N3l0UHZ0?=
+ =?utf-8?B?aUxlaU5PY0h2b0d2WlVCUytPQlpPd3VKd3lnd2t4Nkk2SlBoOE9ScVVIRHUz?=
+ =?utf-8?B?VzlxVnQyUUl6Nzhzb3pVcUdTN2RraHpoNDRxbFRxYmxMUmx2WVg1ZVkwVDRJ?=
+ =?utf-8?B?ekZlUS8ySC83c3BrSFdqNjZTZEg4dVoveFhEdStZWExuTFdLbWFFWlRJSk5H?=
+ =?utf-8?B?QUNNM2cyS3JPZFJ4OHpiZzc5bXA5QXVVbEs2NElVMjJUV2dRMEtoSTJvNGxX?=
+ =?utf-8?B?VFdRUVRhUFBGVklQQzFXYmJnZllScTN0cUY2R2tlSWw4WnpURXBrZ0Vma1lS?=
+ =?utf-8?B?MkdoWlRYQ25xVHFxWm9tcElERmRyd1Fjd2FnaVU0RS9iWWU1d1ZnbUhGSElZ?=
+ =?utf-8?B?TVVUdVFtMC9yZ0xRekdQZDlOOE5ZdFAzN3EyN25ZSE9NUEg4Mlc5RndNdi9Q?=
+ =?utf-8?B?L01YK2lDYVdDTWRkc0dOYjRBZXpsREdSU2FIYjZwMEZDcWRwdGFGQktQSkZr?=
+ =?utf-8?B?Ylp3aWFBSzJ6SG5qM0p4ZzYwZVBPQlBpcTdZdXNDUTlqL1BLdGJxRHI3c2Zu?=
+ =?utf-8?B?dEZTdmpEN2xISk4rOGJLRDE1SHVWS24xeTU5V3ZiWWFza0MxYzZVWDdUWUdi?=
+ =?utf-8?B?TmFQczVJVzRMcDh4aGtTYkJQYzRzODJZa215TFF6Q2Zhb0ZyL3lGT0dCWTZD?=
+ =?utf-8?B?ZUZMcnJTUnUreDlaYnVXakgzZUh2Qkd6YzdGY3praFNTUXRQQnIvd2k3b3BU?=
+ =?utf-8?B?RUI1dlU4VmdwYUJXMyt4QUxzVXMwSHNuYWx4ZzUvVitUNVNaMnBzb01LTUlF?=
+ =?utf-8?B?SXhLTWdzUS8zcG9QWGlubkxNd21pVEhqZzgvd3ZxSE9EQ0pIYjNOMnNWRm94?=
+ =?utf-8?B?aFNaMEJhOTNudlV3ckdJUnlFbW9BUjJIcUNmeTFmeXBBeDdhS3BXVVJFaXYx?=
+ =?utf-8?B?eHdBTm5OSmpyYlVUY1ZsdHpxWllvZXJyUjhOK3crbWxrR3lhQVdkSk5RL2x3?=
+ =?utf-8?B?TjFrSWxOaGFDS0Ryc2VnbkxMYit4WGJuZ0krdHB6cWY4OE8yYXlKNFZqL0c3?=
+ =?utf-8?B?VEprUC9idE5sV2pGaUF3RFEzbkhWVkhiM3U5Y2w0UlRUcHI2VnNrKzlod3dG?=
+ =?utf-8?B?THFYS3hmbVZrUzAzUWlVSk5Xdy92d2RnUTFDTHZvVkZJTlVTZ0h6YUdBWkRi?=
+ =?utf-8?B?YXkyUm9KQ1VZQXVFbUdOUkR2ZW1sbDF5cnBJd1llZStIU2RRcTgwRndYR2s1?=
+ =?utf-8?B?UDZQOVdSNWt4RUhXdy83akVabFJMMTd4Mm9OS2hkcWtNUkU1MFBrQnB6cGVQ?=
+ =?utf-8?B?ZHBZaWdRbkIvUkRQMXZLZnNtSmF5N1M4RnlHMS9CTGhUTDdMNXVSaFlnTjlG?=
+ =?utf-8?Q?HVo0lHnQuPtI0UYWcFnLQ/Jt7?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7237b901-afd5-458e-ba3e-08dd4a5f8087
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 05:46:59.8514
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZMzPKVQZ92LgzI5ARXxfOmugGFvkjlth7AvBfr9qfanfs6vEKlMXfTJRLQqjwreaXK6wB6D6cnA4cohk9dOVQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7446
 
-Drivers usually call this method on error/exit paths and do not check
-for it's return value, which is always 0 anyway, so make it void. This
-is safe to do as currently all drivers use
-devm_platform_profile_register().
+On 2/7/2025 3:26 AM, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> The `cppc_cap1_cached` variable isn't used at all, there is no
+> need to read it at initialization for each CPU.
 
-While at it improve the style and make the function safer by checking
-for IS_ERR_OR_NULL before dereferencing the device pointer.
+Looks good to me,
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
-Hi Rafael,
+Reviewed-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
 
-Please tell me if you prefer different commits for this. Also, should we
-WARN_ON(IS_ERR_OR_NULL(dev))?
+Thanks,
+Dhananjay
 
-Based on the acpi branch of the linux-pm tree.
-
-~ Kurt
----
- drivers/acpi/platform_profile.c  | 15 ++++++---------
- include/linux/platform_profile.h |  2 +-
- 2 files changed, 7 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-index fc92e43d0fe9..59d82386a073 100644
---- a/drivers/acpi/platform_profile.c
-+++ b/drivers/acpi/platform_profile.c
-@@ -569,24 +569,21 @@ EXPORT_SYMBOL_GPL(platform_profile_register);
- /**
-  * platform_profile_remove - Unregisters a platform profile class device
-  * @dev: Class device
-- *
-- * Return: 0
-  */
--int platform_profile_remove(struct device *dev)
-+void platform_profile_remove(struct device *dev)
- {
- 	struct platform_profile_handler *pprof = to_pprof_handler(dev);
--	int id;
-+
-+	if (IS_ERR_OR_NULL(dev))
-+		return;
-+
- 	guard(mutex)(&profile_lock);
- 
--	id = pprof->minor;
-+	ida_free(&platform_profile_ida, pprof->minor);
- 	device_unregister(&pprof->dev);
--	ida_free(&platform_profile_ida, id);
- 
- 	sysfs_notify(acpi_kobj, NULL, "platform_profile");
--
- 	sysfs_update_group(acpi_kobj, &platform_profile_group);
--
--	return 0;
- }
- EXPORT_SYMBOL_GPL(platform_profile_remove);
- 
-diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
-index 8ab5b0e8eb2c..d5499eca9e1d 100644
---- a/include/linux/platform_profile.h
-+++ b/include/linux/platform_profile.h
-@@ -47,7 +47,7 @@ struct platform_profile_ops {
- struct device *platform_profile_register(struct device *dev, const char *name,
- 					 void *drvdata,
- 					 const struct platform_profile_ops *ops);
--int platform_profile_remove(struct device *dev);
-+void platform_profile_remove(struct device *dev);
- struct device *devm_platform_profile_register(struct device *dev, const char *name,
- 					      void *drvdata,
- 					      const struct platform_profile_ops *ops);
-
-base-commit: 3e3e377dd1f300bbdd230533686ce9c9f4f8a90d
--- 
-2.48.1
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/cpufreq/amd-pstate.c | 5 -----
+>  drivers/cpufreq/amd-pstate.h | 2 --
+>  2 files changed, 7 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+> index dd230ed3b9579..71636bd9884c8 100644
+> --- a/drivers/cpufreq/amd-pstate.c
+> +++ b/drivers/cpufreq/amd-pstate.c
+> @@ -1529,11 +1529,6 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
+>  		if (ret)
+>  			return ret;
+>  		WRITE_ONCE(cpudata->cppc_req_cached, value);
+> -
+> -		ret = rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_CAP1, &value);
+> -		if (ret)
+> -			return ret;
+> -		WRITE_ONCE(cpudata->cppc_cap1_cached, value);
+>  	}
+>  	ret = amd_pstate_set_epp(cpudata, cpudata->epp_default);
+>  	if (ret)
+> diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
+> index 6d776c3e5712a..7501d30db9953 100644
+> --- a/drivers/cpufreq/amd-pstate.h
+> +++ b/drivers/cpufreq/amd-pstate.h
+> @@ -71,7 +71,6 @@ struct amd_aperf_mperf {
+>   * 		  AMD P-State driver supports preferred core featue.
+>   * @epp_cached: Cached CPPC energy-performance preference value
+>   * @policy: Cpufreq policy value
+> - * @cppc_cap1_cached Cached MSR_AMD_CPPC_CAP1 register value
+>   *
+>   * The amd_cpudata is key private data for each CPU thread in AMD P-State, and
+>   * represents all the attributes and goals that AMD P-State requests at runtime.
+> @@ -101,7 +100,6 @@ struct amd_cpudata {
+>  	/* EPP feature related attributes*/
+>  	u8	epp_cached;
+>  	u32	policy;
+> -	u64	cppc_cap1_cached;
+>  	bool	suspended;
+>  	u8	epp_default;
+>  };
 
