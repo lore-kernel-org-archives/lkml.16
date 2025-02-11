@@ -1,181 +1,201 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A4A1D6DC8
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EB91B4259;
+	Tue, 11 Feb 2025 00:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739234551; cv=none; b=pinLDnJSiP2zEea4tbpdM0J25NLvR1MnPkZVP4dLZiKhPrMKQJz/PYbxXS5T0u3BBbIerU382hbu8cZ4SjBiMjRek0ASUEbrVuTOS5Gmiva2eHSAPLariwD8iPA5Nj/DVwmJBUTqw7j9itn8H1mDEFp+ilC3HnV2+8tG7Y5xOA8=
+	t=1739234569; cv=none; b=PnH5kJYYS5hnKKkmtjbmh6bAAKYjCZTatwgHxr4w6XBX9YA0xwzHqVt+lFA3QWfBmWsyMengnsWpvZBLLE0lRd/sJAEg5cxWo0c7njzWZprKppsvtf0vZPT25H6G34zne70m54XhN0zFUSMsvmEo4Jjl4xaDs6GZWuqILPsQvTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739234551; c=relaxed/simple;
-	bh=oqwAWfvbdoScRtu8hPtWbARYhO1gtAfiQzHTgvD5/jY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b2e41e4qUcGa0R1pOzkNz6LAHLkwOx1bCenk/MQd5mf2g9wx7uCa2QxIuY3WVLAjhKRxtXA6KDyL1QZovcBDgKuZOI+lIaoU3yT+pUTjfC5uYXacVkxe9Yf3N12iWVuK9qQJbtGQe2hkLWzC7YnVRq3BnuZK28BoPSdgtBR+A/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RgTCgvgd; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739234569; c=relaxed/simple;
+	bh=gOl7sypTcjVDSzWEpj5+cpGk9s8h5WVawV/ZWHfCoYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eFB0W+IWZDReFat/A33EKLFdwVvEpah7X5vtX3YaesG0oiwfCnpQo5uEjrZf+hPF29owRbrOvEKHAdxXBM91qutubwKZvlbkv3BT44ibwer71INxIUPRxV0J5wNl187N0rev3YLeOieFKPbFGVW/xMpVATyxulzDdWsIYhwBLh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VUoTlxOh; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RgTCgvgd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739234548;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9t+x6jSPF/Kaax2beF3oSfdLLrK+SQWfb/7DMQGVOLs=;
-	b=RgTCgvgdNbM1NXNc6eu7LZQpDrSAFe3WBELCiTxaiPXHkFzCnddJifIPT3wmGIdYxUkzmo
-	5H0boztPg5oORYMx78l2cBs80km6pCHkWRnyeO4tIy5S+V5/JU0uo/YO+3aebMnZCsK7VZ
-	hqz7YF9nm7vwVv+8+7qj7DLSpcg+jGE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-468-Ku2qpg2aMryfCR2GurdvVQ-1; Mon,
- 10 Feb 2025 19:42:23 -0500
-X-MC-Unique: Ku2qpg2aMryfCR2GurdvVQ-1
-X-Mimecast-MFC-AGG-ID: Ku2qpg2aMryfCR2GurdvVQ
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5936B180087A;
-	Tue, 11 Feb 2025 00:42:19 +0000 (UTC)
-Received: from h1.redhat.com (unknown [10.22.88.129])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 602901800873;
-	Tue, 11 Feb 2025 00:42:10 +0000 (UTC)
-From: Nico Pache <npache@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: ryan.roberts@arm.com,
-	anshuman.khandual@arm.com,
-	catalin.marinas@arm.com,
-	cl@gentwo.org,
-	vbabka@suse.cz,
-	mhocko@suse.com,
-	apopple@nvidia.com,
-	dave.hansen@linux.intel.com,
-	will@kernel.org,
-	baohua@kernel.org,
-	jack@suse.cz,
-	srivatsa@csail.mit.edu,
-	haowenchao22@gmail.com,
-	hughd@google.com,
-	aneesh.kumar@kernel.org,
-	yang@os.amperecomputing.com,
-	peterx@redhat.com,
-	ioworker0@gmail.com,
-	wangkefeng.wang@huawei.com,
-	ziy@nvidia.com,
-	jglisse@google.com,
-	surenb@google.com,
-	vishal.moola@gmail.com,
-	zokeefe@google.com,
-	zhengqi.arch@bytedance.com,
-	jhubbard@nvidia.com,
-	21cnbao@gmail.com,
-	willy@infradead.org,
-	kirill.shutemov@linux.intel.com,
-	david@redhat.com,
-	aarcange@redhat.com,
-	raquini@redhat.com,
-	dev.jain@arm.com,
-	sunnanyong@huawei.com,
-	usamaarif642@gmail.com,
-	audra@redhat.com,
-	akpm@linux-foundation.org,
-	rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com,
-	tiwai@suse.de,
-	baolin.wang@linux.alibaba.com,
-	corbet@lwn.net,
-	shuah@kernel.org
-Subject: [RFC v2 5/5] mm: document mTHP defer setting
-Date: Mon, 10 Feb 2025 17:40:54 -0700
-Message-ID: <20250211004054.222931-6-npache@redhat.com>
-In-Reply-To: <20250211004054.222931-1-npache@redhat.com>
-References: <20250211004054.222931-1-npache@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUoTlxOh"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c050c6e201so235235985a.0;
+        Mon, 10 Feb 2025 16:42:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739234566; x=1739839366; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ves2PKf6HPc01SFv90D7qof8tDzgHtK1O0RPrNmLMrU=;
+        b=VUoTlxOhOClx3+0lerNU34S5pHFGbF5h7xXJlYIJu/hC1URQvGCR1PRc6e7QjgGRDt
+         olxJzRfLjUi+ct38HufBXPW/CDvyZMG0aznGhy5f3y71UEkLs31BVDCXGVBzHyjJDi8g
+         WVpEiRbXsU6GsWL5sr4iFxBiHf/xWXWy1CFcWX16YoDkdanMvwaDLS2p268eOtTusCha
+         fkF9gmzWaH90s17/4wBSMAgEUbg9g4Rmsi2TdZaOo1spaa0lOBlDxqnbHVCttYzh0zOa
+         zsOVXQrMwX6sj6hSoxIxlnK/mg9K6mH14ukCR4YmJfHsBex6k5QhMgAwYc4ivPgWctCI
+         0GGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739234566; x=1739839366;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ves2PKf6HPc01SFv90D7qof8tDzgHtK1O0RPrNmLMrU=;
+        b=tamaLmJ2fenBRkeaqgDgQxPUx8Qohk5Pc+RzuL1dSg+Y9EOJDTOQwqyd8mwwCOQc+i
+         F+nt1ggVGOzEoX+p31RvWkytd6MFhx7Bs/Nq0o1tbHzxcgNXJDPYo2L405P85RJSP0nU
+         ZCzTkZ64U25ilGaXujtJf+CP9Z8qeSaHubfZutVLu0U4Fv+SvfJ65wUtx9+3hJYWPQth
+         r5RrRQj3vvnlb+FyaB9vfK75sK1yaQ0LjM9Jg5FHeQjyiq44/7rxvYB5JtlZC3QFdbRX
+         0ixzUo+sMUY0TdtpWrQMmHqLX5J48DJgBbu3An8OTF5ydDL3JQLcrIvod39K5ZNole0i
+         m/Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9Hm1jEL1E6kW0YN4CK5EzYx2zl4uceW1mfx5AF1UspzfeBa4xy+AxtlKobemV8jWFEybtEZ+CRHbvyyff@vger.kernel.org, AJvYcCVnNLoE6kfM7eWv3WoYjMGSeFnJHaO0Oc1c1H42yVop8hRk8BjY+hQm20W4bZArCh5ikDFscctc+gPc@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwXTkSIhDPNuc//Zw0MptXHxjJ0ET88o+r+OEeszLvEafdfMNr
+	LCMonCFTi7WI0x9NHcWhRZpJP3q8X0SoLrAWPbARR8VQqlEb3xic
+X-Gm-Gg: ASbGncvfinpOVtODgUSczPzqaZIZ75uCTyO3RzBdNNS4ZExdjcKPq6J+SIkH+9XTHcl
+	Cu2hD5SIMrxO/g2UfBquHX7g1iRyOkbYJKr12hRNVD8yQbZ6iLcLhvL49x1AinAWp/w1QfI4eoN
+	w/Ht2TI0V9Q7XJowxVaXcSADug2INEToaKqB+3o5fSLvYKyfpYQfAr+j1H2Qt3/V4CXbdIYygf1
+	1Cn3IYEjHWVK2BZ7Yc8nNFkUYS41D15L03WQtdaUFmXEIEAFvAylVN5D5xRCqqz0qw=
+X-Google-Smtp-Source: AGHT+IEF3uTLUH2iOgpwnxLI7jl+sTJ/Lafd2yRzSkI96FyLXuh78dVjps2rwiQRrWVM1p/rSY8GKA==
+X-Received: by 2002:a05:620a:6a83:b0:7c0:51b1:49b4 with SMTP id af79cd13be357-7c051b14a5fmr986106485a.38.1739234566457;
+        Mon, 10 Feb 2025 16:42:46 -0800 (PST)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c041d6628bsm598304585a.0.2025.02.10.16.42.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 16:42:45 -0800 (PST)
+Date: Tue, 11 Feb 2025 08:42:39 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+Cc: linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, 
+	Longbin Li <looong.bin@gmail.com>, Jesse Taube <jesse@rivosinc.com>, 
+	Yong-Xuan Wang <yongxuan.wang@sifive.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Evan Green <evan@rivosinc.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Andy Chiu <andybnac@gmail.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Chen Wang <unicorn_wang@outlook.com>, 
+	Inochi Amaoto <inochiama@gmail.com>
+Subject: Re: [PATCH v3 2/3] riscv: add ISA extension parsing for bfloat16 ISA
+ extension
+Message-ID: <7qkfqzhytjq2qwo2wg3xtkoqu6id6wduckeeudbn2yt5p5p7xv@2gl5bcny26rk>
+References: <20241206055829.1059293-1-inochiama@gmail.com>
+ <20241206055829.1059293-3-inochiama@gmail.com>
+ <374d3b07-e16c-4468-828a-a2a542cd88ac@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <374d3b07-e16c-4468-828a-a2a542cd88ac@rivosinc.com>
 
-Now that we have mTHP support in khugepaged, lets add it to the
-transhuge admin guide to provide proper guidance.
+On Mon, Feb 10, 2025 at 03:38:58PM +0100, Clément Léger wrote:
+> 
+> 
+> On 06/12/2024 06:58, Inochi Amaoto wrote:
+> > Add parsing for Zfbmin, Zvfbfmin, Zvfbfwma ISA extension which
+> > were ratified in 4dc23d62 ("Added Chapter title to BF16") of
+> > the riscv-isa-manual.
+> > 
+> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> > ---
+> >  arch/riscv/include/asm/hwcap.h | 3 +++
+> >  arch/riscv/kernel/cpufeature.c | 3 +++
+> >  2 files changed, 6 insertions(+)
+> > 
+> > diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+> > index 869da082252a..14cc29f2a723 100644
+> > --- a/arch/riscv/include/asm/hwcap.h
+> > +++ b/arch/riscv/include/asm/hwcap.h
+> > @@ -100,6 +100,9 @@
+> >  #define RISCV_ISA_EXT_ZICCRSE		91
+> >  #define RISCV_ISA_EXT_SVADE		92
+> >  #define RISCV_ISA_EXT_SVADU		93
+> > +#define RISCV_ISA_EXT_ZFBFMIN		94
+> > +#define RISCV_ISA_EXT_ZVFBFMIN		95
+> > +#define RISCV_ISA_EXT_ZVFBFWMA		96
+> >  
+> >  #define RISCV_ISA_EXT_XLINUXENVCFG	127
+> >  
+> > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> > index c0916ed318c2..5cfcab139568 100644
+> > --- a/arch/riscv/kernel/cpufeature.c
+> > +++ b/arch/riscv/kernel/cpufeature.c
+> > @@ -341,6 +341,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+> >  	__RISCV_ISA_EXT_DATA(zacas, RISCV_ISA_EXT_ZACAS),
+> >  	__RISCV_ISA_EXT_DATA(zawrs, RISCV_ISA_EXT_ZAWRS),
+> >  	__RISCV_ISA_EXT_DATA(zfa, RISCV_ISA_EXT_ZFA),
+> > +	__RISCV_ISA_EXT_DATA(zfbfmin, RISCV_ISA_EXT_ZFBFMIN),
+> 
+> Hi Inochi,
+> 
+> You could add a validation callback to that extension:
+> 
+> static int riscv_ext_f_depends(const struct riscv_isa_ext_data *data,
+> 			       const unsigned long *isa_bitmap)
+> {
+> 	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_f))
+> 		return 0;
+> 
+> 	return -EPROBE_DEFER;
+> }
+> 
+>   ...
+>   __RISCV_ISA_EXT_DATA_VALIDATE(zfbfmin, RISCV_ISA_EXT_ZFBFMIN,
+> riscv_ext_f_depends),
+> 
+> 
+> But I'm ok with the current state of that patch since I have the same
+> thing coming for other extensions as well. 
 
-Signed-off-by: Nico Pache <npache@redhat.com>
----
- Documentation/admin-guide/mm/transhuge.rst | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-index b3b18573bbb4..99ba3763c1c4 100644
---- a/Documentation/admin-guide/mm/transhuge.rst
-+++ b/Documentation/admin-guide/mm/transhuge.rst
-@@ -63,7 +63,7 @@ often.
- THP can be enabled system wide or restricted to certain tasks or even
- memory ranges inside task's address space. Unless THP is completely
- disabled, there is ``khugepaged`` daemon that scans memory and
--collapses sequences of basic pages into PMD-sized huge pages.
-+collapses sequences of basic pages into huge pages.
- 
- The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
- interface and using madvise(2) and prctl(2) system calls.
-@@ -103,8 +103,8 @@ madvise(MADV_HUGEPAGE) on their critical mmapped regions.
- Applications that would like to benefit from THPs but would still like a
- more memory conservative approach can choose 'defer'. This avoids
- inserting THPs at the page fault handler unless they are MADV_HUGEPAGE.
--Khugepaged will then scan the mappings for potential collapses into PMD
--sized pages. Admins using this the 'defer' setting should consider
-+Khugepaged will then scan the mappings for potential collapses into (m)THP
-+pages. Admins using this the 'defer' setting should consider
- tweaking khugepaged/max_ptes_none. The current default of 511 may
- aggressively collapse your PTEs into PMDs. Lower this value to conserve
- more memory (ie. max_ptes_none=64).
-@@ -119,11 +119,14 @@ Global THP controls
- 
- Transparent Hugepage Support for anonymous memory can be entirely disabled
- (mostly for debugging purposes) or only enabled inside MADV_HUGEPAGE
--regions (to avoid the risk of consuming more memory resources) or enabled
--system wide. This can be achieved per-supported-THP-size with one of::
-+regions (to avoid the risk of consuming more memory resources), defered to
-+khugepaged, or enabled system wide.
-+
-+This can be achieved per-supported-THP-size with one of::
- 
- 	echo always >/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/enabled
- 	echo madvise >/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/enabled
-+	echo defer >/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/enabled
- 	echo never >/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/enabled
- 
- where <size> is the hugepage size being addressed, the available sizes
-@@ -155,6 +158,13 @@ hugepage sizes have enabled="never". If enabling multiple hugepage
- sizes, the kernel will select the most appropriate enabled size for a
- given allocation.
- 
-+khugepaged use max_ptes_none scaled to the order of the enabled mTHP size to
-+determine collapses. When using mTHPs its recommended to set max_ptes_none low.
-+Ideally less than HPAGE_PMD_NR / 2 (255 on 4k page size). This will prevent
-+undesired "creep" behavior that leads to continously collapsing to a larger
-+mTHP size. max_ptes_shared and max_ptes_swap have no effect when collapsing to a
-+mTHP, and mTHP collapse will fail on shared or swapped out pages.
-+
- It's also possible to limit defrag efforts in the VM to generate
- anonymous hugepages in case they're not immediately free to madvise
- regions or to never try to defrag memory and simply fallback to regular
-@@ -318,7 +328,7 @@ Alternatively, each supported anonymous THP size can be controlled by
- passing ``thp_anon=<size>[KMG],<size>[KMG]:<state>;<size>[KMG]-<size>[KMG]:<state>``,
- where ``<size>`` is the THP size (must be a power of 2 of PAGE_SIZE and
- supported anonymous THP)  and ``<state>`` is one of ``always``, ``madvise``,
--``never`` or ``inherit``.
-+``defer``, ``never`` or ``inherit``.
- 
- For example, the following will set 16K, 32K, 64K THP to ``always``,
- set 128K, 512K to ``inherit``, set 256K to ``madvise`` and 1M, 2M
--- 
-2.48.1
+I think it is good for me to add the check, and I wonder it is possible
+to add the extra check for zvfbfmin and zvfbfwma like this:
 
+static int riscv_ext_zvfbfmin_validate(const struct riscv_isa_ext_data *data,
+				       const unsigned long *isa_bitmap)
+{
+	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_v))
+		return 0;
+
+	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZVE32F))
+		return 0;
+
+	return -EPROBE_DEFER;
+}
+
+static int riscv_ext_zvfbfwma_validate(const struct riscv_isa_ext_data *data,
+				       const unsigned long *isa_bitmap)
+{
+	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZFBFMIN) &&
+	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZVFBFMIN))
+		return 0;
+
+	return -EPROBE_DEFER;
+}
+
+> So with or without my previous comment fixed:
+> 
+> Reviewed-by: Clément Léger <cleger@rivosinc.com>
+> 
+> Thanks,
+> 
+> Clément
+> 
+
+Thanks,
+
+Regards,
+Inochi
+
+> >  	__RISCV_ISA_EXT_DATA(zfh, RISCV_ISA_EXT_ZFH),
+> >  	__RISCV_ISA_EXT_DATA(zfhmin, RISCV_ISA_EXT_ZFHMIN),
+> >  	__RISCV_ISA_EXT_DATA(zca, RISCV_ISA_EXT_ZCA),
+> > @@ -373,6 +374,8 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+> >  	__RISCV_ISA_EXT_SUPERSET(zve64d, RISCV_ISA_EXT_ZVE64D, riscv_zve64d_exts),
+> >  	__RISCV_ISA_EXT_SUPERSET(zve64f, RISCV_ISA_EXT_ZVE64F, riscv_zve64f_exts),
+> >  	__RISCV_ISA_EXT_SUPERSET(zve64x, RISCV_ISA_EXT_ZVE64X, riscv_zve64x_exts),
+> > +	__RISCV_ISA_EXT_DATA(zvfbfmin, RISCV_ISA_EXT_ZVFBFMIN),
+> > +	__RISCV_ISA_EXT_DATA(zvfbfwma, RISCV_ISA_EXT_ZVFBFWMA),
+> >  	__RISCV_ISA_EXT_DATA(zvfh, RISCV_ISA_EXT_ZVFH),
+> >  	__RISCV_ISA_EXT_DATA(zvfhmin, RISCV_ISA_EXT_ZVFHMIN),
+> >  	__RISCV_ISA_EXT_DATA(zvkb, RISCV_ISA_EXT_ZVKB),
+> 
