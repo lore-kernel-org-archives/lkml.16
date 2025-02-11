@@ -1,84 +1,86 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB04A24C676
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36BBC215799;
+	Tue, 11 Feb 2025 14:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739282670; cv=none; b=LelD+bLG7LL2HDq960KYg9ZLoCSS0fU/UfIEBOCjIciAm1kmZLjWYM632+ivhcht3RSVacUJmCsndYGC+uKXEUoQ6R1rNSgYFDo+X4I9CUWC3ZDHLreFsfB6Ign/iZEA1CK6ExDuJSAlwS6DYJ/BSJq+9vkDX6euXpszJzKecFk=
+	t=1739282690; cv=none; b=P+WG4Cc3mnl2GsN7C3Cis7PLyfTUbkMPvHOk2CaS7Er57ZkWwbFN/2WIPtvJ0khbyBAd0COhzsZakXKybi4kUOSLr+csVIacyskH4/4IuoOAK6AJ/g9gS2Eb7BfKchkT1Kwwx6SPlW7FBFOhvBi4yirxpflOMFn46MQJFrzAL/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739282670; c=relaxed/simple;
-	bh=vMOdpFf13leEHXzQqFAXuKlmIV8zaMhepi2X91ndeJQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NXQFkEnNNZzcu5w9HLlCDcu3Xe2Rp1/iPaFz4q9lTWMrJ93sINFZYTSz5r6uZjx+/X60Td6rFMg+MUAtuUsGOF8K7PQ+ULNtUgbwRal3SwE2GkL9GGDxjfaLAygM9YfnEp48GsFI+LR8rxqKQE4ssM956I6urvvh9Jxvup9EXJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lGB9ZMJD; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739282690; c=relaxed/simple;
+	bh=5Dq8VZkw9xNox4d9nXP+NDsofsDFpbC12ldyftrP/PY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DnxOTS6oOwmAUD4licrOHU2N5kInx92KN1gaQHG0Quc2L5eDeRzu5L0bxpA3XejNZxrmVyHyk44Ru4g9TmRSr6F4G1MI1mMr5EL6rHl4Yg+R1VQoTNbAixccqtr5pFOCvzmAbI1ZbIqUsWmtTWAr/mMT7DStmIbgyZAZRYuOZvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=QNZeXL/p; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lGB9ZMJD"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739282665;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=o1BPkLTn6NvjCT7x9OM1G503BAs6KZAocao82IvriLs=;
-	b=lGB9ZMJD7B7rsn3p10DIXhPBLKMvFCdb2lENHmwoh3Mij9cZRpH1VdPODoT6YEU74a55Ws
-	09dCJQ7gMTZhccjv2Xj7BbuZ8Ud/uC7PlcO4MobLtGY8aQd54EYCCAfuGKDBeH9X1B3XCf
-	7k6VgkIumuoq21dg5HMLm22zGS6Op2w=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] pcmcia: Use str_off_on() and str_yes_no() helpers
-Date: Tue, 11 Feb 2025 15:03:47 +0100
-Message-ID: <20250211140350.713397-2-thorsten.blum@linux.dev>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QNZeXL/p"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=VSeuhfOw8yfHQ+TWsCEpeuHvxKiIbFJlwEB/VaRLJIo=; b=QNZeXL/pfPJhHnQAz1R1qzLi/w
+	OXuJqpxpgy+GIdKnoz+ivHnrTcVOJCAocPLD/vCv7xQKdndoeO0D2qz5w+wltF5y9aOof+SxqAzKM
+	KSWnELbT/2kglIv9CgYbcoMgLbTf7acKQyJ29q2shPGklCJADXPgB5JOHE4ek1FKiLtk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1thqsF-00D4ti-T7; Tue, 11 Feb 2025 15:04:27 +0100
+Date: Tue, 11 Feb 2025 15:04:27 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, thomas.petazzoni@bootlin.com,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	=?iso-8859-1?Q?Nicol=F2?= Veronese <nicveronese@gmail.com>,
+	Simon Horman <horms@kernel.org>, mwojtas@chromium.org,
+	Antoine Tenart <atenart@kernel.org>, devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Romain Gantois <romain.gantois@bootlin.com>
+Subject: Re: [PATCH net-next 03/13] net: phy: Introduce PHY ports
+ representation
+Message-ID: <0ae41811-e16b-4e64-9fc4-9cb4ea1da697@lunn.ch>
+References: <20250207223634.600218-1-maxime.chevallier@bootlin.com>
+ <20250207223634.600218-4-maxime.chevallier@bootlin.com>
+ <20250211143209.74f84a10@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211143209.74f84a10@kmaincent-XPS-13-7390>
 
-Remove hard-coded strings by using the str_off_on() and str_yes_no()
-helper functions.
+> With net drivers having PHY managed by the firmware or DSA, there is no linux
+> description of their PHYs.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/pcmcia/socket_sysfs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+DSA should not be special, Linux is driving the PHY so it has to exist
+as a linux device.
 
-diff --git a/drivers/pcmcia/socket_sysfs.c b/drivers/pcmcia/socket_sysfs.c
-index c7a906664c36..4eadd0485066 100644
---- a/drivers/pcmcia/socket_sysfs.c
-+++ b/drivers/pcmcia/socket_sysfs.c
-@@ -10,6 +10,7 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/string.h>
-+#include <linux/string_choices.h>
- #include <linux/major.h>
- #include <linux/errno.h>
- #include <linux/mm.h>
-@@ -98,7 +99,7 @@ static ssize_t pccard_show_card_pm_state(struct device *dev,
- 					 char *buf)
- {
- 	struct pcmcia_socket *s = to_socket(dev);
--	return sysfs_emit(buf, "%s\n", s->state & SOCKET_SUSPEND ? "off" : "on");
-+	return sysfs_emit(buf, "%s\n", str_off_on(s->state & SOCKET_SUSPEND));
- }
- 
- static ssize_t pccard_store_card_pm_state(struct device *dev,
-@@ -177,7 +178,7 @@ static ssize_t pccard_show_resource(struct device *dev,
- 				    struct device_attribute *attr, char *buf)
- {
- 	struct pcmcia_socket *s = to_socket(dev);
--	return sysfs_emit(buf, "%s\n", s->resource_setup_done ? "yes" : "no");
-+	return sysfs_emit(buf, "%s\n", str_yes_no(s->resource_setup_done));
- }
- 
- static ssize_t pccard_store_resource(struct device *dev,
--- 
-2.48.1
+Firmware is a different case. If the firmware has decided to hide the
+PHY, the MAC driver is using a higher level API, generally just
+ksetting_set etc. It would be up to the MAC driver to export its PHY
+topology and provide whatever other firmware calls are needed. We
+should keep this in mind when designing the kAPI, but don't need to
+actually implement it. The kAPI should not directly reference a
+phydev/phylink instance, but an abstract object which represents a
+PHY.
+
+	Andrew
 
