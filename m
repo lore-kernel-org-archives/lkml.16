@@ -1,37 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CAB1EEA38;
-	Tue, 11 Feb 2025 11:44:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB4A1FA165;
+	Tue, 11 Feb 2025 11:44:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739274278; cv=none; b=U1Z6AEx0vRJM7UKcOXg3gBmMlql9aY9mdFoRn/5f6kMqAoO/h4zbrY7xVbnVgwDNwAXM0WOjDvPg2eWdfSowc4kBRuF2TBCAuE0qQMpv5QNY69V9+dMyxr7OzliXv3tJCQXUf3bS1R778MRCPRGbdk7WTofDr65PWbzB/W4erqI=
+	t=1739274279; cv=none; b=egWRmIVv/0XTlBcf9urmNGwR4wlRE6gVqRTxUV+acyULKdFCZgpIoc7dwNX2uir5SuVwFm+MfUmyDhyT4A+uwBVwI2mAPZWWo2Q7WkbcHYYlRypyLFR10KWj8ycUGIEKJNJ/K+5nad4j7qH6AWgoG7I5LKUuNX2eUyJoOrB1Crc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739274278; c=relaxed/simple;
-	bh=RgLO6P1goXDawul5y+R84q5+vVPWK6PuO7ujWU+944Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tRefJ0cMQod/YaZgAvfooYbZpBxs/v/oaSWkoliVIDUxSPLRsGkqeBjDwDvZBwtTjmZy3NPsA1aiIICLdst2rcLDNej48q+EJy9spyZgy9LdixGfl/W0YMOHneSFQ3P96loC1BLQ/EbCccgZsUsp/T7BcLyfTYOGd943JLWWrUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pEQMvPpM; arc=none smtp.client-ip=148.251.105.195
+	s=arc-20240116; t=1739274279; c=relaxed/simple;
+	bh=1blVE50JLGY1NZ5lRXIT4Y/pMISIL1X/dC/cJ9LqPAo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UrLg4youpbJaDk2kMmvoaUD8AJU9r4RBW4sJNwQLWVa1HLrf31cQlLP/caT/PCfN2bPhiOKg5A/LCdNFhuMoMGj55PyfVjRVEU2GM6OsVN7PD9zRpFTwhbpLAss8aWLppAATgINjrA9wBUOse4/g48NGAvMzpylV2KlHFm2tB2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kOpRjjYM; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pEQMvPpM"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kOpRjjYM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739274272;
-	bh=RgLO6P1goXDawul5y+R84q5+vVPWK6PuO7ujWU+944Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=pEQMvPpM1YD15H2fDyHoX8THcZog4GAeo5LXRWXHDXejcZGzOtOCyw/xQ2SfkmkBL
-	 mRoL1ODbIFoWHwd0Ixf2aNBR53P72os0HEgR3aB9YCHAMsSNgSNm41borfGfT0vL2P
-	 59XJx13Y2s067YNB4knmVaJFGoZEHSNmdmjZ5f+V854Jrk2DP0UYv54hXONLOgnR+s
-	 sY+P0jHSjuq8BWs4P30DD6g96GlDZKxziWtuhWKz0yu9VpyhdhwPZ9uD5/K+uu+SGO
-	 b7Zq8hndC9X7eB8qV2UCz2Iuf05KGIZjKlyTycP1Q2qPM9q5HLXuQ14GVftrpPIt/f
-	 vQcDvE7W5wN8Q==
+	s=mail; t=1739274273;
+	bh=1blVE50JLGY1NZ5lRXIT4Y/pMISIL1X/dC/cJ9LqPAo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kOpRjjYMhtXgmXvG9+mO0EsEoYtOddONqEUsg0WFZbS6kB5sl6TslmYIDiusbBKlz
+	 1LfsUCMCBxHfF24s+nBN96Q6KVmCrrl4K4bwUQGP3nJJ0lQBK8YmLU+BrQOWZKk+YD
+	 //FIIbQHyC9ldmrdRn7IMVJewkLgQY20aPE1AfEUhCwPfrOPW48QwJvuLnBi+qOfrF
+	 WnDgJ/xCEesQD2tTe7NbzDax+HSURlOpYReSWALchDxoXp8vZ9ldPh/4+TCg3y8Uxy
+	 OCuSmnmQ7Ulak6lCfi44PirH4K879HSNWRAbojJNSFVoa6GfeG0IfESQwlgw9Uok0H
+	 iApzGPgvDWsWw==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7F7BA17E14D5;
-	Tue, 11 Feb 2025 12:44:31 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id AC3AC17E1539;
+	Tue, 11 Feb 2025 12:44:32 +0100 (CET)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: neil.armstrong@linaro.org
 Cc: quic_jesszhan@quicinc.com,
@@ -49,10 +50,12 @@ Cc: quic_jesszhan@quicinc.com,
 	linux-kernel@vger.kernel.org,
 	kernel@collabora.com,
 	pablo.sun@mediatek.com
-Subject: [PATCH v1 0/2] Add driver for Himax HX8279 DriverIC panels
-Date: Tue, 11 Feb 2025 12:44:27 +0100
-Message-ID: <20250211114429.1519148-1-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v1 1/2] dt-bindings: display: panel: Add Himax HX8279/HX8279-D
+Date: Tue, 11 Feb 2025 12:44:28 +0100
+Message-ID: <20250211114429.1519148-2-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250211114429.1519148-1-angelogioacchino.delregno@collabora.com>
+References: <20250211114429.1519148-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,30 +64,99 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series adds a driver for DSI panels using the Himax HX8279 and
-HX8279-D DriverICs, and introduces one panel using such a configuration,
-the Startek KX070FHFID078.
+Himax HX8279 is a Display DriverIC suitable for driving LCD
+MIPI-DSI panels.
 
-This panel is found on the latest hardware revisions of some MediaTek
-Genio Evaluation Kits, and specifically, at least:
- - Genio 510 EVK
- - Genio 700 EVK
- - Genio 1200 EVK
+Describe this DriverIC and the Startek KD070FHFID078 panel found
+on newer revisions of the MediaTek Genio 510/700/1200 Evaluation
+Kits (EVK).
 
-This driver was tested on all of the aforementioned boards.
-
-AngeloGioacchino Del Regno (2):
-  dt-bindings: display: panel: Add Himax HX8279/HX8279-D
-  drm: panel: Add driver for Himax HX8279 and Startek KD070FHFID078
-
- .../bindings/display/panel/himax,hx8279.yaml  |  74 ++
- drivers/gpu/drm/panel/Kconfig                 |  11 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- drivers/gpu/drm/panel/panel-himax-hx8279.c    | 910 ++++++++++++++++++
- 4 files changed, 996 insertions(+)
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ .../bindings/display/panel/himax,hx8279.yaml  | 74 +++++++++++++++++++
+ 1 file changed, 74 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/panel/himax,hx8279.yaml
- create mode 100644 drivers/gpu/drm/panel/panel-himax-hx8279.c
 
+diff --git a/Documentation/devicetree/bindings/display/panel/himax,hx8279.yaml b/Documentation/devicetree/bindings/display/panel/himax,hx8279.yaml
+new file mode 100644
+index 000000000000..d66191398f50
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/himax,hx8279.yaml
+@@ -0,0 +1,74 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/himax,hx8279.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Himax HX8279/HX8279-D based MIPI-DSI panels
++
++maintainers:
++  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
++
++description:
++  The Himax HX8279 is a 1803 channel outputs source driver with MIPI
++  TCON, which generates the horizontal and vertical control timing to
++  the source and gate drivers.
++  This DriverIC is most suitable for 1200x1920, 1080x1920, 1200x1600,
++  and 600x1024 panels and outputs full RGB888 over two or four lanes,
++  single or dual, MIPI-DSI video interface.
++
++allOf:
++  - $ref: panel-common-dual.yaml#
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - startek,kd070fhfid078
++      - const: himax,hx8279
++
++  reg:
++    maxItems: 1
++
++  iovcc-supply:
++    description: I/O voltage supply
++
++  vdd-supply:
++    description: Panel power supply
++
++required:
++  - compatible
++  - reg
++  - backlight
++  - reset-gpios
++  - iovcc-supply
++  - vdd-supply
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    dsi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        panel@0 {
++            compatible = "startek,kd070fhfid078", "himax,hx8279";
++            reg = <0>;
++            backlight = <&backlight>;
++            enable-gpios = <&pio 25 GPIO_ACTIVE_HIGH>;
++            reset-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
++            iovcc-supply = <&vreg_lcm_vio>;
++            vdd-supply = <&vreg_lcm_vdd>;
++
++            port {
++                panel_in: endpoint {
++                    remote-endpoint = <&dsi_out>;
++                };
++            };
++        };
++    };
++
++...
 -- 
 2.48.1
 
