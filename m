@@ -1,125 +1,153 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F31C1EE006;
-	Tue, 11 Feb 2025 07:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739260725; cv=none; b=VaAlwnC+EN7Ng31o/72HwiKirm3shPFF3XTuVZ/JsPQwpkJZnT/L9/HHu1ybgUlokEXD1Cp2Fm5ePcADH2iHYGZ+qKh9JERb/MClonBqMxZeXPSNmG5m4JPrWbKb9EeG/jaaUuAwJFYdFHUFeYV3tPpyOgw2kjDMMQPD0QDBqIQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739260725; c=relaxed/simple;
-	bh=MfEtWbLPgXZpUzRVrDPwsHWz/9YeYn+wWSSA9lyf3bI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GPBN5T+DuuRvouTU+B25BGcCRtybv2RdJrDkGcFna3ZeSGejHzPu2ls5PLUBDXavWhMPF4YkRHL9dI7HjVn+fblUdzi4KJOQ+6iYyTkP8cY24hB0oMWFQtJG67gnLGVCb3MCJ2pgZqCYq9HqVCusjh43Tr+1corV2E606f6rdM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nqMsmtvg; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB861EE006;
+	Tue, 11 Feb 2025 07:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739260732; cv=pass; b=b1FqB5d4vTDv6pkQ/ak9FP1NUmLsYCr6W95TY8PFRam5lmxqC5p+hf+EMRhBIWePDzxiJQJpbV6Dab4a9esQyRCnaeciDIN4YYMTSTV8wHLqVfYbuj7IF3svk1MP2bx/wvhQgmHPod7TAo1hsJZ+xkDG5tvd/ZbfG1EJq3cqCuI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739260732; c=relaxed/simple;
+	bh=vkzV05Gs7XYdaSqllXxUzjJhF64gmbcaH6g2i+S1ZeE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YJJxfIJKvEhDMLPRVHQajro9yfmCluc8OLIcJNLE198DS2iPpSq89/XtYIXTHBrocstsy53ePq/QKFtIhoD3sSB5cHJA6iPy6pPmG+C1Difu1K4xSguFbrZI6etrBBQiZ5aygOoTeMh0j9QGoo9dUofzAjaHQbSmshSYuPYX5eo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=A5dWF/Kz; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nqMsmtvg"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B1go7G005901;
-	Tue, 11 Feb 2025 07:58:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=WlxeSK
-	+CAkCyLAKyw0C9HbWTW9TRohs2UDyT8UneP/8=; b=nqMsmtvgA6XO9pvNt4HSjv
-	ugyIlux65V1i3HWg7l9s8hWyLWqkK4O7bwzAFbmP5oFHgHLV3IgC/qHq6FXdym/U
-	Rh2TqdtLA8t/53dmVmXqZceQupP2pqduaRPUnNzk0eiaz00cCQbNU7ue61hkzVsW
-	QKta95IW5cgInyy5CJZCT2ZVa4Y4jGewEfCOp2z+LzEkCl5eKwhZQQJY+dXs92Sf
-	26R/FfZ0jJ5kMJYimG1rojaUtrWA3wcCGvBG5XoDSeMZxSMag5SY1nnmnLaIgD1i
-	Z6b27mOiRVNyQEB3Wm8KqjWiowQiLgwutA+AHWwB+AiSHvrEDR/8A/QuhNlqB8vA
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44qvma1bdq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 07:58:40 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51B4Yn7D000924;
-	Tue, 11 Feb 2025 07:58:39 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44pjkn29rd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 07:58:39 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51B7wZBq33358334
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Feb 2025 07:58:35 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5D95920043;
-	Tue, 11 Feb 2025 07:58:35 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A243820040;
-	Tue, 11 Feb 2025 07:58:34 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.179.13.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 11 Feb 2025 07:58:34 +0000 (GMT)
-Date: Tue, 11 Feb 2025 08:58:33 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Rorie Reyes <rreyes@linux.ibm.com>
-Cc: Anthony Krowiak <akrowiak@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, borntraeger@de.ibm.com, pasic@linux.ibm.com,
-        jjherne@linux.ibm.com, alex.williamson@redhat.com
-Subject: Re: [PATCH v1] s390/vfio-ap: Signal eventfd when guest AP
- configuration is changed
-Message-ID: <Z6sDKeA6WzAgagiZ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20250107183645.90082-1-rreyes@linux.ibm.com>
- <Z4U6iu5JidJUxDgX@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <f69bba4b-a97e-4166-9ce1-c8a2ad634696@linux.ibm.com>
- <f1af50b3-f966-445d-ab89-3d213f55b93a@linux.ibm.com>
- <Z6RnfwawWop0v1CW@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <02675184-0ce5-4f08-9d5d-f42987b77b5b@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="A5dWF/Kz"
+ARC-Seal: i=1; a=rsa-sha256; t=1739260712; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=E1gBDwoi1Bb3lNK+4qkoTEZex4ubrnfuAPBvPXkoCfbB5isbTP0P/EBna+FF+iszCOo/dbWhwxr9gLC1bnPpk6acL3SvR2uNmrRhPNcn0DMQGYfY66GixQb7h/+EA8xBQLpNTPuM8inYeWiO/GcaXobox8KhDNa7dcLEs2EIKdY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739260712; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=xo6LVXxBk8luultuiNJGM+k/vs2dVpcg7QsqMgG6nvU=; 
+	b=horctQeFEaGeMzlpr/JWuRLJ+AlIAku/xf5AYvy81NiLfhb6CO4QusOFPZMamVnhUc4h2B3OI0cntbLe+iQEojkIVmpJC4EqeqPr3LhgGR49X0q69PfIxmKu0nn60YQT+hocc3dDkf/CgStmynUMhokSGVvBDlbiN1Ebm0r9xmM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739260712;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=xo6LVXxBk8luultuiNJGM+k/vs2dVpcg7QsqMgG6nvU=;
+	b=A5dWF/KzsxL7i7pDrDwFEQqP/exZlGSOsQyhyG9dLxg80G5aEnKrLE2oY8POdigD
+	Y97Ku2W59bbIKM5EAttIXCfTMGb6Lylle6AytO0S3Uen0bTi1ol6QAvwXQYHlAn+oh+
+	6Qo00dYJBKX/WCVpSsWeB6F/pFCFhKX+UPQMCpsU=
+Received: by mx.zohomail.com with SMTPS id 1739260710354138.37583421281113;
+	Mon, 10 Feb 2025 23:58:30 -0800 (PST)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v1 5/7] cxl/core: Use guard() to drop goto pattern of cxl_dpa_alloc()
+Date: Tue, 11 Feb 2025 15:57:25 +0800
+Message-Id: <20250211075727.351895-6-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250211075727.351895-1-ming.li@zohomail.com>
+References: <20250211075727.351895-1-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <02675184-0ce5-4f08-9d5d-f42987b77b5b@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: SEkIxNSiV1jJ20CL6-C0sYFI2LnPE0Ur
-X-Proofpoint-ORIG-GUID: SEkIxNSiV1jJ20CL6-C0sYFI2LnPE0Ur
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_03,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- clxscore=1015 lowpriorityscore=0 priorityscore=1501 impostorscore=0
- adultscore=0 mlxlogscore=999 spamscore=0 suspectscore=0 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502110044
+Feedback-ID: rr0801122718be4e9ab09d08c67a3cc64800002b9f99af80e6f326acc9192af39c5ebdb4e95f8c4d79872a8a:zu08011227c20d155d6494045a0e02dae400007bc391ada48f10dc61b8d786c1a634e274d56516271839e98d:rf0801122d406f06170db6aa24e559e01c00002326dc041cb13330494fd9232a8015ac92e5e2de37282883b4153bd53237b7:ZohoMail
+X-ZohoMailClient: External
 
-On Thu, Feb 06, 2025 at 09:12:27AM -0500, Rorie Reyes wrote:
+In cxl_dpa_alloc(), some checking and operations need to be protected by
+a rwsem called cxl_dpa_rwsem, so there is a goto pattern in
+cxl_dpa_alloc() to release the rwsem. The goto pattern can be optimized
+by using guard() to hold the rwsem.
 
-Hi Rorie,
+Creating a new function called __cxl_dpa_alloc() to include all checking
+and operations needed to be procted by cxl_dpa_rwsem. Using
+guard(rwsem_write()) to hold cxl_dpa_rwsem at the beginning of the new
+function.
 
-> On 2/6/25 2:40 AM, Alexander Gordeev wrote:
-> > On Wed, Feb 05, 2025 at 12:47:55PM -0500, Anthony Krowiak wrote:
-> > > > > How this patch is synchronized with the mentioned QEMU series?
-> > > > > What is the series status, especially with the comment from Cédric
-> > > > > Le Goater [1]?
-> > > > > 
-> > > > > 1. https://lore.kernel.org/all/20250107184354.91079-1-rreyes@linux.ibm.com/T/#mb0d37909c5f69bdff96289094ac0bad0922a7cce
-...
-> > > I don't think that is what Alex was asking. I believe he is asking how the
-> > > QEMU and kernel patch series are going to be synchronized.
-> > > Given the kernel series changes a value in vfio.h which is used by QEMU, the
-> > > two series need to be coordinated since the vfio.h file
-> > > used by QEMU can not be updated until the kernel code is available. So these
-> > > two sets of code have
-> > > to be merged upstream during a merge window. which is different for the
-> > > kernel and QEMU. At least I think that is what Alex is asking.
-> > Correct.
-> > Thanks for the clarification, Anthony!
-> 
-> Tony, thank you for the back up!
-> 
-> Alexander, is there anything else you need from my end for clarification?
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+ drivers/cxl/core/hdm.c | 29 ++++++++++++++---------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
-The original question still stays - is it safe to pull this patch now,
-before the corresponding QEMU change is integrated?
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 4d753520a79a..27813c430db9 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -444,29 +444,25 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+ 	return 0;
+ }
+ 
+-int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
++static int __cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+ {
+ 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+ 	resource_size_t free_ram_start, free_pmem_start;
+-	struct cxl_port *port = cxled_to_port(cxled);
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 	struct device *dev = &cxled->cxld.dev;
+ 	resource_size_t start, avail, skip;
+ 	struct resource *p, *last;
+-	int rc;
+ 
+-	down_write(&cxl_dpa_rwsem);
++	guard(rwsem_write)(&cxl_dpa_rwsem);
+ 	if (cxled->cxld.region) {
+ 		dev_dbg(dev, "decoder attached to %s\n",
+ 			dev_name(&cxled->cxld.region->dev));
+-		rc = -EBUSY;
+-		goto out;
++		return -EBUSY;
+ 	}
+ 
+ 	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
+ 		dev_dbg(dev, "decoder enabled\n");
+-		rc = -EBUSY;
+-		goto out;
++		return -EBUSY;
+ 	}
+ 
+ 	for (p = cxlds->ram_res.child, last = NULL; p; p = p->sibling)
+@@ -506,21 +502,24 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+ 		skip = skip_end - skip_start + 1;
+ 	} else {
+ 		dev_dbg(dev, "mode not set\n");
+-		rc = -EINVAL;
+-		goto out;
++		return -EINVAL;
+ 	}
+ 
+ 	if (size > avail) {
+ 		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
+ 			cxl_decoder_mode_name(cxled->mode), &avail);
+-		rc = -ENOSPC;
+-		goto out;
++		return -ENOSPC;
+ 	}
+ 
+-	rc = __cxl_dpa_reserve(cxled, start, size, skip);
+-out:
+-	up_write(&cxl_dpa_rwsem);
++	return __cxl_dpa_reserve(cxled, start, size, skip);
++}
++
++int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
++{
++	struct cxl_port *port = cxled_to_port(cxled);
++	int rc;
+ 
++	rc = __cxl_dpa_alloc(cxled, size);
+ 	if (rc)
+ 		return rc;
+ 
+-- 
+2.34.1
 
-Thanks!
