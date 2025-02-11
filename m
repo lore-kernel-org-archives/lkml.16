@@ -1,98 +1,299 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AF914A82;
-	Tue, 11 Feb 2025 00:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF4F23A0
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233396; cv=none; b=J0hqqZ9UUhL3AF6Qt0QWpeJ+EkP1NXFXrxnZPidP+Tc/kqMu1Qcmo8RO25uiQKimSPMVA8lbzcGW+z6Qew56r48/qRC2Fl2dCU1tL4ASi2/VIi8cnFDXP6R4f5pHcUq4sbQaUfQEhAIuyqXfyZ9sVONsBIObakKnYa2lJT1NflU=
+	t=1739233412; cv=none; b=FVm2YsaZBPo0DAr+lbAoJmQyiJRekCag0tOUkNO6IxF/hwIyMGF8LVQ9r1CVB7Z0TnYGvDxYdhIq7XyOeYL+ADr8KBSBmHY9z09jDLp06xeGikjSCS0/fxbKmYjlCiYrbeLTirffFhhFC3vB9UnolcQE6vc7i4MQPkCSwzGqpFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739233396; c=relaxed/simple;
-	bh=mRA1cmlIzeoIX7wF5rfgohB3epABVAJ4qc6TtgGETj0=;
+	s=arc-20240116; t=1739233412; c=relaxed/simple;
+	bh=AopigPBAn3GXV2cawRws8/86QdyKd0HOJ73h/vhCKbY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r/H1paJzG9UC5AQiLPX20yRTZDyTOe7gR6aNRS4eDFOfqZaU7t5Fy1bUJS8XaN5FDNDenHwm6vZ9Rsv4aAtORImNPFokeLufdqTnQUmDUYbfynRqnbsdd/YH0pNV+7RdVoU+azI2Qoeq6HAIYqBb/h+q3CmDpWbBEqwF3aMXBLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=MrR22n2P; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=ogd2QDHPICwuvSza/mcBnZ2RmXlW0MpsNP8tRldLsyIUnPbpgf9Sdap5qs7LsYUhZ6rFuq8diyDDTr06zO8CIhZOkW4SyQaQ/SyCjuPdpEO+JyU+m8hemXbXFdS4XeGVQhE/GgwDqjvUpWQd4q70Y5DcUb3MKbKFxF519v9ObIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=G9yWfml4; arc=none smtp.client-ip=209.85.128.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="MrR22n2P"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hxh+YLiePD6ZgxfNUFuR9y84+we8TJD73uUNEi8TGDs=; b=MrR22n2P22D9bKN+nX+/5LZZhQ
-	FAtHYT48N+Fn8jooEN1ucJkh4AftyWb3IdWm2cg06+2HpESEtYWOT6VcD6PdBcr4ANQwzvMQ4KLEt
-	ut/LnVp11xNuKE3YKdIpJh3wfMcZqrSQHWmAZo10o2G60vFt3AVM2AgJvu7CfO3KGcke13JcVa7ln
-	wzw/ncNbh163hZYncIssruF2UBNhlIF+uvl/rBCEJIJszWeC8Fl8gyUOTNCEVdDtnJym4EVnjyDJB
-	52r569/UsEHnhWApqEWBmn8UMzctbdk5OrrEDZJbXDUxqPLl22lbYe4al+nqkzJ4DlHybyF85/gIY
-	u3La6uRg==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1the3Q-00000009zX0-2Tt6;
-	Tue, 11 Feb 2025 00:23:08 +0000
-Date: Tue, 11 Feb 2025 00:23:08 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Zicheng Qu <quzicheng@huawei.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, jlayton@kernel.org,
-	axboe@kernel.dk, joel.granados@kernel.org, tglx@linutronix.de,
-	linux-kernel@vger.kernel.org, hch@lst.de, len.brown@intel.com,
-	pavel@ucw.cz, pengfei.xu@intel.com, rafael@kernel.org,
-	syzkaller-bugs@googlegroups.com, linux-pm@vger.kernel.org,
-	tanghui20@huawei.com, zhangqiao22@huawei.com,
-	judy.chenhui@huawei.com
-Subject: Re: [PATCH] acct: Prevent NULL pointer dereference when writing to
- sysfs
-Message-ID: <20250211002308.GG1977892@ZenIV>
-References: <20250127091811.3183623-1-quzicheng@huawei.com>
- <20250210131719.528717-1-quzicheng@huawei.com>
- <20250210-unordnung-petersilie-90e37411db18@brauner>
- <20250210152146.GC1977892@ZenIV>
- <20250210-erstsemester-eckpunkte-f2f0d922ed01@brauner>
- <20250210181902.GE1977892@ZenIV>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="G9yWfml4"
+Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-6f6ca9a3425so44952457b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:23:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739233409; x=1739838209; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qlUFik2Cn3+UF32BcSaPs8X9uoxvxbSY4EvgNwl3nLs=;
+        b=G9yWfml4gvh4Txm8kI5UK/SeAQC1j//eIafj8xtOw+ZoEGnn/YhCDiLAH4z0A0xRuj
+         +s27flFZgtItTnl10oTmd9gv5xsXyAV6qDPii1he96Qjgw/x4PkfxLgEg20mX1xTWUTl
+         rh5s08w0LwJpi1Tv+bRMMGNkv8dbD3iM+16GifTZeCV3CpYSNgJjraiK5mygnrngYktf
+         3mKDVFAvOo7V/8XbGhkotAzgwwGDpKAgyuTz6gLDFGJaDrWubG0t1s7dg/QeLE73sqxk
+         6gC/AF7KarftnQv2FUtBEICaIAnIcmG4ww783U6qQ2BY/3G6FCKcyJ1KBOCz5LWSZysw
+         ey8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739233409; x=1739838209;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qlUFik2Cn3+UF32BcSaPs8X9uoxvxbSY4EvgNwl3nLs=;
+        b=kJnzbeJGxAhxAj1haaAGzjKWCDJkTXBkmKaPSbV7xhk1s3zDI2usnIi7FhIbN6eMKI
+         WNg9ZQG+jyDy8WiKof3ZruB0+akuz1/C2WIRXBfnkxbgo25raU2jmWaB3x6fvmPTSFMQ
+         VCcSNs2MEQnUL2Ior3d6UX1XJ3RDgsHwKtFfKHgsV+tFMoaNk4/YUPW3hHw9d9Ynoz6o
+         3z46i5LI/jhYJR6AbGg6ibbfYLy6AYwMcCraWa5yZfYSSL7rkB0dqg9VYZq+/sKHMVS3
+         JXUqlvRXEmiToZu3/uz/GnvoVx5ZHxWcaakO9yeL7ShxSVNXPp9tRAUK3LMtX/n5w3/a
+         LP6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVSemSWLN5J3nZAVEub4ATsuPvTLdnHNZbIGAJw6+KVL94CeUPUqLpBwl7A+tI7VGeCCM2Dpnu33qJNOzk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+Cwf4HEvcM5gM1h+BOrT9WG7NPAE6QktAN+IiagivDx54YD2y
+	Q2zTflE59fG96We2RLbNyEu3kW/q5nVSwopSEwcb1M8DwQQyS477iHYxk7j42EE=
+X-Gm-Gg: ASbGncu79OucwvE7EjaSqO5AHAu9Om1g7AH9AF8LIrd8m9De2jy5/YICHS5DiTdvv1k
+	TMbpY6RO7zjaGIoZ9iVRyJCZveR95ADbDS/bNJ/Lq//XuBPh7sD9xhkQX8se8vGNUdGJFLs2DjG
+	LmLw2oa8I99c53qjT/JUGzcqixNYB3Bway06Uf92mhdivNDcuTouFWVcDDjZitl24Nc9e/kXGhc
+	+9CPy47+1kd8jwkjXy+6sYD3k2x5e4mr3eX16o5xMrzSwxU/1veI4+chhdOOhpk6yu2lWcmIWOg
+	eVg=
+X-Google-Smtp-Source: AGHT+IFSyb6+nkjB0xsO1NPVunIuHs7rXC4UlzNdyRAuB/KbUs8KTwwp4ehcJv9y4ufISKopybkvhw==
+X-Received: by 2002:a05:690c:4448:b0:6ef:827b:2442 with SMTP id 00721157ae682-6f9b29dfba4mr162843667b3.35.1739233408845;
+        Mon, 10 Feb 2025 16:23:28 -0800 (PST)
+Received: from ghost ([50.146.0.9])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99ffc0aeasm18931437b3.96.2025.02.10.16.23.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 16:23:27 -0800 (PST)
+Date: Mon, 10 Feb 2025 16:23:26 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Guo Ren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>,
+	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 6/7] perf syscalltbl: Use lookup table containing
+ multiple architectures
+Message-ID: <Z6qYfrdGlfHj4XEL@ghost>
+References: <20250210165108.95894-1-irogers@google.com>
+ <20250210165108.95894-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250210181902.GE1977892@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250210165108.95894-7-irogers@google.com>
 
-On Mon, Feb 10, 2025 at 06:19:02PM +0000, Al Viro wrote:
-> On Mon, Feb 10, 2025 at 05:02:35PM +0100, Christian Brauner wrote:
-> > On Mon, Feb 10, 2025 at 03:21:46PM +0000, Al Viro wrote:
-> > > On Mon, Feb 10, 2025 at 04:12:54PM +0100, Christian Brauner wrote:
-> > > 
-> > > > One fix would be to move exit_fs() past exit_task_work(). It looks like
-> > > > that this should be doable without much of a problem and it would fix
-> > > > the path_init() problem.
-> > > > 
-> > > > There should hopefully be nothing relying on task->fs == NULL in
-> > > > exit_task_work().
-> > > 
-> > > There's a question of the task_work_add() issued by exit_task_fs(),
-> > > though.
-> > 
-> > Can't we simply remove the pins on the mounts of fs->root and fs->pwd in
-> > exit_fs() explicitly? If that works I think that's a fair enough
-> > compromise for this shite.
+On Mon, Feb 10, 2025 at 08:51:07AM -0800, Ian Rogers wrote:
+> Switch to use the lookup table containing all architectures rather
+> than tables matching the perf binary.
 > 
-> I'd rather go for a simpler approach...  Why do we need those writes
-> to be done in context of exiting process in the first place?  It's
-> not as if they needed to go out before it terminates, so what's to
-> stop us from having a kernel thread in background and queue the data
-> to be written for it to pick up?
+> This fixes perf trace when executed on a 32-bit i386 binary on an
+> x86-64 machine. Note in the following the system call names of the
+> 32-bit i386 binary as seen by an x86-64 perf.
 > 
-> Does anybody see problems with that approach?
+> Before:
+> ```
+>          ? (         ): a.out/447296  ... [continued]: munmap())                                           = 0
+>      0.024 ( 0.001 ms): a.out/447296 recvfrom(ubuf: 0x2, size: 4160585708, flags: DONTROUTE|CTRUNC|TRUNC|DONTWAIT|EOR|WAITALL|FIN|SYN|CONFIRM|RST|ERRQUEUE|NOSIGNAL|WAITFORONE|BATCH|SOCK_DEVMEM|ZEROCOPY|FASTOPEN|CMSG_CLOEXEC|0x91f80000, addr: 0xe30, addr_len: 0xffce438c) = 1475198976
+>      0.042 ( 0.003 ms): a.out/447296 lgetxattr(name: "", value: 0x3, size: 34)                             = 4160344064
+>      0.054 ( 0.003 ms): a.out/447296 dup2(oldfd: -134422744, newfd: 4)                                     = -1 ENOENT (No such file or directory)
+>      0.060 ( 0.009 ms): a.out/447296 preadv(fd: 4294967196, vec: (struct iovec){.iov_base = (void *)0x2e646c2f6374652f,.iov_len = (__kernel_size_t)7307199665335594867,}, vlen: 557056, pos_h: 4160585708) = 3
+>      0.074 ( 0.004 ms): a.out/447296 lgetxattr(name: "", value: 0x1, size: 2)                              = 4160237568
+>      0.080 ( 0.001 ms): a.out/447296 lstat(filename: "", statbuf: 0x193f6)                                 = 0
+>      0.089 ( 0.007 ms): a.out/447296 preadv(fd: 4294967196, vec: (struct iovec){.iov_base = (void *)0x3833692f62696c2f,.iov_len = (__kernel_size_t)3276497845987585334,}, vlen: 557056, pos_h: 4160585708) = 3
+>      0.097 ( 0.002 ms): a.out/447296 close(fd: 3</proc/447296/status>)                                     = 512
+>      0.103 ( 0.002 ms): a.out/447296 lgetxattr(name: "", value: 0x1, size: 2050)                           = 4157935616
+>      0.107 ( 0.007 ms): a.out/447296 lgetxattr(pathname: "", name: "", value: 0x5, size: 2066)             = 4158078976
+>      0.116 ( 0.003 ms): a.out/447296 lgetxattr(pathname: "", name: "", value: 0x1, size: 2066)             = 4159639552
+>      0.121 ( 0.003 ms): a.out/447296 lgetxattr(pathname: "", name: "", value: 0x3, size: 2066)             = 4160184320
+>      0.129 ( 0.002 ms): a.out/447296 lgetxattr(pathname: "", name: "", value: 0x3, size: 50)               = 4160196608
+>      0.138 ( 0.001 ms): a.out/447296 lstat(filename: "")                                                   = 0
+>      0.145 ( 0.002 ms): a.out/447296 mq_timedreceive(mqdes: 4291706800, u_msg_ptr: 0xf7f9ea48, msg_len: 134616640, u_msg_prio: 0xf7fd7fec, u_abs_timeout: (struct __kernel_timespec){.tv_sec = (__kernel_time64_t)-578174027777317696,.tv_nsec = (long long int)4160349376,}) = 0
+>      0.148 ( 0.001 ms): a.out/447296 mkdirat(dfd: -134617816, pathname: " ��� ���▒���▒���", mode: IFREG|ISUID|IRUSR|IWGRP|0xf7fd0000) = 447296
+>      0.150 ( 0.001 ms): a.out/447296 process_vm_writev(pid: -134617812, lvec: (struct iovec){.iov_base = (void *)0xf7f9e9c8f7f9e4c0,.iov_len = (__kernel_size_t)4160349376,}, liovcnt: 4160588048, rvec: (struct iovec){}, riovcnt: 4160585708, flags: 4291707352) = 0
+>      0.197 ( 0.004 ms): a.out/447296 capget(header: 4160184320, dataptr: 8192)                             = 0
+>      0.202 ( 0.002 ms): a.out/447296 capget(header: 1448669184, dataptr: 4096)                             = 0
+>      0.208 ( 0.002 ms): a.out/447296 capget(header: 4160577536, dataptr: 8192)                             = 0
+>      0.220 ( 0.001 ms): a.out/447296 getxattr(pathname: "", name: "c������", value: 0xf7f77e34, size: 1)  = 0
+>      0.228 ( 0.005 ms): a.out/447296 fchmod(fd: -134729728, mode: IRUGO|IWUGO|IFREG|IFIFO|ISVTX|IXUSR|0x10000) = 0
+>      0.240 ( 0.009 ms): a.out/447296 preadv(fd: 4294967196, vec: 0x5658e008, pos_h: 4160192052)            = 3
+>      0.250 ( 0.008 ms): a.out/447296 close(fd: 3</proc/447296/status>)                                     = 1436
+>      0.260 ( 0.018 ms): a.out/447296 stat(filename: "", statbuf: 0xffce32ac)                               = 1436
+>      0.288 (1000.213 ms): a.out/447296 readlinkat(buf: 0xffce31d4, bufsiz: 4291703244)                       = 0
+> ```
+> 
+> After:
+> ```
+>          ? (         ): a.out/442930  ... [continued]: execve())                                           = 0
+>      0.023 ( 0.002 ms): a.out/442930 brk()                                                                 = 0x57760000
+>      0.052 ( 0.003 ms): a.out/442930 access(filename: 0xf7f5af28, mode: R)                                 = -1 ENOENT (No such file or directory)
+>      0.059 ( 0.009 ms): a.out/442930 openat(dfd: CWD, filename: "/etc/ld.so.cache", flags: RDONLY|CLOEXEC|LARGEFILE) = 3
+>      0.078 ( 0.001 ms): a.out/442930 close(fd: 3</proc/442930/status>)                                     = 0
+>      0.087 ( 0.007 ms): a.out/442930 openat(dfd: CWD, filename: "/lib/i386-linux-", flags: RDONLY|CLOEXEC|LARGEFILE) = 3
+>      0.095 ( 0.002 ms): a.out/442930 read(fd: 3</proc/442930/status>, buf: 0xffbdbb70, count: 512)         = 512
+>      0.135 ( 0.001 ms): a.out/442930 close(fd: 3</proc/442930/status>)                                     = 0
+>      0.148 ( 0.001 ms): a.out/442930 set_tid_address(tidptr: 0xf7f2b528)                                   = 442930 (a.out)
+>      0.150 ( 0.001 ms): a.out/442930 set_robust_list(head: 0xf7f2b52c, len: 12)                            =
+>      0.196 ( 0.004 ms): a.out/442930 mprotect(start: 0xf7f03000, len: 8192, prot: READ)                    = 0
+>      0.202 ( 0.002 ms): a.out/442930 mprotect(start: 0x5658e000, len: 4096, prot: READ)                    = 0
+>      0.207 ( 0.002 ms): a.out/442930 mprotect(start: 0xf7f63000, len: 8192, prot: READ)                    = 0
+>      0.230 ( 0.005 ms): a.out/442930 munmap(addr: 0xf7f10000, len: 103414)                                 = 0
+>      0.244 ( 0.010 ms): a.out/442930 openat(dfd: CWD, filename: 0x5658d008)                                = 3
+>      0.255 ( 0.007 ms): a.out/442930 read(fd: 3</proc/442930/status>, buf: 0xffbdb67c, count: 4096)        = 1436
+>      0.264 ( 0.018 ms): a.out/442930 write(fd: 1</dev/pts/4>, buf: , count: 1436)                          = 1436
+>      0.292 (1000.173 ms): a.out/442930 clock_nanosleep(rqtp: { .tv_sec: 17866546940376776704, .tv_nsec: 4159878336 }, rmtp: 0xffbdb59c) = 0
+>   1000.478 (         ): a.out/442930 exit_group()                                                          = ?
+> ```
+> 
 
-Note, BTW, that games with rlimit and creds switching disappear if done
-that way.  
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
 
-FWIW, I wonder if we should simply allocate a page worth of buffer,
-occupied by acct_t array, with count + pointer to buffer kept in acct,
-with acct->mutex used to protect the entire thing, so that do_acct_process()
-would add a record to that sucker and wake the kthread up, with kthread
-handling actual writes and emptying the buffer.  No need for exit(2)
-to wait unless the buffer is full...
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> ---
+>  tools/perf/util/syscalltbl.c | 89 ++++++++++++++++++++++++++----------
+>  1 file changed, 64 insertions(+), 25 deletions(-)
+> 
+> diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
+> index 760ac4d0869f..db0d2b81aed1 100644
+> --- a/tools/perf/util/syscalltbl.c
+> +++ b/tools/perf/util/syscalltbl.c
+> @@ -15,16 +15,39 @@
+>  #include <string.h>
+>  #include "string2.h"
+>  
+> -#if __BITS_PER_LONG == 64
+> -  #include <asm/syscalls_64.h>
+> -#else
+> -  #include <asm/syscalls_32.h>
+> -#endif
+> +#include "trace/beauty/generated/syscalltbl.c"
+>  
+> -const char *syscalltbl__name(int e_machine __maybe_unused, int id)
+> +static const struct syscalltbl *find_table(int e_machine)
+>  {
+> -	if (id >= 0 && id <= (int)ARRAY_SIZE(syscall_num_to_name))
+> -		return syscall_num_to_name[id];
+> +	static const struct syscalltbl *last_table;
+> +	static int last_table_machine = EM_NONE;
+> +
+> +	/* Tables only exist for EM_SPARC. */
+> +	if (e_machine == EM_SPARCV9)
+> +		e_machine = EM_SPARC;
+> +
+> +	if (last_table_machine == e_machine && last_table != NULL)
+> +		return last_table;
+> +
+> +	for (size_t i = 0; i < ARRAY_SIZE(syscalltbls); i++) {
+> +		const struct syscalltbl *entry = &syscalltbls[i];
+> +
+> +		if (entry->e_machine != e_machine && entry->e_machine != EM_NONE)
+> +			continue;
+> +
+> +		last_table = entry;
+> +		last_table_machine = e_machine;
+> +		return entry;
+> +	}
+> +	return NULL;
+> +}
+> +
+> +const char *syscalltbl__name(int e_machine, int id)
+> +{
+> +	const struct syscalltbl *table = find_table(e_machine);
+> +
+> +	if (table && id >= 0 && id < table->num_to_name_len)
+> +		return table->num_to_name[id];
+>  	return NULL;
+>  }
+>  
+> @@ -41,38 +64,54 @@ static int syscallcmpname(const void *vkey, const void *ventry)
+>  	return strcmp(key->name, key->tbl[*entry]);
+>  }
+>  
+> -int syscalltbl__id(int e_machine __maybe_unused, const char *name)
+> +int syscalltbl__id(int e_machine, const char *name)
+>  {
+> -	struct syscall_cmp_key key = {
+> -		.name = name,
+> -		.tbl = syscall_num_to_name,
+> -	};
+> -	const int *id = bsearch(&key, syscall_sorted_names,
+> -				ARRAY_SIZE(syscall_sorted_names),
+> -				sizeof(syscall_sorted_names[0]),
+> -				syscallcmpname);
+> +	const struct syscalltbl *table = find_table(e_machine);
+> +	struct syscall_cmp_key key;
+> +	const int *id;
+> +
+> +	if (!table)
+> +		return -1;
+> +
+> +	key.name = name;
+> +	key.tbl = table->num_to_name;
+> +	id = bsearch(&key, table->sorted_names, table->sorted_names_len,
+> +		     sizeof(table->sorted_names[0]), syscallcmpname);
+>  
+>  	return id ? *id : -1;
+>  }
+>  
+> -int syscalltbl__num_idx(int e_machine __maybe_unused)
+> +int syscalltbl__num_idx(int e_machine)
+>  {
+> -	return ARRAY_SIZE(syscall_sorted_names);
+> +	const struct syscalltbl *table = find_table(e_machine);
+> +
+> +	if (!table)
+> +		return 0;
+> +
+> +	return table->sorted_names_len;
+>  }
+>  
+> -int syscalltbl__id_at_idx(int e_machine __maybe_unused, int idx)
+> +int syscalltbl__id_at_idx(int e_machine, int idx)
+>  {
+> -	return syscall_sorted_names[idx];
+> +	const struct syscalltbl *table = find_table(e_machine);
+> +
+> +	if (!table)
+> +		return -1;
+> +
+> +	assert(idx >= 0 && idx < table->sorted_names_len);
+> +	return table->sorted_names[idx];
+>  }
+>  
+> -int syscalltbl__strglobmatch_next(int e_machine __maybe_unused, const char *syscall_glob, int *idx)
+> +int syscalltbl__strglobmatch_next(int e_machine, const char *syscall_glob, int *idx)
+>  {
+> -	for (int i = *idx + 1; i < (int)ARRAY_SIZE(syscall_sorted_names); ++i) {
+> -		const char *name = syscall_num_to_name[syscall_sorted_names[i]];
+> +	const struct syscalltbl *table = find_table(e_machine);
+> +
+> +	for (int i = *idx + 1; table && i < table->sorted_names_len; ++i) {
+> +		const char *name = table->num_to_name[table->sorted_names[i]];
+>  
+>  		if (strglobmatch(name, syscall_glob)) {
+>  			*idx = i;
+> -			return syscall_sorted_names[i];
+> +			return table->sorted_names[i];
+>  		}
+>  	}
+>  
+> -- 
+> 2.48.1.502.g6dc24dfdaf-goog
+> 
