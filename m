@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEBE16D9C2;
-	Tue, 11 Feb 2025 00:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02951C3C1C;
+	Tue, 11 Feb 2025 00:31:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233897; cv=none; b=TbVTjZHFARq+2mHCMsFIaRK6Nm39El27INrDztnim4nCK2F+zJ5DL4dcpGviCCS9uK2JuhCySA+ikXD6xTrI+q4JyoycuOMlM3sVswMkNlO2T9DctCMFi0uip7+EhyVkRWHsu4znvB6es97dfJj33goalFgSZGDSrpwifsQK/Dw=
+	t=1739233897; cv=none; b=OnE1J0TCF3UzXXqJDv7rge6HhByUGF4FTp9kbrcecYUI+IYPhPYudwS3k693T0kJp/nPsk0xSvz1VCXuZqXmIW2Z1kw12n1h+XAC0K2sCDvVtS4LPC0qKxkmqsIj738n8DuOVNxzY7g8aC5rdx4FTebSJ3v5ydRtYDwI/gHx9qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739233897; c=relaxed/simple;
-	bh=351EThpS+t9RF8RdHEoGmC3hU66ASzFB3lNONnuywOY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=KNTl9aI0mmax2s0mm955ymkeFsldIAkUooFhiT/WkEY4MXt66QSdm3a3UM15cg2GzszoKqZ7TeE7AA91SN4cV2RxMp6VZYEUW9/Gc6Kqcgq8N/sPBlvaqp3/fIBAlXUHxjrE2XEHR6ssc42RiY5Jahdg6Ut9nzRFEsf6JaL2Z+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uLqIcdbI; arc=none smtp.client-ip=10.30.226.201
+	bh=gAfzP3Akbt3rrJhscbWO+FbDpwpEfOValH1tmXtVu/Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=csriO/+ftKgqUzW7FUI/aRA6I8Y1u7yNPEGDgJhe9x5ZABPc4mw9vHC+NUpPAm0lsuWaLnw45PhRkhL87qmVLw34+SPBROImZnZt2yHjy2ulMjRCf6yLrwk7M8ya1oASt9Bw8RT0WIkcLwqGO/w8Nf5Bl/CtA5HnyEsUpTSVuy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NQOSxTn+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uLqIcdbI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1819C4CEE9;
-	Tue, 11 Feb 2025 00:31:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NQOSxTn+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 043F1C4CEED;
+	Tue, 11 Feb 2025 00:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739233896;
-	bh=351EThpS+t9RF8RdHEoGmC3hU66ASzFB3lNONnuywOY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=uLqIcdbIYJE77AIl5q+iSK0S8Hu1L4LRt/HzGyvvVxcIUJ17NhRAYTQQP2XQ2qVvE
-	 C1mxWCGKTJLkcj/goPTlpjG6KWCUkMTKmyWuC5m3a0fEkN4+F4v3w5uXJcQGhmE1+c
-	 +RDUB7UIAS++eoPrPRB6SC4a4pJ5fw0iJGDnT5HQtMGny9p669Z64phmkXTUlzJOVF
-	 Dr14eZUsnfVezSBvVyM9B2LaUz2f3mgMR8rmWwoPbW8XB9Belz9Gbfw4hEPtmVri2k
-	 zhrwP7A6hi8EskQj16QjmFkpFg9sjfNi0+3c0Ho8KZ7fJlqPwl4vgc4NZlvIRbeNO8
-	 4lNkfnx6l0ANQ==
+	s=k20201202; t=1739233897;
+	bh=gAfzP3Akbt3rrJhscbWO+FbDpwpEfOValH1tmXtVu/Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NQOSxTn+X5kq43kLaMi4OMg/Y89AeggPpgswLSdj7SFgIEDaeYf8pqY2ias7XpBqm
+	 kw3v1ykE9UDnQ+0T4gvyySd6pbK0X7HzG3L9Jog8KvS/Rtn8SvYlZ/HLUwycAyx6Yo
+	 qXHbaiwBZOp2EaBaeJhQcZ8nut8IL3g070zKFUzQIEX/OOWpu2FvwJKMnBu+csnVaR
+	 tatG15/yCJ9L6PlGE1kWmL7K7yfxk/zKixpdT4RiJj8ygpso7Qx34/Xx4IGqvDIDOI
+	 c00dGBgtPlL31P/iunYTXMaf3PIBIwvGKseoDasWV75oy8GVR/bvyg5/Sdag9PfG8z
+	 pCRlKVAEql7hg==
 From: Kees Cook <kees@kernel.org>
 To: David Gow <davidgow@google.com>
 Cc: Kees Cook <kees@kernel.org>,
-	Luis Felipe Hernandez <luis.hernandez093@gmail.com>,
-	Nicolas Pitre <npitre@baylibre.com>,
-	Rae Moar <rmoar@google.com>,
+	Gabriela Bittencourt <gbittencourt@lkcamp.dev>,
 	Pedro Orlando <porlando@lkcamp.dev>,
 	Danilo Pereira <dpereira@lkcamp.dev>,
-	Gabriela Bittencourt <gbittencourt@lkcamp.dev>,
 	Gabriel Krisman Bertazi <krisman@suse.de>,
 	Shuah Khan <skhan@linuxfoundation.org>,
+	Rae Moar <rmoar@google.com>,
+	Luis Felipe Hernandez <luis.hernandez093@gmail.com>,
+	Nicolas Pitre <npitre@baylibre.com>,
 	Diego Vieira <diego.daniel.professional@gmail.com>,
 	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
 	Jakub Kicinski <kuba@kernel.org>,
@@ -46,121 +47,67 @@ Cc: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	kunit-dev@googlegroups.com
-Subject: [PATCH v2 0/6] KUnit test moves / renames
-Date: Mon, 10 Feb 2025 16:31:28 -0800
-Message-Id: <20250211002600.it.339-kees@kernel.org>
+Subject: [PATCH v2 6/6] unicode: kunit: change tests filename and path
+Date: Mon, 10 Feb 2025 16:31:34 -0800
+Message-Id: <20250211003136.2860503-6-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250211002600.it.339-kees@kernel.org>
+References: <20250211002600.it.339-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4504; i=kees@kernel.org; h=from:subject:message-id; bh=351EThpS+t9RF8RdHEoGmC3hU66ASzFB3lNONnuywOY=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmrZqUwLSlqT91x4AiX9jzx7Uv0WuKVQla/aI9I2fVqp YB9veecjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIkovWb4H/3AQZLNd2ay+rSO Q74tOkyG3ft2p+svZzNq+Gmh8NtFlJFhitvuTxdeGpvti7m8ozv0sPaEZ7b9E79t21C2Yseupxt 38QEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1870; i=kees@kernel.org; h=from:subject; bh=HLI6DJk21kGeUIWW0nIc0fj9BIw5YtsNKNhJ+tB6yHU=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmrZqUlJ39dzn/OrKxD6MfTp8fZrL9athwKmZNRyZUqv e/T4qLPHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABOpnsnwm/XY1/ZCD6Nt5/Ze vrItSkj7yMYtqyX/+UzaHjL7qPYdvipGhsWLmSY7rVQs7oq4tWtXZNTiRp/TU7zf+KywCLM4p7N CixsA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
 
-This is rebased to v6.14-rc2. I'll carry it and folks can send me new
-tests, etc, as needed to minimize future collisions.
+Change utf8 kunit test filename and path to follow the style
+convention on Documentation/dev-tools/kunit/style.rst
 
- v1: https://lore.kernel.org/lkml/20241011072509.3068328-2-davidgow@google.com/
+Co-developed-by: Pedro Orlando <porlando@lkcamp.dev>
+Signed-off-by: Pedro Orlando <porlando@lkcamp.dev>
+Co-developed-by: Danilo Pereira <dpereira@lkcamp.dev>
+Signed-off-by: Danilo Pereira <dpereira@lkcamp.dev>
+Signed-off-by: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
+Reviewed-by: David Gow <davidgow@google.com>
+Acked-by: Gabriel Krisman Bertazi <krisman@suse.de>
+Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+Reviewed-by: Rae Moar <rmoar@google.com>
+Link: https://lore.kernel.org/r/20241202075545.3648096-7-davidgow@google.com
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ fs/unicode/Makefile                                | 2 +-
+ fs/unicode/{ => tests}/.kunitconfig                | 0
+ fs/unicode/{utf8-selftest.c => tests/utf8_kunit.c} | 0
+ 3 files changed, 1 insertion(+), 1 deletion(-)
+ rename fs/unicode/{ => tests}/.kunitconfig (100%)
+ rename fs/unicode/{utf8-selftest.c => tests/utf8_kunit.c} (100%)
 
-Thanks!
-
--Kees
-
-Bruno Sobreira França (1):
-  lib/math: Add int_log test suite
-
-Diego Vieira (1):
-  lib/tests/kfifo_kunit.c: add tests for the kfifo structure
-
-Gabriela Bittencourt (2):
-  unicode: kunit: refactor selftest to kunit tests
-  unicode: kunit: change tests filename and path
-
-Kees Cook (1):
-  lib: Move KUnit tests into tests/ subdirectory
-
-Luis Felipe Hernandez (1):
-  lib: math: Move KUnit tests into tests/ subdir
-
- MAINTAINERS                                   |  19 +-
- fs/unicode/Kconfig                            |   5 +-
- fs/unicode/Makefile                           |   2 +-
- fs/unicode/tests/.kunitconfig                 |   3 +
- .../{utf8-selftest.c => tests/utf8_kunit.c}   | 149 ++++++------
- fs/unicode/utf8-norm.c                        |   2 +-
- lib/Kconfig.debug                             |  27 ++-
- lib/Makefile                                  |  39 +--
- lib/math/Makefile                             |   5 +-
- lib/math/tests/Makefile                       |   4 +-
- lib/math/tests/int_log_kunit.c                |  74 ++++++
- .../rational_kunit.c}                         |   0
- lib/tests/Makefile                            |  41 ++++
- lib/{ => tests}/bitfield_kunit.c              |   0
- lib/{ => tests}/checksum_kunit.c              |   0
- lib/{ => tests}/cmdline_kunit.c               |   0
- lib/{ => tests}/cpumask_kunit.c               |   0
- lib/{ => tests}/crc_kunit.c                   |   0
- lib/{ => tests}/fortify_kunit.c               |   0
- lib/{ => tests}/hashtable_test.c              |   0
- lib/{ => tests}/is_signed_type_kunit.c        |   0
- lib/tests/kfifo_kunit.c                       | 224 ++++++++++++++++++
- lib/{ => tests}/kunit_iov_iter.c              |   0
- lib/{ => tests}/list-test.c                   |   0
- lib/{ => tests}/memcpy_kunit.c                |   0
- lib/{ => tests}/overflow_kunit.c              |   0
- lib/{ => tests}/siphash_kunit.c               |   0
- lib/{ => tests}/slub_kunit.c                  |   0
- lib/{ => tests}/stackinit_kunit.c             |   0
- lib/{ => tests}/string_helpers_kunit.c        |   0
- lib/{ => tests}/string_kunit.c                |   0
- lib/{ => tests}/test_bits.c                   |   0
- lib/{ => tests}/test_fprobe.c                 |   0
- lib/{ => tests}/test_hash.c                   |   0
- lib/{ => tests}/test_kprobes.c                |   0
- lib/{ => tests}/test_linear_ranges.c          |   0
- lib/{ => tests}/test_list_sort.c              |   0
- lib/{ => tests}/test_sort.c                   |   0
- lib/{ => tests}/usercopy_kunit.c              |   0
- lib/{ => tests}/util_macros_kunit.c           |   0
- 40 files changed, 458 insertions(+), 136 deletions(-)
- create mode 100644 fs/unicode/tests/.kunitconfig
- rename fs/unicode/{utf8-selftest.c => tests/utf8_kunit.c} (64%)
- create mode 100644 lib/math/tests/int_log_kunit.c
- rename lib/math/{rational-test.c => tests/rational_kunit.c} (100%)
- rename lib/{ => tests}/bitfield_kunit.c (100%)
- rename lib/{ => tests}/checksum_kunit.c (100%)
- rename lib/{ => tests}/cmdline_kunit.c (100%)
- rename lib/{ => tests}/cpumask_kunit.c (100%)
- rename lib/{ => tests}/crc_kunit.c (100%)
- rename lib/{ => tests}/fortify_kunit.c (100%)
- rename lib/{ => tests}/hashtable_test.c (100%)
- rename lib/{ => tests}/is_signed_type_kunit.c (100%)
- create mode 100644 lib/tests/kfifo_kunit.c
- rename lib/{ => tests}/kunit_iov_iter.c (100%)
- rename lib/{ => tests}/list-test.c (100%)
- rename lib/{ => tests}/memcpy_kunit.c (100%)
- rename lib/{ => tests}/overflow_kunit.c (100%)
- rename lib/{ => tests}/siphash_kunit.c (100%)
- rename lib/{ => tests}/slub_kunit.c (100%)
- rename lib/{ => tests}/stackinit_kunit.c (100%)
- rename lib/{ => tests}/string_helpers_kunit.c (100%)
- rename lib/{ => tests}/string_kunit.c (100%)
- rename lib/{ => tests}/test_bits.c (100%)
- rename lib/{ => tests}/test_fprobe.c (100%)
- rename lib/{ => tests}/test_hash.c (100%)
- rename lib/{ => tests}/test_kprobes.c (100%)
- rename lib/{ => tests}/test_linear_ranges.c (100%)
- rename lib/{ => tests}/test_list_sort.c (100%)
- rename lib/{ => tests}/test_sort.c (100%)
- rename lib/{ => tests}/usercopy_kunit.c (100%)
- rename lib/{ => tests}/util_macros_kunit.c (100%)
-
+diff --git a/fs/unicode/Makefile b/fs/unicode/Makefile
+index 37bbcbc628a1..d95be7fb9f6b 100644
+--- a/fs/unicode/Makefile
++++ b/fs/unicode/Makefile
+@@ -4,7 +4,7 @@ ifneq ($(CONFIG_UNICODE),)
+ obj-y			+= unicode.o
+ endif
+ obj-$(CONFIG_UNICODE)	+= utf8data.o
+-obj-$(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST) += utf8-selftest.o
++obj-$(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST) += tests/utf8_kunit.o
+ 
+ unicode-y := utf8-norm.o utf8-core.o
+ 
+diff --git a/fs/unicode/.kunitconfig b/fs/unicode/tests/.kunitconfig
+similarity index 100%
+rename from fs/unicode/.kunitconfig
+rename to fs/unicode/tests/.kunitconfig
+diff --git a/fs/unicode/utf8-selftest.c b/fs/unicode/tests/utf8_kunit.c
+similarity index 100%
+rename from fs/unicode/utf8-selftest.c
+rename to fs/unicode/tests/utf8_kunit.c
 -- 
 2.34.1
 
