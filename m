@@ -1,127 +1,148 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF790244E96;
-	Tue, 11 Feb 2025 13:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A0D24C669
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739282159; cv=none; b=jPUeFN1fnzeRXzGT8+P5NBd/T+t6XgRJH0E9BUwd38XihWxb6WKu0tqg79IYsQAsLdCqjP93NBFh+u1OTEnpdNIV/DwsnsdpX4mqT4wR7yhOxIhCUed5vYoVSiRpF5EcMVpcWkBrPfFYw2sJK3MbMZ4QZEdh5RoinaaUwa0t3pM=
+	t=1739282159; cv=none; b=q+XfeQ6ScKauVStv+ffrqbcCgNWz6v2zC+UXzTR9Lrd3a9aLZJomhEWi5HrBoPJMJdFNf4zC2k8s8V+4NS39ls0LjBcprhMXKS0iOMo7zhnJQjzpINXnkUCpnuVwE9cAeXSHIhZ5zoPucDuoiNKBdZkvi913uQ2gsUVPf8xR8Mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739282159; c=relaxed/simple;
-	bh=f9IOn1H+Qz7jYxe1KmRcYdzwSDqyhB302hT92PUKc2E=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=AWv5hpfDRxcPDMmilE2XHvsQJWitPefSKKxaA3oRySicNZKA/y+1/i8+OkBTeKJlLNGaNidv0zfqXa2ySAnn5yFOe8C5f0rtc7D95wfOLg8mhAJcyPYRgg6mTENQhgbljM/Vudyl77oY2sBjKJbFv/FRx7kACuR03AMWxLVVyFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=NM7NzNok; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	bh=tvddLOD38SbA+nE14izQGPNoMlGp5ZWiCv7xIdyaTR8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XdlNxB4YIsfcf6KknIJpsTp7kKMhJhObirMg2WiNwrHY2tvYVxqb239A4G/ESNXlHEivw5yZlXMHwBrAxwZkyPNOSgHBhuYBypTyRloJwzyf4uPIHhp7PwyRqYW3NcADkrhzsAE32jATBPJ0su18IpAfJdIhof7JuIuLt65JqUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LjEEbJVK; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="NM7NzNok"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LjEEbJVK"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2f44353649aso8177571a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:55:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739282157; x=1739886957; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AhF+JZnbICstMQ4SyijmaSYDsITfNwFybUAYOWyiZXU=;
+        b=LjEEbJVKsnr9/Bsf8TZWXbIEH1ixlpJK61YR+lS6w6zVvRx0ZMR8sUTqELQhPhYvx0
+         g6F8Xe/usYq8l/6WOpRHuk63HnkmtvH6PvLGsgcpB+9NeHgdaGSBIJq7nbE9ilO28O3R
+         g3w0p4vW/9Pggxyymt7DJIK4Hpcvocw8jjphJjx7OaqZAwzzfqGCiK52B5fxCqrBWDSn
+         JGYdvodniqgfzB9aSif2AxWUg746i+Z5vsZbd0bmnP4JxqvmBMgVZuEuui9KQ0lE1efb
+         pciajeEA29strUtEP+X4Z67WFSHVxbszxRS3WwB/ywXHhenuZtNgHUZJIRZokwpsrs7K
+         sNEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739282157; x=1739886957;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AhF+JZnbICstMQ4SyijmaSYDsITfNwFybUAYOWyiZXU=;
+        b=ce7mX5KDPgDDfnYqJToxWGOqDgSpLAdLbhx6lBQCCeyxvKghcsUFJyAQeJPIRp8/6A
+         y+4SXztex1a9lr3lNmOrowN1pS9rm35e6cbf0Y1qU6i73d4XDVxhK+liWxFEeix/cF/M
+         k6cJZCb9c8vHd1951wr5fEw0Ov7cfpvX10aKv5gzDzwNnqpuPi33em+71GG5wj99CnHA
+         kXeAEdXI+02P+Dtl3nrCQ6bcrC3AO7Fg+FU8wjVB/akovhlGaw+Hq9VvI6aG00DI2kfc
+         X47NL3mg14mHMccvdNljkZwVF18S27K/G6DG3jcxOOvCZwWgLHaWEPqeVKUP052vWu73
+         bCQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2djfungK9EreYIhwm+eoQGejdTb7ayJxI0QZK10GuyoT+NrwqKYRYQ3wRmz10lqFy8/9ByRkL3dNsMv0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQZjNTA9/1bcCrJrrW4hej5/EtdW574fadQenwQgXcPBfUJ50b
+	C4FP0uEVlHje8wrxQtMhzWJOKIuQxPqnXPL1kKIqZzJFq7xJruLWQgUiqYi3KLef+TIvzzBhjCA
+	X6GS9NmLZu0jQp4X7X9wL1AbFNI/PF8I/7obW
+X-Gm-Gg: ASbGncs0nRG0IggTpFnE0d/ctFmYr35gRwGFnaen6xJN41YYX9E2P90jFPPzRfWX7Sg
+	NMrvrn/dmxnsWUhrVEqtPixpiLBrBvUFn7xLvpGozJUJO/0eh8MGape8/omKfNoLuKuHWy1l3kO
+	m81NS6KpCyVWlY6ON/sEq30+rgAHE=
+X-Google-Smtp-Source: AGHT+IGroUNVHpMBAUy/bObZea2jE/snBP4iAn1fJ0F8Y+yGqofcGPH5OOKF/rW4Qwm5mzGvQOH1DLn2V2e6J52emRE=
+X-Received: by 2002:a17:90b:1d45:b0:2ea:5e0c:2847 with SMTP id
+ 98e67ed59e1d1-2fa9ee17fb8mr4391611a91.22.1739282157250; Tue, 11 Feb 2025
+ 05:55:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1739282154;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mifodZnx+GAT8j3y7LTSrIDDb3fyeuMJi7Lz1TWQoWg=;
-	b=NM7NzNok5uOfeVIliUUYXIjdfRtVgvDGaH9gru/W/Z2DSizT9jGyeohS7f/+9/x41Hh+UO
-	AasxnZ7X27daRD2cLPsFWyH4C5MfdLr8955ZuZ32LOOHz+IybYOnKka8tHUOM4TSGUSqox
-	U2Ypmvd8oWnSgL1tSLduD7ltV9sqTxa4xPID6osBCAwssPuMKt9QuFvJjtvRDkZj5rxb5J
-	XTTqUZjNlZylDn+t9EcfUVemavXzxOS1BWBM/NTKgJpYSZIFuUvaAkQn4Ydxw9BzRv2Tlj
-	tVlJ0mhoiALwBGSmZXcVVfsWwXNaDVsaImIoxOLJwBqjxCnFqlapMEjkR+mZ+g==
-Date: Tue, 11 Feb 2025 14:55:53 +0100
-From: Dragan Simic <dsimic@manjaro.org>
-To: Quentin Schulz <quentin.schulz@cherry.de>
-Cc: Jagan Teki <jagan@edgeble.ai>, Quentin Schulz <foss+kernel@0leil.net>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Niklas
- Cassel <cassel@kernel.org>, Michael Riesch <michael.riesch@wolfvision.net>,
- Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v5 2/4] arm64: dts: rockchip: add overlay test for Edgeble
- NCM6A
-In-Reply-To: <06f1f9f4-8a79-4505-98b8-992accf1fb87@cherry.de>
-References: <20250207-pre-ict-jaguar-v5-0-a70819ea0692@cherry.de>
- <20250207-pre-ict-jaguar-v5-2-a70819ea0692@cherry.de>
- <CA+VMnFyom=2BmJ_nt-At6hTQP0v+Auaw-DkCVbT9mjndMmLKtQ@mail.gmail.com>
- <8d830c2c-6268-4c70-ae8a-47183b8cbace@cherry.de>
- <74502f5556584ee7378c63d4971f2a66@manjaro.org>
- <06f1f9f4-8a79-4505-98b8-992accf1fb87@cherry.de>
-Message-ID: <a9a023233f9a096cc215203bb6ef41d7@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+References: <20250206181711.1902989-1-elver@google.com> <20250206181711.1902989-9-elver@google.com>
+ <e276263f-2bc5-450e-9a35-e805ad8f277b@acm.org> <CANpmjNMfxcpyAY=jCKSBj-Hud-Z6OhdssAXWcPaqDNyjXy0rPQ@mail.gmail.com>
+ <f5eda818-6119-4b8f-992f-33bc9c184a64@acm.org>
+In-Reply-To: <f5eda818-6119-4b8f-992f-33bc9c184a64@acm.org>
+From: Marco Elver <elver@google.com>
+Date: Tue, 11 Feb 2025 14:55:20 +0100
+X-Gm-Features: AWEUYZkwbHjIdQKR2hqck9okMpxl0TDfWkkc2sBGpPLWquXQ8_lyXjiGcdcjlSE
+Message-ID: <CANpmjNPxyWey6v1tj6TwtN6Pe8Ze=wrfFFjuJFzCQTd4XM8xQA@mail.gmail.com>
+Subject: Re: [PATCH RFC 08/24] lockdep: Annotate lockdep assertions for
+ capability analysis
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.com>, 
+	Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Frederic Weisbecker <frederic@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, 
+	Jann Horn <jannh@google.com>, Joel Fernandes <joel@joelfernandes.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Josh Triplett <josh@joshtriplett.org>, 
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>, Waiman Long <longman@redhat.com>, 
+	Will Deacon <will@kernel.org>, kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Quentin,
+On Mon, 10 Feb 2025 at 19:54, Bart Van Assche <bvanassche@acm.org> wrote:
+>
+>
+> On 2/10/25 10:23 AM, Marco Elver wrote:
+> > If you try to write code where you access a guarded_by variable, but
+> > the lock is held not in all paths we can write it like this:
+> >
+> > struct bar {
+> >    spinlock_t lock;
+> >    bool a; // true if lock held
+> >    int counter __var_guarded_by(&lock);
+> > };
+> > void foo(struct bar *d)
+> > {
+> >     ...
+> >     if (d->a) {
+> >       lockdep_assert_held(&d->lock);
+> >       d->counter++;
+> >     } else {
+> >       // lock not held!
+> >     }
+> >    ...
+> > }
+> >
+> > Without lockdep_assert_held() you get false positives, and there's no
+> > other good way to express this if you do not want to always call foo()
+> > with the lock held.
+> >
+> > It essentially forces addition of lockdep checks where the static
+> > analysis can't quite prove what you've done is right. This is
+> > desirable over adding no-analysis attributes and not checking anything
+> > at all.
+>
+> In the above I see that two different options have been mentioned for
+> code that includes conditional lockdep_assert_held() calls:
+> - Either include __assert_cap() in the lockdep_assert_held() definition.
+> - Or annotate the entire function with __no_thread_safety_analysis.
+>
+> I think there is a third possibility: add an explicit __assert_cap()
+> call under the lockdep_assert_held() call. With this approach the
+> thread-safety analysis remains enabled for the annotated function and
+> the compiler will complain if neither __must_hold() nor __assert_cap()
+> has been used.
 
-On 2025-02-11 13:59, Quentin Schulz wrote:
-> On 2/10/25 7:29 PM, Dragan Simic wrote:
->> On 2025-02-10 18:57, Quentin Schulz wrote:
->>> On 2/10/25 3:11 PM, Jagan Teki wrote:
->>>> On Fri, 7 Feb 2025 at 20:50, Quentin Schulz <foss+kernel@0leil.net> 
->>>> wrote:
->>>>> 
->>>>> From: Quentin Schulz <quentin.schulz@cherry.de>
->>>>> 
->>>>> The Edgeble NCM6A can have WiFi modules connected and this is 
->>>>> handled
->>>>> via an overlay (commit 951d6aaa37fe ("arm64: dts: rockchip: Add 
->>>>> Edgeble
->>>>> NCM6A WiFi6 Overlay")).
->>>>> 
->>>>> In order to make sure the overlay is still valid in the future, 
->>>>> let's
->>>>> add a validation test by applying the overlay on top of the main 
->>>>> base
->>>>> at build time.
->>>>> 
->>>>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>>> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
->>>>> ---
->>>>>   arch/arm64/boot/dts/rockchip/Makefile | 4 ++++
->>>>>   1 file changed, 4 insertions(+)
->>>>> 
->>>>> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/ 
->>>>> boot/dts/rockchip/Makefile
->>>>> index 
->>>>> 534e70a649eeada7f9b6f12596b83f5c47b184b4..02f98abe1df10f44f2ac27ea5f6c6e6c6334724e 
->>>>> 100644
->>>>> --- a/arch/arm64/boot/dts/rockchip/Makefile
->>>>> +++ b/arch/arm64/boot/dts/rockchip/Makefile
->>>>> @@ -192,3 +192,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568- 
->>>>> wolfvision-pf5-vz-2-uhd.dtb
->>>>>   rk3568-wolfvision-pf5-vz-2-uhd-dtbs := rk3568-wolfvision-pf5.dtb 
->>>>> \
->>>>>          rk3568-wolfvision-pf5-display-vz.dtbo \
->>>>>          rk3568-wolfvision-pf5-io-expander.dtbo
->>>>> +
->>>>> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-edgeble-neu6a-wifi.dtb
->>>>> +rk3588-edgeble-neu6a-wifi-dtbs := rk3588-edgeble-neu6a-io.dtb \
->>>>> +       rk3588-edgeble-neu6a-wifi.dtbo
->>>> 
->>>> Please add neu6b-io as well, wifi dtbo is similar for it as well.
->>> 
->>> Similar or identical :)?
->>> 
->>> Should the overlay be renamed if it applies to neu6b AND neu6a 
->>> instead
->>> of implying it's only for neu6a based on the name of the overlay?
->> 
->> I'm afraid it's a bit too late for renaming the .dtso file. :/
-> 
-> How is it too late? Is there some rule somewhere about renaming I 
-> missed?
+That's just adding more clutter. Being able to leverage existing
+lockdep_assert to avoid false positives (at potential cost of few
+false negatives) is a decent trade-off. Sure, having maximum checking
+guarantees would be nice, but there's a balance we have to strike vs.
+ergonomics, usability, and pointless clutter.
 
-The way I see it, names of the .dts and .dtso files become part of
-the "extended ABI", so to speak, once they've been accepted upstream
-for a while, because renaming them may break boot configurations.
+Can we initially try to avoid clutter as much as possible? Then, if
+you feel coverage is not good enough, make the analysis stricter by
+e.g. removing the implicit assert from lockdep_assert in later patches
+and see how it goes.
+
+I'm basing my judgement here on experience having worked on other
+analysis in the kernel, and the biggest request from maintainers has
+always been to "avoid useless clutter and false positives at all
+cost", often at the cost of increased potential for false negatives
+but avoiding false positives and reducing annotations (I can dig out
+discussions we had for KMSAN if you do not believe me...).
