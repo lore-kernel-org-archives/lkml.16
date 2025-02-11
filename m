@@ -1,150 +1,299 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BC3262152;
-	Tue, 11 Feb 2025 17:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752E8253B61;
+	Tue, 11 Feb 2025 17:28:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739294883; cv=none; b=TRKTZXuBtrJigYGsV3rNzrMykcDlapVJq4T/WS7MyCtBqMyTj5VnmHK0YEv5bryp/UKcWcu4heiIYCs0AUI34Zhb99TEy5SU0pr3am0WynF1dk2TbIjNHkisjVf3B3lo3GvEmaESK2C/EQSuy3QGrsG0zBjkEDJsPuGcsoZi0F0=
+	t=1739294899; cv=none; b=A/PnUN+qY59AEdKkJUce5kX1YhpBMFdmvVudROo+9DBPtFPBbD9nj1B7s88p9L5fkVm6Va+iAArnaHPlf3Uk2ifvnm3YMP/cUZAHvP3a9MJMsMLbfNJGw/Lo/WCU4g/6UZzpw1x6uEmm6BV3DKmQhfD2l0tseQAbPfZaJMs3WDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739294883; c=relaxed/simple;
-	bh=NddH0pkxZWe9E2BuTZtR2bE6TlVPCcuHwM6y+KM9BA4=;
+	s=arc-20240116; t=1739294899; c=relaxed/simple;
+	bh=LD/O1EBHcgMEITUbuApU66HPZd2hSaN6Qz+lpvhgYLk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nya2IDlaYa8QYM9oGl6PCu5nOcoMLH3C3v4x4jqhorSwVqSyYYb5RbQz44ELvW860LdLhdA9XXq2TL5Pu8Bkjen2WgdvCrRanzIQXAVI4mzNZ8IHMXOUEBHcXfpbNR+fI29TwGBQ3WDkkrAg+9GL6rDaTwb/pKH0SGHcPXArFuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZBrQx2h3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=sHG6GxyPkEtghFaF2nhLWKG/EnLPYfrCnT1TMl28lrbIKlGL94GG1h2pGo1G8PyuD+cc8w69EE/HhLaeCcsa/EM/Y/539SaYWX4U5zeTNMGJzwmkS6BF5ethdl69QlfRpyCksH2r1torTcSZISz+qEwyFyQs0L39odRRXvMM5yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=meqzADNx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZBrQx2h3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1044EC4CEDD;
-	Tue, 11 Feb 2025 17:27:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="meqzADNx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08833C4CEDD;
+	Tue, 11 Feb 2025 17:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739294882;
-	bh=NddH0pkxZWe9E2BuTZtR2bE6TlVPCcuHwM6y+KM9BA4=;
+	s=k20201202; t=1739294898;
+	bh=LD/O1EBHcgMEITUbuApU66HPZd2hSaN6Qz+lpvhgYLk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZBrQx2h3jicMJM1SPW6/fLau90JPmb1GNG1ajhMgiNldTP0+DP4vDxK9l/SvqE0+Q
-	 8QO8ese1OhzYvU9Fj5IkmkzL8vy7Lo6ffmv5cfVIBfk8oG0C5ZjIY6L4nUeqAkP9DT
-	 rUgMR9E8BR6B8E9cpv97P118YM9xzqEVj5iVZMXeZWW7J9AcFUbd1EpU/UvxOZR+z9
-	 xvuob0gKx8VLDx0YbpkGNNoehd11HjHSceewp1VA1DTPoVJX5lsWYrRCDyEFvVlNh4
-	 IWWKh7N0PrUzofo75YHCqwMweBJuV5LZ0ABsP2zkwdmi+QBJD7//iT2hsWm3IhXKMu
-	 DRGIHWh8Cjt8Q==
-Date: Tue, 11 Feb 2025 18:27:54 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Erik Schilling <erik.schilling@linaro.org>,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V8 04/14] rust: Add cpumask helpers
-Message-ID: <Z6uImtVQpVGrCGnj@pollux>
-References: <cover.1738832118.git.viresh.kumar@linaro.org>
- <db0166341ce824c157d0c58c240b3efc6aec6f6e.1738832118.git.viresh.kumar@linaro.org>
- <Z6qTelPSqpFk439l@thinkpad>
- <20250211042908.nyftiw7gtxosfjwc@vireshk-i7>
- <Z6t51xodSV21ER4M@thinkpad>
+	b=meqzADNxPyy8lDrn5qHUVqcRkkz99t3Vk0zXCnSBCgpLq011eZ/z/SGkvFSSCu34C
+	 WbsSKgXWHsgj3xRbkQq3Q5TTPxoinT+5CkjT2v3gHoWCtWP9EoI7fOsYXMPELm7Qz3
+	 nFlynvCmFqFHwzc2PKQQeoyb6J2BAByPGvl4TTbMUEa0nZyuavi6Zp8AzcV8p65CfW
+	 UdGiLhenehDi4+QkNAKjyBmXgUcsQ05mKGaCAPkyp+zy2aU3W0XPGWiQxhfsUImREB
+	 t5sRluJ0A5zrRkuEiiaSzwa6Jwaw+J8oejSbQTEEmzdF7TFTgDNN+AjsmF9QIllesY
+	 GNXnvTKyNStxg==
+Date: Tue, 11 Feb 2025 18:28:15 +0100
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v14 04/10] perf record --off-cpu: Dump off-cpu samples in
+ BPF
+Message-ID: <Z6uIr8cRZBllFKt4@x1>
+References: <20241215181220.754822-1-howardchu95@gmail.com>
+ <20241215181220.754822-5-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z6t51xodSV21ER4M@thinkpad>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241215181220.754822-5-howardchu95@gmail.com>
 
-Hi Yury,
-
-On Tue, Feb 11, 2025 at 11:24:55AM -0500, Yury Norov wrote:
-> + Jason, Christoph
+On Sun, Dec 15, 2024 at 10:12:14AM -0800, Howard Chu wrote:
+> Collect tid, period, callchain, and cgroup id and dump them when off-cpu
+> time threshold is reached.
 > 
-> On Tue, Feb 11, 2025 at 09:59:08AM +0530, Viresh Kumar wrote:
-> > On 10-02-25, 19:02, Yury Norov wrote:
-> > > On Thu, Feb 06, 2025 at 02:58:25PM +0530, Viresh Kumar wrote:
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > index ee6709599df5..bfc1bf2ebd77 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -4021,6 +4021,7 @@ F:	lib/cpumask_kunit.c
-> > > >  F:	lib/find_bit.c
-> > > >  F:	lib/find_bit_benchmark.c
-> > > >  F:	lib/test_bitmap.c
-> > > > +F:	rust/helpers/cpumask.c
-> > > 
-> > > Sorry what? I never committed to maintain this thing, and will
-> > > definitely not do it for free.
-> > > 
-> > > NAK.
-> > 
-> > Okay.
+> We don't collect the off-cpu time twice (the delta), it's either in
+> direct samples, or accumulated samples that are dumped at the end of
+> perf.data.
 > 
-> No, not Okay.
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Link: https://lore.kernel.org/r/20241108204137.2444151-6-howardchu95@gmail.com
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/util/bpf_skel/off_cpu.bpf.c | 88 ++++++++++++++++++++++++--
+>  1 file changed, 83 insertions(+), 5 deletions(-)
 > 
-> To begin with, this is the 8th version of the same patch, but you
-> only now bothered to CC someone who is listed in MAINTAINERS. This is
-> not how the community works.
+> diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> index 1cdd4d63ea92..77fdc9e81db3 100644
+> --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> @@ -19,11 +19,17 @@
+>  #define MAX_ENTRIES  102400
+>  
+>  #define MAX_CPUS  4096
+> +#define MAX_OFFCPU_LEN 37
+> +
+> +struct stack {
+> +	u64 array[MAX_STACKS];
+> +};
 
-I'm answering, since I was involved in the discussion you refer to below, but
-please also let me add a few other thoughts from my side.
+So I needed to rename the above as it fails 'make -C tools/perf
+build-test', the direct make command line to hit that:
 
-First of all, I think you are right here.
+⬢ [acme@toolbox perf-tools-next]$ rm -rf /tmp/build/$(basename $PWD)/ ; mkdir -p /tmp/build/$(basename $PWD)/  
+⬢ [acme@toolbox perf-tools-next]$ alias m='rm -rf ~/libexec/perf-core/ ; make -k GEN_VMLINUX_H=1 CORESIGHT=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin && perf test python && cat /tmp/build/perf-tools-next/feature/test-all.output'
+⬢ [acme@toolbox perf-tools-next]$ m 
+  GENSKEL /tmp/build/perf-tools-next/util/bpf_skel/sample_filter.skel.h
+util/bpf_skel/off_cpu.bpf.c:24:8: error: redefinition of 'stack'
+   24 | struct stack {
+      |        ^
+/tmp/build/perf-tools-next/util/bpf_skel/.tmp/../vmlinux.h:128096:8: note: previous definition is here
+ 128096 | struct stack {
+        |        ^
+util/bpf_skel/off_cpu.bpf.c:218:42: error: no member named 'array' in 'struct stack'
+  218 |         for (int i = 0; i < MAX_STACKS && from->array[i]; ++i, ++len)
+      |                                           ~~~~  ^
+util/bpf_skel/off_cpu.bpf.c:219:32: error: no member named 'array' in 'struct stack'
+  219 |                 to->array[n + 2 + i] = from->array[i];
+      |                                        ~~~~  ^
+3 errors generated.
+make[2]: *** [Makefile.perf:1276: /tmp/build/perf-tools-next/util/bpf_skel/.tmp/off_cpu.bpf.o] Error 1
 
-AFAICS, the cpumask abstraction was added to this series in v6, and you were
-CC'd in v8, which is *not* OK.
+So for now I'm adding the patch below to get it going.
 
-I also agree that this definitely deserves it's own series for you to be
-properly involved.
+IIRC there was some discussion about ditching GEN_VMLINUX_H=1, we can
+remove this hack later if/when we progress on that.
 
-> > I will add a separate entry for Rust cpumask stuff.
-> 
-> That would make things even worse. Before you wanted me to maintain
-> rust linkage. Now you want me to get approval from someone else who
-> maintains rust linkage. In case I need to change something, I want to
-> be able to just change.
+- Arnaldo
 
-I think the decision is up to you, whether
-
-1) You want to maintain it on your own.
-2) You want a co-maintainer / reviewer that takes care of the Rust parts.
-3) You want nothing to do with it and have it maintained as a separate
-   component.
-
-In case you prefer option 3), please do *not* see it as "you need to get
-approval from someone else for code changes in your subsystem", because no ones
-wants to impose this on you.
-
-Please see it as just another driver or another component that makes use of the
-API you maintain.
-
-If you are running into API changes that affect the Rust abstraction, that's
-where you can refer to the maintainer of the Rust abstraction to help out. Just
-like with every other driver or component that uses a core API, which isn't
-trivial to adjust.
-
-> 
-> I went deeper into the subject, and found that rust team has similar
-> problems with other maintainers:
-> 
-> https://lore.kernel.org/lkml/20250108122825.136021-3-abdiel.janulgue@gmail.com/
-
-I don't think that this case is similar to the one you linked in. I think you
-were indeed a bit bypassed here, plus you seem to have a real concern with
-maintainership, which I think is fair to be addressed and resolved.
-
-I hope my reply already helps with that.
-
-- Danilo
+diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+index 77fdc9e81db395d1..848a123e5610f17b 100644
+--- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
++++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+@@ -21,7 +21,8 @@
+ #define MAX_CPUS  4096
+ #define MAX_OFFCPU_LEN 37
+ 
+-struct stack {
++// We have a 'struct stack' in vmlinux.h when building with GEN_VMLINUX_H=1
++struct __stack {
+ 	u64 array[MAX_STACKS];
+ };
+ 
+@@ -29,7 +30,7 @@ struct tstamp_data {
+ 	__u32 stack_id;
+ 	__u32 state;
+ 	__u64 timestamp;
+-	struct stack stack;
++	struct __stack stack;
+ };
+ 
+ struct offcpu_key {
+@@ -211,7 +212,7 @@ static inline int can_record(struct task_struct *t, int state)
+ 	return 1;
+ }
+ 
+-static inline int copy_stack(struct stack *from, struct offcpu_data *to, int n)
++static inline int copy_stack(struct __stack *from, struct offcpu_data *to, int n)
+ {
+ 	int len = 0;
+ 
+@@ -231,7 +232,7 @@ static inline int copy_stack(struct stack *from, struct offcpu_data *to, int n)
+  * information of the task, and dump it as a raw sample to perf ring buffer
+  */
+ static int off_cpu_dump(void *ctx, struct offcpu_data *data, struct offcpu_key *key,
+-			struct stack *stack, __u64 delta)
++			struct __stack *stack, __u64 delta)
+ {
+ 	int n = 0, len = 0;
+ 
+  
+>  struct tstamp_data {
+>  	__u32 stack_id;
+>  	__u32 state;
+>  	__u64 timestamp;
+> +	struct stack stack;
+>  };
+>  
+>  struct offcpu_key {
+> @@ -41,6 +47,10 @@ struct {
+>  	__uint(max_entries, MAX_ENTRIES);
+>  } stacks SEC(".maps");
+>  
+> +struct offcpu_data {
+> +	u64 array[MAX_OFFCPU_LEN];
+> +};
+> +
+>  struct {
+>  	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
+>  	__uint(key_size, sizeof(__u32));
+> @@ -48,6 +58,13 @@ struct {
+>  	__uint(max_entries, MAX_CPUS);
+>  } offcpu_output SEC(".maps");
+>  
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+> +	__uint(key_size, sizeof(__u32));
+> +	__uint(value_size, sizeof(struct offcpu_data));
+> +	__uint(max_entries, 1);
+> +} offcpu_payload SEC(".maps");
+> +
+>  struct {
+>  	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
+>  	__uint(map_flags, BPF_F_NO_PREALLOC);
+> @@ -106,6 +123,8 @@ const volatile bool uses_cgroup_v1 = false;
+>  
+>  int perf_subsys_id = -1;
+>  
+> +__u64 offcpu_thresh_ns = 500000000ull;
+> +
+>  /*
+>   * Old kernel used to call it task_struct->state and now it's '__state'.
+>   * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
+> @@ -192,6 +211,47 @@ static inline int can_record(struct task_struct *t, int state)
+>  	return 1;
+>  }
+>  
+> +static inline int copy_stack(struct stack *from, struct offcpu_data *to, int n)
+> +{
+> +	int len = 0;
+> +
+> +	for (int i = 0; i < MAX_STACKS && from->array[i]; ++i, ++len)
+> +		to->array[n + 2 + i] = from->array[i];
+> +
+> +	return len;
+> +}
+> +
+> +/**
+> + * off_cpu_dump - dump off-cpu samples to ring buffer
+> + * @data: payload for dumping off-cpu samples
+> + * @key: off-cpu data
+> + * @stack: stack trace of the task before being scheduled out
+> + *
+> + * If the threshold of off-cpu time is reached, acquire tid, period, callchain, and cgroup id
+> + * information of the task, and dump it as a raw sample to perf ring buffer
+> + */
+> +static int off_cpu_dump(void *ctx, struct offcpu_data *data, struct offcpu_key *key,
+> +			struct stack *stack, __u64 delta)
+> +{
+> +	int n = 0, len = 0;
+> +
+> +	data->array[n++] = (u64)key->tgid << 32 | key->pid;
+> +	data->array[n++] = delta;
+> +
+> +	/* data->array[n] is callchain->nr (updated later) */
+> +	data->array[n + 1] = PERF_CONTEXT_USER;
+> +	data->array[n + 2] = 0;
+> +	len = copy_stack(stack, data, n);
+> +
+> +	/* update length of callchain */
+> +	data->array[n] = len + 1;
+> +	n += len + 2;
+> +
+> +	data->array[n++] = key->cgroup_id;
+> +
+> +	return bpf_perf_event_output(ctx, &offcpu_output, BPF_F_CURRENT_CPU, data, n * sizeof(u64));
+> +}
+> +
+>  static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
+>  			struct task_struct *next, int state)
+>  {
+> @@ -216,6 +276,16 @@ static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
+>  	pelem->state = state;
+>  	pelem->stack_id = stack_id;
+>  
+> +	/*
+> +	 * If stacks are successfully collected by bpf_get_stackid(), collect them once more
+> +	 * in task_storage for direct off-cpu sample dumping
+> +	 */
+> +	if (stack_id > 0 && bpf_get_stack(ctx, &pelem->stack, MAX_STACKS * sizeof(u64), BPF_F_USER_STACK)) {
+> +		/*
+> +		 * This empty if block is used to avoid 'result unused warning' from bpf_get_stack().
+> +		 * If the collection fails, continue with the logic for the next task.
+> +		 */
+> +	}
+>  next:
+>  	pelem = bpf_task_storage_get(&tstamp, next, NULL, 0);
+>  
+> @@ -230,11 +300,19 @@ static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
+>  		__u64 delta = ts - pelem->timestamp;
+>  		__u64 *total;
+>  
+> -		total = bpf_map_lookup_elem(&off_cpu, &key);
+> -		if (total)
+> -			*total += delta;
+> -		else
+> -			bpf_map_update_elem(&off_cpu, &key, &delta, BPF_ANY);
+> +		if (delta >= offcpu_thresh_ns) {
+> +			int zero = 0;
+> +			struct offcpu_data *data = bpf_map_lookup_elem(&offcpu_payload, &zero);
+> +
+> +			if (data)
+> +				off_cpu_dump(ctx, data, &key, &pelem->stack, delta);
+> +		} else {
+> +			total = bpf_map_lookup_elem(&off_cpu, &key);
+> +			if (total)
+> +				*total += delta;
+> +			else
+> +				bpf_map_update_elem(&off_cpu, &key, &delta, BPF_ANY);
+> +		}
+>  
+>  		/* prevent to reuse the timestamp later */
+>  		pelem->timestamp = 0;
+> -- 
+> 2.43.0
