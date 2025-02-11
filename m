@@ -1,93 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334EC3BB54;
-	Tue, 11 Feb 2025 18:35:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446473BB54
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:37:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739298935; cv=none; b=ZQHKZCxuZ05q5NMIdWr1ZG0eJikrFMYcr/asGWZ3RN3eP0u76F6sKlHIILdJ0J3aSJO4AJ4nOowavaB4w4XFqrm2xPnlGMLN171gIFdQWu1K6A8eGm5lyWmTiX9obHMGY9ddN0jbyS7mWHzfwDBqeIvsTlBmgr4RwuvBxNMTZl8=
+	t=1739299021; cv=none; b=TMWs0efEPPcaBtLzkzcC7SkERa1W62kr1pqLMZF7+xsRLEWtfXQlSulqpZG1cdM1wYFAwWV22ZmzM22q61yHPgQCPfyZcS/7eXepziAQGtW2YTxxPyRAFU/vveiq65OmOPHZJwK0aLSFdbCAWgAxg7Lmftv3r5RGky/lXaRPvdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739298935; c=relaxed/simple;
-	bh=/GDgxa2V50tFPQOr9OXJ/5PrkxuGxrhpmwMTgMzj/T0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Uc1Eo9DIEdZkhEjCJqSXlSC1r59vNi9OeQo5y0fo5OlU4g9pWH+XNEPYevE1uMUsEFxwfFwJpZUKQSioUPBbZTtitqdl+jmXe9I4qWsWj1TKja2HKV5th6xnC5mcoA4PXuW32jeREpVrdVY+99bqY9TkXZN2fQpbC/xNiejMW1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kl+DX5ig; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739299021; c=relaxed/simple;
+	bh=ECyQVWW45GnMczkRjm/XlCIytIxAb9ehTHDo2xIVE4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GYBYvW8yWA+99Mkh2y15GzRTG1A5/7I/1HG+CCGzOWI2sVkdxPtPUIFulTjKcooVXD+UFWMyQRhFlpkZud5I/9RD51kNPDrgSg1IEYsxOVjC1b4dUH/WjyHRWYBtBG0Y7MFRdQ0lWphybxejk2Ri5Ry4mETdog4MKp9PFjmvWY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2ecMHeR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kl+DX5ig"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A7A7C4CEDD;
-	Tue, 11 Feb 2025 18:35:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2ecMHeR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D3ADC4CEDD;
+	Tue, 11 Feb 2025 18:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739298933;
-	bh=/GDgxa2V50tFPQOr9OXJ/5PrkxuGxrhpmwMTgMzj/T0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kl+DX5igmocajTRVwBOsdZaBjIkP6B6H3j2G+72XnR5gu5LDvnJzhET+0Vb1TMSD6
-	 A2JJP0TP1FLV+XAsv0hHXSjSVvmEa9pb6Aq69DOXfje6W4aQvorDhKm+HheB9iwZk0
-	 HuKXXpkcwLgd97YlZP+3rVJgybJj/l5FR2DN9O8+m+fzpo18vRtEJF4U3KODj2pDqk
-	 5Y4+pUbVH2gHNtjDAj9Di2bjvymszhio/t1iBscgngU+cs1w6NolRNEgvJOkRh/XYU
-	 fLOI0ULS1WWzZnBE83kphBPURC+LTNVtCov0hoitU4GLBR2kBgB0FgKhKc+Y6s6q+5
-	 vUSGvKMQjmT/A==
-From: SeongJae Park <sj@kernel.org>
-To: "Arnd Bergmann" <arnd@arndb.de>
-Cc: SeongJae Park <sj@kernel.org>,
-	"Naresh Kamboju" <naresh.kamboju@linaro.org>,
-	"open list" <linux-kernel@vger.kernel.org>,
-	linux-mm <linux-mm@kvack.org>,
-	"Linux PM" <linux-pm@vger.kernel.org>,
-	rcu <rcu@vger.kernel.org>,
-	"LTP List" <ltp@lists.linux.it>,
-	"Linux Regressions" <regressions@lists.linux.dev>,
-	lkft-triage@lists.linaro.org,
-	"Andrew Morton" <akpm@linux-foundation.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	"Vincent Guittot" <vincent.guittot@linaro.org>,
-	"Daniel Lezcano" <daniel.lezcano@linaro.org>,
-	"Dan Carpenter" <dan.carpenter@linaro.org>,
-	"Anders Roxell" <anders.roxell@linaro.org>
-Subject: Re: next-20250210: WARNING: at include/linux/rwsem.h:85 madvise_unlock
-Date: Tue, 11 Feb 2025 10:35:31 -0800
-Message-Id: <20250211183531.4359-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <fa1a7a10-f892-4e7e-acb4-0b058aa53d88@app.fastmail.com>
-References: 
+	s=k20201202; t=1739299020;
+	bh=ECyQVWW45GnMczkRjm/XlCIytIxAb9ehTHDo2xIVE4E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V2ecMHeREtQ/wkbTPoKsOeq+nqXp+73t/ZKlLsqrNK3xL22ErByyMZzi4hfK879GP
+	 TbRUHh+Oir4XU+oHSo9fSOcLt3vdCbLOre1EHiZVLfGoSGDAhobtrMj6RvJKxg5lGz
+	 iNPPqLFtGMhsLFl2lCIuer8ouq5WQex6JvZWVQ4N3zMpuMXSdjuyICZs665D8UCnLn
+	 +PcN5Qc9NpUGQG2UdzsPYEZRyDx9S3aQbA5Ju0kxx8oJ/VEbSq4nHd2Iob3GAJpshG
+	 zJnxUmH/NcDfKY6U7v/Ai3ghV9rmZgbkkp8CidLovekB3NWGVUk9o50syWAXz3DcD1
+	 luiTyZ4FU4UeA==
+Date: Tue, 11 Feb 2025 18:36:56 +0000
+From: Will Deacon <will@kernel.org>
+To: Itai Handler <itai.handler@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	mark.rutland@arm.com, ardb@kernel.org, usamaarif642@gmail.com
+Subject: Re: Issues with kexec on arm64
+Message-ID: <20250211183655.GA9618@willie-the-truck>
+References: <CAFpOueSJFyAa2q=0S5Ch6cCy_ORKBV8Y-FUTq6bTky37LJ7M_A@mail.gmail.com>
+ <20250103161637.GA3921@willie-the-truck>
+ <CAFpOueQa2EOSC7=5xsWU85B0FG8xsDoqk7btMQCEV7wBdT1GQw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFpOueQa2EOSC7=5xsWU85B0FG8xsDoqk7btMQCEV7wBdT1GQw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, 11 Feb 2025 10:32:55 +0100 "Arnd Bergmann" <arnd@arndb.de> wrote:
-
-> On Tue, Feb 11, 2025, at 10:23, Naresh Kamboju wrote:
-> > Regressions on arm64 Juno-r2 device while running LTP syscalls tests
-> > madvise01 warnings on the Linux next-20250210 tag.
+On Sun, Jan 05, 2025 at 04:46:42PM +0200, Itai Handler wrote:
+> On Fri, Jan 3, 2025 at 6:16 PM Will Deacon <will@kernel.org> wrote:
 > >
-> > First seen on next-20250210
-> > Good: next-20250207
-> > Bad: next-20250210
+> > On Tue, Dec 24, 2024 at 01:36:41PM +0200, Itai Handler wrote:
+> > > [Sorry about my previous e-mail on this subject. It got corrupted.
+> > > Please ignore it.]
+> > >
+> > > Hello,
+> > >
+> > > I'm encountering kernel panics / system hangs when attempting to
+> > > kexec a vmlinux file on arm64 architecture.
+> > >
+> > > It happens both on qemu and on real hardware.
+> > >
+> > > These issues occur on all kernels from v4.19 to the latest mainline.
+> >
+> > I think other folks have been using kexec on arm64, so something smells
+> > fishy here. Is the issue intermittent?
 > 
-> Cc SeongJae Park <sj@kernel.org>
-[...]
-> This is mmap_write_unlock() triggering
-> rwsem_assert_held_write(&mm->mmap_lock);
+> No, it isn't intermittent. It's very easy to reproduce the panics/hangs.
+> At most we need to perform two recursive kexec attempts of the vmlinux file.
+> In v6.6, using the configuration I supplied (config.sh), a single kexec
+> attempt is sufficient to demonstrate the issue. In that case a panic occurs
+> on the first kexec attempt. In newer versions I mostly see hangs but sometimes
+> panics as well.
+> Please note that the configuration I supplied sets CONFIG_ARM64_64K_PAGES=y.
+> But I saw issues also with 4K pages, but in that case only when enabling some
+> debug options (KASAN, SCHED_DEBUG, KCSAN).Also please note that kexec with the
+> Image file (instead of the vmlinux file) seems to work properly, without any
+> issue.
 > 
-> That code was changed in these commits:
+> >
+> > > A sample panic output looks as follows:
+> > >   kernel BUG at arch/arm64/mm/mmu.c:217!
+> > >   Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
+> > >   CPU: 0 PID: 0 Comm: swapper Not tainted 6.6.0 #292
+> > >   Hardware name: linux,dummy-virt (DT)
+> > >   pstate: 800000c5 (Nzcv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > >   pc : __create_pgd_mapping+0xe8/0x3b0
+> > >   lr : __create_pgd_mapping+0x44/0x3b0
+> > >   sp : fffffe00804d3c20
+> > >   x29: fffffe00804d3c20 x28: fffffe0080620000 x27: fffffffefdbc0000
+> > >   x26: fffffe0080300000 x25: 0000000040010000 x24: fffffffefdbc8020
+> > >   x23: fffffe0080010000 x22: 0000000000000040 x21: fffffe0080010000
+> > >   x20: fffffe0080300000 x19: 0040000000000783 x18: 0000000000000000
+> > >   x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+> > >   x14: fffffffefdde0000 x13: fffffe00804d3c78 x12: 0000000000001d68
+> > >   x11: 0000000000001d64 x10: fffffe00804d3c2c x9 : fffffffefdde0000
+> > >   x8 : 0000000040420000 x7 : 0000000000001d68 x6 : 0000000000000000
+> > >   x5 : fffffe00a0010000 x4 : 0000000000001004 x3 : fffffe0480010000
+> > >   x2 : fffffe00804f7ec0 x1 : 0000000000000000 x0 : 0000000000000000
+> > >   Call trace:
+> > >    __create_pgd_mapping+0xe8/0x3b0
+> > >    map_kernel_segment+0x74/0xb0
+> > >    paging_init+0xec/0x4f8
+> > >    setup_arch+0x234/0x52c
+> > >    start_kernel+0x64/0x500
+> > >    __primary_switched+0xb4/0xbc
+> > >   Code: f9400300 92400400 f1000c1f 54000060 (d4210000)
+> > >   ---[ end trace 0000000000000000 ]---
+> > >   Kernel panic - not syncing: Oops - BUG: Fatal exception
+> >
+> > So this explodes because we find a page-table entry at the pmd level
+> > that we don't like the look of:
+> >
+> >   - It's not a block entry
+> >   - It's not all zeroes
+> >   - It's also not a table
+> >
+> > Sadly, the actual value is clobbered by the time we take the BUG():
+> >
+> >    0:   f9400300        ldr     x0, [x24]
+> >    4:   92400400        and     x0, x0, #0x3
+> >    8:   f1000c1f        cmp     x0, #0x3
+> >    c:   54000060        b.eq    0x18  // b.none
+> >   10:*  d4210000        brk     #0x800          <-- trapping instruction
+> >
+> > Maybe dumping 'pmd_val(pmd)' before we crash would be instructive? Maybe
+> > it's a pointer...
 > 
-> 415553982a1e mm-madvise-remove-redundant-mmap_lock-operations-from-process_madvise-fix
-> ec68fbd9e99f mm/madvise: remove redundant mmap_lock operations from process_madvise()
-> f19c9d7b57cf mm/madvise: split out madvise() behavior execution
-> a4d5a73cdc14 mm/madvise: split out madvise input validity check
-> 948a0a9ea070 mm/madvise: split out mmap locking operations for madvise()
+> I dumped the bad pmd (on v6.6).
+> It's always the same value: 128000017901ca60.
+
+Hmm, I can't make anything useful out of that but it certainly looks
+bogus.
+
+> > > I bisected those panics to 8eb7e28d4c642c310f25c18f80a44dd4b01c694e
+> > > ("arm64/mm: move runtime pgds to rodata"), which was added on v4.19.
+> >
+> > Hmm. I wonder if the rodata section isn't being loaded properly? Can you
+> > add some traces to check that, please?
 > 
-> You could try reverting them to see if that fixes it again.
+> Could you advise which traces are needed and how to add them?
 
-Thank you for kindly Cc-ing me and further providing this nice information,
-Arnd!  I posted a fix and continuing discussion there:
-https://lore.kernel.org/20250211063201.5106-1-sj@kernel.org
+If you can find where the .rodata section lives in the kernel binary
+that you're trying to kexec, then you could instrument the kexec code to
+check that it does indeed load that into memory, for example? You'll
+need to use your imagination as you're the one lucky enough to hit the
+bug...
 
-
-Thanks,
-SJ
-
-[...]
+Will
