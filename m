@@ -1,67 +1,66 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415BE1E9B2A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C1126BDB3;
+	Tue, 11 Feb 2025 02:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739242425; cv=none; b=VRKBf4bN9oF2AMT76X3n9DzCR8RVGi9V9wQ0zfyjssHRCsY+F4hlimagxz9Y/5ec+zaWpbtxLIhzheJY6GHLL8aQ1g+9qCEK3aNTiBXxDlW9P7Op/oygV5FbG55W3XSQN6AAsN/xlgyanMnWkgmMydtdiRYnvsJzotxJvjzt5/4=
+	t=1739242613; cv=none; b=JOdy/V8+AsLjgXn6rrDe7ubqkBcIf9P5A5ebscJKsXHbo9L/P1+7cZAbLlOTXca0h9qvKVq7gBGx7Sis+kb/fdfh/A+7j+QZmd35K9wOtM11KBCuNNJ7W62iG7l+iMRLO+QJg+Tt8k/0bX7iIrc44j88+wkrNrdgI0kK/+jX2FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739242425; c=relaxed/simple;
-	bh=uY84+6Dkc/kFdh/MJuILlKIszskgmWsjsdtqGT9tFms=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R62TiSRe3kzFfjYEDwqfyHCSx9YA3VDoqiWCQ1cAssGOjCV9mmijcoldAflzlnyDOjMUUHx5BmLV5Uj1VbEUB90oHa/EPEOlJvd08Zgs2xY5ZCFqNUJLsq4HmN8uFbU7cXmmVzRiMud+ma2AWlOdxA4EQkHqpV2xBAK64/NWFAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Hy8Pf3W4; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1739242613; c=relaxed/simple;
+	bh=drFbHHuUIZs0yvjOWJKD+MSxbdtSSBC+mwOH1lUeAA4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HBgommY6iv5nXBxAM/uKsQKvVXlRRQS1ZCHh5Pv6iRQl9lCauubwrsy+0XOXmZP97JPd7bnV2x103rbHW+lwgLJXF68ojfPrNRuwy6OpX1zqJF6uj+HCs6cKkEfhi1l6lnpoOC1xSXwK+47JPvUsPzKs5uXnPGtHYbtj3dsbDig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nQ3rOQnQ; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Hy8Pf3W4"
-X-UUID: 642ac46ee82311efb8f9918b5fc74e19-20250211
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=vFqxwTsvmIoW4A0S0/Di3p/KIuTvNq8siIshHmcmHIU=;
-	b=Hy8Pf3W4vd48N0Vj8L7VYXCJWuNFeQpoiO65XrlIGaEjb6a6DdVhnccstRLjUe/CYfGcaSW3g9X5+g/6rZiimnEJs57oZNY7qYTdFqnLx01dnXa/VB6/8O2wr+alfoq1UkF7xY+ddXMEoSoObpulTcKOZil3kJCAmv4FCoZxXwQ=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:1a67fad2-a0a0-4c0f-8659-390a820ea2f9,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:60aa074,CLOUDID:b9ca627f-427a-4311-9df4-bfaeeacd8532,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 642ac46ee82311efb8f9918b5fc74e19-20250211
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
-	(envelope-from <sunny.shen@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1391345110; Tue, 11 Feb 2025 10:53:37 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 11 Feb 2025 10:53:36 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Tue, 11 Feb 2025 10:53:36 +0800
-From: Sunny Shen <sunny.shen@mediatek.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-CC: Matthias Brugger <matthias.bgg@gmail.com>, Philipp Zabel
-	<p.zabel@pengutronix.de>, Fei Shao <fshao@chromium.org>, Pin-yen Lin
-	<treapking@chromium.org>, "Jason-JH . Lin" <jason-jh.lin@mediatek.com>, Nancy
- Lin <nancy.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, "Paul
- Chen --cc=devicetree @ vger . kernel . org" <paul-pl.chen@mediatek.com>,
-	<linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Sunny Shen
-	<sunny.shen@mediatek.com>
-Subject: [PATCH 5/5] drm/mediatek: Change main display path to support PQ for MT8196
-Date: Tue, 11 Feb 2025 10:52:54 +0800
-Message-ID: <20250211025317.399534-6-sunny.shen@mediatek.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250211025317.399534-1-sunny.shen@mediatek.com>
-References: <20250211025317.399534-1-sunny.shen@mediatek.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nQ3rOQnQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739242612; x=1770778612;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=drFbHHuUIZs0yvjOWJKD+MSxbdtSSBC+mwOH1lUeAA4=;
+  b=nQ3rOQnQ+0/XDqetkFWawsSaRorXRX/62Vv9DZh4YsQLcL7f6TDuodDF
+   XoU4vs6769E2lyMxkNZz4EI1EjP0nMVBwNRVDRqhjxuKI3z7+ggBpbZeZ
+   KhP5K7EWS6PF8AxAEqWoNHlVLOBpErK0sSbZmf3l1Zmm6LNZubDjlfmoh
+   2UqZ6wEE4n6gNgE+L9dLIYkVQ/MEjy2bOyUjH+c1THI8nYKyZRwXgFeKg
+   RK4LuJ5GtAp5sEplM9qibSX4WrKwTNlcJ32vJ/jlqXf/E1p2TiUNMc5Kp
+   Zju7oywXVOFuC/n2MVzFa4vaCJf3YJQ4xCjmlUOT+9s6HZ6+zTJ3p1M9i
+   A==;
+X-CSE-ConnectionGUID: KhOM8vvbT+KWg5mNATA40A==
+X-CSE-MsgGUID: begQOsxKQwmcJx4AGOcieA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="43612418"
+X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
+   d="scan'208";a="43612418"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:56:52 -0800
+X-CSE-ConnectionGUID: hRpPb8FGTYySr7TJTlVXkQ==
+X-CSE-MsgGUID: IvumfHUsRYG8B/GfMXFz7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
+   d="scan'208";a="112355211"
+Received: from litbin-desktop.sh.intel.com ([10.239.156.93])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:56:47 -0800
+From: Binbin Wu <binbin.wu@linux.intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com,
+	kvm@vger.kernel.org
+Cc: rick.p.edgecombe@intel.com,
+	kai.huang@intel.com,
+	adrian.hunter@intel.com,
+	reinette.chatre@intel.com,
+	xiaoyao.li@intel.com,
+	tony.lindgren@intel.com,
+	isaku.yamahata@intel.com,
+	yan.y.zhao@intel.com,
+	chao.gao@intel.com,
+	linux-kernel@vger.kernel.org,
+	binbin.wu@linux.intel.com
+Subject: [PATCH v2 00/17] KVM: TDX: TDX interrupts
+Date: Tue, 11 Feb 2025 10:58:11 +0800
+Message-ID: <20250211025828.3072076-1-binbin.wu@linux.intel.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,35 +68,238 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-Due to the path mux design of the MT8196, the following components
-need to be added to support Picture Quality (PQ) in the main display
-path: CCORR0, CCORR1, DITHER0, GAMMA0, MDP_RSZ0, POSTMASK0, TDSHP0.
+Hi,
 
-Signed-off-by: Sunny Shen <sunny.shen@mediatek.com>
+This patch series introduces the support of interrupt handling for TDX
+guests, including virtual interrupt injection and VM-Exits caused by
+vectored events.
+
+This patch set is one of several patch sets that are all needed to provide
+the ability to run a functioning TD VM. We think this is in pretty good
+shape at this point, but it probably needs another round of review before
+hand off. We would appreciate review from Sean on the implementation of the
+APICv feedback [1].
+
+
+Base of this series
+===================
+This series is based on kvm-coco-queue up to the end of MMU part 2, plus
+two later sections. Stack is:
+  - '55f78d925e07 ("KVM: TDX: Return -EBUSY when tdh_mem_page_add()
+    encounters TDX_OPERAND_BUSY")'.
+  - v2 of "KVM: TDX: TD vcpu enter/exit" (There is one small log difference
+    between the v2 patches and the commits in kvm-coco-queue. No code
+    differences). 
+  - v2 of "KVM: TDX: TDX hypercalls may exit to userspace"
+
+
+Notable changes since v1 [2]
+============================
+Enforce APICv active for TDX guests from the view of KVM, which was
+suggested by Sean in one PUCK session, because it is not concept right to
+"lie" to KVM that APICv is disabled while it is actually enabled. Instead,
+it's better to make APICv enabled and prevent it from being disabled from
+the view of KVM. More details can be found in the discussion thread [1].
+For this purpose, additional checks are implemented:
+- Check enable_apicv in tdx_bringup().
+- Reject KVM_{GET,SET}_LAPIC from userspace, thus it requires the code
+  change in QEMU to skip request KVM_{GET,SET}_LAPIC.
+- Implement vt_refresh_apicv_exec_ctrl() to bug the VM if APICv is
+  disabled.
+
+Enforce KVM_IRQCHIP_SPLIT for TDX guests to disallow in-kernel I/O APIC
+while in-kernel local APIC is needed.
+
+Unify the code to handle NMIs and external interrupts.
+
+WARN on init event for TDX vCPU.
+
+Drop vt_hwapic_irr_update() since .hwapic_irr_update() is gone in 6.14.
+
+Also, there is an new information update about NMI blocked status after
+exiting from TDX guest for NMI-induced exits in "NMI" part of section
+"VM-Exits caused by vectored event" below.
+
+
+Virtual interrupt injection
+===========================
+Non-NMI Interrupt
+-----------------
+TDX supports non-NMI interrupt injection only by posted interrupt. Posted
+interrupt descriptors (PIDs) are allocated in shared memory, KVM can update
+them directly. To post pending interrupts in the PID, KVM can generate a
+self-IPI with notification vector prior to TD entry.
+TDX guest status is protected, KVM can't get the interrupt status of TDX
+guest. In this series, assumes interrupt is always allowed. A later patch
+set will have the support for TDX guest to call TDVMCALL with HLT, which
+passes the interrupt block flag, so that whether interrupt is allowed in
+HLT will checked against the interrupt block flag.
+
+NMI
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+KVM can request the TDX module to inject a NMI into a TDX vCPU by setting
+the PEND_NMI TDVPS field to 1. Following that, KVM can call TDH.VP.ENTER to
+run the vCPU and the TDX module will attempt to inject the NMI as soon as
+possible.
+PEND_NMI TDVPS field is a 1-bit filed, i.e. KVM can only pend one NMI in
+the TDX module. Also, TDX doesn't allow KVM to request NMI-window exit
+directly. When there is already one NMI pending in the TDX module, i.e. it
+has not been delivered to TDX guest yet, if there is NMI pending in KVM,
+collapse the pending NMI in KVM into the one pending in the TDX module.
+Such collapse is OK considering on X86 bare metal, multiple NMIs could
+collapse into one NMI, e.g. when NMI is blocked by SMI.  It's OS's
+responsibility to poll all NMI sources in the NMI handler to avoid missing
+handling of some NMI events. More details can be found in the changelog of
+the patch "KVM: TDX: Implement methods to inject NMI".
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index b810a197f58b..1c97dc46ae70 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -242,6 +242,13 @@ static const unsigned int mt8196_mtk_ddp_ovl0_main[] = {
- 
- static const unsigned int mt8196_mtk_ddp_disp0_main[] = {
- 	DDP_COMPONENT_DLI_ASYNC0,
-+	DDP_COMPONENT_MDP_RSZ0,
-+	DDP_COMPONENT_TDSHP0,
-+	DDP_COMPONENT_CCORR0,
-+	DDP_COMPONENT_CCORR1,
-+	DDP_COMPONENT_GAMMA0,
-+	DDP_COMPONENT_POSTMASK0,
-+	DDP_COMPONENT_DITHER0,
- 	DDP_COMPONENT_DLO_ASYNC1,
- };
- 
+SMI
+---
+TDX doesn't support system-management mode (SMM) and system-management
+interrupt (SMI) in guest TDs because TDX module doesn't provide a way for
+VMM to inject SMI into guest TD or switch guest vCPU mode into SMM. Handle
+SMI request as what KVM does for CONFIG_KVM_SMM=n, i.e. return -ENOTTY,
+and add KVM_BUG_ON() to SMI related OPs for TD.
+
+INIT/SIPI event
+----------------
+TDX defines its own vCPU creation and initialization sequence including
+multiple SEAMCALLs.  Also, it's only allowed during TD build time. Always
+block INIT and SIPI events for the TDX guest.
+
+
+VM-Exits caused by vectored event
+=================================
+NMI (with *new update*)
+-----------------------
+Just like the VMX case, NMI remains blocked after exiting from TDX guest
+for NMI-induced exits [*], handle VM-Exit caused by NMIs within
+tdx_vcpu_enter_exit(), i.e., handled before leaving the safety of noinstr.
+
+[*]: Old TDX modules may have a bug which makes NMI unblocked after exiting
+from TDX guest for NMI-induced exits.  This could potentially lead to
+nested NMIs: a new NMI arrives when KVM is manually calling the host NMI
+handler.  This is an architectural violation, but it doesn't have real harm
+until FRED is enabled together with TDX (for non-FRED, the host NMI handler
+can handle nested NMIs).  Given this is rare to happen and has no real
+harm, ignore this for the initial TDX support.
+For the new TDX modules that fixed the bug, NMIs are blocked after exiting
+from TDX guest for NMI-induced exits, which is the default behavior and no
+"opt-in" is needed. This is aligned with the suggestion made by Sean [3].
+
+External Interrupt
+------------------
+Similar to the VMX case, external interrupts are handled in
+.handle_exit_irqoff() callback.
+
+Exception
+---------
+Machine check, which is handled in the .handle_exit_irqoff() callback, is
+the only exception type KVM handles for TDX guests. For other exceptions,
+because TDX guest state is protected, exceptions in TDX guests can't be
+intercepted. TDX VMM isn't supposed to handle these exceptions. Exit to
+userspace with KVM_EXIT_EXCEPTION If unexpected exception occurs.
+
+SMI
+---
+In SEAM root mode (TDX module), all interrupts are blocked. If an SMI
+occurs in SEAM non-root mode (TD guest), the SMI causes VM exit to TDX
+module, then SEAMRET to KVM. Once it exits to KVM, SMI is delivered and
+handled by kernel handler right away.
+An SMI can be "I/O SMI" or "other SMI".  For TDX, there will be no I/O SMI
+because I/O instructions inside TDX guest trigger #VE and TDX guest needs
+to use TDVMCALL to request VMM to do I/O emulation.
+For "other SMI", there are two cases:
+- MSMI case.  When BIOS eMCA MCE-SMI morphing is enabled, the #MC occurs in
+  TDX guest will be delivered as an MSMI.  It causes an
+  EXIT_REASON_OTHER_SMI VM exit with MSMI (bit 0) set in the exit
+  qualification.  On VM exit, TDX module checks whether the "other SMI" is
+  caused by an MSMI or not.  If so, TDX module marks TD as fatal,
+  preventing further TD entries, and then completes the TD exit flow to KVM
+  with the TDH.VP.ENTER outputs indicating TDX_NON_RECOVERABLE_TD.  After
+  TD exit, the MSMI is delivered and eventually handled by the kernel
+  machine check handler (7911f14 x86/mce: Implement recovery for errors in
+  TDX/SEAM non-root mode), i.e., the memory page is marked as poisoned and
+  it won't be freed to the free list when the TDX guest is terminated.
+  Since the TDX guest is dead, follow other non-recoverable cases, exit to
+  userspace.
+- For non-MSMI case, KVM doesn't need to do anything, just continue TDX
+  vCPU execution.
+
+
+Repos
+=====
+Due to "KVM: VMX: Move common fields of struct" in "TDX vcpu enter/exit" v2
+[4], subsequent patches require changes to use new struct vcpu_vt, refer to
+the full KVM branch below.
+
+It requires TDX module 1.5.06.00.0744 [5], or later as mentioned in [4].
+A working edk2 commit is 95d8a1c ("UnitTestFrameworkPkg: Use TianoCore
+mirror of subhook submodule").
+
+The full KVM branch is here:
+https://github.com/intel/tdx/tree/tdx_kvm_dev-2025-02-10
+
+A matching QEMU is here:
+https://github.com/intel-staging/qemu-tdx/tree/tdx-qemu-upstream-v7
+
+
+Testing 
+=======
+It has been tested as part of the development branch for the TDX base
+series. The testing consisted of TDX kvm-unit-tests and booting a Linux
+TD, and TDX enhanced KVM selftests.
+
+[1] https://lore.kernel.org/kvm/Z4VKdbW1R0AoLvkB@google.com
+[2] https://lore.kernel.org/kvm/20241209010734.3543481-1-binbin.wu@linux.intel.com
+[3] https://lore.kernel.org/kvm/Z0T_iPdmtpjrc14q@google.com
+[4] https://lore.kernel.org/kvm/20250129095902.16391-1-adrian.hunter@intel.com
+[5] https://github.com/intel/tdx-module/releases/tag/TDX_1.5.06
+
+Binbin Wu (2):
+  KVM: TDX: Enforce KVM_IRQCHIP_SPLIT for TDX guests
+  KVM: VMX: Move emulation_required to struct vcpu_vt
+
+Isaku Yamahata (12):
+  KVM: TDX: Disable PI wakeup for IPIv
+  KVM: VMX: Move posted interrupt delivery code to common header
+  KVM: TDX: Implement non-NMI interrupt injection
+  KVM: TDX: Wait lapic expire when timer IRQ was injected
+  KVM: TDX: Implement methods to inject NMI
+  KVM: TDX: Complete interrupts after TD exit
+  KVM: TDX: Handle SMI request as !CONFIG_KVM_SMM
+  KVM: TDX: Always block INIT/SIPI
+  KVM: TDX: Force APICv active for TDX guest
+  KVM: TDX: Add methods to ignore virtual apic related operation
+  KVM: TDX: Handle EXCEPTION_NMI and EXTERNAL_INTERRUPT
+  KVM: TDX: Handle EXIT_REASON_OTHER_SMI
+
+Sean Christopherson (3):
+  KVM: TDX: Add support for find pending IRQ in a protected local APIC
+  KVM: x86: Assume timer IRQ was injected if APIC state is protected
+  KVM: VMX: Add a helper for NMI handling
+
+ arch/x86/include/asm/kvm-x86-ops.h |   1 +
+ arch/x86/include/asm/kvm_host.h    |   1 +
+ arch/x86/include/asm/posted_intr.h |   5 +
+ arch/x86/include/uapi/asm/vmx.h    |   1 +
+ arch/x86/kvm/irq.c                 |   3 +
+ arch/x86/kvm/lapic.c               |  14 +-
+ arch/x86/kvm/lapic.h               |   2 +
+ arch/x86/kvm/smm.h                 |   3 +
+ arch/x86/kvm/vmx/common.h          |  74 ++++++++
+ arch/x86/kvm/vmx/main.c            | 262 ++++++++++++++++++++++++++---
+ arch/x86/kvm/vmx/nested.c          |   2 +-
+ arch/x86/kvm/vmx/posted_intr.c     |   9 +-
+ arch/x86/kvm/vmx/posted_intr.h     |   2 +
+ arch/x86/kvm/vmx/tdx.c             | 145 +++++++++++++++-
+ arch/x86/kvm/vmx/tdx.h             |   5 +
+ arch/x86/kvm/vmx/vmx.c             | 113 +++----------
+ arch/x86/kvm/vmx/vmx.h             |   1 -
+ arch/x86/kvm/vmx/x86_ops.h         |  12 ++
+ arch/x86/kvm/x86.c                 |   6 +
+ 19 files changed, 541 insertions(+), 120 deletions(-)
+
 -- 
-2.34.1
+2.46.0
 
