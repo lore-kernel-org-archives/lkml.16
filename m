@@ -1,155 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192F52AE6A;
-	Tue, 11 Feb 2025 16:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55752AE6A;
+	Tue, 11 Feb 2025 16:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739291434; cv=none; b=LgMYzjOB0YjMyUptvN5gQSg6ZCQyzpBCYGa3WszZQZ6Q9IP3hshbLW6uXQ5BGfS1LlH5reTjaxv3Gx0TpMTwtwZSdDy3xfcjvHq6Eq0EYWnuX6wr2cH4iloV9ngl/xB+d+CU3n35/gfligxgEMBA+eKvwbUYqwAz1sIL2m/PbN4=
+	t=1739291441; cv=none; b=MLRimuJj4Scyr6/OCvuEqAEfEqwi4vpiPQUFDk4tezX56GludNrm+ZqUYXDSTN5eoALTVa0fai9c1A/mFObq2vLN5iJCL90PiffD+FReHfnwnCANjGoLx0aPp1bnyQMhS1RvFIzr4xYpljLI1s6dMhRtFzGCxbkNpycvJNqbXDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739291434; c=relaxed/simple;
-	bh=cHhVe3lnCIHIlSu/fg/SHyBljFFWdesuVmKgHAUgfu4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KUoTU4H3CGbwV3oJgjyrqvNeFrjS0LF0JZ41NyXhQ7TzXmxC4o782MWSRquUGJMCeDQ/o6G3kjYWYj20Miy2b0Zu6mYhY72Wyd63yFPIEM71UqT08lt56yhBkqa3kOqC4EOEBUi1KoO4wMsWk0h1hvpCVScqIuRdwrJLQEHMp9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L9/gZbCw; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739291441; c=relaxed/simple;
+	bh=blWk8OYXAKWZt4nEyYBk3rcMjLdQvE088z87QuEQYcU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KByZ/nJamAbjR7ax0UrELxXZ+Qa1SJxLFKnwm1ZeVlnueTCKMyeRBtN7lDpdC7dc7l9sC2Q5SjuMkOZ7ldWpQz6TV6Z6MRdwFinglbtDlwOByJEcZFdvLarqzxeJ/xO11Z6vsjvNv6E++KAx9ZPuZKR8S2/uy+9R2yTIVye33PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=R1eyWf/m; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L9/gZbCw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739291432; x=1770827432;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cHhVe3lnCIHIlSu/fg/SHyBljFFWdesuVmKgHAUgfu4=;
-  b=L9/gZbCw1VKTWWVz/9DbtIx7v26ourLKkw6hDgJ+vcS/Re4E3nYgkrGm
-   F/2LfQysi/NQVYj6TZgjrk+Zu9TRSfDxAEUCk7qIliKjYfxo+J2IlQqwn
-   t/ecc52BjCH6A+1/xc/6oGQXxFczf/DtNlREAZd6+ozXN+IjLBHTNFxoD
-   O0aKp8BYeG4KYMWVgjh8RPucfZ5U4Snj2Ky2MikQQa5L3bIAuyujBbNVV
-   I+2mhInbC1e+1PJwr0fl1h6CcX3C0TiRJ6ayT5XvkH4nHad2pixz32mxo
-   qYqkW9N9pMXwLN5BPswAdbAVMaA9jNByd1ahzCm/fi+/+o/tlsNnsVM3k
-   w==;
-X-CSE-ConnectionGUID: 1+IOLPFIRGOprJSutrZKOQ==
-X-CSE-MsgGUID: ocvsyDVzQR6xzaWCmInXww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="39802282"
-X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="39802282"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 08:30:30 -0800
-X-CSE-ConnectionGUID: 7hmef146TemXHrdIlZ1N/w==
-X-CSE-MsgGUID: knwsERq+S12G/QnS/D+DSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="112322563"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa009.jf.intel.com with ESMTP; 11 Feb 2025 08:30:28 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id D49BB8F; Tue, 11 Feb 2025 18:30:26 +0200 (EET)
-Date: Tue, 11 Feb 2025 18:30:26 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 02/14] platform/x86: alienware-wmi: Add WMI Drivers
-Message-ID: <Z6t7IjcOFuAbztfn@black.fi.intel.com>
-References: <20250207154610.13675-1-kuurtb@gmail.com>
- <20250207154610.13675-3-kuurtb@gmail.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="R1eyWf/m"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B4vo81003866;
+	Tue, 11 Feb 2025 10:30:32 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=9E82TJqdSUGHUuRV0fGif+EouUYylC7G+GekqeDR0R8=; b=
+	R1eyWf/mJidquPtQn+fUtWSP7lrEQt2n4uJoNpQNsRZhGtmWstPtBXuhMNljbvga
+	fIaZ53RjFxfUsrWh4opw7HW/wRz3y7gl4YPqttFYsYlc/j6pMrP3W7yUDbgAQkNJ
+	Hh//P61JCytBBhNjt+t3wZUuSICPmKB7agB7yrop4b1qxxqnavChSAFZc36KpouP
+	RhUfSQnK2WMFa28D2vKnGLLSuUtvK5wDduAzdIxa8mfIkAcYcY4BDBgY+ouYxWCS
+	Rah6I7JWwqqpy01BShumlyWnwf9x8r/trpgJBRvrF0dMGejwjBQUnRooewcXkr4K
+	wY3+W/VgHTKo8FbzW3eIig==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44p4jmw2dw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 10:30:32 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 11 Feb
+ 2025 16:30:26 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Tue, 11 Feb 2025 16:30:26 +0000
+Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 26323820248;
+	Tue, 11 Feb 2025 16:30:26 +0000 (UTC)
+Message-ID: <8a785b3d-1c77-4905-832b-4f4acaec1ff3@opensource.cirrus.com>
+Date: Tue, 11 Feb 2025 16:30:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207154610.13675-3-kuurtb@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] firmware: cs_dsp: test_control_parse: null-terminate test
+ strings
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+CC: Simon Trimmer <simont@opensource.cirrus.com>,
+        Charles Keepax
+	<ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>, <patches@opensource.cirrus.com>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+References: <20250211-cs_dsp-kunit-strings-v1-1-d9bc2035d154@linutronix.de>
+ <d1c9a0f3-5bc5-4b78-abfa-d17e90c36f48@opensource.cirrus.com>
+ <20250211161448-c6560879-7bc9-4fe1-a9cf-713f029c1ee7@linutronix.de>
+Content-Language: en-GB
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <20250211161448-c6560879-7bc9-4fe1-a9cf-713f029c1ee7@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=PNv1+eqC c=1 sm=1 tr=0 ts=67ab7b28 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=VwQbUJbxAAAA:8 a=xpmXR35279-dqAzjWgoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: e9r7MIn-42D0RhUNrOckl23MdUcm-rwF
+X-Proofpoint-ORIG-GUID: e9r7MIn-42D0RhUNrOckl23MdUcm-rwF
+X-Proofpoint-Spam-Reason: safe
 
-On Fri, Feb 07, 2025 at 10:45:58AM -0500, Kurt Borja wrote:
-> Add WMI drivers for LEGACY and WMAX devices.
+On 11/02/2025 3:21 pm, Thomas Weißschuh wrote:
+> On Tue, Feb 11, 2025 at 03:10:38PM +0000, Richard Fitzgerald wrote:
+>> On 11/02/2025 3:00 pm, Thomas Weißschuh wrote:
+>>> The char pointers in 'struct cs_dsp_mock_coeff_def' are expected to
+>>> point to C strings. They need to be terminated by a null byte.
+>>> However the code does not allocate that trailing null byte and only
+>>> works if by chance the allocation is followed by such a null byte.
+>>>
+>>> Refactor the repeated string allocation logic into a new helper which
+>>> makes sure the terminating null is always present.
+>>> It also makes the code more readable.
+>>>
+>>> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+>>> Fixes: 83baecd92e7c ("firmware: cs_dsp: Add KUnit testing of control parsing")
+>>> Cc: stable@vger.kernel.org
+>>> ---
+>>>    .../cirrus/test/cs_dsp_test_control_parse.c        | 51 ++++++++--------------
+>>>    1 file changed, 19 insertions(+), 32 deletions(-)
+>>>
+>>> diff --git a/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c b/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
+>>> index cb90964740ea351113dac274f0366de7cedfd3d1..942ba1af5e7c1e47e8a2fbe548a7993b94f96515 100644
+>>> --- a/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
+>>> +++ b/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
+>>> @@ -73,6 +73,18 @@ static const struct cs_dsp_mock_coeff_def mock_coeff_template = {
+>>>    	.length_bytes = 4,
+>>>    };
+>>> +static char *cs_dsp_ctl_alloc_test_string(struct kunit *test, char c, size_t len)
+>>> +{
+>>> +	char *str;
+>>> +
+>>> +	str = kunit_kmalloc(test, len + 1, GFP_KERNEL);
+>>> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, str);
+>>> +	memset(str, c, len);
+>>> +	str[len] = '\0';
+>>> +
+>>> +	return str;
+>>> +}
+>>> +
+>>>    /* Algorithm info block without controls should load */
+>>>    static void cs_dsp_ctl_parse_no_coeffs(struct kunit *test)
+>>>    {
+>>> @@ -160,12 +172,8 @@ static void cs_dsp_ctl_parse_max_v1_name(struct kunit *test)
+>>>    	struct cs_dsp_mock_coeff_def def = mock_coeff_template;
+>>>    	struct cs_dsp_coeff_ctl *ctl;
+>>>    	struct firmware *wmfw;
+>>> -	char *name;
+>>> -	name = kunit_kzalloc(test, 256, GFP_KERNEL);
+>>
+>> This allocates 256 bytes of zero-filled memory...
+>>
+>>> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, name);
+>>> -	memset(name, 'A', 255);
+>>
+>> ... and this fills the first 255 bytes, leaving the last byte still as
+>> zero. So the string is zero-terminated. I don't see a problem here.
 > 
-> This involves moving the platform device registration to a helper
-> function that is now called from the driver's preferred WMI device
-> driver probe. In the case of the WMAX this is done only if
-> `!quirks->thermal` because the newer WMAX interface doesn't support any
-> of the LED features of this driver. This also eliminates the need to
-> check for `quirks->num_zones > 0` inside alienfx_probe().
+> This single instance it is indeed correct.
+> In all other five it's broken.
 > 
-> Only one WMI driver is registered on module initialization to prevent
-> registering a duplicate platform device.
+>> Just fix the other allocs to be kzalloc with the correct length?
 > 
-> Additionally, create_thermal_profile() now takes wmi_device * instead of
-> platform_device *.
+> If you prefer that, sure I can change it.
+> 
+> Personally I like the helper much better. One does not have to look at a
+> dense block of code to see what the actual intention is.
+> Assuming the location in cs_dsp_ctl_parse_max_v1_name() was fixed when
+> some breakage was observed, with a helper it would have been fixed for
+> all locations and not crept into upstream code.
+> 
+> 
+> Thomas
 
-...
+Actually I try to avoid helpers in tests. The trouble is that the
+function name _sounds_ like they do what you want, but you have to go
+and look at the helper to see what it _really_ does. More helpers means
+it's more difficult to review whether the test case does what it should
+do. I went through this early on where I had a lot more helpers for all
+that similar code in the test cases, and I found that I had test cases
+that were wrong but that was difficult to see because the test procedure
+was hidden across a lot of helper functions.
 
-> +static int alienware_alienfx_setup(struct alienfx_platdata *pdata)
-> +{
-> +	struct device *dev = &pdata->wdev->dev;
-> +	struct platform_device *pdev;
->  	int ret;
->  
-> +	pdev = platform_device_register_data(NULL, "alienware-wmi",
-> +					     PLATFORM_DEVID_NONE, pdata,
-> +					     sizeof(*pdata));
-> +	if (IS_ERR(pdev))
-> +		return PTR_ERR(pdev);
-> +
-> +	dev_set_drvdata(dev, pdev);
-> +	ret = devm_add_action_or_reset(dev, alienware_alienfx_remove, pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-
-	return devm_add_action_or_reset(...);
-
-> +}
-
-...
-
-> +static const struct wmi_device_id alienware_legacy_device_id_table[] = {
-> +	{ LEGACY_CONTROL_GUID, NULL },
-
-Drop that ' , NULL' part, it makes an additional burden if the type of the
-driver_data is ever changed.
-
-> +	{ },
-
-No comma in the terminator entries.
-
-> +};
-
-...
-
-> +static const struct wmi_device_id alienware_wmax_device_id_table[] = {
-> +	{ WMAX_CONTROL_GUID, NULL },
-> +	{ },
-> +};
-
-Ditto.
-
-...
-
-> +static int __init alienware_wmax_wmi_init(void)
-> +{
-> +	return wmi_driver_register(&alienware_wmax_wmi_driver);
-> +}
-> +
-> +static void __exit alienware_wmax_wmi_exit(void)
-> +{
-> +	wmi_driver_unregister(&alienware_wmax_wmi_driver);
-> +}
-
-I believe we have module_wmi_driver() which can be used after the split
-(haven't checked those patches yet).
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+For these strings there are some cases where it's important for the
+string to NOT have a NULL terminator in the firmware file so I'm a bit
+concerned that it was intended to create a string without a terminator
+and the bug is failure to handle this. But I'm really busy right now
+with other things so haven't got much time to look at this, If you
+and Mark want to take this patch to prevent the string overruns I'll
+come back when I have time and do a follow-up patch if I think the
+test framework should handle the non-terminated strings.
