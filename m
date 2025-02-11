@@ -1,28 +1,28 @@
-Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [185.125.25.9])
+Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CDA24C67A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A34F24C66D
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739282601; cv=none; b=QQkrLiG0eiu5HhatO3PEBrUos1M1PTA2REonfI6pnEIWahYsplipmCy0ABG4mhbgXhKW7Ox+nwvCp9tELYNxUty9LfOjA2UxVcYEwtN5YA0svN9kOBV1AxzSe1GzzByCiTj0P+Ftf9OlevdzvxSeLziQ3nyZSgVk5YJRYejdV6w=
+	t=1739282602; cv=none; b=ErAGWWw2lXXpV/QhLTXyvuy1xXEGMfcDVZQlCVsyTjfm8MTcEoPd07rQ8sTLKcew4xUzeiSdAwTVCF0vvkfWsRcQ78g0NGcrbdr6fyIIuLGH+nXGFvajJNRMbqUekpfCs9+hJ+1iLE5bsWdyeVquEDLq39SS/TbLSutd1zpa950=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739282601; c=relaxed/simple;
-	bh=BlYp5T7rHQ9tm+2AZREmSqkNH7doQoIqX4UDI5fOvV8=;
+	s=arc-20240116; t=1739282602; c=relaxed/simple;
+	bh=38SzZjtaSSJ8VTC/qk48nzlF2mAAeFz1rRcmoBtR5AE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JwqEAYKOfRA60KSHmsvL7ogNUugcAyIe+ijGY1d1DwM2hJXZwR8H4UBMmyofqvdaLFOMpIPliXDNTnW+mvBDmdgAf1uuhldNrg4mzncj4veucvT3x0iHQBdaPGpxZ6dtRGgY+GBBGJxduoR8pY5EQysTXOyps20mMNV6epG27fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=185.125.25.9
+	 In-Reply-To:To:Cc; b=ZhB0ZKTgV1wbU/ldGuzst4xTCzaf6DtjhTMuVkOwmTlZpYI2XUiUfvijMOjktcL6bvFuIZjde2ax/bhoNmMXwbDyzv3fbslH+3C/7Xr7hQ+aawtsou/RoyLkK20AbtvUP8boq1Te4nHhYFSkSCUxUxC3zUHpPWB8cdzyg4j9Mng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:1])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YsjpF3Gf0z9W7;
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YsjpG45V0zChv;
+	Tue, 11 Feb 2025 15:03:18 +0100 (CET)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4YsjpF3VQ1zTLG;
 	Tue, 11 Feb 2025 15:03:17 +0100 (CET)
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4YsjpD1NkhzTvn;
-	Tue, 11 Feb 2025 15:03:16 +0100 (CET)
 From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Tue, 11 Feb 2025 15:02:51 +0100
-Subject: [PATCH v6 2/4] arm64: dts: rockchip: add overlay test for Edgeble
- NCM6A/NCM6B
+Date: Tue, 11 Feb 2025 15:02:52 +0100
+Subject: [PATCH v6 3/4] arm64: dts: rockchip: add overlay tests for Rock 5B
+ PCIe overlays
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,7 +31,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250211-pre-ict-jaguar-v6-2-4484b0f88cfc@cherry.de>
+Message-Id: <20250211-pre-ict-jaguar-v6-3-4484b0f88cfc@cherry.de>
 References: <20250211-pre-ict-jaguar-v6-0-4484b0f88cfc@cherry.de>
 In-Reply-To: <20250211-pre-ict-jaguar-v6-0-4484b0f88cfc@cherry.de>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -48,19 +48,19 @@ X-Infomaniak-Routing: alpha
 
 From: Quentin Schulz <quentin.schulz@cherry.de>
 
-The Edgeble NCM6A/NCM6B can have WiFi modules connected and this is
-handled via an overlay (commit 951d6aaa37fe ("arm64: dts: rockchip: Add
-Edgeble NCM6A WiFi6 Overlay")).
+According to commit 40658534756f ("arm64: dts: rockchip: Add rock5b
+overlays for PCIe endpoint mode"), Rock 5B can operate in PCIe endpoint
+mode. For that to work, the rk3588-rock-5b-pcie-ep.dtbo overlay needs to
+be applied on Rock 5B base Device Tree. If that Rock 5B is connected to
+another Rock 5B, the latter needs to apply the
+rk3588-rock-5b-pcie-srns.dtbo overlay.
 
-Despite the name of the overlay, it applies to both NCM6A and NCM6B[1].
-
-In order to make sure the overlay is still valid in the future, let's
-add a validation test by applying the overlay on top of the main bases
+In order to make sure the overlays are still valid in the future, let's
+add a validation test by applying the overlays on top of the main base
 at build time.
 
-[1] https://lore.kernel.org/linux-rockchip/CA+VMnFyom=2BmJ_nt-At6hTQP0v+Auaw-DkCVbT9mjndMmLKtQ@mail.gmail.com/
-
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
 Reviewed-by: Dragan Simic <dsimic@manjaro.org>
 Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
 ---
@@ -68,21 +68,21 @@ Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
  1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 55fe706612d3ec07c2d9df9e4cd1e4cc54cc1c44..1406d9df57f8ce589217730f836b4e222b1e0d26 100644
+index 1406d9df57f8ce589217730f836b4e222b1e0d26..2cec67c00114b16ca55c12fa8f757a015c4602ad 100644
 --- a/arch/arm64/boot/dts/rockchip/Makefile
 +++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -192,3 +192,11 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-vz-2-uhd.dtb
- rk3568-wolfvision-pf5-vz-2-uhd-dtbs := rk3568-wolfvision-pf5.dtb \
- 	rk3568-wolfvision-pf5-display-vz.dtbo \
- 	rk3568-wolfvision-pf5-io-expander.dtbo
+@@ -200,3 +200,11 @@ rk3588-edgeble-neu6a-wifi-dtbs := rk3588-edgeble-neu6a-io.dtb \
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-edgeble-neu6b-wifi.dtb
+ rk3588-edgeble-neu6b-wifi-dtbs := rk3588-edgeble-neu6b-io.dtb \
+ 	rk3588-edgeble-neu6a-wifi.dtbo
 +
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-edgeble-neu6a-wifi.dtb
-+rk3588-edgeble-neu6a-wifi-dtbs := rk3588-edgeble-neu6a-io.dtb \
-+	rk3588-edgeble-neu6a-wifi.dtbo
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b-pcie-ep.dtb
++rk3588-rock-5b-pcie-ep-dtbs := rk3588-rock-5b.dtb \
++	rk3588-rock-5b-pcie-ep.dtbo
 +
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-edgeble-neu6b-wifi.dtb
-+rk3588-edgeble-neu6b-wifi-dtbs := rk3588-edgeble-neu6b-io.dtb \
-+	rk3588-edgeble-neu6a-wifi.dtbo
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b-pcie-srns.dtb
++rk3588-rock-5b-pcie-srns-dtbs := rk3588-rock-5b.dtb \
++	rk3588-rock-5b-pcie-srns.dtbo
 
 -- 
 2.48.1
