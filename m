@@ -1,418 +1,282 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00230701.pphosted.com (mx0b-00230701.pphosted.com [148.163.158.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78C7635;
-	Tue, 11 Feb 2025 01:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739235726; cv=none; b=crhQiKQbtFkfNYd/Qg68KFxaKnbAiLcmwkeZ1RDL4IRGaOEGwQVAPoe1Dl55olk/8PURrdXdhm5pEpEhB3uV9f5Wr3QzUcU2WTlfaiuQs2N1c07JbvOHuHl86563or1PhWW9Y+blhmSXGqchTuMTe6d53PY1XFCPIeivR7UIm6k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739235726; c=relaxed/simple;
-	bh=JycsQGpmD29TxPWN55pQimRbTjchndTQXkCYtW+5ZZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ckcMbmPuiPRpWfQHaNtaU5RUZJCF6eb71IdtbfhDOgodd4y3BA/qJLjUgfuPQZb7dLX8JEW4CVkjmlLIKguFrIdeei1cwdAzNzOdQyOHCDky3MoLau15qVWQZVyNBh3EUpXhfUllZz+9PuJlAA5IFBMAIw7MD87H7LBOael1Bvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MfIOWhdQ; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9071C13DDD3;
+	Tue, 11 Feb 2025 01:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.158.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739235730; cv=fail; b=ar/qxS1IJipllvK1SoSY6yemuner/12pEjiplTqidX2EAS+rPMz6SvL1/p554nIWFuAqYSoj88o+psLPk9BtKXQFCffGrnpjIOSUQm5/CIc3kINhpCu/QvL+JWf4bwiaVkm3+Np1wma7tQaq4RjYbYowaALy10aUcBQ9PSwQG00=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739235730; c=relaxed/simple;
+	bh=fy4HhIZoE3JNGxl9t1BzQsnoWruENBTq9yp5C3kfHfs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=X+cApDjfmAOTQRn730ufrCyLfOMgGQwV03cU5O1p1R9Wr7spXSbA47bKw5byIWOcx8+fzurHColFnXuP0ky3Ok7UHbC3mAc3V+f5lNaHKt56VyiHqiU7fLA9CsoeFXp2BGDUf+mhj4o5GZcgYzYZoLfnyfVNln2tZeHhyRrNNGw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synopsys.com; spf=pass smtp.mailfrom=synopsys.com; dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=vcCP2/oB; dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=OcR7Z6H0; dkim=fail (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=nzBRkt3t reason="signature verification failed"; arc=fail smtp.client-ip=148.163.158.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synopsys.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=synopsys.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfIOWhdQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB48C4CED1;
-	Tue, 11 Feb 2025 01:02:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739235726;
-	bh=JycsQGpmD29TxPWN55pQimRbTjchndTQXkCYtW+5ZZA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MfIOWhdQL5UK9lasaTP9cMACPqvQquD++NXjtYXI6R+wWqaq34upkbzTxn/nfkatW
-	 6iQKwYlgZZkL6wj/kvbTSx48ZZoneeXPbqC7qb78Bx5Y2E/D5mpRq+B8bc3Q7jD+DM
-	 4N+jVKMQTJwOoMc7FUl54+SuABSOI8zR+YypdP50O+SUqnFNnANOGl+pW6Tju2OLLC
-	 xCZKY3GRodJVG/TYlcfpeqJ/UEb/gAfiMHN30jHpOXMrnKl4/KkU3zUCs2dR6h2MlU
-	 U/PK1K+EvUbpeNvSkg9SO6/seMcin/yRqXBPVxVr34HzquZTqdkPuSbax9pHak2K7B
-	 me9a0XUl2P+8g==
-Date: Mon, 10 Feb 2025 17:02:04 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v5 6/8] perf report: Add --latency flag
-Message-ID: <Z6qhjFs0YOMTzk9W@google.com>
-References: <cover.1738772628.git.dvyukov@google.com>
- <eb32b9b13856b0d508836b61b3e8377aef9163a3.1738772628.git.dvyukov@google.com>
- <Z6WBsruddcx0SFV5@google.com>
- <CACT4Y+afC5WfTMaKGtg760PS5oXkkurzAyHVyKr9TsPs9RU2DQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="vcCP2/oB";
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="OcR7Z6H0";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="nzBRkt3t"
+Received: from pps.filterd (m0098572.ppops.net [127.0.0.1])
+	by mx0b-00230701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AJ26oP001389;
+	Mon, 10 Feb 2025 16:23:50 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com; h=
+	cc:content-id:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	pfptdkimsnps; bh=fy4HhIZoE3JNGxl9t1BzQsnoWruENBTq9yp5C3kfHfs=; b=
+	vcCP2/oB9UENz3hcBq0HvQiGBG7woPk+kTkquWZQL+0L8I+eVXrG0eLgyNt3JVTj
+	SiZrSqUsRcEwK7Wxkg3PsaYNRfqMcxIuyroML7KIBeQpeqWT3q6EAAS7kJ7EayLX
+	ggFH2HTaAPiwKyrv6revJNjMSaZXiaHh6utM2DfP7ycBbZ+HqeRFAGJI6GlBQ8K2
+	bsfQ/YM9KX8EJnP8UnyU6+czYafyI+RroxqmqbtpY9qnK09qQyNAheARyJulZFKX
+	kQ91iOy7fR1C7jWgoQFYDIxj4DYjRPx/vX0uYenpOWjhjn6qDiHW8EhRnqA8nY1F
+	Xp0Oqp2o0/wCuEo0Prtiow==
+Received: from smtprelay-out1.synopsys.com (smtprelay-out1.synopsys.com [149.117.87.133])
+	by mx0b-00230701.pphosted.com (PPS) with ESMTPS id 44p6sjapnq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 16:23:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+	t=1739233429; bh=fy4HhIZoE3JNGxl9t1BzQsnoWruENBTq9yp5C3kfHfs=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=OcR7Z6H0G5puwy1ltgSmc6cfdc+N6nkUY7cPNnTFnltihJjWtZipC0vrnBPGbHAxg
+	 Vj8LNVyI6Mq6ypgTQlNzVhYP6Vs7VGkUxGd4zkh9Tg3ZAWPXz4iSJtdYKSqg7D4tKf
+	 dbdBsIksayoZ/fS9Qv4xImhFMfU6oXKfveRA3SbaEO8F1Orz15S7RCW1l285VBMMX3
+	 Jra1WeuAkhKBQ7gUKhYXP0QeV/oqe4+hdUyAz4wE2tGZ8qv2kJZXGAZkCb4R5uvQmx
+	 3pwIKXWoTmK0+0lCZhHc0PZ7o4BeGrZqjvib7QuIYC+INavOabdZ3F+m7K5KTCm36u
+	 VI4IkbVbR4i6w==
+Received: from mailhost.synopsys.com (badc-mailhost3.synopsys.com [10.192.0.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits)
+	 client-signature RSA-PSS (2048 bits))
+	(Client CN "mailhost.synopsys.com", Issuer "SNPSica2" (verified OK))
+	by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 423CD40105;
+	Tue, 11 Feb 2025 00:23:48 +0000 (UTC)
+Received: from o365relay-in.synopsys.com (sv2-o365relay1.synopsys.com [10.202.1.137])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(Client CN "o365relay-in.synopsys.com", Issuer "Entrust Certification Authority - L1K" (not verified))
+	by mailhost.synopsys.com (Postfix) with ESMTPS id 9E244A0085;
+	Tue, 11 Feb 2025 00:23:47 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+	dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.a=rsa-sha256 header.s=selector1 header.b=nzBRkt3t;
+	dkim-atps=neutral
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2172.outbound.protection.outlook.com [104.47.58.172])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256
+	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
+	(Client CN "mail.protection.outlook.com", Issuer "DigiCert Cloud Services CA-1" (verified OK))
+	by o365relay-in.synopsys.com (Postfix) with ESMTPS id EB6954048E;
+	Tue, 11 Feb 2025 00:23:46 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=K+YniJT+g92g4P4HOSOfuQGfgsYSZzCH0AXLbxYH03K0avxO7aE2Prlyulab+pX9+S523Y2Ra9LyusJoUbqNlpHuLHEuM2lVsQd9U+WehkmwQLWVxroZnlFdUJEwGpI4w/RUu1OWLtF0SZqm8oYHkh0IcG/6/yr3J46/2UJXfCO2JE8hQaB/uXfa5Vvv2SNr+8xvU6Df3+eOVjQJNychs9UdCxhE2kmT/iw/CRfelIbXr8kkvJG1TxKNjGBuaAH0sRd0lPnNqIsEClgykmrkVQkhWJu5i3WApHCPH1lEdSdL43h+kwmGqVSWtn0zXOz/Mx5C9+YqZSkbCvGEETR0sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fy4HhIZoE3JNGxl9t1BzQsnoWruENBTq9yp5C3kfHfs=;
+ b=wYn8/UH4aFTEnuvHew5B1Oxmds6JZaUNabQ/YarDtBN0lIOAGVvshykslDhhqN6ZV8Wn79l1EqjLKgUN5YgwMV9Lf+BdZ52B15l9Dmm8K+zKGwjiiI3OfbZ3ESXAxvo4yDX91wJ6gYs+8sS0oFW/U680qfzLXB0MS/XrrQ02hoNiS2trZcUZBwrDNOtAvTFurhWe1zf9195+S8uBIujbUl8ios9XFYw3mQUp/jpXy0AY9QVc9KyGRj5TpBnhWinjrvdbm1JbIYeatJyZJDJefn0ie3r7r4tuK9M9IOsQ/331N019gPdga4h/KBFS/ibP3dsYieQn+5gaJYFl1vNaAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fy4HhIZoE3JNGxl9t1BzQsnoWruENBTq9yp5C3kfHfs=;
+ b=nzBRkt3t+j/kix4jFtLgZ1O4czDvkvNVX9LzFyJrT0XpIqylhyWXJizrWCkcums0vvWN+611XAiEmWMKhoq//Cxf/NvvP/Zn16l7IGTJYfSR234uF0Lvrm1LGdq1z4Unb+qu20HZaFmHOfAicjDMPjAuqeiKqDjA1MS3gXCj0zM=
+Received: from LV2PR12MB5990.namprd12.prod.outlook.com (2603:10b6:408:170::16)
+ by DS7PR12MB6240.namprd12.prod.outlook.com (2603:10b6:8:94::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Tue, 11 Feb
+ 2025 00:23:43 +0000
+Received: from LV2PR12MB5990.namprd12.prod.outlook.com
+ ([fe80::3d09:f15f:d888:33a8]) by LV2PR12MB5990.namprd12.prod.outlook.com
+ ([fe80::3d09:f15f:d888:33a8%3]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
+ 00:23:43 +0000
+X-SNPS-Relay: synopsys.com
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Ferry Toth <fntoth@gmail.com>
+Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Avoid using reserved endpoints
+ on Intel Merrifield
+Thread-Topic: [PATCH v2 3/3] usb: dwc3: gadget: Avoid using reserved endpoints
+ on Intel Merrifield
+Thread-Index: AQHbdnAs0zybOBVA70GZZhi82A27hLNBSYUA
+Date: Tue, 11 Feb 2025 00:23:43 +0000
+Message-ID: <20250211002340.25miqmaafdc52g4q@synopsys.com>
+References: <20250203191524.3730346-1-andriy.shevchenko@linux.intel.com>
+ <20250203191524.3730346-4-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250203191524.3730346-4-andriy.shevchenko@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV2PR12MB5990:EE_|DS7PR12MB6240:EE_
+x-ms-office365-filtering-correlation-id: facbc635-e4c1-4cdc-f854-08dd4a3257bd
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?VTNmTGl3cUdSeWlPdTM0N1d2Z3V2OURwYlNFcWZydThpZHZyVDdoTUtDTEV6?=
+ =?utf-8?B?NDl4Zkt4TUVvdnFpUldkUHZWZ1RjWDEzaTB1SHBoaHpoMjdGZ0tyUDhsWmVz?=
+ =?utf-8?B?ZjNQWWlybEw4TEFRY3RNWlc0UFQ0Z0ZiRUdZaWVQZURpckt0cFZ5cTFEQS9D?=
+ =?utf-8?B?c3B3bjAwckZJSWVuT24vNHFkdTYzNDZPR3FUdmprcmR6QWxYTTVrUkdBdDlo?=
+ =?utf-8?B?WXFQSS9sM2hoWktua0cxSmREdTJPaTNZSmFad1ZJSElxczJZNXNBUEtvTjcx?=
+ =?utf-8?B?QzBvSzRKYkVLMWZLSlJSbXpGb1p1cE1yK1VYaThPSkQ0T2dsRUljR1V1eXVm?=
+ =?utf-8?B?cTdSOUgvUnN1UTFWL21hTGlackNqZVVkd2Z4U2wzNytKUEppK1JsVW9yd0ph?=
+ =?utf-8?B?ZkRQUTUrSEdGbzB0QWpBVlhGczZaZmdCVmJnaFRNVFFEZHhLQ1N6bmZ3dld3?=
+ =?utf-8?B?OEN2QXoxL1NBbmFINUpJRE8rTW01R25WRVpVV2lGbnFheS8wYUtvSEllbFlN?=
+ =?utf-8?B?RHQwSlVJdE9ac0ZQNXV5Zjg1VUNQSWlHRzFXc3B2VnZPVndLQkFxQlNyeWQy?=
+ =?utf-8?B?c3h0S293cXFCYWpMNmlCSXN1VWlXRGNZTzlxZzJUdHdSWWpadVU3TzBpODF6?=
+ =?utf-8?B?ZU4xdXJyMGE3a1RiSmhEU2ExV0tPUjZhRHZMYmpRdXlpcWJJYno5SmR5d012?=
+ =?utf-8?B?OUh1TWZzMUdSTFIzUXBjSFlhSmozeXg5ZkpFaktpaktWdkJLOCtuZWY2OFZB?=
+ =?utf-8?B?RlBMUjFnZjgrNDJMVmtlUFp6ZDJFUTdQMWVma1d5VkFIVXl6TWtDQWJJMndN?=
+ =?utf-8?B?cVJJNGsrTFd0V21ZblJ4Um4rblJXUEJHMEVRdU92MkRneWg4eWd1dlpOeEVT?=
+ =?utf-8?B?WFJRSUJqamNNNTQvNlhwUmJhNFFZT0xhUzZyM1JpQTl0Z3RMSktXRTR6Z1g5?=
+ =?utf-8?B?ZWtpWXpvRUpXQ2tkMjBOOVNRQkpPVXJnL0F3UHd5WWgrSUJBT3hjWW9oQ3M1?=
+ =?utf-8?B?MW4yWGdMalpiMWtOQ0JhU3plcXNFazVXS1dCYzRXcGptV1cwTFcrUzlrNk9J?=
+ =?utf-8?B?enl2TEs1ekZEODBXK3lWVkYxbnlEOFlhZFpEZVRPa2JRdjhsV2RqU21sa0l0?=
+ =?utf-8?B?akJiTElRbis5aXUzL3grelYvVmNVaUJaSVMvbzNmK1grajdFQ2tiWTA2ankx?=
+ =?utf-8?B?THJTaWNzVmpiaHFhMUp2eXdKRUhva0s2alk2cy9KNndJRlhJTTRjMHU5Ukdm?=
+ =?utf-8?B?bEFhQklCY29WM2w5azdFUkFNc2lOWU8rUzJVcU1OV09qU1lUZ3FxSjVVdm5N?=
+ =?utf-8?B?b3JjZEsrVHR1S0RlaExGYjM3UkJYb1RwakxOeTdJS3UxaysrNFpwUHdKeXdC?=
+ =?utf-8?B?S2J4THh2ek1SdUdaZ09va2hPdE9tdUdnTmQvaDN6ZkFVQ1gyZ0phZEdxbm9k?=
+ =?utf-8?B?MVNWWGNwUENvU2RJclBJY3ZDRG1jRHNicW1UUThkbis4U005Y20zWTJURnJq?=
+ =?utf-8?B?U0pkTFVGL2lJdjZWMVBRVi8yWVNhb09FU3VTRStqWlNRRzUrVFdBblhObEM3?=
+ =?utf-8?B?YmMxdUxWOWJaZTgxZmNuV1Qxb0luWXRuQkNzU0pMNDdocndYdzV3NHh5NkZE?=
+ =?utf-8?B?NmVOQThrWjczUlJlMTFVK05ZSkNRckViREQxazhoakRYcDBTRm16MFVaOWJ3?=
+ =?utf-8?B?czRwVkFXbGpqUzJ1Y2VaLzliM0dyNlFjNGM0RnFXWU5GaFhEaWpDRlRJaGc2?=
+ =?utf-8?B?QnZaZU5IcFp1S1V2RGRQWmNYdExhaXp2b2didzdSQ3hDTk1oaUxrZithTm1j?=
+ =?utf-8?B?bjI2M2NGR3gwd3JYS0NScHhVNUZwVEZaSlZoSnNFVHRCQm8zYWRRMXJHNDFv?=
+ =?utf-8?B?ZUhLWnBnY0tzd3J3TXRNc0p2L0taRFlRTUc1L0pabCtVQlFRSWtCajI5dkV6?=
+ =?utf-8?Q?xHZ3qGtIWQgWAGLJyC+e+R3lzSvwPCDJ?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?WFR3WVRwejg5bk5obmlYUFNubk1wK0ZqbTVoWkg5RHdabTBMVlZOaWQwZmg2?=
+ =?utf-8?B?bE93QURrVVZlSFdTY0tNR0MrVU83MytDZ2pEN1Y3V1hvbmVFYVlkYUhRdXpJ?=
+ =?utf-8?B?MTlZRFZNN0FOcXI0OHlBUENFN2lnTXJ6VlJhalpCc1Z6dUpYN0JrTmp2OU1X?=
+ =?utf-8?B?ZTFaUzY2dGw4SlRXd1pjaEtPaFpHc05kaEVtUGx5bFAxajJhY0hyVE02OVJp?=
+ =?utf-8?B?TTBjQ1MyWTVJbldVZmJXTU9HeGhCVVNVQkgwSU1GTE9LOHV2bEZSSmtXVTlk?=
+ =?utf-8?B?M3hXTWZ4cDB2cm0ybkgrTi9FanZOZVdPaGpqQklhTm9vQkFGSHdLZ2RnWW1w?=
+ =?utf-8?B?V0p2T1dkUWtJMSttYnhDTG5TVEVaRUgwejR1bi9saE53UUtIZno4M0JiT29H?=
+ =?utf-8?B?dVp0aFRGUXhsK1hISnVjVU9YZnRjOWQwTnVKQ3ZDKzJxeVphRjRUTDYrdUZO?=
+ =?utf-8?B?SUF1Y1Z2WjB2akxGcXRHa3NIbHRwWmw1YzJqblhkcEF0Kzl3alMvWmwyRWpZ?=
+ =?utf-8?B?M05rTVppZVl0cGlCb2hMeXN5c1BpelJqNHN4U0J3TXorWWwveG4zaFJlY2RO?=
+ =?utf-8?B?ZVRuOUE1NndhQno4Y2ZDSkh3ZDVSclRHdHpKaTR1WnMvdFl6T2RzczNPT3R5?=
+ =?utf-8?B?UEZOVW1ydUx5V1BmOEs0bUlpaWt1clRzQWFpRE9hTmREMmxHbzhyTHc5ZVlv?=
+ =?utf-8?B?blFoMGR2VEYrbDVSQ0d3MXFETzJ6dndzVUszQXdjeWVKbFlVVmk3TVhaUzVq?=
+ =?utf-8?B?NlhMVE9BSk5lbFUwNlF0MENUNGNZN3NOY3p0Mk9IKzlqMkQyTnhyWHI5alRk?=
+ =?utf-8?B?bVZrSytUZjROditHZFlyUXZ6VW8rL0tkeEV0T3d1UkV1WkR5Q2tucHBmZlA4?=
+ =?utf-8?B?RmRiVTRobzNGMUpKb2FrOFpScStFWWpKalQzWkh6cjRMTThZcFMwQ2pHTXEv?=
+ =?utf-8?B?MmQ3YlJZWG9hbkZNR0oweGhtdEExcWNlNGtNbGFxTG1DZVdienNZWlZhY29M?=
+ =?utf-8?B?V1F2c3FTQ1poOUFOOVNVaSs3NG55MTFCaWdaaG5wRm43dmovaGZ5Mis3dXFW?=
+ =?utf-8?B?V1BLUDROZTk3TGYyenJkdHlQRFZaY0FxenJWcWRISDZEai9XaVQrWWtNRnl4?=
+ =?utf-8?B?UlFURG5icnB5RStLVmdYTEEzMGhXblBOYUdlR0d4aTdzdThYUEg1UTRGQlYy?=
+ =?utf-8?B?Z3FabFdId0dZQmo0RXg2ZlV0TW92WDJYSFkwbWdTYUt4eW5tZENVU0tJRnRM?=
+ =?utf-8?B?Z00wOGhHR3lFMzhKL0dWaTNDQUpWclRkUjYvRStOai9sQUoySEV4SE4xdmQv?=
+ =?utf-8?B?blRlTXF4Y3dzVElrYXRzZldTRVpIZ01neDFiTXU5eW5hMFhEL3BNVjZSa2E1?=
+ =?utf-8?B?WVVqK0tEeWkwNHJnU2RMSVcrMFJPMTFHRzBrbGs0QVc0ZnVNSzVJY1NuMGgw?=
+ =?utf-8?B?M2RyTU56QkVhT2ppdGwyQWF1TWh4RGFJeG5LY0lqTHhVclVVYTIzU29nYk8y?=
+ =?utf-8?B?azVsRzQ5bjdLMWFDclEvRTBaT2lBbEppd0hlSVZHVnlxVm0xNWVhWDVuRHA3?=
+ =?utf-8?B?WlpOd2dvdmJMZS9KYW5Gd0U0aE5TVTVzVUJXL3JNNmRlUXcxRTQzUXBpdGxZ?=
+ =?utf-8?B?amswUU52dXpjMEZqVHFGRFJSUXJUbUV2M25KOTVMc2t1V2RGRjZCU2E5MWlw?=
+ =?utf-8?B?RjNrZSsxZThvZnF1REUzOGlOZWM2dVNYdERCNW5aYnp4YTFUQXFNQXF3am1Q?=
+ =?utf-8?B?c0RjclA2UGcvNlkvcUhpc1NWQVJEbXY0OWtEcktJZFUwYnZOK1A5RkZqeWRF?=
+ =?utf-8?B?THhyMjJCRVZ2aWdHRVdhSEZlemp0WkNjR1hTUm15alBjMmdlSVhkMnZNUXZZ?=
+ =?utf-8?B?RHZlcmN5TVlGSFJ1UGxrT3ZpQmtwOVZzY1ZkOXM4R2gvbTBrcGlqazhRTVlL?=
+ =?utf-8?B?bzB6N05nRGluRCtLTjIvOFB6QkhBSjFiNFpOVk9ZbkJsU29qcHRFQ2FucUgz?=
+ =?utf-8?B?bzZlaWJoalROeVdoMW5QQnRWMkRHS0M5dlFjbjhlcFhEek53US9yeHdWRGVh?=
+ =?utf-8?B?Um1oU2NCdDI0S2dBTmJ4TEMyZ1ptNysreWJyNDhsYWFsdDhIcG4vSHhGR1Jx?=
+ =?utf-8?Q?soYMGCQR/rVkDG8uvZC8gutAK?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D91A4AC46D2FAB40B72D1017ACDBA82E@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+afC5WfTMaKGtg760PS5oXkkurzAyHVyKr9TsPs9RU2DQ@mail.gmail.com>
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	BD+VZdlVoBvatBNgr99puX1WNTAu91NVUPIWdS7q7uznNl040COmOp8PzBermxAFoNfGAKVmY7hBzK6SXLfIeQiZyqiIOdisIR0r5Y/YzpF1F2JMk2AwlI/7MtvjPScEk/fJnuGSfMYpx6lBwTSfGQbV42mcvYLUvWaFtWZjk5HIWrd7Zt/VHMSsTszvfE7dNWO40en2HjA7rgWGsbeXBIYuB6ySn9J2xdg10zZ3J12nKYmOLHiRnceG/n+9HU1+izBjfDNg3IX9zuGxG3dcbXINegfZPj8DsBn3E7T65JwIzazIcXsM/7J79VBAxDXNMgB5viPZ7ck6dt4ovHllNDhmIJBm/Pre8Dssl6QJpKMkOV0idlfbqfHVUvhOEPOrrXPDMUDvOPzTRvKQw2G593UuIPog+iwo4O3efVQNIjemDpiRuA2mplYmxCfALDcQJV0A87Xr5SdXogrodak+/QA67qm/jUc8BSS29DKWauUKUDBiWeflgoIt/G9EGa6a8SM73yp5Op6z73NVPEv+NCLwmkdvLUaTL47pPuLh2UyTIsvACoiDQhd+s7RSsyAbP+Lf1YJPe0BhV6Pwe6wg6Y9T6HRSp1/YexmRmdqbDY2oEG2typcK97i3OXMRPigb6Vj5sLla0K+ZpJlbZuIwSQ==
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: facbc635-e4c1-4cdc-f854-08dd4a3257bd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2025 00:23:43.6788
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: U2LR9uLfkmqaTrf6wTnBWyQaaMRasXUoOIrMxRGQ/AMIjhE6bleRywGjlvaO35n4u5uRo6OmBgKgvkkBGmXATw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6240
+X-Authority-Analysis: v=2.4 cv=K87YHzWI c=1 sm=1 tr=0 ts=67aa9896 cx=c_pps a=t4gDRyhI9k+KZ5gXRQysFQ==:117 a=t4gDRyhI9k+KZ5gXRQysFQ==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=T2h4t0Lz3GQA:10 a=nEwiWwFL_bsA:10 a=qPHU084jO2kA:10 a=QyXUC8HyAAAA:8 a=jIQo8A4GAAAA:8 a=GgoY5xHB6-PSeDZeo3kA:9 a=QEXdDO2ut3YA:10 a=Lf5xNeLK5dgiOs8hzIjU:22
+X-Proofpoint-ORIG-GUID: Yuhsv5InbX8DKH7zafNyQgjzMHXGCir7
+X-Proofpoint-GUID: Yuhsv5InbX8DKH7zafNyQgjzMHXGCir7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_12,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_active_cloned_notspam policy=outbound_active_cloned score=0
+ clxscore=1015 mlxscore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ suspectscore=0 bulkscore=0 mlxlogscore=821 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502100180
 
-On Fri, Feb 07, 2025 at 08:23:58AM +0100, Dmitry Vyukov wrote:
-> On Fri, 7 Feb 2025 at 04:44, Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Wed, Feb 05, 2025 at 05:27:45PM +0100, Dmitry Vyukov wrote:
-> > > Add record/report --latency flag that allows to capture and show
-> > > latency-centric profiles rather than the default CPU-consumption-centric
-> > > profiles. For latency profiles record captures context switch events,
-> > > and report shows Latency as the first column.
-> > >
-> > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > Cc: Ian Rogers <irogers@google.com>
-> > > Cc: linux-perf-users@vger.kernel.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > >
-> > > ---
-> > > Changes in v5:
-> > >  - added description of --latency flag in Documentation flags
-> > > ---
-> > >  tools/perf/Documentation/perf-record.txt |  4 +++
-> > >  tools/perf/Documentation/perf-report.txt |  5 +++
-> > >  tools/perf/builtin-record.c              | 20 ++++++++++++
-> > >  tools/perf/builtin-report.c              | 32 +++++++++++++++---
-> > >  tools/perf/ui/hist.c                     | 41 +++++++++++++++++++-----
-> > >  tools/perf/util/hist.h                   |  1 +
-> > >  tools/perf/util/sort.c                   | 33 +++++++++++++++----
-> > >  tools/perf/util/sort.h                   |  2 +-
-> > >  tools/perf/util/symbol_conf.h            |  4 ++-
-> > >  9 files changed, 122 insertions(+), 20 deletions(-)
-> > >
-> > > diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> > > index 80686d590de24..c7fc1ba265e27 100644
-> > > --- a/tools/perf/Documentation/perf-record.txt
-> > > +++ b/tools/perf/Documentation/perf-record.txt
-> > > @@ -227,6 +227,10 @@ OPTIONS
-> > >       '--filter' exists, the new filter expression will be combined with
-> > >       them by '&&'.
-> > >
-> > > +--latency::
-> > > +     Enable data collection for latency profiling.
-> > > +     Use perf report --latency for latency-centric profile.
-> > > +
-> > >  -a::
-> > >  --all-cpus::
-> > >          System-wide collection from all CPUs (default if no target is specified).
-> > > diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-> > > index 87f8645194062..66794131aec48 100644
-> > > --- a/tools/perf/Documentation/perf-report.txt
-> > > +++ b/tools/perf/Documentation/perf-report.txt
-> > > @@ -68,6 +68,11 @@ OPTIONS
-> > >  --hide-unresolved::
-> > >          Only display entries resolved to a symbol.
-> > >
-> > > +--latency::
-> > > +        Show latency-centric profile rather than the default
-> > > +        CPU-consumption-centric profile
-> > > +        (requires perf record --latency flag).
-> > > +
-> > >  -s::
-> > >  --sort=::
-> > >       Sort histogram entries by given key(s) - multiple keys can be specified
-> > > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > > index 5db1aedf48df9..e219639ac401b 100644
-> > > --- a/tools/perf/builtin-record.c
-> > > +++ b/tools/perf/builtin-record.c
-> > > @@ -161,6 +161,7 @@ struct record {
-> > >       struct evlist           *sb_evlist;
-> > >       pthread_t               thread_id;
-> > >       int                     realtime_prio;
-> > > +     bool                    latency;
-> > >       bool                    switch_output_event_set;
-> > >       bool                    no_buildid;
-> > >       bool                    no_buildid_set;
-> > > @@ -3371,6 +3372,9 @@ static struct option __record_options[] = {
-> > >                    parse_events_option),
-> > >       OPT_CALLBACK(0, "filter", &record.evlist, "filter",
-> > >                    "event filter", parse_filter),
-> > > +     OPT_BOOLEAN(0, "latency", &record.latency,
-> > > +                 "Enable data collection for latency profiling.\n"
-> > > +                 "\t\t\t  Use perf report --latency for latency-centric profile."),
-> > >       OPT_CALLBACK_NOOPT(0, "exclude-perf", &record.evlist,
-> > >                          NULL, "don't record events from perf itself",
-> > >                          exclude_perf),
-> > > @@ -4017,6 +4021,22 @@ int cmd_record(int argc, const char **argv)
-> > >
-> > >       }
-> > >
-> > > +     if (record.latency) {
-> > > +             /*
-> > > +              * There is no fundamental reason why latency profiling
-> > > +              * can't work for system-wide mode, but exact semantics
-> > > +              * and details are to be defined.
-> > > +              * See the following thread for details:
-> > > +              * https://lore.kernel.org/all/Z4XDJyvjiie3howF@google.com/
-> > > +              */
-> > > +             if (record.opts.target.system_wide) {
-> > > +                     pr_err("Failed: latency profiling is not supported with system-wide collection.\n");
-> > > +                     err = -EINVAL;
-> > > +                     goto out_opts;
-> > > +             }
-> > > +             record.opts.record_switch_events = true;
-> > > +     }
-> > > +
-> > >       if (rec->buildid_mmap) {
-> > >               if (!perf_can_record_build_id()) {
-> > >                       pr_err("Failed: no support to record build id in mmap events, update your kernel.\n");
-> > > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> > > index 2a19abdc869a1..69de6dbefecfa 100644
-> > > --- a/tools/perf/builtin-report.c
-> > > +++ b/tools/perf/builtin-report.c
-> > > @@ -112,6 +112,8 @@ struct report {
-> > >       u64                     nr_entries;
-> > >       u64                     queue_size;
-> > >       u64                     total_cycles;
-> > > +     u64                     total_samples;
-> > > +     u64                     singlethreaded_samples;
-> > >       int                     socket_filter;
-> > >       DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
-> > >       struct branch_type_stat brtype_stat;
-> > > @@ -331,6 +333,10 @@ static int process_sample_event(const struct perf_tool *tool,
-> > >                                    &rep->total_cycles, evsel);
-> > >       }
-> > >
-> > > +     rep->total_samples++;
-> > > +     if (al.parallelism == 1)
-> > > +             rep->singlethreaded_samples++;
-> > > +
-> > >       ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
-> > >       if (ret < 0)
-> > >               pr_debug("problem adding hist entry, skipping event\n");
-> > > @@ -1079,6 +1085,11 @@ static int __cmd_report(struct report *rep)
-> > >               return ret;
-> > >       }
-> > >
-> > > +     /* Don't show Latency column for non-parallel profiles by default. */
-> > > +     if (rep->singlethreaded_samples * 100 / rep->total_samples >= 99 &&
-> > > +                     !symbol_conf.prefer_latency)
-> > > +             perf_hpp__cancel_latency();
-> > > +
-> > >       evlist__check_mem_load_aux(session->evlist);
-> > >
-> > >       if (rep->stats_mode)
-> > > @@ -1468,6 +1479,10 @@ int cmd_report(int argc, const char **argv)
-> > >                   "Disable raw trace ordering"),
-> > >       OPT_BOOLEAN(0, "skip-empty", &report.skip_empty,
-> > >                   "Do not display empty (or dummy) events in the output"),
-> > > +     OPT_BOOLEAN(0, "latency", &symbol_conf.prefer_latency,
-> > > +                 "Show latency-centric profile rather than the default\n"
-> > > +                 "\t\t\t  CPU-consumption-centric profile\n"
-> > > +                 "\t\t\t  (requires perf record --latency flag)."),
-> > >       OPT_END()
-> > >       };
-> > >       struct perf_data data = {
-> > > @@ -1722,16 +1737,25 @@ int cmd_report(int argc, const char **argv)
-> > >               symbol_conf.annotate_data_sample = true;
-> > >       }
-> > >
-> > > +     symbol_conf.enable_latency = true;
-> > >       if (report.disable_order || !perf_session__has_switch_events(session)) {
-> > >               if (symbol_conf.parallelism_list_str ||
-> > > -                             (sort_order && strstr(sort_order, "parallelism")) ||
-> > > -                             (field_order && strstr(field_order, "parallelism"))) {
-> > > +                     symbol_conf.prefer_latency ||
-> > > +                     (sort_order && (strstr(sort_order, "latency") ||
-> > > +                             strstr(sort_order, "parallelism"))) ||
-> > > +                     (field_order && (strstr(field_order, "latency") ||
-> > > +                             strstr(field_order, "parallelism")))) {
-> > >                       if (report.disable_order)
-> > > -                             ui__error("Use of parallelism is incompatible with --disable-order.\n");
-> > > +                             ui__error("Use of latency profile or parallelism is incompatible with --disable-order.\n");
-> > >                       else
-> > > -                             ui__error("Use of parallelism requires --switch-events during record.\n");
-> > > +                             ui__error("Use of latency profile or parallelism requires --latency flag during record.\n");
-> > >                       return -1;
-> > >               }
-> > > +             /*
-> > > +              * If user did not ask for anything related to
-> > > +              * latency/parallelism explicitly, just don't show it.
-> > > +              */
-> > > +             symbol_conf.enable_latency = false;
-> > >       }
-> > >
-> > >       if (sort_order && strstr(sort_order, "ipc")) {
-> > > diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-> > > index 6de6309595f9e..b453f8eb579cc 100644
-> > > --- a/tools/perf/ui/hist.c
-> > > +++ b/tools/perf/ui/hist.c
-> > > @@ -632,27 +632,36 @@ void perf_hpp__init(void)
-> > >               return;
-> > >
-> > >       if (symbol_conf.cumulate_callchain) {
-> > > -             hpp_dimension__add_output(PERF_HPP__OVERHEAD_ACC);
-> > > +             /* Use idempotent addition to avoid more complex logic. */
-> > > +             if (symbol_conf.prefer_latency)
-> > > +                     hpp_dimension__add_output(PERF_HPP__LATENCY_ACC, true);
-> > > +             hpp_dimension__add_output(PERF_HPP__OVERHEAD_ACC, true);
-> > > +             if (symbol_conf.enable_latency)
-> > > +                     hpp_dimension__add_output(PERF_HPP__LATENCY_ACC, true);
-> > >               perf_hpp__format[PERF_HPP__OVERHEAD].name = "Self";
-> > >       }
-> > >
-> > > -     hpp_dimension__add_output(PERF_HPP__OVERHEAD);
-> > > +     if (symbol_conf.prefer_latency)
-> > > +             hpp_dimension__add_output(PERF_HPP__LATENCY, true);
-> > > +     hpp_dimension__add_output(PERF_HPP__OVERHEAD, true);
-> > > +     if (symbol_conf.enable_latency)
-> > > +             hpp_dimension__add_output(PERF_HPP__LATENCY, true);
-> > >
-> > >       if (symbol_conf.show_cpu_utilization) {
-> > > -             hpp_dimension__add_output(PERF_HPP__OVERHEAD_SYS);
-> > > -             hpp_dimension__add_output(PERF_HPP__OVERHEAD_US);
-> > > +             hpp_dimension__add_output(PERF_HPP__OVERHEAD_SYS, false);
-> > > +             hpp_dimension__add_output(PERF_HPP__OVERHEAD_US, false);
-> > >
-> > >               if (perf_guest) {
-> > > -                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_SYS);
-> > > -                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_US);
-> > > +                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_SYS, false);
-> > > +                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_US, false);
-> > >               }
-> > >       }
-> > >
-> > >       if (symbol_conf.show_nr_samples)
-> > > -             hpp_dimension__add_output(PERF_HPP__SAMPLES);
-> > > +             hpp_dimension__add_output(PERF_HPP__SAMPLES, false);
-> > >
-> > >       if (symbol_conf.show_total_period)
-> > > -             hpp_dimension__add_output(PERF_HPP__PERIOD);
-> > > +             hpp_dimension__add_output(PERF_HPP__PERIOD, false);
-> > >  }
-> > >
-> > >  void perf_hpp_list__column_register(struct perf_hpp_list *list,
-> > > @@ -701,6 +710,22 @@ void perf_hpp__cancel_cumulate(void)
-> > >       }
-> > >  }
-> > >
-> > > +void perf_hpp__cancel_latency(void)
-> > > +{
-> > > +     struct perf_hpp_fmt *fmt, *lat, *acc, *tmp;
-> > > +
-> > > +     if (is_strict_order(field_order) || is_strict_order(sort_order))
-> > > +             return;
-> > > +
-> > > +     lat = &perf_hpp__format[PERF_HPP__LATENCY];
-> > > +     acc = &perf_hpp__format[PERF_HPP__LATENCY_ACC];
-> > > +
-> > > +     perf_hpp_list__for_each_format_safe(&perf_hpp_list, fmt, tmp) {
-> > > +             if (fmt_equal(lat, fmt) || fmt_equal(acc, fmt))
-> > > +                     perf_hpp__column_unregister(fmt);
-> > > +     }
-> > > +}
-> > > +
-> > >  void perf_hpp__setup_output_field(struct perf_hpp_list *list)
-> > >  {
-> > >       struct perf_hpp_fmt *fmt;
-> > > diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> > > index 91159f16c60b2..29d4c7a3d1747 100644
-> > > --- a/tools/perf/util/hist.h
-> > > +++ b/tools/perf/util/hist.h
-> > > @@ -582,6 +582,7 @@ enum {
-> > >
-> > >  void perf_hpp__init(void);
-> > >  void perf_hpp__cancel_cumulate(void);
-> > > +void perf_hpp__cancel_latency(void);
-> > >  void perf_hpp__setup_output_field(struct perf_hpp_list *list);
-> > >  void perf_hpp__reset_output_field(struct perf_hpp_list *list);
-> > >  void perf_hpp__append_sort_keys(struct perf_hpp_list *list);
-> > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> > > index bc4c3acfe7552..2b6023de7a53a 100644
-> > > --- a/tools/perf/util/sort.c
-> > > +++ b/tools/perf/util/sort.c
-> > > @@ -2622,6 +2622,7 @@ struct hpp_dimension {
-> > >       const char              *name;
-> > >       struct perf_hpp_fmt     *fmt;
-> > >       int                     taken;
-> > > +     int                     was_taken;
-> > >  };
-> > >
-> > >  #define DIM(d, n) { .name = n, .fmt = &perf_hpp__format[d], }
-> > > @@ -3513,6 +3514,7 @@ static int __hpp_dimension__add(struct hpp_dimension *hd,
-> > >               return -1;
-> > >
-> > >       hd->taken = 1;
-> > > +     hd->was_taken = 1;
-> > >       perf_hpp_list__register_sort_field(list, fmt);
-> > >       return 0;
-> > >  }
-> > > @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
-> > >       return 0;
-> > >  }
-> > >
-> > > -int hpp_dimension__add_output(unsigned col)
-> > > +int hpp_dimension__add_output(unsigned col, bool implicit)
-> > >  {
-> > > +     struct hpp_dimension *hd;
-> > > +
-> > >       BUG_ON(col >= PERF_HPP__MAX_INDEX);
-> > > -     return __hpp_dimension__add_output(&perf_hpp_list, &hpp_sort_dimensions[col]);
-> > > +     hd = &hpp_sort_dimensions[col];
-> > > +     if (implicit && !hd->was_taken)
-> > > +             return 0;
-> >
-> > I don't think you need these implicit and was_taken things.
-> > Just removing from the sort list when it's unregistered seems to work.
-> >
-> > ---8<---
-> > @@ -685,6 +685,7 @@ void perf_hpp_list__prepend_sort_field(struct perf_hpp_list *list,
-> >  static void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
-> >  {
-> >         list_del_init(&format->list);
-> > +       list_del_init(&format->sort_list);
-> >         fmt_free(format);
-> >  }
-> >
-> > ---8<---
-> 
-> It merely suppresses the warning, but does not work the same way. See
-> this for details:
-> https://lore.kernel.org/all/CACT4Y+ZREdDL7a+DMKGFGae1ZjX1C8uNRwCGF0c8iUJtTTq0Lw@mail.gmail.com/
-
-But I think it's better to pass --latency option rather than adding it
-to -s option.  If you really want to have specific output fields, then
-please use -F latency,sym instead.
-
-Also I've realized that it should add one sort key in setup_overhead()
-to support hierarchy mode properly.  Something like this?
-
-Thanks,
-Namhyung
-
-
----8<---
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 2b6023de7a53ae2e..329c2e9bbc69a725 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -3817,22 +3817,15 @@ static char *setup_overhead(char *keys)
- 		return keys;
- 
- 	if (symbol_conf.prefer_latency) {
--		keys = prefix_if_not_in("overhead", keys);
--		keys = prefix_if_not_in("latency", keys);
--		if (symbol_conf.cumulate_callchain) {
--			keys = prefix_if_not_in("overhead_children", keys);
-+		if (symbol_conf.cumulate_callchain)
- 			keys = prefix_if_not_in("latency_children", keys);
--		}
--	} else if (!keys || (!strstr(keys, "overhead") &&
--			!strstr(keys, "latency"))) {
--		if (symbol_conf.enable_latency)
-+		else
- 			keys = prefix_if_not_in("latency", keys);
--		keys = prefix_if_not_in("overhead", keys);
--		if (symbol_conf.cumulate_callchain) {
--			if (symbol_conf.enable_latency)
--				keys = prefix_if_not_in("latency_children", keys);
-+	} else {
-+		if (symbol_conf.cumulate_callchain)
- 			keys = prefix_if_not_in("overhead_children", keys);
--		}
-+		else
-+			keys = prefix_if_not_in("overhead", keys);
- 	}
- 
- 	return keys;
----8<---
-
+T24gTW9uLCBGZWIgMDMsIDIwMjUsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4gSW50ZWwgTWVy
+cmlmaWVsZCBTb0MgdXNlcyB0aGVzZSBlbmRwb2ludHMgZm9yIHRyYWNpbmcgYW5kIHRoZXkgY2Fu
+bm90DQo+IGJlIHJlLWFsbG9jYXRlZCBpZiBiZWluZyB1c2VkIGJlY2F1c2UgdGhlIHNpZGUgYmFu
+ZCBmbG93IGNvbnRyb2wgc2lnbmFscw0KPiBhcmUgaGFyZCB3aXJlZCB0byBjZXJ0YWluIGVuZHBv
+aW50czoNCj4gDQo+IOKAoiAxIEhpZ2ggQlcgQnVsayBJTiAoSU4jMSkgKFJUSVQpDQo+IOKAoiAx
+IDFLQiBCVyBCdWxrIElOIChJTiM4KSArIDEgMUtCIEJXIEJ1bGsgT1VUIChSdW4gQ29udHJvbCkg
+KE9VVCM4KQ0KPiANCj4gSW4gZGV2aWNlIG1vZGUsIHNpbmNlIFJUSVQgKEVQIzEpIGFuZCBFWEkv
+UnVuQ29udHJvbCAoRVAjOCkgdXNlcw0KPiBFeHRlcm5hbCBCdWZmZXIgQ29udHJvbCAoRUJDKSBt
+b2RlLCB0aGVzZSBlbmRwb2ludHMgYXJlIHRvIGJlIG1hcHBlZCB0bw0KPiBFQkMgbW9kZSAodG8g
+YmUgZG9uZSBieSBFWEkgdGFyZ2V0IGRyaXZlcikuIEFkZGl0aW9uYWxseSBUUkIgZm9yIFJUSVQN
+Cj4gYW5kIEVYSSBhcmUgbWFpbnRhaW5lZCBpbiBTVE0gKFN5c3RlbSBUcmFjZSBNb2R1bGUpIHVu
+aXQgYW5kIHRoZSBFWEkNCj4gdGFyZ2V0IGRyaXZlciB3aWxsIGFzIHdlbGwgY29uZmlndXJlIHRo
+ZSBUUkIgbG9jYXRpb24gZm9yIEVQICMxIElODQo+IGFuZCBFUCM4IChJTiBhbmQgT1VUKS4gU2lu
+Y2UgU1RNL1BUSSBhbmQgRVhJIGhhcmR3YXJlIGJsb2NrcyBtYW5hZ2UNCj4gdGhlc2UgZW5kcG9p
+bnRzIGFuZCBpbnRlcmZhY2UgdG8gT1RHMyBjb250cm9sbGVyIHRocm91Z2ggRUJDIGludGVyZmFj
+ZSwNCj4gdGhlcmUgaXMgbm8gbmVlZCB0byBlbmFibGUgYW55IGV2ZW50cyAoc3VjaCBhcyBYZmVy
+Q29tcGxldGUgZXRjKQ0KPiBmb3IgdGhlc2UgZW5kIHBvaW50cy4NCj4gDQo+IFNpZ25lZC1vZmYt
+Ynk6IEFuZHkgU2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPg0K
+PiAtLS0NCj4gIGRyaXZlcnMvdXNiL2R3YzMvZHdjMy1wY2kuYyB8IDEwICsrKysrKysrKysNCj4g
+IDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy91c2IvZHdjMy9kd2MzLXBjaS5jIGIvZHJpdmVycy91c2IvZHdjMy9kd2MzLXBjaS5jDQo+
+IGluZGV4IDA1Mjg1MmY4MDE0Ni4uNTRhNGVlMmI5MGI3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJz
+L3VzYi9kd2MzL2R3YzMtcGNpLmMNCj4gKysrIGIvZHJpdmVycy91c2IvZHdjMy9kd2MzLXBjaS5j
+DQo+IEBAIC0xNDgsMTEgKzE0OCwyMSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHByb3BlcnR5X2Vu
+dHJ5IGR3YzNfcGNpX2ludGVsX2J5dF9wcm9wZXJ0aWVzW10gPSB7DQo+ICAJe30NCj4gIH07DQo+
+ICANCj4gKy8qDQo+ICsgKiBJbnRlbCBNZXJyaWZpZWxkIFNvQyB1c2VzIHRoZXNlIGVuZHBvaW50
+cyBmb3IgdHJhY2luZyBhbmQgdGhleSBjYW5ub3QNCj4gKyAqIGJlIHJlLWFsbG9jYXRlZCBpZiBi
+ZWluZyB1c2VkIGJlY2F1c2UgdGhlIHNpZGUgYmFuZCBmbG93IGNvbnRyb2wgc2lnbmFscw0KPiAr
+ICogYXJlIGhhcmQgd2lyZWQgdG8gY2VydGFpbiBlbmRwb2ludHM6DQo+ICsgKiAtIDEgSGlnaCBC
+VyBCdWxrIElOIChJTiMxKSAoUlRJVCkNCj4gKyAqIC0gMSAxS0IgQlcgQnVsayBJTiAoSU4jOCkg
+KyAxIDFLQiBCVyBCdWxrIE9VVCAoUnVuIENvbnRyb2wpIChPVVQjOCkNCj4gKyAqLw0KPiArc3Rh
+dGljIGNvbnN0IHU4IGR3YzNfcGNpX21yZmxkX3Jlc2VydmVkX2VuZHBvaW50c1tdID0geyAzLCAx
+NiwgMTcgfTsNCj4gKw0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBwcm9wZXJ0eV9lbnRyeSBkd2Mz
+X3BjaV9tcmZsZF9wcm9wZXJ0aWVzW10gPSB7DQo+ICAJUFJPUEVSVFlfRU5UUllfU1RSSU5HKCJk
+cl9tb2RlIiwgIm90ZyIpLA0KPiAgCVBST1BFUlRZX0VOVFJZX1NUUklORygibGludXgsZXh0Y29u
+LW5hbWUiLCAibXJmbGRfYmNvdmVfcHdyc3JjIiksDQo+ICAJUFJPUEVSVFlfRU5UUllfQk9PTCgi
+c25wcyxkaXNfdTNfc3VzcGh5X3F1aXJrIiksDQo+ICAJUFJPUEVSVFlfRU5UUllfQk9PTCgic25w
+cyxkaXNfdTJfc3VzcGh5X3F1aXJrIiksDQo+ICsJUFJPUEVSVFlfRU5UUllfVThfQVJSQVkoInNu
+cHMscmVzZXJ2ZWQtZW5kcG9pbnRzIiwgZHdjM19wY2lfbXJmbGRfcmVzZXJ2ZWRfZW5kcG9pbnRz
+KSwNCj4gIAlQUk9QRVJUWV9FTlRSWV9CT09MKCJzbnBzLHVzYjItZ2FkZ2V0LWxwbS1kaXNhYmxl
+IiksDQo+ICAJUFJPUEVSVFlfRU5UUllfQk9PTCgibGludXgsc3lzZGV2X2lzX3BhcmVudCIpLA0K
+PiAgCXt9DQo+IC0tIA0KPiAyLjQzLjAucmMxLjEzMzYuZzM2YjUyNTVhMDNhYw0KPiANCg0KQWNr
+ZWQtYnk6IFRoaW5oIE5ndXllbiA8VGhpbmguTmd1eWVuQHN5bm9wc3lzLmNvbT4NCg0KVGhhbmtz
+LA0KVGhpbmg=
