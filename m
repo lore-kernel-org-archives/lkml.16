@@ -1,252 +1,117 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE4F20B81B;
-	Tue, 11 Feb 2025 14:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB1922DFAB;
+	Tue, 11 Feb 2025 14:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739285739; cv=none; b=qgxiN3cBpZJEBvPn0f6/vWDsw29fo5hnJbGkPKRQl/7V70QpQ1ihwvILlq+snn29TwOFZleZwMSL/zoB3HD13osBxwp6Ew6oGJ3/GDj0lvGzT/H12jqSqbmpwrFctc17l7MLJYokqOyAC5PiZy3TVy+2bG2aKwZdIN7GadH6UHA=
+	t=1739285767; cv=none; b=RNbrlqvwdUFT9a/T3MvwUw6bVI6eDzJKr9S0tHI48I+yhiIOWk4iejWXwgifOSDJXm+p0hfcp0Ul/GFk3CDlTGTFm1eWjS81w8znkY/OfwXEHr6UslGqlAO4E3JCiZq54lfj+IU9DiH+/0PTTOj+mz4p0kt6ZbULlzbuJzntpaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739285739; c=relaxed/simple;
-	bh=h/Zbu4a6hdn41uOMV8xjMtWrg8vRskudWypMzSK1qB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P/q3gWq2k7w8GQgob2DICoDOOMc8n0gTyQlfSLmNQl1uLoX4Q4XPB4z9uHtVPt5J5c+Mycp7GHRXOkF1vHu7xqMMUCwTIi2UGSvP74W2P91HyHFzCFgUUD3kEbmYK+DrHTRFAEmZkgFWLF38sPJJKyKSWD5Iglb1LzKThrUfSXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=NAYLE5Vx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xTkGe36D; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=NTx2E53h; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ls00SH9c; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1739285767; c=relaxed/simple;
+	bh=JC1YWdVO+CG22HREpDaZLIkHq0qLwlTa4TUnggqwB+c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HyVrxE/C5SnovWA9NLdk5eh7ncWq6AaHcqdfbNHleEOIoU9K+TVFox4OSiIidLiMS/3TU0HXDQCuh/dCY/QSK38gsu6E7V6ROGw+fx7JA78JdlpAKXnjmhvBJjUOPlFUsZ8a03VNZ589qCdiQbH18WFpYuy63J2FchO16KW2fN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ps2f9zP+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NAYLE5Vx";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xTkGe36D";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NTx2E53h";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ls00SH9c"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7653C2032F;
-	Tue, 11 Feb 2025 14:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739284105; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v8qG30/4kybfxJlxH8HHSqXj3/zitvI8GARaJXT9ZyI=;
-	b=NAYLE5VxIc7KQ1jmJRwKzRjWjlOx3F9KZ3x5YQKqc4YTwpi5d/EHfrrHRJXBCY8tFHaKaJ
-	5YTbH4r2Z5YySeLtYa+YeW3T5RX+4PO8bjgfwF3fN75UyL5EVPeMjfriJuWnrAhNyoHafP
-	o+OoLScrG1o31Z2W/zZwiIZrTDgqFI0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739284105;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v8qG30/4kybfxJlxH8HHSqXj3/zitvI8GARaJXT9ZyI=;
-	b=xTkGe36DkfX4IWl38eSPP1WT5T10bYRpyZGcanEqnEIKjeubQ72FjsyIZNH1r5s7qpUH9T
-	JZ4FTdsjXAILPmAA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=NTx2E53h;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=ls00SH9c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739284104; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v8qG30/4kybfxJlxH8HHSqXj3/zitvI8GARaJXT9ZyI=;
-	b=NTx2E53hIGKfv9aPrN6NcluvA+CUbwgHWG/T2JCWOxnS3y8WEJREjD9dFKOUVaROgddvC9
-	YvxZlZyYWI3nAQfF7CBJuEkRv1mdkVCJNPF5dDCLTDLNudKgeddrifLBIy2EiHTjb57rtc
-	SvocKpDLiU06WBMniJYawoJ5Hnu9av8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739284104;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v8qG30/4kybfxJlxH8HHSqXj3/zitvI8GARaJXT9ZyI=;
-	b=ls00SH9c25Mi4+tbu/CQ3T4z2gec8JKuX9VTtPQlZvfWxT+2Ae/9gKHeeO+torjWalSBn3
-	LZ4XaHYXIAevVTBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6A09D13782;
-	Tue, 11 Feb 2025 14:28:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MRorGoheq2fXTgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 11 Feb 2025 14:28:24 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id E27A7A095C; Tue, 11 Feb 2025 15:28:19 +0100 (CET)
-Date: Tue, 11 Feb 2025 15:28:19 +0100
-From: Jan Kara <jack@suse.cz>
-To: libaokun@huaweicloud.com
-Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, 
-	jack@suse.cz, linux-kernel@vger.kernel.org, yi.zhang@huawei.com, 
-	yangerkun@huawei.com, Baokun Li <libaokun1@huawei.com>
-Subject: Re: [PATCH v2 4/7] ext4: add more ext4_emergency_state() checks
- around sb_rdonly()
-Message-ID: <c4qihdjztjo4gn6srmuy3nl5qctxbf4vcc7j44rrtxosrfhlvj@qxivndjxqyms>
-References: <20250122114130.229709-1-libaokun@huaweicloud.com>
- <20250122114130.229709-5-libaokun@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ps2f9zP+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92CF6C4CEDD;
+	Tue, 11 Feb 2025 14:56:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739285766;
+	bh=JC1YWdVO+CG22HREpDaZLIkHq0qLwlTa4TUnggqwB+c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ps2f9zP+T2PJhfnob7f+BrNRpT4bS9K05bV9oCQXbrpRUFSDUfHLICzGx+dJblIe0
+	 5W9ht9HoPYnZ/eJ9z8rqRLXNUpdB3RRqONG1MVvMUDGgi7UdTyDbbdeKP3QjN2CjgX
+	 Bg4OgVb+g92lR68YGO6kBnHCd7xrEwrSVXLyxYH8vGUC/uPh9hFOHcXQAEYLDHubJk
+	 uAUiyCzlG4Gtq0S4CLeUGqtdEtXkeOvg8HgQ9gpaifwyWVBmZiqtmOjn3CyQSJ7yhb
+	 Lw+Y2XTOZNz8w8sGW5BPNfpIRe4npDUkZz2oVOowarZlKIqS3rKfKjK0N1b3ohDjk7
+	 3oItsoIP++R3Q==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1thrgM-000000008T5-21oo;
+	Tue, 11 Feb 2025 15:56:14 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: "Chester A . Unal" <chester.a.unal@arinc9.com>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] USB: serial: option: drop MeiG Smart defines
+Date: Tue, 11 Feb 2025 15:55:47 +0100
+Message-ID: <20250211145547.32517-1-johan@kernel.org>
+X-Mailer: git-send-email 2.45.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250122114130.229709-5-libaokun@huaweicloud.com>
-X-Rspamd-Queue-Id: 7653C2032F
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim,suse.cz:email,huawei.com:email,huaweicloud.com:email,suse.com:email]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.01
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On Wed 22-01-25 19:41:27, libaokun@huaweicloud.com wrote:
-> From: Baokun Li <libaokun1@huawei.com>
-> 
-> Some functions check sb_rdonly() to make sure the file system isn't
-> modified after it's read-only. Since we also don't want the file system
-> modified if it's in an emergency state (shutdown or emergency_ro),
-> we're adding additional ext4_emergency_state() checks where sb_rdonly()
-> is checked.
-> 
-> Suggested-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Baokun Li <libaokun1@huawei.com>
-> Reviewed-by: Zhang Yi <yi.zhang@huawei.com>
+Several MeiG Smart modems apparently use the same product id, making the
+defines even less useful.
 
-Looks good. Feel free to add:
+Drop them in favour of using comments consistently to make the id table
+slightly less unwieldy.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@vger.kernel.org
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/usb/serial/option.c | 28 ++++++++--------------------
+ 1 file changed, 8 insertions(+), 20 deletions(-)
 
-								Honza
-
-> ---
->  fs/ext4/file.c  |  3 ++-
->  fs/ext4/ioctl.c |  2 +-
->  fs/ext4/super.c | 26 +++++++++++++++-----------
->  3 files changed, 18 insertions(+), 13 deletions(-)
-> 
-> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
-> index d0c21e6503c6..45fc6586d41b 100644
-> --- a/fs/ext4/file.c
-> +++ b/fs/ext4/file.c
-> @@ -844,7 +844,8 @@ static int ext4_sample_last_mounted(struct super_block *sb,
->  	if (likely(ext4_test_mount_flag(sb, EXT4_MF_MNTDIR_SAMPLED)))
->  		return 0;
->  
-> -	if (sb_rdonly(sb) || !sb_start_intwrite_trylock(sb))
-> +	if (ext4_emergency_state(sb) || sb_rdonly(sb) ||
-> +	    !sb_start_intwrite_trylock(sb))
->  		return 0;
->  
->  	ext4_set_mount_flag(sb, EXT4_MF_MNTDIR_SAMPLED);
-> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-> index 7b9ce71c1c81..0c5ce9c2cdfc 100644
-> --- a/fs/ext4/ioctl.c
-> +++ b/fs/ext4/ioctl.c
-> @@ -1705,7 +1705,7 @@ int ext4_update_overhead(struct super_block *sb, bool force)
->  {
->  	struct ext4_sb_info *sbi = EXT4_SB(sb);
->  
-> -	if (sb_rdonly(sb))
-> +	if (ext4_emergency_state(sb) || sb_rdonly(sb))
->  		return 0;
->  	if (!force &&
->  	    (sbi->s_overhead == 0 ||
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index 4b089a5b760a..d8116c9c2bd0 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -473,8 +473,9 @@ static void ext4_maybe_update_superblock(struct super_block *sb)
->  	__u64 lifetime_write_kbytes;
->  	__u64 diff_size;
->  
-> -	if (sb_rdonly(sb) || !(sb->s_flags & SB_ACTIVE) ||
-> -	    !journal || (journal->j_flags & JBD2_UNMOUNT))
-> +	if (ext4_emergency_state(sb) || sb_rdonly(sb) ||
-> +	    !(sb->s_flags & SB_ACTIVE) || !journal ||
-> +	    journal->j_flags & JBD2_UNMOUNT)
->  		return;
->  
->  	now = ktime_get_real_seconds();
-> @@ -765,7 +766,8 @@ static void update_super_work(struct work_struct *work)
->  	 * We use directly jbd2 functions here to avoid recursing back into
->  	 * ext4 error handling code during handling of previous errors.
->  	 */
-> -	if (!sb_rdonly(sbi->s_sb) && journal) {
-> +	if (!ext4_emergency_state(sbi->s_sb) &&
-> +	    !sb_rdonly(sbi->s_sb) && journal) {
->  		struct buffer_head *sbh = sbi->s_sbh;
->  		bool call_notify_err = false;
->  
-> @@ -1325,13 +1327,14 @@ static void ext4_put_super(struct super_block *sb)
->  	ext4_mb_release(sb);
->  	ext4_ext_release(sb);
->  
-> -	if (!sb_rdonly(sb) && !aborted) {
-> -		ext4_clear_feature_journal_needs_recovery(sb);
-> -		ext4_clear_feature_orphan_present(sb);
-> -		es->s_state = cpu_to_le16(sbi->s_mount_state);
-> -	}
-> -	if (!sb_rdonly(sb))
-> +	if (!ext4_emergency_state(sb) && !sb_rdonly(sb)) {
-> +		if (!aborted) {
-> +			ext4_clear_feature_journal_needs_recovery(sb);
-> +			ext4_clear_feature_orphan_present(sb);
-> +			es->s_state = cpu_to_le16(sbi->s_mount_state);
-> +		}
->  		ext4_commit_super(sb);
-> +	}
->  
->  	ext4_group_desc_free(sbi);
->  	ext4_flex_groups_free(sbi);
-> @@ -3699,7 +3702,8 @@ static int ext4_run_li_request(struct ext4_li_request *elr)
->  		if (group >= elr->lr_next_group) {
->  			ret = 1;
->  			if (elr->lr_first_not_zeroed != ngroups &&
-> -			    !sb_rdonly(sb) && test_opt(sb, INIT_INODE_TABLE)) {
-> +			    !ext4_emergency_state(sb) && !sb_rdonly(sb) &&
-> +			    test_opt(sb, INIT_INODE_TABLE)) {
->  				elr->lr_next_group = elr->lr_first_not_zeroed;
->  				elr->lr_mode = EXT4_LI_MODE_ITABLE;
->  				ret = 0;
-> @@ -4004,7 +4008,7 @@ int ext4_register_li_request(struct super_block *sb,
->  		goto out;
->  	}
->  
-> -	if (sb_rdonly(sb) ||
-> +	if (ext4_emergency_state(sb) || sb_rdonly(sb) ||
->  	    (test_opt(sb, NO_PREFETCH_BLOCK_BITMAPS) &&
->  	     (first_not_zeroed == ngroups || !test_opt(sb, INIT_INODE_TABLE))))
->  		goto out;
-> -- 
-> 2.39.2
-> 
+diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+index 887a1c687b52..ba8c0a4047de 100644
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -619,18 +619,6 @@ static void option_instat_callback(struct urb *urb);
+ /* Luat Air72*U series based on UNISOC UIS8910 uses UNISOC's vendor ID */
+ #define LUAT_PRODUCT_AIR720U			0x4e00
+ 
+-/* MeiG Smart Technology products */
+-#define MEIGSMART_VENDOR_ID			0x2dee
+-/*
+- * MeiG Smart SLM828, SRM815, and SRM825L use the same product ID. SLM828 is
+- * based on Qualcomm SDX12. SRM815 and SRM825L are based on Qualcomm 315.
+- */
+-#define MEIGSMART_PRODUCT_SRM825L		0x4d22
+-/* MeiG Smart SLM320 based on UNISOC UIS8910 */
+-#define MEIGSMART_PRODUCT_SLM320		0x4d41
+-/* MeiG Smart SLM770A based on ASR1803 */
+-#define MEIGSMART_PRODUCT_SLM770A		0x4d57
+-
+ /* Device flags */
+ 
+ /* Highest interface number which can be used with NCTRL() and RSVD() */
+@@ -2350,6 +2338,14 @@ static const struct usb_device_id option_ids[] = {
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0a05, 0xff) },			/* Fibocom FM650-CN (NCM mode) */
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0a06, 0xff) },			/* Fibocom FM650-CN (RNDIS mode) */
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0a07, 0xff) },			/* Fibocom FM650-CN (MBIM mode) */
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x2dee, 0x4d41, 0xff, 0, 0) },		/* MeiG Smart SLM320 */
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x2dee, 0x4d57, 0xff, 0, 0) },		/* MeiG Smart SLM770A */
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x2dee, 0x4d22, 0xff, 0, 0) },		/* MeiG Smart SRM815 */
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x2dee, 0x4d22, 0xff, 0x10, 0x02) },	/* MeiG Smart SLM828 */
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x2dee, 0x4d22, 0xff, 0x10, 0x03) },	/* MeiG Smart SLM828 */
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x2dee, 0x4d22, 0xff, 0xff, 0x30) },	/* MeiG Smart SRM815 and SRM825L */
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x2dee, 0x4d22, 0xff, 0xff, 0x40) },	/* MeiG Smart SRM825L */
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x2dee, 0x4d22, 0xff, 0xff, 0x60) },	/* MeiG Smart SRM825L */
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2df3, 0x9d03, 0xff) },			/* LongSung M5710 */
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1404, 0xff) },			/* GosunCn GM500 RNDIS */
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x305a, 0x1405, 0xff) },			/* GosunCn GM500 MBIM */
+@@ -2406,14 +2402,6 @@ static const struct usb_device_id option_ids[] = {
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9191, 0xff, 0, 0) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(UNISOC_VENDOR_ID, TOZED_PRODUCT_LT70C, 0xff, 0, 0) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(UNISOC_VENDOR_ID, LUAT_PRODUCT_AIR720U, 0xff, 0, 0) },
+-	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SLM320, 0xff, 0, 0) },
+-	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SLM770A, 0xff, 0, 0) },
+-	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0, 0) },	/* MeiG Smart SRM815 */
+-	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0x10, 0x02) },	/* MeiG Smart SLM828 */
+-	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0x10, 0x03) },	/* MeiG Smart SLM828 */
+-	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0xff, 0x30) },	/* MeiG Smart SRM815 and SRM825L */
+-	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0xff, 0x40) },	/* MeiG Smart SRM825L */
+-	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0xff, 0x60) },	/* MeiG Smart SRM825L */
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x1bbb, 0x0530, 0xff),			/* TCL IK512 MBIM */
+ 	  .driver_info = NCTRL(1) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x1bbb, 0x0640, 0xff),			/* TCL IK512 ECM */
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.45.3
+
