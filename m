@@ -1,377 +1,116 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEE626157E;
-	Tue, 11 Feb 2025 17:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B836B26157E
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739295940; cv=none; b=YmBIXym/ilwnVoeYqwdwClIpOIxOsmtZIRrhP2Q908pmOhGZYPIZGvHWwBLT+LH1gfBosmIvv4ebX3QQ/pumXNDjhZcbze0MHQTnRxfIp8IzQBq2EwVIfUYJt2kazYMVLOWE1Ohp3hxPNJkRrL0UPHzIXI2mPGOibIhXT3WDbbE=
+	t=1739295951; cv=none; b=B+4SAI2xcZmXaQBzEZVxdxBQBRV6i3ejUDLdC64C2v6w36FWywjFvxe+quE2Xp1gOuieD73NzTxEXUMzNHuiCT79ryzCEqfB/RuJxoRFsmeYUCmYLs8kLXMaiXMr/OgQt66+CX8K04njI2BfWmOuvhD/Ir2uaesmB57nmCk77aI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739295940; c=relaxed/simple;
-	bh=uf8OFglXgDhKFByMZzbpcJz9amIWUJuSpmzKzXAIXFo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X3gTdW9reF1cHVEZoqlWsHrjNnuIOzOMuKb9Qjvbt1q7WM3CcnZGpP0EzJWzUbiSropkfjcybCXlYMhGW7fseJYe24kNPhpTp+T2c/UF37qMbQfcO4O0mZk+1Thx2zD6181o9BEkgkc1ub3OmnFdBO5lo/6VhnbyicOdbsz6vIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NoFvSaSt; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739295951; c=relaxed/simple;
+	bh=dTvy6fyffzRxcgF5lIWtfRUlZwl2If8HDMDUsHDXjdQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=o1m3x1EnU3hE1Q3mP0oojuQgheF0gnbjtuq3m1yHrbTyeprGwYFTR9wchNMal2Aekj/WEt0UeBh3tab7CFJzH0bpDv/hwjq0RWlRU1fIOCbSia1Wfm6qYqhXTGbPtdmCiWhd+QyML6leUFEegx/WDzkjdLbaw/rkVUF4Bp3aWEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=Aldn1XbG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=n5B9lcZt; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NoFvSaSt"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43944181e68so27644025e9.0;
-        Tue, 11 Feb 2025 09:45:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739295937; x=1739900737; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OVukLjmjU7JWbNgNRIVE9jMDHO3O38O0IgGphOEr4s4=;
-        b=NoFvSaSt76diylFH7QyM7oWZNzNUVZnwQyDgGXiTkgEstfj+sk1DASVXzOSzu10WN+
-         xe8/oqHr51Ti7+YnbKNGcIbxDECRsNqoq+fMN+BWWD8HVDDz+8T3RV4x5RqXijUkM05m
-         pVjlMCPzFYz95n5vIdbXRMqz2yNaQgncBYld25spIARs3Iqc54NFR1FUeH5NhNyZ5Ehx
-         WAcvMa4VIOyKZ7g6bqnaGyKHyNkHuw6SRrrG1LDzz0nzsOjvBO+ldYnuvwfw7rvSVO3b
-         UdOqijnDNpT9rRgxtPrwjssoWkGPk+FSM/lSUoyf+SWLZIBlCwSjOH9xLewEN+zbEC7V
-         a3ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739295937; x=1739900737;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OVukLjmjU7JWbNgNRIVE9jMDHO3O38O0IgGphOEr4s4=;
-        b=l+bEHmIOIR6qJii0MZRKiEZMgFbKtYuAAlibl+ZKgB70onPRcz3z7cH4Z+b4gePa/J
-         EaCkIDmC+u5hPEAxqzBajc7/YfT23dIHsF2IwB6rIFWEKvfzqf9+R/z6aIOy7Vaai/im
-         POlg9XtoRzXeYcCmVVC4XuJWuI4NYTgTsXnfJjxr5vNW47NLlmUJyMBGKAsfaihCkEtf
-         bOJ1dXcYfTiTNokA9SO3nIJCpO+c9Mx0xCGUqotEfkMJcfKdhhk+BbRIpMoRnm+mifz4
-         BxPZYr4z7oCm5Kpz1ipdnyPBbpf1UZKnhmbgjksoBAJD4rWDjtp5R7dwFYRzsZT5gxHC
-         rdYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHoEr3kubTKhvRQs4cxP8uDBqBjzd1pCJBL0NtrRUcE2up9Odxir/8MMZscgkqIsKCJuj4bEugshA=@vger.kernel.org, AJvYcCUHy7+OLgWRX5Ek5AmTanKXzKLMOvoIagiFD92nyXRvgm/kwnEwQbnefGx/SfvXWCzAv8a1xhPTsRpRqt2W@vger.kernel.org, AJvYcCV4IVwScAk3t2sB1TR7spfjl6NHr6FDPPEHytXKsQAZgwdENKOjBJ1DcwVFdWGNIW7P98D6Plx9LrCR+ao=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8mrdvoWO6WOc9OPbAMe4Wf53SJ3nlheGqU9MAxGvrDM3YfNzk
-	HzauLI2oD7RYrCpC3VRG+NP4LVJVExwfoDmWZlrhPI2PQ6IEjuEP
-X-Gm-Gg: ASbGnctMkACZUGDr2mO18i6UCV7PeGBtVLcimWmXM9eF/FAfI9FapcLUG3dsfCZhyqQ
-	oqPXLNNNdZqhaUkE1uKvByho0c8AUoXdjsaiocjWYbbkyOdl+D1SVZQPBwOV42qRILBbHLIHagH
-	d29GXh9oJ+HFjiCV79ZnmPwp2tgc+rj9ay7mNp9KvNUGnYmX7Kkl5NMVNCy8i1sqZHxq1qc2gsM
-	s9lbkIXdXmY9WJ3tExwozDShjAZTglLbmZu1Ahjk0xrVWKrcC7Sx458U+uHyH3Gz8RRhioqcX+b
-	8dh5gYKnDAhsThO3vIX5yzKSylryu70TfZC53cJg4xJ45IzreoBNn8HewcvBWNA=
-X-Google-Smtp-Source: AGHT+IHevhnQA52ksSDKCk/5HBFf2WQR6jKC1x+TgyxG0JLSuHfuqUjzxDwjKzCxF5CuvX9dIZjkUA==
-X-Received: by 2002:a05:600c:c0c:b0:430:57e8:3c7e with SMTP id 5b1f17b1804b1-439581caafbmr1240075e9.28.1739295936426;
-        Tue, 11 Feb 2025 09:45:36 -0800 (PST)
-Received: from ?IPV6:2001:861:3385:e20:2acd:89a8:83d9:4be5? ([2001:861:3385:e20:2acd:89a8:83d9:4be5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390db11750sm222041925e9.40.2025.02.11.09.45.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 09:45:36 -0800 (PST)
-Message-ID: <c11a234e-de9e-465e-bd09-bfa516dba6dd@gmail.com>
-Date: Tue, 11 Feb 2025 18:45:31 +0100
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="Aldn1XbG";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="n5B9lcZt"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id D0DAD2540127;
+	Tue, 11 Feb 2025 12:45:48 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Tue, 11 Feb 2025 12:45:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1739295948; x=
+	1739382348; bh=GIFexkCqrPd7tVDQwCNayNvdGfiWwZdap6JG7M+32EQ=; b=A
+	ldn1XbGXUu6jVcjs3gNrDALJgmlqpszVE+hxqPCa1aqIsuunwnUZMaGuXutmKJJz
+	ENDPCnJ9ElKxOjYsi916aL7Ovvf+wcOP5uPcf6aQPf8Tg3gG06VJzSbuTxRuxhsf
+	PW85v8iy1hUsKccGgqv3SP+1uDZ2sp1dKb/bsZOVTCO4wyss46xTVVJ/V5BeP7Si
+	X41v03Q0U3PTmuZcDGcxHT9aqN+9XF0MrcI/jxcdKWuC6d/hgHcsGJpN1lzCh+FM
+	Ej/SJr/6DWzLG9n+/c5Z8eTbOh++iPikE+Ay64TKN37tgS+6Nw4c3k+Ld5lGqwNm
+	YRrMa4lCsGd89mUcvs6GQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1739295948; x=1739382348; bh=G
+	IFexkCqrPd7tVDQwCNayNvdGfiWwZdap6JG7M+32EQ=; b=n5B9lcZtkAHbC9Rcp
+	6uZbzJo5j1KjlgC1mv+26Do1YBujpr4cwUm4oxz7bavWc8WkeOffbxf6NAOdZ7PY
+	aw1WJAG9olRykDEL/ox3aOosYLb54/fdOTBMsVK+zyGVitP13OkaKDwT4RN2qYcm
+	jrOT9r+1IPF2Xeu5uFG+6TGLRCOpUDFOAxzFslXl7c5zgqB+mWcVnXdm3ApaRSQo
+	hexAdsE+3ZvdMaE9sf0M8sv7NVCMeUG2//9/8N3BJbu7zzNkjMyl0uEdd5j1GJGs
+	BHg//akq82oT2y79L4lBRuVOhtBVaMKzvzrwpidQ6IFY5ocP91DDEDhp7NJYl71S
+	vR2kw==
+X-ME-Sender: <xms:zIyrZ2ZcH1Y0wP7RnmPNChzQfQz22UAydSzCZgOiiS4OVBf4fTF4VQ>
+    <xme:zIyrZ5YXXMKEK5m7V9GmLGM4mzPPJlcudd3cERxNYbHQTKd4UGO6fi1F2UoNCB0gX
+    MH-NZLriA0NRu-alUU>
+X-ME-Received: <xmr:zIyrZw8nD0hEvVFg7UcsHqKdIBde5WprW1RYMmk5gi8ZclAtmGAw7UN8lpfZxMl61iak6571qlp1wcyZ0LrE9tOiVdCgMZBcGGHkfzP4zhkHsmHR>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudeigecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecuogetfedtuddqtdduuc
+    dludehmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhm
+    peforghrkhcurfgvrghrshhonhcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvg
+    gssgdrtggrqeenucggtffrrghtthgvrhhnpeegkeegfeegieduuddukefgudeffffgffdv
+    ueekheevvefgiefgfffgffffueejheenucffohhmrghinhepohhrrdgtiienucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdq
+    lhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeefpdhmohguvgepsh
+    hmthhpohhuthdprhgtphhtthhopehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggs
+    sgdrtggrpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtohepmhgrrhhkphgvrghrshhonheslhgvnhhovhhordgtohhm
+X-ME-Proxy: <xmx:zIyrZ4qHQpRu2zH0Ekc00rD4iEaA26TIvs_JCi01Lg-qIC5JvzrJvw>
+    <xmx:zIyrZxp2lcE9v_x6-jfCsUbI30hW4uhaA1_M7WP5pCYHHOAPWcR06A>
+    <xmx:zIyrZ2RBnaF4CouOTnHq4f93aKKQT84WdlEB3r08NiCO-GprfelSog>
+    <xmx:zIyrZxpBgosNOBxtC-0-8dLoh2wsaklYYEnlHKsZUWdwcbTZFBWlYA>
+    <xmx:zIyrZ4Xv_vWf9OHnOS391G-9lXRjdX8IA8HL_UgtbY-vdG6DRSnP6sov>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 11 Feb 2025 12:45:48 -0500 (EST)
+From: Mark Pearson <mpearson-lenovo@squebb.ca>
+To: mpearson-lenovo@squebb.ca
+Cc: linux-kernel@vger.kernel.org,
+	markpearson@lenovo.com
+Subject: [PATCH] MAINTAINERS: Update email address for think-lmi maintainer
+Date: Tue, 11 Feb 2025 12:44:58 -0500
+Message-ID: <20250211174521.17542-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/12] drm/sti: move to devm_platform_ioremap_resource()
- usage
-To: Anusha Srivatsa <asrivats@redhat.com>, Joel Stanley <joel@jms.id.au>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Andrew Jeffery <andrew@codeconstruct.com.au>, Stefan Agner
- <stefan@agner.ch>, Alison Wang <alison.wang@nxp.com>,
- Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>,
- Xinwei Kong <kong.kongxinwei@hisilicon.com>,
- Sumit Semwal <sumit.semwal@linaro.org>, Yongqin Liu
- <yongqin.liu@linaro.org>, John Stultz <jstultz@google.com>,
- Chun-Kuang Hu <chunkuang.hu@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Marek Vasut <marex@denx.de>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Sandy Huang <hjc@rock-chips.com>,
- =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
- Andy Yan <andy.yan@rock-chips.com>, Orson Zhai <orsonzhai@gmail.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Chunyan Zhang <zhang.lyra@gmail.com>, Alain Volmat
- <alain.volmat@foss.st.com>, Yannick Fertre <yannick.fertre@foss.st.com>,
- Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
- Philippe Cornu <philippe.cornu@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Thierry Reding <thierry.reding@gmail.com>,
- Mikko Perttunen <mperttunen@nvidia.com>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Alexey Brodkin <abrodkin@synopsys.com>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: linux-aspeed@lists.ozlabs.org, dri-devel@lists.freedesktop.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org, imx@lists.linux.dev,
- linux-rockchip@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-tegra@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20250205-mem-cocci-newapi-v1-0-aebf2b0e2300@redhat.com>
- <20250205-mem-cocci-newapi-v1-7-aebf2b0e2300@redhat.com>
-Content-Language: en-US, fr
-From: =?UTF-8?Q?Rapha=C3=ABl_Gallais-Pou?= <rgallaispou@gmail.com>
-In-Reply-To: <20250205-mem-cocci-newapi-v1-7-aebf2b0e2300@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+I no longer use my markpearson@lenovo.com email address as the Lenovo
+email servers are garbage.
+Switching to my personal account that is more open-source friendly.
+I am still a Lenovo employee (if that makes any difference)
 
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Le 05/02/2025 à 21:08, Anusha Srivatsa a écrit :
-> Replace platform_get_resource/_byname + devm_ioremap
-> with just devm_platform_ioremap_resource()
-> 
-> Used Coccinelle to do this change. SmPl patch:
-> 
-> @rule@
-> identifier res;
-> expression ioremap;
-> identifier pdev;
-> constant mem;
-> expression name;
-> @@
-> -struct resource *res;
-> ...
-> -res = platform_get_resource_byname(pdev,mem,name);
-> <...
-> -if (!res) {
-> -...
-> -}
-> ...>
-> -ioremap = devm_ioremap(...);
-> +ioremap = devm_platform_ioremap_resource_byname(pdev,name);
-> 
-> and
-> @rule_2@
-> identifier res;
-> expression ioremap;
-> identifier pdev;
-> @@
-> -struct resource *res;
-> ...
-> -res = platform_get_resource(pdev,...);
-> <...
-> -if (!res) {
-> -...
-> -}
-> ...>
-> -ioremap = devm_ioremap(...);
-> +ioremap = devm_platform_ioremap_resource(pdev,0);
-> 
-> v2: Fix compilation error.
-
-Hi Anusha,
-
-Just a nit: changelog should be after the ‘---’ separator. :-)
-
-Other than this, it is
-Acked-by: Raphael Gallais-Pou <rgallaispou@gmail.com>
-
-Thanks,
-Regards,
-Raphaël
-> 
-> Cc: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-> Cc: Alain Volmat <alain.volmat@foss.st.com>
-> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
-> ---
->   drivers/gpu/drm/sti/sti_compositor.c | 10 +---------
->   drivers/gpu/drm/sti/sti_dvo.c        | 10 +---------
->   drivers/gpu/drm/sti/sti_hda.c        |  9 +--------
->   drivers/gpu/drm/sti/sti_hdmi.c       | 11 +----------
->   drivers/gpu/drm/sti/sti_hqvdp.c      | 10 +---------
->   drivers/gpu/drm/sti/sti_tvout.c      | 10 +---------
->   drivers/gpu/drm/sti/sti_vtg.c        | 10 +---------
->   7 files changed, 7 insertions(+), 63 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/sti/sti_compositor.c b/drivers/gpu/drm/sti/sti_compositor.c
-> index 063f82d23d80c4ba83624a0066a18416a2b37351..7aefce6706ba2cd7d97a33228c9b9812edecf06f 100644
-> --- a/drivers/gpu/drm/sti/sti_compositor.c
-> +++ b/drivers/gpu/drm/sti/sti_compositor.c
-> @@ -177,7 +177,6 @@ static int sti_compositor_probe(struct platform_device *pdev)
->   	struct device_node *np = dev->of_node;
->   	struct device_node *vtg_np;
->   	struct sti_compositor *compo;
-> -	struct resource *res;
->   	unsigned int i;
->   
->   	compo = devm_kzalloc(dev, sizeof(*compo), GFP_KERNEL);
-> @@ -194,14 +193,7 @@ static int sti_compositor_probe(struct platform_device *pdev)
->   
->   	memcpy(&compo->data, of_match_node(compositor_of_match, np)->data,
->   	       sizeof(struct sti_compositor_data));
-> -
-> -	/* Get Memory ressources */
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (res == NULL) {
-> -		DRM_ERROR("Get memory resource failed\n");
-> -		return -ENXIO;
-> -	}
-> -	compo->regs = devm_ioremap(dev, res->start, resource_size(res));
-> +	compo->regs = devm_platform_ioremap_resource(pdev, 0);
->   	if (compo->regs == NULL) {
->   		DRM_ERROR("Register mapping failed\n");
->   		return -ENXIO;
-> diff --git a/drivers/gpu/drm/sti/sti_dvo.c b/drivers/gpu/drm/sti/sti_dvo.c
-> index c6c2abaa1891cd3ea025805b50d275ec314512c3..660588f01f90950a9b2c180ab230188c19901f26 100644
-> --- a/drivers/gpu/drm/sti/sti_dvo.c
-> +++ b/drivers/gpu/drm/sti/sti_dvo.c
-> @@ -511,7 +511,6 @@ static int sti_dvo_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
->   	struct sti_dvo *dvo;
-> -	struct resource *res;
->   	struct device_node *np = dev->of_node;
->   
->   	DRM_INFO("%s\n", __func__);
-> @@ -523,14 +522,7 @@ static int sti_dvo_probe(struct platform_device *pdev)
->   	}
->   
->   	dvo->dev = pdev->dev;
-> -
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dvo-reg");
-> -	if (!res) {
-> -		DRM_ERROR("Invalid dvo resource\n");
-> -		return -ENOMEM;
-> -	}
-> -	dvo->regs = devm_ioremap(dev, res->start,
-> -			resource_size(res));
-> +	dvo->regs = devm_platform_ioremap_resource_byname(pdev, "dvo-reg");
->   	if (!dvo->regs)
->   		return -ENOMEM;
->   
-> diff --git a/drivers/gpu/drm/sti/sti_hda.c b/drivers/gpu/drm/sti/sti_hda.c
-> index b12863bea95559c4f874eb94cea8938609d435d4..0b5dbaf4d5305989846e25a1cab6f82d191aa9a5 100644
-> --- a/drivers/gpu/drm/sti/sti_hda.c
-> +++ b/drivers/gpu/drm/sti/sti_hda.c
-> @@ -750,14 +750,7 @@ static int sti_hda_probe(struct platform_device *pdev)
->   		return -ENOMEM;
->   
->   	hda->dev = pdev->dev;
-> -
-> -	/* Get resources */
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hda-reg");
-> -	if (!res) {
-> -		DRM_ERROR("Invalid hda resource\n");
-> -		return -ENOMEM;
-> -	}
-> -	hda->regs = devm_ioremap(dev, res->start, resource_size(res));
-> +	hda->regs = devm_platform_ioremap_resource_byname(pdev, "hda-reg");
->   	if (!hda->regs)
->   		return -ENOMEM;
->   
-> diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti_hdmi.c
-> index ca2fe17de4a5d1e0199e59a97e6c7601e139ed9e..666143c48b0d0f2c20cd26323ddbc8e69d966622 100644
-> --- a/drivers/gpu/drm/sti/sti_hdmi.c
-> +++ b/drivers/gpu/drm/sti/sti_hdmi.c
-> @@ -1380,7 +1380,6 @@ static int sti_hdmi_probe(struct platform_device *pdev)
->   	struct device *dev = &pdev->dev;
->   	struct sti_hdmi *hdmi;
->   	struct device_node *np = dev->of_node;
-> -	struct resource *res;
->   	struct device_node *ddc;
->   	int ret;
->   
-> @@ -1399,15 +1398,7 @@ static int sti_hdmi_probe(struct platform_device *pdev)
->   	}
->   
->   	hdmi->dev = pdev->dev;
-> -
-> -	/* Get resources */
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hdmi-reg");
-> -	if (!res) {
-> -		DRM_ERROR("Invalid hdmi resource\n");
-> -		ret = -ENOMEM;
-> -		goto release_adapter;
-> -	}
-> -	hdmi->regs = devm_ioremap(dev, res->start, resource_size(res));
-> +	hdmi->regs = devm_platform_ioremap_resource_byname(pdev, "hdmi-reg");
->   	if (!hdmi->regs) {
->   		ret = -ENOMEM;
->   		goto release_adapter;
-> diff --git a/drivers/gpu/drm/sti/sti_hqvdp.c b/drivers/gpu/drm/sti/sti_hqvdp.c
-> index 0f658709c9d0d398c4eed65202443db9d0b41f8c..420395598d119a403d531211022e6005d6a2bd59 100644
-> --- a/drivers/gpu/drm/sti/sti_hqvdp.c
-> +++ b/drivers/gpu/drm/sti/sti_hqvdp.c
-> @@ -1356,7 +1356,6 @@ static int sti_hqvdp_probe(struct platform_device *pdev)
->   	struct device *dev = &pdev->dev;
->   	struct device_node *vtg_np;
->   	struct sti_hqvdp *hqvdp;
-> -	struct resource *res;
->   
->   	DRM_DEBUG_DRIVER("\n");
->   
-> @@ -1367,14 +1366,7 @@ static int sti_hqvdp_probe(struct platform_device *pdev)
->   	}
->   
->   	hqvdp->dev = dev;
-> -
-> -	/* Get Memory resources */
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (!res) {
-> -		DRM_ERROR("Get memory resource failed\n");
-> -		return -ENXIO;
-> -	}
-> -	hqvdp->regs = devm_ioremap(dev, res->start, resource_size(res));
-> +	hqvdp->regs = devm_platform_ioremap_resource(pdev, 0);
->   	if (!hqvdp->regs) {
->   		DRM_ERROR("Register mapping failed\n");
->   		return -ENXIO;
-> diff --git a/drivers/gpu/drm/sti/sti_tvout.c b/drivers/gpu/drm/sti/sti_tvout.c
-> index af6c06f448c4819def8cc0d0836e30f991529690..0bebe815f5e7567f84388af93723a6fa7d2cc7a2 100644
-> --- a/drivers/gpu/drm/sti/sti_tvout.c
-> +++ b/drivers/gpu/drm/sti/sti_tvout.c
-> @@ -838,7 +838,6 @@ static int sti_tvout_probe(struct platform_device *pdev)
->   	struct device *dev = &pdev->dev;
->   	struct device_node *node = dev->of_node;
->   	struct sti_tvout *tvout;
-> -	struct resource *res;
->   
->   	DRM_INFO("%s\n", __func__);
->   
-> @@ -850,14 +849,7 @@ static int sti_tvout_probe(struct platform_device *pdev)
->   		return -ENOMEM;
->   
->   	tvout->dev = dev;
-> -
-> -	/* get memory resources */
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "tvout-reg");
-> -	if (!res) {
-> -		DRM_ERROR("Invalid glue resource\n");
-> -		return -ENOMEM;
-> -	}
-> -	tvout->regs = devm_ioremap(dev, res->start, resource_size(res));
-> +	tvout->regs = devm_platform_ioremap_resource_byname(pdev, "tvout-reg");
->   	if (!tvout->regs)
->   		return -ENOMEM;
->   
-> diff --git a/drivers/gpu/drm/sti/sti_vtg.c b/drivers/gpu/drm/sti/sti_vtg.c
-> index 5ba469b711b5318e9e9e6d8df127fb8933d1fac1..b5353fe774d72fd629ecd3ef75a5d2817ca8617f 100644
-> --- a/drivers/gpu/drm/sti/sti_vtg.c
-> +++ b/drivers/gpu/drm/sti/sti_vtg.c
-> @@ -380,20 +380,12 @@ static int vtg_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
->   	struct sti_vtg *vtg;
-> -	struct resource *res;
->   	int ret;
->   
->   	vtg = devm_kzalloc(dev, sizeof(*vtg), GFP_KERNEL);
->   	if (!vtg)
->   		return -ENOMEM;
-> -
-> -	/* Get Memory ressources */
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (!res) {
-> -		DRM_ERROR("Get memory resource failed\n");
-> -		return -ENOMEM;
-> -	}
-> -	vtg->regs = devm_ioremap(dev, res->start, resource_size(res));
-> +	vtg->regs = devm_platform_ioremap_resource(pdev, 0);
->   	if (!vtg->regs) {
->   		DRM_ERROR("failed to remap I/O memory\n");
->   		return -ENOMEM;
-> 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 25c86f47353d..5a819b2a333b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -23588,7 +23588,7 @@ T:	git git://repo.or.cz/linux-2.6/linux-acpi-2.6/ibm-acpi-2.6.git
+ F:	drivers/platform/x86/thinkpad_acpi.c
+ 
+ THINKPAD LMI DRIVER
+-M:	Mark Pearson <markpearson@lenovo.com>
++M:	Mark Pearson <mpearson-lenovo@squebb.ca>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/ABI/testing/sysfs-class-firmware-attributes
+-- 
+2.48.1
 
