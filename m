@@ -1,227 +1,107 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0023214;
-	Tue, 11 Feb 2025 03:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A041519BE
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739245744; cv=none; b=gc9i7UFcuyFEgM+PT3AcOEgBBeHSlUThp5/fq9nlfsIq6lm9C+ODm3tkYpg9ok8OETNdLrCcIf/ybgTB+ZsaGruCIBdVskCdYMnnUAgfkSzydiZHnb19SIgTtzAmVJ8txbPUo4cN5ZUEU+rmUwgHZfXz82mXaQuSEEzlWizX3e0=
+	t=1739245758; cv=none; b=nXMsRM5eL/6p+RZuE/PC6uOGHDJejIgZnCfoaGiknHm5gcDV8G+EwTLqd/Izjo6CYzY5WeUtRi9Ln/mMpO+YYWUwfvQXTaaSNmB0kJprY3hHsEz6kffa44HnUUHUkJOg8BbSUrA7HxrzXDmwT56NzbDJFl0we28L+vt8U+4dEiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739245744; c=relaxed/simple;
-	bh=CVLsmp1LRuNWzVp6hx4LTEb+q3YTAsfq6vaqfTvc2OY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lvh+D9sf0xiapDU1FjfA0XxVdeSvs9nbgWdb0IbBvZaXLE0BMAUMFDSzhA0egtj0SYxuoBeGpQs04h0pfm+s2UoAAmZzxQwqe8kqSckiHsryZ7Sh37kH+JHoBBAMNbfENWtoiIW9okg+KvngUjCC3WXwsK+rpvBKdLAtNbOExx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TFij88ld; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739245758; c=relaxed/simple;
+	bh=ZUyEnpcGq2cJjl2hT1NidI9TY4wYHvgF2eK5+ZJbX9U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pAii76OiHWxcBaNdGbtqJzc4Zq24aO8AFdw6i5Sj82KAvjFIib8pYEIbs90PHnqH+xBvQTpYZx9b1J9fRu+WnBYhYVNCTzQT9nSc2v5P8FHN3nGv4rTn6tVF8qZiW3fH9aW85ENr6J7GrKKB5JciexRYErR5vUDz/F9SueZR/5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YhjZSfYp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFij88ld"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4394036c0efso11824805e9.2;
-        Mon, 10 Feb 2025 19:49:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739245740; x=1739850540; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=koAuJ4PjXUiGGw43AdmoM6HX66pYKu8QZqYsy5ozR9k=;
-        b=TFij88ldk1eE/waLPGotBg52XsxnD/zs0nsFlcc0eQn3ZDYGlGHbkI8okAjTyGjR5d
-         1p1vD1lgC+x2Zk4Y1w8/XSMpLVZuJWyqxTnZm5iMY24h9pxS9tVsU87JpGom4/mq2+p9
-         1HdjYENldUPbGE5msWPCwqnbpshMpG/X1+vyRRo59VUE4FUqalIGYvFw7mvvC7fdKkVX
-         EsgjqrLXZUZpj41Vpj9trFir6fnQ9nHEZIMQpErHA3AQVBTxvX0MgK5JpjITjsjc5KbL
-         gTA/ow/Ri4JPief4IrFFZKSwhUx3+/JtAVFMs5hYA+KZcIXZRjwjmLQy8CPrdPQd9eeV
-         hk8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739245740; x=1739850540;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=koAuJ4PjXUiGGw43AdmoM6HX66pYKu8QZqYsy5ozR9k=;
-        b=qjAU1DfFFZdp2yGWIBB4CRvLfVFV5BrSvssat+VW/s2UA0vfC5FK+xjhwUGE6DQyX2
-         +oIuIsKujmqviMWptNAu5odTxenKJKJrtDa8WAX2AdKyXDKp3vjiP//2hO0y4PlJhSQ7
-         AgVDlsTCDrToJ+awV1lSKLR58NbxbJVZsw4OBo7ZfelNMSomNpSq3HZkyzxAyjTqHEoL
-         SXz9PZcBhlaNYkdNTHPT2MmTDQVPiR7BwOBn5swAmM0jJWlen5AfEhwaIc4xFf/yX8Ar
-         p8QoPSzxYWRIs0hOsyV61vlOjVioOq7u+pfgZczPbMgkphIzinnNokxPizRQ/Lr3sgW8
-         ByfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpcTP8o6k9Sk8Af0uruCWGTGz+iYNpXpvZBfkOLMXY6oWfYtoocekQb8eZEBUZGAycVhg=@vger.kernel.org, AJvYcCXT1xfDQm88s1PsiXTrRHWpgOJfCPwiPpY97mPMT1vmATb2mRxmuEd8WJRKL5zQUC0Atg97X2O1HXhluaS2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8EjZRxjjeu7dsMBQLH8kI6eWKYyOt6aP3RbFqc9yLgKHTHJP+
-	MfOwd30lhkHqP3s+nt3A2/Kt/W3A8htii6qcSNlYMFvpp+nkwtqOeMbpOHlXOF433KR6RpgoUzx
-	RWziMgv3uz7HimT+kuy06Gs11a5Q=
-X-Gm-Gg: ASbGnctpDSJVajjZu/TS14yV4bibeBuwvrUeG/FPXKmt8+Cc1hqZaxCNspSNS6bUUVE
-	hZEIXJvKCAZJxPuBKNSr7o52vZZAlO1ulbUDIqrmtzeujt1DfNNw2/hoOczJTK71G43yTASzBPf
-	CvXtuNM0CvfBQlwIairIiwr6VJzYP6
-X-Google-Smtp-Source: AGHT+IGAmMbZArySpF13CgRirtAx57Tj9W3Hx1S2Z/fIEOqtibbAz2fZiNPQHk05WAGCVpWpqHwCay/XE2vMDVqm3Lg=
-X-Received: by 2002:a05:600c:5103:b0:439:5529:33e0 with SMTP id
- 5b1f17b1804b1-439552935afmr1088415e9.27.1739245740316; Mon, 10 Feb 2025
- 19:49:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YhjZSfYp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739245753;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Fc6Lup8PyQQxDZ8TsMYZrD/hozXEfxTI7AerH3va8cE=;
+	b=YhjZSfYpnxqR0eBQJdImBvzyHL7wUgVZE7TrDD2bz3aXutPzWF/OshS8FqdizaU9b/s6zW
+	mS2wXVbLlBsHrJLGjXKfzXP4VJHwUbjS/zoXv77GABg0r2GFMUpU5iu2vyhe8UURQggjWx
+	R2ExiAFpTsQpFozH4AswE3RbMaOnDps=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-382-vsfOlkt8MSuU_8T59fYdLA-1; Mon,
+ 10 Feb 2025 22:49:11 -0500
+X-MC-Unique: vsfOlkt8MSuU_8T59fYdLA-1
+X-Mimecast-MFC-AGG-ID: vsfOlkt8MSuU_8T59fYdLA
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 805C11956088;
+	Tue, 11 Feb 2025 03:49:10 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.22.89.14])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2AC99195608D;
+	Tue, 11 Feb 2025 03:49:08 +0000 (UTC)
+From: Luiz Capitulino <luizcap@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	yaozhenguo1@gmail.com,
+	muchun.song@linux.dev
+Cc: linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	rppt@kernel.org,
+	luizcap@redhat.com
+Subject: [PATCH] mm: hugetlb: avoid fallback for specific node allocation of 1G pages
+Date: Mon, 10 Feb 2025 22:48:56 -0500
+Message-ID: <20250211034856.629371-1-luizcap@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <AM6PR03MB5080261D024B49D26F3FFF0099F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
- <AM6PR03MB5080EDA5E2E2FDB96C98F72F99F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
- <CAADnVQJZnNj3KGcy-MKz_F2KEiKWGpXchxVx1zuGA-5g3SO=HQ@mail.gmail.com> <AM6PR03MB5080933CC30F9105A617351E99F22@AM6PR03MB5080.eurprd03.prod.outlook.com>
-In-Reply-To: <AM6PR03MB5080933CC30F9105A617351E99F22@AM6PR03MB5080.eurprd03.prod.outlook.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 10 Feb 2025 19:48:49 -0800
-X-Gm-Features: AWEUYZlJpW3k_r9bG4pY3030cMGys1WZqAjGgfdZmDSYDCZDE5mqhbIrmQ8YZFw
-Message-ID: <CAADnVQ+BmPeDxZUJ51qBQjK+yMSVkVLR2maSbe03tr+8T+Qnqw@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next 6/8] sched_ext: Add filter for scx_kfunc_ids_unlocked
-To: Juntong Deng <juntong.deng@outlook.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, 
-	Andrea Righi <arighi@nvidia.com>, changwoo@igalia.com, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Mon, Feb 10, 2025 at 3:40=E2=80=AFPM Juntong Deng <juntong.deng@outlook.=
-com> wrote:
->
-> On 2025/2/8 03:37, Alexei Starovoitov wrote:
-> > On Wed, Feb 5, 2025 at 11:35=E2=80=AFAM Juntong Deng <juntong.deng@outl=
-ook.com> wrote:
-> >>
-> >> This patch adds filter for scx_kfunc_ids_unlocked.
-> >>
-> >> The kfuncs in the scx_kfunc_ids_unlocked set can be used in init, exit=
-,
-> >> cpu_online, cpu_offline, init_task, dump, cgroup_init, cgroup_exit,
-> >> cgroup_prep_move, cgroup_cancel_move, cgroup_move, cgroup_set_weight
-> >> operations.
-> >>
-> >> Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
-> >> ---
-> >>   kernel/sched/ext.c | 30 ++++++++++++++++++++++++++++++
-> >>   1 file changed, 30 insertions(+)
-> >>
-> >> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-> >> index 7f039a32f137..955fb0f5fc5e 100644
-> >> --- a/kernel/sched/ext.c
-> >> +++ b/kernel/sched/ext.c
-> >> @@ -7079,9 +7079,39 @@ BTF_ID_FLAGS(func, scx_bpf_dispatch_from_dsq, K=
-F_RCU)
-> >>   BTF_ID_FLAGS(func, scx_bpf_dispatch_vtime_from_dsq, KF_RCU)
-> >>   BTF_KFUNCS_END(scx_kfunc_ids_unlocked)
-> >>
-> >> +static int scx_kfunc_ids_unlocked_filter(const struct bpf_prog *prog,=
- u32 kfunc_id)
-> >> +{
-> >> +       u32 moff;
-> >> +
-> >> +       if (!btf_id_set8_contains(&scx_kfunc_ids_unlocked, kfunc_id) |=
-|
-> >> +           prog->aux->st_ops !=3D &bpf_sched_ext_ops)
-> >> +               return 0;
-> >> +
-> >> +       moff =3D prog->aux->attach_st_ops_member_off;
-> >> +       if (moff =3D=3D offsetof(struct sched_ext_ops, init) ||
-> >> +           moff =3D=3D offsetof(struct sched_ext_ops, exit) ||
-> >> +           moff =3D=3D offsetof(struct sched_ext_ops, cpu_online) ||
-> >> +           moff =3D=3D offsetof(struct sched_ext_ops, cpu_offline) ||
-> >> +           moff =3D=3D offsetof(struct sched_ext_ops, init_task) ||
-> >> +           moff =3D=3D offsetof(struct sched_ext_ops, dump))
-> >> +               return 0;
-> >> +
-> >> +#ifdef CONFIG_EXT_GROUP_SCHED
-> >> +       if (moff =3D=3D offsetof(struct sched_ext_ops, cgroup_init) ||
-> >> +           moff =3D=3D offsetof(struct sched_ext_ops, cgroup_exit) ||
-> >> +           moff =3D=3D offsetof(struct sched_ext_ops, cgroup_prep_mov=
-e) ||
-> >> +           moff =3D=3D offsetof(struct sched_ext_ops, cgroup_cancel_m=
-ove) ||
-> >> +           moff =3D=3D offsetof(struct sched_ext_ops, cgroup_move) ||
-> >> +           moff =3D=3D offsetof(struct sched_ext_ops, cgroup_set_weig=
-ht))
-> >> +               return 0;
-> >> +#endif
-> >> +       return -EACCES;
-> >> +}
-> >> +
-> >>   static const struct btf_kfunc_id_set scx_kfunc_set_unlocked =3D {
-> >>          .owner                  =3D THIS_MODULE,
-> >>          .set                    =3D &scx_kfunc_ids_unlocked,
-> >> +       .filter                 =3D scx_kfunc_ids_unlocked_filter,
-> >>   };
-> >
-> > why does sched-ext use so many id_set-s ?
-> >
-> >          if ((ret =3D register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OP=
-S,
-> >                                               &scx_kfunc_set_select_cpu=
-)) ||
-> >              (ret =3D register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OP=
-S,
-> >
-> > &scx_kfunc_set_enqueue_dispatch)) ||
-> >              (ret =3D register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OP=
-S,
-> >                                               &scx_kfunc_set_dispatch))=
- ||
-> >              (ret =3D register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OP=
-S,
-> >                                               &scx_kfunc_set_cpu_releas=
-e)) ||
-> >              (ret =3D register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OP=
-S,
-> >                                               &scx_kfunc_set_unlocked))=
- ||
-> >
-> > Can they all be rolled into one id_set then
-> > the patches 2-6 will be collapsed into one patch and
-> > one filter callback that will describe allowed hook/kfunc combinations?
->
-> Yes, I agree that it would be ideal to put all kfuncs in the one id_set,
-> but I am not sure that this is better in implementation.
->
-> For filters, the only kfunc-related information that can be known is
-> the kfunc_id.
->
-> kfunc_id is not a stable value, for example, when we add a new kfunc to
-> the kernel, it may cause the kfunc_id of other kfuncs to change.
->
-> A simple experiment is to add a bpf_task_from_aaa kfunc, and then we
-> will find that the kfunc_id of bpf_task_from_pid has changed.
->
-> This means that it is simple for us to implement kfuncs grouping via
-> id_set because we only need to check if kfunc_id exists in a specific
-> id_set, we do not need to care about what kfunc_id is.
->
-> But if we implement grouping only in the filter, we may need to first
-> get the btf type of the corresponding kfunc based on the kfunc_id via
-> btf_type_by_id, and then further get the kfunc name, and then group
-> based on the kfunc name in the filter, which seems more complicated.
+When using the HugeTLB kernel command-line to allocate 1G pages from
+a specific node, such as:
 
-I didn't mean to extract kfunc name as a string and do strcmp() on it.
-That's a non-starter.
-I imagined verifier-like approach of enum+set+list
-where enum has all kfunc names,
-set gives efficient btf_id_set8_contains() access,
-and list[KF_bpf_foo] gives func_id to compare with.
+   default_hugepagesz=1G hugepages=1:1
 
-But if the current break down of scx_kfunc_set_* fits well
-with per struct_ops hook filtering then keep it.
-But please think of a set approach for moff as well to avoid
-+           moff =3D=3D offsetof(struct sched_ext_ops, exit) ||
-+           moff =3D=3D offsetof(struct sched_ext_ops, cpu_online) ||
-+           moff =3D=3D offsetof(struct sched_ext_ops, cpu_offline) ||
+If node 1 happens to not have enough memory for the requested number of
+1G pages, the allocation falls back to other nodes. A quick way to
+reproduce this is by creating a KVM guest with a memory-less node and
+trying to allocate 1 1G page from it. Instead of failing, the allocation
+will fallback to other nodes.
 
-Then it will be:
-if (btf_id_set8_contains(&scx_kfunc_ids_unlocked, kfunc_id) ...
-&& moff_set_containts(.._unlocked, moff)) // allow
+This defeats the purpose of node specific allocation. Also, specific
+node allocation for 2M pages don't have this behavior: the allocation
+will just fail for the pages it can't satisfy.
 
-There is SCX_OP_IDX(). Maybe it can be used to populate a set.
+This issue happens because HugeTLB calls memblock_alloc_try_nid_raw()
+for 1G boot-time allocation as this function falls back to other nodes
+if the allocation can't be satisfied. Use memblock_alloc_exact_nid_raw()
+instead, which ensures that the allocation will only be satisfied from
+the specified node.
 
-Something like this:
-static const u32 ops_flags[] =3D {
-  [SCX_OP_IDX(cpu_online)] =3D KF_UNLOCKED,
-  ..
-};
+Fixes: b5389086ad7b ("hugetlbfs: extend the definition of hugepages parameter to support node allocation")
 
-if (btf_id_set8_contains(&scx_kfunc_ids_unlocked, kfunc_id) &&
-    (ops_flags[moff / sizeof(void (*)(void))] & KF_UNLOCKED)) // allow
+Signed-off-by: Luiz Capitulino <luizcap@redhat.com>
+---
+ mm/hugetlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 65068671e460..163190e89ea1 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3145,7 +3145,7 @@ int __alloc_bootmem_huge_page(struct hstate *h, int nid)
+ 
+ 	/* do node specific alloc */
+ 	if (nid != NUMA_NO_NODE) {
+-		m = memblock_alloc_try_nid_raw(huge_page_size(h), huge_page_size(h),
++		m = memblock_alloc_exact_nid_raw(huge_page_size(h), huge_page_size(h),
+ 				0, MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+ 		if (!m)
+ 			return 0;
+-- 
+2.48.1
+
