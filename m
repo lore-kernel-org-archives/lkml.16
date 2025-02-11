@@ -1,102 +1,114 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.94])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784F91E9B39;
-	Tue, 11 Feb 2025 07:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11C21D54C2
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739260486; cv=none; b=rPdto4FgQqc3ZAlqIxrpEoMxKbDRnqd7Vs47YZhHO5ZKOyQz+BV7YQOaamoOMHJRCWWIblbpFK6MPhMHm5HP8mupH65kpWDbY68vIYox9ewR978q5APG/lRUmSKvp2tCw+yJoQUH/QN3XntDp6LG0PEGGP58yMocGPnaRIOxVMU=
+	t=1739260546; cv=none; b=BiNCMbwbbU9P7IgTyJWuekg1MfBSJLQqnGMWFp7Hhxnt0VkSSw5YT/anW4k4OBaYZG/BG5dU4AFmVd0QMsdb+qFvMxwxJPNPvjzz4USBlDGiYx/XksR6B3KbUu1Wx5NVoZe4O15sRngeGv/JIs9LIVnugzgo5cX8C0gGMd4M9BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739260486; c=relaxed/simple;
-	bh=zeYqsmy3zOjGEu/ZNTX027ncYMz1t9krEA8HwArBA2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Io0h64a5JYKdRKOxz8pFQiZDjdrJdre3hyCydgJHRy6lKLJzPrInZ0sQz9R95k1wqd7M6kG3+NgqoSkGQB5qnaDDDNmAdlF7UDde0nqeCgPZHXpfrhp1uhfrhiEUwCSgupBqliisF6T3L8bTbtSy0/OCKKSTK+b9obfhjplEBYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=cjWTWyqX; arc=none smtp.client-ip=212.42.244.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="cjWTWyqX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1739260113; bh=zeYqsmy3zOjGEu/ZNTX027ncYMz1t9krEA8HwArBA2s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cjWTWyqXIm4qG5RQ+weSzjFX/zpNVo8yMker3i+OKmCeYtRqnn+7lR7PDR4xtcLW0
-	 fgpJMjw3322dNPiI0TdLAgFpg2H24nQSlnDEjSVVb6CXD/OppknmJ3i/yaCyA8vVfU
-	 u/IoC1SHMD2fFL6gnuYn+ltvhT6e2PVlLJFUoLPE=
-Received: from [2001:bf0:244:244::71] (helo=mail.avm.de)
-	by mail.avm.de with ESMTP (eXpurgate 4.52.1)
-	(envelope-from <n.schier@avm.de>)
-	id 67ab00d1-714a-7f0000032729-7f00000187f2-1
-	for <multiple-recipients>; Tue, 11 Feb 2025 08:48:33 +0100
-Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [IPv6:2001:bf0:244:244::71])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Tue, 11 Feb 2025 08:48:33 +0100 (CET)
-Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
-	by mail-auth.avm.de (Postfix) with ESMTPA id B249C80230;
-	Tue, 11 Feb 2025 08:48:32 +0100 (CET)
-Received: from l-nschier-z2.ads.avm.de (unknown [IPv6:fde4:4c1b:acd5:7792::1])
-	by buildd.core.avm.de (Postfix) with ESMTP id A293E181681;
-	Tue, 11 Feb 2025 08:48:32 +0100 (CET)
-Received: from nicolas by l-nschier-z2.ads.avm.de with local (Exim 4.98)
-	(envelope-from <n.schier@avm.de>)
-	id 1thl0S-00000004hMe-1bBr;
-	Tue, 11 Feb 2025 08:48:32 +0100
-Date: Tue, 11 Feb 2025 08:48:32 +0100
-From: Nicolas Schier <n.schier@avm.de>
-To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc: linux-kbuild@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Richard Weinberger <richard@nod.at>,
-	Nicolas Schier <nicolas@fjasle.eu>
-Subject: Re: [PATCH v1] kbuild: Allow building of samples with UML
-Message-ID: <20250211-holistic-gentle-moth-c90edb@l-nschier-z2>
-References: <20241218115126.264342-1-mic@digikod.net>
+	s=arc-20240116; t=1739260546; c=relaxed/simple;
+	bh=W3bkEOH1ytsxsN1rOoZS0qhdvdLKw3yJpew8Wld5ImM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oVbpcBOe4BSz67cynTN7VFtKSzM1wlQzerxze2oQOd91aqSsUBsJeM/hgQEEaBBSZlqK7mZ6NXsOl5ZwEn9NrSTzs10dH9bWuzWaXrh0+L+I303SVsUBqf6BYvz70QI/DcIAfWWw+LmOySLdFveK9kIA5iRxmNT0hUoMiSDeJ0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1D69D441EB;
+	Tue, 11 Feb 2025 07:55:38 +0000 (UTC)
+Message-ID: <6ae4838b-f7b5-419d-8659-7b8779a74adb@ghiti.fr>
+Date: Tue, 11 Feb 2025 08:55:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241218115126.264342-1-mic@digikod.net>
-X-purgate-ID: 149429::1739260113-C7F3ACDC-FBB69494/0/0
-X-purgate-type: clean
-X-purgate-size: 1114
-X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
-X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
-X-purgate: clean
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] riscv: Use of_property_present() to test for
+ non-boolean properties
+Content-Language: en-US
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+ linux-riscv@lists.infradead.org
+Cc: Steffen Persvold <spersvold@gmail.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, linux-kernel@vger.kernel.org,
+ Jeremy Linton <jeremy.linton@arm.com>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Yunhui Cui <cuiyunhui@bytedance.com>,
+ Sudeep Holla <sudeep.holla@arm.com>,
+ =?UTF-8?Q?Miquel_Sabat=C3=A9_Sol=C3=A0?= <mikisabate@gmail.com>,
+ Rob Herring <robh@kernel.org>
+References: <20250205143903.413959-1-emil.renner.berthing@canonical.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250205143903.413959-1-emil.renner.berthing@canonical.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegtdeggecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhephffhuddtveegleeggeefledtudfhudelvdetudfhgeffffeigffgkeethfejudejnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmedugedvugemleekkedumeegfeejieemleeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmedugedvugemleekkedumeegfeejieemleekpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmedugedvugemleekkedumeegfeejieemleekngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopegvmhhilhdrrhgvnhhnvghrrdgsvghrthhhihhnghestggrnhhonhhitggrlhdrtghomhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgru
+ ggvrggurdhorhhgpdhrtghpthhtohepshhpvghrshhvohhlugesghhmrghilhdrtghomhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjvghrvghmhidrlhhinhhtohhnsegrrhhmrdgtohhmpdhrtghpthhtoheptghonhhorhdrughoohhlvgihsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhm
+X-GND-Sasl: alex@ghiti.fr
 
-On Wed, Dec 18, 2024 at 12:51:23PM +0100, Mickaël Salaün wrote:
-> It's useful to build samples/* with UML and the only blocker is the
-> artificial incompatibility with CONFIG_HEADERS_INSTALL.
-> 
-> Allow the headers_install target with ARCH=um, which then allow building
-> samples (and tests using them) with UML too:
-> 
->   printf 'CONFIG_SAMPLES=y\nCONFIG_HEADERS_INSTALL=y\nCONFIG_SAMPLE_LANDLOCK=y\n' >.config
->   make ARCH=um olddefconfig headers_install
->   make ARCH=um samples/landlock/
-> 
-> Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-> Cc: Johannes Berg <johannes@sipsolutions.net>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nicolas Schier <nicolas@fjasle.eu>
-> Cc: Richard Weinberger <richard@nod.at>
-> Fixes: 1b620d539ccc ("kbuild: disable header exports for UML in a straightforward way")
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Hi Emil,
+
+On 05/02/2025 15:39, Emil Renner Berthing wrote:
+> The use of of_property_read_bool() for non-boolean properties is
+> deprecated and since
+>
+> commit c141ecc3cecd ("of: Warn when of_property_read_bool() is used on non-boolean properties")
+>
+> a warning is displayed when used incorrectly. Fix it by switching to
+> of_property_present() as recommended in the same commit.
+>
+> Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 > ---
->  Makefile          | 1 -
->  lib/Kconfig.debug | 1 -
->  2 files changed, 2 deletions(-)
-> 
+>   arch/riscv/kernel/cacheinfo.c | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
+> index 2d40736fc37c..26b085dbdd07 100644
+> --- a/arch/riscv/kernel/cacheinfo.c
+> +++ b/arch/riscv/kernel/cacheinfo.c
+> @@ -108,11 +108,11 @@ int populate_cache_leaves(unsigned int cpu)
+>   	if (!np)
+>   		return -ENOENT;
+>   
+> -	if (of_property_read_bool(np, "cache-size"))
+> +	if (of_property_present(np, "cache-size"))
+>   		ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+> -	if (of_property_read_bool(np, "i-cache-size"))
+> +	if (of_property_present(np, "i-cache-size"))
+>   		ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+> -	if (of_property_read_bool(np, "d-cache-size"))
+> +	if (of_property_present(np, "d-cache-size"))
+>   		ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
+>   
+>   	prev = np;
+> @@ -125,11 +125,11 @@ int populate_cache_leaves(unsigned int cpu)
+>   			break;
+>   		if (level <= levels)
+>   			break;
+> -		if (of_property_read_bool(np, "cache-size"))
+> +		if (of_property_present(np, "cache-size"))
+>   			ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+> -		if (of_property_read_bool(np, "i-cache-size"))
+> +		if (of_property_present(np, "i-cache-size"))
+>   			ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+> -		if (of_property_read_bool(np, "d-cache-size"))
+> +		if (of_property_present(np, "d-cache-size"))
+>   			ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
+>   		levels = level;
+>   	}
 
-Thanks, looks good to me.
 
-Reviewed-by: Nicolas Schier <n.schier@avm.de>
+The same patch has been on the ML since last november:
+
+https://lore.kernel.org/linux-riscv/20241104190314.270095-1-robh@kernel.org/
+
+And was already re-sent once end of december...
+
+Thanks anyway,
+
+Alex
+
+
