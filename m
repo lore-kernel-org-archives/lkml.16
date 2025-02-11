@@ -1,135 +1,244 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B871F4E25
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D0C1F473A
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739270673; cv=none; b=ecTqH20LBgutJHaCMaraiz24QDJ1rBqG8IGyXD3SRWVH3WQ5AcxBeQWgQnwM5aZIUw4t0vgkxJK+zaQWOtA1dT4zbBUrDHgtiUoQKhIlMGQjaTl2fmXjSHcAB2C/AjOM/HkZk5WaoKPi+L6NSqka42LR1j9CAjpdCq0Bv4iQKtg=
+	t=1739270683; cv=none; b=kEECq6SIfKvb1e48twWA9nchaInsRmuLXaE39wDIX63B4rVoTbj1xFrBW740pKtW6BRV3wxeS1oTPKCR6kLn09/87VsbTYxqheat/u4WQCZ6V1aLJbS/wtW7pUajUHwdeGwmdMDwA2ELiYnzIoe5chGBAf19GTa1+kl18e8eZjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739270673; c=relaxed/simple;
-	bh=lyQGPOiFZfI8iuJQWeJ/ZTEHobti30YMVFPeLxYKCIY=;
+	s=arc-20240116; t=1739270683; c=relaxed/simple;
+	bh=ZSYX5J+kB/QWD1n9ivRYM0GHXtsmbJF5T35MTJn55UQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q2J9F3RYxhxvYmx0ewD8GTksFk7k9zGVjPG6HtFdpqi6FOYwwQvuHUnTtvCsPWESErm/PsxSe0l8ko2zDmHd9yjCmFG0M8b7hPx0tSegRSyZSyB6jhxtmKkEYa2i5BemGf3ccMUxiWGFcpP1WJhaXVICfoEqnrOhh7bTJsFB3vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Jtt77E+k; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=KBUC/QiK7Sp7BccWGQwwTXCBcR+rRC/92W2mYpb5OXp7m/wRwvjr7yVC62Ea78jj8scSrxHJsQ7oef/zpKucV8UcieV3cO20vUnUQOxISw4zc/CVmJMXzz8qVszcMuUr+9SEQYA8owJaqptyjyHOLOweiHtn5peiWFboWaM1sYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IJD7G4ib; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jtt77E+k"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21f2339dcfdso84315265ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:44:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJD7G4ib"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43618283d48so37100725e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:44:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739270671; x=1739875471; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KGyAcIVzwdxp3SxUx+rEML92I4jzvu6KhWaUMgM+hIg=;
-        b=Jtt77E+kukLcHVB+chYhAjiR76Ep2Mz6XaUZtkCLsDfWw43zWq5NR/uK9B3VZu6Oa9
-         qdQzo0DnA/pt3E1t3S3L0wWo3npbdMcBZGnF0ObtPLbggyYc++liFDwIsAaEag9TUrNh
-         55GyOSyP+8PHwhyesYzngOMKXspeB45iaj20ZcxtPczfS+Oam97+2hsG3qyTgtKPW5CR
-         AL3lSQdFtkKXr5m0NKZ62mr4yMz5vwlIJgAtMUKNCeCBXXUqQSqTJyenDWXv7LzLD531
-         O69J5bt8NbKIKIsVPFKFdCIvjx+nsNattotk9Qp+fYLiZ+/q4ZRswfzjD8Q6MT5oO7oP
-         S3qQ==
+        d=gmail.com; s=20230601; t=1739270679; x=1739875479; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kJcFMQJvlRYWjrCqI8QX/Ukpl5nZX3icPZpoJRtpLMo=;
+        b=IJD7G4ib47a6Kz0JEdfEpM59wy2QfROgjCHA4EMAnkZw4JNbwtbYykQ6xuoRjI/6te
+         8z0rV/odNYBCeg6QNXwTBVUSuAO8GPInMzWRQ12FsnU0amMf/DR+WUZD4vDRo8OGjNf+
+         yhWMbRGvBnM9OyHtituK4t6sZiCgkaYLyLLiH0TLcmnM4f6jPh2bmdlrSmjXsKa+i6DA
+         MfJv1fQPSKBX449/ZMLg7gk73UuIHtSUwYCrmBaCcDfeRIz3veWPCMIip4LmbyhLg8RY
+         e+368qBWo+f6idJUuoiqGSpMj0ZCNGbp+XWObzmCwbSsdQDoIxEKzHQAzt8Q8P4t1mcz
+         UxVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739270671; x=1739875471;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KGyAcIVzwdxp3SxUx+rEML92I4jzvu6KhWaUMgM+hIg=;
-        b=s1RIX9tRwsPtqE+FXxBO8gUxhnEen88FxX/itt5VYDfazy8j8eEZX1923rJCsCPHud
-         YBuPv3u0BwEuWkVYdGYYV3DTCA9fOin9jZ/8JfV4KtXFdeot3GOUES2JwNvRXHAo5E6K
-         4rn5OkJa1wYvpWBxRIKXumhhkbrh2teJm4FnFaL4AZHAQSgTXwhVt4WAmuQyck4HbRsj
-         rniYT5RlxTFpfxACP/EVr3iey/aXcUzgex86POfLyvwV9OMFEkeP3hKJjNfyGV9kpGSK
-         y9V7kbfl3btk7auiTbYVP57iMWc4sGvJccmSeVG/4qpCCP1MxVGqHho/p6Tq/LMfc0Q9
-         3CuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUzvWX6Mwnp94lEWRDD2A/8iKzQn8LIYY+nLpg8UMYZy2LoBairJuo1w0aE5sAkf1pytmM/Ta1W/5Gx5L4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsLtNvorjYHYyPYHukM5oLADyLWLagJVqVJCQm1g5zpdHNSKs2
-	VSQVRzec9kMiIYtXWRFLnf3YKryJarnYmlYkESf4gUITl3DGg4EgGT9XpQ7jCmA=
-X-Gm-Gg: ASbGncspL8JhwlabYhlUYgSOz1YsWbhgCT8Hc5m0buBpVNFBIlTnEX1IZEPmhZwgQU+
-	xztALwfPdNOuB8rVlbKHKtQL+NFP25yz7B/Iv6MzQfUQOenC2/mWhhhasSPH5N7bTyzJ+Se7RuF
-	q1N7IhjxpUG7jUupDW5oe6y8fP1PFUYhERemgOD92Kk1u0xE50w4fNJ2WdZ93rHS4yicOijqqBy
-	Qd+fvZ4Yrl+aeP2X/9gFMQddvmu0wHeU++Dq4/9iQR4g7ViZhyj9s7Edz89aHo6Sp4VwJKCJ7V4
-	jI6ayGcE0AJz5ExdGw==
-X-Google-Smtp-Source: AGHT+IFkGzG5Hx5dxP8FNIuWUPeK9ACiFX9V+SrVY6ss/7yixFEmLNDBn5grfGl0BrfxDpYTkhCtJQ==
-X-Received: by 2002:a17:902:f641:b0:215:9eac:1857 with SMTP id d9443c01a7336-21fb6bf622fmr47511905ad.5.1739270671078;
-        Tue, 11 Feb 2025 02:44:31 -0800 (PST)
-Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa618e5e18sm5506354a91.41.2025.02.11.02.44.30
+        d=1e100.net; s=20230601; t=1739270679; x=1739875479;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kJcFMQJvlRYWjrCqI8QX/Ukpl5nZX3icPZpoJRtpLMo=;
+        b=p9cfZYV0N7kktqhtZbf/PR/DsCE9N55Aac3RxKN2nHa97fS76/FySFNgqVDtLsP7Au
+         EzTe1skqxlbd42uy0paGlT99FZ+ndRcilegkv1rHQuEeU3ELZOrBaNAbOboy8R6MUWqq
+         dT69G4Z57awM6PhKqg1PZCIKvA5HN+JE2qirOMUiRJuEH7S9/4jOds+KWWuS0weNuhIt
+         pJp19CLb3YXpzakAikgUQLA7vj4Ns9dP1CeEBvccjXft+mKVgzgBXgK89hF8szCNYABE
+         OIpX1YHTMq0SrxKFCssbOpVKpq/0ezCb9AshAD6XIpz9lkIfiXPmLIQAjeb8xqVf7t/u
+         dXyg==
+X-Forwarded-Encrypted: i=1; AJvYcCUy9IivIVEDVZy8gGgC+JaSBzmi2gHYqpBO9PvuwThH1bUqbvKnrpOYvAbm2vpbM4FiAfj+upwYVpjkzUU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR9lfTAXCtl+2R+E/WzTgnD8JYxsv9JyKmPugJ5Zv16/n6hHuk
+	yv7LZASka4AzdLD5gtmY9RZJ+FbmZZNf8Msgt2HFUlMxkS8KOmOp
+X-Gm-Gg: ASbGncsiK9DLJ5PU0F4ILtyb+rpEw0V/sRy/FzEXfBbG2ErtpB8NXyT+kk8YB49Zswg
+	8iQI9ZXBHXBHE65Lxh+7CIOoIP/z8MA+GkCvyeVMdGt7lH0/z2+utDzml02SBQJOZNpxT4EADkg
+	dcQ/7RfuW9dbLaMkzFJiju8PDCmbrnU9Nd1cNfmQI0MeU8eIX91B9In9B6aIxq7meQIC98sY49V
+	SmA+orN/6jSbwu+GNKkmz3l1X1E0Errm18j1IoQ+IDV54eOZSUCbXBPBCaOvLuRDDZi0kIq9xNb
+	sHd9QrsrDTCkIQ==
+X-Google-Smtp-Source: AGHT+IG+NM23xq1Gg1pDDKGgZB+1gTyiM2grB+zK5t5NeWTG07g3GKXCcgUgvelC4ZDkV8YcysruPg==
+X-Received: by 2002:a05:600c:4e13:b0:434:9499:9e87 with SMTP id 5b1f17b1804b1-4394c8538fdmr25448345e9.25.1739270679131;
+        Tue, 11 Feb 2025 02:44:39 -0800 (PST)
+Received: from fedora ([94.73.37.161])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da965b3sm178045935e9.5.2025.02.11.02.44.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 02:44:30 -0800 (PST)
-Date: Tue, 11 Feb 2025 16:14:28 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Sumit Gupta <sumitg@nvidia.com>, Lifeng Zheng <zhenglifeng1@huawei.com>
-Cc: rafael@kernel.org, lenb@kernel.org, robert.moore@intel.com,
-	corbet@lwn.net, linux-pm@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-doc@vger.kernel.org,
-	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org, treding@nvidia.com,
-	jonathanh@nvidia.com, sashal@nvidia.com, vsethi@nvidia.com,
-	ksitaraman@nvidia.com, sanjayc@nvidia.com, bbasu@nvidia.com
-Subject: Re: [Patch 0/5] Support Autonomous Selection mode in cppc_cpufreq
-Message-ID: <20250211104428.dibsnxmkiluzixvz@vireshk-i7>
-References: <20250211103737.447704-1-sumitg@nvidia.com>
+        Tue, 11 Feb 2025 02:44:38 -0800 (PST)
+Date: Tue, 11 Feb 2025 11:44:37 +0100
+From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/13] drm/vkms: Allow to configure multiple CRTCs
+Message-ID: <Z6sqFdvtwSxHD-FO@fedora>
+References: <20250129110059.12199-1-jose.exposito89@gmail.com>
+ <20250129110059.12199-9-jose.exposito89@gmail.com>
+ <Z5uDJFHnn1HzWOz4@louis-chauvet-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250211103737.447704-1-sumitg@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z5uDJFHnn1HzWOz4@louis-chauvet-laptop>
 
-On 11-02-25, 16:07, Sumit Gupta wrote:
-> This patchset supports the Autonomous Performance Level Selection mode
-> in the cppc_cpufreq driver. The feature is part of the existing CPPC
-> specification and already present in Intel and AMD specific pstate
-> cpufreq drivers. The patchset adds the support in generic acpi cppc
-> cpufreq driver.
-
-Is there an overlap with:
-
-https://lore.kernel.org/all/20250206131428.3261578-1-zhenglifeng1@huawei.com/
-
-?
-
-> It adds a new 'cppc_cpufreq_epp' instance of the 'cppc_cpufreq' driver
-> for supporting the Autonomous Performance Level Selection and Energy
-> Performance Preference (EPP).
-> Autonomous selection will get enabled during boot if 'cppc_auto_sel'
-> boot argument is passed or the 'Autonomous Selection Enable' register
-> is already set before kernel boot. When enabled, the hardware is
-> allowed to autonomously select the CPU frequency within the min and
-> max perf boundaries using the Engergy Performance Preference hints.
-> The EPP values range from '0x0'(performance preference) to '0xFF'
-> (energy efficiency preference).
+On Thu, Jan 30, 2025 at 02:48:20PM +0100, Louis Chauvet wrote:
+> On 29/01/25 - 12:00, José Expósito wrote:
+> > Add a list of CRTCs to vkms_config and helper functions to add and
+> > remove as many CRTCs as wanted.
+> > 
+> > For backwards compatibility, add one CRTC to the default configuration.
+> > 
+> > A future patch will allow to attach planes and CRTCs, but for the
+> > moment there are no changes in the way the output is configured.
+> > 
+> > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 > 
-> It also exposes the acpi_cppc sysfs nodes to update the epp, auto_sel
-> and {min|max_perf} registers for changing the hints to hardware for
-> Autonomous selection.
+> Co-developped-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 > 
-> In a followup patch, plan to add support to dynamically switch the
-> cpufreq driver instance from 'cppc_cpufreq_epp' to 'cppc_cpufreq' and
-> vice-versa without reboot.
+> [...]
 > 
-> The patches are divided into below groups:
-> - Patch [1-2]: Improvements. Can be applied independently.
-> - Patch [3-4]: sysfs store nodes for Auto mode. Depend on Patch [1-2].
-> - Patch [5]: Support for 'cppc_cpufreq_epp'. Uses a macro from [3].
+> > diff --git a/drivers/gpu/drm/vkms/tests/vkms_config_test.c b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
 > 
-> Sumit Gupta (5):
->   ACPI: CPPC: add read perf ctrls api and rename few existing
->   ACPI: CPPC: expand macro to create store acpi_cppc sysfs node
->   ACPI: CPPC: support updating epp, auto_sel and {min|max_perf} from
->     sysfs
->   Documentation: ACPI: add autonomous mode ctrls info in cppc_sysfs.txt
->   cpufreq: CPPC: Add cppc_cpufreq_epp instance for Autonomous mode
+> [...]
 > 
->  Documentation/admin-guide/acpi/cppc_sysfs.rst |  28 ++
->  .../admin-guide/kernel-parameters.txt         |  11 +
->  drivers/acpi/cppc_acpi.c                      | 311 ++++++++++++++++--
->  drivers/cpufreq/cppc_cpufreq.c                | 260 ++++++++++++++-
->  include/acpi/cppc_acpi.h                      |  19 +-
->  5 files changed, 572 insertions(+), 57 deletions(-)
+> > +static void vkms_config_test_valid_crtc_number(struct kunit *test)
+> > +{
+> > +	struct vkms_config *config;
+> > +	struct vkms_config_crtc *crtc_cfg;
+> > +	int n;
+> > +
+> > +	config = vkms_config_default_create(false, false, false);
+> > +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
+> > +
+> > +	/* Invalid: No CRTCs */
+> > +	crtc_cfg = list_first_entry(&config->crtcs, typeof(*crtc_cfg), link);
+> > +	vkms_config_destroy_crtc(config, crtc_cfg);
+> > +	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
+> > +
+> > +	/* Invalid: Too many CRTCs */
+> > +	for (n = 0; n <= 32; n++)
+> > +		vkms_config_add_crtc(config);
+> > +
+> > +	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
+> > +
+> > +	vkms_config_destroy(config);
+> > +}
+> 
+> Same as before, can you rename the fonction to 
+> vkms_config_test_invalid_crtc_number
+> 
+> [...]
+> 
+> > diff --git a/drivers/gpu/drm/vkms/vkms_config.c b/drivers/gpu/drm/vkms/vkms_config.c
+> 
+> [...]
+> 
+> > +struct vkms_config_crtc **vkms_config_get_crtcs(const struct vkms_config *config,
+> > +						size_t *out_length)
+> > +{
+> > +	struct vkms_config_crtc **array;
+> > +	struct vkms_config_crtc *crtc_cfg;
+> > +	size_t length;
+> > +	int n = 0;
+> > +
+> > +	length = list_count_nodes((struct list_head *)&config->crtcs);
+> > +	if (length == 0) {
+> > +		*out_length = length;
+> > +		return NULL;
+> > +	}
+> > +
+> > +	array = kmalloc_array(length, sizeof(*array), GFP_KERNEL);
+> > +	if (!array)
+> > +		return ERR_PTR(-ENOMEM);
+> > +
+> > +	list_for_each_entry(crtc_cfg, &config->crtcs, link) {
+> > +		array[n] = crtc_cfg;
+> > +		n++;
+> > +	}
+> > +
+> > +	*out_length = length;
+> > +	return array;
+> > +}
+> 
+> Same as before, can't we use an iterator?
+> 
+> [...]
+> 
+> > +static bool valid_crtc_number(struct vkms_config *config)
+> > +{
+> > +	size_t n_crtcs;
+> > +
+> > +	n_crtcs = list_count_nodes(&config->crtcs);
+> > +	if (n_crtcs <= 0 || n_crtcs >= 32) {
+> > +		pr_err("The number of CRTCs must be between 1 and 31\n");
+> 
+> I agree we need some logs, but I think pr_err is too agressive (i.e may 
+> be considered as an error by some test tools).
+> 
+> I think we should at least:
+> - lower to warn/notice/info
+> - use drm variants of the macro
+> 
+> > +		return false;
+> > +	}
+> > +
+> > +	return true;
+> > +}
+> > +
+> 
+> [...]
+> 
+> > +struct vkms_config_crtc *vkms_config_add_crtc(struct vkms_config *config)
+> > +{
+> > +	struct vkms_config_crtc *crtc_cfg;
+> > +
+> > +	crtc_cfg = kzalloc(sizeof(*crtc_cfg), GFP_KERNEL);
+> > +	if (!crtc_cfg)
+> > +		return ERR_PTR(-ENOMEM);
+> > +
+> > +	vkms_config_crtc_set_writeback(crtc_cfg, false);
+> > +
+> > +	list_add_tail(&crtc_cfg->link, &config->crtcs);
+> > +
+> > +	return crtc_cfg;
+> > +}
+> > +
+> > +void vkms_config_destroy_crtc(struct vkms_config *config,
+> > +			      struct vkms_config_crtc *crtc_cfg)
+> > +{
+> > +	list_del(&crtc_cfg->link);
+> > +	kfree(crtc_cfg);
+> > +}
+> 
+> Same as before, the pair add/destroy seems strange.
+> 
+> > +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> > @@ -181,7 +181,8 @@ static int vkms_create(struct vkms_config *config)
+> >  		goto out_devres;
+> >  	}
+> >  
+> > -	ret = drm_vblank_init(&vkms_device->drm, 1);
+> > +	ret = drm_vblank_init(&vkms_device->drm,
+> > +			      vkms_config_get_num_crtcs(config));
+> 
+> At this point we only create one crtc, can you move this change in the 
+> commit where you create multiple crtc?
 
--- 
-viresh
+Since the code to add more than one CRTCs is unused but technically present, I
+think that this is the right patch to use this function.
+
+Anyway, at the moment it'll always return 1, so it is a no-op.
+
+I didn't change it in v2, let me know if it works for you.
+
+Thanks,
+Jose
+
+> >  	if (ret) {
+> >  		DRM_ERROR("Failed to vblank\n");
+> >  		goto out_devres;
+> > -- 
+> > 2.48.1
+> > 
