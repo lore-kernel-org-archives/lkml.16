@@ -1,117 +1,125 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46F41F03D1
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF8C1F03C7;
+	Tue, 11 Feb 2025 08:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739263298; cv=none; b=i1mnV8Ba8WtQawnQDnHyuv/3qNSL6flGJ2xs+fltiqw+gdG2HbVZC7ugqI4j5gg6IzvWYAGb+XdHazS9JvFMv9U3BB/aFm67cNNd6DhbpXk/BvNwu/2NAuOmWh53QBvLM/uWZoDTUdTAqQiMNCJL8UiNUAtcqMcIn6l8WbFzKt8=
+	t=1739263309; cv=none; b=VE/Kbd5eT42OmMEoc75KVQdkCfd7TyXpK+kAV1aO72pej6LSn33leo7bVdrz3PsavHYa8ZBQn3eGGuulosjrGSDeNZPe5vbLphdWfESof5xpdJt0D7/dxMWsHjzxUMtgcIF6O4J79JQxezKTDApMcRLrRiYLs9fFEvxAGytp0kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739263298; c=relaxed/simple;
-	bh=pcZrX+J37mEd/JG2HKfBGz4YgsAx+tMGKxw2mQHHV/c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ekfMrS8guYeMFO+KyE63vWYMzEr1/+wxfwJa/l6zoWmFo8MKA2ZBFRDS92qH+Gqjyfz2vEgF3z7FcPQ9HCe0l51+vYtFg4UeE8kIKYv9pIIJcvnrmRl+q6kQl+3eDu0Yy05sAtRZmtIJ1NzIxYW/upHA/ginCMIZ6lSLMcRSB14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=deOZDTR1; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1739263309; c=relaxed/simple;
+	bh=6gPS1YPsWcIMNduBKi+ViZQ5KfZ9CPDoSfRGzV5cUhc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RCvu23PhH6Q/w7Xhw25+K/A9XC0pHvdGa6VxwjJ8ioaaI01RiLaqJ4RdhLh5PU3Z3R9VXaJy/u9cVBLwPS/zlaqq/dqoG8EqoKQtOEdQgaHhwyjp5VvWWPu5qADUumMUBfv1M3HZH4xZ4ootS2n8/fEstwVRQVx4wtDi4eDHlyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=ppjjdNdP; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=ot8Ty0pa reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="deOZDTR1"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-438a39e659cso36026265e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:41:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ppjjdNdP";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="ot8Ty0pa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739263295; x=1739868095; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aqT3P+FafKsTve9iwlQFfzcqESHrnY+X7Hzoqpf6cy0=;
-        b=deOZDTR1akEYZAngizMvGEGdIitxRbrg3VAGN2He9JSwz8PGZYGIbPfziPbRU8PpZr
-         9CqkxvrmyEF9zzhm7JhA2kCR+L3OlzKhXLcYlwFViolegwaWB7hq0VK73MeQiDuPpRQm
-         nxUTrS2vAKU4p1HrjEjd/imIe+k9Y9daF7ddTFbmTb52LisvXFqnamywLJjNK6C62p6m
-         zVmEXaqicgeJfRhfe63dxrVVXTNZtZ2MJHh1kcuJBx2JqHU/SQANfO15V/+q1BSHguHj
-         pvV3uiS+xR34Nxi/xNnmkKo2NS2To6/V13AF13hEswBDALS+vDs316ybqoTEjizRIcjj
-         USvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739263295; x=1739868095;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aqT3P+FafKsTve9iwlQFfzcqESHrnY+X7Hzoqpf6cy0=;
-        b=NG38UYq6BvAguudYjWHOxXxY0JGMH9ObLODLDZqq2i8Lw1bAxsMvEgUbojHu1sAxDv
-         t2f0mEGQQq47msjc1rWcmAebeaoSKbsdJ2DRYUbVZMlfZ2Bf4GYrF+5PPacQ2tM89FNb
-         JVTMY2GiTeQEz1lpGXP66PlX0XYca6hnM38lzFmvsV2Bm8nRKzPvQnEL+hdCShFTYiCo
-         8Evd2nEwqM6dpyXCD5eD36eBG6HspGfRF1dbXdAaq2A0gjd+3P2q3L7jneQ0OXI/vTGk
-         k6j+ZpDL1hLN36dFb1M4DwUcyWAfgyyH8PtNFRm3X7NJCnIhZyejfu7pzF8yU1Vu49xq
-         cC1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVeDLtNu6yAtLOm5kgPhDoohZibxx8JFBbFdDQRwDo5OYu+A/7Vx+29e1owQYO5jpwOD70rEaL1s0Xzg+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2jBlU6OriE8FwsEsSE11FiQUeaXCU6PW211ftVsHPZfl0Bv6X
-	i+MPKLGQ5S2ieA6mF+Oh9BBhQw+n9+MEt2eVHOT3w9DxmXH1OJtjJP87KOMe3zc=
-X-Gm-Gg: ASbGncuXwOuWcF7yy/ahMVHdSbi+AngkJXhP4mWb1Xs6/L3rmMGTwuJqk6QXNH8v06y
-	XVtBgorEbk7D75ZRwpLvehxqUyjKmldCDKnVWfjbfMnaEUShg6HUaBfBsjxmNkfqxdc0hCwW/uP
-	XYJG2YNhV+IhVqkbkYLbi1L2XCDi4Qb6bI1TIfKUNSJR3jQKu3d18F25AU/Gt2DoyTOA+IiNTM8
-	wYHvS03JGuwgNawc6Iv4k5SRtqenP2lZZswapaPHEYrjTipWncaT5iL/WhdG6albA77VDalSlhn
-	AT0DZZeGAZDyKw==
-X-Google-Smtp-Source: AGHT+IGPEm991NB1BbIvptry/MmFm+kPJii/eBe5ogouwGf1sSmq4KA2slfZ+QecZeKet1nHZpZAYg==
-X-Received: by 2002:a05:600c:468e:b0:439:47dc:e383 with SMTP id 5b1f17b1804b1-43947dce501mr55579065e9.12.1739263294987;
-        Tue, 11 Feb 2025 00:41:34 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:561:8978:1d41:636a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dca34a8sm168723615e9.16.2025.02.11.00.41.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 00:41:34 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v2 0/7] gpio: 74x164: Refactor and clean up the driver
-Date: Tue, 11 Feb 2025 09:41:32 +0100
-Message-ID: <173926329086.23265.1166908966030656021.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250207151825.2122419-1-andriy.shevchenko@linux.intel.com>
-References: <20250207151825.2122419-1-andriy.shevchenko@linux.intel.com>
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1739263306; x=1770799306;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4RFb9A4U5YyWgy4kzIOhyisia7n5ROq1RTJWpcRxL5s=;
+  b=ppjjdNdP3TX3KgdVQ6MKG5JBgMF7cQOuKN7B+QeKAlJmkH+InPp0+ZEv
+   mZz+eny1WPLbHQ4psKRje13a1eJ+4yaPMP14Y5hNYjerdrWfU8iuXzmQu
+   yfIlOU8btMZ5jXwf0mxhrWwfb93mSolSBV794oUxzX5jdaLN0J7jlfqfx
+   IuwGzrAcf/kAkUWvvjl0e3x7Woo7AAcRhTGi5LoZAGlVPadwfTvBB5Iif
+   AttGGvQrRUeCCVrf02GbeV0feKulIadPo5nshGIFmfL9O+UJs+Zw/GbHK
+   vuvK1shFia08iZ7k/fhMSlSlS2yM2EdtLJ6AjOFOY7lWLdif5sz6E9x9U
+   A==;
+X-CSE-ConnectionGUID: j0tyI7jSQeGshznAOusVTA==
+X-CSE-MsgGUID: emYshl8GQ1aoyScGBzvbtQ==
+X-IronPort-AV: E=Sophos;i="6.13,277,1732575600"; 
+   d="scan'208";a="41744827"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 11 Feb 2025 09:41:43 +0100
+X-CheckPoint: {67AB0D46-30-28232521-C0C2250B}
+X-MAIL-CPID: 63B22B090640647039E5A23306925933_4
+X-Control-Analysis: str=0001.0A006378.67AB0D47.008B,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B7738169B35;
+	Tue, 11 Feb 2025 09:41:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1739263298;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4RFb9A4U5YyWgy4kzIOhyisia7n5ROq1RTJWpcRxL5s=;
+	b=ot8Ty0paEoLYoZcqnTi134PC18byiWn8/CX977l0j/Ul36QedKf2kiEDwDMSjk1wi6eHek
+	zWicf2skVWKrnZ2mH6Ebt/oF9XK/W/lyJ88XQ1x45QDUFGSu1AuyMYnAeFygYGjpm83v6g
+	X/KZcf280IJajG7t77cPMiSTKUHWKjvc5DeHNo2TW+iHJ1lzOIu1jfuaUcZEgtfhGZZf+x
+	BGJJLdR52obnjKWl6Ee2RUiMjaj55EQ5VpKsYwU044Zbu6Sa0A3g1V7Dn8Qu0m4Ys6Xlvx
+	Vi+F5JKWtaJFnXJ+IsL63iR2gC6NZcZtgkhhg0fMfcPYYGOWTcM6m5xci9rtJg==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] i.MX91/93 parallel display bridge
+Date: Tue, 11 Feb 2025 09:41:17 +0100
+Message-Id: <20250211084119.849324-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi,
 
+i.MX91/93 support a parallel display interface. There is a single register
+for configuring the output format. There is not much documentation, but
+apparently this does some internal conversion.
+Add a bridge driver (similar to fsl-ldb.c) for connecting a bridge/panel
+to lcdif.
+I'm a bit unsure about the name. There is no dedicated IP, according to
+reference manual, just that single register. I would also agree
+to imx9-dpi or imx93-dpi.
+Note: It's only applicable to i.MX91/93, but not i.MX95!
 
-On Fri, 07 Feb 2025 17:17:07 +0200, Andy Shevchenko wrote:
-> Seems like I have had a cleanup series for 74x164, but forgot to send it
-> last year, here it is.
-> 
-> Changelog v2:
-> - remove ->remove() leftover (Bart)
-> - collected tags (Geert, Gustavo)
-> 
-> [...]
-
-Applied, thanks!
-
-[1/7] gpio: 74x164: Remove unneeded dependency to OF_GPIO
-      commit: cd323c6e62dd98035c141b6f751e5b2b7d490b2e
-[2/7] gpio: 74x164: Simplify code with cleanup helpers
-      commit: bdd603acf6a2b5056dc174e52bc8b285da529dc4
-[3/7] gpio: 74x164: Annotate buffer with __counted_by()
-      commit: d746cc6e64027e331769f871a595a3dd2c6b30ff
-[4/7] gpio: 74x164: Make use of the macros from bits.h
-      commit: e742e6b02d858ff9f6a7b43d0b1b5aae9c7e5cf5
-[5/7] gpio: 74x164: Fully convert to use managed resources
-      commit: abe3817fa1dcae480ec7b71ec1608454cb65d0b8
-[6/7] gpio: 74x164: Switch to use dev_err_probe()
-      commit: 9bd2dbe4066b3821b68f3e18ba91a3a1cd6354df
-[7/7] gpio: 74x164: Utilise temporary variable for struct device
-      commit: 5892cfc7db9814a71c991da7024fa03384e48924
+Tested on TQMa9352 on MBa91xxCA
 
 Best regards,
+Alexander
+
+Alexander Stein (2):
+  dt-bindings: display: bridge: ldb: Implement simple Freescale
+    i.MX91/93 DPI bridge
+  drm: bridge: imx9-parallel-disp-fmt: add i.MX91/93 parallel display
+    bridge
+
+ .../bridge/fsl,imx9-parallel-disp-fmt.yaml    |  78 +++++++
+ drivers/gpu/drm/bridge/Kconfig                |  10 +
+ drivers/gpu/drm/bridge/Makefile               |   1 +
+ .../gpu/drm/bridge/imx9-parallel-disp-fmt.c   | 213 ++++++++++++++++++
+ 4 files changed, 302 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/fsl,imx9-parallel-disp-fmt.yaml
+ create mode 100644 drivers/gpu/drm/bridge/imx9-parallel-disp-fmt.c
+
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.34.1
+
