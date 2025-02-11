@@ -1,274 +1,120 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCC229A0
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4FB28F5;
+	Tue, 11 Feb 2025 00:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233737; cv=none; b=WNGOBLoU/UYznruNZXWoB0lAtoUYCtqe7FdVnSFgwF7MOV9BS9Rf24FHw11iPN7WSpb5NqthIKGJsNSKlIUvQa5oG9bnvMC8aCwMXcq2Q5vjWccUYA51Rm0o5GO3gLBeQRBoTa2c4AW7En/I0dEif686avdJBE8/xqay+pZSNpw=
+	t=1739233786; cv=none; b=mZEsY0pIpZELOL+PLmbcPYNU7G0zQ464+8vTO6CTEQw/IRqzGfvxD0IQeuqQtLt8hkKUCGR9QlPuP5Gng/xlw1W0OzqnabNQ5dRFKff4D3K0YuUiEHQ3QauNrRlfAk8LI4fIq4dKs/VAcBvFPLPx04J7gBS56MbTZC1sFmKOjRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739233737; c=relaxed/simple;
-	bh=dFb38PYMyv+UEenKSim3jv0rojeAKfCqlzpED01XGoE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f5YGEA0P6261DiqY8WSN9Bbsc9Br+9bYTONzBx/mWmVgkacnaNqLZgYcer6D/WDK5WOLc0Cx1vvZLUSCiuBQp30x0vF9Xf5YzN9pAQ69zOtZpjFlUB9Z3djGF3cAroCp5jgbYiLLAAHa+8FuuZWH9vagSaVU4pxXMilV/CVut90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=pdNd1/oR; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	s=arc-20240116; t=1739233786; c=relaxed/simple;
+	bh=TMgXkr3cTJRM3MaW/W4X97Rj0sxwJzv7gAxKX00QO1Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HDIdP9XWjoo78VVPsbIFOp4htaQS4rIop0RipvhCcFVByK3Th+j8knk5lpV3bYE20Txq2vOQhlIIoIF8TeLCeAonUKDy8u/UykILaTGqjOfo6LvFQ9LUC1AvXmvkQTAT+f9xfMfUlTug6UPyhEI+JtlshfpQw25bkr/Qy+HCtwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AXimKAQK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="pdNd1/oR"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38dd011ff8bso2755333f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:28:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1739233732; x=1739838532; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aJHvmkoJ4NZzrDtHkxvQtMlMZmaGhaWLkXX3ZNLF8DM=;
-        b=pdNd1/oRor/cQSC0YWK6l/fANpqq9i8UUHQMymJlHxO2DOuj63lXWMzBGwRWUtHSmP
-         N1ZEePqvg7evLhpZ+QMvX8ilKiGGyr6Ae5XBiSDeC1ZFPvDpCL0sgMNMgrro9V7vwlBG
-         OEvjCIDiy/3W38964a71x6lvUBaiaLcnZcwc4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739233732; x=1739838532;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aJHvmkoJ4NZzrDtHkxvQtMlMZmaGhaWLkXX3ZNLF8DM=;
-        b=JwCuS27LETBZWX64ajNi5mL/ojYqj79UjaOlRZQvDC1EGef3WsV6N7n6sTSUrsuzAi
-         Hh4FaQ4dw+C8SeCzS6hEoU4wAnbyQFQFLqqngfVcSGTDtBEqlPNl1faWnhF+zEx5yFrN
-         /GYh3ikUdogx/lPk7tMd4WPLyLujDmYt8ESgJIKdXZo4vPnCswaMpToyi6sJdI10Zpdk
-         WJs2Zb+6oqW0kZfDxvXGmHVVAUCV0QWb0QGvA/lkg35gsomapCBzg7hlUJfghVybrGrE
-         UG1wTDjl1X0ZIKttXcIGZmXNW6dt/MyC9gwNQBTRCASctVnc0CzwcHaoe6Fly82H1/WY
-         LpmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhfgFEl2XJVzVdoRIUzFlFfaG0s9TP0pp4XeFwGfG+3UjBTS6LnRo+SkL3+l1eHD/iSrrKPL7ICHXfUgA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTxZce3b1UqqvGOkMjCoVPF1suBNF568a07SMHumLL3nThgUD/
-	o6A5swGkxfJ33lTEOCqGnBegz6s8Jlm4poCLoVcIHgufJtiNLvtc//PM11WnW2v0KZ2j7sMhahw
-	sKDuEF2+aYNFYEsIygRya1Kqlz8SG9UZoPG+kUQ==
-X-Gm-Gg: ASbGncshSb2/e8New/yMrpNZHjGWChtAAqXt9/V5aEO1tOC7DIbii6NzvpwrXc7EBWf
-	v8pvjI/BR6WNb8AdD4K6MnRwUvzkjOtp7v6uDY2C1A07GSGB89Od2S4tTvgJloAv1b+lYvUo=
-X-Google-Smtp-Source: AGHT+IExfl+mPR5DWHGAjHDLHsIBCrX3fpi4pnophsPSrLb37A1vXmaO36a5G8lrOeU3g3f1M+wVwnw57XvehNxxaLs=
-X-Received: by 2002:a5d:64e2:0:b0:38d:d4d4:d381 with SMTP id
- ffacd0b85a97d-38dd4d4d577mr8943689f8f.15.1739233732259; Mon, 10 Feb 2025
- 16:28:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AXimKAQK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08730C4CED1;
+	Tue, 11 Feb 2025 00:29:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739233785;
+	bh=TMgXkr3cTJRM3MaW/W4X97Rj0sxwJzv7gAxKX00QO1Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AXimKAQK8gtKAqF7lap7m+Ntcb4qLWi68dQxwb0HERhJcKUxpSG2D5D7e2JKqrRbL
+	 OydQbSj9RgWKPQxirB4rLTsB4mH7IYirz2Dmg1OAf6yfRP895vtTSq/drXwSP4W3xA
+	 Z3T51AMKiOjD2UrpaaROYee4snilkqPvtzos/YW/u/fjlrpTWyRPY5c25mgApK/+UR
+	 vmAcESqUeOn5VaX6uRnNFXh0D0RDt2dLCo3L1B8cr4aQ4ciG2R/Bujqimt5gHKU6QF
+	 3CgihS2mwyoFgYEPrSCuzSZ2lvstbbZwAKac3ZMm0W8AeSUQA1DZkaWPXevsH0tHPT
+	 g59OqFsgfFHgQ==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: Frank Binns <frank.binns@imgtec.com>,
+	Matt Coster <matt.coster@imgtec.com>
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Borislav Petkov <bp@suse.de>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	bpf@vger.kernel.org,
+	linux-kbuild@vger.kernel.org
+Subject: [PATCH] tools: fix annoying "mkdir -p ..." logs when building tools in parallel
+Date: Tue, 11 Feb 2025 09:29:06 +0900
+Message-ID: <20250211002930.1865689-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <da5065c4-79ba-431f-9d7e-1ca314394443@paulmck-laptop>
- <Z5QcXoE0lrS6yIBt@pavilion.home> <d7bbe2cd-d889-40e9-8d46-fb8772fed6db@paulmck-laptop>
- <Z5T7kF7LKIuk05FR@pavilion.home> <a18ec931-a7cb-408b-8707-f88068a13ba9@paulmck-laptop>
- <CAEXW_YReLoj+fofM9=fT-G0rz-E0z7vcwg_ANrbfCrPOX99tYA@mail.gmail.com>
- <CAEXW_YQaC+TYnXZca2MBcJQgf2EWD+pBp-Dih+b647RtpJ+LNQ@mail.gmail.com>
- <83f5a3ff-8f89-4994-844f-b7eb9e80b16d@paulmck-laptop> <CAEXW_YTiX2taVbg3keCR4RuxSdfpVA0fVPpCcDWXjF7rH7Kkdw@mail.gmail.com>
- <CAEXW_YTduDBJY2CbkStWc3-4MP06+bJVFmEbgvfayB6BQyyksw@mail.gmail.com>
- <76ea9e49-c8d9-4ddf-8dd5-65ba4096e242@paulmck-laptop> <CAEXW_YSxGb3ph-bBiWsOJS-C2XvW9FUuwtoM1eFVxPomMKUd5A@mail.gmail.com>
-In-Reply-To: <CAEXW_YSxGb3ph-bBiWsOJS-C2XvW9FUuwtoM1eFVxPomMKUd5A@mail.gmail.com>
-From: Joel Fernandes <joel@joelfernandes.org>
-Date: Mon, 10 Feb 2025 19:28:37 -0500
-X-Gm-Features: AWEUYZmPmyksieWZ1pEBQBr2nyM2oMrHAAhAW1a8E8lPwWucfBGFvBzUIGIpA-8
-Message-ID: <CAEXW_YS4wD1WJm3fGukyf_rUTZoe9Rmbs2rphLntmo2NbYG--A@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 rcu] Fix get_state_synchronize_rcu_full() GP-start detection
-To: paulmck@kernel.org
-Cc: Frederic Weisbecker <frederic@kernel.org>, rcu@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-team@meta.com, rostedt@goodmis.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 27, 2025 at 1:45=E2=80=AFPM Joel Fernandes <joel@joelfernandes.=
-org> wrote:
->
-> On Mon, Jan 27, 2025 at 11:49=E2=80=AFAM Paul E. McKenney <paulmck@kernel=
-.org> wrote:
-> >
-> > On Sun, Jan 26, 2025 at 09:58:11PM -0500, Joel Fernandes wrote:
-> > > On Sun, Jan 26, 2025 at 9:55=E2=80=AFPM Joel Fernandes <joel@joelfern=
-andes.org> wrote:
-> > > >
-> > > > On Sun, Jan 26, 2025 at 9:03=E2=80=AFPM Paul E. McKenney <paulmck@k=
-ernel.org> wrote:
-> > > > >
-> > > > > On Sun, Jan 26, 2025 at 08:22:23PM -0500, Joel Fernandes wrote:
-> > > > > > On Sun, Jan 26, 2025 at 8:13=E2=80=AFPM Joel Fernandes <joel@jo=
-elfernandes.org> wrote:
-> > > > > > >
-> > > > > > > Hi, Paul and Frederic,
-> > > > > > >
-> > > > > > > [...]
-> > > > > > > > > > On Sat, Jan 25, 2025 at 12:03:58AM +0100, Frederic Weis=
-becker wrote:
-> > > > > > > > > > > Le Fri, Dec 13, 2024 at 11:49:49AM -0800, Paul E. McK=
-enney a =C3=A9crit :
-> > > > > > > > > > > > diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-> > > > > > > > > > > > index 2f9c9272cd486..d2a91f705a4ab 100644
-> > > > > > > > > > > > --- a/kernel/rcu/rcu.h
-> > > > > > > > > > > > +++ b/kernel/rcu/rcu.h
-> > > > > > > > > > > > @@ -162,7 +162,7 @@ static inline bool rcu_seq_done=
-_exact(unsigned long *sp, unsigned long s)
-> > > > > > > > > > > >  {
-> > > > > > > > > > > >         unsigned long cur_s =3D READ_ONCE(*sp);
-> > > > > > > > > > > >
-> > > > > > > > > > > > -       return ULONG_CMP_GE(cur_s, s) || ULONG_CMP_=
-LT(cur_s, s - (2 * RCU_SEQ_STATE_MASK + 1));
-> > > > > > > > > > > > +       return ULONG_CMP_GE(cur_s, s) || ULONG_CMP_=
-LT(cur_s, s - (3 * RCU_SEQ_STATE_MASK + 1));
-> > > > > > > > > > >
-> > > > > > > [...]
-> > > > > > > > > > > The way I understand it is that rcu_state.gp_seq migh=
-t be seen started while
-> > > > > > > > > > > root_rnp->gp_seq is not. So rcu_seq_snap() on the sta=
-rted rcu_state.gp_seq
-> > > > > > > > > > > may return maximum 2 full GPs ahead of root_rnp->gp_s=
-eq. And therefore it takes below
-> > > > > > > > > > > 2 GPs to safely deduce we wrapped around.
-> > > > > > > > > >
-> > > > > > > > > > Exactly!
-> > > > > > > > > >
-> > > > > > > > > > > Should it be ULONG_CMP_LT(cur_s, s - (2 * (RCU_SEQ_ST=
-ATE_MASK + 1))) ?
-> > > > > > > > > >
-> > > > > > > > > > Quite possibly.  I freely admit that I allowed a bit of=
- slop because
-> > > > > > > > > > time was of the essence (holidays and all that) and als=
-o it does not
-> > > > > > > > > > hurt much to lose a couple of counts out of a 2^32 cycl=
-e, to say nothing
-> > > > > > > > > > of the common-case 2^64 cycle.  It would not hurt to be=
- exact, but it
-> > > > > > > > > > would be necessary to convince ourselves that we were n=
-ot off by one in
-> > > > > > > > > > the wrong direction.
-> > > > > > > > > >
-> > > > > > > > > > I would be happy to see a patch, as long as it was suff=
-iciently
-> > > > > > > > > > convincing.
-> > > > > > > > >
-> > > > > > > > > I'm not so much concerned about being exact but rather ab=
-out making
-> > > > > > > > > sure we still understand what we did within one year. We =
-can leave one
-> > > > > > > > > more grace period than what we expect out of paranoia but=
-, the most
-> > > > > > > > > important is that we comment about what we expect and why=
-. Let me
-> > > > > > > > > prepare a patch for that.
-> > > > > > > >
-> > > > > > > > Even better!
-> > > > > > >
-> > > > > > > Do we really have users who could pass such a huge delta wrap=
-ped
-> > > > > > > around value to poll() i.e > ULONG_MAX/2 ?  For 32-bit, that =
-would be
-> > > > > > > 2 billion count since the get() (500 million GPs on 32-bit?).=
- I am
-> > > > > > > curious if such a scenario should be a WARN() because also: I=
-f more
-> > > > > > > than ULONG_MAX/2 values are possible after get(), then a full=
- or
-> > > > > > > multiple ULONG_MAX wraparound is also possible. This means th=
-en both
-> > > > > > > rcu_seq_done() and rcu_seq_done_exact() become unreliable any=
-way for
-> > > > > > > such stale get() values.
-> > > > > > >
-> > > > > > > I do agree with both your points on the side effect of the pa=
-tch to
-> > > > > > > rcu_seq_done_exact(), but I am not fully convinced myself abo=
-ut
-> > > > > > > utility of rcu_seq_done_exact() versus the rcu_seq_done() but=
- I could
-> > > > > > > be missing something.
-> > > > > >
-> > > > > > I want to modify my comment on reliability. rcu_seq_done_exact(=
-) is
-> > > > > > certainly more "reliable" than rcu_seq_done() for wraparound de=
-lta  >
-> > > > > > ULONG_MAX/2. Still with such a huge wrap around it is not fail =
-proof
-> > > > > > if it lands within the "3 Grace period" window, so if it is not=
- super
-> > > > > > reliable and if the user should not rely on it, then I wonder i=
-f it is
-> > > > > > better to not do it and instead warn the user they are playing =
-with
-> > > > > > fire. But a counter-argument might be, landing within the 3 GP =
-window
-> > > > > > is quite low probability...
-> > > > >
-> > > > > It is also a harmless false negative.  And another poll within a =
-few
-> > > > > hundred milliseconds will set things straight.  In contrast, if w=
-e
-> > > > > used rcu_seq_done(), it would be a good long time before we got o=
-ut of
-> > > > > false-negative territory.
-> > > >
-> > > > True!
-> > > >
-> > > > > On a 32-bit system, if there was an expedited grace period every =
-10
-> > > > > microseconds (just barely possible on small systems), then a 32-b=
-it
-> > > > > counter would wrap in about 12 hours.  So there would be a six-ho=
-ur
-> > > > > false-negative zone.
-> > > > >
-> > > > > So an expedited grace period every 10 microseconds combined with
-> > > > > a six-hour polling delay is unlikely, but not out of the realm of
-> > > > > possibility.
-> > > >
-> > > > Assuming that every 10 microsecond of the entire 6 hours is used fo=
-r
-> > > > an expedited GP, but I agree with your point.
-> > > >
-> > > > > Please feel free to nominate a comment.
-> > > >
-> > > > Ok thanks, I'll see what Frederic comes up with and can take it fro=
-m there.
-> > >
-> > > I forgot to ask is the reason for keeping rcu_seq_done_exact() to hav=
-e
-> > > more complexity only when needed, or does it make sense to rename
-> > > rcu_seq_done_exact() as rcu_seq_done_done() and get rid of the old
-> > > rcu_seq_done()?
-> >
-> > We might well be able to use the rcu_seq_done_exact() algorithm for
-> > all the uses, but that will require very careful review and testing.
-> > Please keep in mind that there are quite a few uses, that the benefit
-> > is small, and I was lazy.  ;-)
-> >
-> > The difference with the polling APIs is that a user might well
-> > legitimately hang onto a cookie for six hours, for example, by having
-> > used it to tag a data structure in a block cache or similar.
->
-> Thanks for clarification. I will work on a patch along these lines and
-> see if it is worth doing.
+When CONFIG_OBJTOOL=y or CONFIG_DEBUG_INFO_BTF=y, parallel builds
+show awkward "mkdir -p ..." logs.
 
-Here I think there is a real issue:
+  $ make -j16
+    [ snip ]
+  mkdir -p /home/masahiro/ref/linux/tools/objtool && make O=/home/masahiro/ref/linux subdir=tools/objtool --no-print-directory -C objtool
+  mkdir -p /home/masahiro/ref/linux/tools/bpf/resolve_btfids && make O=/home/masahiro/ref/linux subdir=tools/bpf/resolve_btfids --no-print-directory -C bpf/resolve_btfids
 
-poll_state_synchronize_srcu() uses rcu_seq_done()
+Defining MAKEFLAGS=<value> on the command line wipes out command line
+switches from the resultant MAKEFLAGS definition, even though the command
+line switches are active. [1]
 
-    if (cookie !=3D SRCU_GET_STATE_COMPLETED &&
-        !rcu_seq_done(&ssp->srcu_sup->srcu_gp_seq, cookie))
-        return false;
+The first word of $(MAKEFLAGS) is a possibly empty group of characters
+representing single-letter options that take no argument. However, this
+breaks if MAKEFLAGS=<value> is given on the command line.
 
-where as poll_state_synchronize_rcu() uses rcu_seq_done_exact()
+The tools/ and tools/% targets set MAKEFLAGS=<value> on the command
+line, which breaks the following code in tools/scripts/Makefile.include:
 
-bool poll_state_synchronize_rcu(unsigned long oldstate)
-{
-    if (oldstate =3D=3D RCU_GET_STATE_COMPLETED ||
-        rcu_seq_done_exact(&rcu_state.gp_seq_polled, oldstate)) {
+    short-opts := $(firstword -$(MAKEFLAGS))
 
-I believe rcu_seq_done_exact() makes more sense for polling API, as
-there is a higher chance that there is a significant delay between the
-get_state..() and poll_state..() calls.
+If MAKEFLAGS really needs modification, it should be done through the
+environment variable, as follows:
 
-I think I am pretty convinced now looking at all the call sites that
-rcu_seq_done_exact() should be used everywhere. I am vetting more
-callsites, but that's what I'm leaning towards. I think
-rcu_seq_done_exact() makes the code more robust to false-negatives
-(duration during which a false-negative is in effect)...
+    MAKEFLAGS=<value> $(MAKE) ...
 
-thanks,
+That said, I question whether modifying MAKEFLAGS is necessary here.
+The only flag we might want to exclude is --no-print-directory, as the
+tools build system changes the working directory. However, people might
+find the "Entering/Leaving directory" logs annoying.
 
- - Joel
+I simply removed the offending MAKEFLAGS=.
+
+[1]: https://savannah.gnu.org/bugs/?62469
+
+Fixes: a50e43332756 ("perf tools: Honor parallel jobs")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ Makefile | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 89628e354ca7..52207bcb1a9d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1421,18 +1421,13 @@ ifneq ($(wildcard $(resolve_btfids_O)),)
+ 	$(Q)$(MAKE) -sC $(srctree)/tools/bpf/resolve_btfids O=$(resolve_btfids_O) clean
+ endif
+ 
+-# Clear a bunch of variables before executing the submake
+-ifeq ($(quiet),silent_)
+-tools_silent=s
+-endif
+-
+ tools/: FORCE
+ 	$(Q)mkdir -p $(objtree)/tools
+-	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/
++	$(Q)$(MAKE) LDFLAGS= O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/
+ 
+ tools/%: FORCE
+ 	$(Q)mkdir -p $(objtree)/tools
+-	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
++	$(Q)$(MAKE) LDFLAGS= O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
+ 
+ # ---------------------------------------------------------------------------
+ # Kernel selftest
+-- 
+2.43.0
+
