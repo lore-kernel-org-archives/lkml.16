@@ -1,185 +1,104 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E76B1F0E5C;
-	Tue, 11 Feb 2025 09:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F8F1BD9D2
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739266211; cv=none; b=i37u2eVegp3lzUdLpUQjhCmujGCy5EuoA29RCwsvc/1lh1eGorllebBUxGKEPugv/D/HUhWYSj2O9Ez0+tdjYaLDvqBCEtQ0Il0f1VmNf4CI7rx2HYHNqVim1Zu8Z97DRH7BavXt3I3rgAZ3m/ODOnw7HWK3aAY5P9BtgFO0wso=
+	t=1739266258; cv=none; b=VkU5tvCAE7FBBNbc7AGG9Aih+fxB+LiF+0LBgI1t/jZIFjqFjDNclgBekql5h0vC39dDAhm7HO8y8zgQ+JNo19q5B9kvIjF/2MJsbtR8uIliaOSY1bPleR+Hgy6/D1XTFQkznfOqcc9JhXaVWZeswPSXqjyL/+J2LlpqkAYz6NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739266211; c=relaxed/simple;
-	bh=kh1RoAOMTmHyrqSjIKrarn+yEalDE2KGW1HPIU+MCRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SppA0u1u2OMgZAWOai51Wsd59yXVHEt6BMCbyBdhjnQIoIVnHdB1zhX0AZHRH9fDMwbYEdecs8CtruBeUYY9BwS8zvL6LDUhbkT7da2GOsWsZCphG2Y1gP4Yn7LQhwuNqFc85yz3iK087poqqfmSeAL4k1I4ZNiJtkDLwVIFu7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=alM7hX1q; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1739266258; c=relaxed/simple;
+	bh=tB9kJkzix8UdmTuptFEyspPiHP1wy3L8TCC/7InfdzE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rlqOcmi40C1zTwr2EGCJcrnrPU+0BjEjwFobixofZK10rjmwPEhsGG4hcZYdhX67SxLL5SOif75kTdS3DnEyBx6LNSc5gaX97j+nC25Htc41Sc+0LHoaGyv41/cKfmbbqpvPTQNVeMoHni7M1PcAyWRUzbIc8HydqTfoUl53n9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JEfEg4O8; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="alM7hX1q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1739266201; x=1739871001; i=ps.report@gmx.net;
-	bh=wPhcP0ysWo8kiC7tYIfKR/lpoPsbi4VO9OoHCHU8r3c=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=alM7hX1qBVd6fvxF8urV62Jd6EGPbq9RvKsYyZMZvHtNf1PYTsrrAKVlchb06krh
-	 /nGOn9fME7qG1t+jqZ3p+us9kGVK5bkuuSc8UttDjezv8KNqpkerKcXu/apnoabra
-	 ZlrzBZAIqQLLeOae+HTJiDyAzMFLPMDn9dnJ9lMepVn3LNl2V/PJtK+I1ggEwgW/G
-	 YPRJmy8rFJHMNTmkML4JBPJ+NX3107ChRl779ADi9YrvWOwShjGpcFXLDPP2zGQJ8
-	 G7boVTsCAq5HDgfmbwSDmjAKaOpH9Wmqk/WYpGGBRX+X15TQg/OZmYNyzbNN9+/Vr
-	 XAloG4cQET9BHwC1Pg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost ([82.135.81.30]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MyKHm-1tTfTo3Nq0-00sfdw; Tue, 11
- Feb 2025 10:30:00 +0100
-Date: Tue, 11 Feb 2025 10:29:59 +0100
-From: Peter Seiderer <ps.report@gmx.net>
-To: Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH net-next v4 09/17] net: pktgen: align some variable
- declarations to the most common pattern
-Message-ID: <20250211102959.4aeeb806@gmx.net>
-In-Reply-To: <20250206132538.GU554665@kernel.org>
-References: <20250205131153.476278-1-ps.report@gmx.net>
-	<20250205131153.476278-10-ps.report@gmx.net>
-	<20250206132538.GU554665@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JEfEg4O8"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4395578be70so2078675e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:30:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739266255; x=1739871055; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8DiHXPgT+3YQYkd4DdSOCTqE0SnmmwoYH/BXg8DEztU=;
+        b=JEfEg4O8O74f9t4oygOJEiDUe7JdvANbZL8W6bCbF9kUeWjQsO6xjs4bkmoWLH5USq
+         8fBmmHISzjaW9WgD6UaTdvGHM48UW+BVkCEUg5vURxJvSRdtun3qgOB3XsbAVPzEogHW
+         oiKatiL7teSKz9DxTZwbCJ7HEp4GA4rhQ1T3WzHUk3R98pCuJQdkU5JOkBtnT60wlsQi
+         H5cwh+vcZHp1Xh6KRy21BJxqtHY4hmWI+46rl4CS1RIz6eoVw0Qkrmd8JKO2bp9q8guB
+         jjhZnG1N7yuCT9zbgZtyTHfXdT+4MkCEcK4Vse6oG27u3tRyFZDrgTsu5UQiig/ua1po
+         RDFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739266255; x=1739871055;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8DiHXPgT+3YQYkd4DdSOCTqE0SnmmwoYH/BXg8DEztU=;
+        b=jBxeLMuGcXVo48Q9oIDd0nZwGtmLmR293lAyl+aZEnmUCeFch92sVVSfxenYxKTogT
+         7MR+1K6RA39YE3GLDePRJ6FcjzaWE9gy4kX2ZHynG+6rrBHDPYtDpjWlvGIusz33//WV
+         cbyxoA9+HBO89dGJkG1rGLksqTbnNxv1czqPZ0OV8iVec/i6xeYb1BA7xPhSEPuEwH1m
+         5JIYF90MdaQHD/LIR5E1gF7RuczDY9ZxesfbVbelXN3a+Bmz+abjy3hIHSm4GlezUD7D
+         +EOsRA7LdzWV5PXcyn17VBA5BETxzQ69jeCw+OOPBZjc3mJWBFGvc4LtPC0EQRyHbbQ8
+         AV1A==
+X-Forwarded-Encrypted: i=1; AJvYcCV7EokmUFoo4khzeo8x01FIKlvoI5O87C1AIhbeEVCVXRlIWNw2y0mP3j+WYM2qQBfiFH/2OBIyEhf3Eek=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwD1mIjAYfeuwtRnaKFl7f//zNaSVAr8ZXi25WANdPztYuhzW7/
+	+5s6zTzGx6fPYAL8vbEGxWprpCxwuQUoWyVDT1BffBQL3CQgk5cjKQVwg9thcQM=
+X-Gm-Gg: ASbGncscmnbI9O6Lkrzfl8l5HmreinVgeokSZ6fGObrR2QPza6/NGYHyR6ai7zfDr+/
+	0EUpgrVll/N8dnobFCQ6zmVqTWfFmmHgXnhmFwZ0RhLzNi5agA9WmjlFBwfZnCOwFLumpx8zZg3
+	rb9yWXUgTPJqpu89qUPwwnJASJpOjOMSwNne6Req/O0vXzp2DJAGGaKPJmXcD1o3kuYV9PPVP4T
+	aYXTewx/FuGQzawOcQs2bW9AeEyiNmoOPnZnHxF1YNR6iaXMmzHgE74JgmiRymLIoWEUimnuQN4
+	A81qk/Y7d2FgsSGwV0/b9sxhe8j93IoiCLGquIB6UjnCsc2PcMfCfxiGKneHg+jgHp6Xm6Q=
+X-Google-Smtp-Source: AGHT+IHvp+X+fSiYRW+1aXlB5+kLhOGzNT0eATn29S+MSUUf1w33k5xR/ZKqHe179dbj9iJ2W/rkEg==
+X-Received: by 2002:a5d:59a9:0:b0:38d:e02d:5f4b with SMTP id ffacd0b85a97d-38de02d5fc6mr5082245f8f.32.1739266255437;
+        Tue, 11 Feb 2025 01:30:55 -0800 (PST)
+Received: from ta2.c.googlers.com (169.178.77.34.bc.googleusercontent.com. [34.77.178.169])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc672b55bsm12591296f8f.79.2025.02.11.01.30.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 01:30:54 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: [PATCH 0/2] mtd: spi-nor: use scope-based mutex cleanup helpers
+Date: Tue, 11 Feb 2025 09:30:52 +0000
+Message-Id: <20250211-spi-nor-guard-mutex-v1-0-05ed77a484d9@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:q80QNBi+mJdxRVtoALQDPCsn0ntljixSQm1+/52vqpAYjyfu5H+
- rC0XAmxfBPETOon9BrIi85OQR80Q2h056GPCQ9d8o6+Nskz+BLtxrx5H5lhKh6Md3hTQcKs
- OAua78GFQhmNlNAJKs2kMex4rt07d9ILIboGs29ePvDELSMDiGpvz0aBYXrvZa+6QUJbiNK
- YE79Men49QssJA0OOQBGg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:4lyfgqOCAV0=;raGpbA+rgF/FhrQImWdd3OWWvx1
- +Oo8jrA9hNP92lgMFIPStEkyFC/IJxIX2GPTKeJ4iJrLA6mB3YZOubq4BYcdhRFEKitt00iJ3
- sVzWUOSRquZCP5s8ZCP4Wi+VmemdxDvNmKBuG1FeDI6MwziyaJhyyJdgQRrqPNhKsXXIIzYkM
- ZMafGzwp1PxYFl8wgBnw2PkW3o0gbrhFbxQvyvie3B4RMXCfi5HvEm+DA3SVCsS7NpWCl9ZUa
- bzG3gvGPPFJso1gJA5xIg9KG0l1g5ZKMgQ1DOHJnaGDyXOsFfJPoglE4iOJJfCt5CWkxyyVEi
- r2D7XsE9gq8YPhST+D4cLWJtSn4yJN/nvv7Almpz1DN1orEgrjODyRlzyK+/0PIvcHy4bOIuq
- ESric4Eem+zxNOFK4vQBtrx75fjdR21nkygnLzTkXl9TSZuYSTYHXXhu3qyWugxtHTOenEKKw
- HiF5XaGGhMwYZZvsUte7/HGlFt8+huQgB9Z+bWKsVOg0G8d0Z9huXD2lbEXC0p4YSCPwjPbek
- mwCv7OcSdwnfOPYvv8NFuwHV/9Sp2cUGMvEisWM3vGGV+B4ZfVyunpCs4rwexjeGFL788cbWw
- J0+KqZhD4OeTUxv0lxdEEPi8URHuwRNXgZK9vtehnTTB5tEee4Ap3pGvtwhQ6worxaccvGiRT
- p362BpzP+rtZLdmwSe6YF2JUrmgy6D1KFn+3na+GCYXQqbUnUByycMZoZ+7MkA2E8w8517yam
- zS8isVAF+puXK8L55M734xdV0EgcQeCCqrcLJXkfiPSl8kXR558VtFWsL6mGZSr0waMvaLAFr
- kuZTxWWUg3QOYpai8A7j/U4ZHppTUC7Fd8ltOS8Apkmrc94w3Acf2MJXgFsloRoj2vokj2N61
- gu8ocEvUH06KW5lm+sb+sr7Fsn7+N6kUqkysgeqS29lPwoS8WugjX7NouTMpA74pWZ9KKObsY
- NtH/GdhB9HNdOKzoD7NPXn4SYrE5o7wnEYt3I1m0ZIsoazC6XW5tezFY9H2Q2qs+b1fjsrJL7
- ih7jlDJCh2rgprVJrTItX9rnlhV73hv850A4Hh+5C3J/YR2/6IuuHmS8Vej9zCHdK6r7qoOzi
- msqgF/+uhKRMbiajBEgr9CoSRR8KVx+EIhCq7Pyj576h96RasPEDJNnMjRgIzsK5SAY9oHbbU
- wE6OgZCNBKuYbUSCi+S7MPIV6ttz26d0j3cHmXBNvbs7FK+Co4rD0qtsJ1j3eFremrGGGEBXu
- Qmhy/+U99tALuyL/aHB0IpgEUhaMCMtIDmR0q6ZCNux2Qp7n03tEhmJgbKv+Unp4bmJtAFxwo
- HZRncB4suxHo1zHmLt5FvNab95gWMgSeqgg0BUdEPdpit+If15J1jQrn4+dn5M8XnVhZnYzZ+
- UXO9OZOBNKu8CMq7QqrYRqqTTQ7sQEdE3Q3ISi4xtTK5yPBB9RE2yD6SYrcR1zbUSzuFeV936
- braH0K8XJ6MIMqfNT7Ds3jUboQu8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMwYq2cC/x3MMQqAMAxA0atIZgNtUYleRRyKRs1glVSlIN7d4
+ viG/x+IrMIRuuIB5Vui7CHDlgWMqw8Lo0zZ4IyrjbMW4yEYdsXl8jrhdp2c0FDbEpGvamogl4f
+ yLOm/9sP7fl18TA9lAAAA
+To: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739266254; l=570;
+ i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
+ bh=tB9kJkzix8UdmTuptFEyspPiHP1wy3L8TCC/7InfdzE=;
+ b=8OZFGRlWl0hO43G2J3e0yhgCef6e270zFNX+Z0P/s3h8aYFvv5kZR2ZbM5zl8ouz3XewXz7yJ
+ JQN6aS7xBWhDwm0dEYxzL+b385Lq+vUgRg+sJLDEgAlTaMd6iMCGdFd
+X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
+ pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
 
-Hello Simon,
+Use scope-based mutex clenup helpers, it reduces the code size.
 
-On Thu, 6 Feb 2025 13:25:38 +0000, Simon Horman <horms@kernel.org> wrote:
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+---
+Tudor Ambarus (2):
+      mtd: spi-nor: sort headers alphabetically
+      mtd: spi-nor: use scope-based mutex cleanup helpers
 
-> On Wed, Feb 05, 2025 at 02:11:45PM +0100, Peter Seiderer wrote:
-> > Align some variable declarations (in get_imix_entries and get_labels) =
-to
-> > the most common pattern (int instead of ssize_t/long) and adjust funct=
-ion
-> > return value accordingly.
-> >
-> > Signed-off-by: Peter Seiderer <ps.report@gmx.net>
->
-> Hi Peter,
->
-> These comments are is true in general of this patchset, but particularly=
- so
-> in the case of this patch:
->
-> * I think a more succinct subject would be nice.
-> * I think the patch description should provide some reason
->   _why_ the change is being made.
+ drivers/mtd/spi-nor/core.c | 75 +++++++++++++++-------------------------------
+ 1 file changed, 24 insertions(+), 51 deletions(-)
+---
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+change-id: 20250211-spi-nor-guard-mutex-0899888a4586
 
-Yep, will improve...
+Best regards,
+-- 
+Tudor Ambarus <tudor.ambarus@linaro.org>
 
->
-> Also, specifically relating to this patch, I wonder if it's scope ought =
-to
-> be extended. For example, the two callers of num_arg(), get_imix_entries=
-() and
-> pktgen_if_write() assign the return value of num_arg() to len, which is =
-now
-> an int in both functions. But num_args() returns a long.
-
-Aim was to get rid of the int/long mixture in the code (which works flawle=
-ss
-because no one writes to proc with more than a few bytes AND count is limi=
-ted
-to INT_MAX - PAGE_SIZE in vfs_write (see [1], [2])...
-
-I believe the clean way is to use
-
-  size_t i, max;
-  ssize_t len;
-
-consequently through out the code and adjust the function signatures
-accordingly...., will re-spin...
-
->
-> > ---
-> > Changes v3 -> v4
-> >   - new patch (factored out of patch 'net: pktgen: fix access outside =
-of user
-> >     given buffer in pktgen_if_write()')
-> > ---
-> >  net/core/pktgen.c | 14 ++++++--------
-> >  1 file changed, 6 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/net/core/pktgen.c b/net/core/pktgen.c
-> > index 4f201a2db2dc..279910367ad4 100644
-> > --- a/net/core/pktgen.c
-> > +++ b/net/core/pktgen.c
-> > @@ -850,12 +850,11 @@ static int strn_len(const char __user * user_buf=
-fer, unsigned int maxlen)
-> >   * where each entry consists of size and weight delimited by commas.
-> >   * "size1,weight_1 size2,weight_2 ... size_n,weight_n" for example.
-> >   */
-> > -static ssize_t get_imix_entries(const char __user *buffer,
-> > -				struct pktgen_dev *pkt_dev)
-> > +static int get_imix_entries(const char __user *buffer,
-> > +			    struct pktgen_dev *pkt_dev)
-> >  {
-> > -	int i =3D 0;
-> > -	long len;
-> >  	char c;
-> > +	int i =3D 0, len;
->
-> Given it can be achieved with exactly the same lines changed, just in a
-> different order, please arrange the local variable declarations in rever=
-se
-> xmas tree order - longest line to shortest.
->
-> Likewise for the other hunk of this patch.  And I believe there are also
-> other cases in this patchset where this comment applied.
->
-> The following tool can be useful:
-> https://github.com/ecree-solarflare/xmastree
-
-O.k. will take a look at it...
-
-Thanks for review!
-
-Regards,
-Peter
-
-
-[1] https://elixir.bootlin.com/linux/v6.13.1/source/fs/read_write.c#L673
-[2] https://elixir.bootlin.com/linux/v6.13.1/source/include/linux/fs.h#L27=
-04
