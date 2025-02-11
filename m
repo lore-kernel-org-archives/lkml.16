@@ -1,83 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C905C2638B5;
-	Tue, 11 Feb 2025 19:13:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78342262D11
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739301234; cv=none; b=TLRxK1P6PbDfYPb1z7kLjNE1uvyf3SwV5dsp1KTFQZFv3RpO3/llkKMW322F3f3pZ5mlwN74jhyGg/fSNSVDfdIZeVlsvOy6qu63mwxC5imP1mgblU5ng5Fno6IWTM5bxP1uUUekc/UXeUjsUAlRH9r0av72RONDltISuzXVmSw=
+	t=1739301273; cv=none; b=gUbYcFc+mFjd9LdLn2PbYwjU0v+NNXyjigV6SojsVXBTVSmzSiyMMq0RryB04M3lt6lQa1Bg1XAdxyct6O1R0FtzVyS6rB64KHAzhnuiYPG82Gv3T0HwuNOrwQvVDoMn3jxP56AWUdmjdNkwPw10vg5rqiUzP+WBenn3UHlKDg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739301234; c=relaxed/simple;
-	bh=FrEJd9jXepdUuhDPmxH5Vj3+n9U4/VIxGBQQAZktwuQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mTnfQsxSFYiUD2aX/tLP4hiFb8SpPxM4L/s1FzVvlOk4lHVNF4JLhZQ6MRLHhSx7/Xc4L+KuPiRrKtuecVBt0IlKQN69xZP7tpww3iXZWFOBGTUuCsAjDkELhCdWbFH9sWr08y8ZV8RHoRWQoWGZngX9aG6NTTXUxW+RrwkpIBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kgYfy6en; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739301273; c=relaxed/simple;
+	bh=vyTBcmYfrrYkIm6Dk87/cDEK50YxjOkKi6v4tKwOVls=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=SqrzwOli5U5DyQmipu1f0ykhIVGBoDk5jFLqmGx+/IBhJlBgnFzjBPPNJuG2ozdYiv7+8QX5tmyRootOHvIPwQwI3pD/jgsCifxzPGcFJiVez3PAYjCfLOSqhlz+baLmNCqw+EeQ/OBSWEPP7SX0CPF9SbciNbeAu1SV7DDnYAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LNz6GzbV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kgYfy6en"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 882F4C4CEE4;
-	Tue, 11 Feb 2025 19:13:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LNz6GzbV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED768C4CEDD;
+	Tue, 11 Feb 2025 19:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739301234;
-	bh=FrEJd9jXepdUuhDPmxH5Vj3+n9U4/VIxGBQQAZktwuQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=kgYfy6encDJA2aRUzq86NpQw/4OFXh9ciIzDH1ManFoPdJaXAt6dE3REa13eS28zR
-	 RCl6j5CvpDa0s0EjWaPcABbBQZ/JaCql/UOsk1NxXVgNwxiSqffcAtBewrlyL3WY3g
-	 xgZ330FPAc6jj7D6FvppYAXYVhRPgCKvyebI9q59B55/KB51E2rn767JLrc36GGlke
-	 aoA9+89/O2M9O2Vas8j067Hd1MHULNk6r7tN67jvIV6EBRYlfW6sRE2bMUHHhyBiRY
-	 Zci2NIsAqsGzghYbxlJnIoHUhhs8mUHHGHyWo1A71UoYzwJ9Wtq9v1os6fwMuaJgsx
-	 LxTBbOxvJmpqg==
-From: Mark Brown <broonie@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Andy Shevchenko <andriy.shevchenko@intel.com>
-In-Reply-To: <20250210-spi-offload-extra-headers-v1-0-0f3356362254@baylibre.com>
-References: <20250210-spi-offload-extra-headers-v1-0-0f3356362254@baylibre.com>
-Subject: Re: [PATCH 0/2] spi: offload: extra headers
-Message-Id: <173930123330.78619.3960614397215392494.b4-ty@kernel.org>
-Date: Tue, 11 Feb 2025 19:13:53 +0000
+	s=k20201202; t=1739301273;
+	bh=vyTBcmYfrrYkIm6Dk87/cDEK50YxjOkKi6v4tKwOVls=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=LNz6GzbVbFiG059p/Q3KT6t4TxwSUidZ6ujksEnB1BtAxAIcwlUVj0Q+dY9LoMXvN
+	 1CrfSu4fpGwKuoK4YUtb+8FQFnBI8M/gTbaQPOHFYE8veVw3/KVZ5SAzuYo6ZPBymn
+	 Xc1YSW6CYhlOl3pF8HR183opjf4fsiUsg/zMRzdxxvbqDGJvDHkVIdSNA9N7Tvaxqj
+	 MPlaHMb8ihzBSXwaYFtzoDaeraEVwQupWyPQuBAJdLW6Kg0Nz0hXkxgdr22El/2oJQ
+	 uDyOhgn+9OqbI4VVqU0NQfXY0paIOOFwiZ7EgW/gN+KVFTGGG/XEQt61pLF7QS7PlL
+	 0Wx8iuKZ5SwJg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB21B380AA7A;
+	Tue, 11 Feb 2025 19:15:02 +0000 (UTC)
+Subject: Re: [GIT PULL] tomoyo update for v6.14-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <48a5c8af-c447-496c-a4cd-85a5698e5a1a@I-love.SAKURA.ne.jp>
+References: <48a5c8af-c447-496c-a4cd-85a5698e5a1a@I-love.SAKURA.ne.jp>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <48a5c8af-c447-496c-a4cd-85a5698e5a1a@I-love.SAKURA.ne.jp>
+X-PR-Tracked-Remote: git://git.code.sf.net/p/tomoyo/tomoyo.git tags/tomoyo-pr-20250211
+X-PR-Tracked-Commit-Id: bdc35f164b0f60480b2f5e098bb8f3c0cea05cd2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 09fbf3d502050282bf47ab3babe1d4ed54dd1fd8
+Message-Id: <173930130149.4156803.9340963539697647565.pr-tracker-bot@kernel.org>
+Date: Tue, 11 Feb 2025 19:15:01 +0000
+To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
 
-On Mon, 10 Feb 2025 17:16:13 -0600, David Lechner wrote:
-> Following up from some late feedback, a couple patches adding extra
-> headers to a few SPI offload files.
-> 
-> 
+The pull request you sent on Tue, 11 Feb 2025 22:01:28 +0900:
 
-Applied to
+> git://git.code.sf.net/p/tomoyo/tomoyo.git tags/tomoyo-pr-20250211
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/09fbf3d502050282bf47ab3babe1d4ed54dd1fd8
 
-Thanks!
+Thank you!
 
-[1/2] spi: offload: types: include linux/bits.h
-      commit: fcd7ace9a725ae034ff9f24cb94c9fe12a1f02da
-[2/2] spi: spi-offload-trigger-pwm: add extra headers
-      commit: ff4d4158ef9143327a42f7be4298751cb0d1be69
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
