@@ -1,217 +1,493 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF6B1CA84;
-	Tue, 11 Feb 2025 05:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739250316; cv=fail; b=JNUNHoy+rJNb8KEz3/28J/RwDYzVUm+24ws0bdQwV6p5MgF2579cZm2Je6pUjaj+H5E/oPrM0Cqyauvv1LqW6zgfkMfuNl0ASOyMC9AioY4LihWf7UIMwSPV4THxuJm9VF2TfqKOtBcEBHPiHdV6sTs9AAgAv9fO0HWz6y2sVcQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739250316; c=relaxed/simple;
-	bh=Q3SuIFBzcxXrRhufDxx5Y7DX4uzgMnMkg4VfHWdCi/g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=hG2WG3oaS2afLnwcUJgyjUezrK8k7OEHtd+o1FlDGQJ6YBXs3ITwJAjb/Miiv41g0IpbQXJ5WZrYdIzOCD2nt87tY00Xu4iQ2rpXsRTWgvLr9+gyY8fF1PseSUS0kPqn9RwhL6kzt8KTHh5lRMVjeYaeqTLvh+mbDhmasEmfD+4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FO8EoGu8; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E31B26BDA8
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739250541; cv=none; b=LNv2GS7I4Hm4gRzhPlt1vx667pJFj4qQUrAUwx58ltrCz04QLEYzqbHoheavd1d1Z/E94XRmxB+ItUI7jJEqf6kL2jSfxNfHLNM/OK5F1vs4vrr92TG2UlJ2S5WeI21GGFM8GToa6ib3iI68+13l0EAm/DB/IA6P+xor6881y3c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739250541; c=relaxed/simple;
+	bh=E/cHEEXbhIFAqBP265ABzCQu2+wXDOCdEMdOiWMl+uw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=De+ODn3FVJS5JQOQXR0ECNmJpFybp2EBOIBdj5/Om5yxPrfspdJoolqk3EURpvRLvTp/p8v28ahh1hwJZ7Fo9dqbotvhmjG150fRgN6N9Yq95C34k16qARe9mmsXa+ah8ZBh25tT+PyeoJa9F/ra0I9R9dqJesmx2s/1FpQBiu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h9FaCYMv; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FO8EoGu8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739250314; x=1770786314;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=Q3SuIFBzcxXrRhufDxx5Y7DX4uzgMnMkg4VfHWdCi/g=;
-  b=FO8EoGu8PZS0W6h0ulT3KqMm23abzhpYzX1NBBTZ931vJns0RvJ9rI3S
-   XJ5pLDEpXqsEQ+jvjrnLTuqt1VLmr2T5DvhR8iGXVLJ+NSMXmQiIkfmN9
-   Rh6kKhOFA0ugCvoYAp5KcBaBc4H71EEjptpFFJLsh38t666/UjUw+kY+/
-   v/KPa4sDHhu5f1eA2bJHRCVLCtQswU0H6TIhmrrDF18eQOSE0hb8OWgCj
-   UgTtOQnI4/fjwn07+au5BbtkhttPueYYG12XAqWLPM3MOcdFrIlZVypy+
-   2ETMh6JY6ZWFkbCkuWqQ2nNvFVp47+VyQb0gTNu67ALJ3a7a7SBpdYcRB
-   Q==;
-X-CSE-ConnectionGUID: 365pDX1pSWiXZeXx1LfFyQ==
-X-CSE-MsgGUID: r0ajsIQSTJuEz3iyZz0SaQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="39718785"
-X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
-   d="scan'208";a="39718785"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 21:05:14 -0800
-X-CSE-ConnectionGUID: F++oFPb1S7yjfkBvtJgSYQ==
-X-CSE-MsgGUID: MZRd7zFcRZqHXUtq5RotDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117597632"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Feb 2025 21:05:14 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 10 Feb 2025 21:05:13 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 10 Feb 2025 21:05:13 -0800
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.43) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 10 Feb 2025 21:05:12 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=T0XQUt6nVg9Sud49Uy2iV9cINH7Hiipj5HRw60QS3CPawD5YmefZRWZBdWEZ3JgbfPzQcmM2jL60D9vYTyTE5AsS2um+gqbfSaM+RWf2YNhkQDxvR4oyGy5c18dZtFs9xWiGdvSwbXkZSxqeptmPN6C/DSoiqy1ApnSyovveIsH96E2HxlCqkyDPZ2XKWqev3mib1R14BHh39Y6Vlkhi81CmVJXHDoB65wqGu2qFYuYh4OSGK7MlqlpK3zlyw0sirU3yXRkO0t/b79mmKBNaRtcc1aHjYGWFhAmiaYbaNOQ6jqv6GUIBq1y7GisP5EIVxzg/7GUtodRgRjDzHNWujA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q3SuIFBzcxXrRhufDxx5Y7DX4uzgMnMkg4VfHWdCi/g=;
- b=U40AWOsK2JNziaCCZsMCgj7PcEf6xYe4HvsVJYRZ542xrzF/jc3aAXoCy9CDTmZL5oyngtwsfIQhRD7KBWbF2ni4j8qmNOxHobVhiCVbu4f+zGe8A5eWP6KtyXKNxK3mvTPi33eKE2cqn/EHEIowKYeFAt8Dmg2FZOlQxR0uASVCxRECTTwoc6FPfAwz+HH0i2OXrcUIZ0SwMwEDz/9dS85gsReM0ioiTcQn8prMTLn7D6bCVvUJAH42Xxbqr7r0usvlCdCxiWGJhM6OUC9W9dlbQd5ezcU7XyAdDElDlwE6UJAR5o1Sqkop7EtG+llxIT2Zu+snL3XwfYpHvvIRCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
- by SA1PR11MB6687.namprd11.prod.outlook.com (2603:10b6:806:25a::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Tue, 11 Feb
- 2025 05:05:10 +0000
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::fdb:309:3df9:a06b]) by BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::fdb:309:3df9:a06b%5]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
- 05:05:10 +0000
-From: "Huang, Kai" <kai.huang@intel.com>
-To: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com"
-	<pbonzini@redhat.com>, "seanjc@google.com" <seanjc@google.com>,
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>
-CC: "Gao, Chao" <chao.gao@intel.com>, "Edgecombe, Rick P"
-	<rick.p.edgecombe@intel.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>,
-	"Lindgren, Tony" <tony.lindgren@intel.com>, "Hunter, Adrian"
-	<adrian.hunter@intel.com>, "Chatre, Reinette" <reinette.chatre@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhao, Yan Y"
-	<yan.y.zhao@intel.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>
-Subject: Re: [PATCH v2 1/8] KVM: x86: Have ____kvm_emulate_hypercall() read
- the GPRs
-Thread-Topic: [PATCH v2 1/8] KVM: x86: Have ____kvm_emulate_hypercall() read
- the GPRs
-Thread-Index: AQHbfDAdHdE1vXi33ESmwEUDitMlkbNBjKiA
-Date: Tue, 11 Feb 2025 05:05:10 +0000
-Message-ID: <2aa9a47831205744f826b66e20001b2c6fde6d68.camel@intel.com>
-References: <20250211025442.3071607-1-binbin.wu@linux.intel.com>
-	 <20250211025442.3071607-2-binbin.wu@linux.intel.com>
-In-Reply-To: <20250211025442.3071607-2-binbin.wu@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.54.3 (3.54.3-1.fc41) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|SA1PR11MB6687:EE_
-x-ms-office365-filtering-correlation-id: dc5cad5f-e2cd-46de-c313-08dd4a59a8e2
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?ZnBwRFdBbHVzMEdGZzNyV1JOS0t6cDBLb3VMSktSaGE0bU10cHUyd2xNSS9I?=
- =?utf-8?B?dnFpaGpwelEvOWZKY09sSExGRFEzaGJXTm5nLzI5QW1naEdDd2g1bXJpa2xT?=
- =?utf-8?B?YmlCS3JjVFE3U1hUU3dUTFZKZWNSVHdsSVdpSFlOa09ENXBxd2NPWklhVmxM?=
- =?utf-8?B?Q2R6WDF6K0xQYWNNTDJsa2t4bWYvRENCczRVWmRYdWVVeDRoTTdEaHhRZzBR?=
- =?utf-8?B?ZGJhbUpJZ0R1TDNiVzQ3TXJZQ0gwMnVKYzJyeHlXSVF3RGNYb04vNTFDd1hm?=
- =?utf-8?B?S3A4ZXRUeXloeW1zMkRvdGdDeEcxb2UyTGk1YXB4ODY3UlUrcXJ0SEtueUw5?=
- =?utf-8?B?Yng5WkRiczU1dXlPS0QxY2t3TFptVTFkRU9qdmttWjBQdVRYL2laWERtMnVR?=
- =?utf-8?B?aFhXWFAyTVZ2WURJQXZHaElqWUpYSWx2aFJQS0RlNkZXZDZOTm0zSWg4WVMw?=
- =?utf-8?B?TkFjVm55NFJyUWVha3RRVFJYMks4RnppVzBQY1U1bkM0ZXBPdWIycnJlSGNu?=
- =?utf-8?B?aHprRzJuVEdhNVpGaUNyTEZ4QTdTQXIvOU1sRGhwUVBOS2ZSMjFxSDB5Vnc3?=
- =?utf-8?B?VHZCak5NZ05XWms2MXhMSW02MDVIK29CNDYwVVhtZ2haRHRsRnp3TlEvcnQ3?=
- =?utf-8?B?WHQ2Q1JNWGNKZ2plZGhRaHdwcHlqRjY2Y1NteFZENmZaYlYwWWQ5YTVKVG1p?=
- =?utf-8?B?UDFPZml2MlBjeWNQRERWNFJKNFBZbHNBUHBVcFVwcG1YSlI3dnZHc3U2bFFj?=
- =?utf-8?B?eUJCTWZLRG5RbWpsREZvUWxpVTFZT1RVSHhqdHVZOVBOS2hSTzlrZFhxNTlX?=
- =?utf-8?B?REwxc0xtQVVIcmRFQjBaOTEvVDgwYlRtTGVFT213Wmg4SWpTUmNJWTE2Mmps?=
- =?utf-8?B?UzdXMWZyVGpFczE2Yjc5YnhMVWFrS2RmdXBFLzhBUzBYWmkyR2ZRK1Q3R3BW?=
- =?utf-8?B?blNLTzFXS3NHOHJya0JFRG5BcDNtRlU1MFgydnRndDFBeUpuT3dRNWU4ZitZ?=
- =?utf-8?B?MlpFMG1xVmcwK2RHdExnOFViREp1a0hJSGdSYVlqWXlRTXNXV2hDeUFsVXRt?=
- =?utf-8?B?MUl2L3JickNrTmxWbzdlQitSakJLUllySlZaUEJZTUxHT2tpNENpT0dZZzVX?=
- =?utf-8?B?MkEyQmRKRWQ2S0toQURVZzRwQzcxWWcreTBRM0V6N2VMYUVWUzhHVDZ1UVFo?=
- =?utf-8?B?T0F2RUliSzk2a2pnQWxsWE9RUWtSdCs1VlZlOGYvSmk3RnRCRTd3NWQydGNY?=
- =?utf-8?B?RDJVOVcwZW1BSFBmMHRmblJ6cDRrUFo2ejJpNEZjcURxSDN1TTJpSzNwZkFH?=
- =?utf-8?B?a1JmYmYyMS9Tc00xeDVyNWxveUVPTGJITnY0empCNUFjWnFBRmpvV0pnOHZK?=
- =?utf-8?B?a0tGRHRiSjh4SDIwdk40YktxQzBUdjY2ZTZDT2xnTHR4UFBIRmZONFoyRW9o?=
- =?utf-8?B?aWc0MitOalpveUF1YnRYKysycmJlRGV6NXlMdGxTcVhwUFZwN0FwZ1YxOC9V?=
- =?utf-8?B?UDNBaVJIb3lUWVp4RWl2b0hhVjJPVG5JVW9IajVMeEpEeDVHbkJackpnSHRv?=
- =?utf-8?B?OVBxaE5FOWZPakhiOUVsT0EvcHZuRUtKMHJtaExUY25tTm9yeExYR2Q4SXZZ?=
- =?utf-8?B?SXZ3TlRpQmxramJFMXliSEM0c3Y3WDlaQlA3bldCeC9CcDZNS3RXWk0zRU43?=
- =?utf-8?B?MzA2cGJETCtleFNrSUdyYnluNldCaUFBdHQwdmtjMms4djRhSjhWci9wSi82?=
- =?utf-8?B?ajVGbGlJK0EwZjJGQ2tnWnlabG4xUXB5WFNGSERTNEZ5Z2psVlh6dml5K1ZB?=
- =?utf-8?B?SlRiWlVVL0R0aXk4SmdCRWZTWDhaNkJUSUh1TGFFVkczbmpwK3p6ZUV3QzEw?=
- =?utf-8?B?bDRWcTVmQk5NdnVKYlpOVngrMTl6c0RKS2ZkSlRQUFFJd3dwWm5xU1VOVHd5?=
- =?utf-8?Q?gid+o80y1H8=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dWNzSEh3bjFCbHBYRGhtUUxzalBqYzlYRHk4MzUxZVpqOXpTRkpRazVXNjhH?=
- =?utf-8?B?OWxRMVV4MnR2Y3BENTM0UTN2UXV1b0RRb2pKMjBjUEl1VVYvbTVEYW44aWhi?=
- =?utf-8?B?ZGowRVJQWEV4UTdQVEY3c3FhOW04WWJWMGllZC9UQktPcVdjT0dyeEtkVUxO?=
- =?utf-8?B?aGVycGZrODVVK213OVdtS0FLMURRYzNtUUE3YzdUN2NQOXEzV0Y0Rm5OSzVC?=
- =?utf-8?B?TE4vbTErajV1MUtZQkZVMlpYamZ4a1ZSQ0tsNFpnaCtTVWhtSDBlQWxRZEJW?=
- =?utf-8?B?UWZ3NTVFd1o2Uk9Sa1lSRk44dDVlOE5wVmVhOXdSRzdpc0Z1bVVaaFlkRGVF?=
- =?utf-8?B?aTlCNmY0dzhvdyswQmxPTFZxdVFJWTJtSERjZUJ4a09NT0thcEdiS1BBRW5o?=
- =?utf-8?B?RHVydXhKeVdQMXJ4TklwamU3SXJDWDl4REdLMmZGaGtsbndZTm5QYldCYnI1?=
- =?utf-8?B?UGdjKzZ2SE50QWk1SkpXRmthSkhTQU5ib05oejZKWktUVWh2ZFIxVlBHeGNU?=
- =?utf-8?B?eEJwRm15QlBNOG5kTURKVGNpSE1VU3p0WlR3UG5yVUd4OS9SZlBvQnAwVGM0?=
- =?utf-8?B?aWZST3dLVzY2RUVudGpncDNva2R4V1dLeGhsamdEZ0pmZkcyV0tBbUMvVEsy?=
- =?utf-8?B?QXF6TkdOSUM5OEVoNXRUMUlXVGRmSlJKRGwyUUZEMDJWZTRlQm5zYXRUb2Vi?=
- =?utf-8?B?WGFneDhWc2JzcU1UYWh5VGc4VXl3cDZlSXdJQy9pbkhrOEphcUszSE9ramsv?=
- =?utf-8?B?MWM2WDZoNzNCNlFlTEF1SWx2MHMra3dDT3o3N21mMklKM1BTcng0K2w5SXNt?=
- =?utf-8?B?dlZ0ZDNRTkNFZUI1NGJKckxiQlJOUERsbTFTdnZQQmk5c09zVzhmMEs1ODFx?=
- =?utf-8?B?dE4xeEdRZUlRQUowUVg5RGxPZ0U3Y1JqQjlxSmtEREV3RDh5eG5vaTREcG90?=
- =?utf-8?B?NTdWTWp6UlpnQWRsSkhSb0ZOSWRlQm5TckZvZTZKcXBMaEQwc0lGMy9jWWdI?=
- =?utf-8?B?MUI4TkhYK2tRNzVWVjZnT3cxaFIvUkx6MVp3OUxFMU8rMGpDZVdQcVo1TFg2?=
- =?utf-8?B?dEo3MnRqb3RGRXhaVzJpMjh1czNVU0pBdmtvOGtnMUp2R21qU2gzaTUrbUdk?=
- =?utf-8?B?VmZIbHA1QzBVTnJuKyt3eXBkS0w0V3R3NGJnWnEydnZEbExGeUN3ZVNlb2d1?=
- =?utf-8?B?bjB3SGVNeWp3RHU4RTAxRWljN2Qwd1YwbGNTMGtOYnUwanRDNlZ5Uk9VZ0xC?=
- =?utf-8?B?anV1NjdrSEx6b1A3aTA0VU4vVkR0U3kyZndMbUFoYlNCQXcyZzZmMGlQVTZr?=
- =?utf-8?B?TnZTeXVEam5UTmpyZW1oc0xnc3ZvRjlDOGRpek5XZFQ5VHo0QnErTHB2Zkh3?=
- =?utf-8?B?TVBWLzBReGhVN2VmOUV1aDF0TDRzTjhTT1ZKUXQ2R0Y4bG05bllpRFFkd2FK?=
- =?utf-8?B?T09tR3JFVzNZbHEvVXFMSUplbzFLeHpoVkVBNW9taUFQVWlqYmVOTWxkMnly?=
- =?utf-8?B?eHk3OVFQaWlzMmhEY0M1aVB0cG13QWFnVURHS2VJZlpXTkd2WEVVZjhtZ2xJ?=
- =?utf-8?B?aFhjbWF3Zm5Jc3lqMWZSTGo1cm5wdC9HamFVUHhEaVJQZ2tiaGpML0VRakkz?=
- =?utf-8?B?MEZwSllZMThqSFF0TnF5ZUhCZmgyU2RZaVZiY1MyU3h5WTMxUnRTRWMwNklt?=
- =?utf-8?B?c1ZJeE9Sd3A3ZkFpY2VyYks3dUhleFQ2QnAvYUpEZ1BySFhMSGRGL3JZTnpH?=
- =?utf-8?B?RTYvWUZnNXJjTTF0M3lGdml5M0V1UmlqeU5CVWRzWnBDZnRyTUw5MGhmOW8w?=
- =?utf-8?B?b1gyZkQ1VlJzanhWMCtCSjYvbU5ZMjlzWHpQQWRyMHptLzdTRnAyQXlEU1NV?=
- =?utf-8?B?UG5DamNVczlNNHkzQ1V1M0dQQ1VSUzBKWjN2b3JTYkx2dWoxME5NQjNZbFdt?=
- =?utf-8?B?TXgvak9XKy8vTDZFWFZlZ01pOVlieURML0FYSFdkUFNNQTMyRGxkVG9nUis0?=
- =?utf-8?B?bEk3S2gwN3owaDRIdDlvUU1UbXV0VTc4TjdVMzU5Tk1INGZyZUI3Q05CandP?=
- =?utf-8?B?bVZCMDVXT1Qvc1pUbzhpRzJpL3MvOTd0WFVCWXRncTE4dmlaUFRmOTVIYWI2?=
- =?utf-8?B?YzZNMkVSSkZHd0NHRHIvcThaSTQ3ay9NVlBKcGVZa1VvVmFLN0JqY1h4cjd0?=
- =?utf-8?B?RHc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C656A8D3F12AB24CA97B727B620D0FBF@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h9FaCYMv"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3d146357fb2so82635ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 21:08:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739250537; x=1739855337; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5bHIxyguxTjZ0OBmEcJlBmy4lfINCqcKpdhZw7EcmMU=;
+        b=h9FaCYMvHNqJ/Xrs7/rxJ9Um7R3lh/+q2jIAuDiH7we18q8+z8zE/viz++OQwY3hiN
+         x7XGYTxTVN+lPbh5Xb13bJ6Yn/Rfo43K0/cyu7wwVkosCmVmwBCYLDx8AiVOZc//SK0n
+         NeKXks4l6j/m8tfOrrkr5CwlqQd3V14a44BccpMU5KyvHnB48gA7ED0hdgM+/5+Tb8RI
+         7/849hHGFY9jF5nYST0mlFtMlGzf8yS6RfvEhqaxdSghlDCNSvryJMR5U0bl/esQjks2
+         8aZF6qEC4AapDTqI2362YICPLbOy7ziNLFHS4ovdbcncxmpkpBa0JVHzQfwd6UJXMm2j
+         Q+TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739250537; x=1739855337;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5bHIxyguxTjZ0OBmEcJlBmy4lfINCqcKpdhZw7EcmMU=;
+        b=EGuNMWKF+g7tw8FFqLHfo0bojA37sAm9VYm6mtrzQ6ni3ccUg+3KvQyTdd6dnRcYh/
+         mk8gEEdSPJjWCW+ZuIKGtR+lplT2y3+xtAmLKn1/dHx89xS9uOkkIAQbciclLWEGlaqO
+         LTWh5FBCOPXdauOBdLpVNoVU+ZjD9yYB/Ll0ClvKsTI0QL3a1d/FCrpptbMYpsD6aAAv
+         gCcWJexxuIJOSI8X+1wlqD5SIK5QBLzl7QoaAjnmDPFOqP06hg1T+76uV5/uRMN8wkD4
+         ud8+gnCW/y9o8PZl/DkpsU0xsN9+D73BABhZZc1OBt4SvESZ4YlT/gQTKHKiFsWmwAKS
+         ESNg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUurSqBm7w3yMMFsZcqxEHdaK7aduuMvFPC9LHPcsMCWSshtwNLF4/dLHIFmtuhDHHZYRHkIuRehjJaZ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxg0uvG2veH1k+kA/VxQNxBZcxBmbuyL/KfY5ahZrdXEavaO97A
+	2OAgEvjehcOpRwha+VoUU86IecNznkcBje5/hNlYQmu1vKMfiJ5YXXjSHsgeFQlgmVEIHTLbdXv
+	caLQBgecvLhUYntP9PQ5D31AKOM8Vx1dLmcSh
+X-Gm-Gg: ASbGncuWTyXJL+xrZ0ALvAZGjcMvPA2fbkg7KBlwfjP3b7OqSIYQmPZTOb6hVLwq9mF
+	HvfK7xRA4CEYFbof4PJxnScVYpa46p7OOKyMy/acEsnIJpl6Udqx8u/tXsNLGn4dW+n3kHGfOWA
+	==
+X-Google-Smtp-Source: AGHT+IFyaxcME8jKJS8TwGr550Sm6lyyiZH/pTFtRGczGBZijBDRqdrgMQrnR44cn+MWQ1wfBsdSIs3486rzPTce5tE=
+X-Received: by 2002:a05:6e02:1a8a:b0:3d0:5855:85a3 with SMTP id
+ e9e14a558f8ab-3d16fde405bmr2244515ab.8.1739250536964; Mon, 10 Feb 2025
+ 21:08:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc5cad5f-e2cd-46de-c313-08dd4a59a8e2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2025 05:05:10.2412
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: s3NDxLOPipfpKinuniDUmic/jPxF2PDsTG+Qqfrn5HthmHwoTyqXYLEVjimKs3iLHZUq2oRkthe96HGeqspCRQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6687
-X-OriginatorOrg: intel.com
+References: <20250210165108.95894-1-irogers@google.com> <20250210165108.95894-6-irogers@google.com>
+ <Z6qYYC3LqXNZ6hMc@ghost>
+In-Reply-To: <Z6qYYC3LqXNZ6hMc@ghost>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 10 Feb 2025 21:08:45 -0800
+X-Gm-Features: AWEUYZmlPd4riJsmMkW7pemOAyZz5w-Rgxikg50ui8cUlusfvpZDiXXdUzP9x5g
+Message-ID: <CAP-5=fUQKx27CwWwnXa3zJzt+MoPDdJRfOZqqpF0FJQDKKFvSw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] perf trace beauty: Add syscalltbl.sh generating
+ all system call tables
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>, 
+	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gVHVlLCAyMDI1LTAyLTExIGF0IDEwOjU0ICswODAwLCBCaW5iaW4gV3Ugd3JvdGU6DQo+IEhh
-dmUgX19fX2t2bV9lbXVsYXRlX2h5cGVyY2FsbCgpIHJlYWQgdGhlIEdQUnMgaW5zdGVhZCBvZiBw
-YXNzaW5nIHRoZW0NCj4gaW4gdmlhIHRoZSBtYWNyby4NCj4gDQo+IFdoZW4gZW11bGF0aW5nIEtW
-TSBoeXBlcmNhbGxzIHZpYSBURFZNQ0FMTCwgVERYIHdpbGwgbWFyc2hhbGwgcmVnaXN0ZXJzIG9m
-DQo+IFREVk1DQUxMIEFCSSBpbnRvIEtWTSdzIHg4NiByZWdpc3RlcnMgdG8gbWF0Y2ggdGhlIGRl
-ZmluaXRpb24gb2YgS1ZNDQo+IGh5cGVyY2FsbCBBQkkgX2JlZm9yZV8gX19fX2t2bV9lbXVsYXRl
-X2h5cGVyY2FsbCgpIGdldHMgY2FsbGVkLiAgVGhlcmVmb3JlLA0KPiBfX19fa3ZtX2VtdWxhdGVf
-aHlwZXJjYWxsKCkgY2FuIGp1c3QgcmVhZCByZWdpc3RlcnMgaW50ZXJuYWxseSBiYXNlZCBvbiBL
-Vk0NCj4gaHlwZXJjYWxsIEFCSSwgYW5kIHRob3NlIHJlZ2lzdGVycyBjYW4gYmUgcmVtb3ZlZCBm
-cm9tIHRoZQ0KPiBfX2t2bV9lbXVsYXRlX2h5cGVyY2FsbCgpIG1hY3JvLg0KPiANCj4gQWxzbywg
-b3BfNjRfYml0IGNhbiBiZSBkZXRlcm1pbmVkIGluc2lkZSBfX19fa3ZtX2VtdWxhdGVfaHlwZXJj
-YWxsKCksDQo+IHJlbW92ZSBpdCBmcm9tIHRoZSBfX2t2bV9lbXVsYXRlX2h5cGVyY2FsbCgpIG1h
-Y3JvIGFzIHdlbGwuDQo+IA0KPiBObyBmdW5jdGlvbmFsIGNoYW5nZSBpbnRlbmRlZC4NCj4gDQo+
-IA0KDQpSZXZpZXdlZC1ieTogS2FpIEh1YW5nIDxrYWkuaHVhbmdAaW50ZWwuY29tPg0K
+On Mon, Feb 10, 2025 at 4:22=E2=80=AFPM Charlie Jenkins <charlie@rivosinc.c=
+om> wrote:
+>
+> On Mon, Feb 10, 2025 at 08:51:06AM -0800, Ian Rogers wrote:
+> > Rather than generating individual syscall header files generate a
+> > single trace/beauty/generated/syscalltbl.c. In a syscalltbls array
+> > have references to each architectures tables along with the
+> > corresponding e_machine. When the 32-bit or 64-bit table is ambiguous,
+> > match the perf binary's type. For ARM32 don't use the arm64 32-bit
+> > table which is smaller. EM_NONE is present for is no machine matches.
+> >
+> > Conditionally compile the tables, only having the appropriate 32 and
+> > 64-bit table. If ALL_SYSCALLTBL is defined all tables can be
+> > compiled.
+>
+> Is there somewhere that the ALL_SYSCALLTBL could be documented? I talk
+> about this more in patch 7, but if this also could help perf report
+> display the correct syscall names, then ALL_SYSCALLTBL maybe should be
+> the default?
+
+So I think ALL_SYSCALLTBL should just go to being the default once we
+have a use for it. Currently `perf trace record` doesn't capture the
+e_machine of the executing processes, so recording on say a RISC-V
+machine and then analyzing on an x86-64 isn't possible. I was worried
+that just making ALL_SYSCALLTBL the default would lead to complaints
+about increases in binary size or something. This patch series does
+what's sensible for things that work right now. ALL_SYSCALLTBL is
+useful for making sure the tables other than for your build machine at
+least compile. If others feel strongly it should be the default I
+don't have a problem changing the code.
+
+Thanks,
+Ian
+
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> > ---
+> >  tools/perf/Makefile.perf              |   9 +
+> >  tools/perf/trace/beauty/syscalltbl.sh | 274 ++++++++++++++++++++++++++
+> >  2 files changed, 283 insertions(+)
+> >  create mode 100755 tools/perf/trace/beauty/syscalltbl.sh
+> >
+> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > index 55d6ce9ea52f..793e702f9aaf 100644
+> > --- a/tools/perf/Makefile.perf
+> > +++ b/tools/perf/Makefile.perf
+> > @@ -559,6 +559,14 @@ beauty_ioctl_outdir :=3D $(beauty_outdir)/ioctl
+> >  # Create output directory if not already present
+> >  $(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_ou=
+tdir)')
+> >
+> > +syscall_array :=3D $(beauty_outdir)/syscalltbl.c
+> > +syscall_tbl :=3D $(srctree)/tools/perf/trace/beauty/syscalltbl.sh
+> > +syscall_tbl_data :=3D $(srctree)/tools/scripts/syscall.tbl \
+> > +     $(wildcard $(srctree)/tools/perf/arch/*/entry/syscalls/syscall*.t=
+bl)
+> > +
+> > +$(syscall_array): $(syscall_tbl) $(syscall_tbl_data)
+> > +     $(Q)$(SHELL) '$(syscall_tbl)' $(srctree)/tools $@
+> > +
+> >  fs_at_flags_array :=3D $(beauty_outdir)/fs_at_flags_array.c
+> >  fs_at_flags_tbl :=3D $(srctree)/tools/perf/trace/beauty/fs_at_flags.sh
+> >
+> > @@ -878,6 +886,7 @@ build-dir   =3D $(or $(__build-dir),.)
+> >
+> >  prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders=
+ \
+> >       arm64-sysreg-defs \
+> > +     $(syscall_array) \
+> >       $(fs_at_flags_array) \
+> >       $(clone_flags_array) \
+> >       $(drm_ioctl_array) \
+> > diff --git a/tools/perf/trace/beauty/syscalltbl.sh b/tools/perf/trace/b=
+eauty/syscalltbl.sh
+> > new file mode 100755
+> > index 000000000000..635924dc5f59
+> > --- /dev/null
+> > +++ b/tools/perf/trace/beauty/syscalltbl.sh
+> > @@ -0,0 +1,274 @@
+> > +#!/bin/sh
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +#
+> > +# Generate all syscall tables.
+> > +#
+> > +# Each line of the syscall table should have the following format:
+> > +#
+> > +# NR ABI NAME [NATIVE] [COMPAT]
+> > +#
+> > +# NR       syscall number
+> > +# ABI      ABI name
+> > +# NAME     syscall name
+> > +# NATIVE   native entry point (optional)
+> > +# COMPAT   compat entry point (optional)
+> > +
+> > +set -e
+> > +
+> > +usage() {
+> > +       cat >&2 <<EOF
+> > +usage: $0 <TOOLS DIRECTORY> <OUTFILE>
+> > +
+> > +  <TOOLS DIRECTORY>    path to kernel tools directory
+> > +  <OUTFILE>            output header file
+> > +EOF
+> > +       exit 1
+> > +}
+> > +
+> > +if [ $# -ne 2 ]; then
+> > +       usage
+> > +fi
+> > +tools_dir=3D$1
+> > +outfile=3D$2
+> > +
+> > +build_tables() {
+> > +     infile=3D"$1"
+> > +     outfile=3D"$2"
+> > +     abis=3D$(echo "($3)" | tr ',' '|')
+> > +     e_machine=3D"$4"
+> > +
+> > +     if [ ! -f "$infile" ]
+> > +     then
+> > +             echo "Missing file $infile"
+> > +             exit 1
+> > +     fi
+> > +     sorted_table=3D$(mktemp /tmp/syscalltbl.XXXXXX)
+> > +     grep -E "^[0-9]+[[:space:]]+$abis" "$infile" | sort -n > "$sorted=
+_table"
+> > +
+> > +     echo "static const char *const syscall_num_to_name_${e_machine}[]=
+ =3D {" >> "$outfile"
+> > +     # the params are: nr abi name entry compat
+> > +     # use _ for intentionally unused variables according to SC2034
+> > +     while read -r nr _ name _ _; do
+> > +             echo "  [$nr] =3D \"$name\"," >> "$outfile"
+> > +     done < "$sorted_table"
+> > +     echo "};" >> "$outfile"
+> > +
+> > +     echo "static const uint16_t syscall_sorted_names_${e_machine}[] =
+=3D {" >> "$outfile"
+> > +
+> > +     # When sorting by name, add a suffix of 0s upto 20 characters so =
+that
+> > +     # system calls that differ with a numerical suffix don't sort bef=
+ore
+> > +     # those without. This default behavior of sort differs from that =
+of
+> > +     # strcmp used at runtime. Use sed to strip the trailing 0s suffix
+> > +     # afterwards.
+> > +     grep -E "^[0-9]+[[:space:]]+$abis" "$infile" | awk '{printf $3; f=
+or (i =3D length($3); i < 20; i++) { printf "0"; }; print " " $1}'| sort | =
+sed 's/\([a-zA-Z1-9]\+\)0\+ \([0-9]\+\)/\1 \2/' > "$sorted_table"
+> > +     while read -r name nr; do
+> > +             echo "  $nr,    /* $name */" >> "$outfile"
+> > +     done < "$sorted_table"
+> > +     echo "};" >> "$outfile"
+> > +
+> > +     rm -f "$sorted_table"
+> > +}
+> > +
+> > +rm -f "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +#include <elf.h>
+> > +#include <stdint.h>
+> > +#include <asm/bitsperlong.h>
+> > +#include <linux/kernel.h>
+> > +
+> > +struct syscalltbl {
+> > +       const char *const *num_to_name;
+> > +       const uint16_t *sorted_names;
+> > +       uint16_t e_machine;
+> > +       uint16_t num_to_name_len;
+> > +       uint16_t sorted_names_len;
+> > +};
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__alpha__)
+> > +EOF
+> > +build_tables "$tools_dir/perf/arch/alpha/entry/syscalls/syscall.tbl" "=
+$outfile" common,64 EM_ALPHA
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__alpha__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__arm__) || defined(__aarch64__=
+)
+> > +EOF
+> > +build_tables "$tools_dir/perf/arch/arm/entry/syscalls/syscall.tbl" "$o=
+utfile" common,32,oabi EM_ARM
+> > +build_tables "$tools_dir/perf/arch/arm64/entry/syscalls/syscall_64.tbl=
+" "$outfile" common,64,renameat,rlimit,memfd_secret EM_AARCH64
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__arm__) || defined(__aar=
+ch64__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__csky__)
+> > +EOF
+> > +build_tables "$tools_dir/scripts/syscall.tbl" "$outfile" common,32,csk=
+y,time32,stat64,rlimit EM_CSKY
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__csky__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__mips__)
+> > +EOF
+> > +build_tables "$tools_dir/perf/arch/mips/entry/syscalls/syscall_n64.tbl=
+" "$outfile" common,64,n64 EM_MIPS
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__mips__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__hppa__)
+> > +#if __BITS_PER_LONG !=3D 64
+> > +EOF
+> > +build_tables "$tools_dir/perf/arch/parisc/entry/syscalls/syscall.tbl" =
+"$outfile" common,32 EM_PARISC
+> > +echo "#else" >> "$outfile"
+> > +build_tables "$tools_dir/perf/arch/parisc/entry/syscalls/syscall.tbl" =
+"$outfile" common,64 EM_PARISC
+> > +cat >> "$outfile" <<EOF
+> > +#endif //__BITS_PER_LONG !=3D 64
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__hppa__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__powerpc__) || defined(__power=
+pc64__)
+> > +EOF
+> > +build_tables "$tools_dir/perf/arch/powerpc/entry/syscalls/syscall.tbl"=
+ "$outfile" common,32,nospu EM_PPC
+> > +build_tables "$tools_dir/perf/arch/powerpc/entry/syscalls/syscall.tbl"=
+ "$outfile" common,64,nospu EM_PPC64
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__powerpc__) || defined(_=
+_powerpc64__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__riscv)
+> > +#if __BITS_PER_LONG !=3D 64
+> > +EOF
+> > +build_tables "$tools_dir/scripts/syscall.tbl" "$outfile" common,32,ris=
+cv,memfd_secret EM_RISCV
+> > +echo "#else" >> "$outfile"
+> > +build_tables "$tools_dir/scripts/syscall.tbl" "$outfile" common,64,ris=
+cv,rlimit,memfd_secret EM_RISCV
+> > +cat >> "$outfile" <<EOF
+> > +#endif //__BITS_PER_LONG !=3D 64
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__riscv)
+> > +#if defined(ALL_SYSCALLTBL) || defined(__s390x__)
+> > +EOF
+> > +build_tables "$tools_dir/perf/arch/s390/entry/syscalls/syscall.tbl" "$=
+outfile" common,64,renameat,rlimit,memfd_secret EM_S390
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__s390x__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__sh__)
+> > +EOF
+> > +build_tables "$tools_dir/perf/arch/sh/entry/syscalls/syscall.tbl" "$ou=
+tfile" common,32 EM_SH
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__sh__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__sparc64__) || defined(__sparc=
+__)
+> > +#if __BITS_PER_LONG !=3D 64
+> > +EOF
+> > +build_tables "$tools_dir/perf/arch/sparc/entry/syscalls/syscall.tbl" "=
+$outfile" common,32 EM_SPARC
+> > +echo "#else" >> "$outfile"
+> > +build_tables "$tools_dir/perf/arch/sparc/entry/syscalls/syscall.tbl" "=
+$outfile" common,64 EM_SPARC
+> > +cat >> "$outfile" <<EOF
+> > +#endif //__BITS_PER_LONG !=3D 64
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__sparc64__) || defined(_=
+_sparc__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_64__=
+)
+> > +EOF
+> > +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_32.tbl" =
+"$outfile" common,32,i386 EM_386
+> > +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_64.tbl" =
+"$outfile" common,64 EM_X86_64
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x8=
+6_64__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__xtensa__)
+> > +EOF
+> > +build_tables "$tools_dir/perf/arch/xtensa/entry/syscalls/syscall.tbl" =
+"$outfile" common,32 EM_XTENSA
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__xtensa__)
+> > +
+> > +#if __BITS_PER_LONG !=3D 64
+> > +EOF
+> > +build_tables "$tools_dir/scripts/syscall.tbl" "$outfile" common,32 EM_=
+NONE
+> > +echo "#else" >> "$outfile"
+> > +build_tables "$tools_dir/scripts/syscall.tbl" "$outfile" common,64 EM_=
+NONE
+> > +echo "#endif //__BITS_PER_LONG !=3D 64" >> "$outfile"
+> > +
+> > +build_outer_table() {
+> > +       e_machine=3D$1
+> > +       outfile=3D"$2"
+> > +       cat >> "$outfile" <<EOF
+> > +       {
+> > +           .num_to_name =3D syscall_num_to_name_$e_machine,
+> > +           .sorted_names =3D syscall_sorted_names_$e_machine,
+> > +           .e_machine =3D $e_machine,
+> > +           .num_to_name_len =3D ARRAY_SIZE(syscall_num_to_name_$e_mach=
+ine),
+> > +           .sorted_names_len =3D ARRAY_SIZE(syscall_sorted_names_$e_ma=
+chine),
+> > +       },
+> > +EOF
+> > +}
+> > +
+> > +cat >> "$outfile" <<EOF
+> > +static const struct syscalltbl syscalltbls[] =3D {
+> > +#if defined(ALL_SYSCALLTBL) || defined(__alpha__)
+> > +EOF
+> > +build_outer_table EM_ALPHA "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__alpha__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__arm__) || defined(__aarch64__=
+)
+> > +EOF
+> > +build_outer_table EM_ARM "$outfile"
+> > +build_outer_table EM_AARCH64 "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__arm__) || defined(__aar=
+ch64__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__csky__)
+> > +EOF
+> > +build_outer_table EM_CSKY "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__csky__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__mips__)
+> > +EOF
+> > +build_outer_table EM_MIPS "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__mips__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__hppa__)
+> > +EOF
+> > +build_outer_table EM_PARISC "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__hppa__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__powerpc__) || defined(__power=
+pc64__)
+> > +EOF
+> > +build_outer_table EM_PPC "$outfile"
+> > +build_outer_table EM_PPC64 "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__powerpc__) || defined(_=
+_powerpc64__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__riscv)
+> > +EOF
+> > +build_outer_table EM_RISCV "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__riscv)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__s390x__)
+> > +EOF
+> > +build_outer_table EM_S390 "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__s390x__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__sh__)
+> > +EOF
+> > +build_outer_table EM_SH "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__sh__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__sparc64__) || defined(__sparc=
+__)
+> > +EOF
+> > +build_outer_table EM_SPARC "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__sparc64__) || defined(_=
+_sparc__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_64__=
+)
+> > +EOF
+> > +build_outer_table EM_386 "$outfile"
+> > +build_outer_table EM_X86_64 "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x8=
+6_64__)
+> > +
+> > +#if defined(ALL_SYSCALLTBL) || defined(__xtensa__)
+> > +EOF
+> > +build_outer_table EM_XTENSA "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +#endif // defined(ALL_SYSCALLTBL) || defined(__xtensa__)
+> > +EOF
+> > +build_outer_table EM_NONE "$outfile"
+> > +cat >> "$outfile" <<EOF
+> > +};
+> > +EOF
+> > --
+> > 2.48.1.502.g6dc24dfdaf-goog
+> >
