@@ -1,186 +1,449 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2041.outbound.protection.outlook.com [40.107.220.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012371D90CD;
-	Tue, 11 Feb 2025 09:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739267458; cv=fail; b=d9htUVnHwFOPCYFQt1T061fe9nIvDdfBAztUen8NfeOo0oU3WnG0MvZlmwRQzqH3FHrVYv/6lDW8iPE15t3ztD8W0P4+ubvoQHw9t6IQsHVpWOk1mViDcHvMDu8POnB/Qj/C3GPExKURArfy6jdmNetFqRVE3fP3H2aVI0b+EEw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739267458; c=relaxed/simple;
-	bh=pYcmvIccccUKlGbSb8InhIuliSgcgLAt1TW2xqIRWtA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Pvrcc2ZtPY+DE+gLcRNWWRId3tarFYnt1F+CBcQFmnOF/ehnSzz69F93q/Ogg9Dz4U+/t58Ifu7lwmTfrs118Dhf481vYc/xbylP/T5Ue70WIPsix6VcDVvVqSMKBnj+g24JzC6bzQ94p9FNZ9DtMyGRLPTew3qHJdeN5xepPe0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lS+ChZZb; arc=fail smtp.client-ip=40.107.220.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF01D1D90CD;
+	Tue, 11 Feb 2025 09:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739267557; cv=none; b=rBGI2yClaB1NUqVotaDVrLj/4dDBmcNBjNbVg27vVpHP5/fkvNoQxH8sTRLbif1Gsf9Qc5zPJGXaereES5xn0+B+FRsPOsEDciHhm++iV60FzNcmhWovYhGKN6vpXrpbcKqeDZBu6I8hEO1sLDDbA9Qso4Rt04APKzy71BNQ8xY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739267557; c=relaxed/simple;
+	bh=VZjiZNtpP5IMd8/wK+VHsSE4QSg4aS456UZIcf1oOhQ=;
+	h=From:To:Subject:Date:Message-Id; b=SE1UXs3WhKkmBH2COHNU3gwsfLOVKZQngfKmuq5EMM31uWqUbZYbjhMoGaTsnfhIPjQqhK4UiflFINIPNjOoNlotIzMD5XULR/VrW2KJ2UxNAv0NthSu0ahFcUTW/ngWzW+KY2N8UmmyTNTAKCUu5sud79HO5hzDNzovOXrvsqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cDL272P7; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lS+ChZZb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ONHztYX5EbecqBiLuiQnehiciFrnYhtm0mo5brLEa73D/NdKhFMqKO9ecN7dHbCsjUZl0ipUEZ+hCMxK07uEem79AdhE/5qxx5O9pl44vhU6xSgBcTAC37uMU+Pj8HM4h9UCScwju/+K4mATioNsAFRevMR4ReQsKvRBwAsXMpEK437bQ+igSELmyUXC82KMXl5vuosmEwLxIqH9HHBVW3JFsdH6/vtpde/8ry8Kj2HS40Hiu9u9dzuPxikEMUDuGjBv5/9cr+9YUIOszOKLhkjeSF9D3gn0xW/c6MMIhhwCtDS+yOdsrMxp4EGIOqJLx7W9TgggSIY3WpldF8rpgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7HXhle5SmLxRBRQ6zMU/GH3GNJyHbPw83MdLhMCueEc=;
- b=SdniuwgwWVDn+uWi3alFncStAj+WUToA0CT0jAYdn/ewXyb196xJg02TF5zo4woYUpI63fHdyw5YcMZCCszjAwLjyxV4mu/HJsMfW14cWfbhhYBeZwi93pNv5z1GzdXqJKQiY7GSbClMbXY5xj8AuhJixF6q884mdd3FMlRj9uF54MDSuURlLFCwnNh7q3IzzXedEwTT5pUGdEAXqTsKLUBptSSi/k2TE3y+x9Qk1kSCjDolq5dE2tjELF4cjiOLXf3Xwr5lS1d741VXgdAYGnIN+7XrD+cN+vpPzA0JoOMPmGWEInk+0+lr/Td+g0cU3F8lh+aBc9SZcOobyPXlbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7HXhle5SmLxRBRQ6zMU/GH3GNJyHbPw83MdLhMCueEc=;
- b=lS+ChZZbg3etaT08lZbSDsTo2ZLUIgJqlccj/nrh0JYnDmd0c76ysU87J+HEqTAr3CAjrliz85fHRPcAUnNhjxoyJnQb8d7uBYKuboNJC4tOvXzof47Eb11xU4zN6X7z+Ah63vFRby5Ca2npz+IBj+QsCieWVRt3Zn2ahfSMZO+notD9SBBonwRSoDocmlVDJtMpVLv+xdmDSD9UaVocS+rRwJsfU0h8PWyc4NqO/jDE0r0ahPoubaFSQWCz/5Qx7byHdY6SYOm2tIYcXlCIDzG/qWNkdJIvPl6bKbC6dQnSCsbf9xYFZoDGhu0IJRO5ziSxsBBkzbudtDTWuikORA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
- by DM4PR12MB6421.namprd12.prod.outlook.com (2603:10b6:8:b7::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.16; Tue, 11 Feb
- 2025 09:50:54 +0000
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5%7]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
- 09:50:54 +0000
-Date: Tue, 11 Feb 2025 10:50:46 +0100
-From: Andrea Righi <arighi@nvidia.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, Ian May <ianm@nvidia.com>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] sched_ext: idle: Per-node idle cpumasks
-Message-ID: <Z6sddk2otmAVrfcb@gpd3>
-References: <20250207211104.30009-1-arighi@nvidia.com>
- <20250207211104.30009-6-arighi@nvidia.com>
- <Z6ju7vFK5TpJamn5@thinkpad>
- <Z6owBvYiArjXvIGC@thinkpad>
- <Z6r9H6JukZi19dQP@gpd3>
- <Z6r_NZui9GibrQHY@gpd3>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6r_NZui9GibrQHY@gpd3>
-X-ClientProxiedBy: FR3P281CA0201.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a5::13) To CY5PR12MB6405.namprd12.prod.outlook.com
- (2603:10b6:930:3e::17)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cDL272P7"
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 4D0F52107A9D; Tue, 11 Feb 2025 01:52:35 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4D0F52107A9D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739267555;
+	bh=eX6hHik7B3tlfUunBekW+SxFWAYILIuefRVg2mz9lu0=;
+	h=From:To:Subject:Date:From;
+	b=cDL272P7islw7LaH/Ar9E0KIz1WdgKYDHWfJW+2v5+vfhOxeE+LKewV/4s+scy6mj
+	 lnMA7rhhbITtDQJafrgUMEb18jz6OQ3gTvOjjnaMuCDCRiDhiTYBdNc8jla4Qni8nO
+	 0s+O3Czr7wFxhtI1RscDjuQOE1RL/xuQTcJC9BHM=
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	michal.swiatkowski@linux.intel.com,
+	mlevitsk@redhat.com,
+	yury.norov@gmail.com,
+	shradhagupta@linux.microsoft.com,
+	kotaranov@microsoft.com,
+	peterz@infradead.org,
+	ernis@linux.microsoft.com,
+	brett.creeley@amd.com,
+	mhklinux@outlook.com,
+	schakrabarti@linux.microsoft.com,
+	kent.overstreet@linux.dev,
+	longli@microsoft.com,
+	leon@kernel.org,
+	erick.archer@outlook.com,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] net: mana: Add debug logs in MANA network driver
+Date: Tue, 11 Feb 2025 01:51:55 -0800
+Message-Id: <1739267515-31187-1-git-send-email-ernis@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|DM4PR12MB6421:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4eabc64e-3716-4b81-b544-08dd4a819344
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?122iYSnbJT17f6b83C/3euo8bNNsye3FrRQLtaYz96fsNaDp0eReaApzInZ/?=
- =?us-ascii?Q?L2zFAkKJRSfyWLGkdW9p6QpLDVm+79hYCrezl/wAKMTwHsE8AW/eB+CzGu1w?=
- =?us-ascii?Q?j9duxtyoXY7RMM+XEPIJtX/7NJ6gOBuEIoiDQTr6btlv+gia7nIE2jr8Rk9A?=
- =?us-ascii?Q?FPza9EyVB221+/We5clOCyCCa35WQ5rFoN6AdBIzhePHzoFEEkn69UEaSx0g?=
- =?us-ascii?Q?dGqfondZGYH7ybgXWPWyI1hb1Jw9bNiRFQGXhs0xryhny/PX+1kgZtY4u2w8?=
- =?us-ascii?Q?7WxoAyMlErrL6PFx5Z6ESCRJovnelGLFQu5znMpRK6bbckK20lUJJk+3Mp54?=
- =?us-ascii?Q?ZT2ynJ4AoSFkG+U4nauRUsxXZojzU8Ejf+uk+1JW0MTLRS+DAwzgmNEpxBMG?=
- =?us-ascii?Q?R5uN/zqCxwqKKKYH1OAkK6JnOkG6yardBNcDphLNHmJ+GazBPzSDlx398Fw2?=
- =?us-ascii?Q?oQNkZIkS6nrJAMina7Jye0er50QXH2KsAaqlsn6//+IZEzdAe4K75WMuZNPa?=
- =?us-ascii?Q?LhxAdQnWM1TKMl0+m26u0tIp+nSGRLJMS9t91Gx028DFK9KFh+o2BwC+7rcv?=
- =?us-ascii?Q?D+tpE614j2IeYshx6nPuFb2I0+qZO7zcb7T652pen/261dcupB0ot8fsm0Gq?=
- =?us-ascii?Q?ZlG/+2QsOiJ+NcsHbN6l9w9xfOgi4EyoatXJ9fKEmHm0NJVZlWoGdiUhqwYW?=
- =?us-ascii?Q?U7g5j4iY0jdCb+MZ0hGSXPwL+p/XdY24m01TAxQual5q1aYd57Mi+AN7tcu7?=
- =?us-ascii?Q?/RWYDPBX7AZnSjvDSHgecCDmqwiSAIdAdFrcQ3uXDGlmHQ6JqA3f5PscoDms?=
- =?us-ascii?Q?4Cq/FD6TqchErKc1McYALizEumXLMi+S+YKp+2sRjWsUO6/NZGLziin1F3A0?=
- =?us-ascii?Q?O5nSeVzV/xpzJSGfGEJJWrsi+jyBrrHBsl6m2ki8vjMkOfHTXWN1UyD74EYg?=
- =?us-ascii?Q?vlqn7FSMDK0ltiDrTNHwzbG1WX2YLWwTHxxJKK8ji3/uRj1f7vhNURkUVYeI?=
- =?us-ascii?Q?ALGqWCZcZNbGtCyCTLY4TlW7KaUs6JjtA93ww4R+iYgxRIWc2FMx8m15uoRy?=
- =?us-ascii?Q?JtOKp5bE4XuQuMUWNRfibbbTmA0OXATm8vwjfFQs+plTIumHDPUps2wG+Xms?=
- =?us-ascii?Q?XT6oqRAzrp/my4fgDxY8xctXx0p0vQEZ6CiRG4utZ/ZxuThijswtbv1Olper?=
- =?us-ascii?Q?gUWBWG6zIWuE3G3jSkI9Utgtd1p26GybhtGnNzNrgVkZa5+F/NLraJm6DEdo?=
- =?us-ascii?Q?yIRxYyRN2w8nxw/tEDO94BnrA7GEACuAniMDVZl5Lvec5BMZovdZT/Hywkn7?=
- =?us-ascii?Q?Sr7aAHllzlL7WIGP5DWDcDll9FD29ck+EupBOYSBnqivabWFpWx/7pPE+NFt?=
- =?us-ascii?Q?/ShjqAsFZIbrO1MDg9J2loorVj/8?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?GbJECftB/376v84lWcPEjdX7NeN5Z/m1CsyLnFjucvc9p+q3wxtkNewJW/wJ?=
- =?us-ascii?Q?BjdTelApXbduUVTLrzjbcqsiN4XQiEYLJZt+/qUY7SZGduvuiH5SaIhgdJuT?=
- =?us-ascii?Q?pdEU3c1x1MNpTj9wrq5GurJ/OTI8ukFCJcSPBvBn5r22KR2V4zuKVO2ZJCLQ?=
- =?us-ascii?Q?FqG4dXqnKod9ehNImkNSF8hTTai1Z2b6jcPneij6Evpe97PNNLn2y9lR0QW0?=
- =?us-ascii?Q?AmfXSyIwVStV+tna4NAy+6R/MFRxSbYhsGQRYXWFpf2CnXcVlwYm6E/C9jKp?=
- =?us-ascii?Q?4HIaMv5GgrKZNLqVCOBGmK8ojp/vtNlySUz/borGxRg37mGLLSl4K1ApNDQA?=
- =?us-ascii?Q?Ri89MCTndvcootHx0zLC2Pt9Bvq7Mks4sLMRa7KxIXCPeBrIQ5ryV9uJ0+mg?=
- =?us-ascii?Q?JPgkaAIcEXC3dwhWxvc41WB1klSc/AW28qYDz3S4LWtUonlpuDXJVyDDJPWd?=
- =?us-ascii?Q?6ntIVQC1wJ98CwEHI8jlA+mQaxSIp7j4bEcyi6UsQTzOG/pZS4QoMKjhXYqX?=
- =?us-ascii?Q?2WZxSX3vQ1QPRZCAD0U9FpY+9xyYFj57MpzVkIXF49LpA2X2WBmsBkPO6JrV?=
- =?us-ascii?Q?i2BCeI27GQan8VDSiASzE4bx45pgZdlX/FtbFCml9J7ONbRKsVlB0FLmltlq?=
- =?us-ascii?Q?kcWA0RPrevHG2y/PYvfO236rxH5brMkO07idy5Wyg4aNEV822lMUK1DfS82h?=
- =?us-ascii?Q?WFXBFNeWQC33bpx9I8EF8eOnmSLNxwFpnis2iRALkS8+SwelUcHi9tRzZ7Ki?=
- =?us-ascii?Q?5rhyh+v9A+ekWp8Di9rTt/SSnhKLwte0acvXX+p2GJK+2BDSUwSsEoNKb64G?=
- =?us-ascii?Q?SHKtO0jPY3DAlWSr0GsN0CvI9QYe01CPd56DG+2M/F9YClCnM5eDxXovInpn?=
- =?us-ascii?Q?6p4R40H+KMB/b2ZYn5OLwVDmFQWcIpmf8HL4KSRlPkW6/ZgCfi45UppcpOBG?=
- =?us-ascii?Q?SB2cMr3Q8n3N5hwiFgyFv2+WzZBrklMFdz7v0rMkdk+3DTO1HB0llrVwZJ6s?=
- =?us-ascii?Q?9jkY/ErOWV7VJkZqvp8sFni/LrYHW1Y5UhcxY4zVzYX0FmzI4kKrhNyojeBv?=
- =?us-ascii?Q?64H4yJmgO0aJC6WYSRYTXBqfpf/KE450dZ5mwMyXkmGvQtboMMcDwHrJovcM?=
- =?us-ascii?Q?Irq7bIk90AIC6bcssVBW/0BBT6/Ebnqnd2Slca7t1xWI/bTIgGUmm5WLv0i7?=
- =?us-ascii?Q?m7sNaUVtuv0Mqz6MgKzuCXeg5Y3jKzYUnCml8x52rUG9g7pKXDEFsCgS0Vtf?=
- =?us-ascii?Q?YTDzzLlxfvj5bsnZNZBgV/DUIHUlvCDtYtiX/0zdZhHCmkY71c/H3xxMElSE?=
- =?us-ascii?Q?akiIKCkcKEY47YkIwO50ji46SnS/vIS0dcw2zhSVyr4ecS6jFJvKHed3yQed?=
- =?us-ascii?Q?1Za3N3ivqjR+Fch+/3UGgUqy+ezDEVN5yQxMdcAckPtloEQ6Jgeb8TfQvlh6?=
- =?us-ascii?Q?UurB8UUDy4Qs66ACVL+R7O4d8OTwFBpBVZTh+gKE+OKkVz7Av+c+KKe1K3hN?=
- =?us-ascii?Q?pZ/b4QR4TGbfAlK4lSKMZGqgrj8ocwbEgfr01v1lmEhUWCriq6HHS/M/VqIV?=
- =?us-ascii?Q?0YtH9+biHJXMtHuXlLg7lBOEJsKkSLznY3kHPTcj?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4eabc64e-3716-4b81-b544-08dd4a819344
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 09:50:54.0107
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2P0w07ObTnVCu1YGEXrg5bwg3mPMcfLBtH120FBgIx91oD71ECY1WzFeH6dvOtyv8nMr2QXeXJg/SfJo+c5yZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6421
 
-On Tue, Feb 11, 2025 at 08:41:45AM +0100, Andrea Righi wrote:
-> On Tue, Feb 11, 2025 at 08:32:51AM +0100, Andrea Righi wrote:
-> > On Mon, Feb 10, 2025 at 11:57:42AM -0500, Yury Norov wrote:
-> > ...
-> > > > > +/*
-> > > > > + * Find the best idle CPU in the system, relative to @node.
-> > > > > + */
-> > > > > +s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, int node, u64 flags)
-> > > > > +{
-> > > > > +	nodemask_t unvisited = NODE_MASK_ALL;
-> > > 
-> > > This should be a NODEMASK_ALLOC(). We don't want to eat up too much of the
-> > > stack, right?
-> > 
-> > Ok, and if I want to initialize unvisited to all online nodes, is there a
-> > better than doing:
-> > 
-> >   nodemask_clear(*unvisited);
-> >   nodemask_or(*unvisited, *unvisited, node_states[N_ONLINE]);
-> > 
-> > We don't have nodemask_copy() right?
-> 
-> Sorry, and with that I mean nodes_clear() / nodes_or() / nodes_copy().
+Add debug statements to assist in debugging and monitoring
+driver behaviour, making it easier to identify potential
+issues  during development and testing.
 
-Also, it might be problematic to use NODEMASK_ALLOC() here, since we're
-potentially holding raw spinlocks. Maybe we could use per-cpu nodemask_t,
-but then we need to preempt_disable() the entire loop, since
-scx_pick_idle_cpu() can be be called potentially from any context.
+Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 52 +++++++++++++----
+ .../net/ethernet/microsoft/mana/hw_channel.c  |  6 +-
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 58 +++++++++++++++----
+ 3 files changed, 94 insertions(+), 22 deletions(-)
 
-Considering that the maximum value for NODE_SHIFT is 10 with CONFIG_MAXSMP,
-nodemask_t should be 128 bytes at most, that doesn't seem too bad... Maybe
-we can accept to have it on the stack in this case?
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index be95336ce089..f9839938f0ab 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -666,8 +666,11 @@ int mana_gd_create_hwc_queue(struct gdma_dev *gd,
+ 
+ 	gmi = &queue->mem_info;
+ 	err = mana_gd_alloc_memory(gc, spec->queue_size, gmi);
+-	if (err)
++	if (err) {
++		dev_err(gc->dev, "GDMA queue type: %d, size: %u, gdma memory allocation err: %d\n",
++			spec->type, spec->queue_size, err);
+ 		goto free_q;
++	}
+ 
+ 	queue->head = 0;
+ 	queue->tail = 0;
+@@ -688,6 +691,8 @@ int mana_gd_create_hwc_queue(struct gdma_dev *gd,
+ 	*queue_ptr = queue;
+ 	return 0;
+ out:
++	dev_err(gc->dev, "Failed to create queue type %d of size %u, err: %d\n",
++		spec->type, spec->queue_size, err);
+ 	mana_gd_free_memory(gmi);
+ free_q:
+ 	kfree(queue);
+@@ -763,14 +768,18 @@ static int mana_gd_create_dma_region(struct gdma_dev *gd,
+ 
+ 	if (resp.hdr.status ||
+ 	    resp.dma_region_handle == GDMA_INVALID_DMA_REGION) {
+-		dev_err(gc->dev, "Failed to create DMA region: 0x%x\n",
+-			resp.hdr.status);
+ 		err = -EPROTO;
+ 		goto out;
+ 	}
+ 
+ 	gmi->dma_region_handle = resp.dma_region_handle;
++	dev_dbg(gc->dev, "Created DMA region handle 0x%llx\n",
++		gmi->dma_region_handle);
+ out:
++	if (err)
++		dev_err(gc->dev,
++			"Failed to create DMA region of length: %u, page_type: %d, status: 0x%x, err: %d\n",
++			length, req->gdma_page_type, resp.hdr.status, err);
+ 	kfree(req);
+ 	return err;
+ }
+@@ -793,8 +802,11 @@ int mana_gd_create_mana_eq(struct gdma_dev *gd,
+ 
+ 	gmi = &queue->mem_info;
+ 	err = mana_gd_alloc_memory(gc, spec->queue_size, gmi);
+-	if (err)
++	if (err) {
++		dev_err(gc->dev, "GDMA queue type: %d, size: %u, gdma memory allocation err: %d\n",
++			spec->type, spec->queue_size, err);
+ 		goto free_q;
++	}
+ 
+ 	err = mana_gd_create_dma_region(gd, gmi);
+ 	if (err)
+@@ -815,6 +827,8 @@ int mana_gd_create_mana_eq(struct gdma_dev *gd,
+ 	*queue_ptr = queue;
+ 	return 0;
+ out:
++	dev_err(gc->dev, "Failed to create queue type %d of size: %u, err: %d\n",
++		spec->type, spec->queue_size, err);
+ 	mana_gd_free_memory(gmi);
+ free_q:
+ 	kfree(queue);
+@@ -841,8 +855,11 @@ int mana_gd_create_mana_wq_cq(struct gdma_dev *gd,
+ 
+ 	gmi = &queue->mem_info;
+ 	err = mana_gd_alloc_memory(gc, spec->queue_size, gmi);
+-	if (err)
++	if (err) {
++		dev_err(gc->dev, "GDMA queue type: %d, size: %u, memory allocation err: %d\n",
++			spec->type, spec->queue_size, err);
+ 		goto free_q;
++	}
+ 
+ 	err = mana_gd_create_dma_region(gd, gmi);
+ 	if (err)
+@@ -862,6 +879,8 @@ int mana_gd_create_mana_wq_cq(struct gdma_dev *gd,
+ 	*queue_ptr = queue;
+ 	return 0;
+ out:
++	dev_err(gc->dev, "Failed to create queue type %d of size: %u, err: %d\n",
++		spec->type, spec->queue_size, err);
+ 	mana_gd_free_memory(gmi);
+ free_q:
+ 	kfree(queue);
+@@ -1157,8 +1176,11 @@ int mana_gd_post_and_ring(struct gdma_queue *queue,
+ 	int err;
+ 
+ 	err = mana_gd_post_work_request(queue, wqe_req, wqe_info);
+-	if (err)
++	if (err) {
++		dev_err(gc->dev, "Failed to post work req from queue type %d of size %u (err=%d)\n",
++			queue->type, queue->queue_size, err);
+ 		return err;
++	}
+ 
+ 	mana_gd_wq_ring_doorbell(gc, queue);
+ 
+@@ -1435,8 +1457,10 @@ static int mana_gd_setup(struct pci_dev *pdev)
+ 	mana_smc_init(&gc->shm_channel, gc->dev, gc->shm_base);
+ 
+ 	err = mana_gd_setup_irqs(pdev);
+-	if (err)
++	if (err) {
++		dev_err(gc->dev, "Failed to setup IRQs: %d\n", err);
+ 		return err;
++	}
+ 
+ 	err = mana_hwc_create_channel(gc);
+ 	if (err)
+@@ -1454,12 +1478,14 @@ static int mana_gd_setup(struct pci_dev *pdev)
+ 	if (err)
+ 		goto destroy_hwc;
+ 
++	dev_dbg(&pdev->dev, "mana gdma setup successful\n");
+ 	return 0;
+ 
+ destroy_hwc:
+ 	mana_hwc_destroy_channel(gc);
+ remove_irq:
+ 	mana_gd_remove_irqs(pdev);
++	dev_err(&pdev->dev, "%s failed (error %d)\n", __func__, err);
+ 	return err;
+ }
+ 
+@@ -1470,6 +1496,7 @@ static void mana_gd_cleanup(struct pci_dev *pdev)
+ 	mana_hwc_destroy_channel(gc);
+ 
+ 	mana_gd_remove_irqs(pdev);
++	dev_dbg(&pdev->dev, "mana gdma cleanup successful\n");
+ }
+ 
+ static bool mana_is_pf(unsigned short dev_id)
+@@ -1488,8 +1515,10 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	BUILD_BUG_ON(2 * MAX_PORTS_IN_MANA_DEV * GDMA_EQE_SIZE > EQ_SIZE);
+ 
+ 	err = pci_enable_device(pdev);
+-	if (err)
++	if (err) {
++		dev_err(&pdev->dev, "Failed to enable pci device (err=%d)\n", err);
+ 		return -ENXIO;
++	}
+ 
+ 	pci_set_master(pdev);
+ 
+@@ -1498,9 +1527,10 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto disable_dev;
+ 
+ 	err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+-	if (err)
++	if (err) {
++		dev_err(&pdev->dev, "DMA set mask failed: %d\n", err);
+ 		goto release_region;
+-
++	}
+ 	dma_set_max_seg_size(&pdev->dev, UINT_MAX);
+ 
+ 	err = -ENOMEM;
+@@ -1575,6 +1605,8 @@ static void mana_gd_remove(struct pci_dev *pdev)
+ 
+ 	pci_release_regions(pdev);
+ 	pci_disable_device(pdev);
++
++	dev_dbg(&pdev->dev, "mana gdma remove successful\n");
+ }
+ 
+ /* The 'state' parameter is not used. */
+diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+index a00f915c5188..1ba49602089b 100644
+--- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
++++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+@@ -440,7 +440,8 @@ static int mana_hwc_alloc_dma_buf(struct hw_channel_context *hwc, u16 q_depth,
+ 	gmi = &dma_buf->mem_info;
+ 	err = mana_gd_alloc_memory(gc, buf_size, gmi);
+ 	if (err) {
+-		dev_err(hwc->dev, "Failed to allocate DMA buffer: %d\n", err);
++		dev_err(hwc->dev, "Failed to allocate DMA buffer size: %u, err %d\n",
++			buf_size, err);
+ 		goto out;
+ 	}
+ 
+@@ -529,6 +530,9 @@ static int mana_hwc_create_wq(struct hw_channel_context *hwc,
+ out:
+ 	if (err)
+ 		mana_hwc_destroy_wq(hwc, hwc_wq);
++
++	dev_err(hwc->dev, "Failed to create HWC queue size= %u type= %d err= %d\n",
++		queue_size, q_type, err);
+ 	return err;
+ }
+ 
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index aa1e47233fe5..32e2c5cd7152 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -52,10 +52,12 @@ static int mana_open(struct net_device *ndev)
+ {
+ 	struct mana_port_context *apc = netdev_priv(ndev);
+ 	int err;
+-
+ 	err = mana_alloc_queues(ndev);
+-	if (err)
++
++	if (err) {
++		netdev_err(ndev, "%s failed to allocate queues: %d\n", __func__, err);
+ 		return err;
++	}
+ 
+ 	apc->port_is_up = true;
+ 
+@@ -64,7 +66,7 @@ static int mana_open(struct net_device *ndev)
+ 
+ 	netif_carrier_on(ndev);
+ 	netif_tx_wake_all_queues(ndev);
+-
++	netdev_dbg(ndev, "%s successful\n", __func__);
+ 	return 0;
+ }
+ 
+@@ -176,6 +178,9 @@ static int mana_map_skb(struct sk_buff *skb, struct mana_port_context *apc,
+ 	return 0;
+ 
+ frag_err:
++	if (net_ratelimit())
++		netdev_err(apc->ndev, "Failed to map skb of size %u to DMA\n",
++			   skb->len);
+ 	for (i = sg_i - 1; i >= hsg; i--)
+ 		dma_unmap_page(dev, ash->dma_handle[i], ash->size[i],
+ 			       DMA_TO_DEVICE);
+@@ -687,6 +692,7 @@ int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu, int num_qu
+ 	return 0;
+ 
+ error:
++	netdev_err(mpc->ndev, "Failed to pre-allocate RX buffers for %d queues\n", num_queues);
+ 	mana_pre_dealloc_rxbufs(mpc);
+ 	return -ENOMEM;
+ }
+@@ -1304,8 +1310,10 @@ static int mana_create_eq(struct mana_context *ac)
+ 	for (i = 0; i < gc->max_num_queues; i++) {
+ 		spec.eq.msix_index = (i + 1) % gc->num_msix_usable;
+ 		err = mana_gd_create_mana_eq(gd, &spec, &ac->eqs[i].eq);
+-		if (err)
++		if (err) {
++			dev_err(gc->dev, "Failed to create EQ %d : %d\n", i, err);
+ 			goto out;
++		}
+ 		mana_create_eq_debugfs(ac, i);
+ 	}
+ 
+@@ -2080,6 +2088,8 @@ static int mana_create_txq(struct mana_port_context *apc,
+ 
+ 	return 0;
+ out:
++	netdev_err(net, "Failed to create %d TX queues, %d\n",
++		   apc->num_queues, err);
+ 	mana_destroy_txq(apc);
+ 	return err;
+ }
+@@ -2415,6 +2425,7 @@ static int mana_add_rx_queues(struct mana_port_context *apc,
+ 		rxq = mana_create_rxq(apc, i, &ac->eqs[i], ndev);
+ 		if (!rxq) {
+ 			err = -ENOMEM;
++			netdev_err(ndev, "Failed to create rxq %d : %d\n", i, err);
+ 			goto out;
+ 		}
+ 
+@@ -2661,12 +2672,18 @@ int mana_alloc_queues(struct net_device *ndev)
+ 	int err;
+ 
+ 	err = mana_create_vport(apc, ndev);
+-	if (err)
++	if (err) {
++		netdev_err(ndev, "Failed to create vPort %u : %d\n", apc->port_idx, err);
+ 		return err;
++	}
+ 
+ 	err = netif_set_real_num_tx_queues(ndev, apc->num_queues);
+-	if (err)
++	if (err) {
++		netdev_err(ndev,
++			   "netif_set_real_num_tx_queues () failed for ndev with num_queues %u : %d\n",
++			   apc->num_queues, err);
+ 		goto destroy_vport;
++	}
+ 
+ 	err = mana_add_rx_queues(apc, ndev);
+ 	if (err)
+@@ -2675,14 +2692,20 @@ int mana_alloc_queues(struct net_device *ndev)
+ 	apc->rss_state = apc->num_queues > 1 ? TRI_STATE_TRUE : TRI_STATE_FALSE;
+ 
+ 	err = netif_set_real_num_rx_queues(ndev, apc->num_queues);
+-	if (err)
++	if (err) {
++		netdev_err(ndev,
++			   "netif_set_real_num_rx_queues () failed for ndev with num_queues %u : %d\n",
++			   apc->num_queues, err);
+ 		goto destroy_vport;
++	}
+ 
+ 	mana_rss_table_init(apc);
+ 
+ 	err = mana_config_rss(apc, TRI_STATE_TRUE, true, true);
+-	if (err)
++	if (err) {
++		netdev_err(ndev, "Failed to configure RSS table: %d\n", err);
+ 		goto destroy_vport;
++	}
+ 
+ 	if (gd->gdma_context->is_pf) {
+ 		err = mana_pf_register_filter(apc);
+@@ -2823,8 +2846,10 @@ int mana_detach(struct net_device *ndev, bool from_close)
+ 
+ 	if (apc->port_st_save) {
+ 		err = mana_dealloc_queues(ndev);
+-		if (err)
++		if (err) {
++			netdev_err(ndev, "%s failed to deallocate queues: %d\n", __func__, err);
+ 			return err;
++		}
+ 	}
+ 
+ 	if (!from_close) {
+@@ -2968,6 +2993,8 @@ static int add_adev(struct gdma_dev *gd)
+ 		goto add_fail;
+ 
+ 	gd->adev = adev;
++	dev_dbg(gd->gdma_context->dev,
++		"Auxiliary device added successfully\n");
+ 	return 0;
+ 
+ add_fail:
+@@ -3009,8 +3036,10 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+ 	}
+ 
+ 	err = mana_create_eq(ac);
+-	if (err)
++	if (err) {
++		dev_err(dev, "Failed to create EQs: %d\n", err);
+ 		goto out;
++	}
+ 
+ 	err = mana_query_device_cfg(ac, MANA_MAJOR_VERSION, MANA_MINOR_VERSION,
+ 				    MANA_MICRO_VERSION, &num_ports);
+@@ -3066,8 +3095,14 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+ 
+ 	err = add_adev(gd);
+ out:
+-	if (err)
++	if (err) {
+ 		mana_remove(gd, false);
++	} else {
++		dev_dbg(dev, "gd=%p, id=%u, num_ports=%d, type=%u, instance=%u\n",
++			gd, gd->dev_id.as_uint32, ac->num_ports,
++			gd->dev_id.type, gd->dev_id.instance);
++		dev_dbg(dev, "%s succeeded\n", __func__);
++	}
+ 
+ 	return err;
+ }
+@@ -3129,6 +3164,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+ 	gd->driver_data = NULL;
+ 	gd->gdma_context = NULL;
+ 	kfree(ac);
++	dev_dbg(dev, "%s succeeded\n", __func__);
+ }
+ 
+ struct net_device *mana_get_primary_netdev_rcu(struct mana_context *ac, u32 port_index)
+-- 
+2.34.1
 
-Thanks,
--Andrea
