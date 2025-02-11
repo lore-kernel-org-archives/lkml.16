@@ -1,147 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA451E231F
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F6B1E570A
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739298056; cv=none; b=Bh2A3H8L4goQQav5LzwJEy8kiuqfas+jVnD81ncl56Z1Ck97Y/DTdZCUR0wlw6JWL5zXNBunmT2pGlby5kcRJGUCd5UEHF3xT8RI3Zl/rk86zfRnnr8NjJ+fXNaK0eVOq5KYDN8O6+B3DqKzrpiJZ/IkI2Ba2z52u1r0ZFYxSOU=
+	t=1739298098; cv=none; b=IRfkdnC9d89wPgbjvcHzqSsKydjc/d+MXpZTwsadFG7kAX0KSTEdOVBx9mVFKrxlriBzLXavFgBwB92a00gj2cetmJsFUInB/+l1hRzMECNmypWqBwnwpUk/ZnDMF+/3P4zeNqhdWG7U3ab/JtUqMavMpgRKoMBbqGwKifTp7lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739298056; c=relaxed/simple;
-	bh=BwSdJG1qEJ5lEgTCCL0KL5wh2iaU3ANvXOSfLUO/pcg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DsuNVRpjyMzu0LOE0Wf0KKITj7pDn6qP/69Cq195IWin6WRmETiH8AX77ri0x4npSFKdxV0LQYaAYGGG5Dkr0omn6UnqUVXdsSCxP0zzsy2KoHX0QRLGagEW2UkrZmf3B5dlk4vw+fxX5ojb8CBXr8wGf+NBeDODt4A0EGF/2X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q40V6VAR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739298098; c=relaxed/simple;
+	bh=yHzpB75qrt6L9V798dzn3nFGVe17ID9Yz9uDWiN5boM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BLRvRGXW2OQbUGVETdg++rptQwgQgnxeQsiv0PUryV+p1rmKBa30conSfcuR0AIrWBFNOc+i3Y0x+H3+3HyjXesOIq72KHRF9z0/00aiyZlx/2z6C4v/fIJ4/1h2wO5oVgFQuIYvK1Qfk/S/eAOIftxIX51LGY2OrDFGWF/gqmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tIcVLdU7; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q40V6VAR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092C3C4CEDD;
-	Tue, 11 Feb 2025 18:20:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739298056;
-	bh=BwSdJG1qEJ5lEgTCCL0KL5wh2iaU3ANvXOSfLUO/pcg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q40V6VARP9HS+qSSiQamUqzvCGGtIFWRf+E9o8RKRgYt8LVDpKJl/ZLDAPvMGzOVD
-	 zbT8n6ARq6iGZaQwIAh8rOuRkZuwCM43OIDur2tqv5pyhD6DF/GGJgLZA8Ii/qB7l4
-	 041zMtvgMJgBQ2yNCxnZOYcYPJbQUG0SDnORDtPtxCBOPVDSfqWLYLmzpFE10XXjgr
-	 p9XMri0TsSkX3fluWvycmbh609jern9FMQRo3/F8cOJWIeWwF3YFXqM3eWY20LQmIW
-	 0yYCAqpkrvOuhXe03mt5Pf95HOPQEAgh/4ITBT2HMv7R753tRvReIjVr3gg9cx6eNf
-	 p8rGQNGMqjJtQ==
-From: SeongJae Park <sj@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <howlett@gmail.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	"Lai, Yi" <yi1.lai@linux.intel.com>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH mm-unstable] mm/madvise: handle MADV_{HWPOISON,SOFT_OFFLINE} from madvise_unlock()
-Date: Tue, 11 Feb 2025 10:20:53 -0800
-Message-Id: <20250211182053.3639-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <2f448f7b-1da7-4099-aa9e-0179d47fde40@lucifer.local>
-References: 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tIcVLdU7"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38dd93a6f0aso2221614f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:21:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739298094; x=1739902894; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ltM+a2uxSbqNoll57t/hl+Ny/dwW4fSjhIoNqgR74iw=;
+        b=tIcVLdU7FyNx7JJwMtMB2sVdwIH3hPTSeIrA2vXoux4AEZx4LJ9jDMRPMHIax2dWhB
+         D120pHi71LGWs9iMtCAWuseBi7iE8s7FaFaoxiwxlXXr5cNgCJs8HIJ+ThDHDHnH+up5
+         bLbthEwW+FMcXbFA+7y5RCpnm604YPsLRN8Hcsbs9yT36Y8g2jtNe2YqcOdrASo6ql6T
+         RBjYmGR5GmDjfNtsWUxN4vjQeApM0WCJkDZbOqJByp7Jpp1xuMd0EMX+Yh/jpL6poNWz
+         evTwbKc0x15XEtNq4WgZ1ZRa2kHMOsfxvLIuX4JmFKyd5Dfx1gNnGZzcIUPNr0+ZP/tx
+         g1cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739298094; x=1739902894;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ltM+a2uxSbqNoll57t/hl+Ny/dwW4fSjhIoNqgR74iw=;
+        b=nmHbM/mMb36eYLJnX8NdJDj2e28I2DDcAKZgNWDXZR9u/Abq2FqwwGqClBc/+rv0sN
+         WR4udY2u2K41NQVaHqIsIzKNHBK5wXBRuu2Mk8X4The+dfiqfBRI5QQjItPmvkEItaSc
+         LUUT2uSVJyx/t5xjksrTHhs6Fdz+QKJNayGyZn91UYWyzosDC6iVwR0K5DRXi+555Prc
+         R61VEKO5TbDMcxv//VzUnOswsamSWwQg3QY4kRKs57Jt38/d73xdNJyB/at0tnbjlRCj
+         b4TiZKThKXzZ5K1aTEkFrmQatlaivMJDOuc8CZ10aoN4wvcGKivDSg2/WaeBWNWgzCND
+         l4KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBUrwoE0eF5i9L2fZ4z0B6+WSA/bPVviqxR4D4lLEiqYfvHc5cUfxNWLG+TvD1dRPKMT5sozfOleK3T9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhsVQEuPPYyL4cERX7gQtb+cWdiKQNhUdZjBw44Nq6F7nSTwpg
+	+HYM6qWJZErXkz6OC1CjCfYNQQwZMVrA+zfsKZya+6uzv1xTPEzLtZOZW/gWmHg=
+X-Gm-Gg: ASbGncvv6AgaUu+tIhRmQzb8c0vYiQZ/RyrBGBomU7gharDKtZNW1wgB8WoCkk2DXiR
+	Hn0hCh0hndDwtgpNDUe4JoXHL+Kl6HRwk5OeEd4JNWE8MyjNL11Vmx3zSPEv8QnoPiMLyHReBS/
+	BLINwt0O7576XLhTRBWwEj08wNXqWiJuTP8pXDI5clbFxt24l7KDqxHM9PdpbQlieidPTEZJpUY
+	mFrjj7A33AbwUTsjhfKjIMR7V7rBQ1JoH5zIMDFoeyv0q4dPpEr/g6hw1CPSDTA+JihWKOk+S/V
+	7Jxt1XVUAMk7by4iQR7lxksxRw==
+X-Google-Smtp-Source: AGHT+IH8s48al3LraqkT+TOIwA1K8sIqTbw55FOvBNGZc+9PMaUyZNyKYXua1A0xWaVLj5G742ETew==
+X-Received: by 2002:a5d:47af:0:b0:38d:b051:5a0e with SMTP id ffacd0b85a97d-38dea2ea1d3mr4453f8f.49.1739298093651;
+        Tue, 11 Feb 2025 10:21:33 -0800 (PST)
+Received: from linaro.org ([2a02:2454:ff21:ef30:70a:7a19:231e:65aa])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcde66729sm11842301f8f.81.2025.02.11.10.21.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 10:21:33 -0800 (PST)
+Date: Tue, 11 Feb 2025 19:21:25 +0100
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Johan Hovold <johan@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2] arm64: dts: qcom: x1e80100-qcp: Add WiFi/BT pwrseq
+Message-ID: <Z6uVJeQd1DXFFHG1@linaro.org>
+References: <20250211-x1e80100-pwrseq-qcp-v2-1-c4349ca974ab@linaro.org>
+ <Z6txevdftVNww0wD@hovoldconsulting.com>
+ <CAMRc=McApxN7TKKKAL2OmfkosKYA9gCYZXQZXFAE_A9a5qykmw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McApxN7TKKKAL2OmfkosKYA9gCYZXQZXFAE_A9a5qykmw@mail.gmail.com>
 
-On Tue, 11 Feb 2025 10:51:41 +0000 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-
-> +cc Naresh, Arnd for another reports/discussion of the same issue [0] while
-> lore/lei is broken.
-> 
-> Hi,
-> 
-> Lore breaking means I missed this :) thankfully you cc'd me (_this_ is why I am
-> so adament about people following get_maintainer.pl procedure btw) so I was able
-> to now notice + reply :)
-> 
-> This is totally my bad for missing this on review, so mea culpa.
-
-No worry, your reviews are always very helpful!
-
-> 
-> [0]:https://lwn.net/ml/linux-mm/CA+G9fYt5QwJ4_F8fJj7jx9_0Le9kOVSeG38ox9qnKqwsrDdvHQ@mail.gmail.com/
-> 
-> On Mon, Feb 10, 2025 at 10:32:01PM -0800, SeongJae Park wrote:
-> > madvise_lock() does nothing for MADV_HWPOSION and MADV_SOFT_OFFLINE
-> > behavior, but madvise_unlock() does mmap_lock unlocking regardless of
-> > the behavior.
-[...]
-> >  mm/madvise.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
+On Tue, Feb 11, 2025 at 06:51:02PM +0100, Bartosz Golaszewski wrote:
+> On Tue, Feb 11, 2025 at 4:49 PM Johan Hovold <johan@kernel.org> wrote:
 > >
-> > diff --git a/mm/madvise.c b/mm/madvise.c
-> > index b5ef8e03d8b0..b8969457f3ef 100644
-> > --- a/mm/madvise.c
-> > +++ b/mm/madvise.c
-> > @@ -1577,7 +1577,6 @@ int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
+> > On Tue, Feb 11, 2025 at 04:01:56PM +0100, Stephan Gerhold wrote:
+> > > Add the WiFi/BT nodes for QCP and describe the regulators for the WCN7850
+> > > combo chip using the new power sequencing bindings. All voltages are
+> > > derived from chained fixed regulators controlled using a single GPIO.
+> > >
+> > > The same setup also works for CRD (and likely most of the other X1E80100
+> > > laptops). However, unlike the QCP they use soldered or removable M.2 cards
+> > > supplied by a single 3.3V fixed regulator. The other necessary voltages are
+> > > then derived inside the M.2 card. Describing this properly requires
+> > > new bindings, so this commit only adds QCP for now.
+> > >
+> > > Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> > > ---
+> > > Changes in v2:
+> > > - Rebase on qcom for-next, patch 1-2 were applied already
+> > > - Mention dummy regulator warning
+> > > - Link to v1: https://lore.kernel.org/r/20241007-x1e80100-pwrseq-qcp-v1-0-f7166510ab17@linaro.org
+> > > ---
+> > > The Linux driver currently warns about a missing regulator supply:
+> > >
+> > >   pwrseq-qcom_wcn wcn7850-pmu: supply vddio1p2 not found, using dummy regulator
+> > >
+> > > This supply exists on the WCN7850 chip, but nothing is connected there on
+> > > the QCP. Discussion is still open how to hide this warning in the driver,
+> > > but since the DT is correct and the same setup is already used on SM8550
+> > > upstream, this shouldn't block this patch.
 > >
-> >  static int madvise_lock(struct mm_struct *mm, int behavior)
-> >  {
-> > -
-> >  #ifdef CONFIG_MEMORY_FAILURE
-> >  	if (behavior == MADV_HWPOISON || behavior == MADV_SOFT_OFFLINE)
-> >  		return 0;
-> > @@ -1595,6 +1594,11 @@ static int madvise_lock(struct mm_struct *mm, int behavior)
+> > I thought Bartosz was gonna fix his driver...
 > >
-> >  static void madvise_unlock(struct mm_struct *mm, int behavior)
-> >  {
-> > +#ifdef CONFIG_MEMORY_FAILURE
-> > +	if (behavior == MADV_HWPOISON || behavior == MADV_SOFT_OFFLINE)
-> > +		return;
-> > +#endif
 > 
-> I agree this fixes the issue but this is horrible. let's abstract this please
-> rather than doing the same crap that already existed, only now twice.
+> This is not the same issue. The one you're thinking about[1] was fixed
+> by commit ad783b9f8e78 ("PCI/pwrctl: Abandon QCom WCN probe on
+> pre-pwrseq device-trees").
+> 
+> This warning comes from the PMU driver, not the PCI pwrctrl one for
+> the WLAN module. One solution would be to make this supply optional in
+> bindings and use regulator_get_optional for the ones we know may be
+> unconnected. Does it sound correct?
+> 
 
-I agree abstracting this is a better idea.
+The supply is optional already in the bindings. It's not optional in the
+driver though, because that one uses the bulk regulator API and that
+currently provides no way to mark an individual regulator as optional.
 
-> 
-> > +
-> >  	if (madvise_need_mmap_write(behavior))
-> >  		mmap_write_unlock(mm);
-> >  	else
-> >
-> > base-commit: 8bf30f9d23eb5040d37e6e712789cee8e71e1577
-> > --
-> > 2.39.5
-> 
-> I attach a fix-patch concept for something I think that'd be nicer, do with
-> it what thy wilt! :P sorry I don't mean to be 'one of those' maintainers
-> who copy/pastes code + demands somebody do it (by no means do I do so), but
-> since this is so small I feel it's kind of quicker for me to do it this
-> way.
-> 
-> Obviously take it or leave it/adapt it/etc. This is compile-tested only...
-
-I further ran the repro program and confirmed this fixes the issue :)
-
-> 
-> ----8<----
-> From 9fce3e47bf0fff2a2291be66002af346cdbca665 Mon Sep 17 00:00:00 2001
-> From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Date: Tue, 11 Feb 2025 10:44:26 +0000
-> Subject: [PATCH] mm/madvise: fix madvise_[un]lock() issue
-> 
-> We are asymmetric in our locking/unlocking in the case of memory failure
-> madvise() behaviour options, correct this and abstract the memory failure
-> check.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-
-Reviewed-by: SeongJae Park <sj@kernel.org>
-Tested-by: SeongJae Park <sj@kernel.org>
-
+We did discuss this on v1 of this patch. I think you did not get back to
+Mark's last message yet [2]. :-)
 
 Thanks,
-SJ
+Stephan
 
-[...]
+[2]: https://lore.kernel.org/linux-arm-msm/f125c7d5-5f85-4ff6-999b-2098ff3103f9@sirena.org.uk/
