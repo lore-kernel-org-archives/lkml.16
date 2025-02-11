@@ -1,105 +1,251 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DA72512F4;
-	Tue, 11 Feb 2025 14:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C254250BE1;
+	Tue, 11 Feb 2025 14:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739284795; cv=none; b=Vud+Esz1mz40VuJ1BzBxlltUKZgJIgjmRE/RpBdEFxD51AJ+xAp6tyDWOAjRS5Y5YeLBoqyPo9O9Ek59hgHu90gNXZzMRsiRgfiu8CBQhClI3UezEkgSPBqyuu6lY48JLQXx7f7IAeksClR4/ndUqB04cCeukqJzZ1mJMY45D2k=
+	t=1739284829; cv=none; b=EfoaTVcioH6CxSCJocKe+KsibAPF4ZXokygEbZ/oPVM8kq9dovyhjhZjb55o9PuUTdn8ppKyDXmI8P7eiioEqZnuIRlomOI5XvKBMbiHHKSO7kiDA0Ihz7jztNAztoPXgr0RhCwmnV1njk9eRSFVX9/V2dFpFyNrQLSop43TpEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739284795; c=relaxed/simple;
-	bh=irGBFZvISEuw2wpC8vSJ1dQOP9CCFXZdcoJvKrGVMzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZkfDQht3HJtNuZ+kw9wsSjdxs+3USnZ1Qe0t1w5G82eVLXC7dmtS5QschZz4LUeTEtAVFzF0m1cYyFChAvx/oGs0r9JYEVLCz3kOEAJcet6zTpjWINkrzM3HfKOSZ6minOz7kR263lx2ItBpyK0IDh6oOf0Txm6ESIxnnnxKpIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DRFd+IWF; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1739284829; c=relaxed/simple;
+	bh=QR1Zd8YkXW2iqSrY4dhM1u3r5b6lX8Wm5ql/0QNBu7I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TvkAW0EgsPEyKZYVPsXAXVe1y8dwIYDGA4HuRzkgPvpJU0Zuk5VB88qlbk/hzWv86hTWqr6DWD71HFn28tkMdaKGUVmgmt6/oXKtodgqPu96l0WS9KU1s8nHNrQwuB4NW30VbdYPs16zTOn5J0MCKd8D0bZw3HWbcNWxdCb0Ssk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=hHU24o2H; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DRFd+IWF"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id F29FE40E0224;
-	Tue, 11 Feb 2025 14:39:50 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id BL9hIm6yGZuQ; Tue, 11 Feb 2025 14:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1739284787; bh=MoLQPIRFF2ToK9+6OuM2hGZjp5T1q9wl8C6INqwMDng=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DRFd+IWFE5uOVAGwcy61fj/qecexF/x6y0dBm5TTJhmz0rCYYi9HD4fjWg4bUc5AD
-	 RaursO1ZfrbphRYdloM13lR8JpbQ3oLvf3B9U0RWR6A7wsKDCpf7zObqSW/LefYsGD
-	 mofk9b4zTUI1p0Dm8LVCYKiTQO6opHxlXtvmcLXHpvXK+h0ibfbN6i4en/hBXmxfxg
-	 0pzWUdIiUKDo47yq0cMJHEdHx1r+gFjG26rGUDB47uaL3Aiklj6Ff3VDYqBcdJgWu4
-	 PZmwpbxQz5QqI/modawN5aPQqoU1R4cFpgJAwfBnM1v0+sRhMXgxgEBjr0dgfRmv7i
-	 +ymUCw5jsWZxqLHy7QBa8r5ltbfDdI5maVH27rTjsqRRIYcNdj+2QVZj/IGdfsHJoC
-	 79PtuaPe/amSI3Ng/Uj4RwfdQYq7RTPgLmjMeKZkR2w7cpzzIRoPAbfpHf8/xRVT8Q
-	 QYOSfzJT/cWwewyoir2VSOwmvsZhaa90jzypbbtCv0cRBF94hCumUj0rvkZHfvzsKO
-	 rYQ8duFT6aDEMGpTrDjPWe59lV5O8/wkTUA4cpOGNvcG6EN1K9abvMPmZdwfTTZl7V
-	 eVmi1Cv8ke8wfVlvgW0h91AsbdJpGGK9HtRa58ADZA/WVQePFf3cO8QVyxz698kH5s
-	 yYToDTss4L2jNyGdDV/Lu3i0=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DA33A40E01AE;
-	Tue, 11 Feb 2025 14:39:20 +0000 (UTC)
-Date: Tue, 11 Feb 2025 15:39:19 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	linux-coco@lists.linux.dev, virtualization@lists.linux.dev,
-	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com,
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-	Nikunj A Dadhania <nikunj@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH 00/16] x86/tsc: Try to wrangle PV clocks vs. TSC
-Message-ID: <20250211143919.GBZ6thF2Ryx-D2YpDz@fat_crate.local>
-References: <20250201021718.699411-1-seanjc@google.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hHU24o2H"
+X-UUID: 1e9d35aee88611efb8f9918b5fc74e19-20250211
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=OO2knjmuBvtucptzxUGQqaC73/LOtARP3qDbozdomLc=;
+	b=hHU24o2HiWCChrQymAnA8751pyWaJLrF86/Yh/W1d4NjjuL1+nWgV3JtpS8xFKesh4lCx8SFilOSWbyBxRS+8Q7u897SXGBs9EKplv7WQHitTLgI9O7KGJNp/PEImh7tg2+of8mxGQ22BW9kPvNphRkVqddaVb8VzDykuG2AA/U=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.46,REQID:20ad16f1-933a-4370-8525-7530a1d1b178,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:-50
+X-CID-META: VersionHash:60aa074,CLOUDID:054a2e9c-f55b-41e7-a712-ffbe7a973280,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:1,IP:nil
+	,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:
+	1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 1e9d35aee88611efb8f9918b5fc74e19-20250211
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
+	(envelope-from <zoie.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 182231165; Tue, 11 Feb 2025 22:40:20 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 11 Feb 2025 22:40:19 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Tue, 11 Feb 2025 22:40:19 +0800
+From: Zoie Lin <zoie.lin@mediatek.com>
+To: Qii Wang <qii.wang@mediatek.com>, Andi Shyti <andi.shyti@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	<linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<teddy.chen@mediatek.com>, <joseph-cc.chang@mediatek.com>,
+	<leilk.liu@mediatek.com>, Zoie Lin <zoie.lin@mediatek.com>
+Subject: [PATCH v4 0/1] i2c: mediatek: add runtime PM operations and bus regulator control
+Date: Tue, 11 Feb 2025 22:39:37 +0800
+Message-ID: <20250211144016.488001-1-zoie.lin@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250201021718.699411-1-seanjc@google.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Fri, Jan 31, 2025 at 06:17:02PM -0800, Sean Christopherson wrote:
-> And if the host provides the core crystal frequency in CPUID.0x15, then KVM
-> guests can use that for the APIC timer period instead of manually
-> calibrating the frequency.
+Introduce support for runtime PM operations in
+the I2C driver, enabling runtime suspend and resume functionality.
 
-Hmm, so that part: what's stopping the host from faking the CPUID leaf? I.e.,
-I would think that actually doing the work to calibrate the frequency would be
-more reliable/harder to fake to a guest than the guest simply reading some
-untrusted values from CPUID...
+Although in most platforms, the bus power of i2c is always
+on, some platforms disable the i2c bus power in order to meet
+low power request.
 
-Or are we saying here: oh well, there are so many ways for a normal guest to
-be lied to so that we simply do the completely different approach and trust
-the HV to be benevolent when we're not dealing with confidential guests which
-have all those other things to keep the HV honest?
+This implementation includes bus regulator control to facilitate
+proper handling of the bus power based on platform requirements.
 
-Just checking the general thinking here.
+Signed-off-by: Zoie Lin <zoie.lin@mediatek.com>
+---
+ drivers/i2c/busses/i2c-mt65xx.c | 73 +++++++++++++++++++++++++++------
+ 1 file changed, 61 insertions(+), 12 deletions(-)
 
-Thx.
+This series is based on linux-next, tag: next-20250210
 
+Changes in v4:
+- Removed unnecessary variable initialization.
+- Removed unnecessary brackets.
+- Corrected grammar issues in the commit message.
+- Confirmed autosuspend delay is not necessary.
+
+diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+index 5bd342047d59..1979b46d75f0 100644
+--- a/drivers/i2c/busses/i2c-mt65xx.c
++++ b/drivers/i2c/busses/i2c-mt65xx.c
+@@ -21,6 +21,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
+ #include <linux/scatterlist.h>
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+@@ -1245,8 +1246,8 @@ static int mtk_i2c_transfer(struct i2c_adapter *adap,
+ 	int left_num = num;
+ 	struct mtk_i2c *i2c = i2c_get_adapdata(adap);
+ 
+-	ret = clk_bulk_enable(I2C_MT65XX_CLK_MAX, i2c->clocks);
+-	if (ret)
++	ret = pm_runtime_resume_and_get(i2c->dev);
++	if (ret < 0)
+ 		return ret;
+ 
+ 	i2c->auto_restart = i2c->dev_comp->auto_restart;
+@@ -1299,7 +1300,9 @@ static int mtk_i2c_transfer(struct i2c_adapter *adap,
+ 	ret = num;
+ 
+ err_exit:
+-	clk_bulk_disable(I2C_MT65XX_CLK_MAX, i2c->clocks);
++	pm_runtime_mark_last_busy(i2c->dev);
++	pm_runtime_put_sync(i2c->dev);
++
+ 	return ret;
+ }
+ 
+@@ -1370,6 +1373,38 @@ static int mtk_i2c_parse_dt(struct device_node *np, struct mtk_i2c *i2c)
+ 	return 0;
+ }
+ 
++static int mtk_i2c_runtime_suspend(struct device *dev)
++{
++	struct mtk_i2c *i2c = dev_get_drvdata(dev);
++
++	clk_bulk_disable(I2C_MT65XX_CLK_MAX, i2c->clocks);
++	if (i2c->adap.bus_regulator)
++		regulator_disable(i2c->adap.bus_regulator);
++
++	return 0;
++}
++
++static int mtk_i2c_runtime_resume(struct device *dev)
++{
++	int ret;
++	struct mtk_i2c *i2c = dev_get_drvdata(dev);
++
++	if (i2c->adap.bus_regulator) {
++		ret = regulator_enable(i2c->adap.bus_regulator);
++		if (ret) {
++			dev_err(dev, "enable regulator failed!\n");
++			return ret;
++		}
++	}
++
++	ret = clk_bulk_enable(I2C_MT65XX_CLK_MAX, i2c->clocks);
++	if (ret)
++		if (i2c->adap.bus_regulator)
++			regulator_disable(i2c->adap.bus_regulator);
++
++	return ret;
++}
++
+ static int mtk_i2c_probe(struct platform_device *pdev)
+ {
+ 	int ret = 0;
+@@ -1472,13 +1507,18 @@ static int mtk_i2c_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	ret = clk_bulk_prepare_enable(I2C_MT65XX_CLK_MAX, i2c->clocks);
++	ret = clk_bulk_prepare(I2C_MT65XX_CLK_MAX, i2c->clocks);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "clock enable failed!\n");
+ 		return ret;
+ 	}
++
++	platform_set_drvdata(pdev, i2c);
++
++	ret = mtk_i2c_runtime_resume(i2c->dev);
++	if (ret < 0)
++		goto err_clk_bulk_unprepare;
+ 	mtk_i2c_init_hw(i2c);
+-	clk_bulk_disable(I2C_MT65XX_CLK_MAX, i2c->clocks);
++	mtk_i2c_runtime_suspend(i2c->dev);
+ 
+ 	ret = devm_request_irq(&pdev->dev, irq, mtk_i2c_irq,
+ 			       IRQF_NO_SUSPEND | IRQF_TRIGGER_NONE,
+@@ -1486,19 +1526,20 @@ static int mtk_i2c_probe(struct platform_device *pdev)
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev,
+ 			"Request I2C IRQ %d fail\n", irq);
+-		goto err_bulk_unprepare;
++		goto err_clk_bulk_unprepare;
+ 	}
++	pm_runtime_enable(&pdev->dev);
+ 
+ 	i2c_set_adapdata(&i2c->adap, i2c);
+ 	ret = i2c_add_adapter(&i2c->adap);
+ 	if (ret)
+-		goto err_bulk_unprepare;
+-
+-	platform_set_drvdata(pdev, i2c);
++		goto err_pm_runtime_disable;
+ 
+ 	return 0;
+ 
+-err_bulk_unprepare:
++err_pm_runtime_disable:
++	pm_runtime_disable(&pdev->dev);
++err_clk_bulk_unprepare:
+ 	clk_bulk_unprepare(I2C_MT65XX_CLK_MAX, i2c->clocks);
+ 
+ 	return ret;
+@@ -1510,6 +1551,7 @@ static void mtk_i2c_remove(struct platform_device *pdev)
+ 
+ 	i2c_del_adapter(&i2c->adap);
+ 
++	pm_runtime_disable(&pdev->dev);
+ 	clk_bulk_unprepare(I2C_MT65XX_CLK_MAX, i2c->clocks);
+ }
+ 
+@@ -1518,6 +1560,10 @@ static int mtk_i2c_suspend_noirq(struct device *dev)
+ 	struct mtk_i2c *i2c = dev_get_drvdata(dev);
+ 
+ 	i2c_mark_adapter_suspended(&i2c->adap);
++
++	if (!pm_runtime_status_suspended(dev))
++		mtk_i2c_runtime_suspend(dev);
++
+ 	clk_bulk_unprepare(I2C_MT65XX_CLK_MAX, i2c->clocks);
+ 
+ 	return 0;
+@@ -1536,7 +1582,8 @@ static int mtk_i2c_resume_noirq(struct device *dev)
+ 
+ 	mtk_i2c_init_hw(i2c);
+ 
+-	clk_bulk_disable(I2C_MT65XX_CLK_MAX, i2c->clocks);
++	if (pm_runtime_status_suspended(dev))
++		mtk_i2c_runtime_resume(dev);
+ 
+ 	i2c_mark_adapter_resumed(&i2c->adap);
+ 
+@@ -1546,6 +1593,8 @@ static int mtk_i2c_resume_noirq(struct device *dev)
+ static const struct dev_pm_ops mtk_i2c_pm = {
+ 	NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_i2c_suspend_noirq,
+ 				  mtk_i2c_resume_noirq)
++	SET_RUNTIME_PM_OPS(mtk_i2c_runtime_suspend, mtk_i2c_runtime_resume,
++			   NULL)
+ };
+ 
+ static struct platform_driver mtk_i2c_driver = {
 -- 
-Regards/Gruss,
-    Boris.
+2.45.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
