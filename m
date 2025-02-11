@@ -1,76 +1,51 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7F317C91;
-	Tue, 11 Feb 2025 15:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092DA17C91;
+	Tue, 11 Feb 2025 15:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739286118; cv=none; b=CysB/bdwJXAKFjjQn5D8+akHhRmchkYTuQs7bLJrcbYBlkSP9wrm0tXTYYVWmxlzhDXBTlSxNZhdS4JD3SV/D3SFNLJ5X+uuvA0bvKqtEAmef14MpTbJovzy6PI3EoezaA1JQH2IO6efngGXkg1dRk+0M7u9HBrYf1AFZC1RYLk=
+	t=1739286129; cv=none; b=TAdPnoM6pWxMk3NnH7xXckr/7wJUylg0mDHb7Zc9gKuXsL0tDkvvm6oH+bIaprWdNUZSKvPDuofpch3nilDcVjJqQzlDoaGejlH845XvN2VrjBiDfukzf/dnLiAGmFoLldz3tt18/t9SVZbXAU7NC5enjm8HG01HBRpDr0h6asM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739286118; c=relaxed/simple;
-	bh=NT4LdFuNL1mVF0er7FdAvKA0qLNJnpbCilHR7tk3ZCw=;
+	s=arc-20240116; t=1739286129; c=relaxed/simple;
+	bh=NJrnNissa9VtChrtfIQicfGI0gqVDx4S851Ho4mvxao=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rbgyUNnlwET04hmjhlk6deMH0D2a5kTQWsaZdRtUilvnT9WycPLRPYW5dkpBlEo72ESoWrbz6n8FC2xcC1nHyjtDu3VpU7SDxr8lyAMKrU4TIhBb8ACeyMVft+Rk5pktGczHm3wmBw7oeNsuRBLVm4hhPIyrb7b3zM6pOikt/vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DpBI7Aqt; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=CIIn04Bc44MIZgBRu4bShVdI4s5tOL/aHmVVXWpSYMOaFFbX7+XzbzpE+qcMzn7kEdKhx6YtHHSFCQqpUHrqqDn/hi6Vf+v5q8oOIj3+BiwrnK8oiP/n0qlME+pM4fuMD6RZn6IA0ezUZlUHtX05b9QPSuioPwYK2W0gHHTUwk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PtMCALep; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DpBI7Aqt"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C079340E0220;
-	Tue, 11 Feb 2025 15:01:53 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id vcaTo4I3qsTZ; Tue, 11 Feb 2025 15:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1739286109; bh=4lwHEX7loO/SRy+ZxkW2JvVT9zUzrCSHPE5+qCPs4Vc=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PtMCALep"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCECDC4CEE7;
+	Tue, 11 Feb 2025 15:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739286128;
+	bh=NJrnNissa9VtChrtfIQicfGI0gqVDx4S851Ho4mvxao=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DpBI7Aqt8XOmID6XpqbDT6/JpWJ5yVuWy4TG2lI1I2RyyHucsQiPgTTbMFr+3APKE
-	 vaRUG4GIlOzxTU7YUIqQaaJU7BZE3orP1yegfSTUKgT1lxeqrQgWZfKA3x6KXW4Qvh
-	 Fmod4YL2KZ9eM8+nBAFJX18wZO8dX+OVtTHO+ERgfD/COIHzZak/rQkWDrzM8OUJzt
-	 yDnh8pqfBZwKx5Pztz5ocTaM9hKiTWmb3XDQ+JYa8ptGy8Z9mlwqlbt5/zxlqajcrS
-	 nCDSCzOfOH8dW+quN4fuLfRtCcjkuB2YKjhDgIuGlwXcyxgxsv2xNu6BIHkfCIu57T
-	 dI3o6w7SJEYUnM3DccFMM2p7429H/Dbgolh0WNYMxImLZV9p3qVx1UCoLr1HOD5zEb
-	 XeYWpWM5TAizW4An75m3IzKvBguY8O+HEf2DgqgFMy6/UrWgRx9lnzMyfgmtZsybpk
-	 ewR38IijGkYWVNMTLoBdPuqnO+h1+ruRV3z2Cy2UoZdbRq67StoxJzL0dsuX5eyi4B
-	 KNjYQlmCCsqqCRM0TsE9OAC4ybr5CUT3UCUPvIcSwoYDHPKGVAFK3OhGZ8h6ekN5DA
-	 v+aqAFlzwhlYaJFyH+6bEW/HlTfbiwxSaatnuKXcl8tPmhFzoDDkuSgRm1lFyK7vYt
-	 mfLheS+6IIG/fb5cqt1E39HQ=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7F6A240E01AE;
-	Tue, 11 Feb 2025 15:01:23 +0000 (UTC)
-Date: Tue, 11 Feb 2025 16:01:14 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	linux-coco@lists.linux.dev, virtualization@lists.linux.dev,
-	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com,
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-	Nikunj A Dadhania <nikunj@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH 01/16] x86/tsc: Add a standalone helpers for getting TSC
- info from CPUID.0x15
-Message-ID: <20250211150114.GCZ6tmOqV4rI04HVuY@fat_crate.local>
-References: <20250201021718.699411-1-seanjc@google.com>
- <20250201021718.699411-2-seanjc@google.com>
+	b=PtMCALepGKOl5gqAXES2uJ8GTWxB9LvAebovV4W8TkyeSZDr/2c6LGfjo7t/drubi
+	 gFJAoypbz8Uegh+vvUKY1meiwkSMUOHzxmf1C87GdM7IDCDooUILviqJMq7PyBeRWN
+	 i1ubLMrrY5ghFPM0VCmnGy1Ffe8XyEad/1u4gaY/A1v+uKIykRp7YnrNs9T9BLPoNg
+	 5qbAYkod9qTldl2T6X8Z5uEWnl0Knhq6bVNfQfI0FJXyv6DCd+vUvC1Y4uwf2Ik6zy
+	 lelJ27tr1xQuQ00pordUKZduYMqGxWWLjknMF+eorhEySDM2eXl3eeQMUvFJYuW3rQ
+	 b2qLTIbJamAEA==
+Date: Tue, 11 Feb 2025 16:02:05 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: =?utf-8?Q?Micha=C5=82?= Pecio <michal.pecio@gmail.com>,
+	anna-maria@linutronix.de, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	mingo@kernel.org, tglx@linutronix.de,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Hayes Wang <hayeswang@realtek.com>, Simon Horman <horms@kernel.org>,
+	netdev@vger.kernel.org
+Subject: Re: NOHZ tick-stop error: local softirq work is pending, handler
+ #08!!! on Dell XPS 13 9360
+Message-ID: <Z6tmbdl646D_UjrY@localhost.localdomain>
+References: <20250210124551.3687ae51@foxbook>
+ <b0d55f4c-a078-42a0-a0fe-5823700f2837@molgen.mpg.de>
+ <Z6n-dWDSxNCjROYV@localhost.localdomain>
+ <10de7289-653f-43b1-ad46-2e8a0cd42724@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,55 +54,168 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250201021718.699411-2-seanjc@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <10de7289-653f-43b1-ad46-2e8a0cd42724@molgen.mpg.de>
 
-On Fri, Jan 31, 2025 at 06:17:03PM -0800, Sean Christopherson wrote:
-> Extract retrieval of TSC frequency information from CPUID into standalone
-> helpers so that TDX guest support and kvmlock can reuse the logic.  Provide
-> a version that includes the multiplier math as TDX in particular does NOT
-> want to use native_calibrate_tsc()'s fallback logic that derives the TSC
-> frequency based on CPUID.0x16 when the core crystal frequency isn't known.
+Le Tue, Feb 11, 2025 at 12:57:33PM +0100, Paul Menzel a écrit :
+> Dear Frederic,
 > 
-> No functional change intended.
 > 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/include/asm/tsc.h | 41 ++++++++++++++++++++++++++++++++++++++
->  arch/x86/kernel/tsc.c      | 14 ++-----------
->  2 files changed, 43 insertions(+), 12 deletions(-)
+> Thank you for your reply.
 > 
-> diff --git a/arch/x86/include/asm/tsc.h b/arch/x86/include/asm/tsc.h
-> index 94408a784c8e..14a81a66b37c 100644
-> --- a/arch/x86/include/asm/tsc.h
-> +++ b/arch/x86/include/asm/tsc.h
+> 
+> Am 10.02.25 um 14:26 schrieb Frederic Weisbecker:
+> > Le Mon, Feb 10, 2025 at 12:59:42PM +0100, Paul Menzel a écrit :
+> 
+> > > Am 10.02.25 um 12:45 schrieb Michał Pecio:
+> > > 
+> > > > > > > > > > > On Dell XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022, with Linux
+> > > > > > > > > > > 6.9-rc2+
+> > > > 
+> > > > > Just for the record, I am still seeing this with 6.14.0-rc1
+> > > > 
+> > > > Is this a regression? If so, which versions were not affected?
+> > > 
+> > > Unfortunately, I do not know. Right now, my logs go back until September
+> > > 2024.
+> > > 
+> > >      Sep 22 13:08:04 abreu kernel: Linux version 6.11.0-07273-g1e7530883cd2 (build@bohemianrhapsody.molgen.mpg.de) (gcc (Debian 14.2.0-5) 14.2.0, GNU ld (GNU Binutils for Debian) 2.43.1) #12 SMP PREEMPT_DYNAMIC Sun Sep 22 09:57:36 CEST 2024
+> > > 
+> > > > How hard to reproduce? Wasn't it during resume from hibernation?
+> > > 
+> > > It’s not easy to reproduce, and I believe it’s not related with resuming
+> > > from hibernation (which I do not use) or ACPI S3 suspend. I think, I can
+> > > force it more, when having the USB-C adapter with only the network cable
+> > > plugged into it, and then running `sudo powertop --auto-tune`. But sometimes
+> > > it seems unrelated.
+> > > 
+> > > > IRQ isuses may be a red herring, this code here is a busy wait under
+> > > > spinlock. There are a few of those, they cause various problems.
+> > > > 
+> > > >                   if (xhci_handshake(&xhci->op_regs->status,
+> > > >                                 STS_RESTORE, 0, 100 * 1000)) {
+> > > >                           xhci_warn(xhci, "WARN: xHC restore state timeout\n");
+> > > > 			spin_unlock_irq(&xhci->lock);
+> > > >                           return -ETIMEDOUT;
+> > > >                   }
+> > > > 
+> > > > This thing timing out may be close to the root cause of everything.
+> > > 
+> > > Interesting. Hopefully the USB folks have an idea.
+> > 
+> > Handler #08 is NET_RX. So something raised the NET_RX on some non-appropriate
+> > place, perhaps...
+> > 
+> > Can I ask you one more trace dump?
+> > 
+> > I need:
+> > 
+> > echo 1 > /sys/kernel/tracing/events/irq/softirq_raise/enable
+> > echo 1 > /sys/kernel/tracing/options/stacktrace
+> > 
+> > Unfortunately this will also involve a small patch:
+> > 
+> > diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+> > index fa058510af9c..accd2eb8c927 100644
+> > --- a/kernel/time/tick-sched.c
+> > +++ b/kernel/time/tick-sched.c
+> > @@ -1159,6 +1159,9 @@ static bool report_idle_softirq(void)
+> >   	if (local_bh_blocked())
+> >   		return false;
+> > +	trace_printk("STOP\n");
+> > +	trace_dump_stack(0);
+> > +	tracing_off();
+> >   	pr_warn("NOHZ tick-stop error: local softirq work is pending, handler #%02x!!!\n",
+> >   		pending);
+> >   	ratelimit++;
+> 
+> Thank you for your help. I applied the patch on top of 6.14-rc2, and was
+> able to reproduce the issue. Please find the Linux messages attached, and
+> the trace can be downloaded [1].
 
-Bah, why in the header as inlines? Just leave them in tsc.c and call them...
+So here is the offender:
 
-> @@ -28,6 +28,47 @@ static inline cycles_t get_cycles(void)
->  }
->  #define get_cycles get_cycles
->  
-> +static inline int cpuid_get_tsc_info(unsigned int *crystal_khz,
-> +				     unsigned int *denominator,
-> +				     unsigned int *numerator)
+ => __raise_softirq_irqoff
+ => __napi_schedule
+ => rtl8152_runtime_resume.isra.0
+ => rtl8152_resume
+ => usb_resume_interface.isra.0
+ => usb_resume_both
+ => __rpm_callback
+ => rpm_callback
+ => rpm_resume
+ => __pm_runtime_resume
+ => usb_autoresume_device
+ => usb_remote_wakeup
+ => hub_event
+ => process_one_work
+ => worker_thread
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
 
-Can we pls do a
+It is calling napi_schedule() from a non-interrupt. And since
+____napi_schedule() assumes to be called from an interrupt, it
+raises the softirq accordingly without waking up ksoftirqd.
 
-struct cpuid_tsc_info {
-	unsigned int denominator;
-	unsigned int numerator;
-	unsigned int crystal_khz;
-	unsigned int tsc_khz;
-}
+Can you try the following fix (untested, sorry...) ?
 
-and hand that around instead of those I/O pointers?
-
-It would make the code a bit saner to stare at and follow.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 468c73974046..8f6ea4e7685c 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -8537,8 +8537,11 @@ static int rtl8152_runtime_resume(struct r8152 *tp)
+ 		clear_bit(SELECTIVE_SUSPEND, &tp->flags);
+ 		smp_mb__after_atomic();
+ 
+-		if (!list_empty(&tp->rx_done))
++		if (!list_empty(&tp->rx_done)) {
++			local_bh_disable();
+ 			napi_schedule(&tp->napi);
++			local_bh_enable();
++		}
+ 
+ 		usb_submit_urb(tp->intr_urb, GFP_NOIO);
+ 	} else {
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 67964dc4db95..1bd730b881f0 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -619,6 +619,17 @@ do {									\
+ 		     (!in_softirq() || in_irq() || in_nmi()));		\
+ } while (0)
+ 
++/*
++ * Assert to be either in hardirq or in serving softirq or with
++ * softirqs disabled. Verifies a safe context to queue a softirq
++ * with __raise_softirq_irqoff().
++ */
++#define lockdep_assert_in_interrupt()				\
++do {								\
++	WARN_ON_ONCE(__lockdep_enabled && !in_interrupt());	\
++} while (0)
++
++
+ extern void lockdep_assert_in_softirq_func(void);
+ 
+ #else
+@@ -634,6 +645,7 @@ extern void lockdep_assert_in_softirq_func(void);
+ # define lockdep_assert_preemption_enabled() do { } while (0)
+ # define lockdep_assert_preemption_disabled() do { } while (0)
+ # define lockdep_assert_in_softirq() do { } while (0)
++# define lockdep_assert_in_interrupt() do { } while (0)
+ # define lockdep_assert_in_softirq_func() do { } while (0)
+ #endif
+ 
+diff --git a/net/core/dev.c b/net/core/dev.c
+index c0021cbd28fc..80e415ccf2c8 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4666,6 +4666,7 @@ static inline void ____napi_schedule(struct softnet_data *sd,
+ 	struct task_struct *thread;
+ 
+ 	lockdep_assert_irqs_disabled();
++	lockdep_assert_in_interrupt();
+ 
+ 	if (test_bit(NAPI_STATE_THREADED, &napi->state)) {
+ 		/* Paired with smp_mb__before_atomic() in
