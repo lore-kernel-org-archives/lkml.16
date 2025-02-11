@@ -1,64 +1,66 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADE026BDA6;
-	Tue, 11 Feb 2025 09:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F304726BDA6
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:07:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739264774; cv=none; b=bt0Uh65/ZQtJOo7ZHJk2vFMZRGHDygnln00VkdYnFqTc35DjL545hVoxfL7zyhkCmBON865Gkock2MXngoqduWJIkkPPeEpYFldq6ouH+Jp5ezUaKzyIS+qu3vwoAzwnzqKeMl0YotJ9J0JToCN8dE1fYRHuP39FDw4rdPgEjQY=
+	t=1739264832; cv=none; b=plqfDBBXf0/fMtLh1nBSsmcfMuECq6OGPeSarfh5l/q8E36WfahTzJ34HOVshrUzfxDcz3nkgw5PkplbpjGx52e6GyT4Vox2Pebju+zqs55ORW+M7tbRimsmfL5l7KaCBVLpe3ZiRucWExZJsCCYZLP7toB+SFV3+a8kGW1Ccgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739264774; c=relaxed/simple;
-	bh=IEzsQDpfO4qKgUk8tWbIoV/Aj+XIVuDbQzISKLrBLpo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t95XzGNkz7pBvnM2oumgMUx6EFGSwqDMxRSBMi2B4+l4ORM/WZNOlrE9VnCC/Mklgn01oLw6W/BxzDLj2BEtEnD0EeE9rHuq4tLF5VNDVj4dBLPme8Dpa4cgeM0/kuWggp3S3r3vjC+ZxZJO7q7MNu0EyDL/BtbLnHfwWqce6ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hZRgRU5H; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739264832; c=relaxed/simple;
+	bh=y1f2KOqUZV55ZpZgy+bBqBRTPS30GRYUD0zVrY86E58=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=tSvIiL4f3+NGTNX6MTEN0ga6GkV2i8IexklBoWaRbmCwyOSyKMsvTBcGdtDDKxCFYDvuflPJrmrDo3nFCUKtraPrhsUHxD99FyCd54RPojJkzAEC+ZnLF82OroHdFDHFsjLsiy7JMbW9DWgyuuTzHHyZVOJIv7BeNDRQmN+kWG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nMZyb7jy; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZRgRU5H"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54505a75445so3083129e87.1;
-        Tue, 11 Feb 2025 01:06:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nMZyb7jy"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso36238945e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:07:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739264770; x=1739869570; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=h8rVlgNNUU0i1bMrkzHyq/cftlIkIpGDbN5j/qK9PbM=;
-        b=hZRgRU5HQ3IriiPqEYCKM3md8D2uKjLdmtoLI7KI/b4ynCt2cL7HL+bDBR2Mk4rDA6
-         ctJuio44otDH0CtWGIGdDqfXnRIVkz9n5CGYXtBMSnOVC8kC8ryT8O3gVzQCH/F1Nx2i
-         5AkU7r/qOX0FX06dvBSBOYY7ueynu5pmmZ9X6ra1wTUMp6lzYwkICkI9nrsEJMHdJ5/s
-         UTZC5RRC4bP7dMqx3mvJTGK4U4tazOYwFvqOLlyudMplCHsS4Eib+t/ET0SJAYvrifpP
-         7aoOM8cJMfYKgWu4EM76n3DzYTrvCI5UyK3SRuZzR/Dl1nnBztKn+SECVoAX7Jmp13L8
-         CmVQ==
+        d=linaro.org; s=google; t=1739264829; x=1739869629; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fEkw8mZ9lpxD+Y89tTOOotL+Ya0/so0WoVdJiViSyms=;
+        b=nMZyb7jycqiZyCFx/awZHJf13C2WaZNnH72LzG1QtoRdJ8oouhVyRVpL/oC6vBJHUh
+         Zbfbf4TaDzqsoTccl0oZpRxl4AWRNqDTYR3X7c+622ovoKJFh4uFpl3egk1jiQ+yF+09
+         /Wq8l/Vs76a/2NWnqYGfNOccK6Jce8QRksEeCTWH2T3qZXkNHi5sq+RKRp257FlhOecj
+         rhejUJLZVkZl4HBXd6Ay2gNkaMGQo30+PzqcRiLXcKM0URWZ4aBAeJJZy3rIYHugsdxJ
+         9p3gVEfNFmTmibsTyLzZCXKey4pAIzNGuw3lEnXYgqmhzh4BfGwXmstPuZlX8ZchleMJ
+         O2sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739264770; x=1739869570;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h8rVlgNNUU0i1bMrkzHyq/cftlIkIpGDbN5j/qK9PbM=;
-        b=tKDc0y/xgluBh5W1zzQcvgjuucMS6MIbE6MdXLbDxM88hcVFba5ySbTYzVpjWh09IQ
-         but+GTIDZARsL/3NY1pQFapzkYDtqY2lKT+WZtouIW7KRn5dg6iNuq4P9kIwEh9QIjVO
-         XqprRA8aXLx7Wyn4ktUznIi1U50boNjmKUBGlPdDifHEzRWgatF+EXPbznjI49bROTmz
-         9WSgVagpgedTZN8E0cljW3OEek26BPyazIOdSNT5/2CaGZH3NXyns0rOyBqSUXGaCXWU
-         fpwM/TrPtFmckWOdGrXaehYU/mUOPdp1Ko0WJsn1rOyqkieturvw2WN5JYn7cUObGp5e
-         JqaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+mgbHV9VQ3IeBygcyXBmfkDYHhUg/jFdwvQzoO58Lk/umzQCZAsQdKnW2zXiWfcH9YOOfvun3aK4G@vger.kernel.org, AJvYcCUjI0kv8QoGqoxCs5ea5X5+q1CPaYGmeDcfqo7tippcbcg0M9qsyaq+5sOdCJG9PpBdP4FfwNkN4ghyXotV@vger.kernel.org, AJvYcCX/++rS8wv614A5RAoCDzzNaj2EOI4IwVo7eQD/zC/SSQrWvUegIZcgSy3FQS7jyenQNobwmBmMiv9j@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0C+DEs56Q9tyEWYg5XSDdNIxWs81PoZjyB1dE3VvKRvypDZtZ
-	w9dg39hjOO/sDhifkO5TEcKrYDZHVOWwG5Hs1i4AS8D3WS21pnSY
-X-Gm-Gg: ASbGnct90O0LtLxoEn3Q6aGXazEr7r75xPkfcpt1UPjwVCONhQ+dVYPUzkmJ3jWGzxk
-	EZDKeVwCCHDMDGVgzxGXqSxQ6W5ayPaW9zL7sL3ubKIpK1aX2daxQPyon7Fcx5Wtif3ePy0RV4m
-	9shEO7kzmRRhbJfdVnQbvur8w0B27luymuFIpWUKVBejSvUn4KDwh2wiNsPKxBRWUHnZI5hwsog
-	7XijI2W0rM8nBtDoSLnYSaNU/g0GGyJrL4tMSCN8Edl260BmswDfqLcPHptur8Nphwnm+E+6fA8
-	gW+B/ZW/pUgi1H7PypZ/m82wBQjn
-X-Google-Smtp-Source: AGHT+IFcaa6uJNm8Q8Xuea2thhJSiBeAUyUKgqsOcqDOH4ViStWWJxdNC/8XHXOz466ggA4V+hAmjQ==
-X-Received: by 2002:a05:6512:360f:b0:545:a2f:22bd with SMTP id 2adb3069b0e04-5450a2f23a7mr2675885e87.48.1739264769912;
-        Tue, 11 Feb 2025 01:06:09 -0800 (PST)
-Received: from [172.16.183.207] ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-545052da7fasm908226e87.96.2025.02.11.01.06.07
+        d=1e100.net; s=20230601; t=1739264829; x=1739869629;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fEkw8mZ9lpxD+Y89tTOOotL+Ya0/so0WoVdJiViSyms=;
+        b=TfaylZs5B2uB8xbxbr9HyOW7j1DcKhr+6CQW9yZ0Y6A3YjoDVppIlnMoZqbAMsEPBX
+         VPsIVgLxZ3I2JAlHWTwc1VBiAH1Hj7G1Krr6kfkwAFSA/9rxoAf292/N4fJ+KWfcqFZg
+         +9klJUJ6Ubl19/H7iQQQZhm9Tdlsdzq/9oxFxV1NIv+XsJYktRZV7cOffI/crv4TLnGT
+         xIq7HAxpIf9LEehJvM/eVWanwIPDv+VrGrbJU2UdgVFIzlREr9c2dFHyjCGidWzXIG9P
+         PXhQmzSxxuzpUFBmZV2VM1JSgrgJUoRS6zI0hUDV+EHkT6zmI7r3/OQBZXLUrwkCbKz7
+         LNBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVuxZB32oXNtqZB/MqW0ceQFqZbPL/fGGV2tlxWGQ1vR9/CWY/OpEIQYTprLV3GaX2E7gDPKQTJk3C0FtI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd7EVgNgBWKdbtKz2WRurNZRrpbWZrNIFvx2LpFuWwpdEV9U0f
+	loy6ZWiI9/LXdCkwdt7YRGNSaqKCx8OeXyIvZ8figsthHquUHKupLMCpNAjHFKc=
+X-Gm-Gg: ASbGncs7HmwHHckVa25fZ2vu1hLmwQ8wnfhYWpRcErdY1+3hRTEnVoJPqq8XofSKsZf
+	QW8zfdalJgKrC752td1i+8an1plxqYzlkpXoaG7EkWffQjkCOmoUbVRoWRGzmkrczWHRydPyfGz
+	Ai1/B8Y3ujtcktXx4sPzREza36cS34aYPVYzcB/cwMEW5Zp3BzKxVRt7TMdnKcDQOpBxyaU94As
+	jjTykVcSUysVTmUEi8vR3MTSPPZu3lNnNvv+btXmKbw2ZVSxfnKPJTZMKpRGdx07gucXjLU33+t
+	zKAf1u4s9AFtvvCmKqRELSEmUCjA9AZvygKRI3IGEpInPe8Ew8I10QrbeCjU++zNol3W
+X-Google-Smtp-Source: AGHT+IGHVpSlPQyU0cjYdq4UHMFuNEQDdRE6G+6jYmgVYfWj+t1f7CCzyuHhzxKg1Gx+7it/eNAXag==
+X-Received: by 2002:a05:600c:1e11:b0:436:5fc9:309d with SMTP id 5b1f17b1804b1-439249b2bafmr161317725e9.30.1739264829255;
+        Tue, 11 Feb 2025 01:07:09 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:5b96:57e9:d7dc:bc01? ([2a01:e0a:982:cbb0:5b96:57e9:d7dc:bc01])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dce18d6f9sm10698324f8f.29.2025.02.11.01.07.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 01:06:09 -0800 (PST)
-Message-ID: <87b712f9-6191-4626-b031-0234379a166c@gmail.com>
-Date: Tue, 11 Feb 2025 11:06:07 +0200
+        Tue, 11 Feb 2025 01:07:08 -0800 (PST)
+Message-ID: <fcde9fab-b28a-4e09-b77b-f7c6c3840710@linaro.org>
+Date: Tue, 11 Feb 2025 10:07:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,193 +68,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] iio: adc: Support ROHM BD79124 ADC
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
- David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1738761899.git.mazziesaccount@gmail.com>
- <4781e1b1f074ca6c84ecc084b152885d08e826cc.1738761899.git.mazziesaccount@gmail.com>
- <20250208165208.3560237f@jic23-huawei>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250208165208.3560237f@jic23-huawei>
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v3 3/4] arm64: dts: qcom: sm8550: add missing cpu-cfg
+ interconnect path in the mdss node
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250210-topic-sm8x50-mdss-interconnect-bindings-fix-v3-0-54c96a9d2b7f@linaro.org>
+ <20250210-topic-sm8x50-mdss-interconnect-bindings-fix-v3-3-54c96a9d2b7f@linaro.org>
+ <a3f7bef6-bfc8-4a2e-b979-4aac7908306f@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <a3f7bef6-bfc8-4a2e-b979-4aac7908306f@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 08/02/2025 18:52, Jonathan Cameron wrote:
-> On Wed, 5 Feb 2025 15:38:16 +0200
-> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> 
->> The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The ADC supports
->> an automatic measurement mode, with an alarm interrupt for out-of-window
->> measurements. The window is configurable for each channel.
+On 10/02/2025 17:32, Konrad Dybcio wrote:
+> On 10.02.2025 10:32 AM, Neil Armstrong wrote:
+>> The bindings requires the mdp0-mem and the cpu-cfg interconnect path,
+>> add the missing cpu-cfg path to fix the dtbs check error.
 >>
->> The I2C protocol for manual start of the measurement and data reading is
->> somewhat peculiar. It requires the master to do clock stretching after
->> sending the I2C slave-address until the slave has captured the data.
->> Needless to say this is not well suopported by the I2C controllers.
+>> Fixes: b8591df49cde ("arm64: dts: qcom: sm8550: correct MDSS interconnects")
+>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sm8550.dtsi | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
 >>
->> Thus the driver does not support the BD79124's manual measurement mode
->> but implements the measurements using automatic measurement mode relying
->> on the BD79124's ability of storing latest measurements into register.
->>
->> The driver does also support configuring the threshold events for
->> detecting the out-of-window events.
->>
->> The BD79124 keeps asserting IRQ for as long as the measured voltage is
->> out of the configured window. Thus the driver masks the received event
->> for a fixed duration (1 second) when an event is handled. This prevents
->> the user-space from choking on the events
->>
->> The ADC input pins can be also configured as general purpose outputs.
->> Those pins which don't have corresponding ADC channel node in the
->> device-tree will be controllable as GPO.
->>
->> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>> index eac8de4005d82f246bc50f64f09515631d895c99..702b55296b18ff2f8ea62a3391b7de2804aa9f65 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>> @@ -3020,8 +3020,9 @@ mdss: display-subsystem@ae00000 {
+>>   
+>>   			power-domains = <&dispcc MDSS_GDSC>;
+>>   
+>> -			interconnects = <&mmss_noc MASTER_MDP 0 &mc_virt SLAVE_EBI1 0>;
+>> -			interconnect-names = "mdp0-mem";
+>> +			interconnects = <&mmss_noc MASTER_MDP 0 &mc_virt SLAVE_EBI1 0>,
 > 
-> Hi Matti,
+> QCOM_ICC_TAG_ALWAYS
 > 
-> Just a few really trivial comments though this wasn't my most thorough
-> of reviews as ran out of time / energy today!
-
-
-Thanks :) I appreciate the time and energy invested here :)
+>> +					<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_DISPLAY_CFG 0>;
 > 
->> diff --git a/drivers/iio/adc/rohm-bd79124.c b/drivers/iio/adc/rohm-bd79124.c
->> new file mode 100644
->> index 000000000000..ea93762a24cc
->> --- /dev/null
->> +++ b/drivers/iio/adc/rohm-bd79124.c
->> @@ -0,0 +1,1149 @@
+> QCOM_ICC_TAG_ACTIVE_ONLY
 > 
+> w that
+
+So it depends how it articulates with https://lore.kernel.org/all/20250115-topic-sm8x50-upstream-dt-icc-update-v1-0-eaa8b10e2af7@linaro.org/
+
+I can rebase on top of it, it would be simpler, but then the Fixes tag won't work anymore.
+
 > 
->> +static int bd79124_write_event_value(struct iio_dev *iio_dev,
->> +				     const struct iio_chan_spec *chan,
->> +				     enum iio_event_type type,
->> +				     enum iio_event_direction dir,
->> +				     enum iio_event_info info, int val,
->> +				     int val2)
->> +{
->> +	struct bd79124_data *data = iio_priv(iio_dev);
->> +	int reg;
->> +
->> +	if (chan->channel >= BD79124_MAX_NUM_CHANNELS)
->> +		return -EINVAL;
->> +
->> +	switch (info) {
->> +	case IIO_EV_INFO_VALUE:
->> +		if (dir == IIO_EV_DIR_RISING) {
->> +			guard(mutex)(&data->mutex);
->> +
->> +			data->alarm_r_limit[chan->channel] = val;
->> +			reg = BD79124_GET_HIGH_LIMIT_REG(chan->channel);
->> +		} else if (dir == IIO_EV_DIR_FALLING) {
->> +			guard(mutex)(&data->mutex);
->> +
->> +			data->alarm_f_limit[chan->channel] = val;
->> +			reg = BD79124_GET_LOW_LIMIT_REG(chan->channel);
->> +		} else {
->> +			return -EINVAL;
->> +		}
->> +		/*
->> +		 * We don't want to enable the alarm if it is not enabled or
->> +		 * if it is suppressed. In that case skip writing to the
->> +		 * register.
->> +		 */
->> +		if (!(data->alarm_monitored[chan->channel] & BIT(dir)) ||
->> +		    data->alarm_suppressed[chan->channel] & BIT(dir))
->> +			return 0;
->> +
->> +		return bd79124_write_int_to_reg(data, reg, val);
->> +
->> +	case IIO_EV_INFO_HYSTERESIS:
->> +			reg = BD79124_GET_HYSTERESIS_REG(chan->channel);
->> +			val >>= 3;
-> Odd indent.
-
-Oh, indeed. Thanks!
-
->> +
->> +		return regmap_update_bits(data->map, reg, BD79124_MASK_HYSTERESIS,
->> +					  val);
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +}
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 > 
-> 
->> +static void bd79124_re_enable_lo(struct bd79124_data *data, unsigned int channel)
->> +{
->> +	int ret, evbit = BIT(IIO_EV_DIR_FALLING);
->> +
->> +	if (!(data->alarm_suppressed[channel] & evbit))
->> +		return;
->> +
->> +	data->alarm_suppressed[channel] &= (~evbit);
->> +
->> +	if (!(data->alarm_monitored[channel] & evbit))
->> +		return;
->> +
->> +	ret = bd79124_write_int_to_reg(data, BD79124_GET_LOW_LIMIT_REG(channel),
->> +				       data->alarm_f_limit[channel]);
->> +	if (ret)
->> +		dev_warn(data->dev, "Low limit enabling failed for channel%d\n",
->> +			 channel);
->> +}
->> +
->> +static void bd79124_re_enable_hi(struct bd79124_data *data, unsigned int channel)
->> +{
->> +	int ret, evbit = BIT(IIO_EV_DIR_RISING);
->> +
->> +	if (!(data->alarm_suppressed[channel] & evbit))
->> +		return;
->> +
->> +	data->alarm_suppressed[channel] &= (~evbit);
->> +
->> +	if (!(data->alarm_monitored[channel] & evbit))
->> +		return;
-> This lot is very similar to the lo variant. Can we combine them or
-> use some helper for both?
-
-Initially I did this.
-
-But the code looked a bit dull because the evbitm, alarm-limit array and 
-prints depend on the direction. Furthermore, the caller already knows 
-the direction (as the caller does also handle directions separately), so 
-doing:
-
-foo(dir)
-{
-	if (dir == bar)
-		...
-	else
-		...
-}
-
-...
-
-if (dir == bar)
-	foo(dir);
-else
-	foo(dir);
-
-started to feel just a bit, meh. Hence I separated the stuff to own _lo 
-and _hi functions.
-
-
->> +
->> +	ret = bd79124_write_int_to_reg(data, BD79124_GET_HIGH_LIMIT_REG(channel),
->> +				       data->alarm_r_limit[channel]);
->> +	if (ret)
->> +		dev_warn(data->dev, "High limit enabling failed for channel%d\n",
->> +			 channel);
->> +}
-> 
-
-Yours,
-   -- Matti
+> Konrad
 
