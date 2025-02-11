@@ -1,136 +1,90 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69241253B4F;
-	Tue, 11 Feb 2025 15:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382DE253B40
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739288980; cv=none; b=PUDf+sGo68bZOFNrH2MjnLqcrxlfGdbYXPwG5GjvaPXd2gb7koBSzl2KFA+DwDXjm1my67gNvpL5LPzN+0zYdbKeX8Bwi+tpuK6LxoRDivBv7gd/Hc9WqSnn+hufo05KvemweXruu+Zbzpo4a0wDtJDmBI02zKCn0Xf7kJZX5Vk=
+	t=1739288994; cv=none; b=QMg4KmiEvcOou8CrnhoFqH1p89wdP9mDFnsfVXoAPJX8PanWCuzNhweu/hEsglcNDhEu/MsrfBKCMWtXhfx6IGcvepm4FXy+zbQyiIdWQ7MHtLFOYumL6586sFEWjs/Mq1W8tv9VTz5xlxTQ0z4mYFpWkpVmehy794EUG3tZ4To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739288980; c=relaxed/simple;
-	bh=fKZzaQtQDsSPkGQu8snJR7R9Ds50kdAkBeuKe+iO0yY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=OOQvTLCHMBIPU2M8NdHn0e1xqH2odh4RYH/jd6d0BQCXtsp7VAG1Fwf+j+FkVlYUHUjkbc0mgBdWVkTAQH2ATqlJTKZBqmKD1gfmYEnjQYi7X09XefrXwNJykrZGMKV5CEpY1IOdrcZhjh3gK8pgXgJCYEa0qJ1C15LhXbfzzUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H8i9rHMb; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739288994; c=relaxed/simple;
+	bh=tc3Z3/vbj8eaWV8ZARulWo6HcMBAleEI1od5m8b0CPo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fqqniTXYP4W5YGhHhkLIxbZ05+sw8Dy6vVp/OnRVNybFvwfrDVddBZuQMOsmcgpqjwOpeIecttIL3DCHJCUxsgPSMjmsoKku0fPvR5NjDtZnPNqYlQV9BDOh7HTWE22/Htnimi0wbhR35nPsNbf7ZN7QAzYlEPR0QqXm28KfzA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=hCdMtx8/; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8i9rHMb"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6f678a27787so51127827b3.1;
-        Tue, 11 Feb 2025 07:49:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="hCdMtx8/"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab771575040so1102232866b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:49:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739288978; x=1739893778; darn=vger.kernel.org;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l8qoAqHN6d2bwLyFPQrQGBkCWYEGHRrvnRKCr+AAeR8=;
-        b=H8i9rHMb7vdYs7AQ+eF6mDSpLPpgqI5wScqu6IxUzzdmli36AYPvQ9RhYonzJ34sp1
-         N02S5hel9S/4c0yE8QZXGEnaGCvA27BtYNEnmzY/r3kdtm0rnv3CpZY1PwgWHQht+AzS
-         S7Fe12FZGzT+DNOO5bGin7LEACr8cOLK593KXIPHfnIIxn1tkP+GnofVxQtSSK+psDk1
-         4ZHDRaF9HOhdMYsOVnbAUmssylDhFxzrHm4It/Ru/Gompbog4Xij60oobH7IlYmeNVuz
-         XD95DHxW8D/MAA3cptJDbjY4M+hncl2QW2aWTBVrCquVEt9NynT4E8CogXcExj8TfBbY
-         xu7w==
+        d=linux-foundation.org; s=google; t=1739288990; x=1739893790; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BVwmbIN53ZZEzhu3yBtqTvWwAukU5JKJpM5GyqpzQFs=;
+        b=hCdMtx8/JxLtYhL5jqw78sXwEhpjU4BTSuWyWbo1ZOY4VuF/TOQPk4378y+LwqNcCH
+         F+xi1MoRXLrC1CFlleqwy5mEgBYtzXt3xlHKN76K5BTcnnMP8VckNLvk0eDEYtJsxHja
+         7CZjjo/uFI229SCNQwaiH/NOv6sPJZxCQjzaU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739288978; x=1739893778;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=l8qoAqHN6d2bwLyFPQrQGBkCWYEGHRrvnRKCr+AAeR8=;
-        b=nD+v8bIkC+UZtQ/+/aRTgcp35S5LMpOS1VrW1ecuUIx/e5yMN5z0ccfGbgauLJYGri
-         ExhQlEuAbPVrIwmuOAXicuHnsl9/M4AlkKnWNHTpIuDSwXAzfaQU+msvaoNCAz+ug70z
-         HNFLr6EjCi1U31UncLTQcub693YS/5oIk78NWZ+2b5O56d1dQoju28AytR0mfZmUMZWv
-         tre7yYNNXat99bEg9PVPbAjUv7m6d2qlZUgjhB0QQI3km92q3uioRapsu//lBBWq3TUX
-         Rwomr2XvalpLrVhg2AHYMFXEdkqQpiGhmUeIHnFo7WwdXJKS0cN+mj/JIqrjR0TZOx4G
-         8dug==
-X-Forwarded-Encrypted: i=1; AJvYcCUXer51uTg9nKcsIWsbdO0bdgLDSlQjPPniUI1/Nuq8Iu1/HRBS0TohSKJn52uOZ9zQoh/cOBnslBA7XJ4=@vger.kernel.org, AJvYcCV6OyHkr7ZgaEs2OvCIUI4wcuyg7yBL2sDl7Fui3MWAV2NLWYzvTp2pkZ4z97xBsRpNYoC88qiDOPvWJz0ICak=@vger.kernel.org, AJvYcCWH9key25FY8iLg8XE8B2A+M+VCAA/Zz+0yAIjklc+rJYB10BL0Uhlgk8lbD4v/p6CePAEfDXYWORXy@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4AEoM3h/lxOZ4w9NzbVLp9E+NpOTiZbuhv2ZrlzWRPuUe3EHj
-	/hRTXA24fR7fEsaPcdCCiwjCmZfDtZ8Pc6z5pXxkepmwD+45dWI1
-X-Gm-Gg: ASbGncvhp4nKXG+MMRsPBJknal1KxWeme3GUVTN9yKF5ZtI8JR3E04Y9wcdBiFbPXeR
-	Az99ofyFMY6S8T0Z8POFV1RSmbFGskoRL+dl89pdc3gn1lCCRvr6c3/6zZqxXnJZ3Sc8ovcsFc/
-	/braJtsjGvvyIU0k3PnVsb4BH6iYe/ImnEMKAH5Oml+46JWPKZm1zEBFwIHXuY/bSfzq6kJEHls
-	UIM45C/8N+c3UBOH//pZlPKwtpfsa7ZvH7mKuKvkM2FmULZBuWPkF0W6lvCQp5s2rRKxo2jv2nA
-	VgAz04o=
-X-Google-Smtp-Source: AGHT+IEtgw91cXuJ0BG7VzTeHTqgV/DQam0mEB1K/IkRHtjW8w0U61fsFS5cFTVxxB609FpmSGYQ4A==
-X-Received: by 2002:a05:690c:7010:b0:6ef:5688:f966 with SMTP id 00721157ae682-6f9b2a2167fmr166314937b3.37.1739288978239;
-        Tue, 11 Feb 2025 07:49:38 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99ff6a8c2sm21652137b3.77.2025.02.11.07.49.35
+        d=1e100.net; s=20230601; t=1739288990; x=1739893790;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BVwmbIN53ZZEzhu3yBtqTvWwAukU5JKJpM5GyqpzQFs=;
+        b=G9mZ7Wlg6JexpktD64FeojESehVEHB23QR/Z7CZuWIt+exXvp3HDbAeELiS1My2Pay
+         JN8G5hpVFCTR5Z9jtqU6lTE3CfGCg8uIDohspKO3eOfer6ODTP6LDXhrQQIaWgyrXhe3
+         eZDErCg/gw9So4kS+bvs/Q7uEEFgXDFwZoNhW9sBqzmBZpTCW1P0dMUtdHjUa+tTUMhb
+         4prH1a0oh/t3KpC8ZexfMbC8lTww6gTNJedzhNneRXJ8wLYC6/LnWnOwzmrHZ/j/04X8
+         3m/ivUxp7/ctLwjXx5MZm9p/LzHBHZZtjH1xM+kmYRlCmOd39Xyqxipw6We61wMDezvM
+         SFsg==
+X-Forwarded-Encrypted: i=1; AJvYcCWVY5C1UwQChAnHAGU0Vezb1HOPBhchuP5OMzPaozGxNquNO4SaT2bcYQ2kkphbEpJReZ4uyxWPHJPD01o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5bg+LOVeoOfInrp0AJwSpcb/JHOlQEKrpIs3YKLzL7o15GUVd
+	iCakJFA9UB0ztfony1ELnwJBhfj1tSVa+zmMgFDOB/a7Lz5tZ47bWxHiBlyl0o8WtTd/R4gEZLX
+	zCd4=
+X-Gm-Gg: ASbGnctwabuAyZLqdz15T+WRoRWDdP8lCr5DKvtpWlxHxZ1BPFuzNycE2tposeF5hHq
+	O4K+TFq3OAPSrbFucbbpTOBd+P7qaZshpTgN+yobtUxodUbtfHMeJCcwPSUfAxk/WRCwZ0plaPa
+	sGG1aKz0tCHMCyxZ+nnMAU3fayzPJU0x2Gk/54NiptgOfL7ILu9k+l5662BDtVluX9UTkxMYY6G
+	S6A4SRuoCLRHbVHE/VXDVE5qKCq40iieatpktA5tWlhzHVbqr13AHcKjJ5WGxQvIbbWTHUhfqIe
+	DFlyr57ZU89+M1dZvNlL6Q2VZisVlClYnvZ4CWYM+k2BFMV4LDNAisIznu+KRLJNYw==
+X-Google-Smtp-Source: AGHT+IFkgbYeWBfkCy2MutUv5incDhnp7v+FZPCq3zG7TpSioG1KTf5XzpUx4DWKSfgBUb09qUJkWQ==
+X-Received: by 2002:a17:907:2d8a:b0:ab7:cf7c:f9ed with SMTP id a640c23a62f3a-ab7db5a5addmr282556766b.24.1739288990227;
+        Tue, 11 Feb 2025 07:49:50 -0800 (PST)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7cae13326sm336247466b.115.2025.02.11.07.49.48
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 07:49:37 -0800 (PST)
+        Tue, 11 Feb 2025 07:49:49 -0800 (PST)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5de6069ceb5so5587574a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:49:48 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXaHknLW12YmDOYS3G2uMD4Kc5Eg0WUYTYMXdWM6IqagB7z3XEWnuntEy5NVLn+CAIqbgngdpeCxRBUg2o=@vger.kernel.org
+X-Received: by 2002:a17:907:1c29:b0:ab7:bd8c:3501 with SMTP id
+ a640c23a62f3a-ab7db35bf15mr395283466b.18.1739288988462; Tue, 11 Feb 2025
+ 07:49:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 11 Feb 2025 10:49:34 -0500
-Message-Id: <D7PQHGGX4WPC.26F52356ISZU8@gmail.com>
-To: "Zijun Hu" <zijun_hu@icloud.com>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>, "Lyude Paul"
- <lyude@redhat.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo
- Krummrich" <dakr@kernel.org>
-Cc: "Alexander Lobakin" <aleksander.lobakin@intel.com>, "Andy Shevchenko"
- <andriy.shevchenko@linux.intel.com>, "Bjorn Helgaas" <bhelgaas@google.com>,
- "Jonathan Cameron" <Jonathan.Cameron@huawei.com>, "Liam Girdwood"
- <lgirdwood@gmail.com>, "Lukas Wunner" <lukas@wunner.de>, "Mark Brown"
- <broonie@kernel.org>, =?utf-8?q?Ma=C3=ADra_Canal?= <mairacanal@riseup.net>,
- "Robin Murphy" <robin.murphy@arm.com>, "Simona Vetter"
- <simona.vetter@ffwll.ch>, "Zijun Hu" <quic_zijuhu@quicinc.com>,
- <linux-usb@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Subject: Re: [PATCH v4 1/9] driver core: add a faux bus for use when a
- simple device/bus is needed
-From: "Kurt Borja" <kuurtb@gmail.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <2025021023-sandstorm-precise-9f5d@gregkh>
- <2025021026-atlantic-gibberish-3f0c@gregkh>
- <D7OU5VOXCS8M.39YEYRWFL1MPW@gmail.com>
- <116e9983-6c5f-45f3-a933-dcded223f6d7@icloud.com>
-In-Reply-To: <116e9983-6c5f-45f3-a933-dcded223f6d7@icloud.com>
+MIME-Version: 1.0
+References: <Z6Ow+T/uSv128wdR@duo.ucw.cz> <20250211141109.GV1868108@google.com>
+In-Reply-To: <20250211141109.GV1868108@google.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 11 Feb 2025 07:49:31 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whdcXj==9TkCpQYpmzLweCoDzd9_i8SrODjaQ3ysSe6dw@mail.gmail.com>
+X-Gm-Features: AWEUYZka3wAIe19x0kez_tFXsKssoOVt4xO6i6B_lPdVBwJWqORTVQnRSfmH0iE
+Message-ID: <CAHk-=whdcXj==9TkCpQYpmzLweCoDzd9_i8SrODjaQ3ysSe6dw@mail.gmail.com>
+Subject: Re: MAINTAINERS: Move Pavel to kernel.org address
+To: Lee Jones <lee@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, kernel list <linux-kernel@vger.kernel.org>, rafael@kernel.org, 
+	linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue Feb 11, 2025 at 10:29 AM -05, Zijun Hu wrote:
-> On 2025/2/10 22:29, Kurt Borja wrote:
->>> +
->>> +	ret =3D device_add(dev);
->>> +	if (ret) {
->>> +		pr_err("%s: device_add for faux device '%s' failed with %d\n",
->>> +		       __func__, name, ret);
->>> +		put_device(dev);
->>> +		return NULL;
->>> +	}
->> Now that the probe is synchronous, what do you think about returning
->> -ENODEV if the device failed to bind to the driver?
->>=20
+On Tue, 11 Feb 2025 at 06:11, Lee Jones <lee@kernel.org> wrote:
 >
-> Result of device registering @ret is not, should not be, effected by
-> "device binding driver (probe result)"
->
-> if device binging driver failed, you may return -ENODEV in
-> faux_ops->probe(). not here.
+> I'm struggling to apply this.
 
-After thinking about this discussion, I understand why this might be the
-expected behavior. I'm thinking about very simple modules that would
-remain loaded even if the probe fails. But of course this may cause
-problems to other modules.
+Well, it turns out I already applied it as commit 511121a48bbd
+("MAINTAINERS: Move Pavel to kernel.org address"), so no worries.
 
-In the end, this is just my opinion so it would be up to Greg to decide.
-However, there is still an issue with the groups added to the device,
-which a user might expect they are tied to an "attached" device
-lifetime and this currently not the case.
-
->
->> This would be useful for modules that may want to unload if the probe
->> fails.
->
-> may need to root cause if probe failure happens.
->
-> how to unload module automatically if probe() failure ?
-
-If we check for !dev->driver, a module might propagate an error to the
-module_init, thus making it fail to load.
-
---=20
- ~ Kurt
-
+        Linus
