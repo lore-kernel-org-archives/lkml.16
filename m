@@ -1,433 +1,497 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BEED1F3FCB;
-	Tue, 11 Feb 2025 12:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=210.61.82.184
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739276505; cv=fail; b=BoY8jE9OMfN7gKQrjNitkfKaNQQFKYkpxYUpzw6J6HgeVK9ArP6FhvJ8d0PfMYFydeOumMA5UxbJDQrxHOhBTgnk56DHbWF5ovJ0aA0AvTahyJc5ZpLLnxEtwnFYbUSIZRKRScqk8nO9QC8Iz9HF20F7rSV/RK/mCTibCweU9xo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739276505; c=relaxed/simple;
-	bh=ujU6gZE/FDiqicLFbqx8Pov2Ei6ymTfkC6o6HfXs7ik=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=lf+CZLTG6kiagRiNv/IeEQUMV3L5kTEzrjvgXo+E8JherlhpaVXg14KTq5AB+nWyx0lxJNXBOTMNHZNYJq6/648YKv6mrph+TypNZJ7+Xd/7GdRxH7Ze2YJ2t9F2LKZOhSXiUHKI5CxqrvXXbbMqk4pFiRVBHaz/N7+C2C9FTmQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=rSkfkM5i; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=mqm402sk; arc=fail smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE631F3FCB;
+	Tue, 11 Feb 2025 12:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739276678; cv=none; b=G+6iLnyY3a91ENUFaEim8mt+WLCEAX0+WhTuOPMoudZ9BJ/qC0HP6qvrMjquMm+s55tJxJWHFpj6x/mP7ogNV0tdoCDEg+Tbt25+LFNxmugRxaTBVgupYD6WrLScaGCvxucrHMkGg11+UxOz5tsncnpb1yC0o9xXKDz+WgHVfUA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739276678; c=relaxed/simple;
+	bh=aGGqaZpPT+rSRVg/YC1WMx6qAqamenr0rL8vhcsCp9Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uG0dEjX1TEvzoPVjq1KZ6/61v8b++KdqVRq5ZF0zdX7Kklm8akR7G1wlHAsRgAbKdScyDzu2DNiEzgn7RWL2/Y8jeVv/ftGZNIA0BKH05pYiyIhzKDHRctrYRAUNFKrZzA7ii0hXhrkvRhtUCihUmIArn3X5rzXqpeDCMiA37Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=A2tm53U6; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rSkfkM5i";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="mqm402sk"
-X-UUID: bce95ab2e87211efbd192953cf12861f-20250211
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=ujU6gZE/FDiqicLFbqx8Pov2Ei6ymTfkC6o6HfXs7ik=;
-	b=rSkfkM5i6nb4z0zmEGvvkSj1KDwqqsWi+PgtCSfRLBbtv/y7/AdrEf9iKN3ao+k4zheXW1/oc+tImqG9fScnX7zFH13rWxNBD3ae3ZOARHuMF/o7pANqEKO8s1BpWauSbBruj5CfNeyBGRt867L7rMeIp+Xte0KsPaAa42yjQXo=;
-X-CID-CACHE: Type:Local,Time:202502112013+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:d87aa02b-58de-4e01-8317-a05a03e68d61,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:60aa074,CLOUDID:44a27392-d651-4ec6-81e1-a3deb10c9ff8,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|50,
-	EDM:-3,IP:nil,URL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
-	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: bce95ab2e87211efbd192953cf12861f-20250211
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
-	(envelope-from <crystal.guo@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2054638410; Tue, 11 Feb 2025 20:21:36 +0800
-Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 11 Feb 2025 20:21:35 +0800
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Tue, 11 Feb 2025 20:21:35 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E13HXVI8oxb5F+wgWzv/olCEFR4zySve9ieXT5WKgVkVLXRiowchZ0i+J6TzYFYFF25VbtdYvdRielhjiWrQWIKnsDvWEICCLqGI0dOw9kNunyCOiMogyB1km+rXzrHZcdUdNTUM9R+4DBdgXbX/czwDH5m6JFD2pab8ALDu89nsC0ThpBgL1op1XdBoAtG955Q3zkITSCWa5FHB4k7E8iUUVKTBCY9We2b4G4pVQE7tfQX052ujIFwSf0O4AI01Wdj7RRy1/IU6YXy4IZhnwKzE5N7Unh/I6+yRI3KY2xQqmSC/xeP+ASF/bgU32sGpQuBxTO8ALuBo7/KKvDDS9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ujU6gZE/FDiqicLFbqx8Pov2Ei6ymTfkC6o6HfXs7ik=;
- b=joYBU2JdF2FW5TdgvfjHHJFSaHzM6ojwpOkvOQ2IHIotBOEGj4HNosjg6LW37sU/Qa9Wh4WoxvZ+XY+0qMNOgLQ6k4gIxZjV04IavNxrF+ahjXEV6+i3Pm1DcPrbPJuM4aLhH1XZp50vNbf2zpdhKygd65w3GbE+FIDF8cnP4wejR73mT++PloXH+GSF0yrDXAJaRUPukOV13Jkk7fYVWy8AWK3BLohf9CrFKkf960UFDx+thkarrtBfPkpl+6MnoFBDtpwZAU2eXwfVOxhI0q+1wHnY948UncbrBbglbqpQAjCICrAUUyvUZLta6dADhrxS/S1A5531rP/KBDaMmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ujU6gZE/FDiqicLFbqx8Pov2Ei6ymTfkC6o6HfXs7ik=;
- b=mqm402skq7ksdMPi+/WzFILNzrZ6P6rP+xT84wwGDLPcX3ZTsdUpAUFvLPD0gf3A9RWQoECh4mKJJl9XITi6+L8QBUWEtsPivKKqdiBsQt1Z5R8RVlb4fXUrBGN4/4zmiGe5ykbjd5tkOvRqS1COoPk8bAn5v9r+J8tCBDLVBwI=
-Received: from SI2PR03MB5468.apcprd03.prod.outlook.com (2603:1096:4:104::5) by
- KL1PR03MB7969.apcprd03.prod.outlook.com (2603:1096:820:f9::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8422.18; Tue, 11 Feb 2025 12:21:33 +0000
-Received: from SI2PR03MB5468.apcprd03.prod.outlook.com
- ([fe80::28b5:41ba:aefd:a96f]) by SI2PR03MB5468.apcprd03.prod.outlook.com
- ([fe80::28b5:41ba:aefd:a96f%7]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
- 12:21:33 +0000
-From: =?utf-8?B?Q3J5c3RhbCBHdW8gKOmDreaZtik=?= <Crystal.Guo@mediatek.com>
-To: "robh@kernel.org" <robh@kernel.org>, "matthias.bgg@gmail.com"
-	<matthias.bgg@gmail.com>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"krzk@kernel.org" <krzk@kernel.org>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org"
-	<linux-mediatek@lists.infradead.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, Project_Global_Chrome_Upstream_Group
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: Re: [PATCH 1/2] memory/mediatek: Add an interface to get current DDR
- data rate
-Thread-Topic: [PATCH 1/2] memory/mediatek: Add an interface to get current DDR
- data rate
-Thread-Index: AQHbTHReQ4aD8qLJ/0KwgRI53WA5M7LicdQAgF/0OYA=
-Date: Tue, 11 Feb 2025 12:21:33 +0000
-Message-ID: <eda22525e3b85af7c1894cdc70f710e1450b22e1.camel@mediatek.com>
-References: <20241212090029.13692-1-crystal.guo@mediatek.com>
-	 <20241212090029.13692-2-crystal.guo@mediatek.com>
-	 <a2288f77-0178-4769-8bf3-662c82b8b4e3@kernel.org>
-In-Reply-To: <a2288f77-0178-4769-8bf3-662c82b8b4e3@kernel.org>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SI2PR03MB5468:EE_|KL1PR03MB7969:EE_
-x-ms-office365-filtering-correlation-id: 1c15f37b-22c5-450f-4c7e-08dd4a969f0c
-x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?WU1TbVpFNlFBMS9xV1ZEbXc1ZlV2UnNsUHN2RlA3RklFd2F5R3h1akUwRHBM?=
- =?utf-8?B?MUtteUcwTnZzcGZUOUdiRUFIMjN4Zm1CSTJhZEEzc2pXQVV1TnVtS3JPOE93?=
- =?utf-8?B?Zk5DZjNrWUZGSXJlQ3F4alhvZEFSb3RkL0VSM0x6WGlQdkIza3ZYN0NFSlE5?=
- =?utf-8?B?RkJyRVVUQUhHQlBMRnhNZ3JUTGlYR2NHNU5DREFwMlVBczJBcVhPZ29CSU1C?=
- =?utf-8?B?QlRIOTBlSHNBQmFSSldXYWVuU1p2MGd0Q2szeXc4TGc2ZXZHWExSZEVTUVRp?=
- =?utf-8?B?OVA4V3U4dFpiOVY4cm9Na1EwLy9WdHpxVzFzWjhvTG03OTNKOXhYWFRlSmtz?=
- =?utf-8?B?L2RXTEJPVkxnYm84OGlqWW5acFl2MkMzcmErcGdTcGJhNVd5aS82TjBZMEcw?=
- =?utf-8?B?K1R6RWR1RHBZRWpQT2pzemdRd3pNZjJiQ0V6Q3JJTlh1L2pBcmsvM2VWUVBU?=
- =?utf-8?B?NzdUbU55VG54b21wSkV2cHBaUmdUaXhqV1gxWHh5RDZJSnJabTV2ZjRPZzZU?=
- =?utf-8?B?UU5wSGhlbnNnR0NoQjJsZkh0Z0NrL0srSlhPR2Z3ZXBYbFp4ZlVUNE1SdldG?=
- =?utf-8?B?UyszOXlWZ1huaDFqTjBNcVoySUNxc2t0SGkyWGxJQ1dDdiszVmpNeXRmdVh1?=
- =?utf-8?B?Sktwdk00SzgrQS9ucFB3ME53UnF4TjREQlBKWkg4UllNRHZuNzdoM20zVzJY?=
- =?utf-8?B?SHMrSHJ4TU1INVl2UmkwbFo5elA5aUpab0NaMllkQVlEVFYxMmtVZWIwN2hE?=
- =?utf-8?B?cFo2dmh6SWh2UFdVakNTQm9tOWFnTjV3cjV3dkw2T2dCamN3S1RZQnhjM0Fp?=
- =?utf-8?B?WDFoY0J1SlV1YjRIT3RZSElqSUZoNmc0b2NOc2lJYmtuNEl4cFVTR2FKekNP?=
- =?utf-8?B?Mk1pcHZWSm1weXpkc3U0NTJKUHEwS25NaXVTSFRJdk9iWW1sQngxMVQrZi8y?=
- =?utf-8?B?cVl5OWxaR3VOK3FKMkhhMTFMUmlQOHZwU29WQUlsZklqa29zT3FVOXRwUnBk?=
- =?utf-8?B?MnBoeXp3bExPR0ZvSEcza1hxYXdwMXcybTlsczA4WW9yaFV0ZkQwOENNa2c2?=
- =?utf-8?B?WEhGR1hyZVpWNHBFUTBhbnYyTVJvMzZWQXVkd1BWVDVraWp4VmJBUHV1aHh4?=
- =?utf-8?B?aWdIa2xITTdKMWRmbTlFZDVvZHFqeElLbUYzaWtyZHh1SFp4WFk5Z09TNmtn?=
- =?utf-8?B?SHZlVXBMOWRHbXpxNkVLWGZRWjdGUEhuRzZESndkWUJ4VnRLWjhBRWQ3L3NK?=
- =?utf-8?B?OHFjWnV4aTl3azJVUm1pMmRSck5ETGNBMk51TE5qMmV1Q1NOSUFUZmdJNUxW?=
- =?utf-8?B?ZjM4aGZ2Zk45WWRPOW05KzJCSWNNdnVoeUU2VVV1WnM1akIrcFlXKzFzUGJO?=
- =?utf-8?B?US9XRHQwaFgvZXFQd3hDN0tVR0crd09LSDFEYlY3SXhsem92cFJvRzhGNDdj?=
- =?utf-8?B?c1dLWkdoT2tHWEp3NzR0MlZTVllvNXFDQmtRNU1QUW9EWmNXVTMrRk9RRHRS?=
- =?utf-8?B?ZW5aUzMwS2RYeUcvUW9VbHRNOXNWN1RrVkplcXNmemdNT05FVEM2RURIQlhT?=
- =?utf-8?B?V2N3RHNaOTVLSnVVeFd6dXZDNEQySE5Eak94TWU2SThXYjJaK05Uak02YXZr?=
- =?utf-8?B?OFN0ZVFkaFJBSVNFcGtqT2VmQmFacklQSEV3V0NkamVRZzdXU0hYa20vTTQr?=
- =?utf-8?B?UWFoMUZPb05OVHM5c21MN0g2NDZjVlFOMEtEL24rKzA3Rzl2N0ZYVzVhSXdI?=
- =?utf-8?B?M2VKTmM3WEpvdElBL3dTQXJkNCtxTXBTUXlvM1pWamQvYktNWGpsazZJQ2RE?=
- =?utf-8?B?OUVVeUtkZmFUVEt1Witnb0ZIMG1zL1NyYWw3WWlNT2lqNkVoNnUzdW1TVzJs?=
- =?utf-8?B?WlpUNEREdUlGaXFSK2RxeXNranNxOUFOMGxYQmkxQW5UOXZNK1lrOUhnQkhZ?=
- =?utf-8?Q?c93xBqa7zwg0qnr8C2hV24F2o+2xP82X?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2PR03MB5468.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VUdFVkJOWVBBY1Q5Mjgxa2V1ZDBjeFdFeUlEamdxekFKVGgwa2IrZ0hkSERt?=
- =?utf-8?B?QnpNTVFYS2JTbFRxUU8vNWc0d0ZiRlgrbklwYVZxNXhDWmFZRE9YdHlrT0tm?=
- =?utf-8?B?dVRPSkw5QWxFc2FMVG55T0k2QlZIODdLWFVVK21WSTA4Q1dMam9zVStNUUxD?=
- =?utf-8?B?cFg0OXpmVkJ5OE1RMG5meXFsbHQySnhQRUdzMDhycTZKNVB2NUY2QTU1VjZq?=
- =?utf-8?B?VmRpNzRLWHpqUE5yNElHckVlMmg1QXFLaDVVcFJ0czg1Smdjcm5pQ3lETEYv?=
- =?utf-8?B?L091ckFlV2hsUnpDRWNQVXB0YTAzR2lwcHhpeXpHUHVGR1R6S0MrenBYR0Y1?=
- =?utf-8?B?eVN6VHJQbVZMcWswTWl1TkI4cFJFdmFRKzFHS1c1V0swWWxya3NQN1B3NjJl?=
- =?utf-8?B?V1VGRE9VUjhpK3NBVzFNcWNRQzArMHNydjBIcGlGOFVjUWpvL1oyZXg1VEJT?=
- =?utf-8?B?emROQjNPVmJWM1VGSFl1cGhWMGZXK1I5OWE0MzIyendtektsdDA3aUUzWlU3?=
- =?utf-8?B?RG14L0RvWXllOElscktOWHJPWWc3djl6NWRnQmg2MTVRcndVNEgyaUdmak5a?=
- =?utf-8?B?REI5aVF3Q2w4a2JWMjFYdjJBRnNSRTBIUmhhNXY4bDZ6U2k3OG9jRVNsREla?=
- =?utf-8?B?MGJ1UTh2QXovYTZRZG5Wa1JDUHpUakc3MG1hTVQ3czg1S3JOaHNPQ1JQbnZM?=
- =?utf-8?B?ejlUUDNwSWZpbU1nMEcxa05SaDI4L1A5dXpDYlFXcmdZQ2hXL1YwbjBFZ3JX?=
- =?utf-8?B?WUhCOVJuQnFmSjlYcEp5ZDJyRE5EZXJCS3cvMEJsNkxRRjZmalFES2tha1Zj?=
- =?utf-8?B?bE9ibng2STRZVFREOW5QcUw1WnlHWURaNHM4dWl2UzlHU0QwNUVsS3lTc1B4?=
- =?utf-8?B?SjFERkRoZGlKMUpqK05jZ016MnBzV3Iya2MwMGRBT2VWN1JzY0xYV3Q0T0Y3?=
- =?utf-8?B?MU5VU0toM0ZFNlpuVE1PTUtFalhsYVJ3bXd5aCsyRVg4azFWTEh6OW5LTW5p?=
- =?utf-8?B?Qy9JL1crZmxKVmQ5VUR3Z1ZyNksrTkljTlRTeVgrdzVXTUp4NU1PSVZxeGp5?=
- =?utf-8?B?VnUyRytFbWgvQVFpRDNIenVGa1gwSFpZN0hUZXhFUHdqZXcyeGpRMjhvQVlD?=
- =?utf-8?B?b2JsbUQ0UCtETWlsRDRVZTd6R01wd1oyZlREemN6SFl5TjZSREtBdTB1aTA3?=
- =?utf-8?B?YXltOWdDWThmNnZMaHc5R253WFA0KzY3OTAwMFlGMTdPUFFBeTFseWh0dWtx?=
- =?utf-8?B?NDI2NkIvVWZKRWFkQS9sZUthYnJZUUxmL2oxMXE2Z3g2TlNBQ0U4RGtSRVE2?=
- =?utf-8?B?cTRhRGFxYTB3SE1TSmNhald3elBGbGpmRnhsNmxuSTROWDh3dndwWnltTzkw?=
- =?utf-8?B?azgvMjc2WnBMdU0wblc0d21NN25ab2kvcEkvdjhKd0oxTWd3Y2RyL1BPZ3Jw?=
- =?utf-8?B?K1g0MXFiRUU5YVRZczRudjA4MS9YOEs4d3hSOEIxbzd1NThEODVaRGpPdk9w?=
- =?utf-8?B?ZUtKNzdBa3ZsSlUrbkN6NHc4eFV0d1NMQzlEYmVwbFYwV1BWeE5HQ3Fnb0FS?=
- =?utf-8?B?NkRpR0tvaXRLdExlYWFyK3pRWHNkeUkvQXRLSzVweEJZMGJRRk5JaEpIRlJh?=
- =?utf-8?B?dW5ZZFFnMlIxYVZ1aDhMMXdzSk5kS3NnWWR4WXc0R1hYL2hiSHhLRXNGTzE5?=
- =?utf-8?B?OWlsOERmaVVzTUJkL3pJMWZxTk5PWHFFYlFrc3FHTTVucnFSMVlDNWQyUzFZ?=
- =?utf-8?B?b2hrRE93K2lDS1lkc0dldnk3ZDgzdGt5VUtBVzE1TmVJTU9yZG0xM09xSFF2?=
- =?utf-8?B?NFF6OGhwS1NWdWgxcE9wKzJDelNyWjlyNTVjUWVneDJhSWlFakZHcUp2N2lu?=
- =?utf-8?B?WWF6dExkOHhuRFJkb1FteHJVNktLa3RVL1FoUnVxU1N3a0JaVTEyV3ZPZXNa?=
- =?utf-8?B?UXRPWlZiWUIzTE9JVERZK1Bzc1lKUzJBM1NIVlhzNmkrOS9OcERNQ3owV0Ev?=
- =?utf-8?B?d0V5dWd3elNFYndHWmpCalVPb0hOUEgxQy9uQVhYNlZTZnlLdHFYaEFwUlha?=
- =?utf-8?B?enptTGRWdUcxTk4zdHNRY3ZwdHptQUkyV3B3R1NuV1phUHZhMEROS1ZTOFFl?=
- =?utf-8?B?c3pQV2NpTm5zakdJMk5SeE95cjVRZ0N4Sjh5ZnlMaTlMYk9Qd0lpbE5jSmRI?=
- =?utf-8?B?Zmc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9F9BD37A02247E4387F9065736462F3C@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="A2tm53U6"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 427246DF;
+	Tue, 11 Feb 2025 13:23:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1739276597;
+	bh=aGGqaZpPT+rSRVg/YC1WMx6qAqamenr0rL8vhcsCp9Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=A2tm53U6uEztHjfcUA4HiRR4P2uUPvC4T2Zko9Msc4gE7wb2dcXiRraf8D5STe6jd
+	 qYiznSDMAGB5j2o85dWdGdMFHlTWTccFOGL3NLBIzSRM/p5vl5NmvbnMUaePKpH+dy
+	 vyISVN12AktnT6N9Z2RittVg0RJqUHkE5yWk24WE=
+Message-ID: <16db8f3d-04a2-408a-964f-4cf9478229b4@ideasonboard.com>
+Date: Tue, 11 Feb 2025 14:24:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SI2PR03MB5468.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1c15f37b-22c5-450f-4c7e-08dd4a969f0c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2025 12:21:33.0356
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PzWZ74wJxGUD5VGMHZfJsq80d5iOcgJ83aA+WW1w8mO93mxq+4wjscHe0u667g8ZRDPfMVGEABVGqiD1zkaS1tsry/xp98FgWaYBMc7lvh4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB7969
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/3] dt-bindings: display: ti: Add schema for AM625
+ OLDI Transmitter
+To: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>,
+ David Airlie <airlied@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Simona Vetter <simona@ffwll.ch>, Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Devarsh Thakkar <devarsht@ti.com>,
+ Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+ Jayesh Choudhary <j-choudhary@ti.com>,
+ Francesco Dolcini <francesco@dolcini.it>,
+ DRI Development List <dri-devel@lists.freedesktop.org>,
+ Devicetree List <devicetree@vger.kernel.org>,
+ Linux Kernel List <linux-kernel@vger.kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jyri Sarha <jyri.sarha@iki.fi>
+References: <20250209160925.380348-1-aradhya.bhatia@linux.dev>
+ <20250209160925.380348-3-aradhya.bhatia@linux.dev>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ xsFNBE6ms0cBEACyizowecZqXfMZtnBniOieTuFdErHAUyxVgtmr0f5ZfIi9Z4l+uUN4Zdw2
+ wCEZjx3o0Z34diXBaMRJ3rAk9yB90UJAnLtb8A97Oq64DskLF81GCYB2P1i0qrG7UjpASgCA
+ Ru0lVvxsWyIwSfoYoLrazbT1wkWRs8YBkkXQFfL7Mn3ZMoGPcpfwYH9O7bV1NslbmyJzRCMO
+ eYV258gjCcwYlrkyIratlHCek4GrwV8Z9NQcjD5iLzrONjfafrWPwj6yn2RlL0mQEwt1lOvn
+ LnI7QRtB3zxA3yB+FLsT1hx0va6xCHpX3QO2gBsyHCyVafFMrg3c/7IIWkDLngJxFgz6DLiA
+ G4ld1QK/jsYqfP2GIMH1mFdjY+iagG4DqOsjip479HCWAptpNxSOCL6z3qxCU8MCz8iNOtZk
+ DYXQWVscM5qgYSn+fmMM2qN+eoWlnCGVURZZLDjg387S2E1jT/dNTOsM/IqQj+ZROUZuRcF7
+ 0RTtuU5q1HnbRNwy+23xeoSGuwmLQ2UsUk7Q5CnrjYfiPo3wHze8avK95JBoSd+WIRmV3uoO
+ rXCoYOIRlDhg9XJTrbnQ3Ot5zOa0Y9c4IpyAlut6mDtxtKXr4+8OzjSVFww7tIwadTK3wDQv
+ Bus4jxHjS6dz1g2ypT65qnHen6mUUH63lhzewqO9peAHJ0SLrQARAQABzTBUb21pIFZhbGtl
+ aW5lbiA8dG9taS52YWxrZWluZW5AaWRlYXNvbmJvYXJkLmNvbT7CwY4EEwEIADgWIQTEOAw+
+ ll79gQef86f6PaqMvJYe9QUCX/HruAIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRD6
+ PaqMvJYe9WmFD/99NGoD5lBJhlFDHMZvO+Op8vCwnIRZdTsyrtGl72rVh9xRfcSgYPZUvBuT
+ VDxE53mY9HaZyu1eGMccYRBaTLJSfCXl/g317CrMNdY0k40b9YeIX10feiRYEWoDIPQ3tMmA
+ 0nHDygzcnuPiPT68JYZ6tUOvAt7r6OX/litM+m2/E9mtp8xCoWOo/kYO4mOAIoMNvLB8vufi
+ uBB4e/AvAjtny4ScuNV5c5q8MkfNIiOyag9QCiQ/JfoAqzXRjVb4VZG72AKaElwipiKCWEcU
+ R4+Bu5Qbaxj7Cd36M/bI54OrbWWETJkVVSV1i0tghCd6HHyquTdFl7wYcz6cL1hn/6byVnD+
+ sR3BLvSBHYp8WSwv0TCuf6tLiNgHAO1hWiQ1pOoXyMEsxZlgPXT+wb4dbNVunckwqFjGxRbl
+ Rz7apFT/ZRwbazEzEzNyrBOfB55xdipG/2+SmFn0oMFqFOBEszXLQVslh64lI0CMJm2OYYe3
+ PxHqYaztyeXsx13Bfnq9+bUynAQ4uW1P5DJ3OIRZWKmbQd/Me3Fq6TU57LsvwRgE0Le9PFQs
+ dcP2071rMTpqTUteEgODJS4VDf4lXJfY91u32BJkiqM7/62Cqatcz5UWWHq5xeF03MIUTqdE
+ qHWk3RJEoWHWQRzQfcx6Fn2fDAUKhAddvoopfcjAHfpAWJ+ENc7BTQROprNHARAAx0aat8GU
+ hsusCLc4MIxOQwidecCTRc9Dz/7U2goUwhw2O5j9TPqLtp57VITmHILnvZf6q3QAho2QMQyE
+ DDvHubrdtEoqaaSKxKkFie1uhWNNvXPhwkKLYieyL9m2JdU+b88HaDnpzdyTTR4uH7wk0bBa
+ KbTSgIFDDe5lXInypewPO30TmYNkFSexnnM3n1PBCqiJXsJahE4ZQ+WnV5FbPUj8T2zXS2xk
+ 0LZ0+DwKmZ0ZDovvdEWRWrz3UzJ8DLHb7blPpGhmqj3ANXQXC7mb9qJ6J/VSl61GbxIO2Dwb
+ xPNkHk8fwnxlUBCOyBti/uD2uSTgKHNdabhVm2dgFNVuS1y3bBHbI/qjC3J7rWE0WiaHWEqy
+ UVPk8rsph4rqITsj2RiY70vEW0SKePrChvET7D8P1UPqmveBNNtSS7In+DdZ5kUqLV7rJnM9
+ /4cwy+uZUt8cuCZlcA5u8IsBCNJudxEqBG10GHg1B6h1RZIz9Q9XfiBdaqa5+CjyFs8ua01c
+ 9HmyfkuhXG2OLjfQuK+Ygd56mV3lq0aFdwbaX16DG22c6flkkBSjyWXYepFtHz9KsBS0DaZb
+ 4IkLmZwEXpZcIOQjQ71fqlpiXkXSIaQ6YMEs8WjBbpP81h7QxWIfWtp+VnwNGc6nq5IQDESH
+ mvQcsFS7d3eGVI6eyjCFdcAO8eMAEQEAAcLBXwQYAQIACQUCTqazRwIbDAAKCRD6PaqMvJYe
+ 9fA7EACS6exUedsBKmt4pT7nqXBcRsqm6YzT6DeCM8PWMTeaVGHiR4TnNFiT3otD5UpYQI7S
+ suYxoTdHrrrBzdlKe5rUWpzoZkVK6p0s9OIvGzLT0lrb0HC9iNDWT3JgpYDnk4Z2mFi6tTbq
+ xKMtpVFRA6FjviGDRsfkfoURZI51nf2RSAk/A8BEDDZ7lgJHskYoklSpwyrXhkp9FHGMaYII
+ m9EKuUTX9JPDG2FTthCBrdsgWYPdJQvM+zscq09vFMQ9Fykbx5N8z/oFEUy3ACyPqW2oyfvU
+ CH5WDpWBG0s5BALp1gBJPytIAd/pY/5ZdNoi0Cx3+Z7jaBFEyYJdWy1hGddpkgnMjyOfLI7B
+ CFrdecTZbR5upjNSDvQ7RG85SnpYJTIin+SAUazAeA2nS6gTZzumgtdw8XmVXZwdBfF+ICof
+ 92UkbYcYNbzWO/GHgsNT1WnM4sa9lwCSWH8Fw1o/3bX1VVPEsnESOfxkNdu+gAF5S6+I6n3a
+ ueeIlwJl5CpT5l8RpoZXEOVtXYn8zzOJ7oGZYINRV9Pf8qKGLf3Dft7zKBP832I3PQjeok7F
+ yjt+9S+KgSFSHP3Pa4E7lsSdWhSlHYNdG/czhoUkSCN09C0rEK93wxACx3vtxPLjXu6RptBw
+ 3dRq7n+mQChEB1am0BueV1JZaBboIL0AGlSJkm23kw==
+In-Reply-To: <20250209160925.380348-3-aradhya.bhatia@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-T24gVGh1LCAyMDI0LTEyLTEyIGF0IDEyOjAyICswMTAwLCBLcnp5c3p0b2YgS296bG93c2tpIHdy
-b3RlOg0KPiBFeHRlcm5hbCBlbWFpbCA6IFBsZWFzZSBkbyBub3QgY2xpY2sgbGlua3Mgb3Igb3Bl
-biBhdHRhY2htZW50cyB1bnRpbA0KPiB5b3UgaGF2ZSB2ZXJpZmllZCB0aGUgc2VuZGVyIG9yIHRo
-ZSBjb250ZW50Lg0KPiANCj4gDQo+IE9uIDEyLzEyLzIwMjQgMDk6NTksIENyeXN0YWwgR3VvIHdy
-b3RlOg0KPiA+IEFkZCBNZWRpYVRlayBEUkFNQyBkcml2ZXIgdG8gcHJvdmlkZSBhbiBpbnRlcmZh
-Y2UgdGhhdCBjYW4NCj4gPiBvYnRhaW4gY3VycmVudCBERFIgZGF0YSByYXRlLg0KPiA+IA0KPiA+
-IFNpZ25lZC1vZmYtYnk6IENyeXN0YWwgR3VvIDxjcnlzdGFsLmd1b0BtZWRpYXRlay5jb20+DQo+
-ID4gLS0tDQo+ID4gIGRyaXZlcnMvbWVtb3J5L0tjb25maWcgICAgICAgICAgICAgICAgIHwgICAx
-ICsNCj4gPiAgZHJpdmVycy9tZW1vcnkvTWFrZWZpbGUgICAgICAgICAgICAgICAgfCAgIDEgKw0K
-PiA+ICBkcml2ZXJzL21lbW9yeS9tZWRpYXRlay9LY29uZmlnICAgICAgICB8ICAyMSArKw0KPiA+
-ICBkcml2ZXJzL21lbW9yeS9tZWRpYXRlay9NYWtlZmlsZSAgICAgICB8ICAgMiArDQo+ID4gIGRy
-aXZlcnMvbWVtb3J5L21lZGlhdGVrL210ay1kcmFtYy5jICAgIHwgMzI1DQo+ID4gKysrKysrKysr
-KysrKysrKysrKysrKysrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstZHJh
-bWMuaCB8ICA0MSArKysrDQo+ID4gIDYgZmlsZXMgY2hhbmdlZCwgMzkxIGluc2VydGlvbnMoKykN
-Cj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVtb3J5L21lZGlhdGVrL0tjb25maWcN
-Cj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVtb3J5L21lZGlhdGVrL01ha2VmaWxl
-DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lbW9yeS9tZWRpYXRlay9tdGstZHJh
-bWMuYw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsv
-bXRrLWRyYW1jLmgNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZW1vcnkvS2NvbmZp
-ZyBiL2RyaXZlcnMvbWVtb3J5L0tjb25maWcNCj4gPiBpbmRleCBjODJkOGQ4YTE2ZWEuLmIxNjk4
-NTQ5ZmY4MSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21lbW9yeS9LY29uZmlnDQo+ID4gKysr
-IGIvZHJpdmVycy9tZW1vcnkvS2NvbmZpZw0KPiA+IEBAIC0yMjcsNSArMjI3LDYgQEAgY29uZmln
-IFNUTTMyX0ZNQzJfRUJJDQo+ID4gDQo+ID4gIHNvdXJjZSAiZHJpdmVycy9tZW1vcnkvc2Ftc3Vu
-Zy9LY29uZmlnIg0KPiA+ICBzb3VyY2UgImRyaXZlcnMvbWVtb3J5L3RlZ3JhL0tjb25maWciDQo+
-ID4gK3NvdXJjZSAiZHJpdmVycy9tZW1vcnkvbWVkaWF0ZWsvS2NvbmZpZyINCj4gPiANCj4gPiAg
-ZW5kaWYNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZW1vcnkvTWFrZWZpbGUgYi9kcml2ZXJz
-L21lbW9yeS9NYWtlZmlsZQ0KPiA+IGluZGV4IGQyZTZjYTlhYmJlMC4uY2YxMDkxNDQ5ZDJlIDEw
-MDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWVtb3J5L01ha2VmaWxlDQo+ID4gKysrIGIvZHJpdmVy
-cy9tZW1vcnkvTWFrZWZpbGUNCj4gPiBAQCAtMjcsNiArMjcsNyBAQCBvYmotJChDT05GSUdfU1RN
-MzJfRk1DMl9FQkkpICAgICAgICArPSBzdG0zMi0NCj4gPiBmbWMyLWViaS5vDQo+ID4gDQo+ID4g
-IG9iai0kKENPTkZJR19TQU1TVU5HX01DKSAgICAgKz0gc2Ftc3VuZy8NCj4gPiAgb2JqLSQoQ09O
-RklHX1RFR1JBX01DKSAgICAgICAgICAgICAgICs9IHRlZ3JhLw0KPiA+ICtvYmotJChDT05GSUdf
-SEFWRV9NVEtfTUMpICAgICs9IG1lZGlhdGVrLw0KPiANCj4gV2hhdCBpcyBIQVZFPyBXaHkgdGhp
-cyBpcyBub3QganVzdCBNVEtfTUMgb3IgQVJDSF9NRURJQVRFSz8NCg0KUmVuYW1lIHRoZSBkcmFt
-YyBjb25maWcgdG8gIkNPTkZJR19NRURJQVRFS19NQyIgaW4gdjIgcGF0Y2guDQoNCj4gDQo+ID4g
-IG9iai0kKENPTkZJR19USV9FTUlGX1NSQU0pICAgKz0gdGktZW1pZi1zcmFtLm8NCj4gPiAgb2Jq
-LSQoQ09ORklHX0ZQR0FfREZMX0VNSUYpICArPSBkZmwtZW1pZi5vDQo+ID4gDQo+ID4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvbWVtb3J5L21lZGlhdGVrL0tjb25maWcNCj4gPiBiL2RyaXZlcnMvbWVt
-b3J5L21lZGlhdGVrL0tjb25maWcNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4
-IDAwMDAwMDAwMDAwMC4uMDA3NjRjZGIxNTdlDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBi
-L2RyaXZlcnMvbWVtb3J5L21lZGlhdGVrL0tjb25maWcNCj4gPiBAQCAtMCwwICsxLDIxIEBADQo+
-ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQ0KPiA+ICtjb25maWcg
-SEFWRV9NVEtfTUMNCj4gPiArICAgICBib29sICJNZWRpYVRlayBNZW1vcnkgQ29udHJvbGxlciBz
-dXBwb3J0Ig0KPiA+ICsgICAgIGhlbHANCj4gPiArICAgICAgIFRoaXMgb3B0aW9uIGFsbG93cyB0
-byBlbmFibGUgTWVkaWFUZWsgbWVtb3J5IGNvbnRyb2xsZXINCj4gPiBkcml2ZXJzLA0KPiA+ICsg
-ICAgICAgd2hpY2ggbWF5IGluY2x1ZGUgY29udHJvbGxlcnMgZm9yIERSQU0gb3Igb3RoZXJzLg0K
-PiA+ICsgICAgICAgU2VsZWN0IFkgaGVyZSBpZiB5b3UgbmVlZCBzdXBwb3J0IGZvciBNZWRpYVRl
-ayBtZW1vcnkNCj4gPiBjb250cm9sbGVyLg0KPiA+ICsgICAgICAgSWYgeW91IGRvbid0IG5lZWQs
-IHNlbGVjdCBOLg0KPiA+ICsNCj4gPiAraWYgSEFWRV9NVEtfTUMNCj4gPiArDQo+ID4gK2NvbmZp
-ZyBNVEtfRFJBTUMNCj4gPiArICAgICB0cmlzdGF0ZSAiTWVkaWFUZWsgRFJBTUMgZHJpdmVyIg0K
-PiA+ICsgICAgIGRlcGVuZHMgb24gSEFWRV9NVEtfTUMNCj4gDQo+IEZlZWxzIHVzZWxlc3MsIGlz
-bid0IGl0IHBhcnQgb2YgaWY/DQoNCkNoYW5nZSB0byAiZGVmYXVsdCB5Ii4NCg0KPiANCj4gPiAr
-ICAgICBoZWxwDQo+ID4gKyAgICAgICBUaGlzIG9wdGlvbiBzZWxlY3RzIHRoZSBNZWRpYVRlayBE
-UkFNQyBkcml2ZXIsIHdoaWNoDQo+ID4gcHJvdmlkZXMNCj4gPiArICAgICAgIGFuIGludGVyZmFj
-ZSBmb3IgcmVwb3J0aW5nIHRoZSBjdXJyZW50IGRhdGEgcmF0ZSBvZiBEUkFNLg0KPiA+ICsgICAg
-ICAgU2VsZWN0IFkgaGVyZSBpZiB5b3UgbmVlZCBzdXBwb3J0IGZvciB0aGUgTWVkaWFUZWsgRFJB
-TUMNCj4gPiBkcml2ZXIuDQo+ID4gKyAgICAgICBJZiB5b3UgZG9uJ3QgbmVlZCwgc2VsZWN0IE4u
-DQo+ID4gKw0KPiA+ICtlbmRpZg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lbW9yeS9tZWRp
-YXRlay9NYWtlZmlsZQ0KPiA+IGIvZHJpdmVycy9tZW1vcnkvbWVkaWF0ZWsvTWFrZWZpbGUNCj4g
-PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uYTEzOTVmYzU1
-YjQxDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvbWVtb3J5L21lZGlhdGVr
-L01ha2VmaWxlDQo+ID4gQEAgLTAsMCArMSwyIEBADQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50
-aWZpZXI6IEdQTC0yLjANCj4gPiArb2JqLSQoQ09ORklHX01US19EUkFNQykgICAgICAgICAgICAg
-ICs9IG10ay1kcmFtYy5vDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVtb3J5L21lZGlhdGVr
-L210ay1kcmFtYy5jDQo+ID4gYi9kcml2ZXJzL21lbW9yeS9tZWRpYXRlay9tdGstZHJhbWMuYw0K
-PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi45YzJjOGUx
-ODdhNGENCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9tZW1vcnkvbWVkaWF0
-ZWsvbXRrLWRyYW1jLmMNCj4gPiBAQCAtMCwwICsxLDMyNSBAQA0KPiA+ICsvLyBTUERYLUxpY2Vu
-c2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+ICsvKg0KPiA+ICsgKiBDb3B5cmlnaHQgKGMpIDIw
-MjQgTWVkaWFUZWsgSW5jLg0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9r
-ZXJuZWwuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ICsjaW5jbHVkZSA8
-bGludXgvZGV2aWNlLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4N
-Cj4gPiArI2luY2x1ZGUgPGxpbnV4L29mLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZl9hZGRy
-ZXNzLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9wcmludGsuaD4NCj4gPiArI2luY2x1ZGUgPGxp
-bnV4L2lvLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9zb2MvbWVkaWF0ZWsvbXRrLWRyYW1jLmg+
-DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RldmljZSAqZHJhbWNfcGRldjsN
-Cj4gPiArc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgZHJhbWNfZHJ2Ow0KPiANCj4gRHJv
-cCBib3RoLiBEb24ndCB3cml0ZSBzaW5nbGV0b24gY29kZS4NCg0KT2theSwgcmVtb3ZlZCB0aGVz
-ZSBjb2RlIGluIHYyLg0KPiANCj4gLi4uDQo+IA0KPiA+ICsgICAgICAgICAgICAgaWYgKCEoZHJh
-bWNfZGV2X3B0ci0+Zm1ldGVyX2Rldl9wdHIpKSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-IHByX2luZm8oIiVzOiBtZW1vcnkgIGFsbG9jIGZhaWxcbiIsDQo+ID4gX19mdW5jX18pOw0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4gPiArICAgICAgICAgICAg
-IH0NCj4gPiArICAgICAgICAgICAgIHJldCA9IGZtZXRlcl9pbml0KHBkZXYsIGRyYW1jX2Rldl9w
-dHItDQo+ID4gPmZtZXRlcl9kZXZfcHRyLCBmbWV0ZXJfdmVyc2lvbik7DQo+ID4gKyAgICAgICAg
-ICAgICBpZiAocmV0KSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIHByX2luZm8oIiVzOiBm
-bWV0ZXJfaW5pdCBmYWlsXG4iLCBfX2Z1bmNfXyk7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-IHJldHVybiAtRUlOVkFMOw0KPiA+ICsgICAgICAgICAgICAgfQ0KPiA+ICsgICAgIH0gZWxzZSB7
-DQo+ID4gKyAgICAgICAgICAgICBkcmFtY19kZXZfcHRyLT5mbWV0ZXJfZGV2X3B0ciA9IE5VTEw7
-DQo+ID4gKyAgICAgfQ0KPiA+ICsgICAgIHJldCA9IGRyaXZlcl9jcmVhdGVfZmlsZShwZGV2LT5k
-ZXYuZHJpdmVyLA0KPiA+ICZkcml2ZXJfYXR0cl9kcmFtX2RhdGFfcmF0ZSk7DQo+ID4gKyAgICAg
-aWYgKHJldCkgew0KPiA+ICsgICAgICAgICAgICAgcHJfaW5mbygiJXM6IGZhaWwgdG8gY3JlYXRl
-IGRyYW1fZGF0YV9yYXRlIHN5c2ZzXG4iLA0KPiA+IF9fZnVuY19fKTsNCj4gPiArICAgICAgICAg
-ICAgIHJldHVybiByZXQ7DQo+ID4gKyAgICAgfQ0KPiA+ICsNCj4gPiArICAgICBwbGF0Zm9ybV9z
-ZXRfZHJ2ZGF0YShwZGV2LCBkcmFtY19kZXZfcHRyKTsNCj4gPiArICAgICBwcl9pbmZvKCIlczog
-RFJBTSBkYXRhIHJhdGUgPSAlZFxuIiwgX19mdW5jX18sDQo+ID4gKyAgICAgICAgICAgICBtdGtf
-ZHJhbWNfZ2V0X2RhdGFfcmF0ZSgpKTsNCj4gDQo+IA0KPiBUaGlzIGlzIHRlcmlibGUgY29kaW5n
-IHN0eWxlLiBEcml2ZXIgaXMgaW4gdmVyeSBwb29yIHNoYXBlLg0KPiANCj4gUGxlYXNlIHBlcmZv
-cm0gZXh0ZW5zaXZlIGludGVybmFsIHJldmlldyBpbiBNZWRpYXRlayB0byBhdm9pZCBzZW5kaW5n
-DQo+IHZlcnkgcG9vciBxdWFsaXR5IGNvbnRyaWJ1dGlvbnMuIFRoaXMgdXNlcyBjb21tdW5pdHkg
-cmVzb3VyY2VzIGluDQo+IHVuZmFpcg0KPiB3YXkuIEZldyBtb3JlIGNvbW1lbnRzLCBidXQgYWxs
-IHRoaXMgY29kZSBuZWVkcyBleHRlbnNpdmUgcmV3b3JrIGFuZA0KPiBJDQo+IGFtIG5vdCBnb2lu
-ZyB0byBleHBsYWluIHlvdSBiYXNpY3Mgb2YgTGludXggQ29kaW5nIHN0eWxlLCBpZiB5b3UgZG8N
-Cj4gbm90DQo+IHdhbnQgdG8gdGFrZSBleGlzdGluZyBjb2RlIGFzIGxlYXJuaW5nIGV4YW1wbGVz
-LiBXb3JrIHdpdGggeW91cg0KPiBjb2xsZWdhZ3VlcyBvbiB0aGF0Lg0KPiANCj4gDQo+ID4gKw0K
-PiA+ICsgICAgIHJldHVybiByZXQ7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyB1bnNpZ25l
-ZCBpbnQgZm1ldGVyX3YxKHN0cnVjdCBkcmFtY19kZXZfdCAqZHJhbWNfZGV2X3B0cikNCj4gPiAr
-ew0KPiA+ICsgICAgIHN0cnVjdCBmbWV0ZXJfZGV2X3QgKmZtZXRlcl9kZXZfcHRyID0NCj4gPiAr
-ICAgICAgICAgICAgIChzdHJ1Y3QgZm1ldGVyX2Rldl90ICopZHJhbWNfZGV2X3B0ci0+Zm1ldGVy
-X2Rldl9wdHI7DQo+ID4gKyAgICAgdW5zaWduZWQgaW50IHNodV9sdl92YWw7DQo+ID4gKyAgICAg
-dW5zaWduZWQgaW50IHBsbF9pZF92YWw7DQo+ID4gKyAgICAgdW5zaWduZWQgaW50IHNkbXBjd192
-YWw7DQo+ID4gKyAgICAgdW5zaWduZWQgaW50IHBvc2Rpdl92YWw7DQo+ID4gKyAgICAgdW5zaWdu
-ZWQgaW50IGNrZGl2NF92YWw7DQo+ID4gKyAgICAgdW5zaWduZWQgaW50IG9mZnNldDsNCj4gPiAr
-ICAgICB1bnNpZ25lZCBpbnQgdmNvX2ZyZXE7DQo+ID4gKyAgICAgdW5zaWduZWQgaW50IGZia3Nl
-bDsNCj4gPiArICAgICB1bnNpZ25lZCBpbnQgZHFzb3BlbjsNCj4gPiArICAgICB1bnNpZ25lZCBp
-bnQgYXN5bmNfY2E7DQo+ID4gKyAgICAgdW5zaWduZWQgaW50IGRxX3Nlcl9tb2RlOw0KPiA+ICsN
-Cj4gPiArICAgICBzaHVfbHZfdmFsID0gKHJlYWRsKGRyYW1jX2Rldl9wdHItPmRkcnBoeV9jaG5f
-YmFzZV9hb1swXSArDQo+ID4gKyAgICAgICAgICAgICBmbWV0ZXJfZGV2X3B0ci0+c2h1X2x2Lm9m
-ZnNldCkgJg0KPiA+ICsgICAgICAgICAgICAgZm1ldGVyX2Rldl9wdHItPnNodV9sdi5tYXNrKSA+
-Pg0KPiA+ICsgICAgICAgICAgICAgZm1ldGVyX2Rldl9wdHItPnNodV9sdi5zaGlmdDsNCj4gPiAr
-DQo+ID4gKyAgICAgcGxsX2lkX3ZhbCA9IChyZWFkbChkcmFtY19kZXZfcHRyLT5kZHJwaHlfY2hu
-X2Jhc2VfYW9bMF0gKw0KPiA+ICsgICAgICAgICAgICAgZm1ldGVyX2Rldl9wdHItPnBsbF9pZC5v
-ZmZzZXQpICYNCj4gPiArICAgICAgICAgICAgIGZtZXRlcl9kZXZfcHRyLT5wbGxfaWQubWFzaykg
-Pj4NCj4gPiArICAgICAgICAgICAgIGZtZXRlcl9kZXZfcHRyLT5wbGxfaWQuc2hpZnQ7DQo+ID4g
-Kw0KPiA+ICsgICAgIG9mZnNldCA9IGZtZXRlcl9kZXZfcHRyLT5zZG1wY3dbcGxsX2lkX3ZhbF0u
-b2Zmc2V0ICsNCj4gPiArICAgICAgICAgICAgIGZtZXRlcl9kZXZfcHRyLT5zaHVfb2YgKiBzaHVf
-bHZfdmFsOw0KPiA+ICsgICAgIHNkbXBjd192YWwgPSAocmVhZGwoZHJhbWNfZGV2X3B0ci0+ZGRy
-cGh5X2Nobl9iYXNlX25hb1swXSArDQo+ID4gb2Zmc2V0KSAmDQo+ID4gKyAgICAgICAgICAgICBm
-bWV0ZXJfZGV2X3B0ci0+c2RtcGN3W3BsbF9pZF92YWxdLm1hc2spID4+DQo+ID4gKyAgICAgICAg
-ICAgICBmbWV0ZXJfZGV2X3B0ci0+c2RtcGN3W3BsbF9pZF92YWxdLnNoaWZ0Ow0KPiA+ICsNCj4g
-PiArICAgICBvZmZzZXQgPSBmbWV0ZXJfZGV2X3B0ci0+cG9zZGl2W3BsbF9pZF92YWxdLm9mZnNl
-dCArDQo+ID4gKyAgICAgICAgICAgICBmbWV0ZXJfZGV2X3B0ci0+c2h1X29mICogc2h1X2x2X3Zh
-bDsNCj4gPiArICAgICBwb3NkaXZfdmFsID0gKHJlYWRsKGRyYW1jX2Rldl9wdHItPmRkcnBoeV9j
-aG5fYmFzZV9uYW9bMF0gKw0KPiA+IG9mZnNldCkgJg0KPiA+ICsgICAgICAgICAgICAgZm1ldGVy
-X2Rldl9wdHItPnBvc2RpdltwbGxfaWRfdmFsXS5tYXNrKSA+Pg0KPiA+ICsgICAgICAgICAgICAg
-Zm1ldGVyX2Rldl9wdHItPnBvc2RpdltwbGxfaWRfdmFsXS5zaGlmdDsNCj4gPiArDQo+ID4gKyAg
-ICAgb2Zmc2V0ID0gZm1ldGVyX2Rldl9wdHItPmZia3NlbFtwbGxfaWRfdmFsXS5vZmZzZXQgKw0K
-PiA+ICsgICAgICAgICAgICAgZm1ldGVyX2Rldl9wdHItPnNodV9vZiAqIHNodV9sdl92YWw7DQo+
-ID4gKyAgICAgZmJrc2VsID0gKHJlYWRsKGRyYW1jX2Rldl9wdHItPmRkcnBoeV9jaG5fYmFzZV9u
-YW9bMF0gKw0KPiA+IG9mZnNldCkgJg0KPiA+ICsgICAgICAgICAgICAgZm1ldGVyX2Rldl9wdHIt
-PmZia3NlbFtwbGxfaWRfdmFsXS5tYXNrKSA+Pg0KPiA+ICsgICAgICAgICAgICAgZm1ldGVyX2Rl
-dl9wdHItPmZia3NlbFtwbGxfaWRfdmFsXS5zaGlmdDsNCj4gPiArDQo+ID4gKyAgICAgb2Zmc2V0
-ID0gZm1ldGVyX2Rldl9wdHItPmRxc29wZW5bcGxsX2lkX3ZhbF0ub2Zmc2V0ICsNCj4gPiArICAg
-ICAgICAgICAgIGZtZXRlcl9kZXZfcHRyLT5zaHVfb2YgKiBzaHVfbHZfdmFsOw0KPiA+ICsgICAg
-IGRxc29wZW4gPSAocmVhZGwoZHJhbWNfZGV2X3B0ci0+ZGRycGh5X2Nobl9iYXNlX25hb1swXSAr
-DQo+ID4gb2Zmc2V0KSAmDQo+ID4gKyAgICAgICAgICAgICBmbWV0ZXJfZGV2X3B0ci0+ZHFzb3Bl
-bltwbGxfaWRfdmFsXS5tYXNrKSA+Pg0KPiA+ICsgICAgICAgICAgICAgZm1ldGVyX2Rldl9wdHIt
-PmRxc29wZW5bcGxsX2lkX3ZhbF0uc2hpZnQ7DQo+ID4gKw0KPiA+ICsgICAgIG9mZnNldCA9IGZt
-ZXRlcl9kZXZfcHRyLT5hc3luY19jYVtwbGxfaWRfdmFsXS5vZmZzZXQgKw0KPiA+ICsgICAgICAg
-ICAgICAgZm1ldGVyX2Rldl9wdHItPnNodV9vZiAqIHNodV9sdl92YWw7DQo+ID4gKyAgICAgYXN5
-bmNfY2EgPSAocmVhZGwoZHJhbWNfZGV2X3B0ci0+ZGRycGh5X2Nobl9iYXNlX25hb1swXSArDQo+
-ID4gb2Zmc2V0KSAmDQo+ID4gKyAgICAgICAgICAgICBmbWV0ZXJfZGV2X3B0ci0+YXN5bmNfY2Fb
-cGxsX2lkX3ZhbF0ubWFzaykgPj4NCj4gPiArICAgICAgICAgICAgIGZtZXRlcl9kZXZfcHRyLT5h
-c3luY19jYVtwbGxfaWRfdmFsXS5zaGlmdDsNCj4gPiArDQo+ID4gKyAgICAgb2Zmc2V0ID0gZm1l
-dGVyX2Rldl9wdHItPmRxX3Nlcl9tb2RlW3BsbF9pZF92YWxdLm9mZnNldCArDQo+ID4gKyAgICAg
-ICAgICAgICBmbWV0ZXJfZGV2X3B0ci0+c2h1X29mICogc2h1X2x2X3ZhbDsNCj4gPiArICAgICBk
-cV9zZXJfbW9kZSA9IChyZWFkbChkcmFtY19kZXZfcHRyLT5kZHJwaHlfY2huX2Jhc2VfbmFvWzBd
-ICsNCj4gPiBvZmZzZXQpICYNCj4gPiArICAgICAgICAgICAgIGZtZXRlcl9kZXZfcHRyLT5kcV9z
-ZXJfbW9kZVtwbGxfaWRfdmFsXS5tYXNrKSA+Pg0KPiA+ICsgICAgICAgICAgICAgZm1ldGVyX2Rl
-dl9wdHItPmRxX3Nlcl9tb2RlW3BsbF9pZF92YWxdLnNoaWZ0Ow0KPiA+ICsgICAgIGNrZGl2NF92
-YWwgPSAoZHFfc2VyX21vZGUgPT0gMSk7IC8vIDE6IERJVjQsIDI6IERJVjgsIDM6DQo+ID4gRElW
-MTYNCj4gPiArDQo+ID4gKyAgICAgcG9zZGl2X3ZhbCAmPSB+KDB4NCk7DQo+ID4gKw0KPiA+ICsg
-ICAgIHZjb19mcmVxID0gKChmbWV0ZXJfZGV2X3B0ci0+Y3J5c3RhbF9mcmVxKSAqDQo+ID4gKyAg
-ICAgICAgICAgICAoc2RtcGN3X3ZhbCA+PiA3KSkgPj4gcG9zZGl2X3ZhbCA+PiAxID4+IGNrZGl2
-NF92YWwNCj4gPiArICAgICAgICAgICAgIDw8IGZia3NlbDsNCj4gPiArDQo+ID4gKyAgICAgaWYg
-KChkcXNvcGVuID09IDEpICYmIChhc3luY19jYSA9PSAxKSkNCj4gPiArICAgICAgICAgICAgIHZj
-b19mcmVxID4+PSAxOw0KPiA+ICsNCj4gPiArICAgICByZXR1cm4gdmNvX2ZyZXE7DQo+ID4gK30N
-Cj4gPiArDQo+ID4gKy8qDQo+ID4gKyAqIG10a19kcmFtY19nZXRfZGF0YV9yYXRlIC0gY2FsY3Vs
-YXRlIERSQU0gZGF0YSByYXRlDQo+ID4gKyAqDQo+ID4gKyAqIFJldHVybnMgRFJBTSBkYXRhIHJh
-dGUgKE1CL3MpDQo+ID4gKyAqLw0KPiA+ICt1bnNpZ25lZCBpbnQgbXRrX2RyYW1jX2dldF9kYXRh
-X3JhdGUodm9pZCkNCj4gPiArew0KPiA+ICsgICAgIHN0cnVjdCBkcmFtY19kZXZfdCAqZHJhbWNf
-ZGV2X3B0cjsNCj4gPiArICAgICBzdHJ1Y3QgZm1ldGVyX2Rldl90ICpmbWV0ZXJfZGV2X3B0cjsN
-Cj4gPiArDQo+ID4gKyAgICAgaWYgKCFkcmFtY19wZGV2KQ0KPiA+ICsgICAgICAgICAgICAgcmV0
-dXJuIDA7DQo+ID4gKw0KPiA+ICsgICAgIGRyYW1jX2Rldl9wdHIgPQ0KPiA+ICsgICAgICAgICAg
-ICAgKHN0cnVjdCBkcmFtY19kZXZfdA0KPiA+ICopcGxhdGZvcm1fZ2V0X2RydmRhdGEoZHJhbWNf
-cGRldik7DQo+ID4gKw0KPiA+ICsgICAgIGZtZXRlcl9kZXZfcHRyID0gKHN0cnVjdCBmbWV0ZXJf
-ZGV2X3QgKilkcmFtY19kZXZfcHRyLQ0KPiA+ID5mbWV0ZXJfZGV2X3B0cjsNCj4gPiArICAgICBp
-ZiAoIWZtZXRlcl9kZXZfcHRyKQ0KPiA+ICsgICAgICAgICAgICAgcmV0dXJuIDA7DQo+ID4gKw0K
-PiA+ICsgICAgIGlmIChmbWV0ZXJfZGV2X3B0ci0+dmVyc2lvbiA9PSAxKQ0KPiA+ICsgICAgICAg
-ICAgICAgcmV0dXJuIGZtZXRlcl92MShkcmFtY19kZXZfcHRyKTsNCj4gPiArICAgICByZXR1cm4g
-MDsNCj4gPiArfQ0KPiA+ICtFWFBPUlRfU1lNQk9MKG10a19kcmFtY19nZXRfZGF0YV9yYXRlKTsN
-Cj4gDQo+IE5BSywgbm90IHVzZWQuDQoNCk9rYXksIGNoYW5nZSB0aGUgZGVjbGFyYXRpb24gb2Yg
-bXRrX2RyYW1jX2dldF9kYXRhX3JhdGUoKSB0byBzdGF0aWMuDQoNCj4gDQo+ID4gKw0KPiA+ICtz
-dGF0aWMgaW50IGRyYW1jX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+
-ICt7DQo+ID4gKyAgICAgZHJhbWNfcGRldiA9IE5VTEw7DQo+ID4gKw0KPiA+ICsgICAgIHJldHVy
-biAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
-ZCBkcmFtY19vZl9pZHNbXSA9IHsNCj4gPiArICAgICB7LmNvbXBhdGlibGUgPSAibWVkaWF0ZWss
-Y29tbW9uLWRyYW1jIix9LA0KPiA+ICsgICAgIHt9DQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0
-aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBkcmFtY19kcnYgPSB7DQo+ID4gKyAgICAgLnByb2Jl
-ID0gZHJhbWNfcHJvYmUsDQo+ID4gKyAgICAgLnJlbW92ZSA9IGRyYW1jX3JlbW92ZSwNCj4gPiAr
-ICAgICAuZHJpdmVyID0gew0KPiA+ICsgICAgICAgICAgICAgLm5hbWUgPSAiZHJhbWNfZHJ2IiwN
-Cj4gPiArICAgICAgICAgICAgIC5vd25lciA9IFRISVNfTU9EVUxFLA0KPiANCj4gTkFLLiBZb3Ug
-c2VudCB1cyAxMCB5ZWFyIG9sZCBjb2RlLCB3aGljaCBtZWFucyB5b3UgcmVwbGljYXRlZCBhbGwg
-dGhlDQo+IGJ1Z3MsIGlzc3VlcyBhbmQgb2xkLWNvZGluZyBzdHlsZXMgZXhpc3RpbmcgMTAgeWVh
-cnMgYWdvLg0KPiANCj4gU3RhcnQgKkZST00gU0NSQVRDSCogZnJvbSB0aGUgbmV3ZXN0IGRyaXZl
-ciwgc28geW91IHdvbid0IHNlbmQgdXMNCj4gc2FtZQ0KPiBqdW5rIHdlIGFscmVhZHkgZml4ZWQg
-ZHVyaW5nIGxhc3QgMTAgeWVhcnMuDQo+IA0KPiANCj4gPiArICAgICAgICAgICAgIC5vZl9tYXRj
-aF90YWJsZSA9IGRyYW1jX29mX2lkcywNCj4gPiArICAgICB9LA0KPiA+ICt9Ow0KPiA+ICsNCj4g
-PiArc3RhdGljIGludCBfX2luaXQgZHJhbWNfZHJ2X2luaXQodm9pZCkNCj4gPiArew0KPiA+ICsg
-ICAgIGludCByZXQ7DQo+ID4gKw0KPiA+ICsgICAgIHJldCA9IHBsYXRmb3JtX2RyaXZlcl9yZWdp
-c3RlcigmZHJhbWNfZHJ2KTsNCj4gPiArICAgICBpZiAocmV0KSB7DQo+ID4gKyAgICAgICAgICAg
-ICBwcl9pbmZvKCIlczogaW5pdCBmYWlsLCByZXQgMHgleFxuIiwgX19mdW5jX18sIHJldCk7DQo+
-ID4gKyAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICsgICAgIH0NCj4gPiArDQo+ID4gKyAg
-ICAgcmV0dXJuIHJldDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArbW9kdWxlX2luaXQoZHJhbWNfZHJ2
-X2luaXQpOw0KPiANCj4gTm8sIGp1c3QgbW9kdWxlX3BsYXRmb3JtX2RyaXZlcg0KDQpPa2F5LCBy
-ZW1vdmUgbW9kdWxlX2luaXQgaW4gdjIuDQoNCj4gDQo+ID4gKw0KPiA+ICtNT0RVTEVfQVVUSE9S
-KCJNZWRpYXRlayBDb3Jwb3JhdGlvbiIpOw0KPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIk1lZGlh
-VGVrIERSQU1DIERyaXZlciIpOw0KPiA+ICtNT0RVTEVfTElDRU5TRSgiR1BMIik7DQo+ID4gZGlm
-ZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1kcmFtYy5oDQo+ID4gYi9p
-bmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstZHJhbWMuaA0KPiA+IG5ldyBmaWxlIG1vZGUg
-MTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi45NWU3ZGJmZTdkMGUNCj4gPiAtLS0gL2Rl
-di9udWxsDQo+ID4gKysrIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWRyYW1jLmgN
-Cj4gDQo+IE1vdmUgZXZlcnl0aGluZyBpbnRvIGRyaXZlci4NCg0KT2theS4NCg0KPiANCj4gPiBA
-QCAtMCwwICsxLDQxIEBADQo+ID4gKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4w
-ICovDQo+ID4gKy8qDQo+ID4gKyAqIENvcHlyaWdodCAoYykgMjAxOSBNZWRpYVRlayBJbmMuDQo+
-ID4gKyAqLw0KPiA+ICsNCj4gPiArI2lmbmRlZiBfX01US19EUkFNQ19IX18NCj4gPiArI2RlZmlu
-ZSBfX01US19EUkFNQ19IX18NCj4gPiArDQo+ID4gK3N0cnVjdCByZWdfY3RybF90IHsNCj4gPiAr
-ICAgICB1bnNpZ25lZCBpbnQgb2Zmc2V0Ow0KPiA+ICsgICAgIHVuc2lnbmVkIGludCBtYXNrOw0K
-PiA+ICsgICAgIHVuc2lnbmVkIGludCBzaGlmdDsNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0cnVj
-dCBmbWV0ZXJfZGV2X3Qgew0KPiA+ICsgICAgIHVuc2lnbmVkIGludCB2ZXJzaW9uOw0KPiA+ICsg
-ICAgIHVuc2lnbmVkIGludCBjcnlzdGFsX2ZyZXE7DQo+ID4gKyAgICAgdW5zaWduZWQgaW50IHNo
-dV9vZjsNCj4gPiArICAgICBzdHJ1Y3QgcmVnX2N0cmxfdCBzaHVfbHY7DQo+ID4gKyAgICAgc3Ry
-dWN0IHJlZ19jdHJsX3QgcGxsX2lkOw0KPiA+ICsgICAgIHN0cnVjdCByZWdfY3RybF90IHNkbXBj
-d1syXTsNCj4gPiArICAgICBzdHJ1Y3QgcmVnX2N0cmxfdCBwb3NkaXZbMl07DQo+ID4gKyAgICAg
-c3RydWN0IHJlZ19jdHJsX3QgZmJrc2VsWzJdOw0KPiA+ICsgICAgIHN0cnVjdCByZWdfY3RybF90
-IGRxc29wZW5bMl07DQo+ID4gKyAgICAgc3RydWN0IHJlZ19jdHJsX3QgYXN5bmNfY2FbMl07DQo+
-ID4gKyAgICAgc3RydWN0IHJlZ19jdHJsX3QgZHFfc2VyX21vZGVbMl07DQo+ID4gK307DQo+ID4g
-Kw0KPiA+ICtzdHJ1Y3QgZHJhbWNfZGV2X3Qgew0KPiA+ICsgICAgIHVuc2lnbmVkIGludCBzdXBw
-b3J0X2NoX2NudDsNCj4gPiArICAgICB2b2lkIF9faW9tZW0gKipkcmFtY19jaG5fYmFzZV9hbzsN
-Cj4gPiArICAgICB2b2lkIF9faW9tZW0gKipkcmFtY19jaG5fYmFzZV9uYW87DQo+ID4gKyAgICAg
-dm9pZCBfX2lvbWVtICoqZGRycGh5X2Nobl9iYXNlX2FvOw0KPiA+ICsgICAgIHZvaWQgX19pb21l
-bSAqKmRkcnBoeV9jaG5fYmFzZV9uYW87DQo+ID4gKyAgICAgdm9pZCBfX2lvbWVtICpzbGVlcF9i
-YXNlOw0KPiA+ICsgICAgIHZvaWQgKmZtZXRlcl9kZXZfcHRyOw0KPiA+ICt9Ow0KPiA+ICsNCj4g
-PiArdW5zaWduZWQgaW50IG10a19kcmFtY19nZXRfZGF0YV9yYXRlKHZvaWQpOw0KPiANCj4gDQo+
-IERyb3AsIHVudXNlZC4NCg0KT2theSwgcmVtb3ZlIG10ay1kcmFtYy5oLg0KPiANCj4gPiArDQo+
-ID4gKyNlbmRpZiAvKiBfX01US19EUkFNQ19IX18gKi8NCj4gDQo+IA0KPiBCZXN0IHJlZ2FyZHMs
-DQo+IEtyenlzenRvZg0K
+Hi,
+
+On 09/02/2025 18:09, Aradhya Bhatia wrote:
+> From: Aradhya Bhatia <a-bhatia1@ti.com>
+> 
+> The OLDI transmitters (TXes) do not have registers of their own, and are
+> dependent on the source video-ports (VPs) from the DSS to provide
+> configuration data. This hardware doesn't directly sit on the internal
+> bus of the SoC, but does so via the DSS. Hence, the OLDI TXes are
+> supposed to be child nodes under the DSS, and not independent devices.
+> 
+> Two of the OLDI TXes can function in tandem to output dual-link OLDI
+> output, or cloned single-link outputs. In these cases, one OLDI will be
+> the primary OLDI, and the other one, a companion. The following diagram
+> represents such a configuration.
+> 
+> +-----+-----+         +-------+
+> |     |     |         |       |
+> |     | VP1 +----+--->+ OLDI0 |  (Primary - may need companion)
+> |     |     |    |    |       |
+> | DSS +-----+    |    +-------+
+> |     |     |    |
+> |     | VP2 |    |    +-------+
+> |     |     |    |    |       |
+> +-----+-----+    +--->+ OLDI1 |  (Companion OLDI)
+>                        |       |
+>                        +-------+
+> 
+> The DSS in AM625 SoC has a configuration like the one above. The AM625
+> DSS VP1 (port@0) can connect and control 2 OLDI TXes, to use them in
+> dual-link or cloned single-link OLDI modes. It is only the VP1 that can
+> connect to either OLDI TXes for the AM625 DSS, and not the VP2.
+> 
+> Alternatively, on some future TI SoCs, along with the above
+> configuration, the OLDI TX can _also_ connect to separate video sources,
+> making them work entirely independent of each other. In this case,
+> neither of the OLDIs are "companion" or "secondary" OLDIs, and nor do
+> they require one. They both are independent and primary OLDIs. The
+> following diagram represents such a configuration.
+> 
+> +-----+-----+               +-------+
+> |     |     |               |       |
+> |     | VP1 +--+----------->+ OLDI0 |  (Primary - may need companion)
+> |     |     |  |            |       |
+> |     +-----+  |            +-------+
+> |     |     |  |
+> |     | VP2 |  |
+> |     |     |  |
+> | DSS +-----+  |   +---+    +-------+
+> |     |     |  +-->+ M |    |       |
+> |     | VP3 +----->+ U +--->+ OLDI1 |  (Companion or Primary)
+> |     |     |      | X |    |       |
+> |     +-----+      +---+    +-------+
+> |     |     |
+> |     | VP4 |
+> |     |     |
+> +-----+-----+
+> 
+> Note that depending on the mux configuration, the OLDIs can either be
+> working together in tandem - sourced by VP1, OR, they could be working
+> independently sourced by VP1 and VP3 respectively.
+> The idea is to support all the configurations with this OLDI TX schema.
+> 
+> The OLDI functionality is further supported by a system-control module,
+> which contains a few registers to control OLDI IO power and other
+> electrical characteristics of the IO lanes.
+> 
+> Add devicetree binding schema for the OLDI TXes to support various
+> configurations, and extend their support to the AM625 DSS.
+> 
+> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+> ---
+>   .../bindings/display/ti/ti,am625-oldi.yaml    |  88 ++++++++++
+>   .../bindings/display/ti/ti,am65x-dss.yaml     | 154 ++++++++++++++++++
+>   MAINTAINERS                                   |   1 +
+>   3 files changed, 243 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml b/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+> new file mode 100644
+> index 000000000000..42a80a512660
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+> @@ -0,0 +1,88 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/ti/ti,am625-oldi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments AM625 OLDI Transmitter
+> +
+> +maintainers:
+> +  - Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> +  - Aradhya Bhatia <aradhya.bhatia@linux.dev>
+> +
+> +description:
+> +  The AM625 TI Keystone OpenLDI transmitter (OLDI TX) supports serialized RGB
+> +  pixel data transmission between host and flat panel display over LVDS (Low
+> +  Voltage Differential Sampling) interface. The OLDI TX consists of 7-to-1 data
+> +  serializers, and 4-data and 1-clock LVDS outputs. It supports the LVDS output
+> +  formats "jeida-18", "jeida-24" and "vesa-18", and can accept 24-bit RGB or
+> +  padded and un-padded 18-bit RGB bus formats as input.
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: serial clock input for the OLDI transmitters
+> +
+> +  clock-names:
+> +    const: serial
+> +
+> +  ti,companion-oldi:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      phandle to companion OLDI transmitter. This property is mandatory for the
+> +      primarty OLDI TX if the OLDI TXes are expected to work either in dual-lvds
+> +      mode or in clone mode. This property should point to the secondary OLDI
+> +      TX.
+> +
+> +  ti,secondary-oldi:
+> +    type: boolean
+> +    description:
+> +      Boolean property to mark the OLDI transmitter as the secondary one, when the
+> +      OLDI hardware is expected to run as a companion HW, in cases of dual-lvds
+> +      mode or clone mode. The primary OLDI hardware is responsible for all the
+> +      hardware configuration.
+
+I think these work, but I'm wondering if we would ever need to check 
+something from the main oldi from the secondary oldi. In that case 
+"crossed phandles" would be better, i.e. something like:
+
+(in the first oldi:)
+ti,slave-oldi = <phandle-to-second-oldi>
+
+(in the second oldi:)
+ti,master-oldi = <phandle-to-first-oldi>
+
+Then again, if we ever need that, even with these bindings the driver 
+could find the first oldi, but needs to go via the dss's node.
+
+So, just a thought.
+
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+
+  Tomi
+
+> +  ti,oldi-io-ctrl:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      phandle to syscon device node mapping OLDI IO_CTRL registers found in the
+> +      control MMR region. These registers are required to toggle the I/O lane
+> +      power, and control its electrical characteristics.
+> +
+> +  ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +
+> +    properties:
+> +      port@0:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description: Parallel RGB input port
+> +
+> +      port@1:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description: LVDS output port
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +
+> +allOf:
+> +  - if:
+> +      required:
+> +        - ti,secondary-oldi
+> +    then:
+> +      properties:
+> +        ti,companion-oldi: false
+> +
+> +required:
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - ti,oldi-io-ctrl
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> index 399d68986326..a82c525631ea 100644
+> --- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> @@ -91,6 +91,24 @@ properties:
+>             For AM625 DSS, the internal DPI output port node from video
+>             port 1.
+>             For AM62A7 DSS, the port is tied off inside the SoC.
+> +        properties:
+> +          endpoint@0:
+> +            $ref: /schemas/graph.yaml#/properties/endpoint
+> +            description:
+> +              For AM625 DSS, VP Connection to OLDI0.
+> +              For AM65X DSS, OLDI output from the SoC.
+> +
+> +          endpoint@1:
+> +            $ref: /schemas/graph.yaml#/properties/endpoint
+> +            description:
+> +              For AM625 DSS, VP Connection to OLDI1.
+> +
+> +        anyOf:
+> +          - required:
+> +              - endpoint
+> +          - required:
+> +              - endpoint@0
+> +              - endpoint@1
+>   
+>         port@1:
+>           $ref: /schemas/graph.yaml#/properties/port
+> @@ -112,6 +130,25 @@ properties:
+>         Input memory (from main memory to dispc) bandwidth limit in
+>         bytes per second
+>   
+> +  oldi-transmitters:
+> +    description:
+> +      Child node under the DSS, to describe all the OLDI transmitters connected
+> +      to the DSS videoports.
+> +    type: object
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +    patternProperties:
+> +      '^oldi@[0-1]$':
+> +        $ref: ti,am625-oldi.yaml#
+> +        description: OLDI transmitters connected to the DSS VPs
+> +
+>   allOf:
+>     - if:
+>         properties:
+> @@ -120,10 +157,25 @@ allOf:
+>               const: ti,am62a7-dss
+>       then:
+>         properties:
+> +        oldi-transmitters: false
+>           ports:
+>             properties:
+>               port@0: false
+>   
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: ti,am65x-dss
+> +    then:
+> +      properties:
+> +        oldi-transmitters: false
+> +        ports:
+> +          properties:
+> +            port@0:
+> +              properties:
+> +                endpoint@1: false
+> +
+>   required:
+>     - compatible
+>     - reg
+> @@ -171,3 +223,105 @@ examples:
+>               };
+>           };
+>       };
+> +
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +
+> +    bus {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        dss1: dss@30200000 {
+> +            compatible = "ti,am625-dss";
+> +            reg = <0x00 0x30200000 0x00 0x1000>, /* common */
+> +                  <0x00 0x30202000 0x00 0x1000>, /* vidl1 */
+> +                  <0x00 0x30206000 0x00 0x1000>, /* vid */
+> +                  <0x00 0x30207000 0x00 0x1000>, /* ovr1 */
+> +                  <0x00 0x30208000 0x00 0x1000>, /* ovr2 */
+> +                  <0x00 0x3020a000 0x00 0x1000>, /* vp1 */
+> +                  <0x00 0x3020b000 0x00 0x1000>, /* vp2 */
+> +                  <0x00 0x30201000 0x00 0x1000>; /* common1 */
+> +            reg-names = "common", "vidl1", "vid",
+> +                        "ovr1", "ovr2", "vp1", "vp2", "common1";
+> +            power-domains = <&k3_pds 186 TI_SCI_PD_EXCLUSIVE>;
+> +            clocks =        <&k3_clks 186 6>,
+> +                            <&vp1_clock>,
+> +                            <&k3_clks 186 2>;
+> +            clock-names = "fck", "vp1", "vp2";
+> +            interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> +            oldi-transmitters {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +                oldi0: oldi@0 {
+> +                    reg = <0>;
+> +                    clocks = <&k3_clks 186 0>;
+> +                    clock-names = "serial";
+> +                    ti,companion-oldi = <&oldi1>;
+> +                    ti,oldi-io-ctrl = <&dss_oldi_io_ctrl>;
+> +                    ports {
+> +                        #address-cells = <1>;
+> +                        #size-cells = <0>;
+> +                        port@0 {
+> +                            reg = <0>;
+> +                            oldi0_in: endpoint {
+> +                                remote-endpoint = <&dpi0_out0>;
+> +                            };
+> +                        };
+> +                        port@1 {
+> +                            reg = <1>;
+> +                            oldi0_out: endpoint {
+> +                                remote-endpoint = <&panel_in0>;
+> +                            };
+> +                        };
+> +                    };
+> +                };
+> +                oldi1: oldi@1 {
+> +                    reg = <1>;
+> +                    clocks = <&k3_clks 186 0>;
+> +                    clock-names = "serial";
+> +                    ti,secondary-oldi;
+> +                    ti,oldi-io-ctrl = <&dss_oldi_io_ctrl>;
+> +                    ports {
+> +                        #address-cells = <1>;
+> +                        #size-cells = <0>;
+> +                        port@0 {
+> +                            reg = <0>;
+> +                            oldi1_in: endpoint {
+> +                                remote-endpoint = <&dpi0_out1>;
+> +                            };
+> +                        };
+> +                        port@1 {
+> +                            reg = <1>;
+> +                            oldi1_out: endpoint {
+> +                                remote-endpoint = <&panel_in1>;
+> +                            };
+> +                        };
+> +                    };
+> +                };
+> +            };
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +                port@0 {
+> +                    #address-cells = <1>;
+> +                    #size-cells = <0>;
+> +                    reg = <0>;
+> +                    dpi0_out0: endpoint@0 {
+> +                        reg = <0>;
+> +                        remote-endpoint = <&oldi0_in>;
+> +                    };
+> +                    dpi0_out1: endpoint@1 {
+> +                        reg = <1>;
+> +                        remote-endpoint = <&oldi1_in>;
+> +                    };
+> +                };
+> +                port@1 {
+> +                    reg = <1>;
+> +                    dpi1_out: endpoint {
+> +                        remote-endpoint = <&hdmi_bridge>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0fa7c5728f1e..88fa2d9435b8 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7816,6 +7816,7 @@ M:	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+>   L:	dri-devel@lists.freedesktop.org
+>   S:	Maintained
+>   T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+> +F:	Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+>   F:	Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+>   F:	Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+>   F:	Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+
