@@ -1,149 +1,157 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F091D250BFD
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA8024C679;
+	Tue, 11 Feb 2025 14:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739284596; cv=none; b=Y21efdbfkWNkeek+rgiTG8iGnq2UM3QCx1pE2YWjH/62XMz1GGDa9Bcz5GybiTw1+xjluTwSQT2LkXm1cfRPb+vFLb2xjtpiObmjwAaLAUH4pSPLcKJsOwqe8E2KmyqLwlupm/+p7+XiO7bttUQmKwo5AYkP0uO/YUkryDA2JYI=
+	t=1739284611; cv=none; b=HWNPaXzNbnVV1KhdlcuFcS4/7CFvCR2M3t39lYHVqo0flzmgHRQBqoDL76f8on9nzrDmPCb7U0yRJtHy9eqjrwOTWryC/xJxg8/KHp3tEyIJ+xMVLo0dYlW2uBnXosGHLvMhX5ozsk7bdhhqm7H/DBNs1rnngriz4kUhwkA8b6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739284596; c=relaxed/simple;
-	bh=SKRdCG4ach6Wv6A5flpQ6DzYONw7h0shZmp7bUuXyfo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SWi/6sKWGs0CUc9SDnJLE36Z4xZ8ZHFTyNAa1bww+Hh7h+c0T4yImBDCBn0J0VH2cdERTo+w8P/PlKpNhfzdTK9r5iXr21kDGtEbwNaVITTTjdNu+Hn918YL/cg9501A+lG6QS01Ol03+hOKFHNjoQCOP9Qd6bQXbjtMMWAYurg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CLfy6gW8; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739284611; c=relaxed/simple;
+	bh=/aM1bzULbT0YR8QtwmIHthRWeDHo0pPo/NYA4mvs+qc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L7R/K8sSWpv8oq4Sqx2sfpgknduHMl0KUUGzvkjdHV4iXpkJ9hR9iOVEXW9/Cz9CR/pR16qKRImJsbzkshz4RKOrwnvdTj8aADXRKXKuQKe6uRY+CCy8vF01/UGBTZPEx5TCkUFjJn+XPVzxXLLMABrTyYA0YCKTDwwyE8der30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R2BfNFca; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CLfy6gW8"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab744d5e567so1095891666b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:36:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2BfNFca"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5de74599749so3707209a12.1;
+        Tue, 11 Feb 2025 06:36:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739284593; x=1739889393; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SKRdCG4ach6Wv6A5flpQ6DzYONw7h0shZmp7bUuXyfo=;
-        b=CLfy6gW8Se7aOmJVyP8L6OVG+mrOsNTaIih2RxrnoV90y0g7R+PdQJyTdBuXrzN9fJ
-         NfLUu54Y86kg+96CSts3tu6jTReDpmWl9JfJZEmLmAShgraoJtxRavVEKhG6bqxv6eNQ
-         dwIhlFnT8/ch1ss2uX9NVdEHCfahdYypfO2FPydxKnrDq9Ix4DQwukddVNTCG+u8AOMT
-         DPhtrNEkgBzW1Zd1aMqHOd0v8Iky9OXOorgyqV3TYMU6sKbToD7MHKeN/4SFgA3oU3tu
-         8BttDVgky04RBUE2XUc4K8bXLAqqHWcALgCeSdCckuZyeZ5ULCWy1bM1acwjHFEEFCgc
-         1UqQ==
+        d=gmail.com; s=20230601; t=1739284607; x=1739889407; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x8SaDr/lQ8QeoRPH86F9hyguGpM9i9iIGPdAU8SZ5Xs=;
+        b=R2BfNFcaoUw8Q1ZbBw/ABT9yY5OmXE69hSCB2CAPrWZ1Jk9SKFCku7XSL7pQPPp3oY
+         MToOSjK5zj7HPtfQ+HIS6ze3CYBYkRPqqLoq41YCxoat2ZbDBKfA31CIrgIln/4mzt3+
+         EosQl1tAfcu1JWt8l8nFTMidzuFhCiODp3mVKGXSrgDtDIfp2XhYT4SUTqIL0JerpV4r
+         eNfLvWo/ZPqR6yeU0slcpOKJsntM6/sWetJWQDJgmLuIRL0MkK6Q5P/PqdDl2iD2xHra
+         7uSS7yTtY4OYIQ56mNNkZDpawZeeteIfukN/389KpZzih3NBWsdoQo/4Ifu2pZPLYRML
+         a0MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739284593; x=1739889393;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SKRdCG4ach6Wv6A5flpQ6DzYONw7h0shZmp7bUuXyfo=;
-        b=KFblgqDo5nZuERVE+KBhkO5GRyuQl46nEBM+4gdpq8uDvH9SNDaVcUrkF3MJ8UbcJs
-         3xu6hC6FLr9iqUx+FvbouXOFB8KY2CuESTb+X8qP/WLYnMiYz5dQApcqhw3WdgNp7E4+
-         K72I6T+8I+utfrY0tCxCcZZVfn3VHgRfVjs2xGbwW2rygOIy9JZLKzAXCidaJl+Guo7m
-         uQ7Q0HTF+ftF8U41sFlEJO4VnsDucXtwvwtyxPiatsnihd3K+Lp36y7JcZbUZkjXUoKY
-         nXoPcRNrdwOy3gcDLLxp21AoRQx7aHcrpd4eLI4NSN5sdAoZ4z+Q9TGsxmIpjkRxQcLq
-         ui8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVI0sZGjSmGd9J3u113QwFSkmReYAItlQ4tiJeyx8PvH3IcC9StQzkNt8yi6nHPxcgJ0PmZfobXjbMhy8E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcCnArx8/wMKpvqJ+qWl3fq5oJpxvVpUTT7jFmh/1NQOHh8MWA
-	sgDK49cmjxmCog+75/qU40jFGSki021fcURNUto31ECGPcTsL6tuTxcG+AM/z/sPHvk0/3989KN
-	UG2ITN+TUxxwnDIL+fX8c+Rgg21vp7Usg/+gL
-X-Gm-Gg: ASbGncsofmv0IxWAHRL+NtVc/htexupUTUk7ItRD2jyT0XrsdJDmuYkdAz8xcDAX9Pq
-	aNSmbP3YkkrLj4aoZH3dhdTg4tFKb9MU+pEEdazprWGc/vAm8pRIZyZXdrt+1xFZtW7buzqR0tr
-	xGJ/QojMfHDxROfa8auNen7/cQ4+4=
-X-Google-Smtp-Source: AGHT+IFJClLAtCiLwKN30WOw56WHlM6aMkU7ly7YgQm9v/KGLaw/V8bPeAWSdIriklQLx95CtlS9zZMKiJ2ZJyN/yzg=
-X-Received: by 2002:a17:907:6d05:b0:ab2:f255:59f5 with SMTP id
- a640c23a62f3a-ab7daf84878mr331110766b.16.1739284593112; Tue, 11 Feb 2025
- 06:36:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739284607; x=1739889407;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x8SaDr/lQ8QeoRPH86F9hyguGpM9i9iIGPdAU8SZ5Xs=;
+        b=X2gErBQJ4bI3g2kr+lZYc3+jGvRA1A1rXhPbCFlo8far7OI5BfBTOVWShAPi0xJnqS
+         D3iQDuZuE5vO8Ojm+BHrthkc3sf6H4Y8mvzvUZ4oYGLxBxPPWSdNSOYDKIh8ygDHONRG
+         /zG2fJm//CwOV/7RAWbRjfI+mBvCnKht7t8CHZYvbcMcyR8PGZeF5ULSZaWtjxPC0t70
+         3obuK3l0+t7oHHdmBgkH7+BiHAQT3Nrl4mHGny51pgZabZwdczfjzDQPPfOLQ2sVuZBo
+         q+47KJZu/Xqx2qeasquRrgc/3wbwjy8XQP+WLNBmfc4yTvQ7VKGmGuDxPTkUy2jMBwtn
+         +ZaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0K1ZR99bSv165CKmsiUvUs2D13f2bvNfkBGTKpp1SHIOOxzK4V3QmkT3JxmTYACnN84k=@vger.kernel.org, AJvYcCWAxLk7SzColfG1eQXY4hzwsWcuB6WC8V1x1byr2V9KfzMK2ne4UMRhahY30l05HLobmAhxq555PrbY1Tq1@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHKsWXTb1XWfQ4GzvbQnzl8p0NCLF8y1EnAuaHreZbu+EFHRzR
+	QIE3gAhdUH+i4OVlPqPXmW6Th8fgBAjkF1t/UoO1f+mN7268Pfvp
+X-Gm-Gg: ASbGncsvDNy3qqMR8686vy5ntEEnxw7AO+09pDjImGG0I2hqnjNIOeYziwuC2CBRm2U
+	g/cAT4EmTOA6xqtvNmZODeLE/MXfsr57mr7dWgEawiaXrZQTjX+3mc+ZpV3bE4V3iIEoGLAXmUz
+	BBbmQ6K+8K37Qp3jkhcuPobK6id8mUmx4I0RJCW0Kxg/wahOLcZPaZobIOiD95THqsPO8sEZXwf
+	N2fjpLYcSOyrT+fN+G5k/C2sZ3YwcU8R/I6J0f4+ZllmAWgmjZ2zUrARTaNk/c9qAXPzQngJr7r
+	/A==
+X-Google-Smtp-Source: AGHT+IHYvOZdnmN65WKSWrTtKLE9iGk7tyLYJpQ2F0GvdNHtObaePdH2mn0vu4ixNBomaAOGcIqJmQ==
+X-Received: by 2002:a05:6402:40d5:b0:5dc:db1e:ab4e with SMTP id 4fb4d7f45d1cf-5de45072163mr18801420a12.19.1739284607424;
+        Tue, 11 Feb 2025 06:36:47 -0800 (PST)
+Received: from krava ([173.38.220.50])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf1b7b0a2sm9650606a12.22.2025.02.11.06.36.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 06:36:47 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 11 Feb 2025 15:36:44 +0100
+To: Tao Chen <chen.dylane@gmail.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	eddyz87@gmail.com, haoluo@google.com, qmo@kernel.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Tao Chen <dylane.chen@didiglobal.com>
+Subject: Re: [PATCH bpf-next v6 3/4] libbpf: Add libbpf_probe_bpf_kfunc API
+Message-ID: <Z6tgfKgUdCRaQJ9c@krava>
+References: <20250211111859.6029-1-chen.dylane@gmail.com>
+ <20250211111859.6029-4-chen.dylane@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207181823.6378-1-james.morse@arm.com> <f600712d-d089-4285-8d04-e12f53a61572@intel.com>
-In-Reply-To: <f600712d-d089-4285-8d04-e12f53a61572@intel.com>
-From: Peter Newman <peternewman@google.com>
-Date: Tue, 11 Feb 2025 15:36:21 +0100
-X-Gm-Features: AWEUYZm9EhzAaUSl-BfhZJkgycuakloqQIHOZ4N7qJO1hkFmyETRgdlgkoqW538
-Message-ID: <CALPaoCjY-3f2tWvBjuaQPfoPhxveWxxCxHqQMn4BEaeBXBa0bA@mail.gmail.com>
-Subject: Re: [PATCH v6 00/42] x86/resctrl: Move the resctrl filesystem code to /fs/resctrl
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: James Morse <james.morse@arm.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com, 
-	D Scott Phillips OS <scott@os.amperecomputing.com>, carl@os.amperecomputing.com, 
-	lcherian@marvell.com, bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com, 
-	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>, 
-	Xin Hao <xhao@linux.alibaba.com>, dfustini@baylibre.com, amitsinght@marvell.com, 
-	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>, 
-	Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>, 
-	Shanker Donthineni <sdonthineni@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211111859.6029-4-chen.dylane@gmail.com>
 
-Hi Reinette,
+On Tue, Feb 11, 2025 at 07:18:58PM +0800, Tao Chen wrote:
 
-On Mon, Feb 10, 2025 at 6:24=E2=80=AFPM Reinette Chatre
-<reinette.chatre@intel.com> wrote:
->
-> Hi James,
->
-> I'd like to check in on what you said in [1]. It sounded as though you we=
-re
-> planning to look at the assignable counter work from an Arm/MPAM
-> perspective but that work has since progressed (now at V11 [2]) without
-> input from Arm/MPAM perspective. As I understand assignable counters may =
-benefit
-> MPAM and looking close to settled but it is difficult to gain confidence
-> in an interface that may (may not?) be used for MPAM without any feedback
-> from Arm/MPAM. I am trying to prevent future issues when/if MPAM needs to=
- use
-> this new interface and find it confusing that there does not seem to be
-> any input from MPAM side. What am I missing?
+SNIP
 
-I've looked into monitor assignment on MPAM a little, so I'll share my find=
-ings.
+> diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+> index 8ed92ea922b3..ab5591c385de 100644
+> --- a/tools/lib/bpf/libbpf_probes.c
+> +++ b/tools/lib/bpf/libbpf_probes.c
+> @@ -431,6 +431,54 @@ static bool can_probe_prog_type(enum bpf_prog_type prog_type)
+>  	return true;
+>  }
+>  
+> +int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type, int kfunc_id, int btf_fd,
+> +			   const void *opts)
+> +{
+> +	struct bpf_insn insns[] = {
+> +		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, BPF_PSEUDO_KFUNC_CALL, 1, kfunc_id),
+> +		BPF_EXIT_INSN(),
+> +	};
+> +	const size_t insn_cnt = ARRAY_SIZE(insns);
+> +	char buf[4096];
+> +	int fd_array[2] = {-1};
+> +	int ret;
+> +
+> +	if (opts)
+> +		return libbpf_err(-EINVAL);
+> +
+> +	if (!can_probe_prog_type(prog_type))
+> +		return -EOPNOTSUPP;
 
-Like with ABMC/BMEC, MPAM's counters can be configured to monitor
-reads, writes, or both, so there are situations where it would be
-useful to be able to assign 2 counters to the same group to be able to
-break down the bandwidth between reads and writes. However, a group's
-two assignment slots are called "local" and "total", so if MPAM's
-resources only support one of the two, then only one counter can be
-assigned to a group.
+we could use libbpf_err(-EOPNOTSUPP) in here and in libbpf_probe_bpf_helper
+sry for not spoting it earlier
 
-MPAM does not support any filters that would differentiate between
-traffic serviced by local or remote memory, so it's difficult to see
-an MBM event other than "total" ever being used. Multiple MSCs
-measuring memory bandwidth at an interconnect and a local memory
-controller could potentially be used to together to infer the "local"
-and "total" counts, but this would require the implementation to
-understand the platform-specific relationship between different types
-of MSCs and somehow present them as a single rdt_resource to resctrl.
-As best as I can tell, the MPAM driver today will choose "local" or
-"total"[1] for what it will present to the FS layer as an
-rdt_resource.
+other than that the patchset looks good to me
 
-Based on this, I would prefer the arch/fs refactoring changes go in
-first to give us more time to think about how better to abstract
-counter assignment on a non-RDTlike implementation. I believe finally
-settling on an arch/fs separation for the currently-supported feature
-set would make the counter assignment work clearer for everyone
-involved. Also, my own users have been using an implementation like
-this one successfully for over a year on ARM-based platforms while I'm
-still just experimenting with the usage model of ABMC on AMD hardware,
-so I consider the MPAM work to be more mature and would not like to
-see it delayed on account of ABMC.
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 
-Thanks!
--Peter
+thanks,
+jirka
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/tree/dr=
-ivers/platform/arm64/mpam/mpam_resctrl.c?h=3Dmpam/snapshot/v6.14-rc1#n824
-
->
-> Reinette
->
-> [1] https://lore.kernel.org/lkml/9479c799-86fc-4d9e-addb-66011ecae9c7@arm=
-.com/
-> [2] https://lore.kernel.org/lkml/cover.1737577229.git.babu.moger@amd.com/
->
+> +
+> +	if (btf_fd >= 0) {
+> +		fd_array[1] = btf_fd;
+> +	} else if (btf_fd == -1) {
+> +		/* insn.off = 0, means vmlinux btf */
+> +		insns[0].off = 0;
+> +	} else {
+> +		return libbpf_err(-EINVAL);
+> +	}
+> +
+> +	buf[0] = '\0';
+> +	ret = probe_prog_load(prog_type, insns, insn_cnt, btf_fd >= 0 ? fd_array : NULL,
+> +			      buf, sizeof(buf));
+> +	if (ret < 0)
+> +		return libbpf_err(ret);
+> +
+> +	/* If BPF verifier recognizes BPF kfunc but it's not supported for
+> +	 * given BPF program type, it will emit "calling kernel function
+> +	 * bpf_cpumask_create is not allowed", if the kfunc id is invalid,
+> +	 * it will emit "kernel btf_id 4294967295 is not a function". If btf fd
+> +	 * invalid in module btf, it will emit "invalid module BTF fd specified" or
+> +	 * "negative offset disallowed for kernel module function call"
+> +	 */
+> +	if (ret == 0 && (strstr(buf, "not allowed") || strstr(buf, "not a function") ||
+> +			(strstr(buf, "invalid module BTF fd")) ||
+> +			(strstr(buf, "negative offset disallowed"))))
+> +		return 0;
+> +
+> +	return 1; /* assume supported */
+> +}
+> +
+>  int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type, enum bpf_func_id helper_id,
+>  			    const void *opts)
+>  {
+> -- 
+> 2.43.0
+> 
