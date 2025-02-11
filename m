@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F84A253B6D;
-	Tue, 11 Feb 2025 01:32:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D125E269CE1;
+	Tue, 11 Feb 2025 01:32:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739237575; cv=none; b=J+DCBXw71/STKNl4cI7UQgwhhuT/tMYvnJLpY+fYpOm8hwvMIMezmbsLmJau1lUj0TLJNE9TH/L5xtfY9XbIF5O3K5g0ArDsBk271C6fFXcVg297SFY3jwax94hEd7m/NmsVxcsL1azUqExnlBX5OeGpMXwqtr1Yrf8BqcTayUw=
+	t=1739237576; cv=none; b=bT4luOTjtjh+PsUKHb6AV1ojkT7iLzdrvbSB7RzBfaJynr2ILVEzthLNsAj2y/v8cRidcUWf3Co1HilXjOGYhpTdBXxFRL7XaHb2ktQAZOfzgd+HdiTsaW6tCxmjKyy652TgueRHr/Oi3uTaC867hACscCNFehwRasFCiWrzEVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739237575; c=relaxed/simple;
-	bh=yjSVntJ6iXt8W9c259Qi78e29HqQPMM1IRfLfxua9SM=;
+	s=arc-20240116; t=1739237576; c=relaxed/simple;
+	bh=NntETSmMpoqPKXPrmBQsXny2q4hroXsGg9cv8R8jNBs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dbkR7lXbzV3Cl5DkVEEfv5aGYIVEG2iu0PARW3t6O0Y2BSB/kWXuIhCnLUInLPrvOV5O6TxdbCLy2agu06ASOfhGdiMQz0VRISIk1I2vp7TURI3VfUqeU784n2TgU7yjTV7wZh5kT2e/4KIRWSHJ2+R8wjZT9KFr99LVhgGRkSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=unvcpvtC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KXH0nejWuhbpKhcbxL2gq9bGKpjMQxHrHGmPiXoL+AskzYefJteX8+SxiGeXk61SQCcO2ZvyVhuAeDeT/xTk4vQDZd2wNiaIvOq/rrJYBGkUyAjOdcREJXoxuQCHQzZqoPiFGMqvifw2g5bj81hStnftjhHtqAKcZQrHaz7lt8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1RVpcJC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="unvcpvtC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A75EC4CEDF;
-	Tue, 11 Feb 2025 01:32:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1RVpcJC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB14EC4CEDF;
+	Tue, 11 Feb 2025 01:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739237574;
-	bh=yjSVntJ6iXt8W9c259Qi78e29HqQPMM1IRfLfxua9SM=;
+	s=k20201202; t=1739237576;
+	bh=NntETSmMpoqPKXPrmBQsXny2q4hroXsGg9cv8R8jNBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=unvcpvtCD38t/sIOD4iBwdsfOnpm0Hg5oOcVhfmxQkp6osbpr9glV5OIxJnKsnZAc
-	 KDbtQN9fe4GlJqHDjtHuu0q9/gNYZSY9WB0QEPzQcme5BJE8ByqfzHcAcrU46UE9oo
-	 KaZJrCRSI1LeayWfeRapIfL9IbLCksycgVI00cpiKL3VnPkIseWXA284x98SKUBMSX
-	 TAplB62CwGcYC2XuDC2WZvy2KpJp0DJRY2jC4XplTdKFNOSMLaBq3Eq5ChTbUThZf+
-	 Ds5YoT+Q5kumdQj8X77rTyhu3Y9wuUN6VwjdRxgj9ncYef37if5cyBW+p2tyDnlxmS
-	 QUh5EkR2WbLfg==
+	b=c1RVpcJCrg19c9SrLHqSw6w0XLIkImNpFUBLKrzruu9PRjgO8/TnRFiPZxJs2M56K
+	 Z3fHbQPeU2/PGCdXaGVC7lHs1Tcwm/4Bz7nI9R3VUeLTZ1Cyf0IeEwLxxsB5fnKwa4
+	 6LsdyAu7iDLfVL3jzujCPbMcxJqJ+Tj0yq+BTb5IFWycu7CBpV6As4wJ+JX/+iy9ju
+	 uM33ghvpCMzDhcQPKIZGiuTw43K7tsTHcusc6niRPV/cK4ipFn6jvdVdqplJWJYE/M
+	 kWHPOsYPtEY+pFCUnH0bFk4W9CUHsNNruP7I5TBrKXs/LFt//QHQYfW2bohbozbJC8
+	 /viErzSgQb/aw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: Magnus Lindholm <linmag7@gmail.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	rafael@kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 3/8] powercap: call put_device() on an error path in powercap_register_control_type()
-Date: Mon, 10 Feb 2025 20:32:43 -0500
-Message-Id: <20250211013248.4098848-3-sashal@kernel.org>
+	mdr@sgi.com,
+	James.Bottomley@HansenPartnership.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 5/8] scsi: qla1280: Fix kernel oops when debug level > 2
+Date: Mon, 10 Feb 2025 20:32:45 -0500
+Message-Id: <20250211013248.4098848-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250211013248.4098848-1-sashal@kernel.org>
 References: <20250211013248.4098848-1-sashal@kernel.org>
@@ -51,43 +52,36 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.234
 Content-Transfer-Encoding: 8bit
 
-From: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
+From: Magnus Lindholm <linmag7@gmail.com>
 
-[ Upstream commit 93c66fbc280747ea700bd6199633d661e3c819b3 ]
+[ Upstream commit 5233e3235dec3065ccc632729675575dbe3c6b8a ]
 
-powercap_register_control_type() calls device_register(), but does not
-release the refcount of the device when it fails.
+A null dereference or oops exception will eventually occur when qla1280.c
+driver is compiled with DEBUG_QLA1280 enabled and ql_debug_level > 2.  I
+think its clear from the code that the intention here is sg_dma_len(s) not
+length of sg_next(s) when printing the debug info.
 
-Call put_device() before returning an error to balance the refcount.
-
-Since the kfree(control_type) will be done by powercap_release(), remove
-the lines in powercap_register_control_type() before returning the error.
-
-This bug was found by an experimental verifier that I am developing.
-
-Signed-off-by: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
-Link: https://patch.msgid.link/20250110010554.1583411-1-joe@pf.is.s.u-tokyo.ac.jp
-[ rjw: Changelog edits ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Magnus Lindholm <linmag7@gmail.com>
+Link: https://lore.kernel.org/r/20250125095033.26188-1-linmag7@gmail.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/powercap/powercap_sys.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/qla1280.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/powercap/powercap_sys.c b/drivers/powercap/powercap_sys.c
-index 7a3109a538813..fe5d05da7ce7a 100644
---- a/drivers/powercap/powercap_sys.c
-+++ b/drivers/powercap/powercap_sys.c
-@@ -627,8 +627,7 @@ struct powercap_control_type *powercap_register_control_type(
- 	dev_set_name(&control_type->dev, "%s", name);
- 	result = device_register(&control_type->dev);
- 	if (result) {
--		if (control_type->allocated)
--			kfree(control_type);
-+		put_device(&control_type->dev);
- 		return ERR_PTR(result);
- 	}
- 	idr_init(&control_type->idr);
+diff --git a/drivers/scsi/qla1280.c b/drivers/scsi/qla1280.c
+index 545936cb3980d..8c08a0102e098 100644
+--- a/drivers/scsi/qla1280.c
++++ b/drivers/scsi/qla1280.c
+@@ -2876,7 +2876,7 @@ qla1280_64bit_start_scsi(struct scsi_qla_host *ha, struct srb * sp)
+ 			dprintk(3, "S/G Segment phys_addr=%x %x, len=0x%x\n",
+ 				cpu_to_le32(upper_32_bits(dma_handle)),
+ 				cpu_to_le32(lower_32_bits(dma_handle)),
+-				cpu_to_le32(sg_dma_len(sg_next(s))));
++				cpu_to_le32(sg_dma_len(s)));
+ 			remseg--;
+ 		}
+ 		dprintk(5, "qla1280_64bit_start_scsi: Scatter/gather "
 -- 
 2.39.5
 
