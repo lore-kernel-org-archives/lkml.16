@@ -1,161 +1,128 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A181EDA38;
-	Tue, 11 Feb 2025 07:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CEE51EB9FD;
+	Tue, 11 Feb 2025 07:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739260131; cv=none; b=CROsJjKy8gUPvrSpIZ+jvGshjHHERrQ4sTBiGCqAbRKIufMeMZylwNIp1dhDg5eLjRLsRx7LLoqi8032doDxT3iCK5MimZY6bfIDg3/78Bt1jGzaXHVhV8M5B2GtsBu4qblSrpoJQZqSjOPfuqwow+8V8yvKd9aPV/bHxssu+V0=
+	t=1739260195; cv=none; b=FrmvqaSmjyeAuzEM4tT77v1iKDLok0X1ptZmS6eP5Bq8DqnjhNeAItFgT4V3RTTa5/fEl0s2+sXtZwJvhHt2T2ALAsLeVSta452Jn97lHOMHm8YyxCUl53v0Kr4hlkcy2oQ+di8ZsXGCOqUCofQr3eo1ZPDQLl0ecJ5zikeH1kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739260131; c=relaxed/simple;
-	bh=i9mApgRl/34Hvnr2FI4liwukHUzLOAV8H28W3dbsKYc=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=bi+woWUmhKlvqWLEvJJmXC4iu7ciXbE0ByMCY7SX6f9JtHVg42qXsaWNkgV5KLGydw0CGys/+Zpy28KyOfRTxZ/sHjvkXXjWytuZZBzeLCUDuSFb8D7fFmrjuAFZllob1jJSnFSLUIrQb7MbwDd4RbZ7xE35400bDZUo80+36Ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=2/HEGcR9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=I4IxVtCn; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1739260195; c=relaxed/simple;
+	bh=9ZXuDR56VOj3aRUbJ/oIRUrBTTfenvcfHNCEn/YTP4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UJNK0amVzmC8e/t4aNVVLkydey4pFUQGBLxjh/4yF8OpH3KfPNphjtSdjZgK7eRILIQ0FmcAHhTrq6Fzz51TqwWqYgpD9a2kPDaITPGg/1IxUgPr/9Q27KCwzemRaaC+M/6KxAtBJp3BrXwGDPAuRPLQh8dEfzQ5fOjZ7vNMf4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aCHvVt2J; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="2/HEGcR9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="I4IxVtCn"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id B00B513802BF;
-	Tue, 11 Feb 2025 02:48:48 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Tue, 11 Feb 2025 02:48:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1739260128;
-	 x=1739346528; bh=ZxB3/5WwQz68fg3MoEi71/v426Fi20HIksm5loNdxsU=; b=
-	2/HEGcR9OGOaAwRQO6L6sMF2KbOtsNplv7MNsDt/YCxHuhPRcqAYtEiGoZgIwOfc
-	uL3sX3JSq1cawjwJkoxV3QTUgisQ3ya7PSS1ytut1LTD8PGj+BKk96+KJE65RNBW
-	Tsphgr7hCXE4tVIJ34oYnPVbiB4vjSTfc9/NOGeoGbswiwgC1a+6NHKuopy+NWom
-	W8Aye1T6NHlCILvx9Uo/L5Kan0YegyE5vRZFt0JnSxM/E7xAAFXkVMgaJLxHkNSW
-	7vSPcFaDVUCUX03VcnEb5QcRWhgQe/5RuBfnXo/EPUTyYvPI+L0q+ljabvM280SI
-	8+YYDn0Hmr5uRCF9PS3rqw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1739260128; x=1739346528; bh=Z
-	xB3/5WwQz68fg3MoEi71/v426Fi20HIksm5loNdxsU=; b=I4IxVtCnnAUwaMwdS
-	HBPGl0s8Bs7N5OvfxUUj7rmVpwUDenuSUtoWA8qW7iOVzTrXUCYnMvk85s2z0xoR
-	WwjfijsoIZ2gTZvqKVWotAOhcud1aPNGWjwV5EUeMHeY8JPZJfZ+Xl8EawFUVWba
-	L3G6vsOf9tVmmeY9c0Wm3+WHg4QEmtkIr425BlwrsmYGhpE/Bmny9s4MR27hsZYL
-	y6+mygr/MkXkIGwZMSloEQsmGVX47ObWdyppCTZAe/elBW2w3wJ2xxOqyqnb6WE1
-	pUlHrn/PNj4fbO2AgIJp64uaid65I+6U3nPUa7F1LIYYVGTHDQvsRUDBL0TAlSC2
-	PtUrg==
-X-ME-Sender: <xms:3wCrZ2JHs4IEKLoCYrrqhDKpD0sECcz6XTbclk5k5JQOCStIbUrLoA>
-    <xme:3wCrZ-KMxcrDJeRW5DKhBWQAbB8In_PeccU4ovCK8v_85BQrb0r0MSUwuSRA9sLTX
-    4SX2c5Sd_RQzhV7q7Y>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegtdegfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfekledtffefhffghfetteehuefhgfetgefhtdeu
-    feduueeltefghedtjeeifffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepfedu
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrg
-    hssegrrhhmrdgtohhmpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgt
-    ohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoh
-    eprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehhohifrghr
-    uggthhhuleehsehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhrohhgvghrshesghhooh
-    hglhgvrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhg
-    pdhrtghpthhtoheprggurhhirghnrdhhuhhnthgvrhesihhnthgvlhdrtghomhdprhgtph
-    htthhopegrtghmvgeskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:3wCrZ2tgaKZd-r19tJFBLx1c9olIzWTs4ZaRSponWadm2LzZ8pniRQ>
-    <xmx:3wCrZ7abmJIQQGxBya7YEj5PHj7E42WKmlGvJuuqMoyGm5CmplJPQg>
-    <xmx:3wCrZ9aU6yItPSC8xJtXsBq-fJNVShJH7DJB1OOPcE4_GM_L7YKmfw>
-    <xmx:3wCrZ3A_NdBF4H9b_qRB98P-LNzrFo0iZkHCoC5kpllQIinlE4Y6uA>
-    <xmx:4ACrZwlxbCT18wcLzBJjhR0WUz3hezoGAamIPURRlc7nthRHwLvQT-fx>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 374062220072; Tue, 11 Feb 2025 02:48:47 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aCHvVt2J"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739260181; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=E4fujhKTHDMvm3LvF6P6OUjzbktVGbdSMW9p0iJwGt4=;
+	b=aCHvVt2JbhmRjhLif/TESL3yzeIGw+9dAjSI5uJymbhkXUilRi739KtPqd/ThJgk56R0MVL72GfRjdtfs49xtKzvtJQgfaTl3IJj+qpPYIfyv5FEFiPSvLfMuDMjGjayEU2E8J2iUAYwbe3hoab8WpHVlp9iWetkSAQlvnUQweU=
+Received: from U-V2QX163P-2032.local(mailfrom:fengwei_yin@linux.alibaba.com fp:SMTPD_---0WPG-4g2_1739260179 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 11 Feb 2025 15:49:41 +0800
+Date: Tue, 11 Feb 2025 15:49:38 +0800
+From: YinFengwei <fengwei_yin@linux.alibaba.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Tariq Toukan <tariqt@nvidia.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org, fengwei_yin@linux.alibaba.com
+Subject: Re: [PATCH 1/2] net/mlx4: fix build error from usercopy size check
+Message-ID: <Z6sBEoUB02Q8paEu@U-V2QX163P-2032.local>
+References: <20230418114730.3674657-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 11 Feb 2025 08:48:26 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ian Rogers" <irogers@google.com>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Ingo Molnar" <mingo@redhat.com>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Namhyung Kim" <namhyung@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>,
- "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
- "Jiri Olsa" <jolsa@kernel.org>,
- "Adrian Hunter" <adrian.hunter@intel.com>,
- "Kan Liang" <kan.liang@linux.intel.com>,
- "John Garry" <john.g.garry@oracle.com>, "Will Deacon" <will@kernel.org>,
- "James Clark" <james.clark@linaro.org>,
- "Mike Leach" <mike.leach@linaro.org>, "Leo Yan" <leo.yan@linux.dev>,
- guoren <guoren@kernel.org>, "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>,
- "Charlie Jenkins" <charlie@rivosinc.com>,
- "Bibo Mao" <maobibo@loongson.cn>, "Huacai Chen" <chenhuacai@kernel.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Jiri Slaby" <jirislaby@kernel.org>,
- =?UTF-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>,
- "Howard Chu" <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- linux-riscv@lists.infradead.org
-Message-Id: <07c5c3ad-5a6d-4eda-95f2-ed16e7504d4c@app.fastmail.com>
-In-Reply-To: <20250210165108.95894-4-irogers@google.com>
-References: <20250210165108.95894-1-irogers@google.com>
- <20250210165108.95894-4-irogers@google.com>
-Subject: Re: [PATCH v2 3/7] perf syscalltbl: Remove struct syscalltbl
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230418114730.3674657-1-arnd@kernel.org>
 
-On Mon, Feb 10, 2025, at 17:51, Ian Rogers wrote:
-> The syscalltbl held entries of system call name and number pairs,
-> generated from a native syscalltbl at start up. As there are gaps in
-> the system call number there is a notion of index into the
-> table. Going forward we want the system call table to be identifiable
-> by a machine type, for example, i386 vs x86-64. Change the interface
-> to the syscalltbl so (1) a (currently unused machine type of EM_HOST)
-> is passed (2) the index to syscall number and system call name mapping
-> is computed at build time.
->
-> Two tables are used for this, an array of system call number to name,
-> an array of system call numbers sorted by the system call name. The
-> sorted array doesn't store strings in part to save memory and
-> relocations. The index notion is carried forward and is an index into
-> the sorted array of system call numbers, the data structures are
-> opaque (held only in syscalltbl.c), and so the number of indices for a
-> machine type is exposed as a new API.
->
-> The arrays are computed in the syscalltbl.sh script and so no start-up
-> time computation and storage is necessary.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+Hi Arnd,
 
-Your changes look fine to me, but I noticed one part that may
-be wrong before and after your patch:
+On Tue, Apr 18, 2023 at 01:47:11PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The array_size() helper is used here to prevent accidental overflow in
+> mlx4_init_user_cqes(), but as this returns SIZE_MAX in case an overflow
+> would happen, the logic in copy_to_user() now detects that as overflowing
+> the source:
+> 
+> In file included from arch/x86/include/asm/preempt.h:9,
+>                  from include/linux/preempt.h:78,
+>                  from include/linux/percpu.h:6,
+>                  from include/linux/context_tracking_state.h:5,
+>                  from include/linux/hardirq.h:5,
+>                  from drivers/net/ethernet/mellanox/mlx4/cq.c:37:
+> In function 'check_copy_size',
+>     inlined from 'copy_to_user' at include/linux/uaccess.h:190:6,
+>     inlined from 'mlx4_init_user_cqes' at drivers/net/ethernet/mellanox/mlx4/cq.c:317:9,
+>     inlined from 'mlx4_cq_alloc' at drivers/net/ethernet/mellanox/mlx4/cq.c:394:10:
+> include/linux/thread_info.h:244:4: error: call to '__bad_copy_from' declared with attribute error: copy source size is too small
+>   244 |    __bad_copy_from();
+>       |    ^~~~~~~~~~~~~~~~~
+> 
+> Move the size logic out, and instead use the same size value for the
+> comparison and the copy.
+I could hit this build error with latest upstream kernel tree with
+gcc 10.2.1 20200825 for arm64 platform. No such build error for x86
+platform.
+
+This patch can fix the build error. I am wondering whether you will
+push this fix to upstream kernel. You can add:
+  Tested-by: Yin Fengwei <fengwei_fyin@linux.alibaba.com>
+
+
+Regards
+Yin, Fengwei
 
 > 
-> -const int syscalltbl_native_max_id = SYSCALLTBL_MAX_ID;
-> -static const char *const *syscalltbl_native = syscalltbl;
-> +const char *syscalltbl__name(int e_machine __maybe_unused, int id)
-> +{
-> +	if (id >= 0 && id <= (int)ARRAY_SIZE(syscall_num_to_name))
-> +		return syscall_num_to_name[id];
-> +	return NULL;
-> +}
-
-The syscall numbers on mips (and previously on ia64) are offset by
-a large number depending on the ABI (o32/n32/n64). I assume what
-we want here is to have the small numbers without the offset in
-syscall_num_to_name[], but that requires adding the offset during
-the lookup. Can you check if this is handled correctly?
-
-      Arnd
+> Fixes: f69bf5dee7ef ("net/mlx4: Use array_size() helper in copy_to_user()")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/net/ethernet/mellanox/mlx4/cq.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx4/cq.c b/drivers/net/ethernet/mellanox/mlx4/cq.c
+> index 4d4f9cf9facb..020cb8e2883f 100644
+> --- a/drivers/net/ethernet/mellanox/mlx4/cq.c
+> +++ b/drivers/net/ethernet/mellanox/mlx4/cq.c
+> @@ -290,6 +290,7 @@ static void mlx4_cq_free_icm(struct mlx4_dev *dev, int cqn)
+>  static int mlx4_init_user_cqes(void *buf, int entries, int cqe_size)
+>  {
+>  	int entries_per_copy = PAGE_SIZE / cqe_size;
+> +	size_t copy_size = array_size(entries, cqe_size);
+>  	void *init_ents;
+>  	int err = 0;
+>  	int i;
+> @@ -304,7 +305,7 @@ static int mlx4_init_user_cqes(void *buf, int entries, int cqe_size)
+>  	 */
+>  	memset(init_ents, 0xcc, PAGE_SIZE);
+>  
+> -	if (entries_per_copy < entries) {
+> +	if (copy_size > PAGE_SIZE) {
+>  		for (i = 0; i < entries / entries_per_copy; i++) {
+>  			err = copy_to_user((void __user *)buf, init_ents, PAGE_SIZE) ?
+>  				-EFAULT : 0;
+> @@ -315,7 +316,7 @@ static int mlx4_init_user_cqes(void *buf, int entries, int cqe_size)
+>  		}
+>  	} else {
+>  		err = copy_to_user((void __user *)buf, init_ents,
+> -				   array_size(entries, cqe_size)) ?
+> +				   copy_size) ?
+>  			-EFAULT : 0;
+>  	}
+>  
+> -- 
+> 2.39.2
+> 
