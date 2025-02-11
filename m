@@ -1,39 +1,45 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EAB26BDB6;
-	Tue, 11 Feb 2025 02:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4138C1DA53
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739239820; cv=none; b=TvjErPu7cecAaaDEjy4pMVabdKd368Kj80b15bGtS/upST7FfMka9I8lEkAngr8osDWCdZqrnj0831gbVcm3/7B0wcyQxcDll/huoLrmtBnQOkcWsou6TJd525v8sh5ioYAuqJJWRinzqGIsc6iFgTTK2vRpOioLx0SUEp2CQgE=
+	t=1739239849; cv=none; b=obOu0ENGVQU7YyHVtJ8TAP7Zx9woeXZRxJkLkwj4ii6MIOlIE5QuPMtaw5G1widP+wWvz3vcWd9fpLqLwaNnmDKp254wW5jLxxrp82tyihD6qUj+EmG8TLrmC62bN/2gkWv8To0PthacZSBKhzZjdEYXrr5zHDUyHBzjrA98YIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739239820; c=relaxed/simple;
-	bh=LNAELXR25QLhZ60L2E3BhWgFcqWuotAESCDfV6NklpA=;
+	s=arc-20240116; t=1739239849; c=relaxed/simple;
+	bh=Fr0RebjifclQohEWpVEQQkCNJXvfA8rfMhCbBCL/xRk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EoHUgAgeK5WpmxcGCIkpy15I3KmY4ZZZHBn/ZfEBhhaHsn2T+wpV41jQmzbU2aggxgH7laJ8H7jIX2lciYgzcQ7VyvFoKXtwiWvWOoiLUs+7iT8QTJUPU9BtR54pHBPfeNcCiMUUEAluwZrohjvyOS00oLsMklFf5QwfZfHaiVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=J2NlU1bS; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="J2NlU1bS"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51B29ccE2395994
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 10 Feb 2025 18:09:38 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51B29ccE2395994
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025011701; t=1739239779;
-	bh=O5qRIdXnEK4dfbCNrq+hlyh6+pTco9nSmyBf6AOVPew=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=J2NlU1bSf5X5b8U5C/Pujcs8/juIxf5RXyQNvEflIEajXtw8uj8Bfci8+AGSiikVP
-	 FtozmRQnST21BaewFCPXD/wn3LQBdgvu0/qRBbi69V+xmgQZvThOuBPEByKjbB+TsL
-	 FpzijsPj81vny402aZ66s0s2+nyPwk7pxgHC1iITpVr3yNZaJvr00jNMohiuis+rQT
-	 15DDDeoP+Z6bjhBAGZrbdFCQvd0m7OhgoEv3wa3PCex7NncrIQZ0gdW8rI9pRQPSxn
-	 TbkYHpiviVrF3UfU3tq6IRiU1hEM73fS38uyS8FrDugqfmM+NpGaRXva3fKM59bEJ+
-	 6vRWY+DzBXpXg==
-Message-ID: <adcd4fb5-052a-4d75-b1f9-1168d153338a@zytor.com>
-Date: Mon, 10 Feb 2025 18:09:37 -0800
+	 In-Reply-To:Content-Type; b=r0r+Bs3bybwZen2AzXNccG65ibWWDL5P7DzLuoz2KPGLBpnO1BXlm5u8PlKxWys+JXdh471+IlQomwOSeoqfHKUkir1XdKHh7soGT9x3UYXqKmtehIK4Wcj4a1Znw474tdlvKY+OMz5ZW6Ab7flp/PSzcJAhPqZf9dvExCzCBlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 61b0610ee81d11efa216b1d71e6e1362-20250211
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:0a6cd021-b74b-4636-8044-1296cd1d6001,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:6f300245bbb320185f45256b9d039828,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
+	-3,IP:nil,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 1,FCT|NGT
+X-CID-BAS: 1,FCT|NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR
+X-UUID: 61b0610ee81d11efa216b1d71e6e1362-20250211
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <xiaopei01@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 789152770; Tue, 11 Feb 2025 10:10:36 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id 170FB16001CC7;
+	Tue, 11 Feb 2025 10:10:36 +0800 (CST)
+X-ns-mid: postfix-67AAB19B-999081649
+Received: from [10.42.13.56] (unknown [10.42.13.56])
+	by node4.com.cn (NSMail) with ESMTPA id CB19216001CC7;
+	Tue, 11 Feb 2025 02:10:35 +0000 (UTC)
+Message-ID: <dc881f9a-37ab-466f-b6fd-2142f25eac4b@kylinos.cn>
+Date: Tue, 11 Feb 2025 10:10:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,75 +47,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/6] Introduce CET supervisor state support
-To: Sean Christopherson <seanjc@google.com>, Chao Gao <chao.gao@intel.com>,
-        Borislav Petkov <bp@alien8.de>
-Cc: tglx@linutronix.de, dave.hansen@intel.com, x86@kernel.org,
-        pbonzini@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        peterz@infradead.org, rick.p.edgecombe@intel.com, mlevitsk@redhat.com,
-        weijiang.yang@intel.com, john.allen@amd.com
-References: <20241126101710.62492-1-chao.gao@intel.com>
- <Z0WitW5iFdu6L5IV@intel.com> <Z4HI2EsPwezokhB0@google.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <Z4HI2EsPwezokhB0@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH V5] phy: freescale: fsl-samsung-hdmi: fix build error in
+ fsl_samsung_hdmi_phy_configure_pll_lock_det
+To: Vinod Koul <vkoul@kernel.org>, vkoul@kernel.org
+Cc: xiaopeitux@foxmail.com, linux-kernel@vger.kernel.org
+References: <tencent_195F1119DC8F547C905D5ED127D173EFAE08@qq.com>
+ <CAHCN7xL7eMV2f04nURp3jCCmNZ0GSTY=uaOwoiht38AC4Oz0EQ@mail.gmail.com>
+ <476dace4-92fb-4d92-a342-cffd6f77b8f1@kylinos.cn> <Z6oxJEvABw780+DZ@vaman>
+From: Pei Xiao <xiaopei01@kylinos.cn>
+In-Reply-To: <Z6oxJEvABw780+DZ@vaman>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 1/10/2025 5:26 PM, Sean Christopherson wrote:
-> On Tue, Nov 26, 2024, Chao Gao wrote:
->> On Tue, Nov 26, 2024 at 06:17:04PM +0800, Chao Gao wrote:
->>> This v2 is essentially a resend of the v1 series. I took over this work
->> >from Weijiang, so I added my Signed-off-by and incremented the version
->>> number. This repost is to seek more feedback on this work, which is a
->>> dependency for CET KVM support. In turn, CET KVM support is a dependency
->>> for both FRED KVM support and CET AMD support.
->>
->> This series is primarily for the CET KVM series. Merging it through the tip
->> tree means this code will not have an actual user until the CET KVM series
->> is merged. A good proposal from Rick is that x86 maintainers can ack this
->> series, and then it can be picked up by the KVM maintainers along with the
->> CET KVM series. Dave, Paolo and Sean, are you okay with this approach?
-> 
-> Boris indicated off-list that he would prefer to take this through tip and give
-> KVM an immutable branch.  I'm a-ok with either approach.
-> 
 
-So is the plan to merge this patch set in the v6.14 cycle?
+=E5=9C=A8 2025/2/11 01:02, Vinod Koul =E5=86=99=E9=81=93:
+> On 17-01-25, 10:15, Pei Xiao wrote:
+>> =E5=9C=A8 2025/1/17 09:59, Adam Ford =E5=86=99=E9=81=93:
+>>> On Mon, Jan 13, 2025 at 2:41=E2=80=AFAM <xiaopeitux@foxmail.com> wrot=
+e:
+>>>> From: Pei Xiao <xiaopei01@kylinos.cn>
+>>>>
+>>>> FIELD_PREP() checks that a value fits into the available bitfield,
+>>>> but the index div equals to 4,is out of range.
+>>>>
+>>>> which gcc complains about:
+>>>> In function =E2=80=98fsl_samsung_hdmi_phy_configure_pll_lock_det=E2=80=
+=99,
+>>>> inlined from =E2=80=98fsl_samsung_hdmi_phy_configure=E2=80=99 at
+>>>> drivers/phy/freescale/phy-fsl-samsung-hdmi.c :470:2:
+>>>> ././include/linux/compiler_types.h:542:38: error: call to =E2=80=98_=
+_compiletime_assert_538=E2=80=99
+>>>> declared with attribute error: FIELD_PREP: value too large for the f=
+ield
+>>>>   542 |  _compiletime_assert(condition, msg, __compiletime_assert_,
+>>>> __COUNTER__)
+>>>>       |                                      ^
+>>>> ././include/linux/compiler_types.h:523:4: note: in definition of
+>>>> macro =E2=80=98__compiletime_assert=E2=80=99 523 |    prefix ## suff=
+ix();
+>>>>       |    ^~~~~~
+>>>> ././include/linux/compiler_types.h:542:2: note: in expansion of macr=
+o
+>>>> =E2=80=98_compiletime_assert=E2=80=99
+>>>>   542 |  _compiletime_assert(condition, msg, __compiletime_assert_,
+>>>>  __COUNTER__)
+>>>>
+>>>> REG12_CK_DIV_MASK only two bit, limit div to range 0~3,
+>>>> so build error will fix.
+>>>>
+>>> LGTM.
+>>>
+>>> Reviewed-by:  Adam Ford <aford173@gmail.com>
+>> loop Vkoul for=C2=A0email address was written incorrectly.
+> Thanks for looping in!
+>
+> Change looks good to me. Can you please revise the patch title. A patch
+> title should describe the change we are making. Fix build error is not
+> an apt title
+
+there so many=C2=A0 "Fix build error" : https://git.kernel.org/pub/scm/li=
+nux/kernel/git/next/linux-next.git/log/?qt=3Dgrep&q=3Dfix+build+error
+
+what we should revise?
+
+Like:*phy: freescale: fsl-samsung-hdmi: Limit PLL lock detection clock di=
+vider to valid range*
+
+if you approve,I will send V6 for the title,or any advice?
+
+Pei,
 
 Thanks!
-     Xin
+
