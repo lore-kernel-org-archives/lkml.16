@@ -1,215 +1,157 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF79821A424;
-	Tue, 11 Feb 2025 16:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9505325C6F1;
+	Tue, 11 Feb 2025 16:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739292422; cv=none; b=BIhaWCrnAO8eVNLCy5eK8igXw83whCnsYgRjGrC8peDNHIBy7Em8eO8IE2Mm1IKyC3ytvcr0L3HEMaiO0BnhQdnov6Qd96Lmc1uydwIfXU+nn6DKAt2rGpeHDr49YtJANVgbA1kBRBuwyVgsS+8wymh/99pEYllkLY66C832Ns4=
+	t=1739292453; cv=none; b=KGWVgZUGRRODhxR6+WVvXIh5ZnyzdNPPtJpHGwQaDp1C1uC8s/89T5kmU1t1rwIJFU+vlsCRvYqlxnFWYxuvEoOcMy3Vb/bc1Sv2OwAycnQ0DCD6ozN45HgmgNRQzwzMPWoeO7bMVj6cL0vtuAz420nDThhuJhWy+LnJB2gxq/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739292422; c=relaxed/simple;
-	bh=Fw6SVeNXzLvfb224w7BNBYbemQCCrZ4h3Lf2HlO83tc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=beG/JD4VetN9TGb5R1kz0gycDEdk60F8vAa6kiGJl5zyl6hC+TYOS1fiRTxgXurLl6oBnBCDdaOo5eYjzkcnxM27I8L/h5QNWeAY+49qhxOUM1igrtuKSg6+VKRYdzSwI/bQmt97gUx2uk3VPnLDG3A6UcoTHf2sMBJOdW8gn7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=ijHPvaWn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Of4q54We; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1739292453; c=relaxed/simple;
+	bh=9qfKloJ1Sdb7kUwKMngycijFydBKVCi5IB7EhWLxtVQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u19ZVAAXZGiMTHlGz5BrlfVaoCEX1KylNih59ZQ/PQfGqqJ7MJ+mzI/NR7tNwgVzplVU8pcXR0zIj6sjnqr56bDtEes4GQHxf7R/r+4s19x/dtBRTao+5zT2WjpBYgPhAATyMVbNVQ6g/jYrydGQtsM1cqE1XiiWWPIlzBJcDBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JNv3zrtu; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="ijHPvaWn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Of4q54We"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 9142E254018A;
-	Tue, 11 Feb 2025 11:46:59 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Tue, 11 Feb 2025 11:46:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1739292419;
-	 x=1739378819; bh=jELG8TlPFjBSmkdvazl9U9lJl1lPYlPrt7kKtqTvmOE=; b=
-	ijHPvaWnCKsJzTN5UV2Mq+eCkj1rCr4DQFIbASvd8rJB3StWviXgBm5aQwyb37//
-	5eDSqrInWl1kYT30iw3caBh/JLBwa8zxmnmRr40Dp3g20HRsEBrGNw6gNFhNOprp
-	aEbeRKjxJTBhj5JeuiHcHKsW0RebCHU6U98C4px6ZUElIxiVQ+3Fz+df/FITjX1l
-	fDocYueGa6o6H5KqVK6lUYfviHFdYXzrdEGt+70EFrNMzCZL3g8lhulL702mkn2v
-	B0p2AAsSLReZFKLeSK2VqqbZKXQxFyQAyV6mJrQabqWQWG1m5F2liudtcei42wXP
-	/noSsEI4OsABj/xWN6Jjzw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739292419; x=
-	1739378819; bh=jELG8TlPFjBSmkdvazl9U9lJl1lPYlPrt7kKtqTvmOE=; b=O
-	f4q54WeRTb50+n9zfwp8I8H2h8i1OlpjpnnYNuKIjT+y4D8z/on7mGVoo2RM4kp+
-	2ZwUY1287RCGyJydyOwCVytiJDwa7jZoiz+bHB4R3Yfwl807BLdafgO5/BCGxAsf
-	3b5naPvaDOo0/gCPP9HYCDlp0S2muvU9k1MYxWM61qC6np7vXv/0YLE1fn8pUmPE
-	gy5GJEuwh/bByaAgg2xcdTw1gWXxvDLDQj9eCP7a7pPNTxBqh1bRXXoPxLuyMDiC
-	H8efzppbKr0iJwKdSVPPlzYG+5NtJ9tRYOB2pdwpQk9eIpdRq2XIph0Pqw7wT2oQ
-	FV5V0nryUuA24mnMpyfew==
-X-ME-Sender: <xms:An-rZzkxfYRRYJowecSjdC6digDQp1iapsUopeYNnxwDi68hWot14g>
-    <xme:An-rZ21HCfoEHYP9FlYXujKEfndQB63c9WOmEjncccI9M-aBppUy3N09Jq8tmzFWO
-    DEBuwYMUm71KEsTegI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudehudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedt
-    hedtveehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
-    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpoh
-    huthdprhgtphhtthhopehjrghmvghssegvqhhuihhvrdhtvggthhdprhgtphhtthhopeif
-    pggrrhhmihhnsehgmhigrdguvgdprhgtphhtthhopehjohhrghgvrdhlohhpvgiivdeshh
-    hprdgtohhmpdhrtghpthhtohepmhgrrhhkphgvrghrshhonheslhgvnhhovhhordgtohhm
-    pdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtg
-    homhdprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopehhuggv
-    ghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugiesrhhovggtkh
-    dquhhsrdhnvghtpdhrtghpthhtohepjhguvghlvhgrrhgvsehsuhhsvgdrtghomh
-X-ME-Proxy: <xmx:A3-rZ5qv-yFXdvh1zYEcdnzTra8CU6yMOvkMd11n3L3bxbYZ-tgGQQ>
-    <xmx:A3-rZ7mMyUrqzsHsE5EG-4HD00OwWFwTCOVMlIJ2fCNxbLV5txoqrg>
-    <xmx:A3-rZx3lDlHhRtWsFa-raWu4g6tlNLwT_NS5Wf9225tXuWXO7c2Clg>
-    <xmx:A3-rZ6s30sKpu8jkqgCfYkZnLX7TnBJEXVuLw0VmFBkWr9cqNMqU2g>
-    <xmx:A3-rZ_Nmf7h98yYct2ufVD4pokwFGw67cBmGEMNn3Ksf8s4lncdzCQF4>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id E406C3C0066; Tue, 11 Feb 2025 11:46:58 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JNv3zrtu"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21f7f03d856so53897475ad.1;
+        Tue, 11 Feb 2025 08:47:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739292451; x=1739897251; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9RUzvp1ZG0y8AnaFa56cpTK5bp8QlW6Oa2OethA2BWA=;
+        b=JNv3zrtufXAtqGg3N7InBVF0BWul/O3ij5ThonjBV6FHvhfTi836Ma5II9LglP3C8j
+         a3drlJGvMoMu68y4bldyNGfusCq2BI9gp8HsZQroiJzq+e58IZE5gBlIbZMkk56JhwUP
+         d+VAOKICfIev+YfoWcMoTfdHzuaMAsaNfo1cM6FWpyU/xDsGRa9Vu0uKAMHuuyaJK/we
+         P2U235mNz2oOFKQ9xVdikiZ7OqLa+gJ4lcilld9BVr+EpgTeEVyMSsbzNQPU1wU0ORwb
+         ApB0HBkyJNOVMXEUC5Lw+24yADRUrT3kNl2ZsiJyc9hTuiM1UizT/z0whnBtPU0V7tnT
+         VGqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739292451; x=1739897251;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9RUzvp1ZG0y8AnaFa56cpTK5bp8QlW6Oa2OethA2BWA=;
+        b=DaKT8NfovrtL9S/QUJYErR76GH5jPfe25lCbeClw2uzscOlq89BEHaZ5+e088GM1xv
+         2k9vPXgf8lZmVOF94bPzNZky3z9RUo78rw4DKa3KKNhBZwQ2LLVOgPuE01AESlOkJFZ0
+         izQOgLHcF+FxPf7zAvt33db0ffWxtMwzlwhD34EThLZYIpFHG+xzENkvO4R0UJ68flXD
+         NgXWF9ZGlYUQCkV0wNQ16RjPHcgc1fNxlrzwWNxMD5nTSXcIXLSz9VZwXk5CAKOEDlSf
+         Y53UPZbHYSLb41l9dHyGH8FZcn32I6F/vYloFYX1WRpaae8wrSljwquZLAVnNPvb48mo
+         7HFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUOyBWxyQrSsolypzskRgQdkwh4fPvWXTWhhfrQ8gPvh2PMUYgvczUazotAJrZe8rftPtTWZB2@vger.kernel.org, AJvYcCVFliWoSio8QLq9NQJ+BxFq1BDvCPMb+W77PXsXBWckMMasiKOYTsJOyemO6xTA1LWJZjNa0WQkflbB@vger.kernel.org, AJvYcCVnLqVXMl/D0nlls9mv6/IIC7a7aAo4SsmTgfIbmJ0SHBToBla4k0O0ELYUeMk5gE/HUJY=@vger.kernel.org, AJvYcCWOrq+bPCBMWJgJB5rHa7sVwzk9/3e7di4c849QObyV4sXq6eeo2Emic3KsTl1tUae6KE66ACCXsgo3nYRlH3Y8cH9v@vger.kernel.org, AJvYcCXcDBk3kEyjwEShWHzzTlXJBEFYn67l9kJgPveOppnOGlHhzcVQ0LdvY35tlG+iokF3u8ullbbvIDrGRoAW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5LGXbplhtj/aZt8dd09KM7iMpfdcHDQIMzwvbZ39g4zLt0F5S
+	Q/xod1L5fsohneW/ohdCtSgpvFqkOe2zEydlgkJ5NT/LRZpakXuLx9wfRtV0yPRuh9MLo/ESkzN
+	c2cOGW92RYEdN0BlYnWoliQHEgyE=
+X-Gm-Gg: ASbGncs9unPnew5uhjUwwxhllmEgHSWAVq1+EuvZZmORx23v4uu0F+6xI/SFamRg3yF
+	zcb8WnsZhe4zZlWU8fV0fYMs4Gt326XrAqAdRIBmzmMP9NG/Rd5pJfP1R5HlD3dlxmYjHr/+IoN
+	hz3d/q4rLdX3W7
+X-Google-Smtp-Source: AGHT+IEELJ655DrjeaM+rroctVnf4elYF5IHZCLHCw4dEP2dpIbZwF+siQVA2GTnQaJTu2aqS+be48SXQ+7EaUjBAOA=
+X-Received: by 2002:aa7:8894:0:b0:730:9752:d02a with SMTP id
+ d2e1a72fcca58-7309752d29dmr9553456b3a.4.1739292450533; Tue, 11 Feb 2025
+ 08:47:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 11 Feb 2025 11:46:38 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Armin Wolf" <W_Armin@gmx.de>, james@equiv.tech,
- "Mark Pearson" <markpearson@lenovo.com>, "Jorge Lopez" <jorge.lopez2@hp.com>
-Cc: jdelvare@suse.com, "Guenter Roeck" <linux@roeck-us.net>,
- linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "Jonathan Corbet" <corbet@lwn.net>, linux-doc@vger.kernel.org
-Message-Id: <10f2da65-0873-4512-b0c3-b91ab149a199@app.fastmail.com>
-In-Reply-To: <33eac2f8-b295-4716-a5f8-9f0bf7f6d349@gmx.de>
-References: <20250203182322.384883-1-W_Armin@gmx.de>
- <20250203182322.384883-3-W_Armin@gmx.de>
- <33eac2f8-b295-4716-a5f8-9f0bf7f6d349@gmx.de>
-Subject: Re: [PATCH 2/7] platform/x86: think-lmi: Use ACPI object when extracting
- strings
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20250211111559.2984778-1-jolsa@kernel.org>
+In-Reply-To: <20250211111559.2984778-1-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 11 Feb 2025 08:47:18 -0800
+X-Gm-Features: AWEUYZlR5xmU_PonJ8aeN81Mk0X1T2Cpls2DEXwC15pznh_L4ZPcGMH7kF4zKRI
+Message-ID: <CAEf4BzYPmtUirnO3Bp+3F3d4++4ttL_MZAG+yGcTTKTRK2X2vw@mail.gmail.com>
+Subject: Re: [PATCHv2 perf/core] uprobes: Harden uretprobe syscall trampoline check
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Kees Cook <kees@kernel.org>, Eyal Birger <eyal.birger@gmail.com>, 
+	stable@vger.kernel.org, Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org, x86@kernel.org, 
+	bpf@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>, Deepak Gupta <debug@rivosinc.com>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Armin
+On Tue, Feb 11, 2025 at 3:16=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Jann reported [1] possible issue when trampoline_check_ip returns
+> address near the bottom of the address space that is allowed to
+> call into the syscall if uretprobes are not set up.
+>
+> Though the mmap minimum address restrictions will typically prevent
+> creating mappings there, let's make sure uretprobe syscall checks
+> for that.
+>
+> [1] https://lore.kernel.org/bpf/202502081235.5A6F352985@keescook/T/#m9d41=
+6df341b8fbc11737dacbcd29f0054413cbbf
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: Eyal Birger <eyal.birger@gmail.com>
+> Cc: stable@vger.kernel.org
+> Fixes: ff474a78cef5 ("uprobe: Add uretprobe syscall to speed up return pr=
+obe")
+> Reported-by: Jann Horn <jannh@google.com>
+> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> Reviewed-by: Kees Cook <kees@kernel.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+> v2 changes:
+> - adding UPROBE_NO_TRAMPOLINE_VADDR macro (Andrii)
+> - rebased on top of perf/core
+>
+>  arch/x86/kernel/uprobes.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> index 5a952c5ea66b..e8d3c59aa9f7 100644
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -357,19 +357,25 @@ void *arch_uprobe_trampoline(unsigned long *psize)
+>         return &insn;
+>  }
+>
+> -static unsigned long trampoline_check_ip(void)
+> +static unsigned long trampoline_check_ip(unsigned long tramp)
+>  {
+> -       unsigned long tramp =3D uprobe_get_trampoline_vaddr();
+> -
+>         return tramp + (uretprobe_syscall_check - uretprobe_trampoline_en=
+try);
+>  }
+>
+> +#define UPROBE_NO_TRAMPOLINE_VADDR ((unsigned long)-1)
+> +
+>  SYSCALL_DEFINE0(uretprobe)
+>  {
+>         struct pt_regs *regs =3D task_pt_regs(current);
+> -       unsigned long err, ip, sp, r11_cx_ax[3];
+> +       unsigned long err, ip, sp, r11_cx_ax[3], tramp;
+> +
+> +       /* If there's no trampoline, we are called from wrong place. */
+> +       tramp =3D uprobe_get_trampoline_vaddr();
+> +       if (tramp =3D=3D UPROBE_NO_TRAMPOLINE_VADDR)
+> +               goto sigill;
+>
+> -       if (regs->ip !=3D trampoline_check_ip())
+> +       /* Make sure the ip matches the only allowed sys_uretprobe caller=
+. */
+> +       if (regs->ip !=3D trampoline_check_ip(tramp))
+>                 goto sigill;
+>
 
-On Sun, Feb 9, 2025, at 7:31 PM, Armin Wolf wrote:
-> Am 03.02.25 um 19:23 schrieb Armin Wolf:
->
->> Move the ACPI buffer handling out of tlmi_extract_output_string()
->> and instead pass the unpacked ACPI object to prepare for future
->> changes.
->
-> Hi,
->
-> i was hoping that maybe the driver maintainer could take a look at this patch
-> and give some feedback.
->
-My apologies - because of this patch (and a couple of others) I've just realised I never updated the MAINTAINERS file.
-I have been mothballing the markpearson@lenovo.com address as it's a nightmare to use and switched to using my personal email domain instead. It seems my email filters aren't flagging these messages the way they are supposed to be - I have to figure that out :(
+LGTM. I don't know if that would make any difference, but I'd sprinkle
+unlikely() around these two conditions to make sure they don't
+interfere with instruction flow much
 
-> Thanks,
-> Armin Wolf
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+>         err =3D copy_from_user(r11_cx_ax, (void __user *)regs->sp, sizeof=
+(r11_cx_ax));
+> --
+> 2.48.1
 >
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->> ---
->>   drivers/platform/x86/think-lmi.c | 38 +++++++++++++++++---------------
->>   1 file changed, 20 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
->> index 323316ac6783..2c94a4af9a1d 100644
->> --- a/drivers/platform/x86/think-lmi.c
->> +++ b/drivers/platform/x86/think-lmi.c
->> @@ -262,16 +262,11 @@ static int tlmi_simple_call(const char *guid, const char *arg)
->>   	return 0;
->>   }
->>
->> -/* Extract output string from WMI return buffer */
->> -static int tlmi_extract_output_string(const struct acpi_buffer *output,
->> -				      char **string)
->> +/* Extract output string from WMI return value */
->> +static int tlmi_extract_output_string(union acpi_object *obj, char **string)
->>   {
->> -	const union acpi_object *obj;
->>   	char *s;
->>
->> -	obj = output->pointer;
->> -	if (!obj)
->> -		return -ENOMEM;
->>   	if (obj->type != ACPI_TYPE_STRING || !obj->string.pointer)
->>   		return -EIO;
->>
->> @@ -352,17 +347,21 @@ static int tlmi_opcode_setting(char *setting, const char *value)
->>   static int tlmi_setting(int item, char **value, const char *guid_string)
->>   {
->>   	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->> +	union acpi_object *obj;
->>   	acpi_status status;
->>   	int ret;
->>
->>   	status = wmi_query_block(guid_string, item, &output);
->> -	if (ACPI_FAILURE(status)) {
->> -		kfree(output.pointer);
->> +	if (ACPI_FAILURE(status))
->>   		return -EIO;
->> -	}
->>
->> -	ret = tlmi_extract_output_string(&output, value);
->> -	kfree(output.pointer);
->> +	obj = output.pointer;
->> +	if (!obj)
->> +		return -ENODATA;
->> +
->> +	ret = tlmi_extract_output_string(obj, value);
->> +	kfree(obj);
->> +
->>   	return ret;
->>   }
->>
->> @@ -370,19 +369,22 @@ static int tlmi_get_bios_selections(const char *item, char **value)
->>   {
->>   	const struct acpi_buffer input = { strlen(item), (char *)item };
->>   	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->> +	union acpi_object *obj;
->>   	acpi_status status;
->>   	int ret;
->>
->>   	status = wmi_evaluate_method(LENOVO_GET_BIOS_SELECTIONS_GUID,
->>   				     0, 0, &input, &output);
->> -
->> -	if (ACPI_FAILURE(status)) {
->> -		kfree(output.pointer);
->> +	if (ACPI_FAILURE(status))
->>   		return -EIO;
->> -	}
->>
->> -	ret = tlmi_extract_output_string(&output, value);
->> -	kfree(output.pointer);
->> +	obj = output.pointer;
->> +	if (!obj)
->> +		return -ENODATA;
->> +
->> +	ret = tlmi_extract_output_string(obj, value);
->> +	kfree(obj);
->> +
->>   	return ret;
->>   }
->>
->> --
->> 2.39.5
->>
->>
-Changes look good to me. If you can hold on a bit I'll see if I can test them on a few platforms to make sure no surprises.
-
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-
-Mark
