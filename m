@@ -1,121 +1,99 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B70C26BD81;
-	Tue, 11 Feb 2025 14:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B522C24FC1A
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739283404; cv=none; b=C+LmhIRsEtMB1zpDrXq8fbmQ64idsIqRcgJA7i0PFPpo6iyBN2M5m4bb95IuEhulmqwAerUIrE4+X6e2si2ITcCZ1LXOlcfQY3t4e27N3Glo2QSDbmhfj6uIHew7F9RilWQx5sXVkoPF5sGuAGTa16ePgFcXkOWPNBUJsy7pBhc=
+	t=1739283409; cv=none; b=gAbVseT+Q1eA/Jdqk9DwRP9nNPNTwHcyRaaZMUFtvxWkdsGPn7fyuemqRxqQQC2AzftxlZ56tRHQyzfJAONgR4tvcznigc30tCe53eBO4ptr4YVDyRmS3wpNK3D7pkB9YM26xHegxUp2H5uE+DiqQk6SkmV78CXF+T5sjrU1Fas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739283404; c=relaxed/simple;
-	bh=Av6E65X93ZDV7ReN7FBX9WeuiuZfRC5v81xAZZU2K2U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ZGjahQJw+ppi1t5HWYFQuT6bm3CncNmXUlPXdEmQE35j7m/4VKcJEDU0xVWyIIL18VciKuD+gjevwC2GWA9LAF984B31pJ5BoUWiAfg4Eu/0TyqBSwF4CDcF++0a1+KQ5csYJllwlebQSZckCRjlJljMBMiY5JlzqugmA8RVtZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=CIoCgiDr; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1739283409; c=relaxed/simple;
+	bh=0jZjuDqamsjoEk7e0fmImJOnmKjvvP3xAW1YAbTFTqE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UvZndDbEAl1/wTnliQME0WSmxV1FiqaJ/UqCTvqs9hjYmqoTckWeE8bp+ccqC77m2EURQdBeHjRnvjQF+ip8wtMl4n0JR2/Oc4qCMJ8MfWvNV7On47FMwGzJAG670yRsQUGE8egCyinQXm8ML4U+ZDGxfOzeTBPWBEb6aYdapmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tronnes.org; spf=pass smtp.mailfrom=tronnes.org; dkim=pass (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b=D/4Ey+3o; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tronnes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tronnes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="CIoCgiDr"
-Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id DC83412000C;
-	Tue, 11 Feb 2025 17:16:34 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru DC83412000C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1739283394;
-	bh=a9bkt3y3P97QXCwMrtbY2A0SpgcCvcSFAyWcYlq9ZMc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=CIoCgiDrMl5ZIV5lLG4AK3tLdI1jiyPY6fYBFL4Y8vaDaqKLtOi11XFq4ZDs15Kw0
-	 ZSNg0uOib3sduFNy2dT4G9Fv9CRRqpWGEIMfc744TaOSDWc4902xM+sSRgROtbrM5b
-	 vYIOWBVdJWSkKcHzORXUw1voROX8YkZmVJd8G71UX7JQz18zsxk1WQ4nNVm7RN1Hna
-	 5ASJHUkpjJMGX5zlFy/P4a/+/d4tbuBUEXPo4gSVLip+7oE4NptF8ZhxWpuluOJ0kX
-	 aduiYb5mg454dg9l/OBYNBYBxgEkMuaoMxPCfJZIL2YXXF0dp7wTIgwOk1iqNOI4Eb
-	 OaUkPPbUfTvZg==
-Received: from smtp.sberdevices.ru (p-exch-cas-a-m1.sberdevices.ru [172.24.201.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 11 Feb 2025 17:16:34 +0300 (MSK)
-Message-ID: <e8b8686f-8de1-aa25-9707-fcad4ffa5710@salutedevices.com>
-Date: Tue, 11 Feb 2025 17:16:29 +0300
+	dkim=pass (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="D/4Ey+3o"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
+	; s=ds202412; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:Sender:Reply-To:
+	Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:
+	References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:
+	List-Owner:List-Archive; bh=MIH+Qt/I9LD0chnB4J+lbV92eo3vViC6oSROdQt6ba4=; b=D
+	/4Ey+3olG2BeKv37mJEme3irIv1YP4ccIAvY8M8gHQ8olFj6qYpG7JFU/Lr7NKb7VlznB2C3CYmEJ
+	g22ghj4XO/HRn30IVaTWsnEG7WcpRdPbOfmG6thhEVbtlFF4SI2fZR3ravAobbl5nEijwg9Y9R1ey
+	741QsVOfN/UgIWmwFug7bWnCB+Ghh6oO3TwhuWNO9mW9tSaDFIQrbxf3TwQdhZI/jn30pVbu9bMso
+	0zqDgE7pFD/BxG01Eqwfk79GBxu8wQyexnuOo5m8YuGIFO+fwelIrcYdtfIBzxNn3AwmMz3oQ7Si8
+	15ukF515EYQvDZGqOVilBmk8FpCEr+RNA==;
+Received: from smtp
+	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	id 1thr43-003msR-Gj;
+	Tue, 11 Feb 2025 15:16:39 +0100
+Message-ID: <221ad1f2-307a-4ead-84e2-4b6c4331a20f@tronnes.org>
+Date: Tue, 11 Feb 2025 15:16:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [DMARC error] Re: [syzbot] [bluetooth?] KASAN:
- slab-use-after-free Read in skb_queue_purge_reason (2)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: Update maintainer of repaper and mi0283qt
+To: Alex Lanzano <lanzano.alex@gmail.com>, airlied@gmail.com,
+ simona@ffwll.ch, tzimmermann@suse.de
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ noralf@tronnes.org
+References: <20250210233232.3995143-1-lanzano.alex@gmail.com>
 Content-Language: en-US
-To: <hdanton@sina.com>, <linux-bluetooth@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <luiz.dentz@gmail.com>,
-	<luiz.von.dentz@intel.com>, <marcel@holtmann.org>, <netdev@vger.kernel.org>,
-	<syzkaller-bugs@googlegroups.com>
-References: <67a9e24a.050a0220.3d72c.0050.GAE@google.com>
-From: Arseniy Krasnov <avkrasnov@salutedevices.com>
-In-Reply-To: <67a9e24a.050a0220.3d72c.0050.GAE@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-a-m1.sberdevices.ru (172.24.196.116) To
- p-exch-cas-a-m1.sberdevices.ru (172.24.201.216)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 190939 [Feb 11 2025]
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, syzkaller.appspot.com:5.0.1,7.1.1;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;goo.gl:5.0.1,7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2025/02/11 13:33:00
-X-KSMG-LinksScanning: Clean, bases: 2025/02/11 13:29:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2025/02/11 08:54:00 #27149591
-X-KSMG-AntiVirus-Status: Clean, skipped
+From: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
+In-Reply-To: <20250210233232.3995143-1-lanzano.alex@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi, I guess problem here is that, if hci_uart_tty_close() will be called between
-setting HCI_UART_PROTO_READY and skb_queue_head_init(), in that case mrvl_close()
-will access uninitialized data.
 
-hci_uart_set_proto() {
-        ...
-        set_bit(HCI_UART_PROTO_READY, &hu->flags);
-                                                   
-        err = hci_uart_register_dev(hu);
-                mrvl_open()
-                    skb_queue_head_init();
 
-        if (err) {
-                return err;
-        }
-        ...
-}
+On 11.02.2025 00:32, Alex Lanzano wrote:
+> Add myself as the maintainer of the recently orphaned repaper and
+> mi0283qt drivers.
+> 
+> Signed-off-by: Alex Lanzano <lanzano.alex@gmail.com>
+> ---
 
-Thanks
+Thanks for picking these up:
 
-On 10.02.2025 14:26, syzbot wrote:
-> syzbot has bisected this issue to:
+Acked-by: Noralf Trønnes <noralf@tronnes.org>
+
+
+>  MAINTAINERS | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> commit c411c62cc13319533b1861e00cedc4883c3bc1bb
-> Author: Arseniy Krasnov <avkrasnov@salutedevices.com>
-> Date:   Thu Jan 30 18:43:26 2025 +0000
-> 
->     Bluetooth: hci_uart: fix race during initialization
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=116cebdf980000
-> start commit:   40b8e93e17bf Add linux-next specific files for 20250204
-> git tree:       linux-next
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=136cebdf980000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=156cebdf980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ec880188a87c6aad
-> dashboard link: https://syzkaller.appspot.com/bug?extid=683f8cb11b94b1824c77
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b7eeb0580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f74f64580000
-> 
-> Reported-by: syzbot+683f8cb11b94b1824c77@syzkaller.appspotmail.com
-> Fixes: c411c62cc133 ("Bluetooth: hci_uart: fix race during initialization")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1c5b22f00434..b5e46f23d1ba 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7352,7 +7352,8 @@ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+>  F:	drivers/gpu/drm/mgag200/
+>  
+>  DRM DRIVER FOR MI0283QT
+> -S:	Orphan
+> +M:	Alex Lanzano <lanzano.alex@gmail.com>
+> +S:	Maintained
+>  T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+>  F:	Documentation/devicetree/bindings/display/multi-inno,mi0283qt.txt
+>  F:	drivers/gpu/drm/tiny/mi0283qt.c
+> @@ -7455,7 +7456,8 @@ F:	Documentation/devicetree/bindings/display/bridge/ps8640.yaml
+>  F:	drivers/gpu/drm/bridge/parade-ps8640.c
+>  
+>  DRM DRIVER FOR PERVASIVE DISPLAYS REPAPER PANELS
+> -S:	Orphan
+> +M:	Alex Lanzano <lanzano.alex@gmail.com>
+> +S:	Maintained
+>  T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+>  F:	Documentation/devicetree/bindings/display/repaper.txt
+>  F:	drivers/gpu/drm/tiny/repaper.c
+
