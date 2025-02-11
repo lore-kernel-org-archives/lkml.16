@@ -1,162 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3021F0E31
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 259791E5721;
+	Tue, 11 Feb 2025 08:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739264272; cv=none; b=eLe7dOYdQ2EWDU9yDOZlwjNOGwSkc+4leSIb0wY5QTO6PQP6L9+x3Hjz7u1AaFgRrgG+xED6gLGRLbCKT1JhkiH1rw5BirCXwFyDNzRSMLihTRD2ndwMXGHsvb2rp4pcO2WDK7EiuD/2IbbX1a+pnZM6P3/GxWLHcHKWkufP6hA=
+	t=1739264317; cv=none; b=rZdZfp0cWxqwSE0qwwpieya0bNoRZmyBVjGyFAGPmmTLUeSowBQjPbUN9UQVew8DOGaU3ySwLadUYY3zRLvCTGFCyYjbPeJE+Anu63KXIV+RKTcOyAEduiXWFtuy18zuftoE9Yt0NPs4CuWgw7u0XrlOKTlejPGgDve3ckDLFI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739264272; c=relaxed/simple;
-	bh=HDnBlOyPw8QhBcGdjodP9zFRxyfM6MYgL5alIXcYcHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SWZ93VgdkoIFZF0KrNxgVv7qYCcu5dRy//lyouZS8nS7wu/+RT/aZhFYyKp77tBU21O06yNYq7ByRF0gXmljb3jSbFSQ62NvlllTRABvhumAYqvIIGiizYF7XuUskG1gkjcwo6dFQiMTyjsQZ6g/gL967OS2If7daSG7EH71vOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LyPA6XyV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LyPA6XyV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739264269;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zIQbPjiqwmwUxZhJUEjUvnEZCNp6KfZmxpyLl8jvIIY=;
-	b=LyPA6XyVAdjwn8AdhpPcHzpjM+x8ib5qWeiEaK9HraQntPbi180TXgUUOZjujRhG0/Pjgh
-	3WSPfFYbs0Xsdq6ydUi5gVD0nYTzkdZcxnmzrdx6e7nwkmkpdVQVH+vc8TthXy2uph/qcV
-	aevO9HCzQ0MUsFSdeMh1fbq0NKGZcC0=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-341-HCgza1P4MeKwvvIFnplJ2Q-1; Tue, 11 Feb 2025 03:57:48 -0500
-X-MC-Unique: HCgza1P4MeKwvvIFnplJ2Q-1
-X-Mimecast-MFC-AGG-ID: HCgza1P4MeKwvvIFnplJ2Q
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38ddcb63ed1so1219048f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:57:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739264267; x=1739869067;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zIQbPjiqwmwUxZhJUEjUvnEZCNp6KfZmxpyLl8jvIIY=;
-        b=Cm7eswhf9ovlRfxgZ7KJyXV9kGGSf7Ai4lTCRamTPWkaNCql540lPmeSUXY/p69Vww
-         GxApmTyrEjB5s+7JmXP7lOue57zaRbJ9zOdJoTeegfwxF9scQd5+hSv1X5CvqtW39Czc
-         slC1hdd8wo0GWDnGXoj1B1mKlrwW6nskNEYgX3h8rF0x4KGgABXPU76l3b2i4Mf+2UTd
-         cDw+09sn7y8N1X5RYYzYILgjkUn7PSdzwlRxbseWO2oO+zys90A/0httGMfSyRa+b0CM
-         RDxHAIPb8obTPiqGMsby7vs/sHoz/mHc+ZkWjiV3yVLNGHiKMqmOLptrQFzZlJxFWleg
-         HgWw==
-X-Forwarded-Encrypted: i=1; AJvYcCWSDYQwILyVNxU2h6PG+v0lloJrSPVoAAAZNFppmPeQFrLMOB7at7lCrd/7I1Xwj9Wjku8PqIQgUHkAN5c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJKTBPon4ofTczuGXOJeGFpRJuZcsR+JJeXHwoZM5u4ES2htYg
-	v7VZdWMmAN7hvdDBpXazEUKXzzKwZK2DNgm9IqpAh5/cvPXiIiNxXMC02MdGuNXvqA+D6qfgnYv
-	6YaTA7T3DhSe8lD8GF6glWiHLVy0+T16lesjI3ovEJfqYbpwyOQwr773NL2g0lw==
-X-Gm-Gg: ASbGnct4bMozJ4JvKSSqbi4OwjOTf8emsn/D8TZYAY3bTqbwREN0hqMeLtDR8cYX79O
-	aAbqSrMuCU7QppKY6auYznOaMYs7Z6n/fPYl7Ly3IdaF4d98y+7fLyWvFvtke6YUbtoC20sDxCp
-	TFzSOLyIwXdKgxp86b7tlzbSlGX3YCIe3QZLmqFD03u+m/Kbl3NV9pFihkPXxz8oRn9F5OzXHmk
-	uIb6zz0HIImXtq2TuuPT7vFNFddQS2gpXld+upYHeNU2Peki8+y4Vh3EBCKIhzioBd7h4Y52ulV
-	3uGP2oHgNgYwI+ISBKQ1fwQPpHmGzSp7DPOcRVJrEWVvAqzWNfoslQ==
-X-Received: by 2002:a5d:438f:0:b0:386:3835:9fec with SMTP id ffacd0b85a97d-38dc935fba0mr13080909f8f.44.1739264266784;
-        Tue, 11 Feb 2025 00:57:46 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG9gS/8oWxy2/+63oWaWVYrKsS8WPZEr2M1pgDTFIO4r0DJWvdJ3n9OPtCV6k/zDtewXv+XUA==
-X-Received: by 2002:a5d:438f:0:b0:386:3835:9fec with SMTP id ffacd0b85a97d-38dc935fba0mr13080869f8f.44.1739264266036;
-        Tue, 11 Feb 2025 00:57:46 -0800 (PST)
-Received: from sgarzare-redhat (host-79-46-200-29.retail.telecomitalia.it. [79.46.200.29])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da9652bsm173908095e9.2.2025.02.11.00.57.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 00:57:45 -0800 (PST)
-Date: Tue, 11 Feb 2025 09:57:41 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Junnan Wu <junnan01.wu@samsung.com>
-Cc: stefanha@redhat.com, mst@redhat.com, jasowang@redhat.com, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	xuanzhuo@linux.alibaba.com, eperezma@redhat.com, horms@kernel.org, kvm@vger.kernel.org, 
-	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	q1.huang@samsung.com, ying01.gao@samsung.com, ying123.xu@samsung.com, 
-	lei19.wang@samsung.com
-Subject: Re: [Patch net 1/2] vsock/virtio: initialize rx_buf_nr and
- rx_buf_max_nr when resuming
-Message-ID: <gr5rqfwb4qgc23dadpfwe74jvsq37udpeqwhpokhnvvin6biv2@6v5npbxf6kbn>
-References: <20250211071922.2311873-1-junnan01.wu@samsung.com>
- <CGME20250211071941epcas5p308a13898102cf851bc9988c0e2766c5e@epcas5p3.samsung.com>
- <20250211071922.2311873-2-junnan01.wu@samsung.com>
+	s=arc-20240116; t=1739264317; c=relaxed/simple;
+	bh=x6W1HDLosyVn27dDhWnDbtDxbDJIhXRuKZqrrk9uB+M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mIshLFjM8kLBTeAbFOU5UClkxVeYxl2pg0uVtzKJfN0p2+ZqpepUx9nz/KymV1mfe+kZVWNe96eEnTNRUw77TWVY4VOZthrBRh2f2RZzvgwwvVHnudibqs+deMoaZeb9QjbcCh0Gu40ad2Zov67gqhPXmEetz6oO6LyvOJU7lEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C72091477;
+	Tue, 11 Feb 2025 00:58:55 -0800 (PST)
+Received: from [10.57.83.200] (unknown [10.57.83.200])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FBD13F5A1;
+	Tue, 11 Feb 2025 00:58:28 -0800 (PST)
+Message-ID: <d009306c-eb1c-48ca-ab8e-d891b413d55f@arm.com>
+Date: Tue, 11 Feb 2025 09:58:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250211071922.2311873-2-junnan01.wu@samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 8/8] mm: Add basic tests for kpkeys_hardened_cred
+To: Kees Cook <kees@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ David Howells <dhowells@redhat.com>,
+ "Eric W. Biederman" <ebiederm@xmission.com>, Jann Horn <jannh@google.com>,
+ Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Andy Lutomirski <luto@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Pierre Langlois <pierre.langlois@arm.com>,
+ Quentin Perret <qperret@google.com>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
+References: <20250203102809.1223255-1-kevin.brodsky@arm.com>
+ <20250203102809.1223255-9-kevin.brodsky@arm.com>
+ <202502062024.BCB0DED1D5@keescook>
+Content-Language: en-GB
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+In-Reply-To: <202502062024.BCB0DED1D5@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 07/02/2025 05:52, Kees Cook wrote:
+> On Mon, Feb 03, 2025 at 10:28:09AM +0000, Kevin Brodsky wrote:
+>> Add basic tests for the kpkeys_hardened_pgtables feature: try to
+>> perform a direct write to current->{cred,real_cred} and ensure it
+>> fails.
+>>
+>> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+>> ---
+>>  mm/Makefile                    |  1 +
+>>  mm/kpkeys_hardened_cred_test.c | 42 ++++++++++++++++++++++++++++++++++
+> Current file naming convention[1] would be to name this as:
+>
+> 	mm/tests/kpkeys_hardened_cred_kunit.c
 
-You need to update the title now that you're moving also queued_replies.
+I wasn't aware of those guidelines, thanks for the pointer! I got
+inspiration from various existing tests, it unfortunately looks like the
+conventions in [1] have not been universally adopted. I'll try to follow
+them in the next version (of both RFC series).
 
-On Tue, Feb 11, 2025 at 03:19:21PM +0800, Junnan Wu wrote:
->When executing suspend to ram twice in a row,
->the `rx_buf_nr` and `rx_buf_max_nr` increase to three times vq->num_free.
->Then after virtqueue_get_buf and `rx_buf_nr` decreased
->in function virtio_transport_rx_work,
->the condition to fill rx buffer
->(rx_buf_nr < rx_buf_max_nr / 2) will never be met.
+> [...]
 >
->It is because that `rx_buf_nr` and `rx_buf_max_nr`
->are initialized only in virtio_vsock_probe(),
->but they should be reset whenever virtqueues are recreated,
->like after a suspend/resume.
->
->Move the `rx_buf_nr` and `rx_buf_max_nr` initialization in
->virtio_vsock_vqs_init(), so we are sure that they are properly
->initialized, every time we initialize the virtqueues, either when we
->load the driver or after a suspend/resume.
->At the same time, also move `queued_replies`.
+> +static void write_cred(struct kunit *test)
+> +{
+> +	long zero = 0;
+> +	int ret;
+> +
+> +	ret = copy_to_kernel_nofault((unsigned long *)current->cred, &zero, sizeof(zero));
+> +	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
+> +			    "Write to current->cred wasn't prevented");
+> +
+> +	ret = copy_to_kernel_nofault((unsigned long *)current->real_cred, &zero, sizeof(zero));
+> +	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
+> +			    "Write to current->real_cred wasn't prevented");
+> This is a good negative test. I would include a positive test as well.
+> i.e. make sure you can run copy_from_kernel_nofault() to read it
+> successfully. Otherwise you don't know if you're just getting a bad
+> address -- we want to distinguish between them. (This is more true for
+> the next suggestion, since current->cred being broken would be much more
+> obvious.)
 
-Why?
+That's a fair point, I've actually run into this sort of issues with the
+page table tests (in the other RFC series). I can add positive tests
+with a regular read (e.g. reading current->cred->uid directly) - no
+fault is expected to occur in that case.
 
-As I mentioned the commit description should explain why the changes are 
-being made for both reviewers and future references to this patch.
+> While current->cred is good and easy, I would like to see prepare_creds()
+> exercised too to get a new cred and validate that it is equally directly
+> readable and directly not writable, and then use the correct accessors
+> to perform a successful write to the cred, read back the change,
+> etc. (i.e. validate the expected behavior too.)
 
-The rest LGTM.
+prepare_creds() does not allocate protected memory, see the introduction
+in the cover letter and patch 6. However I could certainly add such
+tests for the new helpers protect_creds() and prepare_protected_creds(),
+which are meant to be used with override_creds().
 
-Stefano
+>> +}
+>> +
+>> +static int kpkeys_hardened_cred_suite_init(struct kunit_suite *suite)
+>> +{
+>> +	if (!arch_kpkeys_enabled()) {
+>> +		pr_err("Cannot run kpkeys_hardened_cred tests: kpkeys are not supported\n");
+>> +		return 1;
+>> +	}
+> Instead of failing ("return 1") I think this should be a "skip" (it is
+> expected to not work if there is no support) in each test instead:
 
->
->Fixes: bd50c5dc182b ("vsock/virtio: add support for device suspend/resume")
->Co-developed-by: Ying Gao <ying01.gao@samsung.com>
->Signed-off-by: Ying Gao <ying01.gao@samsung.com>
->Signed-off-by: Junnan Wu <junnan01.wu@samsung.com>
->---
-> net/vmw_vsock/virtio_transport.c | 10 +++++++---
-> 1 file changed, 7 insertions(+), 3 deletions(-)
->
->diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
->index b58c3818f284..f0e48e6911fc 100644
->--- a/net/vmw_vsock/virtio_transport.c
->+++ b/net/vmw_vsock/virtio_transport.c
->@@ -670,6 +670,13 @@ static int virtio_vsock_vqs_init(struct virtio_vsock *vsock)
-> 	};
-> 	int ret;
->
->+	mutex_lock(&vsock->rx_lock);
->+	vsock->rx_buf_nr = 0;
->+	vsock->rx_buf_max_nr = 0;
->+	mutex_unlock(&vsock->rx_lock);
->+
->+	atomic_set(&vsock->queued_replies, 0);
->+
-> 	ret = virtio_find_vqs(vdev, VSOCK_VQ_MAX, vsock->vqs, vqs_info, NULL);
-> 	if (ret < 0)
-> 		return ret;
->@@ -779,9 +786,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
->
-> 	vsock->vdev = vdev;
->
->-	vsock->rx_buf_nr = 0;
->-	vsock->rx_buf_max_nr = 0;
->-	atomic_set(&vsock->queued_replies, 0);
->
-> 	mutex_init(&vsock->tx_lock);
-> 	mutex_init(&vsock->rx_lock);
->-- 
->2.34.1
->
+kasan_suite_init() uses this approach if KASAN is disabled, but skipping
+does seem to be a better idea - this way it doesn't show up as an error.
 
+> 	if (!arch_kpkeys_enabled())
+> 		kunit_skip(test, "kpkeys are not supported\n");
+>
+> I'm very happy to see tests! :)
+
+Thank you for the review and suggestions!
+
+- Kevin
