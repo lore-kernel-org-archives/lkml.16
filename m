@@ -1,259 +1,214 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2072.outbound.protection.outlook.com [40.107.105.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573E6269D0C;
-	Tue, 11 Feb 2025 19:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739301839; cv=none; b=H/0yVuu758X79s7LNqABBoHOsuTN/LD8WoccmmWQ7MSDtY9Ct2lPdYpv1EZoe39fjhvrA/2bexGocD+xoMIPWcBVfXRJ9P/Nzn/ORS2AtivDUjq+C8ZQj6GWLqZMQwAQiUObNhOU5l1XE83WuqufbIGwNIffdPNy1I7sj7XOCEg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739301839; c=relaxed/simple;
-	bh=/9krtCEs7t4mxpxN/fjiXdprmhRlMOwc+DF3ygA3K7Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c8brSSKoq3UaPacyRxD4RS/jBzv8pWi3mlQl4/yTtkO4uxfOpVZqOCvSlTBm1XXyUcFwyno2LI3dXndB0Pk+nwHObSiljzlH5DsfAh5vGHd4sIRopJL/Iog96mgbElicm9D9g2FeosvS4DXRpQ8FnwP48AcpP1GOFhcgdgT6kPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jwQybSmm; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1730A26B2AF;
+	Tue, 11 Feb 2025 19:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739301841; cv=fail; b=C63MSgELUd6fHHciibbxcE1r3eVhxbO4lx6SVHFQ4r/jTk9nc0jpOfA7KP2iLNvUMc+cHXYhfjNqiw/XR1/PcZXhgaPv2Z4m0cP3m9QC0y7shmkTtwteG6yAwoc8IcZkAiL6tulJ/LAu8py6i+xWqjE8feH9AshjcelYs+S/27M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739301841; c=relaxed/simple;
+	bh=lCL6z6y8CVHebkwmpyotf4ntH6iD+kZXtq/tGQQG+8w=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=cHmLuQy6Lx728eN02+odb7pUyEjjoq4e9xYvI7o6+NwVG1vfahena0zEozBAiVKDyu5AP3ASJa2OWvS3ZuX76qx1bf0UH8nNzgSJZqZbb/Ci+Qd2j5kNoeK1N2tg9eBNXpSHhZhm1rp9DEVykVTUmFUFsxYfn4T6d+zQeZXT8FU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=l6x9Oe/l; arc=fail smtp.client-ip=40.107.105.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwQybSmm"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-471963ae31bso25569211cf.3;
-        Tue, 11 Feb 2025 11:23:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739301836; x=1739906636; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AyquudzGFfxKdiRxksRXadMuPylK1GlogDa9cblcCyI=;
-        b=jwQybSmmU3PdzhVMk4sTOq1ZxIILElrn7hbghvlVAINOoNaWl+l5+0CubIoH8D51I4
-         WwXj1f/kPj3NLhioFMmaCuLN3nmd6CShBuEXR+9CmOz4BKfaBtC0eLXDJQIdMxDIOrtv
-         KXkh5K3UlrAWXwAk7zZtWkXSSm6ZerPKsnQCdAXAtFtP73mdgS9upWUyv25sjg3uYfcj
-         OP5qDydMKkB7iEXYyk6m3tURfNlu8kGz3N+InLZugqgQ79CYCt+TdB+HP0PSaBSsKDA/
-         JO7F1p7dIAG/Npsx817A1Juc9+DhNNP1tDuO32ljris7/ObivVoQbt6ClI0VGchf1GFE
-         zc3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739301836; x=1739906636;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AyquudzGFfxKdiRxksRXadMuPylK1GlogDa9cblcCyI=;
-        b=JXwTuBuHeKif6viprgHzXk2OJLJwRybPUIRWm6n04Oqi8YBti0Go2o75RRWbWg6MlP
-         aYg8b72r5IGY+cpKAIwPFNNHHLTglQjH7EMcENxfN4Qv7v1oQJZ3KIAPNi3DBoeTpYgc
-         tgyZAqeXg5OwSqnNm34BR5LeTdCBD5FH/bHKs1ohNoqpYq7FMlmPc5oeOgabjZMM1Hcr
-         WCq8QhIqubsjBEe+NGyWERuABOH5v6l3eE3YZ1zUrUbc+dxFEB040GKPfJLr9bmGoCpy
-         8sFWaTcakieKULhN0+S19bCyunhLlVYQM4CLUJjqsL/IqdErOZTTfugdY85DFz52Tp/F
-         pt/g==
-X-Forwarded-Encrypted: i=1; AJvYcCX6vrhlOVL24CcfJKIiMQCUmD3vAh8G7HvO5bh8RLv1X014BB7/pUGK5jwHde67bUz1n2RI7dXuL4dwawjL@vger.kernel.org, AJvYcCXYOb419YQXE25jU8lZdmDGRFLmZOKbqxlvcuHlCUkdHzS+RMPxE/2h1JnmQRebisl5R/oj/yOmgAAk1psg@vger.kernel.org
-X-Gm-Message-State: AOJu0YySY3r6acelnaWcPSHKtS2DDRx2t778zAy9XRkuHyjJQbarukLE
-	U5DJ2xabDAORNN7EAxK9KpzZsXJUH+07i3DOi5Kn3mUWevVIL5JaMLdILUrL46zX8lrmG80ZN5A
-	nItrCk9nlpSKkQCweQNGD5vCvj0I=
-X-Gm-Gg: ASbGncsaLYzXm68w5sL39tT/jY4rRIawqvlrAOaQctWZUFD64PBKFPTIk0L0fUykLun
-	hOamgQrkrLF7jUryMhugkNMWDzvWGVlSddZAhaMs2nMtwsgbOYsWEqchgHsyqpKZPDfVuSiFwXg
-	==
-X-Google-Smtp-Source: AGHT+IHsO/hy//zVuTr38WbJwX4RVSGuIWDkkbwLY9Ry/XOTJk49t0soPTp74YtJBvE7sBPSsUvSPjOv/yPpUkJ8ia4=
-X-Received: by 2002:a05:622a:4b:b0:471:8dab:d4f2 with SMTP id
- d75a77b69052e-471afe0ee3amr5145021cf.3.1739301836091; Tue, 11 Feb 2025
- 11:23:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="l6x9Oe/l"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EJ1sKx332zTMZz0e4plGon5QF/vV2a07NY/XzXBZ4MOCvtvddzSJ2gso8fyOf2aBtmXJyYhy3g7qhds1KJqrHjzKSbrgqEMwDEzq4QdWPLgLyazTc3wzQoHLHyWgoxJ/dKlIx9KgZ4smCn9yxGyxew/n6ROIk57AtXnwR7SBS6y9ZU2f4ZDIaezYewuoOG5EyiGI+/asGQNe3dF4dIh0I9UWAnfDvwcjQn3qjik6ee/Glwr0IPFrbafqV/3z6Ct71ow4llxZJkM1QJtPpdNuX4QwdErqfQA4PWv9AKn/RHU7uZI6zUZX1gRP6OVl4SZimkEYK8V57oqmcrJffpJtaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e+LzJPZ7Gi7lAxatOmcc98lvsDhVx9q2XMNbv9qEuKA=;
+ b=At5Sssw4CHDrfwnZE3+hhv+cPyTcZ2/NS1c7wZrIwLBgjjPqJXWPEWj/V7IbhlUeqSDJLbcYlqtvvPlFUJ34VhSgASYJb71LOale1gUl3D4yWeiYgHYJ9hCoX0l9pzAdjV1nTq/m/5g6AND9jpa0YOKaBt1ydCIk8T19H562fVK/JEnicoQqvRLufOXCy11RbnV/TxT1C0wv/UYGhlk3XG3/4CbkuDTEcazotjTwY/mgqqg50kjH4uYWnUHocQlb5dwdJduxcuCNCXsidOnkDHlT7Tc8RkZEqfB8MTcz3UsEounSv+9lMKx7xmobVE9fOXKF5USOP0LdsKY3TJLefQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e+LzJPZ7Gi7lAxatOmcc98lvsDhVx9q2XMNbv9qEuKA=;
+ b=l6x9Oe/lDO9JoNiLAmHqoTZY4KRvbG+8YdlgFxtz7a+QweX8aYH1CoqXiyMyrqxfLOgicSk3kQa480wGqkG84HYTwmv530ekMPSKr0aC4IhW5Vni5G4N2XoYlxs702U4soRKasQ3sbrJ3WEBuDFv8ja+qiqOa268Qo9uUiwYGduZIOazNBVenZQtB7JcCQZQttbYWqXDs4EQBdXyxBLGe81TRMT8sd/52tAE78TALHEo09JOJVNSNaJ1LPTzSymgbTPao7gK9QYnCo6gPrJfGL81yVzyc4GHvMXZPpvbDRvr/uYlrqCNj1ifOYBazdGFL77ILbIJv3JqMWhrUNC5Mw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM9PR04MB8553.eurprd04.prod.outlook.com (2603:10a6:20b:434::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Tue, 11 Feb
+ 2025 19:23:57 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8422.012; Tue, 11 Feb 2025
+ 19:23:57 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Date: Tue, 11 Feb 2025 14:22:07 -0500
+Subject: [PATCH v15 14/15] arm64: dts: imx95: Add msi-map for pci-ep device
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250211-ep-msi-v15-14-bcacc1f2b1a9@nxp.com>
+References: <20250211-ep-msi-v15-0-bcacc1f2b1a9@nxp.com>
+In-Reply-To: <20250211-ep-msi-v15-0-bcacc1f2b1a9@nxp.com>
+To: Kishon Vijay Abraham I <kishon@kernel.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Anup Patel <apatel@ventanamicro.com>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Shuah Khan <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>, 
+ Lucas Stach <l.stach@pengutronix.de>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ imx@lists.linux.dev, devicetree@vger.kernel.org, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739301723; l=827;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=lCL6z6y8CVHebkwmpyotf4ntH6iD+kZXtq/tGQQG+8w=;
+ b=sfW6AQBb2HQ2oEa5MR6KhcXy6sZ7o9IzY/NljbUL6bfMX840IU6hmYU3ZEx7V6YNHMfWRU7Bd
+ 0otqu/AEEsJCEUBB5hLb1+CLl53sEfDygg8pdbhURcP3mCiEA1ZqMpP
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: SJ0PR13CA0231.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c1::26) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
- <9cd88643-daa8-4379-be0a-bd31de277658@suse.cz> <20250207172917.GA2072771@perftesting>
- <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz> <CAJnrk1aNVMCfTjL0vo-Qki68-5t1W+6-bJHg+x67kHEo_-q0Eg@mail.gmail.com>
- <Z6ct4bEdeZwmksxS@casper.infradead.org> <CAJnrk1aY0ZFcS4JvmJL=icigencsCD8g4qmZiTuoPWj2S2Y_LQ@mail.gmail.com>
- <81298bd1-e630-4940-ae5b-7882576b6bf4@suse.cz> <CAJnrk1aBc5uvL78s3kdpXojH-B11wtOPSDUJ0XnCzmHH+eO2Nw@mail.gmail.com>
- <20250210191235.GA2256827@perftesting> <Z6pjSYyzFJHaQo73@casper.infradead.org>
- <8a99f6bf3f0b5cb909f11539fb3b0ef0d65b3a73.camel@kernel.org> <ecee2d1392fcb9b075687e7b59ec69057d3c1bb3.camel@kernel.org>
-In-Reply-To: <ecee2d1392fcb9b075687e7b59ec69057d3c1bb3.camel@kernel.org>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Tue, 11 Feb 2025 11:23:45 -0800
-X-Gm-Features: AWEUYZl1GfPTZXzSetqKFD7DNB6FXqKr6c58XQWiS0Jq_hJKJpwnR8_iG_rZU74
-Message-ID: <CAJnrk1ZkhNdCf_v4KHmsFoh3EcEaKY0Z8SVn2nJouVDxTZxv=A@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
- related applications since v6.13
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Matthew Wilcox <willy@infradead.org>, Josef Bacik <josef@toxicpanda.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Christian Heusel <christian@heusel.eu>, Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm <linux-mm@kvack.org>, =?UTF-8?Q?Mantas_Mikul=C4=97nas?= <grawity@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM9PR04MB8553:EE_
+X-MS-Office365-Filtering-Correlation-Id: a631130f-0f9c-42ae-9088-08dd4ad1a119
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|1800799024|7416014|366016|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?T29QbkJsbndBeTcyakMxOFRQMnBKbWk5NmZsRjR5cU9XSXFhVlNYdVVDRW10?=
+ =?utf-8?B?M2VpaXNRVWtOSmRCeWdZeTVzZFVWNUkwSXhLR3Q4ODJOSlhSS1IxWnUzVzNl?=
+ =?utf-8?B?czIxU1VxT1BzTzE4ZVJmVGl4STJicTNkOEJnTnMzMWcrYXRWaVE2SkdqTWVJ?=
+ =?utf-8?B?TmRGUTU3N0NremllSGMvUytsRnRSMGZPTXFxdndkUC9ST2dDSWpRajFjYlJa?=
+ =?utf-8?B?Nkp0c2tRMTE1UGpwMVhJOFVaYnEyeko5bGRhOWdyL2h6alU5V3ExNFBKYjd5?=
+ =?utf-8?B?TWxKSTliMnJ2dmlCWUk5a1RRMGtjTGFPU3FlMUh1L2ZyVEdXUnVRbnFyaWVO?=
+ =?utf-8?B?QkhDaVNBamZJTmlHTmpTWE9iN0pTVVpzemlKZUdjQTFtUFJneWVSc2ducURE?=
+ =?utf-8?B?enlmcis4LzR6WllYRXFhLy9zSnExTzE3UEFRZ2tCaVNpNS93NUJ3RFo5UHFI?=
+ =?utf-8?B?SjRYYWdjNkovRndYWUVqNXBXV1JMNU5YQndjTi9WVlQxbkdHdzVRRWJjRkt3?=
+ =?utf-8?B?ZU9RdXBrVEZTanRoWWYxYnVCZkdNZ1FuMWlOeWpXY0laZDlQaUQxV0c1STIr?=
+ =?utf-8?B?MDgzUGVrMVZCNXBXNHhMbHhkZzFGZHdCR3N4eDVBWGxod1U0Z3NkL0gxRnN5?=
+ =?utf-8?B?bTM4enN0THQ2UzczaGJwdVMyeTJBNEJhUkszT2xORVA4dDlVWXdxMjFPZi9M?=
+ =?utf-8?B?V0szbTFPbkszN1FjdGNoYVl3L2pLNVpzNjRZYkVWRWQ2WlJkcmt5MjI5MUpI?=
+ =?utf-8?B?dW50MDFqd2o3SVpOcjAwZ3N6bGR4ZExBOGVhOUZXV2tZTG9TcFAvUzU1TGIr?=
+ =?utf-8?B?ZFRSblJKWENVa1J6YWFSUDJjOEovcDA0dFN1bXM3YTJDSm5zSDUwWnI4azJW?=
+ =?utf-8?B?bFZhL0RxdFN3RDhCMHdSMXJOVXFqTmF5SmIxam9vbWgwMlhMdEVHQVpsQkFB?=
+ =?utf-8?B?QTZpbVZQVSsvaVFiMDMySzlpdlo2eit2a2dONWNEcUh0QXFWWU01RzVmNWZs?=
+ =?utf-8?B?UVRQdnhkMXV6UzdzN1RrdEZQTjZ1VUFvbnl3WUZ4Q1A5NXh5bksxRm5MVkdW?=
+ =?utf-8?B?RDFiRHF6WW5VcmJod1hOb05RTXdrSzRIanlmQUttbkYyanVDVkcwNEJtZzRs?=
+ =?utf-8?B?V2VJcUIvdW91dFYyVUMyK05MbGFqWCtNOGtiQk1XWVYyd1MvQVZTcU8zaDBI?=
+ =?utf-8?B?SEtZRmhkR2Q4MGpBTjJCRjJveDNmQ1VacnJYOXJ2OGVOUm9zU1RoenNKRTk4?=
+ =?utf-8?B?WXpHSmdaSkhJYWdhYUx4eU5zVExheE43ZXE3UDV4MlRNMmVYdFlFREFORFlj?=
+ =?utf-8?B?cDBLT21DbGN4Z0dwZWttOE1YT3lNbWRzQm50WDdoTW1UK3U0eUVSSDBqTVVD?=
+ =?utf-8?B?cGJ0L29DK2NZQWdqOUNQdGc4MHErRTNGRGJJcHdJM2Z2VytkbDlSZjVObXo2?=
+ =?utf-8?B?QkRlS0VFUm9INkJzM0ZCbEw5Z25jMXVpSkZ4QjI0MmJicEFoRUFFQzRaYm0r?=
+ =?utf-8?B?WU5Mdm9VU2tiYlEzTTNhbGVyaGJjcG55WTYrQmJ5YkhFK1Fxc0NlcStTbnlk?=
+ =?utf-8?B?UTM4NGZaaXpibWlvMWRUc3BMTzFmTnFBSnh4b0hLNXY3NDI5blVGL0J5dVND?=
+ =?utf-8?B?Zk9qVERSbE04VEt6MHpweExVUmkyakVZaUdJb3czOUIvY1F3UmhoN3Y3eC9m?=
+ =?utf-8?B?NXU4MUpqRTRVbS9PYjhxSUlPRWJ1UVpPRk9OZ3ZFWWdBMHBjdko0M3NHRFBC?=
+ =?utf-8?B?YkRZWUJyV3plVU5BdkxFWXE5dURFV1FhRkxFakp4emJxUzdPVkZHU0U4WUlF?=
+ =?utf-8?B?Q203bmpab1FpWi90SkVKbEpqTGEzUW91YlNXTVJ2RWVlbXQ1a3Y1S0Q4OXlK?=
+ =?utf-8?B?MXJRbEVYM3kxaC9TUW5SYWJxS2ZUUWtFNGgxczVtL3FyYVF5WmdMcTFnY1Vy?=
+ =?utf-8?B?ZkVyM2Z4QWMveTAzL3UwL01ZYXI5MHV4dUYzSHVYVHFqRnpncGFOTVFjMjdp?=
+ =?utf-8?B?MklKRVhUV2pRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(7416014)(366016)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RkNXQis3dlgzWHhvKzBTQU84VmEzL2poOG1WQXFmTDMxaUMyWlpLV3VVSXZO?=
+ =?utf-8?B?RXBidVBoaVV5VUdjQy9XQkgxQS9BaDVkWHo3b29zYkpVQ2l6cXNhd0Q2eUQr?=
+ =?utf-8?B?OFFqSmpFZHM1UDVmanMwclRtVHBsL09HM0orbzUzUlpEMFFHajQ2b2RtTW9a?=
+ =?utf-8?B?U3JnOTd2eUpLdmJ4VXVEY3VJMlE0bGJsZlpnTFNhcW81QlowZkd4MUg1ZWNG?=
+ =?utf-8?B?ZnY4MU1aV0lWL2VRbndxaUlVZUhCNkMxdm5KUW5kM24vc3Awbk1IL0ZGVkZR?=
+ =?utf-8?B?cEtXVGRlUDlnMjJ6aTRCTG1lcnZPNnlpa3M2anNhbkJ2K3M5a2xzQTlWZEpa?=
+ =?utf-8?B?ZFJBTWM5QlJDeE5tcHl2UklDV2dGM3cyMmhKSnRrSmpPclEwQURBZThYM085?=
+ =?utf-8?B?ZGZnNVc2VDUwN2piRGllYy9xcm83NkphSXA3bFgvM29Ha3Jrb0t5dzJ6WFFh?=
+ =?utf-8?B?eUNUSlFVSmUwMndNVjIzbjNDUkprUjNQR25qdktwUUJSVml0WWI1UTNhNDFn?=
+ =?utf-8?B?QTJicFNkcjl2M05mU2pKSXRxd29KSkJvK01lS0dIQWkzRTVDMEZxK1JXTEZX?=
+ =?utf-8?B?K2lpUTFTaVMwY1QwZlM3dFBUeDNtdWVpU3F5bWFUalJndlQzVEswcEJBN0lq?=
+ =?utf-8?B?NkQxZ2k1UFhtcVRnbWVzZmtORUpGbkRBRVB1ektVQitEM2VrTkx6QjZZQ1ZT?=
+ =?utf-8?B?ZVl2c1p6V2EvRmtWbm9xUENvNXZ2R1NrM0pRVTNuaFVySldlTFVHSnJDRHpm?=
+ =?utf-8?B?MUlRMElZdUdQWXJ3VVZFOVVpQ1JIeGNHeUxNSW1QQlRnNUxTTk5xb0dMRVVv?=
+ =?utf-8?B?TU9YRkRJWDZxM3BVSjYxcjNmcWZpVk5DV0d4NVVIK1FFd2xGcVRvWHVZaGVs?=
+ =?utf-8?B?N2xrbXYvbnRpVmd0RDRvbm94SGNWQnV5ZDNQVTdtQ1J5QjAwVFBiazU0amtR?=
+ =?utf-8?B?bk9scEVSajJhNEF5WnNxeVRWTE5hanZUOUthTE9UaGFrYi9tTXdDK2pUaUs4?=
+ =?utf-8?B?VjlkN1NWRmF0eTNSN2paRkpWTGVxcHFWNnZyS1YvYnpOUTllR25HR3ZVd1JZ?=
+ =?utf-8?B?RGRrNkpoZHlqUnJjQTRwa0NpTWhYeTE5NDNKWStER0ZmTEE0eUVkcEh0dDhj?=
+ =?utf-8?B?dEVGTmNoa1ZYYXlZYjRubmJsdVp0bEVKaW5HSVRtSUlCR1htbVgrdGMyYVlq?=
+ =?utf-8?B?SFZQTXRQbDRreTBwTkdVT0JTcFJxcFQwZU1xMlF4NjVjS0VHNUVCT0pBRWNY?=
+ =?utf-8?B?ZTJyK0x6V3N6YVpFVyttbkRseTI0MzB4L21icnJ0U2JSakNPQ1ZZRUhmM0VL?=
+ =?utf-8?B?Z3JjdkREa1FZYlM5bXRlYVM0UWUxMkd5NnZlV1RzNzNObVR0MGt3WWM5cDE4?=
+ =?utf-8?B?SG9nYVBlNTBzQlIwY0EwaE10RmJpWldBTDhpYWZTWmdCbXpjcVRtbzZwZDU1?=
+ =?utf-8?B?c1JNd2Y0eHh6NEttWm8vQU8yQVcrQkVvTTZLNHhmVHEzeWUvRStaSHNXclBW?=
+ =?utf-8?B?QjFna3lBR2dDZ1FmazVrNU9LU0E0ZHZtSG9QdWtCM29jbDk5TGs3Nnk0dm4y?=
+ =?utf-8?B?dW5HM1l2Sms5dnN3d0lxNG1jK1hWRGZhR0JBSjg3L2hrNWNselNyUFliZ0xj?=
+ =?utf-8?B?djRUTjNtUEZiRGp4N21WMzFLdWhzUE5TQk5tUE11Szk3MWFKb1VqTEJVRGtR?=
+ =?utf-8?B?MWpuaGFUZzBOSFR6dWpzMkdCcFM1WVZDK2xENzVrdTNzZFFDemEwbUdXNmxP?=
+ =?utf-8?B?ZytvbFRRYkRaNk5lL0ZLNTZyTjAvczRTV0JpajJQVno1WXFFaTVrZGh4OGNC?=
+ =?utf-8?B?WnllanJUaC9wNllQbXlrZ01pRnI2d1A4eWp4ckxXQm1vSVNiUFMyNUpyc21Q?=
+ =?utf-8?B?a3VBdVh4YWY1ay9hVmhENlNnOVpwQ05BSXZrc2tkQWdPNFlXZ1JyTzUzcFVr?=
+ =?utf-8?B?Mm5TN05ZNEtDcnk3Z0s5UnlmMm1LWGRETXU2cmxGNHlWRTNBb2xhZDhGQ0VD?=
+ =?utf-8?B?UnZyYXh0bzhpbitVendCbmlyZUhybllTbVBUTWdKdGcyL1IvT0dPUmhkNEUr?=
+ =?utf-8?B?bmVCVytJRGQ1QlRQdzFGa2ZZci92QkV4NzdLOHRmVlIxYlVheDFNNzZRaENp?=
+ =?utf-8?Q?s8/4PKfUupNVyylfbCM+qfuOY?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a631130f-0f9c-42ae-9088-08dd4ad1a119
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 19:23:56.9123
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dAnHaMd7vpotZS48Hi6kzRzEuWxrHJxerFl/M1byJwaE1jDS0gYzaUn5W6mb3KbMWI9VjdnqQZ7N9uQ2jWD0Og==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8553
 
-On Tue, Feb 11, 2025 at 6:01=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
-ote:
->
-> On Mon, 2025-02-10 at 17:38 -0500, Jeff Layton wrote:
-> > On Mon, 2025-02-10 at 20:36 +0000, Matthew Wilcox wrote:
-> > > On Mon, Feb 10, 2025 at 02:12:35PM -0500, Josef Bacik wrote:
-> > > > From: Josef Bacik <josef@toxicpanda.com>
-> > > > Date: Mon, 10 Feb 2025 14:06:40 -0500
-> > > > Subject: [PATCH] fuse: drop extra put of folio when using pipe spli=
-ce
-> > > >
-> > > > In 3eab9d7bc2f4 ("fuse: convert readahead to use folios"), I conver=
-ted
-> > > > us to using the new folio readahead code, which drops the reference=
- on
-> > > > the folio once it is locked, using an inferred reference on the fol=
-io.
-> > > > Previously we held a reference on the folio for the entire duration=
- of
-> > > > the readpages call.
-> > > >
-> > > > This is fine, however I failed to catch the case for splice pipe
-> > > > responses where we will remove the old folio and splice in the new
-> > > > folio.  Here we assumed that there is a reference held on the folio=
- for
-> > > > ap->folios, which is no longer the case.
-> > > >
-> > > > To fix this, simply drop the extra put to keep us consistent with t=
-he
-> > > > non-splice variation.  This will fix the UAF bug that was reported.
-> > > >
-> > > > Link: https://lore.kernel.org/linux-fsdevel/2f681f48-00f5-4e09-8431=
--2b3dbfaa881e@heusel.eu/
-> > > > Fixes: 3eab9d7bc2f4 ("fuse: convert readahead to use folios")
-> > > > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> > > > ---
-> > > >  fs/fuse/dev.c | 2 --
-> > > >  1 file changed, 2 deletions(-)
-> > > >
-> > > > diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-> > > > index 5b5f789b37eb..5bd6e2e184c0 100644
-> > > > --- a/fs/fuse/dev.c
-> > > > +++ b/fs/fuse/dev.c
-> > > > @@ -918,8 +918,6 @@ static int fuse_try_move_page(struct fuse_copy_=
-state *cs, struct page **pagep)
-> > > >   }
-> > > >
-> > > >   folio_unlock(oldfolio);
-> > > > - /* Drop ref for ap->pages[] array */
-> > > > - folio_put(oldfolio);
-> > > >   cs->len =3D 0;
-> > >
-> > > But aren't we now leaking a reference to newfolio?  ie shouldn't
-> > > we also:
-> > >
-> > > -   folio_get(newfolio);
-> > >
-> > > a few lines earlier?
-> > >
-> >
-> >
-> > I think that ref was leaking without Josef's patch, but your proposed
-> > fix seems correct to me. There is:
-> >
-> > - 1 reference stolen from the pipe_buffer
-> > - 1 reference taken for the pagecache in replace_page_cache_folio()
-> > - the folio_get(newfolio) just after that
-> >
-> > The pagecache ref doesn't count here, and we only need the reference
-> > that was stolen from the pipe_buffer to replace the one in pagep.
->
-> Actually, no. I'm wrong here. A little after the folio_get(newfolio)
-> call, we do:
->
->         /*
->          * Release while we have extra ref on stolen page.  Otherwise
->          * anon_pipe_buf_release() might think the page can be reused.
->          */
->         pipe_buf_release(cs->pipe, buf);
->
-> ...so that accounts for the extra reference. I think the newfolio
-> refcounting is correct as-is.
+Add msi-map for pci-ep device.
 
-I think we do need to remove the folio_get(newfolio); here or we are
-leaking the reference.
-
-new_folio =3D page_folio(buf->page) # ref is 1
-replace_page_cache_folio() # ref is 2
-folio_get() # ref is 3
-pipe_buf_release() # ref is 2
-
-One ref belongs to the page cache and will get dropped by that, but
-the other ref is unaccounted for (since the original patch removed
-"folio_put()" from fuse_readpages_end()).
-
-I still think acquiring an explicit reference on the folio before we
-add it to ap->folio and then dropping it when we're completely done
-with it in fuse_readpages_end() is the best solution, as that imo
-makes the refcounting / lifetimes the most explicit / clear. For
-example, in try_move_pages(), if we get rid of that "folio_get()"
-call, the page cache is the holder of the remaining reference on it,
-and we rely on the earlier "folio_clear_uptodate(newfolio);" line in
-try_move_pages() to guarantee that the newfolio isn't freed out from
-under us if memory gets tight and it's evicted from the page cache.
-
-imo, a patch like this makes the refcounting the most clear:
-
-From 923fa98b97cf6dfba3bb486833179c349d566d64 Mon Sep 17 00:00:00 2001
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Tue, 11 Feb 2025 10:59:40 -0800
-Subject: [PATCH] fuse: acquire explicit folio refcount for readahead
-
-In 3eab9d7bc2f4 ("fuse: convert readahead to use folios"), the logic
-was converted to using the new folio readahead code, which drops the
-reference on the folio once it is locked, using an inferred reference
-on the folio. Previously we held a reference on the folio for the
-entire duration of the readpages call.
-
-This is fine, however for the case for splice pipe responses where we
-will remove the old folio and splice in the new folio (see
-fuse_try_move_page()), we assume that there is a reference held on the
-folio for ap->folios, which is no longer the case.
-
-To fix this and make the refcounting explicit, acquire a refcount on the
-folio before we add it to ap->folios[] and drop it when we are done with
-the folio in fuse_readpages_end(). This will fix the UAF bug that was
-reported.
-
-Link: https://lore.kernel.org/linux-fsdevel/2f681f48-00f5-4e09-8431-2b3dbfa=
-a881e@heusel.eu/
-Fixes: 3eab9d7bc2f4 ("fuse: convert readahead to use folios")
-Signed-off-by: Joanne Koong <joannelkoong@gmail.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- fs/fuse/file.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+change from v14 to v15
+- none
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 7d92a5479998..6fa535c73d93 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -955,8 +955,10 @@ static void fuse_readpages_end(struct fuse_mount
-*fm, struct fuse_args *args,
-                fuse_invalidate_atime(inode);
-        }
+change from v13 to v14
+- new patch
+---
+ arch/arm64/boot/dts/freescale/imx95.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
--       for (i =3D 0; i < ap->num_folios; i++)
-+       for (i =3D 0; i < ap->num_folios; i++) {
-                folio_end_read(ap->folios[i], !err);
-+               folio_put(ap->folios[i]);
-+       }
-        if (ia->ff)
-                fuse_file_put(ia->ff, false);
+diff --git a/arch/arm64/boot/dts/freescale/imx95.dtsi b/arch/arm64/boot/dts/freescale/imx95.dtsi
+index 6b8470cb3461a..cdc06dea5982b 100644
+--- a/arch/arm64/boot/dts/freescale/imx95.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx95.dtsi
+@@ -1667,6 +1667,7 @@ pcie1_ep: pcie-ep@4c380000 {
+ 			assigned-clock-rates = <3600000000>, <100000000>, <10000000>;
+ 			assigned-clock-parents = <0>, <0>,
+ 						 <&scmi_clk IMX95_CLK_SYSPLL1_PFD1_DIV2>;
++			msi-map = <0x0 &its 0x98 0x1>;
+ 			power-domains = <&scmi_devpd IMX95_PD_HSIO_TOP>;
+ 			status = "disabled";
+ 		};
 
-@@ -1049,6 +1051,12 @@ static void fuse_readahead(struct readahead_control =
-*rac)
+-- 
+2.34.1
 
-                while (ap->num_folios < cur_pages) {
-                        folio =3D readahead_folio(rac);
-+                       /*
-+                        * Acquire an explicit reference on the folio in ca=
-se
-+                        * it's replaced in the page cache in the splice ca=
-se
-+                        * (see fuse_try_move_page()).
-+                        */
-+                       folio_get(folio);
-                        ap->folios[ap->num_folios] =3D folio;
-                        ap->descs[ap->num_folios].length =3D folio_size(fol=
-io);
-                        ap->num_folios++;
---
-2.43.5
-
-> --
-> Jeff Layton <jlayton@kernel.org>
