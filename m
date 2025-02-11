@@ -1,50 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE2B26BD94;
-	Tue, 11 Feb 2025 08:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD981F0E23;
+	Tue, 11 Feb 2025 08:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739263642; cv=none; b=TJScU8zeOW0g1y7VZ46sPGyI+/M3sQt4Cx0FaCd2oB1FDM2upaK8TsBY6jesnGzcuUPkd6gabHZR6rJKuHTnppUcz4D/nLlR7pdZs7DoyS0ot2JsYGhwNs9O+I+saIQK0VmCdgrArmt74SKp4W9R9t7WDjY4lfWTuSdHYzyuftI=
+	t=1739263644; cv=none; b=fB6jBM+t7IciZHtSzLtZUl9Y3m5O/CmUoFPtxcw9TPeRC87+SiZEqrA0g3zVa0OjYBziXB4vBF+F4dQbL4rvsXB4KZVtSJm1b6KxrfL+yFBTpH3Zjx77zwpAgcPtdZDhuLgreWsyJLOTKb72urQseUfF2TfFxNiBTlXdlxptqZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739263642; c=relaxed/simple;
-	bh=O2n4k7Gt1NVYYJ2SAPrLTlEttn/2uOimh2XBrjHMAOk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sM2uMCJQW7RmQdUfHoaCoEoxxGWTh4pYtdn6gXewBscw4Xqwfb492u1/OeWUhZP0eM77J200xP93DAIoJFx/56BJutEvE1vVcu7PtU6qGT4N0oASMFSPNlkkREHDCt+nPtk9tdRXmLkUIvxYggH9cmFm8oyUVSSnrHjyuae9MPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NWhTf39D; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739263644; c=relaxed/simple;
+	bh=fxSkNnWswjURBe3YN/VNeFO1XaorU4Mow1Ay0hX/jmI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LA4dfpwbFMHmAObviTXL5AqZxT9yNv6xgLZ116tbqqjYmserkYrfavsk43tOyzthjeTPU6hHzQF6Oo8UKJqsc0n3I95e1pXuZ/njfkbUVww14otxQ3RGSSdjCa9TvORSz6Twh62mBHYFBWWW+Q1+UMIws3Kd4GFUOnti/CW0rwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lBs7zg8D; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NWhTf39D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739263641; x=1770799641;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=O2n4k7Gt1NVYYJ2SAPrLTlEttn/2uOimh2XBrjHMAOk=;
-  b=NWhTf39D0uOtxD/FEn09BIAe59uKCCRBlzWMm4Y7fMt0vNLgDwg3T+ka
-   WkezHWwJeZeL2MHpMHoc/W1i7EIx38LyteuAov5Ho1guOkVnyOd5ytkGS
-   5ZogBRN2rZR90fXZLAQto5oWzCBy1dmw7D76LkbOSC9mOMQFBoJKKWgMd
-   dYDQzmbYoppTRLGLY+si+AjSUGb+CM4hNv1qMb8LjbsrTAmQCi57jpRSP
-   KoGdFgt7PbR6fRWu/Xt9AGbsShQvm/1riA8aqY4xWzvOGU1E1nLN+U2QT
-   W2FgYOGbHiLxX1v8IoQYqFzcwAtNkMJ0YQJB/SbabFAUSo46rm6x7BUfm
-   g==;
-X-CSE-ConnectionGUID: IxQBbiFTQ2myHXnRo7ZqKA==
-X-CSE-MsgGUID: GPQutLocRiW4wPqv1Sig4Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50099554"
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="50099554"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 00:47:20 -0800
-X-CSE-ConnectionGUID: fc5CPoz5SYuvotnO9i1Nuw==
-X-CSE-MsgGUID: 3e5LvWukQHyPSy2STXvTRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="112662467"
-Received: from unknown (HELO [10.217.160.151]) ([10.217.160.151])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 00:47:18 -0800
-Message-ID: <d459faf0-a180-496a-a809-db5b5a247e94@linux.intel.com>
-Date: Tue, 11 Feb 2025 09:47:11 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lBs7zg8D"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B71FD4006138;
+	Tue, 11 Feb 2025 08:47:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	YOhQtrBV6RaVA3wua/DaoyI2LGXzbI8BGpKTO0Q/A28=; b=lBs7zg8DRgNu/gTP
+	o/zEBx/fW5vEyf9riHXglfO3MNowD3YCQilSwMlyld0FSCPaWofkniNdLo5Ijnef
+	AU76tEaYcXJkaQ8sP/J+XE6jHf+T1X9qLMWjRVAk40SMY84UyxVpQtoNrFu8OIjU
+	9n2Nw8UQDDNpoJKrfTQVBBWS2p2RX6dvEVAEwj0jV70O5G+Y+fV9wRfrifdswE80
+	KxsWSVOzwqjqcg+LUkE6TItFCaYV+tfQfj0jLCRiGmvc/YO0Kk5RFhcq4Tm2QyI9
+	m5N74a3Ya5up6vgeyvSp1txoEPw3Gfcm7ol4fUiFGq52Q/rnCYY5f41WaMYChqRv
+	yOMkBg==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qe5mucyx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 08:47:19 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51B8lITN032221
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 08:47:18 GMT
+Received: from [10.218.5.175] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Feb
+ 2025 00:45:00 -0800
+Message-ID: <cf78b342-6655-4cde-b877-8f498ed0e6bf@quicinc.com>
+Date: Tue, 11 Feb 2025 14:14:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,59 +50,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] accel/amdxdna: Add missing include linux/slab.h
-To: Su Hui <suhui@nfschina.com>, min.ma@amd.com, lizhi.hou@amd.com,
- ogabbay@kernel.org
-Cc: quic_jhugo@quicinc.com, George.Yang@amd.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <20250211015354.3388171-1-suhui@nfschina.com>
+Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: sa8775p: Remove cdsp
+ compute-cb@10
+To: Ling Xu <quic_lxu5@quicinc.com>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>
+CC: <quic_kuiw@quicinc.com>, <quic_ekangupt@quicinc.com>,
+        <quic_kartsana@quicinc.com>, <kernel@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@kernel.org>
+References: <cover.1739260973.git.quic_lxu5@quicinc.com>
+ <4c9de858fda7848b77ea8c528c9b9d53600ad21a.1739260973.git.quic_lxu5@quicinc.com>
 Content-Language: en-US
-From: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
-Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298
- Gdansk - KRS 101882 - NIP 957-07-52-316
-In-Reply-To: <20250211015354.3388171-1-suhui@nfschina.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Pratyush Brahma <quic_pbrahma@quicinc.com>
+In-Reply-To: <4c9de858fda7848b77ea8c528c9b9d53600ad21a.1739260973.git.quic_lxu5@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: -ao38ud2dWcFS6EEWd7ubzlJJnAgiqIT
+X-Proofpoint-ORIG-GUID: -ao38ud2dWcFS6EEWd7ubzlJJnAgiqIT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_04,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 clxscore=1011 suspectscore=0 mlxscore=0
+ lowpriorityscore=0 phishscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=946 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502110053
 
-Reviewed-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
 
-On 2/11/2025 2:53 AM, Su Hui wrote:
-> When compiling without CONFIG_IA32_EMULATION, there can be some errors:
-> 
-> drivers/accel/amdxdna/amdxdna_mailbox.c: In function ‘mailbox_release_msg’:
-> drivers/accel/amdxdna/amdxdna_mailbox.c:197:2: error: implicit declaration
-> of function ‘kfree’.
->   197 |  kfree(mb_msg);
->       |  ^~~~~
-> drivers/accel/amdxdna/amdxdna_mailbox.c: In function ‘xdna_mailbox_send_msg’:
-> drivers/accel/amdxdna/amdxdna_mailbox.c:418:11: error:implicit declaration
-> of function ‘kzalloc’.
->   418 |  mb_msg = kzalloc(sizeof(*mb_msg) + pkg_size, GFP_KERNEL);
->       |           ^~~~~~~
-> 
-> Add the missing include.
-> 
-> Fixes: b87f920b9344 ("accel/amdxdna: Support hardware mailbox")
-> Signed-off-by: Su Hui <suhui@nfschina.com>
-> Reviewed-by: Lizhi Hou <lizhi.hou@amd.com>
+On 2/11/2025 1:44 PM, Ling Xu wrote:
+> From: Karthik Sanagavarapu <quic_kartsana@quicinc.com>
+>
+> Remove the context bank compute-cb@10 because these SMMU ids are S2-only
+> which is not used for S1 transaction.
+>
+> Fixes: f7b01bfb4b47 ("arm64: qcom: sa8775p: Add ADSP and CDSP0 fastrpc nodes")
+> Cc: stable@kernel.org
+> Signed-off-by: Karthik Sanagavarapu <quic_kartsana@quicinc.com>
+> Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
 > ---
-> v2:
->  - move the header to the include block above and keep it sorted(Jacek Lawrynowicz).
-> 
->  drivers/accel/amdxdna/amdxdna_mailbox.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/accel/amdxdna/amdxdna_mailbox.c b/drivers/accel/amdxdna/amdxdna_mailbox.c
-> index 814b16bb1953..e5301fac1397 100644
-> --- a/drivers/accel/amdxdna/amdxdna_mailbox.c
-> +++ b/drivers/accel/amdxdna/amdxdna_mailbox.c
-> @@ -8,6 +8,7 @@
->  #include <linux/bitfield.h>
->  #include <linux/interrupt.h>
->  #include <linux/iopoll.h>
-> +#include <linux/slab.h>
->  #include <linux/xarray.h>
->  
->  #define CREATE_TRACE_POINTS
+>   arch/arm64/boot/dts/qcom/sa8775p.dtsi | 8 --------
+>   1 file changed, 8 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> index 0aa27db21f3d..81b2fba94841 100644
+> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> @@ -4585,14 +4585,6 @@ compute-cb@9 {
+>   						dma-coherent;
+>   					};
+>   
+> -					compute-cb@10 {
+> -						compatible = "qcom,fastrpc-compute-cb";
+> -						reg = <10>;
+> -						iommus = <&apps_smmu 0x214a 0x04a0>,
+> -							 <&apps_smmu 0x218a 0x0400>;
+Commit description seems misleading as these are nested sids and not 
+S2-only. You may say you don't need it for your
+usecase which is a different thing altogether.
+> -						dma-coherent;
+> -					};
+> -
+>   					compute-cb@11 {
+>   						compatible = "qcom,fastrpc-compute-cb";
+>   						reg = <11>;
+
+-- 
+Thanks and Regards
+Pratyush Brahma
 
