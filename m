@@ -1,320 +1,154 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57961F03F2
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18751F0E49;
+	Tue, 11 Feb 2025 09:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739266261; cv=none; b=bIvacFZRzkxF6x+UpcMLa9OEeV+77C/mrq1Oa5Hr1NWhdaIulwfWX7GvVWu4JbrNVT4MnkHmENSlmMRJe+EaeoH0mc5y+4CLWuvSmTUE+R2cWBKAiTK+zTLePwmEFaglkE/bOZUq7yq+WixFLpnksszn0Y4M5pQGwvuhiGffot0=
+	t=1739266270; cv=none; b=AGgtq7aO4W4HvrKZ2b4v4NE0B0Pv+E5Yvjhji/osD9xIioHJQ9RZSdYPMZO/yNHAJJGa3gqXHe+Us/V5cFgn2CW1hZBCglHAXtPetgbqhmIbqDuvt+kCWxieBBWEp6IKYVu6lEqa02+rU9bVS9d1GoISc1XlZ6cHp5KTU5Yw/sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739266261; c=relaxed/simple;
-	bh=A/I48PbBb5I5iIc6Shl7ozap+VkugdClZDkBLg/W4xs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UgzIn6CDDaiHFcUXVLUgn/hb3ODUiI1Tk6cLQjfy+vJz8DkH8vHQnOI0vdhCQeF5bGlaScfOO8qsb56QGxBd4eAhc6BzcRKFU/I65Ym3Rdoq3mrTXVQ3nb8i48jl78Y74YRetoRoF4Uqf2wyOxwYEjZwJtaUA4lM7W+P+UW83ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=maZWnNaa; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739266270; c=relaxed/simple;
+	bh=rZ/L/eDctQHAU5B9MiJ71+NBc1VaWKjoU0bJIk5EbsY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TwuCtoLIE/CQ9rxSwjPPE3rOAwIZxpCXihzmL1Ist5TEWyCmyDLgeUal3qo1A0ZCRJPy09E/B/DRrU6FzYHXfVGrVQdlhW0Oh4MyUWNlnIvFg5rrcHmtp6yUIV7GKWfbceUOe0yyVgGk8oRDRrxgC0vTZUrSX5GXPEklhFIGhAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rRmoxrpq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="maZWnNaa"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38dc5b8ed86so2249004f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:30:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739266258; x=1739871058; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8GF075tACuMVMVh8PNKT0nRFACsnr6kvsDOiw0epdSs=;
-        b=maZWnNaaEaLZshsyOEyl9lTSgdoaKdOWmW9cZIB1VNcPq4qWtFmwwLocWEuIbYufdB
-         NZ0MgxaeLYfhJSn2OuENObg68VAandSxjvb38OcS/iZKEpSXXfkiK959ntgpYTPIKq6s
-         rxEDwkWOCj+wjm9MRx4o0C5wIFrnrC7Qoc4bU179D37xOiL3CgNeY3pEKQgaca6ZSVDZ
-         p/o6ENiOcVgz+zQ3/hxLuWY9IpFrFE7ZnBnEK1IuQwWkQAtOKzUaSlyjWFJgxr988+0a
-         vmRTIWgFbQwD0azCgxsSk4xnKtiVqrG/0/M59nF4TKL1baTQb8WApiReue7IyH7f96rO
-         ejUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739266258; x=1739871058;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8GF075tACuMVMVh8PNKT0nRFACsnr6kvsDOiw0epdSs=;
-        b=lyLFIexNRNYlVrizIMqR9Xb0+5EnHtiD6IN6XWlgFYCfI4pxaj5P1TYsEZJ4ZAPxsB
-         CgGTy5qzmK5IBbyTvcEVYdlUAvHCgYhogQIbvSnfaqgtfrGVPLfVp6BSes4T1ck6eQO5
-         Zh+KSLwXdKfd6ICx8ncSsXf47u3aDc9bflVAblIRI7KhA8WWWzKIe5V0Xo9KpeWucWlY
-         f6dqGvZU9vYOeHZyNYmiwc0DmR2mMPegSx8LD9FJGN471WiHiCgxskpOFDw59tDEqSUr
-         EknWU9LQid4F8bjpnglLXwayqgbqxz++/slwW2NPf+gRj50Wrvzc7dhbvncwS2qyUgIM
-         oDPg==
-X-Forwarded-Encrypted: i=1; AJvYcCWpjRtQ3eR80MRcLRbO9GGyFTaLrukAgWegpcz++wLEvdiror3ngiqdBBi5e4EXdr8NKP5veEZK/I/MIVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3BQAx2Axyj2eOMZI5R9hc/Us3adRy7B0XT2cDGjEJlv14bOHX
-	vzf2Ua+BjoicLZxh0xygYSOYnn1HCoVspAN+zKQ15PwQrh0ycPJOGuP4EvQvi4E=
-X-Gm-Gg: ASbGncu5Mn+B5BxHj+lT97jNZzJT2wIRJw8gjmeLlJP1evnYDGIYSgYy//CxOxwu4Gu
-	1BdJWJxXdt6LI9j1xv5EGQz0YfnoHIRcnhbd9d6zbiT+v7Ymv4pCfU12f+uMfQ9fw7AlBgBCzWy
-	t+VZNzfXwqHBiH8feFGDOsb6x3DipalcGVBBxAd/TX0sh6mmruZdwuVd1OHVU6a/KqBS6acmSEd
-	brXO0FPdQ/wTRXl2ycDy0XDmK/zBpCuSUqhQt3NC3rkamXDlgwfh+b3KwceTgX6+LiElPvLsAB+
-	zYSixcmSYKxEamSo+l5y9HZpu2Al9318ax4n91Pi5Sy+4I4pmbJ96yhyRZqUgf3goQnFiOw=
-X-Google-Smtp-Source: AGHT+IFiydCLeAvyEeW/5ArSvXalUmxlAwauB30Q787ws04Fjnw5BBYoJGg7Bc0g2UUutEuxX4DAng==
-X-Received: by 2002:a05:6000:1887:b0:38c:5fbf:10d6 with SMTP id ffacd0b85a97d-38de416d65dmr2356745f8f.7.1739266257863;
-        Tue, 11 Feb 2025 01:30:57 -0800 (PST)
-Received: from ta2.c.googlers.com (169.178.77.34.bc.googleusercontent.com. [34.77.178.169])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc672b55bsm12591296f8f.79.2025.02.11.01.30.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 01:30:56 -0800 (PST)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-Date: Tue, 11 Feb 2025 09:30:54 +0000
-Subject: [PATCH 2/2] mtd: spi-nor: use scope-based mutex cleanup helpers
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rRmoxrpq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38449C4CEDD;
+	Tue, 11 Feb 2025 09:31:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739266270;
+	bh=rZ/L/eDctQHAU5B9MiJ71+NBc1VaWKjoU0bJIk5EbsY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rRmoxrpqxpxP4nCESTR6EmlmZbVv5vNsHxr5cI4VQo4XEuz/1skNPTFX2at6sVoyE
+	 chByaTrWUGHW7Z0sfJ++NNR8wpa2C1IGECMhudsJeE1DcecxDDC9CufoJKPemsWAE5
+	 HREQsPN0pyhnIJFnTdpmFAUFouVq0Uj1idmBIiOLA8Co1VZqELGwxnmIPOIv9Mflvd
+	 AQX3x0jL4PLGDhshyHB5jM5Fg+d1jAjTPVAOkooHnHI2ums4av/Tr6RyBnir4enEWf
+	 o7R3HTskKaWNpHMsTTF3q+nrdpraNrK5b9aoBw0yIU2iRZxhT1/dWTQLNfmiVfoBry
+	 cbhBFNw+dDGgA==
+Message-ID: <adeff1d6-f80b-4a2c-b4bb-da44ecd5b747@kernel.org>
+Date: Tue, 11 Feb 2025 10:31:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next v3 01/15] mptcp: pm: drop info of
+ userspace_pm_remove_id_zero_address
+Content-Language: en-GB
+To: Simon Horman <horms@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
+ <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-1-71753ed957de@kernel.org>
+ <20250210194934.GO554665@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20250210194934.GO554665@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250211-spi-nor-guard-mutex-v1-2-05ed77a484d9@linaro.org>
-References: <20250211-spi-nor-guard-mutex-v1-0-05ed77a484d9@linaro.org>
-In-Reply-To: <20250211-spi-nor-guard-mutex-v1-0-05ed77a484d9@linaro.org>
-To: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Tudor Ambarus <tudor.ambarus@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739266254; l=6004;
- i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
- bh=A/I48PbBb5I5iIc6Shl7ozap+VkugdClZDkBLg/W4xs=;
- b=M8SYru7/AL6WclLtCUHLw2NOZOMXHyS08tR6ubyxEcEb+BuFrMRefWlULpzaP4icIWZlwbluz
- Z0nLiWyXXYAAfj2CzZNJEmKOJEt+NYyUUIHjJluJ3o+nPlpEuQBlDMX
-X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
- pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
 
-Use scope-based mutex clenup helpers, it reduces the code size.
+Hi Simon,
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- drivers/mtd/spi-nor/core.c | 71 ++++++++++++++--------------------------------
- 1 file changed, 22 insertions(+), 49 deletions(-)
+On 10/02/2025 20:49, Simon Horman wrote:
+> On Fri, Feb 07, 2025 at 02:59:19PM +0100, Matthieu Baerts (NGI0) wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> The only use of 'info' parameter of userspace_pm_remove_id_zero_address()
+>> is to set an error message into it.
+>>
+>> Plus, this helper will only fail when it cannot find any subflows with a
+>> local address ID 0.
+>>
+>> This patch drops this parameter and sets the error message where this
+>> function is called in mptcp_pm_nl_remove_doit().
+>>
+>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> Reviewed-by: Simon Horman <horms@kernel.org>
 
-diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index 1bb4a500be6e..c9b970f35c6b 100644
---- a/drivers/mtd/spi-nor/core.c
-+++ b/drivers/mtd/spi-nor/core.c
-@@ -7,6 +7,7 @@
-  * Copyright (C) 2014, Freescale Semiconductor, Inc.
-  */
- 
-+#include <linux/cleanup.h>
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -639,32 +640,26 @@ static bool spi_nor_use_parallel_locking(struct spi_nor *nor)
- static int spi_nor_rww_start_rdst(struct spi_nor *nor)
- {
- 	struct spi_nor_rww *rww = &nor->rww;
--	int ret = -EAGAIN;
- 
--	mutex_lock(&nor->lock);
-+	guard(mutex)(&nor->lock);
- 
- 	if (rww->ongoing_io || rww->ongoing_rd)
--		goto busy;
-+		return -EAGAIN;
- 
- 	rww->ongoing_io = true;
- 	rww->ongoing_rd = true;
--	ret = 0;
- 
--busy:
--	mutex_unlock(&nor->lock);
--	return ret;
-+	return 0;
- }
- 
- static void spi_nor_rww_end_rdst(struct spi_nor *nor)
- {
- 	struct spi_nor_rww *rww = &nor->rww;
- 
--	mutex_lock(&nor->lock);
-+	guard(mutex)(&nor->lock);
- 
- 	rww->ongoing_io = false;
- 	rww->ongoing_rd = false;
--
--	mutex_unlock(&nor->lock);
- }
- 
- static int spi_nor_lock_rdst(struct spi_nor *nor)
-@@ -1212,26 +1207,21 @@ static void spi_nor_offset_to_banks(u64 bank_size, loff_t start, size_t len,
- static bool spi_nor_rww_start_io(struct spi_nor *nor)
- {
- 	struct spi_nor_rww *rww = &nor->rww;
--	bool start = false;
- 
--	mutex_lock(&nor->lock);
-+	guard(mutex)(&nor->lock);
- 
- 	if (rww->ongoing_io)
--		goto busy;
-+		return false;
- 
- 	rww->ongoing_io = true;
--	start = true;
- 
--busy:
--	mutex_unlock(&nor->lock);
--	return start;
-+	return true;
- }
- 
- static void spi_nor_rww_end_io(struct spi_nor *nor)
- {
--	mutex_lock(&nor->lock);
-+	guard(mutex)(&nor->lock);
- 	nor->rww.ongoing_io = false;
--	mutex_unlock(&nor->lock);
- }
- 
- static int spi_nor_lock_device(struct spi_nor *nor)
-@@ -1254,32 +1244,27 @@ static void spi_nor_unlock_device(struct spi_nor *nor)
- static bool spi_nor_rww_start_exclusive(struct spi_nor *nor)
- {
- 	struct spi_nor_rww *rww = &nor->rww;
--	bool start = false;
- 
- 	mutex_lock(&nor->lock);
- 
- 	if (rww->ongoing_io || rww->ongoing_rd || rww->ongoing_pe)
--		goto busy;
-+		return false;
- 
- 	rww->ongoing_io = true;
- 	rww->ongoing_rd = true;
- 	rww->ongoing_pe = true;
--	start = true;
- 
--busy:
--	mutex_unlock(&nor->lock);
--	return start;
-+	return true;
- }
- 
- static void spi_nor_rww_end_exclusive(struct spi_nor *nor)
- {
- 	struct spi_nor_rww *rww = &nor->rww;
- 
--	mutex_lock(&nor->lock);
-+	guard(mutex)(&nor->lock);
- 	rww->ongoing_io = false;
- 	rww->ongoing_rd = false;
- 	rww->ongoing_pe = false;
--	mutex_unlock(&nor->lock);
- }
- 
- int spi_nor_prep_and_lock(struct spi_nor *nor)
-@@ -1316,30 +1301,26 @@ static bool spi_nor_rww_start_pe(struct spi_nor *nor, loff_t start, size_t len)
- {
- 	struct spi_nor_rww *rww = &nor->rww;
- 	unsigned int used_banks = 0;
--	bool started = false;
- 	u8 first, last;
- 	int bank;
- 
--	mutex_lock(&nor->lock);
-+	guard(mutex)(&nor->lock);
- 
- 	if (rww->ongoing_io || rww->ongoing_rd || rww->ongoing_pe)
--		goto busy;
-+		return false;
- 
- 	spi_nor_offset_to_banks(nor->params->bank_size, start, len, &first, &last);
- 	for (bank = first; bank <= last; bank++) {
- 		if (rww->used_banks & BIT(bank))
--			goto busy;
-+			return false;
- 
- 		used_banks |= BIT(bank);
- 	}
- 
- 	rww->used_banks |= used_banks;
- 	rww->ongoing_pe = true;
--	started = true;
- 
--busy:
--	mutex_unlock(&nor->lock);
--	return started;
-+	return true;
- }
- 
- static void spi_nor_rww_end_pe(struct spi_nor *nor, loff_t start, size_t len)
-@@ -1348,15 +1329,13 @@ static void spi_nor_rww_end_pe(struct spi_nor *nor, loff_t start, size_t len)
- 	u8 first, last;
- 	int bank;
- 
--	mutex_lock(&nor->lock);
-+	guard(mutex)(&nor->lock);
- 
- 	spi_nor_offset_to_banks(nor->params->bank_size, start, len, &first, &last);
- 	for (bank = first; bank <= last; bank++)
- 		rww->used_banks &= ~BIT(bank);
- 
- 	rww->ongoing_pe = false;
--
--	mutex_unlock(&nor->lock);
- }
- 
- static int spi_nor_prep_and_lock_pe(struct spi_nor *nor, loff_t start, size_t len)
-@@ -1393,19 +1372,18 @@ static bool spi_nor_rww_start_rd(struct spi_nor *nor, loff_t start, size_t len)
- {
- 	struct spi_nor_rww *rww = &nor->rww;
- 	unsigned int used_banks = 0;
--	bool started = false;
- 	u8 first, last;
- 	int bank;
- 
--	mutex_lock(&nor->lock);
-+	guard(mutex)(&nor->lock);
- 
- 	if (rww->ongoing_io || rww->ongoing_rd)
--		goto busy;
-+		return false;
- 
- 	spi_nor_offset_to_banks(nor->params->bank_size, start, len, &first, &last);
- 	for (bank = first; bank <= last; bank++) {
- 		if (rww->used_banks & BIT(bank))
--			goto busy;
-+			return false;
- 
- 		used_banks |= BIT(bank);
- 	}
-@@ -1413,11 +1391,8 @@ static bool spi_nor_rww_start_rd(struct spi_nor *nor, loff_t start, size_t len)
- 	rww->used_banks |= used_banks;
- 	rww->ongoing_io = true;
- 	rww->ongoing_rd = true;
--	started = true;
- 
--busy:
--	mutex_unlock(&nor->lock);
--	return started;
-+	return true;
- }
- 
- static void spi_nor_rww_end_rd(struct spi_nor *nor, loff_t start, size_t len)
-@@ -1426,7 +1401,7 @@ static void spi_nor_rww_end_rd(struct spi_nor *nor, loff_t start, size_t len)
- 	u8 first, last;
- 	int bank;
- 
--	mutex_lock(&nor->lock);
-+	guard(mutex)(&nor->lock);
- 
- 	spi_nor_offset_to_banks(nor->params->bank_size, start, len, &first, &last);
- 	for (bank = first; bank <= last; bank++)
-@@ -1434,8 +1409,6 @@ static void spi_nor_rww_end_rd(struct spi_nor *nor, loff_t start, size_t len)
- 
- 	rww->ongoing_io = false;
- 	rww->ongoing_rd = false;
--
--	mutex_unlock(&nor->lock);
- }
- 
- static int spi_nor_prep_and_lock_rd(struct spi_nor *nor, loff_t start, size_t len)
+Thank you for the review, and this message!
 
+> A minor nit, perhaps it has been discussed before:
+> 
+> I'm not sure that your Reviewed-by is needed if you also provide
+> your Signed-off-by. Because it I think that the latter implies the former.
+
+This has been discussed a while ago, but only on the MPTCP list I think.
+To be honest, we didn't find a precise answer in the doc [1], and maybe
+we are doing it wrong for all this time :)
+
+Technically, when someone shares a patch on the MPTCP ML, someone else
+does the review, sent the "Reviewed-by" tag, then the patch is queued,
+and the one sending the patch to the netdev ML adds a "Signed-off-by"
+tag. With this patch here, I did both.
+
+Before, we were removing the RvB tag when it was the same as the SoB
+one, but we stopped doing that because we thought that was not correct
+and / or not needed. We can re-introduce this if preferred. My
+understanding is that the SoB tag is for the authors and the
+intermediate maintainers -- who might have not done a full review --
+while the RvB one seems to indicate that a "proper" review has been
+done. If someone else does a review on a patch, I can add my SoB tag
+when "forwarding" the patch, trusting the review done by someone else.
+
+Do you think it is better to remove the RvB tag if there is a SoB one
+for the same person?
+
+[1] https://docs.kernel.org/process/submitting-patches.html
+
+Cheers,
+Matt
 -- 
-2.48.1.502.g6dc24dfdaf-goog
+Sponsored by the NGI0 Core fund.
 
