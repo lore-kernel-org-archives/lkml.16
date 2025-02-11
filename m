@@ -1,124 +1,205 @@
-Received: from ring0.de (ring0.de [152.53.19.228])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4017526BD87
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.19.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4409C22318;
+	Tue, 11 Feb 2025 01:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739238701; cv=none; b=NDnVjtQBaliJGQuB9PTrxz/AlfzZZk4P8vtyaJ82mCgbzZUE6I0JXuZLvqXIlOnJf/7e9LfjvHWlUosS+M337fWjqf2aMtdDmW9Wzxgx2/anSsWGVAt74E3HFb3HscURNIMTjiZR7yttJsbDSAL4eBY3Kt2acltEogot2QLq3SE=
+	t=1739238701; cv=none; b=ZLGr69CE5fxP0vJPCcwHee3G3VlrZIP1MztqviBzbf75ROtei7v7Zu3Bo+nIPV/U+2n0eKo/0DYBYAVbnBSDrGwWinZ5WtEAtKFQX823NWKkv6jGCAXvBoL/fSdehNfsxC06L/J0OC20t73y3jJiKuxdRtnoAOhXQTGjWZ2tfm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739238701; c=relaxed/simple;
-	bh=ppw3vJ1gCVcWIn5OaRlVDmg/ng4GS4+jM44pszcGFgc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aB9mCkb+t1WZitNtFI0bHcRTbLmFXajbQsXx6aA0P2iYEqvkgGwkzknJjE5+4ecallweqJmYXFJr4c0WXx29PpS77mZaEgn2x0LdCGvW5rfTrOyh146pYJWlELHcQukz4aUBfI70mkqRSEwI/S9BZ4fFoNRhgzSZmk8UpTkpfKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ring0.de; spf=pass smtp.mailfrom=ring0.de; dkim=pass (1024-bit key) header.d=ring0.de header.i=@ring0.de header.b=Oz4xsojw; arc=none smtp.client-ip=152.53.19.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ring0.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ring0.de
+	bh=nCIiUV1jtuHcR3eWZYKD3letQjclk1G0r5X/zLiu3Y8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CQSFlv5HBBohAm2U9RnDzCl8RQToML8m9ngQrsBwXyjKcza6c5fyiHGfXKP+DM9LUAlkfiRC6L10AnaSHFbvFvPGLlnfT7CFouopw/2z5l2eoSOU50XiB8xe0fckPIIHzQkssfYAARqvUsRtYtXUVhp7R7eSr4YlDMU5n4QXWDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gvUlKOym; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ring0.de header.i=@ring0.de header.b="Oz4xsojw"
-From: Sebastian Reichel <sre@ring0.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ring0.de; s=dkim;
-	t=1739238226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=8yk01hIdDoOTB8pd782zVymNxuGWbUdglBo6acGQyJ0=;
-	b=Oz4xsojwF8SPQ0OlIBurNyBTUWhIy4hoOQbDDGNKvOsmpbiT3m+0cvnSwQ9lH5iXhJtE8H
-	d6rOTiSqHv92PTeXPy1fEcdQsLUw/AEV+CdfkRFvrjSGaU6Eub9VkRL2lLBBtZ5wNm9E1a
-	SZwoGawvKQvrX2jkW5imlpA57z8sb3U=
-Authentication-Results: ring0.de;
-	auth=pass smtp.mailfrom=sre@ring0.de
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Sebastian Reichel <sre@kernel.org>,
-	Johan Hovold <johan@kernel.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] drm/edp-panel: Add panel used by T14s Gen6 Snapdragon
-Date: Tue, 11 Feb 2025 02:41:01 +0100
-Message-ID: <20250211014314.94429-1-sre@ring0.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gvUlKOym"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AHtKVL006114;
+	Tue, 11 Feb 2025 01:51:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1ggmpUlEH9eixLyKpXlpoLJ8PIqcM2pSQEaa1a9t2qg=; b=gvUlKOym++NFtjDO
+	dtj9SjXES6RMjChSYtntdYhOmTZuXZ5HL7yz3QcL7Qb7yva6Nfm26B+UdysJN2gD
+	t+Ei+WtfyF+7lmbnnFmb5eOlHwcAWc9Z3wg6LqyypHv/i7qf3JkPKMYNXyhhXVeo
+	+BHlNd8vC+QUBV8ngmn1SPRD+G8n2ImYt97UN/vR/DTuDWPE5avmXPDUDA3Od12k
+	9P7lvFUJnML75hq9G1L588F7LQjzblF5lMRUrIHRd0SsWbSPnkg39VoEHOIwTpXv
+	wx5r9Nlmu9JQMUdoqGAUVrP/5cIhizZ7V2pcnIa/nMcEtEH4icX2cVfZiX//WE12
+	VrlvzA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qe5mtg1w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 01:51:24 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51B1pNme021339
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 01:51:23 GMT
+Received: from [10.134.70.212] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
+ 2025 17:51:23 -0800
+Message-ID: <887a8c60-ef53-4f46-9dd1-c74f266f8bb2@quicinc.com>
+Date: Mon, 10 Feb 2025 17:51:07 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-1.60 / 15.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:39351, ipnet:193.32.248.0/24, country:SE];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	DKIM_SIGNED(0.00)[ring0.de:s=dkim];
-	NEURAL_SPAM(0.00)[0.828];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FROM_EQ_ENVFROM(0.00)[];
-	IS_LOCAL_DOMAIN_E(0.00)[ring0.de];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	IS_LOCAL_DOMAIN_H(0.00)[ring0.de]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: DB156E2E26
-X-Rspamd-Server: antispam
-X-Spamd-Bar: -
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] drm/msm/dsi: Use existing per-interface slice
+ count in DSC timing
+Content-Language: en-US
+To: Marijn Suijten <marijn.suijten@somainline.org>,
+        Rob Clark
+	<robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Dmitry
+ Baryshkov" <dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>, "David
+ Airlie" <airlied@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Simona Vetter
+	<simona@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        "Jordan
+ Crouse" <jordan@cosmicpenguin.net>,
+        <~postmarketos/upstreaming@lists.sr.ht>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        "Martin
+ Botka" <martin.botka@somainline.org>,
+        Jami Kettunen
+	<jami.kettunen@somainline.org>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>
+References: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-0-9a60184fdc36@somainline.org>
+ <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-1-9a60184fdc36@somainline.org>
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-1-9a60184fdc36@somainline.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: WVlzP2eybIJaV7B7JPZcca6eFxe4rx8v
+X-Proofpoint-ORIG-GUID: WVlzP2eybIJaV7B7JPZcca6eFxe4rx8v
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_01,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 clxscore=1011 suspectscore=0 mlxscore=0
+ lowpriorityscore=0 phishscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502110009
 
-From: Sebastian Reichel <sre@kernel.org>
 
-The Lenovo Thinkpad T14s Gen6 Snapdragon is currently sold with three
-different panel versions: OLED, Low Power IPS or IPS with Touchscreen.
 
-My Low Power IPS version had this panel and the kernel complained
-about not knowing any details.  I don't have any panel documentation,
-but as far as I can see the same timings for the already supported
-CSO panel also work for this one.
+On 2/9/2025 1:42 PM, Marijn Suijten wrote:
+> When configuring the timing of DSI hosts (interfaces) in
+> dsi_timing_setup() all values written to registers are taking
+> bonded-mode into account by dividing the original mode width by 2
+> (half the data is sent over each of the two DSI hosts), but the full
+> width instead of the interface width is passed as hdisplay parameter to
+> dsi_update_dsc_timing().
+> 
+> Currently only msm_dsc_get_slices_per_intf() is called within
+> dsi_update_dsc_timing() with the `hdisplay` argument which clearly
+> documents that it wants the width of a single interface (which, again,
+> in bonded DSI mode is half the total width of the mode) resulting in all
+> subsequent values to be completely off.
+> 
+> However, as soon as we start to pass the halved hdisplay
+> into dsi_update_dsc_timing() we might as well discard
+> msm_dsc_get_slices_per_intf() since the value it calculates is already
+> available in dsc->slice_count which is per-interface by the current
+> design of MSM DPU/DSI implementations and their use of the DRM DSC
+> helpers.
+> 
+> Fixes: 08802f515c3c ("drm/msm/dsi: Add support for DSC configuration")
+> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
 
-The raw EDID is:
+Hi Marijn,
 
-00 ff ff ff ff ff ff 00 0e 6f 13 14 00 00 00 00
-00 1e 01 04 a5 1e 13 78 03 82 53 a4 55 4d 9b 24
-0d 51 55 00 00 00 01 01 01 01 01 01 01 01 01 01
-01 01 01 01 01 01 35 3c 80 a0 70 b0 23 40 30 20
-36 00 2e bd 10 00 00 18 00 00 00 fd 00 30 3c 4a
-4a 0f 01 0a 20 20 20 20 20 20 00 00 00 fe 00 43
-53 4f 54 20 54 33 0a 20 20 20 20 20 00 00 00 fe
-00 4d 4e 45 30 30 37 4a 41 31 2d 32 0a 20 00 8b
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 
-Signed-off-by: Sebastian Reichel <sre@kernel.org>
----
-Hi,
+Thanks,
 
-I'm running my kernels on the laptop as a daily driver with this patch
-for ca. 3 weeks now and haven't noticed any problems. In case they have
-better documentation I added some people in Cc, that have send patches
-for the T14s DT and thus should have at least one of them.
+Jessica Zhang
 
-Greetings,
-
--- Sebastian
----
- drivers/gpu/drm/panel/panel-edp.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index f8511fe5fb0d..7af65fb69075 100644
---- a/drivers/gpu/drm/panel/panel-edp.c
-+++ b/drivers/gpu/drm/panel/panel-edp.c
-@@ -1951,6 +1951,7 @@ static const struct edp_panel_entry edp_panels[] = {
- 	EDP_PANEL_ENTRY('C', 'M', 'N', 0x14e5, &delay_200_500_e80_d50, "N140HGA-EA1"),
- 
- 	EDP_PANEL_ENTRY('C', 'S', 'O', 0x1200, &delay_200_500_e50_p2e200, "MNC207QS1-1"),
-+	EDP_PANEL_ENTRY('C', 'S', 'O', 0x1413, &delay_200_500_e50_p2e200, "MNE007JA1-2"),
- 
- 	EDP_PANEL_ENTRY('C', 'S', 'W', 0x1100, &delay_200_500_e80_d50, "MNB601LS1-1"),
- 	EDP_PANEL_ENTRY('C', 'S', 'W', 0x1104, &delay_200_500_e50, "MNB601LS1-4"),
--- 
-2.47.2
+> ---
+>   drivers/gpu/drm/msm/dsi/dsi_host.c   |  8 ++++----
+>   drivers/gpu/drm/msm/msm_dsc_helper.h | 11 -----------
+>   2 files changed, 4 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> index 007311c21fdaa0462b05d53cd8a2aad0269b1727..42e100a8adca09d7b55afce0e2553e76d898744f 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> @@ -846,7 +846,7 @@ static void dsi_ctrl_enable(struct msm_dsi_host *msm_host,
+>   		dsi_write(msm_host, REG_DSI_CPHY_MODE_CTRL, BIT(0));
+>   }
+>   
+> -static void dsi_update_dsc_timing(struct msm_dsi_host *msm_host, bool is_cmd_mode, u32 hdisplay)
+> +static void dsi_update_dsc_timing(struct msm_dsi_host *msm_host, bool is_cmd_mode)
+>   {
+>   	struct drm_dsc_config *dsc = msm_host->dsc;
+>   	u32 reg, reg_ctrl, reg_ctrl2;
+> @@ -858,7 +858,7 @@ static void dsi_update_dsc_timing(struct msm_dsi_host *msm_host, bool is_cmd_mod
+>   	/* first calculate dsc parameters and then program
+>   	 * compress mode registers
+>   	 */
+> -	slice_per_intf = msm_dsc_get_slices_per_intf(dsc, hdisplay);
+> +	slice_per_intf = dsc->slice_count;
+>   
+>   	total_bytes_per_intf = dsc->slice_chunk_size * slice_per_intf;
+>   	bytes_per_pkt = dsc->slice_chunk_size; /* * slice_per_pkt; */
+> @@ -991,7 +991,7 @@ static void dsi_timing_setup(struct msm_dsi_host *msm_host, bool is_bonded_dsi)
+>   
+>   	if (msm_host->mode_flags & MIPI_DSI_MODE_VIDEO) {
+>   		if (msm_host->dsc)
+> -			dsi_update_dsc_timing(msm_host, false, mode->hdisplay);
+> +			dsi_update_dsc_timing(msm_host, false);
+>   
+>   		dsi_write(msm_host, REG_DSI_ACTIVE_H,
+>   			DSI_ACTIVE_H_START(ha_start) |
+> @@ -1012,7 +1012,7 @@ static void dsi_timing_setup(struct msm_dsi_host *msm_host, bool is_bonded_dsi)
+>   			DSI_ACTIVE_VSYNC_VPOS_END(vs_end));
+>   	} else {		/* command mode */
+>   		if (msm_host->dsc)
+> -			dsi_update_dsc_timing(msm_host, true, mode->hdisplay);
+> +			dsi_update_dsc_timing(msm_host, true);
+>   
+>   		/* image data and 1 byte write_memory_start cmd */
+>   		if (!msm_host->dsc)
+> diff --git a/drivers/gpu/drm/msm/msm_dsc_helper.h b/drivers/gpu/drm/msm/msm_dsc_helper.h
+> index b9049fe1e2790703a6f42dd7e6cd3fa5eea29389..63f95523b2cbb48f822210ac47cdd3526f231a89 100644
+> --- a/drivers/gpu/drm/msm/msm_dsc_helper.h
+> +++ b/drivers/gpu/drm/msm/msm_dsc_helper.h
+> @@ -12,17 +12,6 @@
+>   #include <linux/math.h>
+>   #include <drm/display/drm_dsc_helper.h>
+>   
+> -/**
+> - * msm_dsc_get_slices_per_intf() - calculate number of slices per interface
+> - * @dsc: Pointer to drm dsc config struct
+> - * @intf_width: interface width in pixels
+> - * Returns: Integer representing the number of slices for the given interface
+> - */
+> -static inline u32 msm_dsc_get_slices_per_intf(const struct drm_dsc_config *dsc, u32 intf_width)
+> -{
+> -	return DIV_ROUND_UP(intf_width, dsc->slice_width);
+> -}
+> -
+>   /**
+>    * msm_dsc_get_bytes_per_line() - calculate bytes per line
+>    * @dsc: Pointer to drm dsc config struct
+> 
+> -- 
+> 2.48.1
+> 
+> 
 
