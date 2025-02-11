@@ -1,135 +1,136 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841721F3FD1;
-	Tue, 11 Feb 2025 10:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD171F236B;
+	Tue, 11 Feb 2025 10:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739269189; cv=none; b=u9czoN5tC/xva1cdNSiSW5Na+Bxs4bZiJwsHIFvqIAaN8NsH5vmOCIB/XxVV1cDbjHXBiyUPrU7idDjbNYO4qi7oitQhYiEbYvJEgYLc1dGSwI48E6UgFlC68Iy4GTi73OoNP8BGl/vzcgh6yHXz2NbCB0Ch9nWziTtOnO+C0Ps=
+	t=1739269232; cv=none; b=jUu3BmbxWo1NhzlfFmVZfKN7Oc3/OqgFqJKhRwrc6Z+1VUzR2Bm7GwGQ7Vhnu+X+hXBiFcH8moDwTFt2tICeiRinHaeFP6l3eND+CF2+QVDv/2xwKl4HCLY304GAnCuit/k7VNY3phH0bYgg2eHgmO5EGXBITV9HORZEy6W3AY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739269189; c=relaxed/simple;
-	bh=uX1dyU9IflgpojBwXeOMw8uHEiq7py2tVx43fLyNoyc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MYFl03fnhuf4Tm4LHEWM6h3a9gTt8v6LjJN9ms73T3tuLjEQpTKwjcDqVgB526bjA81/ZAnBbqvvY1UFylgruQtdTl5p7I99GqzxTFWH7mrRUqpKwl+yM5dmhC5DZ8bysDKcWr+Bha8Vvd8WJZURKiAkg7v8942TyjPj2IECZvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=RyKq5tU4; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1739269232; c=relaxed/simple;
+	bh=9lfDDB4rPknt5HbAKTNtzSaIA0xDJDNjOynJmOPHlww=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FyPgCwpDljrAgSwc15L91jS4F2R1dlexHuEcIbGlncNipA22r4L7EUAMVWKrxqDYZcnEjxw6OEFMIXLKrKbUoQNi8H+boha3BhQdXfIqx+JQdSLk+JjvKr6HIGlOLIYPlhezf9tyYZW22qwjGdWh1wk+1rG4thge/97OPOsOm3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wq/SldKK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="RyKq5tU4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=7hfjt0I5NnrMIwqrD0mfpNKdeBJDKmRJFRQX9VEMhUU=; b=RyKq5tU4gJrvp0I9SDHNYwuL7b
-	NIoPnPxm1Ky1/wh0xCoSJHRif70vJVUsux58hnlYWxL4M1BtGHKz9fs4d8clPl8B+QsISMjXZum9w
-	+MA2E+sjoIHRtpl8wQK2JzQ5PXOOQ2VLzKmETjW9SZSIAzyWuz8nHCdCQVNAyPbloRGNJBQTW2xmV
-	vw4dO1Y8ze/3FGKayzQaJ9+lqHw1Ratvb1PgCng3yEfmjmvWnlj1Os3Lx5eZPcM9NkF1zu97uKC91
-	s9Wd5+REWbaxfvcIWFsjmLp8TdX75W9mG7J/fPWeK2/yq4x4N9BGxrbdVx2hGN7b8toBEaedLZ0tJ
-	1rKNklJg==;
-Received: from i53875bc0.versanet.de ([83.135.91.192] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1thnMf-0006As-Pf; Tue, 11 Feb 2025 11:19:37 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Kever Yang <kever.yang@rock-chips.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-rockchip@lists.infradead.org,
- Shaohan Yao <shaohan.yao@rock-chips.com>, linux-pm@vger.kernel.org,
- Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
- Zhang Rui <rui.zhang@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- linux-arm-kernel@lists.infradead.org
-Subject:
- Re: [PATCH 2/2] thermal: rockchip: Support the rk3562 SoC in thermal driver
-Date: Tue, 11 Feb 2025 11:19:36 +0100
-Message-ID: <17758610.geO5KgaWL5@diego>
-In-Reply-To: <7f17cc55-a741-4bb8-9513-0580ca6fedd3@linaro.org>
-References:
- <20241224094015.3816301-1-kever.yang@rock-chips.com>
- <20241224094015.3816301-2-kever.yang@rock-chips.com>
- <7f17cc55-a741-4bb8-9513-0580ca6fedd3@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wq/SldKK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D36F6C4CEE4;
+	Tue, 11 Feb 2025 10:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739269232;
+	bh=9lfDDB4rPknt5HbAKTNtzSaIA0xDJDNjOynJmOPHlww=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Wq/SldKKohls9L9zYrH4MQRYuMqwGfi2zjJVZwBuaNe/hJgqgOBAxn86Np0sygFlr
+	 VjM6FNh9QxQnmC0fRI5cDzFZqEewMdcfiOA3t+Bb22o+I3NsMgQwOGlMLLv1XOE8kl
+	 2MFWWG0RE8gxSVHERYQDqwXmoPJVsgRPS+4dkn9GHo1qxt7tUvDaFHRETowVa7zSp4
+	 p8IiwNiTfpfDMuftOrfBXNzq4tFM4IyBtqWxECmbecIrV3FoNJ6S+5CVLRFP0cSUxh
+	 CwyPLqIhzB1izTsBM/bzyvD4+HvcLEpgjn1mFqj8vfNL0ZfsX/uZDoGVBCHjTZ/emU
+	 Aa87q2ahTP8kA==
+Message-ID: <3da61b9b-fa44-4a45-bccb-40a23ef997ce@kernel.org>
+Date: Tue, 11 Feb 2025 10:20:27 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next] bpftool: Check map name length when map create
+To: Rong Tao <rtoax@foxmail.com>, ast@kernel.org, daniel@iogearbox.net
+Cc: rongtao@cestc.cn, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>,
+ "open list:BPF [TOOLING] (bpftool)" <bpf@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <tencent_1C4444032C2188ACD04B4995B0D78F510607@qq.com>
+From: Quentin Monnet <qmo@kernel.org>
+Content-Language: en-GB
+In-Reply-To: <tencent_1C4444032C2188ACD04B4995B0D78F510607@qq.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hey Daniel,
-
-Am Dienstag, 11. Februar 2025, 10:36:09 MEZ schrieb Daniel Lezcano:
-> On 24/12/2024 10:40, Kever Yang wrote:
-> > From: Shaohan Yao <shaohan.yao@rock-chips.com>
-> > 
-> > There are one Temperature Sensor on rk3562, channel 0 is for chip.
+2025-02-11 16:45 UTC+0800 ~ Rong Tao <rtoax@foxmail.com>
+> From: Rong Tao <rongtao@cestc.cn>
 > 
-> A bit stingy in terms of description, no ?
+> The size of struct bpf_map::name is BPF_OBJ_NAME_LEN (16).
 > 
+> bpf(2) {
+>   map_create() {
+>     bpf_obj_name_cpy(map->name, attr->map_name, sizeof(attr->map_name));
+>   }
+> }
 > 
-> > Signed-off-by: Shaohan Yao <shaohan.yao@rock-chips.com>
-> > Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-[...]
-> > +static const struct tsadc_table rk3562_code_table[] = {
-> > +	{0, -40000},
-> > +	{1419, -40000},
-> > +	{1428, -35000},
-> > +	{1436, -30000},
-> > +	{1445, -25000},
-> > +	{1453, -20000},
-> > +	{1462, -15000},
-> > +	{1470, -10000},
-> > +	{1479, -5000},
-> > +	{1487, 0},
-> > +	{1496, 5000},
-> > +	{1504, 10000},
-> > +	{1512, 15000},
-> > +	{1521, 20000},
-> > +	{1529, 25000},
-> > +	{1538, 30000},
-> > +	{1546, 35000},
-> > +	{1555, 40000},
-> > +	{1563, 45000},
-> > +	{1572, 50000},
-> > +	{1580, 55000},
-> > +	{1589, 60000},
-> > +	{1598, 65000},
-> > +	{1606, 70000},
-> > +	{1615, 75000},
-> > +	{1623, 80000},
-> > +	{1632, 85000},
-> > +	{1640, 90000},
-> > +	{1648, 95000},
-> > +	{1657, 100000},
-> > +	{1666, 105000},
-> > +	{1674, 110000},
-> > +	{1682, 115000},
-> > +	{1691, 120000},
-> > +	{1699, 125000},
-> > +	{TSADCV2_DATA_MASK, 125000},
-> > +};
+> When specifying a map name using bpftool map create name, no error is
+> reported if the name length is greater than 15.
 > 
-> May be it is time to optimize all these tables out of the memory driver?
+>     $ sudo bpftool map create /sys/fs/bpf/12345678901234567890 \
+>         type array key 4 value 4 entries 5 name 12345678901234567890
 > 
-> It is the 9th table introduced.
+> Users will think that 12345678901234567890 is legal, but this name cannot
+> be used to index a map.
+> 
+>     $ sudo bpftool map show name 12345678901234567890
+>     Error: can't parse name
+> 
+>     $ sudo bpftool map show
+>     ...
+>     1249: array  name 123456789012345  flags 0x0
+>     	key 4B  value 4B  max_entries 5  memlock 304B
+> 
+>     $ sudo bpftool map show name 123456789012345
+>     1249: array  name 123456789012345  flags 0x0
+>     	key 4B  value 4B  max_entries 5  memlock 304B
+> 
+> The map name provided in the command line is truncated, but no error is
+> reported. This submission checks the length of the map name.
+> 
+> Signed-off-by: Rong Tao <rongtao@cestc.cn>
+> ---
+>  tools/bpf/bpftool/map.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
+> index ed4a9bd82931..fa00f7865065 100644
+> --- a/tools/bpf/bpftool/map.c
+> +++ b/tools/bpf/bpftool/map.c
+> @@ -1330,6 +1330,12 @@ static int do_create(int argc, char **argv)
+>  		goto exit;
+>  	}
+>  
+> +	if (strlen(map_name) > BPF_OBJ_NAME_LEN - 1) {
+> +		p_err("The map name is too long, should be less than %d\n",
 
-just to see if we think differently, what do you have in mind?
 
-For me the adc-to-temperature conversion _is_ part of the hw-block itself,
-so should likely not spill into the devicetree, but you're right, defining
-a big table for each soc also isn't really great.
-
-For the rk3562 in question, the stepping seems to be 8,9,8,9,....
-where for the rk3568 the value stepping seems to be 32,36,32,36,...
-and it looks similar for the other socs too, with the driver is already
-interpolating between values it seems.
-
-So even just halving (or more) all the big tables (dropping every second
-entry for example) should not really loose us real granularity.
-
-Heiko
+Nit: I'd drop "The" (and the capital letter) for consistency with other
+messages in bpftool; and I'd replace "less than ..." with "no longer
+than %d characters\n" to make it explicit and avoid confusion between
+"strictly less" and "less or equal".
 
 
+> +		      BPF_OBJ_NAME_LEN - 1);
+> +		goto exit;
+> +	}
+> +
+>  	set_max_rlimit();
+>  
+>  	fd = bpf_map_create(map_type, map_name, key_size, value_size, max_entries, &attr);
+
+
+There's no need to defer the check until after we've parsed all
+arguments. Can you move it to the location where we retrieve the name,
+please?:
+
+		[...]
+		} else if (is_prefix(*argv, "name")) {
+			NEXT_ARG();
+			map_name = GET_ARG();
+		} else ...
+
+pw-bot: cr
+
+Apart from these, it's a good idea to fix it, thank you!
+Quentin
