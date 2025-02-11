@@ -1,55 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79166262175
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:50:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E05262D0D
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:50:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739299855; cv=none; b=naMtLI9aR6IIwKVOX0VCINhtatHApQw7trLxTcG7MY3U141CrnoCKSl1lIG2NJNCZJEQ+IyNoDxxxoX0WGNkmagGLbKycKriQ+WgxZuP0nwcrNR5Alq/3joLXYFdYEhGJtwh8fcUva933Ax+VcoH5uv3EGlRTpCiPRvyGfJ+2r0=
+	t=1739299856; cv=none; b=KD1VCMawO1C0F2vq9bWVQhFup8Ufgrlf89FvqIqEoUc++1yH1Asfgzr/RUQXiKdGNetoQLnkj4S9amULZfTIiOSoAZjkg9MxuKaWtEmxLYxZ5LQJmObc1A9rYeu6sYtPAXAUywCLloxCv28NPiorP3diiSPRbW8P2vYmx5Oiaok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739299855; c=relaxed/simple;
-	bh=kyDm0PTrKtGkLlMNu0FPB29JJtDL74GPskH5mAi0zBY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dY3X1zumveLOSj5AYxzFzJIKalychwsN7rS/QjpOWbyRWcTxe1TCTcjZomWINzGpbrZgrKvEAGjK8lO2cSnhw2WJY3b5fOMP5+zQ7unF3UOJLnHUnlFURtMy0kfXvHUPhDdz7HUTeOzaNqYKBA1Bw95ouR8j/ELI7w3O8kKHK3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E6G8IcZV; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1739299856; c=relaxed/simple;
+	bh=tKaSwlUToGhEpBuLbJaqZ4JaBFick+0Rx4nfge+h+Fc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=D5PfVZw0JuJlvvz4R/A2RlfaWspN122OIxexYXxbTdqy/zEp6aOVEncov8UhxJ9Rsw0KkqaQ8HspveoqBXwr6TO8Rtg3qZtJY+fxqYEmZw1HjSIFAUbqgSSB6Pr4A0cFcZmk66chji6fZxaucoCpHjAjE94BszlXmu0e3oYvfOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nKsV6u9G; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E6G8IcZV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nKsV6u9G"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739299853; x=1770835853;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kyDm0PTrKtGkLlMNu0FPB29JJtDL74GPskH5mAi0zBY=;
-  b=E6G8IcZV7O2ic/mfU0nIVKUckssS3JZ6Z5yl0StNZurvV6aKphHGS7m1
-   JycIDaVGDqd/3ZBqQj3kNXxYFHtyw2CtrjVsdFt5CbjY0y+N+O3r5Bt7B
-   IQJDKponrKxC5dDEtZvU9oIISxeV6pySsH8AypdQ/xEvfVQnjlLx9JCjj
-   tb64Ghdh44zNYGwh4XQ05HQ5BrW1JJkhZ+IjzmigukylaRg3FZk2wgyti
-   xH2veXmc+O0Gf2S16QhxVk4evS2q8KDBOdILeEi28oHlwmifSabFDXTXl
-   M2GPQt74bprZk3jR+CjPHSAm57uTo0k0hS0wMRcx1hzJb4aABwGlyxzT5
-   A==;
-X-CSE-ConnectionGUID: AJCTvHTqQXmQEiqKD7UBaA==
-X-CSE-MsgGUID: 2M8zsC0XQES5cmqbTrAONA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="57345434"
+  t=1739299855; x=1770835855;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=tKaSwlUToGhEpBuLbJaqZ4JaBFick+0Rx4nfge+h+Fc=;
+  b=nKsV6u9GMG6Nqi2BM79pr1iGKdUYMiU7enVWrhEnXKbpFVj/mF2GO1rZ
+   Ww1/jNUJRmL813hQ8Lc4knHOXAkxXtZRot2ugf3kSzd7In8or6WE8E78q
+   Gm63jduHIoPnjX4MfyUm1gqqtUA+ehZmrsrC2jFMIzJzOy4Vh9U6cI0jo
+   vH06kNZqkdl+NtS0FAp0HsRb9gO1nFw7PpjxhsG5SX0OPVYRlA+yi6wJW
+   +HOmmPqpdQKpj/sMD3LzvchuTLfjeRDd6uipyPm4dWEeN6CYOSkNTF6Se
+   VRX7sG4fZ9j3ycF3tLGqvVFc3IJ7RhFHWWHZz8dIS+nEhdUN2x4arcKWR
+   w==;
+X-CSE-ConnectionGUID: FDG5UZLcQ+W67f8B/xKF8g==
+X-CSE-MsgGUID: smKFItj4QcOvR5B0o1Qcdg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="57345437"
 X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="57345434"
+   d="scan'208";a="57345437"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 10:50:53 -0800
-X-CSE-ConnectionGUID: RDEdeHgiRwCDYIkVG4rr0g==
-X-CSE-MsgGUID: Cm5PZ908ShShACozo4NYdg==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 10:50:55 -0800
+X-CSE-ConnectionGUID: IB0RnN5SS9ey0jxV3N5Csw==
+X-CSE-MsgGUID: XBhpMDkLTM2QOrIxCqh1Gg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="149780206"
+   d="scan'208";a="149780213"
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 11 Feb 2025 10:50:52 -0800
+  by orviesa001.jf.intel.com with ESMTP; 11 Feb 2025 10:50:54 -0800
 From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 0/5] intel_th: Fixes for v6.14
-Date: Tue, 11 Feb 2025 20:50:12 +0200
-Message-ID: <20250211185017.1759193-1-alexander.shishkin@linux.intel.com>
+Subject: [PATCH 1/5] intel_th: msu: Fix kernel-doc warnings
+Date: Tue, 11 Feb 2025 20:50:13 +0200
+Message-ID: <20250211185017.1759193-2-alexander.shishkin@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250211185017.1759193-1-alexander.shishkin@linux.intel.com>
+References: <20250211185017.1759193-1-alexander.shishkin@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,27 +62,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Greg,
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Here are 5 patches that I'd like to get into this cycle; 3 are new PCI
-IDs and 2 are kernel-doc warning fixes. Please take a look and consider
-applying.
+Correct function comments to prevent kernel-doc warnings
+found when using "W=1".
 
-Alexander Shishkin (3):
-  intel_th: msu: Fix less trivial kernel-doc warnings
-  intel_th: pci: Add Panther Lake-H support
-  intel_th: pci: Add Panther Lake-P/U support
+msu.c:162: warning: Function parameter or struct member 'mbuf_priv' not described in 'msc'
+msu.c:164: warning: Function parameter or struct member 'orig_addr' not described in 'msc'
+msu.c:164: warning: Function parameter or struct member 'orig_sz' not described in 'msc'
 
-Andy Shevchenko (1):
-  intel_th: msu: Fix kernel-doc warnings
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+---
+ drivers/hwtracing/intel_th/msu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Pawel Chmielewski (1):
-  intel_th: pci: Add Arrow Lake support
-
- drivers/hwtracing/intel_th/msu.c | 13 +++++++++++--
- drivers/hwtracing/intel_th/pci.c | 15 +++++++++++++++
- 2 files changed, 26 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/hwtracing/intel_th/msu.c b/drivers/hwtracing/intel_th/msu.c
+index 66123d684ac9..492d8eba37eb 100644
+--- a/drivers/hwtracing/intel_th/msu.c
++++ b/drivers/hwtracing/intel_th/msu.c
+@@ -108,7 +108,7 @@ struct msc_iter {
+  * @reg_base:		register window base address
+  * @thdev:		intel_th_device pointer
+  * @mbuf:		MSU buffer, if assigned
+- * @mbuf_priv		MSU buffer's private data, if @mbuf
++ * @mbuf_priv:		MSU buffer's private data, if @mbuf
+  * @win_list:		list of windows in multiblock mode
+  * @single_sgt:		single mode buffer
+  * @cur_win:		current window
+@@ -117,6 +117,8 @@ struct msc_iter {
+  * @single_wrap:	single mode wrap occurred
+  * @base:		buffer's base pointer
+  * @base_addr:		buffer's base address
++ * @orig_addr:		MSC0 buffer's base address
++ * @orig_sz:		MSC0 buffer's size
+  * @user_count:		number of users of the buffer
+  * @mmap_count:		number of mappings
+  * @buf_mutex:		mutex to serialize access to buffer-related bits
 -- 
 2.47.2
 
