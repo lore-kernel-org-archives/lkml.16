@@ -1,217 +1,272 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.ssi.bg (mx.ssi.bg [193.238.174.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C7D1F891F;
-	Tue, 11 Feb 2025 14:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B9F1E376E;
+	Tue, 11 Feb 2025 14:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.238.174.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739282471; cv=none; b=SFPZrQ43jO/UHz3VdfjUo3nZt4wp2wZ9aQ8WwEqX5Lz4D+lPRTQjVqlRfcLhW/AUGouHWfFBNknAIHuFrBt6dstSEs7ZkoGEIoSJkSWU0cjtujBj1NRhYNMNo+rxp4EA7Z/1l2hr83DIOXjNXL5kdxbuS0DKP3hgTDO1PWEG3Fw=
+	t=1739282499; cv=none; b=ItmiBaXQkWZKsRFJm5ag/sz7HpsTkHwg+DEr80aWTmJBUaoUeqqh/NstcZ0QeiYBUaEoACtTn1n+UvB/yHXazQUU+cyqQ3xB/TupM7gzPLERsOr/eKpnDnSoqt01d9d34c4Kn+pzbVRoRLnYfIfuvoZkzipzjMwQY7BUvvru6A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739282471; c=relaxed/simple;
-	bh=W4EbBbuyk3MpknoCIOAaHOmpmm2WzX6Vs/PF/x622I4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=igNpd60pfPRaYS6j20lO7b125Phpymuhnk3J0RiBhwL+Q8HJdB4bO/m+lk1CoSIGUg9MfJ/uM7pHuPyVFOI/cqycTRvcLE9qS+VmxAtCBQTbLUqLUXJcLAfN5zESlnkD+aIEEDN/RMfbOyy1YwVXkJVtq/NVZfhVN+pevotZsdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MO1i98Qj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739282499; c=relaxed/simple;
+	bh=tL9O+uEh0ILH739lliOo8AMi2wqhWQL+dKG8bMas4mc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=RR60Rk3pEWGb2313y3sbyiMsrE0ev0Io7unCXQIZbw5fgA6AH5XMq3g/rRHzWuUxpsM+6RQ2nakk0OfcW5LwIglQoC6wRt2+vUdExXHjBoQbWWIz5JIM6VZz1w6EDhsw8mS15LldOPsH8AsEO1/XuYlSbOdrvN5dvyX3h8liyY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg; spf=pass smtp.mailfrom=ssi.bg; dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b=RUhRtJvE; arc=none smtp.client-ip=193.238.174.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ssi.bg
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MO1i98Qj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88CFAC4CEDD;
-	Tue, 11 Feb 2025 14:01:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739282470;
-	bh=W4EbBbuyk3MpknoCIOAaHOmpmm2WzX6Vs/PF/x622I4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MO1i98QjauLQEkR3Kc2jCjTk4qRtMKjUtLgq+2ba88HwI1W+xtibo+hkFXIqzcOsU
-	 ZuoG8c//mA7HBFSDFfxWsZWvivwNXx2UfV8RlcB/sP2i6b5TI7otyrka2jTh+FE8XT
-	 JxZbSHESobO3K+X3JaeIiQ17BxxaexGP9eox4IGqjle9Z9oAIUY//CfLJR+Cy3crGz
-	 zgFnNV1nVLSo4c/Qt3zUwHK4UzS6dIn2YfeODiEiLtIhwRkplrrSWRhKrUy+aOU3ZA
-	 6zvixRrDRM2B5z8WCWz3qOcCTRJW6WAyCqpULOLh31axI7P958wyOAZNpzXmNNO3sn
-	 bUt0vDdyzS7vQ==
-Message-ID: <ecee2d1392fcb9b075687e7b59ec69057d3c1bb3.camel@kernel.org>
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for
- FUSE/Flatpak related applications since v6.13
-From: Jeff Layton <jlayton@kernel.org>
-To: Matthew Wilcox <willy@infradead.org>, Josef Bacik <josef@toxicpanda.com>
-Cc: Joanne Koong <joannelkoong@gmail.com>, Vlastimil Babka <vbabka@suse.cz>,
-  Miklos Szeredi <miklos@szeredi.hu>, Christian Heusel
- <christian@heusel.eu>, Miklos Szeredi <mszeredi@redhat.com>, 
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>, Mantas
- =?UTF-8?Q?Mikul=C4=97nas?=	 <grawity@gmail.com>
-Date: Tue, 11 Feb 2025 09:01:08 -0500
-In-Reply-To: <8a99f6bf3f0b5cb909f11539fb3b0ef0d65b3a73.camel@kernel.org>
-References: 
-	<CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
-		 <9cd88643-daa8-4379-be0a-bd31de277658@suse.cz>
-		 <20250207172917.GA2072771@perftesting>
-		 <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz>
-		 <CAJnrk1aNVMCfTjL0vo-Qki68-5t1W+6-bJHg+x67kHEo_-q0Eg@mail.gmail.com>
-		 <Z6ct4bEdeZwmksxS@casper.infradead.org>
-		 <CAJnrk1aY0ZFcS4JvmJL=icigencsCD8g4qmZiTuoPWj2S2Y_LQ@mail.gmail.com>
-		 <81298bd1-e630-4940-ae5b-7882576b6bf4@suse.cz>
-		 <CAJnrk1aBc5uvL78s3kdpXojH-B11wtOPSDUJ0XnCzmHH+eO2Nw@mail.gmail.com>
-		 <20250210191235.GA2256827@perftesting>
-		 <Z6pjSYyzFJHaQo73@casper.infradead.org>
-	 <8a99f6bf3f0b5cb909f11539fb3b0ef0d65b3a73.camel@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b="RUhRtJvE"
+Received: from mx.ssi.bg (localhost [127.0.0.1])
+	by mx.ssi.bg (Potsfix) with ESMTP id CF773234F0;
+	Tue, 11 Feb 2025 15:55:26 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ssi.bg; h=cc:cc
+	:content-type:content-type:date:from:from:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=ssi;
+	 bh=g2Omdx+gC2VgWT+qBhjHWyxng8Qdk36CSx5aBDN/WYc=; b=RUhRtJvEltA0
+	kGC14MNbugq34P1kIz+l/q108own4UKmGAlom7ntH9q2ahzzp9+mQypRjEcAaBs3
+	YrKlYgdmsLbpQDSW2x8kI5RiqJR1cLj5nflAvEmTVVMiPHMXm5xpAm7ZGwvFlGnB
+	Fn88I6JA/vvrv2YAZ3SqgxDR7NVtn50mTn22UDKp9bYL3+e8Tf0VzlDsRFI0i7oe
+	YMVv4JfQfnaiE7hR4KFMPupN0R0wfSRRBPECJJm5m2OvHaCktUZkT38uWNtRuDK2
+	PTqan5qRWA5IRSlLYfi+9UpR7TJemmxooYhs+6wvsCTLrw9Vs7Ef9bkazr25hTB/
+	IeCcdpeBla5F+lO8u72kd2WSOSFc4e8jvumN1/aQeo6tUQfVStIjE1k9LEiUYVq1
+	r2WSqUbvdR2G27ND5tIPsmZhaxY9lV4z2f+nbnT7eR0EoM+ZCgyBkG5IrRlh0Cak
+	zuYUopMoaYxM8toiWFoZYL/kyrckHPE7jWWXVRtq1LL5KA6fdTAt62orESJNvEp6
+	n+e++iXeeDlnbAYbbmVph9ZbBtCAFFcSVJ02J1TAJKei+Z4zcUF5kLGl7hFaK1jU
+	h9ZqvlztB5lx3ct7qaEGfrAfbr2S6KVGakgpWjAcmA6DwF+Ei/rIWN9R9tJ4Ihyi
+	CCphLm3TDUPW1uobQ6YBX0unICHq5O4=
+Received: from ink.ssi.bg (ink.ssi.bg [193.238.174.40])
+	by mx.ssi.bg (Potsfix) with ESMTPS;
+	Tue, 11 Feb 2025 15:55:25 +0200 (EET)
+Received: from ja.ssi.bg (unknown [213.16.62.126])
+	by ink.ssi.bg (Postfix) with ESMTPSA id 615C117093;
+	Tue, 11 Feb 2025 15:55:18 +0200 (EET)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by ja.ssi.bg (8.18.1/8.17.1) with ESMTP id 51BDt7l9025873;
+	Tue, 11 Feb 2025 15:55:10 +0200
+Date: Tue, 11 Feb 2025 15:55:07 +0200 (EET)
+From: Julian Anastasov <ja@ssi.bg>
+To: mengkanglai <mengkanglai2@huawei.com>
+cc: Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Yanan (Euler)" <yanan@huawei.com>,
+        "Fengtao (fengtao, Euler)" <fengtao40@huawei.com>,
+        "gaoxingwang (A)" <gaoxingwang1@huawei.com>, lvs-devel@vger.kernel.org
+Subject: Re: ftp ipvs connect failed in ipv6
+In-Reply-To: <e1527ca5f8f84be09022859f5e33b584@huawei.com>
+Message-ID: <7a1903c5-f7e3-4480-2a07-ae94e4d6a895@ssi.bg>
+References: <e1527ca5f8f84be09022859f5e33b584@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 2025-02-10 at 17:38 -0500, Jeff Layton wrote:
-> On Mon, 2025-02-10 at 20:36 +0000, Matthew Wilcox wrote:
-> > On Mon, Feb 10, 2025 at 02:12:35PM -0500, Josef Bacik wrote:
-> > > From: Josef Bacik <josef@toxicpanda.com>
-> > > Date: Mon, 10 Feb 2025 14:06:40 -0500
-> > > Subject: [PATCH] fuse: drop extra put of folio when using pipe splice
-> > >=20
-> > > In 3eab9d7bc2f4 ("fuse: convert readahead to use folios"), I converte=
-d
-> > > us to using the new folio readahead code, which drops the reference o=
-n
-> > > the folio once it is locked, using an inferred reference on the folio=
-.
-> > > Previously we held a reference on the folio for the entire duration o=
-f
-> > > the readpages call.
-> > >=20
-> > > This is fine, however I failed to catch the case for splice pipe
-> > > responses where we will remove the old folio and splice in the new
-> > > folio.  Here we assumed that there is a reference held on the folio f=
-or
-> > > ap->folios, which is no longer the case.
-> > >=20
-> > > To fix this, simply drop the extra put to keep us consistent with the
-> > > non-splice variation.  This will fix the UAF bug that was reported.
-> > >=20
-> > > Link: https://lore.kernel.org/linux-fsdevel/2f681f48-00f5-4e09-8431-2=
-b3dbfaa881e@heusel.eu/
-> > > Fixes: 3eab9d7bc2f4 ("fuse: convert readahead to use folios")
-> > > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> > > ---
-> > >  fs/fuse/dev.c | 2 --
-> > >  1 file changed, 2 deletions(-)
-> > >=20
-> > > diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-> > > index 5b5f789b37eb..5bd6e2e184c0 100644
-> > > --- a/fs/fuse/dev.c
-> > > +++ b/fs/fuse/dev.c
-> > > @@ -918,8 +918,6 @@ static int fuse_try_move_page(struct fuse_copy_st=
-ate *cs, struct page **pagep)
-> > >  	}
-> > > =20
-> > >  	folio_unlock(oldfolio);
-> > > -	/* Drop ref for ap->pages[] array */
-> > > -	folio_put(oldfolio);
-> > >  	cs->len =3D 0;
-> >=20
-> > But aren't we now leaking a reference to newfolio?  ie shouldn't
-> > we also:
-> >=20
-> > -	folio_get(newfolio);
-> >=20
-> > a few lines earlier?
-> >=20
->=20
->=20
-> I think that ref was leaking without Josef's patch, but your proposed
-> fix seems correct to me. There is:
->=20
-> - 1 reference stolen from the pipe_buffer
-> - 1 reference taken for the pagecache in replace_page_cache_folio()
-> - the folio_get(newfolio) just after that
->=20
-> The pagecache ref doesn't count here, and we only need the reference
-> that was stolen from the pipe_buffer to replace the one in pagep.
 
-Actually, no. I'm wrong here. A little after the folio_get(newfolio)
-call, we do:
+	Hello,
 
-        /*
-         * Release while we have extra ref on stolen page.  Otherwise
-         * anon_pipe_buf_release() might think the page can be reused.
-         */
-        pipe_buf_release(cs->pipe, buf);
+On Mon, 10 Feb 2025, mengkanglai wrote:
 
-...so that accounts for the extra reference. I think the newfolio
-refcounting is correct as-is.
---=20
-Jeff Layton <jlayton@kernel.org>
+> Hello:
+> I found a problem with ftp ipvs.
+> I create 3 virtual machine in one host. One is the FTP client, the other is the ipvs transition host, and the other is the FTP server.
+> The ftp connection is successful in ipv4 address,but failed in ipv6 address.
+> The failure is tcp6 checksum error in tcp_dnat_handler(tcp_dnat_handler-> tcp_csum_check->csum_ipv6_magic),
+> I trace back where skb->csum is assigned and found skb->csum is assigned in nf_ip6_checksum in case CHECKSUM_NONE(ipv6_conntrack_in=> nf_conntrack_in => nf_conntrack_tcp_packet => nf_ip6_checksum).
+> I don't know much about ipv6 checksums,why ipv6 nf_conntrack assign skb->csum but check error in ipvs tcp_dnat_handler?
+
+	Looks like the checksum validation does not use correct
+offset for the protocol header in the case with IPv6. Do you
+see extension headers before the final IPv6 header that
+points to TCP header? If that is the case, the following patch
+can help. If you prefer, you can apply just the TCP part for
+the FTP test. Let me know if this solves the problem, thanks!
+
+[PATCH] ipvs: provide correct ipv6 proto offset for csum checks
+
+Protocol checksum validation fails if there are multiple IPv6 headers
+before the protocol header. iph->len already contains its offset, so
+use it to fix the problem.
+
+Signed-off-by: Julian Anastasov <ja@ssi.bg>
+---
+ net/netfilter/ipvs/ip_vs_proto_sctp.c | 18 ++++++------------
+ net/netfilter/ipvs/ip_vs_proto_tcp.c  | 19 ++++++-------------
+ net/netfilter/ipvs/ip_vs_proto_udp.c  | 18 ++++++------------
+ 3 files changed, 18 insertions(+), 37 deletions(-)
+
+diff --git a/net/netfilter/ipvs/ip_vs_proto_sctp.c b/net/netfilter/ipvs/ip_vs_proto_sctp.c
+index 83e452916403..63c78a1f3918 100644
+--- a/net/netfilter/ipvs/ip_vs_proto_sctp.c
++++ b/net/netfilter/ipvs/ip_vs_proto_sctp.c
+@@ -10,7 +10,8 @@
+ #include <net/ip_vs.h>
+ 
+ static int
+-sctp_csum_check(int af, struct sk_buff *skb, struct ip_vs_protocol *pp);
++sctp_csum_check(int af, struct sk_buff *skb, struct ip_vs_protocol *pp,
++		unsigned int sctphoff);
+ 
+ static int
+ sctp_conn_schedule(struct netns_ipvs *ipvs, int af, struct sk_buff *skb,
+@@ -108,7 +109,7 @@ sctp_snat_handler(struct sk_buff *skb, struct ip_vs_protocol *pp,
+ 		int ret;
+ 
+ 		/* Some checks before mangling */
+-		if (!sctp_csum_check(cp->af, skb, pp))
++		if (!sctp_csum_check(cp->af, skb, pp, sctphoff))
+ 			return 0;
+ 
+ 		/* Call application helper if needed */
+@@ -156,7 +157,7 @@ sctp_dnat_handler(struct sk_buff *skb, struct ip_vs_protocol *pp,
+ 		int ret;
+ 
+ 		/* Some checks before mangling */
+-		if (!sctp_csum_check(cp->af, skb, pp))
++		if (!sctp_csum_check(cp->af, skb, pp, sctphoff))
+ 			return 0;
+ 
+ 		/* Call application helper if needed */
+@@ -185,19 +186,12 @@ sctp_dnat_handler(struct sk_buff *skb, struct ip_vs_protocol *pp,
+ }
+ 
+ static int
+-sctp_csum_check(int af, struct sk_buff *skb, struct ip_vs_protocol *pp)
++sctp_csum_check(int af, struct sk_buff *skb, struct ip_vs_protocol *pp,
++		unsigned int sctphoff)
+ {
+-	unsigned int sctphoff;
+ 	struct sctphdr *sh;
+ 	__le32 cmp, val;
+ 
+-#ifdef CONFIG_IP_VS_IPV6
+-	if (af == AF_INET6)
+-		sctphoff = sizeof(struct ipv6hdr);
+-	else
+-#endif
+-		sctphoff = ip_hdrlen(skb);
+-
+ 	sh = (struct sctphdr *)(skb->data + sctphoff);
+ 	cmp = sh->checksum;
+ 	val = sctp_compute_cksum(skb, sctphoff);
+diff --git a/net/netfilter/ipvs/ip_vs_proto_tcp.c b/net/netfilter/ipvs/ip_vs_proto_tcp.c
+index 7da51390cea6..dabdb9d3b479 100644
+--- a/net/netfilter/ipvs/ip_vs_proto_tcp.c
++++ b/net/netfilter/ipvs/ip_vs_proto_tcp.c
+@@ -29,7 +29,8 @@
+ #include <net/ip_vs.h>
+ 
+ static int
+-tcp_csum_check(int af, struct sk_buff *skb, struct ip_vs_protocol *pp);
++tcp_csum_check(int af, struct sk_buff *skb, struct ip_vs_protocol *pp,
++	       unsigned int tcphoff);
+ 
+ static int
+ tcp_conn_schedule(struct netns_ipvs *ipvs, int af, struct sk_buff *skb,
+@@ -166,7 +167,7 @@ tcp_snat_handler(struct sk_buff *skb, struct ip_vs_protocol *pp,
+ 		int ret;
+ 
+ 		/* Some checks before mangling */
+-		if (!tcp_csum_check(cp->af, skb, pp))
++		if (!tcp_csum_check(cp->af, skb, pp, tcphoff))
+ 			return 0;
+ 
+ 		/* Call application helper if needed */
+@@ -244,7 +245,7 @@ tcp_dnat_handler(struct sk_buff *skb, struct ip_vs_protocol *pp,
+ 		int ret;
+ 
+ 		/* Some checks before mangling */
+-		if (!tcp_csum_check(cp->af, skb, pp))
++		if (!tcp_csum_check(cp->af, skb, pp, tcphoff))
+ 			return 0;
+ 
+ 		/*
+@@ -301,17 +302,9 @@ tcp_dnat_handler(struct sk_buff *skb, struct ip_vs_protocol *pp,
+ 
+ 
+ static int
+-tcp_csum_check(int af, struct sk_buff *skb, struct ip_vs_protocol *pp)
++tcp_csum_check(int af, struct sk_buff *skb, struct ip_vs_protocol *pp,
++	       unsigned int tcphoff)
+ {
+-	unsigned int tcphoff;
+-
+-#ifdef CONFIG_IP_VS_IPV6
+-	if (af == AF_INET6)
+-		tcphoff = sizeof(struct ipv6hdr);
+-	else
+-#endif
+-		tcphoff = ip_hdrlen(skb);
+-
+ 	switch (skb->ip_summed) {
+ 	case CHECKSUM_NONE:
+ 		skb->csum = skb_checksum(skb, tcphoff, skb->len - tcphoff, 0);
+diff --git a/net/netfilter/ipvs/ip_vs_proto_udp.c b/net/netfilter/ipvs/ip_vs_proto_udp.c
+index 68260d91c988..e99e7c5df869 100644
+--- a/net/netfilter/ipvs/ip_vs_proto_udp.c
++++ b/net/netfilter/ipvs/ip_vs_proto_udp.c
+@@ -25,7 +25,8 @@
+ #include <net/ip6_checksum.h>
+ 
+ static int
+-udp_csum_check(int af, struct sk_buff *skb, struct ip_vs_protocol *pp);
++udp_csum_check(int af, struct sk_buff *skb, struct ip_vs_protocol *pp,
++	       unsigned int udphoff);
+ 
+ static int
+ udp_conn_schedule(struct netns_ipvs *ipvs, int af, struct sk_buff *skb,
+@@ -155,7 +156,7 @@ udp_snat_handler(struct sk_buff *skb, struct ip_vs_protocol *pp,
+ 		int ret;
+ 
+ 		/* Some checks before mangling */
+-		if (!udp_csum_check(cp->af, skb, pp))
++		if (!udp_csum_check(cp->af, skb, pp, udphoff))
+ 			return 0;
+ 
+ 		/*
+@@ -238,7 +239,7 @@ udp_dnat_handler(struct sk_buff *skb, struct ip_vs_protocol *pp,
+ 		int ret;
+ 
+ 		/* Some checks before mangling */
+-		if (!udp_csum_check(cp->af, skb, pp))
++		if (!udp_csum_check(cp->af, skb, pp, udphoff))
+ 			return 0;
+ 
+ 		/*
+@@ -297,17 +298,10 @@ udp_dnat_handler(struct sk_buff *skb, struct ip_vs_protocol *pp,
+ 
+ 
+ static int
+-udp_csum_check(int af, struct sk_buff *skb, struct ip_vs_protocol *pp)
++udp_csum_check(int af, struct sk_buff *skb, struct ip_vs_protocol *pp,
++	       unsigned int udphoff)
+ {
+ 	struct udphdr _udph, *uh;
+-	unsigned int udphoff;
+-
+-#ifdef CONFIG_IP_VS_IPV6
+-	if (af == AF_INET6)
+-		udphoff = sizeof(struct ipv6hdr);
+-	else
+-#endif
+-		udphoff = ip_hdrlen(skb);
+ 
+ 	uh = skb_header_pointer(skb, udphoff, sizeof(_udph), &_udph);
+ 	if (uh == NULL)
+-- 
+2.48.1
+
+
+Regards
+
+--
+Julian Anastasov <ja@ssi.bg>
+
