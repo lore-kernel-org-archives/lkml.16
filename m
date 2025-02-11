@@ -1,92 +1,71 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E531805E;
-	Tue, 11 Feb 2025 01:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5FD1805E
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739236188; cv=none; b=Uxh088xA9V3wxXdNeTNTDZ2GB1VfM17tgr4bTxSC7n971k5Zu+T+39cVOCbuA8B2Rrs9g29diDGegNBrKGhUnyjioZTFlTwy06Ncv6F0TEhXaVyv3YJnOmcXTGW9GKWB+OjShgZVLRVOVInxhgyaHdPbQxfMjx3rO2JKnwXitU0=
+	t=1739236223; cv=none; b=jtr2lKdeYQYqqXC1hNKtaSyibZpyWUNENRQlGfjZ1XSOzbeVDM1YErcuXb2RP+PjBLfa15j97n6rBkSRt3+H/Nv2PsGSOCUWcjxILNQeUcfukLwDdwuS6rAzXKBpIF7tFk4+brTkikegOAvw1ubGHkauzoc6kUMvu8kDihm+6is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739236188; c=relaxed/simple;
-	bh=6Idg8uJ9iPDpsfQccDDDicevNwmyMCS8+ONKoz3yRB0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gk6g1PXEjzF5ptGVjkk86Z46xpnoo0Oj7sxFNbIQLp3/Jl51WyY7KL/7rWgezvE0of2aovYx9o9lOeu/KJNju23rB05Dua0hn44Qgd760SIfXr4BzuoiWYZzfJ9CZMvMqI8hoXvndupUr+76Ll5SvoMPTjvAsszQBOOWpGKk19c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=TXOta40J; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1739236223; c=relaxed/simple;
+	bh=6ZnD12+pw5XtWqBAV1nvIjBS3WXN9iny4Hba1svLY5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eXul6NbOAHMu7BVOcifTPUlswe1s62eDKtoRi0hPc/AXc1ktBnb7vdSlnmUx0yNGcn+zBJ0xhKUA/qezZR4Eg32py20k3XnbrVNfX1hjuz+o0pSJU8C87h49AKHFnXsyP3zNjPcPkd3jcOx+Oxr8pIA8qDOct42kqZDi1EWivCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pw+ZPIxd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="TXOta40J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1739236187; x=1770772187;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=UlwViKvkK8zcGDuf7UucAahjqpx6kwc7K2f51BR+Ko8=;
-  b=TXOta40JgDChxQFyF+JT8MkbeAj0R1FItBk9GijzgWyBxKLxgPtp8CGy
-   mUOZSQqoBhWGJ85PpFuneh2xvoozhhjyKiwltLCwH9vsSEjNjYk2L8JI7
-   wn+W4iQj+khTO+gZ9xdXL5QESmWm1WWdf/BZK8K9oT28LnoLRWDt1cyl0
-   k=;
-X-IronPort-AV: E=Sophos;i="6.13,276,1732579200"; 
-   d="scan'208";a="717705807"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 01:09:42 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:57671]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.23.136:2525] with esmtp (Farcaster)
- id dfd31b59-b323-4be3-91e5-ad497774b6bf; Tue, 11 Feb 2025 01:09:41 +0000 (UTC)
-X-Farcaster-Flow-ID: dfd31b59-b323-4be3-91e5-ad497774b6bf
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Tue, 11 Feb 2025 01:09:40 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.119.10.138) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 11 Feb 2025 01:09:36 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <leitao@debian.org>
-CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<horms@kernel.org>, <kernel-team@meta.com>, <kuba@kernel.org>,
-	<kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <ushankar@purestorage.com>
-Subject: Re: [PATCH net-next v2 0/2] net: core: improvements to device lookup by hardware address.
-Date: Tue, 11 Feb 2025 10:09:27 +0900
-Message-ID: <20250211010927.86214-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250210-arm_fix_selftest-v2-0-ba84b5bc58c8@debian.org>
-References: <20250210-arm_fix_selftest-v2-0-ba84b5bc58c8@debian.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pw+ZPIxd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07D00C4CED1;
+	Tue, 11 Feb 2025 01:10:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739236222;
+	bh=6ZnD12+pw5XtWqBAV1nvIjBS3WXN9iny4Hba1svLY5w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Pw+ZPIxdIPj8cwdvB+Uw1LlwVkf+n625bnJPx6uKHCmHA2Oc+geGVa3XF01Qg32lr
+	 t3jjRWExypk/xiThqUM7vR52FJLTD3+Jx1eZXkXQ+JPdWjRuHYSiejAteimKGvn1Us
+	 WO6n10JL6HFLKVxwmggytYrE7vmDKlCoXP6/gO35uGO3Uml7uU39lcPaxRy26+kdrF
+	 8pX/Jx+UjbWbFGLcgXXiP78sUxy3LNPB2z0FsF+b7kanr8/IB9FIdbIXv8noZZyhYm
+	 VHBJSpJn7Fib6en3W6NgOQDobLxZOrXDyJG1SZl+og5dDNQwxc40hmxZGmQ5BeYStL
+	 sgn8Urqys3tkA==
+Date: Mon, 10 Feb 2025 17:10:20 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: David Kaplan <david.kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 16/35] x86/bugs: Restructure ssb mitigation
+Message-ID: <20250211011020.2aopcvfav7nrshft@jpoimboe>
+References: <20250108202515.385902-1-david.kaplan@amd.com>
+ <20250108202515.385902-17-david.kaplan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D046UWB004.ant.amazon.com (10.13.139.164) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250108202515.385902-17-david.kaplan@amd.com>
 
-From: Breno Leitao <leitao@debian.org>
-Date: Mon, 10 Feb 2025 03:56:12 -0800
-> The first patch adds a new dev_getbyhwaddr() helper function for
+On Wed, Jan 08, 2025 at 02:24:56PM -0600, David Kaplan wrote:
+> @@ -2272,15 +2280,6 @@ static enum ssb_mitigation __init __ssb_select_mitigation(void)
+>  		}
+>  	}
+>  
+> -	return mode;
+> -}
+> -
+> -static void ssb_select_mitigation(void)
+> -{
+> -	ssb_mode = __ssb_select_mitigation();
+> -
+> -	if (boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
+> -		pr_info("%s\n", ssb_strings[ssb_mode]);
+>  }
 
-nit: second
+Extra whitespace at end of function.
 
-> finding devices by hardware address when the RTNL lock is held. This
-> prevents PROVE_LOCKING warnings that occurred when RTNL was held but the
-
-Same comment for patch 2, this itself doens't fix the warning.
-Also, patch 2 & 3 should be net.git materials ?  Maybe squash
-the two and add a Fixes tag then.
-
-
-> RCU read lock wasn't. The common address comparison logic is extracted
-> into dev_comp_addr() to avoid code duplication.
-> 
-> The second patch adds missing documentation for the return value of
-
-nit: first
-
-
-> dev_getbyhwaddr_rcu(), fixing a warning reported by NIPA. The kdoc
-> comment now properly specifies that the function returns either a
-> pointer to net_device or NULL when no matching device is found.
+-- 
+Josh
