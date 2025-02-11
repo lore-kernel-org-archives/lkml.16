@@ -1,86 +1,101 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36BBC215799;
-	Tue, 11 Feb 2025 14:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6FC24C67A;
+	Tue, 11 Feb 2025 14:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739282690; cv=none; b=P+WG4Cc3mnl2GsN7C3Cis7PLyfTUbkMPvHOk2CaS7Er57ZkWwbFN/2WIPtvJ0khbyBAd0COhzsZakXKybi4kUOSLr+csVIacyskH4/4IuoOAK6AJ/g9gS2Eb7BfKchkT1Kwwx6SPlW7FBFOhvBi4yirxpflOMFn46MQJFrzAL/k=
+	t=1739282928; cv=none; b=d4k98nDRu8LPRblDKcpH8pMW2oyOrLfAaUg3ToKT1ven8G2nj7K2N1MPH6gP9JVpyWRO/jC28fDjjIZzO75q3bKGrxLX+3vhxE83GMS/rtQgFkK7pv2ZvkeoPFuaQjt0DMAkprNMyFYKmpVhF44NBIIaBTFucaaMSQ+xS8eukCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739282690; c=relaxed/simple;
-	bh=5Dq8VZkw9xNox4d9nXP+NDsofsDFpbC12ldyftrP/PY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DnxOTS6oOwmAUD4licrOHU2N5kInx92KN1gaQHG0Quc2L5eDeRzu5L0bxpA3XejNZxrmVyHyk44Ru4g9TmRSr6F4G1MI1mMr5EL6rHl4Yg+R1VQoTNbAixccqtr5pFOCvzmAbI1ZbIqUsWmtTWAr/mMT7DStmIbgyZAZRYuOZvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=QNZeXL/p; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1739282928; c=relaxed/simple;
+	bh=0PFh1OG9X//IBm62qDANGEQPsFHlL0salMfKyoQEYmE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dGOFzcCBFhHYjoFpH4gBTtDLYVdvzwpdY3WL9MW+y4ZaWgeS2S7B6x9+3ZWemk78oa28oVagMpQrgvmosvI0PGRjSgP2s3Zcffol6GkQ29oPNn1xF8SrQixESQAkUm4d/Kxhn6VnTm+q52Rz/qNr3T1y6yd4kbhm0N4DsNJfdPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=mIGZgNwF; arc=none smtp.client-ip=18.132.163.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QNZeXL/p"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=VSeuhfOw8yfHQ+TWsCEpeuHvxKiIbFJlwEB/VaRLJIo=; b=QNZeXL/pfPJhHnQAz1R1qzLi/w
-	OXuJqpxpgy+GIdKnoz+ivHnrTcVOJCAocPLD/vCv7xQKdndoeO0D2qz5w+wltF5y9aOof+SxqAzKM
-	KSWnELbT/2kglIv9CgYbcoMgLbTf7acKQyJ29q2shPGklCJADXPgB5JOHE4ek1FKiLtk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1thqsF-00D4ti-T7; Tue, 11 Feb 2025 15:04:27 +0100
-Date: Tue, 11 Feb 2025 15:04:27 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	=?iso-8859-1?Q?Nicol=F2?= Veronese <nicveronese@gmail.com>,
-	Simon Horman <horms@kernel.org>, mwojtas@chromium.org,
-	Antoine Tenart <atenart@kernel.org>, devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>
-Subject: Re: [PATCH net-next 03/13] net: phy: Introduce PHY ports
- representation
-Message-ID: <0ae41811-e16b-4e64-9fc4-9cb4ea1da697@lunn.ch>
-References: <20250207223634.600218-1-maxime.chevallier@bootlin.com>
- <20250207223634.600218-4-maxime.chevallier@bootlin.com>
- <20250211143209.74f84a10@kmaincent-XPS-13-7390>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="mIGZgNwF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1739282879;
+	bh=Ye9E/OOxaG1qDTj2JmfnAhMxyR9NraXuwREP5ViG3jg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=mIGZgNwFwmY1FBjx3hGpWnKVot1tw7F8qD2MBBbUH4iDm04DvCtMXvzadL8JiVSoO
+	 MO0Wt7IpR7kkFxFQ12KyU2mDz9MmdrgTrSfiZdCDdNyec1/WjLPEJOeT4qi4KJBvk6
+	 EOb34gbxKDMxbCqYMWYyFj4kXnzxAD3H0OUjBz4A=
+X-QQ-mid: bizesmtpip3t1739282869t48piuu
+X-QQ-Originating-IP: wqSrQbwuHDK5cNCHMi6h+ZDxwJYJixw9ggcSfwm96/k=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 11 Feb 2025 22:07:48 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 5207954684755876973
+From: WangYuli <wangyuli@uniontech.com>
+To: wangyuli@uniontech.com
+Cc: tsbogend@alpha.franken.de,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	macro@orcam.me.uk,
+	masahiroy@kernel.org,
+	jiaxun.yang@flygoat.com,
+	zhanjun@uniontech.com,
+	guanwentao@uniontech.com
+Subject: [PATCH 1/2] MIPS: Eliminate Redundant KBUILD_SYM32 Checks
+Date: Tue, 11 Feb 2025 22:07:39 +0800
+Message-ID: <4EACDB7E6DA201A2+20250211140740.1812778-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <41107E6D3A125047+20250211135616.1807966-1-wangyuli@uniontech.com>
+References: <41107E6D3A125047+20250211135616.1807966-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211143209.74f84a10@kmaincent-XPS-13-7390>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NDjjYYC84KgIMmaP6860sI42p41k0TtaUILug9Nr6/9uQ0oXTxUPrfhv
+	Gj1dHdYkfiS/cYewO9w1ZNWF/lC2OJ9TnYzHUCSrCPeBRtJL0Q54acdT8enrhasli9bi+Gd
+	vvmWksBzTDtTLlQJfWHhsF3TYT1X14+Bo5S3RcH2ZQiS1aqeJ74ohBSr3MbFlgWADR1AFIK
+	2ATiJp4l2XxMu26fWBeF8a5sOjDhhQhzsC0BN+pEOnKCCjYAMhzWqaucxY/QpLHwz2/9Jv3
+	AalEJbCMx9fAIB0OPm/EjC2/qGazxWYhEbx2oE0AxLAV5d6VAbaqItZUtyOkVgisWPZMEJ0
+	ZSv5AW2QwD6t5ycVBt2Dy4GPFO9YeMoRtfVAJcbVUR43wnx0E3cw57j2WAO9ElVxacPFakP
+	UNOSHJJWWB8koOoUNmfBbYbVots0duA48AiXN5IVG5FTMlKRgCArX7hFReQew9DRtKm59lz
+	wVuKKDU3Pu7PWMxsJo8X6T94Z8Pu1upWKDfNcVa2rhOEiD3V8vBZ6X1hSnuy+XS6ua0wdEJ
+	GNM738FaniCLSt/bTg7RNXZk9ducBLGRIr652yvZH4KX653VzTLnYkgEzo83bDHBrw74k5I
+	Bml2tKbiePF6XW3/ZSO+ZLB1Ol6o6a8hogjbvW2tM7gOF4gf+zySvjHnjstbHUOsOxK07bv
+	jHevO92D0xkD6XU0MVv/lIQj72KsF1QTWiuv5QGmJVlxwmLeJ4M63Z6L1wtWxNOAHvww3f4
+	GP9QrOhEvGYSXcM89hfM/uTcofbIq1/ebSGcPg3R8ECM53BITR2sUM7r2pWZ8USS6Q1ZN71
+	atHrxLBZMZ1LQy9e6jHaS8575PPKko4ieL0wVSd5ecTJ2/5DP8LmHf5rHofo69ydvW1Rig3
+	b8WR39ki5oCjAQMg8V+vsbAJeyWbcROpvm07keCHKGbV2Z/uZgVsWWk/+ROKRiQ99CsWGd+
+	6DCis4wCYZ5CP1bf8eHEouIB0vbs6Z4m56mH/wXABKph8pfczsfHYlkhyYM38DrxTNUObWi
+	/AwNY1ETW+grkHcWn2iu6/VIXGTrY=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-RECHKSPAM: 0
 
-> With net drivers having PHY managed by the firmware or DSA, there is no linux
-> description of their PHYs.
+Given that KBUILD_SYM32=y is a prerequisite for this statement to be
+executed, it's logically redundant to verify KBUILD_SYM32 is y again.
 
-DSA should not be special, Linux is driving the PHY so it has to exist
-as a linux device.
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ arch/mips/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Firmware is a different case. If the firmware has decided to hide the
-PHY, the MAC driver is using a higher level API, generally just
-ksetting_set etc. It would be up to the MAC driver to export its PHY
-topology and provide whatever other firmware calls are needed. We
-should keep this in mind when designing the kAPI, but don't need to
-actually implement it. The kAPI should not directly reference a
-phydev/phylink instance, but an abstract object which represents a
-PHY.
-
-	Andrew
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index be8cb44a89fd..962eb749ed23 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -302,7 +302,7 @@ ifdef CONFIG_64BIT
+   endif
+ 
+   ifeq ($(KBUILD_SYM32), y)
+-    cflags-$(KBUILD_SYM32) += -msym32 -DKBUILD_64BIT_SYM32
++    cflags-y += -msym32 -DKBUILD_64BIT_SYM32
+   else
+     ifeq ($(CONFIG_CPU_DADDI_WORKAROUNDS), y)
+       $(error CONFIG_CPU_DADDI_WORKAROUNDS unsupported without -msym32)
+-- 
+2.47.2
 
