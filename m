@@ -1,111 +1,177 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AFD265CB8
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCED262175
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739303409; cv=none; b=Gc3UjWDiaWcmXOtpXBq270mQuWheFU+O1bwL416agnJWCaQlJp06DN1iloZh8G7YhprzLjV8peA+qFfXXzpkJpb5mFSicO8f6wr7LaZ6Nax+LEQKb5ioBi9QsfieJfa9bjVR1IAxPjExCHSlpu9RfXS837oAzRFofgOCd3USLhk=
+	t=1739303431; cv=none; b=DMIXkdcUmu7FRedstU5KZQ9gKt6qGgEnep4FTW4FfvumzJCMlGzGJSfxs1Z2SMgcUFqlfFhaeOI7hw2L5/ttNq6QUNGmmBQFTL+NII3PLjGKiJ6vQNDdF+soukPrkKKVOa0Nh1qxOhrtJ787GV9I9+aIvbLr32Pu7recAkYsggc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739303409; c=relaxed/simple;
-	bh=4Y+wde6FTequXKMit8DFeMHtsKviytt4h9vl35TgHZo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H30UgXyvX8xSCDafih4qYr241VtBluQJ1MhLh/k/wONmX4l2sgPGhJy++de9IQutIRR7vKGTY2yWnBw5Xkk+6Ua5N5qEBOjNlZMfgf6fot03JFEkvoNwVoDGi3Q2PlmeeSfybL6vADeT8aBEa/l3OJ0nUrp2++KZHilFSJy6fI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=w5azk8/O; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1739303431; c=relaxed/simple;
+	bh=wfLZW5gqtvVmGHnil9DDZFmpzOx8V/Vjk+jgnWcGFhY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a+fDsV0I3XLZS7S5/2sulrwLsyMiUc5jYBq3RcBPreP6sWUhJeUbsVCLa8TszpQQgJQjA4g5kAn3Enjxq1xtdvVONDez8x6HuFVUt1FoKdhfLMECrjRTPTes3spu7kX6sSHHFVNlrZ9sjlEHXZqfQCiVkS1x/b/Dubszt317iMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hnfFNmeZ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="w5azk8/O"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-854a68f5afcso136562339f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:50:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1739303404; x=1739908204; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OsIvwEcUTBMStw2MMLLuDVcTGQeCcLwOBqA9S/j+YXs=;
-        b=w5azk8/OdnAJUSh4X1kTEcxqNfwO2/awEbTMqx/uC26WkMs4cGCFHzprnPR1nooAR3
-         Py2+1yBpC42SMFRhMEvKugE1QBpBKtr4RUr7qqsxZ5XPgOgGCbDnu55GSeAdDxHQz/a6
-         bcai1jxKbMGeKtiYv4hav2Y55fr3L+2HCAc3qeraMKR756Q9fvxd/Cte/z0pTNW92zEi
-         edMdg5C86e1HlwwBi7iehJeq7lv705DvyFFaSlqhVGxk34GYfeXyPIEA3AH+X+wSERMo
-         yUETMumsq5h3B9NJWE0JQj2M5Sq6IWwYnwL5fjAm1u8Cy9ljmZHMOQ3kojCXn2lQ2S9a
-         YBFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739303404; x=1739908204;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OsIvwEcUTBMStw2MMLLuDVcTGQeCcLwOBqA9S/j+YXs=;
-        b=bJq86DC/wRNSvN+o4q+fzFLemoDDQHJejTzSSOOf5KRtmpF115bFYs/HoAjk57qTtj
-         FXqSJbpYCPUTZ1s1RMc2JR/Bqn3sZ4Q9Dv74nGrHyOrFumF42ffEexZktpU131cfZO7r
-         2id/IaXXIB1NUtBPLm3MzpQqJL/2kUzQfDI0h9dN5p8xs2hA0D7cJ+frj8G8RaSChwCB
-         S/Sb52FtUEWdJfoTrRV297BpCozSKraIT/elNQ3hauLvLqx0diaBO6dgkF5su4p/rF3h
-         6pYcy1YXAUxYhlV7mQ3Gq+lEKsz3Vd6fM3mmXO9H9ArFHMi84KOdRqbi1lffJ1HmlgmD
-         1o9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUWcM6HhtKlAFFiJUMWKymEAaIH0NEWF8K+miN3XLVFiPy0pntgQ9FogOVD6U7JOgyNip6EhWMCoBnvcbE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCpZHq6DBPpJjVKOV7M0Ea2FxP90AZIH1rGdLKti0/lt4/l1Y8
-	4S7aOR5NydPuA4P2xIOIh3XJQctZPaPvzuwJFSrDDgFlAWIeCK+MEtL0Vw1NFVU=
-X-Gm-Gg: ASbGncssuMdS6wchGjCcrKi9SsXdV2JZwCfF/NmdbmJWhSG367tgegTpOBgePrzcWk8
-	tyONo+53pUkadndzBrwwHK5GBzYN7DuqN++o+yKjeM3xYGynsHNKNS7w6rWMcDyoAftcmxOjeMq
-	Ztulv6Rd8HAzwR5keONXQQy0dR/TFnxROq0CmPfxPuEnpgRvc39GmuqedKJxe9lod1r024yrIdC
-	NXMJSVLlJqST3NZXeJrDF/QCMhBLHCCnQuK9r/60Z4Wy3WaugNPSedFThMtKyAFpNZATIIasz1t
-	qvdpIzE0zhM=
-X-Google-Smtp-Source: AGHT+IFrTVAEGiw2EoTh/b9YW5R/KtzW2+Oh2EsbSrKLQH+zV7TjtxzGKsJ/H8T6kpwj7fxcn/baxg==
-X-Received: by 2002:a05:6602:14c3:b0:843:e667:f196 with SMTP id ca18e2360f4ac-85555c8c4eemr91680639f.4.1739303404598;
-        Tue, 11 Feb 2025 11:50:04 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ed1885b085sm77104173.69.2025.02.11.11.50.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 11:50:03 -0800 (PST)
-Message-ID: <84447986-6cd7-499c-834e-9aa01fad98da@kernel.dk>
-Date: Tue, 11 Feb 2025 12:50:02 -0700
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hnfFNmeZ"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BGYoxX015636;
+	Tue, 11 Feb 2025 19:49:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=79Q7RCoFbvD/ApWNVNwamV+gO+i8NxSznRW253IJX
+	10=; b=hnfFNmeZ7y0FcqoIWMZNhSAo6hLXsQKBMrzb8VlswRdbWMIk+t/ZwK0/9
+	vv49TNKxg8aAJ/uxqlXiz3Qh1lWfhqGJrUFH/VjZJZBzCn8JwnSuluHzB5TUG3yW
+	fVudqu0tC8H/8GhNIwgdubPT8eSgckoxKNPQXqwZv8uWj9hfaUTZCRD51p3cESPQ
+	1rzKYCse5GuxCeF2DjH2AfM4BeJYJMu0w2LSwLBIcoRPUkhXXUNJu8p7KZLB+RuE
+	VCn6UszP8x5vZj/4LXHmJS4xMCjAq4T08e+mHTjy8Eum4IU95rsBbk88ihugPX6m
+	DilesS+ETt2WARsqRzfGUZMAhpkjA==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44r28puh3k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 19:49:56 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51BGMIf4021672;
+	Tue, 11 Feb 2025 19:49:56 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44phksn50e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 19:49:55 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51BJnqqi33816882
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Feb 2025 19:49:52 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 56B7D20043;
+	Tue, 11 Feb 2025 19:49:52 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3B25120040;
+	Tue, 11 Feb 2025 19:49:50 +0000 (GMT)
+Received: from li-7bb28a4c-2dab-11b2-a85c-887b5c60d769.ibm.com.com (unknown [9.39.23.89])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 11 Feb 2025 19:49:50 +0000 (GMT)
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: frederic@kernel.org, linux-kernel@vger.kernel.org
+Cc: sshegde@linux.ibm.com, mingo@kernel.org, peterz@infradead.org,
+        vincent.guittot@linaro.org, maddy@linux.ibm.com,
+        dietmar.eggemann@arm.com, riel@surriel.com
+Subject: [RFC] sched/cputime: issue with time accounting using default configs
+Date: Wed, 12 Feb 2025 01:15:58 +0530
+Message-ID: <20250211194558.803373-1-sshegde@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] apple-nvme: defer cache flushes by a specified amount
-To: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Hector Martin
- <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
- Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250211-nvme-fixes-v1-0-6958b3aa49fe@rosenzweig.io>
- <20250211-nvme-fixes-v1-3-6958b3aa49fe@rosenzweig.io>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250211-nvme-fixes-v1-3-6958b3aa49fe@rosenzweig.io>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Jt0HC7HrCRGQZTemKUjreg5WSib7_S2g
+X-Proofpoint-GUID: Jt0HC7HrCRGQZTemKUjreg5WSib7_S2g
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_08,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ suspectscore=0 impostorscore=0 mlxlogscore=753 lowpriorityscore=0
+ clxscore=1011 phishscore=0 priorityscore=1501 malwarescore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502110126
 
-On 2/11/25 11:25 AM, Alyssa Rosenzweig wrote:
-> From: Jens Axboe <axboe@kernel.dk>
-> 
-> Cache flushes on the M1 nvme are really slow, taking 17-18 msec to
-> complete. This can slow down workloads considerably, pure random writes
-> end up being bound by the flush latency and hence run at 55-60 IOPS.
-> 
-> Add a deferred flush work around to provide better performance, at a
-> minimal risk. By default, flushes are delayed at most 1 second, but this
-> is configurable.
-> 
-> With this work-around, a pure random write workload runs at ~12K IOPS
-> rather than 56 IOPS.
+While experimenting with irq time accounting stumbled upon this issue
+with cputime accounting while running simple benchmarks.  
 
-I knew this one would bite in the ass at some point down the line ;-)
+This is very likely a common issue across different archs unless one turns
+on IRQ_TIME_ACCOUNTING. Took a look at src rpms of rhel and suse. Only
+rhel on x86 seems to enable it. 
 
-I do think the feature is sane, and to my knowledge we haven't had any
-issues with it since I originally wrote it 3 years ago. But I also
-think it should probably go in the block layer proper, as other
-devices might benefit from it.
+(default configs)
+CONFIG_VIRT_CPU_ACCOUNTING=y
+CONFIG_VIRT_CPU_ACCOUNTING_GEN=y
+# CONFIG_IRQ_TIME_ACCOUNTING is not set
+CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+all    3.41    0.00   73.81    0.00   22.00    0.00    0.10    0.00    0.00    0.67
+all    3.39    0.00   73.30    0.00   22.71    0.01    0.01    0.00    0.00    0.58
 
-That said, I'm fine with parking this in the apple nvme driver for
-now, as we don't have to deal with multiple namespaces etc. Can
-always get migrated to a core feature later, if desired.
+(With CONFIG_IRQ_TIME_ACCOUNTING=y)
+CONFIG_VIRT_CPU_ACCOUNTING=y
+CONFIG_VIRT_CPU_ACCOUNTING_GEN=y
+CONFIG_IRQ_TIME_ACCOUNTING=y
+CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+all    3.64    0.00   94.26    0.00    1.77    0.06    0.05    0.00    0.00    0.21
+all    3.42    0.00   93.89    0.00    1.94    0.07    0.00    0.00    0.00    0.68
 
+
+Forced NATIVE to be enabled by removing conditional check in NO_HZ_FULL.
+CONFIG_VIRT_CPU_ACCOUNTING=y
+# CONFIG_TICK_CPU_ACCOUNTING is not set
+CONFIG_VIRT_CPU_ACCOUNTING_NATIVE=y
+CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+all    5.78    0.00   92.55    0.00    1.56    0.00    0.00    0.00    0.00    0.11
+all    6.14    0.00   91.86    0.00    1.68    0.02    0.00    0.00    0.00    0.29
+
+Given the code, NATIVE accounting seems most accurate, 
+since it tracks enter/exit of user, hardirq, softirqs. 
+Though it comes with its own overhead.
+
+
+Such a drastic difference w.r.t to *irq time*. That made me wonder why?
+This happens because of when NO_HZ_FULL is chosen, NATIVE accounting
+cannot be enabled and GENeric is the option. 
+GEN -> account_process_tick ->
+	-> if context tracking is enabled, do accounting based on it. 
+	-> if irq_time accounting is enabled, do that. 
+	-> If not, fall back to simple tick based accounting. With this
+	   whole tick duration can be attributed to IRQ. Which is not true.
+
+NATIVE -> account_process_tick ->
+	vtime_flush - native based accounting. 
+
+
+The main concern is, context tracking is enabled only if NO_HZ_FULL=y and 
+(nohz_full= or isolcpus=) is set. Most of the kernels are built with
+NO_HZ_FULL, but many may not pass the nohz_full=. (correct me if i am
+wrong). This leads to context tracking isn't being enabled. Since irq
+time isn't enabled either, it falls into simple tick based accounting. 
+
+A few ways to fix. Some may not be sane. These are the hacks that i have
+tried. 
+
+1. Looking at irq_time vs native accounting, seems like irq_time is
+lightweight and close enough to native. maybe that can be a middle
+ground. So enable it for the arch default configs. That way distros can
+enable it. below patch is with this method. 
+NOTE: this needs more work still w.r.t to measuring the overhead.
+
+2. Select IRQ_TIME_ACCOUNTING in case of NO_HZ_FULL. This would fix this
+accounting issue for all archs. But given a slight overhead, some archs
+may not want it. 
+
+3. If context tracking is not enabled, then do native way if archs
+supports it. since native and irq_time are exclusive only one of them
+can be enabled. This needs a lot of change given how the current code is
+with macros. Also this meant decoupling native from NO_HZ_FULL. 
+ 
+Is this a problem worth fixing? are there any better way to fix it? 
+
+Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+---
+ arch/powerpc/configs/ppc64_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/powerpc/configs/ppc64_defconfig b/arch/powerpc/configs/ppc64_defconfig
+index 465eb96c755e..9bc678d92384 100644
+--- a/arch/powerpc/configs/ppc64_defconfig
++++ b/arch/powerpc/configs/ppc64_defconfig
+@@ -3,6 +3,7 @@ CONFIG_POSIX_MQUEUE=y
+ CONFIG_AUDIT=y
+ CONFIG_NO_HZ_FULL=y
+ CONFIG_NO_HZ=y
++CONFIG_IRQ_TIME_ACCOUNTING=y
+ CONFIG_HIGH_RES_TIMERS=y
+ CONFIG_BPF_SYSCALL=y
+ CONFIG_BPF_JIT=y
 -- 
-Jens Axboe
+2.39.3
 
