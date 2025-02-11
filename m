@@ -1,105 +1,102 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538C2224F6;
-	Tue, 11 Feb 2025 00:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C009541C7F
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739235374; cv=none; b=UvKFqY5OVwzucCicDLxTvJTwK3Y43ot/p8WKUbr+9DkLbYLiQlK9HTOEcldz87vI4545F9uxkEVRu/bmV9vV5UAvfVW9WrvfinntVnx8soseoTQZO1VLxu/8F3vGg1P6RYgQqB6YvUfsnRwUnO5WProU7MdMvrNqWxQ2ppriraY=
+	t=1739235447; cv=none; b=ExbjGchykXXUjSqw0Ng4CGGwLumDNGDs7C/hkcWUJYwTShF6u0xbLURje1VHzcVsxxAfwykIYk9zycpnlxdVyjYcYE2NiDPBnBVkRN8isONEUdhHr17/t+twwDKPacpriMWLDwk88pljMAQhIwJMOCmc/5clqg8LBJj+oKN77E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739235374; c=relaxed/simple;
-	bh=e47iR8fyburMallAFhuLe1RTPvkqX9NNf1uJok+lahI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JK0MBYFTuLrIx/Xw6zs6lC8faEXp7qIhyygXrI3GPgtHDZQ8Fk0+R6pkfNUtQxir7F9kaBnEBmh9gScwYUTMmcqiDJ0YLQ6PkgREwkaMkasW8c04wThp+RaOx/kVDmLmHgMllfOtLQUav0dtAgWQKco9an2/npFxYxk0AVzYc8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LsUlUbvl; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739235447; c=relaxed/simple;
+	bh=veOa1e1fqXZolRHTxUcJhvc7wIWeVNZRLTZpkPpIRfI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VfmiymsB+WEU0p09iDIdo47mJUuQcQRc5XGW2Cs0qBISGOadT59ZsjSeojwO/IKywctzFCQ3B/f6YoPqZ09YFJoIKtncsjXlkDIKqZkaTLu4MOPuvmvs0C5hKfycJS9ZLXH+9cgmYbZSuPQAJMhQcesEOB8q6/dBFsHEdZESbb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=MoRl5CFt; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LsUlUbvl"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5de6c708315so3522629a12.0;
-        Mon, 10 Feb 2025 16:56:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739235370; x=1739840170; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6UL9cMSXRLrKUmcSWZ6ehr9HZGcrPjrQbiwbSxeTuc0=;
-        b=LsUlUbvl3hpoPc5qYWbSr54rDWpm7Vk5LUlHSePtW/jwjMB4z+Az6IiWAtuwzf+59i
-         2dVdEO/az7Ewd2xG0SO1ph+tl8PziUzra8q0JRZVu+mAprWGbhTLfsDYDaDsOkBUrvel
-         LZ9VI+J2A7a6+ogmv9651sv55ynnIxNkQUgEiPqqw7Sf92ChS43U75DDw92gu41MUp5d
-         Xm+GmPNogal/sk4HBD1wiw9sc88SHHz8Z5UDL15SSGxBIvCwx8tr6w1N9jceOmisLYxg
-         uFA4F4cofE7LwGSo9J2bfe/FOGlIabvYV7ydZe6lEYbQZYyORfPqFBlfBNGPXlWbEObj
-         qeRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739235370; x=1739840170;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6UL9cMSXRLrKUmcSWZ6ehr9HZGcrPjrQbiwbSxeTuc0=;
-        b=fnRstHXUi8mS1TdGv7u1SlloLwJTem+5fVeqGkIY390EN/NbwnKx8+MC1VW3HuFIEF
-         nG5oPEJh8++QrzXO/wJgBeI7eERukM9nL7cgYF1iUc+pD+XCrpQY4sqHgFbqo1P/BRUd
-         ASf+jOtHAitaCkLHJVoivuwrTG4Sn80IDIolkJYPnsSVPzmD52Mcs/77YvT82GS5r35K
-         QlQH1KeMzIPUEkleKjF6Jbo7k3i++XmSIhYsWft07qrfKpj5QmnDGqBDdNwejTflqNqD
-         NJB8mRiToQZeD2Kz4SyPWfjP/mGd8JMwRd3Slb4+F7SLQ38ErT+z5aSJAdi9OmSFmgBJ
-         /fZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWLWR4ihjTSGaNEn/M+dmzWpgtxXVwHvUQF3k3pClTvFrQBHyaChkB6K7NICmRcPWJDLeZ/UvzDQLH8QY8=@vger.kernel.org, AJvYcCWeK6pgZ/1AuMU9PkB79dsd0PM2Ep30d/mPpmspTaR0luXa85By3CwZReFHny6512rwgf3HDidZS7N/3Wu8Nww0@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywfb9w7AtZ7SF3pGYiJfa6NVRm5nBiGWAm0r5jO5z9tOUh5TQWF
-	+dETAGU2506w4+FcTOIfaPtWmXMhat4DEmV2po1RerIha2pLCl4E
-X-Gm-Gg: ASbGncuqTQbvdssQ/TjEmut/0bKLNIjgHeqSmGka3TOAVT0Y+LJ4hqJ36eJtzJIkNSs
-	KpW0hGzkpiLa29mmHqgPTinJvHZxD6DE+obhdl2BjDRfNvBADGbw1OOZ9mzT8NzNVlyRbY9kA22
-	ildX/BdGiQ1kDAbmXIKJKLGSC1Aneyf0vVBjReT+vqfYe8+8uSKwnEbIYsWx1X/f6JzXb0aEBM+
-	HRv8VJQEEcNCEUw50Z9aosnEBpD9ZV+2mY2DMFhrIrbpiBgio11CJCswyRrKWGGmnCndsX6cl/d
-	1Jyg
-X-Google-Smtp-Source: AGHT+IFmOULmOXGP28PqCUALPKYMf0/xNA7A869rzJwx0VnrPUsVgBbo5gi6VDEbrDyHmyNFNjEpgQ==
-X-Received: by 2002:a05:6402:4305:b0:5de:39fd:b303 with SMTP id 4fb4d7f45d1cf-5de44feab07mr15546115a12.2.1739235370140;
-        Mon, 10 Feb 2025 16:56:10 -0800 (PST)
-Received: from localhost ([95.85.21.13])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5de379cedc6sm8183032a12.44.2025.02.10.16.56.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 16:56:08 -0800 (PST)
-Date: Tue, 11 Feb 2025 02:56:06 +0200
-From: Ahmed Salem <x0rw3ll@gmail.com>
-To: peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, shuah@kernel.org, 
-	skhan@linuxfoundation.org
-Cc: linux-integrity@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH v2] selftests: tpm2: test_smoke: use POSIX-conformant
- expression operator
-Message-ID: <gmqimicpacyyg6mkxrk4etmi74gp6zqivlrgbu263lfgpw7qvg@wwzrscxvidvm>
-References: <D7OY3ZVGJOV5.R3SL9SBFT2DF@kernel.org>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="MoRl5CFt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=3RHzaXPvSSsD3tcvq+PDetqc0A0Fsw+o/kApTBGNk3M=; b=MoRl5CFtqHV4jUa8hjd3chY/xp
+	Jfx9tMuScPCD9alrsCUCLsTkq9dWCA+7wr3i2EbIOurqXHNDiqmWXdFZ6MRskgGQ3YT513Qh6fCww
+	TKSCtkmAuhngf77R3fQMZlvRG/jI+OFlZe2NQbXqGvnObnIFC4OldnMRqnqHD+9w4BpL/TlQdvkP8
+	9SJs/rs1lhjbBqoySkMScQxlsIXQgGg9qGBt/khXCceSw+2kl8kZ9N/QBoFij6mh85ulhlmLamBqv
+	QwqUtOlK1ZV+qn9XXM7DtqjevdEr+EaoXZ0MzsSNoLozk7VgvoL3Q2JbbCiKIKBcw2HKrlyfiFazh
+	Q3uUYOrA==;
+Received: from [58.29.143.236] (helo=[192.168.1.6])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1theaJ-007VYY-Ql; Tue, 11 Feb 2025 01:57:13 +0100
+Message-ID: <8ce4d887-464c-4d4d-825d-0d01dcafe400@igalia.com>
+Date: Tue, 11 Feb 2025 09:57:08 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D7OY3ZVGJOV5.R3SL9SBFT2DF@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched_ext: Provides a sysfs 'events' to expose core event
+ counters
+To: Tejun Heo <tj@kernel.org>
+Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org
+References: <20250210143643.220994-1-changwoo@igalia.com>
+ <Z6o3WOGS5Pulha36@slm.duckdns.org>
+From: Changwoo Min <changwoo@igalia.com>
+Content-Language: en-US, ko-KR, en-US-large, ko
+In-Reply-To: <Z6o3WOGS5Pulha36@slm.duckdns.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Use POSIX-conformant operator symbol '=='.
+Hello,
 
-Signed-off-by: Ahmed Salem <x0rw3ll@gmail.com>
----
+Thank you for the review!
 
-Changes in v2:
- - Remove snippets pinpointing the issue 
-   from commit message
+On 25. 2. 11. 02:28, Tejun Heo wrote:
+> Hello,
+> 
+> On Mon, Feb 10, 2025 at 11:36:43PM +0900, Changwoo Min wrote:
+> ...
+>> +#define scx_attr_event_show(buf, at, events, kind) ({				\
+>> +	sysfs_emit_at(buf, at, "%40s: %16llu\n", #kind, (events)->kind);	\
+>> +})
+> 
+> It's nice to format things in tabular forms but things under /sys lean more
+> towards simpler formatting, so maybe just do "%s %16llu\n"?
 
- tools/testing/selftests/tpm2/test_smoke.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sure, I will change it to the simplest form, "%s %llu\n".
 
-diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
-index 168f4b166234..3a60e6c6f5c9 100755
---- a/tools/testing/selftests/tpm2/test_smoke.sh
-+++ b/tools/testing/selftests/tpm2/test_smoke.sh
-@@ -6,6 +6,6 @@ ksft_skip=4
- 
- [ -e /dev/tpm0 ] || exit $ksft_skip
- read tpm_version < /sys/class/tpm/tpm0/tpm_version_major
--[ "$tpm_version" == 2 ] || exit $ksft_skip
-+[ "$tpm_version" = 2 ] || exit $ksft_skip
- 
- python3 -m unittest -v tpm2_tests.SmokeTest 2>&1
--- 
-2.47.2
+> 
+>>   static struct attribute *scx_global_attrs[] = {
+>>   	&scx_attr_state.attr,
+>>   	&scx_attr_switch_all.attr,
+>>   	&scx_attr_nr_rejected.attr,
+>>   	&scx_attr_hotplug_seq.attr,
+>>   	&scx_attr_enable_seq.attr,
+>> +	&scx_attr_events.attr,
+> 
+> This probably should belong to the root/ subdir as we'd probably want to
+> keep the event counter separate per scheduler instance in the
+> multi-scheduler future.
 
+I feel this is a bit contradictory to the need to access the core
+event counters even after an scx scheduler is unloaded. In the
+current implementation, root/ subdir appears and disappears when
+an scx scheduler is loaded and unloaded.
+
+We may change the scx_ktype to something similar to
+scx_global_attr_group in order to keep root/ subdir. We then show
+an empty file for root/ops when no scx scheduler is loaded while
+keep the root/events file intact. I am not sure if this is what
+we want.
+
+What do you think?
+
+Regards,
+Changwoo Min
