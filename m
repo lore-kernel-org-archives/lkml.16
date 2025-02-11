@@ -1,306 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32099250C11
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9488E250BFC;
+	Tue, 11 Feb 2025 14:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739284764; cv=none; b=AFVHt3iNGFq44ZknHJ6YY4bF1bcnZWsy4L2MWJ6Jm4vIeXxL5vJJqhpW1oD+VkwPEWSbrwQAUESTAL3u0JdRM9T6XlyN4K0BxgsQqGgrwdi4yyK+9W3W0C5XK5m2w7YLguzzuY7Z9TmvIOpQZBCC6wPxS6BGY6/stbQSO49meDM=
+	t=1739284771; cv=none; b=XbKGhufuvVjWNeyngduHkK2E73Snm3Ujaem+gRyHPLwbMxrW6/jXCF0DT7+X5PA8rb8BrXjzDjaro0002m1PoRkUez8tlaKB9666uujl3GGnbdfJcbDhn+aDhHh+58ubfdtmdSWBOKdrRVmdIMXkVNN2T2J0WuODXl8S7EHPahY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739284764; c=relaxed/simple;
-	bh=p9naWnQ0E1iqLvGPEhpxsWFpQ6BgZR017/nN0csyCE0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X9WhOKlAOp1EmPjFc52QITQ9bfTooZGvrSRF2MG5huZD3UJTwyb/fgJbZviJ2mqb62YUfGCEqXZMCeL6wdOOcOBEWDvgDC+GaA3msoJcMY2avZkMf2onAyf95sQXOL3XPe2SpqYOyKsqm2SqfkMBtomNcI34Wha3LBNjlJz/ZKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CXo+Qnnc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739284771; c=relaxed/simple;
+	bh=vwvT0IV6zmeOtXSkiICUs3PNA74HF+q9L26ymYs58uA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=k8TEMONjcOUNcoRJZrijNpqYdEO63KZ2FzG9Ai/pBPkQ0MRvclOkFhLXVJOko5yYJEhv4R58Yh2FglnVppTIEQZKklxsUElyH0/cBezFDr2TeNXeQZ/wAFIXtZeWMBSwhJjqor91evK4LOL+UmT2i2AiHdbm4xCFYVmB8Pb9L00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oYCFRrO/; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CXo+Qnnc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739284761;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XPf5dvcDVGeFg4rp8rzaEx8TRiTLHtjfNYmtCjoBL30=;
-	b=CXo+QnncJ8vAtgdRhga5vStt84VyLSyLhelFqZll5Y83bYYEIcHqR9oM/SK84RlV12V13S
-	C5XIlYa7mamtTMVtazPcfaq9OjO10sMh96oMU+CFpQ4yw1fPcOdhdbUymBf8iYidYE1fsu
-	Juz4zILoCVkZM+3GvMwacIr1z55zJpg=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-MgHh9RcbNj6xMEAAs2r4fw-1; Tue, 11 Feb 2025 09:39:17 -0500
-X-MC-Unique: MgHh9RcbNj6xMEAAs2r4fw-1
-X-Mimecast-MFC-AGG-ID: MgHh9RcbNj6xMEAAs2r4fw
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38de11a0002so106178f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:39:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739284756; x=1739889556;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XPf5dvcDVGeFg4rp8rzaEx8TRiTLHtjfNYmtCjoBL30=;
-        b=mbAw0hD20NbAprThbQY/MA6ypTyB8l6pQ69UBN2l1zYNDcB0xNOjdYwVVicUcNrmc2
-         D+zpapiF4fQO4sXsERova7b8Prk+5NlWI4XxdGb1ZZsJaxSzEpNebmoJNODS3nFhx5Hp
-         10yUfenuPq+zdBgw/Ry8fZBqEykskDX5p1bu5uIUHFNc32uWjVw3Wxko3BjQwfme1jcg
-         6FlmO41e7F2tjfkRKH5tpGrGwK6k8yuBgn0giBLXXChV0zTjyl8wNAug60oyAyr5Qd1p
-         ffsw3iBq84zSKH5t8v4epggdNF71pq9nggM/ePmx9Wt6M9vdByXup2bAzXTizaGaepLD
-         NU+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWHK5ybBplVbB6c90ptdoHmnq7JyDvuhBgKtBBCwV2ya/VGCF/PbAosrkaLQhktZn2yzLEAIIv70mgZzBY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvSViH/C458A4teSophW7dmiP8NOkY5rcqcf4Bn9ls3r1eXJ2a
-	VS0FsZ4zfHukNxikMJ4ezeEa9usS4PahkEIEeNP+S8eqPWDU3EMKFGuwfXL/JwhgTV6CnbWD5oB
-	pO6IUL7HTI+UQ+5KKE1VVObgKl6hMp49VDhXwCLevBdZVWOaMtPAd2jpsDiBIUA==
-X-Gm-Gg: ASbGncvgh6P3tBOVl76pfkVWzYbwQPAUwe5UvET3yg04vdGIZCQzS/vTBsrs0Q6Y8Ms
-	OQDU5dtR8aWA0iDqUMBHOpLRO4bzqjn2Ykx8Esa33IOkeAc1fJ0HBdyycFS0XB21BZxA5yfAKWg
-	XGLSLzV6q1zoIoM/n96j78LdezjUUT/zvVDY+mmChfvORlXp+dAJS9PHTaqPlCFEx8GMnHpCAJ4
-	LKix4iNghg/y7yiTuteUN5oon3UBzWuImEfMdIe3YqM3A5TqrYou8ZhN21Phcxwm/3OJEcgWM2d
-	CYLMhzfX147JmBiTBdy+BqJUpPe+3rdn78d6QrNUwGiGPkpbVQ+LCBtU1kfA19/j2QM=
-X-Received: by 2002:a05:6000:1548:b0:38d:d3e2:db40 with SMTP id ffacd0b85a97d-38dd3e2dc3amr7819784f8f.17.1739284756327;
-        Tue, 11 Feb 2025 06:39:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFI48MsBZ0xT8yThrymEFgbe5pw/LDZFV6jmWuDquHS5367gme0u5rb2EuyuSeXzwWC2tE8KA==
-X-Received: by 2002:a05:6000:1548:b0:38d:d3e2:db40 with SMTP id ffacd0b85a97d-38dd3e2dc3amr7819754f8f.17.1739284755919;
-        Tue, 11 Feb 2025 06:39:15 -0800 (PST)
-Received: from rh.fritz.box (p200300f6af0e4d00dda53016e366575f.dip0.t-ipconnect.de. [2003:f6:af0e:4d00:dda5:3016:e366:575f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcc9bd251sm11745833f8f.9.2025.02.11.06.39.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 06:39:15 -0800 (PST)
-From: Sebastian Ott <sebott@redhat.com>
-To: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Cc: Cornelia Huck <cohuck@redhat.com>,
-	Eric Auger <eric.auger@redhat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/4] KVM: arm64: Allow userspace to change AIDR_EL1
-Date: Tue, 11 Feb 2025 15:39:09 +0100
-Message-ID: <20250211143910.16775-4-sebott@redhat.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250211143910.16775-1-sebott@redhat.com>
-References: <20250211143910.16775-1-sebott@redhat.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oYCFRrO/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739284767;
+	bh=vwvT0IV6zmeOtXSkiICUs3PNA74HF+q9L26ymYs58uA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=oYCFRrO//YgoqO/DWnNYn5svT2uWsQbcG7xfLxGH9/DEx7GNbhgGg4usxoyJiqtf7
+	 3IBJ3XJzcazrb0L9+X4KcAfI+pPP92dC6eLh5NysTbNVvDaxTx8nPstlPbZmIzG355
+	 DnsdIarIGT1u1nnNSeWAM7/45gHY8rnQtNC1ONJ/AFPLNrJnIIqIGa10He6a0qTaea
+	 nRZwFiaOu9JUEll0dntr+cCDdMsfOyzYwhaYoJyDWXbwgHD5b40k5YNFFaiEIxbuu/
+	 5685xsz1PNX/BluoLan8nLMbmrp5gQnv+qNRMbOAJZm5Fkj9UU+wVmS4jN7VIUtNSV
+	 DfHvwv8ZmGGzg==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id C588B17E0CA2;
+	Tue, 11 Feb 2025 15:39:26 +0100 (CET)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Fei Shao <fshao@chromium.org>, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Cc: kernel@collabora.com, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ =?utf-8?q?Trevor_Wu_=28=E5=90=B3=E6=96=87=E8=89=AF=29?= <Trevor.Wu@mediatek.com>, 
+ Chen-Yu Tsai <wenst@chromium.org>, devicetree@vger.kernel.org, 
+ stable@vger.kernel.org
+In-Reply-To: <20250207-mt8188-afe-fix-hang-disabled-apll1-clk-v2-1-a636d844c272@collabora.com>
+References: <20250207-mt8188-afe-fix-hang-disabled-apll1-clk-v2-1-a636d844c272@collabora.com>
+Subject: Re: [PATCH v2] arm64: dts: mediatek: mt8188: Assign apll1 clock as
+ parent to avoid hang
+Message-Id: <173928476672.1551988.2336306121447017501.b4-ty@collabora.com>
+Date: Tue, 11 Feb 2025 15:39:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.14.2
 
-Enable VMMs to write AIDR_EL1 by treating it as a VM ID register.
-Trap guest access of AIDR_EL1 when the VMs value differs from hardware.
+On Fri, 07 Feb 2025 14:41:24 -0300, Nícolas F. R. A. Prado wrote:
+> Certain registers in the AFE IO space require the apll1 clock to be
+> enabled in order to be read, otherwise the machine hangs (registers like
+> 0x280, 0x410 (AFE_GAIN1_CON0) and 0x830 (AFE_CONN0_5)). During AFE
+> driver probe, when initializing the regmap for the AFE IO space those
+> registers are read, resulting in a hang during boot.
+> 
+> This has been observed on the Genio 700 EVK, Genio 510 EVK and
+> MT8188-Geralt-Ciri Chromebook, all of which are based on the MT8188 SoC.
+> 
+> [...]
 
-Since this was the last invariant register remove all the stuff
-that was needed to handle these.
+Applied to v6.14-next/dts64, thanks!
 
-Signed-off-by: Sebastian Ott <sebott@redhat.com>
----
- arch/arm64/include/asm/kvm_host.h |  3 ++
- arch/arm64/kvm/sys_regs.c         | 90 +++----------------------------
- 2 files changed, 10 insertions(+), 83 deletions(-)
+[1/1] arm64: dts: mediatek: mt8188: Assign apll1 clock as parent to avoid hang
+      commit: 301d44afbdcfd523a8c126c52b9d597ec27c473a
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index c8fba4111b77..de735e2ad9ce 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -375,6 +375,7 @@ struct kvm_arch {
- 
- 	u64 midr_el1;
- 	u64 revidr_el1;
-+	u64 aidr_el1;
- 	u64 ctr_el0;
- 
- 	/* Masks for VNCR-backed and general EL2 sysregs */
-@@ -1475,6 +1476,8 @@ static inline u64 *__vm_id_reg(struct kvm_arch *ka, u32 reg)
- 		return &ka->midr_el1;
- 	case SYS_REVIDR_EL1:
- 		return &ka->revidr_el1;
-+	case SYS_AIDR_EL1:
-+		return &ka->aidr_el1;
- 	case SYS_CTR_EL0:
- 		return &ka->ctr_el0;
- 	default:
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 646c0a04e58a..d388594d7b28 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1667,7 +1667,7 @@ static bool is_feature_id_reg(u32 encoding)
- static inline bool is_vm_ftr_id_reg(u32 id)
- {
- 	if (id == SYS_CTR_EL0 || id == SYS_MIDR_EL1 ||
--	    id == SYS_REVIDR_EL1)
-+	    id == SYS_REVIDR_EL1 || id == SYS_AIDR_EL1)
- 		return true;
- 
- 	return (sys_reg_Op0(id) == 3 && sys_reg_Op1(id) == 0 &&
-@@ -2544,6 +2544,7 @@ static bool access_mdcr(struct kvm_vcpu *vcpu,
- 
- FUNCTION_RESET(midr_el1)
- FUNCTION_RESET(revidr_el1)
-+FUNCTION_RESET(aidr_el1)
- 
- 
- /*
-@@ -2870,6 +2871,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 	  .set_user = set_clidr, .val = ~CLIDR_EL1_RES0 },
- 	{ SYS_DESC(SYS_CCSIDR2_EL1), undef_access },
- 	{ SYS_DESC(SYS_SMIDR_EL1), undef_access },
-+	{ ID_DESC(AIDR_EL1), .set_user = set_id_reg_non_ftr, .visibility = id_visibility,
-+	  .reset = reset_aidr_el1, .val = -1ULL },
- 	{ SYS_DESC(SYS_CSSELR_EL1), access_csselr, reset_unknown, CSSELR_EL1 },
- 	ID_FILTERED(CTR_EL0, ctr_el0,
- 		    CTR_EL0_DIC_MASK |
-@@ -4634,61 +4637,6 @@ id_to_sys_reg_desc(struct kvm_vcpu *vcpu, u64 id,
- 	return r;
- }
- 
--/*
-- * These are the invariant sys_reg registers: we let the guest see the
-- * host versions of these, so they're part of the guest state.
-- *
-- * A future CPU may provide a mechanism to present different values to
-- * the guest, or a future kvm may trap them.
-- */
--
--#define FUNCTION_INVARIANT(reg)						\
--	static u64 reset_##reg(struct kvm_vcpu *v,			\
--			       const struct sys_reg_desc *r)		\
--	{								\
--		((struct sys_reg_desc *)r)->val = read_sysreg(reg);	\
--		return ((struct sys_reg_desc *)r)->val;			\
--	}
--
--FUNCTION_INVARIANT(aidr_el1)
--
--/* ->val is filled in by kvm_sys_reg_table_init() */
--static struct sys_reg_desc invariant_sys_regs[] __ro_after_init = {
--	{ SYS_DESC(SYS_AIDR_EL1), NULL, reset_aidr_el1 },
--};
--
--static int get_invariant_sys_reg(u64 id, u64 __user *uaddr)
--{
--	const struct sys_reg_desc *r;
--
--	r = get_reg_by_id(id, invariant_sys_regs,
--			  ARRAY_SIZE(invariant_sys_regs));
--	if (!r)
--		return -ENOENT;
--
--	return put_user(r->val, uaddr);
--}
--
--static int set_invariant_sys_reg(u64 id, u64 __user *uaddr)
--{
--	const struct sys_reg_desc *r;
--	u64 val;
--
--	r = get_reg_by_id(id, invariant_sys_regs,
--			  ARRAY_SIZE(invariant_sys_regs));
--	if (!r)
--		return -ENOENT;
--
--	if (get_user(val, uaddr))
--		return -EFAULT;
--
--	/* This is what we mean by invariant: you can't change it. */
--	if (r->val != val)
--		return -EINVAL;
--
--	return 0;
--}
--
- static int demux_c15_get(struct kvm_vcpu *vcpu, u64 id, void __user *uaddr)
- {
- 	u32 val;
-@@ -4770,15 +4718,10 @@ int kvm_sys_reg_get_user(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg,
- int kvm_arm_sys_reg_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- {
- 	void __user *uaddr = (void __user *)(unsigned long)reg->addr;
--	int err;
- 
- 	if ((reg->id & KVM_REG_ARM_COPROC_MASK) == KVM_REG_ARM_DEMUX)
- 		return demux_c15_get(vcpu, reg->id, uaddr);
- 
--	err = get_invariant_sys_reg(reg->id, uaddr);
--	if (err != -ENOENT)
--		return err;
--
- 	return kvm_sys_reg_get_user(vcpu, reg,
- 				    sys_reg_descs, ARRAY_SIZE(sys_reg_descs));
- }
-@@ -4814,15 +4757,10 @@ int kvm_sys_reg_set_user(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg,
- int kvm_arm_sys_reg_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- {
- 	void __user *uaddr = (void __user *)(unsigned long)reg->addr;
--	int err;
- 
- 	if ((reg->id & KVM_REG_ARM_COPROC_MASK) == KVM_REG_ARM_DEMUX)
- 		return demux_c15_set(vcpu, reg->id, uaddr);
- 
--	err = set_invariant_sys_reg(reg->id, uaddr);
--	if (err != -ENOENT)
--		return err;
--
- 	return kvm_sys_reg_set_user(vcpu, reg,
- 				    sys_reg_descs, ARRAY_SIZE(sys_reg_descs));
- }
-@@ -4911,23 +4849,13 @@ static int walk_sys_regs(struct kvm_vcpu *vcpu, u64 __user *uind)
- 
- unsigned long kvm_arm_num_sys_reg_descs(struct kvm_vcpu *vcpu)
- {
--	return ARRAY_SIZE(invariant_sys_regs)
--		+ num_demux_regs()
--		+ walk_sys_regs(vcpu, (u64 __user *)NULL);
-+	return num_demux_regs()	+ walk_sys_regs(vcpu, (u64 __user *)NULL);
- }
- 
- int kvm_arm_copy_sys_reg_indices(struct kvm_vcpu *vcpu, u64 __user *uindices)
- {
--	unsigned int i;
- 	int err;
- 
--	/* Then give them all the invariant registers' indices. */
--	for (i = 0; i < ARRAY_SIZE(invariant_sys_regs); i++) {
--		if (put_user(sys_reg_to_index(&invariant_sys_regs[i]), uindices))
--			return -EFAULT;
--		uindices++;
--	}
--
- 	err = walk_sys_regs(vcpu, uindices);
- 	if (err < 0)
- 		return err;
-@@ -5001,7 +4929,8 @@ static void vcpu_set_hcr(struct kvm_vcpu *vcpu)
- 	else
- 		vcpu->arch.hcr_el2 |= HCR_TID2;
- 
--	if (kvm_read_vm_id_reg(kvm, SYS_REVIDR_EL1) != read_sysreg(REVIDR_EL1))
-+	if ((kvm_read_vm_id_reg(kvm, SYS_REVIDR_EL1) != read_sysreg(REVIDR_EL1)) ||
-+	    (kvm_read_vm_id_reg(kvm, SYS_AIDR_EL1) != read_sysreg(AIDR_EL1)))
- 		vcpu->arch.hcr_el2 |= HCR_TID1;
- 
- 	if (vcpu_el1_is_32bit(vcpu))
-@@ -5156,16 +5085,11 @@ int __init kvm_sys_reg_table_init(void)
- 	valid &= check_sysreg_table(cp14_64_regs, ARRAY_SIZE(cp14_64_regs), true);
- 	valid &= check_sysreg_table(cp15_regs, ARRAY_SIZE(cp15_regs), true);
- 	valid &= check_sysreg_table(cp15_64_regs, ARRAY_SIZE(cp15_64_regs), true);
--	valid &= check_sysreg_table(invariant_sys_regs, ARRAY_SIZE(invariant_sys_regs), false);
- 	valid &= check_sysreg_table(sys_insn_descs, ARRAY_SIZE(sys_insn_descs), false);
- 
- 	if (!valid)
- 		return -EINVAL;
- 
--	/* We abuse the reset function to overwrite the table itself. */
--	for (i = 0; i < ARRAY_SIZE(invariant_sys_regs); i++)
--		invariant_sys_regs[i].reset(NULL, &invariant_sys_regs[i]);
--
- 	ret = populate_nv_trap_config();
- 
- 	for (i = 0; !ret && i < ARRAY_SIZE(sys_reg_descs); i++)
--- 
-2.42.0
+Cheers,
+Angelo
+
 
