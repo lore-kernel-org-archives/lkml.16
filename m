@@ -1,110 +1,119 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8DE922E410;
-	Tue, 11 Feb 2025 14:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7DD250BEC
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739285326; cv=none; b=k3W9IGp5LZHLgMgJnlfOA+JVzdS6exmj/uie/BtmdCSk9RI8O7harccXhjqZU9SEw3tKrk0uqzDz5v3nRh7WNZtpkSDIH6lDpv3sJ2xYAlq+Eh0SUjUGkEjZOIrKxFUHyWp948IjHaZ5/8gV3v90wnQovkzK94vSf8Nsu8uR46M=
+	t=1739285404; cv=none; b=copL44XJQidcg1DqADVDUW0YaYaqmdNW0wAi+tiOZ09dpE6eXZNBMTPMAqolVkNqdLA13NNgw8E9aKDcqXgw/zCvpRb5rqa7YKIE4UIHI4x2WsBziMOsuYwpmnWgGTHI4uM2XT5l5+f+OrHgCRYhKsM6s4jhZrV8Kd2CNSCyUNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739285326; c=relaxed/simple;
-	bh=JfQdjMVxGbYsw8sMM6Ri650tQ0UNKwrkOmxaShYK07U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MMuyebKmZqJtTsEraC32TCKbJYtpBDV1bBGwY2m61OKu8dK06wxUFeXXz287Vf1UssiXErF7FfpMLLlvovo6Ua8SuutNItmMg91YpDUYJmVBA4TyGb/sQwD5bz+Olayea1mBmT2o3F2bnBTLtcXF36GUKzPBoNjyZL65grAuJl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F5iVfld4; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739285404; c=relaxed/simple;
+	bh=jdFTd4heaqF1waae3nF4Loe4e9NQVSskphOCed8h7lw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m+lRlsz7hqoqxFq3vweCtrcl99kfO21t5B9zGArfoIAYMMcnOX2Pz2KhbsL8QfCRj6dgJLbrUi56w9erJnPkakmeu4K+9ICD4tDqJAa2AAhrPWmNcUOxja9Bx3POd71f0/Pc7pbEhA3jkR4WD4ieFv0Mk6tJzyxyw0kguz9Gr2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jp+6ziyI; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F5iVfld4"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-307bc125e2eso52815921fa.3;
-        Tue, 11 Feb 2025 06:48:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739285323; x=1739890123; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hb8WGpZVQ0ZPLASqjNohDLlbvR12SUwdUzxjh12ST9Q=;
-        b=F5iVfld4xE3KhrfHOwSrH1nu2vQlq8mjj2B7zmgXPtNSABAFpXiURkJXHopc7Dkio1
-         Xn7kuxlmd8MfK/7+3KCi9w7thO1Mln7A534FT5HEuUBKoZ4YgT76pXmkhEde4dPGV9o8
-         dQ2JSHnwXNAUyK2Ds3w8K5Yr2UF/jxjkCiKe5PV+Yb5YKIub0Ky3JudbktCdW+hU4PGR
-         wzkPCeMLf/z7HY445nx/klqO69ia3OMaOwWQ8O95vpgOs95YpJ3QjGby+cQV2E+5dikV
-         yOMi42IkA2LqcRlknjpgK/zOXAbZZHQuUPt5yMGj0RYxYZp+TGUaCnn8KWpDmrq7Ore2
-         q6fQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jp+6ziyI"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BAaJaf028737
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:50:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	y9QQxW1CrdMOjnr/u7ZG72NR9gv+JDy1eoZ8KaTkW9A=; b=jp+6ziyIHb65iozh
+	9RVFlMo/Pi+ZYkw+ukFV/65b+/w7nfKODthOo9qvUziQDjqlrrfUzoYNDdpZ2/im
+	RtHMD/h1JF3f/9n09QehWXAnPrb5MSLLOdNBXb7JknzJeUCAEhRog9D/vKWL+LAT
+	qz20fnFLPN5DieKa75sy6B16SFDbjsQCALbUjmGNWXg2GKjj4CUDvEAozpNwh+W3
+	joP3vGfnfA3nB683zqvCAI9DbwaoFyJi1E1XAyMStJUr90z9Tk76fbYjgfcq4Jfv
+	K059w/GChp4VWKRjA8cY+Z4TkTfd0Y5hVaZd1SKtL2Hj24ctVQoxbxmTPIk/TYNp
+	6EYjfw==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qxg9ht7t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:50:00 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e4546f8c47so10230096d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:50:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739285323; x=1739890123;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hb8WGpZVQ0ZPLASqjNohDLlbvR12SUwdUzxjh12ST9Q=;
-        b=I3OoKZjWRZu0+0zIQZkfQapwj58Eh3Nd2ssmA/+2qDl0eQroDkZMbGwupLCpPc/JhG
-         t9j188myvImqbQzNbAnIwWy09K5S3Yuq714iUs+XfGFZEm3iQrKY6+Nhf2qnN+C2FWdl
-         zKES5RFbrmm6FlJJr4C9sbl+KfCoCcAkGhFRmn5V3xhOQyvANDtD/Zb37nNFpJZ8LCKn
-         RSsShpN+pMy+N56nDUJntlPOQJtNDPZBPJ6MzauPQEFHOwtM0UQPugFhNaJePiHippLC
-         F10+X3H2Z8B8JYMwo5CJSafBlsA17x8Hijxb0QdDZS4rG8Da8/Q8H4Qv6ZhvCQGo8qCO
-         oKwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVy2OxN8IUFxuGUhnA8K1ODjeFSNNz5eO2QtIski5u9CKaiB1AAy1UfDRFCnw7bDEcEzfk33IEPDy1+A78/bHcl@vger.kernel.org, AJvYcCWhkOb2OXuRCBzAlxoaCA35/4sZZxZcEH3bK/JdaP704LuzAE5VKmyZrs3JdUKOTe/k6qMUmsumivI4Rns=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMr9iDacs5/i3wMYLYeGSs2324xYcPH0DAhQ4drwkQaD9Lk6EB
-	6k7xQdHEQjslfSo7SbWIDmdkVlucdyeoX3LSV4nfJ5mFJqc+68KRockY8lAN17y+bJMn6sKesJt
-	AS1JwjcAI84ussGQq0S8jhire01rna3pF
-X-Gm-Gg: ASbGncsmSjSj6ZdGtRxrHolAEDXe2k1VTbEdNcMrgKNF2yFE6bWB1eVdJbXoLGfBsjP
-	EMcVN+2Kpmv8BqNgjhdh0wRDQeZTT/vmT//V2uoLX1lMRcSUSr20WlMaeT3pbjxfhSBjmBrem2e
-	54TcQmBuU/deYJ
-X-Google-Smtp-Source: AGHT+IFyQBNVwkAP+WJ5grg060BXEsXvubUYYvwxhjyORFrC58EExOAqo/K8MUl3U2ORZxt9dv5lMH4DKLM7UOj6YmI=
-X-Received: by 2002:a2e:9f4b:0:b0:308:e3ee:8773 with SMTP id
- 38308e7fff4ca-308e3eea069mr33664771fa.17.1739285322444; Tue, 11 Feb 2025
- 06:48:42 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739285399; x=1739890199;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y9QQxW1CrdMOjnr/u7ZG72NR9gv+JDy1eoZ8KaTkW9A=;
+        b=n09baIZsg2hopO1d6tp+2McOH68CFkOGBppFBxajIfiG5rkht+N2FavedoM/+Uk6FZ
+         89nlpJNW9W3fMaheEE2MuklZTu5N6zo3GNDE9NBWT6DSVTguLa8uxnJ7SUr1eieYsOLJ
+         pBY2hL7x5FbPGckXt4DTbZx+2qK5PxQBeHbgOmak4c283pvSa3yhZWmrWrfeJJ8KQkkB
+         FeneBxEquya1Xz9FIXQaPwmE+3+SfeUs990ZRj557XODi2fpU5BNEb42t9suZ+90LoyR
+         HzulWBiH3DKHR8slpHhOuJFl3WjxL0SPudLB7bxD2t3/VhiFmf6qlHXIPBC7UcAL4XXp
+         QOuA==
+X-Forwarded-Encrypted: i=1; AJvYcCUcOaI0Atl0Cc37p5VboUOuIfIRF4TPno2V4tT602ZajWuA34dpcauJpLFGFfWSrbYXC7jf1iQueDUo0Vw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbI+QKbkFluoBBUEPksLml/3wSlSPsPUMhnnTCQnQ6N3BdQaYS
+	qSD5aUzF5Y/K0kb2hs+zpYA3f0u1a8dxEVtsLEzT1TyADgSu7+svcQDX7Vi5yIkpbN0bt0OVopN
+	hFLHOAsrXThets+MIdTtgFrFjTjO9R8ZeuDIT2mcW9wjAdVGTDCC0EnM5eIXuk/w=
+X-Gm-Gg: ASbGncujpN4ODFZs5NaTADX1Xr0BGLr4RC6fyieUE5RvTCmbpe2A1IBbeWDMCcgvzfs
+	zjvGK/WKaXAe9CZZ9QhAUxXbrn7YrWZ+6KuwVJIpmELMjtDPY8swLAJ98hClUdJyukXC+RI6KZs
+	p0AAdxsqRw4gF0lbePneppgNzZ89AuRvJNbUidfFopkUrwu4iMEOLeP635L8j/CIAGtJu/kKsNr
+	i7IylmnpNxCVmzaN1/RVYWK52wm17mkVvwoZYqUV0XCIWCu+WsaEVEVcvLRHmgufsnfPD6vu9hg
+	n7Cwk0yjhiCoZt7XOzAg3Vi94ibCzK3fM74L606KJhIHe9DCnsQb2GAYeWk=
+X-Received: by 2002:a05:6214:19e5:b0:6d8:a67e:b2ff with SMTP id 6a1803df08f44-6e445715619mr91437496d6.8.1739285399563;
+        Tue, 11 Feb 2025 06:49:59 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHkk9DjPa3+ZeT3Nyflq6y5KlqeBXv7S25Hpw0rmBRomm62/VHebINsLa7PDQCcXTd8MmZyVg==
+X-Received: by 2002:a05:6214:19e5:b0:6d8:a67e:b2ff with SMTP id 6a1803df08f44-6e445715619mr91437396d6.8.1739285399076;
+        Tue, 11 Feb 2025 06:49:59 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7e2711937sm125092766b.25.2025.02.11.06.49.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 06:49:58 -0800 (PST)
+Message-ID: <52d29b4f-7ae2-4f79-b09b-f0b2a4e3034d@oss.qualcomm.com>
+Date: Tue, 11 Feb 2025 15:49:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210-scanf-kunit-convert-v6-0-4d583d07f92d@gmail.com>
- <20250210-scanf-kunit-convert-v6-1-4d583d07f92d@gmail.com>
- <Z6s2eqh0jkYHntUL@pathway.suse.cz> <CAJ-ks9n5=FYiFdmzWCkkACzX6oEVs=Z261_ZAKVq3tkqgJoSCQ@mail.gmail.com>
- <Z6s_VHExZe7ArgO7@smile.fi.intel.com>
-In-Reply-To: <Z6s_VHExZe7ArgO7@smile.fi.intel.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 11 Feb 2025 09:48:06 -0500
-X-Gm-Features: AWEUYZnWuvUuM0jAwAOHslBvVwO43LvTTZE23sNpqpSNVMknAe3J7QJIe_NCv4M
-Message-ID: <CAJ-ks9=fRs212-okYDDQFN=LD_w7PQ6JP_NvMT0W6pfpruXxTw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] scanf: convert self-test to KUnit
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, David Gow <davidgow@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/6] arm64: dts: qcom: qcm2290: add UART3 device
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Rob Herring
+ <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
+        Rocky Liao <quic_rjliao@quicinc.com>,
+        Bjorn Andersson
+ <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20250207-rb1-bt-v4-0-d810fc8c94a9@linaro.org>
+ <20250207-rb1-bt-v4-5-d810fc8c94a9@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250207-rb1-bt-v4-5-d810fc8c94a9@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: IBMJKZs2Otq2qU52RuMAs4zS4brjZwaF
+X-Proofpoint-GUID: IBMJKZs2Otq2qU52RuMAs4zS4brjZwaF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_06,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxscore=0 priorityscore=1501 malwarescore=0 spamscore=0 impostorscore=0
+ mlxlogscore=824 lowpriorityscore=0 phishscore=0 clxscore=1015
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502110099
 
-On Tue, Feb 11, 2025 at 7:15=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Feb 11, 2025 at 06:45:07AM -0500, Tamir Duberstein wrote:
-> > On Tue, Feb 11, 2025 at 6:37=E2=80=AFAM Petr Mladek <pmladek@suse.com> =
-wrote:
-> > > On Mon 2025-02-10 13:13:48, Tamir Duberstein wrote:
->
-> > > > +     kunit_printk(KERN_DEBUG, test, "\"%s\", \"%s\" ->", str, fmt)=
-;  \
-> > >
-> > > The switch from pr_debug() to kunit_printk() causes printing huge
-> > > amount of messages even when the test passes.
-> >
-> > I'm not able to reproduce this. pr_debug expands to printk(KERN_DEBUG,
-> > ...) which is also what kunit_printk(KERN_DEBUG, ...) expands to. Can
-> > you help me understand how you're testing?
->
-> You are missing something.
-> https://stackoverflow.com/a/57762255/2511795
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
+On 7.02.2025 9:41 PM, Dmitry Baryshkov wrote:
+> On QCM2290-based devices the SE3 is used for the Bluetooth chips. Add
+> corresponding device node.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
 
-I see. Given Petr's comment about pr_debug also not being the right
-thing, I took a closer look and realized that these debug logs are
-redundant as they don't provide any information beyond what the
-failure messages already do. So I'll just remove them.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+Konrad
