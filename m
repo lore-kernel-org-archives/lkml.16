@@ -1,227 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042C3220681;
-	Tue, 11 Feb 2025 12:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0BA21480A;
+	Tue, 11 Feb 2025 12:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739278640; cv=none; b=Waw9Wp9IF/mrn4OdJlHBd1uWZpAD6Dn3fmkmzn8Saj/Y7bh41nHx5NtVzBGfZRECuUK/q3BzqC4stucw2mA9i4LC1U1yQr0zBMAJomaPy0s39OYG3eQ2CKpNim6uDDSP1DHGTTOKp2vghae6q9dyIN/txbKtI0ihAKPVjqBIPGQ=
+	t=1739278663; cv=none; b=MmMNTa8n9TRu1uhS6jXtvcXfjFNyQWaS/jRNbzy8JAC87q2mEhTnO+Vz+X5455qo/9q4MxqNjNwhzHUH9sYHKEg1AYMbQlV1UvKpbZtiPpbPfoQnNJiHnU1ykQcvF8IEu+3p8jSaVPf0WWTJtKTEBKd/3YjZHFfJsZLnyuASiK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739278640; c=relaxed/simple;
-	bh=sPxWUuFbd78xK9I7JHO3mXw/fvd/P5gSKy9WoWbU9w0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NnmSJ0rzlAlqwAtB4AJyhh6eayKcOCB3aP3rgNXFx1iiibphTP42V+sRB6l+oFAYlIk8PhwrIy4obYIPjrtBIonpp3MBUB/hMaPhYxdOdB4oIP2H2MCIqZFGKb46kLxlkrGanVipYmgpLRIFyFbWhY2OFe9jkk/fcluLI4IrABs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gXOZqHc9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739278663; c=relaxed/simple;
+	bh=X4fB1Ellq5GKEOukrFF7YPbWRktsIcuO66L67hsODoo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nwB77/g9ezeZFD4mgOasRYCzxxQI5bJiGsgh6sVDA/DY1SWq/ALKpjAWL/LuI9G/p2gR7EOFYVb7iNTFv0gq8v0A599qlINJv5u4T+KP5SJhDwWWxlryQHDwQcMgDcaJVpED4ncoJOBLFOxTwZVqfYKNzwVcfYinKPfVAbUBIQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SsCcIb8W; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gXOZqHc9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B123FC4CEE6;
-	Tue, 11 Feb 2025 12:57:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739278639;
-	bh=sPxWUuFbd78xK9I7JHO3mXw/fvd/P5gSKy9WoWbU9w0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gXOZqHc9eKfsx9uXJcpPVY/6FEwGZ20o15AOvOH3S8wVD9CNYkw5u/NW+NPKLOVH6
-	 CHTVFyr5gmAtG5SVEil///fxwrqEJtEb0/5Kd3hbFW4BalhNd3TrxV+1p0z+7looxR
-	 FC6RbvumPwP3ikOWavdkUjjjrC3fby95svf1dUNxp0v/CT6AuVAaf7LOmQPyH/BuV2
-	 DU7a407L7W2yOJ2c5oTSBl+7bG6qt0ojkissdzakGyk/pD55I0XSApecaBCFMlDh42
-	 thAa/gtSy8LEyIwO4Uoiw/y44cQd/6g7EfPej/jbpMMRIeYSmjrkc478IS2II8MCVp
-	 YeuVK6YellCDw==
-Message-ID: <9fea34ee-3dbc-4166-ba7a-a5f4d1551e3d@kernel.org>
-Date: Tue, 11 Feb 2025 06:57:17 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SsCcIb8W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739278662; x=1770814662;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=X4fB1Ellq5GKEOukrFF7YPbWRktsIcuO66L67hsODoo=;
+  b=SsCcIb8WojibYanEr7gMS9H9D8VxzJI+wS2A0mYVfLhUtX3bqcqrsVHG
+   3plM9BaGhcY9JwV/F2vTlL9gmlF9q+2o4J/5f7QYtX+xnfLKvjFb+hNQw
+   l9eTsFHYYMpXIcObw6n7ZoahVJktvxtqME/M7q/QgXDC84/uHU6LbKW6L
+   l/bBsLr46Xs8CC7t4x6q6NVkrj/jP0rN+7zWuOo+n+SLRCWC+B/gM1N5V
+   G2rkJRyN+eDFL/HPLO1H5Z4bnOuZ0HEOHHAy/4cVMBu4EL3LcANdTdeKU
+   Je3G/B0p33CCBpWqs51jkmGS5Pn+ZBZMgtqOWUWw/6co/03ZnF6Mkf62/
+   A==;
+X-CSE-ConnectionGUID: 4SQgvuPPTiOUbzfuiRBurQ==
+X-CSE-MsgGUID: MFz5LGCqSqGgEQmamEF0wg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40019705"
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="40019705"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:57:41 -0800
+X-CSE-ConnectionGUID: t0LgvSdkSSy5isLBEeXO8A==
+X-CSE-MsgGUID: B0jUdtFpT+aBUeHNlcg5UA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="113023165"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:57:36 -0800
+Date: Tue, 11 Feb 2025 14:57:33 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, lgirdwood@gmail.com,
+	Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	oe-kbuild-all@lists.linux.dev,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 01/20] driver core: Split devres APIs to
+ device/devres.h
+Message-ID: <Z6tJPc-coP1Iw3qt@black.fi.intel.com>
+References: <202502102201.zLWaJC6V-lkp@intel.com>
+ <Z6oZ9dnYrlp5djiQ@smile.fi.intel.com>
+ <7c42e438-22f9-40d9-bb8e-24feb7d58e64@app.fastmail.com>
+ <Z6sYAxRIeCzw12nY@smile.fi.intel.com>
+ <c1184a91-e216-423d-b956-d4b22116a171@app.fastmail.com>
+ <Z6siYlWfvfUvNLpX@smile.fi.intel.com>
+ <279d9f32-a1c9-41aa-b15a-e1485877b2d5@app.fastmail.com>
+ <Z6s2cGMM9R6SZ9Le@smile.fi.intel.com>
+ <49396042-31f0-4d8e-aa54-d89093ab5709@app.fastmail.com>
+ <Z6s-S67MdpVrXRji@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ARM: dts: socfpga: remove syscon compatible string for
- sysmgr node
-To: "Rabara, Niravkumar L" <niravkumar.l.rabara@intel.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: lkp <lkp@intel.com>
-References: <20250117154244.4079614-1-niravkumar.l.rabara@intel.com>
- <45276881-11de-47c9-aa9c-488df537a596@kernel.org>
- <d78ae428-6139-426b-bde9-e3ce5a4008ac@kernel.org>
- <BL3PR11MB65325F279FEA579D19EFCF7AA2FD2@BL3PR11MB6532.namprd11.prod.outlook.com>
- <32563a12-eba0-44b4-ad53-e69c6a4962cb@kernel.org>
- <BL3PR11MB6532F03C63BABEC1DCE50964A2FD2@BL3PR11MB6532.namprd11.prod.outlook.com>
- <9b4e50cd-abab-4f3c-8450-d721bac5db17@kernel.org>
- <BL3PR11MB6532473C345BF326F55A4CF9A2FD2@BL3PR11MB6532.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <BL3PR11MB6532473C345BF326F55A4CF9A2FD2@BL3PR11MB6532.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6s-S67MdpVrXRji@smile.fi.intel.com>
 
-On 2/11/25 06:37, Rabara, Niravkumar L wrote:
-> Hi Dinh,
+On Tue, Feb 11, 2025 at 02:10:51PM +0200, Andy Shevchenko wrote:
+> On Tue, Feb 11, 2025 at 12:56:11PM +0100, Arnd Bergmann wrote:
+> > On Tue, Feb 11, 2025, at 12:37, Andy Shevchenko wrote:
+> > >
+> > > The problem this series solves at the beginning is that not all the consumers
+> > > of device.h needs it, in many cases the device/devres.h (or subset of
+> > > device/*.h) is enough to include. While solving this, it appears that
+> > > the current code uses ERR_PTR() instead of IOMEM_ERR_PTR() in devm_*io*() APIs
+> > > and kernel test robot found this and complained about. While solving
+> > > this new issue, LKP found another issue that is circular dependency.
+> > > But the original code only wants to have an access to IOMEM_ERR_PTR() which
+> > > is in io.h and can be moved to err.h AFAICS. Does this sound reasonable?
+> > 
+> > Yes, that sounds fine to me. I agree that not including linux/io.h
+> > from device/devres.h is a good idea, same as no longer including
+> > linux/device.h from asm/io.h. Moving IOMEM_ERR_PTR() as you
+> > describe is the right idea.
 > 
->> -----Original Message-----
->> From: Dinh Nguyen <dinguyen@kernel.org>
->> Sent: Tuesday, 11 February, 2025 8:25 PM
->> To: Rabara, Niravkumar L <niravkumar.l.rabara@intel.com>; Rob Herring
->> <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley
->> <conor+dt@kernel.org>; devicetree@vger.kernel.org; linux-
->> kernel@vger.kernel.org
->> Cc: lkp <lkp@intel.com>
->> Subject: Re: [PATCH] ARM: dts: socfpga: remove syscon compatible string for
->> sysmgr node
->>
->> On 2/11/25 06:18, Rabara, Niravkumar L wrote:
->>> Hi Dinh,
->>>
->>>> -----Original Message-----
->>>> From: Dinh Nguyen <dinguyen@kernel.org>
->>>> Sent: Tuesday, 11 February, 2025 12:15 PM
->>>> To: Rabara, Niravkumar L <niravkumar.l.rabara@intel.com>; Rob Herring
->>>> <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor
->>>> Dooley <conor+dt@kernel.org>; devicetree@vger.kernel.org; linux-
->>>> kernel@vger.kernel.org
->>>> Cc: lkp <lkp@intel.com>
->>>> Subject: Re: [PATCH] ARM: dts: socfpga: remove syscon compatible
->>>> string for sysmgr node
->>>>
->>>>> Yes, I have tested this using NFS boot, however I didn't observe any
->>>>> issue with SD/MMC driver.
->>>>>
->>>>> => fdt print /soc/mmc@ff808000
->>>>> mmc@ff808000 {
->>>>> 	#address-cells = <0x00000001>;
->>>>> 	#size-cells = <0x00000000>;
->>>>> 	compatible = "altr,socfpga-dw-mshc";
->>>>> 	reg = <0xff808000 0x00001000>;
->>>>> 	interrupts = <0x00000000 0x00000062 0x00000004>;
->>>>> 	fifo-depth = <0x00000400>;
->>>>> 	clocks = <0x0000001a 0x00000024>;
->>>>> 	clock-names = "biu", "ciu";
->>>>> 	resets = <0x00000006 0x00000027>;
->>>>> 	altr,sysmgr-syscon = <0x0000001c 0x00000028 0x00000004>;
->>>>> 	status = "okay";
->>>>> 	cap-sd-highspeed;
->>>>> 	cap-mmc-highspeed;
->>>>> 	broken-cd;
->>>>> 	bus-width = <0x00000004>;
->>>>> 	clk-phase-sd-hs = <0x00000000 0x00000087>;
->>>>> 	phandle = <0x00000029>;
->>>>> };
->>>>> => fdt print /soc/sysmgr@ffd06000
->>>>> sysmgr@ffd06000 {
->>>>> 	compatible = "altr,sys-mgr";
->>>>> 	reg = <0xffd06000 0x00000300>;
->>>>> 	cpu1-start-addr = <0xffd06230>;
->>>>> 	phandle = <0x0000001c>;
->>>>> };
->>>>>
->>>>> [    1.095784] mmc_host mmc0: Bus speed (slot 0) = 50000000Hz (slot req
->>>> 50000000Hz, actual 50000000HZ div = 0)
->>>>> [    1.105692] mmc0: new high speed SDHC card at address 0001
->>>>> [    1.108238] at24 0-0051: supply vcc not found, using dummy regulator
->>>>> [    1.111817] mmcblk0: mmc0:0001 SD32G 29.1 GiB
->>>>> [    1.118872] at24 0-0051: 4096 byte 24c32 EEPROM, writable, 32
->>>> bytes/write
->>>>> [    1.129186]  mmcblk0: p1 p2 p3
->>>>>
->>>>> .
->>>>>
->>>>> root@arria10:~# ls /dev/mmcblk0*
->>>>> /dev/mmcblk0    /dev/mmcblk0p1  /dev/mmcblk0p2  /dev/mmcblk0p3
->>>>> root@arria10:~# mount /dev/mmcblk0p1 /tmp/ root@arria10:~# ls /tmp/
->>>>> extlinux                         socfpga_arria10_socdk_sdmmc.dtb  zImage
->>>>> fit_spl_fpga.itb                 u-boot.img
->>>>>
->>>>>
->>>>
->>>> You didn't really test anything. There's a register in the System
->>>> Manager that has set the SD/MMC clk-phase in U-Boot. So you won't see
->>>> the failure unless you explicitly change the value in that register
->>>> and then boot Linux, then you will see the failure. If you look at
->>>> drivers/mmc/host/dw_mmc-pltfm.c and look at the function
->>>> dw_mci_socfpga_priv_init(), you can see that work in action. If you remove
->> the syscon property, then that portion of the driver will fail.
->>>> Also the ethernet driver is using the system manager's to set the
->>>> correct PHY mode through syscon. I think you need to test this patch more
->> thoroughly.
->>>>
->>>> DInh
->>>
->>> Altera System Manager driver (drivers/mfd/altera-sysmgr.c) is enabled
->>> in "socfpga_defconfig" - i.e. CONFIG_MFD_ALTERA_SYSMGR=y
->>>
->>> So, SoCFPGA always using drivers/mfd/altera-sysmgr.c for System
->>> Manager register access, not the generic "syscon" drivers/mfd/syscon.c.
->>> That's why we do not need "syscon" compatible for fall back mechanism.
->>>
->>> 	sysmgr: sysmgr@ffd08000 {
->>> -		compatible = "altr,sys-mgr", "syscon";
->>> +		compatible = "altr,sys-mgr";
->>>    		reg = <0xffd08000 0x4000>;
->>>    	};
->>> 	mmc: mmc@ff808000 {
->>> 		…
->>> 		altr,sysmgr-syscon = <&sysmgr 0x28 4>;
->>> 		clk-phase-sd-hs = <0>, <135>;
->>> 		…
->>> 	};
->>> 	gmac0: ethernet@ff800000 {
->>> 		…
->>> 		altr,sysmgr-syscon = <&sysmgr 0x44 0>;
->>> 		…
->>> 	};
->>>
->>>
->>> Even the sdmmc driver you mentioned is using "drivers/mfd/altera-sysmgr.c"
->>> not the generic "syscon" drivers/mfd/syscon.c. Same thing for ethernet
->>> driver as well.
->>>
->>> dw_mci_socfpga_priv_init()  {
->>> 	...
->>> 	rc = of_property_read_variable_u32_array(np, "clk-phase-sd-hs",
->> &clk_phase[0], 2, 0);
->>> 	if (rc < 0)
->>> 		return 0;
->>>
->>> 	sys_mgr_base_addr = altr_sysmgr_regmap_lookup_by_phandle(np,
->> "altr,sysmgr-syscon");
->>> 	if (IS_ERR(sys_mgr_base_addr)) {
->>> 		dev_warn(host->dev, "clk-phase-sd-hs was specified, but failed
->> to find altr,sys-mgr regmap!\n");
->>> 		return 0;
->>> 	}
->>>
->>> 	of_property_read_u32_index(np, "altr,sysmgr-syscon", 1, &reg_offset);
->>> 	of_property_read_u32_index(np, "altr,sysmgr-syscon", 2, &reg_shift);
->>> 	...
->>> }
->>>
->>> Please let me know if my understanding is incorrect.
->>>
->>
->> But the altera-sysmgr driver is using syscon as the interface:
->>
->> config MFD_ALTERA_SYSMGR
->>           bool "Altera SOCFPGA System Manager"
->>           depends on ARCH_INTEL_SOCFPGA && OF
->>           select MFD_SYSCON
->>
->> Can you look at your bootlog and see if you see this message ""clk-phase-sd-hs
->> was specified, but failed to find altr,sys-mgr regmap!"?
->>
+> Thank you for confirming the idea. Raag, please follow as suggested:
 > 
-> No, I do not see this error/warning in boot log.
-> " clk-phase-sd-hs was specified, but failed to find altr,sys-mgr regmap!"
-> 
-> Also I did test by manually changing the clock phase register value in u-boot,
-> and then boot Linux without "syscon" compatible, and I do not see any error or
-> warning and sdmmc and ethernet drivers are working fine.
-> 
-> => md.l 0xffd06028 1
-> ffd06028: 00000003                             ....
-> => mw.l 0xffd06028 0x0
-> 
+> Move IOMEM_ERR_PTR() to err.h (perhaps in a separate patch),
+> and drop io.h from devres.h as it will be not needed.
 
-Can you try an image that removes MFD_SYSCON from the MFD_ALTERA_SYSMGR?
+Sure, and perhaps drop a few patches to reduce spam while we sort this out.
 
+Raag
