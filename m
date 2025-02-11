@@ -1,98 +1,111 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5154B2512D5;
-	Tue, 11 Feb 2025 18:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EBFD1E47A8
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739299262; cv=none; b=lIAulcJB5xeRE+UsCC8ApEK+3v6iJIeDvUZ8t8TiuSYt8AVKa1hkok6kNHCB110ciH+vIYj0eBfUz+pUL3eADHHhCZ7O+7W5g5Viv9Y8f+8g41JNv4pmKnSaukV+kJa/UKfyE5aatGFs7GqmC04MzACsQR5/ntM02w5etE7arng=
+	t=1739299265; cv=none; b=oKfeCgb7BCZlLkMYEpagjZGSfg6hQF9n0bL9n2wrwVfapQcsh96r+Ls1+RmZ7x7PzL7B3KpiMDncKkoVumuacbqxVf7TKxZa6j0nSgbbnBTTXOy/29B9HmGZML6z9HIXyV8m7Dwmt9u/l6QHTMeQBcO6l80qoXjV8OFJ5uMjs5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739299262; c=relaxed/simple;
-	bh=KrcQzU2cuwcp/DKxZt8MWgikwP2pnNYmPOpVyvs0Klo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YQ+Qi6NVALXX11dPrigOmMuTSnpEHw1rNs+8IlEiZJFB5R24BYttJJ96j9DEfsmTSUHcTYNzUMkrOfzks9gy4ZJf/q3B9jrgVnoLuM/A6sBl2UFqn5wDkQZA0Y//VMsxTDP3w3JlwdrRlEgQEUspfqQXVkr1bfputkPfHxE2Ie0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=dSWlJrIC; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="dSWlJrIC"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id F1F5F40E0177;
-	Tue, 11 Feb 2025 18:40:57 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 5Rf2ncew0aZq; Tue, 11 Feb 2025 18:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1739299254; bh=92xrLsP+k3VhCc+TsKTBqWx5JTdBo52z09H/w8PE7O4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dSWlJrICaWCIUzx8rfOK7k5chJur4bbdDfnuElowBNGfqm3bDAhDLXewRAWwDF+tc
-	 o7Wllb4REZqBOVVeoVYaI47p8W9YpEo44jm7XvLpVoaj6I9984HLZzM3xx5RvcoSJa
-	 ZCKcXGDiKvcpEVpntKsZt8dgBoz5kEAgxdd4ukYL2PIZZ20SwQLd21MC6Y7etN/TO5
-	 Z72SWn+Nf1tMGD9p7Dg4DiGT1oRMhBwUJku3WLYMuVFq7+hfB8b0qIdfa/vSASaI2G
-	 +iOgSXQANQmSV75kQ3CfiyPicE0lTjP0uo8qIKjUt0pAtD6v0a2wYsgXYQKj4vMZyg
-	 fal2owI4xDoKeuuxfxGyGOrMTYw26eQ/izbZqlJN8CXwYxgcQeTbNqoxDRtpqyd9mM
-	 EAJIH/HYVDSuoRb2nNxFKm99Occfe9DCM5apE1E3+VqZwRyFz1/gTwCnUT2D5Z1UVe
-	 yFl392I+SmTcDDbJqhEB8jFn/dKcoFekGgU8qDOxPobsVD3I8qaQ/AiTRDQFN6EVGB
-	 7kDuTcarQLnP9upD9/lZBlWWDz2f7OEfeG9AQgOcPBRzAs2rE0WVXfhIDksbGmcI4Y
-	 9vOHSFnwx4nm0Fa2NpJ4hYHGiOrd1NQJ4ATLHurBnv/QowW5RdKISyvVwVYFhrzZvT
-	 0HwTWcvM5ahVB6HzEDwuvqKI=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A9B5340E01A3;
-	Tue, 11 Feb 2025 18:40:27 +0000 (UTC)
-Date: Tue, 11 Feb 2025 19:40:21 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	linux-coco@lists.linux.dev, virtualization@lists.linux.dev,
-	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com,
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-	Nikunj A Dadhania <nikunj@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH 01/16] x86/tsc: Add a standalone helpers for getting TSC
- info from CPUID.0x15
-Message-ID: <20250211184021.GFZ6uZlZWPVTI5qO1_@fat_crate.local>
-References: <20250201021718.699411-1-seanjc@google.com>
- <20250201021718.699411-2-seanjc@google.com>
- <20250211150114.GCZ6tmOqV4rI04HVuY@fat_crate.local>
- <Z6uIGwxx9HzZQ-N7@google.com>
+	s=arc-20240116; t=1739299265; c=relaxed/simple;
+	bh=Fxqq6zp+OKlNrfdLL0K3HimmEAyjOKDGF/4KIG+bQNI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RQel2k/KM5Tvq8y2OWc4AfxxxnBGmJtrB4PD1DvJxeQS/N98W9M3MbCcgszUJRocQUw/SyzbKsFVDyWdwPG4zhJhVeM/doYStZW4v1P4qHVN1aDPDCIrJ2tPQch27ZYZ2qjzJ2syXlirPWX1xmPzXKgflIIqFciJd+W/hew3qhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CCD713D5;
+	Tue, 11 Feb 2025 10:41:25 -0800 (PST)
+Received: from [10.57.35.63] (unknown [10.57.35.63])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17DC03F58B;
+	Tue, 11 Feb 2025 10:41:01 -0800 (PST)
+Message-ID: <756ba6d7-b18e-4139-851b-496b1820117a@arm.com>
+Date: Tue, 11 Feb 2025 18:41:00 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z6uIGwxx9HzZQ-N7@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] iommu/dart: Assert !locked when configuring
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Sven Peter
+ <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250210-locked-dart-v1-0-5d97fe247f35@rosenzweig.io>
+ <20250210-locked-dart-v1-5-5d97fe247f35@rosenzweig.io>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250210-locked-dart-v1-5-5d97fe247f35@rosenzweig.io>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 11, 2025 at 09:25:47AM -0800, Sean Christopherson wrote:
-> Because obviously optimizing code that's called once during boot is super
-> critical?
+On 2025-02-10 7:39 pm, Alyssa Rosenzweig wrote:
+> Configuration is only possible and needed for non-locked DARTs and will
+> fail for locked DARTs. We cannot try -- assert that we do not.
 
-Because let's stick 'em where they belong and keep headers containing only
-small, trivial and inlineable functions. Having unusually big functions in
-a header triggers my weird code patterns detector. :)
+Except now we absolutely will - if a locked DART and its client device 
+are advertised to Linux, instead of gracefully refusing to touch it, 
+we'll now attach the client to a DMA domain, firing a barrage of 
+multiple WARNs in the process, and give it DMA ops which still cannot 
+work. I'm not really convinced this series on its own leaves us in a 
+better position than we're already in now... :/
 
--- 
-Regards/Gruss,
-    Boris.
+How hideous is the rest of what's required to actually make this usable?
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+Robin.
+
+> Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> ---
+>   drivers/iommu/apple-dart.c | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/apple-dart.c b/drivers/iommu/apple-dart.c
+> index 29b627b38e8c37afd2b6a72865f43d24b633834a..87eb87bb2f5158d000a2c2fc801b722a2262c941 100644
+> --- a/drivers/iommu/apple-dart.c
+> +++ b/drivers/iommu/apple-dart.c
+> @@ -309,6 +309,7 @@ apple_dart_hw_enable_translation(struct apple_dart_stream_map *stream_map)
+>   	struct apple_dart *dart = stream_map->dart;
+>   	int sid;
+>   
+> +	WARN_ON(stream_map->dart->locked);
+>   	for_each_set_bit(sid, stream_map->sidmap, dart->num_streams)
+>   		writel(dart->hw->tcr_enabled, dart->regs + DART_TCR(dart, sid));
+>   }
+> @@ -318,6 +319,7 @@ static void apple_dart_hw_disable_dma(struct apple_dart_stream_map *stream_map)
+>   	struct apple_dart *dart = stream_map->dart;
+>   	int sid;
+>   
+> +	WARN_ON(stream_map->dart->locked);
+>   	for_each_set_bit(sid, stream_map->sidmap, dart->num_streams)
+>   		writel(dart->hw->tcr_disabled, dart->regs + DART_TCR(dart, sid));
+>   }
+> @@ -328,7 +330,7 @@ apple_dart_hw_enable_bypass(struct apple_dart_stream_map *stream_map)
+>   	struct apple_dart *dart = stream_map->dart;
+>   	int sid;
+>   
+> -	WARN_ON(!stream_map->dart->supports_bypass);
+> +	WARN_ON(stream_map->dart->locked || !stream_map->dart->supports_bypass);
+>   	for_each_set_bit(sid, stream_map->sidmap, dart->num_streams)
+>   		writel(dart->hw->tcr_bypass,
+>   		       dart->regs + DART_TCR(dart, sid));
+> @@ -340,6 +342,7 @@ static void apple_dart_hw_set_ttbr(struct apple_dart_stream_map *stream_map,
+>   	struct apple_dart *dart = stream_map->dart;
+>   	int sid;
+>   
+> +	WARN_ON(stream_map->dart->locked);
+>   	WARN_ON(paddr & ((1 << dart->hw->ttbr_shift) - 1));
+>   	for_each_set_bit(sid, stream_map->sidmap, dart->num_streams)
+>   		writel(dart->hw->ttbr_valid |
+> @@ -353,6 +356,7 @@ static void apple_dart_hw_clear_ttbr(struct apple_dart_stream_map *stream_map,
+>   	struct apple_dart *dart = stream_map->dart;
+>   	int sid;
+>   
+> +	WARN_ON(stream_map->dart->locked);
+>   	for_each_set_bit(sid, stream_map->sidmap, dart->num_streams)
+>   		writel(0, dart->regs + DART_TTBR(dart, sid, idx));
+>   }
+> 
+
