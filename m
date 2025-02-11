@@ -1,93 +1,127 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBBD263889;
-	Tue, 11 Feb 2025 19:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14782264607
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739301715; cv=none; b=kQWK469qomm8io4EDwKBY1CD8radQGIik0mk4aCB+3kxsY2iVJcXTgFbSoMsSdhzTRV7EcLBiyUbsR9nkGYmdCWrge+IWo55ZNQGsKht1a5onfxRoCqyz1Nl+0oxVM3E+B8pJL7lWNp+Kc+2m/gyVYuErBaKa+hmeYMwULzTUzs=
+	t=1739301718; cv=none; b=B/4FOI21NxbrwhOQTM3dbQ4mW+ySvlkTwCp4S/T+tYXiFOTyRpcKL5+QpYcZPFP3zWSTEt8tK00/bCh4MAsnpOiBZM4mtKetzrXHYj++J21/JZdQZprjc8xNExmJp0GxqImJ2bY7lM5mkKMJM2fW3uz7Uwvta7ch3eXT8R3BSw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739301715; c=relaxed/simple;
-	bh=tgtV+Wa7SeGMVxezIYOVlCAkbZVBWE2HOEvollOng80=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KTdcwFi1UdbFnAQki9hIJHoclOddHWF4QbLz8Yt/syiOE12nT1Aq84GZazmhvD9AbhIeXwvy3ptu9xD3crju72eEpfGcrY0SOiW7Mw1N732w5bRRaf5EGWbTmiggVK7G0UXhtgYpnIogNKnH8sAi7Bou9JE/xx9lADmz44RzlCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=INB9sV5I; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739301718; c=relaxed/simple;
+	bh=i0rjrv5Hw6uQyXJ5j8UYn+6uNdJPs4y5WflA+/CxlGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kw3tVpwY/b2AVbjf3ZHaARanrNaspxLsRUIOUN1b8n5VuzQjvc4231CB9twqKZbz9hKp3A8tmH6VRhaVsBt7T8O5aRqtMTm8GX0i1ZTNqM/PFflhBEmBgRNs1bp85qshdV/ddLTq4+GC0oXOljhuggWjo4sDnYj7TyQmrKOXcEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=p6Lng5ZC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=M95Iwyi6; arc=none smtp.client-ip=202.12.124.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INB9sV5I"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-308f4436cb1so739381fa.1;
-        Tue, 11 Feb 2025 11:21:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739301712; x=1739906512; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tgtV+Wa7SeGMVxezIYOVlCAkbZVBWE2HOEvollOng80=;
-        b=INB9sV5IxCGqMUFCo7LUffCLD/uiC0SxLJOqQGKq0s4tDb4IOBv5z0QMfTKHO5FT0i
-         6EbAWHIUEb7CSjTSVzDCLwyQeVx1pj7o4sOPNjlDuBYynDECCaB9A0/VZ08fTONSBomG
-         ignQzsGl0t6kT8FpSL4B+A0xtKy5QblOl7094vuIc5VjdPk6xXCYWPb6yQcHfAvdUzLN
-         v7SAPxx4z76FIOWYLFn4fln9l2KJjxbNVRMQ1Q8DPUMGE8nTAL2zAqJkBW0pLO9bT3A3
-         Ig5qGRZ9YG06st193W3IDiTqqvy+yb97CjnOpXuduCtjU/IdH+5LBOIRqCzLfFGG2Vzg
-         jtIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739301712; x=1739906512;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tgtV+Wa7SeGMVxezIYOVlCAkbZVBWE2HOEvollOng80=;
-        b=ULu/0jPfOQoMsG2+BG4NPqOAoLJL28C6ZGaVzZsHpRFtjI6lwV9NOo2ri3SHA1jBnK
-         NkbjKIaFL60s+t901q+NkaVZn077LQhAyZi7t466nKyav8u3kEsZSOHQXZaqMVbADwyr
-         Lxw7HrQJO387hL7hH/TYiizp4Z6DENQxjiHGCHOB/j0+G3QWwx2Nc5gUH5JBkztcoCfV
-         v8TgUA0x5CjhhlSDZyBEuqGNLtr5hSvIqNyNn7jzWPDKcnKBlPlxuHppwax8Pdt117UZ
-         3ig5RjeHwuFgqeL5YSNkAM3pYly/spvCkWigEGswPL4/4evffPCIMvJVROfd9e3YlrDq
-         eEFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXMKfENN2NYy3uFL1MsBcN1lMQItSCLHk+jrqwKTSjWjsduQzvclWH8dwPxEMOJqIzEkzTK0xT0WSq/a9U=@vger.kernel.org, AJvYcCXQfUstx1sJpqSsSgtr7HuPpinsXJt2DjTNApVD3mUPZi9IzdOr0lE4cuYMROdh9kxKXxhIOAEs2RYyqVb1korg@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoFZ7iI484rL3jFezwIthZnuRX2P7yifHD9+lqWPScpQMeBxaQ
-	BItWjxdegq173g9mo5cwEFeT+6hZq9LYMQPffsa/qlC9PGpdWhKfKp0fS2F6t9zU+whq9p4bevx
-	QE1KE4UtbEqS9XkK/LkK/0tnnmCY=
-X-Gm-Gg: ASbGncs1FCXRJ+lBERSyz23PbqStJxLewLFYSa0wGfw3JGAaq1Ng7dfCi9H4iSx6is3
-	RuPXgXUrE6QJuAT6vtlh/D72Kv2jfWr600H77Kwe9wYUHfqCTu0YhDxuxEYjMm+miFy18xTzmmu
-	YNwxd/EAVat1ZO
-X-Google-Smtp-Source: AGHT+IEKJAzutbQRM+DNEY/sK2iNGzebZM0+/CFesmtvWA5xbvrBToJwne6Nsp1ZZPn1QsgYCsv7TokRO6AuAuLytUw=
-X-Received: by 2002:a2e:a78a:0:b0:302:49b6:dfaf with SMTP id
- 38308e7fff4ca-30904632510mr659631fa.20.1739301711976; Tue, 11 Feb 2025
- 11:21:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="p6Lng5ZC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="M95Iwyi6"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 082C92540113;
+	Tue, 11 Feb 2025 14:21:56 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Tue, 11 Feb 2025 14:21:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1739301715; x=1739388115; bh=4CMMII7gg+
+	S8ZOua/g5opUsXHaf674ZZLjjOpdOjwqM=; b=p6Lng5ZCX20mDzQNjqo+bbgI9M
+	npPT8FklqciXwLGjqcT8Au3W5BJI/lfFBHCsx3UZ41Fkp6M5gU2f9WIZIOO4IfLz
+	eHNEABYblCeOEjtnbpydn8zc0VTyiRzm9iQ4qofAp9wVD8UAk3agXPiOwekZJrXz
+	MvT6b8fJXFN5kyiXff4fO4L/oHCGySvOGR/gddZU1pOPYxzRRSNvKtrgjJmac6Td
+	ciFEHYYJojcv/0BNV1Lzde7dicQ6r/SYjMTRI0BGvYeZ77lwA535KlomsZaNVfc2
+	TA/wK7WxQlNtSm2jKC9nklyzpSeG4seTsb7N858T0Got3o/pU/SijgS9TWmg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1739301715; x=1739388115; bh=4CMMII7gg+S8ZOua/g5opUsXHaf674ZZLjj
+	OpdOjwqM=; b=M95Iwyi6FtMUh7KPJgK56Wce/ol4WOjqun99tTLR3eZjBJ1KvCG
+	/iqKQsfU7sGOuerb6/qDJg6j88pFxwSRG+GHAQ8B0iaFyA9pxM0mq8yMgdak5C4k
+	SpQsVAx4GQ3yXT918CeeU4ozH4WjhUOoEM/1XYz/mh8sdKhF+Ns6Tibrko24g9Gj
+	KEw/7ugiEuAacIkqxI+UOgkgrRKKjYH4bWSK4bgeZpc1B+xEjxe8Bkx91gXHV/cj
+	5KVs76A9L37pziRP7TOmg0QTKfvBn/GcvxifPVkChPosFMPl4jfFYcYokxxjfn5f
+	lBvsAdaZ4DIXEs6yAo63CXTjpgXYorJnSPQ==
+X-ME-Sender: <xms:U6OrZ59UBYN-cFuUVAg1HUTC2A-KvdIGR5abqEbWIcEDnO70U8Vunw>
+    <xme:U6OrZ9v91b_sCtxu66wg1qC57Prxo9R2ELtqAbe8Si0fkcxSNUQCSBoZ_sTWfQJnV
+    mya6vod980qYXA-xkE>
+X-ME-Received: <xmr:U6OrZ3AwdNfjAI-szRwK1zvGJ4MkQaoMkDJ_lRNg9DR2R34TVispYQ0gqlJsbN0_mVmRGJylH5NuUtAxgDH8338W6syNm-8Y5hs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudekvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
+    necuhfhrohhmpeflrghnnhgvucfirhhunhgruhcuoehjsehjrghnnhgruhdrnhgvtheqne
+    cuggftrfgrthhtvghrnhepudefhfehudetjeeutdfhvefhtdeltdfgheefkeefleegveev
+    tedtveelfffhiedtnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjsehjrghnnhgruhdrnhgv
+    thdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprh
+    hosghinhdrmhhurhhphhihsegrrhhmrdgtohhmpdhrtghpthhtoheprghlhihsshgrsehr
+    ohhsvghniiifvghighdrihhopdhrtghpthhtohepshhvvghnsehsvhgvnhhpvghtvghrrd
+    guvghvpdhrtghpthhtohepjhhorhhoseeksgihthgvshdrohhrghdprhgtphhtthhopeif
+    ihhllheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghsrghhiheslhhishhtshdrlh
+    hinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhi
+    shhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehiohhmmhhusehlihhsth
+    hsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
+    rhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:U6OrZ9erICxeLKtv6LRcbSWf_u5GLNZ9i4lTMgfqxre8ndwsGs8jTQ>
+    <xmx:U6OrZ-MYxDweROPJ9p79fDIf7AD8irrFJGtIkDHdI8ztD3q1iIzbiA>
+    <xmx:U6OrZ_kmBVpDMbmoe4CARgdr7aXORa4zf45F6JPMOeAw3CuYclXYqA>
+    <xmx:U6OrZ4vfXkODZch2zGpMRRxixhJGTtKwlqSfNW8UflKv_hk17rYx3g>
+    <xmx:U6OrZ1pwJBCZX0WeuuCRjO1xQVKskjEe_pnW_ebS2OFBRQqfVc4qhonm>
+Feedback-ID: i47b949f6:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 11 Feb 2025 14:21:54 -0500 (EST)
+Date: Tue, 11 Feb 2025 20:21:52 +0100
+From: Janne Grunau <j@jannau.net>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Sven Peter <sven@svenpeter.dev>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] iommu/dart: Assert !locked when configuring
+Message-ID: <20250211192152.GA810942@robin.jannau.net>
+References: <20250210-locked-dart-v1-0-5d97fe247f35@rosenzweig.io>
+ <20250210-locked-dart-v1-5-5d97fe247f35@rosenzweig.io>
+ <756ba6d7-b18e-4139-851b-496b1820117a@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204-printf-kunit-convert-v1-0-ecf1b846a4de@gmail.com>
- <CAKwiHFi6SUCT7UjUTdKmLJ8kiAEqVg=d6ND60R05MJB85Eoj9w@mail.gmail.com>
- <CAJ-ks9kLmArqqPati8n0dwzhjccLmTuTHtkaSyf_F_1QXzCoRw@mail.gmail.com>
- <87bjvers3u.fsf@prevas.dk> <CAJ-ks9=0+fk22Dx-65a+CSYhy0dnjTJuot9PtgOCi5Th1_wARA@mail.gmail.com>
- <87y0yeqafu.fsf@prevas.dk> <CABVgOS=dfuX+X8=EVHcrCZnbOZj3T+wGD922eoeHb-dcOmmzXw@mail.gmail.com>
- <87h650ri08.fsf@prevas.dk> <CAJ-ks9mKZVSZzgaPbJ3t3qcx0bMc1LUH+GueOtVX4UAWbntdvg@mail.gmail.com>
-In-Reply-To: <CAJ-ks9mKZVSZzgaPbJ3t3qcx0bMc1LUH+GueOtVX4UAWbntdvg@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 11 Feb 2025 14:21:15 -0500
-X-Gm-Features: AWEUYZn-IDVzrPa3u-avQrQtvmNmvj-VcisIqvcjJqs5Hdu21kJ1zWqRiaBmgMQ
-Message-ID: <CAJ-ks9kMoWiWACGWWAL7TJkf9MU2k4afPBikz2hxRibzA2hHZA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] printf: convert self-test to KUnit
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <756ba6d7-b18e-4139-851b-496b1820117a@arm.com>
 
-On Tue, Feb 11, 2025 at 6:34=E2=80=AFAM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> https://lore.kernel.org/all/20250210-printf-kunit-convert-v3-1-ee6ac5500f=
-5e@gmail.com/
->
-> Weirdly the cover letter seems to be missing on lore, should I resend?
+On Tue, Feb 11, 2025 at 06:41:00PM +0000, Robin Murphy wrote:
+> On 2025-02-10 7:39 pm, Alyssa Rosenzweig wrote:
+> > Configuration is only possible and needed for non-locked DARTs and will
+> > fail for locked DARTs. We cannot try -- assert that we do not.
+> 
+> Except now we absolutely will - if a locked DART and its client device 
+> are advertised to Linux, instead of gracefully refusing to touch it, 
+> we'll now attach the client to a DMA domain, firing a barrage of 
+> multiple WARNs in the process, and give it DMA ops which still cannot 
+> work. I'm not really convinced this series on its own leaves us in a 
+> better position than we're already in now... :/
+> 
+> How hideous is the rest of what's required to actually make this usable?
 
-It's there now.
-https://lore.kernel.org/all/20250210-printf-kunit-convert-v3-0-ee6ac5500f5e=
-@gmail.com/
+The TTBR can not be changed but the preset first level table can
+modified at will. The driver keeps a shadow first label table and syncs
+that to the preset 1st level table on flush_tbl().
+It gets more complicated by the fact that the iommu for the display
+coprocessor is locked and mappings for its firmware and boot framebuffer
+are preinstalled and have to be maintained or restored on
+initialization.
+This is handled via reserved memory with translation.
+
+Downstream change to handle this is in
+https://github.com/AsahiLinux/linux/commit/d90cc3590ea460e1c574b4b7c47fdafb2794af6a
+not including the change to parse / handle reserved memory with
+translation in iommu core.
+
+Janne
