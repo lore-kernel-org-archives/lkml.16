@@ -1,33 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590231EE7A7;
-	Tue, 11 Feb 2025 07:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2FF1EF081
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:47:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739260075; cv=none; b=a9YVnjbnLzbjkVvHbws65q4jftzjiSSSf6AwIhkpJj6wXub9tOqJFBNtcm8Cfb8HeMZjRO+tS8FZAcAFDf1iSTRdLZ7iT27DRg0Rg4nx9MLPwrulcD79XnTlxS/48QK1O+CgUzb5h3eVEcNcEFDuGoUFaJZSTMqV8ikDQll77IE=
+	t=1739260077; cv=none; b=QOYsPasfQcY2KqcKw1a3T/SXH7veRAq1kBpcstjDy3Dhf+iXxK3K55f2Sm6XuHXzhdvPMbglfPOQlNmZ40XQYuWdvvkT/9gr5fXhs11gHZNROua8qa4LMIU9544jokVYEFA7UuzBZ5HIqa5pJ4av0gI9R8ru4OWTCX/GjaKt5NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739260075; c=relaxed/simple;
-	bh=/lOfEXoHSRWWUu6+9XbL3umNJ/qo8MjCSUqOVlhorkE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=sTBWm3dW+M8+I8xPWiQyOqY7hOsD9mhyNZ+/NiCadVm8nh7Z5LsYFtgkaq+tLSCxhLX+9v5nlfYNBhwLve3uH4puSLFqr31qjhyWUP7ndO5Aw4R7T+jDfPCXLUBRSMZhGo3ca4Yd5X/Uj4IHfhOmXOshTPItRUZfqbg9Ebi+ygM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aggTEq4C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739260077; c=relaxed/simple;
+	bh=Uwj56g+UudL4tlC037hd/re8acBWYOU4vfYbDPyPlKM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q6huJMsRZpJxih8kfQYNcpuilJRKobfaseiMuEWAhAalDcS3+8HFcvc7rynJc1hdjvxW49AbIACegWoZ5MD1iQBORBGpZuDv1v/+oXi+S4aaCq9GWmM7pUn26uLV3lB+gSAEVs6kfzXkGrcBCY928xr7ISbmSGJ42BZ87+jt8lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ZmNsQzij; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aggTEq4C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9942FC4CEDD;
-	Tue, 11 Feb 2025 07:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739260073;
-	bh=/lOfEXoHSRWWUu6+9XbL3umNJ/qo8MjCSUqOVlhorkE=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=aggTEq4C9VuXFAfvWM9K7BuJuN+4penmdTWT6pUHOttH+yVEglButCGmm2CozofoJ
-	 fdUivUX/Z+rmmV4wPiGX9Imcr1Z/BVw4qjXr+QP9ASb0V7G6aBKAtoSVGl+tXD5Gkx
-	 1fHgvztsFwa3RGFr3190/sQ5YRgo3rclvaewBGXI5+8HR/p2iKnmgapUSC40Em7q3D
-	 BtEQHCOJNcrath8HWynPmEzY5kVVqwNwezUY2qfb836IKwlnCo9HrtGzW9ZiBj7Eef
-	 EDUtKmfWSLbap5h71kfln25xA5EAUSRR+kTHtpo9eu69EfXzTYNRTRmUX+VRxPzyBW
-	 buhpr5Uscohwg==
-Message-ID: <c699c7f8-4f2d-4908-b52e-cd3e46b7b4e4@kernel.org>
-Date: Tue, 11 Feb 2025 08:47:48 +0100
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ZmNsQzij"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21fa56e1583so24910135ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:47:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1739260074; x=1739864874; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YOxJUR1r6moJ1nFDgHvdggcLKQEb9GI98orRGi6n50c=;
+        b=ZmNsQzijVXxtM4XXjf46j8EnqARDXphRKubVUiRKerlJr5iI4CJdfaehDenjeFt9LL
+         WSpwQOrl+7TGlIEHG0TL4Q4zVlu5/SRl9hHT8F4AeOAJeOZhic77PjxaJIR740FPukNl
+         YymTnzaLd8cOqKlnRxpfz4/tgVlhQrb4tg3JwAiO8x3WqTgach4EpBCGzdYIuSNT9I1u
+         cZ/Ugqo8jdMV9Y8ToMGEb6284x/clDyBhF7x9/nb9EkpC1NvZd9mXBbokxtwXwbl7bmb
+         zliP3G353FwNvkIZNiWciy3icuqjvhkJhgudUSeXceDwfsoigO9Kdt/XBa7OSXuPb/2q
+         0cDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739260074; x=1739864874;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YOxJUR1r6moJ1nFDgHvdggcLKQEb9GI98orRGi6n50c=;
+        b=k3QsBVFPfl/keo2Bxv6OEIQb6yk1P6NK4IEjyEvlm2yqKS143i2kfwdP4tEov4hBjW
+         nKcDwSniCnC5Dd1wzD/1hMAvWetLh+BSWSho+Q7aUo7HBdwwRySHLSEH5C3//osHQ+vS
+         I07gI2KDQnFAy95niZs2dNEB/Wbi8CSFB6jf3sb3uee2pjz1RSBAu4vs+EPLjydb4Jnd
+         5eeYOdWtchQDhw91sGFyfUfFuOrm/MITq8Vv4IgWVIZHQzQpBr059GcJKvD4tdPx5Lrv
+         gX38vbpO0Bg5uCbTiAUVcwPTSvsDXeGJ6E9fGc2AXn4+vTzXt57cuEOBACHPDHSOhFez
+         p0UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFM4/8vFf/AoAedsLzsopmj9ZstYUI4CU3bptbloHfOxK2fStclNG8zA13XF9aVLyF+eKVmzyXxO9yE0c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNlBeWROxjLiMzgIq/K+WLTF+758TEnS1PmOQI9ly/nhs/Ybra
+	sbD+RVhE3aLxwcy0wYZ9WLGA3MPuEQYX1Ni2r+Dv+StGdHFzgHtmpXW1PKYODdM=
+X-Gm-Gg: ASbGncu18DYNylBy7u+Zr07iLw0BdVEkAAB3N27yvEnwoSPu0XCTWUSMRlKzccs0qXZ
+	PWXYJbl1hOXLqz12TnKQQuLMb+ZIAIH7Mfrjwa41VlalzIHqE+W/lsudggEKXPlSnbI0jMhWQLs
+	RmVJWwcU4l/QcxHf2eblEqMaNIVMU+Us1lJl+i8Un4kFLoRSn02J30OEW3EkPkpjl8ngrw+zVf3
+	xTAIV9CBUVLw2csO7WeFfFJDjBL8rB8aubH3leNlQA+rEOZgJGdmfffaQZ558r0JeZIGniavZqR
+	ZfXbZeqxDDvQqyRKBgcT3DWgCYTx0aIltRokL9TQlQ==
+X-Google-Smtp-Source: AGHT+IEoxxPYXOWq1VEr2O9B36RIJecPKfV2ThBHPe9LsevuG0MSxUMQSOIpMfUYtJpsJ2pcKeMrCw==
+X-Received: by 2002:a17:902:da86:b0:215:a039:738 with SMTP id d9443c01a7336-21f4e1cbb68mr256165615ad.5.1739260074055;
+        Mon, 10 Feb 2025 23:47:54 -0800 (PST)
+Received: from [10.84.150.121] ([203.208.167.150])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653bfb2sm90969865ad.67.2025.02.10.23.47.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 23:47:53 -0800 (PST)
+Message-ID: <aa09e9c6-bef4-43c7-afe8-7ea300e3219a@bytedance.com>
+Date: Tue, 11 Feb 2025 15:47:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,162 +66,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/16] dt-bindings: clock: at91: Split up per SoC
- partially
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Ryan Wanner <ryan.wanner@microchip.com>,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-References: <20250210164506.495747-1-ada@thorsis.com>
- <20250210164506.495747-2-ada@thorsis.com>
- <a199849a-ca36-439d-8246-7addd9a78833@kernel.org>
- <20250211-cuddly-system-33432b3ced5f@thorsis.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/2] mm/mmu_gather: clean up the stale code comment
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250211-cuddly-system-33432b3ced5f@thorsis.com>
-Content-Type: text/plain; charset=UTF-8
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, will@kernel.org,
+ aneesh.kumar@kernel.org, npiggin@gmail.com, peterz@infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250211034348.39531-1-bhe@redhat.com>
+ <20250211034348.39531-2-bhe@redhat.com>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <20250211034348.39531-2-bhe@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 11/02/2025 08:16, Alexander Dahl wrote:
-> Hello everyone,
-> 
-> Am Mon, Feb 10, 2025 at 06:05:31PM +0100 schrieb Krzysztof Kozlowski:
->> On 10/02/2025 17:44, Alexander Dahl wrote:
->>> Before adding even more new indexes creating more holes in the
->>> clk at91 drivers pmc_data->chws arrays, split this up.
->>>
->>> This is a partial split up only for SoCs affected by upcoming changes
->>> and by that PMC_MAIN + x hack, others could follow by the same scheme.
->>>
->>> Binding splitup was proposed for several reasons:
->>>
->>> 1) keep the driver code simple, readable, and efficient
->>> 2) avoid accidental array index duplication
->>> 3) avoid memory waste by creating more and more unused array members.
->>>
->>> Old values are kept to not break dts, and to maintain dt ABI.
->>>
->>> Link: https://lore.kernel.org/linux-devicetree/20250207-jailbird-circus-bcc04ee90e05@thorsis.com/T/#u
->>> Signed-off-by: Alexander Dahl <ada@thorsis.com>
->>> ---
->>>
->>> Notes:
->>>     v2:
->>>     - new patch, not present in v1
->>>
->>>  .../dt-bindings/clock/microchip,sam9x60-pmc.h | 19 +++++++++++
->>>  .../dt-bindings/clock/microchip,sam9x7-pmc.h  | 25 +++++++++++++++
->>>  .../clock/microchip,sama7d65-pmc.h            | 32 +++++++++++++++++++
->>>  .../dt-bindings/clock/microchip,sama7g5-pmc.h | 24 ++++++++++++++
->>>  4 files changed, 100 insertions(+)
->>>  create mode 100644 include/dt-bindings/clock/microchip,sam9x60-pmc.h
->>>  create mode 100644 include/dt-bindings/clock/microchip,sam9x7-pmc.h
->>>  create mode 100644 include/dt-bindings/clock/microchip,sama7d65-pmc.h
->>>  create mode 100644 include/dt-bindings/clock/microchip,sama7g5-pmc.h
->>>
->>> diff --git a/include/dt-bindings/clock/microchip,sam9x60-pmc.h b/include/dt-bindings/clock/microchip,sam9x60-pmc.h
->>> new file mode 100644
->>> index 0000000000000..e01e867e8c4da
->>> --- /dev/null
->>> +++ b/include/dt-bindings/clock/microchip,sam9x60-pmc.h
->>> @@ -0,0 +1,19 @@
->>> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
->>> +/*
->>> + * The constants defined in this header are being used in dts and in
->>> + * at91 sam9x60 clock driver.
->>> + */
->>> +
->>> +#ifndef _DT_BINDINGS_CLOCK_MICROCHIP_SAM9X60_PMC_H
->>> +#define _DT_BINDINGS_CLOCK_MICROCHIP_SAM9X60_PMC_H
->>> +
->>> +#include <dt-bindings/clock/at91.h>
->>> +
->>> +/* old from before bindings splitup */
->>> +#define SAM9X60_PMC_MCK		PMC_MCK		/* 1 */
->>> +#define SAM9X60_PMC_UTMI	PMC_UTMI	/* 2 */
->>> +#define SAM9X60_PMC_MAIN	PMC_MAIN	/* 3 */
->>> +
->>> +#define SAM9X60_PMC_PLLACK	PMC_PLLACK	/* 7 */
->>
->> IIUC, you want to have bindings per SoC, so why not adding proper
->> constants here instead of including entire old binding header? The
->> binding header should be entirely abandoned later.
-> 
-> Which binding header should be abandoned entirely?
 
-The one you claim to split. I assume it is the same  one included here.
+
+On 2025/2/11 11:43, Baoquan He wrote:
+> In commit d7f861b9c43a ("mm/mmu_gather: add __tlb_remove_folio_pages()"),
+> helper function __tlb_remove_folio_pages_size() was added. And based on
+> the helper, wrapper functions __tlb_remove_folio_pages() and
+> __tlb_remove_page_size() are created and used by upper level functions.
+> 
+> So let's update the code comment to reflect the current code about
+> tlb_remove_page()/tlb_remove_page_size(), etc.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>   include/asm-generic/tlb.h | 21 ++++++++++-----------
+>   1 file changed, 10 insertions(+), 11 deletions(-)
+
+Reviewed-by: Qi Zheng <zhengqi.arch@bytedance.com>
+
+Thanks!
 
 > 
-> The bindings per SoC idea was proposed in series v1 feedback.  I'm
-> neither a binding nor a clock expeert.  As far as I understood it's
-> important to keep the exact same values as before to not change any
-
-Yes, I did not propose to change any IDs.
-
-> ABI.  The non SoC specific values are still used on older SoCs of the
-> at91 family, so this is why I used the old constants for now.
-> 
-> These PMC indexes are not the only definitions in
-> dt-bindings/clock/at91.h however, there are more which are not SoC
-> specific.
-> 
-> I'd like some thoughts from the Microchip maintainers here,
-> what's their idea on how to proceed with the at91 clock stuff?
-> 
-> This works for me, but the current state is more or less still an idea
-> as base for discussion.  Please don't make it overly complicated, this
-> is not the primary focus of my work.
-
-You made this binding more complicated than it should be - instead of
-simple list of clocks you include some other file and split between old
-and new.
-
-Best regards,
-Krzysztof
+> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+> index 9ae4ca02f29f..5f99b3cf73fc 100644
+> --- a/include/asm-generic/tlb.h
+> +++ b/include/asm-generic/tlb.h
+> @@ -67,22 +67,21 @@
+>    *
+>    *    See also MMU_GATHER_TABLE_FREE and MMU_GATHER_RCU_TABLE_FREE.
+>    *
+> - *  - tlb_remove_page() / __tlb_remove_page()
+> - *  - tlb_remove_page_size() / __tlb_remove_page_size()
+> - *  - __tlb_remove_folio_pages()
+> + *  - tlb_remove_page() / tlb_remove_page_size()
+> + *  - __tlb_remove_folio_pages() / __tlb_remove_page_size()
+> + *  - __tlb_remove_folio_pages_size()
+>    *
+> - *    __tlb_remove_page_size() is the basic primitive that queues a page for
+> - *    freeing. __tlb_remove_page() assumes PAGE_SIZE. Both will return a
+> - *    boolean indicating if the queue is (now) full and a call to
+> - *    tlb_flush_mmu() is required.
+> + *    __tlb_remove_folio_pages_size() is the basic primitive that queues pages
+> + *    for freeing. It will return a boolean indicating if the queue is (now)
+> + *    full and a call to tlb_flush_mmu() is required.
+>    *
+>    *    tlb_remove_page() and tlb_remove_page_size() imply the call to
+>    *    tlb_flush_mmu() when required and has no return value.
+>    *
+> - *    __tlb_remove_folio_pages() is similar to __tlb_remove_page(), however,
+> - *    instead of removing a single page, remove the given number of consecutive
+> - *    pages that are all part of the same (large) folio: just like calling
+> - *    __tlb_remove_page() on each page individually.
+> + *    __tlb_remove_folio_pages() is similar to __tlb_remove_page_size(),
+> + *    however, instead of removing a single page, assume PAGE_SIZE and remove
+> + *    the given number of consecutive pages that are all part of the
+> + *    same (large) folio.
+>    *
+>    *  - tlb_change_page_size()
+>    *
