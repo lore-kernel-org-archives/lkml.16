@@ -1,72 +1,40 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7DD250BEC
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CB2250BE4
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739285404; cv=none; b=copL44XJQidcg1DqADVDUW0YaYaqmdNW0wAi+tiOZ09dpE6eXZNBMTPMAqolVkNqdLA13NNgw8E9aKDcqXgw/zCvpRb5rqa7YKIE4UIHI4x2WsBziMOsuYwpmnWgGTHI4uM2XT5l5+f+OrHgCRYhKsM6s4jhZrV8Kd2CNSCyUNo=
+	t=1739285412; cv=none; b=KWOaMuooNC/ek0nxM4NbHQWcpO1FPDgM4bjCkSDsWboiP4w2yhVr5WliuVWJy96/6rk2qgBMNqEPs0CGkUGWg4nnQQCHCFtws07AmEO/D2xDUxZhhkegaKQqFHCj/bCXFbbPjCuv5/Ve+n6z5KSJv/0IE/5g+4HKXG1IwRF3hFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739285404; c=relaxed/simple;
-	bh=jdFTd4heaqF1waae3nF4Loe4e9NQVSskphOCed8h7lw=;
+	s=arc-20240116; t=1739285412; c=relaxed/simple;
+	bh=eJFTfdQAsK7kOdhotwhb8vYaouQUuCRznRhtGA/0hxM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m+lRlsz7hqoqxFq3vweCtrcl99kfO21t5B9zGArfoIAYMMcnOX2Pz2KhbsL8QfCRj6dgJLbrUi56w9erJnPkakmeu4K+9ICD4tDqJAa2AAhrPWmNcUOxja9Bx3POd71f0/Pc7pbEhA3jkR4WD4ieFv0Mk6tJzyxyw0kguz9Gr2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jp+6ziyI; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=D6muPkIxRcMLhmBubbWSEc+H7UWN7iL5L4/WyLr8WJWqUCwzVcKpqYqxUD36+M2TMCjDih6YXGVefmAfzEDJeRf1pWf3d3Hq31FtYsGmET2BxbohXFAxLriUnLM/6GRalupMWeIN6SWbhjB//IcVO1fmgX+POwUZxo+xq8hrYEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KBjzOrkg; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jp+6ziyI"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BAaJaf028737
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:50:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	y9QQxW1CrdMOjnr/u7ZG72NR9gv+JDy1eoZ8KaTkW9A=; b=jp+6ziyIHb65iozh
-	9RVFlMo/Pi+ZYkw+ukFV/65b+/w7nfKODthOo9qvUziQDjqlrrfUzoYNDdpZ2/im
-	RtHMD/h1JF3f/9n09QehWXAnPrb5MSLLOdNBXb7JknzJeUCAEhRog9D/vKWL+LAT
-	qz20fnFLPN5DieKa75sy6B16SFDbjsQCALbUjmGNWXg2GKjj4CUDvEAozpNwh+W3
-	joP3vGfnfA3nB683zqvCAI9DbwaoFyJi1E1XAyMStJUr90z9Tk76fbYjgfcq4Jfv
-	K059w/GChp4VWKRjA8cY+Z4TkTfd0Y5hVaZd1SKtL2Hj24ctVQoxbxmTPIk/TYNp
-	6EYjfw==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qxg9ht7t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:50:00 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e4546f8c47so10230096d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:50:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739285399; x=1739890199;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y9QQxW1CrdMOjnr/u7ZG72NR9gv+JDy1eoZ8KaTkW9A=;
-        b=n09baIZsg2hopO1d6tp+2McOH68CFkOGBppFBxajIfiG5rkht+N2FavedoM/+Uk6FZ
-         89nlpJNW9W3fMaheEE2MuklZTu5N6zo3GNDE9NBWT6DSVTguLa8uxnJ7SUr1eieYsOLJ
-         pBY2hL7x5FbPGckXt4DTbZx+2qK5PxQBeHbgOmak4c283pvSa3yhZWmrWrfeJJ8KQkkB
-         FeneBxEquya1Xz9FIXQaPwmE+3+SfeUs990ZRj557XODi2fpU5BNEb42t9suZ+90LoyR
-         HzulWBiH3DKHR8slpHhOuJFl3WjxL0SPudLB7bxD2t3/VhiFmf6qlHXIPBC7UcAL4XXp
-         QOuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcOaI0Atl0Cc37p5VboUOuIfIRF4TPno2V4tT602ZajWuA34dpcauJpLFGFfWSrbYXC7jf1iQueDUo0Vw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbI+QKbkFluoBBUEPksLml/3wSlSPsPUMhnnTCQnQ6N3BdQaYS
-	qSD5aUzF5Y/K0kb2hs+zpYA3f0u1a8dxEVtsLEzT1TyADgSu7+svcQDX7Vi5yIkpbN0bt0OVopN
-	hFLHOAsrXThets+MIdTtgFrFjTjO9R8ZeuDIT2mcW9wjAdVGTDCC0EnM5eIXuk/w=
-X-Gm-Gg: ASbGncujpN4ODFZs5NaTADX1Xr0BGLr4RC6fyieUE5RvTCmbpe2A1IBbeWDMCcgvzfs
-	zjvGK/WKaXAe9CZZ9QhAUxXbrn7YrWZ+6KuwVJIpmELMjtDPY8swLAJ98hClUdJyukXC+RI6KZs
-	p0AAdxsqRw4gF0lbePneppgNzZ89AuRvJNbUidfFopkUrwu4iMEOLeP635L8j/CIAGtJu/kKsNr
-	i7IylmnpNxCVmzaN1/RVYWK52wm17mkVvwoZYqUV0XCIWCu+WsaEVEVcvLRHmgufsnfPD6vu9hg
-	n7Cwk0yjhiCoZt7XOzAg3Vi94ibCzK3fM74L606KJhIHe9DCnsQb2GAYeWk=
-X-Received: by 2002:a05:6214:19e5:b0:6d8:a67e:b2ff with SMTP id 6a1803df08f44-6e445715619mr91437496d6.8.1739285399563;
-        Tue, 11 Feb 2025 06:49:59 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHkk9DjPa3+ZeT3Nyflq6y5KlqeBXv7S25Hpw0rmBRomm62/VHebINsLa7PDQCcXTd8MmZyVg==
-X-Received: by 2002:a05:6214:19e5:b0:6d8:a67e:b2ff with SMTP id 6a1803df08f44-6e445715619mr91437396d6.8.1739285399076;
-        Tue, 11 Feb 2025 06:49:59 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7e2711937sm125092766b.25.2025.02.11.06.49.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 06:49:58 -0800 (PST)
-Message-ID: <52d29b4f-7ae2-4f79-b09b-f0b2a4e3034d@oss.qualcomm.com>
-Date: Tue, 11 Feb 2025 15:49:56 +0100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KBjzOrkg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739285407;
+	bh=eJFTfdQAsK7kOdhotwhb8vYaouQUuCRznRhtGA/0hxM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KBjzOrkggzWe2k8B4SoQGWxG5e1WFOkHY1tqM9jC2N5S+zR3os2oxN5pCeOAfCxPv
+	 HnNAaA1IWmMDuTuc2UofQN/rj3h/kqg1o+3mZC0Zq9B4PGEUXpTsAZNkNZce3Ya3O3
+	 uzvHXwp8b1MqjGTjS0P961b3a/TsfQ1XcsrpJ3or23M5ZNVYj6WAmDzlahmQ5XK41D
+	 8hQL8/+EhExZw2rKricxTzKoY6O99+ocop6AY8wQsGqzQ7LkDpWyaSEKo8sq+eT4FR
+	 5idx3yAaimqmfk22UqKCyG12bT84q/pXdOT1dZxEz4jElqvCtqNEorRNhIqMA50QZl
+	 zSyTSBZg/ZQFA==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 417B217E0CA2;
+	Tue, 11 Feb 2025 15:50:07 +0100 (CET)
+Message-ID: <bd1704a5-5504-4bb9-af6a-37c2849508a8@collabora.com>
+Date: Tue, 11 Feb 2025 15:50:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,46 +42,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/6] arm64: dts: qcom: qcm2290: add UART3 device
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Rob Herring
- <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
-        Rocky Liao <quic_rjliao@quicinc.com>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20250207-rb1-bt-v4-0-d810fc8c94a9@linaro.org>
- <20250207-rb1-bt-v4-5-d810fc8c94a9@linaro.org>
+Subject: Re: [PATCH] mfd: syscon: Restore device_node_to_regmap() for
+ non-syscon nodes
+To: "Rob Herring (Arm)" <robh@kernel.org>, Lee Jones <lee@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc: Will McVicker <willmcvicker@google.com>,
+ John Madieu <john.madieu.xa@bp.renesas.com>, Nishanth Menon <nm@ti.com>,
+ Vaishnav Achath <vaishnav.a@ti.com>, linux-kernel@vger.kernel.org
+References: <20250124191644.2309790-1-robh@kernel.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250207-rb1-bt-v4-5-d810fc8c94a9@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20250124191644.2309790-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: IBMJKZs2Otq2qU52RuMAs4zS4brjZwaF
-X-Proofpoint-GUID: IBMJKZs2Otq2qU52RuMAs4zS4brjZwaF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_06,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- mlxscore=0 priorityscore=1501 malwarescore=0 spamscore=0 impostorscore=0
- mlxlogscore=824 lowpriorityscore=0 phishscore=0 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502110099
 
-On 7.02.2025 9:41 PM, Dmitry Baryshkov wrote:
-> On QCM2290-based devices the SE3 is used for the Bluetooth chips. Add
-> corresponding device node.
+Il 24/01/25 20:16, Rob Herring (Arm) ha scritto:
+> Commit ba5095ebbc7a ("mfd: syscon: Allow syscon nodes without a
+> "syscon" compatible") broke drivers which call device_node_to_regmap()
+> on nodes without a "syscon" compatible. Restore the prior behavior for
+> device_node_to_regmap().
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> This also makes using device_node_to_regmap() incompatible with
+> of_syscon_register_regmap() again, so add kerneldoc for
+> device_node_to_regmap() and syscon_node_to_regmap() to make it clear
+> how and when each one should be used.
+> 
+> Fixes: ba5095ebbc7a ("mfd: syscon: Allow syscon nodes without a "syscon" compatible")
+> Cc: Will McVicker <willmcvicker@google.com>
+> Cc: John Madieu <john.madieu.xa@bp.renesas.com>
+> Cc: Nishanth Menon <nm@ti.com>
+> Reported-by: Vaishnav Achath <vaishnav.a@ti.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+...and tested on
+
+Radxa NIO 12L (MT8395/8195), MediaTek Genio 700 EVK (MT8390/MT8188), and on
+MT8195 Tomato Chromebook
+
+Tested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
 > ---
+>   drivers/mfd/syscon.c | 29 ++++++++++++++++++++++++++---
+>   1 file changed, 26 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index 226915ca3c93..aa4a9940b569 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -159,6 +159,7 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_res)
+>   }
+>   
+>   static struct regmap *device_node_get_regmap(struct device_node *np,
+> +					     bool create_regmap,
+>   					     bool check_res)
+>   {
+>   	struct syscon *entry, *syscon = NULL;
+> @@ -172,7 +173,7 @@ static struct regmap *device_node_get_regmap(struct device_node *np,
+>   		}
+>   
+>   	if (!syscon) {
+> -		if (of_device_is_compatible(np, "syscon"))
+> +		if (create_regmap)
+>   			syscon = of_syscon_register(np, check_res);
+>   		else
+>   			syscon = ERR_PTR(-EINVAL);
+> @@ -233,15 +234,37 @@ int of_syscon_register_regmap(struct device_node *np, struct regmap *regmap)
+>   }
+>   EXPORT_SYMBOL_GPL(of_syscon_register_regmap);
+>   
+> +/**
+> + * device_node_to_regmap() - Get or create a regmap for specified device node
+> + * @np: Device tree node
+> + *
+> + * Get a regmap for the specified device node. If there's not an existing
+> + * regmap, then one is instantiated. This function should not be used if the
+> + * device node has a custom regmap driver or has resources (clocks, resets) to
+> + * be managed. Use syscon_node_to_regmap() instead for those cases.
+> + *
+> + * Return: regmap ptr on success, negative error code on failure.
+> + */
+>   struct regmap *device_node_to_regmap(struct device_node *np)
+>   {
+> -	return device_node_get_regmap(np, false);
+> +	return device_node_get_regmap(np, true, false);
+>   }
+>   EXPORT_SYMBOL_GPL(device_node_to_regmap);
+>   
+> +/**
+> + * syscon_node_to_regmap() - Get or create a regmap for specified syscon device node
+> + * @np: Device tree node
+> + *
+> + * Get a regmap for the specified device node. If there's not an existing
+> + * regmap, then one is instantiated if the node is a generic "syscon". This
+> + * function is safe to use for a syscon registered with
+> + * of_syscon_register_regmap().
+> + *
+> + * Return: regmap ptr on success, negative error code on failure.
+> + */
+>   struct regmap *syscon_node_to_regmap(struct device_node *np)
+>   {
+> -	return device_node_get_regmap(np, true);
+> +	return device_node_get_regmap(np, of_device_is_compatible(np, "syscon"), true);
+>   }
+>   EXPORT_SYMBOL_GPL(syscon_node_to_regmap);
+>   
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
-Konrad
