@@ -1,119 +1,107 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632E3253F0F
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A457B1FAC54;
+	Tue, 11 Feb 2025 16:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739289612; cv=none; b=X7VUHJweLUBCTnd78CIpfa+SqCkrWldMlHtWYewJi84CVDGLObkYAOAETyBTSpa1vQadxiiFGAevoSpxrUxGrKee3ECpPepOgBtIUIp2F3BF49+EkGDwYgz7rhCir7MIP3ArJQau1YZ2dYhUQuyDDZ4S8xt3VFZBLs/RA7rmDtA=
+	t=1739289620; cv=none; b=KMQVOcNB1CAz8Eo/t4zMbjfKJ0CEvh1Ne1Nt/sOgCl7dPDrT4KYql1OuI2tuUud1d2PVLFVAwgwN6rdkQnoSpgCYGQ/t3Xdg0S68VbwOvIdLdfE5UVE2OmdvmpwVZycdmbzhbLvi4+DUlv7GOSBu+BHzUGV8a4cHVSUvi2C/OCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739289612; c=relaxed/simple;
-	bh=367tBOVSTQNE68f9evXGvkRc2n1V8n4iAsIeEbOEs7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jNj7o4NsOtjjOgSeKg/G4D9bvsnFahz7BGFU1KJbh+WLVNLrl/ASpuXbOSytwxX6g04Myef4Q/OeAeIEEGz1TEnrWVDip+e1Ihb088cjGBWNilTcbOBD+8RupntIJp0RmveiapJMS3lvxNwtj//SQQi433OGYo/74AxUTGJkIz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=PAfX6H3I; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="PAfX6H3I"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaecf50578eso1133951866b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:00:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1739289608; x=1739894408; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hI/ECcJmQ5+lRsmCQ33ubWCT5i7ZlE5HoQwEXVHTSj0=;
-        b=PAfX6H3IXurM2KFL7dkio3W4u4fg1aQj/lhZQ0vzFZXxrBvHGkIEh5qa1rdCway+/0
-         oKU9dphjhzdnk9b/Vdn3cFy0qIxAVL8Vdc/x/urq9wmws4i8F50armq4fo/oP5G43Ps/
-         JRjQF+k8b3tnmeRk7LH/6J0rp4rKDfde94w4Gf0w3ukOagclMo/j7K/PqugVoKKeUVkg
-         tgJdAeZgni5ws6DBcbEVyuDfVf76I6U2sKDImzZgDTab+WXprsnOfpprkb9dvh7DdVvn
-         Tc5/hVoUwcRWWv5Kt7HD++LimcvKsC/D5oeS8EumXW2ont/827c8Km0ITIYELVsVRYaj
-         1i8Q==
+	s=arc-20240116; t=1739289620; c=relaxed/simple;
+	bh=cjJM2KE2o46qVeKknzL+BNQNtpT26yoh3cOtsNK7xN8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H0ilqhH4LrOdOHlHFQUfFAiODNpGQjyehA8EtHGonRlfNSIYYsDAM3z8S1VpV8OOolMzJsYugv7KwiR9y8+jdUYXWr72+Yz1ntozDnpUItRA2MXcsMtVHy/IdZt+QUNUBHZM3bKyTnGS6Qdq5Al7TNRnT2RVAuRLQW/j1j8WqHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4bbbab48111so943521137.0;
+        Tue, 11 Feb 2025 08:00:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739289608; x=1739894408;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hI/ECcJmQ5+lRsmCQ33ubWCT5i7ZlE5HoQwEXVHTSj0=;
-        b=VwXh7PVdnGTATZPVD9TSyFbY8S+eb3VhrKhpQV68qx2NCfPkFhdOYNhyO4M2kpiHXW
-         rrXETFAlwmjPdDYpXy/omMFGe6PuLfRDkpAitLJeT6+xStZ27vUdYwT1W74d4Xo2reJm
-         O8uVAVdT0K7G4C4Mm1eC2P6/LhK5ls/dG9jOVnwLz8qF8uZ/AX5DWzFhJo94uf9BJ02l
-         cWVJ19C7303iisbvjN3EDA+wQ4+5BcSDHThEFWe0pTJMn6i1VWtBqHZMH70Ex0SQNmON
-         afe7jyVR5KFUvoE21TCt5YzdLp4wy2KOq8A41riAgGQOaajNVW1lZLXBPmYgIEAlXx5P
-         RLqA==
-X-Forwarded-Encrypted: i=1; AJvYcCXd8B/BHbA2Gf40uwGZNzs18yJuxWUQrThwr1ZsM279PiH8ZOMVVA1JWPNsDotDCkEOV/MprOO7c7znT8g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxz46SNAp+NCNVdve6sq+6JLGOb5bYgwr9a62XelwzR77yX7t6y
-	ICldv3Hrw7FSfXELB/PJUTa0OmTnZnRwVZqCeo94yzuXiVg9v2bZOQz1lmzlN0o=
-X-Gm-Gg: ASbGnctH7xHSt0YVXsemHZ0HuGi/a8mfxSnxWqcn0q8Acn3vKXBV2WEHPz2xGOyMrnQ
-	kfMt+9pr+ll658zJvAWHMLku6E8OGoAbqCZz2Be2zlR5sJnfW8AIbDed8WSNzsfPm1OmLim2y0S
-	YV0+oPKAGu26sK8f10YXiEWXH8lTrdW8k98tm7CVo1KCyJDMuVseMcMfTq0/mTxphwr1Nrj0+l6
-	Zqvk94qXt0E5P7snkwh49knm2qx79OAh1E73CwzvbrKSFJdeSm3qpxC142qHLgKAGhYvFkPCxK3
-	E0FDE4PVPescsqiZ0waHcjXVX6Rk29Wa50bB7K/JYd3VP10=
-X-Google-Smtp-Source: AGHT+IE7ksSku6fs3EFiOJ7qMjT+Xj86y9WzUfaIKnMbJB/roCniH1bXiqumQdCG0sjm3B/UGhh56Q==
-X-Received: by 2002:a17:907:2d24:b0:ab2:ea29:b6 with SMTP id a640c23a62f3a-ab7f01cc9bemr17039766b.35.1739289608146;
-        Tue, 11 Feb 2025 08:00:08 -0800 (PST)
-Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7ce2e91e9sm307325466b.117.2025.02.11.08.00.06
+        d=1e100.net; s=20230601; t=1739289615; x=1739894415;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=65Ob+9ribC+B3TH+jhgdsBGAdasRb7AfHL590YYnv/k=;
+        b=wThdw4LUiTPtgEBo0HlDnCSmsKXbHttijEmknJbZXXfUvNosyHbSoot/rvcwt5OirF
+         uhxR0sRKs9jzCEVnME1sTcQdaq3S3PNaTRN7aiQ80P782M8cCYvdT08D5x3s/c2WrIcr
+         BkChrSmOeS3mUBm+aVNA8xM4MQ76lilalzIGzGpCgwJU00rnpNIMhpmkX6yyMCiZ8Efd
+         NEYbtAEoCgAOBU33STEkLK4ExLm0brmEIuEFpc4fF+O2XHIp/9TTTGtT1itjQEhdiq3e
+         BKWNa4qnE/dEn0lZ2k2SROeUl9tspPegxDjAlineSNp6bACSuxUuPj+6ZtAMUE0UHKe+
+         w0wg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjmZUwYHB1y1gfOIfjIt/UJEIS+pAFJkwGJMPNFPPLfICHox136LSQ7MBxhglGFQpDELiCQLIY5IL5iKJW@vger.kernel.org, AJvYcCX2+tDLYMQTel1rEWwOLPUO3ob/x12yU7YajI+w/3wbr2d46yiR6TW0pzCypALuSgruw2OTZvlSw0P8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6Jw2HIzaVFVtb3UMBzxipQhwXeRFzLMgpd084nECnwaYZPT5+
+	xi7rdKhNdPt634c2oNiVoOuY1BB4mAr/IqFJfaFBTCBDFlmckIrYSTlQlFGxS8c=
+X-Gm-Gg: ASbGncvbhOotDmo75YA9ctfFw27hEiH2AmI2DFGDAzeGtuR6ybQuToVvbKCzFfo8a9x
+	ZcUh0xFqAVFw0/DsZ8BrwoCY8b33I9bIEpbMRT/GsRo3IzCpg81YtegidTK7zxKc1Owte4M0UZ7
+	ROs2l2EoWHKTM4GXpnrLKlHmmYLGyRIDAsY0dIR8zlXUFVbWGMjT2OwJxPPaVvPRn0JUS6CQZRk
+	AJe0igur1xMw5fPxu1+qjewXufqdJ8ylS4VkT+naiVU9m+ETB+OJvkW8HU2pFWBgO1cj1mkX9Pv
+	mKYKL+ST9CQA9ItRd1WsfdfTfMcVL+3qmCNg/U6SStOWIDDsak58lg==
+X-Google-Smtp-Source: AGHT+IG9R7bSKjdmS1s6aYWZhIkHF+21nO7Ap/2R34ECqkZdXRFEBP+3r57yO84XDc+/59RKebrHCA==
+X-Received: by 2002:a05:6102:1624:b0:4ba:9abf:800f with SMTP id ada2fe7eead31-4bbf212de8bmr21376137.6.1739289615079;
+        Tue, 11 Feb 2025 08:00:15 -0800 (PST)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f9805757sm2016320241.34.2025.02.11.08.00.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 08:00:07 -0800 (PST)
-Message-ID: <91d709aa-2414-4fb4-b3e1-94e0e330d33c@blackwall.org>
-Date: Tue, 11 Feb 2025 18:00:05 +0200
+        Tue, 11 Feb 2025 08:00:14 -0800 (PST)
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4ba7ab22192so1798187137.3;
+        Tue, 11 Feb 2025 08:00:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU1BXMlM7xvQfhCwPSHZxheMFWJ8tZOevuGmpqov1lt4iOOr/JS2G3H/Sq0Rc3ZsMWRzxLZN1hEv8B83vGn@vger.kernel.org, AJvYcCWspqtjtHSYnXgTaYH1tycW2WFKLPQihBL++CSg+FMZBg3dQXRsXXGxuQUmvoeeAZyuax5Sbu/MxreS@vger.kernel.org
+X-Received: by 2002:a05:6102:41ac:b0:4b2:9eeb:518f with SMTP id
+ ada2fe7eead31-4bbf2189436mr11231137.10.1739289614043; Tue, 11 Feb 2025
+ 08:00:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 net-next 05/14] bridge: Add filling forward path from
- port to port
-To: Vladimir Oltean <olteanv@gmail.com>, Eric Woudstra <ericwouds@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Pablo Neira Ayuso
- <pablo@netfilter.org>, Jozsef Kadlecsik <kadlec@netfilter.org>,
- Jiri Pirko <jiri@resnulli.us>, Ivan Vecera <ivecera@redhat.com>,
- Roopa Prabhu <roopa@nvidia.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Joe Damato <jdamato@fastly.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Frank Wunderlich <frank-w@public-files.de>,
- Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, bridge@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250209111034.241571-1-ericwouds@gmail.com>
- <20250209111034.241571-6-ericwouds@gmail.com>
- <20250211132832.aiy6ocvqppoqkd65@skbuf>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20250211132832.aiy6ocvqppoqkd65@skbuf>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250129155525.663780-1-koichiro.den@canonical.com>
+ <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com>
+ <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
+ <CAMRc=Mc3qBXaATpYRAXeHne0+mBjErivjvUe4rBEj2ksansatQ@mail.gmail.com> <CAMRc=Mc5WWNErJfEQ4sFRQm_+vDRMa7KBKSPSnP3W8scu4G19A@mail.gmail.com>
+In-Reply-To: <CAMRc=Mc5WWNErJfEQ4sFRQm_+vDRMa7KBKSPSnP3W8scu4G19A@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 11 Feb 2025 17:00:02 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdV=Nn40OgnHnDx3Cy0XsVRVwWzdopYj=XKTdefkHGQxGA@mail.gmail.com>
+X-Gm-Features: AWEUYZkV35CAB6JDjgYqZ9qoV_70B0OlTiuopUalVujnG1oCI-3_-nClXEY0tKU
+Message-ID: <CAMuHMdV=Nn40OgnHnDx3Cy0XsVRVwWzdopYj=XKTdefkHGQxGA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] Introduce configfs-based interface for gpio-aggregator
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Koichiro Den <koichiro.den@canonical.com>, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/11/25 15:28, Vladimir Oltean wrote:
-> On Sun, Feb 09, 2025 at 12:10:25PM +0100, Eric Woudstra wrote:
->> @@ -1453,7 +1454,10 @@ void br_vlan_fill_forward_path_pvid(struct net_bridge *br,
->>  	if (!br_opt_get(br, BROPT_VLAN_ENABLED))
->>  		return;
->>  
->> -	vg = br_vlan_group(br);
->> +	if (p)
->> +		vg = nbp_vlan_group(p);
->> +	else
->> +		vg = br_vlan_group(br);
->>  
->>  	if (idx >= 0 &&
->>  	    ctx->vlan[idx].proto == br->vlan_proto) {
-> 
-> I think the original usage of br_vlan_group() here was incorrect, and so
-> is the new usage of nbp_vlan_group(). They should be br_vlan_group_rcu()
-> and nbp_vlan_group_rcu().
-> 
+On Thu, 30 Jan 2025 at 21:48, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Thu, Jan 30, 2025 at 7:40=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+> > While at it: there's no reason to impose a
+> > naming convention of lineX, lineY etc., the names don't matter for the
+> > aggregator setup (unlike gpio-sim where they indicate the offset of
+> > the line they concern).
+>
+> Scratch that part. There's a good reason for that - the ordering of
+> lines within the aggregator. I'm just not sure whether we should
+> impose a strict naming where - for an aggregator of 3 lines total - we
+> expect there to exist groups named line0, line1 and line2 or if we
+> should be more lenient and possibly sort whatever names the user
+> provides alphabetically?
 
-Oops, right. Nice catch!
+My first idea was "Hey, just sort them alphabetically, and use
+the names as gpio-line-names". But that means they have to be
+globally unique, so line<Y> is indeed better.
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
