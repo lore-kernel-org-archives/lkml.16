@@ -1,87 +1,132 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702D91EF0A9
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D941EF0A9;
+	Tue, 11 Feb 2025 09:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739265367; cv=none; b=KlT+vHdnuc5DGZash1VxtJQVIhh+Dl0vxgFhIX74m/vNFBic1pzvABMYJg8e9NvY0TRVaeYW14M/l+DqKyXswQuudVaZ1XVcRqD9gn/FB9tc6xaOLE26NZ4PB0sTY4hqUv/Kg53PCEYB7Ne/glluwceGKnCRsjq3UIGCTLaKDlo=
+	t=1739265464; cv=none; b=ERo9iRbeu3kW2UNmTDD8omUFHfkB9ZRHieZzoLz1y7anFYqu7kS/zMvn5dWNrs0S3n2sjitw1aZrfrkP5+4jXDnvI2Nt1CX3do78NAtHsWUbfIubVDmPxjzJqh7LawX1JB1gb0eYZ7+CMnPLS+dLTtVicN6DJx3JICy3A4IbVHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739265367; c=relaxed/simple;
-	bh=8UfEMiOEBOeaIBtwImceNCmamRpFFTjgv2GGzdM5I7s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DEIz8wC9jhfGJ39SICuSjP7gfTh4o52l+2VYwiGpgGUN8FBDuymmgxRRQKDkbVW1sifkDlxzM78GeywTMqikrE8lwM7HbqJv6D/mu5FUtHUnqIKyFFnlg61U+MP82ULjg3dE01BqZqKO5a+QicyK1tYvAQtxblT5uXVqbh937hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FDIrcK87; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739265464; c=relaxed/simple;
+	bh=q1ph39zTYKj5k8jovBlZb0OmW0D/Cl5sBfBfHNGZ+Fs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sj2SKqN90VXUsvBQDvoqT6M/yy2K4pK+ydhrrB//S6ljnfhZ2FrEeBq8rlga0mHVhs+MlvxxsDBeU/Ks8hpEnTTtTp8qD8Gp1jGz51a9b312jEUtZLmHlD1MB+1XVRhXwBYERTl4G6xgwxkFLn65vDhdYXV+bgZNErWAiXgzmpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=T7xACDYR; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FDIrcK87"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5450abbdce0so2065125e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:16:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739265362; x=1739870162; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8UfEMiOEBOeaIBtwImceNCmamRpFFTjgv2GGzdM5I7s=;
-        b=FDIrcK87hwYMj3ThVP/bpXvBTIwTIxc2CDQk1BsZHgA+tP1wTU0omUWu/JdUadLlpA
-         E4prB+oV2f6vzyyU4eOb0rrIoj2Vp8MsO75xNE5zveAndNG0FNGkidoeuYtFBgExAnPb
-         OOrP7R+ioGeslyZjvHUQ3+Ncf9dl3Wqcu1VYBZHiGWF1nPrPNqrwMDYkr6DxXqOAR2dm
-         xcysla+vtHS1+M7ZKgQyTgUp67cIC1nEUSVEmM0pm54mecRjEuT1qyBPh4vJ0aLJdeMe
-         DzKXCdB86OEIamIfNzv65JdBGTGyLZ6rwMEcwHDClXSmQZkLoh6HtYCDD3/lr/TQ2Yj1
-         G8bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739265362; x=1739870162;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8UfEMiOEBOeaIBtwImceNCmamRpFFTjgv2GGzdM5I7s=;
-        b=IucuYltE4f6w1ZzfuESZYO0Y8vpJPeizUi8J2Pua0IeN0KqRFUjFPxvVro04ShmQOW
-         Tj+Q4Gjcj9h5t2xYRavT+z6vEm0T2VM0yRbBvwVeUYddpvfQ0CzVgeyCPKm4ZGK6IuLh
-         ln7plAi7UA+mtA/1IP1KqwEBPIrDw//LPLad6ikuLzvluRpltqCjgT+RdIH0IgDpCk7w
-         WUXh3tgpeZNxQyFiPUoorIsQnB2Eg4a6igQPy9d8INuB7rIX+qlSBew2fsUnD2As45l9
-         d9P+ooyKMWibIXWnaHvlHNpC8uDzIGpTcue2GldsHeR/4+rZGYwIUqw4Na2IPecc2EBC
-         ElEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHdnRk00SxQncbwi5SHgy3bxaoW6gI2+spzZ703fz5aMVur7i1IB/e0tbKaWqVfMvKfKzbPxOsjUYojS4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzn+z+obszGD5wVx5z72afIZqRMWV1Tp0hs7Qj7OIalpzLO+OJN
-	JzlT27o4oBCujtjYf54Sia9pdbKgT3mgBZtvYJAp02kjBBGK/92G+3fJn8pycOe6vXGUW2igecG
-	foAuqiyswaExi2TjLmY8qhJHIRFFQ0kvPXvE1BA==
-X-Gm-Gg: ASbGncvNNEPObIE34p11+8a3a/hceifs53bruji/wuqhK+5azwAKIWMCq1Nt6W6exG6
-	W0DEaeDMixnVLH7O9cDv689plkhEP7h8f5Crsd+L5kj3qI8PCoXF4fVM2EXQhP0rMIYeDAnok
-X-Google-Smtp-Source: AGHT+IGUDw4T7meBLRLmxvDNfzzNRFxj3H+A9DNaY0nmeEagW6HROntcqR+BTGp7fazad8t23/Foxxtov8jsByu1Lis=
-X-Received: by 2002:a05:6512:118f:b0:545:a1a:556f with SMTP id
- 2adb3069b0e04-545118767edmr854568e87.50.1739265362482; Tue, 11 Feb 2025
- 01:16:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="T7xACDYR"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 27539433D9;
+	Tue, 11 Feb 2025 09:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739265459;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T128NbBeShVjgHAQHFQBVXrcbz3LydX8l7wGrFI7ueM=;
+	b=T7xACDYRo4ZKNUXI1/0DERPK7oBUD4COOhQeQ03s6RH8EOyByC+6pjBEZ6OzrOskPxeFuS
+	bj1x1oMaVubfmt3p26TgQVuUpl2zcK0XoiUC456N7+IGvvckqpqJgCItd7YswXw26TdEOJ
+	M91jZud9cbdMfRKvKG0rkxCGpLdYdpRNO1gh9mW3iT33Ge4lrkju+oPKRM6FENGcYAigOS
+	AMmT/wHxfjhD2hbhK6CFJZvEZDF1S2DQtqSVDuLGIfB4sw7wuuj4cIXdgh7E5LPVHPgIIh
+	G5b8e1G431JQKCpx/CGPenErBzIhdyOHy2eojCn4jjfcomZSr06/ZsDQrE6S7g==
+Date: Tue, 11 Feb 2025 10:17:35 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: kernel test robot <lkp@intel.com>
+Cc: davem@davemloft.net, llvm@lists.linux.dev,
+ oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Marek
+ =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
+ <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
+ mwojtas@chromium.org, Antoine Tenart <atenart@kernel.org>,
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>, Robert Marko <robert.marko@sartura.hr>
+Subject: Re: [PATCH net-next 11/13] net: phy: Only rely on phy_port for
+ PHY-driven SFP
+Message-ID: <20250211101735.0af025c4@fedora-1.home>
+In-Reply-To: <202502082347.tFufJ529-lkp@intel.com>
+References: <20250207223634.600218-12-maxime.chevallier@bootlin.com>
+	<202502082347.tFufJ529-lkp@intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com> <20250203121843.3183991-7-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250203121843.3183991-7-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 11 Feb 2025 10:15:51 +0100
-X-Gm-Features: AWEUYZmKsMFSUUUDA-6QujaPBWCv-A0WnPWsEIS9Ys7-p_cNmYjrYPDZOgguks4
-Message-ID: <CACRpkdYgfpYAGaWdoULMhFgXRj49j5Jkf9Do+wmG=NiH83nSRg@mail.gmail.com>
-Subject: Re: [PATCH v1 6/7] gpio: 74x164: Switch to use dev_err_probe()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegtdeivdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeifeejgeevhffhhfefvdfhgefgudefkeefgeeivdeuveejueeljeekgfffieeihfenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghdptddurdhorhhgnecukfhppedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgdphhgvlhhopehfvgguohhrrgdquddrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedvpdhrtghpthhtoheplhhkphesihhnthgvlhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtr
+ dhnvghtpdhrtghpthhtoheplhhlvhhmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepohgvqdhksghuihhlugdqrghllheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Mon, Feb 3, 2025 at 1:18=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+Hi,
 
-> Switch to use dev_err_probe() to simplify the error path and
-> unify a message template.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Sun, 9 Feb 2025 00:04:55 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Hi Maxime,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on net-next/main]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Maxime-Chevallier/net-ethtool-Introduce-ETHTOOL_LINK_MEDIUM_-values/20250208-064223
+> base:   net-next/main
+> patch link:    https://lore.kernel.org/r/20250207223634.600218-12-maxime.chevallier%40bootlin.com
+> patch subject: [PATCH net-next 11/13] net: phy: Only rely on phy_port for PHY-driven SFP
+> config: i386-buildonly-randconfig-005-20250208 (https://download.01.org/0day-ci/archive/20250208/202502082347.tFufJ529-lkp@intel.com/config)
+> compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502082347.tFufJ529-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202502082347.tFufJ529-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> drivers/net/phy/qcom/qca807x.c:698:12: error: use of undeclared identifier 'phy_sfp_attach'; did you mean 'phy_attach'?  
+>      698 |         .attach = phy_sfp_attach,
+>          |                   ^~~~~~~~~~~~~~
+>          |                   phy_attach
+>    include/linux/phy.h:1912:20: note: 'phy_attach' declared here
+>     1912 | struct phy_device *phy_attach(struct net_device *dev, const char *bus_id,
+>          |                    ^
+> >> drivers/net/phy/qcom/qca807x.c:699:12: error: use of undeclared identifier 'phy_sfp_detach'; did you mean 'phy_detach'?  
+>      699 |         .detach = phy_sfp_detach,
+>          |                   ^~~~~~~~~~~~~~
+>          |                   phy_detach
+>    include/linux/phy.h:1924:6: note: 'phy_detach' declared here
+>     1924 | void phy_detach(struct phy_device *phydev);
+>          |      ^
+> >> drivers/net/phy/qcom/qca807x.c:702:17: error: use of undeclared identifier 'phy_sfp_connect_phy'  
+>      702 |         .connect_phy = phy_sfp_connect_phy,
+>          |                        ^
+> >> drivers/net/phy/qcom/qca807x.c:703:20: error: use of undeclared identifier 'phy_sfp_disconnect_phy'  
+>      703 |         .disconnect_phy = phy_sfp_disconnect_phy,
+>          |                           ^
+> >> drivers/net/phy/qcom/qca807x.c:748:9: error: call to undeclared function 'phy_sfp_probe'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]  
+>      748 |                 ret = phy_sfp_probe(phydev, &qca807x_sfp_ops);
+>          |                       ^
+>    5 errors generated.
 
-Yours,
-Linus Walleij
+Ah damned, I missed that qca807x now also supports SFP. I'll include a
+conversion fr that driver too in V2 (and add Robert in CC:)
+
+Thanks,
+
+Maxime
