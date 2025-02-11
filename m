@@ -1,319 +1,161 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2058.outbound.protection.outlook.com [40.107.21.58])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDA9255E25;
-	Tue, 11 Feb 2025 16:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739291572; cv=fail; b=X37Pm6OBXcpj6Dg87DibVOy4IMN43vyIMUttdlkPPnhcNTyk2BQHbaiKS9v2q66wSROAuZK7jLRweWwxxK1PyG2Tnonjfq4y02j3VM/MSyEUL2ybPLfg2Sa8ZPsuaCzumCABIvX+jv7HufNG0SAuZd5nkLe09b3jC0uXbhUWSg4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739291572; c=relaxed/simple;
-	bh=DDNo9MZe6+cjtUUqLPBDjf7pW/KsoM8Nh6SS0aYsghM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qfH07sl4HDD1jKvS6PxVAYe74Dw93Fqb//+FteOP2tW7hUmwWpJ9psu+Wv7R/KDD5aLN+fYmFvE59/pYR9KLmgSiMBvtZoafEK5ccZ+QC+Qi3j/H5GCySNPGDc4pE+qlwCZxLgBq/w0GaEtf2b2P1cW+fBmtSNA0lLE59kMew0A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=h48tVuBV; arc=fail smtp.client-ip=40.107.21.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27D325332A;
+	Tue, 11 Feb 2025 16:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739291632; cv=none; b=axwyk1Tzs4jVAHye0YXGYw2gK0FfKOfmemq9NcnEvcrnSNgMxM+1EE8VydN0GUjiD+HwDt4Vt9vaW59J1zhV1+1FtD2v1AqVtSEl5RBacp7jPGrNrlU8Z+L/Tm12JNTy8wtnPEpHOZuIWnS7aA5/cyLCXCvoKbufI5khsaC0c4I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739291632; c=relaxed/simple;
+	bh=NiU17ZiL7r9njo66V2OXrxgI1jtsjxyiCos9qiXsT/A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=meeLdcX+UxXRLxeQmjHlrJmmSkfcQyJrmJdpr8evahOOQjDJcMgMmLGqsRcRz1tN5bdPR2iaGyqgxN5z89wDO3vShsC5iEm5TWUTccu35/zZXK/IpdxBsjgVKu0jEbMBbIQtgU5UUPA8LIMpScM4+NCj/AUlO0bu6APD44Wo11Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U4YfXNEw; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="h48tVuBV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AJlhJRbRxuFta+eBcAzjfY+Cobw3JhFaJo4qCgrEOfMj2bB92bcwtMLDZWPSi9AIm7QRj9kQWzZorrqqp9RiOX1eC3aoRMtPVbwWLkAJmQhHTw5C2OoaspuN0L9YBvhQMVLqfeeyr0DUKNn7OF9jSO0GoahotnCghPZrxKI7YC8W79+pok8IZLt4E9XDQU5NWUv1M4CwURD5T1PBhkts3Ktocnp2q+gakUqrFtILpiVR/XMtqrvxESD95zKfNQeu6EKhjZ5VJ50Imh5SroerZCy0FVd/jtFa5UEWba3EfPd7B+FNWe8CIbtOVuL96/QtSts4BcwS+Ssi1KuMzZ0FSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hSFQyrsuJwvUl30TTuZwYRXoa3kODf1M+IrOewrrdX4=;
- b=pWkrQy5mwZhwTDTm6m/+nbIJUdhjnuv120otkrWxvY0YTXaDHTU40uI1JulhrQNptCqz+miCVjszhfZwZdORZk+9vPQDhVTHsyBSiip1+miRfYELN4FFsFE46k96opzodxloO/ndbAWYtBuBJdASJQxWUTQR2V1A/La56/OQVVzf++6tYUS4/tJQal8tMK/vhKZ14uFNGmYWxX4XHOWawj8FLKxCN5QUiZP5zYi16wB6emjLFMPM/SC0+YEVfo/esgW1Jw0yhf5wOyaUuGDMnuP8Z0LdfCZEJcNEZxm84BqZpfMtcNgr35HE2/r4OajpDU+2cvxRf95+WX2r1jviuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hSFQyrsuJwvUl30TTuZwYRXoa3kODf1M+IrOewrrdX4=;
- b=h48tVuBVdjF0/gsnhFK0c3YX4KLFmSOIioek2lAGtY9gOy7iSYT52DCLXkGjDowitAsbyVvZpKT7PWke/Fn4NWBOZs6le5FZr89V1mSNCtMsJzPJhNTmcoAO/onr/6EjVzHv5D93z7ZXnGgPFa7wODLRD5lZvthvi7nDOqKcHuw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
- by VI0PR04MB10686.eurprd04.prod.outlook.com (2603:10a6:800:25d::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Tue, 11 Feb
- 2025 16:32:44 +0000
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a%5]) with mapi id 15.20.8422.012; Tue, 11 Feb 2025
- 16:32:44 +0000
-Message-ID: <d8ce8db2-1717-40f8-b53e-24cc71a758c9@cherry.de>
-Date: Tue, 11 Feb 2025 17:32:42 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 7/8] arm64: dts: rockchip: Add OPP data for CPU cores
- on RK3588j
-To: Alexey Charkov <alchark@gmail.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
- Dragan Simic <dsimic@manjaro.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- Chen-Yu Tsai <wens@kernel.org>, Diederik de Haas <didi.debian@cknow.org>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Kever Yang <kever.yang@rock-chips.com>
-References: <20240617-rk-dts-additions-v5-0-c1f5f3267f1e@gmail.com>
- <20240617-rk-dts-additions-v5-7-c1f5f3267f1e@gmail.com>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <20240617-rk-dts-additions-v5-7-c1f5f3267f1e@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1PR06CA0164.eurprd06.prod.outlook.com
- (2603:10a6:803:c8::21) To AS8PR04MB8897.eurprd04.prod.outlook.com
- (2603:10a6:20b:42c::20)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U4YfXNEw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739291630; x=1770827630;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NiU17ZiL7r9njo66V2OXrxgI1jtsjxyiCos9qiXsT/A=;
+  b=U4YfXNEwWrRiaPP9pT8OcC6+zSyIQtGK9zr14xIaCYDAIqgSD+Dp/g0R
+   8ts54nX9AMEZrFRjb/peXVmFuREEh7YA54rk+zo1WshjqfaJppxygjMwm
+   HZ8KDlZnYI9NCu0alvK5c+vwXMlRlUTzOfIW68665TNRnkM1+XEtV7+SR
+   XFe4rupdYUWbs/5fiY2JjKpEBfAD1hBE1VpKXGl9/I0EtptTcd/E3pUoB
+   2FCiJeM3l1p3qvq7NCS8YTfq51wkX4Uh0Fy47gxBEKgAQOXqujmTZWRuJ
+   KOBHQvwG+38V8eZ9C37bQc+Bi1srHnOvNbcMeZ9l7NohNDqwFd4zuyUBH
+   w==;
+X-CSE-ConnectionGUID: K6I/9dZPTwWZ47W2NcVaig==
+X-CSE-MsgGUID: 13lHL14QSIGrkL8lgNJZxg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="62389088"
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="62389088"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 08:33:50 -0800
+X-CSE-ConnectionGUID: MuvdhWw1SSe7ORDRKW5o0A==
+X-CSE-MsgGUID: Bm0eJ+ZYS3GOiHoh0NJ5dA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="135822447"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa002.fm.intel.com with ESMTP; 11 Feb 2025 08:33:48 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id CBADA8F; Tue, 11 Feb 2025 18:33:46 +0200 (EET)
+Date: Tue, 11 Feb 2025 18:33:46 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 04/14] platform/x86: alienware-wmi: Refactor LED
+ control methods
+Message-ID: <Z6t76t_4nIXwFX5Q@black.fi.intel.com>
+References: <20250207154610.13675-1-kuurtb@gmail.com>
+ <20250207154610.13675-5-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|VI0PR04MB10686:EE_
-X-MS-Office365-Filtering-Correlation-Id: f5fd91a0-a7b9-4218-3253-08dd4ab9b655
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|10070799003|7416014|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Y01FcEF0eWU0YWs0eStvQ1hma3JxVTZKY01Wd1MrN0U5V2lzRU1XanMwaWR4?=
- =?utf-8?B?K0xSTGw0bTJYajhtZnhiVjRQU1hlVHY3blBSS0hqR0hDUGUwQTBNRnp3bFNl?=
- =?utf-8?B?TDRmQkZHc1lSb290dHRMZXUwV3NVQ1dZdFR4aStaY3pEVExSVUVDV0swb1RY?=
- =?utf-8?B?Q0xLMkZtL1pNcjV0SWY4L2h1OERQZVlCdjB3NGNnNktiWVVCa1pkUUd6U1Ux?=
- =?utf-8?B?ZytzMFRGMGhuYTBHRlJvUG9yU2F3akNyVGtIbld2V2dDZ3NPaWt2MEh2VUFQ?=
- =?utf-8?B?L3VnaWJRT1NCM1dpL3lHL2ZvaUo5RG1KSVRJczBhZTlLMEtENFFvd0JzU05q?=
- =?utf-8?B?Y1hVTkNqR1pibExuQXpUaGhENFZOOXBXM003N21VVDcyNUQwanV2VTlqYVUz?=
- =?utf-8?B?UTh0QkFFRUNnS0huUmVzdzhsd0EraFJyK1d0ZkRpNFhvNGFqbmhzcFo1WHcr?=
- =?utf-8?B?VmtYdFFRTFZkeXVXTmZuUWI2VFd0bDBMSnV2QTE1NmU5aTRlMC92SlhKVzU3?=
- =?utf-8?B?U3VxK3pFNTEvOXlIQlVGdklKc0xuWktveEUrTUVTNm5Ld1hyYnpxUE5vY1Bn?=
- =?utf-8?B?WU5FWXpVSXM5MUxWa0FoemZzUXhZZFU1bEg2MFJ2M1RwNEJWL2RjY3g0T1po?=
- =?utf-8?B?REQvT2gzaDFybTh2WGkvdnJCa1NDTUpkVnYwU1o1RkM2dFJXUDVTa3NURkxl?=
- =?utf-8?B?RVZKN0dJV0lBWmhqODcyMzhKVWRScXJCc0Y0MXJKM051ODRqaFFZcWdhMDlK?=
- =?utf-8?B?WWZaYU1sSjVhWG1SWis5dDg3bkhZRlg3bC81K08vL2RGRU4rTlQvU3hNZzRE?=
- =?utf-8?B?YlFDNmhXNW9kU04xQzRmbTNGM1Fod2U4ZVN6Zkh6eHlKVSsrQnpweHdkbVF4?=
- =?utf-8?B?S1hKNjlrbHMyUUZaMFRnUlFLeXdMTTR3OVRSSUxJdEQxZnUvaU13T3VYSGZZ?=
- =?utf-8?B?aERSVnR3ZFo5R2tsUG5tMGl0RGpjQncxVTA5cWd1K09TS2xQdmNJaUZtckZ6?=
- =?utf-8?B?RmtjVGFlWS9rS1NHdVpVWGZWWlBJNDBneDR0SmdpeXhXUk1lUjdlUzFRNUNT?=
- =?utf-8?B?bTgwaFhOaU1SZExtZ1A1OWNTOFZxUTE2K0RXVmdVdTF2Tk1wOVJXRlZhWXpo?=
- =?utf-8?B?VFJKTjZzUWdreVFqMGlLUk5iQXd2cGwvdENGam5CWE9YSFB4dGNtaXJGaUdi?=
- =?utf-8?B?bUV5ZGtqb3FubzNjUFlGYkhPT3lUZmIwMDBQR280VXNETWVnUXExRURONG1Q?=
- =?utf-8?B?N3BaWWN3QWJDenZhQ2tJUXVVdUdoR0VVZGVIYW1PbGhhMVJQVWFnWWFDOExT?=
- =?utf-8?B?NHcrbUJidUpHVE5nK3FkRHpQVWJhdm81a1lpaHUwKytYS2pzOEZ6TDRpN2tJ?=
- =?utf-8?B?UTRjT0o1WWoxQ0FzZXJ1eTFxTis3TERSZzFlU3dyNjRPWjkzUGphZWZWVXZ3?=
- =?utf-8?B?YUZkNklxdXE1MCs5UDFFbGdEbkltRXlDYU1Da0ZLYWFnY1YxeDEyQmZ3OHBw?=
- =?utf-8?B?M2RGbnc1blZockpaMkFEZ2VwTFRKL291U3daeWFiN3VPeGhudTUyWHh5dTJU?=
- =?utf-8?B?VXkyazJnWWplWlZ6VE4rRHlCRDJrMUpkNWVpSkgwc3l4ckNOVTZheXR1OVpW?=
- =?utf-8?B?QUM5emxJU1JjaDFMRHp0YTVHVEtZQmI5K0d1bFZ0QU8rU0hjb3hTbzAxc21y?=
- =?utf-8?B?NjJnWmpDNUxoQzBVRGwwNk5JVEtZMmVralNlMmxTSzZMaUFKRTFzMXBwSDYr?=
- =?utf-8?B?bXBOYnAyRk5udnp5RGd2dUtyRzF5MDRpTDNwR1Vpa2F5eUowb1VuZUxad28w?=
- =?utf-8?B?VVRieVZBRTVUMWROUTZ5UT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NDcvcUdGMHJOV1dKQmxtQThtdDFseHppMUYrNXFKS08vNFJ3a1FtdVNzV2hs?=
- =?utf-8?B?aTV1UE1IZ3krTWQ4OE81SFU3Y1lyYzRqb09rZU0wem0wemowUmRvVFZzRXNj?=
- =?utf-8?B?amN2eHJMdzUwaWtCdHkzaitjYlhOT1k3SFNaSkl1ZW00bUNvOGF5b0tTem5x?=
- =?utf-8?B?dFcxRm0xUlZGa0VEdDFFRFZiM3NPUUFaVEIvUlJqMzIzc0VFZjh4S2JVbXF4?=
- =?utf-8?B?eTF2eEZxU2U4dUZhcGNyWEIvTVBQS1g1VVkydlVYd3BWWUQ5TzFvNmRsZGRo?=
- =?utf-8?B?aXdjTWwzNGN4QmJhSVc3K0hRem1CaDNueHE4Nk5KMEZCUkorR0hIS3ZZdjVU?=
- =?utf-8?B?dTFCemt5eXlBZUN5anZOWit3dTJpQzNOTnhFMk9sUGoyaWdQNzZCaHhKZVNN?=
- =?utf-8?B?NEp6YUh0c1M1NFQ0SXpoMmZ6LzV3RzF1RkVmakIxZGVLZ0gyejJSa2JMS1Qv?=
- =?utf-8?B?b0hhZ2RUZVI4cW1jNGQ3dE9XRFNaWGVORVpFc3RJRmw1NzJUeGFGamV4SDh5?=
- =?utf-8?B?WVh1UHl5UmNWRXpIL3lscW82cWlseUQyU0NVR0pKY2FrcGl3UnMrZDh3MEsr?=
- =?utf-8?B?b3gvemxnSXI1VGRoVkRmOE05ZWFBOWNSaDlaVHFUQ09DYS9QWks4L3plN1pW?=
- =?utf-8?B?SzJPdFdSZlBFVzJ1VGZUQW1NV29QRnJUcG9RR1dNZFRaVnk1MWxRczFTWmsz?=
- =?utf-8?B?bHgxWmQ0dk1FUVI1QzU5dnpjVjkrMVZPblkxcTV5bURPYlNtNnpmRWNxQWVB?=
- =?utf-8?B?aENSWWxnM1o5TVNLSWVVd3RNWlA4MVpPd2ZoZUFvTnkxODExcW02T1dXMmh1?=
- =?utf-8?B?OVlvNHBCa2NDOU9lWXRnOEluYmQ4Q0ZERS9DVElrYS9COHVxQzBtYXpFcDdv?=
- =?utf-8?B?QUNnSVBZYlVkMnVSUDNJcXd2NW92N3NQb3ZCVGJERWZsa1ZxUFZlMktNQjU3?=
- =?utf-8?B?MStnYndua3BvS2JQdVRtRjYvOEpSSTlBZ3g1bmp2bUJ4bE1Ca3cybFJBOVpN?=
- =?utf-8?B?NXdkTWdUWnJ2TTVraDdVTGlLaEQrM3YybEp3MExmTHZEZDVmSGMxdEdCTVZo?=
- =?utf-8?B?WXlKdE1nYnk2WVB2dE1xNDUxNHRnVUlKNzB0bGRxRjFFYTBKbHhvVlBuUUk1?=
- =?utf-8?B?VjBtOUo4SHRtWlVHSUZmV1k2cmZyZEZOOCsyTDRyczJLcTd6UWxYQngxNGpR?=
- =?utf-8?B?NVg5QlFneUFvY2p4ZTRBcTd6MHJMN2NYd1J1TCs4RDAwQUVuczdxS2pSTVli?=
- =?utf-8?B?Nk8yWGs0TDJZUkJPdXNnMy9KNjFRM0R1R2FRcFNjYkl5TE1rdDJDd0NVYm55?=
- =?utf-8?B?TXRBbW5zd09ib0hkRDgwVEZWWWordG41UkpHa0xWVlNsa1RHencvM3hHMlBE?=
- =?utf-8?B?aElhNUhDWWRuVzdRaTBMNEtZUk9YM2QxdXlGTW02RHQwb2hLTzBLOVRrcWZ4?=
- =?utf-8?B?Q1I4eHdXajBuWm0zT3czeTBXNUo2d2JTOGlkSGJWcGdxb2UzbVRCdEhoM2lG?=
- =?utf-8?B?YnhGSmQxbklPcEZ4WFFEMnhjekdnSnVqWEV4VzRWandVQ2FMMHFjOTA3ZHlI?=
- =?utf-8?B?WkkxdWl5ZVVKMWR4VDAwNEJiOXJyR1NVajd6d293Y1ZQZSthUnNScEhRamtR?=
- =?utf-8?B?TjVhQW9KNnBCVWt3SE5RdEZzeFU2UWZjUVhFRXl6cWJFM0VlT2hmdzhXNTdY?=
- =?utf-8?B?S1VkMVpmTWNXT0RVbGdBUTdTZ3E2TWxsUkFyKzlKRXZ3TkhGNlpzQ2RNVWdP?=
- =?utf-8?B?dTZmOWJ3c3lYNnA5bGdYNCtMV0hNd2VTSFdtK1lCU1dkZDBhZWhoWXA4VzlW?=
- =?utf-8?B?QVVhL0p6clBWTnIzb1loS3BhdWZMM0RVRFhhU0RIOHl2TFhybWRyZVRuV01r?=
- =?utf-8?B?MFBwdXBtTGJOR1plRkp0SU5sUmVDRWoyeHlESUFUMGFIMW1lVFlkcERqMEov?=
- =?utf-8?B?eCtwVWxmeENJWGJmNVM2ZVZFTzRzc3QrM2dPVGp3MTNEVW8zTEZHd3pnMHdq?=
- =?utf-8?B?djNvOUxaSktmOW9wb2gwZjhYMWFNZTZoWDgra2d3UjJIa21IZTdZQ05LUmdk?=
- =?utf-8?B?T1p3RGQzcVpqY29lb0x1bjFoU2JlV3Y0aDRjaVVxNHpEajNTUTNPUkgvWFdx?=
- =?utf-8?B?Sld1YnFwT29lWjkvME85d2NUd2dCWGVBR3YxN2ZCRjZUUjRlRUdwckJJdE4v?=
- =?utf-8?Q?IjED2YfjuvD2X87nimmJ9HQ=3D?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5fd91a0-a7b9-4218-3253-08dd4ab9b655
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 16:32:44.6558
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rMmxFFk72wOqgGPyXoEloGJUW5hYZ1DwSDyqRLZYURr4z0ahoA+h134X8oQopJZPpcj82bbxyFJgIwln6fClC5VWbs+hySAJlyLezf7OigY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10686
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207154610.13675-5-kuurtb@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi all,
-
-On 6/17/24 8:28 PM, Alexey Charkov wrote:
-> RK3588j is the 'industrial' variant of RK3588, and it uses a different
-> set of OPPs both in terms of allowed frequencies and in terms of
-> applicable voltages at each frequency setpoint.
+On Fri, Feb 07, 2025 at 10:46:00AM -0500, Kurt Borja wrote:
+> Both WMI devices handled by this module specify a distinct interface for
+> LED control. Previously this module handled this by dynamically adapting
+> arguments passed to wmi_evaluate_method() based on the `interface`
+> global variable.
 > 
-> Add the OPPs that apply to RK3588j (and apparently RK3588m too) to
-> enable dynamic CPU frequency scaling.
+> To avoid the use of global variables, and enable the migration to
+> non-deprecated WMI methods, let the WMI drivers define upd_led and
+> upd_brightness operations, which completely replace
+> alienware_update_led() and wmax_brightness().
 > 
-> OPP values are derived from Rockchip downstream sources [1] by taking
-> only those OPPs which have the highest frequency for a given voltage
-> level and dropping the rest (if they are included, the kernel complains
-> at boot time about them being inefficient)
-> 
-> [1] https://github.com/rockchip-linux/kernel/blob/604cec4004abe5a96c734f2fab7b74809d2d742f/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> 
+> Also define alienware_wmi_command(), which serves as a wrapper for
+> wmidev_evaluate_method(). This new method is very similar to
+> alienware_wmax_command() but is WMI device agnostic.
 
-Funny stuff actually. Rockchip have their own downstream cpufreq driver 
-which autodetects at runtime the SoC variant and filter out OPPs based 
-on that info. And this patch is based on those values and filters.
+...
 
-However, they also decided that maybe this isn't the best way to do it 
-and they decided to have an rk3588j.dtsi where they remove some of those 
-OPPs instead of just updating the mask/filter in their base dtsi 
-(rk3588s.dtsi downstream). See 
-https://github.com/rockchip-linux/kernel/blob/604cec4004abe5a96c734f2fab7b74809d2d742f/arch/arm64/boot/dts/rockchip/rk3588j.dtsi
-
-So...
-
-> Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> ---
->   arch/arm64/boot/dts/rockchip/rk3588j.dtsi | 108 ++++++++++++++++++++++++++++++
->   1 file changed, 108 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588j.dtsi b/arch/arm64/boot/dts/rockchip/rk3588j.dtsi
-> index 0bbeee399a63..b7e69553857b 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588j.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588j.dtsi
-> @@ -5,3 +5,111 @@
->    */
->   
->   #include "rk3588-extra.dtsi"
+> +static int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
+> +				 void *in_args, size_t in_size, u32 *out_data)
+> +{
+> +	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
+> +	struct acpi_buffer in = {in_size, in_args};
+> +	acpi_status ret;
 > +
-> +/ {
-> +	cluster0_opp_table: opp-table-cluster0 {
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
+> +	ret = wmidev_evaluate_method(wdev, 0, method_id, &in, out_data ? &out : NULL);
+> +	if (ACPI_FAILURE(ret))
+> +		return -EIO;
 > +
-> +		opp-1416000000 {
-> +			opp-hz = /bits/ 64 <1416000000>;
-> +			opp-microvolt = <750000 750000 950000>;
-> +			clock-latency-ns = <40000>;
-> +			opp-suspend;
-> +		};
-> +		opp-1608000000 {
-> +			opp-hz = /bits/ 64 <1608000000>;
-> +			opp-microvolt = <887500 887500 950000>;
-> +			clock-latency-ns = <40000>;
-> +		};
-> +		opp-1704000000 {
-> +			opp-hz = /bits/ 64 <1704000000>;
-> +			opp-microvolt = <937500 937500 950000>;
-> +			clock-latency-ns = <40000>;
-> +		};
+> +	union acpi_object *obj __free(kfree) = out.pointer;
 
-None of those are valid according to Rockchip, we should have
+Actually we have ACPI_FREE(), but it's not big deal (as of today) to use kfree().
 
-		opp-1296000000 {
-			opp-hz = /bits/ 64 <1296000000>;
-			opp-microvolt = <750000 750000 950000>;
-			clock-latency-ns = <40000>;
-			opp-suspend;
-		};
+> +	if (out_data) {
+> +		if (obj && obj->type == ACPI_TYPE_INTEGER)
+> +			*out_data = (u32)obj->integer.value;
 
-instead?
+Unneeded casting.
 
-and...
+> +		else
+> +			return -ENOMSG;
+> +	}
+> +
+> +	return 0;
+> +}
 
+...
+
+> +	if (legacy_args.state != LEGACY_RUNNING) {
+
+With inverted conditional and duplicated line it will all look better.
+
+> +		legacy_args.state = priv->lighting_control_state;
+> +
+> +		input.length = sizeof(legacy_args);
+> +		input.pointer = &legacy_args;
+> +
+> +		status = wmi_evaluate_method(LEGACY_POWER_CONTROL_GUID, 0,
+> +					     location + 1, &input, NULL);
+> +		if (ACPI_FAILURE(status))
+> +			return -EIO;
+> +
+> +		return 0;
+> +	}
+> +
+> +	return alienware_wmi_command(wdev, location + 1, &legacy_args,
+> +				     sizeof(legacy_args), NULL);
+
+...
+
+> +static int wmax_wmi_update_brightness(struct alienfx_priv *priv,
+> +				      struct wmi_device *wdev, u8 brightness)
+> +{
+> +	struct wmax_brightness_args in_args = {
+> +		.led_mask = 0xFF,
+
+GENMASK()?
+
+> +		.percentage = brightness,
 > +	};
 > +
-> +	cluster1_opp_table: opp-table-cluster1 {
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +
-> +		opp-1416000000 {
-> +			opp-hz = /bits/ 64 <1416000000>;
-> +			opp-microvolt = <750000 750000 950000>;
-> +			clock-latency-ns = <40000>;
-> +		};
-> +		opp-1608000000 {
-> +			opp-hz = /bits/ 64 <1608000000>;
-> +			opp-microvolt = <787500 787500 950000>;
-> +			clock-latency-ns = <40000>;
-> +		};
-> +		opp-1800000000 {
-> +			opp-hz = /bits/ 64 <1800000000>;
-> +			opp-microvolt = <875000 875000 950000>;
-> +			clock-latency-ns = <40000>;
-> +		};
-> +		opp-2016000000 {
-> +			opp-hz = /bits/ 64 <2016000000>;
-> +			opp-microvolt = <950000 950000 950000>;
-> +			clock-latency-ns = <40000>;
-> +		};
+> +	return alienware_wmi_command(wdev, WMAX_METHOD_BRIGHTNESS, &in_args,
+> +				     sizeof(in_args), NULL);
+> +}
 
-opp-1800000000 and opp-2016000000 should be removed.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-and...
 
-> +	};
-> +
-> +	cluster2_opp_table: opp-table-cluster2 {
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +
-> +		opp-1416000000 {
-> +			opp-hz = /bits/ 64 <1416000000>;
-> +			opp-microvolt = <750000 750000 950000>;
-> +			clock-latency-ns = <40000>;
-> +		};
-> +		opp-1608000000 {
-> +			opp-hz = /bits/ 64 <1608000000>;
-> +			opp-microvolt = <787500 787500 950000>;
-> +			clock-latency-ns = <40000>;
-> +		};
-> +		opp-1800000000 {
-> +			opp-hz = /bits/ 64 <1800000000>;
-> +			opp-microvolt = <875000 875000 950000>;
-> +			clock-latency-ns = <40000>;
-> +		};
-> +		opp-2016000000 {
-> +			opp-hz = /bits/ 64 <2016000000>;
-> +			opp-microvolt = <950000 950000 950000>;
-> +			clock-latency-ns = <40000>;
-> +		};
-
-opp-1800000000 and opp-2016000000 should be removed as well.
-
-Did I misunderstand what Rockchip did here? Adding Kever in Cc at least 
-for awareness on Rockchip side :)
-
-I guess another option could be to mark those above as
-
-turbo-mode;
-
-though no clue what this would entail. From a glance at cpufreq, it 
-seems that for Rockchip since we use the default cpufreq-dt, it would 
-mark those as unusable, so essentially a no-op, so better remove them 
-entirely?
-
-Cheers,
-Quentin
