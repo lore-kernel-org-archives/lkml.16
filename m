@@ -1,174 +1,115 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B58B3C0B;
-	Tue, 11 Feb 2025 00:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13DF1361;
+	Tue, 11 Feb 2025 00:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739232532; cv=none; b=nJInPRN+/Ill7243mXWnCF8kwsppcd9SA+7vuCB/GPF36ST7r9VFgOmcR0umttGyHP5KFb00MsoslbUB2rQ1IFKHlxglRWNwz+DtAKuAuPsq3syWCudo+10I9aPTu+gyf90D1KuANp3cIom0evWxm/Wkm86Uhd0x7eLKUfe5dbA=
+	t=1739232564; cv=none; b=lUeN08mDWAvNNPnTT4vqDY7TitriNXSz05TPSGtyc6g907czj/BMpMygykPd1u3g1tbgLZCiFwKG+9rtwH5rnSVtz2+0hJU0S+op626QD1mtb9GWYWG13h64lft5dZqelkxw8WWm7G1V05L7p8GVuDAuv3si+KaYPKmc4z1c8+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739232532; c=relaxed/simple;
-	bh=h25Y+GJslj1osPPwzBp6g5ITvcIe6KA9nGKAC1tMkHI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=l+2820iY/5XLX9H0t8sv1YLHSbC9OI0ThwO547S1Vrbp8ntovGSyZo84TJ+WIpi2lSE6jIhecyTZlosdsJ+CwD3Hcc9w+B9G3+j3++Ht0DxZeDCaC8XxlCYWK3QsB4why2aij6XBrRVXECg63s7j1MpS4Hs23alcfp2awkC8Zi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VQfjM9D7; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1739232564; c=relaxed/simple;
+	bh=01uiTrRRxKutdrpyTfLES+sUzCNND8v4qkEDza+0xVk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JXawYtviyWMtupCpvVdrNXuWj9RyW9Z48nflFqP1semNQlpVwptAuJKcfrtQybJGvjFk6dpzFEKo+fYX9QyfPccdzLQbTuhXC0tzMOTUuvzq/JNEuqTUatVpgsNMnhSeAzdh0Ywag5YNUyW31ZO6TbG9+mcMgJZK5lZCmjgEZ3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DyUbyw+l; arc=none smtp.client-ip=209.85.222.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQfjM9D7"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21f50895565so53148035ad.2;
-        Mon, 10 Feb 2025 16:08:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DyUbyw+l"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c05cce598dso33064585a.3;
+        Mon, 10 Feb 2025 16:09:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739232530; x=1739837330; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=uQyUJBqo+jTXiMiWvhStxEYM9tCoQv2ZIzt9rc3LsXM=;
-        b=VQfjM9D7aRGlyOO59wRRmbawBXD8uy05WwvyMR4YHkzLZRyJcv2LWlmKYT6eDv780W
-         wqviwHDYrrvDExxqgsAXyq7faMpOEmRFjJ19o42p9QIGLWTNrLCecBJormuqrM80cH3f
-         UMCiKC/pV7Ch1PeGaJwxHev27s2tZd/AbplUWOx9y9dYg9FTDTwZNhNg20EYJqgzCS11
-         VhT24iznSuQPlBE8YvSCgFr3LMcHHoZD5kbdevBYbXJcTdHe/vH5sqoK8yiF1Wc0uXLS
-         ukSQ+PE2xarxsqizedsVr7nuvylToLSjcY+eZVy1+EL5H3tde/L6tCEICEaAkQ3CZ4tf
-         +Vjw==
+        d=gmail.com; s=20230601; t=1739232561; x=1739837361; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4Ah4k5+xQ1fRNUu+6C0S6nP1nA7x+T5drbERSfhVVRE=;
+        b=DyUbyw+llULRR/gNW25wUNQcCiJsgDvNGPfbMGDyh7KRrLzCDrojJYPulljVI7ynQg
+         mZRYOP5bUJYH/RuXgGdZtgQhFNAVENsY4PgHPiCqP0Ns0eju4LTKYSiC4rJrNP6tI+7B
+         CDIIYdeI49RnAu4KnytGElwqMCraivxGssRXrPe4TTeYWNFiHmOccThNnLaMeIm0Nm2X
+         VOKsi8YZyqIDIrwcHjPXQqJGE1v14jNavWiC2nnf5CNELOR+1GJZER1srMrU0Xe12UFE
+         l4lIjy7GL7a0jENZoNmjSxz7I5HKVxk+8pSL/JjIHlw8Ct7xSmnZTl1rpAzsp0KV2Zi/
+         8fXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739232530; x=1739837330;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uQyUJBqo+jTXiMiWvhStxEYM9tCoQv2ZIzt9rc3LsXM=;
-        b=uEiyqfbkmR+nPUXZYlTIMStVYmamYCqBJ4AYKEza6jP2IVxhWajDvL4aohUQ4ZHBEs
-         u7V3mYfmhi3E50JqAT79729bfkA9z58r3L/or9YGfr9PhcAkkKceTRG0CSjqXyQsxnbX
-         3dfhrrUpIeAUrwkCeO4ET0rano1Qx3x0j49hAdEb0bsQhaB2aGwyMCIICgbteYuKMq0H
-         F150CAwzndn2OlXlkTBllPuKrVQjFleTpbJY7dwJnhen6RfKzBQ25IY3QmfE6+1wSI+k
-         I9IHpL1k8Oli6vHdBBfToDgon+hvojt4oZufxE3Jt0it4050bAkZoD8jdabuIrEU9ems
-         wcLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmhg4BnbCnCTtfXSX8i+rG53v5y/KaFiIcjcFAnFzeAUyyxDwWISJMOxD2rbbTNS9Xxlc=@vger.kernel.org, AJvYcCVLUFZs4FJrCA9JKFC1S4ku51GCGAM9RRYRn1ygG+YXh0+JU/bcVxo8RS2TJw54Q7vHwFJoqkgoLwVaY+Ne@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrOsgXULS64AyKcKFODJnlRNUc/ml1mpkyp/Sl5avxnHRTbdDk
-	KDDXKs5V25/UWUqGXVDtavdiAVQOwp3az29/0uOuAFcazN38KSKJ
-X-Gm-Gg: ASbGncuYsdr5PC4RjsVx+E55cjMZ1eSgX1v4s7FD4nbrM2gpgfEyqZI6q+EDWlL6+B3
-	Kg2SgWdpUEN5HyIJTy7XjkzwYi3KUxzdN3zPbLyb5cljfv7mF37m8fb6EcR+c5yJBI1ThcmVdZP
-	mPL11Y80wjb3Gi6X3IjUn/lhx1bsPj+XZdal0Mhyn5xwkf9qxhb9ct0vwlFuyu8zVeDtNxEzmXs
-	AHAayTGCjyewHZhL7NfaFDXMK7YbJB4z9moVac+hpSqfIkAzDaj7Cfh5PAMbnnNl2HbCwGLQbEt
-	tJI6blNUkfdk
-X-Google-Smtp-Source: AGHT+IGDiHUAa707fZSIiz13RbPklkC1h9XML1rywNVdLJb0wY4Mp/STxHikL/FhaHi8cHMzHDo6oA==
-X-Received: by 2002:a17:903:2bcb:b0:216:4a06:e87a with SMTP id d9443c01a7336-21fb64a5fe6mr23698975ad.40.1739232530464;
-        Mon, 10 Feb 2025 16:08:50 -0800 (PST)
-Received: from [192.168.0.235] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368afde8sm84249775ad.223.2025.02.10.16.08.48
+        d=1e100.net; s=20230601; t=1739232561; x=1739837361;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4Ah4k5+xQ1fRNUu+6C0S6nP1nA7x+T5drbERSfhVVRE=;
+        b=lAOMqGN3BW3W11egb7opNrhRv6EGKc5jGxgCw700D+GwvVxGoQ9CvSWa6VmLDiaT8p
+         kiHfIw0gjEWSBkcFwD15/Iq0iHAkoQDRJQi/POd2DGDofdakeg0OEMo18MDGDGaOTM3a
+         gSfwrvWrhaZgnbPX8je/eR1qLFO24ufAq0UO7FvClKModiIgCENeNbuHr5a7OdJW2Q+U
+         Nvkbn6ETzIbpkwYg4V2JPWMKZaYYBM4mRKJaAaiHCJocsSAUfpVSBTRiz3akaUBpx2oU
+         2GVUNIAa2Drnz0WGh9SHFgn9zG9ZnEGOd8yZ00zAQJRLt5OEYtpWJekTfkKV4wY4Xrcm
+         kQvA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBqCMZ6WD+S6kOTAuoFYjIXy0VblKAZcURC2/NoK0dxTXE6yESsDKRiRVRtFJGrVKVdhAJYVhY@vger.kernel.org, AJvYcCVqBqKMvmSq9yPFJYaTXU+rYs7tj7HzabQlBcmgm8MA7tgieomDNi6e+OmZJaDSs0O9KLDrUN0PKjk=@vger.kernel.org, AJvYcCVrv+yMU29QWLVSSpRe488j7z9+r6Rmd6N7Gal02fqNyGIfTdYr6q/PToeaa6hZZ83inwdnGMj09T6aPzDR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8IA8JTPMr4Q1uFyI0fS9AacoEZdV7QV3g3Km1sOsykQ/NHFFb
+	9ThlLArkGj/U8cEs1NWgXWNARuVI6qwKJNxChC8FZM8XcowF0/U=
+X-Gm-Gg: ASbGncsnXUzZToqlqeoC715swCdh/FjjyPTJkDfYoJlMzCJVc2nf7IVKxa43fADO/Or
+	qW9oeMb2DQwrnr1wI8zUDLxmTlEzYLZu74kEcAKggbObwuXJhvoYjjM1ggBmY1fM+BHF99Az/IY
+	sHcbNSiyUIW+8GcUjp4BngJYnp4akPtAEC9c3kLjU5ATiW8vKtu9ume9AXDvFDa6WxwM87jgzTm
+	u0wR7JEsFH6rJOZajm8c2gjV64O4NmaevL8cnjZzyEUh8wDIPt5U+LWyapigSRVlETR9ABD2mvv
+	6F2CyR+wjErb
+X-Google-Smtp-Source: AGHT+IEBNymajCc+NwMXIImuo+y111CUAjewA7syDuazHuJdvT8SyYtv2TQjZ/rPxap9qo/cAU2erw==
+X-Received: by 2002:a05:620a:4150:b0:7b6:dc5c:de5 with SMTP id af79cd13be357-7c069ce9f4emr42655285a.1.1739232561394;
+        Mon, 10 Feb 2025 16:09:21 -0800 (PST)
+Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0603216c4sm173032885a.97.2025.02.10.16.09.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 16:08:49 -0800 (PST)
-Message-ID: <6976077bc2d417169a437bc582a72defd1dec3d4.camel@gmail.com>
-Subject: Re: [PATCH bpf-next v2 8/9] selftests/bpf: Add selftests for
- load-acquire and store-release instructions
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Peilin Ye <yepeilin@google.com>, bpf@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Cc: bpf@ietf.org, Xu Kuohai <xukuohai@huaweicloud.com>, David Vernet	
- <void@manifault.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann	
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
- Lau	 <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song	
- <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
- Singh	 <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo	
- <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet	
- <corbet@lwn.net>, "Paul E. McKenney" <paulmck@kernel.org>, Puranjay Mohan	
- <puranjay@kernel.org>, Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens
-	 <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Catalin Marinas	
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Quentin Monnet	
- <qmo@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan
- <shuah@kernel.org>,  Ihor Solodrai <ihor.solodrai@linux.dev>, Yingchi Long
- <longyingchi24s@ict.ac.cn>, Josh Don <joshdon@google.com>,  Barret Rhoden
- <brho@google.com>, Neel Natu <neelnatu@google.com>, Benjamin Segall
- <bsegall@google.com>, 	linux-kernel@vger.kernel.org
-Date: Mon, 10 Feb 2025 16:08:44 -0800
-In-Reply-To: <3ac854ac5cc62e78fadd2a7f1af9087ec3fc7a9c.1738888641.git.yepeilin@google.com>
-References: <cover.1738888641.git.yepeilin@google.com>
-	 <3ac854ac5cc62e78fadd2a7f1af9087ec3fc7a9c.1738888641.git.yepeilin@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+        Mon, 10 Feb 2025 16:09:20 -0800 (PST)
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+To: mturquette@baylibre.com,
+	sboyd@kernel.org,
+	florian.fainelli@broadcom.com
+Cc: bcm-kernel-feedback-list@broadcom.com,
+	richardcochran@gmail.com,
+	dave.stevenson@raspberrypi.com,
+	popcornmix@gmail.com,
+	mripard@kernel.org,
+	u.kleine-koenig@baylibre.com,
+	nathan@kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	zzjas98@gmail.com,
+	Chenyuan Yang <chenyuan0y@gmail.com>
+Subject: [PATCH] clk: bcm: rpi: Fix potential NULL pointer dereference
+Date: Mon, 10 Feb 2025 18:09:17 -0600
+Message-Id: <20250211000917.1739835-1-chenyuan0y@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2025-02-07 at 02:06 +0000, Peilin Ye wrote:
-> Add several ./test_progs tests:
->=20
->   - arena_atomics/load_acquire
->   - arena_atomics/store_release
->   - verifier_load_acquire/*
->   - verifier_store_release/*
->   - verifier_precision/bpf_load_acquire
->   - verifier_precision/bpf_store_release
->=20
-> The last two tests are added to check if backtrack_insn() handles the
-> new instructions correctly.
->=20
-> Additionally, the last test also makes sure that the verifier
-> "remembers" the value (in src_reg) we store-release into e.g. a stack
-> slot.  For example, if we take a look at the test program:
->=20
->     #0:  r1 =3D 8;
->       /* store_release((u64 *)(r10 - 8), r1); */
->     #1:  .8byte %[store_release];
->     #2:  r1 =3D *(u64 *)(r10 - 8);
->     #3:  r2 =3D r10;
->     #4:  r2 +=3D r1;
->     #5:  r0 =3D 0;
->     #6:  exit;
->=20
-> At #1, if the verifier doesn't remember that we wrote 8 to the stack,
-> then later at #4 we would be adding an unbounded scalar value to the
-> stack pointer, which would cause the program to be rejected:
->=20
->   VERIFIER LOG:
->   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> ...
->   math between fp pointer and register with unbounded min value is not al=
-lowed
->=20
-> All new tests depend on #ifdef ENABLE_ATOMICS_TESTS.  Currently they
-> only run for arm64.
->=20
-> Signed-off-by: Peilin Ye <yepeilin@google.com>
-> ---
+The `init.name` could be NULL. Add missing check in the
+raspberrypi_clk_register().
+This is similar to commit 3027e7b15b02
+("ice: Fix some null pointer dereference issues in ice_ptp.c").
+Besides, bcm2835_register_pll_divider() under the same directory also
+has a very similar check.
 
-Acked-by: Eduard Zingerman <eddyz87@gmail.com>
+Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+---
+ drivers/clk/bcm/clk-raspberrypi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-[...]
-
-> +++ b/tools/testing/selftests/bpf/progs/verifier_load_acquire.c
-> @@ -0,0 +1,190 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/bpf.h>
-> +#include <bpf/bpf_helpers.h>
-> +#include "../../../include/linux/filter.h"
-> +#include "bpf_misc.h"
-> +
-> +#if defined(ENABLE_ATOMICS_TESTS) && defined(__TARGET_ARCH_arm64)
-
-[...]
-
-> +#else
-> +
-> +SEC("socket")
-> +__description("load-acquire is not supported by compiler or jit, use a d=
-ummy test")
-> +__success
-> +int dummy_test(void)
-> +{
-> +	return 0;
-> +}
-
-Nit: why is dummy_test() necessary?
-
-> +
-> +#endif
-> +
-> +char _license[] SEC("license") =3D "GPL";
-
-[...]
+diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
+index 0e1fe3759530..720acc10f8aa 100644
+--- a/drivers/clk/bcm/clk-raspberrypi.c
++++ b/drivers/clk/bcm/clk-raspberrypi.c
+@@ -286,6 +286,8 @@ static struct clk_hw *raspberrypi_clk_register(struct raspberrypi_clk *rpi,
+ 	init.name = devm_kasprintf(rpi->dev, GFP_KERNEL,
+ 				   "fw-clk-%s",
+ 				   rpi_firmware_clk_names[id]);
++	if (!init.name)
++		return ERR_PTR(-ENOMEM);
+ 	init.ops = &raspberrypi_firmware_clk_ops;
+ 	init.flags = CLK_GET_RATE_NOCACHE;
+ 
+-- 
+2.34.1
 
