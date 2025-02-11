@@ -1,45 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4FB28F5;
-	Tue, 11 Feb 2025 00:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9939E29A0
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233786; cv=none; b=mZEsY0pIpZELOL+PLmbcPYNU7G0zQ464+8vTO6CTEQw/IRqzGfvxD0IQeuqQtLt8hkKUCGR9QlPuP5Gng/xlw1W0OzqnabNQ5dRFKff4D3K0YuUiEHQ3QauNrRlfAk8LI4fIq4dKs/VAcBvFPLPx04J7gBS56MbTZC1sFmKOjRs=
+	t=1739233877; cv=none; b=Yz2ov3N7wHrz83E7NG9qELCJ/udlk5M1kQYs8EoD/2L7jpY99QgIhc5GWcPKwyqbUgjVwQUNu6XeW1fq2Quwj3lF7Sl2OMFOeCYAmZ6D5DyzDSFkq41HBtG9wFCx2gC7R+O5kG5zXXYSAldDgR6vS2FBsGuJxZnQHLCg4Dl3aRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739233786; c=relaxed/simple;
-	bh=TMgXkr3cTJRM3MaW/W4X97Rj0sxwJzv7gAxKX00QO1Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HDIdP9XWjoo78VVPsbIFOp4htaQS4rIop0RipvhCcFVByK3Th+j8knk5lpV3bYE20Txq2vOQhlIIoIF8TeLCeAonUKDy8u/UykILaTGqjOfo6LvFQ9LUC1AvXmvkQTAT+f9xfMfUlTug6UPyhEI+JtlshfpQw25bkr/Qy+HCtwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AXimKAQK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739233877; c=relaxed/simple;
+	bh=iDHTAvqsNtAMEXu8qu9xgMtUaTltQ6x5FMmy+IDzPRk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PCDWsluTnsFADUHIIwY3tjQMJFEuro1iLG2qvYnyksrnOo01j9KZO2+tDoF8g0AzUu06nv0tzUL3SWdUyY3LADPbFsbYQrAbrmHQCgEEpSpxxPx/ycaOdOAXbiiFzfkHCHV/JlPSmhefUTfCejJwYgOhnQI2a010f0KYWNwY1zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XO6EX7P+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AXimKAQK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08730C4CED1;
-	Tue, 11 Feb 2025 00:29:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739233785;
-	bh=TMgXkr3cTJRM3MaW/W4X97Rj0sxwJzv7gAxKX00QO1Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=AXimKAQK8gtKAqF7lap7m+Ntcb4qLWi68dQxwb0HERhJcKUxpSG2D5D7e2JKqrRbL
-	 OydQbSj9RgWKPQxirB4rLTsB4mH7IYirz2Dmg1OAf6yfRP895vtTSq/drXwSP4W3xA
-	 Z3T51AMKiOjD2UrpaaROYee4snilkqPvtzos/YW/u/fjlrpTWyRPY5c25mgApK/+UR
-	 vmAcESqUeOn5VaX6uRnNFXh0D0RDt2dLCo3L1B8cr4aQ4ciG2R/Bujqimt5gHKU6QF
-	 3CgihS2mwyoFgYEPrSCuzSZ2lvstbbZwAKac3ZMm0W8AeSUQA1DZkaWPXevsH0tHPT
-	 g59OqFsgfFHgQ==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: Frank Binns <frank.binns@imgtec.com>,
-	Matt Coster <matt.coster@imgtec.com>
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Borislav Petkov <bp@suse.de>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	bpf@vger.kernel.org,
-	linux-kbuild@vger.kernel.org
-Subject: [PATCH] tools: fix annoying "mkdir -p ..." logs when building tools in parallel
-Date: Tue, 11 Feb 2025 09:29:06 +0900
-Message-ID: <20250211002930.1865689-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XO6EX7P+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739233873;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lt4B3Gv3OCrw8JiFM9sdRNcEjetfZHNbsKR6G5cmR7c=;
+	b=XO6EX7P+NtiVKs/5+ZXtYZ9FW85XQFrocQ2sEIx08OnMx7rihSW5xiFAg1BZACONHs9RtQ
+	0OlFA81lEmESAjfYJxJ1VEk7T4KjEIJorN/qsc50LCvaKVsaYQ0D6H7I+w2nkp+5QGdUQN
+	UlR872iEOvEbnlANvQ971d5cRuadPvA=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-353-dlf1c_dsMhCtKj-fEFFg6A-1; Mon,
+ 10 Feb 2025 19:31:10 -0500
+X-MC-Unique: dlf1c_dsMhCtKj-fEFFg6A-1
+X-Mimecast-MFC-AGG-ID: dlf1c_dsMhCtKj-fEFFg6A
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9C96C195608C;
+	Tue, 11 Feb 2025 00:31:04 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.88.129])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EFD3B18004A7;
+	Tue, 11 Feb 2025 00:30:52 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: ryan.roberts@arm.com,
+	anshuman.khandual@arm.com,
+	catalin.marinas@arm.com,
+	cl@gentwo.org,
+	vbabka@suse.cz,
+	mhocko@suse.com,
+	apopple@nvidia.com,
+	dave.hansen@linux.intel.com,
+	will@kernel.org,
+	baohua@kernel.org,
+	jack@suse.cz,
+	srivatsa@csail.mit.edu,
+	haowenchao22@gmail.com,
+	hughd@google.com,
+	aneesh.kumar@kernel.org,
+	yang@os.amperecomputing.com,
+	peterx@redhat.com,
+	ioworker0@gmail.com,
+	wangkefeng.wang@huawei.com,
+	ziy@nvidia.com,
+	jglisse@google.com,
+	surenb@google.com,
+	vishal.moola@gmail.com,
+	zokeefe@google.com,
+	zhengqi.arch@bytedance.com,
+	jhubbard@nvidia.com,
+	21cnbao@gmail.com,
+	willy@infradead.org,
+	kirill.shutemov@linux.intel.com,
+	david@redhat.com,
+	aarcange@redhat.com,
+	raquini@redhat.com,
+	dev.jain@arm.com,
+	sunnanyong@huawei.com,
+	usamaarif642@gmail.com,
+	audra@redhat.com,
+	akpm@linux-foundation.org,
+	rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	tiwai@suse.de
+Subject: [RFC v2 0/9] khugepaged: mTHP support
+Date: Mon, 10 Feb 2025 17:30:19 -0700
+Message-ID: <20250211003028.213461-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,74 +94,80 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-When CONFIG_OBJTOOL=y or CONFIG_DEBUG_INFO_BTF=y, parallel builds
-show awkward "mkdir -p ..." logs.
+The following series provides khugepaged and madvise collapse with the
+capability to collapse regions to mTHPs.
 
-  $ make -j16
-    [ snip ]
-  mkdir -p /home/masahiro/ref/linux/tools/objtool && make O=/home/masahiro/ref/linux subdir=tools/objtool --no-print-directory -C objtool
-  mkdir -p /home/masahiro/ref/linux/tools/bpf/resolve_btfids && make O=/home/masahiro/ref/linux subdir=tools/bpf/resolve_btfids --no-print-directory -C bpf/resolve_btfids
+To achieve this we generalize the khugepaged functions to no longer depend
+on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
+(defined by MTHP_MIN_ORDER) that are utilized. This info is tracked
+using a bitmap. After the PMD scan is done, we do binary recursion on the
+bitmap to find the optimal mTHP sizes for the PMD range. The restriction
+on max_ptes_none is removed during the scan, to make sure we account for
+the whole PMD range. max_ptes_none will be scaled by the attempted collapse
+order to determine how full a THP must be to be eligible. If a mTHP collapse
+is attempted, but contains swapped out, or shared pages, we dont perform the
+collapse.
 
-Defining MAKEFLAGS=<value> on the command line wipes out command line
-switches from the resultant MAKEFLAGS definition, even though the command
-line switches are active. [1]
+With the default max_ptes_none=511, the code should keep its most of its 
+original behavior. To exercise mTHP collapse we need to set max_ptes_none<=255.
+With max_ptes_none > HPAGE_PMD_NR/2 you will experience collapse "creep" and 
+constantly promote mTHPs to the next available size.
 
-The first word of $(MAKEFLAGS) is a possibly empty group of characters
-representing single-letter options that take no argument. However, this
-breaks if MAKEFLAGS=<value> is given on the command line.
+Patch 1:     Some refactoring to combine madvise_collapse and khugepaged
+Patch 2:     Refactor/rename hpage_collapse
+Patch 3-5:   Generalize khugepaged functions for arbitrary orders
+Patch 6-9:   The mTHP patches
 
-The tools/ and tools/% targets set MAKEFLAGS=<value> on the command
-line, which breaks the following code in tools/scripts/Makefile.include:
+---------
+ Testing
+---------
+- Built for x86_64, aarch64, ppc64le, and s390x
+- selftests mm
+- I created a test script that I used to push khugepaged to its limits while
+   monitoring a number of stats and tracepoints. The code is available 
+   here[1] (Run in legacy mode for these changes and set mthp sizes to inherit)
+   The summary from my testings was that there was no significant regression
+   noticed through this test. In some cases my changes had better collapse
+   latencies, and was able to scan more pages in the same amount of time/work,
+   but for the most part the results were consistant.
+- redis testing. I tested these changes along with my defer changes
+  (see followup post for more details).
+- some basic testing on 64k page size.
+- lots of general use. These changes have been running in my VM for some time.
 
-    short-opts := $(firstword -$(MAKEFLAGS))
+Changes since V1 [2]:
+- Minor bug fixes discovered during review and testing
+- removed dynamic allocations for bitmaps, and made them stack based
+- Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
+- Updated trace events to include collapsing order info.
+- Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
+- No longer require a chunk to be fully utilized before setting the bit. Use
+   the same max_ptes_none scaling principle to achieve this.
+- Skip mTHP collapse that requires swapin or shared handling. This helps prevent
+   some of the "creep" that was discovered in v1.
 
-If MAKEFLAGS really needs modification, it should be done through the
-environment variable, as follows:
+[1] - https://gitlab.com/npache/khugepaged_mthp_test
+[2] - https://lore.kernel.org/lkml/20250108233128.14484-1-npache@redhat.com/
 
-    MAKEFLAGS=<value> $(MAKE) ...
+Nico Pache (9):
+  introduce khugepaged_collapse_single_pmd to unify khugepaged and
+    madvise_collapse
+  khugepaged: rename hpage_collapse_* to khugepaged_*
+  khugepaged: generalize hugepage_vma_revalidate for mTHP support
+  khugepaged: generalize alloc_charge_folio for mTHP support
+  khugepaged: generalize __collapse_huge_page_* for mTHP support
+  khugepaged: introduce khugepaged_scan_bitmap for mTHP support
+  khugepaged: add mTHP support
+  khugepaged: improve tracepoints for mTHP orders
+  khugepaged: skip collapsing mTHP to smaller orders
 
-That said, I question whether modifying MAKEFLAGS is necessary here.
-The only flag we might want to exclude is --no-print-directory, as the
-tools build system changes the working directory. However, people might
-find the "Entering/Leaving directory" logs annoying.
+ include/linux/khugepaged.h         |   4 +
+ include/trace/events/huge_memory.h |  34 ++-
+ mm/khugepaged.c                    | 422 +++++++++++++++++++----------
+ 3 files changed, 306 insertions(+), 154 deletions(-)
 
-I simply removed the offending MAKEFLAGS=.
-
-[1]: https://savannah.gnu.org/bugs/?62469
-
-Fixes: a50e43332756 ("perf tools: Honor parallel jobs")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- Makefile | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 89628e354ca7..52207bcb1a9d 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1421,18 +1421,13 @@ ifneq ($(wildcard $(resolve_btfids_O)),)
- 	$(Q)$(MAKE) -sC $(srctree)/tools/bpf/resolve_btfids O=$(resolve_btfids_O) clean
- endif
- 
--# Clear a bunch of variables before executing the submake
--ifeq ($(quiet),silent_)
--tools_silent=s
--endif
--
- tools/: FORCE
- 	$(Q)mkdir -p $(objtree)/tools
--	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/
-+	$(Q)$(MAKE) LDFLAGS= O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/
- 
- tools/%: FORCE
- 	$(Q)mkdir -p $(objtree)/tools
--	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
-+	$(Q)$(MAKE) LDFLAGS= O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
- 
- # ---------------------------------------------------------------------------
- # Kernel selftest
 -- 
-2.43.0
+2.48.1
 
