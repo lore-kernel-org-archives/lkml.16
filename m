@@ -1,172 +1,169 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E801F1523;
-	Tue, 11 Feb 2025 10:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739270512; cv=pass; b=QdLiRdjBnXLfpqeiuiMv+nHjTda7UgvLboBbVA/HiSN/Km7fznQwpoa7a2KMhfd57CWrtVpe1JTKdsXBiC2IZC7vcHQEPqSjN0p3bd0F3L1kRm6/I+hT9gc20+Dvnce7dbNtVcw4y6pWE4oTCVqB6LFj7Nprh5E8llotP3SyeBE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739270512; c=relaxed/simple;
-	bh=mEOc+dqZpqUlIzt6nPUiBI+7XwlX0upE740xaq5NqPA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IFb9SPq0zO96M8kxh0CYykybnK2SCFjqSc/K1BimfSoihYJ2ML4Rknd4XLb79cUWOR374vw1BFGrHP+o2Cndmz6QziHmDvVVVOa5XeiWM/UXgZjpyP5UCdo8+W+jzfdl09mlF47qkBUZquz2aaLhJ406TaDY1W9FVIIPE2ZhTpA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b=kdfpqRdk; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614111F8918
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739270520; cv=none; b=d/7HGv8B35LKhXt8/6ed/aV+opyFIE9Xrs/gP95xB1zu9rvDMkvNVlgOaXk/YI1rb4dI4T1zvEKdZBj4M1h+s626YyOFe//JlAT2P0eQIyy1WF/ySnS9Sc2sN106UsDqDYa746FsaRu3TVJkafC3mL6MzIRXvZr9fXMUJrFdanM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739270520; c=relaxed/simple;
+	bh=FooWr0ldHoSRyh8SIaja1jRnbPQlXMMzgjUp2Lh9IBw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IbOMmEWziKEgVqioWP7wGeeFablfzg9ybniYL3NlOj1qbzZz0UdqKfwyGRWvFJm00YUS4EDJ59zzL79ldQtev/Y6QAcqLVLouYqXUXLtIBrNWc74Jrj6SsWQBhogb8p+lOd1nasLKhIml2Rqi6TcSH1FKiDB4QezMZ/ux4dBEpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=N+yIjRxl; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b="kdfpqRdk"
-ARC-Seal: i=1; a=rsa-sha256; t=1739270477; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=mwi82a1VC0WX0mnkqDaeehyMyVFVEj4t2oX7L/TCjiHtiYB7UuceU1o9V2Ch+9o4zltsPlBcFb4fdv8+rxktaJqW1Q8KlkTen/Pl17gSNMmtpT3i5htGY8dXAf2WkG4GGKwdDWWeVOjh+pE52ItcHz34mNoIxmLMbpGojBEc8Z0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739270477; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ubGyYqooXI2P+wuwvYT/UUhmQ3sN+skqfbeQAf8g68Y=; 
-	b=hvrvbf2+7wqF6YKXbMOoA/8Fm226wP6CKc6c07oHoi3h1cFXfFFfUlfdpJKJngVl9fWOTWP3KrxISu6OnsJyunORWMiMXnH22HKa8b0CDmCNSKP1eJYnqF2j/gTJ+zkOIuXa+neWu9/k+JQn+BRGxrGrkNYvOC07GBHsY/heGbU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=louisalexis.eyraud@collabora.com;
-	dmarc=pass header.from=<louisalexis.eyraud@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739270476;
-	s=zohomail; d=collabora.com; i=louisalexis.eyraud@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=ubGyYqooXI2P+wuwvYT/UUhmQ3sN+skqfbeQAf8g68Y=;
-	b=kdfpqRdkVKeQAH/5Y/EIwAFtun58/BS9O8u/eV3wKOEEf1FlqYJra//v0lxwoJH5
-	20h03YlS242c/15r/A9nSKaKwa/NLDqqRIYbiAjPanT6Le+XYjPs8Zbtnq8dPOlgiry
-	IavDHj9UzJSxa7CtNcyEmGo4eYBjg9rp5zxBgpuA=
-Received: by mx.zohomail.com with SMTPS id 1739270473078530.12461900681;
-	Tue, 11 Feb 2025 02:41:13 -0800 (PST)
-Message-ID: <0ea21f4f22a4814278f9fb68c1417594c7817c06.camel@collabora.com>
-Subject: Re: [PATCH v3 3/3] arm64: dts: mediatek: mt8370: Enable gpu support
-From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Krzysztof Kozlowski
-	 <krzk@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard	
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	 <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring	
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Boris
- Brezillon <boris.brezillon@collabora.com>, Steven Price
- <steven.price@arm.com>, kernel@collabora.com, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org
-Date: Tue, 11 Feb 2025 11:41:08 +0100
-In-Reply-To: <9cbd03f7-c3e4-433b-96ee-3b9683fccdd2@collabora.com>
-References: <20250207-mt8370-enable-gpu-v3-0-75e9b902f9c1@collabora.com>
-	 <20250207-mt8370-enable-gpu-v3-3-75e9b902f9c1@collabora.com>
-	 <20250211-nice-boar-of-abracadabra-f696ec@krzk-bin>
-	 <9cbd03f7-c3e4-433b-96ee-3b9683fccdd2@collabora.com>
-Organization: Collabora Ltd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N+yIjRxl"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-436ce2ab251so37094945e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:41:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739270516; x=1739875316; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0cUkixBgpYEn4aAeaI+o2I3hnF9EtEfIlYRTahALjTQ=;
+        b=N+yIjRxlucioHo9mr5yUxrXMpkixvJEuV/qvFwgCfppA9QRr7LAivUl2zuIYUGmm3A
+         XebAE7SuRYjY/5AyhU6vm8Y+98sslA7vOxArxfYlFt3FnJteQ63xvSciILlQ7QIBiXsA
+         4WX0Np/YOQxpr+8Oa5CfkLR6SjXLWkpISxjZf3NzNXL1TkbAU8SwuyGj1v01amTXDYR9
+         Kj2vNWJ5fwME3nbHN7H7dNVCeHVBJPNsEy+tUr9s+FgJ+AUOiUg0N/7pRAXjxSTSXM5g
+         Z+duvoWjocKd3EGayBjXGfWKCXXwQ+twZ5dzEAvmXwS6YPR4NpHeo6hMHneekwwoMx0Y
+         BTgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739270516; x=1739875316;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0cUkixBgpYEn4aAeaI+o2I3hnF9EtEfIlYRTahALjTQ=;
+        b=Jg//e1E/OHEvwX6107bUsbQb9Oz0DNNDxP3ewjPetuTlOzeDQyT0jK7P0LRHZpOODh
+         eabV+PRjM1ApQwhf+dTkQ7umnecPj+Y4HPck+zWTRybTT6csby2oYCM1/NOX6tG9/0JK
+         7ZCidrjbfsWsILGSQ0vzspv0iZ2N419Akf3Qqtw1WfgNd4JBsdgk/tXVmjkzQ2LaDosb
+         8Ok4DMYC+fLPLib2obxwo73xO2zvDZycytwNLD7oNxEg8vOj/MpACUquCNh8bq0DO82d
+         2NnuW7blIQNnFmO+eX/pw/p4oaCTwUez9/e6bjxWwWGnuy4AMAiaTaSP4tVKJS/VaEEt
+         ZjzA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8tgxEasKQJ+CTDRCHe1zm2fWL301HS57skyfe6+R9s2oMjzNxGsDQUimmjoUohpeNHHorrV6iNVX/u78=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV/OLJVwa7RrftTsTRWZxtedu35apEdPu2Y0LT/Fh7r0vsCwDC
+	3VDCMWhYxmD52CwVMf5nd5S7hZReFtStzaSnvDwWjWgf5/Ekp54zZo5UK8O63sU=
+X-Gm-Gg: ASbGncsJWkvkfaUQlH6Pu/17hf+Qu1jdKiKNyGD4bhlg93pqJRXcu27+blcxWpD+9G4
+	JndKkdAu4+/4eiSeOZ7+QFEsqQnfw5KfW20qfkd2Cj0IlQvRQnVybmCXPnVisYbKB7CfUzy2tWZ
+	mWlDUvALqk80feNpEjb2BCG8Tav8pxDNT0J70sgHO6lFI63DmMu6pbdzVAT7Gg3j5N3+PREYUlf
+	LWfFFI+jrjAy+Eh/YaqhFYlz7d5Q0HIEjAjQ+z3PHKEmpydXoQb92zDmeZbaeDebQVPcASXiaCy
+	HsO8q9EdpxtMW+ic2qYIIqM=
+X-Google-Smtp-Source: AGHT+IHiznFHRTCwShZbEfQSfsP4ZlgsTN5VR0Awq+vBQZzykOkPVdMDgz2P9LDFE6gk8RKX6JBiyw==
+X-Received: by 2002:a05:600c:310f:b0:439:48f6:dd6d with SMTP id 5b1f17b1804b1-43948f6de9amr49946795e9.22.1739270516524;
+        Tue, 11 Feb 2025 02:41:56 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.65.3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43946bff4d4sm49091965e9.3.2025.02.11.02.41.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 02:41:56 -0800 (PST)
+Message-ID: <ea5d18c1-0cce-44f7-bf7a-7c69ffb05bb6@linaro.org>
+Date: Tue, 11 Feb 2025 10:41:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 0/8] Coresight for Kernel panic and watchdog reset
+To: Linu Cherian <lcherian@marvell.com>
+Cc: suzuki.poulose@arm.com, mike.leach@linaro.org,
+ linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, corbet@lwn.net,
+ devicetree@vger.kernel.org, sgoutham@marvell.com, gcherian@marvell.com
+References: <20241216053014.3427909-1-lcherian@marvell.com>
+ <da7dcddb-d407-41b2-8343-a0ec21914606@linaro.org>
+ <20250204120216.GB1525185@hyd1403.caveonetworks.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250204120216.GB1525185@hyd1403.caveonetworks.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2025-02-11 at 10:28 +0100, AngeloGioacchino Del Regno wrote:
-> Il 11/02/25 09:31, Krzysztof Kozlowski ha scritto:
-> > On Fri, Feb 07, 2025 at 04:18:32PM +0100, Louis-Alexis Eyraud
-> > wrote:
-> > > Add a new gpu node in mt8370.dtsi to enable support for the
-> > > ARM Mali G57 MC2 GPU (Valhall-JM) found on the MT8370 SoC, using
-> > > the
-> > > Panfrost driver.
-> > >=20
-> > > On a Mediatek Genio 510 EVK board, the panfrost driver probed
-> > > with the
-> > > following message:
-> > > ```
-> > > panfrost 13000000.gpu: clock rate =3D 390000000
-> > > panfrost 13000000.gpu: mali-g57 id 0x9093 major 0x0 minor 0x0
-> > > status 0x0
-> > > panfrost 13000000.gpu: features: 00000000,000019f7, issues:
-> > > 00000003,
-> > > =C2=A0=C2=A0=C2=A0 80000400
-> > > panfrost 13000000.gpu: Features: L2:0x08130206 Shader:0x00000000
-> > > =C2=A0=C2=A0=C2=A0 Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS=
-:0x7
-> > > panfrost 13000000.gpu: shader_present=3D0x5 l2_present=3D0x1
-> > > [drm] Initialized panfrost 1.3.0 for 13000000.gpu on minor 0
-> > > ```
-> > >=20
-> > > Signed-off-by: Louis-Alexis Eyraud
-> > > <louisalexis.eyraud@collabora.com>
-> > > ---
-> > > =C2=A0 arch/arm64/boot/dts/mediatek/mt8370.dtsi | 9 +++++++++
-> > > =C2=A0 1 file changed, 9 insertions(+)
-> > >=20
-> > > diff --git a/arch/arm64/boot/dts/mediatek/mt8370.dtsi
-> > > b/arch/arm64/boot/dts/mediatek/mt8370.dtsi
-> > > index
-> > > cf1a3759451ff899ce9e63e5a00f192fb483f6e5..2f27f7e7ab813b97f869297
-> > > ae360f69854e966e1 100644
-> > > --- a/arch/arm64/boot/dts/mediatek/mt8370.dtsi
-> > > +++ b/arch/arm64/boot/dts/mediatek/mt8370.dtsi
-> > > @@ -59,6 +59,15 @@ &cpu_little3_cooling_map0 {
-> > > =C2=A0=C2=A0				<&cpu3 THERMAL_NO_LIMIT
-> > > THERMAL_NO_LIMIT>;
-> > > =C2=A0 };
-> > > =C2=A0=20
-> > > +&gpu {
-> > > +	compatible =3D "mediatek,mt8370-mali", "arm,mali-valhall-
-> > > jm";
-> >=20
-> > It's up to platform maintainers, but IMHO this is discouraged
-> > practice.
-> > If you ever need to override compatible, this means the node is not
-> > really shared between this and base SoC (base DTSI).
-> >=20
->=20
-> That's true, indeed, but this is a special case, where the GPU
-> actually is really
-> architecturally and generationally the same, difference being that
-> one core is
-> lasered off from the lower binned silicon.
->=20
-> I appreciate you pointing that out, and effectively we shall not
-> create any
-> misunderstanding on this practice, which shall remain discouraged.
->=20
-> Speaking of which!
->=20
-> Louis, since you anyway have to send a v4, please add a comment
-> before that
-> gpu node override saying:
->=20
-> /*
-> =C2=A0 * Please note that overriding compatibles is a discouraged practic=
-e
-> and is a
-> =C2=A0 * clear indication of nodes not being, well, compatible!
-> =C2=A0 *
-> =C2=A0 * This is a special case, where the GPU is the same as MT8188, but
-> with one
-> =C2=A0 * of the cores fused out in this lower-binned SoC.
-> =C2=A0 */
-> &gpu {
-> =C2=A0 ....etc
->=20
->=20
-> Thanks,
-> Angelo
 
-Hi,
 
-I understand your concerns and I agree with you.
+On 04/02/2025 12:02 pm, Linu Cherian wrote:
+> Hi James,
+> 
+> 
+> On 2025-01-24 at 17:38:58, James Clark (james.clark@linaro.org) wrote:
+>>
+>>
+>> On 16/12/2024 5:30 am, Linu Cherian wrote:
+>>> This patch series is rebased on coresight-next-v6.12.rc4
+>>>
+>>> * Patches 1 & 2 adds support for allocation of trace buffer pages from
+>>>     reserved RAM
+>>> * Patches 3 & 4 adds support for saving metadata at the time of kernel panic
+>>> * Patch 5 adds support for reading trace data captured at the time of panic
+>>> * Patches 6 & 7 adds support for disabling coresight blocks at the time of panic
+>>> * Patch 8: Gives the full description about this feature as part of documentation
+>>>
+>>> v12 is posted here,
+>>> https://lore.kernel.org/linux-arm-kernel/20241129084714.3057080-1-lcherian@marvell.com/
+>>>
+>>> Changelog from v12:
+>>> * Fixed wrong buffer pointer passed to coresigh_insert_barrier_packet
+>>> * tmc_read_prepare/unprepare_crashdata need to be called only once and
+>>>     hence removed from read path and added to tmc_probe
+>>> * tmc_read_prepare_crashdata renamed to tmc_prepare_crashdata and
+>>>     avoid taking locks  as its moved to probe function.
+>>> * Introduced read status flag, "reading" specific to reserved buffer to keep the
+>>>     reserved buffer reading independent of the regular buffer.
+>>> * open/release ops for reserved buffer has to take care only about the
+>>>     set/unset the "reading" status flag as the reserved buffer is prepared
+>>>     during the probe time itself.
+>>> * Few other trivial changes
+>>>
+>>
+>> Hi Linu,
+>>
+>> I tested that decoding a crash dump of ETM1 (trace ID 17) from panic kernel
+>> works:
+>>
+>>    $ ./ptm2human -i cstrace.bin
+>>
+>>    ...
+>>    There is no valid data in the stream of ID 16
+>>    Decode trace stream of ID 17
+>>    Syncing the trace stream...
+>>    Decoding the trace stream...
+>>    instruction addr at 0x140c9afc, ARM state, secure state,
+>>    ...
+> 
+> 
+> Thanks for trying this out.
+> 
+>>
+>> I noticed that once in the panic kernel Coresight becomes unusable, and the
+>> Perf Coresight tests fail, with no obvious way to reset it other than a cold
+>> boot:
+>>
+>>   $ perf record -e cs_etm//u -- true
+>>   $ perf report -D | grep AUX
+>>   ...
+>>   AUX data lost 27 times out of 27!
+>>   ...
+>>
+>> I didn't debug it yet. I thought it might be something to do with the RESRV
+>> buffer mode, but it doesn't look like that should be the case from the code.
+>> Perhaps its the claim tags and coresight_is_claimed_any() lingering, so it's
+>> not really an issue that's introduced by this change?
+> 
+> 
+> Is that problem reproducible without this series applied ?
+> 
+> Thanks.
+> Linu Cherian.
+> 
+> 
+> 
 
-Adding this warning comment in mt8370.dtsi file seems appropriate to
-explain why it was done this way, and make more cautious those who
-might read this override code and inspire from it.
+Yes looks like it's unrelated. I sent patches to fix the claim tag 
+issue, and there is some other state that needs to be cleared too. But 
+we can do it later.
 
-I'll amend this commit with it in the v4 patchset.
 
-Regards,
-Louis-Alexis
 
