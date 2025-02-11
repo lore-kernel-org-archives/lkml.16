@@ -1,85 +1,111 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB8D41C7F;
-	Tue, 11 Feb 2025 17:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B590741C7F;
+	Tue, 11 Feb 2025 17:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739296119; cv=none; b=JlS9JzBi6NF6JSYhXsAHEV0WixrztZGTbmITsyPYIvC+Vj2gc9gOI/2Pc0X18o8RwuxgLmYRva5kgNyl4RGET031MbeKKNaNWDF5na2sLrgOm0Ua1k8o+NYfpMNmjN4QebtdH1qdfXHJzKFlS6GiipWKW7iUiF9G882S/Bg9BFY=
+	t=1739296130; cv=none; b=KXZ+75y2FhEWoKKjJ2yTqsUhN4VYlRCMFxDyIzXxtZeaAgUP48J+f4ZXVpMUm3A1GLnkKVAUtveQ+KB70655TOl+8XoFbJrpcN1cqVN/+YUAndhqtJd05cr/+/pRPaSLKRXhqDcRPBEQ/dCKOohvwsLt07aY6N71ijOjqpEF90A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739296119; c=relaxed/simple;
-	bh=Z8lWfXxYGhsMs8dAs2Wwm4xHfFeTOKBFHHc/bDiuT6k=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=EtfD2HgY9H92SFOoPLow814tV7yj39dWn9EpYVxdJKn0qzzkYx5apwoh7WfHXhRXzvHxLgPrAfWRd7z8zUy5MIAhsl95YkoyIekNw1+nyCBn6ZF2ok/xkiglXggtg3ec5bRdv2Z+PR849eQL0cUqj+TDNZnDq/0MiZJX7liRrbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=jVFyeOtM; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1739296130; c=relaxed/simple;
+	bh=ccY5BIjSEiY5JgWoG8f8RW4gkIN1Q7YjhgwwkVkhgKc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SHvjiIVS5/cyFxKeUSqCxF/orz+23t8P9DyL344J5Y0rn+eRW8I7upiAru47fFctmi0Lr3f7KxmdtRozurMZ1Zrhk4Afkw/YvUEBUaSPs2vW+VSlx7Nn2yeKBJsoixb8+08i1zMEvAHGCtx5yqlAxclZfL8bz6CsJwV6JuaVpnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hlwDclHu; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="jVFyeOtM"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 9557725C4B;
-	Tue, 11 Feb 2025 18:48:35 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id g3ydeW4wkoKu; Tue, 11 Feb 2025 18:48:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1739296111; bh=Z8lWfXxYGhsMs8dAs2Wwm4xHfFeTOKBFHHc/bDiuT6k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=jVFyeOtMDokw97k1t1QawSgEVgDg94c6AYdfNp+jiEPTBsNMz3S1wTHjXUHI19PDX
-	 TEo4SERflwLXqeKpRjqLiLoLa3Q7/i/EkKiSBaqjTwG2mAHqctBKRefvWCjfq34Lp3
-	 4KLgd6SJ01GbvFtqZrTHOU4PNqzAL7usAKoRH2lBapvnxEqT0ir7zrueYtjJUm5pvg
-	 eFwcq9UGe1Dk7K9VRRTwVaDlgTI3zLrvz2YogYczVhi11QPiGZnvoOUBKDNYgEYiqi
-	 J+3smDToYRaPYIPnrPAnm0CBvgoCzSKzsimhJyn9hLFDE4g690g4176IZgaxxxOUOk
-	 /1ynOknIAOGhg==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlwDclHu"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2fa51743d80so4765390a91.2;
+        Tue, 11 Feb 2025 09:48:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739296128; x=1739900928; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lQowQWiAJelJlI2iEmex+lOXVXcguom9gOW3fCrq5J0=;
+        b=hlwDclHuApnJKPC/CrCag3/BflEKsDzxLmhCJjD2AQLLFjaer9Qog38mVJQzD0t8qW
+         i6qly0vOWjve47RaecEq2K0/vH06oLFtEZyXuR5wez/wFWP/kA4zNEDeZe2hdrPlUKqu
+         tLRe+ye+asBHIbxH58ZCs2VeNcKHXK29hr1h59VWamudgvrsbZrNLLU0Zw8xOL9UG25Z
+         k6PUGlTHKYQ2J91qVbbDnsBby1qboGmb/XSe4Ge9joyZ0KOEr9v+BGTkB/Wk1WYCHIi9
+         nSNdVdUQhMg8nWmakmrmJ1s5M0j0zCW8q7W88tLSfdigsURMIf+ukaZNaaasEj/36KIs
+         Qx3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739296128; x=1739900928;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lQowQWiAJelJlI2iEmex+lOXVXcguom9gOW3fCrq5J0=;
+        b=mLyfJx9gPCueJjKEKoTAM19CrAkpu3vpPi3gGo73uV2Wx2c1JpM4/2ztUOY7O1wlAa
+         tb11YSUKopfCNa2Bol+K0cccibVy9WP2sTTta8g8S6am34NpfMXv3uKKfjMP7c8Qpgif
+         /zzWZIAVSegrmnilWa0ENoy2yComb6ciSLoY5T9w02IYLG38treBsmAjk/91pcSUeyhj
+         q2WjQ475LOSITp5oQziAlTQXRZZlTDW6yhAxuWuANjCnnltWF94KVwsSTYs4aUbkkgVT
+         pSHF1IPw+JjTS4nZOQ+UzBc4O3xH7Mz+cpkJpkJc87diTFFz7jgLZS1zeTvAXmvIUDBs
+         AX4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUNH7/cz4UDc7BZSJO8oOjW+Bv42iGYPMBJd1PWAqsdHfVJ1WXCFZTNz8jF37lLK0asUUR+C1hF0ACc6kA=@vger.kernel.org, AJvYcCVebECQpz8nBctQhCfoODhqC7elaJRQ0PG5CXeb2bTZRU6n+qKu4RxpaKyyYolXorwKaVCYloja76Mo@vger.kernel.org, AJvYcCXMntBpy14UXqA895tIxXlXJObD+gQK72QkLsgcOS7OjOwBB4JF4qQhcdZkiTWqjzI6d9CMdCGL@vger.kernel.org
+X-Gm-Message-State: AOJu0YybErHbNRLulOYqbe8dwaxGYKOjdXcQHosOvLDv08O1f1Af139C
+	NISSzKAz7a2ql45F08lu5T4pW6lie8dxfEQ2bmGSIt0iEs8FOqsd8dDd956I
+X-Gm-Gg: ASbGnctXXwQrxZhO04kyMbuDv8CVa72xeB2fdagqRsOLZGVxVAub06W0bS/HHyiIxds
+	u2jUq8lIlNOn/udQPIUQv7hSK4O1MZOVKZFftKhG2JC1E+kPFPO9TBlIu6OqTXlYrehrEbhxtrn
+	sxtYuYPEULeOeNDJ6m+GGu4kUIT3jHUjR25+6FGBGUm3x6Mr7IMAklQG4zh8y/tg8OUpSlaSDMs
+	V/D+GkDQIZYtjRgjmz5F9Ft/T0HhvzJpmD56ZMqh+HG0kLp7W/aQnd+gp7opwF8RaZsZzkBkib0
+	cJq5slJxYtXh0XTTdRpsRsNqd7vguPPSiOOXsTtfPjCKabvQXr0IEmeFyh02mV+E1z/FQqKjRIE
+	f
+X-Google-Smtp-Source: AGHT+IHWEcDUqeIjF2UczikL2kH+m/RHHuupuS5FDT9TP0QKfKb9Mvo6k4+5bwf7BlDl1BDFumVxqA==
+X-Received: by 2002:a17:90b:3c0e:b0:2f2:ab09:c256 with SMTP id 98e67ed59e1d1-2fa243ee52dmr31720249a91.33.1739296127959;
+        Tue, 11 Feb 2025 09:48:47 -0800 (PST)
+Received: from localhost.localdomain (c-73-98-126-133.hsd1.nm.comcast.net. [73.98.126.133])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa13d6a640sm10469385a91.1.2025.02.11.09.48.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 09:48:47 -0800 (PST)
+From: Jill Donahue <jilliandonahue58@gmail.com>
+X-Google-Original-From: Jill Donahue <jdonahue@fender.com>
+To: gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Jill Donahue <jilliandonahue58@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v4] f_midi_complete to call queue_work
+Date: Tue, 11 Feb 2025 10:48:05 -0700
+Message-Id: <20250211174805.1369265-1-jdonahue@fender.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 11 Feb 2025 17:48:31 +0000
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar
- <alim.akhtar@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, Rob
- Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, Marek Szyprowski
- <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Sergey Lisov <sleirsgoevy@gmail.com>, linux-phy@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kaustabh
- Chakraborty <kauschluss@disroot.org>
-Subject: Re: [PATCH 4/4] phy: exynos5-usbdrd: add exynos7870 USBDRD support
-In-Reply-To: <20250204-exynos7870-usbphy-v1-4-f30a9857efeb@disroot.org>
-References: <20250204-exynos7870-usbphy-v1-0-f30a9857efeb@disroot.org>
- <20250204-exynos7870-usbphy-v1-4-f30a9857efeb@disroot.org>
-Message-ID: <ba9aee5d125cd9bd2eea02d283877b5a@disroot.org>
-X-Sender: kauschluss@disroot.org
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2025-02-03 20:40, Kaustabh Chakraborty wrote:
-> From: Sergey Lisov <sleirsgoevy@gmail.com>
-> 
-> Implement support for Exynos7870 USB DRD on top of the existing
-> exynos5-usbdrd driver.
-> 
-> Exynos7870 has a single USB 2.0 DRD PHY controller and no 3.0 PHYs. Thus,
-> it only supports the UTMI interface.
-> 
-> Moreover, the PMU register offset for enabling the PHY controller is
-> different for SoCs such as Exynos7870, where BIT(0) is for the 3.0 PHY and
-> BIT(1) is for the 2.0 PHY. The phy_isol function for Exynos7870 uses the
-> appropriate register offsets.
-> 
-> Signed-off-by: Sergey Lisov <sleirsgoevy@gmail.com>
-> Co-developed-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> ---
->  drivers/phy/samsung/phy-exynos5-usbdrd.c    | 260 ++++++++++++++++++++++++++++
->  include/linux/soc/samsung/exynos-regs-pmu.h |   2 +
->  2 files changed, 262 insertions(+)
-> 
+From: Jill Donahue <jilliandonahue58@gmail.com>
 
-Please refrain from merging, wait for the next revision.
-Thank you.
+When using USB MIDI, a lock is attempted to be acquired twice through a
+re-entrant call to f_midi_transmit, causing a deadlock.
+
+Fix it by using queue_work() to schedule the inner f_midi_transmit() via
+a high priority work queue from the completion handler.
+
+Link: https://lore.kernel.org/all/CAArt=LjxU0fUZOj06X+5tkeGT+6RbXzpWg1h4t4Fwa_KGVAX6g@mail.gmail.com/
+Fixes: d5daf49b58661 ("USB: gadget: midi: add midi function driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jill Donahue <jilliandonahue58@gmail.com>
+---
+V3 -> V4: Adjusted changes based on latest kernel tree
+
+ drivers/usb/gadget/function/f_midi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/function/f_midi.c b/drivers/usb/gadget/function/f_midi.c
+index 837fcdfa3840..a188648d7528 100644
+--- a/drivers/usb/gadget/function/f_midi.c
++++ b/drivers/usb/gadget/function/f_midi.c
+@@ -283,7 +283,7 @@ f_midi_complete(struct usb_ep *ep, struct usb_request *req)
+ 			/* Our transmit completed. See if there's more to go.
+ 			 * f_midi_transmit eats req, don't queue it again. */
+ 			req->length = 0;
+-			f_midi_transmit(midi);
++			queue_work(system_highpri_wq, &midi->work);
+ 			return;
+ 		}
+ 		break;
+-- 
+2.25.1
+
