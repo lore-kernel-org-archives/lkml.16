@@ -1,159 +1,125 @@
-Received: from out203-205-221-164.mail.qq.com (out203-205-221-164.mail.qq.com [203.205.221.164])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3BD1F4E25;
-	Tue, 11 Feb 2025 10:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF081F4720;
+	Tue, 11 Feb 2025 10:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739270375; cv=none; b=Akc7BX0vUTm0SGznjB68Nq6KHWwJFvnGgEIo9TolhpeD/5GoPkNEh+gfUjWnFoSMwrQPOufk7KvPqHZGE7+eFJQZDMX18+7tPrGbDKLGlOEGkyfdig2Od6qSfW0M+qWt5zTeHnMgGqcjE7JHdv+CNt3UEy3tIydR8czpKgK3SSQ=
+	t=1739270400; cv=none; b=vAHup7pzEIemTvc3CFxm19liAX3BtxLFCcDFZhNAkuZWAZ7+pCxwy+wbxsJB8yLC+wL9+UOc+FkEhupas8xd4yNPfPQXBZWyNw7kRds7ZkAr6zPoFEND4Ud/Dz4LJehO7EmW7zURh0uyNuCxVEEJcB2i38NyDvRX8ZOjll0yxiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739270375; c=relaxed/simple;
-	bh=K2l7gaEVKXXaf+0S0QRve1hkeJDi8Zssq35IxcvevLI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=um2oxeTeh8DbQnKS3tbqqm+c9kFVh4IUflHjpBLmb6P8MUKJfVYCqF8rCv/XHTdhXpOrAGf8BgnRvnvM/KGqS7XC2G8DKYutnirDkCqUy4PuKxDODIJaMtS+dAvjHAZgCdv+smHaaEGsxja2cB3PV5SMRBh9Vsxa3otMayPzQ24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=PK2WIyYS; arc=none smtp.client-ip=203.205.221.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1739270400; c=relaxed/simple;
+	bh=t3SGcUgUn3/fIExKnXCklakPIAZR+0Rk4JPEh8gbtcA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=A2H18rYT6rmChMLi0Zw+7Z+f55MCl8JklWVyUC/GHggEB8g2iWsmCn8O2+86C4ZdkxReCcI+pp7DW+2ito1lRokOajaD28eZW3FP2Rxz+5FO8eFw/+BPBowM9pp5AyfWcWCGdHvTsAUrLHz/Yb0okViRwZbwErD1uCgDVanM30c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=V/gXoQMx; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="PK2WIyYS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1739270069;
-	bh=7x7wcr3iaglunvqzItfa9xM6EfAD5tU2/52gb/XsUl4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=PK2WIyYSjRvqiZqsuFPfYSAXyWvifHyS9nHFttE/By/GuuuiFgPvqsVOnuaFLLk40
-	 rQ57im6RRK/BUpAF6AEabmKSY4cJtNjBm9csYTA0cC0K9LYepgcRzcWQtMeZNtk3RX
-	 ruorDZHd+NQesvyLKTWLUnBTjM/H8F8unp91eToA=
-Received: from [10.56.52.9] ([39.156.73.10])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id 898B7669; Tue, 11 Feb 2025 18:34:24 +0800
-X-QQ-mid: xmsmtpt1739270064t9rke3kwq
-Message-ID: <tencent_152195E35781D102C443834B219FACA04B07@qq.com>
-X-QQ-XMAILINFO: NkHKfw09D6j8fi55IeO+BWc+hsD21Z7qh8hYP1AXm69ZPOS9OZxNp0e1H5gDiw
-	 0sNCJA+airnOktaNeop3N+gbTiFxCjYvAn/i3tne6B8lrkzB6ih7SXv0lgM1POJ3yIj2dLYbC95T
-	 EfAgP/F7dqcd3nXwdw8Jm2tpJvHio/qxoGsnKfccW7mWUBrIluAOokZdjauQHTUFrawf5vP7r6QX
-	 yjJ4JoKZW1QhE5SbcHekkNqOxg7tMwxTkj//yTNfgmincP+zQHqo5DsmMcnxTwwnnC6byTgdM++n
-	 KxJct2AtK1mHtj6QHRCx82rzRA91VpegUcqVvz+e5UNJZh1xmg3tKXBpnciSM2Ucs5eTBQOBUhyu
-	 1bo+mpa+ARufhZ1PkMAoAmedPemBKdlhvAHrXlkWi4LL67KYyesDC/+9KLAFfA5mDKoRDkRnQUKp
-	 6HMb3YPjMKK1WBCN49w+RLAZMVubJpYdY2viw0uK+jykAELTX5CAUnI73WY6YKU2xNoZlD2pi1Ky
-	 Zo4egoLSkIv5t6KpQYaNEsVbi69QWJwY9cKz5Aa1Msk9C4+ag5XQk9/1zL8OiOlfClycPAWtS7Ik
-	 BCFs+jrdrDtZcV4otOVCydB96EIZpG934XFPUJNkUtXjEHJsrK6VdsCI1wMI2b6SaziGaMwrrCFv
-	 YSHDR2gNkTh84SaFHMBLTHn7v5md2mRNa7ltCQ8hp2KusN8xR5Vf+y2LeLsr1/PHtka4GA5Quuwr
-	 6/vAHSCy50fV6EipFjx53IQe7ipm4sLdJVSPVBdExUfRcT9qjBuR0wwghJ6XlatUeJalkNhWEEkN
-	 UrTuRt/NZ7gV7upp+LlkpQOh6FrvkM2NxInDGAw7N21t3fhgYAAYt1OwhoAN2D9dv8E4xaU4oEiW
-	 rD8i2zEwzP2nPeig2mA0Qouaqh1Pix51mwJ/sNs3kUVqBR2LBXPqVBZIs5/TERGIxaqxL6tl8wxS
-	 MO9DUFtFV7Xvkb8q829jkOJaHceZhj
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-OQ-MSGID: <7cc003ca-cc4f-4ff5-b908-825fcb3332de@foxmail.com>
-Date: Tue, 11 Feb 2025 18:34:24 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="V/gXoQMx"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B7U3od001431;
+	Tue, 11 Feb 2025 10:39:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=AsbYPY6w2GX2BNFqz/5nbs
+	5EuGdQJnJQ1j0OQUY2bv4=; b=V/gXoQMxAsUkIQa4sbet/wyPzu/m+uHD33ZYIH
+	DmOM9QvCeMvVc8+l5kWhAFU+jXzbETQEpqpwob/uQmaouLzHL+Hk3i2Hh5hC8+jx
+	4Va2o7DCNJnjJ7nx/mJOUYwa7LZs1mhQz6uPLBrnI0CEdiYxQyJSLbKIJnWsjTsm
+	3dXDdVZ3QkLVw5WKS9RaFMlJwIWjbzGv9S/d3qlzGlu5lU22Fo2cDh3mF0zK3jGp
+	GWNc846RHd0R/plp5FPp5QC4SXoxqvqaWJvl9suvypipri18XhR6S513Dh+14pF4
+	TRKvM34CQNvNTq1jZCZErYpRVkuVwPL95thPKD+y2tI1SiXg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qepxkmra-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 10:39:51 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51BAdocW013041
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 10:39:50 GMT
+Received: from cse-cd01-lnx.ap.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 11 Feb 2025 02:39:46 -0800
+From: Yongxing Mou <quic_yongmou@quicinc.com>
+Date: Tue, 11 Feb 2025 18:37:43 +0800
+Subject: [PATCH] drm/msm/dpu: Allocate the number of LMs based on
+ max_mixer_width to support 4 streams MST case
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next] bpftool: Check map name length when map create
-To: Quentin Monnet <qmo@kernel.org>, ast@kernel.org, daniel@iogearbox.net
-Cc: rongtao@cestc.cn, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>,
- "open list:BPF [TOOLING] (bpftool)" <bpf@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <tencent_1C4444032C2188ACD04B4995B0D78F510607@qq.com>
- <3da61b9b-fa44-4a45-bccb-40a23ef997ce@kernel.org>
-Content-Language: en-US
-From: Rong Tao <rtoax@foxmail.com>
-In-Reply-To: <3da61b9b-fa44-4a45-bccb-40a23ef997ce@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20250211-dp_lm-v1-1-deeca9ac9bd9@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAIAoq2cC/yXM4QqDIBSG4VuJ83uCWketWxkxTI+bMKtpG4Po3
+ ifr5/Px8e5QKEcqMDQ7ZPrEEpe5QlwacA8734lFXw2SS+RSCObX2zMxEwwFgQF7RKjfNVOI33/
+ nOp7O9HrX3HaOMNlCzC0pxW1ofECvhOFC9Za4spKsQ01tO3GtrVdBSZRdx2E8jh+RbzvzowAAA
+ A==
+X-Change-ID: 20250211-dp_lm-8f8ef15f5955
+To: Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        "Yongxing
+ Mou" <quic_yongmou@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739270386; l=1224;
+ i=quic_yongmou@quicinc.com; s=20241121; h=from:subject:message-id;
+ bh=t3SGcUgUn3/fIExKnXCklakPIAZR+0Rk4JPEh8gbtcA=;
+ b=+m+TG7JMCHW09MiRsbSbDZVRrQF0fqBdyFDG244X/i0Sy2fiEei/E7x09Ykd04nDmNdeF2sVx
+ 3rfKTGF4mFoDKy2nOyo3uJ46ByPUoAjvoNnu7j4Qzoi4srSDMzx6zDp
+X-Developer-Key: i=quic_yongmou@quicinc.com; a=ed25519;
+ pk=zeCnFRUqtOQMeFvdwex2M5o0Yf67UHYfwCyBRQ3kFbU=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: nPDHW2kq_5vEdyldeyTO6Pz7eGkOGPK-
+X-Proofpoint-ORIG-GUID: nPDHW2kq_5vEdyldeyTO6Pz7eGkOGPK-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_04,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ phishscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 impostorscore=0
+ mlxlogscore=872 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502110067
 
+In 2x2 mst case, each 2k monitor will use 2 lms, but dpu_8_4 only have
+6 lms, so let 2k only use one lm to support such case.
 
-On 2/11/25 18:20, Quentin Monnet wrote:
-> 2025-02-11 16:45 UTC+0800 ~ Rong Tao <rtoax@foxmail.com>
->> From: Rong Tao <rongtao@cestc.cn>
->>
->> The size of struct bpf_map::name is BPF_OBJ_NAME_LEN (16).
->>
->> bpf(2) {
->>    map_create() {
->>      bpf_obj_name_cpy(map->name, attr->map_name, sizeof(attr->map_name));
->>    }
->> }
->>
->> When specifying a map name using bpftool map create name, no error is
->> reported if the name length is greater than 15.
->>
->>      $ sudo bpftool map create /sys/fs/bpf/12345678901234567890 \
->>          type array key 4 value 4 entries 5 name 12345678901234567890
->>
->> Users will think that 12345678901234567890 is legal, but this name cannot
->> be used to index a map.
->>
->>      $ sudo bpftool map show name 12345678901234567890
->>      Error: can't parse name
->>
->>      $ sudo bpftool map show
->>      ...
->>      1249: array  name 123456789012345  flags 0x0
->>      	key 4B  value 4B  max_entries 5  memlock 304B
->>
->>      $ sudo bpftool map show name 123456789012345
->>      1249: array  name 123456789012345  flags 0x0
->>      	key 4B  value 4B  max_entries 5  memlock 304B
->>
->> The map name provided in the command line is truncated, but no error is
->> reported. This submission checks the length of the map name.
->>
->> Signed-off-by: Rong Tao <rongtao@cestc.cn>
->> ---
->>   tools/bpf/bpftool/map.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
->> index ed4a9bd82931..fa00f7865065 100644
->> --- a/tools/bpf/bpftool/map.c
->> +++ b/tools/bpf/bpftool/map.c
->> @@ -1330,6 +1330,12 @@ static int do_create(int argc, char **argv)
->>   		goto exit;
->>   	}
->>   
->> +	if (strlen(map_name) > BPF_OBJ_NAME_LEN - 1) {
->> +		p_err("The map name is too long, should be less than %d\n",
->
-> Nit: I'd drop "The" (and the capital letter) for consistency with other
-> messages in bpftool; and I'd replace "less than ..." with "no longer
-> than %d characters\n" to make it explicit and avoid confusion between
-> "strictly less" and "less or equal".
+Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks, i'll submit another patch.
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 5172ab4dea995a154cd88d05c3842d7425fc34ce..e8846bf8edc5f9b2b3b7f093e4d5aad75de53da1 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -677,7 +677,8 @@ static struct msm_display_topology dpu_encoder_get_topology(
+ 	else if (!dpu_kms->catalog->caps->has_3d_merge)
+ 		topology.num_lm = 1;
+ 	else
+-		topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
++		topology.num_lm = (mode->hdisplay > dpu_kms->catalog->caps->max_mixer_width) ?
++				   2 : 1;
+ 
+ 	if (crtc_state->ctm)
+ 		topology.num_dspp = topology.num_lm;
 
-Rong Tao.
+---
+base-commit: df5d6180169ae06a2eac57e33b077ad6f6252440
+change-id: 20250211-dp_lm-8f8ef15f5955
 
->
->> +		      BPF_OBJ_NAME_LEN - 1);
->> +		goto exit;
->> +	}
->> +
->>   	set_max_rlimit();
->>   
->>   	fd = bpf_map_create(map_type, map_name, key_size, value_size, max_entries, &attr);
->
-> There's no need to defer the check until after we've parsed all
-> arguments. Can you move it to the location where we retrieve the name,
-> please?:
->
-> 		[...]
-> 		} else if (is_prefix(*argv, "name")) {
-> 			NEXT_ARG();
-> 			map_name = GET_ARG();
-> 		} else ...
->
-> pw-bot: cr
->
-> Apart from these, it's a good idea to fix it, thank you!
-> Quentin
+Best regards,
+-- 
+Yongxing Mou <quic_yongmou@quicinc.com>
 
