@@ -1,179 +1,213 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA1726BDAB;
-	Tue, 11 Feb 2025 16:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791D0255E34;
+	Tue, 11 Feb 2025 16:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290587; cv=none; b=qX8hkekmJCGZN4d8FLax2fkhvjwifHhD7g4Kx2yyatSbVBNElfcoIKa0rkDAKgSf7RNNcGl6A0pZyxzfWMA6jKefyIyHhVVjkZ7zsbX8BD20bvuo+QSKs69/aoAPaK33hox3wbqrOC32XP7bsCBY98Z1thUt6PRKioxdI6yR6rw=
+	t=1739290601; cv=none; b=qHbMzm4o8VmJdBn+kEoSWXIHCZDmFcJg0RS0GzmthK4CYwJlM4idg/5/Z4+G+9Jk5twFQiCme3L4XOZ0oNEt4AESeCN0K/wD783a990ERM4l+z+KWT+CZYyds7Yn+wpqpKQMd5A6jLqPwg2MseKpPry/LIN++oI69OLAbEO9S/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290587; c=relaxed/simple;
-	bh=//cJhE+O0+VrZAKb9m1IxqZPBCUXNhLVk6/ZmK0d5wk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YWNT4Uppq7XSn4/f6dqCqQAc27i0ZmucRkPvfrQ+Se9DqyXMOVG99tC4MWUxJNSQiR0+hO7N1RpxpqPGqujlBIA7Sau4ZRQs19u3Ug45IsmatfFZRDN/y34tM7RKDR+mzBNfN90K6XDkn8lpQy1sEvjuqUEDPK/VDxUa/C666eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AillAHVK; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1739290601; c=relaxed/simple;
+	bh=8/EU+brzdQekYGKHLTWjfcXsNGf5cAuhaSkvj4HJZu4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=upQAbcMECjYsqMug6OBgwcXFOxOE31UZWMrM7KrLhcboNGTzwgj0Y+nvnjD3i2zN2EQay5yN0Ik2jVIy9wWZEWMMhdi9JzUmK5Bo3R7as/xZzY8N9QQWo9j0pzk9p613rva+cQ7q/yQLmu1/3VpdCYlX0EbWSj8qqEGs5wT2Yq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AillAHVK"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21f7f03d856so53172525ad.1;
-        Tue, 11 Feb 2025 08:16:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739290584; x=1739895384; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B6NtcHO/GCHrAKEKneWNcs/P7+2+54GmkdtMXWshNCQ=;
-        b=AillAHVKZXclNS4/GIngZ9YJfFwdMUzFMepTjD1J7s92bN61LdIARoX8ZTWvD1VecJ
-         CUCxxxulGOYpz36kaz5COfqilAGMCRoGaEeu1dOX7E5hp0qwEVGxjoNe0slQw9lrwfJV
-         JtOkaPkbTOmVjAlkuZAhUUSnIJcpm8D6YEiqUEzWldfdOFRvIw+A6yzeKjU1htPFQsxf
-         8D/0EpNX8klXCX37c9VqluFrUxv0a3Dw61fdvDnAv/dhRKIIgHuNaB2Hc3e/2kGzxpuh
-         J7mwYl/Hr5QP7P6yGmJw3A1QFKoDMfRE4SyWJHcqNN657KRwpqaRi9NoycIjrebB/by+
-         nJMA==
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6d8e8445219so45950276d6.0;
+        Tue, 11 Feb 2025 08:16:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739290584; x=1739895384;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739290598; x=1739895398;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B6NtcHO/GCHrAKEKneWNcs/P7+2+54GmkdtMXWshNCQ=;
-        b=uKqc2/OcAlCHsQhzRii+sUpxNTXKernIqL0XIVm0G3/NpF7FIzCH/EaFTpr9FR1rz6
-         kBoZs0ZPLKDmOVHdYL4brkE1s25mlBUBUWE6C10nk5MWUqErmF00+bdZ0/pFquJUB9XF
-         WTUZBBSJC1kjuWWqvsxwgvyKdLSA/vlyUrXgwX18syRR8AF9NZk8EWOnX6x0PIXznuC1
-         l2WzDzqp159t/kKZLjAZUY97C0nAI2pel0P8jIZoiRLW57kFfnCgO5HQlMo/QaeX9YTb
-         s9s174/gbNeJ1cc6PvLRJGCB/VHDrfLc/fv54+7HkIB/lxs5useAEnaEUdpmdOoLOnaZ
-         1sSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLFBr2mbXcaEKjwo1DRAxQdlfUqUpf0iy6pucmlges6+y5ERJZhrmLL3sS37k+NiYIYbq/N9NJLJLta7g=@vger.kernel.org, AJvYcCXhS6fGg5O7/+Mq3dM8DIOKYuXDYCXPKXEY9kddznPYdGmnH7ayPe6jjmiQNB0Xb1tvp87Xrkux1kh9lyeCWfU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyN8iH4hQfQh7xiEdkjgYX6rOcwkLcne+xQf72SK3AQr1s1Pp+4
-	2luzpufvrbrPDMV7/1vztCdf7dd9I6jf0bwFerNvLgnD8JOCUL7s
-X-Gm-Gg: ASbGncv2LQl0tv6rz2LII3TyoKsqOJpNAYln7yN7jz/KF3MyGE79y8zhuzAZR30YUh1
-	X5eP4oOpZAFXCy5c+KWlrJq5xvUyYzDKoOr5JiesoUhSm4JOsRkthXPmkuZ8J/nRlqTqnIo1Fgp
-	KJ1x7PGFxRdwiIUpBqT+4LgPqkj1lRNFwHcp1+KzwWhxP3EJELJhc48WUvtoIEUJQKK4m01DJt8
-	rKCFlDtPsDyseD5ktsQHKGBA/m521AF2O6FxBTNTcgk/JO9FGYmkTrJ99B+YfAXwS7WQyhX+Dmk
-	IPcKivbi8JwArXoAARlpeJHWSI5q
-X-Google-Smtp-Source: AGHT+IEDZUvlbfAF77TKsx3UZFWFWMiWRuU/S3EmcSxFxIjzpmOfQbRctCxc8o2e+P083H+VxXedXA==
-X-Received: by 2002:a17:902:ce06:b0:20c:6399:d637 with SMTP id d9443c01a7336-21f4e78de85mr361209085ad.40.1739290584543;
-        Tue, 11 Feb 2025 08:16:24 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687e675sm98109695ad.179.2025.02.11.08.16.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 08:16:23 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 11 Feb 2025 08:16:22 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 23/31] watchdog: Switch to use hrtimer_setup()
-Message-ID: <882031d8-5b8b-455c-9f5e-90090408304e@roeck-us.net>
-References: <cover.1738746821.git.namcao@linutronix.de>
- <a5c62f2b5e1ea1cf4d32f37bc2d21a8eeab2f875.1738746821.git.namcao@linutronix.de>
+        bh=GSrn4BFBKiNaDlc/+eWZmaHOtn4P6CwgbesXN1qmuFE=;
+        b=b/njLvC73WPwnA0HRCvnyc6c6yaF+a6XyRz7JoPRuoB9onPJ2NSm1Wse8eUyY3wZbI
+         P5MbnbcjFc+gncS9oOMYMr4opqVFhgBtl2lS3cUKKdFkBnEtbDtt8mNxLupGeYfPOdjW
+         TD2vaD0ze0wXGuFwLwBfnfXRbfPgEaSTVVveF+bHulLcGlzG7KPIDKu7Ms4Svo/hifO7
+         WzQmS0SC31UrUTP9usl9zCIDXdg7vOLhtIv+0WbRFLl7SaxTtblmHmPBhzOK0xHajLsG
+         0zhwb43RU+JBlquuXe3F2eGq+lyLw2GkxGfUuW4khxtdDEhy/5b+MiAuzPPTz+ITbLE4
+         PLVA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxSj2uZq2rCbzLUZwTLcaINAOT0JFJAay0IwSF66XsNRXuAp1LDtHTiiPhaS8zqwC3oIEALctPm2YxiNU=@vger.kernel.org, AJvYcCXvtg0HK/HtPbO29ecRPrh4ixsaCCaJqC3tGwio988SiabbLDczOJL6bi5h+osjEIZkAFgOwhrzghxbCs8ZJDbZmok=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAyASve8W5KsLu6UXJ4pIx5G9t6Or+zZkHADWlaV8xJuUp0l+d
+	oZltCf/bmAOPkkd7mKnKOPxiPnEgfmy207l0pYfMrIHHmUFLUvAAmATrYUwqYsk=
+X-Gm-Gg: ASbGncup0B3LNhfSc7ROhLr+uocG2i4Ny0anRIFOHl1zr4YBOssIA5xhUD68B724BFX
+	b0CA+qkV/H8cJAo8ahkkmTeyiWQmFOTizlFAICwciZZH5Ng6CJoUPnpvKw/PVdUpcmhYSRi2Q/4
+	7eVW2hFwEYgMzrBguTXb5Nf8iB31Hn3S700KChAYdglS0uD3sloaJXpaIMWDOf2jETK+viyvnoe
+	QO9OdNhhTAAasmQgpkpX5b01rCkhkCLSFaSf8kBUJ6LeQsRnSu2MhQxNEdYkOs4NqFNCBUl8ocz
+	trtzPwkRoYrY+k9vHukj+ABPhXxY35EkvzWw0i7XFjbMLAFJZi2e0yN3kQ==
+X-Google-Smtp-Source: AGHT+IGSVNttvvGFL3W3B/o6gyaJdCzGXWTy8S0WaL2Xw8gfuX8muNbFl4cavlkKZAgCl19utPOfCA==
+X-Received: by 2002:a05:6214:411c:b0:6e2:481c:3713 with SMTP id 6a1803df08f44-6e445705b4emr237686316d6.37.1739290597991;
+        Tue, 11 Feb 2025 08:16:37 -0800 (PST)
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com. [209.85.222.170])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43e6b3c32sm59699466d6.124.2025.02.11.08.16.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 08:16:37 -0800 (PST)
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c05dc87ad9so264571985a.3;
+        Tue, 11 Feb 2025 08:16:37 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX7DCXPGJzsaousH2vphq2Z9/FpqtnYqA8k7SXq1WN6MAquXXnY5PVW5jK0mckK8X5KdgX/6PSaiNxPWnYvQ2cenCQ=@vger.kernel.org, AJvYcCXaoXILREKZH9XPLv6x3FKwFTnLgubtY8Be/pSZUhO+UcZyxb9BWHf97xSEi4j0Qj+Bse/7fDcXFRP6X2A=@vger.kernel.org
+X-Received: by 2002:a05:620a:288a:b0:7c0:174d:e350 with SMTP id
+ af79cd13be357-7c047c9774amr3740159085a.36.1739290597503; Tue, 11 Feb 2025
+ 08:16:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5c62f2b5e1ea1cf4d32f37bc2d21a8eeab2f875.1738746821.git.namcao@linutronix.de>
+References: <20241011172003.1242841-1-fabrizio.castro.jz@renesas.com>
+ <CAMuHMdUrg+gqJsg2LaBkzaLPzh4nZefqVdqH2rLhCEGQDya88g@mail.gmail.com> <TY3PR01MB120897A4A7AEF860A13F87E72C2FD2@TY3PR01MB12089.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY3PR01MB120897A4A7AEF860A13F87E72C2FD2@TY3PR01MB12089.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 11 Feb 2025 17:16:25 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWYZizs_3Q6mEXCfaivmSy7CYEj1uvHVrA7=9NM+9Ov1w@mail.gmail.com>
+X-Gm-Features: AWEUYZkLQIU0RpCEnnqM5nXIcmSBKeSN0X0hlcQNaAx_PqrFead9E5SNkLPt0NU
+Message-ID: <CAMuHMdWYZizs_3Q6mEXCfaivmSy7CYEj1uvHVrA7=9NM+9Ov1w@mail.gmail.com>
+Subject: Re: [PATCH v4] irqchip/renesas-rzg2l: Fix missing put_device
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Markus Elfring <elfring@users.sourceforge.net>, 
+	Markus Elfring <Markus.Elfring@web.de>, Marc Zyngier <maz@kernel.org>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 11:39:07AM +0100, Nam Cao wrote:
-> hrtimer_setup() takes the callback function pointer as argument and
-> initializes the timer completely.
-> 
-> Replace hrtimer_init() and the open coded initialization of
-> hrtimer::function with the new setup mechanism.
-> 
-> Patch was created by using Coccinelle.
-> 
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
-> Cc: linux-watchdog@vger.kernel.org
-> ---
+Hi Fabrizio,
 
-Change log missing. I am also personally not a friend of changing
-multiple drivers in a single patch for changes like this. That makes
-it all but impossible to revert one of the driver changes if it was
-wrong without reverting everything.
+On Tue, 11 Feb 2025 at 16:49, Fabrizio Castro
+<fabrizio.castro.jz@renesas.com> wrote:
+> > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Sent: 11 February 2025 15:12
+> > Subject: Re: [PATCH v4] irqchip/renesas-rzg2l: Fix missing put_device
+> >
+> > On Fri, 11 Oct 2024 at 19:20, Fabrizio Castro
+> > <fabrizio.castro.jz@renesas.com> wrote:
+> > > rzg2l_irqc_common_init calls of_find_device_by_node, but the
+> > > corresponding put_device call is missing.
+> > > This also gets reported by make coccicheck.
+> > >
+> > > Make use of the cleanup interfaces from cleanup.h to call into
+> > > __free_put_device (which in turn calls into put_device) when
+> > > leaving function rzg2l_irqc_common_init and variable "dev" goes
+> > > out of scope.
+> > >
+> > > Mind that we don't want to "put" "dev" when rzg2l_irqc_common_init
+> > > completes successfully, therefore assign NULL to "dev" to prevent
+> > > __free_put_device from calling into put_device within the successful
+> > > path.
+> > >
+> > > "make coccicheck" will still complain about missing put_device calls,
+> > > but those are false positives now.
+> > >
+> > > Fixes: 3fed09559cd8 ("irqchip: Add RZ/G2L IA55 Interrupt Controller d=
+river")
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> >
+> > Revisiting commit d038109ac1c6bf61 ("irqchip/renesas-rzg2l: Fix missing
+> > put_device")...
+> >
+> > > --- a/drivers/irqchip/irq-renesas-rzg2l.c
+> > > +++ b/drivers/irqchip/irq-renesas-rzg2l.c
+> > > @@ -8,6 +8,7 @@
+> > >   */
+> > >
+> > >  #include <linux/bitfield.h>
+> > > +#include <linux/cleanup.h>
+> > >  #include <linux/clk.h>
+> > >  #include <linux/err.h>
+> > >  #include <linux/io.h>
+> > > @@ -530,12 +531,12 @@ static int rzg2l_irqc_parse_interrupts(struct r=
+zg2l_irqc_priv *priv,
+> > >  static int rzg2l_irqc_common_init(struct device_node *node, struct d=
+evice_node *parent,
+> > >                                   const struct irq_chip *irq_chip)
+> > >  {
+> > > +       struct platform_device *pdev =3D of_find_device_by_node(node)=
+;
+> > > +       struct device *dev __free(put_device) =3D pdev ? &pdev->dev :=
+ NULL;
+> >
+> > Now there is a variable holding "&pdev->dev", all below references
+> > to the latter can be replaced by "dev"...
+>
+> Right! I will shortly send a patch for this.
 
-Guenter
+Thanks in advance!
 
->  drivers/watchdog/softdog.c                     | 8 +++-----
->  drivers/watchdog/watchdog_dev.c                | 4 ++--
->  drivers/watchdog/watchdog_hrtimer_pretimeout.c | 4 ++--
->  kernel/watchdog.c                              | 3 +--
->  4 files changed, 8 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/watchdog/softdog.c b/drivers/watchdog/softdog.c
-> index 7a1096265f18..0820e35ad2e3 100644
-> --- a/drivers/watchdog/softdog.c
-> +++ b/drivers/watchdog/softdog.c
-> @@ -187,14 +187,12 @@ static int __init softdog_init(void)
->  	watchdog_set_nowayout(&softdog_dev, nowayout);
->  	watchdog_stop_on_reboot(&softdog_dev);
->  
-> -	hrtimer_init(&softdog_ticktock, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> -	softdog_ticktock.function = softdog_fire;
-> +	hrtimer_setup(&softdog_ticktock, softdog_fire, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
->  
->  	if (IS_ENABLED(CONFIG_SOFT_WATCHDOG_PRETIMEOUT)) {
->  		softdog_info.options |= WDIOF_PRETIMEOUT;
-> -		hrtimer_init(&softdog_preticktock, CLOCK_MONOTONIC,
-> -			     HRTIMER_MODE_REL);
-> -		softdog_preticktock.function = softdog_pretimeout;
-> +		hrtimer_setup(&softdog_preticktock, softdog_pretimeout, CLOCK_MONOTONIC,
-> +			      HRTIMER_MODE_REL);
->  	}
->  
->  	if (soft_active_on_boot)
-> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-> index 19698d87dc57..8369fd94fc1a 100644
-> --- a/drivers/watchdog/watchdog_dev.c
-> +++ b/drivers/watchdog/watchdog_dev.c
-> @@ -1051,8 +1051,8 @@ static int watchdog_cdev_register(struct watchdog_device *wdd)
->  	}
->  
->  	kthread_init_work(&wd_data->work, watchdog_ping_work);
-> -	hrtimer_init(&wd_data->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
-> -	wd_data->timer.function = watchdog_timer_expired;
-> +	hrtimer_setup(&wd_data->timer, watchdog_timer_expired, CLOCK_MONOTONIC,
-> +		      HRTIMER_MODE_REL_HARD);
->  	watchdog_hrtimer_pretimeout_init(wdd);
->  
->  	if (wdd->id == 0) {
-> diff --git a/drivers/watchdog/watchdog_hrtimer_pretimeout.c b/drivers/watchdog/watchdog_hrtimer_pretimeout.c
-> index 940b53718a91..fbc7eecd8b20 100644
-> --- a/drivers/watchdog/watchdog_hrtimer_pretimeout.c
-> +++ b/drivers/watchdog/watchdog_hrtimer_pretimeout.c
-> @@ -23,8 +23,8 @@ void watchdog_hrtimer_pretimeout_init(struct watchdog_device *wdd)
->  {
->  	struct watchdog_core_data *wd_data = wdd->wd_data;
->  
-> -	hrtimer_init(&wd_data->pretimeout_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> -	wd_data->pretimeout_timer.function = watchdog_hrtimer_pretimeout;
-> +	hrtimer_setup(&wd_data->pretimeout_timer, watchdog_hrtimer_pretimeout, CLOCK_MONOTONIC,
-> +		      HRTIMER_MODE_REL);
->  }
->  
->  void watchdog_hrtimer_pretimeout_start(struct watchdog_device *wdd)
-> diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-> index b2da7de39d06..6a98dbc931ac 100644
-> --- a/kernel/watchdog.c
-> +++ b/kernel/watchdog.c
-> @@ -797,8 +797,7 @@ static void watchdog_enable(unsigned int cpu)
->  	 * Start the timer first to prevent the hardlockup watchdog triggering
->  	 * before the timer has a chance to fire.
->  	 */
-> -	hrtimer_init(hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
-> -	hrtimer->function = watchdog_timer_fn;
-> +	hrtimer_setup(hrtimer, watchdog_timer_fn, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
->  	hrtimer_start(hrtimer, ns_to_ktime(sample_period),
->  		      HRTIMER_MODE_REL_PINNED_HARD);
->  
-> -- 
-> 2.39.5
-> 
-> 
+> > >         struct irq_domain *irq_domain, *parent_domain;
+> > > -       struct platform_device *pdev;
+> > >         struct reset_control *resetn;
+> > >         int ret;
+> > >
+> > > -       pdev =3D of_find_device_by_node(node);
+> > >         if (!pdev)
+> > >                 return -ENODEV;
+> > >
+> > > @@ -591,6 +592,17 @@ static int rzg2l_irqc_common_init(struct device_=
+node *node, struct device_node
+> > *
+> > >
+> > >         register_syscore_ops(&rzg2l_irqc_syscore_ops);
+> > >
+> > > +       /*
+> > > +        * Prevent the cleanup function from invoking put_device by a=
+ssigning
+> > > +        * NULL to dev.
+> > > +        *
+> > > +        * make coccicheck will complain about missing put_device cal=
+ls, but
+> > > +        * those are false positives, as dev will be automatically "p=
+ut" via
+> > > +        * __free_put_device on the failing path.
+> > > +        * On the successful path we don't actually want to "put" dev=
+.
+> > > +        */
+> > > +       dev =3D NULL;
+> > > +
+> > >         return 0;
+> >
+> > Can't the above be replaced by
+> >
+> >     no_free_ptr(dev);
+> >
+> > ? Or would Coccinelle still complain?
+>
+> If I use no_free_ptr the compiler complains that its return value is not =
+used:
+>
+> In file included from ../drivers/irqchip/irq-renesas-rzg2l.c:11:
+> ../drivers/irqchip/irq-renesas-rzg2l.c: In function =E2=80=98rzg2l_irqc_c=
+ommon_init=E2=80=99:
+> ../include/linux/cleanup.h:215:15: warning: ignoring return value of =E2=
+=80=98__must_check_fn=E2=80=99 declared with attribute =E2=80=98warn_unused=
+_result=E2=80=99 [-Wunused-result]
+>   215 |  ((typeof(p)) __must_check_fn(__get_and_null(p, NULL)))
+>       |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> ../drivers/irqchip/irq-renesas-rzg2l.c:595:2: note: in expansion of macro=
+ =E2=80=98no_free_ptr=E2=80=99
+>   595 |  no_free_ptr(dev);
+>       |  ^~~~~~~~~~~
+
+I hadn't tried it myself, and thus hadn't noticed that warning.
+Interestingly, the addition of __must_check_fn()[1] predates the
+documentation[2] that shows the above construct...
+
+[1] commit 85be6d842447067c ("cleanup: Make no_free_ptr() __must_check"),
+[2] commit d5934e76316e84ec ("cleanup: Add usage and style documentation").
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
