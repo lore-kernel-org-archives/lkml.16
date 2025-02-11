@@ -1,33 +1,72 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50345215793
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F0A1EF096
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739280028; cv=none; b=rph5CSSSn3EMCZCnR7gtmi4fvteJFKmQuKT/1mgkEX/bNnsSSn2ZmRWayaHRRjuO1Z2Syjf7khN4zRl3XncWAVz8hLclM5ZVEWFIlQSDzP5ekFxsv3db47is0Kv7Ukx6fWAh/TswrtfSYHS8VN9mDmVTh0BSpDy1L/vRkZWD0jc=
+	t=1739280117; cv=none; b=fWSHeMJufDL6z7Rfw1YU0YF/R3hvYVOyx3G3AKNAem+RL+l/UyWcOuD9C6Qp9Ev8HgC0PJzDuE0mvhsADGCJXbUoFr8PNJj5lor4GPAo/vJ6znN8ZFFv4X07aBkrILEg7vJRuNq4n5AFfaXQtNnzNSU4zylfIvTpkOKdiQ6UZLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739280028; c=relaxed/simple;
-	bh=UXOHdVC4qGOqpShpTnw73VcGk4nbY8q5R1jCQRbfdxE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=k4oF3CKeTtWkO/yBdSESR/3XUwqgyVFhtj3mRcpwW9FcupWxLYvDs048b65vVjv0lxfPj536kItU2JgqRrciuM3I+/hUOEWJi0I4vALmxKrBFgaoyoTrdxEnbcY4AwPYVEzEqjpTl0sYxdHcX6RMcpGO19GCLK8qOgekWNkaXbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=UNmbddXD; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739280117; c=relaxed/simple;
+	bh=7EBzLd/MkkAQO/2gIs3RgMZYWCN0hifel1hX00qZrX0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LPcQz2zpEy6GdmVjxq3ZvZUoF2wmOBrn1A+b67TmyeRBMIm1x6i/gU1WBk3u4JIxhPYE4tLpmfih6io68Tt5f7ym2JbljmP2cXaE1YyxcHKLh3p8hwkH1RsOrUCglQVlHC+lvqPxdc1Hp3fAhLvpQtR8+LJklwVqZTi2xee2wPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TQ4lQdem; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UNmbddXD"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5F4622B3;
-	Tue, 11 Feb 2025 14:19:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739279948;
-	bh=UXOHdVC4qGOqpShpTnw73VcGk4nbY8q5R1jCQRbfdxE=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=UNmbddXDUF0oSrsGEOSUFF7h5JYrpqRPM0a60oddX8RMBZ/Zc5ThwEQXlYSLXMSSD
-	 pjVtQNoKLOGbDlw/HolEQ7gxSg6n29w0wx2JsLjTBMW3p12ibzg5kXOgSMzkuhtix4
-	 rUVdHDM3UrZhMy0LBdy6XLN+F9LMn02Ez0CXPJfU=
-Message-ID: <192889ed-237e-40b0-8444-7aad36a8bc7a@ideasonboard.com>
-Date: Tue, 11 Feb 2025 15:20:21 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TQ4lQdem"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B8ZPF6002266
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:21:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	WxaAP2OfJQcefUPkd/AkugD6llbStw6Nvz+c51lPgbo=; b=TQ4lQdemhNvxlgq2
+	XeHBvjp7cWkPU71K165PmuaP/MupUpjICDswGQAaxophv32VBKQQm/wMs1zW7J4g
+	nLsNkkz8dXrA59l+2KM6w4/BYqafJkqh9PRzP5mjqc8INvndb9ytXWBrAP2GBRie
+	DQ1yTqAezUDA4h1zCqpeu6Tg38dtKxNu7B/CekTAMb5pDg2vM9eTz7fy9Ok5tdnl
+	ljgJDciZLsuCB6+daXRR9M8iUpc2P29t8e+SXdJHDh0Ngi7Z1sWFEhlPCz6tjS65
+	5NeTt8A56w6OflbCArJPCQWpVjmFnneAaRnA8t+EOaUWyXNrZzru3g879zgRg6cw
+	yWkksw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qepxm592-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:21:54 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c05239c607so58525685a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:21:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739280113; x=1739884913;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WxaAP2OfJQcefUPkd/AkugD6llbStw6Nvz+c51lPgbo=;
+        b=Fjqs2hwu4fmWxVivHp/5Xcgj271irYzhKmCPKt0MeVfOdQfZ9uKOIp24FL1ecJFmEp
+         jCWYFgAjGsIl2Jzq+6zn+JpFr6zDwsHq4Gw7jDhMDK5cx2t8Tlur8j0JigjKp9zcyuym
+         0gKEjS0IKwUZ3A5IqsbIE0wUmwyNU87K97tmS0Uv+41OBcaaSJKmDs+1PGyTg5UussU5
+         p4/GfrIpRU7v0et0khMXxGqBn97Bc4KVHU52LaurBVzu7wyjA8zsVFcu7DKz81r/vvvD
+         1z/AqYJV0BzOwu2wwIfecftF9iJiuKJhmSmpt1YE0R/Cghu6iJrMju6q/xhePl9Iw7lv
+         mRjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKHVOhG6tB1t5dZnu2Qiz2+Sjks25ZOcDKv5Tb+ygwQUqPPjasG6lC5pkBfyueb0XJkNRiD60pTxkwkVY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzsg90KeDNgPpdOWtJFiENswt8u3uX1l9HVd3buck61AdYFFOLC
+	MMiAZJPrH8DQm5imdsRklQ/l27Qd9PwdTAXFjbXd6axy4k+VHlH+6xOQweX8s8398U4CoOPYD06
+	+drdS7jTc4ZwRdNQGNBA/BoU+ecAnFKyq3TKEcCN5upD3fHwPPyYLUjewFJohJjU=
+X-Gm-Gg: ASbGncv9QvqczpwUWqlabKnYo4kMTUKhVtVzRsnwv7jofSTdWzXU9VkGhK227rasAir
+	vulYK91sOdc9xQZEZwKHaG/lnq1ZMCcEhzgoZWZ9ue2Oa8tituyBoySluxVmeI4HzapmjXzCFwI
+	xAsLZs96on2PO1BbOW5LAbGdcPwzXbygTEvXdAVjkPyFdmivIbmWJvBpsI1a4qrG4sNqOO1Zz8O
+	Mn/XmYwKnqmFozAgTgfehPzlig4ioez3wR8hyRFNjNquw3bwVCSK2JjGhZzC8KMdmEJhYovqVwK
+	1dVFpKrCq+4t8IS5llbjFWAWViBavw9VffgK1v7pxKmUJ73t23YXKKOCSC4=
+X-Received: by 2002:a05:620a:1a28:b0:7b6:c3ad:6cc4 with SMTP id af79cd13be357-7c069cf37c0mr143517485a.5.1739280113517;
+        Tue, 11 Feb 2025 05:21:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE0dqsw15wKwS/BY+L64XWNIZkK61jXi1TTzfL+uXdnejS6AhoibNvrqpmqVJiiO/CfpHiYiw==
+X-Received: by 2002:a05:620a:1a28:b0:7b6:c3ad:6cc4 with SMTP id af79cd13be357-7c069cf37c0mr143514985a.5.1739280113155;
+        Tue, 11 Feb 2025 05:21:53 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf1b7adc4sm9578260a12.19.2025.02.11.05.21.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 05:21:51 -0800 (PST)
+Message-ID: <59592224-7e99-4eba-b41d-7bfa6b1695cb@oss.qualcomm.com>
+Date: Tue, 11 Feb 2025 14:21:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,107 +74,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3] drm: xlnx: zynqmp_dpsub: Add NULL check in
- zynqmp_audio_init
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-To: Charles Han <hanchunchao@inspur.com>, laurent.pinchart@ideasonboard.com
-Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Markus.Elfring@web.de,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch, michal.simek@amd.com,
- vishal.sagar@amd.com
-References: <20250211102049.6468-1-hanchunchao@inspur.com>
- <b8c4dabc-c9a9-407a-94a1-4a59a67e0440@ideasonboard.com>
+Subject: Re: [PATCH 6/6] arm64: dts: qcom: sm8750: Add ICE nodes
+To: Melody Olvera <quic_molvera@quicinc.com>,
+        Thara Gopinath <thara.gopinath@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>
+Cc: linux-crypto@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gaurav Kashyap <quic_gaurkash@quicinc.com>
+References: <20250113-sm8750_crypto_master-v1-0-d8e265729848@quicinc.com>
+ <20250113-sm8750_crypto_master-v1-6-d8e265729848@quicinc.com>
 Content-Language: en-US
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <b8c4dabc-c9a9-407a-94a1-4a59a67e0440@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250113-sm8750_crypto_master-v1-6-d8e265729848@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: ruC6yz57gRHmo83XZPpS4uLW8b-33MjL
+X-Proofpoint-ORIG-GUID: ruC6yz57gRHmo83XZPpS4uLW8b-33MjL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_05,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ phishscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 impostorscore=0
+ mlxlogscore=765 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502110088
 
-Hi,
-
-On 11/02/2025 15:08, Tomi Valkeinen wrote:
-> Hi,
+On 13.01.2025 10:16 PM, Melody Olvera wrote:
+> From: Gaurav Kashyap <quic_gaurkash@quicinc.com>
 > 
-> On 11/02/2025 12:20, Charles Han wrote:
->> devm_kasprintf() calls can return null pointers on failure.
->> But some return values were not checked in zynqmp_audio_init().
->>
->> Add NULL check in zynqmp_audio_init(), avoid referencing null
->> pointers in the subsequent code.
->>
->> Signed-off-by: Charles Han <hanchunchao@inspur.com>
->> ---
->>   drivers/gpu/drm/xlnx/zynqmp_dp_audio.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c b/drivers/gpu/drm/ 
->> xlnx/zynqmp_dp_audio.c
->> index fa5f0ace6084..f07ff4eb3a6d 100644
->> --- a/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
->> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
->> @@ -323,12 +323,16 @@ int zynqmp_audio_init(struct zynqmp_dpsub *dpsub)
->>       audio->dai_name = devm_kasprintf(dev, GFP_KERNEL,
->>                        "%s-dai", dev_name(dev));
->> +    if (!audio->dai_name)
->> +        return -ENOMEM;
->>       for (unsigned int i = 0; i < ZYNQMP_NUM_PCMS; ++i) {
->>           audio->link_names[i] = devm_kasprintf(dev, GFP_KERNEL,
->>                                 "%s-dp-%u", dev_name(dev), i);
->>           audio->pcm_names[i] = devm_kasprintf(dev, GFP_KERNEL,
->>                                "%s-pcm-%u", dev_name(dev), i);
->> +        if (!audio->link_names[i] || !audio->pcm_names[i])
->> +            return -ENOMEM;
->>       }
->>       audio->base = devm_platform_ioremap_resource_byname(pdev, "aud");
+> Add the SM8750 nodes for the UFS Inline Crypto Engine (ICE).
 > 
-> Thanks, looks good to me. I'll apply with Laurent's RB, which he gave 
-> for v1.
+> Signed-off-by: Gaurav Kashyap <quic_gaurkash@quicinc.com>
+> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+> ---
 
-Actually, looks like you dropped the Fixes tag that you had in the v1 
-and v2. I will add it back.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-  Tomi
-
+Konrad
