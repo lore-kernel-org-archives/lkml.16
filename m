@@ -1,68 +1,39 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0871F7557;
-	Tue, 11 Feb 2025 10:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B8E194C6A
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739270690; cv=none; b=UANtvVinDMcCbDsURinQx3kmuFTdsEZvarnGPxDqgSamjVSTO4ZwjQH7c7muUFhL5Ij6sGwk6w9KdyIPxIQLEROQjtzIblpdS57IEwjaQmgXKIvRxOAj3Mo7AegUu9+sFfCeHAri726gS9mC20Miad6trVnK/B3zhhwMeXxho+Y=
+	t=1739270770; cv=none; b=LyWoHyXQU702LcgQ5+XuZ5VB2DCeIhCp6poPap3gx0L36Dj37nlGUtyyVIYfe/TBuTwy+BfKPrLAIb6lyphKxRyUeksp9ER9WiQpfr/Zj6egnSd/92mYGznDNV0oPWOregRrz5MMXYklZQgOZrZTiTKDNo/x77TWNk0G9FS672g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739270690; c=relaxed/simple;
-	bh=fqSfSW3N86wX211OcP2cRDv+OWAKZZ8EZxIEcwBW6HI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ju9Fbp/uu2VqwhesgP1FzkoJLez+CXNMUVg65qtLp9cDlqvDWnGggS8+de1C5fv80bXukxr6yWaaIU8yjTDjY90RTrXOCtltgENQdsRWoJZYevLQTZkQ1l62Vcq/1GFeShzWQ2eF0dphAzldnXhMzy7bL7xga61hoaEJlZ2Vi/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HkAHSF0m; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1739270770; c=relaxed/simple;
+	bh=PKhgCI0Zy0bjDtG6fmMXd/y+VHyTFHTVxbURGIl+GJg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AYGboCdxiIQlO9l2/uglEzvz4H8tz+5wHJZpNuSUrmTibhdXWbRmfRkt5zmlVIxqzcoXCi8UByYuhfkR7yXEI+cAb72AHuwa1L/VJbam+WWQpZbjdaWOWuZNhQbcUI6/dlb/ALl7YKm0Kdo9tI0QobdpXCos99F7iPVojBL+SWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=frEap/S9; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HkAHSF0m"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BAaJ9q028737;
-	Tue, 11 Feb 2025 10:44:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=bS4scRVoEBm
-	S9TVfVUlmpiKHB60mJBvQ4MS0mSfwu64=; b=HkAHSF0mSbcGcU8Ro324IZz9rHr
-	b/uFrn28o0VgdvCkB5sNnFrSSun4qysy6irOdbEuR0SSxyRh16/sy2xKPGhzCQl/
-	TlPbQWgEbXC+s6w9PrIbZ8yewZ+zE80PqvduK/zNc9IR7NAG+thXsAjzSd4xQzBS
-	aZrvNyj7JTT+zHI8fZAmaX0OtVB39PT6+Jjk0q2j6THanlXu1nxxrcAJigtelqG9
-	5n56ldPSYvhZVJ3UqRv0SMXx9p8yp0oJgS8QkCWkCjIL9lf+vkkj/SqQ/KODF91U
-	ubWI1JkXK6k9+ML8giyee35imzenOYcT5FTdjnueRL0heLTwX5LU1aEOytw==
-Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qxg9h2x2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 10:44:45 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 51BAigwT002171;
-	Tue, 11 Feb 2025 10:44:42 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 44p0bkpjtk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 10:44:42 +0000
-Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51BAigQ3002166;
-	Tue, 11 Feb 2025 10:44:42 GMT
-Received: from chejiang-gv.ap.qualcomm.com (chejiang-gv.qualcomm.com [10.233.43.239])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 51BAigbs002159
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 10:44:42 +0000
-Received: by chejiang-gv.ap.qualcomm.com (Postfix, from userid 37913)
-	id 59A6014F3; Tue, 11 Feb 2025 18:44:41 +0800 (CST)
-From: Cheng Jiang <quic_chejiang@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_chejiang@quicinc.com,
-        quic_jiaymao@quicinc.com, quic_shuaz@quicinc.com,
-        quic_zijuhu@quicinc.com, quic_mohamull@quicinc.com
-Subject: [PATCH v1 1/1] arm64: dts: qcom: qcs8300-ride: enable BT on qcs8300-ride
-Date: Tue, 11 Feb 2025 18:44:21 +0800
-Message-Id: <20250211104421.1172892-2-quic_chejiang@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250211104421.1172892-1-quic_chejiang@quicinc.com>
-References: <20250211104421.1172892-1-quic_chejiang@quicinc.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="frEap/S9"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739270751;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rjgh0NHIE24t3tM5YBjaxn3uiX5S8lp37xeGpZmhvUY=;
+	b=frEap/S9qKMVVv7cClslXsAh7Itfk/OND9x/ftHtv5rlIB5zt0R1hXYMD5aDcqaaEPS0WR
+	hIKw2E/9pAE7K/NzlAz/6s7DfpB8sZ9zc6hNbY4/7mPxb540Q4EpgZEJB8LSNb51EnjfBt
+	9vij7ycKiRvSnwyFSMe4X/+JYfxolu8=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] ACPI: video: Use str_yes_no() helper in acpi_video_bus_add()
+Date: Tue, 11 Feb 2025 11:45:32 +0100
+Message-ID: <20250211104532.699124-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,81 +41,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Uxs3c1a5POdb0kHSVw5-tXQZvzzlL2By
-X-Proofpoint-GUID: Uxs3c1a5POdb0kHSVw5-tXQZvzzlL2By
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_04,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- mlxscore=0 priorityscore=1501 malwarescore=0 spamscore=0 impostorscore=0
- mlxlogscore=999 lowpriorityscore=0 phishscore=0 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502110067
+X-Migadu-Flow: FLOW_OUT
 
-Enable BT on qcs8300-ride by adding a node for the BT module. Since the
-platform uses the QCA6698 Bluetooth chip. While the QCA6698 shares th
-same IP core as the WCN6855, it has different RF components and RAM sizes,
-requiring new firmware files. Use the firmware-name property to specify
-the NVM and rampatch firmware to load.
+Remove hard-coded strings by using the str_yes_no() helper function.
 
-Signed-off-by: Cheng Jiang <quic_chejiang@quicinc.com>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 24 +++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/acpi/acpi_video.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-index a6991e8e2df6..93458773b72d 100644
---- a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-@@ -17,6 +17,7 @@ / {
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index a972831dbd66..efdadc74e3f4 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -27,6 +27,7 @@
+ #include <linux/acpi.h>
+ #include <acpi/video.h>
+ #include <linux/uaccess.h>
++#include <linux/string_choices.h>
  
- 	aliases {
- 		serial0 = &uart7;
-+		serial1 = &uart2;
- 	};
+ #define ACPI_VIDEO_BUS_NAME		"Video Bus"
+ #define ACPI_VIDEO_DEVICE_NAME		"Video Device"
+@@ -2039,9 +2040,9 @@ static int acpi_video_bus_add(struct acpi_device *device)
  
- 	chosen {
-@@ -451,6 +452,13 @@ &serdes0 {
- };
- 
- &tlmm {
-+	bt_en_state: bt-en-state {
-+		pins = "gpio55";
-+		function = "normal";
-+		output-low;
-+		bias-pull-down;
-+	};
-+
- 	ethernet0_default: ethernet0-default-state {
- 		ethernet0_mdc: ethernet0-mdc-pins {
- 			pins = "gpio5";
-@@ -544,6 +552,22 @@ wlan_en_state: wlan-en-state {
- 	};
- };
- 
-+&uart2 {
-+	status = "okay";
-+	bluetooth: bluetooth {
-+		compatible = "qcom,wcn6855-bt";
-+		firmware-name = "QCA6698/hpnv21", "QCA6698/hpbtfw21.tlv";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bt_en_state>;
-+		enable-gpios = <&tlmm 55 GPIO_ACTIVE_HIGH>; /* BT_EN */
-+
-+		vddio-supply       = <&vreg_conn_pa>;         /* bt-vdd-ctrl1-supply */
-+		vddbtcxmx-supply   = <&vreg_conn_1p8>;        /* bt-vdd-ctrl2-supply */
-+		max-speed = <3200000>;
-+	};
-+};
-+
- &uart7 {
- 	status = "okay";
- };
+ 	pr_info("%s [%s] (multi-head: %s  rom: %s  post: %s)\n",
+ 	       ACPI_VIDEO_DEVICE_NAME, acpi_device_bid(device),
+-	       video->flags.multihead ? "yes" : "no",
+-	       video->flags.rom ? "yes" : "no",
+-	       video->flags.post ? "yes" : "no");
++	       str_yes_no(video->flags.multihead),
++	       str_yes_no(video->flags.rom),
++	       str_yes_no(video->flags.post));
+ 	mutex_lock(&video_list_lock);
+ 	list_add_tail(&video->entry, &video_bus_head);
+ 	mutex_unlock(&video_list_lock);
 -- 
-2.34.1
+2.48.1
 
