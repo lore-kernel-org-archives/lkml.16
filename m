@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC4E3C3C;
-	Tue, 11 Feb 2025 15:08:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3145A24F5AA;
+	Tue, 11 Feb 2025 15:08:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739286481; cv=none; b=M5k2ckxjSqPqkhNQX7ZgsYJq7ZM8hpnpqZUX8lc4h+ytW0ygSvB9pIBlisLZjlOyUIQhx5NzM7M6nXMy4VO1GkrYExeFPMWZ7w1AxIYDSYqxu6/2+5nfkw5T3fJbk5vN5LSTmGBE6WkUMf7i7WsYh9Z2W2cw8LXJo7bYieehi1c=
+	t=1739286514; cv=none; b=JazB2odjswKP3hGWSZjK0V6MWtdmPorI00Yk/TptlGkhx0v7sFekHEICvg4FIkgMSuYRKyr1/bcuK+3DIVxT4hBObVzaVxsJhFWYw3R2CJxuJMMn/jmRnGWzn8nM6/LHkaW48StbYEktP6HTBKP14NHru0XqeWUmn8gLbjMCVL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739286481; c=relaxed/simple;
-	bh=lNPUaE77q0AFctgL6amVVXO/TUfnN9RH4g0Cnckt/s0=;
+	s=arc-20240116; t=1739286514; c=relaxed/simple;
+	bh=BL96cbuR3qWCo7GHtxKj34XPlMXb6Sqp2Ebs/ONUmxU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=BaaGRKFXv4N8cct8H52/lMF7AE5d5Rah16XKjba6UtdU/OpwYnz6BfzobO4Qj6eLvoqfZtyGWa9VnhDka59gPIdktR1GyPAKExd8tJ2rssAVEzi/Ojlr+XvCmBGJ8u5cyU7w6T42O9VT++1dbA6LXktH4QkpxgtiA7sphTw9pfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bQGRmWCX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=tioJdomp6oppntfrMZgVmk0ZiEkBHBeicOMRCBIeH3UMBgRf3oWD4fwdt0SZDN9wLrhGGkPirEq3B5ePkYjHb1zPYojQIWBba5b0avrkGlOSZ6TH5628Kke5tJAMf5EBwR7h5GGEAl5UmN3uFic9maVs8VKMc0fzDwc4KjleR+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+Ad7wWi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bQGRmWCX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D314C4CEDD;
-	Tue, 11 Feb 2025 15:07:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+Ad7wWi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2CA8C4CEDD;
+	Tue, 11 Feb 2025 15:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739286480;
-	bh=lNPUaE77q0AFctgL6amVVXO/TUfnN9RH4g0Cnckt/s0=;
+	s=k20201202; t=1739286513;
+	bh=BL96cbuR3qWCo7GHtxKj34XPlMXb6Sqp2Ebs/ONUmxU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=bQGRmWCXqvhbdz66JOSQ6E9JHNzpA2U3GGuSVVQ0KERNCdSV3theFvI6QoYRMKlvz
-	 7ZhLbISnpWL9/YtSnCRW+vb6FubqpNY9vb05tThmmhE2pyFJjEbcYlTAGhTEAJovoy
-	 Yoj9MyVb8AWinPKBJaW7tub/lFUcawT8vs8W4q4s4VlPeRx634YCJPjEUH3RpO39Io
-	 nqmfLVbIGpXCc3ZQhk/uiSi/E7kDWz+cypeIRNhMEHdEQBTA0gLyme1zCpU3GxOsb/
-	 agjnHt+nhNFsZB7T4LDEW5B4hCTUZwJ1TPaft3NvoUm0q7ivbcesw4fHkK1kCZmgy+
-	 rATZ0cTZMxnQg==
+	b=G+Ad7wWiLWwnZgu/nx9E+8/ctdBCbryhqFl+gNGdkzLtNQ+YyiA5GgOcLszErKruR
+	 nCzHcSw5cMLz+iY/In8X55Dr+pXfpxowoUJeET77FVnkr4gf7ifqElFPoIQKjt9Lgc
+	 77EkzKqhsi8thuAsv9FcN2w336ja2OwXUIZJ4KljyBHHOljpA0t2/MUG3E3Hfn9/XF
+	 SVzyEF6WbU4dbJtFRCfLuGK/dKwsCd8sP5oebNxJH3alIIZTTvpjrecnowX98qaOc3
+	 q1dxr/oNnGtKLyDdqRxcl1mf808gQcfAjlLPK2e5DN/ilPY8ANWvWcwUv6y34Rc+VS
+	 /DPeyuFb+i0Cg==
 From: Lee Jones <lee@kernel.org>
-To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
-Cc: imx@lists.linux.dev
-In-Reply-To: <20250107161628.121685-1-Frank.Li@nxp.com>
-References: <20250107161628.121685-1-Frank.Li@nxp.com>
-Subject: Re: (subset) [PATCH v2 1/1] dt-bindings: leds: Convert
- leds-tlc591xx.txt to yaml format
-Message-Id: <173928647810.2237766.13705317280883831005.b4-ty@kernel.org>
-Date: Tue, 11 Feb 2025 15:07:58 +0000
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, 
+ Lee Jones <lee@kernel.org>, Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Sergey Lisov <sleirsgoevy@gmail.com>, linux-kernel@vger.kernel.org, 
+ linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20250204-exynos7870-pmic-regulators-v1-2-05adad38102c@disroot.org>
+References: <20250204-exynos7870-pmic-regulators-v1-0-05adad38102c@disroot.org>
+ <20250204-exynos7870-pmic-regulators-v1-2-05adad38102c@disroot.org>
+Subject: Re: (subset) [PATCH 2/4] dt-bindings: mfd: samsung,s2mps11: add
+ compatible for s2mpu05-pmic
+Message-Id: <173928651138.2238525.2074698799034104775.b4-ty@kernel.org>
+Date: Tue, 11 Feb 2025 15:08:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,27 +50,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.13.0
 
-On Tue, 07 Jan 2025 11:16:26 -0500, Frank Li wrote:
-> Convert binding doc leds-tlc591xx.txt to yaml format to fix below DTB_CHECK
-> warning.
+On Tue, 04 Feb 2025 02:06:27 +0530, Kaustabh Chakraborty wrote:
+> S2MPU05 is a PMIC present in Samsung's Exynos7870 devices. It houses
+> voltage regulators (21 LDOs and 5 BUCKs), and an RTC module. Add the
+> compatible string "samsung,s2mpu05-pmic" to the PMIC documentation.
 > 
-> arch/arm64/boot/dts/freescale/imx8mp-aristainetos3-proton2s.dtb:
->   /soc@0/bus@30800000/i2c@30a30000/tlc59108@40: failed to match any schema with compatible: ['ti,tlc59108']
 > 
-> Additional change:
-> - ref to common.yaml for child nodes.
-> - limit child's reg to 0 - 7 for ti,tlc59108.
-> - fix typo 'linux,default_trigger' in example.
-> - change child node name's prefix to led-.
-> - change nodename to led-controller.
-> - fix properties order in example.
-> 
-> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: leds: Convert leds-tlc591xx.txt to yaml format
-      commit: 346e704278151149e9b4c6807686ee667b911e77
+[2/4] dt-bindings: mfd: samsung,s2mps11: add compatible for s2mpu05-pmic
+      commit: 929a8b608d1acd1ca7a493a72d80768a32925981
 
 --
 Lee Jones [李琼斯]
