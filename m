@@ -1,40 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB37433BE
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE3C1E9B0A
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739255828; cv=none; b=MTq6zp+gXlMjqjYCpG6hKGd20321RgDU+FIs6JEibOrV7IQCt8jjMsH5g9wzrDOil/86xkII/PGg8SKsGcU6HU3bB7YqXpvTPG64ygn8NrS1ZzL7SFtVeYLWum4D25+aDOHo2aKsRUDgeD9WryI3NIihhY567WSbHwlh44DWyeQ=
+	t=1739255833; cv=none; b=QrHTl1Ivj/nyfzppIO5sWfEMjKwTWDJ08tQMDER65qUEbOmWjHrHRbpDurmXr+6JwWRPMmA9t1BF//Wl5wUUt1b9INsfbQWFslt91pytb8KUtvVtxyZ2DYdaKR1l9TPPiJ3mGCdyUdDyOZYXpwt2kVEea+6C+bNTSbDzKfaUUG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739255828; c=relaxed/simple;
-	bh=2yiMq0kic3NrnbeSa2ncweARleUMsxv2MZfLUAhekBg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bu+3u1i91zz1G6UTB0DyVdvy75FKOroTigSmS+2pnuxYDzuT617GqRwuaEl89X20Th9TKkVuEclK1olaC/Oj6OA+cg3NR/wKeBWqMQWPMt6n3pQ3LIDvufao1Aqutxq9Yd5WtScZTaHVbeHmO0E8AQoGA8iIQeqGRKdaLQg/nS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPf78K2q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739255833; c=relaxed/simple;
+	bh=USsgt3nAVhZ0Zv/kBH3ZmhJWyVIQLdUJM+hRIBl9Ht4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YsMReylNVtS0k4tqPqQGyu1ZcZfikD/7zjAgpR1MMof1oNQAOJQNl+ZJDXSnNWZLST9ic4ef5hcqSeP7bTALlL2Z3kJ29+0EzKmHlE97CEd9ilz0MXhp1C7BomwsD+vVWW2ZkYJWaF9nL6mzpWtkAgVNDpHeanyYMSfn79tNx5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ByHbg+cC; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPf78K2q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAE3CC4CEDD;
-	Tue, 11 Feb 2025 06:37:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739255827;
-	bh=2yiMq0kic3NrnbeSa2ncweARleUMsxv2MZfLUAhekBg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RPf78K2q9HUuMOvKHKYTYMZJZdjnBS6vsvOPMVUBAIJyjzkerItYnNHWGIHGehp0t
-	 DuHptmwQCwGdWvyWZk1C1hReI98IYHFXxKEkFMlRAw8ZEL86X1NSidX59sou2OWptE
-	 nU+FTOC2/hSG0lFgFlbqiX3ZeF/fMrcv23k763ar3NTcHhRb4osPRZ7kGntG7dzvgF
-	 G+7VcDaen4CkYphc73WVcwqbaL2HDlf8qwHUITwq2fyKVtcrFow4vZpF1awrvK3U+Z
-	 Zm7tAUJf4spebyJw0Z03mypGy/2H1it+VlGrqIChHo9AQOElXdq6adr2dv6+Pq/GX7
-	 UfJ73yRjneO7Q==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>,
-	syzbot+15669ec8c35ddf6c3d43@syzkaller.appspotmail.com
-Subject: [PATCH] f2fs: fix to avoid panic once fallocation fails for pinfile
-Date: Tue, 11 Feb 2025 14:36:57 +0800
-Message-ID: <20250211063657.405289-1-chao@kernel.org>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ByHbg+cC"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739255826; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=dqAyo2ReN2P0QJoWH2gGeQPluWKTOZLcnIOz78ef+dc=;
+	b=ByHbg+cCfZK0VoADyHFH7RHYt2gXj4NCaunVBRLxZojvYih6iLO9EmNrqkoS2UqbNWKgHY27ErUPsa6nc+5BUlM7uEy1NtYNrFUs8WhBto7DUc8EX1fVEq77eMlTOtWdYZPyuHx6zInzQyyw9cy8ZpQh9vZ6GbnKrM4Ijzdmo/4=
+Received: from localhost.localdomain(mailfrom:dtcccc@linux.alibaba.com fp:SMTPD_---0WPFmM14_1739255819 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 11 Feb 2025 14:37:05 +0800
+From: Tianchen Ding <dtcccc@linux.alibaba.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] sched/eevdf: Force propagating min_slice of cfs_rq when {en,de}queue tasks
+Date: Tue, 11 Feb 2025 14:36:59 +0800
+Message-Id: <20250211063659.7180-1-dtcccc@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,135 +46,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-syzbot reports a f2fs bug as below:
+When a task is enqueued and its parent cgroup se is already on_rq, this
+parent cgroup se will not be enqueued again, and hence the root->min_slice
+leaves unchanged. The same issue happens when a task is dequeued and its
+parent cgroup se has other runnable entities, and the parent cgroup se
+will not be dequeued.
 
-------------[ cut here ]------------
-kernel BUG at fs/f2fs/segment.c:2746!
-CPU: 0 UID: 0 PID: 5323 Comm: syz.0.0 Not tainted 6.13.0-rc2-syzkaller-00018-g7cb1b4663150 #0
-RIP: 0010:get_new_segment fs/f2fs/segment.c:2746 [inline]
-RIP: 0010:new_curseg+0x1f52/0x1f70 fs/f2fs/segment.c:2876
-Call Trace:
- <TASK>
- __allocate_new_segment+0x1ce/0x940 fs/f2fs/segment.c:3210
- f2fs_allocate_new_section fs/f2fs/segment.c:3224 [inline]
- f2fs_allocate_pinning_section+0xfa/0x4e0 fs/f2fs/segment.c:3238
- f2fs_expand_inode_data+0x696/0xca0 fs/f2fs/file.c:1830
- f2fs_fallocate+0x537/0xa10 fs/f2fs/file.c:1940
- vfs_fallocate+0x569/0x6e0 fs/open.c:327
- do_vfs_ioctl+0x258c/0x2e40 fs/ioctl.c:885
- __do_sys_ioctl fs/ioctl.c:904 [inline]
- __se_sys_ioctl+0x80/0x170 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Force propagating min_slice when se doesn't need to be enqueued or
+dequeued. Ensure the se hierarchy always get the latest min_slice.
 
-Concurrent pinfile allocation may run out of free section, result in
-panic in get_new_segment(), let's expand pin_sem lock coverage to
-include f2fs_gc(), so that we can make sure to reclaim enough free
-space for following allocation.
-
-In addition, do below changes to enhance error path handling:
-- call f2fs_bug_on() only in non-pinfile allocation path in
-get_new_segment().
-- call reset_curseg_fields() to reset all fields of curseg in
-new_curseg()
-
-Fixes: f5a53edcf01e ("f2fs: support aligned pinned file")
-Reported-by: syzbot+15669ec8c35ddf6c3d43@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/linux-f2fs-devel/675cd64e.050a0220.37aaf.00bb.GAE@google.com
-Signed-off-by: Chao Yu <chao@kernel.org>
+Fixes: aef6987d8954 ("sched/eevdf: Propagate min_slice up the cgroup hierarchy")
+Signed-off-by: Tianchen Ding <dtcccc@linux.alibaba.com>
 ---
- fs/f2fs/file.c    |  8 +++++---
- fs/f2fs/segment.c | 20 ++++++++++----------
- 2 files changed, 15 insertions(+), 13 deletions(-)
+v3:
+I modified some descriptions in commit log, and rebased to the latest
+tip branch. The old version of patch can be found in [1].
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 2f93a27d2f45..4c563edbf5c6 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1834,18 +1834,20 @@ static int f2fs_expand_inode_data(struct inode *inode, loff_t offset,
+The original patchset wants to add a feature. As the 2nd patch may be
+hard to be accepted, I think at least the bugfix should be applied.
+
+The issue about this patch was described detailly in [2].
+
+[1]https://lore.kernel.org/all/20241031094822.30531-1-dtcccc@linux.alibaba.com/
+[2]https://lore.kernel.org/all/a903d0dc-1d88-4ae7-ac81-3eed0445654d@linux.alibaba.com/
+---
+ kernel/sched/fair.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1e78caa21436..0d479b92633a 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6970,6 +6970,8 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		update_cfs_group(se);
  
- 		map.m_len = sec_blks;
- next_alloc:
-+		f2fs_down_write(&sbi->pin_sem);
-+
- 		if (has_not_enough_free_secs(sbi, 0, f2fs_sb_has_blkzoned(sbi) ?
- 			ZONED_PIN_SEC_REQUIRED_COUNT :
- 			GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))) {
- 			f2fs_down_write(&sbi->gc_lock);
- 			stat_inc_gc_call_count(sbi, FOREGROUND);
- 			err = f2fs_gc(sbi, &gc_control);
--			if (err && err != -ENODATA)
-+			if (err && err != -ENODATA) {
-+				f2fs_up_write(&sbi->pin_sem);
- 				goto out_err;
-+			}
- 		}
+ 		se->slice = slice;
++		if (se != cfs_rq->curr)
++			min_vruntime_cb_propagate(&se->run_node, NULL);
+ 		slice = cfs_rq_min_slice(cfs_rq);
  
--		f2fs_down_write(&sbi->pin_sem);
--
- 		err = f2fs_allocate_pinning_section(sbi);
- 		if (err) {
- 			f2fs_up_write(&sbi->pin_sem);
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index c282e8a0a2ec..6ebe25eafafa 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2806,7 +2806,7 @@ static int get_new_segment(struct f2fs_sb_info *sbi,
- 							MAIN_SECS(sbi));
- 		if (secno >= MAIN_SECS(sbi)) {
- 			ret = -ENOSPC;
--			f2fs_bug_on(sbi, 1);
-+			f2fs_bug_on(sbi, !pinning);
- 			goto out_unlock;
- 		}
- 	}
-@@ -2848,7 +2848,7 @@ static int get_new_segment(struct f2fs_sb_info *sbi,
- out_unlock:
- 	spin_unlock(&free_i->segmap_lock);
+ 		cfs_rq->h_nr_runnable += h_nr_runnable;
+@@ -7099,6 +7101,8 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
+ 		update_cfs_group(se);
  
--	if (ret == -ENOSPC)
-+	if (ret == -ENOSPC && !pinning)
- 		f2fs_stop_checkpoint(sbi, false, STOP_CP_REASON_NO_SEGMENT);
- 	return ret;
- }
-@@ -2921,6 +2921,13 @@ static unsigned int __get_next_segno(struct f2fs_sb_info *sbi, int type)
- 	return curseg->segno;
- }
+ 		se->slice = slice;
++		if (se != cfs_rq->curr)
++			min_vruntime_cb_propagate(&se->run_node, NULL);
+ 		slice = cfs_rq_min_slice(cfs_rq);
  
-+static void reset_curseg_fields(struct curseg_info *curseg)
-+{
-+	curseg->inited = false;
-+	curseg->segno = NULL_SEGNO;
-+	curseg->next_segno = 0;
-+}
-+
- /*
-  * Allocate a current working segment.
-  * This function always allocates a free segment in LFS manner.
-@@ -2939,7 +2946,7 @@ static int new_curseg(struct f2fs_sb_info *sbi, int type, bool new_sec)
- 	ret = get_new_segment(sbi, &segno, new_sec, pinning);
- 	if (ret) {
- 		if (ret == -ENOSPC)
--			curseg->segno = NULL_SEGNO;
-+			reset_curseg_fields(curseg);
- 		return ret;
- 	}
- 
-@@ -3710,13 +3717,6 @@ static void f2fs_randomize_chunk(struct f2fs_sb_info *sbi,
- 		get_random_u32_inclusive(1, sbi->max_fragment_hole);
- }
- 
--static void reset_curseg_fields(struct curseg_info *curseg)
--{
--	curseg->inited = false;
--	curseg->segno = NULL_SEGNO;
--	curseg->next_segno = 0;
--}
--
- int f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 		block_t old_blkaddr, block_t *new_blkaddr,
- 		struct f2fs_summary *sum, int type,
+ 		cfs_rq->h_nr_runnable -= h_nr_runnable;
 -- 
-2.48.1.502.g6dc24dfdaf-goog
+2.39.3
 
