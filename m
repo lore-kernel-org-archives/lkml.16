@@ -1,132 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41EE2010E6;
-	Tue, 11 Feb 2025 12:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F301324C66E
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739275865; cv=none; b=iWnvs5MPcHUfNuitYfeUL8H6GA2wfv0iRqdYh8BPlxlqJXpUA65ZC9gBctBXLIH71a696ACv6jHKQ+zAQU58RuP4PotNDpdy9pKxBnQrXHfQDSAXTDjigzfVorATPusRZTF5M6ZOGwzRNQQ9DT472d1iq17zUoYq7fawkbpbrec=
+	t=1739275918; cv=none; b=F6iFcc15w5l0Yzn0HB0bAf69H2t6wFgIV+DFqL9NHjvDrms6Vat2ybY3dbKT0ohjyo0jCrgtQHyrXfydvqEgBX8p9oyA45lus3TvDzjcy4gdN6GpmWiFkK0D3LGGl0SLUIHD1WWBv6nm0xp4fIfGRgclVhNB9feB+fBAiz0Fl68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739275865; c=relaxed/simple;
-	bh=dVa1v4FEnhdEcRKHgQOjoXmm0Uba3dBOZT5OrGPkID0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SGrF8EvVrQGhV9sDYG/15CNszsF0/+P5oHjZUC7HzV88pia+ItMmdkAhWlJhM9Zl4mHMTvWBF8fY9GyXHM9o4xNDabWTexp6BFgXLLJiWXo1PgR4CCO/9I76ax9xr/8z+CEeRhmWs2nBxM00Vn9DkeCVBOwTkT6YRM3PbiqkbU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UTmtaVyF; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739275918; c=relaxed/simple;
+	bh=9kUhc7xl6mK6FtG9qv/EtCxmuNix+RvSOrWwAt/0ImY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=awIencfbKfH1rR0xhUAYVElMTm7DrJo0XdG5/ps7Bm/FsVgj0N4IrZ+Y2F/unKN2PBftJKklvgXaJGdwmYyZBezGA7/vgLZqvVdzXqkYK4yH6Z36ANpquxkk2p9DQkhjK6iKfSi9rjqEwDpUKdoB2Aw3m+Mj+HjmN8CcVka+gV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FWzCX/nN; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UTmtaVyF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739275862; x=1770811862;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dVa1v4FEnhdEcRKHgQOjoXmm0Uba3dBOZT5OrGPkID0=;
-  b=UTmtaVyFUY97Ydf7r/N8wWj92mNEZd4ajF/ZcIFPGNYOmYSu/fiZzXlT
-   nZ471/QyuD7sWsWD6Dtq0Axi+wfNCs9BPD8jVweJUK7Qao1B0qK22YEBU
-   9CzxVZB8CsRrD9sBAwPSQ2s7MnlLKv5/gtOLCKdGg6kc6u/4kVfYz1lIz
-   3ELumAaOQB10LpV1wcCSt7NUZrw5xWB2DMPX4NNE1UC+cP0hy3Y/z6fQ2
-   9cTR0e/h1xma7mmOQuMPLI3FRqWuVJ8JaYhGs+ElJxVhP8bUf2HhySuwy
-   mMXRdcKSETK2QVB5MUQWQknGtm0j5wovkcou2tTj00nu0Y2lSB1ZWjveq
-   w==;
-X-CSE-ConnectionGUID: vNd8oQahQmujvx4TI3s46Q==
-X-CSE-MsgGUID: TQLBJ/26RwS3V/2x8hAdcg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40009046"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="40009046"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:11:01 -0800
-X-CSE-ConnectionGUID: 1c0JZ1woQzWllJevK0qSYw==
-X-CSE-MsgGUID: vEphLevZRnyj2ZPdgjfSpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113390239"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:10:55 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1thp6K-0000000AUm6-18UE;
-	Tue, 11 Feb 2025 14:10:52 +0200
-Date: Tue, 11 Feb 2025 14:10:51 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: kernel test robot <lkp@intel.com>, Raag Jadav <raag.jadav@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, lgirdwood@gmail.com,
-	Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	oe-kbuild-all@lists.linux.dev,
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-sound@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-iio@vger.kernel.org
-Subject: Re: [PATCH v4 01/20] driver core: Split devres APIs to
- device/devres.h
-Message-ID: <Z6s-S67MdpVrXRji@smile.fi.intel.com>
-References: <20250210064906.2181867-2-raag.jadav@intel.com>
- <202502102201.zLWaJC6V-lkp@intel.com>
- <Z6oZ9dnYrlp5djiQ@smile.fi.intel.com>
- <7c42e438-22f9-40d9-bb8e-24feb7d58e64@app.fastmail.com>
- <Z6sYAxRIeCzw12nY@smile.fi.intel.com>
- <c1184a91-e216-423d-b956-d4b22116a171@app.fastmail.com>
- <Z6siYlWfvfUvNLpX@smile.fi.intel.com>
- <279d9f32-a1c9-41aa-b15a-e1485877b2d5@app.fastmail.com>
- <Z6s2cGMM9R6SZ9Le@smile.fi.intel.com>
- <49396042-31f0-4d8e-aa54-d89093ab5709@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FWzCX/nN"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5de47cf9329so6779253a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:11:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739275915; x=1739880715; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=noORodC8eJauXHSwu7JFMsa7CCMymPsH7IaAfTCYkT8=;
+        b=FWzCX/nNJRdhr9beVdlLQJKSYGmQoWrLnlUVihL7Ezz3AMKvguGtxyEP9n9cyFRD7d
+         IGN7Gbr+3qja/Cn8G/ysubw1SVBMaQDQeXFzqejvBv07hA7lZPsbPWr/ZUZL388s/GPx
+         4AZ8/iZmV+whrqmWIBwQ3LCP3lnVKACI8D6ZUhYuciZ0/DjVKEaMSo/0MlFAjFMLpPwt
+         FQQFrGhD4kFdXSlp6/1mOvq9G1jIdv5NbNGoTYPCvfaxdbHIkjsYEB5FykTAX0nb+mcG
+         ugx9O/FHKFsiOri1Ah/Mr05gfSGM8m87e0rja2Xa9cQZWLpFz/KKTQH4IXaU7avQ6nWr
+         yaVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739275915; x=1739880715;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=noORodC8eJauXHSwu7JFMsa7CCMymPsH7IaAfTCYkT8=;
+        b=csm3z5DtUagb6P5bWt/kas+fty9dNdr1SENzIUcRJoyes56/IUa/lO+iorttVtQa4l
+         WeCaFfIMpktJ1DEz0vMFf9vEFiNfwGPyULOBhE8aauDDidwBiwSRCFA/QRPKLWqBm2xP
+         RvNezNJbHpEKO6LJc75bTjqKXO4CNINr3CZfHA9Qr6MGW0hXWityUMeGrjJgatCrGd61
+         3pTO09r+9ttluVeR6kKSMhhScOTxrxt9YRQyYhFDdUV00a7BDGfbVb+XxLTC82v4+WOS
+         rBTYcOYH2SnscnmXyKeGNuXhujpKQelJOyFEDJJsYFtQYa7FDteaJ2d3T0Mwn7lD+R1V
+         Qu1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUGjh/mggXwZYH1wbR4z+gMu99U69nu1a/ZeaAPZm/6b14jO1poA9lUYGKTj+bF6fg3tlplsdS09ESZ1ks=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyU8G7vtjiPhnZ3EzLk7CvbPlcq9XrLoNbrk3ggriQeLUNZHn0I
+	f3MfCjI9ZnVu5dV8YtbecRp+kRPegp1WCKDAoEB/uGfC+8UDsFWykW2kE+TkV6lsZZO0G7tmtkp
+	GEx69P7VfBmOVjUctMqgzSgavzN5wdIYXNtR5
+X-Gm-Gg: ASbGncvaSkxrp/kBko0XTstLmzoEI8ZCC0xU6MMqsWrYRtZYshgnJhcEdGgAM3TS4yo
+	QXkbce7h4BHloh5puwHq03JnSXgK9XvzY8S+OgmIrQJc3vutDGD1bHNfF0sc1CBUe02rzvyo=
+X-Google-Smtp-Source: AGHT+IFBxztBYpfICsyJIWE1dpWOwhxEB7LLhq6al5vWh0ZOYPHdFhb048EfHLyedbvE6WIgBTPV4R+XdwEIM3DCXhA=
+X-Received: by 2002:a05:6402:254e:b0:5dc:7374:2638 with SMTP id
+ 4fb4d7f45d1cf-5de9a394514mr3181412a12.7.1739275915228; Tue, 11 Feb 2025
+ 04:11:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <49396042-31f0-4d8e-aa54-d89093ab5709@app.fastmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <SY8P300MB0421A0CA0D6C69A8BE4767A7A1FD2@SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM>
+In-Reply-To: <SY8P300MB0421A0CA0D6C69A8BE4767A7A1FD2@SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 11 Feb 2025 13:11:44 +0100
+X-Gm-Features: AWEUYZkkWwiCaZee0oA7l-edrRXJciPS57JSeEV9SVREQ1J2ULGF-WM2UrxXs84
+Message-ID: <CANn89i+7cj3y05h9ee1ha1dykbSx6J=7QubBp7NMphQqtpA1iA@mail.gmail.com>
+Subject: Re: BUG: corrupted list in nsim_fib6_rt_destroy
+To: YAN KANG <kangyan91@outlook.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"syzkaller@googlegroups.com" <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 11, 2025 at 12:56:11PM +0100, Arnd Bergmann wrote:
-> On Tue, Feb 11, 2025, at 12:37, Andy Shevchenko wrote:
-> >
-> > The problem this series solves at the beginning is that not all the consumers
-> > of device.h needs it, in many cases the device/devres.h (or subset of
-> > device/*.h) is enough to include. While solving this, it appears that
-> > the current code uses ERR_PTR() instead of IOMEM_ERR_PTR() in devm_*io*() APIs
-> > and kernel test robot found this and complained about. While solving
-> > this new issue, LKP found another issue that is circular dependency.
-> > But the original code only wants to have an access to IOMEM_ERR_PTR() which
-> > is in io.h and can be moved to err.h AFAICS. Does this sound reasonable?
-> 
-> Yes, that sounds fine to me. I agree that not including linux/io.h
-> from device/devres.h is a good idea, same as no longer including
-> linux/device.h from asm/io.h. Moving IOMEM_ERR_PTR() as you
-> describe is the right idea.
+On Tue, Feb 11, 2025 at 1:04=E2=80=AFPM YAN KANG <kangyan91@outlook.com> wr=
+ote:
+>
+> Dear maintainers,
+>
+> I found a kernel  bug titiled "BUG: corrupted list in nsim_fib6_rt_destro=
+y " while using modified syzkaller fuzzing tool. I Itested it on the latest=
+ Linux upstream version (6.13.0-rc7) .
+>
+>
+> After preliminary analysis, the bug is triggerd in  nsim_fib6_rt_destroy =
+function  drivers/net/netdevsim/fib.c
+> when kernel try to delete node from list :  list_del(&fib_rt->list);
+> the node has already unlink from the list.
 
-Thank you for confirming the idea. Raag, please follow as suggested:
+This analysis seems to be AI generated, this is literally rephrasing
+the call stack.
 
-Move IOMEM_ERR_PTR() to err.h (perhaps in a separate patch),
-and drop io.h from devres.h as it will be not needed.
+>
+>
+> If you fix this issue, please add the following tag to the commit:
+> Reported-by: yan kang <kangyan91@outlook.com>
+> Reported-by: yue sun <samsun1006219@gmail.com
+>
+>
+> I hope it helps.
+> Best regards
+> yan kang
+>
+> Kernel crash log  and reproducer are listed below.
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Syzkaller hit 'BUG: corrupted list in nsim_fib6_rt_destroy' bug.
+>
+> netdevsim netdevsim0 netdevsim0 (unregistering): unset [1, 0] type 2 fami=
+ly 0 port 6081 - 0
+> list_del corruption. prev->next should be ffff888112b16f28, but was 00000=
+00000000000. (prev=3Dffff8881083184a8)
+> ------------[ cut here ]------------
+> kernel BUG at lib/list_debug.c:62!
+> Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+> CPU: 0 UID: 0 PID: 9911 Comm: kworker/u8:4 Not tainted 6.13.0-rc1 #5
 
-> Side note: I looked at large-scale header file cleanups in the past,
-> and in general the result of that was that the best way to reduce the
-> indirect inclusions is by splitting data structure definitions from
-> inline functions that use those data structures. The definition of
-> "struct device" clearly has too many dependencies, and to make
-> this one better. There has actually been some good preparatory work
-> done by Kent Overstreet a while ago that moves structures out
-> (e.g. work_struct and mutex), but not yet struct device and
-> struct kobject, which are needed in many other headers. The tricky
-> part that needs to happen to actually make it useful later on is
-> to replace all the unnecessary indirect includes with the minimal
-> ones, and that is a huge amount of work.
-
-Good to hear that somebody is working on the dependency hell untangling.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+This is not 6.13.0-rc7
