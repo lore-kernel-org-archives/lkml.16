@@ -1,213 +1,213 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD981F03C8
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAC11F03D8
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739234499; cv=none; b=CHkjvpr4HDly8D/WzQS9ktd1ULR6ZNolpSumdgOYbFVX6l/IBWeZnwitW2en9GFKlZtoy31omI9rDOj1/uNFqLYO6Mtf7QFzfuL/OctBwobiYHdKaN92MmVvERI8xaiVsVz/wvaXWhsRxLV+tBbwBrhyIeUbTcMyyU15s/ediKU=
+	t=1739234499; cv=none; b=jqSYlMOQO6aGMVMmxIH7UV6zYij2t+I27ukqKdzvbZGI2zr71m/z9BVn9EiRW9OUikk5IleSD4eARIRt7cA0AuolN30IU99JOtQshcga8On4cnRElXvr3Ev1OqE3gE8APF9wqeqcIWGAbUjiqNH2tirilaqPz3WB200ZqCpcUa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739234499; c=relaxed/simple;
-	bh=EIFh1VS+tmyV8MWJnttmdKzNbkF0v1mKqFsWzLP6HZw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JFDDhEzmDW5CQAaids8A6dlIZGUyJTig3Or3mTxwiUgvmn97lTD2RuKuHnW8lT1T/Ov/yZ5gLFuBN/oI0amCJivw++WnqhzNTOqpBTFlBGucFe0IELEQBbMhTWsGrMg8dRZwFTPcUiPicCn+gx9qepuZWDuwqCIjp564FTciJB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cD2/nV1r; arc=none smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	bh=yszauvfHR5CJoqGS7dRg39k9lBfvZ8YEOGy7XiNcbl4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tTM3bYfGZOiCC2/sx5nuHxE3BzOQB1l9bPat+W2US6SMiKVjBuHdAJNmZSXq7o6+ZweIbxt/36bK335Xfw7w4H3J93b7zzsnyLsCSfWvT0BdiMDT2oQVX3oiocrYCd2gId7JZSOxLt92na8yrO+FEeZB+DdxClVK+bfIRr1jgjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=f9P2VrSq; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cD2/nV1r"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3f3a6ee569cso508672b6e.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:41:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="f9P2VrSq"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4368a293339so55519295e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:41:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739234493; x=1739839293; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gTYdSbxG8yUDg+dbsh8BpVlCJuplQ2b0sQujpaxyPas=;
-        b=cD2/nV1rRJLhr8veJBR/13ah0l5HgCaA1sLX8e4RgmgXBNStxW4y0HUKTpqrsSPSpI
-         8qSohd6U0o4qiMqDDT9tgkYlFAqPwUfFLqdpdmKgLR6l35crUq/4dnTupeIYLROblyOP
-         U24r9wqvlv5b5/2vFUYVXOgqZVodTHkyRU1o+eo+e8UfUbZqh81l620cVIcAHbuLNh2m
-         czNirfYgwVJzdAMkmlDfd1G3OZFRZIWyarTm7hnlzn75rcl0OGSPfPxZq5ygbrN+h4ai
-         NjJpwsvRi0MiabAOe74pc0RDeFwxMfcTzBMPfvIXIbZv1HDDH1AiW+OEs+BXqOLVVkb0
-         MIwQ==
+        d=openvpn.net; s=google; t=1739234494; x=1739839294; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5DAovT2W7HziHzik7go4TCDAdNaqmBB80x80023BUq4=;
+        b=f9P2VrSq+2xsszn1tEquicPnRcPNFJ8UEzp1tGHq41qY8QCwOdnSuXuxbhiOpYeaZs
+         dPYwdmZYusz0fcHpDdYOaqjf0K1PmJKYT7gBWxRhFvS6covSc8hFfTKicVfFeN7fxKXS
+         qZQ+9XS8DfmAg33iv5LmIse+Y/eiWiWiZITZpGwYnUILzVKRYccalxMMa8LUTnhRQ5a6
+         IHATZdajRjS9EupOp3Iido1zjxVJN9Va+WAu5eDhlFmCZatEVi1WeJStBmV3wv41+nUs
+         N4uF467FgtRBjh6X3h1dEKPjyhcN2ihxRv/rYlBkGORCXKcBxs2iY85iTXxYeqc/Sup3
+         tJ2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739234493; x=1739839293;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739234494; x=1739839294;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gTYdSbxG8yUDg+dbsh8BpVlCJuplQ2b0sQujpaxyPas=;
-        b=e7kNioMRtn8dBGsSFan5TydcTj6NSG2EZarpjBbNnytqqerv2hoQ94L0fsKTF3KIpd
-         jPgKMHVs04GvjUt2B4ri8WXwDTx2luVwZjZmiSKoaZ8rpevOw+vyPjiM4Zx2KMoZ+XmX
-         vY72LuIQT9XMjIYetMC5iCVsgrIU/DkmYZ22GzEo6M3dXjDdbM2dYP54hsWDAsUmAFSZ
-         Al3fO+T+0y0uBesySwDHA3C8rhWGoWbl/3tsksSmSpirjBtBVygIythPkiubG2fgNA+q
-         3e7jXzmoHSbaTW/lWDldRfZh22EhlgwET2n57ibmPNFxiiNOES77FSXou/KvNf6in7CA
-         IvVw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5mfoE+wM3EZXJHHBMcCXHvU9uimTLSTyFgI0E0cwPtirKASphyvGgI6qqH8Z6gGRv9fh6uGD5LFRHOgQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb0ZR3GIVWrNB6qb9pTKj5iaZ3sPtrlAj42X04/SU9sTBFpWYe
-	qzQKQ+QtsEkL1Ssf675h92tLIA2lGm6Ja4TRI8tZZ6wMJEJUsOl+ad4tc0rXVOXTea5rwg6Xidi
-	tYffO4MfmKIT/KZDnB87itqwxzuIGqWSMKc+S
-X-Gm-Gg: ASbGncvNMJ/WPzdX2LcQDZI6a6uvwNB8WPxjzEw3+wYGXGRjzqnJNvQ+SLJGDZFCkbP
-	9O57ubIKTQrJsmDZ50Jm7BEG+bznhux/K68Ep56tHRd46Yuis7QSCAm+YGkV8vxE8Yil08WHN9G
-	+lpjy+ie8IOkWSPuZWLc5eX+kkBIMdDw==
-X-Google-Smtp-Source: AGHT+IHKpDcNbK8l8Cif7Teq0zW4ncPo2hFh+SJRVAe4zwcaAY56zpp5E+WA4yh8LAB2rBdI4b+XQdbiNWT4LJZtsSQ=
-X-Received: by 2002:a05:6808:1701:b0:3ea:aa8a:c121 with SMTP id
- 5614622812f47-3f39233f5c5mr12325831b6e.22.1739234493210; Mon, 10 Feb 2025
- 16:41:33 -0800 (PST)
+        bh=5DAovT2W7HziHzik7go4TCDAdNaqmBB80x80023BUq4=;
+        b=bC+H/LaOhii3A5Qh/YrrVhBqw/87rO/tOSm5CQLIQV+js2NX2qwD09YIAieDfM8xnT
+         YX/EUN/e2BcI7YNoiPolQ6qgjy5YyYY5gqegIV+66VZF74iE3gRT5EQSEkAmwX/rBFCC
+         9N2tfBiB7aomMKfOCNQvo+PmVp9nQzyXGcXl0/iISLOm7FGlVT/Ud8KPtBXGVlbxKSNG
+         IAPh3+3b7p/2rbpOiB5D3JswdqB8Mt1u0agAqFm2OfRGwlpuGufTa/C+HWT8/1oFdNhi
+         JbCbpOQBVjDjf0a3Q8LefQzx2ZE+ZRYv/wBeDpQwqGj3kGMBrCKJpoaYARdaTWhN5NiV
+         gp/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUSpPnxfV8hjHxslPtMneBQWwyD8KRj2bYTaLj/LQroJMTvTNmzvNaIZdcwQWwShhv1sUHyYU+MEmygm2Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx7MgqwZlY3h9hbXT/Xi/gEkuhGAaX/uPoeqUJJetwfEz/fDUd
+	e3uZUHfBY97hXnAccL1MEdfo32xBD0nn5pQy5AtVc8b98jMjCfv1UQkp7zsCQAA=
+X-Gm-Gg: ASbGnctuHxcrFPt1m3yitwxalvolOA2fPEMViGlXMhC6hNJ1ryMpnhUzNJdaA7O4jgr
+	he9TGJATPpxK9RZ1k0H9uqsqcMWJsLBz0FI3tCu8+LAYsRT001mSGrwJBah+b6Yv72794gy4P7D
+	fPEZC/Vwl/2CB62T5fZz01LZH/DT5eiUXGCOOO6fh/LNyTliL6la6OdVwAG/q0mdHjtvJdtf8A8
+	iy2lMTI+Jyu76vLTkrA5VOJDrbTsJXKJZTEqpRylU6T+Vhuh8OjkZw8YtvL5Z/xI277DrHE9a9c
+	jrwv/sAwqbJslVdgO1zYWT1pH48=
+X-Google-Smtp-Source: AGHT+IGyrKv62JtEJRpaC2UKjYSB9M4z/yXJLJ2z+txHNc/jelHKjUCHQI84HAHiShjDTmMVKALivw==
+X-Received: by 2002:a05:600c:468c:b0:435:23c:e23e with SMTP id 5b1f17b1804b1-4392498a1eemr134633965e9.12.1739234494398;
+        Mon, 10 Feb 2025 16:41:34 -0800 (PST)
+Received: from serenity.mandelbit.com ([2001:67c:2fbc:1:1255:949f:f81c:4f95])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394dc1bed2sm3388435e9.0.2025.02.10.16.41.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 16:41:33 -0800 (PST)
+From: Antonio Quartulli <antonio@openvpn.net>
+Date: Tue, 11 Feb 2025 01:40:16 +0100
+Subject: [PATCH net-next v19 23/26] ovpn: notify userspace when a peer is
+ deleted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208033129.3524423-1-badhri@google.com> <20250211002155.62lyfqjlygod7cdp@synopsys.com>
-In-Reply-To: <20250211002155.62lyfqjlygod7cdp@synopsys.com>
-From: Badhri Jagan Sridharan <badhri@google.com>
-Date: Mon, 10 Feb 2025 16:40:54 -0800
-X-Gm-Features: AWEUYZlBGWpL05YGugXdws7E7XtDkVKCf7mI5RDSxg5eqkUq0ieRg_9FmSAS7CU
-Message-ID: <CAPTae5LisYMjx63Jz_xmZ9zA5PtaxRA49gh2FA-fONsJ12sXeg@mail.gmail.com>
-Subject: Re: [PATCH v2] usb: dwc3: gadget: Prevent irq storm when TH re-executes
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
-	"felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, 
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jameswei@google.com" <jameswei@google.com>, 
-	"stable@kernel.org" <stable@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250211-b4-ovpn-v19-23-86d5daf2a47a@openvpn.net>
+References: <20250211-b4-ovpn-v19-0-86d5daf2a47a@openvpn.net>
+In-Reply-To: <20250211-b4-ovpn-v19-0-86d5daf2a47a@openvpn.net>
+To: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Donald Hunter <donald.hunter@gmail.com>, 
+ Antonio Quartulli <antonio@openvpn.net>, Shuah Khan <shuah@kernel.org>, 
+ sd@queasysnail.net, ryazanov.s.a@gmail.com, 
+ Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3505; i=antonio@openvpn.net;
+ h=from:subject:message-id; bh=yszauvfHR5CJoqGS7dRg39k9lBfvZ8YEOGy7XiNcbl4=;
+ b=owEBbQGS/pANAwAIAQtw5TqgONWHAcsmYgBnqpyOLHHD7zDZ7YQoQEFysuBVyh71soZA1Gt8J
+ 63AosCZoVOJATMEAAEIAB0WIQSZq9xs+NQS5N5fwPwLcOU6oDjVhwUCZ6qcjgAKCRALcOU6oDjV
+ h8sJB/9t4Q3nacED0Fhos6WAmjgJe7lROiuoM9oyl7TSASxaNvIDME58HIs46Nz5kLHGaQC00oG
+ 5huLJAucr/jdhrE0klJe9lgu0fp0S2vbTciHhRsV81o3TaEH2sYIqCLNhcdlTrg05Wszb/9n0l/
+ wt9x5rh76R9Y8sl3Nq7FPUePTCkwxjD2RsEkecmkG79aVCC5EZCuW1zHz31xZNgMylbbcW5maTI
+ FNIVDeSMa1VkX99N4EYBMbnnysmwIwGf98PiqFxsbCfc00jOIvKyc52mYDxMwbgalYl4Hkaiyfk
+ eWFYamAt5assDPJlkTNrWqeOn53Tgs7ykdtUtYgyFxDewd3a
+X-Developer-Key: i=antonio@openvpn.net; a=openpgp;
+ fpr=CABDA1282017C267219885C748F0CCB68F59D14C
 
-.
+Whenever a peer is deleted, send a notification to userspace so that it
+can react accordingly.
 
-On Mon, Feb 10, 2025 at 4:22=E2=80=AFPM Thinh Nguyen <Thinh.Nguyen@synopsys=
-.com> wrote:
->
-> On Sat, Feb 08, 2025, Badhri Jagan Sridharan wrote:
-> > While commit d325a1de49d6 ("usb: dwc3: gadget: Prevent losing events in
-> > event cache") makes sure that top half(TH) does not end up overwriting =
-the
-> > cached events before processing them when the TH gets invoked more than=
- one
-> > time, returning IRQ_HANDLED results in occasional irq storm where the T=
-H
-> > hogs the CPU. The irq storm can be prevented by clearing the flag befor=
-e
-> > event handler busy is cleared. Default enable interrupt moderation in a=
-ll
-> > versions which support them.
-> >
-> > ftrace event stub during dwc3 irq storm:
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000866: irq_handler_exit: =
-irq=3D14 ret=3Dhandled
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000872: irq_handler_entry:=
- irq=3D504 name=3Ddwc3
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000874: irq_handler_exit: =
-irq=3D504 ret=3Dhandled
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000881: irq_handler_entry:=
- irq=3D504 name=3Ddwc3
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000883: irq_handler_exit: =
-irq=3D504 ret=3Dhandled
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000889: irq_handler_entry:=
- irq=3D504 name=3Ddwc3
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000892: irq_handler_exit: =
-irq=3D504 ret=3Dhandled
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000898: irq_handler_entry:=
- irq=3D504 name=3Ddwc3
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000901: irq_handler_exit: =
-irq=3D504 ret=3Dhandled
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000907: irq_handler_entry:=
- irq=3D504 name=3Ddwc3
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000909: irq_handler_exit: =
-irq=3D504 ret=3Dhandled
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000915: irq_handler_entry:=
- irq=3D504 name=3Ddwc3
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000918: irq_handler_exit: =
-irq=3D504 ret=3Dhandled
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000924: irq_handler_entry:=
- irq=3D504 name=3Ddwc3
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000927: irq_handler_exit: =
-irq=3D504 ret=3Dhandled
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000933: irq_handler_entry:=
- irq=3D504 name=3Ddwc3
-> >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000935: irq_handler_exit: =
-irq=3D504 ret=3Dhandled
-> >     ....
-> >
-> > Cc: stable@kernel.org
-> > Suggested-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-> > Fixes: d325a1de49d6 ("usb: dwc3: gadget: Prevent losing events in event=
- cache")
-> > Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> > ---
-> >  drivers/usb/dwc3/core.c   |  2 +-
-> >  drivers/usb/dwc3/gadget.c | 10 +++++++---
-> >  2 files changed, 8 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> > index dfa1b5fe48dc..6df971ef7285 100644
-> > --- a/drivers/usb/dwc3/core.c
-> > +++ b/drivers/usb/dwc3/core.c
-> > @@ -1835,7 +1835,7 @@ static void dwc3_get_properties(struct dwc3 *dwc)
-> >       dwc->tx_thr_num_pkt_prd =3D tx_thr_num_pkt_prd;
-> >       dwc->tx_max_burst_prd =3D tx_max_burst_prd;
-> >
-> > -     dwc->imod_interval =3D 0;
-> > +     dwc->imod_interval =3D 1;
->
-> Use dwc3_has_imod() to determine whether to set this. Otherwise we get
-> a warning on setups that don't support imod.
+This is most important when a peer is deleted due to ping timeout,
+because it all happens in kernelspace and thus userspace has no direct
+way to learn about it.
 
-Hi Thinh,
+Signed-off-by: Antonio Quartulli <antonio@openvpn.net>
+---
+ drivers/net/ovpn/netlink.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/net/ovpn/netlink.h |  1 +
+ drivers/net/ovpn/peer.c    |  1 +
+ 3 files changed, 67 insertions(+)
 
-dwc3_check_params() which gets invoked after dwc3_get_properties() at
-https://elixir.bootlin.com/linux/v6.14-rc1/source/drivers/usb/dwc3/core.c#L=
-1851
-seems to already call dwc3_has_imod(). Do you prefer me to add an
-explicit check here as well ?
+diff --git a/drivers/net/ovpn/netlink.c b/drivers/net/ovpn/netlink.c
+index 86114e5aa76be1595edfabaedfd8996c2d9398b3..40ea87b9860c38284979b7fb26f99b5510dffd5d 100644
+--- a/drivers/net/ovpn/netlink.c
++++ b/drivers/net/ovpn/netlink.c
+@@ -1093,6 +1093,71 @@ int ovpn_nl_key_del_doit(struct sk_buff *skb, struct genl_info *info)
+ 	return 0;
+ }
+ 
++/**
++ * ovpn_nl_peer_del_notify - notify userspace about peer being deleted
++ * @peer: the peer being deleted
++ *
++ * Return: 0 on success or a negative error code otherwise
++ */
++int ovpn_nl_peer_del_notify(struct ovpn_peer *peer)
++{
++	struct ovpn_socket *sock;
++	struct sk_buff *msg;
++	struct nlattr *attr;
++	int ret = -EMSGSIZE;
++	void *hdr;
++
++	netdev_info(peer->ovpn->dev, "deleting peer with id %u, reason %d\n",
++		    peer->id, peer->delete_reason);
++
++	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_ATOMIC);
++	if (!msg)
++		return -ENOMEM;
++
++	hdr = genlmsg_put(msg, 0, 0, &ovpn_nl_family, 0, OVPN_CMD_PEER_DEL_NTF);
++	if (!hdr) {
++		ret = -ENOBUFS;
++		goto err_free_msg;
++	}
++
++	if (nla_put_u32(msg, OVPN_A_IFINDEX, peer->ovpn->dev->ifindex))
++		goto err_cancel_msg;
++
++	attr = nla_nest_start(msg, OVPN_A_PEER);
++	if (!attr)
++		goto err_cancel_msg;
++
++	if (nla_put_u8(msg, OVPN_A_PEER_DEL_REASON, peer->delete_reason))
++		goto err_cancel_msg;
++
++	if (nla_put_u32(msg, OVPN_A_PEER_ID, peer->id))
++		goto err_cancel_msg;
++
++	nla_nest_end(msg, attr);
++
++	genlmsg_end(msg, hdr);
++
++	rcu_read_lock();
++	sock = rcu_dereference(peer->sock);
++	if (!sock) {
++		ret = -EINVAL;
++		goto err_unlock;
++	}
++	genlmsg_multicast_netns(&ovpn_nl_family, sock_net(sock->sock->sk),
++				msg, 0, OVPN_NLGRP_PEERS, GFP_ATOMIC);
++	rcu_read_unlock();
++
++	return 0;
++
++err_unlock:
++	rcu_read_unlock();
++err_cancel_msg:
++	genlmsg_cancel(msg, hdr);
++err_free_msg:
++	nlmsg_free(msg);
++	return ret;
++}
++
+ /**
+  * ovpn_nl_key_swap_notify - notify userspace peer's key must be renewed
+  * @peer: the peer whose key needs to be renewed
+diff --git a/drivers/net/ovpn/netlink.h b/drivers/net/ovpn/netlink.h
+index 33390b13c8904d40b629662005a9eb92ff617c3b..4ab3abcf23dba11f6b92e3d69e700693adbc671b 100644
+--- a/drivers/net/ovpn/netlink.h
++++ b/drivers/net/ovpn/netlink.h
+@@ -12,6 +12,7 @@
+ int ovpn_nl_register(void);
+ void ovpn_nl_unregister(void);
+ 
++int ovpn_nl_peer_del_notify(struct ovpn_peer *peer);
+ int ovpn_nl_key_swap_notify(struct ovpn_peer *peer, u8 key_id);
+ 
+ #endif /* _NET_OVPN_NETLINK_H_ */
+diff --git a/drivers/net/ovpn/peer.c b/drivers/net/ovpn/peer.c
+index 6bec5cad5fd88b1e9dbb32fc64d208c9b4ccc965..ef317f18c112ef51afc934e02b4c1135afb23a13 100644
+--- a/drivers/net/ovpn/peer.c
++++ b/drivers/net/ovpn/peer.c
+@@ -681,6 +681,7 @@ static void ovpn_peer_remove(struct ovpn_peer *peer,
+ 	}
+ 
+ 	peer->delete_reason = reason;
++	ovpn_nl_peer_del_notify(peer);
+ 
+ 	INIT_WORK(&peer->remove_work, ovpn_peer_remove_work);
+ 	schedule_work(&peer->remove_work);
 
-Thanks,
-Badhri
+-- 
+2.45.3
 
->
-> >
-> >       dwc->tx_fifo_resize_max_num =3D tx_fifo_resize_max_num;
-> >  }
-> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> > index d27af65eb08a..fad115113d28 100644
-> > --- a/drivers/usb/dwc3/gadget.c
-> > +++ b/drivers/usb/dwc3/gadget.c
-> > @@ -4467,14 +4467,18 @@ static irqreturn_t dwc3_process_event_buf(struc=
-t dwc3_event_buffer *evt)
-> >       dwc3_writel(dwc->regs, DWC3_GEVNTSIZ(0),
-> >                   DWC3_GEVNTSIZ_SIZE(evt->length));
-> >
-> > +     evt->flags &=3D ~DWC3_EVENT_PENDING;
-> > +     /*
-> > +      * Add an explicit write memory barrier to make sure that the upd=
-ate of
-> > +      * clearing DWC3_EVENT_PENDING is observed in dwc3_check_event_bu=
-f()
-> > +      */
-> > +     wmb();
-> > +
-> >       if (dwc->imod_interval) {
-> >               dwc3_writel(dwc->regs, DWC3_GEVNTCOUNT(0), DWC3_GEVNTCOUN=
-T_EHB);
-> >               dwc3_writel(dwc->regs, DWC3_DEV_IMOD(0), dwc->imod_interv=
-al);
-> >       }
-> >
-> > -     /* Keep the clearing of DWC3_EVENT_PENDING at the end */
-> > -     evt->flags &=3D ~DWC3_EVENT_PENDING;
-> > -
-> >       return ret;
-> >  }
-> >
-> >
-> > base-commit: 9682c35ff6ecd76d9462d4749b8b413d3e8e605e
-> > --
-> > 2.48.1.502.g6dc24dfdaf-goog
-> >
->
-> The rest looks fine.
->
-> Thanks,
-> Thinh
