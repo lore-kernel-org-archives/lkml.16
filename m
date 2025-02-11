@@ -1,206 +1,388 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2063.outbound.protection.outlook.com [40.107.92.63])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491582F5E;
-	Tue, 11 Feb 2025 05:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739253073; cv=fail; b=q+PyaTGNFZ8IgBmEgdXNmlCeDDkycbDF9+R10005YTkRjI4GesmTbUrcFpYdqvOg6P2iGSrNo9Ugg+IOm/Yp7/2sFwmvpsP5fauXVX1TYmcJ2KHFpYHkwgSdkacopl+Gji0lre68eatppMVewOdCMVrQOEjOnXJSoJ9fQAnPMgI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739253073; c=relaxed/simple;
-	bh=BJQSRrK9goo/fVs9h/+OUWX1Xce44W65sBXRK25qwrE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tlVeHap4G+RQWkm7KyeEJZ9OBPTMmvUZ3qEPVOOk2VCNbtbfy0QOC1KxMV8HeKLLDAOU/REJWw5de2v6WapjRMSbKt08SKnUaDApsDlB8256sHIJjxTeuXqsHUMkFBR2zFWKxGm3pXOev2FUmtZuHSu8dns7soAxaHIB2fPT7lk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ETDt/1TG; arc=fail smtp.client-ip=40.107.92.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7929F2F5E;
+	Tue, 11 Feb 2025 05:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739253108; cv=none; b=rK/7Kv0fwxPqT38bFbFmLIAllyuQzc3Cx+wEmSxApiT0j+MxCbyBRR0s5zSk/mEuE45ml6SQ3p2yFyr4BKLp2ttAvAKFriXzroqF3PRFQtNM0YM++wZtQ3IU+/QNbonpPp4juTWmpxPINkSpXJ5bw0QiTVF/q2OjZ9lTC9pDk7U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739253108; c=relaxed/simple;
+	bh=L+/VNNRBxkATAvp+Zxct/6e1fUvfonQzFPfgzYaSiFA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CoslOS5XMdwLHnEtW6Ew/quJtQJF+zy7beRBnjlblBr7+5rYmzRvPksXVdKdQ7yXfW4srVas1ficUFmdED9Nkyn6nwAAI+JyyT+2fTzVPwdIQtHpVJwF5cD2sIXhT7R56PiNcpb82fqEwlRH9TJu1LV/Ubhm/wMFN0dNSIH5/gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0FyuH664; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ETDt/1TG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=d1tM16L9YzruNlxrtmhzCoaD1VEzJ7/9ZCG1ssTW2kZ6bJx4KySydrRIzLuDtWBEiN9KIvPMh/1+tE5WiE+tIU8nYewnjVQToEekUmWNIa5zb5h7vOEhq3TpfUCbTMDoR5Gc57081wLOc+CBQIsyQIWBIP5VZpRlNILuJx6cki7qHw6R3ks+KjskSHyHTjl5C7KJx1v0dNKoWBFclaaUDciFc7xiFJmw+tOBkoeSBvUNdU6yA3O/tWwJM8bNv3eKxJOh0McL4PunLjbCX/XNWoPfMWjFWYHopQw8AzYLBnePd7dqh1N3J02QHbUaKPJ1tqW2bb3TGwIMort3XZY/TA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7utcaSbcM+PuyAiA33w3r+AYwK7WngbgdesADJCBnKY=;
- b=TpS3PFuZK82H2RLp1rgHlVTI+2Q/ceLmI7ZgJpnEQ8XA8xtllolpN6cjFIPprMTNJL5ofAlrPiO/sPynZFgiSJ8QYeLSw8At44xcBYP5I5uIDOZ8CoosnAzWds543sp2TwFRyduaRFKArEs0D56vfXsQyPqIaSLR9gk18qoLEvnuJ8Vb74S21bFalJajzQmjBetn9CvMHxt57VFB8KpFBN5HXz81G91aqYbKLcAfVlRuz6h3V8AOnXV+uh7/HeMzANF7o0UIlO8LB5fwxiZr+aUcxy2o3hl/R15A35aIBEcl28HcomkuwKWiA2n/J6Dysp2eYyhRYRsT/vcVjO2+mQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7utcaSbcM+PuyAiA33w3r+AYwK7WngbgdesADJCBnKY=;
- b=ETDt/1TGfrOh9qpqzSWNAIdiDdnFlx+RIj18fPNboV7nUm9s6UekmRTn/jKYPhDsy+B2AjH6s5CXRc0om+bwIw9OEOfw7G2lhxwhW/Xzh6eNNpBXrhXPDc/VBb7k4+T5zXE8vzzGq4jKvISwi1qkdNUangjCyCbzqH/vXkhOvRReXnID3uNf24sE59nKA9CqPgqBaGAzoZhste6RegDXp8pZqMz6bwS1cUyF17uJ+8dB0qC9x8eZLerJf0bG6SH319WPrggpo5XiEksPCwZ90rhAIvCPQweaq2Qsla6CxeWo1dloS5m/FtsgD3iq7iBNlPeNfTzxRX7imMaUcRCAdA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL3PR12MB6473.namprd12.prod.outlook.com (2603:10b6:208:3b9::16)
- by PH7PR12MB9254.namprd12.prod.outlook.com (2603:10b6:510:308::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Tue, 11 Feb
- 2025 05:51:06 +0000
-Received: from BL3PR12MB6473.namprd12.prod.outlook.com
- ([fe80::25e1:5ee7:117:8923]) by BL3PR12MB6473.namprd12.prod.outlook.com
- ([fe80::25e1:5ee7:117:8923%3]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
- 05:51:05 +0000
-Message-ID: <8ed14c8f-fb38-4f50-9319-f6d4e660fae9@nvidia.com>
-Date: Tue, 11 Feb 2025 11:20:57 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] ASoC: tegra: Add interconnect support
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: broonie@kernel.org, linux-sound@vger.kernel.org,
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
- jonathanh@nvidia.com, mkumard@nvidia.com, spujar@nvidia.com
-References: <20250203105304.4155542-1-sheetal@nvidia.com>
- <ftyikuzu7avxlbyfruubjg5zucbstq5psilehpoahvdhpuqlr6@pcubq7dsm6fw>
-Content-Language: en-US
-From: "Sheetal ." <sheetal@nvidia.com>
-In-Reply-To: <ftyikuzu7avxlbyfruubjg5zucbstq5psilehpoahvdhpuqlr6@pcubq7dsm6fw>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0PR01CA0091.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:ae::14) To BL3PR12MB6473.namprd12.prod.outlook.com
- (2603:10b6:208:3b9::16)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0FyuH664"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63962C4CEE4;
+	Tue, 11 Feb 2025 05:51:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739253107;
+	bh=L+/VNNRBxkATAvp+Zxct/6e1fUvfonQzFPfgzYaSiFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0FyuH664DHGLsPMJ65W3o/ssWvMED4Vbv84ctN1z3lqtz5LGbvRl911qjGo4uW0am
+	 Bj9ac/U6JneZ9Az3xuHLJKl4N6dzwuE4GPnNiIqM9hxm4otvGGf63cIbq9x5aH0Qx9
+	 39aM6yQ28bbqNyGgl4ar9IwHnbGyZ40TzBqcrdn0=
+Date: Tue, 11 Feb 2025 06:50:44 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+	Mark Brown <broonie@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Subject: Re: [PATCH v4 1/9] driver core: add a faux bus for use when a simple
+ device/bus is needed
+Message-ID: <2025021118-unsnap-dripping-1a13@gregkh>
+References: <2025021023-sandstorm-precise-9f5d@gregkh>
+ <2025021026-atlantic-gibberish-3f0c@gregkh>
+ <D7OU5VOXCS8M.39YEYRWFL1MPW@gmail.com>
+ <2025021038-pushy-prior-5dfd@gregkh>
+ <D7OURQCZ3I1X.85BUFMYU6H8A@gmail.com>
+ <2025021028-showgirl-waviness-b4bf@gregkh>
+ <D7OVXDJEMH53.18HAI8VKLN997@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL3PR12MB6473:EE_|PH7PR12MB9254:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9c2a564a-3cca-46c5-9a17-08dd4a60130d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YzdyOGNZUjZWUTFjOEd1WVVZSnVGOXNENEFZM0JLU1p5NmN0eFYzQ1ZHQXdp?=
- =?utf-8?B?cGtMUlpwcjZ0dERuQThhczBBQ1lxSmkxYTFJUWtnZGhNNjhkUDNKaHNObGxX?=
- =?utf-8?B?R0FuL0VMYkgxeVY2dC9oNVgvY0dWaVpNSjh6RFQ5c0dmR2t2Zkp3ZmZ2dEpa?=
- =?utf-8?B?MnlLOHYreHhZQ2twWnFBU0Q3aDBWWHByakZyY2JkbHc2RFkvdXVEcGo0ZnN6?=
- =?utf-8?B?UnAvUmltWlF0emJ0RDhJaTdLc1pPUWpsSUhYUC9xSTlLR01lSVBLZjVwclg1?=
- =?utf-8?B?aForMmFCekZvV0JsUEc2bHpFem4zVEQ2ODYzWjlablJJdlhIczA1RHRMOXBL?=
- =?utf-8?B?cmJ6VUg3N2VESjc1WWdpc0JZSTkzcFFkeUJCYXduSUhkeVA1OStNTFV0VTFV?=
- =?utf-8?B?WGRoNzRTeVg3My9Yc2w5bXFiUS9abnY4aGJwQlZFOTVnVGpvT0M2OUp4QlJ5?=
- =?utf-8?B?bGJvamhDekRZZ20vdnFkZnFnbmlja1VKZGM4UlpCd1locWtDVXh6MW5jK2xP?=
- =?utf-8?B?b2FBK3NXUlY1RVpRNmFrWktMUi9uZVBuWXFqUU1GaUZJQWtTS3FCdWhXdFly?=
- =?utf-8?B?NnFVdFoxblR6NWV4MlhXNUtZckorSUROMzc1emdyNzJOS3BUY3hDZ2gvUHF5?=
- =?utf-8?B?T0lRYXJSWXhTZ2JqN1FZWWxHTVNDNktvSlgvNDhxWFhtb2U3SnJUL2FMdC9O?=
- =?utf-8?B?U3YvSmRZRGV2NXFleGxRZEhjTW1tRjFGRzA0TDhxYThBSmlIRDgyVm9HeW1P?=
- =?utf-8?B?RXpTaWFzWFhHZStEYVpSNG00REpBUG5PMkVZc2l6dWhUdVYydUZKM08wQU5v?=
- =?utf-8?B?NHpENTNhWDFOMVpxZnB6TitmR3ZYZmpoQU1ZcVltZHo0djVyQjVjZ2xCVlFs?=
- =?utf-8?B?L29KREFJcDdOOStLYlFJU0FoYnk3YTNtOTJuOU1Rd3QybWFMY09YdFlUS1Zk?=
- =?utf-8?B?WGhpd1ZDWkVkS2lCQkY3d2FDUEEzK1llR0xYYURuVGxTMGFBeVh3YjBVMmc4?=
- =?utf-8?B?bXoyOGpiTlZCR0ZGMjh4cEJPMGlSUmJiUFhaR0tBYnZ5c1JWVmdYeFdQcTNr?=
- =?utf-8?B?MlhKSHFuVVhSOEE1ekRTSk51T2R1MTdOVDQwQlVCcFluQjVYeTJrYUsxamdN?=
- =?utf-8?B?TG9GMDdpY2x0c29ybUNIUEZOTHA3TXB3d3V3TVI2b05YekNHMkZyMDlXTkJP?=
- =?utf-8?B?UjlFVGF0WWZYRzNXOTJrOE1WamU4SG50VVhYZU9pRTFsZDluWHE3RVpNVVc5?=
- =?utf-8?B?Q0FFdTc4SVV4RmdOUVlWNVFIZnNTRlM3WXl5Z1UveWhkYy9aMjVSMStVR3RV?=
- =?utf-8?B?cUxLZXZ0NEJHbitnejM5SlQ3YjA1N1VYTU16RFRmVElnVW02TUZkTTB5TUx4?=
- =?utf-8?B?R094SnlOLzJudnRSZnhCQjc4bUR6RGNCcjg5a1VRMFY3cVNRQTlnOS9LRWZk?=
- =?utf-8?B?djZJTXprK0pTRFU2ZDh0MWlUcUwreXpaNkNsS2drTG9SbG81UXJwWUtSWWJv?=
- =?utf-8?B?c2ZFRkU5cVM1My84ZVJ1TzdTUGs4ODlZOGlkTG45MHBNbkU1Qk4wNzlyU01V?=
- =?utf-8?B?L0lhYlc1dng5Tk1CVXIvcjhURllheFJMRHI4ZWM3UEMvTU9sVW1BTnBNcHVX?=
- =?utf-8?B?ZlVzMXpCcEwvRGRjaDdnblpwYzcvS2ErWDdmWmJuNkVtYUc5M1BnaUdSb2l2?=
- =?utf-8?B?eUNZK3JzT0FrV0ZhNzBOWXpYZEU2Z0pEenZmUUtHbTlURFFUd3YwQTRZRk9G?=
- =?utf-8?B?Ykd5OGx5NkV5NDRyUDJqNHdMZWZJUTV2UmtQK0FWOFNsYU5aWGZ2YzNkaGE2?=
- =?utf-8?B?UXBDcjRzSlg2SWJSQ2dqU2JkSTRYMmVuYXhSSGRiMHQvb3I2VXllZEQ2ZWo4?=
- =?utf-8?Q?mNoAYsHORt11n?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB6473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L0ZmS1dHcFZ6dDA4K0xWemorVURSVDJqSytxVm9BR3U4My93YVhIM3ZDR1Zi?=
- =?utf-8?B?M1ljU1FXMWpuWnhZWmw0cnNQeUtUVHhqaTQxVVJ4anA1Wm5wc3hKSTNQdGtD?=
- =?utf-8?B?Z2ZCbXBrK1JYcWZ2bzBSdVExSjcrUkgzR09PcUVOMjR0ek01MGI4TkdxN0k5?=
- =?utf-8?B?V2ViMWRPVWgzZ0JPeGdaZnBpWGFnUkNkeStValh6RVBiVEkyWVpTbERITzVo?=
- =?utf-8?B?MW8yZzRIRDJwcWNmVGVFOVk2am9UZVRiQkZoL0RsN3RlaUR4ZHRraDZ2czFJ?=
- =?utf-8?B?MWxNU2QwTnJKQ24yQTdnK0VWMmtYMlpvc1FPU0JwV1QyeEovUFRIRXF4cUYw?=
- =?utf-8?B?TlJQd0JGcXJIc3dXSFFRSzlmemlVdnBjT3djbmpVd0hCU1Rqc2xQZmFFUSt5?=
- =?utf-8?B?aXV2M054MkljNkllZ0IyRkswU3NhOUdMb1U2QTNWeTBsZ3JmYWlqSWJ3c2xY?=
- =?utf-8?B?ZGdQQldtTnk5Qy9IL1MvejF2Zi9KcCtCbUxPUTVEM0tiS1RHZW03R2VQM2J6?=
- =?utf-8?B?cTNTRkpLam0xajVMamJibitwb2QyWFAwMyt2cWhNVjNlbkdROFNzV1V4bHNo?=
- =?utf-8?B?WXJ6UjVFN3UzRDFJWFNDMkU4c0FubUZQMVIxUVlUY2FqR2ZVVEVwS0JxajNS?=
- =?utf-8?B?T0RxNFl3RDB4TXZpU3BZM1VPT2d2SjJTRmlpQXV6RVBnUWFVVXZHTS85M3hv?=
- =?utf-8?B?SHdmdEpRNnR0MUZ3ZWIzSlFYM0JTS1pLSlRwaUdzbk1pOGVMT2YyY205ZVRU?=
- =?utf-8?B?SmxwVTlzYXBRazluNmhRVXNSaXNYZzN3Q2F2NG5EZ1hWZis3MTkzVXJVakhF?=
- =?utf-8?B?Mi9QVFNoWnJucGdWekt5WER5UktSNkRyaGxLZnlYL3ZqOURiejVKdUR2WGcw?=
- =?utf-8?B?aVoyMEg5WmovK3dZR2dhMmV0dUw1QW1PeVBZTUtsM1g2WjRHUGcrY1lnN2tX?=
- =?utf-8?B?cnFlWEkvY3JIc09lZGJ5dHRvUjUrOHJoM1VWVmhzaVBUQ3ArTFB4aDU3MEsw?=
- =?utf-8?B?eDkwMWNZU3V6VVhhcCs0eDJmZis2eC9KNi93bDhZNFJvZmVORE1ZOS9UN3lK?=
- =?utf-8?B?ZktqQ0VaY21veFBaYlZOYk53cUhYSHZ5REtPUTl0dWhCemQ1T1o4UXR6aC9q?=
- =?utf-8?B?WkROR3MwRi95Z2ZONmNab0crMm5CZVQ1M1BNZWI0blJZWHJOL25lcTlGSUww?=
- =?utf-8?B?TWpsdklCWlR5VThKN1ZzR280S0YxWStxS1ZnTk5Ub3BEcFhOOHpjUGU4LzJt?=
- =?utf-8?B?b1d0NWc0UGNobXUzK1VLQ3pkYTNuWXNUTno5Qm96SkZ1bnowU2F1cm9EUWlZ?=
- =?utf-8?B?UkdFU0JjanBEcktyRjZraTdzeCtUZTAzTXJzRWhkazR2VnlsVzllZDhmbUx0?=
- =?utf-8?B?VzRpVm9uUjhuL05EOUtEVEZ1WSt2VVF1WmxyTDZtOHUwUEJzbTl2S1Awb1du?=
- =?utf-8?B?S05ET0ZycUFPaERpZytCRTJZOGlPOXRiVnFaU3BKSEtOT0VvaWVsVXNYM3Vp?=
- =?utf-8?B?R0ZyR0NlZFphSkFyWmo2STkzS1hOSTlXT2MxaVRCWE1HZkFpVlo0eUJOYzln?=
- =?utf-8?B?Y3BybzRHMGxlSWpZN3IwdjhIa2VFTHZHdGwvTkU0UUxTNys1OXRJbU85cjJm?=
- =?utf-8?B?OGI1M0VUVmpqRE5jVk92T1ZjMkR3czl2a3VSK0wxZG5YdFpQMHVWL3NDRjZM?=
- =?utf-8?B?V3Y3d2FXYlB0SXBBVEdLZGkwbzZURWxNdmtyRWcwd0l6QTFvakdOcXJZNjQw?=
- =?utf-8?B?L1pnQ0JkYjBmS0NvRnQwZ0t3ZW4zb09QTndLRDhkbnVPUWVCSTcvbGU0SXE0?=
- =?utf-8?B?MTZhSFowZDdBdWl0QWE4eHpPNXRzRDRhNjFXS1JMMXM2NndCU2JQeUZFY00x?=
- =?utf-8?B?R2d2MlVWdG4xbG5BMkgvZjZxMzgyR0dqam15V1RhQXJEV095QmoxVG1OdEV3?=
- =?utf-8?B?RngvME41UGw5bGRMNmc2R2tDam9BTHZwajY5YVFwN3FPQ256V2pNUVhIWkVy?=
- =?utf-8?B?bzUyM01OZlNPL0FHcDdkdXdQMi9DcnozdS9jRWxWYWpoYWVRRDdzTWtyeEpz?=
- =?utf-8?B?ODF0azlPQzNndU9Gc2YrcXVDQ0VwNkowZUhlbEkrcENhb25uRlVrVDhubnMw?=
- =?utf-8?Q?Kfdp+II9QdCvaIEKBDBw09b53?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c2a564a-3cca-46c5-9a17-08dd4a60130d
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB6473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 05:51:05.6546
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 36NpZtN9P5NP5RTCqACMAbMmRQRksBVoFTutLRolBbGcrxuaotXa4wyouVJxiZNindKBsIJoJGe606lJZsB/Cg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9254
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D7OVXDJEMH53.18HAI8VKLN997@gmail.com>
 
+On Mon, Feb 10, 2025 at 10:52:47AM -0500, Kurt Borja wrote:
+> On Mon Feb 10, 2025 at 10:36 AM -05, Greg Kroah-Hartman wrote:
+> > On Mon, Feb 10, 2025 at 09:58:24AM -0500, Kurt Borja wrote:
+> >> On Mon Feb 10, 2025 at 9:45 AM -05, Greg Kroah-Hartman wrote:
+> >> > On Mon, Feb 10, 2025 at 09:29:52AM -0500, Kurt Borja wrote:
+> >> >> Hi Greg,
+> >> >> 
+> >> >> On Mon Feb 10, 2025 at 7:30 AM -05, Greg Kroah-Hartman wrote:
+> >> >> > Many drivers abuse the platform driver/bus system as it provides a
+> >> >> > simple way to create and bind a device to a driver-specific set of
+> >> >> > probe/release functions.  Instead of doing that, and wasting all of the
+> >> >> > memory associated with a platform device, here is a "faux" bus that
+> >> >> > can be used instead.
+> >> >> >
+> >> >> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >> >> > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> >> >> > Reviewed-by: Lyude Paul <lyude@redhat.com>
+> >> >> > Reviewed-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> >> >> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >> >> > ---
+> >> >> > v4: - really removed the name logic
+> >> >> >     - added #include <linux/container_of.h> to faux.h
+> >> >> >     - added parent pointer to api call
+> >> >> >     - minor documentation updates
+> >> >> >     - made probe synchronous
+> >> >> > v3: - loads of documentation updates and rewrites
+> >> >> >     - added to the documentation build
+> >> >> >     - removed name[] array as it's no longer needed
+> >> >> >     - added faux_device_create_with_groups()
+> >> >> >     - added functions to get/set devdata
+> >> >> >     - renamed faux_driver_ops -> faux_device_ops
+> >> >> >     - made faux_device_ops a const *
+> >> >> >     - minor cleanups
+> >> >> >     - tested it, again.
+> >> >> >
+> >> >> > v2: - renamed bus and root device to just "faux" thanks to Thomas
+> >> >> >     - removed the one-driver-per-device and now just have one driver
+> >> >> >       entirely thanks to Danilo
+> >> >> >     - kerneldoc fixups and additions and string handling bounds checks
+> >> >> >       thanks to Andy
+> >> >> >     - coding style fix thanks to Jonathan
+> >> >> >     - tested that the destroy path actually works
+> >> >> >  Documentation/driver-api/infrastructure.rst |   6 +
+> >> >> >  drivers/base/Makefile                       |   2 +-
+> >> >> >  drivers/base/base.h                         |   1 +
+> >> >> >  drivers/base/faux.c                         | 232 ++++++++++++++++++++
+> >> >> >  drivers/base/init.c                         |   1 +
+> >> >> >  include/linux/device/faux.h                 |  69 ++++++
+> >> >> >  6 files changed, 310 insertions(+), 1 deletion(-)
+> >> >> >  create mode 100644 drivers/base/faux.c
+> >> >> >  create mode 100644 include/linux/device/faux.h
+> >> >> >
+> >> >> > diff --git a/Documentation/driver-api/infrastructure.rst b/Documentation/driver-api/infrastructure.rst
+> >> >> > index 3d52dfdfa9fd..35e36fee4238 100644
+> >> >> > --- a/Documentation/driver-api/infrastructure.rst
+> >> >> > +++ b/Documentation/driver-api/infrastructure.rst
+> >> >> > @@ -41,6 +41,12 @@ Device Drivers Base
+> >> >> >  .. kernel-doc:: drivers/base/class.c
+> >> >> >     :export:
+> >> >> >  
+> >> >> > +.. kernel-doc:: include/linux/device/faux.h
+> >> >> > +   :internal:
+> >> >> > +
+> >> >> > +.. kernel-doc:: drivers/base/faux.c
+> >> >> > +   :export:
+> >> >> > +
+> >> >> >  .. kernel-doc:: drivers/base/node.c
+> >> >> >     :internal:
+> >> >> >  
+> >> >> > diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+> >> >> > index 7fb21768ca36..8074a10183dc 100644
+> >> >> > --- a/drivers/base/Makefile
+> >> >> > +++ b/drivers/base/Makefile
+> >> >> > @@ -6,7 +6,7 @@ obj-y			:= component.o core.o bus.o dd.o syscore.o \
+> >> >> >  			   cpu.o firmware.o init.o map.o devres.o \
+> >> >> >  			   attribute_container.o transport_class.o \
+> >> >> >  			   topology.o container.o property.o cacheinfo.o \
+> >> >> > -			   swnode.o
+> >> >> > +			   swnode.o faux.o
+> >> >> >  obj-$(CONFIG_AUXILIARY_BUS) += auxiliary.o
+> >> >> >  obj-$(CONFIG_DEVTMPFS)	+= devtmpfs.o
+> >> >> >  obj-y			+= power/
+> >> >> > diff --git a/drivers/base/base.h b/drivers/base/base.h
+> >> >> > index 8cf04a557bdb..0042e4774b0c 100644
+> >> >> > --- a/drivers/base/base.h
+> >> >> > +++ b/drivers/base/base.h
+> >> >> > @@ -137,6 +137,7 @@ int hypervisor_init(void);
+> >> >> >  static inline int hypervisor_init(void) { return 0; }
+> >> >> >  #endif
+> >> >> >  int platform_bus_init(void);
+> >> >> > +int faux_bus_init(void);
+> >> >> >  void cpu_dev_init(void);
+> >> >> >  void container_dev_init(void);
+> >> >> >  #ifdef CONFIG_AUXILIARY_BUS
+> >> >> > diff --git a/drivers/base/faux.c b/drivers/base/faux.c
+> >> >> > new file mode 100644
+> >> >> > index 000000000000..531e9d789ee0
+> >> >> > --- /dev/null
+> >> >> > +++ b/drivers/base/faux.c
+> >> >> > @@ -0,0 +1,232 @@
+> >> >> > +// SPDX-License-Identifier: GPL-2.0-only
+> >> >> > +/*
+> >> >> > + * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >> >> > + * Copyright (c) 2025 The Linux Foundation
+> >> >> > + *
+> >> >> > + * A "simple" faux bus that allows devices to be created and added
+> >> >> > + * automatically to it.  This is to be used whenever you need to create a
+> >> >> > + * device that is not associated with any "real" system resources, and do
+> >> >> > + * not want to have to deal with a bus/driver binding logic.  It is
+> >> >> > + * intended to be very simple, with only a create and a destroy function
+> >> >> > + * available.
+> >> >> > + */
+> >> >> > +#include <linux/err.h>
+> >> >> > +#include <linux/init.h>
+> >> >> > +#include <linux/slab.h>
+> >> >> > +#include <linux/string.h>
+> >> >> > +#include <linux/container_of.h>
+> >> >> > +#include <linux/device/faux.h>
+> >> >> > +#include "base.h"
+> >> >> > +
+> >> >> > +/*
+> >> >> > + * Internal wrapper structure so we can hold a pointer to the
+> >> >> > + * faux_device_ops for this device.
+> >> >> > + */
+> >> >> > +struct faux_object {
+> >> >> > +	struct faux_device faux_dev;
+> >> >> > +	const struct faux_device_ops *faux_ops;
+> >> >> > +};
+> >> >> > +#define to_faux_object(dev) container_of_const(dev, struct faux_object, faux_dev.dev)
+> >> >> > +
+> >> >> > +static struct device faux_bus_root = {
+> >> >> > +	.init_name	= "faux",
+> >> >> > +};
+> >> >> > +
+> >> >> > +static int faux_match(struct device *dev, const struct device_driver *drv)
+> >> >> > +{
+> >> >> > +	/* Match always succeeds, we only have one driver */
+> >> >> > +	return 1;
+> >> >> > +}
+> >> >> > +
+> >> >> > +static int faux_probe(struct device *dev)
+> >> >> > +{
+> >> >> > +	struct faux_object *faux_obj = to_faux_object(dev);
+> >> >> > +	struct faux_device *faux_dev = &faux_obj->faux_dev;
+> >> >> > +	const struct faux_device_ops *faux_ops = faux_obj->faux_ops;
+> >> >> > +	int ret = 0;
+> >> >> > +
+> >> >> > +	if (faux_ops && faux_ops->probe)
+> >> >> > +		ret = faux_ops->probe(faux_dev);
+> >> >> > +
+> >> >> > +	return ret;
+> >> >> > +}
+> >> >> > +
+> >> >> > +static void faux_remove(struct device *dev)
+> >> >> > +{
+> >> >> > +	struct faux_object *faux_obj = to_faux_object(dev);
+> >> >> > +	struct faux_device *faux_dev = &faux_obj->faux_dev;
+> >> >> > +	const struct faux_device_ops *faux_ops = faux_obj->faux_ops;
+> >> >> > +
+> >> >> > +	if (faux_ops && faux_ops->remove)
+> >> >> > +		faux_ops->remove(faux_dev);
+> >> >> > +}
+> >> >> > +
+> >> >> > +static const struct bus_type faux_bus_type = {
+> >> >> > +	.name		= "faux",
+> >> >> > +	.match		= faux_match,
+> >> >> > +	.probe		= faux_probe,
+> >> >> > +	.remove		= faux_remove,
+> >> >> > +};
+> >> >> > +
+> >> >> > +static struct device_driver faux_driver = {
+> >> >> > +	.name		= "faux_driver",
+> >> >> > +	.bus		= &faux_bus_type,
+> >> >> > +	.probe_type	= PROBE_FORCE_SYNCHRONOUS,
+> >> >> > +};
+> >> >> > +
+> >> >> > +static void faux_device_release(struct device *dev)
+> >> >> > +{
+> >> >> > +	struct faux_object *faux_obj = to_faux_object(dev);
+> >> >> > +
+> >> >> > +	kfree(faux_obj);
+> >> >> > +}
+> >> >> > +
+> >> >> > +/**
+> >> >> > + * faux_device_create_with_groups - Create and register with the driver
+> >> >> > + *		core a faux device and populate the device with an initial
+> >> >> > + *		set of sysfs attributes.
+> >> >> > + * @name:	The name of the device we are adding, must be unique for
+> >> >> > + *		all faux devices.
+> >> >> > + * @parent:	Pointer to a potential parent struct device.  If set to
+> >> >> > + *		NULL, the device will be created in the "root" of the faux
+> >> >> > + *		device tree in sysfs.
+> >> >> > + * @faux_ops:	struct faux_device_ops that the new device will call back
+> >> >> > + *		into, can be NULL.
+> >> >> > + * @groups:	The set of sysfs attributes that will be created for this
+> >> >> > + *		device when it is registered with the driver core.
+> >> >> > + *
+> >> >> > + * Create a new faux device and register it in the driver core properly.
+> >> >> > + * If present, callbacks in @faux_ops will be called with the device that
+> >> >> > + * for the caller to do something with at the proper time given the
+> >> >> > + * device's lifecycle.
+> >> >> > + *
+> >> >> > + * Note, when this function is called, the functions specified in struct
+> >> >> > + * faux_ops can be called before the function returns, so be prepared for
+> >> >> > + * everything to be properly initialized before that point in time.
+> >> >> > + *
+> >> >> > + * Return:
+> >> >> > + * * NULL if an error happened with creating the device
+> >> >> > + * * pointer to a valid struct faux_device that is registered with sysfs
+> >> >> > + */
+> >> >> > +struct faux_device *faux_device_create_with_groups(const char *name,
+> >> >> > +						   struct device *parent,
+> >> >> > +						   const struct faux_device_ops *faux_ops,
+> >> >> > +						   const struct attribute_group **groups)
+> >> >> > +{
+> >> >> > +	struct faux_object *faux_obj;
+> >> >> > +	struct faux_device *faux_dev;
+> >> >> > +	struct device *dev;
+> >> >> > +	int ret;
+> >> >> > +
+> >> >> > +	faux_obj = kzalloc(sizeof(*faux_obj), GFP_KERNEL);
+> >> >> > +	if (!faux_obj)
+> >> >> > +		return NULL;
+> >> >> > +
+> >> >> > +	/* Save off the callbacks so we can use them in the future */
+> >> >> > +	faux_obj->faux_ops = faux_ops;
+> >> >> > +
+> >> >> > +	/* Initialize the device portion and register it with the driver core */
+> >> >> > +	faux_dev = &faux_obj->faux_dev;
+> >> >> > +	dev = &faux_dev->dev;
+> >> >> > +
+> >> >> > +	device_initialize(dev);
+> >> >> > +	dev->release = faux_device_release;
+> >> >> > +	if (parent)
+> >> >> > +		dev->parent = parent;
+> >> >> > +	else
+> >> >> > +		dev->parent = &faux_bus_root;
+> >> >> > +	dev->bus = &faux_bus_type;
+> >> >> > +	dev->groups = groups;
+> >> >> > +	dev_set_name(dev, "%s", name);
+> >> >> > +
+> >> >> > +	ret = device_add(dev);
+> >> >> > +	if (ret) {
+> >> >> > +		pr_err("%s: device_add for faux device '%s' failed with %d\n",
+> >> >> > +		       __func__, name, ret);
+> >> >> > +		put_device(dev);
+> >> >> > +		return NULL;
+> >> >> > +	}
+> >> >> 
+> >> >> Now that the probe is synchronous, what do you think about returning
+> >> >> -ENODEV if the device failed to bind to the driver?
+> >> >
+> >> > Nope, that would make all callers have to deal with a pointer or a NULL,
+> >> > or an error value encorporated in a pointer.
+> >> 
+> >> Right! I thought for a sec this function returned ERR_PTRs.
+> >> 
+> >> >
+> >> >> This would be useful for modules that may want to unload if the probe
+> >> >> fails.
+> >> >
+> >> > Then just test for NULL, there's nothing preventing that, right?
+> >> 
+> >> Please, correct me if I'm wrong. If the probe the user provided fails
+> >> the device would still be added successfully to the bus. That means this
+> >> function would return a valid pointer and the module has no way of
+> >> knowing if the probe succeeded in an __init section.
+> >
+> > Ah, yes, you are totally correct here.  You don't know if the probe
+> > failed or not.  But your device is still "live" and you can only get rid
+> > of it by calling faux_device_destroy(), all that might be wrong with it
+> > is that it's not really associated with the bus.
+> 
+> I'm curious of what happens with the sysfs groups you pass if the probe
+> fails. Do they get assigned on driver attachment or right after
+> device_add()? Because those sysfs attributes may depend on resources
+> initialized on the probe.
 
-On 05-02-2025 19:45, Thierry Reding wrote:
-> On Mon, Feb 03, 2025 at 10:53:04AM +0000, Sheetal . wrote:
->> From: Sheetal <sheetal@nvidia.com>
->>
->> Add interconnect framework support to set required audio bandwidth
->> based on PCM device usage. The maximum bandwidth is determined by
->> the number of APE PCM devices and maximum audio format supported.
->>
->> If interconnect property is not defined or INTERCONNECT config
->> is not enabled then the audio usecase will still function.
->>
->> Validate bandwidth updates by reading the interconnect summary sysfs
->> node during PCM device open and close operations.
->>
->> Signed-off-by: Sheetal <sheetal@nvidia.com>
->>
->> ---
->> v2: Fix pcm_id parameter uninitialized warning.
->> ---
->>   sound/soc/tegra/Makefile          |   2 +-
->>   sound/soc/tegra/tegra210_admaif.c |  24 +++++-
->>   sound/soc/tegra/tegra210_admaif.h |   9 +-
->>   sound/soc/tegra/tegra_isomgr_bw.c | 132 ++++++++++++++++++++++++++++++
->>   sound/soc/tegra/tegra_isomgr_bw.h |  31 +++++++
->>   5 files changed, 192 insertions(+), 6 deletions(-)
->>   create mode 100644 sound/soc/tegra/tegra_isomgr_bw.c
->>   create mode 100644 sound/soc/tegra/tegra_isomgr_bw.h
->>
->> diff --git a/sound/soc/tegra/Makefile b/sound/soc/tegra/Makefile
->> index cea4b0d54378..defea7f53f11 100644
->> --- a/sound/soc/tegra/Makefile
->> +++ b/sound/soc/tegra/Makefile
->> @@ -13,7 +13,7 @@ snd-soc-tegra210-dmic-y := tegra210_dmic.o
->>   snd-soc-tegra210-i2s-y := tegra210_i2s.o
->>   snd-soc-tegra186-asrc-y := tegra186_asrc.o
->>   snd-soc-tegra186-dspk-y := tegra186_dspk.o
->> -snd-soc-tegra210-admaif-y := tegra210_admaif.o
->> +snd-soc-tegra210-admaif-y := tegra210_admaif.o tegra_isomgr_bw.o
-> I don't understand why this had to be tacked on like this? Why do we
-> need exported symbols for something that looks otherwise very specific
-> to ADMAIF? Will this ever be used outside of the ADMAIF driver? If not
-> this should just be moved into tegra210_admaif.c and then there's no
-> need for the EXPORT_SYMBOL() either.
-Thanks for pointing, will send a separate patch to fix this.
->
-> Thierry
+The driver core handles this for us, for a default device attribute
+group, nothing new here.
+
+> > You can still assign resources to it, AND the resources will be freed up
+> > when the device goes away (see the comment in device_release() for
+> > specifics as to this happening today for platform devices.)
+> >
+> > I guess we can test for this and handle it, if you feel it is necessary,
+> > it wouldn't be hard to do so, but let me add this later as it's the same
+> > problem with platform devices and odds are we want to fix that issue up
+> > there too, right?
+> 
+> Platform devices have platform_create_bundle() which does check if the
+> probe succeeded.
+
+Almost no one uses that function, and I'm really not sure that it does
+that check either (got lost in the maze yesterday, I'll look into it
+later today.)
+
+This api is to replace the examples in this series that do NOT use the
+create_bundle() api, which has the exact same functionality of "we don't
+know if the driver was bound or not" logic.
+
+> >> > Also, the only way probe can fail is if the probe you passed into the
+> >> > call fails.  Or if you picked a name that is already in the system, both
+> >> 
+> >> Exactly. I'm thinking of modules that are very simple and just care
+> >> about the probe succeeding, so having the device hanging around in the
+> >> bus and the module loaded would be a waste of resources.
+> >
+> > Modules usually don't need to do the probe callback at all.  I show one
+> > example in this series (the regulator dummy driver), but it can be
+> > easily rewritten to not need that at all.
+> 
+> This is a good point, but from a developer standpoint I would always try
+> to use the probe callback. This API seems to suggest that's the
+> appropiate use.
+> 
+> Also it would be amazing if the probe could reside in an __init section.
+
+Probes should NEVER be in an init section for obvious reasons.  Please
+don't do that today.
+
+thanks,
+
+greg k-h
