@@ -1,64 +1,42 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA3A1EE7C2
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739261742; cv=none; b=rIcoc+sKpClKJsg/WQNUN9Pvr1G46sa8UGJCVkbHZazkPEifCDnuW5+FZDPFOYKV8l317s9W9a1Q9lqcxA6ps/eGK/rYr7AS+JeLfq1CwDDY0caSTPVcztVY5S+97p6WwJ99q77iLUILmgFzQwP4ZUibPZuULRK9FNPmXWCcvI4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739261742; c=relaxed/simple;
-	bh=h2/pIydPFxFhHqLCHsZVs7Z0HrzQ8CX1VOzjLTd+tok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mSO9n6kpZI2xnxBZuak3q2D0gZSKCwfTqFeHiPM1UtTv7q6Oj4M0n55CocWzmjv2m4lcaNbcwylcXIcxbzss1WdRuCe+YCpTVKpYFWKEpCmCDNNS7EGQ7H7F082q9wH0w10AyG2jW5s2gZ1V5NBMSUgGELPTzc99wvhJqndvV+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=s55KmjgW; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377A21EE031;
+	Tue, 11 Feb 2025 08:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739261745; cv=pass; b=cJ5om75DlAaGENb7phIcfEMCaBEKgOqacF7LDznf5Ny+CfeM4vo6oNsO3nWzb/Zfkx81Ie/6YHpP9BOCCxalv7OdEb+gQLjeLAAzsDucOFTd5HwesjFE0ZqVczTNLWrMwUeZVgOgHcHDtP8VdOlFCRPNkxSS3KcfN4J92Fq3ef8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739261745; c=relaxed/simple;
+	bh=ml9HCLFnHj3okZfENU5PWNu76H5yibO9VbLtc/Rw0KE=;
+	h=Message-ID:Date:MIME-Version:Cc:From:Subject:To:Content-Type; b=sOwr8ROwmwcWGhqD6wzFIxnhtwd2ZCujXDhjeDHTwoUQEFReJn/qYxXYTcv9bDAruGrPkTWiJNUNW1h8PW9nerVXhsbZe4FRIgF2Jf3anIw3gV3y5ncaOudiEJ12VpZ6feesCPwxR2DSMXXu0qlVao7MbMz7uphPnJuWl99XNgA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b=HvnVlaZa; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="s55KmjgW"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4361b0ec57aso52469425e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:15:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739261738; x=1739866538; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=c3IGe4OcFv6FI23HlHP/OAtXBHpwlZj9qeTFPSe5VqM=;
-        b=s55KmjgWgXRVU2Ccnh5UVf0CGTZ0gJQvu5+TnNU95gLupaM2ciRQYE7jHIW36H4wCM
-         By8HF1CQTkHz3TVVK5L9mOiCuOkmG026CklFUHvPiGssKGow1vlGWvNArNwx9NIxahqk
-         qjnDRSIuRjd0WrTarXDPbzQv4omSQCOsrij2PjlQAKTJjgm3zTCb5RyC3wtBHs9XYLsB
-         WDMWvbSDvSLGhORXXLjBVl3e/2sFetEuCoKUqDY0PQnFcJFcMihQRIWGYJlRCRQviiiz
-         iK/tSNHyx+kZayRcryff+uTxGO2kfa7rhZJspZpvzgpKNBCYdz2wCJIy8Ljk6eHqJ7n8
-         Q7FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739261738; x=1739866538;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c3IGe4OcFv6FI23HlHP/OAtXBHpwlZj9qeTFPSe5VqM=;
-        b=EHYbSXPgEjgSpPyE/m8ciA4BwobNEa6TqUckFtzbB8Cnw95ARH+E1ZI/blvQ+IhAFW
-         Dy9r1nwZGY1x1DWIkaUAqrQiC9CRVQNa0XyXKIUWr6+yCyuY/zgeA1hUrTeGwJpC7FkU
-         izhZN7T6to16aVN2gAZ1F2AFIl40XqWVIr0bJ1ch5KZacyAKntHv+PJQ6W+a/tqNUxow
-         it9wqBdwMqpq/juVcoFlMNXdivlkBnXNGP/6RjCMPMN3xGY7NjsQFLzbmyDjULEM+oVQ
-         QjDLxhdMyVT0AhDBOuPyiL6O+nOoWuoAsHJw3wabtjCGkeBA48cJn93hiUaLVPOb0udu
-         6lCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQpFlAss+HJJBXTs6UAyiZIEtzXoHkOTnqZ+DTBDQMKvanItckCXsi5cDyP/w66Vu7p3VvaLiI8VSNZs8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcNjt2zuGW4OgWrGNioUdX3bdJcwgqcb03ua6lc9raW54SLU7c
-	M1DjxtEfYRmoFspyFaryyhyKdtEsqKdhi1AbR87NIX1duPIs1QD2FpPHdS7Aisg=
-X-Gm-Gg: ASbGncv9WIlR6z4hO10uxtyH68c8lKWkBjA5bBxUScTw4t3TMJsEMD61XScvvESPHAx
-	oBHfUqU/FcRe7imxjxWPPibnp1+ztWXTfIMZ/rMzWYxW87dX5mhnS/uh7fsKtzh0ZDcDCttJZNY
-	3vvA9q8K2sONbg/bndmL3z/+IO1BH5sevk7YvXE/ICcFmT+8CAU+2ytiHr1ya0KiY7ZLVy0fiNI
-	wh0+4ooTuL9equsveI7+mv5SLGlz2ckaRcjTyj86CED/oOnsbG22KmjKZ28xSJ27s6TXvNZmANV
-	Xk4LZDdSMP/hZ283GYpCMog3aLlzYyJN9UMcA3f3l2TKhkPSKKBo34qYosYn
-X-Google-Smtp-Source: AGHT+IH+5QrN1U/95DO6o4UiF6FvG8maAzowDO/GoyJnqUeyjwX0zNb5nUEP64Igjir4Mqu4zYfDmw==
-X-Received: by 2002:a05:600c:1d02:b0:434:a815:2b57 with SMTP id 5b1f17b1804b1-439249a8276mr125068715e9.20.1739261738429;
-        Tue, 11 Feb 2025 00:15:38 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dce18d6f9sm10586921f8f.29.2025.02.11.00.15.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 00:15:38 -0800 (PST)
-Message-ID: <56d2e34f-56cf-4141-b85f-1b11f560feaa@rivosinc.com>
-Date: Tue, 11 Feb 2025 09:15:37 +0100
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b="HvnVlaZa"
+ARC-Seal: i=1; a=rsa-sha256; t=1739261723; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=UGPx6GsCZ4qC2x55GioKK9jhZ4XcOAQhBYpk1HPuJcKFfIoQ+CusgVxAZc/n4Ajcr03BfWVFPIBpyEx5OhBzPZbyMsMab/FyMbonI4E/ZiYYnrglITikLTy4/fraTretrYrFQedBKJzJe7LralxjDapL4HPU9mEjor8bb5hOxhE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739261723; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Jm2+B3dC9Go2CBCBCYErvWv91+CAUXIZB+j0be0w8Fc=; 
+	b=GHJIVZsZ7anm0JxHe69Z9GlJJBFfIpDJd24M3kZWYYjdowqg9UMcWn03BqYHtHTFMPHlhZo8XiMOt7S47cRcO0TO68yL9DObmLBhm1pZsb1/Pf0DKSkTPVqQNPWYIU2VxD3Pe7TefJd5DCryl+l1PL4sH3SE7PG1sGcVyikoJeI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=Usama.Anjum@collabora.com;
+	dmarc=pass header.from=<Usama.Anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739261723;
+	s=zohomail; d=collabora.com; i=Usama.Anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:From:From:Subject:Subject:To:To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=Jm2+B3dC9Go2CBCBCYErvWv91+CAUXIZB+j0be0w8Fc=;
+	b=HvnVlaZaABEpZRMUDfS656mZSHd3yqfW/qACeoH9MdwFui+vy9u3FasRnBzOqame
+	JE1eP+c1fEdG7RFH3o4ztcm5UpTN9QT2adnfp+SRmGMC8qmyxwwol+/5+PBgzCw89Bb
+	lr6rmaS/v+7lAcb2wBG19dn54pNQeGXwa6a+zvFg=
+Received: by mx.zohomail.com with SMTPS id 1739261719547543.4080545437324;
+	Tue, 11 Feb 2025 00:15:19 -0800 (PST)
+Message-ID: <59c036b6-a3d6-403b-8bb0-566a17f72abc@collabora.com>
+Date: Tue, 11 Feb 2025 13:15:55 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,80 +44,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: cpufeature: use bitmap_equal() instead of memcmp()
-To: Alexandre Ghiti <alex@ghiti.fr>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- "open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-Cc: Conor Dooley <conor@kernel.org>, Alexandre Ghiti <alexghiti@rivosinc.com>
-References: <20250210155615.1545738-1-cleger@rivosinc.com>
- <968ff88f-ae77-43b4-a5b4-1a4b0bf61098@ghiti.fr>
+Cc: Usama.Anjum@collabora.com, linux-arm-msm@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+ kernel@collabora.com
 Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <968ff88f-ae77-43b4-a5b4-1a4b0bf61098@ghiti.fr>
+From: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
+Subject: [BUG REPORT] MHI's resume from hibernate is broken
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Johan Hovold <johan@kernel.org>, Loic Poulain <loic.poulain@linaro.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
+Hi,
 
+I've been digging in the MHI code to find the reason behind broken
+resume from hibernation for MHI. The same resume function is used
+for both resume from suspend and resume from hibernation. The resume
+from suspend works fine because at resume time the state of MHI is 
+MHI_STATE_M3. On the other hand, the state is MHI_STATE_RESET when
+we resume from hibernation.
 
-On 11/02/2025 08:41, Alexandre Ghiti wrote:
-> Hi Clément,
-> 
-> On 10/02/2025 16:56, Clément Léger wrote:
->> Comparison of bitmaps should be done using bitmap_equal(), not memcmp(),
->> use the former one to compare isa bitmaps.
->>
->> Signed-off-by: Clément Léger <cleger@rivosinc.com>
->> ---
->>   arch/riscv/kernel/cpufeature.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/
->> cpufeature.c
->> index c6ba750536c3..40ac72e407b6 100644
->> --- a/arch/riscv/kernel/cpufeature.c
->> +++ b/arch/riscv/kernel/cpufeature.c
->> @@ -479,7 +479,7 @@ static void __init riscv_resolve_isa(unsigned long
->> *source_isa,
->>               if (bit < RISCV_ISA_EXT_BASE)
->>                   *this_hwcap |= isa2hwcap[bit];
->>           }
->> -    } while (loop && memcmp(prev_resolved_isa, resolved_isa,
->> sizeof(prev_resolved_isa)));
->> +    } while (loop && !bitmap_equal(prev_resolved_isa, resolved_isa,
->> RISCV_ISA_EXT_MAX));
->>   }
->>     static void __init match_isa_ext(const char *name, const char
->> *name_end, unsigned long *bitmap)
-> 
-> 
-> Since bitmap does not guarantee the value of the 'extra' bits (https://
-> elixir.bootlin.com/linux/v6.13.1/source/lib/bitmap.c#L24), this is a fix
-> so I would add a Fixes tag:
-> 
-> Fixes: 625034abd52a8c ("riscv: add ISA extensions validation callback")
+It seems resume from MHI_STATE_RESET state isn't correctly supported.
+The channel state is MHI_CH_STATE_ENABLED at this point. We get error
+while switching channel state from MHI_CH_STATE_ENABLE to
+MHI_CH_STATE_RUNNING. Hence, channel state change fails and later mhi
+resume fails as well. 
 
-Yeah, I wasn't sure since it does not fix anything per se. We aligned
-the ISA size to a multiple of 64 (128) so we actually do not have any
-extra undefined bits. But I agree that it's better to track it correctly
-as a fix.
+I've put some debug prints to understand the issue. These may be
+helpful:
 
-That makes me think that we could actually size RISCV_ISA_EXT_MAX to be
-exactly the number of ISA extensions we support rather than a larger
-arbitrary value.
+[  669.032683] mhi_update_channel_state: switch to MHI_CH_STATE_TYPE_START[2] channel state not possible cuzof channel current state[1]. mhi state: [0] Return -EINVAL
+[  669.032685] mhi_prepare_channel: mhi_update_channel_state to MHI_CH_STATE_TYPE_START[2] returned -22
+[  669.032693] qcom_mhi_qrtr mhi0_IPCR: failed to prepare for autoqueue transfer -22
 
-> 
-> You can also add:
-> 
-> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+This same error has been reported on some fix patches [1] [2]. Are there
+any patches which I should test? 
 
-Thanks !
+Is officially hibernation use case supported at all?
 
-Clément
+In my view, this path may not have gotten tested and can be fixed easily
+as we need to perform, more or less the same steps which were performed
+at init time. But I've not found much documentation around MHI protocol
+and its state machine, how is mhi state related to mhi channels support.
 
-> 
-> Thanks,
-> 
-> Alex
-> 
+PS: Just some information, my device has QCNFA765 endpoint and ath11k_pci
+is being used. It doesn't seem like the problem is in the driver. The
+problem is on the host side which isn't able to communicate correctly with
+the endpoint. The resume from hibernation would be broken on all wifi
+chips using mhi.
+
+[1] https://lore.kernel.org/all/Z5EKrbXMTK9WBsbq@hovoldconsulting.com 
+[2] https://lore.kernel.org/all/Z5ENq9EMPlNvxNOF@hovoldconsulting.com 
+-- 
+BR,
+Muhammad Usama Anjum
 
