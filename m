@@ -1,125 +1,221 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2054.outbound.protection.outlook.com [40.107.100.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8645826BDA8;
-	Tue, 11 Feb 2025 08:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739262104; cv=none; b=meosbq3Zki6P58fAhjoRgn4r6p9210TYAAK7ZrPHCe4r2AjROq+4CwOwqF+NAJKkMaOJrXofOwSni3nlY5RqHsUvKNuaS3OaSCCYTZidVAPd3UIICV7XtvJPRsMEGHC+Udew7MaZjNUpn+sX3WpBkxwDD6B00K7ypbh+T+1Im2E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739262104; c=relaxed/simple;
-	bh=F/wyFTGIS4w4RjHEHqyY2nYD2HSLonYYUIcDxUOuYe4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n4hairrs8IyuZ7bqUQiBFAY3DWwbUTjtGQH9K8aMcgq/28rHt2H+tmeX5WyVuf/fMsEe1EJ1xclqZqVuvUCq1n2W0nmrSakITb3gO1NpGc0iMMID0vfFWsahEyJlyiourRyfNPLqZLlNHSscfLPQlQzPd1aRlTsOp7Sm3huHqdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hmM2KBL7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iP3Ax1Kp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B4F1EE021;
+	Tue, 11 Feb 2025 08:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739262120; cv=fail; b=U11oR6zR2FSTpbrmZH+dB5iVFXCc2ols62nMUpeqTMiF7cVZvCHX0/VXYYe9FZQdiB6aYTe+W/g+g558IPq14Asxm1OGWs+JpcQGgWDLB4+LTCXi2Zf2ObTJIhQRnmyZ1GJGVNK37yDQRMZ0e0KiWuu/U+VkmA/fds0E63FN+To=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739262120; c=relaxed/simple;
+	bh=qKguWasAukKX/vr6LRmdIqmywBMmAG4dGs0KRHR0mkc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ktMId2Mb0hy8qx9U1uEegCx9tBQH/Cch/LQkclA8bIanWfvyDslk2LSpCaxbjb9WIw/+6XDo5g64BA2Q2q8NPa4elqEv79B0iSjN0SXu30mu1leOPswqeAZtuvQPF/Z8lWCl6WmMRoKLVP3Yc/+PfJXbHm3c1V31AM9FY3UxBDI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2gnHYT3v; arc=fail smtp.client-ip=40.107.100.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hmM2KBL7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iP3Ax1Kp"
-Date: Tue, 11 Feb 2025 09:21:38 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739262100;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9BlClQg/igJMGUDxsPh2k6TNuhBuRDg74jGMgRLHdWM=;
-	b=hmM2KBL7vW7mDZ2m2kbRTvbCD1THEqo2LjN8tx/vGwvctzhHHXlVAEKUGpfESAL9YPhBuv
-	y/HN+6gdC4qlUDrFdwiEBbsBrDEnipn3X82MeQUJcSiYJSsiWU6g/Olxzg5PyhNtdzy5dw
-	r/rM9M3gk0pFfH0vlgy2kdbsgCOYUeqI8YtU55mv8gsAm75duubgX1U0D/2qRthLx+x4UL
-	DfPlPP3TlAi4/1nvJV5qZUKm5vifF1I91EMjwFWYLwjUeiLfyDZankUhBfu4ktYQkgEaKf
-	ubojmPUwwhuHGpigHEGo0tXB0t9qW8QCmwHJpVsmeDx6egZpC9p2C1qOALhEkw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739262100;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9BlClQg/igJMGUDxsPh2k6TNuhBuRDg74jGMgRLHdWM=;
-	b=iP3Ax1Kp6OqZ6pKpSWuFyA+erFCUcCmN36r5C/3Jpzbml2Ws6g3A+h3Boal+r6tX6LYeNk
-	SR/VoVg2YhdwQaCQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Joel Fernandes <joel@joelfernandes.org>,
-	Prakash Sangappa <prakash.sangappa@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
-	x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	luto@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
-	bharata@amd.com, raghavendra.kt@amd.com,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
-	Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Clark Williams <clark.williams@gmail.com>, daniel.wagner@suse.com,
-	Joseph Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250211082138.iqvedSfG@linutronix.de>
-References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
- <9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
- <20250204220418.35949317@gandalf.local.home>
- <CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
- <20250205081635.397eacb0@gandalf.local.home>
- <CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
- <20250206083039.0916ad24@gandalf.local.home>
- <20250206134408.lD_POjuG@linutronix.de>
- <20250210144321.1f5974a6@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2gnHYT3v"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tqr54alwSiNNMm4VcoeFPX1k/N4dDhiLbNXg3CThVhQzGilncQS+uD/rJo6K57/mXPcYd/20dNh+mQGVJR3cSIvnaJOlY3mWuMmoP3vrquR9lB1gTgyThDOBn0nwUk3EdFFtf3MyGvLibaAzETqfDPgPt9HYqtAG+JpI4+gXCGDMT/tpjmHiuCWWDQM4i5PYnfcmF2cCXIuCP8HuSRruBYsz2HE8bnxsRsus7xEinCXbvV8eJP2XHwq8ceCm1ftM5iHRO68jKXs7tcPXUaAphaba0fKGJJg8i17CD1wsCvHCh+4ZrbjcNwamXLamJKnC92uIit08FSvLY4x0PoPgew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sLCYkT7mYPYDBlK2MoFUZShMGZTdaxMYRgxP4ZlBDNY=;
+ b=UyXGoPxSTKC/cLv55FCOVGLBcOvd7nB/klrfWjKzPMv3mSbuLpYe7bKW2VKimhyKuLShzf4HeiPTTJaheyIkzsvt34ZB5acoCPCaCsUBWXC3UCKQ2BA5wGYrBUPZ5hP1JCg9t0aFFJs211Pr+fz5s5AQVC0sEQjhBdSzILVeue0xtpW6nAbe/7ffSUjEOw5tDRSxz6HgxfJ2LNv0wcOxXpE0ij/O7XWYhZSfGVZahDpuICLIqfKn/S6KGmtFe8B2WZDnTmZJNbVxiSVvPS3Tsuyt7dmqCbQP/rX/m8szcbepQhg/TLPlBSHJ4jahy/GnX0QhxzlggRBbDZIIGEOMVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sLCYkT7mYPYDBlK2MoFUZShMGZTdaxMYRgxP4ZlBDNY=;
+ b=2gnHYT3vmymwWZLqWC4EO6HCYuu06vvSv/poHZ9tbifaczFr6zcbUCSzvl9dt9BL1lrLwyuEU0Rq2ORF4pli43p7s9jaivOBddt+orUAqbbyONg8ipvgTV/NTX/bef3+6xGaphvOia07QzaaHYFQCYbpoSrVEc5y8AHHB/dOeq0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4123.namprd12.prod.outlook.com (2603:10b6:5:21f::23)
+ by PH0PR12MB7488.namprd12.prod.outlook.com (2603:10b6:510:1e9::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Tue, 11 Feb
+ 2025 08:21:55 +0000
+Received: from DM6PR12MB4123.namprd12.prod.outlook.com
+ ([fe80::512d:6caa:552a:7ebf]) by DM6PR12MB4123.namprd12.prod.outlook.com
+ ([fe80::512d:6caa:552a:7ebf%3]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
+ 08:21:55 +0000
+Message-ID: <f5f829d2-6e38-4d91-9621-94a85c0d8e14@amd.com>
+Date: Tue, 11 Feb 2025 13:51:47 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 00/23] ASoC: amd: acp70: add soundwire and acp pdm
+ support
+Content-Language: en-US
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
+ tiwai@suse.com, Basavaraj.Hiregoudar@amd.com, Sunil-kumar.Dommati@amd.com,
+ venkataprasad.potturu@amd.com, Mario.Limonciello@amd.com,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250120100130.3710412-1-Vijendar.Mukunda@amd.com>
+ <173920499691.65690.5029473211250633476.b4-ty@kernel.org>
+ <d16ce74f-3320-49ec-a195-a473e03a9fc4@amd.com>
+ <d1d08149-3b4c-44ff-99f0-34cdf70eb67f@sirena.org.uk>
+From: "Mukunda,Vijendar" <vijendar.mukunda@amd.com>
+In-Reply-To: <d1d08149-3b4c-44ff-99f0-34cdf70eb67f@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0186.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:e8::13) To DM6PR12MB4123.namprd12.prod.outlook.com
+ (2603:10b6:5:21f::23)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250210144321.1f5974a6@gandalf.local.home>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4123:EE_|PH0PR12MB7488:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8f8bdc35-a632-403f-b7ac-08dd4a75253f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MDdqdm55QS9xdXRxNTg4eXJTU1JubjBVY3FwcjJ0cGN1cjBpdmdYeGpaaUt0?=
+ =?utf-8?B?NFRGWTVTSC9iVWg5TzdKMnF0cTQ4S0hXL2lhTy80aEtpcXFTeUZraElvNWNI?=
+ =?utf-8?B?ZHJUOXRUWTNMckE1SnhUWUUyYkd5SEF1MEphSjUxSUc3UFBTRVI2WXFRWUdt?=
+ =?utf-8?B?M2c5dkpHNkp2d0pheGE3NmNMWTZxcUMraEk4c1R2OHRQVkpIMTVvQkF2N25C?=
+ =?utf-8?B?WnhINmExRXlaWHNqSVA2V2NQcmhEK2lyWDdiVkFranA1aTlDdVlaL2pUYlhX?=
+ =?utf-8?B?MUF1YWNtWVQ2M2d4UFNnUzFSU1VQMnBBNHZTTmV5VlQyY1RGcFlRd0kvVllY?=
+ =?utf-8?B?SjZ3MDRaU00xWFVTUzVOaDRFeGVCOFNuQ21GWmVDSElwc01BSS9QMmduRTNK?=
+ =?utf-8?B?K29kZTlRM2w5UDhMVnVhdGhqMlQ3S3FpV2lhTUg3Z01xYW5MUmVycTAwdTAz?=
+ =?utf-8?B?L1dtMkMyeTN6SGJZY0NHajhTaFlCdElUb0pNZFpRVWtUNEp1OHRDRnRRbFdw?=
+ =?utf-8?B?Uzg5TGIwMHVBL25vdTgxRGdEQ1gvenlNOC9sZnR3ZGlzQ2l5YjBoNlI0N1J3?=
+ =?utf-8?B?V3VnTW8ycS9pWE8veFlmUmxZNjFNRVYyWkpVcHdBdlZlSWwvVzFWdUwzR0p1?=
+ =?utf-8?B?VnJNcEZUck9YUVB2Z29NdWJqUkVCeFVCZHg3OHJneTV5NE1JYTl5NDZVc3ha?=
+ =?utf-8?B?SXpwdlJ1L3hwWUliamRKZHZkS2dLdWVwb0hmSU9NRjhEN1JWZDhURURYOVRD?=
+ =?utf-8?B?VlRVbUo1ZU9MMEJTem9RNXk0aWMxQ3hKdGl6NU5nRnJScjgwWjlrV1pGMlR0?=
+ =?utf-8?B?aG9rUkhPSGxDU2MzQ0pFUER3VWgycFpoRXAxcnJnKzdFZ0oweThCRjZERHZE?=
+ =?utf-8?B?eWFsQVkxSk5zbkR0OC9GV1A0eUlGUU5TTXY4WEgvMHkwQUE3czB4a2hTTVpi?=
+ =?utf-8?B?UmN3OVE3cGc4Z1RSd2RrVUVTSnB0Z2o4cWl0LzhFUDZSczNRRzA2emUwS0cr?=
+ =?utf-8?B?MG5JVmR0aGZaT2pGVWZ5clZvR1d4eG5sTVh4VG0zZkp5YVRMZkVaYkluY1dY?=
+ =?utf-8?B?ZTRIL3B6UWkyaVJTQ0xFZHBCZ2tEeG5YdExXQ2JGMVg5N0FoT0l2Wkl2U1A5?=
+ =?utf-8?B?RndtQmcwSVNsV0gyeS9TUklmWXdKazlOTEZpMEdQeDlaM2FGampkaWZaT0Vr?=
+ =?utf-8?B?RFR0NmJDMnM4RzJIcUt1SkVhQVJZbXlUUFRPRkh2bzFFbWRESmJyVEZleG50?=
+ =?utf-8?B?dG1NTlQzQm5UZFpLeWV1TVpNZG96L0s1N2dNbFR0SFZLaytITFFLMGpIZTVW?=
+ =?utf-8?B?Y0krWW03UjBjQlg2QXJucTJhK1J4M1JmZEc2YWN0VzIrNWsrTWRmUFkwcXJT?=
+ =?utf-8?B?QjlxNXgyY3hPWm5UOHc2SW5oWm5JTFNmbzUrRXFIVkdDTUtpQ0dSbytMNDk2?=
+ =?utf-8?B?ZmtCWGIvcWpWQmNrZGQ1WUF2RThyMTdaUDdnOFNJZVJaRHlxM0RsNHZJVzUv?=
+ =?utf-8?B?bkJGR1E4RzN4YXF1OUg0b0c1Q05jQWRXZGxBS0ZsZllzc0ZMUXUrME4yalRn?=
+ =?utf-8?B?ZnhEcXk3bml6akJma2ZNdERQT1JGSnlNRVhFcEJ5aUVSNkEreXIvblE3QTAw?=
+ =?utf-8?B?S25tSExrakJtTHZtZDliSnR4NUgxMHdiVXoxOFowSm43NWZuZFFTNUgyZGlE?=
+ =?utf-8?B?RkMxckZYbmVCYzA3QzF1bmJnU21BaFF0bnphejZwT0dxWm9iMUtuQ3hpaVRn?=
+ =?utf-8?B?MExjd2ZzK2ZxY1UwdE4rRm42SXpmOHlCU2dITWpSU0VwQUhsMVR2RzdTUWZZ?=
+ =?utf-8?B?RGJ1RHBRVXZLeS8wYk9RaWFFMHVLcnpvekZXYmR0QjJPaW1YSnFtVWExNXpm?=
+ =?utf-8?Q?h0B3NQaumDn5J?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4123.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dlNKL095VEdxQ1NNVWFSazV0R1RycGdjd1FPTkpmcjZPTjVucEthUnlBZUxz?=
+ =?utf-8?B?U3YzdEd3bk9tUnhtWk05RnI1M2lqMkVvZDluazZrdzl1VVlMSGhMdTAvajRG?=
+ =?utf-8?B?VWZGR3hhSTBzWmVqajIzZFVIWWZrcDNpVy9MYzYxRC9Fd0wvT29pMWZ2eXQz?=
+ =?utf-8?B?RVNGRXArRGpMVi91WjNWRmNOK1JnNWVSdko2SC95bGJ5Q0dhZEsxaEI2aDky?=
+ =?utf-8?B?OXZQUnNFTXU1TnlrV2NOR3FxL0ptN3JoeXRwalNRQStrdkZrVkQ2VlVGSjlm?=
+ =?utf-8?B?T1IyeitHNjdQUXFRNVlOdTRlekRnR08zaHAvOS9BU2wvRGtWTGI1bGpQNDNE?=
+ =?utf-8?B?S2JLNnRlNFlwOW50MThWVXRqa0t1dTJ0bEUwVHhrNzVOTmphYkJENFJLVWVm?=
+ =?utf-8?B?dFl6cmozb3dLKy9oZUo2RmxIL29xNWhSdW9HWXJ1N0EwQUZueSs3cjNNcnBy?=
+ =?utf-8?B?ejU0WlJrOFpyT3NRdCtyamZkZTI3SEkxeVkrblUva2wvSzRLdjUyUElBQXdW?=
+ =?utf-8?B?RytneU1hMFFjZXlWdlQ4VmRXL0VZcWJGSXdQYzViSlJVRlNNL2h4dG0xbUdC?=
+ =?utf-8?B?MXN3RmZocmxNd3kxR1JOdG4wdXNJRUZrelVEVDFYMGJTa1VCdVpJeHJUZGtk?=
+ =?utf-8?B?bTYzb1U0K3hMTXI4a1NEZFdhVWY5SS9sOUtjN253WllMcG03VDVJYnJDa081?=
+ =?utf-8?B?d3NDK2Y0UHJJRnVJSnpBVjNOSGVlb2dVWGRveDNpL3ZyQVBDazg0R0F1YzRa?=
+ =?utf-8?B?R2QzcElCRis1YUtwMWJBYzZ2VzBNOTc1NVIrSmppL1FvRmUzeHhlWkhhTDlV?=
+ =?utf-8?B?aFlEQjdmWXI5bEVzUjhGbStNd0t4RmpIMmlka2xFQzQwWUJyN3BxNTg2Wm54?=
+ =?utf-8?B?bTk3OXZhYitjNmNHeWNpNzN3ODRyMVg1cTByK0JCNkgyUHV5dW9laFpzTjZ6?=
+ =?utf-8?B?SEtXa3QwQVBKemZnNVhsR2RPTVhGSTF1SnZMY25xNmJxL2tUczFPMjZkNlBC?=
+ =?utf-8?B?Mm9zczdEemc0eXZHNlZzc253eDhwTFJsU0hnb1Q1UGNaUG5rNk94clZLQldD?=
+ =?utf-8?B?RHJyN0NCNFBwQnBDbjNCMWUwWHVWUVhOaFBkV2hVWVU3WnU5SE1vbDNEYUdK?=
+ =?utf-8?B?LzA2NVJmS09SdWlIZDl5ei9YcWFZUmtBL2wrelYxREd3dFkzMXJxOEp4a2d0?=
+ =?utf-8?B?cWU3RWZQUFE4TXZDWUtHcldKTHYvYWFzTjZseU9QLzVGaUtYTzZzNWhUNzMz?=
+ =?utf-8?B?UTVPRitZMStGWCtDSkVqZjErRURkbTJiWk1Cd3hKV0owSnptR1RzME8yT3Zi?=
+ =?utf-8?B?N0M5eUFpelhKSUEvWFdGSXJDMXRXRlVneHJjbEFuYTUrZ3RqRkRrTXM0Rk9u?=
+ =?utf-8?B?UzI5RERZTmFTY1Rxd1hYTzVpUTVndDZ1bjhxTUUvMC9ZUnhZeDNCWURYM0dY?=
+ =?utf-8?B?dlB2RkU4QkpFTkpXOWpkcE5abitXZVdGVFNrVWVSWFJYRFRQV2NuWm1SRG9C?=
+ =?utf-8?B?Mm9rbEZIbklmaTNuVk55QWFaYWVqaG5jdHNyUmsyTnZSdU1KWm5oMkNPdG1D?=
+ =?utf-8?B?K0xldnRBTXV5RmZxdU1iekozMEtwN3FLVDlCcjlZbVRJNXBqOSt3TFI5T3hr?=
+ =?utf-8?B?d2tVdzU1VW03UmxRMnJWcUlCdDEvNElLVTJFUUFRTUxGb0RMNGlqVEVQZzdW?=
+ =?utf-8?B?MVRab1ZsV1gwcDkwWE9NMnQ2TTAydWhBUDJzc3UycHY1WkhER2Z5dHFUQndv?=
+ =?utf-8?B?TE0zcUxCbnk4V0pkY2JQZ0F1RTFJMjhPTVhyYW5vR1FWWWQ5eUI4T2xoOU9x?=
+ =?utf-8?B?ejhVMGE0UnNaMUQzWXhzZ2tGTGVxS0FaS3F2alZQdDZ3aTFtTEUzV1ZPU2RI?=
+ =?utf-8?B?MytpQkgwWEZ1N25WSHVmTXdOOTl0VEgvN3NpL21udGtSMGVWSU1XK3JkNDI1?=
+ =?utf-8?B?Szl0SEpyTnFsWXNESGIzakVySEtXcGx4UTFRMTRwVEJ0ejJFOW9RRWQyZGtu?=
+ =?utf-8?B?RkRzNWZXc0JIcmVIZjRXdTBEV1Z2cGd3cHdnaDdRalJUMTF2dURrV2pZQWNs?=
+ =?utf-8?B?V1VmTjBKcHRsWkU5dERwRjZBd3YyNzM3NUk1cmtBMGtNMTVNVzlYMFBFSWNQ?=
+ =?utf-8?Q?vUSzfQpGaza6xJZR7P1ngTTFl?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f8bdc35-a632-403f-b7ac-08dd4a75253f
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4123.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 08:21:55.6903
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3HP7eChBCvNVZKsoXaQcli8j3GarDUzak3LIPIRigdM7wWxmE+JC2S5XsPHsCPKmQwVzyT6Dh/U060JuC55Fpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7488
 
-On 2025-02-10 14:43:21 [-0500], Steven Rostedt wrote:
-> On Thu, 6 Feb 2025 14:44:08 +0100
-> Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-> 
-> > I did add a scheduling point in rt_spin_unlock() if LAZY was set and
-> > based on few tests it was something between noise and worse. It seems
-> > that "run to completion" is better than interrupt the kernel in the
-> > middle whatever it is doing. "Don't preempt the lock owner" is already
-> > handled by LAZY with the scheduling point on return to userland.
-> 
-> Does that mean that PREEMPT_RT requires a non preempt method for
-> SCHED_OTHER for SCHED_OTHER to not hit the issues that we were originally
-> hitting? That is, with being able to preempt spin_locks in PREEMPT_RT,
-> running a system with PREEMPT_RT in full preemption mode will still suffer
-> performance issues against a non PREEMPT_RT running in full preemption mode?
+On 10/02/25 23:34, Mark Brown wrote:
+> On Mon, Feb 10, 2025 at 10:16:05PM +0530, Mukunda,Vijendar wrote:
+>> On 10/02/25 21:59, Mark Brown wrote:
+>>>> [...]
+>> This patch series should be dropped and V3 version should be picked.
+> All the "no commit info"s here:
+>
+>>> [01/23] ASoC: amd: add register header file for ACP7.0 platform
+>>>         (no commit info)
+>>> [02/23] ASoC: amd: acp70: add acp pci driver for ACP7.0 and ACP7.1 platforms
+>>>         (no commit info)
+>>> [03/23] ASoC: amd: acp70: add acp init and de-init functions
+>>>         (no commit info)
+>>> [04/23] ASoC: amd: acp70: add logic for scanning acp child devices
+>>>         (no commit info)
+>>> [05/23] ASoC: amd: acp70: create platform devices for acp child nodes
+>>>         (no commit info)
+>>> [06/23] ASoC: amd: acp70: enable driver build for ACP7.0 platform
+>>>         (no commit info)
+>>> [07/23] ASoC: amd: acp70: add acp pdm platform driver
+>>>         (no commit info)
+>>> [08/23] ASoC: amd: acp70: add acp pdm driver dma ops and dai ops
+>>>         (no commit info)
+>>> [09/23] ASoC: amd: acp70: add acp soundwire dma driver
+>>>         (no commit info)
+>>> [10/23] ASoC: amd: update ACP7.0 KConfig option description
+>>>         (no commit info)
+>>> [11/23] ASoC: amd: acp70: add soundwire dma driver dma ops
+>>>         (no commit info)
+>>> [12/23] ASoC: amd: acp70: add acp ip interrupt handler
+>>>         (no commit info)
+>>> [13/23] ASoC: amd: acp70: add acp pdm driver pm ops
+>>>         (no commit info)
+>>> [14/23] ASoC: amd: acp70: add pm ops support for soundwire dma driver
+>>>         (no commit info)
+>>> [15/23] ASoC: amd: acp70: add acp driver pm ops support
+>>>         (no commit info)
+>>> [16/23] ASoC: amd: acp70: enable wake capability for acp pci driver
+>>>         (no commit info)
+>>> [17/23] ASoC: amd: acp70: add soundwire wake interrupt handling
+>>>         (no commit info)
+>>> [18/23] ASoC: amd: acp70: enable soundwire host wake irq mask
+>>>         (no commit info)
+>>> [19/23] ASoC: amd: acp70: enable acp pme enable during acp init sequence
+>>>         (no commit info)
+>>> [20/23] ASoC: amd: acp70: create a device node for soundwire machine driver
+>>>         (no commit info)
+> mean that these patches weren't actually applied, it's only these ones:
+>
+>>> [21/23] ASoC: amd: acp: add machine driver changes for ACP7.0 and ACP7.1 platforms
+>>>         commit: 638ad2bdb2f994c8bd99cc40e0c4796a8617ccf3
+>>> [22/23] ASoC: amd: acp: add RT711, RT714 & RT1316 support for ACP7.0 platform
+>>>         commit: 187150671d83324f1ca56f7ab5e00f16a3b9f2a9
+>>> [23/23] ASoC: amd: acp: amd-acp70-acpi-match: Add rt722 support
+>>>         commit: d0252b0b945ec67fd09fc764dcadf445fb7757ee
+> which were actually applied out of v3, they just didn't change much if
+> at all between the two versions and the tooling knew about v2 as well.
+Got it. Thanks
 
-So with LAZY_PREEMPT (not that one that was merged upstream, its
-predecessor) we had a counter similar to the preemption counter. On each
-rt_spin_lock() the counter was incremented, on each rt_spin_unlock() the
-counter was decremented. Once the counter hit zero and the lazy preempt
-flag was set (which was only set on schedule requests by SCHED_OTHER
-tasks), we scheduled.
-This improved the performance as we didn't schedule() while holding a
-spinlock_t and then bump into the same lock in the next task.
-
-We don't follow this behaviour exactly today.
-
-Adding this behaviour back vs the behaviour we have now, doesn't seem to
-improve anything at visible levels. We don't have a counter but we can
-look at the RCU nesting counter which should be zero once locks have
-been dropped. So this can be used for testing.
-
-But as I said: using "run to completion" and preempt on the return
-userland rather than once the lazy flag is seen and all locks have been
-released appears to be better.
-
-It is (now) possible that you run for a long time and get preempted
-while holding a spinlock_t. It is however more likely that you release
-all locks and get preempted while returning to userland.
-
-> -- Steve
-
-Sebastian
