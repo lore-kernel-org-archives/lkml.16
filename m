@@ -1,199 +1,198 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A0B26BDB6;
-	Tue, 11 Feb 2025 07:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739257436; cv=fail; b=lmMchZ/dZeuZumK4+CYLR7wr36XDGjx6k+5WiAZwPplxf7PNkc980W/il3JfFlUKSzVncTxoxyUKpFn4Pr9k4dTfqSHqjLlWAgQP1Ch2fu6vD2Tj0bNvadT3RUVcd99xMWAgFs9GC7mfit9XN2ZFaMPrGQVbCNcd274EOQ+vNb4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739257436; c=relaxed/simple;
-	bh=WC7y9gq4TK1r+j9CoPh1m5NnXYFXkosQ1zVoS1YPC0g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=j9h5hfq9o9dYxiF7V75jY0/XtCQN/VrE/9GPLSVIwUM4FbwBKIIcJrcSimagtrp10dScZ9eImxO04yyXoU+Gx5QVZO/NjYBQD6McinrNC7QS5yAeUkO/96Y6QCzC9LSqnY/aX4/E+m6oIuCwUlwvdYzGHfeB36zMktWOObswki4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gcJLcOLZ; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBCB26BDB6;
+	Tue, 11 Feb 2025 07:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739257525; cv=none; b=qSdtV67m9iD1MyOm+a92giFmk8d9N1lyA6DfhAtypGmaRVw49AMr5pxfgoXR3Si9+hGsWpPrsQzx9PcGCvOpGW3ODW8p2Z6CHylAumedIAWPZBcHknC+pppUDJpk1jyz5gyH4TLmB6fOV/oqzNHg0mdHN71XYUymcYj7SuBMVxo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739257525; c=relaxed/simple;
+	bh=mwmPV6GcjGF953IW1HDwL4a6zb02eH1Tc0c3yrbIinQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mjt8OAwajiL3D8HVX7PtQh0vgwO9dVmVtQoJ6GGX3bIwy+FtXdhNT70HotBJYdFt0tJDj7GbKqIhv+3ILrN8yrY8kUCmqzybzqnPukG4/YH93ZUkdgb6awvMjG4ehA8a9cYq/yDabznQ4lk3WacREcTrX3yfYC+4rtGBO8fTyaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=fZ3S4PNW; arc=none smtp.client-ip=217.92.40.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gcJLcOLZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739257432; x=1770793432;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=WC7y9gq4TK1r+j9CoPh1m5NnXYFXkosQ1zVoS1YPC0g=;
-  b=gcJLcOLZxH5/D1aFfmvw6t1+rwXwXsTFXYqIpNWr9dJRmpbw5jv3G692
-   ko0h1x131q1OT7X0yVDYeYjq6JZIogPM7RIXAuDKV1JTmDyHZg1O7ePxw
-   0sIvw9AnlGHQp2dIJB0s6Ssfn0tQJpe3sEbX5AXYxeHzXsAzCaU4iemgd
-   AVYEGpwRHvsy5QHv5ScfF3UsyUQ2dbtQZqD37MSsqT7Wlg4zBcWQakhTL
-   MCL4z4277vLuX91+aoUNEyCAKriatFkNE2FKP2bgKd8M7UD0VHUhl8uhC
-   fVTIhi0g9liVnok04piZU628RUIhjK4lQn+aRNpfh9t1iK8hELa/Ua8B9
-   Q==;
-X-CSE-ConnectionGUID: pJusOO41TzyUHzRZnzGcqg==
-X-CSE-MsgGUID: AvZz20d2SLaiAlO/H6eKpg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="39558519"
-X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
-   d="scan'208";a="39558519"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 23:03:51 -0800
-X-CSE-ConnectionGUID: dK86PctiSfezt6XjP6ICjg==
-X-CSE-MsgGUID: oZNR50AKSOigs5jCpdaJKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
-   d="scan'208";a="113060224"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Feb 2025 23:03:50 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 10 Feb 2025 23:03:49 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 10 Feb 2025 23:03:49 -0800
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.177)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 10 Feb 2025 23:03:49 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pn+z2H2DJ2EFM8nZrn7RbuMRrBDKhe3uQnbos7qgoAG1cTWh+fyXtEPKawdArYnn3unekXfZndDQvNoUNCmKefXbT9dBmO4N4jMxV+WjOcOPHG07VjXWT0PxKlgQdov0jd1p6lcFLFR1znQYkofLu8meoEL2AEWqQ+zhnt/P8G/zSrizPDvS1wmBETtvZCMUfu7F4gc6fhD0Apoe3IM2R5UerxeGp2Irtk+txYeH1bOgbR4sV8uq6N395lDuv0l+Bh/x3pufzK22f8ZcEQnXeg4Y33zgCfB0G5JYoiZ170Y561rArQYub+zEMgzt6s1lElR0L/8wC+ZHpLmKewuCrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CC8KJ6GGxDp8ZoRvYRr2DoQv43RZ0XqNmZb7jPyg6ts=;
- b=v6Js8xgzLWj8mpG1xoj7TZeqNJwQWaAlm26D61vhNMQFlLesrkbB8XL+HC2kwR0QaxDdtJdfM7dCa3yX31FntAsQruTEMwdFtEivmgjI/ZHzoFsReAAwGCZx+Od6pE+MeCm1ZIg/D3BtM52ls4nE+fBua+wevU4U+o44q0gI7X5tiH+QI9MVqmDnHw0HVaQfNAjbe4XfcNnSKCbV6MTTq044rReSegctYBJOI5xXbWu8DTDObsQR8ZyWQ8cG2E7e8h01sEdA01jnrwNccld+ohDb44a4b+F0QWs7Zb+yftl9B1+40ZZaK7oiuWGYSecC/oAO2FOVFpRuJjhZO/Mqtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CY8PR11MB7134.namprd11.prod.outlook.com (2603:10b6:930:62::17)
- by CY5PR11MB6461.namprd11.prod.outlook.com (2603:10b6:930:33::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Tue, 11 Feb
- 2025 07:03:47 +0000
-Received: from CY8PR11MB7134.namprd11.prod.outlook.com
- ([fe80::cd87:9086:122c:be3d]) by CY8PR11MB7134.namprd11.prod.outlook.com
- ([fe80::cd87:9086:122c:be3d%4]) with mapi id 15.20.8422.012; Tue, 11 Feb 2025
- 07:03:47 +0000
-From: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-To: Nikolay Borisov <nik.borisov@suse.com>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>, "Luck, Tony" <tony.luck@intel.com>
-Subject: RE: [PATCH v2 1/3] x86/mce/inject: Remove call to mce_notify_irq()
-Thread-Topic: [PATCH v2 1/3] x86/mce/inject: Remove call to mce_notify_irq()
-Thread-Index: AQHbe9MmPOK3qhQALkCLeoLYg5EdtrNBrQ7w
-Date: Tue, 11 Feb 2025 07:03:47 +0000
-Message-ID: <CY8PR11MB713403A5AC3B0699B56A552F89FD2@CY8PR11MB7134.namprd11.prod.outlook.com>
-References: <20250210154707.114219-1-nik.borisov@suse.com>
- <20250210154707.114219-2-nik.borisov@suse.com>
-In-Reply-To: <20250210154707.114219-2-nik.borisov@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CY8PR11MB7134:EE_|CY5PR11MB6461:EE_
-x-ms-office365-filtering-correlation-id: ace905a9-579b-4b31-bb0c-08dd4a6a3b10
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?3lE3R6Aq7uEp58PW4p+per4mX6v13bv0VIVc6pYSU8GHYOnXLR7J8G5bnwrn?=
- =?us-ascii?Q?Eif8ctJtMX5ktNf6PCVgBErTPHf504MKnAWs5YCYM+CniH0tFnbwMD2wZQhO?=
- =?us-ascii?Q?9yv6zlwSdfPGn+vGpQc7awmIjvCkJoWs59tqnihCsUzZWKZo5BmjG9Skp+dK?=
- =?us-ascii?Q?lGDhPb4C3iuYfSmMoqMzIwYK1E8+yUJezC4+yoHi3NufpOuCn+tTSIhvjzG6?=
- =?us-ascii?Q?biZ+d9fyWZRNHKjOQELxnrjxu/hwe6Q/Yp7RyUVlSMHg6sDqx9O/dc1A1lOe?=
- =?us-ascii?Q?ff5FxePXlK0vQ9OzsDBGuooa9ZqRX8c4v+Y7L6cHozdNlfAQ9bI0zjbRa2TN?=
- =?us-ascii?Q?iKq5Ototnk1Y8SQbpf8ETGz9c8oq38vyZ50YuN/FSxBCZf0X74uuT8FkK/Ve?=
- =?us-ascii?Q?W3jn//R1I1TFenBD/X74PNEu6k61+CXM0Zk8DjJKvHFDE0q3oB+1RALw90E4?=
- =?us-ascii?Q?M66ddlkuGM91g78WfZ/vAmPObslObRnobkqxqJ6+brYvChNZyNEAGF77t43u?=
- =?us-ascii?Q?4lKQIu5NoUgW4Ze18IrWzfE9nxsFuIpRPmVYQtWtLBVAKdaczO5iJsBTmWQB?=
- =?us-ascii?Q?TNdVNvV5nB7zxsMFpsn+Gv0iPGQdWqsOx27sg7znv+hyWPkGAXDodgH91fw5?=
- =?us-ascii?Q?jgpGkNF8dFN3ow3qrtfg1/cLbPpAAoemfketH9Kcb+qikWCfF9iq/d3ClhLk?=
- =?us-ascii?Q?qgo5a09qjmdhFzFEzpC1hIlTi5vXdYDaPPHngroj0yKjlodvGfqTxmM3iwSw?=
- =?us-ascii?Q?mtLeISRCnNDPx4tBtP7BX0BRd1kwJTa+tYAWSB+Tkwh+crqZp/tTUxEFck0H?=
- =?us-ascii?Q?9zvWss5/PkSklIg2f3Jov9JEb1htYTGK2PFANzunM2ngkp6thp39JGOdQr9W?=
- =?us-ascii?Q?/BBJGEEP42IhwhA3FXQ+pneSPsQPug6wSBHxbtbb3YKedts6hJKQuTdmOLvF?=
- =?us-ascii?Q?e0BCuwq8R/9JAd9XZ9SChylh9qREhcWHYbywhbZagCfVjIOMvVSiKKNfGeKD?=
- =?us-ascii?Q?1flVM6643ro2tv/5qvC2soXHBYGfYRxIXXp8iLhCafkDj6QcdV+zQzYS8SUc?=
- =?us-ascii?Q?l+/R9sndwYrDUDffne3q573HEpo6OsOq5l+1j5mtzv4RcJPWaObubnvfmpAx?=
- =?us-ascii?Q?I/dOUnegMT78iC3Otwb9CKyY26xMSIgE0ULNhRnCoQOSIXL9E+7yrM4dSCxG?=
- =?us-ascii?Q?6Wkn90i/UvaduismgbyjCaPFxqE91RAol64eVvSSzbmITa5Za7hqlyma24L3?=
- =?us-ascii?Q?TybY2M9jAbcz9h/woKTrZKc+87DuS3lykTCAUP/+pNqRaZQHhVDRAYDu0rc4?=
- =?us-ascii?Q?+jFJ+g91JQwcx9Y1L1W/EKnzEKy1VrQpr3vENwEA3nV3NVPDV9f3ct6SsGd4?=
- =?us-ascii?Q?1NdhfjVnEWq6BsjkqIpib9/oOrvUHNHWtpFqoa36AUZRY3A2H4vhYVKNrST8?=
- =?us-ascii?Q?x+T6Ojcw4ioJV0l4J+p4A+jaBGHU+NfA?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR11MB7134.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?+6LuKi10O3eS+/8titWxieyOa8hni0JLjStdnKYGfIrN7KI+ChekBJd2zSJT?=
- =?us-ascii?Q?9HcK5BDikBbvyO22S/E108r9ON8/bjP+NE2x1y3Zcjhtlg9bb1E+IQWKyeYX?=
- =?us-ascii?Q?AOykMu1PmPM7n2w25z7P70AKHh6aPeT2z4cUrZWLWcVXwpIZaOnyRrd7u/29?=
- =?us-ascii?Q?AcvM9N4fesVRxNvpsV1cRWPT+jizWxvk3KBBUvBTMXPUpcKPR4cphpQF/k8Q?=
- =?us-ascii?Q?iZHUhpqDNLfI8wUvIjGocSDnlcb5Ylt8fMIt6zMwSNEJ9xDcZD2aEC8ZfPpm?=
- =?us-ascii?Q?egFpBslslFJikEifmom0rZ3bvgNuD3wjmmR13ft572ztLu1URehdlhTvUejn?=
- =?us-ascii?Q?uSzl7zBFWFhuDkwn7KoZtmN0hRNCrDxct0gPP0bRogbZlYmRrVIV7phJ8EqN?=
- =?us-ascii?Q?hhc+f+6ypsSnztGC1aOUqbQlbN2dwgxb7mOr03ENpwgBmZyr5/w6bikSdMhB?=
- =?us-ascii?Q?7Sr4Vy9vqq7iMbxnCBZGniWLKFFMBpkG4doXB/4gysZDCid+QJOn2TlAVvjI?=
- =?us-ascii?Q?JFuJ/fDyJIvI2pL2aQz01G8ILok4byD7xB8Go/n3YmZS2crYW0nrc2C7wt+H?=
- =?us-ascii?Q?CSzjrmNzNtYh6AV8Z2VYkmujZsgSJ/t0U18r4GfjzmVLoeOd92M3HQXZfu96?=
- =?us-ascii?Q?NjwjDzRg1kGWXjbsm3F1U9yDzgGyn9dEmd/Es8BgfZBPfp0F36dfAkj991qL?=
- =?us-ascii?Q?kvkaJjft0k6raL6mKgmUXPOKERSg6/oIzeLMrILYgj6gdv5PFbMrVj+C6hyl?=
- =?us-ascii?Q?xweQI/lpwm181agy/9qqH3XjeJCmaWCmkplEbW6QC6YfKYNnCMnrE3hroiTf?=
- =?us-ascii?Q?ovJk89osBslc8qjUQGwLvFp3PGqomGu8Bbln8C5Ohki7ek/3FpgQo3JCXbeM?=
- =?us-ascii?Q?n28BjLO/2jV/u1Al3BLdIoK4PPQRt/7PDd9X+ya2htialHAxQgT2jsy9G+rl?=
- =?us-ascii?Q?ys1MN/g/sRx1edHCCY3DJjQpCC+kmo/GpPDnc+/HFmc3zmnlRhbDgmA/tgY4?=
- =?us-ascii?Q?nBDwD18f/oX8aMtgl5ije/lliGMFZLU0pw5nTwhaxqw1zH8eZ06e5V4qNngD?=
- =?us-ascii?Q?prar4iZlKDn7xkej2n8CjtHjdeOWaYY9g/VEW3fZXWR3fIvy8Ki42YwsnYJ9?=
- =?us-ascii?Q?+zlaPIBPfgfFJt2X2uN6lwatZ4U42oyeso0v2aQ3NWdaZIfBXMtD4DqrhP7+?=
- =?us-ascii?Q?nDEOR0lRqbP1obhsqcLH29h2rY9itk7fsvqYEHjAVtwUYTNLwNkCHmEkMSvl?=
- =?us-ascii?Q?jmHENvxquR3jS8NH08suc1KaWHZPpirnBEjmaApeCLaIJDp45MnQ+vrNp9ut?=
- =?us-ascii?Q?W4FmU8EqHKGqW/55v8LibRsb9OGIcsd6rewBwZ6ZviN8h4c2/mPXniYs+SLN?=
- =?us-ascii?Q?V3nDWAZw3BiZqO7HOQpKLfNKSebu+FWi1mlDrBRay7r84D21MuAZ7ERK8gOM?=
- =?us-ascii?Q?mtNW3fQY2vClD2h3zXPTOzPXohXbhS7w57zNb3F8hCeA/CeEdJUWFB4ZS+d8?=
- =?us-ascii?Q?DWaiwMY8U11yNH8GrUdCO52gvcMGkaNLvucm+093tWVrgU6jlfty43yHDxUy?=
- =?us-ascii?Q?HGdYD8eTSpcRPw9sCeGHMukOZlQB2NeFdqGMWEK+?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="fZ3S4PNW"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 395C81480388;
+	Tue, 11 Feb 2025 08:05:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
+	t=1739257520;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zhmjHnHw3vjWo+tkwmIIDKtbQQYkCfKwRVCsE4/6FJ0=;
+	b=fZ3S4PNWa3z+AJjC0z2Rbjb5irYPnhzFSGve2WHv/xVHrClSkkw1Oes9qbeC/rN/TQZh5m
+	KrVmjp6tTe3JZa0PMnQEZFj+kESGp912bmTFau0QfHIltHr4fb0isN2eAYvm8uSYjR0TZg
+	NpUqCvPoVIOFWaolUjEMi4nruboGJWZco7zOLxrjNKaYfJcOOChhvyNaNs26HVnmAvR6Tg
+	XyS9tX9ilujx0t0bxAxs45yYEXWzCm4SG8fhljKGhNvao+jh7Z+VK9r33o2Ov7q5sIsCU8
+	Pll5wN5r0QX6RRXhKR/8Jrazpa5tfCXRic9raMqghv/C5Bk0FPfe1Gl2Mh5RhQ==
+Date: Tue, 11 Feb 2025 08:05:14 +0100
+From: Alexander Dahl <ada@thorsis.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Alexander Dahl <ada@thorsis.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Ryan Wanner <ryan.wanner@microchip.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Subject: Re: [PATCH v2 08/16] dt-bindings: nvmem: microchip-otpc: Add
+ required clocks
+Message-ID: <20250211-primer-epic-d07bc3752569@thorsis.com>
+Mail-Followup-To: Krzysztof Kozlowski <krzk@kernel.org>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Ryan Wanner <ryan.wanner@microchip.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+References: <20250210164506.495747-1-ada@thorsis.com>
+ <20250210164506.495747-9-ada@thorsis.com>
+ <8e9562c8-5c01-4b5c-b2b0-4dad3d16e7a8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY8PR11MB7134.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ace905a9-579b-4b31-bb0c-08dd4a6a3b10
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2025 07:03:47.3834
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: prm57Mr6kKNNWtsjhLLzLRUdevbL4E3k3qkl6v+eEJRvsZCq8R4DnGk+M07PBN2dvAgMcCYAeTdHzd4o/L+aEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6461
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8e9562c8-5c01-4b5c-b2b0-4dad3d16e7a8@kernel.org>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+X-Last-TLS-Session-Version: TLSv1.3
 
-> From: Nikolay Borisov <nik.borisov@suse.com>
-> [...]
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -584,6 +584,28 @@ bool mce_is_correctable(struct mce *m)  }
-> EXPORT_SYMBOL_GPL(mce_is_correctable);
->=20
-> +/*
-> + * Notify the user(s) about new machine check events.
-> + * Can be called from interrupt context, but not from machine check/NMI
-> + * context.
-> + */
-> +static int mce_notify_irq(void)
+Hello Krzysztof,
 
-Why make mce_notify_irq() return an int?
+Am Mon, Feb 10, 2025 at 05:59:52PM +0100 schrieb Krzysztof Kozlowski:
+> On 10/02/2025 17:44, Alexander Dahl wrote:
+> > The OTPC requires both the peripheral clock through PMC and the main RC
+> > oscillator.  Seemed to work without explicitly enabling those clocks on
+> > sama7g5 before, but did not on sam9x60.
+> > 
+> > Older datasheets were not clear and explicit about this, but recent are,
+> > e.g. SAMA7G5 series datasheet (DS60001765B),
+> > section 30.4.1 Power Management:
+> > 
+> >> The OTPC is clocked through the Power Management Controller (PMC).
+> >> The user must power on the main RC oscillator and enable the
+> >> peripheral clock of the OTPC prior to reading or writing the OTP
+> >> memory.
+> > 
+> > Link: https://lore.kernel.org/linux-clk/ec34efc2-2051-4b8a-b5d8-6e2fd5e08c28@microchip.com/T/#u
+> > Signed-off-by: Alexander Dahl <ada@thorsis.com>
+> > ---
+> > 
+> > Notes:
+> >     v2:
+> >     - new patch, not present in v1
+> > 
+> >  .../nvmem/microchip,sama7g5-otpc.yaml         | 28 +++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml b/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
+> > index 9a7aaf64eef32..1fa40610888f3 100644
+> > --- a/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
+> > +++ b/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
+> > @@ -29,6 +29,16 @@ properties:
+> >    reg:
+> >      maxItems: 1
+> >  
+> > +  clocks:
+> > +    items:
+> > +      - description: main rc oscillator
+> > +      - description: otpc peripheral clock
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: main_rc_osc
+> 
+> osc
 
-> [...]
-> -/*
-> - * Notify the user(s) about new machine check events.
-> - * Can be called from interrupt context, but not from machine check/NMI
-> - * context.
-> - */
-> -bool mce_notify_irq(void)
-> [...]
+On at91 SoCs main oscillator and main RC oscillator are two different
+things, and those are different clocks in Linux as well.  This clock
+is named "main_rc_osc" in the clock driver.  In
+drivers/clk/at91/sam9x60.c this clock is added like this:
+
+    hw = at91_clk_register_main_rc_osc(regmap, "main_rc_osc", 12000000, 50000000);
+
+The datasheet makes it explicit, it's exactly the main rc oscillator
+clock required for the OTPC to work, no other clock.
+
+So why name this "osc" only then?  This is confusing at best.
+
+> 
+> > +      - const: otpc_clk
+> 
+> otpc or bus or whatever logically this is
+
+Okay the "_clk" suffix is redundant.  Since the peripheral clock for
+the OTPC is required here, I would go with "otpc" only then.
+
+> 
+> > +
+> >  required:
+> >    - compatible
+> >    - reg
+> > @@ -37,6 +47,8 @@ unevaluatedProperties: false
+> >  
+> >  examples:
+> >    - |
+> > +    #include <dt-bindings/clock/at91.h>
+> > +    #include <dt-bindings/clock/microchip,sama7g5-pmc.h>
+> >      #include <dt-bindings/nvmem/microchip,sama7g5-otpc.h>
+> >  
+> >      otpc: efuse@e8c00000 {
+> > @@ -44,10 +56,26 @@ examples:
+> >          reg = <0xe8c00000 0xec>;
+> >          #address-cells = <1>;
+> >          #size-cells = <1>;
+> > +        clocks = <&pmc PMC_TYPE_CORE SAMA7G5_PMC_MAIN_RC>, <&pmc PMC_TYPE_PERIPHERAL 67>;
+> > +        clock-names = "main_rc_osc", "otpc_clk";
+> >  
+> >          temperature_calib: calib@1 {
+> >              reg = <OTP_PKT(1) 76>;
+> >          };
+> >      };
+> >  
+> > +  - |
+> > +    #include <dt-bindings/clock/at91.h>
+> > +    #include <dt-bindings/clock/microchip,sam9x60-pmc.h>
+> > +    #include <dt-bindings/nvmem/microchip,sama7g5-otpc.h>
+> > +
+> > +    efuse@eff00000 {
+> > +        compatible = "microchip,sam9x60-otpc", "syscon";
+> > +        reg = <0xeff00000 0xec>;
+> 
+> No need for new example with difference in what exactly? Even compatible
+> was not added here...
+
+Different compatible, different clocks, no sub nodes, different
+peripheral clock id …  From a human doc readers I'd like another
+example, but fine, we can drop it if it adds too much redundancy.
+
+Greets
+Alex
+
+> 
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> > +        clocks = <&pmc PMC_TYPE_CORE SAM9X60_PMC_MAIN_RC>, <&pmc PMC_TYPE_PERIPHERAL 46>;
+> > +        clock-names = "main_rc_osc", "otpc_clk";
+> > +    };
+> > +
+> >  ...
+> 
+> 
+> Best regards,
+> Krzysztof
