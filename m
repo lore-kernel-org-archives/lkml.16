@@ -1,241 +1,659 @@
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f196.google.com (mail-yb1-f196.google.com [209.85.219.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70F9191;
-	Tue, 11 Feb 2025 00:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165DD208A9
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233144; cv=none; b=QStGyBa+UBZDXYa3sTMxVhtymU+/gqt2r4UFD10EWMd2q9vayfMDy1gjNFZF7FhICaHIb3E7xTEjEhqh+Dms+w8uEPzwDCoZyWY+WkRIQYdZ46Kz8RJV0hKg08cL+MNKj5Jg7++lHQPfkOZX6a5W72khZ18Wlnc5Xjge1FaiJts=
+	t=1739233162; cv=none; b=cQ6VYuA4Vazk2H3uaq1ILwg3aehJMSglgEJKxa75JjLj9wq0zX9w+arRBdncxn0UXEefRTmMdCGSEDjaeIowh0aCfL1FYy719bqSJHRuKDFT1Ddooy1+Mxi+SM+psVmG2XWVmUlfRElyEawVlKZ1AdtN2WRPqnxhHIHxXrylYDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739233144; c=relaxed/simple;
-	bh=K42GwEHzXU9S+gWUaSIIkZ2h974drgPTV7TQKd/F6ag=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VwUgBMnPBZ56QwYBX8NWDblohFR7kzosh59++QrukU2EN/VrlQNQg9l6moXQhZ8PBuglQ0Ect6YyH+GkIDc7HJZpU/34QR60tahgEqaXIfFs6BndGrWeIXhw5WotoVQetDyoJbXADmzdoND4jDQSvdh4aFRAMaYfKK/MCFL5IM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=QeDq6wSa; arc=none smtp.client-ip=166.84.1.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
+	s=arc-20240116; t=1739233162; c=relaxed/simple;
+	bh=kn+Sr6kCAYGRQcSnadYblds5EWpA8xcU3C1dAdFoBtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l7zg7iWnlwTRENojv6Wzw7ZRulZij8TSeYXAAKGhDRow9M0BYX0tgb+jfthMh1Z+pOgjKFdcAW0UWU5D1hjF/gNFHsSL4rGJeciGSv4dU454rB5ETIgEpMr6ehr9mVeq/q8odES8m7B6KwzGsJ5UJ5DPuV/WfoVr4802w+i8PSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=XhMA8iDC; arc=none smtp.client-ip=209.85.219.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="QeDq6wSa"
-Received: from [192.168.80.133] (unknown [207.7.121.250])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4YsMW14vdDz4FfP;
-	Mon, 10 Feb 2025 19:18:53 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1739233135; bh=K42GwEHzXU9S+gWUaSIIkZ2h974drgPTV7TQKd/F6ag=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=QeDq6wSaW5ddK0IlMN7saAP4tblNZa9UHEK6mmEVZr6sp+lj/jlpR37g1PV0UkVVH
-	 8Wp6GFwA5YHZuxNU2+47kfgFAAGnaxc6WrarcJOzbuM2ir41wB3i9c1WarJf1GU3NQ
-	 Bk5/sZsrT1qeJE1ew7JDFpNijb0+XBjYVGkwi4PA=
-Message-ID: <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
-Date: Mon, 10 Feb 2025 16:18:51 -0800
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="XhMA8iDC"
+Received: by mail-yb1-f196.google.com with SMTP id 3f1490d57ef6-e4930eca0d4so3579419276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:19:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739233159; x=1739837959; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nQH+0Qh0rnKhtt4PSdvbu7QNB9jBjNqn7by0vbd3PTY=;
+        b=XhMA8iDCLXQFsZxFMSn6gBRpLkAfW4xv0IOrQHmCxSiv6JdG4E3yE3uNZY8HGxfBe8
+         rMuRNngG1fECLqiYVuDf9ZnOMS9zFXL1LjiulavuLdloQVfnkSNb3VJICTm+ZYuPQYho
+         pPjJk7bFCkmv+ybpynxkR9qUmzSvGf2WVuGpFFXAAm4C1q5YxZ6HUcrcgWLZseeVIHfO
+         kR4DVUxjAbhdzUjo1Z2/tb+/ozwWec/tD2wmdSVoIobr4hV48g9LbjjA++y0HDeYuPjd
+         LXUuVgOD64sSS3jzng32VqhzoSlp0MApUBy7tJSgLakuuc7tYwNPfElohF44shW7bolw
+         RzEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739233159; x=1739837959;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nQH+0Qh0rnKhtt4PSdvbu7QNB9jBjNqn7by0vbd3PTY=;
+        b=IrfJ80BKjkYdMSF4TDcIKBeGhl0EvP5I0HIUkU6zUIc/JQwg3o3iWZr6Tm5Bo3n2CW
+         QA3SsOFr71SdVpnma4od4ZmNzl7Bzn/TEbbXk4w/kGa/Bmkvgxd0LQXJZUZdXLQTs05Z
+         eHMkCoM0YjIOSAwkr2wErgYUrkFAGXeFzo9AG20b2Oy/zzY3nxfGjN+T7q14yqnddQfO
+         9GXhxllXQfOKNYWzX3szRYdLL2xpOWxMA1UzTIYlLHmvtC8KHwntT626ERsrYKIGcY6p
+         PZR0X7yIWsQzFLkY3Vk6d68qj1KyFYk9wybVX7dLoGkHyJMhkaXSRTTvJUrivNWjG7td
+         f5nA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPt1NwLqx6RUFO8F4iKqfpLIfxdZBNIGQL2q+2uPbmovjTJ/NAMitebd964I2GRv2z7EmxqnRJfzPrjSw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywae5GvW396dRLu+Ib/Zb/QSgFTIiJhlHU0tNtDWa84vkZe/UW+
+	hake2pTHwK4pvexMZYK9lCOI10ds/6iHiCGJXIXmPpQBOEaNHUVjJad9L4ltpP4=
+X-Gm-Gg: ASbGncty/c0HuxMuckh9XuyVcHswO3HJMbEtrBNJ7ZNxQvQQlvboc9Gm7OG19ckAsqT
+	e5BraqU5J0hCnHSWtbNTyMyi3RehJ63Nhu68s3FqVitnlPi8+NYWpqzIDINIy2OLFAAmCpsUC4/
+	rbcHB9NHapTgQyqZY2tbSvoovi6nrKAo8LStkjKiGsBJVxJzyFpVNuLdCaumXMIBX1iocXiWm+b
+	hNiLEX2G01cu85kIvEARbqs0ObJxDm30LEn0+KdDXsuoQ8ZzCHkgeB/VDzv/L8pjEuw1tGK4ife
+	rbo=
+X-Google-Smtp-Source: AGHT+IGPbgKa18+z0Y5luTA3UrvUForoahUWDzZX1uYQaimd+qV82fPmZSfXut2G/H+aYq7dTWhb6w==
+X-Received: by 2002:a05:6902:2783:b0:e5b:f5f:5960 with SMTP id 3f1490d57ef6-e5b461662f3mr14051088276.1.1739233158865;
+        Mon, 10 Feb 2025 16:19:18 -0800 (PST)
+Received: from ghost ([50.146.0.9])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5b3a1f3602sm2912785276.12.2025.02.10.16.19.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 16:19:17 -0800 (PST)
+Date: Mon, 10 Feb 2025 16:19:16 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Guo Ren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>,
+	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 3/7] perf syscalltbl: Remove struct syscalltbl
+Message-ID: <Z6qXhAzN2uJPMiTf@ghost>
+References: <20250210165108.95894-1-irogers@google.com>
+ <20250210165108.95894-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac)
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: ilpo.jarvinen@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
- Jian-Hong Pan <jhp@endlessos.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- =?UTF-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
- Andreas Noever <andreas.noever@gmail.com>,
- Michael Jamet <michael.jamet@intel.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org,
- Kenneth Crudup <kenny@panix.com>
-References: <20250210210502.GA15655@bhelgaas>
-Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <20250210210502.GA15655@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210165108.95894-4-irogers@google.com>
 
-
-I wonder about that, too- but for the most part, my resumes from 
-hibernate/suspend tend to work most of the time.
-
-I've instrumented .../drivers/thunderbolt/path.c to add some pr_info()s 
-in __tb_path_deactivate_hop() to see if it's either tripping up on a NPE 
-and to see where it dies, but since then nothing has happened again, so 
-I do wonder sometimes if it's an errant driver (i.e., just subtle 
-changes in the ordering of code could be making a difference).
-
-That being said, leaving a USB4-to-NVMe bridged NVMe device connected to 
-a Thunderbolt dock on suspend causes hangs on resume that only the power 
-button seems to recover from. I've really been trying to bisect the 
-cause on this one as it's usually my only failure mode (and frustrating 
-when I forget to unplug before I suspend). What complicates that one 
-more is it now doesn't happen EVERY time.
-
-One change I've done from Linus' master (which I tend to grab every few 
-days) and have for a while is this:
-
-----
--        cflags-$(CONFIG_MCORE2)                += -march=core2
-+        cflags-$(CONFIG_MCORE2) += \
-+                $(call cc-option,-march=alderlake,$(call 
-cc-option,-mtune=native)) \
-+                $(call cc-option,-mtune=alderlake,$(call 
-cc-option,-mtune=native))
-----
-
-But I'm running "gcc (Ubuntu 14.2.0-4ubuntu2) 14.2.0", so that should be 
-mature enough to not introduce any Intel-chipset-specific bugs, right?
-
--Kenny
-
-On 2/10/25 13:05, Bjorn Helgaas wrote:
-> [+cc Thunderbolt folks, original post
-> https://lore.kernel.org/r/04091f53-3c94-4533-ab48-e9296e6e2841@panix.com]
+On Mon, Feb 10, 2025 at 08:51:04AM -0800, Ian Rogers wrote:
+> The syscalltbl held entries of system call name and number pairs,
+> generated from a native syscalltbl at start up. As there are gaps in
+> the system call number there is a notion of index into the
+> table. Going forward we want the system call table to be identifiable
+> by a machine type, for example, i386 vs x86-64. Change the interface
+> to the syscalltbl so (1) a (currently unused machine type of EM_HOST)
+> is passed (2) the index to syscall number and system call name mapping
+> is computed at build time.
 > 
-> Wow, something about your platform or usage is really good at finding
-> these bugs ;)  The original post is a page fault in xe_display_pm_resume()
-> and this one a NULL pointer dereference in __tb_path_deactivate_hop().
-> You see these so frequently that I would think Google would find more
-> reports, but I don't see any, which makes me wonder if this is some
-> kind of memory corruption related to a driver on your system.
+> Two tables are used for this, an array of system call number to name,
+> an array of system call numbers sorted by the system call name. The
+> sorted array doesn't store strings in part to save memory and
+> relocations. The index notion is carried forward and is an index into
+> the sorted array of system call numbers, the data structures are
+> opaque (held only in syscalltbl.c), and so the number of indices for a
+> machine type is exposed as a new API.
 > 
-> On Sat, Feb 08, 2025 at 07:47:10PM -0800, Kenneth Crudup wrote:
->> Eh, NVM.
->>
->> Just had another resume crash with it reverted:
->>
->> ----
->> <6>[69848.656985][T25549] CPU19 is up
->> <6>[69848.666220][T25549] ACPI: PM: Waking up from system sleep state S4
->> <6>[69848.693976][T25549] ACPI: EC: interrupt unblocked
->> <4>[69848.704735][T25549] thunderbolt 0000:00:0d.2: 0:5: path does not end
->> on a DP adapter, cleaning up
->> <1>[69848.706322][T25549] BUG: kernel NULL pointer dereference, address:
->> 0000000000000384
->> <1>[69848.706324][T25549] #PF: supervisor read access in kernel mode
->> <1>[69848.706325][T25549] #PF: error_code(0x0000) - not-present page
->> <6>[69848.706326][T25549] PGD 0 P4D 0
->> <4>[69848.706327][T25549] Oops: Oops: 0000 [#1] PREEMPT SMP
->> <4>[69848.706330][T25549] CPU: 1 UID: 0 PID: 25549 Comm: systemd-sleep
->> Tainted: G S   U     O       6.14.0-rc1-kenny+ #4
->> <4>[69848.706332][T25549] Tainted: [S]=CPU_OUT_OF_SPEC, [U]=USER,
->> [O]=OOT_MODULE
->> <4>[69848.706332][T25549] Hardware name: Dell Inc. XPS 9320/0KNXGD, BIOS
->> 2.18.1 12/24/2024
->> <4>[69848.706333][T25549] RIP: 0010:__tb_path_deactivate_hop+0x25/0x220
->> <4>[69848.706337][T25549] Code: 5d 5d c3 c3 90 55 48 89 e5 41 57 41 56 41 55
->> 41 54 53 48 83 ec 18 89 55 c4 65 48 8b 04 25 28 00 00 00 48 89 45 d0 48 8b
->> 47 20 <80> b8 84 03 00 00 00 0f 85 64 01 00 00 8b 90 04 03 00 00 44 8d 2c
->> <4>[69848.706338][T25549] RSP: 0000:ffffa2d40a9fb7f8 EFLAGS: 00010292
->> <4>[69848.706339][T25549] RAX: 0000000000000000 RBX: 0000000000000001 RCX:
->> 0000000000000002
->> <4>[69848.706340][T25549] RDX: 000000000000000e RSI: 00000000a863e150 RDI:
->> ffffa2d400803b00
->> <4>[69848.706340][T25549] RBP: ffffa2d40a9fb838 R08: 0000000000000000 R09:
->> ffffffffa9a55760
->> <4>[69848.706341][T25549] R10: 0000000000000000 R11: 0000000000000000 R12:
->> ffff8d1fc6bce7c0
->> <4>[69848.706341][T25549] R13: 0000000000000028 R14: ffff8d1fc1861000 R15:
->> ffff8d1fc18513e8
->> <4>[69848.706342][T25549] FS:  00007fb5b3631940(0000)
->> GS:ffff8d272f440000(0000) knlGS:0000000000000000
->> <4>[69848.706343][T25549] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> <4>[69848.706343][T25549] CR2: 0000000000000384 CR3: 00000003cea00003 CR4:
->> 0000000000770ef0
->> <4>[69848.706344][T25549] PKRU: 55555554
->> <4>[69848.706344][T25549] Call Trace:
->> <4>[69848.706345][T25549]  <TASK>
->> <4>[69848.706348][T25549]  ? show_regs.part.0+0x1d/0x20
->> <4>[69848.706351][T25549]  ? __die+0x52/0x91
->> <4>[69848.706352][T25549]  ? page_fault_oops+0x9a/0x220
->> <4>[69848.706354][T25549]  ? exc_page_fault+0x2fc/0x5c0
->> <4>[69848.706357][T25549]  ? asm_exc_page_fault+0x27/0x30
->> <4>[69848.706359][T25549]  ? __tb_path_deactivate_hop+0x25/0x220
->> <4>[69848.706360][T25549]  __tb_path_deactivate_hops+0x37/0x60
->> <4>[69848.706361][T25549]  tb_path_deactivate+0x1e/0x110
->> <4>[69848.706362][T25549]  tb_tunnel_deactivate+0x65/0x120
->> <4>[69848.706363][T25549]  tb_tunnel_discover_dp+0x373/0x670
->> <4>[69848.706364][T25549]  tb_switch_discover_tunnels+0x71/0x1e0
->> <4>[69848.706366][T25549]  tb_resume_noirq+0x91/0x2a0
->> <4>[69848.706368][T25549]  tb_domain_resume_noirq+0x3f/0x60
->> <4>[69848.706369][T25549]  nhi_resume_noirq+0x34/0x90
->> <4>[69848.706370][T25549]  pci_pm_restore_noirq+0x71/0xc0
->> <4>[69848.706372][T25549]  ? new_id_store+0x1b0/0x1b0
->> <4>[69848.706373][T25549]  dpm_run_callback+0x40/0xb0
->> <4>[69848.706375][T25549]  device_resume_noirq+0xc4/0x2a0
->> <4>[69848.706376][T25549]  dpm_noirq_resume_devices+0x11b/0x150
->> <4>[69848.706376][T25549]  dpm_resume_start+0xc/0x30
->> <4>[69848.706377][T25549]  hibernation_snapshot+0x26d/0x430
->> <4>[69848.706379][T25549]  hibernate.cold+0x9c/0x333
->> <4>[69848.706380][T25549]  state_store+0xbe/0xc0
->> <4>[69848.706381][T25549]  kobj_attr_store+0xf/0x20
->> <4>[69848.706383][T25549]  sysfs_kf_write+0x34/0x40
->> <4>[69848.706385][T25549]  kernfs_fop_write_iter+0x134/0x1e0
->> <4>[69848.706386][T25549]  vfs_write+0x244/0x410
->> <4>[69848.706388][T25549]  ksys_write+0x63/0xd0
->> <4>[69848.706389][T25549]  __x64_sys_write+0x14/0x20
->> <4>[69848.706390][T25549]  x64_sys_call+0x9eb/0xa00
->> <4>[69848.706392][T25549]  do_syscall_64+0x63/0xf0
->> <4>[69848.706394][T25549]  ? do_filp_open+0xbe/0x170
->> <4>[69848.706395][T25549]  ? do_wp_page+0x7f3/0xe80
->> <4>[69848.706398][T25549]  ? ___pte_offset_map+0x17/0xe0
->> <4>[69848.706399][T25549]  ? __handle_mm_fault+0xb13/0x1160
->> <4>[69848.706400][T25549]  ? do_syscall_64+0x6f/0xf0
->> <4>[69848.706401][T25549]  ? strncpy_from_user+0x25/0xf0
->> <4>[69848.706402][T25549]  ? __count_memcg_events+0x49/0xe0
->> <4>[69848.706403][T25549]  ? handle_mm_fault+0x181/0x2a0
->> <4>[69848.706404][T25549]  ? irqentry_exit+0x4a/0x60
->> <4>[69848.706405][T25549]  ? exc_page_fault+0x196/0x5c0
->> <4>[69848.706406][T25549]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
->> <4>[69848.706407][T25549] RIP: 0033:0x7fb5b3526274
->> <4>[69848.706411][T25549] Code: Unable to access opcode bytes at
->> 0x7fb5b352624a.
->> <4>[69848.706411][T25549] RSP: 002b:00007ffe667063f8 EFLAGS: 00000202
->> ORIG_RAX: 0000000000000001
->> <4>[69848.706412][T25549] RAX: ffffffffffffffda RBX: 0000000000000005 RCX:
->> 00007fb5b3526274
->> <4>[69848.706413][T25549] RDX: 0000000000000005 RSI: 000055ae2380a030 RDI:
->> 0000000000000007
->> <4>[69848.706413][T25549] RBP: 00007ffe66706420 R08: 0000000000000000 R09:
->> 0000000000000001
->> <4>[69848.706414][T25549] R10: 0000000000000003 R11: 0000000000000202 R12:
->> 0000000000000005
->> <4>[69848.706414][T25549] R13: 000055ae2380a030 R14: 000055ae237f62a0 R15:
->> 00007fb5b360fea0
->> <4>[69848.706415][T25549]  </TASK>
->> <4>[69848.706415][T25549] Modules linked in: vmw_vmci snd_soc_sof_sdw
->> snd_soc_sdw_utils snd_sof_probes iwlmvm mei_hdcp mei_pxp mac80211
->> snd_sof_pci_intel_tgl snd_sof_pci_intel_cnl snd_sof_intel_hda_generic
->> snd_sof_pci soundwire_intel soundwire_generic_allocation soundwire_cadence
->> snd_sof_intel_hda_common snd_soc_hdac_hda iwlwifi btusb
->> snd_sof_intel_hda_mlink btintel snd_sof_intel_hda cfg80211 mei_me ov01a10 xe
->> drm_ttm_helper gpu_sched drm_suballoc_helper drm_gpuvm drm_exec i915
->> drm_buddy intel_gtt drm_display_helper cec ttm
->> <4>[69848.706433][T25549] CR2: 0000000000000384
->> <4>[69848.706435][T25549] ---[ end trace 0000000000000000 ]
->> ----
->>
->> On 2/8/25 12:56, Kenneth Crudup wrote:
->>>
->>> Guys, I don't think this commit is right; I've had 2 out of three resume
->>> failures since this change went into Linus' master. I've attached a
->>> pstore dump of the latest crash, and while it appears to be coming from
->>> the Intel XE driver, 95% of my (s0ix) resumes worked previously[1]
->>> before this change.
->>>
->>> LMK if you need more information.
->>>
->>> -Kenny
->>>
->>> [1] - unless I forget to detach my NVMe USB4 external drive before
->>> suspending, which is a breakage that appears to have gone in sometime
->>> around the 6.10 series, but I haven't been able to bisect it
->>
->> -- 
->> Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange County
->> CA
->>
+> The arrays are computed in the syscalltbl.sh script and so no start-up
+> time computation and storage is necessary.
+
+Thank you for also generating the sorted table, that is a very nice
+addition.
+
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+Tested-by: Charlie Jenkins <charlie@rivosinc.com>
+
 > 
-
--- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
-
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> ---
+>  tools/perf/builtin-trace.c       |  88 +++++++++++++-----------
+>  tools/perf/scripts/syscalltbl.sh |  36 ++++------
+>  tools/perf/util/syscalltbl.c     | 113 ++++++++++---------------------
+>  tools/perf/util/syscalltbl.h     |  22 ++----
+>  4 files changed, 103 insertions(+), 156 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 916a51df236b..4b77c2ab3dba 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -143,7 +143,6 @@ struct syscall_fmt {
+>  
+>  struct trace {
+>  	struct perf_tool	tool;
+> -	struct syscalltbl	*sctbl;
+>  	struct {
+>  		/** Sorted sycall numbers used by the trace. */
+>  		struct syscall  *table;
+> @@ -2100,7 +2099,7 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+>  		return 0;
+>  	}
+>  
+> -	name = syscalltbl__name(trace->sctbl, sc->id);
+> +	name = syscalltbl__name(sc->e_machine, sc->id);
+>  	if (name == NULL) {
+>  		sc->nonexistent = true;
+>  		return -EEXIST;
+> @@ -2200,10 +2199,14 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+>  
+>  	strlist__for_each_entry(pos, trace->ev_qualifier) {
+>  		const char *sc = pos->s;
+> -		int id = syscalltbl__id(trace->sctbl, sc), match_next = -1;
+> +		/*
+> +		 * TODO: Assume more than the validation/warnings are all for
+> +		 * the same binary type as perf.
+> +		 */
+> +		int id = syscalltbl__id(EM_HOST, sc), match_next = -1;
+>  
+>  		if (id < 0) {
+> -			id = syscalltbl__strglobmatch_first(trace->sctbl, sc, &match_next);
+> +			id = syscalltbl__strglobmatch_first(EM_HOST, sc, &match_next);
+>  			if (id >= 0)
+>  				goto matches;
+>  
+> @@ -2223,7 +2226,7 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+>  			continue;
+>  
+>  		while (1) {
+> -			id = syscalltbl__strglobmatch_next(trace->sctbl, sc, &match_next);
+> +			id = syscalltbl__strglobmatch_next(EM_HOST, sc, &match_next);
+>  			if (id < 0)
+>  				break;
+>  			if (nr_allocated == nr_used) {
+> @@ -2677,6 +2680,7 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
+>  	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
+>  	int augmented_args_size = 0;
+>  	void *augmented_args = NULL;
+> +	/* TODO: get e_machine from thread. */
+>  	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
+>  	struct thread_trace *ttrace;
+>  
+> @@ -2751,6 +2755,7 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
+>  	struct thread_trace *ttrace;
+>  	struct thread *thread;
+>  	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
+> +	/* TODO: get e_machine from thread. */
+>  	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
+>  	char msg[1024];
+>  	void *args, *augmented_args = NULL;
+> @@ -2826,6 +2831,7 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+>  	struct thread *thread;
+>  	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1, callchain_ret = 0, printed = 0;
+>  	int alignment = trace->args_alignment;
+> +	/* TODO: get e_machine from thread. */
+>  	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
+>  	struct thread_trace *ttrace;
+>  
+> @@ -3179,6 +3185,7 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+>  
+>  	if (evsel == trace->syscalls.events.bpf_output) {
+>  		int id = perf_evsel__sc_tp_uint(evsel, id, sample);
+> +		/* TODO: get e_machine from thread. */
+>  		struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
+>  
+>  		if (sc) {
+> @@ -3682,9 +3689,9 @@ static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, str
+>  	return trace->skel->progs.syscall_unaugmented;
+>  }
+>  
+> -static void trace__init_syscall_bpf_progs(struct trace *trace, int id)
+> +static void trace__init_syscall_bpf_progs(struct trace *trace, int e_machine, int id)
+>  {
+> -	struct syscall *sc = trace__syscall_info(trace, NULL, EM_HOST, id);
+> +	struct syscall *sc = trace__syscall_info(trace, NULL, e_machine, id);
+>  
+>  	if (sc == NULL)
+>  		return;
+> @@ -3693,22 +3700,22 @@ static void trace__init_syscall_bpf_progs(struct trace *trace, int id)
+>  	sc->bpf_prog.sys_exit  = trace__find_syscall_bpf_prog(trace, sc, sc->fmt ? sc->fmt->bpf_prog_name.sys_exit  : NULL,  "exit");
+>  }
+>  
+> -static int trace__bpf_prog_sys_enter_fd(struct trace *trace, int id)
+> +static int trace__bpf_prog_sys_enter_fd(struct trace *trace, int e_machine, int id)
+>  {
+> -	struct syscall *sc = trace__syscall_info(trace, NULL, EM_HOST, id);
+> +	struct syscall *sc = trace__syscall_info(trace, NULL, e_machine, id);
+>  	return sc ? bpf_program__fd(sc->bpf_prog.sys_enter) : bpf_program__fd(trace->skel->progs.syscall_unaugmented);
+>  }
+>  
+> -static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int id)
+> +static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int e_machine, int id)
+>  {
+> -	struct syscall *sc = trace__syscall_info(trace, NULL, EM_HOST, id);
+> +	struct syscall *sc = trace__syscall_info(trace, NULL, e_machine, id);
+>  	return sc ? bpf_program__fd(sc->bpf_prog.sys_exit) : bpf_program__fd(trace->skel->progs.syscall_unaugmented);
+>  }
+>  
+> -static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int key, unsigned int *beauty_array)
+> +static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int e_machine, int key, unsigned int *beauty_array)
+>  {
+>  	struct tep_format_field *field;
+> -	struct syscall *sc = trace__syscall_info(trace, NULL, EM_HOST, key);
+> +	struct syscall *sc = trace__syscall_info(trace, NULL, e_machine, key);
+>  	const struct btf_type *bt;
+>  	char *struct_offset, *tmp, name[32];
+>  	bool can_augment = false;
+> @@ -3804,9 +3811,9 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
+>  	return NULL;
+>  
+>  try_to_find_pair:
+> -	for (int i = 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
+> -		int id = syscalltbl__id_at_idx(trace->sctbl, i);
+> -		struct syscall *pair = trace__syscall_info(trace, NULL, EM_HOST, id);
+> +	for (int i = 0, num_idx = syscalltbl__num_idx(sc->e_machine); i < num_idx; ++i) {
+> +		int id = syscalltbl__id_at_idx(sc->e_machine, i);
+> +		struct syscall *pair = trace__syscall_info(trace, NULL, sc->e_machine, id);
+>  		struct bpf_program *pair_prog;
+>  		bool is_candidate = false;
+>  
+> @@ -3890,7 +3897,7 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
+>  	return NULL;
+>  }
+>  
+> -static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
+> +static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_machine)
+>  {
+>  	int map_enter_fd = bpf_map__fd(trace->skel->maps.syscalls_sys_enter);
+>  	int map_exit_fd  = bpf_map__fd(trace->skel->maps.syscalls_sys_exit);
+> @@ -3898,27 +3905,27 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
+>  	int err = 0;
+>  	unsigned int beauty_array[6];
+>  
+> -	for (int i = 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
+> -		int prog_fd, key = syscalltbl__id_at_idx(trace->sctbl, i);
+> +	for (int i = 0, num_idx = syscalltbl__num_idx(e_machine); i < num_idx; ++i) {
+> +		int prog_fd, key = syscalltbl__id_at_idx(e_machine, i);
+>  
+>  		if (!trace__syscall_enabled(trace, key))
+>  			continue;
+>  
+> -		trace__init_syscall_bpf_progs(trace, key);
+> +		trace__init_syscall_bpf_progs(trace, e_machine, key);
+>  
+>  		// It'll get at least the "!raw_syscalls:unaugmented"
+> -		prog_fd = trace__bpf_prog_sys_enter_fd(trace, key);
+> +		prog_fd = trace__bpf_prog_sys_enter_fd(trace, e_machine, key);
+>  		err = bpf_map_update_elem(map_enter_fd, &key, &prog_fd, BPF_ANY);
+>  		if (err)
+>  			break;
+> -		prog_fd = trace__bpf_prog_sys_exit_fd(trace, key);
+> +		prog_fd = trace__bpf_prog_sys_exit_fd(trace, e_machine, key);
+>  		err = bpf_map_update_elem(map_exit_fd, &key, &prog_fd, BPF_ANY);
+>  		if (err)
+>  			break;
+>  
+>  		/* use beauty_map to tell BPF how many bytes to collect, set beauty_map's value here */
+>  		memset(beauty_array, 0, sizeof(beauty_array));
+> -		err = trace__bpf_sys_enter_beauty_map(trace, key, (unsigned int *)beauty_array);
+> +		err = trace__bpf_sys_enter_beauty_map(trace, e_machine, key, (unsigned int *)beauty_array);
+>  		if (err)
+>  			continue;
+>  		err = bpf_map_update_elem(beauty_map_fd, &key, beauty_array, BPF_ANY);
+> @@ -3954,9 +3961,9 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
+>  	 * first and second arg (this one on the raw_syscalls:sys_exit prog
+>  	 * array tail call, then that one will be used.
+>  	 */
+> -	for (int i = 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
+> -		int key = syscalltbl__id_at_idx(trace->sctbl, i);
+> -		struct syscall *sc = trace__syscall_info(trace, NULL, EM_HOST, key);
+> +	for (int i = 0, num_idx = syscalltbl__num_idx(e_machine); i < num_idx; ++i) {
+> +		int key = syscalltbl__id_at_idx(e_machine, i);
+> +		struct syscall *sc = trace__syscall_info(trace, NULL, e_machine, key);
+>  		struct bpf_program *pair_prog;
+>  		int prog_fd;
+>  
+> @@ -4393,8 +4400,13 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>  		goto out_error_mem;
+>  
+>  #ifdef HAVE_BPF_SKEL
+> -	if (trace->skel && trace->skel->progs.sys_enter)
+> -		trace__init_syscalls_bpf_prog_array_maps(trace);
+> +	if (trace->skel && trace->skel->progs.sys_enter) {
+> +		/*
+> +		 * TODO: Initialize for all host binary machine types, not just
+> +		 * those matching the perf binary.
+> +		 */
+> +		trace__init_syscalls_bpf_prog_array_maps(trace, EM_HOST);
+> +	}
+>  #endif
+>  
+>  	if (trace->ev_qualifier_ids.nr > 0) {
+> @@ -4419,7 +4431,8 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>  	 *  So just disable this beautifier (SCA_FD, SCA_FDAT) when 'close' is
+>  	 *  not in use.
+>  	 */
+> -	trace->fd_path_disabled = !trace__syscall_enabled(trace, syscalltbl__id(trace->sctbl, "close"));
+> +	/* TODO: support for more than just perf binary machine type close. */
+> +	trace->fd_path_disabled = !trace__syscall_enabled(trace, syscalltbl__id(EM_HOST, "close"));
+>  
+>  	err = trace__expand_filters(trace, &evsel);
+>  	if (err)
+> @@ -4692,8 +4705,7 @@ DEFINE_RESORT_RB(syscall_stats, a->msecs > b->msecs,
+>  	entry->msecs   = stats ? (u64)stats->stats.n * (avg_stats(&stats->stats) / NSEC_PER_MSEC) : 0;
+>  }
+>  
+> -static size_t thread__dump_stats(struct thread_trace *ttrace,
+> -				 struct trace *trace, FILE *fp)
+> +static size_t thread__dump_stats(struct thread_trace *ttrace, struct trace *trace, int e_machine, FILE *fp)
+>  {
+>  	size_t printed = 0;
+>  	struct syscall *sc;
+> @@ -4721,7 +4733,7 @@ static size_t thread__dump_stats(struct thread_trace *ttrace,
+>  			pct = avg ? 100.0 * stddev_stats(&stats->stats) / avg : 0.0;
+>  			avg /= NSEC_PER_MSEC;
+>  
+> -			sc = trace__syscall_info(trace, /*evsel=*/NULL, EM_HOST,
+> +			sc = trace__syscall_info(trace, /*evsel=*/NULL, e_machine,
+>  						 syscall_stats_entry->syscall);
+>  			if (!sc)
+>  				continue;
+> @@ -4771,7 +4783,8 @@ static size_t trace__fprintf_thread(FILE *fp, struct thread *thread, struct trac
+>  	else if (fputc('\n', fp) != EOF)
+>  		++printed;
+>  
+> -	printed += thread__dump_stats(ttrace, trace, fp);
+> +	/* TODO: get e_machine from thread. */
+> +	printed += thread__dump_stats(ttrace, trace, EM_HOST, fp);
+>  
+>  	return printed;
+>  }
+> @@ -5003,8 +5016,9 @@ static int trace__parse_events_option(const struct option *opt, const char *str,
+>  			*sep = '\0';
+>  
+>  		list = 0;
+> -		if (syscalltbl__id(trace->sctbl, s) >= 0 ||
+> -		    syscalltbl__strglobmatch_first(trace->sctbl, s, &idx) >= 0) {
+> +		/* TODO: support for more than just perf binary machine type syscalls. */
+> +		if (syscalltbl__id(EM_HOST, s) >= 0 ||
+> +		    syscalltbl__strglobmatch_first(EM_HOST, s, &idx) >= 0) {
+>  			list = 1;
+>  			goto do_concat;
+>  		}
+> @@ -5140,7 +5154,6 @@ static void trace__exit(struct trace *trace)
+>  			syscall__exit(&trace->syscalls.table[i]);
+>  		zfree(&trace->syscalls.table);
+>  	}
+> -	syscalltbl__delete(trace->sctbl);
+>  	zfree(&trace->perfconfig_events);
+>  }
+>  
+> @@ -5286,9 +5299,8 @@ int cmd_trace(int argc, const char **argv)
+>  	sigaction(SIGCHLD, &sigchld_act, NULL);
+>  
+>  	trace.evlist = evlist__new();
+> -	trace.sctbl = syscalltbl__new();
+>  
+> -	if (trace.evlist == NULL || trace.sctbl == NULL) {
+> +	if (trace.evlist == NULL) {
+>  		pr_err("Not enough memory to run!\n");
+>  		err = -ENOMEM;
+>  		goto out;
+> diff --git a/tools/perf/scripts/syscalltbl.sh b/tools/perf/scripts/syscalltbl.sh
+> index 1ce0d5aa8b50..a39b3013b103 100755
+> --- a/tools/perf/scripts/syscalltbl.sh
+> +++ b/tools/perf/scripts/syscalltbl.sh
+> @@ -50,37 +50,27 @@ fi
+>  infile="$1"
+>  outfile="$2"
+>  
+> -nxt=0
+> -
+> -syscall_macro() {
+> -    nr="$1"
+> -    name="$2"
+> -
+> -    echo "	[$nr] = \"$name\","
+> -}
+> -
+> -emit() {
+> -    nr="$1"
+> -    entry="$2"
+> -
+> -    syscall_macro "$nr" "$entry"
+> -}
+> -
+> -echo "static const char *const syscalltbl[] = {" > $outfile
+> -
+>  sorted_table=$(mktemp /tmp/syscalltbl.XXXXXX)
+>  grep -E "^[0-9]+[[:space:]]+$abis" "$infile" | sort -n > $sorted_table
+>  
+> -max_nr=0
+> +echo "static const char *const syscall_num_to_name[] = {" > $outfile
+>  # the params are: nr abi name entry compat
+>  # use _ for intentionally unused variables according to SC2034
+>  while read nr _ name _ _; do
+> -    emit "$nr" "$name" >> $outfile
+> -    max_nr=$nr
+> +	echo "	[$nr] = \"$name\"," >> $outfile
+>  done < $sorted_table
+> +echo "};" >> $outfile
+>  
+> -rm -f $sorted_table
+> +echo "static const uint16_t syscall_sorted_names[] = {" >> $outfile
+>  
+> +# When sorting by name, add a suffix of 0s upto 20 characters so that system
+> +# calls that differ with a numerical suffix don't sort before those
+> +# without. This default behavior of sort differs from that of strcmp used at
+> +# runtime. Use sed to strip the trailing 0s suffix afterwards.
+> +grep -E "^[0-9]+[[:space:]]+$abis" "$infile" | awk '{printf $3; for (i = length($3); i < 20; i++) { printf "0"; }; print " " $1}'| sort | sed 's/\([a-zA-Z1-9]\+\)0\+ \([0-9]\+\)/\1 \2/' > $sorted_table
+> +while read name nr; do
+> +	echo "	$nr,	/* $name */" >> $outfile
+> +done < $sorted_table
+>  echo "};" >> $outfile
+>  
+> -echo "#define SYSCALLTBL_MAX_ID ${max_nr}" >> $outfile
+> +rm -f $sorted_table
+> diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
+> index 2f76241494c8..760ac4d0869f 100644
+> --- a/tools/perf/util/syscalltbl.c
+> +++ b/tools/perf/util/syscalltbl.c
+> @@ -9,6 +9,7 @@
+>  #include <stdlib.h>
+>  #include <asm/bitsperlong.h>
+>  #include <linux/compiler.h>
+> +#include <linux/kernel.h>
+>  #include <linux/zalloc.h>
+>  
+>  #include <string.h>
+> @@ -20,112 +21,66 @@
+>    #include <asm/syscalls_32.h>
+>  #endif
+>  
+> -const int syscalltbl_native_max_id = SYSCALLTBL_MAX_ID;
+> -static const char *const *syscalltbl_native = syscalltbl;
+> +const char *syscalltbl__name(int e_machine __maybe_unused, int id)
+> +{
+> +	if (id >= 0 && id <= (int)ARRAY_SIZE(syscall_num_to_name))
+> +		return syscall_num_to_name[id];
+> +	return NULL;
+> +}
+>  
+> -struct syscall {
+> -	int id;
+> +struct syscall_cmp_key {
+>  	const char *name;
+> +	const char *const *tbl;
+>  };
+>  
+>  static int syscallcmpname(const void *vkey, const void *ventry)
+>  {
+> -	const char *key = vkey;
+> -	const struct syscall *entry = ventry;
+> +	const struct syscall_cmp_key *key = vkey;
+> +	const uint16_t *entry = ventry;
+>  
+> -	return strcmp(key, entry->name);
+> +	return strcmp(key->name, key->tbl[*entry]);
+>  }
+>  
+> -static int syscallcmp(const void *va, const void *vb)
+> +int syscalltbl__id(int e_machine __maybe_unused, const char *name)
+>  {
+> -	const struct syscall *a = va, *b = vb;
+> -
+> -	return strcmp(a->name, b->name);
+> +	struct syscall_cmp_key key = {
+> +		.name = name,
+> +		.tbl = syscall_num_to_name,
+> +	};
+> +	const int *id = bsearch(&key, syscall_sorted_names,
+> +				ARRAY_SIZE(syscall_sorted_names),
+> +				sizeof(syscall_sorted_names[0]),
+> +				syscallcmpname);
+> +
+> +	return id ? *id : -1;
+>  }
+>  
+> -static int syscalltbl__init_native(struct syscalltbl *tbl)
+> +int syscalltbl__num_idx(int e_machine __maybe_unused)
+>  {
+> -	int nr_entries = 0, i, j;
+> -	struct syscall *entries;
+> -
+> -	for (i = 0; i <= syscalltbl_native_max_id; ++i)
+> -		if (syscalltbl_native[i])
+> -			++nr_entries;
+> -
+> -	entries = tbl->syscalls.entries = malloc(sizeof(struct syscall) * nr_entries);
+> -	if (tbl->syscalls.entries == NULL)
+> -		return -1;
+> -
+> -	for (i = 0, j = 0; i <= syscalltbl_native_max_id; ++i) {
+> -		if (syscalltbl_native[i]) {
+> -			entries[j].name = syscalltbl_native[i];
+> -			entries[j].id = i;
+> -			++j;
+> -		}
+> -	}
+> -
+> -	qsort(tbl->syscalls.entries, nr_entries, sizeof(struct syscall), syscallcmp);
+> -	tbl->syscalls.nr_entries = nr_entries;
+> -	tbl->syscalls.max_id	 = syscalltbl_native_max_id;
+> -	return 0;
+> +	return ARRAY_SIZE(syscall_sorted_names);
+>  }
+>  
+> -struct syscalltbl *syscalltbl__new(void)
+> +int syscalltbl__id_at_idx(int e_machine __maybe_unused, int idx)
+>  {
+> -	struct syscalltbl *tbl = malloc(sizeof(*tbl));
+> -	if (tbl) {
+> -		if (syscalltbl__init_native(tbl)) {
+> -			free(tbl);
+> -			return NULL;
+> -		}
+> -	}
+> -	return tbl;
+> -}
+> -
+> -void syscalltbl__delete(struct syscalltbl *tbl)
+> -{
+> -	zfree(&tbl->syscalls.entries);
+> -	free(tbl);
+> -}
+> -
+> -const char *syscalltbl__name(const struct syscalltbl *tbl __maybe_unused, int id)
+> -{
+> -	return id <= syscalltbl_native_max_id ? syscalltbl_native[id]: NULL;
+> -}
+> -
+> -int syscalltbl__id(struct syscalltbl *tbl, const char *name)
+> -{
+> -	struct syscall *sc = bsearch(name, tbl->syscalls.entries,
+> -				     tbl->syscalls.nr_entries, sizeof(*sc),
+> -				     syscallcmpname);
+> -
+> -	return sc ? sc->id : -1;
+> -}
+> -
+> -int syscalltbl__id_at_idx(struct syscalltbl *tbl, int idx)
+> -{
+> -	struct syscall *syscalls = tbl->syscalls.entries;
+> -
+> -	return idx < tbl->syscalls.nr_entries ? syscalls[idx].id : -1;
+> +	return syscall_sorted_names[idx];
+>  }
+>  
+> -int syscalltbl__strglobmatch_next(struct syscalltbl *tbl, const char *syscall_glob, int *idx)
+> +int syscalltbl__strglobmatch_next(int e_machine __maybe_unused, const char *syscall_glob, int *idx)
+>  {
+> -	int i;
+> -	struct syscall *syscalls = tbl->syscalls.entries;
+> +	for (int i = *idx + 1; i < (int)ARRAY_SIZE(syscall_sorted_names); ++i) {
+> +		const char *name = syscall_num_to_name[syscall_sorted_names[i]];
+>  
+> -	for (i = *idx + 1; i < tbl->syscalls.nr_entries; ++i) {
+> -		if (strglobmatch(syscalls[i].name, syscall_glob)) {
+> +		if (strglobmatch(name, syscall_glob)) {
+>  			*idx = i;
+> -			return syscalls[i].id;
+> +			return syscall_sorted_names[i];
+>  		}
+>  	}
+>  
+>  	return -1;
+>  }
+>  
+> -int syscalltbl__strglobmatch_first(struct syscalltbl *tbl, const char *syscall_glob, int *idx)
+> +int syscalltbl__strglobmatch_first(int e_machine, const char *syscall_glob, int *idx)
+>  {
+>  	*idx = -1;
+> -	return syscalltbl__strglobmatch_next(tbl, syscall_glob, idx);
+> +	return syscalltbl__strglobmatch_next(e_machine, syscall_glob, idx);
+>  }
+> diff --git a/tools/perf/util/syscalltbl.h b/tools/perf/util/syscalltbl.h
+> index 362411a6d849..2bb628eff367 100644
+> --- a/tools/perf/util/syscalltbl.h
+> +++ b/tools/perf/util/syscalltbl.h
+> @@ -2,22 +2,12 @@
+>  #ifndef __PERF_SYSCALLTBL_H
+>  #define __PERF_SYSCALLTBL_H
+>  
+> -struct syscalltbl {
+> -	struct {
+> -		int max_id;
+> -		int nr_entries;
+> -		void *entries;
+> -	} syscalls;
+> -};
+> +const char *syscalltbl__name(int e_machine, int id);
+> +int syscalltbl__id(int e_machine, const char *name);
+> +int syscalltbl__num_idx(int e_machine);
+> +int syscalltbl__id_at_idx(int e_machine, int idx);
+>  
+> -struct syscalltbl *syscalltbl__new(void);
+> -void syscalltbl__delete(struct syscalltbl *tbl);
+> -
+> -const char *syscalltbl__name(const struct syscalltbl *tbl, int id);
+> -int syscalltbl__id(struct syscalltbl *tbl, const char *name);
+> -int syscalltbl__id_at_idx(struct syscalltbl *tbl, int idx);
+> -
+> -int syscalltbl__strglobmatch_first(struct syscalltbl *tbl, const char *syscall_glob, int *idx);
+> -int syscalltbl__strglobmatch_next(struct syscalltbl *tbl, const char *syscall_glob, int *idx);
+> +int syscalltbl__strglobmatch_first(int e_machine, const char *syscall_glob, int *idx);
+> +int syscalltbl__strglobmatch_next(int e_machine, const char *syscall_glob, int *idx);
+>  
+>  #endif /* __PERF_SYSCALLTBL_H */
+> -- 
+> 2.48.1.502.g6dc24dfdaf-goog
+> 
