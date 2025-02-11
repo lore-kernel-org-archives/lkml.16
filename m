@@ -1,100 +1,101 @@
-Received: from smtp.cecloud.com (unknown [1.203.97.246])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DDED1E885A;
-	Tue, 11 Feb 2025 08:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.246
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CE91EBFE6;
+	Tue, 11 Feb 2025 08:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739261084; cv=none; b=GRjewelwiRksOSvcIiCJrBkrSrbvU//AWo1DBF3oBhka0yQlCvu20vomBSuiT5EBRsBuC7sRd8WOYiVDB5PyqxEmsdfcUCaaOZm0edvexaqECcv03hiHvCL4qB6DpmPfEDq0pmxHYnXo/Kcmt/bL4qeQiSzhguwry69Zbj2Owu0=
+	t=1739261115; cv=none; b=c6VqxKgFPdQ3zH5SDukj4N0eOPt9riZQMgyscrgs1A5EkJftgYPdKQ8/vd5+5tLXul/vmO0Er3MgJYGUQAYLuP4FohEBE4VRlZPrz7CljKFvihji1MXq68gzQNtoPLXU/dUH6MuTkkyHGN6Xh0fFbFYcO1j6E36X0IgNI0eEfrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739261084; c=relaxed/simple;
-	bh=v3/QnHLfPhdX6VRlE+pIU43UTeH6HpsCS0I+aVAD7EY=;
-	h=Date:From:To:Cc:Subject:References:Mime-Version:Message-ID:
-	 Content-Type; b=UR4oZ8AKPl3Tb7IgybI6Y8coT8uJltvc8TDNlSlCyNG3zAQwVSMG3JIcH2phZ5x8G/QnhUAntqXZqSr6ibwozV9CBgSHFYItqzy1K2J7EuWter8+aUGhIv+7VGigaEtYFUQAbQT1i3zlaTGZ7xNdXactUanOZkQ/UCfpzlR5X34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; arc=none smtp.client-ip=1.203.97.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.cecloud.com (Postfix) with ESMTP id ABD1A7C0114;
-	Tue, 11 Feb 2025 16:04:37 +0800 (CST)
-X-MAIL-GRAY:0
-X-MAIL-DELIVERY:1
-X-SKE-CHECKED:1
-X-ABS-CHECKED:1
-X-ANTISPAM-LEVEL:2
-Received: from desktop-n31qu50 (unknown [39.156.73.12])
-	by smtp.cecloud.com (postfix) whith ESMTP id P1609376T281456890605936S1739261076388694_;
-	Tue, 11 Feb 2025 16:04:37 +0800 (CST)
-X-IP-DOMAINF:1
-X-RL-SENDER:zhang.guanghui@cestc.cn
-X-SENDER:zhang.guanghui@cestc.cn
-X-LOGIN-NAME:zhang.guanghui@cestc.cn
-X-FST-TO:chunguang.xu@shopee.com
-X-RCPT-COUNT:9
-X-LOCAL-RCPT-COUNT:0
-X-MUTI-DOMAIN-COUNT:0
-X-SENDER-IP:39.156.73.12
-X-ATTACHMENT-NUM:0
-X-UNIQUE-TAG:<f1449e49e91462346a3942c695e01741>
-X-System-Flag:0
-Date: Tue, 11 Feb 2025 16:04:35 +0800
-From: "zhang.guanghui@cestc.cn" <zhang.guanghui@cestc.cn>
-To: chunguang.xu <chunguang.xu@shopee.com>, 
-	"Maurizio Lombardi" <mlombard@bsdbackstore.eu>
-Cc: mgurtovoy <mgurtovoy@nvidia.com>, 
-	sagi <sagi@grimberg.me>, 
-	kbusch <kbusch@kernel.org>, 
-	sashal <sashal@kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-nvme <linux-nvme@lists.infradead.org>, 
-	linux-block <linux-block@vger.kernel.org>
-Subject: Re: Re: nvme-tcp: fix a possible UAF when failing to send request
-References: <2025021015413817916143@cestc.cn>, 
-	<D7OOGIOAJRUH.9LOJ3X4IUKQV@bsdbackstore.eu>, 
-	<3f1f7ec3-cb49-4d66-b2b0-57276a6c62f0@nvidia.com>, 
-	<D7OWXONOUZ1Y.19KIRCQDVRTKN@bsdbackstore.eu>, 
-	<CAAO4dAWdsMjYMp9jdWXd_48aG0mTtVpRONqjJJ1scnc773tHzg@mail.gmail.com>
-X-Priority: 3
-X-GUID: 28157AFE-1A33-4CB7-B756-379251543D66
-X-Has-Attach: no
-X-Mailer: Foxmail 7.2.25.331[cn]
+	s=arc-20240116; t=1739261115; c=relaxed/simple;
+	bh=KNU0Db/TA+KJGjPbWUHiMYaQOxX9S4MROwmmDeMDDPk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=WcoQClG8JietCLvq5o14uen3WJVPWo7Dkvq9jOMp/3I/xjX/9f/3PqKZAniA6wX90C90dn0rNd7QMPsK12oy5oGMC5sX2tgHlA1C7psi1VBvzC3hysM2cj/JXfHtxUR56deHPQQVtS1Z2LxUjoI8nA5ATrfnRLrT1e0fyuf/I1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=F5i+BGWG; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="F5i+BGWG"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739261108; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=OWNTXIBLk44jOWCaxqVWXnPJfTyD2vfL7kKmjrg4X+s=;
+	b=F5i+BGWGARxq5pStMKTz9LoluBAdOsdyXL/EH2kJTFS9K0k2opEC2QQzbEUCiv/60zFbRPC8zEtMfplsWnP1mpptw8xYlriH0WXYNg5C4D6r7wMGrvcqOx48ohEt9mP4934K6qb/A998nFcZQNHtN2LQZmYjx71lqEQtQQD9JSo=
+Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPG-wH._1739261107 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 11 Feb 2025 16:05:08 +0800
+Message-ID: <d1db3047-f478-4d8f-b9f6-e7a5820d5a29@linux.alibaba.com>
+Date: Tue, 11 Feb 2025 16:05:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <202502111604342976121@cestc.cn>
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-SGnCoAoKCgrCoCDCoCBUaGlzIGlzIGHCoCByYWNlIGlzc3VlLMKgwqBJIGNhbid0IHJlcHJvZHVj
-ZSBpdCBzdGFibHkgeWV0LiBJIGhhdmUgbm90IHRlc3RlZCB0aGUgbGF0ZXN0IGtlcm5lbC7CoCBi
-dXQgaW4gZmFjdCzCoMKgSSd2ZSBzeW5jZWQgc29tZSBudm1lLXRjcCBwYXRjaGVzIGZyb23CoCBs
-YXN0ZXN0IHVwc3RyZWFtLCAKCgoKQnV0IGluIGZhY3QsIHRoZSBpc3N1ZSBzdGlsbCBleGlzdHMu
-IEkgcmV2aWV3IG52bWUtdGNwIGNvZGUgYW5kIGZvdW5kIHRoYXQgdGhpcyBpc3N1ZXMgbWF5IGV4
-aXN0IGluIG52bWVfdGNwX3BvbGwgcHJvY2Vzc2luZy4gCgoKCgoKCgp6aGFuZy5ndWFuZ2h1aUBj
-ZXN0Yy5jbgoKCgrCoAoKCgpGcm9tOsKgWHUgQ2h1bmd1YW5nCgoKCkRhdGU6wqAyMDI1LTAyLTEx
-wqAxNToyMAoKCgpUbzrCoE1hdXJpemlvIExvbWJhcmRpCgoKCkNDOsKgTWF4IEd1cnRvdm95OyB6
-aGFuZy5ndWFuZ2h1aTsgc2FnaTsga2J1c2NoOyBzYXNoYWw7IGxpbnV4LWtlcm5lbDsgbGludXgt
-bnZtZTsgbGludXgtYmxvY2sKCgoKU3ViamVjdDrCoFJlOiBudm1lLXRjcDogZml4IGEgcG9zc2li
-bGUgVUFGIHdoZW4gZmFpbGluZyB0byBzZW5kIHJlcXVlc3QKCgoKCgoKCkhpOsKgCgoKCgoKCgpE
-b2VzwqAgeW91IGhhdmUgdGVzdGVkIHRoZSBsYXRlc3Qga2VybmVsLCBjYW4gaXTCoCByZXByb2R1
-Y2UgdGhlIHNhbWUgaXNzdWXvvJ8KCgoKCgoKCk1hdXJpemlvIExvbWJhcmRpIDxtbG9tYmFyZEBi
-c2RiYWNrc3RvcmUuZXU+IOS6jiAyMDI15bm0MuaciDEx5pel5ZGo5LqMIDAwOjQw5YaZ6YGT77ya
-CgoKCgoKT24gTW9uIEZlYiAxMCwgMjAyNSBhdCAxMToyNCBBTSBDRVQsIE1heCBHdXJ0b3ZveSB3
-cm90ZToKCgoKPgoKCgo+IEl0IHNlZW1zIHRvIG1lIHRoYXQgdGhlIEhPU1RfUEFUSF9FUlJPUiBo
-YW5kbGluZyBjYW4gYmUgaW1wcm92ZWQgaW4KCgoKPiBudm1lLXRjcC4KCgoKPgoKCgo+IEluIG52
-bWUtcmRtYSB3ZSB1c2UgbnZtZV9ob3N0X3BhdGhfZXJyb3IocnEpIGFuZCBudm1lX2NsZWFudXBf
-Y21kKHJxKSBpbgoKCgo+IGNhc2Ugd2UgZmFpbCB0byBzdWJtaXQgYSBjb21tYW5kLi4KCgoKPgoK
-Cgo+IGNhbiB5b3UgdHJ5IHRvIHJlcGxhY2luZyBudm1lX3RjcF9lbmRfcmVxdWVzdChibGtfbXFf
-cnFfZnJvbV9wZHUocmVxKSwKCgoKPiBOVk1FX1NDX0hPU1RfUEFUSF9FUlJPUik7IGNhbGwgd2l0
-aCB0aGUgc2ltaWxhciBsb2dpYyB3ZSB1c2UgaW4KCgoKPiBudm1lLXJkbWEgZm9yIGhvc3QgcGF0
-aCBlcnJvciBoYW5kbGluZyA/CgoKCgoKWWVzLCBJIGNvdWxkIHRyeSB0byBwcmVwYXJlIGEgcGF0
-Y2guCgoKCgoKSW4gYW55IGNhc2UsIEkgdGhpbmsgdGhlIG1haW4gaXNzdWUgaGVyZSBpcyB0aGF0
-IG52bWVfdGNwX3BvbGwoKQoKCgpzaG91bGQgYmUgcHJldmVudGVkIGZyb20gcmFjaW5nIGFnYWlu
-c3QgaW9fd29yay4uLiBhbmQgSSBhbHNvIHRoaW5rCgoKCnRoZXJlIGlzIGEgcG9zc2libGUgcmFj
-ZSBjb25kaXRpb24gaWYgbnZtZV90Y3BfcG9sbCgpIHJhY2VzIGFnYWluc3QKCgoKdGhlIGNvbnRy
-b2xsZXIgcmVzZXR0aW5nIGNvZGUuCgoKCgoKTWF1cml6aW8KCgo=
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] perf/dwc_pcie: fix some unreleased resources
+To: Yunhui Cui <cuiyunhui@bytedance.com>, renyu.zj@linux.alibaba.com,
+ will@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>, linux-pci@vger.kernel.org
+References: <20250208104002.60332-1-cuiyunhui@bytedance.com>
+ <20250208104002.60332-2-cuiyunhui@bytedance.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250208104002.60332-2-cuiyunhui@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
+
+在 2025/2/8 18:40, Yunhui Cui 写道:
+> Release leaked resources, such as plat_dev and dev_info.
+> 
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> ---
+>   drivers/perf/dwc_pcie_pmu.c | 33 ++++++++++++++++++++++-----------
+>   1 file changed, 22 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
+> index cccecae9823f..19fa2ba8dd67 100644
+> --- a/drivers/perf/dwc_pcie_pmu.c
+> +++ b/drivers/perf/dwc_pcie_pmu.c
+> @@ -572,8 +572,10 @@ static int dwc_pcie_register_dev(struct pci_dev *pdev)
+>   		return PTR_ERR(plat_dev);
+>   
+>   	dev_info = kzalloc(sizeof(*dev_info), GFP_KERNEL);
+> -	if (!dev_info)
+> +	if (!dev_info) {
+> +		platform_device_unregister(plat_dev);
+>   		return -ENOMEM;
+> +	}
+>   
+>   	/* Cache platform device to handle pci device hotplug */
+>   	dev_info->plat_dev = plat_dev;
+> @@ -730,6 +732,15 @@ static struct platform_driver dwc_pcie_pmu_driver = {
+>   	.driver = {.name = "dwc_pcie_pmu",},
+>   };
+>   
+> +static void dwc_pcie_cleanup_devices(void)
+> +{
+> +	struct dwc_pcie_dev_info *dev_info, *tmp;
+> +
+> +	list_for_each_entry_safe(dev_info, tmp, &dwc_pcie_dev_info_head, dev_node) {
+> +		dwc_pcie_unregister_dev(dev_info);
+> +	}
+> +}
+> +
+>   static int __init dwc_pcie_pmu_init(void)
+>   {
+>   	struct pci_dev *pdev = NULL;
+> @@ -742,7 +753,7 @@ static int __init dwc_pcie_pmu_init(void)
+>   		ret = dwc_pcie_register_dev(pdev);
+>   		if (ret) {
+>   			pci_dev_put(pdev);
+
+Should we get a reference count of pdev in dwc_pcie_register_dev and put it in
+dwc_pcie_unregister_dev?
+
+Thanks.
+Shuai
 
