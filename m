@@ -1,141 +1,268 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012068.outbound.protection.outlook.com [52.101.71.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58651260A25;
-	Tue, 11 Feb 2025 16:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739292770; cv=none; b=au8dAyIYI0jf71OQPR9lxvz5ZfNvjJPGm+HDkQDtketKafCiSUh5w27QfQRQ0mxNN+O932gorqPoV4GT66hA68YPOl5MH33MYVIvh4PbtscPwPR8CnbT1O+tNXQgpn+7dnrCP2fych1vFGudOjd2UgM1RzZV9BBMDecHbcOo93s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739292770; c=relaxed/simple;
-	bh=cMCtRH+z6U+h94TbDbjYZxf9DfLlcz6nfjn5WGdzMDw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tuJ+5lSCak1tJz/bUM0gvCabpb1LTWAlw3YO1qxXKnbTvZKIjzp5wJC+TcwalztCm1YqeuDTFspLj7LGTKvc7asJGsMa3NZo9OtvNSfFU4GTrzr7d1WN2SKZQRarQS5E0DYiIilw7S+4IhvYKRebzOkUVPOxrOmJJp/zT3XCOMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F884aayl; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE63B254AE7;
+	Tue, 11 Feb 2025 16:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739292835; cv=fail; b=Qf71E5SFBd4hjYDnfo4xb3r658GP0xVg6oN0fI2pgvSFqOveEBisne7CA9Ss/IK1tFK9Bu0/6wqVgUN+TZCQRBxYbxYe/7r5+uMLAbM5Zvqho+JQZ0dUDW/9OdDL2yYhuFHKk6o+k9KqCAHYtiMNDaTSlcgjJbDTePEmgJMyrLE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739292835; c=relaxed/simple;
+	bh=3tTCAsnQzYuEYGEFlm2oEMssti0s2bH9Jotqu3CM5pk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ZrL0SNkU3BVFD37QfmiCDFARgMtb2XVaQfdIUyySQKg0Ym0+XHQT9xX2SVwjWhGeZ5oqq2tNElqrRSCj/Zsq+cqKd9+Ora/XAz/eDpCE+0h1G/XSP4rXSQ5S88ye3V6+nvydluIibaOHAKaIQ+ttU5oFObGtp/YYHTgFB7k08t8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=IHnqzz/+; arc=fail smtp.client-ip=52.101.71.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F884aayl"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38dcb97e8a3so3701667f8f.3;
-        Tue, 11 Feb 2025 08:52:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739292766; x=1739897566; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o7l7FdkR959eBNuQUmz1vYudXlEABsFNBYvc5a0MM9g=;
-        b=F884aaylnI2ZSL/bt5hUA+D7+bb0wECbz7NkTBnHzq0kWR1cgn7yFShwJ4BKfr6o0i
-         IDi2Xrx0v4+7F25KPDtgYqICqkBp1dGgJtbuM2F+c1zSF+IcKBOLQJZpJHJF0jXnIO3V
-         ehjqaXuR/sUg+kftnNiiZCzgoHwl4kamhyDlQZVuQG1YOw1qUk0d5mtXgmZyHgpPMpub
-         5V6N4ib4U2EdGrE3Ewhjdq86lxvl0WfJNfq8BxqebTiibapsaArdTy1YzBMb0AV+uXzv
-         stS11K+Mjaa5QWkSF7kAivcmdVWqsGoHHeJpyn/3LT3/fQ6tc1I5pGqNHx+piDRHJUHv
-         TU5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739292766; x=1739897566;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o7l7FdkR959eBNuQUmz1vYudXlEABsFNBYvc5a0MM9g=;
-        b=VQWsUK0EFrJV4VS4B0LiBi1XMePFsoY8GbRPJpBNOEieesQc05azOfdB4czdaUkcg1
-         uqnj0zaOUTJcllr8YbhwU2JSygoJwXO6UgUanucjPR3NRqKOCOrj0ly5CCCCfKbM0TiG
-         0gPdfNkEFuizH+b0dzyyVBpQI1si4/sj6RZYyRL3Njv1C1UvtQxI4CMizr/6InqimtTM
-         GcGHhm9pItTx7KvX8jRaBJch6CdxTmNWyxppUUFvJGTqDsxPCLrMwEpeorglWhDZNOu+
-         Pynt9H5PUjT04JDUiHtwPuUEvn1N7LdzEOmFFUztJxfTONUFy+IXmpin4sLk3nfuV2W7
-         Z0WA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgLhxc8LoFY1KfUcwOorHOPNbU0PDtEV2QnMYJlrQNuw27awyffeIACqHmY9J44XbBPfk4tD3rtSa/Yc3+6HkSR6WF@vger.kernel.org, AJvYcCUk9enjKEAx3qooKuWmcPxmeUrY8YgHx2NrF/qmmGGQI/VPveE7Vf9LKPa0NXDves1Fl4NjRHvSvTPpXLc9@vger.kernel.org, AJvYcCUsLxAv3dBMlSIiXrThQDGd9SUAipVaJ1ri4YMe8IxMEhIg5YHdPgg3WMosobBWxbTlmys=@vger.kernel.org, AJvYcCWJYAD7qEjwn1cYRvuBAU/ZUkEOsAvmEzPV6uWOH0zMt+9rUMgVorXBe1DuNZRVQ7Erre8DesTx@vger.kernel.org, AJvYcCXDcCayTcLlGgf116C2PesYheSKk6k1rJSlNvcnOyjaLimK7lPIC41ZvS54FP4w0txeySETLQEvgmMo@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrKbp4Sm+nFdPrqDTqrAwyg1mvb87Aj1kJ711GdRu/rv+r1W+i
-	LlYem3iinGGAgP1PztACIxT4NP+uvILt/qxLNftv4tWZ5Mne0P5S1jmn3W7YaufhzfW22S5yQLH
-	mvmfTV4g0OjjKD8E8gliskQKTjT80ZA+1
-X-Gm-Gg: ASbGncummmDseBqaX0rXTwyBUketrMbLwld6eJ4UiMwlZjBaTXM/iRn2q6HX04Tpf9M
-	VuEtSiBC+at7Nfc5gBI+DZI443jD99UuZH/qYvVXk6x4MVtLikhd4gY8aak0xIRa0ecQVQkoc
-X-Google-Smtp-Source: AGHT+IEM+6wMrT0JRG3VIrgXvAIM2GN8O9zWoQmnsuW8lvAeaQmEhS9wOO/SRRIC2ca8APfB0ccJeeLexU7+BMfWIUw=
-X-Received: by 2002:a05:6000:2c1:b0:38d:d666:5448 with SMTP id
- ffacd0b85a97d-38dd66656aemr13413226f8f.40.1739292765187; Tue, 11 Feb 2025
- 08:52:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="IHnqzz/+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=g6MURnvSxfRnnmq4ZuFGW9iMVxaBZTG8cccdJ0emqaXzZl9um6QKYLcAL62rRzavB62Gud7JbareQS/AvPmTYpOHTZJjQv0mqCM1x6HrHTFO6Emai2/z905OetMZOAJ1hEISfmULsXoi0KcPFYi4cFgHA7I52XQhDqPX344foenINTzoHWPaprtF4cdi1WbGPJR8xBn9skjNICn2J4a3YAHC6YLTNotruKq8xhOIiWVkK/sn67O1KdJqLo24vfp7JooWBSMX5slgRL0IBODaByccNtwPpdVku+0nR0a1/R3n5jAyarkT6V01EiKCehCG0/cfK2+GS86JpymL39WQTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8kJs0GWcupCwhbYNcmSyBjqGs/8gSSvwbOyU7KXFq6s=;
+ b=KcmcbdpWfvoEtfVpbGe9qweLG06SG3WIh6qaktDGfk4SGCk3tJxCHDmlIN5WfoyTmZVdBvOvxlLGs2rELsC/Nl9Wra2z5jdAF41b6oOcvFZHvWKJZMP7vG/Qy58ofW0sZSrIc05FcWCPuYknTRiCX/MlewTAt39qqn+A2xuhvJukAXHVWBA/mUIamGA/Jb4ahQ8dWCdry4PDH+0trOxqvdMCsIgF9reiEU+vv9sTrG6tYiB72xXRrozX4/Xgo+lS7swbLxeBxbYSUb0MEi0ngEqBtMiMTlCtWqavfzwvCuVbJMAiYs74Zml53mmLGeg9huKpnur7JomGYfZw+Oahhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8kJs0GWcupCwhbYNcmSyBjqGs/8gSSvwbOyU7KXFq6s=;
+ b=IHnqzz/+VjO/8o+hXnD00d/3inyUUXb/zOw5gGjihQJTWeqaxY5iOAkxfHuWlG3iduSt3EzVVRP61YKADrOWPdaBZfJ6xfXHjJ/7FpthfbbdM0r5l9nPK4F4NJutfM2S4/FIhV72FVQvWCB4IKBsksIjn+V1AztmpdQ3ta2uiNXb5M03BMY2gzEcwkm9Z0+wmWvRD1B2cSXLxYADQJiZgftp+6hn2HU078XR5JMTu3O82sDLSVQpN5VBPnDRbnNEUpmoq23gnCOO/uv+HgCvfkx7OAJm/m65TU5gzfEdyiOYb/bk7sz7EsNxCypUkRuuQMEr1/eSi1mzgnMsgaO10A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS8PR04MB7991.eurprd04.prod.outlook.com (2603:10a6:20b:289::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Tue, 11 Feb
+ 2025 16:53:51 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8422.012; Tue, 11 Feb 2025
+ 16:53:50 +0000
+Date: Tue, 11 Feb 2025 11:53:41 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: display: bridge: ldb: Implement simple
+ Freescale i.MX91/93 DPI bridge
+Message-ID: <Z6uAlTsWTKsC4oYI@lizhi-Precision-Tower-5810>
+References: <20250211084119.849324-1-alexander.stein@ew.tq-group.com>
+ <20250211084119.849324-2-alexander.stein@ew.tq-group.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211084119.849324-2-alexander.stein@ew.tq-group.com>
+X-ClientProxiedBy: BY5PR20CA0035.namprd20.prod.outlook.com
+ (2603:10b6:a03:1f4::48) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250211111559.2984778-1-jolsa@kernel.org> <CAEf4BzYPmtUirnO3Bp+3F3d4++4ttL_MZAG+yGcTTKTRK2X2vw@mail.gmail.com>
-In-Reply-To: <CAEf4BzYPmtUirnO3Bp+3F3d4++4ttL_MZAG+yGcTTKTRK2X2vw@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 11 Feb 2025 08:52:34 -0800
-X-Gm-Features: AWEUYZnQJyQVViKFBVnVgmh-OYBVequMFzAuUfgtInjn-tuR2NbKw0gZmlSYgJg
-Message-ID: <CAADnVQJ05xkXw+c_T1qB+ECUqO5sJxDVJ3bypjS3KSQCTJb-1g@mail.gmail.com>
-Subject: Re: [PATCHv2 perf/core] uprobes: Harden uretprobe syscall trampoline check
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Eyal Birger <eyal.birger@gmail.com>, stable <stable@vger.kernel.org>, 
-	Jann Horn <jannh@google.com>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Linux API <linux-api@vger.kernel.org>, 
-	X86 ML <x86@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Deepak Gupta <debug@rivosinc.com>, Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7991:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1eee9535-26a6-48f1-6243-08dd4abca902
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|376014|1800799024|7416014|366016|52116014|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+ =?us-ascii?Q?hVDbhcsi2peAX/ju3zvuVf9A8ZNzfoqd47KlT+w+Jbl+JmjDHDPPq8jlFZP7?=
+ =?us-ascii?Q?MeOWUHqrvxVDeo50UIoRa3dpnGDs4MHFLgXtfUO1Z+iJecSlZhuRITWEx73r?=
+ =?us-ascii?Q?0V9IGdlGSkJFQYqTwjP/A8a2EGTAAMHPO4rFY8lzYhaOsGwXtcQCdm7y1ATX?=
+ =?us-ascii?Q?jz72Ob5IhoUecgB2Bgfc6CM+XEXHRf07r8QsUOpnTPJLdRWrVtL3sqrzP2BF?=
+ =?us-ascii?Q?utAThxt3jmKYN8JfFOS5Rqe5/VqiDf6KIF7fRXb7mM/lsnNF3pVu9U0jCcrs?=
+ =?us-ascii?Q?43g8li8c8HzvlylYdp1qkgCO/v23Kv3xzXR7Z8omzrYpo7AoCb9BDydZUzqJ?=
+ =?us-ascii?Q?0IF0BMlCstihNJib7nEm34CyIOjGtiddbTXZbMnxKKqt2zeOpeNBGMDa7XVt?=
+ =?us-ascii?Q?WlQKV1LreO419F9smRx7H1RuFnqqmv5d9wKRsRasTCa12tzuugszvCxyO/6P?=
+ =?us-ascii?Q?xXKBGX8PHqAvIk8HTh8cr+uKpWG+sHQX6evP6NpeKre/LnryLEnfoUYL4pFJ?=
+ =?us-ascii?Q?5MHaunjbhLUCkpaTx4a9l9f7v3nRcVaI6JGfrcqIrupHMMbUxkS5SqvO6ruO?=
+ =?us-ascii?Q?tKlSYdqLTAdECalnDr55h0JHY6GdXYsiGJrk7Ky6OWyBelWbLF1dFmetx2x2?=
+ =?us-ascii?Q?YKJmU24IgotMtz9shr+pV4ogul/QUjE9AlSm4URoNgemJLpovhOx0/YKsIp+?=
+ =?us-ascii?Q?NGFTg56WqxMROzD5TvIKhbOE/BBBe0uokQXknSk/m/95CtmPyO04qSIOs737?=
+ =?us-ascii?Q?5slqSNppcrG8gZbHZA+9b+shjbphbcoLem2qje5DSU89z9Y1GRrE5gVJOtjb?=
+ =?us-ascii?Q?BiZ51x3t5/TvREsZs6OVDYDjMvC7jZilxdi2zyKvXTPqKiQozQkw23y2dAAT?=
+ =?us-ascii?Q?aRRbqo/Lxly45Fxor9vieZmc9/BY2ywiKl7CICc54b14UAAldTANpx9ReKUh?=
+ =?us-ascii?Q?3BZZVz2lnzHiuH8NchgMXjs54Q5ARE520gQ7RdCpJsiyg3Gdi02V9VvGN9WG?=
+ =?us-ascii?Q?AW/w/DK4DM+RwTvNQJSOr57IqpQYE3UsxWiPi0hUxI0EKiLA8oQbGcJixo+o?=
+ =?us-ascii?Q?hZrE2Mnr6IEG+h3HfFbkvOJ4v661QHh/S9B1hHXWV6fv5uUGJ2I0Po4016bS?=
+ =?us-ascii?Q?QtswiUrewqIbM1sAq5VMzK2c1oOLrPfwmboUbsOsBXaaWsjcPjSqp9xu3Sof?=
+ =?us-ascii?Q?LV5yy4ABkDkjmnUusKV85wQxWXu/fadPUlOSDAm9e7UidseB+Wd9nDMCkcCF?=
+ =?us-ascii?Q?iDlSjGtEkF5fmbMMt5Sx7SLyyJIJtZ/pvw3/GMDh4y80/4iDqINwOoSGkcgD?=
+ =?us-ascii?Q?pJBCmsTSO+5vGWj3RAWAB17YSVbAONhJiY1icAyngo3bJOz091KtqorN/x97?=
+ =?us-ascii?Q?VJsjndSimvaPkMDXdnVaTvmWN3KN?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(52116014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?K5x2uhbqtr2wrfqBdi6pajlymCqujj7yvIWTWviOGKshz7/yveqVRYWsLUWu?=
+ =?us-ascii?Q?BshmT4vo4GR6rZ1a9LvofumDDAT3LD8Ht6zd9kS4Qd5X9Bnca9+sRXhPyowq?=
+ =?us-ascii?Q?HZzKymxD/gYL257lum3LLT50ozP1ic2Uy6veA6gy9+AqKJ3pyerq1UxBjdIl?=
+ =?us-ascii?Q?oFTRiJyAlb5bd5rbBwVMDpQxF6Xeqs0uuKcJdYILs5bQsH6DMZfrBWEeRKkf?=
+ =?us-ascii?Q?ekqeXv0V7Iup+RK6hbXOlYJfekrNJVWidHewKqO45GLbOeC3N8p+AffYWdZ3?=
+ =?us-ascii?Q?OtsuDiZEIiFNeeTfq8EjEPNqJhSz1jvQ+y25O18lnrUqwYwwvCCtV+8y1QPN?=
+ =?us-ascii?Q?PGw8D4WA+cRfO7R4XGvsqkjx8A2ISMecQTDad4Bh2eRf9JeuDjisbpzm8TJR?=
+ =?us-ascii?Q?J9Ww7+qNm8xxVhmhJckBWutF1qdt7c1n55/Grq80o2zywS7sjpObr3IeFZQj?=
+ =?us-ascii?Q?ctWgHUooctOHFjv5UBZnn8ZZPJdOsnFkFmTy0MjGUSY+f+KgDmyR7VEOFkbZ?=
+ =?us-ascii?Q?hAcQChph5c6wyPvqOXxdaVn6b2S4D6W5/tdYYJNq5NpOskD0gva7cKXh2yAt?=
+ =?us-ascii?Q?xt+z38uPWRasxKI74i9m3xpBoVQODcfUQLwolklmbQ73OfJ6bxsINHVKro3c?=
+ =?us-ascii?Q?y1dyBGGIh4bUx18dtzWVM6r1A32KfASLbgkQq6hE/Dhi5gqXZXiRYlO7aWXs?=
+ =?us-ascii?Q?kq0yV+4HEiD52WbjkDyVL+sc9To4jChnJo47H35IhjsclNw8U7zqTFA11dyp?=
+ =?us-ascii?Q?+GC1nR3/oOuF7iygNrA5bhENuJvPXsERjiuxIBZ+4lBci/7MaFeFLkXI56ky?=
+ =?us-ascii?Q?yfoxWiEgYnouFxJ8tiISeePvWkyfA+3DzpUai9AqOTa2K3WE/O0b6Jh8Y598?=
+ =?us-ascii?Q?ZaCwdpjsJ9lVJW3BC11nwhWy7lcol31ljf++qzUoYmxh8wy3ZFGUWRF0LBFO?=
+ =?us-ascii?Q?8YhnDcTDjFeHi4dCtXZg5g0nvRyBt1ZKjtm+kt94rZlnlhvBAT4nv7iYofoQ?=
+ =?us-ascii?Q?VEjuCGaDkPRShw3l3iqyTpvPoJtSlRa39r4UDhNkEv8tqEJoiODThG1QGu9k?=
+ =?us-ascii?Q?Eel+P4gVhssaggxDBk8HU8x2xy4lx5SoCkXg1uQIv3X9Q2yDIssVSJSGe40N?=
+ =?us-ascii?Q?+B+B4uDp8PNXtCoPanO+qdCxyYIjUYkLXp284XcIf4FNrcyW3bX8wml/wSmi?=
+ =?us-ascii?Q?uvfG2CQ3ZZ6yFIjbvqdPkk11f/cAV5XYdM+C65KVa5X7jX3QSVBl6ZCdrcl0?=
+ =?us-ascii?Q?+JRuaM9NDfRIl6o3by7mz4C2wQXi2h9tM/oVUb7RumPraagB8XrSNfg/9xTS?=
+ =?us-ascii?Q?H70ZGSkQnxKHmBEbWXnWOV6q+/UgWFu+X0ls8/iFtL7moQyUTUEBtrgItQu/?=
+ =?us-ascii?Q?cVlzVDDxlSD+fSyi7V8jRsWn6jJwX6m/OjBQKfq11tLwNXrU6GZ6bycmZ8RA?=
+ =?us-ascii?Q?NjXRp9EvvLQC3TImfRpdCN2ucTbMNGFomtLIiQFALfAiq21Dmab+xQ4/nR6G?=
+ =?us-ascii?Q?LyZQyoQ+TCvTZQ8UW9SeQ/MSth2x3NVpveP7sVhg0Z5oo9Fxs1OWleq7HbrR?=
+ =?us-ascii?Q?Mk60PWPur+p9SmaxY27TyIg67u1fs6RwPXmje/3L?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1eee9535-26a6-48f1-6243-08dd4abca902
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 16:53:50.8946
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Qfhou+CSh67XW4ogSrN1sxf4JUiHrMEZlJikjenlCXfhS86UH7uSvGNA3zY8PwDvhOY2tfbyVIYfUeNcopISJA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7991
 
-On Tue, Feb 11, 2025 at 8:48=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
+On Tue, Feb 11, 2025 at 09:41:18AM +0100, Alexander Stein wrote:
+> The i.MX91/93 contains a single syscon registers which is responsible
+> for configuring DPI output format. Add DT binding which represents
+> this configuration as a bridge.
 >
-> On Tue, Feb 11, 2025 at 3:16=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrot=
-e:
-> >
-> > Jann reported [1] possible issue when trampoline_check_ip returns
-> > address near the bottom of the address space that is allowed to
-> > call into the syscall if uretprobes are not set up.
-> >
-> > Though the mmap minimum address restrictions will typically prevent
-> > creating mappings there, let's make sure uretprobe syscall checks
-> > for that.
-> >
-> > [1] https://lore.kernel.org/bpf/202502081235.5A6F352985@keescook/T/#m9d=
-416df341b8fbc11737dacbcd29f0054413cbbf
-> > Cc: Kees Cook <kees@kernel.org>
-> > Cc: Eyal Birger <eyal.birger@gmail.com>
-> > Cc: stable@vger.kernel.org
-> > Fixes: ff474a78cef5 ("uprobe: Add uretprobe syscall to speed up return =
-probe")
-> > Reported-by: Jann Horn <jannh@google.com>
-> > Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-> > Reviewed-by: Kees Cook <kees@kernel.org>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> > v2 changes:
-> > - adding UPROBE_NO_TRAMPOLINE_VADDR macro (Andrii)
-> > - rebased on top of perf/core
-> >
-> >  arch/x86/kernel/uprobes.c | 16 +++++++++++-----
-> >  1 file changed, 11 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> > index 5a952c5ea66b..e8d3c59aa9f7 100644
-> > --- a/arch/x86/kernel/uprobes.c
-> > +++ b/arch/x86/kernel/uprobes.c
-> > @@ -357,19 +357,25 @@ void *arch_uprobe_trampoline(unsigned long *psize=
-)
-> >         return &insn;
-> >  }
-> >
-> > -static unsigned long trampoline_check_ip(void)
-> > +static unsigned long trampoline_check_ip(unsigned long tramp)
-> >  {
-> > -       unsigned long tramp =3D uprobe_get_trampoline_vaddr();
-> > -
-> >         return tramp + (uretprobe_syscall_check - uretprobe_trampoline_=
-entry);
-> >  }
-> >
-> > +#define UPROBE_NO_TRAMPOLINE_VADDR ((unsigned long)-1)
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+>  .../bridge/fsl,imx9-parallel-disp-fmt.yaml    | 78 +++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/fsl,imx9-parallel-disp-fmt.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/fsl,imx9-parallel-disp-fmt.yaml b/Documentation/devicetree/bindings/display/bridge/fsl,imx9-parallel-disp-fmt.yaml
+> new file mode 100644
+> index 0000000000000..54cb73b59b1eb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/fsl,imx9-parallel-disp-fmt.yaml
+> @@ -0,0 +1,78 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/fsl,imx9-parallel-disp-fmt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale i.MX91/93 DPI bridge
+> +
+> +maintainers:
+> +  - Alexander Stein <alexander.stein@ew.tq-group.com>
+> +
+> +description: |
 
-If you respin anyway maybe use ~0UL instead?
-In the above and in
-uprobe_get_trampoline_vaddr(),
-since
+Needn't |
 
-unsigned long trampoline_vaddr =3D -1;
+> +  The i.MX91/93 mediamix contains a single register which is responsible
+> +  for configuring the parallel display output format. This describes
+> +  this registers as bridge within the DT.
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx9-parallel-display-format
 
-looks odd too.
+
+look like it should belong a property in fsl,imx8mm-disp-blk-ctrl.yaml.
+
+Rob provide similar suggestion at
+https://lore.kernel.org/imx/20250203220655.GA123074-robh@kernel.org/
+
+Or at least, uplayer mfd yaml should link to this file.
+
+Frank
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +
+> +    properties:
+> +      port@0:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description: Video port for DPI input.
+> +
+> +      port@1:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description: Video port for DPI output (panel or bridge).
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    blk-ctrl {
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        bridge@60 {
+> +            compatible = "fsl,imx9-parallel-display-format";
+> +            reg = <0x60 0x4>;
+> +            status = "disabled";
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                port@0 {
+> +                    reg = <0>;
+> +
+> +                    dpi_from_lcdif: endpoint {
+> +                        remote-endpoint = <&lcdif_to_dpi>;
+> +                    };
+> +                };
+> +
+> +                port@1 {
+> +                    reg = <1>;
+> +
+> +                    dpi_out: endpoint {
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> --
+> 2.34.1
+>
