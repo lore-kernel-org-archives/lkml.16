@@ -1,158 +1,189 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A64E1EBA14;
-	Tue, 11 Feb 2025 08:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C184A1EBFE6;
+	Tue, 11 Feb 2025 08:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739260976; cv=none; b=I/1gCfc6cFyI1b5hKU3NtUAr8CyIi+BWngCNNC3iUmnPX+wp9VIwOXUAg73pXVD7xv1tbQ5NoSweTlv6cTOXZGlLkhTyD4f7ugn8paHmY1BWt4iNzLb0OVAZTwlqowJh1cuaR1Vg3TeIk9xdFtvETqQedwBhPxGkJ7Ua7rTpl6I=
+	t=1739261008; cv=none; b=We6Bknl2jdw+JHXZdXIfHEbVO4AOdQV/ERkGJ+Wppi/kZ8N3j/+oBSbXp1vP2XrLEfNOaS1LbKZQwaEplt/4BZZEQDYyX3acwCdGsw5FJEh2RgLPPCgl+EjTqq7a2TRRnHcRjCnbPf/ccqWOaMzU+6P4eva0/+1PYtMhFax+rlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739260976; c=relaxed/simple;
-	bh=Kh9Ogk7+x0yP4Ukzvfr+odHFDe4F2iECj/j/BUEk5eU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pY6GYRD3CXJ6Pq5av06eoRylAnnoMNNxmtOkXCo2HjQDxBWA+zm2cxd4KgxwB6cuwp6svRWpxK9TNApV/x7nqMevc3tRbxp8s2+753nxxI//E/dcHy7lzKlyGFB5C2oXNF6OOlFF5Xr55I21+BYXbgg9sAB2rBvkBDt3ISEUvZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5de63846e56so5247125a12.1;
-        Tue, 11 Feb 2025 00:02:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739260971; x=1739865771;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kOS/9voZO7vapVv46CaqegmZFfcgz3O52bGNQXQxQY0=;
-        b=GRFpQqe5V6HIxmOvzgbseJyIJShWE/ZLf8YD3w/OYFoh49MhjrAcrAbfoKLm0cDWaA
-         lNcHLVFJiuopbl4X1i6IencjIvb6y90Ovi49Auz4+9ls6xN/qUwQSkwbMSo5owh8PLm6
-         Jw8YobXoSWTp3B2yGwG31yKbmFXmxl9hsZJA8dA2gOAbOdALPAj3ftcmTBDgGGeUT29u
-         tJelRUGBPY0KElwhsomw8UQTNkOIE2hF3tqOAXR95ZynrxVON7LkWWmb0394L9P9Vkws
-         z2lASMvauCT8QA8EHp5HB58p2QaKh4sPKagN4ALKXJx3cZmqU+ysuwT81LpipgQDqIop
-         RrIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8JpY9y4Sk2IraOXKlRSbNobTGTmYhtnFPe9WEjkzMYsVXJ/FTzkkOraei8IXBRmf5JpEdA5ym8/8T@vger.kernel.org, AJvYcCVo8pEDjbOop8xS37obh73bdw7uZoVJVaPPUL4ynCbW/iqtiIkpkt1grn18tBbmhvYT81qUim6wilBS@vger.kernel.org, AJvYcCWcd/oYy3DIQDVquYxhs+sUB/HZZZK7vxWXGoI2COwbueQNeaDJz/N9lkiwnT6vnvMrglyd1Uqpz0eaHA==@vger.kernel.org, AJvYcCX3KnmpyGCjGqbh/JCkfnJ7JW776K9DbKOrH2G0z9vvlaGH1XkySfIFYkS4GduQJy4IWDv87jr9TxQTZLYv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxD40NeCTph+F1U8RI73+RO1oIVjB+I5MsIPpimlF40GcFVYV6U
-	co8bmHGJagNBVSJCwiKXyWRjNEyGUWpR7ij4onmqP1NSPNDkOMBwYCmSdvl45+U=
-X-Gm-Gg: ASbGncsxmqB2zHz4J8nIo/0c/p1dfmqNO2NfHR+RetjQs937uahLpPRMb83rg17nYs/
-	umMUQimSShEJsE1Dmndzp0HxtxTcWJV5vDhhS++sFXeLkfmAlQlZjVT7Hfm0Gq6EproSVaAc7m6
-	EHFmv9fHGDwItmk480fiIHJ2vyebEH8vBN7/QKntMRyUZlQ2s4yIm994bj8rgGFbd8o07EawEyf
-	JR/7R5zAn2OgKqOzLbxiC01bsb9VoeFhBHpPoqNfuH4r1/2DxGwAqgdho+RejOzFaiB8UUjPw7i
-	/0Au6iUqiOSGN7bW3brvwVz4jqBfpZrS5gYO89Zj6lrummqB6GY3BQ==
-X-Google-Smtp-Source: AGHT+IFRG5cIyHTv3cauXEI/Kd8qR+4CxBI786yt8N+Ncxe7HAhstmZ+lX6C8DOVTLDH5iKCHgdCtA==
-X-Received: by 2002:aa7:dbd4:0:b0:5de:4add:d52f with SMTP id 4fb4d7f45d1cf-5de9a4c860fmr1898377a12.32.1739260970380;
-        Tue, 11 Feb 2025 00:02:50 -0800 (PST)
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de51587da6sm7206462a12.64.2025.02.11.00.02.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 00:02:49 -0800 (PST)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5de63846e56so5247040a12.1;
-        Tue, 11 Feb 2025 00:02:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU/w0nkz9IrREk8CtPoj/2A7yBdu69Ohb2uPBdXRBve9OcHrdkCcPjOH8ROkKy8MJSXelob3P7WxxVE@vger.kernel.org, AJvYcCUShqoiq0iGwZXjTB0R3Ax0aQHIMxu80bnhK6m2ZEdDB6nBth/n6FxI4JqXbFqcAHjapZQyjpedwF9kJA==@vger.kernel.org, AJvYcCUhOXrq19R+OCgjFDcqqQ1k+QC9ipv6CMRWcgsvLwqfFQs1TmjIwojrjA6B7OWAEbeTe1AzcYGgwnws+PEJ@vger.kernel.org, AJvYcCVXAGJp3lDDs6hb5a5IIQ0VjHxF8g/NPivZ6C0SsSdv+rCp3y+4LrygaCgCq+yxNJ/twPFbkXLdVRJG@vger.kernel.org
-X-Received: by 2002:a05:6402:3485:b0:5d0:ed71:3ce4 with SMTP id
- 4fb4d7f45d1cf-5de9a394509mr2832636a12.6.1739260969034; Tue, 11 Feb 2025
- 00:02:49 -0800 (PST)
+	s=arc-20240116; t=1739261008; c=relaxed/simple;
+	bh=fcMnfF/02PwcgIb5knjQyysxW5tjvDb1ZQDm57WEIcg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Uus6zlqfrIVP1yk52+boZtOUOUZ6hMhUwcZSe95JLVtjSPc63b1sNwuTlTzp6Ppu/VJ5I1j2x8jtdkDYYeuPDY6uaZ1WGdZDwBHTfh5b9UJu3Ajy7Evy0njXDIyLVuyPCzyiqW8FFfzGCu30wli6BDAlRD/hndi5+4lWa2Xlc8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tsFMZLR8; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tsFMZLR8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A03C4CEDD;
+	Tue, 11 Feb 2025 08:03:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739261008;
+	bh=fcMnfF/02PwcgIb5knjQyysxW5tjvDb1ZQDm57WEIcg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tsFMZLR8qsPO+zv9eVl6FbzRTs8M8hQz09kMMyaS8RjZ3zBm4n6xDol93yXXRicYQ
+	 8mAvdhNHGkFMO6S5b+Y6ceXIP1Cp4L9kuiPX244ZLwefhssfnBwZsG2mjDbtAtqtAS
+	 noaCrdhkhiQQMr0peRWbfWoWf/8pzxW09npugDlLlVXcQ6SVVg9S2J8Nn1B4jUREIO
+	 rEhVzEwP0fQBnPObim/sDQm46Fd/XoAY3MDX+Ak2WWnKLAyqAByXk9gQMtGd0T7Djl
+	 A1lu7r6qyBw/qeQKsr3PekZIia/cc2UGO6AvMtF2IdUzi07IxmKL1oap19qglc8sCJ
+	 iNn8F40djQ84w==
+Message-ID: <19e5129b-8423-4660-8e4f-8b898214d275@kernel.org>
+Date: Tue, 11 Feb 2025 09:03:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241218183401.41687-1-vicentiu.galanopulo@remote-tech.co.uk>
- <20241218183401.41687-4-vicentiu.galanopulo@remote-tech.co.uk>
- <173641864745.2570436.6359371577917683428.b4-ty@kernel.org>
- <CAMuHMdXNOEXuEADeSGGHw88Tse+QjSkknKYGH-kk02jSpiuNiQ@mail.gmail.com>
- <20250210165923.GC1868108@google.com> <20250210170136.GD1868108@google.com>
-In-Reply-To: <20250210170136.GD1868108@google.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 11 Feb 2025 09:02:34 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXtDd-KSeX_8nhj_J0X33WRT47_v3m01qdBN01-p4xVjA@mail.gmail.com>
-X-Gm-Features: AWEUYZkd6jwi31R-cWUTztcZCNox7Hslq-Hkz90mfjEROmdjN3FG73ZPmUY9Y1I
-Message-ID: <CAMuHMdXtDd-KSeX_8nhj_J0X33WRT47_v3m01qdBN01-p4xVjA@mail.gmail.com>
-Subject: Re: (subset) [PATCH v11 3/3] leds: Add LED1202 I2C driver
-To: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/4] dt-bindings: soc: spacemit: Add spacemit,k1-syscon
+To: Haylen Chu <heylenay@4d2.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Haylen Chu <heylenay@outlook.com>,
+ Yixun Lan <dlan@gentoo.org>, linux-riscv@lists.infradead.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Inochi Amaoto <inochiama@outlook.com>,
+ Chen Wang <unicornxdotw@foxmail.com>, Jisheng Zhang <jszhang@kernel.org>,
+ Meng Zhang <zhangmeng.kevin@linux.spacemit.com>
+References: <20250103215636.19967-2-heylenay@4d2.org>
+ <20250103215636.19967-4-heylenay@4d2.org>
+ <aw2vqnz5vcccqqvrrhz5tgawj7fnzzg3tds7nnepuorit37a7r@jcj3wrs7d73h>
+ <Z6rdBhQ7s2ReOgBL@ketchup>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Z6rdBhQ7s2ReOgBL@ketchup>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Lee,
+On 11/02/2025 06:15, Haylen Chu wrote:
+> On Sat, Jan 04, 2025 at 11:07:58AM +0100, Krzysztof Kozlowski wrote:
+>> On Fri, Jan 03, 2025 at 09:56:35PM +0000, Haylen Chu wrote:
+>>> Add documentation to describe Spacemit K1 system controller registers.
+>>>
+>>> Signed-off-by: Haylen Chu <heylenay@4d2.org>
+>>> ---
+>>>  .../soc/spacemit/spacemit,k1-syscon.yaml      | 52 +++++++++++++++++++
+>>>  1 file changed, 52 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
+>>> new file mode 100644
+>>> index 000000000000..79c4a74ff30e
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
+>>> @@ -0,0 +1,52 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/soc/spacemit/spacemit,k1-syscon.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Spacemit K1 SoC System Controller
+>>> +
+>>> +maintainers:
+>>> +  - Haylen Chu <heylenay@4d2.org>
+>>> +
+>>> +description:
+>>> +  The Spacemit K1 SoC system controller provides access to shared register files
+>>> +  for related SoC modules, such as clock controller and reset controller.
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    items:
+>>> +      - enum:
+>>> +          - spacemit,k1-apbc-syscon
+>>> +          - spacemit,k1-apbs-syscon
+>>> +          - spacemit,k1-apmu-syscon
+>>> +          - spacemit,k1-mpmu-syscon
+>>> +      - const: syscon
+>>> +      - const: simple-mfd
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +
+>>> +  clock-controller:
+>>> +    $ref: /schemas/clock/spacemit,k1-ccu.yaml#
+>>> +    type: object
+>>
+>> So now we see the full picture and it leads to questions.
+>>
+>> 1. Why spacemit,k1-apbc-syscon with spacemit,k1-ccu-apmu child is a
+>> correct combination?
+>>
+>> 2. Why having this split in the first place? Please confirm that clock
+>> controller is really, really a separate device and its child in
+>> datasheet. IOW, fake child for your Linux is a no-go. Fake child while
+>> devices are independent is another no-go.
+> 
+> These syscons are introduced because the clock controllers share
+> registers with reset controllers. Folding them into the parents results
 
-On Mon, 10 Feb 2025 at 18:01, Lee Jones <lee@kernel.org> wrote:
-> On Mon, 10 Feb 2025, Lee Jones wrote:
-> > On Tue, 21 Jan 2025, Geert Uytterhoeven wrote:
-> >
-> > > Hi Lee,
-> > >
-> > > On Thu, Jan 9, 2025 at 11:31=E2=80=AFAM Lee Jones <lee@kernel.org> wr=
-ote:
-> > > > On Wed, 18 Dec 2024 18:33:59 +0000, Vicentiu Galanopulo wrote:
-> > > > > The output current can be adjusted separately for each channel by=
- 8-bit
-> > > > > analog (current sink input) and 12-bit digital (PWM) dimming cont=
-rol. The
-> > > > > LED1202 implements 12 low-side current generators with independen=
-t dimming
-> > > > > control.
-> > > > > Internal volatile memory allows the user to store up to 8 differe=
-nt patterns,
-> > > > > each pattern is a particular output configuration in terms of PWM
-> > > > > duty-cycle (on 4096 steps). Analog dimming (on 256 steps) is per =
-channel but
-> > > > > common to all patterns. Each device tree LED node will have a cor=
-responding
-> > > > > entry in /sys/class/leds with the label name. The brightness prop=
-erty
-> > > > > corresponds to the per channel analog dimming, while the patterns=
-[1-8] to the
-> > > > > PWM dimming control.
-> > > > >
-> > > > > [...]
-> > > >
-> > > > Applied, thanks!
-> > > >
-> > > > [3/3] leds: Add LED1202 I2C driver
-> > > >       commit: 939757aafeb9c266dda37657ee5f7a73ffd35ae2
-> > >
-> > > You also have commit 259230378c65ebb6 ("leds: Add LED1202 I2C driver"=
-)
-> > > in mfd/for-mfd-next, which dropped the change to drivers/leds/Makefil=
-e,
-> > > and changed the Link:-tag to point to the older version v10?
-> >
-> > Interesting.  Not sure I noticed and if I did, I must have fixed it.
-> >
-> > This is the commit that made it in:
-> >
-> >   939757aafeb9 ("leds: Add LED1202 I2C driver")
->
-> Scratch that - looks like:
->
->   259230378c65 ("leds: Add LED1202 I2C driver")
->
-> ... also made it in.  However the Makefile line survived:
->
->   drivers/leds/Makefile:obj-$(CONFIG_LEDS_ST1202)         +=3D leds-st120=
-2.o
->
-> Did anything break or is all as expected?
+So a fake split...
 
-The end result is fine.  History might confuse people (the (un)happy
-few who care about history ;-), as "git log -p v6.14-rc1 --
-drivers/leds/Makefile" shows 939757aafeb9, while "git log -p v6.14-rc1
--- drivers/leds/leds-st1202.c" shows 259230378c65, linking to the
-older version.
+> in devicetree nodes act as both reset and clock controllers, like what
 
-Gr{oetje,eeting}s,
+Which is correct hardware representation, isn't it?
 
-                        Geert
+> has been done for Rockchip SoCs. Such folding isn't practical for the
+> MPMU region either, since watchdog and other misc bits (e.g. PLL lock
+> status) locates in it.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Hm? Why? You have a device which is reset and clock controller, so why
+one device node is not practical? Other vendors do not have problem with
+this.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> 
+> If you're more comfortable with reset and clock controllers folded
+> together and eliminating most of these syscons, I'm willing to make the
+> change.
+
+This is expected.
+
+
+
+Best regards,
+Krzysztof
