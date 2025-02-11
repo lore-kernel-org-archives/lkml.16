@@ -1,143 +1,386 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED91B26BDA7
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4C512FF69
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739250926; cv=none; b=YacZl1EJEXqhc88lG0iEiK7x3gtK/PcRKENLzJwColmIHgDxlW4sbz5bCMZiBs7gYQuwBZtns8/anvHzaoqEOcffEhtXl37vGrBhqD5y9k8R/83S6VNH2Atghzo6hcFc28vdb/KmXdPaY7BSX4MFVFJpDpJwPiTTciI0c/T4L18=
+	t=1739250934; cv=none; b=Tr8vcE09XnTRwAH6l3QzRIpkIbCxej0rFuF3c5HuIUaqsSAbFhQkwIHLq0/kj1+pc7ByG9c0KgZ8XkRUpmEumBSDI9GHPQY2LbiSYGJK4hZVLpzhUEvyuiIsTkIyPCPZIps3RaA0N5ypU981fR0QXiMI6F4ZRXWO+mSnNr00Ecg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739250926; c=relaxed/simple;
-	bh=ecMp9NzXgAfPDtti/3umyr6JhdSqbCGAQwtPeBNYQPs=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=K7FVBz4RX+KRvq5LJezDo9x/u6FKFYVkEAmjXVkCHdyVYDfLPzC6IWh1lJm9FGFQlUzxRyIDmM1vIXKa91fCmnwx0hNIdXAJ0VtSDJRnTnBU6fCxF1+8mudLLTZbTwzn7TQXNpoXib3z6IG8pUjeeJtWpbxU3qOTdiW5egvsiIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cb2mOlVr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739250934; c=relaxed/simple;
+	bh=PJEfEXr1gVwxb1qf0hBMFkj9bafyWUb/1D81UvQuKsM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y+LInRvIUQyOjYv95ygiq19sPFH/UDPaCSY9fgzrd7cop1KpxYpT4Y2bRJ14zpMpkL5hV2ZoRLGyqOguvPTyjzK7MYASD0M+YYKedzxS3UfZnL+SCNrR1+wnEQNWWqLBD+Rgo+myyWFfYrtAtymObRS6o8sEUDXCHvJeS/a6Hfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jcGC51vj; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cb2mOlVr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C43FC4CEDD;
-	Tue, 11 Feb 2025 05:15:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739250925;
-	bh=ecMp9NzXgAfPDtti/3umyr6JhdSqbCGAQwtPeBNYQPs=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=cb2mOlVreSRYNT38gFA8VUp4BGH+e6nm0Fnq0d2LQh4xc8UoOtYJ9OSzXq+RV6dme
-	 TU+egjhD9485dZT8BjzwYuVYDGJNv4xPoqC3sq4n1Ogmq1e8rYyuRnHaXjjPDlwoE/
-	 Mbetk/eyNJjdI4XoCmJn45DOEoiIcTz+dwksC1kuczrrlW9WVfsRvQRZDP2ahQqCer
-	 289V8sOF9T7RAvUDLKTYMiEBikTPVBrB/AZ17ucmzGe1V7bAELTqdPC0BXHOwpIU73
-	 GhVFbOaen+5iuiiApEYrWMdSGOXKa4sB/5isNMx7hb8nM9aEwHLXGmmtVp3BbRKGgo
-	 K7uWSjSTJiIzQ==
-Message-ID: <5a647c34-62d0-47e9-827d-6d7fa9ee5ec5@kernel.org>
-Date: Tue, 11 Feb 2025 13:15:22 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jcGC51vj"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d05815e89dso76505ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 21:15:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739250931; x=1739855731; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZJbWFN9obvqmrGBaLDgirkSslltkhSez5QGjVbmhl6M=;
+        b=jcGC51vj3/wIJsEyRbjp3+Noq8ZjsIAkgBUDAb2da8iByzY+/r44wJgwc1wLkRq3CD
+         B/30b8zSnfUTC45zqI9wuAeuDc2f3cwhD/n0aJTFxzdg/7NECA05FQEkBNtBbrf2/Rla
+         ShhGbcUDBS3/KghvaGokUygP3fQROP684rihNkK5H8uWeWtocDXpr9fAlJMVfaqKNZBQ
+         8GZ0RijxC3Ox4MiNAbwNOhiTbz1Ei8I/2UnooG9cgn1XFhb6EkWeE4YNnx+Yt2u4yh6f
+         IQMV9Cz9NzkcyY1H+xSn69KZfASoNH35Qa7tReDQYqZdHaIyf7VwrE21iazFWL4D4Q1h
+         sk/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739250931; x=1739855731;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZJbWFN9obvqmrGBaLDgirkSslltkhSez5QGjVbmhl6M=;
+        b=N7NSzQYhGJ/9RRNbiIbGfO6U1siYbhgvegyPBgbeaDfKMzrVFAEW68mcluqte9xRNN
+         liGAJnVYfK43CybEMFAgLKZliVJWs+zlLDCHH0ZdI8L5IkEYmHn6zsdo3mozKBNXFufV
+         9vDAkGmyUvubycgWHUWmFWbMn7vDbKh+0l5nXleZgZjBPoHGqDR3PyYceu/XdNwiR9yc
+         38A778ELD1TJuvCgLgQD8BAABySMeHDcJu4s82VWZ1GowehqFfJa7YhsXcj2oxBMpnji
+         b4YUM51u5wwEEJhSjONLiPYPldz2/derqZxKSEvWfqICs4PzR3G484jfYfljOuADs7yX
+         hHpA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1KHftx5XX8WkfxpUvTR67BzayVx7K9rxUd13OnRgNWeaRrtwitfdW+A6/BATWi9OGRV8qct8WS/mSaaY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywyv7hQ2ZtWu1IsmCLgaxmKC5IbthHhGAlsGv78Bgrd99rp49XA
+	fw6Eq9jUSoK3FeCm+oMf71EngYIrF7gLVkdIhZRcn2ZKacYNK7KbAHSB9+r8wHvIrg4+H4vq30C
+	m/AhLpsepmijNLfD2d1P17dtCr2NBcdDldXAo
+X-Gm-Gg: ASbGncsz2n8My+vHocOSPqv6gWkP1x2pdi26ak3NtY5+jlcTfe7p0gbhd6oIHi77Hf8
+	YJWKiC0naroC05Lo2ZDAHg292AwzS/ZQxsJHWh5fr8f4uRQvYOjEO15BxUl7BIcx6Fi1a8MAfpQ
+	==
+X-Google-Smtp-Source: AGHT+IGfSl4kWhCCgj3XPGHNCoxGxNbbsLFo1bp5YL3grWE6XvcLpoEkx4NmLGXATzlWTGCv+Emwhbcj1yN10fQqLnU=
+X-Received: by 2002:a05:6e02:152c:b0:3d0:51e0:14af with SMTP id
+ e9e14a558f8ab-3d16fde3e3dmr1966765ab.10.1739250930870; Mon, 10 Feb 2025
+ 21:15:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org
-Subject: Re: [syzbot] [f2fs?] kernel BUG in new_curseg (2)
-To: syzbot <syzbot+15669ec8c35ddf6c3d43@syzkaller.appspotmail.com>,
- jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <67aa72bf.050a0220.110943.0035.GAE@google.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <67aa72bf.050a0220.110943.0035.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250210165108.95894-1-irogers@google.com> <20250210165108.95894-7-irogers@google.com>
+ <Z6qOHi0D89o1pdQl@ghost>
+In-Reply-To: <Z6qOHi0D89o1pdQl@ghost>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 10 Feb 2025 21:15:19 -0800
+X-Gm-Features: AWEUYZkbCdQvay1KVLiyu-3jGD0mNnHZ9ZWTU7CH6hQ_dxYDj52b6QlzEYbBh7I
+Message-ID: <CAP-5=fXO6S8p8y11uwg46zM46MboZ3+QuoK+JuNTdbo3WBfqtg@mail.gmail.com>
+Subject: Re: [PATCH v2 6/7] perf syscalltbl: Use lookup table containing
+ multiple architectures
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>, 
+	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/chao/linux.git bugfix/syzbot
+On Mon, Feb 10, 2025 at 3:39=E2=80=AFPM Charlie Jenkins <charlie@rivosinc.c=
+om> wrote:
+>
+> On Mon, Feb 10, 2025 at 08:51:07AM -0800, Ian Rogers wrote:
+> > Switch to use the lookup table containing all architectures rather
+> > than tables matching the perf binary.
+> >
+> > This fixes perf trace when executed on a 32-bit i386 binary on an
+> > x86-64 machine. Note in the following the system call names of the
+> > 32-bit i386 binary as seen by an x86-64 perf.
+> >
+> > Before:
+> > ```
+> >          ? (         ): a.out/447296  ... [continued]: munmap())       =
+                                    =3D 0
+> >      0.024 ( 0.001 ms): a.out/447296 recvfrom(ubuf: 0x2, size: 41605857=
+08, flags: DONTROUTE|CTRUNC|TRUNC|DONTWAIT|EOR|WAITALL|FIN|SYN|CONFIRM|RST|=
+ERRQUEUE|NOSIGNAL|WAITFORONE|BATCH|SOCK_DEVMEM|ZEROCOPY|FASTOPEN|CMSG_CLOEX=
+EC|0x91f80000, addr: 0xe30, addr_len: 0xffce438c) =3D 1475198976
+> >      0.042 ( 0.003 ms): a.out/447296 lgetxattr(name: "", value: 0x3, si=
+ze: 34)                             =3D 4160344064
+> >      0.054 ( 0.003 ms): a.out/447296 dup2(oldfd: -134422744, newfd: 4) =
+                                    =3D -1 ENOENT (No such file or director=
+y)
+> >      0.060 ( 0.009 ms): a.out/447296 preadv(fd: 4294967196, vec: (struc=
+t iovec){.iov_base =3D (void *)0x2e646c2f6374652f,.iov_len =3D (__kernel_si=
+ze_t)7307199665335594867,}, vlen: 557056, pos_h: 4160585708) =3D 3
+> >      0.074 ( 0.004 ms): a.out/447296 lgetxattr(name: "", value: 0x1, si=
+ze: 2)                              =3D 4160237568
+> >      0.080 ( 0.001 ms): a.out/447296 lstat(filename: "", statbuf: 0x193=
+f6)                                 =3D 0
+> >      0.089 ( 0.007 ms): a.out/447296 preadv(fd: 4294967196, vec: (struc=
+t iovec){.iov_base =3D (void *)0x3833692f62696c2f,.iov_len =3D (__kernel_si=
+ze_t)3276497845987585334,}, vlen: 557056, pos_h: 4160585708) =3D 3
+> >      0.097 ( 0.002 ms): a.out/447296 close(fd: 3</proc/447296/status>) =
+                                    =3D 512
+> >      0.103 ( 0.002 ms): a.out/447296 lgetxattr(name: "", value: 0x1, si=
+ze: 2050)                           =3D 4157935616
+> >      0.107 ( 0.007 ms): a.out/447296 lgetxattr(pathname: "", name: "", =
+value: 0x5, size: 2066)             =3D 4158078976
+> >      0.116 ( 0.003 ms): a.out/447296 lgetxattr(pathname: "", name: "", =
+value: 0x1, size: 2066)             =3D 4159639552
+> >      0.121 ( 0.003 ms): a.out/447296 lgetxattr(pathname: "", name: "", =
+value: 0x3, size: 2066)             =3D 4160184320
+> >      0.129 ( 0.002 ms): a.out/447296 lgetxattr(pathname: "", name: "", =
+value: 0x3, size: 50)               =3D 4160196608
+> >      0.138 ( 0.001 ms): a.out/447296 lstat(filename: "")               =
+                                    =3D 0
+> >      0.145 ( 0.002 ms): a.out/447296 mq_timedreceive(mqdes: 4291706800,=
+ u_msg_ptr: 0xf7f9ea48, msg_len: 134616640, u_msg_prio: 0xf7fd7fec, u_abs_t=
+imeout: (struct __kernel_timespec){.tv_sec =3D (__kernel_time64_t)-57817402=
+7777317696,.tv_nsec =3D (long long int)4160349376,}) =3D 0
+> >      0.148 ( 0.001 ms): a.out/447296 mkdirat(dfd: -134617816, pathname:=
+ " =EF=BF=BD=EF=BF=BD=EF=BF=BD =EF=BF=BD=EF=BF=BD=EF=BF=BD=E2=96=92=EF=BF=
+=BD=EF=BF=BD=EF=BF=BD=E2=96=92=EF=BF=BD=EF=BF=BD=EF=BF=BD", mode: IFREG|ISU=
+ID|IRUSR|IWGRP|0xf7fd0000) =3D 447296
+> >      0.150 ( 0.001 ms): a.out/447296 process_vm_writev(pid: -134617812,=
+ lvec: (struct iovec){.iov_base =3D (void *)0xf7f9e9c8f7f9e4c0,.iov_len =3D=
+ (__kernel_size_t)4160349376,}, liovcnt: 4160588048, rvec: (struct iovec){}=
+, riovcnt: 4160585708, flags: 4291707352) =3D 0
+> >      0.197 ( 0.004 ms): a.out/447296 capget(header: 4160184320, dataptr=
+: 8192)                             =3D 0
+> >      0.202 ( 0.002 ms): a.out/447296 capget(header: 1448669184, dataptr=
+: 4096)                             =3D 0
+> >      0.208 ( 0.002 ms): a.out/447296 capget(header: 4160577536, dataptr=
+: 8192)                             =3D 0
+> >      0.220 ( 0.001 ms): a.out/447296 getxattr(pathname: "", name: "c=EF=
+=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD", value: 0xf7f77e34, si=
+ze: 1)  =3D 0
+> >      0.228 ( 0.005 ms): a.out/447296 fchmod(fd: -134729728, mode: IRUGO=
+|IWUGO|IFREG|IFIFO|ISVTX|IXUSR|0x10000) =3D 0
+> >      0.240 ( 0.009 ms): a.out/447296 preadv(fd: 4294967196, vec: 0x5658=
+e008, pos_h: 4160192052)            =3D 3
+> >      0.250 ( 0.008 ms): a.out/447296 close(fd: 3</proc/447296/status>) =
+                                    =3D 1436
+> >      0.260 ( 0.018 ms): a.out/447296 stat(filename: "", statbuf: 0xffce=
+32ac)                               =3D 1436
+> >      0.288 (1000.213 ms): a.out/447296 readlinkat(buf: 0xffce31d4, bufs=
+iz: 4291703244)                       =3D 0
+> > ```
+> >
+> > After:
+> > ```
+> >          ? (         ): a.out/442930  ... [continued]: execve())       =
+                                    =3D 0
+> >      0.023 ( 0.002 ms): a.out/442930 brk()                             =
+                                    =3D 0x57760000
+> >      0.052 ( 0.003 ms): a.out/442930 access(filename: 0xf7f5af28, mode:=
+ R)                                 =3D -1 ENOENT (No such file or director=
+y)
+> >      0.059 ( 0.009 ms): a.out/442930 openat(dfd: CWD, filename: "/etc/l=
+d.so.cache", flags: RDONLY|CLOEXEC|LARGEFILE) =3D 3
+> >      0.078 ( 0.001 ms): a.out/442930 close(fd: 3</proc/442930/status>) =
+                                    =3D 0
+> >      0.087 ( 0.007 ms): a.out/442930 openat(dfd: CWD, filename: "/lib/i=
+386-linux-", flags: RDONLY|CLOEXEC|LARGEFILE) =3D 3
+> >      0.095 ( 0.002 ms): a.out/442930 read(fd: 3</proc/442930/status>, b=
+uf: 0xffbdbb70, count: 512)         =3D 512
+> >      0.135 ( 0.001 ms): a.out/442930 close(fd: 3</proc/442930/status>) =
+                                    =3D 0
+> >      0.148 ( 0.001 ms): a.out/442930 set_tid_address(tidptr: 0xf7f2b528=
+)                                   =3D 442930 (a.out)
+> >      0.150 ( 0.001 ms): a.out/442930 set_robust_list(head: 0xf7f2b52c, =
+len: 12)                            =3D
+> >      0.196 ( 0.004 ms): a.out/442930 mprotect(start: 0xf7f03000, len: 8=
+192, prot: READ)                    =3D 0
+> >      0.202 ( 0.002 ms): a.out/442930 mprotect(start: 0x5658e000, len: 4=
+096, prot: READ)                    =3D 0
+> >      0.207 ( 0.002 ms): a.out/442930 mprotect(start: 0xf7f63000, len: 8=
+192, prot: READ)                    =3D 0
+> >      0.230 ( 0.005 ms): a.out/442930 munmap(addr: 0xf7f10000, len: 1034=
+14)                                 =3D 0
+> >      0.244 ( 0.010 ms): a.out/442930 openat(dfd: CWD, filename: 0x5658d=
+008)                                =3D 3
+> >      0.255 ( 0.007 ms): a.out/442930 read(fd: 3</proc/442930/status>, b=
+uf: 0xffbdb67c, count: 4096)        =3D 1436
+> >      0.264 ( 0.018 ms): a.out/442930 write(fd: 1</dev/pts/4>, buf: , co=
+unt: 1436)                          =3D 1436
+> >      0.292 (1000.173 ms): a.out/442930 clock_nanosleep(rqtp: { .tv_sec:=
+ 17866546940376776704, .tv_nsec: 4159878336 }, rmtp: 0xffbdb59c) =3D 0
+> >   1000.478 (         ): a.out/442930 exit_group()                      =
+                                    =3D ?
+> > ```
+> >
+>
+> I think I am conflating some things in my mind here. This change doesn't
+> impact perf report does it? perf report reports syscall numbers only,
+> but it could be hooked up into this change to correctly report the
+> correct syscall name from a perf.data generated on any architecture?
+>
+> I believe that question is tangential to this patch but let me know!
 
-On 2/11/25 05:42, syzbot wrote:
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    a64dcfb451e2 Linux 6.14-rc2
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17297b18580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7f246b548ed0635a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=15669ec8c35ddf6c3d43
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=103943f8580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12da1bdf980000
-> 
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-a64dcfb4.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/6a816640d31b/vmlinux-a64dcfb4.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/b5cb42ffa4f6/bzImage-a64dcfb4.xz
-> mounted in repro #1: https://storage.googleapis.com/syzbot-assets/caba9b9b8f24/mount_0.gz
->   fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=14da1bdf980000)
-> mounted in repro #2: https://storage.googleapis.com/syzbot-assets/270c3c4c1558/mount_6.gz
->   fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=121672a4580000)
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+15669ec8c35ddf6c3d43@syzkaller.appspotmail.com
-> 
-> F2FS-fs (loop0): Found nat_bits in checkpoint
-> F2FS-fs (loop0): Start checkpoint disabled!
-> F2FS-fs (loop0): Mounted with checkpoint version = 48b305e6
-> ------------[ cut here ]------------
-> kernel BUG at fs/f2fs/segment.c:2809!
-> Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
-> CPU: 0 UID: 0 PID: 5304 Comm: syz-executor274 Not tainted 6.14.0-rc2-syzkaller #0
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> RIP: 0010:get_new_segment fs/f2fs/segment.c:2809 [inline]
-> RIP: 0010:new_curseg+0x1f52/0x1f70 fs/f2fs/segment.c:2939
-> Code: fb fd e9 1a fa ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 4c fa ff ff 48 89 df e8 59 4e fb fd e9 3f fa ff ff e8 5f b5 94 fd 90 <0f> 0b e8 57 b5 94 fd 90 0f 0b e8 4f b5 94 fd 90 0f 0b e8 47 b5 94
-> RSP: 0018:ffffc9000d0af4a8 EFLAGS: 00010293
-> RAX: ffffffff842a9a41 RBX: 0000000000000018 RCX: ffff88801ede4880
-> RDX: 0000000000000000 RSI: 0000000000000018 RDI: 0000000000000018
-> RBP: dffffc0000000000 R08: ffffffff842a8875 R09: fffff52001a15e84
-> R10: dffffc0000000000 R11: fffff52001a15e84 R12: 0000000000000018
-> R13: ffff888043de5101 R14: 0000000000000018 R15: ffff888038298f58
-> FS:  000055556f014380(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 0000000042a82000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  __allocate_new_segment+0x1ce/0x940 fs/f2fs/segment.c:3273
->  f2fs_allocate_new_section fs/f2fs/segment.c:3287 [inline]
->  f2fs_allocate_pinning_section+0xfa/0x4e0 fs/f2fs/segment.c:3301
->  f2fs_expand_inode_data+0x696/0xca0 fs/f2fs/file.c:1849
->  f2fs_fallocate+0x537/0xa10 fs/f2fs/file.c:1959
->  vfs_fallocate+0x623/0x7a0 fs/open.c:338
->  do_vfs_ioctl+0x258c/0x2e40 fs/ioctl.c:885
->  __do_sys_ioctl fs/ioctl.c:904 [inline]
->  __se_sys_ioctl+0x80/0x170 fs/ioctl.c:892
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7ffbafdefd99
-> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007ffecbc98b98 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 0000400000000080 RCX: 00007ffbafdefd99
-> RDX: 00004000000000c0 RSI: 0000000040305828 RDI: 0000000000000005
-> RBP: 0030656c69662f2e R08: 000055556f0154c0 R09: 000055556f0154c0
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00004000000000c0
-> R13: 00004000000000e0 R14: 00004000000000c2 R15: 00007ffbafe3903b
->  </TASK>
-> Modules linked in:
-> ---[ end trace 0000000000000000 ]---
-> RIP: 0010:get_new_segment fs/f2fs/segment.c:2809 [inline]
-> RIP: 0010:new_curseg+0x1f52/0x1f70 fs/f2fs/segment.c:2939
-> Code: fb fd e9 1a fa ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 4c fa ff ff 48 89 df e8 59 4e fb fd e9 3f fa ff ff e8 5f b5 94 fd 90 <0f> 0b e8 57 b5 94 fd 90 0f 0b e8 4f b5 94 fd 90 0f 0b e8 47 b5 94
-> RSP: 0018:ffffc9000d0af4a8 EFLAGS: 00010293
-> RAX: ffffffff842a9a41 RBX: 0000000000000018 RCX: ffff88801ede4880
-> RDX: 0000000000000000 RSI: 0000000000000018 RDI: 0000000000000018
-> RBP: dffffc0000000000 R08: ffffffff842a8875 R09: fffff52001a15e84
-> R10: dffffc0000000000 R11: fffff52001a15e84 R12: 0000000000000018
-> R13: ffff888043de5101 R14: 0000000000000018 R15: ffff888038298f58
-> FS:  000055556f014380(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 0000000042a82000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> 
-> 
-> ---
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
+You are right it is tangential. There are tracepoints for most system
+calls that could be used to break down individual counts. You may be
+thinking of `perf trace record` that I mentioned. Many of the perf
+commands have a record and report option, so that things can be done
+off-line. The support isn't what it should be. For example, `perf stat
+record` will record event information and counts but it doesn't do
+things like store metrics, so you'd need to manually compute a metric
+from `perf stat report` if you wanted to use `perf stat` in this
+record/report mode. I think often times think C is a very slow and
+verbose way of doing the plumbing for these things, so I keep pushing
+my python patches along.
 
+Thanks for all your changes and the reviews! This patch series is just
+moving things you've enabled around and was little work as a
+consequence.
+
+Thanks,
+Ian
+
+> Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> > ---
+> >  tools/perf/util/syscalltbl.c | 89 ++++++++++++++++++++++++++----------
+> >  1 file changed, 64 insertions(+), 25 deletions(-)
+> >
+> > diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.=
+c
+> > index 760ac4d0869f..db0d2b81aed1 100644
+> > --- a/tools/perf/util/syscalltbl.c
+> > +++ b/tools/perf/util/syscalltbl.c
+> > @@ -15,16 +15,39 @@
+> >  #include <string.h>
+> >  #include "string2.h"
+> >
+> > -#if __BITS_PER_LONG =3D=3D 64
+> > -  #include <asm/syscalls_64.h>
+> > -#else
+> > -  #include <asm/syscalls_32.h>
+> > -#endif
+> > +#include "trace/beauty/generated/syscalltbl.c"
+> >
+> > -const char *syscalltbl__name(int e_machine __maybe_unused, int id)
+> > +static const struct syscalltbl *find_table(int e_machine)
+> >  {
+> > -     if (id >=3D 0 && id <=3D (int)ARRAY_SIZE(syscall_num_to_name))
+> > -             return syscall_num_to_name[id];
+> > +     static const struct syscalltbl *last_table;
+> > +     static int last_table_machine =3D EM_NONE;
+> > +
+> > +     /* Tables only exist for EM_SPARC. */
+> > +     if (e_machine =3D=3D EM_SPARCV9)
+> > +             e_machine =3D EM_SPARC;
+> > +
+> > +     if (last_table_machine =3D=3D e_machine && last_table !=3D NULL)
+> > +             return last_table;
+> > +
+> > +     for (size_t i =3D 0; i < ARRAY_SIZE(syscalltbls); i++) {
+> > +             const struct syscalltbl *entry =3D &syscalltbls[i];
+> > +
+> > +             if (entry->e_machine !=3D e_machine && entry->e_machine !=
+=3D EM_NONE)
+> > +                     continue;
+> > +
+> > +             last_table =3D entry;
+> > +             last_table_machine =3D e_machine;
+> > +             return entry;
+> > +     }
+> > +     return NULL;
+> > +}
+> > +
+> > +const char *syscalltbl__name(int e_machine, int id)
+> > +{
+> > +     const struct syscalltbl *table =3D find_table(e_machine);
+> > +
+> > +     if (table && id >=3D 0 && id < table->num_to_name_len)
+> > +             return table->num_to_name[id];
+> >       return NULL;
+> >  }
+> >
+> > @@ -41,38 +64,54 @@ static int syscallcmpname(const void *vkey, const v=
+oid *ventry)
+> >       return strcmp(key->name, key->tbl[*entry]);
+> >  }
+> >
+> > -int syscalltbl__id(int e_machine __maybe_unused, const char *name)
+> > +int syscalltbl__id(int e_machine, const char *name)
+> >  {
+> > -     struct syscall_cmp_key key =3D {
+> > -             .name =3D name,
+> > -             .tbl =3D syscall_num_to_name,
+> > -     };
+> > -     const int *id =3D bsearch(&key, syscall_sorted_names,
+> > -                             ARRAY_SIZE(syscall_sorted_names),
+> > -                             sizeof(syscall_sorted_names[0]),
+> > -                             syscallcmpname);
+> > +     const struct syscalltbl *table =3D find_table(e_machine);
+> > +     struct syscall_cmp_key key;
+> > +     const int *id;
+> > +
+> > +     if (!table)
+> > +             return -1;
+> > +
+> > +     key.name =3D name;
+> > +     key.tbl =3D table->num_to_name;
+> > +     id =3D bsearch(&key, table->sorted_names, table->sorted_names_len=
+,
+> > +                  sizeof(table->sorted_names[0]), syscallcmpname);
+> >
+> >       return id ? *id : -1;
+> >  }
+> >
+> > -int syscalltbl__num_idx(int e_machine __maybe_unused)
+> > +int syscalltbl__num_idx(int e_machine)
+> >  {
+> > -     return ARRAY_SIZE(syscall_sorted_names);
+> > +     const struct syscalltbl *table =3D find_table(e_machine);
+> > +
+> > +     if (!table)
+> > +             return 0;
+> > +
+> > +     return table->sorted_names_len;
+> >  }
+> >
+> > -int syscalltbl__id_at_idx(int e_machine __maybe_unused, int idx)
+> > +int syscalltbl__id_at_idx(int e_machine, int idx)
+> >  {
+> > -     return syscall_sorted_names[idx];
+> > +     const struct syscalltbl *table =3D find_table(e_machine);
+> > +
+> > +     if (!table)
+> > +             return -1;
+> > +
+> > +     assert(idx >=3D 0 && idx < table->sorted_names_len);
+> > +     return table->sorted_names[idx];
+> >  }
+> >
+> > -int syscalltbl__strglobmatch_next(int e_machine __maybe_unused, const =
+char *syscall_glob, int *idx)
+> > +int syscalltbl__strglobmatch_next(int e_machine, const char *syscall_g=
+lob, int *idx)
+> >  {
+> > -     for (int i =3D *idx + 1; i < (int)ARRAY_SIZE(syscall_sorted_names=
+); ++i) {
+> > -             const char *name =3D syscall_num_to_name[syscall_sorted_n=
+ames[i]];
+> > +     const struct syscalltbl *table =3D find_table(e_machine);
+> > +
+> > +     for (int i =3D *idx + 1; table && i < table->sorted_names_len; ++=
+i) {
+> > +             const char *name =3D table->num_to_name[table->sorted_nam=
+es[i]];
+> >
+> >               if (strglobmatch(name, syscall_glob)) {
+> >                       *idx =3D i;
+> > -                     return syscall_sorted_names[i];
+> > +                     return table->sorted_names[i];
+> >               }
+> >       }
+> >
+> > --
+> > 2.48.1.502.g6dc24dfdaf-goog
+> >
