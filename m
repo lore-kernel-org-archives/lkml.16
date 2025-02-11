@@ -1,143 +1,109 @@
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E821F8AF8;
-	Tue, 11 Feb 2025 11:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A191F91F6
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739274995; cv=none; b=CzT0s0xNSM6o5XqbidNkIoYvhFgZJ58Ruv9itg/uLTeXFaDLTsAJVYyk1Nv27e4m7B2pvcqEX98y3drb9zVCCM9v6gXcppvmdTZZyAhMpD4I2x6vKfY1QPKvlzcZyrFU+bY8e6DNAVtHEnqI0gZki6rOmQA8ZaKSRzSbD6E7zuA=
+	t=1739275033; cv=none; b=QG5+4PHnFpQC7q0bs8PJiN1iolT7SpPXS+qeC6dJSwEnisic/6xBh5TGvkuaUJE8fZvhEJKyPTYCDE23lMXgRzzpdbL7Ih18gCGTs/HCeo15xpaHCkeAcyrEyhAbW7HcAAWPP9DOBzXmHW0BuDsDoivqpX7InkxOMqm1ZRmeD+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739274995; c=relaxed/simple;
-	bh=rd29cpkgIwrU7/mh++kq6VmSBZdKxSQR4Rl/ZCGILEM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Iuym5OYRipWyXXmSgGCHinWia+9CZGpdt3vEx3wEZ6f4/9Btssv4rrAgyNtaUHuvjQpgrio2c9tucVWUegfRgs4tgIjjnkPuc1FK6Yc23+ff8fn/KGaIlT2XyINxbC6piHbTRGwSh4lqmKIsV6KQCOrd1srHDLa4TYLA7fcfMiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=BOdRE3La; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Dj0NE2f9; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1739275033; c=relaxed/simple;
+	bh=vpI+yV0dwbmZFIhRaRGyW8a5HVtO/K90AaYY0HmkYxE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N0njscVrczYzzeAO9xXFlhG1OroGxQEbcJiu+VP5uj+yeQITPWNG61sEfCpr2lIUv1pUZuUfkCxfw8ahdBEQoeNsOJotoxHCz6aF23PjIfmxbYqkpa9OcH8smS24NWOKK6fmOmOkKqH/j9GmZSn1h/HqmZWfPK9oxv0wqVbgxTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AIyPVGkJ; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="BOdRE3La";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Dj0NE2f9"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id ABA8413808C3;
-	Tue, 11 Feb 2025 06:56:32 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Tue, 11 Feb 2025 06:56:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1739274992;
-	 x=1739361392; bh=SCgFKCz0WVFlk+/nGWCfvkfQS3PqNaxn3RNPH9+mh7c=; b=
-	BOdRE3LaNTDlQADqs5Hkyc0y7uE6jlOpYdk72QHjqA3KEpUXPc2790a5yTzTGEc6
-	Zr/+8Xe0dhc/Tz9MgNlp5wbRMfY0BoAmdOZfzxg0X28OgC2tEKax9a4DT7SYy8mO
-	EoIy5GrlU4/8xaKMG6eqEAICm7+QGvHvY8Z8ex8czbEA0yn+/Rv4eQ6Y9xojZlyO
-	YXP5i0OdOHdsehprYT2+ksC4ICkW6eXshnB8Qur2hNp5uj54i6m8u5t9+01Yzhbv
-	CKAjOOJOqjy37PZNTUBXoFaPEtwlcvrjY/KQj9m4I/q9nl9+YtKAXr1rqynz4GhG
-	IkHIl/nUcchALoUnvdMoOw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739274992; x=
-	1739361392; bh=SCgFKCz0WVFlk+/nGWCfvkfQS3PqNaxn3RNPH9+mh7c=; b=D
-	j0NE2f9eUybBDBypcXB0Gfr24ZHt7WcVOxeVohAZmLBADkM5pDpBpntNC5/NeGrM
-	TZn1DQNz83Gjw1Dcc1YKO9CmBigcqKE1JGyC3a3iH/OtRjbVqpLhtDLvUsJEvJky
-	td6QB3+QvNo4KYCFsHA3+OJdrk6dXm1mJx/YYLd1orbS3aCszO6URTp6dWSx+rVa
-	CXReLM09E+r4bbyvkEtfdv/dVAr70XnVU9BlMV+BKDQCMHc08CJOl4r3mb2fMLUm
-	u2zObocPX+AwbuoxCRk9SmAzm1TYr9u5TtxYXSyt1Uo7d98bD45Yv9Lbpmd2VrpY
-	BVTGugO0qHLamCmIB5A3A==
-X-ME-Sender: <xms:8DqrZyI6N5j27bQ0fsKkQT0JRPOSxt0UVyH-NRT8Eo80-VEvcrxX7g>
-    <xme:8DqrZ6JoDMm2ZDrHAl7RRE8bOM1rKWHM08TNqLleu3CQS8jBhEP8BSxTdbiUJq071
-    FFGa5Xh84tsIYVzCDw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegtdelgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedv
-    tddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepughmihhtrhihrdhtohhrohhkhh
-    hovhesghhmrghilhdrtghomhdprhgtphhtthhopehlghhirhgufihoohgusehgmhgrihhl
-    rdgtohhmpdhrtghpthhtoheplhhkphesihhnthgvlhdrtghomhdprhgtphhtthhopehprh
-    iivghmhihslhgrfidrkhhithhsiigvlhesihhnthgvlhdrtghomhdprhgtphhtthhopehr
-    rggrghdrjhgruggrvhesihhnthgvlhdrtghomhdprhgtphhtthhopegsrhhoohhnihgvse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehjihgtvdefsehkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhrvg
-    eskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:8DqrZytxAqlN6V9ootafxgtKy8n_5mIlmoC3PP1rtvg5YyxKtr832A>
-    <xmx:8DqrZ3Y9Pgo2Ue7-eGtuG9QM9Mxj_xw2jfwWHmRP4Uv-rHAGtD47HQ>
-    <xmx:8DqrZ5bzw4AXGhO8JrtwHxoRRRT4nJi83FYFnP31nMsJps87YOgfcg>
-    <xmx:8DqrZzAXdgPM9jr1Ft_sAe1Mn_YlatD3ZiSQMCFfUd0Zh3D98dvROA>
-    <xmx:8DqrZ1P1831GY0oWJVBAkqiyOEjQYHiHgePr2JAYS3uj3q6SN0AL5Irz>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 4443E2220072; Tue, 11 Feb 2025 06:56:32 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AIyPVGkJ"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38dc33931d3so2402224f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:57:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739275030; x=1739879830; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=x+/rKU8hND2RosjvAKGWInz1qgNkLNHLXSblj/1XFjg=;
+        b=AIyPVGkJlgcML6BtskWNgRrGfUuf9CBdc6cgkcsCoa3i+KMlwVsOueaISXXdmgZcDZ
+         0sTXWYKKIBPGT4hPQFRacfzfSE25L0sysAGAYvi395QM7JVcmuZYRDRhckGII+KrZP7R
+         2uF//yw2DEXlSY5SmpOpJUdBEKTvAp6/ZmfWE3S6wF8HtOC1BeJrN3P42cHtK+UoAYFK
+         hJQ5boYIUIUz8mIr/Mcb0NNHccZ3Skd6fJlAahADpL4HANcN+rId25PuFwEBTntX+/iM
+         dcJCf88NGq80TBAMoqJehV/iBPum2qpifWIpfW63refMjwOHU8RxNrk4bIVaAzU/mFL2
+         Wnmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739275030; x=1739879830;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x+/rKU8hND2RosjvAKGWInz1qgNkLNHLXSblj/1XFjg=;
+        b=IY0kV1fUQwV2j3ac04JzguBVVoI8KLWokN4tABY8hFwGb3wznbdfWX67fNgOIt3D7F
+         C4hf3ojfZN9L/u8sMeCbCSozTw2piF6mGy49FZRp0qsoiT2Ds+gJnLF6AwcIKFshpZg/
+         igqKO1ep8I+0d1liGTN19u+WzUwPM+1rKV1MeOQZn8281ko6rn6z9tW5V7BECkiTAfd1
+         lWoMdhN4a9TLMB7NZ293pW6mi4WIQqFpY4CJX4wtp1zHUt7fmHjB7AlNM4u246N4O9zV
+         fNP8i9MrSkMTQu+2+JocdAbG6M02YI15hFq+3PZTFlAgp38W2c/dJCJXOO9DK2wzJiLA
+         ttXQ==
+X-Gm-Message-State: AOJu0Ywf/MpaKRxR4rCiXFjZ4ABRk1MKNQrEcDVnK7u564RdnWh3Uvxp
+	NRpjSkt69DZ3RqZ8wK5d81deWPlqKlTaQZMgLeFLgCjUw35Ft8WbPwZlo1d0Swk=
+X-Gm-Gg: ASbGncsj2iDKpkvejZwDKYxujNLL6tk+VA5sQ8kN2p5taEJba6b8wkIpCmARo9axyo2
+	7qcqFqrWozZITRRDoxVOkUNdj/jDfNPMu/8Wo+/3BdcPo77+ZJD5N9Kcna6FOEWi6frXINvCPz0
+	nOcDQk7oRk6nzbA9bVZBdiDIAY+KoM/XRk56/i/BpjtxP9Ix02E0dUMEBCakLlGPaXNeety09ET
+	LOj2+lJOzMtZUvdmQ5wyZ5ufV5cLtgrzqKo9afnn2pJMiBoe3H2epDHy3ROSibyhln+yaw6BRfS
+	5ChCeYwuZJyNXZmhMAeb34tD
+X-Google-Smtp-Source: AGHT+IGEDbZ4F+KtHnkoF3QqtYj/Mv0BkaXQoyniQIaUjtGof6BuGlXWqpwnecn1thdzCU0aThGJqw==
+X-Received: by 2002:a5d:64af:0:b0:38d:d0ca:fbd5 with SMTP id ffacd0b85a97d-38dd0cb6a75mr11977488f8f.22.1739275030079;
+        Tue, 11 Feb 2025 03:57:10 -0800 (PST)
+Received: from [192.168.0.14] ([79.115.63.124])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc0c5a894sm14314088f8f.95.2025.02.11.03.57.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 03:57:09 -0800 (PST)
+Message-ID: <bad87f30-0483-48c1-b263-02cc752c77e6@linaro.org>
+Date: Tue, 11 Feb 2025 11:57:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 11 Feb 2025 12:56:11 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: "kernel test robot" <lkp@intel.com>, "Raag Jadav" <raag.jadav@intel.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Mika Westerberg" <mika.westerberg@linux.intel.com>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, lgirdwood@gmail.com,
- "Mark Brown" <broonie@kernel.org>, "Sebastian Reichel" <sre@kernel.org>,
- "Jonathan Cameron" <jic23@kernel.org>,
- "Przemek Kitszel" <przemyslaw.kitszel@intel.com>,
- oe-kbuild-all@lists.linux.dev,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
- linux-sound@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-iio@vger.kernel.org
-Message-Id: <49396042-31f0-4d8e-aa54-d89093ab5709@app.fastmail.com>
-In-Reply-To: <Z6s2cGMM9R6SZ9Le@smile.fi.intel.com>
-References: <20250210064906.2181867-2-raag.jadav@intel.com>
- <202502102201.zLWaJC6V-lkp@intel.com> <Z6oZ9dnYrlp5djiQ@smile.fi.intel.com>
- <7c42e438-22f9-40d9-bb8e-24feb7d58e64@app.fastmail.com>
- <Z6sYAxRIeCzw12nY@smile.fi.intel.com>
- <c1184a91-e216-423d-b956-d4b22116a171@app.fastmail.com>
- <Z6siYlWfvfUvNLpX@smile.fi.intel.com>
- <279d9f32-a1c9-41aa-b15a-e1485877b2d5@app.fastmail.com>
- <Z6s2cGMM9R6SZ9Le@smile.fi.intel.com>
-Subject: Re: [PATCH v4 01/20] driver core: Split devres APIs to device/devres.h
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/3] dt-bindings: firmware: add google,gs101-acpm-ipc
+To: Diederik de Haas <didi.debian@cknow.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ andre.draszik@linaro.org, kernel-team@android.com, willmcvicker@google.com,
+ peter.griffin@linaro.org, daniel.lezcano@linaro.org,
+ vincent.guittot@linaro.org, ulf.hansson@linaro.org, arnd@arndb.de,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250211-gs101-acpm-v8-0-01d01f522da6@linaro.org>
+ <20250211-gs101-acpm-v8-1-01d01f522da6@linaro.org>
+ <D7PJTD3PSP78.27N2S94J2CNZG@cknow.org>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <D7PJTD3PSP78.27N2S94J2CNZG@cknow.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 11, 2025, at 12:37, Andy Shevchenko wrote:
->
-> The problem this series solves at the beginning is that not all the consumers
-> of device.h needs it, in many cases the device/devres.h (or subset of
-> device/*.h) is enough to include. While solving this, it appears that
-> the current code uses ERR_PTR() instead of IOMEM_ERR_PTR() in devm_*io*() APIs
-> and kernel test robot found this and complained about. While solving
-> this new issue, LKP found another issue that is circular dependency.
-> But the original code only wants to have an access to IOMEM_ERR_PTR() which
-> is in io.h and can be moved to err.h AFAICS. Does this sound reasonable?
 
-Yes, that sounds fine to me. I agree that not including linux/io.h
-from device/devres.h is a good idea, same as no longer including
-linux/device.h from asm/io.h. Moving IOMEM_ERR_PTR() as you
-describe is the right idea.
 
-Side note: I looked at large-scale header file cleanups in the past,
-and in general the result of that was that the best way to reduce the
-indirect inclusions is by splitting data structure definitions from
-inline functions that use those data structures. The definition of
-"struct device" clearly has too many dependencies, and to make
-this one better. There has actually been some good preparatory work
-done by Kent Overstreet a while ago that moves structures out
-(e.g. work_struct and mutex), but not yet struct device and
-struct kobject, which are needed in many other headers. The tricky
-part that needs to happen to actually make it useful later on is
-to replace all the unnecessary indirect includes with the minimal
-ones, and that is a huge amount of work.
+On 2/11/25 10:36 AM, Diederik de Haas wrote:
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> Shouldn't this be ``(GPL-2.0-only OR BSD-2-Clause)`` ?
+> 
+> AFAIK it's the recommended form since SPDX 3.0:
+> https://spdx.dev/license-list-3-0-released/
 
-     Arnd
+It should, it's a copy-paste error.
+
+Looking in the driver patch, I shall update
+include/linux/firmware/samsung/exynos-acpm-protocol.h to GPL-2.0-only as
+well.
+
+And then I shall s/MODULE_LICENSE("GPL");/MODULE_LICENSE("GPL v2");/
+everywhere as "GPL" indicates [GNU Public License v2 or later].
+
+I'm going to respin everything to fix the License mismatch in the set.
+
+Thanks!
+ta
