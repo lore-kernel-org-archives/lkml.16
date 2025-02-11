@@ -1,121 +1,116 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C99A1D54FE;
-	Tue, 11 Feb 2025 15:40:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3934125332A;
+	Tue, 11 Feb 2025 15:40:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739288444; cv=none; b=WOIG35kQPhbJ2rRSwzV4V70zMY5MfFT+7E9P4esChsSVYXQIB1Vu9vjNxXFmF+jSEqy6e+VMGyKLI3xh3SosLH1nNl9lfelFykH9m9N1jV3FRhhpHUg6xdmHXSujhrXNYEiq+aAvaD0gaGCfkkm6diBfZ3JbJ1VOsadoRaw+gXs=
+	t=1739288446; cv=none; b=SUKvRvUG4Kq7y05Bm/e0CQS5KCEBswf9hnFwBCY6YC6HuZN5TITkjlAPd73trlAqgB/jPw6duDKUU9B0G9nOALCT5/c7x2jpB9zQCOmMAqS3yYPmJJ0FU83iwibg/f8ASJVNDMRdbWJCs9T6VekHI56GQwGIjHyGb0xSiuTOwpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739288444; c=relaxed/simple;
-	bh=XhMiLeU60aBB9kTwbXErUUGOtaeA4xJDR705zjYx1r8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hbn3yxTm4/jVAy02kJRc/GWVeAntH8OegQ05Ox18uOX+1lOqS0y2Rs7C85ePFNLd/W9gz2cQB8o4ZFkfQJCtInjp+jb7P1tpLXw/6N+YMtw+V7y6sCguFCoJWhffIfXkK6I0LTrLiYPViiHVTAi6wsuD6cbSpAtj3pVxV/ZpVFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lqMGuSHr; arc=none smtp.client-ip=198.175.65.12
+	s=arc-20240116; t=1739288446; c=relaxed/simple;
+	bh=IRqvT2gFAGKgf/HJpQvxM4rKmMf2ytFeZ3wxmbUMJnk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EVclyc/Swg7bZ+wMqxyQhritgDbzpm/k9t7XqENDw+L4YhK4/m1pAu84vZDnGHBwO4aJB/45RGEY8Ld9pscxP7MuXl5O4EJtQ/QWualBYfu4X5Ijdp8c2hHI2G0HFGLd1JblYhduJtJHGMk4zYRi4TX3ER/RNXVZ/xXImntk9ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jhwwqmc3; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lqMGuSHr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jhwwqmc3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739288443; x=1770824443;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XhMiLeU60aBB9kTwbXErUUGOtaeA4xJDR705zjYx1r8=;
-  b=lqMGuSHrEIHvVT4pU4iRfQDWJhw+NjzjskCRDZw8a+NQFMvJPs4fBy5h
-   nps/WxtN662uk/l+QzZbtWuL11Maad3gyl02XTVL7ISG83BvzuJm0ZWHO
-   CZXqBD6hzTDugDbw/3KH7E8MhY566bR8dMMeRIxHDYwiMf9BhF/77Ejlq
-   SAglOMJBC6UauQZsdHCJsOqjVcFe0JJOeypvM8FcXnHprbRATFfXXx4It
-   /BYMMjR430w8PN3R+t9pB5VwaawzD4AtqTF9hRr67AAgKKxtzulRj2vPY
-   Ioa9wD9Z/WyiwQVRRkycKzBABT2Bm3y9qeW2dmMiz/32GSbAQ+ieN5rWT
-   w==;
-X-CSE-ConnectionGUID: mPyOrvCeSBKVduq7MfzjiA==
-X-CSE-MsgGUID: dGfP3FuPTk+CZfoxQT90Mw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="51307167"
+  t=1739288445; x=1770824445;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IRqvT2gFAGKgf/HJpQvxM4rKmMf2ytFeZ3wxmbUMJnk=;
+  b=Jhwwqmc3NIHoBAPhyE4OGIktOqgyFUJv/dhY6zxFCjMF/ZpdOe7eW/9l
+   SD/xXu+wk+5q3YQZmBXFlLRXGkb3fFF1wZzSSl7Asdz0+Y+EYLf7VLl6N
+   vRpL6ZvNuMAFkv4TMX2Vu8UwlXnKt8oY1i4zBY4kaOgX2aT1e4GkA9+73
+   9NRXxkZTxbgD8iObE62BElu3xMY3/fbBHE0pjEimMNOWBj2x7hrFc2lmU
+   1mbTJ+7MoEg4kuRniWjuoI79Nayj1Q3Kmc03RojVggQZdUA6bp9sK1BP3
+   RoyA13M6P9U6JQuEg+TypD4Y66TQzar6mB3bTnJkQ00mXdv5Am0+8gNq3
+   g==;
+X-CSE-ConnectionGUID: BhT/ROXlTBiDXMKDhhcOtg==
+X-CSE-MsgGUID: cjA5z0ufQnejZcj+RthTeQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="51307177"
 X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="51307167"
+   d="scan'208";a="51307177"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:40:42 -0800
-X-CSE-ConnectionGUID: YM69FsTPTf2HkR0xqKaQFQ==
-X-CSE-MsgGUID: 2SlSAkaJRH+E7ANSpoRSZA==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:40:43 -0800
+X-CSE-ConnectionGUID: pWAKKPsrRrKX/y3Ug34QtQ==
+X-CSE-MsgGUID: s7huuwbJRX+TrPVK3UY41Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="149730903"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:40:38 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1thsNG-0000000AY4A-2pV9;
-	Tue, 11 Feb 2025 17:40:34 +0200
-Date: Tue, 11 Feb 2025 17:40:34 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v7 0/3] scanf: convert self-test to KUnit
-Message-ID: <Z6tvciJpQgTwYpGx@smile.fi.intel.com>
-References: <20250211-scanf-kunit-convert-v7-0-c057f0a3d9d8@gmail.com>
+   d="scan'208";a="149730920"
+Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
+  by orviesa001.jf.intel.com with ESMTP; 11 Feb 2025 07:40:41 -0800
+Message-ID: <7bb25848-c80e-4ba8-8790-8628951806b3@linux.intel.com>
+Date: Tue, 11 Feb 2025 17:41:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211-scanf-kunit-convert-v7-0-c057f0a3d9d8@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] usb: xhci: Skip only one TD on Ring Underrun/Overrun
+To: Michal Pecio <michal.pecio@gmail.com>,
+ Mathias Nyman <mathias.nyman@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Niklas Neronin <niklas.neronin@linux.intel.com>,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250210083718.2dd337c3@foxbook>
+ <20250210084220.3e5414e9@foxbook>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <20250210084220.3e5414e9@foxbook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 11, 2025 at 10:13:36AM -0500, Tamir Duberstein wrote:
-> This is one of just 3 remaining "Test Module" kselftests (the others
-> being bitmap and printf), the rest having been converted to KUnit. In
-> addition to the enclosed patch, please consider this an RFC on the
-> removal of the "Test Module" kselftest machinery.
+On 10.2.2025 9.42, Michal Pecio wrote:
+> If skipping is deferred to events other than Missed Service Error itsef,
+> it means we are running on an xHCI 1.0 host and don't know how many TDs
+> were missed until we reach some ordinary transfer completion event.
 > 
-> I tested this using:
+> And in case of ring xrun, we can't know where the xrun happened either.
 > 
-> $ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 scanf
+> If we skip all pending TDs, we may prematurely give back TDs added after
+> the xrun had occurred, risking data loss or buffer UAF by the xHC.
 > 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> If we skip none, a driver may become confused and stop working when all
+> its URBs are missed and appear to be "in flight" forever.
+> 
+> Skip exactly one TD on each xrun event - the first one that was missed,
+> as we can now be sure that the HC has finished processing it. Provided
+> that one more TD is queued before any subsequent doorbell ring, it will
+> become safe to skip another TD by the time we get an xrun again.
+> 
+> Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
 > ---
-> Changes in v7:
-> - Remove redundant debug logs. (Petr Mladek)
-> - Drop Petr's Acked-by.
-> - Use original test assertions as KUNIT_*_EQ_MSG produces hard-to-parse
->   messages. The new failure output is:
+>   drivers/usb/host/xhci-ring.c | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+> index 878abf5b745d..049206a1db76 100644
+> --- a/drivers/usb/host/xhci-ring.c
+> +++ b/drivers/usb/host/xhci-ring.c
+> @@ -2875,6 +2875,18 @@ static int handle_tx_event(struct xhci_hcd *xhci,
+>   
+>   			if (!ep_seg && usb_endpoint_xfer_isoc(&td->urb->ep->desc)) {
+>   				skip_isoc_td(xhci, td, ep, status);
+> +
+> +				if (ring_xrun_event) {
+> +					/*
+> +					 * If we are here, we are on xHCI 1.0 host with no idea how
+> +					 * many TDs were missed and where the xrun occurred. Don't
+> +					 * skip more TDs, they may have been queued after the xrun.
+> +					 */
+> +					xhci_dbg(xhci, "Skipped one TD for slot %u ep %u",
+> +							slot_id, ep_index);
+> +					break;
 
-It would be good if you put into cover letter, or even in the respectful patch
-the example of the error report for the old code and new code that it will be
-clear how it changes.
+This would be the same as return 0; right?
 
->     vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4hx %1hx %1hx %4hx %4hx", ...) expected 837828163 got 1044578334
->             not ok 1 " "
->         # numbers_list_field_width_val_width: ASSERTION FAILED at lib/scanf_kunit.c:92
->     vsscanf("dc2:1c:0:3531:2621:5172:1:7", "%3hx:%2hx:%1hx:%4hx:%4hx:%4hx:%1hx:%1hx", ...) expected 892403712 got 28
->             not ok 2 ":"
->         # numbers_list_field_width_val_width: ASSERTION FAILED at lib/scanf_kunit.c:92
->     vsscanf("e083,8f6e,b,70ca,1,1,aab1,10e4", "%4hx,%4hx,%1hx,%4hx,%1hx,%1hx,%4hx,%4hx", ...) expected 1892286475 got 757614
->             not ok 3 ","
->         # numbers_list_field_width_val_width: ASSERTION FAILED at lib/scanf_kunit.c:92
->     vsscanf("2e72-8435-1-2fc-7cbd-c2f1-7158-2b41", "%4hx-%4hx-%1hx-%3hx-%4hx-%4hx-%4hx-%4hx", ...) expected 50069505 got 99381
->             not ok 4 "-"
->         # numbers_list_field_width_val_width: ASSERTION FAILED at lib/scanf_kunit.c:92
->     vsscanf("403/0/17/1/11e7/1/1fe8/34ba", "%3hx/%1hx/%2hx/%1hx/%4hx/%1hx/%4hx/%4hx", ...) expected 65559 got 1507328
->             not ok 5 "/"
->         # numbers_list_field_width_val_width: pass:0 fail:5 skip:0 total:5
->         not ok 4 numbers_list_field_width_val_width
->         # numbers_slice: ASSERTION FAILED at lib/scanf_kunit.c:92
->     vsscanf("3c87eac0f4afa1f9231da52", "%1hx%4hx%4hx%4hx%1hx%4hx%4hx%1hx", ...) expected 1257942031 got 2886715518
+Whole series looks good, I'll add it
 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+-Mathias
 
