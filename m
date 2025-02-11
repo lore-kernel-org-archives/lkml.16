@@ -1,107 +1,99 @@
-Received: from sienna.cherry.relay.mailchannels.net (sienna.cherry.relay.mailchannels.net [23.83.223.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F70253B43;
-	Tue, 11 Feb 2025 16:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.165
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739291166; cv=pass; b=JFQ14l+2dddhbKK2IWSqlif2RBJIw0m4nrCMIi+nUiHgcBFWv0GZjSM6xkvUZTaX+9ukTwWUmAIw8yWszsKry/LL4yluL4IEgutIIAFP6XwvxnTXOoalcG6OLwryJJt5iE1SdTNDOMNIyJ8X48jFzTQgbsPPITgTv6vAr1xIkW4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739291166; c=relaxed/simple;
-	bh=qwYi2UUDH8EB5JiCzhvOVvEE9T4L6yaTCiw/wnL4Oao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MbPuprkHEeyJhGG+Z06uBIFJXxfVs3cFx0BgwnQcXZmmyLm9RIac3hsmtuWj4iAD5b0YvYim65XGy4lcS2pnsWP6JDQeS1JsRcM2RrWtt2L5NCa5G07n9GsHNUF9TZcltaWjTVqGWDXPuHy5sLtzRbe6eS7x/sO17L5arS1qnw0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=U4ApvGVQ; arc=pass smtp.client-ip=23.83.223.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="U4ApvGVQ"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 8F6E0782F0D;
-	Tue, 11 Feb 2025 16:25:58 +0000 (UTC)
-Received: from pdx1-sub0-mail-a292.dreamhost.com (100-122-220-145.trex-nlb.outbound.svc.cluster.local [100.122.220.145])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 076AF7825BE;
-	Tue, 11 Feb 2025 16:25:57 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1739291158; a=rsa-sha256;
-	cv=none;
-	b=dXSfLF5yD/LQA6mcuLy9+IEAPH+d8EAWq3/w4E9iunuOEjEhgPvBIfNPbHgNlySeKN7yVf
-	7RiPdE1Gfq4QdYa6/cxtEMFUti/ysfX7y17EQgkfAZy/2/CaNKpAcsQqEQ1Ll3TKtmejP2
-	FSK4+cpnbKSGJWf+AJQdYgqfet8L4sT7lAxFbx7pDlyK/lMPgiei5Gac+ATaJYdMHsaeLS
-	8MvzvVOmBdvUxGpabP6EAXGB6br/uf4gwaQWBcIRpsxVcHIwLAKZ+hf9VgwA4xfFXDQSiR
-	Ybdw7994zBICUo+AL+RqlXUuTAnkcqiPo37qo7KEaD/I5E7lXA5PSaRX01yUkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1739291158;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=qwYi2UUDH8EB5JiCzhvOVvEE9T4L6yaTCiw/wnL4Oao=;
-	b=xNkptpAiU7E9vkMMtl5BmgEho1SNAGQ7Qd/MtH5p/cOhMCWyeBMWyqx8XnjwYyOMTk9Loj
-	79D/j66QfVE1qA+WF9s9iCzPnA0wEIvXL0o4pMZXUufovbOznsRr8aRnnbQfCrTqZjGeQa
-	GJkmRA5cvv/UPiBZGI7bVaDl6SJtpHPtUzsRCV+/mdxLyk7W03efpc27H9R1rDNJy8VXWK
-	M5JdftPAvwyT99c70Z6qUHr/SEYbOyju62AQQ8OF2w4N6CkuYY47IghBiUlEqVs6i1bJ5m
-	NLnQUZAgSEcnrg6ZUcOW/83giZkuPhKS/nZCODpBXqTP8ECwkjZgrwMyZ74D8A==
-ARC-Authentication-Results: i=1;
-	rspamd-68c88d6cff-mnvtp;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Interest-Unite: 24c0838b56538522_1739291158331_621628707
-X-MC-Loop-Signature: 1739291158331:3069174138
-X-MC-Ingress-Time: 1739291158331
-Received: from pdx1-sub0-mail-a292.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.122.220.145 (trex/7.0.2);
-	Tue, 11 Feb 2025 16:25:58 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a292.dreamhost.com (Postfix) with ESMTPSA id 4Ysmys1Z73z25;
-	Tue, 11 Feb 2025 08:25:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1739291157;
-	bh=qwYi2UUDH8EB5JiCzhvOVvEE9T4L6yaTCiw/wnL4Oao=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=U4ApvGVQI3cWGXIv0c/oHebXaQxqqK4GkDpCCue8+vOdIX5vbrND+V/rs+xM+MtR2
-	 9EQn8YAucnRDKwjgEUQIJNpGa8L/AMlPOmcOkKAhkqUFbYmSEidnwJxnNZxgUbXCNN
-	 1hjj9n6euI7jNCpfn14G+WYSfW8FVc9zE4tS1bxIAe2ff3YMK1m3YhDWk+URTyZIEW
-	 0IOgzNE4szxbRgB4JyhuejrExjkWNRFc4cX4TGMJBneLzjvAThdE1BYT6h0xYRHTHE
-	 64UqhmbQoYbmz0TjKUzQfOG6LN/+9rP+rq6Quy3qhIywOa00Tm21ktIyh4TQjiNxH3
-	 C8nYWBNE60YUA==
-Date: Tue, 11 Feb 2025 08:25:54 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Li Ming <ming.li@zohomail.com>
-Cc: jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] cxl/cdat: Remove redundant gp_port initialization
-Message-ID: <20250211162554.37qtvrdazzlkj4ne@offworld>
-References: <20250211062054.300108-1-ming.li@zohomail.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E950E26BD8E
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739291271; cv=none; b=aZO7bhgMQlYAYlR63iepJ022x4Y4idyC04tS66D4oNWRPPi0r7sjzIyzU47LRFqhIZkzYj0V4mlPXb5QLvsjGgeFfE4JPfWXdoUU0pfAaW6vMDN9S/rN0qnAnzZ+cjb5Dvbf/Zc8pd2ZQtoDKQjTB+nOfPsad4S50BIZSWR9NFw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739291271; c=relaxed/simple;
+	bh=m2vUGcn+byOSrLz9jG+8j49FJIZgquXxhQbsO1uzmWQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oviURZ/ObezNZim+E7pjVErobxu1hNU18iE/D1e1YKpTSfCG186daKTGjgc1Og0eUAz0fiCUWuyUiMZDPOocYjma7Wciq9oS2XieHNdGofkBgKFehIQSX2gGTlqWhHJKrcu7qvitXNbuinfGKQZL9soQHnq8vysS2VggCaQJ730=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F40813D5;
+	Tue, 11 Feb 2025 08:28:10 -0800 (PST)
+Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4D423F6A8;
+	Tue, 11 Feb 2025 08:27:48 -0800 (PST)
+Message-ID: <4b48fd24-6cd5-474c-bed8-3faac096fd58@arm.com>
+Date: Tue, 11 Feb 2025 17:27:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250211062054.300108-1-ming.li@zohomail.com>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: BUG Report: Fork benchmark drop by 30% on aarch64
+To: Hagar Hemdan <hagarhem@amazon.com>
+Cc: abuehaze@amazon.com, linux-kernel@vger.kernel.org
+References: <20250205151026.13061-1-hagarhem@amazon.com>
+ <4a9cc5ab-c538-4427-8a7c-99cb317a283f@arm.com>
+ <20250207110754.GA10452@amazon.com>
+ <1ca758c7-b6ab-4880-9cc7-217093a30bbb@arm.com>
+ <20250210213155.GA649@amazon.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <20250210213155.GA649@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 11 Feb 2025, Li Ming wrote:
+On 10/02/2025 22:31, Hagar Hemdan wrote:
+> On Mon, Feb 10, 2025 at 11:38:51AM +0100, Dietmar Eggemann wrote:
+>> On 07/02/2025 12:07, Hagar Hemdan wrote:
+>>> On Fri, Feb 07, 2025 at 10:14:54AM +0100, Dietmar Eggemann wrote:
+>>>> Hi Hagar,
+>>>>
+>>>> On 05/02/2025 16:10, Hagar Hemdan wrote:
 
->gp_port is already pointed to the grandparent port during its definition,
->remove a redundant code to let gp_port point to the grandparent port
->again.
->
->Signed-off-by: Li Ming <ming.li@zohomail.com>
+[...]
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+>> The 'spawn' tasks in sched_move_task() are 'running' and 'queued' so we
+>> call dequeue_task(), put_prev_task(), enqueue_task() and
+>> set_next_task().
+>>
+>> I guess what we need here is the cfs_rq->avg.load_avg (cpu_load() in
+>> case of root tg) update in:
+>>
+>>   task_change_group_fair() -> detach_task_cfs_rq() -> ...,
+>>   attach_task_cfs_rq() -> ...
+>>
+>> since this is used for WF_FORK, WF_EXEC handling in wakeup:
+>>
+>>   select_task_rq_fair() -> sched_balance_find_dst_cpu() ->
+>>   sched_balance_find_dst_group_cpu()
+>>
+>> in form of 'least_loaded_cpu' and 'load = cpu_load(cpu_rq(i)'.
+>>
+>> You mentioned AutoGroups (AG). I don't see this issue on my Debian 12
+>> Juno-r0 Arm64 board. When I run w/ AG, 'group' is '/' and
+>> 'tsk->sched_task_group' is '/autogroup-x' so the condition 'if (group ==
+>> tsk->sched_task_group)' isn't true in sched_move_task(). If I disable AG
+>> then they match "/" == "/".
+>>
+>> I assume you run Ubuntu on your AWS instances? What kind of
+>> 'cgroup/taskgroup' related setup are you using?
+> 
+> I'm running AL2023 and use Vanilla kernel 6.13.1 on m6g.xlarge AWS instance.
+> AL2023 uses cgroupv2 by default.
+>>
+>> Can you run w/ this debug snippet w/ and w/o AG enabled?
+> 
+> I have run that and have attached the trace files to this email.
+
+Thanks!
+
+So w/ AG you see that 'group' and 'tsk->sched_task_group' are both
+'/user.slice/user-1000.slice/session-1.scope' so we bail for those tasks
+w/o doing the 'cfs_rq->avg.load_avg' update I described above.
+
+You said that there is no issue w/o AG. Unfortunately your 'w/o AG'
+trace does not contain any evidence that you ran UnixBench's './Run -c 4
+spawn' since there are no lines for tasks with p->comm='spawn'. Could
+you rerun this please. My hunch is that 'group' and
+'tsk->sched_task_group' differ w/o AG?
+
+[...]
