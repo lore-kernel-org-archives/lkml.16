@@ -1,151 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9096FB9;
-	Tue, 11 Feb 2025 12:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB206FB9;
+	Tue, 11 Feb 2025 12:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739277302; cv=none; b=TavpuWnTDj2uceOR452pjj4rsAoEKTlsJZRy3RfR03QYlnvLwybqkDRkrai/ifbLIU0+GgWy/zH0+8PGVQRZtou2O5z0o1Miawdp+1LaWBFDPVbMIoOuXbgZSaEJ72Xl20xsdp4dNf/imivkkPK2IAiksAeWQ4RaufgBIllLOWU=
+	t=1739277383; cv=none; b=YkQOLMO9/fOuBOpdwwUUvkdVsWTRQVM1jZhgKrcIe4uJvqs1QVwnPRlTimSPnZMhAV/ss2kYatSog7WJ/8QBvsGt9vyLpvCp4iivh9k3BnDX/z301yUuLDUjPpELVbLLfnu6J11JczEN3HT7KFVDjpR532d4gznKy6+VaBzThNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739277302; c=relaxed/simple;
-	bh=MA14njnJTflw/O+wK7u99/DEzkLn82WquM8a6RvG0Kk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GD6QKXjp1LWGm4yNBHo99i+fyPdC+mCr2JszHmuwWbBXmX+toD7arc3hz5FOT8Ia1z0c+9HKDqL0dKapGejBZUIjgzuJT0xrCQOol4uRe6o3BBPKfTz5f9R9x1rKymti6eZOKS3dohLo0JicxAcyGT7LOH/QEkAizLjMJdQ6ypo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FOjrMX6L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739277383; c=relaxed/simple;
+	bh=sZG1112UKEcmLgh4KS5IXeQ2vd73nCQ0xdUMTVgWqJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f58T2mF+y+QP9j3efZ6Bk2IJF0opWm+f59zd5MfKuw1R2v6bUzNZsI3UKcW7NLsBxfH6sNfc9HUVO+ftrkiIjwOZsoW13ulcwPu3aoPdo9XvkWXIO0bK6APQbgFzx7BRX8r97DAJwrYF3pcVtQrhI+FdPiiaAld78c0tinzl2Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kvji4oGh; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FOjrMX6L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AFAC4CEDD;
-	Tue, 11 Feb 2025 12:34:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739277302;
-	bh=MA14njnJTflw/O+wK7u99/DEzkLn82WquM8a6RvG0Kk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FOjrMX6LCFqH0i2YuNm9+qyiW/Eb92E4QreqJ2T9+GlDiXgX0Jte8aGHcOXFbLmxU
-	 gQ1FfAm54IJx1GhDUrrdjH9AIggQvdCusC3fd1kDlkCVNHxIhJj5b2aG7ddaErmAsw
-	 SKZjQCI59+Vm0NVrZ+wjJt9cquceo3ChPd0QGEg3DcSvZ59tXQfJnSRGMHhtqzQ3LW
-	 cRr2VhUJauJVgc0rulls9zzoMF9hrFZ+OB0fQ+a99AMpgwkh+8RcMxCvrZOemrBJ1r
-	 LHVP06OAVbozyEKNRRUey2NkYmJo0FjUSDwT54h8h7pPxJRJex5recJzei7hoixe/P
-	 RT/tET6XJS7jg==
-Date: Tue, 11 Feb 2025 12:34:57 +0000
-From: Conor Dooley <conor@kernel.org>
-To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Eric Biggers <ebiggers@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Andy Chiu <andybnac@gmail.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] RISC-V: add vector crypto extension validation
- checks
-Message-ID: <20250211-implode-mute-8ff31f44bdf9@spud>
-References: <20250205-cobbler-unpadded-5580c1f5d946@spud>
- <20250205-quench-entrench-09bed8c8c823@spud>
- <f1ce7aa9-63e3-41bd-9bb0-a54ebc714dff@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kvji4oGh"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab7ca64da5dso310178266b.0;
+        Tue, 11 Feb 2025 04:36:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739277380; x=1739882180; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bP5m1MKlTrOTM+BW8w3Lgsy0b/m3aaXuVq/Pw4K70rk=;
+        b=Kvji4oGhY17Z/QKNyOGH7TGlTvQVHHV+22FCuc3dpVfsFktxrzuNYVvLBSuY5ox5t+
+         EPgniFD/2lGTcQMRyNnJSLtqS/InpD6D8v8fXFpV0SchmKXBL1lGJV5XPzxaT8yltABe
+         o8eDYtqgDizWP8UfqABpO4MwZ4Bsq1MHB/jtWl2s3D8kcdam8chJN9LliXefkZaRUd4c
+         9dk2T9IT6owxph2UHNp4Lia/gd4oBlYBreDF3U20DmfnzwMANHGxFQlIufqEE6p7FFOu
+         3xq0OWQ+E7kqnngXnRa9PzsT+h5hPjsqXRjspnydlBN4WfdeDRcbn/oYKRDiJEfHrFok
+         QjIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739277380; x=1739882180;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bP5m1MKlTrOTM+BW8w3Lgsy0b/m3aaXuVq/Pw4K70rk=;
+        b=r2ddIevwnHojHDm56iiV+AiJ7y9FNdmrlyqczsrPdJ+uJBkZTr4sesLpBXa9Kpz+B4
+         uZaPSH5ZifpnvQxud1sbDDwgkJqnEcG2jRvIj0kwhUdBrZbv060v7fYl9gsh51W033uD
+         H/dYXk+PcPz1Z+WyG7+WKK6LVgP4wFpnIAZWoQGMY7Og774Nc1hRivEIf8rY4qHB8mzz
+         hssUA14q2HH45xinkVcKiBwhE1FUaYImQt0BjEDMDABDsDZEGKU7QyqaNp0IzzkLNUQV
+         OEWA0p/ohzoNqTydwvlSShns9rFeLi2a97HFyZVnr2VGnAKZ/QqzGvjHZqgEEi1bTfgB
+         OQdg==
+X-Forwarded-Encrypted: i=1; AJvYcCVP8R+u/9wTq5i7Lfr086xpOnzAaKlFFEKoPaqFhR9MTEFGsTLgUkDdLtImjR0rcOpMAnoCUpxwy6sO/uQ=@vger.kernel.org, AJvYcCVaSBdu/XM44uUpF775IqWZLMfF14lUA7Rg/SMP0exBXWhm1DeW1WSeFzV15fb13jysO8p0p8vT@vger.kernel.org, AJvYcCWmHGFhRtbtF9Q24X5VXEhFFPBaEln7qkaNkToXXEXVmGmC5exmxZK8p/3IVUopEHwKud5AI/mOdxzX@vger.kernel.org
+X-Gm-Message-State: AOJu0YylfHmc3QnLDdCekLJnG/nU7pZ3ZfuiA+7FC8WRiHfWU7zufmNW
+	Eq435nGpb2YGLN0D69jZW2F5bZLyS54QGclFlbr14kyYxGx4/IEx
+X-Gm-Gg: ASbGnct+SFoF+Yom4aJnS4cmETuLhjr0wgF0i659hW8IGAO6UeBbwfQA8Z6K3Tc0AYU
+	YBDjxABwLchEh99WSMvYel/XZwa7ykSU0Vfmyv/6985tNl3IyRDP1maq3ocGJfFI8Fo3dcZMXXE
+	sTYS432XdM3MJTFT4YGVMZNQdsE++EqUrAsHd1zgSTdVvumPUSn+O4SqiFHKEXyunoQLrslaIhn
+	TxOTaODAnAivI+5x6MxDltnhEiFqKiO4ghTGdLiUoQEOGx8jgvHtJjw6El2MNgNMx0v+Eknw6s9
+	vhs5idATFhT3/vz5ZhLoNb2J5QT90KJj
+X-Google-Smtp-Source: AGHT+IGTQCQjV5wM3AQyayoBB6ZBZZQoah7NqJFP8fRvEp4YFg+UYl4JLydhWL7qT31mKO1xEQp6Aw==
+X-Received: by 2002:a17:907:a78a:b0:ab7:843c:2cbb with SMTP id a640c23a62f3a-ab7daf31171mr259405066b.11.1739277379803;
+        Tue, 11 Feb 2025 04:36:19 -0800 (PST)
+Received: from foxbook (adtq181.neoplus.adsl.tpnet.pl. [79.185.228.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab79d28723esm747793166b.64.2025.02.11.04.36.18
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Tue, 11 Feb 2025 04:36:19 -0800 (PST)
+Date: Tue, 11 Feb 2025 13:36:14 +0100
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: gregkh@linuxfoundation.org, ki.chiang65@gmail.com,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+ mathias.nyman@intel.com, stable@vger.kernel.org
+Subject: [PATCH] usb: xhci: Handle quirky SuperSpeed isoc error reporting by
+ Etron HCs
+Message-ID: <20250211133614.5d64301f@foxbook>
+In-Reply-To: <20250210095736.6607f098@foxbook>
+References: <20250205234205.73ca4ff8@foxbook>
+	<b19218ab-5248-47ba-8111-157818415247@linux.intel.com>
+	<20250210095736.6607f098@foxbook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2QQXwfJwMNFQMRKG"
-Content-Disposition: inline
-In-Reply-To: <f1ce7aa9-63e3-41bd-9bb0-a54ebc714dff@rivosinc.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+xHCI 4.9.1 requires HCs to obey the IOC flag we set on the last TRB even
+after an error has been reported on an earlier TRB. This typically means
+that an error mid TD is followed by a success event for the last TRB.
+
+On SuperSpeed (and only SS) isochronous endpoints Etron hosts were found
+to emit a success event also after an error on the last TRB of a TD.
+
+Reuse the machinery for handling errors mid TD to handle these otherwise
+unexpected events. Avoid printing "TRB not part of current TD" errors,
+ensure proper tracking of HC's internal dequeue pointer and distinguish
+this known quirk from other bogus events caused by ordinary bugs.
+
+This patch was found to eliminate all related warnings and errors while
+running for 30 minutes with a UVC camera on a flaky cable which produces
+transaction errors about every second. An altsetting was chosen which
+causes some TDs to be multi-TRB, dynamic debug was used to confirm that
+errors both mid TD and on the last TRB are handled as expected:
+
+[ 6028.439776] xhci_hcd 0000:06:00.0: Transfer error for slot 1 ep 2 on endpoint
+[ 6028.439784] xhci_hcd 0000:06:00.0: Error 4 mid isoc TD, wait for final completion event, is_last_trb=1
+[ 6028.440268] xhci_hcd 0000:06:00.0: Successful completion on short TX for slot 1 ep 2 with last td short 0
+[ 6028.440270] xhci_hcd 0000:06:00.0: Got event 1 after mid TD error
+[ 6029.123683] xhci_hcd 0000:06:00.0: Transfer error for slot 1 ep 2 on endpoint
+[ 6029.123694] xhci_hcd 0000:06:00.0: Error 4 mid isoc TD, wait for final completion event, is_last_trb=0
+[ 6029.123697] xhci_hcd 0000:06:00.0: Successful completion on short TX for slot 1 ep 2 with last td short 0
+[ 6029.123700] xhci_hcd 0000:06:00.0: Got event 1 after mid TD error
+
+Handling of Stopped events is unaffected: finish_td() is called but it
+does nothing and the TD waits until it's unlinked:
+
+[ 7081.705544] xhci_hcd 0000:06:00.0: Transfer error for slot 1 ep 2 on endpoint
+[ 7081.705546] xhci_hcd 0000:06:00.0: Error 4 mid isoc TD, wait for final completion event, is_last_trb=1
+[ 7081.705630] xhci_hcd 0000:06:00.0: Stopped on Transfer TRB for slot 1 ep 2
+[ 7081.705633] xhci_hcd 0000:06:00.0: Got event 26 after mid TD error
+[ 7081.705678] xhci_hcd 0000:06:00.0: Stopped on Transfer TRB for slot 1 ep 2
+[ 7081.705680] xhci_hcd 0000:06:00.0: Got event 26 after mid TD error
+[ 7081.705759] xhci_hcd 0000:06:00.0: Stopped on No-op or Link TRB for slot 1 ep 2
+[ 7081.705799] xhci_hcd 0000:06:00.0: Stopped on No-op or Link TRB for slot 1 ep 2
+
+Reported-by: Kuangyi Chiang <ki.chiang65@gmail.com>
+Closes: https://lore.kernel.org/linux-usb/20250205053750.28251-1-ki.chiang65@gmail.com/T/
+Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
+---
 
 
---2QQXwfJwMNFQMRKG
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 11, 2025 at 09:45:44AM +0100, Cl=E9ment L=E9ger wrote:
->=20
->=20
-> On 05/02/2025 17:05, Conor Dooley wrote:
-> > From: Conor Dooley <conor.dooley@microchip.com>
-> >=20
-> > Using Clement's new validation callbacks, support checking that
-> > dependencies have been satisfied for the vector crpyto extensions.
-> > Currently riscv_isa_extension_available(<vector crypto>) will return
-> > true on systems that support the extensions but vector itself has been
-> > disabled by the kernel, adding validation callbacks will prevent such a
-> > scenario from occuring and make the behaviour of the extension detection
-> > functions more consistent with user expectations - it's not expected to
-> > have to check for vector AND the specific crypto extension.
-> >=20
-> > The 1.0.0 Vector crypto spec states:
-> > 	The Zvknhb and Zvbc Vector Crypto Extensions --and accordingly
-> > 	the composite extensions Zvkn and Zvks-- require a Zve64x base,
-> > 	or application ("V") base Vector Extension. All of the other
-> > 	Vector Crypto Extensions can be built on any embedded (Zve*) or
-> > 	application ("V") base Vector Extension.
-> > and this could be used as the basis for checking that the correct base
-> > for individual crypto extensions, but that's not really the kernel's job
-> > in my opinion and it is sufficient to leave that sort of precision to
-> > the dt-bindings. The kernel only needs to make sure that vector, in some
-> > form, is available.
-> >=20
-> > Since vector will now be disabled proactively, there's no need to clear
-> > the bit in elf_hwcap in riscv_fill_hwcap() any longer.
-> >=20
-> > Link: https://github.com/riscv/riscv-crypto/releases/tag/v1.0.0
-> > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> > ---
-> >  arch/riscv/kernel/cpufeature.c | 49 +++++++++++++++++++++++-----------
-> >  1 file changed, 33 insertions(+), 16 deletions(-)
-> >=20
-> > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeat=
-ure.c
-> > index 40a24b08d905..1c148ecea612 100644
-> > --- a/arch/riscv/kernel/cpufeature.c
-> > +++ b/arch/riscv/kernel/cpufeature.c
-> > @@ -138,6 +138,23 @@ static int riscv_ext_vector_float_validate(const s=
-truct riscv_isa_ext_data *data
-> >  	return 0;
-> >  }
-> > =20
-> > +static int riscv_ext_vector_crypto_validate(const struct riscv_isa_ext=
-_data *data,
-> > +					    const unsigned long *isa_bitmap)
-> > +{
-> > +	if (!IS_ENABLED(CONFIG_RISCV_ISA_V))
-> > +		return -EINVAL;
-> > +
-> > +	/*
-> > +	 * It isn't the kernel's job to check that the binding is correct, so
-> > +	 * it should be enough to check that any of the vector extensions are
-> > +	 * enabled, which in-turn means that vector is usable in this kernel
-> > +	 */
-> > +	if (!__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZVE32X=
-))
-> > +		return -EINVAL;
->=20
-> After a second thought, I think it should be this:
->=20
-> if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZVE32X))
-> 	return 0;
->=20
-> return -EPROBEDEFER;
->=20
-> Extensions can be enabled later (but can not be "reverted") so check for
-> the extension to be present (in which case it's ok), or wait for it to
-> be (potentially) enabled.
+Hi Mathias,
 
-Ah, of course it is operating on the /resolved/ isa, not the source one.
-Makes me thing the parameter of all the validate callbacks should be
-"resolved_isa_bitmap" instead of "isa_bitmap" to make things clearer?
+This is the best I was able to do. It does add a few lines, but I don't
+think it's too scary and IMO the switch looks even better this way. It
+accurately predicts those events while not breaking anything else that
+I can see or think of, save for the risk of firmware bugfix adding one
+ESIT of latency on errors.
+
+I tried to also test your Etron patch but it has whitespace damage all
+over the place and would be hard to apply.
+
+Regards,
+Michal
 
 
---2QQXwfJwMNFQMRKG
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/usb/host/xhci-ring.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6tD8QAKCRB4tDGHoIJi
-0rbMAP4r/yeGzY8gnolAtoXxntJZm835aG220lRMaGrFycBfywD/dVqx4BlphFDL
-rdGYdaDO/nBthbezTn7ZCNX4CIT5QAM=
-=5wwm
------END PGP SIGNATURE-----
-
---2QQXwfJwMNFQMRKG--
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 965bffce301e..7ff5075e5890 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -2437,6 +2437,7 @@ static void process_isoc_td(struct xhci_hcd *xhci, struct xhci_virt_ep *ep,
+ 	bool sum_trbs_for_length = false;
+ 	u32 remaining, requested, ep_trb_len;
+ 	int short_framestatus;
++	bool error_event = false, etron_quirk = false;
+ 
+ 	trb_comp_code = GET_COMP_CODE(le32_to_cpu(event->transfer_len));
+ 	urb_priv = td->urb->hcpriv;
+@@ -2473,8 +2474,7 @@ static void process_isoc_td(struct xhci_hcd *xhci, struct xhci_virt_ep *ep,
+ 		fallthrough;
+ 	case COMP_ISOCH_BUFFER_OVERRUN:
+ 		frame->status = -EOVERFLOW;
+-		if (ep_trb != td->end_trb)
+-			td->error_mid_td = true;
++		error_event = true;
+ 		break;
+ 	case COMP_INCOMPATIBLE_DEVICE_ERROR:
+ 	case COMP_STALL_ERROR:
+@@ -2483,8 +2483,7 @@ static void process_isoc_td(struct xhci_hcd *xhci, struct xhci_virt_ep *ep,
+ 	case COMP_USB_TRANSACTION_ERROR:
+ 		frame->status = -EPROTO;
+ 		sum_trbs_for_length = true;
+-		if (ep_trb != td->end_trb)
+-			td->error_mid_td = true;
++		error_event = true;
+ 		break;
+ 	case COMP_STOPPED:
+ 		sum_trbs_for_length = true;
+@@ -2518,8 +2517,17 @@ static void process_isoc_td(struct xhci_hcd *xhci, struct xhci_virt_ep *ep,
+ 	td->urb->actual_length += frame->actual_length;
+ 
+ finish_td:
++	/* An error event mid TD will be followed by more events, xHCI 4.9.1 */
++	td->error_mid_td |= error_event && (ep_trb != td->end_trb);
++
++	/* Etron treats *all* SuperSpeed isoc errors like errors mid TD */
++	if (xhci->quirks & XHCI_ETRON_HOST && td->urb->dev->speed == USB_SPEED_SUPER) {
++		td->error_mid_td |= error_event;
++		etron_quirk |= error_event;
++	}
++
+ 	/* Don't give back TD yet if we encountered an error mid TD */
+-	if (td->error_mid_td && ep_trb != td->end_trb) {
++	if (td->error_mid_td && (ep_trb != td->end_trb || etron_quirk)) {
+ 		xhci_dbg(xhci, "Error mid isoc TD, wait for final completion event\n");
+ 		td->urb_length_set = true;
+ 		return;
+-- 
+2.48.1
