@@ -1,102 +1,155 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561B71F9F79
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192F52AE6A;
+	Tue, 11 Feb 2025 16:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739291303; cv=none; b=YVZt7qfJy6m6AiYDJivmIAQNQhHpZO690hU+kkxIuoor8F1aYPpW/nllvha803ymQ4KYvLa0zxC74qkd6CJxSLR15es+70uWd3rtFUWGYqlPLLDkDt4SvCTPvpv/BDQgq48xJAeNbynVgkh+YLFIXpvoZr6pJ6rx5sd4kiBxnMM=
+	t=1739291434; cv=none; b=LgMYzjOB0YjMyUptvN5gQSg6ZCQyzpBCYGa3WszZQZ6Q9IP3hshbLW6uXQ5BGfS1LlH5reTjaxv3Gx0TpMTwtwZSdDy3xfcjvHq6Eq0EYWnuX6wr2cH4iloV9ngl/xB+d+CU3n35/gfligxgEMBA+eKvwbUYqwAz1sIL2m/PbN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739291303; c=relaxed/simple;
-	bh=yilJGqWW4RYMKFOjUyyusb+5EmeDe91eA1bXhwR/YFI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=o6wBZJX7lk5x4BJ+lTQ6dzWGUAlAU2NodYTCyLoO4TggJXQkh677YCLx2yzuZgeXI427pqUBpSsqwrrO//6ytiRhpQ+DY0UXZ+05u3MTnc4g0Q3iLBGyoxJNvXSfYbuDYAAyq1wgPvjXE4+UFmpHpwnRkyS+gKEH6FyKuVjSvsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BJfVChW7; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1739291434; c=relaxed/simple;
+	bh=cHhVe3lnCIHIlSu/fg/SHyBljFFWdesuVmKgHAUgfu4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KUoTU4H3CGbwV3oJgjyrqvNeFrjS0LF0JZ41NyXhQ7TzXmxC4o782MWSRquUGJMCeDQ/o6G3kjYWYj20Miy2b0Zu6mYhY72Wyd63yFPIEM71UqT08lt56yhBkqa3kOqC4EOEBUi1KoO4wMsWk0h1hvpCVScqIuRdwrJLQEHMp9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L9/gZbCw; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BJfVChW7"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fa3b466245so7334130a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:28:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739291301; x=1739896101; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5MEK/stSb+AMRyC9Zhx6OFHXRnHPVcvklj9Pc8LhwOQ=;
-        b=BJfVChW7Y2jO/ywJh08g35IqukXtKRfHNnPeT6Bb3V/ctZQ55gghSQG/uMR3pK21Bs
-         JvH9zAxfQCZnieEjFG21FepKyMy0VktvKZSM/wHgUVMek3KngJeRFAWXnlQAkLJT1fBO
-         0kMJoJyBhJn5C60ZaCV+zrWIdUi6Zp+F0SaVohKpppry40OkTPtUxLz0BEJcAkrE4P3z
-         coKYEgCgw68vqVQHOn3wKvdFlL+OtKZkDRqGA1tdPq6Qwq9gKRpKzP6HBbxvHQFo4dfz
-         lyfP8pWshLNusB9L9qdUDpMa8h2AQPhbAQKAkjhxJAY7oMQSiK0mbyUUy75QWfWcg40P
-         i1+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739291301; x=1739896101;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5MEK/stSb+AMRyC9Zhx6OFHXRnHPVcvklj9Pc8LhwOQ=;
-        b=bf6n+IDzqrz68l6O+lNZ2VVzq3a+RzG/r0apYBa5Gxtb0VpR1GBVGH2VxBOdLAxKD7
-         CDQag6Yktgpub5KRaoiDRWw2EPWZ5Mc0eW9UG8YWg/mcSqN89RYC2NDsd3mUN+8RZ53T
-         zuN39BmS/53kgY8Mbj3jkYUYZUVGefoamH2iz+kaYlAVnn+78TX3JmzyvK9OgZS7XSQz
-         BuZ8MayJc9rWF/6MTCdZ5hlgV1QWsoSNRFRznZGrw2mgenHjTUD21bYZ0c1QQxNPrBWo
-         5qlaKB5A059+A18vw/aOtAR9470FMln51Pas0Ce9VbtEKRvnXrq2mbPcK390KBNptnCq
-         1MYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQZaFbsXsB/Oz2HKWsrc1AxmisZrH19u1sbFsWtQNbjw6qXvnwN2CsvHkxm66UKs2JHjGRrKoq8cEV2k8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyZ+2plx7Zpa09F3unYpHRzsGZtGMcDNAVjWqrZmTEGAj6k0DR
-	Xc7Fwonm4DbPvckIOdrm7oeY1T2/LJIsNF10C/4mpMY+EsvhdIRt7k8sX+ds+E0PPiBrNzBfuVW
-	Gzw==
-X-Google-Smtp-Source: AGHT+IEW6FT5SzWSOj0JB0UAPg+blRK0ibYMj54XT+2rd1e326WroNU4nUmkSnUDL4aqV/75Jp14hq1SYiM=
-X-Received: from pfrc11.prod.google.com ([2002:aa7:8e0b:0:b0:730:7648:7a74])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:188f:b0:732:2170:b69a
- with SMTP id d2e1a72fcca58-7322170b72bmr3189092b3a.18.1739291301572; Tue, 11
- Feb 2025 08:28:21 -0800 (PST)
-Date: Tue, 11 Feb 2025 16:28:20 +0000
-In-Reply-To: <20250211143919.GBZ6thF2Ryx-D2YpDz@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L9/gZbCw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739291432; x=1770827432;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cHhVe3lnCIHIlSu/fg/SHyBljFFWdesuVmKgHAUgfu4=;
+  b=L9/gZbCw1VKTWWVz/9DbtIx7v26ourLKkw6hDgJ+vcS/Re4E3nYgkrGm
+   F/2LfQysi/NQVYj6TZgjrk+Zu9TRSfDxAEUCk7qIliKjYfxo+J2IlQqwn
+   t/ecc52BjCH6A+1/xc/6oGQXxFczf/DtNlREAZd6+ozXN+IjLBHTNFxoD
+   O0aKp8BYeG4KYMWVgjh8RPucfZ5U4Snj2Ky2MikQQa5L3bIAuyujBbNVV
+   I+2mhInbC1e+1PJwr0fl1h6CcX3C0TiRJ6ayT5XvkH4nHad2pixz32mxo
+   qYqkW9N9pMXwLN5BPswAdbAVMaA9jNByd1ahzCm/fi+/+o/tlsNnsVM3k
+   w==;
+X-CSE-ConnectionGUID: 1+IOLPFIRGOprJSutrZKOQ==
+X-CSE-MsgGUID: ocvsyDVzQR6xzaWCmInXww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="39802282"
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="39802282"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 08:30:30 -0800
+X-CSE-ConnectionGUID: 7hmef146TemXHrdIlZ1N/w==
+X-CSE-MsgGUID: knwsERq+S12G/QnS/D+DSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="112322563"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa009.jf.intel.com with ESMTP; 11 Feb 2025 08:30:28 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id D49BB8F; Tue, 11 Feb 2025 18:30:26 +0200 (EET)
+Date: Tue, 11 Feb 2025 18:30:26 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 02/14] platform/x86: alienware-wmi: Add WMI Drivers
+Message-ID: <Z6t7IjcOFuAbztfn@black.fi.intel.com>
+References: <20250207154610.13675-1-kuurtb@gmail.com>
+ <20250207154610.13675-3-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250201021718.699411-1-seanjc@google.com> <20250211143919.GBZ6thF2Ryx-D2YpDz@fat_crate.local>
-Message-ID: <Z6t6pMgAjHckWMs_@google.com>
-Subject: Re: [PATCH 00/16] x86/tsc: Try to wrangle PV clocks vs. TSC
-From: Sean Christopherson <seanjc@google.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	linux-coco@lists.linux.dev, virtualization@lists.linux.dev, 
-	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com, 
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	Nikunj A Dadhania <nikunj@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207154610.13675-3-kuurtb@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Feb 11, 2025, Borislav Petkov wrote:
-> On Fri, Jan 31, 2025 at 06:17:02PM -0800, Sean Christopherson wrote:
-> > And if the host provides the core crystal frequency in CPUID.0x15, then KVM
-> > guests can use that for the APIC timer period instead of manually
-> > calibrating the frequency.
+On Fri, Feb 07, 2025 at 10:45:58AM -0500, Kurt Borja wrote:
+> Add WMI drivers for LEGACY and WMAX devices.
 > 
-> Hmm, so that part: what's stopping the host from faking the CPUID leaf? I.e.,
-> I would think that actually doing the work to calibrate the frequency would be
-> more reliable/harder to fake to a guest than the guest simply reading some
-> untrusted values from CPUID...
+> This involves moving the platform device registration to a helper
+> function that is now called from the driver's preferred WMI device
+> driver probe. In the case of the WMAX this is done only if
+> `!quirks->thermal` because the newer WMAX interface doesn't support any
+> of the LED features of this driver. This also eliminates the need to
+> check for `quirks->num_zones > 0` inside alienfx_probe().
+> 
+> Only one WMI driver is registered on module initialization to prevent
+> registering a duplicate platform device.
+> 
+> Additionally, create_thermal_profile() now takes wmi_device * instead of
+> platform_device *.
 
-Not really.  Crafting an attack based on timing would be far more difficult than
-tricking the guest into thinking the APIC runs at the "wrong" frequency.  The
-APIC timer itself is controlled by the hypervisor, e.g. the host can emulate the
-timer at the "wrong" freuquency on-demand.  Detecting that the guest is post-boot
-and thus done calibrating is trivial.
+...
 
-> Or are we saying here: oh well, there are so many ways for a normal guest to
-> be lied to so that we simply do the completely different approach and trust
-> the HV to be benevolent when we're not dealing with confidential guests which
-> have all those other things to keep the HV honest?
+> +static int alienware_alienfx_setup(struct alienfx_platdata *pdata)
+> +{
+> +	struct device *dev = &pdata->wdev->dev;
+> +	struct platform_device *pdev;
+>  	int ret;
+>  
+> +	pdev = platform_device_register_data(NULL, "alienware-wmi",
+> +					     PLATFORM_DEVID_NONE, pdata,
+> +					     sizeof(*pdata));
+> +	if (IS_ERR(pdev))
+> +		return PTR_ERR(pdev);
+> +
+> +	dev_set_drvdata(dev, pdev);
+> +	ret = devm_add_action_or_reset(dev, alienware_alienfx_remove, pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
 
-This.  Outside of CoCo, the hypervisor is 100% trusted.  And there's zero reason
-for the hypervisor to lie, it can simply read/write all guest state.
+	return devm_add_action_or_reset(...);
+
+> +}
+
+...
+
+> +static const struct wmi_device_id alienware_legacy_device_id_table[] = {
+> +	{ LEGACY_CONTROL_GUID, NULL },
+
+Drop that ' , NULL' part, it makes an additional burden if the type of the
+driver_data is ever changed.
+
+> +	{ },
+
+No comma in the terminator entries.
+
+> +};
+
+...
+
+> +static const struct wmi_device_id alienware_wmax_device_id_table[] = {
+> +	{ WMAX_CONTROL_GUID, NULL },
+> +	{ },
+> +};
+
+Ditto.
+
+...
+
+> +static int __init alienware_wmax_wmi_init(void)
+> +{
+> +	return wmi_driver_register(&alienware_wmax_wmi_driver);
+> +}
+> +
+> +static void __exit alienware_wmax_wmi_exit(void)
+> +{
+> +	wmi_driver_unregister(&alienware_wmax_wmi_driver);
+> +}
+
+I believe we have module_wmi_driver() which can be used after the split
+(haven't checked those patches yet).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
