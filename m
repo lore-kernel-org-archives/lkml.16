@@ -1,114 +1,85 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF601D7E26;
-	Tue, 11 Feb 2025 04:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0601D90BC;
+	Tue, 11 Feb 2025 05:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739249771; cv=none; b=HbNjCbISlVQfvbKlSy65Z/8pEVbQiYe/KfN9Nx8vyBq+am+hS/9QBRBMEl6p9w9crN0j21wnhpCD07iC1LSARqXB/xRq/yhaiqSffaXq6F7kXDgeo+qOxu0yYbbpyOd4i+jP2I+JFo6ca4zvXV0J94dJ+Kz+y1FcVVpxxMwfigU=
+	t=1739250003; cv=none; b=mgqAXKwSkiZvyp/J+GIxezyoIgs5o92hVEeNix+cXjYUMyy/rr6sp7Duewt5oWTOuwrHMtbYnw0Rg0pyzi1+ZlonXAkDzS/iCrRCWN998kvJHlWsIaHHOJJy/Z+vq13YHo/GmCPmTWU6RJYsGEGNTGkk0TIu3/OKFAVfuK/Enqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739249771; c=relaxed/simple;
-	bh=Dd8pJU4mAkz8oOTBw+33Ba9v2QIfFz/TQnaizVzJwyE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WR4OzGU5ZIAbd0lFkh2llyZTZS5GHIW2Z9HcdPlsLm52UlrF1rLZxKzWiRBMW6t6xBkUVAyXWhuj2Pj4xcn+8dLuNpW1doz1WcrUT5crt7EsjuiTWvYnYNu8pExogTfG9f9seb2Nk6NqXePgB991dfHkQipfJRVyeiDUoOzwqdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j9Uhky7d; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739250003; c=relaxed/simple;
+	bh=hSVMPStI+Sa06Zw2UUdsDpFB6PeSjrO7Ar0sTb6ValY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=iN/iE6aCnbe25Ly5jfrkWoEGfzxAnuB+4jlZHjcuzl0K/3YGIwIZ111N0qOWcc53sIFFdQh9HLAdx8LzTtugsDQVSZsZ1/t0wKQKy6+2x2WwMTlPBUdsKWr1RSiY1VyeO3fLTTcU8MYZL2c4JJhBNvvNFrdD/ZfejdQ/v5Dcf2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=S9loGqeQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j9Uhky7d"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-436281c8a38so33476675e9.3;
-        Mon, 10 Feb 2025 20:56:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739249768; x=1739854568; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YvlqG2mdUySN91b26Hc4Mi8+p6b99eBWTzCbfUz6Rb0=;
-        b=j9Uhky7dAVu9rHGTiRy6s0XgQ1wTh5aW5ypBvjovFl6mQt+nvrTo6KMrECVPuK98ka
-         VZkH6EK/SIfXkklBy7o5NLa9K34tkgVcsPuw5yzd6rza5XT6UpYaG2lEVAqaR5fU7Awg
-         dC1rapn/witJEkXCZ3NqKKlGnq3tvFn4Z3IjTbX0MsALMCQzIPF7DdO+bQ+YvH7DNoSP
-         A0UofhaUkDlIbho/mww3c1I9jLVgPWHD7XHDhfPdPYBHrMHPDrZtKQVWghQmbmWKvSDX
-         7+YwOiVK8gs2eLqR3zeJje/WX9uevjOfG2mQV3k6WASkBYa3cze1UM9KcRCT0epa8l8T
-         Tuhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739249768; x=1739854568;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YvlqG2mdUySN91b26Hc4Mi8+p6b99eBWTzCbfUz6Rb0=;
-        b=jdFkxiSodNFEaZ2tYS9Yb9qArN9hSQ1IFDIbir/Yzz5aQ5cqfRuUaHlVNgNwgniFP6
-         br2cZhJhCMkf+1U0Lza4plAKuyfncbv1amBE0uHEE9galdjWUVVyIHQNXDyFO6aZENzE
-         YW07c55wiJYHlUeDHvnE5Fn5y/q79XrWh+n1iCHFcCBcpcFLNEtjR/aoysuGZnKoCUiB
-         TqQT00D/SbDP4fOBP/pkqrcm0nkR6KphTPAV4X1ZWAMB6Gj5G4VHa2BtmziXE1wr0tjc
-         xUP26oFpKKlRXOERu8JsU8jdA6gPDmvC3zo+Fep8O3fXdFnaUrpupybMTVDyGdw9F6wj
-         WzRA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOJlEFdFNhjQRaEeFqoc2BiNRc71HxX18yaUEluvMUTUcNV3/pfLn44Ktl/39SK+0UE5E=@vger.kernel.org, AJvYcCVWi2HG7IDTMlvJL8e+NO7brtL1Uk3fHTFdDr8/qmmDymGJXep+wHabhV8pjBx2Hac9Oxj/S2qiY68Nw87i@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw73cirIG5XMrfA2eVhabJ2X5tlkYIXoy020upZFbR6VokoL2uH
-	iGxwH450dS44hnX/rYhy4b9loEa7hnOLqhQHb6F1sY5zH/wP2XXCUGVDJsWobU8mAaXbg8bC/0x
-	9QbwkmYuNSaAh9jquI1N0Jnj2120=
-X-Gm-Gg: ASbGncsEPrMn/meeE9Ojxs8ScBMQIVd5YH8QMRK9jJbp8ZGSkopaBN9aXGzWjHqmyaA
-	naolh/CSxl3MhmnB1ubl75jeVFR+rVCO8OOn7Q4vxRV0pj4ay9KxmhcPktF1iMDpuPbqOeSTNVe
-	PMwhsT5sYypKGq0MGqUwdERm3fatcY
-X-Google-Smtp-Source: AGHT+IHVPH3y5XcET08qxG5mfIoe0bM1mbFDx4OVs43sslrkWwEXHC/aB8TK7KhECghuwskKJMQ5E/+WP1m+09AjE1g=
-X-Received: by 2002:a05:600c:1e02:b0:434:9e1d:7626 with SMTP id
- 5b1f17b1804b1-439249c02e2mr103937525e9.25.1739249767385; Mon, 10 Feb 2025
- 20:56:07 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="S9loGqeQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1665BC4CEDD;
+	Tue, 11 Feb 2025 05:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1739250003;
+	bh=hSVMPStI+Sa06Zw2UUdsDpFB6PeSjrO7Ar0sTb6ValY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=S9loGqeQDU7+vM38oniXF9UbZSirIh9+AO7Zw4TASDwdfymSr+mlfND6bI6t+H591
+	 EasGPa45my4fsaWku4WH92kHww4+2JkBwnl465H/iEUc11XXeQH/XfB+bBTEoAU8I8
+	 4Q+hnPRTreXNg78LWQqzxO4EbCx+u8jUUn5NvycY=
+Date: Mon, 10 Feb 2025 21:00:01 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+ nouveau@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, damon@lists.linux.dev, =?ISO-8859-1?Q?J?=
+ =?ISO-8859-1?Q?=E9r=F4me?= Glisse <jglisse@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, Yanteng Si
+ <si.yanteng@linux.dev>, Karol Herbst <kherbst@redhat.com>, Lyude Paul
+ <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra
+ <peterz@infradead.org>, SeongJae Park <sj@kernel.org>, "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Pasha
+ Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>,
+ Alistair Popple <apopple@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Subject: Re: [PATCH v2 03/17] mm/rmap: convert make_device_exclusive_range()
+ to make_device_exclusive()
+Message-Id: <20250210210001.5dc68b38eb1bfa44d0fd78f6@linux-foundation.org>
+In-Reply-To: <20250210193801.781278-4-david@redhat.com>
+References: <20250210193801.781278-1-david@redhat.com>
+	<20250210193801.781278-4-david@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250206105435.2159977-1-memxor@gmail.com> <20250206105435.2159977-8-memxor@gmail.com>
- <20250210095607.GH10324@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250210095607.GH10324@noisy.programming.kicks-ass.net>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 10 Feb 2025 20:55:56 -0800
-X-Gm-Features: AWEUYZm_Ui-VlaR__Qfx0UBZP1wEkQULBhyDCk20ZqOu4LAS3ChHbdZQZd4xhLk
-Message-ID: <CAADnVQKefT6iQVQ66QTCeRCMs_am4cC3pBt1Ym1fxfeeQVDDWA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 07/26] rqspinlock: Add support for timeouts
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Barret Rhoden <brho@google.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Will Deacon <will@kernel.org>, 
-	Waiman Long <llong@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Josh Don <joshdon@google.com>, Dohyun Kim <dohyunkim@google.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kernel Team <kernel-team@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 10, 2025 at 1:56=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Thu, Feb 06, 2025 at 02:54:15AM -0800, Kumar Kartikeya Dwivedi wrote:
-> > @@ -68,6 +71,44 @@
-> >
-> >  #include "mcs_spinlock.h"
-> >
-> > +struct rqspinlock_timeout {
-> > +     u64 timeout_end;
-> > +     u64 duration;
-> > +     u16 spin;
-> > +};
-> > +
-> > +static noinline int check_timeout(struct rqspinlock_timeout *ts)
-> > +{
-> > +     u64 time =3D ktime_get_mono_fast_ns();
->
-> This is only sane if you have a TSC clocksource. If you ever manage to
-> hit the HPET fallback, you're *really* sad.
+On Mon, 10 Feb 2025 20:37:45 +0100 David Hildenbrand <david@redhat.com> wrote:
 
-ktime_get_mono_fast_ns() is the best NMI safe time source we're aware of.
-perf, rcu, even hardlockup detector are using it.
-The clock source can drop to hpet on buggy hw and everything is indeed
-sad in that case, but not like we have a choice.
-Note that the timeout detection is the last resort.
-The logic goes through AA and ABBA detection first.
-So timeout means that the locking dependency is quite complex.
-Periodically checking "are we spinning too long" via
-ktime_get_mono_fast_ns() is what lets us abort the lock.
-Maybe I'm missing the concern.
-Should we use
-__arch_get_hw_counter(VDSO_CLOCKMODE_TSC, NULL) instead ?
+> The single "real" user in the tree of make_device_exclusive_range() always
+> requests making only a single address exclusive. The current implementation
+> is hard to fix for properly supporting anonymous THP / large folios and
+> for avoiding messing with rmap walks in weird ways.
+> 
+> So let's always process a single address/page and return folio + page to
+> minimize page -> folio lookups. This is a preparation for further
+> changes.
+> 
+> Reject any non-anonymous or hugetlb folios early, directly after GUP.
+> 
+> While at it, extend the documentation of make_device_exclusive() to
+> clarify some things.
+
+x86_64 allmodconfig:
+
+drivers/gpu/drm/nouveau/nouveau_svm.c: In function 'nouveau_atomic_range_fault':
+drivers/gpu/drm/nouveau/nouveau_svm.c:612:68: error: 'folio' undeclared (first use in this function)
+  612 |                 page = make_device_exclusive(mm, start, drm->dev, &folio);
+      |                                                                    ^~~~~
+drivers/gpu/drm/nouveau/nouveau_svm.c:612:68: note: each undeclared identifier is reported only once for each function it appears in
+
+
