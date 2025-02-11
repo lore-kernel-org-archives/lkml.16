@@ -1,250 +1,146 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADD81E7C2B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5CA1D7989;
+	Tue, 11 Feb 2025 18:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739299553; cv=none; b=mQadZFZR9yx3IrtbqJ1BO1WyfwALnCbA1JEcKSCRJXiXxHyTRo3v/LwL1M5TKPrLW2I97WKNC1POGIlJLf+un+/WhuUv30YsFkeaUWdu4x7eAfxMAebwsIeirxZ13yl8qUOblOkv+9dWnfx/T0QMfx0Pt/skl0Z8dwWwnaqoxV0=
+	t=1739299576; cv=none; b=iOl3VE5bw8IFjEfu+FbneHSRid78Xwo5CZvpY4V+dtAhjslCuYv8XOjIEjaRc0pxnq0KeRm30WCSzTcTAQ9hK++XzLiw//6+EB5YfvcMmE5TooR6R1W/3iEyH8w7PcbBYrIO9AEUQDY8FIiG2n+JQdSeSff2oDrleBA59IZonC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739299553; c=relaxed/simple;
-	bh=iypHFQvapErVvgNM+puH+9um03GI3lSJujH4j3iqa9M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pJObggDwlhO5CHJWf6ZR/GTzAMRku5/P4zMybqX76yB4x31nn2BlGvRWFKxuRTgfFyjFcW6bh+TNwsPiR44T91513p1Z142BiuYaHkhDM4Vc+oi/AhVSV1gNVPG+gKsAlBIr/bq1rdXI+E39GneduKetFnHvbSWlH0tdHMhKtjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0ICIs+km; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739299576; c=relaxed/simple;
+	bh=/Q8nPQOdh4pnjecQT5SDR+UvXcomMmyjZMV67DY4plQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CrFCWdbPzTvOjP0Z+OiJYVjZXwvvDVefPnApqr3xyQvO3kLCRX+f82JsVmEOLH3DeP4fFqrTxyDfF5QXSIBlhiZH866K1PvwOiYGqcLqRM/OYPExjIYQ2ZbWTomPU1HpU+eJ9HkkGw+vHmZre5FYsEIcrZnEF72owZm3dMjRiZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dl4d6UA9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0ICIs+km"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3d147331fb5so13995ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:45:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739299549; x=1739904349; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iypHFQvapErVvgNM+puH+9um03GI3lSJujH4j3iqa9M=;
-        b=0ICIs+kmnIecDV+dG6CY3G+Vpmo58tDkS0ufk7XvEIWLuvv7JLozzegsJ99adZ/rAi
-         20wbMI+QdXp5ieIftYhFZJz42H/DLJJC9nEmLSvbXlncw5RzwM39N3JLyijoU1a+llD6
-         0YH+Zqru9DQXWW0Q/LRiijvOiIneaiE7KLTfaAq4cWSZjA8ZIdo1B5rXRFWSZh7beGUf
-         FsbTMROjhGiV3iZ7GI800o8hzNtTkOKVkl8ff/vHUHRUYfqLM5qAvuSoYBDldu4YICLO
-         l3xMu556wHdGRlOh+1J0rB8e3XzRxMVq5GzRehmu9qJD77OsqtDxRpedKlz4SdwVWSm5
-         I4Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739299549; x=1739904349;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iypHFQvapErVvgNM+puH+9um03GI3lSJujH4j3iqa9M=;
-        b=Wr+lrnUjeBz1fgjBN4PBq2VoupGEy/1LUiPnVa6o3RsR3/qP5K34Du3CL3Yn0wVlCK
-         AiRrVzvbmRz9eFcGMYB9NzeSbb534gPf93xRkWnlWrxjMfDekA6yiksI2v0jRXUPqpB2
-         1Y7omuzXpg6ryZDSnZjGbmeQc/1RkGG+G/uN+UOCnSETssCLIDL3SBC44hYseSzqrrSA
-         8wnFtMEWkhJzM47bRlEuZQ4XLhmdZmQJvrQBnjBlGc+wy9o+4ccegLhNhcymP0z7BPtD
-         puWS93GJhsuZRHYIJajrYamI/8USj4EIkNRbgroBJuAoMdsiDwg/Fvb7f8nwslSfTndu
-         OqWg==
-X-Forwarded-Encrypted: i=1; AJvYcCWxrvgGaXQbfr59nnVbzm0wspK3nDjRZ6eOKTlT3kBgcokhJ6wR3ZFV5e4NWplzFGztiMOTSSxeTKuV9YY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpoI3TTnvsbeEPVS5PLs83eobopHMoDWvJsWtp7k27y6w7cIgz
-	3LXhj59wgvJqOcVUFvVsGAYFC60F9/x+Vof9M7KXq88Sq12awRFNEpQyrEYjhLzs8LBKPgul6wA
-	QT7JWzhGl11IzSpdF2pICVYh25D/THVYCFudG
-X-Gm-Gg: ASbGncun8WiokPf5mFUB8R3nskEXB8dk+nDuNvhGfFpuSVqZDX5uYdxJRTvqgGH7NRw
-	hHvqhbpWQY+IO2lyHi+pSyEZatN1ea6mGZYSa7hyuh7XL9LthO+EFeveGX2gTVpf90X9/ld8fDu
-	AcPI35WVhFucK7Mb4o074Xcyll
-X-Google-Smtp-Source: AGHT+IHqX3vr00VskyAmXO8pPWLaM+ymT5Q0Notk3eM864X6DrnAlyqB2GWGar0qHREmdunm54q6ghSQTM4GDELbVQ4=
-X-Received: by 2002:a05:6e02:17cb:b0:3a7:e3b3:2e3 with SMTP id
- e9e14a558f8ab-3d171e154dcmr3944225ab.17.1739299548993; Tue, 11 Feb 2025
- 10:45:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dl4d6UA9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 241D9C4CEDD;
+	Tue, 11 Feb 2025 18:46:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739299575;
+	bh=/Q8nPQOdh4pnjecQT5SDR+UvXcomMmyjZMV67DY4plQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dl4d6UA9VXiaKUc4ASuUZqJqgZwNLN+RMCP6WhjXj+eOBUTMWZgBttNFJR2VR2yg6
+	 cpgHMhkCX5Laf6CvWYxizFdFJN8eCWUA8sYSI8yjWVanc4clAksIr+4rTaNir4KQUD
+	 vC5zZI7QtkMfETXdO4glwj4U2mQTR4Oz0CXViYn1RWcCB1dqQmTiGTceFp3mc2SaZK
+	 yWIvdX3r26O8yr9UZ2nfI5QJVxAsuF7ZuYdofvecnlirtDVUzwNEvIbmqc8vUDsSqB
+	 DASjHxRBfS2enAfDhlv8w3jTR8uFOZgPtk7QJZJWFqpGmWGAvCZ2/L7s/R4UgAby4h
+	 Am1FToArZEkXg==
+Date: Tue, 11 Feb 2025 18:46:10 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Cc: Julien Massot <julien.massot@collabora.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH 3/5] dt-bindings: i2c: maxim,max96717: add new properties
+Message-ID: <20250211-ecard-dallying-94ced9b29fd9@spud>
+References: <20250207112958.2571600-1-laurentiu.palcu@oss.nxp.com>
+ <20250207112958.2571600-4-laurentiu.palcu@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210165108.95894-1-irogers@google.com> <20250210165108.95894-6-irogers@google.com>
- <d47c35dd-9c52-48e7-a00d-135572f11fbb@app.fastmail.com> <CAP-5=fUi4RYebxCGYZVHVEt0BpWVmUA6+-vDQfbai25_KJRs7A@mail.gmail.com>
- <0195f9a0-5198-4ee0-b4ff-ea7126dc8299@app.fastmail.com>
-In-Reply-To: <0195f9a0-5198-4ee0-b4ff-ea7126dc8299@app.fastmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 11 Feb 2025 10:45:37 -0800
-X-Gm-Features: AWEUYZmLh2xLEkqSk7Km_nwXZM8Hrzxp2BxzKEHyN48kgEtbMNsw6rc4K0YX_9w
-Message-ID: <CAP-5=fULk0L4H23E_j2qktmLRJD8_iuLf=_UWK+pghSO+_eMGg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] perf trace beauty: Add syscalltbl.sh generating
- all system call tables
-To: Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Howard Chu <howardchu95@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, guoren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2YN4dnJkh2x99pN8"
+Content-Disposition: inline
+In-Reply-To: <20250207112958.2571600-4-laurentiu.palcu@oss.nxp.com>
+
+
+--2YN4dnJkh2x99pN8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 11, 2025 at 9:53=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote=
-:
->
-> On Tue, Feb 11, 2025, at 18:24, Ian Rogers wrote:
-> > On Tue, Feb 11, 2025 at 12:09=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> =
-wrote:
-> >> On Mon, Feb 10, 2025, at 17:51, Ian Rogers wrote:
-> >> > "$tools_dir/perf/arch/arm64/entry/syscalls/syscall_64.tbl" "$outfile=
-"
-> >> > common,64,renameat,rlimit,memfd_secret EM_AARCH64
-> >> > +cat >> "$outfile" <<EOF
-> >> > +#endif // defined(ALL_SYSCALLTBL) || defined(__arm__) ||
-> >> > defined(__aarch64__)
-> >>
-> >> Hardcoding the set of ABIs in the middle of the script seems
-> >> too fragile to me, I'm worried that these get out of sync quickly.
-> >
-> > I agree, again this is carrying forward a behavior and at least after
-> > these changes the location is just one place. Do you have any
-> > suggestions on how to do better?
->
-> Not sure, but I have some patches that I was planning to send
-> that puts these into arch/*/kernel/Makefile.syscalls for all
-> architectures in a consistent way. Ideally we'd use the same
-> Makefile contents for tools/perf in order to trivially sync
-> them, but I'm also happy to hear other suggestions.
->
-> Your patches are currently ahead of mine, so I don't want to
-> hold you up.
->
-> > Fwiw, I wonder a related problem/question that has come up primarily
-> > with Arnaldo and Howard is in having a way to determine system call
-> > argument types so that perf trace can pretty print them. For example,
-> > if via BTF it is found an argument is a "const char*" then it is
-> > assumed to be a string, but a "char *" is not as it may just be an out
-> > argument. There's a source for more information in the syzkaller
-> > project:
-> > https://github.com/google/syzkaller/blob/master/sys/linux/sys.txt
-> > Perhaps there's a way to generate this information from the Linux
-> > build and feed it into perf's build. It is out-of-scope for what I'm
-> > trying to do here, but I thought it worth a mention given my general
-> > ignorance on wider things.
->
-> Yes, this is also something I've been trying to work on. In particular
-> the calling conventions for 64-bit register arguments on 32-bit
-> targets need some help. My plan for this is to have a consistent
-> mapping of internal (sys_foo()) function names to argument lists,
-> instead of having some calls that are slightly different depending
-> on the architecture or ABI.
->
-> This should be in a machine-readable format so it can be parsed
-> not only by perf but also any other project that needs a list
-> (libc, gdb, qemu, strace, rust, ...)
+On Fri, Feb 07, 2025 at 01:29:55PM +0200, Laurentiu Palcu wrote:
+> Add 'maxim,override-mode' property to allow the user to toggle the pin
+> configured chip operation mode and 'maxim,fsync-config' to configure the
+> chip for relaying a frame synchronization signal, received from
+> deserializer, to the attached sensor. The latter is needed for
+> synchronizing the images in multi-sensor setups.
+>=20
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+> ---
+>  .../bindings/media/i2c/maxim,max96717.yaml    | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.y=
+aml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+> index d1e8ba6e368ec..fae578d55fd4d 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+> @@ -42,10 +42,35 @@ properties:
+>        number must be in range of [0, 10].
+> =20
+>    gpio-controller: true
+> +  gpio-reserved-ranges: true
+> =20
+>    '#clock-cells':
+>      const: 0
+> =20
+> +  maxim,override-mode:
+> +    description: Toggle the operation mode from the pin configured one.
+> +    type: boolean
 
-Awesome, thanks for working on this!
+type: flag
 
-> >> > +#if defined(ALL_SYSCALLTBL) || defined(__mips__)
-> >> > +EOF
-> >> > +build_tables
-> >> > "$tools_dir/perf/arch/mips/entry/syscalls/syscall_n64.tbl" "$outfile=
-"
-> >> > common,64,n64 EM_MIPS
-> >> > +cat >> "$outfile" <<EOF
-> >> > +#endif // defined(ALL_SYSCALLTBL) || defined(__mips__)
-> >>
-> >> What about n32/o32? The syscall tables are completely different here.
-> >
-> > So perf hasn't historically supported them and no one is asking for
-> > support. Generating more tables isn't the problem, but we need to have
-> > some way of determining which table to use for n32/o32. I see
-> > EF_MIPS_ABI_O32 and EF_MIPS_ABI_O64, so we could add support by
-> > extending the lookup of the table to be both of e_machine and e_flags.
-> > I'm less clear on choosing n32. That said, back in the 90s I was
-> > working to port MIPS code to Itanium via binary translation. Given now
-> > Itanium is obsolete, I'm not sure it is worth adding complexity for
-> > the sake of MIPS. I'm happy to do what others feel is best here, but
-> > my default position is just to carry what the existing behavior is
-> > forward.
->
-> I think the way it actually works on mips is that all syscalls are
-> allowed in any task and the actual number identifies both the
-> ABI and the syscall. In some variant, the same is true on arm
-> (oabi/eabi) and x86-64 (64/x32), but oabi and x32 are both too
-> obsolete to put much work into them.
->
-> There is still some interest in mips, maybe you can poke the
-> maintainers and see if someone is willing to help out since you
-> have done the bulk of the work already.
 
-Thanks, adding linux-mips@vger.kernel.org. Here is the original
-feedback for them for context:
-https://lore.kernel.org/lkml/07c5c3ad-5a6d-4eda-95f2-ed16e7504d4c@app.fastm=
-ail.com/
+> +  maxim,fsync-config:
+> +    description:
+> +      Frame synchronization (FSYNC) is used to align images sent from mu=
+ltiple
+> +      sources in surround-view applications and is required for concaten=
+ation.
+> +      In FSYNC mode, the deserializer sends a sync signal to each serial=
+izer;
+> +      the serializers then send the signal to the connected sensor.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    items:
+> +      - description: FSYNC RX ID, needs to match the TX ID configured in=
+ the deserializer.
+> +        minimum: 0
+> +        maximum: 31
+> +        default: 0
+> +      - description:
+> +          Output GPIO pin used for sending the FSYNC to the sensor. The =
+pin, however, needs
+> +          to be excluded from the gpiochip using the gpio-reserved-range=
+s property since
+> +          it will be used exclusively for FSYNC generation.
+> +        minimum: 0
+> +        maximum: 10
+> +        default: 0
+> +
+>    reg:
+>      maxItems: 1
+> =20
+> @@ -113,6 +138,9 @@ examples:
+>              #gpio-cells =3D <2>;
+>              #clock-cells =3D <0>;
+> =20
+> +            gpio-reserved-ranges =3D <0 1>;
+> +            maxim,fsync-config =3D <0 0>;
+> +
+>              ports {
+>                  #address-cells =3D <1>;
+>                  #size-cells =3D <0>;
+> --=20
+> 2.34.1
+>=20
 
-> >> > +EOF
-> >> > +build_tables "$tools_dir/perf/arch/s390/entry/syscalls/syscall.tbl"
-> >> > "$outfile" common,64,renameat,rlimit,memfd_secret EM_S390
-> >> > +cat >> "$outfile" <<EOF
-> >> > +#endif // defined(ALL_SYSCALLTBL) || defined(__s390x__)
-> >>
-> >> This skips the 32-bit table, though I think that one is already
-> >> planned to be discontinued in the future.
-> >
-> > Thankfully we have awesome s390 devs on the mailing list, hopefully
-> > they'll shout out if I'm doing things wrong.
->
-> I also remembered that I had a patch to bring the s390 syscall.tbl
-> into the same format as the others, since the behavior is currently
-> a bit different for compat calls. I think there is also a chance
-> that they want to discontinue 32-bit mode entirely, given that
-> the last 32-bit machine was discontinued over 20 years ago, and
-> support for native 32-bit kernels got removed 10 years ago
-> after Debian 8 moved to 64 bit.
->
-> If they are confident that there are no more remaining users that
-> rely on 32-bit binaries, we could both save some work.
->
-> >> > +#if defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_6=
-4__)
-> >> > +EOF
-> >> > +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_32.tb=
-l"
-> >> > "$outfile" common,32,i386 EM_386
-> >> > +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_64.tb=
-l"
-> >> > "$outfile" common,64 EM_X86_64
-> >> > +cat >> "$outfile" <<EOF
-> >> > +#endif // defined(ALL_SYSCALLTBL) || defined(__i386__) ||
-> >> > defined(__x86_64__)
-> >>
-> >> This misses the x32 table.
-> >
-> > Again I'm carrying forward a behavior. Would it be worth adding x32?
->
-> I would probably document it in the file as an intentional
-> omission, same as for arm oabi
+--2YN4dnJkh2x99pN8
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Ack.
+-----BEGIN PGP SIGNATURE-----
 
-> > That said there is likely other context
-> > that I'm unaware of as I'm surprised x32 still exists.
->
-> There are a handful of people still testing it, and some still
-> using it, but I agree it completely failed to get enough
-> traction to be worth maintaining.
->
-> I view x32 (and the corresponding arm64 ilp32 mode that never
-> made it in) mostly as an exercise in benchmark(et)ing, since
-> it showed noticeably higher results in some versions of specint
-> and some compiler workloads, compared to both normal 32-bit and
-> 64-bit modes. The time that we already wasted on maintaining
-> it must have long surpassed any such benefits though, so I
-> certainly don't want to waste more time on it.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6ua8gAKCRB4tDGHoIJi
+0rWUAQC7DyKCXVN0UfP18uwC+5p5DYlNrG9wUl0Z9TRcFSMCpgD+N35w7t2QP+rl
+NJPsEV3Cc+Uy4iJB4fuKjWiNCvDFFQI=
+=NM+F
+-----END PGP SIGNATURE-----
 
-:-) I ate part of a cake intended as a goodwill gesture toward getting
-x32 into Android.
-
-Thanks,
-Ian
+--2YN4dnJkh2x99pN8--
