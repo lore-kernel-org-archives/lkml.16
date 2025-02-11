@@ -1,133 +1,335 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE4C1CD15;
-	Tue, 11 Feb 2025 00:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AC717BD9
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233226; cv=none; b=cxesTJgo18h35JOQ3fpZbno9f31dywRi9pwziLNtM6ZMWStMQfLvzN+oNy4bEqpcn9ckBPuNZ1qi8Vygr1MyFgHemETNGQEoCYapn0EhqVKGxwsz1d0S9iFh2m+8vPv19imSVTfv+tKh0d64fgziOfDzKS9Fjs2+WfCPxN8aFc8=
+	t=1739233248; cv=none; b=FHGadGAvpYP7+OSaEFwddPDY+bEP5GaxMMaP6VKgaZ048SKLY8e1quL3MBHiGoYZGsDjzYT+7onbrwoVOGhw7HnNNnfNYm2WpHBKxy6Ty8IVDAFGcIWvCpWgiqyFkITpqOVgJkuytFUlLgMp8MM0UeR48eT8NzJeZ/a8CEm126M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739233226; c=relaxed/simple;
-	bh=IqnrH6YQqD8O4JxcdVlrdq7qgShIkTw3deISxez7Pog=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VYlhMHjlTURo99qE9aiT0ikI61rw1qAaQVYBuHGHGZO5nmqQrsXpeaNTZCQYl8fbTwdNmf2P4ymigpcq52e0BLYHPBB60H0C7pRESHoCbiqMFku8DDkz3PgvDUcsJnPbscoeAIgcGtwcu31LGVX8b3mVmZZplmew8fpP2Fsxc+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S8kOLr1V; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739233248; c=relaxed/simple;
+	bh=H5s8ed743Lq1jnZYiz0/r1hLxGNbg0PpJq8avqGb9d4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UuasUpJgWiXaPh4zFzQF/JBT8Y5/hEW3FAb6zcgk6rkce9f4TeG7v3JokCSkVFJ0C0/9cJDLteaJPleCduAVc91RqygaR5CvanEoGYhHJ2get9hyqP7xOtOwY7BVTryL8Qc0DLiFA+TmPxOeyOstGIpsEGgClC6fIiigXZ9jxFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=x3Mz5dfc; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8kOLr1V"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21c2f1b610dso121392115ad.0;
-        Mon, 10 Feb 2025 16:20:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="x3Mz5dfc"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e545c1e8a15so4428104276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:20:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739233224; x=1739838024; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1LObash4SiJzQzSayaQdpqyI0vrFPh91JJNVHX4SZoI=;
-        b=S8kOLr1VqCHd/vstNL3FMQs8bt0Q/zsFDuY3Zwkpn4vb0YXHVnAp4/hXUbmaWeLe/f
-         CIX6VgL/xyd134APR/NVsdIRxCL90wD+xj29wxa+8z5YRCdWF/gdyZTvEKUYP9oLuMVQ
-         cfTMpOE0ZHEaeqAM8BEHrmWCa711yQJnxAhHwzj+aBHb3Fto7xFk0seYj0IQC+pehohN
-         k1E1qVCyn/7wWazjOA+tnRfTa+6F3eewSR8Yo/grrLrG3AVDqiQHSBylIhGMxNekGFQL
-         je1N73TJ995hy3fwgbAkfRJA+ETT75obsLIHHMI+a3KInlnS34RmHVdv+pV5wRLexgsv
-         gsFQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739233246; x=1739838046; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=f6fO6ENk+/6RJwbHFhohh2LYSGPeGtLq21Tc4JEEd0s=;
+        b=x3Mz5dfcnfe2STx8LGmFTQz88g/w/zNB+BYfRckph8O26CbSSVGlXgk8+ZbkewPIXw
+         uNK6Ybi/UxHHRqrcvZFGjJCBHxeD10GxaSGRs/EaSkJDkJZw+4oLmIH0hbL9e9wDU5yZ
+         nTSfR+8uP1WTgaqg/DFlRZ1ioRxeLEyJEWjDvkcmAAU0aq6UwXmp9w6BExBc3NJ9qDUN
+         ue4xsX3BeEgV6a1/vLeZIW6DYoCF1qWu6u02UN6j8ai10NTlLp+RJM025UFZh711Fa5U
+         yV1VnrJCaE71ljhFZZMp8w59fh3PUoALLLcYI//rYTEFTGctbP3udgP1Z/eBSeTOrGfi
+         pwSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739233224; x=1739838024;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1LObash4SiJzQzSayaQdpqyI0vrFPh91JJNVHX4SZoI=;
-        b=e90pCBjHtPZEKWZAQNNPqONn3toZHm9Xg1e6SoPRLHcObXES0nMz5pO/q7Wsm7P816
-         ieXmKlEEeCE6dYeBP2KhOmSOjQQqjvMYsdK0JxMHWJdKYUgFwC7FyURowa+D32QETiCa
-         +5X/RtaMU3f2RRkuZjPZATNQGoo6wp4b56878VPonAdoZN5cpRGv4sv4fc5HfSTqQ7BC
-         vEgYclotQkNNTxWEEa6kqAT8qXRbWgPzPeNL4hj1qUW1dkD2K+aauinG4KHUrleJPdax
-         67daqoQqcDcfw+vaFk0RrzzbJKCbQ0NR+IVkweQLShdpM5sfejIzqIPwkON/nfxHsTLY
-         BB2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVe2RCsZtjGBnjPmNdbCL/MNq8qkVelxI6idyC1FfiHDWyeRv1S09aNEF3j/V+xC2T0a2A=@vger.kernel.org, AJvYcCWyXSqbUQTo72wtF3lqh6mL6TLmtsnKRu+95PyK75kdhZ07q8Ze87GGTz9vyUHD/vCTWDm+FWzao0v/UIfy@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKSTBbReciRR0J42EKPefl2fNy6H5/Td6jDd7WuHpTNMf+zCzg
-	8Gzhhu/rwa21QPM5fvvEUyfA/5ShqKPQh3qalaLai+z6tNbNvFBG
-X-Gm-Gg: ASbGncu/UICNNGs6T74P09YJf2MIkIGyAom8Zmkn+v6V7bGqUgmJclFzgII7HTt9Ddk
-	4v2QCPNzJIKCcnngxL4AGtsZDKtnLNEZXAZPndp/2llnEN7xaIyUae/utYP2SWtxxvj9sHOnMnb
-	lMc+UZIqvpVrHh1YqGwrDQsHecho/CxW3XuJkzmyHEGn3GryhUjGcHqgaDS2fRoLZ+cxlgnB5Ou
-	nBqD7tYHQAeq21TYzfeWTTJy8j/aG79w7Q53kgOMbMSzjRCTyNQzwdMZ9esuoihY2au0f6CLOP7
-	XNUc5zGDbjYa
-X-Google-Smtp-Source: AGHT+IGfT4HyRk97hCaleORdR2AUGluiKet1yAikZSTi1M9AHOfW+rliwbIgZiso8b7B35AaCA7dbQ==
-X-Received: by 2002:a17:903:2451:b0:21f:6c81:f77 with SMTP id d9443c01a7336-21f6c81116cmr175450705ad.23.1739233223933;
-        Mon, 10 Feb 2025 16:20:23 -0800 (PST)
-Received: from [192.168.0.235] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687c555sm85174035ad.182.2025.02.10.16.20.22
+        d=1e100.net; s=20230601; t=1739233246; x=1739838046;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f6fO6ENk+/6RJwbHFhohh2LYSGPeGtLq21Tc4JEEd0s=;
+        b=glk4OhM4UNJTq3BvstiHnND5o50bXcdsuOc2nlFRQ8cvrTwypCh2WPTpBBM5lAsqeW
+         Q4/UYYB6Z4r5duBYbnCZztDWSbjA5rVJCHlIXGLAeTcTD3tQm5GKfbq52M3yMYXcwuJq
+         SSaByedPmKTxR+OzNrP+FZIJ/9VTK1ZOtQ1IoWG4bNv++9YC8mBiwo3oN4Gm/Ksq0e63
+         ljWPXSSIwpLVL6BQ0zZcBuqhQjICZ7zD1nd4SGT8R7CxU2tq7ehfuS/3uetyWilDx07Z
+         BtW2N+GMrDWlUMFr1WX45OLLl+JTPMgfisznxunMQ8EVngpUcmoS3swA3obIx+NJsF0a
+         zy0g==
+X-Forwarded-Encrypted: i=1; AJvYcCXidoknba9lbdpY1UthFiDTVyZwzAOohpgQVUPCg6c8NPnIdEslrqghTd5FCz2YpGkG/9UrN0R/GRbHKUw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdzUYHYBknKGAtTa8pYus9K/FnIEto2t5ooerp3F1zGh3hF4LL
+	HeBeZ3tuevUjFuqVXcIHW/0wEiHluiIv3dPo7G5uE4p3UJfLcoJgjEVMsdVPpM8=
+X-Gm-Gg: ASbGncvVg4DIyFQAwfyp8e27ZMUK9QGzP6cbWjphx0InE4K7CcqfdZ5oVKyhUbcqPZ1
+	MxAx6WHdWX6jg+hG8hWH3JXYUPheyJ4+wHbqw1GRD4jQJbDREQ48q6Du3fAfg4Wum3kb5F9sKeC
+	5LuH4VAFHMgcujv+9j7Sz40PSG36jXDVAsliP+78HC9VGzWnx5GH8K3AJ3XiFj1edId3h6v0JMM
+	p7NzSoyt9BFratELyAqAAe9Wjk5ZPFUUwoxfBFJKkP++08wnBXXSBWEZw8ehNBoVPHYz9ebebLm
+	9tY=
+X-Google-Smtp-Source: AGHT+IEgCF8HyG8asrx19RO4/BfI2121j03BDe3RR1UsBBXC3q3qfBJKowis2DMzSxDhdyfGfdvrSA==
+X-Received: by 2002:a05:690c:4b8f:b0:6f9:4f93:c805 with SMTP id 00721157ae682-6f9b287bafamr146119417b3.21.1739233245476;
+        Mon, 10 Feb 2025 16:20:45 -0800 (PST)
+Received: from ghost ([50.146.0.9])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99ff6a903sm18915387b3.84.2025.02.10.16.20.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 16:20:23 -0800 (PST)
-Message-ID: <6a87b140203461f9d56874b9e4a778febdcd47a6.camel@gmail.com>
-Subject: Re: [PATCH bpf-next v2 8/9] selftests/bpf: Add selftests for
- load-acquire and store-release instructions
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Peilin Ye <yepeilin@google.com>, bpf@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Cc: bpf@ietf.org, Xu Kuohai <xukuohai@huaweicloud.com>, David Vernet	
- <void@manifault.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann	
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
- Lau	 <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song	
- <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
- Singh	 <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo	
- <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet	
- <corbet@lwn.net>, "Paul E. McKenney" <paulmck@kernel.org>, Puranjay Mohan	
- <puranjay@kernel.org>, Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens
-	 <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Catalin Marinas	
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Quentin Monnet	
- <qmo@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan
- <shuah@kernel.org>,  Ihor Solodrai <ihor.solodrai@linux.dev>, Yingchi Long
- <longyingchi24s@ict.ac.cn>, Josh Don <joshdon@google.com>,  Barret Rhoden
- <brho@google.com>, Neel Natu <neelnatu@google.com>, Benjamin Segall
- <bsegall@google.com>, 	linux-kernel@vger.kernel.org
-Date: Mon, 10 Feb 2025 16:20:18 -0800
-In-Reply-To: <Z6a_UILNqVGBqnvY@google.com>
-References: <cover.1738888641.git.yepeilin@google.com>
-	 <3ac854ac5cc62e78fadd2a7f1af9087ec3fc7a9c.1738888641.git.yepeilin@google.com>
-	 <Z6ajasn2k559SGNN@google.com> <Z6a_UILNqVGBqnvY@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+        Mon, 10 Feb 2025 16:20:44 -0800 (PST)
+Date: Mon, 10 Feb 2025 16:20:42 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Guo Ren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>,
+	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 4/7] perf thread: Add support for reading the
+ e_machine type for a thread
+Message-ID: <Z6qX2gUQpdSkG253@ghost>
+References: <20250210165108.95894-1-irogers@google.com>
+ <20250210165108.95894-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210165108.95894-5-irogers@google.com>
 
-On Sat, 2025-02-08 at 02:20 +0000, Peilin Ye wrote:
+On Mon, Feb 10, 2025 at 08:51:05AM -0800, Ian Rogers wrote:
+> Use the executable from /proc/pid/exe and read the e_machine from the
+> ELF header. On failure use EM_HOST. Change builtin-trace syscall
+> functions to pass e_machine from the thread rather than EM_HOST, so
+> that in later patches when syscalltbl can use the e_machine the system
+> calls are specific to the architecture.
 
-[...]
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+Tested-by: Charlie Jenkins <charlie@rivosinc.com>
 
-> Sorry, that wasn't very accurate - we need to make sure there are no
-> "holes" in the .addr_space.1 ELF section, e.g.:
->=20
->   /* 8-byte-aligned */
->   __u8 __arena_global load_acquire8_value =3D 0x12;
->   /* 1-byte hole, causing clang-17 to crash */
->   __u16 __arena_global load_acquire16_value =3D 0x1234;
->=20
-> LLVM commit f27c4903c43b ("MC: Add .data. and .rodata. prefixes to
-> MCContext section classification") fixed this issue.
-
-This is a bit strange, from commit log it looks like LLVM-17 should
-include this commit. But in any case, targeting LLVM >=3D 18 seems
-reasonable to me, the main goal is to have these tests run by CI for
-some compiler version.
-
-> - - -
-> For now, I think I should:
->=20
->   1. change existing #if guards to
->      "#if defined(__TARGET_ARCH_arm64) && __clang_major__ >=3D 18"
->=20
->   2. additionally, guard "__arena_global" variable definitions behind
->      "#if __clang_major >=3D 18" so that clang-17 doesn't try to compile
->      that part (then crash)
->=20
-> Will fix in v3.
->=20
-> Thanks,
-> Peilin Ye
->=20
-
-
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> ---
+>  tools/perf/builtin-trace.c | 41 ++++++++++++++++---------------
+>  tools/perf/util/thread.c   | 50 ++++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/thread.h   | 14 ++++++++++-
+>  3 files changed, 85 insertions(+), 20 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 4b77c2ab3dba..1ae609555018 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -2678,16 +2678,17 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
+>  	int printed = 0;
+>  	struct thread *thread;
+>  	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
+> -	int augmented_args_size = 0;
+> +	int augmented_args_size = 0, e_machine;
+>  	void *augmented_args = NULL;
+>  	/* TODO: get e_machine from thread. */
+> -	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
+> +	struct syscall *sc;
+>  	struct thread_trace *ttrace;
+>  
+> -	if (sc == NULL)
+> -		return -1;
+> -
+>  	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
+> +	e_machine = thread__e_machine(thread, trace->host);
+> +	sc = trace__syscall_info(trace, evsel, e_machine, id);
+> +	if (sc == NULL)
+> +		goto out_put;
+>  	ttrace = thread__trace(thread, trace->output);
+>  	if (ttrace == NULL)
+>  		goto out_put;
+> @@ -2756,16 +2757,18 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
+>  	struct thread *thread;
+>  	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
+>  	/* TODO: get e_machine from thread. */
+> -	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
+> +	struct syscall *sc;
+>  	char msg[1024];
+>  	void *args, *augmented_args = NULL;
+> -	int augmented_args_size;
+> +	int augmented_args_size, e_machine;
+>  	size_t printed = 0;
+>  
+> -	if (sc == NULL)
+> -		return -1;
+>  
+>  	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
+> +	e_machine = thread__e_machine(thread, trace->host);
+> +	sc = trace__syscall_info(trace, evsel, e_machine, id);
+> +	if (sc == NULL)
+> +		return -1;
+>  	ttrace = thread__trace(thread, trace->output);
+>  	/*
+>  	 * We need to get ttrace just to make sure it is there when syscall__scnprintf_args()
+> @@ -2830,15 +2833,15 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+>  	bool duration_calculated = false;
+>  	struct thread *thread;
+>  	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1, callchain_ret = 0, printed = 0;
+> -	int alignment = trace->args_alignment;
+> -	/* TODO: get e_machine from thread. */
+> -	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
+> +	int alignment = trace->args_alignment, e_machine;
+> +	struct syscall *sc;
+>  	struct thread_trace *ttrace;
+>  
+> -	if (sc == NULL)
+> -		return -1;
+> -
+>  	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
+> +	e_machine = thread__e_machine(thread, trace->host);
+> +	sc = trace__syscall_info(trace, evsel, e_machine, id);
+> +	if (sc == NULL)
+> +		goto out_put;
+>  	ttrace = thread__trace(thread, trace->output);
+>  	if (ttrace == NULL)
+>  		goto out_put;
+> @@ -3185,8 +3188,8 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+>  
+>  	if (evsel == trace->syscalls.events.bpf_output) {
+>  		int id = perf_evsel__sc_tp_uint(evsel, id, sample);
+> -		/* TODO: get e_machine from thread. */
+> -		struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
+> +		int e_machine = thread ? thread__e_machine(thread, trace->host) : EM_HOST;
+> +		struct syscall *sc = trace__syscall_info(trace, evsel, e_machine, id);
+>  
+>  		if (sc) {
+>  			fprintf(trace->output, "%s(", sc->name);
+> @@ -4764,6 +4767,7 @@ static size_t trace__fprintf_thread(FILE *fp, struct thread *thread, struct trac
+>  {
+>  	size_t printed = 0;
+>  	struct thread_trace *ttrace = thread__priv(thread);
+> +	int e_machine = thread__e_machine(thread, trace->host);
+>  	double ratio;
+>  
+>  	if (ttrace == NULL)
+> @@ -4783,8 +4787,7 @@ static size_t trace__fprintf_thread(FILE *fp, struct thread *thread, struct trac
+>  	else if (fputc('\n', fp) != EOF)
+>  		++printed;
+>  
+> -	/* TODO: get e_machine from thread. */
+> -	printed += thread__dump_stats(ttrace, trace, EM_HOST, fp);
+> +	printed += thread__dump_stats(ttrace, trace, e_machine, fp);
+>  
+>  	return printed;
+>  }
+> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+> index 0ffdd52d86d7..a07446a280ed 100644
+> --- a/tools/perf/util/thread.c
+> +++ b/tools/perf/util/thread.c
+> @@ -1,5 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> +#include <elf.h>
+>  #include <errno.h>
+> +#include <fcntl.h>
+>  #include <stdlib.h>
+>  #include <stdio.h>
+>  #include <string.h>
+> @@ -16,6 +18,7 @@
+>  #include "symbol.h"
+>  #include "unwind.h"
+>  #include "callchain.h"
+> +#include "dwarf-regs.h"
+>  
+>  #include <api/fs/fs.h>
+>  
+> @@ -51,6 +54,7 @@ struct thread *thread__new(pid_t pid, pid_t tid)
+>  		thread__set_ppid(thread, -1);
+>  		thread__set_cpu(thread, -1);
+>  		thread__set_guest_cpu(thread, -1);
+> +		thread__set_e_machine(thread, EM_NONE);
+>  		thread__set_lbr_stitch_enable(thread, false);
+>  		INIT_LIST_HEAD(thread__namespaces_list(thread));
+>  		INIT_LIST_HEAD(thread__comm_list(thread));
+> @@ -423,6 +427,52 @@ void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
+>  	}
+>  }
+>  
+> +static uint16_t read_proc_e_machine_for_pid(pid_t pid)
+> +{
+> +	char path[6 /* "/proc/" */ + 11 /* max length of pid */ + 5 /* "/exe\0" */];
+> +	int fd;
+> +	uint16_t e_machine = EM_NONE;
+> +
+> +	snprintf(path, sizeof(path), "/proc/%d/exe", pid);
+> +	fd = open(path, O_RDONLY);
+> +	if (fd >= 0) {
+> +		_Static_assert(offsetof(Elf32_Ehdr, e_machine) == 18, "Unexpected offset");
+> +		_Static_assert(offsetof(Elf64_Ehdr, e_machine) == 18, "Unexpected offset");
+> +		if (pread(fd, &e_machine, sizeof(e_machine), 18) != sizeof(e_machine))
+> +			e_machine = EM_NONE;
+> +		close(fd);
+> +	}
+> +	return e_machine;
+> +}
+> +
+> +uint16_t thread__e_machine(struct thread *thread, struct machine *machine)
+> +{
+> +	pid_t tid, pid;
+> +	uint16_t e_machine = RC_CHK_ACCESS(thread)->e_machine;
+> +
+> +	if (e_machine != EM_NONE)
+> +		return e_machine;
+> +
+> +	tid = thread__tid(thread);
+> +	pid = thread__pid(thread);
+> +	if (pid != tid) {
+> +		struct thread *parent = machine__findnew_thread(machine, pid, pid);
+> +
+> +		if (parent) {
+> +			e_machine = thread__e_machine(parent, machine);
+> +			thread__set_e_machine(thread, e_machine);
+> +			return e_machine;
+> +		}
+> +		/* Something went wrong, fallback. */
+> +	}
+> +	e_machine = read_proc_e_machine_for_pid(pid);
+> +	if (e_machine != EM_NONE)
+> +		thread__set_e_machine(thread, e_machine);
+> +	else
+> +		e_machine = EM_HOST;
+> +	return e_machine;
+> +}
+> +
+>  struct thread *thread__main_thread(struct machine *machine, struct thread *thread)
+>  {
+>  	if (thread__pid(thread) == thread__tid(thread))
+> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+> index 6cbf6eb2812e..cd574a896418 100644
+> --- a/tools/perf/util/thread.h
+> +++ b/tools/perf/util/thread.h
+> @@ -60,7 +60,11 @@ DECLARE_RC_STRUCT(thread) {
+>  	struct srccode_state	srccode_state;
+>  	bool			filter;
+>  	int			filter_entry_depth;
+> -
+> +	/**
+> +	 * @e_machine: The ELF EM_* associated with the thread. EM_NONE if not
+> +	 * computed.
+> +	 */
+> +	uint16_t		e_machine;
+>  	/* LBR call stack stitch */
+>  	bool			lbr_stitch_enable;
+>  	struct lbr_stitch	*lbr_stitch;
+> @@ -302,6 +306,14 @@ static inline void thread__set_filter_entry_depth(struct thread *thread, int dep
+>  	RC_CHK_ACCESS(thread)->filter_entry_depth = depth;
+>  }
+>  
+> +uint16_t thread__e_machine(struct thread *thread, struct machine *machine);
+> +
+> +static inline void thread__set_e_machine(struct thread *thread, uint16_t e_machine)
+> +{
+> +	RC_CHK_ACCESS(thread)->e_machine = e_machine;
+> +}
+> +
+> +
+>  static inline bool thread__lbr_stitch_enable(const struct thread *thread)
+>  {
+>  	return RC_CHK_ACCESS(thread)->lbr_stitch_enable;
+> -- 
+> 2.48.1.502.g6dc24dfdaf-goog
+> 
