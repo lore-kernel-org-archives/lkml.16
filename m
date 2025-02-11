@@ -1,132 +1,93 @@
-Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A9D1EF09C;
-	Tue, 11 Feb 2025 11:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B4B1F1934;
+	Tue, 11 Feb 2025 11:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739271842; cv=none; b=AV5+MTQhwrG3hBNdEp45s3mjcYezDH3NhunkcWDzGHhaNqXneL7JDyqfVeAQJQZwZwGpfWS05hbmfkK7tUr0T31YBJlxWc+Xp0e19x5hPJzk1tbsVEeSwQmOw6JTYCBx6kdglYVUBYBmKBeC9JZ10X6mlBbblzN1/dnTINTFAt0=
+	t=1739271855; cv=none; b=XNTvRXwt527naRkD9gf/rJe859vlg6BFf/NI0pWrr0OrElW2G+eZlfL/xF6WCZ+Dl7mwOucT2LL9Cc8+tjo7LMfhSuAwKQEWK2atGTTRDv8xA3LUSRwNNljOBgKLK/jdf2xA75bEbTwbV+xg7YQdG0RaWDi/pN0MlMOcy7E+EGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739271842; c=relaxed/simple;
-	bh=HR1cTfPtrYMFL/U4XOfH554Bii/BquLSLW6LMqX7uEs=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=DhMBYOTd9Jr5V7POxicSkR9FByyNL6TKyL570SoRK8BXyVnygCuo26hPBMueSK1a4B6D2CKDxalQFZpkN3ER7GI/5btRgKruTYi8CyvHP5CjnnhkEkPcKbjuh4dVqKjLfgawn6PjHkFDBY+KnCdRTLuVhYZ8Y5SuuMv2Dkfg9bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=xlPf9l4s; arc=none smtp.client-ip=162.62.57.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1739271855; c=relaxed/simple;
+	bh=Uy+ji2q8WemxeYy45m6nVuiaXqPhJ7iphgJdSlQ8iq0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AYqCMQ3eRNy93jIOrcT7x/a1YO/nilW3wvFPW+7OCg5uvwG00vjjb/t1GCUNeaTpJvG6lpn8hYHHC7oS/Yl46t1lEx6NSJWc13WUhtrIJ1d7EvWdGUj8P7n/sk/8qJzM0eg+tKpX54/FY4YibkVe8lV0HWIewJJbwuGFOBgjFXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=QNsbgOlA; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="xlPf9l4s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1739271832;
-	bh=7vU21O8iptioA5gcEabn8Xg1heHT33nvWJUkTyHR0os=;
-	h=From:To:Cc:Subject:Date;
-	b=xlPf9l4su4JlE7qUG3AhCWEJYGWyeRMKhkv7nE57xnrT1q6fHCFbe9fQjASYt5ADs
-	 +whwWbE5ashqrD5wC01aa9Kt8ppGl/p0w6rYcHS/ntzIm3sIzOY/t3aXLbo7EPei92
-	 NUqxTC3bh455BTUYfWs0FIgKcDAV+AzwWFEVM2OM=
-Received: from NUC10.. ([39.156.73.10])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 995B283F; Tue, 11 Feb 2025 18:38:21 +0800
-X-QQ-mid: xmsmtpt1739270301tjrgpmued
-Message-ID: <tencent_26592A2BAF08A3A688A50600421559929708@qq.com>
-X-QQ-XMAILINFO: OATpkVjS499u55ORrONqKpZxP8ux/uuWT7idW6LGyoibpoEN688/lCMWtE5foc
-	 6S/5M7RK+I29VWAXxV1/s/lO7SS+fyn9c6/33F5wiWtvSzJvp+KNtsPDgcubbyjMLixV9lpyILCg
-	 EKnkH1jB8TZyJcXKmZCuFteUT3ljiDrTCZB542O5sEv6uNgDzbT3qkIFTvv6IKosj+M6mgKLmIri
-	 u1v4XW9t7XQQP9B+/+DbgiBAJz0DOruDUNq2sCgFzQ522LhNl62hOAnsqMfhBCgwes3R8Xbd0U4g
-	 7eNTSUYDmGbbkiWZVtpA0yAWc5H/lg7dqBYtcJNqwqHaaA2xf3P9gbVwMSpje62q3EJGGNkcCeZg
-	 xyhPmjyds33AniBjJ/f2IwotpxQEfVNLIw6VdOl+t3u/bYM3ibkrQrrdjj+OP2H6P+G717ddQmlG
-	 14EAFddtQuMdcjfeCgA6xyQAAlRr42HrEmgbFizowK+NiB3PodwfEeA1NvvrgwT01VOXmBPjjZPd
-	 T5SGFvUYxDXP5Qbb1ehTFBkQOQid9DqKy7EVvganIkOIDbvsfbG89HA7+g/dqWFq0Uk9peBqHCB/
-	 q3BZGzovsaZRSBo8mx/qIvUyR1toO4neY0MLfiLETUtsqPn0avW4FOwvv92nLb3RnsQm0/qsHr+T
-	 ChTsMoFlTi1aYY0kW5bYFVcRnTlOL7KZxjfb45pLO1NmJCTPgDXryJ7hyzkTLaNzDm2tiOwHWiTJ
-	 EsXF2Hd4YeyrhvT3hZzncraAWFQcRL5FVfcFCJJZu6ireJuL8vWZ6CZsR8wSMINWgephbnDqmU9C
-	 LH/Ai9oWgkVD8RXlESuvDVZTx9YotBCcD7h6W7FqjCezzYGyxy+ZWz/mAuNmcr2iM0qbY2l3QQt9
-	 +eqamtZ9pfapIwB0TBszYqVTnafUI26aU6GWA9dcLGYmpP59cRMBh6CJP0ZJEZDs5iklKqfKs9D4
-	 Sfs2Z95pfXQ/p7/LG5kRuF3RvYHdBZLEkdm8NcIpoVA5UlRPCq0g==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Rong Tao <rtoax@foxmail.com>
-To: qmo@kernel.org,
-	ast@kernel.org,
-	daniel@iogearbox.net
-Cc: rongtao@cestc.cn,
-	rtoax@foxmail.com,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	bpf@vger.kernel.org (open list:BPF [TOOLING] (bpftool)),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH bpf-next v2] bpftool: Check map name length when map create
-Date: Tue, 11 Feb 2025 18:38:20 +0800
-X-OQ-MSGID: <20250211103820.61883-1-rtoax@foxmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="QNsbgOlA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1739271843;
+	bh=Uy+ji2q8WemxeYy45m6nVuiaXqPhJ7iphgJdSlQ8iq0=;
+	h=From:Date:Subject:To:Cc:From;
+	b=QNsbgOlAhA+b+1RZGXHFkya4UIfTZgA8pFOpFPGXt/shu/1gT3mq9ZHeIp7J2N39N
+	 t4z3H7yl3689UPzWqYiYWYFuFJz9bQkA8iI+y22S4hL8PQc9EUaWKUQvzZi/LQhig8
+	 qTEV6vS702Iu21KO5n6AMiWEDdvZioUSnj2ucw4g=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 11 Feb 2025 12:03:52 +0100
+Subject: [PATCH] selftests/nolibc: split up architecture list in
+ run-tests.sh
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250211-nolibc-test-archs-v1-1-8e55aa3369cf@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIAJcuq2cC/x3MMQqAMAxA0atIZgNtoUO9ijjUGDUgrTQigvTuF
+ sc3/P+CchFWGLoXCt+iklOD7TugPaaNUZZmcMZ546zFlA+ZCS/WC2OhXTH6EAytFNg7aN1ZeJX
+ nf45TrR+VYBcKYwAAAA==
+X-Change-ID: 20250211-nolibc-test-archs-a5990cfc9e52
+To: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739271843; l=1232;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=Uy+ji2q8WemxeYy45m6nVuiaXqPhJ7iphgJdSlQ8iq0=;
+ b=4MO3VIEL95hcYuVJd1z7SFe4Y2o/t1Pnh14ZOEFVYr3eMMXXWQoSrO1YFsMUNHRY/kJukHbSs
+ mw0eeu9ALxDDZPqfaT+UJp5xUgc6UQSI8FP4DzyzIeQm+QlpEggmy9J
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-From: Rong Tao <rongtao@cestc.cn>
+The list is getting overly long and any modifications introduce a lot of
+noise and are prone to conflicts. Split the string into a bash array
+and break that into multiple lines.
 
-The size of struct bpf_map::name is BPF_OBJ_NAME_LEN (16).
-
-bpf(2) {
-  map_create() {
-    bpf_obj_name_cpy(map->name, attr->map_name, sizeof(attr->map_name));
-  }
-}
-
-When specifying a map name using bpftool map create name, no error is
-reported if the name length is greater than 15.
-
-    $ sudo bpftool map create /sys/fs/bpf/12345678901234567890 \
-        type array key 4 value 4 entries 5 name 12345678901234567890
-
-Users will think that 12345678901234567890 is legal, but this name cannot
-be used to index a map.
-
-    $ sudo bpftool map show name 12345678901234567890
-    Error: can't parse name
-
-    $ sudo bpftool map show
-    ...
-    1249: array  name 123456789012345  flags 0x0
-    	key 4B  value 4B  max_entries 5  memlock 304B
-
-    $ sudo bpftool map show name 123456789012345
-    1249: array  name 123456789012345  flags 0x0
-    	key 4B  value 4B  max_entries 5  memlock 304B
-
-The map name provided in the command line is truncated, but no error is
-reported. This submission checks the length of the map name.
-
-Signed-off-by: Rong Tao <rongtao@cestc.cn>
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- tools/bpf/bpftool/map.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/testing/selftests/nolibc/run-tests.sh | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
-index ed4a9bd82931..bd5df44e2420 100644
---- a/tools/bpf/bpftool/map.c
-+++ b/tools/bpf/bpftool/map.c
-@@ -1270,6 +1270,11 @@ static int do_create(int argc, char **argv)
- 		} else if (is_prefix(*argv, "name")) {
- 			NEXT_ARG();
- 			map_name = GET_ARG();
-+			if (strlen(map_name) > BPF_OBJ_NAME_LEN - 1) {
-+				p_err("map name must be no longer than %d characters\n",
-+				      BPF_OBJ_NAME_LEN - 1);
-+				goto exit;
-+			}
- 		} else if (is_prefix(*argv, "key")) {
- 			if (parse_u32_arg(&argc, &argv, &key_size,
- 					  "key size"))
+diff --git a/tools/testing/selftests/nolibc/run-tests.sh b/tools/testing/selftests/nolibc/run-tests.sh
+index bc4e92b4f1b98278a0a72345a5cd67f1a429b6a2..6db01115276888bc89f6ec5532153c37e55c83d3 100755
+--- a/tools/testing/selftests/nolibc/run-tests.sh
++++ b/tools/testing/selftests/nolibc/run-tests.sh
+@@ -17,7 +17,16 @@ perform_download=0
+ test_mode=system
+ werror=1
+ llvm=
+-archs="i386 x86_64 arm64 arm mips32le mips32be ppc ppc64 ppc64le riscv32 riscv64 s390 loongarch"
++all_archs=(
++	i386 x86_64
++	arm64 arm
++	mips32le mips32be
++	ppc ppc64 ppc64le
++	riscv32 riscv64
++	s390
++	loongarch
++)
++archs="${all_archs[@]}"
+ 
+ TEMP=$(getopt -o 'j:d:c:b:a:m:pelh' -n "$0" -- "$@")
+ 
+
+---
+base-commit: 665fa8dea90d9fbc0e7137c7e1315d6f7e15757e
+change-id: 20250211-nolibc-test-archs-a5990cfc9e52
+
+Best regards,
 -- 
-2.48.1
+Thomas Weißschuh <linux@weissschuh.net>
 
