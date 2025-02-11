@@ -1,463 +1,243 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85EF21D00B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2411FA851
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739272182; cv=none; b=tMP7rz03cHHTSbhetLb6YMkPlzPTFs5Hm8TFqX7cQejrRKjE2lnDYeTjQ9vq2Ui8btToEZ1mpMv1smhLtAVb6YleY3oZaYtZSVtHjGS6UiiuTNtSS9DVKIZf1eM1zLe29HeHOUTUEyO8FJ5FHb9uN9vaWJAFcp77kS1qrrwaE+g=
+	t=1739272198; cv=none; b=tVzkaOCe1pr/LuR8N7VDGAvVe/F0DCEQz4JGtqHkwfPZwoT2aJ3f9I3jIi18s0ibn8zx/khfWtPG5i6iwUctGLVEmIww+wxkCARsLpAsb16rkC7fWLO9XJf8m4boGJ4fita0Xw4lEKN5hhoVDr9ZgjJgnrFBWHrnuLc97zDW/d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739272182; c=relaxed/simple;
-	bh=ZTj9POfW0r2v891dVioEm/LvxgBX96ByWwuDI/SqhRc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OIrtRAhx7SIU5t5Snt6F0EYokmj6giihRflRY4TDYVKm2T0qb616gzKlgYh0Ili7UkNhwS2x3wAXNBRe/ogbUhn2h+/+QbPCM3ImPPlPXsd2EZMMC/cH8VznUGvVCy6x5Fdle6Zgz/2EJ7iM9kPVrVA9n0eigHcqsLBVi0j1n0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P3hZy0SF; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739272198; c=relaxed/simple;
+	bh=rpSIJr2tTA1mlR4YLGpeZyR2NSRJg92WBS/isaUQecs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X75KIT4LFPfgPtOMYwYxRtqH6iORm/4Vre2dh3iGpr7gSE9B8k0Q4BXfJDCu0S+V8wF12QP0TbsWCDLGM3bRUAlzU/6TrUSNzCQFAUw0FDH1yzeB6Dm5tP33Jbjtqq0IIulzRTtmeoAj3LyNEteYP3hqwTgPf4PlK/xYiGEXI3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QZBlU3Ff; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3hZy0SF"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4394829ef0fso10152635e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:09:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739272178; x=1739876978; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uGUdgw2ywsEOYDg6PxJGKHCOLJS2s2ya/ph3EyRFJVM=;
-        b=P3hZy0SFInf12gWHqCoUoOwpATfNupSAUqCBxEroTyuorqTJNhMdqzbjsqo0drrBbB
-         sF8U2dVlU1rqpAvMrqfZiRkXbrZHF0u3oTysrIPbHdIsfmnxvyfPMl16Hs5DdaAi9z/T
-         pQYVKr7tGPisb36kN39JY1YJy/J2Mk10e+iSkOrEWXAaBWYawAHISKpk+FDe3n8vhkv1
-         zmbpZ79Kphv7mTbion+bqb77bnrSqq90+yJd5DUjGNnCotCXEBNNDkV5e9u+KBmx45L0
-         zCoQHZ5cNckbEMFS/2Nl3XbV8xRBlbRJFLwqmVjhrRMHyD4pQJyzUeyqev2dRrwTjGwo
-         9dAw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QZBlU3Ff"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739272195;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y7ZAQ07RxJ7O5uwhTtT4Uoh1NwPTNjnj401gSfYgfTY=;
+	b=QZBlU3FfPLoI3p8Yjz4Xs/nl9U417yAB6wu/giRTdj6Z/w9t5Axvl7RK+nu/biTSmOXUqb
+	hQTBvdJf8BfVEi9dkWGDrZ4OLNk1Ety37Qk1Z0YUY0qL+AEv7Bu8uR8lR7v/T0/6j7UUX2
+	kMp3xMB4VqlP345+MhPTUMO6B/LeWzA=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-53-PYEfCnY-OzGsu-aUhcU7Pw-1; Tue, 11 Feb 2025 06:09:54 -0500
+X-MC-Unique: PYEfCnY-OzGsu-aUhcU7Pw-1
+X-Mimecast-MFC-AGG-ID: PYEfCnY-OzGsu-aUhcU7Pw_1739272193
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43933bdcce0so20669455e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:09:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739272178; x=1739876978;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uGUdgw2ywsEOYDg6PxJGKHCOLJS2s2ya/ph3EyRFJVM=;
-        b=w0ySUMejzOPoxxj4+LgtMcGu/gXZ1OY3qsjp/f0R2tUR848OFXT1mY9fxS1mTu+OAn
-         Vo4xtkDnNcnlVgJOj56npmK/Wr9Y5qhNU+CKzAcuWB/ZmTeD431qlbCFZZbClZD3GqkY
-         ByBjPugnAfWcJd/JflQi4tHZTo+FZcPBysc4oDeRRF70kVUzAlS2O2CQc22emD889IEt
-         CPGMAkLs4cj0H+kR6EIeT9cC5+5rGaQSmbfblnH+MJZ8vojVfbBBdz0g2w8tTiRogleo
-         DSZsTWRYYqj8rpS9nnV3YICLes4uUHTD8LyWK6WnGQQCMtc7taxEg4RjXUcxMDAVi0nB
-         HC0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUky2fXIPTcbkGof4EcvGBmGQKnhf+pFU+C2hB9NWA4uoIhho7KDwPbQ6TjhOdnea9HRzHrsKd9Al5wFIs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdR4A9To7v3vR6d3IJgWEek2fVyCmrIah/ynH4p9LYaMTJagFw
-	GwXRTg0wVLSo32Owcb6MovcOcR6hhzE20uqYQZJHKcqsovdrtbjm
-X-Gm-Gg: ASbGncuG9iZf10XfhvKOxWCPEAtiKKjQy25Ax/qZYFrl4s5yEgYu/F+Clz4JXjp0K7k
-	ylhtr+32X8x0KCsl13g+ZniVh5FgkCxypzt1e2/cTCyEsaJ7ZJxQDnPLYsP0YCrTwixJ+PYddW7
-	de/YHyKHnhmHzP96TP/HvX545t5ZMT9KmxtaTfJNdN16EgWnWdTsqT2oteFFeO4VSPI3s2HVm2s
-	HoqFbsk63Ogp8HwlupPrWQsZZo7c7ZjNabt5cZw7n+y8B8biwuGWlie6Oyrfp5YO49gJQxVoI5/
-	b9ktuIXYcCxshY6C
-X-Google-Smtp-Source: AGHT+IEBywQtzeAfqxQNya+FLykWVeF9GchkmCoUu0KPaur3KfXxA5e/gms8QC9wUmsE7b8h69zDmQ==
-X-Received: by 2002:a5d:64c4:0:b0:38d:c0c0:b3da with SMTP id ffacd0b85a97d-38de438e603mr2334406f8f.2.1739272178153;
-        Tue, 11 Feb 2025 03:09:38 -0800 (PST)
-Received: from fedora.. ([94.73.37.161])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcb55b7a5sm11814417f8f.14.2025.02.11.03.09.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 03:09:37 -0800 (PST)
-From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-To: louis.chauvet@bootlin.com
-Cc: hamohammed.sa@gmail.com,
-	simona@ffwll.ch,
-	melissa.srw@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH v2 15/15] drm/vkms: Allow to attach connectors and encoders
-Date: Tue, 11 Feb 2025 12:09:12 +0100
-Message-ID: <20250211110912.15409-16-jose.exposito89@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250211110912.15409-1-jose.exposito89@gmail.com>
-References: <20250211110912.15409-1-jose.exposito89@gmail.com>
+        d=1e100.net; s=20230601; t=1739272193; x=1739876993;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y7ZAQ07RxJ7O5uwhTtT4Uoh1NwPTNjnj401gSfYgfTY=;
+        b=ap/dLQxR99GtoUwnjFIlpPnysLwKrcLqhX1wgWawFivoF6Y0RrmnZKl/UgeDFJ52t+
+         v9UMTIq+Uwl0H/u8LfD7/8B9/Z+Av7pT3RtKiOw/yn4L7f3ONysglC+HY/ohHprDUuJc
+         fkZ9h5KYLUCqzGL4uQw86Mqt/mgFfuoEBtUCPt8wvqXGzViUUhWAcx86TLOqPl6AEVZc
+         u9jq63xpPc5l8uc2jVRm7TMCaIZ8bYxZDiywc51aWLEXzcHtJJPIgMSrcF3LLPjVOyK4
+         XFf6NUY3j6CawXgK9YSOmzqdNJNtZaclow+I7eiVyeMHU9kNA3SkMlhaUJ66af2x4q97
+         CFkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXIAdXbAuO4epj7khVm7L3/aG2/GU27ZQFygJtEONU63l2k8pujuZE/6jA8FewPspDwz0nC6Vm7QfPJGNE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYbajgXPi/yfhDB+W2NQztM0g96IRrQN9DjaX0GCR5i6NovX3d
+	sFZPOz7nNU1MsMsc/DZFkixxOTyUD8sz8coskI8frntx+YkBf1tHHYGR5aZNKseLpejez05pJgm
+	CI+TAFObJhGcbkKfd7u5UEPbGKw9Ny101m8/8IwoOCHRk8xW3VDmEKbdkxrdC4g==
+X-Gm-Gg: ASbGncvJUBqanYIhfV+XQJ0k3ophmZU2JbFvZ5+jjRoheh9to7d3DYvaYixvIJycvFQ
+	7hm1KB9PrD0HP2kPZdf2tPgvr5I6gHbjXPWi1TrmryP/xdj1LajbzPEV6fCAfSGo76P+/DyPmFl
+	bXM1o3Znm8ITR0lZ944x8dobcaMCuB5RWTZEiqTYb+N+fQ9jGxjuU40QKSWVM11h0ifoTJ6kdpb
+	tf0DN1t0CGNZ2ct3+qgMJj3579pMMQdMxl5h8tFLl+VQmivys9DAQoBL6vKPFUZA8M4B+kutsB1
+	vU6UE7RnUVP2oqX4r8s/V8xavLkL+3dTeL8=
+X-Received: by 2002:a05:600c:1c92:b0:439:4589:1abc with SMTP id 5b1f17b1804b1-43945891eaemr64632615e9.14.1739272192986;
+        Tue, 11 Feb 2025 03:09:52 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGRBY/4tHNCW+QPAjUDCl4IZPK/+epAOWrGOIX9oOcIs3K9+fGAdS9SP2ebLTN01yGe5jkbBA==
+X-Received: by 2002:a05:600c:1c92:b0:439:4589:1abc with SMTP id 5b1f17b1804b1-43945891eaemr64632275e9.14.1739272192560;
+        Tue, 11 Feb 2025 03:09:52 -0800 (PST)
+Received: from [192.168.88.253] (146-241-31-160.dyn.eolo.it. [146.241.31.160])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd6080926sm8461760f8f.83.2025.02.11.03.09.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 03:09:52 -0800 (PST)
+Message-ID: <13afab27-2066-4912-b8f6-15ee4846e802@redhat.com>
+Date: Tue, 11 Feb 2025 12:09:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v6 3/3] selftests: drv-net: Test queue xsk
+ attribute
+To: Joe Damato <jdamato@fastly.com>, netdev@vger.kernel.org
+Cc: stfomichev@gmail.com, horms@kernel.org, kuba@kernel.org,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+ "open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)"
+ <bpf@vger.kernel.org>
+References: <20250210193903.16235-1-jdamato@fastly.com>
+ <20250210193903.16235-4-jdamato@fastly.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250210193903.16235-4-jdamato@fastly.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Add a list of possible encoders to the connector configuration and
-helpers to attach and detach them.
+On 2/10/25 8:38 PM, Joe Damato wrote:
+> +def check_xdp(cfg, nl, xdp_queue_id=0) -> None:
+> +    test_dir = os.path.dirname(os.path.realpath(__file__))
+> +    xdp = subprocess.Popen([f"{test_dir}/xdp_helper", f"{cfg.ifindex}", f"{xdp_queue_id}"],
+> +                           stdin=subprocess.PIPE, stdout=subprocess.PIPE, bufsize=1,
+> +                           text=True)
+> +    defer(xdp.kill)
+> +
+> +    stdout, stderr = xdp.communicate(timeout=10)
+> +    rx = tx = False
+> +
+> +    queues = nl.queue_get({'ifindex': cfg.ifindex}, dump=True)
+> +    if not queues:
+> +        raise KsftSkipEx("Netlink reports no queues")
+> +
+> +    for q in queues:
+> +        if q['id'] == 0:
+> +            if q['type'] == 'rx':
+> +                rx = True
+> +            if q['type'] == 'tx':
+> +                tx = True
+> +
+> +            ksft_eq(q['xsk'], {})
+> +        else:
+> +            if 'xsk' in q:
+> +                _fail("Check failed: xsk attribute set.")
+> +
+> +    ksft_eq(rx, True)
+> +    ksft_eq(tx, True)
 
-Now that the default configuration has its connector and encoder
-correctly, configure the output following the configuration.
+This causes self-test failures:
 
-Co-developed-by: Louis Chauvet <louis.chauvet@bootlin.com>
-Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-Signed-off-by: José Expósito <jose.exposito89@gmail.com>
----
- .clang-format                                 |  1 +
- drivers/gpu/drm/vkms/tests/vkms_config_test.c | 94 +++++++++++++++++++
- drivers/gpu/drm/vkms/vkms_config.c            | 60 ++++++++++++
- drivers/gpu/drm/vkms/vkms_config.h            | 29 ++++++
- drivers/gpu/drm/vkms/vkms_output.c            | 33 ++++---
- 5 files changed, 204 insertions(+), 13 deletions(-)
+https://netdev-3.bots.linux.dev/vmksft-net-drv/results/987742/4-queues-py/stdout
 
-diff --git a/.clang-format b/.clang-format
-index ca49832993c5..7630990aa07a 100644
---- a/.clang-format
-+++ b/.clang-format
-@@ -694,6 +694,7 @@ ForEachMacros:
-   - 'vkms_config_for_each_crtc'
-   - 'vkms_config_for_each_encoder'
-   - 'vkms_config_for_each_plane'
-+  - 'vkms_config_connector_for_each_possible_encoder'
-   - 'vkms_config_encoder_for_each_possible_crtc'
-   - 'vkms_config_plane_for_each_possible_crtc'
-   - 'while_for_each_ftrace_op'
-diff --git a/drivers/gpu/drm/vkms/tests/vkms_config_test.c b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-index cba7e9d2fcad..2d104ecfde3b 100644
---- a/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-+++ b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-@@ -511,6 +511,27 @@ static void vkms_config_test_invalid_connector_number(struct kunit *test)
- 	vkms_config_destroy(config);
- }
- 
-+static void vkms_config_test_valid_connector_possible_encoders(struct kunit *test)
-+{
-+	struct vkms_config *config;
-+	struct vkms_config_encoder *encoder_cfg;
-+	struct vkms_config_connector *connector_cfg;
-+
-+	config = vkms_config_default_create(false, false, false);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
-+
-+	encoder_cfg = list_first_entry(&config->encoders,
-+				       typeof(*encoder_cfg), link);
-+	connector_cfg = list_first_entry(&config->connectors,
-+					 typeof(*connector_cfg), link);
-+
-+	/* Invalid: Connector without a possible encoder */
-+	vkms_config_connector_detach_encoder(connector_cfg, encoder_cfg);
-+	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
-+
-+	vkms_config_destroy(config);
-+}
-+
- static void vkms_config_test_plane_attach_crtc(struct kunit *test)
- {
- 	struct vkms_config *config;
-@@ -700,6 +721,77 @@ static void vkms_config_test_encoder_get_possible_crtcs(struct kunit *test)
- 	vkms_config_destroy(config);
- }
- 
-+static void vkms_config_test_connector_get_possible_encoders(struct kunit *test)
-+{
-+	struct vkms_config *config;
-+	struct vkms_config_connector *connector_cfg1, *connector_cfg2;
-+	struct vkms_config_encoder *encoder_cfg1, *encoder_cfg2;
-+	struct vkms_config_encoder *possible_encoder;
-+	unsigned long idx = 0;
-+	int n_encoders = 0;
-+	int err;
-+
-+	config = vkms_config_create("test");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
-+
-+	connector_cfg1 = vkms_config_create_connector(config);
-+	connector_cfg2 = vkms_config_create_connector(config);
-+	encoder_cfg1 = vkms_config_create_encoder(config);
-+	encoder_cfg2 = vkms_config_create_encoder(config);
-+
-+	/* No possible encoders */
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg1, idx,
-+							possible_encoder)
-+		KUNIT_FAIL(test, "Unexpected possible encoder");
-+
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg2, idx,
-+							possible_encoder)
-+		KUNIT_FAIL(test, "Unexpected possible encoder");
-+
-+	/* Connector 1 attached to encoders 1 and 2 */
-+	err = vkms_config_connector_attach_encoder(connector_cfg1, encoder_cfg1);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+	err = vkms_config_connector_attach_encoder(connector_cfg1, encoder_cfg2);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg1, idx,
-+							possible_encoder) {
-+		n_encoders++;
-+		if (possible_encoder != encoder_cfg1 &&
-+		    possible_encoder != encoder_cfg2)
-+			KUNIT_FAIL(test, "Unexpected possible encoder");
-+	}
-+	KUNIT_ASSERT_EQ(test, n_encoders, 2);
-+	n_encoders = 0;
-+
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg2, idx,
-+							possible_encoder)
-+		KUNIT_FAIL(test, "Unexpected possible encoder");
-+
-+	/* Connector 1 attached to encoder 1 and connector 2 to encoder 2 */
-+	vkms_config_connector_detach_encoder(connector_cfg1, encoder_cfg2);
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg1, idx,
-+							possible_encoder) {
-+		n_encoders++;
-+		if (possible_encoder != encoder_cfg1)
-+			KUNIT_FAIL(test, "Unexpected possible encoder");
-+	}
-+	KUNIT_ASSERT_EQ(test, n_encoders, 1);
-+	n_encoders = 0;
-+
-+	err = vkms_config_connector_attach_encoder(connector_cfg2, encoder_cfg2);
-+	KUNIT_EXPECT_EQ(test, err, 0);
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg2, idx,
-+							possible_encoder) {
-+		n_encoders++;
-+		if (possible_encoder != encoder_cfg2)
-+			KUNIT_FAIL(test, "Unexpected possible encoder");
-+	}
-+	KUNIT_ASSERT_EQ(test, n_encoders, 1);
-+
-+	vkms_config_destroy(config);
-+}
-+
- static struct kunit_case vkms_config_test_cases[] = {
- 	KUNIT_CASE(vkms_config_test_empty_config),
- 	KUNIT_CASE_PARAM(vkms_config_test_default_config,
-@@ -715,9 +807,11 @@ static struct kunit_case vkms_config_test_cases[] = {
- 	KUNIT_CASE(vkms_config_test_invalid_encoder_number),
- 	KUNIT_CASE(vkms_config_test_valid_encoder_possible_crtcs),
- 	KUNIT_CASE(vkms_config_test_invalid_connector_number),
-+	KUNIT_CASE(vkms_config_test_valid_connector_possible_encoders),
- 	KUNIT_CASE(vkms_config_test_plane_attach_crtc),
- 	KUNIT_CASE(vkms_config_test_plane_get_possible_crtcs),
- 	KUNIT_CASE(vkms_config_test_encoder_get_possible_crtcs),
-+	KUNIT_CASE(vkms_config_test_connector_get_possible_encoders),
- 	{}
- };
- 
-diff --git a/drivers/gpu/drm/vkms/vkms_config.c b/drivers/gpu/drm/vkms/vkms_config.c
-index d52280d3bbee..3d95dc713151 100644
---- a/drivers/gpu/drm/vkms/vkms_config.c
-+++ b/drivers/gpu/drm/vkms/vkms_config.c
-@@ -93,6 +93,9 @@ struct vkms_config *vkms_config_default_create(bool enable_cursor,
- 	if (IS_ERR(connector_cfg))
- 		goto err_alloc;
- 
-+	if (vkms_config_connector_attach_encoder(connector_cfg, encoder_cfg))
-+		goto err_alloc;
-+
- 	return config;
- 
- err_alloc:
-@@ -275,6 +278,22 @@ static bool valid_connector_number(struct vkms_config *config)
- 	return true;
- }
- 
-+static bool valid_connector_possible_encoders(struct vkms_config *config)
-+{
-+	struct drm_device *dev = &config->dev->drm;
-+	struct vkms_config_connector *connector_cfg;
-+
-+	vkms_config_for_each_connector(config, connector_cfg) {
-+		if (xa_empty(&connector_cfg->possible_encoders)) {
-+			drm_info(dev,
-+				 "All connectors must have at least one possible encoder\n");
-+			return false;
-+		}
-+	}
-+
-+	return true;
-+}
-+
- bool vkms_config_is_valid(struct vkms_config *config)
- {
- 	struct vkms_config_crtc *crtc_cfg;
-@@ -302,6 +321,9 @@ bool vkms_config_is_valid(struct vkms_config *config)
- 	if (!valid_encoder_possible_crtcs(config))
- 		return false;
- 
-+	if (!valid_connector_possible_encoders(config))
-+		return false;
-+
- 	return true;
- }
- 
-@@ -493,6 +515,11 @@ struct vkms_config_encoder *vkms_config_create_encoder(struct vkms_config *confi
- void vkms_config_destroy_encoder(struct vkms_config *config,
- 				 struct vkms_config_encoder *encoder_cfg)
- {
-+	struct vkms_config_connector *connector_cfg;
-+
-+	vkms_config_for_each_connector(config, connector_cfg)
-+		vkms_config_connector_detach_encoder(connector_cfg, encoder_cfg);
-+
- 	xa_destroy(&encoder_cfg->possible_crtcs);
- 	list_del(&encoder_cfg->link);
- 	kfree(encoder_cfg);
-@@ -534,6 +561,8 @@ struct vkms_config_connector *vkms_config_create_connector(struct vkms_config *c
- 	if (!connector_cfg)
- 		return ERR_PTR(-ENOMEM);
- 
-+	xa_init_flags(&connector_cfg->possible_encoders, XA_FLAGS_ALLOC);
-+
- 	list_add_tail(&connector_cfg->link, &config->connectors);
- 
- 	return connector_cfg;
-@@ -541,6 +570,37 @@ struct vkms_config_connector *vkms_config_create_connector(struct vkms_config *c
- 
- void vkms_config_destroy_connector(struct vkms_config_connector *connector_cfg)
- {
-+	xa_destroy(&connector_cfg->possible_encoders);
- 	list_del(&connector_cfg->link);
- 	kfree(connector_cfg);
- }
-+
-+int __must_check vkms_config_connector_attach_encoder(struct vkms_config_connector *connector_cfg,
-+						      struct vkms_config_encoder *encoder_cfg)
-+{
-+	struct vkms_config_encoder *possible_encoder;
-+	unsigned long idx = 0;
-+	u32 encoder_idx = 0;
-+
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg, idx,
-+							possible_encoder) {
-+		if (possible_encoder == encoder_cfg)
-+			return -EINVAL;
-+	}
-+
-+	return xa_alloc(&connector_cfg->possible_encoders, &encoder_idx,
-+			encoder_cfg, xa_limit_32b, GFP_KERNEL);
-+}
-+
-+void vkms_config_connector_detach_encoder(struct vkms_config_connector *connector_cfg,
-+					  struct vkms_config_encoder *encoder_cfg)
-+{
-+	struct vkms_config_encoder *possible_encoder;
-+	unsigned long idx = 0;
-+
-+	vkms_config_connector_for_each_possible_encoder(connector_cfg, idx,
-+							possible_encoder) {
-+		if (possible_encoder == encoder_cfg)
-+			xa_erase(&connector_cfg->possible_encoders, idx);
-+	}
-+}
-diff --git a/drivers/gpu/drm/vkms/vkms_config.h b/drivers/gpu/drm/vkms/vkms_config.h
-index 8451c2f127b6..c87513d174f2 100644
---- a/drivers/gpu/drm/vkms/vkms_config.h
-+++ b/drivers/gpu/drm/vkms/vkms_config.h
-@@ -92,6 +92,7 @@ struct vkms_config_encoder {
-  * struct vkms_config_connector
-  *
-  * @link: Link to the others connector in vkms_config
-+ * @possible_encoders: Array of encoders that can be used with this connector
-  * @connector: Internal usage. This pointer should never be considered as valid.
-  *             It can be used to store a temporary reference to a VKMS connector
-  *             during device creation. This pointer is not managed by the
-@@ -100,6 +101,8 @@ struct vkms_config_encoder {
- struct vkms_config_connector {
- 	struct list_head link;
- 
-+	struct xarray possible_encoders;
-+
- 	/* Internal usage */
- 	struct vkms_connector *connector;
- };
-@@ -156,6 +159,16 @@ struct vkms_config_connector {
- #define vkms_config_encoder_for_each_possible_crtc(encoder_cfg, idx, possible_crtc) \
- 	xa_for_each(&(encoder_cfg)->possible_crtcs, idx, (possible_crtc))
- 
-+/**
-+ * vkms_config_connector_for_each_possible_encoder - Iterate over the
-+ * vkms_config_connector possible encoders
-+ * @connector_cfg: &struct vkms_config_connector pointer
-+ * @idx: Index of the cursor
-+ * @possible_encoder: &struct vkms_config_encoder pointer used as cursor
-+ */
-+#define vkms_config_connector_for_each_possible_encoder(connector_cfg, idx, possible_encoder) \
-+	xa_for_each(&(connector_cfg)->possible_encoders, idx, (possible_encoder))
-+
- /**
-  * vkms_config_create() - Create a new VKMS configuration
-  * @dev_name: Name of the device
-@@ -397,4 +410,20 @@ struct vkms_config_connector *vkms_config_create_connector(struct vkms_config *c
-  */
- void vkms_config_destroy_connector(struct vkms_config_connector *connector_cfg);
- 
-+/**
-+ * vkms_config_connector_attach_encoder - Attach a connector to an encoder
-+ * @connector_cfg: Connector to attach
-+ * @encoder_cfg: Encoder to attach @connector_cfg to
-+ */
-+int __must_check vkms_config_connector_attach_encoder(struct vkms_config_connector *connector_cfg,
-+						      struct vkms_config_encoder *encoder_cfg);
-+
-+/**
-+ * vkms_config_connector_detach_encoder - Detach a connector from an encoder
-+ * @connector_cfg: Connector to detach
-+ * @encoder_cfg: Encoder to detach @connector_cfg from
-+ */
-+void vkms_config_connector_detach_encoder(struct vkms_config_connector *connector_cfg,
-+					  struct vkms_config_encoder *encoder_cfg);
-+
- #endif /* _VKMS_CONFIG_H_ */
-diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
-index 8920d6b5d105..8d7ca0cdd79f 100644
---- a/drivers/gpu/drm/vkms/vkms_output.c
-+++ b/drivers/gpu/drm/vkms/vkms_output.c
-@@ -8,10 +8,10 @@
- int vkms_output_init(struct vkms_device *vkmsdev)
- {
- 	struct drm_device *dev = &vkmsdev->drm;
--	struct vkms_connector *connector;
- 	struct vkms_config_plane *plane_cfg;
- 	struct vkms_config_crtc *crtc_cfg;
- 	struct vkms_config_encoder *encoder_cfg;
-+	struct vkms_config_connector *connector_cfg;
- 	int ret;
- 	int writeback;
- 
-@@ -83,22 +83,29 @@ int vkms_output_init(struct vkms_device *vkmsdev)
- 		}
- 	}
- 
--	connector = vkms_connector_init(vkmsdev);
--	if (IS_ERR(connector)) {
--		DRM_ERROR("Failed to init connector\n");
--		return PTR_ERR(connector);
--	}
-+	vkms_config_for_each_connector(vkmsdev->config, connector_cfg) {
-+		struct vkms_config_encoder *possible_encoder;
-+		unsigned long idx = 0;
- 
--	/* Attach the encoder and the connector */
--	vkms_config_for_each_encoder(vkmsdev->config, encoder_cfg) {
--		ret = drm_connector_attach_encoder(&connector->base, encoder_cfg->encoder);
--		if (ret) {
--			DRM_ERROR("Failed to attach connector to encoder\n");
--			return ret;
-+		connector_cfg->connector = vkms_connector_init(vkmsdev);
-+		if (IS_ERR(connector_cfg->connector)) {
-+			DRM_ERROR("Failed to init connector\n");
-+			return PTR_ERR(connector_cfg->connector);
-+		}
-+
-+		vkms_config_connector_for_each_possible_encoder(connector_cfg,
-+								idx,
-+								possible_encoder) {
-+			ret = drm_connector_attach_encoder(&connector_cfg->connector->base,
-+							   possible_encoder->encoder);
-+			if (ret) {
-+				DRM_ERROR("Failed to attach connector to encoder\n");
-+				return ret;
-+			}
- 		}
- 	}
- 
- 	drm_mode_config_reset(dev);
- 
--	return ret;
-+	return 0;
- }
--- 
-2.48.1
+but I really haven't done any real investigation here.
+
+/P
+
+>  
+>  def get_queues(cfg, nl) -> None:
+>      snl = NetdevFamily(recv_size=4096)
+> @@ -81,7 +112,7 @@ def check_down(cfg, nl) -> None:
+>  
+>  def main() -> None:
+>      with NetDrvEnv(__file__, queue_count=100) as cfg:
+> -        ksft_run([get_queues, addremove_queues, check_down], args=(cfg, NetdevFamily()))
+> +        ksft_run([get_queues, addremove_queues, check_down, check_xdp], args=(cfg, NetdevFamily()))
+>      ksft_exit()
+>  
+>  
+> diff --git a/tools/testing/selftests/drivers/net/xdp_helper.c b/tools/testing/selftests/drivers/net/xdp_helper.c
+> new file mode 100644
+> index 000000000000..b04d4e0ea30a
+> --- /dev/null
+> +++ b/tools/testing/selftests/drivers/net/xdp_helper.c
+> @@ -0,0 +1,89 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <unistd.h>
+> +#include <sys/mman.h>
+> +#include <sys/socket.h>
+> +#include <linux/if_xdp.h>
+> +#include <linux/if_link.h>
+> +#include <net/if.h>
+> +#include <inttypes.h>
+> +
+> +#define UMEM_SZ (1U << 16)
+> +#define NUM_DESC (UMEM_SZ / 2048)
+> +
+> +/* this is a simple helper program that creates an XDP socket and does the
+> + * minimum necessary to get bind() to succeed.
+> + *
+> + * this test program is not intended to actually process packets, but could be
+> + * extended in the future if that is actually needed.
+> + *
+> + * it is used by queues.py to ensure the xsk netlinux attribute is set
+> + * correctly.
+> + */
+> +int main(int argc, char **argv)
+> +{
+> +	struct xdp_umem_reg umem_reg = { 0 };
+> +	struct sockaddr_xdp sxdp = { 0 };
+> +	int num_desc = NUM_DESC;
+> +	void *umem_area;
+> +	int ifindex;
+> +	int sock_fd;
+> +	int queue;
+> +	char byte;
+> +
+> +	if (argc != 3) {
+> +		fprintf(stderr, "Usage: %s ifindex queue_id", argv[0]);
+> +		return 1;
+> +	}
+> +
+> +	sock_fd = socket(AF_XDP, SOCK_RAW, 0);
+> +	if (sock_fd < 0) {
+> +		perror("socket creation failed");
+> +		return 1;
+> +	}
+> +
+> +	ifindex = atoi(argv[1]);
+> +	queue = atoi(argv[2]);
+> +
+> +	umem_area = mmap(NULL, UMEM_SZ, PROT_READ | PROT_WRITE, MAP_PRIVATE |
+> +			MAP_ANONYMOUS, -1, 0);
+> +	if (umem_area == MAP_FAILED)
+> +		return -1;
+> +
+> +	umem_reg.addr = (uintptr_t)umem_area;
+> +	umem_reg.len = UMEM_SZ;
+> +	umem_reg.chunk_size = 2048;
+> +	umem_reg.headroom = 0;
+> +
+> +	setsockopt(sock_fd, SOL_XDP, XDP_UMEM_REG, &umem_reg,
+> +		   sizeof(umem_reg));
+> +	setsockopt(sock_fd, SOL_XDP, XDP_UMEM_FILL_RING, &num_desc,
+> +		   sizeof(num_desc));
+> +	setsockopt(sock_fd, SOL_XDP, XDP_UMEM_COMPLETION_RING, &num_desc,
+> +		   sizeof(num_desc));
+> +	setsockopt(sock_fd, SOL_XDP, XDP_RX_RING, &num_desc, sizeof(num_desc));
+> +
+> +	sxdp.sxdp_family = AF_XDP;
+> +	sxdp.sxdp_ifindex = ifindex;
+> +	sxdp.sxdp_queue_id = queue;
+> +	sxdp.sxdp_flags = 0;
+> +
+> +	if (bind(sock_fd, (struct sockaddr *)&sxdp, sizeof(sxdp)) != 0) {
+> +		perror("bind failed");
+> +		close(sock_fd);
+> +		return 1;
+> +	}
+> +
+> +	/* give the parent program some data when the socket is ready*/
+> +	fprintf(stdout, "%d\n", sock_fd);
+> +
+> +	/* parent program will write a byte to stdin when its ready for this
+> +	 * helper to exit
+> +	 */
+> +	read(STDIN_FILENO, &byte, 1);
+> +
+> +	close(sock_fd);
+> +	return 0;
+> +}
 
