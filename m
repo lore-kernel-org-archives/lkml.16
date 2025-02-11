@@ -1,91 +1,96 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF29A17C91;
-	Tue, 11 Feb 2025 15:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794761F0E4E;
+	Tue, 11 Feb 2025 15:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739287666; cv=none; b=CR2aQAaRt+8VNSirbw1gWcMZ62loSa7xW2SnEGoaagvb75I1vreHmtYTfZ3L2V6Qer9phUsoWbrrQHIhz1qq7flk6SdBVVkstbPLyOjzAsve22QdVZ5QXiJbLwJK966WFI0/KXf4bpTXAp4mfEjt8yCIf/GSJX6k/DDWnFWXt2Y=
+	t=1739287680; cv=none; b=G4/ChQyQoxYri+uG43ta2tYeT47f73ltFK1I20Rr6ZDZ32Rkch74B0cm59Rhf7/j0XrRu35eOIodUW7tskBITKAFBbBtqNNSyoYDzfQiI6bgobhZtrn/J+4v1l5+8NeiOkVNO7oZt7xiPyZovG0bsQ6Xg+EDLXivBT9A7JAgESc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739287666; c=relaxed/simple;
-	bh=VZUbDlrQ3s6WtvfB0UR1f6/kID8Vo2XTjueXVKu71Hs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GTG2lzRCeF91UKw+JHIsrhTFM7NCFgOzD4EfdIjFD1JlBliC/q0A47vuc0yie5jzu6aoR584KietNsU27Dqs/wpGDD1r8P9NNvWXDVlsE+Hb8KsBR1VvubPRCO9hvxkb935ioBONpkkXvP7BpBUBXc07HVgOJ1bmxAkQaAaSk48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowABHLjFTbKtn9EhyDA--.21905S2;
-	Tue, 11 Feb 2025 23:27:21 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: pavan.chebbi@broadcom.com,
-	mchan@broadcom.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH] tg3: Check return value of tg3_nvram_lock before resetting lock
-Date: Tue, 11 Feb 2025 23:26:58 +0800
-Message-ID: <20250211152658.1094-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1739287680; c=relaxed/simple;
+	bh=ZOFCgQqHmE5mPF2tRhaxFQ1i76aEb/IlE1b/4Rfz6EI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AXanHUXNnU3TVDqhHHOtgmScs9C2bHfywozN/nZ3NLB+fsEcnbfpUrH0/cvcSL2zaofH8SPw/l8dQ+VV03gEKSIcyrWi+F0LbGXDZ4hqcaLQIsEX5jKwyKPMH33JofcKKm6ETceBGmSB0P9ZuIFK3TtT7UP7dbpqbeZHVXdHukQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 650FAC4CEDD;
+	Tue, 11 Feb 2025 15:27:56 +0000 (UTC)
+Date: Tue, 11 Feb 2025 10:28:01 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Joel Fernandes <joel@joelfernandes.org>, Prakash Sangappa
+ <prakash.sangappa@oracle.com>, Peter Zijlstra <peterz@infradead.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
+ Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+ x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>, luto@kernel.org,
+ bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org,
+ mgorman@suse.de, jon.grimm@amd.com, bharata@amd.com,
+ raghavendra.kt@amd.com, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
+ Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>, Suleiman
+ Souhlal <suleiman@google.com>, Ingo Molnar <mingo@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Clark Williams
+ <clark.williams@gmail.com>, daniel.wagner@suse.com, Joseph Salisbury
+ <joseph.salisbury@oracle.com>, broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250211102801.5b32d610@gandalf.local.home>
+In-Reply-To: <20250211082138.iqvedSfG@linutronix.de>
+References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
+	<9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
+	<20250204220418.35949317@gandalf.local.home>
+	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
+	<20250205081635.397eacb0@gandalf.local.home>
+	<CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
+	<20250206083039.0916ad24@gandalf.local.home>
+	<20250206134408.lD_POjuG@linutronix.de>
+	<20250210144321.1f5974a6@gandalf.local.home>
+	<20250211082138.iqvedSfG@linutronix.de>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABHLjFTbKtn9EhyDA--.21905S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JrW5Ww4fuF4xWr1DXFWfuFg_yoWkXFgEkF
-	1IqryfK34rKr9Iyr4vkr4fA34I9FWkuryruFsFyrWa9ry7GFy5G3WDZFZxWrsrWrW0yasI
-	kr9IqFW7Aw12gjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb38FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
-	1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
-	cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
-	ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-	AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
-	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
-	evJa73UjIFyTuYvjfU52NtDUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAUKA2erQQRu2wAAs8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The current code does not check the return value of tg3_nvram_lock before
-resetting the lock count (tp->nvram_lock_cnt = 0). This is dangerous
-because if tg3_nvram_lock fails, the lock state may be inconsistent,
-leading to potential race conditions or undefined behavior.
+On Tue, 11 Feb 2025 09:21:38 +0100
+Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 
-This patch adds a check for the return value of tg3_nvram_lock. If the
-function fails, the error is propagated to the caller, ensuring that
-the lock state remains consistent.
+> We don't follow this behaviour exactly today.
+> 
+> Adding this behaviour back vs the behaviour we have now, doesn't seem to
+> improve anything at visible levels. We don't have a counter but we can
+> look at the RCU nesting counter which should be zero once locks have
+> been dropped. So this can be used for testing.
+> 
+> But as I said: using "run to completion" and preempt on the return
+> userland rather than once the lazy flag is seen and all locks have been
+> released appears to be better.
+> 
+> It is (now) possible that you run for a long time and get preempted
+> while holding a spinlock_t. It is however more likely that you release
+> all locks and get preempted while returning to userland.
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/net/ethernet/broadcom/tg3.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+IIUC, today, LAZY causes all SCHED_OTHER tasks to act more like
+PREEMPT_NONE. Is that correct?
 
-diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-index 9cc8db10a8d6..851d19b3f43c 100644
---- a/drivers/net/ethernet/broadcom/tg3.c
-+++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -9160,7 +9160,9 @@ static int tg3_chip_reset(struct tg3 *tp)
- 	if (!pci_device_is_present(tp->pdev))
- 		return -ENODEV;
- 
--	tg3_nvram_lock(tp);
-+	err = tg3_nvram_lock(tp);
-+	if (err)
-+		return err;
- 
- 	tg3_ape_lock(tp, TG3_APE_LOCK_GRC);
- 
--- 
-2.42.0.windows.2
+Now that the PREEMPT_RT is not one of the preemption selections, when you
+select PREEMPT_RT, you can pick between CONFIG_PREEMPT and
+CONFIG_PREEMPT_LAZY. Where CONFIG_PREEMPT will preempt the kernel at the
+scheduler tick if preemption is enabled and CONFIG_PREEMPT_LAZY will
+not preempt the kernel on a scheduler tick and wait for exit to user space.
 
+Sebastian,
+
+It appears you only tested the CONFIG_PREEMPT_LAZY selection. Have you
+tested the difference of how CONFIG_PREEMPT behaves between PREEMPT_RT and
+no PREEMPT_RT? I think that will show a difference like we had in the past.
+
+I can see people picking both PREEMPT_RT and CONFIG_PREEMPT (Full), but
+then wondering why their non RT tasks are suffering from a performance
+penalty from that.
+
+-- Steve
