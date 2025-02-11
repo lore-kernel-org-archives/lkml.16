@@ -1,90 +1,74 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826C81F1524;
-	Tue, 11 Feb 2025 09:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C241F12FA;
+	Tue, 11 Feb 2025 09:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739266150; cv=none; b=eCp2g5NGTm9PNbCU/IF6+fbrSd3uT/DlHXzi0a4QI+Jz/XHhQQJ9nYmOnkL01inymMmy5nVWMofWqxDMz3tS5hK0jJmpyompj9WDhodmSpENIZdQXZYfOxX3LTXhuvd4A3Sw7hU8b84+8vuLtHyvY66Uo+jp2qw8/JZqt7MtjNw=
+	t=1739266155; cv=none; b=O0HcrV+IwLNZZ2uzPB57M3ZegWQ0BA/XegEwfZkcecjDYUD/otHVPmStfVJZdKVIzx0UrT3ZT8L9D3C+FlnC5AxFuNLrIa40XxX4w0RK4JZoO/rbj2AldKavhvCZEhzTtPiiT1t7v5ETMEu8hnrD5BHU3hkkdBq9cDlnkf/VmE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739266150; c=relaxed/simple;
-	bh=okPQbVYPT1ntp/61RJEoRgq8G3igp9SZpAcnOema58I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bH8cMG8jmev8DKsbzbOlyt88VRpGzGk9l+PKGdo9ATxPek0xoZ5IVxfRVLcn6eHarmeYcqo7uO2+mmuReAAxwe7OoPcjU9OMqU10xX1iGM2q+mRzuxADQQnID9THUhkqY0oONrDWcj+1w/zwsfucwziQcT/63nfG64ajRvisu1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=me0RZXfq; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1739266155; c=relaxed/simple;
+	bh=DBFsBaL8EBKY3Sw0vJ1NTvA+B2mhHnikqtShBwayF8Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PAQPMtl0Jfj3wXZWU1ud9MVmJBD8IuPlG9jjAYa9r95EOzvAg1s/+QD3aOtKniAzkP6WjMYCN4dL36aO3FtJ3odNdyO8X3OQ/sMWmIswkfMUJrtibByKBWrpK0eXpxplfRGFEfNOQhxs1mwStLizo/mbFDijCwOfVd512TN2gKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WAHUZhMs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="me0RZXfq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=l9ZBxMcRpMoEoqbx44hfP6cOQVSEwX25fwYpyRa9ruc=; b=me0RZXfqHze4mlDOIlcJ7qvLr8
-	ACyYFpmquyLcJKuo7Wz6huORLPFTUERbLsUPoFi7Zj/9u0vGueiWrrMJVImF6++N4WeoebeicgpwE
-	/jnsq6u6K19up+6du/Xeqf72zRq4ivUA5rUO+5wsAdGT6ik8AJ5qlrZZ3RM4BUeBBs7pq63JhWOPP
-	mnVpHHGb2d5LUw1ZxplJRsxfbI9wCXM8hPhJEinFqiFRs4oX2Q84knBlh6DOiaf8xyITbl3Fu4+BE
-	6BipW7k10w0MCKDn95OXmu7dsqq0C3FUjNKvj/UjdXY1nMaqa6bBvUziNFpiYHq+sFZNfnlRRhfV6
-	RV/pXW7A==;
-Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1thmZi-0005mx-Oe; Tue, 11 Feb 2025 10:29:02 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alexey Charkov <alchark@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH 0/3] arm64: dts: rockchip: Add SPDIF on RK3588
-Date: Tue, 11 Feb 2025 10:28:50 +0100
-Message-ID: <173926612570.1219038.2885465365177392240.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250120-rk3588-spdif-v1-0-1415f5871dc7@gmail.com>
-References: <20250120-rk3588-spdif-v1-0-1415f5871dc7@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WAHUZhMs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2ABBC4CEDD;
+	Tue, 11 Feb 2025 09:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739266154;
+	bh=DBFsBaL8EBKY3Sw0vJ1NTvA+B2mhHnikqtShBwayF8Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WAHUZhMsKRY/l7n8HbwyNxI5/ZKOC9zo2UrrPQJ9VySW2AoXYFG7HrPX725+ICVn/
+	 i6RvjA3uJyrYzhFtbqe27Qom1LqDMYwwywi9zvlwuEaeF2K8nXJ4J4FcqGUBVlh+CU
+	 1TNpD5M53V4gSOHnuZGzpn/Bz3MuPTJJFW9wMxF4Cji6CstKaEFxULc8AYuvg91gEd
+	 ioR88bvXVTKnBeoaNkXxVEf90Rq0Z1MRXG5DYLzTodyMwsXTGZ+o6dGBf+TgF8x108
+	 Jxc3qwt+eY3szNKSKnUJfYiN6nQm/yD7pFsB4Re3bykjhFARv4kY8PDAt0N0d9wJ54
+	 I40P7QUZa9/CA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1thma2-000000007FF-0wIU;
+	Tue, 11 Feb 2025 10:29:22 +0100
+Date: Tue, 11 Feb 2025 10:29:22 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Tony Chung <tony467913@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] drivers: usb: serial: mos7840: using '__func__'
+ to replace function name in dbg message
+Message-ID: <Z6sYclmvaAQ93bEI@hovoldconsulting.com>
+References: <202410250141.AEkzzW60-lkp@intel.com>
+ <20241025061711.198933-5-tony467913@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241025061711.198933-5-tony467913@gmail.com>
 
-
-On Mon, 20 Jan 2025 13:01:26 +0400, Alexey Charkov wrote:
-> RK3588(s) uses a several SPDIF transmitters which are software
-> compatible with those found in RK3568. This series adds the required
-> device tree nodes in SoC .dtsi and enables the dedicated optical
-> SPDIF output on the H96 Max V58.
+On Fri, Oct 25, 2024 at 02:17:14PM +0800, Tony Chung wrote:
+> fix warning of Prefer '"%s...",__func__' to using 'function name'.
 > 
-> Note that only SPDIF 0/1 are meant as externally connected outputs,
-> while SPDIF 2/3/4/5 are internally routed to the various display
-> encoders inside the SoC. Thus, using SPDIF 0/1 only requires their
-> device tree nodes to be enabled (provided that the signal is routed
-> somewhere usable on the board itself), while the rest rely on driver
-> support on the display connector side and are therefore not touched
-> here.
+> Signed-off-by: Tony Chung <tony467913@gmail.com>
+> ---
+>  drivers/usb/serial/mos7840.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> [...]
+> diff --git a/drivers/usb/serial/mos7840.c b/drivers/usb/serial/mos7840.c
+> index b48a26468..31ec2cf1b 100644
+> --- a/drivers/usb/serial/mos7840.c
+> +++ b/drivers/usb/serial/mos7840.c
+> @@ -230,7 +230,7 @@ static int mos7840_set_reg_sync(struct usb_serial_port *port, __u16 reg,
+>  	struct usb_device *dev = port->serial->dev;
+>  
+>  	val = val & 0x00ff;
+> -	dev_dbg(&port->dev, "mos7840_set_reg_sync offset is %x, value %x\n", reg, val);
+> +	dev_dbg(&port->dev, "%s offset is %x, value %x\n", __func__, reg, val);
 
-Applied, thanks!
+I suggest you just leave this as is.
 
-[2/3] arm64: dts: rockchip: Add SPDIF nodes to RK3588(s) device trees
-      commit: 271ba4d6c56c7cb295def511cbcdd9880ec41e1b
-[3/3] arm64: dts: rockchip: Enable SPDIF output on H96 Max V58
-      commit: cd81ee8667cc13ff69e11b44a727be07035aa536
-
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+Johan
