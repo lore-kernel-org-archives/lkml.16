@@ -1,151 +1,182 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D661F03EB
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:41:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3639F1F03C9
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739234501; cv=none; b=ZwgWPP4xSee5xNVA56yD87L26U2uRAPVvnbqwiKzA0yT/6DCrv33ON6HqiMHTjgx/XGUYkiuv8RbiO3ppn6H1IenLI6XxqNBPtnQP7g6OtWGS5zNl4uHhrKQj8qGBS/d1HwRUBw5tR1TBJgXELlSJZ2WeFVfZSpyphi7BtpPmBI=
+	t=1739234501; cv=none; b=o+G0X4ilPwSvFNgpghpimiFjn+LoQcInrG9Qx84Z23ugLCsv5UB/3GF/XIz1NV0ur7O0aKndnLTVvaZDD80OoXIHMdIdTLn7ZWCH2YqvmlWMHLFq9msBnRoe3ssf4Hodyp3nXOGEVlbSv+tTp+V/gdgJEiCBE79NFDc8PkhWmWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739234501; c=relaxed/simple;
-	bh=t9go/X+DjRrOvyBGhvmYx8gry+RZBj9ONKGlRFoyukY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HfmJX2x+js1C/z/Id4DizmPUZKhzc4iPX058nYk1H3CitVuq0+KEiRXPdF/CUyaRyocDinaeOdOK0aIXIvoDy/kajeZrTWnMHevF3Has1t26bPhbfIDvI7RbT8Tmse2R7uwsOVmBKd6Qg7RD9AfzjGcfSKbG+k7K+U/Nylj5GHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=ahGmL7j5; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
+	bh=bpieZKu7nF2fBcW+p5hY/rCkCIIcoFokdt3AqsVsiL8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VSEbTxXPOnt2FvFvk44ZSbMia5JPXsJ9zmVoj41hOF7r9OaTQMSWfbwPWgJFykF1ubxnRofcZuO1pjBe/SA5/53w4udMadCn/2QfMxieF1L4ICMV7EpHY+M54qgiOcMj9NjrGad2d1QGHo1Ge2kYxJn0ll2+fSrAKpmH1PgVit0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=itm6Zc1b; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="ahGmL7j5"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38dcf8009f0so1699311f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:41:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openvpn.net; s=google; t=1739234496; x=1739839296; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sMmL1XdpWp8bWGtfaVtGeJtwHAhwgGInZM8+xT9Fcfo=;
-        b=ahGmL7j5DBG4T4ZDnjMoY7dw1vDe683VqEQ2gk8YanuR64fe7BXihK7lt7OSKGamEN
-         Gv7eLLKbaeDstaJz0JN6OH86XFju6lIQ4RZYT/SDAFjIoZ3P5osdhx8/IdhZFaGchhHp
-         AD9rSfCi0zJiUIiPopPc9/UUP3bvl+aEKzeGfxwLjR56Li7MvcO9Z50oXFuAgiqksvSt
-         HQKBSEHX60a/a9Z7dmalXhcGUVJQA6aHYbuSy3cWeFqjNdMeYUruiN5BUaqMthXR1YIj
-         Y0V/xbNn8mzvtBQq3TNTJssbzSZSW0P4mAhZ3EjBYKJEanC5/cAjZUhP2nNzB50KsmRP
-         0rOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739234496; x=1739839296;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sMmL1XdpWp8bWGtfaVtGeJtwHAhwgGInZM8+xT9Fcfo=;
-        b=oXEiYd7ngq0twAi9Fd+85hUG7EyA0l6ZdOBf36TB/lAGSYJFWjAJzW1mbbRERHuXdw
-         zWm+OMNF+poznnoCdqFAGMUTViwVm+aV87sfBK4yhCgkqEp2p6g2f/rtC1X3me1XGq0P
-         VwmX3w/MRqZ5OIfsiQ9HAxdhryfMIaycfj4PT7Yq6Vk9jQmqAGj1Jibp9rkXeJdmfCRj
-         bY0puTu0PfHYHBKP6pc2SPCqrdJO7a3z4QJmIu68cYU7VGqKSYscKEFg8TeavH8d2FBe
-         mSQBZRA6G2BDqebjpoaNuWfSdoP46IMJQLuJuOBjrIs5YjF+5TqhAFlHK+fUfs/dHMRw
-         A5dw==
-X-Forwarded-Encrypted: i=1; AJvYcCXruaxu8IKelSixJ4NTDZluwgPrA5esSchhdD+UjICWLqST+TtqUdVNyHTI0A/CyZMkvWNkURDSQK8SAvA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAAyON7LOtkiIt8YO06POggRInJl7KV99rRtHwr1ldLZC6fd5Y
-	5sWq8kmc5Cu5x7IEMkOMnvPWG3W1+FY6nVZGPzI+1HLcBVexdXGk+AHlF4NV+1g=
-X-Gm-Gg: ASbGncspc7lwirHdSrdvt86dCNs3h+/hGXGubd/DPMb2PhQ/NM/Rdc+kBkWzWp3rkLO
-	A4SkzaSs6ZCA+HeKvy4QIXMVR3lDZf3Zeu0lw+BelBrwjMx3aS512xzmPBnmoQHCbF5ybK2F6eN
-	Y0D+YI6QodrkN31YwrhIEApF005aFxxJOF/6DkC6SPAs9OONjnO3LYU9Zcrp7mEkpYPXHdocLaE
-	PUineMND5UYhHnqYxB87lkcEmP8PAeaRuwN0XNM1K4tWshXkfBGwdP/jWU15MvnnvkdR0Mylq58
-	hA7jOzFYGj168c3wgeZUqxcbDIY=
-X-Google-Smtp-Source: AGHT+IET0A/pQsSzvGSItJIKx9o2/+rn8QwlMyL7XBg1Isq492vibQkvsqK2ckyJJKTRztGcpI4R8A==
-X-Received: by 2002:a05:6000:18af:b0:38d:cbc2:29c3 with SMTP id ffacd0b85a97d-38dcbc2310fmr12173016f8f.33.1739234496427;
-        Mon, 10 Feb 2025 16:41:36 -0800 (PST)
-Received: from serenity.mandelbit.com ([2001:67c:2fbc:1:1255:949f:f81c:4f95])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394dc1bed2sm3388435e9.0.2025.02.10.16.41.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 16:41:35 -0800 (PST)
-From: Antonio Quartulli <antonio@openvpn.net>
-Date: Tue, 11 Feb 2025 01:40:17 +0100
-Subject: [PATCH net-next v19 24/26] ovpn: add basic ethtool support
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="itm6Zc1b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739234496;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uW32snpxRzCVSt941LOqOUmwseLr9n4AUtM3i/agsHc=;
+	b=itm6Zc1bRTQujjFhDiDZoWYXftWoUIPrqnoUgiRD2Qj23Kfa2pihQVMMLFArwjEhDr/SxE
+	DEi6gitYTHtCrRmeP/ONvrOCwXSYRGhfBE2Zc+rM+JhtE0JR9tZjwqm8e9MhPpowD9gQvF
+	C9sMoHvUdjLlgeXboglCE4hAnKcGRhc=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-251-_e6O-04qOV2n_AD1k2LIuQ-1; Mon,
+ 10 Feb 2025 19:41:35 -0500
+X-MC-Unique: _e6O-04qOV2n_AD1k2LIuQ-1
+X-Mimecast-MFC-AGG-ID: _e6O-04qOV2n_AD1k2LIuQ
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B5BC2180087E;
+	Tue, 11 Feb 2025 00:41:29 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.88.129])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6BC8A18004A7;
+	Tue, 11 Feb 2025 00:41:18 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: ryan.roberts@arm.com,
+	anshuman.khandual@arm.com,
+	catalin.marinas@arm.com,
+	cl@gentwo.org,
+	vbabka@suse.cz,
+	mhocko@suse.com,
+	apopple@nvidia.com,
+	dave.hansen@linux.intel.com,
+	will@kernel.org,
+	baohua@kernel.org,
+	jack@suse.cz,
+	srivatsa@csail.mit.edu,
+	haowenchao22@gmail.com,
+	hughd@google.com,
+	aneesh.kumar@kernel.org,
+	yang@os.amperecomputing.com,
+	peterx@redhat.com,
+	ioworker0@gmail.com,
+	wangkefeng.wang@huawei.com,
+	ziy@nvidia.com,
+	jglisse@google.com,
+	surenb@google.com,
+	vishal.moola@gmail.com,
+	zokeefe@google.com,
+	zhengqi.arch@bytedance.com,
+	jhubbard@nvidia.com,
+	21cnbao@gmail.com,
+	willy@infradead.org,
+	kirill.shutemov@linux.intel.com,
+	david@redhat.com,
+	aarcange@redhat.com,
+	raquini@redhat.com,
+	dev.jain@arm.com,
+	sunnanyong@huawei.com,
+	usamaarif642@gmail.com,
+	audra@redhat.com,
+	akpm@linux-foundation.org,
+	rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	tiwai@suse.de,
+	baolin.wang@linux.alibaba.com,
+	corbet@lwn.net,
+	shuah@kernel.org
+Subject: [RFC v2 0/5] mm: introduce THP deferred setting
+Date: Mon, 10 Feb 2025 17:40:49 -0700
+Message-ID: <20250211004054.222931-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250211-b4-ovpn-v19-24-86d5daf2a47a@openvpn.net>
-References: <20250211-b4-ovpn-v19-0-86d5daf2a47a@openvpn.net>
-In-Reply-To: <20250211-b4-ovpn-v19-0-86d5daf2a47a@openvpn.net>
-To: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Donald Hunter <donald.hunter@gmail.com>, 
- Antonio Quartulli <antonio@openvpn.net>, Shuah Khan <shuah@kernel.org>, 
- sd@queasysnail.net, ryazanov.s.a@gmail.com, 
- Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>, 
- Andrew Lunn <andrew@lunn.ch>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1701; i=antonio@openvpn.net;
- h=from:subject:message-id; bh=t9go/X+DjRrOvyBGhvmYx8gry+RZBj9ONKGlRFoyukY=;
- b=owEBbQGS/pANAwAIAQtw5TqgONWHAcsmYgBnqpyOp1Y/mEQ9QiTKsW4bmwKuJ2pKrAI7cQdPF
- mLLCHnGCViJATMEAAEIAB0WIQSZq9xs+NQS5N5fwPwLcOU6oDjVhwUCZ6qcjgAKCRALcOU6oDjV
- h12yB/9R91hNevzhBIkXLNi3Xy2XVZvGoKjRM8TvkpDV99uf7PVv4U5XtS5vy2zDxtc8FE5PZTi
- vCQqVq4LQ+Hay7o76lYahkX7uukM4J+kkCgI4mZ/aBPLtah+JM5Ll2oN1rss1HeXsY1w/TjKJt/
- EbeGSjdo4RcR9aWFylDxkc3+hBF6M5vMFGfWSwH56S4KOc6x+fyZSzAcrFX3V4tzV1w2UQOlsa/
- GoH84DcsR0rCIbD5WU0LOIhIjX03vTkHFjfZIkK2UdKY2QERNkHjGw10WiOH6a/Q8uzu8wv21+I
- RLs7SElmo0pWSQQt3xghjyyQfnNpNvXhdL/5OWLMR401C63y
-X-Developer-Key: i=antonio@openvpn.net; a=openpgp;
- fpr=CABDA1282017C267219885C748F0CCB68F59D14C
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Implement support for basic ethtool functionality.
+This series is a follow-up to [1], which adds mTHP support to khugepaged.
+mTHP khugepaged support was necessary for the global="defer" and
+mTHP="inherit" case (and others) to make sense.
 
-Note that ovpn is a virtual device driver, therefore
-various ethtool APIs are just not meaningful and thus
-not implemented.
+We've seen cases were customers switching from RHEL7 to RHEL8 see a
+significant increase in the memory footprint for the same workloads.
 
-Signed-off-by: Antonio Quartulli <antonio@openvpn.net>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
- drivers/net/ovpn/main.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Through our investigations we found that a large contributing factor to
+the increase in RSS was an increase in THP usage.
 
-diff --git a/drivers/net/ovpn/main.c b/drivers/net/ovpn/main.c
-index 38114c5482e3ba283937fdafce62056096ff9c2d..20625a2293ab0e55e26a4d700fb6a3d4915b466c 100644
---- a/drivers/net/ovpn/main.c
-+++ b/drivers/net/ovpn/main.c
-@@ -7,6 +7,7 @@
-  *		James Yonan <james@openvpn.net>
-  */
- 
-+#include <linux/ethtool.h>
- #include <linux/genetlink.h>
- #include <linux/module.h>
- #include <linux/netdevice.h>
-@@ -142,6 +143,19 @@ bool ovpn_dev_is_valid(const struct net_device *dev)
- 	return dev->netdev_ops == &ovpn_netdev_ops;
- }
- 
-+static void ovpn_get_drvinfo(struct net_device *dev,
-+			     struct ethtool_drvinfo *info)
-+{
-+	strscpy(info->driver, "ovpn", sizeof(info->driver));
-+	strscpy(info->bus_info, "ovpn", sizeof(info->bus_info));
-+}
-+
-+static const struct ethtool_ops ovpn_ethtool_ops = {
-+	.get_drvinfo		= ovpn_get_drvinfo,
-+	.get_link		= ethtool_op_get_link,
-+	.get_ts_info		= ethtool_op_get_ts_info,
-+};
-+
- static void ovpn_setup(struct net_device *dev)
- {
- 	netdev_features_t feat = NETIF_F_SG | NETIF_F_HW_CSUM | NETIF_F_RXCSUM |
-@@ -152,6 +166,7 @@ static void ovpn_setup(struct net_device *dev)
- 
- 	dev->pcpu_stat_type = NETDEV_PCPU_STAT_TSTATS;
- 
-+	dev->ethtool_ops = &ovpn_ethtool_ops;
- 	dev->netdev_ops = &ovpn_netdev_ops;
- 
- 	dev->priv_destructor = ovpn_priv_free;
+For workloads like MySQL, or when using allocators like jemalloc, it is
+often recommended to set /transparent_hugepages/enabled=never. This is
+in part due to performance degradations and increased memory waste.
+
+This series introduces enabled=defer, this setting acts as a middle
+ground between always and madvise. If the mapping is MADV_HUGEPAGE, the
+page fault handler will act normally, making a hugepage if possible. If
+the allocation is not MADV_HUGEPAGE, then the page fault handler will
+default to the base size allocation. The caveat is that khugepaged can
+still operate on pages thats not MADV_HUGEPAGE.
+
+This allows for two things... one, applications specifically designed to
+use hugepages will get them, and two, applications that don't use
+hugepages can still benefit from them without aggressively inserting
+THPs at every possible chance. This curbs the memory waste, and defers
+the use of hugepages to khugepaged. Khugepaged can then scan the memory
+for eligible collapsing.
+
+Admins may want to lower max_ptes_none, if not, khugepaged may
+aggressively collapse single allocations into hugepages.
+
+TESTING:
+- Built for x86_64, aarch64, ppc64le, and s390x
+- selftests mm
+- In [1] I provided a script [2] that has multiple access patterns
+- lots of general use. These changes have been running in my VM for some time
+- redis testing. This test was my original case for the defer mode. What I was
+   able to prove was that THP=always leads to increased max_latency cases; hence
+   why it is recommended to disable THPs for redis servers. However with 'defer'
+   we dont have the max_latency spikes and can still get the system to utilize
+   THPs. I further tested this with the mTHP defer setting and found that redis
+   (and probably other jmalloc users) can utilize THPs via defer (+mTHP defer)
+   without a large latency penalty and some potential gains.
+   I uploaded some mmtest results here [3] which compares:
+       stock+thp=never
+       stock+(m)thp=always
+       khugepaged-mthp + defer (max_ptes_none=64)
+
+  The results show that (m)THPs can cause some throughput regression in some
+  cases, but also has gains in other cases. The mTHP+defer results have more
+  gains and less losses over the (m)THP=always case.
+
+V2 Changes:
+- base changes on mTHP khugepaged support
+- Fix selftests parsing issue
+- add mTHP defer option
+- add mTHP defer Documentation
+
+[1] - https://lkml.org/lkml/2025/2/10/1982
+[2] - https://gitlab.com/npache/khugepaged_mthp_test
+[3] - https://people.redhat.com/npache/mthp_khugepaged_defer/testoutput2/output.html
+
+Nico Pache (5):
+  mm: defer THP insertion to khugepaged
+  mm: document transparent_hugepage=defer usage
+  selftests: mm: add defer to thp setting parser
+  khugepaged: add defer option to mTHP options
+  mm: document mTHP defer setting
+
+ Documentation/admin-guide/mm/transhuge.rst | 40 ++++++++++---
+ include/linux/huge_mm.h                    | 18 +++++-
+ mm/huge_memory.c                           | 69 +++++++++++++++++++---
+ mm/khugepaged.c                            | 10 ++--
+ tools/testing/selftests/mm/thp_settings.c  |  1 +
+ tools/testing/selftests/mm/thp_settings.h  |  1 +
+ 6 files changed, 115 insertions(+), 24 deletions(-)
 
 -- 
-2.45.3
+2.48.1
 
