@@ -1,66 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF8E1F12F8;
-	Tue, 11 Feb 2025 09:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFFD1F12F8;
+	Tue, 11 Feb 2025 09:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739266876; cv=none; b=XTBrjzBg4Qt4MVuRUee9OGVfdvnWRZn/mtuUVvU2dvLq8gHnkr/HhzmpSZMfDTqjI6XFw1ltzaLp317BNsPbbWwPYp+tZ7vDMtobZbCNs2zf0KSrcYH+qGjRSZJ9TU1wL3l0akpcOvSvM6jyXS9pBfI8GH+rKmHXUvAyq8yy7kI=
+	t=1739266880; cv=none; b=tFlQovAx82O3nfae1TIYwbE87Oa+TjZr6oWJ4Q4Eb6R5Bzm0VpNyoNAJh26HswJeAqwLzz85QFSlkM8V+whCTNIjBEFy+YjbjyZjLUNWYr2GrDa7oRBos5Jsaj4gO71LGBJYz8Bd4Bfh21MI1QpMtmv5mIvcE22O3c4MiO6Q6X4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739266876; c=relaxed/simple;
-	bh=IkAWydMGs1r5rb0BA93bcr9XHfndvLruvy5SdIueU3E=;
+	s=arc-20240116; t=1739266880; c=relaxed/simple;
+	bh=Elhf16ia3QS/HSWAwlp2+dQGl6UKy9ADI24OK1aDw6M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X75kak0Nz9T7ddrFJLGi2H52EPUtzRPEUahPfjvwczfO/zhjJnTOfC2eUWiqxot/9+88vszbiQ95tvJ97SdxXrPFcG0W2CXXf5gw8yggPkPDRbLFbFnx6m+j95IH97+ChOn6Gnl3kL/dLhpN04SHMaCbXv0RCE0g1M36JsP/y7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: izygP/I+T8W8FPtZp56Vmg==
-X-CSE-MsgGUID: F4+jS7SXTxSxelIc1J6FJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50510266"
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="50510266"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 01:41:10 -0800
-X-CSE-ConnectionGUID: M4q0L3FITbuvBztdQMvbJg==
-X-CSE-MsgGUID: Cg7Uozc6SoWKjkvUHvaTwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="143364716"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 01:41:03 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy@kernel.org>)
-	id 1thmlH-0000000ASZ3-2ikX;
-	Tue, 11 Feb 2025 11:40:59 +0200
-Date: Tue, 11 Feb 2025 11:40:59 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH v3 05/15] bus: ts-nbus: use bitmap_get_value8()
-Message-ID: <Z6sbK96JEBpWoFWy@smile.fi.intel.com>
-References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
- <20250210-gpio-set-array-helper-v3-5-d6a673674da8@baylibre.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=m2nV7+Zc+0XC/dm05NJfBGS+AUNQvEnk1tEvJXIRBNx4m9KAadPvCHcAppmDm6cavObZPieGazVQ+INEWdekNZ85iLwEwSJ70y37wKl5795ZtrCAqozTqMfMAy15uEP+sYr7TjmnYdZFvmUvGUUsNjVE5bBT8VjtxX2xJZ1hNNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDGmnQ8E; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDGmnQ8E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23A92C4CEE7;
+	Tue, 11 Feb 2025 09:41:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739266880;
+	bh=Elhf16ia3QS/HSWAwlp2+dQGl6UKy9ADI24OK1aDw6M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tDGmnQ8E+YJFPrwUnTRJkbA4gbiZgfrEYcJ4Xz9OMzfYs2R8cvzWFFRvkh7yU0RbN
+	 40ndxDGiaQg5fxXA1GbWcAiUIsmG8XAkfsFbP0DS0DAHA/j94vUIUdy+QZSl5PTpN2
+	 IgCkXVWlTjzV47u/qWoGKr2M9jJUZHSQK+adw/Z8zs4QtsrdNa2NrWluxSpRbsRiNE
+	 GlBIFSNcL0yjtjyT0qxAPFl9hPpMO1YmH8dKgkxxjI/rp0NH8VPzxpEFDpBPrcJ4bl
+	 i7+ItQkZmhzsQbeY+l0oHlT4ze4jVAgnYl3xeu6BsBnGaM4E+8MXyFruQzVJ8FEPEz
+	 9wR1656ZrlFBA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1thmlj-000000007TW-1l1c;
+	Tue, 11 Feb 2025 10:41:27 +0100
+Date: Tue, 11 Feb 2025 10:41:27 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Tony Chung <tony467913@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH 0/3] drivers: usb: serial: mos7840: Improved baud rate
+ support
+Message-ID: <Z6sbRwXCYQA903h-@hovoldconsulting.com>
+References: <20241024100901.69883-1-tony467913@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,29 +47,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250210-gpio-set-array-helper-v3-5-d6a673674da8@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20241024100901.69883-1-tony467913@gmail.com>
 
-On Mon, Feb 10, 2025 at 04:33:31PM -0600, David Lechner wrote:
-> Use bitmap_get_value8() instead of accessing the bitmap directly.
+On Thu, Oct 24, 2024 at 06:08:59PM +0800, Tony Chung wrote:
+> This patch set has made some improvements for baud rate setup:
+> 1. Optimized register configurations for common baud rates.
+> 2. Added clock select registers to choose between 96M, 30M, or external clock sources,
+>    allowing baud rate setup to 6M, matching the hardware's maximum data rate.
 > 
-> Accessing the bitmap directly is not considered good practice. We now
-> have a helper function that can be used instead, so let's use it.
+> Tony Chung (3):
+>   drivers: usb: serial: mos7840: Add defines for clock select register
+>     offset
+>   drivers: usb: serial: mos7840: added optimized register setups for
+>     common baudrates.
+>   driver: usb: serial: mos7840: add more baudrate options
 
-Thank you, LGTM (one minor thing you may address,
-or keep it as in the current variant of the patch),
+Thanks for these. As for the clean up series, use the established
+patch prefix here too:
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+	USB: serial: mos7840: ...
 
-...
-
-> +#include <linux/bitmap.h>
->  #include <linux/bitops.h>
-
-bitmap.h implies bitops.h
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Johan
