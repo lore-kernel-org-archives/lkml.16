@@ -1,156 +1,221 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC2E21F3FC2;
-	Tue, 11 Feb 2025 10:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9176326BDA9;
+	Tue, 11 Feb 2025 10:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739268957; cv=none; b=KcUVL6wVqGDB8fLOwBqD4Z1Y+oZogDkILyrWcs87AtLrxuhahg001VX6QVWe5RqZGpYr1UOu0vlRNz7YDe/GM/Sh3Ny0WNpeJYBI6Dl+/8HniOLBbMMfQtMT695+6r2OaHCu6yWQKHqWdcUEZL8ZDswRqjA1fI+aZnJbbXetCk4=
+	t=1739268991; cv=none; b=k18+xAONuCfaiWOC3tZoT0WJmqYIEn8xmJRLfVbDvRyqiv7PHvdtAzuX7Lxfw6Wj8kDyflzkocmkaXrkZI3gp5LRLVKeriB41QjoAvCg56sXX7sj6xZ6BPUZ9Sno5BqYN8TqkGDr/3++QDNrAihHO1vggpnJN4aijDL+y2eaN4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739268957; c=relaxed/simple;
-	bh=AANQ4doGqqYCs1ixTUngiq7Ybau1E1MR40bQLIYvdrY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V3yHpNqMOo/Ir6UfUq+WLTfpKaTHl1UoaMnRwbo8thpUvnkIHEi0J4XKoFsZzbQrD06inGeYP77EZfy0g5bMk4NP+CQQpwfsoKyn17dm7jNSsq1RvFF+xv6n3iIYbNWFegUmM8yJo2LxnqfC4XQULDNZEaIwelNBzQCOhHzDdb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 720C61424;
-	Tue, 11 Feb 2025 02:16:16 -0800 (PST)
-Received: from [10.57.37.40] (unknown [10.57.37.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6E763F6A8;
-	Tue, 11 Feb 2025 02:15:49 -0800 (PST)
-Message-ID: <dbd2af63-e9ac-44c8-8bbf-84358e30bf0b@arm.com>
-Date: Tue, 11 Feb 2025 10:15:47 +0000
+	s=arc-20240116; t=1739268991; c=relaxed/simple;
+	bh=h3BpfPvrJQaNAd4htfrP3ddn5ZRvJlMFCTVdibd03eE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z/QJO1oer/VurNPk8BMm9TKsRvFE2iIRdSZLeaY/KURwluj6VLBxI1q1tEcjsE8IaiH22nK0fnQuar9J9b/HM633+MC5o6DqxKyOZAyjqc/0vh3ekqt9iRPhVy4bJD3K+qtGjD/Uk6kUwylUfoQxa8Kk3pMbrEAaT0a6mpMe7hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NALsp+xe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NALsp+xe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15FD0C4CEDD;
+	Tue, 11 Feb 2025 10:16:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739268991;
+	bh=h3BpfPvrJQaNAd4htfrP3ddn5ZRvJlMFCTVdibd03eE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NALsp+xe8cw09a+xtwajFCSr2ztu+oNoi98SVZ/zsb1RSATuTlI9Yjivn0FXa5Dip
+	 HyWtk2xTvpHFB9+/PyLmjTcObhbQByQpSfFN/MFesVOLwCJJc3ZReeSkPjdLXZfLC7
+	 KE4ytkgguda7cDlDcOSA1QiXdQwaeNhC6W1ivw77m0srgLgJ3sQqDXDcyQ5MJ71CuI
+	 nSg8jHrlxqyR3gG3ydZqqmF3tSaG5jul8k/42QhdzLcrnwUNJGPNGq38qceldHBPYc
+	 kfeatPvjpfJ6iQib7G9IyI1tWK4CO8g5nS5AWTU/zmzfXlTtwah27zdMaEP2p4Hu7/
+	 6f/rzFuKMhDdA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1thnJl-000000008A7-3BGl;
+	Tue, 11 Feb 2025 11:16:38 +0100
+Date: Tue, 11 Feb 2025 11:16:37 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Tony Chung <tony467913@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH 2/3] drivers: usb: serial: mos7840: added optimized
+ register setups for common baudrates.
+Message-ID: <Z6sjhS_1KY1jjdur@hovoldconsulting.com>
+References: <20241024100901.69883-1-tony467913@gmail.com>
+ <20241024100901.69883-3-tony467913@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
- for hotplug
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Thierry Reding <treding@nvidia.com>, Waiman Long <longman@redhat.com>,
- Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Joel Fernandes (Google)" <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>, Aashish Sharma <shraash@google.com>,
- Shin Kawamura <kawasin@google.com>,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <Z4kr7xq7tysrKGoR@jlelli-thinkpadt14gen4.remote.csb>
- <cfcea236-5b4c-4037-a6f5-267c4c04ad3c@nvidia.com>
- <Z6MLAX_TKowbmdS1@jlelli-thinkpadt14gen4.remote.csb>
- <Z6M5fQB9P1_bDF7A@jlelli-thinkpadt14gen4.remote.csb>
- <8572b3bc-46ec-4180-ba55-aa6b9ab7502b@nvidia.com>
- <Z6SA-1Eyr1zDTZDZ@jlelli-thinkpadt14gen4.remote.csb>
- <a305f53d-44d4-4d7a-8909-6a63ec18a04b@nvidia.com>
- <5a36a2e8-bd78-4875-9b9e-814468ca6692@arm.com>
- <db800694-84f7-443c-979f-3097caaa1982@nvidia.com>
- <8ff19556-a656-4f11-a10c-6f9b92ec9cea@arm.com>
- <Z6oysfyRKM_eUHlj@jlelli-thinkpadt14gen4.remote.csb>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <Z6oysfyRKM_eUHlj@jlelli-thinkpadt14gen4.remote.csb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241024100901.69883-3-tony467913@gmail.com>
 
-On 2/10/25 17:09, Juri Lelli wrote:
-> Hi Christian,
-> 
-> Thanks for taking a look as well.
-> 
-> On 07/02/25 15:55, Christian Loehle wrote:
->> On 2/7/25 14:04, Jon Hunter wrote:
->>>
->>>
->>> On 07/02/2025 13:38, Dietmar Eggemann wrote:
->>>> On 07/02/2025 11:38, Jon Hunter wrote:
->>>>>
->>>>> On 06/02/2025 09:29, Juri Lelli wrote:
->>>>>> On 05/02/25 16:56, Jon Hunter wrote:
->>>>>>
->>>>>> ...
->>>>>>
->>>>>>> Thanks! That did make it easier :-)
->>>>>>>
->>>>>>> Here is what I see ...
->>>>>>
->>>>>> Thanks!
->>>>>>
->>>>>> Still different from what I can repro over here, so, unfortunately, I
->>>>>> had to add additional debug printks. Pushed to the same branch/repo.
->>>>>>
->>>>>> Could I ask for another run with it? Please also share the complete
->>>>>> dmesg from boot, as I would need to check debug output when CPUs are
->>>>>> first onlined.
->>>>
->>>> So you have a system with 2 big and 4 LITTLE CPUs (Denver0 Denver1 A57_0
->>>> A57_1 A57_2 A57_3) in one MC sched domain and (Denver1 and A57_0) are
->>>> isol CPUs?
->>>
->>> I believe that 1-2 are the denvers (even thought they are listed as 0-1 in device-tree).
->>
->> Interesting, I have yet to reproduce this with equal capacities in isolcpus.
->> Maybe I didn't try hard enough yet.
->>
->>>
->>>> This should be easy to set up for me on my Juno-r0 [A53 A57 A57 A53 A53 A53]
->>>
->>> Yes I think it is similar to this.
->>>
->>> Thanks!
->>> Jon
->>>
->>
->> I could reproduce that on a different LLLLbb with isolcpus=3,4 (Lb) and
->> the offlining order:
->> echo 0 > /sys/devices/system/cpu/cpu5/online
->> echo 0 > /sys/devices/system/cpu/cpu1/online
->> echo 0 > /sys/devices/system/cpu/cpu3/online
->> echo 0 > /sys/devices/system/cpu/cpu2/online
->> echo 0 > /sys/devices/system/cpu/cpu4/online
->>
->> while the following offlining order succeeds:
->> echo 0 > /sys/devices/system/cpu/cpu5/online
->> echo 0 > /sys/devices/system/cpu/cpu4/online
->> echo 0 > /sys/devices/system/cpu/cpu1/online
->> echo 0 > /sys/devices/system/cpu/cpu2/online
->> echo 0 > /sys/devices/system/cpu/cpu3/online
->> (Both offline an isolcpus last, both have CPU0 online)
->>
->> The issue only triggers with sugov DL threads (I guess that's obvious, but
->> just to mention it).
-> 
-> It wasn't obvious to me at first :). So thanks for confirming.
-> 
->> I'll investigate some more later but wanted to share for now.
-> 
-> So, problem actually is that I am not yet sure what we should do with
-> sugovs' bandwidth wrt root domain accounting. W/o isolation it's all
-> good, as it gets accounted for correctly on the dynamic domains sugov
-> tasks can run on. But with isolation and sugov affected_cpus that cross
-> isolation domains (e.g., one BIG one little), we can get into troubles
-> not knowing if sugov contribution should fall on the DEF or DYN domain.
-> 
-> Hummm, need to think more about it.
+On Thu, Oct 24, 2024 at 06:09:03PM +0800, Tony Chung wrote:
+> added optimized register setups for common baudrates.
 
-That is indeed tricky.
-I would've found it super appealing to always just have sugov DL tasks activate
-on this_cpu and not have to worry about all this, but then you have contention
-amongst CPUs of a cluster and there are energy improvements from always
-having little cores handle all sugov DL tasks, even for the big CPUs,
-that's why I introduced
-commit 93940fbdc468 ("cpufreq/schedutil: Only bind threads if needed")
-but that really doesn't make this any easier.
+First, how did you determine the base clocks here? Do you have access to
+some documentation or did you just measure them?
 
+These are all derived from the internal PLL IIUC?
 
+> Signed-off-by: Tony Chung <tony467913@gmail.com>
+> ---
+>  drivers/usb/serial/mos7840.c | 114 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 111 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/serial/mos7840.c b/drivers/usb/serial/mos7840.c
+> index 362875a53..acc16737b 100644
+> --- a/drivers/usb/serial/mos7840.c
+> +++ b/drivers/usb/serial/mos7840.c
+> @@ -1063,11 +1063,116 @@ static int mos7840_calc_baud_rate_divisor(struct usb_serial_port *port,
+>  {
+>  	dev_dbg(&port->dev, "%s - %d\n", __func__, baudRate);
+>  
+> -	if (baudRate <= 115200) {
+> +	// divisor = (256*DLM)+DLL
+> +	// baudrate = InputCLK/(16*Divisor)
+
+Style nit: Please avoid using c99 comments (here and below), just use a
+block comment here and add spaces around the operators.
+
+> +	if (baudRate == 50) {
+> +		*divisor = (256*0x09)+0x04; // DLM=0x09, DLL=0x04
+> +		*clk_sel_val = 0x0;	    // clock source = 1.846153846M
+> +	} else if (baudRate == 75) {
+> +		*divisor = (256*0x06)+0x02; // DLM=0x06, DLL=0x02
+> +		*clk_sel_val = 0x0;	    // clock source = 1.846153846M
+> +	} else if (baudRate == 110) {
+> +		*divisor = (256*0x04)+0x19; // DLM=0x04, DLL=0x19
+> +		*clk_sel_val = 0x0;	    // clock source = 1.846153846M
+> +	} else if (baudRate == 134) {
+> +		*divisor = (256*0x03)+0x5d; // DLM=0x03, DLL=0x5d
+> +		*clk_sel_val = 0x0;	    // clock source = 1.846153846M
+> +	} else if (baudRate == 150) {
+> +		*divisor = (256*0x03)+0x01; // DLM=0x03, DLL=0x01
+> +		*clk_sel_val = 0x0;	    // clock source = 1.846153846M
+> +	} else if (baudRate == 300) {
+> +		*divisor = (256*0x01)+0x81; // DLM=0x01, DLL=0x81
+> +		*clk_sel_val = 0x0;	    // clock source = 1.846153846M
+> +	} else if (baudRate == 600) {
+> +		*divisor = 0xc0;		// DLM=0, DLL=0xc0
+> +		*clk_sel_val = 0x0;		// clock source = 1.846153846M
+> +	} else if (baudRate == 1200) {
+> +		*divisor = 0x60;		// DLM=0, DLL=0x60
+> +		*clk_sel_val = 0x0;		// clock source = 1.846153846M
+> +	} else if (baudRate == 1800) {
+> +		*divisor = 0x40;		// DLM=0, DLL=0x40
+> +		*clk_sel_val = 0x0;		// clock source = 1.846153846M
+> +	} else if (baudRate == 2400) {
+> +		*divisor = 0x30;		// DLM=0, DLL=0x30
+> +		*clk_sel_val = 0x0;		// clock source = 1.846153846M
+> +	} else if (baudRate == 4800) {
+> +		*divisor = 0x18;		// DLM=0, DLL=0x18
+> +		*clk_sel_val = 0x0;		// clock source = 1.846153846M
+> +	} else if (baudRate == 7200) {
+> +		*divisor = 0x10;		// DLM=0, DLL=0x10
+> +		*clk_sel_val = 0x0;		// clock source = 1.846153846M
+> +	} else if (baudRate == 9600) {
+> +		*divisor = 0x0c;		// DLM=0, DLL=0x0c
+> +		*clk_sel_val = 0x0;		// clock source = 1.846153846M
+> +	} else if (baudRate == 14400) {
+> +		*divisor = 0x08;		// DLM=0, DLL=0x08
+> +		*clk_sel_val = 0x0;		// clock source = 1.846153846M
+> +	} else if (baudRate == 19200) {
+> +		*divisor = 0x06;		// DLM=0, DLL=0x06
+> +		*clk_sel_val = 0x0;		// clock source = 1.846153846M
+> +	} else if (baudRate == 28800) {
+> +		*divisor = 0x04;		// DLM=0, DLL=0x04
+> +		*clk_sel_val = 0x0;		// clock source = 1.846153846M
+> +	} else if (baudRate == 38400) {
+> +		*divisor = 0x03;		// DLM=0, DLL=0x03
+> +		*clk_sel_val = 0x0;		// clock source = 1.846153846M
+> +	} else if (baudRate == 57600) {
+> +		*divisor = 0x02;		// DLM=0, DLL=0x02
+> +		*clk_sel_val = 0x0;		// clock source = 1.846153846M
+> +	} else if (baudRate == 115200) {
+> +		*divisor = 0x01;		// DLM=0, DLL=0x01
+> +		*clk_sel_val = 0x0;		// clock source = 1.846153846M
+> +	} else if (baudRate == 230400) {
+> +		*divisor = 0x01;		// DLM=0, DLL=0x01
+> +		*clk_sel_val = 0x10;	// clock source = 3.692307692M
+> +	} else if (baudRate == 460800) {
+> +		*divisor = 0x01;		// DLM=0, DLL=0x01
+> +		*clk_sel_val = 0x30;	// clock source = 7.384615384M
+> +	} else if (baudRate == 806400) {
+> +		*divisor = 0x01;		// DLM=0, DLL=0x01
+> +		*clk_sel_val = 0x40;	// clock source = 12.923076922M
+> +	} else if (baudRate == 921600) {
+> +		*divisor = 0x01;		// DLM=0, DLL=0x01
+> +		*clk_sel_val = 0x50;	// clock source = 14.769230768M
+> +	} else if (baudRate == 25000) {
+> +		*divisor = 0x78;		// DLM=0, DLL=0x78
+> +		*clk_sel_val = 0x70;	// clock source=48M
+> +	} else if (baudRate == 50000) {
+> +		*divisor = 0x3c;		// DLM=0, DLL=0x3c
+> +		*clk_sel_val = 0x70;	// clock source=48M
+> +	} else if (baudRate == 75000) {
+> +		*divisor = 0x28;		// DLM=0, DLL=0x28
+> +		*clk_sel_val = 0x70;	// clock source=48M
+> +	} else if (baudRate == 100000) {
+> +		*divisor = 0x1e;		// DLM=0, DLL=0x1e
+> +		*clk_sel_val = 0x70;	// clock source=48M
+> +	} else if (baudRate == 250000) {
+> +		*divisor = 0x0c;		// DLM=0, DLL=0x0c
+> +		*clk_sel_val = 0x70;	// clock source=48M
+> +	} else if (baudRate == 300000) {
+> +		*divisor = 0x0a;		// DLM=0, DLL=0x0a
+> +		*clk_sel_val = 0x70;	// clock source=48M
+> +	} else if (baudRate == 500000) {
+> +		*divisor = 0x06;		// DLM=0, DLL=0x06
+> +		*clk_sel_val = 0x70;	// clock source=48M
+> +	} else if (baudRate == 600000) {
+> +		*divisor = 0x05;		// DLM=0, DLL=0x05
+> +		*clk_sel_val = 0x70;	// clock source=48M
+> +	} else if (baudRate == 1000000) {
+> +		*divisor = 0x03;		// DLM=0, DLL=0x03
+> +		*clk_sel_val = 0x70;	// clock source=48M
+> +	} else if (baudRate == 3000000) {
+> +		*divisor = 0x01;		// DLM=0, DLL=0x01
+> +		*clk_sel_val = 0x70;	// clock source=48M
+> +
+> +	} else if (baudRate == 1500000) {
+> +		*divisor = 0x01;		// DLM=0, DLL=0x01
+> +		*clk_sel_val = 0x60;	// clock source=24M
+> +
+
+You should be able to determine at least most of the above by just
+calculating the divisors from the base clocks. Perhaps you need a lookup
+table as well to determine which base to use in some cases too.
+
+Note sure we need to add non-standard rates like 25000 etc either.
+
+> +	} else if (baudRate <= 115200) {
+>  		*divisor = 115200 / baudRate;
+>  		*clk_sel_val = 0x0;
+> -	}
+> -	if ((baudRate > 115200) && (baudRate <= 230400)) {
+> +	} else if ((baudRate > 115200) && (baudRate <= 230400)) {
+>  		*divisor = 230400 / baudRate;
+>  		*clk_sel_val = 0x10;
+>  	} else if ((baudRate > 230400) && (baudRate <= 403200)) {
+> @@ -1088,6 +1193,9 @@ static int mos7840_calc_baud_rate_divisor(struct usb_serial_port *port,
+>  	} else if ((baudRate > 1572864) && (baudRate <= 3145728)) {
+>  		*divisor = 3145728 / baudRate;
+>  		*clk_sel_val = 0x70;
+> +	} else {
+> +		dev_dbg(&port->dev, "func: %s -baudrate %d not supported.\n", __func__, baudRate);
+
+Here you could drop "func: %s -" and the period, if you need this at
+all.
+
+> +		return -1;
+
+The calling code does not check for errors, so either fix that or,
+better still, make sure the function always returns a valid divisor
+(e.g. by making sure the input rate is always valid).
+
+>  	}
+>  	return 0;
+>  }
+
+Johan
