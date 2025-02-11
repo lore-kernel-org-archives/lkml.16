@@ -1,206 +1,103 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from pv50p00im-ztdg10021801.me.com (pv50p00im-ztdg10021801.me.com [17.58.6.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA820253350
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9C6253B7A
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739287752; cv=none; b=SLMPO8iDTdN5J9wE0YAY/EsQiByHXeNLoqIGuT9NZRb94yoIhZv700TwPz4voHIEveXhCPqh/+5msBE66LO7/iyWXJNGu1262kQABhO8RauRMRpmBxLBmqTTnw1oK5lDkkjHec8EnNAFMGgr4QSZMNAdHRi3yBUN9SKDSAtZGDw=
+	t=1739287757; cv=none; b=WAJYCiWXgeGD+yfcLmtdenol8HokUTiTpILQqjaYdGomHEC4kScugsBKE3J4VfyukzT4K30fDLdy7flc/X+df71XHNkAdYkI+oaBuHyzfbT3Lxx5lzTMXeU2tp+TVTAubGW3jQaVsyiSluRdJX60vFhiwekac08YU7+8TS9q89U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739287752; c=relaxed/simple;
-	bh=9ImZhNZMfj/n/lXvGitqWNX++l9PGN6TFqRxw2UCdpY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QiYI4nUeHYTir5udCd0JYozatUWWpaav+FCuAh/K68fOjyof5UojTxMUQbYebJ3JLyg1ILPOcslLpCYacu9rUuniJxzpHlA/v6QC01hTZWUf8/WP2AVPCyGiiTEgneqGLBHCz9pGwtDGxrQmNUcK4PTRkg/EW6za9Vxeh+lv3oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=j6wLSaG2; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739287757; c=relaxed/simple;
+	bh=Lpebr7E4O1qXgM+GwTmjvL9d6fJEckCRITlepkyDUZ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IjF5+9OktV6dGyhjo2UXtU+SqHTViAtyXZgvq7GPustjvqR9MABZsEDPqyhiKJD2Yc6LXuCpJ/ksADlke2AfXet7cEmHWEQ8VVv4TEMemWXqxuoqR6et69sYgF4jlGdJi1G5WKh4KS0vdxQzx2AeVzzuUrzQV/gRhAaYhe3nbjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=1C6I5seU; arc=none smtp.client-ip=17.58.6.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="j6wLSaG2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739287748;
-	bh=9ImZhNZMfj/n/lXvGitqWNX++l9PGN6TFqRxw2UCdpY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j6wLSaG2EGmIPnktg7E1dS+Li0krKcy/H13jZbbuUN3pjPc/LS4cNUCJSLBxvYkRS
-	 fbIRuJVM6TKu24Fvq8wjC1vrph76Vlg2hce8rPf4nqzhXvz+iI2t2ni+PU1MWXDhSG
-	 QHEyDbGYcbV63xKTLwLgXw0M4ouh9cN1sOmWMzcQO6phYoWAqp8xcm9UPdruPVSz6i
-	 EU+yOlH79AmKI8ZwFyWekGAsRhnOa7jkCxHb8Us4CT2QP1bkK7w78oCP4d0QSuxDuO
-	 3BqlTILGZxQbCvlGKSVzIclydUkICdA1DwnhtM7VWYajzn66qZFzibRNLd4BSfQS3S
-	 rZ4wg6tZUVgbg==
-Received: from localhost.localdomain (unknown [171.76.80.66])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4593117E0CA2;
-	Tue, 11 Feb 2025 16:29:03 +0100 (CET)
-From: Vignesh Raman <vignesh.raman@collabora.com>
-To: dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com,
-	helen.fornazier@gmail.com,
-	airlied@gmail.com,
-	simona.vetter@ffwll.ch,
-	robdclark@gmail.com,
-	guilherme.gallo@collabora.com,
-	sergi.blanch.torne@collabora.com,
-	valentine.burley@collabora.com,
-	jani.nikula@linux.intel.com,
-	dmitry.baryshkov@linaro.org,
-	mripard@kernel.org,
-	boqun.feng@gmail.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] drm/ci: enable lockdep detection
-Date: Tue, 11 Feb 2025 20:58:06 +0530
-Message-ID: <20250211152812.54018-4-vignesh.raman@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250211152812.54018-1-vignesh.raman@collabora.com>
-References: <20250211152812.54018-1-vignesh.raman@collabora.com>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="1C6I5seU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=QOsegHChMEdENsDFl50iHjj6Urk+naCjXjh88gC9Lb0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=1C6I5seUBBrmEAmp5wop6SYdNnY3c3kQGSe+xH4zowedPM97ukA7LfAHcv3c744yB
+	 J/FYckarWRNq2v4YIdkNPqkKJ3zHFu6lQT9Wy6z9OkW/MILpJTjOyPaid4MjE2jfoD
+	 GpgIHYtRZqd+PfY5t6Nu5Hc3SBQcHFJ75bWYuZPXAV5XN/86bdVLS24kIWPnjgM8Wj
+	 biLON07NOGTxmax9VVN+W2DSrTaBbWorfOhCSNEIuxIdl/n98jgxzDvudhqO2V+QJc
+	 1wmGiNzKErWWFmFMKtv2F692OSZBScDJ8S7SHa1s9a7xMYzGjI33Kaktxm6hFT7ebP
+	 mreZsoXB/3GVg==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10021801.me.com (Postfix) with ESMTPSA id D090A20104E0;
+	Tue, 11 Feb 2025 15:29:06 +0000 (UTC)
+Message-ID: <116e9983-6c5f-45f3-a933-dcded223f6d7@icloud.com>
+Date: Tue, 11 Feb 2025 23:29:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/9] driver core: add a faux bus for use when a simple
+ device/bus is needed
+To: Kurt Borja <kuurtb@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+ Mark Brown <broonie@kernel.org>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mairacanal@riseup.net>, Robin Murphy <robin.murphy@arm.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>, Zijun Hu <quic_zijuhu@quicinc.com>,
+ linux-usb@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+References: <2025021023-sandstorm-precise-9f5d@gregkh>
+ <2025021026-atlantic-gibberish-3f0c@gregkh>
+ <D7OU5VOXCS8M.39YEYRWFL1MPW@gmail.com>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <D7OU5VOXCS8M.39YEYRWFL1MPW@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: HC7Nsj_fZNeMs72_TJJMMOiDclYVS2ZC
+X-Proofpoint-ORIG-GUID: HC7Nsj_fZNeMs72_TJJMMOiDclYVS2ZC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_06,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 phishscore=0
+ suspectscore=0 clxscore=1011 mlxlogscore=999 malwarescore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2502110103
 
-We have enabled PROVE_LOCKING (which enables LOCKDEP) in drm-ci.
-This will output warnings when kernel locking errors are encountered
-and will continue executing tests. To detect if lockdep has been
-triggered, check the debug_locks value in /proc/lockdep_stats after
-the tests have run. When debug_locks is 0, it indicates that lockdep
-has detected issues and turned itself off. Check this value, and if
-lockdep is detected, exit with an error and configure it as a warning
-in GitLab CI.
+On 2025/2/10 22:29, Kurt Borja wrote:
+>> +
+>> +	ret = device_add(dev);
+>> +	if (ret) {
+>> +		pr_err("%s: device_add for faux device '%s' failed with %d\n",
+>> +		       __func__, name, ret);
+>> +		put_device(dev);
+>> +		return NULL;
+>> +	}
+> Now that the probe is synchronous, what do you think about returning
+> -ENODEV if the device failed to bind to the driver?
+> 
 
-GitLab CI ignores exit codes other than 1 by default. Pass the correct
-exit code with variable FF_USE_NEW_BASH_EVAL_STRATEGY set to true or
-exit on failure.
+Result of device registering @ret is not, should not be, effected by
+"device binding driver (probe result)"
 
-Also update the documentation.
+if device binging driver failed, you may return -ENODEV in
+faux_ops->probe(). not here.
 
-Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
----
+> This would be useful for modules that may want to unload if the probe
+> fails.
 
-v2:
-  - Lockdep failures are reported as pipeline warnings,
-    and the documentation is updated.
+may need to root cause if probe failure happens.
 
----
- Documentation/gpu/automated_testing.rst |  4 ++++
- drivers/gpu/drm/ci/igt_runner.sh        | 11 +++++++++++
- drivers/gpu/drm/ci/test.yml             | 19 ++++++++++++++++---
- 3 files changed, 31 insertions(+), 3 deletions(-)
+how to unload module automatically if probe() failure ?
 
-diff --git a/Documentation/gpu/automated_testing.rst b/Documentation/gpu/automated_testing.rst
-index 6d7c6086034d..62aa3ede02a5 100644
---- a/Documentation/gpu/automated_testing.rst
-+++ b/Documentation/gpu/automated_testing.rst
-@@ -115,6 +115,10 @@ created (eg. https://gitlab.freedesktop.org/janedoe/linux/-/pipelines)
- 5. The various jobs will be run and when the pipeline is finished, all jobs
- should be green unless a regression has been found.
- 
-+6. Warnings in the pipeline indicate that lockdep
-+(see Documentation/locking/lockdep-design.rst) issues have been detected
-+during the tests.
-+
- 
- How to update test expectations
- ===============================
-diff --git a/drivers/gpu/drm/ci/igt_runner.sh b/drivers/gpu/drm/ci/igt_runner.sh
-index 68b042e43b7f..2a0599f12c58 100755
---- a/drivers/gpu/drm/ci/igt_runner.sh
-+++ b/drivers/gpu/drm/ci/igt_runner.sh
-@@ -85,5 +85,16 @@ deqp-runner junit \
-    --limit 50 \
-    --template "See $ARTIFACTS_BASE_URL/results/{{testcase}}.xml"
- 
-+# Check if /proc/lockdep_stats exists
-+if [ -f /proc/lockdep_stats ]; then
-+    # If debug_locks is 0, it indicates lockdep is detected and it turns itself off.
-+    debug_locks=$(grep 'debug_locks:' /proc/lockdep_stats | awk '{print $2}')
-+    if [ "$debug_locks" -eq 0 ] && [ "$ret" -eq 0 ]; then
-+        echo "Warning: LOCKDEP issue detected. Please check dmesg logs for more information."
-+        cat /proc/lockdep_stats
-+        ret=101
-+    fi
-+fi
-+
- cd $oldpath
- exit $ret
-diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
-index 0eab020a33b9..3af735dbf6bd 100644
---- a/drivers/gpu/drm/ci/test.yml
-+++ b/drivers/gpu/drm/ci/test.yml
-@@ -1,6 +1,8 @@
- .lava-test:
-   extends:
-     - .container+build-rules
-+  variables:
-+    FF_USE_NEW_BASH_EVAL_STRATEGY: 'true'
-   timeout: "1h30m"
-   rules:
-     - !reference [.scheduled_pipeline-rules, rules]
-@@ -13,6 +15,9 @@
-     - mv -n install/* artifacts/.
-     # Override it with our lava-submit.sh script
-     - ./artifacts/lava-submit.sh
-+  allow_failure:
-+    exit_codes:
-+      - 101
- 
- .lava-igt:arm32:
-   extends:
-@@ -88,9 +93,14 @@
-     - igt:arm64
-   tags:
-     - $RUNNER_TAG
-+  allow_failure:
-+    exit_codes:
-+      - 101
- 
- .software-driver:
-   stage: software-driver
-+  variables:
-+    FF_USE_NEW_BASH_EVAL_STRATEGY: 'true'
-   timeout: "1h30m"
-   rules:
-     - !reference [.scheduled_pipeline-rules, rules]
-@@ -108,6 +118,9 @@
-     - debian/x86_64_test-gl
-     - testing:x86_64
-     - igt:x86_64
-+  allow_failure:
-+    exit_codes:
-+      - 101
- 
- .msm-sc7180:
-   extends:
-@@ -153,7 +166,7 @@ msm:apq8016:
-     BM_KERNEL_EXTRA_ARGS: clk_ignore_unused
-     RUNNER_TAG: google-freedreno-db410c
-   script:
--    - ./install/bare-metal/fastboot.sh
-+    - ./install/bare-metal/fastboot.sh || exit $?
- 
- msm:apq8096:
-   extends:
-@@ -167,7 +180,7 @@ msm:apq8096:
-     GPU_VERSION: apq8096
-     RUNNER_TAG: google-freedreno-db820c
-   script:
--    - ./install/bare-metal/fastboot.sh
-+    - ./install/bare-metal/fastboot.sh || exit $?
- 
- msm:sdm845:
-   extends:
-@@ -181,7 +194,7 @@ msm:sdm845:
-     GPU_VERSION: sdm845
-     RUNNER_TAG: google-freedreno-cheza
-   script:
--    - ./install/bare-metal/cros-servo.sh
-+    - ./install/bare-metal/cros-servo.sh || exit $?
- 
- msm:sm8350-hdk:
-   extends:
--- 
-2.43.0
+
+
+
 
