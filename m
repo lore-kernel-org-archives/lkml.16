@@ -1,182 +1,150 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE672206BB;
-	Tue, 11 Feb 2025 13:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A79320F;
+	Tue, 11 Feb 2025 13:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739280521; cv=none; b=rhRUo7xo53sfPZGp1QsOUhkj8miG/ttH0S6mG8PKR8AVskOIcI1OamAutRGkYC2anXwfv6drft4mnKySjoh58f0V6mskPROfiwz+b49YNKklYwZsVi0KRecYAMjv4M5cJt1Ny/QhvmTTeWRDs1pY1eDvPq+kO3UYqEVBIrm043c=
+	t=1739280541; cv=none; b=g7t8lgEElrdq0XQiXGsTRbE/Ncr+FCTtXfkoPclqEHxVyA+a8H7EaEW7SevAIosfPP/i3mY9sRPRlwSgKWZSA4Ji/6sA1X2FHPxwMSBK16zuKV18wOPcVX4X8pBd0npX/lh/WmuJ2Be/ZiFTDUd2kL7tT+Q8QX7/AGfU6vvprI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739280521; c=relaxed/simple;
-	bh=J36o2DjG9YjX+05Z3jhO/S9Q8yTRO0ZZ92yOnlQxnuE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C48U4bNZlraxx1hjEbZtsROU8XdagcugXleXTsSq5H9q7FT2Ojxwa8+sbIreKyMpnxCCdWGZIv7GyEXGo3tAtvXKG1J02lN6VtzGOBou0IhKxV6y2Bhwuz71GskhFOK8U8hhVxTGYqHqBQMuasgYgfZ8dkabpoXqcAXO0YxmJd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S/VQGvmQ; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739280541; c=relaxed/simple;
+	bh=dqNsW3cC15v27jSPs0dEzsu7+QJx12fycZgZDdvv0Qg=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=s19WQmzx6S07qNGsuqOSEAhkBGek0CUzkHHPVQICf81eiAgWe3yFEA6gI+6K/xCs0Aaa4rvUaVxieCoLSQTsKhkAVyaSZgxaHgHeTWrasd3sMPdKj9RuCOlK0npJMmF/R3pyJz+7r6E86ha/A9kKPgBAT0So/9yaEUFFWu4lmzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xn1brrTa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/VQGvmQ"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab7c3d44ae1so29004766b.2;
-        Tue, 11 Feb 2025 05:28:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739280517; x=1739885317; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WLyb+sxmlUWI3PPRd+G753tkjaglzT6ouXpQ3N3NRPQ=;
-        b=S/VQGvmQK8WUKaTVr3k0vgvAy/f9FQD9+GP/sRHyDnPCG84EgGuWr4hr4+m0F2PP5q
-         BXUtRn9fIpmiYBf5ULRO2YXJKJVP0GaiZgszqGIlIm2BkU27R4CnAZbTxzBxHMh0Jhh0
-         Asse3+lhNWWxWDUzYzvb6pFA1DgAMGCHkJYvsJm/NVfg4Kv9SmWmPGEixCo8DIwqf0L+
-         olixJ6aOBTpoYZVTMeE+mqXCZSY2yjIR5Q2Jrf7R6p/bubihBZxSVCn/JJ8BFxjNxRsT
-         2soNDBpYLmd2Dkm7hWZIgP23LBNuKrFeZgCPsd+T8hL2l0KoA1cJIFfw3vIosWMEq7YD
-         gZPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739280517; x=1739885317;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WLyb+sxmlUWI3PPRd+G753tkjaglzT6ouXpQ3N3NRPQ=;
-        b=f6qEaRRXxed7CCv0+JnPAkwNP3WTypsti0Ql24lFISwB1G3uGOrq//YfY8C6zPwm5G
-         5F4CgEkefn9aZ7QpUkalMbQCfiogf3onuACS7bakYKLCHIW+Dn1wauuX2IXIhtt0MgHr
-         T85S4aYfII3Ly573xSysl2Gu3ug2DAK15xtXVjEX1/UFIiryuYj8LlaxbOm5sQgPviRY
-         x/4uEvyHByXzEymBlrGYc335HqJmm3uexNxUFlt2LDO2D4EwYjJ89D7GlORCnuFqZv3b
-         LM+5y99Os0d0QlBJTBkYIpOhzL7ufMBsju1YjuVcauwSypkDXaT6H28KFO76Lt2xxT7P
-         ih8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWe9icySEOcevNGNDPiAlcsjjBls9eRnADXG9GGT/+4MD/JxH2j7Rz4qRobyc5ZSav52jQnMM4AIYC2fv5nyefe@vger.kernel.org, AJvYcCXnnxe2YQlhm6mv4Wxtwr5GHAmZczbX2+zPEQqxOVDbXGrjfa4/hRrmFWaVM341gLyLIjyJftyiZ8Ur4e8=@vger.kernel.org, AJvYcCXzaJkh1tcgBy4oToKDTb/ebNU45VSF4QHG2y9Jy1kJFQJKQmQ9S0X96+/tfKqC+jB1zXv/Xt2h@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6CMLMWFnxNqzI2qnOO35rVKx4ue1TnwdGOl9H6aBk/z4QGlUK
-	rlwoyrKcc1VXpesGByC4H4wsdcgceZ607Cb8Mvvdfja1Ebjubfec
-X-Gm-Gg: ASbGncsR6t72xS9R3nZAzmEJPJ7c2sNsJokmAz0uoKbA025wbpcK2uqjXdNpBQeNp1Z
-	vg/PolZQjPKHPwvEWOTG9NlE8VbN8VGgBpeop+eUN1YHAQ+umj/2OW/SAfqTKj5uXEH8nsWEH08
-	duwWtKxuGo+PDUZP+nAfdeZQumwA3zgFdWnqv0UU3VTC/eshIDLSskhPA4u+b3cASEroiXxsHg5
-	F0oN9q1d88n0Mt88JjXQp/v+2I8KyEJFzSyY9gdmvp07hv8Y2XscZmziFUKD70GXgDirJTdPy5x
-	IhU=
-X-Google-Smtp-Source: AGHT+IEI3sHUVuDg9ehqKY+KygjpcwX0rbXlLEswHpVnNf7eTh4qQELv+eql57rgOrrbLVr2hu6FNg==
-X-Received: by 2002:a17:907:7d87:b0:ab7:cd83:98bb with SMTP id a640c23a62f3a-ab7e0e6e245mr105887066b.5.1739280516517;
-        Tue, 11 Feb 2025 05:28:36 -0800 (PST)
-Received: from skbuf ([86.127.124.81])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7dca728fcsm147341966b.166.2025.02.11.05.28.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 05:28:35 -0800 (PST)
-Date: Tue, 11 Feb 2025 15:28:32 +0200
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Eric Woudstra <ericwouds@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Jiri Pirko <jiri@resnulli.us>, Ivan Vecera <ivecera@redhat.com>,
-	Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Joe Damato <jdamato@fastly.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, bridge@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v6 net-next 05/14] bridge: Add filling forward path from
- port to port
-Message-ID: <20250211132832.aiy6ocvqppoqkd65@skbuf>
-References: <20250209111034.241571-1-ericwouds@gmail.com>
- <20250209111034.241571-6-ericwouds@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xn1brrTa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C72D0C4CEDD;
+	Tue, 11 Feb 2025 13:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739280541;
+	bh=dqNsW3cC15v27jSPs0dEzsu7+QJx12fycZgZDdvv0Qg=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Xn1brrTa8PUgjgKYSe42q6OvxHapJBaUC0V8AEU9gN1aVq/eY/Wb2zw1xQi8VzW6y
+	 P6PzOx/iI6tFYe4J3CJRP/HdDUhooB3sq4yKPQxSZEkN4cncd/4hheMqrAz+GL/Uer
+	 /V1LC6PRjuvkRdYyq76nJOaz66a8fJyTaieJPIatsRe2OgJZC97yljYGvQGUQJV9Ia
+	 tp0lTyM3cqPl9LKEdEbfvdU2i2Yz3ijAkNhnTQ8LGXakpSimRfmmhgwl/ED5Y05/Pe
+	 xxUTwsNUNpWtPQC4F/DwOy8+Q0LRwVL3gVsh3V7RGsPeYof6fnM/JNRGVIGCUuHzY8
+	 KJM7Ux7ykkrcA==
+Date: Tue, 11 Feb 2025 07:28:59 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250209111034.241571-6-ericwouds@gmail.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, 
+ Konrad Dybcio <konradybcio@kernel.org>, iommu@lists.linux.dev, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>, 
+ devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Pratyush Brahma <quic_pbrahma@quicinc.com>
+In-Reply-To: <20250211-b4-branch-gfx-smmu-v5-0-ff0bcb6a3c51@quicinc.com>
+References: <20250211-b4-branch-gfx-smmu-v5-0-ff0bcb6a3c51@quicinc.com>
+Message-Id: <173928051052.2596191.5953179871612881836.robh@kernel.org>
+Subject: Re: [PATCH v5 0/2] Add support for GPU SMMU on QCS8300
 
-On Sun, Feb 09, 2025 at 12:10:25PM +0100, Eric Woudstra wrote:
-> @@ -1453,7 +1454,10 @@ void br_vlan_fill_forward_path_pvid(struct net_bridge *br,
->  	if (!br_opt_get(br, BROPT_VLAN_ENABLED))
->  		return;
->  
-> -	vg = br_vlan_group(br);
-> +	if (p)
-> +		vg = nbp_vlan_group(p);
-> +	else
-> +		vg = br_vlan_group(br);
->  
->  	if (idx >= 0 &&
->  	    ctx->vlan[idx].proto == br->vlan_proto) {
 
-I think the original usage of br_vlan_group() here was incorrect, and so
-is the new usage of nbp_vlan_group(). They should be br_vlan_group_rcu()
-and nbp_vlan_group_rcu().
+On Tue, 11 Feb 2025 10:15:52 +0530, Pratyush Brahma wrote:
+> Enable GPU SMMU function on QCS8300 platform. GPU SMMU is required
+> for address translation in GPU device.
+> 
+> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
+> ---
+> Changes since v4:
+> - Corrected the clocks list to be inline with clock-names
+> - Removed stray whitespaces
+> - Added r-by tag from Krzysztof on the bindings patch
+> - Link to v4: https://lore.kernel.org/r/20250203-b4-branch-gfx-smmu-v4-0-eaa7aa762f48@quicinc.com
+> 
+> Changes since v3:
+> - Modified the order of clock voting and properties as suggested by Konrad
+> - Removed dependency on clocks in commit text as change is merged in
+>   linux-next before current base commit
+> 
+> Link to v3:
+> https://lore.kernel.org/all/20241227105818.28516-1-quic_pbrahma@quicinc.com/
+> 
+> Changes since v2:
+> Corrected typo in cover letter to include QCS8300
+> Link to
+> v2:https://lore.kernel.org/all/20241227104651.4531-1-quic_pbrahma@quicinc.com/
+> 
+> Changes since v1:
+> Updated bindings for gpu smmu for qcs8300 as per Dmitry's comment
+> Link to v1:
+> https://lore.kernel.org/all/20241224100521.7616-1-quic_pbrahma@quicinc.com/
+> 
+> To: Will Deacon <will@kernel.org>
+> To: Robin Murphy <robin.murphy@arm.com>
+> To: Joerg Roedel <joro@8bytes.org>
+> To: Rob Herring <robh@kernel.org>
+> To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> To: Conor Dooley <conor+dt@kernel.org>
+> To: Bjorn Andersson <andersson@kernel.org>
+> To: Konrad Dybcio <konradybcio@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: iommu@lists.linux.dev
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-msm@vger.kernel.org
+> 
+> ---
+> Pratyush Brahma (2):
+>       dt-bindings: arm-smmu: Document QCS8300 GPU SMMU
+>       arm64: dts: qcom: qcs8300: Add device node for  gfx_smmu
+> 
+>  .../devicetree/bindings/iommu/arm,smmu.yaml        |  3 +-
+>  arch/arm64/boot/dts/qcom/qcs8300.dtsi              | 39 ++++++++++++++++++++++
+>  2 files changed, 41 insertions(+), 1 deletion(-)
+> ---
+> base-commit: a13f6e0f405ed0d3bcfd37c692c7d7fa3c052154
+> change-id: 20250131-b4-branch-gfx-smmu-b03261963064
+> 
+> Best regards,
+> --
+> Pratyush Brahma <quic_pbrahma@quicinc.com>
+> 
+> 
+> 
 
-The lockdep annotation is important, otherwise I get this with CONFIG_PROVE_LOCKING=y:
-[ 1140.931869] =============================
-[ 1140.935996] WARNING: suspicious RCU usage
-[ 1140.940094] 6.14.0-rc1-00224-gda8926a49ba1-dirty #2666 Not tainted
-[ 1140.946371] -----------------------------
-[ 1140.950520] net/bridge/br_private.h:1604 suspicious rcu_dereference_protected() usage!
-[ 1140.958622]
-[ 1140.958622] other info that might help us debug this:
-[ 1140.958622]
-[ 1140.966752]
-[ 1140.966752] rcu_scheduler_active = 2, debug_locks = 1
-[ 1140.973435] 2 locks held by swapper/0/0:
-[ 1140.977521]  #0: ffffd9f646c333b0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire+0x4/0x40
-[ 1140.986404]  #1: ffffd9f646c333b0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire+0x4/0x48
-[ 1140.995170]
-[ 1140.995170] stack backtrace:
-[ 1140.999636] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.14.0-rc1-00224-gda8926a49ba1-dirty #2666
-[ 1140.999650] Hardware name: LS1028A RDB Board (DT)
-[ 1140.999656] Call trace:
-[ 1140.999660]  show_stack+0x24/0x38 (C)
-[ 1140.999683]  dump_stack_lvl+0x40/0xa0
-[ 1140.999698]  dump_stack+0x18/0x24
-[ 1140.999711]  lockdep_rcu_suspicious+0x174/0x218
-[ 1140.999723]  br_vlan_fill_forward_path_pvid+0x90/0x150
-[ 1140.999735]  br_fill_forward_path+0x54/0x1b0
-[ 1140.999751]  dev_fill_bridge_path+0x9c/0x188
-[ 1140.999766]  nft_dev_fill_bridge_path+0x2ac/0x418
-[ 1140.999785]  nft_flow_offload_bridge_init+0x188/0x1c8
-[ 1140.999801]  nft_flow_offload_eval+0x18c/0x300
-[ 1140.999816]  nft_do_chain+0x1c8/0x538
-[ 1140.999831]  nft_do_chain_bridge+0x15c/0x210
-[ 1140.999846]  nf_hook_slow+0x80/0x130
-[ 1140.999862]  NF_HOOK+0xd8/0x1d0
-[ 1140.999871]  __br_forward+0x138/0x1a0
-[ 1140.999880]  br_forward+0xd8/0x160
-[ 1140.999889]  br_handle_frame_finish+0x3bc/0x5a8
-[ 1140.999900]  br_nf_pre_routing_finish+0x538/0x608
-[ 1140.999917]  NF_HOOK+0x254/0x298
-[ 1140.999933]  br_nf_pre_routing+0x3e8/0x428
-[ 1140.999949]  br_handle_frame+0x264/0x490
-[ 1140.999959]  __netif_receive_skb_core+0x13c/0x1128
-[ 1140.999975]  __netif_receive_skb_list_core+0xd4/0x1e8
-[ 1140.999989]  netif_receive_skb_list_internal+0x224/0x338
-[ 1141.000000]  napi_complete_done+0xb4/0x1d8
-[ 1141.000012]  gro_cell_poll+0x94/0xb8
-[ 1141.000025]  __napi_poll+0x58/0x258
-[ 1141.000040]  net_rx_action+0x1f4/0x3e0
-[ 1141.000055]  handle_softirqs+0x184/0x458
-[ 1141.000070]  __do_softirq+0x20/0x2c
-[ 1141.000079]  ____do_softirq+0x1c/0x30
-[ 1141.000095]  call_on_irq_stack+0x24/0x58
-[ 1141.000111]  do_softirq_own_stack+0x28/0x40
-[ 1141.000127]  __irq_exit_rcu+0xd4/0x1a0
-[ 1141.000139]  irq_exit_rcu+0x1c/0x40
-[ 1141.000152]  el1_interrupt+0x8c/0xc0
-[ 1141.000170]  el1h_64_irq_handler+0x18/0x28
-[ 1141.000186]  el1h_64_irq+0x6c/0x70
-[ 1141.000195]  arch_local_irq_enable+0x8/0x10 (P)
-[ 1141.000213]  cpuidle_enter+0x44/0x68
-[ 1141.000228]  do_idle+0x1e8/0x280
-[ 1141.000238]  cpu_startup_entry+0x40/0x50
-[ 1141.000248]  rest_init+0x1c4/0x1d0
-[ 1141.000260]  start_kernel+0x324/0x3e8
-[ 1141.000272]  __primary_switched+0x88/0x98
-[ 1141.197568] ------------[ cut here ]------------
+
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250211-b4-branch-gfx-smmu-v5-0-ff0bcb6a3c51@quicinc.com:
+
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: iommu@3da0000: clock-names:0: 'gcc_gpu_memnoc_gfx_clk' was expected
+	from schema $id: http://devicetree.org/schemas/iommu/arm,smmu.yaml#
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: iommu@3da0000: clock-names:1: 'gcc_gpu_snoc_dvm_gfx_clk' was expected
+	from schema $id: http://devicetree.org/schemas/iommu/arm,smmu.yaml#
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: iommu@3da0000: clock-names:2: 'gpu_cc_ahb_clk' was expected
+	from schema $id: http://devicetree.org/schemas/iommu/arm,smmu.yaml#
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: iommu@3da0000: clock-names:3: 'gpu_cc_hlos1_vote_gpu_smmu_clk' was expected
+	from schema $id: http://devicetree.org/schemas/iommu/arm,smmu.yaml#
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: iommu@3da0000: clock-names:4: 'gpu_cc_cx_gmu_clk' was expected
+	from schema $id: http://devicetree.org/schemas/iommu/arm,smmu.yaml#
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: iommu@3da0000: clock-names:5: 'gpu_cc_hub_cx_int_clk' was expected
+	from schema $id: http://devicetree.org/schemas/iommu/arm,smmu.yaml#
+
+
+
+
+
