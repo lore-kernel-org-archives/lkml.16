@@ -1,401 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03431C3F36;
-	Tue, 11 Feb 2025 00:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA141DF735
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233897; cv=none; b=Fw5HRUv/QqgGiBSdZhyRsmSituRXbjqMyswXhKuuSrPaHmHM9UpnCM/71tsUQlPPLPJJ4CmLXThRHTta2C4o0Q+rWTteluHXiZd4HhDF7Aa4EK701CpFQ5zHSKvMVSVulh5BrMTrxMCUQrb6nR+UI4S3psm/JrLt/e7cDAgsb7Y=
+	t=1739233905; cv=none; b=ifaXG4VkKsvI4NL8ToBu8AV1gW2I5X1Q6Um5jjb2FuUy8aWaVDxfLmTB5Wae1vW87CCZ9Wy01NYfuCzTr8RqxK1IdugllUue57VEKc2SViaByjcuHXlqc+9AOg4n7Y3KuPlRnPDh1UbydfPbIB8Wfsag74SxuoBDoIfnsbyKPwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739233897; c=relaxed/simple;
-	bh=/PR9AB+QpWzqEeX3zFKe7QITS4cHv803/0AieWg4tIY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=g1SUg/D9TPAm0L6yVFyQPDy0OuFnCnbdEk4hDvkxKDA8/YwHMcMMzqbDi646HctKWnrBfz+XrRjJ5IDNucIqQZbd77aOuyqDMk82qMozi2YC9ew9nhPnEzmB/Za6Y1nh2VXFfR+wh2N9OkxxjoGek2bohmUIalM4UUwyeaEzrJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qimTdQHk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739233905; c=relaxed/simple;
+	bh=zsg7Lb4sKnYhVww/v9vwP2UhGN1gjZUs4C+UjH1ebK0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DgrgL/zwLwV6LKKoW/3n17Uqm5qcXyyC+YdVAweVfG+hv6SBmcGCVS4EsdNlKC43WEuB4wJmxz6h78+/C/PoAjOpbCAVXxyYCKBVy3UjzDF1og+Z2up59G/Yer2wUnOH9eF2dGt72NCgd5ukyRfTG/Uqm+U3UtBla+IgV/33rx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KQdZdTio; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qimTdQHk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 067CBC4CEF5;
-	Tue, 11 Feb 2025 00:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739233897;
-	bh=/PR9AB+QpWzqEeX3zFKe7QITS4cHv803/0AieWg4tIY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qimTdQHkHrV7M7T/TX+bmLorH+5rf7VHKUGtE5rIQj3LRSvKlkoojVxxG0xEEkhBR
-	 jkSF7aT2xcjR1fiTCftT0OV9FG2TsS9HjYnCyVpVQ3gbn0jSL52wI7pvONxjcEIHfD
-	 69fQtpKqbWbNVyoqflAt5ub96jO7FCjcvGhuqNrUMaCGGqt1ekisPidbuKFhar5bds
-	 WqhHqBciwHvQMsIp3pIugIrZSsyEZZF8e1V+xNJo0AuOYID+0xQC0slx+k9sD1Iw/O
-	 P4uZV9iN7CgfobCGkdnbK2DVBzFBfXm8F39oE0JWNhGKzjg4UMsr9ggOg+q51xdj7x
-	 hmCmdiQCTzZFA==
-From: Kees Cook <kees@kernel.org>
-To: David Gow <davidgow@google.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Gabriela Bittencourt <gbittencourt@lkcamp.dev>,
-	Pedro Orlando <porlando@lkcamp.dev>,
-	Danilo Pereira <dpereira@lkcamp.dev>,
-	Gabriel Krisman Bertazi <krisman@suse.de>,
-	Rae Moar <rmoar@google.com>,
-	Luis Felipe Hernandez <luis.hernandez093@gmail.com>,
-	Nicolas Pitre <npitre@baylibre.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Diego Vieira <diego.daniel.professional@gmail.com>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	=?UTF-8?q?Bruno=20Sobreira=20Fran=C3=A7a?= <brunofrancadevsec@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com
-Subject: [PATCH v2 5/6] unicode: kunit: refactor selftest to kunit tests
-Date: Mon, 10 Feb 2025 16:31:33 -0800
-Message-Id: <20250211003136.2860503-5-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250211002600.it.339-kees@kernel.org>
-References: <20250211002600.it.339-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KQdZdTio"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739233902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rzjDVzZllkv1t501JGBPBZlzucpspDJXSDj68ZE8hcQ=;
+	b=KQdZdTioTInLOA5xotaReWGAL432ABFSmqxvD0YHsKEdZ6C/fxXgONgiY3zcjESvFCSF71
+	VticZsobbvhVEC+mH3/xWBlG4Vveh0UOxzaeCwPCwOfRvgsH6ZDgjo8kg3vcd438B12BO/
+	tfsb9oGM9me6xfxrqdiEwgOxUiUIGME=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-488-OM9rMKLZPIuLmOGLavR4PQ-1; Mon,
+ 10 Feb 2025 19:31:40 -0500
+X-MC-Unique: OM9rMKLZPIuLmOGLavR4PQ-1
+X-Mimecast-MFC-AGG-ID: OM9rMKLZPIuLmOGLavR4PQ
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 735BC1800873;
+	Tue, 11 Feb 2025 00:31:35 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.88.129])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4FABA180035E;
+	Tue, 11 Feb 2025 00:31:25 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: ryan.roberts@arm.com,
+	anshuman.khandual@arm.com,
+	catalin.marinas@arm.com,
+	cl@gentwo.org,
+	vbabka@suse.cz,
+	mhocko@suse.com,
+	apopple@nvidia.com,
+	dave.hansen@linux.intel.com,
+	will@kernel.org,
+	baohua@kernel.org,
+	jack@suse.cz,
+	srivatsa@csail.mit.edu,
+	haowenchao22@gmail.com,
+	hughd@google.com,
+	aneesh.kumar@kernel.org,
+	yang@os.amperecomputing.com,
+	peterx@redhat.com,
+	ioworker0@gmail.com,
+	wangkefeng.wang@huawei.com,
+	ziy@nvidia.com,
+	jglisse@google.com,
+	surenb@google.com,
+	vishal.moola@gmail.com,
+	zokeefe@google.com,
+	zhengqi.arch@bytedance.com,
+	jhubbard@nvidia.com,
+	21cnbao@gmail.com,
+	willy@infradead.org,
+	kirill.shutemov@linux.intel.com,
+	david@redhat.com,
+	aarcange@redhat.com,
+	raquini@redhat.com,
+	dev.jain@arm.com,
+	sunnanyong@huawei.com,
+	usamaarif642@gmail.com,
+	audra@redhat.com,
+	akpm@linux-foundation.org,
+	rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	tiwai@suse.de
+Subject: [RFC v2 3/9] khugepaged: generalize hugepage_vma_revalidate for mTHP support
+Date: Mon, 10 Feb 2025 17:30:22 -0700
+Message-ID: <20250211003028.213461-4-npache@redhat.com>
+In-Reply-To: <20250211003028.213461-1-npache@redhat.com>
+References: <20250211003028.213461-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=11462; i=kees@kernel.org; h=from:subject; bh=qneY3+E6WQflVJ8FUJLVj8OKpCtnR1WKhTjP+Ezmn4M=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmrZqUda+t6s7pcz37vjKLlXT7aYXt3L7Q9Yndx0bL/5 jde//qQ0FHKwiDGxSArpsgSZOce5+Lxtj3cfa4izBxWJpAhDFycAjCRa7cY/lk0sv9unah/gOvV w5A1l2u0qkpfL5giGSiyWMPVsftuBTMjw5mXO/wmKN258no1+36DhckChiFBDLE7bHf4J93gFtB 4xAoA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-From: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
+For khugepaged to support different mTHP orders, we must generalize this
+function for arbitrary orders.
 
-Refactoring 'test' functions into kunit tests, to test utf-8 support in
-unicode subsystem.
+No functional change in this patch.
 
-This allows the utf8 tests to be run alongside the KUnit test suite
-using kunit-tool, quickly compiling and running all desired tests as
-part of the KUnit test suite, instead of compiling the selftest module
-and loading it.
-
-The refactoring kept the original testing logic intact, while adopting a
-testing pattern across different kernel modules and leveraging KUnit's
-benefits.
-
-Co-developed-by: Pedro Orlando <porlando@lkcamp.dev>
-Signed-off-by: Pedro Orlando <porlando@lkcamp.dev>
-Co-developed-by: Danilo Pereira <dpereira@lkcamp.dev>
-Signed-off-by: Danilo Pereira <dpereira@lkcamp.dev>
-Signed-off-by: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
-Reviewed-by: David Gow <davidgow@google.com>
-Acked-by: Gabriel Krisman Bertazi <krisman@suse.de>
-Reviewed-by: Rae Moar <rmoar@google.com>
-Link: https://lore.kernel.org/r/20241202075545.3648096-6-davidgow@google.com
-Signed-off-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Nico Pache <npache@redhat.com>
 ---
- fs/unicode/.kunitconfig    |   3 +
- fs/unicode/Kconfig         |   5 +-
- fs/unicode/Makefile        |   2 +-
- fs/unicode/utf8-norm.c     |   2 +-
- fs/unicode/utf8-selftest.c | 149 +++++++++++++++++--------------------
- 5 files changed, 77 insertions(+), 84 deletions(-)
- create mode 100644 fs/unicode/.kunitconfig
+ mm/khugepaged.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/unicode/.kunitconfig b/fs/unicode/.kunitconfig
-new file mode 100644
-index 000000000000..62dd5c171f9c
---- /dev/null
-+++ b/fs/unicode/.kunitconfig
-@@ -0,0 +1,3 @@
-+CONFIG_KUNIT=y
-+CONFIG_UNICODE=y
-+CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST=y
-diff --git a/fs/unicode/Kconfig b/fs/unicode/Kconfig
-index da786a687fdc..4ad2c36550f1 100644
---- a/fs/unicode/Kconfig
-+++ b/fs/unicode/Kconfig
-@@ -10,6 +10,7 @@ config UNICODE
- 	  be a separate loadable module that gets requested only when a file
- 	  system actually use it.
- 
--config UNICODE_NORMALIZATION_SELFTEST
-+config UNICODE_NORMALIZATION_KUNIT_TEST
- 	tristate "Test UTF-8 normalization support"
--	depends on UNICODE
-+	depends on UNICODE && KUNIT
-+	default KUNIT_ALL_TESTS
-diff --git a/fs/unicode/Makefile b/fs/unicode/Makefile
-index e309afe2b2bb..37bbcbc628a1 100644
---- a/fs/unicode/Makefile
-+++ b/fs/unicode/Makefile
-@@ -4,7 +4,7 @@ ifneq ($(CONFIG_UNICODE),)
- obj-y			+= unicode.o
- endif
- obj-$(CONFIG_UNICODE)	+= utf8data.o
--obj-$(CONFIG_UNICODE_NORMALIZATION_SELFTEST) += utf8-selftest.o
-+obj-$(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST) += utf8-selftest.o
- 
- unicode-y := utf8-norm.o utf8-core.o
- 
-diff --git a/fs/unicode/utf8-norm.c b/fs/unicode/utf8-norm.c
-index 768f8ab448b8..7b998c99c88d 100644
---- a/fs/unicode/utf8-norm.c
-+++ b/fs/unicode/utf8-norm.c
-@@ -586,7 +586,7 @@ int utf8byte(struct utf8cursor *u8c)
- 	}
- }
- 
--#ifdef CONFIG_UNICODE_NORMALIZATION_SELFTEST_MODULE
-+#if IS_MODULE(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST)
- EXPORT_SYMBOL_GPL(utf8version_is_supported);
- EXPORT_SYMBOL_GPL(utf8nlen);
- EXPORT_SYMBOL_GPL(utf8ncursor);
-diff --git a/fs/unicode/utf8-selftest.c b/fs/unicode/utf8-selftest.c
-index 5ddaf27b21a6..9476ab012baa 100644
---- a/fs/unicode/utf8-selftest.c
-+++ b/fs/unicode/utf8-selftest.c
-@@ -1,35 +1,15 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Kernel module for testing utf-8 support.
-+ * KUnit tests for utf-8 support.
-  *
-  * Copyright 2017 Collabora Ltd.
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
--#include <linux/module.h>
--#include <linux/printk.h>
- #include <linux/unicode.h>
--#include <linux/dcache.h>
-+#include <kunit/test.h>
- 
- #include "utf8n.h"
- 
--static unsigned int failed_tests;
--static unsigned int total_tests;
--
--#define _test(cond, func, line, fmt, ...) do {				\
--		total_tests++;						\
--		if (!cond) {						\
--			failed_tests++;					\
--			pr_err("test %s:%d Failed: %s%s",		\
--			       func, line, #cond, (fmt?":":"."));	\
--			if (fmt)					\
--				pr_err(fmt, ##__VA_ARGS__);		\
--		}							\
--	} while (0)
--#define test_f(cond, fmt, ...) _test(cond, __func__, __LINE__, fmt, ##__VA_ARGS__)
--#define test(cond) _test(cond, __func__, __LINE__, "")
--
- static const struct {
- 	/* UTF-8 strings in this vector _must_ be NULL-terminated. */
- 	unsigned char str[10];
-@@ -167,69 +147,74 @@ static int utf8cursor(struct utf8cursor *u8c, const struct unicode_map *um,
- 	return utf8ncursor(u8c, um, n, s, (unsigned int)-1);
- }
- 
--static void check_utf8_nfdi(struct unicode_map *um)
-+static void check_utf8_nfdi(struct kunit *test)
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 4c88d17250f4..c834ea842847 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -920,7 +920,7 @@ static int khugepaged_find_target_node(struct collapse_control *cc)
+ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
+ 				   bool expect_anon,
+ 				   struct vm_area_struct **vmap,
+-				   struct collapse_control *cc)
++				   struct collapse_control *cc, int order)
  {
- 	int i;
- 	struct utf8cursor u8c;
-+	struct unicode_map *um = test->priv;
+ 	struct vm_area_struct *vma;
+ 	unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
+@@ -932,9 +932,9 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
+ 	if (!vma)
+ 		return SCAN_VMA_NULL;
  
- 	for (i = 0; i < ARRAY_SIZE(nfdi_test_data); i++) {
- 		int len = strlen(nfdi_test_data[i].str);
- 		int nlen = strlen(nfdi_test_data[i].dec);
- 		int j = 0;
- 		unsigned char c;
-+		int ret;
-+
-+		KUNIT_EXPECT_EQ(test, utf8len(um, UTF8_NFDI, nfdi_test_data[i].str), nlen);
-+		KUNIT_EXPECT_EQ(test, utf8nlen(um, UTF8_NFDI, nfdi_test_data[i].str, len),
-+				nlen);
+-	if (!thp_vma_suitable_order(vma, address, PMD_ORDER))
++	if (!thp_vma_suitable_order(vma, address, order))
+ 		return SCAN_ADDRESS_RANGE;
+-	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, PMD_ORDER))
++	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, order))
+ 		return SCAN_VMA_CHECK;
+ 	/*
+ 	 * Anon VMA expected, the address may be unmapped then
+@@ -1130,7 +1130,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+ 		goto out_nolock;
  
--		test((utf8len(um, UTF8_NFDI, nfdi_test_data[i].str) == nlen));
--		test((utf8nlen(um, UTF8_NFDI, nfdi_test_data[i].str, len) ==
--			nlen));
- 
--		if (utf8cursor(&u8c, um, UTF8_NFDI, nfdi_test_data[i].str) < 0)
--			pr_err("can't create cursor\n");
-+		ret = utf8cursor(&u8c, um, UTF8_NFDI, nfdi_test_data[i].str);
-+		KUNIT_EXPECT_TRUE_MSG(test, ret >= 0, "Can't create cursor\n");
- 
- 		while ((c = utf8byte(&u8c)) > 0) {
--			test_f((c == nfdi_test_data[i].dec[j]),
--			       "Unexpected byte 0x%x should be 0x%x\n",
--			       c, nfdi_test_data[i].dec[j]);
-+			KUNIT_EXPECT_EQ_MSG(test, c, nfdi_test_data[i].dec[j],
-+					    "Unexpected byte 0x%x should be 0x%x\n",
-+					    c, nfdi_test_data[i].dec[j]);
- 			j++;
- 		}
- 
--		test((j == nlen));
-+		KUNIT_EXPECT_EQ(test, j, nlen);
- 	}
- }
- 
--static void check_utf8_nfdicf(struct unicode_map *um)
-+static void check_utf8_nfdicf(struct kunit *test)
- {
- 	int i;
- 	struct utf8cursor u8c;
-+	struct unicode_map *um = test->priv;
- 
- 	for (i = 0; i < ARRAY_SIZE(nfdicf_test_data); i++) {
- 		int len = strlen(nfdicf_test_data[i].str);
- 		int nlen = strlen(nfdicf_test_data[i].ncf);
- 		int j = 0;
-+		int ret;
- 		unsigned char c;
- 
--		test((utf8len(um, UTF8_NFDICF, nfdicf_test_data[i].str) ==
--				nlen));
--		test((utf8nlen(um, UTF8_NFDICF, nfdicf_test_data[i].str, len) ==
--				nlen));
-+		KUNIT_EXPECT_EQ(test, utf8len(um, UTF8_NFDICF, nfdicf_test_data[i].str),
-+				nlen);
-+		KUNIT_EXPECT_EQ(test, utf8nlen(um, UTF8_NFDICF, nfdicf_test_data[i].str, len),
-+				nlen);
- 
--		if (utf8cursor(&u8c, um, UTF8_NFDICF,
--				nfdicf_test_data[i].str) < 0)
--			pr_err("can't create cursor\n");
-+		ret = utf8cursor(&u8c, um, UTF8_NFDICF, nfdicf_test_data[i].str);
-+		KUNIT_EXPECT_TRUE_MSG(test, ret >= 0, "Can't create cursor\n");
- 
- 		while ((c = utf8byte(&u8c)) > 0) {
--			test_f((c == nfdicf_test_data[i].ncf[j]),
--			       "Unexpected byte 0x%x should be 0x%x\n",
--			       c, nfdicf_test_data[i].ncf[j]);
-+			KUNIT_EXPECT_EQ_MSG(test, c, nfdicf_test_data[i].ncf[j],
-+					    "Unexpected byte 0x%x should be 0x%x\n",
-+					    c, nfdicf_test_data[i].ncf[j]);
- 			j++;
- 		}
- 
--		test((j == nlen));
-+		KUNIT_EXPECT_EQ(test, j, nlen);
- 	}
- }
- 
--static void check_utf8_comparisons(struct unicode_map *table)
-+static void check_utf8_comparisons(struct kunit *test)
- {
- 	int i;
-+	struct unicode_map *um = test->priv;
- 
- 	for (i = 0; i < ARRAY_SIZE(nfdi_test_data); i++) {
- 		const struct qstr s1 = {.name = nfdi_test_data[i].str,
-@@ -237,8 +222,9 @@ static void check_utf8_comparisons(struct unicode_map *table)
- 		const struct qstr s2 = {.name = nfdi_test_data[i].dec,
- 					.len = sizeof(nfdi_test_data[i].dec)};
- 
--		test_f(!utf8_strncmp(table, &s1, &s2),
--		       "%s %s comparison mismatch\n", s1.name, s2.name);
-+		/* strncmp returns 0 when strings are equal */
-+		KUNIT_EXPECT_TRUE_MSG(test, utf8_strncmp(um, &s1, &s2) == 0,
-+				    "%s %s comparison mismatch\n", s1.name, s2.name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(nfdicf_test_data); i++) {
-@@ -247,62 +233,65 @@ static void check_utf8_comparisons(struct unicode_map *table)
- 		const struct qstr s2 = {.name = nfdicf_test_data[i].ncf,
- 					.len = sizeof(nfdicf_test_data[i].ncf)};
- 
--		test_f(!utf8_strncasecmp(table, &s1, &s2),
--		       "%s %s comparison mismatch\n", s1.name, s2.name);
-+		/* strncasecmp returns 0 when strings are equal */
-+		KUNIT_EXPECT_TRUE_MSG(test, utf8_strncasecmp(um, &s1, &s2) == 0,
-+				    "%s %s comparison mismatch\n", s1.name, s2.name);
- 	}
- }
- 
--static void check_supported_versions(struct unicode_map *um)
-+static void check_supported_versions(struct kunit *test)
- {
-+	struct unicode_map *um = test->priv;
- 	/* Unicode 7.0.0 should be supported. */
--	test(utf8version_is_supported(um, UNICODE_AGE(7, 0, 0)));
-+	KUNIT_EXPECT_TRUE(test, utf8version_is_supported(um, UNICODE_AGE(7, 0, 0)));
- 
- 	/* Unicode 9.0.0 should be supported. */
--	test(utf8version_is_supported(um, UNICODE_AGE(9, 0, 0)));
-+	KUNIT_EXPECT_TRUE(test, utf8version_is_supported(um, UNICODE_AGE(9, 0, 0)));
- 
- 	/* Unicode 1x.0.0 (the latest version) should be supported. */
--	test(utf8version_is_supported(um, UTF8_LATEST));
-+	KUNIT_EXPECT_TRUE(test, utf8version_is_supported(um, UTF8_LATEST));
- 
- 	/* Next versions don't exist. */
--	test(!utf8version_is_supported(um, UNICODE_AGE(13, 0, 0)));
--	test(!utf8version_is_supported(um, UNICODE_AGE(0, 0, 0)));
--	test(!utf8version_is_supported(um, UNICODE_AGE(-1, -1, -1)));
-+	KUNIT_EXPECT_FALSE(test, utf8version_is_supported(um, UNICODE_AGE(13, 0, 0)));
-+	KUNIT_EXPECT_FALSE(test, utf8version_is_supported(um, UNICODE_AGE(0, 0, 0)));
-+	KUNIT_EXPECT_FALSE(test, utf8version_is_supported(um, UNICODE_AGE(-1, -1, -1)));
- }
- 
--static int __init init_test_ucd(void)
-+static struct kunit_case unicode_normalization_test_cases[] = {
-+	KUNIT_CASE(check_supported_versions),
-+	KUNIT_CASE(check_utf8_comparisons),
-+	KUNIT_CASE(check_utf8_nfdicf),
-+	KUNIT_CASE(check_utf8_nfdi),
-+	{}
-+};
-+
-+static int init_test_ucd(struct kunit *test)
- {
--	struct unicode_map *um;
-+	struct unicode_map *um = utf8_load(UTF8_LATEST);
- 
--	failed_tests = 0;
--	total_tests = 0;
-+	test->priv = um;
- 
--	um = utf8_load(UTF8_LATEST);
--	if (IS_ERR(um)) {
--		pr_err("%s: Unable to load utf8 table.\n", __func__);
--		return PTR_ERR(um);
--	}
-+	KUNIT_EXPECT_EQ_MSG(test, IS_ERR(um), 0,
-+			    "%s: Unable to load utf8 table.\n", __func__);
- 
--	check_supported_versions(um);
--	check_utf8_nfdi(um);
--	check_utf8_nfdicf(um);
--	check_utf8_comparisons(um);
--
--	if (!failed_tests)
--		pr_info("All %u tests passed\n", total_tests);
--	else
--		pr_err("%u out of %u tests failed\n", failed_tests,
--		       total_tests);
--	utf8_unload(um);
- 	return 0;
- }
- 
--static void __exit exit_test_ucd(void)
-+static void exit_test_ucd(struct kunit *test)
- {
-+	utf8_unload(test->priv);
- }
- 
--module_init(init_test_ucd);
--module_exit(exit_test_ucd);
-+static struct kunit_suite unicode_normalization_test_suite = {
-+	.name = "unicode_normalization",
-+	.test_cases = unicode_normalization_test_cases,
-+	.init = init_test_ucd,
-+	.exit = exit_test_ucd,
-+};
-+
-+kunit_test_suite(unicode_normalization_test_suite);
-+
- 
- MODULE_AUTHOR("Gabriel Krisman Bertazi <krisman@collabora.co.uk>");
--MODULE_DESCRIPTION("Kernel module for testing utf-8 support");
-+MODULE_DESCRIPTION("KUnit tests for utf-8 support.");
- MODULE_LICENSE("GPL");
+ 	mmap_read_lock(mm);
+-	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
++	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
+ 	if (result != SCAN_SUCCEED) {
+ 		mmap_read_unlock(mm);
+ 		goto out_nolock;
+@@ -1164,7 +1164,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+ 	 * mmap_lock.
+ 	 */
+ 	mmap_write_lock(mm);
+-	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
++	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
+ 	if (result != SCAN_SUCCEED)
+ 		goto out_up_write;
+ 	/* check if the pmd is still valid */
+@@ -2796,7 +2796,7 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+ 			mmap_read_lock(mm);
+ 			mmap_locked = true;
+ 			result = hugepage_vma_revalidate(mm, addr, false, &vma,
+-							 cc);
++							 cc, HPAGE_PMD_ORDER);
+ 			if (result  != SCAN_SUCCEED) {
+ 				last_fail = result;
+ 				goto out_nolock;
 -- 
-2.34.1
+2.48.1
 
