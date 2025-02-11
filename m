@@ -1,152 +1,95 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375BE1E9B17
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD0F1E9B06;
+	Tue, 11 Feb 2025 07:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739257532; cv=none; b=GBrv0xYupnjkA6jApxGxxMX3GQpSD83WMUktOQbKImbwoZcwJfCrLgWVfAc6BxGBprh8ZcW7MZ954Rz1bnKZ0EAe6i7GSXyJQXqojojxrm8HxuLBkG8e6PfznwdIs6C9ntG7jtDpxY9sts8DsNHFmt9y09o0STxsz+zrk6GUphc=
+	t=1739257553; cv=none; b=oRc7ofuDKVFpKK3CtkDMQyp79WnNESy4eV0YEKa4UF0ywtfeO92VUPdSOHictVd0hEsSBQhszTwCDCd80HuYe9aOct59vyVWuqeNyoXBwdUXOOjqal133qor6PZaTwGtRoj1vyM4xhdXXQXfRW6e6WLZmMycegwSpna4B1czATQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739257532; c=relaxed/simple;
-	bh=oaAaNX/QxmUMbeZs9fPg2tPMIurhFhVqYkQIbFmbTRM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=O7ctSaR//ckNufphWKfVHSEGuxc6AurKv0zlgEy0HwAik2KfRgHzdq0YfRlBUALwvDqXmtEwUKRbwFeRYiX+WJwGyEqmp92Pn/nmFS01xjxKZzchdblE58DLIE4v8dq4aOLmOOyDJL1c5CSq1XMnTtqKL9DHq9PVrpvyo2CrR0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d162c02150so13502855ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:05:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739257529; x=1739862329;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AUX72q2tBzhNGgAjcGhqVuvMWdHoUisryHtNBvrmTx0=;
-        b=L28NBeRkO5MQyT+XNk7nNHw99D8VaZh8ZJ0sjKh4bAch+FvgL4x5nG9LImATvpL4T+
-         lF8FwkL3Io8hxLuoNnhXpZ+Z9o4YF0FiJ47IpfrF4GVcfOiS4i7mRSiWrIq6gs0gKoVl
-         rAtAk2G5HhI62tFWEQQ6AtHVRX87qy+uj4iNqKZ8Ri4FttjdZURUfgJy5Mil2xM+rEoS
-         b2NmBmumDBDO5fAQyKamYnlDXWNnvq55hIQIZPSpaUcHlI9RDKM05yWxFH9ai8d6H5aT
-         NWHtAMt65Ve6OZkSsEG5vLY0sCJgMdnRsLGyFTzETKSWfo5M0uValq15onqs/70nHxaO
-         ahmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWXbb3g7TfktOh3WtfppalY2a9Kq37jelpoNXXMyWfQ1kVl0EQYnfbcgWxWjRpe/vNMnXsNvQvemoGz44E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIh6hWrxBB+S3FxXKXoNwrAr1bY7RoXCKbjoMb7vDJnvCOwekb
-	1T0LMCJr2dtOYNoCMxNrcmuG1QTlT4eL5t2QR59N1ANVDB2v+NCUrj/pKfu9vfZJxU5CsHUXIhI
-	/9qDWjIcfDoFhqnA0feU68wK0U8OjgmzXhJ3DQMJneoGj4A2obYha53Y=
-X-Google-Smtp-Source: AGHT+IGnQ5EmH4VvTsLPowsxr/DMZLw5btUfg0zpp1vsVeoLP0DzSeWvURLXfamuZ4ai9GB/4nwE1VH6qOwAUya5WfXWIhXPOFXH
+	s=arc-20240116; t=1739257553; c=relaxed/simple;
+	bh=hajK+H8/OOzhf2LpTlRWz2++os+SDAm2g05VQUq4XZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jny7y2ibVa9zgkk70ghY9DlgIsERi6SMUbemEDWSuimABExeXypulYNin0f6g3jFKuSRfu5AxvVYJ5o5cMSDrFRUZs81TLi8cBJ1wL9ihskKebgcPRqzSRYHXDyfmg1VEywFKfQO2QW+Ix6XUesAFy1eRDp/k8pQPZyKGbfmKjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SjDoB5BQ; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SjDoB5BQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739257551; x=1770793551;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hajK+H8/OOzhf2LpTlRWz2++os+SDAm2g05VQUq4XZE=;
+  b=SjDoB5BQFzGUuqdDHdGoVKJP7+U6kfLXhskvRF7Ff3T7+mmBiwTrU7sX
+   pzBTGF8nmNVt5EcxS6x8S0EUaINjaPAujrzhhJxQhi5ufcPYEhEM8vKkf
+   TnRpASSsdxc3pQ2AU8amPWb3NaY2+7MfB9U2b3ehv2l1kHmekz9TOhejf
+   +PgdSiGX6WPwm8YFj/XFe6MzqhePjou1AGygcVEHuA/bMxWok8NNKo8M2
+   EnQj3TSyCs9ynw67o5y89UqFr06CloSZx/e+c1YZjr+V+LR0EdOuSTzqM
+   6h2BW2za/IUABngeWbJJgIztO65BHilJbIuRskBC8lZXKHReB8F7jjn7p
+   A==;
+X-CSE-ConnectionGUID: NqXb9PKERf+UUN3o3G5Rcg==
+X-CSE-MsgGUID: QEDzxWHJT2qR6RTayfh5GA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40008336"
+X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
+   d="scan'208";a="40008336"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 23:05:50 -0800
+X-CSE-ConnectionGUID: w6VhlQP/TS2Vgnke3Ll7Jw==
+X-CSE-MsgGUID: +bp9aVKwS2aoPGMxXh7Bcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113317099"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 10 Feb 2025 23:05:48 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 8B9662CA; Tue, 11 Feb 2025 09:05:46 +0200 (EET)
+Date: Tue, 11 Feb 2025 09:05:46 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Alexis GUILLEMET <alexis.guillemet@dunasys.com>
+Subject: Re: [PATCH v1 0/2] pinctrl: intel: Fix PWM initialisation
+Message-ID: <20250211070546.GY3713119@black.fi.intel.com>
+References: <20250210195230.490904-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1846:b0:3d1:5037:c97a with SMTP id
- e9e14a558f8ab-3d16f405ca1mr17852615ab.3.1739257529333; Mon, 10 Feb 2025
- 23:05:29 -0800 (PST)
-Date: Mon, 10 Feb 2025 23:05:29 -0800
-In-Reply-To: <67a8cd8f.050a0220.3d72c.003f.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67aaf6b9.050a0220.3d72c.005d.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] general protection fault in h5_recv
-From: syzbot <syzbot+b5691bb559396b262064@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250210195230.490904-1-andriy.shevchenko@linux.intel.com>
 
-syzbot has found a reproducer for the following issue on:
+On Mon, Feb 10, 2025 at 09:44:49PM +0200, Andy Shevchenko wrote:
+> It appears that PWM instantiated from pinctrl-intel is configured
+> to a wrong flow. This mini-series to fix the issue. Note, patch 1
+> is comprehensive documentation paragraph to explain what the difference
+> in the programming flow and what the SoCs are affected.
+> 
+> The issue had been reported privately, hence no Closes tag.
+> I haven't added the Tested-by, so to make sure that it (still) works
+> I ask Alexis to give the formal Tag here in a response to the series.
+> 
+> The idea is to route this via pin control tree as there are already two patches
+> against PWM handling in pinctrl-intel. There is no need to backport that, it's
+> optional, because it wasn't worked from day 1, and hence no Cc: stable@.
+> 
+> Cc: Alexis GUILLEMET<alexis.guillemet@dunasys.com>
+> 
+> Andy Shevchenko (2):
+>   pwm: lpss: Clarify the bypass member semantics in struct
+>     pwm_lpss_boardinfo
+>   pinctrl: intel: Fix wrong bypass assignment in
+>     intel_pinctrl_probe_pwm()
 
-HEAD commit:    df5d6180169a Add linux-next specific files for 20250210
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14a9c3f8580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2cd616b6e736ca7
-dashboard link: https://syzkaller.appspot.com/bug?extid=b5691bb559396b262064
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149c78e4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=129c78e4580000
+Both,
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/92495cf20271/disk-df5d6180.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/4b3656161842/vmlinux-df5d6180.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7fbc4e7a0f5d/bzImage-df5d6180.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b5691bb559396b262064@syzkaller.appspotmail.com
-
-Oops: general protection fault, probably for non-canonical address 0xdffffc000000005f: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x00000000000002f8-0x00000000000002ff]
-CPU: 1 UID: 0 PID: 5834 Comm: syz-executor200 Not tainted 6.14.0-rc2-next-20250210-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-RIP: 0010:h5_recv+0x153/0x940 drivers/bluetooth/hci_h5.c:572
-Code: 08 01 44 8b 64 24 04 48 8b 5c 24 08 4c 8b 74 24 18 49 ff c7 41 ff cc 45 85 e4 0f 8e 55 06 00 00 e8 a2 58 f5 f8 48 8b 44 24 30 <42> 80 3c 28 00 74 08 48 89 df e8 ce 53 5c f9 48 8b 1b 31 ff 48 89
-RSP: 0018:ffffc90003e8fc60 EFLAGS: 00010202
-RAX: 000000000000005f RBX: 00000000000002f8 RCX: 0000000000000061
-RDX: ffff8880350dda00 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: ffffc90003e8fd70 R08: ffffffff88ca308e R09: 1ffff110062cdb03
-R10: dffffc0000000000 R11: ffffffff88ca2fd0 R12: 0000000000000001
-R13: dffffc0000000000 R14: ffff88803166d800 R15: ffffc90003e8fe00
-FS:  00007f38f1dd06c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f38f1d8ed58 CR3: 000000007b704000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- hci_uart_tty_receive+0x141/0x1c0 drivers/bluetooth/hci_ldisc.c:622
- tiocsti+0x24d/0x300 drivers/tty/tty_io.c:2299
- tty_ioctl+0x518/0xdc0 drivers/tty/tty_io.c:2716
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f38f1e183d9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 51 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f38f1dd0218 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f38f1e9f328 RCX: 00007f38f1e183d9
-RDX: 0000400000000040 RSI: 0000000000005412 RDI: 0000000000000006
-RBP: 00007f38f1e9f320 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f38f1e6c074
-R13: 0000400000000300 R14: 00004000000000c0 R15: 0000400000000040
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:h5_recv+0x153/0x940 drivers/bluetooth/hci_h5.c:572
-Code: 08 01 44 8b 64 24 04 48 8b 5c 24 08 4c 8b 74 24 18 49 ff c7 41 ff cc 45 85 e4 0f 8e 55 06 00 00 e8 a2 58 f5 f8 48 8b 44 24 30 <42> 80 3c 28 00 74 08 48 89 df e8 ce 53 5c f9 48 8b 1b 31 ff 48 89
-RSP: 0018:ffffc90003e8fc60 EFLAGS: 00010202
-RAX: 000000000000005f RBX: 00000000000002f8 RCX: 0000000000000061
-RDX: ffff8880350dda00 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: ffffc90003e8fd70 R08: ffffffff88ca308e R09: 1ffff110062cdb03
-R10: dffffc0000000000 R11: ffffffff88ca2fd0 R12: 0000000000000001
-R13: dffffc0000000000 R14: ffff88803166d800 R15: ffffc90003e8fe00
-FS:  00007f38f1dd06c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000040000000f000 CR3: 000000007b704000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	08 01                	or     %al,(%rcx)
-   2:	44 8b 64 24 04       	mov    0x4(%rsp),%r12d
-   7:	48 8b 5c 24 08       	mov    0x8(%rsp),%rbx
-   c:	4c 8b 74 24 18       	mov    0x18(%rsp),%r14
-  11:	49 ff c7             	inc    %r15
-  14:	41 ff cc             	dec    %r12d
-  17:	45 85 e4             	test   %r12d,%r12d
-  1a:	0f 8e 55 06 00 00    	jle    0x675
-  20:	e8 a2 58 f5 f8       	call   0xf8f558c7
-  25:	48 8b 44 24 30       	mov    0x30(%rsp),%rax
-* 2a:	42 80 3c 28 00       	cmpb   $0x0,(%rax,%r13,1) <-- trapping instruction
-  2f:	74 08                	je     0x39
-  31:	48 89 df             	mov    %rbx,%rdi
-  34:	e8 ce 53 5c f9       	call   0xf95c5407
-  39:	48 8b 1b             	mov    (%rbx),%rbx
-  3c:	31 ff                	xor    %edi,%edi
-  3e:	48                   	rex.W
-  3f:	89                   	.byte 0x89
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
