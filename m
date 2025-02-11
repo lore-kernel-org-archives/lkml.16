@@ -1,362 +1,477 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2641F03C7;
-	Tue, 11 Feb 2025 08:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E530A1F03D9
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739263320; cv=none; b=bbEfW0xdmhPFZfpv9LlqLJpIVvoe1HUjWdr6js2cQhT0LE250vAxlGtPlz6G5REvKN6ysbM9QQ3BOYWDZy0ErFa4M+fWG+U1NmbeE5abDm97A1GQWK3EYVEj2IflZ7u5l8rH1NjkJcMURK5vAakKwsc+4J1irUBmqxQ+FYsd0iM=
+	t=1739263352; cv=none; b=fvX6wnlh60Nw5RdQxap1USFIVmbRgD5AmDyO0E5Tm2eolfpEI3X0M4+V2xmg9Qt6bCoIEyH30PDbnDNszVsybsFOv1m1X7595JKoiIYSt/eB/aUFYcd+DGTMNgMpdnm4JNcbs73eL/LmyflwGAjKuorNY0Fv2rnnWAiHdvK1NCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739263320; c=relaxed/simple;
-	bh=P+1AvOfF8N+oyniRH12zNQKP8gJqRBvHHqYDfauDWG0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QkL8zQaj9f06PP0d64KGQLCBJ/o0D2JVouxw/rqjamAcJzvu0WuF1ksWCkVoNWY1gXveL//uNIv0ES6TQtOEUm3RnTIntLwQktXTopWHv9/xwNMmAq0Zw88zYyAeAQiX1ltsd7pNmVUOF9xSr/n7t0/1GQTZFKhpglTytx+CVaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=ULyRsWSN; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=oioSF1zv reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1739263352; c=relaxed/simple;
+	bh=HGl6geUt36C5wAFAZ2zzkXkZ8LrDR5CQGw4JbpM2t8o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fcRwlygxQNeNik/RmgfSjj0SBzMewtFEp8LWCGcK80PO1OCU2SyItcC3O/s1qdqAo3nbPYL5yXbvlQLV4GlW+SLLT+dCCnCDugdrIBfqyGJzgu8lmeEDC0XFZ3GFyHZyj/ewQbnn4T82BmhT9sCF0/L5uqwXuxcTUPHsmnM30cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kAjB4DoE; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ULyRsWSN";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="oioSF1zv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kAjB4DoE"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30761be8fa8so51936401fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:42:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1739263318; x=1770799318;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OhSb1tB8jCUL48/3XaVTpcvYnCAj5JE9StseCDeaZIA=;
-  b=ULyRsWSNkZOFbkCKMnto2cibs0mfmqBmwZUagtyxjbOvYPnrv+kAh1xK
-   h1mwP9YoJYqf0Buu7qr6b10m9qfM3fbUitM6lQXs666m3jG/oyuv1QVff
-   /hSGiR3l6gvBoxbYeCGZbwFUy6jZkcBFMsOMUTI3IMOvsg5l6MaNPu/1c
-   TW35d0jSIo58RCrcpdCiqC9QjNozsDP2HqbvRiZovw5G4Z1gN1sdRL3Cz
-   +n75kJrf1LQlblJt6gbN/PT1pyPMG64bJUk51Lr/rrfxwDt2Yecft/30z
-   QfEP8ksOEobg4caldNLAirA3oQfJ8oLXxzUnECM4GXMiQL9jg+OOP/N0t
-   Q==;
-X-CSE-ConnectionGUID: ZAb/Hh4+RO2kUZc8Yp1qgQ==
-X-CSE-MsgGUID: jf7sDxqcREWATS8YJ25E8Q==
-X-IronPort-AV: E=Sophos;i="6.13,277,1732575600"; 
-   d="scan'208";a="41744845"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 11 Feb 2025 09:41:55 +0100
-X-CheckPoint: {67AB0D53-8-B8541F8F-E50F9B0E}
-X-MAIL-CPID: 05BF5E78B9110FE624A9C1CBE99E2503_2
-X-Control-Analysis: str=0001.0A006366.67AB0D53.00B7,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 99B2B169CCC;
-	Tue, 11 Feb 2025 09:41:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1739263310;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OhSb1tB8jCUL48/3XaVTpcvYnCAj5JE9StseCDeaZIA=;
-	b=oioSF1zveThtEiwKm6nQi8VaDyrGjhMrWGhuApyNoOSKXt6GohUI3DRaFlGAMwMppJV5aj
-	CrGpktuavqWZUADAYWSmLAwvtQTXiR7tkRv2YPw9M5xTGLpYd2zsUbEE7Im6pT9S0NlhH8
-	u6uVUXzch5+f5wnbQCANWv17bI94yWynzQLpKNiQKK0x7lqS9LXPn62fkbcTXCduKt5riq
-	CYfeSW+FLV68kbJ1jht/cow4AdB1gnPY0waUNvHs21O7/3Lj/mr9FHMQzxpXLL/TTzfs/R
-	8Pgxd6zpRXFjgyRgKjUgxCP2MHeeuG4H7xj/uEWhrUzmNsDzBq3lx+sPZHlFow==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] drm: bridge: imx9-parallel-disp-fmt: add i.MX91/93 parallel display bridge
-Date: Tue, 11 Feb 2025 09:41:19 +0100
-Message-Id: <20250211084119.849324-3-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250211084119.849324-1-alexander.stein@ew.tq-group.com>
-References: <20250211084119.849324-1-alexander.stein@ew.tq-group.com>
+        d=google.com; s=20230601; t=1739263348; x=1739868148; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=j5zLMHaArTp12Qy4d6Q7EoFrihDmZm1M5PBT6GJl00E=;
+        b=kAjB4DoElP22Dry10VQtYkRGFKJUO5Ba5xQqXmnXIowg9wYiuO0A1i2ce47FT0FxmA
+         2zUD1TDM6opFXm3TcBB4WoFl/2AOyUOT0iEalQDZuKCzKeFYWF3PYxPFg41YwsWZZq1g
+         AfQVIBwD+HP1+xnlg2X2LoyUeqm5nStWDndjPj9HZ5FPqr9Mzo1puS9Ic9c9f1NWENg+
+         hEWmuJmIn5bKu751vxctE7xT0tbAhI+1BBDtk/9uW57yeYJfwy+HTzdp088afOST9wD0
+         4ueMHVjtzcJsN2vtHkzXparCbHRIZ2snxC9K1BrN/f+Mu2LxGH6aGfUPELEthgfHz/sp
+         oBOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739263348; x=1739868148;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j5zLMHaArTp12Qy4d6Q7EoFrihDmZm1M5PBT6GJl00E=;
+        b=njWBjfAFgbgJlezgS1Ez+8UCxEcst8By9l40Qy318sQbLxaSfw2uVtynscdWv0D4ep
+         n58RV/Tla4D4I6KGlwEYinRPHMBYlFOP3vdUEhYZtBYteuP6ku6M+4QJVCRCZsAGBeEJ
+         KLm1wGXelhNBOvumcJZHcRgrPxfNv7uW4pV3KrzQaZ775kO4L+pzF6ebNMiwSWtpNYmM
+         bmjzTe6RsVFDs8QldWE0ar3+en1IawOubN7KSPjIHVHE5DbhAYaueMp7jqnW7nml+Iyw
+         Daf+co4/zax1PZNIw1krBt0XSXj0z3bfwcOK/jkxCuYz12pvoW4kMmw2BL9MB23qGFHk
+         8eXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXMlx5dDqCiWecjGg0tsiCv/yKQ810/aG55BfhuEcc0y/ZglMucMai0qqJMLXuwUKfoA2iojp/91dWKyjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn4CAK9h4wby8IB1kNHLyso09os8tB7dhxmTA0QhlZ4K6luW5e
+	Imv6rscSTSwx+wiptXztKExQkPPnap8g5OO3ZeqxknW/tDq66kcx9RQc6nq72mt7GNLICPeoQvD
+	1swfXw+SRI00bSC0zHN9AOOTiGqtc57lZ90i8GDX/b8DA5Gtyki+d
+X-Gm-Gg: ASbGncteN8ne3HkOScm47Jw4cLnuM4gCW2LJBY1JUkNVGqIQZGlc/+860P70Qu2vCpg
+	yr3sa0M3xiib7f2E+7KmepIuu3NaBKvaUvUl7n13kpZ2KnuJ5mkFRYzXR5bUjGw+YS9zVKkRFmR
+	VrHhJzjjgQnI3ja9UY87aIQZsPZOta
+X-Google-Smtp-Source: AGHT+IGIuJGGdM76GRBM4irM/KqYy0N807xC5sk960oKuB+RUS2R8uR5FveIqXUHa8Rt11Er9tiSW4DHgJRiZxbV6ew=
+X-Received: by 2002:a2e:bc11:0:b0:308:fd11:76ef with SMTP id
+ 38308e7fff4ca-308fd117b1emr4666301fa.23.1739263347848; Tue, 11 Feb 2025
+ 00:42:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <cover.1738772628.git.dvyukov@google.com> <eb32b9b13856b0d508836b61b3e8377aef9163a3.1738772628.git.dvyukov@google.com>
+ <Z6WBsruddcx0SFV5@google.com> <CACT4Y+afC5WfTMaKGtg760PS5oXkkurzAyHVyKr9TsPs9RU2DQ@mail.gmail.com>
+ <Z6qhjFs0YOMTzk9W@google.com>
+In-Reply-To: <Z6qhjFs0YOMTzk9W@google.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Tue, 11 Feb 2025 09:42:16 +0100
+X-Gm-Features: AWEUYZlDpR6wpJ3qJWnCRtZ-LefEyaH6YmYar8fBZqJVuHlhOC-eBzOjTFRqtps
+Message-ID: <CACT4Y+brgj5vRoxQtZ76hUVcHWUJJ2u_8n89EwuTAoyXXbGDCw@mail.gmail.com>
+Subject: Re: [PATCH v5 6/8] perf report: Add --latency flag
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-i.MX91/93 have a single register specifying parallel display output
-format. Add a bridge driver for setting the corresponding format.
-Currently only RGB565, RGB666 and RGB888 output is supported.
+On Tue, 11 Feb 2025 at 02:02, Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> On Fri, Feb 07, 2025 at 08:23:58AM +0100, Dmitry Vyukov wrote:
+> > On Fri, 7 Feb 2025 at 04:44, Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > On Wed, Feb 05, 2025 at 05:27:45PM +0100, Dmitry Vyukov wrote:
+> > > > Add record/report --latency flag that allows to capture and show
+> > > > latency-centric profiles rather than the default CPU-consumption-centric
+> > > > profiles. For latency profiles record captures context switch events,
+> > > > and report shows Latency as the first column.
+> > > >
+> > > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> > > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > > Cc: Ian Rogers <irogers@google.com>
+> > > > Cc: linux-perf-users@vger.kernel.org
+> > > > Cc: linux-kernel@vger.kernel.org
+> > > >
+> > > > ---
+> > > > Changes in v5:
+> > > >  - added description of --latency flag in Documentation flags
+> > > > ---
+> > > >  tools/perf/Documentation/perf-record.txt |  4 +++
+> > > >  tools/perf/Documentation/perf-report.txt |  5 +++
+> > > >  tools/perf/builtin-record.c              | 20 ++++++++++++
+> > > >  tools/perf/builtin-report.c              | 32 +++++++++++++++---
+> > > >  tools/perf/ui/hist.c                     | 41 +++++++++++++++++++-----
+> > > >  tools/perf/util/hist.h                   |  1 +
+> > > >  tools/perf/util/sort.c                   | 33 +++++++++++++++----
+> > > >  tools/perf/util/sort.h                   |  2 +-
+> > > >  tools/perf/util/symbol_conf.h            |  4 ++-
+> > > >  9 files changed, 122 insertions(+), 20 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> > > > index 80686d590de24..c7fc1ba265e27 100644
+> > > > --- a/tools/perf/Documentation/perf-record.txt
+> > > > +++ b/tools/perf/Documentation/perf-record.txt
+> > > > @@ -227,6 +227,10 @@ OPTIONS
+> > > >       '--filter' exists, the new filter expression will be combined with
+> > > >       them by '&&'.
+> > > >
+> > > > +--latency::
+> > > > +     Enable data collection for latency profiling.
+> > > > +     Use perf report --latency for latency-centric profile.
+> > > > +
+> > > >  -a::
+> > > >  --all-cpus::
+> > > >          System-wide collection from all CPUs (default if no target is specified).
+> > > > diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+> > > > index 87f8645194062..66794131aec48 100644
+> > > > --- a/tools/perf/Documentation/perf-report.txt
+> > > > +++ b/tools/perf/Documentation/perf-report.txt
+> > > > @@ -68,6 +68,11 @@ OPTIONS
+> > > >  --hide-unresolved::
+> > > >          Only display entries resolved to a symbol.
+> > > >
+> > > > +--latency::
+> > > > +        Show latency-centric profile rather than the default
+> > > > +        CPU-consumption-centric profile
+> > > > +        (requires perf record --latency flag).
+> > > > +
+> > > >  -s::
+> > > >  --sort=::
+> > > >       Sort histogram entries by given key(s) - multiple keys can be specified
+> > > > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > > > index 5db1aedf48df9..e219639ac401b 100644
+> > > > --- a/tools/perf/builtin-record.c
+> > > > +++ b/tools/perf/builtin-record.c
+> > > > @@ -161,6 +161,7 @@ struct record {
+> > > >       struct evlist           *sb_evlist;
+> > > >       pthread_t               thread_id;
+> > > >       int                     realtime_prio;
+> > > > +     bool                    latency;
+> > > >       bool                    switch_output_event_set;
+> > > >       bool                    no_buildid;
+> > > >       bool                    no_buildid_set;
+> > > > @@ -3371,6 +3372,9 @@ static struct option __record_options[] = {
+> > > >                    parse_events_option),
+> > > >       OPT_CALLBACK(0, "filter", &record.evlist, "filter",
+> > > >                    "event filter", parse_filter),
+> > > > +     OPT_BOOLEAN(0, "latency", &record.latency,
+> > > > +                 "Enable data collection for latency profiling.\n"
+> > > > +                 "\t\t\t  Use perf report --latency for latency-centric profile."),
+> > > >       OPT_CALLBACK_NOOPT(0, "exclude-perf", &record.evlist,
+> > > >                          NULL, "don't record events from perf itself",
+> > > >                          exclude_perf),
+> > > > @@ -4017,6 +4021,22 @@ int cmd_record(int argc, const char **argv)
+> > > >
+> > > >       }
+> > > >
+> > > > +     if (record.latency) {
+> > > > +             /*
+> > > > +              * There is no fundamental reason why latency profiling
+> > > > +              * can't work for system-wide mode, but exact semantics
+> > > > +              * and details are to be defined.
+> > > > +              * See the following thread for details:
+> > > > +              * https://lore.kernel.org/all/Z4XDJyvjiie3howF@google.com/
+> > > > +              */
+> > > > +             if (record.opts.target.system_wide) {
+> > > > +                     pr_err("Failed: latency profiling is not supported with system-wide collection.\n");
+> > > > +                     err = -EINVAL;
+> > > > +                     goto out_opts;
+> > > > +             }
+> > > > +             record.opts.record_switch_events = true;
+> > > > +     }
+> > > > +
+> > > >       if (rec->buildid_mmap) {
+> > > >               if (!perf_can_record_build_id()) {
+> > > >                       pr_err("Failed: no support to record build id in mmap events, update your kernel.\n");
+> > > > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> > > > index 2a19abdc869a1..69de6dbefecfa 100644
+> > > > --- a/tools/perf/builtin-report.c
+> > > > +++ b/tools/perf/builtin-report.c
+> > > > @@ -112,6 +112,8 @@ struct report {
+> > > >       u64                     nr_entries;
+> > > >       u64                     queue_size;
+> > > >       u64                     total_cycles;
+> > > > +     u64                     total_samples;
+> > > > +     u64                     singlethreaded_samples;
+> > > >       int                     socket_filter;
+> > > >       DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+> > > >       struct branch_type_stat brtype_stat;
+> > > > @@ -331,6 +333,10 @@ static int process_sample_event(const struct perf_tool *tool,
+> > > >                                    &rep->total_cycles, evsel);
+> > > >       }
+> > > >
+> > > > +     rep->total_samples++;
+> > > > +     if (al.parallelism == 1)
+> > > > +             rep->singlethreaded_samples++;
+> > > > +
+> > > >       ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
+> > > >       if (ret < 0)
+> > > >               pr_debug("problem adding hist entry, skipping event\n");
+> > > > @@ -1079,6 +1085,11 @@ static int __cmd_report(struct report *rep)
+> > > >               return ret;
+> > > >       }
+> > > >
+> > > > +     /* Don't show Latency column for non-parallel profiles by default. */
+> > > > +     if (rep->singlethreaded_samples * 100 / rep->total_samples >= 99 &&
+> > > > +                     !symbol_conf.prefer_latency)
+> > > > +             perf_hpp__cancel_latency();
+> > > > +
+> > > >       evlist__check_mem_load_aux(session->evlist);
+> > > >
+> > > >       if (rep->stats_mode)
+> > > > @@ -1468,6 +1479,10 @@ int cmd_report(int argc, const char **argv)
+> > > >                   "Disable raw trace ordering"),
+> > > >       OPT_BOOLEAN(0, "skip-empty", &report.skip_empty,
+> > > >                   "Do not display empty (or dummy) events in the output"),
+> > > > +     OPT_BOOLEAN(0, "latency", &symbol_conf.prefer_latency,
+> > > > +                 "Show latency-centric profile rather than the default\n"
+> > > > +                 "\t\t\t  CPU-consumption-centric profile\n"
+> > > > +                 "\t\t\t  (requires perf record --latency flag)."),
+> > > >       OPT_END()
+> > > >       };
+> > > >       struct perf_data data = {
+> > > > @@ -1722,16 +1737,25 @@ int cmd_report(int argc, const char **argv)
+> > > >               symbol_conf.annotate_data_sample = true;
+> > > >       }
+> > > >
+> > > > +     symbol_conf.enable_latency = true;
+> > > >       if (report.disable_order || !perf_session__has_switch_events(session)) {
+> > > >               if (symbol_conf.parallelism_list_str ||
+> > > > -                             (sort_order && strstr(sort_order, "parallelism")) ||
+> > > > -                             (field_order && strstr(field_order, "parallelism"))) {
+> > > > +                     symbol_conf.prefer_latency ||
+> > > > +                     (sort_order && (strstr(sort_order, "latency") ||
+> > > > +                             strstr(sort_order, "parallelism"))) ||
+> > > > +                     (field_order && (strstr(field_order, "latency") ||
+> > > > +                             strstr(field_order, "parallelism")))) {
+> > > >                       if (report.disable_order)
+> > > > -                             ui__error("Use of parallelism is incompatible with --disable-order.\n");
+> > > > +                             ui__error("Use of latency profile or parallelism is incompatible with --disable-order.\n");
+> > > >                       else
+> > > > -                             ui__error("Use of parallelism requires --switch-events during record.\n");
+> > > > +                             ui__error("Use of latency profile or parallelism requires --latency flag during record.\n");
+> > > >                       return -1;
+> > > >               }
+> > > > +             /*
+> > > > +              * If user did not ask for anything related to
+> > > > +              * latency/parallelism explicitly, just don't show it.
+> > > > +              */
+> > > > +             symbol_conf.enable_latency = false;
+> > > >       }
+> > > >
+> > > >       if (sort_order && strstr(sort_order, "ipc")) {
+> > > > diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+> > > > index 6de6309595f9e..b453f8eb579cc 100644
+> > > > --- a/tools/perf/ui/hist.c
+> > > > +++ b/tools/perf/ui/hist.c
+> > > > @@ -632,27 +632,36 @@ void perf_hpp__init(void)
+> > > >               return;
+> > > >
+> > > >       if (symbol_conf.cumulate_callchain) {
+> > > > -             hpp_dimension__add_output(PERF_HPP__OVERHEAD_ACC);
+> > > > +             /* Use idempotent addition to avoid more complex logic. */
+> > > > +             if (symbol_conf.prefer_latency)
+> > > > +                     hpp_dimension__add_output(PERF_HPP__LATENCY_ACC, true);
+> > > > +             hpp_dimension__add_output(PERF_HPP__OVERHEAD_ACC, true);
+> > > > +             if (symbol_conf.enable_latency)
+> > > > +                     hpp_dimension__add_output(PERF_HPP__LATENCY_ACC, true);
+> > > >               perf_hpp__format[PERF_HPP__OVERHEAD].name = "Self";
+> > > >       }
+> > > >
+> > > > -     hpp_dimension__add_output(PERF_HPP__OVERHEAD);
+> > > > +     if (symbol_conf.prefer_latency)
+> > > > +             hpp_dimension__add_output(PERF_HPP__LATENCY, true);
+> > > > +     hpp_dimension__add_output(PERF_HPP__OVERHEAD, true);
+> > > > +     if (symbol_conf.enable_latency)
+> > > > +             hpp_dimension__add_output(PERF_HPP__LATENCY, true);
+> > > >
+> > > >       if (symbol_conf.show_cpu_utilization) {
+> > > > -             hpp_dimension__add_output(PERF_HPP__OVERHEAD_SYS);
+> > > > -             hpp_dimension__add_output(PERF_HPP__OVERHEAD_US);
+> > > > +             hpp_dimension__add_output(PERF_HPP__OVERHEAD_SYS, false);
+> > > > +             hpp_dimension__add_output(PERF_HPP__OVERHEAD_US, false);
+> > > >
+> > > >               if (perf_guest) {
+> > > > -                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_SYS);
+> > > > -                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_US);
+> > > > +                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_SYS, false);
+> > > > +                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_US, false);
+> > > >               }
+> > > >       }
+> > > >
+> > > >       if (symbol_conf.show_nr_samples)
+> > > > -             hpp_dimension__add_output(PERF_HPP__SAMPLES);
+> > > > +             hpp_dimension__add_output(PERF_HPP__SAMPLES, false);
+> > > >
+> > > >       if (symbol_conf.show_total_period)
+> > > > -             hpp_dimension__add_output(PERF_HPP__PERIOD);
+> > > > +             hpp_dimension__add_output(PERF_HPP__PERIOD, false);
+> > > >  }
+> > > >
+> > > >  void perf_hpp_list__column_register(struct perf_hpp_list *list,
+> > > > @@ -701,6 +710,22 @@ void perf_hpp__cancel_cumulate(void)
+> > > >       }
+> > > >  }
+> > > >
+> > > > +void perf_hpp__cancel_latency(void)
+> > > > +{
+> > > > +     struct perf_hpp_fmt *fmt, *lat, *acc, *tmp;
+> > > > +
+> > > > +     if (is_strict_order(field_order) || is_strict_order(sort_order))
+> > > > +             return;
+> > > > +
+> > > > +     lat = &perf_hpp__format[PERF_HPP__LATENCY];
+> > > > +     acc = &perf_hpp__format[PERF_HPP__LATENCY_ACC];
+> > > > +
+> > > > +     perf_hpp_list__for_each_format_safe(&perf_hpp_list, fmt, tmp) {
+> > > > +             if (fmt_equal(lat, fmt) || fmt_equal(acc, fmt))
+> > > > +                     perf_hpp__column_unregister(fmt);
+> > > > +     }
+> > > > +}
+> > > > +
+> > > >  void perf_hpp__setup_output_field(struct perf_hpp_list *list)
+> > > >  {
+> > > >       struct perf_hpp_fmt *fmt;
+> > > > diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> > > > index 91159f16c60b2..29d4c7a3d1747 100644
+> > > > --- a/tools/perf/util/hist.h
+> > > > +++ b/tools/perf/util/hist.h
+> > > > @@ -582,6 +582,7 @@ enum {
+> > > >
+> > > >  void perf_hpp__init(void);
+> > > >  void perf_hpp__cancel_cumulate(void);
+> > > > +void perf_hpp__cancel_latency(void);
+> > > >  void perf_hpp__setup_output_field(struct perf_hpp_list *list);
+> > > >  void perf_hpp__reset_output_field(struct perf_hpp_list *list);
+> > > >  void perf_hpp__append_sort_keys(struct perf_hpp_list *list);
+> > > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > > > index bc4c3acfe7552..2b6023de7a53a 100644
+> > > > --- a/tools/perf/util/sort.c
+> > > > +++ b/tools/perf/util/sort.c
+> > > > @@ -2622,6 +2622,7 @@ struct hpp_dimension {
+> > > >       const char              *name;
+> > > >       struct perf_hpp_fmt     *fmt;
+> > > >       int                     taken;
+> > > > +     int                     was_taken;
+> > > >  };
+> > > >
+> > > >  #define DIM(d, n) { .name = n, .fmt = &perf_hpp__format[d], }
+> > > > @@ -3513,6 +3514,7 @@ static int __hpp_dimension__add(struct hpp_dimension *hd,
+> > > >               return -1;
+> > > >
+> > > >       hd->taken = 1;
+> > > > +     hd->was_taken = 1;
+> > > >       perf_hpp_list__register_sort_field(list, fmt);
+> > > >       return 0;
+> > > >  }
+> > > > @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > -int hpp_dimension__add_output(unsigned col)
+> > > > +int hpp_dimension__add_output(unsigned col, bool implicit)
+> > > >  {
+> > > > +     struct hpp_dimension *hd;
+> > > > +
+> > > >       BUG_ON(col >= PERF_HPP__MAX_INDEX);
+> > > > -     return __hpp_dimension__add_output(&perf_hpp_list, &hpp_sort_dimensions[col]);
+> > > > +     hd = &hpp_sort_dimensions[col];
+> > > > +     if (implicit && !hd->was_taken)
+> > > > +             return 0;
+> > >
+> > > I don't think you need these implicit and was_taken things.
+> > > Just removing from the sort list when it's unregistered seems to work.
+> > >
+> > > ---8<---
+> > > @@ -685,6 +685,7 @@ void perf_hpp_list__prepend_sort_field(struct perf_hpp_list *list,
+> > >  static void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
+> > >  {
+> > >         list_del_init(&format->list);
+> > > +       list_del_init(&format->sort_list);
+> > >         fmt_free(format);
+> > >  }
+> > >
+> > > ---8<---
+> >
+> > It merely suppresses the warning, but does not work the same way. See
+> > this for details:
+> > https://lore.kernel.org/all/CACT4Y+ZREdDL7a+DMKGFGae1ZjX1C8uNRwCGF0c8iUJtTTq0Lw@mail.gmail.com/
+>
+> But I think it's better to pass --latency option rather than adding it
+> to -s option.  If you really want to have specific output fields, then
+> please use -F latency,sym instead.
+>
+> Also I've realized that it should add one sort key in setup_overhead()
+> to support hierarchy mode properly.  Something like this?
+>
+> Thanks,
+> Namhyung
+>
+>
+> ---8<---
+> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> index 2b6023de7a53ae2e..329c2e9bbc69a725 100644
+> --- a/tools/perf/util/sort.c
+> +++ b/tools/perf/util/sort.c
+> @@ -3817,22 +3817,15 @@ static char *setup_overhead(char *keys)
+>                 return keys;
+>
+>         if (symbol_conf.prefer_latency) {
+> -               keys = prefix_if_not_in("overhead", keys);
+> -               keys = prefix_if_not_in("latency", keys);
+> -               if (symbol_conf.cumulate_callchain) {
+> -                       keys = prefix_if_not_in("overhead_children", keys);
+> +               if (symbol_conf.cumulate_callchain)
+>                         keys = prefix_if_not_in("latency_children", keys);
+> -               }
+> -       } else if (!keys || (!strstr(keys, "overhead") &&
+> -                       !strstr(keys, "latency"))) {
+> -               if (symbol_conf.enable_latency)
+> +               else
+>                         keys = prefix_if_not_in("latency", keys);
+> -               keys = prefix_if_not_in("overhead", keys);
+> -               if (symbol_conf.cumulate_callchain) {
+> -                       if (symbol_conf.enable_latency)
+> -                               keys = prefix_if_not_in("latency_children", keys);
+> +       } else {
+> +               if (symbol_conf.cumulate_callchain)
+>                         keys = prefix_if_not_in("overhead_children", keys);
+> -               }
+> +               else
+> +                       keys = prefix_if_not_in("overhead", keys);
+>         }
+>
+>         return keys;
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- drivers/gpu/drm/bridge/Kconfig                |  10 +
- drivers/gpu/drm/bridge/Makefile               |   1 +
- .../gpu/drm/bridge/imx9-parallel-disp-fmt.c   | 213 ++++++++++++++++++
- 3 files changed, 224 insertions(+)
- create mode 100644 drivers/gpu/drm/bridge/imx9-parallel-disp-fmt.c
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index 6b4664d91faa8..8b69977787883 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -90,6 +90,16 @@ config DRM_FSL_LDB
- 	help
- 	  Support for i.MX8MP DPI-to-LVDS on-SoC encoder.
- 
-+config DRM_IMX9_PARALLEL_DISPLAY_FORMAT
-+	tristate "Support for i.MX93 parallel display format"
-+	depends on OF && MFD_SYSCON
-+	depends on ARCH_MXC || COMPILE_TEST
-+	select DRM_KMS_HELPER
-+	select DRM_PANEL_BRIDGE
-+	help
-+	  Support for internal parallel display format configuration
-+	  found on i.MX91 and i.MX93 processors.
-+
- config DRM_ITE_IT6263
- 	tristate "ITE IT6263 LVDS/HDMI bridge"
- 	depends on OF
-diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-index 97304b429a530..ee3406fed880f 100644
---- a/drivers/gpu/drm/bridge/Makefile
-+++ b/drivers/gpu/drm/bridge/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_DRM_CHRONTEL_CH7033) += chrontel-ch7033.o
- obj-$(CONFIG_DRM_CROS_EC_ANX7688) += cros-ec-anx7688.o
- obj-$(CONFIG_DRM_DISPLAY_CONNECTOR) += display-connector.o
- obj-$(CONFIG_DRM_FSL_LDB) += fsl-ldb.o
-+obj-$(CONFIG_DRM_IMX9_PARALLEL_DISPLAY_FORMAT) += imx9-parallel-disp-fmt.o
- obj-$(CONFIG_DRM_ITE_IT6263) += ite-it6263.o
- obj-$(CONFIG_DRM_ITE_IT6505) += ite-it6505.o
- obj-$(CONFIG_DRM_LONTIUM_LT8912B) += lontium-lt8912b.o
-diff --git a/drivers/gpu/drm/bridge/imx9-parallel-disp-fmt.c b/drivers/gpu/drm/bridge/imx9-parallel-disp-fmt.c
-new file mode 100644
-index 0000000000000..c37bdda53377c
---- /dev/null
-+++ b/drivers/gpu/drm/bridge/imx9-parallel-disp-fmt.c
-@@ -0,0 +1,213 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2022 NXP
-+ * Copyright (c) 2026 TQ-Systems GmbH <linux@ew.tq-group.com>,
-+ * D-82229 Seefeld, Germany.
-+ * Author: Alexander Stein
-+ */
-+
-+#include <linux/media-bus-format.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_bridge.h>
-+#include <drm/drm_of.h>
-+#include <drm/drm_panel.h>
-+
-+#define DISPLAY_MUX_CTRL		0x60
-+#define  PARALLEL_DISP_FORMAT		GENMASK(10, 8)
-+#define  FORMAT_RGB888_TO_RGB888	FIELD_PREP(PARALLEL_DISP_FORMAT, 0)
-+#define  FORMAT_RGB888_TO_RGB666	FIELD_PREP(PARALLEL_DISP_FORMAT, 1)
-+#define  FORMAT_RGB565_TO_RGB565	FIELD_PREP(PARALLEL_DISP_FORMAT, 2)
-+#define  FORMAT_RGB555_TO_RGB555	FIELD_PREP(PARALLEL_DISP_FORMAT, 3)
-+#define  FORMAT_YUV_TO_YCBCR24		FIELD_PREP(PARALLEL_DISP_FORMAT, 4)
-+#define  FORMAT_YUV_TO_YUV444		FIELD_PREP(PARALLEL_DISP_FORMAT, 5)
-+
-+struct imx9_pdf {
-+	struct device *dev;
-+	struct drm_bridge bridge;
-+	struct drm_bridge *panel_bridge;
-+	struct regmap *regmap;
-+};
-+
-+static inline struct imx9_pdf *to_imx9_pdf(struct drm_bridge *bridge)
-+{
-+	return container_of(bridge, struct imx9_pdf, bridge);
-+}
-+
-+static int imx9_pdf_attach(struct drm_bridge *bridge,
-+	enum drm_bridge_attach_flags flags)
-+{
-+	struct imx9_pdf *pdf = to_imx9_pdf(bridge);
-+
-+	return drm_bridge_attach(bridge->encoder, pdf->panel_bridge,
-+	       			 bridge, flags);
-+}
-+
-+static void imx9_pdf_atomic_enable(struct drm_bridge *bridge,
-+				   struct drm_bridge_state *old_bridge_state)
-+{
-+	struct imx9_pdf *pdf = to_imx9_pdf(bridge);
-+	struct drm_atomic_state *state = old_bridge_state->base.state;
-+	const struct drm_bridge_state *bridge_state;
-+	u32 format;
-+
-+	/* Get the bus format from the bridge state. */
-+	bridge_state = drm_atomic_get_new_bridge_state(state, bridge);
-+
-+	switch (bridge_state->output_bus_cfg.format) {
-+	case MEDIA_BUS_FMT_RGB565_1X16:
-+		format = FORMAT_RGB565_TO_RGB565;
-+		break;
-+	case MEDIA_BUS_FMT_RGB666_1X18:
-+		format = FORMAT_RGB888_TO_RGB666;
-+		break;
-+	case MEDIA_BUS_FMT_RGB888_1X24:
-+		format = FORMAT_RGB888_TO_RGB888;
-+		break;
-+	default:
-+		/*
-+		 * Some bridges still don't set the correct bus format.
-+		 * Just print a warning.
-+		 */
-+		dev_warn(pdf->dev,
-+			 "Unsupported bus format 0x%04x, please check output bridge driver\n",
-+			 bridge_state->output_bus_cfg.format);
-+		return;
-+	}
-+
-+	regmap_update_bits(pdf->regmap, DISPLAY_MUX_CTRL, PARALLEL_DISP_FORMAT,
-+			   format);
-+}
-+
-+#define MAX_INPUT_SEL_FORMATS 2
-+static u32 *
-+imx9_pdf_atomic_get_input_bus_fmts(struct drm_bridge *bridge,
-+				   struct drm_bridge_state *bridge_state,
-+				   struct drm_crtc_state *crtc_state,
-+				   struct drm_connector_state *conn_state,
-+				   u32 output_fmt,
-+				   unsigned int *num_input_fmts)
-+{
-+	u32 *input_fmts;
-+
-+	*num_input_fmts = 0;
-+
-+	input_fmts = kcalloc(MAX_INPUT_SEL_FORMATS, sizeof(*input_fmts),
-+			     GFP_KERNEL);
-+	if (!input_fmts)
-+		return NULL;
-+
-+	input_fmts[0] = MEDIA_BUS_FMT_RGB888_1X24;
-+	input_fmts[1] = MEDIA_BUS_FMT_RGB565_1X16;
-+	*num_input_fmts = MAX_INPUT_SEL_FORMATS;
-+
-+	return input_fmts;
-+}
-+
-+#define MAX_OUTPUT_SEL_FORMATS 3
-+static u32 *
-+imx9_pdf_atomic_get_output_bus_fmts(struct drm_bridge *bridge,
-+				    struct drm_bridge_state *bridge_state,
-+				    struct drm_crtc_state *crtc_state,
-+				    struct drm_connector_state *conn_state,
-+				    unsigned int *num_output_fmts)
-+{
-+	u32 *output_fmts;
-+
-+	*num_output_fmts = 0;
-+
-+	output_fmts = kcalloc(MAX_OUTPUT_SEL_FORMATS, sizeof(*output_fmts),
-+			     GFP_KERNEL);
-+	if (!output_fmts)
-+		return NULL;
-+
-+	output_fmts[0] = MEDIA_BUS_FMT_RGB565_1X16;
-+	output_fmts[1] = MEDIA_BUS_FMT_RGB666_1X18;
-+	output_fmts[2] = MEDIA_BUS_FMT_RGB888_1X24;
-+	*num_output_fmts = MAX_OUTPUT_SEL_FORMATS;
-+
-+	return output_fmts;
-+}
-+
-+static enum drm_mode_status
-+imx9_pdf_mode_valid(struct drm_bridge *bridge,
-+		   const struct drm_display_info *info,
-+		   const struct drm_display_mode *mode)
-+{
-+	if (mode->clock > 80000)
-+		return MODE_CLOCK_HIGH;
-+
-+	return MODE_OK;
-+}
-+
-+static const struct drm_bridge_funcs funcs = {
-+	.attach = imx9_pdf_attach,
-+	.atomic_enable = imx9_pdf_atomic_enable,
-+	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-+	.atomic_get_input_bus_fmts = imx9_pdf_atomic_get_input_bus_fmts,
-+	.atomic_get_output_bus_fmts = imx9_pdf_atomic_get_output_bus_fmts,
-+	.atomic_reset = drm_atomic_helper_bridge_reset,
-+	.mode_valid = imx9_pdf_mode_valid,
-+};
-+
-+static int imx9_pdf_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *remote;
-+	struct drm_panel *panel;
-+	struct imx9_pdf *pdf;
-+
-+	pdf = devm_kzalloc(dev, sizeof(*pdf), GFP_KERNEL);
-+	if (!pdf)
-+		return -ENOMEM;
-+
-+	pdf->dev = &pdev->dev;
-+	pdf->bridge.funcs = &funcs;
-+	pdf->bridge.of_node = dev->of_node;
-+	pdf->bridge.type = DRM_MODE_CONNECTOR_DPI;
-+
-+	pdf->regmap = syscon_node_to_regmap(dev->of_node->parent);
-+	if (IS_ERR(pdf->regmap))
-+		return dev_err_probe(dev, PTR_ERR(pdf->regmap),
-+				     "failed to get regmap\n");
-+
-+	remote = of_graph_get_remote_node(dev->of_node, 1, 0);
-+	panel = of_drm_find_panel(remote);
-+	of_node_put(remote);
-+	if (IS_ERR(panel))
-+		return PTR_ERR(panel);
-+
-+	pdf->panel_bridge = devm_drm_panel_bridge_add(dev, panel);
-+	if (IS_ERR(pdf->panel_bridge))
-+		return PTR_ERR(pdf->panel_bridge);
-+
-+	platform_set_drvdata(pdev, pdf);
-+
-+	devm_drm_bridge_add(dev, &pdf->bridge);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id imx9_pdf_dt_ids[] = {
-+	{ .compatible = "fsl,imx9-parallel-display-format", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, imx9_pdf_dt_ids);
-+
-+static struct platform_driver imx9_pdf_driver = {
-+	.probe		= imx9_pdf_probe,
-+	.driver		= {
-+		.name		= "imx9-parallel-display-format",
-+		.of_match_table	= imx9_pdf_dt_ids,
-+	},
-+};
-+module_platform_driver(imx9_pdf_driver);
-+
-+MODULE_AUTHOR("Alexander Stein <alexander.stein@ew.tq-group.com>");
-+MODULE_DESCRIPTION("i.MX91/i.MX93 parallel display format driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.34.1
+Have I decoded the patch correctly?
 
+        if (symbol_conf.prefer_latency) {
+                if (symbol_conf.cumulate_callchain)
+                        keys = prefix_if_not_in("latency_children", keys);
+                else
+                        keys = prefix_if_not_in("latency", keys);
+        } else {
+                if (symbol_conf.cumulate_callchain)
+                        keys = prefix_if_not_in("overhead_children", keys);
+                else
+                        keys = prefix_if_not_in("overhead", keys);
+        }
+
+If I decoded the patch correctly, it's not what we want.
+
+For the default prefer_latency case we also want to add overhead, that
+was intentional for the --latency preset. It does not harm, and allows
+to see/compare differences in latency and overhead.
+Again, if a user wants something custom, there is no way to second
+guess all possible intentions. For non-default cases, we just let the
+user say what exactly they want, and we will follow that.
+
+"latency" should be added even if cumulate_callchain.
+
+For the !prefer_latency case, we don't want to mess with
+overhead/latency fields if the user specified any of them explicitly.
+Otherwise this convenience part gets in the user's way and does not
+allow them to do what they want. User says "I want X" and perf says
+"screw you, I will give you Y instead, and won't allow you to possibly
+do X".
+
+And see above: -F does not work with --hierarchy, so this part is unskippable.
