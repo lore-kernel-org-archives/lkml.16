@@ -1,108 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815B7192B86;
-	Tue, 11 Feb 2025 08:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D35192B86;
+	Tue, 11 Feb 2025 08:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739262768; cv=none; b=EZ/p1TFu4TTXzCVM+XCnNyvQQA5Ef5ac6jUAjN5ymWhU1XYT+Kw796FrKkIC44b0ViRsd2b972V6BefFXD++DCOgORQfL+CyA3E/GDdIushHq/ZxEZ0Igkm48ymUNu4O6TZTiFRz0fJRYix9Y1SmiIc0mBvxuj/z01gBHyB/d6g=
+	t=1739262835; cv=none; b=MOxloxCOsr5O/iu7mka84h9ykml5BcRNVfUBtcFCzGXuGh3YmmRXLtmB07HWlNKkPNeBQuFQw0UdUqrRhVwIhaGrpNck3AceACYxgLXwMcd7ILxBN41ylnExfqDApkNsDqPLO834DWVqZlViK0aR/GCcT6BCQ/vTZQDSjpxolT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739262768; c=relaxed/simple;
-	bh=3HUp0iLtp5lEEMyD1HDsvb7Mi/lw64moNCaiNwR77eI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V0I1g5NpFbRvPzhioyBqFzHG8nIHVj3qhNAau3JlezMrGEz5EfDdAMJZts710jalFO3JeZu7Liac/LGTmL99MQ3En5XaPGx2AmiDBUo+y8d3dp4Oqd+KvnpToCIH570jQeXPfAllIOUjqTDnVbQvX4RZYTpA+ewQ6ZFac9MnkWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SNxyxJWM; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739262835; c=relaxed/simple;
+	bh=NX6m3Adayc0vNqxUwfaOwMkKFBcSZx8C8KPimyfNAR8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=O30V6R5Zl/1/DBhcMS96BOs61nsksmD9WqaFh5leHPrX+ZK7nG2YDoeZHEHJ1z+Uh4nTn1jM22VOPvauyOccbC+gaxc7u+gQdJAL4djvMG0GwYM4j8bOQo3AQ7a60nXkR335RuJtzq8b6JykXITacY1+/F17Wtvm2K0DOdWP1vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uOgTNHdG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SNxyxJWM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739262766; x=1770798766;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3HUp0iLtp5lEEMyD1HDsvb7Mi/lw64moNCaiNwR77eI=;
-  b=SNxyxJWMM23/Dwhj0meMosX99GtL7SYw6Hf+LDsn+yujY4yFAyKuHQxO
-   Q771HjafWAySBo4GSIg0BHqx2RnBNJIpxcXF3EYdiviDwajaV6ZS/C6Fg
-   naHRQwAtIR0oNrlFkTcE/kZMMxv7bn735NEyYhIggQDcVzo0aM/O6B2+5
-   CgLX43NwQTrwv15b2sm8a/JtRL73F3+F7eqwFEbN+CZ8QYVqnYxTos2zk
-   V7W+2PbG+fQ9BPc6yAmMDOiEkw4hflQV5F7AXCoRfICElO9wnsEjVWSko
-   Fv20QZzXZxDnPZ5nfmLO0FUadvamXPiRIO8HYjogtfII9+pfGAcO/42e7
-   A==;
-X-CSE-ConnectionGUID: NkLUK/MrTWOU/VkA5Oaw/Q==
-X-CSE-MsgGUID: aKHg5V3JQ2+Gj3CU9+kekg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40015888"
-X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
-   d="scan'208";a="40015888"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 00:32:45 -0800
-X-CSE-ConnectionGUID: kHJ2xn4rRc2XCuRjxkElzQ==
-X-CSE-MsgGUID: E0HBB7nTSwu9tWF5JA2CIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="135697221"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa002.fm.intel.com with ESMTP; 11 Feb 2025 00:32:42 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id F24E1311; Tue, 11 Feb 2025 10:32:40 +0200 (EET)
-Date: Tue, 11 Feb 2025 10:32:40 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Vishal Annapurve <vannapurve@google.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
-	seanjc@google.com, erdemaktas@google.com, ackerleytng@google.com, jxgao@google.com, 
-	sagis@google.com, oupton@google.com, pgonda@google.com, kirill@shutemov.name, 
-	dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, chao.p.peng@linux.intel.com, 
-	isaku.yamahata@gmail.com, stable@vger.kernel.org
-Subject: Re: [PATCH V3 1/2] x86/tdx: Route safe halt execution via
- tdx_safe_halt()
-Message-ID: <wra363f7ye6mwv2papahmpgmybi45yqyzeohunbqju3zsf22td@zcutpjluiury>
-References: <20250206222714.1079059-1-vannapurve@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uOgTNHdG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C379CC4CEE4;
+	Tue, 11 Feb 2025 08:33:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739262834;
+	bh=NX6m3Adayc0vNqxUwfaOwMkKFBcSZx8C8KPimyfNAR8=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=uOgTNHdG/tKy3sLMKLt+RJlI8dtuz4uFQG6+TDzUJj24vYaXR5Y7AkW2kAhYX/UbZ
+	 elkbdHSsnSjCVxazsby8e/BYhxEOSXZOepy4a5d99Lm7URCtV/OUS0yvuiAu/n06r+
+	 b+4YcQqdM6QjRyapPY5dYvb/7UtsgA6GQlSuqVL8BNqufUp7MgV8oUpJ0dAtuB5VOr
+	 KuWM04krhLK0pvL0PwoFCWAfBI4I2ENqOPFvHyF0BIPtbO1CoDBmRQ9bphmHROnWSz
+	 9tHUyRD9HzLj8b4DPBR5m7r/oV/gPxdZ+wJ+D2TeiSPF+W4+KWuNHoge/KLq1hVGD7
+	 J7y3j6Y5g3JjQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E757C0219D;
+	Tue, 11 Feb 2025 08:33:54 +0000 (UTC)
+From: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>
+Subject: [PATCH net-next v4 0/3] net: phy: dp83822: Add support for
+ changing the transmit amplitude voltage
+Date: Tue, 11 Feb 2025 09:33:46 +0100
+Message-Id: <20250211-dp83822-tx-swing-v4-0-1e8ebd71ad54@liebherr.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206222714.1079059-1-vannapurve@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGoLq2cC/23NQQ6CMBQE0KuYrq35/aVAXXkP4wLaLzTRQlqCG
+ MLdbbrRGJaTybxZWaTgKLLzYWWBZhfd4FMojgdm+sZ3xJ1NmSFgIVBIbsda1oh8Wnh8Od9x1Ta
+ lEaRbKBVLszHQ3S2ZvDJPE/e0TOyWmt7FaQjv/DWL3CdWgdhjZ8GBV2RVo20NIODycNT2FMLJD
+ M/szfhjIOwYmAyojNbWFFhitWPIr4FQ7BgyGbrSNelSAVj9Z2zb9gH4b5SzRQEAAA==
+X-Change-ID: 20241213-dp83822-tx-swing-5ba6c1e9b065
+To: Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dimitri Fedrau <dimitri.fedrau@liebherr.com>, 
+ Dimitri Fedrau <dima.fedrau@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739262831; l=1880;
+ i=dimitri.fedrau@liebherr.com; s=20241202; h=from:subject:message-id;
+ bh=NX6m3Adayc0vNqxUwfaOwMkKFBcSZx8C8KPimyfNAR8=;
+ b=YhgSfLb+zmjwX3GngGcIPF4m91Jxb0cBPhjrgeoaKlLWSN6oMMnbo/y0v7T3CE8Z2dHVNdrmk
+ u2jJx+DyLU3BsN9ZKWoayIgUABWGJUo2070thrqmcYcaYiNdMpAMEAg
+X-Developer-Key: i=dimitri.fedrau@liebherr.com; a=ed25519;
+ pk=rT653x09JSQvotxIqQl4/XiI4AOiBZrdOGvxDUbb5m8=
+X-Endpoint-Received: by B4 Relay for dimitri.fedrau@liebherr.com/20241202
+ with auth_id=290
+X-Original-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Reply-To: dimitri.fedrau@liebherr.com
 
-On Thu, Feb 06, 2025 at 10:27:12PM +0000, Vishal Annapurve wrote:
-> Direct HLT instruction execution causes #VEs for TDX VMs which is routed
-> to hypervisor via TDCALL. safe_halt() routines execute HLT in STI-shadow
-> so IRQs need to remain disabled until the TDCALL to ensure that pending
-> IRQs are correctly treated as wake events. So "sti;hlt" sequence needs to
-> be replaced with "TDCALL; raw_local_irq_enable()" for TDX VMs.
-> 
-> Commit bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
-> prevented the idle routines from using "sti;hlt". But it missed the
-> paravirt routine which can be reached like this as an example:
->         acpi_safe_halt() =>
->         raw_safe_halt()  =>
->         arch_safe_halt() =>
->         irq.safe_halt()  =>
->         pv_native_safe_halt()
-> 
-> Modify tdx_safe_halt() to implement the sequence "TDCALL;
-> raw_local_irq_enable()" and invoke tdx_halt() from idle routine which just
-> executes TDCALL without changing state of interrupts.
-> 
-> If CONFIG_PARAVIRT_XXL is disabled, "sti;hlt" sequences can still get
-> executed from TDX VMs via paths like:
->         acpi_safe_halt() =>
->         raw_safe_halt()  =>
->         arch_safe_halt() =>
-> 	native_safe_halt()
-> There is a long term plan to fix these paths by carving out
-> irq.safe_halt() outside paravirt framework.
+Add support for changing the transmit amplitude voltage in 100BASE-TX mode.
+Add support for configuration via DT.
 
-I don't think it is acceptable to keep !PARAVIRT_XXL (read no-Xen) config
-broken.
+Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+---
+Changes in v4:
+- Remove type $ref from binding
+- Remove '|' from description in binding
+- Change helper function from:
+    static int phy_get_int_delay_property(struct device *dev, const char *name)
+  to:
+    static int phy_get_u32_property(struct device *dev, const char *name, u32 *val)
+- Apply helper function to phy_get_internal_delay
+- Link to v3: https://lore.kernel.org/r/20250204-dp83822-tx-swing-v3-0-9798e96500d9@liebherr.com
 
-We need either move irq.safe_halt() out of PARAVIRT_XXL now or make
-non-paravirt arch_safe_halt() to use TDCALL. Or if we don't care about
-performance of !PARAVIRT_XXL config, special-case HLT in
-exc_virtualization_exception().
+Changes in v3:
+- Switch to tx-amplitude-100base-tx-percent in bindings
+- Link to v2: https://lore.kernel.org/r/20250120-dp83822-tx-swing-v2-0-07c99dc42627@liebherr.com
 
+Changes in v2:
+- Remove binding ti,tx-amplitude-100base-tx-millivolt from ti,dp83822.yaml
+- Add binding tx-amplitude-100base-tx-gain-milli to ethernet-phy.yaml
+- Add helper to get tx amplitude gain from DT
+- Link to v1: https://lore.kernel.org/r/20250113-dp83822-tx-swing-v1-0-7ed5a9d80010@liebherr.com
+
+---
+Dimitri Fedrau (3):
+      dt-bindings: net: ethernet-phy: add property tx-amplitude-100base-tx-percent
+      net: phy: Add helper for getting tx amplitude gain
+      net: phy: dp83822: Add support for changing the transmit amplitude voltage
+
+ .../devicetree/bindings/net/ethernet-phy.yaml      |  6 +++
+ drivers/net/phy/dp83822.c                          | 38 +++++++++++++++++++
+ drivers/net/phy/phy_device.c                       | 44 +++++++++++++---------
+ include/linux/phy.h                                |  4 ++
+ 4 files changed, 74 insertions(+), 18 deletions(-)
+---
+base-commit: c2933b2befe25309f4c5cfbea0ca80909735fd76
+change-id: 20241213-dp83822-tx-swing-5ba6c1e9b065
+
+Best regards,
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+
+
