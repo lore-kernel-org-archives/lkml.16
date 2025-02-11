@@ -1,173 +1,221 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD1A26BDA6;
-	Tue, 11 Feb 2025 09:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8078C26BDA6
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739265059; cv=none; b=QXX2m8uzcS0kzGLL385l5zvF4V+8wC8hpFGFBC82VVP++OCWqaa8QXHywPf377oriRfA8B5Tq5sucG3zrHfAtKWs/ZlkUE55bHr8gvyo8aY5tac3gVxBPetDR7xpJjWxwJHfaCpPlt0azvR4Q5K0QqWDfFqV2F1vFXzm3UNBAMo=
+	t=1739265106; cv=none; b=kKVwqwRsKnjixPwFD3ckRTl9g+/63bEhGeIQzmhTXvj7S0o0Cy928wd4qBbBJiMLXnr0IXyTBMfNm/QOOhr5Eb5RXmGiTreRXSfcr3uX7kazQDgL1Ii9DsEonvdAAUDIuMfy4z7/pIYhWnBuWkuuutX28ucaZrTTM9l0vTOB6LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739265059; c=relaxed/simple;
-	bh=U9/oUWehWMUw3I68Re2zy7G47SfbIzwiwflBq2Dbgeo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YbIJQbbqr1EdOqmbfY3OudrpwMqGW4P2FJdr/3FdYqZdVVIsLKUaSTbhxYjhPNEApF7Tey/SCaPVdVF0GUkAtMuFqsRgp0RfP0HOxeJkO/LxGKAxqFzOUGoae7GOSegAGAjAlorVGHDaqdXdQql5M4o0isblDo2HXmdwnS3T5S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HBb0zS73; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739265106; c=relaxed/simple;
+	bh=vUcVFh5oiMDgY/y2FlfjAPc1cnIYseObH6/EIWY0I2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=O9bs6iDE1SLvjLnzl3IKwcX78T6x7WhNRsoNmmwmGvGFnCsxkLgbQPLHlebgNqL1r7Rt6fqcqefqERV89yxROnarYf5fPUgDHretiMmnC20uV8bb9LaI36Fc1kgOun+uewewYomHRWzHjMHS1y7PWnYavlpba3hu3EMBeSzuev0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kemah6cs; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HBb0zS73"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kemah6cs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739265058; x=1770801058;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=U9/oUWehWMUw3I68Re2zy7G47SfbIzwiwflBq2Dbgeo=;
-  b=HBb0zS73ZbIJtI4MLset6G/HFSHV5A6jzyKoZ6BjarCf79Zy73vT4yiY
-   LJv74W2s13GhKgDSnriChXKLniYOCNfdDpIQzhiT4HQUt015Y6zWpDj0u
-   5aBZ4zFaAxX14Y7LrMaiwTHz3gjpB5wP2SY+fuzpyPMh1sgvlAs2EHhSB
-   s62OoAVmTBv0+3IhLfOO2dFK2OIFUVGsHSZ8LRuvtkjGQjzT7+9Lmgg9w
-   YMoaKKrouB2If83zssuoJgO19nthSIdRvmEdAiZMKhLKDjVaCdJvFcY1F
-   71BAZaDd7IgAm4HY6lwSw45RiJW4cZY//BYuoYQggxh6FdBB5g27DFUCr
-   Q==;
-X-CSE-ConnectionGUID: MsnUMgu9RnGeJM/vFm2V0Q==
-X-CSE-MsgGUID: y+2p3qwkQbmpBrBMweTpfw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40142983"
+  t=1739265105; x=1770801105;
+  h=date:from:to:cc:subject:message-id;
+  bh=vUcVFh5oiMDgY/y2FlfjAPc1cnIYseObH6/EIWY0I2Q=;
+  b=kemah6csdePiymYI7ZHatqtIm0ZDHrn969YXTWIbCHfLPzb3kTt0GdA3
+   qzw0JQqVLs1y7Hi9/UT6W2PtCXypoMy/k4YT5FWN33CpHRkxVmsk8BI/9
+   kMMfFTkB89tgy3ay8abAwSj3BHeAieiU/WO1uwQnuz+4qmazkmamlOvFH
+   qbpu544kLDYXV6b/lPxQuKUMyPQpLLdp/n9Fj3eukYzi4QIuuLsNa2VLT
+   5aWWInrs6vuWlxMsI4k7pZ53m/f6rnTsBrHBdbBa6AjVzCcjNYue1pp0W
+   BVJJuqgtBnZpmXE8aIg8XV7jlwjyJHEuweOGw8B7dpEH3pfLmuzmUuMsg
+   w==;
+X-CSE-ConnectionGUID: +FrKbb+sQz+RodhoRXj36A==
+X-CSE-MsgGUID: 3ZS33MAfS2SPxkHjd+sDVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="39738016"
 X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="40142983"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 01:10:57 -0800
-X-CSE-ConnectionGUID: b5osf7sRQ9Obv8P1FBIWgA==
-X-CSE-MsgGUID: CP2YKcN+TB6aPxK9USvlyA==
+   d="scan'208";a="39738016"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 01:11:44 -0800
+X-CSE-ConnectionGUID: dmeMXns5QAiEzJTtDccF6Q==
+X-CSE-MsgGUID: KjAt/Jp9SI23AhfEjhtnOA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112918889"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa007.jf.intel.com with ESMTP; 11 Feb 2025 01:10:55 -0800
-Date: Tue, 11 Feb 2025 17:09:47 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Yidong Zhang <yidong.zhang@amd.com>
-Cc: linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org,
-	mdf@kernel.org, hao.wu@intel.com, yilun.xu@intel.com,
-	lizhi.hou@amd.com, DMG Karthik <Karthik.DMG@amd.com>,
-	Nishad Saraf <nishads@amd.com>,
-	Hayden Laccabue <hayden.laccabue@amd.com>
-Subject: Re: [PATCH V2 1/4] drivers/fpga/amd: Add new driver amd versal-pci
-Message-ID: <Z6sT20uzjes7SGzr@yilunxu-OptiPlex-7050>
-References: <20241210183734.30803-1-yidong.zhang@amd.com>
- <20241210183734.30803-2-yidong.zhang@amd.com>
- <Z5YPWHVmL29zuQNm@yilunxu-OptiPlex-7050>
- <3b520bab-d948-470a-b06f-5494243ebc1a@amd.com>
- <Z6Q3W2mUw/ZbtnWV@yilunxu-OptiPlex-7050>
- <796e2826-a423-4d0c-977a-105ed236e067@amd.com>
- <Z6Vtz/Bb8wsIH0pG@yilunxu-OptiPlex-7050>
- <7b9bd24f-8f89-4d6c-a079-47c4c0b88a35@amd.com>
- <Z6WO2Ktc9HoqdUSU@yilunxu-OptiPlex-7050>
- <e68be2e2-7fdd-4f09-b479-4b0e31af5be5@amd.com>
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="143301665"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 11 Feb 2025 01:11:43 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1thmIu-0013x7-21;
+	Tue, 11 Feb 2025 09:11:40 +0000
+Date: Tue, 11 Feb 2025 17:11:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:tip/urgent] BUILD SUCCESS
+ 53f0f2db4f25ceac8050d28491a59fd94440d527
+Message-ID: <202502111730.W7dugz7o-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e68be2e2-7fdd-4f09-b479-4b0e31af5be5@amd.com>
 
-On Mon, Feb 10, 2025 at 03:33:07AM -0800, Yidong Zhang wrote:
-> 
-> 
-> On 2/6/25 20:40, Xu Yilun wrote:
-> > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
-> > 
-> > 
-> > On Thu, Feb 06, 2025 at 07:16:25PM -0800, Yidong Zhang wrote:
-> > > 
-> > > 
-> > > On 2/6/25 18:19, Xu Yilun wrote:
-> > > > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
-> > > > 
-> > > > 
-> > > > > > No need to detach a specific driver, remove all devices in the
-> > > > > > fpga-region. I imagine this could also be a generic flow for all PCI/e
-> > > > > > based FPGA cards.
-> > > > > 
-> > > > > I see your point. Is there an existing example in current fpga driver for
-> > > > > PCI/e based cards?
-> > > > 
-> > > > No. The fpga-region re-enumeration arch is still WIP, so no existing
-> > > > implementation.
-> > > 
-> > > Got you. I can also help to test or provide feedback.
-> > > Actually, I had sent Nava my protype of using configfs for the non-OF
-> > > driver. He should have the updated patch soon.
-> > > 
-> > > > 
-> > > > > 
-> > > > > We will need to talk to our management team and re-design our driver.
-> > > > > I think we have 2 approaches:
-> > > > > 1) Align with linux fpga, having one driver for both userPF and mgmtPF; or
-> > > > 
-> > > > Don't get you. Linux FPGA doesn't require one driver for both PFs.
-> > > 
-> > > I assume when you said "generic flow for removing all devices in
-> > > fpga-region" means that there is a single driver which use the fpga-region
-> > > callbacks to remove all devices and then re-progream the FPGA.
-> > > 
-> > > On AMD V70 hardware, the userPF has different deviceid than the mgmtPF.
-> > > Thus, our current design is having 2 separate pcie drivers for each
-> > > different deviceid.
-> > > 
-> > > Thus, in our current design, the fpga-region should be in the userPF driver
-> > > which has callbacks to remove all devices. But in mgmtPF, it is more like a
-> > 
-> > A question, if the FPGA logic is cleared, does the userPF still exist on
-> > PCIe bus?
-> 
-> I am not sure I fully understand your question by "FPGA logic is cleared".
-> Based on our design, the userPF exists, but all services need to be
-> re-configured after hardware is changed.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
+branch HEAD: 53f0f2db4f25ceac8050d28491a59fd94440d527  Merge branch into tip/master: 'sched/urgent'
 
-I briefly read your XRT docs. IIUC we are talking about reprogramming
-the "Dynamic Region", not the "Shell".
+elapsed time: 1414m
 
-The userPF's PCIe basic functionality is in Shell and is out of
-our reprograming discussion. So userPF PCI device always exists even if
-the "Dynamic Region" is being reprogrammed. In this case, we should
-create fpga-region for this "Dynamic Region" in userPF driver.
+configs tested: 144
+configs skipped: 4
 
-userPF uses some HW communication channel to require reprograming, so
-fpga-manager could also be implemented in userPF driver.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-And I agree the mgmtPF driver is a utility driver that just monitor on
-the communication channel and serve requirements, nothing to do with
-FPGA framework. I have no objection to put it in misc or firmware
-directory.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250210    gcc-13.2.0
+arc                   randconfig-001-20250211    clang-19
+arc                   randconfig-002-20250210    gcc-13.2.0
+arc                   randconfig-002-20250211    clang-19
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                            mps2_defconfig    clang-15
+arm                       multi_v4t_defconfig    clang-21
+arm                        multi_v7_defconfig    gcc-14.2.0
+arm                            qcom_defconfig    clang-17
+arm                   randconfig-001-20250210    clang-16
+arm                   randconfig-001-20250211    clang-19
+arm                   randconfig-002-20250210    gcc-14.2.0
+arm                   randconfig-002-20250211    clang-19
+arm                   randconfig-003-20250210    clang-16
+arm                   randconfig-003-20250211    clang-19
+arm                   randconfig-004-20250210    gcc-14.2.0
+arm                   randconfig-004-20250211    clang-19
+arm                         s3c6400_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250210    gcc-14.2.0
+arm64                 randconfig-001-20250211    clang-19
+arm64                 randconfig-002-20250210    clang-21
+arm64                 randconfig-002-20250211    clang-19
+arm64                 randconfig-003-20250210    clang-21
+arm64                 randconfig-003-20250211    clang-19
+arm64                 randconfig-004-20250210    gcc-14.2.0
+arm64                 randconfig-004-20250211    clang-19
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250210    gcc-14.2.0
+csky                  randconfig-002-20250210    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250210    clang-21
+hexagon               randconfig-002-20250210    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250210    gcc-12
+i386        buildonly-randconfig-001-20250211    gcc-12
+i386        buildonly-randconfig-002-20250210    gcc-12
+i386        buildonly-randconfig-002-20250211    gcc-12
+i386        buildonly-randconfig-003-20250210    clang-19
+i386        buildonly-randconfig-003-20250211    gcc-12
+i386        buildonly-randconfig-004-20250210    gcc-12
+i386        buildonly-randconfig-004-20250211    gcc-12
+i386        buildonly-randconfig-005-20250210    gcc-12
+i386        buildonly-randconfig-005-20250211    gcc-12
+i386        buildonly-randconfig-006-20250210    gcc-12
+i386        buildonly-randconfig-006-20250211    gcc-12
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250210    gcc-14.2.0
+loongarch             randconfig-002-20250210    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                       m5249evb_defconfig    gcc-14.2.0
+m68k                          multi_defconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250210    gcc-14.2.0
+nios2                 randconfig-002-20250210    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250210    gcc-14.2.0
+parisc                randconfig-002-20250210    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                    amigaone_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250210    clang-21
+powerpc               randconfig-002-20250210    clang-21
+powerpc               randconfig-003-20250210    gcc-14.2.0
+powerpc64             randconfig-001-20250210    gcc-14.2.0
+powerpc64             randconfig-002-20250210    gcc-14.2.0
+powerpc64             randconfig-003-20250210    gcc-14.2.0
+riscv                            alldefconfig    gcc-14.2.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-21
+riscv                               defconfig    clang-19
+riscv                 randconfig-001-20250210    clang-21
+riscv                 randconfig-002-20250210    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250210    gcc-14.2.0
+s390                  randconfig-002-20250210    clang-19
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                ecovec24-romimage_defconfig    gcc-14.2.0
+sh                             espt_defconfig    gcc-14.2.0
+sh                            hp6xx_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250210    gcc-14.2.0
+sh                    randconfig-002-20250210    gcc-14.2.0
+sh                           se7722_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250210    gcc-14.2.0
+sparc                 randconfig-002-20250210    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250210    gcc-14.2.0
+sparc64               randconfig-002-20250210    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250210    clang-18
+um                    randconfig-002-20250210    clang-16
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250210    clang-19
+x86_64      buildonly-randconfig-002-20250210    gcc-12
+x86_64      buildonly-randconfig-003-20250210    clang-19
+x86_64      buildonly-randconfig-004-20250210    clang-19
+x86_64      buildonly-randconfig-005-20250210    clang-19
+x86_64      buildonly-randconfig-006-20250210    clang-19
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                          iss_defconfig    gcc-14.2.0
+xtensa                randconfig-001-20250210    gcc-14.2.0
+xtensa                randconfig-002-20250210    gcc-14.2.0
 
-What I'm not sure is whether a standalone utility driver in kernel tree
-is preferred (at least I don't). You may talk to other maintainers.
-
-> 
-> 
-> > 
-> > > utility which only handles request from the userPF but it has the management
-> > > privilege. Usually, cloud vendors require the mgmtPF deployed in their
-> > > secured domain (can be a separate physical machine).
-> > 
-> > I though mgmtPF & userPF are just 2 functions on one PCIe card, they are not?
-> > Then how the mgmtPF writes data to another physical machine and
-> > influence the userPF?
-> > 
-> 
-> They are functions but they also have different device id thus we can bind
-> different driver onto each of them.
-> 
-> I think I should interrupt it accurately as Host and VM. See details here
-> please:
-> https://xilinx.github.io/XRT/2019.2/html/cloud_vendor_support.html
-> 
-> But, my point is that we do have 2 separate drivers.
-
-OK, having 2 separate drivers is definitely fine.
-
-Thanks,
-Yilun
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
