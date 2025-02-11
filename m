@@ -1,109 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B06261564;
-	Tue, 11 Feb 2025 17:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9314C41C7F;
+	Tue, 11 Feb 2025 17:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739295976; cv=none; b=NIvhy7CylFaDHwp1KoqZfy+W0npHe+ZJRry990KHTLLUGPbyiQyIewRX3IOGdJQT5Sj9AE963sA5Zk2f84Ud0s9zQ3tbb8UMVzyWdejFCNV05hVYXsJrMhXlI1UsSutPkVey61VavOcz+JNTnSHMIs+IHXSFc3oLn6MdLzQp0iI=
+	t=1739296005; cv=none; b=iD4F1zHO6b2No0tRv6SvnHvGF/GP8NYc6HRwHM2RbWSTO2JeCqpgBesQiRbNZRjktUOWvgqW+Qz1cfb2xZmmToRtERCoj1sth7XtqudiqyfZ28OlkQ74A5KWdS6v4pfifIjEKkDCxyuDmIvVwAeJkGHb2jhu8sGiKOfUQnQ8TGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739295976; c=relaxed/simple;
-	bh=4bWCQgq6wE2a3T0Qy5XzYaE2anG4zZm9WC4XUKvmajU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lg2/Ozq9KqqiyXzydICaJEyu/I6/5UYnLp0GX5lVQEO+OT/mdkUhy85PzQY7SDg5Zx4EEGZeK0GQ40ahVK+QZF8pZ19xIZyBKK6F21TP7pI5J7CmtnFLGaYELJzWNwqPnObdVMZWeGz9bC555w3WNhjLQFNUbCuD4SGUYBoSWVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZcrCSPml; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739296005; c=relaxed/simple;
+	bh=OM750PX+GM6omgY7H5ZVkXVZczPIRx2AABuP2iIlJ3k=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=OlH+W7Odi2DT84cOvZokKp5B3wb0z42UT6rHFBU2wTgn9KP4EBjlQgflAvZCnYFUXjcTNZ7Id/PQ1CeiXxfhwjfk3/9SKfE6X/XcpyIATN8CBbspaUnL/ZmXNB/iDqpkbA3O924jJerspQzrWpcUYhc5vmbiqJOQ25NrxdPN0v8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a23pctpw; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZcrCSPml"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14A42C4CEDD;
-	Tue, 11 Feb 2025 17:46:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739295974;
-	bh=4bWCQgq6wE2a3T0Qy5XzYaE2anG4zZm9WC4XUKvmajU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZcrCSPmlaB/tYdBAf+u3i+Q22uPyV5tZ3MrFzjw4HdRxRADGAUIM8IcFdQxl3KlP5
-	 2v9uqMCLN3NtFrg+dFYz6tqB2r8MiyoETdn1Ibc+0mnCWUc3lAW2iDV0nZiRlLeGo9
-	 lZelCnXID3Z3YTYM5xGdpcZZT5aWLKkqfCbVNt+Hn1bu1t/miAoixrmL6aCJqdriBJ
-	 HoGFlWPR4ZiaBD1knaHIiv6KEWlIL9Ah0Tx5RGT8gvtNIbSdJdW+K0BYZp4Q5O379y
-	 g+CNBASjEwDJgUeVtLZKMZI87FVsRMFCI6zS4CeFQBCZ5+OBDjjSwKtD+JrpbLtN42
-	 qjJB2lSvxnP/w==
-Date: Tue, 11 Feb 2025 09:46:11 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Tavian Barnes <tavianator@tavianator.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>,
-	Michael Petlan <mpetlan@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
-Subject: Re: [PATCH v1] perf sample: Make user_regs and intr_regs optional
-Message-ID: <Z6uM48_IJa-AEzEI@google.com>
-References: <20250113194345.1537821-1-irogers@google.com>
- <CAP-5=fVoQRhd-8jyXfjc2dCuwt7_o1sU208aADT1FriwCNa9qw@mail.gmail.com>
- <Z6q7EZxAvskBE4H3@google.com>
- <CAP-5=fUTBJ_15f1WFuHjZzbWDwsAo3d90WX_hobfVWPjSOe3Vw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a23pctpw"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e53a91756e5so4936248276.1;
+        Tue, 11 Feb 2025 09:46:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739296002; x=1739900802; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=17z9WvxPFneZGd1ktho08KBzK3IXZzOqjdsa7bOBhic=;
+        b=a23pctpwr8C4SfqDSuuPIKiYMzrKqi5DrBoYcuIvUS7VIhH4AQ0q1Hd48Yj8iy/6O+
+         JAXcEkLBR1UIXeJbGK7OFivweD3MG+yU6COdpvSii5SKU4JTvDurONqhCjF+A+6k8D03
+         k8fAIf3m2eqPgfyIdqJlu3tUYFHGY8jMQMQqlgYd0j+6FxfIqZiGGj6XIgGp49eLi0i2
+         vBwjGi9lQLa98zEBi0XFWvOSc6gK8FKl5foxg9/N7AEuxEYpEijC2lx2t9PWdaZ+1BVc
+         JcK8N33/uR3U7S6LD7+K2XnOTvHYyNlQ3UsireQCvC7Ho+FLyupE+hFodBdR5x3BYfuY
+         /H+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739296002; x=1739900802;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=17z9WvxPFneZGd1ktho08KBzK3IXZzOqjdsa7bOBhic=;
+        b=kzxAL8/zLHMguWD/4koOfaI0rnRDieaZx3mJvZJCnDGzHWrqGgHyBQZ1uW21bbKde6
+         TyTlNwIr7dIv16im4kVB76rdN2Aiwblwmz2PRYEGYw40F8/dQZZ+rFXXuBaybQUQpll7
+         VkzV37WJHmc0UHoOp+LhGBsfTxTd/B0Pxwgqk1MIhLuo8Sz2VNRJ5tHFzDK1xz7Mwr13
+         t1TgjARq7r+kqI//QPcYj+EFRqcbPtZSC84JOqhIvb0pPGNLg8lFihOIFKkHaV6q44Rh
+         YIcH4fx5KCqj7KPcckpr1vG5UZb9lDzoSZlQWjwuCXo6d3ZDmXd69+CiTcGDKZc6ZKKc
+         0HjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWsaPu+vTpgg8Bxk5FngD32/CKGWBJNA7+y1NQj7H25V4WTmwyclHsAHO34NLV7u7x4K5xGhHBR6nrrQ8Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc2NZMZkPh1RUmT7/VxcAjG0QZJe2JHZcqh3IPwCgzFdexsrkv
+	wznCeQuRxqqFHvMLFjHX11BiQh+ChnNK1BvAQxQvtA8A/caL+upB1B/FDw==
+X-Gm-Gg: ASbGncvjPyunXO/dd8bOOMODJNFd3lkDcYdDGrEjFxKkS3uegDGLABraWU2Gm6cFRWk
+	OT3K/MXyQ45dU5yw8M9bCtTGCX3iJHs5p1zoK4kGs/MTdehDvrkPqkdoJOeKxg/1uN0IXx/XAA3
+	rRxnya3BMbMx9cIFvani+EE/T8ZnMFE1H1RpWHiEn4Id80qvfT8kHNZhg826qAm9yDVoVuElGzO
+	YBRYkWqYQuugwQuGpB60nGIizKqgvgzx9dCrcdJgCJ/WzR0OkhTZsj1X0gACPcz4dAA1uRm6HCp
+	JmoE67eN
+X-Google-Smtp-Source: AGHT+IGQ5gC01hdvr8VTf5YsoGXb2UXG0Q2y2gUYXEM0i0qQhqueht93GdaXYRKV0bYPjinm6/0yLw==
+X-Received: by 2002:a05:6902:1105:b0:e5a:c8ea:3287 with SMTP id 3f1490d57ef6-e5d9f120803mr263805276.25.1739296002478;
+        Tue, 11 Feb 2025 09:46:42 -0800 (PST)
+Received: from localhost ([2800:bf0:61:1288:72d5:e7e1:d832:2e3d])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5b3a1f3602sm3423416276.12.2025.02.11.09.46.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 09:46:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUTBJ_15f1WFuHjZzbWDwsAo3d90WX_hobfVWPjSOe3Vw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 11 Feb 2025 12:46:40 -0500
+Message-Id: <D7PSZ410LJW6.3VNZ4VU0H5VUC@gmail.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+Cc: <platform-driver-x86@vger.kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Armin Wolf" <W_Armin@gmx.de>, "Mario
+ Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
+ <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 02/14] platform/x86: alienware-wmi: Add WMI Drivers
+From: "Kurt Borja" <kuurtb@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250207154610.13675-1-kuurtb@gmail.com>
+ <20250207154610.13675-3-kuurtb@gmail.com>
+ <Z6t7IjcOFuAbztfn@black.fi.intel.com>
+In-Reply-To: <Z6t7IjcOFuAbztfn@black.fi.intel.com>
 
-On Mon, Feb 10, 2025 at 08:43:40PM -0800, Ian Rogers wrote:
-> On Mon, Feb 10, 2025 at 6:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Mon, Feb 10, 2025 at 10:15:22AM -0800, Ian Rogers wrote:
-> > > On Mon, Jan 13, 2025 at 11:43 AM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > The struct dump_regs contains 512 bytes of cache_regs, meaning the two
-> > > > values in perf_sample contribute 1088 bytes of its total 1384 bytes
-> > > > size. Initializing this much memory has a cost reported by Tavian
-> > > > Barnes <tavianator@tavianator.com> as about 2.5% when running `perf
-> > > > script --itrace=i0`:
-> > > > https://lore.kernel.org/lkml/d841b97b3ad2ca8bcab07e4293375fb7c32dfce7.1736618095.git.tavianator@tavianator.com/
-> > > >
-> > > > Adrian Hunter <adrian.hunter@intel.com> replied that the zero
-> > > > initialization was necessary and couldn't simply be removed.
-> > > >
-> > > > This patch aims to strike a middle ground of still zeroing the
-> > > > perf_sample, but removing 79% of its size by make user_regs and
-> > > > intr_regs optional pointers to zalloc-ed memory. To support the
-> > > > allocation accessors are created for user_regs and intr_regs. To
-> > > > support correct cleanup perf_sample__init and perf_sample__exit
-> > > > functions are created and added throughout the code base.
-> > >
-> > > Ping. Given the memory savings and performance wins it would be nice
-> > > to see this land. Andi Kleen commented on doing a reimplementation,
-> > > which is fine but out-of-scope of what I'm doing here.
-> >
-> > Yeah, I like the core of the change.  Andi's concern is that it touches
-> > too many places.  It'd be nice if we can do that without allocating
-> > memory for regs and eliminating the perf_sample__{init,exit}.  But I'm
-> > not if it's possible.
-> 
-> Moving from no allocations to 2 possible allocations means there has
-> to be corresponding frees. Putting the frees into an __exit function
-> is the norm for this kind of cleanup. I don't see how you can move to
-> the approach presented without adding the frees and not introduce a
-> memory leak. I don't see what's actionable for me to do here.
+On Tue Feb 11, 2025 at 11:30 AM -05, Andy Shevchenko wrote:
+> On Fri, Feb 07, 2025 at 10:45:58AM -0500, Kurt Borja wrote:
+>> Add WMI drivers for LEGACY and WMAX devices.
+>>=20
+>> This involves moving the platform device registration to a helper
+>> function that is now called from the driver's preferred WMI device
+>> driver probe. In the case of the WMAX this is done only if
+>> `!quirks->thermal` because the newer WMAX interface doesn't support any
+>> of the LED features of this driver. This also eliminates the need to
+>> check for `quirks->num_zones > 0` inside alienfx_probe().
+>>=20
+>> Only one WMI driver is registered on module initialization to prevent
+>> registering a duplicate platform device.
+>>=20
+>> Additionally, create_thermal_profile() now takes wmi_device * instead of
+>> platform_device *.
+>
+> ...
+>
+>> +static int alienware_alienfx_setup(struct alienfx_platdata *pdata)
+>> +{
+>> +	struct device *dev =3D &pdata->wdev->dev;
+>> +	struct platform_device *pdev;
+>>  	int ret;
+>> =20
+>> +	pdev =3D platform_device_register_data(NULL, "alienware-wmi",
+>> +					     PLATFORM_DEVID_NONE, pdata,
+>> +					     sizeof(*pdata));
+>> +	if (IS_ERR(pdev))
+>> +		return PTR_ERR(pdev);
+>> +
+>> +	dev_set_drvdata(dev, pdev);
+>> +	ret =3D devm_add_action_or_reset(dev, alienware_alienfx_remove, pdev);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return 0;
+>
+> 	return devm_add_action_or_reset(...);
 
-Right, I'm inclined to merge this patch.  But I need to think a bit more
-about the Andi's approach before that.
+Right!
 
-Thanks,
-Namhyung
+>
+>> +}
+>
+> ...
+>
+>> +static const struct wmi_device_id alienware_legacy_device_id_table[] =
+=3D {
+>> +	{ LEGACY_CONTROL_GUID, NULL },
+>
+> Drop that ' , NULL' part, it makes an additional burden if the type of th=
+e
+> driver_data is ever changed.
+
+Makes sense.
+
+>
+>> +	{ },
+>
+> No comma in the terminator entries.
+
+Makes sense.
+
+>
+>> +};
+>
+> ...
+>
+>> +static const struct wmi_device_id alienware_wmax_device_id_table[] =3D =
+{
+>> +	{ WMAX_CONTROL_GUID, NULL },
+>> +	{ },
+>> +};
+>
+> Ditto.
+>
+> ...
+>
+>> +static int __init alienware_wmax_wmi_init(void)
+>> +{
+>> +	return wmi_driver_register(&alienware_wmax_wmi_driver);
+>> +}
+>> +
+>> +static void __exit alienware_wmax_wmi_exit(void)
+>> +{
+>> +	wmi_driver_unregister(&alienware_wmax_wmi_driver);
+>> +}
+>
+> I believe we have module_wmi_driver() which can be used after the split
+> (haven't checked those patches yet).
+
+This module has two WMI drivers, so I believe this can't be used.
+
+--=20
+ ~ Kurt
 
