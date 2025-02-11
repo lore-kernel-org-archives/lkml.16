@@ -1,143 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4F02C9A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBEA1E98EB;
+	Tue, 11 Feb 2025 06:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739254187; cv=none; b=hDTdbOZeIAmmGvwctJgsrpHtsBReVcvgsDkRkEhRrALW+IQsJfS/Slv8enGCFM0JZH+D99OydGJNAgvFVTLnCWp88iHiFg37IEVBAplm8xpfpM+sr4rkyG7LKdeSMtMUsdv3hRI7HxDayoEpUj29eyn2WiuZ+Efg/6Wdk3vv1lY=
+	t=1739254192; cv=none; b=mrLD37p6KgjV01A7ZO7oCeyYuJhgEScRTjXWgwOu6KxN9mmCxp8sBiExaiyQ4Fd77hM/+0vbx9kOXRY0x1iPwFScthQ9X/ZAFF9JqnK5F4I+hUgdGipSjgNJy6gIUrUT/+OnfzIWyMGoWn7JMgFXhprCIf0+MvgkHTShR39siAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739254187; c=relaxed/simple;
-	bh=ecMp9NzXgAfPDtti/3umyr6JhdSqbCGAQwtPeBNYQPs=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=pB+yzxoEYM2Zu0tLA3lK+NCdHWecFfBa4FbRBoZn1750XLk7HCsFt00AMvEQoNZOaLj7F8Ioeikb/dB3dkPYQddIS+8ZyR3tw3mtjTb5PcoFYxsllES5nnIqdZ0mhMW39rb0XGrDf6VFWBa1tGojAGGg8rrN5Wjex68EBOXG/oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TR1XciYL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739254192; c=relaxed/simple;
+	bh=Ce5Ji/WXQMDkmcJjDCJf+Ub6K+lODSKEHTLEvD1ibhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wf8srS55Iy35O99rwo4n3f6C+13n8eYmGL/gHOiP3YmPijIQXUyD1qk/Y5Em/WehEiVQ3U6VIcHLersUJ4ir4eBFc0b09JrxoCjzG6Oh67tW82R2s9AKIkQZ1F+S8Fk5N9IEC2e31pSlQVz1otINXZiMV2Q4Kh4QIb+JTOSowy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JcXzk/t2; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TR1XciYL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A60CBC4CEDD;
-	Tue, 11 Feb 2025 06:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739254186;
-	bh=ecMp9NzXgAfPDtti/3umyr6JhdSqbCGAQwtPeBNYQPs=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=TR1XciYLPT9/8V4qrVzVjhJNrG+j4DcRZAlZMoLhYr6+R02N3koDFMPCTQERhLMND
-	 74GkgskAg7BD/JVRh4rkvby1ZlhFc5ZKUe9OS+YFA+MJnSPetyFu+hJpSwC3DrAWUH
-	 kq+7wRASzpLOf40DnLsTcaHAq1XCl2fSQhM/sPGaN+AmZjCT+kQ0u+SuRo73tUpKC8
-	 SgquD2rF3GVyksah8ROV789UXgV/Urtx1ZLHy04/XnFjLDSjD/nVlnTZKnjNzSk3cK
-	 x6xMQOGs79KxKF3kkpYcrUupycqGpW71Jd1+ixDXsX1j0B7FHTyIufsFqKSMLVEoYe
-	 FErCFxoBDM6/Q==
-Message-ID: <c6764fc9-9ced-4a55-a91d-ae29e3db2433@kernel.org>
-Date: Tue, 11 Feb 2025 14:09:43 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JcXzk/t2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739254191; x=1770790191;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ce5Ji/WXQMDkmcJjDCJf+Ub6K+lODSKEHTLEvD1ibhI=;
+  b=JcXzk/t22Flzvyu0qFl6mi1a2XAzgJ4lzKpS7VYXxM7Q8h0QpMyOetDt
+   +h5ylWwBYxYNlYR7PjIjCM8DCRLnxgtehZ/9AbC6uT0D8gQ+rniqMic3e
+   zLD9w1oQWv2X3WlbwwIp9kaGn9ZMvir9AUUAGyTbZz7NK+c6AHjI0Wuvt
+   clGl7lZ7+61orj8ByPXabT1+q9C5U6BxwNqpo9nMRQBjwGlsPSgNcp2kQ
+   a3unM6yslOo0RY4BfbAfO33CEww4eZIf7sd+kaGIV5NKZcR/EmD+CwL+9
+   8byCkixf+lZQMgU/0GCBk9327NC+p2ViCS2bBrklH1gSKlAxI1wiaxGJA
+   A==;
+X-CSE-ConnectionGUID: EKLivomvQq+HG6MntZrpDw==
+X-CSE-MsgGUID: fgYI+swiQSigIyCUnbJRrQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="57271607"
+X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
+   d="scan'208";a="57271607"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 22:09:50 -0800
+X-CSE-ConnectionGUID: KjhHhETEQwW6nEdSX5vO5w==
+X-CSE-MsgGUID: W7KoF7IvT3CDUO0isJnv+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
+   d="scan'208";a="117493893"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 22:09:47 -0800
+Date: Tue, 11 Feb 2025 07:06:11 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: mturquette@baylibre.com, sboyd@kernel.org,
+	florian.fainelli@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com, richardcochran@gmail.com,
+	dave.stevenson@raspberrypi.com, popcornmix@gmail.com,
+	mripard@kernel.org, u.kleine-koenig@baylibre.com, nathan@kernel.org,
+	linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, zzjas98@gmail.com
+Subject: Re: [PATCH] clk: bcm: rpi: Fix potential NULL pointer dereference
+Message-ID: <Z6ro06dd81bGO77a@mev-dev.igk.intel.com>
+References: <20250211000917.1739835-1-chenyuan0y@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org
-Subject: Re: [syzbot] [f2fs?] kernel BUG in new_curseg (2)
-To: syzbot <syzbot+15669ec8c35ddf6c3d43@syzkaller.appspotmail.com>,
- jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <67aa72bf.050a0220.110943.0035.GAE@google.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <67aa72bf.050a0220.110943.0035.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211000917.1739835-1-chenyuan0y@gmail.com>
 
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/chao/linux.git bugfix/syzbot
-
-On 2/11/25 05:42, syzbot wrote:
-> syzbot has found a reproducer for the following issue on:
+On Mon, Feb 10, 2025 at 06:09:17PM -0600, Chenyuan Yang wrote:
+> The `init.name` could be NULL. Add missing check in the
+> raspberrypi_clk_register().
+> This is similar to commit 3027e7b15b02
+> ("ice: Fix some null pointer dereference issues in ice_ptp.c").
+> Besides, bcm2835_register_pll_divider() under the same directory also
+> has a very similar check.
 > 
-> HEAD commit:    a64dcfb451e2 Linux 6.14-rc2
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17297b18580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7f246b548ed0635a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=15669ec8c35ddf6c3d43
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=103943f8580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12da1bdf980000
-> 
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-a64dcfb4.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/6a816640d31b/vmlinux-a64dcfb4.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/b5cb42ffa4f6/bzImage-a64dcfb4.xz
-> mounted in repro #1: https://storage.googleapis.com/syzbot-assets/caba9b9b8f24/mount_0.gz
->   fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=14da1bdf980000)
-> mounted in repro #2: https://storage.googleapis.com/syzbot-assets/270c3c4c1558/mount_6.gz
->   fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=121672a4580000)
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+15669ec8c35ddf6c3d43@syzkaller.appspotmail.com
-> 
-> F2FS-fs (loop0): Found nat_bits in checkpoint
-> F2FS-fs (loop0): Start checkpoint disabled!
-> F2FS-fs (loop0): Mounted with checkpoint version = 48b305e6
-> ------------[ cut here ]------------
-> kernel BUG at fs/f2fs/segment.c:2809!
-> Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
-> CPU: 0 UID: 0 PID: 5304 Comm: syz-executor274 Not tainted 6.14.0-rc2-syzkaller #0
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> RIP: 0010:get_new_segment fs/f2fs/segment.c:2809 [inline]
-> RIP: 0010:new_curseg+0x1f52/0x1f70 fs/f2fs/segment.c:2939
-> Code: fb fd e9 1a fa ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 4c fa ff ff 48 89 df e8 59 4e fb fd e9 3f fa ff ff e8 5f b5 94 fd 90 <0f> 0b e8 57 b5 94 fd 90 0f 0b e8 4f b5 94 fd 90 0f 0b e8 47 b5 94
-> RSP: 0018:ffffc9000d0af4a8 EFLAGS: 00010293
-> RAX: ffffffff842a9a41 RBX: 0000000000000018 RCX: ffff88801ede4880
-> RDX: 0000000000000000 RSI: 0000000000000018 RDI: 0000000000000018
-> RBP: dffffc0000000000 R08: ffffffff842a8875 R09: fffff52001a15e84
-> R10: dffffc0000000000 R11: fffff52001a15e84 R12: 0000000000000018
-> R13: ffff888043de5101 R14: 0000000000000018 R15: ffff888038298f58
-> FS:  000055556f014380(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 0000000042a82000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  __allocate_new_segment+0x1ce/0x940 fs/f2fs/segment.c:3273
->  f2fs_allocate_new_section fs/f2fs/segment.c:3287 [inline]
->  f2fs_allocate_pinning_section+0xfa/0x4e0 fs/f2fs/segment.c:3301
->  f2fs_expand_inode_data+0x696/0xca0 fs/f2fs/file.c:1849
->  f2fs_fallocate+0x537/0xa10 fs/f2fs/file.c:1959
->  vfs_fallocate+0x623/0x7a0 fs/open.c:338
->  do_vfs_ioctl+0x258c/0x2e40 fs/ioctl.c:885
->  __do_sys_ioctl fs/ioctl.c:904 [inline]
->  __se_sys_ioctl+0x80/0x170 fs/ioctl.c:892
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7ffbafdefd99
-> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007ffecbc98b98 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 0000400000000080 RCX: 00007ffbafdefd99
-> RDX: 00004000000000c0 RSI: 0000000040305828 RDI: 0000000000000005
-> RBP: 0030656c69662f2e R08: 000055556f0154c0 R09: 000055556f0154c0
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00004000000000c0
-> R13: 00004000000000e0 R14: 00004000000000c2 R15: 00007ffbafe3903b
->  </TASK>
-> Modules linked in:
-> ---[ end trace 0000000000000000 ]---
-> RIP: 0010:get_new_segment fs/f2fs/segment.c:2809 [inline]
-> RIP: 0010:new_curseg+0x1f52/0x1f70 fs/f2fs/segment.c:2939
-> Code: fb fd e9 1a fa ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 4c fa ff ff 48 89 df e8 59 4e fb fd e9 3f fa ff ff e8 5f b5 94 fd 90 <0f> 0b e8 57 b5 94 fd 90 0f 0b e8 4f b5 94 fd 90 0f 0b e8 47 b5 94
-> RSP: 0018:ffffc9000d0af4a8 EFLAGS: 00010293
-> RAX: ffffffff842a9a41 RBX: 0000000000000018 RCX: ffff88801ede4880
-> RDX: 0000000000000000 RSI: 0000000000000018 RDI: 0000000000000018
-> RBP: dffffc0000000000 R08: ffffffff842a8875 R09: fffff52001a15e84
-> R10: dffffc0000000000 R11: fffff52001a15e84 R12: 0000000000000018
-> R13: ffff888043de5101 R14: 0000000000000018 R15: ffff888038298f58
-> FS:  000055556f014380(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 0000000042a82000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> 
-> 
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
 > ---
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
+>  drivers/clk/bcm/clk-raspberrypi.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
+> index 0e1fe3759530..720acc10f8aa 100644
+> --- a/drivers/clk/bcm/clk-raspberrypi.c
+> +++ b/drivers/clk/bcm/clk-raspberrypi.c
+> @@ -286,6 +286,8 @@ static struct clk_hw *raspberrypi_clk_register(struct raspberrypi_clk *rpi,
+>  	init.name = devm_kasprintf(rpi->dev, GFP_KERNEL,
+>  				   "fw-clk-%s",
+>  				   rpi_firmware_clk_names[id]);
+> +	if (!init.name)
+> +		return ERR_PTR(-ENOMEM);
+>  	init.ops = &raspberrypi_firmware_clk_ops;
+>  	init.flags = CLK_GET_RATE_NOCACHE;
 
+Thanks for the fix. There is a need for a fixes tag in case like that.
+Please add it in commit message. Take a look here for example [1].
+
+[1] https://lore.kernel.org/netdev/DM3PR11MB8736BC7EF3A66720427F3775ECF22@DM3PR11MB8736.namprd11.prod.outlook.com/T/#mbc8028620ecffb2f3a23c96130fe03708e679b25
+
+Beside that:
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+
+>  
+> -- 
+> 2.34.1
