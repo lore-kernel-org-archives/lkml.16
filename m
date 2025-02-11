@@ -1,68 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11E927181F;
-	Tue, 11 Feb 2025 23:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAD73BB54
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 23:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739318188; cv=none; b=H6dbaAx/dSv4zjmpgauyzw02hqbO6eT9HM4iHJTHu1wCbeWcQuiQ3qoXuoUQXM+Xv/1c2TYOF8dNxYw4Jh5pXp2N/9/q+UZMa124QrJtgsDVhEDPcC3Rtzfv//DifGHLwEkzCh9Ia8gJc8ch8yKz1+Ra9OqxZOtY50+wbbVzhCA=
+	t=1739318286; cv=none; b=F3HnRO/MgGkrwSUD79/a89/2IDF56QeBFFEXVihDf0b7J8UjM3otf90wtAFSNExUt2DY5JziuHJ6ixVJOslBzqJ8wR4KS/Tr9Evi8MUWQQNDr6MhvKAPzCXDbUDIW17OEY90bfElHOQ0r+Cpl7aPUL9VDxNVmUEK707ySiCaS2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739318188; c=relaxed/simple;
-	bh=PSn0Zmv5N7ytlJwYw0DWAn3cbqPBj9i+Z2EniPfj4ww=;
+	s=arc-20240116; t=1739318286; c=relaxed/simple;
+	bh=RE+aHUIVuDPsDQj42j/fwrw4kpBxa9lJz16JhCXTAlU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GGbxp6DNydgG9unYPAsF6jJ6V2QIjn4YTSkooOWelg0e3YiI9dt0x2Az7IRX4nAOmx9Knwds1lkQSpuUYpXKvciWGMyz7WNDXhauxQRZj8hGml9euGngAD6a+gT53Mmuhkyt0EAUb2rhkJbzNxCi/4jyzA8c2dXZl+3ItIbxmOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VPl9AQ4f; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=I9/qAtuWje/GqfX3s2nqHX05cakOiy7jDDmFi9xz/jx6FGoqfDR9AqYqctSU1jbmvIJyk5DKj9GmBa5Tdr5p0W73HvA/5Y0wtsAnnSWsI0FNwDQm+oUe+Ji/yAg3jAXEpvyXvY6Lpwk81DrgHeSpebXWE7AccHqhMA9ttllbEN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yLp7Sbyl; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VPl9AQ4f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739318187; x=1770854187;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PSn0Zmv5N7ytlJwYw0DWAn3cbqPBj9i+Z2EniPfj4ww=;
-  b=VPl9AQ4fvg0N9x7rxokjRO3oap37CGw+yczgqPNFgUrPfA0TPJyexEhm
-   ZKPdhe1L0xewSfgRfcSVaZ11r7yErCrgzzAprwBjC4AS9XlHMmS0VdycB
-   owp8p9cAz0H+Nr+DXNyJ2dYz0dypybqtW+0201iiD5ERMf2uEmm5qxsY8
-   mcKgNC/y8aR3mcMlwKhlQKbv7fPXkWrrFgdj90gTspvbILlxznzusMkLV
-   +IEFyqzgMKePB+HjIMMjHoaRnRdzfhcv6mNzo7gDM/4SgyHC47YHTD6ZR
-   pX0PzyIrcjICWhdAjY5YnbOR7qwG/UIRC35we1ScQl+V2/3Fyb9VXqu9B
-   Q==;
-X-CSE-ConnectionGUID: lrZlHw8cRhemPf/jsE71fg==
-X-CSE-MsgGUID: fPa6RE94QHqXzyqRDpg5mg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="62427120"
-X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="62427120"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 15:56:26 -0800
-X-CSE-ConnectionGUID: BGEregKiTOCpjOcaSYt5Ow==
-X-CSE-MsgGUID: DUSwUO8RTy6ArYggwXccmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112518747"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 11 Feb 2025 15:56:22 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ti071-0014qp-1u;
-	Tue, 11 Feb 2025 23:56:19 +0000
-Date: Wed, 12 Feb 2025 07:55:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ryan Chen <ryan_chen@aspeedtech.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-	linux-clk@vger.kernel.org, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v8 3/3] clk: aspeed: add AST2700 clock driver
-Message-ID: <202502120701.cqyc1KZw-lkp@intel.com>
-References: <20250210085004.1898895-4-ryan_chen@aspeedtech.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yLp7Sbyl"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54505c79649so3261005e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:58:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739318283; x=1739923083; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LX/ULobNxBgRiiE6AfMWm4qglJRxW2bL2STp6gK7uVE=;
+        b=yLp7SbylZpV6KkaSft03RvdgKMMDJvCbp1+9KxKl5etNCsfLKcWaKWp6vqobcyoAx4
+         0s5SuVB24scHYfL5DRsd8opiUm642VHMw0wFiR20aial2/9DZWNwTSMVYAmQLCNki7jL
+         Jpxocb4OXYrDxTr12FjdGB61F5AGXC4BCtCpVw4Ry0VjUOlMondYP+Dt1un41k3mW63W
+         BdWiMgN6qxGRO2QvJOxAPbNEbtw23ny7uR4Gy1APWR3DeqJ7IXiENPu/sqn8YnK7tcbr
+         IqosVIT6PZ8miakhIlc7rCJ6Onerf/9e2h1Ogt9I3m8D1xIQXzW7KTYN+yMabSuDgZpE
+         bbpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739318283; x=1739923083;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LX/ULobNxBgRiiE6AfMWm4qglJRxW2bL2STp6gK7uVE=;
+        b=c84YxU5XwoF2cqmPjEUVTaiuD4z7m0JJud59dXaGruDyQIuOnTIcL0WMEb51uyE1T+
+         T1pH33lCiKGJwaxEthTXqWNggkit5NIKsk7tYe9sT1IBwGuemxDFtrOX+e+Y2VWrklic
+         vTGS19L3zH8mIkCgOBntcSxBPfCeiVmcyNT1Ym5AIQ0ccVzNqY1vVwv8CJFAZ4Gx3ycT
+         xAYa3nn503EwUbdMY+bUhrbVXNZq2hupsH5TjQ3Y3+WIfgL25OKKXWczHKGWyCg2PZib
+         ay1rIYj5NsQ6nKY7X8q0B4IoDRuJdKTQatiA2X3OzfNU3FAmxwIae+Jm+FoglnrmbtnM
+         wEKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUU6mYgziJ5G1iPAqUSdeKbDxyCU58KkcNNlyit3UMZ+LXkLnni3YlOlatyR46nMbi6a9hrgem5ZjD5AYk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG3vyNuQmKr8BDeXFH/3+BxV5MRj6LeBzapGmHbbVdaGEA13QF
+	6sBtIHYk0v8+mnvkpyqqEZKwYgoX5pelbN8WoGJU1uUh/dLkJBw/QEhE4OU2tWA=
+X-Gm-Gg: ASbGncsK8oy5nSY8OfXfuaBDIv8MNDupsPQVKMLDZ3hc61+8PwXe1dFqUJAMD3aXoEr
+	ec3H2D+0iEGxHJN+HKRR1uIdrt4kUl1LNT+oMHsu++ydvyJOF/S6IMu15E+Vzqw5YC5Br+/ahMQ
+	w6sQgjgttoIxRmEYI45Vb5H7TNPc5Zp7vip0ABZ5B/QMhs4TAY1kT87VirxlHNkCvJMiHFNraEa
+	ptf1Um+n/59uvfXLUwHbYlb27NEhYLfvYVuioTdTkI3p/7eJC6WaT31pyaNHSwem9cQ97HqgWOl
+	0Z+OHDhBGcUvU5qiyQir9mEkXBVQ11+SqPribodRi2cRXJAJ+76jFoouaZpbZ+3XVo5dMss=
+X-Google-Smtp-Source: AGHT+IEZuHKlP0HFN8WiWm/I8ajOzqgUnqFUKxuS5iwuMpASJK2/hwz0WfYOWgwjCMYH+7xZ6hFXEQ==
+X-Received: by 2002:a05:6512:124c:b0:545:353:4d46 with SMTP id 2adb3069b0e04-545181148dfmr238228e87.25.1739318282977;
+        Tue, 11 Feb 2025 15:58:02 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54512236ba5sm393771e87.110.2025.02.11.15.58.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 15:58:01 -0800 (PST)
+Date: Wed, 12 Feb 2025 01:57:59 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>, 
+	Stephen Boyd <sboyd@kernel.org>, Amit Kucheria <amitk@kernel.org>, 
+	Thara Gopinath <thara.gopinath@gmail.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Ajit Pandey <quic_ajipan@quicinc.com>, 
+	Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>, 
+	Jagadeesh Kona <quic_jkona@quicinc.com>, quic_kamalw@quicinc.com, quic_jprakash@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH RFC v2 1/5] dt-bindings: thermal: Add MBG thermal monitor
+ support
+Message-ID: <sybrfmrpegq7fcqykgsfhm56wjyx5vp6zafqw2d73tiral64aw@hg4di55fzdle>
+References: <20241212-mbg-v2-support-v2-0-3249a4339b6e@quicinc.com>
+ <20241212-mbg-v2-support-v2-1-3249a4339b6e@quicinc.com>
+ <ojukpywkhu72cimujmijzidf26654g5vkjaj477imcf4suz2o6@cmow62jcqsfz>
+ <7a5db383-914c-4c1e-846e-5d68cc6a7765@quicinc.com>
+ <fcd718be-fe8a-466f-bd2b-7b75d5f8dd6c@kernel.org>
+ <c85903c6-6a89-4382-bfa2-2fed95f0cbc0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,229 +88,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250210085004.1898895-4-ryan_chen@aspeedtech.com>
+In-Reply-To: <c85903c6-6a89-4382-bfa2-2fed95f0cbc0@kernel.org>
 
-Hi Ryan,
+On Tue, Feb 11, 2025 at 12:50:12PM +0100, Krzysztof Kozlowski wrote:
+> On 11/02/2025 12:46, Krzysztof Kozlowski wrote:
+> > On 11/02/2025 12:15, Satya Priya Kakitapalli wrote:
+> >>
+> >> On 12/13/2024 2:08 PM, Krzysztof Kozlowski wrote:
+> >>> On Thu, Dec 12, 2024 at 09:41:20PM +0530, Satya Priya Kakitapalli wrote:
+> >>>> +
+> >>>> +required:
+> >>>> +  - compatible
+> >>>> +  - reg
+> >>>> +  - interrupts
+> >>>> +  - io-channels
+> >>>> +  - io-channel-names
+> >>> Binding looks ok, but this wasn't tested due to unneeded dependency.
+> >>> Please decouple from dependency, so automation can properly test it.
+> >>
+> >>
+> >> The dependency is needed because this mbg peripheral is present on only 
+> >> targets which have GEN3 ADC5, for which the bindings support is added in 
+> >> the series [1]
+> >>
+> >>
+> >> [1] 
+> >> https://lore.kernel.org/linux-arm-msm/c4ca0a4c-e421-4cf6-b073-8e9019400f4c@quicinc.com/
+> > 
+> > Sure. Then this cannot be merged due to resulting test failure.
+> > 
+> > Please don't post new versions before this can be actually tested and
+> > applied.
+> 
+> Heh, you responded *after two months*, to an old email so even previous
+> discussion is gone from my inbox.
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on clk/clk-next]
-[also build test WARNING on pza/reset/next linus/master v6.14-rc2 next-20250210]
-[cannot apply to pza/imx-drm/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Chen/dt-binding-clock-ast2700-modify-soc0-1-clock-define/20250210-165421
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-patch link:    https://lore.kernel.org/r/20250210085004.1898895-4-ryan_chen%40aspeedtech.com
-patch subject: [PATCH v8 3/3] clk: aspeed: add AST2700 clock driver
-config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20250212/202502120701.cqyc1KZw-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250212/202502120701.cqyc1KZw-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502120701.cqyc1KZw-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/clk/clk-ast2700.c:369:37: warning: 'd_clk_sels' defined but not used [-Wunused-const-variable=]
-     369 | static const struct clk_parent_data d_clk_sels[] = {
-         |                                     ^~~~~~~~~~
->> drivers/clk/clk-ast2700.c:353:37: warning: 'soc1_ahb' defined but not used [-Wunused-const-variable=]
-     353 | static const struct clk_parent_data soc1_ahb[] = {
-         |                                     ^~~~~~~~
->> drivers/clk/clk-ast2700.c:349:37: warning: 'uart16clk' defined but not used [-Wunused-const-variable=]
-     349 | static const struct clk_parent_data uart16clk[] = {
-         |                                     ^~~~~~~~~
->> drivers/clk/clk-ast2700.c:345:37: warning: 'uart15clk' defined but not used [-Wunused-const-variable=]
-     345 | static const struct clk_parent_data uart15clk[] = {
-         |                                     ^~~~~~~~~
->> drivers/clk/clk-ast2700.c:341:37: warning: 'uart14clk' defined but not used [-Wunused-const-variable=]
-     341 | static const struct clk_parent_data uart14clk[] = {
-         |                                     ^~~~~~~~~
->> drivers/clk/clk-ast2700.c:337:37: warning: 'uart13clk' defined but not used [-Wunused-const-variable=]
-     337 | static const struct clk_parent_data uart13clk[] = {
-         |                                     ^~~~~~~~~
->> drivers/clk/clk-ast2700.c:237:37: warning: 'soc0_ahb' defined but not used [-Wunused-const-variable=]
-     237 | static const struct clk_parent_data soc0_ahb[] = {
-         |                                     ^~~~~~~~
->> drivers/clk/clk-ast2700.c:209:37: warning: 'soc0_mpll_div8' defined but not used [-Wunused-const-variable=]
-     209 | static const struct clk_parent_data soc0_mpll_div8[] = {
-         |                                     ^~~~~~~~~~~~~~
-
-
-vim +/d_clk_sels +369 drivers/clk/clk-ast2700.c
-
-   208	
- > 209	static const struct clk_parent_data soc0_mpll_div8[] = {
-   210		{ .fw_name = "soc0-mpll_div8", .name = "soc0-mpll_div8" },
-   211	};
-   212	
-   213	static const struct clk_parent_data mphysrc[] = {
-   214		{ .fw_name = "mphysrc", .name = "mphysrc" },
-   215	};
-   216	
-   217	static const struct clk_parent_data u2phy_refclksrc[] = {
-   218		{ .fw_name = "u2phy_refclksrc", .name = "u2phy_refclksrc" },
-   219	};
-   220	
-   221	static const struct clk_parent_data soc0_hpll[] = {
-   222		{ .fw_name = "soc0-hpll", .name = "soc0-hpll" },
-   223	};
-   224	
-   225	static const struct clk_parent_data soc0_mpll[] = {
-   226		{ .fw_name = "soc0-mpll", .name = "soc0-mpll" },
-   227	};
-   228	
-   229	static const struct clk_parent_data axi0clk[] = {
-   230		{ .fw_name = "axi0clk", .name = "axi0clk" },
-   231	};
-   232	
-   233	static const struct clk_parent_data soc0_ahbmux[] = {
-   234		{ .fw_name = "soc0-ahbmux", .name = "soc0-ahbmux" },
-   235	};
-   236	
- > 237	static const struct clk_parent_data soc0_ahb[] = {
-   238		{ .fw_name = "soc0-ahb", .name = "soc0-ahb" },
-   239	};
-   240	
-   241	static const struct clk_parent_data soc0_uartclk[] = {
-   242		{ .fw_name = "soc0-uartclk", .name = "soc0-uartclk" },
-   243	};
-   244	
-   245	static const struct clk_parent_data emmcclk[] = {
-   246		{ .fw_name = "emmcclk", .name = "emmcclk" },
-   247	};
-   248	
-   249	static const struct clk_parent_data emmcsrc_mux[] = {
-   250		{ .fw_name = "emmcsrc-mux", .name = "emmcsrc-mux" },
-   251	};
-   252	
-   253	static const struct clk_parent_data soc1_clkin[] = {
-   254		{ .fw_name = "soc1-clkin", .name = "soc1-clkin" },
-   255	};
-   256	
-   257	static const struct clk_parent_data soc1_hpll[] = {
-   258		{ .fw_name = "soc1-hpll", .name = "soc1-hpll" },
-   259	};
-   260	
-   261	static const struct clk_parent_data soc1_apll[] = {
-   262		{ .fw_name = "soc1-apll", .name = "soc1-apll" },
-   263	};
-   264	
-   265	static const struct clk_parent_data sdclk[] = {
-   266		{ .fw_name = "sdclk", .name = "sdclk" },
-   267	};
-   268	
-   269	static const struct clk_parent_data sdclk_mux[] = {
-   270		{ .fw_name = "sdclk-mux", .name = "sdclk-mux" },
-   271	};
-   272	
-   273	static const struct clk_parent_data huartxclk[] = {
-   274		{ .fw_name = "huartxclk", .name = "huartxclk" },
-   275	};
-   276	
-   277	static const struct clk_parent_data uxclk[] = {
-   278		{ .fw_name = "uxclk", .name = "uxclk" },
-   279	};
-   280	
-   281	static const struct clk_parent_data huxclk[] = {
-   282		{ .fw_name = "huxclk", .name = "huxclk" },
-   283	};
-   284	
-   285	static const struct clk_parent_data uart0clk[] = {
-   286		{ .fw_name = "uart0clk", .name = "uart0clk" },
-   287	};
-   288	
-   289	static const struct clk_parent_data uart1clk[] = {
-   290		{ .fw_name = "uart1clk", .name = "uart1clk" },
-   291	};
-   292	
-   293	static const struct clk_parent_data uart2clk[] = {
-   294		{ .fw_name = "uart2clk", .name = "uart2clk" },
-   295	};
-   296	
-   297	static const struct clk_parent_data uart3clk[] = {
-   298		{ .fw_name = "uart3clk", .name = "uart3clk" },
-   299	};
-   300	
-   301	static const struct clk_parent_data uart5clk[] = {
-   302		{ .fw_name = "uart5clk", .name = "uart5clk" },
-   303	};
-   304	
-   305	static const struct clk_parent_data uart4clk[] = {
-   306		{ .fw_name = "uart4clk", .name = "uart4clk" },
-   307	};
-   308	
-   309	static const struct clk_parent_data uart6clk[] = {
-   310		{ .fw_name = "uart6clk", .name = "uart6clk" },
-   311	};
-   312	
-   313	static const struct clk_parent_data uart7clk[] = {
-   314		{ .fw_name = "uart7clk", .name = "uart7clk" },
-   315	};
-   316	
-   317	static const struct clk_parent_data uart8clk[] = {
-   318		{ .fw_name = "uart8clk", .name = "uart8clk" },
-   319	};
-   320	
-   321	static const struct clk_parent_data uart9clk[] = {
-   322		{ .fw_name = "uart9clk", .name = "uart9clk" },
-   323	};
-   324	
-   325	static const struct clk_parent_data uart10clk[] = {
-   326		{ .fw_name = "uart10clk", .name = "uart10clk" },
-   327	};
-   328	
-   329	static const struct clk_parent_data uart11clk[] = {
-   330		{ .fw_name = "uart11clk", .name = "uart11clk" },
-   331	};
-   332	
-   333	static const struct clk_parent_data uart12clk[] = {
-   334		{ .fw_name = "uart12clk", .name = "uart12clk" },
-   335	};
-   336	
- > 337	static const struct clk_parent_data uart13clk[] = {
-   338		{ .fw_name = "uart13clk", .name = "uart13clk" },
-   339	};
-   340	
- > 341	static const struct clk_parent_data uart14clk[] = {
-   342		{ .fw_name = "uart14clk", .name = "uart14clk" },
-   343	};
-   344	
- > 345	static const struct clk_parent_data uart15clk[] = {
-   346		{ .fw_name = "uart15clk", .name = "uart15clk" },
-   347	};
-   348	
- > 349	static const struct clk_parent_data uart16clk[] = {
-   350		{ .fw_name = "uart16clk", .name = "uart16clk" },
-   351	};
-   352	
- > 353	static const struct clk_parent_data soc1_ahb[] = {
-   354		{ .fw_name = "soc1-ahb", .name = "soc1-ahb" },
-   355	};
-   356	
-   357	static const struct clk_parent_data soc1_i3c[] = {
-   358		{ .fw_name = "soc1-i3c", .name = "soc1-i3c" },
-   359	};
-   360	
-   361	static const struct clk_parent_data canclk[] = {
-   362		{ .fw_name = "canclk", .name = "canclk" },
-   363	};
-   364	
-   365	static const struct clk_parent_data rmii[] = {
-   366		{ .fw_name = "rmii", .name = "rmii" },
-   367	};
-   368	
- > 369	static const struct clk_parent_data d_clk_sels[] = {
-   370		{ .fw_name = "soc0-hpll_div2", .name = "soc0-hpll_div2" },
-   371		{ .fw_name = "soc0-mpll_div2", .name = "soc0-mpll_div2" },
-   372	};
-   373	
+Are you responding to your own email?
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With best wishes
+Dmitry
