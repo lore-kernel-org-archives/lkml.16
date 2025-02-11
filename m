@@ -1,115 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483251FDE1B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E711F91F6
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739275212; cv=none; b=TVNqLuAiONBa30cXghGQ6vNYBiD8dqg/Ix3xs1L30DCs4vOp6MmbyTRJz8wumPy9hH2GfhSbDEjGa9we4xtenepaHpSyCI8mbB9zubm7bhIwW+gdxNDJgdceZ0fMiqeTP9maAT7HdMX072+eoQtiNmJsBCY7eM6dO9it5t/mwtM=
+	t=1739275222; cv=none; b=Www5rgRFnJc+clDLOpHqpKFNAkcGszNqIejwP9ooi8RzaNvB3mWgsJ4idLWGjXJg87zbkXb6x2YHucx+abgqeVltBSED9MFJQqovNa22i3dizQa9S9e+N2SSdBh1izGotKY94jKchY0QN6sKNQnLb6Igtk6w+kz3eQC1XOXWl3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739275212; c=relaxed/simple;
-	bh=TA/0R93IHQ5a5+EgaK8V4VBeM1CqKJGCSR6MePdrRSI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pegbggzZ+I0zM/h9qBfodrh0oVxL12EmfkIJnIt0E8hBg7rLNnD9+cGvC5VQyjFgO5QNFvB/Bv/AcWu7I7YZZfp7uTyGV2zDt+U6wdwiVkO1nfK2lpo5KMv4cUimEt1HeulMIvLQu31AMS1E+GLORgEkrYv9vtJxTzg4S1kPWA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJy3YIZ9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJy3YIZ9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2124C4CEE6
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:00:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739275211;
-	bh=TA/0R93IHQ5a5+EgaK8V4VBeM1CqKJGCSR6MePdrRSI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UJy3YIZ9fCzPNCmneEjKfEMaIUNOq291JlFZ7Eaix6faH1/8mlqH+lsCbGLKUFFth
-	 5y+/Qf+64SNXGnUuBUdaj6deqjP3B17hVMFzfyfJzEX6UL3xp4qI/i0JdB21I9cibC
-	 93YzdS20pHugLhcA/F/F0g1yJoNSR4xP+pPKGmdEbyUYko4bbYYuFzw/EzXUAhrRTI
-	 cFbdSe3vlDSDHCRYbRUDvpeFEH3lCY2M5MW1sJzG9Odo+hx0+ICGP4FvXPisZI1vQW
-	 rw5uBQM6SDSyDueaNvCKvCX0C6Wq9cWgvKSWEEx02m8B+T5eSnaKXVBWg2tl/UnZem
-	 UwdT4DbJJ8JFg==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5de56ff9851so6645245a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:00:11 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWShW1/JDFfXFsa/HQU9de+iW6MaUR10vopctoRv/6rGZgJCzfHUXHYgZvFbKDvkwt4VgLb60BLZOedYzk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe+kXpi0+cLAqu6/12aG0UEqDqysHQ//Xod41eZ2zviqwWQSsp
-	5/HjL9YUb2jf66P6bJYgigHMZdfpzimflfSyaGUx2PfiRy5uXIZJUh+15UfsBJpiMPm6jLBFkzA
-	n4V5/Zrs9EYSWVHAShG6zN3Zas94=
-X-Google-Smtp-Source: AGHT+IGHNVu0tpCqBhu4Mn6yiKyLBRk68octjzuRqFLITUadZkfqBm0qT5yqHWB/5lCGcOlApRkFsS/UArIYCQrmr1k=
-X-Received: by 2002:a05:6402:2381:b0:5dc:1273:63fd with SMTP id
- 4fb4d7f45d1cf-5de9a4646eamr2670591a12.20.1739275210215; Tue, 11 Feb 2025
- 04:00:10 -0800 (PST)
+	s=arc-20240116; t=1739275222; c=relaxed/simple;
+	bh=3SbQezCP+ISh10ulY9GEv5MsF0c84+68s6utxCeC34s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rZnkdyU0ktgPdnsqw94FIByxZQ222YCahTITfyNcEyVuuc2wGwboV8KdFqF63SlV7wO7vkNdq+I2rj769bgXabecw3bf4xrkiIpAwXSQQTSKonjosTnpi+zDfvx5MwZ5N4htmVAOL58Ip05HCtIxoM2Daeu1HoRKSSWNCmoFKog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1thovX-0000Xi-9K; Tue, 11 Feb 2025 12:59:43 +0100
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1thovT-000PPU-3A;
+	Tue, 11 Feb 2025 12:59:39 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1thovT-0005DW-2n;
+	Tue, 11 Feb 2025 12:59:39 +0100
+Message-ID: <945fb7e913a9c3dcb40697328b7e9842b75fea5c.camel@pengutronix.de>
+Subject: Re: [PATCH v4 09/18] reset: thead: Add TH1520 reset controller
+ driver
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Michal Wilczynski <m.wilczynski@samsung.com>, Matt Coster
+ <Matt.Coster@imgtec.com>, "mturquette@baylibre.com"
+ <mturquette@baylibre.com>,  "sboyd@kernel.org" <sboyd@kernel.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+ "drew@pdp7.com" <drew@pdp7.com>, "guoren@kernel.org" <guoren@kernel.org>,
+ "wefu@redhat.com" <wefu@redhat.com>, "jassisinghbrar@gmail.com"
+ <jassisinghbrar@gmail.com>,  "paul.walmsley@sifive.com"
+ <paul.walmsley@sifive.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
+ "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, Frank Binns
+ <Frank.Binns@imgtec.com>,  "maarten.lankhorst@linux.intel.com"
+ <maarten.lankhorst@linux.intel.com>, "mripard@kernel.org"
+ <mripard@kernel.org>,  "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ "airlied@gmail.com" <airlied@gmail.com>,  "simona@ffwll.ch"
+ <simona@ffwll.ch>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, 
+ "jszhang@kernel.org" <jszhang@kernel.org>, "m.szyprowski@samsung.com"
+ <m.szyprowski@samsung.com>
+Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
+	"devicetree@vger.kernel.org"
+	 <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org"
+	 <linux-riscv@lists.infradead.org>, "dri-devel@lists.freedesktop.org"
+	 <dri-devel@lists.freedesktop.org>, "linux-pm@vger.kernel.org"
+	 <linux-pm@vger.kernel.org>
+Date: Tue, 11 Feb 2025 12:59:39 +0100
+In-Reply-To: <7d8a3f8d-f369-47dd-8c5f-dcff8d692ea8@samsung.com>
+References: <20250128194816.2185326-1-m.wilczynski@samsung.com>
+	 <CGME20250128194836eucas1p151c4fc83a17173fd1b79bfc959976301@eucas1p1.samsung.com>
+	 <20250128194816.2185326-10-m.wilczynski@samsung.com>
+	 <816db99d-7088-4c1a-af03-b9a825ac09dc@imgtec.com>
+	 <e83ea320-23f0-41ed-934c-2f1687b55ec1@samsung.com>
+	 <48261cdfab6e0bc16e5327664b06728e1894422a.camel@pengutronix.de>
+	 <7d8a3f8d-f369-47dd-8c5f-dcff8d692ea8@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
- <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn> <20250115013444.anzoct6gvs56m225@jpoimboe>
- <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn> <20250210212653.oidcl4aqyrcu3yzi@jpoimboe>
-In-Reply-To: <20250210212653.oidcl4aqyrcu3yzi@jpoimboe>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 11 Feb 2025 19:59:57 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7MVDj0CbXfwveb7GDn+D=O4N6oUT6rpGrbGmYPLPpRPg@mail.gmail.com>
-X-Gm-Features: AWEUYZm-JyjLlJb0diDoeBFwWO6Ti4dJ5QC9IXpt6JgfAfQvWaJ4NXEm6A9WSfc
-Message-ID: <CAAhV-H7MVDj0CbXfwveb7GDn+D=O4N6oUT6rpGrbGmYPLPpRPg@mail.gmail.com>
-Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
-	loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi, Josh,
+On Mo, 2025-02-10 at 19:17 +0100, Michal Wilczynski wrote:
+> On 2/4/25 18:18, Philipp Zabel wrote:
+> > On Mo, 2025-02-03 at 19:15 +0100, Michal Wilczynski wrote:
+[...]
+> > > I think this is required because the MEM clock gate is somehow broken
+> > > and marked as 'reserved' in manual, so instead as a workaround, since=
+ we
+> > > can't reliably enable the 'mem' clock it's a good idea to reset the
+> > > whole CLKGEN of the GPU.
+> >=20
+> > If this is a workaround for broken gating of the "mem" clock, would it
+> > be possible (and reasonable) to make this a separate reset control that
+> > is handled by the clock driver? ...
+>=20
+> Thank you for the detailed feedback, Philipp.
+>=20
+> After further consideration, I believe keeping the current reset driver
+> implementation would be preferable to moving the CLKGEN reset handling
+> to the clock driver. While it's technically possible to implement this
+> in the clock driver, I have concerns about the added complexity:
+>=20
+> 1. We'd need to expose the CLKGEN reset separately in the reset driver
 
-On Tue, Feb 11, 2025 at 5:26=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
-> wrote:
->
-> On Mon, Feb 10, 2025 at 02:07:43PM +0800, Tiezhu Yang wrote:
-> > On 01/15/2025 09:34 AM, Josh Poimboeuf wrote:
-> > > On Sat, Jan 11, 2025 at 02:57:42PM +0800, Tiezhu Yang wrote:
-> > > > Hi Josh and Peter,
-> > > >
-> > > > On 12/17/2024 09:08 AM, Tiezhu Yang wrote:
-> > > > > This version is based on tip/tip.git objtool/core branch [1], add=
- some weak
-> > > > > and arch-specific functions to make the generic code more readabl=
-e, tested
-> > > > > with the latest upstream mainline Binutils, GCC and Clang.
-> > > >
-> > > > ...
-> > > >
-> > > > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/l=
-og/?h=3Dobjtool/core
-> > > > >
-> > > > > Tiezhu Yang (9):
-> > > > >   objtool: Handle various symbol types of rodata
-> > > > >   objtool: Handle different entry size of rodata
-> > > > >   objtool: Handle PC relative relocation type
-> > > > >   objtool: Handle unreachable entry of rodata
-> > > > >   objtool/LoongArch: Add support for switch table
-> > > > >   objtool/LoongArch: Add support for goto table
-> > > > >   LoongArch: Enable jump table for objtool
-> > > > >   LoongArch: Convert unreachable() to BUG()
-> > > > >   drm/amd/display: Mark dc_fixpt_from_fraction() noinline
-> > > >
-> > > > Are you OK with the first 8 patches?
-> > > > What's the merge plan for this series?
-> > >
-> > > Sorry, my inbox is still reeling from the holidays.  I will review th=
-is
-> > > soon.
-> >
-> > What are the status of the first 8 patches?
-> > What is the next step? Is there anything else to be done here?
-> > I would really appreciate any advice on how to get this merged.
->
-> Please post a new revision rebased on tip/master, with patch 4 dropped,
-> and I'll queue them up for -tip.  Thanks for your patience.
-You will queue the whole series, or the first 5 patches, or the first 3 pat=
-ches?
+I'd expect this to simplify the reset driver.
 
-Huacai
+> 2. The clock driver's dt-bindings would need modification to add an
+>    optional resets property
 
->
-> --
-> Josh
+If it describes the hardware correctly, that should be fine.
+
+> 3. We'd need custom clk_ops for all three clock gates (including a dummy
+>    'mem' gate)
+> 4. Each clock gate's .enable operation would need to handle CLKGEN reset
+>    deassertion
+
+I accept these arguments, as I have no good feeling for how much
+complexity this would actually add.
+
+In my mind it shouldn't be much: the GPU clocks could all share the
+same refcounted implementation. The first clock to get enabled would
+ungate both GPU_CORE and GPU_CFG_ACLK gates and deassert
+GPU_SW_CLKGEN_RST, all in one place. The remaining enable(s) would be
+no-ops. Would that work?
+
+Whether a separate "dummy" MEM clock for the DT bindings is added or
+not would not make a difference.
+
+> While the clock framework could theoretically handle this, there's no
+> clean way to express the requirement that the CLKGEN reset should only
+> be deasserted after all clocks in the group are enabled. We could
+> implement this explicitly, but it would make the code more complex and
+> harder to understand.
+
+Doing this in the clock driver would have the advantage of clk_enabled
+GPU clocks actually staying physically enabled, without the reset
+driver disabling them via GPU_SW_CLKGEN_RST from the outside.
+
+> The current solution in the reset driver is simpler and clearer - it
+> treats this as what it really is: a TH1520-specific reset sequence.
+
+Yes. What this also is: a workaround for a SoC specific defect in the
+clock tree. I think it belongs in the clock driver because of this.
+
+
+[...]
+> Regarding the delay between clock enable and reset deassert - for SoCs
+> like BPI-F3 with a single reset line, implementing this in the GPU
+> consumer driver makes perfect sense. However, for the T-HEAD SoC, moving
+> the delay there would actually complicate things since we need to manage
+> both the CLKGEN and GPU reset lines in a specific sequence. Having this
+> handled entirely within the reset driver keeps the implementation
+> cleaner.
+
+You could delay in both places, it's just a microsecond after all.
+Whether the workaround is implemented in the reset driver or in the
+clock driver,=C2=A0I wouldn't want the GPU driver to have to carry a specia=
+l
+case for TH1520.
+
+> Does this reasoning align with your thoughts? I'm happy to explore the
+> clock driver approach further if you still see significant advantages to
+> that solution.
+
+I won't object to carry this in the reset driver if the clock
+implementation turns out to be unreasonably complex, but I currently
+don't expect that to be the case. Please give it a shot.
+
+regards
+Philipp
