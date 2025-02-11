@@ -1,101 +1,175 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812E126A08C
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 23:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A70826A0CB;
+	Tue, 11 Feb 2025 23:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739317729; cv=none; b=qfbNTa2oO2wQtaFb5IsoowNtShlJB8m4PnS1MKm8ucupTfbCobQQ+goaIIgZk0wE7Pj+/A542+/U+32NM3LpDMivIrFhqZ2r81ar5Bh7zvr79bm4X44Wme5BozZJaKZN1UQGklw2JRDG6WXIhOF/Del9X/PwJsu1lmfNa8mtL0E=
+	t=1739317731; cv=none; b=qymHfcwY3kCs6/i4NBjvWVhU81DY4jOcOORQRy1EPxIiBQQic0LGnFsRqBHsYNGIvuz6xTRRpUJJsCT7KtZQK/C3wtJ9QUvayCBNRz2AoNE9r30je30fHyGnfvpwM5blm45d01RT6xSjvQZ4RquaJZr5oL+FhY7bq7z5q5goeq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739317729; c=relaxed/simple;
-	bh=cDnsalRb7YufpPDDPgfmjmAXw6jDSFsrdCQyPthOmCc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DdrC8j7nnbcnDWGA4kfM0lpoO1whl2gktlRMbhI1Pqh91AC8bB1gMtMOIDUVazdTQCCwLXp/FFIuzHSquSohmeL4Ujiv4lhVsfPm3G12/n32o1sAK2bDveOQWG7+9trR9tv5m9Vml9uAlRXIjmTNvacKpLbJEURQpCxVmJ7mcTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mOA426pG; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1739317731; c=relaxed/simple;
+	bh=Lq8NnCjIjCNUEajzrtRjsCYvKlCIlc4mjhIhL6vpkNE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Psf0y0iM+8vQ1pn/ll20zF2Ri2nurrOZy0+cQe3KhOVW5o68jOK8Sc/bKGXzZhoUcAPwQmYSBHKx2fFOQW6KTokkM3cbA6R7goDTbHi6JX8JRET9kbvW5QsZOmGaezeVVIICfcam1i1rLnlHw6BhlO/JRtMFhvK5ToF8HDAnB0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=GIsXmzaE; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mOA426pG"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fa44233a04so7911072a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:48:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739317728; x=1739922528; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UGu/cNgqZkYuEVNIGjHmdyKZOLkegFa4UYLEoSBig7Y=;
-        b=mOA426pGaYIz961rpdl1YmxZQ4bu2Wo5yTjgw7I1fH7Roz//tamqeWqfJx6sOppHGH
-         WWHNhfvcJfocTrShWBMZYBR7Bd8WkNGyAq56ERlODeHwYAnqIcFeh74d1+PLYzTxxDXJ
-         dJXjj2KBEcIQTLGsArHvG99qEXVr8ahyiMM0lVgo7GViiGSp2oaNErUDyUF9wDioOZuq
-         t9ifeWIJSN/BloNPPqbZI0MOkTl5ut6zauykimriXYrSGUmRfRSagruwmL4tCcEFarGg
-         oORILajK5IqiQg9/CjnqVYspan9zzI+fkyWNPLK7TvBAqJkLJGlz2zFC05aU/hYimNiH
-         U2rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739317728; x=1739922528;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UGu/cNgqZkYuEVNIGjHmdyKZOLkegFa4UYLEoSBig7Y=;
-        b=bgAcVeb1LQipxurZTshcVysPQhiLgVRy3T/76Ioj0UQVxdwx2Q5SbLmPLnoDiS2xiN
-         Jy2OKPEOJ3IRozGjam4ZrWhk+H6yVu5TwJq9OZWVM7Jg/jGBetmiqDU09bYqL7Y+RqMA
-         PDi4+No5PNpw+W0cGuJ/7uhykpi4su78+xgVZypD5fUYhKG/SwdBCELPxbVjvhCxlX1M
-         GdbnOZiSjw3EdOt7cNajDue1YlwC+hTo4YLqkSppp4MtmaPFokfYv18OH7a89Isbbbmf
-         ljNr0OYtciCrXBE2AW9KsSBer3xBNfdme2L/hegZ4MTifRb0xGbQEzxnCkDzwkvsV1HN
-         DzMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXIUZtrXCedP7BLCF+nFp0K3FDm3FjmENvUHl5fg1tS1Ywjn6O+uWD3YSRQQWQPNemmV5p7DyTo27OyPxU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvjL9SZm9qU01fsyXkBkRMzt4duUm0X+CD48dbNM2UuBgk9JIE
-	SSOe2RnP2ojMeReSXyxBKzTBbQsbYc2067CpRpYMFMZwJBK0LqHbu+RVR1oprLeRdsQsi4OOaxq
-	3Rw==
-X-Google-Smtp-Source: AGHT+IEc79RumyTWGFr0CkEmyy8mfvo7xYFKyN74swX+mC0k9PkA/d+lnmtjNfhMKlCCsGK17ol8aORl4zk=
-X-Received: from pjbnb7.prod.google.com ([2002:a17:90b:35c7:b0:2fa:24c5:36e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:51cd:b0:2ea:3f34:f194
- with SMTP id 98e67ed59e1d1-2fbf5bf4afamr1801039a91.10.1739317727869; Tue, 11
- Feb 2025 15:48:47 -0800 (PST)
-Date: Tue, 11 Feb 2025 15:48:46 -0800
-In-Reply-To: <20250211025442.3071607-5-binbin.wu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="GIsXmzaE"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BId1Yn029428;
+	Tue, 11 Feb 2025 18:48:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=kobpE+nfQOAOZCTakwt07iybo6q
+	TTrsQ7C6TG5FANGc=; b=GIsXmzaE0mWfk0ubXucM75/X9j/5hWMclvkXqZvVHG2
+	9sTP5jPVMwvsdholEl/mAMOBck+AuQaVM7GEVtJzBO2aO9PnmkjzqS6kejTxz6bs
+	FQWoiYbajojN5i5bBywmAQjnPko8bj9/WrusDbT+zOJvzCrBkuSqzR4FRuNwvEuO
+	QOlp3nMU6XrSy73t8UN55+4iUcxXfsAzzYmpaauTmXISrl5xCSbKmIUxralfelK1
+	55XoayLY4sdFqMa6dDBNGzETzxyAehRiL6mqRQEep0pv4cXMcoilNdCnJDagLRLU
+	09JHMRDYKO7AI4DWKbEb0cOL+FqvSeYyir0/NwtILtw==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 44p209yst8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 18:48:35 -0500 (EST)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 51BNmYYr017128
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 11 Feb 2025 18:48:34 -0500
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Tue, 11 Feb 2025 18:48:34 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Tue, 11 Feb 2025 18:48:34 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Tue, 11 Feb 2025 18:48:34 -0500
+Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 51BNmK8r009908;
+	Tue, 11 Feb 2025 18:48:23 -0500
+From: Jonathan Santos <Jonathan.Santos@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Sergiu Cuciurean <sergiu.cuciurean@analog.com>, <lars@metafoo.de>,
+        <Michael.Hennerich@analog.com>, <marcelo.schmitt@analog.com>,
+        <jic23@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <jonath4nns@gmail.com>,
+        <marcelo.schmitt1@gmail.com>,
+        Jonathan Santos <Jonathan.Santos@analog.com>
+Subject: [PATCH v3 10/17] iio: adc: ad7768-1: Move buffer allocation to a separate function
+Date: Tue, 11 Feb 2025 20:48:18 -0300
+Message-ID: <20250211234818.1008765-1-Jonathan.Santos@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250211025442.3071607-1-binbin.wu@linux.intel.com> <20250211025442.3071607-5-binbin.wu@linux.intel.com>
-Message-ID: <Z6vh3ih37Xrmv4TJ@google.com>
-Subject: Re: [PATCH v2 4/8] KVM: TDX: Handle KVM hypercall with TDG.VP.VMCALL
-From: Sean Christopherson <seanjc@google.com>
-To: Binbin Wu <binbin.wu@linux.intel.com>
-Cc: pbonzini@redhat.com, kvm@vger.kernel.org, rick.p.edgecombe@intel.com, 
-	kai.huang@intel.com, adrian.hunter@intel.com, reinette.chatre@intel.com, 
-	xiaoyao.li@intel.com, tony.lindgren@intel.com, isaku.yamahata@intel.com, 
-	yan.y.zhao@intel.com, chao.gao@intel.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: 7a8_z1Ee5dhMc-eXo1poqaXG5HSbrUv0
+X-Proofpoint-GUID: 7a8_z1Ee5dhMc-eXo1poqaXG5HSbrUv0
+X-Authority-Analysis: v=2.4 cv=VPInn8PX c=1 sm=1 tr=0 ts=67abe1d3 cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=T2h4t0Lz3GQA:10 a=gAnH3GRIAAAA:8 a=bQp4CLlzSgFOj8itWtUA:9 a=cZ_F8w-WQ4q-ELucWn4u:22 a=oVHKYsEdi7-vN-J5QA_j:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_10,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 malwarescore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 mlxlogscore=959 phishscore=0 adultscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502110158
 
-On Tue, Feb 11, 2025, Binbin Wu wrote:
-> ---
->  arch/x86/kvm/vmx/tdx.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> index 420ee492e919..daa49f2ee2b3 100644
-> --- a/arch/x86/kvm/vmx/tdx.c
-> +++ b/arch/x86/kvm/vmx/tdx.c
-> @@ -964,6 +964,23 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
->  	return tdx_exit_handlers_fastpath(vcpu);
->  }
->  
-> +static int complete_hypercall_exit(struct kvm_vcpu *vcpu)
-> +{
-> +	tdvmcall_set_return_code(vcpu, vcpu->run->hypercall.ret);
-> +	return 1;
-> +}
-> +
-> +static int tdx_emulate_vmcall(struct kvm_vcpu *vcpu)
-> +{
-> +	kvm_rax_write(vcpu, to_tdx(vcpu)->vp_enter_args.r10);
-> +	kvm_rbx_write(vcpu, to_tdx(vcpu)->vp_enter_args.r11);
-> +	kvm_rcx_write(vcpu, to_tdx(vcpu)->vp_enter_args.r12);
-> +	kvm_rdx_write(vcpu, to_tdx(vcpu)->vp_enter_args.r13);
-> +	kvm_rsi_write(vcpu, to_tdx(vcpu)->vp_enter_args.r14);
-> +
-> +	return __kvm_emulate_hypercall(vcpu, 0, complete_hypercall_exit);
+From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
 
-Thanks for persevering through all the ideas and churn, I like how this turned
-out!
+This change moves the buffer allocation in a separate function, making
+space for adding another type of iio buffer if needed.
+
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+---
+v3 Changes:
+* Added missing SoB.
+
+v2 Changes:
+* Interrupt and completion moved out from ad7768_triggered_buffer_alloc(). 
+---
+ drivers/iio/adc/ad7768-1.c | 44 ++++++++++++++++++++++----------------
+ 1 file changed, 26 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+index 5ee29f9813ce..378245bce199 100644
+--- a/drivers/iio/adc/ad7768-1.c
++++ b/drivers/iio/adc/ad7768-1.c
+@@ -618,6 +618,31 @@ static int ad7768_set_channel_label(struct iio_dev *indio_dev,
+ 	return 0;
+ }
+ 
++static int ad7768_triggered_buffer_alloc(struct iio_dev *indio_dev)
++{
++	struct ad7768_state *st = iio_priv(indio_dev);
++	int ret;
++
++	st->trig = devm_iio_trigger_alloc(indio_dev->dev.parent, "%s-dev%d",
++					  indio_dev->name,
++					  iio_device_id(indio_dev));
++	if (!st->trig)
++		return -ENOMEM;
++
++	st->trig->ops = &ad7768_trigger_ops;
++	iio_trigger_set_drvdata(st->trig, indio_dev);
++	ret = devm_iio_trigger_register(indio_dev->dev.parent, st->trig);
++	if (ret)
++		return ret;
++
++	indio_dev->trig = iio_trigger_get(st->trig);
++
++	return devm_iio_triggered_buffer_setup(indio_dev->dev.parent, indio_dev,
++					       &iio_pollfunc_store_time,
++					       &ad7768_trigger_handler,
++					       &ad7768_buffer_ops);
++}
++
+ static int ad7768_probe(struct spi_device *spi)
+ {
+ 	struct ad7768_state *st;
+@@ -688,20 +713,6 @@ static int ad7768_probe(struct spi_device *spi)
+ 		return ret;
+ 	}
+ 
+-	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-dev%d",
+-					  indio_dev->name,
+-					  iio_device_id(indio_dev));
+-	if (!st->trig)
+-		return -ENOMEM;
+-
+-	st->trig->ops = &ad7768_trigger_ops;
+-	iio_trigger_set_drvdata(st->trig, indio_dev);
+-	ret = devm_iio_trigger_register(&spi->dev, st->trig);
+-	if (ret)
+-		return ret;
+-
+-	indio_dev->trig = iio_trigger_get(st->trig);
+-
+ 	init_completion(&st->completion);
+ 
+ 	ret = ad7768_set_channel_label(indio_dev, ARRAY_SIZE(ad7768_channels));
+@@ -715,10 +726,7 @@ static int ad7768_probe(struct spi_device *spi)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
+-					      &iio_pollfunc_store_time,
+-					      &ad7768_trigger_handler,
+-					      &ad7768_buffer_ops);
++	ret = ad7768_triggered_buffer_alloc(indio_dev);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.34.1
+
