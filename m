@@ -1,204 +1,168 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B1C214A92
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039F92505D9
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:34:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739284480; cv=none; b=ezVnn1hkKs8mN4P0Kbvzu1gtMWK9pX++TRv8xZKFmqfqbShO5kziDLCe12SH2hLdlfnZ2iJMOpC8Rd/h+6dNH9MN4d+HQim8Jf82tG76rvPXR1+pIF/3ZWg/vzX+ym1X9Vr2XnnINbN2sEp/qocwcCukN/ncg6rFZ7dsGWqIBQU=
+	t=1739284498; cv=none; b=SkLO2Dwliw84wUniz3Kdy9AmJWAGPa7/dY31ijC2ckzTEmsF5+CtdDzIrgddvogLjqMrkp4/V5w0wLwbBeMQFzZmGHkApabRVpzDDhWH4fxExSMzHQze6AfWyHNyxehsfvTPQ9a9CWcm8PK1TksFt14bzMQfaXXoNoHUlmCv8g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739284480; c=relaxed/simple;
-	bh=fWyMQLn4yLP4Imj5JVok+6j6i+bMIv2+UnKhp6NUsFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oJaEpwYBOxv1oWnb4TGjO8m3JS/HEFiT5GNN5vGm+5HiQCyRtZncdBBbBrGogG5mnoxgEOBuKUTloGs6trEbjB2DJuJYt+mWRSY105BYbQJbin3nTFwFNuFKIZoDMasUbjkTigG/kYmf1arbfR2qjZFF5QKdrt8vh/5ah+YNHqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OhIq4x4m; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739284498; c=relaxed/simple;
+	bh=BpbyeeCOI146IKCmCu8zod5nA08hBtcuDaJlkhep7EU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=stpzmnHlY/ZD664I26ImkzHfmdfeKIUljUeaW3Wfyy+AP1QxpYwt2x9tmzOtxnRvCkqVRpYb2VeCx074Uum/gPP2Yp6sPE4ie2s3FyTQB6qwrqlZgXK/amTSJ0l39rj/OYl7QUBgdUQx8gWBcVNqQmNLe8DwHLfgmVVoOS7WURk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=L79Cszs9; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OhIq4x4m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739284477;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4Z4v0Gu1VZ5S/3jICytTcnROn9VRGURI+wKWgp6ANjQ=;
-	b=OhIq4x4m/R6FGKAQwgMrGNIn3upOs+VzuGV4mOySsxpYM63OmvxdlDWSqjSmh825PnYDU3
-	blZGmhNTsk/B4XvChDpnYbjQBttRg79OcWyBzbDo7k1rzccBVnmnJmgh5q6IEYHJgTU7wb
-	PUFJM9EBLj6nYXY8DX/6qJ8DYKk2+14=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-651-qYkoHTQ8OMilXTwvVLY07w-1; Tue,
- 11 Feb 2025 09:34:32 -0500
-X-MC-Unique: qYkoHTQ8OMilXTwvVLY07w-1
-X-Mimecast-MFC-AGG-ID: qYkoHTQ8OMilXTwvVLY07w
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A5DB81800879;
-	Tue, 11 Feb 2025 14:34:28 +0000 (UTC)
-Received: from localhost (unknown [10.22.80.65])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6433C18004A7;
-	Tue, 11 Feb 2025 14:34:27 +0000 (UTC)
-Date: Tue, 11 Feb 2025 11:34:26 -0300
-From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rt-devel@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Mark Brown <broonie@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: BUG: debug_exception_enter() disables preemption and may call
- sleeping functions on aarch64 with RT
-Message-ID: <Z6tf8iDhNriSGjeC@uudg.org>
-References: <Z6YW_Kx4S2tmj2BP@uudg.org>
- <Z6n16cK85JMyowDq@J2N7QTR9R3>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="L79Cszs9"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BEL5kU010163
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:34:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zzeSpEzhPhKIc5ciktFW0BzNDzlKE+8N49H7bDEi994=; b=L79Cszs9aBk0ZQfK
+	feucqrjZ0KTdz4LF+VQaUO7LQmuHauo9Zfch4jeglaNB8tSmbcuWOr6mFLscP7e6
+	UVHu/tENKjDhFzZ76HBw+FB8Swx6g5vfeC/6GCEH5u9lCTGcvJR61B3iIvS7eeQ+
+	zQ8mQOGiDzauYEnDKGHLMW+tlIb8KRgCJiMdRntcnW04jRWJMROTSpTxI9YNpDkC
+	r9N5l3CrBBFtWnjJana7VnJosroLKKVuTskvOrXzQhdSc+hsIM1CBubGIYlHVlg0
+	iAWfiIXJnKJLkXifaJMN+wi7gci7gtui7ahLsLIM7ZJO/XK9YmzGLvctEcTUxz6F
+	hsbQsg==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qcs5crk6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:34:55 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-467bb3eea80so1602371cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:34:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739284495; x=1739889295;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zzeSpEzhPhKIc5ciktFW0BzNDzlKE+8N49H7bDEi994=;
+        b=OPxOD30rhhhDjFj6jY5RpQHGu5URtgQZZHfXbIm8/LlLR7oHJgJ/nyEokW71R9Wog+
+         whQoPj7Po0mSr0OqA+ObGJ6iru+1WMObL722a+L/WnaBfF1X1sDyCWaCPutGG09P8VK8
+         5hECOvZJIKGoaIgUcuj9GSn9f+KFmBWwbUB2brKWvzLzN/nMlCrwbVjsn8zpuA5VYoz0
+         +6zi81sX3rv7AU28O/cgiZ/97CAMhUTbN3ECRYW/aDQlxwrQkkBlLZmxmoGBNwcoIDyM
+         xYhHZg0SR8+6M18JTPYQCXgTsW9u/w52QLj1dLhW5J+J2m3ynKJmybWjj8yzaCC9Z1Kh
+         1olw==
+X-Forwarded-Encrypted: i=1; AJvYcCWAWijIw92QEQmwFblTALvhEuHdC1rWZ8fHheyKI8sUKrRexQo0npAPN7CKcBOF2vBDexiXOLYE4yJ3b6E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcaBlJkNIXoJlX7K8Ea1Thd/qHEPFvGbQUUa0pIN7A/F/ogJgW
+	OLMybW3H3JIScIJnTbBt5lZOrTRkVVSwv0Q2k2F2uC40a95GGX564gPk5NHJG/hNoA/0UdDbBeE
+	qR5M3ShlzzIibtmoHcJrSs8xUu/JrJ79YZmIyjqxoKKN2SxRvckyumVkuP9Rof7A=
+X-Gm-Gg: ASbGncuH957y4iKJ1ZZra2LJURbRMerE/tTze+clDmd3JHzBl15/exKUjcQFPQpI1w8
+	X6G7OTpGb/+zLAUys37vJFLhqGXOccTum3K5z8IBa82OX+mbg6ZZKPu3tTe7XVawxNRp7V4wRhp
+	MZOztGFGzDHYjNofWX4vLAYTERa0KxaJ1nu6eLdc05doFiX1+IVsMgM/4z6mNPtZ3KBXXkGzvxo
+	bgkJ/MyCu65s9qP2cQmAXzBAIpx34ecHQQfnW5ltStT6zeVpIBgmYQhbPgA2wvr6WBbaEh3HbYG
+	agiEytAIF01VRYW9WaU0Uqv951VPmwva6S3HirrAxqhKZxerT4CKlGsNIHo=
+X-Received: by 2002:a05:622a:11d0:b0:467:5b1f:4060 with SMTP id d75a77b69052e-471a3da4856mr14126181cf.7.1739284494790;
+        Tue, 11 Feb 2025 06:34:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFQZ8D/6WgOcGT5XAfBFb3oB+8tfbLU3rY2SggZAfxtxRNTdse/H5E4+THqxC/HIDc/rhN41w==
+X-Received: by 2002:a05:622a:11d0:b0:467:5b1f:4060 with SMTP id d75a77b69052e-471a3da4856mr14126041cf.7.1739284494356;
+        Tue, 11 Feb 2025 06:34:54 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7cae13326sm324860466b.115.2025.02.11.06.34.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 06:34:53 -0800 (PST)
+Message-ID: <b74f0591-242d-45eb-8c5b-bfc7edb0441a@oss.qualcomm.com>
+Date: Tue, 11 Feb 2025 15:34:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6n16cK85JMyowDq@J2N7QTR9R3>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] arm64: dts: qcom: qcs8300-ride: enable BT on
+ qcs8300-ride
+To: Cheng Jiang <quic_chejiang@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_jiaymao@quicinc.com,
+        quic_shuaz@quicinc.com, quic_zijuhu@quicinc.com,
+        quic_mohamull@quicinc.com
+References: <20250211104421.1172892-1-quic_chejiang@quicinc.com>
+ <20250211104421.1172892-2-quic_chejiang@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250211104421.1172892-2-quic_chejiang@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: IMr5RLrJXeS_VVSYP8kTxS27PVjM-jLx
+X-Proofpoint-GUID: IMr5RLrJXeS_VVSYP8kTxS27PVjM-jLx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_06,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ mlxlogscore=999 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ adultscore=0 clxscore=1015 mlxscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502110096
 
-On Mon, Feb 10, 2025 at 12:49:45PM +0000, Mark Rutland wrote:
-> On Fri, Feb 07, 2025 at 11:22:57AM -0300, Luis Claudio R. Goncalves wrote:
-> > Hello!
+On 11.02.2025 11:44 AM, Cheng Jiang wrote:
+> Enable BT on qcs8300-ride by adding a node for the BT module. Since the
+> platform uses the QCA6698 Bluetooth chip. While the QCA6698 shares th
+> same IP core as the WCN6855, it has different RF components and RAM sizes,
+> requiring new firmware files. Use the firmware-name property to specify
+> the NVM and rampatch firmware to load.
 > 
-> Hi,
+> Signed-off-by: Cheng Jiang <quic_chejiang@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 24 +++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
-> > While running ssdd[1] from rt-tests on an aarch64 kernel with PREEMPT_RT and
-> > debug features enabled, this bug was triggered on every single run:
-> > 
-> > [1] https://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git/tree/src/ssdd/ssdd.c
-> > 
-> > # ssdd
-> > 
-> > [  273.115597] BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
-> > [  273.115607] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 6077, name: ssdd
-> > [  273.115611] preempt_count: 1, expected: 0
-> > [  273.115614] RCU nest depth: 0, expected: 0
-> > [  273.115617] 1 lock held by ssdd/6077:
-> > [  273.115620]  #0: ffff07ffd77893e0 (&sighand->siglock){+.+.}-{3:3}, at: force_sig_info_to_task+0x58/0x200
-> > [  273.115642] Preemption disabled at:
-> > [  273.115644] [<ffffad24518bd1f4>] debug_exception_enter+0x1c/0x80
-> > [  273.115653] CPU: 47 UID: 0 PID: 6077 Comm: ssdd Not tainted 6.13.0-rt3 #1 PREEMPT_RT
-> > [  273.115659] Hardware name: GIGABYTE R152-P31-00/MP32-AR1-00, BIOS F31n (SCP: 2.10.20220810) 09/30/2022
-> > [  273.115662] Call trace:
-> > [  273.115664]  show_stack+0x34/0x98 (C)
-> > [  273.115670]  dump_stack_lvl+0xa8/0xe8
-> > [  273.115675]  dump_stack+0x1c/0x38
-> > [  273.115680]  __might_resched+0x254/0x330
-> > [  273.115686]  rt_spin_lock+0xcc/0x220
-> > [  273.115692]  force_sig_info_to_task+0x58/0x200
-> > [  273.115697]  force_sig_fault+0xd0/0x120
-> > [  273.115702]  arm64_force_sig_fault+0x48/0x80
-> > [  273.115707]  send_user_sigtrap+0x88/0xe8
-> > [  273.115712]  single_step_handler+0x100/0x160
-> > [  273.115717]  do_debug_exception+0x94/0x160
-> > [  273.115722]  el0_dbg+0x54/0x150
-> > [  273.115727]  el0t_64_sync_handler+0x134/0x138
-> > [  273.115732]  el0t_64_sync+0x1ac/0x1b0
-> > 
-> > The ptrace usage in ssdd eventually exercises the code path that starts on
-> > el0t_64_sync_handler() and may end up calling do_debug_exception(), which
-> > calls debug_exception_enter() that disables preemption.
-> > 
-> > Looking at the backtrace, later in the call chain force_sig_info_to_task()
-> > tries to take a spinlock, which on PREEMPT_RT becomes a rtmutex and could
-> > sleep in case of contention. That triggers the "BUG: sleeping function
-> > called from invalid context" warning.
-> > 
-> > It is also possible to reproduce the problem in an aarch64 kernel with
-> > PREEMPT_RT enabled, no extra debug features, by running ssdd in a loop.
-> > With that we can see not only the backtrace reported above but also other
-> > instances where the process is scheduled out while preemption is disabled:
-> > 
-> > # while :; do ssdd; done
-> > 
-> > [  754.673678] BUG: scheduling while atomic: ssdd/7340/0x00000002
-> > [  754.673682] Modules linked in: qrtr rfkill sunrpc vfat fat acpi_ipmi ipmi_ssif arm_spe_pmu igb ipmi_devintf ipmi_msghandler arm_dmc620_pmu arm_cmn cppc_cpufreq arm_dsu_pmu loop dm_multipath nfnetlink xfs nvme ghash_ce sha2_ce sha256_arm64 nvme_core sha1_ce nvme_auth sbsa_gwdt ast i2c_algo_bit i2c_designware_platform xgene_hwmon i2c_designware_core dm_mirror dm_region_hash dm_log dm_mod fuse
-> > [  754.673703] Preemption disabled at:
-> > [  754.673703] [<ffffa87a17ca470c>] do_debug_exception+0x54/0x100
-> > [  754.673710] CPU: 102 UID: 0 PID: 7340 Comm: ssdd Kdump: loaded Not tainted 6.14.0-rc1 #1
-> > [  754.673712] Hardware name: GIGABYTE R152-P31-00/MP32-AR1-00, BIOS F31n (SCP: 2.10.20220810) 09/30/2022
-> > [  754.673713] Call trace:
-> > [  754.673714]  show_stack+0x34/0x98 (C)
-> > [  754.673718]  dump_stack_lvl+0x80/0xa8
-> > [  754.673721]  dump_stack+0x18/0x2c
-> > [  754.673722]  __schedule_bug+0x90/0xc0
-> > [  754.673726]  schedule_debug.isra.0+0x128/0x158
-> > [  754.673728]  __schedule+0x68/0x690
-> > [  754.673731]  schedule_rtlock+0x24/0x50
-> > [  754.673733]  rtlock_slowlock_locked+0x1c0/0x350
-> > [  754.673735]  rt_spin_lock+0xcc/0x130
-> > [  754.673737]  obj_cgroup_charge+0x54/0x138
-> > [  754.673740]  __memcg_slab_post_alloc_hook+0xcc/0x300
-> > [  754.673743]  kmem_cache_alloc_noprof+0x304/0x338
-> > [  754.673745]  __send_signal_locked+0x90/0x428
-> > [  754.673748]  send_signal_locked+0xe4/0x140
-> > [  754.673750]  force_sig_info_to_task+0xd0/0x160
-> > [  754.673753]  force_sig_fault+0x6c/0xa8
-> > [  754.673755]  arm64_force_sig_fault+0x48/0x80
-> > [  754.673757]  send_user_sigtrap+0x54/0xd0
-> > [  754.673759]  single_step_handler+0xc4/0xe0
-> > [  754.673761]  do_debug_exception+0x7c/0x100
-> > [  754.673762]  el0_dbg+0x40/0x158
-> > [  754.673766]  el0t_64_sync_handler+0x134/0x138
-> > [  754.673768]  el0t_64_sync+0x1ac/0x1b0
-> > 
-> > In this case one of the local_lock_* calls in (the functions called by)
-> > obj_cgroup_charge() seems to hit contention and, as it is dealing with
-> > rtmutexes, be effectively scheduled out to sleep.
-> > 
-> > The scary comment on top of debug_exception_enter() provides a reason for
-> > preemption being disabled at that point, but it seems to open a can of worms
-> > for PREEMPT_RT usage:
-> > 
-> >     /*
-> >      * In debug exception context, we explicitly disable preemption despite
-> >      * having interrupts disabled.
-> >      * This serves two purposes: it makes it much less likely that we would
-> >      * accidentally schedule in exception context and it will force a warning
-> >      * if we somehow manage to schedule by accident.
-> >      */
-> >
-> > This is the data I gathered so far, using both v6.13.0-rt3 and 6.14.0-rc1
-> > for testing. But due to my ignorance wrt the debug exception treatment in
-> > aarch64 I can't devise a solution for the observed behavior.
-> > 
-> > Any suggestions or comments?
-> 
-> I don't have an immediate suggestion; I'll need to go think about this
-> for a bit. Unfortunatealy, there are several nested cans of worms here.
-> :/
-> 
-> In theory, we can go split out the EL0 "debug exceptions" into separate
-> handlers, and wouldn't generally need to disable preemption for things
-> like BRK or single-step.
+> diff --git a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
+> index a6991e8e2df6..93458773b72d 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
+> @@ -17,6 +17,7 @@ / {
+>  
+>  	aliases {
+>  		serial0 = &uart7;
+> +		serial1 = &uart2;
+>  	};
+>  
+>  	chosen {
+> @@ -451,6 +452,13 @@ &serdes0 {
+>  };
+>  
+>  &tlmm {
+> +	bt_en_state: bt-en-state {
+> +		pins = "gpio55";
+> +		function = "normal";
+> +		output-low;
+> +		bias-pull-down;
+> +	};
+> +
+>  	ethernet0_default: ethernet0-default-state {
+>  		ethernet0_mdc: ethernet0-mdc-pins {
+>  			pins = "gpio5";
+> @@ -544,6 +552,22 @@ wlan_en_state: wlan-en-state {
+>  	};
+>  };
+>  
+> +&uart2 {
+> +	status = "okay";
+> +	bluetooth: bluetooth {
 
-If this is an acceptable workaround, until we have the real solution,
-I can work on that :)
+Please add a newline between the last property and subnodes
 
-Luis
+> +		compatible = "qcom,wcn6855-bt";
+> +		firmware-name = "QCA6698/hpnv21", "QCA6698/hpbtfw21.tlv";
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&bt_en_state>;
 
-> However, it's not immediately clear to me how we could handle
-> watchpoints or breakpoints, since for those preemption/interruption
-> could change the HW state under our feet, and we rely on single-step to
-> skip past the watchpoint/breakpoint after it is handled.
-> 
-> That, and last I looked reworking this we'd need to do a larger rework
-> to split out those "debug exceptions" because of that way that currently
-> bounces through the fault handling ligic in arch/arm64/mm/.
-> 
-> Mark.
-> 
----end quoted text---
+You should use qcom,wcn6855-pmu (see e.g. sc8280xp-crd.dts)
+
+> +		enable-gpios = <&tlmm 55 GPIO_ACTIVE_HIGH>; /* BT_EN */
+> +
+> +		vddio-supply       = <&vreg_conn_pa>;         /* bt-vdd-ctrl1-supply */
+> +		vddbtcxmx-supply   = <&vreg_conn_1p8>;        /* bt-vdd-ctrl2-supply */
+
+Drop these comments
 
