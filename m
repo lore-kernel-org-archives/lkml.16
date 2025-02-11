@@ -1,200 +1,275 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61E9D250C0F;
-	Tue, 11 Feb 2025 14:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-8fab.mail.infomaniak.ch (smtp-8fab.mail.infomaniak.ch [83.166.143.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F8C253347
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739282605; cv=none; b=UkOtO5xnRDIwZuj5nQ3OS1o77SzyNj0zRIZzl3i0v/5KFfsr3zPgSnMhoGnM/eh4R0BgsuSjZCHtjw52zeCs5jFfJO5OReH0ta3A7NBZQ5Iqe8bd4lNsTmHAsF/1UpgltjIezEOmsaizWQHjv8noqrTUnGaQN4Z28M8jcQvOoWI=
+	t=1739282610; cv=none; b=d9E+RiNY+udOYtm/m+41POShVUFBAlbjW0uWdk2EJxyB8zOr1Dt5POaHgYfoyZyQmUUHuXbJ15SpmLzgz4X54Gd6jZyq45RR0BHHdcJJnAcLQYvKpD2NT15CP9Qp578ZWwInBfzS4pFRIqGfs9nqTEaIpgzdWaX2UI9n183aVgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739282605; c=relaxed/simple;
-	bh=VBp6SRsPHyX31Y9rJF7ZNdaO7nnLMhnjuXNzJcp3Acc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qhy6wU13/zz8y0Cez5o9FvfNV5XVsNeN73tIVsI56PvZh33uJk4lxPSBnRvlN060mPcYWX7WvEClxTFp1fHJxt+l9YOE+RkinI4pu3VxBum9immXBVlk/AXeFVIjONNJXh+aohlYNjUHcWftSmDHTKDWLOVy0wdcpBK/soViXNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D37F113D5;
-	Tue, 11 Feb 2025 06:03:43 -0800 (PST)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE72E3F6A8;
-	Tue, 11 Feb 2025 06:03:10 -0800 (PST)
-Date: Tue, 11 Feb 2025 14:03:08 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, virtualization@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
-	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
-	bcm-kernel-feedback-list@broadcom.com,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Kees Cook <kees@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Rong Xu <xur@google.com>,
-	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Jinghao Jia <jinghao7@illinois.edu>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-Message-ID: <Z6tYnOEBkOlT_ehp@J2N7QTR9R3>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
- <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
- <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	s=arc-20240116; t=1739282610; c=relaxed/simple;
+	bh=HYRvqKAoGKmiER+ZQHRN5JJ+XylNhpE6RiGjytFynUE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mONt87wB87dC6+VPs6+Q1ihsZs0N9BKTBZJbFrEgzCllJJOPHN/ZK42ooKhQ8VwgtSui6fCyLgCmn368D3LfKf03HzrRYDIFE535ej92npkfXHsyVn06LX3YVSFhJE69ASuQu+cagpNle9sZfYg6BpLZVmYXRJGDftMsefFnTTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=83.166.143.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YsjpH5KFFz1C9p;
+	Tue, 11 Feb 2025 15:03:19 +0100 (CET)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4YsjpG4hsFzT0m;
+	Tue, 11 Feb 2025 15:03:18 +0100 (CET)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Date: Tue, 11 Feb 2025 15:02:53 +0100
+Subject: [PATCH v6 4/4] arm64: dts: rockchip: minimal support for Pre-ICT
+ tester adapter for RK3588 Jaguar
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250211-pre-ict-jaguar-v6-4-4484b0f88cfc@cherry.de>
+References: <20250211-pre-ict-jaguar-v6-0-4484b0f88cfc@cherry.de>
+In-Reply-To: <20250211-pre-ict-jaguar-v6-0-4484b0f88cfc@cherry.de>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Jagan Teki <jagan@edgeble.ai>, Niklas Cassel <cassel@kernel.org>, 
+ Michael Riesch <michael.riesch@wolfvision.net>
+Cc: Jonas Karlman <jonas@kwiboo.se>, Dragan Simic <dsimic@manjaro.org>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Quentin Schulz <quentin.schulz@cherry.de>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Infomaniak-Routing: alpha
 
-On Tue, Feb 11, 2025 at 02:33:51PM +0100, Valentin Schneider wrote:
-> On 10/02/25 23:08, Jann Horn wrote:
-> > On Mon, Feb 10, 2025 at 7:36 PM Valentin Schneider <vschneid@redhat.com> wrote:
-> >> What if isolated CPUs unconditionally did a TLBi as late as possible in
-> >> the stack right before returning to userspace? This would mean that upon
-> >> re-entering the kernel, an isolated CPU's TLB wouldn't contain any kernel
-> >> range translation - with the exception of whatever lies between the
-> >> last-minute flush and the actual userspace entry, which should be feasible
-> >> to vet? Then AFAICT there wouldn't be any work/flush to defer, the IPI
-> >> could be entirely silenced if it targets an isolated CPU.
-> >
-> > Two issues with that:
-> 
-> Firstly, thank you for entertaining the idea :-)
-> 
-> > 1. I think the "Common not Private" feature Will Deacon referred to is
-> > incompatible with this idea:
-> > <https://developer.arm.com/documentation/101811/0104/Address-spaces/Common-not-Private>
-> > says "When the CnP bit is set, the software promises to use the ASIDs
-> > and VMIDs in the same way on all processors, which allows the TLB
-> > entries that are created by one processor to be used by another"
-> 
-> Sorry for being obtuse - I can understand inconsistent TLB states (old vs
-> new translations being present in separate TLBs) due to not sending the
-> flush IPI causing an issue with that, but not "flushing early". Even if TLB
-> entries can be shared/accessed between CPUs, a CPU should be allowed not to
-> have a shared entry in its TLB - what am I missing?
-> 
-> > 2. It's wrong to assume that TLB entries are only populated for
-> > addresses you access - thanks to speculative execution, you have to
-> > assume that the CPU might be populating random TLB entries all over
-> > the place.
-> 
-> Gotta love speculation. Now it is supposed to be limited to genuinely
-> accessible data & code, right? Say theoretically we have a full TLBi as
-> literally the last thing before doing the return-to-userspace, speculation
-> should be limited to executing maybe bits of the return-from-userspace
-> code?
+From: Quentin Schulz <quentin.schulz@cherry.de>
 
-I think it's easier to ignore speculation entirely, and just assume that
-the MMU can arbitrarily fill TLB entries from any page table entries
-which are valid/accessible in the active page tables. Hardware
-prefetchers can do that regardless of the specific path of speculative
-execution.
+The Pre-ICT tester adapter connects to RK3588 Jaguar SBC through its
+proprietary Mezzanine connector.
 
-Thus TLB fills are not limited to VAs which would be used on that
-return-to-userspace path.
+It exposes a PCIe Gen2 1x M.2 connector and two proprietary camera
+connectors. Support for the latter will come once the rest of the camera
+stack is supported.
 
-> Furthermore, I would hope that once a CPU is executing in userspace, it's
-> not going to populate the TLB with kernel address translations - AIUI the
-> whole vulnerability mitigation debacle was about preventing this sort of
-> thing.
+Additionally, the adapter loops some GPIOs together as well as route
+some GPIOs to power rails.
 
-The CPU can definitely do that; the vulnerability mitigations are all
-about what userspace can observe rather than what the CPU can do in the
-background. Additionally, there are features like SPE and TRBE that use
-kernel addresses while the CPU is executing userspace instructions.
+This adapter is used for manufacturing RK3588 Jaguar to be able to test
+the Mezzanine connector is properly soldered.
 
-The latest ARM Architecture Reference Manual (ARM DDI 0487 L.a) is fairly clear
-about that in section D8.16 "Translation Lookaside Buff", where it says
-(among other things):
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Dragan Simic <dsimic@manjaro.org> # Makefile
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+ arch/arm64/boot/dts/rockchip/Makefile              |   5 +
+ .../dts/rockchip/rk3588-jaguar-pre-ict-tester.dtso | 171 +++++++++++++++++++++
+ 2 files changed, 176 insertions(+)
 
-  When address translation is enabled, if a translation table entry
-  meets all of the following requirements, then that translation table
-  entry is permitted to be cached in a TLB or intermediate TLB caching
-  structure at any time:
-  • The translation table entry itself does not generate a Translation
-    fault, an Address size fault, or an Access flag fault.
-  • The translation table entry is not from a translation regime
-    configured by an Exception level that is lower than the current
-    Exception level.
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index 2cec67c00114b16ca55c12fa8f757a015c4602ad..ddc1898618da3e9c797b54a5ba45760c3e8fbc06 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -145,6 +145,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-firefly-itx-3588j.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-friendlyelec-cm3588-nas.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-h96-max-v58.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-jaguar.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-jaguar-pre-ict-tester.dtbo
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-nanopc-t6.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-nanopc-t6-lts.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-ok3588-c.dtb
+@@ -201,6 +202,10 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-edgeble-neu6b-wifi.dtb
+ rk3588-edgeble-neu6b-wifi-dtbs := rk3588-edgeble-neu6b-io.dtb \
+ 	rk3588-edgeble-neu6a-wifi.dtbo
+ 
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-jaguar-pre-ict-tester.dtb
++rk3588-jaguar-pre-ict-tester-dtbs := rk3588-jaguar.dtb \
++	rk3588-jaguar-pre-ict-tester.dtbo
++
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b-pcie-ep.dtb
+ rk3588-rock-5b-pcie-ep-dtbs := rk3588-rock-5b.dtb \
+ 	rk3588-rock-5b-pcie-ep.dtbo
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-jaguar-pre-ict-tester.dtso b/arch/arm64/boot/dts/rockchip/rk3588-jaguar-pre-ict-tester.dtso
+new file mode 100644
+index 0000000000000000000000000000000000000000..9d44dfe2f30d793accb994a230c58038f0c3daad
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3588-jaguar-pre-ict-tester.dtso
+@@ -0,0 +1,171 @@
++// SPDX-License-Identifier: (GPL-2.0-or-later OR MIT)
++/*
++ * Copyright (c) 2024 Cherry Embedded Solutions GmbH
++ *
++ * Device Tree Overlay for the Pre-ICT tester adapter for the Mezzanine
++ * connector on RK3588 Jaguar.
++ *
++ * This adapter has a PCIe Gen2 x1 M.2 M-Key connector and two proprietary
++ * camera connectors (each their own I2C bus, clock, reset and PWM lines as well
++ * as 2-lane CSI).
++ *
++ * This adapter routes some GPIOs to power rails and loops together some other
++ * GPIOs.
++ *
++ * This adapter is used during manufacturing for validating proper soldering of
++ * the mezzanine connector.
++ */
++
++/dts-v1/;
++/plugin/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/rockchip.h>
++
++&{/} {
++	pre_ict_tester_vcc_1v2: regulator-pre-ict-tester-vcc-1v2 {
++		compatible = "regulator-fixed";
++		regulator-name = "pre_ict_tester_vcc_1v2";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <1200000>;
++		regulator-max-microvolt = <1200000>;
++		vin-supply = <&vcc_3v3_s3>;
++	};
++
++	pre_ict_tester_vcc_2v8: regulator-pre-ict-tester-vcc-2v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "pre_ict_tester_vcc_2v8";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		vin-supply = <&vcc_3v3_s3>;
++	};
++};
++
++&combphy0_ps {
++	status = "okay";
++};
++
++&gpio3 {
++	pinctrl-0 = <&pre_ict_pwr2gpio>;
++	pinctrl-names = "default";
++};
++
++&pcie2x1l2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie2x1l2_perstn_m0>;
++	reset-gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>; /* PCIE20X1_2_PERSTN_M0 */
++	vpcie3v3-supply = <&vcc_3v3_s3>;
++	status = "okay";
++};
++
++&pinctrl {
++	pcie2x1l2 {
++		pcie2x1l2_perstn_m0: pcie2x1l2-perstn-m0 {
++			rockchip,pins = <3 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	pre-ict-tester {
++		pre_ict_pwr2gpio: pre-ict-pwr2gpio-pins {
++			rockchip,pins =
++			/*
++			 * GPIO3_A3 requires two power rails to be properly
++			 * routed to the mezzanine connector to report a proper
++			 * value: VCC_1V8_S0_1 and VCC_IN_2. It may report an
++			 * incorrect value if VCC_1V8_S0_1 isn't properly routed,
++			 * but GPIO3_C6 would catch this HW soldering issue.
++			 * If VCC_IN_2 is properly routed, GPIO3_A3 should be
++			 * LOW. The signal shall not read HIGH in the event
++			 * GPIO3_A3 isn't properly routed due to soldering
++			 * issue. Therefore, let's enforce a pull-up (which is
++			 * the SoC default for this pin).
++			 */
++				<3 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>,
++			/*
++			 * GPIO3_A4 is directly routed to VCC_1V8_S0_2 power
++			 * rail. It should be HIGH if all is properly soldered.
++			 * To guarantee that, a pull-down is enforced (which is
++			 * the SoC default for this pin) so that LOW is read if
++			 * the loop doesn't exist on HW (soldering issue on
++			 * either signals).
++			 */
++				<3 RK_PA4 RK_FUNC_GPIO &pcfg_pull_down>,
++			/*
++			 * GPIO3_B2 requires two power rails to be properly
++			 * routed to the mezzanine connector to report a proper
++			 * value: VCC_1V8_S0_1 and VCC_IN_1. It may report an
++			 * incorrect value if VCC_1V8_S0_1 isn't properly routed,
++			 * but GPIO3_C6 would catch this HW soldering issue.
++			 * If VCC_IN_1 is properly routed, GPIO3_B2 should be
++			 * LOW. This is an issue if GPIO3_B2 isn't properly
++			 * routed due to soldering issue, because GPIO3_B2
++			 * default bias is pull-down therefore being LOW. So
++			 * the worst case scenario and the pass scenario expect
++			 * the same value. Make GPIO3_B2 a pull-up so that a
++			 * soldering issue on GPIO3_B2 reports HIGH but proper
++			 * soldering reports LOW.
++			 */
++				<3 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>,
++			/*
++			 * GPIO3_C6 is directly routed to VCC_1V8_S0_1 power
++			 * rail. It should be HIGH if all is properly soldered.
++			 * This is an issue if GPIO3_C6 or VCC_1V8_S0_1 isn't
++			 * properly routed due to soldering issue, because
++			 * GPIO3_C6 default bias is pull-up therefore being HIGH
++			 * in all cases:
++			 *  - GPIO3_C6 is floating (so HIGH) if GPIO3_C6 is not
++			 *    routed properly,
++			 *  - GPIO3_C6 is floating (so HIGH) if VCC_1V8_S0_1 is
++			 *    not routed properly,
++			 *  - GPIO3_C6 is HIGH if everything is proper,
++			 * Make GPIO3_C6 a pull-down so that a soldering issue
++			 * on GPIO3_C6 or VCC_1V8_S0_1 reports LOW but proper
++			 * soldering reports HIGH.
++			 */
++				<3 RK_PC6 RK_FUNC_GPIO &pcfg_pull_down>,
++			/*
++			 * GPIO3_D2 is routed to VCC_5V0_1 power rail through a
++			 * voltage divider on the adapter.
++			 * It should be HIGH if all is properly soldered.
++			 * To guarantee that, a pull-down is enforced (which is
++			 * the SoC default for this pin) so that LOW is read if
++			 * the loop doesn't exist on HW (soldering issue on
++			 * either signals).
++			 */
++				<3 RK_PD2 RK_FUNC_GPIO &pcfg_pull_down>,
++			/*
++			 * GPIO3_D3 is routed to VCC_5V0_2 power rail through a
++			 * voltage divider on the adapter.
++			 * It should be HIGH if all is properly soldered.
++			 * To guarantee that, a pull-down is enforced (which is
++			 * the SoC default for this pin) so that LOW is read if
++			 * the loop doesn't exist on HW (soldering issue on
++			 * either signals).
++			 */
++				<3 RK_PD3 RK_FUNC_GPIO &pcfg_pull_down>,
++			/*
++			 * GPIO3_D4 is routed to VCC_3V3_S3_1 power rail through
++			 * a voltage divider on the adapter.
++			 * It should be HIGH if all is properly soldered.
++			 * To guarantee that, a pull-down is enforced (which is
++			 * the SoC default for this pin) so that LOW is read if
++			 * the loop doesn't exist on HW (soldering issue on
++			 * either signals).
++			 */
++				<3 RK_PD4 RK_FUNC_GPIO &pcfg_pull_down>,
++			/*
++			 * GPIO3_D5 is routed to VCC_3V3_S3_2 power rail through
++			 * a voltage divider on the adapter.
++			 * It should be HIGH if all is properly soldered.
++			 * To guarantee that, a pull-down is enforced (which is
++			 * the SoC default for this pin) so that LOW is read if
++			 * the loop doesn't exist on HW (soldering issue on
++			 * either signals).
++			 */
++				<3 RK_PD5 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++	};
++};
 
-Here "permitted to be cached in a TLB" also implies that the HW is
-allowed to fetch the translation tabl entry (which is what ARM call page
-table entries).
+-- 
+2.48.1
 
-The PDF can be found at:
-
-  https://developer.arm.com/documentation/ddi0487/la/?lang=en
-
-Mark.
