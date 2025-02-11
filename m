@@ -1,223 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D09F1E9B39;
-	Tue, 11 Feb 2025 07:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4251E9B39
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739260224; cv=none; b=riBDfpzkhepwHwAxJ2svaYYnrM/iR6CSKmMQQ967x3B6SZ8Uh4cg0FALfn4tQnRqvDJg0sSyjMxb1TuqCdBKvaxSqUUUHe3SrdPdk46WApF0aqiHyca2jLynpnRkTk0wIHzt1uEKVoOq0M4TLLScYJVc7W5brbGPYRGNbDc2rLs=
+	t=1739260330; cv=none; b=HFx/wfICwZ9xt8OE4DckR2AszFLOWqMSH0FN8wPUi20ftjo58pAjFdR4KeqLO5+kGIVrWT9Z0JgErakEcftHThw4POGbuH0u4DBcFCq9DnqEA4tF9GjB7UNP6UZN0xrCbiIgt7QNmMWQMw4WqJk1lnxu4hsUWWBD/O1RBlDINfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739260224; c=relaxed/simple;
-	bh=EF1TKhjntnzy3W5RYekoNWTXsY1QRykYaRxSzp7OJ94=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=qEVhUn/WwnW86HbMHitYTH23OXkuXvHovsxCSk3k2I2LbZAZSuwys2v1AssYFCtLSHjEvdQUnGZEPV0JjSbpwH0iI+3B8TUltQP4k0xu/63BcP3M1pDe6gC5B1fOKYg2PC2OYHvpmnv4oPJOgq22rQJehWVglWd78c12NtJs05Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gB87xESB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739260330; c=relaxed/simple;
+	bh=IfXNB6uWV0hdA8hswijf+VMKa/9ob7rFSJJkcz0StNI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GYshTrxEPd7gjj2am9nlI+lKuQqKryzoBTLNhUWU8q4BaWNOBar/GA0dvOlp+5wHerkstD5qooyMuxwVdbErK2FTAz+SJFN+3nX6DuCAWjIxKYS+fWWgvb7S3yir/YQsjfZ6JqN6ZyC6DbS4T7f8Igit3HxNtguoglloO0H8Qdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0pO6/GHp; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gB87xESB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41F0CC4CEDD;
-	Tue, 11 Feb 2025 07:50:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739260224;
-	bh=EF1TKhjntnzy3W5RYekoNWTXsY1QRykYaRxSzp7OJ94=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=gB87xESBUQtg3OTfLiVUbAOJY3GWxWeQYzco4QfapW38Yq6WPIM9S+znxkRFd+pdp
-	 DXZ8C2ggw04AB16w8oJ9R1whXfgcd1/CY5yT/fbGKGJWu87iYjtOZ2DjJiQMIPq9yt
-	 ayVbtwHnvufaofEV31KO7t4JQ+FdxQgLVhZUdN5WVouDw4Ws3mkwx/uOqF5k11y0ZV
-	 QKkh56aG8mowoWklhYCLD41PdT9Qpbo4W7oNqbS/HByhmFpUXEYb48tdE+bBD4GOff
-	 eEgTVoc4L6HaRqeFJsl1lmTdHhNOmCDSgMFLBcDM8VsBaVKWiB0mn3/6U0VQ2fgMO4
-	 yonNaC5271QQg==
-Message-ID: <7fa40597-ebc8-495e-885f-ff2c6b80d5e7@kernel.org>
-Date: Tue, 11 Feb 2025 08:50:17 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0pO6/GHp"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e44af3dacbso46593116d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:52:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739260327; x=1739865127; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GGlY+bkOqi5PuH8Y5QlLfcyvBOm3ntepb1OfPBLEDLQ=;
+        b=0pO6/GHp4ElP3WYWgVfsLPJsSotG98kw3nCtnjPALNImA5UiBj4wOAIQs/ZduzlV7z
+         EEMcVUX7jmSmuQWEZmdWuD16fATEBViXj4laBikvuEpdZ6v5AfnOkw+RBPyqlxYJUIS1
+         PgRfwQyjQEt/RgFq71vvaj71+bMLQTnB6b/CjFQNzxWLyJfeDt9TJZUhoYnk6DURw5DX
+         3gELJwJnydJXijYSMBKhMgTDc3QRq8zTQjui8o08W2cRt+pRAZhvawRX+Zd/MF3Sr4ZC
+         Gz9hIHQLPfLTuLoPvJ1tDZuuwAcHE8m1ySTXwivu8u3vHy5nGY31dsOojXxPnr9F54/g
+         gyxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739260327; x=1739865127;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GGlY+bkOqi5PuH8Y5QlLfcyvBOm3ntepb1OfPBLEDLQ=;
+        b=T+y94Ar/CgfstIp2zwPbL0tCK3AldlYgC+OZpt2cMZz9bjHdp15TlozpPwxjstlQD6
+         W04xZbpsi9Q2zWvq4vWmTENgZ9xA4GY2AWQpQc56KUSP7HfxDsYKyU/tJdML+5og9Igh
+         e9uNtpCkTNjjdW6yZE4B+2oU5wkRsWVGmcGT1FlO3lIgzpz/vvI5+h7ExwBrQ21M3lWg
+         TFAAdckKSQH6VqQr7LU460AebzsTI0KYCf1Uy/1q3IfSi6M7qOHhmbYYoaVeEzynK+F9
+         +HglQ6I16MxyiFJWSpixvZNgupDOYgF4KKXTmvU+IwlOGyVRonv7vYBu3zKBh1H8OTTC
+         izEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWmV5ouZSqMqGM+kA2rZUryk4a6LMXuic44iDopPL0m0IyeMGBi7wNvtws0Nr3OkHVVw568VRAw4TijDKM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2ekG4qnH//a4HNPySA+6faKZtS3QEiHY9x3NWKm19F0bAb74O
+	bEmY6dlbl5WC3ZiruwmIbylQOVNPbA9Z7wR0b0R+iAlxVcyQDKs+ayZVTvxxLQBKK36/NieoHf1
+	QPy7T6WsVumsmn8pFtkZF6afEY/MPR22/Pcsp
+X-Gm-Gg: ASbGncsdBWrP4lqWtYNtrGeNoCA/R6cXyOH6bVXJdIuGv+upzUaNm6UNkNeQc0CApXe
+	hMBCW1TyyqNk87nIrpkXqYMlaK9pM8Glr0yqKd58+7yfFWz5ICYyiArNxZD0u2D6Jkf0rkx4NHA
+	==
+X-Google-Smtp-Source: AGHT+IE+yl3wzsSo4TpLqGm9Gq/Dy5uTEQZDUK/aRLj2hBWjOAdHfNwEQlC5XSZs9d0yBjJfceuKCl3XGV5VgLhlK/8=
+X-Received: by 2002:ad4:5c6e:0:b0:6e2:481b:7cd9 with SMTP id
+ 6a1803df08f44-6e467861abdmr47390546d6.25.1739260326988; Mon, 10 Feb 2025
+ 23:52:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/16] dt-bindings: nvmem: microchip-otpc: Add required
- clocks
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Ryan Wanner <ryan.wanner@microchip.com>,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-References: <20250210164506.495747-1-ada@thorsis.com>
- <20250210164506.495747-9-ada@thorsis.com>
- <8e9562c8-5c01-4b5c-b2b0-4dad3d16e7a8@kernel.org>
- <20250211-primer-epic-d07bc3752569@thorsis.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250211-primer-epic-d07bc3752569@thorsis.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250207-bitmap-kunit-convert-v1-0-c520675343b6@gmail.com>
+ <Z6eaDuXnT_rjVSNS@thinkpad> <CAMuHMdUsq_39kgBa8oanXeTzv44HuhS1e5MK7K2jxkVXQ7uWdw@mail.gmail.com>
+ <bd71c705-5f57-4067-b200-fd80b98ddbc9@nvidia.com> <Z6pfomw-3LuWoQQo@thinkpad>
+In-Reply-To: <Z6pfomw-3LuWoQQo@thinkpad>
+From: David Gow <davidgow@google.com>
+Date: Tue, 11 Feb 2025 15:51:54 +0800
+X-Gm-Features: AWEUYZn44yeG9ZBzJSy3v2t1KbtFDEG3Fr63XU8HKrdi1hGCI11-cYXsuiSVW6Q
+Message-ID: <CABVgOS=KZrM2dWyp1HzVS0zh7vquLxmTY2T2Ti53DQADrW+sJg@mail.gmail.com>
+Subject: Re: distro support for CONFIG_KUNIT: [PATCH 0/3] bitmap: convert
+ self-test to KUnit
+To: Yury Norov <yury.norov@gmail.com>
+Cc: John Hubbard <jhubbard@nvidia.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Tamir Duberstein <tamird@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Shuah Khan <shuah@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-kselftest@vger.kernel.org, Brad Figg <bfigg@nvidia.com>, 
+	David Hildenbrand <david@redhat.com>, Michal Hocko <mhocko@suse.com>, Jason Gunthorpe <jgg@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 11/02/2025 08:05, Alexander Dahl wrote:
-> Hello Krzysztof,
-> 
-> Am Mon, Feb 10, 2025 at 05:59:52PM +0100 schrieb Krzysztof Kozlowski:
->> On 10/02/2025 17:44, Alexander Dahl wrote:
->>> The OTPC requires both the peripheral clock through PMC and the main RC
->>> oscillator.  Seemed to work without explicitly enabling those clocks on
->>> sama7g5 before, but did not on sam9x60.
->>>
->>> Older datasheets were not clear and explicit about this, but recent are,
->>> e.g. SAMA7G5 series datasheet (DS60001765B),
->>> section 30.4.1 Power Management:
->>>
->>>> The OTPC is clocked through the Power Management Controller (PMC).
->>>> The user must power on the main RC oscillator and enable the
->>>> peripheral clock of the OTPC prior to reading or writing the OTP
->>>> memory.
->>>
->>> Link: https://lore.kernel.org/linux-clk/ec34efc2-2051-4b8a-b5d8-6e2fd5e08c28@microchip.com/T/#u
->>> Signed-off-by: Alexander Dahl <ada@thorsis.com>
->>> ---
->>>
->>> Notes:
->>>     v2:
->>>     - new patch, not present in v1
->>>
->>>  .../nvmem/microchip,sama7g5-otpc.yaml         | 28 +++++++++++++++++++
->>>  1 file changed, 28 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml b/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
->>> index 9a7aaf64eef32..1fa40610888f3 100644
->>> --- a/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
->>> +++ b/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
->>> @@ -29,6 +29,16 @@ properties:
->>>    reg:
->>>      maxItems: 1
->>>  
->>> +  clocks:
->>> +    items:
->>> +      - description: main rc oscillator
->>> +      - description: otpc peripheral clock
->>> +
->>> +  clock-names:
->>> +    items:
->>> +      - const: main_rc_osc
->>
->> osc
-> 
-> On at91 SoCs main oscillator and main RC oscillator are two different
-> things, and those are different clocks in Linux as well.  This clock
-> is named "main_rc_osc" in the clock driver.  In
+On Tue, 11 Feb 2025 at 04:20, Yury Norov <yury.norov@gmail.com> wrote:
+>
+> On Mon, Feb 10, 2025 at 11:35:48AM -0800, John Hubbard wrote:
+> > On 2/9/25 11:54 PM, Geert Uytterhoeven wrote:
+> > > On Sat, 8 Feb 2025 at 18:53, Yury Norov <yury.norov@gmail.com> wrote:
+> > > > On Fri, Feb 07, 2025 at 03:14:01PM -0500, Tamir Duberstein wrote:
+> > > > > On 7/27/24 12:35 AM, Shuah Khan wrote:
+> > ...
+> > > > > The crux of the argument seems to be that the config help text is taken
+> > > > > to describe the author's intent with the fragment "at boot". I think
+> > >
+> > > IMO, "at boot" is a misnomer, as most tests can be either builtin
+> > > or modular.
+> >
+> > Right.
+> >
+> > >
+> > > > KUNIT is disabled in defconfig, at least on x86_64. It is also disabled
+> > > > on my Ubuntu 24.04 machine. If I take your patches, I'll be unable to
+> >
+> > OK so I just bought a shiny new test machine, and installed one of the
+> > big name distros on it, hoping they've moved ahead and bought into the kunit
+> > story...
+> >
+> > $ grep KUNIT /boot/config-6.8.0-52-generic
+> > # CONFIG_KUNIT is not set
+> >
+> > ...gagghh! No such luck. One more data point, in support of Yuri's complaint. :)
+> >
+> > >
+> > > I think distros should start setting CONFIG_KUNIT=m.
+> >
+> > Yes they should! kunit really does have important advantages for many use
+> > cases, including bitmaps here, and "CONFIG_KUNIT is not set" is the main
+> > obstacle.
+>
+> Hi John, Geert, Tamir,
+>
+> Can you please explain in details which advantages KUNIT brings to
+> the test_bitmap.c, find_bit_benchmark.c and other low-level tests?
+>
 
-It does not matter, you could have 5 oscillators. This device takes one.
-What is this clock from the point of view of device?
+First, I'd agree with Tamir and others who've pointed out that KUnit
+is not really intended for benchmarks, so I definitely don't want to
+oversell it for find_bit_benchmark.c and others (though it has been
+used for benchmarks in a few cases, it's not perfect).
 
-> drivers/clk/at91/sam9x60.c this clock is added like this:
-> 
->     hw = at91_clk_register_main_rc_osc(regmap, "main_rc_osc", 12000000, 50000000);
-> 
-> The datasheet makes it explicit, it's exactly the main rc oscillator
-> clock required for the OTPC to work, no other clock.
+The main advantages of KUnit are that:
+- it's already used for a bunch of lib/ tests (so quite familiar to a
+number of contributors/users),
+- tests can be run at boot without needing any userspace at all (if built-in),
+- KUnit tests are already being automatically run as regression tests,
+and it's relatively easy to run "all tests" associated with a config
+- there's a whole bunch of tooling which automates configuring,
+building, and running a kernel with these tests, across several
+architectures
+  (e.g., passing --arch arm64 or --arch m68k to automatically build
+and run the tests in QEMU for those architectures)
+- there's tooling to nicely print, format, and summarise the results
+of any number of suites.
+- and, as a result of the above, it's very quick and easy to run a
+test (or whole bunch of tests) in an isolated environment.
 
-You speak about source clock but this has to be the clock here, in the
-device context.
+KUnit also has very few runtime dependencies from a developer
+point-of-view (python, optionally QEMU).
 
-> 
-> So why name this "osc" only then?  This is confusing at best.
-> 
->>
->>> +      - const: otpc_clk
->>
->> otpc or bus or whatever logically this is
-> 
-> Okay the "_clk" suffix is redundant.  Since the peripheral clock for
-> the OTPC is required here, I would go with "otpc" only then.
-> 
->>
->>> +
->>>  required:
->>>    - compatible
->>>    - reg
->>> @@ -37,6 +47,8 @@ unevaluatedProperties: false
->>>  
->>>  examples:
->>>    - |
->>> +    #include <dt-bindings/clock/at91.h>
->>> +    #include <dt-bindings/clock/microchip,sama7g5-pmc.h>
->>>      #include <dt-bindings/nvmem/microchip,sama7g5-otpc.h>
->>>  
->>>      otpc: efuse@e8c00000 {
->>> @@ -44,10 +56,26 @@ examples:
->>>          reg = <0xe8c00000 0xec>;
->>>          #address-cells = <1>;
->>>          #size-cells = <1>;
->>> +        clocks = <&pmc PMC_TYPE_CORE SAMA7G5_PMC_MAIN_RC>, <&pmc PMC_TYPE_PERIPHERAL 67>;
->>> +        clock-names = "main_rc_osc", "otpc_clk";
->>>  
->>>          temperature_calib: calib@1 {
->>>              reg = <OTP_PKT(1) 76>;
->>>          };
->>>      };
->>>  
->>> +  - |
->>> +    #include <dt-bindings/clock/at91.h>
->>> +    #include <dt-bindings/clock/microchip,sam9x60-pmc.h>
->>> +    #include <dt-bindings/nvmem/microchip,sama7g5-otpc.h>
->>> +
->>> +    efuse@eff00000 {
->>> +        compatible = "microchip,sam9x60-otpc", "syscon";
->>> +        reg = <0xeff00000 0xec>;
->>
->> No need for new example with difference in what exactly? Even compatible
->> was not added here...
-> 
-> Different compatible, different clocks, no sub nodes, different
-> peripheral clock id …  From a human doc readers I'd like another
+It is, however, less focused on the "debug a running system" case,
+hence the requirement for CONFIG_KUNIT to be enabled, and the tooling
+largely being focused on the "run all of the tests in UML or a VM"
+case.
 
-Clocks are the same. Their actual value does not matter.
+> I'm not strongly against moving under KUNIT's hat, but I do:
+>  - respect commitment of my contributors, so I don't want to wipe git
+>    history for no serious reason;
+
+It should be possible to preserve the git history during a port,
+though it admittedly will have a bunch of porting changes which make
+it more difficult to navigate with git blame. But it should at least
+be better than a total wipe.
+
+>  - respect time of my testers, so no extra dependencies;
+
+I think KUnit is a bit of a mixed bag here. In many cases, KUnit tests
+can be run pretty quickly, either because the tester's environment
+already has CONFIG_KUNIT enabled, or possibly under some kind of
+virtualization with the tooling (either QEMU, or on x86,
+User-Mode-Linux). But, as mentioned above, I'd not consider it ideal
+for performance testing.
+
+I am very sympathetic to not wanting to add a dependency here. I think
+KUnit is a pretty minimal dependency as far as they go (it selects
+CONFIG_GLOB and nothing else, needs no userspace, and even the tooling
+only really requires python on top of the basic toolchain), but it's
+definitely a further dependency for the
+'test-the-currently-running-kernel' use-case.
+
+>  - respect time of reviewers.
+
+This is an area where I think KUnit could be an advantage, as it'd be
+easy for reviewers to simply run
+./tools/testing/kunit/kunit.py run bitmap
+as a spot check on the code. And if they want to test on other
+architectures, the --arch option can be used to do so quickly.
+(And, of course, it can still be loaded as a module (or even built-in)
+on a physical system or other VM, albeit with the requirement for
+CONFIG_KUNIT.)
 
 
 
-Best regards,
-Krzysztof
+As for distros enabling CONFIG_KUNIT by default, as mentioned, my
+understanding is that the Fedora/Red Hat distros are doing it, as are
+some branches of Android, but I doubt anyone else is. This makes
+sense: enabling CONFIG_KUNIT isn't free (though the overhead should be
+very low if no test is running, just a few static branches and an
+extra check in the module loader), and there's always been some
+reticence (which I've shared) in enabling test features on production
+kernels. So it's definitely something I was recommending against a few
+years ago.
+
+However, we've definitely made sure that CONFIG_KUNIT is less
+invasive, with things like hooks being kept behind static branches,
+and made the decision to have _running_ a test taint the kernel, so it
+should be relatively safe to just have the framework enabled (and even
+safe to have it loaded), and pretty obvious when a test is run. We've
+also got a bunch of extra options to disable running tests
+automatically when they're built-in/loaded, both at runtime and
+compile time.
+
+So I'd definitely be happy with other distros choosing to enable
+CONFIG_KUNIT by default now: I think it's much safer than it was, and
+you won't be going against the grain. But equally, I'd understand
+having it disabled in production: the cost, while very small, is
+nonzero.
+
+Cheers,
+-- David
