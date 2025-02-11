@@ -1,131 +1,178 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742A41EF0AA
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0CB204859;
+	Tue, 11 Feb 2025 12:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739277806; cv=none; b=ScYdMCkVxX1wHP+MlyOAUeYO9CLmAZsFJgeJXOfPUUv0NMGFRj0jbCpe32lTyFP7yK22DxNa1C4xB7yraccZpD+Dn6+BvyNRpkLx5tGBmFv2+RCAmLc7GHDZQHDZ0oD7/ARJukGy7X8sfLYrCJCkmJjDFqRp0fCfJnkl38F1C4k=
+	t=1739277908; cv=none; b=n9Twn3EDvfCuQUTOhbUujFJY0m4GXn1sngiGP1VkVp8J5+EhcoAq+Xbaa2qRh0n7MDnvMErsQw2suqv2D1ABnjIwjr3xtMUAbJv68gzZgz0+CMqzTFW6HPFwFyWUkUrsnr7xylFiEfQqqdaMwlT8HN1h/uOsTZF3Sj8VN7AIzWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739277806; c=relaxed/simple;
-	bh=ZaDynmUZpB3fgf+ccdlspZi8D8W0GokI4Rg3ucKPjTw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jy6wrfcA3yWxlK+mFskZHHKGM64yJbNEyCmC+jt1Bu/EYI+HPb1nMaPoXik13VZsHMOpr3oM9drnSfCsqOK8ariQmEIjmhustpEhLRTL+UzjhhUsqyqiyrcfjx+zDq4VljxTO5qAWKNtLfkuo+FpWtwDGvt8A3kLRN2ZoHoh7es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q7mq1vEk; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739277908; c=relaxed/simple;
+	bh=V9k10qmJrqoARBr2IWZK7XdaH8IuPpMg51At5ra5rDI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oQK3favxk6yBLrSROR9nQbIhCO8AeT7SZ/N1c0kAG/1UYt2Fi6i91RVhx1O+GRHilyJu2tZ50YZ1kslD9pCNcDHSL15ce0BCCJSm2U343iVupJ4vAv4O+zYrnj/N4YB3fTTa3rHZT1jrSyzdj3+UDsieptAXSkoaYhIyJ1GQvLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZhJUw8/A; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q7mq1vEk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739277803;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Fl8OSnLCA195UnsHqHADtSdhh5YuMF6KeCEzc0u9BFU=;
-	b=Q7mq1vEktqkfvEQecyoD8nS0KH4UBeuR86G2L8jiGC78yi73eKH1LDYpf2kUupl8B3XrmN
-	eoc9hQIKYlZAEYCE3TdPs/xEBDzvUJVT2rAZyzQtrwCI5Sp5AgKNmCbWRZlEvvDAUdBfWA
-	hbLl/ikcmiwDx6mgCmV0wflpyZ66Mo4=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-256-LdjSg0oZOCOCXSnfmSnpnw-1; Tue, 11 Feb 2025 07:43:21 -0500
-X-MC-Unique: LdjSg0oZOCOCXSnfmSnpnw-1
-X-Mimecast-MFC-AGG-ID: LdjSg0oZOCOCXSnfmSnpnw
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4394040fea1so12193935e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:43:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739277800; x=1739882600;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fl8OSnLCA195UnsHqHADtSdhh5YuMF6KeCEzc0u9BFU=;
-        b=ASBS+0gQYfXzHnefF6ZTA2Zj1ndTpONKFHIfXroLRk44khbXWJcbQd+X/MwlOCKexZ
-         9otg/YNKIaYGGqzb2Hh5dBc76lxorAT3u4ytiLZSOA9jSky6ZSlGOy5Dz9CeIkmbdfUN
-         /ZKSF4GZNoeO2YB9Ggcwsc6RJDj/VwTb9SBPiunXeXp0mJlwhX5QcQS7Oiu+N/H4yVRI
-         PG2dfIYzzLS4ywbL2P6jaD84Hsg+tyA5+Gz0y2Ua9f3IOBaSmxeAsjhojE07feovIbGA
-         rsiJk7NUtT1nUTczNVTBl1ZhppSWQE+y1FeDsFsDo6PYhiksDPa7w0xY+AwzqllUhNJn
-         N/oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWA6DNP8NscvPKJrdXKxq786WSZdE1lIlkIrF+6qp0D0QKrfme1BoVYWj/XyIwgsI5lXje0znKeL0Mq4AE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFmpiXcxANkW1EE8VydeaEQilm5v07DmvEEDELF5ruSKbUuQCk
-	f+9D7rGX5kSD4/LFn9hV9T8OlDFe4ZErjWmP1Iv+GSq08LJrAzF/L6jAIMJQaPo5d9/7YmgT3/I
-	1ExiukaxW9pqvWLw09a68aI4Qlfy59PHxCyxi8LOaxf1ihEtYQcS3b+RbNB9BOg==
-X-Gm-Gg: ASbGncutLA0gEbPMGskv7Oy26vRIyalDlxyV2V28uUzhmRcvt4bTL56aBtljiEM0Rj7
-	DasBqvUNxUOLU8KKLvxXtvzydP+4AoYdq59Q/Qi7X/H2DDGNFJK/maRliQdteDQQv8yTw9lkH6i
-	bSK/ASn+2cK42jNLX6WOkWnrhW/YY8npWTY73KLmtSF6fcPcpSPs4PZ7ZcYpVR8bDDlJeaqW9IF
-	Df/sc+bdJOe8SujMpQkcfqh6h+pQm9SwynZWClXkiuLz3zu5at2NsvjYfcnzormLBtf713IHGA4
-	pYyHg4N5dogQDAo36SVGpmrj+A4m9dHEyra73NFpm9Ohg3bhKVOS2Q==
-X-Received: by 2002:a05:600c:2053:b0:434:e65e:457b with SMTP id 5b1f17b1804b1-4394ceaf842mr28612865e9.3.1739277800598;
-        Tue, 11 Feb 2025 04:43:20 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEk//W2BZo5OkvrLHLvMbFfjLDfIdPmBrP4srGuM2VWkzHyhBkqsKX8bhs4FGGa0+OXOscEUA==
-X-Received: by 2002:a05:600c:2053:b0:434:e65e:457b with SMTP id 5b1f17b1804b1-4394ceaf842mr28612595e9.3.1739277800283;
-        Tue, 11 Feb 2025 04:43:20 -0800 (PST)
-Received: from rh (p200300f6af0e4d00dda53016e366575f.dip0.t-ipconnect.de. [2003:f6:af0e:4d00:dda5:3016:e366:575f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc5a8a9e4sm13420373f8f.10.2025.02.11.04.43.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 04:43:19 -0800 (PST)
-Date: Tue, 11 Feb 2025 13:43:18 +0100 (CET)
-From: Sebastian Ott <sebott@redhat.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>, 
-    Suzuki K Poulose <suzuki.poulose@arm.com>, 
-    Zenghui Yu <yuzenghui@huawei.com>, 
-    Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-    Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, 
-    Cornelia Huck <cohuck@redhat.com>, Eric Auger <eric.auger@redhat.com>, 
-    linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] KVM: arm64: Allow userspace to change MIDR_EL1
-In-Reply-To: <Z6pBd0XgEvrMoLcS@linux.dev>
-Message-ID: <99f6301e-69dd-47e6-2cc6-10f44f6760cd@redhat.com>
-References: <20250210154953.27002-1-sebott@redhat.com> <20250210154953.27002-2-sebott@redhat.com> <Z6pBd0XgEvrMoLcS@linux.dev>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZhJUw8/A"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BCRSEX030318;
+	Tue, 11 Feb 2025 12:44:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=yXCCH/PU40ZjxFTTlFdpHNTE8a98ecuNdKQIWGUHmH0=; b=Zh
+	JUw8/ATmAGY4Fk1MEEJNJbkUGt0MluOf6ox0zxJXSjzVG/SoKWOrKKSl2tYGo9kS
+	6dyJl+x+M8OlWDwqABRomwdx4KWNfAF8fka/j2uBk7CV8346JJxUVkkRcxYmSh4f
+	mFtu1xa0S4E37cDX69PHX/SWFHR7TQknocDomPPhC1PeYhCl9H5ir5DtiyhCj9R7
+	a28N7LqWG8kuaf0xRAFsw7MH0VaCQFq4TDXatp3inJ62wj9WPYNTdU1gHle8lN7w
+	Z5LsYvlGmsNX73SSOxG0CBEDjd8BaHfkzXwGRtqEY8+s9nRmfYHVpvgIPRSjhr4F
+	DwHbLTzWqb8xG4yO5BRA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qxg9hett-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 12:44:57 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51BCiuJH030672
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 12:44:56 GMT
+Received: from codeaurora.org (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Feb
+ 2025 04:44:53 -0800
+From: Manaf Meethalavalappu Pallikunhi <quic_manafm@quicinc.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano
+	<daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba
+	<lukasz.luba@arm.com>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Manaf
+ Meethalavalappu Pallikunhi" <quic_manafm@quicinc.com>
+Subject: [PATCH] thermal: core: Fix race between zone registration and userspace sysfs access
+Date: Tue, 11 Feb 2025 18:14:21 +0530
+Message-ID: <20250211124421.27169-1-quic_manafm@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: xWoqyAvGEUuoP-kEgL07Eft6Do_HqTKD
+X-Proofpoint-GUID: xWoqyAvGEUuoP-kEgL07Eft6Do_HqTKD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_05,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxscore=0 priorityscore=1501 malwarescore=0 spamscore=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 phishscore=0 clxscore=1015
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502110081
 
-Hi Oliver,
+Currently, the thermal zone sysfs is created before setting the
+governor for that thermal zone during registration. If a thermal
+zone is being registered while a userspace module tries to access
+the same thermal zone policy sysfs node, it can lead to a potential
+NULL pointer dereference issue in the policy sysfs path.
 
-On Mon, 10 Feb 2025, Oliver Upton wrote:
-> On Mon, Feb 10, 2025 at 04:49:50PM +0100, Sebastian Ott wrote:
->> Enable VMMs to write MIDR_EL1 by treating it as a VM ID register.
->> Since MIDR_EL1 is not handled as a proper arm64_ftr_reg apply only
->> a sanity check against the writable mask to ensure the reserved
->> bits are 0.
->
-> How exactly does the VMM's MIDR_EL1 find its way to the guest? VPIDR_EL2
-> is still set to the hardware value.
+To avoid this race condition, set the thermal zone governor first
+before enabling the thermal zone sysfs during registration.
+This change fixes below issue,
 
-Ouch. Completely missed that part, sry.
+[ 20.964589]   Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+[ 21.049645]   pstate: 63400005 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+[ 21.049647]   pc : policy_show+0x1c/0x3c
+[ 21.049652]   lr : dev_attr_show+0x38/0x7c
+[ 21.049655]   sp : ffffffc09a98bbf0
+[ 21.049657]   x29: ffffffc09a98bbf0 x28: ffffff885b940000 x27: 0000000000000000
+[ 21.049660]   x26: 0000000000000000 x25: 000000007ffff001 x24: 0000000000000001
+[ 21.049664]   x23: ffffffdca6334c78 x22: ffffff88a2b2fe00 x21: ffffff881cee8000
+[ 21.049667]   x20: ffffff8868318018 x19: ffffffdca7640d78 x18: ffffffdca74d94c0
+[ 21.049670]   x17: 00000000ae84bcd4 x16: 00000000ae84bcd4 x15: 000000002df29963
+[ 21.049673]   x14: 00000000cbef29c7 x13: 000000004e61db0a x12: ffffff885b940be0
+[ 21.049677]   x11: ffffff881cee8000 x10: 0000000000000000 x9 : ffffffdca59f00b8
+[ 21.049680]   x8 : 0000000000000000 x7 : 0000000000000000 x6 : 000000000000003f
+[ 21.049683]   x5 : 0000000000000040 x4 : 0000000000000000 x3 : 0000000000000004
+[ 21.049686]   x2 : ffffff881cee8000 x1 : ffffffdca66e5bfb x0 : ffffff881cee8000
+[ 21.049689]   Call trace:
+[ 21.049690]    policy_show+0x1c/0x3c
+[ 21.049692]    dev_attr_show+0x38/0x7c
+[ 21.049695]    sysfs_kf_seq_show+0xd8/0x160
+[ 21.049699]    kernfs_seq_show+0x44/0x54
+[ 21.049701]    seq_read_iter+0x16c/0x4ec
+[ 21.049705]    kernfs_fop_read_iter+0x64/0x1d8
+[ 21.049709]    vfs_read+0x2d8/0x33c
+[ 21.049711]    ksys_read+0x78/0xe8
+[ 21.049714]    __arm64_sys_read+0x1c/0x2c
+[ 21.049716]    invoke_syscall+0x58/0x10c
+[ 21.049719]    el0_svc_common+0xa8/0xdc
+[ 21.049722]    do_el0_svc+0x1c/0x28
+[ 21.049724]    el0_svc+0x40/0x90
+[ 21.049726]    el0t_64_sync_handler+0x70/0xbc
+[ 21.049728]    el0t_64_sync+0x1a8/0x1ac
+[ 21.049731]   Code: f9435008 aa0203e0 d00054e1 912fec21 (f9400108)
 
->
->> @@ -2021,7 +2037,11 @@ static int set_id_reg(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
->>  		return ret;
->>  	}
->>
->> -	ret = arm64_check_features(vcpu, rd, val);
->> +	if (skip_feature_check(id))
->> +		ret = arm64_check_mask(rd, val);
->> +	else
->> +		ret = arm64_check_features(vcpu, rd, val);
->> +
->
-> Can you add a new implementation of ->set_user() for MIDR/REVIDR/AIDR
-> instead?
+Signed-off-by: Manaf Meethalavalappu Pallikunhi <quic_manafm@quicinc.com>
+---
+ drivers/thermal/thermal_core.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-Yes, sure.
-
->> @@ -2542,6 +2571,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->>
->>  	{ SYS_DESC(SYS_DBGVCR32_EL2), undef_access, reset_val, DBGVCR32_EL2, 0 },
->>
->> +	{ ID_DESC(MIDR_EL1), .set_user = set_id_reg, .visibility = id_visibility,
->> +	  .reset = reset_midr_el1, .val = (u32)-1 },
->
-> nit: GENMASK() instead of truncation by casting.
-
-All done. I add a test and send out V2.
-Thanks a lot!
-Sebastian
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 2328ac0d8561..c6e6b229cc6e 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -1589,6 +1589,11 @@ thermal_zone_device_register_with_trips(const char *type,
+ 
+ 	tz->state = TZ_STATE_FLAG_INIT;
+ 
++	thermal_zone_device_init(tz);
++	result = thermal_zone_init_governor(tz);
++	if (result)
++		goto unregister;
++
+ 	/* sys I/F */
+ 	/* Add nodes that are always present via .groups */
+ 	result = thermal_zone_create_device_groups(tz);
+@@ -1600,19 +1605,14 @@ thermal_zone_device_register_with_trips(const char *type,
+ 		thermal_zone_destroy_device_groups(tz);
+ 		goto remove_id;
+ 	}
+-	thermal_zone_device_init(tz);
+ 	result = device_register(&tz->device);
+ 	if (result)
+ 		goto release_device;
+ 
+-	result = thermal_zone_init_governor(tz);
+-	if (result)
+-		goto unregister;
+-
+ 	if (!tz->tzp || !tz->tzp->no_hwmon) {
+ 		result = thermal_add_hwmon_sysfs(tz);
+ 		if (result)
+-			goto unregister;
++			goto release_device;
+ 	}
+ 
+ 	result = thermal_thresholds_init(tz);
+@@ -1629,12 +1629,12 @@ thermal_zone_device_register_with_trips(const char *type,
+ 
+ remove_hwmon:
+ 	thermal_remove_hwmon_sysfs(tz);
+-unregister:
+-	device_del(&tz->device);
+ release_device:
+ 	put_device(&tz->device);
+ remove_id:
+ 	ida_free(&thermal_tz_ida, id);
++unregister:
++	device_del(&tz->device);
+ free_tzp:
+ 	kfree(tz->tzp);
+ free_tz:
+-- 
 
