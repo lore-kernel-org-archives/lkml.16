@@ -1,105 +1,95 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C5DEC5
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564CE1C8FCE
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739236864; cv=none; b=gjoMFBUMJe2MUSgg1s99Z827x1xwcc8sTRntw/03pwWWZCVejugbXPt5ReUhmrHpT1163ESPkT1kb8blEwK+Mki1eEaOlcxQyKeE/ebI/d0A9WIb5R+NX+rid6oO04ewsEGBscuw1IrRXplCqKtpU+MTSsKNFBqfw2vcSY44TJA=
+	t=1739236867; cv=none; b=BWHNxw6TgKtUir4osOJfSuIUoPqIIM102wjdKz/AE7I/vs01scWnRlaZ6UjFk6nZhMf+kbs5AYvhcEMQxBSihPIxH2gAmeyHEDD8HHUV6RWszlK5yUfPgA1g5xJwhCcekayi7tyaAvIg/TthCmCAso2UeX8SObx0Gf+oXy4gVac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739236864; c=relaxed/simple;
-	bh=MaQFdnDPn6oDlBBV4WvI2w9SEnAIQ/HcPGa1Cc/3bcU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tSgyVMk90MbmpmwL8t06Yw2SqA0PCZ6YG+QoG8aED7cr78NqiyMvbfL8bgIu1wrJcOQ8SUCy5s7T7gjd5HPHzCknDWoLIcKdJOng0giXtfsSPoppXSjfXAJtQHBnUi7n9onkS8PH2OVoXMEeA2c1Dr9p4IeNuC1aPAGiQyMo/Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CBgodye8; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739236867; c=relaxed/simple;
+	bh=iRLEbnQ97SUScJVSVjUaV7C+da230giu3NGUuXUtzoo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DlbdBdCyqfQrsWoGGW/BtXEth9bSPsJLztJjDg3hgO0p5b3u7R0NJjKCo7FsJkElu3Yp5In2gHIPWGdJl93Dfv76VMhBCjrk6hR5/abNGL8sLkL6S9CIR32/uuR/vaj1RCWz/w0CT9+/IvhniRDu3heXqhHJMkPMQSWp3ab4BZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkPErpUC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CBgodye8"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-726d2529db4so1254497a34.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:21:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739236861; x=1739841661; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MaQFdnDPn6oDlBBV4WvI2w9SEnAIQ/HcPGa1Cc/3bcU=;
-        b=CBgodye8mh2HlkTEut/DqYzbyFbptRge/cEWIWSYDGKtbLb3GdQiGCz4f2RMWtJLhq
-         Xyq3HtdH7RdeZUoQI6sKOBD/9e57Pzqzg3mKv2uW7vE1PwzmqUvzjiNQpWcDT1uJMNK2
-         0QMEUYAg00w6ccABq3+NEoMWMvLSgY20SlILntJHdh6ssoS4Lxl6vFXhbemhhAF3ZNhn
-         7c5HHV8Y/6Q16A3unQj1pFzW06KumlvNyuBoehu20iXqGOsFRcV9aWbPwHG+GwQ4QVcv
-         OPYA+vuD7zqMPZ++V9/xJ8Tdrc4V6T+Ni6HFUOXOVFnyshZ+Rswit9ojLAtLOsUDzEz0
-         4wjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739236861; x=1739841661;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MaQFdnDPn6oDlBBV4WvI2w9SEnAIQ/HcPGa1Cc/3bcU=;
-        b=V8N6Cfs1KenkQWFSEr0l03nUZGB2zmfYa1SVVUlqsU/I3GQISSwZ6hlMqi1EHr3S6I
-         1c3b96BBc3ZC5eHPNDufRpfM0HitRcv1XL4ypjg4eMBlp0UIOrtDEU2hwvYjI+nIwRVh
-         +sqaYXwNbkU8CBK2Co0KIdQcT2XZxkCac3OnMbBONkWr78X/cNyk8hgMNX3Xbqj55q60
-         c3Tr4F+r6cXzrnFWgLBW70MhOu9GckA0njR+JtDAeAqE+4nu4mFtyRngiHPnuN7GE6dN
-         bUGIs0x5Ar7o4RVvpwjDxSpNo8w10vLKyhUQf34jjFkYavEWLzjHLbSIhdDJ2PDT5GAr
-         X85Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW7MrFFD0KxtPrn/f20qkZwOR+MgyC6xVezlaUqChpBUwTy4zcWNg0lugTkTW7AVDGEJOU+jPAHyllz/A0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcL2+FwMXpyAn78ktWn+O1pwSyJ65uCSzN78sDgiTZUVX0pBV0
-	xNSHjCdgKp+5qGTU6W9kzY+l3jE+ioLrr7norrwUsREiCAMDdRyYGLKWE45/c+ANoK2bVhpxvPs
-	GVvuWuq2yyMGcxO6cy7Cjoe+0wfw=
-X-Gm-Gg: ASbGnctSpSLHocn2VohDOmYnmaGvlGTQmYhoFopTOI+paIrYAnvl/sYweSnvqIP97wM
-	GuR4birGPG6ZXu10E0wV63nYxV3LThxwTZhYmJd6z7aFEEUjIzSChLY1OQ7ZGzuMlV/JJhaw=
-X-Google-Smtp-Source: AGHT+IGm048wWiFiLM3RnwF5VP9mdTr1NFDjC4UyHl5DciC8UMYJ0TxacQ6z8oYB1tJinGY/z+rTq+yN8/oOxkM5FtY=
-X-Received: by 2002:a05:6870:8a08:b0:29e:63c3:3392 with SMTP id
- 586e51a60fabf-2b83ed3354fmr9621320fac.15.1739236861596; Mon, 10 Feb 2025
- 17:21:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkPErpUC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8EDC4CED1;
+	Tue, 11 Feb 2025 01:21:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739236866;
+	bh=iRLEbnQ97SUScJVSVjUaV7C+da230giu3NGUuXUtzoo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fkPErpUCLGgOPQPkOgIzgww3m9qOyyiLrzdlE2bRzs0QWo6Uqg0E29jf/49B+rtBo
+	 laCF3nVoYVfEAQA1xZLi8NaTKqJiYmZ3gwFY8F+wyRrjyVuAo2QNH5OykkLUUXXqYd
+	 xmfqEAtxk9NalBqnnDGKVN8ocemqPXj33yzP9aWc0GK2LfAUJtXRSNeQCOJTSItUuD
+	 twyaJ5Bfn6lduMrvEljlSR/PDE4INGD3QizeV01ZVEDSuQDV7SYVa85XprAz1bk+iO
+	 v8AH1FtqWCt3cpWNlHKZrEMLglr7I7zWjC+EtRJr77zI5sqs4NbAxezPxrMrmUxEUd
+	 OWKryLaYB2REA==
+Date: Mon, 10 Feb 2025 17:21:04 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: David Kaplan <david.kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 17/35] x86/bugs: Restructure l1tf mitigation
+Message-ID: <20250211012104.mxhmvghlmyf52uaa@jpoimboe>
+References: <20250108202515.385902-1-david.kaplan@amd.com>
+ <20250108202515.385902-18-david.kaplan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241113095833.1805746-1-zhangchunyan@iscas.ac.cn>
- <20241113095833.1805746-2-zhangchunyan@iscas.ac.cn> <87frl0snf6.fsf@all.your.base.are.belong.to.us>
-In-Reply-To: <87frl0snf6.fsf@all.your.base.are.belong.to.us>
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Date: Tue, 11 Feb 2025 09:20:22 +0800
-X-Gm-Features: AWEUYZlvl4mGCqJJI-gBI3cTxlXAt19H2Jtwaartczfba4mVGW4RfhZKYAMKh-E
-Message-ID: <CAAfSe-tRFEXiXJ=tHVnXy4Kb6O7-E2Sr_xybLYxma=ypMhqz9w@mail.gmail.com>
-Subject: Re: [PATCH V5 1/3] riscv: mm: Prepare for reusing PTE RSW bit(9)
-To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-Cc: Chunyan Zhang <zhangchunyan@iscas.ac.cn>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250108202515.385902-18-david.kaplan@amd.com>
 
-On Thu, 30 Jan 2025 at 16:42, Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> wrot=
-e:
->
-> Chunyan Zhang <zhangchunyan@iscas.ac.cn> writes:
->
-> > The PTE bit(9) on RISC-V is reserved for software, it is used by devmap
-> > now which has to be disabled if we want to use bit(9) for other feature=
-s,
-> > since there's no more free PTE bit on RISC-V now.
-> >
-> > So to make ARCH_HAS_PTE_DEVMAP selectable, this patch uses it as
-> > the build condition of devmap definitions.
->
-> Heads-up: It seems like Alistair's series [1] that removes the devmap
-> PTE bit will most likely land in 6.15.
+On Wed, Jan 08, 2025 at 02:24:57PM -0600, David Kaplan wrote:
+>  static void __init l1tf_select_mitigation(void)
+> +{
+> +	if (!boot_cpu_has_bug(X86_BUG_L1TF) || cpu_mitigations_off()) {
+> +		l1tf_mitigation = L1TF_MITIGATION_OFF;
+> +		return;
+> +	}
+> +
+> +	if (l1tf_mitigation == L1TF_MITIGATION_AUTO) {
+> +		if (cpu_mitigations_auto_nosmt())
+> +			l1tf_mitigation = L1TF_MITIGATION_FLUSH_NOSMT;
+> +		else
+> +			l1tf_mitigation = L1TF_MITIGATION_FLUSH;
+> +	}
+> +
+> +}
 
-Yes, I've been keeping an eye on Alistair's series, intended to update
-this patchset after Alistair's patch that removes the devmap PTE bit
-got merged.
+Extra whitespace.
 
-Thanks,
-Chunyan
->
->
-> Bj=C3=B6rn
->
-> [1] https://lore.kernel.org/linux-mm/cover.11189864684e31260d1408779fac9d=
-b80122047b.1736488799.git-series.apopple@nvidia.com/
+> +
+> +static void __init l1tf_apply_mitigation(void)
+>  {
+>  	u64 half_pa;
+>  
+>  	if (!boot_cpu_has_bug(X86_BUG_L1TF))
+>  		return;
+>  
+> -	if (cpu_mitigations_off())
+> -		l1tf_mitigation = L1TF_MITIGATION_OFF;
+> -	else if (cpu_mitigations_auto_nosmt())
+> -		l1tf_mitigation = L1TF_MITIGATION_FLUSH_NOSMT;
+> -
+>  	override_cache_bits(&boot_cpu_data);
+>  
+>  	switch (l1tf_mitigation) {
+>  	case L1TF_MITIGATION_OFF:
+> +		return;
+
+Note the PTE inverstion mitigation is already done unconditionally, the
+X86_FEATURE_L1TF_PTEINV bit is just for reporting that.  So this
+shouldn't return.
+
+-- 
+Josh
