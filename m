@@ -1,73 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8824B20B81B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11020250BEC
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739285681; cv=none; b=YCpkONET3ORtuSq9mF56Tw5tgfL7184GeQa7KpZ7IPIpj0vLmmqJUZ+SGZRg1oa9J+6WlkmMcVN0pjpeOw4K8Y4ncNHzDxsWxecYpL1dnDPXgcCMkwJpZxBF4nRXFHNlpxyVK/NpEWkLWciZgvqRd7B4o9S8P8rGkYagtr/gR74=
+	t=1739285710; cv=none; b=ghDVYoz4HwM2H1ji1LZ7oILLLiVC9kvK4VoFBKAh9Pk7eIX031RWTHfnV/lUOfeKSZnNi5zxXNJRemj9UfUBfspwlWt6ghJeLp0angTmjS4QrG0jjTubfQas9zOE/Yhqk12JFQrqjBXPnHvBY/IMXBOgvt/XlbkGtwFK/gOhFek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739285681; c=relaxed/simple;
-	bh=dR3vaZVDNRhwd8fLzY4rOE2RaJeY/gMcVpJjbHBB+7M=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mFYdpr4Nkzqnh1yMfSF05SWZH5mz40Yvip16zHhCSN2qjA9tuRIaTLQAWxCPcT+BLiz+/qx4VzjPLBOllPpmQAhMGZbxuX8L2sDaIXij94SmSJf8yGOh57QSwDAF8iNM4Cd6TJoruPJa2QfJH5draEyFgtkYkxCjngbrenUSOc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHOWkxnR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739285710; c=relaxed/simple;
+	bh=SLofCmLBCQPA7WpZznxgFPIC8GYUR6mofyJYALKJBYA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jhkiX3/76lQyp8l+iijEVApKp1rz83XtVEYxR9RxFZcYH330JegRcFUWHiqROBVjC+C9lj7BaCNQ6RZcNZDyiO7m/Uqo0Ctj+yiaz2vnVDo/Y0II4M8gZJaCk2JHBrtqS0BkiVB/i6HLu4sQEzpyv7FfbqZAskRfyLRiyFcpjCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Pc64w3ec; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=P43PnTAB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ki1qyHfR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/uKDwch2; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHOWkxnR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 264E3C4CEDD;
-	Tue, 11 Feb 2025 14:54:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739285681;
-	bh=dR3vaZVDNRhwd8fLzY4rOE2RaJeY/gMcVpJjbHBB+7M=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=QHOWkxnRXBMnSXVmlpgVyKs6prkOhBaokBMgS9QBqIDibTMpvos/NjkAi65ByEUnR
-	 sjVc8HEfg26NOK2WP46aHn07e/PbDdBIutRdx1ziP/hiK4MRW71+uWAgDesXcNRmql
-	 unbuiJOSrIw32U0BABGhaxaK8RHKycfbmKNdYOxgKJlP5WjfHN40bkLlyQajHTo6EV
-	 tJ9H5RHogKx765/f2qRWSOGfBpzcu7B1hS/F8f+jTCol6WBxB1lpMrq5T4lRZF7RYS
-	 cchxTBtmZBjjeHL3VakDOPSguKe29Yl1qvZ7Xr6R6ET8rcXYUqW3PVnwt3y7S9rSpE
-	 hkqw26LzfwMLw==
-From: Lee Jones <lee@kernel.org>
-To: Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Pankaj Dubey <pankaj.dubey@samsung.com>, 
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Will McVicker <willmcvicker@google.com>, 
- John Madieu <john.madieu.xa@bp.renesas.com>, Nishanth Menon <nm@ti.com>, 
- Vaishnav Achath <vaishnav.a@ti.com>, linux-kernel@vger.kernel.org
-In-Reply-To: <20250124191644.2309790-1-robh@kernel.org>
-References: <20250124191644.2309790-1-robh@kernel.org>
-Subject: Re: (subset) [PATCH] mfd: syscon: Restore device_node_to_regmap()
- for non-syscon nodes
-Message-Id: <173928567889.2224464.12697953870263722001.b4-ty@kernel.org>
-Date: Tue, 11 Feb 2025 14:54:38 +0000
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Pc64w3ec";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="P43PnTAB";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ki1qyHfR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/uKDwch2"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id EB44037176;
+	Tue, 11 Feb 2025 07:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739259128; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DyC/zecHy0bxo1D2w1H7DuMgfMQ9nDC6wUTe2wLkukM=;
+	b=Pc64w3ecbDqoWX15TcZU93mxkux121r47Z/KKlQnkSqsIJTcz02f1TOXBdiAuD5b6eiKsB
+	lGgP0L0trKnpDA5nRz0DFOPOsElDI+e56XEdpJy23xw85iw6yzkgrelI5mgoLnm1IRSmlP
+	oEVtony6CPJgCbWY1EfjXRB66YFNv7o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739259128;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DyC/zecHy0bxo1D2w1H7DuMgfMQ9nDC6wUTe2wLkukM=;
+	b=P43PnTAB+vdgvxNP6wBoAJnnZLkBqsaOZGODiqza90ugX3eYA+CgZcPNDA5Ztiw1zDWaqf
+	HLLFujBYXbAJoRDg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ki1qyHfR;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="/uKDwch2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739259127; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DyC/zecHy0bxo1D2w1H7DuMgfMQ9nDC6wUTe2wLkukM=;
+	b=ki1qyHfR5bGqnR2/IbuoMIAPt6XzuJkp3hbiUb4ZC/7jjFdJRvVTBgGJXh/DNY6JAfv/qa
+	UN34j94TCXfGJtBhS561sOs9MNoi1I18pM+EYlj2U34eBVUqTCntIdj2nC++EYVNPf1IXy
+	WzffULQ6t4NLw1wwDr4vYHqX9+2U27k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739259127;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DyC/zecHy0bxo1D2w1H7DuMgfMQ9nDC6wUTe2wLkukM=;
+	b=/uKDwch2hIkKkq27bwmjL7uTIX8Mrx5hfkqESUNa8LCEyqtvZt9RqIp6wPY4W7PMSYFyWr
+	LmRcqRz8bDNwK4Cw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B601B13B06;
+	Tue, 11 Feb 2025 07:32:07 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id V07pKvf8qmcpQAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 11 Feb 2025 07:32:07 +0000
+Message-ID: <3649589c-5d1a-4d70-b711-f20dd76edf4b@suse.de>
+Date: Tue, 11 Feb 2025 08:32:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: Update maintainer of repaper and mi0283qt
+To: Alex Lanzano <lanzano.alex@gmail.com>, airlied@gmail.com,
+ simona@ffwll.ch, noralf@tronnes.org
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250210233232.3995143-1-lanzano.alex@gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250210233232.3995143-1-lanzano.alex@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: EB44037176
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_TO(0.00)[gmail.com,ffwll.ch,tronnes.org];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Fri, 24 Jan 2025 13:16:44 -0600, Rob Herring (Arm) wrote:
-> Commit ba5095ebbc7a ("mfd: syscon: Allow syscon nodes without a
-> "syscon" compatible") broke drivers which call device_node_to_regmap()
-> on nodes without a "syscon" compatible. Restore the prior behavior for
-> device_node_to_regmap().
-> 
-> This also makes using device_node_to_regmap() incompatible with
-> of_syscon_register_regmap() again, so add kerneldoc for
-> device_node_to_regmap() and syscon_node_to_regmap() to make it clear
-> how and when each one should be used.
-> 
-> [...]
 
-Applied, thanks!
 
-[1/1] mfd: syscon: Restore device_node_to_regmap() for non-syscon nodes
-      commit: 5728c92ae112301936006c5e305677beb1a7f578
+Am 11.02.25 um 00:32 schrieb Alex Lanzano:
+> Add myself as the maintainer of the recently orphaned repaper and
+> mi0283qt drivers.
+>
+> Signed-off-by: Alex Lanzano <lanzano.alex@gmail.com>
 
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+> ---
+>   MAINTAINERS | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1c5b22f00434..b5e46f23d1ba 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7352,7 +7352,8 @@ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+>   F:	drivers/gpu/drm/mgag200/
+>   
+>   DRM DRIVER FOR MI0283QT
+> -S:	Orphan
+> +M:	Alex Lanzano <lanzano.alex@gmail.com>
+> +S:	Maintained
+>   T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+>   F:	Documentation/devicetree/bindings/display/multi-inno,mi0283qt.txt
+>   F:	drivers/gpu/drm/tiny/mi0283qt.c
+> @@ -7455,7 +7456,8 @@ F:	Documentation/devicetree/bindings/display/bridge/ps8640.yaml
+>   F:	drivers/gpu/drm/bridge/parade-ps8640.c
+>   
+>   DRM DRIVER FOR PERVASIVE DISPLAYS REPAPER PANELS
+> -S:	Orphan
+> +M:	Alex Lanzano <lanzano.alex@gmail.com>
+> +S:	Maintained
+>   T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+>   F:	Documentation/devicetree/bindings/display/repaper.txt
+>   F:	drivers/gpu/drm/tiny/repaper.c
+
+-- 
 --
-Lee Jones [李琼斯]
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
