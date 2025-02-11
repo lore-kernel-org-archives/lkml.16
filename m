@@ -1,36 +1,63 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 881DD28F5
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28831FCF74;
+	Tue, 11 Feb 2025 13:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739279758; cv=none; b=bKRYyE3vlVOJEOLK2sC217g0AT4jYv276lB4/3rs1MyMmDrFkqEwd9rJWr8+hKeFKAK9LZ54+vc6ukAOkDXT7ddeIlyc+p0JRPJI/6GYNL/2d1/2kMznyI68Hf8U4JnnqExa/f+V6ZWXWEqjiUq6knDN/TF0774cCRJNek7K+vQ=
+	t=1739279790; cv=none; b=bZENJdGmfP+75uhPV5YcUmm0r2g7cq7aV57IZQ3uD0treuxo2sGdxryZb6fqsI13rvCRt9HEHBJbB8uxgObl72dxGYhwI74+a+KulialHKkwhsDWHpq/2OSjaIGXpNSvcTkSsBpHedg9zDknNenQ4Fwr0kjni240AudHr0Ck6cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739279758; c=relaxed/simple;
-	bh=UYHrtGkQr/4jiaOk2U59sAXeDCp/0l1oSnacoif9blY=;
+	s=arc-20240116; t=1739279790; c=relaxed/simple;
+	bh=M5ePXotyI1dgXf1FYkHih4HZJzuu/y5R1IO6sfCSaGw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T6Kr8xzBBKP0hKpfFxdQ2t4lYwJ0mP+1u92x36Osk5NRR0jAWYNEahnSm4o05uO5HjXwebimU5BKkv3j9K+smMz1PayfFjC/QNYdGAU5klj9N54m0Xid2RFI45TPhw8CbfyzSpXdmOCZWXYyvJXIy0DBEorU8PrfMWKoj5/Dspg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5505A1424;
-	Tue, 11 Feb 2025 05:16:17 -0800 (PST)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C92973F5A1;
-	Tue, 11 Feb 2025 05:15:54 -0800 (PST)
-Date: Tue, 11 Feb 2025 13:15:52 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: Add missing registrations of SF8MMx hwcaps
-Message-ID: <Z6tNiIMIhN5fPSJM@J2N7QTR9R3>
-References: <20250210-arm64-fix-2024-dpisa-v1-1-d77f43c7b253@kernel.org>
- <Z6pHPKXXnQ1whg57@J2N7QTR9R3>
- <dae7f7b2-f066-4adc-974b-54649ba69306@sirena.org.uk>
- <Z6s2iMP1LbdsYX12@J2N7QTR9R3>
- <bec2a37a-1797-41d2-a44a-a34a54a96f89@sirena.org.uk>
+	 Content-Type:Content-Disposition:In-Reply-To; b=uvuZVw26fr8vireCnlNO2hHH34pby4yo/AkLxfmdKGfPNmM07WBrAh5yiwbmKAw9fK+L+ZxegsNt0TQN92iP4L0RspkyAlJHW0q8q3rklO1NgzxLNQEwaXnNFjVcP5j+FC60ax73+ZD9cNe/D/PuL129J4r0XA72F/IVJyUbAGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5de594e2555so6054357a12.2;
+        Tue, 11 Feb 2025 05:16:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739279787; x=1739884587;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R+06crTRuZfGYr64hF4V/220jMT7lXT/btS5w2dXsgM=;
+        b=uLHLXFlFZu3kI8xlTdv8bZSEvMOao5e3hjDFAN2lLgSqY/wR3XyS+p7ssr4NacNx1b
+         SQqjKPbLoXIlZZDCR5Cc3JsGplcfjpXW0S3f2PEl6hafsK5B4zGs70s7BCbhS40C/4yt
+         N74JGba4sBdGPCLO6P7Zh+QXoUynlqo9vAywMVa325Pp3D6miSmsKXTa1OQMVI3uk5ZD
+         fRbzqIChQar37dfzSydyNeP70FSnephtVRTRlWymh0hjeGtnp3EYdKinItojFn8ctYyV
+         d0BRQy+WmKvp+e1RshI9hU39PWgM5rTPyBHXbjlqq41aWune6Rd+KMdcmc5UOuqX2PI+
+         bqpA==
+X-Forwarded-Encrypted: i=1; AJvYcCUaR2aLAD7ecY5ZvsEcMJe3tlDpGbWiuJrX/vkUO3aVQru4fn3ZpLn2AOKnqrsOEPaqnzT8C8te@vger.kernel.org, AJvYcCWE1u7J5hjilT2aJvDvmsPMzZe/kYXqnLSwP56KkuEsWyFcBOEd/w2re13mbvi+nXF9LIJKpdLvgqOY+Nc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrAtNVVTvia/k79rLi06Z5YER+GcrVeq+T4b9f4WTPpFRum7yc
+	gD66GxgeTUA0nEIZc/JensNdjcZ32TbHuwa6YF9mQRPQM72yh/r+
+X-Gm-Gg: ASbGncsyeBV4oOyZGA1zNiRz5ARgOGiKO6vNpxy/pl0hRkdxgPlF2ORSIQsIbNVrc3P
+	nfoKtxdI/KPKNr2PaPRiBW1X5NDNlesvcHeG5+BbQ8xGAlR8/+9kUTD7d2sP/5RDv/aM0nAq4VV
+	ZQY6LyjhP/rNFuXPAxuLWQOcwPbnklc2twpmIaY5jwET6y3aq43ZKXeMCCbNHgkKziIJkiQNqsd
+	5b5RWSOrcK4T1r/9cl3gRcJU755pAIhIfQhlDTFbgdvodnaHJWPVcNS89GfRDt2V7dmtVB8E/6d
+	ZRk=
+X-Google-Smtp-Source: AGHT+IGwzosxVvzZG/fDwVDmTqPGgBsdD+uvVagBGDKO4bq/6IrvlVy3waqq96Dt4HVKS97GY8J0rw==
+X-Received: by 2002:a05:6402:40c1:b0:5de:aa54:dc1d with SMTP id 4fb4d7f45d1cf-5deaa54e090mr378936a12.1.1739279786664;
+        Tue, 11 Feb 2025 05:16:26 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf1b7b0a2sm9546260a12.22.2025.02.11.05.16.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 05:16:25 -0800 (PST)
+Date: Tue, 11 Feb 2025 05:16:23 -0800
+From: Breno Leitao <leitao@debian.org>
+To: "Iwashima, Kuniyuki" <kuniyu@amazon.co.jp>
+Cc: Uday Shankar <ushankar@purestorage.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"kernel-team@meta.com" <kernel-team@meta.com>
+Subject: Re: [PATCH net-next v2 2/2] net: Add dev_getbyhwaddr_rtnl() helper
+Message-ID: <20250211-spectral-golden-quoll-ed1af9@leitao>
+References: <9B3D8CD0-65DE-43FE-88BA-55902DE96496@amazon.co.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,38 +66,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bec2a37a-1797-41d2-a44a-a34a54a96f89@sirena.org.uk>
+In-Reply-To: <9B3D8CD0-65DE-43FE-88BA-55902DE96496@amazon.co.jp>
 
-On Tue, Feb 11, 2025 at 12:58:10PM +0000, Mark Brown wrote:
-> On Tue, Feb 11, 2025 at 11:37:44AM +0000, Mark Rutland wrote:
-> > On Mon, Feb 10, 2025 at 07:14:58PM +0000, Mark Brown wrote:
-> > > On Mon, Feb 10, 2025 at 06:41:09PM +0000, Mark Rutland wrote:
+On Tue, Feb 11, 2025 at 11:49:14AM +0000, Iwashima, Kuniyuki wrote:
+> From: Breno Leitao <leitao@debian.org>
+> Date: Tue, 11 Feb 2025 03:36:43 -0800
+> > > > +struct net_device *dev_getbyhwaddr(struct net *net, unsigned short type,
+> > > > +                              const char *ha)
+> > > > +{
+> > > > +   struct net_device *dev;
+> > > > +
+> > > > +   ASSERT_RTNL();
+> > > > +   for_each_netdev(net, dev)
+> > > > +           if (dev_comp_addr(dev, type, ha))
+> > > > +                   return dev;
+> > > > +
+> > > > +   return NULL;
+> > > > +}
+> > > > +EXPORT_SYMBOL(dev_getbyhwaddr);
+> > >
+> > > Commit title should change to reflect the new function name in v2.
+> > >
+> > > Separately - how should I combine this with
+> > > https://lore.kernel.org/netdev/20250205-netconsole-v3-0-132a31f17199@purestorage.com/?
+> > > I see three options:
+> > > - combine the two series into one
+> > 
+> > I would suggest you combine the two series into one.
+> > 
+> > I will send a v3 today adjusting the comments, and you can integrated
+> > them into your patchset.
 > 
-> > > > Looking again, it looks like KERNEL_HWCAP_FPRCVT also isn't wired up?
+> I suggest Breno post v3 for net.git with arp fix and then net.git
+> will be merged to net-next on Thursday, then Uday can respin.
 > 
-> > > Indeed.  I'll add that separately.
-> 
-> > Given that KERNEL_HWCAP_FPRCVT was also added by commit 819935464cb2,
-> > I assume you mean you'll send a v2 of this patch doing that.
-> 
-> Well, I was actually intending to send a separate patch given that
-> otherwise it ends up looking like two different changelogs in the same
-> patch and the diffs shouldn't overlap.
+> If this is posted to net-next.git, the following arp fix needs to
+> wait for the next cycle so that net-next.git will be merged to
+> net.git.
 
-It would be simpler for others if you sent a single patch that handled
-the three hwcaps that we failed to wire up in commit 819935464cb2. That
-way they only have one thing to track.
-
-I don't understand what you mean by "two different changelogs"; surely the
-commit message is a trivial variation of the one for this v1 patch:
-
-| arm64: Add missing hwcap registrations
-|
-| Commit 819935464cb2 ("arm64/hwcap: Describe 2024 dpISA extensions to
-| userspace") added definitions for HWCAP_F8MM8, HWCAP_F8MM4, and
-| HWCAP_FPRCVT, but did not include the crucial registration in
-| arm64_elf_hwcaps. Add them.
-
-... and the diff from v1 is "Handle HWCAP_FPRCVT".
-
-Mark.
+Why not sending both patches all together in a patchset against
+net-next?
