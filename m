@@ -1,156 +1,420 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AF0B1F0E2C
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98E11F0E2C
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739274737; cv=none; b=Avwnt/mhRj3vGMhMfVGderQMqKeLpAVXjfi5zJU8Z4Hd6LLVHUDxFqnhz+d7427wMiNjSIfl66X7CHLr5Qjns86gYNgEEF1wkim1a0MItTaeO1t64sRZ2Uw7zVXGg3dAIWh4gTd5whMwdKHbsk9hC0DxU3vMVxgVxe4AWGlZdfY=
+	t=1739274850; cv=none; b=FvPmpc2tEKZVrbPxXndyOZaETYCghvz6V8LLV5+iXOoWtgBh0bsN/PXn/lQ/ErK11XXDKWS2IQDVMaBeGQ6yrhUNzEZprae+AghwHHFDi9wLo20RL4C1dWyPt6BcHrQYIRLkLIiWZT92P/wJxuXbgMhfmKFXkpXL09zZVFPQ9Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739274737; c=relaxed/simple;
-	bh=VNhZx1RSKoKpE+uds6M9R6tlg953Re2Ndu7s2C/UrQs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IVSgvNmGrkPcFP1Cd7iNlGnk4YdcdK2V+LC/RQhU9Tpex+7Bv3QCm4Y7TFFuLXz2MgJGb95K2S+Vlm2Xa/SIkJX6jejgnOHcaIxBD1eJZSXKFhlCDEbVwwph7V27i+sllumr7bnIQfVfX66U1XqKpjYSARywxUb2Ax+S/YGZKS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxjXKBOatnZCJyAA--.2046S3;
-	Tue, 11 Feb 2025 19:50:25 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBx3MR6OatnNPMLAA--.43600S7;
-	Tue, 11 Feb 2025 19:50:24 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 5/7] objtool/LoongArch: Add support for goto table
-Date: Tue, 11 Feb 2025 19:50:14 +0800
-Message-ID: <20250211115016.26913-6-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20250211115016.26913-1-yangtiezhu@loongson.cn>
-References: <20250211115016.26913-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1739274850; c=relaxed/simple;
+	bh=6Ixr/Iz9cg/kpGR4bUS3PpptKq4G8rBcHbce+BMw9Sk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V9g7Hyl9V3cnO+pCpNqwqmQY6w8nBNVa1oPnvIotNIU2GjV077xbtDgT/mcsb0AXPEUSSmqF0q2L1GqW9Ld89tpGa2NV/Kk/ILTWVEnEImi2s3b9x7bVbPf+omHLTiAjWZpAkJOjpIpmJKkVgM3dY5XyIiypvnfG9K6W1uCCTZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=X8uSyxW0; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="X8uSyxW0"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5de63846e56so5674079a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:54:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1739274845; x=1739879645; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vHJ87NPYDPDLaek3RFsgHptMV6mMcGDLkoSALf6A6ko=;
+        b=X8uSyxW0tM27c77mniVHczafMv19I0WRxPHY/5hh1jfpIV0omAiR7V/n+C0K1YQCJC
+         l6oUka2+htGR6PdqiMvLCOYMhvbRXI9qybB4BCs1qfLPReVZ326CDF0ifKyFAjbk09fe
+         f1mqLXhD6TwXvdOOZvD+3dXgkW7ejvaL3x1alylFJJBCfU+cvv7gaPJK79yUDmI6w75J
+         cDV9Uc2lf9fXQwJHRO9mPMqrlvTzwbVRHxev03Zr5BjtrOMR4el3j40S9VaKpzT70roM
+         JKB25DIvdHOZNhgSuK8dfDZlWtJpwDwOQsL5v+laQNRlNeQm9yMo+MdOxtepgequRHdH
+         SSiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739274845; x=1739879645;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vHJ87NPYDPDLaek3RFsgHptMV6mMcGDLkoSALf6A6ko=;
+        b=G3nuUDqo4ruEZV12LfkYP68tL60rREGB5+DpnzwfnUzi4aMs8iljuHB1VbyyKM+x7s
+         2by9M/pcKA/1ueSyoLFIsMZr5Q1Ndibi8BIuUHJC1e0Z4L+WMWqluwesL5VQEckOWa5H
+         m/OIInW1m1ht40nLsb5BRMXAnmKWyPDLhGTZsDUiRypG2fx4NYK1HnLhuBJ186uuLb1Z
+         +fMZQsT6BQFpK+xACG03t2GjoDgnU9+uIE9tX8rY03R350K4leHMrXMCs66H1UMUZFWw
+         axQIl+8xx7dbgcR5YOYNt0U7pwh/mAT0gNqI21q8A5YCSpjpgB7Fhgz5e8hdeIUfPfCB
+         7LVg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEz3EIsAF0xKyslrnFmycS3NsrApXIz+elIeRMaWNDEW775KWQIPdf62/4IUp165XCsrpwBCEWSll/3xs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx97rAll6GKLt1grRyC2fdKn/UxYWtgDsDqOSdcu8wsDyk7wfNQ
+	ZoI+8Nq3gxJu1/1FDEtT0Dx4exHyUQC0xcqR5pBfGJ6IhCG9mc5nd22KYFgQczE=
+X-Gm-Gg: ASbGnctvgW1qdAKV6RUdkw49zHU9MW7frbKE8uLlc8WUbIaCXUnjPObJLbW2hjFKgJY
+	4ZfC5q5H9SrY9lW0dT6C1pJloT42/wZCWlFJpQT83uq/mC7krZpM3pHJsIaSeMReVNaaNNsl1sX
+	MJrdkHRTqgzVr7lZDeL2Kdp2XPZaCv89agKfQehlun8SgOnqIkvkfFN+Up9drervK9fz0W7wwzA
+	uzFDcaoRZM8RA1zXCT+0efMxk6VZdbGHngHhsQgR3IdyEJrI4atHJ0a9zyq7OzNQ80peeGwvDkS
+	/334O/eiGOCpqa/r8g==
+X-Google-Smtp-Source: AGHT+IGf9X+5WBi4CqkYDZ5Z8jxVZrKJeKOWY8YgCidV9FyxQjuAF8Kd3xsI0ECvN1KNe+PGd4RIZA==
+X-Received: by 2002:a17:906:6a19:b0:aaf:1183:e9be with SMTP id a640c23a62f3a-ab7da33b958mr304407166b.2.1739274844926;
+        Tue, 11 Feb 2025 03:54:04 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7d101ed7dsm245193566b.106.2025.02.11.03.54.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 03:54:04 -0800 (PST)
+Date: Tue, 11 Feb 2025 12:54:02 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: David Gow <davidgow@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] scanf: break kunit into test cases
+Message-ID: <Z6s6WsIw3VCGys6K@pathway.suse.cz>
+References: <20250210-scanf-kunit-convert-v6-0-4d583d07f92d@gmail.com>
+ <20250210-scanf-kunit-convert-v6-2-4d583d07f92d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBx3MR6OatnNPMLAA--.43600S7
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCw4rWw18Wr1fWr43Zw43Jwc_yoWrXFy5pF
-	W3C345Kr45ZrWSgr47tay09ryaya1IgFy7JrW7t34fAw43Xr1FyF1SvF9IyFWrCrZ5Jr4I
-	qrs5Kr18CF4DAacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
-	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
-	CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0
-	I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
-	8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73
-	UjIFyTuYvjxU4AhLUUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210-scanf-kunit-convert-v6-2-4d583d07f92d@gmail.com>
 
-The objtool program need to analysis the control flow of each object file
-generated by compiler toolchain, it needs to know all the locations that
-a branch instruction may jump into, if a jump table is used, objtool has
-to correlate the jump instruction with the table.
+On Mon 2025-02-10 13:13:49, Tamir Duberstein wrote:
+> Use `suite_init` and move some tests into `scanf_test_cases`. This
+> gives us nicer output in the event of a failure.
 
-On x86 (which is the only port supported by objtool before LoongArch),
-there is a relocation type on the jump instruction and directly points
-to the table. But on LoongArch, the relocation is on another kind of
-instruction prior to the jump instruction, and also with scheduling it
-is not very easy to tell the offset of that instruction from the jump
-instruction. Furthermore, because LoongArch has -fsection-anchors (often
-enabled at -O1 or above) the relocation may actually points to a section
-anchor instead of the table itself.
+Hmm, simulate the following failure in the original test module:
 
-For the jump table of switch cases, a GCC patch "LoongArch: Add support
-to annotate tablejump" and a Clang patch "[LoongArch] Add options for
-annotate tablejump" have been merged into the upstream mainline, it can
-parse the additional section ".discard.tablejump_annotate" which stores
-the jump info as pairs of addresses, each pair contains the address of
-jump instruction and the address of jump table.
 
-For the jump table of computed gotos, it is indeed not easy to implement
-in the compiler, especially if there is more than one computed goto in a
-function such as ___bpf_prog_run(). objdump kernel/bpf/core.o shows that
-there are many table jump instructions in ___bpf_prog_run(), but there are
-no relocations on the table jump instructions and to the table directly on
-LoongArch.
-
-Without the help of compiler, in order to figure out the address of goto
-table for the special case of ___bpf_prog_run(), since the instruction
-sequence is relatively single and stable, it makes sense to add a helper
-find_reloc_of_rodata_c_jump_table() to find the relocation which points
-to the section ".rodata..c_jump_table".
-
-If find_reloc_by_table_annotate() failed, it means there is no relocation
-info of switch table address in ".rela.discard.tablejump_annotate", then
-objtool may find the relocation info of goto table ".rodata..c_jump_table"
-with find_reloc_of_rodata_c_jump_table().
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/objtool/arch/loongarch/special.c | 32 ++++++++++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
-
-diff --git a/tools/objtool/arch/loongarch/special.c b/tools/objtool/arch/loongarch/special.c
-index 4fa6877d5b2b..27c6473608f3 100644
---- a/tools/objtool/arch/loongarch/special.c
-+++ b/tools/objtool/arch/loongarch/special.c
-@@ -116,6 +116,30 @@ static struct reloc *find_reloc_by_table_annotate(struct objtool_file *file,
- 	return NULL;
+diff --git a/lib/test_scanf.c b/lib/test_scanf.c
+index 44f8508c9d88..3ec12328cc4c 100644
+--- a/lib/test_scanf.c
++++ b/lib/test_scanf.c
+@@ -564,7 +564,7 @@ static void __init numbers_list_field_width_val_h(const char *delim)
+ 	numbers_list_val_width(unsigned short,	"%hu",	     delim, "hu", check_ushort);
+ 	numbers_list_val_width(short,		"%hd",	     delim, "hd", check_short);
+ 	numbers_list_val_width(short,		"%hd",	     delim, "hi", check_short);
+-	numbers_list_val_width(unsigned short,	"%hx",	     delim, "hx", check_ushort);
++	numbers_list_val_width(unsigned short,	"%hx",	     delim, "hx", check_uint);
+ 	numbers_list_val_width(unsigned short,	"0x%hx",     delim, "hx", check_ushort);
+ 	numbers_list_val_width(short,		"0x%hx",     delim, "hi", check_short);
  }
- 
-+static struct reloc *find_reloc_of_rodata_c_jump_table(struct section *sec,
-+						       unsigned long offset,
-+						       unsigned long *table_size)
-+{
-+	struct section *rsec;
-+	struct reloc *reloc;
-+
-+	rsec = sec->rsec;
-+	if (!rsec)
-+		return NULL;
-+
-+	for_each_reloc(rsec, reloc) {
-+		if (reloc_offset(reloc) > offset)
-+			break;
-+
-+		if (!strncmp(reloc->sym->sec->name, ".rodata..c_jump_table", 21)) {
-+			*table_size = 0;
-+			return reloc;
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
- struct reloc *arch_find_switch_table(struct objtool_file *file,
- 				     struct instruction *insn,
- 				     unsigned long *table_size)
-@@ -126,8 +150,12 @@ struct reloc *arch_find_switch_table(struct objtool_file *file,
- 	unsigned long table_offset;
- 
- 	annotate_reloc = find_reloc_by_table_annotate(file, insn, table_size);
--	if (!annotate_reloc)
--		return NULL;
-+	if (!annotate_reloc) {
-+		annotate_reloc = find_reloc_of_rodata_c_jump_table(
-+				 insn->sec, insn->offset, table_size);
-+		if (!annotate_reloc)
-+			return NULL;
-+	}
- 
- 	table_sec = annotate_reloc->sym->sec;
- 	table_offset = annotate_reloc->sym->offset + reloc_addend(annotate_reloc);
--- 
-2.42.0
 
+and I got:
+
+
+[  383.100048] test_scanf: vsscanf("1574 9 64ca 935b 7 142d ff58 0", "%4hx %1hx %4hx %4hx %1hx %4hx %4hx %1hx", ...) expected 2472240330 got 1690959881
+[  383.102843] test_scanf: vsscanf("f12:2:d:2:c166:1:36b:1906", "%3hx:%1hx:%1hx:%1hx:%4hx:%1hx:%3hx:%4hx", ...) expected 131085 got 851970
+[  383.105376] test_scanf: vsscanf("4,b2fe,3,593,6,0,3bde,0", "%1hx,%4hx,%1hx,%3hx,%1hx,%1hx,%4hx,%1hx", ...) expected 93519875 got 242430
+[  383.105659] test_scanf: vsscanf("6-1-2-1-d9e6-f-93e-e567", "%1hx-%1hx-%1hx-%1hx-%4hx-%1hx-%3hx-%4hx", ...) expected 65538 got 131073
+[  383.106127] test_scanf: vsscanf("72d6/35/e88d/1/0/6c8c/7/1", "%4hx/%2hx/%4hx/%1hx/%1hx/%4hx/%1hx/%1hx", ...) expected 125069 got 3901554741
+[  383.106235] test_scanf: vsscanf("c9bea1b8122113e9a168df573", "%4hx%4hx%1hx%4hx%4hx%1hx%4hx%3hx", ...) expected 571539457 got 106936
+[  383.106398] test_scanf: failed 6 out of 2545 tests
+
+
+When I tried to do the same in the new module:
+
+diff --git a/lib/scanf_kunit.c b/lib/scanf_kunit.c
+index e45f3c4f0437..692eb8cbbeab 100644
+--- a/lib/scanf_kunit.c
++++ b/lib/scanf_kunit.c
+@@ -546,7 +546,7 @@ static void numbers_list_field_width_val_h(struct kunit *test, const char *delim
+ 	numbers_list_val_width(unsigned short,	"%hu",	     delim, "hu", check_ushort);
+ 	numbers_list_val_width(short,		"%hd",	     delim, "hd", check_short);
+ 	numbers_list_val_width(short,		"%hd",	     delim, "hi", check_short);
+-	numbers_list_val_width(unsigned short,	"%hx",	     delim, "hx", check_ushort);
++	numbers_list_val_width(unsigned short,	"%hx",	     delim, "hx", check_uint);
+ 	numbers_list_val_width(unsigned short,	"0x%hx",     delim, "hx", check_ushort);
+ 	numbers_list_val_width(short,		"0x%hx",     delim, "hi", check_short);
+ }
+
+then I got:
+
+[ 6625.895391] KTAP version 1
+[ 6625.895928] 1..1
+[ 6625.896494]     KTAP version 1
+[ 6625.896852]     # Subtest: scanf
+[ 6625.897191]     # module: scanf_kunit
+[ 6625.897198]     1..10
+[ 6625.903479]     ok 1 numbers_simple
+[ 6625.903490]         KTAP version 1
+[ 6625.904352]         # Subtest: numbers_list
+[ 6625.905623]         ok 1 " "
+[ 6625.907654]         ok 2 ":"
+[ 6625.909654]         ok 3 ","
+[ 6625.911564]         ok 4 "-"
+[ 6625.913632]         ok 5 "/"
+[ 6625.914020]     # numbers_list: pass:5 fail:0 skip:0 total:5
+[ 6625.914370]     ok 2 numbers_list
+[ 6625.914964]         KTAP version 1
+[ 6625.915871]         # Subtest: numbers_list_field_width_typemax
+[ 6625.917527]         ok 1 " "
+[ 6625.919366]         ok 2 ":"
+[ 6625.921586]         ok 3 ","
+[ 6625.923240]         ok 4 "-"
+[ 6625.925226]         ok 5 "/"
+[ 6625.925622]     # numbers_list_field_width_typemax: pass:5 fail:0 skip:0 total:5
+[ 6625.925973]     ok 3 numbers_list_field_width_typemax
+[ 6625.926709]         KTAP version 1
+[ 6625.927613]         # Subtest: numbers_list_field_width_val_width
+[ 6625.928546]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 1044578334 (0x3e43001e)
+                       *pval == 837828163 (0x31f03e43)
+               vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4hx %1hx %1hx %4hx %4hx", ...)
+[ 6625.929225]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 837828163 (0x31f03e43)
+                       *pval == 0 (0x0)
+               vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4hx %1hx %1hx %4hx %4hx", ...)
+[ 6625.932202]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 12784 (0x31f0)
+                       *pval == 2624608151 (0x9c705797)
+               vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4hx %1hx %1hx %4hx %4hx", ...)
+[ 6625.934982]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 0 (0x0)
+                       *pval == 1966080 (0x1e0000)
+               vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4hx %1hx %1hx %4hx %4hx", ...)
+[ 6625.935004]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 1469513728 (0x57970000)
+                       *pval == 837828163 (0x31f03e43)
+               vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4hx %1hx %1hx %4hx %4hx", ...)
+[ 6625.935025]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 2624608151 (0x9c705797)
+                       *pval == 0 (0x0)
+               vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4hx %1hx %1hx %4hx %4hx", ...)
+[ 6625.935046]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 469802096 (0x1c009c70)
+                       *pval == 2624608151 (0x9c705797)
+               vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4hx %1hx %1hx %4hx %4hx", ...)
+[ 6625.938161]         not ok 1 " "
+[ 6625.952074]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 131073 (0x20001)
+                       *pval == 65538 (0x10002)
+               vsscanf("6:1:2:1:d9e6:f:93e:e567", "%1hx:%1hx:%1hx:%1hx:%4hx:%1hx:%3hx:%4hx", ...)
+[ 6625.952098]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 65538 (0x10002)
+                       *pval == 1038822 (0xfd9e6)
+               vsscanf("6:1:2:1:d9e6:f:93e:e567", "%1hx:%1hx:%1hx:%1hx:%4hx:%1hx:%3hx:%4hx", ...)
+[ 6625.952121]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 3655729153 (0xd9e60001)
+                       *pval == 3848735038 (0xe567093e)
+               vsscanf("6:1:2:1:d9e6:f:93e:e567", "%1hx:%1hx:%1hx:%1hx:%4hx:%1hx:%3hx:%4hx", ...)
+[ 6625.952143]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 1038822 (0xfd9e6)
+                       *pval == 65542 (0x10006)
+               vsscanf("6:1:2:1:d9e6:f:93e:e567", "%1hx:%1hx:%1hx:%1hx:%4hx:%1hx:%3hx:%4hx", ...)
+[ 6625.960548]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 155058191 (0x93e000f)
+                       *pval == 65538 (0x10002)
+               vsscanf("6:1:2:1:d9e6:f:93e:e567", "%1hx:%1hx:%1hx:%1hx:%4hx:%1hx:%3hx:%4hx", ...)
+[ 6625.960579]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 3848735038 (0xe567093e)
+                       *pval == 1038822 (0xfd9e6)
+               vsscanf("6:1:2:1:d9e6:f:93e:e567", "%1hx:%1hx:%1hx:%1hx:%4hx:%1hx:%3hx:%4hx", ...)
+[ 6625.960604]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 50390375 (0x300e567)
+                       *pval == 3848735038 (0xe567093e)
+               vsscanf("6:1:2:1:d9e6:f:93e:e567", "%1hx:%1hx:%1hx:%1hx:%4hx:%1hx:%3hx:%4hx", ...)
+[ 6625.969351]         not ok 2 ":"
+[ 6625.969860]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 3589275648 (0xd5f00000)
+                       *pval == 3768047088 (0xe097d5f0)
+               vsscanf("0,0,d5f0,e097,3,345e,13f,a8da", "%1hx,%1hx,%4hx,%4hx,%1hx,%4hx,%3hx,%4hx", ...)
+[ 6625.972121]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 3768047088 (0xe097d5f0)
+                       *pval == 878575619 (0x345e0003)
+               vsscanf("0,0,d5f0,e097,3,345e,13f,a8da", "%1hx,%1hx,%4hx,%4hx,%1hx,%4hx,%3hx,%4hx", ...)
+[ 6625.972139]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 254103 (0x3e097)
+                       *pval == 2832859455 (0xa8da013f)
+               vsscanf("0,0,d5f0,e097,3,345e,13f,a8da", "%1hx,%1hx,%4hx,%4hx,%1hx,%4hx,%3hx,%4hx", ...)
+[ 6625.976800]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 878575619 (0x345e0003)
+                       *pval == 0 (0x0)
+               vsscanf("0,0,d5f0,e097,3,345e,13f,a8da", "%1hx,%1hx,%4hx,%4hx,%1hx,%4hx,%3hx,%4hx", ...)
+[ 6625.976819]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 20919390 (0x13f345e)
+                       *pval == 3768047088 (0xe097d5f0)
+               vsscanf("0,0,d5f0,e097,3,345e,13f,a8da", "%1hx,%1hx,%4hx,%4hx,%1hx,%4hx,%3hx,%4hx", ...)
+[ 6625.976836]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 2832859455 (0xa8da013f)
+                       *pval == 878575619 (0x345e0003)
+               vsscanf("0,0,d5f0,e097,3,345e,13f,a8da", "%1hx,%1hx,%4hx,%4hx,%1hx,%4hx,%3hx,%4hx", ...)
+[ 6625.976853]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 3691030746 (0xdc00a8da)
+                       *pval == 2832859455 (0xa8da013f)
+               vsscanf("0,0,d5f0,e097,3,345e,13f,a8da", "%1hx,%1hx,%4hx,%4hx,%1hx,%4hx,%3hx,%4hx", ...)
+[ 6625.979505]         not ok 3 ","
+[ 6625.989303]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 1475084289 (0x57ec0001)
+                       *pval == 3243268076 (0xc15057ec)
+               vsscanf("1-1-57ec-c150-15-0-7-c", "%1hx-%1hx-%4hx-%4hx-%2hx-%1hx-%1hx-%1hx", ...)
+[ 6625.989324]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 3243268076 (0xc15057ec)
+                       *pval == 21 (0x15)
+               vsscanf("1-1-57ec-c150-15-0-7-c", "%1hx-%1hx-%4hx-%4hx-%2hx-%1hx-%1hx-%1hx", ...)
+[ 6625.989343]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 1425744 (0x15c150)
+                       *pval == 786439 (0xc0007)
+               vsscanf("1-1-57ec-c150-15-0-7-c", "%1hx-%1hx-%4hx-%4hx-%2hx-%1hx-%1hx-%1hx", ...)
+[ 6625.994177]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 21 (0x15)
+                       *pval == 65537 (0x10001)
+               vsscanf("1-1-57ec-c150-15-0-7-c", "%1hx-%1hx-%4hx-%4hx-%2hx-%1hx-%1hx-%1hx", ...)
+[ 6625.994196]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 458752 (0x70000)
+                       *pval == 3243268076 (0xc15057ec)
+               vsscanf("1-1-57ec-c150-15-0-7-c", "%1hx-%1hx-%4hx-%4hx-%2hx-%1hx-%1hx-%1hx", ...)
+[ 6625.994214]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 786439 (0xc0007)
+                       *pval == 21 (0x15)
+               vsscanf("1-1-57ec-c150-15-0-7-c", "%1hx-%1hx-%4hx-%4hx-%2hx-%1hx-%1hx-%1hx", ...)
+[ 6625.994232]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 3858759692 (0xe600000c)
+                       *pval == 786439 (0xc0007)
+               vsscanf("1-1-57ec-c150-15-0-7-c", "%1hx-%1hx-%4hx-%4hx-%2hx-%1hx-%1hx-%1hx", ...)
+[ 6626.003487]         not ok 4 "-"
+[ 6626.004021]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 3901554741 (0xe88d0035)
+                       *pval == 125069 (0x1e88d)
+               vsscanf("72d6/35/e88d/1/0/6c8c/7/1", "%4hx/%2hx/%4hx/%1hx/%1hx/%4hx/%1hx/%1hx", ...)
+[ 6626.006206]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 125069 (0x1e88d)
+                       *pval == 1821114368 (0x6c8c0000)
+               vsscanf("72d6/35/e88d/1/0/6c8c/7/1", "%4hx/%2hx/%4hx/%1hx/%1hx/%4hx/%1hx/%1hx", ...)
+[ 6626.006226]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 1 (0x1)
+                       *pval == 65543 (0x10007)
+               vsscanf("72d6/35/e88d/1/0/6c8c/7/1", "%4hx/%2hx/%4hx/%1hx/%1hx/%4hx/%1hx/%1hx", ...)
+[ 6626.006243]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 1821114368 (0x6c8c0000)
+                       *pval == 3502806 (0x3572d6)
+               vsscanf("72d6/35/e88d/1/0/6c8c/7/1", "%4hx/%2hx/%4hx/%1hx/%1hx/%4hx/%1hx/%1hx", ...)
+[ 6626.006261]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 486540 (0x76c8c)
+                       *pval == 125069 (0x1e88d)
+               vsscanf("72d6/35/e88d/1/0/6c8c/7/1", "%4hx/%2hx/%4hx/%1hx/%1hx/%4hx/%1hx/%1hx", ...)
+[ 6626.015404]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 65543 (0x10007)
+                       *pval == 1821114368 (0x6c8c0000)
+               vsscanf("72d6/35/e88d/1/0/6c8c/7/1", "%4hx/%2hx/%4hx/%1hx/%1hx/%4hx/%1hx/%1hx", ...)
+[ 6626.015423]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 1828716545 (0x6d000001)
+                       *pval == 65543 (0x10007)
+               vsscanf("72d6/35/e88d/1/0/6c8c/7/1", "%4hx/%2hx/%4hx/%1hx/%1hx/%4hx/%1hx/%1hx", ...)
+[ 6626.018041]         not ok 5 "/"
+[ 6626.022529]     # numbers_list_field_width_val_width: pass:0 fail:5 skip:0 total:5
+[ 6626.022535]     not ok 4 numbers_list_field_width_val_width
+[ 6626.023220]     # numbers_slice: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 106936 (0x1a1b8)
+                       *pval == 571539457 (0x22110001)
+               vsscanf("c9bea1b8122113e9a168df573", "%4hx%4hx%1hx%4hx%4hx%1hx%4hx%3hx", ...)
+[ 6626.024017]     # numbers_slice: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 571539457 (0x22110001)
+                       *pval == 81562 (0x13e9a)
+               vsscanf("c9bea1b8122113e9a168df573", "%4hx%4hx%1hx%4hx%4hx%1hx%4hx%3hx", ...)
+[ 6626.024035]     # numbers_slice: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 1050288657 (0x3e9a2211)
+                       *pval == 91449567 (0x57368df)
+               vsscanf("c9bea1b8122113e9a168df573", "%4hx%4hx%1hx%4hx%4hx%1hx%4hx%3hx", ...)
+[ 6626.024053]     # numbers_slice: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 81562 (0x13e9a)
+                       *pval == 2713242046 (0xa1b8c9be)
+               vsscanf("c9bea1b8122113e9a168df573", "%4hx%4hx%1hx%4hx%4hx%1hx%4hx%3hx", ...)
+[ 6626.024073]     # numbers_slice: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 1759444993 (0x68df0001)
+                       *pval == 571539457 (0x22110001)
+               vsscanf("c9bea1b8122113e9a168df573", "%4hx%4hx%1hx%4hx%4hx%1hx%4hx%3hx", ...)
+[ 6626.024091]     # numbers_slice: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 91449567 (0x57368df)
+                       *pval == 81562 (0x13e9a)
+               vsscanf("c9bea1b8122113e9a168df573", "%4hx%4hx%1hx%4hx%4hx%1hx%4hx%3hx", ...)
+[ 6626.024108]     # numbers_slice: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 1107297651 (0x42000573)
+                       *pval == 91449567 (0x57368df)
+               vsscanf("c9bea1b8122113e9a168df573", "%4hx%4hx%1hx%4hx%4hx%1hx%4hx%3hx", ...)
+[ 6626.026607]     not ok 5 numbers_slice
+[ 6626.039801]     ok 6 numbers_prefix_overflow
+[ 6626.040522]     ok 7 test_simple_strtoull
+[ 6626.041433]     ok 8 test_simple_strtoll
+[ 6626.042409]     ok 9 test_simple_strtoul
+[ 6626.043153]     ok 10 test_simple_strtol
+[ 6626.043161] # scanf: pass:8 fail:2 skip:0 total:10
+[ 6626.043166] # Totals: pass:16 fail:6 skip:0 total:22
+[ 6626.043170] not ok 1 scanf
+
+
+I like that the log better points to the test:
+
+[ 6625.927613]         # Subtest: numbers_list_field_width_val_width
+
+But
+
+[ 6625.928546]     # numbers_list_field_width_val_width: EXPECTATION FAILED at lib/scanf_kunit.c:91
+                   Expected got == *pval, but
+                       got == 1044578334 (0x3e43001e)
+                       *pval == 837828163 (0x31f03e43)
+               vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4hx %1hx %1hx %4hx %4hx", ...)
+
+is much harder to parse than the original
+
+[  383.100048] test_scanf: vsscanf("1574 9 64ca 935b 7 142d ff58 0", "%4hx %1hx %4hx %4hx %1hx %4hx %4hx %1hx", ...) expected 2472240330 got 1690959881
+
+
+Also I wonder why the scanned string is different:
+
+               vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4hx %1hx %1hx %4hx %4hx", ...)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+vs.
+
+[  383.100048] test_scanf: vsscanf("1574 9 64ca 935b 7 142d ff58 0", "%4hx %1hx %4hx %4hx %1hx %4hx %4hx %1hx", ...) expected 2472240330 got 1690959881
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+I would expect that the 1st error would be on the same string
+in both tests. I wonder why it differs.
+
+Best Regards,
+Petr
