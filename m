@@ -1,112 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1DD1E3DFD;
-	Tue, 11 Feb 2025 18:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C48651E3DFD
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739298335; cv=none; b=RmuLLWYLhVJm7ksC5qYWhqel6hwpmorDrDLIDbYUoOOxPI+GA3AjKavSnVdr80ETF9Bt2jZ2SQUk8x1q2l7F1VnEH1wS4gId+TehD+6jgOdxbOV0RfwZknC5pIPFep8xbKi2m9BKyVvjD5RohwRPctMXlp3ULoY2LhwA7E1CiX4=
+	t=1739298341; cv=none; b=GMpFsNrINl5h2StVOAxi/MkchS581F2Go5vxYJcGQHBKyleLRS3ahJHSLWgTElAPZwQNullpGaRSg7XQMpU2R5Jyz/K1gJZC/pbgwIQsZ51JSd/JyqOxtIglsYJaA3Hzoy5SQOYOdEAddOGpmAl1z7vxHGkzjmEa+jqHvEHXjR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739298335; c=relaxed/simple;
-	bh=m2wqFcz+v1UAQgc1YqCV1MB5c8CjM8VI4vZEBEicwuA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jG1yywoG2F8rgm2I5c6tkg/4D6PldxpJseGBNqVqynhTnYRRcJ5N8w3mug0RYMlZmGEkejTxJzWui5hD0ZsqkhKfHiMohPEudxxUeV9hJWNDNyM+Ffi78FrpWbPKJypRAam3GPk4JvcgMnFQ0yro2AMFl09fzVLvODXIAuF1iTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gcZ6MW66; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gcZ6MW66"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A4FDC4CEDD;
-	Tue, 11 Feb 2025 18:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739298334;
-	bh=m2wqFcz+v1UAQgc1YqCV1MB5c8CjM8VI4vZEBEicwuA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gcZ6MW66T4mSGkn1IwJAlhhTn3L0yjP+6Z7DRxfw3s4YqIlseachoNLve9XqrtKST
-	 O7kakKZ94Sd2Yu78QMBC3Dr/WdRoJ2so2S1L41JELSj/ACMf/mxOI+bHnylY1jVKcc
-	 dMsuMXlnGRzwoWfJoZi1/TrpfhzmANqViCcdJIzbF6JggwgSSxJK+oEL00vmrdL5KS
-	 RSieRcUqvmt7CZ1wVrCkKeRR63k36qyRQ1krBypUtiXLRZXTfTWGxHfDHARbLFjQgS
-	 9heWZK/oLn9k+37SuiRtcCnmN6i6/DQvs1xS+yOr2Wvwj9Nc0R2FUl627260njtMvP
-	 UzFpNQsC+PHyw==
-Date: Tue, 11 Feb 2025 18:25:28 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Alain Volmat <alain.volmat@foss.st.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-	Sylvain Petinot <sylvain.petinot@foss.st.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: media: st,stmipid02: correct
- lane-polarities maxItems
-Message-ID: <20250211-labrador-spotter-27df2d2bbe02@spud>
-References: <20250210-6-14-stm32-media-fixes-v1-0-c64ebe9af8bb@foss.st.com>
- <20250210-6-14-stm32-media-fixes-v1-2-c64ebe9af8bb@foss.st.com>
+	s=arc-20240116; t=1739298341; c=relaxed/simple;
+	bh=dk7DcZ8VOV2tzGxsZyrLpE8fBtxN06xuyjPRFr719pk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YWUoxU9hNa2Yqt+hWq4XpC2WI0Ieegp3bLEYfnSijSjBZ/8VLyFYSJO+jb5DKbRoRnk3FxUMV8mIVedfcMoqpP97cW42j4vR+0hNJdJo23x6+KLlkjP9qVdduB6PQb0yTPuo1EtdrnOE8PVSYGZNwFnPaAloM50gFoNv6it6ImM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 684A513D5;
+	Tue, 11 Feb 2025 10:26:00 -0800 (PST)
+Received: from [10.57.35.63] (unknown [10.57.35.63])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23A793F58B;
+	Tue, 11 Feb 2025 10:25:36 -0800 (PST)
+Message-ID: <1d6b3fe7-9376-422b-a2e6-ebaed7b6cd75@arm.com>
+Date: Tue, 11 Feb 2025 18:25:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hFoqtL9VL6EAg4Q/"
-Content-Disposition: inline
-In-Reply-To: <20250210-6-14-stm32-media-fixes-v1-2-c64ebe9af8bb@foss.st.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] iommu/dart: Set DMA domain for locked DARTs
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Sven Peter
+ <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250210-locked-dart-v1-0-5d97fe247f35@rosenzweig.io>
+ <20250210-locked-dart-v1-3-5d97fe247f35@rosenzweig.io>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250210-locked-dart-v1-3-5d97fe247f35@rosenzweig.io>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 2025-02-10 7:39 pm, Alyssa Rosenzweig wrote:
+> This is required.
 
---hFoqtL9VL6EAg4Q/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Now that we can, I'd really rather do this properly and not offer an 
+identity domain in the first place when it's not available.
 
-On Mon, Feb 10, 2025 at 11:04:31AM +0100, Alain Volmat wrote:
-> The MIPID02 can use up to 2 data lanes which leads to having a maximum
-> item number of 3 for the lane-polarities since this also contains the
-> clock lane.
->=20
-> CC: stable@vger.kernel.org
-> Fixes: c2741cbe7f8a ("dt-bindings: media: st,stmipid02: Convert the text =
-bindings to YAML")
-> Signed-off-by: Alain Volmat <alain.volmat@foss.st.com>
+Thanks,
+Robin.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
+> Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 > ---
->  Documentation/devicetree/bindings/media/i2c/st,st-mipid02.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.ya=
-ml b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.yaml
-> index b68141264c0e9fe0e530ce3b06fa3434fa712b38..4d40e75b4e1efff673647dff7=
-bf984c89abca4cf 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.yaml
-> @@ -71,7 +71,7 @@ properties:
->                  description:
->                    Any lane can be inverted or not.
->                  minItems: 1
-> -                maxItems: 2
-> +                maxItems: 3
-> =20
->              required:
->                - data-lanes
->=20
-> --=20
-> 2.34.1
->=20
+>   drivers/iommu/apple-dart.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/iommu/apple-dart.c b/drivers/iommu/apple-dart.c
+> index 9c74a95eb7e819e94ab2fb47ed0d411a1eba8bf7..9c6f780dc7220096ed6bba692fa1a4bd859b0d61 100644
+> --- a/drivers/iommu/apple-dart.c
+> +++ b/drivers/iommu/apple-dart.c
+> @@ -941,6 +941,8 @@ static int apple_dart_def_domain_type(struct device *dev)
+>   		return IOMMU_DOMAIN_IDENTITY;
+>   	if (!cfg->stream_maps[0].dart->supports_bypass)
+>   		return IOMMU_DOMAIN_DMA;
+> +	if (cfg->stream_maps[0].dart->locked)
+> +		return IOMMU_DOMAIN_DMA;
+>   
+>   	return 0;
+>   }
+> 
 
---hFoqtL9VL6EAg4Q/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6uWGAAKCRB4tDGHoIJi
-0vx+AP42lFkGgFbVvjv8uVhpy2pgbgrr0qVFB5kRBVK83SQAOQEA+V9bGwFArr3m
-dzI4HLmfDst/Jxk9UYibYgg4vtsczA0=
-=Rwgi
------END PGP SIGNATURE-----
-
---hFoqtL9VL6EAg4Q/--
