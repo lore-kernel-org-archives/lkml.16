@@ -1,140 +1,178 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615B926BD92
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06D226BDB9
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739248153; cv=none; b=NF/SNj0Qg08W8E6WQhi3oCkmMAc7UUbeAMB1K+iYXYymuUKaRkkWbZHPr0spg1t5hffHfMnOjH7L/hUmMZK1GMs6nuGsS4sQxGFj+00CvDQGmeb6EKZeA0cy2uyTzIx5Sy9QvIckpAGvGnOGxfjVBZWasmD2VMnv+wraQaRc5kU=
+	t=1739248301; cv=none; b=p06aKVd+YUNaOSBONT4yVM5B06jCFEy9jQdp44dOXiXzPFVz9kXFnTTqJB+z0HivRn3Y/mVpX6yVJWNzlWh6UcBNVZo8MntwAQqDM2p3LW5eX4DcjAQh172T73xadResRmXbrmNOLgf7XHUDGMB4AV8uUrVEIwXp2EVbBmYhHeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739248153; c=relaxed/simple;
-	bh=Eh4D03RgjRhUFUGbjnsrtoBwi4K6jy62lBsis7HXjqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qfb7Km3zO6i6KSHSFDAcICsXFUvVcPO0+bDljOwePTnOZhPaE+6qQtzjaqcgo1PnMiG7FFxHxlYotFHXJTlF+H7hRv4ZN1h/jcNrViKzWockuPZ1V1CdD3RtkniJVNB7vUEmxpSd0NLk0qRJiAGEY0ioeYct28XTpU3MM5P7WQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mp5crol3; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739248301; c=relaxed/simple;
+	bh=KBi+G9UGgPx2k8umZQyZtGo0Tkv4fp4ucz0iGRT1/ZM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A5gJLRgbmUrWiF+//zcjkANJRNkwri3/qQgXt4i5RVrbf3t0KlrZgNcD62K6mSrlw+2haR94wtsQ8Erisz5+srnSZdP4IlNXCCbBWNCqzRccyMqMUIKVz5l3Jh6vQiNk351PL14mxE8eilXHl+cm4Uj5vEpJmAeKXoHJTH0tCFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=LT5hQ26v; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mp5crol3"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f55fbb72bso61549685ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:29:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LT5hQ26v"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-855370e0de6so34923739f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:31:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739248151; x=1739852951; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=R17/qsybBuUiE11sy3rr55GZQNSwgogOHqxcTs41IzQ=;
-        b=mp5crol3mvRMFzdn7o2vZKzsUToSZYWKSP8DyMnmPdwg1Lo7pE9DemQtA8iAYxcqyn
-         XiY7okiTDAe9pSNJyGD44ioLnD4+UGLTfchrP++AuXYNE68kCg0NvzSrPd9IgWWzL/3n
-         dMDyxMNthlbrhrEQU1mtIKLsurxPPtvOIVVegIbP1OPtRWCg7nGCFavOyw82CgKNWPPc
-         Gp3rMG5wmkEpJ7+aGayeOY5ENba+agEA9SujVbdZ9S+SAoesn6YdVAlWjxszOH8zG7tK
-         qH1tW5V3xbN99F+QvAvfd3POU3cbHAiFpciz9VJkZMWmBtSrxRh0kdhbF/0DTbkXbWae
-         O3yw==
+        d=sifive.com; s=google; t=1739248298; x=1739853098; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uk7QCT1ibthTmG31kgz2RQ3fd9RFf43i5AcvZcwTxN4=;
+        b=LT5hQ26vzNTfE/pnK0iQOZRlVJ9iOVJQ30cBQmxNxGOYs0Vtyj0Q9LZ/WXHnaWr8WU
+         8FodzwkLHV86p1IUbMUClZ9I4/aeZYYEGROWTkIEkLhO3n4w3dqfKFA7tM4PlmtHKxrM
+         NxDtHeltMZL1QL6dPtT64MMeL1LqLFoBAePnhx1+7+Qr/JLh3uCcFaYzggmbRAIWwpZB
+         C9c5pou1ojdbaiGDB1o+FBiigUli+g4i25OaoeEoloPr5csOaMngMzQ4h0MXF67Pz7XY
+         4FQWQchXuJhtDRzcL2EB+VDzyNVYrgA7enODAz6mFQfVVAoqeY3zftSgOYIkKPut6lW9
+         0KCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739248151; x=1739852951;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R17/qsybBuUiE11sy3rr55GZQNSwgogOHqxcTs41IzQ=;
-        b=cxp8/R6tC1xsfM1m+lqqHM1zv21IJgCMalE0ZEvgYLHCh+JYflk9JF9pWiwUECup04
-         EIc93LKu+3Pf0QwOGdVdtrqJNHfqaSV0ErQM9aLYOyEHerkJOEBVsC6XBdoIc78XYd51
-         dC6xXTW1R12wzAy/yK87S11HhNIlfvHPxkE5rMKCI1UbOGOlGlezVQPYwQ4YDXa7iRkd
-         Xuc6Z38LllywwgcWmi8Di8Yw3Nu02jzqOxyeuFLDf49/xog0KjTuhmsFOiHY7Sd5SBLF
-         4hRIdOTtmp+ebZgyR/V1tSISE/lxhw4hcfiAY8YmiNnNLDC2Q55RaIjUJMbtoEz1hLxG
-         q2LA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9YGTTXDlfVW7ezs/ZAkoDWK/bWwzUK6ygKsc2h+gpCd82nBZRd2vzy3o148Th0klBxbO82NP7WNm74rE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7A7F71rwU8wCSzY/4WXhcazRiSyMJSvgjWc1y1aLBNFPbNTZz
-	0kqRMdiIArEoI8bSYTckhLIl3DwCcsLosLGO0lTsivD69glor8xBzHRfFksQRhw=
-X-Gm-Gg: ASbGncv3SXZgAvlkb8JEjOVKF8XR3VNXw4dbZ/9Lq3HTXtTTwJkNXDfcicSdHuknOiq
-	R/wi4ajgzBgsjbnMJZHfcRnwNRLT4I6b35j2IEOieFNN9DHbQGNfzjWQlR4nHCw9FfgjxhRzbgB
-	zC8GCMYRdHCXdSzXNaXATUva+gDi3jkr1odxP1/lJKFcbBcr3C2O8uAbNNXacNCksM5HQkzVd4x
-	iOrdfIx2IVWeW8yWOaBrEFtAGIlVERVvH2AFUyojIExZHNXq//OoPO5Uy85RG3uCW/+sMO2wFXs
-	wwlCANp7ANtw+PYo8w==
-X-Google-Smtp-Source: AGHT+IEZcBKkgQvgu0Gja7oPmp7ETDL4kRRxy2BoBNXWnfh9afk9yQuRY7Pd92NDnJpb7opE0F3HeA==
-X-Received: by 2002:a17:903:2309:b0:215:a04a:89d5 with SMTP id d9443c01a7336-21f4e1cf038mr280431035ad.2.1739248151630;
-        Mon, 10 Feb 2025 20:29:11 -0800 (PST)
-Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51aecfa58sm8630725a12.25.2025.02.10.20.29.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 20:29:10 -0800 (PST)
-Date: Tue, 11 Feb 2025 09:59:08 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Erik Schilling <erik.schilling@linaro.org>,
-	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V8 04/14] rust: Add cpumask helpers
-Message-ID: <20250211042908.nyftiw7gtxosfjwc@vireshk-i7>
-References: <cover.1738832118.git.viresh.kumar@linaro.org>
- <db0166341ce824c157d0c58c240b3efc6aec6f6e.1738832118.git.viresh.kumar@linaro.org>
- <Z6qTelPSqpFk439l@thinkpad>
+        d=1e100.net; s=20230601; t=1739248298; x=1739853098;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uk7QCT1ibthTmG31kgz2RQ3fd9RFf43i5AcvZcwTxN4=;
+        b=VOUPsiPKSWLXNlAfjifKvu4dqGd24R2DnkwlaqrQRffOTo2gQubP/PxHNJumWyoR+1
+         Azi0AhNNIM3QVpF5oDrkaxKdSeRBpUoE1xG3VTJ5m6VHINbD32IKOzGBGJX9ISWp+Toz
+         pMhb+StxEhmsgp1l7aMa7fM78LHRax3/gHknkn4frQWpv7bkPQURlnf2piBUfs4v3iLk
+         /e63d5IaLcFFc6ecuiMAUhvfBVdu8CCdNSCTGHKJVNjQvHfU9JThzItrWcAkEmxHC0HI
+         l0LVpZDzwCJzrY5hE40ciaOoq1yRhwyDBELdgfM2k2zO/hLAIFAzIX38/fyOKYZf8bKu
+         Z8vA==
+X-Forwarded-Encrypted: i=1; AJvYcCWF1FXGLCEQAKPbJsLr0gZGxzbeNcEoEyD9aIEOcg0uDy0ddfvuzyX3yWQInYGaa9eVCiZmEZgMMBy59s8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUCcMXxf6swErNL5sBmfYBzrFYsT4q4AWohVTOV8FnJm2dGG8u
+	CSRoc+Aqr3YDTJJxNS22ht9JDqzo1K9S/1lNX81+xhheS7qB7XAG4tfwisoSXKk=
+X-Gm-Gg: ASbGncvy6Ttul25yXJa3M771000Tj/wYQulS8Y1PYYxKx/LgYKtFAYM6ZTjWSmZVupc
+	L/T01prRDPXovvSR8bPYJC8X4d25LLbQRqi2pSVn/G03Qurglk8FBncjvHQlyItwlTuGcgWWl59
+	OxJpoOK98l0S3om2pzAWwg+H8wvck7is1MT+pYUJMTZJUb+SgEd2bjVm1UKI2ffwUUFYFlunADu
+	Aiqm5xr38zqwixwkHakXlDd1oWNYDR/SrHc5U6mkmGTuqOzBJZXUZx6lpzPsBFq0U3Oj8LDYTvo
+	wo9cotN3qcbiSdY0y2M4Oesruz6GLYgafANKUT0=
+X-Google-Smtp-Source: AGHT+IHEmCDuHZ+8uB9f8GDunxYoBJjA1XFOTU/tpz/O0tguykq12oFATdzw1dCWB2rK39lLH2IaZg==
+X-Received: by 2002:a05:6602:3946:b0:84a:5201:41ff with SMTP id ca18e2360f4ac-854fd886d54mr1422323839f.3.1739248297943;
+        Mon, 10 Feb 2025 20:31:37 -0800 (PST)
+Received: from [100.64.0.1] ([165.188.116.9])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ecdb903a89sm2110916173.70.2025.02.10.20.31.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 20:31:37 -0800 (PST)
+Message-ID: <6223225b-a7cf-452d-ae69-d895b5f23d62@sifive.com>
+Date: Mon, 10 Feb 2025 22:31:35 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6qTelPSqpFk439l@thinkpad>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/15] riscv: add Firmware Feature (FWFT) SBI
+ extensions definitions
+To: Deepak Gupta <debug@rivosinc.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?=
+ <cleger@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-kselftest@vger.kernel.org
+References: <20250210213549.1867704-1-cleger@rivosinc.com>
+ <20250210213549.1867704-2-cleger@rivosinc.com>
+ <Z6rMtBud/hsKYYIw@debug.ba.rivosinc.com>
+From: Samuel Holland <samuel.holland@sifive.com>
+Content-Language: en-US
+In-Reply-To: <Z6rMtBud/hsKYYIw@debug.ba.rivosinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 10-02-25, 19:02, Yury Norov wrote:
-> On Thu, Feb 06, 2025 at 02:58:25PM +0530, Viresh Kumar wrote:
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index ee6709599df5..bfc1bf2ebd77 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -4021,6 +4021,7 @@ F:	lib/cpumask_kunit.c
-> >  F:	lib/find_bit.c
-> >  F:	lib/find_bit_benchmark.c
-> >  F:	lib/test_bitmap.c
-> > +F:	rust/helpers/cpumask.c
+Hi Deepak,
+
+On 2025-02-10 10:06 PM, Deepak Gupta wrote:
+> On Mon, Feb 10, 2025 at 10:35:34PM +0100, Clément Léger wrote:
+>> The Firmware Features extension (FWFT) was added as part of the SBI 3.0
+>> specification. Add SBI definitions to use this extension.
+>>
+>> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+>> Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+>> Tested-by: Samuel Holland <samuel.holland@sifive.com>
+>> ---
+>> arch/riscv/include/asm/sbi.h | 33 +++++++++++++++++++++++++++++++++
+>> 1 file changed, 33 insertions(+)
+>>
+>> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+>> index 3d250824178b..d373b5c08039 100644
+>> --- a/arch/riscv/include/asm/sbi.h
+>> +++ b/arch/riscv/include/asm/sbi.h
+>> @@ -35,6 +35,7 @@ enum sbi_ext_id {
+>>     SBI_EXT_DBCN = 0x4442434E,
+>>     SBI_EXT_STA = 0x535441,
+>>     SBI_EXT_NACL = 0x4E41434C,
+>> +    SBI_EXT_FWFT = 0x46574654,
+>>
+>>     /* Experimentals extensions must lie within this range */
+>>     SBI_EXT_EXPERIMENTAL_START = 0x08000000,
+>> @@ -402,6 +403,33 @@ enum sbi_ext_nacl_feature {
+>> #define SBI_NACL_SHMEM_SRET_X(__i)        ((__riscv_xlen / 8) * (__i))
+>> #define SBI_NACL_SHMEM_SRET_X_LAST        31
+>>
+>> +/* SBI function IDs for FW feature extension */
+>> +#define SBI_EXT_FWFT_SET        0x0
+>> +#define SBI_EXT_FWFT_GET        0x1
+>> +
+>> +enum sbi_fwft_feature_t {
+>> +    SBI_FWFT_MISALIGNED_EXC_DELEG        = 0x0,
+>> +    SBI_FWFT_LANDING_PAD            = 0x1,
+>> +    SBI_FWFT_SHADOW_STACK            = 0x2,
+>> +    SBI_FWFT_DOUBLE_TRAP            = 0x3,
+>> +    SBI_FWFT_PTE_AD_HW_UPDATING        = 0x4,
+>> +    SBI_FWFT_POINTER_MASKING_PMLEN        = 0x5,
+>> +    SBI_FWFT_LOCAL_RESERVED_START        = 0x6,
+>> +    SBI_FWFT_LOCAL_RESERVED_END        = 0x3fffffff,
+>> +    SBI_FWFT_LOCAL_PLATFORM_START        = 0x40000000,
+>> +    SBI_FWFT_LOCAL_PLATFORM_END        = 0x7fffffff,
+>> +
+>> +    SBI_FWFT_GLOBAL_RESERVED_START        = 0x80000000,
+>> +    SBI_FWFT_GLOBAL_RESERVED_END        = 0xbfffffff,
+>> +    SBI_FWFT_GLOBAL_PLATFORM_START        = 0xc0000000,
+>> +    SBI_FWFT_GLOBAL_PLATFORM_END        = 0xffffffff,
+>> +};
+>> +
+>> +#define SBI_FWFT_PLATFORM_FEATURE_BIT        (1 << 30)
+>> +#define SBI_FWFT_GLOBAL_FEATURE_BIT        (1 << 31)
+>> +
+>> +#define SBI_FWFT_SET_FLAG_LOCK            (1 << 0)
+>> +
+>> /* SBI spec version fields */
+>> #define SBI_SPEC_VERSION_DEFAULT    0x1
+>> #define SBI_SPEC_VERSION_MAJOR_SHIFT    24
+>> @@ -419,6 +447,11 @@ enum sbi_ext_nacl_feature {
+>> #define SBI_ERR_ALREADY_STARTED -7
+>> #define SBI_ERR_ALREADY_STOPPED -8
+>> #define SBI_ERR_NO_SHMEM    -9
+>> +#define SBI_ERR_INVALID_STATE    -10
+>> +#define SBI_ERR_BAD_RANGE    -11
+>> +#define SBI_ERR_TIMEOUT        -12
 > 
-> Sorry what? I never committed to maintain this thing, and will
-> definitely not do it for free.
+> nit: Space mis-aligned(^)    ^
+
+The alignment is correct when the patch is applied. It only looks wrong in the
+patch because the "+" from the unified diff format causes an overflow to the
+next tab stop.
+
+Regards,
+Samuel
+
+> otherwise
+> Reviewed-by: Deepak Gupta <debug@rivosinc.com>
 > 
-> NAK.
+>> +#define SBI_ERR_IO        -13
+>> +#define SBI_ERR_DENIED_LOCKED    -14
+>>
+>> extern unsigned long sbi_spec_version;
+>> struct sbiret {
+>> -- 
+>> 2.47.2
+>>
+>>
 
-Okay. I will add a separate entry for Rust cpumask stuff.
-
-> > +#ifndef CONFIG_CPUMASK_OFFSTACK
-> > +void rust_helper_free_cpumask_var(cpumask_var_t mask)
-> > +{
-> > +	free_cpumask_var(mask);
-> > +}
-> > +#endif
-> 
-> This is most likely wrong because free_cpumask_var() is declared
-> unconditionally, and I suspect the rust helper should be as well.
-
-Non-trivial C macros and inlined C functions cannot be used directly
-in the Rust code and are used via functions ("helpers") that wrap
-those so that they can be called from Rust.
-
-The free_cpumask_var() function is defined as inline only for the
-CONFIG_CPUMASK_OFFSTACK=n case and that's where we need this wrapper.
-For the other case (CONFIG_CPUMASK_OFFSTACK=y), Rust code can directly
-call free_cpumask_var() from the C code and we don't need this helper.
-
-> Please for the next iteration keep me CCed for the whole series. I
-> want to make sure you'll not make me a rust maintainer accidentally.
-
-Sure.
-
--- 
-viresh
