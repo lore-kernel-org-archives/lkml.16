@@ -1,129 +1,105 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6842154BE0
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B2B1D5CD1;
+	Tue, 11 Feb 2025 04:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739246888; cv=none; b=thWMPYNPPOVlVkWgIfiIkDS/lkHLRh11DHj2Czgm0dtGtLAslnE4YNtkd/ovfW/yWEg5ARHqjulOCdbIVTbvoSnWPa4+ytmlayk5kHQGXRu+j5QbXR04XxIhvJ3SFI9RR7rDeGrtwlprGOTVpC4Ns3WZTqkBihw8R3QmkmoNYwM=
+	t=1739246922; cv=none; b=Zvu1lwk0u8mazjO6PIw22F/ffIV098vE15zmsMdLHYS9zzGjAndcGWmLLk1x9ya3+LWnDGyN2zo9VaHiXsejitPS9zAKskE0mg1fI/v87orBYxdJXkBSqOq9/iBNaNqsCWMv6WH8DwWlHQ3EcL2oHPhuPZFLtVHHolla2CHu+Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739246888; c=relaxed/simple;
-	bh=b6XY/v5c1IShWi7Mnzp3g3rBRfTPLqoqs/fcWxDfeEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TqlIZrUo/NUik7QPiv4GUZUm0hqe7g7tiBCgDRoKSwPsR4Y6qmFTSaWJZtm7FfAmphUY8DwALJdL0nP3vBmUE+73YFynET5tL3u3+LvtQbu8vAMtFB5z0qYW1VRahHZ9puV3sPTGVcb8lUSdV80JLKqKnU6zFe6UdD5/r6csygM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=b2Pwc+jJ; arc=none smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1739246922; c=relaxed/simple;
+	bh=RIdLjh0gInw/I9blWel0UlToC5xdW4xXT3livZR0rJc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UQJQlgpUkoR8w3jfKlUpHfl0zVpKZJl5AZm4OoyBGXwpW0+wfIzzmh5mpanzDpKngsjsqyFuiQa9+kj6hfJBhdQbEEgcESeeogWU/F+Ya2Bmgli9xPOmdGrEado5xVVT6+zu5uOV46IqbioOQBGcZVttqCmQM11AH6BYq3Cv7hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=FMLvhbTY; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="b2Pwc+jJ"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-726e5aba2d8so463940a34.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:08:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1739246886; x=1739851686; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=t8eYWsGO5bR6d/A4TPLNpDeU5HcoQR1tHKfNDbSFT88=;
-        b=b2Pwc+jJ4jVFOaDwaDWWBD4g1f3mOtu5WE0oXVLvwulvsu6BXTJz7LRn88fibO6Y0C
-         KN3MT79GAbDfPYUZvDzwgZ4o6/Kk2+h8eyut371dXb3KZ6BUjFxTbKNFW1PjmiDPE6OJ
-         AHRhN5hTLmCbFU1TBDemGknqhnsfF4VliHBto=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739246886; x=1739851686;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t8eYWsGO5bR6d/A4TPLNpDeU5HcoQR1tHKfNDbSFT88=;
-        b=Vwz/JCRsY9zYEwm75AXd9q/nd/fFgTodCWGUhGa0n4DOslRILORG4Ct9+xwhNftjja
-         UPNZhSTW905Qyc0+9pqW16tVqmRMJ/XzyQtbhkZ/6hkbb96/eeRtMzDZkdTnEtEV5d5u
-         2OniOtCD4kcZMeO5pzWDJOrxXs2UCsxkW1Prh+lPslXxj4soSD0Qq7nxHp8MdFy2/1Hk
-         OFi3rjwthzfqaoP6N26Bc6yjQU+9mIUHmGe4F/gON1PTANYKiIcC6QbIVruzlpXrFxsO
-         FuegX+YV4h/vwxK2WDi8FRmXblEZI4zomaV3RNK+adstAi1KRo4OEXHyDuL47Vml6aqi
-         nEmw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFUanOKsBsT472Sz3nMbyAOwa4sMr3NHmj13zfLWyCO+tfDDJAE3ozzWYSig0fy+T8qMQbK5PR8FYjGX0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmWMaafEnqRC3Irc068ZKnM6P6SOpM1q82BtZyPMrWNvaIKQx/
-	oWb1m4FxbrhV6bOCTmnDQfqjQiUiq7ih0uZZrVPgvAb82DPCtil1uBoG9PDaow==
-X-Gm-Gg: ASbGncvgJZUOfQBbLOrO90TSYDshqYV/9FhWzoVsR0BI2KEwwqzxO7Tg0Ur514cEgci
-	04VvBM5nK+ujfdSwyt7FyPXGrbhvjQGxnUEoHwX671NH5CMkVCJqQfuKtYwrStxzZrv2h9Anzx8
-	DxtScjcJ1bjsrbRwJAM1hyKiwVmtEcFitP9WZ3cRUX8SIqqy+PtYsINu84AMMbNebhIBFOEQ+sQ
-	PdY5HC4IL+s9dpXnHbNBXEb/wLMcL9yxqdePo8IjbGgskAmba8KiPQKKNu4rKms4KHfOGkWdSTM
-	D0T/vBnDQb1kUJR/TrZCxHDBkkMJOs0ybwgqnjHaOBdkQKprhjctX7EBxYGNmijTEA==
-X-Google-Smtp-Source: AGHT+IFapi4wMv31NrAKWbcvGGOIg6pfCWW86OI3QXYEtKOl36IiOEMw2fKlDSL1dacmx7ZY5EhBlg==
-X-Received: by 2002:a05:6830:6d11:b0:726:ea48:5993 with SMTP id 46e09a7af769-726ea485bb5mr589459a34.2.1739246885929;
-        Mon, 10 Feb 2025 20:08:05 -0800 (PST)
-Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726e93d873csm380757a34.47.2025.02.10.20.08.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 20:08:04 -0800 (PST)
-Message-ID: <d6f3bedd-11b9-4eaf-a8a2-a6da460fc7b3@broadcom.com>
-Date: Mon, 10 Feb 2025 20:08:01 -0800
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="FMLvhbTY"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4YsSc36PQNz9t0N;
+	Tue, 11 Feb 2025 05:08:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1739246916;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=y0neZiz0fLVNbrblskOmdm8UUdxdooce3vHdNB+7YLA=;
+	b=FMLvhbTY6AfyMGu5f5YG7nHM0Ysya9bCSvxSxF9LQiAV5EPqTchMCL2AuMo/8atJyg63vL
+	jB4lOVOmCWJNdCCVZkQssUCTdK3QdUVzvGprScKMyo27GAMrYmBoI65h7LDFe571VfNxUY
+	du6RgUt0d8IMsmFxMWtPvBtoH8DfqDPgXyhTGtjrg/lXxrAIBOCqFoo1TGrXLDVD0v9cyN
+	eKnsrb1M/8iBQHlwZl1gqzglbqVuZINraYZJCblpZQ2T81i5HpdKiFpCLx99Gb/0deP1Jo
+	GI1XIN6r5HKIu7zXTS0ze1aMcQ2zbq7sQdymmG8R2/XPMlzSCOHak2ZBU7hbrA==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Mon, 10 Feb 2025 23:08:27 -0500
+Subject: [PATCH] ASoC: Intel: sof_sdw: initialize ret in
+ asoc_sdw_rt_amp_spk_rtd_init()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: bcm: rpi: Fix potential NULL pointer dereference
-To: Chenyuan Yang <chenyuan0y@gmail.com>, mturquette@baylibre.com,
- sboyd@kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, richardcochran@gmail.com,
- dave.stevenson@raspberrypi.com, popcornmix@gmail.com, mripard@kernel.org,
- u.kleine-koenig@baylibre.com, nathan@kernel.org, linux-clk@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, zzjas98@gmail.com
-References: <20250211000917.1739835-1-chenyuan0y@gmail.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250211000917.1739835-1-chenyuan0y@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250210-soc_sdw_rt_amp-v1-1-1ee1afcd8941@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIADvNqmcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDI0MD3eL85PjilPL4opL4xNwC3VTLZHMD49SkVJOUZCWgpoKi1LTMCrC
+ B0bG1tQBe6DfAYAAAAA==
+X-Change-ID: 20250210-soc_sdw_rt_amp-e9c703ebe4dc
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1364;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=RIdLjh0gInw/I9blWel0UlToC5xdW4xXT3livZR0rJc=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeHBLODZhLy9ZTGV2NHY1bi92MytVeWZlS09sRWpjZDR4CjMvOTY1dnNGRzNQNmcrYjR1
+ cWwxbExJd2lIRXh5SW9wc3Z6UFVVNTdxRGxEWWVkZmx5YVlPYXhNSUVNWXVEZ0YKWUNLZTN4Z1p
+ qano2OHUxS3R1KzB5TmZQWlNWQ3ZwNmRQMi83MHRwTFFXZXVkOG5xbG5Wc1ZXYjRaM2FnOUhQMg
+ oxYnpRNDh2MGRWOFoxcys5K21SOTlOVGJ4dmJ6NTM4NnV0dDJMajhBVnJWVVR3PT0KPUpjZE8KL
+ S0tLS1FTkQgUEdQIE1FU1NBR0UtLS0tLQo=
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
 
+There is a possibility for an uninitialized *ret* variable to be
+returned in some code paths.
 
+Setting to 0 prevents a random value from being returned.
 
-On 2/10/2025 4:09 PM, Chenyuan Yang wrote:
-> The `init.name` could be NULL. Add missing check in the
-> raspberrypi_clk_register().
-> This is similar to commit 3027e7b15b02
-> ("ice: Fix some null pointer dereference issues in ice_ptp.c").
-> Besides, bcm2835_register_pll_divider() under the same directory also
-> has a very similar check.
-> 
-> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+Closes: https://scan5.scan.coverity.com/#/project-view/63873/10063?selectedIssue=1627120
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+Would it potentially be better to remove ret entirely and just return 0
+explicitly at the end of the function and directly return in the if
+statements? I'm not sure.
+---
+ sound/soc/sdw_utils/soc_sdw_rt_amp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+diff --git a/sound/soc/sdw_utils/soc_sdw_rt_amp.c b/sound/soc/sdw_utils/soc_sdw_rt_amp.c
+index 0538c252ba69b1f5a24ba2de2a610b22d0c0665f..61a00a3548d85689c13e2d2a301da17a572e4a0e 100644
+--- a/sound/soc/sdw_utils/soc_sdw_rt_amp.c
++++ b/sound/soc/sdw_utils/soc_sdw_rt_amp.c
+@@ -190,7 +190,7 @@ int asoc_sdw_rt_amp_spk_rtd_init(struct snd_soc_pcm_runtime *rtd, struct snd_soc
+ 	const struct snd_soc_dapm_route *rt_amp_map;
+ 	char codec_name[CODEC_NAME_SIZE];
+ 	struct snd_soc_dai *codec_dai;
+-	int ret;
++	int ret = 0;
+ 	int i;
+ 
+ 	rt_amp_map = get_codec_name_and_route(dai, codec_name);
+
+---
+base-commit: febbc555cf0fff895546ddb8ba2c9a523692fb55
+change-id: 20250210-soc_sdw_rt_amp-e9c703ebe4dc
+
+Best regards,
 -- 
-Florian
+Ethan Carter Edwards <ethan@ethancedwards.com>
 
