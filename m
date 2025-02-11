@@ -1,72 +1,72 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63844272905;
-	Tue, 11 Feb 2025 22:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DBD272905;
+	Tue, 11 Feb 2025 22:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739314245; cv=none; b=ERdpxricDf7Ih5/QF9ZuGvSq/7zWklSrejcSPjYgYPqHmKJCXotwxB7BOwXrv/p+iRSpHVfThO5qwYkNoPx0VugyVNhUJGyNGWufM6tp7GpbqAPwEthBS6vdxAtyXBhdu+LsUHoX+HPFjN5K9pWrfqokpsDyg1mb4fxX05Yn32w=
+	t=1739314302; cv=none; b=Apa/HW2Wc+aGVuJQPpIVjjbfqSR1Zw6+P5ENfjJU4+Y1g/2qPD+RVURPp+On6nzyk620EgdnqNXHbG1b5kUOTz0d/X/eC8zFW5XFVGGNS8MWps1ARA3iwa+9w9+OXrWlOpseePfrYHu+jiCYtL2sdnnOS0wAwBSZ5WrFrm5b4p8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739314245; c=relaxed/simple;
-	bh=vd7etzFURvjt2qMQWdTlc/0nsCmROUouFpAkB6TyhSA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=giokgzDz8mikonExINRlcfUwHRzDxrKv/yulEomAPG8duKEWMagSZZiJPGS6jX0zTL29WYKCmISGqPQzZklvJj2ZqWc4hLhFD+OdzL8eSI6lUPKzAbKHTM38uXf57cxmNck2/SndTEKVbWDW5XhR2dy5o+D91BO5fsSdPLDQQQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mmi/B7Tu; arc=none smtp.client-ip=209.85.208.48
+	s=arc-20240116; t=1739314302; c=relaxed/simple;
+	bh=wIxUZEd+00TmCiNMDTMEX0eVV3GSpdk9fEt2kd93gUc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gvC0yl+G3LJMAFGxSIG5rwUoyYG2g5veAv57DO9zTicvEdnWeQPmAEfhrTXGt0NR0Pgyp30VACGx9A6TQEBmSZfoAFQNJUzo6OTSmSEv6St6udoN8NxxL/2Tl370Rd+U+F6XfN/ED3BlEjU5mBSXhBiDccODcfEsIXKFFwfMLFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GI5rlr0R; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mmi/B7Tu"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5deae16ab51so394295a12.1;
-        Tue, 11 Feb 2025 14:50:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GI5rlr0R"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38dd935a267so2591138f8f.1;
+        Tue, 11 Feb 2025 14:51:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739314242; x=1739919042; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739314298; x=1739919098; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RkJ255Nz05hMzwYP0ZFP3cQKnCDIXbUqK4zohkcWmek=;
-        b=Mmi/B7TuDqYvE1CnfP2oDmfTKo1GRhfD7jXcBg69N8p0sjWithvcK75krCbZL1/Sb3
-         QIVTvjoPkSTJUcXNFxT+jzwN95AGOT133MA6wiTBuWWv+SUKfO5mMAIxgSyXgsr6xpXZ
-         mrAQTIrcPfOSCc2ccfn6/r+WjB6oen+F8FdiJJ6tyLjKTkhdG/g8Dnlt1sF4utf1GrJO
-         15JokGEb7EmoRsEHKsTVsdcUitAQYCVrWarFhicF0tArpdJrk9gGPOCrOD8FxUO5tBJN
-         4zjB7P/sUlNG/WoVo2RySjO2wxZuAZeKUI9JRsI+J41cblDqWp7zpzYMt2JpLpLbHNKb
-         ntJQ==
+        bh=ICnvzQMQAmp2cYz72i//djwS7X/1914dqOn5NPL1JfE=;
+        b=GI5rlr0RlyinDILVmvqvkxEntgFY9MGuRnd5YshO1MFVALq/SqJ3XnUSZjlxSkW273
+         3CcJZZwzq2p/TTiovNI0uEjy6LDOvnLdwQtRpXXeqPImWGSYFd+/skxlYdhKWIEcvDp5
+         k+wjkVqwxoTKSc6GFuuMO4lIWZxO/daHyb3F9vMFmtuMVy30roTcE1iSgQ+EnzYgOCf8
+         FhK8L/GegNCm5QNJ5iNpLFjFgPV9gDv5rHmzTM5Yj3Mv6NKF/UFSFGADR5FJv5Iem02y
+         iPX05WyfpDzPmZbGz2v47UeKGD5Q5LRh6a5uI1DlcCE6lEj3M9WNmgRoR66qNZ7VsOJu
+         hRrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739314242; x=1739919042;
+        d=1e100.net; s=20230601; t=1739314298; x=1739919098;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=RkJ255Nz05hMzwYP0ZFP3cQKnCDIXbUqK4zohkcWmek=;
-        b=TW68wF947zmeFO2m9t08noEB+wLmKzDnu81MHpLmNAB9uftFDBbIFR7Wri/cO+szif
-         hmqRz6GRalGxHq0dOrgP8oZFpQcS/Cvpa+0397b8zKEiR2WFSwCshk+Ag+Vby8E7GwaE
-         i6gQ57kt93ufeu2NSKuXSZreciuCJL3sAnQbsnxqupWgOwSnTarNPInklkE3Azwb0ma3
-         phamaMS5yZkLuwoQm1CEe4e5/WPLL5qOJ2Yvv/PaiFpoE7QT1QiujIszDZFlJ42pJKyx
-         f3h0Wib0iaygnpbE7wWAXrTCiWdeC1QmR38tO12XxfF9j9F5EgRn1OLF3MgNdl/yUD32
-         3QzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWY+Rixzi9wyxBw9bIqBai62A71Qqo5ajMlKAAkxZX2xoyByo2HechlT8AHEE6Mc6uPwlK1f/iR7MrXv7U=@vger.kernel.org, AJvYcCXix+c6QA0uwEVLn7LLh8K6o014uHi54/KHbHP48tm5zgr6xeyTYWH79aCMOAmCCNwsFGoiYP4RxtDTeeM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY874A6QBvktrrbvVqAMd7GKeifB7itgOvmzaJo5hF/WQ9ZMBt
-	W4opO/Pa09zdmS3p/LTN8oD85WAc+wNISTQOPO5RW7tihWOUO8uuQU5rJQ==
-X-Gm-Gg: ASbGncs7Z4jp0Vk1xhXf6xFWQhehGcrzY0vLmxAYqfckWTf7GDzQZbJRiMb+86zt76U
-	9NtArIeQ7tAgtP1TjWQbHSAR6/zRAmfh1JlCIVYzL47kTkh78VTchDeQ8FkDZMg9BvsCnKyE5Kt
-	c/+Bd8I04XZflCVM/JwnU/gOPDZZnG4h+J4Z9tXhGefXZWsqjnOFQJr+U0PsCpXKRPywK7Bnk+Y
-	3yjMwwc71gURv+UPZD34sp3RZ5vANYUxL17ueVLMzfGsNP3La65OIv47D2E6IWX596zFf74k14J
-	ISGAVxyDjnH087chBieQDJwarLpH8uMV5Ta37pWgfQN9gtxV3wmGvg==
-X-Google-Smtp-Source: AGHT+IFxHR7XFUlEo4fGWSQRitORCTM5qncC4QGfswuOZDj8v2uEOoaqSeMx1wpe0vdO9SFp/CqWwg==
-X-Received: by 2002:a05:6402:27cc:b0:5d0:d818:559d with SMTP id 4fb4d7f45d1cf-5deadd7d39emr2174378a12.11.1739314241317;
-        Tue, 11 Feb 2025 14:50:41 -0800 (PST)
-Received: from playground.localdomain ([82.79.237.175])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7c4316deasm468338866b.10.2025.02.11.14.50.40
+        bh=ICnvzQMQAmp2cYz72i//djwS7X/1914dqOn5NPL1JfE=;
+        b=eqfMaFQkNqUhee+wQGH+ZH/4LxMuXDudnJ7yZrVTJsLsHDNUxWzgEs1XfkNX1dds/b
+         ZN0li04Pv6twogblW8/GTGpBJx2qKy2XL6pN2rBlEsPVzCQuZKg0Iq953Z2KDX+UmzZk
+         ytc5bJYQYt6KBnQKhBHGpT4QqFRU1JSCF1KrFRM85T75Jt9DXlFuAETR2dGXsbxzKEJU
+         RBrCwclmM1lg+81UFdru5PhQ644i6VizWqRSWl3p1Bs18tFb1Uo1o7aj07M+zcQcFxAs
+         5mjddpqYPGAG+74nDzN8bhz9gJej9oVq/OczQMaurlEg8vzKXQwWxTh/0hGddnkemWgz
+         yRzA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJxUO7c8OHlPM8g3RYIhtUZV5gz3bwZXdNv549WL6MJMlC2joXXDPHL36hKHY861jCyP9Dtu4Z@vger.kernel.org, AJvYcCWLxN9p0PSFNLFodZJc/dZoIxU7D0KboOV75B9tSt1yXI13S66+nCzc5XCVzjB2jQXQ5/3IWwgewO8xorc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjOyDGhByWzubGxzyJyuTvLBd7++GbNMfbpAOcGJ9gytIWgl5L
+	fNJatdodZarC8y75KAyXtUP+M5wd82kIh49OIMgYgCEpxPcAQAEw0pkLB2aA
+X-Gm-Gg: ASbGncszfi1pZs8WXaRhG1rnWUrsMWolfQAZxJ9AOUkDWgjqzVNwIt9Gjzk2Cpvjn7h
+	iFLNu7yFgW8jwuey5hGf8Gin5Irosi5js4dn22kj5cFAF85nGjtPYm07GSIDeb1lCf5ZIs/4xs0
+	r2NjzzkaO/MEfZUBxqIJDZRGxSjNbBl5nZgXEy6Eh700yyqTyL63EexO1bHcP3mwYMhEvVqnqtP
+	yL1fgtksxtVJF+jvY0u+2KU2/3Gajm0KF8cMyIQrUsl5rgqIGWODg2cWcgLKUxbEU6xX717KDBP
+	u+wf65Ixa8TxKAX7vkzF0c+QXrIJaegfQdYqDaw=
+X-Google-Smtp-Source: AGHT+IFxSPr6Ik7EeG3X0laBlqQHQTytex4TBrPuw7lJ3kcVufJXL07N44Lupr/3PCF86v+ptpn2rQ==
+X-Received: by 2002:a5d:59ab:0:b0:38d:d8b2:ceef with SMTP id ffacd0b85a97d-38dea2709b9mr565800f8f.13.1739314298204;
+        Tue, 11 Feb 2025 14:51:38 -0800 (PST)
+Received: from localhost.localdomain ([109.175.243.75])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394f3b8485sm19109895e9.1.2025.02.11.14.51.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 14:50:40 -0800 (PST)
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-To: Mark Brown <broonie@kernel.org>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>
-Cc: imx@lists.linux.dev,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: SOF: imx-common: set sdev->pdata->hw_pdata after common is alloc'd
-Date: Tue, 11 Feb 2025 17:50:18 -0500
-Message-Id: <20250211225018.2642-1-laurentiumihalcea111@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Tue, 11 Feb 2025 14:51:37 -0800 (PST)
+From: Stuart Hayhurst <stuart.a.hayhurst@gmail.com>
+To: linux-input@vger.kernel.org
+Cc: Stuart Hayhurst <stuart.a.hayhurst@gmail.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2] HID: corsair-void: Update power supply values with a unified work handler
+Date: Tue, 11 Feb 2025 22:46:35 +0000
+Message-ID: <20250211224705.13576-3-stuart.a.hayhurst@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,42 +75,191 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+corsair_void_process_receiver can be called from an interrupt context,
+locking battery_mutex in it was causing a kernel panic.
+Fix it by moving the critical section into its own work, sharing this
+work with battery_add_work and battery_remove_work to remove the need
+for any locking
 
-'imx_unregister_action' uses 'sdev->pdata->hw_pdata' to fetch the pointer
-to the common data structure. As such, if 'sdev->pdata->hw_pdata' is not
-set before adding 'imx_unregister_action' to the devres list, we risk
-derefrencing a NULL pointer if any of the calls between
-'devm_add_action_or_reset' and 'sdev->pdata->hw_pdata = common' fails.
+Closes: https://bugzilla.suse.com/show_bug.cgi?id=1236843
 
-Set 'sdev->pdata->hw_pdata' to point to 'common' as soon as 'common' is
-allocated.
-
-Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+Fixes: 6ea2a6fd3872 ("HID: corsair-void: Add Corsair Void headset family driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Stuart Hayhurst <stuart.a.hayhurst@gmail.com>
 ---
- sound/soc/sof/imx/imx-common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/sof/imx/imx-common.c b/sound/soc/sof/imx/imx-common.c
-index 82057af1436c..c3594815e60e 100644
---- a/sound/soc/sof/imx/imx-common.c
-+++ b/sound/soc/sof/imx/imx-common.c
-@@ -378,6 +378,7 @@ static int imx_probe(struct snd_sof_dev *sdev)
- 	if (!common)
- 		return dev_err_probe(sdev->dev, -ENOMEM,
- 				     "failed to allocate common data\n");
-+	sdev->pdata->hw_pdata = common;
+v1 -> v2:
+ - Actually remove the mutex
+
+---
+ drivers/hid/hid-corsair-void.c | 87 ++++++++++++++++++----------------
+ 1 file changed, 47 insertions(+), 40 deletions(-)
+
+diff --git a/drivers/hid/hid-corsair-void.c b/drivers/hid/hid-corsair-void.c
+index 56e858066c3c..2f70db8a2370 100644
+--- a/drivers/hid/hid-corsair-void.c
++++ b/drivers/hid/hid-corsair-void.c
+@@ -71,11 +71,9 @@
  
- 	common->ipc_dev = platform_device_register_data(sdev->dev, "imx-dsp",
- 							PLATFORM_DEVID_NONE,
-@@ -436,7 +437,6 @@ static int imx_probe(struct snd_sof_dev *sdev)
- 	imx_dsp_set_data(common->ipc_handle, sdev);
+ #include <linux/bitfield.h>
+ #include <linux/bitops.h>
+-#include <linux/cleanup.h>
+ #include <linux/device.h>
+ #include <linux/hid.h>
+ #include <linux/module.h>
+-#include <linux/mutex.h>
+ #include <linux/power_supply.h>
+ #include <linux/usb.h>
+ #include <linux/workqueue.h>
+@@ -107,6 +105,10 @@
+ #define CORSAIR_VOID_SIDETONE_MAX_WIRELESS	55
+ #define CORSAIR_VOID_SIDETONE_MAX_WIRED		4096
  
- 	sdev->num_cores = 1;
--	sdev->pdata->hw_pdata = common;
- 	sdev->mailbox_bar = SOF_FW_BLK_TYPE_SRAM;
- 	sdev->dsp_box.offset = get_chip_info(sdev)->ipc_info.boot_mbox_offset;
++#define CORSAIR_VOID_ADD_BATTERY		BIT(0)
++#define CORSAIR_VOID_REMOVE_BATTERY		BIT(1)
++#define CORSAIR_VOID_UPDATE_BATTERY		BIT(2)
++
+ enum {
+ 	CORSAIR_VOID_WIRELESS,
+ 	CORSAIR_VOID_WIRED,
+@@ -155,12 +157,12 @@ struct corsair_void_drvdata {
+ 
+ 	struct power_supply *battery;
+ 	struct power_supply_desc battery_desc;
+-	struct mutex battery_mutex;
+ 
+ 	struct delayed_work delayed_status_work;
+ 	struct delayed_work delayed_firmware_work;
+-	struct work_struct battery_remove_work;
+-	struct work_struct battery_add_work;
++
++	unsigned long battery_work_flags;
++	struct work_struct battery_work;
+ };
+ 
+ /*
+@@ -260,11 +262,9 @@ static void corsair_void_process_receiver(struct corsair_void_drvdata *drvdata,
+ 
+ 	/* Inform power supply if battery values changed */
+ 	if (memcmp(&orig_battery_data, battery_data, sizeof(*battery_data))) {
+-		scoped_guard(mutex, &drvdata->battery_mutex) {
+-			if (drvdata->battery) {
+-				power_supply_changed(drvdata->battery);
+-			}
+-		}
++		set_bit(CORSAIR_VOID_UPDATE_BATTERY,
++			&drvdata->battery_work_flags);
++		schedule_work(&drvdata->battery_work);
+ 	}
+ }
+ 
+@@ -536,29 +536,11 @@ static void corsair_void_firmware_work_handler(struct work_struct *work)
+ 
+ }
+ 
+-static void corsair_void_battery_remove_work_handler(struct work_struct *work)
+-{
+-	struct corsair_void_drvdata *drvdata;
+-
+-	drvdata = container_of(work, struct corsair_void_drvdata,
+-			       battery_remove_work);
+-	scoped_guard(mutex, &drvdata->battery_mutex) {
+-		if (drvdata->battery) {
+-			power_supply_unregister(drvdata->battery);
+-			drvdata->battery = NULL;
+-		}
+-	}
+-}
+-
+-static void corsair_void_battery_add_work_handler(struct work_struct *work)
++static void corsair_void_add_battery(struct corsair_void_drvdata *drvdata)
+ {
+-	struct corsair_void_drvdata *drvdata;
+ 	struct power_supply_config psy_cfg = {};
+ 	struct power_supply *new_supply;
+ 
+-	drvdata = container_of(work, struct corsair_void_drvdata,
+-			       battery_add_work);
+-	guard(mutex)(&drvdata->battery_mutex);
+ 	if (drvdata->battery)
+ 		return;
+ 
+@@ -583,16 +565,48 @@ static void corsair_void_battery_add_work_handler(struct work_struct *work)
+ 	drvdata->battery = new_supply;
+ }
+ 
++static void corsair_void_battery_work_handler(struct work_struct *work)
++{
++	struct corsair_void_drvdata *drvdata = container_of(work,
++		struct corsair_void_drvdata, battery_work);
++
++	bool add_battery = test_and_clear_bit(CORSAIR_VOID_ADD_BATTERY,
++					      &drvdata->battery_work_flags);
++	bool remove_battery = test_and_clear_bit(CORSAIR_VOID_REMOVE_BATTERY,
++						 &drvdata->battery_work_flags);
++	bool update_battery = test_and_clear_bit(CORSAIR_VOID_UPDATE_BATTERY,
++						 &drvdata->battery_work_flags);
++
++	/* Add, remove or skip battery */
++	if (add_battery && !remove_battery) {
++		corsair_void_add_battery(drvdata);
++	} else if (remove_battery && !add_battery) {
++		if (drvdata->battery) {
++			power_supply_unregister(drvdata->battery);
++			drvdata->battery = NULL;
++		}
++	}
++
++	/* Communicate that battery values changed */
++	if (update_battery) {
++		if (drvdata->battery)
++			power_supply_changed(drvdata->battery);
++	}
++
++}
++
+ static void corsair_void_headset_connected(struct corsair_void_drvdata *drvdata)
+ {
+-	schedule_work(&drvdata->battery_add_work);
++	set_bit(CORSAIR_VOID_ADD_BATTERY, &drvdata->battery_work_flags);
++	schedule_work(&drvdata->battery_work);
+ 	schedule_delayed_work(&drvdata->delayed_firmware_work,
+ 			      msecs_to_jiffies(100));
+ }
+ 
+ static void corsair_void_headset_disconnected(struct corsair_void_drvdata *drvdata)
+ {
+-	schedule_work(&drvdata->battery_remove_work);
++	set_bit(CORSAIR_VOID_REMOVE_BATTERY, &drvdata->battery_work_flags);
++	schedule_work(&drvdata->battery_work);
+ 
+ 	corsair_void_set_unknown_wireless_data(drvdata);
+ 	corsair_void_set_unknown_batt(drvdata);
+@@ -678,13 +692,7 @@ static int corsair_void_probe(struct hid_device *hid_dev,
+ 	drvdata->battery_desc.get_property = corsair_void_battery_get_property;
+ 
+ 	drvdata->battery = NULL;
+-	INIT_WORK(&drvdata->battery_remove_work,
+-		  corsair_void_battery_remove_work_handler);
+-	INIT_WORK(&drvdata->battery_add_work,
+-		  corsair_void_battery_add_work_handler);
+-	ret = devm_mutex_init(drvdata->dev, &drvdata->battery_mutex);
+-	if (ret)
+-		return ret;
++	INIT_WORK(&drvdata->battery_work, corsair_void_battery_work_handler);
+ 
+ 	ret = sysfs_create_group(&hid_dev->dev.kobj, &corsair_void_attr_group);
+ 	if (ret)
+@@ -721,8 +729,7 @@ static void corsair_void_remove(struct hid_device *hid_dev)
+ 	struct corsair_void_drvdata *drvdata = hid_get_drvdata(hid_dev);
+ 
+ 	hid_hw_stop(hid_dev);
+-	cancel_work_sync(&drvdata->battery_remove_work);
+-	cancel_work_sync(&drvdata->battery_add_work);
++	cancel_work_sync(&drvdata->battery_work);
+ 	if (drvdata->battery)
+ 		power_supply_unregister(drvdata->battery);
  
 -- 
-2.34.1
+2.47.2
 
