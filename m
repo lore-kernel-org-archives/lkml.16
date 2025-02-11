@@ -1,164 +1,89 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57FDB1E231F;
-	Tue, 11 Feb 2025 18:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E301E3DFD;
+	Tue, 11 Feb 2025 18:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739298161; cv=none; b=sNoil1LNL+eztQfr286x9xrR0Qz3gRx2+Cl93vH+JzG9+3I9PjPeAlmSyyOEaJVuSAPMH427UfygxSHyTWjc9skP1qIf4xfaKl0nXBtJQJQwbP3Knyr2l/TrECF1W3CKFnLR99GQ0lR8o4w7gFfpS4la0H+nL2KmNaYIq9vpzws=
+	t=1739298300; cv=none; b=Jl7DpcS4k8yAJYMakokmk06NITn8DWv3o1r1sBLKjpHQ/PeNhAJXz+3U5aMYlEcIsb66NxFkk9LBbDVR49H6PwvObsS3vOD0OdzbOa+JJiwiWJvnBQkpA1Lg+sUWZNtLLbURo1o3i2gvth39VDXAfv/dGrZdMEtLkg/mBWJqKyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739298161; c=relaxed/simple;
-	bh=7dkQibdUy+NOc+u9G1470iGJGOPpU8BL2cSrqAQbM30=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=TGG/75aIYVHqIpcJASfVKgDK/WdLHUSXgGI114soiIuuCu0qxiLGlIknDRAHNvdLnOQEv/pvhH+RvnDV6104+xrPNx/10xBD9+KDpAQ1TT/hMtqleD9qB7xKSTMCXYGEHNy8dKR9hLpAGB1bsgMr+iUf6yXEArcKgaAkXw+Yg/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id EF5F492009C; Tue, 11 Feb 2025 19:22:30 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id EAABA92009B;
-	Tue, 11 Feb 2025 18:22:30 +0000 (GMT)
-Date: Tue, 11 Feb 2025 18:22:30 +0000 (GMT)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Oleg Nesterov <oleg@redhat.com>, "Dmitry V. Levin" <ldv@strace.io>
-cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: Export syscall stack arguments properly for remote
- use
-Message-ID: <alpine.DEB.2.21.2502101732120.65342@angie.orcam.me.uk>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1739298300; c=relaxed/simple;
+	bh=kM0H5lA9t2fpVFtlNKyU3+1PJ3U/cEVn7vnImdyXzmk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fRlcRrkuIioP70KP/hm2Qp/1sJB2bK2BZgjW3/CYyf6pNbm42DNVeCxkOS+cpD34Jvlz3NppdebiF5kGzSCOOtlGoewPSN/LVS3lB0op4aJHFe26d6dReOZALdBwh1RNWNaLmsTHkp6cgDqIo4mqqOQ5lP8BwYoZpTZ0krdzY9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hD2L5F/C; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hD2L5F/C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3121C4CEDD;
+	Tue, 11 Feb 2025 18:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739298299;
+	bh=kM0H5lA9t2fpVFtlNKyU3+1PJ3U/cEVn7vnImdyXzmk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hD2L5F/CmMSGF1Xo9DAHBOLYTzEHGpiz6EsVlfluHk3jesDTX3VXcuHaAGFP9mk9T
+	 onvEzcPwL0yLMZsKU4kXH11OEq8JAB3vuNVVE4F1eBLxI9kYaKgRF27spa0tzxKwfN
+	 m3jCOIFXByISGZgtoUSiF417cS/esPEI25h3Jxe4=
+Date: Tue, 11 Feb 2025 13:24:58 -0500
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Lee Jones <lee@kernel.org>, tools@kernel.org, 
+	Pavel Machek <pavel@ucw.cz>, kernel list <linux-kernel@vger.kernel.org>, rafael@kernel.org, 
+	linux-leds@vger.kernel.org
+Subject: Re: MAINTAINERS: Move Pavel to kernel.org address
+Message-ID: <20250211-coral-copperhead-of-dignity-bcb3ce@lemur>
+References: <Z6Ow+T/uSv128wdR@duo.ucw.cz>
+ <20250211141109.GV1868108@google.com>
+ <CAHk-=whdcXj==9TkCpQYpmzLweCoDzd9_i8SrODjaQ3ysSe6dw@mail.gmail.com>
+ <20250211155614.GY1868108@google.com>
+ <20250211160125.GA2274105@google.com>
+ <CAHk-=whFeiixFbNx8F8rVeCC-Zdco_sFyYynAbRyJH_NAx0Ukw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=whFeiixFbNx8F8rVeCC-Zdco_sFyYynAbRyJH_NAx0Ukw@mail.gmail.com>
 
-We have several places across the kernel where we want to access another 
-task's syscall arguments, such as ptrace(2), seccomp(2), etc., by making 
-a call to syscall_get_arguments().
+On Tue, Feb 11, 2025 at 09:40:24AM -0800, Linus Torvalds wrote:
+> On Tue, 11 Feb 2025 at 08:07, Lee Jones <lee@kernel.org> wrote:
+> >
+> > > Out of interest, how did you apply it?  b4 was playing up for me.
+> 
+> So I had no issues, but I don't actually use b4 to apply the patches,
+> only to fetch them.
+> 
+> >   Fetching patch(es)
+> >   /home/lee/bin/apply-patch.sh: line 134: /tmp/<Z6Ow+T/uSv128wdR@duo.ucw.cz>.mbox: No such file or directory
+> >
+> > Where apply-patch.sh: line 134:
+> >
+> >   b4 am -3 -slt ${PATCHES} -o - ${id} > ${MBOX}
+> >
+> > My first guess would be the stray '/' in the Message-ID.
+> 
+> I don't know your apply-patch.sh script, so maybe the bug is there,
+> and it's your MBOX thing that you create without quoting the message
+> ID.
 
-This works for register arguments right away by accessing the task's 
-`regs' member of `struct pt_regs', however for stack arguments seen with 
-32-bit/o32 kernels things are more complicated.  Technically they ought 
-to be obtained from the user stack with calls to an access_remote_vm(), 
-but we have an easier way available already.
+That would be my guess, too, as b4 itself has no trouble fetching or applying
+this series:
 
-So as to be able to access syscall stack arguments as regular function 
-arguments following the MIPS calling convention we copy them over from 
-the user stack to the kernel stack in arch/mips/kernel/scall32-o32.S, in 
-handle_sys(), to the current stack frame's outgoing argument space at 
-the top of the stack, which is where the handler called expects to see 
-its incoming arguments.  This area is also pointed at by the `pt_regs'
-pointer obtained by task_pt_regs().
+	$ b4 shazam Z6Ow+T/uSv128wdR@duo.ucw.cz
+	Grabbing thread from lore.kernel.org/all/Z6Ow%2BT%2FuSv128wdR@duo.ucw.cz/t.mbox.gz
+	Analyzing 7 messages in the thread
+	Analyzing 0 code-review messages
+	Checking attestation on all messages, may take a moment...
+	---
+	  ✓ [PATCH] MAINTAINERS: Move Pavel to kernel.org address
+	  ---
+	  ✓ Signed: DKIM/ucw.cz
+	---
+	Total patches: 1
+	---
+	Applying: MAINTAINERS: Move Pavel to kernel.org address
 
-Make the o32 stack argument space a proper member of `struct pt_regs' 
-then, by renaming the existing member from `pad0' to `args' and using 
-generated offsets to access the space.  No functional change though.
-
-With the change in place the o32 kernel stack frame layout at the entry 
-to a syscall handler invoked by handle_sys() is therefore as follows:
-
-$sp + 68 -> |         ...         | <- pt_regs.regs[9]
-            +---------------------+
-$sp + 64 -> |         $t0         | <- pt_regs.regs[8]
-            +---------------------+
-$sp + 60 -> |   $a3/argument #4   | <- pt_regs.regs[7]
-            +---------------------+
-$sp + 56 -> |   $a2/argument #3   | <- pt_regs.regs[6]
-            +---------------------+
-$sp + 52 -> |   $a1/argument #2   | <- pt_regs.regs[5]
-            +---------------------+
-$sp + 48 -> |   $a0/argument #1   | <- pt_regs.regs[4]
-            +---------------------+
-$sp + 44 -> |         $v1         | <- pt_regs.regs[3]
-            +---------------------+
-$sp + 40 -> |         $v0         | <- pt_regs.regs[2]
-            +---------------------+
-$sp + 36 -> |         $at         | <- pt_regs.regs[1]
-            +---------------------+
-$sp + 32 -> |        $zero        | <- pt_regs.regs[0]
-            +---------------------+
-$sp + 28 -> |  stack argument #8  | <- pt_regs.args[7]
-            +---------------------+
-$sp + 24 -> |  stack argument #7  | <- pt_regs.args[6]
-            +---------------------+
-$sp + 20 -> |  stack argument #6  | <- pt_regs.args[5]
-            +---------------------+
-$sp + 16 -> |  stack argument #5  | <- pt_regs.args[4]
-            +---------------------+
-$sp + 12 -> | psABI space for $a3 | <- pt_regs.args[3]
-            +---------------------+
-$sp +  8 -> | psABI space for $a2 | <- pt_regs.args[2]
-            +---------------------+
-$sp +  4 -> | psABI space for $a1 | <- pt_regs.args[1]
-            +---------------------+
-$sp +  0 -> | psABI space for $a0 | <- pt_regs.args[0]
-            +---------------------+
-
-holding user data received and with the first 4 frame slots reserved by 
-the psABI for the compiler to spill the incoming arguments from $a0-$a3 
-registers (which it sometimes does according to its needs) and the next 
-4 frame slots designated by the psABI for any stack function arguments 
-that follow.  This data is also available for other tasks to peek/poke 
-at as reqired and where permitted.
-
-Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
----
- arch/mips/include/asm/ptrace.h |    4 ++--
- arch/mips/kernel/asm-offsets.c |    6 ++++++
- arch/mips/kernel/scall32-o32.S |    8 ++++----
- 3 files changed, 12 insertions(+), 6 deletions(-)
-
-linux-mips-scall32-o32-pt-regs-args.diff
-Index: linux-malta/arch/mips/include/asm/ptrace.h
-===================================================================
---- linux-malta.orig/arch/mips/include/asm/ptrace.h
-+++ linux-malta/arch/mips/include/asm/ptrace.h
-@@ -27,8 +27,8 @@
-  */
- struct pt_regs {
- #ifdef CONFIG_32BIT
--	/* Pad bytes for argument save space on the stack. */
--	unsigned long pad0[8];
-+	/* Saved syscall stack arguments; entries 0-3 unused. */
-+	unsigned long args[8];
- #endif
- 
- 	/* Saved main processor registers. */
-Index: linux-malta/arch/mips/kernel/asm-offsets.c
-===================================================================
---- linux-malta.orig/arch/mips/kernel/asm-offsets.c
-+++ linux-malta/arch/mips/kernel/asm-offsets.c
-@@ -27,6 +27,12 @@
- void output_ptreg_defines(void)
- {
- 	COMMENT("MIPS pt_regs offsets.");
-+#ifdef CONFIG_32BIT
-+	OFFSET(PT_ARG4, pt_regs, args[4]);
-+	OFFSET(PT_ARG5, pt_regs, args[5]);
-+	OFFSET(PT_ARG6, pt_regs, args[6]);
-+	OFFSET(PT_ARG7, pt_regs, args[7]);
-+#endif
- 	OFFSET(PT_R0, pt_regs, regs[0]);
- 	OFFSET(PT_R1, pt_regs, regs[1]);
- 	OFFSET(PT_R2, pt_regs, regs[2]);
-Index: linux-malta/arch/mips/kernel/scall32-o32.S
-===================================================================
---- linux-malta.orig/arch/mips/kernel/scall32-o32.S
-+++ linux-malta/arch/mips/kernel/scall32-o32.S
-@@ -64,10 +64,10 @@ load_a6: user_lw(t7, 24(t0))		# argument
- load_a7: user_lw(t8, 28(t0))		# argument #8 from usp
- loads_done:
- 
--	sw	t5, 16(sp)		# argument #5 to ksp
--	sw	t6, 20(sp)		# argument #6 to ksp
--	sw	t7, 24(sp)		# argument #7 to ksp
--	sw	t8, 28(sp)		# argument #8 to ksp
-+	sw	t5, PT_ARG4(sp)		# argument #5 to ksp
-+	sw	t6, PT_ARG5(sp)		# argument #6 to ksp
-+	sw	t7, PT_ARG6(sp)		# argument #7 to ksp
-+	sw	t8, PT_ARG7(sp)		# argument #8 to ksp
- 	.set	pop
- 
- 	.section __ex_table,"a"
+-K
