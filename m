@@ -1,101 +1,193 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D07326BD8E;
-	Tue, 11 Feb 2025 17:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E608126BD8E;
+	Tue, 11 Feb 2025 17:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739294799; cv=none; b=rOcDHhsAO5MWEboFvDQmgloqywdnG25aZe6T7WaAlobcGNnibLZijio2zGFQtayNLhB7E9t8Tj2DKdix29aMbFjgRhswZQoTG0jjTvCZSdnXn8gWtyVr+/9i3xz9TKXC8kEbqwSIA0BwFAjaQDmX99SUFFcjZp3UaeJvrH76NsQ=
+	t=1739294819; cv=none; b=Px99ixPzmOvYrU4UKtnLhQwlhlrLzcDbqcUWPeqN8WFzQxhLEWPuWiQm+OnrNcafFiC1SY4N7LRCcbOuKwvuJn0GdRMdxUgqEcubV4MmVYYq5YquIkNI2LnXpiraAVfsDX40CrvJmwn1vd458qX4uIFvCcQj6FcDUBd+m0TPRcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739294799; c=relaxed/simple;
-	bh=5cU+Vpo1UfVf6yBmz7gKTmJhl1QfDDKO2mILu40rFZM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mOd4E/Sul0V3zlS4nSHYOQTLEtTc7xXEHqXN70DBgNsPCgtVLXwrusE7Amw2hAtEgk8G6uecRgcudMGuUKP1Cmsm+q8x8KUiEBBkZjTyfwyLKklGDAIrY/OuSw6O61LJkjJ/bOcExjUYf0w17xpW1Mueafanl8g02E6JO0XnBRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YspG14DzLz6H8Yg;
-	Wed, 12 Feb 2025 01:24:09 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id A8C011402A4;
-	Wed, 12 Feb 2025 01:26:33 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 11 Feb
- 2025 18:26:33 +0100
-Date: Tue, 11 Feb 2025 17:26:31 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Li Ming <ming.li@zohomail.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/7] cxl/core: Use guard() to replace open-coded
- down_read/write()
-Message-ID: <20250211172631.00001a34@huawei.com>
-In-Reply-To: <20250211075727.351895-2-ming.li@zohomail.com>
-References: <20250211075727.351895-1-ming.li@zohomail.com>
-	<20250211075727.351895-2-ming.li@zohomail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1739294819; c=relaxed/simple;
+	bh=SwAtmGKbkRk/6jd58XdhuX1Gpa+J8POWiyyQkB9m+JM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qkmoXztZOInPYF5DTWxO/7nnZimWt7Xm8aFNAx03RrWKqf64wzYNiC2DlBBxJlsYiL/N0SKiqEAB9oIdVwoR1mZxbOWoWczhGmkmKPx+UejRAScnjS2xlO382GOQQ63Ty7ue0g9dHuiRhGJiFmWLNYZ6/6SUOlPdDRYxgojdXXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y54eDFzY; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y54eDFzY"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-3078fb1fa28so54066341fa.3;
+        Tue, 11 Feb 2025 09:26:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739294816; x=1739899616; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l/my1KtNGprdh0u6If/d4X7EsH9AZGyeXBq0Impw/fg=;
+        b=Y54eDFzYp1eRuyMbn3oMn4Ra2cSqFwEomZAXXq1zJTelCogoTVEu3af5Fya0UUc5Fc
+         07KbQiiKfm1edUd5V4K7bC3ifwro1fZvoQrE3T6/pY9qCrKksUvojrAHKQOxHe91SEt6
+         Am5AriFn0YU1hqm2u3CA6kIK/c5v2AD1ZQ5NgHTn3A7gWLhOAaBMybTW672BVK16vdwv
+         JnEeGrizXP3EokG4/q6ElbCCSuBTMjCDEKstaU8iG4KAKH4NUgDuCqWHjz/hJ9RaDnhV
+         Dyevc/HPbSrE+7KTbsDk/AS3oXyt9nDrxc7X9pHgOKjLysjmVjkw6e15nrnfd92tVPvn
+         E4sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739294816; x=1739899616;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l/my1KtNGprdh0u6If/d4X7EsH9AZGyeXBq0Impw/fg=;
+        b=GiPsZlzVHxdw6cgS1zbw7ejO7iGR9Zcw7PHotGrbdPHpm8pWnVVy8GFyd1p8+hW8Eo
+         FJ8vAgfn0OzL4PuTcKdi4SdE6KAkn1oANeDY4/9NARqrXF/KVMnXD3NGTg1sZn1Yi8iH
+         VMHdJlTzGprv4zNxMkwj2fqKQKUF7UBAdIuIUCIF7rOtIPCVmavLiKQ8fM2Pgdgm5GvG
+         +FNRQwqRqG48vQZiOmSBbOg20qyaOLs3qoQNpJ5XwVfhXZ7Uq5IQ/U4qlWJfxWC1PNGA
+         2nwDs2E1ukOGcjnNmtAGS9H2wm85fvl38k+1lzcf+QOz4LC+2cgiai0JeIgWQcOk7WPm
+         YSgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVv/+ouNepe+hkmlYZnwHd9vbC4jmBwIwXFTgwOK/6R9FXAySEQMQarMKNc5qq2sQ6rt66XC1IBK3ekaSKU6Pqs@vger.kernel.org, AJvYcCXXvTRv3kzxpZqqhrn4E8IQmgsbaGjxZmSQJt5ZqWLMy5Hr5EVbA9XODmN57ifXqV6EKFP5RODLb3MCxxQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaPoEqOTMQlYeptQFkhXphfgF/Na7feNDQvjVL3cmpmzBs2SQi
+	yHK+MoiTHTO8TPRmc8xNJ7VKbxN61dh+BZfdFLJVHx3fDuK+2icrJDtkiF6+54v2GVgt57CCEdz
+	tq/xPJaZ0n97+DY9Nk38WXIw7Vk8=
+X-Gm-Gg: ASbGncvYzs8/1Ou0/fUYNmtPB+xNBWh+QkVjj6YPPT7UQwf5cqwywE3C+pPumEggafY
+	nUNPmctA7GBOp4TXRqpelP0BKeRADqNywhvT2esqT2DQhlZ4DqPS1YvNVOOy3b/x/pBuaRf0kbN
+	dcPpFhOpFX5s8l
+X-Google-Smtp-Source: AGHT+IHWwI24rlnQWXy+pv30sHDR4wlFuDZ/mYg3TNCsyhM+shlNOQDOh4VfaXVfC3pnIMH/vaUUb90OSM9ohWdFPAs=
+X-Received: by 2002:a2e:a912:0:b0:308:f455:1f79 with SMTP id
+ 38308e7fff4ca-309037dc4edmr1148881fa.21.1739294815807; Tue, 11 Feb 2025
+ 09:26:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <20250211-scanf-kunit-convert-v7-0-c057f0a3d9d8@gmail.com>
+ <Z6tvciJpQgTwYpGx@smile.fi.intel.com> <CAJ-ks9mcxW7zY33FPB+mZ75dQ2Xqo-viM9CpbL=0i0WXUPJRhw@mail.gmail.com>
+ <Z6tytjvT1A-5TOrq@smile.fi.intel.com> <CAJ-ks9kSBMh0=dgPC-NiOhibnK_LhBjBdZ_AQ91h-DBZfYR1sw@mail.gmail.com>
+ <Z6uGPZZ7LioJmekz@smile.fi.intel.com>
+In-Reply-To: <Z6uGPZZ7LioJmekz@smile.fi.intel.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 11 Feb 2025 12:26:19 -0500
+X-Gm-Features: AWEUYZkpMIKRrj-0oAj59PKiCMH9W9MOjIvqSINScPvWNcK-xBfj7wRKPtBuFoU
+Message-ID: <CAJ-ks9mGwXmiJ3_Kk4j0MnEqn24A9UJJXVhqtUjcG8W5ifodsA@mail.gmail.com>
+Subject: Re: [PATCH v7 0/3] scanf: convert self-test to KUnit
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 11 Feb 2025 15:57:21 +0800
-Li Ming <ming.li@zohomail.com> wrote:
+On Tue, Feb 11, 2025 at 12:17=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Feb 11, 2025 at 10:57:11AM -0500, Tamir Duberstein wrote:
+> > On Tue, Feb 11, 2025 at 10:54=E2=80=AFAM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Tue, Feb 11, 2025 at 10:47:03AM -0500, Tamir Duberstein wrote:
+> > > > On Tue, Feb 11, 2025 at 10:40=E2=80=AFAM Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > On Tue, Feb 11, 2025 at 10:13:36AM -0500, Tamir Duberstein wrote:
+>
+> ...
+>
+> > > > > > - Use original test assertions as KUNIT_*_EQ_MSG produces hard-=
+to-parse
+> > > > > >   messages. The new failure output is:
+> > > > >
+> > > > > It would be good if you put into cover letter, or even in the res=
+pectful patch
+> > > > > the example of the error report for the old code and new code tha=
+t it will be
+> > > > > clear how it changes.
+> > > > >
+> > > > > >     vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4h=
+x %1hx %1hx %4hx %4hx", ...) expected 837828163 got 1044578334
+> > > > > >             not ok 1 " "
+> > > > > >         # numbers_list_field_width_val_width: ASSERTION FAILED =
+at lib/scanf_kunit.c:92
+> > > > > >     vsscanf("dc2:1c:0:3531:2621:5172:1:7", "%3hx:%2hx:%1hx:%4hx=
+:%4hx:%4hx:%1hx:%1hx", ...) expected 892403712 got 28
+> > > > > >             not ok 2 ":"
+> > > > > >         # numbers_list_field_width_val_width: ASSERTION FAILED =
+at lib/scanf_kunit.c:92
+> > > > > >     vsscanf("e083,8f6e,b,70ca,1,1,aab1,10e4", "%4hx,%4hx,%1hx,%=
+4hx,%1hx,%1hx,%4hx,%4hx", ...) expected 1892286475 got 757614
+> > > > > >             not ok 3 ","
+> > > > > >         # numbers_list_field_width_val_width: ASSERTION FAILED =
+at lib/scanf_kunit.c:92
+> > > > > >     vsscanf("2e72-8435-1-2fc-7cbd-c2f1-7158-2b41", "%4hx-%4hx-%=
+1hx-%3hx-%4hx-%4hx-%4hx-%4hx", ...) expected 50069505 got 99381
+> > > > > >             not ok 4 "-"
+> > > > > >         # numbers_list_field_width_val_width: ASSERTION FAILED =
+at lib/scanf_kunit.c:92
+> > > > > >     vsscanf("403/0/17/1/11e7/1/1fe8/34ba", "%3hx/%1hx/%2hx/%1hx=
+/%4hx/%1hx/%4hx/%4hx", ...) expected 65559 got 1507328
+> > > > > >             not ok 5 "/"
+> > > > > >         # numbers_list_field_width_val_width: pass:0 fail:5 ski=
+p:0 total:5
+> > > > > >         not ok 4 numbers_list_field_width_val_width
+> > > > > >         # numbers_slice: ASSERTION FAILED at lib/scanf_kunit.c:=
+92
+> > > > > >     vsscanf("3c87eac0f4afa1f9231da52", "%1hx%4hx%4hx%4hx%1hx%4h=
+x%4hx%1hx", ...) expected 1257942031 got 2886715518
+> > > >
+> > > > Makes sense. As you can see the error report for the new code is
+> > > > included here. I'll add the old code's error report if I have to
+> > > > respin v8.
+> > >
+> > > At a bare minimum. can you add in the reply to this email?
+> >
+> > Oh, sure:
+> >
+> > On Tue, Feb 11, 2025 at 6:54=E2=80=AFAM Petr Mladek <pmladek@suse.com> =
+wrote:
+> > >
+> > > [...]
+> > >
+> > > [  383.100048] test_scanf: vsscanf("1574 9 64ca 935b 7 142d ff58 0", =
+"%4hx %1hx %4hx %4hx %1hx %4hx %4hx %1hx", ...) expected 2472240330 got 169=
+0959881
+> > > [  383.102843] test_scanf: vsscanf("f12:2:d:2:c166:1:36b:1906", "%3hx=
+:%1hx:%1hx:%1hx:%4hx:%1hx:%3hx:%4hx", ...) expected 131085 got 851970
+> > > [  383.105376] test_scanf: vsscanf("4,b2fe,3,593,6,0,3bde,0", "%1hx,%=
+4hx,%1hx,%3hx,%1hx,%1hx,%4hx,%1hx", ...) expected 93519875 got 242430
+> > > [  383.105659] test_scanf: vsscanf("6-1-2-1-d9e6-f-93e-e567", "%1hx-%=
+1hx-%1hx-%1hx-%4hx-%1hx-%3hx-%4hx", ...) expected 65538 got 131073
+> > > [  383.106127] test_scanf: vsscanf("72d6/35/e88d/1/0/6c8c/7/1", "%4hx=
+/%2hx/%4hx/%1hx/%1hx/%4hx/%1hx/%1hx", ...) expected 125069 got 3901554741
+> > > [  383.106235] test_scanf: vsscanf("c9bea1b8122113e9a168df573", "%4hx=
+%4hx%1hx%4hx%4hx%1hx%4hx%3hx", ...) expected 571539457 got 106936
+>
+> > > [  383.106398] test_scanf: failed 6 out of 2545 tests
+>
+> Is it me who cut something or the above missing this information (total t=
+ests)?
+> If the latter, how are we supposed to answer to the question if the faile=
+d test
+> is from new bunch of cases I hypothetically added or regression of the ex=
+isting
+> ones? Without this it seems like I need to go through all failures. OTOH =
+it may
+> be needed anyway as failing test case needs an investigation.
 
-> Some down/up_read() and down/up_write() cases can be replaced by a
-> guard() simply to drop explicit unlock invoked. It helps to align coding
-> style with current CXL subsystem's.
-> 
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I assume you mean missing from the new output. Yeah, KUnit doesn't do
+this counting. Instead you get the test name in the failure message:
 
-I wondered if it was worth doing some early returns and dropping
-local variables, but on balance think it isn't worth doing.
+> > > > > >     vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4h=
+x %1hx %1hx %4hx %4hx", ...) expected 837828163 got 1044578334
+> > > > > >             not ok 1 " "
+> > > > > >         # numbers_list_field_width_val_width: ASSERTION FAILED =
+at lib/scanf_kunit.c:92
 
+I think maybe you're saying: what if I add a new assertion (rather
+than a new test case), and I start getting failure reports - how do I
+know if the reporter is running old or new test code?
 
-> @@ -364,10 +362,9 @@ resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled)
->  {
->  	resource_size_t size = 0;
->  
-> -	down_read(&cxl_dpa_rwsem);
-> +	guard(rwsem_read)(&cxl_dpa_rwsem);
->  	if (cxled->dpa_res)
->  		size = resource_size(cxled->dpa_res);
-
-Could return resource_size() here and return 0 below.
-I'm not sure it gains us much though. 
-
-> -	up_read(&cxl_dpa_rwsem);
->  
->  	return size;
->  }
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e8d11a988fd9..e3bb33109ced 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3216,10 +3216,9 @@ static int match_region_by_range(struct device *dev, const void *data)
->  	cxlr = to_cxl_region(dev);
->  	p = &cxlr->params;
->  
-> -	down_read(&cxl_region_rwsem);
-> +	guard(rwsem_read)(&cxl_region_rwsem);
->  	if (p->res && p->res->start == r->start && p->res->end == r->end)
->  		rc = 1;
-
-could do return 1 here and return 0 but it doesn't gain us much.
-
-> -	up_read(&cxl_region_rwsem);
->  
->  	return rc;
->  }
-
+In an ideal world the message above would give you all the information
+you need by including the line number from the test. This doesn't
+quite work out in this case because of the various test helper
+functions; you end up with a line number in the test helper rather
+than in the test itself. We could fix that by passing around __FILE__
+and __LINE__ (probably by wrapping the test helpers in a macro). What
+do you think?
