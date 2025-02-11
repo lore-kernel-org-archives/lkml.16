@@ -1,114 +1,112 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pv50p00im-zteg10011501.me.com (pv50p00im-zteg10011501.me.com [17.58.6.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4114244196;
-	Tue, 11 Feb 2025 13:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EEC21D5A7
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739281205; cv=none; b=JR2tMTXELAB1NsKlVmxbC57F1MkVJiWpMuHrL/Pewy6kpFo9TQLTzmUgXBrzU8r2LF3hHq0ViifKMD5tTIHMiviyz4MK3Nnjb+p0j02lXewRUIJKzMfHJS5t+Pu8Az08jYC2VbPYQ/GRhQD71zEeEekp7S2LiH9lKgvu/CMLDkk=
+	t=1739281248; cv=none; b=VJ7WxQjEIR26ttXSbVeRW39na8e5fF4//4yV8+hWFnome7LdA26W0GrK1eQtylmJ4cPfHa3wzmtbQ/fKjQOiVkpmF+rEtj1Z+65E6zJAIZdl+uwUyn/LDxKWJQFsBT7WNxdmCRnbscFKfXvkez+LW2nDFePaBD4TJSAaF68HxUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739281205; c=relaxed/simple;
-	bh=MzCHS4xcpR6oKnwNF5bnd1dPG4rnXwLyPn8vttdj214=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DMSf/SeyC2WGgWYAUg12YLIZk8wz/OLrwA7182JjenZ4EHBbQEblWu9+sPLQb2KxQgkq6W+vQARN4gx39fHHfZYwkz3cGkR6rF8Myqoshbpn0DrRKtWaKBM5xqAVf2FCx+vLJzoCdj9aiyHils6HO6gyGswdzeoD3ydWJ47Jazk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=LejbcdjA; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1739281248; c=relaxed/simple;
+	bh=rDf1yoTRKy12ToOLrZOAZoQ7ACwfJKv8I+9q4AsypCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hLQdPlwxpKv+4QcyhGAWPX7H/euGmszw5yD2Ot+S1y3esdYPJlY/igk6dATxLlnobCl9UjD7JxhdzUJsJBkhDWc0ssrZ7nvrripxDv7Kikrc3ccLNpXCxQzr5w7cQznFrUuBGjnmfaEH733UOg8XA1oXo4eBT+9s/hUruLYo2Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=gLMyPaLZ; arc=none smtp.client-ip=17.58.6.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="LejbcdjA"
-Received: from wse-pc.fritz.box (pd9e59260.dip0.t-ipconnect.de [217.229.146.96])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 6FBFF2FC004D;
-	Tue, 11 Feb 2025 14:39:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1739281193;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YB3kOHzvyAH2tkfntNwIJh9bjqnKflyo3rJ0J7XtYAg=;
-	b=LejbcdjAU8pD0rYzMhKZKn4haEWqKG5eIgAoipIC//nWAIX908c2QHyxT7Q7uY4pmRs4Wt
-	11xO+TYOEs8CxTLZEfbnEF2PKEB1fEPKbMB2anehDQPkbrZq2mZAZbRdRxqCBYYxmTfarO
-	8+m3Nu40xDVl9Tyfb+IF4suW9BNyosk=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-From: Werner Sembach <wse@tuxedocomputers.com>
-To: Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>
-Cc: Werner Sembach <wse@tuxedocomputers.com>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] Add functions for HID drivers to react on first open and last close call
-Date: Tue, 11 Feb 2025 14:39:05 +0100
-Message-ID: <20250211133950.422232-1-wse@tuxedocomputers.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="gLMyPaLZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=7z3RWlztrKg7sVSGOlVn10uKHd+0HdbTDQ77ooJEAJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=gLMyPaLZmpYFi3srhMCrc8avKSZIouPGAmh0G/IvhgH6kxmmqYzsAJ1j5WZ3AQ4eu
+	 BLYcOUCLcPzyspXRbyf2zmdKOBNxzIHvtD7XIp1FR8fIaT8BamEohVLlBpjLG6JRV1
+	 pGzs+G6dV2BcSe0OSKU0qB7wPM4zsky02pZWnuDDa6XngSM4gqKqhke3yFN7vKtc4H
+	 mtLpc2qK3HcPe/A8J2LL44fKVNW7k9PaW5EsXlKkCE61CbwRPK8gnKV6juQKYAstsN
+	 Nc5Wmz6FBRWkopLl6GqWZJ/Gwkvr8pos4j4gilmPN030jdeBWpCsnRFTXfTdr69ihG
+	 0wYtHEevDL+EA==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10011501.me.com (Postfix) with ESMTPSA id 3174F4A0246;
+	Tue, 11 Feb 2025 13:40:37 +0000 (UTC)
+Message-ID: <a682824a-1b65-4b05-9e42-3edc167600a8@icloud.com>
+Date: Tue, 11 Feb 2025 21:40:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] of: property: Increase NR_FWNODE_REFERENCE_ARGS
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Saravana Kannan <saravanak@google.com>, Len Brown <lenb@kernel.org>,
+ Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, linux-acpi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20250210-fix_arg_count-v3-1-a084a5013008@quicinc.com>
+ <Z6oclML_DC1Vnf6z@smile.fi.intel.com>
+ <73eb84f3-8b9d-41f4-9b59-d059111a3d03@icloud.com>
+ <Z6tBlfmTFu9916LA@smile.fi.intel.com>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <Z6tBlfmTFu9916LA@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: TqUHXtr-ok3PC5jRlmgK0cb6DzbWQpgZ
+X-Proofpoint-ORIG-GUID: TqUHXtr-ok3PC5jRlmgK0cb6DzbWQpgZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_06,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 adultscore=0
+ malwarescore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=854
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2502110091
 
-Adds a new function to the hid_driver struct that is called when the
-userspace starts using the device, and another one that is called when
-userspace stop using the device. With this a hid driver can implement
-special suspend handling for devices currently not in use.
+On 2025/2/11 20:24, Andy Shevchenko wrote:
+>>>> -#define NR_FWNODE_REFERENCE_ARGS	8
+>>>> +#define NR_FWNODE_REFERENCE_ARGS	16
+>>> Thinking of the case, perhaps you also want
+>>>
+>>> static_assert(NR_FWNODE_REFERENCE_ARGS == MAX_PHANDLE_ARGS);
+>>>
+>>> to be put somewhere, but I don't think we can do it in this header file.
+>> thank you Andy for code review.
+>>
+>> yes. it seems there are good location to place the static_assert().
+>>
+>> is it okay to associate two macros by
+>> #define MAX_PHANDLE_ARGS NR_FWNODE_REFERENCE_ARGS
+> I was thinking about this and I don't see how it can be done without
+> introducing more chaos (dependency hell) into the headers. So, I won't
+> take this path or even consider it deeper.
+> 
 
-Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
----
- drivers/hid/hid-core.c | 9 ++++++++-
- include/linux/hid.h    | 4 ++++
- 2 files changed, 12 insertions(+), 1 deletion(-)
+i have confirmed that:
 
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 4497b50799dbf..283917a79ac86 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -2392,6 +2392,9 @@ int hid_hw_open(struct hid_device *hdev)
- 		ret = hdev->ll_driver->open(hdev);
- 		if (ret)
- 			hdev->ll_open_count--;
-+
-+		if (hdev->driver->on_hid_hw_open)
-+			hdev->driver->on_hid_hw_open(hdev);
- 	}
- 
- 	mutex_unlock(&hdev->ll_open_lock);
-@@ -2411,8 +2414,12 @@ EXPORT_SYMBOL_GPL(hid_hw_open);
- void hid_hw_close(struct hid_device *hdev)
- {
- 	mutex_lock(&hdev->ll_open_lock);
--	if (!--hdev->ll_open_count)
-+	if (!--hdev->ll_open_count) {
- 		hdev->ll_driver->close(hdev);
-+
-+		if (hdev->driver->on_hid_hw_close)
-+			hdev->driver->on_hid_hw_close(hdev);
-+	}
- 	mutex_unlock(&hdev->ll_open_lock);
- }
- EXPORT_SYMBOL_GPL(hid_hw_close);
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index cdc0dc13c87fe..3b7db4eb3f2f6 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -790,6 +790,8 @@ struct hid_usage_id {
-  * @suspend: invoked on suspend (NULL means nop)
-  * @resume: invoked on resume if device was not reset (NULL means nop)
-  * @reset_resume: invoked on resume if device was reset (NULL means nop)
-+ * @on_hid_hw_open: invoked when hid core opens first instance (NULL means nop)
-+ * @on_hid_hw_close: invoked when hid core closes last instance (NULL means nop)
-  *
-  * probe should return -errno on error, or 0 on success. During probe,
-  * input will not be passed to raw_event unless hid_device_io_start is
-@@ -845,6 +847,8 @@ struct hid_driver {
- 	int (*suspend)(struct hid_device *hdev, pm_message_t message);
- 	int (*resume)(struct hid_device *hdev);
- 	int (*reset_resume)(struct hid_device *hdev);
-+	void (*on_hid_hw_open)(struct hid_device *hdev);
-+	void (*on_hid_hw_close)(struct hid_device *hdev);
- 
- /* private: */
- 	struct device_driver driver;
--- 
-2.43.0
+of.h includes fwnode.h indirectly
+fwnode.h does not include of.h directly or indirectly
+
+in theory, dependency between both headers should also be like this.
+
+So, it is simple to use below define in of.h
+#define MAX_PHANDLE_ARGS NR_FWNODE_REFERENCE_ARGS
+
+>> OR
+>> replace all MAX_PHANDLE_ARGS instances with NR_FWNODE_REFERENCE_ARGS
+>> ?
+> This sounds plausible to me, but you need a blessing from OF people as
+> the naming may be a bit confusing (for them) as "phandle" is well established
+> term in OF realm.
+
+phandle is a type of DT firmware node reference. so this solution
+seems suitable as well.
+
+struct software_node_ref_args also uses NR_FWNODE_REFERENCE_ARGS directly.
+
+let us wait for more comments.
 
