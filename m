@@ -1,244 +1,128 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3FB1F940A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210A2260A21
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739294706; cv=none; b=rDqL1Y/LHF2Z1AmMqzBTbeOl3QR687yVxRiMG0CnbNUwDvlGhIgX28SvrFQKLxYzM4ntjMuSXCCr7by1wPtNKtMMZ9LgKN8Iy6qa4KU9nqWwQ4a4bhVD2SczrzKeb5eUDfH4DvNXiN3wbmmoAdSRtTBWd9zz2khZa1w85DFzLp8=
+	t=1739294750; cv=none; b=YW2ll8qrpctYek2kvL7kwtbnch93Kh/nSEuHlhoJd4UoBfxo1dlHlYCepfTN6+d07ng6VKDXP39NEN4ttcycR53D3xytxnmAa4agQs6neXYtrVqJi3IoXmQkUo4/2l8HmLQJrUcU0ovZcbebHElOhCnO1sPXJ7z4JKF/KBq5NLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739294706; c=relaxed/simple;
-	bh=OVaygMG8VlP4xBkWR28wcsQ/nkYaxyCk2untvEhVW/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qGiRrnhQIdW2zRXqdrW6bM3RLAKEVwdls5OwaJ9Bws+Diw5uaGoai6eQ1rsIPKqZsUXOPX8w1R4tBHpOhHoAecfQ3go2SxxsusOhCWRuTUMTqh95VpqmQH1VEUojZhzECIqqxc0RbJzUswuZjbdBQKMLhMxGH3Z0026FqZ0MkBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1cTnQzUh; arc=none smtp.client-ip=209.85.166.182
+	s=arc-20240116; t=1739294750; c=relaxed/simple;
+	bh=yIyg4O5yYiMN7oIJCMQaW69afuHiK1Kltro4y0FMxoU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ciOqTxXnEDmRl3SpsB0QnqvKVIzARMYvQd79AsmAzw6la3QzZcdAb/3Ki+eW5YaDhcY7ee1R0ZWrYRj9lK2QHg7xSfRXiIGkjj25g2t7ms49ZuG4mVaJmSb/3FZKXznLhe+PMLraRhwb6YjsfkrIidLpBVkVnLQkThFghKgVXRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4h6VTmq5; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1cTnQzUh"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3d147331fb5so214305ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:25:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4h6VTmq5"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fa6409c0baso8008877a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:25:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739294704; x=1739899504; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5eUqaFoF/nA3myl/xKceml4ULdmxAvSOjNMKL2mIwQg=;
-        b=1cTnQzUhEccrjkmLQWshEBqOBXVfIQupgovTVYdn/toiwJfDOYcBYYEn3sWt3G8fez
-         up3g9EK91LB4RZretpyV2H0g8HiwlIXXH8cXcmClCGmbToSyXeFuup8k1/bQTw8oFvXU
-         Vl/kPxKJImg0lMrjPhffcp9xotvjz9aarHG2MIPqNkMCma0tnUlWkp4FPRgABk4ZuzyC
-         mo8J4dB0dZpSWf8qqkscyfycoRJVLfmiSDsQbCilulCnpzHIsjjaYT/8dCQWvbpmJtil
-         81GlZ0NeJAyey13mPdTF2f6VzIehwiq5Ur7KDmAB34mQR3pvYFVwxYaYYfhO1fPP5VEu
-         V1RQ==
+        d=google.com; s=20230601; t=1739294748; x=1739899548; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fehn8/FKPdzBZiJ7SaATTiqPDXAlgIYGKuuyWYqseyE=;
+        b=4h6VTmq5YsASoFycDSK8sm3fFCJfqspqCGsBcpvc+KhpNyBFRQJgj+JC4canHcJ2nU
+         o1B6uRMedbeP+teFkRkYRlHIRahMiPhUc1qVXJMfRh0l/Tioav37v9pSpbDKjwlfCwS9
+         myi0XYJrguCke3qGCoJJOPocswp1Zpf+d/hH+EASs6Sr/mb8RJj6zYwo7lCW3s2D6MQp
+         3wRnAQAufckzdkCQbzjvElKcZqP2Cpe3MzAhkew46ktDi+TTAaUFrPILpPh1SgE7/dVX
+         JjN1ns1RXL9HHwvkCl7Bx8UlGnTCTpbAG8mnusbD27ZvUqucCSmOFvey98Q6iNkk2Ivx
+         bwqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739294704; x=1739899504;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5eUqaFoF/nA3myl/xKceml4ULdmxAvSOjNMKL2mIwQg=;
-        b=wPRIBE2LNiwReq2MODLKXgmkZivgQ5TTNOrXKFdQGWGuKuxXBab+KgHT2sIpC0z2Tn
-         k6eG+zxYt34l0rsYQ5kQvTrPFlU1qOz1h+Q/m0jqP/pE6UoYKNLK3WpuGIer6NBhj9ZD
-         5M59HKxNJQUW0QDi7OaKVN+OlRV6m/upTCDsgcUfMgkCxB5WAROLIKDFpC6AKzK/pyEe
-         SeK1QB3wd5C5UbEonUouQ2zkTrDyKdCMH1cRUTpLvwg6tSteOzgtl1Ogpo3LxB2kFYK+
-         /ihNm9/39TzR8cqLfcKNbNsbuCUAJZVt7aDPFiLXek7HqFCsVuvri8gBjRQDiLoIgC6q
-         6xKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwAJ2MJoASS8Ylo4i+znnmeeXHONweGuIcKBETW5rz/+8sTZ9VQuHAGX60W5XY+8ujuQ2i3UB9ISGLPqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5lnrSuHcJ+0j7FfH0FEprrJGnKCtxL5jujoFnZDp5RQF2Pz9T
-	MCs/4ULPU7+OXdkJukaRQBF2U+ErYVuDRJEMbeHcB1BUDOjnWXHft7sON/P27SckKoU6263RNRK
-	v71eI9NSCKbpspkMa8j907JQKRIdWdx9vD76L
-X-Gm-Gg: ASbGncsUUjMFSmaQRk2DBWexK5BS/FI8pgMJFwxLn0ukGIOK2URIqPlFQ+V/Xf70PjT
-	ZB8aLldSYAYFrn40crU61ntuUAjGjuf9iGA54BlXvbEfH6MztgiYVjAFNRbkY1kv0n+YXIyyKDu
-	ETbpVAJCGctIKepTkDnJ2pPjJC
-X-Google-Smtp-Source: AGHT+IHulOePOuHEHSpuFuNYO6P65ObrRZws2+5sl7jc3tR3t7l3NjrSWpuzOe7Ugxsa9ph5ihwoodwYrD5QTsiZGu4=
-X-Received: by 2002:a92:c54b:0:b0:3cf:c075:da88 with SMTP id
- e9e14a558f8ab-3d171e3baa4mr3301595ab.23.1739294703579; Tue, 11 Feb 2025
- 09:25:03 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739294748; x=1739899548;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fehn8/FKPdzBZiJ7SaATTiqPDXAlgIYGKuuyWYqseyE=;
+        b=HFUGkcG0Mc6nWZHJL3lQjG/jAwlcQP/ZPMBtIYxgYr2bEjVl7rbZX20Aico4VsqfEe
+         lVaj+eWr0dzzsLxb5qsSSjVzxDSc2X1yBMBPhYRSjSxD3gUXin1suQ6GIbNjRhEjt0LE
+         KxupaxqwFAjysq1SLUUse6hUya0Rk5GlzO6ieebB0NfQeHo2I3u/+rzZI/fKM6OUH6AJ
+         rLYkz9vRqMBpuaktT3VoVgXLxzvQ6S+nCt12uXBJLFoipqGHzQPwhwroQOztnjzc5Lr6
+         r1UL7EiyjyNxO70KwE07SDQ6/2H+f8ZJHMdFuGTURUu70jvetTgPl1nsnA4DQp6Ksioz
+         A7oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpxH01gLDlnkJwNDtoTkjaxHFg3NoIwrSZDUSqb+CWpHPnBSzc6JGwlvr4UvAtE7bNDkEFWwPNFjVV9To=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTJ2LsXBNuoXFOnn7G8oJXeVvpRZ8ivYxYYv4y0IikVGg2G6RY
+	wt/MYyZCYUme4dOqUQAjizgxjIHT+dvt9EZLxtzVXjOo03cNJ6D7+IyH9Zs+H21DIsf4BuUuRwl
+	SFg==
+X-Google-Smtp-Source: AGHT+IFueIXltnSm3F29jVZndsq5T+j40lmj4UcIsQhmLdRSEShGqUPy9fjOgqE9JAinoOmES588AgdHP5k=
+X-Received: from pjyf5.prod.google.com ([2002:a17:90a:ec85:b0:2fa:1481:81f5])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:184d:b0:2ea:4c8d:c7a2
+ with SMTP id 98e67ed59e1d1-2fa243db893mr28913562a91.24.1739294748442; Tue, 11
+ Feb 2025 09:25:48 -0800 (PST)
+Date: Tue, 11 Feb 2025 09:25:47 -0800
+In-Reply-To: <20250211150114.GCZ6tmOqV4rI04HVuY@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250210165108.95894-1-irogers@google.com> <20250210165108.95894-6-irogers@google.com>
- <d47c35dd-9c52-48e7-a00d-135572f11fbb@app.fastmail.com>
-In-Reply-To: <d47c35dd-9c52-48e7-a00d-135572f11fbb@app.fastmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 11 Feb 2025 09:24:51 -0800
-X-Gm-Features: AWEUYZklUe5R5QefRSuHohckz8hNxM22lvM3Gxp2M1QMZ2_uE8brpR7qpIuJFYo
-Message-ID: <CAP-5=fUi4RYebxCGYZVHVEt0BpWVmUA6+-vDQfbai25_KJRs7A@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] perf trace beauty: Add syscalltbl.sh generating
- all system call tables
-To: Arnd Bergmann <arnd@arndb.de>, Arnaldo Carvalho de Melo <acme@kernel.org>, Howard Chu <howardchu95@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, guoren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250201021718.699411-1-seanjc@google.com> <20250201021718.699411-2-seanjc@google.com>
+ <20250211150114.GCZ6tmOqV4rI04HVuY@fat_crate.local>
+Message-ID: <Z6uIGwxx9HzZQ-N7@google.com>
+Subject: Re: [PATCH 01/16] x86/tsc: Add a standalone helpers for getting TSC
+ info from CPUID.0x15
+From: Sean Christopherson <seanjc@google.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
+	linux-coco@lists.linux.dev, virtualization@lists.linux.dev, 
+	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com, 
+	kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	Nikunj A Dadhania <nikunj@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Feb 11, 2025 at 12:09=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrot=
-e:
->
-> On Mon, Feb 10, 2025, at 17:51, Ian Rogers wrote:
->
-> > +# Each line of the syscall table should have the following format:
-> > +#
-> > +# NR ABI NAME [NATIVE] [COMPAT]
-> > +#
-> > +# NR       syscall number
-> > +# ABI      ABI name
-> > +# NAME     syscall name
-> > +# NATIVE   native entry point (optional)
-> > +# COMPAT   compat entry point (optional)
->
-> On x86, there is now a sixth optional field.
+On Tue, Feb 11, 2025, Borislav Petkov wrote:
+> On Fri, Jan 31, 2025 at 06:17:03PM -0800, Sean Christopherson wrote:
+> > Extract retrieval of TSC frequency information from CPUID into standalone
+> > helpers so that TDX guest support and kvmlock can reuse the logic.  Provide
+> > a version that includes the multiplier math as TDX in particular does NOT
+> > want to use native_calibrate_tsc()'s fallback logic that derives the TSC
+> > frequency based on CPUID.0x16 when the core crystal frequency isn't known.
+> > 
+> > No functional change intended.
+> > 
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  arch/x86/include/asm/tsc.h | 41 ++++++++++++++++++++++++++++++++++++++
+> >  arch/x86/kernel/tsc.c      | 14 ++-----------
+> >  2 files changed, 43 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/tsc.h b/arch/x86/include/asm/tsc.h
+> > index 94408a784c8e..14a81a66b37c 100644
+> > --- a/arch/x86/include/asm/tsc.h
+> > +++ b/arch/x86/include/asm/tsc.h
+> 
+> Bah, why in the header as inlines?
 
-Thanks, I'll add and repost a v3. I had some other questions below so
-I'll try to do everything together to avoid noise.
+Because obviously optimizing code that's called once during boot is super
+critical?
 
-> > +#if defined(ALL_SYSCALLTBL) || defined(__arm__) || defined(__aarch64__=
-)
-> > +EOF
-> > +build_tables "$tools_dir/perf/arch/arm/entry/syscalls/syscall.tbl"
-> > "$outfile" common,32,oabi EM_ARM
-> > +build_tables
->
-> The oabi syscalls probably shouldn't be part of the default set here.
-> Technically these are two separate ABIs, though EABI is a subset of
-> OABI for the most most part. Some of the calling conventions are
-> also different.
+> Just leave them in tsc.c and call them...
+> 
+> > @@ -28,6 +28,47 @@ static inline cycles_t get_cycles(void)
+> >  }
+> >  #define get_cycles get_cycles
+> >  
+> > +static inline int cpuid_get_tsc_info(unsigned int *crystal_khz,
+> > +				     unsigned int *denominator,
+> > +				     unsigned int *numerator)
+> 
+> Can we pls do a
+> 
+> struct cpuid_tsc_info {
+> 	unsigned int denominator;
+> 	unsigned int numerator;
+> 	unsigned int crystal_khz;
+> 	unsigned int tsc_khz;
+> }
+> 
+> and hand that around instead of those I/O pointers?
 
-Ack. I was carrying forward:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
-ls/perf/arch/arm/entry/syscalls/Kbuild#n3
-but noticed that we weren't adding this for arm64:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
-ls/perf/arch/arm64/entry/syscalls/Kbuild
-I'm happy to drop and have the ARM64 behavior. I'll make it a separate
-patch in case there is a desire from someone to revert.
-
-> > "$tools_dir/perf/arch/arm64/entry/syscalls/syscall_64.tbl" "$outfile"
-> > common,64,renameat,rlimit,memfd_secret EM_AARCH64
-> > +cat >> "$outfile" <<EOF
-> > +#endif // defined(ALL_SYSCALLTBL) || defined(__arm__) ||
-> > defined(__aarch64__)
->
-> Hardcoding the set of ABIs in the middle of the script seems
-> too fragile to me, I'm worried that these get out of sync quickly.
-
-I agree, again this is carrying forward a behavior and at least after
-these changes the location is just one place. Do you have any
-suggestions on how to do better?
-
-Fwiw, I wonder a related problem/question that has come up primarily
-with Arnaldo and Howard is in having a way to determine system call
-argument types so that perf trace can pretty print them. For example,
-if via BTF it is found an argument is a "const char*" then it is
-assumed to be a string, but a "char *" is not as it may just be an out
-argument. There's a source for more information in the syzkaller
-project:
-https://github.com/google/syzkaller/blob/master/sys/linux/sys.txt
-Perhaps there's a way to generate this information from the Linux
-build and feed it into perf's build. It is out-of-scope for what I'm
-trying to do here, but I thought it worth a mention given my general
-ignorance on wider things.
-
-> > +#if defined(ALL_SYSCALLTBL) || defined(__mips__)
-> > +EOF
-> > +build_tables
-> > "$tools_dir/perf/arch/mips/entry/syscalls/syscall_n64.tbl" "$outfile"
-> > common,64,n64 EM_MIPS
-> > +cat >> "$outfile" <<EOF
-> > +#endif // defined(ALL_SYSCALLTBL) || defined(__mips__)
->
-> What about n32/o32? The syscall tables are completely different here.
-
-So perf hasn't historically supported them and no one is asking for
-support. Generating more tables isn't the problem, but we need to have
-some way of determining which table to use for n32/o32. I see
-EF_MIPS_ABI_O32 and EF_MIPS_ABI_O64, so we could add support by
-extending the lookup of the table to be both of e_machine and e_flags.
-I'm less clear on choosing n32. That said, back in the 90s I was
-working to port MIPS code to Itanium via binary translation. Given now
-Itanium is obsolete, I'm not sure it is worth adding complexity for
-the sake of MIPS. I'm happy to do what others feel is best here, but
-my default position is just to carry what the existing behavior is
-forward.
-
-> > +#if defined(ALL_SYSCALLTBL) || defined(__powerpc__) ||
-> > defined(__powerpc64__)
-> > +EOF
-> > +build_tables "$tools_dir/perf/arch/powerpc/entry/syscalls/syscall.tbl"
-> > "$outfile" common,32,nospu EM_PPC
-> > +build_tables "$tools_dir/perf/arch/powerpc/entry/syscalls/syscall.tbl"
-> > "$outfile" common,64,nospu EM_PPC64
-> > +cat >> "$outfile" <<EOF
-> > +#endif // defined(ALL_SYSCALLTBL) || defined(__powerpc__) ||
-> > defined(__powerpc64__)
->
-> This skips the SPU table, but I think that's fine.
->
-> > +EOF
-> > +build_tables "$tools_dir/perf/arch/s390/entry/syscalls/syscall.tbl"
-> > "$outfile" common,64,renameat,rlimit,memfd_secret EM_S390
-> > +cat >> "$outfile" <<EOF
-> > +#endif // defined(ALL_SYSCALLTBL) || defined(__s390x__)
->
-> This skips the 32-bit table, though I think that one is already
-> planned to be discontinued in the future.
-
-Thankfully we have awesome s390 devs on the mailing list, hopefully
-they'll shout out if I'm doing things wrong.
-
-> > +#if defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_64__=
-)
-> > +EOF
-> > +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_32.tbl"
-> > "$outfile" common,32,i386 EM_386
-> > +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_64.tbl"
-> > "$outfile" common,64 EM_X86_64
-> > +cat >> "$outfile" <<EOF
-> > +#endif // defined(ALL_SYSCALLTBL) || defined(__i386__) ||
-> > defined(__x86_64__)
->
-> This misses the x32 table.
-
-Again I'm carrying forward a behavior. Would it be worth adding x32?
-
-Context: I handled x86 on Android over 10 years ago. x86 phones were
-64-bit long before ARM or Apple phones, the kernel was 64-bit but the
-userland was forced to be 32-bit. ARM32 has R15 be the program
-counter, Sophie Wilson's idea, and when Android's security folks
-experimented with ASLR they found it to be free as a consequence of
-ARM32. On x86 not x32 then you're in the land of thunk bx, losing a
-register and extra instructions. We never did x32 on Android as it
-became irrelevant when I brought up x86-64 on Android. The desire for
-x32 was for RIP encoding to fix the ASLR issue, not so much the extra
-registers, and because Android used to mandate a 32-bit user land
-(this was so extreme that even the developer's C to generally ARM
-cross-compilers were built as 32-bit binaries). Given x32 was done for
-Android, Android never used it, I have a hard time thinking we should
-be adding support to perf. That said there is likely other context
-that I'm unaware of as I'm surprised x32 still exists. Fwiw, it
-saddens me that the x32 experience means that for APX we're still
-getting the x86-64 ABI moved forward and silly things like the var
-args convention on %al (there for C80 compatibility I once believed -
-not really an issue today). On ARM64 registers there are at least 8
-callee-save general purpose and floating point registers, so the x86
-model of pretty much everything is caller-save means function calls
-are expensive and you may need aggressive inlining. Anyway, sorry for
-going on so much.
-
-Thanks,
-Ian
+Ah, yeah, that's way better.
