@@ -1,126 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580061F1527;
-	Tue, 11 Feb 2025 10:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8531F3BBE;
+	Tue, 11 Feb 2025 10:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739268678; cv=none; b=W1rnCwuFHudWB7j7anrZ7bLaaNJCLrFcv/PiC5FpgDlpxXVjauZf5lIDEAOO5fegAFhNA+ubrRSrbIQ/yuSJri+0LN/RAtZM0I7sPvVWCzBXlWobzON1vegnVfX97FL2h/QTKz1slNI5UO1IN2Oq0NdP+Y6KMeXRVWwOS54a55w=
+	t=1739268714; cv=none; b=Sb0IvwIeIvfrl595bp2VRNX9lRr7yWsIr85vdETrOAdZIM9nns0M4Pq31FhSw8JAqD/H1F/hiNreuchG15NqS0QGE14BNZ/R1+takhG010/38l4OcniCNYwoSO2TJRIueNDPF4+HdbHX2zqY0amqhw4NKv+iT1A/+F9BA87P0YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739268678; c=relaxed/simple;
-	bh=BLMnHrrBxYwNEmforv64ll3sTdEYcLU2ckHm3a+dNns=;
+	s=arc-20240116; t=1739268714; c=relaxed/simple;
+	bh=PcvVTX8L9ACVG/gTTCKjpqy9r2utuVwxHIetmFSrHaM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iJwKp6UBpwEojYAqUOVDgItiJUPWZxPehJmYCX+euYHFmj/haH3iI5Zj3bnpqxOsB2iDj62bC9yFw80ipIf5A7FV0kf7SMrbCzoA0taIdo3UHgDbOtHejSQB23bq3e8MDPBQg+ARAb1AJ6Ajo6+yMMTnoMMLc2+SiwC8btUMLJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=q1K3AHBs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ebgWUbgNNfOeMd+iaJoCW4KiqEmZc7Ch7d4Qpqcigvem4nF4EAeOcsbGo7kaBWTerjgIDYgcxejxMEpMFHO2QOyZ5Lw9Lb2Q5jfhLA/xhD+5OX2dkeyoNShT/+2nOJ3mxqwfC4I8NBawO6A5VId0z9XfHIM7cqJldPL0TTUjuRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=miRlq9mP; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="q1K3AHBs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7DFDC4CEDD;
-	Tue, 11 Feb 2025 10:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739268678;
-	bh=BLMnHrrBxYwNEmforv64ll3sTdEYcLU2ckHm3a+dNns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q1K3AHBs91U7u4rJfmd7uAb0xsSec+KHA6lKWQYzs3gwycDYVX7Hizy0PfKJzkB4+
-	 Z7Uu98mwifV+KMQx+s9EtWJdBexPcvB+mIvV9P3IgRfQNHlkXamH7Z5jlRRE0zoXbg
-	 PL3KC9OAbDG9Tr5Zx7ka3s32t2CfLvuGls5gquHU=
-Date: Tue, 11 Feb 2025 11:09:35 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Andrew Kreimer <algonell@gmail.com>
-Cc: Dave Penkler <dpenkler@gmail.com>, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2] staging: gpib: Remove unnecessary TTY_LOG expansion
-Message-ID: <2025021119-unsalted-shrink-1211@gregkh>
-References: <20250210121552.33455-1-algonell@gmail.com>
- <20250211093051.15993-1-algonell@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="miRlq9mP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=PV93ETFkrqs3pTKrkdQXX0D434rl02bBD6bSk/+peHA=; b=miRlq9mP3oLnwBVm41ESdv4Rd/
+	uLSFj20mx7H3po/BbLLy045i2QiQicSnht6rNCCLUol9u0EFRy9v+eYbRgwyrFPhr13vqyHLynlrl
+	BKVzen+RSPUkikZejJclhIdJV3TrMutvu65yG9+nJG6SS2FZAC1Ni6H7Mqpb1UFYqeMqN2TjLyaLF
+	zid52R8Famn3Gg8THdDiUdg58NUi8MquONAcc6yT6P0x6ieejo4UrVmtKVbwJcvGq44xxYyywbSvk
+	p1rHFEfzsYnyApJi+s1VJs1ERxXb53ptPPkXNwKqqAYdMX1O7XrCAgUN+KmdTlwXGUHBbI85Ga1X1
+	n3LbfjiQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1thnF4-00000000voA-3zf4;
+	Tue, 11 Feb 2025 10:11:47 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6293A3004AF; Tue, 11 Feb 2025 11:11:46 +0100 (CET)
+Date: Tue, 11 Feb 2025 11:11:46 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>, bpf <bpf@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Barret Rhoden <brho@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Josh Don <joshdon@google.com>, Dohyun Kim <dohyunkim@google.com>,
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+	Kernel Team <kernel-team@meta.com>
+Subject: Re: [PATCH bpf-next v2 07/26] rqspinlock: Add support for timeouts
+Message-ID: <20250211101146.GB29593@noisy.programming.kicks-ass.net>
+References: <20250206105435.2159977-1-memxor@gmail.com>
+ <20250206105435.2159977-8-memxor@gmail.com>
+ <20250210095607.GH10324@noisy.programming.kicks-ass.net>
+ <CAADnVQKefT6iQVQ66QTCeRCMs_am4cC3pBt1Ym1fxfeeQVDDWA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250211093051.15993-1-algonell@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQKefT6iQVQ66QTCeRCMs_am4cC3pBt1Ym1fxfeeQVDDWA@mail.gmail.com>
 
-On Tue, Feb 11, 2025 at 11:30:13AM +0200, Andrew Kreimer wrote:
-> When drivers are successful, they should be quiet.
+On Mon, Feb 10, 2025 at 08:55:56PM -0800, Alexei Starovoitov wrote:
+> On Mon, Feb 10, 2025 at 1:56 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Thu, Feb 06, 2025 at 02:54:15AM -0800, Kumar Kartikeya Dwivedi wrote:
+> > > @@ -68,6 +71,44 @@
+> > >
+> > >  #include "mcs_spinlock.h"
+> > >
+> > > +struct rqspinlock_timeout {
+> > > +     u64 timeout_end;
+> > > +     u64 duration;
+> > > +     u16 spin;
+> > > +};
+> > > +
+> > > +static noinline int check_timeout(struct rqspinlock_timeout *ts)
+> > > +{
+> > > +     u64 time = ktime_get_mono_fast_ns();
+> >
+> > This is only sane if you have a TSC clocksource. If you ever manage to
+> > hit the HPET fallback, you're *really* sad.
 > 
-> Remove the unnecessary TTY_LOG expansion.
-> 
-> Suggested-by: Greg KH <greg@kroah.com>
-> Signed-off-by: Andrew Kreimer <algonell@gmail.com>
-> ---
-> v2:
->   - Change commit message/body.
->   - Remove the TTY_LOG line as suggested.
-> 
-> v1:
->   - Fix a typo in TTY_LOG message.
-> 
->  drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
-> index 85322af62c23..b2c4d1d26f12 100644
-> --- a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
-> +++ b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
-> @@ -542,7 +542,6 @@ static int usb_gpib_attach(gpib_board_t *board, const gpib_board_config_t *confi
->  		return -EIO;
->  
->  	SHOW_STATUS(board);
-> -	TTY_LOG("Module '%s' has been sucesfully configured\n", NAME);
->  	return 0;
->  }
->  
-> 
-> Interdiff against v1:
->   diff --git a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
->   index 1c3e5dfcc9ec..b2c4d1d26f12 100644
->   --- a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
->   +++ b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
->   @@ -542,7 +542,6 @@ static int usb_gpib_attach(gpib_board_t *board, const gpib_board_config_t *confi
->    		return -EIO;
->    
->    	SHOW_STATUS(board);
->   -	TTY_LOG("Module '%s' has been successfully configured\n", NAME);
->    	return 0;
->    }
->    
-> 
-> Range-diff against v1:
-> 1:  779e59d74722 ! 1:  463e7000d1a7 staging: gpib: Fix typo in TTY_LOG message
->     @@ Metadata
->      Author: Andrew Kreimer <algonell@gmail.com>
->      
->       ## Commit message ##
->     -    staging: gpib: Fix typo in TTY_LOG message
->     +    staging: gpib: Remove unnecessary TTY_LOG expansion
->      
->     -    There is a typo in TTY_LOG message:
->     -     - sucesfully -> successfully
->     +    When drivers are successful, they should be quiet.
->      
->     -    Fix it via codespell.
->     +    Remove the unnecessary TTY_LOG expansion.
->      
->     +    Suggested-by: Greg KH <greg@kroah.com>
->          Signed-off-by: Andrew Kreimer <algonell@gmail.com>
->      
->       ## drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c ##
->     @@ drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c: static int usb_gpib_attach(g
->       
->       	SHOW_STATUS(board);
->      -	TTY_LOG("Module '%s' has been sucesfully configured\n", NAME);
->     -+	TTY_LOG("Module '%s' has been successfully configured\n", NAME);
->       	return 0;
->       }
->       
-> -- 
-> 2.48.1.268.g9520f7d998
-> 
+> ktime_get_mono_fast_ns() is the best NMI safe time source we're aware of.
+> perf, rcu, even hardlockup detector are using it.
 
-What is the interdiff at the bottom here for?
+perf is primarily using local_clock(), as is the scheduler.
 
-thanks,
-
-greg k-h
