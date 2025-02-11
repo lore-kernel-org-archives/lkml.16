@@ -1,50 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C23226BDA9;
-	Tue, 11 Feb 2025 10:17:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1537A26BDA9;
+	Tue, 11 Feb 2025 10:18:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739269035; cv=none; b=ZeZDij32gergkxDYO++Y308qDLMrBZGJ4rNqgTaWYv+FOW3+ge3+TbmFJtRRzkxWbVct2OeRjkUQJQjrayruG9C8sfaClJ7+lSS0ye2D26fyVyX3rzWoFER+VlnJMYSoOzGh3YJpdZRYxor/agv9Qw6/B1Lb7iA6cTVV6n4CGhg=
+	t=1739269085; cv=none; b=FrNmjoLUJFZagcL4dfjDvo57QknTi5pU+DR5e3yWrhGyafAqme4oxcA6r+IPdJ54j5s+hQd5VNx4Arm5YfvDKGMzcDfOMDDDq022bieJYh2O2Qz0pKIBBR1y7dBU/7/S+5VzXe1Z/MCfrynLpykzftymfsl1fpebRi8p9r7kgPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739269035; c=relaxed/simple;
-	bh=pcADtuRlu6BZw4eXznSk/MgH09vrV1zqcaWCmhUVR4w=;
+	s=arc-20240116; t=1739269085; c=relaxed/simple;
+	bh=C7gEjp+CjZWa+7yzfzimjm9DA63+y5YVtzHT4iSZrPk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YUGO6HueguVogcfwSi07pauUIyPg755JidS9ngDZRHCc/6t01jDwdKmfo2d33VKCfryv1CQWUvpCLmRx1PlMH3INTBKccRJzB1VGdmYnH0ivolbjCGzL53spJNf7euXhOSJxuN0PepUSzuNgOAJXw1cd6ZC09/OBYs/wNlG9tOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmLoEzmG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=A77Qt6OP47mYkUGSDq2A26Lx2EaOm68r3qlqYeHfuPkEGwI54c4WfmkwRpQscOeQHmb2LBDRCIe85pAoMCV2oumSQDqWoIleoxRTcQjHvnuhdkeQH1ErnoABJ1X5bK329voR/ZSw2apZpK6O36Rz1JouZSiT/shLOyOyYyuYaac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=niY7Y5B1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmLoEzmG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41594C4CEDD;
-	Tue, 11 Feb 2025 10:17:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="niY7Y5B1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B06FC4CEDD;
+	Tue, 11 Feb 2025 10:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739269034;
-	bh=pcADtuRlu6BZw4eXznSk/MgH09vrV1zqcaWCmhUVR4w=;
+	s=k20201202; t=1739269084;
+	bh=C7gEjp+CjZWa+7yzfzimjm9DA63+y5YVtzHT4iSZrPk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dmLoEzmGW8nPqdBqkVkymo86D7XEXRXJwhHr+zMECwpZNrYvWDWKQ1nO5BgkItKsp
-	 Zz89SRnKEsEMbRCiGrOuC8mvLDIgZg4fIwM8cRTqcSnlESdcz6+pGYhk3wIG3eKK8J
-	 aJ5G44kTbtBIUGL/Lt1nMv6YyhrWyyZ1wuWSfaOZie7GnXQF5KsstHkYpE77hfpDjy
-	 du3AEdiEGX3NgKTr0xeaubuX4peEa0qqDWxjG2uZf9F8ojr3Fewk48tBcwjxVzG1wf
-	 Cd9KVDBEBp6E86vVOsQm1HS3d6U1qf67eVZ6c8ODvPdp2nPD+eNixUjg8/Grm+vh2J
-	 HKeRHg3cnd+4A==
-Date: Tue, 11 Feb 2025 11:17:07 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Zicheng Qu <quzicheng@huawei.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, jlayton@kernel.org, axboe@kernel.dk, joel.granados@kernel.org, 
-	tglx@linutronix.de, linux-kernel@vger.kernel.org, hch@lst.de, len.brown@intel.com, 
-	pavel@ucw.cz, pengfei.xu@intel.com, rafael@kernel.org, 
-	syzkaller-bugs@googlegroups.com, linux-pm@vger.kernel.org, tanghui20@huawei.com, 
-	zhangqiao22@huawei.com, judy.chenhui@huawei.com
-Subject: Re: [PATCH] acct: Prevent NULL pointer dereference when writing to
- sysfs
-Message-ID: <20250211-anschaffen-leiht-9e803cc9b087@brauner>
-References: <20250127091811.3183623-1-quzicheng@huawei.com>
- <20250210131719.528717-1-quzicheng@huawei.com>
- <20250210-unordnung-petersilie-90e37411db18@brauner>
- <20250210152146.GC1977892@ZenIV>
- <20250210-erstsemester-eckpunkte-f2f0d922ed01@brauner>
- <20250210181902.GE1977892@ZenIV>
- <20250211002308.GG1977892@ZenIV>
+	b=niY7Y5B1lrSfqvBiu0gXX9813HxxvRkt5Di1twX0SQZgC0eG2shafCuFDdWip2UiT
+	 vjjWnnpmlSZHmggTvfMQIjM0K7MUnuBgUgsC3XQFz1rWqMwGfbYPhvaPDmhd1C4ewN
+	 x52EChzmuTwR9IPJkI5qORB56udK05ktgUuRx20TRh42WFk5naETBvaRLgTeHtVDrv
+	 cIE8KPSyplCtZxoCVF9MV9dy0OKfLCxA4Sf7Gozhw5n0NsemR0zNYPtdbbPhLkbZGR
+	 oFOP3gfr0oyKORaeSEqsiPh1YRZElygz9Qfi5xuNRRuECEjh354PPAm7+bw8EGIyNH
+	 KJ3/x2aFvc1Vg==
+Date: Tue, 11 Feb 2025 10:17:59 +0000
+From: Lee Jones <lee@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: "Rob Herring (Arm)" <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, imx@lists.linux.dev,
+	Pavel Machek <pavel@ucw.cz>, Andrew Lunn <andrew@lunn.ch>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] dt-bindings: leds: Convert leds-tlc591xx.txt to
+ yaml format
+Message-ID: <20250211101759.GM1868108@google.com>
+References: <20250107161628.121685-1-Frank.Li@nxp.com>
+ <173627580718.1304322.7908676202048945270.robh@kernel.org>
+ <Z6pqnw3WBP7WRfYe@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,52 +49,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250211002308.GG1977892@ZenIV>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6pqnw3WBP7WRfYe@lizhi-Precision-Tower-5810>
 
-On Tue, Feb 11, 2025 at 12:23:08AM +0000, Al Viro wrote:
-> On Mon, Feb 10, 2025 at 06:19:02PM +0000, Al Viro wrote:
-> > On Mon, Feb 10, 2025 at 05:02:35PM +0100, Christian Brauner wrote:
-> > > On Mon, Feb 10, 2025 at 03:21:46PM +0000, Al Viro wrote:
-> > > > On Mon, Feb 10, 2025 at 04:12:54PM +0100, Christian Brauner wrote:
-> > > > 
-> > > > > One fix would be to move exit_fs() past exit_task_work(). It looks like
-> > > > > that this should be doable without much of a problem and it would fix
-> > > > > the path_init() problem.
-> > > > > 
-> > > > > There should hopefully be nothing relying on task->fs == NULL in
-> > > > > exit_task_work().
-> > > > 
-> > > > There's a question of the task_work_add() issued by exit_task_fs(),
-> > > > though.
-> > > 
-> > > Can't we simply remove the pins on the mounts of fs->root and fs->pwd in
-> > > exit_fs() explicitly? If that works I think that's a fair enough
-> > > compromise for this shite.
-> > 
-> > I'd rather go for a simpler approach...  Why do we need those writes
-> > to be done in context of exiting process in the first place?  It's
-> > not as if they needed to go out before it terminates, so what's to
-> > stop us from having a kernel thread in background and queue the data
-> > to be written for it to pick up?
-> > 
-> > Does anybody see problems with that approach?
+On Mon, 10 Feb 2025, Frank Li wrote:
+
+> On Tue, Jan 07, 2025 at 12:50:07PM -0600, Rob Herring (Arm) wrote:
+> >
+> > On Tue, 07 Jan 2025 11:16:26 -0500, Frank Li wrote:
+> > > Convert binding doc leds-tlc591xx.txt to yaml format to fix below DTB_CHECK
+> > > warning.
+> > >
+> > > arch/arm64/boot/dts/freescale/imx8mp-aristainetos3-proton2s.dtb:
+> > >   /soc@0/bus@30800000/i2c@30a30000/tlc59108@40: failed to match any schema with compatible: ['ti,tlc59108']
+> > >
+> > > Additional change:
+> > > - ref to common.yaml for child nodes.
+> > > - limit child's reg to 0 - 7 for ti,tlc59108.
+> > > - fix typo 'linux,default_trigger' in example.
+> > > - change child node name's prefix to led-.
+> > > - change nodename to led-controller.
+> > > - fix properties order in example.
+> > >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > > change from v1 to v2
+> > > - using "^led@[0-9a-f]$"
+> > > - remove minimum: 0
+> > > ---
+> > >  .../bindings/leds/leds-tlc591xx.txt           | 40 ---------
+> > >  .../devicetree/bindings/leds/ti,tlc59116.yaml | 90 +++++++++++++++++++
+> > >  2 files changed, 90 insertions(+), 40 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/leds/ti,tlc59116.yaml
+> > >
+> >
+> > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 > 
-> Note, BTW, that games with rlimit and creds switching disappear if done
-> that way.  
-> 
-> FWIW, I wonder if we should simply allocate a page worth of buffer,
-> occupied by acct_t array, with count + pointer to buffer kept in acct,
-> with acct->mutex used to protect the entire thing, so that do_acct_process()
-> would add a record to that sucker and wake the kthread up, with kthread
-> handling actual writes and emptying the buffer.  No need for exit(2)
-> to wait unless the buffer is full...
+> Anyone take care this patch. Rob already acked.
 
-I had thought about it but both LTP and the selftests want the buffer to
-be filled after the process exits.
+Yes.  I'm working through my inbox now.  FWIW, since I work in reverse
+chronological order, you just bumped it to the back of the queue.
 
-So let's not overly complicate this. I want this to be as simple as
-possible and then start deprecating this api asap.
-
-I have a patch that just moves the final write into the workqueue. But
-let's keep the cred override because who knows what security hole we
-open up if we skip the override cred.
+-- 
+Lee Jones [李琼斯]
