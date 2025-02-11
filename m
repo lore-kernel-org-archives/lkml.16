@@ -1,80 +1,79 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF2E8488
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBFD135A53
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739246491; cv=none; b=XNtnUbmJ8+U5Cp6bNlf/MOvzYm70cuJXvNbEpVuoYU17Lh/TpY7qB5QJtZoV8lKVB4/mv9zC7UzhlsrDVQ7xtrn6FLoZI+Z/f28NN509OOc2jNw/4geQCUTSFxURPAexQJjByWfGjAUEBbByr4V4oBrK3uBDCvNoFx4fFEydjgU=
+	t=1739246778; cv=none; b=GfVFpoF/C7awjfhnotavIiV8WNbB2FN6xKfidmM5oMCGdYyP8ZDx9XDxiN5xjOHYfpxLEaFAeVrcZRC+P001FMSJbWByu9gQxSnnkTYx5XmoHyHXDeMGxE//qrrQZA+MongrePAS4FQWUmz59adwrZgnGMURIzpvbKBsqrt/3c0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739246491; c=relaxed/simple;
-	bh=S+zdcfJtPCvC1BH2Jp8SSo4wCM7YozlYfZJMVZB5jmk=;
+	s=arc-20240116; t=1739246778; c=relaxed/simple;
+	bh=Y8Fb7c3oMJFhdqlpFFInDUQpR9IOTEPfZpM3xko40Ck=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BjmL5oKMfknkk/eVUr1UAVn3HwacxGfct7PsK9ACFZ3sI/yeTx9ewWmMZQd38vl1I2YyqoKgMzGpWGLZ182BCnFuBYRJTitxkQGAPjec5Cn1WfezbwmUVRiCckqg7mdFcCrQO0pAel19qHR4PMxarQESoqAwrG2h/I9G8y0nQrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ytMLcodC; arc=none smtp.client-ip=209.85.214.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=I+C2S9eMTBR/6PYqEKrZ+pfX0NJqaJ+RoJ1wEX0PnrMxHxofGE+Fs++2b70HhiCChu/1Ks3uClDxOZsK7ZhzfVVtl74695Y6cTF0z/mJAnvQvnJ70+uuW/n2XvfSvgBgtA+KMEDyASid9AwTZ7i9Z+/Hnu6LKDIfKDSyY5ARmL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=zVZ+f+bC; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ytMLcodC"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f61b01630so51219645ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:01:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="zVZ+f+bC"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21f6022c2c3so47442795ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:06:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739246489; x=1739851289; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739246776; x=1739851576; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=S+zdcfJtPCvC1BH2Jp8SSo4wCM7YozlYfZJMVZB5jmk=;
-        b=ytMLcodChHtPxbDOAPOQYVb7QVcIlKZIi/NhQXa6sfRhI/RntimuhxILSPHX6r3vvx
-         V85zgt54xPeElsKhOKQKXbgcYco3GPDqHVBJTPObJEsmI4GgAIlXqf9RTb7A7Hgb4eA3
-         DcLylUd7PsL9H/KYc8AAI1g4AOgInDD7FFoF356adXfb3J5EHmLDoYZxSxqSYeenXuq2
-         eBEdizs49Yvf7+RGorBZnK0azmsL/3FdlieqEhn5yzV8X+fyxPwkE5fJUVL6UDrktmhc
-         HWEoMhsAw7wTCgYMJOUjWn+YS/WYCQgtAGclDQAyy437HGUsIR4y8JoR11u4i76wBL6Z
-         FBsw==
+        bh=zyKn8f6FlNrtiJWD+T1fk3XzsKPAFPZ0BSNq2D6GOdI=;
+        b=zVZ+f+bCNBJ8qKlfMcYNOmMk/9ffVieJwJSW8z31ufAqZdoHUEnVzz9Afcm8HQg2iJ
+         6s2FsqllFrWnxyxj60/30SiHaxFnKACuo7jkaxCCFkaH+oeu8+yDRl/Ss96A4A8ZEEHW
+         ygtWO62NzHAiFvHrY4+Em2DwLZtoXmfM/LMlPqxt3iyw1l4UtkvUcj/dfETUk+yIMbq0
+         yPG1F3h4DqN4EQ1a7eyL7FyAYlRhSYRtZ3xHLv6T4O25WjmC67BnT3mNZyrPGG34QjXG
+         BoqWfliw32xZ4S2zZmyOIOc0UURQOHshI4xi1nrZ4p5Qlpcz5xYirSFbp0bPrWgCYnLe
+         zEtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739246489; x=1739851289;
+        d=1e100.net; s=20230601; t=1739246776; x=1739851576;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S+zdcfJtPCvC1BH2Jp8SSo4wCM7YozlYfZJMVZB5jmk=;
-        b=AtEID4tlpPXLnArWcpOGNBe1GHjCy6ODIKhaAhj9L68FxHKhWGBn30YXvdWN18Ha67
-         SspvBS5e0m4wnFnrXcd2mgA3pTvTvxTczt+VtEp6ovNp+oaO+aNauPH8nGClLnP8fmsk
-         aA7QeDNolpu2MWz/bykcCrYfF/gPrAt3z3O0GLgALKfjg53zJU63RV4tgP+76+IkLC5y
-         VnDMlycXix47l5f+8/utAwvvBQhb6nD2xEUfKdv0QFlhhZ3L0H3wAXc/ouPtDXUIlbaX
-         xdObtttZ9PkPWYVTK9gok3uAz5haoSnUIy05fJLuk0xAADMllG0jwoLAbbcbv7Zs6DM5
-         Ioog==
-X-Forwarded-Encrypted: i=1; AJvYcCXkGAykcbljENOm7lT9lxiS9j+N4cAiJryRTnUJStNuNiWKZGXxk70MAz20nkVxUXYeRlciswjgu5sst2I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCx4dyvhDwy4p4kIXvMnNn5aCPowZIU5ynpkgGbWERqsnGwINy
-	kH+T4Otqid+4Y2/iJIZaDQhiuvuK9a7uiKZDlgG8YKC0NljVZyKFfnOnoQXrFNo=
-X-Gm-Gg: ASbGncugHzLLnOBlWhLN8sVLtx3eaow3mjuwKudkBPp8gwJevaPs4438UI32PE9JM2X
-	51y6ntD3gc7kyr7CjW4fBSu9UWt/PbAImrTTMiVEurhVcU9WMlMABree4eVMb9qrGsA+hsZJE1L
-	lhR0nSWQ9M2Bz8a/kiB7rPxkKbAbME510Z962D/9RKnNPNQVgGrQ5gmZ+S4S2Si6ErsuAeRW+DS
-	gSbmv3coU1/zAAp04N8sJkCkRC+Aj7tttSee9DxS5MWbGurQBtBaz1uN2J3ymSDN2PaQ6cmY6bY
-	D3jv9IP+aqWgz3DdyJJUFyy5Nw==
-X-Google-Smtp-Source: AGHT+IHQ1bwdnVi0Eyewf84joQokKW1zoJC8VDUOsdcQJkNXtQirRClUT8g3wnWg5KqEmtasn/ZbjA==
-X-Received: by 2002:a17:902:ce89:b0:21f:6d63:6f4f with SMTP id d9443c01a7336-21fb6bf60c4mr27609325ad.2.1739246488700;
-        Mon, 10 Feb 2025 20:01:28 -0800 (PST)
+        bh=zyKn8f6FlNrtiJWD+T1fk3XzsKPAFPZ0BSNq2D6GOdI=;
+        b=w3xUdXpI0z+tzPlWZvnLfmi77ftL8/A9qcu5ZY7V64k5byiwrZOJeT80QKwLPPY82/
+         GBIZJJ7gZ/dOwMqMS72s7ou9u40pc24NxWPj3LsPUzZsj3BNrLCiHnaPJUZ9AHOCPfYw
+         6izaoN8sZN4YZzClEmYkb9vHEppJP/RWADLfWc3fpPxvDMm2ki0fYa7HCLfy8Tv/C0t4
+         /qIBTjR5BhC6fXuXEWunP/PJDmuEwjvjLa5YjAA3fUdVk2f5Ibe0okUG/1Ah01pD8aXC
+         2hDhdSYocySAOv5q8HnRRIH3BR5Iumq5dGBmEsHjIxlCtsMtCo85hB0zSCGVVoOFF6GJ
+         pnZw==
+X-Forwarded-Encrypted: i=1; AJvYcCXGQ7pqQmeKi7xJBvqILT+Af3Y6Yde1VZfcBrwofGCo1rwilZwNpRqULqOWNyST3/laeHjCtNIy0xhjPzE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMqdDSEQxOHKNVFCF6+UOVIq6Z1LMbtalLvv9H4FiKXipPDQRi
+	oNpjekADm3PhA5Q36uMW8BkyPl29hKtaD6Jg1U+Mwwyhqxk2EIwSyRfnr/IC2hM=
+X-Gm-Gg: ASbGnctrEIJrlZpE36cBhsWnkukh+PCOcuEBwHW8sxhsAza0a7Xcwc5VSIc5UbLUBO4
+	/OCRljxGeNhHk1DYjNX0FwdsFFtne32qmvPWlBaQgYgGw0PMhn1FEOgXQDZ10w8EG6CdR7Z/G+Y
+	Bp0kn08vWMpa3Oanht8PFGN5yWgBnE5QqKXvNlnzYfW3jEscrs1uWWA3h3ciBiKDCsOpVZ7l/f3
+	N84b1/nE3CLuj/WgX206u5ZWH0oKetDRtq0a+VjftRhTvTRgoLNPhMH/UqFMhT3f8eiMM9iGA1D
+	0bi0HaPlILWA8jabllqQ6e1SoQ==
+X-Google-Smtp-Source: AGHT+IGlh9j8ErK64T4ScD+I1yhp+hSLhhu8tQ8C1OBgFV46tBgTiWjpNTOBq5c7bhEw0dyoInj7tg==
+X-Received: by 2002:a05:6a20:1591:b0:1ed:a4b1:9124 with SMTP id adf61e73a8af0-1ee4b5bfde2mr2966111637.8.1739246775980;
+        Mon, 10 Feb 2025 20:06:15 -0800 (PST)
 Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368d51ebsm87094655ad.252.2025.02.10.20.01.27
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73085c8360asm3653872b3a.132.2025.02.10.20.06.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 20:01:28 -0800 (PST)
-Date: Mon, 10 Feb 2025 20:01:26 -0800
+        Mon, 10 Feb 2025 20:06:15 -0800 (PST)
+Date: Mon, 10 Feb 2025 20:06:12 -0800
 From: Deepak Gupta <debug@rivosinc.com>
-To: Chunyan Zhang <zhang.lyra@gmail.com>
-Cc: =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Chunyan Zhang <zhangchunyan@iscas.ac.cn>,
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org
-Subject: Re: [PATCH V5 1/3] riscv: mm: Prepare for reusing PTE RSW bit(9)
-Message-ID: <Z6rLlkphtv99+bH3@debug.ba.rivosinc.com>
-References: <20241113095833.1805746-1-zhangchunyan@iscas.ac.cn>
- <20241113095833.1805746-2-zhangchunyan@iscas.ac.cn>
- <87frl0snf6.fsf@all.your.base.are.belong.to.us>
- <CAAfSe-tRFEXiXJ=tHVnXy4Kb6O7-E2Sr_xybLYxma=ypMhqz9w@mail.gmail.com>
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+	linux-kselftest@vger.kernel.org,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: Re: [PATCH v2 01/15] riscv: add Firmware Feature (FWFT) SBI
+ extensions definitions
+Message-ID: <Z6rMtBud/hsKYYIw@debug.ba.rivosinc.com>
+References: <20250210213549.1867704-1-cleger@rivosinc.com>
+ <20250210213549.1867704-2-cleger@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,36 +83,84 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAfSe-tRFEXiXJ=tHVnXy4Kb6O7-E2Sr_xybLYxma=ypMhqz9w@mail.gmail.com>
+In-Reply-To: <20250210213549.1867704-2-cleger@rivosinc.com>
 
-On Tue, Feb 11, 2025 at 09:20:22AM +0800, Chunyan Zhang wrote:
->On Thu, 30 Jan 2025 at 16:42, Björn Töpel <bjorn@kernel.org> wrote:
->>
->> Chunyan Zhang <zhangchunyan@iscas.ac.cn> writes:
->>
->> > The PTE bit(9) on RISC-V is reserved for software, it is used by devmap
->> > now which has to be disabled if we want to use bit(9) for other features,
->> > since there's no more free PTE bit on RISC-V now.
->> >
->> > So to make ARCH_HAS_PTE_DEVMAP selectable, this patch uses it as
->> > the build condition of devmap definitions.
->>
->> Heads-up: It seems like Alistair's series [1] that removes the devmap
->> PTE bit will most likely land in 6.15.
+On Mon, Feb 10, 2025 at 10:35:34PM +0100, Clément Léger wrote:
+>The Firmware Features extension (FWFT) was added as part of the SBI 3.0
+>specification. Add SBI definitions to use this extension.
 >
->Yes, I've been keeping an eye on Alistair's series, intended to update
->this patchset after Alistair's patch that removes the devmap PTE bit
->got merged.
-
-Please keep in mind that even after claiming back devmap PTE SW bit, a compile
-time decision to select between uffd-wp and soft-dirty is not desirable.
-
+>Signed-off-by: Clément Léger <cleger@rivosinc.com>
+>Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+>Tested-by: Samuel Holland <samuel.holland@sifive.com>
+>---
+> arch/riscv/include/asm/sbi.h | 33 +++++++++++++++++++++++++++++++++
+> 1 file changed, 33 insertions(+)
 >
->Thanks,
->Chunyan
->>
->>
->> Björn
->>
->> [1] https://lore.kernel.org/linux-mm/cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com/
+>diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+>index 3d250824178b..d373b5c08039 100644
+>--- a/arch/riscv/include/asm/sbi.h
+>+++ b/arch/riscv/include/asm/sbi.h
+>@@ -35,6 +35,7 @@ enum sbi_ext_id {
+> 	SBI_EXT_DBCN = 0x4442434E,
+> 	SBI_EXT_STA = 0x535441,
+> 	SBI_EXT_NACL = 0x4E41434C,
+>+	SBI_EXT_FWFT = 0x46574654,
+>
+> 	/* Experimentals extensions must lie within this range */
+> 	SBI_EXT_EXPERIMENTAL_START = 0x08000000,
+>@@ -402,6 +403,33 @@ enum sbi_ext_nacl_feature {
+> #define SBI_NACL_SHMEM_SRET_X(__i)		((__riscv_xlen / 8) * (__i))
+> #define SBI_NACL_SHMEM_SRET_X_LAST		31
+>
+>+/* SBI function IDs for FW feature extension */
+>+#define SBI_EXT_FWFT_SET		0x0
+>+#define SBI_EXT_FWFT_GET		0x1
+>+
+>+enum sbi_fwft_feature_t {
+>+	SBI_FWFT_MISALIGNED_EXC_DELEG		= 0x0,
+>+	SBI_FWFT_LANDING_PAD			= 0x1,
+>+	SBI_FWFT_SHADOW_STACK			= 0x2,
+>+	SBI_FWFT_DOUBLE_TRAP			= 0x3,
+>+	SBI_FWFT_PTE_AD_HW_UPDATING		= 0x4,
+>+	SBI_FWFT_POINTER_MASKING_PMLEN		= 0x5,
+>+	SBI_FWFT_LOCAL_RESERVED_START		= 0x6,
+>+	SBI_FWFT_LOCAL_RESERVED_END		= 0x3fffffff,
+>+	SBI_FWFT_LOCAL_PLATFORM_START		= 0x40000000,
+>+	SBI_FWFT_LOCAL_PLATFORM_END		= 0x7fffffff,
+>+
+>+	SBI_FWFT_GLOBAL_RESERVED_START		= 0x80000000,
+>+	SBI_FWFT_GLOBAL_RESERVED_END		= 0xbfffffff,
+>+	SBI_FWFT_GLOBAL_PLATFORM_START		= 0xc0000000,
+>+	SBI_FWFT_GLOBAL_PLATFORM_END		= 0xffffffff,
+>+};
+>+
+>+#define SBI_FWFT_PLATFORM_FEATURE_BIT		(1 << 30)
+>+#define SBI_FWFT_GLOBAL_FEATURE_BIT		(1 << 31)
+>+
+>+#define SBI_FWFT_SET_FLAG_LOCK			(1 << 0)
+>+
+> /* SBI spec version fields */
+> #define SBI_SPEC_VERSION_DEFAULT	0x1
+> #define SBI_SPEC_VERSION_MAJOR_SHIFT	24
+>@@ -419,6 +447,11 @@ enum sbi_ext_nacl_feature {
+> #define SBI_ERR_ALREADY_STARTED -7
+> #define SBI_ERR_ALREADY_STOPPED -8
+> #define SBI_ERR_NO_SHMEM	-9
+>+#define SBI_ERR_INVALID_STATE	-10
+>+#define SBI_ERR_BAD_RANGE	-11
+>+#define SBI_ERR_TIMEOUT		-12
+
+nit: Space mis-aligned(^)	^
+
+otherwise
+Reviewed-by: Deepak Gupta <debug@rivosinc.com>
+
+>+#define SBI_ERR_IO		-13
+>+#define SBI_ERR_DENIED_LOCKED	-14
+>
+> extern unsigned long sbi_spec_version;
+> struct sbiret {
+>-- 
+>2.47.2
+>
 >
