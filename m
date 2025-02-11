@@ -1,90 +1,112 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034DE1F193C;
-	Tue, 11 Feb 2025 10:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2E11F193C;
+	Tue, 11 Feb 2025 10:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739271327; cv=none; b=RIR8JSZVgPw75vczbVWSstIgNAHfTxDZsUHmStB54HvpyKn+qbHYuslVrKrZKIODJz9Dngk0F8tMYyBYXZtj7yJapHoMyV+4WIIwgxKgP/GwhCj6S4vT9Xn/z80AAHWpwEklPn9EfKwQMNkZTBiyv65bJ6ohOjxhpzokWcGx4PU=
+	t=1739271374; cv=none; b=qY+/g29KDyMtyB9bw4o08oSfvRZpk/jfsQTMDOcqpowA99VI48oSuPjb5VuqZUR3j3snAjePVNmKHxTjATfv5VP/qWLY1G1y/OtCWH131a+5DY1SRNmLSalDl24rYH8CInqZsp996jXKN68yRjbEVlmDsHC8fvw+71ZO9OMDPJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739271327; c=relaxed/simple;
-	bh=u8/Lnpmqqyug00ve4rh0Ch5QRFxC7d9Lp8kwRDFpdMY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QsKZ37UvEn9PuBadrozRs6ClRh7O47QtuJZzj5iOfz5m//gc6xua7xrcO28eO0GdyzmH56tdLa3uVrwEMFq2MyKHs6+RG064DUW7DfbrtRUjB2uKnz6bV9Ospse4/LJ35w40gXuRmB33DQQVqxdg3PqPt9pqX7r8TvZsCpKK2hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=aM2e2a5Z; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1739271374; c=relaxed/simple;
+	bh=MVyYYd2aTgxVNuj8kiTBd1CgugjGUI9c7IeyRwPv6BU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KbF7GXJ5zgwk19vXa1AOHDeYzexGOFEaOsOAufhpt0eI6y0wdZoJAqFMxQb6Go2JQ0ruCGkcKqfUQ6PWkwDlgHLEvudSqmLW1j5wou1o9ZiEQeKZC2Lk/TVb82t1LQ8LhMorSQtKKvaHee6Fs49Gd6pkx75xLyuUvpJsBLKNTb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nz9uXY7U; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="aM2e2a5Z"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8707B41E0D;
-	Tue, 11 Feb 2025 10:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739271323;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aNAL4qcDpZADEcFGQJigZHn9NAqCEryKx7MhvZmyVLc=;
-	b=aM2e2a5ZRNus+//jkXB7rQ3t2k+vf14eyttffiLsJBwOBsqez1SCdQbPYuKbWzEJIIlCkf
-	4gwmrY4LpEfpXYkLwnNsuC1sawJ6twdSrAhsvQ0SCLZ3nI5wMTSWBNHKslJZsyXl1Yu4uq
-	tW7aiMLvURuBu19jzkHQXAs2//tHwA2Jem04Y2NoC/KL+WrwTwyTFFAj7yikHuluB2GBFC
-	O9DkGeOl2UuV33nAuEj4aSfs/mvo7IztjgTu9wFj7Pui7Vt4QM/lOUsbXb9nPSHgppcBSM
-	JaW3ygaW46SPDvDN22XP0YCafv5JahZFZqTJcRZpJoX9SpjpQ6oujETDBqSIKg==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  Richard
- Weinberger <richard@nod.at>,  Vignesh Raghavendra <vigneshr@ti.com>,
-  linux-mtd@lists.infradead.org,  linux-arm-msm@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: rawnand: qcom: finish converting register to
- FIELD_PREP
-In-Reply-To: <67aa6527.050a0220.173001.b011@mx.google.com> (Christian
-	Marangi's message of "Mon, 10 Feb 2025 21:44:21 +0100")
-References: <20250209145439.19047-1-ansuelsmth@gmail.com>
-	<877c5xu8yt.fsf@bootlin.com>
-	<67aa6527.050a0220.173001.b011@mx.google.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 11 Feb 2025 11:55:22 +0100
-Message-ID: <87bjv8sqcl.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nz9uXY7U"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4395561ab71so3305585e9.2;
+        Tue, 11 Feb 2025 02:56:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739271371; x=1739876171; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l/1bfAPeKOcp27yVkDAZMo9Kn4FK6xHpWbCvzgxDm2k=;
+        b=Nz9uXY7UMMrZLNVOdgxgnDbb4yfLv2/OkpsRrP1Uh7V99HuSugw38UoAetSi528DNJ
+         nVhRH2b3+y1DSqp6+gfUhSO+laYabZP7a+ZXxydne855lQO/d9X3G1L284iJYeH7bUAD
+         oFP7cWoXVVGqiN/nIQjOQ2mFLHgBoMiCboqz2JygZHHmEBWar/K9Fp/pgKjFRgbww/7e
+         df+JRY/JfdWQ5mKoD032743Wh32VORZC3gJoZ168mLl3oOsD8ehDlWlJRtePoYgJFqV+
+         KPkpYnl0wH0ouDe30dNwaChMOGRxajGonA5Mg+FZ6Xj2CmEpEk/UDNJ2kQDtPgxGBsni
+         X6AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739271371; x=1739876171;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l/1bfAPeKOcp27yVkDAZMo9Kn4FK6xHpWbCvzgxDm2k=;
+        b=YRaaDdjeWQxZxoQEmXYURSnUZkvqsJr3n8xtXao5ZPNrdd32oZ6tlXJ64+YagzMiOx
+         JDz7ExdbNdBf5IapwD/cd+qF+5VKX7qLFpLbozKPcmQIthje5/OE3LTyonOV1egD8IPn
+         Sg5y+0TPYTRuuM15O4NOUpD+sn1Hdp2Lg5rkzJBVaZ7sDZw55OrjWWtJduBL6Dk9S2+d
+         ZoaYYkG2mfc6N0nydzkBeD30f2gFz6AcNOKTBf3AftWwc5eTAvuZF143PPPAOm/meiJt
+         Salw6d6558TWEcdcd+eEL77F9Ty2e4TVHl8JKVWe6TMn0SJ46fUHcAxxan3sTrtW+aqB
+         3i3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUDeNfJwYqXks9n9xNqEvV29QuF5gw+eKUl94k6lhhSPFzX8phrhfAZyDuyhPsVhafvDSiqI5BEpKJkhZFg@vger.kernel.org, AJvYcCXf9HhAfppXln9WssL5+TfReiwFmFSWITKaXel7aBfg2YHcjTlGQJtNviON4/jW4XzLgY/eLKOa9YQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0YXzZaXjFsnEYrM3Fz/B7G+ErtHAlsVJ9BOmUEcA3tPgQPYaq
+	W9uTPWzfvcES4rmV/rkRj643wQyTKDMAzYYxquwyEmqbI6iEo2cVGCHSGwP5
+X-Gm-Gg: ASbGncuxRjuuiLqC8NMPh521FAWzZBEfXZXnl3oFT6o4sc+Ee/4OBRCgpJ2rNkRRyGB
+	WyGgLP9cq7qoiyk790lLlsUu3uvLQW2moN/+LxjUsbds8UfmaLBz6iITY/n9h/HT61TVvaBsHi7
+	wDCRTiLiUJjLnSH1MoGOJYO/Qcw8kqJyfnYhzzvj5vzjWYD3/coMqVE876CapOatkhZHsX6HE2O
+	OoguB+r6RDF3k3sH/VVO1jWOgpJdoFesEncElS/ueJUw1nLxJyPApOqHTuZlNg03biLUNmT/8NF
+	3fDlH4Y8P1C/fqgWC3Mu8BB/Df39dVygh8H8u583wOyc
+X-Google-Smtp-Source: AGHT+IFZ4C9CNLj+h0P8uNwyUbeYIlOH1x64SjPkn8g/qz4Eo2W2Zbio9QsW+rsV6iHY4EBOfh8Mow==
+X-Received: by 2002:a5d:6d83:0:b0:38d:e1ab:d785 with SMTP id ffacd0b85a97d-38de1abda3fmr5599086f8f.14.1739271371036;
+        Tue, 11 Feb 2025 02:56:11 -0800 (PST)
+Received: from prasmi.Home ([2a06:5906:61b:2d00:cfdc:8258:1d0b:42be])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394376118esm64088655e9.40.2025.02.11.02.56.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 02:56:10 -0800 (PST)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] clk: renesas: rzg2l-cpg: Update error message
+Date: Tue, 11 Feb 2025 10:56:02 +0000
+Message-ID: <20250211105603.195905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegtdekudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepjedprhgtphhtthhopegrnhhsuhgvlhhsmhhthhesghhmrghilhdrtghomhdprhgtphhtthhopehmrghnihhvrghnnhgrnhdrshgrughhrghsihhvrghmsehlihhnrghrohdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdpr
- hgtphhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hi Christian,
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
->> I'm fine with your two patches. I was about to apply them, but the first
->> one needs to go through fixes, whereas the second through next, and they
->> are dependent on each other. I propose the following modification:
->> - create patch 1/2 with the content of the cleanup done just below, but
->>   only adapted to the very specific spot that is touched by the fix "fix
->>   broken config...". It would be a prerequisite for the fix.
->> - patch 2/2 would be the content of "fix broken config..."
->>=20
->> And aside, a totally independent patch easy to apply on -rc1 with the
->> rest of this patch.
->>=20
->> Would that work for you?
->>
->
-> Mhhh are they really dependent on each other?
->
-> I posted them in 2 separate patch as one should have priority and be
-> applied ASAP. The other is really a cleanup and from what I can see no
-> delta in the patch gets affected by the fix in the other patch.
->
-> In theory they should apply independently.
+Update the error message in `rzg2l_mod_clock_endisable()` to provide
+clearer debugging information. Instead of printing only the register
+address, include both the `CLK_ON_R(reg)` offset and the corresponding
+`clk` name (`%pC`). This enhances readability and aids in debugging
+clock enable failures.
 
-Ah ok, I must have misread them, fine then.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/clk/renesas/rzg2l-cpg.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Miqu=C3=A8l
+diff --git a/drivers/clk/renesas/rzg2l-cpg.c b/drivers/clk/renesas/rzg2l-cpg.c
+index 91928db411dc..a6b87cc66cbb 100644
+--- a/drivers/clk/renesas/rzg2l-cpg.c
++++ b/drivers/clk/renesas/rzg2l-cpg.c
+@@ -1239,8 +1239,8 @@ static int rzg2l_mod_clock_endisable(struct clk_hw *hw, bool enable)
+ 	error = readl_poll_timeout_atomic(priv->base + CLK_MON_R(reg), value,
+ 					  value & bitmask, 0, 10);
+ 	if (error)
+-		dev_err(dev, "Failed to enable CLK_ON %p\n",
+-			priv->base + CLK_ON_R(reg));
++		dev_err(dev, "Failed to enable CLK_ON 0x%x/%pC\n",
++			CLK_ON_R(reg), hw->clk);
+ 
+ 	return error;
+ }
+-- 
+2.43.0
+
