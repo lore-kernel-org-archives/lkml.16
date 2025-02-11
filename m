@@ -1,191 +1,362 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1581C1F4613;
-	Tue, 11 Feb 2025 10:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528C81F4E39
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739270602; cv=none; b=Vg2N/OrLK856xf40aZGvXnUuaDgHkCR2cDC2tBcHbb9lXPPCZnIDA5Ji3pLujq6dJ7Poaz1+MaV4oCOSqVFVXlv81Z9UA5P5IpxLbJeTUu9NcQHG1HdL7xCbOb/G3hIHR4Tltvv1ZaY9kOFSsq2L8sRmm5Q0p+llzU29vI9ZUOQ=
+	t=1739270609; cv=none; b=uVDOOx1tASp8Q3npUmkCoflEshybYYRZJ3mFqAjq0j2JRgNQeMKaErsP6tcoVAbVsl0y5ncNCOjdlCf05ez+cDVXrHd0Um7lpr6CxpCy1dq0sMwdrawO1yxSuzLrl5Jw6LgTua+P2xg66ySnd219emdgqKxcKQ6DeKFSYT4IcQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739270602; c=relaxed/simple;
-	bh=oZTToYv2z/U8gQI88FyVRSzeqSEew3/8lqV62GL77Qc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SqqVs7gtZN7cNj/6vJIL7NjLgU0NFjhCDqqu0aMGJlycB3ZlTbRw2oLbU6C1PcA1Agqqjd6+NUO9GgmfJosUrbX3I4EtP64FvHrrKYSVgezGyG8NWgSOlv87n2GdeAybg+QItfRQ81c80opY5cOAYFQm5mbZqb7VNSWzmtRE0j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDDB413D5;
-	Tue, 11 Feb 2025 02:43:41 -0800 (PST)
-Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B9DE43F6A8;
-	Tue, 11 Feb 2025 02:43:16 -0800 (PST)
-Message-ID: <8b5c29cd-7083-4815-bf73-7c93dfdebef8@arm.com>
-Date: Tue, 11 Feb 2025 11:43:15 +0100
+	s=arc-20240116; t=1739270609; c=relaxed/simple;
+	bh=MfM2OWe0WHs/NDi465BnxFlg47nY19jwVJP/jhkZ2cU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NRCUnqa/u3bUO/KpbvfVn8KbooU7KAjjRsRbOjepv46xW0tA2oJSzQnAguKreUVI76i7rfZQbcEDE4G14OGepdIBpU3V2WFWihLMGjdB0Q0ONxXhf4xfMS1Z2lpUhK6TV+lKdRbY5zt4IbHBbMJpBXiqtVgYgX0BVSKwi6J36fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V9PSIylp; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V9PSIylp"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38dc1dfd9f2so3540331f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:43:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739270605; x=1739875405; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ud812bVnrQvOr/WIad3dtJdC2j4RUwkBpvrDh5Q9SnQ=;
+        b=V9PSIylpRUPXIZ7CE15cq42sNSGE+Kzw+7BcQ5DjQKcsZp3G2gAynhKRGo+gjxFSA3
+         FU409Y3Mbuqmy2miOpnG0sGPDI7SOftRtjluK5xPblymK4cCdtWtNAGjAC0k5QIB8fxN
+         jPLib/3ZVqsvS6f3lI6Nu+PDFdmx+xVyn0mWLMHFyxhldBrH2h0bHsU8oSXy2xUGv3bj
+         hVuQkkl36cQcA5O7pk2hQqLBSJMLnCkaPesTU9xl8TXLf483IGV8dcN2jrLuRPEGnSoh
+         jRLeM5UqY05JrgwbvKp+48r/5V158U8DwFHYSNrwFpuJHRBAsgSNY+xIrleCrQiG2vgj
+         s7TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739270605; x=1739875405;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ud812bVnrQvOr/WIad3dtJdC2j4RUwkBpvrDh5Q9SnQ=;
+        b=YwyLae51do7IO2X+l0b1iNMPRLU5wwcGzJzr6JicPr5ebZzNpPMZX908P9i+8JGCm3
+         BdrpBkB4WlirL39VIRkOlKXy5VwL6Z83JzIgrN9VAjOBAXylKZfpg39y/Ezh8dRx72Q8
+         ZjpUJSXBN8zpv3XUhaWIVsJ0+mh43OoPjYnrJar++fnOYSJUl1JWphhrYqZsUDyGCfx4
+         QFj1v0IgqlJ0RvZP1rNJfCmR4V/LMm/jnjw/R3kQBcWfJ4oxPxTCIFzXcDIauLJIpcyg
+         VuhztJ5jypbGVkZGBVlso5+VXaD+WXWcfzG2YMHDHNE/AM4TAHx+huywAi03+nnduLGR
+         Zo+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUumQDCnkJ7GcyMIwwwCEXdiJbITRKpSqru3SfSIdjT2NsPUTof+FEzh40mBhDKib3bBH8ttK15C0FiXDc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjP+XsYQOGeBlySuVstTzbsXQPpL54Znn5Qylgf7pV3dT2GHXq
+	TVq/mKSrGvBfnNCSMJ0XNaIQQ3c+0G+fO8CypcroU89WBpF5FUWy
+X-Gm-Gg: ASbGnct6kBe3bmLxQEBRff2hRYkN3ilmhDL5in6amijC1tZNFlhvTCPCLkJ8GNbJPyv
+	bb/f0853Yxd0f/CJulQaE93lvSevPgABtzKETCbjlsoOeP8ZKGvDcWK+K+PaGqMxaDGLSojsd3S
+	y3c6gFVjOBZBwwM1BpBj1eik6Z/lSssHwRlROWJEkc0GcbL+J0l+UkgZHNiMzd7FVY+X+gCbc3Z
+	+9ga6pWXHCwNehbA49K6/eIWR6nQnUX9hCnUTseGwbpU0B02kv/8GtTGGk/WnQZQyeLqWwhjpSK
+	j0HoXfuvLKECNQ==
+X-Google-Smtp-Source: AGHT+IHwfkKHX/Cnt52TZJGgeJIa02ga1mr8Uoobeh5uPI1IJl0KZtd7Z5OucENotiuaP1CxwqWr/A==
+X-Received: by 2002:a5d:64c2:0:b0:38d:df2d:7ac8 with SMTP id ffacd0b85a97d-38ddf2d7d5dmr7171740f8f.25.1739270605284;
+        Tue, 11 Feb 2025 02:43:25 -0800 (PST)
+Received: from fedora ([94.73.37.161])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc09fc2d9sm13653081f8f.6.2025.02.11.02.43.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 02:43:24 -0800 (PST)
+Date: Tue, 11 Feb 2025 11:43:23 +0100
+From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/13] drm/vkms: Allow to configure multiple planes
+Message-ID: <Z6spy81Xa-Aoz-HZ@fedora>
+References: <20250129110059.12199-1-jose.exposito89@gmail.com>
+ <20250129110059.12199-8-jose.exposito89@gmail.com>
+ <Z5uDI0QiP2UWGzI8@louis-chauvet-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
- for hotplug
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: Christian Loehle <christian.loehle@arm.com>,
- Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <treding@nvidia.com>,
- Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Koutny <mkoutny@suse.com>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Joel Fernandes (Google)" <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>, Aashish Sharma <shraash@google.com>,
- Shin Kawamura <kawasin@google.com>,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <Z6MLAX_TKowbmdS1@jlelli-thinkpadt14gen4.remote.csb>
- <Z6M5fQB9P1_bDF7A@jlelli-thinkpadt14gen4.remote.csb>
- <8572b3bc-46ec-4180-ba55-aa6b9ab7502b@nvidia.com>
- <Z6SA-1Eyr1zDTZDZ@jlelli-thinkpadt14gen4.remote.csb>
- <a305f53d-44d4-4d7a-8909-6a63ec18a04b@nvidia.com>
- <5a36a2e8-bd78-4875-9b9e-814468ca6692@arm.com>
- <db800694-84f7-443c-979f-3097caaa1982@nvidia.com>
- <8ff19556-a656-4f11-a10c-6f9b92ec9cea@arm.com>
- <Z6oysfyRKM_eUHlj@jlelli-thinkpadt14gen4.remote.csb>
- <80ccec94-df27-4a99-8037-17165f6c5d8f@arm.com>
- <Z6sWfsAqBlGhnkN_@jlelli-thinkpadt14gen4.remote.csb>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <Z6sWfsAqBlGhnkN_@jlelli-thinkpadt14gen4.remote.csb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z5uDI0QiP2UWGzI8@louis-chauvet-laptop>
 
-On 11/02/2025 10:21, Juri Lelli wrote:
-> On 11/02/25 09:36, Dietmar Eggemann wrote:
->> On 10/02/2025 18:09, Juri Lelli wrote:
->>> Hi Christian,
->>>
->>> Thanks for taking a look as well.
->>>
->>> On 07/02/25 15:55, Christian Loehle wrote:
->>>> On 2/7/25 14:04, Jon Hunter wrote:
->>>>>
->>>>>
->>>>> On 07/02/2025 13:38, Dietmar Eggemann wrote:
->>>>>> On 07/02/2025 11:38, Jon Hunter wrote:
->>>>>>>
->>>>>>> On 06/02/2025 09:29, Juri Lelli wrote:
->>>>>>>> On 05/02/25 16:56, Jon Hunter wrote:
->>>>>>>>
->>>>>>>> ...
->>>>>>>>
->>>>>>>>> Thanks! That did make it easier :-)
->>>>>>>>>
->>>>>>>>> Here is what I see ...
->>>>>>>>
->>>>>>>> Thanks!
->>>>>>>>
->>>>>>>> Still different from what I can repro over here, so, unfortunately, I
->>>>>>>> had to add additional debug printks. Pushed to the same branch/repo.
->>>>>>>>
->>>>>>>> Could I ask for another run with it? Please also share the complete
->>>>>>>> dmesg from boot, as I would need to check debug output when CPUs are
->>>>>>>> first onlined.
->>>>>>
->>>>>> So you have a system with 2 big and 4 LITTLE CPUs (Denver0 Denver1 A57_0
->>>>>> A57_1 A57_2 A57_3) in one MC sched domain and (Denver1 and A57_0) are
->>>>>> isol CPUs?
->>>>>
->>>>> I believe that 1-2 are the denvers (even thought they are listed as 0-1 in device-tree).
->>>>
->>>> Interesting, I have yet to reproduce this with equal capacities in isolcpus.
->>>> Maybe I didn't try hard enough yet.
->>>>
->>>>>
->>>>>> This should be easy to set up for me on my Juno-r0 [A53 A57 A57 A53 A53 A53]
->>>>>
->>>>> Yes I think it is similar to this.
->>>>>
->>>>> Thanks!
->>>>> Jon
->>>>>
->>>>
->>>> I could reproduce that on a different LLLLbb with isolcpus=3,4 (Lb) and
->>>> the offlining order:
->>>> echo 0 > /sys/devices/system/cpu/cpu5/online
->>>> echo 0 > /sys/devices/system/cpu/cpu1/online
->>>> echo 0 > /sys/devices/system/cpu/cpu3/online
->>>> echo 0 > /sys/devices/system/cpu/cpu2/online
->>>> echo 0 > /sys/devices/system/cpu/cpu4/online
->>>>
->>>> while the following offlining order succeeds:
->>>> echo 0 > /sys/devices/system/cpu/cpu5/online
->>>> echo 0 > /sys/devices/system/cpu/cpu4/online
->>>> echo 0 > /sys/devices/system/cpu/cpu1/online
->>>> echo 0 > /sys/devices/system/cpu/cpu2/online
->>>> echo 0 > /sys/devices/system/cpu/cpu3/online
->>>> (Both offline an isolcpus last, both have CPU0 online)
->>>>
->>
->> Could reproduce on Juno-r0:
->>
->> 0 1 2 3 4 5
->>
->> L b b L L L
->>
->>       ^^^
->>       isol = [3-4] so both L
->>
->> echo 0 > /sys/devices/system/cpu/cpu1/online
->> echo 0 > /sys/devices/system/cpu/cpu4/online
->> echo 0 > /sys/devices/system/cpu/cpu5/online
->> echo 0 > /sys/devices/system/cpu/cpu2/online - isol
->> echo 0 > /sys/devices/system/cpu/cpu3/online - isol
->>
->>>> The issue only triggers with sugov DL threads (I guess that's obvious, but
->>>> just to mention it).
->>
->> IMHO, it doesn't have to be a sugov DL task. Any DL task will do.
+On Thu, Jan 30, 2025 at 02:48:19PM +0100, Louis Chauvet wrote:
+> On 29/01/25 - 12:00, José Expósito wrote:
+> > Add a list of planes to vkms_config and create as many planes as
+> > configured during output initialization.
+> > 
+> > For backwards compatibility, add one primary plane and, if configured,
+> > one cursor plane and NUM_OVERLAY_PLANES planes to the default
+> > configuration.
+> > 
+> > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 > 
-> OK, but in this case we actually want to fail. If we have allocated
-> bandwidth for an actual DL task (not a dl server or a 'fake' sugov), we
-> don't want to inadvertently leave it w/o bandwidth by turning CPUs off.
+> Co-developped-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+> 
+> [...]
+> 
+> > diff --git a/drivers/gpu/drm/vkms/tests/vkms_config_test.c b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
+> 
+> [...]
+> 
+> > +static void vkms_config_test_get_planes(struct kunit *test)
+> > +{
+> > +	struct vkms_config *config;
+> > +	struct vkms_config_plane *plane_cfg1, *plane_cfg2;
+> > +	struct vkms_config_plane **array;
+> > +	size_t length;
+> > +
+> > +	config = vkms_config_create("test");
+> > +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
+> > +
+> > +	array = vkms_config_get_planes(config, &length);
+> > +	KUNIT_ASSERT_EQ(test, length, 0);
+> > +	KUNIT_ASSERT_NULL(test, array);
+> > +
+> > +	plane_cfg1 = vkms_config_add_plane(config);
+> > +	array = vkms_config_get_planes(config, &length);
+> > +	KUNIT_ASSERT_EQ(test, length, 1);
+> > +	KUNIT_ASSERT_PTR_EQ(test, array[0], plane_cfg1);
+> > +	kfree(array);
+> > +
+> > +	plane_cfg2 = vkms_config_add_plane(config);
+> > +	array = vkms_config_get_planes(config, &length);
+> > +	KUNIT_ASSERT_EQ(test, length, 2);
+> > +	KUNIT_ASSERT_PTR_EQ(test, array[0], plane_cfg1);
+> > +	KUNIT_ASSERT_PTR_EQ(test, array[1], plane_cfg2);
+> > +	kfree(array);
+> > +
+> > +	vkms_config_destroy_plane(plane_cfg1);
+> > +	array = vkms_config_get_planes(config, &length);
+> > +	KUNIT_ASSERT_EQ(test, length, 1);
+> > +	KUNIT_ASSERT_PTR_EQ(test, array[0], plane_cfg2);
+> > +	kfree(array);
+> > +
+> > +	vkms_config_destroy(config);
+> > +}
+> 
+> In this test I have the feeling that vkms_config_get_planes always returns 
+> a predictable order. It is maybe trivial here, but I would prefer to shows 
+> that the order is not stable, for example:
+> 
+> 	bool plane_cfg1_found = false;
+> 	bool plane_cfg2_found = false;
+> 
+> 	vkms_config_for_each_plane(config, plane_cfg) {
+> 		if (plane_cfg == plane_cfg1)
+> 			plane_cfg1_found = true;
+> 		else if (plane_cfg == plane_cfg2)
+> 			plane_cfg2_found = true;
+> 		else
+> 			KUNIT_FAILS("Unexpected plane");
+> 	}
+> 
+> 	KUNIT_ASSERT(test, plane_cfg1_found);
+> 	KUNIT_ASSERT(test, plane_cfg2_found);
+> 
+> [...]
+> 
+> > +static void vkms_config_test_valid_plane_number(struct kunit *test)
+> > +{
+> > +	struct vkms_config *config;
+> > +	struct vkms_config_plane *plane_cfg;
+> > +	int n;
+> > +
+> > +	config = vkms_config_default_create(false, false, false);
+> > +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
+> > +
+> > +	/* Invalid: No planes */
+> > +	plane_cfg = list_first_entry(&config->planes, typeof(*plane_cfg), link);
+> > +	vkms_config_destroy_plane(plane_cfg);
+> > +	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
+> > +
+> > +	/* Invalid: Too many planes */
+> > +	for (n = 0; n <= 32; n++)
+> > +		vkms_config_add_plane(config);
+> > +
+> > +	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
+> > +
+> > +	vkms_config_destroy(config);
+> > +}
+> 
+> For this function, the naming is a bit strange, it says 
+> "valid_plane_number", but you test only invalid plane number.
 
-Obviously ... ;-)
+The reason for this naming is that it tests the valid_plane_number()
+function called by vkms_config_is_valid(). The applies for the other
+valid_* tests.
 
-Same platform w/ isol = [2-3] with slow switching CPUfreq driver to
-force having 'sugov' tasks.
+However, I don't mind changing its name to so it reflects the test
+rather than the tested function.
 
-# ps2 | grep DLN
-   95    95 S 140      0   - DLN sugov:0
-   96    96 S 140      0   - DLN sugov:1
+Changed in v2.
 
-# taskset -p 95; taskset -p 96
-pid 95's current affinity mask: 39
-pid 96's current affinity mask: 6
+> 
+> Can you rename it to vkms_config_test_invalid_plane_number?
+> 
+> [...]
+> 
+> > diff --git a/drivers/gpu/drm/vkms/vkms_config.c b/drivers/gpu/drm/vkms/vkms_config.c
+> 
+> [...]
+> 
+> > +struct vkms_config_plane **vkms_config_get_planes(const struct vkms_config *config,
+> > +						  size_t *out_length)
+> > +{
+> > +	struct vkms_config_plane **array;
+> > +	struct vkms_config_plane *plane_cfg;
+> > +	size_t length;
+> > +	int n = 0;
+> > +
+> > +	length = list_count_nodes((struct list_head *)&config->planes);
+> > +	if (length == 0) {
+> > +		*out_length = length;
+> > +		return NULL;
+> > +	}
+> > +
+> > +	array = kmalloc_array(length, sizeof(*array), GFP_KERNEL);
+> > +	if (!array)
+> > +		return ERR_PTR(-ENOMEM);
+> > +
+> > +	list_for_each_entry(plane_cfg, &config->planes, link) {
+> > +		array[n] = plane_cfg;
+> > +		n++;
+> > +	}
+> > +
+> > +	*out_length = length;
+> > +	return array;
+> > +}
+> 
+> To join the comment on the test, I am not a big fan of creating a new list 
+> to return to the caller, for three reasons:
+> - the caller needs to manage an other pointer;
+> - the caller needs to understand that the content of the array is only 
+>   valid if: the config is not freed, nobody else removed anything from the 
+>   planes;
+> - the caller may think this list always have the same order if he looks at 
+>   the tests.
+> 
+> I would prefer a simple macro to do an iteration over the config->planes 
+> list: (I did not test this macro, but you have this idea)
+> 
+> 	#define vkms_config_iter_plane(config, plane_cfg) \
+> 		list_for_each_entry((plane_cfg), &(config).planes, link)
+> 
+> This way:
+> - no new pointer to manage;
+> - if one day we have concurency issue, we just have to protect config, not 
+>   config+all the planes;
+> - there is no expected order.
+> 
+> [...]
+> 
+> >  bool vkms_config_is_valid(struct vkms_config *config)
+> >  {
+> > +	if (!valid_plane_number(config))
+> > +		return false;
+> > +
+> > +	if (!valid_plane_type(config))
+> > +		return false;
+> > +
+> >  	return true;
+> >  }
+> 
+> I really like the idea to split the validation function, way simpler!
+> 
+> [...]
+> 
+> > +void vkms_config_destroy_plane(struct vkms_config_plane *plane_cfg)
+> > +{
+> > +	list_del(&plane_cfg->link);
+> > +	kfree(plane_cfg);
+> > +}
+> 
+> I would prefer a "standard" function pair, i.e.: add/remove or 
+> create/destroy, not add/destroy.
+> 
+> For me it should be create/destroy, you create the plane by using a 
+> config, so it is clear it will be attached to it.
+> 
+> If you choose add/remove, you should explains in the documentation that 
+> remove is also doing kfree.
+> 
+> [...]
+> 
+> > diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
+> 
+> [...]
+> 
+> > @@ -11,61 +11,63 @@ int vkms_output_init(struct vkms_device *vkmsdev)
+> >  	struct vkms_connector *connector;
+> >  	struct drm_encoder *encoder;
+> >  	struct vkms_output *output;
+> > -	struct vkms_plane *primary, *overlay, *cursor = NULL;
+> > -	int ret;
+> > +	struct vkms_plane *primary = NULL, *cursor = NULL;
+> > +	struct vkms_config_plane **plane_cfgs = NULL;
+> > +	size_t n_planes;
+> > +	int ret = 0;
+> >  	int writeback;
+> >  	unsigned int n;
+> 
+> I think it could be interesting to have a vkms_config_is_valid call here. 
+> It will avoid raising DRM errors or create unexpected devices.
+> 
+> It will also garantee in a later patch that 
+> vkms_config_crtc_get_primary_plane is a valid pointer.
+> 
+> > -	/*
+> > -	 * Initialize used plane. One primary plane is required to perform the composition.
+> > -	 *
+> > -	 * The overlay and cursor planes are not mandatory, but can be used to perform complex
+> > -	 * composition.
+> > -	 */
+> > -	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY);
+> > -	if (IS_ERR(primary))
+> > -		return PTR_ERR(primary);
+> > +	plane_cfgs = vkms_config_get_planes(vkmsdev->config, &n_planes);
+> > +	if (IS_ERR(plane_cfgs))
+> > +		return PTR_ERR(plane_cfgs);
+> 
+> If you agree on the iterator implementation, this code could be simplified 
+> a lot.
+> 
+> > -	if (vkmsdev->config->cursor) {
+> > -		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR);
+> > -		if (IS_ERR(cursor))
+> > -			return PTR_ERR(cursor);
+> > +	for (n = 0; n < n_planes; n++) {
+> > +		struct vkms_config_plane *plane_cfg;
+> > +		enum drm_plane_type type;
+> > +
+> > +		plane_cfg = plane_cfgs[n];
+> > +		type = vkms_config_plane_get_type(plane_cfg);
+> > +
+> > +		plane_cfg->plane = vkms_plane_init(vkmsdev, type);
+> 
+> Can we pass plane_cfg in vkms_plane_init? This way we don't have to 
+> touch vkms_output_init when adding new vkms_config_plane members.
 
-offline order: CPU1 -> 4 -> 5 -> 3 -> 2
+While it'll be required once we allow to configure more parameters, I don't
+think we need it right now. To keep things as simple as possible, I'd prefer to
+delay it until required.
 
-...
+Thanks,
+Jose
 
-pid 95's current affinity mask: 1
-pid 96's current affinity mask: 4
-
-root@juno:~# echo 0 > /sys/devices/system/cpu/cpu2/online
-[  227.673757] dl_bw_cpus() cpu=6 rd->span=1-5 cpu_active_mask=0,2 cpus=1
-[  227.680329] dl_bw_cpus() cpu=6 rd->span=1-5 cpu_active_mask=0,2 cpus=1
-[  227.686882] dl_bw_manage: cpu=2 cap=0 fair_server_bw=52428 total_bw=157285 dl_bw_cpus=1 type=DEF span=1-5
-[  227.686900] dl_bw_cpus() cpu=6 rd->span=1-5 cpu_active_mask=0,2 cpus=1
-[  227.703066] dl_bw_manage() cpu=2 cap=0 overflow=1 return=-16
--bash: echo: write error: Device or resource busy
-
-So it seems 'sugov:1' getting in the way here.
-
-pid 95's current affinity mask: 1
-pid 96's current affinity mask: 5
-
-Looks like it's not a 'bL' issue but rather one with '>=2 CPU frequency
-policies' and slow-switching CPUfreq drivers.
+> > +		if (IS_ERR(plane_cfg->plane)) {
+> > +			DRM_DEV_ERROR(dev->dev, "Failed to init vkms plane\n");
+> > +			ret = PTR_ERR(plane_cfg->plane);
+> > +			goto err_free;
+> > +		}
+> > +
+> > +		if (type == DRM_PLANE_TYPE_PRIMARY)
+> > +			primary = plane_cfg->plane;
+> > +		else if (type == DRM_PLANE_TYPE_CURSOR)
+> > +			cursor = plane_cfg->plane;
+> >  	}
+> 
+> [...]
