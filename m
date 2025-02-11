@@ -1,112 +1,70 @@
-Received: from pv50p00im-zteg10011501.me.com (pv50p00im-zteg10011501.me.com [17.58.6.42])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EEC21D5A7
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42482214811;
+	Tue, 11 Feb 2025 13:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739281248; cv=none; b=VJ7WxQjEIR26ttXSbVeRW39na8e5fF4//4yV8+hWFnome7LdA26W0GrK1eQtylmJ4cPfHa3wzmtbQ/fKjQOiVkpmF+rEtj1Z+65E6zJAIZdl+uwUyn/LDxKWJQFsBT7WNxdmCRnbscFKfXvkez+LW2nDFePaBD4TJSAaF68HxUM=
+	t=1739281271; cv=none; b=l/j/ysXRx3uIMKmU8yvf6PlXdOoG1a+XlSdk2JJlpEzMqrVYmvPMBfp0/lfOPJ5wxd4Sc9beEPJ3nmHz6d02x+VL6IQ/vdSv9XOcTYh0XLs6sP80VKtiiVVPxTC/UWLVfmyuKYUcgNcsywfpXfv2+ViB1ufuPqdJsFQY9MsYzZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739281248; c=relaxed/simple;
-	bh=rDf1yoTRKy12ToOLrZOAZoQ7ACwfJKv8I+9q4AsypCQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hLQdPlwxpKv+4QcyhGAWPX7H/euGmszw5yD2Ot+S1y3esdYPJlY/igk6dATxLlnobCl9UjD7JxhdzUJsJBkhDWc0ssrZ7nvrripxDv7Kikrc3ccLNpXCxQzr5w7cQznFrUuBGjnmfaEH733UOg8XA1oXo4eBT+9s/hUruLYo2Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=gLMyPaLZ; arc=none smtp.client-ip=17.58.6.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1739281271; c=relaxed/simple;
+	bh=p457+fNBKTBE67/aIJf/FVVxBqrNLH953ZGNpYT5xMs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Z8OMf8cHEdtPjYqYT70+635EVpL3sHCofUhK9iILeKHZRmTpqdKA6vrHYSh/hExsQlfinCG+8WpYNA3N7mAzZodmqed4a0kAM7OnLwy+1kNZit4jbQoy0xGB80Z3jD1ugVO7cTZR0ixU/7Rb+aNpE0+ArbwMzLkv+y/l47fclQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cJUq8fDQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="gLMyPaLZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=7z3RWlztrKg7sVSGOlVn10uKHd+0HdbTDQ77ooJEAJs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=gLMyPaLZmpYFi3srhMCrc8avKSZIouPGAmh0G/IvhgH6kxmmqYzsAJ1j5WZ3AQ4eu
-	 BLYcOUCLcPzyspXRbyf2zmdKOBNxzIHvtD7XIp1FR8fIaT8BamEohVLlBpjLG6JRV1
-	 pGzs+G6dV2BcSe0OSKU0qB7wPM4zsky02pZWnuDDa6XngSM4gqKqhke3yFN7vKtc4H
-	 mtLpc2qK3HcPe/A8J2LL44fKVNW7k9PaW5EsXlKkCE61CbwRPK8gnKV6juQKYAstsN
-	 Nc5Wmz6FBRWkopLl6GqWZJ/Gwkvr8pos4j4gilmPN030jdeBWpCsnRFTXfTdr69ihG
-	 0wYtHEevDL+EA==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-zteg10011501.me.com (Postfix) with ESMTPSA id 3174F4A0246;
-	Tue, 11 Feb 2025 13:40:37 +0000 (UTC)
-Message-ID: <a682824a-1b65-4b05-9e42-3edc167600a8@icloud.com>
-Date: Tue, 11 Feb 2025 21:40:33 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cJUq8fDQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76022C4CEDD;
+	Tue, 11 Feb 2025 13:41:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739281270;
+	bh=p457+fNBKTBE67/aIJf/FVVxBqrNLH953ZGNpYT5xMs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=cJUq8fDQmcDIKRoPRcv27h7IBpUY5OoEGV9JnZLzSpPOK6uV/rshAXOA/hHr10P99
+	 2AXFPxIdtkyhlgfrYHjbCcwusNwALKgotu1EWXxmPVGg6ElcO7hxEirD6Q1dGaSCyD
+	 tgqHuKwcGPe+hGt3HBMBufcQpX2ovgZhib5HLC6k6RlTUsUKjdwt1DigN7B9hV1f7w
+	 0e+ffH4Qjcr4iN4fyFHcOhnfWXP8Ast8a96GkE+HwHsciMuhHBmr48Rfp0paiUXLsX
+	 wI5oWjOnAqbZ/qvMYQMaFhL0DSizfmtJ7res37xwxyGyEyrBujJp24VRS3mRl4LhmA
+	 rgM3Ab7P2Gr5Q==
+From: Lee Jones <lee@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Pavel Machek <pavel@ucw.cz>, 
+ Lee Jones <lee@kernel.org>, 
+ Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+In-Reply-To: <20250204-must_check-devm_mutex_init-v2-1-7b6271c4b7e6@weissschuh.net>
+References: <20250204-must_check-devm_mutex_init-v2-0-7b6271c4b7e6@weissschuh.net>
+ <20250204-must_check-devm_mutex_init-v2-1-7b6271c4b7e6@weissschuh.net>
+Subject: Re: (subset) [PATCH v2 1/2] leds: st1202: Check for error code
+ from devm_mutex_init() call
+Message-Id: <173928126822.2162909.15560673798302833200.b4-ty@kernel.org>
+Date: Tue, 11 Feb 2025 13:41:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] of: property: Increase NR_FWNODE_REFERENCE_ARGS
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Saravana Kannan <saravanak@google.com>, Len Brown <lenb@kernel.org>,
- Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, linux-acpi@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20250210-fix_arg_count-v3-1-a084a5013008@quicinc.com>
- <Z6oclML_DC1Vnf6z@smile.fi.intel.com>
- <73eb84f3-8b9d-41f4-9b59-d059111a3d03@icloud.com>
- <Z6tBlfmTFu9916LA@smile.fi.intel.com>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <Z6tBlfmTFu9916LA@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: TqUHXtr-ok3PC5jRlmgK0cb6DzbWQpgZ
-X-Proofpoint-ORIG-GUID: TqUHXtr-ok3PC5jRlmgK0cb6DzbWQpgZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_06,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 adultscore=0
- malwarescore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=854
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2502110091
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-On 2025/2/11 20:24, Andy Shevchenko wrote:
->>>> -#define NR_FWNODE_REFERENCE_ARGS	8
->>>> +#define NR_FWNODE_REFERENCE_ARGS	16
->>> Thinking of the case, perhaps you also want
->>>
->>> static_assert(NR_FWNODE_REFERENCE_ARGS == MAX_PHANDLE_ARGS);
->>>
->>> to be put somewhere, but I don't think we can do it in this header file.
->> thank you Andy for code review.
->>
->> yes. it seems there are good location to place the static_assert().
->>
->> is it okay to associate two macros by
->> #define MAX_PHANDLE_ARGS NR_FWNODE_REFERENCE_ARGS
-> I was thinking about this and I don't see how it can be done without
-> introducing more chaos (dependency hell) into the headers. So, I won't
-> take this path or even consider it deeper.
+On Tue, 04 Feb 2025 07:52:50 +0100, Thomas Weißschuh wrote:
+> Even if it's not critical, the avoidance of checking the error code
+> from devm_mutex_init() call today diminishes the point of using devm
+> variant of it. Tomorrow it may even leak something. Add the missed
+> check.
+> 
 > 
 
-i have confirmed that:
+Applied, thanks!
 
-of.h includes fwnode.h indirectly
-fwnode.h does not include of.h directly or indirectly
+[1/2] leds: st1202: Check for error code from devm_mutex_init() call
+      commit: 8168906bbb3ba678583422de29e6349407a94bb5
 
-in theory, dependency between both headers should also be like this.
-
-So, it is simple to use below define in of.h
-#define MAX_PHANDLE_ARGS NR_FWNODE_REFERENCE_ARGS
-
->> OR
->> replace all MAX_PHANDLE_ARGS instances with NR_FWNODE_REFERENCE_ARGS
->> ?
-> This sounds plausible to me, but you need a blessing from OF people as
-> the naming may be a bit confusing (for them) as "phandle" is well established
-> term in OF realm.
-
-phandle is a type of DT firmware node reference. so this solution
-seems suitable as well.
-
-struct software_node_ref_args also uses NR_FWNODE_REFERENCE_ARGS directly.
-
-let us wait for more comments.
+--
+Lee Jones [李琼斯]
 
