@@ -1,96 +1,167 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966C9243396;
-	Tue, 11 Feb 2025 14:43:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6641F12FC;
+	Tue, 11 Feb 2025 14:43:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739284985; cv=none; b=NP0vAMz6nppe5+lnqDwR4BrsZEYRVnrHCl18dSAXPzJxWCXPxOE91z/fpecHv4eG4Z0QoEfk0qGBB5H5VgNpiSfgPiV9rpT0RzEErEjHEWLYXrq7ZzY9c8ri466QEIBCFCBBiezZ1YYYcFsva+U1YOYaERm3xhpGL84gmHHON/g=
+	t=1739285002; cv=none; b=sTnPzwKrIM37JPyX6DaNKLg3BLeenaOgxQzNs8q+TyE1PX7QpnoY57l8CF0mioZGKxsQPi6QlVSuVju/JekNmAhYYgXV6OWXSxiIEEi5siVFVQ2QNRj818zm80n6J6eBG5MKNLFYMEQBWB7BCxvcYpW2QLMZDJys1qMzsuansnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739284985; c=relaxed/simple;
-	bh=voK0gPzw+wXISlMnQBaqyxmaIdyN+OgNztg0FBND6l4=;
+	s=arc-20240116; t=1739285002; c=relaxed/simple;
+	bh=7XJ6sQ813gzNVi5Pa7MHabJXhmjCnD8PQpmTLIBUuuI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A+HKQF5TFPYSaWKJppMRMKR5055P+jeov33TeZHCeXFgMrmSOJFTDdkn52OdHtxbnI460jTV+aRWFmGZhXc2x04J5buzvUvuslo+UBBsetNYKDADKn/kAQay51nN4nlGVUQF4PYfaFQwxRnfY0p3O3eXN6YJWQ7Z8OgSAc5g7vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YLmmjNJG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ke9W5jo2+PHAIyBCDI20mDCNDqgpthbP+9UmnlYGknvUzj39FbcyQRF7eBNq9XZl3TZmF4vRLI4YqcnllXTXmE8JbzQmvkM/P35d5yylGzWgSPqpMQpUV5mlZgxVGF99dliqdvbikmty+ixsLk516p9Q5eH/JXRUshKrHtxSkNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJsTwJOP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YLmmjNJG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BF4AC4CEDD;
-	Tue, 11 Feb 2025 14:43:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJsTwJOP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5763C4CEDD;
+	Tue, 11 Feb 2025 14:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739284985;
-	bh=voK0gPzw+wXISlMnQBaqyxmaIdyN+OgNztg0FBND6l4=;
+	s=k20201202; t=1739285002;
+	bh=7XJ6sQ813gzNVi5Pa7MHabJXhmjCnD8PQpmTLIBUuuI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YLmmjNJGAcSLPAyZ0KQ6kprjDncYe39q8wtFEVHf5HpI4k5G4yrWG6ykaTZTsKcUK
-	 5T3S3Yax/EU4cdOuRrEG+py0EmMZErVfexXKIj8iXZmHWFiaA8A3lQAt24x/to+G7N
-	 JsZCFwCeOiqHDxFnBfFNugi0OBE6naFN7SfywFJhrcegbFjp959EpNxkvNHj27NOVU
-	 4APfnAFqN3QEswb9Yl/NM62+ofWsTAk2bRuIi6VabseNwvSrtPd1LKoSbSQJ6BsAJ0
-	 Iymr8Gkxu1bCzXpOugO9pgl/yck58qlkFdlkG+utg5wWFMg5WSk3l7Wh8Yg4cRLayv
-	 yYHo3mQN4tAIg==
-Date: Tue, 11 Feb 2025 14:43:00 +0000
-From: Lee Jones <lee@kernel.org>
-To: j.ne@posteo.net
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+	b=GJsTwJOPPIOkN+bybboObQfcrCNtKQklymfNMMm5DRS4232F30N5KrYSmwTmrg8lN
+	 bKnELzFvf9aUiHiVmpuBZwgCBy+wF/clIuWhKveLR7BYxeT4X9tsWYIhupG3CFoNMm
+	 hjFA7xyFRQ+b1eviFDGjfjZPt1NckdixJCrZ8n2Q+/g9vC++W4edliV6Muj1DFQ/CI
+	 NyLtpNhuhQSYDP9euLuGHNb63FJ7ZHCycgu9XRkpIr46TfLh5kl5AXRzwEg/5EN2Zt
+	 dI7AN8RwAUc1Tm5P9kPQtrX3BiuhxvEGSIH7S54BPGCc1HJg1jf4Hd6kky+H8X0fbj
+	 aYlh2S4Coaquw==
+Date: Tue, 11 Feb 2025 14:43:17 +0000
+From: Conor Dooley <conor@kernel.org>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Eric Biggers <ebiggers@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: leds: Allow differently named multicolor
- leds
-Message-ID: <20250211144300.GW1868108@google.com>
-References: <20250209-multi-led-v1-1-5aebccbd2db7@posteo.net>
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Andy Chiu <andybnac@gmail.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] RISC-V: add vector extension validation checks
+Message-ID: <20250211-crier-gas-7efc51783cf3@spud>
+References: <20250205-cobbler-unpadded-5580c1f5d946@spud>
+ <20250205-defensive-lent-04936dac6bdd@spud>
+ <579dbdce-e61e-48ed-8685-a2cda9d753c3@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yP3MvfkNzMIcLd+h"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250209-multi-led-v1-1-5aebccbd2db7@posteo.net>
+In-Reply-To: <579dbdce-e61e-48ed-8685-a2cda9d753c3@rivosinc.com>
 
-On Sun, 09 Feb 2025, J. Neuschäfer via B4 Relay wrote:
 
-> From: "J. Neuschäfer" <j.ne@posteo.net>
-> 
-> In some cases, a board may have multiple multi-leds, which can't be
-> distinguished by unit address. In such cases it should be possible to
-> name them differently, for example multi-led-a and multi-led-b.
-> This patch adds another node name pattern to leds-class-multicolor.yaml
-> to allow such names.
+--yP3MvfkNzMIcLd+h
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Which H/W needs this?  Is it upstream?  Where is the doc / usage?
+On Tue, Feb 11, 2025 at 11:16:45AM +0100, Cl=E9ment L=E9ger wrote:
+>=20
+>=20
+> On 05/02/2025 17:05, Conor Dooley wrote:
+> > From: Conor Dooley <conor.dooley@microchip.com>
+> >=20
+> > Using Clement's new validation callbacks, support checking that
+> > dependencies have been satisfied for the vector extensions. From the
+> > kernel's perfective, it's not required to differentiate between the
+> > conditions for all the various vector subsets - it's the firmware's job
+> > to not report impossible combinations. Instead, the kernel only has to
+> > check that the correct config options are enabled and to enforce its
+> > requirement of the d extension being present for FPU support.
+> >=20
+> > Since vector will now be disabled proactively, there's no need to clear
+> > the bit in elf_hwcap in riscv_fill_hwcap() any longer.
+> >=20
+> > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> > ---
+> >  arch/riscv/include/asm/cpufeature.h |  3 ++
+> >  arch/riscv/kernel/cpufeature.c      | 57 +++++++++++++++++++----------
+> >  2 files changed, 40 insertions(+), 20 deletions(-)
+> >=20
+> > diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/a=
+sm/cpufeature.h
+> > index 569140d6e639..5d9427ccbc7a 100644
+> > --- a/arch/riscv/include/asm/cpufeature.h
+> > +++ b/arch/riscv/include/asm/cpufeature.h
+> > @@ -56,6 +56,9 @@ void __init riscv_user_isa_enable(void);
+> >  #define __RISCV_ISA_EXT_BUNDLE(_name, _bundled_exts) \
+> >  	_RISCV_ISA_EXT_DATA(_name, RISCV_ISA_EXT_INVALID, _bundled_exts, \
+> >  			    ARRAY_SIZE(_bundled_exts), NULL)
+> > +#define __RISCV_ISA_EXT_BUNDLE_VALIDATE(_name, _bundled_exts, _validat=
+e) \
+> > +	_RISCV_ISA_EXT_DATA(_name, RISCV_ISA_EXT_INVALID, _bundled_exts, \
+> > +			    ARRAY_SIZE(_bundled_exts), _validate)
+> > =20
+> >  /* Used to declare extensions that are a superset of other extensions =
+(Zvbb for instance) */
+> >  #define __RISCV_ISA_EXT_SUPERSET(_name, _id, _sub_exts) \
+> > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeat=
+ure.c
+> > index c6ba750536c3..40a24b08d905 100644
+> > --- a/arch/riscv/kernel/cpufeature.c
+> > +++ b/arch/riscv/kernel/cpufeature.c
+> > @@ -109,6 +109,35 @@ static int riscv_ext_zicboz_validate(const struct =
+riscv_isa_ext_data *data,
+> >  	return 0;
+> >  }
+> > =20
+> > +static int riscv_ext_vector_x_validate(const struct riscv_isa_ext_data=
+ *data,
+> > +				       const unsigned long *isa_bitmap)
+> > +{
+> > +	if (!IS_ENABLED(CONFIG_RISCV_ISA_V))
+> > +		return -EINVAL;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int riscv_ext_vector_float_validate(const struct riscv_isa_ext_=
+data *data,
+> > +					   const unsigned long *isa_bitmap)
+> > +{
+> > +	if (!IS_ENABLED(CONFIG_RISCV_ISA_V))
+> > +		return -EINVAL;
+> > +
+> > +	if (!IS_ENABLED(CONFIG_FPU))
+> > +		return -EINVAL;
+> > +
+> > +	/*
+> > +	 * The kernel doesn't support systems that don't implement both of
+> > +	 * F and D, so if any of the vector extensions that do floating point
+> > +	 * are to be usable, both floating point extensions need to be usable.
+> > +	 */
+> > +	if (!__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_d))
+> > +		return -EINVAL;
+> > +
+> > +	return 0;
+> > +}
+>=20
+> I think this should also be modified to be like this:
+>=20
+>   if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_d))
+> 	  return 0;
+>=20
+>   return -EPROBEDEFER;
+>=20
+> That won't actually change the way it works since RISCV_ISA_EXT_d (and
+> all single letter extensions) is always probed before the others though.
 
-> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> ---
->  Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> index bb40bb9e036ee00e06d21e2321ecd5a7d471c408..c22af25b6430be71300c0e37f696cd61112ea190 100644
-> --- a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> @@ -21,7 +21,9 @@ description: |
->  
->  properties:
->    $nodename:
-> -    pattern: "^multi-led(@[0-9a-f])?$"
-> +    oneOf:
-> +      - pattern: "^multi-led(@[0-9a-f])?$"
-> +      - pattern: "^multi-led-.*$"
->  
->    color:
->      description: |
-> 
-> ---
-> base-commit: 645b5c24cf8590eea322a4fd79c811817046a2e6
-> change-id: 20250209-multi-led-9991e205befd
-> 
-> Best regards,
-> -- 
-> J. Neuschäfer <j.ne@posteo.net>
-> 
-> 
+I don't think so, there's no point deferring since we know that the
+extensions this is used for cannot become true afterwards. I'll add a
+comment justifying it.
 
--- 
-Lee Jones [李琼斯]
+--yP3MvfkNzMIcLd+h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6tiBQAKCRB4tDGHoIJi
+0muEAPsGqCMsvt9Wk798W6VjgLphAcoDAkn3u/euA10G3WgSlAD+PzU6dcrNPwC/
+TRcmECWfmlyz3+wAVQTlJeZFAyoK/w8=
+=TcVj
+-----END PGP SIGNATURE-----
+
+--yP3MvfkNzMIcLd+h--
