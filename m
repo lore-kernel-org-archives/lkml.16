@@ -1,97 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A061DDC14;
-	Tue, 11 Feb 2025 22:31:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78A22641CE;
+	Tue, 11 Feb 2025 22:32:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739313082; cv=none; b=eFAEzqQdFapviHaqnpW5AAtgyuLJwZSMAP4W0L5SxxkKsPcoXD35Ig8H2P9nrTpRk2GjOGDHWG87Wln9DBbmjiw21KdGq8x3jrDKZi6u2OQlxrEQnF+xnGYle+0yWs3YY4ktAcH86fThUgB7B1WUzRwPV1nypXy+197jekIlBXc=
+	t=1739313121; cv=none; b=ENtPEpITIW0KoRgk5ELaFRt2JT+h0rfGWu3vIu/QYg8Y26yW11DObGwE1n059mLPRDWuq0mqZAkMnDjId/Y9cfpaj+dgDbw0tXtilI+60w6RlJL2U6j9BFwhLsrCzQnacB0V9pDy83Q3daAGyy/e6EDuH83jiGcWanosdtVl700=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739313082; c=relaxed/simple;
-	bh=oKiytre//4VdWD8ww4w5uW85mMA9TzV2kpcRlAyNNLQ=;
+	s=arc-20240116; t=1739313121; c=relaxed/simple;
+	bh=nNdMjvufG1KwK6bx+D+n9kZhJLtmEZprQWWJSdNVqIs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GC/W+kMvH75QDt2fXUtn7WTdi7PvGYtAObP/dpTtvEWeVJoL0OKt/ayqnRl8HrNEvaKjfVaf6gIu+iHXrknA63U1LPUaBhrXZpYQdxUsBrllEC2fYP146XVaeTs8zoNlsI4fQqnicUaev74twzESlDzzimRtd/YqP9ohy2zk8BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YY0DPekn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jj+N4zlpYbLlLivjqztNJ7/ZHayBg1U9JR+Fpexl/xukLkFIOA3I32B87Go1vyHXx3wOyLrEfPVEy0XFenHvQogc7GsNarrSXJwuMywmHXcgHkWpehjZfgNYxqC1zYkEuB8i7zT5uvCGm3TtBEmSGr9u8bUTfvsCr8jtF3zJknw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=upjUIQDy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YY0DPekn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEFB1C4CEDD;
-	Tue, 11 Feb 2025 22:31:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="upjUIQDy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58049C4CEDD;
+	Tue, 11 Feb 2025 22:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739313081;
-	bh=oKiytre//4VdWD8ww4w5uW85mMA9TzV2kpcRlAyNNLQ=;
+	s=k20201202; t=1739313120;
+	bh=nNdMjvufG1KwK6bx+D+n9kZhJLtmEZprQWWJSdNVqIs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YY0DPeknXpkCAAXSI/htfS+mSF4sQokI5EXqV26pE0Iiz3gWGhUcsu/Sl0AoqKAba
-	 o2eMhE0iKTOth9xArDpXJaNhj3z6uPjHgwxl05oTMjZ5Cf3gxbtCo3/FMmG+kI8jwJ
-	 ltLNGMdGV7/JWngxIjQSB8qzLlYlGfWqjtzYNHlgKVMHg2SmGIw/kCMeVgTvvhwUsN
-	 BCC7YBZP1oV/RpxEieng1tfx44s7eUjwVJzZaQk7mBNByXnn/bJqcorcaH0gMsuhiV
-	 eecy8beIZkmC68h62ApUK0Ldk46fbbDAXuN2Q8y+NsNmbHN9yD6T82EC6I/YLJNj1c
-	 rldcDOK2FCMYA==
-Date: Tue, 11 Feb 2025 22:31:15 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	patches@opensource.cirrus.com,
-	Ernest Van Hoecke <ernest.vanhoecke@toradex.com>,
-	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: Re: [PATCH v1 3/5] ASoC: dt-bindings: wm8904: Add DMIC, GPIO, MIC
- and EQ support
-Message-ID: <d42f6600-4233-4438-9636-d2892f3d11c1@sirena.org.uk>
-References: <20250206163152.423199-1-francesco@dolcini.it>
- <20250206163152.423199-4-francesco@dolcini.it>
- <20250211221904.GA1270109-robh@kernel.org>
+	b=upjUIQDyR5fFG7FqliMYTHUesOUc7TbFtEYOd8Haus6tJOtyRuCmhYeejce15ZAYm
+	 lq7zxyEt0xMnsC5lQGidtt4wYM7UDPvYseFegNz/BrigboHwJenTXzTiDpjmmtLHTC
+	 vqOTYTO2RSGu4AImUVEw2CMwB86TWPmgPxZc29Zedk5xMEdP7Vh6CdGCaUELaDVeIb
+	 8Es83Eu9DAX+7JJaWganAA/5YVE8EdSE6EFihiBsclIiDceTHOCMxK0GOyYyFmCeJz
+	 cDtJqk4+bwqW531lqsgW0OeJMfveEWSosCMxTvjTo4evuVYZHPugFov2MlvLdn619l
+	 2kkkriaqNnFgA==
+Date: Tue, 11 Feb 2025 14:31:59 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: David Chinner <david@fromorbit.com>, Carlos Maiolino <cem@kernel.org>,
+	linux-xfs@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the xfs tree
+Message-ID: <20250211223159.GF3028674@frogsfrogsfrogs>
+References: <20250212082141.26dc0ad8@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="AS7+IzE+cm9e530p"
-Content-Disposition: inline
-In-Reply-To: <20250211221904.GA1270109-robh@kernel.org>
-X-Cookie: Printed on recycled paper.
-
-
---AS7+IzE+cm9e530p
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250212082141.26dc0ad8@canb.auug.org.au>
 
-On Tue, Feb 11, 2025 at 04:19:04PM -0600, Rob Herring wrote:
-> On Thu, Feb 06, 2025 at 05:31:50PM +0100, Francesco Dolcini wrote:
+On Wed, Feb 12, 2025 at 08:21:41AM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> In commit
+> 
+>   bc0651d93a7b ("xfs: fix online repair probing when CONFIG_XFS_ONLINE_REPAIR=n")
+> 
+> Fixes tag
+> 
+>   Fixes: 48a72f60861f79 ("xfs: don't complain about unfixed metadata when repairs were injected")
+> 
+> has these problem(s):
+> 
+>   - Subject does not match target commit subject
+>     Just use
+>         git log -1 --format='Fixes: %h ("%s")'
+> 
+> maybe you meant
+> 
+> Fixes: 48a72f60861f ("xfs: refactor repair forcing tests into a repair.c helper")
+> 
+> or
+> 
+> Fixes: 8336a64eb75c ("xfs: don't complain about unfixed metadata when repairs were injected")
 
-> > +  wlf,retune-mobile-cfg-names:
-> > +    $ref: /schemas/types.yaml#/definitions/string-array
-> > +    description:
-> > +      List of strings for the available retune modes.
-> > +      If absent, retune is disabled.
+Yes, 8336a64eb75c.
 
-> Is there no defined set of names?
+This patch has been on the list for a month now, and nobody complained.
+Probably because people aren't good at distinguishing one sequence of
+hexadecimal from another.
 
-No, this set of names is for system integrator specified tunings so they
-can make up whatever is appropriate for their system and use cases (or
-otherwise amuses them).  The names will end up getting exposed directly
-to userspace as options that can be selected at runtime.
+Could we /please/ have a bot to warn about these annotation problems
+when patches are on the list for review, rather than a month later after
+it finally enters for-next, without any of the authors, reviewers, or
+maintainers having noticed?
 
---AS7+IzE+cm9e530p
-Content-Type: application/pgp-signature; name="signature.asc"
+Maybe the rest of you are all excellent at this, and I should just fuck
+off and quit.
 
------BEGIN PGP SIGNATURE-----
+--D
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmerz7IACgkQJNaLcl1U
-h9CJ/Qf/e19uP4duTkk/90jausJYsKrWocRj+OfkBnGKJcpqBYoYbYAL93oFPaq1
-ldCKokt7jBx3WlAFR9SmxZkRUi4V0HgwyiD4mVdkpyWQyxP/E4XCT+vM5Su98K6l
-71gTIc5LUO3E3FABIulpIKiVzAHO0T3B+d8pTN9ebAjP80tSRrFJjDOsCJwSNSSh
-KAInIVy9XhAaHVNtVJGEuM0j/AgLR3Ny1vm/0tzpKR2tvPGQz1y4WXYB4ikuIqIV
-m2a49nrOUSw4Zje3er7HsbKDBnjVulrjMXVSF1Mc+dZJmJCw2GDtDPLDh/GzH4bG
-o5Le8tlk3/qzTcci/yUk6zNUtpba1g==
-=kP6n
------END PGP SIGNATURE-----
+> -- 
+> Cheers,
+> Stephen Rothwell
 
---AS7+IzE+cm9e530p--
+
