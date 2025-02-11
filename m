@@ -1,115 +1,88 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6DE1F0E2B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0241EDA22;
+	Tue, 11 Feb 2025 12:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739276269; cv=none; b=tzF0Po68I9eq2SRtEDgzpAFve0R5QLKMNUMnks2Q4AXbdb5vvaoKaNzI7Ib0HveJZT+lNGed8Sh1if/JP5ox84ed8UF6QFpGLjQVjajSRdo+0Ey8c2zHHthJciHtEv7JOeZMB1p5sLRNDHJg+C8McdFSTN/sNU9yr4UcPg/ATEk=
+	t=1739276276; cv=none; b=H9t7KbSTPTQllpkrZhfBGoIoPgH4yShBM+rf0+FC0/5r+IrpHIHdFjegwaPxAtMKF1pGNA4cVxFTMvzp3uQbSSnIh1bpih16kHXJ29KlnJjBL46xcqdqfl1ipkDJneCrQRKUJ+/eQbhiCETl5FIX5o1X+1POGhQZmysN9WIL/jM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739276269; c=relaxed/simple;
-	bh=NNmaBfrBHCWPgGIy3hxDwhYYJtOtt+JWbw2XlLZuqCo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kA+QxnJyprMJ6+clPHqG8TlLdn7Vtr/9L27B5F9Gjazk+7izaUm6O89qok+gQIj0IOpPrSs8tx8TLbzoIdW/2VsWAlSVPq9wqEvIxUwgBB0x+/Fjo4aZF8UaTxpZ26htFN5qin8J8mUSnje5Bc8kG8sYMilOvchfYP+Tsan70dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-867129fdb0aso2286978241.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:17:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739276265; x=1739881065;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SQQhu1+eJSed5qS+FiuHYgY3XHg26ezj5+KoSTQrLcg=;
-        b=irnb/j+fXllz2hooj9OVHWEmT8jYOPiiNzZK/m++kfjDeZwUvwFYj4TZ9VeXdxv38K
-         XUoBzwBhL8Lym4+JmHKWqw+JBY7J4qItyBxYZ2SqwlLXBPPib9NMEy9bxjd1zrI6XjAl
-         dlVYVLAhHjEMMslDYvOH4PZCVP5FOe5SvJq36xl6lC/2JNImpB4Ljh5a1EQI4gGcUNCM
-         SRnULCRhq5mOFd4Lr7AVoRjNXMtI8ysPM/Ayq2zFIL+2Vy/wynk0SqYi7NNGi9SOIyD2
-         YFrrwUVyGKOJA/ImrspQGGh4WQ+wdG6XLDaY8nCId5oles0k/cxbBr+vIhk4180PjLBO
-         jahg==
-X-Forwarded-Encrypted: i=1; AJvYcCW2LGaBT/dfq9aPU9FXXPlOQM7pu0CTUltsllA5ndGHmj1JXcb0bd8H4x2iBpQslRzBn7WuBqTvn6lcsD0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4Uxsc1phKUpbV0mz6fuS3Nqe8olPEGRGXWrQQfOEG2muEZWJE
-	XRepGEFDdMncQH6Fj0VfxPEcnWVDQs64HSnb6nHIFo1Z6R1j91UDzlSbsqQezG0=
-X-Gm-Gg: ASbGncvbLDlbQEoT+wPmthycAeNrFBgGtZMcV70849IybFnQGUB0r/18btyENRnLcj7
-	JeGabQiEgmytQNpIftaRhzSVEKsS0hFB23J0UK9NL1aqAerRjPKHVhHcxutT3+GCJy35W0dwyQO
-	YW8SRWmSbg9sYeR12BET+LHoM4Ws7BkRH82Pul5Vwh0Jdco76Y7bN20ZZ8Sx4TmL4iJ3vx9/o1S
-	HGPPVlzx6jlemq1k3XrlrjCyV/O/LX9TLb1Ds7sieklHXvZTWLihvQhbT72YbRPahm7RArx2B5L
-	Dl9tkG1wkcib3KRCC+sa8DDb/CW0dBwOzEqQ/RCb7kW/w7YsmCe5Og==
-X-Google-Smtp-Source: AGHT+IFHBMOf8Q/R8jPv1g7zhYxytc8I5RwCK8SCYhSrT0YMKoLWsmEUpUcdXdjjWpeLH7zYn6LuXA==
-X-Received: by 2002:a05:6102:3fa2:b0:4b6:8fc5:2e7c with SMTP id ada2fe7eead31-4ba85e20648mr12597793137.12.1739276265603;
-        Tue, 11 Feb 2025 04:17:45 -0800 (PST)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4bbc93070afsm729132137.21.2025.02.11.04.17.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 04:17:45 -0800 (PST)
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4bbe31ef430so449638137.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:17:45 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUjtmvbX1Lbz2PtGIeRPDvVC+hJCkpesyt8JV7QTELACPGfG6wWvQ0nMTAQjr0mSVNN7vCAaqQejFiLKPI=@vger.kernel.org
-X-Received: by 2002:a05:6102:6a98:b0:4bb:9b46:3f6f with SMTP id
- ada2fe7eead31-4bb9b467825mr4695448137.1.1739276265146; Tue, 11 Feb 2025
- 04:17:45 -0800 (PST)
+	s=arc-20240116; t=1739276276; c=relaxed/simple;
+	bh=9RkT9PdNQs5dp3tugQvqKFcTLZgv8DtPvPLncpkJT1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F/yai1nZvUOzPFB04Xi/n74d+tYUd4J0qVe6QVjDja6xyclxxPoyaiEIS5v3dmjaK/BP4O0f48qus5IwvOLYCkppMAzh2saIaBxl5InZ9TVHD3ov/UaKYftnYp3ofkCSmCf4rTlYhbOi/NjCEQTag4a+zQnYprY4gxw4yax4BXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TWsJhdW/; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TWsJhdW/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739276275; x=1770812275;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9RkT9PdNQs5dp3tugQvqKFcTLZgv8DtPvPLncpkJT1A=;
+  b=TWsJhdW/zbvHce7gpBcbx5JnVTxB+6z/f9/PknOPyxWCcc+VrWtyELra
+   CrUdB55MKaO9fglv95jLznMBRnpyjzJYGgEoHCITW6CkDtqSB+bPDPmgS
+   y+aK7EvB1fTo3SESwwCU6KqMQuNnG3y0Ey34NVRqI9BnK9tb6D36gx04O
+   wJfjQTFYGmzM2ugnUdKxH/3lvd58cnmGAHa2reSN5UwGZAIeBCaYweAk6
+   loKXW90Ne6ARP+o/8zLKKfP4vKFJk1s4UjgTn8vHLsrulqjntMTZ2lNFy
+   LF0G+yAkYFMaIc8rSSGDE0Rqn83w1BmNydpJdCM7UO/ly9RIbTWgkq+eQ
+   w==;
+X-CSE-ConnectionGUID: HSx69PBcQu2OHIe6DcFGaQ==
+X-CSE-MsgGUID: FOFmv/i1RHKsWQktHwP+kw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50526097"
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="50526097"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:17:54 -0800
+X-CSE-ConnectionGUID: T8U6InUUT9GDAnLvXSS+WA==
+X-CSE-MsgGUID: yF37Vw9qRx+T6/C1KQts8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117113920"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:17:52 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1thpD3-0000000AUzi-2Rns;
+	Tue, 11 Feb 2025 14:17:49 +0200
+Date: Tue, 11 Feb 2025 14:17:49 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Alexis GUILLEMET <alexis.guillemet@dunasys.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH v1 2/2] pinctrl: intel: Fix wrong bypass assignment in
+ intel_pinctrl_probe_pwm()
+Message-ID: <Z6s_7XTW4-Y1VeSp@smile.fi.intel.com>
+References: <20250210195230.490904-1-andriy.shevchenko@linux.intel.com>
+ <20250210195230.490904-3-andriy.shevchenko@linux.intel.com>
+ <ea58e549-a1ba-4508-8a70-59622f8c3ce3@dunasys.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <077bd67861fe0ee246ba967a3406079373122439.1739271346.git.geert+renesas@glider.be>
- <6aa243e1-6e25-46c8-b75a-d5e7bc1cd5a4@app.fastmail.com>
-In-Reply-To: <6aa243e1-6e25-46c8-b75a-d5e7bc1cd5a4@app.fastmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 11 Feb 2025 13:17:33 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUM9+xTF_UEitagNvprjuXQ+=oo_ey=gN731v2QckXxug@mail.gmail.com>
-X-Gm-Features: AWEUYZmHpbnzzUCIlLGH3HVBQWZ--_LLEiZfqrXuPATgJccm7iv7OXn8qzQIapg
-Message-ID: <CAMuHMdUM9+xTF_UEitagNvprjuXQ+=oo_ey=gN731v2QckXxug@mail.gmail.com>
-Subject: Re: [PATCH v2] platform: cznic: CZNIC_PLATFORMS should depend on
- MACH_ARMADA_38X || ARCH_MVEBU
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ea58e549-a1ba-4508-8a70-59622f8c3ce3@dunasys.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Arnd,
+On Tue, Feb 11, 2025 at 01:11:57PM +0100, Alexis GUILLEMET wrote:
+> On Mon, Feb 10, 2025 at 08:44PM +0200, Andy Shevchenko wrote:
 
-On Tue, 11 Feb 2025 at 12:04, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tue, Feb 11, 2025, at 11:56, Geert Uytterhoeven wrote:
-> > CZ.NIC's Turris devices are based on Marvell Armada 385 or 3720 SoCs.
-> > Hence add dependencies on MACH_ARMADA_38X and ARCH_MVEBU, to prevent
-> > asking the user about these drivers when configuring a kernel that
-> > cannot run on an affected CZ.NIC Turris system.
-> >
-> > Fixes: 992f1a3d4e88498d ("platform: cznic: Add preliminary support for
-> > Turris Omnia MCU")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > v2:
-> >   - Drop PPC_P2020 from the dependency list.
->
-> Looks good to me, one minor issue:
->
-> > @@ -6,6 +6,7 @@
-> >
-> >  menuconfig CZNIC_PLATFORMS
-> >       bool "Platform support for CZ.NIC's Turris hardware"
-> > +     depends on MACH_ARMADA_38X || ARCH_MVEBU || COMPILE_TEST
->
-> Technically the MACH_ARMADA_38X check is redundant here, as that
-> already requires ARCH_MVEBU.
+> Tested-by: Alexis GUILLEMET<alexis.guillemet@dunasys.com>
 
-Thanks for your comment!
-Somehow I thought the former covers arm32, and the latter arm64,
-but ARCH_MVEBU indeed covers both.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Thank you for confirming, I'm going to push this to my review and testing queue soon.
+It should appear in the next (v6.15-rc1) Linux kernel.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Best Regards,
+Andy Shevchenko
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
