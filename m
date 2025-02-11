@@ -1,340 +1,173 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B0826BDA6
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD1A26BDA6;
+	Tue, 11 Feb 2025 09:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739264963; cv=none; b=jchL8OhiEvtK7ku6WJFHza+kVc4Weq7yWtbQtwX9nV8fwAbwBZmqR78cKosmaFRPqkmomL8QMGXPmxU6nW8CJ+Mfx6+XoCgXAKZ1zc+3Li/HDyaye+qGKsNsLVytGtdNB7YQxVp2+KQaQhozfW2yHDTejbXw9U8UdPbDD27M08I=
+	t=1739265059; cv=none; b=QXX2m8uzcS0kzGLL385l5zvF4V+8wC8hpFGFBC82VVP++OCWqaa8QXHywPf377oriRfA8B5Tq5sucG3zrHfAtKWs/ZlkUE55bHr8gvyo8aY5tac3gVxBPetDR7xpJjWxwJHfaCpPlt0azvR4Q5K0QqWDfFqV2F1vFXzm3UNBAMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739264963; c=relaxed/simple;
-	bh=9zkYL3P1bgmOqqVTSBM6wM97gg2QF3AGlInImNoJOz0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AS1xJsZaOocSGKcM35IXu0iNdZiX0rq6tDPdc8MB8KjtqQHEPt9R2Lup0Fys5WsSJAv8sBvxHm/gj72kDYuLR3uMxOz1pACWvaNOhKIo4gJu4xnLli8hROu4hHcc9qIn0WvthKKXlnOVlUemottY/B+Q0toO3N1PfffghN9j498=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=dBBBif+D; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739265059; c=relaxed/simple;
+	bh=U9/oUWehWMUw3I68Re2zy7G47SfbIzwiwflBq2Dbgeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YbIJQbbqr1EdOqmbfY3OudrpwMqGW4P2FJdr/3FdYqZdVVIsLKUaSTbhxYjhPNEApF7Tey/SCaPVdVF0GUkAtMuFqsRgp0RfP0HOxeJkO/LxGKAxqFzOUGoae7GOSegAGAjAlorVGHDaqdXdQql5M4o0isblDo2HXmdwnS3T5S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HBb0zS73; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dBBBif+D"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3971673E;
-	Tue, 11 Feb 2025 10:08:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739264882;
-	bh=9zkYL3P1bgmOqqVTSBM6wM97gg2QF3AGlInImNoJOz0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dBBBif+DMdo23M1FI3mNbYNfMCs18kQZaNdfzoDA7Ab4J+jk5vr25RptRUGfjHBpn
-	 NLhlGt+tbByowoxHo7qAYnaHOlHDojTJe9sV89NC902OLTYvwt5tyPCVmr7/zdOQfn
-	 qF2D6UXz+Cubh18YoxmIevKRfDHac5+1mNMMqKrk=
-Message-ID: <e894d5be-21ba-4028-816b-e47ce36e03d5@ideasonboard.com>
-Date: Tue, 11 Feb 2025 11:09:15 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HBb0zS73"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739265058; x=1770801058;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=U9/oUWehWMUw3I68Re2zy7G47SfbIzwiwflBq2Dbgeo=;
+  b=HBb0zS73ZbIJtI4MLset6G/HFSHV5A6jzyKoZ6BjarCf79Zy73vT4yiY
+   LJv74W2s13GhKgDSnriChXKLniYOCNfdDpIQzhiT4HQUt015Y6zWpDj0u
+   5aBZ4zFaAxX14Y7LrMaiwTHz3gjpB5wP2SY+fuzpyPMh1sgvlAs2EHhSB
+   s62OoAVmTBv0+3IhLfOO2dFK2OIFUVGsHSZ8LRuvtkjGQjzT7+9Lmgg9w
+   YMoaKKrouB2If83zssuoJgO19nthSIdRvmEdAiZMKhLKDjVaCdJvFcY1F
+   71BAZaDd7IgAm4HY6lwSw45RiJW4cZY//BYuoYQggxh6FdBB5g27DFUCr
+   Q==;
+X-CSE-ConnectionGUID: MsnUMgu9RnGeJM/vFm2V0Q==
+X-CSE-MsgGUID: y+2p3qwkQbmpBrBMweTpfw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40142983"
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="40142983"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 01:10:57 -0800
+X-CSE-ConnectionGUID: b5osf7sRQ9Obv8P1FBIWgA==
+X-CSE-MsgGUID: CP2YKcN+TB6aPxK9USvlyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="112918889"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa007.jf.intel.com with ESMTP; 11 Feb 2025 01:10:55 -0800
+Date: Tue, 11 Feb 2025 17:09:47 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Yidong Zhang <yidong.zhang@amd.com>
+Cc: linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org,
+	mdf@kernel.org, hao.wu@intel.com, yilun.xu@intel.com,
+	lizhi.hou@amd.com, DMG Karthik <Karthik.DMG@amd.com>,
+	Nishad Saraf <nishads@amd.com>,
+	Hayden Laccabue <hayden.laccabue@amd.com>
+Subject: Re: [PATCH V2 1/4] drivers/fpga/amd: Add new driver amd versal-pci
+Message-ID: <Z6sT20uzjes7SGzr@yilunxu-OptiPlex-7050>
+References: <20241210183734.30803-1-yidong.zhang@amd.com>
+ <20241210183734.30803-2-yidong.zhang@amd.com>
+ <Z5YPWHVmL29zuQNm@yilunxu-OptiPlex-7050>
+ <3b520bab-d948-470a-b06f-5494243ebc1a@amd.com>
+ <Z6Q3W2mUw/ZbtnWV@yilunxu-OptiPlex-7050>
+ <796e2826-a423-4d0c-977a-105ed236e067@amd.com>
+ <Z6Vtz/Bb8wsIH0pG@yilunxu-OptiPlex-7050>
+ <7b9bd24f-8f89-4d6c-a079-47c4c0b88a35@amd.com>
+ <Z6WO2Ktc9HoqdUSU@yilunxu-OptiPlex-7050>
+ <e68be2e2-7fdd-4f09-b479-4b0e31af5be5@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 00/13]drm/bridge: cdns-dsi: Fix the color-shift issue
-To: Aradhya Bhatia <aradhya.bhatia@linux.dev>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Devarsh Thakkar <devarsht@ti.com>, Praneeth Bajjuri <praneeth@ti.com>,
- Udit Kumar <u-kumar1@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
- DRI Development List <dri-devel@lists.freedesktop.org>,
- Linux Kernel List <linux-kernel@vger.kernel.org>
-References: <20250209121032.32655-1-aradhya.bhatia@linux.dev>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250209121032.32655-1-aradhya.bhatia@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e68be2e2-7fdd-4f09-b479-4b0e31af5be5@amd.com>
 
-Hi,
+On Mon, Feb 10, 2025 at 03:33:07AM -0800, Yidong Zhang wrote:
+> 
+> 
+> On 2/6/25 20:40, Xu Yilun wrote:
+> > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> > 
+> > 
+> > On Thu, Feb 06, 2025 at 07:16:25PM -0800, Yidong Zhang wrote:
+> > > 
+> > > 
+> > > On 2/6/25 18:19, Xu Yilun wrote:
+> > > > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> > > > 
+> > > > 
+> > > > > > No need to detach a specific driver, remove all devices in the
+> > > > > > fpga-region. I imagine this could also be a generic flow for all PCI/e
+> > > > > > based FPGA cards.
+> > > > > 
+> > > > > I see your point. Is there an existing example in current fpga driver for
+> > > > > PCI/e based cards?
+> > > > 
+> > > > No. The fpga-region re-enumeration arch is still WIP, so no existing
+> > > > implementation.
+> > > 
+> > > Got you. I can also help to test or provide feedback.
+> > > Actually, I had sent Nava my protype of using configfs for the non-OF
+> > > driver. He should have the updated patch soon.
+> > > 
+> > > > 
+> > > > > 
+> > > > > We will need to talk to our management team and re-design our driver.
+> > > > > I think we have 2 approaches:
+> > > > > 1) Align with linux fpga, having one driver for both userPF and mgmtPF; or
+> > > > 
+> > > > Don't get you. Linux FPGA doesn't require one driver for both PFs.
+> > > 
+> > > I assume when you said "generic flow for removing all devices in
+> > > fpga-region" means that there is a single driver which use the fpga-region
+> > > callbacks to remove all devices and then re-progream the FPGA.
+> > > 
+> > > On AMD V70 hardware, the userPF has different deviceid than the mgmtPF.
+> > > Thus, our current design is having 2 separate pcie drivers for each
+> > > different deviceid.
+> > > 
+> > > Thus, in our current design, the fpga-region should be in the userPF driver
+> > > which has callbacks to remove all devices. But in mgmtPF, it is more like a
+> > 
+> > A question, if the FPGA logic is cleared, does the userPF still exist on
+> > PCIe bus?
+> 
+> I am not sure I fully understand your question by "FPGA logic is cleared".
+> Based on our design, the userPF exists, but all services need to be
+> re-configured after hardware is changed.
 
-On 09/02/2025 14:10, Aradhya Bhatia wrote:
-> Hello all,
-> 
-> This series provides some crucial fixes and improvements for the Cadence's DSI
-> TX (cdns-dsi) controller found commonly in Texas Instruments' J7 family of SoCs,
-> as well as in Sitara AM62P and AM62L SoCs.
+I briefly read your XRT docs. IIUC we are talking about reprogramming
+the "Dynamic Region", not the "Shell".
 
-I tested this on AI-64 with an RPi panel. The image is not quite stable, 
-but that's always been the case with AI-64 and this panel, and I think 
-it's not related to anything in this series (there's probably more to 
-fix with the cdns-dsi...).
+The userPF's PCIe basic functionality is in Shell and is out of
+our reprograming discussion. So userPF PCI device always exists even if
+the "Dynamic Region" is being reprogrammed. In this case, we should
+create fpga-region for this "Dynamic Region" in userPF driver.
 
-I think this series is ready for merging.
+userPF uses some HW communication channel to require reprograming, so
+fpga-manager could also be implemented in userPF driver.
 
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+And I agree the mgmtPF driver is a utility driver that just monitor on
+the communication channel and serve requirements, nothing to do with
+FPGA framework. I have no objection to put it in misc or firmware
+directory.
 
-  Tomi
+What I'm not sure is whether a standalone utility driver in kernel tree
+is preferred (at least I don't). You may talk to other maintainers.
 
-> Along with that, this series aims to fix the color-shift issue that has been
-> going on with the DSI controller. This controller requires to be enabled before
-> the previous entity enables its stream[0]. It's a strict requirement which, if
-> not followed, causes the colors to "shift" on the display. The fix happens in
-> 2 steps.
-> 
->      1. The bridge pre_enable calls have been shifted before the crtc_enable and
->         the bridge post_disable calls have been shifted after the crtc_disable.
->         This has been done as per the definition of bridge pre_enable.
-> 
->         "The display pipe (i.e. clocks and timing signals) feeding this bridge
->         will not yet be running when this callback is called".
-> 
->         Since CRTC is also a source feeding the bridge, it should not be enabled
->         before the bridges in the pipeline are pre_enabled.
-> 
->         The sequence of enable after this patch will look like:
-> 
-> 	        bridge[n]_pre_enable
-> 	        ...
-> 	        bridge[1]_pre_enable
-> 
-> 	        crtc_enable
-> 	        encoder_enable
-> 
-> 	        bridge[1]_enable
-> 	        ...
-> 	        bridge[n]_enable
-> 
->         and vice-versa for the bridge chain disable sequence.
 > 
 > 
->      2. The cdns-dsi enable / disable sequences have now been moved to pre_enable
->         and post_disable sequences. This is the only way to have cdns-dsi drivers
->         be up and ready before the previous entity is enables its streaming.
+> > 
+> > > utility which only handles request from the userPF but it has the management
+> > > privilege. Usually, cloud vendors require the mgmtPF deployed in their
+> > > secured domain (can be a separate physical machine).
+> > 
+> > I though mgmtPF & userPF are just 2 functions on one PCIe card, they are not?
+> > Then how the mgmtPF writes data to another physical machine and
+> > influence the userPF?
+> > 
 > 
-> The DSI also spec requires the Clock and Data Lanes be ready before the DSI TX
-> enables its stream[0]. A patch has been added to make the code wait for that to
-> happen. Going ahead with further DSI (and DSS configuration), while the lanes
-> are not ready, has been found to be another reason for shift in colors.
+> They are functions but they also have different device id thus we can bind
+> different driver onto each of them.
 > 
-> These patches have been tested with J721E based BeagleboneAI64 along with a
-> RaspberryPi 7" DSI panel. The extra patches can be found in the
-> "next_dsi-v9_2-tests" branch[1] of my github fork if anyone would like to test
-> them.
+> I think I should interrupt it accurately as Host and VM. See details here
+> please:
+> https://xilinx.github.io/XRT/2019.2/html/cloud_vendor_support.html
 > 
-> Thanks,
-> Aradhya
-> 
-> 
-> * Important note about the authorship of patches *
-> 
-> All but one of the patches have been authored when I owned a "ti.com" based
-> email id, i.e. <a-bhatia1@ti.com>. This email id is not in use anymore, and all
-> the work done later has been part of my personal work. Since the original
-> patches were authored using TI's email id, I have maintained the original
-> authorships as they are, as well as their sign offs.
-> 
-> I have further added another sign off that uses my current (and personal) email
-> id, the one that is being used to send this revision, i.e.
-> <aradhya.bhatia@linux.dev>.
-> 
-> 
-> * Note on checkpatch warnings in patch 11/13 *
-> Patch 11/13 caueses the checkpatch to flare up for 1 warning, and 1 check -
-> 
-> WARNING: line length of 101 exceeds 100 columns
-> #63: FILE: drivers/gpu/drm/drm_atomic_helper.c:1252:
-> 
-> CHECK: Lines should not end with a '('
-> #77: FILE: drivers/gpu/drm/drm_atomic_helper.c:1266:
-> 
-> This patch is largely duplicating the original code, with minor differences to
-> perform different operations. Both these lines of code pre-exist in the file and
-> have simply been duplicated. I have decided to keep them as is to maintain the
-> uniformity and the originaly intended readability. Should perhaps a fix be
-> required, this patch/series is not the right place, and another patch can be
-> created to fix this across the whole file.
-> 
-> 
-> [0]: Section 12.6.5.7.3: "Start-up Procedure" [For DSI TX controller]
->       in TDA4VM Technical Reference Manual https://www.ti.com/lit/zip/spruil1
-> 
-> [1]: https://github.com/aradhya07/linux-ab/tree/next_dsi-v9_2-tests
-> 
-> 
-> Change Log:
->    - Changes in v9:
->      - Fix the oops in 11/13 - where the encoder_bridge_enable _was_ pre_enabling
->        the bridges instead of enabling.
->      - Add the following tags:
->        - Dmitry Baryshkov's R-b in patches 2, 10, 11, and A-b in patch 12.
->        - Jayesh Choudhary's R-b in patch 12.
->        - Tomi Valkeinen's R-b in patches 2, 10, 11, 12.
-> 
->    - Changes in v8:
->      - Move the phy de-initialization to bridge post_disable() instead of bridge
->        disable() in patch-3.
->      - Copy the private bridge state (dsi_cfg), in addition to the bridge_state,
->        in patch-9.
->      - Split patch v7:11/12 into three patches, v8:{10,11,12}/13, to separate out
->        different refactorings into different patches, and improve bisectability.
->      - Move patch v7:02/12 down to v8:06/12, to keep the initial patches for
->        fixes only.
->      - Drop patch v7:04/12 as it doesn't become relevant until patch v7:12/12.
->      - Add R-b tags of Dmitry Baryshkov in patch-9 and patch-3, and of
->        Tomi Valkeinen in patch-9.
->     
->    - Changes in v7:
->      - phy_init()/exit() were called from the PM path in v6. Change it back to
->        the bridge enable/disable path in patch-3, so that the phy_init() can go
->        back to being called after D-Phy reset assert.
->      - Reword commit text in patch-5 to explain the need of the fix.
->      - Drop the stray code in patch-10.
->      - Add R-b tag of Dmitry Baryshkov in patch-6.
-> 
->    - Changes in v6:
->      - Reword patch 3 to better explain the fixes around phy de-init.
->      - Fix the Lane ready timeout condition in patch 7.
->      - Fix the dsi _bridge_atomic_check() implementation by adding a new
->        bridge state structure in patch 10.
->      - Rework and combine patches v5:11/13 and v5:12/13 to v6:11/12.
->      - Generate the patches of these series using the "patience" algorithm.
->        Note: All patches, except v6:11/12, *do not* differ from their default
->        (greedy) algorithm variants.
->        For patch 11, the patience algorithm significantly improves the readability.
->      - Rename and move the Bridge enable/disable enums from public to private
->        in patch 11.
->      - Add R-b tags of Tomi Valkeinen in patch 6, and Dmitry Baryshkov in patch 2.
-> 
->    - Changes in v5:
->      - Fix subject and description in patch 1/13.
->      - Add patch to check the return value of
->        phy_mipi_dphy_get_default_config() (patch: 6/13).
->      - Change the Clk and Data Lane ready timeout from forever to 5s.
->      - Print an error instead of calling WARN_ON_ONCE in patch 7/13.
->      - Drop patch v4-07/11: "drm/bridge: cdns-dsi: Reset the DCS write FIFO".
->        There has been some inconsistencies found with this patch upon further
->        testing. This patch was being used to enable a DSI panel based on ILITEK
->        ILI9881C bridge. This will be debugged separately.
->      - Add patch to move the DSI mode check from _atomic_enable() to
->        _atomic_check() (patch: 10/13).
->      - Split patch v4-10/11 into 2 patches - 11/13 and 12/13.
->        Patch 11/13 separates out the Encoder-Bridge operations into a helper
->        function *without* changing the logic. Patch 12/13 then changes the order
->        of the encoder-bridge operations as was intended in the original patch.
->      - Add detailed comment for patch 13/13.
->      - Add Tomi Valkeinen's R-b in patches 1, 2, 4, 5, 7, 8, 9, 13.
-> 
->    - Changes in v4:
->      - Add new patch, "drm/bridge: cdns-dsi: Move to devm_drm_of_get_bridge()",
->        to update to an auto-managed way of finding next bridge in the chain.
->      - Drop patch "drm/bridge: cdns-dsi: Fix the phy_initialized variable" and
->        add "drm/bridge: cdns-dsi: Fix Phy _init() and _exit()" that properly
->        de-initializes the Phy and maintains the initialization state.
->      - Reword patch "drm/bridge: cdns-dsi: Reset the DCS write FIFO" to explain
->        the HW concerns better.
->      - Add R-b tag from Dmitry Baryshkov for patches 1/11 and 8/11.
-> 
->    - Changes in v3:
->      - Reword the commit message for patch "drm/bridge: cdns-dsi: Fix OF node
->        pointer".
->      - Add a new helper API to figure out DSI host input pixel format
->        in patch "drm/mipi-dsi: Add helper to find input format".
->      - Use a common function for bridge pre-enable and enable, and bridge disable
->        and post-disable, to avoid code duplication.
->      - Add T-b tag from Dominik Haller in patch 5/10. (Missed to add it in v2).
->      - Add R-b tag from Dmitry Baryshkov for patch 8/10.
-> 
->    - Changes in v2:
->      - Drop patch "drm/tidss: Add CRTC mode_fixup"
->      - Split patch "drm/bridge: cdns-dsi: Fix minor bugs" into 4 separate ones
->      - Drop support for early_enable/late_disable APIs and instead re-order the
->        pre_enable / post_disable APIs to be called before / after crtc_enable /
->        crtc_disable.
->      - Drop support for early_enable/late_disable in cdns-dsi and use
->        pre_enable/post_disable APIs instead to do bridge enable/disable.
-> 
-> 
-> Previous versions:
-> 
-> v1: https://lore.kernel.org/all/20240511153051.1355825-1-a-bhatia1@ti.com/
-> v2: https://lore.kernel.org/all/20240530093621.1925863-1-a-bhatia1@ti.com/
-> v3: https://lore.kernel.org/all/20240617105311.1587489-1-a-bhatia1@ti.com/
-> v4: https://lore.kernel.org/all/20240622110929.3115714-1-a-bhatia1@ti.com/
-> v5: https://lore.kernel.org/all/20241019195411.266860-1-aradhya.bhatia@linux.dev/
-> v6: https://lore.kernel.org/all/20250111192738.308889-1-aradhya.bhatia@linux.dev/
-> v7: https://lore.kernel.org/all/20250114055626.18816-1-aradhya.bhatia@linux.dev/
-> v8: https://lore.kernel.org/all/20250126191551.741957-1-aradhya.bhatia@linux.dev/
-> 
-> Aradhya Bhatia (13):
->    drm/bridge: cdns-dsi: Fix connecting to next bridge
->    drm/bridge: cdns-dsi: Fix phy de-init and flag it so
->    drm/bridge: cdns-dsi: Fix the clock variable for mode_valid()
->    drm/bridge: cdns-dsi: Check return value when getting default PHY
->      config
->    drm/bridge: cdns-dsi: Wait for Clk and Data Lanes to be ready
->    drm/bridge: cdns-dsi: Move to devm_drm_of_get_bridge()
->    drm/mipi-dsi: Add helper to find input format
->    drm/bridge: cdns-dsi: Support atomic bridge APIs
->    drm/bridge: cdns-dsi: Move DSI mode check to _atomic_check()
->    drm/atomic-helper: Refactor crtc & encoder-bridge op loops into
->      separate functions
->    drm/atomic-helper: Separate out bridge pre_enable/post_disable from
->      enable/disable
->    drm/atomic-helper: Re-order bridge chain pre-enable and post-disable
->    drm/bridge: cdns-dsi: Use pre_enable/post_disable to enable/disable
-> 
->   .../gpu/drm/bridge/cadence/cdns-dsi-core.c    | 225 ++++++++++++++----
->   .../gpu/drm/bridge/cadence/cdns-dsi-core.h    |   2 -
->   drivers/gpu/drm/drm_atomic_helper.c           | 160 +++++++++++--
->   drivers/gpu/drm/drm_mipi_dsi.c                |  37 +++
->   include/drm/drm_mipi_dsi.h                    |   1 +
->   5 files changed, 349 insertions(+), 76 deletions(-)
-> 
-> 
-> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+> But, my point is that we do have 2 separate drivers.
 
+OK, having 2 separate drivers is definitely fine.
+
+Thanks,
+Yilun
