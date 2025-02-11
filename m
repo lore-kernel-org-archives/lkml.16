@@ -1,111 +1,158 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B590741C7F;
-	Tue, 11 Feb 2025 17:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D348A26157E;
+	Tue, 11 Feb 2025 17:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739296130; cv=none; b=KXZ+75y2FhEWoKKjJ2yTqsUhN4VYlRCMFxDyIzXxtZeaAgUP48J+f4ZXVpMUm3A1GLnkKVAUtveQ+KB70655TOl+8XoFbJrpcN1cqVN/+YUAndhqtJd05cr/+/pRPaSLKRXhqDcRPBEQ/dCKOohvwsLt07aY6N71ijOjqpEF90A=
+	t=1739296257; cv=none; b=G99aW4jcIsXmoR4lgogOIy1QjnAUwkb4HhDBhLq95uEVZI1GNnLbP2ZBt1yxzDXUvR7GtHa0iqpgVmm83Hz9JMRMYgohDh96OqWqmsn9R4DAnlmIqFzsBsleUhsxCSgGo6ftk9KAkBMTUtUcAQ9REeUO+XsdPtv4ZcUo+oG8arQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739296130; c=relaxed/simple;
-	bh=ccY5BIjSEiY5JgWoG8f8RW4gkIN1Q7YjhgwwkVkhgKc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SHvjiIVS5/cyFxKeUSqCxF/orz+23t8P9DyL344J5Y0rn+eRW8I7upiAru47fFctmi0Lr3f7KxmdtRozurMZ1Zrhk4Afkw/YvUEBUaSPs2vW+VSlx7Nn2yeKBJsoixb8+08i1zMEvAHGCtx5yqlAxclZfL8bz6CsJwV6JuaVpnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hlwDclHu; arc=none smtp.client-ip=209.85.216.44
+	s=arc-20240116; t=1739296257; c=relaxed/simple;
+	bh=0iY/NwZJPE/fXHS0kCVsYRJPFwF6UsT5NCvJsyVXccI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TNTBWF8u3QTrrlp5Nhu5XJY6bYfnPnvlWMj761wsvnOHuM3UA40jnSPhbe92CBWraa6JECaWKS1EM35b41YEUHPCFrpLT6S+TXAbN8U+MDm28G4dQudKRbT+FT1UJ8GpfVLtRtaQs19htMeRfMjWH9hBGQCwTpIx0OptC4iIj3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GuUpPM7G; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlwDclHu"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2fa51743d80so4765390a91.2;
-        Tue, 11 Feb 2025 09:48:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GuUpPM7G"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30795988ebeso59036971fa.3;
+        Tue, 11 Feb 2025 09:50:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739296128; x=1739900928; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lQowQWiAJelJlI2iEmex+lOXVXcguom9gOW3fCrq5J0=;
-        b=hlwDclHuApnJKPC/CrCag3/BflEKsDzxLmhCJjD2AQLLFjaer9Qog38mVJQzD0t8qW
-         i6qly0vOWjve47RaecEq2K0/vH06oLFtEZyXuR5wez/wFWP/kA4zNEDeZe2hdrPlUKqu
-         tLRe+ye+asBHIbxH58ZCs2VeNcKHXK29hr1h59VWamudgvrsbZrNLLU0Zw8xOL9UG25Z
-         k6PUGlTHKYQ2J91qVbbDnsBby1qboGmb/XSe4Ge9joyZ0KOEr9v+BGTkB/Wk1WYCHIi9
-         nSNdVdUQhMg8nWmakmrmJ1s5M0j0zCW8q7W88tLSfdigsURMIf+ukaZNaaasEj/36KIs
-         Qx3g==
+        d=gmail.com; s=20230601; t=1739296254; x=1739901054; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rYsCvLpqdvorzqPcyGkiCMqppnyBYnn8VtGTqKpYrvk=;
+        b=GuUpPM7GyfY/G2vvRmmnQpD9Z28wSZsHrs47C1bTqN6prBaIBOPiVGpjle0rybIVOV
+         MJfmxlkF6XX4qlJKUrwAo/rg35n61+q7MKvHFVz/3yucz8SBCaGXUP6taZS6ia4ayew0
+         XLxDOBwT9iEfzAyqC0eMRJrrZW9NWsou/pvuDjcgm5tgkD8HTmWHZd+gbTG7Ejlz3leX
+         SBlMcsU9MN4tOi4kJNEqKJOTGFTFhdXQS/0hZKA0XSDpxtXWdcrrYnWJ9eXrwDZFWj+y
+         eXfXWEAkMEDsC7Yiik4sO1mSEHi42DFqfdKavU6OzsvoCvc3LG/ShFZyTqYWpdEwoxUl
+         2MZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739296128; x=1739900928;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lQowQWiAJelJlI2iEmex+lOXVXcguom9gOW3fCrq5J0=;
-        b=mLyfJx9gPCueJjKEKoTAM19CrAkpu3vpPi3gGo73uV2Wx2c1JpM4/2ztUOY7O1wlAa
-         tb11YSUKopfCNa2Bol+K0cccibVy9WP2sTTta8g8S6am34NpfMXv3uKKfjMP7c8Qpgif
-         /zzWZIAVSegrmnilWa0ENoy2yComb6ciSLoY5T9w02IYLG38treBsmAjk/91pcSUeyhj
-         q2WjQ475LOSITp5oQziAlTQXRZZlTDW6yhAxuWuANjCnnltWF94KVwsSTYs4aUbkkgVT
-         pSHF1IPw+JjTS4nZOQ+UzBc4O3xH7Mz+cpkJpkJc87diTFFz7jgLZS1zeTvAXmvIUDBs
-         AX4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUNH7/cz4UDc7BZSJO8oOjW+Bv42iGYPMBJd1PWAqsdHfVJ1WXCFZTNz8jF37lLK0asUUR+C1hF0ACc6kA=@vger.kernel.org, AJvYcCVebECQpz8nBctQhCfoODhqC7elaJRQ0PG5CXeb2bTZRU6n+qKu4RxpaKyyYolXorwKaVCYloja76Mo@vger.kernel.org, AJvYcCXMntBpy14UXqA895tIxXlXJObD+gQK72QkLsgcOS7OjOwBB4JF4qQhcdZkiTWqjzI6d9CMdCGL@vger.kernel.org
-X-Gm-Message-State: AOJu0YybErHbNRLulOYqbe8dwaxGYKOjdXcQHosOvLDv08O1f1Af139C
-	NISSzKAz7a2ql45F08lu5T4pW6lie8dxfEQ2bmGSIt0iEs8FOqsd8dDd956I
-X-Gm-Gg: ASbGnctXXwQrxZhO04kyMbuDv8CVa72xeB2fdagqRsOLZGVxVAub06W0bS/HHyiIxds
-	u2jUq8lIlNOn/udQPIUQv7hSK4O1MZOVKZFftKhG2JC1E+kPFPO9TBlIu6OqTXlYrehrEbhxtrn
-	sxtYuYPEULeOeNDJ6m+GGu4kUIT3jHUjR25+6FGBGUm3x6Mr7IMAklQG4zh8y/tg8OUpSlaSDMs
-	V/D+GkDQIZYtjRgjmz5F9Ft/T0HhvzJpmD56ZMqh+HG0kLp7W/aQnd+gp7opwF8RaZsZzkBkib0
-	cJq5slJxYtXh0XTTdRpsRsNqd7vguPPSiOOXsTtfPjCKabvQXr0IEmeFyh02mV+E1z/FQqKjRIE
-	f
-X-Google-Smtp-Source: AGHT+IHWEcDUqeIjF2UczikL2kH+m/RHHuupuS5FDT9TP0QKfKb9Mvo6k4+5bwf7BlDl1BDFumVxqA==
-X-Received: by 2002:a17:90b:3c0e:b0:2f2:ab09:c256 with SMTP id 98e67ed59e1d1-2fa243ee52dmr31720249a91.33.1739296127959;
-        Tue, 11 Feb 2025 09:48:47 -0800 (PST)
-Received: from localhost.localdomain (c-73-98-126-133.hsd1.nm.comcast.net. [73.98.126.133])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa13d6a640sm10469385a91.1.2025.02.11.09.48.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 09:48:47 -0800 (PST)
-From: Jill Donahue <jilliandonahue58@gmail.com>
-X-Google-Original-From: Jill Donahue <jdonahue@fender.com>
-To: gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Jill Donahue <jilliandonahue58@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v4] f_midi_complete to call queue_work
-Date: Tue, 11 Feb 2025 10:48:05 -0700
-Message-Id: <20250211174805.1369265-1-jdonahue@fender.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1739296254; x=1739901054;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rYsCvLpqdvorzqPcyGkiCMqppnyBYnn8VtGTqKpYrvk=;
+        b=DWCPpMHvCR2IsADGyr2yexkpysySsaagsgQT5gBWa4r9kx/WLwcJ5bAS8lwAvgpvM+
+         PMZaXdKeOQ73+0wGQtEs4QHcpFFMlrx2oB+U4n0q4+l9qc3GgqUPkgS1iy0oOMTcDaN/
+         jjFd4WMQ8bUjHB39LETMmPmLJ9IUBMQ8rrql4DZiAqHtL5aZdKE14rmdJlKhgZKFcxZY
+         Ga9+nqlfryAUhr5k3VyXxz8TP1pAAiOXP3v4gl6mQC38viuMgcck26cAX9wLA2m5wy2B
+         H1btR9VY+G2xEf6c+oSW6jjZpQ2Cjvm/73mWAgjAgSyFj8xe6/zqhk5eiienOGbylKgj
+         SOrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUj5dM74ZywEVBne7TsmBHK2jbG+Xu/cuT3wjP2Zq1HppIs4T/+nS1g0+9e8qlArdH6T32SRUZsdmskMnNiRJ2A@vger.kernel.org, AJvYcCUoeLIbqOEZqmw63Fb+L58M+yqxQF/03Frv0f/Ad7lqgbyOETJvwYxIdAh96P54GZqyquh74TKWa3KJgvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6Qswlc8hzqWq7lmmBzS6uf+Dls0ygGY2UgHWNphfwN/HdAaFE
+	2wqNmzOOT+B4lH5DOj9SwWTKQajMubOkdWQK/i3fU7T1IqcxS4KHssPk6IFiDE1CL3thW95C0Rq
+	hMh/V9yi/KkmDe8LssCtWTsGvEL4=
+X-Gm-Gg: ASbGnct+feOtlvzG2zc0AOqK3Mj/q/6Bwjc6KnELgfVG61FrCpKX/CIDg2zv11ljJHR
+	iqblVmLYUNkULZ4/rfAQdvwVEo1JqQBouzvMDakHuQqGpm40wQ6nqPHrt9xOUgMRtAwiorXk0F1
+	dNCwI/bnfkn1wQ
+X-Google-Smtp-Source: AGHT+IHwcGIJZ0HG/lVot9DPoNYOf8/OyzK1zTxLCUnGIcshHE21CEfAZAkhaQEq/KPpbfdaBtFmTzmAWacX6z08vb4=
+X-Received: by 2002:a2e:b8d1:0:b0:308:f01f:1829 with SMTP id
+ 38308e7fff4ca-3090369a0c9mr1642301fa.6.1739296253584; Tue, 11 Feb 2025
+ 09:50:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250211-scanf-kunit-convert-v7-0-c057f0a3d9d8@gmail.com>
+ <20250211-scanf-kunit-convert-v7-1-c057f0a3d9d8@gmail.com>
+ <Z6tvzhZIMVKWH8kK@smile.fi.intel.com> <CAJ-ks9=Bf42eojROr1X+BnmeQLa=zF7EAr4Y3n2exwZXum+rbQ@mail.gmail.com>
+ <Z6tzkY375ffTVEXQ@smile.fi.intel.com> <CAJ-ks9=xqXsEp1_PP82qr_WDm_OF_uW2eKQfqC5+aDapWdoJ2w@mail.gmail.com>
+ <Z6uFlh6TgXTnwHI-@smile.fi.intel.com>
+In-Reply-To: <Z6uFlh6TgXTnwHI-@smile.fi.intel.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 11 Feb 2025 12:50:17 -0500
+X-Gm-Features: AWEUYZnasDPsgAR6YVeotrPtTHbrU9Jv-Jg8qe1Z31826R3Oh_jO7P4KrvNiOqM
+Message-ID: <CAJ-ks9=WA0LSzgiLQfH+MZO9JcuAJgTFAL2EWf7UStt1NjG4jg@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] scanf: remove redundant debug logs
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Jill Donahue <jilliandonahue58@gmail.com>
+On Tue, Feb 11, 2025 at 12:16=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Feb 11, 2025 at 11:02:59AM -0500, Tamir Duberstein wrote:
+> > On Tue, Feb 11, 2025 at 10:58=E2=80=AFAM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Tue, Feb 11, 2025 at 10:50:33AM -0500, Tamir Duberstein wrote:
+> > > > On Tue, Feb 11, 2025 at 10:42=E2=80=AFAM Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > On Tue, Feb 11, 2025 at 10:13:37AM -0500, Tamir Duberstein wrote:
+> > > > > > The test already prints the same information on failure; remove
+> > > > > > redundant pr_debug() logs.
+>
+> ...
+>
+> > > > > > -     pr_debug("\"%s\", \"%s\" ->\n", str, fmt);               =
+               \
+> > > > >
+> > > > > What *if* the n_args =3D=3D 0 here?
+> > > >
+> > > > Then there's no assertion in this block, so the test cannot possibl=
+y fail here.
+> > >
+> > > Correct, but I'm talking about this in a scope of the removed debug p=
+rint.
+> > > I.o.w. how would we even know that this was the case?
+> > >
+> > > (I'm not objecting removal, what I want from you is to have a descrip=
+tive and
+> > >  explanatory commit message that's answers to "why is this needed?" a=
+nd "why is
+> > >  it safe to do?")
+> >
+> > The true answer to "why is this needed" is Petr requested it in
+> > https://lore.kernel.org/all/Z6s2eqh0jkYHntUL@pathway.suse.cz/ (again,
+> > lore is having issues):
+> >
+> > On Tue, Feb 11, 2025 at 6:37=E2=80=AFAM Petr Mladek <pmladek@suse.com> =
+wrote:
+>
+> [...]
+>
+> > > But when thinking more about it. I think that even pr_debug() is not
+> > > the right solution.
+> > >
+> > > IMHO, we really want to print these details only when the test fails.
+> > >
+> > > Best Regards,
+> > > Petr
+> >
+> > The commit message already answers "why is it safe to do":
+>
+> Not really. It answers that "why is it safe to do when test case fails?".
+>
+> > > The test already prints the same information on failure; remove
+> > > redundant pr_debug() logs.
+> >
+> > Perhaps what you're asking for is an assertion to be added if n_args
+> > =3D=3D 0? I think that would make sense. Does it belong in this series?
+>
+> I don't know if it's possible case. I don't know if we need an assertion.
+> Please, research.
 
-When using USB MIDI, a lock is attempted to be acquired twice through a
-re-entrant call to f_midi_transmit, causing a deadlock.
+Such an assertion is not necessary. `_check_numbers_template` is
+called from `check_{ull,ll,ulong,long,uint,int,ushort,short,uchar,char}`
+which are in turn called from `_test`:
 
-Fix it by using queue_work() to schedule the inner f_midi_transmit() via
-a high priority work queue from the completion handler.
+> if (ret !=3D n_args) {
+>   KUNIT_FAIL(test, "vsscanf(\"%s\", \"%s\", ...) returned %d expected %d"=
+, string, fmt, ret, n_args);
+> } else {
+>   (*fn)(test, check_data, string, fmt, n_args, ap); // <-- `fn` is `check=
+_*`.
+> }
 
-Link: https://lore.kernel.org/all/CAArt=LjxU0fUZOj06X+5tkeGT+6RbXzpWg1h4t4Fwa_KGVAX6g@mail.gmail.com/
-Fixes: d5daf49b58661 ("USB: gadget: midi: add midi function driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jill Donahue <jilliandonahue58@gmail.com>
----
-V3 -> V4: Adjusted changes based on latest kernel tree
-
- drivers/usb/gadget/function/f_midi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/function/f_midi.c b/drivers/usb/gadget/function/f_midi.c
-index 837fcdfa3840..a188648d7528 100644
---- a/drivers/usb/gadget/function/f_midi.c
-+++ b/drivers/usb/gadget/function/f_midi.c
-@@ -283,7 +283,7 @@ f_midi_complete(struct usb_ep *ep, struct usb_request *req)
- 			/* Our transmit completed. See if there's more to go.
- 			 * f_midi_transmit eats req, don't queue it again. */
- 			req->length = 0;
--			f_midi_transmit(midi);
-+			queue_work(system_highpri_wq, &midi->work);
- 			return;
- 		}
- 		break;
--- 
-2.25.1
-
+So `n_args` comes from the test expectation, and it's already checked
+against the return value of `vsscanf`.
