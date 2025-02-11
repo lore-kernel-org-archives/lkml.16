@@ -1,95 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C708264615;
-	Tue, 11 Feb 2025 00:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7915AA29
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739235585; cv=none; b=Z3jXixbGjaVnFx3vCMDCWG9Tg5kKK0DV1CSRwyXeYF+wnl8UWltWHS4i96qMi51KLq0y10G72m8K24GKMaQtiH/5HC73VjYPV4zdnCSF9KSLT7PHyAtV+1rYT5L8i09HoZrOj+daXcFDzPkHmyhlYJndHe4bDRt+ywV6i2rzr6w=
+	t=1739235605; cv=none; b=Qf+s0IijEjGJW0AjhjAJX4EyHJgE8RllwzdN+rqySfl26L3apX+3Ih9BAeRQBshHdk1KQbRmPgxA9RDmm9yA9pT2+fnYltHKoR6i3qOmozdAzi3QrnuahVtUYBMrR3Xod58LMUG5EfWGRo4P9OkC/SHspf1NVOrLGEYETufU3HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739235585; c=relaxed/simple;
-	bh=KclDnq0yGU1M84esdrfIpWZm2KXaxbIJOJXRdNM4TVg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P70KjpbM9vCrbsoXi22e5pk0Yau+5JnrGILDjRqzxkfijCbhl618VgZ4tGad59GC0LhAyOZb3d86JpnBozZmM/OmTzW3oO1VLR3vp0XpUkQ+KNFwd512gVKE5aj5S5SOZuyUNYVvYI+eyZJIYfmebUIQZ/wbx8uvceOEFm2bcmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=baX/QCOx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="baX/QCOx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68860C4CED1;
-	Tue, 11 Feb 2025 00:59:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739235584;
-	bh=KclDnq0yGU1M84esdrfIpWZm2KXaxbIJOJXRdNM4TVg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=baX/QCOxqatyQmLiiwJbPKnXXqi17ksm24/KMF3E42PVYgHxp8UHyslMOHx/CleeI
-	 +v8nfmXKDSFs5N/ZCQBxCGPe8GPQI+2dtJFBbvdN/txmjsnDEQ9v5e58ycEj+jULpA
-	 tdXj9fX98XgZJpClPK3FcnfvIbruA7A8T6iv6Uqsac+/geicTGhqDS1Is3qnBTVHAs
-	 gb/LHHm4EJjJ2y1osY7JMfGsufc+JLt6kaDcGFobRkKdawyQ5La6PEScQS3kdmUWfi
-	 t8HRJPLYf6g0KI+jxc4cV9D+sj7EgQkzPmvzwfBDMshVoxQaK2deyXR+4TNxgWxz66
-	 cOiutKCeDYFIg==
-From: Kees Cook <kees@kernel.org>
-To: Eric Biederman <ebiederm@xmission.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Brown <broonie@kernel.org>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	LEROY Christophe <christophe.leroy2@cs-soprasteria.com>,
-	Akihiko Odaki <akihiko.odaki@daynix.com>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	kexec@lists.infradead.org,
-	binutils@sourceware.org,
-	devel@daynix.com,
-	Heiko Carstens <hca@linux.ibm.com>
-Subject: Re: [PATCH v5 0/6] elf: Define note name macros
-Date: Mon, 10 Feb 2025 16:58:30 -0800
-Message-Id: <173923550723.2947986.17868728802985188618.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250115-elf-v5-0-0f9e55bbb2fc@daynix.com>
-References: <20250115-elf-v5-0-0f9e55bbb2fc@daynix.com>
+	s=arc-20240116; t=1739235605; c=relaxed/simple;
+	bh=yBO6AIJ9HHlZi2gVVUcQ5GTHpfKmff9t97vsnL8Guwo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=RxTQ3ZFOI/d6E0juyQSoG6AAr2lbAP+BnvI9dVL5Ewk3HXPdOcZXOBtzOcRhD2aWoFclD4vJCrksrBf6a4NCw2vgxNROq/inBebmZXZU823+Baq/KrRBJPXO+QWTLNFKeXbjMhUXWCvHyNcN0A5q3fyP8YOaXJ+47TK9qaqgQ6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ce7a0ec1easo35617835ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:00:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739235602; x=1739840402;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hCMyHAFSBUg3/FvAK+7HAV0zKvgB7Cxwor2EeXLPwWY=;
+        b=BhGgx8USVn72GqYxYdXa5F6T5x9mrhOfiNuy3M1+bCy36lgOmbcna7osJTkXi/vHzQ
+         Zr2LRrkYcG3viHpk2aL6+iQ6Bn1vjyjs1AtcaZ38kQ6NLakZJKLeVOn4vynyRecSarDn
+         oFcK4q75mdnKE9nSckWdJlHB8ixmTitixS58XYYiTlzQ9mOz8uNlwqc2lA7IQBQZJC0I
+         cJ1C+KLqm096uDJJyjAWLKrttTsIkBtDYrCZzmu37vkyRY8z586w7XZJdHJzhjVMMlg1
+         Cue3uFyuLEqZ7mva68WDdomCkXgo34liyrIcs3xI25Cy5CUpvfY+7eFAa8cqq41jTEms
+         yTtg==
+X-Gm-Message-State: AOJu0YwcYhAg2s/fQJHQFAiCRlZiVpzHGpgBv1pPPgQ9yy3ERRQi7qb3
+	uAt/h3vO/JuBdEDsKYqu7VodC0+ZZcEVi0Z6ixlqi8TbmehbA6HOdBjX5wvIbWkQllnEGDdLNsa
+	00e96gZV2+3EVhNI0/qLrnHpqgomtccVadSrJGvh1EIj3J5tJ9tM6bW0=
+X-Google-Smtp-Source: AGHT+IHX03J20VI7sv8rVHCqV7uxqaTWTT0Z0alJ3HsBGgOVkY4F68SI8zffkF34kOcaP+wJQ9Sxjz2FvS3MHyQeNs1t0Mg53AQd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:2163:b0:3d0:2331:f809 with SMTP id
+ e9e14a558f8ab-3d13dcde9e4mr133262545ab.2.1739235602489; Mon, 10 Feb 2025
+ 17:00:02 -0800 (PST)
+Date: Mon, 10 Feb 2025 17:00:02 -0800
+In-Reply-To: <67a841a5.050a0220.110943.0017.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67aaa112.050a0220.3d72c.0058.GAE@google.com>
+Subject: Re: [syzbot] 
+From: syzbot <syzbot+812641c6c3d7586a1613@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 15 Jan 2025 14:47:57 +0900, Akihiko Odaki wrote:
-> elf.h had a comment saying:
-> > Notes used in ET_CORE. Architectures export some of the arch register
-> > sets using the corresponding note types via the PTRACE_GETREGSET and
-> > PTRACE_SETREGSET requests.
-> > The note name for these types is "LINUX", except NT_PRFPREG that is
-> > named "CORE".
-> 
-> [...]
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-I rebased this for changes introduced by commit
-680e029fd62f ("proc/kcore: don't walk list on every read")
+***
 
-Applied to for-next/execve, thanks!
+Subject: 
+Author: qasdev00@gmail.com
 
-[1/6] elf: Define note name macros
-      https://git.kernel.org/kees/c/7da8e4ad4df0
-[2/6] binfmt_elf: Use note name macros
-      https://git.kernel.org/kees/c/2fc4947bbd91
-[3/6] powerpc: Use note name macros
-      https://git.kernel.org/kees/c/609c8b309156
-[4/6] crash: Use note name macros
-      https://git.kernel.org/kees/c/0de47f28ec84
-[5/6] s390/crash: Use note name macros
-      https://git.kernel.org/kees/c/d4a760fb77fd
-[6/6] crash: Remove KEXEC_CORE_NOTE_NAME
-      https://git.kernel.org/kees/c/7e620b56d958
-
-Take care,
-
--- 
-Kees Cook
-
+#syz test
