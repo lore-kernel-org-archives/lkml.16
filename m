@@ -1,131 +1,102 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FBC26BD94
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F78326BDA3;
+	Tue, 11 Feb 2025 02:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739241053; cv=none; b=oPMtchk7dsZcTtBSlN4KntcMFwcH/cJxGhmykEO0DIkxgJRFlgjppb0vL47R35InrwaiK9TZtwRqZQ3szVmcLio7vHZSNsAH3OpGSNUk5blrfgiLrTi/cf3ZRDPvSu17q2WPubqyLRNCl/10oz0NtziKtWBV0zQJz2B+VaRUYWs=
+	t=1739241206; cv=none; b=Bl2HIkih86lX43rwcoktlcj42JV53P1lKpVi4gLdX9B99rlXQCfrLCBKkZDo45tbjJrW6i5XD51iI0HAd+4otWJAocXNuclhNabGboni6RE6CF+79WsRboCPWYbA/Iy5YMQsRSP6Hgd8XTz0wD4SiO49qUSkD9BInWv8iva4Q10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739241053; c=relaxed/simple;
-	bh=z44Spgm3p/sgfcKiRbp7z2cHfhP9cHb4EAoXc8i5nNM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Z4ZHtzsX8co3N4ongh+HCSCBKjTI7yzNN22mBe2ZZp/bQbsUkMjkHwf6Lvo/BLPkLTpno9twGXzR/DBuk2dILbl4njpL2bdeanjd9SeLtyPoIgGwvq1hWeudUifCNK3GuFTA1/azih2/T15hEso7p02N4NK3ZHpFua4NOLh+v9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=FNLzOXu0; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1739241206; c=relaxed/simple;
+	bh=e47iR8fyburMallAFhuLe1RTPvkqX9NNf1uJok+lahI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=EJfIawbbtnVIsQIjPkpYT8Xc44GOubii3Uk4eVGnRRo5uIh83HrGx5v8tYlltxkCnB1DZHSDdBiJtthhmyP//yhsdnyiyq7HjkZRxes+csoXjFyg2v326dj7qJPSuhQBAhSmxjrqgTPd99DXIrls/GDi2ELtM/EES4c8F0pDqAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wmg53bT3; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FNLzOXu0"
-X-UUID: 3365825ee82011efb8f9918b5fc74e19-20250211
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Osz1/jocrFEzgFhLEIhFRrb4kDNRJq8rHtYsDHvteoI=;
-	b=FNLzOXu0WbQTQjobIbyftOeYx/uzzERhGi1LNLmDYnZqEx0eeDKTsxmkeFe0nWljHrREa9x27uup4RBJUQemwTO33cuG/63webiu6PQIF7sNY1IxmMgutdeenTUG9DKcHxACiWsUsmLjiqhdi7ZCIKx/d3QXHC0mDXWf2tNsoF8=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:fbd155f0-d9af-4c80-b6fb-b0472d8d8942,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:60aa074,CLOUDID:ef786b92-d651-4ec6-81e1-a3deb10c9ff8,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,
-	LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 3365825ee82011efb8f9918b5fc74e19-20250211
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw01.mediatek.com
-	(envelope-from <bo.ye@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1040286511; Tue, 11 Feb 2025 10:30:47 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 11 Feb 2025 10:30:45 +0800
-Received: from mcddlt001.gcn.mediatek.inc (10.19.240.15) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Tue, 11 Feb 2025 10:30:45 +0800
-From: Bo Ye <bo.ye@mediatek.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: <dicken.ding@mediatek.com>, <hanks.chen@mediatek.com>,
-	<xiujuan.tan@mediatek.co>, Bosser Ye <bo.ye@mediatek.com>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>
-Subject: [PATCH] genirq: clear IRQS_PENDING in irq descriptor
-Date: Tue, 11 Feb 2025 10:30:39 +0800
-Message-ID: <20250211023040.180330-1-bo.ye@mediatek.com>
-X-Mailer: git-send-email 2.17.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wmg53bT3"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5de47cf93dfso5585139a12.2;
+        Mon, 10 Feb 2025 18:33:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739241203; x=1739846003; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6UL9cMSXRLrKUmcSWZ6ehr9HZGcrPjrQbiwbSxeTuc0=;
+        b=Wmg53bT3wWKJ9V2RHyGk7AQJty8bNnJ9UWf9pZv/lPdW0BAxcKhlzwhrezz5t/nMBN
+         kO26SGQJwgR+zEmE0B5QIZZM3lxLnGxOTSWr3ezrMzYxISmXZnnEiBn83aTP0OT/VsBR
+         5gOQGjlhFoEC0wJqiQiZbx5mvQYWQXHHxK20yPujAVqJK+ueh0pW3DUAPAiY8QOyOWEc
+         70cUBSeRnpmpP9GgWK3f91NxuZsxNOXqFolmtAyekmuIi0LnXZIYBn6R/b/t0O6WwEij
+         MVtaKFpfYfWXMgd3FxRK654n24fka/VqPMtxe9amyq617PmFVuqCksKk5bFwBZQT8XNx
+         ESCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739241203; x=1739846003;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6UL9cMSXRLrKUmcSWZ6ehr9HZGcrPjrQbiwbSxeTuc0=;
+        b=HpC4wIKAagGI0yIG506Usse6Qr1lKvxfK1SzKLyX4YzV0HI0Azxu+LzKHWPt/lPGg2
+         YKy+JNfacqp2JeaIwGwrYnMZW/izdv2eOnIxpJew2Jdpl+OdJmndTNBKXIPLQv0M5tHJ
+         QmuCWZqzMTgYL1bhESEI+kBqAuiGH7rKyCA0CBbn4LHeTJoNrH8/NpSnA15Ex+rC3QNU
+         tpDQZyQUM21AWLFvpHKGgU1vznDPwP+kUdypXlR62FUn41GWF2WEBYnFQCl5xsZDDnMK
+         w/Dq/GTMwEnj50haUNYQFxLzLdwVS7VNdj/BcvEXThynhzd6+MC7YW1FFD26OQKrUkIk
+         qxNw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/pHnBdK/6sT6N57y7CGWMNA69KjOpYAZlTBdFTOayJyXs4uU1KUhvzoxae/IauTD1/Fb9nbM55gmTb5dxaBlf@vger.kernel.org, AJvYcCWGkaQXl/62esB9nIF5pXkFYTlt2NEcItpTxlGsxPrAcgPVFDpmVhuf97QUtpkER3hSWF6V/JaW1jHJGn8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtYDbusOxK7vEGPX31NW6jWZOXhMxoI/ARi0qj4ipbDqKucl5W
+	aRff6AixU63nkStUjAq10gOnr89OJ/MlEbKDRwZRntAPrCvkZChU
+X-Gm-Gg: ASbGnctkYb+zcfxuyf/Imuuz5q0i2Hqur/vv2CZQiNMnPr0xG5bNJlEo4Yzxh3KL6ts
+	aNz0YFp5+zZaTq1o90+2hAdnLXKMGZGWex1m/37SNln/w7pP9g5lSpfuN31WgPvjfxQT69DF5iN
+	aks+RbWS1Bj0hvnXK1+rGQ2/irywzd8kW+fZyKWGDR3rR959jO0tY61KgcTECjSna8otyYLUlYv
+	qEzVABSn1fpAg304iTiIunbYluXNHLEK6gOhBroXndakFpCHc3w3QZe9Xfs751sPewRAiJ8Llva
+	QnRCJ92o
+X-Google-Smtp-Source: AGHT+IEbtRQwXdRYjzvNt6JtIsUfluvawcKWNETu3bpc+hBbK+x35bbkv3TuH0v8kzBmn1BIPqCpWQ==
+X-Received: by 2002:a05:6402:5290:b0:5dc:ea7e:8c56 with SMTP id 4fb4d7f45d1cf-5de45070792mr39401428a12.22.1739241202764;
+        Mon, 10 Feb 2025 18:33:22 -0800 (PST)
+Received: from localhost ([45.141.215.21])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ab7b9bfd2c4sm381243166b.43.2025.02.10.18.33.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 18:33:21 -0800 (PST)
+Date: Tue, 11 Feb 2025 04:33:13 +0200
+From: Ahmed Salem <x0rw3ll@gmail.com>
+To: peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, shuah@kernel.org, 
+	skhan@linuxfoundation.org
+Cc: linux-integrity@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+Subject: [PATCH v2 RESEND] selftests: tpm2: test_smoke: use POSIX-conformant
+ expression operator
+Message-ID: <ucnzy5kvkseivbofbushyeukzslvberjb7osjlqttzs7pycnsx@evww4qqqgiuh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Bosser Ye <bo.ye@mediatek.com>
+Use POSIX-conformant operator symbol '=='.
 
-In the kernel-6.6 IRQ subsystem, there is a case of IRQ retrigger:
-Due to the possibility of electrical signal glitches causing false interrupts for edge-triggered type IRQs,
-it is necessary to clear any potential false interrupts or re-triggered interrupt signals from the interrupt
-source between disabling and enabling the edge-triggered IRQ.
-
-When the module using this IRQ may disable the IRQ as needed and then If the disabled IRQ is triggered, the IRQ
-subsystem will set the istate of the corresponding IRQ descriptor to pending. After the module using this
-IRQ completes other tasks, it clears the pending state on the GIC using irq_set_irqchip_state(). However,
-the pending state in the IRQ descriptor's istate is not cleared, which leads to the module receiving the IRQ
-again after enabling it, even though the interrupt source has not triggered, because the IRQ subsystem
-retriggers the interrupt based on the pending state in the IRQ descriptor.
-
-[ 1015.093550] [T300432] ccci_fsm: CPU: 3 PID: 432 Comm: ccci_fsm Tainted: P        W  OE      6.6.30-android15-8-o-g3d1adaff8937-4k #1 4e6ae6c76d81ac612e982b5e84c39c55b332fb77
-...
-[ 1015.093609] [T300432] ccci_fsm: Call trace:
-[ 1015.093628] [T300432] ccci_fsm:  dump_backtrace+0xec/0x138
-[ 1015.093668] [T300432] ccci_fsm:  show_stack+0x18/0x28
-[ 1015.093697] [T300432] ccci_fsm:  dump_stack_lvl+0x50/0x6c
-[ 1015.093728] [T300432] ccci_fsm:  dump_stack+0x18/0x24
-[ 1015.093747] [T300432] ccci_fsm:  gic_retrigger+0x74/0x7c
-[ 1015.093764] [T300432] ccci_fsm:  check_irq_resend+0x8c/0x16c
-[ 1015.093777] [T300432] ccci_fsm:  irq_startup+0x2ec/0x360
-[ 1015.093788] [T300432] ccci_fsm:  enable_irq+0x84/0xf4
-[ 1015.093798] [T300432] ccci_fsm:  wdt_enable_irq+0x2c/0xec [ccci_md_all 029335d5c64293385f41211c1eb232e631274782]
-[ 1015.094263] [T300432] ccci_fsm:  md_cd_start+0x34c/0x510 [ccci_md_all 029335d5c64293385f41211c1eb232e631274782]
-[ 1015.094707] [T300432] ccci_fsm:  ccci_md_start+0x38/0x48 [ccci_md_all 029335d5c64293385f41211c1eb232e631274782]
-[ 1015.095150] [T300432] ccci_fsm:  fsm_routine_start+0x448/0x1ed8 [ccci_md_all 029335d5c64293385f41211c1eb232e631274782]
-[ 1015.095593] [T300432] ccci_fsm:  fsm_main_thread+0x20c/0xa78 [ccci_md_all 029335d5c64293385f41211c1eb232e631274782]
-[ 1015.096035] [T300432] ccci_fsm:  kthread+0x110/0x1b8
-[ 1015.096049] [T300432] ccci_fsm:  ret_from_fork+0x10/0x20
-...
-[ 1015.096067] [    C0] swapper/0: HWIRQ 107 handle_fasteoi_irq[714] set desc->istates to IRQS_PENDING // CPU execute IRQ's ISR
-
-Solution: the corresponding upstream patch modifies the irq_set_irqchip_state(...) in the IRQ subsystem.
-The purpose is to clear the pending state in the IRQ descriptor's istate when successfully clearing the
-corresponding IRQ on the GIC.
-
-Test: Stress tests have verified that the patch is effective and does not cause any side effects.
-
-Signed-off-by: Bosser Ye <bo.ye@mediatek.com>
+Signed-off-by: Ahmed Salem <x0rw3ll@gmail.com>
 ---
- kernel/irq/manage.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 8a936c1ffad3..ad1cefb2e5aa 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -2893,8 +2893,11 @@ int irq_set_irqchip_state(unsigned int irq, enum irqchip_irq_state which,
- #endif
- 	} while (data);
+Changes in v2:
+ - Remove snippets pinpointing the issue 
+   from commit message
+
+ tools/testing/selftests/tpm2/test_smoke.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index 168f4b166234..3a60e6c6f5c9 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -6,6 +6,6 @@ ksft_skip=4
  
--	if (data)
-+	if (data) {
- 		err = chip->irq_set_irqchip_state(data, which, val);
-+		if (!err && which == IRQCHIP_STATE_PENDING && !val)
-+			desc->istate &= ~IRQS_PENDING;
-+	}
+ [ -e /dev/tpm0 ] || exit $ksft_skip
+ read tpm_version < /sys/class/tpm/tpm0/tpm_version_major
+-[ "$tpm_version" == 2 ] || exit $ksft_skip
++[ "$tpm_version" = 2 ] || exit $ksft_skip
  
- out_unlock:
- 	irq_put_desc_busunlock(desc, flags);
+ python3 -m unittest -v tpm2_tests.SmokeTest 2>&1
 -- 
-2.17.0
+2.47.2
 
