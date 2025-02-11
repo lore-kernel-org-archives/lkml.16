@@ -1,113 +1,119 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3AF26BD95;
-	Tue, 11 Feb 2025 02:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CC3194141;
+	Tue, 11 Feb 2025 02:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739242084; cv=none; b=CbdBa8fLYStPP6cd6Yo0BfKUCfXbgNBkgkoCtjSAaxntzhRwldKNpLqyjHxYcEcArUaX6YPjKRhmiiDHgcUzJ2+Qz03Qqk+EF/SejyYLNFIvy/Xg7PNKe64o1NENCYtyz/2LYzuluUtgDdj2yZfiIGE+IkGtJUtMfG4fzUUcXVc=
+	t=1739242193; cv=none; b=ujPPw5Zhb/igIzH/mM5IQ7Uaau18JaMZ6IR0wP/G20A+kAvASLPB1iqPmriog9gPh+trTaqz/A+kDdJc5MlF2+DmKE6M/goDaihiXthts2bL7Y/iO5USati1FTiayZhUpT9vyog4RMm7J6Yn0UJxnEqVf3nTTMZzBSHgyX4ngbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739242084; c=relaxed/simple;
-	bh=5OOL+q7crj6C+Y5aqDrG5n7Z52CJTo/s0a5E+RhLox8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IIBUeNqBNtBKAieHT4kmpe8b9sW+w7Vmr067Ql2DdaUBAIhhzMVZtiNJjZTtNgbXuPupxk9zO9iJx8qq9bbT7b2Ds6wcK5+c4kya5wSCrjrE6iZ3xVXOy9/vTV1kkzZtIatmllbl/q0d+CIsalnn00NDfprd8Lu7axOov5k4eoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E5ohvPSt; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739242193; c=relaxed/simple;
+	bh=Rgy25EVL0wRf2teD4M9Ky3kJgd9pojM13fv9uCJKvCY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=q7xpDVh7Gm4nzvARE8CU/A3ddwAgHpIBKIVPxgIiquaPY6bsKk0aOiZAEC1CD/xL4kYUdyoespuJyoviEEKc3r2gD1mOpuurC+jU2mEGjx2xgIZi3iyWpdk7GwVc4NtkXs53YIE7ll06CHgmVGh/xm9ESNOfeQloD0DFqFc4mZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=b/CNz26p; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5ohvPSt"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-308f71d5efcso9296031fa.3;
-        Mon, 10 Feb 2025 18:48:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739242080; x=1739846880; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zn3t1X0OMk9xhbwKXgSgdmPnjMJbdOEb2KTYQMy3qXc=;
-        b=E5ohvPSt7qrhkNJQ2dZRI1piOllhxqjcwXZy/8pJ5PvkKeOK0BgPetja98eUkgGW9w
-         gbESV+IHFbUO3y0B5fb5xoqzqSt2QnQKTISYmQ22552SvYu22/yfV4qApfBIS5NC5xv+
-         7Xe2esmQFrjMRyElaF1ojsT7h/el+LgZHr0CG5l1Gh9orQ01YFk7kNIDacIInVEwwFCB
-         G+y7EJwLR19upiEE6GKrTO20iTW8bfL+qkygrUASXid8B/g0AANPaE2IsvqL65lqpF6q
-         VJXaok5+pIQKHU87AE0VRCGaetabf37sslw8WYwgZZLoK7cxGzUIGu3bRy8a10Jm8Cny
-         S5NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739242080; x=1739846880;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zn3t1X0OMk9xhbwKXgSgdmPnjMJbdOEb2KTYQMy3qXc=;
-        b=ZNTiQ+TWAbBdej3V/NzOiPTz4eTmGcels8ysj2sBPAPG3FBX0Ctj9/5bHfy+z4e6D9
-         GDbrnt2TOirz2VfwwlL9/YUCPlc9Okchjvhz/XpN3TP2H7/kcS2ZdTPOmdGTT32QEdc+
-         mCXjDEvysV5441uMg830freIEWYSlHKcafs1PpNh/RhGShd/8KHYTflqyfO+hNhtbz2g
-         aB3j8pN2SfWAlAMcOS82rgmssDEZWyz66zAgtDtNjxV8SI/y3eZBbf/LYmD3Ulruupy6
-         1kocvSG+xgxtwkxtkBL/+j7pej1SWl7S+b7nvuA2pQwW5I2Nru88Zkklj8e9nnmzeX0T
-         0bmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVoHGNEQIPYSBLNuUmWjTgHQ7y3chYOYbWW/OpKxP8anWc8tbIfAJ11NPDfFQz9rOzdpwoNZfjgOzLicMk=@vger.kernel.org, AJvYcCVzKAAGr8nPNQ+RTntsiS4VGcDd1Mtv+xtid/WrdIV0gaI5AZa+DC8U/gTfzVHn2wSosDKku8RhRgljh5lwRwD5@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJyO50UEI9u/e4wL7AT5fbPQRYPfXUOOUb2Wh6VGpZzu9m9aG/
-	uzs8B3XEJBX2MphBYl2rNMFZFfytl6dvTiUkO8tSecmNEMcmY8lo7YX+q/vuFrnLa8uXSE9yVqB
-	xFGfq1qR8pGxyNOq1fJUyBsNXUck=
-X-Gm-Gg: ASbGncsHOllvNrx7/RLf2LcvhJw8CFXUwHCOuG+V/hGBfy4x5Z6hIEOEUtiQEoxP4Fm
-	gt9hdPa+AdzVfyZjHlN4liA0Y6WR4hPzcadb4wrMlCRCPQWD+yA+xp5HxnwSkphBjXkJcBz0Zvl
-	YXOaiCjtFzzvkLbWlSYeW+B1ppGCh3
-X-Google-Smtp-Source: AGHT+IFZIkGWLA2ZKDKUhI5865q128jmDXUjWOI34Qtb9k+aP8l3IrsXJBCyVRjwY34me4r64bJw1Q9gAQHDEga7bm4=
-X-Received: by 2002:a05:651c:1994:b0:308:f75f:446 with SMTP id
- 38308e7fff4ca-308f75f07a4mr11013791fa.31.1739242079858; Mon, 10 Feb 2025
- 18:47:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="b/CNz26p"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4YsQs61655z9swL;
+	Tue, 11 Feb 2025 03:49:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1739242186;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Oa3Pz0t//cYNB/fGGI06gp+EWCDBZUXPJXgdkIf+Tpw=;
+	b=b/CNz26pl/GmePFdgwcj+YTYk24EYTSjuR3dXDElCbweQaHZ3xSZSy2JcTx+Xubs3obY3K
+	DziZutfThgZGF8vmLbnblorGubqAdQh+N+NEJGxLGRhofPhlc0h2657YGxxsUhZEdGTaXe
+	aPhrCBmQ4/l8xE4GokM4Dl8E0zY9ZoLE6A8UamCQ/dE6VC9JZj28LTZlMiEyYCQUx9loPE
+	94LLrVGDTbJbshPKba4eDPMTxhVKzTDY94l42ouT1cIbsc0iITHyEm1iPVGbePZ0FPrfw7
+	XtDrKCDnlZvisMjVTWsTF7N06fYxM6AUBpNCz7Clk3Ho+81rchvRpajRmbv0wQ==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Mon, 10 Feb 2025 21:49:41 -0500
+Subject: [PATCH v2] wifi: ath12k: cleanup ath12k_mac_mlo_ready()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208-prime_numbers-kunit-convert-v5-0-b0cb82ae7c7d@gmail.com>
- <20250208-prime_numbers-kunit-convert-v5-2-b0cb82ae7c7d@gmail.com> <202502101836.2B3E7BC4@keescook>
-In-Reply-To: <202502101836.2B3E7BC4@keescook>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 10 Feb 2025 21:47:23 -0500
-X-Gm-Features: AWEUYZmiPJFFPicq2ZL6yV-FXokW2c26z9jhFLITBm6JYY_fKXQ2--JRmflbSOA
-Message-ID: <CAJ-ks9=pU6FsOfMk+fSwG2oLG95L2C-jwBDNad1FTGzQ5seiuw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] lib/prime_numbers: convert self-test to KUnit
-To: Kees Cook <kees@kernel.org>
-Cc: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Luis Felipe Hernandez <luis.hernandez093@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250210-ath12k-uninit-v2-1-3596f28dd380@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIAMS6qmcC/3WOQQ7CIBBFr9LMWsxArG1deQ/TBcIgEyNtAFHT9
+ O5i9y7fS/7LXyBRZEpwahaIVDjxFCqoXQPG63AjwbYyKFQtKhyEzl6qu3gGDpyF7NsjOjtIgx3
+ UzRzJ8XvrXcbKnlOe4mfLF/mz/0pFCim0Mz1i2x+6K50p1wOG7EtHm/ZmesC4rusXVHLVLbIAA
+ AA=
+X-Change-ID: 20250209-ath12k-uninit-18560fd91c07
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
+ Karthikeyan Periyasamy <quic_periyasa@quicinc.com>
+Cc: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
+ Harshitha Prem <quic_hprem@quicinc.com>, 
+ Kalle Valo <quic_kvalo@quicinc.com>, linux-wireless@vger.kernel.org, 
+ ath12k@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1575;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=Rgy25EVL0wRf2teD4M9Ky3kJgd9pojM13fv9uCJKvCY=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeHBLL2FkZlJmM3JKdHF6MTNMMXltdGJHODFNZEZiTnVxCjNPeGJseWFZQ0V6U1hNZjdv
+ Zmw1UnlrTGd4Z1hnNnlZSXN2L0hPVzBoNW96RkhiK2RXbUNtY1BLQkRLRWdZdFQKQUNiQ0xzSHc
+ zOUZ6cjZqT0pvR0dJTjV0WHhnYU90NHNFbTJVSzU5K1IzRkdndjZCQTNtcDVvd00wLy9kOXpsNw
+ pNYmx6NnUvbTNJa09rZHFuN0pkdFc1ZlZjR1AzMWdNYlphUzltUUVwQ1U1Ygo9MjZRMQotLS0tL
+ UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
+X-Rspamd-Queue-Id: 4YsQs61655z9swL
 
-On Mon, Feb 10, 2025 at 9:37=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
-> On Sat, Feb 08, 2025 at 09:44:39PM -0500, Tamir Duberstein wrote:
-> > Extract a private header and convert the prime_numbers self-test to a
-> > KUnit test. I considered parameterizing the test using
-> > `KUNIT_CASE_PARAM` but didn't see how it was possible since the test
-> > logic is entangled with the test parameter generation logic.
-> >
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > ---
-> >  lib/Kconfig.debug                            | 14 +++++
-> >  lib/math/prime_numbers.c                     | 87 +++++---------------=
---------
-> >  lib/math/prime_numbers_private.h             | 17 ++++++
-> >  lib/math/tests/Makefile                      |  1 +
-> >  lib/math/tests/prime_numbers_kunit.c         | 59 +++++++++++++++++++
-> >  tools/testing/selftests/lib/config           |  1 -
-> >  tools/testing/selftests/lib/prime_numbers.sh |  4 --
-> >  7 files changed, 106 insertions(+), 77 deletions(-)
->
-> Thanks! I've applied this and rebased it onto:
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=3Df=
-or-next/move-kunit-tests
->
-> --
-> Kees Cook
+There is a possibility for an uninitialized *ret* variable to be
+returned in some code paths.
 
-Thanks! Could you also take the first patch in the series[0]? The new
-test won't build without it because lib/math/tests/Makefile is dead
-code.
+This explicitly returns 0 without an error. Also removes goto that
+returned *ret* and simply returns in place.
 
-[0] https://lore.kernel.org/all/20250208-prime_numbers-kunit-convert-v5-1-b=
-0cb82ae7c7d@gmail.com/
+Closes: https://scan5.scan.coverity.com/#/project-view/63541/10063?selectedIssue=1642337
+Fixes: b716a10d99a28 ("wifi: ath12k: enable MLO setup and teardown from core")
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+Changes in v2:
+- Rewrite commit subject to include function
+- put int ret; back at top of function declaration
+- minor changes to description
+- Link to v1: https://lore.kernel.org/r/20250209-ath12k-uninit-v1-1-afc8005847be@ethancedwards.com
+---
+ drivers/net/wireless/ath/ath12k/core.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Cheers.
-Tamir
+diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireless/ath/ath12k/core.c
+index 0606116d6b9c491b6ede401b2e1aedfb619339a8..276f2ee553f4e3529abff14f2b9238ee0a78f45e 100644
+--- a/drivers/net/wireless/ath/ath12k/core.c
++++ b/drivers/net/wireless/ath/ath12k/core.c
+@@ -920,12 +920,11 @@ int ath12k_mac_mlo_ready(struct ath12k_hw_group *ag)
+ 			ar = &ah->radio[j];
+ 			ret = __ath12k_mac_mlo_ready(ar);
+ 			if (ret)
+-				goto out;
++				return ret;
+ 		}
+ 	}
+ 
+-out:
+-	return ret;
++	return 0;
+ }
+ 
+ static int ath12k_core_mlo_setup(struct ath12k_hw_group *ag)
+
+---
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+change-id: 20250209-ath12k-uninit-18560fd91c07
+
+Best regards,
+-- 
+Ethan Carter Edwards <ethan@ethancedwards.com>
+
