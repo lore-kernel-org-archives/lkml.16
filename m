@@ -1,132 +1,274 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA5B28F5
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCC229A0
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233646; cv=none; b=IpillZe6E/Xs1w//wlzhej+4Pd4W9d089J+4ZcVgccEcbRScvo0VtQUoZOkygfRFC+62PJJInD5oEPmHsXP7HWRXQD85lnm6n9YoRKMMsjcluq4Wv99tDk/+2UDn+TlPKSNstVEf/WDg0U7nLxuHqv4zbsg6cGaSFQ6HMlvccWs=
+	t=1739233737; cv=none; b=WNGOBLoU/UYznruNZXWoB0lAtoUYCtqe7FdVnSFgwF7MOV9BS9Rf24FHw11iPN7WSpb5NqthIKGJsNSKlIUvQa5oG9bnvMC8aCwMXcq2Q5vjWccUYA51Rm0o5GO3gLBeQRBoTa2c4AW7En/I0dEif686avdJBE8/xqay+pZSNpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739233646; c=relaxed/simple;
-	bh=/YeEb0tef1pagaycgJWtt7V7ZFXRS2ZvTb2YLOs0fP4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lQ/ah0AMWmHnYDuA2QMJ7f5SKhkaRSwWJugCTUdiQL0X2FBVqkFzJFKm275E3M6Pj/QOyWvSs2OMyVLvnNuxMApqKV3FOrRSK/yW33i4D3w2+iJ+LWZZOcOAS4j/QejVsTrvRmqEshAzYy3ngnqJUp9wb5E9sdXq7u7wMC+bW2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d1466cbaddso24858285ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:27:24 -0800 (PST)
+	s=arc-20240116; t=1739233737; c=relaxed/simple;
+	bh=dFb38PYMyv+UEenKSim3jv0rojeAKfCqlzpED01XGoE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f5YGEA0P6261DiqY8WSN9Bbsc9Br+9bYTONzBx/mWmVgkacnaNqLZgYcer6D/WDK5WOLc0Cx1vvZLUSCiuBQp30x0vF9Xf5YzN9pAQ69zOtZpjFlUB9Z3djGF3cAroCp5jgbYiLLAAHa+8FuuZWH9vagSaVU4pxXMilV/CVut90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=pdNd1/oR; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="pdNd1/oR"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38dd011ff8bso2755333f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:28:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1739233732; x=1739838532; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aJHvmkoJ4NZzrDtHkxvQtMlMZmaGhaWLkXX3ZNLF8DM=;
+        b=pdNd1/oRor/cQSC0YWK6l/fANpqq9i8UUHQMymJlHxO2DOuj63lXWMzBGwRWUtHSmP
+         N1ZEePqvg7evLhpZ+QMvX8ilKiGGyr6Ae5XBiSDeC1ZFPvDpCL0sgMNMgrro9V7vwlBG
+         OEvjCIDiy/3W38964a71x6lvUBaiaLcnZcwc4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739233643; x=1739838443;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QwdoP5xDKeiD3xhc6dIZ6hGByqbJddUcA5ugMI1BuaI=;
-        b=EDerHhOUctbUTrqCYHu7LGkFs4jVtog+wzrYT2HTY7TdgQb9xClf7424R4AxsTbDlJ
-         zxZrIVM9dmtDyTGzKayub/eLJNn4FFnaIFaDq6RgOYoS3ByWVFxssnDTJoIsuBLjVbAe
-         SuNU8rwMZhn1miDVYNBm8cv8/TOcQQ+QecKKxOvkygjoJMzxVJQd14EO2QbPfNVgd5tu
-         9dUwE/9QLkt33JP8UuNyTiQJkzADCyTijch3LeGYn98gwEqWay241Cdop2obU+4ELQ8+
-         5sScSXTyrXSqzm6BB6/YVVI4C/ZYHvXi7qYvlrEX0tzC9UPR/domUMEAcOMCeZ+8c02C
-         X5OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXIavO5aYumNyj5OM7LK6uC2MqooZdf3A7Qa9S/eUb+MQHKdpTiC6T0CeO+sxLo3vUynpronutKoTdAeeY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUNdorsJ2mLBc/3ekxSl21iLFLSw2XHkl4LtFKDDcOT4xr/eR/
-	xxtf6waoq61gR+PHcW2LEr6MEfYGoCawIyQ50rf/EdI4hBvevoV3KmqHWDiZm1TJAoVSYkRt+DV
-	5dhuwAlXc7VAHHaCRzu4UBZbGwsD6pi4D4u+SpYfCh6GKFBVW2VYB8Ic=
-X-Google-Smtp-Source: AGHT+IGTGS7ia3PYzneaQLW+nT8/+EH1b+SsvE35s5ycLUV2tAF3AHXI2UGn1JWiY2226OEcvXE+jX+tqsksT2LZKLbizKvxS5Vx
+        d=1e100.net; s=20230601; t=1739233732; x=1739838532;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aJHvmkoJ4NZzrDtHkxvQtMlMZmaGhaWLkXX3ZNLF8DM=;
+        b=JwCuS27LETBZWX64ajNi5mL/ojYqj79UjaOlRZQvDC1EGef3WsV6N7n6sTSUrsuzAi
+         Hh4FaQ4dw+C8SeCzS6hEoU4wAnbyQFQFLqqngfVcSGTDtBEqlPNl1faWnhF+zEx5yFrN
+         /GYh3ikUdogx/lPk7tMd4WPLyLujDmYt8ESgJIKdXZo4vPnCswaMpToyi6sJdI10Zpdk
+         WJs2Zb+6oqW0kZfDxvXGmHVVAUCV0QWb0QGvA/lkg35gsomapCBzg7hlUJfghVybrGrE
+         UG1wTDjl1X0ZIKttXcIGZmXNW6dt/MyC9gwNQBTRCASctVnc0CzwcHaoe6Fly82H1/WY
+         LpmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhfgFEl2XJVzVdoRIUzFlFfaG0s9TP0pp4XeFwGfG+3UjBTS6LnRo+SkL3+l1eHD/iSrrKPL7ICHXfUgA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTxZce3b1UqqvGOkMjCoVPF1suBNF568a07SMHumLL3nThgUD/
+	o6A5swGkxfJ33lTEOCqGnBegz6s8Jlm4poCLoVcIHgufJtiNLvtc//PM11WnW2v0KZ2j7sMhahw
+	sKDuEF2+aYNFYEsIygRya1Kqlz8SG9UZoPG+kUQ==
+X-Gm-Gg: ASbGncshSb2/e8New/yMrpNZHjGWChtAAqXt9/V5aEO1tOC7DIbii6NzvpwrXc7EBWf
+	v8pvjI/BR6WNb8AdD4K6MnRwUvzkjOtp7v6uDY2C1A07GSGB89Od2S4tTvgJloAv1b+lYvUo=
+X-Google-Smtp-Source: AGHT+IExfl+mPR5DWHGAjHDLHsIBCrX3fpi4pnophsPSrLb37A1vXmaO36a5G8lrOeU3g3f1M+wVwnw57XvehNxxaLs=
+X-Received: by 2002:a5d:64e2:0:b0:38d:d4d4:d381 with SMTP id
+ ffacd0b85a97d-38dd4d4d577mr8943689f8f.15.1739233732259; Mon, 10 Feb 2025
+ 16:28:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1282:b0:3d1:54ce:a8f9 with SMTP id
- e9e14a558f8ab-3d16f53eefamr11565025ab.10.1739233643578; Mon, 10 Feb 2025
- 16:27:23 -0800 (PST)
-Date: Mon, 10 Feb 2025 16:27:23 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67aa996b.050a0220.3d72c.0057.GAE@google.com>
-Subject: [syzbot] [jfs?] kernel BUG in lbmIODone (2)
-From: syzbot <syzbot+856d1897cd91a6a435c9@syzkaller.appspotmail.com>
-To: jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
+References: <da5065c4-79ba-431f-9d7e-1ca314394443@paulmck-laptop>
+ <Z5QcXoE0lrS6yIBt@pavilion.home> <d7bbe2cd-d889-40e9-8d46-fb8772fed6db@paulmck-laptop>
+ <Z5T7kF7LKIuk05FR@pavilion.home> <a18ec931-a7cb-408b-8707-f88068a13ba9@paulmck-laptop>
+ <CAEXW_YReLoj+fofM9=fT-G0rz-E0z7vcwg_ANrbfCrPOX99tYA@mail.gmail.com>
+ <CAEXW_YQaC+TYnXZca2MBcJQgf2EWD+pBp-Dih+b647RtpJ+LNQ@mail.gmail.com>
+ <83f5a3ff-8f89-4994-844f-b7eb9e80b16d@paulmck-laptop> <CAEXW_YTiX2taVbg3keCR4RuxSdfpVA0fVPpCcDWXjF7rH7Kkdw@mail.gmail.com>
+ <CAEXW_YTduDBJY2CbkStWc3-4MP06+bJVFmEbgvfayB6BQyyksw@mail.gmail.com>
+ <76ea9e49-c8d9-4ddf-8dd5-65ba4096e242@paulmck-laptop> <CAEXW_YSxGb3ph-bBiWsOJS-C2XvW9FUuwtoM1eFVxPomMKUd5A@mail.gmail.com>
+In-Reply-To: <CAEXW_YSxGb3ph-bBiWsOJS-C2XvW9FUuwtoM1eFVxPomMKUd5A@mail.gmail.com>
+From: Joel Fernandes <joel@joelfernandes.org>
+Date: Mon, 10 Feb 2025 19:28:37 -0500
+X-Gm-Features: AWEUYZmPmyksieWZ1pEBQBr2nyM2oMrHAAhAW1a8E8lPwWucfBGFvBzUIGIpA-8
+Message-ID: <CAEXW_YS4wD1WJm3fGukyf_rUTZoe9Rmbs2rphLntmo2NbYG--A@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 rcu] Fix get_state_synchronize_rcu_full() GP-start detection
+To: paulmck@kernel.org
+Cc: Frederic Weisbecker <frederic@kernel.org>, rcu@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com, rostedt@goodmis.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Mon, Jan 27, 2025 at 1:45=E2=80=AFPM Joel Fernandes <joel@joelfernandes.=
+org> wrote:
+>
+> On Mon, Jan 27, 2025 at 11:49=E2=80=AFAM Paul E. McKenney <paulmck@kernel=
+.org> wrote:
+> >
+> > On Sun, Jan 26, 2025 at 09:58:11PM -0500, Joel Fernandes wrote:
+> > > On Sun, Jan 26, 2025 at 9:55=E2=80=AFPM Joel Fernandes <joel@joelfern=
+andes.org> wrote:
+> > > >
+> > > > On Sun, Jan 26, 2025 at 9:03=E2=80=AFPM Paul E. McKenney <paulmck@k=
+ernel.org> wrote:
+> > > > >
+> > > > > On Sun, Jan 26, 2025 at 08:22:23PM -0500, Joel Fernandes wrote:
+> > > > > > On Sun, Jan 26, 2025 at 8:13=E2=80=AFPM Joel Fernandes <joel@jo=
+elfernandes.org> wrote:
+> > > > > > >
+> > > > > > > Hi, Paul and Frederic,
+> > > > > > >
+> > > > > > > [...]
+> > > > > > > > > > On Sat, Jan 25, 2025 at 12:03:58AM +0100, Frederic Weis=
+becker wrote:
+> > > > > > > > > > > Le Fri, Dec 13, 2024 at 11:49:49AM -0800, Paul E. McK=
+enney a =C3=A9crit :
+> > > > > > > > > > > > diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+> > > > > > > > > > > > index 2f9c9272cd486..d2a91f705a4ab 100644
+> > > > > > > > > > > > --- a/kernel/rcu/rcu.h
+> > > > > > > > > > > > +++ b/kernel/rcu/rcu.h
+> > > > > > > > > > > > @@ -162,7 +162,7 @@ static inline bool rcu_seq_done=
+_exact(unsigned long *sp, unsigned long s)
+> > > > > > > > > > > >  {
+> > > > > > > > > > > >         unsigned long cur_s =3D READ_ONCE(*sp);
+> > > > > > > > > > > >
+> > > > > > > > > > > > -       return ULONG_CMP_GE(cur_s, s) || ULONG_CMP_=
+LT(cur_s, s - (2 * RCU_SEQ_STATE_MASK + 1));
+> > > > > > > > > > > > +       return ULONG_CMP_GE(cur_s, s) || ULONG_CMP_=
+LT(cur_s, s - (3 * RCU_SEQ_STATE_MASK + 1));
+> > > > > > > > > > >
+> > > > > > > [...]
+> > > > > > > > > > > The way I understand it is that rcu_state.gp_seq migh=
+t be seen started while
+> > > > > > > > > > > root_rnp->gp_seq is not. So rcu_seq_snap() on the sta=
+rted rcu_state.gp_seq
+> > > > > > > > > > > may return maximum 2 full GPs ahead of root_rnp->gp_s=
+eq. And therefore it takes below
+> > > > > > > > > > > 2 GPs to safely deduce we wrapped around.
+> > > > > > > > > >
+> > > > > > > > > > Exactly!
+> > > > > > > > > >
+> > > > > > > > > > > Should it be ULONG_CMP_LT(cur_s, s - (2 * (RCU_SEQ_ST=
+ATE_MASK + 1))) ?
+> > > > > > > > > >
+> > > > > > > > > > Quite possibly.  I freely admit that I allowed a bit of=
+ slop because
+> > > > > > > > > > time was of the essence (holidays and all that) and als=
+o it does not
+> > > > > > > > > > hurt much to lose a couple of counts out of a 2^32 cycl=
+e, to say nothing
+> > > > > > > > > > of the common-case 2^64 cycle.  It would not hurt to be=
+ exact, but it
+> > > > > > > > > > would be necessary to convince ourselves that we were n=
+ot off by one in
+> > > > > > > > > > the wrong direction.
+> > > > > > > > > >
+> > > > > > > > > > I would be happy to see a patch, as long as it was suff=
+iciently
+> > > > > > > > > > convincing.
+> > > > > > > > >
+> > > > > > > > > I'm not so much concerned about being exact but rather ab=
+out making
+> > > > > > > > > sure we still understand what we did within one year. We =
+can leave one
+> > > > > > > > > more grace period than what we expect out of paranoia but=
+, the most
+> > > > > > > > > important is that we comment about what we expect and why=
+. Let me
+> > > > > > > > > prepare a patch for that.
+> > > > > > > >
+> > > > > > > > Even better!
+> > > > > > >
+> > > > > > > Do we really have users who could pass such a huge delta wrap=
+ped
+> > > > > > > around value to poll() i.e > ULONG_MAX/2 ?  For 32-bit, that =
+would be
+> > > > > > > 2 billion count since the get() (500 million GPs on 32-bit?).=
+ I am
+> > > > > > > curious if such a scenario should be a WARN() because also: I=
+f more
+> > > > > > > than ULONG_MAX/2 values are possible after get(), then a full=
+ or
+> > > > > > > multiple ULONG_MAX wraparound is also possible. This means th=
+en both
+> > > > > > > rcu_seq_done() and rcu_seq_done_exact() become unreliable any=
+way for
+> > > > > > > such stale get() values.
+> > > > > > >
+> > > > > > > I do agree with both your points on the side effect of the pa=
+tch to
+> > > > > > > rcu_seq_done_exact(), but I am not fully convinced myself abo=
+ut
+> > > > > > > utility of rcu_seq_done_exact() versus the rcu_seq_done() but=
+ I could
+> > > > > > > be missing something.
+> > > > > >
+> > > > > > I want to modify my comment on reliability. rcu_seq_done_exact(=
+) is
+> > > > > > certainly more "reliable" than rcu_seq_done() for wraparound de=
+lta  >
+> > > > > > ULONG_MAX/2. Still with such a huge wrap around it is not fail =
+proof
+> > > > > > if it lands within the "3 Grace period" window, so if it is not=
+ super
+> > > > > > reliable and if the user should not rely on it, then I wonder i=
+f it is
+> > > > > > better to not do it and instead warn the user they are playing =
+with
+> > > > > > fire. But a counter-argument might be, landing within the 3 GP =
+window
+> > > > > > is quite low probability...
+> > > > >
+> > > > > It is also a harmless false negative.  And another poll within a =
+few
+> > > > > hundred milliseconds will set things straight.  In contrast, if w=
+e
+> > > > > used rcu_seq_done(), it would be a good long time before we got o=
+ut of
+> > > > > false-negative territory.
+> > > >
+> > > > True!
+> > > >
+> > > > > On a 32-bit system, if there was an expedited grace period every =
+10
+> > > > > microseconds (just barely possible on small systems), then a 32-b=
+it
+> > > > > counter would wrap in about 12 hours.  So there would be a six-ho=
+ur
+> > > > > false-negative zone.
+> > > > >
+> > > > > So an expedited grace period every 10 microseconds combined with
+> > > > > a six-hour polling delay is unlikely, but not out of the realm of
+> > > > > possibility.
+> > > >
+> > > > Assuming that every 10 microsecond of the entire 6 hours is used fo=
+r
+> > > > an expedited GP, but I agree with your point.
+> > > >
+> > > > > Please feel free to nominate a comment.
+> > > >
+> > > > Ok thanks, I'll see what Frederic comes up with and can take it fro=
+m there.
+> > >
+> > > I forgot to ask is the reason for keeping rcu_seq_done_exact() to hav=
+e
+> > > more complexity only when needed, or does it make sense to rename
+> > > rcu_seq_done_exact() as rcu_seq_done_done() and get rid of the old
+> > > rcu_seq_done()?
+> >
+> > We might well be able to use the rcu_seq_done_exact() algorithm for
+> > all the uses, but that will require very careful review and testing.
+> > Please keep in mind that there are quite a few uses, that the benefit
+> > is small, and I was lazy.  ;-)
+> >
+> > The difference with the polling APIs is that a user might well
+> > legitimately hang onto a cookie for six hours, for example, by having
+> > used it to tag a data structure in a block cache or similar.
+>
+> Thanks for clarification. I will work on a patch along these lines and
+> see if it is worth doing.
 
-syzbot found the following issue on:
+Here I think there is a real issue:
 
-HEAD commit:    2014c95afece Linux 6.14-rc1
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=10e40b18580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b8a65ac161350c5e
-dashboard link: https://syzkaller.appspot.com/bug?extid=856d1897cd91a6a435c9
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
+poll_state_synchronize_srcu() uses rcu_seq_done()
 
-Unfortunately, I don't have any reproducer for this issue yet.
+    if (cookie !=3D SRCU_GET_STATE_COMPLETED &&
+        !rcu_seq_done(&ssp->srcu_sup->srcu_gp_seq, cookie))
+        return false;
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c767824b323f/disk-2014c95a.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/81289e194973/vmlinux-2014c95a.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4a33d49982f5/Image-2014c95a.gz.xz
+where as poll_state_synchronize_rcu() uses rcu_seq_done_exact()
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+856d1897cd91a6a435c9@syzkaller.appspotmail.com
+bool poll_state_synchronize_rcu(unsigned long oldstate)
+{
+    if (oldstate =3D=3D RCU_GET_STATE_COMPLETED ||
+        rcu_seq_done_exact(&rcu_state.gp_seq_polled, oldstate)) {
 
-BUG at fs/jfs/jfs_logmgr.c:2303 assert(bp->l_flag & lbmRELEASE)
-------------[ cut here ]------------
-kernel BUG at fs/jfs/jfs_logmgr.c:2303!
-Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 0 UID: 0 PID: 16 Comm: ksoftirqd/0 Not tainted 6.14.0-rc1-syzkaller-g2014c95afece #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : lbmIODone+0x12c4/0x1318 fs/jfs/jfs_logmgr.c:2303
-lr : lbmIODone+0x12c4/0x1318 fs/jfs/jfs_logmgr.c:2303
-sp : ffff800097d778f0
-x29: ffff800097d77980 x28: 1fffe0001b405141 x27: 1ffff00012037934
-x26: 1fffe0001e20724f x25: dfff800000000000 x24: 0000000000000000
-x23: ffff0000da028a08 x22: 0000000000000000 x21: 0000000000000000
-x20: 0000000000000020 x19: ffff0000da028a00 x18: 0000000000000008
-x17: 0000000000000000 x16: ffff8000832d977c x15: 0000000000000001
-x14: 1ffff00012faee78 x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000102 x10: 0000000000ff0100 x9 : ac6013805dc83c00
-x8 : ac6013805dc83c00 x7 : 0000000000000001 x6 : 0000000000000001
-x5 : ffff800097d770b8 x4 : ffff80008fcbefc0 x3 : ffff800083275f78
-x2 : 0000000000000001 x1 : 0000000100000101 x0 : 000000000000003f
-Call trace:
- lbmIODone+0x12c4/0x1318 fs/jfs/jfs_logmgr.c:2303 (P)
- bio_endio+0x840/0x87c block/bio.c:1548
- blk_update_request+0x4ac/0xda0 block/blk-mq.c:983
- blk_mq_end_request+0x54/0x88 block/blk-mq.c:1145
- lo_complete_rq+0x188/0x2f4 drivers/block/loop.c:395
- blk_complete_reqs block/blk-mq.c:1220 [inline]
- blk_done_softirq+0x11c/0x168 block/blk-mq.c:1225
- handle_softirqs+0x320/0xd34 kernel/softirq.c:561
- run_ksoftirqd+0x70/0xc0 kernel/softirq.c:950
- smpboot_thread_fn+0x4b0/0x90c kernel/smpboot.c:164
- kthread+0x65c/0x7b0 kernel/kthread.c:464
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:862
-Code: d004fd63 91188063 52811fe2 979153a6 (d4210000) 
----[ end trace 0000000000000000 ]---
+I believe rcu_seq_done_exact() makes more sense for polling API, as
+there is a higher chance that there is a significant delay between the
+get_state..() and poll_state..() calls.
 
+I think I am pretty convinced now looking at all the call sites that
+rcu_seq_done_exact() should be used everywhere. I am vetting more
+callsites, but that's what I'm leaning towards. I think
+rcu_seq_done_exact() makes the code more robust to false-negatives
+(duration during which a false-negative is in effect)...
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+thanks,
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+ - Joel
