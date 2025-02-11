@@ -1,206 +1,336 @@
-Received: from SEVP216CU002.outbound.protection.outlook.com (mail-koreacentralazon11022075.outbound.protection.outlook.com [40.107.43.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C66626BD92;
-	Tue, 11 Feb 2025 04:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.43.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739247824; cv=fail; b=DQUf7gS9DsnUxMGNzBuBTL1wbTVh3xmHm3aW7Lxc76Ef5u/h7krNzGWo4tlV1XBEFvGOwPetUtu9sDZDKdDfw5IyqDSP66uS7SQp8QFqxUR6ulJ5p7xLS8CaL1NelJsuiZQYC1w22MZQwIefzWQiU//pWoKmLkCWtcOssRF2Vj8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739247824; c=relaxed/simple;
-	bh=1TEwq4wCdW6dI9cRDspjitDPSigxuS4IW16WDXP+H6M=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GT+lU25DB7oem9QxW/pMT7+ge4QTEntyciM48b7X0nIzEkfutm7ZzmF1pAlqVmLNxdPmrZR2oQlYUsm1pOtUxSuibVqEnBbFKNPaIm7r7BJRs4ml+l7FWNv+19cCBcLZ7TkNEcDMSehknhg+VFaeJW4k+VWtaFEP+J8e3Y3YEkU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com; spf=fail smtp.mailfrom=chipsnmedia.com; dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b=QA9ECc57; arc=fail smtp.client-ip=40.107.43.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=chipsnmedia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF93426BD92
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739248009; cv=none; b=cl8nFmSrSXQVapQB0t4XcWleG6Rj8jfKU0eSRjYgv3v1oc4ISCXl/zvxtSHC5BfgI5Vq8GpYNUuqMGBTPhYL9V2P1nmHXPw0kdPfNAYnLlWqYArNQap4U1x1K3sgVllD0Xov/IXpDvy+PJFg2nnf3dyNiR+OvwsZfoQO/N4oR84=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739248009; c=relaxed/simple;
+	bh=i4cQp1EBbGfD7WP8R6H9end6ijtUk3UzCkgcHkCf364=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uburqga+N4ZIQfB5+WLPq8vbHMIayMxqzKvcO/6x6tYUUGBXRkPGSe3coFdhSiDUkOh7QQGH6PaaNG3xog9v1YrkWHaVArkud8rCt0h1fShEE9u6hEj0AE7b5b70Xs97wP4WodbPWR7IM8fzfYiEMeSsZQrT7XMIyWr4fG0e5uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=hXV4vnTl; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b="QA9ECc57"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uGZZH3zBjgZPT18+fdzVNN1d0tI/i/oeMjZcTuD3dTPQN7uaSJ2Mki4L3iUw1dv3gKcPmS6AOXvpgfk5owW5f0CVvK4T3q6H34VS6f/h0SpFLJjrzL/Dwt1QBLrvCavFLD/eJ5bRw340M72Gwk1jmMh0drT9Scysvtt0uEHSFS7H03tnHMZoUI6BBh9J5489P65JJj21eIbMrSAKsX8F01Ce8a9wEUhCiK89Wr9WuQteZpRsrQvIbh2QAtyJa/fxLCqpS+anx/vI4p77xuQp412Aqrz+lTkWYD0A7tJjVEBJsuZUNz8KQm979bhEgv2PGvdrpUYKxK/9+u6ZFD/XRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uCUvOFYoeytzNSgKr4hsZ2X6kU3OJr2x1nG8nOrrD7Q=;
- b=raFpXdcz9xt03sJ3xLWbw7Rfo7xS5rOvWoSIGHCxhs6ZnhKUu1DYU8w4UWauenH8gM3r0+7Ww/YzpCVVKnbBrB885cEsg9raJV7sbbneKGKG1TqpiR3Wy9a5m8GhDaOwdby/WxV4kwhJrCJ3hBClAZRmay5+MOQpysw6Zk+9xsvxlJdSvWVeLgUb7j0XonXkJ9OgYvi42zfIuP9qAiyv0F1Ur03g8FeyKIKX2DIDJPSntXLTHg4bznMmGWuCILZqyOHHnEqCNF4G2xuOv79mRl8SPIjNdzq+2xo3q4IQzP0CQvL2EWDznPK6TotuM7AeoRDCzbbQDxhvysW8jDKIbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=chipsnmedia.com; dmarc=pass action=none
- header.from=chipsnmedia.com; dkim=pass header.d=chipsnmedia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chipsnmedia.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uCUvOFYoeytzNSgKr4hsZ2X6kU3OJr2x1nG8nOrrD7Q=;
- b=QA9ECc57z1y2lCnJ3kcK9v/87gCYW2AjQrzYhbvGFrFsd81TensX5/HjLLokeKXYTKxAzR7rlTaBzLy1NNmKV1XyKftaLN69XiOncfUrPslOVq4swXp/dIgXYbJ+YOcEDP9q9pQ5TeTGuTYpULjbMZuL+ando0LCgjt80J1h9PM=
-Received: from SL2P216MB1246.KORP216.PROD.OUTLOOK.COM (2603:1096:101:a::9) by
- PUYP216MB3034.KORP216.PROD.OUTLOOK.COM (2603:1096:301:154::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8422.19; Tue, 11 Feb 2025 04:23:37 +0000
-Received: from SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
- ([fe80::9e3d:ee20:8cc7:3c07]) by SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
- ([fe80::9e3d:ee20:8cc7:3c07%4]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
- 04:23:37 +0000
-From: Nas Chung <nas.chung@chipsnmedia.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, "mchehab@kernel.org"
-	<mchehab@kernel.org>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>,
-	"sebastian.fricke@collabora.com" <sebastian.fricke@collabora.com>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>
-CC: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-imx@nxp.com" <linux-imx@nxp.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, jackson.lee
-	<jackson.lee@chipsnmedia.com>, lafley.kim <lafley.kim@chipsnmedia.com>
-Subject: RE: [PATCH 1/8] media: platform: chips-media: wave5: Rename Kconfig
- parameter
-Thread-Topic: [PATCH 1/8] media: platform: chips-media: wave5: Rename Kconfig
- parameter
-Thread-Index: AQHbe5s5mvUd+yJT1UyIraYl4c8mYrNAygCAgACP7XA=
-Date: Tue, 11 Feb 2025 04:23:37 +0000
-Message-ID:
- <SL2P216MB124669DDF06578F9FA509BD9FBFD2@SL2P216MB1246.KORP216.PROD.OUTLOOK.COM>
-References: <20250210090725.4580-1-nas.chung@chipsnmedia.com>
- <20250210090725.4580-2-nas.chung@chipsnmedia.com>
- <d657fa70-af35-415d-b0e7-3aaf2fd05276@kernel.org>
-In-Reply-To: <d657fa70-af35-415d-b0e7-3aaf2fd05276@kernel.org>
-Accept-Language: ko-KR, en-US
-Content-Language: ko-KR
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=chipsnmedia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SL2P216MB1246:EE_|PUYP216MB3034:EE_
-x-ms-office365-filtering-correlation-id: 16d7daa6-7880-4923-1aad-08dd4a53dafd
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?9GphgIPfFP1KT5yFw6z5RDzdRTJF54LFKGvu9P8fjNyAY5obxw4eIMjiIoo6?=
- =?us-ascii?Q?+ONZq6ZJ1+jduFeZhvAUbyeTSxkNBwiSCib2OmQXCRfjsCFBWyvpzOP5A5vK?=
- =?us-ascii?Q?1A7EE3yvhVop5Gpwa87EBONXJ07nqYKtMNW4tiER7oBr02swhJ19qKNumunw?=
- =?us-ascii?Q?3t7B5/bg3v7htPg5+0BKMt78Ky1XmioVN90MlYhHc23gKfV5GTuo3AxTArpF?=
- =?us-ascii?Q?feuMd9IZuvG8rUXmkHXHFdbQgiwayGbZu7YmFrvwtrDQUGTeA1HyRX8w8VzS?=
- =?us-ascii?Q?OGcX2hNidaU1wJj+sDWCk3LesmcitijBHUGUkWSJG5Xwrm01AuF7FTCbHlKb?=
- =?us-ascii?Q?QuzIVMLhfka/yNwkyPWoZLFlOJdwyGY6sHo5WMQ5SW1IfhHbzKWOFOoAKNOf?=
- =?us-ascii?Q?wRopXhfXfhu/H1gFgYbi2uhs0elMpAMphtY27aO9FfE2x+1s6eynYwmdgvrL?=
- =?us-ascii?Q?StXBrJWjZXNsIwNYSQ0tHz6rAfVcOof75uV01zg3SFehQKwEX4nfzqgiW0vg?=
- =?us-ascii?Q?cCKU1l/IxyXEr6sKX7bnPYUPMLpiZxtuNQnkCXqRZ1S7v7MkZnbTVi76Lnqn?=
- =?us-ascii?Q?IwQXJ5AEu91Kq+xmZ0AQQjwGyU8xtAfvZJiLQmMAvbmAGSt70zf0ihHeAcIy?=
- =?us-ascii?Q?O5bSkX8o3/bq6SJhTGgTQCIdOohOwgq1uzuANqMZBA3bvwNia8VGImUw9PKA?=
- =?us-ascii?Q?uyBpzXwKDI8QkID1Rvxh87EUnG6VEG4clsODOeyaoxq41VOxZLNu14xxqWaO?=
- =?us-ascii?Q?r9SDFoSYNoFDiOY8OT4vfBdFFXV7p6UxZirj4HnRAioQSpqNIWfCmg6vc4Ay?=
- =?us-ascii?Q?gyuAnsybtR2gAeBimxy3VWw6r1JNrTI64h3pDCrOAB+Se7K6VPrlwkj0u+6v?=
- =?us-ascii?Q?9M4tk4dTrwoRFIs58ewB39tX8AyEaCnSpeVf5j20ue5VL6+BrhV7JS4I0OFh?=
- =?us-ascii?Q?sTM10Up4+XhcKSAU63fBjfjM7hy4J2+6XMwSEeVJt8PDag/KXEQuFBA2ahcW?=
- =?us-ascii?Q?7UfMMBeaHOhqm8vqpm6CWwKR6u2/Yv2PUyhadN5QPPablPt9qYVR4YxeqwY8?=
- =?us-ascii?Q?K/zvMuVywfsLsDqdIhJDnLprHT4RyhsuZkwP8CUucKpcdayduiiwBjadiDNy?=
- =?us-ascii?Q?8u/hFjDh5k7LLqKLvH0a3SJaOKVAor6DQHZBvfHQGY/MVeq5Lvo3dwuRO/Zc?=
- =?us-ascii?Q?3K0eKQSl/AT97mGv1PaTsX3yD8mypHUz0rV739nIlkPXuX3LeSKDoLbZDSmR?=
- =?us-ascii?Q?V7fRGjwGUqLtYD23QPku79KWzwPD90UIplM50Ed1QBnZfc19g8eLwuqeaxI7?=
- =?us-ascii?Q?mxlDyIhFA8tKpQA8gg4l3xUBd9SMUI6q6FI6Bo/5kkedWya6bm8KWLV4Wt6K?=
- =?us-ascii?Q?sMTM9hDPCbqf/FA7Utj/Vz0awa7uINt/bSZwYG7ypwpty5lba0TcgpnJknDt?=
- =?us-ascii?Q?FAtJE9Lzhpw2S49lekPYARwfwXrl9idB?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SL2P216MB1246.KORP216.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?DSueKDEvqAK1mWs6wGZ8F2fDbUAi69lybw8nPYkc84u1e1DfymVOs13PgFaO?=
- =?us-ascii?Q?MezrStV5gLiGqUJkHfvx1UhKnzcVm9zQapM7d3TWm5LEcMO+q7a104FA5IsY?=
- =?us-ascii?Q?QFwVkowjStROq5pTP7d1Z9Ac3K+WDkDnhX4FJUi0eAC3i3w6wrup4WNjMLjd?=
- =?us-ascii?Q?v2j4rVA7fSbyARBdZtiRujtzRhVuiJrd0+eXvsy2COUWM0cC1mwt9202kWnG?=
- =?us-ascii?Q?mRTmbOYk4YK9fRLhbU84oCs/ldWVH9KBSPsEyYCe66y7ApcGBg4Bml/oqh16?=
- =?us-ascii?Q?cczfwNOZO53zvG85PWQ5ImG/XCE0cpCzsA4+SD41m3OE+PEDnXrmSA6Ag0ca?=
- =?us-ascii?Q?iYGgog6Js2zl0rKycUkNbEckFl0IgjAlWUBgcpLgUr6Tb8ojXpjA9ISgb3v8?=
- =?us-ascii?Q?HE3BtKSsORj2sQWiE3yNHS1KmCWkHf4moFRmBF6x0WyW8i4Lt0ex1NJy4Dwe?=
- =?us-ascii?Q?oM3ZujCqHLYAVFPq9BvYh/8P0PaczuqrfoVy3RNQERL4+sKZ6oUzGlL05MWl?=
- =?us-ascii?Q?Hs7Dn2yl4A2rui5v6JgFPF7P7VFYE+4hCwkQT+n6mjr6WwyewrsMehrEmklB?=
- =?us-ascii?Q?yLo4HY2j8LzXzf8lpY3T4Rgny8B36kIBkjzBbmnjewsd1KI7Ex+82G3heAE4?=
- =?us-ascii?Q?ZWgQQXz0tG5mKpF5AFapJv2IMyp8RyJYHBy+h8x0twFPMqhvWDqC1rVJCLOe?=
- =?us-ascii?Q?hIlAxIgU264i2cnwbNF4oeyKLYw6IkiXFjYZFXjR11lpbOAxSu5KcdHW6bc4?=
- =?us-ascii?Q?81vVBM0HAbRXZtXbBowAQV9G8jDAN28ywJDlzMP3ZHs2UvxpnFAo0cQXC35W?=
- =?us-ascii?Q?xDVOzIAKs7i8qze1jUUUIAcs392knL4wTpCNKoM4vNFDMsyIGpABpkX5OZ6T?=
- =?us-ascii?Q?Pc13ivmnWw6F3EH0DVrgf+lD1EgyUoRzLws3r+05+N6nuHj6IjFDT3zGZJzQ?=
- =?us-ascii?Q?MNyD1j6iA+oXm0UxKmpMksmlO175+onJBrdgDM5efco31mZdfylR+pIv1UZr?=
- =?us-ascii?Q?7XwjD2GXMecQ/BCqlz6btAXgCzjfjSMRHxJb126G6mGFJwhBiPnQqiBLgKWP?=
- =?us-ascii?Q?BHW4JOxgW3oZbpPbTY94G42nfkGp8iTBcy24WAsYUxuJf6KwOYkulj0nDmpD?=
- =?us-ascii?Q?A3woaCUeE7XvoAF+9EAGUGVXoqciQByUMb6wvdcgVtfBw9T7+lU5CYep6EoN?=
- =?us-ascii?Q?QcnoxejmVsKCpkwfDDWZQGmd6fY+dGW9n+HIdqZ0X7Fbp23JbFenBHRoWOHz?=
- =?us-ascii?Q?axaYJ8LcvPL6kR9UFIAr3vSpolXGu0VxLpf0QkWdB8KwCI/uAf/FDZGgf3+Q?=
- =?us-ascii?Q?3x7O1MxSEG2LbzuC1FYQN8JGydRuPXzjqngwNLDgHbOCLtvNtBiZHYRNNKT7?=
- =?us-ascii?Q?xV09+Tzb6LwGI85N+w64VNHPhCQm8JdMMpjqk6ikXSrBzJcs7Kp9xh0GkJhj?=
- =?us-ascii?Q?hGnHcGDlwKNoix15UwURgjx2n4HzSnnIVep0C4UhH36gmyAYR9jiJMITKqLE?=
- =?us-ascii?Q?dEwsCEATu51MRPVH/cdbj3LKoeMvg3BC7RUKG8uu+EVz7pARMJHHAO45TYe6?=
- =?us-ascii?Q?jLUeegDYHXCUJe7e+ljOFmdDT/vTX9MD7iNdMcJP?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="hXV4vnTl"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54298ec925bso6417458e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:26:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1739248005; x=1739852805; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zJBh9fdeWyAFz73+AAjOKrZPv8X8svLxRaCEi/KYX2U=;
+        b=hXV4vnTlYFE1Ebb6bA/4uk0vQ5jhg1nAHrONxht7MNESh1Kc93NRInmSp8AVXNFvIC
+         wJG4uMMwlGRoPBSc4Y9ybv/A5g+xrWYhQ085fzqogq2wuZcIPPt1xD49ekqoa2RVFwB2
+         VM+Cu9LGbsgtJmm25dTmuw8uyJlNeA81Y09LJIkLgGmNNxSavV/098myRu074PX+dV0j
+         wP27Rz//81aMlhUMFGQAiSFdMMcGnG8rDD0UgnFuX/HKbydPFdGn6OntrKM8/m8wf1kN
+         FOS5IYFXL5v3F3kmA/+RaA/BZouMQY3+z4a1InrYWL8ZpNitTXGXRBXXIhyRLG5Rk9ft
+         I70A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739248005; x=1739852805;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zJBh9fdeWyAFz73+AAjOKrZPv8X8svLxRaCEi/KYX2U=;
+        b=I8lu4q5mjwvfpD9d9mAFlhqp/g870oTlkeJZtWtisZRw8OsmlIIE0HMvEMoWxkGPCU
+         rDQWX/4VdF8gTKnCsC3sU1XBCOVY0SrEPPHmBCY+RmurKWQ8NV61qK5MMFBGNZLf8zAE
+         RvhyRgBGfxLukTKvZ/nosHm9HyIsq4l5LYyLMmN2KxYtDzebjA0OXNOHJvcMGe1Ausu3
+         aQ5xc7PbSL4zg9OLd0kvgT4yTAPnF+9lzbeMoZV+YohP5zEdCkB895y4gBbOKhOdpFWU
+         ggFxeBj/K0MbGFDBwAe3x7uWD0UsCUXFLm+UR6UFn+UMFxhQY3G+VojoffJageMyz1IR
+         0l/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUdUJsOpaOqp70tmLpbQWd8GlSsmbx8fmTE+ocvSjm8uuuneSbOq6fN/VjJVo+PPdW+GX0WlbvGGx4cDxE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyTzeVH5Chf1DR94YZzLMJzdUf86+dZXib10DOgwy6efFYN6Ka
+	cb+rO47GlZgUH0zfNqsxyGCAo9WrlpBSWDma4aud4q9I0+JwJe6c7WC8YjnVO6dIxvkGaJ+pn+L
+	GOslWSLfKNk04z1m5jJY4HV6bQu0tKKNYDOd6dA==
+X-Gm-Gg: ASbGncv9KHNtTSjD+gnoVfqEw1QfQKyG+app0Qgp1SPnlmeo7pQRYA76TVrCRdnA36O
+	4OGAnR1XWl/0y7NXqjPHc9x+7+uTif7mFtDv0t17D7PjFN8iDfF2xl3SY4WhW2SRmxGjwVOIx
+X-Google-Smtp-Source: AGHT+IEvysNS6RkGmuuzJxngvkBIqfCXPngNuobbBlL2+M9OjCkU9bWZC1b6ZuqeVUMBeqzQuxhWPtUgLJtjb8/Htp0=
+X-Received: by 2002:a05:6512:3f5:b0:540:1b07:e033 with SMTP id
+ 2adb3069b0e04-54414b0b972mr4546353e87.45.1739248004691; Mon, 10 Feb 2025
+ 20:26:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: chipsnmedia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16d7daa6-7880-4923-1aad-08dd4a53dafd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2025 04:23:37.2860
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4d70c8e9-142b-4389-b7f2-fa8a3c68c467
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: drinfx7A+k8VBrxt3LLzG+869E8kws2QdRXa1pF8Xhr6ilR4e+wcYVYbW1OjHuH84wflDD2W1Vkec3a2cAaZzxxBIoHBK4kfgPVTyPd5ig8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUYP216MB3034
+References: <20250207161939.46139-11-ajones@ventanamicro.com>
+ <20250207161939.46139-18-ajones@ventanamicro.com> <Z6ax7B45OsGerjfA@ghost>
+ <CAAhSdy2tjOE5aajzydFs8A_drHdBSbWrYTX3CX4e7B6Rm107Bw@mail.gmail.com>
+ <c6f98a70-b1c7-4955-bf5d-546e4563cf1c@rivosinc.com> <20250210-e6a2dfcd7995ffc8a6d918e4@orel>
+ <e1fae51d-3511-4bcf-afbf-4e690905ccda@rivosinc.com> <Z6o1bQLJ8aUyjvrQ@ghost>
+ <015a8a52-6a49-41b9-95b4-5e8260d45776@rivosinc.com> <Z6pnTG7YoiDW_Gkq@ghost> <fb67c9e8-0de4-4e11-929a-49d36e81a1a2@rivosinc.com>
+In-Reply-To: <fb67c9e8-0de4-4e11-929a-49d36e81a1a2@rivosinc.com>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Tue, 11 Feb 2025 09:56:32 +0530
+X-Gm-Features: AWEUYZllrOP2AjMXaTFQEzF4ZkdfQdtcJSppkq6n6kvKBVptt8mEi6N8BjuZtP8
+Message-ID: <CAK9=C2VA-fwYwD018iTBvCmgCnX_2+L-eLzc7nLsAMtx_NCCRg@mail.gmail.com>
+Subject: Re: [PATCH 7/9] riscv: Prepare for unaligned access type table lookups
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+Cc: Charlie Jenkins <charlie@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>, 
+	Anup Patel <anup@brainfault.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Krzysztof.
+On Tue, Feb 11, 2025 at 2:27=E2=80=AFAM Cl=C3=A9ment L=C3=A9ger <cleger@riv=
+osinc.com> wrote:
+>
+>
+>
+> On 10/02/2025 21:53, Charlie Jenkins wrote:
+> > On Mon, Feb 10, 2025 at 09:42:25PM +0100, Cl=C3=A9ment L=C3=A9ger wrote=
+:
+> >>
+> >>
+> >> On 10/02/2025 18:20, Charlie Jenkins wrote:
+> >>> On Mon, Feb 10, 2025 at 03:20:34PM +0100, Cl=C3=A9ment L=C3=A9ger wro=
+te:
+> >>>>
+> >>>>
+> >>>> On 10/02/2025 15:06, Andrew Jones wrote:
+> >>>>> On Mon, Feb 10, 2025 at 12:07:40PM +0100, Cl=C3=A9ment L=C3=A9ger w=
+rote:
+> >>>>>>
+> >>>>>>
+> >>>>>> On 10/02/2025 11:16, Anup Patel wrote:
+> >>>>>>> On Sat, Feb 8, 2025 at 6:53=E2=80=AFAM Charlie Jenkins <charlie@r=
+ivosinc.com> wrote:
+> >>>>>>>>
+> >>>>>>>> On Fri, Feb 07, 2025 at 05:19:47PM +0100, Andrew Jones wrote:
+> >>>>>>>>> Probing unaligned accesses on boot is time consuming. Provide a
+> >>>>>>>>> function which will be used to look up the access type in a tab=
+le
+> >>>>>>>>> by id registers. Vendors which provide table entries can then s=
+kip
+> >>>>>>>>> the probing.
+> >>>>>>>>
+> >>>>>>>> The access checker in my experience is only time consuming on sl=
+ow
+> >>>>>>>> hardware. Hardware that supports fast unaligned accesses isn't r=
+eally
+> >>>>>>>> impacted by this? Avoiding a list of hardware that has slow/fast
+> >>>>>>>> unaligned accesses in the kernel was the main reason for dynamic=
+ally
+> >>>>>>>> checking. We did introduce the config option to compile the kern=
+el with
+> >>>>>>>> assumed slow/fast accesses, which of course has the downside of
+> >>>>>>>> recompiling the kernel and I assume that you already considered =
+that.
+> >>>>>>>
+> >>>>>>> The kconfig option does not align with the vision of running the =
+same
+> >>>>>>> kernel image across platforms.
+> >>>>>>
+> >>>>>> I'd would be advocating to remove compile time options as well and=
+ use
+> >>>>>> another way to skip the probe (see below).
+> >>>>>>
+> >>>>>>>
+> >>>>>>>>
+> >>>>>>>> Instead of having a table in the kernel, something that would be=
+ more
+> >>>>>>>> platform agnostic would be to have an extension that signals thi=
+s
+> >>>>>>>> information. That seems like it would accomplish the same goal a=
+nd
+> >>>>>>>> leverage the existing infrastructure in the kernel, albeit with =
+the need
+> >>>>>>>> to make a new extension.
+> >>>>>>>>
+> >>>>>>>
+> >>>>>>> IMO, expecting an ISA extension to be defined for all possible
+> >>>>>>> microarchitectural choices is not going to scale so it is better
+> >>>>>>> to have infrastructure in kernel itself to infer microarchitectur=
+al
+> >>>>>>> choices based on RISC-V implementation ID.
+> >>>>>>
+> >>>>>> Since adding an extension seems quite unlikely, and that a device-=
+tree
+> >>>>>> property is likely DT centric and not applicable to ACPI as well, =
+was a
+> >>>>>> command line argument considered ?
+> >>>>>>
+> >>>>>
+> >>>>> I did consider adding a command line option in addition to the tabl=
+e,
+> >>>>> allowing platforms which neither have a table entry [yet] nor want =
+to do
+> >>>>> the speed test, to set whatever they like. In the end, I dropped it=
+, since
+> >>>>> I don't have a use case at this time. However, if we really don't w=
+ant a
+> >>>>> table, then I can look into the command line option instead.
+> >>>>
+> >>>> Sorry if I wasn't clear, I wasn't considering this as a replacement =
+for
+> >>>> your table but rather as a replacement to Charlie's compile time def=
+ine
+> >>>> to skip misaligned speed probing since it is like "lpj=3D<x>". You c=
+an
+> >>>> specify it on command line if you want to skip the loop time detecti=
+on
+> >>>> of loops per jiffies and have faster boot.
+> >>>
+> >>> Jesse sent out a patch for a kernel parameter to set the access speed=
+ to
+> >>> whatever is desired [1].
+> >>
+> >> Hey Charlie,
+> >>
+> >> Thanks but it seems you forgot to add the link ?
+> >
+> > Oops, I frequently do that...
+> >
+> > https://lore.kernel.org/linux-riscv/20240805173816.3722002-1-jesse@rivo=
+sinc.com/
+> >
+> >>
+> >> Having configuration option + command line option seems like something
+> >> particularly heavy for such feature. The ifdefery/config options
+> >> involved in the misaligned probing code is already quite complicated. =
+If
+> >> another mean to specify the misaligned speed access is added, I think
+> >> all configuration options to set the speed of accesses can then be
+> >> removed and just keep the command line. That will certainly simplify t=
+he
+> >> ifdef/config options.
+> >
+> > Yeah that's why it didn't get merged because it felt like overkill. I
+> > responded on the thread to Anup as why I would prefer config options. I=
+t
+> > just comes down to config options being required to enable compiler
+> > features. The kernel is only built with rv64gc and usage of all other
+> > extensions requires hand written assembly. There are easy performance
+> > gains when compiling the kernel with rv64gc_zba_zbb_zbkb etc.
+> > Performance focused kernels will need to be recompiled anyway so I am o=
+f
+> > the opinion that grouping in other performance features as config
+> > options like this is the easiest thing to do and reduces the amount of
+> > code in the kernel.
+>
+> As answered on the other thread, totally agree, except for the
+> misaligned accesses probing config options ;). Ultimately, we need
+> profiles configuration, either via defconfigs that enables a bunch of
+> optimization via ISA extension or configuration options that groups
+> these config options.
 
->-----Original Message-----
->From: Krzysztof Kozlowski <krzk@kernel.org>
->Sent: Tuesday, February 11, 2025 2:24 AM
->To: Nas Chung <nas.chung@chipsnmedia.com>; mchehab@kernel.org;
->hverkuil@xs4all.nl; sebastian.fricke@collabora.com; robh@kernel.org;
->krzk+dt@kernel.org; conor+dt@kernel.org
->Cc: linux-media@vger.kernel.org; devicetree@vger.kernel.org; linux-
->kernel@vger.kernel.org; linux-imx@nxp.com; linux-arm-
->kernel@lists.infradead.org; jackson.lee <jackson.lee@chipsnmedia.com>;
->lafley.kim <lafley.kim@chipsnmedia.com>
->Subject: Re: [PATCH 1/8] media: platform: chips-media: wave5: Rename
->Kconfig parameter
->
->On 10/02/2025 10:07, Nas Chung wrote:
->> The existing Kconfig parameter VIDEO_WAVE_VPU is ambiguous,
->> as it does not clearly indicate that it is specific to the Wave5 IP.
->>
->> Rename VIDEO_WAVE_VPU to VIDEO_WAVE5_VPU to make it explicit
->> that the parameter is specific to the Wave5 IP.
->>
->> No functional changes, only the parameter name is updated.
->
->
->That's unnecessary churn. Old name was fine. Kconfig does not match
->hardware 1-to-1 but represents only the driver name (or not even that...).
->
->If you solve any particular problem, then explain it. Otherwise this is
->just unnecessarily affecting users and backports.
+I agree.
 
-I understand your point.
-To avoid unnecessary changes, I'll drop this patch.
+Kconfig options for ISA extensions are fine but not for
+misaligned access. The kernel command-line option to skip
+misaligned access probe is fine as well. I still think RISC-V
+implementation ID based microarchitecture feature discovery
+will be eventually required as well so why not add it now.
 
-Thank you for your feedback.
+For profiles, how about having an incremental rva23.config
+similar to 64-bit.config ? This will minimize the duplication
+by re-using the same base defconfig.
 
-Thanks.
-Nas.
+Regards,
+Anup
+
+
 
 >
->>
->> Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
->> ---
->>  arch/arm64/configs/defconfig                      | 2 +-
+> Cl=C3=A9ment
 >
->That's a SoC patch, don't mix up subsystems.
+> >
+> > - Charlie
+> >
+> >>
+> >> Cl=C3=A9ment
+> >>
+> >>>
+> >>> - Charlie
+> >>>
+> >>>> -}
+> >>>> -#else /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
+> >>>> -static void __init check_unaligned_access_speed_all_cpus(void)
+> >>>> -{
+> >>>> -}
+> >>>> -#endif
+> >>>> -
+> >>>>  #ifdef CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
+> >>>>  static void check_vector_unaligned_access(struct work_struct *work =
+__always_unused)
+> >>>>  {
+> >>>> @@ -370,6 +380,11 @@ static int __init vec_check_unaligned_access_sp=
+eed_all_cpus(void *unused __alway
+> >>>>  }
+> >>>>  #endif
+> >>>>
+> >>>> +static bool check_vector_unaligned_access_table(void)
+> >>>> +{
+> >>>> +  return false;
+> >>>> +}
+> >>>> +
+> >>>>  static int riscv_online_cpu_vec(unsigned int cpu)
+> >>>>  {
+> >>>>    if (!has_vector()) {
+> >>>> @@ -377,6 +392,9 @@ static int riscv_online_cpu_vec(unsigned int cpu=
+)
+> >>>>            return 0;
+> >>>>    }
+> >>>>
+> >>>> +  if (check_vector_unaligned_access_table())
+> >>>> +          return 0;
+> >>>> +
+> >>>>  #ifdef CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
+> >>>>    if (per_cpu(vector_misaligned_access, cpu) !=3D RISCV_HWPROBE_MIS=
+ALIGNED_VECTOR_UNKNOWN)
+> >>>>            return 0;
+> >>>> @@ -392,13 +410,15 @@ static int __init check_unaligned_access_all_c=
+pus(void)
+> >>>>  {
+> >>>>    int cpu;
+> >>>>
+> >>>> -  if (!check_unaligned_access_emulated_all_cpus())
+> >>>> +  if (!check_unaligned_access_table() &&
+> >>>> +      !check_unaligned_access_emulated_all_cpus())
+> >>>>            check_unaligned_access_speed_all_cpus();
+> >>>>
+> >>>>    if (!has_vector()) {
+> >>>>            for_each_online_cpu(cpu)
+> >>>>                    per_cpu(vector_misaligned_access, cpu) =3D RISCV_=
+HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED;
+> >>>> -  } else if (!check_vector_unaligned_access_emulated_all_cpus() &&
+> >>>> +  } else if (!check_vector_unaligned_access_table() &&
+> >>>> +             !check_vector_unaligned_access_emulated_all_cpus() &&
+> >>>>               IS_ENABLED(CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS)=
+) {
+> >>>>            kthread_run(vec_check_unaligned_access_speed_all_cpus,
+> >>>>                        NULL, "vec_check_unaligned_access_speed_all_c=
+pus");
+> >>>
+> >>>>
+> >>>> Regarding your table, it feels like a bit going back to old hardcode=
+d
+> >>>> platform description ;). I think some kind of auto-detection of spee=
+d
+> >>>> (not builtin the kernel) for platforms could be good as well to skip
+> >>>> probing.
+> >>>>
+> >>>> A DT property also seems ok to me since the goal is to describe
+> >>>> hardware. Would a common DT/ACPI property be appropriate ? The
+> >>>> device_property API unified both so if we used some common property =
+to
+> >>>> describe the misaligned access speed (both in DT cpu node/ ACPI CPU
+> >>>> device package), we could keep a single parsing method. But I'm no A=
+CPI
+> >>>> expert so I don't know if that really make sense.
+> >>>>
+> >>>> Thanks,
+> >>>>
+> >>>> Cl=C3=A9ment
+> >>>>
+> >>>>>
+> >>>>> Thanks,
+> >>>>> drew
+> >>>>
+> >>
 >
->
->Best regards,
->Krzysztof
