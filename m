@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887591EF0A6;
-	Tue, 11 Feb 2025 08:30:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749921EC00C;
+	Tue, 11 Feb 2025 08:30:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739262603; cv=none; b=HpGkg0EDNlA+ecUO28FZz0GZssH0Xyy1pwgO7x0+RINRW+tGIFQHvyY/RArrkeTEkseRwVvGhUUu5QEskjeo15sgVIAH4F/5KGqmH1mCh6L42AiZ09hXQzh1/yzvD9M95q4hu44h2nF8mC+be+7oPj6+8pMPLepc+qXNTPKIiUc=
+	t=1739262620; cv=none; b=PC+yRPlkd3w2zY4+kWsybX+T+pyxJejDZb8Ivdc4YE9UVBmW84sopAQJqpEOta9Y/hgiX+HEA5EhI1X7B/KTYD/NwWTUpyHCtYkYHI7NmhcjkBwPOuOoDYThzUKC+0AzWlKuAMcy09/A2boq+wevtqgt3tSrYaW0EAzzBqwUJN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739262603; c=relaxed/simple;
-	bh=KkOLO3+N7FDczkhby7I7NSNhK0zE55+iVoHuoQGhHfU=;
+	s=arc-20240116; t=1739262620; c=relaxed/simple;
+	bh=38hk58Y0kLRwemhQaSYbq9+FRPzKOCdH6VSASaua6m8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CtPW/HYBBnrqxQ2BQdPxFRdBpJjQRXttRmukhPO2XHpQ4Ew6LB3HyvXXzCmiZJs2wzB+DcqqhjxmTF1nebjbU0Kyw0nnyqx3RoJBPZ9r8jKcEgBJVraBr2ChJlP9STXYlmf6aSehujInb6q/H32wKVE6YjgZqOvDyC2/tfubhls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GPsM920z; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=op70emM8otlTDGBQ6kOoc1/uboQdUq7IsLJ0+EJ3iu01C9BZJQyK+cgWZ7IR56V6pApkUJHUBHByHEe+idNCnd6j/EIm+OBAJjtET8VaTonAVx+gUBlI7UN48cOAAheMb3cdKMUqdM8wCRskl5zzaQZqEqqFKtOFNjGWJavxnyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q5mXKFsM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GPsM920z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18BD5C4CEDD;
-	Tue, 11 Feb 2025 08:30:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q5mXKFsM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 148A9C4CEDD;
+	Tue, 11 Feb 2025 08:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739262603;
-	bh=KkOLO3+N7FDczkhby7I7NSNhK0zE55+iVoHuoQGhHfU=;
+	s=k20201202; t=1739262619;
+	bh=38hk58Y0kLRwemhQaSYbq9+FRPzKOCdH6VSASaua6m8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GPsM920zDczb0Yxbv7ZH2WHn+G3xOMFEpF64NBqd6gsSIm5tbxc1IKsEdAfvHv2Fw
-	 0W++zDfDwxRFm66KqDgAtlEydhrenhMuobv6sz8L+ACiLe13VptrzGPOWk5z7XADrX
-	 +3cgoSS6WfiH7G5PmPuX+HpYdMlTM+VbPGejhQZOcJ4OdMv8h0VICBos6cZvJDU6Y5
-	 IVe/TmIqD4eHPMzO4XKk0YkpPkCe2gs3S8H76b4tmE42OXc0huuELbovx04aoD0Zol
-	 DoTkj8SHhx8n8GuOJgYIGT+upF+Q78k/WbBj/LcnUgUzVZ7MEQdhHIa9WF66oXtfq4
-	 Fw2UlaZeNpYhw==
-Date: Tue, 11 Feb 2025 09:29:59 +0100
+	b=q5mXKFsMYV50EQ5sGGZZgzh0OmE+815ZQh2PjS3t8fd41NZaOpuv0f6k5iFHKlitW
+	 49yp1lfNGJ5OOSASgGRUE07QC/RMizUsUE2XUxlfp87lgzKBmTgPMQH+5HLoZwc7rJ
+	 EmNRTRZ7+LCVvGA2lT43pEDxcQA6bOjjadbSYyHo+5Dj+olTuDf4Sn7OVrRcbOM1yq
+	 Qc+Z0qFIrDaoRQqvQGH/HfDbdJdvzeRx76+Qzjvl9CUD8F0eSxVDGNPamAOG9Qsyb1
+	 SijNNUevS87VgRK2t/3Y2ouT5EORaVjWLgER0Do8oH7U+EHg/4cIY7URzMF6X3YmGn
+	 YOewXlG3oo6UQ==
+Date: Tue, 11 Feb 2025 09:30:16 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -38,11 +38,11 @@ Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Steven Price <steven.price@arm.com>, kernel@collabora.com, dri-devel@lists.freedesktop.org, 
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: gpu: mali-bifrost: Add compatible
- for MT8370 SoC
-Message-ID: <20250211-judicious-tentacled-chihuahua-9bb5b6@krzk-bin>
+Subject: Re: [PATCH v3 2/3] drm/panfrost: Add support for Mali on the MT8370
+ SoC
+Message-ID: <20250211-sociable-buzzard-of-enhancement-dfd4f0@krzk-bin>
 References: <20250207-mt8370-enable-gpu-v3-0-75e9b902f9c1@collabora.com>
- <20250207-mt8370-enable-gpu-v3-1-75e9b902f9c1@collabora.com>
+ <20250207-mt8370-enable-gpu-v3-2-75e9b902f9c1@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,27 +51,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250207-mt8370-enable-gpu-v3-1-75e9b902f9c1@collabora.com>
+In-Reply-To: <20250207-mt8370-enable-gpu-v3-2-75e9b902f9c1@collabora.com>
 
-On Fri, Feb 07, 2025 at 04:18:30PM +0100, Louis-Alexis Eyraud wrote:
+On Fri, Feb 07, 2025 at 04:18:31PM +0100, Louis-Alexis Eyraud wrote:
 > Add a compatible for the MediaTek MT8370 SoC, with an
-> integrated ARM Mali G57 MC2 GPU (Valhall-JM, dual core).
-> This new compatible is needed for this SoC support, as the other
+> integrated ARM Mali G57 MC2 GPU (Valhall-JM, dual core),
+> with the same platform data as MT8186 (one regulator, two power
+> domains).
+> Despite their different GPU architecture (making them not being
+> compatible), the MT8186 platform data can still be used for MT8370
+> because it only describes supplies, pm_domains and enablement of power
+> management features in the panfrost driver.
+> 
+> Reviewed-by: Steven Price <steven.price@arm.com>
+> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_drv.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-You *always* need new compatible.
-
-> existing compatibles for the same GPU architecture (MT8188, MT8192) do
-> not match the required power domain number.
-> The other compatibles (especially MT8186) cannot be reused because of
-> GPU architecture difference.
-
-Just FYI: you must not *ever* reuse compatibles. What you wanted is to
-mark devices compatible and not. You claim devices are not compatible
-because of this and that.
-
-Please fix the commit msg because I am afraid later people will use it:
-"I can reuse the compatible because that commit msg was acked".
-
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
