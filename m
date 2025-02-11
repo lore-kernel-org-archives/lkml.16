@@ -1,152 +1,265 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EF51EF0A9
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:21:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2781F12F3
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739265670; cv=none; b=cTEYRyaEvtIIoc8HwrlWh+MPvWxV7ETpOnzB6kjul0CmZxHxegXL6RlqB3Ag1oRV2Yh5E0m/u0oSjXe4LXQLRJsTd1aw4t5I4qEKbnxRWuWJ1QyxUwzNidmBYgXuMbOhSAjLSCsBWFyhAEfYE0XJt1DkBtz8+Pdh5HTVmpvxD18=
+	t=1739265671; cv=none; b=OieDCxEkWKmmB1pUhHNuvb6f/xIsMDGrauKQnW7rKGGZ6AK5GxwYbXpq/PzwO1JInxglw0T0hANVAAKM7GVUcIDPjcvvVSQECX4aKJ2nzTDCDq8610FlN5JYUaZ1b5aD/SG6ytrmcxRXI5DtLFTOXTjhL3QTPjMQaULkH4NhCds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739265670; c=relaxed/simple;
-	bh=GcWfSosCoF4FUpxhA3mbRbTcsH6nrQeOhILfVtt71Oo=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CQikkzc4TmFmSqJ4ioMjt+yircOcw24J8qJCe+3H80OfecrR1qzNDNRcVUPUGX+q6nSatv85f5EQ/JJf710PFmIMNgkc2mMq/Tk339Blbwa0kz4C3TDDGJGem+oCkzpU3bAbZS9Ge3TS25Tr6PXAiNkpRZIs0FWPEQpjCCzuGhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=I+0lO+Ex; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1739265671; c=relaxed/simple;
+	bh=l5I8PIu9ZxCeUj57zejedPyy2ubQT8l511+5TzKKrcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q9KxgpC4Ljq+8uv2dq1ngDAluXDsD3zL0Fe8L6QmtnWAaj5MANOubSJvApdtByZUYI4CjWFL1OadejPbWUn7+nm4Yp+k3VA4MOo/VyAG1cpfwN1WwwPfgyX+3U/V6rOQ6EUzoJXWNcZY35gwmXzvSc0eR4BeI+PpgwOkgcLWALw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AEw7g5mL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="I+0lO+Ex"
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com [209.85.208.200])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id A771A40144
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:20:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1739265659;
-	bh=U64CfSm4srCsWUzG3+CxHvNhRpvC2/rUcpu6NW74+lE=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=I+0lO+ExNG7HUQShYsbzzp+yfdwvSIl0DrR+fIFuVoLilvsziruTqkLt+7q+3NpoL
-	 FdWfQ0WEXJHPhmwh24yXpmTSlYxxawt1rV0gXqVQwJYjhelkbRO6C5V8bwMm/YaKmh
-	 9PhwLl9vzBHKeCiNQqr1kqExkRhKTgCCoDLIR5skKc2XEYSTdH+sooeJYWKmSOjFXU
-	 xMI/KTUf1Ei1ZiKloUEXhvz3HMFkKnSpA6Je2nqL7kbvAvF+wZwlbYiuz03+v+liY6
-	 jYcb5L6k9Afin/A6lwysWr+wLdas1MUTgyv9WWKVXLaWZtW8Z8QkeDgbw6b5SI3spm
-	 FvBSrnlwPzK/A==
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-308fefb2bd0so922011fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:20:59 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AEw7g5mL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739265669;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OeUptTWICZS/ftsOpT45FSL/g7uRxhP6PEc8B00d2Eg=;
+	b=AEw7g5mLY/bekbl1ymlnOfn/k4euH3XtEg47wgUh7C8zHaRz0nppVH1N3jiEC8bIV/kDEY
+	U8kw5abJ5N8K9oaruz16kwcfWySGy4lLmdkz5MFzcgIgMXzCrut9qarLeg7Qn1uekOEcvH
+	knQLfcl7bic/Xt/G7MCHmmkzqPdTm8o=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-584-9-Wo-w7wPsW7xq6xb6m6NQ-1; Tue, 11 Feb 2025 04:21:07 -0500
+X-MC-Unique: 9-Wo-w7wPsW7xq6xb6m6NQ-1
+X-Mimecast-MFC-AGG-ID: 9-Wo-w7wPsW7xq6xb6m6NQ
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43943bd1409so13483565e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:21:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739265659; x=1739870459;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U64CfSm4srCsWUzG3+CxHvNhRpvC2/rUcpu6NW74+lE=;
-        b=f+coRKntld/lFfCIBuupP1WcnyabY5FXztc917QPA1ZV5CPrNtj0ywxdSvqPh0OqMG
-         evUU7aCcDrFaCvL/Y5wJ4/Lh5LY0zNiRmiLrjWUZdlknYIL4PuHQv5M4X8HUsC6et9CQ
-         dv8sDsKm0U31od3JkL//90Xz4PL1+UhZa3MR/YcRJ5/57Pd4snbu7fvNV6MlkzWbyJK8
-         daVfpoHrjm+4bPLmYQtAKydNKTGZNhk3m/s7SPDFCX74fpExfRhauZ6IDOXi+55Ld4B1
-         cfqFMJZGuLuDTcaaZOGOy5ZyrFvoHB0VB09sAi5pwdOvcjGLgXcqPn2nTvS7wArIV3L+
-         Kjhg==
-X-Forwarded-Encrypted: i=1; AJvYcCVwptArpud7GpXoWmp4C4MrXyjWYJ2Dqq9CZ89ia+aBfKjkZ7pOusHoFsFjcgcPBUL/KjLb+of3rAtkLbY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK18yoq2pKvJlmOE+4Fnp7mjFLtY+MSjfJ7XuRidEBYh8IN+cI
-	/w7egRLQIaJ74QUDsCzfXPYO1ifS5G6NvWfOer77uUnkb23D5jyFu8nvbN3APiYU+Wuj7O+8RHX
-	OkJwcw+Rrgz5b2ba9uuMCzYDQwNyJFDNqruiXhskQ+FzUUHMn2lLgYenFbaE0338dKtzT9pWw5Y
-	/P5gXjosRvXxghtpkhlgMInie+0Cz7K8s5t4hYHtwHJ6dYmmM/HwVx
-X-Gm-Gg: ASbGncuDhvNN/KiyT5zqMzt3lu6df/+TrK6l3y1AxNC6VF/DVT4fZFzG0a2d38av1fd
-	Hu4+WS+gkzIVJs1wxdiRqbKRGmXBhduhmhQ7RgQ//170P5ncumC2Dykx+g9FapQ==
-X-Received: by 2002:a05:6512:3581:b0:545:8cb:2183 with SMTP id 2adb3069b0e04-54508cb22cfmr2090718e87.29.1739265658886;
-        Tue, 11 Feb 2025 01:20:58 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHuJMSQ/TqRY+ByJfSTG7hk8lOXnBPzeFqbVF3O5Rk8LKphBVZBFUQ/+lvWBZ+XFIrTHvdv/73i4M6xhpprmoM=
-X-Received: by 2002:a05:6512:3581:b0:545:8cb:2183 with SMTP id
- 2adb3069b0e04-54508cb22cfmr2090695e87.29.1739265658468; Tue, 11 Feb 2025
- 01:20:58 -0800 (PST)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 11 Feb 2025 01:20:54 -0800
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 11 Feb 2025 01:20:54 -0800
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <6ae4838b-f7b5-419d-8659-7b8779a74adb@ghiti.fr>
-References: <20250205143903.413959-1-emil.renner.berthing@canonical.com> <6ae4838b-f7b5-419d-8659-7b8779a74adb@ghiti.fr>
+        d=1e100.net; s=20230601; t=1739265666; x=1739870466;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OeUptTWICZS/ftsOpT45FSL/g7uRxhP6PEc8B00d2Eg=;
+        b=ge+qguVHzkZmPzp2agsQXksv3Rc5pLgUIjFA0B/ph9vudC8Oj4GpTOIH/FypmvMQxW
+         OhvP2wJRLvt+f2TFAzowWPvU/WZZTF8XbQwyr1mNXF1RPhmQf58sJcAU5yqa9+KApdWf
+         2PWzt0WU2nnKLQVtzm/hjgjkvfmCIeDiRJRl3NwtzqtFon1MMzRTW/fT5I36lvu0xjxc
+         RG8hB6BECsEWjp5XtxTQ9PFPOPV3bt+Gebn6mOVykrmWvAbifYp8uBr4LJEAN1JC6qkd
+         jhQ6Pj/Ycyz5RX63GrDO4UbbWQfk4xCK5m3ilcRg0T6Nm/x23zA1LhmX+Utkfnyy/V4p
+         q/CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUzTY/n4nqxPoqOzooOmZBy1BdF01t+ynaU0EB9Dr2Ft3BdKzh9PO80pefxGm/83bgt1YXvSlsRxKL6Xho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKO6j7dF9YbYWV1OKMNpsEofFBwT//iF1h2udtFTH0TsE5DzmS
+	sh49u8M2DWyAYrduWDqp0mFt412VFMPf2Cz07BV8N3zWAaPpbAvM9GK8UfE7h2roxi996Uk6Wui
+	FD5+w7WdWkphAmluimK+Nur/RjGPcQ6i33MDEC/MB4KI8+CXpJDeuVnGCuW2frw==
+X-Gm-Gg: ASbGncuAw+H2qGyKccNQhoNthDdNFRBPN1ugRVQmHvw4Pp74Ujvx60NM7m8dQ5Pp65Q
+	9oeUAZhtw9y2+M/heql8ufDcgywkI1VRqZf73BNGCbaq65d6NS2gmfLePthEkgiG8LDPQgDBy8M
+	zHVAt57FCexLuuJCy1XvPxMSHQdre9P25JN+Tjn7tG3a6eQZ653dHwXgDxEfiI7o19ktkkg6i3Q
+	COOsnoI/dvSnoe9klsl89HZuFEuNAnzIwoT6ZXU0yn5tHB/2KBBS9v6hdNDtC0u8IZlYA88QE5J
+	bL4KlEP0NORjCeviDihUYwli/MiBxFfzVQ==
+X-Received: by 2002:a05:600c:3d89:b0:439:4bcb:9627 with SMTP id 5b1f17b1804b1-4394bcb9824mr33093705e9.19.1739265666276;
+        Tue, 11 Feb 2025 01:21:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHHhcii8/gMzgbjCtzPFGXWOhny+IXACWubvNjGvJdPgAWxxjeo8ItFFCONtsM15zsiDsGIpA==
+X-Received: by 2002:a05:600c:3d89:b0:439:4bcb:9627 with SMTP id 5b1f17b1804b1-4394bcb9824mr33093355e9.19.1739265665809;
+        Tue, 11 Feb 2025 01:21:05 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.34.42])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43935c4f4aasm98533225e9.22.2025.02.11.01.21.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 01:21:05 -0800 (PST)
+Date: Tue, 11 Feb 2025 10:21:02 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Christian Loehle <christian.loehle@arm.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <treding@nvidia.com>,
+	Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Aashish Sharma <shraash@google.com>,
+	Shin Kawamura <kawasin@google.com>,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
+ for hotplug
+Message-ID: <Z6sWfsAqBlGhnkN_@jlelli-thinkpadt14gen4.remote.csb>
+References: <Z6MLAX_TKowbmdS1@jlelli-thinkpadt14gen4.remote.csb>
+ <Z6M5fQB9P1_bDF7A@jlelli-thinkpadt14gen4.remote.csb>
+ <8572b3bc-46ec-4180-ba55-aa6b9ab7502b@nvidia.com>
+ <Z6SA-1Eyr1zDTZDZ@jlelli-thinkpadt14gen4.remote.csb>
+ <a305f53d-44d4-4d7a-8909-6a63ec18a04b@nvidia.com>
+ <5a36a2e8-bd78-4875-9b9e-814468ca6692@arm.com>
+ <db800694-84f7-443c-979f-3097caaa1982@nvidia.com>
+ <8ff19556-a656-4f11-a10c-6f9b92ec9cea@arm.com>
+ <Z6oysfyRKM_eUHlj@jlelli-thinkpadt14gen4.remote.csb>
+ <80ccec94-df27-4a99-8037-17165f6c5d8f@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Tue, 11 Feb 2025 01:20:54 -0800
-X-Gm-Features: AWEUYZlZSryfeuoyf0ZVN0odSbkSu51s5prPv-mgznTC7yy0Fa37Rsfs98SEMSw
-Message-ID: <CAJM55Z_X4A_FO1OrA=3jC9+uYhs-Pe0zFSxavFJv3orOka9CdA@mail.gmail.com>
-Subject: Re: [PATCH v1] riscv: Use of_property_present() to test for
- non-boolean properties
-To: Alexandre Ghiti <alex@ghiti.fr>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>, linux-riscv@lists.infradead.org
-Cc: Steffen Persvold <spersvold@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	linux-kernel@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Yunhui Cui <cuiyunhui@bytedance.com>, Sudeep Holla <sudeep.holla@arm.com>, 
-	=?UTF-8?B?TWlxdWVsIFNhYmF0w6kgU29sw6A=?= <mikisabate@gmail.com>, 
-	Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <80ccec94-df27-4a99-8037-17165f6c5d8f@arm.com>
 
-Alexandre Ghiti wrote:
-> Hi Emil,
->
-> On 05/02/2025 15:39, Emil Renner Berthing wrote:
-> > The use of of_property_read_bool() for non-boolean properties is
-> > deprecated and since
-> >
-> > commit c141ecc3cecd ("of: Warn when of_property_read_bool() is used on non-boolean properties")
-> >
-> > a warning is displayed when used incorrectly. Fix it by switching to
-> > of_property_present() as recommended in the same commit.
-> >
-> > Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-> > ---
-> >   arch/riscv/kernel/cacheinfo.c | 12 ++++++------
-> >   1 file changed, 6 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
-> > index 2d40736fc37c..26b085dbdd07 100644
-> > --- a/arch/riscv/kernel/cacheinfo.c
-> > +++ b/arch/riscv/kernel/cacheinfo.c
-> > @@ -108,11 +108,11 @@ int populate_cache_leaves(unsigned int cpu)
-> >   	if (!np)
-> >   		return -ENOENT;
-> >
-> > -	if (of_property_read_bool(np, "cache-size"))
-> > +	if (of_property_present(np, "cache-size"))
-> >   		ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
-> > -	if (of_property_read_bool(np, "i-cache-size"))
-> > +	if (of_property_present(np, "i-cache-size"))
-> >   		ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
-> > -	if (of_property_read_bool(np, "d-cache-size"))
-> > +	if (of_property_present(np, "d-cache-size"))
-> >   		ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
-> >
-> >   	prev = np;
-> > @@ -125,11 +125,11 @@ int populate_cache_leaves(unsigned int cpu)
-> >   			break;
-> >   		if (level <= levels)
-> >   			break;
-> > -		if (of_property_read_bool(np, "cache-size"))
-> > +		if (of_property_present(np, "cache-size"))
-> >   			ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
-> > -		if (of_property_read_bool(np, "i-cache-size"))
-> > +		if (of_property_present(np, "i-cache-size"))
-> >   			ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
-> > -		if (of_property_read_bool(np, "d-cache-size"))
-> > +		if (of_property_present(np, "d-cache-size"))
-> >   			ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
-> >   		levels = level;
-> >   	}
->
->
-> The same patch has been on the ML since last november:
->
-> https://lore.kernel.org/linux-riscv/20241104190314.270095-1-robh@kernel.org/
->
-> And was already re-sent once end of december...
+On 11/02/25 09:36, Dietmar Eggemann wrote:
+> On 10/02/2025 18:09, Juri Lelli wrote:
+> > Hi Christian,
+> > 
+> > Thanks for taking a look as well.
+> > 
+> > On 07/02/25 15:55, Christian Loehle wrote:
+> >> On 2/7/25 14:04, Jon Hunter wrote:
+> >>>
+> >>>
+> >>> On 07/02/2025 13:38, Dietmar Eggemann wrote:
+> >>>> On 07/02/2025 11:38, Jon Hunter wrote:
+> >>>>>
+> >>>>> On 06/02/2025 09:29, Juri Lelli wrote:
+> >>>>>> On 05/02/25 16:56, Jon Hunter wrote:
+> >>>>>>
+> >>>>>> ...
+> >>>>>>
+> >>>>>>> Thanks! That did make it easier :-)
+> >>>>>>>
+> >>>>>>> Here is what I see ...
+> >>>>>>
+> >>>>>> Thanks!
+> >>>>>>
+> >>>>>> Still different from what I can repro over here, so, unfortunately, I
+> >>>>>> had to add additional debug printks. Pushed to the same branch/repo.
+> >>>>>>
+> >>>>>> Could I ask for another run with it? Please also share the complete
+> >>>>>> dmesg from boot, as I would need to check debug output when CPUs are
+> >>>>>> first onlined.
+> >>>>
+> >>>> So you have a system with 2 big and 4 LITTLE CPUs (Denver0 Denver1 A57_0
+> >>>> A57_1 A57_2 A57_3) in one MC sched domain and (Denver1 and A57_0) are
+> >>>> isol CPUs?
+> >>>
+> >>> I believe that 1-2 are the denvers (even thought they are listed as 0-1 in device-tree).
+> >>
+> >> Interesting, I have yet to reproduce this with equal capacities in isolcpus.
+> >> Maybe I didn't try hard enough yet.
+> >>
+> >>>
+> >>>> This should be easy to set up for me on my Juno-r0 [A53 A57 A57 A53 A53 A53]
+> >>>
+> >>> Yes I think it is similar to this.
+> >>>
+> >>> Thanks!
+> >>> Jon
+> >>>
+> >>
+> >> I could reproduce that on a different LLLLbb with isolcpus=3,4 (Lb) and
+> >> the offlining order:
+> >> echo 0 > /sys/devices/system/cpu/cpu5/online
+> >> echo 0 > /sys/devices/system/cpu/cpu1/online
+> >> echo 0 > /sys/devices/system/cpu/cpu3/online
+> >> echo 0 > /sys/devices/system/cpu/cpu2/online
+> >> echo 0 > /sys/devices/system/cpu/cpu4/online
+> >>
+> >> while the following offlining order succeeds:
+> >> echo 0 > /sys/devices/system/cpu/cpu5/online
+> >> echo 0 > /sys/devices/system/cpu/cpu4/online
+> >> echo 0 > /sys/devices/system/cpu/cpu1/online
+> >> echo 0 > /sys/devices/system/cpu/cpu2/online
+> >> echo 0 > /sys/devices/system/cpu/cpu3/online
+> >> (Both offline an isolcpus last, both have CPU0 online)
+> >>
+> 
+> Could reproduce on Juno-r0:
+> 
+> 0 1 2 3 4 5
+> 
+> L b b L L L
+> 
+>       ^^^
+>       isol = [3-4] so both L
+> 
+> echo 0 > /sys/devices/system/cpu/cpu1/online
+> echo 0 > /sys/devices/system/cpu/cpu4/online
+> echo 0 > /sys/devices/system/cpu/cpu5/online
+> echo 0 > /sys/devices/system/cpu/cpu2/online - isol
+> echo 0 > /sys/devices/system/cpu/cpu3/online - isol
+> 
+> >> The issue only triggers with sugov DL threads (I guess that's obvious, but
+> >> just to mention it).
+> 
+> IMHO, it doesn't have to be a sugov DL task. Any DL task will do.
 
-Yeah I saw that later, but it would still be great to have this applied in 6.14
-so we don't get all those warnings at boot.
+OK, but in this case we actually want to fail. If we have allocated
+bandwidth for an actual DL task (not a dl server or a 'fake' sugov), we
+don't want to inadvertently leave it w/o bandwidth by turning CPUs off.
 
-/Emil
+> // on a 2. shell:
+> # chrt -d -T 5000000 -D 10000000 -P 16666666 -p 0 $$
+> 
+> # ps -eTo comm,pid,class | grep DLN
+> bash             1243 DLN
+> 
+> 5000000/16666666 = 0.3, 0.3 << 10 = 307 (task util, bandwidth requirement)
+> 
+> > It wasn't obvious to me at first :). So thanks for confirming.
+> > 
+> >> I'll investigate some more later but wanted to share for now.
+> > 
+> > So, problem actually is that I am not yet sure what we should do with
+> > sugovs' bandwidth wrt root domain accounting. W/o isolation it's all
+> > good, as it gets accounted for correctly on the dynamic domains sugov
+> > tasks can run on. But with isolation and sugov affected_cpus that cross
+> > isolation domains (e.g., one BIG one little), we can get into troubles
+> > not knowing if sugov contribution should fall on the DEF or DYN domain.
+> 
+> # echo 0 > /sys/devices/system/cpu/cpu1/online
+> [   87.402722] __dl_bw_capacity() mask=0-2,5 cap=2940
+> [   87.407551] dl_bw_cpus() cpu=1 rd->span=0-2,5 cpu_active_mask=0-5 cpumask_weight(rd->span)=4
+> [   87.416019] dl_bw_manage: cpu=1 cap=1916 fair_server_bw=52428 total_bw=524284 dl_bw_cpus=4 type=DYN span=0-2,5
+> 
+> # echo 0 > /sys/devices/system/cpu/cpu2/online
+> [   95.562270] __dl_bw_capacity() mask=0,2,5 cap=1916
+> [   95.567091] dl_bw_cpus() cpu=2 rd->span=0,2,5 cpu_active_mask=0,2-5 cpumask_weight(rd->span)=3
+> [   95.575735] dl_bw_manage: cpu=2 cap=892 fair_server_bw=52428 total_bw=157284 dl_bw_cpus=3 type=DYN span=0,2,5
+> 
+> # echo 0 > /sys/devices/system/cpu/cpu5/online
+> [  100.573131] __dl_bw_capacity() mask=0,5 cap=892
+> [  100.577713] dl_bw_cpus() cpu=5 rd->span=0,5 cpu_active_mask=0,3-5 cpumask_weight(rd->span)=2
+> [  100.586186] dl_bw_manage: cpu=5 cap=446 fair_server_bw=52428 total_bw=104856 dl_bw_cpus=2 type=DYN span=0,5
+> 
+> # echo 0 > /sys/devices/system/cpu/cpu3/online
+> [  110.232755] __dl_bw_capacity() mask=1-5 cap=892
+> [  110.237333] dl_bw_cpus() cpu=6 rd->span=1-5 cpu_active_mask=0,3-4 cpus=2
+> [  110.244064] dl_bw_manage: cpu=3 cap=446 fair_server_bw=52428 total_bw=419428 dl_bw_cpus=2 type=DEF span=1-5
+> 
+> 
+> # echo 0 > /sys/devices/system/cpu/cpu4/online
+> [  175.870273] __dl_bw_capacity() mask=1-5 cap=446
+> [  175.874850] dl_bw_cpus() cpu=6 rd->span=1-5 cpu_active_mask=0,4 cpus=1
+> [  175.881407] dl_bw_manage: cpu=4 cap=0 fair_server_bw=52428 total_bw=367000 dl_bw_cpus=1 type=DEF span=1-5
+>                                    ^^^^^                                                            ^^^^^^^^
+>                                    w/o/ cpu4 cap is 0!                                              cpu0 is not part of it                                                                                                     
+> ...
+> [  175.897600] dl_bw_manage() cpu=4 cap=0 overflow=1 return=-16
+>                                           ^^^^^^^^^^ -EBUSY
+>                                           
+> -bash: echo: write error: Device or resource busy
+> 
+> sched_cpu_deactivate()
+> 
+>   dl_bw_deactivate(cpu)
+> 
+>     dl_bw_manage(dl_bw_req_deactivate, cpu, 0);
+> 
+>       return overflow ? -EBUSY : 0;
+> 
+> Looks like in DEF there is no CPU capacity left but we still have 1 DLN
+> task with a bandwidth requirement of 307.
+> 
+
