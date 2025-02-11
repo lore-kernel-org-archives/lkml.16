@@ -1,99 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B026B1F0E2B;
-	Tue, 11 Feb 2025 12:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85031215067;
+	Tue, 11 Feb 2025 12:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739276125; cv=none; b=rO1CKl8AO74VNsw7WC6MqDiRkpTQZGgI6eZyJOkwQ1440/DwIfw4nkGKzmp0QSNH1mDAeHi3NRUSqSuHt0sFAEU5uPxpNi9eUFUdlXAdy+m0qDcVENfVHFXwOgt/NLvaWaK+r5cgD1HRX7GuO+wGrlDgIFpdi9TY6ZbLR8hZeno=
+	t=1739276133; cv=none; b=Z5Jwpcp3O2uppJ06hIK9FuEGl2pMMeZye11N4ibjP6/lqvUgjOyOKfqO7eAzlZS7rqg/bKni59571xRVGdO5z5VvA9SpvzX1jxccSvSGNFM5DNh4oMYb1/uKTqDctxKcQ+5DvZ2ySSU7Hh3j+L3sH33jLhnUfoDHKplmqwYKuLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739276125; c=relaxed/simple;
-	bh=zoSSmznO7SRSw6TE33qECXNuVo+1epHzg6wm9dkgQc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QZeN0N9lgs9gaPTFHgVcGJRPtfVMQfG3l2xZpjy74qtXUOMz9VueE1iBd1QuJsg4LLfpULsWDV28e1Xsc/knvZKOOCFliqL+4LiowopT8AhLzcAtFXi/82zZzfD8J6a1v3QVtotirEENC2e+3phM5V9CrDkWABu+/mjiLFzc1LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NUE4WGa4; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NUE4WGa4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739276124; x=1770812124;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=zoSSmznO7SRSw6TE33qECXNuVo+1epHzg6wm9dkgQc4=;
-  b=NUE4WGa4il3AIBLj/0y4HYO4pJtq5Rz0Q4H8t4zXX0WYEI4TJFFwD52o
-   UHhEB7FhiubxKSmP6wUINGgk125LF9J6hB/UhQydAnb35bST2+ZyiXWky
-   7UsvWmEDYpSF+hWWwivnnqe5aZya8Beh+BhtnbkkgPn48hSuExzLjckGK
-   4GbbBlwqTNE9UB9+UdNosN+Qw2nyCYSSE8SYsL3kW0L5hLdiFhbJQDIUP
-   H2wQHHAin5m9a4bKcJQqAmVPUV1kDsunD3Ih8aqvjSPGVQ3AVbwa+SSsw
-   k3AH2x+e6FaRM0Xkx+KkLP/AlUmLwR4OK7TlolfDEwxblipgoz/tlcGSW
-   Q==;
-X-CSE-ConnectionGUID: nU8F/R5fQ7SHuU2U8mejEg==
-X-CSE-MsgGUID: BrtafWDQQcye80VcYhUJFQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="65245721"
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="65245721"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:15:23 -0800
-X-CSE-ConnectionGUID: 6l/IhbEUTZWS6GsSNhelHA==
-X-CSE-MsgGUID: r/ZCHScQSI6gP4ESi2u1Fw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117688670"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:15:20 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1thpAb-0000000AUx4-02jL;
-	Tue, 11 Feb 2025 14:15:17 +0200
-Date: Tue, 11 Feb 2025 14:15:16 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Petr Mladek <pmladek@suse.com>, David Gow <davidgow@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] scanf: convert self-test to KUnit
-Message-ID: <Z6s_VHExZe7ArgO7@smile.fi.intel.com>
-References: <20250210-scanf-kunit-convert-v6-0-4d583d07f92d@gmail.com>
- <20250210-scanf-kunit-convert-v6-1-4d583d07f92d@gmail.com>
- <Z6s2eqh0jkYHntUL@pathway.suse.cz>
- <CAJ-ks9n5=FYiFdmzWCkkACzX6oEVs=Z261_ZAKVq3tkqgJoSCQ@mail.gmail.com>
+	s=arc-20240116; t=1739276133; c=relaxed/simple;
+	bh=px1/3pDHkPTjELj1Y3FHc3HpPQ/OFBWfdG0ktviEZB8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=jo5wEg3uyHC+zfxyJB+v4F58T2qB5s0/YbaLwVsoqfw9s6sCGSQUnn2ryOvOz8rZ1czvWA1VokG9FzqqFU6+b+gIE1CCmPVKMYJw5fgteW5Uk8c/o9Cl2gTBHs8CV1Hm9wzqg6Ykg0Q4daj0jBxwWviJIWFHsaKJJ1IoYZLjuL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxLGtdP6tnRiVyAA--.2035S3;
+	Tue, 11 Feb 2025 20:15:25 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMBxLsdaP6tn2fkLAA--.47359S3;
+	Tue, 11 Feb 2025 20:15:25 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: remove unnecessary header include path
+To: Masahiro Yamada <masahiroy@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>
+References: <20250210102148.1516651-1-masahiroy@kernel.org>
+From: bibo mao <maobibo@loongson.cn>
+Message-ID: <aa024fce-9882-3bbe-9a3c-08e461408241@loongson.cn>
+Date: Tue, 11 Feb 2025 20:14:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20250210102148.1516651-1-masahiroy@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ-ks9n5=FYiFdmzWCkkACzX6oEVs=Z261_ZAKVq3tkqgJoSCQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-CM-TRANSID:qMiowMBxLsdaP6tn2fkLAA--.47359S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrur13Wr1DJr48Zr4fGF4rJFc_yoWfXrbEva
+	y3Gw4rG3yrJw4kXws5K3yrG3W0gw1kJFs0vrnxXr1xJF9xGrZ5GFs3Ww45AFZ8KrWDWr45
+	tFWvyF98Cr15tosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbx8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
+	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_
+	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbI
+	xvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrx
+	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
+	6r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
+	CI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU
+	=
 
-On Tue, Feb 11, 2025 at 06:45:07AM -0500, Tamir Duberstein wrote:
-> On Tue, Feb 11, 2025 at 6:37 AM Petr Mladek <pmladek@suse.com> wrote:
-> > On Mon 2025-02-10 13:13:48, Tamir Duberstein wrote:
-
-> > > +     kunit_printk(KERN_DEBUG, test, "\"%s\", \"%s\" ->", str, fmt);  \
-> >
-> > The switch from pr_debug() to kunit_printk() causes printing huge
-> > amount of messages even when the test passes.
+On 2025/2/10 下午6:21, Masahiro Yamada wrote:
+> arch/loongarch/kvm/ includes local headers with the double-quote form
+> (#include "..."). Also, TRACE_INCLUDE_PATH in arch/loongarch/kvm/trace.h
+> is relative to include/trace/.
 > 
-> I'm not able to reproduce this. pr_debug expands to printk(KERN_DEBUG,
-> ...) which is also what kunit_printk(KERN_DEBUG, ...) expands to. Can
-> you help me understand how you're testing?
-
-You are missing something.
-https://stackoverflow.com/a/57762255/2511795
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> Hence, the local header search path is unneeded.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>   arch/loongarch/kvm/Makefile | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+> index 3a01292f71cc..f4c8e35c216a 100644
+> --- a/arch/loongarch/kvm/Makefile
+> +++ b/arch/loongarch/kvm/Makefile
+> @@ -3,8 +3,6 @@
+>   # Makefile for LoongArch KVM support
+>   #
+>   
+> -ccflags-y += -I $(src)
+> -
+>   include $(srctree)/virt/kvm/Makefile.kvm
+>   
+>   obj-$(CONFIG_KVM) += kvm.o
+> 
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
