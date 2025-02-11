@@ -1,135 +1,135 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA7A1F03D9
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841721F3FD1;
+	Tue, 11 Feb 2025 10:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739269155; cv=none; b=IYlcn1sfll+em4h+89AB5zV12dbUZyoLHGkWwD6CYo5zMxJ8yELdCl6tCDLO0z/OJsYCSyGEeQHnIeSVPiBNKooOEilakT51XPnkbPTjJ2ikcdd31CSD8h+LLaZZ8G0cDIql+CNG5cTPdRLJhGBbTAuvaa+yN6uIGA/9kylRQkw=
+	t=1739269189; cv=none; b=u9czoN5tC/xva1cdNSiSW5Na+Bxs4bZiJwsHIFvqIAaN8NsH5vmOCIB/XxVV1cDbjHXBiyUPrU7idDjbNYO4qi7oitQhYiEbYvJEgYLc1dGSwI48E6UgFlC68Iy4GTi73OoNP8BGl/vzcgh6yHXz2NbCB0Ch9nWziTtOnO+C0Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739269155; c=relaxed/simple;
-	bh=mmYq0ka1rA31PoqSV1w1EnHuELlMe9cDQhIVsboEH4k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n5dITzbiz11+1d/9p11QyPKUWJNvAPpGGftcSQGBWhlID54qKokP7s1bk67NA5QHQnaYapOXQkOQRENQiPyT/Zf+fsBYb8QJWni4L9yL944VwzihDZtrpeGeskUJXnUXuqDxFTI43XFpuvCIfp2xmfXSoU8JRkUemo7kQApHn5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FbIZsUL0; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739269189; c=relaxed/simple;
+	bh=uX1dyU9IflgpojBwXeOMw8uHEiq7py2tVx43fLyNoyc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MYFl03fnhuf4Tm4LHEWM6h3a9gTt8v6LjJN9ms73T3tuLjEQpTKwjcDqVgB526bjA81/ZAnBbqvvY1UFylgruQtdTl5p7I99GqzxTFWH7mrRUqpKwl+yM5dmhC5DZ8bysDKcWr+Bha8Vvd8WJZURKiAkg7v8942TyjPj2IECZvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=RyKq5tU4; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FbIZsUL0"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38dc5764fc0so4001245f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:19:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739269152; x=1739873952; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=d1+7CYo2GEpNNd6dJTgksWpYBgWB3H8P41Hw271gq6M=;
-        b=FbIZsUL0E8B1mxv3MhwM5VVhhb8aivonj/oWvHc7eWMXRS6cREBKaKwbLbsVBJ3rCN
-         FN5D3/qGfyyyFBjiSkmObVbzwdaritTR8bpi16EVsMeXVIYvftwGO3XaOkBuGfREzlv6
-         6f+pAyEkTxy4bY1H9BZUpxWeU3pXXvfdn8PMVbbPvG7gtV8rwLf5wZUjMLZZiIf3wjX6
-         Zzd0ZVw+5Mjvrm9DsiZKiOVeCDma7WY+mxOPQsuJso2xqZF3qgmrM2uuebEMe6VOkDBF
-         SlCM4vzxY7gUARIUqlMJli7b9jynxtuxy5kU4OBgB4PVLgwBqjlrNVVWFMgylzsvN/Nx
-         KlBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739269152; x=1739873952;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d1+7CYo2GEpNNd6dJTgksWpYBgWB3H8P41Hw271gq6M=;
-        b=NlIJSBXSUHPmM9ufexp387knPhIh0yFxrdL8HY5vnba6xka174rHtKaOdA8LZ2TuEn
-         PXlEJEWWDwNUx3QlAQXTLaGbUK/P45EeDIolIzx1KIE7mIMLyszg90tpfBFl3WHPQCph
-         3mELMmu4MuqCahhKHb72Mf8fjwebcvo+N+wQXnLP1cZDcIx62ngLNNbXXSeCdci4ftbV
-         M+vvPZJBXWPrNBZBBozPMl1I1oMHaUWXG6CUbnhCg3R7DocOtkINnZz46ZTwKmFXkZER
-         7j7bYuFBXHdHkGlG3iRO8usm/TdynOY5aStmHqXowRLodmuXuzbd2RTUprEqIk3Fau99
-         n36g==
-X-Gm-Message-State: AOJu0YyXR156pfXku20SKd/G25JyLlO1aeIW8wJvXsQs08FT7nWkVRBJ
-	ZvZIn4//19HKZ2NpCP5l9/bMwbVLiOS9FiLMgZ2AA4cOTX3N3PFj0EKDUn2tdg0=
-X-Gm-Gg: ASbGnctJ9LrsVh3kgUIRlxN2+QhiDs4THjZs2Cekxa0QvSVINEIkkSyUE2jMLbVMEAz
-	YjHCmz/Q2dJbB2nQbApABXLQqGnmt+wPrnYzbbWDTX+d9TIiCJqeXCw8HrhC4WItdic9+CjttAJ
-	+gpc7aasx9ZEIvjys7wL4FCiaK+mzQSNSpuJ7uRIw31jwRL+cylyGJs4xFRHjFf51sjphqyNyKb
-	VfBEBPbx6VFLWcey0+XBMHqMTDgZYEXXLvlzOdADxe8ffrpYgOGJj0sqFcGVfkKKOBFfdW2XYUd
-	xxS3M1VG8NAJJqod58GXAZlYhb2xJ0P4bSzws4IyMtC56zJE9jiG3N/N+Q==
-X-Google-Smtp-Source: AGHT+IHh4hDVGqmsMf5rJQ27Gh0Zf6r2TAYfUuWPHNsKZyYXSF39sDKmhxO9TOc6pLn17KWtWMv46Q==
-X-Received: by 2002:a5d:6d87:0:b0:38d:d69e:1326 with SMTP id ffacd0b85a97d-38dd69e1b18mr7568941f8f.9.1739269152351;
-        Tue, 11 Feb 2025 02:19:12 -0800 (PST)
-Received: from [192.168.0.156] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd3dcca71sm9090007f8f.76.2025.02.11.02.19.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 02:19:12 -0800 (PST)
-Message-ID: <012b0381-a5d1-49bc-aa59-aae0d35aa034@linaro.org>
-Date: Tue, 11 Feb 2025 10:19:12 +0000
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="RyKq5tU4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=7hfjt0I5NnrMIwqrD0mfpNKdeBJDKmRJFRQX9VEMhUU=; b=RyKq5tU4gJrvp0I9SDHNYwuL7b
+	NIoPnPxm1Ky1/wh0xCoSJHRif70vJVUsux58hnlYWxL4M1BtGHKz9fs4d8clPl8B+QsISMjXZum9w
+	+MA2E+sjoIHRtpl8wQK2JzQ5PXOOQ2VLzKmETjW9SZSIAzyWuz8nHCdCQVNAyPbloRGNJBQTW2xmV
+	vw4dO1Y8ze/3FGKayzQaJ9+lqHw1Ratvb1PgCng3yEfmjmvWnlj1Os3Lx5eZPcM9NkF1zu97uKC91
+	s9Wd5+REWbaxfvcIWFsjmLp8TdX75W9mG7J/fPWeK2/yq4x4N9BGxrbdVx2hGN7b8toBEaedLZ0tJ
+	1rKNklJg==;
+Received: from i53875bc0.versanet.de ([83.135.91.192] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1thnMf-0006As-Pf; Tue, 11 Feb 2025 11:19:37 +0100
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Kever Yang <kever.yang@rock-chips.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-rockchip@lists.infradead.org,
+ Shaohan Yao <shaohan.yao@rock-chips.com>, linux-pm@vger.kernel.org,
+ Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
+ Zhang Rui <rui.zhang@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ linux-arm-kernel@lists.infradead.org
+Subject:
+ Re: [PATCH 2/2] thermal: rockchip: Support the rk3562 SoC in thermal driver
+Date: Tue, 11 Feb 2025 11:19:36 +0100
+Message-ID: <17758610.geO5KgaWL5@diego>
+In-Reply-To: <7f17cc55-a741-4bb8-9513-0580ca6fedd3@linaro.org>
+References:
+ <20241224094015.3816301-1-kever.yang@rock-chips.com>
+ <20241224094015.3816301-2-kever.yang@rock-chips.com>
+ <7f17cc55-a741-4bb8-9513-0580ca6fedd3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] media: qcom: camss: Add sa8775p camss TPG support
-To: Wenmeng Liu <quic_wenmliu@quicinc.com>, Robert Foss <rfoss@kernel.org>,
- Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-References: <20250211-sa8775p_tpg-v1-0-3f76c5f8431f@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250211-sa8775p_tpg-v1-0-3f76c5f8431f@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On 11/02/2025 10:07, Wenmeng Liu wrote:
-> SA8775P is a Qualcomm SoC. This series adds driver changes to
-> bring up the TPG interfaces in SA8775P.
-> 
-> We have tested this on qcs9100-ride board with 'Test Pattern Generator'.
-> Unlike CSID TPG, this TPG can be seen as a combination of CSIPHY and sensor.
-> 
-> Tested with following commands:
-> - media-ctl --reset
-> - v4l2-ctl -d /dev/v4l-subdev0 -c test_pattern=0
-> - media-ctl -V '"msm_tpg0":0[fmt:SRGGB10/4608x2592 field:none]'
-> - media-ctl -V '"msm_csid0":0[fmt:SRGGB10/4608x2592 field:none]'
-> - media-ctl -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/4608x2592 field:none]'
-> - media-ctl -l '"msm_tpg0":1->"msm_csid0":0[1]'
-> - media-ctl -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
-> - v4l2-ctl -d /dev/v4l-subdev0 -c test_pattern=9
-> - yavta -B capture-mplane -n 5 -f SRGGB10P -s 4608x2592 /dev/video0
->    --capture=7
-> 
-> Used following tools for the sanity check of these changes.
-> 
-> - make -j32 W=1
-> - ./scripts/checkpatch.pl
-> 
-> ---
-> This patch series depends on patch series:
-> https://lore.kernel.org/linux-media/20250210162843.609337-1-quic_vikramsa@quicinc.com/
-> ---
-> 
-> ---
-> Wenmeng Liu (3):
->        media: qcom: camss: Add support for TPG common
->        media: qcom: camss: Add link support for TPG common
->        media: qcom: camss: tpg: Add TPG support for SA8775P
-> 
->   drivers/media/platform/qcom/camss/Makefile         |   2 +
->   drivers/media/platform/qcom/camss/camss-csid-690.c |  15 +
->   drivers/media/platform/qcom/camss/camss-csid.c     |  44 +-
->   drivers/media/platform/qcom/camss/camss-tpg-gen1.c | 245 +++++++
->   drivers/media/platform/qcom/camss/camss-tpg.c      | 737 +++++++++++++++++++++
->   drivers/media/platform/qcom/camss/camss-tpg.h      | 130 ++++
->   drivers/media/platform/qcom/camss/camss.c          | 113 ++++
->   drivers/media/platform/qcom/camss/camss.h          |   5 +
->   8 files changed, 1282 insertions(+), 9 deletions(-)
-> ---
-> base-commit: c1696380f08cf7cc68560a11f2e8c51cb24aa7ba
-> change-id: 20250211-sa8775p_tpg-7de227a82eb4
-> 
-> Best regards,
+Hey Daniel,
 
-Great to see this work.
+Am Dienstag, 11. Februar 2025, 10:36:09 MEZ schrieb Daniel Lezcano:
+> On 24/12/2024 10:40, Kever Yang wrote:
+> > From: Shaohan Yao <shaohan.yao@rock-chips.com>
+> > 
+> > There are one Temperature Sensor on rk3562, channel 0 is for chip.
+> 
+> A bit stingy in terms of description, no ?
+> 
+> 
+> > Signed-off-by: Shaohan Yao <shaohan.yao@rock-chips.com>
+> > Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+[...]
+> > +static const struct tsadc_table rk3562_code_table[] = {
+> > +	{0, -40000},
+> > +	{1419, -40000},
+> > +	{1428, -35000},
+> > +	{1436, -30000},
+> > +	{1445, -25000},
+> > +	{1453, -20000},
+> > +	{1462, -15000},
+> > +	{1470, -10000},
+> > +	{1479, -5000},
+> > +	{1487, 0},
+> > +	{1496, 5000},
+> > +	{1504, 10000},
+> > +	{1512, 15000},
+> > +	{1521, 20000},
+> > +	{1529, 25000},
+> > +	{1538, 30000},
+> > +	{1546, 35000},
+> > +	{1555, 40000},
+> > +	{1563, 45000},
+> > +	{1572, 50000},
+> > +	{1580, 55000},
+> > +	{1589, 60000},
+> > +	{1598, 65000},
+> > +	{1606, 70000},
+> > +	{1615, 75000},
+> > +	{1623, 80000},
+> > +	{1632, 85000},
+> > +	{1640, 90000},
+> > +	{1648, 95000},
+> > +	{1657, 100000},
+> > +	{1666, 105000},
+> > +	{1674, 110000},
+> > +	{1682, 115000},
+> > +	{1691, 120000},
+> > +	{1699, 125000},
+> > +	{TSADCV2_DATA_MASK, 125000},
+> > +};
+> 
+> May be it is time to optimize all these tables out of the memory driver?
+> 
+> It is the 9th table introduced.
 
-I think the TPG should be another type of PHY.
+just to see if we think differently, what do you have in mind?
 
----
-bod
+For me the adc-to-temperature conversion _is_ part of the hw-block itself,
+so should likely not spill into the devicetree, but you're right, defining
+a big table for each soc also isn't really great.
+
+For the rk3562 in question, the stepping seems to be 8,9,8,9,....
+where for the rk3568 the value stepping seems to be 32,36,32,36,...
+and it looks similar for the other socs too, with the driver is already
+interpolating between values it seems.
+
+So even just halving (or more) all the big tables (dropping every second
+entry for example) should not really loose us real granularity.
+
+Heiko
+
+
