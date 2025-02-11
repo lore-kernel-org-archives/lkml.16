@@ -1,119 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F20261563;
-	Tue, 11 Feb 2025 17:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B141261563
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739295623; cv=none; b=PH1CaeBTMH8k7JyAZR/WLMCJbdrxpAJzIvX6kFZ+zPSHCocquwuwsO4UNf890vJhd50Qp7TgrNQZdb21cyxmEix1B2oeS9FCOqC0hSbiZaLjKDl/GQT9MIHtaseyDlYuwMAQV+xxclD9xVS0wtB6HICOUOOBUpNQ36h5YFBvAcA=
+	t=1739295648; cv=none; b=hoN8U53lKB1/GOv7NhgE+OHs1n+fgh9zv9u7EBypKqMGQ19GG4DgFsMkq8evlGeq0hsHydGgVrI4VlEXRz6RnYvWj/fISdu3yTkUzvhrMxuaRLVzlbkKOS6D+MH8Wlq8U2gub18JeXkeZWI9k5rCX1KJYwk7I+Si5qFN2ZBaNfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739295623; c=relaxed/simple;
-	bh=ykKhuvNtcefLQFtFY/0YnvZb7+SKCD0jwRcfizZlqjA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GqCll4vHri9MhnfdlSagAYMlYjxJs5wX3zLeUPpXQdmfwDcwgy8foAXsn8ib13ic1sYBT8ic8X3RmpyaPm4ip+/Wm2+Mk80yBbwS7NhrnI6TuyJnAVNoAFOdpH+j/CQVd1bqiCqyBfgQovpay6n04/C0wni3tinHeOkJRqHj2bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTCRa1De; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739295648; c=relaxed/simple;
+	bh=Gl89qtb2MUsfe/8pKuOXnBbxD2G598AXAHnqxWboVm0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mZx7OKDP4NgU1kBnIJTD/bCGY/7mNAKSBwFKQ35I+INr2WXrjUU8l3h32XaFiAJ20sqhBA+kwMAOTx6qBHg6jHU7qcKCoxTv4MLWX0CzJHgtJ/PzlnF2UwjfRL/6T74sE8jlXwU8GaIOIKuE1Xpr6k32bVAtShfjt6K2P5pHNTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Cs30FbkJ; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTCRa1De"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE06EC4CEE5;
-	Tue, 11 Feb 2025 17:40:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739295622;
-	bh=ykKhuvNtcefLQFtFY/0YnvZb7+SKCD0jwRcfizZlqjA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FTCRa1De7v24Qfg940XRi/0dM5aznbQ/b7DjL5/9g2ApJYFcblNb1ld2lRNBvN4Op
-	 CU+SzlBnlao7eFS0V62qngXZTcJbsVxYkW1IL9IcozRQpsYoY99j25pe9ApMrs8Qv0
-	 zHxXYiQw1+eK3aGxx4/97LvS/zmttP/LWDhaqg1VsCBMPS9leke0RZOMEI3I2zWGGV
-	 2NnAhrU8f4EUm5y4uv4WZAk8k5U2jz8OzaaHnc3TTSAsRV4ivGaUIKNckP972L2jY6
-	 iP/Os0wM/V+i0Bq8p8t22LfAnYPZDkfAM0lN2kD4P9+jwR1HqRFRFk2SqEZWFvpBXG
-	 zc3FPhTXpVs0w==
-Message-ID: <728a26f7-a396-41a2-8d1f-7fa39c8f10b3@kernel.org>
-Date: Tue, 11 Feb 2025 18:40:18 +0100
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Cs30FbkJ"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so1081466566b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:40:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1739295645; x=1739900445; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sz+2zlib0S1+CTvsIUDnMSNs7707USycABHIy9UgNmQ=;
+        b=Cs30FbkJU/z6+kOX/NeQi+nEKmLnplFjDXoQvoKD07u2VcZjlUbXT62v5+iZoxBTA4
+         Fkx1CbTKJlg4tBN1q7CeTtarEUx5wM5cFK1OR4AAI9T5yeuzWf9Jllsy5oC/6xiex9O4
+         d0bC5Td/oRCsZE1b1gehef4d49gOga+vbQOT4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739295645; x=1739900445;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Sz+2zlib0S1+CTvsIUDnMSNs7707USycABHIy9UgNmQ=;
+        b=X+JqfYLWJK1nuAc64J2LvFl+6cLIyOyTTf1Z/DfpCLbjbDooRJxf0Jw99rPmbxGgiU
+         zGVJEA/4ERXeQqdiVBGE/2LEUOXyaOEn6+QaKdfJMIjncGnJ/nh7Ambxl16paOlbTQV9
+         kJPNJ85ryVrWAUEG0Q+Cfjhv5X925E9TiaEbx8Zuhx6OCrC0JxBpAJ/SiU8OhV2fACFW
+         yb1aUrA5y/K2nTMsVyh247/BuQIu/TUfssYauk2zoPmg8TZ7GvFfvhr64EWRxSlWX9iY
+         Ee/vVXBuDwms3q/aA20J3QPRtZf2G5etIXOM9D4QPWFw/vP/Dd3u4t8ewp9QWGfBpoVt
+         3rmA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWPNL33y5WL2/Cm4+0U71qQF3hZJqXCY+ZS7E7R+uGFtPdzmbqxznAga7487P2OhFwOZ5qHQ3yGeVb6jk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyz2OFcHtQ369X6DPsxLJFuTcvClrZpVFWGTddlupr075E6aN5n
+	OuGdau91jJYe+2kZqlMIhh69yV1p3fo7VLrJy00iNFhmostzgtuumJZW/h20P9Zi/lNeBOwZ0aq
+	K4qk=
+X-Gm-Gg: ASbGncuxzlQDmYWpOScx/d/SsQLjcfjgiWOMvB6yWQrWKyB2GPzGimPYostoKF4cFyW
+	2938zz7VqE2fTaMUxQVnoMOY0X9Jg4RPQlMKmFgn2DMukLXcfK1uCHV1zyZCJ1MgFNQ7OM5us1y
+	3oVDOZKHcL1KnrhXZk02vavHVcisVF2UMDMP4cIxkX+6VBpD2gnQDRpCkT56lKt+827erEXL5ZN
+	9r4ned6bRGHdw4cgo+F1no4bJgwDUJX9psUQaWJ7B2sX6aBmZ0wQjhDBqxWk44Mz+z+izc5kW9V
+	VitxsvHwy0w3bgqI1GE/Dn1PVEszplvJlYBUROHdwxGg5QPuX30H/DE7n3Wd2reAIQ==
+X-Google-Smtp-Source: AGHT+IFRbVyhQF3WMyGNNM2N/xejmkS7Fqr0A8ooi9gafNd6VWOZSrVCEn0a1cOn0R9nwJZkkK6J2w==
+X-Received: by 2002:a17:907:1b0f:b0:aa6:94c0:f753 with SMTP id a640c23a62f3a-ab789ba48cfmr2334209066b.33.1739295643639;
+        Tue, 11 Feb 2025 09:40:43 -0800 (PST)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7dc2943c2sm186610966b.168.2025.02.11.09.40.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 09:40:42 -0800 (PST)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5de6e26db8eso5524776a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:40:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWothpH3/aKqSqa36j2Ubb+hJe1nsCIiBOz7RZGNinAoAk5UfN+j2PuTqZblOCujhZnoyjYbq5XJICtWpQ=@vger.kernel.org
+X-Received: by 2002:a05:6402:278d:b0:5de:44b1:478 with SMTP id
+ 4fb4d7f45d1cf-5deadd05019mr166853a12.0.1739295641520; Tue, 11 Feb 2025
+ 09:40:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] HID: corsair-void: Add Corsair Void headset family
- driver
-To: Stuart <stuart.a.hayhurst@gmail.com>
-Cc: linux-input@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- linux-kernel@vger.kernel.org
-References: <20241008233030.395126-3-stuart.a.hayhurst@gmail.com>
- <5cf187db-1eae-41a8-a33e-ef68a4f66db6@kernel.org>
- <afb96547-7ff3-4070-b960-33f4af7e3edc@kernel.org>
- <CALTg27kaxGOzq2k-dAqbXZ0ez5e-WZRU47Z2eP5297VVHF81kA@mail.gmail.com>
- <0bc098bf-6c02-4d62-bcb1-939e1f0b9f95@kernel.org>
- <CALTg27meqwVyR_+doDzT6v-frx9hfy=fqkz-S2fTJpk8SMmThw@mail.gmail.com>
- <373c2d57-a513-4c2a-ae38-1aa01262c197@kernel.org>
- <CALTg27mhZ_O5=Q5QwmtAbFuz+phcmt7nVfJo7OAUcvCvDu9ggA@mail.gmail.com>
- <8b27c399-098c-48b7-b71d-a833594571af@kernel.org>
- <CALTg27mzuJsvrQneDKD9ni=tYspaap7=NfLgsBak4hALu+1jzw@mail.gmail.com>
- <183b2a4e-d8bb-454f-8ac7-f74ca9d56269@kernel.org>
- <CALTg27nUpWtXDkkSW1yF6Z1K=erFGPOor0kM4xJ08iwkOZyOQg@mail.gmail.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <CALTg27nUpWtXDkkSW1yF6Z1K=erFGPOor0kM4xJ08iwkOZyOQg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <Z6Ow+T/uSv128wdR@duo.ucw.cz> <20250211141109.GV1868108@google.com>
+ <CAHk-=whdcXj==9TkCpQYpmzLweCoDzd9_i8SrODjaQ3ysSe6dw@mail.gmail.com>
+ <20250211155614.GY1868108@google.com> <20250211160125.GA2274105@google.com>
+In-Reply-To: <20250211160125.GA2274105@google.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 11 Feb 2025 09:40:24 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whFeiixFbNx8F8rVeCC-Zdco_sFyYynAbRyJH_NAx0Ukw@mail.gmail.com>
+X-Gm-Features: AWEUYZkX_fOqnnjmQb4I4Q6pfCSRa56tSaSWMI6CSJkYDffeNhXYzTzv3XAJhhs
+Message-ID: <CAHk-=whFeiixFbNx8F8rVeCC-Zdco_sFyYynAbRyJH_NAx0Ukw@mail.gmail.com>
+Subject: Re: MAINTAINERS: Move Pavel to kernel.org address
+To: Lee Jones <lee@kernel.org>, tools@kernel.org
+Cc: Pavel Machek <pavel@ucw.cz>, kernel list <linux-kernel@vger.kernel.org>, rafael@kernel.org, 
+	linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 11. 02. 25, 13:44, Stuart wrote:
->> E.g. set_bit() (one bit per OP) to something like 'unsigned long flags'
->> in 'struct corsair_void_drvdata'. But it depends if you want to preserve
->> order of actions... (Which was not guaranteed with separate queues
->> anyway, so I assume not?)
-> 
-> Wouldn't using one variable for the flags risk overwriting each other, unless
-> it was atomic? I might be misunderstanding, I haven't played with the kernel's
-> work much.
+On Tue, 11 Feb 2025 at 08:07, Lee Jones <lee@kernel.org> wrote:
+>
+> > Out of interest, how did you apply it?  b4 was playing up for me.
 
-set/clear/test/test_and_clear/..._bit() are guaranteed to be atomic.
+So I had no issues, but I don't actually use b4 to apply the patches,
+only to fetch them.
 
--- 
-js
-suse labs
+>   Fetching patch(es)
+>   /home/lee/bin/apply-patch.sh: line 134: /tmp/<Z6Ow+T/uSv128wdR@duo.ucw.cz>.mbox: No such file or directory
+>
+> Where apply-patch.sh: line 134:
+>
+>   b4 am -3 -slt ${PATCHES} -o - ${id} > ${MBOX}
+>
+> My first guess would be the stray '/' in the Message-ID.
+
+I don't know your apply-patch.sh script, so maybe the bug is there,
+and it's your MBOX thing that you create without quoting the message
+ID.
+
+But in case it's actually b4, let's just add tools@kernel.org to the
+participant list.
+
+              Linus
