@@ -1,287 +1,139 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2609A1F942D;
-	Tue, 11 Feb 2025 11:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B071F8BBF;
+	Tue, 11 Feb 2025 11:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739274348; cv=none; b=F3Pe+cPGV4zKgIHLKIa4E9nVgRabMjGXqyMTP2Bg6jJLwncTt+DPbNPbCVdqndiKt5s9mNRhCcTNtCkGd5cYOFPLP43E4lAGXAG4YYu1f9REYj5j3yFWJanbfiiMrW2/ou9/KwtMfyvqVs7LLPsj8+4nDqb6a+vEewqPtKFWrJQ=
+	t=1739274430; cv=none; b=q/zfDBmpm9r0hPo3tWxLYnldmdSVdSXlTkdIt2w76MTim/+vGTWuYUUTRTyTAaMGjyiUk5WMQUualuZvIT6GbBNWNYNWyPtFpSwly6D/JRF901h4KDv8JbV828l5WsXAdcBgFVtQeH/3NRglcQ32Bg0ZS3v/PqXwV6XINAWevFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739274348; c=relaxed/simple;
-	bh=T3Vp7vUqx1OtGg3x7nh+pW+A11uxUE/U8Iv+xWaDeJ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EVxgfT3/InshbnhZSMtGAvwLZ+WeGjIhFXZXPfOJa6ixCZuRy/DWEKhorUF2Ad7fYUDqX2WkN7YDIZYQsXnWLJP3hFMG6VvGmVeuoyxKtD8YHuOwmqHXnQEpF330htKDfy9SH0lCavQ877yewMmiIg8qwi7ag1CYIbSjrnbcopY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mq+ccVGL; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739274430; c=relaxed/simple;
+	bh=9P8Tde5jB2r72hlwt6Vi7jp/JBFV2fMps/hiNYBEKog=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HuwIxWfr3ujG0PYtxYBMD2BNzMgrPoXHPLhLE23wPC/RftZQ8/+xm7JB3/IuwC0LLvwANewvxsJ/p3DV5d8A0yiVlmb0Vissx7N2vWN2XOHIFDpEf8UUnCTGtL05TocmYWwacoKW9D9Yr9VfgxFEyToxOnq9vD/MIIZ2dZ3zeL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrAPiguR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mq+ccVGL"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5450475df04so3316951e87.0;
-        Tue, 11 Feb 2025 03:45:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739274344; x=1739879144; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KLeIAK0yrRErJ2yCVLvDjXnsrf5KEMDWRHqk8rKgwo0=;
-        b=mq+ccVGL0R36TQt6sQsQIEMLpFBGByXemhd3ed+tppiWW+sh2iI0I572Fp24RAVB2R
-         NCSIk2ITgK/xRj/5wViXQI7p0ELvVgkdPgBjeTXgdZmT+xYzFCk5Qm6gi0IuFzAKHsDq
-         CZ1kIB1tmvCkVKV4pFI8ldzhoNF63rK3LQRrLJFhlZdafgWy77eV4+ArLaY+QXLRpk9M
-         ypBy976PBKKY//Br/7i+74L1gQfBIOyLYVdHXvCBEY5pt6kMOU8q5nP3awQhPOb5sWIc
-         +zL8pt/Xk0nKF9u2ZvKY/h4AgFoBDpiLnWGIHJhkUsgaw45o7WATYU8iyhS72VUCfX08
-         Bbaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739274344; x=1739879144;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KLeIAK0yrRErJ2yCVLvDjXnsrf5KEMDWRHqk8rKgwo0=;
-        b=Mhu3brbyKIR/ND0SNXw3bDBhjGVKu4EgxtPiYBCxWoJiJF8Y38q0zNKnPfxsCeCA7g
-         GvQJVChlkZLfHWIayxLl/LJaV0NR3XCYgAJ0Fix6cDk0We3KubqSt4GB7nsrGIiqJSnN
-         jKAssacjSRc4VEJpbvgLukiBG0Q7MXDww+1e3OAvc0h2EYO+1vfzuseI+ky28Ez0NPRa
-         XP4Od5lLLtUnyRQ7LPzCdJbd3rOuqmQJGB819xhRZGkvi3e5nQHhvFqU9+ARTXciKHAQ
-         +6Gox57XJRdKWt+z4EcDPFRfy4EUsexr/5VITuoFXo8pEkOOm7xKeyGgS8Awc1PksT06
-         CriA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIIjV83HFYh5G0blVuiEXU8u6efeWo7ySdl/cXpvlXN6FN/z/bGmgZWUslBAW0mVGaoWkYGtjciXcc96s=@vger.kernel.org, AJvYcCVePAsFvJqGLghXy/KxPmioyQwm91r585c5CpBOlr3HxJYjJS6juST+53DfLLdN/31qRaW/BvQzOa9Tho4pERJV@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPD0bqyDdrTeYcEQopxoKoNrN3xyKIXQph4Re8SVYeXEil44Ax
-	YJRNYmkGSEjpP+r9VYe7zKE/1RTBo5/8KNCEegO15P7lGJUOmLMDiLJ41OFj3h+xdWZ4QxM4U8O
-	UB3cltuXKildXNMeIs/dxbrmNuQM=
-X-Gm-Gg: ASbGncv3TQj6hpDFKxz++GpRZv4w+cAeOCgzRG50E6g1kf/AoKkWl5I5uTRvCwehIqf
-	ayVzhNq1tt+4L+Jk/FlKB/rPjCaOwDWpt736Ums0YqZ3PmLhV5PdRevmeDCDZ3i3tt1b/dn7WYD
-	po9qgDOPe27olOjueos0vsoqWwq8+6
-X-Google-Smtp-Source: AGHT+IH9sFZjIbF2hYddFB9pjj9cde2EFIwaWIiUqulEgH9EY3el1EGkLz6wONU3+Zru+3ajUKBAguq/FWtTMyhUkKs=
-X-Received: by 2002:a05:6512:3b2b:b0:545:5f0:9536 with SMTP id
- 2adb3069b0e04-54505f09661mr3793110e87.50.1739274343842; Tue, 11 Feb 2025
- 03:45:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrAPiguR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A87F1C4CEDD;
+	Tue, 11 Feb 2025 11:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739274430;
+	bh=9P8Tde5jB2r72hlwt6Vi7jp/JBFV2fMps/hiNYBEKog=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LrAPiguRFji4Iub4YvaRSXBQ/ylWezYiMsifYZ6WcRRo5KbmsJHJQOCsT5GXkhKxS
+	 6I+/9/KRfTtuMMegsTn9ICnMviNmjkqUqCcMMz+Rbr4RHooWeR+yG8AqbOFt0mKWwk
+	 pHWMPewICo4ATe5+RQ1MB1jVAO7GJvRjBNEa/HE2MkOOdTbDxA4qZQMklP93uYrInn
+	 /ETx9QK+iDDhNL4o7z2X8yiaNMxqTiZTyYNyDB7Zk1DRUj6uZXToxv2hl5+BmiVsmW
+	 dpwinirrsHRMa3NZUn2zObL7EhNkC1MBrpgndPljOUbsu//fbg4PPsth0bqnh26kjc
+	 ksOdkJflgeGpQ==
+Message-ID: <fcd718be-fe8a-466f-bd2b-7b75d5f8dd6c@kernel.org>
+Date: Tue, 11 Feb 2025 12:46:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210-scanf-kunit-convert-v6-0-4d583d07f92d@gmail.com>
- <20250210-scanf-kunit-convert-v6-1-4d583d07f92d@gmail.com> <Z6s2eqh0jkYHntUL@pathway.suse.cz>
-In-Reply-To: <Z6s2eqh0jkYHntUL@pathway.suse.cz>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 11 Feb 2025 06:45:07 -0500
-X-Gm-Features: AWEUYZlGPfUAOlpqNmwSRLp7J7Yo_ttfhA07BXvloBntEtzB1syfdskMus6S3KA
-Message-ID: <CAJ-ks9n5=FYiFdmzWCkkACzX6oEVs=Z261_ZAKVq3tkqgJoSCQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] scanf: convert self-test to KUnit
-To: Petr Mladek <pmladek@suse.com>
-Cc: David Gow <davidgow@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 1/5] dt-bindings: thermal: Add MBG thermal monitor
+ support
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>,
+ Stephen Boyd <sboyd@kernel.org>, Amit Kucheria <amitk@kernel.org>,
+ Thara Gopinath <thara.gopinath@gmail.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Ajit Pandey
+ <quic_ajipan@quicinc.com>, Imran Shaik <quic_imrashai@quicinc.com>,
+ Taniya Das <quic_tdas@quicinc.com>, Jagadeesh Kona <quic_jkona@quicinc.com>,
+ quic_kamalw@quicinc.com, quic_jprakash@quicinc.com,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org
+References: <20241212-mbg-v2-support-v2-0-3249a4339b6e@quicinc.com>
+ <20241212-mbg-v2-support-v2-1-3249a4339b6e@quicinc.com>
+ <ojukpywkhu72cimujmijzidf26654g5vkjaj477imcf4suz2o6@cmow62jcqsfz>
+ <7a5db383-914c-4c1e-846e-5d68cc6a7765@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <7a5db383-914c-4c1e-846e-5d68cc6a7765@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 11, 2025 at 6:37=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
-e:
->
-> On Mon 2025-02-10 13:13:48, Tamir Duberstein wrote:
-> > Convert the scanf() self-test to a KUnit test.
-> >
-> > In the interest of keeping the patch reasonably-sized this doesn't
-> > refactor the tests into proper parameterized tests - it's all one big
-> > test case.
-> >
-> > Acked-by: Petr Mladek <pmladek@suse.com>
->
-> Please, remove this. The patchset has changed a lot and it is not
-> longer true.
+On 11/02/2025 12:15, Satya Priya Kakitapalli wrote:
+> 
+> On 12/13/2024 2:08 PM, Krzysztof Kozlowski wrote:
+>> On Thu, Dec 12, 2024 at 09:41:20PM +0530, Satya Priya Kakitapalli wrote:
+>>> +
+>>> +required:
+>>> +  - compatible
+>>> +  - reg
+>>> +  - interrupts
+>>> +  - io-channels
+>>> +  - io-channel-names
+>> Binding looks ok, but this wasn't tested due to unneeded dependency.
+>> Please decouple from dependency, so automation can properly test it.
+> 
+> 
+> The dependency is needed because this mbg peripheral is present on only 
+> targets which have GEN3 ADC5, for which the bindings support is added in 
+> the series [1]
+> 
+> 
+> [1] 
+> https://lore.kernel.org/linux-arm-msm/c4ca0a4c-e421-4cf6-b073-8e9019400f4c@quicinc.com/
 
-Will do.
+Sure. Then this cannot be merged due to resulting test failure.
 
->
-> > --- a/lib/test_scanf.c
-> > +++ b/lib/scanf_kunit.c
-> > @@ -15,67 +13,49 @@
-> [...]
-> >  #define _check_numbers_template(arg_fmt, expect, str, fmt, n_args, ap)=
-               \
-> >  do {                                                                  =
-       \
-> > -     pr_debug("\"%s\", \"%s\" ->\n", str, fmt);                       =
-       \
-> > +     kunit_printk(KERN_DEBUG, test, "\"%s\", \"%s\" ->", str, fmt);  \
->
-> The switch from pr_debug() to kunit_printk() causes printing huge
-> amount of messages even when the test passes.
+Please don't post new versions before this can be actually tested and
+applied.
 
-I'm not able to reproduce this. pr_debug expands to printk(KERN_DEBUG,
-...) which is also what kunit_printk(KERN_DEBUG, ...) expands to. Can
-you help me understand how you're testing?
-
-> [ 5780.664377] KTAP version 1
-> [ 5780.664891] 1..1
-> [ 5780.665376]     KTAP version 1
-> [ 5780.665765]     # Subtest: scanf
-> [ 5780.666104]     # module: scanf_kunit
-> [ 5780.666112]     1..10
-> [ 5780.667354]     # numbers_simple: "0", "%llu" ->
-> [ 5780.667371]     # numbers_simple:    0
-> [ 5780.667923]     # numbers_simple: "0", "%llu" ->
-> [ 5780.668321]     # numbers_simple:    0
-> [ 5780.668803]     # numbers_simple: "1", "%llu" ->
-> [ 5780.669175]     # numbers_simple:    1
-> [ 5780.669624]     # numbers_simple: "18446744073709551615", "%llu" ->
->
-> [... skipping 7500+ lines ...]
->
-> [ 5783.157777]     # test_simple_strtol: simple_strtol("0x7ffffffffffffff=
-f", 0) -> 0x7fffffffffffffff
-> [ 5783.158229]     # test_simple_strtol: simple_strtol("0x800000000000000=
-1", 0) -> 0x8000000000000001
-> [ 5783.158683]     # test_simple_strtol: simple_strtol("0x800000000000000=
-0", 0) -> 0x8000000000000000
-> [ 5783.159131]     # test_simple_strtol: simple_strtol("0x800000000000000=
-0", 0) -> 0x8000000000000000
-> [ 5783.159586]     # test_simple_strtol: simple_strtol("0x800000000000000=
-1", 0) -> 0x8000000000000001
-> [ 5783.160048]     # test_simple_strtol: simple_strtol("0x7ffffffffffffff=
-f", 0) -> 0x7fffffffffffffff
-> [ 5783.160506]     # test_simple_strtol: simple_strtol("0xfffffffffffffff=
-e", 0) -> 0xfffffffffffffffe
-> [ 5783.160957]     # test_simple_strtol: simple_strtol("0x2", 0) -> 0x2
-> [ 5783.161467]     # test_simple_strtol: simple_strtol("0xfffffffffffffff=
-f", 0) -> 0xffffffffffffffff
-> [ 5783.161806]     # test_simple_strtol: simple_strtol("0x1", 0) -> 0x1
-> [ 5783.162564]     ok 10 test_simple_strtol
-> [ 5783.163145] # scanf: pass:10 fail:0 skip:0 total:10
-> [ 5783.163537] # Totals: pass:22 fail:0 skip:0 total:22
-> [ 5783.164052] ok 1 scanf
->
->
-> Yes, it would help with debugging. But we should print these details
-> only when the test fails!
->
-> Partial solution might be to use pr_debug(). The messages will be
-> disabled by default and can be enabled via /sys/kernel/debug/dynamic_debu=
-g/control
->
-> Here is some POC:
->
-> From 7ea79fd67c4a7d8dff9d9fa986bb8dc037087c47 Mon Sep 17 00:00:00 2001
-> From: Petr Mladek <pmladek@suse.com>
-> Date: Tue, 11 Feb 2025 12:24:40 +0100
-> Subject: [POC] kunit/scanf_knunit: Add kunit_debug() to allow using the
->  dynamic debug facility
->
-> Do not fill the kernel logbuffer with debug messages by default.
-> Allow to enable them via /sys/kernel/debug/dynamic_debug/control
->
-> The question is whether we want to print them into the kunit log.
->
-> FIXME: This use just a POC. The right solution should reduce
->        cut&paste.
-> ---
->  include/kunit/test.h | 30 ++++++++++++++++++++++++++++++
->  lib/scanf_kunit.c    |  6 +++---
->  2 files changed, 33 insertions(+), 3 deletions(-)
->
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index 58dbab60f853..23fa3d6b3735 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -637,6 +637,36 @@ void __printf(2, 3) kunit_log_append(struct string_s=
-tream *log, const char *fmt,
->  #define kunit_err(test, fmt, ...) \
->         kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
->
-> +/*
-> + * pr_debug and log to per-test or per-suite log buffer.  Logging only d=
-one
-> + * if CONFIG_KUNIT_DEBUGFS is 'y'; if it is 'n', no log is allocated/use=
-d.
-> + *
-> + * The special variant is needed to allow using the printk dynamic debug
-> + * infrastructure, see CONFIG_DYNAMIC_DEBUG.
-> + */
-> +#define kunit_log_debug(test_or_suite, fmt, ...)                       \
-> +       do {                                                            \
-> +               pr_debug(fmt, ##__VA_ARGS__);                           \
-> +               kunit_log_append((test_or_suite)->log,  fmt,            \
-> +                                ##__VA_ARGS__);                        \
-> +       } while (0)
-> +
-> +#define kunit_printk_debug(test, fmt, ...)                             \
-> +       kunit_log_debug(test, KUNIT_SUBTEST_INDENT "# %s: " fmt,        \
-> +                 (test)->name, ##__VA_ARGS__)
-> +
-> +/**
-> + * kunit_debug() - Prints an DEBUG level message associated with @test.
-> + *
-> + * @test: The test context object.
-> + * @fmt:  A printk() style format string.
-> + *
-> + * Prints an error level message.
-> + */
-> +#define kunit_debug(test, fmt, ...) \
-> +       kunit_printk_debug(test, fmt, ##__VA_ARGS__)
-> +
-> +
->  /*
->   * Must be called at the beginning of each KUNIT_*_ASSERTION().
->   * Cf. KUNIT_CURRENT_LOC.
-> diff --git a/lib/scanf_kunit.c b/lib/scanf_kunit.c
-> index 7e2e7d891e41..e45f3c4f0437 100644
-> --- a/lib/scanf_kunit.c
-> +++ b/lib/scanf_kunit.c
-> @@ -42,10 +42,10 @@ _test(struct kunit *test, check_fn fn, const void *ch=
-eck_data, const char *strin
->
->  #define _check_numbers_template(arg_fmt, expect, str, fmt, n_args, ap)  =
-       \
->  do {                                                                    =
-       \
-> -       kunit_printk(KERN_DEBUG, test, "\"%s\", \"%s\" ->", str, fmt);  \
-> +       kunit_debug(test, "\"%s\", \"%s\" ->", str, fmt);       \
->         for (; n_args > 0; n_args--, expect++) {                         =
-       \
->                 typeof(*expect) got =3D *va_arg(ap, typeof(expect));     =
-         \
-> -               kunit_printk(KERN_DEBUG, test, "\t" arg_fmt, got);       =
-       \
-> +               kunit_debug(test, "\t" arg_fmt, got);           \
->                 KUNIT_EXPECT_EQ_MSG(test, got, *expect,                  =
-       \
->                                     "vsscanf(\"%s\", \"%s\", ...)", str, =
-fmt);  \
->         }                                                                =
-       \
-> @@ -677,7 +677,7 @@ do {                                                 =
-                               \
->                                                                          =
-       \
->         len =3D snprintf(test_buffer, BUF_SIZE, gen_fmt, expect);        =
-         \
->         got =3D (fn)(test_buffer, &endp, base);                          =
-         \
-> -       kunit_printk(KERN_DEBUG, test, #fn "(\"%s\", %d) -> " gen_fmt, te=
-st_buffer, base, got); \
-> +       kunit_debug(test, #fn "(\"%s\", %d) -> " gen_fmt, test_buffer, ba=
-se, got); \
->         if (got !=3D (expect)) {                                         =
-         \
->                 KUNIT_FAIL(test, #fn "(\"%s\", %d): got " gen_fmt " expec=
-ted " gen_fmt, \
->                            test_buffer, base, got, expect);              =
-       \
-> --
-> 2.48.1
->
->
-> But when thinking more about it. I think that even pr_debug() is not
-> the right solution.
->
-> IMHO, we really want to print these details only when the test fails.
->
-> Best Regards,
-> Petr
-
-If you use one of the kunit userspace helpers, you will only see the
-output when the test fails. Having said that, in my local testing I
-don't see the KERN_DEBUG prints locally. I had to run with
-ignore_loglevel to see them at all.
+Best regards,
+Krzysztof
