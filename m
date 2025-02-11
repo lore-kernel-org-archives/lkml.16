@@ -1,178 +1,142 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D4A268FD5
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 22:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AB024E4B0;
+	Tue, 11 Feb 2025 22:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739313429; cv=none; b=VLQ+p176MgkPkg8/8zO5vJw1lEMUIq3C/m0FO3ZV1DR4NTU3RHmu15fAOCOlj7pj9Wfl07eD/JYogjcggbk06djpmPbeaWE5nwmoiE6rOx4/VaOqUzyJoC6zorwl6Ld1DdL99B/c/zH/v22L2xNv4yUeN0CdYGUaFR/0QEwKaCg=
+	t=1739313496; cv=none; b=Ttch2JxDFRNfWMu3N1Jm6KLD+bNZouXrrdQ6MmbdBqhKTGCJ28QI7ewGrVELhaWNbpy7uH2DeFlmp1apuyhADUmnkrAMH8KUzG6Q8SYEvT74EE2Jgu3PstoUgNHVFEgU7mB78su8z98pS+cBiICv6z+Oo/f/poAvpzM9Vq3812A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739313429; c=relaxed/simple;
-	bh=q1sN3kNwFoYv6srTktzz9x4Q+lTtCQc0zhJJvewJyGk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YS82t6sim75e6MN1vt6dsQjLOglItgd7Z7GTDPnU1pxLjgGFM7lVfY+jmg4Add94qMDYFdtuVRve5v7N0ITs9iibuAVPooPnt4NQn8yPs+Mpsjfj73WkwEeH+Jbz2Bj2BRi6ljP/7nFwC4xP0JHerG9ZlW6Og58vLTExpwsRbo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=faCHSE5A; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1739313496; c=relaxed/simple;
+	bh=7WIpvq4/O65XfG23yjkfFRHrpE2QsTdNr67aJS/kJew=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=obsNd+NpPrkA2Fqkme7tGqznI5QMVu0kLUl0vcEoDYUCqWgM8+udWHwtvbn00F/zG2XjN4bgU8zAnxTIgWyC5G0NI5mhkGgFRD/HR79sPpBPt7s5l6XdzUFDKYFtGJNJjDgpe3NpyD+5ehO+TiRjbNEOtgp0yBTy1oxgeaFzLpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=RV66N7hf; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="faCHSE5A"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso9395516a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:37:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1739313427; x=1739918227; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zqgo0vzIUKhLbJdiVtuoHIz5/r7b8o5h5B5NAwoEKTY=;
-        b=faCHSE5A4Z3Dr+go34j0gmTWQHw/sNVarD1wLQstYyfPXs1B9Q1tsd3XOH7PNg/nVr
-         3uTo6XvuEeSc8QpA8ZsAunYcDTtsI+BS1v8hjNUTXzr5W3ntKy+n/A6nkwNJzRzPvHBF
-         0G+p2+12BYak4tp25+6QPjRVZ3eRDRVkKT6jE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739313427; x=1739918227;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zqgo0vzIUKhLbJdiVtuoHIz5/r7b8o5h5B5NAwoEKTY=;
-        b=gPfPvV3SaVA4UzQDh8cagfEuNsGkEHaAKIFwCAGSagV49ACLsJZZ3zcFBhVP4HSqpt
-         3H3ex4WNxqnM4yCgJQsxy+wnOehzDZFyU39ASq/dJ/793hmSRQFN4HXwSt+bGV3MZMi2
-         6Q0GkGHa/JfYU4fD3R1rSe7OoqCyA0sI24zuNBQq7GjbMWOo2/CkzTa/TuEUlRX4wrkN
-         2t8H5v7lqQURhRGm4rT7d14vkje10yD4h3XrqZQuBT77xVG3DwCG1MzIzmI52BCmSraD
-         rARDw5se30N97PtC74Pn2QHozi/Kpe0M5Zfg0WpsvGkKSh65iX4w1YSy39slFjW1yR9u
-         xv7g==
-X-Forwarded-Encrypted: i=1; AJvYcCWLHR5gC2iYkGA+CBsUFuXPHSKWL8TkdohVz4JJSuAFPxBjS53HCCvGysfl4Y9c42PZHm60IByOcin/AaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/digU2lZiTJwNPgGr3XgQaNRPmC4a/zDafwTdYCRcXy8+5DZp
-	3EMs1LSo4yHMNKJU9BsnLEWij0CT/YOfpeDqhIOmDKruTMjjg3PKA8rtsAdd/hY=
-X-Gm-Gg: ASbGncvzbA30XIdrDgIzS1zvA0NgayY/Gw05Rx+4WIp8R9asShtHpNRwmpJGTIMy/dj
-	+48Xz3+gshbnbnKqtKLR3KiYRz/CsFNscc1inq31tB2vFz0ZFUBw7wvHFdF3RG8+fEOVK+8y67I
-	+W4l26PpUUSSAWVk0lNrzK4L23CFRCatLLcrMM/Gk8SwTmvSic8+OI6oGerM4Q1fIJ5g0sCgyz0
-	WSojR+lKUPaTh5iZDEku3yl2axaWuNABHBGo9GFkfl4I1eRiH9s1ZfoM24nBjjx0rKm/X4vG1XZ
-	abbiqlmOU/ee+2eoJh0is3YTnd/ui7wZk/Qp5uU5P+dwjr0Pq54oVT1tbQ==
-X-Google-Smtp-Source: AGHT+IF2E+oD8rBAN01jy8O5/Q4OjPQUXJDe986T7YWkvAoRYx6xoB7ddaApRGSCt08+uRl+E8LH+Q==
-X-Received: by 2002:a17:90b:1f82:b0:2ee:3cc1:793a with SMTP id 98e67ed59e1d1-2fbf5c6d3eamr1174780a91.29.1739313427133;
-        Tue, 11 Feb 2025 14:37:07 -0800 (PST)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f36560c94sm99647275ad.91.2025.02.11.14.37.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 14:37:06 -0800 (PST)
-Date: Tue, 11 Feb 2025 14:37:03 -0800
-From: Joe Damato <jdamato@fastly.com>
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-	horms@kernel.org, kuba@kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Shuah Khan <shuah@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
-Subject: Re: [PATCH net-next v6 3/3] selftests: drv-net: Test queue xsk
- attribute
-Message-ID: <Z6vRD0agypHWDGkG@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Stanislav Fomichev <stfomichev@gmail.com>,
-	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-	horms@kernel.org, kuba@kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Shuah Khan <shuah@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
-References: <20250210193903.16235-1-jdamato@fastly.com>
- <20250210193903.16235-4-jdamato@fastly.com>
- <13afab27-2066-4912-b8f6-15ee4846e802@redhat.com>
- <Z6uM1IDP9JgvGvev@LQ3V64L9R2>
- <Z6urp3d41nvBoSbG@LQ3V64L9R2>
- <Z6usZlrFJShn67su@mini-arch>
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="RV66N7hf"
+Received: from [192.168.244.162] (254C21CD.nat.pool.telekom.hu [37.76.33.205])
+	by mail.mainlining.org (Postfix) with ESMTPSA id AC609E453D;
+	Tue, 11 Feb 2025 22:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1739313492;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sAV0Qe0+FmS/ZCfAzMOGXS1xl5PRcB7p0GeHYLx+/po=;
+	b=RV66N7hfkvH6zCsuwfzhvneBQwMTbrxHhAxzMPMawa4/cS3vZpI6TW/0GsHNzRGaZxIsHO
+	Lad+YfMh6dLSXe8b0Vg9W2m1g8SuNzx3WXSImJFFnwmAOQBacDM6bDyDt4mAHSKj/Sbdxf
+	0ZtuDWEpqImschE1lKsGikHl50XOz4qBlTVQWnYWyRusb5641D2KaBT+IQGZQ0LI8SYIfs
+	RYAtCcCq9loisKrcte1fMezhj4yriIgXD/ueDoIAzS3g4aLc8ZsAVBmjfVuOGM14jcDbq6
+	q1qjeRDEZJxL4ZgUMcylgRWhBD+WAKhkgu1flEq7wvfT/dXmTc6ft9KpMuoByw==
+From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Date: Tue, 11 Feb 2025 23:37:48 +0100
+Subject: [PATCH 04/10] pinctrl: qcom: msm8917: Add MSM8937 wsa_reset pin
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6usZlrFJShn67su@mini-arch>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250211-msm8937-v1-4-7d27ed67f708@mainlining.org>
+References: <20250211-msm8937-v1-0-7d27ed67f708@mainlining.org>
+In-Reply-To: <20250211-msm8937-v1-0-7d27ed67f708@mainlining.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>, 
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+ Robin Murphy <robin.murphy@arm.com>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, iommu@lists.linux.dev, 
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
+ Dang Huynh <danct12@riseup.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739313484; l=2411;
+ i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
+ bh=ATKVPnPAnxLDqZY8gYpdG3Mfkq8Qieu8l9ptvDkctEI=;
+ b=VYmy8NWOjhU4F35G/zQ5lbhNQ4T40R/uiaVRQnb8Cw4MaXrXA/jA1mhtKjV8TCIpaz6jQnnI/
+ R6t2eenWVF9DbSj1LK1Sj41dow8VF4ks5hkTcliORMQY4AAekWJUfYo
+X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
+ pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-On Tue, Feb 11, 2025 at 12:00:38PM -0800, Stanislav Fomichev wrote:
-> On 02/11, Joe Damato wrote:
-> > On Tue, Feb 11, 2025 at 09:45:56AM -0800, Joe Damato wrote:
-> > > On Tue, Feb 11, 2025 at 12:09:50PM +0100, Paolo Abeni wrote:
-> > > > On 2/10/25 8:38 PM, Joe Damato wrote:
+From: Dang Huynh <danct12@riseup.net>
 
-[...]
+It looks like both 8917 and 8937 are the same except for one pin
+"wsa_reset".
 
-> > > > 
-> > > > This causes self-test failures:
-> > > > 
-> > > > https://netdev-3.bots.linux.dev/vmksft-net-drv/results/987742/4-queues-py/stdout
-> > > > 
-> > > > but I really haven't done any real investigation here.
-> > > 
-> > > I think it's because the test kernel in this case has
-> > > CONFIG_XDP_SOCKETS undefined [1].
-> > > 
-> > > The error printed in the link you mentioned:
-> > > 
-> > >   socket creation failed: Address family not supported by protocol
-> > > 
-> > > is coming from the C program, which fails to create the AF_XDP
-> > > socket.
-> > > 
-> > > I think the immediate reaction is to add more error checking to the
-> > > python to make sure that the subprocess succeeded and if it failed,
-> > > skip.
-> > > 
-> > > But, we may want it to fail for other error states instead of
-> > > skipping? Not sure if there's general guidance on this, but my plan
-> > > was to have the AF_XDP socket creation failure return a different
-> > > error code (I dunno maybe -1?) and only skip the test in that case.
-> > > 
-> > > Will that work or is there a better way? I only want to skip if
-> > > AF_XDP doesn't exist in the test kernel.
-> > > 
-> > > [1]: https://netdev-3.bots.linux.dev/vmksft-net-drv/results/987742/config
-> > 
-> > I'll give it a few more hours incase anyone has comments before I
-> > resend, but I got something working (tested on kernels with and
-> > without XDP sockets).
-> > 
-> > xdp_helper returns -1 if (errno == EAFNOSUPPORT). All other error
-> > cases return 1.
-> > 
-> > Updated the python to do this:
-> > 
-> >   if xdp.returncode == 255:
-> >       raise KsftSkipEx('AF_XDP unsupported')
-> >   elif xdp.returncode > 0:
-> >       raise KsftFailEx('unable to create AF_XDP socket')
-> > 
-> > Which seems to work on both types of kernels?
-> > 
-> > Happy to take feedback; will hold off on respinning for a bit just
-> > incase there's a better way I don't know about.
-> 
-> Any reason not to enable CONFIG_XDP_SOCKETS on NIPA kernels? Seems a bit
-> surprising that we run networking tests without XSKs enabled.
+Signed-off-by: Dang Huynh <danct12@riseup.net>
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+---
+ drivers/pinctrl/qcom/Kconfig.msm       | 4 ++--
+ drivers/pinctrl/qcom/pinctrl-msm8917.c | 8 +++++++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-I can't comment on NIPA because I have no idea how it works. Maybe
-there is a kernel with some options enabled and other kernels with
-various options disabled?
+diff --git a/drivers/pinctrl/qcom/Kconfig.msm b/drivers/pinctrl/qcom/Kconfig.msm
+index 35f47660a56b1a730d7724fd5a4fb490da9c7880..a0d63a6725393496e034ca26d218265b7ba4b53f 100644
+--- a/drivers/pinctrl/qcom/Kconfig.msm
++++ b/drivers/pinctrl/qcom/Kconfig.msm
+@@ -138,10 +138,10 @@ config PINCTRL_MSM8916
+ 	  Qualcomm TLMM block found on the Qualcomm 8916 platform.
+ 
+ config PINCTRL_MSM8917
+-	tristate "Qualcomm 8917 pin controller driver"
++	tristate "Qualcomm 8917/8937 pin controller driver"
+ 	help
+ 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+-	  Qualcomm TLMM block found on the Qualcomm MSM8917 platform.
++	  Qualcomm TLMM block found on the Qualcomm MSM8917, MSM8937 platform.
+ 
+ config PINCTRL_MSM8953
+ 	tristate "Qualcomm 8953 pin controller driver"
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm8917.c b/drivers/pinctrl/qcom/pinctrl-msm8917.c
+index cff137bb3b23fbbe2b2630a7cbbf9f46e39981e7..350636807b07d9ab0e207368de63837bc5fa5502 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm8917.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm8917.c
+@@ -539,6 +539,7 @@ enum msm8917_functions {
+ 	msm_mux_webcam_standby,
+ 	msm_mux_wsa_io,
+ 	msm_mux_wsa_irq,
++	msm_mux_wsa_reset,
+ 	msm_mux__,
+ };
+ 
+@@ -1123,6 +1124,10 @@ static const char * const wsa_io_groups[] = {
+ 	"gpio94", "gpio95",
+ };
+ 
++static const char * const wsa_reset_groups[] = {
++	"gpio96",
++};
++
+ static const char * const blsp_spi8_groups[] = {
+ 	"gpio96", "gpio97", "gpio98", "gpio99",
+ };
+@@ -1378,6 +1383,7 @@ static const struct pinfunction msm8917_functions[] = {
+ 	MSM_PIN_FUNCTION(webcam_standby),
+ 	MSM_PIN_FUNCTION(wsa_io),
+ 	MSM_PIN_FUNCTION(wsa_irq),
++	MSM_PIN_FUNCTION(wsa_reset),
+ };
+ 
+ static const struct msm_pingroup msm8917_groups[] = {
+@@ -1616,5 +1622,5 @@ static void __exit msm8917_pinctrl_exit(void)
+ }
+ module_exit(msm8917_pinctrl_exit);
+ 
+-MODULE_DESCRIPTION("Qualcomm msm8917 pinctrl driver");
++MODULE_DESCRIPTION("Qualcomm msm8917/msm8937 pinctrl driver");
+ MODULE_LICENSE("GPL");
 
-I wonder if that's a separate issue though?
+-- 
+2.48.1
 
-In other words: maybe writing the test as I've mentioned above so it
-works regardless of whether CONFIG_XDP_SOCKETS is set or not is a
-good idea just on its own?
-
-I'm just not sure if there's some other pattern I should be
-following other than what I proposed above. I'm hesitant to re-spin
-until I get feedback on the proposed approach.
