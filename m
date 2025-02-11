@@ -1,74 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C241F12FA;
-	Tue, 11 Feb 2025 09:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2EBD1F03E6;
+	Tue, 11 Feb 2025 09:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739266155; cv=none; b=O0HcrV+IwLNZZ2uzPB57M3ZegWQ0BA/XegEwfZkcecjDYUD/otHVPmStfVJZdKVIzx0UrT3ZT8L9D3C+FlnC5AxFuNLrIa40XxX4w0RK4JZoO/rbj2AldKavhvCZEhzTtPiiT1t7v5ETMEu8hnrD5BHU3hkkdBq9cDlnkf/VmE8=
+	t=1739266174; cv=none; b=YiefJp1dWb52qhrvnHKJcuTiiG8bfe9JULH+YvCx2tFVV2OPXcoWu4i/NQalRdgjUes9GfdZZ2z1GWde71cUd+W3AJIjtE7EnCF/4POYxx2qgV7e2l8okSDvmUluU31cDnrle9AyyTSLzSlYj21R2lIHlIAKHIuLq+FjbtoLYmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739266155; c=relaxed/simple;
-	bh=DBFsBaL8EBKY3Sw0vJ1NTvA+B2mhHnikqtShBwayF8Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PAQPMtl0Jfj3wXZWU1ud9MVmJBD8IuPlG9jjAYa9r95EOzvAg1s/+QD3aOtKniAzkP6WjMYCN4dL36aO3FtJ3odNdyO8X3OQ/sMWmIswkfMUJrtibByKBWrpK0eXpxplfRGFEfNOQhxs1mwStLizo/mbFDijCwOfVd512TN2gKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WAHUZhMs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739266174; c=relaxed/simple;
+	bh=JZPLb4A3nkXiV6t/2IIP7XFbjxtiycoxSDUHf93QE7A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bhSlyjNg3g40dgBIMz/pj+DHpE8ULmqiTtNhGR7TxBri5SL+LNeewWMZ41vhu+K2Uz9MpeNV8XFQyZqiWvK1lA2xaWJxkd26Qj5W0XDbsuj2VQAQB7eOCYoCGe6r23JZDyTWkYAz/MGfVyGJZrnVHPA0rv7kTOQ6b19IYMxcRWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=khD+fbl6; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WAHUZhMs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2ABBC4CEDD;
-	Tue, 11 Feb 2025 09:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739266154;
-	bh=DBFsBaL8EBKY3Sw0vJ1NTvA+B2mhHnikqtShBwayF8Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WAHUZhMsKRY/l7n8HbwyNxI5/ZKOC9zo2UrrPQJ9VySW2AoXYFG7HrPX725+ICVn/
-	 i6RvjA3uJyrYzhFtbqe27Qom1LqDMYwwywi9zvlwuEaeF2K8nXJ4J4FcqGUBVlh+CU
-	 1TNpD5M53V4gSOHnuZGzpn/Bz3MuPTJJFW9wMxF4Cji6CstKaEFxULc8AYuvg91gEd
-	 ioR88bvXVTKnBeoaNkXxVEf90Rq0Z1MRXG5DYLzTodyMwsXTGZ+o6dGBf+TgF8x108
-	 Jxc3qwt+eY3szNKSKnUJfYiN6nQm/yD7pFsB4Re3bykjhFARv4kY8PDAt0N0d9wJ54
-	 I40P7QUZa9/CA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1thma2-000000007FF-0wIU;
-	Tue, 11 Feb 2025 10:29:22 +0100
-Date: Tue, 11 Feb 2025 10:29:22 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Tony Chung <tony467913@gmail.com>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] drivers: usb: serial: mos7840: using '__func__'
- to replace function name in dbg message
-Message-ID: <Z6sYclmvaAQ93bEI@hovoldconsulting.com>
-References: <202410250141.AEkzzW60-lkp@intel.com>
- <20241025061711.198933-5-tony467913@gmail.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="khD+fbl6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=mKxU1H0bH4jOjCpR1iDA2kn4hJyozUlGpPk9T5FA/N4=; b=khD+fbl6rFjDcBbbVPzRaalweS
+	coRFMUULM4kw5PMl6IonM8XSYGxIZX5by/0liY/PQq2/ngdVU43/BHV8aJMZ2gP6Yp+BgLXdB+lt9
+	/dDS8qOgHNbsINo5D3WlB6+WkryLtDwItBu9HEJWBDRqRGdRsNBKmPN5d9zz662XOybMSSb4CfwuH
+	BhfYvNtIYJllmFhPM7XJjWnh12RQHn25081YBx0ZJfOTZBEDS4VB0coFZiptRtN7mZdUuxmH9/P9B
+	dG/dk5YnHdUuov+4K+qn6oLrTBCFR5Vzop17VOJAUF8MUwUz8cHTyVMpJNd2J1nrW1zx7cU8iEo4h
+	ysGtCfhQ==;
+Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1thmZj-0005mx-GW; Tue, 11 Feb 2025 10:29:03 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: Sandy Huang <hjc@rock-chips.com>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Alexandre ARNOUD <aarnoud@me.com>,
+	kernel@collabora.com,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: (subset) [PATCH v2 0/4] Add support for HDMI1 output on RK3588 SoC
+Date: Tue, 11 Feb 2025 10:28:51 +0100
+Message-ID: <173926612575.1219038.14455377173250297870.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20241211-rk3588-hdmi1-v2-0-02cdca22ff68@collabora.com>
+References: <20241211-rk3588-hdmi1-v2-0-02cdca22ff68@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241025061711.198933-5-tony467913@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 25, 2024 at 02:17:14PM +0800, Tony Chung wrote:
-> fix warning of Prefer '"%s...",__func__' to using 'function name'.
+
+On Wed, 11 Dec 2024 01:06:13 +0200, Cristian Ciocaltea wrote:
+> The patches provide the basic support to handle the second HDMI output
+> port found on Rockchip RK3588 SoC.
 > 
-> Signed-off-by: Tony Chung <tony467913@gmail.com>
-> ---
->  drivers/usb/serial/mos7840.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> For now I enabled it on Radxa ROCK 5B only, the board I've been using to
+> validate this.
 > 
-> diff --git a/drivers/usb/serial/mos7840.c b/drivers/usb/serial/mos7840.c
-> index b48a26468..31ec2cf1b 100644
-> --- a/drivers/usb/serial/mos7840.c
-> +++ b/drivers/usb/serial/mos7840.c
-> @@ -230,7 +230,7 @@ static int mos7840_set_reg_sync(struct usb_serial_port *port, __u16 reg,
->  	struct usb_device *dev = port->serial->dev;
->  
->  	val = val & 0x00ff;
-> -	dev_dbg(&port->dev, "mos7840_set_reg_sync offset is %x, value %x\n", reg, val);
-> +	dev_dbg(&port->dev, "%s offset is %x, value %x\n", __func__, reg, val);
+> ** IMPORTANT **
+> 
+> [...]
 
-I suggest you just leave this as is.
+Applied, thanks!
 
-Johan
+[2/4] arm64: dts: rockchip: Add PHY node for HDMI1 TX port on RK3588
+      commit: ea97212a0f66b7bd71c23c12f781f1770dd6fcff
+[3/4] arm64: dts: rockchip: Add HDMI1 node on RK3588
+      commit: bed6964e779b5853de042da14320edf9f79506fe
+[4/4] arm64: dts: rockchip: Enable HDMI1 on rock-5b
+      commit: 77cea7ca13680e14119a3b9635c7ef16cd7ee44e
+
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
