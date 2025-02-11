@@ -1,116 +1,179 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9F01E885A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D651D5178;
+	Tue, 11 Feb 2025 08:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739261159; cv=none; b=lcVuCsXczDB5Y2XLd/LSb76j3V+jwdEl7V2VVCmNY5IKLwTTUAp7p9/Nz4JcPWYWCPSrcYjNNEYvnIAvw8EeS7WpHetyFvaLdZesxx/BG2ChVMwzzdfQQvhHGUqPq3ixuRDW5LcqzLTHcSglTFQ28hkB1UtanwQN/ps2ZBYLNwk=
+	t=1739261207; cv=none; b=kZD/utoB34vaTC7ryt0vXw237kewwYDkZr3+/by8jceK4rxdZ2LrCMuCdNfFeEDqvW/T/cG0Te+e89qMGfNKzwsgy/ivX6oEtNVvh8wKpx+VC275HE+gE0TK6wHaoJYMITr9IpQf5gbP1XTZcu5393U8jlBJIdPXhshqpqPTzmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739261159; c=relaxed/simple;
-	bh=oZul2d/wKFmYJJHdQwxELki+d2o5+CW8gJ8R+CmprR0=;
+	s=arc-20240116; t=1739261207; c=relaxed/simple;
+	bh=2jP2zbkt7LWl+/bugR4lAeF/IEYJn8uooGiAdMDZA1Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pyOGTktE/B69LeSJ4/pgv/ZKPjU9b8ZcUCsCZfT/1R66oB6iayhPj/otDjVQAlfzQTHfehb8uOcYVSjh3G5JcYu4KJoHCpbpa/1RzAU+eWFkmBCwhkzVgl+BcM9Ze6eoj/nzzeD2dUs+c/ZBCBh3wz0/X0W8uKL82tGyeRMSHA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=K4wyEUEk; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	 To:Cc:Content-Type; b=YVXrrfwkIroJwvrmr+qhq0tpEg+SIlonHwjGVG79iStiDISHAIP85awU//IoweYjph7FaS8BQ93zKB/WC6LIVUY9Uo8NdorGEf1UK+FgCGoBQ2R9hswyMq/LBr60mzJD7MieCboxRNTF1vrN+ywIIdA99kVT2CYMlOXKjvFmjfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EQN1Ek6/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="K4wyEUEk"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaec111762bso1260515666b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:05:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1739261155; x=1739865955; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VJrOUp+F89GFnzwAsaIErFuCcKPjmLvk5s9hg9IRNZc=;
-        b=K4wyEUEkD1EmMy5T2wBjcdSdS3491zZV0bOXg0j6PIHJFsnR0+dO1V+JewGd/4Qx87
-         wMLCDL/WOLOR2aXEnBfw8YSX9hj0j7hKq+RsZqRWO22J5iCihdRDgF6doQYDn3xIOffm
-         UCRNrSXNiOaQRNw+bVwUKcbpuHA6iHlQgAuPJKZSlkVIZwSbbJkAMaRQSS7lJD+LbR23
-         QHNiWxKd+9Q59/7uMYBm+8ZsJpWOT9qBmxInOCK6lI3yhqHUboFprkkvf8xR/rfvXy5G
-         tcJ3lzFzNBagjFW4RONrkCEfjCY2wWtaVUMwYM0WJr0cW8Wb2x/DwkLZU16c71OWCLDG
-         Yw7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739261155; x=1739865955;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VJrOUp+F89GFnzwAsaIErFuCcKPjmLvk5s9hg9IRNZc=;
-        b=E8qE7mY/AHF1cvEHxCocNnvxKKCUyrH/qry4DbSrkCa2eWT4tvPyDCN9lhgjnrHG95
-         cO7FtQn/veRjbPLEwz7/hKUtl0PzrAktDVPi4D8myVET+T7kgl7DUFjbCdOgpGu+VW6z
-         7td8aH3SCcoiBOG21+x5pycE/jW/vXF9GGU21grFzNtCLAX1S689tsq0ehjH0gABqbup
-         wYhpa/ME2kUfhxev+CUb8kWkiSssWbfqXgw/FOVeuIWIwUjueVToUlMp+/Nv6EsF7zBI
-         dSjhC/drgB3hwUqegQwiCaKYtvNGwIns3pLnOQ5Q3T/OqUW4dni3OtjVV01cHi8Lp2mm
-         JNRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUnWRP9ypKPKd4ZFKJme3noLFm9a43T6j3ij6JY0+V8LXdjWMHBRWO25MWSyCGp2or7Q3GQK8n8cqHGmUw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylrJpl4zc6n9OpjJ4aCzAWCM7Qu3pZo5bsiR4N0J/tdnO9PAp8
-	8qRzlFUbORKPqbQT6CLoJb4Da9qZaYkfbr7+O7+zJNM1TmNEAlkxo0ZfU1AA3C9ZcQK14JFXrJ0
-	AKmY9u60Qbp/xdwzzsvjj/h4+Eanjmlh0a+mbzQ==
-X-Gm-Gg: ASbGncuo13Vaz5LRIxHl+0JINuJD6P0cptj5qQc2ZErxBdy4usIXp4KFgbA4mE9/QN+
-	il9vxs+JI5DmCYPt88ckPzXSNFB8yyjAv7tOdWEVltAUZtU+K8ZPJtIQdlblQWbmM31ECYfi29Z
-	Q/hdHofp+UgWWPz/INvPhAU3yPFQ==
-X-Google-Smtp-Source: AGHT+IEvCt8BeOXdJg8lh6Pl0LfjKQqELNkqQazSvkXvBC8ZT59e0sRDOAAy7KvIr0fZcwzxkMFleImklwBwEspDSj8=
-X-Received: by 2002:a17:906:6a29:b0:aa6:a572:49fd with SMTP id
- a640c23a62f3a-ab789ca2972mr1452330266b.54.1739261155397; Tue, 11 Feb 2025
- 00:05:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EQN1Ek6/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F6BBC4CEDD;
+	Tue, 11 Feb 2025 08:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739261206;
+	bh=2jP2zbkt7LWl+/bugR4lAeF/IEYJn8uooGiAdMDZA1Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EQN1Ek6/+md+VOZqr40C3pMmVqA4uCPEakT1Vkt6yPelL4pCqzyX6Y+HVTCNc2K7c
+	 os2A6Dj04h7adub0avYREMeSlgjttxxqFDfqtiuJypOfSwKdyWm7/siJOyYAEfYqcF
+	 13jvCKGi2/G72hxiVtbIbpDmcXVmYkYYY9cJH7fv2e4J7euwtY8bJUbAvtsYFyaqPh
+	 WNYnrpPnA2UCYVxPCE1kdd9SMGJXdgEccbbtagh5FRGc9JTEgYiqB2IBlk2s6yifZF
+	 PLr3If0Cu+Lgdlts/90+fZHptG9BFq5rTONZxuG2+kllfjlliVUrpn7a0/yZoj/Wpt
+	 flaaY6xA7pvRw==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5450cf0cb07so1476699e87.0;
+        Tue, 11 Feb 2025 00:06:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXucw7K0h6rJaHZ/RQf7etugecHugN2V5ndK7JCHdcJgMHQcZCriXDwo1iPwRstay3LgQGpwZ8Awu/9O9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlMiGdthntk/bo06HseM3Skq1Xu2lkJvLqmAOetMKRCMg2nAOO
+	kgw8Cyc3P58yyx8/GOyMXWAyARU0z5NJX+NEuk/jYwqu5y3G6Qak4IdLijhbEsUInaJHbP2xKO2
+	O3DCLQIO7lAy84AbR0TiyzPYO0jk=
+X-Google-Smtp-Source: AGHT+IEaV6exEDwvJeZ33T3YoFFE0sQrHjviLq59act6YoD68VrvkRY8otxx6UM7RDIa8Is3qHmc6Q9/DAdHpUZuSBk=
+X-Received: by 2002:a05:6512:220b:b0:545:944:aadd with SMTP id
+ 2adb3069b0e04-5450944abc4mr2306081e87.37.1739261204716; Tue, 11 Feb 2025
+ 00:06:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210223144.3481766-1-max.kellermann@ionos.com> <2025021138-track-liberty-f5d9@gregkh>
-In-Reply-To: <2025021138-track-liberty-f5d9@gregkh>
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Tue, 11 Feb 2025 09:05:44 +0100
-X-Gm-Features: AWEUYZn8IYtLkGvSdhSF9RacLZqPPLjjSSgyWsPBEwf3ckYtzh6gc1WMb8IYbZw
-Message-ID: <CAKPOu+-Mi1oCNvk3SJnui3484wpfru3fE1gA72XVcX77PFOjVA@mail.gmail.com>
-Subject: Re: [PATCH v6.13] fs/netfs/read_pgpriv2: skip folio queues without `marks3`
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: dhowells@redhat.com, netfs@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
+References: <20250210165020.42611-1-ebiggers@kernel.org>
+In-Reply-To: <20250210165020.42611-1-ebiggers@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 11 Feb 2025 09:06:33 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEn2tGa0w5R2868L_yw_K1hXGi+RHq2BiO_vgC9TS7GLQ@mail.gmail.com>
+X-Gm-Features: AWEUYZnGSdBcP4cvXyx1aQOKl0cK8T3e1AMQ0-W26Qvg0ba6gExtyK9lONyNotg
+Message-ID: <CAMj1kXEn2tGa0w5R2868L_yw_K1hXGi+RHq2BiO_vgC9TS7GLQ@mail.gmail.com>
+Subject: Re: [PATCH v4] crypto: x86/aes-ctr - rewrite AESNI+AVX optimized CTR
+ and add VAES support
+To: Eric Biggers <ebiggers@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 11, 2025 at 7:30=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
-
-> > Note this patch doesn't apply to v6.14 as it was obsoleted by commit
-> > e2d46f2ec332 ("netfs: Change the read result collector to only use one
-> > work item").
+On Mon, 10 Feb 2025 at 17:51, Eric Biggers <ebiggers@kernel.org> wrote:
 >
-> Why can't we just take what is upstream instead?
+> From: Eric Biggers <ebiggers@google.com>
 >
-> Diverging from that ALWAYS ends up being more work and problems in the
-> end.  Only do so if you have no other choice.
+> Delete aes_ctrby8_avx-x86_64.S and add a new assembly file
+> aes-ctr-avx-x86_64.S which follows a similar approach to
+> aes-xts-avx-x86_64.S in that it uses a "template" to provide AESNI+AVX,
+> VAES+AVX2, VAES+AVX10/256, and VAES+AVX10/512 code, instead of just
+> AESNI+AVX.  Wire it up to the crypto API accordingly.
+>
+> This greatly improves the performance of AES-CTR and AES-XCTR on
+> VAES-capable CPUs, with the best case being AMD Zen 5 where an over 230%
+> increase in throughput is seen on long messages.  Performance on
+> non-VAES-capable CPUs remains about the same, and the non-AVX AES-CTR
+> code (aesni_ctr_enc) is also kept as-is for now.  There are some slight
+> regressions (less than 10%) on some short message lengths on some CPUs;
+> these are difficult to avoid, given how the previous code was so heavily
+> unrolled by message length, and they are not particularly important.
+> Detailed performance results are given in the tables below.
+>
+> Both CTR and XCTR support is retained.  The main loop remains
+> 8-vector-wide, which differs from the 4-vector-wide main loops that are
+> used in the XTS and GCM code.  A wider loop is appropriate for CTR and
+> XCTR since they have fewer other instructions (such as vpclmulqdq) to
+> interleave with the AES instructions.
+>
+> Similar to what was the case for AES-GCM, the new assembly code also has
+> a much smaller binary size, as it fixes the excessive unrolling by data
+> length and key length present in the old code.  Specifically, the new
+> assembly file compiles to about 9 KB of text vs. 28 KB for the old file.
+> This is despite 4x as many implementations being included.
+>
+> The tables below show the detailed performance results.  The tables show
+> percentage improvement in single-threaded throughput for repeated
+> encryption of the given message length; an increase from 6000 MB/s to
+> 12000 MB/s would be listed as 100%.  They were collected by directly
+> measuring the Linux crypto API performance using a custom kernel module.
+> The tested CPUs were all server processors from Google Compute Engine
+> except for Zen 5 which was a Ryzen 9 9950X desktop processor.
+>
+> Table 1: AES-256-CTR throughput improvement,
+>          CPU microarchitecture vs. message length in bytes:
+>
+>                      | 16384 |  4096 |  4095 |  1420 |   512 |   500 |
+> ---------------------+-------+-------+-------+-------+-------+-------+
+> AMD Zen 5            |  232% |  203% |  212% |  143% |   71% |   95% |
+> Intel Emerald Rapids |  116% |  116% |  117% |   91% |   78% |   79% |
+> Intel Ice Lake       |  109% |  103% |  107% |   81% |   54% |   56% |
+> AMD Zen 4            |  109% |   91% |  100% |   70% |   43% |   59% |
+> AMD Zen 3            |   92% |   78% |   87% |   57% |   32% |   43% |
+> AMD Zen 2            |    9% |    8% |   14% |   12% |    8% |   21% |
+> Intel Skylake        |    7% |    7% |    8% |    5% |    3% |    8% |
+>
+>                      |   300 |   200 |    64 |    63 |    16 |
+> ---------------------+-------+-------+-------+-------+-------+
+> AMD Zen 5            |   57% |   39% |   -9% |    7% |   -7% |
+> Intel Emerald Rapids |   37% |   42% |   -0% |   13% |   -8% |
+> Intel Ice Lake       |   39% |   30% |   -1% |   14% |   -9% |
+> AMD Zen 4            |   42% |   38% |   -0% |   18% |   -3% |
+> AMD Zen 3            |   38% |   35% |    6% |   31% |    5% |
+> AMD Zen 2            |   24% |   23% |    5% |   30% |    3% |
+> Intel Skylake        |    9% |    1% |   -4% |   10% |   -7% |
+>
+> Table 2: AES-256-XCTR throughput improvement,
+>          CPU microarchitecture vs. message length in bytes:
+>
+>                      | 16384 |  4096 |  4095 |  1420 |   512 |   500 |
+> ---------------------+-------+-------+-------+-------+-------+-------+
+> AMD Zen 5            |  240% |  201% |  216% |  151% |   75% |  108% |
+> Intel Emerald Rapids |  100% |   99% |  102% |   91% |   94% |  104% |
+> Intel Ice Lake       |   93% |   89% |   92% |   74% |   50% |   64% |
+> AMD Zen 4            |   86% |   75% |   83% |   60% |   41% |   52% |
+> AMD Zen 3            |   73% |   63% |   69% |   45% |   21% |   33% |
+> AMD Zen 2            |   -2% |   -2% |    2% |    3% |   -1% |   11% |
+> Intel Skylake        |   -1% |   -1% |    1% |    2% |   -1% |    9% |
+>
+>                      |   300 |   200 |    64 |    63 |    16 |
+> ---------------------+-------+-------+-------+-------+-------+
+> AMD Zen 5            |   78% |   56% |   -4% |   38% |   -2% |
+> Intel Emerald Rapids |   61% |   55% |    4% |   32% |   -5% |
+> Intel Ice Lake       |   57% |   42% |    3% |   44% |   -4% |
+> AMD Zen 4            |   35% |   28% |   -1% |   17% |   -3% |
+> AMD Zen 3            |   26% |   23% |   -3% |   11% |   -6% |
+> AMD Zen 2            |   13% |   24% |   -1% |   14% |   -3% |
+> Intel Skylake        |   16% |    8% |   -4% |   35% |   -3% |
+>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>
+> Changed in v4:
+> - Used 'varargs' in assembly macros where appropriate.
+>
+> Changed in v3:
+> - Dropped the patch removing the non-AVX AES-CTR for now
+> - Changed license of aes-ctr-avx-x86_64.S to Apache-2.0 OR BSD-2-Clause,
+>   same as what I used for the AES-GCM assembly files.  I've received
+>   interest in this code possibly being reused in other projects.
+> - Updated commit message to remove an ambiguous statement
+> - Updated commit message to clarify that the non-AVX code is unchanged
+> - Added comment above ctr_crypt_aesni() noting that it's non-AVX
+>
+> Changed in v2:
+> - Split the removal of the non-AVX implementation of AES-CTR into a
+>   separate patch, and removed the assembly code too.
+> - Made some minor tweaks to the new assembly file, including fixing a
+>   build error when aesni-intel is built as a module.
+>
+>  arch/x86/crypto/Makefile                |   2 +-
+>  arch/x86/crypto/aes-ctr-avx-x86_64.S    | 592 +++++++++++++++++++++++
+>  arch/x86/crypto/aes_ctrby8_avx-x86_64.S | 597 ------------------------
+>  arch/x86/crypto/aesni-intel_glue.c      | 404 ++++++++--------
+>  4 files changed, 803 insertions(+), 792 deletions(-)
+>  create mode 100644 arch/x86/crypto/aes-ctr-avx-x86_64.S
+>  delete mode 100644 arch/x86/crypto/aes_ctrby8_avx-x86_64.S
+>
 
-Usually I agree with that, and I trust that you will make the right decisio=
-n.
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 
-Before you decide, let me point out that netfs has been extremely
-unstable since 6.10 (July 2024), ever since commit 2e9d7e4b984a ("mm:
-Remove the PG_fscache alias for PG_private_2). All of our web servers
-have been crashing since 6.10 all the time (see
-https://lore.kernel.org/netfs/CAKPOu+_DA8XiMAA2ApMj7Pyshve_YWknw8Hdt1=3DzCy=
-9Y87R1qw@mail.gmail.com/
-for one of several bug reports I posted), and I went through
-considerable trouble by resisting the pressure from people asking me
-to downgrade to 6.6. (I want the bugs fixed, I don't want to go back.)
-For several months, 6.12 had been crashing instantly on boot due to
-yet another netfs regression
-(https://lore.kernel.org/netfs/CAKPOu+_4m80thNy5_fvROoxBm689YtA0dZ-=3Dgcmkz=
-wYSY4syqw@mail.gmail.com/)
-which wasn't fixed until 6.12.11, so our production servers are still
-on 6.11.11 today.
-Before these bugs got ironed out, v6.11 commit ee4cdf7ba857 ("netfs:
-Speed up buffered reading") wreaked more havoc, leading to 8 "Fixes"
-commits so far, plus the 2 I posted yesterday.
+I've tested this with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y on a CPU
+that supports all variants, so
 
-I wrote that e2d46f2ec332 has obsoleted my patch (actually both
-patches), but I don't know if it really fixes both bugs. The code that
-was buggy does not exist anymore in the form that my patch addresses,
-but I don't know if it was just refactored and the bugs were kept (or
-maybe yet more bugs sneaked in).
-
-
-Max
+Tested-by: Ard Biesheuvel <ardb@kernel.org>
