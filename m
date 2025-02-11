@@ -1,78 +1,137 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06F77261397;
-	Tue, 11 Feb 2025 17:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C4017C91;
+	Tue, 11 Feb 2025 17:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739294009; cv=none; b=jCpkVtI4g4rEh34eNOWz5sOy8M+iRGGqdAPJQWYCCDGdBn1NV6CZvRk4Fhj1WtKJMP6pQMjREuMyUZed0iM9da+mk1nvPCv7qD0eukx69j4lg34IBoilnrC1lMNHkMnN9OJn/6AicDG/fUdRh0kHmSgaHdf2zaQ0yybc3Qr53Qo=
+	t=1739294100; cv=none; b=e3pOAtyrSHDpqX4Tju52h4Bp1aKEIqTuaVKyO8s+KBfwjpWZFiPsgAtwKNqu3SzjlYY93MOAecD+Secwkft78jMu2jXSVuqgLwe/da+8RTApMhlAMprhfTI19f7jcd3ErmkCxgTtwwF+q5CEmZNGTIK7hqHzZ0zFaLZXFJed9aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739294009; c=relaxed/simple;
-	bh=BZ+YpgMYrYtDrJkujzjcM2WQZLt5/UaLnQfYvjtyUvs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HZvFOC/MWsokwSLbG7PQxbsev4QoSFkCETu/eUuUtRXtJSsmYork4YH1kN081UVfVtyNc7zM0xA6onzmqX9pjYIaAI+U3rY6wSMULYKTz8JId3bqyGcRJj8rhSGoK17o4QRu4xUyU5v9LyFjGA7d2/mgJEzqJLzPBLIFKCiEh4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8BF013D5;
-	Tue, 11 Feb 2025 09:13:48 -0800 (PST)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AD313F5A1;
-	Tue, 11 Feb 2025 09:13:24 -0800 (PST)
-Date: Tue, 11 Feb 2025 17:13:21 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
- scmi cpufreq
-Message-ID: <Z6uFMW94QNpFxQLK@bogus>
-References: <20241225-scmi-fwdevlink-v1-0-e9a3a5341362@nxp.com>
- <20241225-scmi-fwdevlink-v1-1-e9a3a5341362@nxp.com>
+	s=arc-20240116; t=1739294100; c=relaxed/simple;
+	bh=t66d/4AH1fgVYpjkiv6cVclNRKcllufAF+iU4xKquLM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cYZX6WmDLgZInf8AyroMBEPvfZor1paxYJudP9tWJQ2G3Iyun+fhKk3tnBNsxYyOHmAQSWEkpQD3Ltx4wDsrw01Kp9ta8fFWGPGpbc+L9qqy63c5Op+WID//LfpgKbfPKajCMqPoMelXMICom5/QgsyJK39/ixoV9eV3dSICGD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=DwIB3aVu; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="DwIB3aVu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1739294090; bh=t66d/4AH1fgVYpjkiv6cVclNRKcllufAF+iU4xKquLM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=DwIB3aVuQIyquiaqd/suVGZYHsw4zDypWZsBvl0VHqeEQqHQNIfZrvYwqW1vzjujr
+	 ZwBFItpsWDKwdbY2ptfB6mlP/eDkDgtwcNX6jrDpzvETBYpzDGBnuEwk5A8eXts2n4
+	 t4DvgA+aX+ipNWe85je37fRSSpKLxPnXrnpqiYHo=
+From: Luca Weiss <luca@lucaweiss.eu>
+To: Danila Tikhonov <danila@jiaxyga.com>, neil.armstrong@linaro.org,
+ quic_jesszhan@quicinc.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ andersson@kernel.org, konradybcio@kernel.org, robdclark@gmail.com,
+ quic_abhinavk@quicinc.com, dmitry.baryshkov@linaro.org, sean@poorly.run,
+ marijn.suijten@somainline.org, jonathan@marek.ca, jun.nie@linaro.org,
+ fekz115@gmail.com, ~postmarketos/upstreaming@lists.sr.ht
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, linux@mainlining.org,
+ ~postmarketos/upstreaming@lists.sr.ht,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject:
+ Re: [PATCH 4/4] arm64: dts: qcom: sm7325-nothing-spacewar: Enable panel and
+ GPU
+Date: Tue, 11 Feb 2025 18:14:37 +0100
+Message-ID: <12605108.O9o76ZdvQC@lucaweiss.eu>
+In-Reply-To: <4a232b8e-f63e-4f89-aa4e-257165150549@oss.qualcomm.com>
+References:
+ <20250203181436.87785-1-danila@jiaxyga.com>
+ <20250203181436.87785-5-danila@jiaxyga.com>
+ <4a232b8e-f63e-4f89-aa4e-257165150549@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241225-scmi-fwdevlink-v1-1-e9a3a5341362@nxp.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Dec 25, 2024 at 04:20:44PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On dinsdag 11 februari 2025 14:31:14 Midden-Europese standaardtijd Konrad Dybcio wrote:
+> On 3.02.2025 7:14 PM, Danila Tikhonov wrote:
+> > From: Eugene Lepshy <fekz115@gmail.com>
+> > 
+> > Enable the Adreno GPU and configure the Visionox RM692E5 panel.
+> > 
+> > Signed-off-by: Eugene Lepshy <fekz115@gmail.com>
+> > Co-developed-by: Danila Tikhonov <danila@jiaxyga.com>
+> > Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+> > ---
+> > Note:
+> > Depends on https://lore.kernel.org/linux-arm-msm/20250122-dpu-111-topology-v2-1-505e95964af9@somainline.org/
+> > ---
+> >  .../boot/dts/qcom/sm7325-nothing-spacewar.dts | 53 ++++++++++++++++++-
+> >  1 file changed, 51 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/sm7325-nothing-spacewar.dts b/arch/arm64/boot/dts/qcom/sm7325-nothing-spacewar.dts
+> > index a5cda478bd78..cda317b49d5c 100644
+> > --- a/arch/arm64/boot/dts/qcom/sm7325-nothing-spacewar.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sm7325-nothing-spacewar.dts
+> > @@ -52,6 +52,8 @@ framebuffer0: framebuffer@e1000000 {
+> >  			stride = <(1080 * 4)>;
+> >  			format = "a8r8g8b8";
+> >  
+> > +			display = <&panel0>;
 > 
-> Two drivers scmi_cpufreq.c and scmi_perf_domain.c both use
-> SCMI_PROTCOL_PERF protocol, but with different name, so two scmi devices
-> will be created. But the fwnode->dev could only point to one device.
+> This is allowed by bindings but doesn't seem to do anything
+
+I believe this exposes display dimensions to user space also via simpledrm.
+
+At least I was using something like this before panel support to get phosh
+to scale properly on postmarketOS.
+
+Regards
+Luca
+
 > 
-> If scmi cpufreq device created earlier, the fwnode->dev will point to
-> the scmi cpufreq device. Then the fw_devlink will link performance
-> domain user device(consumer) to the scmi cpufreq device(supplier).
-> But actually the performance domain user device, such as GPU, should use
-> the scmi perf device as supplier. Also if 'cpufreq.off=1' in bootargs,
-> the GPU driver will defer probe always, because of the scmi cpufreq
-> device not ready.
+> > +
+> >  			clocks = <&gcc GCC_DISP_HF_AXI_CLK>,
+> >  				 <&dispcc DISP_CC_MDSS_MDP_CLK>,
+> >  				 <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
+> > @@ -757,6 +759,10 @@ &gpi_dma1 {
+> >  	status = "okay";
+> >  };
+> >  
+> > +&gpu {
+> > +	status = "okay";
+> > +};
+> > +
+> >  &gpu_zap_shader {
+> >  	firmware-name = "qcom/sm7325/nothing/spacewar/a660_zap.mbn";
+> >  };
+> > @@ -823,15 +829,44 @@ &ipa {
+> >  	status = "okay";
+> >  };
+> >  
+> > -/* MDSS remains disabled until the panel driver is present. */
+> > +&mdss {
+> > +	status = "okay";
+> > +};
+> > +
+> >  &mdss_dsi {
+> >  	vdda-supply = <&vdd_a_dsi_0_1p2>;
+> > +	status = "okay";
+> >  
+> > -	/* Visionox RM692E5 panel */
+> > +	panel0: panel@0 {
 > 
-> Because for cpufreq, no need use fw_devlink. So bypass setting fwnode
-> for scmi cpufreq device.
->
+> Is there going to be a panel1, too? ;)
+> 
+> Please drop the 0
+> 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> Konrad
+> 
 
-Not 100% sure if above is correct. See:
 
-Commit 8410e7f3b31e ("cpufreq: scmi: Fix OPP addition failure with a dummy clock provider")
 
-Am I missing something ?
 
--- 
-Regards,
-Sudeep
