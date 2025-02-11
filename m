@@ -1,81 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D26260A20;
-	Tue, 11 Feb 2025 16:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9949E253B5A;
+	Tue, 11 Feb 2025 16:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739292997; cv=none; b=Ayrd/IY8gSVx4AScU0K7o+C2fjeBBuS5PGNa4CKLNchWLmBoMShFXZd9Arqsb9CSiOTirsY5dLekID2Au7dNPw0/LfPRZY3BHJYkgqauiYwgxU/vKEdJS4jKDEnlFTEkEydT6nfb0YO/3lgBCN5avv9v9Vzv+6q9QfF67NEtggs=
+	t=1739293066; cv=none; b=kxXFEh0TaZZDyfV681VwZK9QTKF26ai3IiFGECTEk4FkIItXigdFgLj9WgqM0E1gW3im3BlgI8k6HOspvkNH+Z6Y6A0zBlfD0IRDucuYzVGYlJvO38sj30HkvLX+9aOh/9k/+jZqPT06bOeXFjocLYK5o8emmbQp++MIp8FdeBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739292997; c=relaxed/simple;
-	bh=TflqI1VzBNC2nAOZcM1JKCWEcdaHZrHdj5z5b6rAVyw=;
+	s=arc-20240116; t=1739293066; c=relaxed/simple;
+	bh=XenSwIiny7jWeKOqCxAtMXzolXULUFHtebJbW59m/F8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iDtvkTiXYqvLbpg79KSUwi48ogf7oczt4W9LaQxgDDZfeHqkGAbw3kbgHLPBRiTs1nO7HhamPiGbBcU/B0RLyeBCRmfACvKSdbNiwNCV4TPG3ZqYmFQmmVQldRWwT5rxUWMfWOxXijluKlZY16VCTPaulSHuaoM6x6H1pK0MK8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n08hpbFH; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oKvAJ01/tPf1NIv56MooS5gObuhUhH1feDaQwtGK9aRXf2c9HOZYLpjSjgkHl/9IwSHvJt0rcrEUbzc12scd+IQcqG1yZ3uILUwBRf+WhxNJiWq2rd8H9mZYVL47YD4ao4/EJbitCeJs6WyVrSb8/P9Tii4d436v884Wn9ZVIhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGlzpG27; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n08hpbFH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739292996; x=1770828996;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TflqI1VzBNC2nAOZcM1JKCWEcdaHZrHdj5z5b6rAVyw=;
-  b=n08hpbFHrWPJSTWUm5yDc8KF5DmlUZfox39fVUbnJ2SdMVpyRcoSqo9c
-   IkK6ymK0Nh4uPZRozCRgreo2Pc01/PurijRCHXzsYYPqHRXL82JMlGnFQ
-   IE/G4vmPCU9k3oLmhSf5D7TdtpdHbTP6cMKBsMjq4KtiaYnP0phzvTcpl
-   BG2hzfB/KjLLrT+qB9gLscSWZIJjcpBpC7OrMpRrV9aZYjp7/eg30625m
-   UzmH/ijXaE911mMqhZaLzOpIkS0gZ5Sjva3SjupNFwaFbC66aRlVqsPXk
-   ILQ+LlQ6k84/q4uTJ9VieYjxaROY3fdAmTjhhJ5dVt/i8ogRSIcg/FGbq
-   w==;
-X-CSE-ConnectionGUID: fCfMkwp8SSm1xdp4eIyusw==
-X-CSE-MsgGUID: /5YjLLf3SGqfpAbXknDX5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40042346"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="40042346"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 08:56:34 -0800
-X-CSE-ConnectionGUID: YgcJp3PeRTer3sFeHzaXLg==
-X-CSE-MsgGUID: 7hvXJdtNTRe4k/esyEyW3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="149754577"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 11 Feb 2025 08:56:32 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 632768F; Tue, 11 Feb 2025 18:56:30 +0200 (EET)
-Date: Tue, 11 Feb 2025 18:56:30 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 12/14] platform/x86: dell: Modify Makefile alignment
-Message-ID: <Z6uBPuzGtLZ0xUb7@black.fi.intel.com>
-References: <20250207154610.13675-1-kuurtb@gmail.com>
- <20250207154610.13675-13-kuurtb@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGlzpG27"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE973C4CEDD;
+	Tue, 11 Feb 2025 16:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739293066;
+	bh=XenSwIiny7jWeKOqCxAtMXzolXULUFHtebJbW59m/F8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VGlzpG27tpKE+N0yKxRo0yTi35KNK3M8bfZcksEgY+EUx5TOm8PKbgQw4LVKoInSE
+	 nHgwTk8glkSO0BHyampKLqnMndedZenmkUVy11wRy3ZuNtKXnLY7HfSLLxYNyigFJY
+	 i0cFUO1InQYJ6F5FB2h54D5LbImzYUvUTe3enzXLxlvpWQYUyqOpynIs/vO9eLJm1f
+	 Ku4zvXK2FH3hR1rSon8TgFNw8iFzJe67LKtqjj41F5jykPTqVLo0Df0K2xWfO8FnNA
+	 V6Hw93Hr4qaUM4bjauHFB5UUHxBOp8ytCTyRZMRSREc4V+I9L8R8KGy1MvSAN9hGlJ
+	 XAGVg68OnlwDQ==
+Date: Tue, 11 Feb 2025 16:57:40 +0000
+From: Conor Dooley <conor@kernel.org>
+To: dimitri.fedrau@liebherr.com
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dimitri Fedrau <dima.fedrau@gmail.com>
+Subject: Re: [PATCH net-next v4 1/3] dt-bindings: net: ethernet-phy: add
+ property tx-amplitude-100base-tx-percent
+Message-ID: <20250211-anointer-lubricate-7187aa3bda44@spud>
+References: <20250211-dp83822-tx-swing-v4-0-1e8ebd71ad54@liebherr.com>
+ <20250211-dp83822-tx-swing-v4-1-1e8ebd71ad54@liebherr.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Z+1UdOrhRBQRb0c+"
+Content-Disposition: inline
+In-Reply-To: <20250211-dp83822-tx-swing-v4-1-1e8ebd71ad54@liebherr.com>
+
+
+--Z+1UdOrhRBQRb0c+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207154610.13675-13-kuurtb@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 07, 2025 at 10:46:08AM -0500, Kurt Borja wrote:
-> Add one more TAB to each line to support upcoming changes.
+On Tue, Feb 11, 2025 at 09:33:47AM +0100, Dimitri Fedrau via B4 Relay wrote:
+> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+>=20
+> Add property tx-amplitude-100base-tx-percent in the device tree bindings
+> for configuring the tx amplitude of 100BASE-TX PHYs. Modifying it can be
+> necessary to compensate losses on the PCB and connector, so the voltages
+> measured on the RJ45 pins are conforming.
+>=20
+> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 
-Fix the objs to be y!
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+> ---
+>  Documentation/devicetree/bindings/net/ethernet-phy.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Do=
+cumentation/devicetree/bindings/net/ethernet-phy.yaml
+> index 2c71454ae8e362e7032e44712949e12da6826070..e0c001f1690c1eb9b0386438f=
+2d5558fd8c94eca 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> @@ -232,6 +232,12 @@ properties:
+>        PHY's that have configurable TX internal delays. If this property =
+is
+>        present then the PHY applies the TX delay.
+> =20
+> +  tx-amplitude-100base-tx-percent:
+> +    description:
+> +      Transmit amplitude gain applied for 100BASE-TX. When omitted, the =
+PHYs
+> +      default will be left as is.
+> +    default: 100
+> +
+>    leds:
+>      type: object
+> =20
+>=20
+> --=20
+> 2.39.5
+>=20
+>=20
 
+--Z+1UdOrhRBQRb0c+
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6uBhAAKCRB4tDGHoIJi
+0tsYAQCYAPeG16vFxybr5BtiIoZbroPUUjBWX+z7VeEyXYInYAD7B0fX0IkbazgJ
+QWWthKOAVxreyDpzD6ahxpUbd5PmHgY=
+=G1KB
+-----END PGP SIGNATURE-----
+
+--Z+1UdOrhRBQRb0c+--
