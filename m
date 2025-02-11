@@ -1,139 +1,66 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DC241E5018
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEB51E5018;
+	Tue, 11 Feb 2025 18:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739299034; cv=none; b=EnIU+Dge3whsLyRMilvfbLCPF24WVVzlRJqnlZWm9xctok8z+etdqL0kd8eqOxoLWwsbwtLR8B5bnVQmyXZUFpiCtGptIN8yROYvvjfaRE+rUNr6dldy2vkrQvLEyhp3EN6UQ73xDldJUI5NaRNCA6uYaMWOJWpSL1SnRs5LTiM=
+	t=1739299103; cv=none; b=NLM0YtzK0lG2QbMWr2WqABo6Eyu1BKFotaBgJbgy78q8F7LFvZrQVe8q2D921v+hxbM/XmNtpNGtuMVhqeREr0nI9bW9npt8EVimzKe0DN5G8DOBmCUlZlDFZFgd+6k38SNre/TRx33jY3/DC7ACgf0gH68PZ2+Ctc+ssAxAAPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739299034; c=relaxed/simple;
-	bh=rLWgDrNtVe38hLs1jON1nOmASB0PtweQ1yIvqpmQbxw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nsJLW01YYJ4iWUVfKq/Hfa1POXK320ebosldkctueHyBIg4nPGIWIb4Qk84ud+Zu0Fv5c/GPLLQnC6+hamUC9dPmmY+bTjRfuo8HYy6z8eFs3Qb64z8TRMBziKyPDpMcLxNASwULwERcZ54DoMwAbbLrxp/X/YiTKg4N5kjskUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B54C1424;
-	Tue, 11 Feb 2025 10:37:33 -0800 (PST)
-Received: from [10.1.197.49] (eglon.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 609BE3F58B;
-	Tue, 11 Feb 2025 10:37:08 -0800 (PST)
-Message-ID: <df73713e-eacf-447e-a8e3-860a1e0606b4@arm.com>
-Date: Tue, 11 Feb 2025 18:37:03 +0000
+	s=arc-20240116; t=1739299103; c=relaxed/simple;
+	bh=9d6jju/AIBaHpo4CcHOAS0x1UR/bdfVSyRx15+juWkY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T5u1eu3ecVyZLklugh7PNSq9g50WtQidGYkt3kpPW52SMC8ivm5Nq5UFBRqwXbkNu7Znti8jX9jAS3++qaPSQaXS8nHkvHfuw0uoQTnHr4Vu/a7iCfnL7Idr02Hqgzx2JH2OqWTp/dSx4gl/ZoYFzrg9vcoc6TOMtMDGMDXfrfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KM4EUBoM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KM4EUBoM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79CCFC4CEDD;
+	Tue, 11 Feb 2025 18:38:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739299103;
+	bh=9d6jju/AIBaHpo4CcHOAS0x1UR/bdfVSyRx15+juWkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KM4EUBoMjRN48xcaieQjd0BFqnOJuWcuSbQtEJHC5hn90/M9bzWaCsy+NfatKadD5
+	 wzYebE/Daz96X02ZYwZO/u7UA4Isg1XE8pzUej0EpmicEW9MSn2gMzR83dOlOXLcJy
+	 jPOZ9OIahCPBkd2d1KDBubdKO8twfNjmRdEDCEhgFtxI69ad9Ea3KTzxSlFmMjlpaQ
+	 kDrL8M5vH5HJwy0kQRYDH8KUIvntS7ecZNLjcdd6AfWNc+ROBuLTIBeYJbccI9ym/z
+	 4T1hXfsOtpEP6QOMa1EsLNq5QoYiZohM1tlVvKkW70jVhc7kOx0PqYSWsstrLu4bTz
+	 58+lRzskHQbDA==
+Date: Tue, 11 Feb 2025 11:38:20 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Philipp Zabel <p.zabel@pengutronix.de>, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] apple-nvme: bug and perf fixes
+Message-ID: <Z6uZHKwyMCWgM1a4@kbusch-mbp>
+References: <20250211-nvme-fixes-v1-0-6958b3aa49fe@rosenzweig.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/42] x86/resctrl: Move the resctrl filesystem code to
- /fs/resctrl
-To: Peter Newman <peternewman@google.com>,
- Reinette Chatre <reinette.chatre@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, dfustini@baylibre.com,
- amitsinght@marvell.com, David Hildenbrand <david@redhat.com>,
- Rex Nie <rex.nie@jaguarmicro.com>, Dave Martin <dave.martin@arm.com>,
- Koba Ko <kobak@nvidia.com>, Shanker Donthineni <sdonthineni@nvidia.com>
-References: <20250207181823.6378-1-james.morse@arm.com>
- <f600712d-d089-4285-8d04-e12f53a61572@intel.com>
- <CALPaoCjY-3f2tWvBjuaQPfoPhxveWxxCxHqQMn4BEaeBXBa0bA@mail.gmail.com>
-Content-Language: en-GB
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <CALPaoCjY-3f2tWvBjuaQPfoPhxveWxxCxHqQMn4BEaeBXBa0bA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211-nvme-fixes-v1-0-6958b3aa49fe@rosenzweig.io>
 
-Hi Peter,
-
-On 11/02/2025 14:36, Peter Newman wrote:
-> On Mon, Feb 10, 2025 at 6:24 PM Reinette Chatre
-> <reinette.chatre@intel.com> wrote:
->> I'd like to check in on what you said in [1]. It sounded as though you were
->> planning to look at the assignable counter work from an Arm/MPAM
->> perspective but that work has since progressed (now at V11 [2]) without
->> input from Arm/MPAM perspective. As I understand assignable counters may benefit
->> MPAM and looking close to settled but it is difficult to gain confidence
->> in an interface that may (may not?) be used for MPAM without any feedback
->> from Arm/MPAM. I am trying to prevent future issues when/if MPAM needs to use
->> this new interface and find it confusing that there does not seem to be
->> any input from MPAM side. What am I missing?
+On Tue, Feb 11, 2025 at 01:25:56PM -0500, Alyssa Rosenzweig wrote:
+> This small series fixes three unrelated issues with the Apple NVMe
+> driver.
 > 
-> I've looked into monitor assignment on MPAM a little, so I'll share my findings.
+> * fix NVMe on firmware/machine
+> * fix a power domain leak
+> * fix pathological driver performance with random writes
 > 
-> Like with ABMC/BMEC, MPAM's counters can be configured to monitor
-> reads, writes, or both, so there are situations where it would be
-> useful to be able to assign 2 counters to the same group to be able to
-> break down the bandwidth between reads and writes. However, a group's
-> two assignment slots are called "local" and "total", so if MPAM's
-> resources only support one of the two, then only one counter can be
-> assigned to a group.
+> The first two are strict bug fixes, the last is technically an
+> optimization but given the measured 200x performance difference I do
+> consider to be a fix ;-)
 
-Wouldn't this be a problem on AMD too?
-... specifically 2 counters with different configurations to the same group ...
+The last two patches look good to me.
 
-
-I suspect it may be simpler to support complex things like that via perf.
-I'd dropped that in favour of ABMC, but one platform has come out of the woodwork where
-there are only monitors on the L2 - and I don't think we should expose new counter files
-via resctrl...
-
-
-> MPAM does not support any filters that would differentiate between
-> traffic serviced by local or remote memory, so it's difficult to see
-> an MBM event other than "total" ever being used.
-
-The driver guesses from the topology! If the counters used are on the L3, chances are they
-are local to a NUMA node. If they're on the memory controller, its probably total.
-
-That code does need tightening up to check the cache boundaries match the numa boundaries
-- but I haven't found a machine to test the bandwidth counters on at all yet.
-
-I don't see how this would change what resctrl exposes - mbm_local and mbm_total already
-exist. It's up to the MPAM driver to best match what it has with what it can exposed to
-user-space...
-
-
-> Multiple MSCs
-> measuring memory bandwidth at an interconnect and a local memory
-> controller could potentially be used to together to infer the "local"
-> and "total" counts, but this would require the implementation to
-> understand the platform-specific relationship between different types
-> of MSCs and somehow present them as a single rdt_resource to resctrl.
-> As best as I can tell, the MPAM driver today will choose "local" or
-> "total"[1] for what it will present to the FS layer as an
-> rdt_resource.
-
-I think 'both' should fall out of that logic. It should keep moving the 'total' bandwidth
-counter down the hierarchy until it reaches the memory controller.
-I'd expect a platform that looks like this to have bandwidth monitors on the L3 (or
-whatever cache matches the NUMA boundary) and bandwidth monitors on the memory controller.
-
-Having two sets of bandwidth counters that measure different things in the same MSC is not
-something that can be described by the firmware tables. (I did ask)
-
-I think the logic here would be contained to the MPAM driver...
-
-
-Thanks,
-
-James
-
-> Based on this, I would prefer the arch/fs refactoring changes go in
-> first to give us more time to think about how better to abstract
-> counter assignment on a non-RDTlike implementation. I believe finally
-> settling on an arch/fs separation for the currently-supported feature
-> set would make the counter assignment work clearer for everyone
-> involved. Also, my own users have been using an implementation like
-> this one successfully for over a year on ARM-based platforms while I'm
-> still just experimenting with the usage model of ABMC on AMD hardware,
-> so I consider the MPAM work to be more mature and would not like to
-> see it delayed on account of ABMC.
+I don't know anyone qualified to review the first patch, so I'll take
+your word for it if no one replies in the next few days. :)
