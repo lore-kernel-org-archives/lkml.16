@@ -1,91 +1,195 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128D426215C
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9071E5B68;
+	Tue, 11 Feb 2025 19:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739300615; cv=none; b=jXhMnuOSxDb5SaZ99RM7nJLuHxFLRRP6olTWAWH2H05vStlwoHVDRVHxKm8NNUhKNgNJ3KOh2hWw7pWRrldyCVoLA4/ns2FpPYeiBJYhblKwpnLTPC/05Apbnyvw3/YNwnFdAggxxyjSY94GjnXP3GhbeuLryKJLPj8kXRx9eZE=
+	t=1739300648; cv=none; b=gOOcURZSLrIiDNzCE7qGBkdqsJHVe4FywIVpHg9DcgPbZvWHXjQ6+BDNxILls+FIRQRm/+chSfgfBOqZqnfV8i5HiG1EezT6HIuY0SmQnU51KDOoVF04wie5Q5M5tHoDpz+9m09Q8B/1eXTDTSkp1opV9hq1OC4chuT3/8DA/rU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739300615; c=relaxed/simple;
-	bh=aFRbjSre0n/PpbhfPdOu1q5jYzsALXfM3ldTnjaDe4k=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Y4rrr53aFYfHPWOc8+53iLtYdjuSYnz3Lf1zQ6ZK3F6GqqHoLWWCIZ4ZyH+tyY7RMXg0/2O9XSupZixQTy4ZqIYoKYlqc/KQTfEYITatIqXrjC/A+h8+aAfbNYopohRphrcMhDTOz/HZgZ3B0ckPg76govdrb2h+ZD9m6jUd41A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q+9jUF1d; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1739300648; c=relaxed/simple;
+	bh=/Ljjw5AlvMvn7fg6wWvVO+9IlLKhPy1ShhOtpXaNzGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ITErcbqu3DTuQu/b1reWKAmomGEZK09lnM07e1i9nHaozOTUF2PcMHoeQvYSrQDx/dJaqxXEayjV/exLY+61y0oPhwkHxgu83/CljEEiRhYC8kHqP67lmTyMUbeyxTUGsqjewwf9lrVDKICHvCGRfXOIFGO5x6ZS65m9XJaohWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W3XhRlZn; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q+9jUF1d"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-21f68852b7bso128774945ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:03:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739300613; x=1739905413; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=X6RZHwu8fSUx1PRlASdGoMqhsw6pMz1JSKazfVdmFy0=;
-        b=q+9jUF1dp8fOhBh0u/9JltV1yPnW1ywnhgEDOTJFIe1TtXi+JNS56XKxP3IhbTSKcM
-         MN7HL26FTuOzviCSghyORszxraETEmkLudxSBdFPFni3qpqXJCU8wMtqTHb8i+kEmsnE
-         Nyv7CjaJPqZg4akjmcXLBTCGiutIJ63iLfLNhNGGhycg8y5ZCBtn5+ZZDKo6CoJ0VvFD
-         e8ZCSh1lQcHJ1pFvodN/qzGB4Wo9LsxI/z/ltuDmnloTCCVCTQBhbotAmwNoClrinkqt
-         1PYP5SVRqyOoSD3wN6A4lUx+VBD2Mar58hlZCMbIenvgRNgloUHjl2klp9fW6fRJmgjt
-         fhMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739300613; x=1739905413;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X6RZHwu8fSUx1PRlASdGoMqhsw6pMz1JSKazfVdmFy0=;
-        b=KKUL70QQJIklPusosyWMU+Jc0MDI8EfdgIdkKbumi4t1NaoVUHA1dF25yPWQ9f/lNB
-         n6hlMkfNjq+0EtdFCUg82IQAtdiTs0nzgzFfsIOzrEpQECbzRuu4TUFIl/SPxIUUmr2y
-         SOHRQynexX3VaklC7dqY0ibcFmoSZ91lHn5+RsneWshavzqrrgPMcs0pwGGRFnCVPRlK
-         vze0VqWFXjgpqEQ73Y6gY7mvfKws+PAndfh047j4+y9rWux64xZgxx8NF6Kygbwjs1uR
-         6FUk680Ujvzdy11Dj02AgEbYB6Q7LbMfMCBFCrLHpvJN8Plds8a+yIoIV7mS5et5UBCE
-         YSUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWW2N3ROEE5uM0UvXNWGK8DNVoi+TEhgrUr57WStX62eaoe2ciPIpxH7dbvOxFLP4Qj+zEoEPpcHd+suEs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRUpoBxk29Hd74vFoDiBdXhGCmFZg2j7e6HKSgU1slXOlPLWr0
-	Jz7jGfyFkdLLvCb73JsSz3rAFvdVVLW22a6wJM4FBBNyP8AOnxcsDDwdVxI+elQ3JsOzZfwxzdw
-	CLw==
-X-Google-Smtp-Source: AGHT+IF83FAVS6JbAJzhSAAsNQR7sGHkfYmlENylg6JcCsQBTAIdcwm5DyQRH0pv2Gc0GyUcz7M5iSbKK64=
-X-Received: from pfbbh7.prod.google.com ([2002:a05:6a00:3087:b0:730:7b6c:d5d1])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:258e:b0:1e0:d6ef:521a
- with SMTP id adf61e73a8af0-1ee5c732f01mr650938637.1.1739300613311; Tue, 11
- Feb 2025 11:03:33 -0800 (PST)
-Date: Tue, 11 Feb 2025 11:03:32 -0800
-In-Reply-To: <20250211184021.GFZ6uZlZWPVTI5qO1_@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W3XhRlZn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739300647; x=1770836647;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/Ljjw5AlvMvn7fg6wWvVO+9IlLKhPy1ShhOtpXaNzGQ=;
+  b=W3XhRlZnEpfMzCTfwm/a2iI2/5XVcXuNd5rHSJLt+bVQyqgs5oeCYACx
+   dda4IT6xykC2EJiX00yMhWOtpiZwcdiDY8sOVRboJEKoGuZWI1pl+2UHF
+   nduRCT8b92AKyF7GX3bVhNzvCEh+2+1OML6NPvPjgGhRhAmIzQiRbGvJT
+   ST6+awZbYp/ZydyVXYK/49U0lwJNLTQLiwk0A880CUFaEco3fViYKCE4R
+   pk6tyhO9Un1qouxOYwRKsC3KOrSeUKgeNLiFjqystd4ofvv1CduCxIimI
+   QP7vB7kq7ZiRPPwDMInglNrx1LWjBMmiudsRFxduqtVsWzbB3LoTJ+Voa
+   A==;
+X-CSE-ConnectionGUID: pJ1yCOfUTa+SxZIXyxKZ+w==
+X-CSE-MsgGUID: ERgtw4aUTda3N083KYeICw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="62403692"
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="62403692"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 11:04:06 -0800
+X-CSE-ConnectionGUID: GpuNRdGGT2qKGGc/VMzOOA==
+X-CSE-MsgGUID: Kz2gOXTpSP2BT1vgOrFtJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="113109845"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 11:04:04 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1thvY9-0000000AbNv-1OyJ;
+	Tue, 11 Feb 2025 21:04:01 +0200
+Date: Tue, 11 Feb 2025 21:04:01 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 11/14] platform/x86: Split the alienware-wmi driver
+Message-ID: <Z6ufIQADzILVMusc@smile.fi.intel.com>
+References: <20250207154610.13675-1-kuurtb@gmail.com>
+ <20250207154610.13675-12-kuurtb@gmail.com>
+ <Z6uBJ9AC5XgZTlJG@black.fi.intel.com>
+ <D7PT98IDXMUV.G2F1LRF8BX7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250201021718.699411-1-seanjc@google.com> <20250201021718.699411-2-seanjc@google.com>
- <20250211150114.GCZ6tmOqV4rI04HVuY@fat_crate.local> <Z6uIGwxx9HzZQ-N7@google.com>
- <20250211184021.GFZ6uZlZWPVTI5qO1_@fat_crate.local>
-Message-ID: <Z6ufBMy4u0jcmIl0@google.com>
-Subject: Re: [PATCH 01/16] x86/tsc: Add a standalone helpers for getting TSC
- info from CPUID.0x15
-From: Sean Christopherson <seanjc@google.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	linux-coco@lists.linux.dev, virtualization@lists.linux.dev, 
-	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com, 
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	Nikunj A Dadhania <nikunj@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D7PT98IDXMUV.G2F1LRF8BX7@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Feb 11, 2025, Borislav Petkov wrote:
-> On Tue, Feb 11, 2025 at 09:25:47AM -0800, Sean Christopherson wrote:
-> > Because obviously optimizing code that's called once during boot is super
-> > critical?
+On Tue, Feb 11, 2025 at 12:59:53PM -0500, Kurt Borja wrote:
+> On Tue Feb 11, 2025 at 11:56 AM -05, Andy Shevchenko wrote:
+> > On Fri, Feb 07, 2025 at 10:46:07AM -0500, Kurt Borja wrote:
+
+...
+
+> >>  obj-$(CONFIG_ALIENWARE_WMI)		+= alienware-wmi.o
+> >>  alienware-wmi-objs			:= alienware-wmi-base.o
+> >> +alienware-wmi-y				+= alienware-wmi-legacy.o
+> >> +alienware-wmi-y				+= alienware-wmi-wmax.o
+> >
+> > Oh my... it's even inconsistent!
 > 
-> Because let's stick 'em where they belong and keep headers containing only
-> small, trivial and inlineable functions.
+> Again, this is an already used pattern:
 
-LOL, sorry, I was being sarcastic and poking fun at myself.  I completely agree
-there's no reason to make them inline.
+> 	https://elixir.bootlin.com/linux/v6.14-rc2/source/drivers/platform/x86/dell/Makefile#L14
+> 
+> I add configuration entries later. Is the order of the changes wrong? or
+> is it the entire approach? Do other modules here need a fix?
+
+Again, it doesn't mean it's correct.
+
+Maybe other modules also need that, I don't remember, but you may `git log
+--no-merges --author="Andy" --grep objs` to see changes I made in the past.
+
+...
+
+> >> +	if (!ret) {
+> >> +		if (out_data == 0)
+> >> +			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
+> >> +		else if (out_data == 1)
+> >> +			return sysfs_emit(buf, "disabled [s5] s5_s4\n");
+> >> +		else if (out_data == 2)
+> >> +			return sysfs_emit(buf, "disabled s5 [s5_s4]\n");
+> >
+> > The whole code inherited same issues like redundant 'else'. Please, refactor.
+> 
+> This is not my code, so a separate patch would be needed.
+
+Okay!
+
+...
+
+> >> +	if (strcmp(buf, "disabled\n") == 0)
+> >> +		args.arg = 0;
+> >> +	else if (strcmp(buf, "s5\n") == 0)
+> >> +		args.arg = 1;
+> >> +	else
+> >> +		args.arg = 2;
+> >
+> > sysfs_match_string()
+> 
+> Same as above.
+
+Same as above :-)
+
+...
+
+> >> +	if ((code & WMAX_THERMAL_TABLE_MASK) == WMAX_THERMAL_TABLE_USTT &&
+> >> +	    (code & WMAX_THERMAL_MODE_MASK) <= THERMAL_MODE_USTT_LOW_POWER)
+> >> +		return true;
+> >> +
+> >> +	return false;
+> >
+> > 	return ...
+> >
+> > but if you wish, this one is okay.
+> 
+> This was done for readibility. Also this would require a different
+> patch.
+
+No need, I'm fine with the current approach, just to show the alternatives.
+
+...
+
+> >> +	ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_SYS_DESCRIPTION,
+> >> +				       0, (u32 *) &sys_desc);
+> >
+> > How do you guarantee an alignment? Yes, it might be good for the specific
+> > hardware, but in general this is broken code.
+> 
+> This is a good question. I'm not really sure how to fix this tho. Is it
+> fine to just pass a __packed struct? Also this would require another
+> patch.
+
+Usual approach here is to use one of get_unaligned_le32(), get_unaligned_be32()
+depending on the byte ordering.
+
+> >> +	if (ret < 0)
+> >> +		return ret;
+
+...
+
+> >> +		set_bit(profile, choices);
+> >
+> > Do you need it to be atomic?
+> 
+> I don't think so. `choices` belongs to this thread only.
+
+So, __set_bit() will suffice then.
+
+...
+
+> >> +void __exit alienware_wmax_wmi_exit(void)
+> >> +{
+> >> +	wmi_driver_unregister(&alienware_wmax_wmi_driver);
+> >> +}
+> >
+> > Why not moving these boilerplate to ->probe() and use module_wmi_driver()?
+> 
+> This 3 files are a single module and it has two WMI drivers so this
+> can't be used.
+
+Can it be split to two separate modules then?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
