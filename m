@@ -1,380 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAA21D63F7;
-	Tue, 11 Feb 2025 07:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE691EB9F9
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739258851; cv=none; b=PjmwuAjrPEk/to61DdmpdmDfZxjuH/wPCymKR/+6/bZ3qoMMuNbqi0Wd59/BWGi8+wEz6y9W1UkqyWMhafPia1HCc07mqTZCvLBxCTC8RWw2fs7VUVOidaKE19aUm5IBKKchfArWuJoUeq1/+BwF2QmheT5TajjJTvGHxcmFKNs=
+	t=1739258894; cv=none; b=B18+JdimrmWi9Ka5nJ4oWhLeQljI2cxj8v3VQ9l2lijB7pmk15GVBh89hNpeeT+GvjFzoaMketA7x3BwYAIUmurA3eH0xE9XnE08gyw3zSjNkhmKeKVXY8CGGd91413jrKlN3cweXVW9rzzAFqFletKZ8UeLWihIHQjJnjD0bRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739258851; c=relaxed/simple;
-	bh=rXqLEIQdjG+1hUyu4wbaNDCYjGFe2VrktaWcvWbvdUU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZBOdKoFBT/Ut/1mqkHcADUFmIp/iJ2bVjqTWxf+yVwQ8XM+e203bCoFEvzZbJY0IV8OzMtJyEADrzwuf21iIwb+NzZytkan8ybtbHwdGN5YkFGf4sWziOzeLyrRAslH6JqJQx4GArsQFvn3MPh+yjw7qZ7e3tSq7Tx4eVrdlAUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gLpgENQy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739258894; c=relaxed/simple;
+	bh=xDphkzp7YOwassCx3klJnQSoSwa0N8eY8DjCLu7euf4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tkAr9iUNQKx93uG2Wz3mhJiPl/SQTtVMUNJcAKy49xDMfDMwHmtnqBSjK/TB4C14LKXkxAiCdt9/jigTX/pYRyaMZ/bSld8uqKORpHMUC1Mr/ewI7hzxBkJuLNdL56PXghdwWEb5DQkxJTJoaB7b1dq+8xjZA9xOsNuAvWO+KoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=KAVy5F4q; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gLpgENQy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C35CC4CEDD;
-	Tue, 11 Feb 2025 07:27:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739258850;
-	bh=rXqLEIQdjG+1hUyu4wbaNDCYjGFe2VrktaWcvWbvdUU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gLpgENQyaWvxnT8R3BAVVAEygOp/doipjo1do1nrahghKPcpIqJ5r/enxhznFyAHA
-	 Ul+P06K7z8SO3PcCAIpsZ8Orh7PryQoK2oBxhl3o0NJhcK3RmraSi9akbqlEVQ3O3Y
-	 8ttHkRPZlOjgRIvxt3u2q5ITfTkn7YdrDDsO7Qnc=
-Date: Tue, 11 Feb 2025 08:27:26 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Subject: Re: [PATCH v4 1/9] driver core: add a faux bus for use when a simple
- device/bus is needed
-Message-ID: <2025021111-landowner-gleaming-5971@gregkh>
-References: <2025021023-sandstorm-precise-9f5d@gregkh>
- <2025021026-atlantic-gibberish-3f0c@gregkh>
- <D7OYKAYV14AZ.2D8Q4XP557FSR@gmail.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="KAVy5F4q"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fa21145217so8220116a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:28:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1739258892; x=1739863692; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=u8JvwZe222+nCD5D0NlDaqFgopE4s8QEJ665TCjR17Q=;
+        b=KAVy5F4qSoiLjA+7OYEDq7MqwzJY7gIB72ynzU1CY1DcFkTAYzC/kX8KGPZ4GVjiFW
+         7z5mYuPFyWdKsTLBD4pVsBrC/+0GvFUMq043BmjnaBPwuMrDzm23jsqQQo2eBj3LvhEi
+         WRL39VjNnuXSErih5638WF0lFM/CWPj4h2sMCI4cFMEzYVLhyNNAUpYm6uVDou36ZZmx
+         uy4myemNHB1NzCjeH5oxHorWvbUE8Y6iiaNgUJfYdcvq22d/6MwpxDAZcrZ6+PQZJXCP
+         UcSNLgat75JZ3zPkTmFa46XKnkSui333Tiw1vy/epquGXZPYreHjQOsTNWB9Lr+TjD9i
+         0uRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739258892; x=1739863692;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u8JvwZe222+nCD5D0NlDaqFgopE4s8QEJ665TCjR17Q=;
+        b=E+fOa6sPxF3/qsO29yReE7b3JYHuTzaqL1yEsDNKg/tgSgVaHXATFaDT278Sz0iQof
+         yC6mxWHdDzxKT9HbOahJfdZ/R5HA2910NaUiutjhB7kvGDdMbPzzFm89w4ba9MxRf+u7
+         WPo96GjYrQOMtstx7Yr9I897wEH25W90iIP6P0Z2ad7EndXS9Hvm16p8ehV1DDF+WaNN
+         O5z73LTn3cMYRjG4xwCwWHwkgt3YCBelwZ1ZhTACo7eZptvtBMouh8ZWf/Vwjjy8EMAr
+         IiJmqtRNSpt8e8PToCahKcN7G3Zq6oZWOB74SsLvjol78DM37SpIzckZljWVOGc04CsR
+         udZw==
+X-Gm-Message-State: AOJu0YyNf+h5kPo9CTPzXj2yj1bQlJkTmsBF4N+OPK8DON7lg8c3WHbq
+	PRB6VSri5cJ8YDDYpco6RHwACmJ268VB2ReFW5bdOVzrCqqb26vdSbvCT31c6dyRYrh37/NT9HS
+	q
+X-Gm-Gg: ASbGncvzSiLxCaNl6AbhTDGiAAPV4GrcnEjeHBKZesdLYT8fb6VXe/Dg6Xx9ep8UQi6
+	gj5SJSqYWSPu8yAAuKfEIc79hwak3+RvTNSqWhFieRfFyNvbaY6tfkAwyMhg/fUf/Z86od9/2vj
+	xmMDFoz1u9qLTBL8Mco5MzpCGb637EVMOgYK3FEE4/TxJ04rRZWU/RhcDfcn+kkCrYRQp6wKMWP
+	0uS6kaDDw+VrT4XmoG6Z6AI0VxQzfVC4ICKStpEwkLssWCWsAMHPunn2D2BipQItUZfr1FTIatW
+	YhY7sDpbiWk1sVKJ+i3PDAsQeRmRimVIjd/M/OfrYMv+dNxewEuuXP5g
+X-Google-Smtp-Source: AGHT+IEGFQNt5sPJaZzJIBOUWjXNir7ONpzC/zGumrQumqkRxYesmObQGhXHsFIIUFr5ys2Z+8JnCg==
+X-Received: by 2002:a05:6a21:350d:b0:1ed:9e58:5195 with SMTP id adf61e73a8af0-1ee03a45ccdmr32137005637.13.1739258891851;
+        Mon, 10 Feb 2025 23:28:11 -0800 (PST)
+Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.150])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad54a066811sm3946778a12.8.2025.02.10.23.28.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 23:28:11 -0800 (PST)
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+To: brauner@kernel.org,
+	willy@infradead.org,
+	ziy@nvidia.com,
+	quwenruo.btrfs@gmx.com,
+	david@redhat.com,
+	jannh@google.com,
+	akpm@linux-foundation.org,
+	david@fromorbit.com,
+	djwong@kernel.org,
+	muchun.song@linux.dev
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] mm: pgtable: fix incorrect reclaim of non-empty PTE pages
+Date: Tue, 11 Feb 2025 15:26:25 +0800
+Message-Id: <20250211072625.89188-1-zhengqi.arch@bytedance.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <D7OYKAYV14AZ.2D8Q4XP557FSR@gmail.com>
 
-On Mon, Feb 10, 2025 at 12:56:46PM -0500, Kurt Borja wrote:
-> On Mon Feb 10, 2025 at 7:30 AM -05, Greg Kroah-Hartman wrote:
-> > Many drivers abuse the platform driver/bus system as it provides a
-> > simple way to create and bind a device to a driver-specific set of
-> > probe/release functions.  Instead of doing that, and wasting all of the
-> > memory associated with a platform device, here is a "faux" bus that
-> > can be used instead.
-> >
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-> > Reviewed-by: Lyude Paul <lyude@redhat.com>
-> > Reviewed-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> > v4: - really removed the name logic
-> >     - added #include <linux/container_of.h> to faux.h
-> >     - added parent pointer to api call
-> >     - minor documentation updates
-> >     - made probe synchronous
-> > v3: - loads of documentation updates and rewrites
-> >     - added to the documentation build
-> >     - removed name[] array as it's no longer needed
-> >     - added faux_device_create_with_groups()
-> >     - added functions to get/set devdata
-> >     - renamed faux_driver_ops -> faux_device_ops
-> >     - made faux_device_ops a const *
-> >     - minor cleanups
-> >     - tested it, again.
-> >
-> > v2: - renamed bus and root device to just "faux" thanks to Thomas
-> >     - removed the one-driver-per-device and now just have one driver
-> >       entirely thanks to Danilo
-> >     - kerneldoc fixups and additions and string handling bounds checks
-> >       thanks to Andy
-> >     - coding style fix thanks to Jonathan
-> >     - tested that the destroy path actually works
-> >  Documentation/driver-api/infrastructure.rst |   6 +
-> >  drivers/base/Makefile                       |   2 +-
-> >  drivers/base/base.h                         |   1 +
-> >  drivers/base/faux.c                         | 232 ++++++++++++++++++++
-> >  drivers/base/init.c                         |   1 +
-> >  include/linux/device/faux.h                 |  69 ++++++
-> >  6 files changed, 310 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/base/faux.c
-> >  create mode 100644 include/linux/device/faux.h
-> >
-> > diff --git a/Documentation/driver-api/infrastructure.rst b/Documentation/driver-api/infrastructure.rst
-> > index 3d52dfdfa9fd..35e36fee4238 100644
-> > --- a/Documentation/driver-api/infrastructure.rst
-> > +++ b/Documentation/driver-api/infrastructure.rst
-> > @@ -41,6 +41,12 @@ Device Drivers Base
-> >  .. kernel-doc:: drivers/base/class.c
-> >     :export:
-> >  
-> > +.. kernel-doc:: include/linux/device/faux.h
-> > +   :internal:
-> > +
-> > +.. kernel-doc:: drivers/base/faux.c
-> > +   :export:
-> > +
-> >  .. kernel-doc:: drivers/base/node.c
-> >     :internal:
-> >  
-> > diff --git a/drivers/base/Makefile b/drivers/base/Makefile
-> > index 7fb21768ca36..8074a10183dc 100644
-> > --- a/drivers/base/Makefile
-> > +++ b/drivers/base/Makefile
-> > @@ -6,7 +6,7 @@ obj-y			:= component.o core.o bus.o dd.o syscore.o \
-> >  			   cpu.o firmware.o init.o map.o devres.o \
-> >  			   attribute_container.o transport_class.o \
-> >  			   topology.o container.o property.o cacheinfo.o \
-> > -			   swnode.o
-> > +			   swnode.o faux.o
-> >  obj-$(CONFIG_AUXILIARY_BUS) += auxiliary.o
-> >  obj-$(CONFIG_DEVTMPFS)	+= devtmpfs.o
-> >  obj-y			+= power/
-> > diff --git a/drivers/base/base.h b/drivers/base/base.h
-> > index 8cf04a557bdb..0042e4774b0c 100644
-> > --- a/drivers/base/base.h
-> > +++ b/drivers/base/base.h
-> > @@ -137,6 +137,7 @@ int hypervisor_init(void);
-> >  static inline int hypervisor_init(void) { return 0; }
-> >  #endif
-> >  int platform_bus_init(void);
-> > +int faux_bus_init(void);
-> >  void cpu_dev_init(void);
-> >  void container_dev_init(void);
-> >  #ifdef CONFIG_AUXILIARY_BUS
-> > diff --git a/drivers/base/faux.c b/drivers/base/faux.c
-> > new file mode 100644
-> > index 000000000000..531e9d789ee0
-> > --- /dev/null
-> > +++ b/drivers/base/faux.c
-> > @@ -0,0 +1,232 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > + * Copyright (c) 2025 The Linux Foundation
-> > + *
-> > + * A "simple" faux bus that allows devices to be created and added
-> > + * automatically to it.  This is to be used whenever you need to create a
-> > + * device that is not associated with any "real" system resources, and do
-> > + * not want to have to deal with a bus/driver binding logic.  It is
-> > + * intended to be very simple, with only a create and a destroy function
-> > + * available.
-> > + */
-> > +#include <linux/err.h>
-> > +#include <linux/init.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/string.h>
-> > +#include <linux/container_of.h>
-> > +#include <linux/device/faux.h>
-> > +#include "base.h"
-> > +
-> > +/*
-> > + * Internal wrapper structure so we can hold a pointer to the
-> > + * faux_device_ops for this device.
-> > + */
-> > +struct faux_object {
-> > +	struct faux_device faux_dev;
-> > +	const struct faux_device_ops *faux_ops;
-> > +};
-> > +#define to_faux_object(dev) container_of_const(dev, struct faux_object, faux_dev.dev)
-> > +
-> > +static struct device faux_bus_root = {
-> > +	.init_name	= "faux",
-> > +};
-> > +
-> > +static int faux_match(struct device *dev, const struct device_driver *drv)
-> > +{
-> > +	/* Match always succeeds, we only have one driver */
-> > +	return 1;
-> > +}
-> > +
-> > +static int faux_probe(struct device *dev)
-> > +{
-> > +	struct faux_object *faux_obj = to_faux_object(dev);
-> > +	struct faux_device *faux_dev = &faux_obj->faux_dev;
-> > +	const struct faux_device_ops *faux_ops = faux_obj->faux_ops;
-> > +	int ret = 0;
-> > +
-> > +	if (faux_ops && faux_ops->probe)
-> > +		ret = faux_ops->probe(faux_dev);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static void faux_remove(struct device *dev)
-> > +{
-> > +	struct faux_object *faux_obj = to_faux_object(dev);
-> > +	struct faux_device *faux_dev = &faux_obj->faux_dev;
-> > +	const struct faux_device_ops *faux_ops = faux_obj->faux_ops;
-> > +
-> > +	if (faux_ops && faux_ops->remove)
-> > +		faux_ops->remove(faux_dev);
-> > +}
-> > +
-> > +static const struct bus_type faux_bus_type = {
-> > +	.name		= "faux",
-> > +	.match		= faux_match,
-> > +	.probe		= faux_probe,
-> > +	.remove		= faux_remove,
-> > +};
-> > +
-> > +static struct device_driver faux_driver = {
-> > +	.name		= "faux_driver",
-> > +	.bus		= &faux_bus_type,
-> > +	.probe_type	= PROBE_FORCE_SYNCHRONOUS,
-> > +};
-> > +
-> > +static void faux_device_release(struct device *dev)
-> > +{
-> > +	struct faux_object *faux_obj = to_faux_object(dev);
-> > +
-> > +	kfree(faux_obj);
-> > +}
-> > +
-> > +/**
-> > + * faux_device_create_with_groups - Create and register with the driver
-> > + *		core a faux device and populate the device with an initial
-> > + *		set of sysfs attributes.
-> > + * @name:	The name of the device we are adding, must be unique for
-> > + *		all faux devices.
-> > + * @parent:	Pointer to a potential parent struct device.  If set to
-> > + *		NULL, the device will be created in the "root" of the faux
-> > + *		device tree in sysfs.
-> > + * @faux_ops:	struct faux_device_ops that the new device will call back
-> > + *		into, can be NULL.
-> > + * @groups:	The set of sysfs attributes that will be created for this
-> > + *		device when it is registered with the driver core.
-> > + *
-> > + * Create a new faux device and register it in the driver core properly.
-> > + * If present, callbacks in @faux_ops will be called with the device that
-> > + * for the caller to do something with at the proper time given the
-> > + * device's lifecycle.
-> > + *
-> > + * Note, when this function is called, the functions specified in struct
-> > + * faux_ops can be called before the function returns, so be prepared for
-> > + * everything to be properly initialized before that point in time.
-> > + *
-> > + * Return:
-> > + * * NULL if an error happened with creating the device
-> > + * * pointer to a valid struct faux_device that is registered with sysfs
-> > + */
-> > +struct faux_device *faux_device_create_with_groups(const char *name,
-> > +						   struct device *parent,
-> > +						   const struct faux_device_ops *faux_ops,
-> > +						   const struct attribute_group **groups)
-> > +{
-> > +	struct faux_object *faux_obj;
-> > +	struct faux_device *faux_dev;
-> > +	struct device *dev;
-> > +	int ret;
-> > +
-> > +	faux_obj = kzalloc(sizeof(*faux_obj), GFP_KERNEL);
-> > +	if (!faux_obj)
-> > +		return NULL;
-> > +
-> > +	/* Save off the callbacks so we can use them in the future */
-> > +	faux_obj->faux_ops = faux_ops;
-> > +
-> > +	/* Initialize the device portion and register it with the driver core */
-> > +	faux_dev = &faux_obj->faux_dev;
-> > +	dev = &faux_dev->dev;
-> > +
-> > +	device_initialize(dev);
-> > +	dev->release = faux_device_release;
-> > +	if (parent)
-> > +		dev->parent = parent;
-> > +	else
-> > +		dev->parent = &faux_bus_root;
-> > +	dev->bus = &faux_bus_type;
-> > +	dev->groups = groups;
-> 
-> Just as I feared, adding groups this way is bug prone if we don't check
-> if the device attached to the driver successfully. Consider the
-> following example module:
-> 
-> static attr1_show(...)
-> {
-> 	struct priv *priv = dev_get_drvdata(dev);
-> 	...
-> }
-> DEVICE_ATTR_RO(attr1)
-> 
-> ...
-> 
-> static const struct attribute_group faux_groups[] = {
-> 	...
-> }
-> 
-> /* It would be nice to have the probe in __init */
-> static int __init faux_probe(struct faux_device *fdev)
-> {
-> 	...
-> 	/* Probe may fail */
-> 	if (con)
-> 		return -EINVAL;
-> 	...
-> 	faux_device_set_drvdata(fdev, priv);
-> 	...
-> }
-> 
-> static struct faux_device_ops faux_ops = {
-> 	...
-> }
-> 
-> static int __init module_init()
-> {
-> 	...
-> 	fdev = faux_device_create_with_groups("foo", NULL, &faux_ops,
-> 					      &faux_groups);
-> 	if (!fdev)
-> 		return -ENODEV;
-> }
-> 
-> In this example we have no way of knowing if the probe failed, so the
-> module as well as the device will remain loaded. Furthermore, the sysfs
-> groups WILL be added anyway, which is dangerous because we have no
-> gurantee about drvdata's lifetime nor if it was even initialized
-> correctly, which sysfs show/store methods may assume is the case.
-> 
-> So we have two problems here. First, this module only cares about the
-> probe succeeding so keeping the device alive after it fails wastes
-> resources. Second, we don't have any gurantee about drvdata validity.
-> 
-> > +	dev_set_name(dev, "%s", name);
-> > +
-> > +	ret = device_add(dev);
-> > +	if (ret) {
-> > +		pr_err("%s: device_add for faux device '%s' failed with %d\n",
-> > +		       __func__, name, ret);
-> > +		put_device(dev);
-> > +		return NULL;
-> > +	}
-> 
-> To solve this, I suggest we do this here:
-> 
-> 	/* Check if the device attached correctly */
-> 	if (dev->driver != &faux_driver)
-> 		return ERR_PTR(-ENODEV); /* or NULL */
-> 
-> 	/* 
-> 	 * Add groups after the driver is attached, to avoid lifetime
-> 	 * issues 
-> 	 */
-> 	device_add_groups(dev, groups);
+In zap_pte_range(), if the pte lock was released midway, the pte entries
+may be refilled with physical pages by another thread, which may cause a
+non-empty PTE page to be reclaimed and eventually cause the system to
+crash.
 
-Nope, sorry, let the driver core handle the group creation/removal at
-the proper time.
+To fix it, fall back to the slow path in this case to recheck if all pte
+entries are still none.
 
-I'll work on adding "if probe failed, don't let the device be created"
-logic as it's a simple change, BUT it is a functionally different change
-from what the current api that this code is replacing is doing (i.e. the
-current platform device creation code does this today and no one has
-ever hit this in their use of it in the past few decades.)
+Fixes: 6375e95f381e ("mm: pgtable: reclaim empty PTE page in madvise(MADV_DONTNEED)")
+Reported-by: Christian Brauner <brauner@kernel.org>
+Closes: https://lore.kernel.org/all/20250207-anbot-bankfilialen-acce9d79a2c7@brauner/
+Reported-by: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Closes: https://lore.kernel.org/all/152296f3-5c81-4a94-97f3-004108fba7be@gmx.com/
+Tested-by: Zi Yan <ziy@nvidia.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+---
+ mm/memory.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-thanks,
+diff --git a/mm/memory.c b/mm/memory.c
+index a8196ae72e9ae..7c7193cb21248 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1721,7 +1721,7 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
+ 	pmd_t pmdval;
+ 	unsigned long start = addr;
+ 	bool can_reclaim_pt = reclaim_pt_is_enabled(start, end, details);
+-	bool direct_reclaim = false;
++	bool direct_reclaim = true;
+ 	int nr;
+ 
+ retry:
+@@ -1736,8 +1736,10 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
+ 	do {
+ 		bool any_skipped = false;
+ 
+-		if (need_resched())
++		if (need_resched()) {
++			direct_reclaim = false;
+ 			break;
++		}
+ 
+ 		nr = do_zap_pte_range(tlb, vma, pte, addr, end, details, rss,
+ 				      &force_flush, &force_break, &any_skipped);
+@@ -1745,11 +1747,20 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
+ 			can_reclaim_pt = false;
+ 		if (unlikely(force_break)) {
+ 			addr += nr * PAGE_SIZE;
++			direct_reclaim = false;
+ 			break;
+ 		}
+ 	} while (pte += nr, addr += PAGE_SIZE * nr, addr != end);
+ 
+-	if (can_reclaim_pt && addr == end)
++	/*
++	 * Fast path: try to hold the pmd lock and unmap the PTE page.
++	 *
++	 * If the pte lock was released midway (retry case), or if the attempt
++	 * to hold the pmd lock failed, then we need to recheck all pte entries
++	 * to ensure they are still none, thereby preventing the pte entries
++	 * from being repopulated by another thread.
++	 */
++	if (can_reclaim_pt && direct_reclaim && addr == end)
+ 		direct_reclaim = try_get_and_clear_pmd(mm, pmd, &pmdval);
+ 
+ 	add_mm_rss_vec(mm, rss);
+-- 
+2.20.1
 
-greg k-h
