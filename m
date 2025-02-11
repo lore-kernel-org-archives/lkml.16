@@ -1,138 +1,138 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E331324E4B6;
-	Tue, 11 Feb 2025 15:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3603A253320;
+	Tue, 11 Feb 2025 15:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739286372; cv=none; b=QII3vEcutlIOVTHQWD4mr6VfG+ye0fXxj/VlmJUFdaO/uw0DZfyZ6yQ7j3Ws9uDcmPoeO8xs/GWH+DGVIrRWAL16qJSA5jzKyDiz7dJTTYtH16ZV0wvwbpwU08FGB9DPbiRBOGBAQfTIGTtUYs1sthxt2d++7MpbJNV+CFmk02Y=
+	t=1739286372; cv=none; b=i8CzcWFlTTQfMoScqlfeEiNUDAiqFg12/jtmflkwrTt8P4Ks7h2iQv8LEoPdAH7ts/nyfFFBI9bUe20GVDg66XAMwRthYdAtzxjz83UPW0o1jL+RB84bKIm1UqwgvKlmAyxONDKnWE379K29xci7oeQL7BKOFWP7rMstbxMLSi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739286372; c=relaxed/simple;
-	bh=4B+g3tK9aMfxImDYzfKInCcDdUZK8W55/5LWe/RgXW8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=msiZXK8tl7HAiAZelcO0y2CNV/YhFXeMcoA5xTSAku5WMxOuOUBVxtDQ+AnJ9fFSaOjPEmEaQ48CEkqorOP1y10L+5s3a3Y94yr1kO68sOhQMwD32Q4lyckasWJtPPd4kFvn94SPk7VI7wUx7uFcIPKiEqrKg95/YsezYn2/1gM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y52hG4aY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bhHP9LGW; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=y6Jj3XqEgIoUP0M6OehaXM6KXU5VUxGBjcWtBJ9hvr0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OOu8GajLsWuamWv5JV5cZBXe2wgMwBpkHaeVmrdG/+JFbWRlWFlGZ/GiLd9zsgQ9vcz/CA/j/ehy1xNPQTWCLfK/oa5XzUkay03VF9qQKqze+XJEsBvz4r+Kry0D4tRlpjX95Qc/rn4ewpN8fJNa2U5078QpqOxKIRKq18NE0Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IYl341QM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y52hG4aY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bhHP9LGW"
-Date: Tue, 11 Feb 2025 15:06:07 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739286368;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fcScyRaVnQ5xb4TwKecBkcpqWVZ8pXQZjuAH5zTPMCI=;
-	b=Y52hG4aYOLSZwSw0lf/dVh0933W3yOxodcNSBo0PPq7FupJthqacMKv0tDLftV0FFdwB5q
-	zMM1fV1UAoJFCecFHploI4vy0qo0fQZuJCcGy6og4b9SIyWfbxj5Lx9lilJlPk00LoBayV
-	5Wsp8XSTyBRAJu76qLiyqXwhh5tY/IQjdDYeSm7coTwEd9BdzBLA12XTwsdVZSisGiKeSs
-	KMZhdjV2Umk5uzycoAo2o6ghNRsDGfmI4p+aYd2nFhhG/dRSdScItJIn0CFIYjHFliGVSf
-	KRwQMPXiP7tD9uEV7oD070e5IeF5FIuCCC9YGChphLkMzIBnU0q7fEh7v1OcBA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739286368;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fcScyRaVnQ5xb4TwKecBkcpqWVZ8pXQZjuAH5zTPMCI=;
-	b=bhHP9LGWNTKuK/BX3dYUwbVeTCv4toFPyKc47xeZre4C5s3AJeTFzmZusNTDbIYC43WLW1
-	8xtCSWBDhpCmRQAQ==
-From: "tip-bot2 for Dhananjay Ugwekar" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/rapl: Fix the error checking order
-Cc: Koichiro Den <koichiro.den@canonical.com>,
- Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250129080513.30353-1-dhananjay.ugwekar@amd.com>
-References: <20250129080513.30353-1-dhananjay.ugwekar@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IYl341QM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B890AC4CEDD;
+	Tue, 11 Feb 2025 15:06:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739286371;
+	bh=y6Jj3XqEgIoUP0M6OehaXM6KXU5VUxGBjcWtBJ9hvr0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IYl341QMZEpZWZ15e/LWEtWCDHEdV0dTWgDeLQOwSFL5uHl8fRwWpt+SaVuvHfWZg
+	 +UEAk6MUjnJup99gQas/VhWTsSOc+lfwV7fol0oK1Tt2d9nS/fId8V0eM1dKq5Gve9
+	 EVFLyumfimKHUoP7Wyo9WvPOhkzboTW7prmnKtg3AKejRQjxCoD0Qt2kVMQF3DYBJi
+	 QN6p9d46n0lT7t52OLDpCALkuVVVekdWaVS9n2uhguXx+/G0GBthI5utWrRcJKPavD
+	 Zx2mZY5X9YOq9ql+hYavc3sdfsWDXYoykZfabWHJN/hV2myq5efZfAoyGFh7xyhUDQ
+	 R0+ZMubd7hSGQ==
+Message-ID: <66f7dde5-58e9-4ae8-9431-d94a43e96b0f@kernel.org>
+Date: Tue, 11 Feb 2025 16:06:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173928636768.10177.18009351351852464312.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/3] dt-bindings: firmware: add google,gs101-acpm-ipc
+To: Diederik de Haas <didi.debian@cknow.org>,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Jassi Brar <jassisinghbrar@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kernel-team@android.com, willmcvicker@google.com, peter.griffin@linaro.org,
+ daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+ ulf.hansson@linaro.org, arnd@arndb.de,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250211-gs101-acpm-v8-0-01d01f522da6@linaro.org>
+ <20250211-gs101-acpm-v8-1-01d01f522da6@linaro.org>
+ <D7PJTD3PSP78.27N2S94J2CNZG@cknow.org>
+ <bad87f30-0483-48c1-b263-02cc752c77e6@linaro.org>
+ <a740a0211c82aaaa55940e2f07e1d1b53c23ddd8.camel@linaro.org>
+ <e2bdc9aa-2cbb-4fcc-8c73-5fcdad6e18a7@kernel.org>
+ <D7PNI0953LQN.2PZC72166IWZI@cknow.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <D7PNI0953LQN.2PZC72166IWZI@cknow.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the perf/urgent branch of tip:
+On 11/02/2025 14:29, Diederik de Haas wrote:
+> On Tue Feb 11, 2025 at 1:05 PM CET, Krzysztof Kozlowski wrote:
+>> On 11/02/2025 13:02, André Draszik wrote:
+>>> On Tue, 2025-02-11 at 11:57 +0000, Tudor Ambarus wrote:
+>>>> And then I shall s/MODULE_LICENSE("GPL");/MODULE_LICENSE("GPL v2");/
+>>>> everywhere as "GPL" indicates [GNU Public License v2 or later].
+>>>
+>>> No, please don't, see Documentation/process/license-rules.rst.
+>> For the rest of suggestions here I also recommend rereading docs. I
+>> don't get why we need to change "GPL-2.0 OR BSD-2-Clause", but maybe I
+>> miss some docs. Whatever SPDX recommends is irrelevant if kernel
+>> recommends for example something else, so be sure you make it aligned
+>> with actual kernel preference.
+> 
+> Unfortunately, ``Documentation/process/license-rules.rst`` and
+> ``LICENSES/preferred/GPL-2.0`` are not in 'sync', but I guess that's
+> (potentially) a discussion for another ML.
+> 
+> TL;DR: ``license-rules.rst`` says "GPL-2.0" while the license file
+> allows both.
 
-Commit-ID:     469c76a83bb9f6b2c7b2989c46617c4fe01fee79
-Gitweb:        https://git.kernel.org/tip/469c76a83bb9f6b2c7b2989c46617c4fe01fee79
-Author:        Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-AuthorDate:    Wed, 29 Jan 2025 08:05:14 
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Sat, 08 Feb 2025 15:47:25 +01:00
 
-perf/x86/rapl: Fix the error checking order
+What exactly is there not in sync? To me it shows the preferred GPL-2.0,
+over GPL-2.0-only.
 
-After the commit b4943b8bfc41 ("perf/x86/rapl: Add core energy counter
-support for AMD CPUs"), the default "perf record"/"perf top" command is
-broken in systems where there isn't a PMU registered for type
-PERF_TYPE_RAW.
+LICENSES has licenses and all SPDX tags. license-rules for
+simplification uses only some and the ones there could be understood as
+preferred. Probably this should be changed first.
 
-This is due to the change in order of error checks in rapl_pmu_event_init()
-Due to which we return -EINVAL instead of -ENOENT, when we reach here from
-the fallback loop in perf_init_event().
 
-Move the "PMU and event type match" back to the beginning of the function
-so that we return -ENOENT early on.
-
-Closes: https://lore.kernel.org/all/uv7mz6vew2bzgre5jdpmwldxljp5djzmuiksqdcdwipfm4zm7w@ribobcretidk/
-Fixes: b4943b8bfc41 ("perf/x86/rapl: Add core energy counter support for AMD CPUs")
-Reported-by: Koichiro Den <koichiro.den@canonical.com>
-Signed-off-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20250129080513.30353-1-dhananjay.ugwekar@amd.com
----
- arch/x86/events/rapl.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index d3bb386..4952faf 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -370,6 +370,10 @@ static int rapl_pmu_event_init(struct perf_event *event)
- 	unsigned int rapl_pmu_idx;
- 	struct rapl_pmus *rapl_pmus;
- 
-+	/* only look at RAPL events */
-+	if (event->attr.type != event->pmu->type)
-+		return -ENOENT;
-+
- 	/* unsupported modes and filters */
- 	if (event->attr.sample_period) /* no sampling */
- 		return -EINVAL;
-@@ -387,10 +391,6 @@ static int rapl_pmu_event_init(struct perf_event *event)
- 	rapl_pmus_scope = rapl_pmus->pmu.scope;
- 
- 	if (rapl_pmus_scope == PERF_PMU_SCOPE_PKG || rapl_pmus_scope == PERF_PMU_SCOPE_DIE) {
--		/* only look at RAPL package events */
--		if (event->attr.type != rapl_pmus_pkg->pmu.type)
--			return -ENOENT;
--
- 		cfg = array_index_nospec((long)cfg, NR_RAPL_PKG_DOMAINS + 1);
- 		if (!cfg || cfg >= NR_RAPL_PKG_DOMAINS + 1)
- 			return -EINVAL;
-@@ -398,10 +398,6 @@ static int rapl_pmu_event_init(struct perf_event *event)
- 		bit = cfg - 1;
- 		event->hw.event_base = rapl_model->rapl_pkg_msrs[bit].msr;
- 	} else if (rapl_pmus_scope == PERF_PMU_SCOPE_CORE) {
--		/* only look at RAPL core events */
--		if (event->attr.type != rapl_pmus_core->pmu.type)
--			return -ENOENT;
--
- 		cfg = array_index_nospec((long)cfg, NR_RAPL_CORE_DOMAINS + 1);
- 		if (!cfg || cfg >= NR_RAPL_PKG_DOMAINS + 1)
- 			return -EINVAL;
+Best regards,
+Krzysztof
