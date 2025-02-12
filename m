@@ -1,119 +1,127 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94735203704
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749BF203712
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739399061; cv=none; b=IP4DE4CfXmVZod9lPU7cfQ6hP5l4kBkdItxhUtbPaFQfofR10HAoYnAbvrOLCJXBUQ8iqjWqvyAYA+XxDqI7O++s/4K4srfBLP/v9BXGpxZzyi06xa6uKd2DV38B3syDIolpOcDa4UKiiPQvmoSqRLla22sc0641dTM7IEOyvSc=
+	t=1739399064; cv=none; b=liREfO/uO5SXO24A9Fxy+Vt1hXpWx1bGsSv6PgGp8WwBzvoMV8dIqw8riydEWcXKBpQxRzpP5WBrAHzsdK2I5jZjcvBn7JEwAwQq+Eia0GYzJFIFEBQbqEAq/WFpvC5W+XRs5/pXieiT0yc7HmMF8eqtOol5gRf7Torj5h/ai14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739399061; c=relaxed/simple;
-	bh=5y/tgsaLquT36eDgvZ3fW9Uidq26vHDDKgSZ/y9JSL0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bgKHjOgi04wZ/toK4BubSHCqZuoxPEJxcmr3s59FkNUB08jBKR7zXdRQ3vFeGV8vphmR20B3QeRD5iBYDG5wvePyQ6Gc1xPSBmf0c0YHzhj08uRsZsLV9gHLksoVUOC3GJqITBS8/F7hfiU3Jb73NBfGfnolzO1LvUOuQz+1Owo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kJ5tsehz; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739399064; c=relaxed/simple;
+	bh=o9Rvw5bGAnROKjad7sMpqrfxb3P+iaNsiQvl674qxYA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gj0M62/3a0GL7QF06SXFjfYIdmp8TKGo10482P6LgFEP0VgcaiTVQSmwq5e0Bnsw66E19K1aXuYtZOUcXPCEpJPvsxpJIjJ2WFWFPtx6ySmaEJxUmEaTl3oA2U4hkQ2BuW41xtsphUU8QcekcfABTycF9r4FPSLATOYp3rGliIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bbffjb2n; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kJ5tsehz"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30761be8fa8so2476801fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 14:24:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739399058; x=1740003858; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mu/vYpK5EdDCessSAfsc81pUNCu3XRPo/EhuZMObYC8=;
-        b=kJ5tsehzFYWrNTpI3SApLy71AcU5tQnrtgv7A5a6gAR65Fmr1P3Zy6/MJEQLLNxcVr
-         PuYwxtmoxeqGQsWQ01n5jOIb82IAOwATTzZ4raOCenQOUyRWR1KA+1IPuSZnuj/zKwEq
-         7+e7nAc00awmy/uSmNZoXNHo06uzXJQkt5SsTRheH6U+UyNKTeyh8cj+SkadOwME2JAr
-         HbSSMoLqo75eo8nUEQOY2NpQdlE+QAbQtA0qdnnVPhHQqJQT3Z+iK1pEzoFAOM/EkaD0
-         2rJlE+iV12GrMtVmRLPTtZXhKBTtc5KLCGaY+CKsM9DkRio8g+oXzPpOkdszom4PFX9/
-         sOLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739399058; x=1740003858;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mu/vYpK5EdDCessSAfsc81pUNCu3XRPo/EhuZMObYC8=;
-        b=OI1ot4BAzsIfIEaOlLAcq2AqyvsSyQNr+QfpG3vMwvKGkuVQRpCejPdJBJtizSv7c1
-         KgMF/m3iaoEW47ETlGZGwdkdwTh8X+/5bp7MFRKhOWTe2CfoTMn8odPvvkXjNR4vXwyM
-         wrMt5O518ohY0fxsaGS2K79/eJC0/Wjp/tF+c3swhadA0bD4BFlZiwfHYDTQjb6yOvjU
-         13F49X6xPD/Km5SxVRl4Z3IQswucP9LJr2JLgWVoy3Q9GOqiJPIsUd6bKYxHXVVZeq0i
-         dMC5zI1ETOZcGX2OVv2ZWovf1B5y2F7KjTcOZHgkKiDZ6rQEEVqPz+EUE9hWfVXX+U5s
-         vheA==
-X-Gm-Message-State: AOJu0Yy+pkf1s/fkfm9VSTkuQUeRQBpjJ3DwLrulRs8oiqe63dDBdiZw
-	PSTRRv7Usp7Sn/q860uclkPLhzU6IbLQs8w1gfGu65sxnY9t0Kj0ZI5P9sM8znc=
-X-Gm-Gg: ASbGncuSN1T7k/MiIgpGYIhbqY5Fuv0ff/bwQUptiE8XQBt1iik/Myp7ljf1CPJZf/T
-	b3+AeZOuvx0AFlGnO6zDiExO4u2YymFvhmS+czOoyBIxq9TWY9WxGTKVDDvM0V1+gxb+Q+T89pL
-	tFPuPsSxzgaFdIMGo6y9qOIs9iUsbOBElszN8sWurnDJWpzPMZiodVLw8kjtoPh6loAodwmo1E4
-	8yVZLiVBFtasiuNZXAMrYsvzF6CkyBdJykTNm1Y58RU9s+JFdfFf4VsnpYcFOv5Yx9bclCfaVSy
-	QsGoOdsHgJnF7P/Oy/Zy51jLrGAwiP2WDLKhsChCuIqwCHNjRuIEtG7G2iM=
-X-Google-Smtp-Source: AGHT+IEllG8xsPecNgr5L5f8FoBGVvz0RiYrsFEd203BKL9JYmw0NxRW3Sco6Y7CdnjBxXidfEeaWA==
-X-Received: by 2002:a2e:bc83:0:b0:2fb:8c9a:fe3f with SMTP id 38308e7fff4ca-3090dd56bd0mr4718971fa.22.1739399057615;
-        Wed, 12 Feb 2025 14:24:17 -0800 (PST)
-Received: from eriador.lan (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309100c6415sm150411fa.6.2025.02.12.14.24.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 14:24:16 -0800 (PST)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 0/3] drm/i2c: tda998x: move under drivers/gpu/drm/bridge
-Date: Thu, 13 Feb 2025 00:24:13 +0200
-Message-ID: <173939904858.578381.4749501592256297365.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250113-drm-move-tda998x-v3-0-214e0682a5e4@linaro.org>
-References: <20250113-drm-move-tda998x-v3-0-214e0682a5e4@linaro.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bbffjb2n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739399061;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=j/hFCuHm3dQy3yCXNlW7/z5EXWgYM+xOP2nJGIBn15Q=;
+	b=Bbffjb2n20i4wPWH+dKTMaVn1FDC9OT2iRVuwDF+EMneJbYRg0l3R/G/qO8PULdBJM1dnt
+	qQebRsM5Nn8v4j2el7msZfiHKmwPbCEOn9+ZxIX99vk1eLASMZOruesMh5lzFvHVvmyjvI
+	HOQ9B8E/UUlosxW9zhFHKIrhvgwHLI0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-605-iPLvlH5hPsCaSV9rKTnwgQ-1; Wed,
+ 12 Feb 2025 17:24:18 -0500
+X-MC-Unique: iPLvlH5hPsCaSV9rKTnwgQ-1
+X-Mimecast-MFC-AGG-ID: iPLvlH5hPsCaSV9rKTnwgQ
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 25E25180087B;
+	Wed, 12 Feb 2025 22:24:13 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.92])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CBFAE19560A3;
+	Wed, 12 Feb 2025 22:24:05 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>
+Cc: David Howells <dhowells@redhat.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Max Kellermann <max.kellermann@ionos.com>,
+	Steve French <sfrench@samba.org>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] netfs: Miscellaneous fixes
+Date: Wed, 12 Feb 2025 22:23:58 +0000
+Message-ID: <20250212222402.3618494-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Mon, 13 Jan 2025 11:53:43 +0200, Dmitry Baryshkov wrote:
-> TDA998x is the HDMI bridge driver, incorporating drm_connector and
-> optional drm_encoder (created via the component bind API by the TICLDC
-> and HDLCD drivers). TDA9950 is an I2C-CEC translator, being present
-> on-die on the TDA9989 and TDA19989 chips.
-> 
-> Move TDA9950 driver to drivers/media/cec/i2c and TDA998x driver to
-> drivers/gpu/drm/bridge/.
-> 
-> [...]
+Hi Christian,
 
-Applied to drm-misc-next, thanks!
+Here are some miscellaneous fixes and changes for netfslib, if you could
+pull them:
 
-[1/3] drm/i2c: tda998x: drop support for platform_data
-      commit: b7c5169ab9ddc3432161412bc2de28111306fbb3
-[2/3] media: cec: move driver for TDA9950 from drm/i2c
-      commit: caa6f4a75e9f8eaebd814a9c2d1602e0926f473d
-[3/3] drm/i2c: move TDA998x driver under drivers/gpu/drm/bridge
-      commit: 325ba852d148434c5bcb06d513af1933a7f77b70
+ (1) Fix a number of read-retry hangs, including:
 
-Best regards,
--- 
-With best wishes
-Dmitry
+     (a) Incorrect getting/putting of references on subreqs as we retry
+     	 them.
+
+     (b) Failure to track whether a last old subrequest in a retried set is
+     	 superfluous.
+
+     (c) Inconsistency in the usage of wait queues used for subrequests
+     	 (ie. using clear_and_wake_up_bit() whilst waiting on a private
+     	 waitqueue).
+
+     	 (Note that waitqueue consistency also needs looking at for
+     	 netfs_io_request structs.)
+
+ (2) Add stats counters for retries and publish in /proc/fs/netfs/stats.
+     This is not a fix per se, but is useful in debugging and shouldn't
+     otherwise change the operation of the code.
+
+ (3) Fix the ordering of queuing subrequests with respect to setting the
+     request flag that says we've now queued them all.
+
+The patches can also be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
+
+Thanks,
+David
+
+David Howells (3):
+  netfs: Fix a number of read-retry hangs
+  netfs: Add retry stat counters
+  netfs: Fix setting NETFS_RREQ_ALL_QUEUED to be after all subreqs
+    queued
+
+ fs/netfs/buffered_read.c     | 19 +++++++++++-----
+ fs/netfs/internal.h          |  4 ++++
+ fs/netfs/read_collect.c      |  6 +++--
+ fs/netfs/read_retry.c        | 43 +++++++++++++++++++++++++++---------
+ fs/netfs/stats.c             |  9 ++++++++
+ fs/netfs/write_issue.c       |  1 +
+ fs/netfs/write_retry.c       |  2 ++
+ include/linux/netfs.h        |  2 +-
+ include/trace/events/netfs.h |  4 +++-
+ 9 files changed, 70 insertions(+), 20 deletions(-)
 
