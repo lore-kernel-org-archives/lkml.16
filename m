@@ -1,267 +1,158 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD516205E16;
-	Wed, 12 Feb 2025 11:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084E11E282D;
+	Wed, 12 Feb 2025 11:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739359970; cv=none; b=ndLByb+B96ScR6rgSqxu+92UJS912jGudzxnggsFOFniekQfWY4vJAUL1VsOpD8qsm7n46kfC7gs/xixz2OjORRfFj1UDwETPWetOZYY2RD89c/5i+L8QObf8kPedLlD15pfkCFW1ZXkNceDQSlUWw+kgLlNBHsSvqfktDPPSks=
+	t=1739360036; cv=none; b=MoNagXuaofyKQyCaTVwd/YUGUoO5soqfaAbNl2uwmD99FI0nbEQm2TISHJkIMshQ4kPbqpcz13K0YJ02x+T+vRx5NbS4lgs/6UMO4sZld9ApuO32Tmxu17XNjhwHyTZRVXCV9kG104fEf5RH0IpdP6LhuYlwkcYnH5YLq2l39ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739359970; c=relaxed/simple;
-	bh=EMpRj2ht/tEPGS4+J9CdUCbKV1v6QyKT+z1JosOvVTk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=A+8vfZCHHwnlbZkHRZIfsJoR2lpEmGbsTfg09/hU3sZpW252ZH39YBgDcNOfkl4mDRBm2seqOt+cgUroPbPA6rObsiccOKIZeA81IP7V2fqAJW4vR7TItrH45gOLl9jzjiWKyKIzAm6ohn3kE48QNPqaUlaR/rkjAUiephaJRBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Ma3Vdv3v; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1739360036; c=relaxed/simple;
+	bh=5HAGCJZ+apnsaP84GdrPXudDrLSkzeikILx7xWyXWmg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZPeIcu3jx/UwTDTOyMYPPuRg+V1E/Fb9ebgusefPr8By0d6gqVvqqXdwTabW2l1OWzum6biD9JGrgsf/T9PPm4Vb086SrIklHVAMs+kvMHNdU8M3uIVxMyNiq/FGzXEMZJU8imp6nRZJx3s85YorTmJ9Lv9IAGI+sa6NWbPgm9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Truvy0b2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Ma3Vdv3v"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Date:References:In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=XDHy3FQtxkSqfqwPef2gf5CYBQiv+4aNXY+HG7ioErU=; b=Ma3Vdv3vd6YYrNB45BDBkv+nIZ
-	VfmdsQWf5vTDqfEBoivPGh7Iv4NYMkIWNs0rch2N2VKmEMjPe+fQpM7qqOqE1M4EJFVJwJmdpwZnu
-	77hDy4b/TTZLoKU+6SeoO4xuMa/UjOufLvcvX9XSAKq4nBEvdWsL+zoOT/mDy+aLRmMicMF/5aS/V
-	Zd2ZcSju7Y1gWNXqt3SLluRJq27OqHxbMt7sbarcWfAzY39K/tzzVHh/zgjlFDkeRIsJwjbCBR6yx
-	Un2M5j8fPBujDC/PrSgUw9A65+LAB5wzOmmhMfeAlwt+g2SE0/DGaXXW1u0LSaNy69Kct0FCgkwJj
-	h5nGRoGw==;
-Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
-	by fanzine2.igalia.com with utf8esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tiAyo-008DNr-Vu; Wed, 12 Feb 2025 12:32:40 +0100
-From: Luis Henriques <luis@igalia.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>,  linux-fsdevel@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  Matt Harvey <mharvey@jumptrading.com>,
-  Bernd Schubert <bschubert@ddn.com>,  Joanne Koong
- <joannelkoong@gmail.com>
-Subject: Re: [PATCH v4] fuse: add new function to invalidate cache for all
- inodes
-In-Reply-To: <Z6u5dumvZHf_BDHM@dread.disaster.area> (Dave Chinner's message of
-	"Wed, 12 Feb 2025 07:56:22 +1100")
-References: <20250211092604.15160-1-luis@igalia.com>
-	<Z6u5dumvZHf_BDHM@dread.disaster.area>
-Date: Wed, 12 Feb 2025 11:32:40 +0000
-Message-ID: <875xlf4cvb.fsf@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Truvy0b2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAE46C4CEE8;
+	Wed, 12 Feb 2025 11:33:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739360035;
+	bh=5HAGCJZ+apnsaP84GdrPXudDrLSkzeikILx7xWyXWmg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Truvy0b2xGMYCidsvsho3m8l9ypLntqRlaqF9yqrgKhDCPBnIa0UuBEi0oaklxYyB
+	 UjYsiz0+C7baEpnDs1etzXMAcEJ+/3gKJ6nLVKeUCv/WzeSfqVa9ErRDTM9D4kRPsa
+	 f1LWspgZ/OmwSOxT0g75Lu7VaGMSCEgge1vZ3uTyJ+EPV+B7jM5EKnEpefycKm+aHP
+	 Z3ls1ftE/HOU34lhvOMssTogvGxbNI0Vgm0xrXnBa+Q/g/g6BGIbZQludEIheiaRZW
+	 9qZzTyh8CGuxj8zCararb/JY1C3wfwzfzD4C5mr+sMISvLsTITd+p+4bcHvBE0Wt4e
+	 UmDl1XH7rp9ow==
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2b8f09669bdso760fac.0;
+        Wed, 12 Feb 2025 03:33:55 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUu1K/zr2ofXNA77HCYvdwfMsmHvZvYub5y7GKaafx48Kq6Mjk1AjXA1lwcmgCF9nA7anRUgjhUDxk=@vger.kernel.org, AJvYcCWij3hNgq+zItzV3GJrV0Tq4/OxJbW5NngGD35YN9p00pVBoFT/fz6a7WWyfTWV/bKc9vhBNhWkz8r8E9I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIZBdwdIXj7i4vSl2fBZ6o7TiNhm4/B8PuRUqZuCPYGibfGYHs
+	t6KlWk3HR7Vkw5KRps4RKyRlCHdHOwXUMmgk6Psk0QVZA0KTOrQx3bZQpY6rgsMAaazGfH145wb
+	7kMMv6nn6uJdEsAD/UaPwabv70j0=
+X-Google-Smtp-Source: AGHT+IGjDZne/DPD51rFdpsLWRYRr3/qxtNQMUBpiLHK34/D8eUTcZVdfM6BylVejKsr5/4vTWjZDhsNuyotK2DBqQQ=
+X-Received: by 2002:a05:6870:c1d3:b0:29e:7603:be65 with SMTP id
+ 586e51a60fabf-2b8d6479d47mr1730953fac.1.1739360035125; Wed, 12 Feb 2025
+ 03:33:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <2314745.iZASKD2KPV@rjwysocki.net> <CAPDyKFroyU3YDSfw_Y6k3giVfajg3NQGwNWeteJWqpW29BojhQ@mail.gmail.com>
+ <CAJZ5v0h44Yxp95pHW+75gk5yWKviLO1_YK_cZNFKaGnid7nx9A@mail.gmail.com>
+In-Reply-To: <CAJZ5v0h44Yxp95pHW+75gk5yWKviLO1_YK_cZNFKaGnid7nx9A@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 12 Feb 2025 12:33:44 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iMZ=6YgKR3ZZuiv7DF4=vfoFRonSoXO_zV65oZH2rOgA@mail.gmail.com>
+X-Gm-Features: AWEUYZm72kdFsWQphupdGsEfFL5atXHWknw14-9QaRm06jYJfcnCEUviZNscasY
+Message-ID: <CAJZ5v0iMZ=6YgKR3ZZuiv7DF4=vfoFRonSoXO_zV65oZH2rOgA@mail.gmail.com>
+Subject: Re: [PATCH v1 00/10] PM: Make the core and pm_runtime_force_suspend/resume()
+ agree more
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
+	Johan Hovold <johan@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 12 2025, Dave Chinner wrote:
-
-> [ FWIW: if the commit message directly references someone else's
-> related (and somewhat relevant) work, please directly CC those
-> people on the patch(set). I only noticed this by chance, not because
-> I read every FUSE related patch that goes by me. ]
-
-Point taken -- I should have included you on CC since the initial RFC.
-
-> On Tue, Feb 11, 2025 at 09:26:04AM +0000, Luis Henriques wrote:
->> Currently userspace is able to notify the kernel to invalidate the cache
->> for an inode.  This means that, if all the inodes in a filesystem need to
->> be invalidated, then userspace needs to iterate through all of them and =
-do
->> this kernel notification separately.
->>=20
->> This patch adds a new option that allows userspace to invalidate all the
->> inodes with a single notification operation.  In addition to invalidate
->> all the inodes, it also shrinks the sb dcache.
+On Wed, Feb 12, 2025 at 11:59=E2=80=AFAM Rafael J. Wysocki <rafael@kernel.o=
+rg> wrote:
 >
-> That, IMO, seems like a bit naive - we generally don't allow user
-> controlled denial of service vectors to be added to the kernel. i.e.
-> this is the equivalent of allowing FUSE fs specific 'echo 1 >
-> /proc/sys/vm/drop_caches' via some fuse specific UAPI. We only allow
-> root access to /proc/sys/vm/drop_caches because it can otherwise be
-> easily abused to cause system wide performance issues.
+> On Wed, Feb 12, 2025 at 10:12=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.=
+org> wrote:
+> >
+> > On Tue, 11 Feb 2025 at 22:25, Rafael J. Wysocki <rjw@rjwysocki.net> wro=
+te:
+> > >
+> > > Hi Everyone,
+> > >
+> > > This series is a result of the discussion on a recently reported issu=
+e
+> > > with device runtime PM status propagation during system resume and
+> > > the resulting patches:
+> > >
+> > > https://lore.kernel.org/linux-pm/12619233.O9o76ZdvQC@rjwysocki.net/
+> > > https://lore.kernel.org/linux-pm/6137505.lOV4Wx5bFT@rjwysocki.net/
+> > >
+> > > Overall, due to restrictions related to pm_runtime_force_suspend() an=
+d
+> > > pm_runtime_force_resume(), it was necessary to limit the RPM_ACTIVE
+> > > setting propagation to the parent of the first device in a dependency
+> > > chain that turned out to have to be resumed during system resume even
+> > > though it was runtime-suspended before system suspend.
+> > >
+> > > Those restrictions are that (1) pm_runtime_force_suspend() attempts t=
+o
+> > > suspend devices that have never had runtime PM enabled if their runti=
+me
+> > > PM status is currently RPM_ACTIVE and (2) pm_runtime_force_resume()
+> > > will skip device whose runtime PM status is currently RPM_ACTIVE.
+> > >
+> > > The purpose of this series is to eliminate the above restrictions and
+> > > get pm_runtime_force_suspend() and pm_runtime_force_resume() to agree
+> > > more with what the core does.
+> >
+> > For my understanding, would you mind elaborating a bit more around the
+> > end-goal with this?
 >
-> It also strikes me as a somewhat dangerous precendent - invalidating
-> random VFS caches through user APIs hidden deep in random fs
-> implementations makes for poor visibility and difficult maintenance
-> of VFS level functionality...
+> The end goal is, of course, full integration of runtime PM with system
+> sleep for all devices.  Eventually.
+>
+> And it is necessary to make the core and
+> pm_runtime_force_suspend|resume() work together better for this
+> purpose.
+>
+> > Are you trying to make adaptations for
+> > pm_runtime_force_suspend|resume() and the PM core, such that drivers
+> > that uses pm_runtime_force_suspend|resume() should be able to cope
+> > with other drivers for child-devices that make use of
+> > DPM_FLAG_SMART_SUSPEND?
+>
+> Yes.
+>
+> This is a more general case, though, when a device that was
+> runtime-suspended before system suspend and is left in suspend during
+> it, needs to be resumed during the system resume that follows.
+>
+> Currently, DPM_FLAG_SMART_SUSPEND can lead to this sometimes and it
+> cannot happen otherwise, but I think that it is a generally valid
+> case.
+>
+> > If we can make this work, it would enable the propagation of
+> > RPM_ACTIVE in the PM core for more devices, but still not for all,
+> > right?
+>
+> It is all until there is a known case in which it isn't.  So either
+> you know a specific case in which it doesn't work, or I don't see a
+> reason for avoiding it.
+>
+> ATM the only specific case in which it doesn't work is when
+> pm_runtime_force_suspend|resume() are used.
+>
+> > The point is, the other bigger issue that I pointed out in our earlier
+> > discussions; all those devices where their drivers/buses don't cope
+> > with the behaviour of the DPM_FLAG_SMART_SUSPEND flag, will prevent
+> > the PM core from *unconditionally* propagating the RPM_ACTIVE to
+> > parents. I guess this is the best we can do then?
+>
+> OK, what are they?
+>
+> You keep saying that they exist without giving any examples.
 
-Hmm... OK, I understand the concern and your comment makes perfect sense.
-But would it be acceptable to move this API upper in the stack and make it
-visible at the VFS layer?  Something similar to the 'drop_caches' but with
-a superblock granularity.  I haven't spent any time thinking how could
-that be done, but it wouldn't be "hidden deep" anymore.
+To put it more bluntly, I'm not aware of any place other than
+pm_runtime_force_suspend|resume() that can be confused by changing the
+runtime PM status of a device with runtime PM disabled (either
+permanently, or transiently during a system suspend-resume cycle) to
+RPM_ACTIVE, so if there are any such places, I would appreciate
+letting me know what they are.
 
->> Signed-off-by: Luis Henriques <luis@igalia.com>
->> ---
->> * Changes since v3
->> - Added comments to clarify semantic changes in fuse_reverse_inval_inode=
-()
->>   when called with FUSE_INVAL_ALL_INODES (suggested by Bernd).
->> - Added comments to inodes iteration loop to clarify __iget/iput usage
->>   (suggested by Joanne)
->> - Dropped get_fuse_mount() call -- fuse_mount can be obtained from
->>   fuse_ilookup() directly (suggested by Joanne)
->>=20
->> (Also dropped the RFC from the subject.)
->>=20
->> * Changes since v2
->> - Use the new helper from fuse_reverse_inval_inode(), as suggested by Be=
-rnd.
->> - Also updated patch description as per checkpatch.pl suggestion.
->>=20
->> * Changes since v1
->> As suggested by Bernd, this patch v2 simply adds an helper function that
->> will make it easier to replace most of it's code by a call to function
->> super_iter_inodes() when Dave Chinner's patch[1] eventually gets merged.
->>=20
->> [1] https://lore.kernel.org/r/20241002014017.3801899-3-david@fromorbit.c=
-om
->
-> That doesn't make the functionality any more palatable.
->
-> Those iterators are the first step in removing the VFS inode list
-> and only maintaining it in filesystems that actually need this
-> functionality. We want this list to go away because maintaining it
-> is a general VFS cache scalability limitation.
->
-> i.e. if a filesystem has internal functionality that requires
-> iterating all instantiated inodes, the filesystem itself should
-> maintain that list in the most efficient manner for the filesystem's
-> iteration requirements not rely on the VFS to maintain this
-> information for it.
-
-Right, and in my use-case that's exactly what is currently being done: the
-FUSE API to invalidate individual inodes is being used.  This new
-functionality just tries to make life easier to userspace when *all* the
-inodes need to be invalidated. (For reference, the use-case is CVMFS, a
-read-only FS, where new generations of a filesystem snapshot may become
-available at some point and the previous one needs to be wiped from the
-cache.)
-
-> That's the point of the iterator methods the above patchset adds -
-> it allows the filesystem to provide the VFS with a method for
-> iterating all inodes in the filesystem whilst the transition period
-> where we rework the inode cache structure (i.e. per-sb hash tables
-> for inode lookup, inode LRU caching goes away, etc). Once that
-> rework gets done, there won't be a VFS inode cache to iterate.....
-
-And re-reading the cover-letter in that patchset helped understanding that
-that is indeed the goal.  My patch mentioned that iterator because we
-could eventually take advantage of it, but clearly no new users are
-expected/desired.
-
->>  fs/fuse/inode.c           | 83 +++++++++++++++++++++++++++++++++++----
->>  include/uapi/linux/fuse.h |  3 ++
->>  2 files changed, 79 insertions(+), 7 deletions(-)
->>=20
->> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
->> index e9db2cb8c150..5aa49856731a 100644
->> --- a/fs/fuse/inode.c
->> +++ b/fs/fuse/inode.c
->> @@ -547,25 +547,94 @@ struct inode *fuse_ilookup(struct fuse_conn *fc, u=
-64 nodeid,
->>  	return NULL;
->>  }
->>=20=20
->> +static void inval_single_inode(struct inode *inode, struct fuse_conn *f=
-c)
->> +{
->> +	struct fuse_inode *fi;
->> +
->> +	fi =3D get_fuse_inode(inode);
->> +	spin_lock(&fi->lock);
->> +	fi->attr_version =3D atomic64_inc_return(&fc->attr_version);
->> +	spin_unlock(&fi->lock);
->> +	fuse_invalidate_attr(inode);
->> +	forget_all_cached_acls(inode);
->> +}
->> +
->> +static int fuse_reverse_inval_all(struct fuse_conn *fc)
->> +{
->> +	struct fuse_mount *fm;
->> +	struct super_block *sb;
->> +	struct inode *inode, *old_inode =3D NULL;
->> +
->> +	inode =3D fuse_ilookup(fc, FUSE_ROOT_ID, &fm);
->> +	if (!inode || !fm)
->> +		return -ENOENT;
->> +
->> +	iput(inode);
->> +	sb =3D fm->sb;
->> +
->> +	spin_lock(&sb->s_inode_list_lock);
->> +	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
->> +		spin_lock(&inode->i_lock);
->> +		if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
->> +		    !atomic_read(&inode->i_count)) {
->> +			spin_unlock(&inode->i_lock);
->> +			continue;
->> +		}
->
-> This skips every inode that is unreferenced and cached on the
-> LRU. i.e. it only invalidates inodes that have a current reference
-> (e.g. dentry pins it, has an open file, etc).
->
-> What's the point of only invalidating actively referenced inodes?
->
->> +		/*
->> +		 * This __iget()/iput() dance is required so that we can release
->> +		 * the sb lock and continue the iteration on the previous
->> +		 * inode.  If we don't keep a ref to the old inode it could have
->> +		 * disappear.  This way we can safely call cond_resched() when
->> +		 * there's a huge amount of inodes to iterate.
->> +		 */
->
-> If there's a huge amount of inodes to iterate, then most of them are
-> going to be on the LRU and unreferenced, so this code won't even get
-> here to be able to run cond_resched().
-
-Sigh.  Looks like I got this wrong.  With capital 'W'.
-
->> +		__iget(inode);
->> +		spin_unlock(&inode->i_lock);
->> +		spin_unlock(&sb->s_inode_list_lock);
->> +		iput(old_inode);
->> +
->> +		inval_single_inode(inode, fc);
->> +
->> +		old_inode =3D inode;
->> +		cond_resched();
->> +		spin_lock(&sb->s_inode_list_lock);
->> +	}
->> +	spin_unlock(&sb->s_inode_list_lock);
->> +	iput(old_inode);
->> +
->> +	shrink_dcache_sb(sb);
->
-> Why drop all the referenced inodes held by the dentry cache -after-
-> inode invalidation? Doesn't this mean that racing operations are
-> going to see a valid dentries backed by an invalidated inode?  Why
-> aren't the dentries pruned from the cache first, and new lookups
-> blocked until the invalidation completes?
->
-> I'm left to ponder why the invalidation isn't simply:
->
-> 	/* Remove all possible active references to cached inodes */
-> 	shrink_dcache_sb();
->
-> 	/* Remove all unreferenced inodes from cache */
-> 	invalidate_inodes();
->
-> Which will result in far more of the inode cache for the filesystem
-> being invalidated than the above code....
-
-To be honest, my initial attempt to implement this feature actually used
-invalidate_inodes().  For some reason that I don't remember anymore why I
-decided to implement the iterator myself.  I'll go look at that code again
-and run some tests on this (much!) simplified version of the invalidation
-function your suggesting.
-
-Also, thanks a lot for your comments, Dave.  Much appreciated!  I'll make
-sure any other rev of this patch will include you ;-)
-
-Cheers,
---=20
-Lu=C3=ADs
+Note that rpm_active() could start producing confusing results if the
+runtime PM status of a device with runtime PM disabled is changed from
+RPM_ACTIVE to RPM_SUSPENDED because it will then start to return
+-EACCES instead of 1, but changing the status to RPM_ACTIVE will not
+confuse it the same way.
