@@ -1,173 +1,259 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25A821323D;
-	Wed, 12 Feb 2025 15:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69F6824E4C3
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 15:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739374188; cv=none; b=HOm16G5fhFQ7JbP+cUMmpGGLEloFJru7LmLXWxPPw+kliCQF2sazc7LEAB1bKjtJ57diRvO2azYZWtPKdfe18fGICpxFvGhtYIZ+JU3nbBKJQIi1ce6oUBm1+qam0sEC1/zwBft4T64l/Aq+sHF+SHDBAGDg/iTjVCempSBoLp8=
+	t=1739374192; cv=none; b=bdTJ+fAt7HRcM1RLAPNjKRhbBDzw71c4qjukiqQxVsdmFEuJXySRy7g1Wy6xuFq7hZRV/a3+T4ZjeI5J3Ra593vkEf3HBzSDk8SbnO9hbJ2Ji+GSQFcQGzQ4GoABectTfGxI3mk/alrBschjtnLDz1PJ0DfAn+J18xzUOR5g4oM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739374188; c=relaxed/simple;
-	bh=QnE3MWbyEccydmUgWLoslOgDk1WgUiqPUae/4stuq/o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WmDQhOvXvyBfz3hq2GDyxJlBpdjpxUpCW3kDOYxyg7kgpBG0DZrmX3Wup42CLi6MC86Dtcv8iWIN3CL6/mS4NOIGyIOgvQaaIgyuqVIhWnudyvWQrdC7B54MhYFvYLbN0g2M7rJf8upkeAglx4fdSWBs9O+QsuRjWjQgK1Y6K2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dOh8NnoA; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dOh8NnoA"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CEUEWl003123;
-	Wed, 12 Feb 2025 15:29:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=nv+m3o
-	J4hLmiasN4bXS5CzCbQltOL5gRuC2PqhirWos=; b=dOh8NnoAFpMI78KtdoRHL1
-	V5NY91aLmN3z34XqAO4pKsBkW5h/TCGr6ql3qm7EYB/nqMvFo/2t/ZZqQfkRfyTF
-	FeyL75uTghQGmfM+2LP28QmT0TP0bQw4XDvuK69wWjSWs4FEO1ozeNYXj3aPkoIh
-	3gI6+p0yaCAF8Eqs6OAdzk1CBXIKPu2TFwm04m3JXvtjUiIDC3HLKYHe7djK2TU4
-	19GglOSWs4TMUX3UfU1bwnEhtaEUnpU5LiJidBUHA3LIzRidXachknEjoFVXULdh
-	1gQf8eI6ASgcRxdHYrzZ0SiUK/hMEYfIylTF237GMnfMDu0jM6dNYOh3nKiyPKOg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44rnf8b2xg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 15:29:39 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51CFShO4004327;
-	Wed, 12 Feb 2025 15:29:30 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44rnf8b2vp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 15:28:59 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51CD2ans000978;
-	Wed, 12 Feb 2025 15:28:58 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44pjkn9h1n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 15:28:58 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51CFSvHK60490028
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Feb 2025 15:28:57 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 62E0B5805C;
-	Wed, 12 Feb 2025 15:28:57 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C53F258059;
-	Wed, 12 Feb 2025 15:28:53 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 12 Feb 2025 15:28:53 +0000 (GMT)
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-Date: Wed, 12 Feb 2025 16:28:31 +0100
-Subject: [PATCH v5 1/2] s390/pci: Fix s390_mmio_read/write syscall page
- fault handling
+	s=arc-20240116; t=1739374192; c=relaxed/simple;
+	bh=CtoZJWGWVJ7eVeqv8Re3KPnDgrE26s/mH4tdu0q02Ho=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rnjSvCXWPuZMnx3UFycaLkx1dNrydrVC6mBBJlceS94lRT6oiPAhtSg4w6hRdj0XxilVZ5zaI612TheBCMencTRoCWNzpVWpQlIalGpSr0ymqdUziPVoBUVfl3BUbwp+pf0HtFdMVt8EPzqOEvUcGw+KhtzviQ1+maqx5KFzZqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89E2112FC;
+	Wed, 12 Feb 2025 07:30:10 -0800 (PST)
+Received: from [10.57.81.93] (unknown [10.57.81.93])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED99A3F58B;
+	Wed, 12 Feb 2025 07:29:46 -0800 (PST)
+Message-ID: <46ca554b-f768-4981-9794-1dbc581a7bdc@arm.com>
+Date: Wed, 12 Feb 2025 15:29:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 06/16] arm64/mm: Refactor __set_ptes() and
+ __ptep_get_and_clear()
+Content-Language: en-GB
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205151003.88959-7-ryan.roberts@arm.com>
+ <bdd08da7-d978-437a-849f-8a6115933e19@arm.com>
+ <0538d186-470e-4c4d-974c-0d7f2c96e549@arm.com>
+ <0492ed88-673a-435b-bc89-5f35637b4be6@arm.com>
+In-Reply-To: <0492ed88-673a-435b-bc89-5f35637b4be6@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250212-vfio_pci_mmap-v5-1-633ca5e056da@linux.ibm.com>
-References: <20250212-vfio_pci_mmap-v5-0-633ca5e056da@linux.ibm.com>
-In-Reply-To: <20250212-vfio_pci_mmap-v5-0-633ca5e056da@linux.ibm.com>
-To: Bjorn Helgaas <helgaas@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Alexandra Winter <wintera@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Gerd Bayer <gbayer@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Thorsten Winkler <twinkler@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc: Julian Ruess <julianr@linux.ibm.com>, Halil Pasic <pasic@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2001;
- i=schnelle@linux.ibm.com; h=from:subject:message-id;
- bh=QnE3MWbyEccydmUgWLoslOgDk1WgUiqPUae/4stuq/o=;
- b=owGbwMvMwCX2Wz534YHOJ2GMp9WSGNLX7FPNyX8wd8k1zz6fr5rmK88EbzF2O/f6rZfz5rM/O
- iKz97y53lHKwiDGxSArpsiyqMvZb13BFNM9Qf0dMHNYmUCGMHBxCsBEnnAxMjwybXDjCV0lYvH2
- 54c3j69O635hbNb+/6DTQdvsat9dP+cxMmxafG93f08gr4Pd/gmLU4WvX57ieb/18eUGJuUpa87
- v28oIAA==
-X-Developer-Key: i=schnelle@linux.ibm.com; a=openpgp;
- fpr=9DB000B2D2752030A5F72DDCAFE43F15E8C26090
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: MBfOb8dmJI0O8VsDPTYH6wZAKeSX9Vd1
-X-Proofpoint-GUID: k-YFLZocP8KEp3IJEcIje9AzeBpu0EXE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-12_05,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=948 priorityscore=1501
- bulkscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0 phishscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502120117
 
-The s390 MMIO syscalls when using the classic PCI instructions do not
-cause a page fault when follow_pfnmap_start() fails due to the page not
-being present. Besides being a general deficiency this breaks vfio-pci's
-mmap() handling once VFIO_PCI_MMAP gets enabled as this lazily maps on
-first access. Fix this by following a failed follow_pfnmap_start() with
-fixup_user_page() and retrying the follow_pfnmap_start(). Also fix
-a VM_READ vs VM_WRITE mixup in the read syscall.
+On 07/02/2025 09:38, Ryan Roberts wrote:
+> On 06/02/2025 13:26, Ryan Roberts wrote:
+>> On 06/02/2025 11:48, Anshuman Khandual wrote:
+>>> On 2/5/25 20:39, Ryan Roberts wrote:
 
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- arch/s390/pci/pci_mmio.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+[...]
 
-diff --git a/arch/s390/pci/pci_mmio.c b/arch/s390/pci/pci_mmio.c
-index 46f99dc164ade4ca10f170cd66bdb648f92aa904..1997d9b7965df3b9b6019c7537028cd29d52fc13 100644
---- a/arch/s390/pci/pci_mmio.c
-+++ b/arch/s390/pci/pci_mmio.c
-@@ -175,8 +175,12 @@ SYSCALL_DEFINE3(s390_pci_mmio_write, unsigned long, mmio_addr,
- 	args.address = mmio_addr;
- 	args.vma = vma;
- 	ret = follow_pfnmap_start(&args);
--	if (ret)
--		goto out_unlock_mmap;
-+	if (ret) {
-+		fixup_user_fault(current->mm, mmio_addr, FAULT_FLAG_WRITE, NULL);
-+		ret = follow_pfnmap_start(&args);
-+		if (ret)
-+			goto out_unlock_mmap;
-+	}
- 
- 	io_addr = (void __iomem *)((args.pfn << PAGE_SHIFT) |
- 			(mmio_addr & ~PAGE_MASK));
-@@ -315,14 +319,18 @@ SYSCALL_DEFINE3(s390_pci_mmio_read, unsigned long, mmio_addr,
- 	if (!(vma->vm_flags & (VM_IO | VM_PFNMAP)))
- 		goto out_unlock_mmap;
- 	ret = -EACCES;
--	if (!(vma->vm_flags & VM_WRITE))
-+	if (!(vma->vm_flags & VM_READ))
- 		goto out_unlock_mmap;
- 
- 	args.vma = vma;
- 	args.address = mmio_addr;
- 	ret = follow_pfnmap_start(&args);
--	if (ret)
--		goto out_unlock_mmap;
-+	if (ret) {
-+		fixup_user_fault(current->mm, mmio_addr, 0, NULL);
-+		ret = follow_pfnmap_start(&args);
-+		if (ret)
-+			goto out_unlock_mmap;
-+	}
- 
- 	io_addr = (void __iomem *)((args.pfn << PAGE_SHIFT) |
- 			(mmio_addr & ~PAGE_MASK));
+>>>>
+>>>> While we are at it, refactor __ptep_get_and_clear() and
+>>>> pmdp_huge_get_and_clear() to use a common ___ptep_get_and_clear() which
+>>>> also takes a pgsize parameter. This will provide the huge_pte API the
+>>>> means to clear ptes corresponding with the way they were set.
+>>>
+>>> __ptep_get_and_clear() refactoring does not seem to be related to the
+>>> previous __set_ptes(). Should they be separated out into two different
+>>> patches instead - for better clarity and review ? Both these clean ups
+>>> have enough change and can stand own their own.
+>>
+>> Yeah I think you're probably right... I was being lazy... I'll separate them.
 
--- 
-2.45.2
+When looking at this again, I've decided not to split the patch. The same
+approach is being applied to both helper APIs to produce "anysz" versions that
+will be used by the huge_pte helpers. So I think it is reasonable to do all the
+conversion in a single patch. It just looks too small and bitty if I split it out.
+
+I'll rework the commit log to give both API equal promiance since it currently
+sounds like __ptep_get_and_clear is an after thought.
+
+[...]
+
+>>> s/___set_ptes/___set_pxds ? to be more generic for all levels.
+>>
+>> So now we are into naming... I agree that in some senses pte feels specific to
+>> the last level. But it's long form "page table entry" seems more generic than
+>> "pxd" which implies only pmd, pud, p4d and pgd. At least to me...
+>>
+>> I think we got stuck trying to figure out a clear and short term for "page table
+>> entry at any level" in the past. I think ttd was the best we got; Translation
+>> Table Descriptor, which is the term the Arm ARM uses. But that opens a can of
+>> worms as now we need tdd_t and all the converters pte_tdd(), tdd_pte(),
+>> pmd_tdd(), ... and probably a bunch more stuff on top.
+>>
+>> So personally I prefer to take the coward's way out and just reuse pte.
+> 
+> How about set_ptes_anylvl() and ptep_get_and_clear_anylvl()? I think this makes
+> it explicit and has the benefit of removing the leading underscores. It also
+> means we can reuse pte_t and friends, and we can exetend this nomenclature to
+> other places in future at the expense of a 7 char suffix ("_anylvl").
+> 
+> What do you think?
+
+I'm going to call them set_ptes_anysz() and ptep_get_and_clear_anysz(). That's
+one char shorter and better reflects that we are passing a size parameter in,
+not a level parameter.
+
+Thanks,
+Ryan
+
+> 
+>>
+>>>
+>>>>  {
+>>>> -	__sync_cache_and_tags(pte, nr);
+>>>> -	__check_safe_pte_update(mm, ptep, pte);
+>>>> -	__set_pte(ptep, pte);
+>>>> +	unsigned long stride = pgsize >> PAGE_SHIFT;
+>>>> +
+>>>> +	switch (pgsize) {
+>>>> +	case PAGE_SIZE:
+>>>> +		page_table_check_ptes_set(mm, ptep, pte, nr);
+>>>> +		break;
+>>>> +	case PMD_SIZE:
+>>>> +		page_table_check_pmds_set(mm, (pmd_t *)ptep, pte_pmd(pte), nr);
+>>>> +		break;
+>>>> +	case PUD_SIZE:
+>>>> +		page_table_check_puds_set(mm, (pud_t *)ptep, pte_pud(pte), nr);
+>>>> +		break;
+>>>
+>>> This is where the new page table check APIs get used for batch testing.
+>>
+>> Yes and I anticipate that the whole switch block should be optimized out when
+>> page_table_check is disabled.
+>>
+>>>
+>>>> +	default:
+>>>> +		VM_WARN_ON(1);
+>>>> +	}
+>>>> +
+>>>> +	__sync_cache_and_tags(pte, nr * stride);
+>>>> +
+>>>> +	for (;;) {
+>>>> +		__check_safe_pte_update(mm, ptep, pte);
+>>>> +		__set_pte(ptep, pte);
+>>>> +		if (--nr == 0)
+>>>> +			break;
+>>>> +		ptep++;
+>>>> +		pte = pte_advance_pfn(pte, stride);
+>>>> +	}
+>>>>  }
+>>>
+>>> LGTM
+>>>
+>>>>  
+>>>> -static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
+>>>> -			      pmd_t *pmdp, pmd_t pmd)
+>>>> +static inline void __set_ptes(struct mm_struct *mm,
+>>>> +			      unsigned long __always_unused addr,
+>>>> +			      pte_t *ptep, pte_t pte, unsigned int nr)
+>>>>  {
+>>>> -	page_table_check_pmd_set(mm, pmdp, pmd);
+>>>> -	return __set_pte_at(mm, addr, (pte_t *)pmdp, pmd_pte(pmd),
+>>>> -						PMD_SIZE >> PAGE_SHIFT);
+>>>> +	___set_ptes(mm, ptep, pte, nr, PAGE_SIZE);
+>>>>  }
+>>>>  
+>>>> -static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
+>>>> -			      pud_t *pudp, pud_t pud)
+>>>> +static inline void __set_pmds(struct mm_struct *mm,
+>>>> +			      unsigned long __always_unused addr,
+>>>> +			      pmd_t *pmdp, pmd_t pmd, unsigned int nr)
+>>>> +{
+>>>> +	___set_ptes(mm, (pte_t *)pmdp, pmd_pte(pmd), nr, PMD_SIZE);
+>>>> +}
+>>>> +#define set_pmd_at(mm, addr, pmdp, pmd) __set_pmds(mm, addr, pmdp, pmd, 1)
+>>>> +
+>>>> +static inline void __set_puds(struct mm_struct *mm,
+>>>> +			      unsigned long __always_unused addr,
+>>>> +			      pud_t *pudp, pud_t pud, unsigned int nr)
+>>>>  {
+>>>> -	page_table_check_pud_set(mm, pudp, pud);
+>>>> -	return __set_pte_at(mm, addr, (pte_t *)pudp, pud_pte(pud),
+>>>> -						PUD_SIZE >> PAGE_SHIFT);
+>>>> +	___set_ptes(mm, (pte_t *)pudp, pud_pte(pud), nr, PUD_SIZE);
+>>>>  }
+>>>> +#define set_pud_at(mm, addr, pudp, pud) __set_puds(mm, addr, pudp, pud, 1)
+>>>
+>>> LGTM
+>>>
+>>>>  
+>>>>  #define __p4d_to_phys(p4d)	__pte_to_phys(p4d_pte(p4d))
+>>>>  #define __phys_to_p4d_val(phys)	__phys_to_pte_val(phys)
+>>>> @@ -1276,16 +1288,34 @@ static inline int pmdp_test_and_clear_young(struct vm_area_struct *vma,
+>>>>  }
+>>>>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE || CONFIG_ARCH_HAS_NONLEAF_PMD_YOUNG */
+>>>>  
+>>>> -static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
+>>>> -				       unsigned long address, pte_t *ptep)
+>>>> +static inline pte_t ___ptep_get_and_clear(struct mm_struct *mm, pte_t *ptep,
+>>>> +				       unsigned long pgsize)
+>>>
+>>> So address got dropped and page size got added as an argument.
+>>>
+>>>>  {
+>>>>  	pte_t pte = __pte(xchg_relaxed(&pte_val(*ptep), 0));
+>>>>  
+>>>> -	page_table_check_pte_clear(mm, pte);
+>>>> +	switch (pgsize) {
+>>>> +	case PAGE_SIZE:
+>>>> +		page_table_check_pte_clear(mm, pte);
+>>>> +		break;
+>>>> +	case PMD_SIZE:
+>>>> +		page_table_check_pmd_clear(mm, pte_pmd(pte));
+>>>> +		break;
+>>>> +	case PUD_SIZE:
+>>>> +		page_table_check_pud_clear(mm, pte_pud(pte));
+>>>> +		break;
+>>>> +	default:
+>>>> +		VM_WARN_ON(1);
+>>>> +	}
+>>>>  
+>>>>  	return pte;
+>>>>  }
+>>>>  
+>>>> +static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
+>>>> +				       unsigned long address, pte_t *ptep)
+>>>> +{
+>>>> +	return ___ptep_get_and_clear(mm, ptep, PAGE_SIZE);
+>>>> +}
+>>>> +
+>>>>  static inline void __clear_full_ptes(struct mm_struct *mm, unsigned long addr,
+>>>>  				pte_t *ptep, unsigned int nr, int full)
+>>>>  {
+>>>> @@ -1322,11 +1352,7 @@ static inline pte_t __get_and_clear_full_ptes(struct mm_struct *mm,
+>>>>  static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
+>>>>  					    unsigned long address, pmd_t *pmdp)
+>>>>  {
+>>>> -	pmd_t pmd = __pmd(xchg_relaxed(&pmd_val(*pmdp), 0));
+>>>> -
+>>>> -	page_table_check_pmd_clear(mm, pmd);
+>>>> -
+>>>> -	return pmd;
+>>>> +	return pte_pmd(___ptep_get_and_clear(mm, (pte_t *)pmdp, PMD_SIZE));
+>>>>  }
+>>>>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>>>>  
+>>>
+>>> Although currently there is no pudp_huge_get_and_clear() helper on arm64
+>>> reworked ___ptep_get_and_clear() will be able to support that as well if
+>>> and when required as it now supports PUD_SIZE page size.
+>>
+>> yep.
+>>
+>> Thanks for all your review so far!
+>>
+> 
 
