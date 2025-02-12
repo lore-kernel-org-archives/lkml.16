@@ -1,63 +1,61 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4452E2066C5;
-	Wed, 12 Feb 2025 10:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430AE2066FA;
+	Wed, 12 Feb 2025 10:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739354646; cv=none; b=e5TIrspumSfgzKJdFdIKD3yPTw34IN1O1A6QiUrqQJ+gzRQvdz8VWzlDNOfkQ9Kr+fKLq7cwPlALQT9TGofWVSDM0DHDpkk763XPw6WjRm4yTQnHZ6kFdrgCjDX2r6kDLYvJgLRIUbXa9njq6vUTZel4DKrnNywGBheUEZwNj0g=
+	t=1739354714; cv=none; b=Coj5weQwgGhPe6FbwQY+0e1ysSABhiISHycGFQ/i8e9EYnjOv3jjLlYDYL0pq25/B3ntOZd7zuLvLHV6wL86N0mD3mxDeFlzG2LAHI2lOUBnJyV2eOHN1mpE03hQsLQuht8S1gfQdM4JG48KPomCH8RPdU5/XkopIhRN4VpxNnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739354646; c=relaxed/simple;
-	bh=k/RUvzzosIlMaN4wLtBvyAmJ1Kbx1W1GZa907HCOqbk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rsWDn3uCVKUutSszPsdZlo5Zyuegm35RDvpOqVgc7vaT14nGCQBmiczJiFPxvNq3gxagv9gE+BOqXCFSZ3RFdU+mqH670CeRGDY/1mqqJxwZ6EsJD8rRcK+SJoeo1MzuKOiCtH+06E+8lTtJtL+HjBMU3Q1dD8CD1cQFkZ0oD3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=aWlTfeJa; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739354714; c=relaxed/simple;
+	bh=E49MearhCWQAl0JeKNyAQ1d0vfOm7rpIo89lLibkdVM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dPvSBKNgG0MHGIUG2/StSp/AQLQXFGkBkenuDaWTvPBdC8wmYMczB9w74XdbiiXYTr7o/74ASMLAC+2SJ7a/9MeAx5ecK1lRzzhzN3QurmXRipp3tiJ6PVLoAkjnRAAZCwQQZPOTgwwJHthX6NC9UEnHdr+t3sh/1pO2cis2OJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WOCDolO0; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="aWlTfeJa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739354642;
-	bh=k/RUvzzosIlMaN4wLtBvyAmJ1Kbx1W1GZa907HCOqbk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aWlTfeJaksqtJNVpk8S9gu7NRwCnqOnCR6JTmPOp+FTlOr0hHb8ETY99f9QB5csKy
-	 4teTuG5DuLfIaZpN9DJO6OMEOOr4B5BX1SpJGbfQczueLXpVxjMVy5AqWcSTD7s5EQ
-	 7v9UDh/QVdJkYooGM0yRTk5qTK15ORL88DA6Z2mYWuFQXgQDK7elFqFNdJjcrtrkQq
-	 zQKzfOZTG4RYyHmg85iaApiGx0nr/1dVMeVkRV2U8/OLg+GYuu1jeX3FKqd7Aa7d13
-	 itxls/UQce4keu02YHwslnKn1PIEL0NTpyGN3e4eD28QhR7OxL2q5vzV+qZ7FVsAgX
-	 oC1maJfjsOUpQ==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5BAE217E0F68;
-	Wed, 12 Feb 2025 11:04:01 +0100 (CET)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: sboyd@kernel.org
-Cc: mturquette@baylibre.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	geert+renesas@glider.be,
-	u.kleine-koenig@baylibre.com,
-	amergnat@baylibre.com,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WOCDolO0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739354712; x=1770890712;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=E49MearhCWQAl0JeKNyAQ1d0vfOm7rpIo89lLibkdVM=;
+  b=WOCDolO0WeEfFC9G3aZGCcuNJE0p1TwM313t8N9K0CmzqOpjvsoiqHau
+   21xBLjlPk3J7oEOGlqxf/uj+BqJJ2MjvrQj1fQenHfjKpDvceJda6ZXXr
+   Mi69BgyBaxaqeCfDD4eTUSfI/qsstnOkfRUz8jgYk6fP+bsE6UcMpnOdk
+   WQXPaqE7f52OHTPEzkSSfAFxcqyB0cedDj82fqfaXPnMjgmCDaiAoHjeY
+   rhUcmDoBFZUb9UIPUnVQLrAFleYHpMoOpR3YVrK/Tm+5X3IF20X3y0irC
+   XnBCW78eSdslSdgO+c8sI1cGF2Bk4M2P9B8nA1sA3hBjKgNrZT9Qw8y5m
+   Q==;
+X-CSE-ConnectionGUID: fV9lWE25RA60aBh27YA/vQ==
+X-CSE-MsgGUID: LFYruDamR8WSQv8qtu/dEA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="57537829"
+X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
+   d="scan'208";a="57537829"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 02:05:11 -0800
+X-CSE-ConnectionGUID: ng1uiUhoSru3NGd7NB4iQA==
+X-CSE-MsgGUID: zPR1TcnETaC+BG2XkiXj+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117957606"
+Received: from pg15swiplab1181.png.altera.com ([10.244.232.167])
+  by orviesa005.jf.intel.com with ESMTP; 12 Feb 2025 02:05:09 -0800
+From: niravkumar.l.rabara@intel.com
+To: Dinh Nguyen <dinguyen@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	niravkumar.l.rabara@intel.com,
+	nirav.rabara@altera.com,
 	devicetree@vger.kernel.org,
-	kernel@collabora.com,
-	macpaul.lin@mediatek.com,
-	pablo.sun@mediatek.com
-Subject: [PATCH v2 2/2] clk: mediatek: mt8188-vdo1: Add VDO1_DPI1_HDMI clock for hdmitx
-Date: Wed, 12 Feb 2025 11:03:42 +0100
-Message-ID: <20250212100342.33618-2-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250212100342.33618-1-angelogioacchino.delregno@collabora.com>
-References: <20250212100342.33618-1-angelogioacchino.delregno@collabora.com>
+	linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Subject: [PATCH] arm64: dts: socfpga: agilex5: fix gpio0 address
+Date: Wed, 12 Feb 2025 18:01:31 +0800
+Message-Id: <20250212100131.2668403-1-niravkumar.l.rabara@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,50 +64,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a missing clock found in the VDO1 controller for the HDMI TX
-controller over DPI1.
+From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Fix gpio0 controller address for Agilex5.
+
+Fixes: 3f7c869e143a ("arm64: dts: socfpga: agilex5: Add gpio0 node and spi dma handshake id")
+Cc: stable@vger.kernel.org
+Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
 ---
- drivers/clk/mediatek/clk-mt8188-vdo1.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/mediatek/clk-mt8188-vdo1.c b/drivers/clk/mediatek/clk-mt8188-vdo1.c
-index 4fa355f8f0c2..f715d45e545e 100644
---- a/drivers/clk/mediatek/clk-mt8188-vdo1.c
-+++ b/drivers/clk/mediatek/clk-mt8188-vdo1.c
-@@ -43,6 +43,12 @@ static const struct mtk_gate_regs vdo1_4_cg_regs = {
- 	.sta_ofs = 0x140,
- };
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
+index 51c6e19e40b8..9e4ef24c8318 100644
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
+@@ -222,7 +222,7 @@ i3c1: i3c@10da1000 {
+ 			status = "disabled";
+ 		};
  
-+static const struct mtk_gate_regs vdo1_5_cg_regs = {
-+	.set_ofs = 0x400,
-+	.clr_ofs = 0x400,
-+	.sta_ofs = 0x400,
-+};
-+
- #define GATE_VDO1_0(_id, _name, _parent, _shift)			\
- 	GATE_MTK(_id, _name, _parent, &vdo1_0_cg_regs, _shift, &mtk_clk_gate_ops_setclr)
- 
-@@ -62,6 +68,9 @@ static const struct mtk_gate_regs vdo1_4_cg_regs = {
- #define GATE_VDO1_4(_id, _name, _parent, _shift)			\
- 	GATE_MTK(_id, _name, _parent, &vdo1_4_cg_regs, _shift, &mtk_clk_gate_ops_setclr)
- 
-+#define GATE_VDO1_5(_id, _name, _parent, _shift)			\
-+	GATE_MTK(_id, _name, _parent, &vdo1_5_cg_regs, _shift, &mtk_clk_gate_ops_setclr)
-+
- static const struct mtk_gate vdo1_clks[] = {
- 	/* VDO1_0 */
- 	GATE_VDO1_0(CLK_VDO1_SMI_LARB2, "vdo1_smi_larb2", "top_vpp", 0),
-@@ -129,6 +138,8 @@ static const struct mtk_gate vdo1_clks[] = {
- 	GATE_VDO1_3(CLK_VDO1_DISP_MONITOR_DPINTF, "vdo1_disp_monitor_dpintf_ck", "top_vpp", 17),
- 	/* VDO1_4 */
- 	GATE_VDO1_4(CLK_VDO1_26M_SLOW, "vdo1_26m_slow_ck", "clk26m", 8),
-+	/* VDO1_5 */
-+	GATE_VDO1_5(CLK_VDO1_DPI1_HDMI, "vdo1_dpi1_hdmi", "hdmi_txpll", 0),
- };
- 
- static const struct mtk_clk_desc vdo1_desc = {
+-		gpio0: gpio@ffc03200 {
++		gpio0: gpio@10c03200 {
+ 			compatible = "snps,dw-apb-gpio";
+ 			reg = <0xffc03200 0x100>;
+ 			#address-cells = <1>;
 -- 
-2.48.1
+2.25.1
 
