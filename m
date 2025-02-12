@@ -1,94 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518C9202C45;
-	Wed, 12 Feb 2025 22:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA8D202C45
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739399221; cv=none; b=BNFl0lrFLuly0adzKksQZmn1DLp9uHu0nVzWmwQvkM0zT77qybEfj4Qf26XNBEdUpviapW0d5PiT0a6uoCbYxg+PmHpbfEDAtauz3wQC6pSrcJsqFFqyYHb2f1s8iiX7PYJ4XhC1CJS9/6Gn5pGfbbnWtgduDwYqxmjsUXxaQgs=
+	t=1739399265; cv=none; b=LQ+HB4LjJugS0nlqrqunGP7Cpa5uGyP9X9yaA5977cN5v4En1jQtK+YB8MvY8HvxM8Kl7BEVna0fJJ05+FO02fr8ggXBk8NzTY9V4Wtq+UhhuDu+ZjwIzDDN7eGfGVmbpSzlNeehvbSb/wTURl8iqAMgmHdTagiHRr5usWrv0Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739399221; c=relaxed/simple;
-	bh=/3+mBVrE63/84GWfZK7OmV4Ny/tGhzzzgdhYFy/il4Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HJrTVU3mXSrGe+Tjz8ZEKWn3aYPKggD9HDwFKsgdBIx/rW6lFxT2kI8dR8VckEHoOxNxEF6ouHqEVdBHgFr1Svm+2bc7fcYnqOoDmgY+r+2ZT20EAo8hNbHm3u45Nl+WAZJyt0sWRIYJT+ptuxkp6eT8FXOZj1oQp4pfYlKXF+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RKW3YlQz; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739399265; c=relaxed/simple;
+	bh=RuVfgyHjpa0Dr8v3kLqklchuQuADCZEXTGbZnpszfzs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WmJBWOG8/iPTTHnCOb9P8BRFYjAhOXBvMKBfQ44UTleRRoJn/MTu2gAl1cAaFiDnZG/NQ7/PQRkbPr6fvQC2nKBKxthOhaLMfMZt5IHixZ3waDP8iRb/9ykfj1nEFeB4O93OXOlPv6POzPWA1GG2I5TCN4iDKMyQKliMKhmGh0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ABWIiiPq; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RKW3YlQz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739399219; x=1770935219;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=/3+mBVrE63/84GWfZK7OmV4Ny/tGhzzzgdhYFy/il4Q=;
-  b=RKW3YlQzhT+0w2VxLepW/buJ6YAtdng2+jL6vc00z+rqZv5b6xExmtxe
-   Srs42M9/G8s7ieTQf3F+/KMtpE5ae/8DGY3oQYtcAlAlmpi8g9WFq6E9+
-   RnS5oZ/GpZxRnpmUj5M9COoe1Hjd5ZGnnfWjodbVIFqDuqLSm7omPz3c5
-   97U4GW8swmFVNPIS/f2TGASHvAmnTxmgzXRvh/5t9xaQoZ6smX9Xdwd9p
-   4WMoJeNt/tpjJ75ep2GhhucpoEiBEzIXspmFgByKN/f6f2JimgsoISmZ7
-   0jnFNs1QSjaf7//el/BfYsFw47Yu2YP8md8hDWEd5ybjYtUMUwjIF9FEB
-   w==;
-X-CSE-ConnectionGUID: 7IBeE15jR/m/FEYqGMus/Q==
-X-CSE-MsgGUID: f0WXe2sMQDyRyx1ADL5Ehg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="42919934"
-X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
-   d="scan'208";a="42919934"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 14:26:58 -0800
-X-CSE-ConnectionGUID: 5gpj1kBGTU60agfsopnnIg==
-X-CSE-MsgGUID: H+oFrjRlRKCfbaGSO0YdUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
-   d="scan'208";a="118038847"
-Received: from pg15swiplab1181.png.altera.com ([10.244.232.167])
-  by fmviesa004.fm.intel.com with ESMTP; 12 Feb 2025 14:26:56 -0800
-From: Kuhanh Murugasen Krishnan <kuhanh.murugasen.krishnan@intel.com>
-To: Moritz Fischer <mdf@kernel.org>,
-	Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>,
-	Tom Rix <trix@redhat.com>,
-	linux-fpga@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kuhanh Murugasen Krishnan <kuhanh.murugasen.krishnan@intel.com>,
-	kuhanh.murugasen.krishnan@altera.com
-Cc: Ang Tien Sung <tien.sung.ang@intel.com>
-Subject: [PATCH] fpga: altera-cvp: PCIex8x8 ports (#94)
-Date: Thu, 13 Feb 2025 06:23:21 +0800
-Message-Id: <20250212222321.2716639-1-kuhanh.murugasen.krishnan@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ABWIiiPq"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CLd8nS030555
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:27:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	p2R/RTt+0MfG1Sv58vOwjs183HLY+inpys37nzh2bbQ=; b=ABWIiiPq+geEJsAT
+	QAIgs/Qa7LVlfMV7TFGq6lZNEdi+WZKz1fBnP62E8jwUGBbs4QO5ZF53lZkR77wu
+	L6EQWxVu76KH0F2X1EOgIYoc3eKshXkHEuEQOqwbwWAVXiBw+edkg6/RN5x8xZMs
+	yF2KED1gH9YsgRtliTOXR8M8V18iPcxDHHAkymtpe95VAjSO3udeT207AsPme823
+	F473kKrWEnZxGqxa1C7q1ZmvCu8eK5k7BCWM1w6UTS3aePcRam97emPekP8PoFxX
+	ZLJuMd4Pnn06cbgS/s4nb2BN3fxCATB0+GYyjM+7yp3PPKwPVnJ1OCgiEgOLELuM
+	5PLh4g==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qxg9pa5c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:27:42 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c060361144so3195885a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 14:27:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739399262; x=1740004062;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=p2R/RTt+0MfG1Sv58vOwjs183HLY+inpys37nzh2bbQ=;
+        b=g9fqi0qK6HMvmJQX4DeoOC8CEXs53mdo2Per2bqyOD7L3ivBEivmgHnW3y4gKMvx5x
+         xtZDjXjFCsxc60o5w01cdtVOoNAQJunlc5yZydwxiCwTy3S6h9PZtWQycjGRYYjGG/ZV
+         ZpPXhxrQs7/6kRSv8TqMic9OSuV0FrvBF4dfgz6NkJCUjU8jY/HbSUjFiW7msBcg3RMT
+         jiM8MmuFCrn1qvYcSwPSxL/8VbJpdMZS6XPtdNJsAiZ7FwtM41SlFXAJHlXITXoCh7Tj
+         8uh42u1iUmwsW03KKwbsxNTxxWNovrIwlwLJYAFFfm7JOqSp/VyRfE0PaW4BHv1fomiK
+         I6yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVw7w46EnkxCW3WVUWE0xNc7dbC1j/KE1RSdPvkxARCFAE0aIw3dq9KRTz1ZYhkVKf4tALNeIkH4pgHrfw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybBqeyHVPgKCpVzsXATBiKaUKRGOKiZ7sSBD+RO8GfU31EM9Ta
+	UyxUF5irziiLeAQ8EM/FTLvJPtuzPC5gyC/Y+4Ha8qcqC0B6WiN8PR6/ns/ZFjTMJYCX23ujIix
+	AO3UnmHVR2QT5fM5swWBrtvJAvB4T2XnlX5UG2sO6WkVGi5WVqx42spLrc5uLXUw=
+X-Gm-Gg: ASbGncsn6BZVzh/KQLWv4a0CsTmcwyNHGf3xPgve3CyyvEPvMok6k3M5GuKF0vcfHr3
+	AP3MnZeyabshYeQuIXuF1ZbjripnGWwy1hbH9t7gkbM1AoTfETYJremMT/MRhcaxzLOioW873fj
+	0wCHRE0D8A27Eul2LaSUVXCLCE6S4IbPSBp+IicpOOg1CCTzgljfu2A+wtAqytmkn1eZ+9TGCDd
+	M4FYmMF5GIOv5qRD7ygz+a7qVf5yGuZJ8KIXJFss0xUtdQEFE/F29lxvv9y3dzrXJLLZ7XjXH9s
+	xU0S/SD2tT2pI2Qs3XSEvyh8I5Y1qvtXlwCNALAYjrn2LlzqkUa/EUr+j/k=
+X-Received: by 2002:ac8:5dd2:0:b0:467:5d7f:c684 with SMTP id d75a77b69052e-471afed5648mr27378781cf.12.1739399261979;
+        Wed, 12 Feb 2025 14:27:41 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFm7HwjnD8TfrrD8qTdjd3ZCWCL72oFAhN3KcFlNCVuMikLAd4knHaHey2dB/mkKLaZ7ZWWgA==
+X-Received: by 2002:ac8:5dd2:0:b0:467:5d7f:c684 with SMTP id d75a77b69052e-471afed5648mr27378541cf.12.1739399261580;
+        Wed, 12 Feb 2025 14:27:41 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba53376756sm4479566b.115.2025.02.12.14.27.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 14:27:41 -0800 (PST)
+Message-ID: <82fee126-4e03-4366-8dad-d8ea98081beb@oss.qualcomm.com>
+Date: Wed, 12 Feb 2025 23:27:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: pm8937: Add LPG PWM driver
+To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Daniil Titov <daniilt971@gmail.com>
+References: <20250212-pm8937-pwm-v1-0-a900a779b4ad@mainlining.org>
+ <20250212-pm8937-pwm-v1-1-a900a779b4ad@mainlining.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250212-pm8937-pwm-v1-1-a900a779b4ad@mainlining.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: O0H2WlQ3Jtw7jvfJR72pzkgwgDdK4j-m
+X-Proofpoint-GUID: O0H2WlQ3Jtw7jvfJR72pzkgwgDdK4j-m
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-12_07,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxscore=0 priorityscore=1501 malwarescore=0 spamscore=0 impostorscore=0
+ mlxlogscore=990 lowpriorityscore=0 phishscore=0 clxscore=1015
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502120159
 
-Enabling the possibility of supporting multiple
-PCIe devices from Intel Altera FPGA but with different
-device ids. The current driver registers itself
-to all device IDs which causes an incorrect driver
-association.
+On 12.02.2025 11:21 PM, Barnabás Czémán wrote:
+> From: Daniil Titov <daniilt971@gmail.com>
+> 
+> Add PWM/LPG node to the PM8937 dtsi so devices
+> which use this block can enable them.
+> 
+> Signed-off-by: Daniil Titov <daniilt971@gmail.com>
+> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+> ---
+>  arch/arm64/boot/dts/qcom/pm8937.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pm8937.dtsi b/arch/arm64/boot/dts/qcom/pm8937.dtsi
+> index 42b3575b36ff4d37df11ccb5ed68e965e3716300..d13f39d81386b9493e33411e7fa0fb69e94644f4 100644
+> --- a/arch/arm64/boot/dts/qcom/pm8937.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pm8937.dtsi
+> @@ -143,6 +143,14 @@ pmic@1 {
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+>  
+> +		pm8937_pwm: pwm {
+> +			compatible = "qcom,pm8916-pwm";
 
-Signed-off-by: Ang Tien Sung <tien.sung.ang@intel.com>
-Signed-off-by: Kuhanh Murugasen Krishnan <kuhanh.murugasen.krishnan@intel.com>
----
- drivers/fpga/altera-cvp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please add a new compatible with this one as fallback, i.e.
 
-diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
-index 5af0bd33890c..97e9d4d981ad 100644
---- a/drivers/fpga/altera-cvp.c
-+++ b/drivers/fpga/altera-cvp.c
-@@ -560,7 +560,7 @@ static int altera_cvp_probe(struct pci_dev *pdev,
- static void altera_cvp_remove(struct pci_dev *pdev);
- 
- static struct pci_device_id altera_cvp_id_tbl[] = {
--	{ PCI_VDEVICE(ALTERA, PCI_ANY_ID) },
-+	{ PCI_VDEVICE(ALTERA, 0x00) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(pci, altera_cvp_id_tbl);
--- 
-2.25.1
+compatible = "qcom,pm8937-pwm", "qcom,pm8916-pwm";
 
+and add it in dt-bindings
+
+Konrad
