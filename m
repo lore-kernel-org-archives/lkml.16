@@ -1,129 +1,117 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D758B1D516D;
-	Wed, 12 Feb 2025 19:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53B41DEFDD;
+	Wed, 12 Feb 2025 19:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739388155; cv=none; b=koTllMfPiaWG3WLxhA8uF878JwcF037RnI6dw8YsWNHwMsvavxmKVYgVh/uppNOPbcB3Vgv6PwHy1Ce6ugnLIbfdNZu5+K/97PUFSCrQQLJouqGXYuoyu1/h+Ivs35ieFmL64bVVU7O6PaYNNowaG3qnYP/nR1TY8swkWqvbbyw=
+	t=1739388318; cv=none; b=DC0UTjYnXQdFbN6xO07925xfXDJze2y7iUhCBvl4cGTskN6omj22sLtLTUGEqUUVXpiiE88LHv6Lr4W538bxwOKjbLhnbZ2/51ausnf9Hs9Rm9a/JWSXqPwu0X6CVTqbqVNwrO7M99frwjRGOuvw8zL0H3MUO7wHlN60glvQwhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739388155; c=relaxed/simple;
-	bh=MOMRWX7y66bw+itcznoCfyFl4Dbwv4Trr49Qlu/x+h8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hSES3dSczzZG/wxGsm/JMJXK3O6v+o6zdmTZ4Y3d5hNJor4xmmmqpIYFp+R7brwrU+hVxIJYnDMCHzxGgpHtgoGk5VXRUJyKhNrXQBHvqujZZyGYgyKXu+j12ay3uuU7MJ4I8/J9onka850FP4kAC37Mf/fHjkM0qA8+jQoJPeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EqIkzzvG; arc=none smtp.client-ip=209.85.218.48
+	s=arc-20240116; t=1739388318; c=relaxed/simple;
+	bh=sSKn3cAe8vJOx2Ub9060X3L9Kew3cuPp2yioPFziWMo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E+FJwCIhfF4KiWs2aluq//baI4btIXpw+Oc0iDdMjGflCO7j3EAsyoofp25kKjFvXkd8Nv6fCi5fpCXPZETxF66HUoGO/CCsOCOOKxR7Om2/UtoUWtUTnq4ZKq8fXSLJXR2crdiUbnu/M5VoGsBshbjWAswKV1gDWXyp7MlaxlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fwA/s65P; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqIkzzvG"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ab7d583d2afso220867566b.0;
-        Wed, 12 Feb 2025 11:22:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwA/s65P"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f6022c2c3so21685685ad.0;
+        Wed, 12 Feb 2025 11:25:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739388152; x=1739992952; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SPC+JXoeDesx1/m8YBY1xFOPYCWwxZOG9abJwGiSBcw=;
-        b=EqIkzzvGBZJmQN0qqZEvYZHoEb7zKpGPT6vduY5xVr8C2yRxlSAX3uPtLHYmRXE462
-         mVTn7jbnysp2VeicSemAFpdoF9cH33+Tf176Frf/u8bcaLo+0im09DiOs4eOzUJc4QL8
-         O/906Q4nD90wsrlve0Qbe1L3UXigb/fKO7hzHpvkFAI4TdtbrdCz51+JV/jQqIlcI7TZ
-         fCQsCPY79ZxgOf3I2Ohtmoi1R1BBfg0j/mK3pKQZjo6di6Ghmc0BG814TwkOEYnipran
-         36b4QG2y5mvIUvUj/6XiH3myUb67ycJq5O92+JB1arH244oHAMJqaAPO9+x5oKD4rx79
-         J8cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739388152; x=1739992952;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1739388314; x=1739993114; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SPC+JXoeDesx1/m8YBY1xFOPYCWwxZOG9abJwGiSBcw=;
-        b=pMZvdp2Q2MqSU2WmCNcAWLOh7YiWZgFaD7M93jHvn8Dp/nufhaBGZYmyvv5ZNyDRna
-         1A1GBkMel9TEzT0Q70jeOfxXtcIebq+y4AzObS0Zq9tOjyjsSo6MlgyosuaLqBpVVgXw
-         zSrDxG35inbSQgyyeW2mFshLpV4nhCbC1b/4GXSlgKB/2yi2jKwESt8dihyk12zpPFMQ
-         MJziAOaTgG602QluQ9kj7im+TXZVL3nyiOCV/L2RzFbu+wk3iYyBkBJ8GUIklJy2j838
-         JmYF0Tms8ltlFf++5e1bP/q162VDDqb8lECes8UFdCoE57TaaPi+awe9zvE/hqXofVSc
-         E9qw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjBcsZEeJ2Ik/Ka8URDuT0gw04UEU6EEujAfIeHDYqw5p4f1qr34X8Z+q4uDui72zJYDqqwDoThjjKyBzr@vger.kernel.org, AJvYcCWZ3Mj/x7A9KvoM3oU3i2PqvmCpnEFzpWyFgqlde6V6YVqHs981THFhqWFCBfJssC4V5d/v3CGd@vger.kernel.org, AJvYcCXkfOS3PrWkpyz+D8Sro1sve6o9n8bHSj2gwd0kSfnz8cp2xzN7xioNQ8goXvUWPPOsu2bQJgv4EUc1@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUKeu7ftFw7VpR1ijTTmkwVJ98Gqb27yauYHLxsugNjwfZMRGC
-	89lR7N/PSNYhpz/zkfIjlHqrvCCiFjVurCwomtuM5vqfkkuB46XNlbeQ0g==
-X-Gm-Gg: ASbGncvpokOoX4ryCag5/eKE3r9lF3LOWWmV69EwTiRpUs3T57qNImLB1MDTyNiPd45
-	MTxO5LZ0HDCt4DGXHjgAW91kIp2jsFMMKLQA6rkvhqDTKrYl+pH9ARcbDQdqkgfmZ8Qj29CIOMV
-	sLjhVZ/S2bylYc8wURdLIvK4aFh235HPOqOBytdUASi6NlfYH/LKOY8JbxOemdvDGxiKDw8BnBT
-	RvC6dAd1R56fwgrbf/oMuEMQL140wzDguBQ9ib61Iz1AiN1zOmddQvHpewdLO34TjL9TNkshERE
-	gVNTVYUBxqta
-X-Google-Smtp-Source: AGHT+IF6FvFixqQDKBbekS+Cxre95GuzWINzpClT2uCUry35eAQuSer0gT13FlTqNY5wWkJuAiI38g==
-X-Received: by 2002:a17:906:6a0d:b0:ab7:cf7c:f9ed with SMTP id a640c23a62f3a-aba510de33fmr10610766b.24.1739388151696;
-        Wed, 12 Feb 2025 11:22:31 -0800 (PST)
-Received: from debian ([2a00:79c0:659:fd00:45fb:7d1a:5e4d:9727])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7e8050dd2sm338040966b.136.2025.02.12.11.22.30
+        bh=uHuwhzhUtmjes/uvYM9YoGu3wUSPo/UpEOhuRs84cMs=;
+        b=fwA/s65PtA9lp8lXSWfuZBHo6j68lGSJpYdzRzB2Qp/V9YKCojDuRnJ6D/7/CKbRRt
+         xnHEbMTEfIeXv4vivxpqGbOrccfLbMZft9ruJABNhVnC2ypi0NROy9Ki1AxDARE9VOYh
+         yAoXArAuZW7dk6tr/4tRyr32OfWEFukxx+ttv+w9ovHRtEA1hLZ011HhT93/TVH318TV
+         USP44ziZtCFbBfgAbiVFV7PYpcUMgIBCT/MjA8cRE4B9XzP8MP8BFn2h0xxTogcb7flc
+         IaoxBSD+Q55KeAQQKpU3+LHbZsmoDcWXJuJz3s1XJ1kcHSKTj286nN5xDkTmUTlijzVq
+         QLow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739388314; x=1739993114;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uHuwhzhUtmjes/uvYM9YoGu3wUSPo/UpEOhuRs84cMs=;
+        b=xSe/v5q4/H5xHk2Wb3U29XS4HI2Ft/btgBZRX2mAVYBKCrtCRd1nk18P/6wZOSgIxY
+         F+G33Nk0/EgFPw+2odmO6Jk9NUdvhI602suKt3NdIS1Dcbh9ipSeQ7T4LYElA0emhMbU
+         aHkCvF3Dng2opYh+Fm4wGCXylgkPEDDpdoTxYk/09TMb0+26dVDMwAyvm9s0af1quhjo
+         dVdPEbygxlwpDWE9iqdojyRj6n8wnXEaxJIKvckE9Qk1A3BkZWaT7zH/pPPaSt8C9Jvx
+         tE+yWG/fHtuyLbMcsajX+1Vm1fs+g9CvMFyI5TbQki1XsmduX0tjXzWJtB3NWU09hK/k
+         e/zg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPdtIs5Jv4/9Nshw3I8rUYipwnfNCQLQgGgMuEe7GSWjiYuJMW/VGyfv+HDy4tlA6fCsf/3Q3jW6CWFldX@vger.kernel.org, AJvYcCVWtpWjOIaj0RTGibtalUJPk+7ISMFQIHSBfLP+siznJmTdGjdLW28FDCCAiRh2kItmPdApq0Vuteu4@vger.kernel.org, AJvYcCXfcFeNf2wE7Uy65upSaknVQ1KskMvBYL6XNHT7dPAAGgLuQi0A7vDg9Nw1bjnPjIvYakh7y/ATjaOhAx2WQA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD9ctOLJz3ddwJbW0I+FXKloyaZGDrTfS1nypNa8ZV5y667qv+
+	lc7tnLqy91HtmJHUL3tSPjiN3EkbQuG09Vevk89wzUcnPUlJN/cc
+X-Gm-Gg: ASbGncvDX0rOaiLI294MTT/6v0M54E2351HPFWwKmF5nEFzVJDyMU9/jtBI17C7EvNF
+	AEdLq4NCymjP799nVSiisyftUmFXn/fRJxkRL5khFSCpBmMQYhmLJN49Yr+e5pW5L+7sASjN2Cn
+	MIv61aZcxuRN8Rlpq09AVujHT+ZMwXFj6fM3wDmlL/s8EMrRCUj2Uyt4t+eY5NNo55oNHsVrskD
+	mhdYsn06Uc2+XFAWg6SOZMsPmWWwsT6S0uR1EV2m1z8VmQVEAWV6ezcxvL8EWP0pVMp22EOlZed
+	vtopmqXDsTIi1YG30lp1CvWJmp26bp7FntOmr3qBmw==
+X-Google-Smtp-Source: AGHT+IHcOBqjiEVfR0zTy4OMDsmxuaWI0odaMLRy1ZKtdCOvuR39+L0kvGf+nTVb3puyRgCGvWhYkg==
+X-Received: by 2002:a05:6a00:458e:b0:725:ce39:4516 with SMTP id d2e1a72fcca58-7323c7516f8mr253668b3a.7.1739388314052;
+        Wed, 12 Feb 2025 11:25:14 -0800 (PST)
+Received: from jamesmacinnes-VirtualBox ([66.119.214.127])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7309709027bsm5115955b3a.44.2025.02.12.11.25.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 11:22:31 -0800 (PST)
-Date: Wed, 12 Feb 2025 20:22:28 +0100
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: dimitri.fedrau@liebherr.com, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v4 1/3] dt-bindings: net: ethernet-phy: add
- property tx-amplitude-100base-tx-percent
-Message-ID: <20250212192228.GA4383@debian>
-References: <20250211-dp83822-tx-swing-v4-0-1e8ebd71ad54@liebherr.com>
- <20250211-dp83822-tx-swing-v4-1-1e8ebd71ad54@liebherr.com>
- <b60f286a-75c8-4b60-9707-6d834fd4d3ad@lunn.ch>
+        Wed, 12 Feb 2025 11:25:13 -0800 (PST)
+Date: Wed, 12 Feb 2025 11:25:10 -0800
+From: "James A. MacInnes" <james.a.macinnes@gmail.com>
+To: Caleb Connolly <caleb.connolly@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ andersson@kernel.org, konradybcio@kernel.org, quic_wcheng@quicinc.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ lgirdwood@gmail.com
+Subject: Re: [PATCH 2/3] regulator: qcom_usb_vbus: Add support for PMI8998
+ VBUS
+Message-ID: <20250212112510.2c7140a5@jamesmacinnes-VirtualBox>
+In-Reply-To: <3e8d6cb7-43e3-4375-94be-c6b28331da76@linaro.org>
+References: <20250212010744.2554574-1-james.a.macinnes@gmail.com>
+	<20250212010744.2554574-3-james.a.macinnes@gmail.com>
+	<fcf907a5-9fb7-4988-a30a-a555740ca817@linaro.org>
+	<8ec05fd8-1623-457f-a3b5-1095acd62cf7@sirena.org.uk>
+	<3e8d6cb7-43e3-4375-94be-c6b28331da76@linaro.org>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b60f286a-75c8-4b60-9707-6d834fd4d3ad@lunn.ch>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Am Wed, Feb 12, 2025 at 02:04:02PM +0100 schrieb Andrew Lunn:
-> On Tue, Feb 11, 2025 at 09:33:47AM +0100, Dimitri Fedrau via B4 Relay wrote:
-> > From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+On Wed, 12 Feb 2025 16:09:01 +0000
+Caleb Connolly <caleb.connolly@linaro.org> wrote:
+
+> On 2/12/25 15:37, Mark Brown wrote:
+> > On Wed, Feb 12, 2025 at 03:29:54PM +0000, Caleb Connolly wrote:
+> >   
+> >> I would suggest implementing a proper .is_enabled op to poll the
+> >> status register for OTG_STATE_ENABLED and configuring  
 > > 
-> > Add property tx-amplitude-100base-tx-percent in the device tree bindings
-> > for configuring the tx amplitude of 100BASE-TX PHYs. Modifying it can be
-> > necessary to compensate losses on the PCB and connector, so the voltages
-> > measured on the RJ45 pins are conforming.
-> > 
-> > Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> > ---
-> >  Documentation/devicetree/bindings/net/ethernet-phy.yaml | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> > index 2c71454ae8e362e7032e44712949e12da6826070..e0c001f1690c1eb9b0386438f2d5558fd8c94eca 100644
-> > --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> > +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> > @@ -232,6 +232,12 @@ properties:
-> >        PHY's that have configurable TX internal delays. If this property is
-> >        present then the PHY applies the TX delay.
-> >  
-> > +  tx-amplitude-100base-tx-percent:
-> > +    description:
-> > +      Transmit amplitude gain applied for 100BASE-TX. When omitted, the PHYs
-> > +      default will be left as is.
-> > +    default: 100
+> > No, that would be buggy.  Implement a get_status() operation if the
+> > device can report status.  is_enabled() should report what the
+> > driver asked for.  
 > 
-> Doesn't having a default statement contradict the text? Maybe the
-> bootloader has set it to 110%, the text suggests it will be left at
-> that, but the default value of 100 means it will get set back to 100%?
->
-You are right, will remove the default statement.
+> Ahh yep, that's right. it should implement .get_status() (as per the 
+> polling code in _regulator_do_enable()).
+> 
 
-> What do your driver changes actually do?
+I am happy to implement the proper get_status() operation, but the
+other half of this, the type-c driver (that is functional on the 845),
+is managing the status portion. With my testing so far, I see the
+regulator resets the USB hub when I remove power and then supplies from
+its own battery. Is this the expected operation? As of yet, I am not
+seeing any failures and the original Android driver lacked the
+knowledge of the output is status.
 
-Only if tx-amplitude-100base-tx-percent is present, the amplitude should
-be changed.
+I can dive back into the original driver and the documentation to
+verify. 
 
-Best regards,
-Dimitri Fedrau
+Any other thoughts?
+
+Thank you,
