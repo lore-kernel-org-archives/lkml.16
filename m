@@ -1,173 +1,173 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE7C1EE013;
-	Wed, 12 Feb 2025 08:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBB8204F73;
+	Wed, 12 Feb 2025 08:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739348714; cv=none; b=tDF0nFHicizhqUASOmMTKhDWoFb3AfaURMNWmRAsCtFwtVe072wRKf3D++/WDQJ7X68Ch26Y5h7mzm7mYveIysOXIwsLtj7NaRBrn8xCzgZ6fzbgMd9TSfJZsvH9nNmWF4zr9FHwAEPuA1Ou0tkrPHDSPx/PLz5eZXLmWtviGJg=
+	t=1739348747; cv=none; b=Yluvx4uRKnjnE2YDJVIuX3rvGwENJBHXERupJw8YzdNHOpxyjUni7MTVjSND6bXGDGO15LrHVMGMp+XUp7blYb+kDW41rUte2qRTiM8bbx/3aid5WvVJ58lH69ToCiSaD7uZs7GC8E18WI90iYFYNlNSqZkGJMv+fZky185BwaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739348714; c=relaxed/simple;
-	bh=UxLLrFR3unDkQEVXT9keu7/Y/BnzW500e0pY1YknrSw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=TcRUHQV44O7qE0s+MqlKyVE735jfwkzIrWwwOu4eqn7qelNCd9oHWZ06mLaOxf5+iGvzKo6gMwL9SAJsBhlYZuw46tUQ6BqfYZXrLnvMI7D5bPRo3ASJPvfWrP9m6heecKs2Rk0MSz33ykxHxWruRYh7+6PQpxjlLk8bnnjSvzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MYDLgWlD; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739348747; c=relaxed/simple;
+	bh=ukrkJzE51VQLzsAENhN/N7LN/GMW+1t1gZXt+vPnv1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H0cz6MYbY+EJcGBNwQgMoNWPTpectjQ7m570rt4wbNfW2/eNfqo/DQsSkdGkGzgZL8vouf3g1DxgayYJoSU2LqLh7ZnOQDlR3x1wOKsDcBZhyL2QzyqG0nKjFQO2MGCTE+8Yi7umkMVi3jmjkim0V+xbTX0+hO9yqnwP6D4g3Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IHMcyV8h; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MYDLgWlD"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51C0oYeI030181;
-	Wed, 12 Feb 2025 08:25:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4+MbO4I6cRAV6UyKT51mOFpjDAxPBVOlCZ8ub22QxvI=; b=MYDLgWlD8AHtOUSQ
-	gkOXzM8RLv2eMnZ5GcwVnFr8at6sPnSqb9LcvMDY6/gifokQUE+jKMxdURv9OH/o
-	f39aNULAGiXEd3V8d7EG3nUrTC3/PdsGVFv4haM5P6XH/QKHPemtbv1WDwNJNMDF
-	XXSoMDVxkFPbww7mJzkFzYcPpCSzjthaUlJdkhv1RRIfRZN1+HFzKJrKgQhsAGFi
-	4zHlC4RzgbrjrD1xVfs/mKZG6UKuU5swuj4a63UNk0BuctY5ZJocu3RNakHUuqY6
-	QZxsPJBSTOhmWqcRyKLrj5eJz5knrso8nBDNsSHBXoCe8G9k+ntuXAL+d34CbiRE
-	VBScug==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qxg9m7dy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 08:25:09 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51C8P8Od011271
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 08:25:08 GMT
-Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 12 Feb 2025 00:23:05 -0800
-From: Taniya Das <quic_tdas@quicinc.com>
-Date: Wed, 12 Feb 2025 13:52:20 +0530
-Subject: [PATCH v3 2/4] clk: qcom: lpassaudiocc-sc7280: Add support for
- LPASS resets for QCM6490
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IHMcyV8h"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 05D781F764;
+	Wed, 12 Feb 2025 08:25:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739348736;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LIgUAEyu8qolGLYGKy5KFxfJEdAWp4C5nM5+ktv2GAc=;
+	b=IHMcyV8h5M35NbOnH2TZErLdEosb8U02k4tCGIImqJ6EV8fbbMmqTqCSKzDlZNQo8Wco1u
+	8uW+ROGU8eRUvgKrTKcurNmd2W10HGBEpwW0z9NF8d9FLXtU5HCfk7IUsYrohzGnKwDJH/
+	mvqcKl/1z/1VcISm8IA6+Uut6geE5JyF94KQeCR+MEcMgN4s3nIixUtJ8/odC9NJQoU2si
+	pcqia8BfBySgTwAGCzLxkT8sXSxSziBm85Yt5lwjY9SLKjyVbID5IbK8Pwil388Vr/AVaH
+	lCL0i74qj6/yahizFabye0IMDx90ma4miNOaUEi5xFbzbXHjSJFe/lMsUrjPBg==
+Date: Wed, 12 Feb 2025 09:25:26 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, Marek
+ =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
+ <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
+ mwojtas@chromium.org, Antoine Tenart <atenart@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>
+Subject: Re: [PATCH net-next RFC v2 2/6] net: ethtool: Introduce
+ ETHTOOL_LINK_MEDIUM_* values
+Message-ID: <20250212092526.544fb80e@fedora.home>
+In-Reply-To: <20250211130830.25dbafb3@fedora.home>
+References: <20250122174252.82730-1-maxime.chevallier@bootlin.com>
+	<20250122174252.82730-3-maxime.chevallier@bootlin.com>
+	<20250123103534.1ca273af@kmaincent-XPS-13-7390>
+	<20250211130830.25dbafb3@fedora.home>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250212-lpass_qcm6490_resets-v3-2-0b1cfb35b38e@quicinc.com>
-References: <20250212-lpass_qcm6490_resets-v3-0-0b1cfb35b38e@quicinc.com>
-In-Reply-To: <20250212-lpass_qcm6490_resets-v3-0-0b1cfb35b38e@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Taniya Das
-	<quic_tdas@quicinc.com>
-X-Mailer: b4 0.15-dev-aa3f6
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: IitNfqJQCIE0OPCcJirzuOhfYsQkrB9P
-X-Proofpoint-GUID: IitNfqJQCIE0OPCcJirzuOhfYsQkrB9P
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-12_02,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- mlxscore=0 priorityscore=1501 malwarescore=0 spamscore=0 impostorscore=0
- mlxlogscore=880 lowpriorityscore=0 phishscore=0 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502120064
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegfeeflecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeuhfefgffgtdfhgffhvdfhhffhteeutdektefghfetveehheejjefgudeiudehudenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedviedprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On the QCM6490 boards the LPASS firmware controls the complete clock
-controller functionalities. But the LPASS resets are required to be
-controlled from the high level OS. The Audio SW driver should be able to
-assert/deassert the audio resets as required. Thus in clock driver add
-support for the resets.
+Hi again K=C3=B6ry,
 
-Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
----
- drivers/clk/qcom/lpassaudiocc-sc7280.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+> Hi K=C3=B6ry,
+>=20
+> On Thu, 23 Jan 2025 10:35:34 +0100
+> Kory Maincent <kory.maincent@bootlin.com> wrote:
+>=20
+> > On Wed, 22 Jan 2025 18:42:47 +0100
+> > Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
+> >  =20
+> > > In an effort to have a better representation of Ethernet ports,
+> > > introduce enumeration values representing the various ethernet Medium=
+s.
+> > >=20
+> > > This is part of the 802.3 naming convention, for example :
+> > >=20
+> > > 1000 Base T 4
+> > >  |    |   | |
+> > >  |    |   | \_ lanes (4)
+> > >  |    |   \___ Medium (T =3D=3D Twisted Copper Pairs)
+> > >  |    \_______ Baseband transmission
+> > >  \____________ Speed
+> > >=20
+> > >  Other example :
+> > >=20
+> > > 10000 Base K X 4
+> > >            | | \_ lanes (4)
+> > >            | \___ encoding (BaseX is 8b/10b while BaseR is 66b/64b)
+> > >            \_____ Medium (K is backplane ethernet)
+> > >=20
+> > > In the case of representing a physical port, only the medium and numb=
+er
+> > > of lanes should be relevant. One exception would be 1000BaseX, which =
+is
+> > > currently also used as a medium in what appears to be any of
+> > > 1000BaseSX, 1000BaseFX, 1000BaseCX and 1000BaseLX.   =20
+> >=20
+> >=20
+> >  =20
+> > > -	__DEFINE_LINK_MODE_PARAMS(100, T, Half),
+> > > -	__DEFINE_LINK_MODE_PARAMS(100, T, Full),
+> > > -	__DEFINE_LINK_MODE_PARAMS(1000, T, Half),
+> > > -	__DEFINE_LINK_MODE_PARAMS(1000, T, Full),
+> > > +	__DEFINE_LINK_MODE_PARAMS_LANES(10, T, 2, 4, Half, T),
+> > > +	__DEFINE_LINK_MODE_PARAMS_LANES(10, T, 2, 4, Full, T),
+> > > +	__DEFINE_LINK_MODE_PARAMS_LANES(100, T, 2, 4, Half, T),
+> > > +	__DEFINE_LINK_MODE_PARAMS_LANES(100, T, 2, 4, Full, T),   =20
+> >=20
+> >  =20
+> > > -	__DEFINE_LINK_MODE_PARAMS(1000, KX, Full),
+> > > -	__DEFINE_LINK_MODE_PARAMS(10000, KX4, Full),
+> > > -	__DEFINE_LINK_MODE_PARAMS(10000, KR, Full),
+> > > +	__DEFINE_LINK_MODE_PARAMS(1000, KX, Full, K),
+> > > +	__DEFINE_LINK_MODE_PARAMS(10000, KX4, Full, K),
+> > > +	__DEFINE_LINK_MODE_PARAMS(10000, KR, Full, K),   =20
+> >=20
+> > The medium information is used twice.
+> > Maybe we could redefine the __DEFINE_LINK_MODE_PARAMS like this to avoid
+> > redundant information:
+> > #define __DEFINE_LINK_MODE_PARAMS(_speed, _medium, _encoding, _lanes, _=
+duplex)
+> >=20
+> > And something like this when the lanes are not a fix number:
+> > #define __DEFINE_LINK_MODE_PARAMS_LANES_RANGE(_speed, _medium, _encodin=
+g,
+> > _min_lanes, _max_lanes, _duplex)
+> >=20
+> > Then we can remove all the __LINK_MODE_LANES_XX defines which may be
+> > wrong as you have spotted in patch 1. =20
+>=20
+> I will give this a try, see hw this looks, so that we can separate the
+> encoding info from the medium info.
 
-diff --git a/drivers/clk/qcom/lpassaudiocc-sc7280.c b/drivers/clk/qcom/lpassaudiocc-sc7280.c
-index 45e7264770866f929a3f4663c477330f0bf7aa84..b6439308926371891cc5f9a5e0d4e8393641560d 100644
---- a/drivers/clk/qcom/lpassaudiocc-sc7280.c
-+++ b/drivers/clk/qcom/lpassaudiocc-sc7280.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (c) 2021, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
-  */
- 
- #include <linux/clk-provider.h>
-@@ -713,14 +714,24 @@ static const struct qcom_reset_map lpass_audio_cc_sc7280_resets[] = {
- 	[LPASS_AUDIO_SWR_WSA_CGCR] = { 0xb0, 1 },
- };
- 
-+static const struct regmap_config lpass_audio_cc_sc7280_reset_regmap_config = {
-+	.name = "lpassaudio_cc_reset",
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.fast_io = true,
-+	.max_register = 0xc8,
-+};
-+
- static const struct qcom_cc_desc lpass_audio_cc_reset_sc7280_desc = {
--	.config = &lpass_audio_cc_sc7280_regmap_config,
-+	.config = &lpass_audio_cc_sc7280_reset_regmap_config,
- 	.resets = lpass_audio_cc_sc7280_resets,
- 	.num_resets = ARRAY_SIZE(lpass_audio_cc_sc7280_resets),
- };
- 
- static const struct of_device_id lpass_audio_cc_sc7280_match_table[] = {
--	{ .compatible = "qcom,sc7280-lpassaudiocc" },
-+	{ .compatible = "qcom,qcm6490-lpassaudiocc", .data = &lpass_audio_cc_reset_sc7280_desc },
-+	{ .compatible = "qcom,sc7280-lpassaudiocc", .data = &lpass_audio_cc_sc7280_desc },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, lpass_audio_cc_sc7280_match_table);
-@@ -752,13 +763,17 @@ static int lpass_audio_cc_sc7280_probe(struct platform_device *pdev)
- 	struct regmap *regmap;
- 	int ret;
- 
-+	desc = device_get_match_data(&pdev->dev);
-+
-+	if (desc->num_resets)
-+		return qcom_cc_probe_by_index(pdev, 1, desc);
-+
- 	ret = lpass_audio_setup_runtime_pm(pdev);
- 	if (ret)
- 		return ret;
- 
- 	lpass_audio_cc_sc7280_regmap_config.name = "lpassaudio_cc";
- 	lpass_audio_cc_sc7280_regmap_config.max_register = 0x2f000;
--	desc = &lpass_audio_cc_sc7280_desc;
- 
- 	regmap = qcom_cc_map(pdev, desc);
- 	if (IS_ERR(regmap)) {
-@@ -772,7 +787,7 @@ static int lpass_audio_cc_sc7280_probe(struct platform_device *pdev)
- 	regmap_write(regmap, 0x4, 0x3b);
- 	regmap_write(regmap, 0x8, 0xff05);
- 
--	ret = qcom_cc_really_probe(&pdev->dev, &lpass_audio_cc_sc7280_desc, regmap);
-+	ret = qcom_cc_really_probe(&pdev->dev, desc, regmap);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to register LPASS AUDIO CC clocks\n");
- 		goto exit;
+So I did give it a go, but it turns out to be much more complex than
+expected... The _type information from definitions like :
 
--- 
-2.45.2
+__DEFINE_LINK_MODE_PARAMS(10000, KX4, Full, K),
 
+(here _type is KX4) can't really be split into the individual
+attributes <Medium, Encoding, Lanes> without having some complex macro
+logic. This type is used to convert to actual linkmodes that already
+exist in the kernel :
+
+#define ETHTOOL_LINK_MODE(speed, type, duplex) \
+	ETHTOOL_LINK_MODE_ ## speed ## base ## type ## _ ## duplex ## _BIT
+
+Say we want to generate the _type from <Medium, Encoding, Lanes> with a
+macro, we have to cover all the weird cases :
+
+1000BaseT =3D> No encoding, no lanes
+10000BaseKX4 =3D> K medium, X encoding, 4 lanes
+10000BeseKX =3D> K medium, X encding, no lanes (which means 1 lane)
+1000BaseX =3D> Just encoding
+100000BaseLR4_ER4 =3D> One link mode that applies for 2 mediums ?
+
+While doable, this will probably end-up more complex and hard to
+maintain than re-specifying the medium :(
+
+Maxime
