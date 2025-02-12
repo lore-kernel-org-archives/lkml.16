@@ -1,63 +1,134 @@
-Received: from mail-sh.amlogic.com (unknown [58.32.228.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F433D3B8
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 02:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.32.228.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E5F8F77;
+	Wed, 12 Feb 2025 02:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739326903; cv=none; b=aM/wvxVrujF/8fR13ZUZotQMnbvRUti3k/z/o+kmTIyJ2h82GzLXsEnxMUC/mA0zuXOsIV2PDn8wTiEAHfwfzmTbfWcHZGzpFDKHqrYw0S1M76o4pQ2xN77nUD2T7D/+Ld/vZCxRRmnS23BoOo1JQyxx9fCe+bEfoww6pM3voc4=
+	t=1739326928; cv=none; b=NGt9smh8t/jpjqLYXkJgPJimwsf9rzylznWsVQ9FP5wHQti3+M5TNfA8POAvPxRbPf/PFZBdvWsFiaKNOMXwiNkzxw4ByaT2vVIlZnaQ1TOAiETx0dPO6j69O+i2d1fPgyC7WwLDv1MOhDuOb/Ly54sAAcMxza7R96/09EVmo0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739326903; c=relaxed/simple;
-	bh=UgwC4QNIm2wYd98Mrn0myQ1ps/3mn0ecSPsnhG0Dywk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Nsp9lZg1/X1HmUpWjFNFmdJex8Uvi4cNh2qrbnpM1pR9+ISf3frR5p6K+6JYcf2v70QgbsVfSXwGIA8qJmiuBFOi/tjJ2Hz8NbgnoLgb2dIbgY4GDmF+45HoyXOWnHrq5hdct2QwrjNVn8fZhV2wGGa4huH1v8MvoziKhtw0KHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; arc=none smtp.client-ip=58.32.228.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
-Received: from walle01-sz.amlogic.com (10.28.11.73) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.2507.39; Wed, 12 Feb 2025
- 10:06:32 +0800
-From: Shengken Lin <shengken.lin@amlogic.com>
-To: <akpm@linux-foundation.org>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, Shengken Lin
-	<shengken.lin@amlogic.com>
-Subject: [PATCH] mm: Remove redundant PageMemcgKmem(page) call
-Date: Wed, 12 Feb 2025 10:06:27 +0800
-Message-ID: <20250212020627.3461237-1-shengken.lin@amlogic.com>
-X-Mailer: git-send-email 2.41.0
+	s=arc-20240116; t=1739326928; c=relaxed/simple;
+	bh=PNtMqBcAsc1rDrfqAyOraDXzsZcTf5BbU8fLA+q2i7I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iT2D/uOGs0zXAs4ni56n/kpggfCYZxNdGoqsxMy0DjsH18tzFTIbrucUwTOUK4O94QVNiAxIKo18/T1WVOagk6ChHKcjAcpc5UlxUoZwPhZt7ffOodGZJG1ZWPPVKn7Dd9YdCXEOM+lduBwKghTSGNfsfE5TWO7gMBs+802Be1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bpQu2C9+; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bpQu2C9+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739326927; x=1770862927;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PNtMqBcAsc1rDrfqAyOraDXzsZcTf5BbU8fLA+q2i7I=;
+  b=bpQu2C9+DCjm9gCG8VGUkL3LzJASwPjF77xCDlhAnrcl8dLYcptYVmg6
+   c2W9N0wwMYapS5R3WbqV426fFFSx2V46BcNf0Vf7gSDXk8VFULXuMH26z
+   sFD18y3jlV5IhwyOAzQzqOap+hhUAc3bx/tsx0XbLeiqcybONBron4ZVK
+   EQkCUMKCJpiZhI/lYygnc+kkCpIPq+D1nVcasonoSWhAwNnn/Xo+l/W9/
+   nAIOTt6I7NiugHE7kJVBJXl/PbEqQtRm9zlrUOnm+qRKGkGxkhsehXFxs
+   Ar8sj969KpUvBAl3hZivPjsHRDvcw+VbHinyS38O0XpdIcTP5Zu13bax7
+   g==;
+X-CSE-ConnectionGUID: Pb7ZV8plQD2Kyj0P5mi6Zw==
+X-CSE-MsgGUID: JsRFjdw+RMuheJ5nKzzkUw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51398364"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="51398364"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 18:22:06 -0800
+X-CSE-ConnectionGUID: 8DVA/s8dSbKfdbiRiKO8ZQ==
+X-CSE-MsgGUID: QtzzeT3pQBeAccp+Z1BFtw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="149866516"
+Received: from unknown (HELO [10.238.0.51]) ([10.238.0.51])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 18:21:16 -0800
+Message-ID: <a771f116-d70e-4f52-ada3-8422e1f45acf@linux.intel.com>
+Date: Wed, 12 Feb 2025 10:21:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/8] KVM: TDX: Add a place holder for handler of TDX
+ hypercalls (TDG.VP.VMCALL)
+To: Sean Christopherson <seanjc@google.com>, Chao Gao <chao.gao@intel.com>
+Cc: pbonzini@redhat.com, kvm@vger.kernel.org, rick.p.edgecombe@intel.com,
+ kai.huang@intel.com, adrian.hunter@intel.com, reinette.chatre@intel.com,
+ xiaoyao.li@intel.com, tony.lindgren@intel.com, isaku.yamahata@intel.com,
+ yan.y.zhao@intel.com, linux-kernel@vger.kernel.org
+References: <20250211025442.3071607-1-binbin.wu@linux.intel.com>
+ <20250211025442.3071607-4-binbin.wu@linux.intel.com>
+ <Z6sNVHulm4Lovz2T@intel.com> <Z6vhTGHKIC_hK5z4@google.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <Z6vhTGHKIC_hK5z4@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-The function of PageMemcgKmem(page) is the same as that of
-folio_memcg_kmem(folio).
 
-Since __memcg_kmem_uncharge_page already uses folio_memcg_kmem to check
-if a folio has been uncharged, calling PageMemcgKmem(page) before
-__memcg_kmem_uncharge_page is redundant.
 
-Signed-off-by: Shengken Lin <shengken.lin@amlogic.com>
----
- mm/page_alloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2/12/2025 7:46 AM, Sean Christopherson wrote:
+> On Tue, Feb 11, 2025, Chao Gao wrote:
+>>> @@ -810,6 +829,7 @@ static bool tdx_guest_state_is_invalid(struct kvm_vcpu *vcpu)
+>>> static __always_inline u32 tdx_to_vmx_exit_reason(struct kvm_vcpu *vcpu)
+>>> {
+>>> 	struct vcpu_tdx *tdx = to_tdx(vcpu);
+>>> +	u32 exit_reason;
+>>>
+>>> 	switch (tdx->vp_enter_ret & TDX_SEAMCALL_STATUS_MASK) {
+>>> 	case TDX_SUCCESS:
+>>> @@ -822,7 +842,21 @@ static __always_inline u32 tdx_to_vmx_exit_reason(struct kvm_vcpu *vcpu)
+>>> 		return -1u;
+>>> 	}
+>>>
+>>> -	return tdx->vp_enter_ret;
+>>> +	exit_reason = tdx->vp_enter_ret;
+>>> +
+>>> +	switch (exit_reason) {
+>>> +	case EXIT_REASON_TDCALL:
+>>> +		if (tdvmcall_exit_type(vcpu))
+>>> +			return EXIT_REASON_VMCALL;
+>>> +
+>>> +		if (tdvmcall_leaf(vcpu) < 0x10000)
+>> Can you add a comment for the hard-coded 0x10000?
+> Or better yet, a #define of some kind (with a comment ;-) ).
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 579789600a3c..5a76760de495 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1055,7 +1055,7 @@ __always_inline bool free_pages_prepare(struct page *page,
- 	trace_mm_page_free(page, order);
- 	kmsan_free_page(page, order);
+As Chao pointed out, we should convert the leaves defined in the GHCI spec
+and supported in KVM only.  Specific leaf numbers will be used instead of
+comparing to 0x10000.
 
--	if (memcg_kmem_online() && PageMemcgKmem(page))
-+	if (memcg_kmem_online())
- 		__memcg_kmem_uncharge_page(page, order);
+I plan to change it to:
 
- 	/*
---
-2.34.1
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index 2b24f50ad0ee..af8276402212 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -920,11 +920,17 @@ static __always_inline u32 tdx_to_vmx_exit_reason(struct kvm_vcpu *vcpu)
+                 if (tdvmcall_exit_type(vcpu))
+                         return EXIT_REASON_VMCALL;
+
+-               if (tdvmcall_leaf(vcpu) < 0x10000) {
+-                       if (tdvmcall_leaf(vcpu) == EXIT_REASON_EPT_VIOLATION)
++               switch(tdvmcall_leaf(vcpu)) {
++                       case EXIT_REASON_EPT_VIOLATION:
+                                 return EXIT_REASON_EPT_MISCONFIG;
+-
+-                       return tdvmcall_leaf(vcpu);
++                       case EXIT_REASON_CPUID:
++                       case EXIT_REASON_HLT:
++                       case EXIT_REASON_IO_INSTRUCTION:
++                       case EXIT_REASON_MSR_READ:
++                       case EXIT_REASON_MSR_WRITE:
++                               return tdvmcall_leaf(vcpu);
++                       default:
++                               break;
+                 }
+                 break;
+         case EXIT_REASON_EPT_MISCONFIG:
+
+
+
 
