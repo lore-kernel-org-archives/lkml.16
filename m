@@ -1,124 +1,177 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B79271828;
-	Wed, 12 Feb 2025 09:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA741E282D
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739353556; cv=none; b=CEkGGI5aPGZi88bAA2lCby4q9oIGdf3Dx5bPs7QT94KJz5TBWHeIRM4dpcfqYydGZ+1DMx0kOgwaQrpmKBF/4KyXLYfIyj3AAIS7YcRqH9VjR3sBULvN1NT9cQQJaI1J/W2IOeDKXsoshsxgmqU0rIKxQOzqvV9fGCcnhBQUvAQ=
+	t=1739353558; cv=none; b=QGvvuDrcxVmcxKFPmzNJUW1cgU2JawrbQq1dubJ1qM5hFOLNJ2JaahQZ+bdUaPYhhO9TemrKxL8L72su92//0mO2EWQw7pKygyiLdHT5QQKF+8/esKzARiIaTR6HHw5C4I3izrrA6Omr1ybGTMwfeu4+Vy+CK90zDET4G9dzqKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739353556; c=relaxed/simple;
-	bh=kAK1JNEXBVI90rtvbzvhelzR8j2Kk8vnxGVJn1p7bBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MkvZ842eExKM+/dwU4NVFHBH6MRwW/HezjwdRPzcWTj9AoSKEZItvVZ8Y0gC3+yczqg6S8845YiSdiiOWmMhAeAdGn/C5JaDdUOgUdksuWDbVcmW35grOAF5x5hO5bo93LFwL69NbvQspKkoJJ/KwUHgPwpqgV0tmcVS69gemCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mHammSSf; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1739353558; c=relaxed/simple;
+	bh=vnx2AdOW50HMFVLSHH43ey2HhNMvsX6+y6C07WIJ1a8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rqP3pwR8HGUgtc9/txEU8DHqzGixT5Am4eHMB2B0d4ajzfc+oyOpUbqt1tPm3JtS6SAgYXnWNn//g290zk+kexyOcJuupibCX6hmr2z+0A8Iwx7NjEv4RrelB36yVr4J2rO6uq/m3nsVfebkinOvuxaZTS94yVl9V4CVyTvBnls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=wozjY8AU; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mHammSSf"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E398A432FA;
-	Wed, 12 Feb 2025 09:45:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739353551;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CfitNOlVMCBM5pFcbQFIlvndtGb2TiK3zUMFNWZwgDY=;
-	b=mHammSSfAxD36lSKrqFlgQ0FxjGr0GSfooYA6WuHOPvHq9JQbumFr0Ho3U1Q8tbb9rmgj8
-	tzyPK6jPpwkd3G3gLk3e1NimGOsnqsuAFerXeIsRKeyGNl/6qLEg3wHBjMGJoqCzuNpIlu
-	gG5mm//6DtYFd517rnZxUZIplJuyLTrwTsT9S9iFmFmODq2DPfQlcrRjAFf7c3H6SKPIQo
-	cRNPcLf/EXG4VWiBv8ryfwFbhp9vR61Su+ehl48mzUydz6bja2p044wqlsDs8IPX5fY0d3
-	3VQ0BUcWlu/pehPCt64yUHk1WP1jizH/rz1hkKhC60ggLigUfumfX2WaRsFFZw==
-Date: Wed, 12 Feb 2025 10:45:49 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Luca Ceresoli
- <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [RFC PATCH 3/3] i2c: i2c-core-of: Handle i2c bus extensions
-Message-ID: <20250212104549.6b1d8781@bootlin.com>
-In-Reply-To: <71468d78-07aa-49b1-8b6d-3d98c6fc9893@kernel.org>
-References: <20250205173918.600037-1-herve.codina@bootlin.com>
-	<20250205173918.600037-4-herve.codina@bootlin.com>
-	<71468d78-07aa-49b1-8b6d-3d98c6fc9893@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="wozjY8AU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1739353556; x=1770889556;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=vnx2AdOW50HMFVLSHH43ey2HhNMvsX6+y6C07WIJ1a8=;
+  b=wozjY8AUp4C4ji5MH/LD3W6zvdyRYXd2Imbv9kcdypHDv9rxqqAQQvqk
+   8GHSLsJVyqA3wT3T+V1Z/OR/cyEG0VkXNvTIT1WowSi85Wg4PPM+125cY
+   BDqypNOT0B6VtvEjth8gBQi2O9gj0yfHKnHSOTNpZ+M6t1WwtwqEwYVtS
+   XgGj2c52fmwX1+WFxLy/6k+87smUIAWjdnuwcxCQ7TyJWiYF8sfFOgXzk
+   jOy6cM0ZkfBg37kdxj7S2D/TqhB8TH+0iAsb0JvPEtLDA4p6tM0zXd9Es
+   njmr6J3YrsWCjck7u3Bo6crzYTXMKMKrflm5B09xORbkzjszutt+GP2ZV
+   g==;
+X-CSE-ConnectionGUID: 8MuVtLdRQ2uCYR3xxsN4MA==
+X-CSE-MsgGUID: poXRycaeTVyvkAHRJFv8uw==
+X-IronPort-AV: E=Sophos;i="6.13,279,1732604400"; 
+   d="scan'208";a="37585559"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Feb 2025 02:45:55 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 12 Feb 2025 02:45:14 -0700
+Received: from che-lt-i67131.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Wed, 12 Feb 2025 02:45:08 -0700
+From: Manikandan Muralidharan <manikandan.m@microchip.com>
+To: <sam@ravnborg.org>, <bbrezillon@kernel.org>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <lee@kernel.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Dharma Balasubiramani <dharma.b@microchip.com>, Manikandan Muralidharan
+	<manikandan.m@microchip.com>
+Subject: [PATCH v2 3/3] drm: atmel-hlcdc: set LVDS PLL clock rate for LVDS Displays
+Date: Wed, 12 Feb 2025 15:14:49 +0530
+Message-ID: <20250212094449.109622-3-manikandan.m@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250212094449.109622-1-manikandan.m@microchip.com>
+References: <20250212094449.109622-1-manikandan.m@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegfeehhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtvdefvefgiedvtedvgedvgeelhfejkeejgefgvdfguedtudeiiedtieejffduhfenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehkrhiikheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfihsrgdorhgvnhgvshgrshesshgrnhhgqdgvnhhgihhnvggvrhhinhhgrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnv
- ghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain
 
-Hi Krzysztof,
+From: Dharma Balasubiramani <dharma.b@microchip.com>
 
-On Wed, 12 Feb 2025 06:54:19 +0100
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
+The LVDS PLL clock runs at 7 times the panel pixel clock.
+For LVDS displays, the PLL clock rate is set based on the
+panel pixel clock, eliminating the need for the assigned-clock-rates
+Device Tree property for lvds_pll_clk in the LCD node.
 
-> On 05/02/2025 18:39, Herve Codina wrote:
-> >  
-> >  	dev_dbg(&adap->dev, "of_i2c: walking child nodes from %pOF\n", bus);
-> >  
-> > -	/* Register device directly attached to this bus */
-> > +	/*
-> > +	 * Register device directly described in this bus node before looking
-> > +	 * at extensions.
-> > +	 */
-> >  	for_each_available_child_of_node(bus, node) {
-> > +		/* Filter out extension node */
-> > +		if (of_node_name_eq(node, "i2c-bus-extension"))  
-> 
-> Where is the ABI documented?
-> 
-> > +			continue;
-> > +
-> >  		if (of_node_test_and_set_flag(node, OF_POPULATED))
-> >  			continue;
-> >  
-> > @@ -103,6 +110,23 @@ static void of_i2c_register_children(struct i2c_adapter *adap,
-> >  			of_node_clear_flag(node, OF_POPULATED);
-> >  		}
-> >  	}
-> > +
-> > +	/* Look at extensions */
-> > +	for_each_available_child_of_node(bus, node) {
-> > +		if (!of_node_name_eq(node, "i2c-bus-extension"))
-> > +			continue;
-> > +
-> > +		extension = of_parse_phandle(node, "i2c-bus", 0);  
-> 
-> And this?
-> 
-> > +		if (!extension)
-> > +			continue;
-> > +  
+Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+---
+Changes in v2:
+- Rephrase commit message and comment block
+---
+ .../gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c    | 48 ++++++++++++++++---
+ 1 file changed, 42 insertions(+), 6 deletions(-)
 
-I know the binding is not present in this RFC series.
+diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+index 0e709047369a..cf4f9ccd81a4 100644
+--- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
++++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+@@ -99,9 +99,15 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
+ 		drm_connector_list_iter_end(&iter);
+ 	}
+ 
+-	ret = clk_prepare_enable(crtc->dc->hlcdc->sys_clk);
+-	if (ret)
+-		return;
++	if (crtc->dc->hlcdc->lvds_pll_clk) {
++		ret = clk_prepare_enable(crtc->dc->hlcdc->lvds_pll_clk);
++		if (ret)
++			return;
++	} else {
++		ret = clk_prepare_enable(crtc->dc->hlcdc->sys_clk);
++		if (ret)
++			return;
++	}
+ 
+ 	vm.vfront_porch = adj->crtc_vsync_start - adj->crtc_vdisplay;
+ 	vm.vback_porch = adj->crtc_vtotal - adj->crtc_vsync_end;
+@@ -186,7 +192,10 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
+ 			   ATMEL_XLCDC_DPI : ATMEL_HLCDC_MODE_MASK),
+ 			   cfg);
+ 
+-	clk_disable_unprepare(crtc->dc->hlcdc->sys_clk);
++	if (crtc->dc->hlcdc->lvds_pll_clk)
++		clk_disable_unprepare(crtc->dc->hlcdc->lvds_pll_clk);
++	else
++		clk_disable_unprepare(crtc->dc->hlcdc->sys_clk);
+ }
+ 
+ static enum drm_mode_status
+@@ -242,7 +251,11 @@ static void atmel_hlcdc_crtc_atomic_disable(struct drm_crtc *c,
+ 				    10, 1000))
+ 		dev_warn(dev->dev, "Atmel LCDC status register CLKSTS timeout\n");
+ 
+-	clk_disable_unprepare(crtc->dc->hlcdc->sys_clk);
++	if (crtc->dc->hlcdc->lvds_pll_clk)
++		clk_disable_unprepare(crtc->dc->hlcdc->lvds_pll_clk);
++	else
++		clk_disable_unprepare(crtc->dc->hlcdc->sys_clk);
++
+ 	pinctrl_pm_select_sleep_state(dev->dev);
+ 
+ 	pm_runtime_allow(dev->dev);
+@@ -255,15 +268,38 @@ static void atmel_hlcdc_crtc_atomic_enable(struct drm_crtc *c,
+ {
+ 	struct drm_device *dev = c->dev;
+ 	struct atmel_hlcdc_crtc *crtc = drm_crtc_to_atmel_hlcdc_crtc(c);
++	struct drm_display_mode *adj = &c->state->adjusted_mode;
+ 	struct regmap *regmap = crtc->dc->hlcdc->regmap;
+ 	unsigned int status;
++	int ret;
+ 
+ 	pm_runtime_get_sync(dev->dev);
+ 
+ 	pm_runtime_forbid(dev->dev);
+ 
+ 	pinctrl_pm_select_default_state(dev->dev);
+-	clk_prepare_enable(crtc->dc->hlcdc->sys_clk);
++
++	if (crtc->dc->hlcdc->lvds_pll_clk) {
++		/*
++		 * For LVDS displays, retrieve the pixel clock from the panel
++		 * and set the LVDS PLL clock rate accordingly.
++		 * According to the datasheet,the LVDS PLL clock is 7 times the pixel clock.
++		 */
++		ret = clk_set_rate(crtc->dc->hlcdc->lvds_pll_clk,
++				   (adj->clock * 7 * 1000));
++		if (ret) {
++			dev_err(dev->dev, "Failed to set LVDS PLL clk rate: %d\n", ret);
++			return;
++		}
++
++		ret = clk_prepare_enable(crtc->dc->hlcdc->lvds_pll_clk);
++		if (ret)
++			return;
++	} else {
++		ret = clk_prepare_enable(crtc->dc->hlcdc->sys_clk);
++		if (ret)
++			return;
++	}
+ 
+ 	regmap_write(regmap, ATMEL_HLCDC_EN, ATMEL_HLCDC_PIXEL_CLK);
+ 	if (regmap_read_poll_timeout(regmap, ATMEL_HLCDC_SR, status,
+-- 
+2.25.1
 
-As I mentioned in my cover letter, the binding that needs to be updated is
-available in dt-schema repo [0].
-
-When the binding is be accepted in dt-schema repo, I will not be able to
-change it and because two repos are involved, I cannot send the binding and
-the implementation in the same series.
-
-Before sending a patch to update the binding in dt-schema repo, I would
-like first to discuss the proposed i2c bus extension idea in terms of:
-  1) DT properties naming and purpose
-  2) implementation
-
-[0] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/i2c/i2c-controller.yaml
-
-Best regards,
-Hervé
