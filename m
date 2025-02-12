@@ -1,101 +1,58 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271E520B80A
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 12:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3660271828;
+	Wed, 12 Feb 2025 12:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739362297; cv=none; b=ZYWvxgNfyUGEVAHlfqpmCxaHAKDicqnRZQjGDdkJ5sMFektBsiZf6F1dD40DnFVnQsq3b0rstiKTpwywHZhWZDvHheervEiy76jGZbZBmN9hbafRXY2V/qeXZtmDIEqWyPe7XuriE9d/OCzCTgLvCpBRwES+eeXBONWqXlG4KOI=
+	t=1739362474; cv=none; b=MAcq854jN5kS3Qkimo+cm2z/wHlnaDuxzFJpU+0mNz+kfQbEm2tyhAJVbkWvQzq4cBLw6+VjlOYUKasJJYOlmhd1Rsj9pWNQvlocxYgOiGLlGSzFHb0DM/X6IiBLfXMAaEeNSqGyja40JN7aurYVzGaU+E/agdhdm8Sq4ebSSaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739362297; c=relaxed/simple;
-	bh=nJAjT5/s+Bk+T68CHU79IOZD9HbJfSD+dB61v+xr4Gg=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=c22ZgWXak6mXU2qPMCVWXMY+ybwEJlKuvk0uHHJkxSPQ3jLhCQQS+QlbisjZnYmcofinrV3Snrq5t90V4fvL+4r8TFWbZl4CswKBAUv2VY0jz4AY/8zZ7MN+4Qu7N2uv1UNApzO5vX80GpeejydlJQv5VEgAC/3w5+YuBMJo9Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=psyZcKpb; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739362474; c=relaxed/simple;
+	bh=8w67IvdnCJouPhy6jKHPyJZ9UV+ATFoPmD/iXb8EI4g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=upavpt18ZmOChLO0ySndQLPX5X2BIo9Cg8Ergoq6DygE1D3y3zsPi/4ZD8c+60L07BOiXfbIuEYw3ypQ0uxRYwIygp6CfZ3fWhSwov4xDNTSFOrikpZWZyiqGyktlNw7wgR0UxdGb+uFYiGW4DyGBsA3CavpqeZRMX8nsLXlT+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RIkeIoQG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="psyZcKpb"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739362283;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pD1APsDwrUWqekelr1RRXUMoMxq1F8JT/FnOwqPMeBo=;
-	b=psyZcKpbhx3ingRfbaLiu2ViVdK7x+sGbNgzRyVHRzlUBuc1GKZ5n0VzyRZaJajsfCeaWO
-	z4LiAo+uf6ZrKu6Tus9m406QhdU/O8Sw2hP2ZtpIAs5yoRLsgrylzgV2JzpV1dXVNCy+p8
-	yBUIjFSfuwYJlhZ9zknbMludF2f4j34=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RIkeIoQG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EB01C4CEDF;
+	Wed, 12 Feb 2025 12:14:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739362473;
+	bh=8w67IvdnCJouPhy6jKHPyJZ9UV+ATFoPmD/iXb8EI4g=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=RIkeIoQGL20vye961PFtOAlRnapPOx9l9+9XhKisexERl5daeSaW9hS63jwnCwZvS
+	 elDfQtTZzif2s/tAwqSY5OK0Uj7QxOkECAv+E3SE736HPZL7sAgN87xtOOccPYGoKV
+	 hBgT4pnPsc3O/12HH37YuawoX+uci7M0TDZoLwpyItTqDKFx3jSN1+EgrUXt7nRhJT
+	 DSmQm/sSoEgGlhknP2t9Ju4WrLSlaxbp9sMpzOSFPs3uWcJ+NlEyHi9bflsS1ffp5u
+	 Qxk/w4QCiPJFX1/QuWtMeuQvJ0GjOrl7SKiFBd8aoxNzTM12ouBUlYC7frwJ9GPkkp
+	 PFjsvhRB5nwzA==
+Message-ID: <17ad6782ac79c3ca6b403c220b2794adb6e8ad78.camel@kernel.org>
+Subject: Re: [PATCH] virtio: console: Use str_yes_no() helper in
+ port_debugfs_show()
+From: Amit Shah <amit@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Wed, 12 Feb 2025 13:14:30 +0100
+In-Reply-To: <20250212114841.74650-2-thorsten.blum@linux.dev>
+References: <20250212114841.74650-2-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
-Subject: Re: [PATCH] proc: Use str_yes_no() helper in proc_pid_ksm_stat()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <20250212120451.GO1977892@ZenIV>
-Date: Wed, 12 Feb 2025 13:11:08 +0100
-Cc: Christian Brauner <brauner@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jeff Layton <jlayton@kernel.org>,
- Adrian Ratiu <adrian.ratiu@collabora.com>,
- xu xin <xu.xin16@zte.com.cn>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Felix Moessbauer <felix.moessbauer@siemens.com>,
- linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <220DFA78-0A12-4F46-B778-B331A7F2841A@linux.dev>
-References: <20250212115954.111652-2-thorsten.blum@linux.dev>
- <20250212120451.GO1977892@ZenIV>
-To: Al Viro <viro@zeniv.linux.org.uk>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
 
-On 12. Feb 2025, at 13:04, Al Viro wrote:
-> On Wed, Feb 12, 2025 at 12:59:52PM +0100, Thorsten Blum wrote:
->> Remove hard-coded strings by using the str_yes_no() helper function.
+On Wed, 2025-02-12 at 12:48 +0100, Thorsten Blum wrote:
+> Remove hard-coded strings by using the str_yes_no() helper function.
 >=20
->> seq_printf(m, "ksm_merge_any: %s\n",
->> - test_bit(MMF_VM_MERGE_ANY, &mm->flags) ? "yes" : "no");
->> + str_yes_no(test_bit(MMF_VM_MERGE_ANY, &mm->flags)));
->> ret =3D mmap_read_lock_killable(mm);
->> if (ret) {
->> mmput(mm);
->> return ret;
->> }
->> seq_printf(m, "ksm_mergeable: %s\n",
->> - ksm_process_mergeable(mm) ? "yes" : "no");
->> + str_yes_no(ksm_process_mergeable(mm)));
->=20
-> Is that any more readable?  If anything, that might be better off with =
-something
-> like a printf modifier...
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+> =C2=A0drivers/char/virtio_console.c | 4 ++--
+> =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
 
-The helpers have other benefits (from include/linux/string_choices.h):
+Reviewed-by: Amit Shah <amit@kernel.org>
 
-/*
- * Here provide a series of helpers in the str_$TRUE_$FALSE format (you =
-can
- * also expand some helpers as needed), where $TRUE and $FALSE are their
- * corresponding literal strings. These helpers can be used in the =
-printing
- * and also in other places where constant strings are required. Using =
-these
- * helpers offers the following benefits:
- *  1) Reducing the hardcoding of strings, which makes the code more =
-elegant
- *     through these simple literal-meaning helpers.
- *  2) Unifying the output, which prevents the same string from being =
-printed
- *     in various forms, such as enable/disable, enabled/disabled, =
-en/dis.
- *  3) Deduping by the linker, which results in a smaller binary file.
- */
-
-Thanks,
-Thorsten=
