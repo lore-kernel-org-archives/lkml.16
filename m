@@ -1,120 +1,113 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD3CC148;
-	Wed, 12 Feb 2025 03:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFF727182B;
+	Wed, 12 Feb 2025 03:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739329680; cv=none; b=o108MTNVVFD10PQjgSkZMBuL6jScGae+AtOq6YRTM+KBQ+qzBsJJEeI6C7wW1sFQdSOcsghQLut37WMStV/01AkAMTj0E5l8D7E8n0ge/dUPeWrCPZyrrjE3NztcSQqV0KDwZAxoc8/GKrmTqxpz3+mH6jkW6GvNCXXEOGB2wFs=
+	t=1739329944; cv=none; b=NkZufyn76BxLPFwqZDFzyy6ZuUSN+bqeY9sSd041tafyHDW+WM0S/YCloAiBMSgpjI4MKC5VLQnkspFqe5o6hCMMf2osOc+/v2TiLZz91TutQjz0rwS0Sl6gl8VyLf8MH5hMUWhvoEKdu5+tVOwRxfvbfSLqUqk8z1cI/Cj9L18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739329680; c=relaxed/simple;
-	bh=jaIYd7cshqR/G5ETbAdsuBDEMdOgq06VwWSRJQs5sBw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JZXNTphVwl8lc7JzxTfEOvr7MYUFOkg0BfXlnS3wuMot1h2JYq7B7fghI1usMyq8HiNU34zLnCASj1SZmYQ5Qo3FoydJ3dIVHKK8ExVh/TM5KkDc7YmRxTarGPW5fd4zR28mzALGWbtciOPn3+hj94BQU31Rq9TVP/+PiOSTmhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Yt3CF69hCz4f3jqb;
-	Wed, 12 Feb 2025 11:07:37 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id E0AF01A0BD9;
-	Wed, 12 Feb 2025 11:07:53 +0800 (CST)
-Received: from hulk-vt.huawei.com (unknown [10.67.174.121])
-	by APP3 (Coremail) with SMTP id _Ch0CgDXKcSBEKxnbyc1Dg--.7428S2;
-	Wed, 12 Feb 2025 11:07:53 +0800 (CST)
-From: Chen Ridong <chenridong@huaweicloud.com>
-To: akpm@linux-foundation.org,
-	mhocko@kernel.org,
-	hannes@cmpxchg.org,
-	yosryahmed@google.com,
-	roman.gushchin@linux.dev,
-	shakeel.butt@linux.dev,
-	muchun.song@linux.dev,
-	davidf@vimeo.com,
-	vbabka@suse.cz,
-	mkoutny@suse.com,
-	paulmck@kernel.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	chenridong@huawei.com,
-	wangweiyang2@huawei.com
-Subject: [PATCH] mm/oom_kill: revert watchdog reset in global OOM process
-Date: Wed, 12 Feb 2025 02:57:07 +0000
-Message-Id: <20250212025707.67009-1-chenridong@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1739329944; c=relaxed/simple;
+	bh=hS0C6YuBmSuMaJvuGugmlUTvoT5Svl7GpzGy4fckWqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R1HATPnkBuZA+6x6/MIE0IvylEujGasbOZ2rAY4GWs0RQs6mrXroRTRIQo7vkBils/Asu3Pq4QtQRYvrvzx3MuxDRfK4BnOFZHyEVfAsbriw6lJm/UnMBg2crTS12GUpBCYiHJHGReUneHR9XtltPF/a3R0v4RuKwtLzL0Y5y38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JODFbWLt; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JODFbWLt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739329942; x=1770865942;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hS0C6YuBmSuMaJvuGugmlUTvoT5Svl7GpzGy4fckWqg=;
+  b=JODFbWLtGujXT+ErZoSzfN1WNJJN1kuPXD+FTFxee5RPZoajKt31K4nH
+   5lkkocFfO8LXKLsme/wy9sLBqczj2t18yz6JXSyWfT8PViJ9Pmkx9ILgg
+   pEwZgt2E7puoqnKmYw5nSMuJhYGAdpbSjL/ETPwotH6j1KEryAMaHdESv
+   k800oWWROMmrL264FEFvtjdAvnq5B4641/EhApBUe9FzN3LXMOax1gytt
+   ADE1Jf2L85Q8jcvr4FnOHeInwKxYk1QAXL6/JTEJEIBsQ6ig1PSEnS/Mj
+   Hocus2SfmLiFy7RNfBuNhsSSG4mX4VSV/eLanQN352VNUsprOlznifnyR
+   Q==;
+X-CSE-ConnectionGUID: +DgbPe7qRlO371EPWpXD9Q==
+X-CSE-MsgGUID: f8KqcM+0T9WBE4MKr2h+SQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="39992757"
+X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
+   d="scan'208";a="39992757"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 19:12:21 -0800
+X-CSE-ConnectionGUID: WZWEef/aS7WzUr1iw4fYBA==
+X-CSE-MsgGUID: bcGxCh1+TV2ZLtDPHxCwHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
+   d="scan'208";a="112681941"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 19:12:18 -0800
+Message-ID: <13d7d1ad-d631-436f-b1b6-a11a77e6660a@intel.com>
+Date: Wed, 12 Feb 2025 11:12:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgDXKcSBEKxnbyc1Dg--.7428S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KFy8Kry3Ww48GryrJw1fWFg_yoW8XF48pa
-	98ua4UK398J3Z8ZF47Aa4IvF17J395ZFW8JF9rK34FvwsxtFn2yrWIyr1aqryrAFWS9a4Y
-	vFs8Kr1xJrWavw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
-	n4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
-	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8
-	ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
-	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
-	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
-	7IUbmii3UUUUU==
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/8] KVM: x86: Have ____kvm_emulate_hypercall() read
+ the GPRs
+To: Binbin Wu <binbin.wu@linux.intel.com>, pbonzini@redhat.com,
+ seanjc@google.com, kvm@vger.kernel.org
+Cc: rick.p.edgecombe@intel.com, kai.huang@intel.com, adrian.hunter@intel.com,
+ reinette.chatre@intel.com, tony.lindgren@intel.com,
+ isaku.yamahata@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com,
+ linux-kernel@vger.kernel.org
+References: <20250211025442.3071607-1-binbin.wu@linux.intel.com>
+ <20250211025442.3071607-2-binbin.wu@linux.intel.com>
+ <de966c9c-54e4-4da2-8dd3-d23b59b279a3@intel.com>
+ <7abea257-7d83-40a2-8d56-c155593153f4@linux.intel.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <7abea257-7d83-40a2-8d56-c155593153f4@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Chen Ridong <chenridong@huawei.com>
+On 2/12/2025 9:32 AM, Binbin Wu wrote:
+> 
+> 
+> On 2/11/2025 6:23 PM, Xiaoyao Li wrote:
+>> On 2/11/2025 10:54 AM, Binbin Wu wrote:
+>>> Have ____kvm_emulate_hypercall() read the GPRs instead of passing them
+>>> in via the macro.
+>>>
+>>> When emulating KVM hypercalls via TDVMCALL, TDX will marshall 
+>>> registers of
+>>> TDVMCALL ABI into KVM's x86 registers to match the definition of KVM
+>>> hypercall ABI _before_ ____kvm_emulate_hypercall() gets called. 
+>>> Therefore,
+>>> ____kvm_emulate_hypercall() can just read registers internally based 
+>>> on KVM
+>>> hypercall ABI, and those registers can be removed from the
+>>> __kvm_emulate_hypercall() macro.
+>>>
+>>> Also, op_64_bit can be determined inside ____kvm_emulate_hypercall(),
+>>> remove it from the __kvm_emulate_hypercall() macro as well.
+>>
+>> After this patch, __kvm_emulate_hypercall() becomes superfluous.
+>> we can just put the logic to call the "complete_hypercall" into 
+>> ____kvm_emulate_hypercall() and rename it to __kvm_emulate_hypercall()
+>>
+>>
+> According to the commit message of
+> "KVM: x86: Refactor __kvm_emulate_hypercall() into a macro":
+> "Rework __kvm_emulate_hypercall() into a macro so that completion of
+> hypercalls that don't exit to userspace use direct function calls to the
+> completion helper, i.e. don't trigger a retpoline when RETPOLINE=y."
 
-Unlike memcg OOM, which is relatively common, global OOM events are rare
-and typically indicate that the entire system is under severe memory
-pressure. The commit ade81479c7dd ("memcg: fix soft lockup in the OOM
-process") added the touch_softlockup_watchdog in the global OOM handler to
-suppess the soft lockup issues. However, while this change can suppress
-soft lockup warnings, it does not address RCU stalls, which can still be
-detected and may cause unnecessary disturbances. Simply remove the
-modification from the global OOM handler.
+I see.
 
-Fixes: ade81479c7dd ("memcg: fix soft lockup in the OOM process")
-Signed-off-by: Chen Ridong <chenridong@huawei.com>
----
- mm/oom_kill.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+I thought the purpose of introducing the macro was for TDX usage. My 
+fault that didn't checking the commit message of that change.
 
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index 25923cfec9c6..2d8b27604ef8 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -44,7 +44,6 @@
- #include <linux/init.h>
- #include <linux/mmu_notifier.h>
- #include <linux/cred.h>
--#include <linux/nmi.h>
- 
- #include <asm/tlb.h>
- #include "internal.h"
-@@ -431,15 +430,10 @@ static void dump_tasks(struct oom_control *oc)
- 		mem_cgroup_scan_tasks(oc->memcg, dump_task, oc);
- 	else {
- 		struct task_struct *p;
--		int i = 0;
- 
- 		rcu_read_lock();
--		for_each_process(p) {
--			/* Avoid potential softlockup warning */
--			if ((++i & 1023) == 0)
--				touch_softlockup_watchdog();
-+		for_each_process(p)
- 			dump_task(p, oc);
--		}
- 		rcu_read_unlock();
- 	}
- }
--- 
-2.34.1
+It makes sense for retpoline reason.
+
+> So I kept the macro.
 
