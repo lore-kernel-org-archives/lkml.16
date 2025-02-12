@@ -1,138 +1,192 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CEB1205E0D;
-	Wed, 12 Feb 2025 09:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AD820ADC7
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739352999; cv=none; b=H8WV7vKH3bK+OvzwzakiZGoDNyqbIKNX/+Bf2CAa8OpJXsO9F/DBrt6OOOs9ntu8HS+LEK+tQr28pt7x1MLUi6b6Ss5qI/JbMuN9hX7o/b2hQvps6Fhqv9F18POFgZ5QK3qutC750E2lJ94rjlZW4tCGoZhiCvY+hPOLpiGnVtw=
+	t=1739353001; cv=none; b=m6Ik/Yi1chtpHNvySJajSnzU8iDK27GQQOfB0HgcuvsmItOfzzj3B8W/t4Ew8fE0YHJj6bjr/qQofCSZoUXBk5eo8pcSvDyJemA0rPRuV3H8dWIuoOFNJsNLiskuKMx0+8izbprnBu29fxlDbxbcbqLv/AXbQFpcgh86peE+Uhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739352999; c=relaxed/simple;
-	bh=kBff/CeZOD7kxT3LNbE6M8lpQFzkn1RzKnS2nA15g+M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EQYz4PTO02cmJ2nRNkxTcSqviNl/il7BO2HsCTu6LXrZJ+kGu6B+rnGv4H3TRxj+NTppChUZiGjDXR6uAWdUmXCGHEd7hkoGAT6mgpwaMcvkiOXOvbr0t3YjSIHkX7jBojzO/DDJyjTUTZNbWC5OqM3XZowJuKfHAOKrAYdXuh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=PY6H+C1w; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="PY6H+C1w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=E49mb
-	M8Y56MagZCzjfVLDOWNTUIqbd/u7olBPvb7dv0=; b=PY6H+C1wTH948HCsVaQ2D
-	Ud2InDLN9wC8gpamSiJfdOX/JrlVKnvkMQxwtn5ozj9rGTURWtnZk0T7FTBnpbId
-	LE5uAZVmDnuNlW9KVeZOkwUmnHDZZzUj+MaPCd6LDiHDFLW8VzuEnr3tNRwvJwra
-	gguPS2eaFOEx7/YezWvvZo=
-Received: from ProDesk.. (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wBnG9Fja6xn14FuLQ--.33700S4;
-	Wed, 12 Feb 2025 17:35:37 +0800 (CST)
-From: Andy Yan <andyshrk@163.com>
-To: heiko@sntech.de
-Cc: hjc@rock-chips.com,
-	krzk+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	derek.foreman@collabora.com,
-	detlev.casanova@collabora.com,
-	daniel@fooishbar.org,
-	robh@kernel.org,
-	sebastian.reichel@collabora.com,
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v14 02/13] drm/rockchip: vop2: Rename TRANSFORM_OFFSET to TRANSFORM_OFFS
-Date: Wed, 12 Feb 2025 17:34:57 +0800
-Message-ID: <20250212093530.52961-3-andyshrk@163.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250212093530.52961-1-andyshrk@163.com>
-References: <20250212093530.52961-1-andyshrk@163.com>
+	s=arc-20240116; t=1739353001; c=relaxed/simple;
+	bh=fJ0oQVoe3v+GZGtKDqY/m+T+upxz/j86dCJyFecV9bQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bYYF+mgQQWnFGMDYmLOZaLCh1zZjLVP1TQd+nuvqpOmEHLbEyorcChc5nbudBGaaonW8QgqSrzjH3b4vb4QWKR6kwu5BbmrNYVe1omhbCpgEZXcZDJuRwyEdh6MhiZkd1fLcAJXa0bp+1MBTgcYmICKk9tsXqPx6/YqbmFELgio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1ti9AB-0003qj-6V; Wed, 12 Feb 2025 10:36:11 +0100
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1ti9AA-000Z2U-1y;
+	Wed, 12 Feb 2025 10:36:10 +0100
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1ti9AA-00AzSK-1c;
+	Wed, 12 Feb 2025 10:36:10 +0100
+Date: Wed, 12 Feb 2025 10:36:10 +0100
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 1/3] ASoC: dt-bindings: support imx95's CM7 core
+Message-ID: <20250212093610.x4ixrackmn3u2xrf@pengutronix.de>
+References: <20250211225808.3050-1-laurentiumihalcea111@gmail.com>
+ <20250211225808.3050-2-laurentiumihalcea111@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBnG9Fja6xn14FuLQ--.33700S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCrWxKw4rJFWDCryxAr43KFg_yoWrCr18pr
-	W3JayDWF4UKFs2qFWkAr15AF48Jan2k3yfGa9xJrnIqFyaga4DWw12ka4UJr47ta4I9FZ2
-	q3saqrW7urW3tr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j1jgxUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0gzxXmesX27xyQAAsz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211225808.3050-2-laurentiumihalcea111@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-From: Andy Yan <andy.yan@rock-chips.com>
+On 25-02-11, Laurentiu Mihalcea wrote:
+> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> 
+> Add binding for imx95's CM7 core, used for audio processing.
+> Additionally, introduce a common binding for NXP audio processors with
+> Sound Open Firmware (SOF) support.
+> 
+> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> ---
+>  .../bindings/sound/fsl,imx95-cm7-sof.yaml     | 64 +++++++++++++++++++
+>  .../bindings/sound/fsl,sof-cpu.yaml           | 27 ++++++++
+>  2 files changed, 91 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,imx95-cm7-sof.yaml
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,sof-cpu.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,imx95-cm7-sof.yaml b/Documentation/devicetree/bindings/sound/fsl,imx95-cm7-sof.yaml
+> new file mode 100644
+> index 000000000000..f00ae3219e15
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/fsl,imx95-cm7-sof.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/fsl,imx95-cm7-sof.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP imx95 CM7 core
+> +
+> +maintainers:
+> +  - Daniel Baluta <daniel.baluta@nxp.com>
+> +
+> +description: NXP imx95 CM7 core used for audio processing
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx95-cm7-sof
 
-This help avoid "exceeds 100 columns" warning from checkpatch
+Albeit Krzysztof already add his Reviewed-by, can I ask why we need to
+add the -sof suffix instead of -audio or so? SOF is a software project
+but you can clearly run different software on the audio-copro as well.
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
----
+Regards,
+  Marco
 
-(no changes since v1)
-
- drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 8 ++++----
- drivers/gpu/drm/rockchip/rockchip_drm_vop2.h | 4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-index ebc9cb93073c..8e1b742a7550 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-@@ -1524,7 +1524,7 @@ static void vop2_plane_atomic_update(struct drm_plane *plane,
- 		transform_offset = vop2_afbc_transform_offset(pstate, half_block_en);
- 		vop2_win_write(win, VOP2_WIN_AFBC_HDR_PTR, yrgb_mst);
- 		vop2_win_write(win, VOP2_WIN_AFBC_PIC_SIZE, act_info);
--		vop2_win_write(win, VOP2_WIN_AFBC_TRANSFORM_OFFSET, transform_offset);
-+		vop2_win_write(win, VOP2_WIN_AFBC_TRANSFORM_OFFS, transform_offset);
- 		vop2_win_write(win, VOP2_WIN_AFBC_PIC_OFFSET, ((src->x1 >> 16) | src->y1));
- 		vop2_win_write(win, VOP2_WIN_AFBC_DSP_OFFSET, (dest->x1 | (dest->y1 << 16)));
- 		vop2_win_write(win, VOP2_WIN_AFBC_PIC_VIR_WIDTH, stride);
-@@ -1535,7 +1535,7 @@ static void vop2_plane_atomic_update(struct drm_plane *plane,
- 	} else {
- 		if (vop2_cluster_window(win)) {
- 			vop2_win_write(win, VOP2_WIN_AFBC_ENABLE, 0);
--			vop2_win_write(win, VOP2_WIN_AFBC_TRANSFORM_OFFSET, 0);
-+			vop2_win_write(win, VOP2_WIN_AFBC_TRANSFORM_OFFS, 0);
- 		}
- 
- 		vop2_win_write(win, VOP2_WIN_YRGB_VIR, DIV_ROUND_UP(fb->pitches[0], 4));
-@@ -3448,7 +3448,7 @@ static const struct reg_field vop2_cluster_regs[VOP2_WIN_MAX_REG] = {
- 	[VOP2_WIN_AFBC_TILE_NUM] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_VIR_WIDTH, 16, 31),
- 	[VOP2_WIN_AFBC_PIC_OFFSET] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_PIC_OFFSET, 0, 31),
- 	[VOP2_WIN_AFBC_DSP_OFFSET] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_DSP_OFFSET, 0, 31),
--	[VOP2_WIN_AFBC_TRANSFORM_OFFSET] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_TRANSFORM_OFFSET, 0, 31),
-+	[VOP2_WIN_AFBC_TRANSFORM_OFFS] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_TRANSFORM_OFFS, 0, 31),
- 	[VOP2_WIN_AFBC_ROTATE_90] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_ROTATE_MODE, 0, 0),
- 	[VOP2_WIN_AFBC_ROTATE_270] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_ROTATE_MODE, 1, 1),
- 	[VOP2_WIN_XMIRROR] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_ROTATE_MODE, 2, 2),
-@@ -3547,7 +3547,7 @@ static const struct reg_field vop2_esmart_regs[VOP2_WIN_MAX_REG] = {
- 	[VOP2_WIN_AFBC_PIC_OFFSET] = { .reg = 0xffffffff },
- 	[VOP2_WIN_AFBC_PIC_SIZE] = { .reg = 0xffffffff },
- 	[VOP2_WIN_AFBC_DSP_OFFSET] = { .reg = 0xffffffff },
--	[VOP2_WIN_AFBC_TRANSFORM_OFFSET] = { .reg = 0xffffffff },
-+	[VOP2_WIN_AFBC_TRANSFORM_OFFS] = { .reg = 0xffffffff },
- 	[VOP2_WIN_AFBC_HDR_PTR] = { .reg = 0xffffffff },
- 	[VOP2_WIN_AFBC_HALF_BLOCK_EN] = { .reg = 0xffffffff },
- 	[VOP2_WIN_AFBC_ROTATE_270] = { .reg = 0xffffffff },
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
-index 29cc7fb8f6d8..8510140b0869 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
-@@ -118,7 +118,7 @@ enum vop2_win_regs {
- 	VOP2_WIN_AFBC_PIC_OFFSET,
- 	VOP2_WIN_AFBC_PIC_SIZE,
- 	VOP2_WIN_AFBC_DSP_OFFSET,
--	VOP2_WIN_AFBC_TRANSFORM_OFFSET,
-+	VOP2_WIN_AFBC_TRANSFORM_OFFS,
- 	VOP2_WIN_AFBC_HDR_PTR,
- 	VOP2_WIN_AFBC_HALF_BLOCK_EN,
- 	VOP2_WIN_AFBC_ROTATE_270,
-@@ -335,7 +335,7 @@ enum dst_factor_mode {
- #define RK3568_CLUSTER_WIN_DSP_INFO		0x24
- #define RK3568_CLUSTER_WIN_DSP_ST		0x28
- #define RK3568_CLUSTER_WIN_SCL_FACTOR_YRGB	0x30
--#define RK3568_CLUSTER_WIN_AFBCD_TRANSFORM_OFFSET	0x3C
-+#define RK3568_CLUSTER_WIN_AFBCD_TRANSFORM_OFFS	0x3C
- #define RK3568_CLUSTER_WIN_AFBCD_OUTPUT_CTRL	0x50
- #define RK3568_CLUSTER_WIN_AFBCD_ROTATE_MODE	0x54
- #define RK3568_CLUSTER_WIN_AFBCD_HDR_PTR	0x58
--- 
-2.34.1
-
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  reg-names:
+> +    const: sram
+> +
+> +  memory-region:
+> +    maxItems: 1
+> +
+> +  memory-region-names:
+> +    const: dma
+> +
+> +  port:
+> +    description: SAI3 port
+> +    $ref: audio-graph-port.yaml#
+> +    unevaluatedProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - memory-region
+> +  - memory-region-names
+> +  - port
+> +
+> +allOf:
+> +  - $ref: fsl,sof-cpu.yaml#
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    cm7-cpu@80000000 {
+> +        compatible = "fsl,imx95-cm7-sof";
+> +        reg = <0x80000000 0x6100000>;
+> +        reg-names = "sram";
+> +        mboxes = <&mu7 2 0>, <&mu7 2 1>, <&mu7 3 0>, <&mu7 3 1>;
+> +        mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
+> +        memory-region = <&adma_res>;
+> +        memory-region-names = "dma";
+> +        port {
+> +            /* SAI3-WM8962 link */
+> +            endpoint {
+> +                remote-endpoint = <&wm8962_ep>;
+> +            };
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,sof-cpu.yaml b/Documentation/devicetree/bindings/sound/fsl,sof-cpu.yaml
+> new file mode 100644
+> index 000000000000..31863932dbc3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/fsl,sof-cpu.yaml
+> @@ -0,0 +1,27 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/fsl,sof-cpu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP audio processor common properties
+> +
+> +maintainers:
+> +  - Daniel Baluta <daniel.baluta@nxp.com>
+> +
+> +properties:
+> +  mboxes:
+> +    maxItems: 4
+> +
+> +  mbox-names:
+> +    items:
+> +      - const: txdb0
+> +      - const: txdb1
+> +      - const: rxdb0
+> +      - const: rxdb1
+> +
+> +required:
+> +  - mboxes
+> +  - mbox-names
+> +
+> +additionalProperties: true
+> -- 
+> 2.34.1
+> 
+> 
+> 
