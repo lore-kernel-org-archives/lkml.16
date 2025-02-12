@@ -1,112 +1,112 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC9C202F8F;
-	Wed, 12 Feb 2025 20:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD0A202C25;
+	Wed, 12 Feb 2025 20:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739391810; cv=none; b=SdQgaZq29UmZmNJOVncKCKXxW8DsOVX1JPOFFSBF2npM6Ql52hnlowLbwwgWMmG53ayYcvbRdt443mhuv8tuyLWUkvvGSlcJlfTGTGxUYPNGK8v667iljtyqVm3i+WQmR6Og2IbUtOHHs4QgDlCCIzQ0UVhJiCalsSj+/Gt//VM=
+	t=1739391822; cv=none; b=Eqy6LevKFrfYAfcDYV4dPUwljMahkIuVwmKMrnYA823iPgjb9WjjkyLZu8pbF06wb08q2QABUReQ6RTFLxdr8Mx9GcYX5lwp6qvkhiv6byZV1R6bOStJOtJD1YC/5K9gxAfsm729QPmrs1e5Dllf84OhZJdYW0t+vG3d/LbFQqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739391810; c=relaxed/simple;
-	bh=T4SN9qQTVCRprL18w226gEvL0hjMQ/9J2Lehg+8OR1I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BVojlTH3fnzaLhe8LKXras0VlBGxJXtFA+cthsSMU3rnYpK9BmQhxcmWlA1YfHi5rdsmZd7qmjXhFk+z+aKVfc6azZxb9ikBmuHIhgQ8m9ViHRQxeiokHfIvXWKK4x0P+F1IMo9ocUOxXFR3BTpfsw7wfr/kkcdTcQHOOe1+qxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gNgPYjKF; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739391822; c=relaxed/simple;
+	bh=dFmFzf5x2hcX0BE4LB5gHThxnXRidZAv02/0Gvl/FEo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LyBx9kvHca2nDEO8sAbRCd6uj3YopZnv7J0mmIlKycg86PaygukdZ+9iszmeizYx2fy9lwoMc/f19FbEDK/QkFmi0b3+LjyZBlPSnBtteXzW+PsXW95ZExvVDQfjS6jqQCfqbjJhLmdqvQ9gE6UirY4k1W6BQBboqXrAWL5dJJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UWtU8N/3; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNgPYjKF"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6d90044ac35so262176d6.1;
-        Wed, 12 Feb 2025 12:23:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739391807; x=1739996607; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wFqfug0dvo4+SvGxTEfuy1Nbc66z9jbXayYAmndjSOM=;
-        b=gNgPYjKFzO5gkTVkOrS4OTXKb7mQc8j5yq7PQt6UZOWpYx5L79SmCil5DwWqylW2I+
-         Mc5HYq6ZAji2T6uagUEfGuT1NoZBBTi1yAQXCrHqY72IaO908CL+Utz5cOEXlCZjif58
-         6KhgatH37SwxSp/+W1/Vl1oCkM6d3W/LvZgaPhjvyU/7x7oojrrRoB8/P9HNz3JV5Gjk
-         P1GOMFHFYqAMnjbyZ4DOzdgJoA7S/rlmzB2i6x3+bA5P71ZkauHb9lD+GxgxBPdGH4CY
-         YBi6yXWaPXuQ0l555px/1CsCvSxmoipQEMW3ImblNjrP3z7ybxrGDH8KuAKdvf9hyN5o
-         HZdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739391807; x=1739996607;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wFqfug0dvo4+SvGxTEfuy1Nbc66z9jbXayYAmndjSOM=;
-        b=d8og5DoEaN0Ovd+vf85TuP36wmtyjQABKh5+15w4qwFzjL83ceu8TuGiL1kR7jrB+A
-         aWuh+hg/wNPXfOZjjWbkl9TPbREr9FuaPnp/RVQD/SV/RZeHD8l9FubCgPSDuHLyk4kl
-         shNDs8RZtQ0NeLi935JnczFaJlUOaLRu8v0wuAgNFmokfrO6CP0DGllCRb7bYq1qEJvJ
-         wcylhG83r/C3trRT50eGXY+rGFZiQPs14cUXGuSMTXvgmL4RDEr27TFpRfo9Reu21VWX
-         mfS3YRzIts6VC7bD/A1YlRbJdsirHFH/6OS7I6Sgit74ROLG3IJgf/MtMAoUa8h56DtY
-         kRsg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWA1PUTWhpSSOJ5fhg0Vvfg7ckpkcJYv9WRKDmY0vu6SKIIcB2Gh4kKd5B+OetLW+oVXuS2FmjPXraGpWr@vger.kernel.org, AJvYcCVvhg7HUv/+sR4TpjbjCK5qLXMMKAn2Q/zYYksovWOuYlYEoXmir0BhrnQstXrYhEmJLrog+bDroaVW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzMdjvr5TNkUZ+iV1jN8aDGVkwS6o0qM20gDNtgLTh7S1RlGqZ
-	4S5//wFV+Hn2JHq2GvR0DXBXUq5jAxhQ67HN/hf55tLtQz9NQwc=
-X-Gm-Gg: ASbGncvadT+w/SqcbVIbqZ4PXPYM1aNIFI/Fzx2zswk4YwtdAJFn5Gji6I9HIp0M6pq
-	TSU7FW+LC81h8viEtCC4OTcJr7m13s7KlERj9D9z/zw4Hmml7nl5lIm+mrXUC57qg39mxlgl6IH
-	m7SWAOOvOI/6A9N5SUMvDltoxYF15P/jDd93052+kI4cVe2opMoM/fWYDMpJj2XtGY/tFVCDziH
-	yixvl0M/Q7JT5oY4ucEq39D962sET2noSjj1DjtLghsyS7rGK8pV/h/k/weaaxbUESBOITLl4Z7
-	SeMfwe9dW6Sp
-X-Google-Smtp-Source: AGHT+IHrunwFa9y1n/VCE/JHLro3uaHsjKV1AuCg8NjkBGyKTg9Jo6/WpWR9TxBMa0++i/xfgPtU4Q==
-X-Received: by 2002:a05:6214:20e9:b0:6e1:a79c:4cb8 with SMTP id 6a1803df08f44-6e46ed772damr30480456d6.2.1739391806803;
-        Wed, 12 Feb 2025 12:23:26 -0800 (PST)
-Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43baacee1sm82943076d6.84.2025.02.12.12.23.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 12:23:25 -0800 (PST)
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-To: avifishman70@gmail.com,
-	tmaimon77@gmail.com,
-	tali.perry1@gmail.com,
-	venture@google.com,
-	yuenn@google.com,
-	benjaminfair@google.com,
-	linus.walleij@linaro.org
-Cc: openbmc@lists.ozlabs.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chenyuan Yang <chenyuan0y@gmail.com>
-Subject: [PATCH] pinctrl: nuvoton: Add NULL pointer check in npcm8xx_gpio_fw()
-Date: Wed, 12 Feb 2025 14:23:11 -0600
-Message-Id: <20250212202311.3741443-1-chenyuan0y@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UWtU8N/3"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CAmimr011665;
+	Wed, 12 Feb 2025 20:23:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	m+shayb7qRrOI+CksDG+eimPv5mTP0U44AV7gSRSwDk=; b=UWtU8N/3Be3D9VUd
+	61aUJWHaTSO+kQ/2q/YC0JiQUdYVOktES0mC7iy/9xykdOddnhwl4ktPiDh+kH7u
+	l1tpQRawp3hk/mNUUUZYaqFwbC6600l4W7T+zUUN1Smfm8oSO77lJ8++fS/zg2O1
+	9LMHQHknJf1iVUU+B80vUeeNBoXU7jgLP987PgHMzOhxE7kAuJfs6uKBuLHaiXH/
+	jSW2woYoPL723moj7e81kn+4yEKvvTTYqR5MfwMKgk+vJYVMygL1XLjQnT7BK4J9
+	y4lZEXfOeGiJlJP0zf01v2TsLXR4EuF+D/ylmyVjlSor6Pc3EEgDNWt1N6ZuQQTX
+	UESoHg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qxv3x0yw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Feb 2025 20:23:32 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51CKNWTx003483
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Feb 2025 20:23:32 GMT
+Received: from [10.71.110.136] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Feb
+ 2025 12:23:30 -0800
+Message-ID: <3606b749-a476-4c52-9f8b-5e4b465c5e79@quicinc.com>
+Date: Wed, 12 Feb 2025 12:23:29 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/msm/dpu: Disable dither in phys encoder cleanup
+To: Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Rob Clark
+	<robdclark@gmail.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        "Sean
+ Paul" <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        "David Airlie" <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250211-dither-disable-v1-1-ac2cb455f6b9@quicinc.com>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20250211-dither-disable-v1-1-ac2cb455f6b9@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 3tecjAmcdAuLWE6NSjUuGh-6YoV560Ru
+X-Proofpoint-ORIG-GUID: 3tecjAmcdAuLWE6NSjUuGh-6YoV560Ru
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-12_06,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=964
+ suspectscore=0 phishscore=0 adultscore=0 spamscore=0 mlxscore=0
+ bulkscore=0 impostorscore=0 clxscore=1015 lowpriorityscore=0
+ malwarescore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502120145
 
-Add a NULL pointer check for pctrl->gpio_bank[id].gc.label in
-npcm8xx_gpio_fw() to prevent potential NULL pointer dereference.
-This is similar to the fix in commit 3027e7b15b02 
-("ice: Fix some null pointer dereference issues in ice_ptp.c").
 
-The npcm7xx driver already has this check in its npcm7xx_gpio_fw()
-function, which provides similar functionality.
-Add the same protection to npcm8xx.
 
-Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
----
- drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 3 +++
- 1 file changed, 3 insertions(+)
+On 2/11/2025 7:59 PM, Jessica Zhang wrote:
+> Disable pingpong dither in dpu_encoder_helper_phys_cleanup().
+> 
+> This avoids the issue where an encoder unknowingly uses dither after
+> reserving a pingpong block that was previously bound to an encoder that
+> had enabled dither.
+> 
+> Reported-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Closes: https://lore.kernel.org/all/jr7zbj5w7iq4apg3gofuvcwf4r2swzqjk7sshwcdjll4mn6ctt@l2n3qfpujg3q/
+> Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+> ---
+> This was tested on SC7180 Trogdor by pulling in the concurrent writeback
+> series [1] and running the IGT kms_writeback@writeback_check_output
+> subtest.
+> 
+> [1] https://patchwork.freedesktop.org/series/144083/
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
 
-diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-index 471f644c5eef..d09a5e9b2eca 100644
---- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-+++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-@@ -2374,6 +2374,9 @@ static int npcm8xx_gpio_fw(struct npcm8xx_pinctrl *pctrl)
- 		pctrl->gpio_bank[id].gc.parent = dev;
- 		pctrl->gpio_bank[id].gc.fwnode = child;
- 		pctrl->gpio_bank[id].gc.label = devm_kasprintf(dev, GFP_KERNEL, "%pfw", child);
-+		if (!pctrl->gpio_bank[id].gc.label)
-+			return -ENOMEM;
-+
- 		pctrl->gpio_bank[id].gc.dbg_show = npcmgpio_dbg_show;
- 		pctrl->gpio_bank[id].direction_input = pctrl->gpio_bank[id].gc.direction_input;
- 		pctrl->gpio_bank[id].gc.direction_input = npcmgpio_direction_input;
--- 
-2.34.1
+Was an extremely tricky issue to debug.
 
+Glad this one is resolved,
+
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
