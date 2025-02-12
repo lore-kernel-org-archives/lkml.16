@@ -1,100 +1,87 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C89013A3F7
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA26E13DB9F;
+	Wed, 12 Feb 2025 02:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739325557; cv=none; b=Y1GXkqL8XCuI/EHe4hgfTeXeZFXoj+jyfoWBG00pnLxcJrEezSGgv3ynGsPXCG0ucImf5R9/Smk1zl2QqSGxMnlxKkl0QduHWhP38/yNvHpaXepVbEUwUXmYyv1CgIesKqMykM4+KixpFgKe8q1ZE70wXbwVZwSxWNYhoCusWUE=
+	t=1739325606; cv=none; b=peJXYF7MxV5SMSmxnT+k3Y4lRXmzIGrq/CIrxE0XOxU0e7GgrwcIjSSVft8Zl4D1v/ENlZa+eqqfeWW/E3mKQAGJRbJHTjBkj3rXFpnaxtyXfM4OCUpR2SrUgyBz56lKRsxZU8fgz++opXMVi5qMMC3AGWkpoHGrPEZNBiwu5yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739325557; c=relaxed/simple;
-	bh=8plav0HWTt+1h9QiCkNdNPq1o+Y+AMAFq2hfN8tZSs8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HMY8thVDYeA/DpHo1tdMDBYMpHWqEwqf0R+i9Pd+gzCBfvHeVyvnJSEgf3WemEIUz4GG1n6GdYEhE0G3hyBVc1uuBApH7qPxpKLslgGqrFkmcQsgPfKxI4D19LdoCR85wiKwMlgmByy1h1UTCc+6gdEuz/UYvXB9ZUrLJCk6tFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vlExsrIx; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1739325606; c=relaxed/simple;
+	bh=oilJiX+VeDtt6XMyhc6T4ILKvqJAoN3URIWrJE3VgHU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=QVqZ8tp629dv7GAAZCe4KJ5tFaSGvTVaquBZCUbOi7hNYPEEtorZ3i8l4nkgQquiqmXS1XZEWo4WgAVTFzYN6ITyUZeG/sSMfu8q1oX/3j2NGVCup2uxprzv55bRpTzFllKET8zCNQKc4XL5iELO/noaFzngIIifP3abXfys4xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJArGJoe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vlExsrIx"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f81a0d0a18so13252077a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:59:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739325555; x=1739930355; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5TmAA7lrYyzPK7RPMr80QZDXqtaYCD1a8crOBimpM0Y=;
-        b=vlExsrIxEZEHfUvcBMDMBuSIUS84rCdt5tgck0XWeP5fT1rJXN6W4aIFWgxaUc0HVV
-         3U1c01nUZLMbTp6vhOuN1JirigMQxO/8MO68xZFck6rB3k4GGiMJBSWjZrfB65l3Cn/J
-         BkhT0QLKFHLN3/BLjvWvEF3yjs+zVlcMLAPLDD6D4o+6ZroiXI+uofTjewvFZuniZGdd
-         wN5W9mNzjvatxLtLDIwYONoDiViIqq/PC7m6YYkc5BD2ND/R8ewTABLzvK1x3V52RGTt
-         yiyRpaM8Hv3EFtizbHz0ol0SssVJzdHASqBarhGcfnuqbyJZIFdh3aQb5VfiRuIiUYa1
-         ydqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739325555; x=1739930355;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5TmAA7lrYyzPK7RPMr80QZDXqtaYCD1a8crOBimpM0Y=;
-        b=OkOIai5Lbc7UJntG7SVHbAAPy+Jt8yqkeRTntmgegPqW6Yxrn+4LE4coWkzHYkio4i
-         YXqQN16BNqOUNZfVuBjStmIyl6TMGNlvuHT4DGU2XIFPxcXK8SD7S9euBWOzoEGFH/IB
-         Jqg84+xHamIUCxuJTYzhlo38e5OwroH/l8e36Kl/WN7+tVO+QddKPQLmO4mE+dtzfZgE
-         Dgncla/+J/a2TitBLEMLSsbihFSl5iQDdgSBIAPzMLKmlceSHWE4vNYsKSfl9+XwxN+J
-         1lpThNme+1myBThwoe9b704Nacm5ICdX9Ifo3llg/DMBwxGPHuKv47+AM3NsO8rYBLt6
-         FKKw==
-X-Gm-Message-State: AOJu0YwojnvZiEnYHQELU24hWj7p2e5+3mvvxm6fwEBaPK3TKWFuYQKt
-	0IfTUDh510vpV0M2+yS/vP1v5tAzQ1uZwn7sOw9u7AtyhzNJXieu+OudCy2JSBjJcK9ZyEkjKtO
-	8Rg==
-X-Google-Smtp-Source: AGHT+IGNXFHUFBAGO7+23DHP+xbhUNfnPfHgeiFc0IIY5LE7qIIGAVhpnh4dGAbimBx/4hI7qfnSlyKuElk=
-X-Received: from pjbpq16.prod.google.com ([2002:a17:90b:3d90:b0:2e9:38ea:ca0f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:53cf:b0:2ee:ab29:1a57
- with SMTP id 98e67ed59e1d1-2fbf5bb8fb4mr2372898a91.2.1739325555495; Tue, 11
- Feb 2025 17:59:15 -0800 (PST)
-Date: Tue, 11 Feb 2025 17:59:14 -0800
-In-Reply-To: <20250203223205.36121-5-prsampat@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJArGJoe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A86C4CEDD;
+	Wed, 12 Feb 2025 02:00:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739325606;
+	bh=oilJiX+VeDtt6XMyhc6T4ILKvqJAoN3URIWrJE3VgHU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=gJArGJoeKrymHt+AHoegfgrxkW/c84h3HcxZgUROZHEyIDEdkCyqsoRJ083JvkSSE
+	 d8GJs/1LNq1y9wjtcIbxMctRYIv41LmGXGZA+8ZIm7oLoY2USWfsEMh//El9wgt5LD
+	 dBqRgJjKIh3zn18XULsttCm8xMU4nCR0FT4wS+OYkynFdHO1AjiPfJI6fNwiVEH0yf
+	 GNg+nKkxdBW+jHGcNfyJfgmUC+ORjzdizUAf7Aj5zVndsKWALUnvY7bOfcTLj289Mc
+	 +AxR3pqfG9D2TqB1gj7OJ4w1et01N6hCQ9nzsES0lFKiUag3inbe9qE5JoeZbVArPg
+	 stj/h8xFDhlzA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34084380AAFF;
+	Wed, 12 Feb 2025 02:00:36 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250203223205.36121-1-prsampat@amd.com> <20250203223205.36121-5-prsampat@amd.com>
-Message-ID: <Z6wAclXklofHtY__@google.com>
-Subject: Re: [PATCH v6 4/9] KVM: selftests: Add VMGEXIT helper
-From: Sean Christopherson <seanjc@google.com>
-To: "Pratik R. Sampat" <prsampat@amd.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	pbonzini@redhat.com, thomas.lendacky@amd.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, shuah@kernel.org, 
-	pgonda@google.com, ashish.kalra@amd.com, nikunj@amd.com, pankaj.gupta@amd.com, 
-	michael.roth@amd.com, sraithal@amd.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 0/5] Use HWMON_CHANNEL_INFO macro to simplify code
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173932563500.69529.13441437064879744393.git-patchwork-notify@kernel.org>
+Date: Wed, 12 Feb 2025 02:00:35 +0000
+References: <20250210054710.12855-1-lihuisong@huawei.com>
+In-Reply-To: <20250210054710.12855-1-lihuisong@huawei.com>
+To: Huisong Li <lihuisong@huawei.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ oss-drivers@corigine.com, irusskikh@marvell.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ louis.peens@corigine.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+ kabel@kernel.org, zhanjie9@hisilicon.com, zhenglifeng1@huawei.com,
+ liuyonglong@huawei.com
 
-On Mon, Feb 03, 2025, Pratik R. Sampat wrote:
-> Abstract rep vmmcall coded into the VMGEXIT helper for the sev
-> library.
-> 
-> No functional change intended.
-> 
-> Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
-> Tested-by: Srikanth Aithal <sraithal@amd.com>
-> Signed-off-by: Pratik R. Sampat <prsampat@amd.com>
-> ---
-> v5..v6:
-> 
-> * Collected tags from Pankaj and Srikanth.
-> ---
->  tools/testing/selftests/kvm/include/x86/sev.h    | 2 ++
->  tools/testing/selftests/kvm/x86/sev_smoke_test.c | 2 +-
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/include/x86/sev.h b/tools/testing/selftests/kvm/include/x86/sev.h
-> index 82c11c81a956..e7df5d0987f6 100644
-> --- a/tools/testing/selftests/kvm/include/x86/sev.h
-> +++ b/tools/testing/selftests/kvm/include/x86/sev.h
-> @@ -27,6 +27,8 @@ enum sev_guest_state {
->  
->  #define GHCB_MSR_TERM_REQ	0x100
->  
-> +#define VMGEXIT()		{ __asm__ __volatile__("rep; vmmcall"); }
+Hello:
 
-Please make this a proper inline function, there's no reason to use a macro.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 10 Feb 2025 13:47:05 +0800 you wrote:
+> The HWMON_CHANNEL_INFO macro is provided by hwmon.h and used widely by many
+> other drivers. This series use HWMON_CHANNEL_INFO macro to simplify code
+> in net subsystem.
+> 
+> Note: These patches do not depend on each other. Put them togeter just for
+> belonging to the same subsystem.
+> 
+> [...]
+
+Here is the summary with links:
+  - [v2,1/5] net: aquantia: Use HWMON_CHANNEL_INFO macro to simplify code
+    https://git.kernel.org/netdev/net-next/c/43a0d7f26ad7
+  - [v2,2/5] net: nfp: Use HWMON_CHANNEL_INFO macro to simplify code
+    https://git.kernel.org/netdev/net-next/c/e05427c4d138
+  - [v2,3/5] net: phy: marvell: Use HWMON_CHANNEL_INFO macro to simplify code
+    https://git.kernel.org/netdev/net-next/c/0cb595e80edc
+  - [v2,4/5] net: phy: marvell10g: Use HWMON_CHANNEL_INFO macro to simplify code
+    https://git.kernel.org/netdev/net-next/c/4798f4834b2e
+  - [v2,5/5] net: phy: aquantia: Use HWMON_CHANNEL_INFO macro to simplify code
+    https://git.kernel.org/netdev/net-next/c/d6085a23b3b4
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
