@@ -1,139 +1,145 @@
-Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
+Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33028260A5D
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 19:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.129.21.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C551260A4E;
+	Wed, 12 Feb 2025 19:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739387323; cv=none; b=FqOpK+JZS85v+H6Kp/A+1TufkBNZZ0Dmk5AHghqbw/F+8L3lI6BGPR35dOVDzLGzMmPvVDMI2Ti7d6/7QHzuLV6gffiz+158U13a/cmKTer7CUYebZDhypNFV/VgzXD6QAzeAcd+QEkcZ3YFLytzEOkzBwC0u8HfBhoS4J72LTg=
+	t=1739387405; cv=none; b=oIks1yYWcUOYLTVJpxAtgr29u6ISMU7TR77NxCk1+uUdYfn1UAYoWk0ttKw0RngOgLhD553eGCaRolu1DEMW08S/oIme4b79UYBo2AKGQh3ddxnNbbR2MXGu3NBEjN2Z8bjvZ2puOJ+nkDmoq4uXOufgEVJS5SWx3U3JrxbjDBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739387323; c=relaxed/simple;
-	bh=ygo3vadibOXlUuW78yWaAK6i/jYiA6MP6/h9do9iXUE=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=Iv64KUTjY/6ROG2BfPEyRPeIvcjP7iq/5n9eQWX5jBx6SYQzHFkMyoRpinvRjoj9IcSJ1yzb1GVr9oxr+QMm96a4hgVimeNtv7scVUSV832z3bGtDtLm+S2wGw6GnWjKRfxaDl2ANpp3f//XVpzEGq0l4/9GGo79yIixse6WAsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr; spf=pass smtp.mailfrom=3xo.fr; dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b=AUaFuro2; arc=none smtp.client-ip=212.129.21.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xo.fr
+	s=arc-20240116; t=1739387405; c=relaxed/simple;
+	bh=3YhrClgMV1aKi0S4z5olXFmU2m1U1F09UvqrHJPICx4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FswYNfS33tenJuIWYHgv4E12hll3fktjHqeIB7GUBf/L/RxAURngDNAwVlowWeOfXOK41meySj24ym7yancoXoLrRpMk0twQUdpsJXeJyZAL+E8OmAf1Kt4hafsbhNjSMOZa7sGMoLeiIx8jFc72r/cXrqSbHKq5yihuDLAkopg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=matthias-proske.de; spf=pass smtp.mailfrom=matthias-proske.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=JgLa8KsE; arc=none smtp.client-ip=134.0.28.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=matthias-proske.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matthias-proske.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b="AUaFuro2"
-Received: from localhost (mail.3xo.fr [212.129.21.66])
-	by mail.3xo.fr (Postfix) with ESMTP id F2B9E8D;
-	Wed, 12 Feb 2025 19:58:55 +0100 (CET)
-X-Virus-Scanned: Debian amavis at nxo2.3xo.fr
-Received: from mail.3xo.fr ([212.129.21.66])
- by localhost (mail.3xo.fr [212.129.21.66]) (amavis, port 10024) with ESMTP
- id Wuqj2Y-kLiOt; Wed, 12 Feb 2025 19:58:50 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.3xo.fr B08D38C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xo.fr; s=3xo;
-	t=1739386730; bh=GB5Q5dVh6WIWw7tyjYIIkZAzZvIRXGmIq8KJH9bTdEg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AUaFuro2VqAo3RmR3W7fPbFRxB9GQYCq8/EXyd0WckR5rwHBXmtEXkwrmZsHggJVj
-	 QfARJtC4jAacOj58BbW4Qwz6VHpxYqJ0RPP2RGOYICZyFvvF8I8WhrbsC8nnLh5Uxa
-	 vsvdwtFV5dewixWw3nUdS9cqT4Rouy08noJFuEcimg96oW9NPqt7lK1nigl6KUJywJ
-	 FN4n74vGyPa4MDQzw6Xfgi8XhSdiORbfutmYgjK3TlLEiJIpGaUZWDS08HQCLfZHsn
-	 hn7RccQJ3zRJ2WqqiFXzTS5SsJwbUhJtIaE3pexhvBF7Wbimea/pMiq0RVPGolUmzT
-	 X3IjXNC5LjZ/A==
-Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by mail.3xo.fr (Postfix) with ESMTPSA id B08D38C;
-	Wed, 12 Feb 2025 19:58:50 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="JgLa8KsE"
+Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
+	by mxout2.routing.net (Postfix) with ESMTP id 93B07601DA;
+	Wed, 12 Feb 2025 19:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1739386880;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=q+TDqPY/j9LuymxqoSxnd/KR0pzmWLDlKhqHng4rETU=;
+	b=JgLa8KsEvxf83OU/YJW3Jxvkg79AMmbPexqGyMa1YFE3lWzQ9K24njhnA1T2zFciGesa60
+	cq295GydBWSzqjYKdViddtlnAJj5hun6/0rZUe3lZekuVJSPtJVwUdeGdKepT5u0L2GTZP
+	260a6iSPy9Sh9uTweqcOIfsFZmXhgDQ=
+Received: from localhost.localdomain (unknown [217.26.232.248])
+	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 8CC40360077;
+	Wed, 12 Feb 2025 19:01:19 +0000 (UTC)
+From: Matthias Proske <email@matthias-proske.de>
+To: Arend van Spriel <arend.vanspriel@broadcom.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Norbert van Bolhuis <nvbolhuis@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Ondrej Jirman <megi@xff.cz>,
+	Erick Archer <erick.archer@outlook.com>,
+	Matthias Proske <email@matthias-proske.de>,
+	Jacobe Zang <jacobe.zang@wesion.com>
+Cc: linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] wifi: brcmfmac: keep power during suspend if board requires it
+Date: Wed, 12 Feb 2025 19:59:35 +0100
+Message-ID: <20250212185941.146958-2-email@matthias-proske.de>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 12 Feb 2025 19:58:50 +0100
-From: Nicolas Baranger <nicolas.baranger@3xo.fr>
-To: dri-devel@lists.freedesktop.org
-Cc: Tzimmermann <tzimmermann@suse.de>, airlied@redhat.com, Jocelyn Falempe
- <jfalempe@redhat.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- linux-kernel@vger.kernel.org
-Subject: Include ASPEED ast-drm 1.15.1 video driver in kernel tree
-In-Reply-To: <d507f6268ea3158b5af82b6860ca7b71@3xo.fr>
-References: <d507f6268ea3158b5af82b6860ca7b71@3xo.fr>
-Message-ID: <194c4656963debcf074d87e89ab1a829@3xo.fr>
-X-Sender: nicolas.baranger@3xo.fr
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
 Content-Transfer-Encoding: 8bit
+X-Mail-ID: 87371727-d5df-497f-88f1-efc5d1639e48
 
-Dear maintener
+After commit 92cadedd9d5f ("brcmfmac: Avoid keeping power to SDIO card
+unless WOWL is used"), the wifi adapter by default is turned off on
+suspend and then re-probed on resume.
 
-I did include ast-drm driver version 1.15.1 (in replacement of version 
-0.1.0) on the new mainline kernel too (6.14.0-rc2) and I issue a new 
-dkms patch 
+This conflicts with some embedded boards that require to remain powered.
+They will fail on resume with:
 
-Last DKMS patch had been sucessfully tested on mainline.
-And last ast.ko version 1.15.1 included in linux tree had also been 
-sucessfully tested 
+brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout
+ieee80211 phy1: brcmf_bus_started: failed: -110
+ieee80211 phy1: brcmf_attach: dongle is not responding: err=-110
+brcmfmac: brcmf_sdio_firmware_callback: brcmf_attach failed
 
-Online directory is updated with :
-- new DKMS patch
-- new DKMS srouces
-- new DKMS debian package
-- new tarball of mainline included ast_new ported in kernel tree
-- new kernel debian package (mainline with ast_new)
+This commit checks for the Device Tree property 'cap-power-off-cards'.
+If this property is not set, it means that we do not have the capability
+to power off and should therefore remain powered.
 
+Signed-off-by: Matthias Proske <email@matthias-proske.de>
+---
+ .../broadcom/brcm80211/brcmfmac/bcmsdh.c      | 20 ++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-NB: online directory is here: 
-https://xba.soartist.net/ast-drm_nba_20250211/
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+index 60eb95fc19a5..6bc107476a2a 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+@@ -1172,6 +1172,7 @@ static int brcmf_ops_sdio_suspend(struct device *dev)
+ 	struct brcmf_bus *bus_if;
+ 	struct brcmf_sdio_dev *sdiodev;
+ 	mmc_pm_flag_t sdio_flags;
++	bool cap_power_off;
+ 	int ret = 0;
+ 
+ 	func = container_of(dev, struct sdio_func, dev);
+@@ -1179,19 +1180,23 @@ static int brcmf_ops_sdio_suspend(struct device *dev)
+ 	if (func->num != 1)
+ 		return 0;
+ 
++	cap_power_off = !!(func->card->host->caps & MMC_CAP_POWER_OFF_CARD);
+ 
+ 	bus_if = dev_get_drvdata(dev);
+ 	sdiodev = bus_if->bus_priv.sdio;
+ 
+-	if (sdiodev->wowl_enabled) {
++	if (sdiodev->wowl_enabled || !cap_power_off) {
+ 		brcmf_sdiod_freezer_on(sdiodev);
+ 		brcmf_sdio_wd_timer(sdiodev->bus, 0);
+ 
+ 		sdio_flags = MMC_PM_KEEP_POWER;
+-		if (sdiodev->settings->bus.sdio.oob_irq_supported)
+-			enable_irq_wake(sdiodev->settings->bus.sdio.oob_irq_nr);
+-		else
+-			sdio_flags |= MMC_PM_WAKE_SDIO_IRQ;
++
++		if (sdiodev->wowl_enabled) {
++			if (sdiodev->settings->bus.sdio.oob_irq_supported)
++				enable_irq_wake(sdiodev->settings->bus.sdio.oob_irq_nr);
++			else
++				sdio_flags |= MMC_PM_WAKE_SDIO_IRQ;
++		}
+ 
+ 		if (sdio_set_host_pm_flags(sdiodev->func1, sdio_flags))
+ 			brcmf_err("Failed to set pm_flags %x\n", sdio_flags);
+@@ -1213,18 +1218,19 @@ static int brcmf_ops_sdio_resume(struct device *dev)
+ 	struct brcmf_sdio_dev *sdiodev = bus_if->bus_priv.sdio;
+ 	struct sdio_func *func = container_of(dev, struct sdio_func, dev);
+ 	int ret = 0;
++	bool cap_power_off = !!(func->card->host->caps & MMC_CAP_POWER_OFF_CARD);
+ 
+ 	brcmf_dbg(SDIO, "Enter: F%d\n", func->num);
+ 	if (func->num != 2)
+ 		return 0;
+ 
+-	if (!sdiodev->wowl_enabled) {
++	if (!sdiodev->wowl_enabled && cap_power_off) {
+ 		/* bus was powered off and device removed, probe again */
+ 		ret = brcmf_sdiod_probe(sdiodev);
+ 		if (ret)
+ 			brcmf_err("Failed to probe device on resume\n");
+ 	} else {
+-		if (sdiodev->settings->bus.sdio.oob_irq_supported)
++		if (sdiodev->wowl_enabled && sdiodev->settings->bus.sdio.oob_irq_supported)
+ 			disable_irq_wake(sdiodev->settings->bus.sdio.oob_irq_nr);
+ 
+ 		brcmf_sdiod_freezer_off(sdiodev);
+-- 
+2.48.1
 
-Please let me know what I should do to see this change in linux-next
-
-Thanks for help
-
-Kind regards
-Nicolas Baranger
-
-
-Le 2025-02-11 19:15, Nicolas Baranger a écrit :
-
-> Dear maintener
-> 
-> For my own usage, I did make work the ASPEED ast-drm 1.15.1 video 
-> driver on mainline kernel (6.13.0 + 6.13.1).
-> 
-> ASPEED video driver is availiable here:
-> https://www.aspeedtech.com/file/support/Linux_DRM_1.15.1_4.tar.gz
-> 
-> But it only work for LTS kernel
-> So I modify the DKMS package and I build a new Debian DKMS package with 
-> the adapted  source.
-> My patch can be find here :
-> https://xba.soartist.net/ast-drm_nba_20250211/nba-dkms/astdiff.patch
-> See the README:
-> https://xba.soartist.net/ast-drm_nba_20250211/nba-dkms/README
-> 
-> Using this new 'ast 1.15.1' driver, performance are amazing compared to 
-> the 'ast' driver include in kernel tree, specially when using a 
-> discrete GPU and offloading VULKAN / 3D on it but using AST VGA card as 
-> the main video card and as the main and only video output (the discrete 
-> GPU is used only for offloading 3D or for cuda/opencl)
-> 
-> So to make things easier, I include the new 'ast 1.15.1' driver in 
-> kernel tree as AST_NEW : linux-6.13.1-ast/drivers/gpu/drm/ast_new'
-> It's working fine as you can see on this video :
-> https://xba.soartist.net/ast-drm_nba_20250211/vulcan_nvidia_prime_render_offload_on_ast_vga_card.webm
-> 
-> I upload all the work I've done here :
-> https://xba.soartist.net/ast-drm_nba_20250211/
-> 
-> See the global README :
-> https://xba.soartist.net/ast-drm_nba_20250211/README
-> 
-> and the README in nba-kernel sub-directory :
-> https://xba.soartist.net/ast-drm_nba_20250211/nba-kernel/README
-> 
-> I'm not a developer so please let me know if I made the things the 
-> right way and if this new 'ast 1.15.1' driver can be ported to 
-> linux-next or linux-? ?
-> If you need more explanations, do not hesitate to contact me, I would 
-> be happy to help
-> 
-> Kind regards
-> Nicolas Baranger
