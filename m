@@ -1,212 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF761F9A83;
-	Wed, 12 Feb 2025 10:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A0B207E1C
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 10:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739356572; cv=none; b=EOcGjwmhCxMNSal61Ze8hUe9nqXiMjQ9GIe9C1aZNbe7Y1BPAtfLX2waTgokPy1oKJPdhAiOQTrl4fKv4tdm2DlyHOJRzIAr7Htf38bmbJsjZAnp4mfL/Ds3C02AjwriFCB0YrOtEjCYTt2GZYWdN/tWxIXGBKWXH87aqg83DDc=
+	t=1739356593; cv=none; b=WYK7B++dIzuHD4HWV/bv/rYoHbtGdVkDaLumjbr91XEYYr/loc6uOibuwuVj+9d8TaTztB+PIJxstDMzG5D02UosFwbHTxeYBW/yvPQ964hzqI99sRjMa7zi7TghZnA9HyGxfZRodW4/RmcF5h/QGVME3g6Mh+IGGUeEy/droiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739356572; c=relaxed/simple;
-	bh=U+c+IUesQkxYjvnR8zFinWB/EQGDYXNhX1r/1VZq/90=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=thR57lRMNpjknVGTRJGddLaSzWivDLU3t7Ux5TrqQEPLYAxnlvviV+GSYl+VKJzYl0NOcNURL9QTu2bOPAbHmyFaTYJhydXBUs/5WjUZt/2dJKDZ8AK/qNOKCEG2nfhJqW3fBENw1yoaQLTtJoNmoNOEd7vMgcPEwAD7KLz4ofM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WhrjfjhQ; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739356593; c=relaxed/simple;
+	bh=EIpYAhIq9NNYuXKRKrzmwNFmlbVg4UQ/2hUVkjXh0Sg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nLbNpFxMiVUtNYcAcSfKdkcekuY5lrbD/ENVfWZc5IJMmlNrXZOI8E54tIJZusvftHfPgi/USzfzUwD2kiJ4xoj6QKL7LPFCV1Mw6u6R3sCffa8+7rrU+V8joBCOkWxMdRh8Mu8XZtWxySyI5VW9Oeh/jBVsdmEwthvW2/tfiPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=odhJFPuc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9P/fYWQz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WhrjfjhQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739356570; x=1770892570;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=U+c+IUesQkxYjvnR8zFinWB/EQGDYXNhX1r/1VZq/90=;
-  b=WhrjfjhQWWn2q6/76i5lNqeK9xKOothc5klws1igxbASpgpl+ta0rNRw
-   61uf1K58BFrpgaR/MGG5wwJel9XHXSCbZdQeL01I63ogXHDFgkFJUji/1
-   qtMULAma4H74NWDm5dqsJXxDbQlrbKdvgE2hrklxl6jL+7Pnjvx/TaGFG
-   CehT3Y+RZtZ6Trm//bym9r0IexrZ3VAxJtFmaxFs4VyJYb7MyLzO3AVEN
-   WIOzekmGHdDzMZxSV6Ruu0XIpB8Zesb0/SraigTgN+lVe2riD5wQTd8x0
-   DmoqgqYeX8odE/gJwooDjjmbmJM86BsmDoBnHGx+9b6Ohn2GqDIfk1VnL
-   g==;
-X-CSE-ConnectionGUID: jo3EgtJ9RiKlFsHKbvxvyQ==
-X-CSE-MsgGUID: t91MvRu0RymvMZEb7Ex+KA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50229048"
-X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="50229048"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 02:36:10 -0800
-X-CSE-ConnectionGUID: b9QEK0mWTSSiC354VRZ84w==
-X-CSE-MsgGUID: yuaYBeT9RWSiK4YYAVlyRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="117799074"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 02:36:07 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tiA68-0000000Anyl-3KQh;
-	Wed, 12 Feb 2025 12:36:04 +0200
-Date: Wed, 12 Feb 2025 12:36:04 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Felipe Balbi <balbi@kernel.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Ferry Toth <fntoth@gmail.com>
-Subject: Re: [PATCH v2 2/3] usb: dwc3: gadget: Add support for
- snps,reserved-endpoints property
-Message-ID: <Z6x5lB4hGpz-9IzS@smile.fi.intel.com>
-References: <20250203191524.3730346-1-andriy.shevchenko@linux.intel.com>
- <20250203191524.3730346-3-andriy.shevchenko@linux.intel.com>
- <20250212011013.xumqgguhluxdslpz@synopsys.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="odhJFPuc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9P/fYWQz"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739356584;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mJW3NSnH6JLJPW1kGy+sRGD72uADSV9Hs0Zlg+mi+gs=;
+	b=odhJFPuc321yWuJmSm0mDNmKSUUAmFEI6gA+uCkcvAFfG+RYX6epWO388u5F8g1IgoB6tx
+	WuoLu4bef2olSj5C2fDYP9z51d4SR4w2P0USDMhyODyAvlA0mflAFtyb3O/PCw4TYNPUkX
+	JDLtqsIz9YhlTBHnFxMAd5xbRtyOzKFD5U7BXQj26z952Mla+s9lLfKPYh7quBmX8UFpph
+	wfdkaaFD+PJZ8X6R8HohNCLUjduOfPH+VpuljbtP9Cvj/sjYeIH3k5XUaRMDgkYr2LGThf
+	rp+OfV7sQQBC4Zgbi/RSbbhgaxjRSSYRkIcKY743eeXIDNwuqgB9TFDtntgg3Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739356584;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mJW3NSnH6JLJPW1kGy+sRGD72uADSV9Hs0Zlg+mi+gs=;
+	b=9P/fYWQzxKMPrs0ZH1P7Tmrv6wC0xJNbrBoK/B+rSzWnoKqsmlS8aKmp2ZvvDEWYzPC3Xx
+	WBXz7DoIvXPaILBg==
+To: linux-rt-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Waiman Long <longman@redhat.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 1/2] lockdep: Don't disable interrupts on RT in disable_irq_nosync_lockdep.*()
+Date: Wed, 12 Feb 2025 11:36:18 +0100
+Message-ID: <20250212103619.2560503-2-bigeasy@linutronix.de>
+In-Reply-To: <20250212103619.2560503-1-bigeasy@linutronix.de>
+References: <760e34f9-6034-40e0-82a5-ee9becd24438@roeck-us.net>
+ <20250212103619.2560503-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250212011013.xumqgguhluxdslpz@synopsys.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 12, 2025 at 01:10:17AM +0000, Thinh Nguyen wrote:
-> On Mon, Feb 03, 2025, Andy Shevchenko wrote:
-> > The snps,reserved-endpoints property lists the reserved endpoints
-> > that shouldn't be used for normal transfers. Add support for that
-> > to the driver.
+disable_irq_nosync_lockdep() disables interrupts with lockdep enabled to
+avoid false positive reports by lockdep that a certain lock has not been
+acquired with disabled interrupts. The user of this macros expects that
+a lock can be acquried without disabling interrupts because the IRQ line
+triggering the interrupt is disabled.
 
-> > While at it, make sure we don't crash by a sudden access to those
-> > endpoints in the gadget driver.
+This triggers a warning on PREEMPT_RT because after
+disable_irq_nosync_lockdep.*() the following spinlock_t now is acquired
+with disabled interrupts.
 
-^^^ (1)
+On PREEMPT_RT there is no difference between spin_lock() and
+spin_lock_irq() so avoiding disabling interrupts in this case works for
+the two remaining callers as of today.
 
-...
+Don't disable interrupts on PREEMPT_RT in disable_irq_nosync_lockdep.*().
 
-> >  	/* Reset resource allocation flags */
-> > -	for (i = resource_index; i < dwc->num_eps && dwc->eps[i]; i++)
-> > -		dwc->eps[i]->flags &= ~DWC3_EP_RESOURCE_ALLOCATED;
-> > +	for (i = resource_index; i < dwc->num_eps; i++) {
-> > +		dep = dwc->eps[i];
-> > +		if (!dep)
-> > +			continue;
-> > +
-> > +		dep->flags &= ~DWC3_EP_RESOURCE_ALLOCATED;
-> > +	}
-> 
-> Please keep code refactoring as a separate patch.
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Closes: https://lore.kernel.org/760e34f9-6034-40e0-82a5-ee9becd24438@roeck-=
+us.net
+Fixes: e8106b941ceab ("[PATCH] lockdep: core, add enable/disable_irq_irqsav=
+e/irqrestore() APIs")
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ include/linux/interrupt.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-It's induced by the change you asked for, it's not a simple refactoring.
-
-Or do you want me to have the patch to check eps against NULL to be separated
-from this one (see (1) above)?
-
-> >  
-> >  	return 0;
-
-...
-
-> > +static int dwc3_gadget_parse_reserved_endpoints(struct dwc3 *dwc, const char *propname,
-> > +						u8 *eps, u8 num)
-> > +{
-> > +	u8 count;
-> > +	int ret;
-> > +
-> > +	if (!device_property_present(dwc->dev, propname))
-> > +		return 0;
-> > +
-> > +	ret = device_property_count_u8(dwc->dev, propname);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +	count = ret;
-> > +
-> > +	ret = device_property_read_u8_array(dwc->dev, propname, eps, min(num, count));
-> 
-> Why do min(num, count)? Can we just put the size of the eps array as
-> specified by the function doc.
-
-No, we can't ask more than there is. The call will fail in such a case.
-In case you wonder, the similar OF call also behaves in the same way.
-
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return count;
-> > +}
-
-...
-
-> >  static int dwc3_gadget_init_endpoints(struct dwc3 *dwc, u8 total)
-> >  {
-> > +	const char			*propname = "snps,reserved-endpoints";
-> >  	u8				epnum;
-> > +	u8				eps[DWC3_ENDPOINTS_NUM];
-> 
-> Can we rename eps to reserved_eps.
-
-Sure.
-
-> > +	u8				count;
-> > +	u8				num;
-> > +	int				ret;
-> >  
-> >  	INIT_LIST_HEAD(&dwc->gadget->ep_list);
-> >  
-> > +	ret = dwc3_gadget_parse_reserved_endpoints(dwc, propname, eps, ARRAY_SIZE(eps));
-> 
-> Base on the name of this function, I would expect the return value
-> to be a status and not a count. Since we are not really parsing but
-> getting the property array. Can we rename this to
-> dwc3_gadget_get_reserved_endpoints()?
-
-Sure.
-
-> > +	if (ret < 0) {
-> > +		dev_err(dwc->dev, "failed to read %s\n", propname);
-> > +		return ret;
-> > +	}
-> > +	count = ret;
-
-...
-
-> > static bool dwc3_gadget_endpoint_trbs_complete(struct dwc3_ep *dep,
-
-> >  		for (i = 0; i < DWC3_ENDPOINTS_NUM; i++) {
-> >  			dep = dwc->eps[i];
-> > +			if (!dep)
-> > +				continue;
-> 
-> It should be fine to ignore this check here. Something must be really
-> wrong if there's an interrupt pointing to an endpoint that we shouldn't
-> be touching. If we do add a check, we should print a warn or something
-> here. But that should be a patch separate from this.
-
-Theoretically everything is possible as it may be HW integration bug,
-for example. But are you asking about separate patch even from the rest
-of the checks? Please, elaborate what do you want to see.
-
-...
-
-> > static void dwc3_endpoint_interrupt(struct dwc3 *dwc,
-
-> >  	dep = dwc->eps[epnum];
-> > +	if (!dep)
-> > +		return;
-> 
-> Same here.
-> 
-> Looks like the only NULL check needed is in
-> dwc3_gadget_clear_tx_fifos().
-
-Seems more, see above.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 8cd9327e4e78d..a1b1be9bf73b2 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -448,7 +448,7 @@ irq_calc_affinity_vectors(unsigned int minvec, unsigned=
+ int maxvec,
+ static inline void disable_irq_nosync_lockdep(unsigned int irq)
+ {
+ 	disable_irq_nosync(irq);
+-#ifdef CONFIG_LOCKDEP
++#if defined(CONFIG_LOCKDEP) && !defined(CONFIG_PREEMPT_RT)
+ 	local_irq_disable();
+ #endif
+ }
+@@ -456,7 +456,7 @@ static inline void disable_irq_nosync_lockdep(unsigned =
+int irq)
+ static inline void disable_irq_nosync_lockdep_irqsave(unsigned int irq, un=
+signed long *flags)
+ {
+ 	disable_irq_nosync(irq);
+-#ifdef CONFIG_LOCKDEP
++#if defined(CONFIG_LOCKDEP) && !defined(CONFIG_PREEMPT_RT)
+ 	local_irq_save(*flags);
+ #endif
+ }
+@@ -471,7 +471,7 @@ static inline void disable_irq_lockdep(unsigned int irq)
+=20
+ static inline void enable_irq_lockdep(unsigned int irq)
+ {
+-#ifdef CONFIG_LOCKDEP
++#if defined(CONFIG_LOCKDEP) && !defined(CONFIG_PREEMPT_RT)
+ 	local_irq_enable();
+ #endif
+ 	enable_irq(irq);
+@@ -479,7 +479,7 @@ static inline void enable_irq_lockdep(unsigned int irq)
+=20
+ static inline void enable_irq_lockdep_irqrestore(unsigned int irq, unsigne=
+d long *flags)
+ {
+-#ifdef CONFIG_LOCKDEP
++#if defined(CONFIG_LOCKDEP) && !defined(CONFIG_PREEMPT_RT)
+ 	local_irq_restore(*flags);
+ #endif
+ 	enable_irq(irq);
+--=20
+2.47.2
 
