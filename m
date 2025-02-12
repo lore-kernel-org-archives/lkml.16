@@ -1,189 +1,202 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6969A50;
-	Wed, 12 Feb 2025 01:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C22A50;
+	Wed, 12 Feb 2025 01:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739324819; cv=none; b=m3pkd6bGLWOQe9A0dolr9zsuVbEkXXcPlJHbOtRhRrFUsEGu/nxSlrRBiHC4N8uQx/40hLeVSiEhSiMawv5J1nDKm2evZio7fJ2V0MrEJf4AciV91yjUVYPYYU781EbEja6DfZhRBMTmsqdjrzm4MRnELedgOoOiUjGPrcyawz4=
+	t=1739324842; cv=none; b=nXp163nUU/aBaKx7zEBAckq4AsMs6qSpk3Ll5vxWY+K7a8Mj8olBKioYqRghzNX5+mFH1ceKdIK5NVXifIL6tzIVA+Fh8oazrfYQXBIgIg4aWKIXI0XOLBbHEf1m/xTDpgQhcICHPn91yYTH9p5AM2Ut0Bl0/fdrUUtGXqRCWnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739324819; c=relaxed/simple;
-	bh=Ginejh+tbEGCmtoArOZLAEg3VJDDEjauTYsDOWFIZ7o=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=dZJEbogjvSB3wHRt6Q2qzhloFDeOotZ6MOebIQHd5Rz1hDFZkOvEL0kPVqxg1JqgsiG8c3cl/lpZELI4lgT8azWtKpxG9Vtx87XB8P7DD9DoGCYDHP7l5bp31elWjJpXhY9yNBIcHuPOj39hfpR+05uFgiMZ8Ybj6UYpPrAHJJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dSfYVqgh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=F+LtD82t; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dSfYVqgh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=F+LtD82t; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dSfYVqgh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="F+LtD82t";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dSfYVqgh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="F+LtD82t"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AEC151FB5B;
-	Wed, 12 Feb 2025 01:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739324814; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=80G5x7D3vfS92/rq2H76/rJdfMkIIguKeohm9qj9ym4=;
-	b=dSfYVqgh+ipBmqmFS2wIjY1xgHA7E5sN4ZpAOLhmGey3Ncz/F6o8kjbJiIOnY+EqTJ73cf
-	LxDfYVQvNaQdFfEpL4ylwi0hydd0cJGDiDWHnnHMFWMvqmscDcmzKx/BgkLzemVuMXsUSe
-	LYrmU+gfvsL86i9WgjxCzh8imXuqlu8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739324814;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=80G5x7D3vfS92/rq2H76/rJdfMkIIguKeohm9qj9ym4=;
-	b=F+LtD82tD60yRDDO3EAOBBzi6jW6fY3TETALgs7HbPwV6UnsW80o1opiPWGDYNmHMMOH07
-	+X+hvp9mru3KftCg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739324814; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=80G5x7D3vfS92/rq2H76/rJdfMkIIguKeohm9qj9ym4=;
-	b=dSfYVqgh+ipBmqmFS2wIjY1xgHA7E5sN4ZpAOLhmGey3Ncz/F6o8kjbJiIOnY+EqTJ73cf
-	LxDfYVQvNaQdFfEpL4ylwi0hydd0cJGDiDWHnnHMFWMvqmscDcmzKx/BgkLzemVuMXsUSe
-	LYrmU+gfvsL86i9WgjxCzh8imXuqlu8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739324814;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=80G5x7D3vfS92/rq2H76/rJdfMkIIguKeohm9qj9ym4=;
-	b=F+LtD82tD60yRDDO3EAOBBzi6jW6fY3TETALgs7HbPwV6UnsW80o1opiPWGDYNmHMMOH07
-	+X+hvp9mru3KftCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E615B13782;
-	Wed, 12 Feb 2025 01:46:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0Q0IJov9q2ezPAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 12 Feb 2025 01:46:51 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1739324842; c=relaxed/simple;
+	bh=0D/iPir+wRJlV9RSrXjEAjN4DkrNvYEFWbF7NB6h8VE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HrT8IcyHvuhhAXZQP5C9oENlaexWDl8oiobsN9amPf+cHDRbNblej/Liq33yGyIZDfs5Z495Qmzwn5f/6N3F4VaMaxHd24PZwX1uovYuFO9ZZl7mx4hckK8pTmy192jTp6R1oWNS3sIgWnS49JQsj1d33xY5vRl6JEUNCCt0NiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Wed, 12 Feb
+ 2025 09:47:11 +0800
+Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
+ Transport; Wed, 12 Feb 2025 09:47:11 +0800
+From: Jammy Huang <jammy_huang@aspeedtech.com>
+To: <eajames@linux.ibm.com>, <mchehab@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <joel@jms.id.au>,
+	<andrew@aj.id.au>, <linux-media@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5] media: dt-bindings: aspeed,video-engine: Convert to json schema
+Date: Wed, 12 Feb 2025 09:47:11 +0800
+Message-ID: <20250212014711.2181865-1-jammy_huang@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Jeff Layton" <jlayton@kernel.org>, "Dave Chinner" <david@fromorbit.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH 02/19] VFS: use global wait-queue table for d_alloc_parallel()
-In-reply-to: <20250212002543.GK1977892@ZenIV>
-References: <>, <20250212002543.GK1977892@ZenIV>
-Date: Wed, 12 Feb 2025 12:46:31 +1100
-Message-id: <173932479179.22054.9609257898334521265@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Wed, 12 Feb 2025, Al Viro wrote:
-> On Wed, Feb 12, 2025 at 10:35:41AM +1100, NeilBrown wrote:
->=20
-> > Without lockdep making the dentry extra large, struct dentry is 192
-> > bytes, exactly 3 cache lines.  There are 16 entries per 4K slab.
-> > Now exactly 1/4 of possible indices are used.
-> > For every group of 16 possible indices, only 0, 4, 8, 12 are used.
-> > slabinfo says the object size is 256 which explains some of the spread.=20
->=20
-> Interesting...
->=20
-> root@cannonball:~# grep -w dentry /proc/slabinfo
-> dentry            1370665 1410864    192   21    1 : tunables    0    0    =
-0 : slabdata  67184  67184      0
->=20
-> Where does that 256 come from?  The above is on amd64, with 6.1-based debian
-> kernel and I see the same object size on other boxen (with local configs).
+Convert aspeed-video.txt to yaml format.
+Update aspeed-video.txt to aspeed,video-engine.yaml in MAINTAINER file.
 
-I found SLUB_DEBUG and redzoning does that.  Disabling the debug brings
-done to 192 bytes and 21 per slab which you see.  That is still only 33%
-hit rate.
+Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+---
+ v5:
+  - Don't put additional changes in this commit.
 
->=20
-> > I don't think there is a good case here for selecting bits from the
-> > middle of the dentry address.
-> >=20
-> > If I use hash_ptr(dentry, 8) I get a more uniform distribution.  64000
-> > entries would hope for 250 per bucket.  Median is 248.  Range is 186 to
-> > 324 so +/- 25%.
-> >=20
-> > Maybe that is the better choice.
->=20
-> That's really interesting, considering the implications for m_hash() and mp=
-_hash()
-> (see fs/namespace.c)...
+ v4:
+  - Keep | after phandle description to fix dt_binding_check error.
 
-Those functions add in the next set of bits as well - effectively mixing
-in more bits from the page address.  If I do that the spread is better
-but there are still buckets with close to twice the median, though most
-are +/- 30%.
+ v3:
+  - Add Additional changes into comments.
+  - Remove | after phandle description
 
->=20
-> > > > > 3) the dance with conditional __wake_up() is worth a helper, IMO.
-> > >=20
-> > > I mean an inlined helper function.
-> >=20
-> > Yes.. Of course...
-> >=20
-> > Maybe we should put
-> >=20
-> > static inline void wake_up_key(struct wait_queue_head *wq, void *key)
-> > {
-> > 	__wake_up(wq, TASK_NORMAL, 0, key);
-> > }
-> >=20
-> > in include/linux/wait.h to avoid the __wake_up() "internal" name, and
-> > then use
-> > 	wake_up_key(d_wait, dentry);
-> > in the two places in dcache.c, or did you want something
-> > dcache-specific?
->=20
-> More like
-> 	if (wq)
-> 		__wake_up(wq, TASK_NORMAL, 0, key);
-> probably...
->=20
+ v2:
+  - Update patch subject
+  - Add NOTE for false positive warning
+---
+ .../bindings/media/aspeed,video-engine.yaml   | 72 +++++++++++++++++++
+ .../bindings/media/aspeed-video.txt           | 33 ---------
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 73 insertions(+), 34 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+ delete mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
 
-Thanks,
-NeilBrown
+diff --git a/Documentation/devicetree/bindings/media/aspeed,video-engine.yaml b/Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+new file mode 100644
+index 000000000000..95d4dfe2a217
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/aspeed,video-engine.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ASPEED Video Engine
++
++maintainers:
++  - Eddie James <eajames@linux.ibm.com>
++
++description:
++  The Video Engine (VE) embedded in the ASPEED SOCs can be configured to
++  capture and compress video data from digital or analog sources.
++
++properties:
++  compatible:
++    enum:
++      - aspeed,ast2400-video-engine
++      - aspeed,ast2500-video-engine
++      - aspeed,ast2600-video-engine
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: vclk
++      - const: eclk
++
++  resets:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  memory-region:
++    maxItems: 1
++    description: |
++      Phandle to the reserved memory nodes to be associated with the
++      VE. VE will acquires memory space for 3 purposes:
++        1. JPEG header
++        2. Compressed result
++        3. Temporary transformed image data
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/ast2600-clock.h>
++
++    video@1e700000 {
++        compatible = "aspeed,ast2600-video-engine";
++        reg = <0x1e700000 0x1000>;
++        clocks = <&syscon ASPEED_CLK_GATE_VCLK>,
++                 <&syscon ASPEED_CLK_GATE_ECLK>;
++        clock-names = "vclk", "eclk";
++        interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++        aspeed,scu = <&syscon>;
++        aspeed,gfx = <&gfx>;
++    };
+diff --git a/Documentation/devicetree/bindings/media/aspeed-video.txt b/Documentation/devicetree/bindings/media/aspeed-video.txt
+deleted file mode 100644
+index d2ca32512272..000000000000
+--- a/Documentation/devicetree/bindings/media/aspeed-video.txt
++++ /dev/null
+@@ -1,33 +0,0 @@
+-* Device tree bindings for Aspeed Video Engine
+-
+-The Video Engine (VE) embedded in the Aspeed AST2400/2500/2600 SOCs can
+-capture and compress video data from digital or analog sources.
+-
+-Required properties:
+- - compatible:		"aspeed,ast2400-video-engine" or
+-			"aspeed,ast2500-video-engine" or
+-			"aspeed,ast2600-video-engine"
+- - reg:			contains the offset and length of the VE memory region
+- - clocks:		clock specifiers for the syscon clocks associated with
+-			the VE (ordering must match the clock-names property)
+- - clock-names:		"vclk" and "eclk"
+- - resets:		reset specifier for the syscon reset associated with
+-			the VE
+- - interrupts:		the interrupt associated with the VE on this platform
+-
+-Optional properties:
+- - memory-region:
+-	phandle to a memory region to allocate from, as defined in
+-	Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+-
+-Example:
+-
+-video-engine@1e700000 {
+-    compatible = "aspeed,ast2500-video-engine";
+-    reg = <0x1e700000 0x20000>;
+-    clocks = <&syscon ASPEED_CLK_GATE_VCLK>, <&syscon ASPEED_CLK_GATE_ECLK>;
+-    clock-names = "vclk", "eclk";
+-    resets = <&syscon ASPEED_RESET_VIDEO>;
+-    interrupts = <7>;
+-    memory-region = <&video_engine_memory>;
+-};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 896a307fa065..7e59daa1e89d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3549,7 +3549,7 @@ M:	Eddie James <eajames@linux.ibm.com>
+ L:	linux-media@vger.kernel.org
+ L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/media/aspeed-video.txt
++F:	Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+ F:	drivers/media/platform/aspeed/
+ 
+ ASUS EC HARDWARE MONITOR DRIVER
 
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+2.25.1
 
