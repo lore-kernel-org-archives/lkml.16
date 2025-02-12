@@ -1,200 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83D8204F62;
-	Wed, 12 Feb 2025 08:13:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739348009; cv=fail; b=deKTOckCzJbF/CZXTP7f31CFlFUL0qqkoI7E+Lt2zEVVHmo8jYVt0khNTzUOWzv8YUaYb4Vb7/RJu9HrSXdLxBYcFJIU3X2NLxDcsEGKV+o0og690RtLltu9S1IP4CQdN868hysImBsZgZqYaGod8uzypSy8NV0DCijzJLiO42A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739348009; c=relaxed/simple;
-	bh=ClpsHf+X0Kry1IGYw6Exqlj/KO1yYxXqQwNkRdg6kqY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Aj827b9YtgtDQQjlBKVP7spj6PrqURL99hj6E9UlwAWpp5v5KrtzKPEAYDTVmKDyMP7+zYu+7lYKBko++gfU4u3d/w6v0IpMEipiFanHIjfcHkqTWFkqUZrcI97xBbhQ4tWE4px6Fg2HS/OTBCxi7+YkbvM1GMBHIAbziA9SW9o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KPx4wlWg; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E4C1EE013
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 08:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739348136; cv=none; b=pDENPqnwHnwk7M7/IAass8Qfr3iKGjq02ibTJbKZLveBSNI5YbYyM8nCi5xmsxG72Oh/0hE7mst/z6MrEt6KkuOElVjoydgPH8UcKgKaOZ3X897j/8cUUB0PpUwJoqYj5dRFItA8Ch2eDmQhJ3yS7+1d/1be3B95e950E2ZGcW4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739348136; c=relaxed/simple;
+	bh=pqSWrSKDZu2W3AsjSYgllmcKNDjNEXWE7Ff4oLEDdIg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TOEmgpKjrTcUkbpsI5PTDw0xtrL35BHJ8ROA5LRuKZnhD8ScMMhNj9AvSha3YAbmVFR6fbN1ICecmMlGs03ZC7cAQ6fjUg26BRDg9VBwzO27Ien97ghE2PHOXTHISoMbgWby20HuX4ZY/EmZKbeqj72Z1d8qOdv0PktG6ToGrmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=i4xVd5f1; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KPx4wlWg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739348007; x=1770884007;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=ClpsHf+X0Kry1IGYw6Exqlj/KO1yYxXqQwNkRdg6kqY=;
-  b=KPx4wlWggwNITESxYmS6bx65PX5U55mpKoXpPYh1zrp5aAou0RO/BEDy
-   qauGnSzpLu5HJjpBnEaIiL66ciIzNx+Z7Vr3WdzzWEZ6ddTkhmDwlLjeK
-   M+TndP1dxi+OFZTURzLbnmIQtflAWjXZHDXvX7bolpMtMSRUOoP/zovfh
-   h9w+q8lLEThLQmpicA7ku24eg/DaJlcf+S7qP3OrVwFA8cA4ijkaXY/Wu
-   tCU4eZAc17DhLCr2DjqsQjjW2QYJnlfMQKFu64/Q8ETIGu7Z79Hoaqu0r
-   mPRbAtmE/8GP4aoyt2l8zH2kr1q7bd/6w2+JjhY2xb+FH+iugQvww0uXI
-   g==;
-X-CSE-ConnectionGUID: 6IXHAoIRT1yG60PhpUUP0Q==
-X-CSE-MsgGUID: rbu55DLPSB6ITVRk/I5wLA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="43646436"
-X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="43646436"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 00:13:24 -0800
-X-CSE-ConnectionGUID: rCe6WSt0Rkmm2/Xa92RPRQ==
-X-CSE-MsgGUID: pJaSCJlNRYuaugkNHv6QWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117371293"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 12 Feb 2025 00:13:20 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 12 Feb 2025 00:13:19 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 12 Feb 2025 00:13:19 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.42) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 12 Feb 2025 00:13:19 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O2fd6utTTVtZkT8bcqF6EhPDrgujK3p/CucqE5SjMx/f0ZaBiqGAnoT+bqJKmEjyPTWu1AMClpV6zuCJ5E56vLqaMRjAumIhLriNZ5yC6Y8AHIvM2oiwlJUtEZ2y0bj7sDwhFIjDv5GRwM5eCIHeFc7kGDH0Xuf2c1Hk1trnrPbsK1KDZR870ZRMiMP/uH3GMs4biJ28CFsbo56ff5zZirpKtbAHfaH+aul3ghyMUu+i/bONl585L+QxtW9bSoYZxc61XZ3aPsmi7q8nxldqQTLlWz19O6MGv7zW9mt/VMFLUuSxgPpN4dY4VWfrl8MgAHHJm4QEFxwwFtzPj98JAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8srqXqVgDEWL5tePQpEumHrMQSYJHJoX6GatuFf1150=;
- b=p+u4jyR7ZiEVbXhaUvHkfgC2tyfef4sHNs5DiTvxsGrGt4TdDfTZ4LjmAybdWNng+SgiijT+ZqRcdoYsHmfwTZ+Qi0hOY5yeO08fM+vjxw/Du2Ox5BmJl/7lWsxnVr36BgevcLu4hhEJomggSTfMgQZar6Dw25eeCZskpm/L+W3h7biIleA9Jf/S+eyPRMPu43FeN5raWvjhNm6fz9xgrM854cHVMy7JohcvkaxpDyqkPL3mxI+exkRmq45BY4sL6Ph2oCX4o8AzBwfbPr9zLJ2MCTWDBFfpPHjeGNxsCwjlhcU2fjl5NCWgz0Tmsscdm2y5+eqv9eknNywSkyuq+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
- by SN7PR11MB8284.namprd11.prod.outlook.com (2603:10b6:806:268::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Wed, 12 Feb
- 2025 08:12:35 +0000
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b%5]) with mapi id 15.20.8422.015; Wed, 12 Feb 2025
- 08:12:35 +0000
-Date: Wed, 12 Feb 2025 16:12:24 +0800
-From: Chao Gao <chao.gao@intel.com>
-To: Binbin Wu <binbin.wu@linux.intel.com>
-CC: <pbonzini@redhat.com>, <seanjc@google.com>, <kvm@vger.kernel.org>,
-	<rick.p.edgecombe@intel.com>, <kai.huang@intel.com>,
-	<adrian.hunter@intel.com>, <reinette.chatre@intel.com>,
-	<xiaoyao.li@intel.com>, <tony.lindgren@intel.com>,
-	<isaku.yamahata@intel.com>, <yan.y.zhao@intel.com>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 01/17] KVM: TDX: Add support for find pending IRQ in a
- protected local APIC
-Message-ID: <Z6xX6PCjW0PZe59D@intel.com>
-References: <20250211025828.3072076-1-binbin.wu@linux.intel.com>
- <20250211025828.3072076-2-binbin.wu@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250211025828.3072076-2-binbin.wu@linux.intel.com>
-X-ClientProxiedBy: KL1PR0401CA0005.apcprd04.prod.outlook.com
- (2603:1096:820:f::10) To CH3PR11MB8660.namprd11.prod.outlook.com
- (2603:10b6:610:1ce::13)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="i4xVd5f1"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5deae16ab51so942188a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 00:15:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1739348133; x=1739952933; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OqxADw0mM/35GjV5ECvP4wRGY3fCb1JBuXcZqTu8EFw=;
+        b=i4xVd5f14CB9wxl+nAc9EGUXVxVSLuYwoNivnE6JYceGuyzJJhV6W80E4pp1eVyWWG
+         bnt//ZhMCzLSUWHE8URMFc29y/CGuSgi21m4hIkrrFp4httbU82kcs9alwJfutWGqv7m
+         HbWrb8rMhF9r6+Ngu6WtSPhQr7xLMsBEe5OaKAFMv2CLkhKzZV56GWb8tRYYptMqBniF
+         B/sPPRJTPBR7aceeiqsscu810IebLyQGyjtrlwDZF1TC/sqyfklom+sd0XVotsthwAzf
+         5P0Ez7IzQycjzZbtJldoAyQ6xzW2fg7W7NjE3/xkoEkJt2W5M/GMUHBgY3xn7IIgL0k2
+         x4kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739348133; x=1739952933;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OqxADw0mM/35GjV5ECvP4wRGY3fCb1JBuXcZqTu8EFw=;
+        b=j/PECKZOivCo8pEDRWS21z4d8IgaI/RDTqScp3NNBukx9FKDPk2QkNcs1aZLs9miia
+         2RRZt9g/JBEhOGvDruLFIalxS7FIoqhTkoXHfohcD/suhizeqhskzZiLlFkG24FSxMX2
+         t1qsl5UaSDNL4c10INBSqyfOYAob5EMLqFYmLpOt00/obebNd5cO5yi5z73UfsDSyWKD
+         h+s6krry3S6IcS/KK+1sUcQbB9WQBNy+H/mWl77zJ3x/AFQiOQqQw75+R3gtb7lGGexZ
+         9ii5g21/fMKZVnLNDWiHoXJufn35R2c4jqCEP/YfgVMAoEzlqdEJ6fLD/T1WVPy8j+sQ
+         RkSg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/2OXIRYLHLkYjJGba+Td/fnkYB0dz17ZrrRwaUjClgSvTLzHhvEn/B3epZwf3vzphDrjX2+F2yKZE5x0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh/m2GqGSj3IBMENPjq1J11fKc8V9HgCro6vnFTfrk94DZza6m
+	o71CQfXl7cKe2ELFFNJO7AuJg7qoHsPhXHpQIcoVBpquCmejE54DEgQSP8lS3gY=
+X-Gm-Gg: ASbGncv+FJ3C21KOSW6RfMnv0lOogywte6bO3dQGH+h9XWGa2wYNV3b3xkVpfTz1/ic
+	WqIVy4nEGx2qgkIFHc2XV1q0FEMFdgOt0+q8vCnBWAW3pHNmNVOtJY5038SUoowW4CA8mpc9wa1
+	Fo8G318CTLM2uz7hQ4LMiqwriwWK0gazCFR6474Zw2yGXRMebjoaJIvwxxVw7hfBsQ7fweVX4v3
+	jc/vNVEKssJcOK4zO77Hsc6RkUwN3+ND9OZhJIvY2GzHCUixXXFzGXVJgC0HSr2d22l0w0NqIZB
+	lGXO2phkzcaFCCLcuUVTkxhS
+X-Google-Smtp-Source: AGHT+IEbwR6Lyd/Au1yiix8z7N9e//5C4qN6OPaROOH+JFMvGJ7S7t8yx7MVhrpHdvoBh0/u2cudOA==
+X-Received: by 2002:a05:6402:13cc:b0:5dc:caab:9447 with SMTP id 4fb4d7f45d1cf-5deadd9d336mr5364745a12.18.1739348132467;
+        Wed, 12 Feb 2025 00:15:32 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.173])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de44e4bc17sm9802856a12.70.2025.02.12.00.15.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 00:15:31 -0800 (PST)
+Message-ID: <833f642e-a4f5-46ad-8854-0e85598d1be7@tuxon.dev>
+Date: Wed, 12 Feb 2025 10:15:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|SN7PR11MB8284:EE_
-X-MS-Office365-Filtering-Correlation-Id: 68c942f6-0ed7-4137-db28-08dd4b3d018f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?hjRG6RHWO+kNO3uonqnA3yZfEC1/uULGGF9FTK/+9ZrOWTLX47Ug2RHVDZ23?=
- =?us-ascii?Q?pMwDpIBeleU2ED0/2kGBb4od6TmJQX7EzGb2RKOyoVn6cC+AOZJL70+YFEth?=
- =?us-ascii?Q?oZj+iOpGbgLFYCwjQy8PDq+rYp9mrhz8BAzTWmL2HrxDLgtakQRvXICviJWS?=
- =?us-ascii?Q?FcyA1MPmwVPd6+bZlnjspJRw9cHZzddsAzNRSQiu/f9NXEhLA9rP1mBI/Z9H?=
- =?us-ascii?Q?om+PFZfER9bM4G7E38w8BWlBSnqinhFJg/84txUQAcXfIHoyhKUu9YrBgT5A?=
- =?us-ascii?Q?fFFqOIDjTy4IHemg4TLNXokUuJJuCHRwMlXKKASSpBTw352X0tywlrada1JI?=
- =?us-ascii?Q?V6Srwc5iekbHhy1Na2v/JYf4lc5b9SmctANQp7cXxvGiFbGzfaxWCHpoTjRB?=
- =?us-ascii?Q?W2nj8PBRTYNVoPR0YswKmHtr3UWIV7gaooLoyc29J3Ht24GzSgxQHM9bwxbS?=
- =?us-ascii?Q?MWicZhDhMiPEjbJlozWgtK6gPf4VRpkNKQsuOTdqNgue7FIDthu27QCAoKUr?=
- =?us-ascii?Q?nm+4ruL9Z4WKHYkyh13B4HJjQqmi+ewNyzJawQk5aR4/VRdxITQuBt9FGHSm?=
- =?us-ascii?Q?vIrV0w9J8ZFD5fdltfSX6jzYw4IYQdKfbohhL8OyXNZH3R14hsUv8jBF5oJs?=
- =?us-ascii?Q?bgHM9OxD4+KSluhxl4j4IKSkR5tEIefO6OZmK3mEIvuVCDDgKgSHmz745UGr?=
- =?us-ascii?Q?kmtNqoXdQbEK67pkbngJf08IptgJT1+SYxljio+YSLR3Oa/Jd1L2ombhYij/?=
- =?us-ascii?Q?IV80yt8yqdGMIShM1fDj3ZhrDBU3Eq+eOh5No2IdXt+6E8BO6ownMoP4TfKi?=
- =?us-ascii?Q?JLBkmKVlJmDboa1caI5u6XfunqR4+48952aS8rsRGaVBfhDIhxjCv7HLOBRC?=
- =?us-ascii?Q?LsfNST+T/rCYWqkcVhBluaJhrtJ5yxeU3qHpY1c1+4XEyzKUniMeBbTc4ZA4?=
- =?us-ascii?Q?D6Y6ECJmaLMt1TxkjxFH5X1doc8o4baUto07XX+9HvnMRn5Z+sCyGMjPUexX?=
- =?us-ascii?Q?bpnacBi7W0+SakfgpGKuYp5hmfCYh3/5XY+wyVo+JFJZGVEO8ENy+gT1mr9I?=
- =?us-ascii?Q?s+YqHVSK6NWiSCkIMFPhiYP/3VMsXf5IsbGfHfizlAiXpzJWAnbPS9wajmVd?=
- =?us-ascii?Q?LXq3NctisuvDqmwsAB9qFhKZ37NOj6ETQ9j0/3XOZJcXVnWe/oSyV4p/Tiy2?=
- =?us-ascii?Q?eG50KhJhMDShIagTh9tLJSiu6H6AE2ZyUtR+6Dnbf/RtX7jLV2GORavDQD1U?=
- =?us-ascii?Q?L7UzEK+MTVWmQ7WhhtZne0NNZtR+amM6HvPomvX0AvwdPaM/uStEcFpU8ecH?=
- =?us-ascii?Q?6ZeesVGvNP9aFqvSEkBQCcubi2lCnqA9IMuFzRAyx0Fn6gn3mtz/HJINwa/e?=
- =?us-ascii?Q?cDWR7NRLu4EQQCuZP4VBXIpdE4op?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?P+3oNUq+5N/x4mG8weouV71Oj8LOEB4RN4LhDLXvERxt3If7Ot+8qM/rEGcR?=
- =?us-ascii?Q?rCPtTA+b2jqRfL4omnVB5n997pR11kfK9AgOqlQ+qN/fNEjmCyiB+19wpRV4?=
- =?us-ascii?Q?hlOKAPX5cdnXf+2/SLEhWnoa872yL+PBXtXDYYR6BQegPI+sIyMyxi727PgQ?=
- =?us-ascii?Q?cPM+T4yhYuIWFlbz2FBH/FJL1qR4o8PN9Ux/7bRkZeJ7SFWtaul2kuoB5o01?=
- =?us-ascii?Q?Xx1Wfro4De7kxv19XuPkXQ+HPrID4C88ix1DZLqteZzuyI5U4vSorlfTd7QA?=
- =?us-ascii?Q?i8jlvtRnk0Cu1kX0pLha7BMkA8N4bRNzajHP3VUhnzDXRHUesuRY9WNSM9a1?=
- =?us-ascii?Q?Z7Gm8a/e6Dz6DTxE7oGSBIjYKnJB4bmwuOg12FWolNjBi9EnQTrKYYKF4jBP?=
- =?us-ascii?Q?DF2NepCheHJzgyK05uLl4pQUXiswGe8cafi9pqhcyMPBcUVTc8Nt4Z/jU4u0?=
- =?us-ascii?Q?5QQ1J5QnBqHkziSdSKrWqWYgDJRD7S2N85I+XUYtMc1ROLxg+Zd9J/QUF3Wm?=
- =?us-ascii?Q?SjlLqxQK62l+Nqj/bNsSjvGs8jxefXidXnm4KCamNTW/Z2f/PZeD/pQhbbIL?=
- =?us-ascii?Q?YkfWr9GnS+Ut6V/5Y5G11yq14z1iDYw30c21pv+Vkc/E8MB+jUh6gATZvvS1?=
- =?us-ascii?Q?nS7w4iGZL0qqha+Me6KpJA0r8y+cBpE2q6cR8px2OL/W4Z876pm1t8iAQ1/u?=
- =?us-ascii?Q?OKS1Kj4Iw1JLNT/f/1gKHfanaoL5m3CKxsBI2m/Mj63Ijs3bJX8AEGyLcSEj?=
- =?us-ascii?Q?AsKgre2KyAY+3XTy0tROQlQtskc23lE9aLLb2HeTL6hUkXMM+fDWcgiwakwy?=
- =?us-ascii?Q?Vz/atEHs85rwMH7F675RIVKW+I0xgtWq9mdyaxQnnlEgZWCeiAgtKA+JsBwt?=
- =?us-ascii?Q?J+lVRuryRXA5NxUu+w2pBxPFxSV63906RcpZU2oYEvAIh/EFwlB83pk95Rif?=
- =?us-ascii?Q?nq1iAk2iJksBI85AsW1qJVyMqmOjNrvYMCIUIR2LsrqK4ZuLcwckWKc0ZNv7?=
- =?us-ascii?Q?JFhBsFGImHVIDnYeXY9i0dpFfxVv2DrtSHHHoRrr0G9n52+dZYrERylru7Or?=
- =?us-ascii?Q?Qnsghvi3CQlIbcAOGM0i753mngecxS24prgTXIxLicCeseEWYsW9WiNX0nGR?=
- =?us-ascii?Q?E24kBhNSOH7cwT16NWONcIDnPrURlhYmdPzDlOJnoQfdyhgIen7y87NllMzI?=
- =?us-ascii?Q?MewjdESwu8bDJyOfEUzmhzraYykexXYAZxRpM8YtZ4aL8BRQdfziftqzKfuK?=
- =?us-ascii?Q?x9VjOb+TSzwQacEyN4w/uPgEDiydtbbd3Ed5k8nQeuTgKBJFmx2zJ+zGnrMg?=
- =?us-ascii?Q?IvDnDoIZc/GWS1yRZEGXAaTB75MRcdjD7Jn1OUfun6NY0MtZOv0QHc8gPUF5?=
- =?us-ascii?Q?jae8Wxo83F3eVdjSEmXMnTDLLyWOMFeWuPjBs00vD1jvVEhVpxzCmWM4teko?=
- =?us-ascii?Q?NMSAphfrPWPm2gn8DxngDALJAmxKwxzGhDfXhxFdy21hkyTaZmFTEHxmCxYP?=
- =?us-ascii?Q?8WF2OtQKByItlw4qQ7hDCu8u6mNICawQt7W1Z9kPHN7MCsaFGIomODyxz8zl?=
- =?us-ascii?Q?QK5n2/AXbJ/MdlhdYVHXeyogafBELhea8zY3wwY7?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68c942f6-0ed7-4137-db28-08dd4b3d018f
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2025 08:12:35.2499
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FjZaAUBsZP3yWUDw5y6JgumQCOpFHBClN/1lKb8LdktD6EL7/W31KZTyJ2xqKZiSNsddl8x/t1GRScZfLR3C5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB8284
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 11/15] ARM: at91: PM: Add Backup mode for SAMA7D65
+To: Ryan.Wanner@microchip.com, lee@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, sre@kernel.org,
+ nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+ p.zabel@pengutronix.de
+Cc: linux@armlinux.org.uk, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+References: <cover.1739221064.git.Ryan.Wanner@microchip.com>
+ <76a89f1ae5e9c4d337c2a28e4b1d0e5cef63e5fe.1739221064.git.Ryan.Wanner@microchip.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <76a89f1ae5e9c4d337c2a28e4b1d0e5cef63e5fe.1739221064.git.Ryan.Wanner@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
->diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
->index 7f1318c44040..2b1ea57a3a4e 100644
->--- a/arch/x86/kvm/vmx/main.c
->+++ b/arch/x86/kvm/vmx/main.c
->@@ -62,6 +62,8 @@ static __init int vt_hardware_setup(void)
-> 		vt_x86_ops.set_external_spte = tdx_sept_set_private_spte;
-> 		vt_x86_ops.free_external_spt = tdx_sept_free_private_spt;
-> 		vt_x86_ops.remove_external_spte = tdx_sept_remove_private_spte;
+Hi, Ryan,
 
-Nit: I think it would be more consistent to set up .protected_apic_has_interrupt
-if TDX is enabled (rather than clearing it if TDX is disabled).
-
->+	} else {
->+		vt_x86_ops.protected_apic_has_interrupt = NULL;
-> 	}
+On 10.02.2025 23:13, Ryan.Wanner@microchip.com wrote:
+> From: Ryan Wanner <Ryan.Wanner@microchip.com>
 > 
-> 	return 0;
->@@ -371,6 +373,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
-> 	.sync_pir_to_irr = vmx_sync_pir_to_irr,
-> 	.deliver_interrupt = vmx_deliver_interrupt,
-> 	.dy_apicv_has_pending_interrupt = pi_has_pending_interrupt,
->+	.protected_apic_has_interrupt = tdx_protected_apic_has_interrupt,
+> Add config check that enables Backup mode for SAMA7D65 SoC.
 > 
-> 	.set_tss_addr = vmx_set_tss_addr,
-> 	.set_identity_map_addr = vmx_set_identity_map_addr,
+> Add SHDWC_SR read to clear the status bits once finished exiting low
+> power modes.
+
+Can you please also explain why? From [1]:
+
+"The text should be written in such detail so that when read weeks, months
+or even years later, it can give the reader the needed details to grasp the
+reasoning for **why** the patch was created."
+
+
+[1] https://www.kernel.org/doc/html/v6.13/process/submitting-patches.html
+
+
+> This is only for SAMA7D65 SoCs.
+> 
+> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+> ---
+>  arch/arm/mach-at91/pm.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+> index 1eec68e92f8d8..55cab31ce1ecb 100644
+> --- a/arch/arm/mach-at91/pm.c
+> +++ b/arch/arm/mach-at91/pm.c
+> @@ -707,6 +707,9 @@ static int at91_pm_enter(suspend_state_t state)
+>  static void at91_pm_end(void)
+>  {
+>  	at91_pm_config_ws(soc_pm.data.mode, false);
+> +
+> +	if (IS_ENABLED(CONFIG_SOC_SAMA7D65))
+> +		readl(soc_pm.data.shdwc + 0x08);
+
+Can you please add a comment near explaining what 0x08 offset means (search
+for "SHDWC.MR" in this file for an example)?
+
+Is this cleanup needed only for backup mode or for all of them. If only for
+backup you can move it in at91_pm_suspend() after fncpy().
+
+Thank you,
+Claudiu
+
+>  }
+>  
+>  
+> @@ -1065,7 +1068,8 @@ static int __init at91_pm_backup_init(void)
+>  	int ret = -ENODEV, located = 0;
+>  
+>  	if (!IS_ENABLED(CONFIG_SOC_SAMA5D2) &&
+> -	    !IS_ENABLED(CONFIG_SOC_SAMA7G5))
+> +	    !IS_ENABLED(CONFIG_SOC_SAMA7G5) &&
+> +	    !IS_ENABLED(CONFIG_SOC_SAMA7D65))
+>  		return -EPERM;
+>  
+>  	if (!at91_is_pm_mode_active(AT91_PM_BACKUP))
+
