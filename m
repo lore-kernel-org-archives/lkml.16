@@ -1,110 +1,171 @@
-Received: from mta20.hihonor.com (mta20.honor.com [81.70.206.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5ADB3597E
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 03:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.206.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEC11DB933
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 03:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739331132; cv=none; b=JxNpPXGaZkXbO+z+oDsB1EqU6HDknGjK2VNB0IPHjnwu/TnnsT4D15oKxQMq1/kbkpHT5eLGa7Tj+XcI6B3nKd2N6Dyf1Hp9IZ0uHHgysEsK1fJI7X4qACmtxJTTXJC7UqRLgE8ZCosIwia0UNh5vETnp1YlYR3961UFxo8zvds=
+	t=1739331150; cv=none; b=rFzLZe/9recYEIBAIr63WllxaJU8+tdo92zm4w38WCSOwSBlaNE3e/61iRZLUVDyKA5j3l49+Gxg8GTWlr5SgqT6EvduCNysPO0jkwU7kRV6OQk7DAR2DUms6gMwGY3JYA+rmQjuV2rMv156x1Li+4vqhckT+1sbfPq66GxjK5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739331132; c=relaxed/simple;
-	bh=glInTiBVeilIs24ZWvGBKoc7kufdh6XKYo4ictR/3Fk=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=qyiTaCnZK0wvzWS3ZTsMg44gsTS5ocn2ujdhgwQAKuqUrFGMjaktLkr9bSdJjf5NOUTdEIORh+r9sRoKrJWCgcJ1BVkzF4xs/C/XqHQItLkGdcFsM42NKN6yMFLxtPUVO2LYSIupx8egsGWSOuiZN5i89+zE2xr7gDHHYqqH+kY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.206.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w003.hihonor.com (unknown [10.68.17.88])
-	by mta20.hihonor.com (SkyGuard) with ESMTPS id 4Yt3K81Fg2zYlSjh;
-	Wed, 12 Feb 2025 11:12:44 +0800 (CST)
-Received: from a008.hihonor.com (10.68.30.56) by w003.hihonor.com
- (10.68.17.88) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 12 Feb
- 2025 11:13:46 +0800
-Received: from a007.hihonor.com (10.68.22.31) by a008.hihonor.com
- (10.68.30.56) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 12 Feb
- 2025 11:13:46 +0800
-Received: from a007.hihonor.com ([fe80::e866:83ac:f23b:c25c]) by
- a007.hihonor.com ([fe80::e866:83ac:f23b:c25c%10]) with mapi id
- 15.02.1544.011; Wed, 12 Feb 2025 11:13:46 +0800
-From: gaoxu <gaoxu2@honor.com>
-To: Andrew Morton <akpm@linux-foundation.org>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Suren
- Baghdasaryan" <surenb@google.com>, Barry Song <21cnbao@gmail.com>,
-	yipengxiang <yipengxiang@honor.com>
-Subject: [PATCH] mm: Fix possible NULL pointer dereference in __swap_duplicate
-Thread-Topic: [PATCH] mm: Fix possible NULL pointer dereference in
- __swap_duplicate
-Thread-Index: Adt8+0GogoLTL6hgQfOcUIXDGgpBSQ==
-Date: Wed, 12 Feb 2025 03:13:46 +0000
-Message-ID: <44655569e3a1419f800952004f07e714@honor.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1739331150; c=relaxed/simple;
+	bh=GXIjdcanFwwm7LKyMwYAwJA0WALJk9p2AHH6SgAhdTA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HJdiBu5DJzxmIZgAL2saKOEifJzrYjDHUChx1WFGrTbpCyLU/o8Cb/p5o+yFleEmRibySlGOZTZSMpDU1O6bjNkktGa/6zvMODBn5X7LoUJkDmc3OXtBSPkJHFtKmXIoU3LegrncnSp0r/ZdaeG38A1N8A/aAIZN2cSsncmnHJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JwISrUry; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JwISrUry"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21f5ccd9742so9869775ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:32:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739331148; x=1739935948; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VhDIo/pgY9uUkXE2IY3OHzZfG1I5TLyMDQUSWmrc3tE=;
+        b=JwISrUrylt611oz1S2thbgPIWQNoGJF/ztKD8RydIDAmcvBgPon3YCCt7JpscTrFP3
+         8l0dW8YvWWKZDUjDh+0DN4AwRycJzcW46/zwBH6VoboNQzKHFf58T8+JO2eWhcBbnDr4
+         ZHDVTaIzITMVwWBoTw0ImmEjwd1TD15gZtaf4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739331148; x=1739935948;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VhDIo/pgY9uUkXE2IY3OHzZfG1I5TLyMDQUSWmrc3tE=;
+        b=a6zof+RVdkbpP306rBSXh4Cx6h+GjKBsQSmhZuARXXgYENyE/yL9yANAZ7Zx1pVJJd
+         CGAFXxK0iv+3SBuvnKg4sGYjLBHbwDoL2S/oBC/LVQyBFwldkOJuKWVqLwV8tzCq2WwB
+         J2vL7JN0GzuGiXSl1uSZG2Lz6WhYLSnyUrrXdVr6AMGL4xur+WiJByJq9mCMCLlcSZec
+         HXqeQsuIWWp/QqAkvEweucALP4Q/sS/wJ4DKA9JJ14VE7WHXV4yxcXJiF7n/HphRiCVC
+         35f+dlT3wAnt+hJD/iIW8KooqF+Jtg6iWfFCzFeLS82vIshbfw/+sturlLnyTeyHb5vS
+         +rIw==
+X-Gm-Message-State: AOJu0Yy7H7l4tNOgxjsqI5lOT3ZazAOG9fQKPnI3fFdYHINrFgiv90MB
+	HiISQE5fGb0wAQe77zX9TECv8TaUueYvXtWZnxBGEqTzYzDQYyL9fxExV9YCUw==
+X-Gm-Gg: ASbGncsqXRft31DTJyue0egSZsdUPIOxV8XYNaROkh7BLNPiWWx4/mNvHfUh9BYJjLV
+	j03XDxHfzmFC52VFkibwtWhZH+p5MeP6BNVJj5z9SPSEi94wSd9umSjh6/FiOG7h3MBrY86u1Ke
+	6n/jXiPQGaPt4mQVCXkKdaN7cdGECj3wD5935/yN4pE+1q6glB9OqQc5kSND2jh+lRDGOTv/PoK
+	Bwj3DW8jxY6CeoynHPN+YqkO4VGC+3PtrzOfjU05K4N6/ygotTjog20AAnFlZ/4spsZBPQjfYfm
+	nNkI8wVz//DKMuS8uqPJ1pXO82Qd9UsfzksULFWBUHDuwP638w==
+X-Google-Smtp-Source: AGHT+IEIwna3DqffuQNJ/PJZ/+10GTsizIv6pLGCNhKwGTKomsFMzdKcOxj1NoWcVrvGsfxSiq0lgw==
+X-Received: by 2002:a17:902:e5cc:b0:215:aa88:e142 with SMTP id d9443c01a7336-220bbf75778mr10132655ad.7.1739331148140;
+        Tue, 11 Feb 2025 19:32:28 -0800 (PST)
+Received: from localhost (9.184.168.34.bc.googleusercontent.com. [34.168.184.9])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-21f3687c6ecsm104027215ad.198.2025.02.11.19.32.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 19:32:27 -0800 (PST)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	keescook@chromium.org,
+	jannh@google.com,
+	torvalds@linux-foundation.org,
+	vbabka@suse.cz,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@Oracle.com,
+	adhemerval.zanella@linaro.org,
+	oleg@redhat.com,
+	avagin@gmail.com,
+	benjamin@sipsolutions.net
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org,
+	jorgelo@chromium.org,
+	sroettger@google.com,
+	hch@lst.de,
+	ojeda@kernel.org,
+	thomas.weissschuh@linutronix.de,
+	adobriyan@gmail.com,
+	johannes@sipsolutions.net,
+	pedro.falcato@gmail.com,
+	hca@linux.ibm.com,
+	willy@infradead.org,
+	anna-maria@linutronix.de,
+	mark.rutland@arm.com,
+	linus.walleij@linaro.org,
+	Jason@zx2c4.com,
+	deller@gmx.de,
+	rdunlap@infradead.org,
+	davem@davemloft.net,
+	peterx@redhat.com,
+	f.fainelli@gmail.com,
+	gerg@kernel.org,
+	dave.hansen@linux.intel.com,
+	mingo@kernel.org,
+	ardb@kernel.org,
+	mhocko@suse.com,
+	42.hyeyoo@gmail.com,
+	peterz@infradead.org,
+	ardb@google.com,
+	enh@google.com,
+	rientjes@google.com,
+	groeck@chromium.org,
+	mpe@ellerman.id.au,
+	aleksandr.mikhalitsyn@canonical.com,
+	mike.rapoport@gmail.com,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [RFC PATCH v5 0/7] mseal system mappings
+Date: Wed, 12 Feb 2025 03:32:20 +0000
+Message-ID: <20250212033227.1279141-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-c3dwX3N3YXBfaW5mbygpIG1heSByZXR1cm4gbnVsbDsgaXQgaXMgbmVjZXNzYXJ5IHRvIGNoZWNr
-IHRoZSByZXR1cm4gdmFsdWUNCnRvIGF2b2lkIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZS4gVGhl
-IGNvZGUgZm9yIG90aGVyIGNhbGxzIHRvDQpzd3Bfc3dhcF9pbmZvKCkgaW5jbHVkZXMgY2hlY2tz
-LCBhbmQgX19zd2FwX2R1cGxpY2F0ZSgpIHNob3VsZCBhbHNvDQppbmNsdWRlIGNoZWNrcy4NCg0K
-VGhlIHJlYXNvbiB3aHkgc3dwX3N3YXBfaW5mbygpIHJldHVybnMgTlVMTCBpcyB1bmNsZWFyOyBp
-dCBtYXkgYmUgZHVlIHRvDQpDUFUgY2FjaGUgaXNzdWVzIG9yIEREUiBiaXQgZmxpcHMuIFRoZSBw
-cm9iYWJpbGl0eSBvZiB0aGlzIGlzc3VlIGlzIHZlcnkNCnNtYWxsLCBhbmQgdGhlIHN0YWNrIGlu
-Zm8gd2UgZW5jb3VudGVyZWQgaXMgYXMgZm9sbG93c++8mg0KVW5hYmxlIHRvIGhhbmRsZSBrZXJu
-ZWwgTlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlIGF0IHZpcnR1YWwgYWRkcmVzcw0KMDAwMDAwMDAw
-MDAwMDA1OA0KW1JCL0VdcmJfc3JlYXNvbl9zdHJfc2V0OiBzcmVhc29uX3N0ciBzZXQgbnVsbF9w
-b2ludGVyDQpNZW0gYWJvcnQgaW5mbzoNCiAgRVNSID0gMHgwMDAwMDAwMDk2MDAwMDA1DQogIEVD
-ID0gMHgyNTogREFCVCAoY3VycmVudCBFTCksIElMID0gMzIgYml0cw0KICBTRVQgPSAwLCBGblYg
-PSAwDQogIEVBID0gMCwgUzFQVFcgPSAwDQogIEZTQyA9IDB4MDU6IGxldmVsIDEgdHJhbnNsYXRp
-b24gZmF1bHQNCkRhdGEgYWJvcnQgaW5mbzoNCiAgSVNWID0gMCwgSVNTID0gMHgwMDAwMDAwNSwg
-SVNTMiA9IDB4MDAwMDAwMDANCiAgQ00gPSAwLCBXblIgPSAwLCBUbkQgPSAwLCBUYWdBY2Nlc3Mg
-PSAwDQogIEdDUyA9IDAsIE92ZXJsYXkgPSAwLCBEaXJ0eUJpdCA9IDAsIFhzID0gMA0KdXNlciBw
-Z3RhYmxlOiA0ayBwYWdlcywgMzktYml0IFZBcywgcGdkcD0wMDAwMDAwOGE4MGU1MDAwDQpbMDAw
-MDAwMDAwMDAwMDA1OF0gcGdkPTAwMDAwMDAwMDAwMDAwMDAsIHA0ZD0wMDAwMDAwMDAwMDAwMDAw
-LA0KcHVkPTAwMDAwMDAwMDAwMDAwMDANCkludGVybmFsIGVycm9yOiBPb3BzOiAwMDAwMDAwMDk2
-MDAwMDA1IFsjMV0gUFJFRU1QVCBTTVANClNraXAgbWQgZnRyYWNlIGJ1ZmZlciBkdW1wIGZvcjog
-MHgxNjA5ZTANCi4uLg0KcGMgOiBzd2FwX2R1cGxpY2F0ZSsweDQ0LzB4MTY0DQpsciA6IGNvcHlf
-cGFnZV9yYW5nZSsweDUwOC8weDFlNzgNCnNwIDogZmZmZmZmYzBmMmE2OTllMA0KeDI5OiBmZmZm
-ZmZjMGYyYTY5OWUwIHgyODogZmZmZmZmOGE1YjI4ZDM4OCB4Mjc6IGZmZmZmZjhiMDY2MDMzODgN
-CngyNjogZmZmZmZmZGY3MjkxZmU3MCB4MjU6IDAwMDAwMDAwMDAwMDAwMDYgeDI0OiAwMDAwMDAw
-MDAwMTAwMDczDQp4MjM6IDAwMDAwMDAwMDAyZDJkMmYgeDIyOiAwMDAwMDAwMDAwMDAwMDA4IHgy
-MTogMDAwMDAwMDAwMDAwMDAwMA0KeDIwOiAwMDAwMDAwMDAwMmQyZDJmIHgxOTogMTgwMDAwMDAw
-MDJkMmQyZiB4MTg6IGZmZmZmZmRmNzI2ZmFlYzANCngxNzogMDAwMDAwMDAwMDAwMDAwMCB4MTY6
-IDAwMTAwMDAwMDAwMDAwMDEgeDE1OiAwMDQwMDAwMDAwMDAwMDAxDQp4MTQ6IDA0MDAwMDAwMDAw
-MDAwMDEgeDEzOiBmZjdmZmZmZmZmZmZmYjdmIHgxMjogZmZlZmZmZmZmZmZmZmJmZg0KeDExOiBm
-ZmZmZmY4YTVjN2UxODk4IHgxMDogMDAwMDAwMDAwMDAwMDAxOCB4OSA6IDAwMDAwMDAwMDAwMDAw
-MDYNCng4IDogMTgwMDAwMDAwMDAwMDAwMCB4NyA6IDAwMDAwMDAwMDAwMDAwMDAgeDYgOiBmZmZm
-ZmY4MDU3YzAxZjEwDQp4NSA6IDAwMDAwMDAwMDAwMGEzMTggeDQgOiAwMDAwMDAwMDAwMDAwMDAw
-IHgzIDogMDAwMDAwMDAwMDAwMDAwMA0KeDIgOiAwMDAwMDA2ZGFmMjAwMDAwIHgxIDogMDAwMDAw
-MDAwMDAwMDAwMSB4MCA6IDE4MDAwMDAwMDAyZDJkMmYNCkNhbGwgdHJhY2U6DQogc3dhcF9kdXBs
-aWNhdGUrMHg0NC8weDE2NA0KIGNvcHlfcGFnZV9yYW5nZSsweDUwOC8weDFlNzgNCiBjb3B5X3By
-b2Nlc3MrMHgxMjc4LzB4MjFjYw0KIGtlcm5lbF9jbG9uZSsweDkwLzB4NDM4DQogX19hcm02NF9z
-eXNfY2xvbmUrMHg1Yy8weDhjDQogaW52b2tlX3N5c2NhbGwrMHg1OC8weDExMA0KIGRvX2VsMF9z
-dmMrMHg4Yy8weGUwDQogZWwwX3N2YysweDM4LzB4OWMNCiBlbDB0XzY0X3N5bmNfaGFuZGxlcisw
-eDQ0LzB4ZWMNCiBlbDB0XzY0X3N5bmMrMHgxYTgvMHgxYWMNCkNvZGU6IDkxMzljMzVhIDcxMDA2
-ZjNmIDU0MDAwNTY4IGY4Nzk3YjU1IChmOTQwMmVhOCkNCi0tLVsgZW5kIHRyYWNlIDAwMDAwMDAw
-MDAwMDAwMDAgXS0tLQ0KS2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IE9vcHM6IEZhdGFsIGV4
-Y2VwdGlvbg0KU01QOiBzdG9wcGluZyBzZWNvbmRhcnkgQ1BVcw0KDQpUaGUgcGF0Y2ggc2VlbXMg
-dG8gb25seSBwcm92aWRlIGEgd29ya2Fyb3VuZCwgYnV0IHRoZXJlIGFyZSBubyBtb3JlDQplZmZl
-Y3RpdmUgc29mdHdhcmUgc29sdXRpb25zIHRvIGhhbmRsZSB0aGUgYml0IGZsaXBzIHByb2JsZW0u
-IFRoaXMgcGF0aA0Kd2lsbCBjaGFuZ2UgdGhlIGlzc3VlIGZyb20gYSBzeXN0ZW0gY3Jhc2ggdG8g
-YSBwcm9jZXNzIGV4Y2VwdGlvbiwgdGhlcmVieQ0KcmVkdWNpbmcgdGhlIGltcGFjdCBvbiB0aGUg
-ZW50aXJlIG1hY2hpbmUuDQoNClNpZ25lZC1vZmYtYnk6IGdhbyB4dSA8Z2FveHUyQGhvbm9yLmNv
-bT4NCi0tLQ0KIG1tL3N3YXBmaWxlLmMgfCAyICsrDQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0
-aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvbW0vc3dhcGZpbGUuYyBiL21tL3N3YXBmaWxlLmMNCmlu
-ZGV4IDc0NDhhMzg3Ni4uMGIyNTNiOGNhIDEwMDY0NA0KLS0tIGEvbW0vc3dhcGZpbGUuYw0KKysr
-IGIvbW0vc3dhcGZpbGUuYw0KQEAgLTM1MjEsNiArMzUyMSw4IEBAIHN0YXRpYyBpbnQgX19zd2Fw
-X2R1cGxpY2F0ZShzd3BfZW50cnlfdCBlbnRyeSwgdW5zaWduZWQgY2hhciB1c2FnZSwgaW50IG5y
-KQ0KIAlpbnQgZXJyLCBpOw0KIA0KIAlzaSA9IHN3cF9zd2FwX2luZm8oZW50cnkpOw0KKwlpZiAo
-dW5saWtlbHkoIXNpKSkNCisJCXJldHVybiAtRUlOVkFMOw0KIA0KIAlvZmZzZXQgPSBzd3Bfb2Zm
-c2V0KGVudHJ5KTsNCiAJVk1fV0FSTl9PTihuciA+IFNXQVBGSUxFX0NMVVNURVIgLSBvZmZzZXQg
-JSBTV0FQRklMRV9DTFVTVEVSKTsNCi0tIA0KMi4xNy4xDQo=
+From: Jeff Xu <jeffxu@chromium.org>
+
+The commit message in the first patch contains the full description of
+this series.
+
+------------------
+History:
+
+V5
+  - Remove kernel cmd line (Lorenzo Stoakes)
+  - Add test info (Lorenzo Stoakes)
+  - Add threat model info (Lorenzo Stoakes)
+  - Fix x86 selftest: test_mremap_vdso
+  - Restrict code change to ARM64/x86-64/UM arch only.
+  - Add userprocess.h to include seal_system_mapping().
+  - Remove sealing vsyscall.
+  - Split the patch.
+
+V4:
+  https://lore.kernel.org/all/20241125202021.3684919-1-jeffxu@google.com/
+
+V3:
+  https://lore.kernel.org/all/20241113191602.3541870-1-jeffxu@google.com/
+
+V2:
+  https://lore.kernel.org/all/20241014215022.68530-1-jeffxu@google.com/
+
+V1:
+  https://lore.kernel.org/all/20241004163155.3493183-1-jeffxu@google.com/
+
+Jeff Xu (7):
+  mseal, system mappings: kernel config and header change
+  selftests: x86: test_mremap_vdso: skip if vdso is msealed
+  mseal, system mappings: enable x86-64
+  mseal, system mappings: enable arm64
+  mseal, system mappings: enable uml architecture
+  mseal, system mappings: uprobe mapping
+  mseal, system mappings: update mseal.rst
+
+ Documentation/userspace-api/mseal.rst         |  5 +++
+ arch/arm64/Kconfig                            |  1 +
+ arch/arm64/kernel/vdso.c                      | 23 +++++++----
+ arch/um/Kconfig                               |  1 +
+ arch/x86/Kconfig                              |  1 +
+ arch/x86/entry/vdso/vma.c                     | 17 ++++++---
+ arch/x86/um/vdso/vma.c                        |  7 +++-
+ include/linux/userprocess.h                   | 18 +++++++++
+ init/Kconfig                                  | 18 +++++++++
+ kernel/events/uprobes.c                       |  6 ++-
+ security/Kconfig                              | 18 +++++++++
+ .../testing/selftests/x86/test_mremap_vdso.c  | 38 +++++++++++++++++++
+ 12 files changed, 137 insertions(+), 16 deletions(-)
+ create mode 100644 include/linux/userprocess.h
+
+-- 
+2.48.1.502.g6dc24dfdaf-goog
+
