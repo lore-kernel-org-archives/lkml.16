@@ -1,73 +1,172 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63D71E7C32
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 07:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC039204097;
+	Wed, 12 Feb 2025 07:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739344448; cv=none; b=ISBcP3+A8L9dlZntvBWHs14oDYzIdV5J2HsE3rgVXAe5/3H8WhC6in9ffRs5Xvr54LDonBUsVVvBTlIN4M+Wxk1HzSEDYVGAn6+CuDCSPvuMNzi6f5K3xxzsfAysnEi9fSr8CSyQ0Zu9w/6HotVI92OnREb0lKRoFEiDxYF4oYs=
+	t=1739344529; cv=none; b=QV8Lmh5WWZZIYLXmPXfWkeryJi4rMHnHKC5kq9oyQWDtGffgZwyC3b9+5wfkaj79gVQ0VJmxNw9ZOcTjOQZR83Dh5gPhcD9q2RL1lJuCs5vqqq8DjMHRn+7GjSXmdx5ax2Tu5qodSBOyfDYkufGTvFL/VIFcqkP9+h1GHiGuofo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739344448; c=relaxed/simple;
-	bh=zaNqzBSMcIQZXY9ZvIt7+qqbfra6dLMOwrxJN4ZabIs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=NilQxPPQTF71zIwHILGujc++a58bdWYd1KofvTMre2gUqcbrCDmNtIYAwUQs7y5Ny0GVWHf42tcKILUuu90GXxe7cmMuqzEOlbTZvHsM/1qdxTDhLA7elepFsPYA+ogKYFkR9kE5jtJBgHojoE8yi2AbjFBAAUQnrO9UZrc47hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d13f29ca32so90235255ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 23:14:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739344446; x=1739949246;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Og5bvwhvhKoFdyVw94dIkty6Mefj0ZwIRl9Su87Fn7I=;
-        b=rtYcRYSk4oJk//R2IolTCf7H4w70N6W4b6YrfLe9a1pKjpD7JcAzXJMVZHpBttFwyD
-         3O6MtlpyOU/UuvQNXW6fPMdaCBLJ2Tg9WA+NaDGaQscvuPkTcwijarncT3oMMtEJmZfB
-         0zthx8UGlJJfK4etxPxM9Q+W5uPHU/PN0bpKiaAZZHn2XLGMKwJctZV5enlgsrcT+0/2
-         cLYAtyv9db/f6o0fQA7sojbYEEy9FLvBIT/kFv0TJ/KqSHhnK6mF99ogn1jI5y8JyjXP
-         lrm3fa82jQoXroySCPnGeQtPwYs7WRQ5gKmUQ0xuiJc/zpjxmujo2doV/8zHngY+5er/
-         dzcw==
-X-Forwarded-Encrypted: i=1; AJvYcCXUUNB4KbzX6CDBQRvqtxlJmCMqjA/DCDpUSjzV6htXDcLcLFMsOmVB9tTnZ5iSq9BUHuzbURTc3RfGaH0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7LxHT6bC99rBcnmaGQzSd6oRuQ1cvN+W5AC38e6Ifk34FSJ1z
-	kjX6lDrFt9wLAS4wnDGV42ul2Sulzxv+akXHvoBpKp8Nxpw5d3hXkXDGj6K/mzGlhL9XFk/WdKh
-	5bMhvr1xbWEmM+khEE3yJefF0gISIv/NRYMFpl2yFwWdHaZi0PvpGpz0=
-X-Google-Smtp-Source: AGHT+IGw2qMHAT//UJUsT0kOfbyPwJWmtREXaqlGBdTJfT+ooeDqUeC/0MzYt82v6bAiYLO0/YSZXWfhVB7wsO56WdpHKaqSQziT
+	s=arc-20240116; t=1739344529; c=relaxed/simple;
+	bh=V66YCvC0FuwsQ3Tm8P1Y43IROGLiDwhKoiqjaV3vOeg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qhwv4403ud+xDuPOYWoynW2IeDSL+j2xBFy7Mrzy3e5joiPuDl/EOgr6aoYBcHyTDEGVeUijQmrmXTRlnqmG+c1xOwLcbEgHbq5fnAXZJ9lKpp+cIsxXuZRUzpsKUj2zOkGkW4edKLJS0BYwHxHVieTNlWSrOfpRw54SP9/JaNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ligrOa55; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ligrOa55"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE5C5C4CEDF;
+	Wed, 12 Feb 2025 07:15:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739344528;
+	bh=V66YCvC0FuwsQ3Tm8P1Y43IROGLiDwhKoiqjaV3vOeg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ligrOa55dlzfdnDNNi2tX2QeAofE/o4XhppmFpY7n4ksubSdNSb60y7Bv6fuhL42G
+	 uKARlCvUJFO1cT6RY9+AvvtLe5EDhgYZFeOvnmrXPMp/49YIKZ5uHAE/twE56SpwLh
+	 55crwSbwXweCl07jG+fHp2plhJe3umU1DSp1JC+88dBg/NIDszVLXgRHmXyq2Y4WR/
+	 2NQIMtvvEKuR8m+D9TQYZ4dLkvrOTNK9Yc5sNXfnp0FxALkKTbzmxbV3BC0qj0Ctn3
+	 s1Pj8lhSdOb+agDfHyayP96xBWZVhNQJM8yEjna46SC+2ml/6QU5lfYoYRdxEyHQJk
+	 hEJt7Sfw2gwaw==
+Date: Wed, 12 Feb 2025 08:15:25 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Nikola Jelic <nikola.jelic83@gmail.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, 
+	tiwai@suse.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rwalton@cmlmicro.com
+Subject: Re: [PATCH V3 1/2] ASoC: dt-bindings: Add cmx655 codec
+Message-ID: <20250212-gabby-aardwolf-of-chivalry-a7fda2@krzk-bin>
+References: <20250210222903.88282-1-nikola.jelic83@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d14:b0:3d0:4b06:def3 with SMTP id
- e9e14a558f8ab-3d17d092da5mr13330275ab.10.1739344445914; Tue, 11 Feb 2025
- 23:14:05 -0800 (PST)
-Date: Tue, 11 Feb 2025 23:14:05 -0800
-In-Reply-To: <0cc53c2e-a7cc-74ea-a5f0-928af997ecf7@salutedevices.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ac4a3d.050a0220.3d72c.0117.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in
- skb_queue_purge_reason (2)
-From: syzbot <syzbot+683f8cb11b94b1824c77@syzkaller.appspotmail.com>
-To: avkrasnov@salutedevices.com, linux-kernel@vger.kernel.org, 
-	luiz.dentz@gmail.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250210222903.88282-1-nikola.jelic83@gmail.com>
 
-Hello,
+On Mon, Feb 10, 2025 at 11:28:46PM +0100, Nikola Jelic wrote:
+> Signed-off-by: Nikola Jelic <nikola.jelic83@gmail.com>
+> 
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Nothing improved here. Respond to previous comments or implement them.
 
-Reported-by: syzbot+683f8cb11b94b1824c77@syzkaller.appspotmail.com
-Tested-by: syzbot+683f8cb11b94b1824c77@syzkaller.appspotmail.com
+Some things got better in this patch, thank you. Other did not. Maybe
+there is misunderstanding about my comments, but you never replied to
+them, so I would assume you will be implementing them fully. If
+something is unclear, ask responding inline.
 
-Tested on:
 
-commit:         c674aa7c Add linux-next specific files for 20250212
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17c10ea4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a0fd539126ae5541
-dashboard link: https://syzkaller.appspot.com/bug?extid=683f8cb11b94b1824c77
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=14a51097980000
+> ---
+> V2 -> V3: fixed dt_binding_check + yamllint warnings
+> V1 -> V2: removed the txt file, fixed review remarks
+> ---
+>  .../bindings/sound/cml,cmx655d.yaml           | 78 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+>  2 files changed, 80 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/cml,cmx655d.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/cml,cmx655d.yaml b/Documentation/devicetree/bindings/sound/cml,cmx655d.yaml
+> new file mode 100644
+> index 000000000000..1648f606bf48
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/cml,cmx655d.yaml
+> @@ -0,0 +1,78 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/cml,cmx655d.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: CML Micro CMX655D codec
+> +
+> +maintainers:
+> +  - Richard Walton <rwalton@cmlmicro.com>
+> +  - Nikola Jelic <nikola.jelic83@gmail.com>
+> +
+> +description:
+> +  The CMX655D is an ultra-low power voice codec.
+> +
+> +allOf:
+> +  - $ref: dai-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - cml,cmx655d
+> +
+> +  reg:
+> +    description: Local bus address
 
-Note: testing is done by a robot and is best-effort only.
+Drop, why did this appear?
+
+> +    maxItems: 1
+> +
+> +  "#sound-dai-cells":
+> +    description: The first cell indicating the audio interface
+
+Drop, redundant. It wasn't here before and I did not ask for this, so why?
+
+> +    const: 0
+> +
+> +  reset-gpios:
+> +    description: GPIO used for codec reset, negative logic
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: Interrupt for the CMX655D IRQ line
+
+Drop
+
+> +    maxItems: 1
+> +
+> +  interrupt-names:
+> +    description: Interrupt name for the CMX655D IRQ line
+
+Nothing improved. Maybe there was some misunderstanding. I asked to look
+at other bindings doing this. Where do you see syntax like that for
+interrupt-names? What syntax do you see for interrupt-names?
+
+> +    maxItems: 1
+> +
+> +  cml,classd-oc-reset-attempts:
+> +    description: Maximum number of times to reset CMX655 class-D
+> +      following a overcurrent event.
+> +      >10000 = disable limit.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1
+> +    maximum: 10001
+> +    default: 5
+
+Still no answer why this is board configurable.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        status = "okay";
+
+Another ignored comment.
+
+> +        audio-codec@54 {
+> +            compatible = "cml,cmx655d";
+> +            #sound-dai-cells = <0>;
+> +            reg = <0x54>;
+
+Another...
+
+
+Best regards,
+Krzysztof
+
