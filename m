@@ -1,173 +1,120 @@
-Received: from mx0.infotecs.ru (mx0.infotecs.ru [91.244.183.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03BB20E6FB;
-	Wed, 12 Feb 2025 13:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.244.183.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359CE20F073
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 13:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739367716; cv=none; b=OfX7dXvp8eAAoFFMan2KOEKbmI42ng5J7ZdRBGQJNG2DUtJDvBAhIdiU9GPiQhX6nWzAD2Muvpn2V05Uh6CEtwdwV5UOxZ40WkAUyDBLZrhVXo9snWU7/EycHr6OE23K4Onr2J1aPDvYyvmnYGHbIBC2UTU/9RFwpKxTLlrovQM=
+	t=1739367724; cv=none; b=IBqw5aL0NSW6TZAvr6mdCApE0xk6hwLCWYR9lU0OHWUur/YmozXfX5sPzUPAugDr21EFpkeF922KY3vxqWfaZuyRIzjZBvAVooGFJoFOM8olkhHm5xg+ij4q9qhZz8Elb1fkyQ30ivPyYndtbSD7qqpDpmqKBteM3ODfCGBbIS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739367716; c=relaxed/simple;
-	bh=TZT5R2eitdFgRj0GA9fKVPD0Pm3cWU0d9sQiyh5DmcU=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=dzstz3F7NsmIk0uS31fNhZYMBC3EpmV3tqMly+afrxQsYFSqPER06jvnNL2InGMlltJeAC1DiMLPiaMgzOHLvwrYzFtOA4/zlFplx1frvj/p9ARYLLfks17hdrzaf03rKMw/3afZG07M8kf7gZvflmJBNhe3gAz/GzJDjBp8J3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru; spf=pass smtp.mailfrom=infotecs.ru; dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b=AwiZsHXW; arc=none smtp.client-ip=91.244.183.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infotecs.ru
+	s=arc-20240116; t=1739367724; c=relaxed/simple;
+	bh=7h6nbFnzFOLt+RWCH5AbtMdfobMx6uMJQ+/GW3rjNHQ=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HC9z3N4uu8TwjCFvAYc015foLoZi+Yb7xmGKltMcqY0dm/GB3vdyBDsZH3I9LFBmy1BUHP71QQmXvTm5tPXPgoVlfTU141/JMZG+so70Ik5ri7qAO1QsHY5VDMcT6BvvqG+LLEwftoeh1j5L1EA3aWbI98b1WNUEXFnZw725GpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=tf0qqWKO; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b="AwiZsHXW"
-Received: from mx0.infotecs-nt (localhost [127.0.0.1])
-	by mx0.infotecs.ru (Postfix) with ESMTP id BF277106B922;
-	Wed, 12 Feb 2025 16:41:51 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx0.infotecs.ru BF277106B922
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infotecs.ru; s=mx;
-	t=1739367712; bh=/bAj5hq2MsJG0KFKRNkqn4MOUfRTT/Tgyz72UhKpIzY=;
-	h=From:To:CC:Subject:Date:From;
-	b=AwiZsHXW3oUF2F6fQeYVPMLgvMEe3uGZFTzDOThcF81u6/gPijzZV4P/6UtBqVZ68
-	 Z5YWZDaojQbEFi7aKRzgFOKDTOVja4KjkvKuB0ORxUUmR3E/QmaexJB5985wXl2o5I
-	 /kxVWkj2sAI5Gnoyftube5izbWK0enSJuN78GbkY=
-Received: from msk-exch-02.infotecs-nt (msk-exch-02.infotecs-nt [10.0.7.192])
-	by mx0.infotecs-nt (Postfix) with ESMTP id BBE233063333;
-	Wed, 12 Feb 2025 16:41:51 +0300 (MSK)
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-To: Neil Horman <nhorman@tuxdriver.com>
-CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: [PATCH net] drop_monitor: fix incorrect initialization order
-Thread-Topic: [PATCH net] drop_monitor: fix incorrect initialization order
-Thread-Index: AQHbfVPeGhCgtX+tO0OFhEPE/MmNpQ==
-Date: Wed, 12 Feb 2025 13:41:51 +0000
-Message-ID: <20250212134150.377169-1-Ilia.Gavrilov@infotecs.ru>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-exclaimer-md-config: 208ac3cd-1ed4-4982-a353-bdefac89ac0a
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="tf0qqWKO"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dcdb56c9d3so10815758a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 05:42:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1739367720; x=1739972520; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CiPPwWHAckmQZTxpa+xmoPK+TKz+hzKWUS2Ki/RrKBY=;
+        b=tf0qqWKOCPdHFeTouhdCNfqMdXM62rqIIVelxnjxAPdmmhzshZs38aLfAZtN85B0sG
+         dgLWvuXg90S53hSVVIlmCGwmovdaqjSrXPXrfkF4pAE+3287z1h21K6D5a++9KpNwLon
+         V+WBPKihByguP+Yl99d++KU1WRA+qcLbweZlI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739367720; x=1739972520;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CiPPwWHAckmQZTxpa+xmoPK+TKz+hzKWUS2Ki/RrKBY=;
+        b=IKRt49o6gcCBB6ZmZR4RYj2Wv0RhMDGMSZF5Bm47uyr1iOG2xTInpO1mopurL/Ym5D
+         ijeZkd7zEw3jkxmhvJypjymI53brCmSMZ29Z4IeFaoVrzO64INiw+gyn9Mc8kFqchkgW
+         ih3WaNbrhPLrApuGymSNLrT0oQZ6Wm3okatL3hJIJv17j//cFTWw+8BgejirhSLs78bv
+         H+fvm/imJ6I/WJ73vD9aMEfSEe4LsK6qMyTnLXrT55LWPyBQkpfKAGEu77PZ32c6r/aE
+         mX4fxzjzejIQVd57xk9ximcy0zqTggUeNHNgBLA1PMgDAQjSLizfloL9Ts5yJaySlZpt
+         ObPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWeEazgJNovJjIgic9aWkKUyNGeROnsSO8xldcb2R69L9HXe75wfqhNvrbOQnFgILVOt2ddxZp524Rnrb0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTkM3IXM+IczHY8DYw26jedSxrkrXgEB13mi619A05mY9JCLBS
+	HUyl9Pj5VvJbLspoib5cAGzC7CCNBKjuOfeVgxPDWqeFN9RAirjrpHETfEjH+CVgO7DePdewlvF
+	/QLsR/fyOzAgrRG8LK+O4Sfk56hZ+mgJJ9GCzEQ==
+X-Gm-Gg: ASbGnct5nly/27xvH2qprzx0aJfwascPs7vJOb1jPjioBiDvDv6jZ6+CCo8PLNR8WHT
+	wD5lhhWf4tN5E880ZkpNhwd1xRGflRLZ9mbxf8zFdha4xgy/hJViwZ0nOUpZ6BQjG7qC5yVs2y8
+	8fwIX+uvSQe87622VhzFsZklkr
+X-Google-Smtp-Source: AGHT+IEdAA4vYWE4f6Jqe5kfoXPBf8sLR14CrtIsQmKMdovKf9+A7oyaNsjV1HVscFoUluPDJ6oVMDtmO0huBxs8zNA=
+X-Received: by 2002:a05:6402:2088:b0:5de:aa54:dc22 with SMTP id
+ 4fb4d7f45d1cf-5deadddd507mr6946407a12.20.1739367720462; Wed, 12 Feb 2025
+ 05:42:00 -0800 (PST)
+Received: from 155257052529 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 12 Feb 2025 05:42:00 -0800
+From: Joe Damato <jdamato@fastly.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250212134148.388017-1-jdamato@fastly.com>
+References: <20250212134148.388017-1-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KLMS-Rule-ID: 5
-X-KLMS-Message-Action: clean
-X-KLMS-AntiSpam-Status: not scanned, disabled by settings
-X-KLMS-AntiSpam-Interceptor-Info: not scanned
-X-KLMS-AntiPhishing: Clean, bases: 2025/02/12 10:45:00
-X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2025/02/12 10:17:00 #27183182
-X-KLMS-AntiVirus-Status: Clean, skipped
+Date: Wed, 12 Feb 2025 05:42:00 -0800
+X-Gm-Features: AWEUYZnEliqL8EWyyXri7CgDbBmA6yJKuyWcDbYIfwZ4SEiiHdkwBqv8IjRtz70
+Message-ID: <CALALjgyPqYGEw2dzi-AN6oB4jcQUt9e890=FA9+FPyV6=dXbaQ@mail.gmail.com>
+Subject: [PATCH net-next v7 1/3] netlink: Add nla_put_empty_nest helper
+To: netdev@vger.kernel.org
+Cc: pabeni@redhat.com, stfomichev@gmail.com, horms@kernel.org, kuba@kernel.org, 
+	Joe Damato <jdamato@fastly.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Syzkaller reports the following bug:
+Creating empty nests is helpful when the exact attributes to be exposed
+in the future are not known. Encapsulate the logic in a helper.
 
-BUG: spinlock bad magic on CPU#1, syz-executor.0/7995
- lock: 0xffff88805303f3e0, .magic: 00000000, .owner: <none>/-1, .owner_cpu:=
- 0
-CPU: 1 PID: 7995 Comm: syz-executor.0 Tainted: G            E     5.10.209+=
- #1
-Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference=
- Platform, BIOS 6.00 11/12/2020
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x119/0x179 lib/dump_stack.c:118
- debug_spin_lock_before kernel/locking/spinlock_debug.c:83 [inline]
- do_raw_spin_lock+0x1f6/0x270 kernel/locking/spinlock_debug.c:112
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:117 [inline]
- _raw_spin_lock_irqsave+0x50/0x70 kernel/locking/spinlock.c:159
- reset_per_cpu_data+0xe6/0x240 [drop_monitor]
- net_dm_cmd_trace+0x43d/0x17a0 [drop_monitor]
- genl_family_rcv_msg_doit+0x22f/0x330 net/netlink/genetlink.c:739
- genl_family_rcv_msg net/netlink/genetlink.c:783 [inline]
- genl_rcv_msg+0x341/0x5a0 net/netlink/genetlink.c:800
- netlink_rcv_skb+0x14d/0x440 net/netlink/af_netlink.c:2497
- genl_rcv+0x29/0x40 net/netlink/genetlink.c:811
- netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
- netlink_unicast+0x54b/0x800 net/netlink/af_netlink.c:1348
- netlink_sendmsg+0x914/0xe00 net/netlink/af_netlink.c:1916
- sock_sendmsg_nosec net/socket.c:651 [inline]
- __sock_sendmsg+0x157/0x190 net/socket.c:663
- ____sys_sendmsg+0x712/0x870 net/socket.c:2378
- ___sys_sendmsg+0xf8/0x170 net/socket.c:2432
- __sys_sendmsg+0xea/0x1b0 net/socket.c:2461
- do_syscall_64+0x30/0x40 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x62/0xc7
-RIP: 0033:0x7f3f9815aee9
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 =
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
-f 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f3f972bf0c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f3f9826d050 RCX: 00007f3f9815aee9
-RDX: 0000000020000000 RSI: 0000000020001300 RDI: 0000000000000007
-RBP: 00007f3f981b63bd R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000006e R14: 00007f3f9826d050 R15: 00007ffe01ee6768
-
-If drop_monitor is built as a kernel module, syzkaller may have time
-to send a netlink NET_DM_CMD_START message during the module loading.
-This will call the net_dm_monitor_start() function that uses
-a spinlock that has not yet been initialized.
-
-To fix this, let's place resource initialization above the registration
-of a generic netlink family.
-
-Found by InfoTeCS on behalf of Linux Verification Center
-(linuxtesting.org) with SVACE.
-
-Fixes: 9a8afc8d3962 ("Network Drop Monitor: Adding drop monitor implementat=
-ion & Netlink protocol")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ilia Gavrilov <Ilia.Gavrilov@infotecs.ru>
+Signed-off-by: Joe Damato <jdamato@fastly.com>
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
 ---
- net/core/drop_monitor.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ v4:
+   - new in v4
 
-diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
-index 6efd4cccc9dd..9755d2010e70 100644
---- a/net/core/drop_monitor.c
-+++ b/net/core/drop_monitor.c
-@@ -1734,6 +1734,11 @@ static int __init init_net_drop_monitor(void)
- 		return -ENOSPC;
- 	}
-=20
-+	for_each_possible_cpu(cpu) {
-+		net_dm_cpu_data_init(cpu);
-+		net_dm_hw_cpu_data_init(cpu);
-+	}
-+
- 	rc =3D genl_register_family(&net_drop_monitor_family);
- 	if (rc) {
- 		pr_err("Could not create drop monitor netlink family\n");
-@@ -1749,11 +1754,6 @@ static int __init init_net_drop_monitor(void)
-=20
- 	rc =3D 0;
-=20
--	for_each_possible_cpu(cpu) {
--		net_dm_cpu_data_init(cpu);
--		net_dm_hw_cpu_data_init(cpu);
--	}
--
- 	goto out;
-=20
- out_unreg:
-@@ -1772,13 +1772,12 @@ static void exit_net_drop_monitor(void)
- 	 * Because of the module_get/put we do in the trace state change path
- 	 * we are guaranteed not to have any current users when we get here
- 	 */
-+	BUG_ON(genl_unregister_family(&net_drop_monitor_family));
-=20
- 	for_each_possible_cpu(cpu) {
- 		net_dm_hw_cpu_data_fini(cpu);
- 		net_dm_cpu_data_fini(cpu);
- 	}
--
--	BUG_ON(genl_unregister_family(&net_drop_monitor_family));
+ include/net/netlink.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/include/net/netlink.h b/include/net/netlink.h
+index e015ffbed819..29e0db940382 100644
+--- a/include/net/netlink.h
++++ b/include/net/netlink.h
+@@ -118,6 +118,7 @@
+  *   nla_nest_start(skb, type)		start a nested attribute
+  *   nla_nest_end(skb, nla)		finalize a nested attribute
+  *   nla_nest_cancel(skb, nla)		cancel nested attribute construction
++ *   nla_put_empty_nest(skb, type)	create an empty nest
+  *
+  * Attribute Length Calculations:
+  *   nla_attr_size(payload)		length of attribute w/o padding
+@@ -2240,6 +2241,20 @@ static inline void nla_nest_cancel(struct
+sk_buff *skb, struct nlattr *start)
+ 	nlmsg_trim(skb, start);
  }
-=20
- module_init(init_net_drop_monitor);
---=20
-2.39.5
+
++/**
++ * nla_put_empty_nest - Create an empty nest
++ * @skb: socket buffer the message is stored in
++ * @attrtype: attribute type of the container
++ *
++ * This function is a helper for creating empty nests.
++ *
++ * Returns: 0 when successful or -EMSGSIZE on failure.
++ */
++static inline int nla_put_empty_nest(struct sk_buff *skb, int attrtype)
++{
++	return nla_nest_start(skb, attrtype) ? 0 : -EMSGSIZE;
++}
++
+ /**
+  * __nla_validate_nested - Validate a stream of nested attributes
+  * @start: container attribute
+-- 
+2.43.0
