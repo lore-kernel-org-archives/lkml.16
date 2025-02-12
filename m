@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2091DA21;
-	Wed, 12 Feb 2025 00:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7793C79F2;
+	Wed, 12 Feb 2025 00:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739320811; cv=none; b=dxA+NmxsClT1bfiloOkvoQUpQVtxbk0/G1Ii4vs23nY6xZ5eH6fsMb0facD3CCLKvtrjgDQXqwPDdwlaM04yDIbZJNPTSHyyxkFpjRKmJEnTOmtEAwd/BXHxVuY1FuttU3LI5tV2SCQ/weT5vjoZelZJdcxhiTkrpGUZhtGmc84=
+	t=1739320817; cv=none; b=TmWoymiXdIJsyG+LGRh/WSu5fhhzqKmlm5/UAuaK7Vk6XnFCEwIXzp/Vf/BStKEDSDyfQRl49kjpbvZN7yfs10bU2I0EhzFQYUiNIOALLfX4qu321s6nRycDeWB0cB6S4JdsInFpHdfi3bpgPY8r7txnPeMyiAuBKR3UFNluoAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739320811; c=relaxed/simple;
-	bh=o6jacl+8YFQgDkweUrSEzGvajj1U6xTIXTLU27ON87Q=;
+	s=arc-20240116; t=1739320817; c=relaxed/simple;
+	bh=hObQGVu7Y1GI6QKEV3LMHYulIKErStEVHWh8dzpl4qM=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=o/s1kfzW/6APV0YKl0Qe09ntEwiGnJnvT0oT+RFN1zLzCK8N74DSeWggh6jzd4yb4xThQrjvkykdlMgF5BLRM0OAccAOmE7X1lBTuxYX9klz1T6VR1xh+sV4nyMiNMRefuJHjzoMDXSFv3Zr+WRM6lsvUI3v5ouYse1WBR3klFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=horZP85L; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=UPsi5xu88jtQyeniPCspJO3U9Hdie5MZ22N9pAo9XRCh2qUBx1dp9Nw3lML/6Qb9RORZ9rawLF7ekYwRB49rvmyAZT5wiKSvXtLjDTab7ZoL8SqMaBzqoh72FgWlV3vWi5LFRH25yTg3P13icbnGkS/lHiQly5M8Cn7+eTplu6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OW5nFlcO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="horZP85L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E439C4CEE2;
-	Wed, 12 Feb 2025 00:40:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OW5nFlcO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E40FFC4CEE5;
+	Wed, 12 Feb 2025 00:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739320810;
-	bh=o6jacl+8YFQgDkweUrSEzGvajj1U6xTIXTLU27ON87Q=;
+	s=k20201202; t=1739320815;
+	bh=hObQGVu7Y1GI6QKEV3LMHYulIKErStEVHWh8dzpl4qM=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=horZP85LlDZ86QCZvtw15CDgr1Mo8OW5HZQj5/HiaQVmg7YZ67A4QfVf8N8Cq+dLq
-	 8lXcGDK/rJG15Bh+HNw4ajUaUcUQq1g054DSKqAk2K+VTPbsHI7RYYMoQ5d91WlVh6
-	 UIYyU150aJfGduKkNmkUsfItaidd9JwO0EWrVUmQGv+XmQPTZShTS+DZcaLL4INVrv
-	 eZ2DTondLlJS1nBFz3UUeJpoTdkjt8DIUy6PxJHAWvMiPmrYUJ6JZ/wjUq1Vt+Mdy2
-	 J8QPCNfhSstwU+4kVTjdOZV335c5rKRylDlEuEpGdWriFbr+9QU+IqgZmwmL6UMRky
-	 lP/AH5scUBhMA==
+	b=OW5nFlcOXYyuiIcR9zcgVpf0ckL7bOyqEYvDuenWfUHeueVWe3BNps8X6+tC+FZCR
+	 bVRetV3dQQAEzjdEXzuWr/v7hySqpUhmz0GJ8gIAyJNcRVWYq4B52DmaTLEJam7SVi
+	 wKUPXt917NJevf7blR9eW9nax+5WzQZL29cvYI7xzK4GQm4+BLJynb/VNs2oF3R8h0
+	 +dEFA/CAakCJyxea2JH0S7ZCS44hXPh2FWNRBr4pWYFiN+4FSgUPX9cd0aDvtd7TWv
+	 hm3Ppl4+Ye+YmgqjS7qFf5FEO8nr1Y5R53hh0iOg7MZ/xSDwYgsnEDr0zXdvUrFvFG
+	 LuuMi9PpXCTZA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE57380AA7A;
-	Wed, 12 Feb 2025 00:40:40 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EBBE6380AA7A;
+	Wed, 12 Feb 2025 00:40:44 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,36 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3] hamradio: baycom: replace strcpy() with strscpy()
+Subject: Re: [PATCH RESEND] net: phy: broadcom: don't include
+ '<linux/pm_wakeup.h>' directly
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <173932083925.51333.16699116613029373811.git-patchwork-notify@kernel.org>
-Date: Wed, 12 Feb 2025 00:40:39 +0000
-References: <3qo3fbrak7undfgocsi2s74v4uyjbylpdqhie4dohfoh4welfn@joq7up65ug6v>
-In-Reply-To: <3qo3fbrak7undfgocsi2s74v4uyjbylpdqhie4dohfoh4welfn@joq7up65ug6v>
-To: Ethan Carter Edwards <ethan@ethancedwards.com>
-Cc: dan.carpenter@linaro.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-hams@vger.kernel.org, pabeni@redhat.com,
- linux-hardening@vger.kernel.org, kernel-hardening@lists.openwall.com
+ <173932084349.51333.4089445627229532241.git-patchwork-notify@kernel.org>
+Date: Wed, 12 Feb 2025 00:40:43 +0000
+References: <20250210113658.52019-2-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20250210113658.52019-2-wsa+renesas@sang-engineering.com>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-kernel@vger.kernel.org, florian.fainelli@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, andrew@lunn.ch, hkallweit1@gmail.com,
+ linux@armlinux.org.uk, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Sat, 8 Feb 2025 23:06:21 -0500 you wrote:
-> The strcpy() function has been deprecated and replaced with strscpy().
-> There is an effort to make this change treewide:
-> https://github.com/KSPP/linux/issues/88.
+On Mon, 10 Feb 2025 12:36:59 +0100 you wrote:
+> The header clearly states that it does not want to be included directly,
+> only via '<linux/(platform_)?device.h>'. Replace the include accordingly.
 > 
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-> Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
-> 
-> [...]
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> ---
+>  drivers/net/phy/broadcom.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Here is the summary with links:
-  - [v3] hamradio: baycom: replace strcpy() with strscpy()
-    https://git.kernel.org/netdev/net-next/c/3b147be9ef08
+  - [RESEND] net: phy: broadcom: don't include '<linux/pm_wakeup.h>' directly
+    https://git.kernel.org/netdev/net-next/c/ad30ee801388
 
 You are awesome, thank you!
 -- 
