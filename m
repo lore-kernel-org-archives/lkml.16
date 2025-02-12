@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2FB1DC07D;
-	Wed, 12 Feb 2025 19:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6309D1FCFE2;
+	Wed, 12 Feb 2025 19:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739388685; cv=none; b=hCYxvoRkA6AF8nMeBHy1/gDLA+vRiSJmO/k/wdygJfvWqlgfXo6+ae9iqLI0tkz8SYMR9SUUQDe18yORRe0g1gYpXOZZ6FXBJc2RnMk8genuceknbcwtsF+ZZWEMKdRH8aaFAxCn8qbJ5qh5tLDIaJ4lwXZQUACLBVb9LT1Qs4k=
+	t=1739388686; cv=none; b=JfZvmYucLlz/PskPViHuyBRx0V7+OtaqMLzsr6y6WiSZD+IBPCKMBMFsc3EUauyekwE4r0f07/FA0hHSZnBKWydfwKF//PSPFNYovuZl6T7QGHd6RhurURiha+114u/4MHsGjuWkhLraonBzPaIPwuE3f9mlgYftTY/fauzVUQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739388685; c=relaxed/simple;
-	bh=QWfCk6Z9kmUwiT/DGt2f/lMajzR81wKfnu7GN46kOys=;
+	s=arc-20240116; t=1739388686; c=relaxed/simple;
+	bh=Ze4Uk+nUu5ksQDzaMxOYhGlURLhavDr5sueanXUJg4I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iYz6VxkNP70FAIXQtSkset7utj5BENSeLTbnQivapyrnYxEKGJu9Oig2RdGAXiB3FqNBzn2uEykqANxlCjj9VseqM9Nq4xz4RcXPtQOHKPaNWXp2cla8/dLs42txXBd4SCkjJ/fRw3gFGWAuKSFe6NgV3FzcbCtSFGG2apQ4QCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RHV+S7FJ; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=Yg5I4dFV6v3apod3A4BAqvM32SsE0m2U4hlDAeg5laeg3e8bN+W0f2VGvEqNELGKNfCH+NTIwPTSjd/7XQDs/f70rE21lHszuVK5h4l4w9X9dzwO7NLI272iYzm/sKX2iNpzkRK0BCQbIq4oafrrrYrEByocNXyrToRAVj1h4Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MdbB9hGr; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RHV+S7FJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MdbB9hGr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739388684; x=1770924684;
+  t=1739388685; x=1770924685;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=QWfCk6Z9kmUwiT/DGt2f/lMajzR81wKfnu7GN46kOys=;
-  b=RHV+S7FJEOX5oTeFqrx7iWPTcTnXKbQ8HuMCZsumt9lRVAabuttsCqC+
-   E6eXUKGhENQCLT323h0J3f4juLhH8v9atWgUK2TWUCWSlEXQfiw7OXtLz
-   jJFmnBXU3bYsqFfvItYLSQD1BfbgOrQu7QnZA02Sngnowxuc50qcvSGVk
-   MkrsrpF3xvedLXN5NDbvGs23v5QzeDWSHP0LjkxYscVoMHUIQaZ+MGLUy
-   xOgq7XZWA1Ub5tJfHUHMN2pIYKX9m2P+4dI3llY+67GpxaLU65RMBuSBk
-   jSimWopJ/fTNE2m/6RMbwPmM0RqRM+3tMnxoK7Z/+6QdYaOhnlf+3jUAA
-   A==;
-X-CSE-ConnectionGUID: abR/tZHXQaqBourjndWzFQ==
-X-CSE-MsgGUID: GlGls5kWSB2E8Bf3D3/Qng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="50714405"
-X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
-   d="scan'208";a="50714405"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 11:31:24 -0800
-X-CSE-ConnectionGUID: Oi6g4VVQRSWYiCtLZuw10A==
-X-CSE-MsgGUID: SalJIseoSXmw88IeDLGjrQ==
+  bh=Ze4Uk+nUu5ksQDzaMxOYhGlURLhavDr5sueanXUJg4I=;
+  b=MdbB9hGr62dMLC5uy1mEYLZzLt1zpZO+QhuqUPF3nt8XYo3P4r5uXbk0
+   NzfDNv8dJrBOapg3vLHH3qqp0nzSbofYJid2WSLqL8xdkyNmB7Gg/pTz4
+   qJpy53ig820H4iRF/6FLj9jWSJgPMuSLogXXqGnxGKe2Oq9brV0qU1ODE
+   wxeKlY/mXHg9k8ooo82eDJuECDayjaKNAIeMdr5QdqiyFnTaGKcc+gaP8
+   tWUbTTWkATZdcN9YPYhxrFKFvFVGLC0nEqhmIhYv3PV62UvSntAsO5SMb
+   HsSizBkYWQTvEmNtWSIzv0lIkCSMJ/TuqUMKa3gJtdFFOu92linPtkw9q
+   g==;
+X-CSE-ConnectionGUID: ZMA/fwJMTLu2Q9YNEhQTKA==
+X-CSE-MsgGUID: t95BTWm/QiWjouurikkS1w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40183660"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="40183660"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 11:31:23 -0800
+X-CSE-ConnectionGUID: jZzIFCRWQrSRGiToBbcmjA==
+X-CSE-MsgGUID: 83Ttg1O6SLC5MMotY1ehWw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
-   d="scan'208";a="112880548"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117542534"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 12 Feb 2025 11:31:21 -0800
+  by fmviesa005.fm.intel.com with ESMTP; 12 Feb 2025 11:31:21 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 7F3C531C; Wed, 12 Feb 2025 21:31:19 +0200 (EET)
+	id 5353810F; Wed, 12 Feb 2025 21:31:19 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
@@ -57,9 +57,9 @@ Cc: Rob Herring <robh@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Ferry Toth <fntoth@gmail.com>
-Subject: [PATCH v3 4/4] usb: dwc3: gadget: Avoid using reserved endpoints on Intel Merrifield
-Date: Wed, 12 Feb 2025 21:28:04 +0200
-Message-ID: <20250212193116.2487289-5-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 1/4] dt-bindings: usb: dwc3: Add a property to reserve endpoints
+Date: Wed, 12 Feb 2025 21:28:01 +0200
+Message-ID: <20250212193116.2487289-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
 In-Reply-To: <20250212193116.2487289-1-andriy.shevchenko@linux.intel.com>
 References: <20250212193116.2487289-1-andriy.shevchenko@linux.intel.com>
@@ -69,59 +69,42 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Intel Merrifield SoC uses these endpoints for tracing and they cannot
-be re-allocated if being used because the side band flow control signals
-are hard wired to certain endpoints:
-
-• 1 High BW Bulk IN (IN#1) (RTIT)
-• 1 1KB BW Bulk IN (IN#8) + 1 1KB BW Bulk OUT (Run Control) (OUT#8)
-
-In device mode, since RTIT (EP#1) and EXI/RunControl (EP#8) uses
-External Buffer Control (EBC) mode, these endpoints are to be mapped to
-EBC mode (to be done by EXI target driver). Additionally TRB for RTIT
-and EXI are maintained in STM (System Trace Module) unit and the EXI
-target driver will as well configure the TRB location for EP #1 IN
-and EP#8 (IN and OUT). Since STM/PTI and EXI hardware blocks manage
-these endpoints and interface to OTG3 controller through EBC interface,
-there is no need to enable any events (such as XferComplete etc)
-for these end points.
+Some of the endpoints may be reserved by hardware for different purposes,
+e.g., tracing control and output. This is the case, for instance, on
+Intel Merrifield and Moorefield platforms that reserve a few and USB driver
+may not use them for the regular transfers. Add the respective bindings.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Tested-by: Ferry Toth <fntoth@gmail.com>
-Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../devicetree/bindings/usb/snps,dwc3-common.yaml     | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-index 052852f80146..54a4ee2b90b7 100644
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -148,11 +148,21 @@ static const struct property_entry dwc3_pci_intel_byt_properties[] = {
- 	{}
- };
+diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
+index c956053fd036..71249b6ba616 100644
+--- a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
++++ b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
+@@ -65,6 +65,17 @@ properties:
+       mode.
+     type: boolean
  
-+/*
-+ * Intel Merrifield SoC uses these endpoints for tracing and they cannot
-+ * be re-allocated if being used because the side band flow control signals
-+ * are hard wired to certain endpoints:
-+ * - 1 High BW Bulk IN (IN#1) (RTIT)
-+ * - 1 1KB BW Bulk IN (IN#8) + 1 1KB BW Bulk OUT (Run Control) (OUT#8)
-+ */
-+static const u8 dwc3_pci_mrfld_reserved_endpoints[] = { 3, 16, 17 };
++  snps,reserved-endpoints:
++    description:
++      Reserve endpoints for other needs, e.g, for tracing control and output.
++      When set, the driver will avoid using them for the regular USB transfers.
++    $ref: /schemas/types.yaml#/definitions/uint8-array
++    minItems: 1
++    maxItems: 30
++    items:
++      minimum: 2
++      maximum: 31
 +
- static const struct property_entry dwc3_pci_mrfld_properties[] = {
- 	PROPERTY_ENTRY_STRING("dr_mode", "otg"),
- 	PROPERTY_ENTRY_STRING("linux,extcon-name", "mrfld_bcove_pwrsrc"),
- 	PROPERTY_ENTRY_BOOL("snps,dis_u3_susphy_quirk"),
- 	PROPERTY_ENTRY_BOOL("snps,dis_u2_susphy_quirk"),
-+	PROPERTY_ENTRY_U8_ARRAY("snps,reserved-endpoints", dwc3_pci_mrfld_reserved_endpoints),
- 	PROPERTY_ENTRY_BOOL("snps,usb2-gadget-lpm-disable"),
- 	PROPERTY_ENTRY_BOOL("linux,sysdev_is_parent"),
- 	{}
+   snps,dis-start-transfer-quirk:
+     description:
+       When set, disable isoc START TRANSFER command failure SW work-around
 -- 
 2.45.1.3035.g276e886db78b
 
