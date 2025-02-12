@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5794F2080EA
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 10:36:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBFA2080EC
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 10:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739356593; cv=none; b=JvACXgtJZI58++awpX0gGPu0qDaYiqhWWrCv8G3HrjdKu0rsP3qPg4a+0kTVfXsBlWNnobKkoINmLhB82h3iJY/gtsj9S1wG9/dGASkrVHOydb65mupqMSEQvw+SmU/EVweLfFvjBe3KjdLYDInaaigeuzJrqyLYjUzLFb/OeXs=
+	t=1739356594; cv=none; b=AQ1yuSrLYdUeQxn7kzIoKni+kyq28N30QyFk78F4ra+NEtorRa1Ny1Osdcj30y0aggVMJ/2YgcW6RKTo3K/CEjbaddyq104Y0bH7EW2TcE/uYlkZ35m6Z9AmkmRcKwsSE1LocMlQ7KqmKiagfTVCmYtewAX86PczqQWujt9BpQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739356593; c=relaxed/simple;
-	bh=0WR84p7YKZF2BFhyRyUTGT162ZAn/eAXDTpRJEXuTV4=;
+	s=arc-20240116; t=1739356594; c=relaxed/simple;
+	bh=mkHccYxFpw6IWV8gVpwa1KPT8Brq/wgiFwIOvtIyvfY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bA3LK2S36rXfhebqeyoYKtuqfbZ9ehcLqJc56er/fJ3yZpaGH3vObeP3cQONsLOTridE4DHN1faLkNGsqQfYZLyQopcnP1xGF3NZrqnoytmhWAooe2HZu3j0uwq+UeApV9VOtfC+WU/D3ea6haH2OXAwqXwGzrryOShqhI5ax2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HiNPp2Vv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NLazJwO+; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=bpsomf3OeKh7CCQcZ52EFBdPnpTRcQgW3/OMNmRlj7KEqKNTA8SwnxVeggp7VP6g1knsp32HATNvtjg+1cM29NPOB/BzkW5wrbbMff6HlapX82HQzDcm2RBeK3aFbdYpfk4G0Sy3OvG86wpj8GwR2XrQ6+foHeyiEvrWMmO2+BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pIezP+wv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R+JyVdlL; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HiNPp2Vv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NLazJwO+"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pIezP+wv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R+JyVdlL"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1739356584;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=o4ro3qoz6KkAoq2X6IKf6RkvdmN1FbVe9xHb8JQwNCo=;
-	b=HiNPp2VvVxB3Xu34K2TVvPIidzEC3qRbSW4ce3+I4JUoOpcPJY9bUlVGUSd1PsSS7T8e/s
-	hsx/4RPx6YD8Y/iR4JzgSQRKXMv4Zog7R9WCcLNnikWOtOu2Qb/ULCp7TMqpu2G72qdUGB
-	eFZx8/EvDCPQl+EFRtSAwtMRWslaBQMo9GNz2mfnznJeHK18+AXrtdWvhIGMAjJQ7ZcT7z
-	qPHqs6l3TvPWRkCemzrlEht8IUjZvc8pmAINXMwf4f0DEo8elNU6g4IvsVeyTSw6tNM7si
-	90Df9egiW+hF/7znoU375d6YH/rsPBMKS+FTS1ZlDBocX7Rbidmj5pewvDTFOg==
+	bh=v0V4Zx3GTmtiiX2SMw1wyrim82M3wrqb99wqyWJPfww=;
+	b=pIezP+wvklkZjMk1CtsSIWcvWsuIXOBKqxeEE68+fNSSdpiASieVoRqsdNCKk8V5MuQXSt
+	GER6KRSmMvTuZoh6VF0vLTTloxJdFO8FYWrlHtvW/TlLWUSAIHah/6F7LnQyGXyGeXbkpK
+	H9Ya75zGtfqAg9zlHPoBINOVEmNQI5MS+W8TzSnq9Ir3Ix+7QLfVS1h/3nw2Q4q6YH0sK/
+	knxbekKw66Q8fxLpBGtNF66vFJwfxiRA5MN4boOuBwSEeXpd9W3TB2mybP5VeTaG97wBe1
+	qdS8gJSPr03ExrnCmbU1Vrtxs4cCD6wgytqIPGHR9GODZ2p7zMzGw5CPosNHVQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1739356584;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=o4ro3qoz6KkAoq2X6IKf6RkvdmN1FbVe9xHb8JQwNCo=;
-	b=NLazJwO+S7ybtnv4SDpm2vAUYo8YwQlSfyyruNQYTUTYb+sIyfm3/J6xGQi4yvWGNxCKO2
-	k59/ca16L3ECFlDQ==
+	bh=v0V4Zx3GTmtiiX2SMw1wyrim82M3wrqb99wqyWJPfww=;
+	b=R+JyVdlLpdD39g2mXfGR+1tv5aFKF6PkzC84ug5lSbXE5rn6AnRmJHaTzz4svb0XNUM0Iz
+	hCrVOeeIyjb58BCw==
 To: linux-rt-devel@lists.linux.dev,
 	linux-kernel@vger.kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
@@ -50,48 +50,51 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Clark Williams <clrkwllms@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 0/2] lockdep: disable_irq_nosync_lockdep.*() for PREEMPT_RT.
-Date: Wed, 12 Feb 2025 11:36:17 +0100
-Message-ID: <20250212103619.2560503-1-bigeasy@linutronix.de>
-In-Reply-To: <760e34f9-6034-40e0-82a5-ee9becd24438@roeck-us.net>
+Subject: [PATCH 2/2] lockdep: Remove disable_irq_lockdep().
+Date: Wed, 12 Feb 2025 11:36:19 +0100
+Message-ID: <20250212103619.2560503-3-bigeasy@linutronix.de>
+In-Reply-To: <20250212103619.2560503-1-bigeasy@linutronix.de>
 References: <760e34f9-6034-40e0-82a5-ee9becd24438@roeck-us.net>
+ <20250212103619.2560503-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Guenter reported a sleeping-while-atomic warning on PREEMPT_RT with the
-NE2K card. Turns out it is a questionable construct which requires
-lockdep tweak to not get reported. It was added long time ago to deal
-with the NE2K and has today two users.
+disable_irq_lockdep() has no users, last one was probabaly removed in
+   0b7c874348ea1 ("forcedeth: fix unilateral interrupt disabling in netpoll=
+ path")
 
-The way I see, we could convert NE2K to NAPI and avoid the construct. It
-would do the slow-part/ spin (in the reset case) with "just" BH disabled
-which is what it is doing now since all callers disable BH before
-calling. There are however many parts using the driver which have to be
-touched (CS, PCI, =E2=80=A6) and I have just qemu here so I am not too
-comfortable doing it. Also I haven't looked what is wrong forcedeth yet.
+Remove disable_irq_lockdep().
 
-I have no idea why nobody converted NE2K to NAPI in the last 20 years.
-The annotation was added in 2007 while NAPI was added in 2002 via
-   abb85ec3ab0ba ("Integrate NAPI work done by Jamal Hadi Salim, Robert Ols=
-son, and Alexey Kuznetsov.=E2=80=A6)
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ include/linux/interrupt.h | 8 --------
+ 1 file changed, 8 deletions(-)
 
-The easy part is to just avoid disabling interrupt on PREEMPT_RT since
-there is no difference.
-
-Sebastian Andrzej Siewior (2):
-  lockdep: Don't disable interrupts on RT in
-    disable_irq_nosync_lockdep.*()
-  lockdep: Remove disable_irq_lockdep().
-
- include/linux/interrupt.h | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
-
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index a1b1be9bf73b2..c782a74d2a304 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -461,14 +461,6 @@ static inline void disable_irq_nosync_lockdep_irqsave(=
+unsigned int irq, unsigned
+ #endif
+ }
+=20
+-static inline void disable_irq_lockdep(unsigned int irq)
+-{
+-	disable_irq(irq);
+-#ifdef CONFIG_LOCKDEP
+-	local_irq_disable();
+-#endif
+-}
+-
+ static inline void enable_irq_lockdep(unsigned int irq)
+ {
+ #if defined(CONFIG_LOCKDEP) && !defined(CONFIG_PREEMPT_RT)
 --=20
 2.47.2
 
