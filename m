@@ -1,113 +1,140 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25B1134A8;
-	Wed, 12 Feb 2025 13:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DDC20C486
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 13:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739367031; cv=none; b=iJHGdr/8z1hoXhtZwOoxQmIuFdAgCEkxZptXfA/2ocqSvqemjGzSoDPBOR1las6RTdHJ70rRNVOLq22YnCTP2RhhkYsT5H+ThuPQAP6LfDIMQ7xsx8NO7LfwySXwpS24bT5rdogDdeqAcM4Tl7IM6jnz+KovHP6ZmhBABHXFamM=
+	t=1739367031; cv=none; b=ZdEypC6q5KYYoiYT2ohvD+gIFF141otKCfFZomQ+k3ul/soss6ZX+/OoquyQRI3Un/JijFl1L49pZZ+kHrF2C9zFPM6FD1geAByUgdsNyvovbBjsaHBjDeAL1Lsoao2XTHxk6qjBTb1B/AlXqKR/McKKV49tJ9XqI6hzP4M0Kf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739367031; c=relaxed/simple;
-	bh=x8AYOnMF7PRVPfCYpeD0g4I5hOenk7Y0XPRJuJ6O6PU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J83uCL44HfOeGBYHst/1W3UP/qkuaDCgc+eCtrEUzvtIDAHo6sp8SXQ0zRy/8iVLXePelF6teXSLUA3Dp+KaKalLEm2Za/au9qx4+N6ibdfoNVNR4hDw7F+0HcJcLxDFyEfB/tmX1eOdS7cQqc4AuM8+pp+JIY5TYveKWHwh5Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M5suh/CG; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=cppRDKTH5X7+PhdoGd1D1mSrJYsVfO2+TtgwU+r5HiM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dtsgRoP8V0v9pLIb2uJMBN9gUgLjRwkoVSR6pzGBTieBY3HXtKfhx+vOaPRUQ6ovPR0t++ajr4gHK6srxS0lHxT5I51xgs3GxOkYSkcE8RHT02bKzbv/psFpggjm/x0O1IUbPHpxXhaet7KrqLc1FDPkTMfYJ09t5Cr0riw9r2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=bI9eezHu; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5suh/CG"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43944c51e41so35186905e9.0;
-        Wed, 12 Feb 2025 05:30:29 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="bI9eezHu"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21f4af4f9ddso80949485ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 05:30:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739367028; x=1739971828; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QFUpAYQ/EzsN4696Aznq2jleqF4aGdSY4M+7/WbykcI=;
-        b=M5suh/CGClE5CJoUtp7EKI4oEr8g8ymVkfs9G4m11+ERNf7mZZWjsSCebba1OzDBe5
-         K+yqbGUn5JQ/r4T4QxSDb6mJAEYAq4S2Hk5nz9LNUw1CCaL2oM/h9B9coWtzYi0M2NWp
-         LLzMAxIzGRyIQxsk7anKNk8eF8B2SyRgPXe2Uf+oOpzoa788dweSG0JFfH9hfmH/a4yH
-         9arDPI3fDFjh9kxo8FhsvkdZHhINlfVqihdJQn1PFSU2R17pltahmp3jpIJx8879/llV
-         fTJjkiWGVbh8fHJ8AMF0k3Ah4lDZisPlZohSITof2HbL1PZwWMnVPLJkx6HaEcMGByEm
-         SXTQ==
+        d=fastly.com; s=google; t=1739367029; x=1739971829; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bq7SdSXo+JhFwWwHQa7/twUcE0+PVputBf+G7gcfT+Q=;
+        b=bI9eezHuZ1YRlXLL26JDblxdtNGRFf09dr3q1mu7Lynz47ayzTiLJjJhKXhTy/9k+B
+         0D4ITt6y8zAWEjZ/FVrGl4QY3nS95UcnG7ba0x7HqugSdeMpRZFhqv9YE4C5N+qjDbQe
+         LoFfdGwBDdNyt6mq/GpTEhAdKGpI+BpwLuogA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739367028; x=1739971828;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1739367029; x=1739971829;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QFUpAYQ/EzsN4696Aznq2jleqF4aGdSY4M+7/WbykcI=;
-        b=c90lLMvKTDqMHe20G+wmOP2lNBcUrz7iLiQH3OA8YjcQ8E+A2OABLEWzVyPgBTY7a8
-         IGs335xUC9/XQ+YiD1ewqkNE+ERtOvTWveJmdb0uHg4jy2D5oa6CaaPfEzcuJkz17TSq
-         ZRyUOcGKKGJ+uu/sqLV1g1Lri06mujZDu/sek16qThQ5YuYQw3VpDj3gxBSYqOCPD1GL
-         rRs4n2wH8ZtXWwohzCXwgJyW1i5BkYVX203lR4VdZlK67JcmkraUSm0UJqs+biTqA+dZ
-         ey/ohyWqDJPGOdr7QG6rkXLw4LvP42A7m5dJhxgVWej/EUEUdlwQ0q0BcaLY/yKd0key
-         qeIw==
-X-Forwarded-Encrypted: i=1; AJvYcCXdZ0Z77ul/mMd0s67f4q9I7U+2+cGHy/RE7ofaEZCPw2gM1Gl6mARh0V8QPWg9n0FtXwsSbBV7YKgK480=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym3IcOhXG3P8PMyfN6g9A76jOALWJB2jItzKLnXkyiP7VJHTGS
-	+SQ/JjSPk0ZiCyPz99iIP+n8rCce1ToTAR+cNH52L/bwxZFNEvJzJ4Yssg==
-X-Gm-Gg: ASbGncuDH9UVb/EQQoxTFtmiOCRatIamiQIWZgJaCxLb/3qxS4G75u7cOF7uZw3l8AT
-	TOWqdgcG+0sVi3si3fXIXa82rQHnkTTanDn4VNAgvTW/d5RXcv0q86MgwZ55VwVV8ZtyRdJRsPd
-	un4KdbTUPncmhXSPgrlOMEDmnOMRhighyjkZNCCCqjPhY6ebyfmEdm7BlJMRDAz7T4VH5CoXGoc
-	tPuXuzkKKb9wRAEyMoaM0gNN7ZkBdN6KdcdM/ZeGjVUjUfsv/afXww4LBpAWaESUj0RxLIgZeEJ
-	zyodHelAoAA0dkxRM3m1P2/s
-X-Google-Smtp-Source: AGHT+IGRnXj0xPkxw+QISfZ5uRdPjMB50w6jdYQoac4xQcQwkfZCRC02jLlLBsV00Ltaxk4cGvP2cA==
-X-Received: by 2002:adf:eb83:0:b0:38d:d9bd:1897 with SMTP id ffacd0b85a97d-38dea271f65mr2235994f8f.22.1739367027596;
-        Wed, 12 Feb 2025 05:30:27 -0800 (PST)
-Received: from [192.168.8.100] ([148.252.128.10])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394dc1c56asm33562685e9.0.2025.02.12.05.30.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 05:30:26 -0800 (PST)
-Message-ID: <80ba6f5e-33dc-4f06-9277-96ae99d89239@gmail.com>
-Date: Wed, 12 Feb 2025 13:31:29 +0000
+        bh=bq7SdSXo+JhFwWwHQa7/twUcE0+PVputBf+G7gcfT+Q=;
+        b=LbIFbO1I2wwNbdtLO+1G7H7nNTiqAffFv57+MmIlgl/8slvQpXdIACd9AHBZBLYOSe
+         erbYO5wgFblg0B+BCsuuXK6vWl0/qtLLDLKktArwNKi2a3nObrM8vcmRuZIqTqbVWURI
+         Ntw/qmX9C/QXjNnXdL9ifh3Rf87N20JvitZ5yvRZtJf4CziY0FMBELF0r/ER1nHKjEvn
+         AG0JXuITr6x5FOrCMY01h33homD1x93s8K6Q+8oKSVGwGX7R4c+TZrjgk1Jjuc/guiFZ
+         OvAd75m+fEWEraswRjpYgMib7yXyXJH3QBHQPXbAGQ5I3PzGXCV5F48KfUXh/rWMoHex
+         RODg==
+X-Forwarded-Encrypted: i=1; AJvYcCWNIzxr89kSK3sZJrB+84o61g5gWXgIXuW3eDTQDR6dAeSRNbGL51C/FSIeAYEOL/CxMWr/Vpg/kgKoZ9k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj5ZCRAYC7KpFaS0AA+sGnamJgAbFT8r11h3UpN33lAZg3kWJk
+	Sv2VuVV3CzGnhUTZUwf3wJFPNTaofJ84LFL3Gf8giaj/cThwKT2SgPCsurTAY7k=
+X-Gm-Gg: ASbGnctQinMQGxohcxJABt+bXsvTliHRf7zhk3eYtGQoaQH+zo0QNOIROBRL2h2D5FJ
+	fDick2nxUHgKGdeLIZkMpv+EBip0b8L1gtn+GSlw8Ep/FsGorrD4zxuTBRq5zOnPIs0BrVYQbjo
+	6Vv5HZ5px+KF6qnwpDr4I4jnPisn5xlpxQb1kw2TKVU26khNbHHOUVhpZA0SWXmqSNZEIGy/j7W
+	RIwPy7JQqsiDAUmogyjHa5/OXVjr+5eEtJt5j+W+WKzDPcZFdbFLYhpmoVvjNsFzcwEeP9yaPJM
+	kyzUoc+AVIBOOlgso69Dbvo7KgPmixAo1WZ5t2035CpTZXZNh8zfRlFkSg==
+X-Google-Smtp-Source: AGHT+IE/UeUsPjMO1gpNMj4yctOpDIpP/4atL2aTr+WokGGBV4mZ/QiJjiwEjLs7hX6m+RhsVtK1Fg==
+X-Received: by 2002:a17:90a:fc46:b0:2fa:1a23:c01d with SMTP id 98e67ed59e1d1-2fbf5c10491mr4674200a91.21.1739367029580;
+        Wed, 12 Feb 2025 05:30:29 -0800 (PST)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98b4c52sm1448513a91.4.2025.02.12.05.30.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 05:30:29 -0800 (PST)
+Date: Wed, 12 Feb 2025 05:30:26 -0800
+From: Joe Damato <jdamato@fastly.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Stanislav Fomichev <stfomichev@gmail.com>,
+	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+	horms@kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Shuah Khan <shuah@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
+Subject: Re: [PATCH net-next v6 3/3] selftests: drv-net: Test queue xsk
+ attribute
+Message-ID: <Z6yiciovTsNpIAJA@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Stanislav Fomichev <stfomichev@gmail.com>,
+	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+	horms@kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Shuah Khan <shuah@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
+References: <20250210193903.16235-1-jdamato@fastly.com>
+ <20250210193903.16235-4-jdamato@fastly.com>
+ <13afab27-2066-4912-b8f6-15ee4846e802@redhat.com>
+ <Z6uM1IDP9JgvGvev@LQ3V64L9R2>
+ <Z6urp3d41nvBoSbG@LQ3V64L9R2>
+ <Z6usZlrFJShn67su@mini-arch>
+ <Z6vRD0agypHWDGkG@LQ3V64L9R2>
+ <Z6vY_LXp3LTp7qWV@mini-arch>
+ <20250211183706.5b53ee5e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] io_uring: pass struct io_tw_state by value
-To: Caleb Sander Mateos <csander@purestorage.com>,
- Jens Axboe <axboe@kernel.dk>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250211214539.3378714-1-csander@purestorage.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250211214539.3378714-1-csander@purestorage.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211183706.5b53ee5e@kernel.org>
 
-On 2/11/25 21:45, Caleb Sander Mateos wrote:
-...
-> --- a/io_uring/waitid.c
-> +++ b/io_uring/waitid.c
-> @@ -14,11 +14,11 @@
->   #include "io_uring.h"
->   #include "cancel.h"
->   #include "waitid.h"
->   #include "../kernel/exit.h"
->   
-> -static void io_waitid_cb(struct io_kiocb *req, struct io_tw_state *ts);
-> +static void io_waitid_cb(struct io_kiocb *req, struct io_tw_state ts);
->   
->   #define IO_WAITID_CANCEL_FLAG	BIT(31)
->   #define IO_WAITID_REF_MASK	GENMASK(30, 0)
->   
->   struct io_waitid {
-> @@ -129,11 +129,11 @@ static void io_waitid_complete(struct io_kiocb *req, int ret)
->   
->   	ret = io_waitid_finish(req, ret);
->   	if (ret < 0)
->   		req_set_fail(req);
->   	io_req_set_res(req, ret, 0);
-> -	io_req_task_complete(req, &ts);
+On Tue, Feb 11, 2025 at 06:37:06PM -0800, Jakub Kicinski wrote:
+> On Tue, 11 Feb 2025 15:10:52 -0800 Stanislav Fomichev wrote:
+> > > I can't comment on NIPA because I have no idea how it works. Maybe
+> > > there is a kernel with some options enabled and other kernels with
+> > > various options disabled?  
+> > 
+> > Sorry, should've been more clear. My suggestion is to add 
+> > CONFIG_XDP_SOCKETS to tools/testing/selftests/drivers/net/config
+> > to make your new testcase run in a proper environment with XSKs enabled.
+> 
+> +1 this we need for sure
 
-This thing will need to be fixed first
+OK will do.
+ 
+> > > I wonder if that's a separate issue though?
+> > >
+> > > In other words: maybe writing the test as I've mentioned above so it
+> > > works regardless of whether CONFIG_XDP_SOCKETS is set or not is a
+> > > good idea just on its own?
+> > > 
+> > > I'm just not sure if there's some other pattern I should be
+> > > following other than what I proposed above. I'm hesitant to re-spin
+> > > until I get feedback on the proposed approach.  
+> > 
+> > I'd keep your test as is (fail hard if XSK is not there), but 
+> > let's see if Paolo/Jakub have any other suggestions.
+> 
+> No strong preference. Stan is right that validating the environment 
+> is definitely a non-goal for the upstream tests. But if you already
+> added and tested the checks Joe you can keep them, up to you.
 
-
-> +	io_req_task_complete(req, ts);
->   }
-
--- 
-Pavel Begunkov
-
+OK. I guess I'll just leave them? They are as described earlier in
+the thread.
