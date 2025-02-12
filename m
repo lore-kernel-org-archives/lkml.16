@@ -1,171 +1,94 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A5B2036E4
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21B2204591;
+	Wed, 12 Feb 2025 22:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739399957; cv=none; b=sH7eVNUu05y7DxsjD9zuhXgNJPjBoAlOD6CZtcCLXKiGASkznhU34Ee9wvcuLtqrJDmc0/0yuQCfqy8ZhtwseYNhACDi9HV9SXGnkf1dtglEkSBR15w9Z6hJZQRRy8xPybIf27V03ojrg6Ivai+hm4q5mJZfBr1s77KKNQq8+KA=
+	t=1739399970; cv=none; b=gh3C+RHn0xkreWm56Is+oV62rkMayrRTrKxKORHe1DQ0RLOlZRTe83zlz15/vUHG3XIP2wJ4nMvf1i/21cMRLp9bYZQ/xSpX85zlgNqZM6vv5a/JL8J6mAm7flU2oFsbwaYrBcQzPiOyf8A7ZoIyaqywKgS3pJXSz7kkpZ4A/vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739399957; c=relaxed/simple;
-	bh=fnVZ2lCPQbrID/bYxkmjhoSHnujt4I2Wy/e4E5JDwyE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g6w6gDnZKEKD+D3C1ZCd3regO/JabTaQK52tYWXzvbdJSjpQzoRlLfcxhaBq41e+HJ0DtpqpzRXzxQyyNDLdmorORCRYyXOahRHG/KNn1QkPPPpjIvFQ8RGbFoGjPsUzZdd5ZbBM8yFKlFORw421pzRjgQXiZpKvmM3/ddLwFeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=xMR7NejW; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1739399970; c=relaxed/simple;
+	bh=/3+mBVrE63/84GWfZK7OmV4Ny/tGhzzzgdhYFy/il4Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BgP2DKrqMRVbiwz95H5E6MEnEh/RQJMaPLremhR1eP5wMFnXOcKUkje1W+HbPZdeuuhRUrU6+bOIL02nwGZjveXDArN6pitQTSgXrPJBDkKNwcial61eYbzzjiIS+2MzBUoQR1jr2HuiIPY/Vxg2oOiSof42lLJ+7ey/+ERr47s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dwXaJWXz; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="xMR7NejW"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-855418e04e7so7981739f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 14:39:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1739399955; x=1740004755; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f/ApWdhQdL4i12plffxYfmx5srXyB4Qlw7j9cj3Vdhs=;
-        b=xMR7NejWiUU05OXYuNJguz7VoniZpOcx9sZdU9Tq9oOeb04SPLixxMX7Fw2iL+n251
-         ksPtvvfdF+UOTlBSzaKzbFVjunwcPe7cYH4EEyybBKuQwK58Dc5jNUyv6ThDjDtyA1MW
-         XbaOLuaaJfJpH6EG3vjHk7Sqv0ZOMYxRU4a/ouhjglpJg7rxt//khqal13Uj3NXpcZlz
-         8EDEAF718UANQwY7TiIDAcfoGgJMH3aKKlif+X3TjeS5Wt9aNDzrZdONsAXyFLkzOGb9
-         YRzVIzcY0VCWkeYNPkjFirAdyw1I9HYJfe2Ch1Sv5OkGpMCRWT8XvmZydGJGrYGyaqim
-         ZFOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739399955; x=1740004755;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f/ApWdhQdL4i12plffxYfmx5srXyB4Qlw7j9cj3Vdhs=;
-        b=GgjL0mJF/9DlsEi1ZUutS6Q4yfFyZp65pCy7YZ0l2EjS+kr+DabgQSuJIj/WMPLKJA
-         W5KFVb/yONwOsi8nfE+KsbCaCbwxZn6u6R5v609sfJAFGVgN+iI5blBurPUHq6UCTIki
-         +9jEY3GGtA7rQhZHsr837r6JOZryoqrzNDU3SiQehEwzeBWtLpE2zzRYQFyIy9Q0awfQ
-         otuJlSuyMoH67IpH/+wNMvWtrFUWzKkt7FWgBn91XbcXHcSJSOhbl1dCAahpLMXf7iT1
-         FQy1ZOkNiJ68juDScB9YqU6LR8WNl3NqenmpmxSsstWZTsvAUJSNoTwQOa2MjCqZ7ttt
-         Yrxg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+JGxsxvkGuBNEimTZX6VuHD/d6vr9WnfeOykP5VuG53tGX49huaQPbCq7ptJ3haO75ZcgHF1FMGkFdKU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsOxaUEeh2oFC469jNVaqOGoJkHhfxhktH+1+K6tBmpTcVC98I
-	TzzN8qu260FDJb+Or81F0880XBN0UPPwWuq+HHGXFsPfoW2t9G0N+1PLULwpkpA=
-X-Gm-Gg: ASbGncukUQtpoS/XnEfCdniTuu5HThyhSbl6RZpAwMOPeISZrYoE/PIqNApBI/bg8l4
-	XKZqsCtGZhaKPDvdImGj+gdwOBXjPfJvObesHqEBKjGAOawNcMQC/5yALv0v54I7bDsEJtVySFa
-	fy/Vf5D8ba/bDDHcJubrqKqwL+ELvcpQU8AOxol23iCDRy3e72j8cI/kG1VEOXYUXn04eS1z0DK
-	Pe4v+eRQHjxvUVfAiCh/WE+ScAa4B//1xar2BQqfaCpsJImS7avyLrk3FjB2Izz7/KXeoU5vVUg
-	oYgm4IXWy+7C
-X-Google-Smtp-Source: AGHT+IF/BDZz9FHkl0LZyYH+3RLFw1WwUMy5WJeRoZZj4mPNlS6nL4gi8lXQd+YzTUGk97c1/+4D1g==
-X-Received: by 2002:a05:6602:6013:b0:84a:5280:596f with SMTP id ca18e2360f4ac-85555dacf8cmr373866339f.9.1739399954792;
-        Wed, 12 Feb 2025 14:39:14 -0800 (PST)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ed282b0ed1sm17213173.103.2025.02.12.14.39.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 14:39:14 -0800 (PST)
-Message-ID: <999d55a6-b039-4a76-b0f6-3d055e91fd48@kernel.dk>
-Date: Wed, 12 Feb 2025 15:39:13 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dwXaJWXz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739399969; x=1770935969;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/3+mBVrE63/84GWfZK7OmV4Ny/tGhzzzgdhYFy/il4Q=;
+  b=dwXaJWXzEIkMh7yZx0JP65Wx1J1Xf/DHbb05opzTrmJuAZK6QlE0qHg7
+   wOoEbyclup0k4GWcpeJnX940Lem8dEbnIq6FNrE/x2mQRGbC/h1ErvnkQ
+   u6OnWi7hC0KmILtx98DM0CfTKShee3mvIB/dhlYh9Rm38CGyH66x3PzfF
+   nggLg4aEohrC2rmO6H4W3tbuhlLsAHoFXjIs3RTI8ljTVyjbYoc0dVUL4
+   eMYZVk6eSqQA1WwXV4EHDdwuGKpZiMMd4SL9Bw7+rTISbwq0BPM0H6Wcd
+   TzTOVAMwrBfWttWXJXTQXJBN+Dta1jljaaeE0fl7u6JCJNhSGdEQCfY3R
+   g==;
+X-CSE-ConnectionGUID: DFK5Dgk+RVq6teKzbf/C/A==
+X-CSE-MsgGUID: R8ly/kwhQ9OQOOV6VyIb+A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="51477510"
+X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
+   d="scan'208";a="51477510"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 14:39:29 -0800
+X-CSE-ConnectionGUID: 05zNa/znTkyUTxknDH1uZw==
+X-CSE-MsgGUID: vC9d2BQfQe6i8Hbd2elhPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117581233"
+Received: from pg15swiplab1181.png.altera.com ([10.244.232.167])
+  by fmviesa005.fm.intel.com with ESMTP; 12 Feb 2025 14:39:25 -0800
+From: Kuhanh Murugasen Krishnan <kuhanh.murugasen.krishnan@intel.com>
+To: Moritz Fischer <mdf@kernel.org>,
+	Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>,
+	linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kuhanh Murugasen Krishnan <kuhanh.murugasen.krishnan@intel.com>,
+	kuhanh.murugasen.krishnan@altera.com
+Cc: Ang Tien Sung <tien.sung.ang@intel.com>
+Subject: [PATCH] fpga: altera-cvp: PCIex8x8 ports
+Date: Thu, 13 Feb 2025 06:35:53 +0800
+Message-Id: <20250212223553.2717304-1-kuhanh.murugasen.krishnan@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] uring_cmd SQE corruptions
-To: Caleb Sander <csander@purestorage.com>
-Cc: Pavel Begunkov <asml.silence@gmail.com>,
- Riley Thomasson <riley@purestorage.com>, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250212204546.3751645-1-csander@purestorage.com>
- <401f9f7a-b813-43b0-b97f-0165072e2758@kernel.dk>
- <CADUfDZqK9+GLsRSdFVd47eZTsz863B3m16GtHc+Buiqdr7Jttg@mail.gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <CADUfDZqK9+GLsRSdFVd47eZTsz863B3m16GtHc+Buiqdr7Jttg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/12/25 2:54 PM, Caleb Sander wrote:
-> On Wed, Feb 12, 2025 at 12:55?PM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 2/12/25 1:45 PM, Caleb Sander Mateos wrote:
->>> In our application issuing NVMe passthru commands, we have observed
->>> nvme_uring_cmd fields being corrupted between when userspace initializes
->>> the io_uring SQE and when nvme_uring_cmd_io() processes it.
->>>
->>> We hypothesized that the uring_cmd's were executing asynchronously after
->>> the io_uring_enter() syscall returned, yet were still reading the SQE in
->>> the userspace-mapped SQ. Since io_uring_enter() had already incremented
->>> the SQ head index, userspace reused the SQ slot for a new SQE once the
->>> SQ wrapped around to it.
->>>
->>> We confirmed this hypothesis by "poisoning" all SQEs up to the SQ head
->>> index in userspace upon return from io_uring_enter(). By overwriting the
->>> nvme_uring_cmd nsid field with a known garbage value, we were able to
->>> trigger the err message in nvme_validate_passthru_nsid(), which logged
->>> the garbage nsid value.
->>>
->>> The issue is caused by commit 5eff57fa9f3a ("io_uring/uring_cmd: defer
->>> SQE copying until it's needed"). With this commit reverted, the poisoned
->>> values in the SQEs are no longer seen by nvme_uring_cmd_io().
->>>
->>> Prior to the commit, each uring_cmd SQE was unconditionally memcpy()ed
->>> to async_data at prep time. The commit moved this memcpy() to 2 cases
->>> when the request goes async:
->>> - If REQ_F_FORCE_ASYNC is set to force the initial issue to go async
->>> - If ->uring_cmd() returns -EAGAIN in the initial non-blocking issue
->>>
->>> This patch set fixes a bug in the EAGAIN case where the uring_cmd's sqe
->>> pointer is not updated to point to async_data after the memcpy(),
->>> as it correctly is in the REQ_F_FORCE_ASYNC case.
->>>
->>> However, uring_cmd's can be issued async in other cases not enumerated
->>> by 5eff57fa9f3a, also leading to SQE corruption. These include requests
->>> besides the first in a linked chain, which are only issued once prior
->>> requests complete. Requests waiting for a drain to complete would also
->>> be initially issued async.
->>>
->>> While it's probably possible for io_uring_cmd_prep_setup() to check for
->>> each of these cases and avoid deferring the SQE memcpy(), we feel it
->>> might be safer to revert 5eff57fa9f3a to avoid the corruption risk.
->>> As discussed recently in regard to the ublk zero-copy patches[1], new
->>> async paths added in the future could break these delicate assumptions.
->>
->> I don't think it's particularly delicate - did you manage to catch the
->> case queueing a request for async execution where the sqe wasn't already
->> copied? I did take a quick look after our out-of-band conversation, and
->> the only missing bit I immediately spotted is using SQPOLL. But I don't
->> think you're using that, right? And in any case, lifetime of SQEs with
->> SQPOLL is the duration of the request anyway, so should not pose any
->> risk of overwriting SQEs. But I do think the code should copy for that
->> case too, just to avoid it being a harder-to-use thing than it should
->> be.
-> 
-> Yes, even with the EAGAIN case fixed, nvme_validate_passthru_nsid() is
-> still catching the poisoned nsids. However, the log lines now come
-> from the application thread rather than the iou-wrk thread.
-> Indeed, we are not using SQPOLL. But we are using IOSQE_SQE_GROUP from
-> Ming's SQE group patch set[1]. Like IOSQE_IO_LINK, subsequent
-> operations in a group are issued only once the first completes. The
-> first operation in the group is a UBLK_IO_PROVIDE_IO_BUF from Ming's
-> other patch set[2], which should complete synchronously. The
-> completion should be processed in __io_submit_flush_completions() ->
-> io_free_batch_list() and queue the remaining grouped operations to be
-> issued in task work. And all the pending task work should be processed
-> during io_uring_enter()'s return to userspace.
-> But some NVMe passthru operations must be going async because they are
-> observing the poisoned values the application thread writes into the
-> io_uring SQEs after io_uring_enter() returns. We don't yet have an
-> explanation for how they end up being issued async; ftrace shows that
-> in the typical case, all the NVMe passthru operations in the group are
-> issued during task work before io_uring_enter() returns to userspace.
-> Perhaps a pending signal could short-circuit the task work processing?
+Enabling the possibility of supporting multiple
+PCIe devices from Intel Altera FPGA but with different
+device ids. The current driver registers itself
+to all device IDs which causes an incorrect driver
+association.
 
-I think it'd be a good idea to move testing to the newer patchset, as
-the sqe grouping was never really fully vetted or included. It's not
-impossible that it's a side effect of that, even though it very well
-cold be a generic issue that exists already without those patches. In
-any case, that'd move us all to a closer-to-upstream test base, without
-having older patches that aren't upstream in the mix.
+Signed-off-by: Ang Tien Sung <tien.sung.ang@intel.com>
+Signed-off-by: Kuhanh Murugasen Krishnan <kuhanh.murugasen.krishnan@intel.com>
+---
+ drivers/fpga/altera-cvp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-How are the rings setup for what you're testing? I'm specifically
-thinking of the task_work related flags. Is it using DEFER_TASKRUN, or
-is it using the older signal style task_work?
-
+diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
+index 5af0bd33890c..97e9d4d981ad 100644
+--- a/drivers/fpga/altera-cvp.c
++++ b/drivers/fpga/altera-cvp.c
+@@ -560,7 +560,7 @@ static int altera_cvp_probe(struct pci_dev *pdev,
+ static void altera_cvp_remove(struct pci_dev *pdev);
+ 
+ static struct pci_device_id altera_cvp_id_tbl[] = {
+-	{ PCI_VDEVICE(ALTERA, PCI_ANY_ID) },
++	{ PCI_VDEVICE(ALTERA, 0x00) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, altera_cvp_id_tbl);
 -- 
-Jens Axboe
+2.25.1
+
