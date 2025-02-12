@@ -1,108 +1,112 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88BA2063D6
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179DB1F03C1
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739354042; cv=none; b=dZRPc8iNGHbvuG2+OGt6VVxHrVUb1AKAv3myIA38I6AXY8CifY52uKqoLHpLSGfX0K7BRzgj73XWwUZNO2oBcQNrHMTntlxaQaDk6ZqN8FzafTE+xcU9I8gUkophPLV29ez1/jciaB6vOt1zSWdK3PSmCChE+aQsnqI/RJ+nxH0=
+	t=1739354099; cv=none; b=BJ/RluiI9Sf70dooNGzg4PgOxsaecH+bdh/T2UP3PvpH6QsPWUdHwR7WquUO54v4thdO/HfNpnX3EFHdv+XPxNJFmE8P02xSonhHaUuHxmv0QQnUtDQ8fg+NBXHAeToUZYMvQ2NiYBPy+xcMftPycZby+pFIhaiUgFu9tVeUXjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739354042; c=relaxed/simple;
-	bh=PZMdbK+5409eVJVCWqtfrQHw1QcFuT5g6apO0nOaPtc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lC/Ho+CKRjHVHrG3E6vtwMPdig+xqagu9oUDB4tdryzuuCCgomxtwDQgVGZ8u+dIIx8ZG9qC56SEG0jhfq4YIksW4hfKHBLSJzd0G0IG2EYQ1q8vkU9Y/qPOlbxYABwb3+AXFqN/tOfz+yN6qyZObS85gvvl5BHJrk59M8ZjgIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rJNs5C6o; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1739354099; c=relaxed/simple;
+	bh=UNgfNFGiapG/OthpbtBmzOD+XNv2vQtibQOh6UhLmNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s0HIWu/Jg0EZQmT6TTzSOxdOVBMC4MXHFbSa1MwQ1FyMOOkDShq/zxiuKXGg1/4U60jDerAJyi/Hwe4RTgdl1g/LrNXOxvcMXeUrn/9QjJjJdpnlIG68YOv3w2+j79XnTr5JOrZXHCyvJTCaCNFxKIGv3Lg0t0m6dDvswBRy/L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Pq0yP9Uc; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rJNs5C6o"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4394820123dso18771085e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:54:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739354039; x=1739958839; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tIR7kxuCYlEHmDo3YVqs1C3HW9gsJqd1zOT7FkNeONI=;
-        b=rJNs5C6o1myS/dabDPlyvOgRNVMkwHsc3AftOwVes5E68Oqlul7ykNq/gZNJkTRBZx
-         Vx7SzN9uY4uSbn6ihsrFNgMDpzkKjH7HBv9qyaLSxfeaXfFcndkQ5MTy70IWc6hChzgV
-         b2dTbhPcO7qoGWCbI9fWU23Lmt3U/5VThnSYqV3CwGiuAliDbIQni5/Fjn6lm7Xibn/C
-         pSEJ+QGXP1uNk6tFBB7xWZf1ugfK5bK1H8aBaKIud6arS9XefFWZk0rkqPnnk6yzvS9Q
-         t1XbsO4YA9AzjWQ40G7DNrNvIzBv2Sk7VHwUYk1Ys8M2rfECKiywBfjtEM5Pc1rDpAhI
-         ND5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739354039; x=1739958839;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tIR7kxuCYlEHmDo3YVqs1C3HW9gsJqd1zOT7FkNeONI=;
-        b=iAxVn2kOPk/rTsrhmSwj6EpLe2pCfpEHABVdvcqYyVXXQD2CC2mbyZSxHf03VH5+Nb
-         ChqUaDTx5Ttuec1q6zfy4XU2SMDKZiOCizygm3sBl3ONASQuHZD6U4usEJJzgIpP6RLN
-         YupJiK4//MEKOkgvseLq0v81ft4X3Y4j63VXn19kp7Yfxij2UKKHx/fw/Y+OLqTAoSJx
-         B2veP1cHnuXEWBqBZiP9tZUMPyAc0YgmytdyZm/IXXjSt7VOOzhFyz7SA9KivoQ4j606
-         2uwIz4haPYmp+ndrdzGLgHpF+U+JQkSVROqUhLX2rWDX0LaU5lEvMySArA1rq5IS/A+h
-         my+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVBd+lpooWGWrf4VP74lgjZk9Gh4n0FHyEB3onkEC4y8Ltd2ktKJPzHKoF07iJF3jQv+6FFbz4cxQ+7iHM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzu8DO8rcrkGyGLxNn9dYwvcmE2b2Df2jGZW33of+tSkhW64Bic
-	tit1R0guZ0VIH14Pz5ORfXhFN9dHo6qqYx2BBLbMTmWsqHgHHd0Dqjy248PjTN0=
-X-Gm-Gg: ASbGncut8YuLU7bJ4yKGyfAkD1R1pthN3M9mCqtzwnEVuyltEVza4kqER+0L83kcH32
-	5kmC2J1BFMTIGECfwlLZxI4Eg1v+N1xiueSSHzqTQD5VLhuEzKAuyvn6lG/02fdeMvFRR7XvJLD
-	f6Y1mI/pFxBcwJ8f2wGw90G9BrMGiLmxs+iqlOQGuWMhNlG7J1QG3GhmntUQcMxOcgDQbjSUVxl
-	nteGUvXuZOTICDovUygmT35T5DEjOa3V7nYEzRYoOYe9G9kew34qq7AZsF7mPG7CFWB/X/AAY+4
-	42uu6dw3t+vca9E=
-X-Google-Smtp-Source: AGHT+IE1AuIEYHupLeeT9Nxbe+qdld3vOkKKKz82MsP6O3GVbjl5NUVtbZU3jbI1vKhF91kVaT9XZA==
-X-Received: by 2002:a5d:6908:0:b0:38d:db8b:f505 with SMTP id ffacd0b85a97d-38dea262832mr1371554f8f.17.1739354039252;
-        Wed, 12 Feb 2025 01:53:59 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:521c:13af:4882:344c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38ec2d9b299sm842935f8f.56.2025.02.12.01.53.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 01:53:58 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Wentao Liang <vulab@iscas.ac.cn>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] gpio: stmpe: Check return value of stmpe_reg_read in stmpe_gpio_irq_sync_unlock
-Date: Wed, 12 Feb 2025 10:53:57 +0100
-Message-ID: <173935403447.13404.4893974637827879328.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250212021849.275-1-vulab@iscas.ac.cn>
-References: <20250212021849.275-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pq0yP9Uc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=6c+WjwuOjtZ/tCDydLZsLysHBEZRfMiTVscRPlLORcI=; b=Pq0yP9Ucvm22cCmGGU2MzGS7vX
+	pnvfMziMyGrKPf+LpLEw5sbsHtTw6kmtptlFPhxfwwCfog8sJkZ2yrluAR9ouMu/QetwtttEb0TI3
+	lR6ESkwaqzXKWrb60nxyzjJ0mN9Hq1ZDEeow40V/O4dNQs0amTR6u7R5Doi5XAEOptzSpKmRAfk2b
+	oKjE/qMWuTSkL0+fUYpeX1QO2+wCR1Cle5A3MjhW2MV79Skg2QykLcY/pGy02Nq5iXyFIRVhfcCwX
+	NAANbHouzC2yj9uUeoBbmAVd6UxSutHSm2lCUw9Fa6/0+O7fhqyk4gB7BD22kIB3Z8lAPf8kQHlAR
+	wZS+bVXw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1ti9S3-00000004ByC-13YM;
+	Wed, 12 Feb 2025 09:54:39 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id CCE93300318; Wed, 12 Feb 2025 10:54:38 +0100 (CET)
+Date: Wed, 12 Feb 2025 10:54:38 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Rik van Riel <riel@surriel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de,
+	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
+	jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
+	Manali Shukla <Manali.Shukla@amd.com>
+Subject: Re: [PATCH v10 09/12] x86/mm: enable broadcast TLB invalidation for
+ multi-threaded processes
+Message-ID: <20250212095438.GC19118@noisy.programming.kicks-ass.net>
+References: <20250211210823.242681-1-riel@surriel.com>
+ <20250211210823.242681-10-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211210823.242681-10-riel@surriel.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Feb 11, 2025 at 04:08:04PM -0500, Rik van Riel wrote:
 
+> +static void broadcast_tlb_flush(struct flush_tlb_info *info)
+> +{
+> +	bool pmd = info->stride_shift == PMD_SHIFT;
+> +	unsigned long maxnr = invlpgb_count_max;
+> +	unsigned long asid = info->mm->context.global_asid;
+> +	unsigned long addr = info->start;
+> +	unsigned long nr;
+> +
+> +	/* Flushing multiple pages at once is not supported with 1GB pages. */
+> +	if (info->stride_shift > PMD_SHIFT)
+> +		maxnr = 1;
 
-On Wed, 12 Feb 2025 10:18:49 +0800, Wentao Liang wrote:
-> The stmpe_reg_read function can fail, but its return value is not checked
-> in stmpe_gpio_irq_sync_unlock. This can lead to silent failures and
-> incorrect behavior if the hardware access fails.
-> 
-> This patch adds checks for the return value of stmpe_reg_read. If the
-> function fails, an error message is logged and the function returns
-> early to avoid further issues.
-> 
-> [...]
+How does this work?
 
-Applied, thanks!
+Normally, if we get a 1GB range, we'll iterate on the stride and INVLPG
+each one (just like any other stride).
 
-[1/1] gpio: stmpe: Check return value of stmpe_reg_read in stmpe_gpio_irq_sync_unlock
-      commit: b9644fbfbcab13da7f8b37bef7c51e5b8407d031
+Should you not instead either force the stride down to PMD level or
+force a full flush?
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> +
+> +	/*
+> +	 * TLB flushes with INVLPGB are kicked off asynchronously.
+> +	 * The inc_mm_tlb_gen() guarantees page table updates are done
+> +	 * before these TLB flushes happen.
+> +	 */
+> +	if (info->end == TLB_FLUSH_ALL) {
+> +		invlpgb_flush_single_pcid_nosync(kern_pcid(asid));
+> +		/* Do any CPUs supporting INVLPGB need PTI? */
+> +		if (static_cpu_has(X86_FEATURE_PTI))
+> +			invlpgb_flush_single_pcid_nosync(user_pcid(asid));
+> +	} else do {
+> +		/*
+> +		 * Calculate how many pages can be flushed at once; if the
+> +		 * remainder of the range is less than one page, flush one.
+> +		 */
+> +		nr = min(maxnr, (info->end - addr) >> info->stride_shift);
+> +		nr = max(nr, 1);
+> +
+> +		invlpgb_flush_user_nr_nosync(kern_pcid(asid), addr, nr, pmd);
+> +		/* Do any CPUs supporting INVLPGB need PTI? */
+> +		if (static_cpu_has(X86_FEATURE_PTI))
+> +			invlpgb_flush_user_nr_nosync(user_pcid(asid), addr, nr, pmd);
+> +
+> +		addr += nr << info->stride_shift;
+> +	} while (addr < info->end);
+> +
+> +	finish_asid_transition(info);
+> +
+> +	/* Wait for the INVLPGBs kicked off above to finish. */
+> +	tlbsync();
+> +}
