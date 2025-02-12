@@ -1,149 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2827D271811;
-	Wed, 12 Feb 2025 01:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FA66136
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739322386; cv=none; b=D15xJ+C4ydskHVB7T2k1woTEyPoe9TUPkAPDaRRBqRpKy0YMJL9fO7fFLRkDndQt5jK8IqbORMVFlIg2ZFpulzUpTG0FbpC5bN6p6M3Y7jXE/bR1Y2dUts+g3O0S+VcRrMSPgkcLrlQXFUmGTsZpzgeuu3zTLQDPHgHSVvtf7zk=
+	t=1739322501; cv=none; b=ErpRucmoIuvZkb6esW2y2GsHA0ZxrrWMv/G1lLp3NdlTSHD3mw6BsnaK7qk58rZZu2SSGFyO7AgFZH14d7v7ykNqx1OAp+ROC8ebOPN6aqaY+TSDTPg6TWbsemeFkxSDEjPT1ilwDHQfJ/sgfTHbnSl6JOwAYQrnmEAs44M/5FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739322386; c=relaxed/simple;
-	bh=lPLtbO08wzB1FZuAkE1t6UltO8e/hBN62YEOAPcWXpY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=h+DJtsjFyERBEuN//nTvvwuoBKG87WwQbHmXWd6MJcQ8+1/B9jVzwJOEzjMpO6k+vtNv+lS/TdMuJV+ViqHYRsguulCoLunL7sOiDurrLE3nQuKagCETvy2CfzR+BXC75seL6x3/8jnLp4AWn+aQTkoREh1Oxx8R4W9qfUAA14E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hfcBKe/C; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739322501; c=relaxed/simple;
+	bh=2rJJ7HfL5LNYfbuvkH9bco/27aob0ttoKR1Oc5+4vjw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f1zbMPsn027g9Dq9Qeqp8QRHSoGWw6Eativ5tiXepQNkHqGrIotoLeKEQdCirquD9ImLpDcIxejPS7nEOkoHrovtiXkag5XtnxmOCMYAbAx4wQF71bhwQfX1e/F557fxV7t03YMAqFsn+qFDpZ6y2CmcZg01FsKgHWVRyIk/bUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KpMJj+CC; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hfcBKe/C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739322385; x=1770858385;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lPLtbO08wzB1FZuAkE1t6UltO8e/hBN62YEOAPcWXpY=;
-  b=hfcBKe/CY3cHrs3D0kE37KsvP/Fp9eUVxyxVoLnUu0A3dBGbSXDVQdyF
-   PNpL262CU399KzWLGPufIUdv+WS9IRxCWZGdT1H158oX12K6pbIQBRuZi
-   s26cdRZgdrjcp6FW2Z+IrEWVZ94JtjZrTwbJL/iLJWsi7VLeJHhWfgb59
-   mvOFIipqWmnNmMp5bGFw/zDpceGRiQubdsyqrg9422qpbOwTpp1Gr5gVb
-   w32XXAVZO6ipUEt+9gzxId2aPEc3geVSRIx9SpwCKwcMwNoZJjLSMVTNx
-   gzfIDFOqGkDkaiT7fPQdhGXmKksexCTOk3sOJiHBrrBifD0q0w459u2Xd
-   g==;
-X-CSE-ConnectionGUID: 3eBHkES+RaOR9FF0ma1P7w==
-X-CSE-MsgGUID: gqSQhn18StSHgKX1HZoazA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50187930"
-X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="50187930"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 17:06:24 -0800
-X-CSE-ConnectionGUID: j4ShramuSlaO3SHJzaSjsw==
-X-CSE-MsgGUID: genqVSeeToGdVVdxvmP+nQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="149853272"
-Received: from iweiny-desk3.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.124.222.126])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 17:06:23 -0800
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v2] platform/x86:intel/pmc: Move arch specific action to init function
-Date: Tue, 11 Feb 2025 17:05:56 -0800
-Message-ID: <20250212010621.1003663-1-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KpMJj+CC"
+Date: Tue, 11 Feb 2025 17:08:03 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739322486;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RY6F2Jk4IS2djWCEuxsfNU6S62Bb19qyazUJLPUX6Fk=;
+	b=KpMJj+CCYiRUftmezhybDgQxVgOdlBuJMz7VWmLJk3sYRCZ/cPc5p8Qwydppuy57w8Uc9Q
+	wd+ur4mot2ZuuiIB9isrfL9H4t3QUt6ZBQszrxEgh+zW2tAFgJ8I5BGins7XTkRGR7A60g
+	4DtFkfJgJ9rcwInRLhbixOS4P3eMcYc=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, "T.J. Mercier" <tjmercier@google.com>, Tejun Heo <tj@kernel.org>, 
+	Michal Hocko <mhocko@kernel.org>, Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org, 
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: add hierarchical effective limits for v2
+Message-ID: <bg5bq2jakwamok6phasdzyn7uckq6cno2asm3mgwxwbes6odae@vu3ngtcibqpo>
+References: <20250205222029.2979048-1-shakeel.butt@linux.dev>
+ <mshcu3puv5zjsnendao73nxnvb2yiprml7aqgndc37d7k4f2em@vqq2l6dj7pxh>
+ <ctuqkowzqhxvpgij762dcuf24i57exuhjjhuh243qhngxi5ymg@lazsczjvy4yd>
+ <5jwdklebrnbym6c7ynd5y53t3wq453lg2iup6rj4yux5i72own@ay52cqthg3hy>
+ <20250210225234.GB2484@cmpxchg.org>
+ <Z6rYReNBVNyYq-Sg@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6rYReNBVNyYq-Sg@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-Move arch specific action from core.c to the init() function of spt.c.
+On Tue, Feb 11, 2025 at 04:55:33AM +0000, Roman Gushchin wrote:
+[...]
+> 
+> Maybe I'm missing something, but somehow it wasn't a problem for many years.
+> Nothing really changed here.
+> 
+> So maybe someone can come up with a better explanation of a specific problem
+> we're trying to solve here?
 
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
----
-v2->v1:
-- Change the name of pmc_pci_ids to spt_pmc_pci_id
-
- drivers/platform/x86/intel/pmc/core.c | 13 -------------
- drivers/platform/x86/intel/pmc/spt.c  | 21 +++++++++++++++++++++
- 2 files changed, 21 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index d819478fea29a..bd90d38e62e94 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1418,11 +1418,6 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 
- MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
- 
--static const struct pci_device_id pmc_pci_ids[] = {
--	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID) },
--	{ }
--};
--
- /*
-  * This quirk can be used on those platforms where
-  * the platform BIOS enforces 24Mhz crystal to shutdown
-@@ -1533,14 +1528,6 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	if (!pmcdev->pkgc_res_cnt)
- 		return -ENOMEM;
- 
--	/*
--	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
--	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
--	 * in this case.
--	 */
--	if (pmc_dev_info == &spt_pmc_dev && !pci_dev_present(pmc_pci_ids))
--		pmc_dev_info = &cnp_pmc_dev;
--
- 	mutex_init(&pmcdev->lock);
- 
- 	if (pmc_dev_info->init)
-diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
-index 956b2ec1c7510..440594acac6cf 100644
---- a/drivers/platform/x86/intel/pmc/spt.c
-+++ b/drivers/platform/x86/intel/pmc/spt.c
-@@ -8,6 +8,8 @@
-  *
-  */
- 
-+#include <linux/pci.h>
-+
- #include "core.h"
- 
- const struct pmc_bit_map spt_pll_map[] = {
-@@ -134,6 +136,25 @@ const struct pmc_reg_map spt_reg_map = {
- 	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
- };
- 
-+static const struct pci_device_id spt_pmc_pci_id[] = {
-+	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID) },
-+	{ }
-+};
-+
-+static int spt_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
-+{
-+	/*
-+	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
-+	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
-+	 * in this case.
-+	 */
-+	if (!pci_dev_present(spt_pmc_pci_id))
-+		return generic_core_init(pmcdev, &cnp_pmc_dev);
-+
-+	return generic_core_init(pmcdev, pmc_dev_info);
-+}
-+
- struct pmc_dev_info spt_pmc_dev = {
- 	.map = &spt_reg_map,
-+	.init = spt_core_init,
- };
--- 
-2.43.0
-
+The most simple explanation is visibility. Workloads that used to run
+solo are being moved to a multi-tenant but non-overcommited environment
+and they need to know their capacity which they used to get from system
+metrics. Now they have to get from cgroup limit files but usage of
+cgroup namespace limits those workloads to extract the needed
+information.
