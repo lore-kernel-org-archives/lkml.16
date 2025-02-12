@@ -1,82 +1,127 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C0F2046A6
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 11:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774CA201260;
+	Wed, 12 Feb 2025 11:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739358976; cv=none; b=IgHIM5zitdTDuBVAAwIzSdkorb73duml3sEyBJ9kZnGSTufTAqw2mPhYaW2BhdrxLlzlqTdFa99y3bG4BcCIqGSlhc8zwOavc+uj5vIoaU76wrbrXM5p2gkbdhkRezG1aXX+FqjP9nl5pHlPmhn5nwOgOUUdM7BNcXAipwTDWgE=
+	t=1739359012; cv=none; b=jLeYSr+4sedl8Q/W9wNE5F7VZrKhg7GCMslHDsCPk99E4wOx8RIQE2deEsoq6OI0ft/gWJ8+UBmuevtcm513tk8rnm2kwEzGXFUrsSqJIvx0ZxbpatCpfBQXJPDnUs67H7ct5hvK6df2WxWbLjxEMqSJBJulPfGv4lPUpbDjtdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739358976; c=relaxed/simple;
-	bh=WYtHUND9hBAbnQwP77+rUM/btGdN4jw7BzumAFm3fH4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W6PvYU2N+g7NRxRddD+egBYKKx5jZPMgHJXNsBqNGUw6U9XLhQL4JbwXHXe3XaNZEmc5V2y7JKqc7mDvLEkVIBeU4/10CGp/16jGa7g0zkCXcXLn+SfayZ4mLRRmYQSba5x12s5rD/gwDcgzvO4QVBZ0NV+fKHb/NCrzqKoFv5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WazfGzcz; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739359012; c=relaxed/simple;
+	bh=JWsrM6Tcs+C9f+X8PVgHyMjnM9oD4EdsAg4asrUaRs8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aN4qo0CsBcY6pgDlJV2tFPiU0juaP3UEjxsk7Mgeuu+xoEM6l7jhTZ7PtBqs38gL2VvK1F29zrY/BeXKpeCzbNpL3/bu3X3GxhdB9lgGdOyyQzVPLyM7yOGPy0uBYv6M1Z8Dmg+DwttYAn6eYRpCZfBB5JBAwVLOWMZtc9i7c3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XdrPTOgU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WazfGzcz"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739358956;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Kr/yp+z2yzlhwItC3YopAzacvObrzqFyIuCIGJbNTsA=;
-	b=WazfGzczwVB7vraan4TB295PIh5r+q8uwKgMAwmlHTdxZYvHPJF+CPAS8WY3UbxQaySpHq
-	x0m+wpuljobzunU0hdgCf1MhQBT3We38G5I8IeOzirO1GAVbrRvAz9eVBXIb9v1dKV+m49
-	Mid//t3hC/ak43XDZqIvp3TqSTa5fJE=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Weikang <guoweikang.kernel@gmail.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] alpha: Use str_yes_no() helper in pci_dac_dma_supported()
-Date: Wed, 12 Feb 2025 12:14:47 +0100
-Message-ID: <20250212111449.3675-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XdrPTOgU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 850B9C4CEDF;
+	Wed, 12 Feb 2025 11:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739359011;
+	bh=JWsrM6Tcs+C9f+X8PVgHyMjnM9oD4EdsAg4asrUaRs8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XdrPTOgUPTRYAb9XnRKvfjHMPiC89ZEiduHxoz0NJnI4GQVJiol0rv9oBOdpvoFJR
+	 p+VnuStLAkDMk7yhzb+ULDoK1ItVa7cTgbwxMQjzW2EAe2oT+WkhjuFa02DwQSFN47
+	 3uYA9g72SheD+ASXImFYR+guVxPx9r8fBwGJY97r6IsgOABfdXdDypW39nMTW8HkTW
+	 /Irzkqu31/F1cAmyAwdoT+HWRbcBWvnhstMmKve8fnxIOrGOXSO4YHgwwHzYv3YIht
+	 sbBJ4oD01v+2sEtm/BR052Ksbq9O8N7p67wamWwjxLSDnrByAKv1kLNkn/tlNVpHnl
+	 leISBHzu7+t8w==
+Date: Wed, 12 Feb 2025 12:16:44 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Zicheng Qu <quzicheng@huawei.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, axboe@kernel.dk, joel.granados@kernel.org, tglx@linutronix.de, 
+	viro@zeniv.linux.org.uk, hch@lst.de, len.brown@intel.com, pavel@ucw.cz, 
+	pengfei.xu@intel.com, rafael@kernel.org, tanghui20@huawei.com, zhangqiao22@huawei.com, 
+	judy.chenhui@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, linux-pm@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 0/2] acct: don't allow access to internal filesystems
+Message-ID: <20250212-giert-spannend-8893f1eaba7d@brauner>
+References: <20250210-unordnung-petersilie-90e37411db18@brauner>
+ <20250211-work-acct-v1-0-1c16aecab8b3@kernel.org>
+ <c780964d17b908846f07d01f4020be7bc784ec8b.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c780964d17b908846f07d01f4020be7bc784ec8b.camel@kernel.org>
 
-Remove hard-coded strings by using the str_yes_no() helper function.
+On Tue, Feb 11, 2025 at 01:56:41PM -0500, Jeff Layton wrote:
+> On Tue, 2025-02-11 at 18:15 +0100, Christian Brauner wrote:
+> > In [1] it was reported that the acct(2) system call can be used to
+> > trigger a NULL deref in cases where it is set to write to a file that
+> > triggers an internal lookup.
+> > 
+> > This can e.g., happen when pointing acct(2) to /sys/power/resume. At the
+> > point the where the write to this file happens the calling task has
+> > already exited and called exit_fs() but an internal lookup might be
+> > triggered through lookup_bdev(). This may trigger a NULL-deref
+> > when accessing current->fs.
+> > 
+> > This series does two things:
+> > 
+> > - Reorganize the code so that the the final write happens from the
+> >   workqueue but with the caller's credentials. This preserves the
+> >   (strange) permission model and has almost no regression risk.
+> > 
+> > - Block access to kernel internal filesystems as well as procfs and
+> >   sysfs in the first place.
+> > 
+> > This api should stop to exist imho.
+> > 
+> 
+> I wonder who uses it these days, and what would we suggest they replace
+> it with? Maybe syscall auditing?
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- arch/alpha/kernel/pci_iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Someone pointed me to atop but that also works without it. Since this is
+a privileged api I think the natural candidate to replace all of this is
+bpf. I'm pretty sure that it's relatively straightforward to get a lot
+more information out of it than with acct(2) and it will probably be
+more performant too.
 
-diff --git a/arch/alpha/kernel/pci_iommu.c b/arch/alpha/kernel/pci_iommu.c
-index 681f56089d9c..dc91de50f906 100644
---- a/arch/alpha/kernel/pci_iommu.c
-+++ b/arch/alpha/kernel/pci_iommu.c
-@@ -13,6 +13,7 @@
- #include <linux/log2.h>
- #include <linux/dma-map-ops.h>
- #include <linux/iommu-helper.h>
-+#include <linux/string_choices.h>
- 
- #include <asm/io.h>
- #include <asm/hwrpb.h>
-@@ -212,7 +213,7 @@ static int pci_dac_dma_supported(struct pci_dev *dev, u64 mask)
- 
- 	/* If both conditions above are met, we are fine. */
- 	DBGA("pci_dac_dma_supported %s from %ps\n",
--	     ok ? "yes" : "no", __builtin_return_address(0));
-+	     str_yes_no(ok), __builtin_return_address(0));
- 
- 	return ok;
- }
--- 
-2.48.1
+Without any limitations as it is right now, acct(2) can easily lockup
+the system quite easily by pointing it to various things in sysfs and
+I'm sure it can be abused in other ways. So I wouldn't enable it.
 
+> 
+> config BSD_PROCESS_ACCT
+>         bool "BSD Process Accounting"
+>         depends on MULTIUSER
+>         help
+>           If you say Y here, a user level program will be able to instruct the
+>           kernel (via a special system call) to write process accounting
+>           information to a file: whenever a process exits, information about
+>           that process will be appended to the file by the kernel.  The
+>           information includes things such as creation time, owning user,
+>           command name, memory usage, controlling terminal etc. (the complete
+>           list is in the struct acct in <file:include/linux/acct.h>).  It is
+>           up to the user level program to do useful things with this
+>           information.  This is generally a good idea, so say Y.
+> 
+> Maybe at least time to replace that last sentence and make this default
+> to 'n'?
+
+I agree.
+
+> 
+> > Link: https://lore.kernel.org/r/20250127091811.3183623-1-quzicheng@huawei.com [1]
+> > 
+> > Signed-off-by: Christian Brauner <brauner@kernel.org>
+> > ---
+> > Christian Brauner (2):
+> >       acct: perform last write from workqueue
+> >       acct: block access to kernel internal filesystems
+> > 
+> >  kernel/acct.c | 134 ++++++++++++++++++++++++++++++++++++----------------------
+> >  1 file changed, 84 insertions(+), 50 deletions(-)
+> > ---
+> > base-commit: af69e27b3c8240f7889b6c457d71084458984d8e
+> > change-id: 20250211-work-acct-a6d8e92a5fe0
+> > 
+> 
+> -- 
+> Jeff Layton <jlayton@kernel.org>
