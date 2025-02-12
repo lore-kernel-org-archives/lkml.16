@@ -1,71 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D93146A68
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544011CA9C;
+	Wed, 12 Feb 2025 01:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739325296; cv=none; b=Di8NiX8rUa2X03tTqM826eKwBuFMJnupynRIx5NCxybkvA0bMhhBNsFRAeKG3VIKxb+5fp/xLfn9EI0jbqb4+WQgj7ZI5/m7PM+GbaEinveXnf8rwTQqX53MfxKQkQmeOp4ieTQOVt+LFbdEgkyZheHcGZpOSebKXP5k+Ip3vho=
+	t=1739325446; cv=none; b=W/GlNPREnUgymH0k+mhwRyEP8iB/zGj+ZOLYPm1ruF2ZuGgQ5Byd6mTohBHwybRMcJ6lnbVlI6Sk1KaCu33J7JO+IMdPVaQ5oqjJPK2wqhH6bulXN7mKWKy14wEVTzb83n5FivEvFFuBQ5cfywtdrJNd3SGtL/nuiUaSIQ1TJEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739325296; c=relaxed/simple;
-	bh=K4ihjAlWy2h4llZLGypkm22M0Vmbx1QNncg3WdOCYpg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iNXdYuRg5bmx6yQsOCMnBJy78DVdmzx1AOUvXtSaVVb/LatraGyM9v2sjXNcXXKiSRBWU7BXIhMyf1PUWi1yrw5mFtXnQ5e9am1iYxgppoO35N0PPa+O5MPqdk6OZkZiba7CmZNCWEoATsQPqijJRDyQkLOSiG0FhbeAwW8hCeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDtEYgV9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739325446; c=relaxed/simple;
+	bh=0Cgv83jQe5AAi1xEAIuRjZtijRb+djvDZM1d5+6Lo/A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r9+/q9c1pllcwc4rhpH4/lfHVDWhkUr10MkUenYIO8bnReqR1/1pJE5iD7ieQEsLKnf1D431TS4We0liCGgag6w6VYBoylsX6CjsireWwiIYtViuWYCCoRD3+9MzklX0+SpmO/aKM/at/Ftn0I+wblBx46YoLObfusGqM3ClFlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=LJ/fBHlk; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDtEYgV9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEAB9C4CEE5;
-	Wed, 12 Feb 2025 01:54:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739325295;
-	bh=K4ihjAlWy2h4llZLGypkm22M0Vmbx1QNncg3WdOCYpg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HDtEYgV9OLcFn3FVEl44az+67gxXQd1OuWCFOw8DWKz0Xad4vHDwNb0P9fGHez4ik
-	 mH06Y+NPQq1JYf0SGR4WpxyC+YiRTsd633I+Oc40/ARLeDK8CqhUx/3UdGlfLfzWMd
-	 Y4B8o1rORaln24eyyl1ujVkv8HP+9hrJEWbb0KWlwrJIUuibckKKN8cO32P7yz194g
-	 E0furaTOXRNOFHcKfpseMtjkX4wRnQ3O27/Hnv3mZn9eSXWO9eZNo/mIeQ2XsglNeO
-	 r8KnvU07RkIgGs73Bh0lfJn7tVCsvnqyoCUB/IbYcoJw5yFNuWXMspuNz8CAe33zfm
-	 FWn26e3rE8uRQ==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH 2/2] f2fs: add dump_stack() in f2fs_handle_critical_error()
-Date: Wed, 12 Feb 2025 09:54:13 +0800
-Message-ID: <20250212015413.666375-2-chao@kernel.org>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-In-Reply-To: <20250212015413.666375-1-chao@kernel.org>
-References: <20250212015413.666375-1-chao@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="LJ/fBHlk"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739325441; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=KwxKW1SDDYgfgG2N6v3DrfWr2V+f8zrDXRD4+gXBJvU=;
+	b=LJ/fBHlkL8dyqUqnMjZJipW/DzTIdinFpW/XBuZEqXOaU2spsMEK54hCIDFe+b49FSyrHC+lYNYyWEAeym70dGssBRA2+AjJerNmZUVjIARIY+tcWTDto5mcWneHZfBQzWn/R7gxChL1KRgiLKtHJiX9FcOpCe+VRUxRyoC5icc=
+Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPI8Bo9_1739325121 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 12 Feb 2025 09:52:02 +0800
+Message-ID: <5fb57072-96a6-4ce9-8636-f1746693cfff@linux.alibaba.com>
+Date: Wed, 12 Feb 2025 09:51:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/4] x86/mce: Collect error message for severities
+ below MCE_PANIC_SEVERITY
+To: "Luck, Tony" <tony.luck@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+ "nao.horiguchi@gmail.com" <nao.horiguchi@gmail.com>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "linmiaohe@huawei.com" <linmiaohe@huawei.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
+ "tianruidong@linux.alibaba.com" <tianruidong@linux.alibaba.com>
+References: <20250211060200.33845-1-xueshuai@linux.alibaba.com>
+ <20250211060200.33845-2-xueshuai@linux.alibaba.com>
+ <SJ1PR11MB6083B1BEED49F2A622F8AA4AFCFD2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <SJ1PR11MB6083B1BEED49F2A622F8AA4AFCFD2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-To show call stack, so that we can see who causes critical error, note
-that it won't call dump_stack() for shutdown path.
 
-Signed-off-by: Chao Yu <chao@kernel.org>
----
- fs/f2fs/super.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 24ded06c8980..1af78b75906b 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -4221,6 +4221,8 @@ void f2fs_handle_critical_error(struct f2fs_sb_info *sbi, unsigned char reason)
- 
- 	if (shutdown)
- 		set_sbi_flag(sbi, SBI_IS_SHUTDOWN);
-+	else
-+		dump_stack();
- 
- 	/*
- 	 * Continue filesystem operators if errors=continue. Should not set
--- 
-2.48.1.502.g6dc24dfdaf-goog
+在 2025/2/12 00:51, Luck, Tony 写道:
+>> +	char *tmp = *msg, cur_sev = MCE_NO_SEVERITY, sev;
+> 
+> Should cur_sev and sev be of type "int" (since that's the type returned by mce_severity())?
+> 
+> It doesn't matter today since the list of return value does fit into "char", but it is setting up
+> to fail if that should ever change.
+> 
+> -Tony
 
+You are right, I previously only focused on the fact that the field 'sev' of
+struct severity is an unsigned char.
+
+Will fix it in next version.
+
+Thanks.
+Shuai
