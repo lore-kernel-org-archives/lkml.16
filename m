@@ -1,92 +1,98 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAC2271824;
-	Wed, 12 Feb 2025 12:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C3120CCF5;
+	Wed, 12 Feb 2025 12:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739365071; cv=none; b=uZFDGlHOA5e9t8HUWf4NU6PrQUQ5gT1ti2cgMqaITjNFzLIAcTKYRBjBG//KAqU8YE+uX2oOBMAmKQrC2/vy3XqC/xF4EmUvloVbmZ0i1Ys1dCj6jI4Nu/EuPbe899f45oO0WsJMswcLfr+n9FlJf2nmsv6r8nnDrnl9QPnUyNw=
+	t=1739365100; cv=none; b=At1IHgq7R16M8Jm4y7dHwYS6ZWxWRc3My/jtmhG5N8kDlTmrPR4GQ+n6QkTOnWjat3NtP/6W6WkzVeI8VxtWpIYI5eydGpp1yqnRZhWniBW4IMk1J1Kq/HwJqsbTMsYLX6vULPP0g2pqZpS1Wymgr+rf3AFwTmJL/nSPUU0Mokk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739365071; c=relaxed/simple;
-	bh=1fQJ9/QoaiCE3XRCo0rze42eHMuZ87wHTMYWXy0JzSk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rEJryDGqUyp0UTiULYNLLpGSxmcwxuZ/eEbN0cFg+ay7VO2j3Wr5sSLSnpJev1rihWW9tsD/Ybo70TuhELyDYUFpQq4tfnxCrTEGghduUXJMk0Qse31Oz4j3snC0JLcO9Hl8njH45WeoPF6lhRkxFUOBcb1Jo5dO/9L1++M9ZAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so1256650766b.3;
-        Wed, 12 Feb 2025 04:57:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739365067; x=1739969867;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j+omTqBzUILm+6CyB0Br0bTGYlVV+kHRwXXStam8eq0=;
-        b=FidvBiEo5R2x9KaabmY/XnkLcnSV8/sESRkB33QTHuMKNvozdIGrahxDbmKbs1ER1r
-         opi3zt6CelV2EiylSQsbXYY0/wyrDLefJ38JFBGe48+Y9GaHLuXjmxlEtgIo29Fvhv3T
-         458AE+TA7Fi7RhGJ7U9VXVYw1TXBdYZU98OuBwNDlvCsIyMHCAmRltFBOzGq87NTarqC
-         cFOLK00+Et9HGLSFowSrBi5TJQT7dhEMv6oAlAyqYmFrH20MonMlP5Gvb/gw4Zymol2n
-         4KTEZ2jZqFFcvfTlEVHahQD8OQEWAZh4ezJZuIF1wAfIjCXPFW2dAa//P7FYnVMPpyW0
-         NA0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVUAFo/3YKRCli/px2AvsA2s9JiQBaPg4HDMq8Y9va0KZjH3zs9ctadXIUAHqvd+NxLlT9LTL5TYD0u68k8@vger.kernel.org, AJvYcCXP0o20to/rUW0AZvHN9oKfLqUdIE4F8QBtsDdSZvtFKGSiLFygtaA3zZhO4lICKi1dY9O6klrH5kLvog==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzekzaZff2I0zkvL1Xr2TEg9TQQ1XihW6ekapI6g5sFOktX9yo
-	zMUior+58MIHwEYB7QPNLSjVj9W0YELV7FYMTTm9CPkXcRQ/PPjq7A6rxIjAJOY=
-X-Gm-Gg: ASbGncsiHJOppVbRZzxZEI2EIhN8dTAKzUov6MA0ppKSS3UtpfaAA58hwjUhruWhnQc
-	Eez53XQAM0uxTL0tc1Xl16lcj3AIaE0snVioyj4eJuvUbwveRYa7V48IeLRNH2EimzoKznwar6E
-	MZ+3/cgeaqoEGhqo36bxVsTWbtzjHMXgRGKH/VSw8LCehTh0rvyMybpdsUr0SBFdAlhbr+qoUTL
-	HJootsUyksS9JpHVY5rHS5vJRYX+UQsGoSR9aqg2jW5vOyF5ML31n7VHj6ccEhZbk52xCzsigkx
-	rkad6rHNlJtV95dhFtof8jrFIrm79wOfB93wMddFMXK+mqKzsA7OFQ==
-X-Google-Smtp-Source: AGHT+IGOq9ERUslcLV2yMahTl/DW/mD3ioaQPVufgDYepNMLUztCai413N2H0Ft4q8c8y+OxwSQcNA==
-X-Received: by 2002:a17:907:6e8c:b0:ab7:d59c:41d0 with SMTP id a640c23a62f3a-ab7f3381283mr263332366b.20.1739365066844;
-        Wed, 12 Feb 2025 04:57:46 -0800 (PST)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7ced6fe0dsm487000166b.179.2025.02.12.04.57.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 04:57:44 -0800 (PST)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5de4f4b0e31so8755516a12.0;
-        Wed, 12 Feb 2025 04:57:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUha9wqxpDdqoRtSt1h/RsL8rue6fblttCjQV4LpyPj85ihvAA/SrbB1s+4zJ1byEqNdl0i22USGNgAvi1B@vger.kernel.org, AJvYcCXlvvqtP5oTAaqM4DKbd+Ww/Ztyby+0VfgXNg4JSlsqSzdfs15n5SkEYaNXW+42ixFAdo+YMwvxMiJ7lQ==@vger.kernel.org
-X-Received: by 2002:a05:6402:34d2:b0:5d3:cff5:634f with SMTP id
- 4fb4d7f45d1cf-5deadde6002mr2835112a12.24.1739365063427; Wed, 12 Feb 2025
- 04:57:43 -0800 (PST)
+	s=arc-20240116; t=1739365100; c=relaxed/simple;
+	bh=+rUyy8CCsAX49LoyMo4QlyZTIfngKhPrGjoTwwC4T/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IwiesL5Qg9yxLF/KybMQcb7AMBL76/rOW+jnC2+dwYMrLrSw55v189nkfspgUZYA5JLxc2g19y0b9VihFE/05/75r8H5wJI1o/XHeXMxkZjSr2jm5I5UyikYKxQMDBgzajQGj5R9XUHLHDTtSHksGgM+WWpQtGI8qXMALLi10xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aYoHh9I8; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aYoHh9I8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC30EC4CEDF;
+	Wed, 12 Feb 2025 12:58:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739365099;
+	bh=+rUyy8CCsAX49LoyMo4QlyZTIfngKhPrGjoTwwC4T/4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aYoHh9I8hOFC/rd6q6DuWBa0ELk6Z7OMZH+d1Po86Hca4RmKPfp6Iy748FXUdyIlI
+	 tgH/3yl0mOAPAoIko670EqeX9y9i+3JZ/uI7ZsPHzcVNNFWCQ27UkVj53+bdt/O6h1
+	 tp2zNyvG6uiP3W6uc1ax8M6WidyQaPTSueZo4zk6WWNhXIYT0nyl+heT4KgnulLxOT
+	 VgWKUUVaGzBd9JgaNBnvjddPhhnrvtOVueKPNh9Ht9jYirxxZuEV9VqTmcHVbKcyW5
+	 ewHSt4dDIHHeiLGHQBiKMVEehzQ+s32Auf+U/HtB+/DzK1kpDbUrePlehroB/oTObM
+	 X96pQV4d2Rp4A==
+Date: Wed, 12 Feb 2025 13:58:08 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, linux-kernel@vger.kernel.org, "David S. Miller"
+ <davem@davemloft.net>, Andreas Noever <andreas.noever@gmail.com>, Avadhut
+ Naik <avadhut.naik@amd.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Eric Dumazet <edumazet@google.com>, Hu Haowen
+ <2023002089@link.tyut.edu.cn>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Jamet <michael.jamet@intel.com>, Mika Westerberg
+ <mika.westerberg@linux.intel.com>, Paolo Abeni <pabeni@redhat.com>, Sean
+ Young <sean@mess.org>, Yanteng Si <si.yanteng@linux.dev>, Yehezkel Bernat
+ <YehezkelShB@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Michael
+ Ellerman <mpe@ellerman.id.au>, Shrikanth Hegde <sshegde@linux.ibm.com>,
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Pawan Gupta
+ <pawan.kumar.gupta@linux.intel.com>, James Morse <james.morse@arm.com>,
+ "Nysal Jan K.A" <nysal@linux.ibm.com>, Tom Lendacky
+ <thomas.lendacky@amd.com>, Sourabh Jain <sourabhjain@linux.ibm.com>,
+ Stephen Rothwell <sfr@canb.auug.org.au>, Frederic Barrat
+ <fbarrat@linux.ibm.com>, Andrew Donnellan <ajd@linux.ibm.com>, Madhavan
+ Srinivasan <maddy@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao
+ <naveen@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+ workflows@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 0/9] Extend automarkup support for ABI symbols
+Message-ID: <20250212135808.58d2f032@foz.lan>
+In-Reply-To: <Z6yFG_NntQfkwYli@archie.me>
+References: <cover.1739254867.git.mchehab+huawei@kernel.org>
+	<Z6yFG_NntQfkwYli@archie.me>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212111449.3675-2-thorsten.blum@linux.dev>
-In-Reply-To: <20250212111449.3675-2-thorsten.blum@linux.dev>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 12 Feb 2025 13:57:26 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXSaRCQMePxnfP7EdMUf4PU9ZCC09NsyHUSjhhXC=eT2A@mail.gmail.com>
-X-Gm-Features: AWEUYZnrp1PaU2E7y_Z-ScKjyKKRUdtJyijVggRYIiNip4_87QuBmsShUjRCjAY
-Message-ID: <CAMuHMdXSaRCQMePxnfP7EdMUf4PU9ZCC09NsyHUSjhhXC=eT2A@mail.gmail.com>
-Subject: Re: [PATCH] alpha: Use str_yes_no() helper in pci_dac_dma_supported()
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Guo Weikang <guoweikang.kernel@gmail.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 12 Feb 2025 at 12:15, Thorsten Blum <thorsten.blum@linux.dev> wrote:
-> Remove hard-coded strings by using the str_yes_no() helper function.
->
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Em Wed, 12 Feb 2025 18:25:15 +0700
+Bagas Sanjaya <bagasdotme@gmail.com> escreveu:
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> On Tue, Feb 11, 2025 at 07:22:54AM +0100, Mauro Carvalho Chehab wrote:
+> > Now that ABI creates a python dictionary, use automarkup to create cross
+> > references for ABI symbols as well.   
+> 
+> I get three new warnings:
+> 
+> WARNING: /sys/devices/system/cpu/cpuX/topology/physical_package_id is defined 2 times: /home/bagas/repo/linux-kernel/Documentation/ABI/stable/sysfs-devices-system-cpu:27; /home/bagas/repo/linux-kernel/Documentation/ABI/testing/sysfs-devices-system-cpu:70
+> WARNING: /sys/devices/system/cpu/cpuX/topology/ppin is defined 2 times: /home/bagas/repo/linux-kernel/Documentation/ABI/stable/sysfs-devices-system-cpu:89; /home/bagas/repo/linux-kernel/Documentation/ABI/testing/sysfs-devices-system-cpu:70
 
-Can't test it, though, my UDB died +20y ago...
+Those two are new reports that get_abi.py detects after the recent changes.
+In the past, symbol duplication were detected only within the same group
+(testing, stable, ...). The new version can detect symbols that are
+duplicated on different parts of the ABI. In this specific case, the same
+symbols exist on both stable and testing.
 
-Gr{oetje,eeting}s,
+There is a fix for them already at:
 
-                        Geert
+https://lore.kernel.org/linux-doc/673e9543783349b0fcf625018e38e4e93fe98f52.1738020236.git.mchehab+huawei@kernel.org/
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> WARNING: Documentation/ABI/testing/sysfs-class-cxl not found
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I need to double-check verify this one, as it didn't appear on
+my tests. Are you getting it against docs-next or linux-next?
+
+Thanks,
+Mauro
