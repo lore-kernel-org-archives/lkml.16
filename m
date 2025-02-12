@@ -1,70 +1,128 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FA66136
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96A8271811;
+	Wed, 12 Feb 2025 01:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739322501; cv=none; b=ErpRucmoIuvZkb6esW2y2GsHA0ZxrrWMv/G1lLp3NdlTSHD3mw6BsnaK7qk58rZZu2SSGFyO7AgFZH14d7v7ykNqx1OAp+ROC8ebOPN6aqaY+TSDTPg6TWbsemeFkxSDEjPT1ilwDHQfJ/sgfTHbnSl6JOwAYQrnmEAs44M/5FU=
+	t=1739322501; cv=none; b=mGm7JwiZL+MzY9HY6HZlr/fXaSBJrWfTPi4aEgTqQxWzOBDdTBJcrug0c7Kmqhu6xL+cPgKPGxYFBYz2vJO8p21c7x4SntlMKWgRw1d3MPRZ7UgcGjxsuoy8eXhxLGhEQLlgWEXWuMnHtvy99NBR1XUsqITjXjWvKRkap65Wxes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739322501; c=relaxed/simple;
-	bh=2rJJ7HfL5LNYfbuvkH9bco/27aob0ttoKR1Oc5+4vjw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f1zbMPsn027g9Dq9Qeqp8QRHSoGWw6Eativ5tiXepQNkHqGrIotoLeKEQdCirquD9ImLpDcIxejPS7nEOkoHrovtiXkag5XtnxmOCMYAbAx4wQF71bhwQfX1e/F557fxV7t03YMAqFsn+qFDpZ6y2CmcZg01FsKgHWVRyIk/bUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KpMJj+CC; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	bh=20Ap9aAZ+Ch4c8R+BNmFdvqVW+TRYONxjh68ki4MqOA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QnIjCr3yQ6iPBPJtLtfqptzcFXWKVGpIqYhSEBLxynJfuRVlWXElFiJXg/8hhPeM4ewB1jC+IEBU/77t45H6r0nHPhtVfVR0WCQkoDKkcLV3CkREBOH2g2XuU0PBpDQMs3ZQcglola+Xva08TDR+k6pzRhSx/eY1VlETzw5vGeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NhxXU12M; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KpMJj+CC"
-Date: Tue, 11 Feb 2025 17:08:03 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739322486;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RY6F2Jk4IS2djWCEuxsfNU6S62Bb19qyazUJLPUX6Fk=;
-	b=KpMJj+CCYiRUftmezhybDgQxVgOdlBuJMz7VWmLJk3sYRCZ/cPc5p8Qwydppuy57w8Uc9Q
-	wd+ur4mot2ZuuiIB9isrfL9H4t3QUt6ZBQszrxEgh+zW2tAFgJ8I5BGins7XTkRGR7A60g
-	4DtFkfJgJ9rcwInRLhbixOS4P3eMcYc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, "T.J. Mercier" <tjmercier@google.com>, Tejun Heo <tj@kernel.org>, 
-	Michal Hocko <mhocko@kernel.org>, Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: add hierarchical effective limits for v2
-Message-ID: <bg5bq2jakwamok6phasdzyn7uckq6cno2asm3mgwxwbes6odae@vu3ngtcibqpo>
-References: <20250205222029.2979048-1-shakeel.butt@linux.dev>
- <mshcu3puv5zjsnendao73nxnvb2yiprml7aqgndc37d7k4f2em@vqq2l6dj7pxh>
- <ctuqkowzqhxvpgij762dcuf24i57exuhjjhuh243qhngxi5ymg@lazsczjvy4yd>
- <5jwdklebrnbym6c7ynd5y53t3wq453lg2iup6rj4yux5i72own@ay52cqthg3hy>
- <20250210225234.GB2484@cmpxchg.org>
- <Z6rYReNBVNyYq-Sg@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NhxXU12M"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2f441791e40so8573241a91.3;
+        Tue, 11 Feb 2025 17:08:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739322498; x=1739927298; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=a1TRAUpwttsFmuI80sWwjqr4fHIXT9YMFZZ9UQxehD0=;
+        b=NhxXU12Mi0YMRUT9b7MGng0mNm2mZ5ssiYREDHTYzW9Qe/xIPZ/eNUrss5mdvmpfJt
+         AyNsNYuTzgWJV6444V5rGrdkf7o/NBR8Gm9tSYq2lVb+r29LkgUjXW4IXLuVL6swljA8
+         dDD1qARbyuAM+q9NB320OBkOfyb5mQupV/3GgwHNQceigcCWovIZsvbQQ/2az+RiXnJr
+         AJwqD9axSW0xb5FibsUSmmcPawvvn/oJZbY8FSrIn1yql2glyojh5Skvw+HKV+Xey0TN
+         k2MRH2neTUrsiaC2nJmOaGQonoGidHaL5yUswr6lqbBmp/vBHD35Fr/KToMphxcOs/Df
+         7Piw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739322498; x=1739927298;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=a1TRAUpwttsFmuI80sWwjqr4fHIXT9YMFZZ9UQxehD0=;
+        b=NjafsMgCU15LIvDkVxb/zbWKY06nQE3FpdB5JHw7Cevu8z6qC7T1pQZ/mtOy/2Vkic
+         oYk1ufExK15Ft6PZdRje2/4KvXZXND2dqsv+JUOH8Lrccuvb5pAD/cXHQu54qJjcNznM
+         HuVG4SY/26ycxz2rB3JbUMGCyEItJjh25m052tN8kB2nWll6OVLqp4H1Ts7LYFgYFAR2
+         C+eD72Fklo4fEIhcbWY7S/0JcTYaCl0DqJ1CpM7T5MPC/ejv2mzVbzCfYp5hIDHSQEFZ
+         S8E8rpW0e44D5JtqVfd7HRcMHxctcuV2cskoP3a5QSzyUW8rKM2Bb8dbZKSxTTBOjpZo
+         nc3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUa4MiOhoZrbVDDEwC2pFFz0l/LFjTfdV7HNiOHh8hTRgV/gxNKl9z4/7g3vCkCto6PDQH41slNZl6s@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOx/OGQmoyEPggp51w7qYKPmp3UhBgAsSScxC0xpojjW/q+PW5
+	U5hydZur85xu4GQo5Fk+ro2nWcV5KAGmney4u/awROC18wNJsJ9Z3WW1G83C
+X-Gm-Gg: ASbGncuLrqM8+6L2YmoR/D4JxpMDfAgOPwrBLdjDjQJwo//v6YhraVs0Oc3zKUB92jH
+	bvafemuFDaaYMEVyFgpI8jsfIC54xG6hGwTkHLfzBdldmZi4yqsHDjVGAyCK6pUG7RQAXpNIz3i
+	G44kMtWRhir9RC1JlUMHfzvk9zvXUugrcyl5d1Lch5M6jpfS4lR3SfuUP4T+bENAe8bp41nB1tM
+	9tEKItg10OR+2IUhveOGYfHrcD8HcFgdoJZBW2IAYIMtQcALSyvVubW/jJ1uoJPI97/msKIKHxG
+	OomByJcAWDIQxrqbkB9yFwQhmPZzI3MCBmbMug==
+X-Google-Smtp-Source: AGHT+IF4TMKc6KT3C/K020xhd/HHg4qxnpumAIl79CQqU3rKDGbruejw3iY7NkRcKY0oF93E8plG7g==
+X-Received: by 2002:a17:90a:d645:b0:2ea:a9ac:eee1 with SMTP id 98e67ed59e1d1-2fbf5bf731dmr2170484a91.10.1739322497832;
+        Tue, 11 Feb 2025 17:08:17 -0800 (PST)
+Received: from localhost.localdomain ([66.119.214.127])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98d3d16sm190408a91.13.2025.02.11.17.08.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 17:08:17 -0800 (PST)
+From: "James A. MacInnes" <james.a.macinnes@gmail.com>
+To: linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	andersson@kernel.org,
+	konradybcio@kernel.org,
+	quic_wcheng@quicinc.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	"James A. MacInnes" <james.a.macinnes@gmail.com>
+Subject: [PATCH 0/3] Add PMI8998 VBUS Regulator Support v2
+Date: Tue, 11 Feb 2025 17:07:41 -0800
+Message-ID: <20250212010744.2554574-1-james.a.macinnes@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6rYReNBVNyYq-Sg@google.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 11, 2025 at 04:55:33AM +0000, Roman Gushchin wrote:
-[...]
-> 
-> Maybe I'm missing something, but somehow it wasn't a problem for many years.
-> Nothing really changed here.
-> 
-> So maybe someone can come up with a better explanation of a specific problem
-> we're trying to solve here?
+Greetings,
 
-The most simple explanation is visibility. Workloads that used to run
-solo are being moved to a multi-tenant but non-overcommited environment
-and they need to know their capacity which they used to get from system
-metrics. Now they have to get from cgroup limit files but usage of
-cgroup namespace limits those workloads to extract the needed
-information.
+Thank you all for your feedback. I have integrated your recommendations
+into this revised patch series (v2); please disregard the previous thread.
+
+Summary of Changes:
+- Patch 1/3: Updates the Device Tree Schema bindings to include
+  "qcom,pmi8998-vbus-reg" for PMI8998 support.
+- Patch 2/3: Extends the Qualcomm USB VBUS regulator driver to support
+  PMI8998, dynamically configuring the regulator based on the PMIC type.
+- Patch 3/3: Adds the VBUS regulator node to pmi8998.dtsi, enabling
+  USB Type-C VBUS support.
+
+Motivation:
+To enable VBUS operation on the SDM845 platform PMI8998 PMIC.
+
+Kernel Version & Testing:
+- These patches were developed and tested on Linux 6.13.
+- Attempting to run Linux 6.14-rc2 on our Lantronix SOM resulted in a
+  hard crash, making it unsuitable for validation.
+- Validation was performed using a modified device tree, confirming proper
+  regulator configuration.
+- No regressions were observed on existing PMIC configurations.
+
+Next Steps:
+If there are any suggestions or required changes, please let me know.
+I will be happy to revise and address any concerns.
+
+Thanks again,
+James A. MacInnes
+james.a.macinnes@gmail.com
+
+
+James A. MacInnes (3):
+  regulator: qcom_usb_vbus: Update DTS binding for PMI8998 support
+  regulator: qcom_usb_vbus: Add support for PMI8998 VBUS
+  arm64: boot: dts: pmi8998.dtsi: Add VBUS regulator node
+
+ .../regulator/qcom,usb-vbus-regulator.yaml    |  1 +
+ arch/arm64/boot/dts/qcom/pmi8998.dtsi         |  6 +++
+ drivers/regulator/qcom_usb_vbus-regulator.c   | 38 ++++++++++++++++---
+ 3 files changed, 40 insertions(+), 5 deletions(-)
+
+-- 
+2.43.0
+
