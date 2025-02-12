@@ -1,50 +1,50 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C5D1EB9E7;
-	Wed, 12 Feb 2025 08:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BF81EB9E7;
+	Wed, 12 Feb 2025 08:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739348590; cv=none; b=HuqUgddyP4J41uoIEOhpPQDZT6uMKuSQFRU8zFd/Zg5YfI8gmSGDil3eOq+LnZygJnSEy9uIO9C4VgU9piMeHHMJJNB+1d3ZM07W/Mv0T2MIUMw03lVYuEiNHMSumRJylVXJ7TRshlthaXEXwGoGTqaK/EmHxJEFoGUJBAULRG4=
+	t=1739348601; cv=none; b=g0c1DcN+yWOy560h2wpEUt+T5AN46fZbCKxT8Pw9/CyY+t57sxcJysbkka5/QGH3tTxiiMqdw6HHNVBCnMl1DVOYA3KVJiTGQ/VjtCD3MdSKtbmwDnJHUzjlfp5nbrdFzkSjRWtst6WZ58r64MJuY5uRR7KwHD0UwpAxky8z4yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739348590; c=relaxed/simple;
-	bh=KYdDS6B7wvjb0omg8B10oPqGBZDKPXF7RR4qQ8hWeNM=;
+	s=arc-20240116; t=1739348601; c=relaxed/simple;
+	bh=1iJhJnM265RGARCFpim5El9X2TM98ULYRYWfMuophYY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=sbmd0UMqzvcz1Eiqaepq50LeuEDIcIi+tDGaEw9814mq+fWomEGWYCqSMBGLMoXP24gJI5uHEqge9gtz5f5VVAeTBEYkeQIfQZtJZeogEqNZsPIJEBJw8ISs5P9nhaYW8Vlt4ArEzSGldc9xoJP4ozfZSPLLbcdVFpV7WW8xgiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YU/6RE6m; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:CC; b=leC9d2m0zxKDVyTuOcsmaDfVfWrglH2whepZPry9a6Ue9niGETcL2A+DZaYvHiHz/xTXC5OBr3eiceiCoWETI3J1BJ/CEKc929kk+NaQDrv57gJ+QPUS25A6NQjrermHSATIxXrWhHg2zpy/l62UfE2/mgL5xTHFOboMqfAIR0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=L3kyn+Rw; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YU/6RE6m"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51C2Pl4c008015;
-	Wed, 12 Feb 2025 08:23:05 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="L3kyn+Rw"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51C26Bo9010392;
+	Wed, 12 Feb 2025 08:23:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7cHzvg6PF6lQr0kj15FvGwSQkUwo93/jKuEkuqAaNkI=; b=YU/6RE6m0qVmZ0jo
-	omXhH2LBVv+ZwBlbjGK3u+nll5clU9BHnY1oJCLB7YbP0riSstJevXVvrNYOVz0i
-	Ac4Wkv1iVTOCNhU8uYV1RC0XJtNYy8o8R1c3GyTzZ0Pt2X5RDmvepw2Y5yRL5H1N
-	GhCdg37+M/8fzOQpZzXNjsFGJlKoMoxF9uaKsLeQmTyjB3iauMQGK0QaVmI6zVmI
-	acjd3SyrTzC8c0ik3LtcMmHVhf2OqVDFJgDw0OMFgW1eF1pO6FdBcGOaq4j3r3nS
-	gryeFgTSBGqLLUUDLAJMe+zLEus6kXHS4azOybV2sGYp1QrOsSuTv7fC40W9jIAO
-	QTCRdg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qy4dc5e4-1
+	mu3bcZ3WToKeEfkyCxYH0QTwkprUfKMps5hrqlJakck=; b=L3kyn+RwFUjtU3Pl
+	KnAUvT2gPoZUKi60CgYc3bB/1wgrSD+WAL53IeEIMoWJv8rxIiamgISqmznAlSUu
+	8Rd92KzkzvUWBWJtgi+OCebkc/WzNnV0kvWJvx7rLrwRC1A7z5CYq3m0/ovGzBbN
+	476kIfhWvMlhimWK469BCmWdf+2ozJl7c9rszH9mv5MxaLdDlFbskax6DaEuNhwR
+	WxFW0xQgb9yyaYReIMDd2RNqOehO8wTQ18yQ+0GswyQGFYE1QWWFSh0ziMzAz+We
+	vLpN08Jji6MqhJpEdiqQ6LCrUCC3U2ZhVAmhraH3Pw1Ay/VPC0RUtPraoJEQRfkc
+	5pWPmA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qcs5f5nk-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 08:23:05 +0000 (GMT)
+	Wed, 12 Feb 2025 08:23:15 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51C8N4pS017594
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51C8NEiU004172
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 08:23:04 GMT
+	Wed, 12 Feb 2025 08:23:14 GMT
 Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 12 Feb 2025 00:23:00 -0800
+ 15.2.1544.9; Wed, 12 Feb 2025 00:23:10 -0800
 From: Taniya Das <quic_tdas@quicinc.com>
-Date: Wed, 12 Feb 2025 13:52:19 +0530
-Subject: [PATCH v3 1/4] dt-bindings: clock: qcom: Add compatible for
- QCM6490 boards
+Date: Wed, 12 Feb 2025 13:52:21 +0530
+Subject: [PATCH v3 3/4] arm64: dts: qcom: qcm6490-idp: Update the LPASS
+ audio node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250212-lpass_qcm6490_resets-v3-1-0b1cfb35b38e@quicinc.com>
+Message-ID: <20250212-lpass_qcm6490_resets-v3-3-0b1cfb35b38e@quicinc.com>
 References: <20250212-lpass_qcm6490_resets-v3-0-0b1cfb35b38e@quicinc.com>
 In-Reply-To: <20250212-lpass_qcm6490_resets-v3-0-0b1cfb35b38e@quicinc.com>
 To: Bjorn Andersson <andersson@kernel.org>,
@@ -78,57 +78,40 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: dhZk7qTrRSs5K45G4bacrzJMGX-L53kx
-X-Proofpoint-GUID: dhZk7qTrRSs5K45G4bacrzJMGX-L53kx
+X-Proofpoint-ORIG-GUID: UVFBPlk-1C7MsaH7zfUVhm59W42WUtxO
+X-Proofpoint-GUID: UVFBPlk-1C7MsaH7zfUVhm59W42WUtxO
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-12_02,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 mlxlogscore=999 bulkscore=0 phishscore=0 spamscore=0
- suspectscore=0 adultscore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502120064
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ mlxlogscore=946 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ adultscore=0 clxscore=1015 mlxscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502120064
 
-Add the new QCM6490 compatible to support the reset functionality for
-Low Power Audio subsystem.
+Update the lpassaudio node to support the new compatible as the
+lpassaudio needs to support the reset functionality on the
+QCM6490 IDP board and the rest of the Audio functionality would be
+provided from the LPASS firmware.
 
 Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
 ---
- .../devicetree/bindings/clock/qcom,sc7280-lpasscorecc.yaml | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7280-lpasscorecc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7280-lpasscorecc.yaml
-index 488d63959424088ede67835eb4dcf3feef6d0848..3217cd3c3b602e62b5cf2270fb351a6988d025aa 100644
---- a/Documentation/devicetree/bindings/clock/qcom,sc7280-lpasscorecc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,sc7280-lpasscorecc.yaml
-@@ -20,6 +20,7 @@ description: |
- properties:
-   compatible:
-     enum:
-+      - qcom,qcm6490-lpassaudiocc
-       - qcom,sc7280-lpassaoncc
-       - qcom,sc7280-lpassaudiocc
-       - qcom,sc7280-lpasscorecc
-@@ -130,6 +131,19 @@ allOf:
-         reg:
-           maxItems: 1
+diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+index 9209efcc49b57a853c4dd55ac52cd4dc98d7fe86..86d58f625d0e16a1eccd9925609b496fbd066051 100644
+--- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
++++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+@@ -759,3 +759,8 @@ &wifi {
  
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: qcom,qcm6490-lpassaudiocc
+ 	status = "okay";
+ };
 +
-+    then:
-+      properties:
-+        reg:
-+          items:
-+            - description: lpass core cc register
-+            - description: lpass audio csr register
-+
- additionalProperties: false
- 
- examples:
++&lpass_audiocc {
++	compatible = "qcom,qcm6490-lpassaudiocc";
++	/delete-property/ power-domains;
++};
 
 -- 
 2.45.2
