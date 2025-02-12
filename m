@@ -1,181 +1,344 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A661F20F079
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 13:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039F427181F;
+	Wed, 12 Feb 2025 13:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739367901; cv=none; b=jJEmYNUtqcrzibO8jovwAiajUJOQCGEtp8vUpuh63QsqEa4xcRIjvArSlVwGGqrj8Fv6oMFNdAm2fcxpxqQvPJOYv5i9sxyIWi7BA23YnG7wQKc9aM2KpOx/sdGRBoODTSzeCXAxaGYFeZpzg5Ai5D5VogQ3cFksE9B0eJtOfpQ=
+	t=1739368109; cv=none; b=rsaDIuFIEOwnjihBJQj6vd7STIxVG8lO/46InQN0OZE48I7XU8IIQ0KA5IA5G5OrS8+GQf8kwZHzzhet+6BEe/Et/dgbPCr7IGa+2PC4Pjrb7uUKkSfZk5zcYXw0pUwY6kwtgNkOhqcl7neCSucsSS/SUMTVWI+IKu8xqSjlwx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739367901; c=relaxed/simple;
-	bh=1N4I54exUcgE3LTlRai6GULrj0a3pJK6dc5b/9sf+V8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pl63/iBsEM2V1srngYqWewVK33Meu740VvK4Z8Wyxs2hsElq9v0yxIB/Mc2cl8a3xarbHMcVpNvrrXlTRFHO2x8KDXjZN3Im++qsqUAvA8JAgfKDXVrN0Mdsq1n2ovsDSznJsTdXdXJ3KFA2y+sRlr0lGl/ev1EJoHRIZB+4EPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eGLt8cg1; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eGLt8cg1"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51C672Ei006115
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 13:44:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bcv87hwVFJ59H+rlgvVS9U8o2Zyl8UBZpx3M/46jsWA=; b=eGLt8cg13jFBCs95
-	yrPopG7sZNOi1ak3UaZIxzK32Z9zTx0VtHzuFulWKVwnu6fmhU5x0gCh6CR9KBGP
-	3HptCiSTfHzFiFDymejlEFZWMMv4XD1pu5mWfZwUVsW4vea0O0oC5/Lau0VOtSbe
-	ToGZMztFEXKAxtnSvhHTWyf0HsGIiih9PT+k5NkkQLwK9Dn7WJPuv2fe89iie91C
-	jienpfs1fDF22tg981YnrAmkBIvBa1npVfm/8Awhj1DJQAdn9ePdivZWJAhtg2VE
-	pmyEV5cr18DV5BiKZxOKcnlMrMKjfzfD2HPbMTmUCcJbyIxvP/GHS+CrV7jI562i
-	bNU6KA==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qe5mypur-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 13:44:58 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c05d579bc2so31720385a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 05:44:58 -0800 (PST)
+	s=arc-20240116; t=1739368109; c=relaxed/simple;
+	bh=YgNazSPuZP67B7SpYjUZ6vVvMN8W7GFutmn8IfY3wtw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DtQDkensLTcyKSZW45LBGVCpTz/3mLAMELDuFNItotmx9iHbKQ5uSxKcCcRjFrmrGuQL5lSYlrtZj2Dl6AsSz5eZ7eWpbt8trBAm90HkqQttoJeRW0cHuMGuD0nE4dqqltggNCt115cT5oe6J/6LovWDTy3r53DQESj2sUOr624=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-5205539e38cso583272e0c.0;
+        Wed, 12 Feb 2025 05:48:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739367898; x=1739972698;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bcv87hwVFJ59H+rlgvVS9U8o2Zyl8UBZpx3M/46jsWA=;
-        b=NcI3zIqbbFBcgryhbGarUPGmB5UEY0tNKzIWWT0rcUjS6d5HLQzxirj2u+Zp6Q0cM7
-         cEtTiC3kKGKLEZn2cANkHAnBQzZ4x3a3akay2lQDi7osRmHXtP3FMv5v7rKK8Z2RKXw4
-         q9uQL4C959NkhG29ft6Jc89mWZPunSafRzXA3Lsra1TfG8LasIUOW+N2QgsYh/8U6NmA
-         Sne5OHpvQK8CbATxqNiQ9svJFuUPfreY5t2j5w4yYf/ZphjPzcVJeYGQF88eGwlCnYKk
-         Jo3RMynZnxgViRZGWmga2K07UE6rmj8kxdgkZNm9QJRrytAb8QDpOeZfpvDGM26KYghM
-         H/1w==
-X-Forwarded-Encrypted: i=1; AJvYcCWGjS9PeUuAo4p8/az+oDvgyPy25O+NV/+GNwMo7A5wRCjsSMni4kjHrM4oZwN1wzcszp6ZZIKT0j3mDSo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5FDeQkq+pdEQMDPrmetQGcN+5GkzyjFRf9c/bvFAR2uLncUX7
-	W3bPqGfSihZlau/3FZdJBtHQYcx7BBiQJJvaQ95MhsyGSRMpCiYaJKpVuWuA3cKj3+xygam1++U
-	/pMzFKDHwD0ok0lz84MzMUEe3GhtUVAJcf7QSn0oM0hQYi4P8J+40pCEqKnM0uH4=
-X-Gm-Gg: ASbGnctRLEeCCIeGEQ075gTdnaxItE4/nxyyGB0I17xzwYO501CDc+p4b4Kz/Hht9LR
-	yzISA2R4371/HOMEPXAkbRu46PMZnI0cLbIIaXyzW9ebBGAR2pi/WU3ogkNw4wLYIYp22LvdVA5
-	J0LpWipqROLe5G/1aKnYCj5iim+hVkM/wWXyae8zNRvENmvzp9ygVU5g67w06rfeVlLHePF61d8
-	OJQbwLEgZfsxuUTls+jKB/OpqaCJkN5BOj0wrDfFPAaemcVujb5DQYZyBVauUhgxPMVp+tFe7Au
-	utfu1RCs/07qOUsTn/4Sg6FjDUEZqTNOVAugicWz2SHFlBer994PUaKdHv4=
-X-Received: by 2002:a05:620a:178f:b0:7c0:7818:8563 with SMTP id af79cd13be357-7c0781886f1mr47788185a.8.1739367896994;
-        Wed, 12 Feb 2025 05:44:56 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHOHyU09alCVQwtWMOufSC23nsnbBXmC6L1k3XnA5cPStmX6pOxlCcBfACplNb3zo+zUrAcFA==
-X-Received: by 2002:a05:620a:178f:b0:7c0:7818:8563 with SMTP id af79cd13be357-7c0781886f1mr47786285a.8.1739367896515;
-        Wed, 12 Feb 2025 05:44:56 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de51768762sm9483438a12.61.2025.02.12.05.44.53
+        d=1e100.net; s=20230601; t=1739368105; x=1739972905;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gLmliqgqberlgcuZIoGufpRBbuTFaATaAsV8mqEroag=;
+        b=whpigQuSMvHTKgwWhAn7Vhj3NK7mbR3O0z3jLFvB2WUjLQp+Pt4tIvNE4nyqDWoXa6
+         PTEHUrA/iHjuDOa21GMS/MekWIbdeVTX74idVN3/uFUy1Eeqam8BndSx0mLmIXh59NN6
+         gjbNmMux8B7/aDyRCsqtMEV1InvuEsuiI+vX/tu+ugzuptEdfl9hh86uQ0TG8lOshQXt
+         nVUuX9jnne3XROZXCuwUdoe4m9XhraVM2uuzMJE9P/5uhNR3ag/O3udO/5igKjN0Wlsm
+         Qcp8WHKRMsWgK4GLau+BlWXpyPEHMQaEi3V1DB4B3NBplAyhY2uRnkUh/JiKzgjFgWtJ
+         st4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXJn+xjeHW4v1pmzJSizh7VtHUfiZdik+vUPEc2JlZ4xMYIQFo/5TYMnfMpB6i4bPSR7Bqd82HAXd2AK38=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYgQYOJ1lrIHvjPoYlc82jx6OnTkQNU4Y3qGAxMcOTOqjb0mDs
+	6DT6YUhM/uPPOfuJ4DQcbHSsc1xxKKFFRR8WsSRwt+4HKZHIKAJeLW0CYASfaaw=
+X-Gm-Gg: ASbGnctNrnc6wo2zSKwqed1NPils2/+fAmuliJBzJpkwfW3vxP3wVbdk33NE2ii+zDf
+	vlNLbdt/xzs3W/HwCKCXKC2NsMKtYTguMTPvvJdH1HF349H5rgoUziTE4hX7PQaQ8v03GtJ6Scg
+	DYFn0fdTOgyWHIQ28FApaiCr5UZj7tSV4iJf/S0UFCUXaDaAGsom3m5jp+NBlNkWL51gLLTs5zq
+	PBg7jNWKxXPrKXIHICo3aZ+GADUId6z4QXiGLvIjeNeh6XlU98K5iA7QVvzeJ0wTNHZ2wGJB2LP
+	DX5Lp44EkaUayEMw4IKvU2xxs36gfU9Nx7mxJmG4uwSGgvGAHTsUCA==
+X-Google-Smtp-Source: AGHT+IH3Y48R2ZJ4R6YKz93HIIVM5ywdZ/StoZIYRvEPTZ5OqfQ9q0VeYeAQ4FSS5J4WO+xWWrE8hg==
+X-Received: by 2002:a05:6122:1797:b0:520:42d3:91c1 with SMTP id 71dfb90a1353d-52069e13313mr1408215e0c.10.1739368105124;
+        Wed, 12 Feb 2025 05:48:25 -0800 (PST)
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51f42734a5dsm1275726e0c.17.2025.02.12.05.48.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 05:44:56 -0800 (PST)
-Message-ID: <c4850349-e0d7-4976-a6dc-9c690905abf3@oss.qualcomm.com>
-Date: Wed, 12 Feb 2025 14:44:52 +0100
+        Wed, 12 Feb 2025 05:48:24 -0800 (PST)
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4ba722d3916so1667810137.2;
+        Wed, 12 Feb 2025 05:48:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWweo9s6w9KIPtNa4k3nXGL3AbWZ1J/GHMAI1t09ClZ9M6f+LJsVu0+lemwMC9Ahwmi3tGyCZTvmzZ5E4M=@vger.kernel.org
+X-Received: by 2002:a05:6102:290e:b0:4b1:1eb5:8ee3 with SMTP id
+ ada2fe7eead31-4bbf56c9ea2mr1860862137.22.1739368104389; Wed, 12 Feb 2025
+ 05:48:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] dt-bindings: display/msm: Redocument the
- dp-controller for QCS8300
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Yongxing Mou <quic_yongmou@quicinc.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250212-mst_qcs8300-v1-0-38a8aa08394b@quicinc.com>
- <20250212-mst_qcs8300-v1-1-38a8aa08394b@quicinc.com>
- <531a23fe-940a-4e9a-b023-5f1789ac65a5@kernel.org>
- <10d83c88-9f72-4577-95ba-bb1fd1ef36d1@quicinc.com>
- <5fd75e3d-ee87-439e-b6d4-dd0dd9a0ea2d@kernel.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <5fd75e3d-ee87-439e-b6d4-dd0dd9a0ea2d@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: moKu3gx_jjB1TPvUqI5YqY_npJGCnMvB
-X-Proofpoint-ORIG-GUID: moKu3gx_jjB1TPvUqI5YqY_npJGCnMvB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-12_04,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 clxscore=1015 suspectscore=0 mlxscore=0
- lowpriorityscore=0 phishscore=0 impostorscore=0 malwarescore=0 spamscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502120106
+References: <20250203031213.399914-1-koichiro.den@canonical.com> <20250203031213.399914-3-koichiro.den@canonical.com>
+In-Reply-To: <20250203031213.399914-3-koichiro.den@canonical.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 12 Feb 2025 14:48:12 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXCAH=5Az9fq33-8izCLRbzxOM6zj8VbPWj0iR=KXPFtw@mail.gmail.com>
+X-Gm-Features: AWEUYZnXuYGZ3QeleJZDyo2hHX3sf1Q4nEyvTm2jTsGdtwsxeYGffrrnLZjGaiM
+Message-ID: <CAMuHMdXCAH=5Az9fq33-8izCLRbzxOM6zj8VbPWj0iR=KXPFtw@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] gpio: aggregator: introduce basic configfs interface
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
+	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 12.02.2025 12:28 PM, Krzysztof Kozlowski wrote:
-> On 12/02/2025 12:13, Yongxing Mou wrote:
->>
->>
->> On 2025/2/12 16:35, Krzysztof Kozlowski wrote:
->>> On 12/02/2025 08:12, Yongxing Mou wrote:
->>>> We need to enable mst for qcs8300, dp0 controller will support 2 streams
->>>> output. So not reuse sm8650 dp controller driver and will add a new driver
->>>> patch for qcs8300 mst feature. Modify the corresponding dt-bingding file
->>>> to compatible with the qcs8300-dp.
->>>>
->>>> Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
->>> NAK. You just said qcs8300 is compatible with sm8650. I did not ask
->>> about drivers, I asked about hardware.
->>>
->>> This is messy approach. Describe properly the hardware first, instead of
->>> sending two conflicting patchsets.
->>>
->>> Best regards,
->>> Krzysztof
->>
->> Hi, Krzysztof, thanks for reviewing, i want to explain why i submitted 
->> this patch. Patch 
->> https://lore.kernel.org/all/20250114-dts_qcs8300-v3-1-d114cc5e4af9@quicinc.com/ 
->> and 
->> https://lore.kernel.org/all/20250120-mdssdt_qcs8300-v4-2-1687e7842125@quicinc.com/ 
->> is the qcs8300 display enablement changes. It base on current linux base 
->> code and it only support SST mode, so in the SST mode, qcs8300 dp 
->> controller driver is quite same with sm8650, struct msm_dp_desc only 
->> have 3 members(io_start, id and wide_bus_supported) and they are same 
->> both in qcs8300 and sm8650, so we reuse it. BTW, for dp phy hardware 
->> version, qcs8300 and sm8650 is different.
-> 
-> No. In one patchset you claim hardware is like that, in other patchset
-> you say hardware is different.
-> 
-> Sorry, hardware does not change based on your patchsets.
-> 
-> Sort out this before posting new versions.
+Hi Den-san,
 
-In other words, fallback compatibles must be chosen with features that
-are present in hardware, but not yet supported upstream in mind.
+On Mon, 3 Feb 2025 at 04:12, Koichiro Den <koichiro.den@canonical.com> wrote:
+> The existing sysfs 'new_device' interface has several limitations:
+> * No way to determine when GPIO aggregator creation is complete.
+> * No way to retrieve errors when creating a GPIO aggregator.
+> * No way to trace a GPIO line of an aggregator back to its
+>   corresponding physical device.
+> * The 'new_device' echo does not indicate which virtual gpiochip<N>
+>   was created.
+> * No way to assign names to GPIO lines exported through an aggregator.
+>
+> Introduce the new configfs interface for gpio-aggregator to address
+> these limitations. It provides a more streamlined, modern, and
+> extensible configuration method. For backward compatibility, the
+> 'new_device' interface and its behaviour is retained for now.
+>
+> This commit implements minimal functionalities:
+>
+>   /config/gpio-aggregator/<name-of-your-choice>/
+>   /config/gpio-aggregator/<name-of-your-choice>/live
+>   /config/gpio-aggregator/<name-of-your-choice>/<lineY>/
+>   /config/gpio-aggregator/<name-of-your-choice>/<lineY>/key
+>   /config/gpio-aggregator/<name-of-your-choice>/<lineY>/offset
+>
+> Basic setup flow is:
+> 1. Create a directory for a GPIO aggregator.
+> 2. Create subdirectories for each line you want to instantiate.
+> 3. In each line directory, configure the key and offset.
+>    The key/offset semantics are as follows:
+>    * If offset is >= 0:
+>      - key specifies the name of the chip this GPIO belongs to
+>      - offset specifies the line offset within that chip.
+>    * If offset is <0:
+>      - key needs to specify the GPIO line name.
+> 4. Return to the aggregator's root directory and write '1' to the live
+>    attribute.
+>
+> For example, the command in the existing kernel doc:
+>
+>   echo 'e6052000.gpio 19 e6050000.gpio 20-21' > new_device
+>
+> is equivalent to:
+>
+>   mkdir /sys/kernel/config/gpio-aggregator/<custom-name>
+>   # Change <custom-name> to name of your choice (e.g. "aggr0")
+>   cd /sys/kernel/config/gpio-aggregator/<custom-name>
+>   mkdir line0 line1 line2  # Only "line<Y>" naming allowed.
+>   echo e6052000.gpio > line0/key
+>   echo 19            > line0/offset
+>   echo e6050000.gpio > line1/key
+>   echo 20            > line1/offset
+>   echo e6050000.gpio > line2/key
+>   echo 21            > line2/offset
+>   echo 1             > live
+>
+> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
 
-It's totally fine (and even preferred/expected) to describe hardware resources
-(such as MST clocks here) when initially creating bindings for a piece of hw,
-even though the drivers don't use them yet at that moment.
+Thanks for your patch!
 
-dt-bindings are supposed to give the OS a complete representation of the
-hardware and ideally be immutable (which is a struggle, but we're getting
-better). Driver specifics should not influence your decisions (or at least
-do so very minimally) when adding these.
+> --- a/drivers/gpio/gpio-aggregator.c
+> +++ b/drivers/gpio/gpio-aggregator.c
+> @@ -9,10 +9,14 @@
+>
+>  #include <linux/bitmap.h>
+>  #include <linux/bitops.h>
+> +#include <linux/completion.h>
+> +#include <linux/configfs.h>
 
-Now you're in a """good""" position as the display bindings haven't been merged
-yet, so you can still upload a new patchset where the description is more
-accurate. If it was merged, we'd have to break the ABI or add some crazy 
-workarounds..
+Using configfs requires CONFIG_CONFIGFS_FS.
+So either GPIO_AGGREGATOR should select CONFIGFS_FS, or
+all configfs-related code should be protected by checks for
+CONFIG_CONFIGFS_FS.  Since we want to encourage people to use the new
+API, I think the former is preferred.
 
-Please coalesce this patchset with the "add 8300 display support" one.
+>  #include <linux/ctype.h>
+>  #include <linux/delay.h>
+>  #include <linux/idr.h>
+>  #include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/lockdep.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> @@ -34,11 +38,39 @@
+>   */
+>
+>  struct gpio_aggregator {
+> +       struct config_group group;
+>         struct gpiod_lookup_table *lookups;
+>         struct platform_device *pdev;
+> +       struct mutex lock;
+> +       int id;
+> +
+> +       /* Synchronize with probe */
+> +       struct notifier_block bus_notifier;
+> +       struct completion probe_completion;
+> +       bool driver_bound;
+> +
+> +       /* List of gpio_aggregator_line. Always added in order */
+> +       struct list_head list_head;
+> +
+>         char args[];
+>  };
+>
+> +struct gpio_aggregator_line {
+> +       struct config_group group;
+> +       struct gpio_aggregator *parent;
+> +       struct list_head entry;
+> +
+> +       /* Line index within the aggregator device */
+> +       int idx;
 
-Please also describe all 4 MST clocks and whatever other clocks/resets that
-may be necessary down the line.
- 
-Konrad
+unsigned int
+
+> +
+> +       /* GPIO chip label or line name */
+> +       char *key;
+> +       /* Can be negative to indicate lookup by line name */
+> +       int offset;
+> +
+> +       enum gpio_lookup_flags flags;
+> +};
+> +
+>  static DEFINE_MUTEX(gpio_aggregator_lock);     /* protects idr */
+>  static DEFINE_IDR(gpio_aggregator_idr);
+
+> +static bool aggr_is_active(struct gpio_aggregator *aggr)
+> +{
+> +       lockdep_assert_held(&aggr->lock);
+> +
+> +       return !!aggr->pdev && platform_get_drvdata(aggr->pdev);
+
+No need for "!!".
+
+> +}
+
+> +static void aggr_line_add(struct gpio_aggregator *aggr,
+> +                         struct gpio_aggregator_line *line)
+> +{
+> +       struct gpio_aggregator_line *tmp;
+> +
+> +       lockdep_assert_held(&aggr->lock);
+> +
+> +       list_for_each_entry(tmp, &aggr->list_head, entry) {
+> +               if (WARN_ON(tmp->idx == line->idx))
+
+Can this really happen?
+
+> +                       return;
+> +               if (tmp->idx > line->idx) {
+> +                       list_add_tail(&line->entry, &tmp->entry);
+> +                       return;
+> +               }
+> +       }
+> +       list_add_tail(&line->entry, &aggr->list_head);
+> +}
+
+> +static void aggr_lockup_configfs(struct gpio_aggregator *aggr, bool lock)
+> +{
+> +       struct configfs_subsystem *subsys = aggr->group.cg_subsys;
+> +       struct gpio_aggregator_line *line;
+> +
+> +       /*
+> +        * The device only needs to depend on leaf lines. This is
+> +        * sufficient to lock up all the configfs entries that the
+> +        * instantiated, alive device depends on.
+> +        */
+> +       list_for_each_entry(line, &aggr->list_head, entry) {
+> +               if (lock)
+> +                       WARN_ON(configfs_depend_item_unlocked(
+> +                                       subsys, &line->group.cg_item));
+
+Can this happen?
+I am also worried if this can be triggered by the user, combined
+with panic_on_warn.
+
+> +               else
+> +                       configfs_undepend_item_unlocked(
+> +                                       &line->group.cg_item);
+> +       }
+> +}
+> +
+> +static ssize_t
+> +gpio_aggr_line_key_show(struct config_item *item, char *page)
+> +{
+> +       struct gpio_aggregator_line *line = to_gpio_aggregator_line(item);
+> +       struct gpio_aggregator *aggr = line->parent;
+> +
+> +       guard(mutex)(&aggr->lock);
+> +
+> +       return sprintf(page, "%s\n", line->key ?: "");
+
+Please use sysfs_emit() instead (everywhere).
+
+
+> +}
+
+> +static ssize_t
+> +gpio_aggr_device_live_store(struct config_item *item, const char *page,
+> +                           size_t count)
+> +{
+> +       struct gpio_aggregator *aggr = to_gpio_aggregator(item);
+> +       int ret = 0;
+> +       bool live;
+> +
+> +       ret = kstrtobool(page, &live);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (live)
+> +               aggr_lockup_configfs(aggr, true);
+> +
+> +       scoped_guard(mutex, &aggr->lock) {
+> +               if (live == aggr_is_active(aggr))
+> +                       ret = -EPERM;
+> +               else if (live)
+> +                       ret = aggr_activate(aggr);
+> +               else
+> +                       aggr_deactivate(aggr);
+> +       }
+> +
+> +       /*
+> +        * Undepend is required only if device disablement (live == 0)
+
+s/Undepend/Lock-up/?
+
+> +        * succeeds or if device enablement (live == 1) fails.
+> +        */
+> +       if (live == !!ret)
+> +               aggr_lockup_configfs(aggr, false);
+> +
+> +       return ret ?: count;
+> +}
+
+> +static struct config_group *
+> +gpio_aggr_make_group(struct config_group *group, const char *name)
+> +{
+> +       /* arg space is unneeded */
+> +       struct gpio_aggregator *aggr = kzalloc(sizeof(*aggr), GFP_KERNEL);
+> +       if (!aggr)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       mutex_lock(&gpio_aggregator_lock);
+> +       aggr->id = idr_alloc(&gpio_aggregator_idr, aggr, 0, 0, GFP_KERNEL);
+> +       mutex_unlock(&gpio_aggregator_lock);
+> +
+> +       if (aggr->id < 0) {
+> +               kfree(aggr);
+> +               return ERR_PTR(aggr->id);
+> +       }
+
+The above more or less duplicates the existing code in
+new_device_store().
+
+> +
+> +       INIT_LIST_HEAD(&aggr->list_head);
+> +       mutex_init(&aggr->lock);
+> +       config_group_init_type_name(&aggr->group, name, &gpio_aggr_device_type);
+> +       init_completion(&aggr->probe_completion);
+> +
+> +       return &aggr->group;
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
