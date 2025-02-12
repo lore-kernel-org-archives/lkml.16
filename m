@@ -1,157 +1,123 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FD2B2040A7
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 07:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27A62040A4
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 07:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739344806; cv=none; b=VzcvvF+ahNrQX1dOIK9VShkAkLZH+LFZdyZM6bUt7JhDe5RY6gXJU+/9GTstvAgMZ8MBJNuZn1saW2p07roonMcAEwT1jBpHhG8K/6wEmcnoBQzFtpMkypkIDqWRzF2v6l6XnICwjZ5pKstOuDx2gKoIk/jP2TtiVqerqhZLjuE=
+	t=1739344906; cv=none; b=aNCiKafHiJyyu2NoSUkduFqaJWhPxfFbi0/c7UxDAgrS34EEcokCKZ+yWSz7O1sJY15DqPwgJcUr+9L0HZa5kafYM2uXNGmbYn3SaoJXm3NyZm17xNvMMlCMftjNhhUF2+1g5hR5dAt5y/IB02al+IBr25uJiEdzLGx6bDbuwO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739344806; c=relaxed/simple;
-	bh=p3TXOgPutER088kooOwsPkLRYDwyiVT6E7Bu0WF26Tg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RizpC8d/D2VwjjtI8GWzuqvKXba0bOcvdpNefruizige8jU13FbbCOWRPOOGCFqxfh5jgeYlNGk0h7Jf1Rtuxj8zYdJX5Ktuw8soh62xjva7E3zeq3Fk94vn71AU3UDlhoZcKBXCF/9Nkr/uUo1mm4MwH6Vj/rgv9+fHivyLuPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4Yt83s13G2z9sPd;
-	Wed, 12 Feb 2025 07:46:33 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 83R2JPrA4XVg; Wed, 12 Feb 2025 07:46:33 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4Yt83s02qzz9rvV;
-	Wed, 12 Feb 2025 07:46:33 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id E858C8B770;
-	Wed, 12 Feb 2025 07:46:32 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id wzoTdwFsLGnb; Wed, 12 Feb 2025 07:46:32 +0100 (CET)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [10.25.207.138])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id B98A08B763;
-	Wed, 12 Feb 2025 07:46:32 +0100 (CET)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Erhard Furtner <erhard_f@mailbox.org>
-Subject: [PATCH v2] powerpc/code-patching: Fix KASAN hit by not flagging text patching area as VM_ALLOC
-Date: Wed, 12 Feb 2025 07:46:28 +0100
-Message-ID: <06621423da339b374f48c0886e3a5db18e896be8.1739342693.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.47.0
+	s=arc-20240116; t=1739344906; c=relaxed/simple;
+	bh=GX2Bo920yza7SAo4ieMuOLncMS2btUetGyMlP7Ii+n0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mRZqQjAX9U+JF5HgWA8FeBweFxNcIiR6NTavxvtROybclvif6J2zAi0DN05Ww3IxBKtTIT9etnoEfuMJvl+QDGMFDxFjefXfu7u7Fa9X+GTpGa9smRilBOR6RJfii1GDZ1PCK2RUA1HP59hEsOZHqwRQrz+ObuxKvhZ/Qmv6Fa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a+XVS0uP; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a+XVS0uP"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5deb0ea1129so558464a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 23:21:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739344903; x=1739949703; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=I1XA/sda8QNaELrl3C+Fgi3gSSESl0xT3B7//5s8Fkw=;
+        b=a+XVS0uPZ5JWILbPbG5OLe8fbOVqOprHvRZE3moAN7OuQnybFH2ZmkRumwJG2x40t+
+         0OvkCPF3M3STereU/01vVEDMXhYn7wC+atxbbQxh6cLLBQk8N7YwVXXC0HXRwCLKXTcL
+         thE/osVfk/j+uDwX2oLX41L3RvAbCLzOz5HytghP6CXBN/XLlyt5IeiZfp8pTty2jRA/
+         MwxXrEcJpk1tdenp95fGpBKLhOut9OUyaZebm+MbSkyGkRmmeeeYaN/T+fFsBTRTDLai
+         phlLfMrbqEzKJy6kFGAYDd1jZEWP+HAiCufekMo2HtPqoeCILrC9w7yY6fKhSURtmepV
+         9/dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739344903; x=1739949703;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I1XA/sda8QNaELrl3C+Fgi3gSSESl0xT3B7//5s8Fkw=;
+        b=q4OiG88DWk00XZ0fAjx3n5qJh4oEWHOkdQM6niL6gBb4iEPVw5SSZLNeMz5FutPXqG
+         0Tc33j2b6oRLQK1O8IyMmyhCse7/+WgDJfPP7gs8bsTi0De66929UDxMPVvqPCp35HMJ
+         WNcISn31rzQlaLbRs25IiI2pkZ/W1CZ5Olo76HgSNyZC05aWB4VcMIjkHk9CEIlpemuB
+         85etgbiDX1rFIzgT1pA25zBRzeRjmP6aBk3DihLp77dzg1QHebwj3CpzEB54t3I8pGW4
+         83DFXq35jM7jXGWeJz7MTCBIaXOY0lawE3DWygdg4INzoAh/+H2fxl4MQHoIyhvfVand
+         15ug==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ8/AyF4YRKLjHPEumwp5jr36zA7mim5eFlq+S5tUO5CHrK/fa16U6dqNgFh6i1MM7XopIOKXyVTVDCI4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCOQNUH8cx6P+/K9tyhCt98ROvQMVa1pvcFPB3+JwE+zgb/sTi
+	lfiFOJM2I9UaP1h/dU2MI33z4Nd8384VJRUHlNJlBO3qneoVbAjheKc+WPmV5lpqE6JbFKoAx/y
+	E
+X-Gm-Gg: ASbGnctFnI1ZQ+MBmtLVAWjGi+5qzKXgM9oCzC/SDWk88OqQf0HI5Ikztl3i35Wy/cR
+	Coe8UnZZZKPrTFnNG8fLwKZ+BgaHNws2u4hZ+AhJhHFXJuAX3U3LIKfySvKKfvZ8kAe50VVaCey
+	phNpd3c2rqwb3c3Co8g9vGlKOAwHnHcVrFdR1XpkCsipq3eIDh2RoMT6pm6mtf589/6/GySasGz
+	WcBcEepLmWOLDXX+OwTRTwEEftAXv97JsF2CFrzGenHbN6vuNybUvlIO99YhkZ6EQawoDdTkdOs
+	oFTT41grNULY0+4akyRc
+X-Google-Smtp-Source: AGHT+IFbJH6iVjLwp8uJnuQIc1OwsoBuQCq0ElnDpSJ9Ye+j/v1LlJ0uv2hVXznwRiz6v7Cbww+2GA==
+X-Received: by 2002:a05:6402:4024:b0:5d0:efaf:fb73 with SMTP id 4fb4d7f45d1cf-5deaddc10acmr1962398a12.15.1739344903041;
+        Tue, 11 Feb 2025 23:21:43 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5de4805a0b2sm9653626a12.48.2025.02.11.23.21.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 23:21:42 -0800 (PST)
+Date: Wed, 12 Feb 2025 10:21:39 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ian To <onlyian4981@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] staging: rtl8723bs: format comments
+Message-ID: <1052fff0-b503-4b47-9897-fe7c26c14126@stanley.mountain>
+References: <cover.1739001527.git.onlyian4981@gmail.com>
+ <b58a9f5b579e17f70681f8419b54d7d9864d1730.1739001527.git.onlyian4981@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739342788; l=4545; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=p3TXOgPutER088kooOwsPkLRYDwyiVT6E7Bu0WF26Tg=; b=ZwrR/v049bSg+M2ge8wLUfGPpag6/zJhkrHc7AVgLBNOGC47fYkLb5AohC9JsPKexXtASgR05 oGd+skniHlgAONLFqL40qWBk9HF5i69maFApz6cE6U4n+X4JbAmaGfs
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b58a9f5b579e17f70681f8419b54d7d9864d1730.1739001527.git.onlyian4981@gmail.com>
 
-Erhard reported the following KASAN hit while booting his PowerMac G4
-with a KASAN-enabled kernel 6.13-rc6:
+On Sat, Feb 08, 2025 at 12:15:54AM -0800, Ian To wrote:
+> Some comments were not formatted correctly. Reported by checkpatch.
+> 
+> Signed-off-by: Ian To <onlyian4981@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/core/rtw_security.c | 102 +++++++++---------
+>  1 file changed, 51 insertions(+), 51 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_security.c b/drivers/staging/rtl8723bs/core/rtw_security.c
+> index 1e9eff01b1aa..3281751436fd 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_security.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_security.c
+> @@ -30,10 +30,10 @@ const char *security_type_str(u8 value)
+>  /* WEP related ===== */
+>  
+>  /*
+> -	Need to consider the fragment  situation
+> -*/
+> + *	Need to consider the fragment  situation
+> + */
+>  void rtw_wep_encrypt(struct adapter *padapter, u8 *pxmitframe)
+> -{																	/*  exclude ICV */
+> +{								/*  exclude ICV */
 
-  BUG: KASAN: vmalloc-out-of-bounds in copy_to_kernel_nofault+0xd8/0x1c8
-  Write of size 8 at addr f1000000 by task chronyd/1293
+What does this comment even mean?
 
-  CPU: 0 UID: 123 PID: 1293 Comm: chronyd Tainted: G        W          6.13.0-rc6-PMacG4 #2
-  Tainted: [W]=WARN
-  Hardware name: PowerMac3,6 7455 0x80010303 PowerMac
-  Call Trace:
-  [c2437590] [c1631a84] dump_stack_lvl+0x70/0x8c (unreliable)
-  [c24375b0] [c0504998] print_report+0xdc/0x504
-  [c2437610] [c050475c] kasan_report+0xf8/0x108
-  [c2437690] [c0505a3c] kasan_check_range+0x24/0x18c
-  [c24376a0] [c03fb5e4] copy_to_kernel_nofault+0xd8/0x1c8
-  [c24376c0] [c004c014] patch_instructions+0x15c/0x16c
-  [c2437710] [c00731a8] bpf_arch_text_copy+0x60/0x7c
-  [c2437730] [c0281168] bpf_jit_binary_pack_finalize+0x50/0xac
-  [c2437750] [c0073cf4] bpf_int_jit_compile+0xb30/0xdec
-  [c2437880] [c0280394] bpf_prog_select_runtime+0x15c/0x478
-  [c24378d0] [c1263428] bpf_prepare_filter+0xbf8/0xc14
-  [c2437990] [c12677ec] bpf_prog_create_from_user+0x258/0x2b4
-  [c24379d0] [c027111c] do_seccomp+0x3dc/0x1890
-  [c2437ac0] [c001d8e0] system_call_exception+0x2dc/0x420
-  [c2437f30] [c00281ac] ret_from_syscall+0x0/0x2c
-  --- interrupt: c00 at 0x5a1274
-  NIP:  005a1274 LR: 006a3b3c CTR: 005296c8
-  REGS: c2437f40 TRAP: 0c00   Tainted: G        W           (6.13.0-rc6-PMacG4)
-  MSR:  0200f932 <VEC,EE,PR,FP,ME,IR,DR,RI>  CR: 24004422  XER: 00000000
+> @@ -374,39 +374,38 @@ static void phase1(u16 *p1k, const u8 *tk, const u8 *ta, u32 iv32)
+>  	/* size on the 80-bit block P1K[], using the 128-bit key TK[] */
+>  	for (i = 0; i < PHASE1_LOOP_CNT; i++) {
+>  		/* Each add operation here is mod 2**16 */
+> -		p1k[0] += _S_(p1k[4] ^ TK16((i&1)+0));
+> -		p1k[1] += _S_(p1k[0] ^ TK16((i&1)+2));
+> -		p1k[2] += _S_(p1k[1] ^ TK16((i&1)+4));
+> -		p1k[3] += _S_(p1k[2] ^ TK16((i&1)+6));
+> -		p1k[4] += _S_(p1k[3] ^ TK16((i&1)+0));
+> +		p1k[0] += _S_(p1k[4] ^ TK16((i & 1) + 0));
+> +		p1k[1] += _S_(p1k[0] ^ TK16((i & 1) + 2));
+> +		p1k[2] += _S_(p1k[1] ^ TK16((i & 1) + 4));
+> +		p1k[3] += _S_(p1k[2] ^ TK16((i & 1) + 6));
+> +		p1k[4] += _S_(p1k[3] ^ TK16((i & 1) + 0));
 
-  GPR00: 00000166 af8f3fa0 a7ee3540 00000001 00000000 013b6500 005a5858 0200f932
-  GPR08: 00000000 00001fe9 013d5fc8 005296c8 2822244c 00b2fcd8 00000000 af8f4b57
-  GPR16: 00000000 00000001 00000000 00000000 00000000 00000001 00000000 00000002
-  GPR24: 00afdbb0 00000000 00000000 00000000 006e0004 013ce060 006e7c1c 00000001
-  NIP [005a1274] 0x5a1274
-  LR [006a3b3c] 0x6a3b3c
-  --- interrupt: c00
+These aren't comments.
 
-  The buggy address belongs to the virtual mapping at
-   [f1000000, f1002000) created by:
-   text_area_cpu_up+0x20/0x190
-
-  The buggy address belongs to the physical page:
-  page: refcount:1 mapcount:0 mapping:00000000 index:0x0 pfn:0x76e30
-  flags: 0x80000000(zone=2)
-  raw: 80000000 00000000 00000122 00000000 00000000 00000000 ffffffff 00000001
-  raw: 00000000
-  page dumped because: kasan: bad access detected
-
-  Memory state around the buggy address:
-   f0ffff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   f0ffff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  >f1000000: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
-             ^
-   f1000080: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
-   f1000100: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
-  ==================================================================
-
-f8 corresponds to KASAN_VMALLOC_INVALID which means the area is not
-initialised hence not supposed to be used yet.
-
-Powerpc text patching infrastructure allocates a virtual memory area
-using get_vm_area() and flags it as VM_ALLOC. But that flag is meant
-to be used for vmalloc() and vmalloc() allocated memory is not
-supposed to be used before a call to __vmalloc_node_range() which is
-never called for that area.
-
-That went undetected until commit e4137f08816b ("mm, kasan, kmsan:
-instrument copy_from/to_kernel_nofault")
-
-The area allocated by text_area_cpu_up() is not vmalloc memory, it is
-mapped directly on demand when needed by map_kernel_page(). There is
-no VM flag corresponding to such usage, so just pass no flag. That way
-the area will be unpoisonned and usable immediately.
-
-Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-Closes: https://lore.kernel.org/all/20250112135832.57c92322@yea/
-Fixes: 37bc3e5fd764 ("powerpc/lib/code-patching: Use alternate map for patch_instruction()")
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
-v2: Reformated commit message to avoid git dropping away everything after --- interrupt: c00
----
- arch/powerpc/lib/code-patching.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
-index 81c0f673eb25..f84e0337cc02 100644
---- a/arch/powerpc/lib/code-patching.c
-+++ b/arch/powerpc/lib/code-patching.c
-@@ -108,7 +108,7 @@ static int text_area_cpu_up(unsigned int cpu)
- 	unsigned long addr;
- 	int err;
- 
--	area = get_vm_area(PAGE_SIZE, VM_ALLOC);
-+	area = get_vm_area(PAGE_SIZE, 0);
- 	if (!area) {
- 		WARN_ONCE(1, "Failed to create text area for cpu %d\n",
- 			cpu);
--- 
-2.47.0
-
+regards,
+dan carpenter
