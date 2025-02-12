@@ -1,209 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3AC2101BE;
-	Wed, 12 Feb 2025 14:59:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1982101BE;
+	Wed, 12 Feb 2025 14:59:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739372355; cv=none; b=R0fce9w41+EoZN/ezLJ8u+5VsXxiqHY/KBf1udVWm0rdoRtsrvHszIwj79d/JzI5rfOj9FANex6RrAxiRM+d3/4UJGLia4MqagpB1OvVkL4uLHO5P80hcKMqgRzLFrs+wQWbdIEDdaO76NAQPUiK+Ad7EZ/ObfJnsFU988SOlwY=
+	t=1739372398; cv=none; b=gIqvm16ly1hQ2ceDYtmD5/BEm2OVKjVIJurLfrCAk4878K5LumKLcyh1jUBLMhHEIERDDRQr5Sgo4yW5SdG/Lnazc+A6tpZzvEhbslU3RJAN0UI1N3UgD1EURvy+jtGsGn+gWoEspF250cejab6L/oC6cGDaAaXdn50eSwoDdnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739372355; c=relaxed/simple;
-	bh=oCvq9gSavJWl2kDBTfPs3YD8zX+/lohqwlywSoG+xkQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jO4NIOQyHvW0a0d+SkT1qKmNMeCyyybUjYxL8tVK3wBYebU6t9xfRdHiW2Fz0gToWac0BTW+Ctuk4mi5h9Xeu7Osa0rnBK5UGHm7F2t4qp/1IsrIjCPAJo/zFH3oKHuBCQQ8EvEZzBVuGtn9mwoU77Nkeq91ScJhOMBarxbX+EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHVQnH6C; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHVQnH6C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C524C4CEDF;
-	Wed, 12 Feb 2025 14:59:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739372353;
-	bh=oCvq9gSavJWl2kDBTfPs3YD8zX+/lohqwlywSoG+xkQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hHVQnH6CNr1DzWYc7ti8auIZ/FJHzitoE4i/mpGQgFTAleKGfwLoybhM9Pyoop3SW
-	 qEwgOvKAQvnZm1sJliTrLgmB74tMM1OGMmzzm/+KuOfYCjKCHFMZBkC49DPz5eoC7o
-	 3q6hox23kgW2BrozBC5dt0lXhATKjuMUwfnkR0utm9dwqq5hPKRxlaHXKMAPGCzzWc
-	 d/5D1MW5Vf+NBRv7b2xL0TQs2Ib7FRaJhrWTQhV0Jkrq34z9bNgUYWy7MPdeN//8qa
-	 sMprTgrL6hVlfF50Ut2YlltyO+xk0b2JZyZoclBGdPliHjbfAVGWTelTS8U+GbGLgU
-	 T1DYxD/Orn1PA==
-From: Philipp Stanner <phasta@kernel.org>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Yinggang Gu <guyinggang@loongson.cn>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Philipp Stanner <pstanner@redhat.com>
-Cc: netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] stmmac: Replace deprecated PCI functions
-Date: Wed, 12 Feb 2025 15:58:32 +0100
-Message-ID: <20250212145831.101719-2-phasta@kernel.org>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1739372398; c=relaxed/simple;
+	bh=JPZO5PznLFdhUuUvdW0D6DAedUoHfJO7jNY831mmzMo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FFDEiEjgoWJtMpqXDmXFpxRUqNqh0jCcWRPyg/0dme1GMeF6ACtQ422s5L4R/wVn3OuLsAfiNgIGd7bte9P8VhC85O2qUXnwrStJFnqAaJpHMNuSgDj//OD1LbOjKBLJ64P9fA85JfHENjEs+qM9zQiidAHSQRQM4YIrqyTQSW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F070BC4CEDF;
+	Wed, 12 Feb 2025 14:59:53 +0000 (UTC)
+Date: Wed, 12 Feb 2025 10:00:01 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Joel Fernandes <joel@joelfernandes.org>, Prakash Sangappa
+ <prakash.sangappa@oracle.com>, Peter Zijlstra <peterz@infradead.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
+ Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+ x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>, luto@kernel.org,
+ bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org,
+ mgorman@suse.de, jon.grimm@amd.com, bharata@amd.com,
+ raghavendra.kt@amd.com, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
+ Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>, Suleiman
+ Souhlal <suleiman@google.com>, Ingo Molnar <mingo@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Clark Williams
+ <clark.williams@gmail.com>, daniel.wagner@suse.com, Joseph Salisbury
+ <joseph.salisbury@oracle.com>, broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250212100001.2e129b62@gandalf.local.home>
+In-Reply-To: <20250212121113.3nJ-kf-6@linutronix.de>
+References: <9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
+	<20250204220418.35949317@gandalf.local.home>
+	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
+	<20250205081635.397eacb0@gandalf.local.home>
+	<CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
+	<20250206083039.0916ad24@gandalf.local.home>
+	<20250206134408.lD_POjuG@linutronix.de>
+	<20250210144321.1f5974a6@gandalf.local.home>
+	<20250211082138.iqvedSfG@linutronix.de>
+	<20250211102801.5b32d610@gandalf.local.home>
+	<20250212121113.3nJ-kf-6@linutronix.de>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Philipp Stanner <pstanner@redhat.com>
+On Wed, 12 Feb 2025 13:11:13 +0100
+Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+> > IIUC, today, LAZY causes all SCHED_OTHER tasks to act more like
+> > PREEMPT_NONE. Is that correct?  
+> 
+> Well. First sched-tick will set the LAZY bit, the second sched-tick
+> forces a resched.
+> On PREEMPT_NONE the sched-tick would be set NEED_RESCHED while nothing
+> will force a resched until the task decides to do schedule() on its own.
+> So it is slightly different for kernel threads.
 
-The PCI functions
-  - pcim_iomap_regions()
-  - pcim_iomap_table() and
-  - pcim_iounmap_regions()
-have been deprecated.
+Except that it should schedule on a cond_resched() and the point of adding
+LAZY was to get rid of all the cond_resched() which in turn gets rid of the
+need for PREEMPT_NONE. Which was what I was getting at. That PREEMPT_LAZY
+is really just NONE without the need to sprinkle cond_resched() all over
+the kernel. Instead of having cond_resched(), we just wait for the next
+tick.
 
-The usage of pcim_* cleanup functions in the driver detach path (remove
-callback) is actually not necessary, since they perform that cleanup
-automatically.
+> 
+> Unless we talk about userland, here we would have a resched on the
+> return to userland after the sched-tick LAZY or NONE does not matter.
+> 
+> > Now that the PREEMPT_RT is not one of the preemption selections, when you
+> > select PREEMPT_RT, you can pick between CONFIG_PREEMPT and
+> > CONFIG_PREEMPT_LAZY. Where CONFIG_PREEMPT will preempt the kernel at the
+> > scheduler tick if preemption is enabled and CONFIG_PREEMPT_LAZY will
+> > not preempt the kernel on a scheduler tick and wait for exit to user space.  
+> 
+> This is not specific to RT but FULL vs LAZY. But yes. However the second
 
-Replace them with pcim_iomap_region().
+Not true. PREEMPT_RT use to enable PREEMPT_FULL as well (it would preempt
+everywhere). The issue we found was that spin_locks which would not have
+been preempted by just FULL alone were being preempted when RT was enabled.
+That caused a lot more contention with spin locks in the kernel.
 
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
----
- .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 28 ++++++-------------
- .../net/ethernet/stmicro/stmmac/stmmac_pci.c  | 24 ++++------------
- 2 files changed, 14 insertions(+), 38 deletions(-)
+That is PREEMPT_RT with PREEMPT_FULL will have a noticeable performance
+degradation compared to just PREEMPT_FULL alone.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-index bfe6e2d631bd..19b16df864dd 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-@@ -11,6 +11,8 @@
- #include "dwmac_dma.h"
- #include "dwmac1000.h"
- 
-+#define DRIVER_NAME "dwmac-loongson-pci"
-+
- /* Normal Loongson Tx Summary */
- #define DMA_INTR_ENA_NIE_TX_LOONGSON	0x00040000
- /* Normal Loongson Rx Summary */
-@@ -520,7 +522,7 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
- {
- 	struct plat_stmmacenet_data *plat;
- 	struct stmmac_pci_info *info;
--	struct stmmac_resources res;
-+	struct stmmac_resources res = {};
- 	struct loongson_data *ld;
- 	int ret, i;
- 
-@@ -552,17 +554,10 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
- 	pci_set_master(pdev);
- 
- 	/* Get the base address of device */
--	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
--		if (pci_resource_len(pdev, i) == 0)
--			continue;
--		ret = pcim_iomap_regions(pdev, BIT(0), pci_name(pdev));
--		if (ret)
--			goto err_disable_device;
--		break;
--	}
--
--	memset(&res, 0, sizeof(res));
--	res.addr = pcim_iomap_table(pdev)[0];
-+	res.addr = pcim_iomap_region(pdev, 0, DRIVER_NAME);
-+	ret = PTR_ERR_OR_ZERO(res.addr);
-+	if (ret)
-+		goto err_disable_device;
- 
- 	plat->bsp_priv = ld;
- 	plat->setup = loongson_dwmac_setup;
-@@ -617,13 +612,6 @@ static void loongson_dwmac_remove(struct pci_dev *pdev)
- 	if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN)
- 		loongson_dwmac_msi_clear(pdev);
- 
--	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
--		if (pci_resource_len(pdev, i) == 0)
--			continue;
--		pcim_iounmap_regions(pdev, BIT(i));
--		break;
--	}
--
- 	pci_disable_device(pdev);
- }
- 
-@@ -673,7 +661,7 @@ static const struct pci_device_id loongson_dwmac_id_table[] = {
- MODULE_DEVICE_TABLE(pci, loongson_dwmac_id_table);
- 
- static struct pci_driver loongson_dwmac_driver = {
--	.name = "dwmac-loongson-pci",
-+	.name = DRIVER_NAME,
- 	.id_table = loongson_dwmac_id_table,
- 	.probe = loongson_dwmac_probe,
- 	.remove = loongson_dwmac_remove,
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index 352b01678c22..f3279c4387c5 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -155,7 +155,7 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
- {
- 	struct stmmac_pci_info *info = (struct stmmac_pci_info *)id->driver_data;
- 	struct plat_stmmacenet_data *plat;
--	struct stmmac_resources res;
-+	struct stmmac_resources res = {};
- 	int i;
- 	int ret;
- 
-@@ -188,13 +188,13 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
- 		return ret;
- 	}
- 
--	/* Get the base address of device */
-+	/* The first BAR > 0 is the base IO addr of our device. */
- 	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		if (pci_resource_len(pdev, i) == 0)
- 			continue;
--		ret = pcim_iomap_regions(pdev, BIT(i), pci_name(pdev));
--		if (ret)
--			return ret;
-+		res.addr = pcim_iomap_region(pdev, i, STMMAC_RESOURCE_NAME);
-+		if (IS_ERR(res.addr))
-+			return PTR_ERR(res.addr)
- 		break;
- 	}
- 
-@@ -204,8 +204,6 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
- 	if (ret)
- 		return ret;
- 
--	memset(&res, 0, sizeof(res));
--	res.addr = pcim_iomap_table(pdev)[i];
- 	res.wol_irq = pdev->irq;
- 	res.irq = pdev->irq;
- 
-@@ -226,21 +224,11 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
-  * stmmac_pci_remove
-  *
-  * @pdev: platform device pointer
-- * Description: this function calls the main to free the net resources
-- * and releases the PCI resources.
-+ * Description: Main driver resource release function
-  */
- static void stmmac_pci_remove(struct pci_dev *pdev)
- {
--	int i;
--
- 	stmmac_dvr_remove(&pdev->dev);
--
--	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
--		if (pci_resource_len(pdev, i) == 0)
--			continue;
--		pcim_iounmap_regions(pdev, BIT(i));
--		break;
--	}
- }
- 
- static int __maybe_unused stmmac_pci_suspend(struct device *dev)
--- 
-2.47.1
+> sched-tick will force preemption point even without the
+> exit-to-userland.
+> 
 
+My question still stands. Have you compared PREEMPT_FULL with and without
+PREEMPT_RT?
+
+-- Steve
