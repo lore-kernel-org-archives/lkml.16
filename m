@@ -1,139 +1,112 @@
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8535CF4FA;
-	Wed, 12 Feb 2025 12:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739364153; cv=none; b=fX0nz+g1RkE7qVSw45eJmLfMXd4X0+0ZOl4x3WjaXHsa7vARx355sJ593lyD066Gxbnv6CFOnbkZ49GFjo3UyRUhzIw57xeCPgAzrpSVqXeIpNl63QlaDzxEonKGjGnayZjofVE84sIeoKa4mA6a7KgXp4DtwbumY2S68FiOSRA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739364153; c=relaxed/simple;
-	bh=gfnQfZvbBycEH6mze+hbX+x3Vkhgqjl25sZUdQySYsY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IAT62d6N34s9LhrQAVGVKPOVogtokYLfh+AGaHqeX25/3+/EJ/hpG+Oca7/7ShuL21tHJaMWjWG31AEZtBobJlIAJhW16ZHOWtt8MFxDEj+8jlgjWKtzQqZcbK/OzuFp4M6FcoUSw6OaA1XZq3ABLlgKRDkqUkXOpxhvNFTJKpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4bb0e7e6cceso992995137.1;
-        Wed, 12 Feb 2025 04:42:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739364148; x=1739968948;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FFJmWf9PLC2VPPWNEyS3sjZLQaSoXbf39gWYrpDNH+k=;
-        b=AAu0I1JFr5D4gqCjPl47rx3eCQcqm4Vck+WyJX93F8a1TDCz28J4R26yAPueOgGnMq
-         7EYo/OVLtXsU84IEClkMNTS4hDUzXyuvghFGaIgOrMhJz7cqB8khC9OEVOcVhd5K2qn/
-         aGTgjr/A+z6Z67heY6r9OODXMwiwpvugAMO9RR96BuJ4YjIsZY3i9qEwwojy9YGNhK4X
-         yEtH2shamBnJo3ucLOw/ED16os+4Osj2+JFFXaB7W36JMD8236IBxaO0fBi103Uyg2h8
-         X29nawIyrDmrYANLK8OcOjIfySYu2FCt/Y83H1QmubQQD1+OlHVbU9n+i9JkI7fsI3O7
-         G77g==
-X-Forwarded-Encrypted: i=1; AJvYcCUFBq5r/cbK2ZWDEqSqVQXj5gxF2rip04OfwgvFKbIQWLoaD9PzeUkrwsGD5sFqoRMtwLvEwwFmWzYE@vger.kernel.org, AJvYcCXpX2eOQJ0l4o1DUeQGrL4uRGiFQcElZeObOuec/dFHtjt6Gr2RTQzddg6BFwInbWxiE/UxoQHgv2Csl28=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5PGe4VNBlStlye+SmZVzqu2Vw/uJOBeQ9XlsKInuFLst0Yyku
-	etoCjZV7af/pk5g0cpKtT3Ex0XZot9C+jgtMBPRG835WHmR6YtukdH7WtZvt
-X-Gm-Gg: ASbGncs9OAGBm1uqgjE2ZNURyO8UW0V17XlvPxnQbvkZ13m9Q4NvH7117LkF5EMrttP
-	fn7F5/NWAEiP5r4p630jA22dfRva/C0jkiivHZeM9X3VTgFFd2qXef9CaWYHu0iuQL2KukDGOz8
-	n70/Qqfy8QeIzcZ1vjjeJDoJRi1pMHUDAUO5/ce4msYnpPJGAq+grrekD0ND4E19j4Wh/0thXXb
-	FnoiR8FSqy0bUI3l3yLhTcXfb6hZtJ+7kC5NUlPd13+k9Er9TVBT6fbiAfOqTjBbCEsQZmtMvIT
-	pWANDQIzbRU/oaRCf3oFPZmY+IrqPLqrq2VgU1MbAjR7+NnlZwPYVg==
-X-Google-Smtp-Source: AGHT+IF3YMgEuhS0qIlSgbLp0aZRkg+SNiu/6FAr+7c6EQpSMi02G1rz6Lhad4lFwNkQDPsQ1b389g==
-X-Received: by 2002:a05:6102:3f0a:b0:4af:c519:4e7f with SMTP id ada2fe7eead31-4bbf22e8233mr2563004137.18.1739364148443;
-        Wed, 12 Feb 2025 04:42:28 -0800 (PST)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4bbdcf078ccsm695506137.3.2025.02.12.04.42.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 04:42:28 -0800 (PST)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-8671441a730so1237704241.0;
-        Wed, 12 Feb 2025 04:42:28 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU+7EAJ615qD4l6sMQhYEssrJqHaZkud7y7bB00KHwEOv4IzN6NbAsEcpIRcZEobAqTjmUrwLNmX/RhKtg=@vger.kernel.org, AJvYcCXxXe9k0nwxxlGIxpQMHi7DvlV/5SlWEntlPi7fNbM1pJdqBS1dTGgIj0BSnJwwVqXtn0IREQIddlRQ@vger.kernel.org
-X-Received: by 2002:a05:6102:418e:b0:4bb:d7f0:6e50 with SMTP id
- ada2fe7eead31-4bbf23288cemr2351909137.25.1739364147818; Wed, 12 Feb 2025
- 04:42:27 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4790D20A5D9;
+	Wed, 12 Feb 2025 12:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739364279; cv=pass; b=ppSPniGyBTIN0hBlqMROCajTTQjgm9xBY3gH2eqp4zLe7YXEdI/GBpDKKkUnfY79Mpz61kCqG5B3H5gh2JiXx8WkyUlAMTCNCExSuTE0hnYzFXigrtGWxznEtgMwHhluPfOIOM4q/V/euX78oVSkdfoWGfsc9sMdZq/X+4vz58Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739364279; c=relaxed/simple;
+	bh=JBdG7HNd/1tVUtH0BDCQnqqSS6Cy6BkptAat8oiEIUE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=srYiachQ4oCLBCbfhgp370onGJH2pAdmh5FfiE/8YwJOmu1HVXwDxBHhT+Vp7e88qlrXmKvnqw3A7tvPWbj5llCbm47OEQJsQqrqIg+/mzLX5nq8T2NNWgG0qM+6SqPw5a4F0P5UWXK6aJnmDDAwdIfSev+E2b9KJoh66X3R9Pc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=KFDIojn1; arc=pass smtp.client-ip=136.143.188.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="KFDIojn1"
+ARC-Seal: i=1; a=rsa-sha256; t=1739364264; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=mhTek3LMOXWwE7inMGdFBQrsJZznqdEbQDauKdZXlGwi+Z9MfxqqTNkuHAcqwwYCDxnV0OG+NVNWOmAJNe3ZTxx0FgUVdwAggVNMkDGmmTrTWv61fR9qzmbcuE2iSJ8837Uhmy+oBFxF/9JpQCQJlTsODE+Z0ubmulW2P0qxMBM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739364264; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=k0u7MCkVugkCYytrZIZnLSDOJ7P6+i9SZvRkCovv5zU=; 
+	b=ACA9jmkQalqYV3VPWJ07o8K0WZJpck8qONiPpOHlxLC9EQdGe+FwSaDn2g/7DmX9GLqCRFfkwlY6G2tUU/LycXHcUbjNxmisOKulgmG8/LCIKmcatAYvnyDlxhekL5/iyMarYWHVfjWSo455Zdb11lq6+qqBN1a/wHX0Y9wHDd4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739364263;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=k0u7MCkVugkCYytrZIZnLSDOJ7P6+i9SZvRkCovv5zU=;
+	b=KFDIojn1akvvSLIMtBtS1j/gY6cML0WKSgoRHfeomaqwixBDGRWuFchtvI/GL5aB
+	KFl2p63f+Y8wIG9/MErZmEYc1IbDoGL1bs/sXhr9Rx2Vb6+10JW4a3dM6uSV5ry2Nij
+	jOnTZh89SkxlPkYr/fKxBSsT1UfvNsyfdB4psLKo=
+Received: by mx.zohomail.com with SMTPS id 1739364260281358.8015360119805;
+	Wed, 12 Feb 2025 04:44:20 -0800 (PST)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: srinivas.kandagatla@linaro.org, linux-rockchip@lists.infradead.org
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, detlev.casanova@collabora.com,
+ sebastian.reichel@collabora.com, Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH RESEND v2 0/6] RK3576 OTP support
+Date: Wed, 12 Feb 2025 13:44:15 +0100
+Message-ID: <5943191.DvuYhMxLoT@workhorse>
+In-Reply-To: <20250210224510.1194963-1-heiko@sntech.de>
+References: <20250210224510.1194963-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203-b4-get_maintainer-v2-0-83ba008b491f@suse.cz>
- <20250203-b4-get_maintainer-v2-1-83ba008b491f@suse.cz> <66c2bf7a-9119-4850-b6b8-ac8f426966e1@suse.cz>
-In-Reply-To: <66c2bf7a-9119-4850-b6b8-ac8f426966e1@suse.cz>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 12 Feb 2025 13:42:15 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWvTDO6wcLQs1DwrEjj3jDDav5uKU6E-5=TKFK9w1Nb-w@mail.gmail.com>
-X-Gm-Features: AWEUYZkJ3_m0j2FOFXfQoG21VRxPr1IQKZ7cn7WkguLKGKkl4S-XxfFtuRcefZU
-Message-ID: <CAMuHMdWvTDO6wcLQs1DwrEjj3jDDav5uKU6E-5=TKFK9w1Nb-w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] get_maintainer: add --substatus for reporting
- subsystem status
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	workflows@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>, 
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, Thorsten Leemhuis <linux@leemhuis.info>, 
-	Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-Hi Vlastimil,
+On Monday, 10 February 2025 23:45:04 Central European Standard Time Heiko 
+Stuebner wrote:
+> This enables OTP support in the nvmem driver for rk3576.
+> 
+> I expect to pick the clock patch (patch1) and the arm64-dts patch (patch6)
+> myself, after the nvmem-driver and -binding patches have been applied
+> (patches 2-5).
+> 
+> But kept them together for people wanting to try this series.
+> 
+> changes in v2:
+> - fix register constant in clock definition (Diederik)
+> - add patch to set limits on variant-specific clock-names
+> - use correct limits for clocks + resets on rk3576 binding
+> 
+> 
+> RESEND, because I messed up my git-send-email which caused it to include
+> the list of patches 2 times, duplicating everything :-( .
+> 
+> Heiko Stuebner (6):
+>   clk: rockchip: rk3576: define clk_otp_phy_g
+>   nvmem: rockchip-otp: Move read-offset into variant-data
+>   dt-bindings: nvmem: rockchip,otp: add missing limits for clock-names
+>   dt-bindings: nvmem: rockchip,otp: Add compatible for RK3576
+>   nvmem: rockchip-otp: add rk3576 variant data
+>   arm64: dts: rockchip: add rk3576 otp node
+> 
+>  .../bindings/nvmem/rockchip,otp.yaml          | 25 ++++++++++++
+>  arch/arm64/boot/dts/rockchip/rk3576.dtsi      | 39 +++++++++++++++++++
+>  drivers/clk/rockchip/clk-rk3576.c             |  2 +
+>  drivers/nvmem/rockchip-otp.c                  | 17 +++++++-
+>  4 files changed, 81 insertions(+), 2 deletions(-)
 
-On Tue, 11 Feb 2025 at 17:01, Vlastimil Babka <vbabka@suse.cz> wrote:
-> On 2/3/25 12:13, Vlastimil Babka wrote:
-> > The subsystem status is currently reported with --role(stats) by
-> > adjusting the maintainer role for any status different from Maintained.
-> > This has two downsides:
-> >
-> > - if a subsystem has only reviewers or mailing lists and no maintainers,
-> >   the status is not reported (i.e. typically, Orphan subsystems have no
-> >   maintainers)
-> >
-> > - the Supported status means that someone is paid for maintaining, but
-> >   it is reported as "supporter" for all the maintainers, which can be
-> >   incorrect. People have been also confused about what "supporter"
-> >   means.
-> >
-> > This patch introduces a new --substatus option and functionality aimed
-> > to report the subsystem status separately, without adjusting the
-> > reported maintainer role. After the e-mails are output, the status of
-> > subsystems will follow, for example:
-> >
-> > ...
-> > linux-kernel@vger.kernel.org (open list:LIBRARY CODE)
-> > LIBRARY CODE status: Supported
-> >
-> > In order to allow replacing the role rewriting seamlessly, the new
-> > option works as follows:
-> >
-> > - it is automatically enabled when --email and --role are enabled
-> >   (the defaults include --email and --rolestats which implies --role)
->
-> With the following fixup, the above changes to:
->
-> - it is automatically enabled when --email and --role are enabled and the
->   output is a terminal (the defaults include --email and --rolestats which
->   implies --role)
->
-> ----8<----
-> From f5523a85c742065fcb88a8aa26831f9dba9faf15 Mon Sep 17 00:00:00 2001
-> From: Vlastimil Babka <vbabka@suse.cz>
-> Date: Tue, 11 Feb 2025 16:16:11 +0100
-> Subject: [PATCH] get_maintainer: add --substatus for reporting subsystem
->  status - fix
->
-> The automatically enabled --substatus can break existing scripts that do
-> not disable --rolestats. Require that script output goes to a terminal
-> to enable it automatically.
->
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Hi Heiko,
 
-Thanks, that fixes the issue for me.
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+for the entire series:
 
-Gr{oetje,eeting}s,
+Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-                        Geert
+OTPs show up on my Sige5 RK3576 board and read fine. Also compared the OTP 
+nodes to downstream and the values look consistent with that. The OTPs aren't 
+documented in the TRM I have, so unfortunately I can't cross-reference that.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+NB: patchwork's "Series" download for this series somehow lacks patch 2/6, 
+which tripped me up at first. Not sure if that's a problem with patchwork or 
+with how you sent the series out, but I thought I'd let others know who run 
+into this.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Nicolas Frattaroli
+
+
+
