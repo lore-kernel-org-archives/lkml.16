@@ -1,128 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5B820B20B;
-	Wed, 12 Feb 2025 11:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EC020ADD8
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 11:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739359394; cv=none; b=NPWzO0fAcDM2OntUYkbwGi35Lu+3QglYPWTECG57ROmW1Va3XkEhRouhP1m80zEzT1Cob8FgsmSIFRGPSAdyO8IWS/6M9RUPX9ULeYZxFu+xVYYmv9Xq2Zz6y0KO7dSGbOshPK3TSRJ3G+Qqc3ZHqVcz4Jd8RsvC6Rfw4DYbKrw=
+	t=1739359394; cv=none; b=dMOL/xbrflTT9Vtv8OnUYpAE7+qgW6wGM7V0904qsWe7L9BI9yi++qnyGaZdmcTtEVTQLyTdwmnXT3gdHVu/a0dXjEqPhzaZeGcYmlux1sAxE9l9mPc/cBRg0GJYJXke1SIRPwmhfrIxiKEMt5cgjPu8g7FtTcNknTZ7npNdt3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739359394; c=relaxed/simple;
-	bh=AFkdpmQGP5sZCinnR86xf7GsJoERsE6FIzmh5/b05Wc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VkWAS+w+HWvDkm4oCD6M+g0FqkQC2LO4rOJAXnA+5xIGvui43k5JxHpaBCY2P3/SrZlDX5zYrr4fDnd/ZCoZTOczZmK5/R2dk3K3LnEKKub5sRhiGoSZ+4fDkOmbEGbHJEuwiFvn9BOe93P9B8fNY1h1FtoKDVaAh4Lm4xmxDGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j9oYcWyE; arc=none smtp.client-ip=10.30.226.201
+	bh=e2Y7p8dyN9eqj7U5017bQRwN6g3lLgcIgAe2Fqj3P7s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cabTt9iIuAQy0pBlwW5FhVcizd6RfzIJc5se6kLNBchy4s7eNSsTUa6HaDagWOivpHOJJyEyiipu5w2Qp+XlgNA8F+clAJAzOgYk6hx9RAExkbiU1rfo7XASbOFxHnpcj+vb/oiI0jFQYVOAw+IK7t9Ej2qKwe5fuUosrKq88Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I1WqzBER; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j9oYcWyE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FD78C4CEEA;
-	Wed, 12 Feb 2025 11:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739359393;
-	bh=AFkdpmQGP5sZCinnR86xf7GsJoERsE6FIzmh5/b05Wc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j9oYcWyET1Y99zTPzXgG1tUszc57+SXSP9vsTdJewDv42tUKYzpNHJs32gdtQGDyO
-	 znZM6aYzVP66470OQhaejv6lzBkCJZJXegPvQVkdWL8YUixxiAb0FR2V8axhCBt29p
-	 7kotXdoXw/0C9DMPmfX24b87QpgXMSy8zp9iPLZIa+gxS01rckXqrUBgKn/nZvg62E
-	 Y/7BEYPNhywmURoNgHmCeLYFSsAonZhz4/Z5W4SmvbXDcFff54/g+VnWmvt+5/E4/b
-	 DQOjhw91HW6tkkxnWzHRdtdcZoXSf8ZTz1WFP5FX6o70af6uXQmvluf5V9zN+LQPBn
-	 wNRnErW8CI+Rw==
-Message-ID: <3541c732-9c7a-4de9-b658-c194fd52a361@kernel.org>
-Date: Wed, 12 Feb 2025 11:23:09 +0000
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I1WqzBER"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-307325f2436so61492111fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 03:23:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739359390; x=1739964190; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7LU1Mx0M1JJLQ6X7nOndn1GNJ7UBsOKiHS90jS7YqHQ=;
+        b=I1WqzBER/sn25WPgjCITGMM1ahNXA7wQQ0kmBjB7svEiHlfqo8Ka8GBLtUpc6M26fK
+         RGG9QOlsYQiW+n8OawC14IBI3mhbOlBdrclzdJywmDBqXTtRpEDlcaPC7qbT201vSLmz
+         s7CW5UZkLWYmTMrsjJBgoKo1INVcyQ1C5LmnnJ5lP8QPBD3BgQ+RIt/03fvDXZ/S5c+B
+         rPirYIjZz6unT1Zhq/NqI0bETuuCmpAg0RkMW96UYHSuF+RCiOTfqoMoC9ONybUx5aHF
+         O0WYTAVJoW9qEIas+83YWRpP3th9hizaUtJCJbQ77AotGRFGxPNvp+MfIAdKrJ25ZQvk
+         ZZ4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739359390; x=1739964190;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7LU1Mx0M1JJLQ6X7nOndn1GNJ7UBsOKiHS90jS7YqHQ=;
+        b=eE5vBzZO8awnroPTc/JVRnnzNrt1iTj3DLlPLBtMtp5qesG05TdGtPNODsIQ8O6/2k
+         6qpn+mPXg7ygeaYTONEEgLG4PR30HajhDbRFSRvQU90Fbn8oHXtCKORDo9p34sgyWqm7
+         8qh6zHWFt4HYbffqSajtKGIsB6E/7KCG0tblSZf+LccBEiTbUDWxC495BnhDtBdx9PBK
+         nHaJ0WRf/yMmPpZGlyjN3GxUGg3IBk8hLkkP9wlzAKB0gbe4KtfNZrRNdq0WSnt0lrLm
+         Z1XhJIFaC1e+DafNduYpNyUCkL77p+A5BqXDVoCmHaCH/uyns+vZOwllr+RNlVRqWOZ4
+         5liw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxQP+A2UE1vWCtlFJiWH2tMlTRjCdXcQWN15ZROoL5mVomaApcRPf2XzGzIBcv91yKA9cMhozYwrJ62pA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3F5+7OJsqAY4BtCeFK/eW38XrMb1JIZFSi3ARrdD2l2UpGq7Q
+	1bYX3kyiA8nCS/nQS4zXAFY2AOqL39rB7gSMNtcdrlA/GGdaLkPPsCH83QpMnzg=
+X-Gm-Gg: ASbGncsivRCLXDPAZLA7nctp0coKX4bmg/dPw9f+DbDKsg0hQEpvem54HLIM4gws3Yw
+	cqdyZaVgGG1yvv2CllbJHZ6197w/OYssd1qm+xP1lGVsGgwTwVQvBfN3ILT2CmCYMiD54WNOYsQ
+	wut8AqUoNy1mA39tIk7kk98bUvBlANl/rbV9bVCviYpBvnogsK4Cmo4k8Kv/+2WuB99eaj1yYCq
+	26kPIR06JmWSmzlhElmNzKGD+S1//tEXYLjcqp/tBCDetdNMSWVsZ365kUj49PNiImXQmKGHa1N
+	+mwfa2jkNn1+TpZ1djs+EUWZWQ==
+X-Google-Smtp-Source: AGHT+IFszoZ8SBA/9FJsuY6Uu27qPFJKW5beQGmqgaj/FjRsBLL1NiJEufHRTdvsslQRkUBHSfB1ow==
+X-Received: by 2002:a05:651c:198d:b0:308:f01f:182c with SMTP id 38308e7fff4ca-309036b453emr11165271fa.12.1739359389988;
+        Wed, 12 Feb 2025 03:23:09 -0800 (PST)
+Received: from [192.168.1.140] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de1a6531sm18310511fa.45.2025.02.12.03.23.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 03:23:09 -0800 (PST)
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 12 Feb 2025 12:22:58 +0100
+Subject: [PATCH v4 04/31] ARM: process: Rewrite ret_from_fork i C
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v3] bpftool: Check map name length when map
- create
-To: Rong Tao <rtoax@foxmail.com>, andrii.nakryiko@gmail.com, ast@kernel.org,
- daniel@iogearbox.net
-Cc: Rong Tao <rongtao@cestc.cn>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>,
- "open list:BPF [TOOLING] (bpftool)" <bpf@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <tencent_AF066A426F591F977D2A73AF00A34A883808@qq.com>
-From: Quentin Monnet <qmo@kernel.org>
-Content-Language: en-GB
-In-Reply-To: <tencent_AF066A426F591F977D2A73AF00A34A883808@qq.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250212-arm-generic-entry-v4-4-a457ff0a61d6@linaro.org>
+References: <20250212-arm-generic-entry-v4-0-a457ff0a61d6@linaro.org>
+In-Reply-To: <20250212-arm-generic-entry-v4-0-a457ff0a61d6@linaro.org>
+To: Dmitry Vyukov <dvyukov@google.com>, Oleg Nesterov <oleg@redhat.com>, 
+ Russell King <linux@armlinux.org.uk>, Kees Cook <kees@kernel.org>, 
+ Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ "Paul E. McKenney" <paulmck@kernel.org>, 
+ Jinjie Ruan <ruanjinjie@huawei.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Ard Biesheuvel <ardb@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: b4 0.14.2
 
-2025-02-12 09:20 UTC+0800 ~ Rong Tao <rtoax@foxmail.com>
-> From: Rong Tao <rongtao@cestc.cn>
-> 
-> The size of struct bpf_map::name is BPF_OBJ_NAME_LEN (16).
-> 
-> bpf(2) {
->   map_create() {
->     bpf_obj_name_cpy(map->name, attr->map_name, sizeof(attr->map_name));
->   }
-> }
-> 
-> When specifying a map name using bpftool map create name, no error is
-> reported if the name length is greater than 15.
-> 
->     $ sudo bpftool map create /sys/fs/bpf/12345678901234567890 \
->         type array key 4 value 4 entries 5 name 12345678901234567890
-> 
-> Users will think that 12345678901234567890 is legal, but this name cannot
-> be used to index a map.
-> 
->     $ sudo bpftool map show name 12345678901234567890
->     Error: can't parse name
-> 
->     $ sudo bpftool map show
->     ...
->     1249: array  name 123456789012345  flags 0x0
->     	key 4B  value 4B  max_entries 5  memlock 304B
-> 
->     $ sudo bpftool map show name 123456789012345
->     1249: array  name 123456789012345  flags 0x0
->     	key 4B  value 4B  max_entries 5  memlock 304B
-> 
-> The map name provided in the command line is truncated, but no warning is
-> reported. This submission checks the length of the map name.
-> 
-> Reviewed-by: Quentin Monnet <qmo@kernel.org>
-> Signed-off-by: Rong Tao <rongtao@cestc.cn>
-> ---
-> v2: https://lore.kernel.org/lkml/tencent_26592A2BAF08A3A688A50600421559929708@qq.com/
-> v1: https://lore.kernel.org/lkml/tencent_1C4444032C2188ACD04B4995B0D78F510607@qq.com/
-> ---
->  tools/bpf/bpftool/map.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
-> index ed4a9bd82931..9617e64d3d11 100644
-> --- a/tools/bpf/bpftool/map.c
-> +++ b/tools/bpf/bpftool/map.c
-> @@ -1270,6 +1270,10 @@ static int do_create(int argc, char **argv)
->  		} else if (is_prefix(*argv, "name")) {
->  			NEXT_ARG();
->  			map_name = GET_ARG();
-> +			if (strlen(map_name) > BPF_OBJ_NAME_LEN - 1) {
-> +				p_info("Warning: map name is longer than %d characters, it will be truncated.\n",
+Move the direct assembly call to schedule_tail() and the
+call starting a kernel thread into a C version of ret_from_fork()
+in process.c and rename the old ret_from_fork to ret_from_fork_asm
+following the pattern in x86.
 
+Leave a comment on what we will do when we get to switching to
+generic entry with this as a base.
 
-Change looks mostly good, thanks! Two small things to address with this
-message string:
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ arch/arm/include/asm/switch_to.h |  4 ++++
+ arch/arm/kernel/entry-common.S   | 22 +++++++++++++++-------
+ arch/arm/kernel/process.c        | 24 ++++++++++++++++++++++--
+ 3 files changed, 41 insertions(+), 9 deletions(-)
 
-- Please remove the trailing '\n', p_info() adds it already.
-- Please replace %d with %u. The value is unsigned, and we've merged a
-commit to clean these up recently, 17c3dc50294b ("bpftool: Using the
-right format specifiers").
+diff --git a/arch/arm/include/asm/switch_to.h b/arch/arm/include/asm/switch_to.h
+index 9372348516ce9b80fa713966943d0bc622e86066..18d084aff5a4faa7cc5e40d48fbc4aa97a89b0c6 100644
+--- a/arch/arm/include/asm/switch_to.h
++++ b/arch/arm/include/asm/switch_to.h
+@@ -17,6 +17,10 @@
+ #define __complete_pending_tlbi()
+ #endif
+ 
++asmlinkage void ret_from_fork_asm(void);
++__visible void ret_from_fork(struct task_struct *prev, struct pt_regs *regs,
++			     int (*fn)(void *), void *fn_arg);
++
+ /*
+  * switch_to(prev, next) should switch from task `prev' to `next'
+  * `prev' will never be the same as `next'.  schedule() itself
+diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
+index 2f93c2f6d5b8fdf6aaf3dda0192bde144fcf238d..df6961a1006b7a0f3522728812bf52ccb849e511 100644
+--- a/arch/arm/kernel/entry-common.S
++++ b/arch/arm/kernel/entry-common.S
+@@ -5,6 +5,7 @@
+  *  Copyright (C) 2000 Russell King
+  */
+ 
++#include <linux/cfi_types.h>
+ #include <asm/assembler.h>
+ #include <asm/unistd.h>
+ #include <asm/ftrace.h>
+@@ -128,15 +129,22 @@ ENDPROC(ret_to_user)
+ /*
+  * This is how we return from a fork.
+  */
+-ENTRY(ret_from_fork)
+-	bl	schedule_tail
+-	cmp	r5, #0
+-	movne	r0, r4
+-	badrne	lr, 1f
+-	retne	r5
++SYM_TYPED_FUNC_START(ret_from_fork_asm)
++	/*
++	 * ret_from_fork() expects:
++	 * r0: prev
++	 * r1: regs
++	 * r2: fn() for kernel process or NULL
++	 * r3: fn_arg for kernel process or N/A
++	 */
++	mov	r1, sp
++	mov	r2, r5
++	mov	r3, r4
++	bl	ret_from_fork
++	mov	r0, #0
+ 1:	get_thread_info tsk
+ 	b	ret_to_user
+-ENDPROC(ret_from_fork)
++SYM_FUNC_END(ret_from_fork_asm)
+ 
+ /*=============================================================================
+  * SWI handler
+diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
+index e16ed102960cb01d625e2ccc484f238b824b03b3..81c1c3f988344185917cf4e53d0d8ee47ae912f4 100644
+--- a/arch/arm/kernel/process.c
++++ b/arch/arm/kernel/process.c
+@@ -29,6 +29,7 @@
+ #include <asm/processor.h>
+ #include <asm/thread_notify.h>
+ #include <asm/stacktrace.h>
++#include <asm/switch_to.h>
+ #include <asm/system_misc.h>
+ #include <asm/mach/time.h>
+ #include <asm/tls.h>
+@@ -230,7 +231,26 @@ void flush_thread(void)
+ 	thread_notify(THREAD_NOTIFY_FLUSH, thread);
+ }
+ 
+-asmlinkage void ret_from_fork(void) __asm__("ret_from_fork");
++/* The assembly stub sets up the parameters and calls ret_from_fork() */
++asmlinkage void ret_from_fork_asm(void) __asm__("ret_from_fork_asm");
++
++__visible void ret_from_fork(struct task_struct *prev, struct pt_regs *regs,
++				     int (*fn)(void *), void *fn_arg)
++{
++	schedule_tail(prev);
++
++	/* Is this a kernel thread? */
++	if (unlikely(fn)) {
++		fn(fn_arg);
++		/*
++		 * A kernel thread is allowed to return here after successfully
++		 * calling kernel_execve().  Exit to userspace to complete the
++		 * execve() syscall.
++		 */
++	}
++
++	/* syscall_exit_to_user_mode(regs); here once we switch to generic entry */
++}
+ 
+ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ {
+@@ -263,7 +283,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 		thread->cpu_context.r5 = (unsigned long)args->fn;
+ 		childregs->ARM_cpsr = SVC_MODE;
+ 	}
+-	thread->cpu_context.pc = (unsigned long)ret_from_fork;
++	thread->cpu_context.pc = (unsigned long)ret_from_fork_asm;
+ 	thread->cpu_context.sp = (unsigned long)childregs;
+ 
+ 	clear_ptrace_hw_breakpoint(p);
 
-
-> +				      BPF_OBJ_NAME_LEN - 1);
-> +			}
->  		} else if (is_prefix(*argv, "key")) {
->  			if (parse_u32_arg(&argc, &argv, &key_size,
->  					  "key size"))
+-- 
+2.48.1
 
