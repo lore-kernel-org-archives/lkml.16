@@ -1,160 +1,112 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD20202C5C
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 20:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC9C202F8F;
+	Wed, 12 Feb 2025 20:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739391809; cv=none; b=XLA0F0crk8GP2b7INFEowVDqO8c3Cj9lbfIme1W1s5VS+rRJqs7pYuzXd6EP1IwLqFU5GxRAkmZpGyUylFs/L5VbS7l5QlK2egLSki0kMDB5/ygFpQtYOjDj9xfU6lmxqpJY/1YiQZv2kQgnu1jaW6kYA622qA+8GOA0gCSFv3U=
+	t=1739391810; cv=none; b=SdQgaZq29UmZmNJOVncKCKXxW8DsOVX1JPOFFSBF2npM6Ql52hnlowLbwwgWMmG53ayYcvbRdt443mhuv8tuyLWUkvvGSlcJlfTGTGxUYPNGK8v667iljtyqVm3i+WQmR6Og2IbUtOHHs4QgDlCCIzQ0UVhJiCalsSj+/Gt//VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739391809; c=relaxed/simple;
-	bh=YdLcJOKQc+JyEEQm/WKU7c1rP96Y/6AeinxtJg48yHI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BrRgmLXsqGp/6yKTGyeMJuTPp+DHsz0KUNKjmSXJmGR+XI1zoaWDkbnopZXxf1uGaSTrhvANeBiM3Eaz6Aub0wwvWErtc0h/TCOBEKxZaqS2UP78Z8f3q+xKH1X1Zcbq+QvL2jlCWSptzKBXMCtPV6nRXaeKW6jbsZv+mZmIvx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=w0KpcvVA; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739391810; c=relaxed/simple;
+	bh=T4SN9qQTVCRprL18w226gEvL0hjMQ/9J2Lehg+8OR1I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BVojlTH3fnzaLhe8LKXras0VlBGxJXtFA+cthsSMU3rnYpK9BmQhxcmWlA1YfHi5rdsmZd7qmjXhFk+z+aKVfc6azZxb9ikBmuHIhgQ8m9ViHRQxeiokHfIvXWKK4x0P+F1IMo9ocUOxXFR3BTpfsw7wfr/kkcdTcQHOOe1+qxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gNgPYjKF; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w0KpcvVA"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab7dd005cb0so3044966b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 12:23:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNgPYjKF"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6d90044ac35so262176d6.1;
+        Wed, 12 Feb 2025 12:23:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739391805; x=1739996605; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U3mNPU+LR4h3V6TxdDn8bLuYJ+/VeUr0D42fSLZpupc=;
-        b=w0KpcvVAZl1gNpa6Ot6U1Hfig/JMz7Mv2uKcunlS0Pko1v2ApArWs0CHjT/BF5gBv7
-         7PbgRHO9JJjq5VDwTlSOREk/7qXYZmcRB7L3eMyNoAaAR9AYXEJ+T8gmXXBg+OvFL6PW
-         4RKVFwMi78hvOLo37Du8XZUxDr2fia+6da+k1XGnEYU6K/Ip4yj7qBKmYg4QUUMzCFCx
-         DjZjRwmeqfUrFCpKkoge7Ezt/Rq3bapKJt3bTvh0DPBm6cAEz278Yt0yynNhnbgbiSeP
-         mN4yAnbxUaS12iI8S0aGmdEj6tGAGHTdGDCFlYv5EwQYRtLLLM6qXAAuHzA7r7I29xD7
-         w7pg==
+        d=gmail.com; s=20230601; t=1739391807; x=1739996607; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wFqfug0dvo4+SvGxTEfuy1Nbc66z9jbXayYAmndjSOM=;
+        b=gNgPYjKFzO5gkTVkOrS4OTXKb7mQc8j5yq7PQt6UZOWpYx5L79SmCil5DwWqylW2I+
+         Mc5HYq6ZAji2T6uagUEfGuT1NoZBBTi1yAQXCrHqY72IaO908CL+Utz5cOEXlCZjif58
+         6KhgatH37SwxSp/+W1/Vl1oCkM6d3W/LvZgaPhjvyU/7x7oojrrRoB8/P9HNz3JV5Gjk
+         P1GOMFHFYqAMnjbyZ4DOzdgJoA7S/rlmzB2i6x3+bA5P71ZkauHb9lD+GxgxBPdGH4CY
+         YBi6yXWaPXuQ0l555px/1CsCvSxmoipQEMW3ImblNjrP3z7ybxrGDH8KuAKdvf9hyN5o
+         HZdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739391805; x=1739996605;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U3mNPU+LR4h3V6TxdDn8bLuYJ+/VeUr0D42fSLZpupc=;
-        b=vEjkVcxsaYKwwF1DKnvzQhZ8GPT/LcfWZ9IWO7JkHrn8LS5w2t0FPSFvmup1u2u2K5
-         BZu1qd+44iWgFUOR6s8luIl/F551et1cNHk8X7AmfQP3mA/9YA+6tSq2Lze4L+EvrG4r
-         veiZDIXxZAT4bVkRp9WwbF67mktB1mB3GdsBRWEbgIpiOUbgvN45RLiXyQvC445hCOgg
-         shzLl0JwW4Xs3egW5B/9OtCMQwZuBQyRm6FWWp/AlutYt5OCOszA8gFi1Si0SuGVkVd3
-         O6evjIsIdi4JmpMN6UCOnWPu4THI7Vn/vI9jCljJ1mmHKSPb0I/YNeMYNPMukyAWFgsR
-         Wcsg==
-X-Forwarded-Encrypted: i=1; AJvYcCW62AMqd3TKM1DzMsRH3AKB0lVA/JBxGvNcU0C7kKSKjtKsRtynYf9GkPLgUJj36quz9UMI80KWg3CN/qc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykYSjzmOa+W0qj6cg3V5/Px3b8o6yHnMGGKLwOE0w2Uty0P2g5
-	eLost3ngH8TbG6TvvilyCiKatVF8KY/57/ft/QVDLKpNE8zvgxuoB1amxYIeFMzWJEFw4OZU4YS
-	n
-X-Gm-Gg: ASbGncuh/ZZjOnH0pDabFeGH9DBNLNKcmEPKWowAISuM9aNBZILKZxJjwPc+mBgFB05
-	YmXKJEktQxZm8CyKvw0sA2l3xmyhNcI+9pnhP9IT9ZAmBc2xVfU5sstZr2OFbg+YopdQupzrkTz
-	ozV/9IPoDrbHmFeAUfmSDXMGh6VdR3MjZr61JTqRXjeB0kEgtl2/tIrKe51vpqrt1DGdPpJX7ZD
-	mIeA8/AQZ1gjRkfavR6wHNM9NW4yW2+C8AmfYDBH9S4GoGtipzI0/oqTWRGuDvEEskcPk30z1yd
-	98F0cVW/5aQxVE1rZfQyWhlgu5KDgQU=
-X-Google-Smtp-Source: AGHT+IE8CYeuyLuHhWUOn+/Nntm5CLze5WPHM2552HvXledXoT2RwZTzv30yFuzyODSMwZlS20HT9Q==
-X-Received: by 2002:a17:907:60d2:b0:ab6:eec4:c9c2 with SMTP id a640c23a62f3a-ab7f33cd42emr156854466b.7.1739391805326;
-        Wed, 12 Feb 2025 12:23:25 -0800 (PST)
-Received: from [127.0.1.1] ([178.197.218.144])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7db5ef658sm419660066b.42.2025.02.12.12.23.24
+        d=1e100.net; s=20230601; t=1739391807; x=1739996607;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wFqfug0dvo4+SvGxTEfuy1Nbc66z9jbXayYAmndjSOM=;
+        b=d8og5DoEaN0Ovd+vf85TuP36wmtyjQABKh5+15w4qwFzjL83ceu8TuGiL1kR7jrB+A
+         aWuh+hg/wNPXfOZjjWbkl9TPbREr9FuaPnp/RVQD/SV/RZeHD8l9FubCgPSDuHLyk4kl
+         shNDs8RZtQ0NeLi935JnczFaJlUOaLRu8v0wuAgNFmokfrO6CP0DGllCRb7bYq1qEJvJ
+         wcylhG83r/C3trRT50eGXY+rGFZiQPs14cUXGuSMTXvgmL4RDEr27TFpRfo9Reu21VWX
+         mfS3YRzIts6VC7bD/A1YlRbJdsirHFH/6OS7I6Sgit74ROLG3IJgf/MtMAoUa8h56DtY
+         kRsg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWA1PUTWhpSSOJ5fhg0Vvfg7ckpkcJYv9WRKDmY0vu6SKIIcB2Gh4kKd5B+OetLW+oVXuS2FmjPXraGpWr@vger.kernel.org, AJvYcCVvhg7HUv/+sR4TpjbjCK5qLXMMKAn2Q/zYYksovWOuYlYEoXmir0BhrnQstXrYhEmJLrog+bDroaVW@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzMdjvr5TNkUZ+iV1jN8aDGVkwS6o0qM20gDNtgLTh7S1RlGqZ
+	4S5//wFV+Hn2JHq2GvR0DXBXUq5jAxhQ67HN/hf55tLtQz9NQwc=
+X-Gm-Gg: ASbGncvadT+w/SqcbVIbqZ4PXPYM1aNIFI/Fzx2zswk4YwtdAJFn5Gji6I9HIp0M6pq
+	TSU7FW+LC81h8viEtCC4OTcJr7m13s7KlERj9D9z/zw4Hmml7nl5lIm+mrXUC57qg39mxlgl6IH
+	m7SWAOOvOI/6A9N5SUMvDltoxYF15P/jDd93052+kI4cVe2opMoM/fWYDMpJj2XtGY/tFVCDziH
+	yixvl0M/Q7JT5oY4ucEq39D962sET2noSjj1DjtLghsyS7rGK8pV/h/k/weaaxbUESBOITLl4Z7
+	SeMfwe9dW6Sp
+X-Google-Smtp-Source: AGHT+IHrunwFa9y1n/VCE/JHLro3uaHsjKV1AuCg8NjkBGyKTg9Jo6/WpWR9TxBMa0++i/xfgPtU4Q==
+X-Received: by 2002:a05:6214:20e9:b0:6e1:a79c:4cb8 with SMTP id 6a1803df08f44-6e46ed772damr30480456d6.2.1739391806803;
+        Wed, 12 Feb 2025 12:23:26 -0800 (PST)
+Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43baacee1sm82943076d6.84.2025.02.12.12.23.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 12:23:24 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 12 Feb 2025 21:23:15 +0100
-Subject: [PATCH RESEND v2 4/4] can: c_can: Use
- syscon_regmap_lookup_by_phandle_args
+        Wed, 12 Feb 2025 12:23:25 -0800 (PST)
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+To: avifishman70@gmail.com,
+	tmaimon77@gmail.com,
+	tali.perry1@gmail.com,
+	venture@google.com,
+	yuenn@google.com,
+	benjaminfair@google.com,
+	linus.walleij@linaro.org
+Cc: openbmc@lists.ozlabs.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chenyuan Yang <chenyuan0y@gmail.com>
+Subject: [PATCH] pinctrl: nuvoton: Add NULL pointer check in npcm8xx_gpio_fw()
+Date: Wed, 12 Feb 2025 14:23:11 -0600
+Message-Id: <20250212202311.3741443-1-chenyuan0y@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250212-syscon-phandle-args-can-v2-4-ac9a1253396b@linaro.org>
-References: <20250212-syscon-phandle-args-can-v2-0-ac9a1253396b@linaro.org>
-In-Reply-To: <20250212-syscon-phandle-args-can-v2-0-ac9a1253396b@linaro.org>
-To: Marc Kleine-Budde <mkl@pengutronix.de>, 
- Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
- Tong Zhang <ztong0001@gmail.com>
-Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2178;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=YdLcJOKQc+JyEEQm/WKU7c1rP96Y/6AeinxtJg48yHI=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBnrQM2qWjKWqmymVGMAA09vBIR1+khsrxWWPPN8
- V4LEJnRj0mJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ60DNgAKCRDBN2bmhouD
- 189LEACGjro+mUt8FRa+Hk8icqyt1sckNS+OE5ueZbGmzU4z6C8037F9wjqHBxjX1QMiQxVf064
- ZJD6/IhRnZ+K4LddE5EDzf5HHRaJ9C4sdaPwNaDSUuqRVnfYTSclUO7na30rDSq76p0noXFIAV8
- no/FqXXJ5GkhvknU65pwboSoFmYE2leZ7gwfcijtv+30h6cCoEr24Wgo3bIxoBriULzJImWsOKJ
- 18AqB96AmdM23QZyIK+BDdN4RZQaxSh+oq2qOL4D0TfUUVymmdAUde+av7owAF+FPuKYIIl+kcj
- w2QKw0ZvXMAxBLvRQakhFqxLIi71351jSg8LTJ4WNxb6tovmTg/ZY/8OenxeNZ7AifyMvitCfpF
- 9K6xd8iockfLFsoWXpOlqOR+Xko3NBaiyqSSToTPI3gH7uqF0+Zhp7kpt/bymx6PxVjZKRRJQ5A
- BzxsoWzz1clTJDnZQn9zgAxIF6P8Jz5GtNj2g1QWBihosNw/5g1sIV5USnkZ4BioHaMVsWNDt5F
- Nu4hGEU7d6DIMGZQZblsFXJRBT9AjTTlW4sg33lKAaQ8pRYVio5wXKtQpPc+jR3ezMQOQQvdXFa
- k7GJf3ZeGxRygStwwgHfLoIkXvN359fm3jUVxagv5NYW02ROixXjUEcOff10xPUSY9fBt7JxzgG
- dUMBqVBqCU0sR8w==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-Use syscon_regmap_lookup_by_phandle_args() which is a wrapper over
-syscon_regmap_lookup_by_phandle() combined with getting the syscon
-argument.  Except simpler code this annotates within one line that given
-phandle has arguments, so grepping for code would be easier.
+Add a NULL pointer check for pctrl->gpio_bank[id].gc.label in
+npcm8xx_gpio_fw() to prevent potential NULL pointer dereference.
+This is similar to the fix in commit 3027e7b15b02 
+("ice: Fix some null pointer dereference issues in ice_ptp.c").
 
-There is also no real benefit in printing errors on missing syscon
-argument, because this is done just too late: runtime check on
-static/build-time data.  Dtschema and Devicetree bindings offer the
-static/build-time check for this already.
+The npcm7xx driver already has this check in its npcm7xx_gpio_fw()
+function, which provides similar functionality.
+Add the same protection to npcm8xx.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
 ---
- drivers/net/can/c_can/c_can_platform.c | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/can/c_can/c_can_platform.c b/drivers/net/can/c_can/c_can_platform.c
-index 1acceb097c17fb7c0e2095a43d926d9cf802ebef..19c86b94a40e4f5c3db3c2da67b64da1310584b8 100644
---- a/drivers/net/can/c_can/c_can_platform.c
-+++ b/drivers/net/can/c_can/c_can_platform.c
-@@ -317,30 +317,21 @@ static int c_can_plat_probe(struct platform_device *pdev)
- 		 * platforms. Only supported with DT boot.
- 		 */
- 		if (np && of_property_present(np, "syscon-raminit")) {
-+			unsigned int args[2];
- 			u32 id;
- 			struct c_can_raminit *raminit = &priv->raminit_sys;
- 
- 			ret = -EINVAL;
--			raminit->syscon = syscon_regmap_lookup_by_phandle(np,
--									  "syscon-raminit");
-+			raminit->syscon = syscon_regmap_lookup_by_phandle_args(np,
-+									       "syscon-raminit",
-+									       2, args);
- 			if (IS_ERR(raminit->syscon)) {
- 				ret = PTR_ERR(raminit->syscon);
- 				goto exit_free_device;
- 			}
- 
--			if (of_property_read_u32_index(np, "syscon-raminit", 1,
--						       &raminit->reg)) {
--				dev_err(&pdev->dev,
--					"couldn't get the RAMINIT reg. offset!\n");
--				goto exit_free_device;
--			}
--
--			if (of_property_read_u32_index(np, "syscon-raminit", 2,
--						       &id)) {
--				dev_err(&pdev->dev,
--					"couldn't get the CAN instance ID\n");
--				goto exit_free_device;
--			}
-+			raminit->reg = args[0];
-+			id = args[1];
- 
- 			if (id >= drvdata->raminit_num) {
- 				dev_err(&pdev->dev,
-
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+index 471f644c5eef..d09a5e9b2eca 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+@@ -2374,6 +2374,9 @@ static int npcm8xx_gpio_fw(struct npcm8xx_pinctrl *pctrl)
+ 		pctrl->gpio_bank[id].gc.parent = dev;
+ 		pctrl->gpio_bank[id].gc.fwnode = child;
+ 		pctrl->gpio_bank[id].gc.label = devm_kasprintf(dev, GFP_KERNEL, "%pfw", child);
++		if (!pctrl->gpio_bank[id].gc.label)
++			return -ENOMEM;
++
+ 		pctrl->gpio_bank[id].gc.dbg_show = npcmgpio_dbg_show;
+ 		pctrl->gpio_bank[id].direction_input = pctrl->gpio_bank[id].gc.direction_input;
+ 		pctrl->gpio_bank[id].gc.direction_input = npcmgpio_direction_input;
 -- 
-2.43.0
+2.34.1
 
