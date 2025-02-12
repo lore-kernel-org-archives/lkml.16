@@ -1,82 +1,93 @@
-Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBFF2AF19;
-	Wed, 12 Feb 2025 11:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8595209F58
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 11:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739358303; cv=none; b=GZ8MVHICF9i58+3O4keChbgAtdO2pKvE48WGUgYSk8o4tVogXNalcLTlRPt9hgpFOZGRq/JER1f/QdRb8OU13sb8h3z46UyeNXnW9ZMEVEJyOSLwKBJ5WJjctou6CA/40OYtnKcPGMgnaWaRFdcewvIJsChqUscuXvzT5Kvsuwo=
+	t=1739358319; cv=none; b=BHJGDSxAAb7rC5S+414aW2wx0QKorF9HZhX/t9cFLO3M6JA4O+l4HfE2BaWEPZ+AwtY3sNfFPhgNs9pHo93lHmYQppG2Pwlk/HT47uEksvrNDnzjeU881pYmfK1seE9B96EYwtsM+c08aqrpVBLrDd78Boi75vOlB/i6kDj4bso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739358303; c=relaxed/simple;
-	bh=LPAsGC/1kPwqJtEBVDKuR6kEkbgn6y+zm0h6s9vKkYg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pu5BWKnf2FsuHx2V78Rf1icQbYL4GQJKCQFme6I3gA0gsmnYN6crbbIKCOCqnCzeVHS2NhobhYewryWo+E22N7p7xcK7v0cXUBfZdoIHfAzTVGc2a62CmWjji03KqMLURUnTpsxsuBgz+95iCrrIzdgwWXhRyM1QM2ZXlja8TiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=C8jZPP9O; arc=none smtp.client-ip=217.70.178.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="C8jZPP9O"
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	by mslow3.mail.gandi.net (Postfix) with ESMTP id 23D48584D17;
-	Wed, 12 Feb 2025 10:50:36 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A246F43191;
-	Wed, 12 Feb 2025 10:50:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739357435;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LPAsGC/1kPwqJtEBVDKuR6kEkbgn6y+zm0h6s9vKkYg=;
-	b=C8jZPP9OENUbhih3cyMW9qDaXrAVLZ3AIGea6s0MLdCuHcdGqMlmHi8Owvu3fzToaIlRMl
-	00fAiFL7m7Fo+dErGAhMaDZegjz1UbS7kL4tVp9hNpgL50LDXzMrGGC5qVuSpcnKWEwk7s
-	+j018eD3QX4d7MsYwCeDcjklWy1yEREi5LEgR7UXNIqCCYU+vCHWZMiPpA7nz4uHKVFYDT
-	r8Q2+8jaY1GRjHrNar8qHaXSeh7W7ugmz9CQGKQ6EFa6wlY216nVxoMtbPMbfjpIqX1mXU
-	LqTb0BzoTYVZgD2vQtDB2sPRXRseS3DKdSEG101R+VZ0YzEtVEj+mjqqbzpKaA==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-To: Conor Dooley <conor@kernel.org>, "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth
- <sebastian.hesselbarth@gmail.com>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Robert Marko
- <robert.marko@sartura.hr>, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] marvell: DT root compatible fixes
-In-Reply-To: <20250204-headfirst-evergreen-ec92900ee782@spud>
-References: <20250131-dt-marvell-fixes-v1-0-55f9f6acd4b1@kernel.org>
- <20250204-headfirst-evergreen-ec92900ee782@spud>
-Date: Wed, 12 Feb 2025 11:50:34 +0100
-Message-ID: <87wmdvsah1.fsf@BLaptop.bootlin.com>
+	s=arc-20240116; t=1739358319; c=relaxed/simple;
+	bh=gWtL0LpKi6VE/r1z1i/28M1Br0IH1wKjkxZVCpn+ErY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q/yI5G4R2ymPYMWto7W49ypjoxZfMqyBQLm2vQOiMWKyr5Ij2LZgVBnwCChOiKIveE/lK/gNBv6oy2H6f7sctr+BCO6WwT7Dbnzpc7Qhxq+TUuuI/tNf2u2LsRnGa6Su/vAFxkxJxr1kG7He0iNXKxWdWSIuA9K4wpRaUNiJZeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3733F106F;
+	Wed, 12 Feb 2025 03:05:38 -0800 (PST)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CD233F6A8;
+	Wed, 12 Feb 2025 03:05:15 -0800 (PST)
+Date: Wed, 12 Feb 2025 11:05:07 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: Add missing registrations of hwcaps
+Message-ID: <Z6yAY_8UcavXRzRZ@J2N7QTR9R3>
+References: <20250212-arm64-fix-2024-dpisa-v2-1-67a1c11d6001@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegfeeikecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffffkgggtgfesthhqredttddtjeenucfhrhhomhepifhrvghgohhrhicuvefngffogffpvfcuoehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefghfegvdehgfdtjedvtefhvdeikefgteeuhfeukeettefgvdeuueettddtkeegveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeguleegtgemheekuggvmegrtddtvgemvghftddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeguleegtgemheekuggvmegrtddtvgemvghftddupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopegtohhnohhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhto
- hepshgvsggrshhtihgrnhdrhhgvshhsvghlsggrrhhthhesghhmrghilhdrtghomhdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmrghrkhhosehsrghrthhurhgrrdhhrhdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
-X-GND-Sasl: gregory.clement@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250212-arm64-fix-2024-dpisa-v2-1-67a1c11d6001@kernel.org>
 
-Conor Dooley <conor@kernel.org> writes:
+On Wed, Feb 12, 2025 at 12:30:42AM +0000, Mark Brown wrote:
+> Commit 819935464cb2 ("arm64/hwcap: Describe 2024 dpISA extensions to
+> userspace") added definitions for HWCAP_FPRCVT, HWCAP_F8MM8 and
+> HWCAP_F8MM4 but did not include the crucial registration in
+> arm64_elf_hwcaps.  Add it.
+> 
+> Fixes: 819935464cb2 ("arm64/hwcap: Describe 2024 dpISA extensions to userspace")
+> Reported-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-> On Fri, Jan 31, 2025 at 03:08:24PM -0600, Rob Herring (Arm) wrote:
->> This series adds some missing root node compatibles and fixes some=20
->> errors in dts files for the root node compatibles.
->>=20
->> Signed-off-by: "Rob Herring (Arm)" <robh@kernel.org>
->
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Thanks for the respin.
 
-Applied on mvebu/dt64
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Thanks,
+Mark.
 
-Gregory
-
---=20
-Gr=C3=A9gory CLEMENT, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> ---
+> Changes in v2:
+> - Add FPRCVT.
+> - Link to v1: https://lore.kernel.org/r/20250210-arm64-fix-2024-dpisa-v1-1-d77f43c7b253@kernel.org
+> ---
+>  arch/arm64/kernel/cpufeature.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index f0910f20fbf8c18fbeb63bcee18abf13371b1d5e..d561cf3b8ac7b11784282dc889852ef52a7b8f6e 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -3091,6 +3091,7 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
+>  	HWCAP_CAP(ID_AA64ISAR0_EL1, TS, FLAGM, CAP_HWCAP, KERNEL_HWCAP_FLAGM),
+>  	HWCAP_CAP(ID_AA64ISAR0_EL1, TS, FLAGM2, CAP_HWCAP, KERNEL_HWCAP_FLAGM2),
+>  	HWCAP_CAP(ID_AA64ISAR0_EL1, RNDR, IMP, CAP_HWCAP, KERNEL_HWCAP_RNG),
+> +	HWCAP_CAP(ID_AA64ISAR3_EL1, FPRCVT, IMP, CAP_HWCAP, KERNEL_HWCAP_FPRCVT),
+>  	HWCAP_CAP(ID_AA64PFR0_EL1, FP, IMP, CAP_HWCAP, KERNEL_HWCAP_FP),
+>  	HWCAP_CAP(ID_AA64PFR0_EL1, FP, FP16, CAP_HWCAP, KERNEL_HWCAP_FPHP),
+>  	HWCAP_CAP(ID_AA64PFR0_EL1, AdvSIMD, IMP, CAP_HWCAP, KERNEL_HWCAP_ASIMD),
+> @@ -3190,6 +3191,8 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
+>  	HWCAP_CAP(ID_AA64FPFR0_EL1, F8FMA, IMP, CAP_HWCAP, KERNEL_HWCAP_F8FMA),
+>  	HWCAP_CAP(ID_AA64FPFR0_EL1, F8DP4, IMP, CAP_HWCAP, KERNEL_HWCAP_F8DP4),
+>  	HWCAP_CAP(ID_AA64FPFR0_EL1, F8DP2, IMP, CAP_HWCAP, KERNEL_HWCAP_F8DP2),
+> +	HWCAP_CAP(ID_AA64FPFR0_EL1, F8MM8, IMP, CAP_HWCAP, KERNEL_HWCAP_F8MM8),
+> +	HWCAP_CAP(ID_AA64FPFR0_EL1, F8MM4, IMP, CAP_HWCAP, KERNEL_HWCAP_F8MM4),
+>  	HWCAP_CAP(ID_AA64FPFR0_EL1, F8E4M3, IMP, CAP_HWCAP, KERNEL_HWCAP_F8E4M3),
+>  	HWCAP_CAP(ID_AA64FPFR0_EL1, F8E5M2, IMP, CAP_HWCAP, KERNEL_HWCAP_F8E5M2),
+>  #ifdef CONFIG_ARM64_POE
+> 
+> ---
+> base-commit: 21fed7c223e20e694b91dbf25936d922a50c8b19
+> change-id: 20250207-arm64-fix-2024-dpisa-635a5961609c
+> 
+> Best regards,
+> -- 
+> Mark Brown <broonie@kernel.org>
+> 
