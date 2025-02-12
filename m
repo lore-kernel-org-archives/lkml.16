@@ -1,251 +1,195 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51E5A50;
-	Wed, 12 Feb 2025 00:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7FE79FD
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 00:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739318899; cv=none; b=sAcx4wfO5plNmmICJz3WMB2k3ZZQuFzsp74FXJfsi4/lnhLOZAiAKBuDDnWpSArXGVN1TTgEm9AmDSh1bE6L4imP2Au4Bo138gSwlsl69SFSBNvUuBfPKNM8PyINeGKpHxhX331dxDTIseHKzwUQufzDupWKH4IjPk/Chw0jj3E=
+	t=1739318900; cv=none; b=AhU3KC1rWOgSs+RSTh3C1+yg/Zv2ulsTC3hir2N4ji045Rr/d4owWg1wctiUH6LdA7sbWw/Z5VxOwfOOIVwTjZ9CYavHt+ogFQiaH9gVZ9wmrF5rijO/eHfjZymx/NlfjcIEtWWpsU1AN7Mch83+iTqJ/9eU3Hsd+3GYy0v4QXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739318899; c=relaxed/simple;
-	bh=SOiiH8gjnTYqlwwhwyE7E5lB0LJ6lqMXcORsFzst4v0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=p3uC5QsJXPkMJYGwcdBLxu33/COm9Y33O7Z/SJmN3j7NAyr/CvSbn1CA9FU2uPToZIF2y1DJcSYgTHtvY4wlgmKMk7HPQ2FTKOPbLeOiFZiHIsQoraOoqfi2KQiNaRD0DZOcgexud1l8JVO5d1SKLLQCBF8VHo+jXnYSQJ8Mius=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RGFfO78K; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739318900; c=relaxed/simple;
+	bh=qPyAwicKpZpLg3GmtysNq22b8SvhJ9Kkp+IXaoaTFnU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=DOfVp3xaE9/h+3RS6DeqTqPHaws3iuzUjCWfhJLAWWFswH7ZbfZDZkjyh+cg/h/jogCITMyx9t4fVlqnvFEgKXmJ1GUPqnl5l70TmICl5yWn/qnER/WrokSO/EmOj3ntYytqq4SQm7Xudlc4mS3DYK+u3MTmjH2a3WEi6mocI4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vannapurve.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0W4+BWTt; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vannapurve.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGFfO78K"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2fa44590eebso7285789a91.3;
-        Tue, 11 Feb 2025 16:08:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0W4+BWTt"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2f5538a2356so13035251a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:08:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739318896; x=1739923696; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=N5Nlmn6/JbbUIilhIlDhPJ4VAV6ahFXWJyAmErbF/kY=;
-        b=RGFfO78Kcmg5RXn1YrKc97fkMqC1nPREZ5HQLjMQRbcMdRVd/c6u2ecoVspF6N+vq5
-         MTKZiiMiS5dGR9pt41Z/INc49i0scS7Tr8HUs14N/wANtknU+uGlwJJ6zgn4X7SfHBeN
-         mVD7UR7cMaCBoMMmaJFjLxowS8HKd7Gpgr7LlOhwJiadOfdjEwVGYFwRL2pcPt1jAc0a
-         vWQrh5Gx/ip2eJ5K/IugEeotZgV2sz4+qO6SXqfeo2SllwRzdoIxZHdXzV/sJtg+Rmye
-         RndsaBaQ1VccrPzExJSZ/aor/dqCkcQ/WgNfXjR44HaL1IxTgv7VpMS7kxdjppu6WmKk
-         j9Ug==
+        d=google.com; s=20230601; t=1739318898; x=1739923698; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rhFKIyqyWccfVyhYNzTyKMpa/Pu1oM/LLWYuIAGv7wA=;
+        b=0W4+BWTt/oWdsQ6efyp1JIT778fbfnHUNFjprU9IjG8JvSPV9OK6gEIOK8o7SjXMBj
+         cxpf1agmm1vmLJdY8G18PHbuFP6Zo4HiAw4qFM1Jf14O8gtUDlPFmqYJ5ocMokEmotXI
+         qR3v9IXFAjD/z2kIgcer3mZ3HN/WMXiryPNHrFYkORgmS4DLFY++YkjwF2wJPPQuSkbm
+         pnfMlJ1xeiw3S1eTVVfinzKSwjMh0TgZmPC4o4OdOvST4F/hhswmmW3732/4sYJqrSUR
+         dl4DVtycLHe78SaGT5ZmfDxyyEulSN0pDtd/vtzCiTLjT5QzyCy0uOkOSKE1J5EDfCUW
+         ueGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739318896; x=1739923696;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N5Nlmn6/JbbUIilhIlDhPJ4VAV6ahFXWJyAmErbF/kY=;
-        b=YHSika2IwanR0MWiKe7OyzYEcQ3nkv04Ahcx6WQX2x2fBbZMdk8tVyAVZuUNuC8Dys
-         3oW0sXUG/tbXc3TJq1Tvtvs5ZTt4ouUTFdpLPIzSWoXgMkTaSHUD91apRuRFQScCOrIJ
-         yAcPLPo+QLz8JgkWHJA08CvDahljlefTxAaI1M/46gwq+VdpTMF7FesJCZ+FBijLXwfE
-         5HkHQtqlzy/IG6F018mGYiE7HF7PEgWsSmagXL8tMTKVY6e5w89QCMMC9GRVEfsgTC8B
-         ZI9GQgvqBAykOZMbcQV3DJnAYg13jquvGQyNtVP91wzxaBKDkSGcp2+8d1XDT3pku+vx
-         KzAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWVFsjTljFaofKk5/TOfCK/YRBKfPL9+Po+wMhcPVz8f01R7WOcNkE38/8PRJOTjQTZVH/O9Kidlgu0QMu4@vger.kernel.org, AJvYcCXbqTUyWdyx7stX/79j4gV/Osp9qy4k/fgoWoDe5GKPH7M8+/6kIlgvc8535F2eJPoO2/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1bdfdnX6cwk/IKq2setzKAnc7kmW8RzJdwW0kKD5EAEtCGz5t
-	wcBTD4ya/8whmsB22HX7PGmRVgGMzET3SkYq9CSyTBFHUDFUCGUx
-X-Gm-Gg: ASbGncui6BE7mxl28trYQcaRvyP9BhhFr4D1Aq0AXQvYNOl5zBgfU+q53gASi5s9RhE
-	e8YOlKwq/p/cq3tDBFbBT+mNShCEWSNbVyjwQkA3Mz7U92ByF1Z0PyibqjqHtkPHFBrYoUY4GGC
-	gnLP1PGddNtuSaXhcyrZbIC18/vHl71S8QQUQ0YhpLU5bywvu+aSzVpMT4n2KT/LvXI5rvXWIw6
-	YTx6l1zRH3s8js/w/GRodh6urNYAGPNCwTaRYfZMmLzmRM39BgQXBMfJfcOhn49jv0vLKT0Qw+9
-	ZSXVW/NOdvYC
-X-Google-Smtp-Source: AGHT+IGu8j/EzScz0NFTYCfLtaLVKyGEmTfu1DpkFlHI3iawnU2/6heLbUWvmDL7IZ0vX/fA3qGKJw==
-X-Received: by 2002:a17:90b:520e:b0:2ee:3cc1:793e with SMTP id 98e67ed59e1d1-2fbf5c6a1b6mr1460208a91.32.1739318895906;
-        Tue, 11 Feb 2025 16:08:15 -0800 (PST)
-Received: from [192.168.0.235] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98d05cesm140479a91.18.2025.02.11.16.08.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 16:08:14 -0800 (PST)
-Message-ID: <a10a2865242dc217e71de54f75fa4289aefb2fa9.camel@gmail.com>
-Subject: Re: [PATCH bpf-next v2 24/26] bpf: Implement verifier support for
- rqspinlock
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra	
- <peterz@infradead.org>, Will Deacon <will@kernel.org>, Waiman Long	
- <llong@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko	
- <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai
- Lau	 <martin.lau@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
- Tejun Heo	 <tj@kernel.org>, Barret Rhoden <brho@google.com>, Josh Don
- <joshdon@google.com>,  Dohyun Kim <dohyunkim@google.com>,
- linux-arm-kernel@lists.infradead.org, kernel-team@meta.com
-Date: Tue, 11 Feb 2025 16:08:09 -0800
-In-Reply-To: <20250206105435.2159977-25-memxor@gmail.com>
-References: <20250206105435.2159977-1-memxor@gmail.com>
-	 <20250206105435.2159977-25-memxor@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+        d=1e100.net; s=20230601; t=1739318898; x=1739923698;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rhFKIyqyWccfVyhYNzTyKMpa/Pu1oM/LLWYuIAGv7wA=;
+        b=M749EkXMjYMgn1rzFBMys34n0rrtw5G9Xv04fy6U1ukYklZWFe2gMwxdiZho9yd1VY
+         Eq+bDZft8qcpV1TecmRSbNb5lpadY7YO5IOVjk9bXj3qPlvX3PPkvgpwJx3WjUNySuE/
+         qalUyU4TMvXjMNnW3Wb2kR0prlkxK6NzmCeGP450+tANVOSBB6yn3eVdyvDyIQsiHnFC
+         LXoej37t57qLHN0scOs1FDa3/tDvLMuuyXM9ao9a2tLnoeA4byNgiv4xcKNBfjwqsnoT
+         aDY1ZNLjPROIQQSQ+mOxlylfc2cnqrJHH65BSYeIEFP6ebVWK9hNNgYqQz7vbSFuBTTa
+         fF/A==
+X-Forwarded-Encrypted: i=1; AJvYcCX1p5NsQvFXAB2odFemYVW6vzy27wuMEMsY2HHhrP92lmvn5qAufyCnwGCEl+wKOGqrFndQkYiKoKLpAUs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW7nNqzyAOpAU5DLPA+2c7go5x1ByMpolZHjQuyyQIGmoGs/79
+	NSfh1FPhogguPpD2LbT/Zc+wbG3GGAqC20Nsa9c6CA4g3LYcvoX3yc8vyQ8Pn8flc0iUmF/3+bN
+	rUzkkmKjusS+JiDrWHg==
+X-Google-Smtp-Source: AGHT+IGIIh1a6f5LCEQr8t1bLmoqA5VXctBMBQSaTYWM2+xjlnEVTI47jUBbtXW0wJOYn/WoZYxJQiGIyuC2R8tL
+X-Received: from pfoa23.prod.google.com ([2002:aa7:8657:0:b0:730:759d:5049])
+ (user=vannapurve job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:cd2:b0:730:7499:4036 with SMTP id d2e1a72fcca58-7322c443c7bmr1611687b3a.22.1739318898459;
+ Tue, 11 Feb 2025 16:08:18 -0800 (PST)
+Date: Wed, 12 Feb 2025 00:07:45 +0000
+In-Reply-To: <20250212000747.3403836-1-vannapurve@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250212000747.3403836-1-vannapurve@google.com>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <20250212000747.3403836-3-vannapurve@google.com>
+Subject: [PATCH V4 2/4] x86/tdx: Route safe halt execution via tdx_safe_halt()
+From: Vishal Annapurve <vannapurve@google.com>
+To: x86@kernel.org, linux-kernel@vger.kernel.org
+Cc: pbonzini@redhat.com, seanjc@google.com, erdemaktas@google.com, 
+	ackerleytng@google.com, jxgao@google.com, sagis@google.com, oupton@google.com, 
+	pgonda@google.com, kirill@shutemov.name, dave.hansen@linux.intel.com, 
+	linux-coco@lists.linux.dev, chao.p.peng@linux.intel.com, 
+	isaku.yamahata@gmail.com, sathyanarayanan.kuppuswamy@linux.intel.com, 
+	Vishal Annapurve <vannapurve@google.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 2025-02-06 at 02:54 -0800, Kumar Kartikeya Dwivedi wrote:
-> Introduce verifier-side support for rqspinlock kfuncs. The first step is
-> allowing bpf_res_spin_lock type to be defined in map values and
-> allocated objects, so BTF-side is updated with a new BPF_RES_SPIN_LOCK
-> field to recognize and validate.
->=20
-> Any object cannot have both bpf_spin_lock and bpf_res_spin_lock, only
-> one of them (and at most one of them per-object, like before) must be
-> present. The bpf_res_spin_lock can also be used to protect objects that
-> require lock protection for their kfuncs, like BPF rbtree and linked
-> list.
->=20
-> The verifier plumbing to simulate success and failure cases when calling
-> the kfuncs is done by pushing a new verifier state to the verifier state
-> stack which will verify the failure case upon calling the kfunc. The
-> path where success is indicated creates all lock reference state and IRQ
-> state (if necessary for irqsave variants). In the case of failure, the
-> state clears the registers r0-r5, sets the return value, and skips kfunc
-> processing, proceeding to the next instruction.
->=20
-> When marking the return value for success case, the value is marked as
-> 0, and for the failure case as [-MAX_ERRNO, -1]. Then, in the program,
-> whenever user checks the return value as 'if (ret)' or 'if (ret < 0)'
-> the verifier never traverses such branches for success cases, and would
-> be aware that the lock is not held in such cases.
->=20
-> We push the kfunc state in check_kfunc_call whenever rqspinlock kfuncs
-> are invoked. We introduce a kfunc_class state to avoid mixing lock
-> irqrestore kfuncs with IRQ state created by bpf_local_irq_save.
->=20
-> With all this infrastructure, these kfuncs become usable in programs
-> while satisfying all safety properties required by the kernel.
->=20
-> Signed-off-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-> ---
+Direct HLT instruction execution causes #VEs for TDX VMs which is routed
+to hypervisor via TDCALL. safe_halt() routines execute HLT in STI-shadow
+so IRQs need to remain disabled until the TDCALL to ensure that pending
+IRQs are correctly treated as wake events. So "sti;hlt" sequence needs to
+be replaced with "TDCALL; raw_local_irq_enable()" for TDX VMs.
 
-Apart from a few nits, I think this patch looks good.
+Commit bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
+prevented the idle routines from using "sti;hlt". But it missed the
+paravirt routine which can be reached like this as an example:
+        acpi_safe_halt() =>
+        raw_safe_halt()  =>
+        arch_safe_halt() =>
+        irq.safe_halt()  =>
+        pv_native_safe_halt()
 
-Acked-by: Eduard Zingerman <eddyz87@gmail.com>
+Modify tdx_safe_halt() to implement the sequence "TDCALL;
+raw_local_irq_enable()" and invoke tdx_halt() from idle routine which just
+executes TDCALL without changing state of interrupts. Introduce dependency
+on CONFIG_PARAVIRT and override paravirt halt()/safe_halt() routines for
+TDX VMs.
 
-[...]
+Cc: stable@vger.kernel.org
+Fixes: bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
+Signed-off-by: Vishal Annapurve <vannapurve@google.com>
+---
+ arch/x86/Kconfig           |  1 +
+ arch/x86/coco/tdx/tdx.c    | 18 +++++++++++++++++-
+ arch/x86/include/asm/tdx.h |  2 +-
+ arch/x86/kernel/process.c  |  2 +-
+ 4 files changed, 20 insertions(+), 3 deletions(-)
 
-> diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
-> index 32c23f2a3086..ed444e44f524 100644
-> --- a/include/linux/bpf_verifier.h
-> +++ b/include/linux/bpf_verifier.h
-> @@ -115,6 +115,15 @@ struct bpf_reg_state {
->  			int depth:30;
->  		} iter;
-> =20
-> +		/* For irq stack slots */
-> +		struct {
-> +			enum {
-> +				IRQ_KFUNC_IGNORE,
-
-Is this state ever used?
-mark_stack_slot_irq_flag() is always called with either NATIVE or LOCK.
-
-> +				IRQ_NATIVE_KFUNC,
-> +				IRQ_LOCK_KFUNC,
-> +			} kfunc_class;
-> +		} irq;
-> +
->  		/* Max size from any of the above. */
->  		struct {
->  			unsigned long raw1;
-
-[...]
-
-> @@ -8038,36 +8059,53 @@ static int process_spin_lock(struct bpf_verifier_=
-env *env, int regno,
->  	}
-> =20
->  	rec =3D reg_btf_record(reg);
-> -	if (!btf_record_has_field(rec, BPF_SPIN_LOCK)) {
-> -		verbose(env, "%s '%s' has no valid bpf_spin_lock\n", map ? "map" : "lo=
-cal",
-> -			map ? map->name : "kptr");
-> +	if (!btf_record_has_field(rec, is_res_lock ? BPF_RES_SPIN_LOCK : BPF_SP=
-IN_LOCK)) {
-> +		verbose(env, "%s '%s' has no valid %s_lock\n", map ? "map" : "local",
-> +			map ? map->name : "kptr", lock_str);
->  		return -EINVAL;
->  	}
-> -	if (rec->spin_lock_off !=3D val + reg->off) {
-> -		verbose(env, "off %lld doesn't point to 'struct bpf_spin_lock' that is=
- at %d\n",
-> -			val + reg->off, rec->spin_lock_off);
-> +	spin_lock_off =3D is_res_lock ? rec->res_spin_lock_off : rec->spin_lock=
-_off;
-> +	if (spin_lock_off !=3D val + reg->off) {
-> +		verbose(env, "off %lld doesn't point to 'struct %s_lock' that is at %d=
-\n",
-> +			val + reg->off, lock_str, spin_lock_off);
->  		return -EINVAL;
->  	}
->  	if (is_lock) {
->  		void *ptr;
-> +		int type;
-> =20
->  		if (map)
->  			ptr =3D map;
->  		else
->  			ptr =3D btf;
-> =20
-> -		if (cur->active_locks) {
-> -			verbose(env,
-> -				"Locking two bpf_spin_locks are not allowed\n");
-> -			return -EINVAL;
-> +		if (!is_res_lock && cur->active_locks) {
-
-Nit: having '&& cur->active_locks' in this branch but not the one for
-     'is_res_lock' is a bit confusing. As far as I understand this is
-     just an optimization, and active_locks check could be done (or dropped=
-)
-     in both cases.
-
-> +			if (find_lock_state(env->cur_state, REF_TYPE_LOCK, 0, NULL)) {
-> +				verbose(env,
-> +					"Locking two bpf_spin_locks are not allowed\n");
-> +				return -EINVAL;
-> +			}
-> +		} else if (is_res_lock) {
-> +			if (find_lock_state(env->cur_state, REF_TYPE_RES_LOCK, reg->id, ptr))=
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 87198d957e2f..afcdbc9693dc 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -902,6 +902,7 @@ config INTEL_TDX_GUEST
+ 	depends on X86_64 && CPU_SUP_INTEL
+ 	depends on X86_X2APIC
+ 	depends on EFI_STUB
++	depends on PARAVIRT
+ 	select ARCH_HAS_CC_PLATFORM
+ 	select X86_MEM_ENCRYPT
+ 	select X86_MCE
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index 32809a06dab4..ee67c1870e70 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -14,6 +14,7 @@
+ #include <asm/ia32.h>
+ #include <asm/insn.h>
+ #include <asm/insn-eval.h>
++#include <asm/paravirt_types.h>
+ #include <asm/pgtable.h>
+ #include <asm/set_memory.h>
+ #include <asm/traps.h>
+@@ -398,7 +399,7 @@ static int handle_halt(struct ve_info *ve)
+ 	return ve_instr_len(ve);
+ }
+ 
+-void __cpuidle tdx_safe_halt(void)
++void __cpuidle tdx_halt(void)
  {
-> +				verbose(env, "Acquiring the same lock again, AA deadlock detected\n"=
-);
-> +				return -EINVAL;
-> +			}
->  		}
-
-Nit: there is no branch for find_lock_state(... REF_TYPE_RES_LOCK_IRQ ...),
-     this is not a problem, as other checks catch the imbalance in
-     number of unlocks or unlock of the same lock, but verifier won't
-     report the above "AA deadlock" message for bpf_res_spin_lock_irqsave()=
-.
-
-The above two checks make it legal to take resilient lock while
-holding regular lock and vice versa. This is probably ok, can't figure
-out an example when this causes trouble.
-
-> -		err =3D acquire_lock_state(env, env->insn_idx, REF_TYPE_LOCK, reg->id,=
- ptr);
-> +
-> +		if (is_res_lock && is_irq)
-> +			type =3D REF_TYPE_RES_LOCK_IRQ;
-> +		else if (is_res_lock)
-> +			type =3D REF_TYPE_RES_LOCK;
-> +		else
-> +			type =3D REF_TYPE_LOCK;
-> +		err =3D acquire_lock_state(env, env->insn_idx, type, reg->id, ptr);
->  		if (err < 0) {
->  			verbose(env, "Failed to acquire lock state\n");
->  			return err;
->  		}
->  	} else {
->  		void *ptr;
-> +		int type;
-> =20
->  		if (map)
->  			ptr =3D map;
-
-[...]
+ 	const bool irq_disabled = false;
+ 
+@@ -409,6 +410,12 @@ void __cpuidle tdx_safe_halt(void)
+ 		WARN_ONCE(1, "HLT instruction emulation failed\n");
+ }
+ 
++static void __cpuidle tdx_safe_halt(void)
++{
++	tdx_halt();
++	raw_local_irq_enable();
++}
++
+ static int read_msr(struct pt_regs *regs, struct ve_info *ve)
+ {
+ 	struct tdx_module_args args = {
+@@ -1109,6 +1116,15 @@ void __init tdx_early_init(void)
+ 	x86_platform.guest.enc_kexec_begin	     = tdx_kexec_begin;
+ 	x86_platform.guest.enc_kexec_finish	     = tdx_kexec_finish;
+ 
++	/*
++	 * "sti;hlt" execution in TDX guests will induce a #VE in the STI-shadow
++	 * which will enable interrupts before HLT TDCALL inocation possibly
++	 * resulting in missed wakeup events. Modify all possible HLT
++	 * execution paths to use TDCALL for performance/reliability reasons.
++	 */
++	pv_ops.irq.safe_halt = tdx_safe_halt;
++	pv_ops.irq.halt = tdx_halt;
++
+ 	/*
+ 	 * TDX intercepts the RDMSR to read the X2APIC ID in the parallel
+ 	 * bringup low level code. That raises #VE which cannot be handled
+diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
+index b4b16dafd55e..393ee2dfaab1 100644
+--- a/arch/x86/include/asm/tdx.h
++++ b/arch/x86/include/asm/tdx.h
+@@ -58,7 +58,7 @@ void tdx_get_ve_info(struct ve_info *ve);
+ 
+ bool tdx_handle_virt_exception(struct pt_regs *regs, struct ve_info *ve);
+ 
+-void tdx_safe_halt(void);
++void tdx_halt(void);
+ 
+ bool tdx_early_handle_ve(struct pt_regs *regs);
+ 
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index 6da6769d7254..d11956a178df 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -934,7 +934,7 @@ void __init select_idle_routine(void)
+ 		static_call_update(x86_idle, mwait_idle);
+ 	} else if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
+ 		pr_info("using TDX aware idle routine\n");
+-		static_call_update(x86_idle, tdx_safe_halt);
++		static_call_update(x86_idle, tdx_halt);
+ 	} else {
+ 		static_call_update(x86_idle, default_idle);
+ 	}
+-- 
+2.48.1.502.g6dc24dfdaf-goog
 
