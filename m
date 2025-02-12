@@ -1,134 +1,125 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F15207E19
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0C12046BF;
+	Wed, 12 Feb 2025 09:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739353019; cv=none; b=MhrLKYZzgfbcFuJglJp1I5rYx3573PzzFC+ba4dnphqFJYlPPNjR/ahvtlC+oL6D1pnwvkOEK0veohgZrgzgdN+hi+dqNvKVRejJKG6a5n5ThqA4RQAc0tXsaM0z3ev6cSgzfQPJ6PYGF0OX8B0pPdVGVJFVbVO/GrvTzs47gJE=
+	t=1739353048; cv=none; b=J2SJ+f3DpP/tR1D3s1bSo/8jfhb/jzKcXISFTqeqnm1KisEZq8GJDZiRP1o0cl+bVUgDd7ml9rnHg5KhgxOkoQJjBhmq83MYsueYEIlmGz73yf7qvVybGbkotfYOghQGB903pMtPOd7UNdpWSvh0sYUcpXFzkuAVtpSgCFYeNkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739353019; c=relaxed/simple;
-	bh=7KT0FF/FzIbIE6w2ehfIcEyeGHIB5NZeS2fUmYmWmwU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a0t78fda63BKLBuqvTfENIL5KKuNmw1lcASZoMk4538UkIQ8wuh5GfqnVfsNhssO2L7+7V6/s3UCh6x8UyB1A0EBVhN71iJfGI8a5gDuveZwZv3hpb8OXCD8yXslf25KLxbIKGQ2N4x718H2jSXjcbqWhGWhY5oP/q0LbnzTlDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=1bY7ylZ7; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1739353048; c=relaxed/simple;
+	bh=Sf9TKmSkzVueM1GHBhBchFQOzKBW36BR9sNxJqN89VI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xv2iBaF1XvpU/f41blimhilUWXFC4XPunpkMh4rIGMzA6hd3ejvjJ/q1G1hGJlhlIdXQWQ7HI1+sqhDZiyBFcFZfxcFiFos7imgp5aN6nUUortn3jlx4oUxX3TtgyIWwoX+Rso7lX05nWA9R5t6wFskuHdIQE3VCckPF0Zp5zvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hQQpFous; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="1bY7ylZ7"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4394820123dso18647065e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:36:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739353016; x=1739957816; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NRhZaB3W6faFlCbku+LscU579s6QSzZfyLaHX9G8q1c=;
-        b=1bY7ylZ78sEe+qzdUjM2zmGfl1QOFXMRsX6hXdSa68HPLuyAOu9iJXDh0S+L6QuX6e
-         NGG0J80Xki52AuIezFQssR0b3LYZRjmc7w2Mi+gjGrz5fFn4u9aYZ9BEBvvJl2YQVLzm
-         34JyT8vew1VSBU9l4TeMWsrWJoOSZqen1K0wrXR5UVDzay1x1nMCl2fgAkqD0yTgz+6l
-         rvVXrBNSuIMhJtFa8EvuqyyKbBN1JrdwVZDhRpe+gGQDpssIr6uTkd3BnUVVRgbzh/6k
-         JwBUSbRHO5tJlDdyhhgPLpTIFpDVbsOizKfSb9nUArzef29+F7UPKxezK8ze/Pok4iI8
-         CHKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739353016; x=1739957816;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NRhZaB3W6faFlCbku+LscU579s6QSzZfyLaHX9G8q1c=;
-        b=Wwj79a3cI2znl6ehK6KvxJzEAfySgDVh36jMGqBPO+P84BZdlP3Q7d3X8ko4SSSgMD
-         /hQ97eSJ7FFHdPKPJJr66otyEJx8S7W0ezQ8faI8d7npEMFnIwjwwj/DUnNVh1wqIWyu
-         Oa0cDG9N7laZLcY+ic281DvCQvO21aTa+vZrT/h4f4wvdmlL2oh3GP62Erp3Gdzase/B
-         P86jzpXltJ3nts0k2Co5YF5LrW8QDzs9pTH1JUIukptdL9XE5FZzqYwkCswo/SAfvfQ4
-         BP6L/CfxYDxKqHsjv43pSsz8KqfbiG2Td2yUyPBqTTM3lwSxfzIQPcSDGK6U9Pkfv+u8
-         zwoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXl8I4/yqeZlt3TxPIgsZeiMKFYpGf8Ak+QWtslx8CxA7kziwFydn/61jOilSKnrajfpnGyujzD/02z8fk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6UZw3BYFur/envP8+QW/jbxBkXSfLLjiOPI9iOieHy3a+rV4a
-	aMv71RPAdXNKPsmg7NjdbTXCB5cUzCGuSDjjo0Fg+gJc9T2zPNjfbsFUOdrAhPM=
-X-Gm-Gg: ASbGnct90LIrRsf/wJH/WwegzeoZjZ98aRJdeWkIzAYhjwMSe5zyUvtmveIwNwUZne/
-	LW/G37OQBhNG4VQhnlyNnt3SU5lCVT1UKFCFCoNb759RcwWMLhmASG0+ym4k9me4iNcJM5DBpnt
-	rljEgbBaivD9P8F/mvJuCLN3dg8pjuj9jv3QpBk2KFVpSOe4q+voFdaVjMf2AlukBXH05ToYmv2
-	rGK+SO/oiQIIaXIqSenT/WrXr8ELQvsDEuSpMdhSrZzFNdkQmcdf6iF4vYl8gIKtkI4ENg9UjC8
-	p0cIYxFiWGALktM=
-X-Google-Smtp-Source: AGHT+IFQnul0kNzls6ThIvi1z7bQ429pLFDaGlT/FcOXJm3pTEnq6re0+Qc4O8V8syw5sWV5sK78UQ==
-X-Received: by 2002:a05:6000:188b:b0:38d:b34a:679 with SMTP id ffacd0b85a97d-38dea2cefc8mr1824460f8f.37.1739353016217;
-        Wed, 12 Feb 2025 01:36:56 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:521c:13af:4882:344c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a078448sm14132935e9.34.2025.02.12.01.36.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 01:36:55 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Peter Rosin <peda@axentia.se>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	David Lechner <dlechner@baylibre.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	linux-sound@vger.kernel.org,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: (subset) [PATCH v3 00/15] gpiolib: add gpiod_multi_set_value_cansleep
-Date: Wed, 12 Feb 2025 10:36:53 +0100
-Message-ID: <173935301204.11039.10193374588878813157.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
-References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hQQpFous"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BBA1C4CEDF;
+	Wed, 12 Feb 2025 09:37:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739353048;
+	bh=Sf9TKmSkzVueM1GHBhBchFQOzKBW36BR9sNxJqN89VI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hQQpFousasWfqZDY4+6b2djjxTKiIwrHPS+SSGh1gn4skoX77dASovqUU3Q23JmjR
+	 UqH0fPhy0fA/dVP9wGCvcbGWp3dnP03pHup/wZXMsbT9G+sPVaQ6CMgLrUjDR/Mdpb
+	 YMEDMh/Vvs5j+Ig+tsZ6aYQFL5joW4DwUoB6vsM2ugzfu4pXNT3gEGTL0KotJqccRT
+	 Iyo9ZYrsUZ+giqMbM3h4zY0U1qywr+kyEc3vBVVJJAETCUdi2hzdbr9H6erqm/kE+D
+	 ZKjgH/L5S2PGAdqnMSSHGf0BgbR2ApBFGEW97KjVashyG+gwnuyiuYAq5dQuNW8gzp
+	 i+REHQZXqMvpQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1ti9BX-000000003Nw-2Eii;
+	Wed, 12 Feb 2025 10:37:35 +0100
+Date: Wed, 12 Feb 2025 10:37:35 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, konradybcio@kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Saranya R <quic_sarar@quicinc.com>,
+	Frank Oltmanns <frank@oltmanns.dev>
+Subject: Re: [PATCH v2] soc: qcom: pdr: Fix the potential deadlock
+Message-ID: <Z6xr3ylNSC6iYf-C@hovoldconsulting.com>
+References: <20250129155544.1864854-1-mukesh.ojha@oss.qualcomm.com>
+ <nqsuml3jcblwkp6mcriiekfiz5wlxjypooiygvgd5fjtmfnvdc@zfoaolcjecpl>
+ <Z6nE0kxF2ipItB2r@hu-mojha-hyd.qualcomm.com>
+ <Z6nKOz97Neb1zZOa@hovoldconsulting.com>
+ <Z6uDv3c3DkmgumnM@hu-mojha-hyd.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6uDv3c3DkmgumnM@hu-mojha-hyd.qualcomm.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Feb 11, 2025 at 10:37:11PM +0530, Mukesh Ojha wrote:
+> On Mon, Feb 10, 2025 at 10:43:23AM +0100, Johan Hovold wrote:
+> > On Mon, Feb 10, 2025 at 02:50:18PM +0530, Mukesh Ojha wrote:
+> > > On Thu, Feb 06, 2025 at 04:13:25PM -0600, Bjorn Andersson wrote:
 
-
-On Mon, 10 Feb 2025 16:33:26 -0600, David Lechner wrote:
-> This series was inspired by some minor annoyance I have experienced a
-> few times in recent reviews.
+> > > > I came to the same patch while looking into the issue related to
+> > > > in-kernel pd-mapper reported here:
+> > > > https://lore.kernel.org/lkml/Zqet8iInnDhnxkT9@hovoldconsulting.com/
+> > > > 
+> > > > So:
+> > > > Reviewed-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+> > > > Tested-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
 > 
-> Calling gpiod_set_array_value_cansleep() can be quite verbose due to
-> having so many parameters. In most cases, we already have a struct
-> gpio_descs that contains the first 3 parameters so we end up with 3 (or
-> often even 6) pointer indirections at each call site. Also, people have
-> a tendency to want to hard-code the first argument instead of using
-> struct gpio_descs.ndescs, often without checking that ndescs >= the
-> hard-coded value.
+> Should i add this in next version ?
+
+Yes, if there is another revision.
+
+> > I was gonna ask if you have confirmed that this indeed fixes the audio
+> > regression with the in-kernel pd-mapper?
+> > 
+> > Is this how you discovered the issue as well, Mukesh and Saranya?
 > 
-> [...]
+> No, we are not using in kernel pd-mapper yet in downstream..
 
-Applied, thanks!
+Ok, thanks for confirming.
 
-[06/15] gpio: max3191x: use gpiod_multi_set_value_cansleep
-        commit: eb2e9c308d2882d9d364af048eb3d8336d41c4bb
+> > If so, please mention that in the commit message, but in any case also
+> > include the corresponding error messages directly so that people running
+> > into this can find the fix more easily. (I see the pr_err now, but it's
+> > not as greppable).
+> 
+> Below is the sample log which got in downstream when we hit this issue
+> 
+> 13.799119:   PDR: tms/servreg get domain list txn wait failed: -110
+> 13.799146:   PDR: service lookup for msm/adsp/sensor_pd:tms/servreg failed: -110
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+I think it would be good to include this (without the time stamp) as an
+example as it would make it easier to find this fix even if the failure
+happens for another service.
+
+> > A Link tag to my report would be good to have as well if this fixes the
+> > audio regression.
+> 
+> I see this is somehow matching the logs you have reported, but this deadlock
+> is there from the very first day of pdr_interface driver.
+> 
+> [   14.565059] PDR: avs/audio get domain list txn wait failed: -110
+> [   14.571943] PDR: service lookup for avs/audio failed: -110
+
+Yes, but using the in-kernel pd-mapper has exposed a number of existing
+bugs since it changes the timing of events enough to make it easier to
+hit them.
+
+The audio regression is a very real regression for users of Snapdragon
+based laptops like, for example, the Lenovo Yoga Slim 7x.
+
+If Bjorn has confirmed that this is the same issue (I can try to
+instrument the code based on your analysis to confirm this too), then I
+think it would be good to mention this in the commit message and link to
+the report, for example:
+
+	This specifically also fixes an audio regression when using the
+	in-kernel pd-mapper as that makes it easier to hit this race. [1]
+
+	Link: https://lore.kernel.org/lkml/Zqet8iInnDhnxkT9@hovoldconsulting.com/ # [1]
+
+or similar.
+
+Johan
