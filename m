@@ -1,86 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80C51E47B4;
-	Wed, 12 Feb 2025 07:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9841D201268
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 07:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739346586; cv=none; b=QwgML91EjDC0tyYP2cVENf2rGjK7jJwO/GVW/0R/mjc0OAFp2Kxr+oibu7LuA5cEpO5vFpTl7AsuntFAoHfJwm/ArufAiVmen8Q3dveJ6azFd7bz5AvBssclmFZ6jBBf7LM45BV8TihE9RyR6z6sDpMRL1IIxwC04Hl9rgIXhDc=
+	t=1739346605; cv=none; b=m+0yCfy9/SZxT6uVVz9f22R7/dy8V/25QucBlLcfVS7t06oFw0z7j4vVJ3fXKi5aGOcnTPDC4JJJ0FVhUfhv+UU66SyZ12fuoiRWf9MMDHmCPusb5BtzyUTZJ235+0t4x89Kv184Kl7JS7Hv/EuZZ5CBJ2wNqkaN/kt3MXy6H1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739346586; c=relaxed/simple;
-	bh=8w9Hl06CLUYgviD29yBA21KUXubpdXVQiG1IHZKXkeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R9a5ownmfuzfqTdGm9zBVKut1o1XGoPELdKY0zcuLyjpMkRzvnbNOGl4CVJzgeKttYz0o1F7AL8KKWHkwlge22tS+X0A7p2/TuBOLT/WeqxcaBTFyLwjGfP52zVsFN96CYEr5BBGsOgyxt3rpDWVGCGk2QxbGpBSk/1Kx70eKZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=M3ExI9lE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="M3ExI9lE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE33CC4CEDF;
-	Wed, 12 Feb 2025 07:49:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739346585;
-	bh=8w9Hl06CLUYgviD29yBA21KUXubpdXVQiG1IHZKXkeU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M3ExI9lEP6kCp7MpcbrMay2usPSFkRdmWF/MUCMp8sGF9f3fWOZnXOWGMhLG7Af0D
-	 XJhz7PicapucY+881T6fDxdoL4ZPfITHzynpULuGGN5btzaVwT1fvAax4+yQPlOEtS
-	 Jyo/nfqLV6EFHfklhlDcJvLylHlhg8IH70C8Y1Z4=
-Date: Wed, 12 Feb 2025 08:48:41 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: "Moore, Robert" <robert.moore@intel.com>,
-	"Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-	Len Brown <lenb@kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"acpica-devel@lists.linux.dev" <acpica-devel@lists.linux.dev>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	David Hildenbrand <david@redhat.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] ACPI/MRRM: Add "node" symlink to
- /sys/devices/system/memory/rangeX
-Message-ID: <2025021231-panhandle-stonewall-ba3e@gregkh>
-References: <20250210211223.6139-1-tony.luck@intel.com>
- <20250210211223.6139-4-tony.luck@intel.com>
- <2025021111-deepen-landing-4252@gregkh>
- <SJ1PR11MB6083BF8F07A18FEF581DAAF2FCFD2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+	s=arc-20240116; t=1739346605; c=relaxed/simple;
+	bh=AOpEiDRdv/zMfMTCdXM0iJQaQUXHegfeysZkTKSnhmE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JgbvPLCa7XiJPRlEv3cwc4SV60YZLbfHJF5LGZn4QsPrfvInzxKhlfq5t/lRWMfDJbd2bZuVnOQzkyNC4gZQ4zgoQwe8Pc7nQCIlTozOUvjD05mHUTTC4KAmfgxFYmJxLw2zkeaizvu/pGcGWFxN9tmoo7MxSizrhdpbpd5yQIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Yt9GW2gRHz9sSf;
+	Wed, 12 Feb 2025 08:40:51 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id win_Exv7QbtN; Wed, 12 Feb 2025 08:40:51 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Yt9GW1hD6z9sSd;
+	Wed, 12 Feb 2025 08:40:51 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 110AF8B770;
+	Wed, 12 Feb 2025 08:40:51 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id X0yeLhePcO08; Wed, 12 Feb 2025 08:40:51 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [10.25.207.138])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id DF78E8B763;
+	Wed, 12 Feb 2025 08:40:50 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] powerpc: Don't use --- in kernel logs
+Date: Wed, 12 Feb 2025 08:40:48 +0100
+Message-ID: <54a1f8d2c3fb5b95434039724c8c141052ae5cc0.1739346038.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SJ1PR11MB6083BF8F07A18FEF581DAAF2FCFD2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739346048; l=2323; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=AOpEiDRdv/zMfMTCdXM0iJQaQUXHegfeysZkTKSnhmE=; b=HnFm4QGgZpVbWmsHfAv54PYdo8ORxP8uSAGUO5YwkXdvYNyyO0KcFrr9cj+Rso5TvF0E78nS5 KtDuxVk6pLLA6eTap+dpy3Bg0u7HmZEguEMpQw94EZzFrQNBs5wa4TA
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 11, 2025 at 05:02:11PM +0000, Luck, Tony wrote:
-> >> +	if (node)
-> >> +		ret = sysfs_create_link(&entry->dev.kobj, &node->dev.kobj, "node");
-> >
-> > What is going to remove this symlink if the memory goes away?  Or do
-> > these never get removed?
-> 
-> There's currently no method for runtime changes to these memory ranges. They
-> are described by a static ACPI table.  I need to poke the folks that came up
-> with this to ask how memory hotplug will be handled (since CXL seems to be
-> making that fashionable again).
+When a kernel log containing --- at the start of a line is copied into
+a patch message, 'git am' drops everything located after that ---.
 
-ACPI should be supporting memory hotplug today, at the very least
-"memory add", so surely you have some old boxes to test this with?
+Replace --- by ---- to avoid that.
 
-> > symlinks in sysfs created like this always worry me.  What is going to
-> > use it?
-> 
-> <hand waves>User space tools that want to understand what the "per-region"
-> monitoring and control features are actually operating on.</hand waves>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/kernel/process.c | 8 ++++----
+ arch/powerpc/xmon/xmon.c      | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-If you don't have a real user today, please don't include it now.  Wait
-until it is actually needed.
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index ef91f71e07c4..855e09886503 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -1000,7 +1000,7 @@ static inline void tm_reclaim_task(struct task_struct *tsk)
+ 
+ 	WARN_ON(tm_suspend_disabled);
+ 
+-	TM_DEBUG("--- tm_reclaim on pid %d (NIP=%lx, "
++	TM_DEBUG("---- tm_reclaim on pid %d (NIP=%lx, "
+ 		 "ccr=%lx, msr=%lx, trap=%lx)\n",
+ 		 tsk->pid, thr->regs->nip,
+ 		 thr->regs->ccr, thr->regs->msr,
+@@ -1008,7 +1008,7 @@ static inline void tm_reclaim_task(struct task_struct *tsk)
+ 
+ 	tm_reclaim_thread(thr, TM_CAUSE_RESCHED);
+ 
+-	TM_DEBUG("--- tm_reclaim on pid %d complete\n",
++	TM_DEBUG("---- tm_reclaim on pid %d complete\n",
+ 		 tsk->pid);
+ 
+ out_and_saveregs:
+@@ -2367,14 +2367,14 @@ void __no_sanitize_address show_stack(struct task_struct *tsk,
+ 				(sp + STACK_INT_FRAME_REGS);
+ 
+ 			lr = regs->link;
+-			printk("%s--- interrupt: %lx at %pS\n",
++			printk("%s---- interrupt: %lx at %pS\n",
+ 			       loglvl, regs->trap, (void *)regs->nip);
+ 
+ 			// Detect the case of an empty pt_regs at the very base
+ 			// of the stack and suppress showing it in full.
+ 			if (!empty_user_regs(regs, tsk)) {
+ 				__show_regs(regs);
+-				printk("%s--- interrupt: %lx\n", loglvl, regs->trap);
++				printk("%s---- interrupt: %lx\n", loglvl, regs->trap);
+ 			}
+ 
+ 			firstframe = 1;
+diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
+index 268859e4df87..042793b5be78 100644
+--- a/arch/powerpc/xmon/xmon.c
++++ b/arch/powerpc/xmon/xmon.c
+@@ -1787,7 +1787,7 @@ static void xmon_show_stack(unsigned long sp, unsigned long lr,
+ 				       sp + STACK_INT_FRAME_REGS);
+ 				break;
+ 			}
+-			printf("--- Exception: %lx %s at ", regs.trap,
++			printf("---- Exception: %lx %s at ", regs.trap,
+ 			       getvecname(TRAP(&regs)));
+ 			pc = regs.nip;
+ 			lr = regs.link;
+-- 
+2.47.0
 
-thanks,
-
-greg k-h
