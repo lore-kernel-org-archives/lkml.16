@@ -1,138 +1,104 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4645D205AA6
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 08:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C472054FC
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 08:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739350664; cv=none; b=mYyt/NTObahq0zzGetF5Yg4kHyur8qSmfR1CDt00y+l8IK5nK44QuibUQmsUmpNJuFKLDMiEYR1LgTuVxEdNCe+aDUjc+xDLRpVNwzgDfA5w6fQh42JmfsrEvfUu4zZh7FCwah9LZVnHdVrO1JvtMfOQ+vAChULtCmCwpqaDXFE=
+	t=1739350765; cv=none; b=lIPTgvuWe7fiUd3e5bUKvaJLa5K2As1DCPgmKKSpCpN0kw+E14TDVfTN5UKUNpZ7dK7hG/Pt3Dub9S80++0Zn/0OYSLMXZxCOJdZMtKTt8QZCK2UbP2j+4CAGD2yWoW98gdpvX9UIQclGn+O9Vq1Czcj6oo76W3VglHiLRt1PhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739350664; c=relaxed/simple;
-	bh=XV7IVblDWD8KDdpkj7qGjSLygK5e9tiLpzFQ3w2uR8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PYM9n0ULBPA+7kaGbe5ZztpzVlTwaDfKnLsyezWEwKu5thwQ1UubQbOgD1qj8iBdLKGkNGudei0c0ogDU6B8y4VW9LKEgPOv6lnpq0lzk0oKDTyOdK7DYbyMjIsOQYCsjawpqrwXTwRKmc7ImSRwMhp61tol4TKKS/grgqyl1Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=aEzxNjKi; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1739350765; c=relaxed/simple;
+	bh=k4EFS67+OSzd7mMGXZ6yWM2eULBPefQQnxTnKpQBiGc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d1VSXWrMLhRhlHH0jGWUhJQflWOpZxXEHGwhPy2leVBorlp4qmtQ8eWrmGTk/Rk3IN8c3ZPl4gTXAGny5iQ2h10UJnYxQjyGktlm6L/o+hxQH5lyR6MDOXBBOjBFuatPVc/uAOkw3j1F6loDbh3Ktyzj6rmXk2ewK+QeFJMGhv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nbQmluS4; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="aEzxNjKi"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5deae16ab51so1011450a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 00:57:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nbQmluS4"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43934d6b155so3530375e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 00:59:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1739350660; x=1739955460; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+IuI5zXvDpkkZzSpr5OZmFLbRF4AuQK1DqlOW4Frc34=;
-        b=aEzxNjKiWWkWPFAE/ZCN5+4EGzFkvwtClDt36n0pzEHo/fVTs0e/EE/+LoU7IsLshh
-         pk9mlThKyEJoQ8weA2AtkF9gwG1IxsgF9Re3V/jasOWSlgqbyl6PtjeaWnRTtWjBc7GQ
-         BpNenyNzUGdInTKzwGOimakpZEihofAys+93Qx4fYPOYGqWT0dYV9h2h2WTXikdipz8h
-         u2k+jnedQ/qD9HBSWLECbxbtOoDDJ4sg7TLhWrR/09xEjVIO/trHcOkZ93zF5WB0zcIL
-         i2rU8CQqe08avbdd8EcLtZNZSacvfvIk+vtMqIqteTh8P6/7U7WHcATztx9BmuwFMdQD
-         JtYA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739350762; x=1739955562; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UGTn43wFwxBQyxqbkwKJtGIvMk3JyrzFT6OLqV1izpk=;
+        b=nbQmluS4nzLhnIiy9f3Hcd6ONQHKPoJjRjazJsYbJuDRg9nxFRtNTk5NssVAr/ND10
+         u1u/YeyjwEWmr0o2H4ZarC/NXw0Uc8Kf/JBO/GRm4yMV8s6dqhpah1pdq+fIOA0McCSZ
+         JvfhWr0ToB3PF5jB0bP9X6maKd0XKM0RInH4WYZ/ybSlyaC2sjIBEVgjqWS0nqHCSgdi
+         cmSxS+ryYAdpoQO8EKxNWUYW1WIJi/wvWb8ZFON6QjX7GAJsfWgtT3W32f/rWiX/wA1v
+         pGX6NvRJxOMeU5LRPWIQUnXDjXET8MOL52vU8neivZQhgC/n9dvEL+Hzt1bxZ8h9Snls
+         /ORw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739350660; x=1739955460;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+IuI5zXvDpkkZzSpr5OZmFLbRF4AuQK1DqlOW4Frc34=;
-        b=xLxocfvCHvyd158onYOicf3VsUQ2A/HYEquiOpjJXrJDJMwmrLtXYyLdISNi5/sHKD
-         8Kj6DhkALW5j+6ey9WAI1SFT+crTSkDsRfgzEYLXBCCfr8AqBPf8s+ZkCzGWpDejT08I
-         aE457zP0Ct7blVyYdAM7Zo0rLHLefeIGbH9MCeG1gfnUs85GNp4tNeR0JRFbj3B53EdP
-         gDQ2ZyE2qfb0FnPCLiYUh34Xx2RBjnNmWz3vbp1cvzzc/7SmXsFrDUUSudtIaWmGXfJt
-         6LhDFiApx826A80EUlgpc/rBbAbq9kKZOWECpeGpjr7aebbD//a/93LR5qlTZxmTwTl3
-         uSzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVi3nlZAYaRoFChUIXauTCW48w+ImeYLKHw7gB1QGsNQSuVn2kBCkpAQ44hluwOR79azQr1AXTGhr0V6TQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTZIWEqxMW8XPf0oUoLuYGiXc9HVrt5aU1tnea8b7332pW6yUH
-	pVSbxrYsXnhFkwMrHJ8iwWCPPJ1iTO+qGhvnyRC6ux1hLcIpRhsc5dPxIQhW6Gc=
-X-Gm-Gg: ASbGnct7XeqSi11tW9A/sfWDA/IfqK13/HwcROTAiiplLkQq65uzGM1M5dheFHHnyQA
-	x9N0X6xsesurCEPkn1/fZqrzAdWmOcINTtKmxot0E3pu9136bbg+rHn236xlvWn139uGTAowdl5
-	8rwbukFt6WjGzrnMqEo+52sk53IXAUjeQCzuVoIQE9NYT6BgK+zfzCjFI8grPBkVDCoGLzNTF++
-	1JYDuM+8N+QOt58aTB4Hcn5DiYHDehxMlzPdxkDLYLxKQ/qTyxnNICJdTUKJE0ussN2Q2orFi4b
-	xFWncqZ1CjCnNfve/ewWgX58krw7
-X-Google-Smtp-Source: AGHT+IHAlI+h0f9gQ05Wk4VO5y5MPCyT960vP5L1X6nmRum7jNTTiYbDKSPELSyxpwXSfS409hjybw==
-X-Received: by 2002:a05:6402:40c1:b0:5dc:ea7e:8c56 with SMTP id 4fb4d7f45d1cf-5deadddd4e6mr4918933a12.22.1739350660368;
-        Wed, 12 Feb 2025 00:57:40 -0800 (PST)
-Received: from localhost (109-81-84-135.rct.o2.cz. [109.81.84.135])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ab7d062771csm422764866b.29.2025.02.12.00.57.39
+        d=1e100.net; s=20230601; t=1739350762; x=1739955562;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UGTn43wFwxBQyxqbkwKJtGIvMk3JyrzFT6OLqV1izpk=;
+        b=kBoAX1hN+R8p15dcONzNklh296LJQby7+TpfaJfcIgkidRVXDQ11u9vCQWxc7X0Lz2
+         BBlxJAo0Bx2u8PuJ40araE7C3mDwx/IDubBes997nOJl0VIGKmz2kiBhxOxOThzR+VEr
+         QBt2sem0oqOuJmQse03IEFqQdp/wpXmqcOkqVkrE8FgQv1N+gN7tTRKXW09AyQfqtARx
+         S5e8Kh4Ibgn4oXIWbPbS3i7qjhJ6iGEhA05oASnIYL1LfmSgX7o2cZPcKNfo2METM3tx
+         7t5mdTgk4etaAKBSpPDgJ7DLq7Vx6YY3nvHUiqm1enPFwfcpENiP0Z2Wyd8jqczc6OUn
+         +sTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWGyKLPikBWm9jhoofHnY36eXhnC1+mWZUMaZ3SKu4kRXn+JP3ndb2Fp/uyZe2FJVmzJxv9Y8mfVCpMk+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMrL6Kz1c63XP5cTh4cSFxM9D0ro2BCCixF5UtbBqPdswHTzvA
+	6zlofEcIT3GuiL+aeM2jV1EtqlWpy6mWWr9utm4PjJgmC+MpOvQ8n5WkMH/RWkY=
+X-Gm-Gg: ASbGncvbtAhHWYsRASF3fJ9ulclUaT2PZwN4wTl4M0MHAchC+SesSlmccOwZI/sIrhX
+	QbwpVhqAS5owrJGFhXmcRQfuYM3jvS5chTsN1arck66h1Hp3ivIKTSA3fZ2XdXFCJCjkKodYHHm
+	qXeLSi3YY+m7Jv1PhyPgXXWfU+Naut/YNXrHWh9TgaJb985DM4bTspCvoPL/yHryQ014iTRzraq
+	qsAYzZ15iSzd93PWF4YOMQ4amJcDhc9xqL5BFZWssWdLAPIUiGqruXCCdkq7Xd+iLElY7xDj8kh
+	j2dpcsk2/j36I0Q=
+X-Google-Smtp-Source: AGHT+IEG3GeWGBdsf/djtVQU2OU7vHk9Fqxlcdeuau/EFRL0RMjo++ts4nycnHc+/7bfHyaPQRMzNQ==
+X-Received: by 2002:a05:600c:3510:b0:439:4c1e:d810 with SMTP id 5b1f17b1804b1-439583b578bmr18887125e9.9.1739350761900;
+        Wed, 12 Feb 2025 00:59:21 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:521c:13af:4882:344c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcef5c9c6sm12948568f8f.86.2025.02.12.00.59.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 00:57:40 -0800 (PST)
-Date: Wed, 12 Feb 2025 09:57:39 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Chen Ridong <chenridong@huaweicloud.com>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, yosryahmed@google.com,
-	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	muchun.song@linux.dev, davidf@vimeo.com, vbabka@suse.cz,
-	mkoutny@suse.com, paulmck@kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	chenridong@huawei.com, wangweiyang2@huawei.com
-Subject: Re: [PATCH] mm/oom_kill: revert watchdog reset in global OOM process
-Message-ID: <Z6xig5sLNpFVFU2T@tiehlicka>
-References: <20250212025707.67009-1-chenridong@huaweicloud.com>
+        Wed, 12 Feb 2025 00:59:21 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>
+Cc: linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] leds: aw200xx: don't use return with gpiod_set_value() variants
+Date: Wed, 12 Feb 2025 09:59:18 +0100
+Message-ID: <20250212085918.6902-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250212025707.67009-1-chenridong@huaweicloud.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed 12-02-25 02:57:07, Chen Ridong wrote:
-> From: Chen Ridong <chenridong@huawei.com>
-> 
-> Unlike memcg OOM, which is relatively common, global OOM events are rare
-> and typically indicate that the entire system is under severe memory
-> pressure. The commit ade81479c7dd ("memcg: fix soft lockup in the OOM
-> process") added the touch_softlockup_watchdog in the global OOM handler to
-> suppess the soft lockup issues. However, while this change can suppress
-> soft lockup warnings, it does not address RCU stalls, which can still be
-> detected and may cause unnecessary disturbances. Simply remove the
-> modification from the global OOM handler.
-> 
-> Fixes: ade81479c7dd ("memcg: fix soft lockup in the OOM process")
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-But this is not really fixing anything, is it? While this doesn't
-address a potential RCU stall it doesn't address any actual problem.
-So why do we want to do this?
+While it now returns void, it will soon be converted to return an
+integer instead. Don't do `return gpiod_set...`.
 
-> Signed-off-by: Chen Ridong <chenridong@huawei.com>
-> ---
->  mm/oom_kill.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
-> 
-> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> index 25923cfec9c6..2d8b27604ef8 100644
-> --- a/mm/oom_kill.c
-> +++ b/mm/oom_kill.c
-> @@ -44,7 +44,6 @@
->  #include <linux/init.h>
->  #include <linux/mmu_notifier.h>
->  #include <linux/cred.h>
-> -#include <linux/nmi.h>
->  
->  #include <asm/tlb.h>
->  #include "internal.h"
-> @@ -431,15 +430,10 @@ static void dump_tasks(struct oom_control *oc)
->  		mem_cgroup_scan_tasks(oc->memcg, dump_task, oc);
->  	else {
->  		struct task_struct *p;
-> -		int i = 0;
->  
->  		rcu_read_lock();
-> -		for_each_process(p) {
-> -			/* Avoid potential softlockup warning */
-> -			if ((++i & 1023) == 0)
-> -				touch_softlockup_watchdog();
-> +		for_each_process(p)
->  			dump_task(p, oc);
-> -		}
->  		rcu_read_unlock();
->  	}
->  }
-> -- 
-> 2.34.1
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202502121512.CmoMg9Q7-lkp@intel.com/
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/leds/leds-aw200xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/leds/leds-aw200xx.c b/drivers/leds/leds-aw200xx.c
+index 08cca128458c..fe223d363a5d 100644
+--- a/drivers/leds/leds-aw200xx.c
++++ b/drivers/leds/leds-aw200xx.c
+@@ -379,7 +379,7 @@ static void aw200xx_enable(const struct aw200xx *const chip)
+ 
+ static void aw200xx_disable(const struct aw200xx *const chip)
+ {
+-	return gpiod_set_value_cansleep(chip->hwen, 0);
++	gpiod_set_value_cansleep(chip->hwen, 0);
+ }
+ 
+ static int aw200xx_probe_get_display_rows(struct device *dev,
 -- 
-Michal Hocko
-SUSE Labs
+2.45.2
+
