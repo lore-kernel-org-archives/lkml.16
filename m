@@ -1,65 +1,65 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7032E20A5C4
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 11:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1F220D51D
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 11:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739359398; cv=none; b=eOv8aKZPQvzGIKUJdSTb+VZchGIxh7VkuQsvZwUqQJlUpha5Oc7v9x41Br5pjduRuTV6HzgksguM9dnyWDJBBzkKhrd/8IuItuNAZCbz2JJWGj7PxTAqpQ7hMWcI+mfeTmTy4FsRElbzCmGo0Mv+IQEYBDLA1CDeOs+1W2vg0q8=
+	t=1739359399; cv=none; b=Yf/w7/Oapq5FwHK51rhXHWTDYmhrXZyov5tojpK796lVbyKptbj+nP+U/1YTL7CCXNosI+SmjSPp8mZkEPKID2WqxQV499aNBwpohp1yszR/Cw96WKl6OG6pG3ZbAVmaLD4eiI+jUXuDPWwm9QtXdX+g8K9svupndKtkndR+/OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739359398; c=relaxed/simple;
-	bh=hXVFyo95Fd8AEwhm82LpDlV5OS0uorB3k4MP3pL+pwA=;
+	s=arc-20240116; t=1739359399; c=relaxed/simple;
+	bh=1//OcGv7gI8Rf5rDiwusdTiN/AV8oS31pnzMa0CmGQ8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iOe8aW8bxUcKJrKcCrRfDCam8Hp0Zu8F7kqbChLP63ibAFLwQUOjs9c/XFhynrzXgo31qpyykPK0+1im8W6ZokHZPR7v/ZSZsP93QyYx3m3sLkcZnS+fhZ9rjrhhrNkmDwhXkDHOtZsWHqP61vx3ikirKv6zkxSNoJpAHdu0LQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KdgSokIc; arc=none smtp.client-ip=209.85.208.169
+	 In-Reply-To:To:Cc; b=TnXtE5+SGaH2KGo9VgNR4T/JXMk/3IMvCpK+lXetaeAF+zCAC3N65LIPZG+u/CWoJBrYxqNAO9UqN5LHCftypd12EQSKAPoTV124iQAFM7sivvO+XymVeu7cgc2Oopc+jKp0QzAgSN/CBmamU8smWfKMUFQk/GLYP0k8xmjzmtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lLoeraVh; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KdgSokIc"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-309025ec288so10966911fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 03:23:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lLoeraVh"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-308f141518cso31072841fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 03:23:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739359393; x=1739964193; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739359395; x=1739964195; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yplTGeg8q5Jb1IHX+lZzUxdHnSw+Ki6MseFOXEsgMb4=;
-        b=KdgSokIcHhP4P5KC+RsZQFxFbEqxbpxB9+QxGaC4/7BRUnSCri6S6XIom3+dlma7Ao
-         wPE3kRyO6n2ORgipzV1hXFc1xo6dNJTmKM2m0IyWnf8vlxqgkq7Hza46gE4Pd0LvsHcC
-         AtWjq/BeYCQNpaZV1ynKuBffEvW27kKdG7RimjpaiWQmqfYo8dzkb7XtjqvscTZz7Z5J
-         3IaKtI6Gtqtl+hxFBHZRwuwxiE3OpvQ1buM+Zi/3t5YYP8spi76C7XEMFLsIj58OznEY
-         4N5UpCixUalSp1XhCyxZBEB6mZGRUrtLaIrf64KnAzIuheHpbRK4L82j9/n0aDKfkqXF
-         TC9w==
+        bh=aUy2L+59XSB2dO0W6jnqgQpUaRtZ0LvR6wu2Q9qABCw=;
+        b=lLoeraVhBlUS7fu0JC3aWUId7baQCUUhU5Q/3Apx3QHyA1OBLKyXFdK21jE+U8tnvD
+         H0277KYTdJjigVdlgVzs1bHqAff18Q4aQxYSSFT8Z5wfH7VVdq8QJDSkOL8FQVnBc2Zj
+         uYTXgiP8LsbHTHRHciJesZmKbRAkioWXG+A7i5wVOjVyUT40z2192JFObEW1mSkVsH3q
+         4q2GSamKl5/TvZ5SfenBZugW4nw0yaQoS3wy3fwzm6uyR8w7RMsrLqRxN8eTBr7RdHjz
+         tYO7n7zq+nWmYagyHJQRIqFeJAMtQl9xcaE7l+dGo6uw9MUvyAdTAlnykaMuVPkOYdx9
+         lEtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739359393; x=1739964193;
+        d=1e100.net; s=20230601; t=1739359395; x=1739964195;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yplTGeg8q5Jb1IHX+lZzUxdHnSw+Ki6MseFOXEsgMb4=;
-        b=jsWrtZIdr/wwjbArRJf1UtGd8ADQ0QsO5KbEu8uCLbvKOSCTxd9bEWtEp4S769SyAi
-         UE31eTjTh672OXOQLneFQFm41KUz6I1YOrjOGyuHiIySGZzlOqii7n6Chq8YFZahArn/
-         FP9id5MduQ13jFSyT5LaBgCAytT36aB9Ch3sfbS/5UvkSJmkMfEu3pmzI681gn+p+Ezf
-         V8kksfz/9VryGg8vt4I2AA8ISQBx7hKos9Ba4NnF0kulHu3ZpE/jLDzq+mp4ugNfodhQ
-         Dw0wMFrnSVAAPtcSC+vZFAKvAqZSDZhj/c4bMo5UYredw4KhstB6ex1aMz1JMFvibQIj
-         eQZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWKR+kLAoKbDFTYffzfZix1R2GLP6h6PFH4ukzUr24d54+RV+6lCmNkAtkSVU5IOitoCmi3ujvt0kACRc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2dVJ/XJoQ+J75uy16u+fvH8ViDAljPjMgDScXSLdT0qNa5GAw
-	OkT1mQKaQ6oTEqiSodaaehphfl3N3icKrOIH3v2qe1+fH6VEuNrWvVDMLjWFTWU=
-X-Gm-Gg: ASbGncsllI1AK1d4Jl/i2YBOJ2r65TomFkcK3Fx4mmof3ERcZ0kRZsRSbJwZ6WxaCzg
-	FAnBbWdKxmg0r+Ko5cyupTWdDu0a+BQbzLMCx0FFsnPlDxwLyVms4RKXx+nnw4uzhWJKqB4n0bg
-	3lPxc85ULs4S8bktaNCiZcP2YHP4/046CBRO/gBunJE4oNUqXE3dmW/dmUTbtb5d//F4F6FwfId
-	4L/GT3kak5AFZPYNB+/lEENvEv97Y4E59ZXMQVuNyAnufkbP36Ap1Joza1Fzz2oBzOyuRvsWDOR
-	TvYdr9fPz+mxZ6e/ZnY0aAkjkQ==
-X-Google-Smtp-Source: AGHT+IEaYca91uWTU7cyiSHpPYPrfctGa1tgN1r2xzyJA7Zpo1TE5CUGZf48fi1/xqnUPpwUa4Slpw==
-X-Received: by 2002:a2e:2206:0:b0:308:eb34:101e with SMTP id 38308e7fff4ca-30903911e32mr7352541fa.29.1739359393267;
-        Wed, 12 Feb 2025 03:23:13 -0800 (PST)
+        bh=aUy2L+59XSB2dO0W6jnqgQpUaRtZ0LvR6wu2Q9qABCw=;
+        b=bERlE8Dq7mM6N0y1CsSPpO8HYSOvbrYpmp48uLZOL4zifdEVRoAa7zAQS+juGaEYZ6
+         MUEvlGFMvSTnsID3nbS8NVZLh33NSrfkWBFpaLvU3vJ11uuQBk7/uD5CCBGhrnMdWEE0
+         DAC8LR6ArIyuSuYs1b8qMO47VVCRLwydvmhRXG6QdQGW67Wch9FfG7EbcjlFlXI2aUeG
+         e6SBA0ExovVh0y2SrzT27jQ1gHQshrARD/1/yh3SVS69lwXYcG0KDGsJyVNrTMTgqhJH
+         egEhXxPLkklKX9eT5h5QPpHUIv8H1Ovg+nLRvNtijf99zqYCnoqM4rZ1dHemDXf9mV/j
+         flyg==
+X-Forwarded-Encrypted: i=1; AJvYcCXAmgyTJfvuGuYQHAQpCxQgr+s31JLursIRSK7KFwXDMOhyjBCRQmCJSzP+VN1XkRkx8muno2iTUzkDdVY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylFUKCtArmCeTCN97WQM95q34m0pJprAnT3dIH38fs4ozVYuCw
+	qp2UO1AFIdFZU8SW/jV2y4L+aJx7JDrahchdHJxhBKaZn4GWcpl5fsZ8StCOsQg=
+X-Gm-Gg: ASbGncto6B0O/FcyaPQredujJv1dhoveX04tFI70pNLkOwgFN/MpsQTEv2kYfZ3f/F7
+	VtO9H9yzqx31D/dJwFZgzz+7x+NfF69Y6UgTQW0bV4otpsEri4oapYfJJ+JBN9PSqWcU7kAiZXO
+	SPrYIyDciQQ1loZDCKoS5zdD6ClgWQLhDwfFqH1FvR/omA1Vb4FND6xho3k6jH5+kbT/i8GHBVh
+	lMI5YVOBqhlenFQjpFP01Fq8CVwhcPvvB++lkSdjWIggjWazrvfUvlznAJdPVna6NBf5d2nSPYR
+	Yd6u0ZivGHiHFoEvkKw98XKYMQ==
+X-Google-Smtp-Source: AGHT+IHZJ/tBIMRwnLsYcu+g9QAXHEyBK/NodAzDXyRtpuVQmFBcjHxeJrEL5OicySIl+6hJ7MT1qQ==
+X-Received: by 2002:a05:651c:895:b0:308:efa4:d27f with SMTP id 38308e7fff4ca-30904fc98f2mr9827531fa.2.1739359395534;
+        Wed, 12 Feb 2025 03:23:15 -0800 (PST)
 Received: from [192.168.1.140] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de1a6531sm18310511fa.45.2025.02.12.03.23.12
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de1a6531sm18310511fa.45.2025.02.12.03.23.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 03:23:12 -0800 (PST)
+        Wed, 12 Feb 2025 03:23:15 -0800 (PST)
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 12 Feb 2025 12:23:01 +0100
-Subject: [PATCH v4 07/31] ARM: entry: Rewrite two asm calls in C
+Date: Wed, 12 Feb 2025 12:23:03 +0100
+Subject: [PATCH v4 09/31] ARM: entry: save the syscall sp in thread_info
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250212-arm-generic-entry-v4-7-a457ff0a61d6@linaro.org>
+Message-Id: <20250212-arm-generic-entry-v4-9-a457ff0a61d6@linaro.org>
 References: <20250212-arm-generic-entry-v4-0-a457ff0a61d6@linaro.org>
 In-Reply-To: <20250212-arm-generic-entry-v4-0-a457ff0a61d6@linaro.org>
 To: Dmitry Vyukov <dvyukov@google.com>, Oleg Nesterov <oleg@redhat.com>, 
@@ -82,119 +82,88 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  Linus Walleij <linus.walleij@linaro.org>
 X-Mailer: b4 0.14.2
 
-The normal and trace entry code calls out to arm_syscall()
-and sys_ni_syscall() from assembly, but these calls can
-be moved over to the new C implementation.
+We are going to rewrite the syscall handling in C, which
+means that the stack used by the call code is no longer
+predicatably 8 bytes (for syscall arguments r4 and r5)
+but a varying number of bytes depending on how nested the
+C code is.
+
+However the current code is just assuming it can rewind
+the stack by adding 8 to sp if a syscall is interrupted by
+a sigreturn call.
+
+Solve this by storing the entry sp in the per-task
+struct thread_info and use that in the sigreturn wrapper
+instead. We already have the thread info available in
+the SWI entry and sigreturn is probably not so common
+that retrieveing a pointer to thread_info should affect
+anything very much.
+
+Storing this per-task in thread_info makes the solution
+SMP robust.
 
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/include/asm/traps.h   |  2 +-
- arch/arm/kernel/entry-common.S | 23 +++++------------------
- arch/arm/kernel/syscall.c      | 13 +++++++++++--
- arch/arm/kernel/traps.c        |  2 +-
- 4 files changed, 18 insertions(+), 22 deletions(-)
+ arch/arm/include/asm/thread_info.h | 1 +
+ arch/arm/kernel/asm-offsets.c      | 1 +
+ arch/arm/kernel/entry-common.S     | 8 ++++++--
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/include/asm/traps.h b/arch/arm/include/asm/traps.h
-index 2621b9fb9b19b064aa40a8ab4a3a89067b98a010..b888912c2450e0e8eec8139166c7292f283545c7 100644
---- a/arch/arm/include/asm/traps.h
-+++ b/arch/arm/include/asm/traps.h
-@@ -40,7 +40,7 @@ asmlinkage void dump_backtrace_stm(u32 *stack, u32 instruction, const char *logl
- asmlinkage void do_undefinstr(struct pt_regs *regs);
- asmlinkage void handle_fiq_as_nmi(struct pt_regs *regs);
- asmlinkage void bad_mode(struct pt_regs *regs, int reason);
--asmlinkage int arm_syscall(int no, struct pt_regs *regs);
-+int arm_syscall(int no, struct pt_regs *regs);
- asmlinkage void baddataabort(int code, unsigned long instr, struct pt_regs *regs);
- asmlinkage void __div0(void);
- asmlinkage void handle_bad_stack(struct pt_regs *regs);
+diff --git a/arch/arm/include/asm/thread_info.h b/arch/arm/include/asm/thread_info.h
+index 943ffcf069d29cf4a035964d20d56f7ebdd6d602..d8a45c5a10496aaf806bfeaa0353d5e8985bd6f5 100644
+--- a/arch/arm/include/asm/thread_info.h
++++ b/arch/arm/include/asm/thread_info.h
+@@ -67,6 +67,7 @@ struct thread_info {
+ 	__u32			cpu_domain;	/* cpu domain */
+ 	struct cpu_context_save	cpu_context;	/* cpu context */
+ 	__u32			abi_syscall;	/* ABI type and syscall nr */
++	__u32			sp_syscall;	/* SP when entering syscall */
+ 	unsigned long		tp_value[2];	/* TLS registers */
+ 	union fp_state		fpstate __attribute__((aligned(8)));
+ 	union vfp_state		vfpstate;
+diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
+index 4853875740d0fe61c6bbc32ddd9a16fa8d1fb530..c9525cbb26b73827821aa746030e56b037f49556 100644
+--- a/arch/arm/kernel/asm-offsets.c
++++ b/arch/arm/kernel/asm-offsets.c
+@@ -49,6 +49,7 @@ int main(void)
+   DEFINE(TI_CPU_DOMAIN,		offsetof(struct thread_info, cpu_domain));
+   DEFINE(TI_CPU_SAVE,		offsetof(struct thread_info, cpu_context));
+   DEFINE(TI_ABI_SYSCALL,	offsetof(struct thread_info, abi_syscall));
++  DEFINE(TI_SP_SYSCALL,		offsetof(struct thread_info, sp_syscall));
+   DEFINE(TI_TP_VALUE,		offsetof(struct thread_info, tp_value));
+   DEFINE(TI_FPSTATE,		offsetof(struct thread_info, fpstate));
+ #ifdef CONFIG_VFP
 diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
-index 57aa1084a0476e9c218cd100ce4fdf4aaa748234..77801d039b5f6562b231a6fd4979e318c7e736a6 100644
+index 3cfc6d952ff99be9c4c1be4481ac3039260e3e57..8baab7f97f59c434396f30b08ddd3029c5f9c0e5 100644
 --- a/arch/arm/kernel/entry-common.S
 +++ b/arch/arm/kernel/entry-common.S
-@@ -264,18 +264,10 @@ ENTRY(vector_swi)
- 	mov	r0, tbl
- 	/* r1 already contains regs */
- 	mov	r2, scno			@ syscall number from r7
--	badr	r3, __ret_fast_syscall
--	bl 	invoke_syscall
--
--	/* Restore regs into r1 and lr after C call */
-+	/* We return here no matter what, also pass this as an argument */
- 	badr	lr, __ret_fast_syscall
--	add	r1, sp, #S_OFF
--
--2:	cmp	scno, #(__ARM_NR_BASE - __NR_SYSCALL_BASE)
--	eor	r0, scno, #__NR_SYSCALL_BASE	@ put OS number back
--	bcs	arm_syscall
--	mov	why, #0				@ no longer a real syscall
--	b	sys_ni_syscall			@ not private func
-+	mov	r3, lr
-+	b 	invoke_syscall
+@@ -232,6 +232,8 @@ ENTRY(vector_swi)
  
- #if defined(CONFIG_OABI_COMPAT) || !defined(CONFIG_AEABI)
- 	/*
-@@ -308,13 +300,8 @@ __sys_trace:
- 	mov	r0, tbl
- 	badr	r3, __sys_trace_return
- 	bl	invoke_syscall_trace
--
--	/* Restore regs into r1 and lr after C call */
--	add	r1, sp, #S_R0 + S_OFF		@ pointer to regs
--	badr	lr, __sys_trace_return
--
--	cmp	scno, #-1			@ skip the syscall?
--	bne	2b
-+	cmp	r0, #-1
-+	bne	__sys_trace_return
- 	add	sp, sp, #S_OFF			@ restore stack
+ 	uaccess_disable tbl
+ 	get_thread_info tsk
++	/* Save a per-task copy of SP for sigreturn */
++	str	sp, [tsk, #TI_SP_SYSCALL]
  
- __sys_trace_return_nosave:
-diff --git a/arch/arm/kernel/syscall.c b/arch/arm/kernel/syscall.c
-index edc0ac88ec60ce3f23149a526de7dc1205906552..d637dc74b1c70415933898fbcadbedc71df5f654 100644
---- a/arch/arm/kernel/syscall.c
-+++ b/arch/arm/kernel/syscall.c
-@@ -12,7 +12,10 @@ __visible int invoke_syscall(void *table, struct pt_regs *regs, int scno, void *
- 		/* Doing this with return makes sure the stack gets pop:ed */
- 		return invoke_syscall_asm(table, regs, scno, retp);
+ 	adr	tbl, sys_call_table		@ load syscall table pointer
  
--	return 0;
-+	if (scno >= __ARM_NR_BASE)
-+		return arm_syscall(scno, regs);
-+
-+	return sys_ni_syscall();
- }
+@@ -377,13 +379,15 @@ sys_syscall:
+ ENDPROC(sys_syscall)
  
- int invoke_syscall_trace_asm(void *table, struct pt_regs *regs, int scno, void *retp);
-@@ -20,9 +23,15 @@ __ADDRESSABLE(invoke_syscall_trace_asm);
+ sys_sigreturn_wrapper:
+-		add	r0, sp, #S_OFF
++		get_thread_info tsk
++		ldr	r0, [tsk, #TI_SP_SYSCALL]	@ read back SP
+ 		mov	why, #0		@ prevent syscall restart handling
+ 		b	sys_sigreturn
+ ENDPROC(sys_sigreturn_wrapper)
  
- __visible int invoke_syscall_trace(void *table, struct pt_regs *regs, int scno, void *retp)
- {
-+	if (scno == -1)
-+		return -1;
-+
- 	if (scno < NR_syscalls)
- 		/* Doing this with return makes sure the stack gets pop:ed */
- 		return invoke_syscall_trace_asm(table, regs, scno, retp);
- 
--	return 0;
-+	if (scno >= __ARM_NR_BASE)
-+		return arm_syscall(scno, regs);
-+
-+	return sys_ni_syscall();
- }
-diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
-index 6ea645939573fb65ed36f5435a9c94e98828f45b..942c77767919466d5b89d83d8eb77032b119473e 100644
---- a/arch/arm/kernel/traps.c
-+++ b/arch/arm/kernel/traps.c
-@@ -609,7 +609,7 @@ do_cache_op(unsigned long start, unsigned long end, int flags)
-  *  0x9f0000 - 0x9fffff are some more esoteric system calls
-  */
- #define NR(x) ((__ARM_NR_##x) - __ARM_NR_BASE)
--asmlinkage int arm_syscall(int no, struct pt_regs *regs)
-+int arm_syscall(int no, struct pt_regs *regs)
- {
- 	if ((no >> 16) != (__ARM_NR_BASE>> 16))
- 		return bad_syscall(no, regs);
+ sys_rt_sigreturn_wrapper:
+-		add	r0, sp, #S_OFF
++		get_thread_info tsk
++		ldr	r0, [tsk, #TI_SP_SYSCALL]	@ read back SP
+ 		mov	why, #0		@ prevent syscall restart handling
+ 		b	sys_rt_sigreturn
+ ENDPROC(sys_rt_sigreturn_wrapper)
 
 -- 
 2.48.1
