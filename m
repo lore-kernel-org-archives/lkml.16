@@ -1,185 +1,146 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38AF1DB12C;
-	Wed, 12 Feb 2025 05:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA231DB12C;
+	Wed, 12 Feb 2025 05:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739337761; cv=none; b=PCITLdJtrQCpi3JcTKSILsT0n6tpVjR2FIqq1jrZXwvZlZzMC78Um3grbtpTmquN5P8tm3+hov4XpMrrvA8/CgG0/zZ06OdaNFmQZqZjhih3EJCsH/VRCyItKqugK2A5rV1W+pAPridfyXSCJ/wOajxBYQcYr8AYzi3UQxhMWEI=
+	t=1739337846; cv=none; b=mUp3BkFXiM5mxAp4zyvnk9EFD4elhWaPB4M0ZslF3Y1kJ2Iapn0n39k4PXowE7a4knMBplBBs2R3MjOEMtTt0Yoc0xs5n6GPULD+DsuWqKh/lJ1zVqxOlDm7BBFkCbRWJn8dhJhx11vAt0ExaePRxvCYwEymBa9gGXpuF3l0xms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739337761; c=relaxed/simple;
-	bh=foq2SrGu35ckWh0uM/JlM2by4URihd4ahZVdTGyxbKA=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=PpodzZIGNm6NjkuJ7wJVoJ/SujX+cTL58EqNrkPxNyqHf09V1RdQRcUbgp0GqENTn7RJdatg26UAlzEGf6yKwr+uLuNLQcO9PtMY7nRUbaz9X7iy4G4ovvr230DKVu5qLM/lUZitbgZeFRaO7OcqCzWHB/8aiNufVR1OIG0nzH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=e1pSSxNt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KRkXJYZR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=e1pSSxNt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KRkXJYZR; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1739337846; c=relaxed/simple;
+	bh=dHrGo3MQlhcb+bCCsVoydXD2nFxFqQhq9MWMEMJtsf0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OVD8uMQPirrgX3SemgmRDvb6J6v565qP35C/CWM5ppGV4Qx61Zn6A9ZKVT/uLhSyKCIPyurERfoDP0ijmUmcNLeKH+/XideMyPzqN84PgkfJZccCB0iZRfz2q5Z3sNxHjZDbK96Nt9UXGshHYwvUrs759qX3j18ZAwBoSw3E5DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAo1JDSa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="e1pSSxNt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KRkXJYZR";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="e1pSSxNt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KRkXJYZR"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C2E681FB8D;
-	Wed, 12 Feb 2025 05:22:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739337757; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9pMrhd8rIAPk1/Wb1h7GOo77FVMJ/Y+bI9/i18p9Eng=;
-	b=e1pSSxNt2lqENrRhC2t6NYbqcQkrLBfBUmyx+7RHHa4ZOfgv+hCUzakL3bRVTUkBVgMJKF
-	reWPLkF17hs86zjr6Uy1E5ErAw0c9dAiFmfaiGNdSJFSthI05U+YS1yl+LZ2fET4I+zO08
-	jeaDGxAzMb9Hew7iwOiqpya/kxEUZi8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739337757;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9pMrhd8rIAPk1/Wb1h7GOo77FVMJ/Y+bI9/i18p9Eng=;
-	b=KRkXJYZRP76cSPk+Z+xxOohOydAuF5he0FOxhjPTMlJK4xBz+Z3LDD2iL+8sQhovdz6hLH
-	Yla/1hLEDLA25MCw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739337757; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9pMrhd8rIAPk1/Wb1h7GOo77FVMJ/Y+bI9/i18p9Eng=;
-	b=e1pSSxNt2lqENrRhC2t6NYbqcQkrLBfBUmyx+7RHHa4ZOfgv+hCUzakL3bRVTUkBVgMJKF
-	reWPLkF17hs86zjr6Uy1E5ErAw0c9dAiFmfaiGNdSJFSthI05U+YS1yl+LZ2fET4I+zO08
-	jeaDGxAzMb9Hew7iwOiqpya/kxEUZi8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739337757;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9pMrhd8rIAPk1/Wb1h7GOo77FVMJ/Y+bI9/i18p9Eng=;
-	b=KRkXJYZRP76cSPk+Z+xxOohOydAuF5he0FOxhjPTMlJK4xBz+Z3LDD2iL+8sQhovdz6hLH
-	Yla/1hLEDLA25MCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1D59213707;
-	Wed, 12 Feb 2025 05:22:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jOhBMRowrGeDdwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 12 Feb 2025 05:22:34 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAo1JDSa"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4B44DC4CEDF;
+	Wed, 12 Feb 2025 05:24:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739337845;
+	bh=dHrGo3MQlhcb+bCCsVoydXD2nFxFqQhq9MWMEMJtsf0=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=uAo1JDSajDjOdGtARdCHKbr06rWf+WGgb//DbXcB3s1LusNEcxyg7K5TOlAB1uw/d
+	 6lGxLv7QB13j5Js/2Qn0rwlh9/62E7ARrV6rn3JRi3CaJcAI0/489PHF4sVA19fHGR
+	 ebfG4jEsngo2fsAcXIBjbl/YKfsOKJyZZU1i1L+f4jerFjKmnZ+IDe2E4iKibBNkCb
+	 ITrSNVgsOR2jcMIz6swONZ1cA3xrLHjOWaVKezIS1YN3nM1qibwpjTPtmqq1Q7l+8b
+	 pBTYUADUmrKyV15b0lwJNckaBWT4cYp1kROTvt3LCLw8zOSb2RyqTaZvkem/d+dlvg
+	 xfeGI57C8wRGQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FA0C02198;
+	Wed, 12 Feb 2025 05:24:05 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Subject: [PATCH v5 0/5] Pinctrl: Add Amlogic pinctrl driver
+Date: Wed, 12 Feb 2025 13:20:49 +0800
+Message-Id: <20250212-amlogic-pinctrl-v5-0-282bc2516804@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Jeff Layton" <jlayton@kernel.org>, "Dave Chinner" <david@fromorbit.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/19] VFS: introduce lookup_and_lock() and friends
-In-reply-to: <20250208231819.GR1977892@ZenIV>
-References: <>, <20250208231819.GR1977892@ZenIV>
-Date: Wed, 12 Feb 2025 16:22:16 +1100
-Message-id: <173933773664.22054.1727909798811618895@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALIvrGcC/3XPywrCMBAF0F8pWRvJTF7Vlf8hLtI0rQH7IC1FK
+ f1306JQCS7vMPcMM5PBBe8Gcs5mEtzkB9+1MchDRuzdtLWjvoyZIEMBCEBN8+hqb2nvWzuGB0V
+ 0RkGOrGQlia0+uMo/N/F6i/nuh7ELr+3ABOv0vzUBZVQA06g5lwCny2fjaLuGrNqEOwFVKmAUb
+ GmcQKN0oVUq8K8gGYBMBR4FLHLJlZDaFCYVxE5ATAWxfqG0LtBBXlXwKyzL8gaOnmPOdgEAAA=
+ =
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739337841; l=3760;
+ i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
+ bh=dHrGo3MQlhcb+bCCsVoydXD2nFxFqQhq9MWMEMJtsf0=;
+ b=48ehFmexr5yBzIpiugk/aBUy3SDD2ySYKaPSO1jH0djIjbkaZPDx5ja95qCF5cNLzEZ/H198f
+ +RjYNcMPgnMD4tKNn1OuOp6+DkWPuomKh+bYk3D6AceXOK+tVTjpcNj
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
+ auth_id=107
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 
-On Sun, 09 Feb 2025, Al Viro wrote:
-> On Fri, Feb 07, 2025 at 08:22:35PM +0000, Al Viro wrote:
-> > On Thu, Feb 06, 2025 at 04:42:45PM +1100, NeilBrown wrote:
-> > > lookup_and_lock() combines locking the directory and performing a lookup
-> > > prior to a change to the directory.
-> > > Abstracting this prepares for changing the locking requirements.
-> > >=20
-> > > done_lookup_and_lock() provides the inverse of putting the dentry and
-> > > unlocking.
-> > >=20
-> > > For "silly_rename" we will need to lookup_and_lock() in a directory that
-> > > is already locked.  For this purpose we add LOOKUP_PARENT_LOCKED.
-> >=20
-> > Ewww...  I do realize that such things might appear in intermediate
-> > stages of locking massage, but they'd better be _GONE_ by the end of it.
-> > Conditional locking of that sort is really asking for trouble.
-> >=20
-> > If nothing else, better split the function in two variants and document
-> > the differences; that kind of stuff really does not belong in arguments.
-> > If you need it to exist through the series, that is - if not, you should
-> > just leave lookup_one_qstr() for the "locked" case from the very beginnin=
-g.
->=20
-> The same, BTW, applies to more than LOOKUP_PARENT_LOCKED part.
->=20
-> One general observation: if the locking behaviour of a function depends
-> upon the flags passed to it, it's going to cause massive headache afterward=
-s.
->=20
-> If you need to bother with data flow analysis to tell what given call will
-> do, expect trouble.
->=20
-> If anything, I would rather have separate lookup_for_removal(), etc., each
-> with its locking effects explicitly spelled out.  Incidentally, looking
+Add pinctrl driver support for Amloigc SoCs
 
-lookup_for_removal() etc would only be temporarily needed.  Eventually
-(I hope) we would get to a place where all filesystems support all
-operations with only a shared lock.  When we get there,
-lookup_for_remove() and lookup_for_create() would be identical again.
+Base on the previous discussion,
+https://lore.kernel.org/r/20241113-a4_pinctrl-v6-0-35ba2401ee35@amlogic.com
+The existed meson driver failed to meet the requirement of the current dt-binding.
+So we start this new pinctrl driver to solve problem.
 
-And the difference wouldn't be that one takes a shared lock and the
-other takes an exclusive lock.  It would be that one takes a shared or
-exclusive lock based on flag X stored somewhere (inode, inode_operations,
-...) while the other takes a shared or exclusive lock based on flag Y.
+The advantage of this version: Once the source file and binding document
+are added, adding dts node will be only operation for subsequent Amlogic SoCs
+(such as A4, A5).
 
-It would be nice to be able to accelerate that and push the locking down
-into the filesystems call at once as Linus suggested last time:
+The code in DTS file is also readable when using GPIO, as below:
+reset-gpios = <&gpiob 6 GPIO_ACTIVE_LOW>;
 
-https://lore.kernel.org/all/CAHk-=3Dwhz69y=3D98udgGB5ujH6bapYuapwfHS2esWaFrKE=
-oi9-Ow@mail.gmail.com/
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+Changes in v5:
+- Some little modifications were made to bindings and dts according to Rob's suggestions.
+- Move source file into driver/pinctrl/meson and fix license issue.
+- Link to v4: https://lore.kernel.org/r/20250122-amlogic-pinctrl-v4-0-4677b2e18ff1@amlogic.com
 
-That would require either adding a new rwsem to each inode, possibly in
-the filesystem-private part of the inode, or changing VFS to not lock
-the inode at all.  The first would be unwelcome by fs developers I
-expect, the second would be a serious challenge.  I started thinking
-about and quickly decided I had enough challenges already.
+Changes in v4:
+- Drop bank-number property, and get information from gpio-ranges property.
+- Keep required of pinctrol after patternProperties, and add missing "ranges" for required.
+- Add required(pinmux) of function.
+- Keep address-cells and size-cells property values, because:
+  Previously only represented a register address offset value, now directly represents a register, through 'ranges" which to represent.
+- Some little modifications were made to bindings and dts according to Krzysztof's suggestions.
+- Link to v3: https://lore.kernel.org/r/20250115-amlogic-pinctrl-v3-0-2b8536457aba@amlogic.com
 
-So I think we need some way for the VFS to determine and select the lock
-type requires by the filesystem.  Christian suggested a flag in
-inode_operations and think that is a good idea.  I originally suggested
-a flag in the superblock, but Linus suggested different operations might
-want different locking (same email linked above).
+Changes in v3:
+- Move reg and reg-name from pin controller node into gpio-controller node and drop mask property.
+- Use gpio-range instead of ngpios property.
+- Some little modifications were made to bindings according to Rob's suggestions.
+- Fix bug reported by kernel test robot.
+- Two pin controller node compressed into one because of register address defined in gpio-controller.
+- Link to v2: https://lore.kernel.org/r/20241226-amlogic-pinctrl-v2-0-cdae42a67b76@amlogic.com
 
-But I don't think we can get away without having conditional locking
-(like we already do in open_last_lookup() depending on O_CREAT).
+Changes in v2:
+- Some modifications and optimizations were made to bindings according to Rob's suggestions.
+- Refined some details on functions node for bindings. 
+- Some source code optimizations were made according to Linus's suggestions.
+- Add stand API to generic to deal pinmux propertity.
+- Add private reg data to deal with for future SoCs.
+- Simplified some unused processing (previously used for extension).
+- Sync add to MAINTAINERS files.
+- Link to v1: https://lore.kernel.org/r/20241211-amlogic-pinctrl-v1-0-410727335119@amlogic.com
 
-Thanks,
-NeilBrown
+---
+Xianwei Zhao (5):
+      dt-bindings: pinctrl: Add support for Amlogic A4 SoC
+      pinctrl: pinconf-generic: Add API for pinmux propertity in DTS file
+      pinctrl: Add driver support for Amlogic SoCs
+      arm64: dts: amlogic: a4: add pinctrl node
+      MAINTAINERS: Add an entry for Amlogic pinctrl driver
+
+ .../bindings/pinctrl/amlogic,pinctrl-a4.yaml       |  126 +++
+ MAINTAINERS                                        |    8 +
+ arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        |  120 +++
+ drivers/pinctrl/meson/Kconfig                      |   11 +
+ drivers/pinctrl/meson/Makefile                     |    1 +
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c         | 1053 ++++++++++++++++++++
+ drivers/pinctrl/pinconf-generic.c                  |  130 +++
+ drivers/pinctrl/pinconf.h                          |    4 +
+ include/dt-bindings/pinctrl/amlogic,pinctrl.h      |   46 +
+ include/linux/pinctrl/pinconf-generic.h            |    4 +
+ 10 files changed, 1503 insertions(+)
+---
+base-commit: 4de5110762b94b9978fb8182a568572fb2194f8b
+change-id: 20241211-amlogic-pinctrl-22ea61820d0d
+
+Best regards,
+-- 
+Xianwei Zhao <xianwei.zhao@amlogic.com>
+
+
