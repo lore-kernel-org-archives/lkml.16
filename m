@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D5F21B1BE;
-	Wed, 12 Feb 2025 15:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF6424CEDA;
+	Wed, 12 Feb 2025 15:48:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739375300; cv=none; b=TWIIZiWvH6BwJjJzR9C4C9/xfj0jK3SHCD/RJNYx7FbQqGG/fSRT9D4fu1vsS7cr2pH1pT3tNuksOWYsoIeR46DCh3HH6vHJnZI45K4IQ7ZwvGtCZpTq7OAURTKtgNgEdeZkuYn3PowyTw5Qz0cn/kImE2g9gzhx7Bez4sfVr08=
+	t=1739375301; cv=none; b=bPIz1PQ5y5OqYZk5s/YpsHoo+w3E5f5nuKx/OglKrHSwKvZy90bYnN1fUjGKnBfTXCNrvdVsv31mU3xMKqrrTxsq6CEcbqGIUbf4pWhmiFBF1mjQvXtgTBMT0fs5qyNPRDPV1f7CRcmz/Gh4oEMatDbSd8s1O0l7//m/Uma8ZrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739375300; c=relaxed/simple;
-	bh=jGTcO7uOKoo9Sew7/PnGEbprmSHHDRcuUgN9YyNsgpk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UfwoJYS2YqxPdVKHssJeJAvQXwUt9JD0g6sZKv1bQw2n770VrKmq8upBOpBAYBlhUk6dmW+Vl4gTgZRJ94q+ngHLybG5D+KLIS9DSjDSi2Qe36heIhJCErj5MSOyu4fSvKrYcw5/7SjuP0dxWElWPe2L4pzJWWk3Dgps2Ktyqm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpKfe7nh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739375301; c=relaxed/simple;
+	bh=E1JSCgjVviBxxpgC3OgCVP2YBiwy9pc5amnOz8Sv1Do=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZfUE/oiSrP8G+dn70u6PsBFKzIKOsJtssTX5l7tphsBzVCChGzursS/i0JKjQiceXPx33BBOa2fEDzWUkppbNkk3bP0jxuQVE3VAPhJAxE26NhWLxKIDE7SlGusDhDkja5ANgfaZuR2jk63j7owTP7OgTXVOl7tdSdHjG+UFAss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sn30lqjk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpKfe7nh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFE85C4CEDF;
-	Wed, 12 Feb 2025 15:48:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sn30lqjk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF6FCC4CEE7;
+	Wed, 12 Feb 2025 15:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739375299;
-	bh=jGTcO7uOKoo9Sew7/PnGEbprmSHHDRcuUgN9YyNsgpk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LpKfe7nhCwi7G2IBXWHGfrifPCjdBtpx5STvudjspOxexJrzMWCekZRcSy+b9Vbp+
-	 q23nMNet1qLz58BEZ7ZJD8Od5x3hBDTSM3JPm7qU44xp3eGoyc8iDo8CdUcyssUwv7
-	 ucT4r7Gg/OrMxzjjmuKXivISpXYBEXztV/dyfH5UdVJmNLRpjs2QZFPCXKxPg/2m73
-	 xaoF0NsbIXnwxVpu9Gejxt/KRvD6osrOClBaVLbZMUK3VuGKQtBnT+vx7JNinCz6ks
-	 qTQj4l3I4sNeubtfDCs5JH0CeW6fK+HH1wJC3P4sDY2e7e90cBJ+tkB6i1nnKWrFL1
-	 WIc/dou+/Dh1w==
+	s=k20201202; t=1739375300;
+	bh=E1JSCgjVviBxxpgC3OgCVP2YBiwy9pc5amnOz8Sv1Do=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Sn30lqjkFktFPbyPCuerQWmWuxoD2pojMAV7+VlEfStvMVGYKhZg/G+UxeUW9rYsg
+	 cIQGwD2znjX103mKqtB3Ed9LeANq7sJYLVu+uhKESktUk/EsRohgycYppx+nJdKfFi
+	 1N584SuBXwz7pvwhdHMaAv538h2Yhk3etwrshqHD/T6/dPF6Q9eWuRjt9yPNW1f+p8
+	 aS6pjsMoT7zoyiPatpu/NiXCR/Hx2CVgBYAsIQoU4XXmi3p75aq1aC9Afdr/zqkPpO
+	 KhUn6dQ0bm7RftAT6/70CC0kASx4R3SzW066atMJ9Xh3rwyPnxMBxKPzP34oqWRvRy
+	 5Elz/s8rnmcOw==
 From: Eric Biggers <ebiggers@kernel.org>
 To: fsverity@lists.linux.dev
 Cc: linux-crypto@vger.kernel.org,
@@ -39,10 +40,12 @@ Cc: linux-crypto@vger.kernel.org,
 	Mike Snitzer <snitzer@kernel.org>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Mikulas Patocka <mpatocka@redhat.com>
-Subject: [PATCH v8 0/7] Optimize dm-verity and fsverity using multibuffer hashing
-Date: Wed, 12 Feb 2025 07:47:11 -0800
-Message-ID: <20250212154718.44255-1-ebiggers@kernel.org>
+Subject: [PATCH v8 2/7] crypto: testmgr - add tests for finup_mb
+Date: Wed, 12 Feb 2025 07:47:13 -0800
+Message-ID: <20250212154718.44255-3-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250212154718.44255-1-ebiggers@kernel.org>
+References: <20250212154718.44255-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,122 +54,193 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-[ This patchset keeps getting rejected by Herbert, who prefers a
-  complex, buggy, and slow alternative that shoehorns CPU-based hashing
-  into the asynchronous hash API which is designed for off-CPU offload:
-  https://lore.kernel.org/linux-crypto/cover.1730021644.git.herbert@gondor.apana.org.au/
-  This patchset is a much better way to do it though, and I've already
-  been maintaining it downstream as it would not be reasonable to go the
-  asynchronous hash route instead.  Let me know if there are any
-  objections to me taking this patchset through the fsverity tree, or at
-  least patches 1-5 as the dm-verity patches could go in separately. ]
+From: Eric Biggers <ebiggers@google.com>
 
-[ This patchset applies to v6.14-rc2 ]
+Update the shash self-tests to test the new finup_mb method when
+CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y.
 
-On many modern CPUs, it is possible to compute the SHA-256 hash of two
-equal-length messages in about the same time as a single message, if all
-the instructions are interleaved.  This is because each SHA-256 (and
-also most other cryptographic hash functions) is inherently serialized
-and therefore can't always take advantage of the CPU's full throughput.
+Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ crypto/testmgr.c | 73 +++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 66 insertions(+), 7 deletions(-)
 
-An earlier attempt to support multibuffer hashing in Linux was based
-around the ahash API.  That approach had some major issues, as does the
-alternative ahash-based approach proposed by Herbert (e.g. see my
-responses at
-https://lore.kernel.org/linux-crypto/20240610164258.GA3269@sol.localdomain/
-and
-https://lore.kernel.org/linux-crypto/20241028190045.GA1408@sol.localdomain/,
-and the other discussion on v4
-https://lore.kernel.org/linux-crypto/20240603183731.108986-1-ebiggers@kernel.org/T/#t)
-This patchset instead takes a much simpler approach of just adding a
-synchronous API for hashing equal-length messages.
-
-This works well for dm-verity and fsverity, which use Merkle trees and
-therefore hash large numbers of equal-length messages.
-
-This patchset is organized as follows:
-
-- Patch 1-2 add crypto_shash_finup_mb() and tests for it.
-- Patch 3-4 implement finup_mb on x86_64 and arm64, using an
-  interleaving factor of 2.
-- Patch 5 adds multibuffer hashing support to fsverity.
-- Patch 6-7 add multibuffer hashing support to dm-verity.
-
-This patchset increases raw SHA-256 hashing throughput by up to 98%,
-depending on the CPU (see patches for per-CPU results).  The throughput
-of cold-cache reads from dm-verity and fsverity increases by around 35%.
-
-Changed in v8:
-  - Rebased onto v6.14-rc2 and updated cover letter.
-
-Changed in v7:
-  - Rebased onto v6.12-rc1 and dropped patches that were upstreamed.
-  - Added performance results for more CPUs.
-
-Changed in v6:
-  - All patches: added Reviewed-by and Acked-by tags
-  - "crypto: testmgr - add tests for finup_mb": Whitespace fix
-  - "crypto: testmgr - generate power-of-2 lengths more often":
-    Fixed undefined behavior
-  - "fsverity: improve performance by using multibuffer hashing":
-    Simplified a comment
-  - "dm-verity: reduce scope of real and wanted digests":
-    Fixed mention of nonexistent function in commit message
-  - "dm-verity: improve performance by using multibuffer hashing":
-    Two small optimizations, and simplified a comment
-
-Changed in v5:
-  - Reworked the dm-verity patches again.  Split the preparation work
-    into separate patches, fixed two bugs, and added some new cleanups.
-  - Other small cleanups
-
-Changed in v4:
-  - Reorganized the fsverity and dm-verity code to have a unified code
-    path for single-block vs. multi-block processing.  For data blocks
-    they now use only crypto_shash_finup_mb().
-
-Changed in v3:
-  - Change API from finup2x to finup_mb.  It now takes arrays of data
-    buffer and output buffers, avoiding hardcoding 2x in the API.
-
-Changed in v2:
-  - Rebase onto cryptodev/master
-  - Add more comments to assembly
-  - Reorganize some of the assembly slightly
-  - Fix the claimed throughput improvement on arm64
-  - Fix incorrect kunmap order in fs/verity/verify.c
-  - Adjust testmgr generation logic slightly
-  - Explicitly check for INT_MAX before casting unsigned int to int
-  - Mention SHA3 based parallel hashes
-  - Mention AVX512-based approach
-
-Eric Biggers (7):
-  crypto: shash - add support for finup_mb
-  crypto: testmgr - add tests for finup_mb
-  crypto: x86/sha256-ni - add support for finup_mb
-  crypto: arm64/sha256-ce - add support for finup_mb
-  fsverity: improve performance by using multibuffer hashing
-  dm-verity: reduce scope of real and wanted digests
-  dm-verity: improve performance by using multibuffer hashing
-
- arch/arm64/crypto/sha2-ce-core.S    | 281 ++++++++++++++++++++-
- arch/arm64/crypto/sha2-ce-glue.c    |  40 +++
- arch/x86/crypto/sha256_ni_asm.S     | 368 ++++++++++++++++++++++++++++
- arch/x86/crypto/sha256_ssse3_glue.c |  39 +++
- crypto/shash.c                      |  58 +++++
- crypto/testmgr.c                    |  73 +++++-
- drivers/md/dm-verity-fec.c          |  19 +-
- drivers/md/dm-verity-fec.h          |   5 +-
- drivers/md/dm-verity-target.c       | 192 +++++++++++----
- drivers/md/dm-verity.h              |  34 +--
- fs/verity/fsverity_private.h        |   7 +
- fs/verity/hash_algs.c               |   8 +-
- fs/verity/verify.c                  | 169 ++++++++++---
- include/crypto/hash.h               |  52 +++-
- 14 files changed, 1224 insertions(+), 121 deletions(-)
-
-
-base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index e61490ba40958..6c8b4bd700a8a 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -234,10 +234,11 @@ enum flush_type {
+ 
+ /* finalization function for hash algorithms */
+ enum finalization_type {
+ 	FINALIZATION_TYPE_FINAL,	/* use final() */
+ 	FINALIZATION_TYPE_FINUP,	/* use finup() */
++	FINALIZATION_TYPE_FINUP_MB,	/* use finup_mb() */
+ 	FINALIZATION_TYPE_DIGEST,	/* use digest() */
+ };
+ 
+ /*
+  * Whether the crypto operation will occur in-place, and if so whether the
+@@ -297,10 +298,14 @@ struct test_sg_division {
+  *				     the @iv_offset
+  * @key_offset: misalignment of the key, where 0 is default alignment
+  * @key_offset_relative_to_alignmask: if true, add the algorithm's alignmask to
+  *				      the @key_offset
+  * @finalization_type: what finalization function to use for hashes
++ * @multibuffer_index: random number used to generate the message index to use
++ *		       for finup_mb (when finup_mb is used).
++ * @multibuffer_count: random number used to generate the num_msgs parameter to
++ *		       finup_mb (when finup_mb is used).
+  * @nosimd: execute with SIMD disabled?  Requires !CRYPTO_TFM_REQ_MAY_SLEEP.
+  *	    This applies to the parts of the operation that aren't controlled
+  *	    individually by @nosimd_setkey or @src_divs[].nosimd.
+  * @nosimd_setkey: set the key (if applicable) with SIMD disabled?  Requires
+  *		   !CRYPTO_TFM_REQ_MAY_SLEEP.
+@@ -314,10 +319,12 @@ struct testvec_config {
+ 	unsigned int iv_offset;
+ 	unsigned int key_offset;
+ 	bool iv_offset_relative_to_alignmask;
+ 	bool key_offset_relative_to_alignmask;
+ 	enum finalization_type finalization_type;
++	unsigned int multibuffer_index;
++	unsigned int multibuffer_count;
+ 	bool nosimd;
+ 	bool nosimd_setkey;
+ };
+ 
+ #define TESTVEC_CONFIG_NAMELEN	192
+@@ -1129,19 +1136,27 @@ static void generate_random_testvec_config(struct rnd_state *rng,
+ 	if (prandom_bool(rng)) {
+ 		cfg->req_flags |= CRYPTO_TFM_REQ_MAY_SLEEP;
+ 		p += scnprintf(p, end - p, " may_sleep");
+ 	}
+ 
+-	switch (prandom_u32_below(rng, 4)) {
++	switch (prandom_u32_below(rng, 8)) {
+ 	case 0:
++	case 1:
+ 		cfg->finalization_type = FINALIZATION_TYPE_FINAL;
+ 		p += scnprintf(p, end - p, " use_final");
+ 		break;
+-	case 1:
++	case 2:
+ 		cfg->finalization_type = FINALIZATION_TYPE_FINUP;
+ 		p += scnprintf(p, end - p, " use_finup");
+ 		break;
++	case 3:
++	case 4:
++		cfg->finalization_type = FINALIZATION_TYPE_FINUP_MB;
++		cfg->multibuffer_index = prandom_u32_state(rng);
++		cfg->multibuffer_count = prandom_u32_state(rng);
++		p += scnprintf(p, end - p, " use_finup_mb");
++		break;
+ 	default:
+ 		cfg->finalization_type = FINALIZATION_TYPE_DIGEST;
+ 		p += scnprintf(p, end - p, " use_digest");
+ 		break;
+ 	}
+@@ -1296,10 +1311,37 @@ static inline int check_shash_op(const char *op, int err,
+ 		pr_err("alg: shash: %s %s() failed with err %d on test vector %s, cfg=\"%s\"\n",
+ 		       driver, op, err, vec_name, cfg->name);
+ 	return err;
+ }
+ 
++static int do_finup_mb(struct shash_desc *desc,
++		       const u8 *data, unsigned int len, u8 *result,
++		       const struct testvec_config *cfg,
++		       const struct test_sglist *tsgl)
++{
++	struct crypto_shash *tfm = desc->tfm;
++	const u8 *unused_data = tsgl->bufs[XBUFSIZE - 1];
++	u8 unused_result[HASH_MAX_DIGESTSIZE];
++	const u8 *datas[HASH_MAX_MB_MSGS];
++	u8 *outs[HASH_MAX_MB_MSGS];
++	unsigned int num_msgs;
++	unsigned int msg_idx;
++	unsigned int i;
++
++	num_msgs = 1 + (cfg->multibuffer_count % crypto_shash_mb_max_msgs(tfm));
++	if (WARN_ON_ONCE(num_msgs > HASH_MAX_MB_MSGS))
++		return -EINVAL;
++	msg_idx = cfg->multibuffer_index % num_msgs;
++	for (i = 0; i < num_msgs; i++) {
++		datas[i] = unused_data;
++		outs[i] = unused_result;
++	}
++	datas[msg_idx] = data;
++	outs[msg_idx] = result;
++	return crypto_shash_finup_mb(desc, datas, len, outs, num_msgs);
++}
++
+ /* Test one hash test vector in one configuration, using the shash API */
+ static int test_shash_vec_cfg(const struct hash_testvec *vec,
+ 			      const char *vec_name,
+ 			      const struct testvec_config *cfg,
+ 			      struct shash_desc *desc,
+@@ -1372,11 +1414,14 @@ static int test_shash_vec_cfg(const struct hash_testvec *vec,
+ 			return -EINVAL;
+ 		}
+ 		goto result_ready;
+ 	}
+ 
+-	/* Using init(), zero or more update(), then final() or finup() */
++	/*
++	 * Using init(), zero or more update(), then either final(), finup(), or
++	 * finup_mb().
++	 */
+ 
+ 	if (cfg->nosimd)
+ 		crypto_disable_simd_for_test();
+ 	err = crypto_shash_init(desc);
+ 	if (cfg->nosimd)
+@@ -1384,28 +1429,42 @@ static int test_shash_vec_cfg(const struct hash_testvec *vec,
+ 	err = check_shash_op("init", err, driver, vec_name, cfg);
+ 	if (err)
+ 		return err;
+ 
+ 	for (i = 0; i < tsgl->nents; i++) {
++		const u8 *data = sg_virt(&tsgl->sgl[i]);
++		unsigned int len = tsgl->sgl[i].length;
++
+ 		if (i + 1 == tsgl->nents &&
+ 		    cfg->finalization_type == FINALIZATION_TYPE_FINUP) {
+ 			if (divs[i]->nosimd)
+ 				crypto_disable_simd_for_test();
+-			err = crypto_shash_finup(desc, sg_virt(&tsgl->sgl[i]),
+-						 tsgl->sgl[i].length, result);
++			err = crypto_shash_finup(desc, data, len, result);
+ 			if (divs[i]->nosimd)
+ 				crypto_reenable_simd_for_test();
+ 			err = check_shash_op("finup", err, driver, vec_name,
+ 					     cfg);
+ 			if (err)
+ 				return err;
+ 			goto result_ready;
+ 		}
++		if (i + 1 == tsgl->nents &&
++		    cfg->finalization_type == FINALIZATION_TYPE_FINUP_MB) {
++			if (divs[i]->nosimd)
++				crypto_disable_simd_for_test();
++			err = do_finup_mb(desc, data, len, result, cfg, tsgl);
++			if (divs[i]->nosimd)
++				crypto_reenable_simd_for_test();
++			err = check_shash_op("finup_mb", err, driver, vec_name,
++					     cfg);
++			if (err)
++				return err;
++			goto result_ready;
++		}
+ 		if (divs[i]->nosimd)
+ 			crypto_disable_simd_for_test();
+-		err = crypto_shash_update(desc, sg_virt(&tsgl->sgl[i]),
+-					  tsgl->sgl[i].length);
++		err = crypto_shash_update(desc, data, len);
+ 		if (divs[i]->nosimd)
+ 			crypto_reenable_simd_for_test();
+ 		err = check_shash_op("update", err, driver, vec_name, cfg);
+ 		if (err)
+ 			return err;
 -- 
 2.48.1
 
