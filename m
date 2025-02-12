@@ -1,234 +1,143 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2068.outbound.protection.outlook.com [40.107.117.68])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96362202C26;
-	Wed, 12 Feb 2025 07:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739344545; cv=fail; b=mdTXNvHUQ7yg6pmdPPlsSIE+nz9x8Dr1bboBdRBLN2q3sffe/BSHdRKP5P2qJvI3xRTgjC/K88JQ0zlJDBt1+YSDmKMTS+9d6LgjBEelVFeMwO5pRaYx5JjU10K5JGIIAhLVUNLyYavoxRtr8/ilJ6NzIpp+/cn+N98b6W5eNj8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739344545; c=relaxed/simple;
-	bh=Zk3DoqduxtjJSU60Ndo/psC5gZzmvvsGEhNFMx0jcnY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Z8NaEQG+DZJH3mk+p7MKJYFojVUeimptYyj6OE0OUf7OfCNxzLLdf0rOrdtzple+5fClRnjMEjuIEmY1FZVhtpM8/BG4OwY7qYOFh6cWxRvfjsXyi4hpH0gl1z5WhfSdUS/03RTrioJ5qGXvge7vIB5XCeFJtI8GmBvadh69q58=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=HRFGSExh; arc=fail smtp.client-ip=40.107.117.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4157C1DD9AD;
+	Wed, 12 Feb 2025 07:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739344558; cv=none; b=C4bNXNMBbi1yEnZ36RYTnfPsffLfGpHHXZGqiaoeOy3FvxV0iA8SRM0UOKvchgh13IkUGpDVPU4ZDxs+Y9r/hCI3hqq7v8pGWtvbO9hkhf1O6236PTD9kW+fXxmX7VhtrEVanCFr+aTGdVdN8N1UCCFaAVjiQ8Uj8oQcmhnYf/0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739344558; c=relaxed/simple;
+	bh=Jl/RExNC7L/CWPHfobcu6zP+lqJZmKi8R5mVEGE90Ws=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=Cnf2Z9Q8YoViHFZgPm/EdxUoPBvdNKAl6jp6VfDHGFUirANd9BoH+DU89vRW1Q2h9+Fv/uvBIm5NhdcGC2jovj5U+AV3SvKrWAsHAbKRKMI2KHAT0fEnhp/eIpOFfdG5TVVSyDsmZWomchrOu89mlAHr6jZGQQbr9yRaH9bBrUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cMGiXXqB; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="HRFGSExh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yEzg9XlN8b0cpit9D/pPbE1FFAfePKs0epcpYvPiUwFCqzfXO+Iu4WvK2E9EluT5Mee5p8vhNNXT7IXQ2SaioNH7/tFzM/ZxwBzpSjCjH79oUE+Be1mFydAr3EATxA1Ss4xxXdnxml/p5M3iVL6vljO4BHGkf+CO8wj3Ks4pSmU7xosiRRYj44XqUM5AoAdkbs3LX/eFGsq3zKpkk64TMLZhUs4B4BXmDt0DK1r7AWN6234gukklDzBn/04Axk42JwNxlmZ2/uQrwRCPFqmA4uhzhf+KgRoOYr8CiRI/0s7qkK5NXC82VWpPWbwjpnMKNBSAtKfuykUkXe/K8uJn5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2XJyW6bUH+83BtdjWG6Fx3r5s9KsJ0eIzk/W95CI8Nk=;
- b=hBMj4wcnN0juSxTXsQjWKaAO6wRiPojuVML+KB2LDQyiXjNReXD1QJsB0+xuByD4q6W7Q4rd/XdR6l0hVB9B+Eh8L6N+2m4fX9FGAtfcx8/r4KqKE3eDBOxnoJil5A5voXEb57kpG6x8T1F8bNqTf3cHCm4N4qaDBweF3B8a0SSBS3c2DnNKTcW5INGBbUBet11QvjHSsflzaqX6JkQDySFwkbEqcnU0MvhK8Cd3kHFYtQbvOOTQe4K5xk6j7lLjEaiIr4UAQ3zvC/FChReg9l8WEaiExJu82dLF6YAnN8FECNS8hTo250mropJ7Ku8PsiWxFZC+foFejPSPrszGBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2XJyW6bUH+83BtdjWG6Fx3r5s9KsJ0eIzk/W95CI8Nk=;
- b=HRFGSExhZ2ov2n8CnnBC0BKhMOg6M4nQQJBwAtl1Mmaf7pygKVN7x0FOXAVTx8n2dqK3SixR3j1jQN/nqaR6MK7qtT+2MH1bFqCRJdt6vdEWOvLqSOb66xum81XP83hZxq4eYuYFa+U7e9+Ho0IZYvrrsDNpgisEt1aylpqtOMzrQ+7aayVT5vRbEcyXKMF+IB0HXfw28u4QUhZdNa6DGvDETg8uEMljymHiP799pd1meXOoUEKYxltWEi27/Kd9+NBMSgw6F2eLzrwDvTGo9kfTnCOK+qEDaV0naIM4nyzXv+K3arkbmJ2dxA8Sj1XaBEGgEadFbLzyDFXcjRINOA==
-Received: from KL1PR02CA0002.apcprd02.prod.outlook.com (2603:1096:820:c::7) by
- KL1PR0401MB6564.apcprd04.prod.outlook.com (2603:1096:820:b3::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Wed, 12 Feb
- 2025 07:15:37 +0000
-Received: from HK2PEPF00006FB1.apcprd02.prod.outlook.com
- (2603:1096:820:c:cafe::1b) by KL1PR02CA0002.outlook.office365.com
- (2603:1096:820:c::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Wed,
- 12 Feb 2025 07:15:37 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
- smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
-Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
- designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
- client-ip=211.20.1.79; helo=localhost.localdomain;
-Received: from localhost.localdomain (211.20.1.79) by
- HK2PEPF00006FB1.mail.protection.outlook.com (10.167.8.7) with Microsoft SMTP
- Server id 15.20.8445.10 via Frontend Transport; Wed, 12 Feb 2025 07:15:37
- +0000
-From: MarshallZhan-wiwynn <marshall_zhan@wiwynn.com>
-To: patrick@stwcx.xyz,
-	Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>
-Cc: MarshallZhan-wiwynn <marshall_zhan@wiwynn.com>,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] leds: cat9532: support cat9532 in pca955x
-Date: Wed, 12 Feb 2025 15:15:24 +0800
-Message-Id: <20250212071525.1148988-1-marshall_zhan@wiwynn.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cMGiXXqB"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51C0Nsd1000355;
+	Wed, 12 Feb 2025 07:15:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=48VtbAEtHa9FVv7oX7/yR3
+	rNttch9ec7jgrW2MLFWqA=; b=cMGiXXqBFPyBDBTioXAtpLpsQd+XeS5e25NKqD
+	smy+qLh4QuW+Xr7HtqgQZy+culWRVLBih1MzNlqU9RwnvB+huXSNQL+nQlabvm4R
+	3ZV/e+P4mm1EdSBzLhqbhH/IB4XnfKTq4PQh0NXblssjKwIiqDPXoP3FT6hZAX1J
+	lC/mcgVp7wh0w5JeQWeNB/eKlP9U3a41WtpyxG9YShE9555UGfS4K/BFY6qPXUVH
+	flu3w8B8cOfYOJxmZ8AjGIWW87I+EueW1S4BeOe47m51BfKtU0R8XNsVzkiTOrtr
+	moJC7Ti7v/ATCjaJDb/fHiQQUzC1RGmb9f2/5Lof+/m8kMVA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qgtk6822-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Feb 2025 07:15:42 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51C7FfhG005106
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Feb 2025 07:15:41 GMT
+Received: from cse-cd01-lnx.ap.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 11 Feb 2025 23:15:35 -0800
+From: Yongxing Mou <quic_yongmou@quicinc.com>
+Subject: [PATCH 0/4] Add MST support for qcs8300 platform
+Date: Wed, 12 Feb 2025 15:12:23 +0800
+Message-ID: <20250212-mst_qcs8300-v1-0-38a8aa08394b@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK2PEPF00006FB1:EE_|KL1PR0401MB6564:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: a1472dcc-acfe-49b5-ba0d-08dd4b350c94
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hL5AUsijZI7j2W4KkxsLQogyVkvMrxxaP16UqQg0aDSoNhxxpRDk4TqGEY2O?=
- =?us-ascii?Q?VYvfk+Qgd//uXO7f9wEPFUCd+r/ZXexMsInC67Ko7UYvBi90YMqKr0GU9u45?=
- =?us-ascii?Q?qeNd7aZ2psjCXMLHOiONjBIMX2vgIVUTbIxsKAe9FT0cp62vEVw9Mrome/zh?=
- =?us-ascii?Q?fOnaXnZocSE4GFkGv1odKIG3uTWhZ2+QILtUEOM9DwGZUMTiKdSDXk6AvSFK?=
- =?us-ascii?Q?mMWcZsBGpuTGBJJK3hAf3JbbIBBqD+2X7SgRK2wVm+zwWB15uVIDf6ipLTMk?=
- =?us-ascii?Q?rkPjjP+mdG89+lK1/w2MyLwc71SmtiH1LmzQKY5QpxJQcvdZXkfrAl1qkvJp?=
- =?us-ascii?Q?cisVUVal3VTKgR7PeisP8IU2r3ly507jLM2jzIB6i+U+c3EzaN8olh4ScFYP?=
- =?us-ascii?Q?CMyHr+V4DmDQG9XCQBq1tammCpr8iJGHRdMFFLXcTyPzLkEzcEOPlI1FuM5V?=
- =?us-ascii?Q?xZCO+oWZMglZHcfOpTyHaiyByRF4N6jf5rXrP4KjDtUwMs51eDMQ0JIMdPzH?=
- =?us-ascii?Q?HghB3GRcI7SUGb2MSZIIlI1jLXgdD2ehpg6s1RKgKocOrkQ7b5rR82iCvq9F?=
- =?us-ascii?Q?HDTaZrdh72R/WE3KNi0+CI+eb1PUMn7+io60iSOgl+5gaBT9D3YlzoOplHuz?=
- =?us-ascii?Q?pxW8gvN5m4psJ3E3WgYDfkDUBP57YbPMIEe48L1arFXqBmirumwi6VCyrJtn?=
- =?us-ascii?Q?lyt1zRPHOQQj9mnIcsE0KMq20M0GJ3gdCnXokQZ/rUEx36slpY38y+EAjWZS?=
- =?us-ascii?Q?t0MOfbrw6pT/bwiicTB212OiRGDqBGj+S8HvYQa7lRjZKRUVGA36bM7P3CDK?=
- =?us-ascii?Q?FNDGc6qbyukjWGAea4fMQqNugR6bnkviMt48OrOf06upSid2tg5PEMVTCVcO?=
- =?us-ascii?Q?/IRuK9ecmFAnk+9mhg8EorV+FhuthzK1FZYHBru5Ky063ysIRBo8s4PF4ICn?=
- =?us-ascii?Q?YZQyGHszTActKo5QHoj9R1+a9xsW54a5bqRUh0NYgCRV63U7XljOXt5RK0+3?=
- =?us-ascii?Q?EV+1uFSselu19cPg/xO0XyUCaM7M76QYRQjxLHteHJYQVnSIRwWCV5fk4AAa?=
- =?us-ascii?Q?5LjOnc7lJOg34t7WXf/h50WQk2yQpGeHtny7yOBoyVQZR/GyptxlWLnAiC4Y?=
- =?us-ascii?Q?OLm9u/NxdwOz7in+LdrFQu4R+E+dPC5jbZja7Kw+Y96N/l6VtfxOqLCtWC5M?=
- =?us-ascii?Q?HasQ5aKDTJTqduYSMOEiWGfqSnflCsktxr1E1YSwBP/DSiaHZYjsHwr6bjxn?=
- =?us-ascii?Q?XmCGPkhKNZQ7Pq/bAqJyXNPJIuDkOgca/TCFGXAUuSZtteumDTgNShXTIVVU?=
- =?us-ascii?Q?tN0XOfSxGTC85uJbuh1XerbCwy+GhO7m+WjLQI1YidXzvvA0kym3tDgmY67/?=
- =?us-ascii?Q?PA9Sm8mLVa1BsPrW3KFyX3TQNEAmUgJWE7DxkelcGvAlPFi19PYZbNn8ILO2?=
- =?us-ascii?Q?8shmBkR+M1mL64kXgu6Xqt6nJVvKYh11khrXsWzC6uCX9ZoYkAqq50BNmNRV?=
- =?us-ascii?Q?NenzdxvW1apEzMk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: wiwynn.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2025 07:15:37.1495
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1472dcc-acfe-49b5-ba0d-08dd4b350c94
-X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HK2PEPF00006FB1.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR0401MB6564
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOBJrGcC/22OwW6DMAyGXwX5vFQ2JTHpae8xVVMwZs0BaBOGN
+ lW8e1N67fGz5O//7pA1Rc1wqu6QdI05zlMB+qhALmH6URP7wlBjbbEmMmNevm+S2yOiaYTaYIk
+ 9OQvl45p0iH+77ev84qS33yJdXkfoQlYj8zjG5VRxF3wnYtGjtU4QufeBqe2Z2Cl6HtQ2A3l4u
+ i4xL3P630NX2mVvm1YyaLwLR2WuG2e7zxIgcZJDmYXztm0PnA0Y6PQAAAA=
+X-Change-ID: 20250211-mst_qcs8300-4c18a5179165
+To: Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Yongxing Mou <quic_yongmou@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739344529; l=1827;
+ i=quic_yongmou@quicinc.com; s=20241121; h=from:subject:message-id;
+ bh=Jl/RExNC7L/CWPHfobcu6zP+lqJZmKi8R5mVEGE90Ws=;
+ b=TPyxPGWrK3pvuk+wl8LmqunqRUy4OuHYZoitd6OuRqhbktqFyRZtmAwZWCMqLtWqccEs7y6Rf
+ igITqw2rVRHDuuLqcq9swzQYIR71KkjtKk0MzHsP3vippE15DLjEsMy
+X-Developer-Key: i=quic_yongmou@quicinc.com; a=ed25519;
+ pk=zeCnFRUqtOQMeFvdwex2M5o0Yf67UHYfwCyBRQ3kFbU=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: DzL6IFt04_o_IEetidlIpHe8dYBEAvBx
+X-Proofpoint-ORIG-GUID: DzL6IFt04_o_IEetidlIpHe8dYBEAvBx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-12_02,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 impostorscore=0
+ adultscore=0 clxscore=1015 mlxscore=0 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=793 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502120055
 
-The CAT9532 chips are almost 100% compatible with PCA9552, except that
-the CAT9532 used the opposite polarity in register that sets on/off.
+This series of patches introduces how to enable MST functionality on
+the qcs8300 platform. The qcs8300 platform uses dpu_8_4 hardware, which
+is the same as the sa8775p, but it only has one DPU. So it only has one
+DP0 controller, supporting 4-stream MST. This patch only enables 
+2-stream MST, using intf0 and intf3. The first and second patches are
+modifications to the correspond dt-bindings, third patch is the dp 
+controller driver after not reuse sm8650, fourth patch is the qcs8300
+dts modification which add the clk support for stream 1.
 
-Compare the state at INPUT with the state of LSn and dynamically
-adjust how you program LSn
-
-Signed-off-by: MarshallZhan-wiwynn <marshall_zhan@wiwynn.com>
+Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
 ---
- drivers/leds/leds-pca955x.c | 37 ++++++++++++++++++++++++++++++++-----
- 1 file changed, 32 insertions(+), 5 deletions(-)
+This patch depends on following series:
+https://lore.kernel.org/all/20250120-mdssdt_qcs8300-v4-0-1687e7842125@quicinc.com/
+https://lore.kernel.org/all/20250114-dts_qcs8300-v3-0-d114cc5e4af9@quicinc.com/
+https://lore.kernel.org/all/20241202-dp_mst_bindings-v1-0-9a9a43b0624a@quicinc.com
+https://lore.kernel.org/all/20241205-dp_mst-v1-0-f8618d42a99a@quicinc.com/
 
-diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
-index 94a9f8a54b35..c5bb81473b6a 100644
---- a/drivers/leds/leds-pca955x.c
-+++ b/drivers/leds/leds-pca955x.c
-@@ -13,6 +13,7 @@
-  *     PCA9550         2-bit driver            0x60 .. 0x61
-  *     PCA9551         8-bit driver            0x60 .. 0x67
-  *     PCA9552         16-bit driver           0x60 .. 0x67
-+ *     CAT9532         16-bit driver           0x60 .. 0x67
-  *     PCA9553/01      4-bit driver            0x62
-  *     PCA9553/02      4-bit driver            0x63
-  *
-@@ -235,6 +236,20 @@ static int pca955x_read_pwm(struct i2c_client *client,=
- int n, u8 *val)
-        return 0;
- }
+---
+Yongxing Mou (4):
+      dt-bindings: display/msm: Redocument the dp-controller for QCS8300
+      dt-bindings: display/msm: Add stream 1 pixel clock for QCS8300
+      drm/msm/dp: Populate the max_streams for qcs8300 mst controller
+      arm64: dts: qcom: qcs8300: Add support for stream 1 clk for DP MST
 
-+static int pca955x_read_input_bit(struct pca955x *pca955x, int led_num)
-+{
-+       u8 cmd =3D led_num / 8;
-+       int ret;
-+
-+       ret =3D i2c_smbus_read_byte_data(pca955x->client, cmd);
-+       if (ret < 0) {
-+               dev_err(&pca955x->client->dev, "%s: reg 0x%x, err %d\n", __=
-func__, led_num, ret);
-+               return ret;
-+       }
-+       return (ret >> (led_num % 8)) & 1;
-+
-+}
-+
- static enum led_brightness pca955x_led_get(struct led_classdev *led_cdev)
- {
-        struct pca955x_led *pca955x_led =3D container_of(led_cdev,
-@@ -251,10 +266,11 @@ static enum led_brightness pca955x_led_get(struct led=
-_classdev *led_cdev)
-        ls =3D (ls >> ((pca955x_led->led_num % 4) << 1)) & 0x3;
-        switch (ls) {
-        case PCA955X_LS_LED_ON:
--               ret =3D LED_FULL;
--               break;
-        case PCA955X_LS_LED_OFF:
--               ret =3D LED_OFF;
-+               if (pca955x_read_input_bit(pca955x, pca955x_led->led_num))
-+                       ret =3D LED_FULL;
-+               else
-+                       ret =3D LED_OFF;
-                break;
-        case PCA955X_LS_BLINK0:
-                ret =3D LED_HALF;
-@@ -276,6 +292,8 @@ static int pca955x_led_set(struct led_classdev *led_cde=
-v,
-        struct pca955x_led *pca955x_led;
-        struct pca955x *pca955x;
-        u8 ls;
-+       u8 ls_last_state;
-+       int inupt_bit;
-        int chip_ls;    /* which LSx to use (0-3 potentially) */
-        int ls_led;     /* which set of bits within LSx to use (0-3) */
-        int ret;
-@@ -292,12 +310,21 @@ static int pca955x_led_set(struct led_classdev *led_c=
-dev,
-        if (ret)
-                goto out;
+ .../devicetree/bindings/display/msm/dp-controller.yaml     |  5 +----
+ .../devicetree/bindings/display/msm/qcom,qcs8300-mdss.yaml | 14 ++++++++------
+ arch/arm64/boot/dts/qcom/qcs8300.dtsi                      | 12 ++++++++----
+ drivers/gpu/drm/msm/dp/dp_display.c                        |  8 ++++++++
+ 4 files changed, 25 insertions(+), 14 deletions(-)
+---
+base-commit: 7ba9bcc5090556c007d9a718d7176e097fe54f19
+change-id: 20250211-mst_qcs8300-4c18a5179165
 
-+       ls_last_state =3D pca955x_ledstate(ls, bit);
-        switch (value) {
-        case LED_FULL:
--               ls =3D pca955x_ledsel(ls, ls_led, PCA955X_LS_LED_ON);
-+               input_bit =3D pca955x_read_input_bit(pca955x, pca955x_led->=
-led_num);
-+               if (ls_last_state =3D=3D input_bit)
-+                       ls =3D pca955x_ledsel(ls, ls_led, PCA955X_LS_LED_ON=
-);
-+               else
-+                       ls =3D pca955x_ledsel(ls, ls_led, PCA955X_LS_LED_OF=
-F);
-                break;
-        case LED_OFF:
--               ls =3D pca955x_ledsel(ls, ls_led, PCA955X_LS_LED_OFF);
-+               input_bit =3D pca955x_read_input_bit(pca955x, pca955x_led->=
-led_num);
-+               if (ls_last_state =3D=3D input_bit)
-+                       ls =3D pca955x_ledsel(ls, ls_led, PCA955X_LS_LED_OF=
-F);
-+               else
-+                       ls =3D pca955x_ledsel(ls, ls_led, PCA955X_LS_LED_ON=
-);
-                break;
-        case LED_HALF:
-                ls =3D pca955x_ledsel(ls, ls_led, PCA955X_LS_BLINK0);
---
-2.25.1
+Best regards,
+-- 
+Yongxing Mou <quic_yongmou@quicinc.com>
 
-WIWYNN PROPRIETARY
-This email (and any attachments) contains proprietary or confidential infor=
-mation and is for the sole use of its intended recipient. Any unauthorized =
-review, use, copying or distribution of this email or the content of this e=
-mail is strictly prohibited. If you are not the intended recipient, please =
-notify the sender and delete this email immediately.
