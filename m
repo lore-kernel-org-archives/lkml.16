@@ -1,116 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0EC1D5143;
-	Wed, 12 Feb 2025 23:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53E41EF0B9
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 23:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739403049; cv=none; b=EeqT9FnFWzY2xifA2BQlkV4zdsU1f6F5k5Fmod4W3pE4PULPlMrG4J9J8whtZzdyYNnWxybq5ASN1hKqA6jRUA0spgLExHDwmpGDHfM04jbtSDdfb1kYU7rDlMa6rGMOiHPAlo7D5z7FD0DZZunlXoGcjb+uUhASKzPjs8/XRdk=
+	t=1739403164; cv=none; b=CO5gifDVbShdQ+QhUSaCKxmvPzVksS/d44nC8FphTa847heSq8/rv2MhQUI5qsKW3dx8vlSpWQqn2BTXD43e3IdWyKjVH/hl6u4SXPSncHLJNqRVkXhh6tr5H3z3evduETbV9p7SKvRLFjUoPFoigml9CDvPu4uCjHq2VHdQ2Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739403049; c=relaxed/simple;
-	bh=Gky+ek+f6dQ1foZALEI0/TAWTKqzdPow3GkeyJofb+U=;
+	s=arc-20240116; t=1739403164; c=relaxed/simple;
+	bh=2c9L7o/NOWe5sQeiJ8Ja5INnXAHyzsmTZ1faqR2gQZo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NpLrP8laLpL1Ocb5EmENf4/o4N3uu8fckGhv2NdP6Ic+vmqJf8ENDnzagFvn+lxZsQfjFx2/jLO0Jy1dV0gk5OXF0gijkugHGnDyCp5Jn2AOoEG3sW4ZxeNg3Gz9OEgUZhs6gP4kXWPu88AISZYCjsfSzDt7mF/PtIDxv+Bq6NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JvRg5a0y; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JvRg5a0y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739403048; x=1770939048;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Gky+ek+f6dQ1foZALEI0/TAWTKqzdPow3GkeyJofb+U=;
-  b=JvRg5a0yg1dJNmeWBJSNIOUX3d1dZpwD5vBRe2NCU2NrOlHp6l3tfx/U
-   WAQKwlox8Cg7guVZI0lbcvulUsf7h4xfRysIZEdET1k3IymSmkb+YlOwd
-   Axb0n6YSTdGQ9Ye/e2nDtlXMjLXGPmdiiMSulG1G+rYmYD0so2vC8JEZf
-   zfW3tW05aBPKBxR1b22oXSnLdURVW7ZvcnykrdLsLme45hI1k6MI5ihkW
-   1wpmcJ669weqhkgIXQtQpFJe9SoXCyeFb/Bx//hYBaBzONBQqlacI8PRv
-   Un1BOqgnc9D32Mii2bW6NIpL8/og6ezDSIQQxTI2iXL3YteyswD1iC3or
-   g==;
-X-CSE-ConnectionGUID: 78dOxnzpSVWQ5Qqgc5sPnw==
-X-CSE-MsgGUID: DTkHK4VlQtyBw+mCAnqApQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="40118303"
-X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
-   d="scan'208";a="40118303"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 15:30:47 -0800
-X-CSE-ConnectionGUID: gTqfFyaFSginqyhtZ0OSWQ==
-X-CSE-MsgGUID: Px8W/QkFRmGKFN5OaIUw0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118142063"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.123])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 15:30:46 -0800
-Date: Wed, 12 Feb 2025 15:30:45 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
-	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com,
-	lukas@wunner.de, ming.li@zohomail.com,
-	PradeepVineshReddy.Kodamati@amd.com
-Subject: Re: [PATCH v7 14/17] cxl/pci: Update CXL Port RAS logging to also
- display PCIe SBDF
-Message-ID: <Z60vJYIJQxJ7Cu9d@aschofie-mobl2.lan>
-References: <20250211192444.2292833-1-terry.bowman@amd.com>
- <20250211192444.2292833-15-terry.bowman@amd.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EzaOlTUcnq+ygHrP6k2Qn0ikXLzbQ9m9N2VxHW6zlyEeBbtaf3rEfh+aUSqepBArIyDHoR9DU4gnXlFbYsPAi1NQ6U1xI6HTYcj0kZk/NNsPf2yFu4XLY8On2KTE2xFBQIHRhNIxwANXVika7XdvauTjgXwLIHmTrRaLWSFZdk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BC61C4CEDF;
+	Wed, 12 Feb 2025 23:32:44 +0000 (UTC)
+Date: Wed, 12 Feb 2025 15:32:42 -0800
+From: Josh Poimboeuf <jpoimboe@redhat.com>
+To: Jan Beulich <jbeulich@suse.com>
+Cc: lkml <linux-kernel@vger.kernel.org>, Juergen Gross <jgross@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH] compiler: remove stringification from __ADDRESSABLE_ASM()
+Message-ID: <20250212233242.pnzazr3lxu3f6p6e@jpoimboe>
+References: <561c52d6-9728-4dfc-a629-353dc2488c8b@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250211192444.2292833-15-terry.bowman@amd.com>
+In-Reply-To: <561c52d6-9728-4dfc-a629-353dc2488c8b@suse.com>
 
-On Tue, Feb 11, 2025 at 01:24:41PM -0600, Terry Bowman wrote:
-> CXL RAS errors are currently logged using the associated CXL port's name
-> returned from devname(). They are typically named with 'port1', 'port2',
-> etc. to indicate the hierarchial location in the CXL topology. But, this
-> doesn't clearly indicate the CXL card or slot reporting the error.
+On Wed, Feb 12, 2025 at 04:11:51PM +0100, Jan Beulich wrote:
+> __ADDRESSABLE_ASM_STR() is where the necessary stringification happens.
+> As long as "sym" doesn't contain any odd characters, no quoting is
+> required for its use with .quad / .long. In fact the quotation gets in
+> the way with gas 2.25; it's only from 2.26 onwards that quoted symbols
+> are half-way properly supported.
 > 
-> Update the logging to also log the corresponding PCIe devname. This will
-> give a PCIe SBDF or ACPI object name (in case of CXL HB). This will provide
-> details helping users understand which physical slot and card has the
-> error.
+> Fixes: 0ef8047b737d ("x86/static-call: provide a way to do very early static-call updates")
+> Signed-off-by: Jan Beulich <jbeulich@suse.com>
+> Cc: stable@vger.kernel.org
+> ---
+> I think that __ADDRESSABLE_ASM{,_STR}() better would have a separate
+> comment, as that presently kind of shared with {_,}__ADDRESSABLE() isn't
+> really applicable to assembly code.
 > 
-> Below is example output after making these changes.
-> 
-> Correctable error example output:
-> cxl_port_aer_correctable_error: device=port1 (0000:0c:00.0) parent=root0 (pci0000:0c) status='Received Error From Physical Layer'
-> 
-> Uncorrectable error example output:
-> cxl_port_aer_uncorrectable_error: device=port1 (0000:0c:00.0) parent=root0 (pci0000:0c) status: 'Memory Byte Enable Parity Error' first_error: 'Memory Byte Enable Parity Error'
+> Is data allocation actually necessary in __ADDRESSABLE_ASM()? Aiui the
+> sole goal is to have sym in the symbol table. That could be achieved by
+> a simple .global (or e.g. .hidden) directive.
 
-snip
-> 
+Hm, yes, but isn't that a bug?  It shouldn't be defining the symbol, as
+that will already be defined elsewhere.  So it would link to the local
+symbol instead of the actual static key defined in another object.
+
+Even worse, the local symbol gets discarded during linking?  Not sure
+how that works without a linker error...
+
+.global sounds like it would work, then we can just remove all the
+__ADDRESSABLE_ASM() cruft.
+
+> Shouldn't Xen's __ADDRESSABLE_xen_hypercall use STATIC_CALL_KEY() rather
+> than open-coding it?
+
+Indeed...
+
+> --- a/include/linux/compiler.h
+> +++ b/include/linux/compiler.h
+> @@ -245,7 +245,7 @@ static inline void *offset_to_ptr(const
+>  #define __ADDRESSABLE_ASM(sym)						\
+>  	.pushsection .discard.addressable,"aw";				\
+>  	.align ARCH_SEL(8,4);						\
+> -	ARCH_SEL(.quad, .long) __stringify(sym);			\
+> +	ARCH_SEL(.quad, .long) sym;					\
+>  	.popsection;
 >  
->  TRACE_EVENT(cxl_port_aer_uncorrectable_error,
-> -	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
-> -	TP_ARGS(dev, status, fe, hl),
-> +	TP_PROTO(struct device *cxl_dev, struct device *pcie_dev, u32 status, u32 fe, u32 *hl),
-> +	TP_ARGS(cxl_dev, pcie_dev, status, fe, hl),
->  	TP_STRUCT__entry(
-> -		__string(devname, dev_name(dev))
-> -		__string(parent, dev_name(dev->parent))
-> +		__string(cxl_name, dev_name(cxl_dev))
-> +		__string(cxl_parent_name, dev_name(cxl_dev->parent))
-> +		__string(pcie_name, dev_name(pcie_dev))
-> +		__string(pcie_parent_name, dev_name(pcie_dev->parent))
+>  #define __ADDRESSABLE_ASM_STR(sym) __stringify(__ADDRESSABLE_ASM(sym))
 
-I get the rename of devname->cxl_name and parent->cxl_parent_name
-since now we have pcie names too.  How about making those changes
-in the previous patch where devname and parent are introduced. Then
-this patch doesn't have any changes other than adding the pcie names.
-
-Having said that, should/can this merge with the patch before it?
-
-
-snip
+-- 
+Josh
