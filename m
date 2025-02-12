@@ -1,167 +1,215 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD371F94D
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 00:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF5C12B93
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 00:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739321160; cv=none; b=iMXq4POTyESsFJiUN7n43ImzKtGlwDMJn4g+mxy7lFns0YzC7y0oMAWCPDOAi81McWCNsVxme3VL5AFpIRoytroBDYrWYj8A5OcwE740HtgJYiBpPsFQhRyIwW+FlflIX+bsROYfCDVwyrywM1pnPEwpp2I6FKa4ADSCOaIQMTc=
+	t=1739321219; cv=none; b=quXo7xM4aKjWD6FwkLo68J8CxWvvafYNa7CH6WKL29iCfepkU/lhxRJqrvOTgx5wsQGL70F0XvRBNeh3KX9GZAw9cotmQW1/g4gHvom4dsvJucUVvS8CvDin9nb9Cnl2x+g/cyPZewAqgpalBbFs+M26YZEn/GkeQpyUEl0G5DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739321160; c=relaxed/simple;
-	bh=L8M9J0DT+3fg7fOa9jiMrBAmSPXuGJDr6zpRasFuZpg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d+CvYGGAqnokiNtosN+QStmOjlaeO3o4soRoj6za5Vh5ONodX0FqxITJiOuzgju2vHwZdDFDs9Ayc0zOfTtn3L0C3nmmgPFj/2NKZwVVFRZhXsivUYQpR4dTuHPOW6fUXuX+GVhpqxlgLyCvXE7p5AW2GkeW+3q1VRXu6L+DwoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F7Q+1cUw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739321219; c=relaxed/simple;
+	bh=JkLCN4YFjTAam7Iy75o7EPqrBdKr3MgMAk4ZNfNOQps=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=eI+LYlGiROrbzhTVWeu7uFM5EFwlmlPAU3/WLB0XKCqcOZ39mLXqLC25jIJE0dKOw1K//nYMX7/G5K+6siG9vbWCVKHni/I02I/2/w/dlqprv1RFKENcTltCG6NcZx2rh1WQn09VGRQ1qrdYhrxIvSiLBHbWRHaBh6afP7uKVPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iVEYX4Bj; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F7Q+1cUw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739321157;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eua/hApNBjEqd+RMENEi87Sr+Mh/D0hB/oWXPr8GJgk=;
-	b=F7Q+1cUwtjFx88vB6UAeWKVYkzqr3SgSGz1YoDgIvuLffSVa/NVD4YmmBSWiJnFkaPQ5tc
-	IXrlfpAxgDR3k8kdl6/eMgtSyJUHmncLDbDs5NK6AbGUMo7K0OdRVpT7K1dpblB54IwqVW
-	ZccO3SbKQr5Xw3ltU07ttRfJCGXT9ac=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-589-jt4UKMa5O9qdEmhk_P6QFw-1; Tue, 11 Feb 2025 19:45:56 -0500
-X-MC-Unique: jt4UKMa5O9qdEmhk_P6QFw-1
-X-Mimecast-MFC-AGG-ID: jt4UKMa5O9qdEmhk_P6QFw
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2f83e54432dso19410388a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:45:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iVEYX4Bj"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2f2a9f056a8so12204562a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:46:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739321218; x=1739926018; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MTX6y7TnilLrI/eaywdsRxlxFNQJZpUyGgd1QJfP8kg=;
+        b=iVEYX4BjrHvdI1EhSE2uXGmutGmzu6SQvkQeuYkfmqbaGus5MPwvKD9VLf5+bRrl+T
+         gcvzFyy1g4FV5IRs/S7aaEdbcEJIL3NfK0YqtglkvrEny5rCYdVGI4uIeONZ3Rqf1TTr
+         NPTjNkx9ou35RdvNR3aOWkoJZqsXfK1zxpXOA2g/4E1oXkYu5kMvPTgS0xqlLS+nGwFU
+         7Keus1Wm/PX1A2o+vmlvw4G85S/vNl+NMEJ6WO2+AFacaiOmhH24htXR482/dXErGUKo
+         fDp5cOitsdUtSsTEu1vyCxFCuZxxBN3vYEMCRD00KnHjtaD8i10AyBSDmwttVzbgg/M1
+         CORg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739321155; x=1739925955;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eua/hApNBjEqd+RMENEi87Sr+Mh/D0hB/oWXPr8GJgk=;
-        b=XlvPXuWk7ZpAotC2009WIEOSXyRisFEQnMlSLvLwFk+yAEGXWgB/3qwkn6N4kxFWl9
-         JudltO709TYg8av98MHGRj0MhHWLcv9RpsCbTJFPj1RvBp5sNxCtaTLdSZ8PycRgcQVO
-         pkz4bRET/O6GfK4hxgTW+IPueL63UncTGn/Z7dI7DvrxbDotozHvvZ9z+G/+PE6yVY6s
-         G+upnbpzn8dDtaDs4TC8rDzShqMvdI/y+l4dKqW6eStzyyXA/YnZGOUwKYLTqkdX3jNp
-         yXHm6kIUjONUUMl2zzv1TwVRqMDZ7pwibQMjrd+AjFJudiNvuQEdmWGK0nHWLgUgLdb7
-         xSsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVaNFgl5Q9UJE/s9FJ7eJcj8m11tPgv0XN7esbp1vgvh7M7rHPS2YpxGzeOjQDyWgN7B+p9hzvQW5m/0hA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAkOW7csjaWfiT9QErYeoo+fU3LlGd3D2G9ccbdSIZFTXPpVM+
-	z5u1UaAyPbglaLmh1DPksQlCt0j0PoGjZ548+DX1x0HaI79K/JTiH7IIhZcki75PCTi0YelQ0CK
-	z1iWpoiTrx9R1V/N8Cu5pm4XPrNXRiTObFO4F9aU0pOVKMy3bK5tCIPsjUbEhGw==
-X-Gm-Gg: ASbGncuajXnbwOCCT8+ku/ESGiKH9YpIZcmfHBGCHJJpQ2tsQVn5yaa/fUMfKQNZtgt
-	raGDpN28XJ1JoVGtVRKjkhziE7e0mgNlD1eCJ7vmCP/q/XVg8NDg/riVrxk85UeIm0C1EimYDKf
-	L/WaLUZ5NNiQQh3YnNdj1DifgUPeB2OBrjtiglNAQ8IOyrLX4ZumQNtCZ/OxWtNR0CzV97nhSRJ
-	txzTv37ToKc0o1M6pwv9UFiG1R7LRDJTxPa5JSD67PLBuq6gESO72KTOctL552hOwMgUY++
-X-Received: by 2002:a17:90b:544f:b0:2ee:aed6:9ec2 with SMTP id 98e67ed59e1d1-2fbf5c0f653mr2103365a91.14.1739321155472;
-        Tue, 11 Feb 2025 16:45:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE6IIMJ+3Hvx8Id8rTg0AZzH7XEwW28qToMrNpGHIdmEypuProqH9OrCUS32B2pihOhAwnVBg==
-X-Received: by 2002:a17:90b:544f:b0:2ee:aed6:9ec2 with SMTP id 98e67ed59e1d1-2fbf5c0f653mr2103334a91.14.1739321155171;
-        Tue, 11 Feb 2025 16:45:55 -0800 (PST)
-Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf9908960sm202009a91.41.2025.02.11.16.45.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 16:45:54 -0800 (PST)
-Date: Wed, 12 Feb 2025 08:43:21 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, 
-	Ondrej Kozina <okozina@redhat.com>, Milan Broz <gmazyland@gmail.com>, 
-	Thomas Staudt <tstaudt@de.ibm.com>, Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, 
-	Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>, 
-	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH v8 0/7] Support kdump with LUKS encryption by reusing
- LUKS volume keys
-Message-ID: <uo2q3jxzcu3d4noiznxpw5woaclikmywyzi7yjlnpef3fdjt4e@idvs7tiv3znb>
-References: <20250207080818.129165-1-coxu@redhat.com>
- <Z6sljm1lurDKPCvj@MiWiFi-R3L-srv>
+        d=1e100.net; s=20230601; t=1739321218; x=1739926018;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MTX6y7TnilLrI/eaywdsRxlxFNQJZpUyGgd1QJfP8kg=;
+        b=lOfT+sUoMEZG7D6UG4RPHMCQfmX4gQPMXjfVkdQhhpz41wMynslyk1Hx+X5Of7ZtwH
+         Uuwf5hbrw/VvmjJ8XejzZIfs4Yt+h1lKr2utzRbouZXI/7PQIRh5IJF6HftJcc/TUsH6
+         Yuvz4g01fF4Bq2nJxvQ56OgxO3MS2PVhqP9cwNOPg2r239rDIHGGbuxJkBSwaT4+nI49
+         TvlWZel3UKJcSvMiOl/xGiWj9xxGSqkM+F0OmNtI5KKyLlj8uNBUKrnvm8Er5bGRNYtk
+         4IaEElS/fY77HdpsAqk0uN14EWLOwRSi72RlZAxbWCxfcWLlpQrjaSXAqr1LYoJ3zQrN
+         huiw==
+X-Forwarded-Encrypted: i=1; AJvYcCXm0EGgLAAZ5ZseHaMChUoJ79pm+2gzSV55CAg6GKoHW6YiXUIPgO8okqeLHM+QFmz5EvOPrgzpjh3yUHM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9+V04SGUJy/54GKHTXoVDKebDxm34rEjrFuV2hZmFjDiXY3x3
+	yfaGNZ5Dk8lm47FbhK4sexv1XU8GGA1NUjdutMytJ8QpKOrs0fGZYjV8jzUEf99m+3R6h9yopmF
+	3lQ==
+X-Google-Smtp-Source: AGHT+IEtQfaHsTrhBTIFHko0gpIlHMJl5CnUaVwMkKgniEw9UZfriGGKCvXVCxVHr/BGlkoEIHr/wUFj6/s=
+X-Received: from pjbok7.prod.google.com ([2002:a17:90b:1d47:b0:2f9:d5f9:128f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5486:b0:2ee:48bf:7dc3
+ with SMTP id 98e67ed59e1d1-2fbf5c10a46mr1908251a91.15.1739321217707; Tue, 11
+ Feb 2025 16:46:57 -0800 (PST)
+Date: Tue, 11 Feb 2025 16:46:56 -0800
+In-Reply-To: <Z6sReszzi8jL97TP@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Z6sljm1lurDKPCvj@MiWiFi-R3L-srv>
+Mime-Version: 1.0
+References: <20250211025442.3071607-1-binbin.wu@linux.intel.com>
+ <20250211025442.3071607-6-binbin.wu@linux.intel.com> <Z6r0Q/zzjrDaHfXi@yzhao56-desk.sh.intel.com>
+ <926a035f-e375-4164-bcd8-736e65a1c0f7@linux.intel.com> <Z6sReszzi8jL97TP@intel.com>
+Message-ID: <Z6vvgGFngGjQHwps@google.com>
+Subject: Re: [PATCH v2 5/8] KVM: TDX: Handle TDG.VP.VMCALL<MapGPA>
+From: Sean Christopherson <seanjc@google.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: Binbin Wu <binbin.wu@linux.intel.com>, Yan Zhao <yan.y.zhao@intel.com>, pbonzini@redhat.com, 
+	kvm@vger.kernel.org, rick.p.edgecombe@intel.com, kai.huang@intel.com, 
+	adrian.hunter@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
+	tony.lindgren@intel.com, isaku.yamahata@intel.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 11, 2025 at 06:25:18PM +0800, Baoquan He wrote:
->On 02/07/25 at 04:08pm, Coiby Xu wrote:
->> LUKS is the standard for Linux disk encryption, widely adopted by users,
->> and in some cases, such as Confidential VMs, it is a requirement. With
->> kdump enabled, when the first kernel crashes, the system can boot into
->> the kdump/crash kernel to dump the memory image (i.e., /proc/vmcore)
->> to a specified target. However, there are two challenges when dumping
->> vmcore to a LUKS-encrypted device:
->>
->>  - Kdump kernel may not be able to decrypt the LUKS partition. For some
->>    machines, a system administrator may not have a chance to enter the
->>    password to decrypt the device in kdump initramfs after the 1st kernel
->>    crashes; For cloud confidential VMs, depending on the policy the
->>    kdump kernel may not be able to unseal the keys with TPM and the
->>    console virtual keyboard is untrusted.
->>
->>  - LUKS2 by default use the memory-hard Argon2 key derivation function
->>    which is quite memory-consuming compared to the limited memory reserved
->>    for kdump. Take Fedora example, by default, only 256M is reserved for
->>    systems having memory between 4G-64G. With LUKS enabled, ~1300M needs
->>    to be reserved for kdump. Note if the memory reserved for kdump can't
->>    be used by 1st kernel i.e. an user sees ~1300M memory missing in the
->>    1st kernel.
->>
->> Besides users (at least for Fedora) usually expect kdump to work out of
->> the box i.e. no manual password input or custom crashkernel value is
->> needed. And it doesn't make sense to derivate the keys again in kdump
->> kernel which seems to be redundant work.
->>
->> This patch set addresses the above issues by making the LUKS volume keys
->> persistent for kdump kernel with the help of cryptsetup's new APIs
->> (--link-vk-to-keyring/--volume-key-keyring). Here is the life cycle of
->> the kdump copies of LUKS volume keys,
->>
->>  1. After the 1st kernel loads the initramfs during boot, systemd
->>     use an user-input passphrase to de-crypt the LUKS volume keys
->>     or TPM-sealed key and then save the volume keys to specified keyring
->>     (using the --link-vk-to-keyring API) and the key will expire within
->>     specified time.
->>
->>  2. A user space tool (kdump initramfs loader like kdump-utils) create
->>     key items inside /sys/kernel/config/crash_dm_crypt_keys to inform
->>     the 1st kernel which keys are needed.
->>
->>  3. When the kdump initramfs is loaded by the kexec_file_load
->>     syscall, the 1st kernel will iterate created key items, save the
->>     keys to kdump reserved memory.
->>
->>  4. When the 1st kernel crashes and the kdump initramfs is booted, the
->>     kdump initramfs asks the kdump kernel to create a user key using the
->>     key stored in kdump reserved memory by writing yes to
->>     /sys/kernel/crash_dm_crypt_keys/restore. Then the LUKS encrypted
->>     device is unlocked with libcryptsetup's --volume-key-keyring API.
->>
->>  5. The system gets rebooted to the 1st kernel after dumping vmcore to
->>     the LUKS encrypted device is finished
->>
->> After libcryptsetup saving the LUKS volume keys to specified keyring,
->> whoever takes this should be responsible for the safety of these copies
->> of keys. The keys will be saved in the memory area exclusively reserved
->> for kdump where even the 1st kernel has no direct access. And further
->> more, two additional protections are added,
->>  - save the copy randomly in kdump reserved memory as suggested by Jan
->>  - clear the _PAGE_PRESENT flag of the page that stores the copy as
->>    suggested by Pingfan
->>
->> This patch set only supports x86. There will be patches to support other
->> architectures once this patch set gets merged.
->
->This v8 looks good to me, thanks for the great effort, Coiby.
->
->Acked-by: Baoquan He <bhe@redhat.com>
+On Tue, Feb 11, 2025, Chao Gao wrote:
+> On Tue, Feb 11, 2025 at 04:11:19PM +0800, Binbin Wu wrote:
+> >
+> >
+> >On 2/11/2025 2:54 PM, Yan Zhao wrote:
+> >> On Tue, Feb 11, 2025 at 10:54:39AM +0800, Binbin Wu wrote:
+> >> > +static int tdx_complete_vmcall_map_gpa(struct kvm_vcpu *vcpu)
+> >> > +{
+> >> > +	struct vcpu_tdx *tdx =3D to_tdx(vcpu);
+> >> > +
+> >> > +	if (vcpu->run->hypercall.ret) {
+> >> > +		tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_INVALID_OPERAND);
+> >> > +		tdx->vp_enter_args.r11 =3D tdx->map_gpa_next;
+> >> > +		return 1;
+> >> > +	}
+> >> > +
+> >> > +	tdx->map_gpa_next +=3D TDX_MAP_GPA_MAX_LEN;
+> >> > +	if (tdx->map_gpa_next >=3D tdx->map_gpa_end)
+> >> > +		return 1;
+> >> > +
+> >> > +	/*
+> >> > +	 * Stop processing the remaining part if there is pending interrup=
+t.
+> >> > +	 * Skip checking pending virtual interrupt (reflected by
+> >> > +	 * TDX_VCPU_STATE_DETAILS_INTR_PENDING bit) to save a seamcall bec=
+ause
+> >> > +	 * if guest disabled interrupt, it's OK not returning back to gues=
+t
+> >> > +	 * due to non-NMI interrupt. Also it's rare to TDVMCALL_MAP_GPA
+> >> > +	 * immediately after STI or MOV/POP SS.
+> >> > +	 */
+> >> > +	if (pi_has_pending_interrupt(vcpu) ||
+> >> > +	    kvm_test_request(KVM_REQ_NMI, vcpu) || vcpu->arch.nmi_pending)=
+ {
+> >> Should here also use "kvm_vcpu_has_events()" to replace
+> >> "pi_has_pending_interrupt(vcpu) ||
+> >>   kvm_test_request(KVM_REQ_NMI, vcpu) || vcpu->arch.nmi_pending" as Se=
+an
+> >> suggested at [1]?
+> >>=20
+> >> [1] https://lore.kernel.org/all/Z4rIGv4E7Jdmhl8P@google.com
+> >
+> >For TDX guests, kvm_vcpu_has_events() will check pending virtual interru=
+pt
+> >via a SEAM call.=C2=A0 As noted in the comments, the check for pending v=
+irtual
+> >interrupt is intentionally skipped to save the SEAM call. Additionally,
 
-Great, thanks for reviewing and acknowledging the patch set!
+Drat, I had a whole response typed up and then discovered the implementatio=
+n of
+tdx_protected_apic_has_interrupt() had changed.  But I think the basic gist
+still holds.
 
--- 
-Best regards,
-Coiby
+The new version:
 
+ bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu)
+ {
+-       return pi_has_pending_interrupt(vcpu);
++       u64 vcpu_state_details;
++
++       if (pi_has_pending_interrupt(vcpu))
++               return true;
++
++       vcpu_state_details =3D
++               td_state_non_arch_read64(to_tdx(vcpu), TD_VCPU_STATE_DETAIL=
+S_NON_ARCH);
++
++       return tdx_vcpu_state_details_intr_pending(vcpu_state_details);
+ }
+
+is much better than the old:
+
+ bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu)
+ {
+-       return pi_has_pending_interrupt(vcpu);
++       bool ret =3D pi_has_pending_interrupt(vcpu);
++       union tdx_vcpu_state_details details;
++       struct vcpu_tdx *tdx =3D to_tdx(vcpu);
++
++       if (ret || vcpu->arch.mp_state !=3D KVM_MP_STATE_HALTED)
++               return true;
++
++       if (tdx->interrupt_disabled_hlt)
++               return false;
++
++       details.full =3D td_state_non_arch_read64(tdx, TD_VCPU_STATE_DETAIL=
+S_NON_ARCH);
++       return !!details.vmxip;
+ }
+
+because assuming the vCPU has an interrupt if it's not HALTED is all kinds =
+of
+wrong.
+
+However, checking VMXIP for the !HLT case is also wrong.  And undesirable, =
+as
+evidenced by both this path and the EPT violation retry path wanted to avoi=
+d
+checking VMXIP.
+
+Except for the guest being stupid (non-HLT TDCALL in an interrupt shadow), =
+having
+an interrupt in RVI that is fully unmasked will be extremely rare.  Actuall=
+y,
+outside of an interrupt shadow, I don't think it's even possible.  I can't =
+think
+of any CPU flows that modify RVI in the middle of instruction execution.  I=
+.e. if
+RVI is non-zero, then either the interrupt has been pending since before th=
+e
+TDVMCALL, or the TDVMCALL is in an STI/SS shadow.  And if the interrupt was
+pending before TDVMCALL, then it _must_ be blocked, otherwise the interrupt
+would have been serviced at the instruction boundary.
+
+I am completely comfortable saying that KVM doesn't care about STI/SS shado=
+ws
+outside of the HALTED case, and so unless I'm missing something, I think it=
+ makes
+sense for tdx_protected_apic_has_interrupt() to not check RVI outside of th=
+e HALTED
+case, because it's impossible to know if the interrupt is actually unmasked=
+, and
+statistically it's far, far more likely that it _is_ masked.
+
+> >unnecessarily returning back to guest will has performance impact.
+> >
+> >But according to the discussion thread above, it seems that Sean priorit=
+ized
+> >code readability (i.e. reuse the common helper to make TDX code less spe=
+cial)
+> >over performance considerations?
+>=20
+> To mitigate the performance impact, we can cache the "pending interrupt" =
+status
+> on the first read, similar to how guest RSP/RBP are cached to avoid VMREA=
+Ds for
+> normal VMs. This optimization can be done in a separate patch or series.
+>=20
+> And, future TDX modules will report the status via registers.
