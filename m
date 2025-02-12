@@ -1,112 +1,172 @@
-Received: from mail-il1-f225.google.com (mail-il1-f225.google.com [209.85.166.225])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B887C1CF96
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 00:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0441101E6
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 00:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739321518; cv=none; b=jJHIW8gWOAi7teAjXt+mRkb46hOLJ5+uk/6rox3Mgo8GdCQU9S8t5alZSksB58+9rrC4OfheOOu+ilDKr1Wq4HW5XOZe+AAzHWZgLMGF9aYhPz+O/q53Z3fmg5cDayVAmvK2XWmR/uifz0qIryQwD241e6Xwu0NWWfm5YxZqmGc=
+	t=1739321698; cv=none; b=pgpswP4z9ATF/sGK70xy7ZLBdRieUP4CORhOHpDqg9W1sJop4Fzb6v5tHobweq8pirxcGr95GoiqAwnb/FpXXrerYmNhgURk7eZyfB+o1oVMW89bx8bQgUV2/Dn1qHq6XlIE6VQRxaaZ+f2H6YbCcYQacbFJ5PiQQsfQBol/UIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739321518; c=relaxed/simple;
-	bh=uybylxy3CxWXbqjZP/G8qtq9yh04SBEkS6ZcbdxAOJs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MADy9llYN2903KM6Yp4ibJl/wQAmEXJTcLrQ2xflW2zU0ya18Tesa93c6881YYgc4sAOfxIgsjZmSwd+ZsC6RLWge1QzakAsZQXh+e4jjEnoRKSohQPY6YjPNud2cR63cD1ndBn3aQOi38FAu60a2c+zW/EGy+r8WfmetZDB/X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=YQuBBhdX; arc=none smtp.client-ip=209.85.166.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1739321698; c=relaxed/simple;
+	bh=UIzklivqR5Z23WPkWjVe2n77YozrOST8ZDHjd23oRgI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YDB26JT3eDiu677vh5rd/NM5aEvPaFz8vdJHi/NMGx2Zm7Zk+iIfzW4fiLgwaBiGPHhAaT1GnWPqjEaW4arvYBcaikPYCWZc6z8YTHDUKj7MCNZaUFg2RiV+pg1wTjIsDkg1r3k5ssJbr9FQdpGUAozE0p8++a1J9g520hj7r1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=ATu/kmAq; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="YQuBBhdX"
-Received: by mail-il1-f225.google.com with SMTP id e9e14a558f8ab-3d142933f32so1336385ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:51:55 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="ATu/kmAq"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4394345e4d5so21029585e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:54:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1739321514; x=1739926314; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wxjIUJ0LCGQtTFpUNlyNV0SkSCoelxvdgjl3lNP3O8Q=;
-        b=YQuBBhdXtlhiMYbjNudL7nmHpca/Y0mTj4OVMAt8jhZ3lunmcaFqjmt5+N+ARepVb4
-         /HbwefJrySa8AAehPF5SYyd8bvsey+j2f1+d6GmbEQ2FEW7TmmjlD53u2vJZ+UPOB/2s
-         TixUWP++afQFjuKjiWUenY5QHxzXx8YN8R3rtmLmD+zuw3WhALLMrPnWj8wSajvnSG1m
-         RXx2BaGw9x3Z0DkZ61EBMkiH5UlY1pmDezcky/onvd48YJM2hvidVkJ0wvShTLpDnMix
-         fHHzMVo0EO+ZyyN5Mz/L4Z+1cqGJj7GVgdB3sMAePo8QjZAzRz6Zwcn8V8wk7xawEEaQ
-         UpSg==
+        d=citrix.com; s=google; t=1739321695; x=1739926495; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=3eEjYLiIzAQvKfFhJfuIXXpvDRbqlCf0jI1QKURWY7Q=;
+        b=ATu/kmAq6UsVYQ31QRq+jvEFumCs+gQo6q462XofCYlHjpHBjgCIhjksLVgH+ACCfF
+         v4E+kgMLzwlXXjM+2/2GJ2cFP2qyzgZIBI+5Gou67i0douboKH2VTCRLkhj3Y2LiQS0U
+         lhOI9+StSp00lDDoFid24c9COnjrE8fdeVpU8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739321514; x=1739926314;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wxjIUJ0LCGQtTFpUNlyNV0SkSCoelxvdgjl3lNP3O8Q=;
-        b=P+qtGtjDpRl7DR1NRYFEwMyqsX7MZwWK7FCjIbSI4M5lKswVDVVHFmMGJ+38VM4ckh
-         5fd/2vZptRf/pF5VD2Xk5+OV1+xjZjRzOuql0lmPZvLK1XCOrlzXR3bbc2FoiI9p9b9B
-         UKuo92+TBl6yO9EKW2a4rg4sZ5woRdtqIBqJ0FLNxV4FvkJvr1/AkqdpAfp49zPOUPLK
-         MLy8MWCDUICWrASGTbE0RO15sGsI5lz/7NT9LbVuZ326Ftlm+F7fyQb8MjluY7ULeRAz
-         NKea87cbgbdIxPViTMG9Pk7SM76PgHuRqJtNyLl9H5e72ZLZm8W3vRgeyI8h+gNIhydq
-         QIMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGwqsK2R7r56dHvT0DRrv57UsJ4ywI85QCOB6WcZooex9EV7JCTYm/RkMQ7dJv2ou1dj/k4u65wUMRQgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbT2XHKm/Fip83TdSyKzPVHBdPTwgRdIbMnokxGTj2qzJeYA7m
-	xOGa3kN76G0Hezz+aYI1OltY+rSNfqUxdx3C1Z1d9dxDK/QHQcED7DWgnK1BgGXjhTJxQT3iU9I
-	j8oM7aDn2RabtyFKmZK3dCC6YGRctyk50XQ2MN5tgbFwXHpEe
-X-Gm-Gg: ASbGncsmJNWlzbGvxjv4j+42QjiKC9Q07thgeC01KZUPeCwnqBKKysWRuqkJhkBbRLs
-	/xCWtaMXD8DSbk/WvnduLdr8t1F3fCuW4d9JHMZXqxayF1Ob7KFVk0kHHsLFNORGtiUbw5x+qmN
-	CDwqEwHEkeya/swy/HVQs01kr0jVxLYUQuUUUEr3rO/hCgiXxCZUL1vEplpRMfRKK2EXMHowCjg
-	sD8nvEkVUapMilx86B02+FpNXIldMtrOUurgnsn2GkjGDjpaih6JPVOZH5NcuuY6PqAmXrufCHb
-	q8y/q+nLL2EUK5qo8nZOtd4=
-X-Google-Smtp-Source: AGHT+IHYpDUM5IoG8Gefvs4nmEzKc+3MUcQyKzvpDeSdd4lhbhbGh2EnHmPFJjw+Kv8PFBLmrPRm+a/xUBfZ
-X-Received: by 2002:a05:6e02:1d9a:b0:3d0:13f1:b47c with SMTP id e9e14a558f8ab-3d17c2155e0mr3318165ab.4.1739321514520;
-        Tue, 11 Feb 2025 16:51:54 -0800 (PST)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d16133e8f5sm3111825ab.69.2025.02.11.16.51.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 16:51:54 -0800 (PST)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 715553400C7;
-	Tue, 11 Feb 2025 17:51:53 -0700 (MST)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 685E6E40C16; Tue, 11 Feb 2025 17:51:23 -0700 (MST)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>
-Cc: Caleb Sander Mateos <csander@purestorage.com>,
-	io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] io_uring: use lockless_cq flag in io_req_complete_post()
-Date: Tue, 11 Feb 2025 17:51:18 -0700
-Message-ID: <20250212005119.3433005-1-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1739321695; x=1739926495;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3eEjYLiIzAQvKfFhJfuIXXpvDRbqlCf0jI1QKURWY7Q=;
+        b=EpIjpQKox89Kw5gOK7JobworB0pzMrayLYb+LiMHHD854VI+6LiD4BIb9nMAa0P+zH
+         pb3uo8fRrV3n8FmALDwiDgtDsDN/9sBoEVUt7f2Yc7ejmf/53/EYL4Mizh9h43c8s9Vr
+         MO9Kj8aXq9Weo1GeqZvRrID8CRj2c5MSmQ65o1VoKPdmaGZkYp2ZLsC0u1ydmvfp0vTg
+         NIVc+BOnsYtN0Q38bkEGktxMjwr0s77Zjbvqw6rkj9cHQ9r76xaPZ5M9ft2VnOpIJTtb
+         tqmyOpbKZ1CHCaIqE+zWuhDSW9QBwWZ80tY6cg+nc8rx0UimBB0ftkFI8hYyBf76NpB1
+         z8Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCVbeiNRSB0kHHgv+RmjkeFk2m2LhFKg7ClOH6yOX1+cZHas94RkU5QoxJxA9hewPcnd8ZM928dDarJDjxY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTFL2vDlP/dvRGDjvgh+aUK7izwU7QN0OWtoGP/a54zvE6EfWC
+	PDXnzduaGBUdyYghN2izZ+rgRFuKpkDdpTvBqasSDqJNT/rz5u1+5E00uhjl3Xo=
+X-Gm-Gg: ASbGnct7rRxd6cO+JAiONeBIve5SaIlS/kn9O/FoYSLVgC+XRutaaniTiSz1r5UrN+l
+	HnkQciVNsqJdr54KBIKPbcPS1PFyWmMdDfjJk9iwwhq00QhCIpDSmg/aV+ukHNl7IxudbjtC+1J
+	eSjA2CbfpvG/9riOA8yfE3gyKgklqPYYwtY3fNOxud1UHkejNrBVjjTaJH7udvI3neu67MP76Ni
+	wk793Az3Ho7G94sJo5Ffv5o0lVzplQIKjeD2q/iEYxMR1QvIzPr0wl/IUbQyyuGwQ90FYtkM0vt
+	Bzt9RlIqUc3nE/Rqc5i1Nwr4feUoSnIY1N46cjYCy6N7QCyBdTxhn14=
+X-Google-Smtp-Source: AGHT+IFBoL5K522A7AuoflUF+1XhMG9n3ItwKCGI8JCLC5Il05/77VAGdvXbN30wro/dkD3TCaY0yg==
+X-Received: by 2002:a05:600c:4e8d:b0:439:4a1f:cf85 with SMTP id 5b1f17b1804b1-439580e532amr12252835e9.0.1739321695252;
+        Tue, 11 Feb 2025 16:54:55 -0800 (PST)
+Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a06ae8asm3736345e9.21.2025.02.11.16.54.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 16:54:54 -0800 (PST)
+Message-ID: <2299c94f-aa46-47b5-bd25-9436a8fbd619@citrix.com>
+Date: Wed, 12 Feb 2025 00:54:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/17] x86/cpu/intel: Fix page copy performance for
+ extended Families
+To: Dave Hansen <dave.hansen@intel.com>, Sohil Mehta <sohil.mehta@intel.com>,
+ x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+ Tony Luck <tony.luck@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Fenghua Yu <fenghua.yu@intel.com>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>, Zhang Rui <rui.zhang@intel.com>,
+ David Laight <david.laight.linux@gmail.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20250211194407.2577252-1-sohil.mehta@intel.com>
+ <20250211194407.2577252-6-sohil.mehta@intel.com>
+ <b9c21518-54fc-4907-8fc3-d492a3f33bdf@intel.com>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <b9c21518-54fc-4907-8fc3-d492a3f33bdf@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-io_uring_create() computes ctx->lockless_cq as:
-ctx->task_complete || (ctx->flags & IORING_SETUP_IOPOLL)
+On 11/02/2025 8:53 pm, Dave Hansen wrote:
+> On 2/11/25 11:43, Sohil Mehta wrote:
+>> +	/*
+>> +	 * Modern CPUs are generally expected to have a sane fast string
+>> +	 * implementation. However, the BIOS may disable it on certain CPUs
+>> +	 * via the architectural FAST_STRING bit.
+>> +	 */
+>> +	if (IS_ENABLED(CONFIG_X86_64) && (c->x86 == 6 || c->x86 > 15))
+>> +		set_cpu_cap(c, X86_FEATURE_REP_GOOD);
+> I'm not sure the BIOS comment is helpful here.
+>
+> Also, at this point, let's just make the check >=6 (or the >=PPRO
+> equivalent).
+>
+> It will only matter if *all* of these are true:
+> 1. Someone has a 64-bit capable P4 that powers on
+> 2. They're running a 64-bit mainline kernel
+> 3. String copy is *actually* slower than the alternative
+> 4. They are performance sensitive enough to notice
+>
+> We don't even know the answer to #3 for sure. Let's just say what we're
+> doing in a comment:
+>
+> 	/* Assume that any 64-bit CPU has a good implementation */
 
-So use it to simplify that expression in io_req_complete_post().
+If you're going to override the BIOS setting, then you need to
+explicitly set MSR_MISC_ENABLE.FAST_STRINGS.
 
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
----
- io_uring/io_uring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Otherwise you're claiming to Linux that REP is good even when hardware
+is prohibited from using optimisations.
 
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index ec98a0ec6f34..0bd94599df81 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -897,11 +897,11 @@ static void io_req_complete_post(struct io_kiocb *req, unsigned issue_flags)
- 
- 	/*
- 	 * Handle special CQ sync cases via task_work. DEFER_TASKRUN requires
- 	 * the submitter task context, IOPOLL protects with uring_lock.
- 	 */
--	if (ctx->task_complete || (ctx->flags & IORING_SETUP_IOPOLL)) {
-+	if (ctx->lockless_cq) {
- 		req->io_task_work.func = io_req_task_complete;
- 		io_req_task_work_add(req);
- 		return;
- 	}
- 
--- 
-2.45.2
+~Andrew
 
