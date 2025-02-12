@@ -1,116 +1,190 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C02481FF1DF;
-	Wed, 12 Feb 2025 21:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2333A202F8C
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 21:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739397331; cv=none; b=BYHdqz0394+p0lCylRtNuq819msbkOAQtKgoAlmYSMky7W7HDj0tuPEh6NO920eo3IUeTNm0Q1DezXDjd1QHeUEaCB/NsEXzEn1v00wTLZm8coU5TR2Ty9RwuAAHVwIBYBLxDpOXhK+U4wPG8E5MO/odcNknlSd/ZLxp7VTUdCk=
+	t=1739397534; cv=none; b=NRu78TLpPuqSM3RtWQKaPHCFDKLzM98ou8mJH0A6NmVplLmk1MB5ESsbA+WLSuzu7CyFDHksWz7bmzOUuiNfv1AnlzSQhhedHh1rGlkmc38FWpatIajiePWqUhf5cCRAhCChNjNFo/c/EfG7VnCYKLL6MvuOFG1QkhbCQOmV3hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739397331; c=relaxed/simple;
-	bh=gHcV0lnpLWJYJxLs7QprlXgEmM1aIqcMb4O8yITOdz0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HHnM9F6qFdWTIzuOu7IbJDrmOr0GsN2hX6QHC5iUvrSPKIeXz4yUhNNIWbUpTgc2Ur7WI0FmTTpofMxqCf2iJ+511kM85w6vYUHCF6TQpS8vpjddPjiFx1XNVGJEdkD1R4d62pWPj6eAmSNPsC50NEtF98fMWcCEcprlZnU8BZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E893113E;
-	Wed, 12 Feb 2025 13:55:48 -0800 (PST)
-Received: from [10.118.100.66] (G9L3377F54.austin.arm.com [10.118.100.66])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 494AB3F58B;
-	Wed, 12 Feb 2025 13:55:27 -0800 (PST)
-Message-ID: <fdaa9a58-790f-4839-8db7-1b9a81eb8edf@arm.com>
-Date: Wed, 12 Feb 2025 15:55:26 -0600
+	s=arc-20240116; t=1739397534; c=relaxed/simple;
+	bh=ZeJV606HhNOYcrFNa/6JlfrCAbfQCMj5yvznSZgG+FA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nNrsPnd3kHYIf65XB/yuAOo6wGKfP9X/Uf1Lh6Dia38Bo8AN8xzZdJwE4ViYlZmNCG8yM6pLsv2+3AT5LB6lirGB2El+qMKreAlQkY+7wWexnA8mRW5jt63YisyQWSPlVwABr8xNyGhfyAOY4RjYiNcOvrjYQ1nN+6h1Tyk8Svc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=glTpOYId; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="glTpOYId"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21f8f3bd828so301045ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 13:58:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1739397532; x=1740002332; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7vkMubqrMNCA+P8txMR+PCY+IaB0s5pHKten9Sx9268=;
+        b=glTpOYIdb+kLz1ZRA1Vnu9O39TWSqAIQbKMXCHSA5K5/yEOA34LVq8knQGuWLcaLW8
+         muAB65UZp60B2GpGIyJVd3IH5y2OC3i/3+Xa3czqbi1bSY53icUXS04KPBEqNsx2JPJx
+         HKRBTGjMCuakuyPhgAX92/Buf+CeIRbpv4nphr+n3v6u3dCHM7ld7T5gwuTxh+kaSXOE
+         euk6Gkv4tW8FC5WqMR6G2ez8kYMSJkAU0j1+6K8wgrfRKU2t2DvyN4IXNYrMCN/LvKw/
+         rYavhUU+x7l/74NMxWNwzqgrTqmG3zUOz9dQv8/thtMBWghLndsA8yBkWNvLR5GWp5yJ
+         oBTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739397532; x=1740002332;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7vkMubqrMNCA+P8txMR+PCY+IaB0s5pHKten9Sx9268=;
+        b=hnHSYeOl6KkyPqHBf4CI69alzr5b3EFGsL6Xgt/HPLplaj/QV5j1O2hOCYPdFFjZxo
+         YUx8WWSm5Ej6CGTX18+oy7AsAYLEeAhYf/rj92nhFnlRO27bVwxnK/R6ESnH+kxK3SOn
+         tzrPG6KXyK/lNW+ly5Fz+8bIBYLnb4NLayvB+e/8+pID2zt/SDUDA+rZEOlRQlsmL3Nf
+         l0Vx8yr1BV7ASylQO5+LRHbbWX+f+Xzkfkith3IgFb7XSkzDyvC3ORDSnXGH7SnIRyOx
+         1YPyySpnFxR7uwn2YHb1yYGpi9IdwGdBVANoeKtAjVlVdecgSRjUbf6E/giG4C9LfA7r
+         LINA==
+X-Forwarded-Encrypted: i=1; AJvYcCXV1cXgw5adlnv0j9ru21Lna1IvkPHRbF5d9qPqPA2fxw4kvXOECFwd8UWx3thJaneywgPMERYOfY1vr88=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE096gy0qI8xyEmMdaH3m0FM60y/iw+YynRZTJsr24eMS+6sb8
+	am1m6qPwwPzua2BMDuW8gKVLatSngBV+sjaJrzyIfe42bCpKwmV7lVErPESjYOYD9uCO9ox4neF
+	MpnXS/BJHNVyDLf41LtfyeAnkTwPYfUO6IbSw4w==
+X-Gm-Gg: ASbGncumAtNdAFgsz1HBlzh6cbfTE3bXYw498i5V3mtQDJdkMBXpSvCpG0BGVznGD+M
+	OKMwkSGEgGnUx9YSPgRLzmDrBBGmiIq0KKdOIlW7Jsjz+T8cDTzU1oHw4693H7mLAMy5+KU0=
+X-Google-Smtp-Source: AGHT+IGv1A+woJLlJgl63xhuiKMFHTiUoQ/G0lh4kY82QXapUXwlp/DT66Lo83612m9rkYmfcT+rnuzNCLEgGSvUxoE=
+X-Received: by 2002:a17:902:ea01:b0:20c:5da8:47b8 with SMTP id
+ d9443c01a7336-220bbf3284amr30377295ad.5.1739397532283; Wed, 12 Feb 2025
+ 13:58:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] Add support for the TPM FF-A start method
-To: Sumit Garg <sumit.garg@linaro.org>
-Cc: linux-integrity@vger.kernel.org, jarkko@kernel.org, peterhuewe@gmx.de,
- jgg@ziepe.ca, sudeep.holla@arm.com, rafael@kernel.org, lenb@kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- Jens Wiklander <jens.wiklander@linaro.org>
-References: <20250210232227.97761-1-stuart.yoder@arm.com>
- <CAFA6WYM7K4_toy5_n1arW4po4SOX0R9624rCgO=_MvcMeySwUA@mail.gmail.com>
- <4bb3cefa-b843-45ca-82c5-d96b13454baa@arm.com>
- <CAFA6WYM3UA9+TE8L2U5Qd8FZfaGZnbba=QzWU7fEu3LKQVm-tw@mail.gmail.com>
-Content-Language: en-US
-From: Stuart Yoder <stuart.yoder@arm.com>
-In-Reply-To: <CAFA6WYM3UA9+TE8L2U5Qd8FZfaGZnbba=QzWU7fEu3LKQVm-tw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250212204546.3751645-1-csander@purestorage.com>
+ <401f9f7a-b813-43b0-b97f-0165072e2758@kernel.dk> <50caa50c-5126-4072-8cfc-33b83b524489@kernel.dk>
+In-Reply-To: <50caa50c-5126-4072-8cfc-33b83b524489@kernel.dk>
+From: Caleb Sander <csander@purestorage.com>
+Date: Wed, 12 Feb 2025 13:58:41 -0800
+X-Gm-Features: AWEUYZmI7u_8qzPpg7HXGKAXEj_umodoVjsh9_-byPg-wdS94gn-N9p1Mvu9XyA
+Message-ID: <CADUfDZroLajE4sF6=oYopg=gNtv3Zko78ZcJv4eQ5SBxMxDOiw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] uring_cmd SQE corruptions
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Pavel Begunkov <asml.silence@gmail.com>, Riley Thomasson <riley@purestorage.com>, 
+	io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Feb 12, 2025 at 1:02=E2=80=AFPM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 2/12/25 1:55 PM, Jens Axboe wrote:
+> > On 2/12/25 1:45 PM, Caleb Sander Mateos wrote:
+> >> In our application issuing NVMe passthru commands, we have observed
+> >> nvme_uring_cmd fields being corrupted between when userspace initializ=
+es
+> >> the io_uring SQE and when nvme_uring_cmd_io() processes it.
+> >>
+> >> We hypothesized that the uring_cmd's were executing asynchronously aft=
+er
+> >> the io_uring_enter() syscall returned, yet were still reading the SQE =
+in
+> >> the userspace-mapped SQ. Since io_uring_enter() had already incremente=
+d
+> >> the SQ head index, userspace reused the SQ slot for a new SQE once the
+> >> SQ wrapped around to it.
+> >>
+> >> We confirmed this hypothesis by "poisoning" all SQEs up to the SQ head
+> >> index in userspace upon return from io_uring_enter(). By overwriting t=
+he
+> >> nvme_uring_cmd nsid field with a known garbage value, we were able to
+> >> trigger the err message in nvme_validate_passthru_nsid(), which logged
+> >> the garbage nsid value.
+> >>
+> >> The issue is caused by commit 5eff57fa9f3a ("io_uring/uring_cmd: defer
+> >> SQE copying until it's needed"). With this commit reverted, the poison=
+ed
+> >> values in the SQEs are no longer seen by nvme_uring_cmd_io().
+> >>
+> >> Prior to the commit, each uring_cmd SQE was unconditionally memcpy()ed
+> >> to async_data at prep time. The commit moved this memcpy() to 2 cases
+> >> when the request goes async:
+> >> - If REQ_F_FORCE_ASYNC is set to force the initial issue to go async
+> >> - If ->uring_cmd() returns -EAGAIN in the initial non-blocking issue
+> >>
+> >> This patch set fixes a bug in the EAGAIN case where the uring_cmd's sq=
+e
+> >> pointer is not updated to point to async_data after the memcpy(),
+> >> as it correctly is in the REQ_F_FORCE_ASYNC case.
+> >>
+> >> However, uring_cmd's can be issued async in other cases not enumerated
+> >> by 5eff57fa9f3a, also leading to SQE corruption. These include request=
+s
+> >> besides the first in a linked chain, which are only issued once prior
+> >> requests complete. Requests waiting for a drain to complete would also
+> >> be initially issued async.
+> >>
+> >> While it's probably possible for io_uring_cmd_prep_setup() to check fo=
+r
+> >> each of these cases and avoid deferring the SQE memcpy(), we feel it
+> >> might be safer to revert 5eff57fa9f3a to avoid the corruption risk.
+> >> As discussed recently in regard to the ublk zero-copy patches[1], new
+> >> async paths added in the future could break these delicate assumptions=
+.
+> >
+> > I don't think it's particularly delicate - did you manage to catch the
+> > case queueing a request for async execution where the sqe wasn't alread=
+y
+> > copied? I did take a quick look after our out-of-band conversation, and
+> > the only missing bit I immediately spotted is using SQPOLL. But I don't
+> > think you're using that, right? And in any case, lifetime of SQEs with
+> > SQPOLL is the duration of the request anyway, so should not pose any
+> > risk of overwriting SQEs. But I do think the code should copy for that
+> > case too, just to avoid it being a harder-to-use thing than it should
+> > be.
+> >
+> > The two patches here look good, I'll go ahead with those. That'll give
+> > us a bit of time to figure out where this missing copy is.
+>
+> Can you try this on top of your 2 and see if you still hit anything odd?
+>
+> diff --git a/io_uring/uring_cmd.c b/io_uring/uring_cmd.c
+> index bcfca18395c4..15a8a67f556e 100644
+> --- a/io_uring/uring_cmd.c
+> +++ b/io_uring/uring_cmd.c
+> @@ -177,10 +177,13 @@ static void io_uring_cmd_cache_sqes(struct io_kiocb=
+ *req)
+>         ioucmd->sqe =3D cache->sqes;
+>  }
+>
+> +#define SQE_COPY_FLAGS (REQ_F_FORCE_ASYNC|REQ_F_LINK|REQ_F_HARDLINK|REQ_=
+F_IO_DRAIN)
 
-
-On 2/12/25 1:39 AM, Sumit Garg wrote:
-> On Tue, 11 Feb 2025 at 21:39, Stuart Yoder <stuart.yoder@arm.com> wrote:
->>
->> Hi Sumit,
->>
->> On 2/11/25 12:45 AM, Sumit Garg wrote:
->>> + Jens
->>>
->>> Hi Stuart,
->>>
->>> On Tue, 11 Feb 2025 at 04:52, Stuart Yoder <stuart.yoder@arm.com> wrote:
->>>>
->>>> These patches add support for the CRB FF-A start method defined
->>>> in the TCG ACPI specification v1.4 and the FF-A ABI defined
->>>> in the Arm TPM Service CRB over FF-A (DEN0138) specification.
->>>> (https://developer.arm.com/documentation/den0138/latest/)
->>>
->>> Nice to have a specification standardizing interface to TPM
->>> managed/implemented by the firmware. Care to add corresponding kernel
->>> documentation under Documentation/security/tpm/.
->>
->> Yes, I can add some documentation there.
->>
->>> BTW, we already have drivers/char/tpm/tpm_ftpm_tee.c, so do you see
->>> possibilities for an abstraction layer on top of communication channel
->>> based on either FF-A or TEE or platform bus?
->>
->> I think the CRB and OP-TEE based messaging approaches for interacting
->> with a TZ-based TPM are fundamentally different and I don't see how
->> to harmonize them through some abstraction.
->>
->> The OP-TEE TPM protocol copies the TPM command into a temp shared memory
->> buffer and sends a message to the TPM referencing that buffer.
->>
->> The CRB uses a permanently shared memory carve-out that in addition
->> to the command/response data has other fields for locality control,
->> command control, status, TPM idle, etc. The only 'message' needed is
->> something to signal 'start'.  Any OS that is FF-A aware and has a
->> CRB driver can simply add a new start method, which is what this
->> patch series does.
-> 
-> Okay, I see how the CRB driver is closely tied to the ACPI based
-> systems.
-
-The CRB driver is currently probed based on ACPI, but it fundamentally
-doesn't have to be.  If there was a DT binding for CRB-based
-TPMs the different start methods would be defined there and the
-CRB driver could support that.
-
-> I was expecting the FF-A based TPM interface to be
-> independent of ACPI or DT such that it's not constrained by the
-> hardware description a platform chooses to use. I suppose there will
-> be a different TPM FF-A driver or spec when someone wants to deploy it
-> on DT based systems, right?
-
-The CRB is just a shared memory buffer, with some architected semantics
-defined by TCG. The basic CRB usage model is that a client puts
-something in the CRB, such as the bytes of a TPM command, and then
-notifies the TPM that a change was made to the CRB. The CRB over
-FF-A spec just defines the message to perform that notification
-when FF-A is used.
-
-So, whether the fTPM was advertised via ACPI or DT, it doesn't matter.
-The FF-A based interface is only about the the notification messages
-needed for the OS driver to tell the TPM that something has changed
-in the CRB.
+I believe this still misses the last request in a linked chain, which
+won't have REQ_F_LINK/REQ_F_HARDLINK set?
+IOSQE_IO_DRAIN also causes subsequent operations to be issued async;
+is REQ_F_IO_DRAIN set on those operations too?
 
 Thanks,
-Stuart
+Caleb
+
+> +
+>  static int io_uring_cmd_prep_setup(struct io_kiocb *req,
+>                                    const struct io_uring_sqe *sqe)
+>  {
+>         struct io_uring_cmd *ioucmd =3D io_kiocb_to_cmd(req, struct io_ur=
+ing_cmd);
+> +       struct io_ring_ctx *ctx =3D req->ctx;
+>         struct io_uring_cmd_data *cache;
+>
+>         cache =3D io_uring_alloc_async_data(&req->ctx->uring_cache, req);
+> @@ -190,7 +193,7 @@ static int io_uring_cmd_prep_setup(struct io_kiocb *r=
+eq,
+>
+>         ioucmd->sqe =3D sqe;
+>         /* defer memcpy until we need it */
+> -       if (unlikely(req->flags & REQ_F_FORCE_ASYNC))
+> +       if (unlikely(ctx->flags & IORING_SETUP_SQPOLL || req->flags & SQE=
+_COPY_FLAGS))
+>                 io_uring_cmd_cache_sqes(req);
+>         return 0;
+>  }
+>
+> --
+> Jens Axboe
