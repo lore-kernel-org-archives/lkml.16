@@ -1,127 +1,94 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54E1202C45
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518C9202C45;
+	Wed, 12 Feb 2025 22:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739399148; cv=none; b=bILnvFqAF273m1BduC+bit6Yvjotsfz07nr5l0qzI+r3Yaszqmg6bBX0VFqRnzlz8sDOGzyN4DRYunzRmSNq2PwWvvu5azFqCe3PEeiuCkMZDliqv9mIzutRw3h+w3c8DS/a8DtuqTOSayPRc3+tRZkJsFOtA9ZGbE81HDsj8go=
+	t=1739399221; cv=none; b=BNFl0lrFLuly0adzKksQZmn1DLp9uHu0nVzWmwQvkM0zT77qybEfj4Qf26XNBEdUpviapW0d5PiT0a6uoCbYxg+PmHpbfEDAtauz3wQC6pSrcJsqFFqyYHb2f1s8iiX7PYJ4XhC1CJS9/6Gn5pGfbbnWtgduDwYqxmjsUXxaQgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739399148; c=relaxed/simple;
-	bh=cRsst9VUZPQ4xjX0JjGxH/HZKO6ga8iI/0by98CXMI0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sIqkIKdXMUoXpVmXun4W2BGUTv94drtRyrtQXfGkwIQD9kOU/lPojUMfKH4Zv6o3y1S62xoCCSqNjoKmKTQYSobM93eCbLOZQITuUUASgWx5M9QVzIBorgLx49hdSQN8QoEdkxiUFBMA9AiwaJf2M1J0JSa55647SSSBLdP50zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qGQ57XXI; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739399221; c=relaxed/simple;
+	bh=/3+mBVrE63/84GWfZK7OmV4Ny/tGhzzzgdhYFy/il4Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HJrTVU3mXSrGe+Tjz8ZEKWn3aYPKggD9HDwFKsgdBIx/rW6lFxT2kI8dR8VckEHoOxNxEF6ouHqEVdBHgFr1Svm+2bc7fcYnqOoDmgY+r+2ZT20EAo8hNbHm3u45Nl+WAZJyt0sWRIYJT+ptuxkp6eT8FXOZj1oQp4pfYlKXF+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RKW3YlQz; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qGQ57XXI"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d18c325ee4so7635ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 14:25:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739399146; x=1740003946; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eb8NB3DXPVSxp8ymRsumf/Gc3u9+Crn5k7jX9QVoT18=;
-        b=qGQ57XXICBWt4v7pTUUjcg6HduSc4W8c5CDVU+YQVMmLAPquEmLBkBZH60DYSbJV26
-         Fb6ievsf6+gqpMx6bkuJElY46OK+o9q8w3hNUzSFgOsc88Ym5DK5Y5m2uhOmIgMVDTsD
-         f0g442zLMpu+H1aflzNFVXuwCwozaVMfzOO9md7KRH9cHiBaUMJcdtrEarWd6I1Qh6xp
-         uvXPZIHPYfuKkm/+EBgbrHNE5CGa1rPkXcJDajYSRciOArkRVcD9qhU0GyKNG+bPGowd
-         WVqNRGFW2fY3kqYMh4RO//bP6A4Elq03qvGxaTsuw80le+3Pc+SbU1fFio84JGDllNLW
-         d2jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739399146; x=1740003946;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eb8NB3DXPVSxp8ymRsumf/Gc3u9+Crn5k7jX9QVoT18=;
-        b=ppFG/MvVDKxoxMKfQeLScen42BD2VMqRtob6GrlG8FrS279YU50P7jrTT1Zw91wkWA
-         8QOAZaK4WceDZBHXkM9xaYaGpMgsIEuhwaPOAdov0xMMJgHK/EXLWtjNXGksd/ndX76g
-         rIClRD45ugKG9Y6X8LWcOAg2QBRJ9BIm2La4sZsZdZhdWZcp2uaq39I+u0RHEXuoFQU8
-         zZ1e1SJ1Biha4M5QxHSyWZD9Gh6/ymnxlaXS/01k6qZ3EYeLzqI33rC9tJcqMUW1cNCQ
-         B+OamRHUPx1pmAtc9iphpu6Cbqv4RbZqWThxFcZE8a6HQJllx/CPYstTonK+NibCWkKy
-         IpNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXOVhzPeaCCBMbiHMXibss1yViBB+vcJ8QYWPP4NS24l+csIBPQ7CZ+VfRQlp2x8Kc6YzzZzbdejbPtgok=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT5oCVQu1Lpch/Z0HDXopzznjHfnfgpt/uP8sa/yMNhYZxoB6t
-	7J1rF8SyWpUcwM7c9wVObUPFDkeLIHjkQpBCC1Xt0aMsFVL7UmGzQJ50opnPdT1haK56ltkpLXm
-	tCNRiLGTWy3/hBEm63wZ2cPP0u50xslyE6o4V
-X-Gm-Gg: ASbGncs09LX0QRJL+HSxgiB759u5E9i+pEdXyNiqsQSmFHzFL37mw9s22F9ygXZjNPG
-	YUeWaBoo22B6f0nwJtYeveyw0bjBHHmBIv/SjEtRT487nr7bcBek5n/ztZhUvjwTY4STdttJ2sR
-	9ikDFj7K4ni13JtS95TUiKaCSq
-X-Google-Smtp-Source: AGHT+IEPi18vHfc6677zYsQWxRRWLmfPS/2RcM6gJqq5aFJEzAn2ciymxv8IrOUJUOw3+je2EcPOc6fxm7v4RthHM4k=
-X-Received: by 2002:a05:6e02:2405:b0:3d0:5ac6:f493 with SMTP id
- e9e14a558f8ab-3d18e1e33d2mr339635ab.5.1739399145693; Wed, 12 Feb 2025
- 14:25:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RKW3YlQz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739399219; x=1770935219;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/3+mBVrE63/84GWfZK7OmV4Ny/tGhzzzgdhYFy/il4Q=;
+  b=RKW3YlQzhT+0w2VxLepW/buJ6YAtdng2+jL6vc00z+rqZv5b6xExmtxe
+   Srs42M9/G8s7ieTQf3F+/KMtpE5ae/8DGY3oQYtcAlAlmpi8g9WFq6E9+
+   RnS5oZ/GpZxRnpmUj5M9COoe1Hjd5ZGnnfWjodbVIFqDuqLSm7omPz3c5
+   97U4GW8swmFVNPIS/f2TGASHvAmnTxmgzXRvh/5t9xaQoZ6smX9Xdwd9p
+   4WMoJeNt/tpjJ75ep2GhhucpoEiBEzIXspmFgByKN/f6f2JimgsoISmZ7
+   0jnFNs1QSjaf7//el/BfYsFw47Yu2YP8md8hDWEd5ybjYtUMUwjIF9FEB
+   w==;
+X-CSE-ConnectionGUID: 7IBeE15jR/m/FEYqGMus/Q==
+X-CSE-MsgGUID: f0WXe2sMQDyRyx1ADL5Ehg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="42919934"
+X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
+   d="scan'208";a="42919934"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 14:26:58 -0800
+X-CSE-ConnectionGUID: 5gpj1kBGTU60agfsopnnIg==
+X-CSE-MsgGUID: H+oFrjRlRKCfbaGSO0YdUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
+   d="scan'208";a="118038847"
+Received: from pg15swiplab1181.png.altera.com ([10.244.232.167])
+  by fmviesa004.fm.intel.com with ESMTP; 12 Feb 2025 14:26:56 -0800
+From: Kuhanh Murugasen Krishnan <kuhanh.murugasen.krishnan@intel.com>
+To: Moritz Fischer <mdf@kernel.org>,
+	Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>,
+	linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kuhanh Murugasen Krishnan <kuhanh.murugasen.krishnan@intel.com>,
+	kuhanh.murugasen.krishnan@altera.com
+Cc: Ang Tien Sung <tien.sung.ang@intel.com>
+Subject: [PATCH] fpga: altera-cvp: PCIex8x8 ports (#94)
+Date: Thu, 13 Feb 2025 06:23:21 +0800
+Message-Id: <20250212222321.2716639-1-kuhanh.murugasen.krishnan@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212221445.437481-1-namhyung@kernel.org>
-In-Reply-To: <20250212221445.437481-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 12 Feb 2025 14:25:34 -0800
-X-Gm-Features: AWEUYZkOKMbZzWVbJGyBP-A50OG1S_X-IxmfIoNOeRJjPef2U-p22t0pd2K8YnM
-Message-ID: <CAP-5=fV4w=y5-mFdwa8_UAxPYJeqnFhdXjyVic88CKwP_XdmSg@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Use symfs when opening debuginfo by path
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 12, 2025 at 2:14=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> I found that it failed to load a binary using --symfs option.  Say I
-> have a binary in /home/user/prog/xxx and a perf data file with it.  If I
-> move them to a different machine and use --symfs, it tries to find the
-> binary in some locations under symfs using dso__read_binary_type_filename=
-(),
-> but not the last one.
->
->   ${symfs}/usr/lib/debug/home/user/prog/xxx.debug
->   ${symfs}/usr/lib/debug/home/user/prog/xxx
->   ${symfs}/home/user/prog/.debug/xxx
->   /home/user/prog/xxx
->
-> It should check ${symfs}/home/usr/prog/xxx.  Let's fix it.
->
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Enabling the possibility of supporting multiple
+PCIe devices from Intel Altera FPGA but with different
+device ids. The current driver registers itself
+to all device IDs which causes an incorrect driver
+association.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Ang Tien Sung <tien.sung.ang@intel.com>
+Signed-off-by: Kuhanh Murugasen Krishnan <kuhanh.murugasen.krishnan@intel.com>
+---
+ drivers/fpga/altera-cvp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Ian
+diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
+index 5af0bd33890c..97e9d4d981ad 100644
+--- a/drivers/fpga/altera-cvp.c
++++ b/drivers/fpga/altera-cvp.c
+@@ -560,7 +560,7 @@ static int altera_cvp_probe(struct pci_dev *pdev,
+ static void altera_cvp_remove(struct pci_dev *pdev);
+ 
+ static struct pci_device_id altera_cvp_id_tbl[] = {
+-	{ PCI_VDEVICE(ALTERA, PCI_ANY_ID) },
++	{ PCI_VDEVICE(ALTERA, 0x00) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, altera_cvp_id_tbl);
+-- 
+2.25.1
 
-> ---
->  tools/perf/util/debuginfo.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-> index 19acf4775d3587a4..b5deea7cbdf24620 100644
-> --- a/tools/perf/util/debuginfo.c
-> +++ b/tools/perf/util/debuginfo.c
-> @@ -125,8 +125,12 @@ struct debuginfo *debuginfo__new(const char *path)
->         dso__put(dso);
->
->  out:
-> +       if (dinfo)
-> +               return dinfo;
-> +
->         /* if failed to open all distro debuginfo, open given binary */
-> -       return dinfo ? : __debuginfo__new(path);
-> +       symbol__join_symfs(buf, path);
-> +       return __debuginfo__new(buf);
->  }
->
->  void debuginfo__delete(struct debuginfo *dbg)
-> --
-> 2.48.1.502.g6dc24dfdaf-goog
->
