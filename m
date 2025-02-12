@@ -1,217 +1,363 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715CB26157D;
-	Wed, 12 Feb 2025 18:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344C4263882;
+	Wed, 12 Feb 2025 18:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739384261; cv=none; b=KfsyczTMLV5Sku5Y95Us2sFib/AVuU4Ewzr/Md6lcGoz20HPnWmjbCon4hf9YGn6cwuuvSKmzXmqbzvxYrWgrRDj0HY+6OcOaPkTDNSzc1/3FcD6X8BmA/32PUNiE/TX9IX8YRrbcALvYUJ8Kwged5j8aiUuHxM0aj9qTs9a1tg=
+	t=1739384268; cv=none; b=FBsN2vA/oNNgak4cebQCtWDTwbQrUW0ZzezU0L/4AWRHfWgoYvxIJcBgQgO4tiSJ9/SffXHqfjB6lkhahwS2K1nydWnCnSpW8s74f92ROFglJnGRWhM/0ZBVXxHlk6hNSbvi2vi6pSSukqqm/D8YBVsa6bokZ3qVnlVNWuvhl5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739384261; c=relaxed/simple;
-	bh=jU2kPhgyRZAfdjYf2MKVcaAlilzb8sQchUY6HIPoYUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H3y1TE5oRq8MmbgprGT4KigPMfqMlTVzXKnKhGDEbCfx9XTHeCgGHgojuCtgXlRkKL2peN+/3XIWKJTHEg4FoJh7pQdE3oXOURGNRY0hqo2QRhLuTfEu3Xi5ccABYxc/LXv4gihh5isPtf0xdCGrgTcktMitOwbV7zaZsBMT/m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H87SpPOg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739384268; c=relaxed/simple;
+	bh=fqCLVTQ4v4HRae1dND4LZGPXts75n+vTfjoEtBPBAnk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BwLSkMIWMPx9xge7rkXiXds8M/pilqsnuMwTY0ICSZ1FLSi9ANJiJWVmWF/RqqlxjuLHXUcSo3yA74bcivQ7PfJa1p8aCXvjZr61lhF8bTAqsRzPDSsxnjHWHUlDsaH6qNHP7FH7WnVkigOqlngCyLiF3Ijy/pFMpEptgYJtHxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=Mc8JMElV; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H87SpPOg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D38C4CEDF;
-	Wed, 12 Feb 2025 18:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739384259;
-	bh=jU2kPhgyRZAfdjYf2MKVcaAlilzb8sQchUY6HIPoYUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H87SpPOgrCyGqo44WNZMOiY7ftkh5qONH0YCgttNiuye/7uexi28ExoBCGok2InLh
-	 zNiobaiOZ/eFofd97uUB/D/h/O0wjL/9ACrJaexTBoWg0/iof73FHv440cYpRX7jI0
-	 avnjFg0skeGp0kisV/1SlCUXSUH1kPqwn7Ub0cc1lVDNIqAd8XOjo/FecG2DVnkIjR
-	 GBQD1GRMX8DGjtvcIpK+ztuo4dlbPr7CVuMyncJ9R3IaOh23lWs8SVBRE4BXCsNNxq
-	 8qXJX88jNTmmzkz+qxD1JdWEemHmcsuwOTlSFbgS3lpVVKNo3A3odYulBgInJ89ryF
-	 ZhxR89buP8NkQ==
-Date: Wed, 12 Feb 2025 12:17:38 -0600
-From: Rob Herring <robh@kernel.org>
-To: Artur Weber <aweber.kernel@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Christian Daudt <bcm@fixthebug.org>,
-	Sherman Yin <syin@broadcom.com>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Stanislav Jakubek <stano.jakubek@gmail.com>,
-	~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 1/7] dt-bindings: pinctrl: Add bindings for BCM21664 pin
- controller
-Message-ID: <20250212181738.GA4056295-robh@kernel.org>
-References: <20250207-bcm21664-pinctrl-v1-0-e7cfac9b2d3b@gmail.com>
- <20250207-bcm21664-pinctrl-v1-1-e7cfac9b2d3b@gmail.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="Mc8JMElV"
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CGx0WO014280;
+	Wed, 12 Feb 2025 13:17:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=ClmUb
+	2fgPOQ/VC7ShfO5PDVMYGo/R/d42SATNe7wMnY=; b=Mc8JMElVpc41VIyro2N6b
+	S5IqhFv+VwlZ9UpXzy+3WPw5CAytJb4seSg6RH3bM9G43oq4UNnIm5bcbqJ0uABn
+	9bqZUTEvHy6R0wfHUoRHqJKN+YGH/66crtD8DCO24laxPQz7XffdZK7DPPHwAst6
+	XWIZbkF8pPLo8HmKw8ubi9LVp2GdmKHPdTYr2hnfm4B+VwPzolgpiFftjikoJxsh
+	NfFfLf+yHVFGxp5kM7wCu9b+sOaHPvXwyAqye2yAYr+Pn4J+VNtcf3t89j1LwMQt
+	xT2xNnKSDFk8YbkqOR7yiQlq1yU3liE9Y0x3V0LoGvD6t/+fjjyrrxOByGPG0J7o
+	Q==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 44p52a3nb1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Feb 2025 13:17:31 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 51CIHU61046481
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 12 Feb 2025 13:17:30 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Wed, 12 Feb
+ 2025 13:17:30 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Wed, 12 Feb 2025 13:17:30 -0500
+Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 51CIHGJP017479;
+	Wed, 12 Feb 2025 13:17:19 -0500
+From: Jonathan Santos <Jonathan.Santos@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Jonathan Santos <Jonathan.Santos@analog.com>, <lars@metafoo.de>,
+        <Michael.Hennerich@analog.com>, <marcelo.schmitt@analog.com>,
+        <jic23@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <jonath4nns@gmail.com>,
+        <marcelo.schmitt1@gmail.com>, <dlechner@baylibre.com>
+Subject: [PATCH RESEND v3 08/17] iio: adc: ad7768-1: convert driver to use regmap
+Date: Wed, 12 Feb 2025 15:17:16 -0300
+Message-ID: <51aa3df84b50bf981bea65690d54feddd3d98a89.1739368121.git.Jonathan.Santos@analog.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1739368121.git.Jonathan.Santos@analog.com>
+References: <cover.1739368121.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207-bcm21664-pinctrl-v1-1-e7cfac9b2d3b@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: 8ZyAjZ18zkpt6bLGSdAdU5VohVJoCHN2
+X-Authority-Analysis: v=2.4 cv=FabNxI+6 c=1 sm=1 tr=0 ts=67ace5bb cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=T2h4t0Lz3GQA:10 a=gAnH3GRIAAAA:8 a=TTykNLNcmczWsnS9fc4A:9 a=oVHKYsEdi7-vN-J5QA_j:22
+X-Proofpoint-GUID: 8ZyAjZ18zkpt6bLGSdAdU5VohVJoCHN2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-12_05,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ mlxscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0
+ spamscore=0 impostorscore=0 priorityscore=1501 phishscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502120132
 
-On Fri, Feb 07, 2025 at 09:02:40PM +0100, Artur Weber wrote:
-> Add device tree bindings for the pin controller included in the
-> BCM21664 chip. The bindings are based off brcm,bcm11351-pinctrl.yaml;
-> both chips use the same driver, but have different pins, and the
-> BCM21664 has 6 alt modes instead of 4.
-> 
-> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
-> ---
->  .../bindings/pinctrl/brcm,bcm21664-pinctrl.yaml    | 169 +++++++++++++++++++++
->  1 file changed, 169 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm21664-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm21664-pinctrl.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..233bea91b640ffa8480637d7304f661b7a4f5d79
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm21664-pinctrl.yaml
-> @@ -0,0 +1,169 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/brcm,bcm21664-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Broadcom BCM21664 pin controller
-> +
-> +maintainers:
-> +  - Florian Fainelli <florian.fainelli@broadcom.com>
-> +  - Ray Jui <rjui@broadcom.com>
-> +  - Scott Branden <sbranden@broadcom.com>
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: brcm,bcm21664-pinctrl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +patternProperties:
-> +  '-pins$':
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    patternProperties:
-> +      '-grp[0-9]$':
-> +        type: object
-> +        unevaluatedProperties: false
-> +
-> +        properties:
-> +          pins:
-> +            description:
-> +              Specifies the name(s) of one or more pins to be configured by
-> +              this node.
-> +            items:
-> +              enum: [ adcsyn, batrm, bsc1clk, bsc1dat, camcs0, camcs1, clk32k,
-> +                      clk_cx8, dclk1, dclk4, dclkreq1, dclkreq4, dmic0clk,
-> +                      dmic0dq, dsi0te, gpio00, gpio01, gpio02, gpio03, gpio04,
-> +                      gpio05, gpio06, gpio07, gpio08, gpio09, gpio10, gpio11,
-> +                      gpio12, gpio13, gpio14, gpio15, gpio16, gpio17, gpio18,
-> +                      gpio19, gpio20, gpio21, gpio22, gpio23, gpio24, gpio25,
-> +                      gpio26, gpio27, gpio28, gpio32, gpio33, gpio34, gpio93,
-> +                      gpio94, gps_calreq, gps_hostreq, gps_pablank, gps_tmark,
-> +                      icusbdm, icusbdp, lcdcs0, lcdres, lcdscl, lcdsda, lcdte,
-> +                      mdmgpio00, mdmgpio01, mdmgpio02, mdmgpio03, mdmgpio04,
-> +                      mdmgpio05, mdmgpio06, mdmgpio07, mdmgpio08, mmc0ck,
-> +                      mmc0cmd, mmc0dat0, mmc0dat1, mmc0dat2, mmc0dat3, mmc0dat4,
-> +                      mmc0dat5, mmc0dat6, mmc0dat7, mmc0rst, mmc1ck, mmc1cmd,
-> +                      mmc1dat0, mmc1dat1, mmc1dat2, mmc1dat3, mmc1dat4,
-> +                      mmc1dat5, mmc1dat6, mmc1dat7, mmc1rst, pc1, pc2, pmbscclk,
-> +                      pmbscdat, pmuint, resetn, rfst2g_mtsloten3g,
-> +                      rtxdata2g_txdata3g1, rtxen2g_txdata3g2, rxdata3g0,
-> +                      rxdata3g1, rxdata3g2, sdck, sdcmd, sddat0, sddat1, sddat2,
-> +                      sddat3, simclk, simdat, simdet, simrst, spi0clk, spi0fss,
-> +                      spi0rxd, spi0txd, sri_c, sri_d, sri_e, sspck, sspdi,
-> +                      sspdo, sspsyn, stat1, stat2, swclktck, swdiotms, sysclken,
-> +                      tdi, tdo, testmode, traceclk, tracedt00, tracedt01,
-> +                      tracedt02, tracedt03, tracedt04, tracedt05, tracedt06,
-> +                      tracedt07, tracedt08, tracedt09, tracedt10, tracedt11,
-> +                      tracedt12, tracedt13, tracedt14, tracedt15, trstb,
-> +                      txdata3g0, ubctsn, ubrtsn, ubrx, ubtx ]
-> +
-> +          function:
-> +            description:
-> +              Specifies the pin mux selection.
-> +            enum: [ alt1, alt2, alt3, alt4, alt5, alt6 ]
-> +
-> +          slew-rate:
-> +            description: |
-> +              Meaning depends on configured pin mux:
-> +                bsc*clk/pmbscclk or bsc*dat/pmbscdat:
-> +                  0: Standard (100 kbps) & Fast (400 kbps) mode
-> +                  1: Highspeed (3.4 Mbps) mode
-> +                Otherwise:
-> +                  0: fast slew rate
-> +                  1: normal slew rate
-> +
-> +          bias-disable: true
-> +          bias-pull-up: true
-> +          input-disable: true
-> +          input-enable: true
+Convert the AD7768-1 driver to use the regmap API for register
+access. This change simplifies and standardizes register interactions,
+reducing code duplication and improving maintainability.
 
-With unevaluateProperties, these have no effect.
+Create two regmap configurations, one for 8-bit register values and
+other for 24-bit register values.
 
-> +
-> +        required:
-> +          - pins
-> +
-> +        allOf:
-> +          - $ref: pincfg-node.yaml#
-> +
-> +          # Optional properties for standard pins
-> +          - if:
-> +              properties:
-> +                pins:
-> +                  contains:
-> +                    enum: [ adcsyn, batrm, camcs0, camcs1, clk32k, clk_cx8,
-> +                            dclk1, dclk4, dclkreq1, dclkreq4, dmic0clk, dmic0dq,
-> +                            dsi0te, gpio00, gpio01, gpio02, gpio03, gpio04,
-> +                            gpio05, gpio06, gpio07, gpio08, gpio09, gpio10,
-> +                            gpio11, gpio12, gpio13, gpio14, gpio15, gpio18,
-> +                            gpio19, gpio20, gpio21, gpio22, gpio23, gpio24,
-> +                            gpio25, gpio26, gpio27, gpio28, gpio32, gpio33,
-> +                            gpio34, gpio93, gpio94, gps_calreq, gps_hostreq,
-> +                            gps_pablank, gps_tmark, icusbdm, icusbdp, lcdcs0,
-> +                            lcdres, lcdscl, lcdsda, lcdte, mdmgpio00, mdmgpio01,
-> +                            mdmgpio02, mdmgpio03, mdmgpio04, mdmgpio05,
-> +                            mdmgpio06, mdmgpio07, mdmgpio08, mmc0ck, mmc0cmd,
-> +                            mmc0dat0, mmc0dat1, mmc0dat2, mmc0dat3, mmc0dat4,
-> +                            mmc0dat5, mmc0dat6, mmc0dat7, mmc0rst, mmc1ck,
-> +                            mmc1cmd, mmc1dat0, mmc1dat1, mmc1dat2, mmc1dat3,
-> +                            mmc1dat4, mmc1dat5, mmc1dat6, mmc1dat7, mmc1rst,
-> +                            pc1, pc2, pmuint, resetn, rfst2g_mtsloten3g,
-> +                            rtxdata2g_txdata3g1, rtxen2g_txdata3g2, rxdata3g0,
-> +                            rxdata3g1, rxdata3g2, sdck, sdcmd, sddat0, sddat1,
-> +                            sddat2, sddat3, simclk, simdat, simdet, simrst,
-> +                            spi0clk, spi0fss, spi0rxd, spi0txd, sri_c, sri_d,
-> +                            sri_e, sspck, sspdi, sspdo, sspsyn, stat1, stat2,
-> +                            swclktck, swdiotms, sysclken, tdi, tdo, testmode,
-> +                            traceclk, tracedt00, tracedt01, tracedt02,
-> +                            tracedt03, tracedt04, tracedt05, tracedt06,
-> +                            tracedt07, tracedt08, tracedt09, tracedt10,
-> +                            tracedt11, tracedt12, tracedt13, tracedt14,
-> +                            tracedt15, trstb, txdata3g0, ubctsn, ubrtsn, ubrx,
-> +                            ubtx ]
-> +            then:
-> +              properties:
-> +                drive-strength:
-> +                  enum: [ 2, 4, 6, 8, 10, 12, 14, 16 ]
+Since we are using regmap now, define the remaining registers from 0x32
+to 0x34.
 
-Not sure this is worth the complexity. And actually, 'drive-strength' 
-will be allowed on the pins not listed here and can have any value.
+Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+---
+v3 Changes:
+* Included a second register map for the 24-bit register values.
+* Added register tables to separate the 24-bit from the 8-bit values.
 
-I would just move this to the main section and drop the if/then. You 
-could list the subset of pins where 'drive-strength' is not valid 
-instead and then put 'drive-strength: false'.
+v2 Changes:
+* New patch in v2.
+---
+ drivers/iio/adc/ad7768-1.c | 148 +++++++++++++++++++++++++------------
+ 1 file changed, 101 insertions(+), 47 deletions(-)
 
-Rob
+diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+index f5509a0a36ab..64d123b52b02 100644
+--- a/drivers/iio/adc/ad7768-1.c
++++ b/drivers/iio/adc/ad7768-1.c
+@@ -12,6 +12,7 @@
+ #include <linux/gpio/consumer.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/sysfs.h>
+ #include <linux/spi/spi.h>
+@@ -59,6 +60,9 @@
+ #define AD7768_REG_ADC_DIAG_STATUS	0x2F
+ #define AD7768_REG_DIG_DIAG_STATUS	0x30
+ #define AD7768_REG_MCLK_COUNTER		0x31
++#define AD7768_REG_COEFF_CONTROL	0x32
++#define AD7768_REG_COEFF_DATA		0x33
++#define AD7768_REG_ACCESS_KEY		0x34
+ 
+ /* AD7768_REG_POWER_CLOCK */
+ #define AD7768_PWR_MCLK_DIV_MSK		GENMASK(5, 4)
+@@ -153,6 +157,8 @@ static const struct iio_chan_spec ad7768_channels[] = {
+ 
+ struct ad7768_state {
+ 	struct spi_device *spi;
++	struct regmap *regmap;
++	struct regmap *regmap24;
+ 	struct regulator *vref;
+ 	struct clk *mclk;
+ 	unsigned int mclk_freq;
+@@ -175,46 +181,76 @@ struct ad7768_state {
+ 	} data __aligned(IIO_DMA_MINALIGN);
+ };
+ 
+-static int ad7768_spi_reg_read(struct ad7768_state *st, unsigned int addr,
+-			       unsigned int len)
+-{
+-	unsigned int shift;
+-	int ret;
++static const struct regmap_range ad7768_regmap_rd_ranges[] = {
++	regmap_reg_range(AD7768_REG_CHIP_TYPE, AD7768_REG_DIG_DIAG_ENABLE),
++	regmap_reg_range(AD7768_REG_MASTER_STATUS, AD7768_REG_COEFF_CONTROL),
++	regmap_reg_range(AD7768_REG_ACCESS_KEY, AD7768_REG_ACCESS_KEY),
++};
+ 
+-	shift = 32 - (8 * len);
+-	st->data.d8[0] = AD7768_RD_FLAG_MSK(addr);
++static const struct regmap_access_table ad7768_regmap_rd_table = {
++	.yes_ranges = ad7768_regmap_rd_ranges,
++	.n_yes_ranges = ARRAY_SIZE(ad7768_regmap_rd_ranges),
++};
+ 
+-	ret = spi_write_then_read(st->spi, st->data.d8, 1,
+-				  &st->data.d32, len);
+-	if (ret < 0)
+-		return ret;
++static const struct regmap_range ad7768_regmap_wr_ranges[] = {
++	regmap_reg_range(AD7768_REG_SCRATCH_PAD, AD7768_REG_SCRATCH_PAD),
++	regmap_reg_range(AD7768_REG_INTERFACE_FORMAT, AD7768_REG_GPIO_WRITE),
++	regmap_reg_range(AD7768_REG_OFFSET_HI, AD7768_REG_DIG_DIAG_ENABLE),
++	regmap_reg_range(AD7768_REG_SPI_DIAG_STATUS, AD7768_REG_SPI_DIAG_STATUS),
++	regmap_reg_range(AD7768_REG_COEFF_CONTROL, AD7768_REG_COEFF_CONTROL),
++};
+ 
+-	return (be32_to_cpu(st->data.d32) >> shift);
+-}
++static const struct regmap_access_table ad7768_regmap_wr_table = {
++	.yes_ranges = ad7768_regmap_wr_ranges,
++	.n_yes_ranges = ARRAY_SIZE(ad7768_regmap_wr_ranges),
++};
+ 
+-static int ad7768_spi_reg_write(struct ad7768_state *st,
+-				unsigned int addr,
+-				unsigned int val)
+-{
+-	st->data.d8[0] = AD7768_WR_FLAG_MSK(addr);
+-	st->data.d8[1] = val & 0xFF;
++static const struct regmap_config ad7768_regmap_config = {
++	.name = "ad7768-1-8",
++	.reg_bits = 8,
++	.val_bits = 8,
++	.read_flag_mask = BIT(6),
++	.rd_table = &ad7768_regmap_rd_table,
++	.wr_table = &ad7768_regmap_wr_table,
++	.max_register = AD7768_REG_ACCESS_KEY,
++	.use_single_write = true,
++	.use_single_read = true,
++};
+ 
+-	return spi_write(st->spi, st->data.d8, 2);
+-}
++static const struct regmap_range ad7768_regmap24_rd_ranges[] = {
++	regmap_reg_range(AD7768_REG_ADC_DATA, AD7768_REG_ADC_DATA),
++	regmap_reg_range(AD7768_REG_COEFF_DATA, AD7768_REG_COEFF_DATA),
++};
+ 
+-static int ad7768_set_mode(struct ad7768_state *st,
+-			   enum ad7768_conv_mode mode)
+-{
+-	int regval;
++static const struct regmap_access_table ad7768_regmap24_rd_table = {
++	.yes_ranges = ad7768_regmap24_rd_ranges,
++	.n_yes_ranges = ARRAY_SIZE(ad7768_regmap24_rd_ranges),
++};
+ 
+-	regval = ad7768_spi_reg_read(st, AD7768_REG_CONVERSION, 1);
+-	if (regval < 0)
+-		return regval;
++static const struct regmap_range ad7768_regmap24_wr_ranges[] = {
++	regmap_reg_range(AD7768_REG_COEFF_DATA, AD7768_REG_COEFF_DATA),
++};
+ 
+-	regval &= ~AD7768_CONV_MODE_MSK;
+-	regval |= AD7768_CONV_MODE(mode);
++static const struct regmap_access_table ad7768_regmap24_wr_table = {
++	.yes_ranges = ad7768_regmap24_wr_ranges,
++	.n_yes_ranges = ARRAY_SIZE(ad7768_regmap24_wr_ranges),
++};
++
++static const struct regmap_config ad7768_regmap24_config = {
++	.name = "ad7768-1-24",
++	.reg_bits = 8,
++	.val_bits = 24,
++	.read_flag_mask = BIT(6),
++	.rd_table = &ad7768_regmap24_rd_table,
++	.wr_table = &ad7768_regmap24_wr_table,
++	.max_register = AD7768_REG_COEFF_DATA,
++};
+ 
+-	return ad7768_spi_reg_write(st, AD7768_REG_CONVERSION, regval);
++static int ad7768_set_mode(struct ad7768_state *st,
++			   enum ad7768_conv_mode mode)
++{
++	return regmap_update_bits(st->regmap, AD7768_REG_CONVERSION,
++				 AD7768_CONV_MODE_MSK, AD7768_CONV_MODE(mode));
+ }
+ 
+ static int ad7768_scan_direct(struct iio_dev *indio_dev)
+@@ -233,9 +269,10 @@ static int ad7768_scan_direct(struct iio_dev *indio_dev)
+ 	if (!ret)
+ 		return -ETIMEDOUT;
+ 
+-	readval = ad7768_spi_reg_read(st, AD7768_REG_ADC_DATA, 3);
+-	if (readval < 0)
+-		return readval;
++	ret = regmap_read(st->regmap24, AD7768_REG_ADC_DATA, &readval);
++	if (ret)
++		return ret;
++
+ 	/*
+ 	 * Any SPI configuration of the AD7768-1 can only be
+ 	 * performed in continuous conversion mode.
+@@ -260,15 +297,21 @@ static int ad7768_reg_access(struct iio_dev *indio_dev,
+ 		return ret;
+ 
+ 	if (readval) {
+-		ret = ad7768_spi_reg_read(st, reg, 1);
+-		if (ret < 0)
+-			goto err_release;
+-		*readval = ret;
+-		ret = 0;
++		if (regmap_check_range_table(st->regmap, reg, &ad7768_regmap_rd_table))
++			ret = regmap_read(st->regmap, reg, readval);
++
++		if (regmap_check_range_table(st->regmap24, reg, &ad7768_regmap24_rd_table))
++			ret = regmap_read(st->regmap24, reg, readval);
++
+ 	} else {
+-		ret = ad7768_spi_reg_write(st, reg, writeval);
++		if (regmap_check_range_table(st->regmap, reg, &ad7768_regmap_wr_table))
++			ret = regmap_write(st->regmap, reg, writeval);
++
++		if (regmap_check_range_table(st->regmap24, reg, &ad7768_regmap24_wr_table))
++			ret = regmap_write(st->regmap24, reg, writeval);
++
+ 	}
+-err_release:
++
+ 	iio_device_release_direct_mode(indio_dev);
+ 
+ 	return ret;
+@@ -285,7 +328,7 @@ static int ad7768_set_dig_fil(struct ad7768_state *st,
+ 	else
+ 		mode = AD7768_DIG_FIL_DEC_RATE(dec_rate);
+ 
+-	ret = ad7768_spi_reg_write(st, AD7768_REG_DIGITAL_FILTER, mode);
++	ret = regmap_write(st->regmap, AD7768_REG_DIGITAL_FILTER, mode);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -322,7 +365,7 @@ static int ad7768_set_freq(struct ad7768_state *st,
+ 	 */
+ 	pwr_mode = AD7768_PWR_MCLK_DIV(ad7768_clk_config[idx].mclk_div) |
+ 		   AD7768_PWR_PWRMODE(ad7768_clk_config[idx].pwrmode);
+-	ret = ad7768_spi_reg_write(st, AD7768_REG_POWER_CLOCK, pwr_mode);
++	ret = regmap_write(st->regmap, AD7768_REG_POWER_CLOCK, pwr_mode);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -449,11 +492,11 @@ static int ad7768_setup(struct ad7768_state *st)
+ 	 * to 10. When the sequence is detected, the reset occurs.
+ 	 * See the datasheet, page 70.
+ 	 */
+-	ret = ad7768_spi_reg_write(st, AD7768_REG_SYNC_RESET, 0x3);
++	ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x3);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = ad7768_spi_reg_write(st, AD7768_REG_SYNC_RESET, 0x2);
++	ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x2);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -508,18 +551,19 @@ static int ad7768_buffer_postenable(struct iio_dev *indio_dev)
+ 	 * continuous read mode. Subsequent data reads do not require an
+ 	 * initial 8-bit write to query the ADC_DATA register.
+ 	 */
+-	return ad7768_spi_reg_write(st, AD7768_REG_INTERFACE_FORMAT, 0x01);
++	return regmap_write(st->regmap, AD7768_REG_INTERFACE_FORMAT, 0x01);
+ }
+ 
+ static int ad7768_buffer_predisable(struct iio_dev *indio_dev)
+ {
+ 	struct ad7768_state *st = iio_priv(indio_dev);
++	unsigned int unused;
+ 
+ 	/*
+ 	 * To exit continuous read mode, perform a single read of the ADC_DATA
+ 	 * reg (0x2C), which allows further configuration of the device.
+ 	 */
+-	return ad7768_spi_reg_read(st, AD7768_REG_ADC_DATA, 3);
++	return regmap_read(st->regmap, AD7768_REG_ADC_DATA, &unused);
+ }
+ 
+ static const struct iio_buffer_setup_ops ad7768_buffer_ops = {
+@@ -590,6 +634,16 @@ static int ad7768_probe(struct spi_device *spi)
+ 
+ 	st->spi = spi;
+ 
++	st->regmap = devm_regmap_init_spi(spi, &ad7768_regmap_config);
++	if (IS_ERR(st->regmap))
++		return dev_err_probe(&spi->dev, PTR_ERR(st->regmap),
++				     "Failed to initialize regmap");
++
++	st->regmap24 = devm_regmap_init_spi(spi, &ad7768_regmap24_config);
++	if (IS_ERR(st->regmap24))
++		return dev_err_probe(&spi->dev, PTR_ERR(st->regmap24),
++				     "Failed to initialize regmap24");
++
+ 	st->vref = devm_regulator_get(&spi->dev, "vref");
+ 	if (IS_ERR(st->vref))
+ 		return PTR_ERR(st->vref);
+-- 
+2.34.1
+
