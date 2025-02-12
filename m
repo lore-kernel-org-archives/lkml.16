@@ -1,91 +1,135 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A7F1FF1C8
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 07:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1551FF1C8
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 07:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739345601; cv=none; b=aNDv3oEG+Y92aNv8lBmDmjiexMsMInZGGzwm4G7sRnjn3K3YVWQ8OQhhdDm/n9XD52BP9aTl4OntANP6pC5+I41XsPr8EukkHGUZlwfoaCfRYz9bSzEIN2efJlV7oeIzX6MbNohYUm625PefLWZo2t8i/n5V5uICwEI2zWwIvIc=
+	t=1739345607; cv=none; b=p1EblQyqPTiaWmuEeTp/wp6edxu5dTWgOUTVdbUEJjzIA7YXXUXTR7DO8xezSn06JxGR8vEEK6uvvgWHxpzEEDWUVNgsRaIYBB4FyUf6PEV5OC6Z7a8OWXmKK9G9lBTaVR3zHgcczvMYMLVh4MU99cj+Ai1G9BgK2tweYcAmvGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739345601; c=relaxed/simple;
-	bh=hYJSw/8vcXikwAiQGAZCaAebtEtzVdMa9zLS/tqsQfw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fNO6xq2bl2Mub4Y7/ZUgLpVh02GCGqAjjT17Rc2c6NZkF9aSmJB6i/Ajv9NLEDkfpXLNUeAtOzno8z9ytDqvGZTYVd890Ei46eQJCyyNSPfMA55C02K8PJTDr1qhQCUdOPSMENMmnahjjLHE2PDKo2uXxFkpgXqz7WSYUMljs2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QXAWa6We; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739345607; c=relaxed/simple;
+	bh=bIFAFWBKWpZ07y7ctOBZ70nTlK0JeLPnASpipllNb7c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sZwOhL7ZM6lkrTwRmKNL+S5JmTbx8yehD2FZHyHEXzXPzuMY/6M38DjF0uYHuRfKD78ffS3ouVESLV5nKEy/rrTcAlTbFMNqxH9Q/TugdVMkENDwX9DReskR034J3myE5z9OT1AJjGzhQTA5TTxVi50j8KnmxFPx8fra2mdNcaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=NUMBZw9v; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QXAWa6We"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5deae16ab51so881063a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 23:33:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NUMBZw9v"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f6d264221so49427905ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 23:33:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739345597; x=1739950397; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iRzoLQjUR383Rec3XjmkK4huVUopwWO1GBDIhR8udRI=;
-        b=QXAWa6WemliXrUizHp6nxKvvlG2yg6kzem78UvjtzxmwwrgiozK2kA5oYDLDbFZvF9
-         QXmtLyns0Z9cEDOuMwS/v2HtquZz3oD64KC2h4rdH/5qcPFyuuwGq/aheP4IgjcGgemV
-         iYqgHlH8eIdfFmS1r+BNt7Oq2/NHjLgVOFDV3rwkzoWTfstf390fr8mXowIoRtg4XTW4
-         bwR8SafpH2xAEQrzS4gSD3LPlrroQtCYVEnbpQyviXgJIXQMNvZLCPSe5Jvq8ltMefOQ
-         byzDs51DpeaXvTFBus7gOPxCvwuVcpyQ954drYeSjWLKND2AbuE6dQ3CbymC7awSXfwN
-         lozg==
+        d=bytedance.com; s=google; t=1739345605; x=1739950405; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fkwC4yo/St1MU9GrbOiGWT5f1H9mKSQMNgvX57ikxsY=;
+        b=NUMBZw9vPlXuscejlvYcNB0QaLN/b5qskT0WdWzTG5nm7a9DkMYmYX46tFTHRn3KRF
+         mojBEaXe0ZgJdS5qHjlRPD6xSB1VWef1o7+MIIwwaiplQUyOSvR5DMqxAtrlWxLubQ6Z
+         dk91FQToMAeSOOLhC69avYWbQ/hVOYk/7bMdKKItrMX8rf1E4ZReor2B3iPNDnjOdtD4
+         Gla5JHdCywkWkdx1ll5twsM+h9Q3XaipD7qnK0cuAwqL9lJwydG5dVr7hFg4Ag5m9Y7w
+         8j6QuuJrDsOJwHozgdVcPvEzLw2qlcCfvn5ywL+dXldeMzAFmeJf2v8vyyJlKVjvS+yG
+         VXFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739345597; x=1739950397;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iRzoLQjUR383Rec3XjmkK4huVUopwWO1GBDIhR8udRI=;
-        b=rCmqfhn/jvRC1IMenKdwXXUM8kb2u/CyXyS3wLI94l2W4GApgAxSkn5J6vJke7UBVi
-         8c9x4mfuzA+l85yjEU49jPnkogxi4GE4HP5k4OXmC99+G9SoZd3dd4UdgRxLIjk8/uv9
-         h5KFBtuWpNffW0p2kCy0bZcQTW4m24QI2HI0wpkaDPNav8n10lmjlrxJ6VTiCxwv4HrU
-         sinUMXwWgN4FGVuvlLznStpGDZRmUQzQog94kqq/Lo+rEYZrsq5ILWBT6VFeuba5qT14
-         yloh9FTAxCh31aOEHp7CO2/GEvLknsxBF//hIFocWcwFgmJ+2nnVsCqasKOwcb3YOBGV
-         0I6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWiDvpoXNGShQVLr7g/H3IgGw0aoZLNwcOKeOZxV8j0NGaZWnfkt9vMgbHa4a31Tue9ecN/oCVkP5dn3sg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMRwP9XNb/MV1jl42+G55g2hXpKXxk/zq4K+mLufnaICG3gFsc
-	MlCLqOOSzu8UUlgl1FD+ICGlm/lCuxldeI6VsBZyQJ6LB769f6CydTiN5aQopaM=
-X-Gm-Gg: ASbGncv9KK/04tGeN/TU2/LFWQEeZTK3BaKi49W+Qw5YctsT/ZQkgxZBUvNA2PMX95g
-	aTQVs6i8aAIvBce1D05qmN5nElAHMawVM4X9G9a1/1Q2SUaKTauORrG1Okp+rk54xtfBwyVg+gY
-	QsytwY/4jji7eLVfbwZvHWW0RJ4Ccgcdj9lLFU22d6Rm3ppEt7k/IKycSPiEPakmj7fNl7aUPM4
-	nAg7WHicUmHaFcGM6Wi9jS24wnmMRz7khNoJQFbNBb/1utG+NwteXAaWNAZuDXpOf7ChHIYZIE3
-	uQHNsWLJVZS6al7U7FWt
-X-Google-Smtp-Source: AGHT+IHEkyu5VJUntgvHMtsslwDLby1dwnGZEm2O9JyjbaJVp2KAlFWei0TrRWLwCNwYOoR6u4aUbQ==
-X-Received: by 2002:a05:6402:5250:b0:5dc:74fd:abf1 with SMTP id 4fb4d7f45d1cf-5deadd9cd42mr5209426a12.15.1739345596558;
-        Tue, 11 Feb 2025 23:33:16 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ab7b30aeb7bsm696331266b.131.2025.02.11.23.33.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 23:33:16 -0800 (PST)
-Date: Wed, 12 Feb 2025 10:33:13 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Dima Volkovsk <s0ldw3ll@gmail.com>
-Cc: marvin24@gmx.de, gregkh@linuxfoundation.org, ac100@lists.launchpad.net,
-	linux-tegra@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: nvec: Fix pm_power_off reset condition in
- tegra_nvec_remove
-Message-ID: <429e6aa2-b195-4624-a609-e1445dcbd150@stanley.mountain>
-References: <20250209201752.66313-1-s0ldw3ll@gmail.com>
+        d=1e100.net; s=20230601; t=1739345605; x=1739950405;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fkwC4yo/St1MU9GrbOiGWT5f1H9mKSQMNgvX57ikxsY=;
+        b=u/yhCY89gJaMGvOliCD6UplccRTU+318pdhdicsrFeyJ5Uhamv1lRFkVVFasMR9x4e
+         zL3fRcyflx3BYLnfHbRd5+0WH26NJXiTGovxcrx81IIbitpKaUgype0NwoAWTm8r6m+g
+         uuc0J8CuxIXn7RTORfmxXfW9cgMNrDdyt7yWP7UYQpVEgVLyDKcTzNQVxwMEsuEXYWLD
+         +JJS4+n6BRein2tb/0Tn4YUXq2caE7uGlkbRbO/6yqa8+f7DiYPr8dJjeE6PZ/bwEK9Z
+         gjO1gmZr3kEtIPYGws2e39YUWBIX2F6xzy3cMIT2PwauQda4gqb0cJDytjymTQKqILbv
+         lsCw==
+X-Forwarded-Encrypted: i=1; AJvYcCUyEo+uupa/Js+LGquijIYi5DLmmNNEuQCu9vEC8qTPW40Cn9tiMSvHXnn8pH8agCAaFMN2Rh65pOKo44Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyxD2wHqHvnzVr4lxMrb9ifEzi4MqtjsVxrlm4LYB48mgD72Kv
+	FSgDB5YijL1Sj3U/UDVVTDMU0pgVygi9IVCplkN/FUd59bS5Te7Y0Y4OZIE4AjA=
+X-Gm-Gg: ASbGncsBLaGAtNWW+PPzGead1F2277OuzzOiwg9Xl39r6sgP87cdiy6xebirwEV4lSI
+	JPk+miN7pnIk0d18HkzuJ4KFa0V6+grWDUiXWoCDBVcut7o2RXPR3fz/KwLars8eoEZ+cAjhDb9
+	X9yZSyFT75gABjW955DJE7eTCgQzcI98zz2gLRYJXE6zSOUuy8+y6zJe4JdL8BmvE9y9RBVwgqJ
+	cUBdIg3mA7nLYho02ZytAfLKeKVVsbmvbaqKV/0JvREpIrkBSdpCyA86BCBJ3T5F9vhlb+FQzhI
+	MTkyhVBjG1kNztkn0QKh6FmdA5kUBUgdkXLd0xIW+g==
+X-Google-Smtp-Source: AGHT+IGiuGc7iBWpCw3G4pXH50ZiqqPYc7UNNfOGWQ0h2PpQXVIqAav7BnmCxlwuHgBLLmHBduzIkw==
+X-Received: by 2002:a17:902:fc4f:b0:21f:7821:55b6 with SMTP id d9443c01a7336-220bbae2543mr35144095ad.13.1739345605349;
+        Tue, 11 Feb 2025 23:33:25 -0800 (PST)
+Received: from [10.84.150.121] ([203.208.167.153])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650ce0bsm106755595ad.21.2025.02.11.23.33.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 23:33:24 -0800 (PST)
+Message-ID: <2e194c31-c177-496b-8e53-a20625e20a2b@bytedance.com>
+Date: Wed, 12 Feb 2025 15:32:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250209201752.66313-1-s0ldw3ll@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm: pgtable: fix NULL pointer dereference issue
+Content-Language: en-US
+To: Ezra Buehler <ezra@easyb.ch>
+Cc: linux@armlinux.org.uk, david@redhat.com, hughd@google.com,
+ ryan.roberts@arm.com, akpm@linux-foundation.org, muchun.song@linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <be323425-2465-423a-a6f4-affbaa1efe09@bytedance.com>
+ <20250212064002.55598-1-zhengqi.arch@bytedance.com>
+ <CAM1KZSnWFivV-7nc55MBAEtdP1LXfW4eLKa-94HPZaTP0AOPrg@mail.gmail.com>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <CAM1KZSnWFivV-7nc55MBAEtdP1LXfW4eLKa-94HPZaTP0AOPrg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 09, 2025 at 09:16:48PM +0100, Dima Volkovsk wrote:
-> In the current implementation of tegra_nvec_remove, the pm_power_off handler
-> is set to NULL without checking if it is actually set to nvec_power_off. This
-> change ensures that pm_power_off is only reset if it was previously set to
-> nvec_power_off, preventing unintended side effects when removing the device.
+Hi Ezra,
+
+On 2025/2/12 15:27, Ezra Buehler wrote:
+> Hi Qi,
 > 
-> Signed-off-by: Dima Volkovsk <s0ldw3ll@gmail.com>
+> Thanks for the fix. I will test it as well as I can.
 
-What everyone else said and also you forgot to add a Fixes tag.
+Thanks!
 
-regards,
-dan carpenter
+> 
+> On Wed, Feb 12, 2025 at 7:41 AM Qi Zheng <zhengqi.arch@bytedance.com> wrote:
+>>
+>> When update_mmu_cache_range() is called by update_mmu_cache(), the vmf
+>> parameter is NULL, which will cause a NULL pointer dereference issue in
+>> adjust_pte():
+>>
+>> Unable to handle kernel NULL pointer dereference at virtual address 00000030 when read
+>> Hardware name: Atmel AT91SAM9
+>> PC is at update_mmu_cache_range+0x1e0/0x278
+>> LR is at pte_offset_map_rw_nolock+0x18/0x2c
+>> Call trace:
+>>   update_mmu_cache_range from remove_migration_pte+0x29c/0x2ec
+>>   remove_migration_pte from rmap_walk_file+0xcc/0x130
+>>   rmap_walk_file from remove_migration_ptes+0x90/0xa4
+>>   remove_migration_ptes from migrate_pages_batch+0x6d4/0x858
+>>   migrate_pages_batch from migrate_pages+0x188/0x488
+>>   migrate_pages from compact_zone+0x56c/0x954
+>>   compact_zone from compact_node+0x90/0xf0
+>>   compact_node from kcompactd+0x1d4/0x204
+>>   kcompactd from kthread+0x120/0x12c
+>>   kthread from ret_from_fork+0x14/0x38
+>> Exception stack(0xc0d8bfb0 to 0xc0d8bff8)
+>>
+>> To fix it, do not rely on whether 'ptl' is equal to decide whether to hold
+>> the pte lock, but decide it by whether CONFIG_SPLIT_PTE_PTLOCKS is
+>> enabled. In addition, if two vmas map to the same PTE page, there is no
+>> need to hold the pte lock again, otherwise a deadlock will occur. Just add
+>> the need_lock parameter to let adjust_pte() know this information.
+>>
+>> Reported-by: Ezra Buehler <ezra@easyb.ch>
+> 
+> Perhaps a detail but, maybe better use "Ezra Buehler
+> <ezra.buehler@husqvarnagroup.com>" here.
 
+Got it. Will wait for your test results first.
+
+Thanks,
+Qi
+
+> 
+> Cheers,
+> Ezra.
