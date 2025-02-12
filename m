@@ -1,235 +1,177 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2066.outbound.protection.outlook.com [40.107.93.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5C3271835;
-	Wed, 12 Feb 2025 06:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739341893; cv=fail; b=N6t40WbSfxIcketF2ar0NvTudLasgKVNW1lYDE82eGjrgp5/hlFx3Tcsixy0zsv5STTIgV5JL5lyRhGAZC873Pqh9+jEQhMOBYAnrYsRDj711nxLGN4VhrL7TBAp7L/9qakuJbsgnOQJO7Iv7ul/sJQRd0Ai8HR51Va2RB0+Frg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739341893; c=relaxed/simple;
-	bh=c1cxRb4ymEf4UpJ0iV6ruCyObS9qpSe9Tm+tIqGlRhE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=OjaOrFrrK1hxauwFpzF/9HvK9HJktoVnPfDbAYEAlUS9SQwE7yKzX+Si70kOaBtLf/xwDYlSxVCEtyGe17B6ufdL0hW4xYpRj9q0+eH//24QVakn6jU8HACgXpwm+WG411J7UGskf6pFbBB2EKJsMPa16o4Gdsl79wj3By/+Egs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=w+8V2A0k; arc=fail smtp.client-ip=40.107.93.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C003A1FBC8C
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 06:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739341922; cv=none; b=BUZ8UP0W5HgR75xnOljVQ6qXNTX9YuWjUSnN3QKeTVYQzlI+Sxfa6Y72mtgnjxbCqitDPbttIpiYJRgZspOHOheeYQfSwZBLWV3VNcAltqu97F+q99S++yO0vri9aMnJc0CwDQkspgbwOEB5IQCbNdT54wf1KHZ3cjMG39QkTSs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739341922; c=relaxed/simple;
+	bh=TamXbQFD1NAhS3+xk1Nnfi/W2m0PNcgTBD8ofcb6uk0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XI4swbxU+wL3GO7OB6xhGba/6r85nIwIWvq8FDJgoTwJnyPfOPkGYNkYAnG0eoqGzyhjjN5asqQ+E7yTm7v+/YvsCs7h6ewzYDV0jMCsCFqlTng6D/8+HPn1pun600MkNZP+naigPHoDaBYmSMT2JSfipl+1l5dqpi/Iu700jP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=iAfannZD; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="w+8V2A0k"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=H3uYIDgIvGdeT/+HbVDfI0dYzhTGZSWGBORRKnvZi4jlY1C3gkBWk6QIs37d0JjawE5C+n6LN3ZUZNX+MfFBLbI3zYPHlj7yuaQUlSz6c66H8sS5uuaJVcFpZXaNZ3DfRfxi9pzWR8D8pAWLv9AoLuqaelCI6ZFwLZHBXGAPMCbygo1w2DGo8GGgB9S79UNcBreQ6i/E811kQOLbblvccCw8IgCTS4SE+8/LEFkSFGaO5ZmRuX5nO/VB1qSDJqcU0IuXU+Wg5vne0GJ4XvB3Gj1z18NhqjBrDfKT4mEGpV2tGKoQi0en6eUUtdZUIo5ZNvqucuT8r5v134cRmoZvKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GiypnW0F08JXPsJY0U5E9oxnM/oE5R1/oHug89NmZEo=;
- b=m+sGnc+EFTk034oNCopbuoNQSj2DZD6aQmOEzzHZzXnxIogpGwoZA5jfkN2Auw3leIQ7QI/BhzoKdS2szxw6qPM0iWmPEXTO5Ij5jo7VTY3SQPbMu8jRktxvTtQXmWSrCNRv8uLlPLtR+f2FcfjKp1/AvnzACNCMCHHV/keoIN6sBkhr7thHt9BGOJwvgMxlWQp0D75ag6MLVt+peLQPL0k0jpXndkW3fy8W+ujbq+KEPuG0dcibWz0kxe+da5jz+aZ7nJvU/yNJUcESC7Edunv0mFjyZZYQCYsgHuojpR8j/67HTwA0UJ3QFrfxl09lTSud980VbPISabtYhoO58w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GiypnW0F08JXPsJY0U5E9oxnM/oE5R1/oHug89NmZEo=;
- b=w+8V2A0khBj7d+1CSXXcLLpCnhamnDXrKwB66FEwZHEB7IDGEo/CHsEGR8sawYgUu0PwkC2GyESD+MdR6raq9TJs9x2ApzowefJLb0W93mwFO6MoKQ7J8XEqUmt3PTA9Evb6hDPsUF19CC5etT9eD0Ok2ZNijr6C13NmLJxgfpE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
- by IA0PR12MB8840.namprd12.prod.outlook.com (2603:10b6:208:490::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Wed, 12 Feb
- 2025 06:31:29 +0000
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9%6]) with mapi id 15.20.8422.015; Wed, 12 Feb 2025
- 06:31:29 +0000
-Message-ID: <4d7dca2e-4245-44a3-96a7-0c9e1ef363fb@amd.com>
-Date: Wed, 12 Feb 2025 12:01:15 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/14] cpufreq/amd-pstate: Move perf values into a union
-To: Mario Limonciello <superm1@kernel.org>,
- "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
- Perry Yuan <perry.yuan@amd.com>
-Cc: "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <linux-kernel@vger.kernel.org>,
- "open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250206215659.3350066-1-superm1@kernel.org>
- <20250206215659.3350066-4-superm1@kernel.org>
- <5577e2ad-6cd0-4fe8-a8e8-28199491ca3a@amd.com>
- <9b38a679-875c-436a-9383-8b0d8a1b67af@kernel.org>
-Content-Language: en-US
-From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-In-Reply-To: <9b38a679-875c-436a-9383-8b0d8a1b67af@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN3PR01CA0013.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:95::9) To LV8PR12MB9207.namprd12.prod.outlook.com
- (2603:10b6:408:187::15)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iAfannZD"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2fbf77b2b64so785337a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 22:32:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739341920; x=1739946720; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=501yi1cpVrmEp+ncJhrBCmHl7nTzT7vsrJ8f3PE998M=;
+        b=iAfannZDDIvnk7FoC4mWh7OpxhqknrqKnBO19rOscj9m8A5jMNPEMQjzn5YcQ21ZaU
+         TPHH7wWZHYuIhabbmxC/lsXC4EC35LT6zHUvAk7Q60Q0D7pzyE7dwbXeXucgRvcd2Y/m
+         DjZ0PIeCbdzCN+t1f3lvEdnFMEhGNlQsvZvyE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739341920; x=1739946720;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=501yi1cpVrmEp+ncJhrBCmHl7nTzT7vsrJ8f3PE998M=;
+        b=iQkZxYt9kDcOCBuVHps+Zf6jQTZCedQd2RVDA2H1RyCc2ailogu0KGy0aK7siL628q
+         ISjg8RI41PZY+DXVkmpqsEK6OMMqLW7KwPSEWx57FhP/wimYS4Rtuv+LOzAXCX7LiZME
+         Dm9nJWoCSYIsQDZ7JXRME+jBVuTlzm89h2ZZbtcnZexooOxOEGAFt8wh99VIU4qrB/EZ
+         7oI70HZfquTI2/TFYDMoh2nYL7WOUAIIBUkXLgDw9M6HrJJxAgJqiS5SeV+O2DUx0rAG
+         i2XwBlaCq9omib0u9NetbVKXSWm4xg2fk7NV07vt3kvYiwPA/bkUkqcDkAnYxu+917zu
+         p0wA==
+X-Forwarded-Encrypted: i=1; AJvYcCWM8lbGw1Pq2CvmApZdzwhRLoeAByppu4LXgYWTOOx7sR4cOD+OWS8hbUtLfjViORRMs/G5qwkjFWJ82u8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsF9BFhQ4ihjWFxtMWZBIu1u8ZmvQa400S3XPXgG1UngBPdRWp
+	befdRXkuYE/QWvBXEDzwNwnOQ/zPv4vRa5DseJd4h6GqSuC//myZlOVIhFK65w==
+X-Gm-Gg: ASbGnctdIuUHgB/ftfwACnnD+0AWCX0dMWQf+Da1lX9zm/8lOaWqqGE69goDjGzqCUr
+	vI/Qkm2SfHeXlrsiRzkE0XigbFXDMQd3FCRUIKKIMuef0XoqpQkwAQvA9pvq1cZeKeFdX1Zqxv3
+	IHe3gFIz0oi8jkqVbtD2Elv8K1fX/YEE123ea51Of+TlFFe7Xc7wtDnGTrTCiJVko2OGOpEYX2M
+	ubPXhkJhD9YKnRNcbtzfq/CUQEgPXsZV+eDt4I+SdDhVMYUJ7rwI1OYWgpZ7hIbIUX/VkwSFXmG
+	SO9TauWfBamBFrx0Dg==
+X-Google-Smtp-Source: AGHT+IHiV9B6eIfyg2Gsmc1ORW5sQ5pz7wffjd71n/VATHAnz5v2omml/47WVzTGc9TaWCYUQEpqog==
+X-Received: by 2002:a17:90a:fc4c:b0:2ee:48bf:7dc9 with SMTP id 98e67ed59e1d1-2fbf5c1bfc6mr3357534a91.15.1739341920049;
+        Tue, 11 Feb 2025 22:32:00 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:69f5:6852:451e:8142])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fbf98d3886sm663293a91.25.2025.02.11.22.31.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 22:31:59 -0800 (PST)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Kairui Song <ryncsn@gmail.com>,
+	Minchan Kim <minchan@kernel.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH v5 00/18] zsmalloc/zram: there be preemption
+Date: Wed, 12 Feb 2025 15:26:58 +0900
+Message-ID: <20250212063153.179231-1-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|IA0PR12MB8840:EE_
-X-MS-Office365-Filtering-Correlation-Id: efc803ff-838c-4571-287a-08dd4b2ee23a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dDBpQ2UrcEVYTlY0RERZaVZFQ1dEVkY2VzJ0M09kRi9zWi9FK3pENzZUMG93?=
- =?utf-8?B?ZGtESVpJMkFzWEVUMUNERmg2akM5RzZCNGNNRmpOV2c4b1J3eS9RcUJBWVVM?=
- =?utf-8?B?OGNjakkvQ2Y1MXNqL3dDV2E2ZmN1YkhleG1SQlZMOG1aWUxyNWMxYXFhbm9X?=
- =?utf-8?B?dVRISFB1R2toNHFBRUZ0akZiMVhRKzF0MkYyU3ViTmUrR2xOK2ZNU3lTYmNk?=
- =?utf-8?B?THhxSWtHQjdVdTgrMG4zaE1UL2JYR0RhRlMySmJXS09tR0kyUHhyODYvRUJ4?=
- =?utf-8?B?YkFndlFlVDZwbjBnSXpEb1dPeHU5NmNPRWpWaVRVOWJaNlMwSXFhQ0RPYStk?=
- =?utf-8?B?TENqTXNpcytIZURuOUxtckE5ZmovSzBBT3VNOUJYRjIreW9UUW5nbk5vK1dP?=
- =?utf-8?B?ajlWNlh2eTZYeW1OeHc3cHdJdm8vNWhnN2pFWmVtdTQydmJVa3ZReUVuTVRR?=
- =?utf-8?B?TWJpNTRSendMSGJKdWdjVFhQMHpuZ1JoWE83VU5qblgzR25JMUNFWDVsaGJo?=
- =?utf-8?B?UzdHR0JDSXRQcjNVOXdOSkh1eEdOR2tURW9lWmtpdDROVXd2ZWJjdDRQcEtF?=
- =?utf-8?B?ellRVTJLTU9Ld1pKWHB1TUp0NG1lMjIvWFVtaTlRTURXWkdEN2g1RVlLVXVj?=
- =?utf-8?B?cit0YWo1TGREN3N4bjFFc1FnMmxNbWNVR1ExZTN0c0NSbEJEYVNFa0JMR0Vi?=
- =?utf-8?B?YUd0ZjdjREhiZ3pJeG4vRHZHT2FPVGRPckhmUStSdVRVaGR3YkUrYkZTRmNq?=
- =?utf-8?B?KytrZ1BVbHZ6MkJjZlBLQ3Z6c21QVDFoa3dOeHZydEdFZEExb2VrTEJUeGlH?=
- =?utf-8?B?K1NNUDlnNCtaV2p2RlpTY2lrRUFCam9tNWRWUXhmb0xiZUV2VzVwdVRZQksr?=
- =?utf-8?B?WlY3azBvZm9mZzdQZHhGeFFXMGE3NEtRWks0NEFNWTVNVUYvSTRWaTJzN3c1?=
- =?utf-8?B?cnZPdEdBTENqMjhiZTJxY3FUYTB1T2NZcTNPV0VwWGlJSkw5dm5ISDZXY0w4?=
- =?utf-8?B?bGczUU11WlA1N1FlckhoUHk3TTlnMkFrcyt0NllGQWtOMXhQbEtxQ3ZialZl?=
- =?utf-8?B?Z3dTdWNhNXpjblBOSExPcDZBN052VWVaUWhyVTRJbW1XcldONmhCTmtQQnJ0?=
- =?utf-8?B?R3RzUTQ5Z0JiYmFOamE3enIrUDU4M0pEaVhxcmpwa24yekxrVi9vUE5JSm5m?=
- =?utf-8?B?YzVCTTFLUW94eWUxODJHYlFvQzdNd2dhTnlwdkN2ZFVmejAvNS92c0dUR3Bu?=
- =?utf-8?B?RUFWS0RNTWlpbXQ1WmMxUXA3eGlLK2JiV3N2ZlIrL3hHM3lEdzVsYjdaMytO?=
- =?utf-8?B?ZkZUYnB5Zlk2OVVwUGZJL3RpOGlJSWZQeEE2L2s2WjdFWElIU0V1cmpCZGNO?=
- =?utf-8?B?Y1cwOGxMajJLMVNOU2ErSDFKRW1kRUpsKzdKUHE4YUpEYk5pNlZ1QWMyUy9W?=
- =?utf-8?B?S0hXREtQaVdqcHlsUUNOdVZuK1RaRmlXMVQ5ZlJ3RVU1M3pyZUxuTURxeUwv?=
- =?utf-8?B?bTVSMm1BaEs4emxhRGtMTjlNZTlrUFdSVWcrd3RNSlJuWWhpN1pvdE1MZnNu?=
- =?utf-8?B?UGcwajhDTG9FVlJwMkFlT2pKRTQwSjNNWVFKeEtqdmRyaDQrQkw3SmtBTmQ1?=
- =?utf-8?B?bGZLQUtPTnI4amxGdmVLTi9LM05FRGI5cUdUWFIxS2t6NEd6dFc3dkFFS3pV?=
- =?utf-8?B?MW1wUU9BTS9GYm5IUzVnVkM5NXNpajZLWHI1QmZUa3ZXY0g2SFBDcVBrbCtt?=
- =?utf-8?B?Nm5Zd0NHMThYcW9Oc25IazFJa2JZWkxrU0dlaFNCaERvakgzblRUT1IzTnhR?=
- =?utf-8?B?ckxYQVgwSVl6cXlwSGg1T2hyWHlGMkUwSi91RzB4ZDJYRzkzamJ2RHhzcjRr?=
- =?utf-8?Q?I0DFWgcTDPSNu?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?M2YrK3pmd2duOWkzNDEzeWo2ZVBIdzRiV0N1dk5DNWE5VFdDZmFsUmV2QzlF?=
- =?utf-8?B?L0s1VW5vanh1RXplYVFBSk9MRUxaQUg1Tml6NkRHSVlKVjBsN3pSVk93NVIv?=
- =?utf-8?B?REtycnIvTS8vcjdpS25YYWJoM0VCYkM1U2VXV0N4ZVhGaFZEUCtVaWJKREJU?=
- =?utf-8?B?endaUkJ5MnNJeXlGWU4yWnNVNVplVm11empwRHpUQUtnRWV1Zm94UFNudjVo?=
- =?utf-8?B?dXdtQjRLSlNSdDk4UFU1elZwYzEra3lvcEpCcHpORVErMHN4dHMzWjFkUjkv?=
- =?utf-8?B?QkhOcWRsQngxNlowSGd1THJ1b0I2eFk2dmxGMmdVZHZWcmwyVWhaaFZKV21L?=
- =?utf-8?B?Rk9vMlhyekxTSmRQZVFmY1JCSG90YjVZL0NkWmFoTDhqMGo3K3BnTGZsaUtW?=
- =?utf-8?B?NFM4R0pwRnpDSnhIcDd0MUd0cUFQYW9ONGxMOXNCQ1IzVk1yd240VkdNWUVl?=
- =?utf-8?B?TUo0bHFFOFZMdzUrVURQWVRIZFZqSE9PVFczMUo4aTFzYy9XSUUxaU5LaGw5?=
- =?utf-8?B?QU9CajZYbEV2YVRPbjZYemxldy82dDI0MEpIcmRnYi9ONEZ6TE5zS2JjUDJZ?=
- =?utf-8?B?NHk4aDkxaTdNTjRwcjYzM2t1aWxaMlNnampHWEhBQXZDRHBURThITFRDM25S?=
- =?utf-8?B?NXR0WXZaQzh2aTVOTHFMSWNQN0x1RlFnTCszcTYxbXloeFVYUFZycW9TaFMw?=
- =?utf-8?B?Um9hVzkyaEpsQXhWc1RFSHI5STFYUW9wTmQwbnZaZkViY0YyLzlmT3JsdHRl?=
- =?utf-8?B?T1dkcFBjeWs5RnRCTFVlOXBSdE9MVXdlTll6UnRxVktHY3RLU1N0WFpGUGZl?=
- =?utf-8?B?YWJBeE90TDdTbStYZTQ1NjhqL3dMNUlwZmVlL3NicFFQYS9GekVUa3hid3dW?=
- =?utf-8?B?VE8zWG9XNlpkNi9qT01PcHhvOVEwQnJRaDhwN1hDZUJGZkt3TVp4Szcxdmpz?=
- =?utf-8?B?ZW8weWtKR2ZCMTdmSFlRTy9WV1Y1VUNrUEN2elpyWFhUMTd1MGNJSHBpRXpt?=
- =?utf-8?B?bkhpTWl1dXBXVG94Y2JpTVNDREx4ZnZTUlRRRktESlZOMGhUUEZpMGgwRDB5?=
- =?utf-8?B?QXA2SWVibE55eks1U05oS3E0QlRzNE9Ybm1KWXN0MWRFdTQvZXhuT0llb2VQ?=
- =?utf-8?B?QjFJdVMzR2Q5RzRDcmFCYzNHTS8yV1I3b1hIUnNta3F2dlJxOExXQTZ0WG0y?=
- =?utf-8?B?Sm1RcEliSkhJZTU0OFpBQUdrWnRUQTZkUEkzK0hEZ1hVTk5TUnJKYWYvWEZF?=
- =?utf-8?B?SDBuTXlES0lNVy84THd0ZWJkQ2h2VVJISDYzNzhTNnZlUEhoWVJSNE8rdC9w?=
- =?utf-8?B?WkVzZitVeGhFbHhwSG9tTmVUeXY4d29lU29udUovNDNoODZueTFDcThsLytX?=
- =?utf-8?B?c2lTN3RVd2h5T0dSQUZzL3E1NDNZNFdqaDdOc0pIaTBUNGNjY1hkR3llWWxa?=
- =?utf-8?B?YitDOXk5aVA5SGtzMlVGck1hek5CUmMyNzZLMEdNUmN3ZGFyaW0yUXhJU0xP?=
- =?utf-8?B?SFl1cE56ZGFYUTdJSWZVWmtKcCsvUmZVYmYrdHYrYnRDelQvMG1UTXYvei9R?=
- =?utf-8?B?SHNBd1pZYTIzQUl5anJmdHRHb05PSXhRMHN4Y3J3dlZLR1FUczBqWUlvM2Ur?=
- =?utf-8?B?clZaakNtMzhjTTVJNjhUMUlLeEhwc0JYQ0xLYjlQZ0ZSTjZqbldtZFhKR1Fs?=
- =?utf-8?B?UW9hTDVvRTgwbnVEVytCd0lzTjhycmtKYnMyVnZseUl4M2pVYzVLeXRIa1lJ?=
- =?utf-8?B?YjgwbmJNOFBnazk5RTArRS81SVpHMndCbjJ6OFA1dm1oWWJKRzZRcGkrL1J6?=
- =?utf-8?B?Zm03WGJ2S2RYekNqUU1vd05BLzUrcGNKclpON3g3bktwOVdtOWdTb1ErNzdz?=
- =?utf-8?B?dFJsSndMb010dDQxSDJIcHdORytNUW5OK2YyTWh1RTN0M2lUNWg1cUJTNEJw?=
- =?utf-8?B?TVhIYktnWlYvWjZibzdvaWJxUU9mdUV5QXhpRnkwbWhTNWlwTHJNSTBKWTcv?=
- =?utf-8?B?OGlKUlpMMnpDMlVUT1pXTVFDSnkycHdCUWw4Q1ZMWHVrTnBrRkdlMlREaVJI?=
- =?utf-8?B?N3BoSVowdk42bUtZNVlzbzAwQzdvdzFINmZuWkVQTkZJeU51Z3lQeU1KeGhp?=
- =?utf-8?Q?O98KDEHAcC1FUPDpYYgpn3PCX?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: efc803ff-838c-4571-287a-08dd4b2ee23a
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2025 06:31:29.5543
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xJL72kaqehGN+2Ov8sL9d6zJqTmUnjIIUeCrhW+bV2bzsSI3kvTPIilenSlYgBtGbOF9wVIeliv6QebzRhBhSw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8840
+Content-Transfer-Encoding: 8bit
 
-On 2/12/2025 3:44 AM, Mario Limonciello wrote:
-> On 2/10/2025 07:38, Dhananjay Ugwekar wrote:
->> On 2/7/2025 3:26 AM, Mario Limonciello wrote:
->>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>
->>> By storing perf values in a union all the writes and reads can
->>> be done atomically, removing the need for some concurrency protections.
->>>
->>> While making this change, also drop the cached frequency values,
->>> using inline helpers to calculate them on demand from perf value.
->>>
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>> ---
-[Snip]
->>>     static int amd_pstate_update_freq(struct cpufreq_policy *policy,
->>>                     unsigned int target_freq, bool fast_switch)
->>>   {
->>>       struct cpufreq_freqs freqs;
->>> -    struct amd_cpudata *cpudata = policy->driver_data;
->>> +    struct amd_cpudata *cpudata;
->>> +    union perf_cached perf;
->>>       u8 des_perf;
->>>         amd_pstate_update_min_max_limit(policy);
->>>   +    cpudata = policy->driver_data;
->>
->> Any specific reason why we moved this dereferencing after amd_pstate_update_min_max_limit() ?
-> 
-> Closer to the first use.
-> 
->>
->>> +    perf = READ_ONCE(cpudata->perf);
->>> +
->>>       freqs.old = policy->cur;
->>>       freqs.new = target_freq;
->>>   -    des_perf = freq_to_perf(cpudata, target_freq);
->>> +    des_perf = freq_to_perf(perf, cpudata->nominal_freq, target_freq);
->>
->> Personally I preferred the earlier 2 argument format for the helper functions, as the helper
->> function handled the common dereferencing part, (i.e. cpudata->perf and cpudata->nominal_freq)
-> 
-> Something like this?
-> 
-> static inline u8 freq_to_perf(struct amd_cpudata *cpudata, unsigned int freq_val)
-> {
->     union perf_cached perf = READ_ONCE(cpudata->perf);
->     u8 perf_val = DIV_ROUND_UP_ULL((u64)freq_val * perf.nominal_perf, cpudata->nominal_freq);
-> 
->     return clamp_t(u8, perf_val, perf.lowest_perf, perf.highest_perf);
-> }
-> 
-> As an example in practice of what that turns into with inline code it should be:
-> 
-> static void amd_pstate_update_min_max_limit(struct cpufreq_policy *policy)
-> {
->     struct amd_cpudata *cpudata = policy->driver_data;
->     union perf_cached perf = READ_ONCE(cpudata->perf);
->     union perf_cached perf2 = READ_ONCE(cpudata->perf);
->     union perf_cached perf3 = READ_ONCE(cpudata->perf);
->     u8 val1 = DIV_ROUND_UP_ULL((u64)policy->max * perf2.nominal_perf, cpudata->nominal_freq);
->     u8 val2 = DIV_ROUND_UP_ULL((u64)policy->min * perf2.nominal_perf, cpudata->nominal_freq);
-> 
->     perf.max_limit_perf = clamp_t(u8, val1, perf2.lowest_perf, perf2.highest_perf);
->     perf.min_limit_perf = clamp_t(u8, val2, perf3.lowest_perf, perf3.highest_perf);
-> .
-> .
-> .
-> 
-> So now that's 3 reads for cpudata->perf in every use.
+Currently zram runs compression and decompression in non-preemptible
+sections, e.g.
 
-Yea, right, its a tradeoff, in clean looking code vs less computations. 
-I'll leave it upto you, I'm okay either way.
+    zcomp_stream_get()     // grabs CPU local lock
+    zcomp_compress()
+
+or
+
+    zram_slot_lock()       // grabs entry spin-lock
+    zcomp_stream_get()     // grabs CPU local lock
+    zs_map_object()        // grabs rwlock and CPU local lock
+    zcomp_decompress()
+
+Potentially a little troublesome for a number of reasons.
+
+For instance, this makes it impossible to use async compression
+algorithms or/and H/W compression algorithms, which can wait for OP
+completion or resource availability.  This also restricts what
+compression algorithms can do internally, for example, zstd can
+allocate internal state memory for C/D dictionaries:
+
+do_fsync()
+ do_writepages()
+  zram_bio_write()
+   zram_write_page()                          // become non-preemptible
+    zcomp_compress()
+     zstd_compress()
+      ZSTD_compress_usingCDict()
+       ZSTD_compressBegin_usingCDict_internal()
+        ZSTD_resetCCtx_usingCDict()
+         ZSTD_resetCCtx_internal()
+          zstd_custom_alloc()                 // memory allocation
+
+Not to mention that the system can be configured to maximize
+compression ratio at a cost of CPU/HW time (e.g. lz4hc or deflate
+with very high compression level) so zram can stay in non-preemptible
+section (even under spin-lock or/and rwlock) for an extended period
+of time.  Aside from compression algorithms, this also restricts what
+zram can do.  One particular example is zram_write_page() zsmalloc
+handle allocation, which has an optimistic allocation (disallowing
+direct reclaim) and a pessimistic fallback path, which then forces
+zram to compress the page one more time.
+
+This series changes zram to not directly impose atomicity restrictions
+on compression algorithms (and on itself), which makes zram write()
+fully preemptible; zram read(), sadly, is not always preemptible yet.
+There are still indirect atomicity restrictions imposed by zsmalloc().
+One notable example is object mapping API, which returns with:
+a) local CPU lock held
+b) zspage rwlock held
+
+First, zsmalloc is converted to use sleepable RW-"lock" (it's atomic_t
+in fact) for zspage migration protection.  Second, a new handle mapping
+is introduced which doesn't use per-CPU buffers (and hence no local CPU
+lock), does fewer memcpy() calls, but requires users to provide a
+pointer to temp buffer for object copy-in (when needed).  Third, zram is
+converted to the new zsmalloc mapping API and thus zram read() becomes
+preemptible.
+
+v4 -> v5:
+- switched to preemptible per-CPU comp streams (Yosry)
+- switched to preemptible bit-locks for zram entry locking (Andrew)
+- added lockdep annotations to new zsmalloc/zram locks (Hillf, Yosry)
+- perf measurements
+- reworked re-compression loop (a bunch of minor fixes)
+- fixed potential physical page leaks on writeback/recompression error
+  paths
+- documented new locking rules
+
+Sergey Senozhatsky (18):
+  zram: sleepable entry locking
+  zram: permit preemption with active compression stream
+  zram: remove crypto include
+  zram: remove max_comp_streams device attr
+  zram: remove two-staged handle allocation
+  zram: remove writestall zram_stats member
+  zram: limit max recompress prio to num_active_comps
+  zram: filter out recomp targets based on priority
+  zram: rework recompression loop
+  zsmalloc: factor out pool locking helpers
+  zsmalloc: factor out size-class locking helpers
+  zsmalloc: make zspage lock preemptible
+  zsmalloc: introduce new object mapping API
+  zram: switch to new zsmalloc object mapping API
+  zram: permit reclaim in zstd custom allocator
+  zram: do not leak page on recompress_store error path
+  zram: do not leak page on writeback_store error path
+  zram: add might_sleep to zcomp API
+
+ Documentation/ABI/testing/sysfs-block-zram  |   8 -
+ Documentation/admin-guide/blockdev/zram.rst |  36 +-
+ drivers/block/zram/backend_zstd.c           |  11 +-
+ drivers/block/zram/zcomp.c                  |  43 +-
+ drivers/block/zram/zcomp.h                  |   8 +-
+ drivers/block/zram/zram_drv.c               | 286 +++++++------
+ drivers/block/zram/zram_drv.h               |  22 +-
+ include/linux/zsmalloc.h                    |   8 +
+ mm/zsmalloc.c                               | 420 +++++++++++++++-----
+ 9 files changed, 536 insertions(+), 306 deletions(-)
+
+-- 
+2.48.1.502.g6dc24dfdaf-goog
 
