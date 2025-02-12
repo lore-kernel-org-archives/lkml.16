@@ -1,101 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0B11FECA5;
-	Wed, 12 Feb 2025 06:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A998D1FBEA6;
+	Wed, 12 Feb 2025 06:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739341569; cv=none; b=WVjWEqEtgxkkzetC3H0C1eHUqvDsgAZxYLYez7NXvFZzOE6idv9pCgFlW9hR8dUDrP4QjkE4mlQe20bh2LzeaeBYxZAG+CVtGDYRNA4GwJFgfxdxUUzDmR6w096UpMc8BdWOQmgZpJrbJs5Etp294JtMqnehNgQ1arUGs5fNJnQ=
+	t=1739341624; cv=none; b=XTYW1NT/E8A3AzZHANRpwaerdAF28xWIGsCNClzOaBmmvvpz72VA37dY2e0uu/rf1RWj1AQofAcxpFKrq6jRXSEENyYBKZhds2MJJElVOcY6IQU5ijegH101qAzDOoy1Z+3pmbh2OFB+CYVGaITuYIOnYxRZXeZRRoofnl21bh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739341569; c=relaxed/simple;
-	bh=tKd11dX8so6573A0u2H006iFssbu+bQR5O6pj8pFlEg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=heh0/jHwjpd/xya0FLqCCQJJ7XyhjDd7hN39CS/SCG0bHNoagHE8a41kWPEqxLBSaDIFOJATaZparH89sxW6ZS+wZMRaeVqs1hJjnLy3isx9nafyB67gti2wDEHib6f67p/tsMnB1VbqO0/E96VkOVRQamSsTlLgYon0K7aUoFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W88bWC5J; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739341624; c=relaxed/simple;
+	bh=65IGQQyNlGL97eMSscE+Db1rh6uKwtQ4wn+Khd1QG0g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=oOct6qB3ZseyUhGFiWT/NAefXDD4NTWi+6wS+sY+z9kaIxSAIfBWCU/d34wjo4kaVtaJ+D+x4Yi9k9Xr1Ylv7PU1Dyu50XP9ViJUehkaA47v+QYmtIXfJEL8CVLD27nM4tlofmvGTbH0BZThoctzMOMH2AnDWbFn/THDJaPUTyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=EMAxMEDK; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W88bWC5J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739341568; x=1770877568;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tKd11dX8so6573A0u2H006iFssbu+bQR5O6pj8pFlEg=;
-  b=W88bWC5JkSl8VoVgMwOp5b6XKKJsnrTgXA+C43D/o7jJxkazNB/1qnYL
-   ejwiFXoX+AiiVMP9+uO2rC2ypognyK4ux5Ynj+GlhZZp/5X4cJllCP00K
-   UsvKbSAk5oTQEALVnkErJWvTSQ6e9XdW8zlk2jmXR41dFCN/lXMtD/gw2
-   vnLfL0LdqL+yhcANLy6guxOQ0y5D1S3dPh6LujiYUx+HwD5Lji2nQ3zh1
-   axN1Ayjwe0QetpXFcQEXxHl4xiUGczOtcMc854e1H/0c+vR4EECsS9g/d
-   NseKjPhDaFABfBot3Q7CSVe6WMWfe437ypcSo0hrZs1VGd6k933wyzM6z
-   g==;
-X-CSE-ConnectionGUID: 2O4CXHSZS9u6vAAIbfAyKw==
-X-CSE-MsgGUID: ArXUJoUpTmOLIfJEeSfOkA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="40005252"
-X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="40005252"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 22:26:07 -0800
-X-CSE-ConnectionGUID: 8ds+cfntTI+MByDkEBXUiw==
-X-CSE-MsgGUID: R4/vkoXzSPaZDNne193kjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="117812235"
-Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by fmviesa004.fm.intel.com with ESMTP; 11 Feb 2025 22:26:04 -0800
-From: Raag Jadav <raag.jadav@intel.com>
-To: arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	linus.walleij@linaro.org,
-	mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	dmitry.torokhov@gmail.com,
-	jic23@kernel.org,
-	przemyslaw.kitszel@intel.com
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v5 12/12] input: ipaq-micro-keys: use devm_kmemdup_array()
-Date: Wed, 12 Feb 2025 11:55:13 +0530
-Message-Id: <20250212062513.2254767-13-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250212062513.2254767-1-raag.jadav@intel.com>
-References: <20250212062513.2254767-1-raag.jadav@intel.com>
+	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="EMAxMEDK"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4Yt7d86tH4z9tFG;
+	Wed, 12 Feb 2025 07:26:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
+	s=MBO0001; t=1739341613;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+7N+XpMkRRdoh+Bj42XO2iok1EBcqM54SUgrwByemnI=;
+	b=EMAxMEDKouOdv9tfDkWZG9Kxvn1mxdnuLb9WNeAiCvYXxc3nVbfTsgU1q415iHfhYwMkt3
+	zmElKwAwm9kd1tc9HhilRWGK6l26GIvDEdQrmRDVt4bGZYe9GdOiuy4xQs4hRe6WrQPMU4
+	RcmKm8z2Vq1eUAlNA5jGkJq6lZrpGrjOI12C8UNWS0+Cr9PAvkx7oTPy8VA3tGo3zw1JpP
+	aS13FsSF/ENWFui/8nYg3htTcVtf8MauFZB0Ecs0Ai81Rzlh0JT+1Igxkp9nCsJgKn/bTm
+	NKTlPIkeOMH+7bw99qXZ4Hmjkjphs8qfeznOTf2sOzwRoH7nKC2iQml3GjXbIw==
+From: Frank Oltmanns <frank@oltmanns.dev>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,  Konrad Dybcio
+ <konradybcio@kernel.org>,  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+  Chris Lew <quic_clew@quicinc.com>,  linux-arm-msm@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  Stephan Gerhold
+ <stephan.gerhold@linaro.org>,  Johan Hovold <johan+linaro@kernel.org>,
+  Caleb Connolly <caleb.connolly@linaro.org>,  Joel Selvaraj
+ <joelselvaraj.oss@gmail.com>,  Alexey Minnekhanov
+ <alexeymin@postmarketos.org>,  stable@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: pd-mapper: defer probing on sdm845
+In-Reply-To: <9f8cf902-85a3-43db-bce9-4fc9b876c473@kernel.org> (Krzysztof
+	Kozlowski's message of "Wed, 12 Feb 2025 06:45:17 +0100")
+References: <20250205-qcom_pdm_defer-v1-1-a2e9a39ea9b9@oltmanns.dev>
+	<9f8cf902-85a3-43db-bce9-4fc9b876c473@kernel.org>
+Date: Wed, 12 Feb 2025 07:26:43 +0100
+Message-ID: <871pw38yqk.fsf@oltmanns.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 4Yt7d86tH4z9tFG
 
-Convert to use devm_kmemdup_array() which is more robust.
+Hi Krzysztof,
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/input/keyboard/ipaq-micro-keys.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+On 2025-02-12 at 06:45:17 +0100, Krzysztof Kozlowski <krzk@kernel.org> wrot=
+e:
+> On 05/02/2025 22:57, Frank Oltmanns wrote:
+>> +static const struct of_device_id qcom_pdm_defer[] __maybe_unused =3D {
+>> +	{ .compatible =3D "qcom,sdm845", .data =3D &first_dev_remoteproc3, },
+>> +	{},
+>> +};
+>>  static void qcom_pdm_stop(struct qcom_pdm_data *data)
+>>  {
+>>  	qcom_pdm_free_domains(data);
+>> @@ -637,6 +651,25 @@ static struct qcom_pdm_data *qcom_pdm_start(void)
+>>  	return ERR_PTR(ret);
+>>  }
+>>
+>> +static bool qcom_pdm_ready(struct auxiliary_device *auxdev)
+>> +{
+>> +	const struct of_device_id *match;
+>> +	struct device_node *root;
+>> +	struct qcom_pdm_probe_first_dev_quirk *first_dev;
+>> +
+>> +	root =3D of_find_node_by_path("/");
+>> +	if (!root)
+>> +		return true;
+>> +
+>> +	match =3D of_match_node(qcom_pdm_defer, root);
+>
+> Aren't you open-coding machine is compatible?
+>
 
-diff --git a/drivers/input/keyboard/ipaq-micro-keys.c b/drivers/input/keyboard/ipaq-micro-keys.c
-index 58631bf7ce55..ca7ec054b1ce 100644
---- a/drivers/input/keyboard/ipaq-micro-keys.c
-+++ b/drivers/input/keyboard/ipaq-micro-keys.c
-@@ -102,9 +102,8 @@ static int micro_key_probe(struct platform_device *pdev)
- 
- 	keys->input->keycodesize = sizeof(micro_keycodes[0]);
- 	keys->input->keycodemax = ARRAY_SIZE(micro_keycodes);
--	keys->codes = devm_kmemdup(&pdev->dev, micro_keycodes,
--			   keys->input->keycodesize * keys->input->keycodemax,
--			   GFP_KERNEL);
-+	keys->codes = devm_kmemdup_array(&pdev->dev, micro_keycodes, keys->input->keycodemax,
-+					 keys->input->keycodesize, GFP_KERNEL);
- 	if (!keys->codes)
- 		return -ENOMEM;
- 
--- 
-2.34.1
+Thanks for pointing out of_machine_is_compatible =E2=80=94 I wasn't aware o=
+f it!
 
+The patch was already NACK'ed by Bjorn, but I still learned something
+from your feedback.
+
+Thanks,
+  Frank
+
+>
+>
+>
+> Best regards,
+> Krzysztof
