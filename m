@@ -1,136 +1,131 @@
-Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5102046B5;
-	Wed, 12 Feb 2025 12:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60942271824
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 12:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739364743; cv=none; b=hMWR0f7z0J+zKPwUN+UKMevUL9hZukRbKzvJ7+kGuaytHXkrheeie/70GnnyeYnDVz9OuOG0FHEdzLb6Qnejc3dnrGII5WIJM5xt3XkTTojtfOkLK47saeyLI/fcrHr5cIaSZo7nLCFvZZSj5HCkO2MsXPyZZL2wiurw0I+1Xxc=
+	t=1739364826; cv=none; b=FFAl4o9Y5xkHwJj2UEsk5Etpsq8kID4Jo8ltJVqL7zui7DB2zM5DAa0QqZ09uXDtfqVgMrTHQNiZ1adQyNxJQg6OOAmNAw1eoi1bEmWv7U5Y/VqrRQ+gb3ofk7kxUxxicibhby5q+7J9ZWPO0xGtz8X6ohWpETmcnGrzq7NriNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739364743; c=relaxed/simple;
-	bh=0HUJCUu1wgMcgDDTi7Bg/sYak+QPi7iL6RR8eCGvuUM=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=iGGWjDV7quwpi3PELMdnY2thArirOPwwfvq8GfWCbZsQs66sLIUUXaTE4iR/7WA/07oQhKRpyuenH54cK8CBMxjg1W5AbaLY7Z73R0/iCLAqTZZ/8svtM62EjvpUXjlSXwhr+qwbn2tdnDJFqWFErKqDw+lYQJ7Q8+jA1QrAdGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=RnqjVrAS; arc=none smtp.client-ip=162.62.57.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1739364826; c=relaxed/simple;
+	bh=W4vUf1/0kFjyw3Paou9TarghzObDE/bTqGE1At5j+8c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JAXhoxJrR9n5ByCnsjSouAfWJVhavPnn1gvU9pECAfTtewO2jnAxLR5kCT2Y4VLAmDCUCC+IzffNjs2gJxhnUNxilsWcS/LiWJc+xNzBBeGZ9Xj1O2TEBlguJUiYPwuh/Nd/mDl71kr7F50WznOAS/jEpmcI7X3o1GTix3eIKSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RaqKmOUW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="RnqjVrAS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1739364726;
-	bh=+XIDPqjGUvxmjKTI7q2+Nz1Yuu2Dud+hxdGsctS0pCM=;
-	h=From:To:Cc:Subject:Date;
-	b=RnqjVrAS5ToUAMZ4e/ATqtEkPmwTFWL50N/eICCOaGWR2nGcwxX+0Dz/JR2muHLqJ
-	 LxPI+vG6m7gSJzEHOJUzTi6scc8Imauk61Ud+KGSZ5eJahyDt6EqZmXg74pC++TGnq
-	 MsAUWPcpDxI27GAlsLkLOJL/SxTwdnZz/k6TbydY=
-Received: from f41.lan ([240e:305:1b95:d110:7285:c2ff:fe86:1af4])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id B758387A; Wed, 12 Feb 2025 20:45:53 +0800
-X-QQ-mid: xmsmtpt1739364353tcm46gffh
-Message-ID: <tencent_B44B3A95F0D7C2512DC40D831DA1FA2C9907@qq.com>
-X-QQ-XMAILINFO: N2bAIxLK0elnyafZvAS7NlnEeBNBU/rEwUIhb3bMQDt445BhsBLzRZX+Y/XPhu
-	 daivaUk+OV7owFM2QKnC/yqkalI6HNlPutLjgFrFWAsRYcNLdtuTSPkUKapeyd7z1yCKP6ehXYu2
-	 o+u86QgQd102TcsTdtIMD6ZtOU5V2dwYZaryuO5fKPT6BuLfdXzVKAyah7OrQ1fWoIAdsEBGmH4K
-	 bhJ819uxIIEhL+Tp3MJQqovaQGu0jAp/+gsM+bWtxVfcSY7qPAAHEn8cismo9SOTYh/DKwJrJyMd
-	 TofmE45VkmdLXh+S4wyedoXG3S/8zO3ojBDLuUQiz9ChX56OF5Oa/1Kf3uZg8S+Mpd4FkausBwDo
-	 AITFU2CAEOKGeQ4tbhq3Abo+YhwEGRW1GYvwJSEOzxCPYaloEDVXBzYcpKSmv4ScUra9CjxkZdZ3
-	 atyj0QTyhgKzo5SS8WGe4/8wgP5u9kQqDEqPSBrXYRMy9RgvWmkeP8jg6f6/tzoXIH6YeJuKiqL7
-	 qzTs0PxvqfycTokxh8CV2ZMBD4G18eyIb0rSlLtSESPMa/RbiRvrB64dtlHqVO3wa/+LsJCfneDa
-	 O2Som2NC9dHTis5Q/77BL9AjKkseuEmV6rRasW2txq1Z0s8+nB+iOIhcN1wtDLTPa3vgEftCW71B
-	 hxjI9jutCxvYCPBhmeob3KuMQ4PWjDpzMXh6R6QSpK5p64szp5Tf2cX5THaYu7TannLbv/yonjR3
-	 IgBsVG253+ccraaB+m9vK9nyM8Ktxf8itC4zGkIXlqe9nxu5cLSq2PHHs5E4lE8yqAgYPdcGzxrw
-	 9rdsH4Y5k0oaRWSY1xN6C/sloc43k0GnbH6d+rjl7l+DTWXAcD/LilkccLVmXDvakOxT34U5uz2Z
-	 7sBY6alEgm+BWvp/xAMA/TtyRieVZYVObBpsUklNEf0B9AS82UAKDVtmZaKHpEeDyppUTxTZZkH5
-	 TA1ZjMVOp02Ohzs9j2ctGEl0M6nxFHeqOxA/g+CTNp6BkByfVD6mmZOlFDAa4mEgyc5XMBEyw=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Rong Tao <rtoax@foxmail.com>
-To: andrii@kernel.org,
-	qmo@kernel.org,
-	ast@kernel.org
-Cc: rongtao@cestc.cn,
-	rtoax@foxmail.com,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	bpf@vger.kernel.org (open list:BPF [TOOLING] (bpftool)),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH bpf-next v4] bpftool: Check map name length when map create
-Date: Wed, 12 Feb 2025 20:45:52 +0800
-X-OQ-MSGID: <20250212124552.9247-1-rtoax@foxmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RaqKmOUW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739364824;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=knzBHB+xibELoM9METHHEBNydWfuqJFvfie23B+AtL0=;
+	b=RaqKmOUWFrLlx6d4v/DImjxPZE+9bOAJ3dbDx8fAIW0ue50ktyDiFU5XD6bhK95oLFekT6
+	wMIT0KHQ1rrJJo6FRNxmAgQl0Fhad+rq6GPf1UQ7IySdIfbWv9tcdGZ2bYJ2HUU16XWIOC
+	pD6CSHqLxnHS8fqzLieghZUJXB5++mY=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-138-3-RWW0F0NnevZDbM-YCCjA-1; Wed, 12 Feb 2025 07:53:42 -0500
+X-MC-Unique: 3-RWW0F0NnevZDbM-YCCjA-1
+X-Mimecast-MFC-AGG-ID: 3-RWW0F0NnevZDbM-YCCjA_1739364822
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c04e4c62a8so700907685a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 04:53:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739364822; x=1739969622;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=knzBHB+xibELoM9METHHEBNydWfuqJFvfie23B+AtL0=;
+        b=IKyTECw3KtJf1a3HGsB8pIqTn1Wb47mg/YfPMitXfkGlf3pWLZnxcd32AtL5HdFSHZ
+         FgAA2/j3aW+6q3pv+r9chq2t2NujcfpRZHM9eAZUYJgziAemTe5kduiPtiIWCMUgl32A
+         E6t0IzIkVJOQvYHvu+kznR69DGz56Ogpzqdkt7yLB+5xPvVEzd6aBVuJKMJeBTuyuNWv
+         yrh/LhWxNL8LxhaQ6u+SXxuyqlg8l6W84ieDnWtPey/i8ewJfiRDz+u2nwr/wKCPa7d3
+         n7kfjAIqp8zwlSrXsyz/e4kJaZLzmOfzxmD44gQ8p80ovolL55d7DGPkKcdtu7aJ6ofn
+         Hwkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWJXe5Vm7/MnRvtM8gYMpLojkEX9cKfgFe5z/V9L/ATHP0mHTHESm925ET2ZXt5LVWb+3dCi3erd+tx6eM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCX0Xw11qHtGNL6HqftQxT8dX7TRZC1DnGLZjCSYu+Zt/53CNw
+	2q7iBJWu5sLaUNXhBUkBMQGqSDfFU/4lZkdc3HmKGW0cC06LIqQSnZuQwKVUVcCmAqoeExR23Vl
+	CU3p1J25zJclPTGtLcvb9dPYV0SUnTS2nEGxRy9ovpSWQ7HutaZH1vH4PSbZh4w==
+X-Gm-Gg: ASbGncsW8CdC1/IM9MfmMFlfKahNhCYjHW+mTf+mt4NAzeAXghAjoiGY56vMhzGJcjw
+	ECkt+tA5hXQ5QgLEDVggpgyROaqHZYRRe24qbsKzDjyHIkbNV47mEJlbuYBuR4J22k6P510QyTK
+	c9t9ubn4TupuqElmnhjjFetOes2thcCMZZxgxmWMzC+ZJwbNpRU9hqJe6VeOGq9lEUyq9jjdVHg
+	ceTCGn0qwALy8FLKyOClJWWII2v+fqPvHA7wpP03QOFRFiIEKOooD/8rWYbneJw9U527nhg1os7
+	BfSt
+X-Received: by 2002:a05:620a:3950:b0:7c0:589b:2f3e with SMTP id af79cd13be357-7c06fc88adcmr407301885a.29.1739364822208;
+        Wed, 12 Feb 2025 04:53:42 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE7FcO8kuy6Gfi4rIlvRUBrNcSfOrvcVLper0drGWk6xj15NOdU6I+CCP8OX2xjc19cBs0qPg==
+X-Received: by 2002:a05:620a:3950:b0:7c0:589b:2f3e with SMTP id af79cd13be357-7c06fc88adcmr407299085a.29.1739364821922;
+        Wed, 12 Feb 2025 04:53:41 -0800 (PST)
+Received: from [10.26.1.94] ([66.187.232.136])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c07518e80fsm66396585a.26.2025.02.12.04.53.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 04:53:41 -0800 (PST)
+Message-ID: <1d2c943f-9521-4dc8-b798-06cbb84bb7dc@redhat.com>
+Date: Wed, 12 Feb 2025 07:53:40 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] intel_idle: introduce 'no_native' module parameter
+To: dedekind1@gmail.com, kernel test robot <lkp@intel.com>,
+ linux-pm@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Jonathan Corbet <corbet@lwn.net>,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>, Len Brown <lenb@kernel.org>,
+ Prarit Bhargava <prarit@redhat.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250211132741.99944-1-darcari@redhat.com>
+ <202502121732.P7lZkbhm-lkp@intel.com>
+ <21e66060c13c6a3cc33592f71cb08975711a6adb.camel@gmail.com>
+ <9416ee48-a68a-465e-85be-89d5a53afcd8@redhat.com>
+ <b7ed8d0b07e82a637bfc8a3f4d592f0f15ba9688.camel@gmail.com>
+Content-Language: en-US
+From: David Arcari <darcari@redhat.com>
+In-Reply-To: <b7ed8d0b07e82a637bfc8a3f4d592f0f15ba9688.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Rong Tao <rongtao@cestc.cn>
 
-The size of struct bpf_map::name is BPF_OBJ_NAME_LEN (16).
 
-bpf(2) {
-  map_create() {
-    bpf_obj_name_cpy(map->name, attr->map_name, sizeof(attr->map_name));
-  }
-}
+On 2/12/25 7:46 AM, Artem Bityutskiy wrote:
+> On Wed, 2025-02-12 at 07:41 -0500, David Arcari wrote:
+>> - #ifdef the code that doesn't compile
+>> - default no_acpi=true in the !CONFIG_ACPI_PROCESSOR_CSTATE case
+>>
+>> I sort of like the second option better, but I worry about the
+>> documentation.  Specifically:
+>>
+>> "In the case that ACPI is not configured these flags have no impact
+>> +on functionality."
+>>
+>> I guess that is still true.
+>>
+>> Perhaps there is a better option.  What do you think?
+> 
+> I've not been involved into kernel that much for long time. In old days
+> sprinkling #ifdefs around was an anti-pattern. Most probably nowadays too. So
+> the second option sounds better to me.
 
-When specifying a map name using bpftool map create name, no error is
-reported if the name length is greater than 15.
+Another option would be to change the offending code to a function call:
 
-    $ sudo bpftool map create /sys/fs/bpf/12345678901234567890 \
-        type array key 4 value 4 entries 5 name 12345678901234567890
+if (ignore_native()) {
 
-Users will think that 12345678901234567890 is legal, but this name cannot
-be used to index a map.
+And have ignore_native() always return false when ACPI is not configured.
 
-    $ sudo bpftool map show name 12345678901234567890
-    Error: can't parse name
+And yes I should have built and tested the kernel with ACPI disabled. 
+My apologies.
 
-    $ sudo bpftool map show
-    ...
-    1249: array  name 123456789012345  flags 0x0
-    	key 4B  value 4B  max_entries 5  memlock 304B
+I will do that for v4.
 
-    $ sudo bpftool map show name 123456789012345
-    1249: array  name 123456789012345  flags 0x0
-    	key 4B  value 4B  max_entries 5  memlock 304B
+-DA
 
-The map name provided in the command line is truncated, but no warning is
-reported. This submission checks the length of the map name.
-
-Reviewed-by: Quentin Monnet <qmo@kernel.org>
-Signed-off-by: Rong Tao <rongtao@cestc.cn>
----
-v3: https://lore.kernel.org/lkml/tencent_AF066A426F591F977D2A73AF00A34A883808@qq.com/
-v2: https://lore.kernel.org/lkml/tencent_26592A2BAF08A3A688A50600421559929708@qq.com/
-v1: https://lore.kernel.org/lkml/tencent_1C4444032C2188ACD04B4995B0D78F510607@qq.com/
----
- tools/bpf/bpftool/map.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
-index ed4a9bd82931..81cc668b4b05 100644
---- a/tools/bpf/bpftool/map.c
-+++ b/tools/bpf/bpftool/map.c
-@@ -1270,6 +1270,10 @@ static int do_create(int argc, char **argv)
- 		} else if (is_prefix(*argv, "name")) {
- 			NEXT_ARG();
- 			map_name = GET_ARG();
-+			if (strlen(map_name) > BPF_OBJ_NAME_LEN - 1) {
-+				p_info("Warning: map name is longer than %u characters, it will be truncated.",
-+				      BPF_OBJ_NAME_LEN - 1);
-+			}
- 		} else if (is_prefix(*argv, "key")) {
- 			if (parse_u32_arg(&argc, &argv, &key_size,
- 					  "key size"))
--- 
-2.48.1
+> 
+> Artem.
+> 
 
