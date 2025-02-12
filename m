@@ -1,89 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-sh.amlogic.com (unknown [58.32.228.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8A71CD1F;
-	Wed, 12 Feb 2025 02:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F433D3B8
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 02:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.32.228.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739326880; cv=none; b=jZTphlKtnQmQncCrTdVtiHJKasLrNRiCgoE3k2a6wdB61qUzjkjHGi2xfeLBcu4QU78WUS5/04bDcIcdjJhRMw8mhEmZBpZoDIPcBjxGEMFk8WCrU9nM0KO4FCpnvseWHLWfGz090yPam/yExhQNqxJvRHcyBsgbegIHctbF8HE=
+	t=1739326903; cv=none; b=aM/wvxVrujF/8fR13ZUZotQMnbvRUti3k/z/o+kmTIyJ2h82GzLXsEnxMUC/mA0zuXOsIV2PDn8wTiEAHfwfzmTbfWcHZGzpFDKHqrYw0S1M76o4pQ2xN77nUD2T7D/+Ld/vZCxRRmnS23BoOo1JQyxx9fCe+bEfoww6pM3voc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739326880; c=relaxed/simple;
-	bh=IyLvP91pfGYRHCXqlRx/ClwzflNIe5Yh0J8AVLNN12Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uqg55o8KK9teSGjuOh3/9TIWD11Rp/Mjw6iBw5jeo/0TGOFC+4R4cDmTCKbtejEVzESdhWUHc+hGub4sgHnFCKjTGs0zNndw5OyVOLI3luk0v2BE0zvNRGqjcxtWr4LKCLJp0GAqu7gRWUZd10FH/h21AnZCUsIU/iln7x+fIzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTMWDyOA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTMWDyOA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99ABEC4CEE4;
-	Wed, 12 Feb 2025 02:21:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739326879;
-	bh=IyLvP91pfGYRHCXqlRx/ClwzflNIe5Yh0J8AVLNN12Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lTMWDyOAyrZVTk0RkOOT1gPJt1AI4FCh107H0lJJ+YKfe9DYu7MtgZZMFdIs8ESso
-	 Rkv66JTBZOZc6fxrTFn5GOSJAWT8ebdmxqQhvjoHRi2m8K0KoRrqLdpzsBYgK6avmY
-	 8v16oFX0lxzGEL+7Ix0lOtJQgdiSo7XU7DWJn15evfvurFOjyiBJgbbW12pLJMzJid
-	 AiKoCNVZ9qtXAm5CVFefyRPCUIIwAmCLE+GKL7oyPMxLvlVY25yPJIpdUwarc1GZXJ
-	 6WML7Tij8w4ZZ/m5qU8gTjIRw9z14NXwCnLtf86vBBLfPLIMTLas43Yvev16eA0fKU
-	 NWPH++9FGpjoA==
-Date: Wed, 12 Feb 2025 02:21:18 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: bp@alien8.de, dave.hansen@linux.intel.com, decui@microsoft.com,
-	haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
-	mingo@redhat.com, ssengar@linux.microsoft.com, tglx@linutronix.de,
-	wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
-	benhill@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
-Subject: Re: [PATCH hyperv-next 0/2] x86/hyperv: VTL mode reboot fixes
-Message-ID: <Z6wFnoK-X7i1bd9x@liuwe-devbox-debian-v2>
-References: <20250117210702.1529580-1-romank@linux.microsoft.com>
+	s=arc-20240116; t=1739326903; c=relaxed/simple;
+	bh=UgwC4QNIm2wYd98Mrn0myQ1ps/3mn0ecSPsnhG0Dywk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Nsp9lZg1/X1HmUpWjFNFmdJex8Uvi4cNh2qrbnpM1pR9+ISf3frR5p6K+6JYcf2v70QgbsVfSXwGIA8qJmiuBFOi/tjJ2Hz8NbgnoLgb2dIbgY4GDmF+45HoyXOWnHrq5hdct2QwrjNVn8fZhV2wGGa4huH1v8MvoziKhtw0KHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; arc=none smtp.client-ip=58.32.228.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+Received: from walle01-sz.amlogic.com (10.28.11.73) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.2507.39; Wed, 12 Feb 2025
+ 10:06:32 +0800
+From: Shengken Lin <shengken.lin@amlogic.com>
+To: <akpm@linux-foundation.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, Shengken Lin
+	<shengken.lin@amlogic.com>
+Subject: [PATCH] mm: Remove redundant PageMemcgKmem(page) call
+Date: Wed, 12 Feb 2025 10:06:27 +0800
+Message-ID: <20250212020627.3461237-1-shengken.lin@amlogic.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250117210702.1529580-1-romank@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Fri, Jan 17, 2025 at 01:07:00PM -0800, Roman Kisel wrote:
-> The first patch defines a specialized machine emergency restart
-> callback not to write to the physical address of 0x472 which is
-> what the native_machine_emergency_restart() does unconditionally.
-> 
-> I first wanted to tweak that function[1], and in the course of
-> the discussion it looked as the risks of doing that would
-> outweigh the benefit: the bare-metal systems have likely adopted
-> that behavior as a standard although I could not find any mentions
-> of that magic address in the UEFI+ACPI specification.
-> 
-> The second patch removes the need to always supply "reboot=t"
-> to the kernel command line in the OpenHCL bootloader [2]. There is
-> no other option at the moment; when/if it appears the newly added
-> callback's code can be adjusted as required.
-> 
-> It would be great to apply this to the stable tree if no concerns,
-> should apply cleanly.
-> 
-> [1] https://lore.kernel.org/all/20250109204352.1720337-1-romank@linux.microsoft.com/
-> [2] https://github.com/microsoft/openvmm/blob/7a9d0e0a00461be6e5f3267af9ea54cc7157c900/openhcl/openhcl_boot/src/main.rs#L139
-> 
-> Roman Kisel (2):
->   x86/hyperv: VTL mode emergency restart callback
->   x86/hyperv: VTL mode callback for restarting the system
+The function of PageMemcgKmem(page) is the same as that of
+folio_memcg_kmem(folio).
 
-Saurabh please review these patches. Thanks.
+Since __memcg_kmem_uncharge_page already uses folio_memcg_kmem to check
+if a folio has been uncharged, calling PageMemcgKmem(page) before
+__memcg_kmem_uncharge_page is redundant.
 
-I don't have a strong opinion on them.
+Signed-off-by: Shengken Lin <shengken.lin@amlogic.com>
+---
+ mm/page_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
->  arch/x86/hyperv/hv_vtl.c | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> 
-> base-commit: 2e03358be78b65d28b66e17aca9e0c8700b0df78
-> -- 
-> 2.34.1
-> 
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 579789600a3c..5a76760de495 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1055,7 +1055,7 @@ __always_inline bool free_pages_prepare(struct page *page,
+ 	trace_mm_page_free(page, order);
+ 	kmsan_free_page(page, order);
+
+-	if (memcg_kmem_online() && PageMemcgKmem(page))
++	if (memcg_kmem_online())
+ 		__memcg_kmem_uncharge_page(page, order);
+
+ 	/*
+--
+2.34.1
+
