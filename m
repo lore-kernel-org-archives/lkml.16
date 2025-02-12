@@ -1,205 +1,460 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2072.outbound.protection.outlook.com [40.107.93.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688EB25B671;
-	Wed, 12 Feb 2025 17:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739382189; cv=fail; b=GaTBQbWkxxLQfo7xkfMISJ8ZA2kqvT41C5bg5xpAsMPeMe4sV77cfzq3N+8HqMOZpQM/1n2QCUq67ApnZJkFO0EAryZu7EJL/cpDKe8+z1cNIcDAWFy6Cqs9p9/AF8e+MmaTgRL+Y3OkLMQBIrWekrSIuIBDNSNEDOwrzDYzXIE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739382189; c=relaxed/simple;
-	bh=Vyw93R2lC4BMMJo1dRa13p+G9jwrKioAwOQKXvCREz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=g5R9TnFavqx2Nmu4Kr5kOvxkkRMeIhbxzc+S4lWkvI78VtlgVd36qsvkbC0cWCio8J2OGnfqLYLuHfFwbNsB0MXcctNZ8aR9lXYLqj5htShNOiyUcsEVqgYIX7WD5u6Tz/Um5+lw0A0cRjop9TglpcnbBPGj+ca+V2qblbbsTgA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=B5mT3kVE; arc=fail smtp.client-ip=40.107.93.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C862586C6;
+	Wed, 12 Feb 2025 17:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739382213; cv=none; b=lbbRM77CiMP7TGOG/Ane0PFXhVX9vNor+/0g/MYcv5d1eSzACOEtGA3CxrdZy+94BJUyKEe3mCeIlPOfQMCazxervWYzK9lrpTB+kmrW+VY4wJ3EQyuQScXCFFUlpKmao4873CHF8a9IcTa71NwC9tLGl0ig6DtTmEY4p8NV23E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739382213; c=relaxed/simple;
+	bh=L4kfXCzpw3LHzhnMct3EQoXu61cLC7vGM9jRNWN86dU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=GQLjFWsbtDZdgU8BSEZWHAMdECRSCw5YvsIHsGGc0ibQHu2J84WozvspX9V3OmDiWTDyD4qVGpMNUSpPt3PtdevLYtPK24vw+F/CPyGFGSajqkj90vVHoYVWCFOd0SjHzSQxPIdoWYvEpopN7k7OBSqMy54qZig2exzZLdWGIGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mi9IPAcv; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="B5mT3kVE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hVJBSwDw2qAPMBIclB5NQARQtlUAmjOiiEwinfHtuz708pu/+Kz9UAAsQywdHczHU2cwrxlb5j8i+neZZmikM564uV92M0NVuwn2PVSWRWmCGpXwrJFgqlklVJc+IBUbdIbeH/NapL9yK2VKlqbTmzpU/OvT5b+9XoCrVQG2i519VjzzqiG8R4nVHZMMf3vGIGCfQgGW4HoJu3plD6GmA7eEyC5aydAQna9/tPOvjSYBj1QKszZd0MCzS4GsG8t8+ovq3mt1WBjXx3th/hquL0Ppf/kSQ3n9KS4jqFtd7Bb9J5LXs/Wr3SLm6UgE2nZg0Nd8pzJWxIdpXWMSSrDWAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Vyw93R2lC4BMMJo1dRa13p+G9jwrKioAwOQKXvCREz4=;
- b=xNHOpSjxJB2dVr97AchlClMUt7pZkoO+vG/NOB1r5edbWAL8hartgZjW/LA/32wnWDIwM5eAf6zLmwfUBoBzjd6Rr1paCavxlQTeb66HQ/jBNn3O5dMkyrncuevjlrKESSTy3Yjbc/tk+lZ8JpbjiQq7Tkc+Fs1+fR6K8CBnFgO5upe8yBi8r3giM3gx+jgiIUfLrNMR5AKuxj5ymXbBjpY0Rcq5pCVyySW133I0iM69xKaqzRAIgqlHNsE3fYDYXTjMxYEpO8hYqsMuAqOHzDK+tm/w5kpJwCrOchjP7rkCx/QacZTg2ZyT7ACx4KeVHmLbo8Rdl7Bmsk2M16Jg8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vyw93R2lC4BMMJo1dRa13p+G9jwrKioAwOQKXvCREz4=;
- b=B5mT3kVEfHmiQQhmC0MYKqyKcfPVbLuuFFJ2o7idT/yGzWvqfdCxXs4wOJT37RaM4NeeQatDnqzx92hZT1AMujQYGcFf5Gtt5Bv5Nb1Y2MZ2JSVyriamWtBKK6pUv/Iu/GHDsOzBGRDmYheZZSRlNc5B3JbVx3DsrXKHufVx0BuelS2g5rKThZNkU1ubjvnH/eUN+NviT45chJgz25VbfMjdx2Wxy8i7tjlEq8L30WSkgy/sTYmXS1hXvJqovg8jqmWXoTFa1yvtHpZ+OL9W+fmZHdzVQ+JqXKQ6WQmjaCdukOjGX5eB8MP39VD+qE759uT8j09Fwk2xRU7dcjrSZA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MW6PR12MB8663.namprd12.prod.outlook.com (2603:10b6:303:240::9)
- by IA1PR12MB8221.namprd12.prod.outlook.com (2603:10b6:208:3f0::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Wed, 12 Feb
- 2025 17:43:04 +0000
-Received: from MW6PR12MB8663.namprd12.prod.outlook.com
- ([fe80::594:5be3:34d:77f]) by MW6PR12MB8663.namprd12.prod.outlook.com
- ([fe80::594:5be3:34d:77f%2]) with mapi id 15.20.8422.015; Wed, 12 Feb 2025
- 17:43:04 +0000
-Date: Wed, 12 Feb 2025 13:43:03 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 05/14] kexec: Add Kexec HandOver (KHO) generation
- helpers
-Message-ID: <20250212174303.GU3754072@nvidia.com>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-6-rppt@kernel.org>
- <20250210202220.GC3765641@nvidia.com>
- <CA+CK2bBBX+HgD0HLj-AyTScM59F2wXq11BEPgejPMHoEwqj+_Q@mail.gmail.com>
- <20250211124943.GC3754072@nvidia.com>
- <CA+CK2bAEnaPUJmd3LxFwCRa9xWrSJ478c4xisvD4pwvNMiTCgA@mail.gmail.com>
- <20250211163720.GH3754072@nvidia.com>
- <20250212152336.GA3848889@nvidia.com>
- <Z6zOqtaLQwnIWl2E@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6zOqtaLQwnIWl2E@kernel.org>
-X-ClientProxiedBy: MN2PR20CA0021.namprd20.prod.outlook.com
- (2603:10b6:208:e8::34) To MW6PR12MB8663.namprd12.prod.outlook.com
- (2603:10b6:303:240::9)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mi9IPAcv"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6f9b1bc594dso246297b3.0;
+        Wed, 12 Feb 2025 09:43:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739382210; x=1739987010; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XTKo4knAvjUALZFhvPfgqttFum7ZaL5Xtp/4/l9yBkg=;
+        b=mi9IPAcvJIIf01kW8+H9Wv+vdKPVgN0duAI5ecDpJ9yhKFDd4PKXjZNyHj2ykO10YV
+         XlvhqMMluyNNLAYhgQn3pa4K8kMIQq5Dd9qe/Ub3Pk4uRG1N9N2gp0t1gMGWf/O9DIb0
+         5LDrnhURGo3yuRvqQUPEOPVAprC+ikOx4PCTEU+y0wp1M7rwMokUZxObrFKqdO/p2rn+
+         GtXv9nNuzfb16K5p6OdxxGzgjwllse3bH+7655di0nG8LNrHaBxezaXW9P2Ob1ST/kBr
+         OZRTVa1f4WwZ1gNjL49Ls80ZT826gaw/ScMfdSMD+FYPtKfS/HgJ/QR5J1KORT1+t0c5
+         vmcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739382210; x=1739987010;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XTKo4knAvjUALZFhvPfgqttFum7ZaL5Xtp/4/l9yBkg=;
+        b=BkfuDEhrcteiihBJhZek2GQ+6y1afAOfSOgUbwN1lFyC9FjBCn+AZSkvXyMWSerYaO
+         sRNThMPNdHyw4A3mDjKVsaYBwx78GZP3zXjgseJ8pdxyKczjtDhOA36T1NO4rWah4uSN
+         EnBHKRaddrhszNxL10SohaQ+R5tkTkSh9Ip1HJH3IPiuQRR6/WOWF2/00oH7lQGF3Tlg
+         AaxlEnxEbtKZkkM6tRgGsG1rIT3GMyKZaxhSKaDn27drY+pMGdMk3P3WRxPPGLuN336Z
+         1iVpNdIgMBdQG1nVlZqoCoMPQlQqykAEeIQaB/nEpTLEi37uJCol2M3Q5ZMl9Z1krNlf
+         sACg==
+X-Forwarded-Encrypted: i=1; AJvYcCX05Dp7OrmIRW/ICucXcuE9ijdlBdZKGgru+jM/f4kq17Us5e8F1GoZiw9Ipe6C0aS2gzPKiCE1RI8xXQD9x6i7ZY+9@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsLy3F4LUfUtvzW5DQ1o9MFW5B9PBrbQO+VD/ezDWtJHuxiPit
+	feU0ivNYC1vLH0E3ljxpZoQQJ1UvEqSuTVwhjBZXMyhjT2fdmNym
+X-Gm-Gg: ASbGncu01Cl4aY9lmyss11cu8tECHmbft4fNz/WtSr8R8hRtX2KnibrlOKoDyShoCaq
+	52GxNQzQrkHajGJlVRaDzQFEOJQpJWr7PDktrNxwR1d+Vfgktwa8UqoZPVdGp5nk9I195v3R72H
+	z0A349+sLQywRCmoVzCZfc6ztzalw2P67LKDCsEtRGtxTOtpRK+u28gUiLra79e2BGY/jVyWIpC
+	FF6QqgMVW7Kmj6nayjYKzitrxrP0AXNnsBSXQ9LAy2rBrHzsn2WugAoDVytIxGBM/vpnsT8FS0q
+	8/uSkrQ0dg==
+X-Google-Smtp-Source: AGHT+IEvwYgyghlf7mm+lt3t8FIrhHIAsmys1to2z4kKG0slr1wUdYul/TbiYK8H1iErznuG3Oj25Q==
+X-Received: by 2002:a05:690c:4903:b0:6f5:4304:fb8 with SMTP id 00721157ae682-6fb1f1c7654mr49294507b3.18.1739382209988;
+        Wed, 12 Feb 2025 09:43:29 -0800 (PST)
+Received: from localhost ([2800:bf0:179:113e:f067:4e25:4298:6451])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99fd56916sm27754827b3.62.2025.02.12.09.43.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 09:43:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW6PR12MB8663:EE_|IA1PR12MB8221:EE_
-X-MS-Office365-Filtering-Correlation-Id: fcda6154-e116-4491-99c7-08dd4b8cb3fd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?eCRtdU5NxRln6L2vSD9zK3Np5n0fC70kE9dYCC7RxAz3J+sxt7LICm5NxsNt?=
- =?us-ascii?Q?27NvA9BOzP3/NTtZHdMGVr9ERDLt9Mqjb13sR1IrJKySHT4kNPkGrFBZOEDH?=
- =?us-ascii?Q?HH6U30i32HBa4W2IAOApEvCitZzkURf9k3K1FuZwCLJoI63v5UCI7Pk4Hh1a?=
- =?us-ascii?Q?TqeDPsDwU5sdYQ9lIi0fpPbo4HOAovmqj2k+B9gf33ke+/IJeT9vCxaGbPVB?=
- =?us-ascii?Q?lUpE4pZFt2rykDk/RA/nzierCZ/lNmZMmUDDmhp81cRX8YOLV74Rsu2HDIY4?=
- =?us-ascii?Q?K1DShJUsi+fi2yKtzDzyeW1aQSSAdYzMBaV2Db8FTDjD1kpSGoPtIQOTzQIN?=
- =?us-ascii?Q?TQ4oVcDQmFSc9Aloutqtk4BPr62uHviY+PibF2nIe99LeotniTQGtnBzKVQD?=
- =?us-ascii?Q?OExKzvf3qRHaoew+oBKd4e1Tl0NTiZb5+uOREhH0Vp+T6ctqS9Gk8dTDs9uo?=
- =?us-ascii?Q?6DcCVKqztwBG0RRar7IQWSN83RRx2sKwWXvf85Wa71VrAUKCNVFt88VTQQZe?=
- =?us-ascii?Q?Wbh0GS2llWLViSInnFVgnXZk9zZOnb0IC77Fo/af7anBfmyA+/SRy/UW5S7J?=
- =?us-ascii?Q?T0nunRMY76Dnh9A3Eje+f4Gg86aYmi//Ogkgm2DWyfB3MEZC9RIPU3n+o04J?=
- =?us-ascii?Q?fjELK+Aa4keBvIaZb3zG7uPbDPzEmXFG4yZ6Nhldm8krSwhwoHhHMv8GDXY0?=
- =?us-ascii?Q?p/Si/ywjB3W/gi8rCpEfJrUcdTMwLaEAB88jTvU6IpUrnc5AMkBIuNJHzM4M?=
- =?us-ascii?Q?kZzgWVG3Tt9YqNX+GYWZy1zKOb6359JupFiujj9hMZFb8klmMJBtUcEycmgG?=
- =?us-ascii?Q?O6T6rxNXixD4ZXcUKKiRQZeMDTrYWNJ3cQrET67DnbmC8DxmyXbokJN/esFq?=
- =?us-ascii?Q?9VqhJlQuUN+ZRTM+ZjLpq8RuKS8Cwq+9vHnYgRMIr+PwivooCXsz5e6aUrfe?=
- =?us-ascii?Q?LOI9EfRTUO3EpytBbDBSKGrkZkx6+v2wfLhFf5tw8ljm6voCLkiDHeYUs53I?=
- =?us-ascii?Q?iHhEGsmjqVCnIfMHM3AGQZGL+r8/nJ2OSZ/zzZS+O1RrXHSSdehOHJu9PDd7?=
- =?us-ascii?Q?SyPgQ88jiEJ4gwQSAZjVGR3rjxdTcFdkMV4JVp/9tw6m/uMJ8oDEsIb6a8Yt?=
- =?us-ascii?Q?9Q1ubHS+9z0cJgEE+9PWMvE1yTKrLUb7ZUzkzlPWpyy11ZmcgNfu59eKyS4Z?=
- =?us-ascii?Q?DL4nU+cspC0jJI64Q7W06TCodMii6ZI1d/GEOWVwDzj98E3HxpRh7B9Qrzgh?=
- =?us-ascii?Q?Hatv5iWtuyHchnaqff1u48ZxsDUFM8PrLuCZFn3A6vvkmS+po3jAqC5WF/xz?=
- =?us-ascii?Q?hSUzeUze5DYqrOc90o++K8bnnEQoub3Bth4Czp5TVP+/DdYx9HgcPerJ20xb?=
- =?us-ascii?Q?zBhXRsXRdqOC+uo2QFUYA2gB4U/6?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR12MB8663.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?k6pKXTxW+ltA8nSIxzihH4SzSnKE55QKEUfZGww6P7DKYjl0UqrlI2UfuK16?=
- =?us-ascii?Q?PmhT6qRWiUDCmdmBuuSymrVjhMb8/ds6QI6tFQZqUSa3RlITlu80J142r32n?=
- =?us-ascii?Q?53Z47mQKT4xqle4DPuLpwg686HXlmFXUXRUATIoriCtRZkkvxTnzhiaP2DY0?=
- =?us-ascii?Q?2vjQAgcuCzkuHFeWYJg/0OeMo1P0LdX2srFeZoX9SS+fGEmZHJVRbcRBm057?=
- =?us-ascii?Q?vwsw6yjGRmf8fNpgWXL3IucTzPjdGh5O7UZSVl+B0vk303JKazEaxcts6nGv?=
- =?us-ascii?Q?eEPRMQm0z0xvivo9KP+Bm+YUfLDKCgdxsfD2FJlRHbY8s3cO6aRBdxeNIifh?=
- =?us-ascii?Q?5mfpMiUot0KB1PJdNH65D/gtwb7DBc88ZNNf5QFhdG2xfzjAKENR+UWH+zKU?=
- =?us-ascii?Q?AxtGYI/lfEVJXiT7svdaTlPB7DdHQspwT4tkdLNTNZFl2gg61TuqcnuDHOS6?=
- =?us-ascii?Q?tKzRfmZNIozDMIyPJ1RLeVqAwf+NE1bOolbB0EtpQsHkv6aGnDm2F21ApE1a?=
- =?us-ascii?Q?5qXND3D7kuJgCgF+H9MQfHcJpzA/xACe6Iin1WW9MyT/AiWGkXBnaLz49WiD?=
- =?us-ascii?Q?qlUcGqaCvnOd3YN1AYPdSsOIG8/1VTuwlnqAry66df25CmqC4ovVi+98/Aec?=
- =?us-ascii?Q?6/RbUUPw8K9EzvsO92QkJ6z5v2KnZ4gGK0+imS4YDpvzuMQpmA+zf7k3Cpro?=
- =?us-ascii?Q?OfdACLRY96+3Ulp3cGIUxy98jgJzvFBaNcarNUk9d4p7cRm17QrFvr877BEz?=
- =?us-ascii?Q?Hk+SCK+eo1QPsBO/rxj90ATPk266Zd7U24TZMg4aiU1d6yJeXRKQTjBfB1cW?=
- =?us-ascii?Q?GVW9n0sMIFv8g5LXuokGegQUqqoqYe5BUrCrzIN/3Y017zVmY/LxrzEbvMOv?=
- =?us-ascii?Q?wKkB3tQpgb6ZILSpgifnIHIbHmtM4ZRXqbaFS3A3FK6BZVQUcjZH9eP0xGKG?=
- =?us-ascii?Q?ygJgQkYIOQvrIqsj6D4+Wt0VGN5wQHCb1JSWzcSs/R2AnQWSmZvwsBkY3142?=
- =?us-ascii?Q?rUlbQSyQS5Kq65n/1lbdoOulOV9a6CboWIYGHCHoIEysNDa3gXg/27wNtepk?=
- =?us-ascii?Q?Of01/PcBxyN4Xqrn7Vn7sUtVYHV7gGzjdOIZ9EYV9k25xW/YwjESRETyWtiM?=
- =?us-ascii?Q?CqhmpR2yOIxfQ8oaIV0ePjEXoPzN8sYgFgicwyZoRe/fo7/mpQQC9plUFV5X?=
- =?us-ascii?Q?K9QYBzFrB5G6hC2L4nRIRVEbNdMUuVedXcIQWyJ6BrTgpfYDdC89ywge9uV1?=
- =?us-ascii?Q?iLyUpUDuoyUoKSlU4/Y9onLHo2rzx+plL9FFpzIhffP4Rd+GNBerBRwlaLkc?=
- =?us-ascii?Q?Fj30lcvOb8AnE2OajA7yN9fYsdKv4pb3RLxhbpCNTe8FaBJOXnZbQ5yBpyrS?=
- =?us-ascii?Q?jE0plZu5B15d1LC8yGtpqjuP2MKDISfxUjjSrsbVqeGSbVGOt5pAtrtyf9Yz?=
- =?us-ascii?Q?YeW3sHqYqYgugMRBY0YjxgsVbNjETjnJgTPHuzRO+/nadrL/N93TTrqNRe55?=
- =?us-ascii?Q?6/DjKh9lsaLE8Zh9Gu0HXlAKUZSTBTLxXxNmKkBr60eWNnrbpK/U0aiE9Bf0?=
- =?us-ascii?Q?cOIg92EPW3kJ+73YS2oaGTOR95BG2p3tVLLa1tDw?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fcda6154-e116-4491-99c7-08dd4b8cb3fd
-X-MS-Exchange-CrossTenant-AuthSource: MW6PR12MB8663.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2025 17:43:04.5053
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0P8Jj8OH+WGU64qtS4cFL034ya9n+OiNd7/9MkzdFHwZT/PxjorcgP9YJm7OOU71
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8221
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 12 Feb 2025 12:43:28 -0500
+Message-Id: <D7QNJ79F513X.FYQCGSC9M3KG@gmail.com>
+Cc: <linux-kernel@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+ <dongeg1@lenovo.com>, "Mark Pearson" <mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH v5] platform/x86: lenovo-super-hotkey-wmi.c: Support for
+ mic and audio mute LEDs
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Jackie Dong" <xy-jackie@139.com>, <hdegoede@redhat.com>,
+ <ilpo.jarvinen@linux.intel.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250212070154.5333-1-xy-jackie@139.com>
+In-Reply-To: <20250212070154.5333-1-xy-jackie@139.com>
 
-On Wed, Feb 12, 2025 at 06:39:06PM +0200, Mike Rapoport wrote:
+Hi Jackie,
 
-> As I've mentioned off-list earlier, KHO in its current form is the lowest
-> level of abstraction for state preservation and it is by no means is
-> intended to provide complex drivers with all the tools necessary.
+I left some style recommendations below and a couple questions. I
+apologize for not including this in the last review.
 
-My point, is I think it is the wrong level of abstraction and the
-wrong FDT schema. It does not and cannot solve the problems we know we
-will have, so why invest anything into that schema?
+On Wed Feb 12, 2025 at 2:01 AM -05, Jackie Dong wrote:
+> Implement Lenovo utility data WMI calls needed to make LEDs
+> work on Ideapads that support this GUID.
+> This enables the mic and audio LEDs to be updated correctly.
+>
+> Tested on below samples.
+> ThinkBook 13X Gen4 IMH
+> ThinkBook 14 G6 ABP
+> ThinkBook 16p Gen4-21J8
+> ThinkBook 16 G8 IRL
+> ThinkBook 16 G7+ ASP
+>
+> Signed-off-by: Jackie Dong <xy-jackie@139.com>
+> Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> ---
+> Changes in v5:
+>  - Take out union acpi_object *obj __free(kfree) =3D output.pointer from
+>    if-else block
+>  - Remove lsk_wmi_context_lud_keys related source code
+>
+> Changes in v4:
+>  - Add related head files include cleanup.h, dev_printk.h, device.h,
+>    module.h
+>  - Replaced kfree() by __free()
+>  - Remove double free for obj
+>  - Remove wpriv->cdev[led_type].dev =3D dev
+>  - Remove *wpriv =3D *(const struct lenovo_super_hotkey_wmi_private *)con=
+text
+>  - Remove wpriv->event =3D=3D LSH_WMI_EVENT_LUD_KEYS
+>  - Remove lenovo_super_hotkey_wmi_remove() for unnecessary
+>
+> Changes in v3:
+>  - Changed the name of the Kconfig entry to LENOVO_SUPER_HOTKEY_WMI
+>  - Renamed everything in this driver which contains the name "ideapad"
+>    to instead contain the name of this driver.
+>  - Moved struct wmi_device *led_wdev in lenovo_super_hotkey_wmi_private,
+>    and use container_of() to the led_wdev pointer.
+>  - Replaced sizeof(struct wmi_led_args) by sizeof(led_arg)
+>  - Added condtions checking for obj && obj->type =3D=3D ACPI_TYPE_INTEGER
+>    and free the ACPI object after get the required value.
+>  - Removed led_classdev_unregister() after led_reg_failed label, but
+>    add lenovo_super_hotkey_wmi_remove(struct wmi_device *wdev) to free
+>    resource.
+>  - Removed IDEAPAD_WMI_EVENT_FN_KEYS/IDEAPAD_WMI_EVENT_LUD_KEYS related
+>    source codes and only keep LUD_WMI_METHOD_GUID.
+>
+> Changes in v2:
+>  - Update code layout and formatting as recommended in review
+>  - Improved error handling in ideapad_wmi_led_init
+>  - Separated a WMI driver named lenovo-super-hotkey-wmi.c from
+>    ideapad-lap.c, it's only for Lenovo Super Hotkey WMI devices.
+>
+>  drivers/platform/x86/Kconfig                  |   9 +
+>  drivers/platform/x86/Makefile                 |   1 +
+>  .../platform/x86/lenovo-super-hotkey-wmi.c    | 222 ++++++++++++++++++
+>  3 files changed, 232 insertions(+)
+>  create mode 100644 drivers/platform/x86/lenovo-super-hotkey-wmi.c
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 0258dd879d64..c1792e8f04e1 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -475,6 +475,15 @@ config IDEAPAD_LAPTOP
+>  	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
+>  	  rfkill switch, hotkey, fan control and backlight control.
+> =20
+> +config LENOVO_SUPER_HOTKEY_WMI
+> +	tristate "Lenovo Super Hotkey Utility WMI extras driver"
+> +	depends on ACPI_WMI
+> +	depends on IDEAPAD_LAPTOP
 
-I think the scratch system is great, and an amazing improvement over
-past version. Upgrade the memory preservation to match and it will be
-really good.
+Does this still depend on IDEAPAD_LAPTOP? Also add:
+	select NEW_LEDS
+	select LEDS_CLASS
 
-> What you propose is a great optimization for memory preservation mechanism,
-> and additional and very useful abstraction layer on top of "basic KHO"!
+> +	help
+> +	  This driver provides WMI support for Lenovo customized hotkeys functi=
+on
+> +	  of Lenovo NoteBooks which are for Consumer and SMB customers, such as
+> +	  Ideapad/YOGA/XiaoXin/Gaming/ThinkBook and so on.
 
-I do not see this as a layer on top, I see it as fundamentally
-replacing the memory preservation mechanism with something more
-scalable.
+This driver deals with mute key leds. Is this description right?
 
-> But I think it will be easier to start with something *very simple* and
-> probably suboptimal and then extend it rather than to try to build complex
-> comprehensive solution from day one.
+> +
+>  config LENOVO_YMC
+>  	tristate "Lenovo Yoga Tablet Mode Control"
+>  	depends on ACPI_WMI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefil=
+e
+> index e1b142947067..598335da9f55 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -61,6 +61,7 @@ obj-$(CONFIG_UV_SYSFS)       +=3D uv_sysfs.o
+>  # IBM Thinkpad and Lenovo
+>  obj-$(CONFIG_IBM_RTL)		+=3D ibm_rtl.o
+>  obj-$(CONFIG_IDEAPAD_LAPTOP)	+=3D ideapad-laptop.o
+> +obj-$(CONFIG_LENOVO_SUPER_HOTKEY_WMI)	+=3D lenovo-super-hotkey-wmi.o
+>  obj-$(CONFIG_LENOVO_YMC)	+=3D lenovo-ymc.o
+>  obj-$(CONFIG_SENSORS_HDAPS)	+=3D hdaps.o
+>  obj-$(CONFIG_THINKPAD_ACPI)	+=3D thinkpad_acpi.o
+> diff --git a/drivers/platform/x86/lenovo-super-hotkey-wmi.c b/drivers/pla=
+tform/x86/lenovo-super-hotkey-wmi.c
 
-But why? Just do it right from the start? I spent like a hour
-sketching that, the existing preservation code is also very simple,
-why not just fix it right now?
+This name doesn't tell me a lot about the features of this driver. Is
+this the internal name of the WMI device?
 
-Jason
+> new file mode 100644
+> index 000000000000..86c3dc2009b8
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-super-hotkey-wmi.c
+> @@ -0,0 +1,222 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *  Lenovo Super Hotkey Utility WMI extras driver for Ideapad laptop
+> + *
+> + *  Copyright (C) 2025	Lenovo
+> + */
+> +
+> +#include <linux/cleanup.h>
+> +#include <linux/dev_printk.h>
+> +#include <linux/device.h>
+> +#include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
+> +
+> +/* Lenovo Super Hotkey WMI GUIDs */
+> +#define LUD_WMI_METHOD_GUID	"CE6C0974-0407-4F50-88BA-4FC3B6559AD8"
+> +
+> +/* Lenovo Utility Data WMI method_id */
+> +#define WMI_LUD_GET_SUPPORT 1
+> +#define WMI_LUD_SET_FEATURE 2
+> +
+> +#define WMI_LUD_GET_MICMUTE_LED_VER   20
+> +#define WMI_LUD_GET_AUDIOMUTE_LED_VER 26
+> +
+> +#define WMI_LUD_SUPPORT_MICMUTE_LED_VER   25
+> +#define WMI_LUD_SUPPORT_AUDIOMUTE_LED_VER 27
+> +
+> +/* Input parameters to mute/unmute audio LED and Mic LED */
+> +struct wmi_led_args {
+> +	u8 id;
+> +	u8 subid;
+> +	u16 value;
+> +};
+> +
+> +/* Values of input parameters to SetFeature of audio LED and Mic LED */
+> +enum hotkey_set_feature {
+> +	MIC_MUTE_LED_ON =3D 1,
+> +	MIC_MUTE_LED_OFF,
+> +	AUDIO_MUTE_LED_ON =3D 4,
+
+Please align this values.
+
+> +	AUDIO_MUTE_LED_OFF,
+> +};
+> +
+> +#define LSH_ACPI_LED_MAX 2
+> +
+> +struct lenovo_super_hotkey_wmi_private {
+> +	struct led_classdev cdev[LSH_ACPI_LED_MAX];
+> +	struct wmi_device *led_wdev;
+> +};
+> +
+> +enum mute_led_type {
+> +	MIC_MUTE,
+> +	AUDIO_MUTE,
+> +};
+> +
+> +static int lsh_wmi_mute_led_set(enum mute_led_type led_type, struct led_=
+classdev *led_cdev,
+> +				enum led_brightness brightness)
+> +
+> +{
+> +	struct lenovo_super_hotkey_wmi_private *wpriv =3D container_of(led_cdev=
+,
+> +			struct lenovo_super_hotkey_wmi_private, cdev[led_type]);
+> +	struct wmi_led_args led_arg =3D {0, 0, 0};
+> +	struct acpi_buffer input;
+> +	acpi_status status;
+> +
+> +	switch (led_type) {
+> +	case MIC_MUTE:
+> +		led_arg.id =3D brightness =3D=3D LED_ON ? MIC_MUTE_LED_ON : MIC_MUTE_L=
+ED_OFF;
+> +		break;
+> +	case AUDIO_MUTE:
+> +		led_arg.id =3D brightness =3D=3D LED_ON ? AUDIO_MUTE_LED_ON : AUDIO_MU=
+TE_LED_OFF;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	input.length =3D sizeof(led_arg);
+> +	input.pointer =3D &led_arg;
+> +	status =3D wmidev_evaluate_method(wpriv->led_wdev, 0, WMI_LUD_SET_FEATU=
+RE, &input, NULL);
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static int lsh_wmi_audiomute_led_set(struct led_classdev *led_cdev,
+> +				     enum led_brightness brightness)
+> +
+> +{
+> +	return lsh_wmi_mute_led_set(AUDIO_MUTE, led_cdev, brightness);
+> +}
+> +
+> +static int lsh_wmi_micmute_led_set(struct led_classdev *led_cdev,
+> +				   enum led_brightness brightness)
+> +{
+> +	return lsh_wmi_mute_led_set(MIC_MUTE, led_cdev, brightness);
+> +}
+> +
+> +static int lenovo_super_hotkey_wmi_led_init(enum mute_led_type led_type,=
+ struct device *dev)
+> +{
+> +	struct lenovo_super_hotkey_wmi_private *wpriv =3D dev_get_drvdata(dev);
+> +	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
+> +	struct acpi_buffer input;
+> +	int led_version, err =3D 0;
+> +	unsigned int wmiarg;
+> +	acpi_status status;
+> +
+> +	switch (led_type) {
+> +	case MIC_MUTE:
+> +		wmiarg =3D WMI_LUD_GET_MICMUTE_LED_VER;
+> +		break;
+> +	case AUDIO_MUTE:
+> +		wmiarg =3D WMI_LUD_GET_AUDIOMUTE_LED_VER;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	input.length =3D sizeof(wmiarg);
+> +	input.pointer =3D &wmiarg;
+> +	status =3D wmidev_evaluate_method(wpriv->led_wdev, 0, WMI_LUD_GET_SUPPO=
+RT, &input, &output);
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	union acpi_object *obj __free(kfree) =3D output.pointer;
+> +	if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER) {
+> +		led_version =3D obj->integer.value;
+> +	} else {
+> +		err =3D -EIO;
+> +		return err;
+
+Return -EIO directly here and drop the braces on both branches.
+
+> +	}
+> +
+> +	wpriv->cdev[led_type].max_brightness =3D LED_ON;
+> +	wpriv->cdev[led_type].flags =3D LED_CORE_SUSPENDRESUME;
+> +
+> +	switch (led_type) {
+> +	case MIC_MUTE:
+> +		if (led_version !=3D WMI_LUD_SUPPORT_MICMUTE_LED_VER) {
+> +			err =3D -EIO;
+> +			goto led_error;
+
+Return -EIO and drop brances.
+
+> +		}
+> +		wpriv->cdev[led_type].name =3D "platform::micmute";
+> +		wpriv->cdev[led_type].brightness_set_blocking =3D &lsh_wmi_micmute_led=
+_set;
+> +		wpriv->cdev[led_type].default_trigger =3D "audio-micmute";
+> +
+> +		err =3D devm_led_classdev_register(dev, &wpriv->cdev[led_type]);
+> +		if (err < 0)
+> +			goto led_reg_failed;
+> +
+> +		break;
+> +	case AUDIO_MUTE:
+> +		if (led_version !=3D WMI_LUD_SUPPORT_AUDIOMUTE_LED_VER) {
+> +			err =3D -EIO;
+> +			goto led_error;
+
+Return -EIO and drop brances.
+
+> +		}
+> +		wpriv->cdev[led_type].name =3D "platform::mute";
+> +		wpriv->cdev[led_type].brightness_set_blocking =3D &lsh_wmi_audiomute_l=
+ed_set;
+> +		wpriv->cdev[led_type].default_trigger =3D "audio-mute";
+> +
+> +		err =3D devm_led_classdev_register(dev, &wpriv->cdev[led_type]);
+> +		if (err < 0)
+> +			goto led_reg_failed;
+> +
+> +		break;
+> +	default:
+> +		err =3D -EINVAL;
+> +		dev_err(dev, "Unknown LED type %d\n", led_type);
+> +		goto led_error;
+
+Return -EINVAL directly.
+
+> +	}
+> +
+> +	return 0;
+> +
+> +led_reg_failed:
+> +	dev_err(dev, "Could not register mute LED %d : %d\n", led_type, err);
+> +
+> +led_error:
+> +	return err;
+> +}
+> +
+> +static void lenovo_super_hotkey_wmi_leds_setup(struct device *dev)
+> +{
+> +	lenovo_super_hotkey_wmi_led_init(MIC_MUTE, dev);
+> +	lenovo_super_hotkey_wmi_led_init(AUDIO_MUTE, dev);
+
+I wonder why you decided not to propagate errors of this calls. Maybe
+you are expecting one to fail but not the other?
+
+If this both fail this module would remain loaded for no reason, so
+maybe propagate some error in that case.
+
+> +}
+> +
+> +static int lenovo_super_hotkey_wmi_probe(struct wmi_device *wdev, const =
+void *context)
+> +{
+> +	struct lenovo_super_hotkey_wmi_private *wpriv;
+> +
+> +	wpriv =3D devm_kzalloc(&wdev->dev, sizeof(*wpriv), GFP_KERNEL);
+> +	if (!wpriv)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(&wdev->dev, wpriv);
+> +	wpriv->led_wdev =3D wdev;
+> +	lenovo_super_hotkey_wmi_leds_setup(&wdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct wmi_device_id lenovo_super_hotkey_wmi_id_table[] =3D=
+ {
+> +	{ LUD_WMI_METHOD_GUID, NULL }, /* Utility data */
+
+Maybe drop this comment.
+
+Additionally, please CC me and previous reviewers the next revision.
+
+--=20
+ ~ Kurt
+
+> +	{ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(wmi, lenovo_super_hotkey_wmi_id_table);
+> +
+> +static struct wmi_driver lenovo_super_hotkey_wmi_driver =3D {
+> +	 .driver =3D {
+> +		 .name =3D "lenovo_super_hotkey_wmi",
+> +		 .probe_type =3D PROBE_PREFER_ASYNCHRONOUS
+> +	 },
+> +	 .id_table =3D lenovo_super_hotkey_wmi_id_table,
+> +	 .probe =3D lenovo_super_hotkey_wmi_probe,
+> +	 .no_singleton =3D true,
+> +};
+> +
+> +module_wmi_driver(lenovo_super_hotkey_wmi_driver);
+> +
+> +MODULE_INFO(depends, "wmi,ideapad-laptop");
+> +MODULE_AUTHOR("Jackie Dong <dongeg1@lenovo.com>");
+> +MODULE_DESCRIPTION("Lenovo Super Hotkey Utility WMI extras driver");
+> +MODULE_LICENSE("GPL");
+
