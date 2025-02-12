@@ -1,129 +1,119 @@
-Received: from mail-il1-f226.google.com (mail-il1-f226.google.com [209.85.166.226])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CA1253B63
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 16:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D451E766F
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 16:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739378894; cv=none; b=V0rqxBQMQKDywIioibwpwPjVuUsoJCYwmLiUbWgPWyHBMcE3hDh2AIy6MHqdQuVVrUUq2LX/IDg7hjIDP89MPdGEXt2BRA0qfEgJplYnpn14oqxEKNITiL5XxkCxONZKP8wvwiEyhetzaC3d+LWT3bSl/mRiNbUUOSF/vglYTzs=
+	t=1739378925; cv=none; b=DK1AFGGv5stbEMfwA+5Q8MQ8xnQ1p1JHy+IFDG2Sb6T6GQWWmFUUNRKO7ut5nm+DZFWuR4YeSxMwmMb1dAEyStbevK48i4NABhaENP9/ArlW4AqEewnLVbjE2YAGm4w9UPcQCCE4Ar/wTB60a58N85oDpjyy3q2/z2Qj277Cr8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739378894; c=relaxed/simple;
-	bh=Qjj2QMAanOTsP0E6oofq18bt8+1l7KG1JEs5PYmidSw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XGDJlVWEWecHF5A6mJQVoAJ1sumlB9aI4UdPYFWvZxA59HRlag9163PTMDzTzDmnRKpDUrqTUmgK/rluxQx/ovKCY0TitZWHgu5mTXEZ7QjUnzFg8eXMSHRDnzlTQRhnzNN7pC3WB5QtvpYi5aJ5JuROVoctY1CdUkmG8dRSuLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=QRV9p5ip; arc=none smtp.client-ip=209.85.166.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1739378925; c=relaxed/simple;
+	bh=dqTOM9C16tYEOgJgRBbtam7BsJCZdibciwKGZ1YyhjQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YctPMHGrBBhxtOWc466BxKLgVb+Kn5ukK+hUGAGrbyhz7vRi54c+uHc3TM67tdy4C6dpoDQdOQugiiSCnzX9VgNZn71SPuGQQIMeDWMiSSIbD7TBxpC/tqj99QmAydyS7yLmXUu64syz2vyImfkl2qehtHNLLiMbXa+9uZTgKYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eOC2Zwzs; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="QRV9p5ip"
-Received: by mail-il1-f226.google.com with SMTP id e9e14a558f8ab-3d17a853c67so351315ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 08:48:11 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eOC2Zwzs"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54504bf07cdso4964077e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 08:48:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1739378891; x=1739983691; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/f8bv9QH5EQJaX+bBU+s7mbL/Dwx7/Hsr9UPWP0QZpE=;
-        b=QRV9p5ipIFEB95u8jtDvzsCTTD74C4IvTaHBfmdEjjA7gBtrNX071rsnLtK0kdkWlf
-         rDv5sy5dSMW3Y0o42LdWRscCAEhLK8tc9+aOXAXuym1G8jkxh13uesdRsHjtyreBEOj0
-         noJYYQR874ZcBRtF+hzOElKRCEXwZQ3V+GVHmJNY+a1Jgj3JOGYOg/1ueQ/DeUxRGyKY
-         9u2KQgbZiuTNNc949r+MX4TCtpNRQnPfmFZH5DACMoT5+kYncNATCvpQVDNAhbixE6aQ
-         2TsXDm29G6D+HKgSMapTfr0YJXtO1UsgAIrCuBrwo6j0pJO/Yu4YNU5Oy6PxkaKodus1
-         DDHQ==
+        d=chromium.org; s=google; t=1739378921; x=1739983721; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NyHRmSw+0ICK2sEynOaKxLDRuSl/oG4kVMvohYL0VYY=;
+        b=eOC2ZwzsL2a5rGb/Xis5kMl4eHEjA3BCvwgWSPDalyjMJlRWTftf+HsTI7zlMA5qyi
+         z040s0rgebbyiTXi7DSLgq0Si697/qFwunbhlG5ku0+qIyr2uZ3VqrjhKO/4OD6jnD4J
+         EJx6Qvy7EbvkoI5LBhWEjUIuO4ywQVmtfCWyg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739378891; x=1739983691;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/f8bv9QH5EQJaX+bBU+s7mbL/Dwx7/Hsr9UPWP0QZpE=;
-        b=AGlHfXsHEs+RXwuRdvuAEMGFGFfqMP7Lwbf6o3RsB7jrhwUacHQ6vweFNIgWkbb7hK
-         X/Eoc2b8NS4JL/7xdYUFO7rikB2p0BeptUQoscUra4M1ZZ53dRZ2kS6eSKk5hpE3eaUt
-         oLySQV9uLv132pxEzCe2OweaFiFx647M+TibKg+K0EyqZtX2BWIJiRHf9Uh3+HACKUtS
-         Xe1qRA9wJiu9+2j//RBl4FLxPcUTTccH/gs8rU3H09E08JSVywOTHlOuwkFIlWSuDMu/
-         aQi7W4L1tLkCbJNybCXrmqZf4L2+u3qSCkTl/zNEXUpaJX8D3gnJWbx+1H53uz1iKGbL
-         B17A==
-X-Forwarded-Encrypted: i=1; AJvYcCXhUV6/Ob5IqrCRHD5Y3QSJq0TbT8JEueTq2RiRHHCVZzv9XUSGuFD9nKbFvlJ8tW+G5JeG5+FcOR8By4o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+wB23hO61k38DBIR78lef/QAre5OU/Ife9FGnlwFdi6WGO36E
-	aIYPzmATv4kRQHnTjVciFx/LI49Mkc7WI2WdVQOyCeHMgk4cI3tv43Ls38Lv68x5r3LKeDaHkOd
-	FzF5MTxOyHHOW2UHNjhtYY2nKPdRH2vEVEf3r+poArzi7aBCn
-X-Gm-Gg: ASbGncvInrLU4uUwpADAZqCGskeSjcAfdV6oaRMqdxg+3ZGx5nNS+LeH3DuWz8k6VmJ
-	6qjfqd3bquu5lVUBG2VVSOZMvk7bvKFor/vIB94vcIyOnzSIzP+ja9kuiNPoZRbNxBQQuqh8DNl
-	1ySfcCl58zCvpBkr7Ymr+A2AZP4n/jZAl+M1V96s5IqJTV/p2Y/fvWjqyj97jIgIVUGQX4xiWtP
-	ifSdVozcA8DVp36ydC9mcFOp7GRXvXF9FIIMzPmqrWXGdc6ytRTJ2l1HJ7geZyK85rfhiFqGOiY
-	E0SIKDQ2m2QP4I/FTLzvls4=
-X-Google-Smtp-Source: AGHT+IEnewgTPigF6UFFH5AistoyMlBljeF+wcBNbPlqftf8XpROgWlV8W2TEoX8mejN7RP6z7fc3JFqUo0J
-X-Received: by 2002:a05:6e02:550:b0:3d1:8bf1:46f9 with SMTP id e9e14a558f8ab-3d18bf14b8fmr114495ab.7.1739378891173;
-        Wed, 12 Feb 2025 08:48:11 -0800 (PST)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d18a9081f3sm150405ab.34.2025.02.12.08.48.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 08:48:11 -0800 (PST)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id F31A93402DD;
-	Wed, 12 Feb 2025 09:48:09 -0700 (MST)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id ED64FE416E5; Wed, 12 Feb 2025 09:48:09 -0700 (MST)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>
-Cc: Caleb Sander Mateos <csander@purestorage.com>,
-	io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] io_uring: pass ctx instead of req to io_init_req_drain()
-Date: Wed, 12 Feb 2025 09:48:05 -0700
-Message-ID: <20250212164807.3681036-1-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1739378921; x=1739983721;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NyHRmSw+0ICK2sEynOaKxLDRuSl/oG4kVMvohYL0VYY=;
+        b=ds1ysyKqS0hfjJfNTDmp/Wzcvn3FfSFTvWRP2fj70+O9hG+rpi1hWeGWII54QaCskX
+         iMQKPmyoAGX5wFZvSCdOHXOfgr8yOk2Rm8aKGmSnqGnTrCJc2PF2F3H7W3VbDhuaiu28
+         mmv3DE/K8QdhdckZARHadx3oCKFm+isFRvqkYPDJVT+5icnEYcaxUN7jG7HE38BaEoF4
+         UuLRo/YHiig5XteMVUePYbmKkC/L5+3sMW4h40r3MFN7vMhEKzeEjQKXzQy615Rx/9S1
+         fVPnk/Tv8MJL/VJoBOIlXsgIPrueor27d9UZckr0hCYv0bqgmS08Pk2ee6tBqbQ7GPcN
+         CVuw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxzyELFbda9eeJ5kHHvVnr5U0PGn008OwPeZ7couFdzbDyI7YUvbkAuhULl8TXcwjn+C3HKbBD+putYHU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLlw9EbWxEji0B8tQac77PQ/O6LkC8Lj2oueasMprcfY6l5Ct+
+	Rzw5deAPBZaCA04RKMpIBApzwD6cTnYgDUNOHzeeRRynKZh/EyUruvfMobbrRjyyNImzmamVQBh
+	QPwNI
+X-Gm-Gg: ASbGncu5M+MOdp2ht22NSZG/WmvlFwxC6MWQUOvQWqHzL3psPOduYLWaewrZF1Hv/1P
+	GDCxy6iAcpEpd3ExHEExN3FG3NvKkXkzwj71IA/vYbbC922MF8vX68qlpEgXsNTAy2ktcO2H0sT
+	z51jcwEP2DrrNIfgqSwftM2eUFMQK5eNitLwWcCbtLNoxMJPSEM52hNpxd2ef3spwTn2oItVF6o
+	ZQVUyk07uXDBhX1JgGmGytI9eA60fyKKMY8S+ewrux3wmf1bxn33dFAV68D0yGnAoCwnEYhYR6k
+	F7E6LtfzxojcggR3256yniCSDyrVEKOrfsMXSxCgqQcWkRcJbFCcSQhyFiI=
+X-Google-Smtp-Source: AGHT+IFOjKCWhyAhA0SkyzBjzgzIRARSQyQ2IDCr4QPqd3iDolbaDnZsWIJp08eXMh7rikjYR1QF7g==
+X-Received: by 2002:a05:6512:ba6:b0:545:e2e:842d with SMTP id 2adb3069b0e04-54518109188mr1272010e87.14.1739378921533;
+        Wed, 12 Feb 2025 08:48:41 -0800 (PST)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54504e74823sm1393925e87.154.2025.02.12.08.48.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 08:48:40 -0800 (PST)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30613802a04so68371921fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 08:48:40 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUFxU8cw7PWGxqn5B3MR6uBeJKBT4Xte2XiPXgIZel3+Cyka14tgUvheOfdBSB93m6glnBmtFf678FvLUg=@vger.kernel.org
+X-Received: by 2002:a2e:a805:0:b0:300:3a15:8f22 with SMTP id
+ 38308e7fff4ca-309037d6f62mr16328151fa.21.1739378920063; Wed, 12 Feb 2025
+ 08:48:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250210092342.287324-1-tejasvipin76@gmail.com> <CAD=FV=WwbNAhiMWN_4PRODByWScdnqAKk7yvGP2KJSoEzvo=vg@mail.gmail.com>
+In-Reply-To: <CAD=FV=WwbNAhiMWN_4PRODByWScdnqAKk7yvGP2KJSoEzvo=vg@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 12 Feb 2025 08:48:28 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=VENY6b16hYP=E78KjAYPzvT+Bim40rcvYjhPdOAk24WA@mail.gmail.com>
+X-Gm-Features: AWEUYZnATny9gDH5jd4FFZMoQQDTKHRshaBDolOTR4ufydHKrJxGl6YS56Vgw9o
+Message-ID: <CAD=FV=VENY6b16hYP=E78KjAYPzvT+Bim40rcvYjhPdOAk24WA@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/panel: visionox-r66451: transition to mipi_dsi
+ wrapped functions
+To: Tejas Vipin <tejasvipin76@gmail.com>
+Cc: neil.armstrong@linaro.org, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
+	quic_jesszhan@quicinc.com, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-io_init_req_drain() takes a struct io_kiocb *req argument but only uses
-it to get struct io_ring_ctx *ctx. The caller already knows the ctx, so
-pass it instead.
+Hi,
 
-Drop "req" from the function name since it operates on the ctx rather
-than a specific req.
+On Mon, Feb 10, 2025 at 7:28=E2=80=AFAM Doug Anderson <dianders@chromium.or=
+g> wrote:
+>
+> Hi,
+>
+> On Mon, Feb 10, 2025 at 1:24=E2=80=AFAM Tejas Vipin <tejasvipin76@gmail.c=
+om> wrote:
+> >
+> > Change the visionox-r66451 panel to use multi style functions for
+> > improved error handling. Additionally, always drop LPM flag after
+> > sending init sequence.
+> >
+> > Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
+> > ---
+> > Changes in v2:
+> >     - Fixed visionox_r66451_enable to return dsi_ctx.accum_err
+> >     - Mentioned changed handling of LPM flag in commit message
+> >
+> > Link to v1: https://lore.kernel.org/all/20250208051541.176667-1-tejasvi=
+pin76@gmail.com/
+> > ---
+> >  drivers/gpu/drm/panel/panel-visionox-r66451.c | 181 ++++++++----------
+> >  1 file changed, 77 insertions(+), 104 deletions(-)
+>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
----
- io_uring/io_uring.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Pushed to drm-misc-next:
 
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 8bb8c099c3e1..4a0944a57d96 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -1995,13 +1995,12 @@ static inline bool io_check_restriction(struct io_ring_ctx *ctx,
- 		return false;
- 
- 	return true;
- }
- 
--static void io_init_req_drain(struct io_kiocb *req)
-+static void io_init_drain(struct io_ring_ctx *ctx)
- {
--	struct io_ring_ctx *ctx = req->ctx;
- 	struct io_kiocb *head = ctx->submit_state.link.head;
- 
- 	ctx->drain_active = true;
- 	if (head) {
- 		/*
-@@ -2059,11 +2058,11 @@ static int io_init_req(struct io_ring_ctx *ctx, struct io_kiocb *req,
- 		if (sqe_flags & IOSQE_CQE_SKIP_SUCCESS)
- 			ctx->drain_disabled = true;
- 		if (sqe_flags & IOSQE_IO_DRAIN) {
- 			if (ctx->drain_disabled)
- 				return io_init_fail_req(req, -EOPNOTSUPP);
--			io_init_req_drain(req);
-+			io_init_drain(ctx);
- 		}
- 	}
- 	if (unlikely(ctx->restricted || ctx->drain_active || ctx->drain_next)) {
- 		if (ctx->restricted && !io_check_restriction(ctx, req, sqe_flags))
- 			return io_init_fail_req(req, -EACCES);
--- 
-2.45.2
-
+[1/1] drm/panel: visionox-r66451: transition to mipi_dsi wrapped functions
+      commit: f4dd4cb79f9ec3294e5100223ed90d8ae371f168
