@@ -1,117 +1,141 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53B41DEFDD;
-	Wed, 12 Feb 2025 19:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CB61DEFDD;
+	Wed, 12 Feb 2025 19:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739388318; cv=none; b=DC0UTjYnXQdFbN6xO07925xfXDJze2y7iUhCBvl4cGTskN6omj22sLtLTUGEqUUVXpiiE88LHv6Lr4W538bxwOKjbLhnbZ2/51ausnf9Hs9Rm9a/JWSXqPwu0X6CVTqbqVNwrO7M99frwjRGOuvw8zL0H3MUO7wHlN60glvQwhE=
+	t=1739388330; cv=none; b=oqizEWcVfM5pGLXHV4Hiz7A8LlkyT19TDuYKI3t5CycZHG53S1zTO2fQzPym24RXRVnaqi6kxPsvxV0D6BwDYt6Czugtlw5SGmNYKsAXSP1dEh+0aHyM1b3Ucn10Pyf5QafYgGpwaUSnvz05B5acw1nfQB6HbTyeSx9NuBNn+Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739388318; c=relaxed/simple;
-	bh=sSKn3cAe8vJOx2Ub9060X3L9Kew3cuPp2yioPFziWMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E+FJwCIhfF4KiWs2aluq//baI4btIXpw+Oc0iDdMjGflCO7j3EAsyoofp25kKjFvXkd8Nv6fCi5fpCXPZETxF66HUoGO/CCsOCOOKxR7Om2/UtoUWtUTnq4ZKq8fXSLJXR2crdiUbnu/M5VoGsBshbjWAswKV1gDWXyp7MlaxlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fwA/s65P; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739388330; c=relaxed/simple;
+	bh=HBBqqi+x0G8qDpmtHU+9cA14OLmLrDmPMXDs7u256ZM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZO+4J8kS6CModUcTwK9V4wf04Dsa32kTSIynA4SUPcOuoDdfg3tdIqoOD43i4H7FSiaTq8JF9l9rZWIXwwHKsenFcHUgbYbleamUawD2KkXN/tA092sQPoQQOUUqGMLRbB/8x9CbWRRW8bTfLnP8Rst3nHPsVndp6u+4b08anJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=TuOGU+hS; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwA/s65P"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f6022c2c3so21685685ad.0;
-        Wed, 12 Feb 2025 11:25:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739388314; x=1739993114; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uHuwhzhUtmjes/uvYM9YoGu3wUSPo/UpEOhuRs84cMs=;
-        b=fwA/s65PtA9lp8lXSWfuZBHo6j68lGSJpYdzRzB2Qp/V9YKCojDuRnJ6D/7/CKbRRt
-         xnHEbMTEfIeXv4vivxpqGbOrccfLbMZft9ruJABNhVnC2ypi0NROy9Ki1AxDARE9VOYh
-         yAoXArAuZW7dk6tr/4tRyr32OfWEFukxx+ttv+w9ovHRtEA1hLZ011HhT93/TVH318TV
-         USP44ziZtCFbBfgAbiVFV7PYpcUMgIBCT/MjA8cRE4B9XzP8MP8BFn2h0xxTogcb7flc
-         IaoxBSD+Q55KeAQQKpU3+LHbZsmoDcWXJuJz3s1XJ1kcHSKTj286nN5xDkTmUTlijzVq
-         QLow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739388314; x=1739993114;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uHuwhzhUtmjes/uvYM9YoGu3wUSPo/UpEOhuRs84cMs=;
-        b=xSe/v5q4/H5xHk2Wb3U29XS4HI2Ft/btgBZRX2mAVYBKCrtCRd1nk18P/6wZOSgIxY
-         F+G33Nk0/EgFPw+2odmO6Jk9NUdvhI602suKt3NdIS1Dcbh9ipSeQ7T4LYElA0emhMbU
-         aHkCvF3Dng2opYh+Fm4wGCXylgkPEDDpdoTxYk/09TMb0+26dVDMwAyvm9s0af1quhjo
-         dVdPEbygxlwpDWE9iqdojyRj6n8wnXEaxJIKvckE9Qk1A3BkZWaT7zH/pPPaSt8C9Jvx
-         tE+yWG/fHtuyLbMcsajX+1Vm1fs+g9CvMFyI5TbQki1XsmduX0tjXzWJtB3NWU09hK/k
-         e/zg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPdtIs5Jv4/9Nshw3I8rUYipwnfNCQLQgGgMuEe7GSWjiYuJMW/VGyfv+HDy4tlA6fCsf/3Q3jW6CWFldX@vger.kernel.org, AJvYcCVWtpWjOIaj0RTGibtalUJPk+7ISMFQIHSBfLP+siznJmTdGjdLW28FDCCAiRh2kItmPdApq0Vuteu4@vger.kernel.org, AJvYcCXfcFeNf2wE7Uy65upSaknVQ1KskMvBYL6XNHT7dPAAGgLuQi0A7vDg9Nw1bjnPjIvYakh7y/ATjaOhAx2WQA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD9ctOLJz3ddwJbW0I+FXKloyaZGDrTfS1nypNa8ZV5y667qv+
-	lc7tnLqy91HtmJHUL3tSPjiN3EkbQuG09Vevk89wzUcnPUlJN/cc
-X-Gm-Gg: ASbGncvDX0rOaiLI294MTT/6v0M54E2351HPFWwKmF5nEFzVJDyMU9/jtBI17C7EvNF
-	AEdLq4NCymjP799nVSiisyftUmFXn/fRJxkRL5khFSCpBmMQYhmLJN49Yr+e5pW5L+7sASjN2Cn
-	MIv61aZcxuRN8Rlpq09AVujHT+ZMwXFj6fM3wDmlL/s8EMrRCUj2Uyt4t+eY5NNo55oNHsVrskD
-	mhdYsn06Uc2+XFAWg6SOZMsPmWWwsT6S0uR1EV2m1z8VmQVEAWV6ezcxvL8EWP0pVMp22EOlZed
-	vtopmqXDsTIi1YG30lp1CvWJmp26bp7FntOmr3qBmw==
-X-Google-Smtp-Source: AGHT+IHcOBqjiEVfR0zTy4OMDsmxuaWI0odaMLRy1ZKtdCOvuR39+L0kvGf+nTVb3puyRgCGvWhYkg==
-X-Received: by 2002:a05:6a00:458e:b0:725:ce39:4516 with SMTP id d2e1a72fcca58-7323c7516f8mr253668b3a.7.1739388314052;
-        Wed, 12 Feb 2025 11:25:14 -0800 (PST)
-Received: from jamesmacinnes-VirtualBox ([66.119.214.127])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7309709027bsm5115955b3a.44.2025.02.12.11.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 11:25:13 -0800 (PST)
-Date: Wed, 12 Feb 2025 11:25:10 -0800
-From: "James A. MacInnes" <james.a.macinnes@gmail.com>
-To: Caleb Connolly <caleb.connolly@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, quic_wcheng@quicinc.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- lgirdwood@gmail.com
-Subject: Re: [PATCH 2/3] regulator: qcom_usb_vbus: Add support for PMI8998
- VBUS
-Message-ID: <20250212112510.2c7140a5@jamesmacinnes-VirtualBox>
-In-Reply-To: <3e8d6cb7-43e3-4375-94be-c6b28331da76@linaro.org>
-References: <20250212010744.2554574-1-james.a.macinnes@gmail.com>
-	<20250212010744.2554574-3-james.a.macinnes@gmail.com>
-	<fcf907a5-9fb7-4988-a30a-a555740ca817@linaro.org>
-	<8ec05fd8-1623-457f-a3b5-1095acd62cf7@sirena.org.uk>
-	<3e8d6cb7-43e3-4375-94be-c6b28331da76@linaro.org>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="TuOGU+hS"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51C9hFbv026890;
+	Wed, 12 Feb 2025 11:25:06 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=Wufsjz4xcZASzpC++jwn8Zg
+	FIphgLQj/6xicRGnRsws=; b=TuOGU+hSoXt2d1JkBG0/3Rd3yPNae2D1+/neiMo
+	rBCmkv9BfCNNmYfR1fzJCae4/ApzPeD7gvURubpgekABS1L8sT5P7cinOaSgNHx4
+	n3z0Rbdsh9jlHhQZDSAUx538yRaMRXaIe2PA/owbNyxTmN50EkdnDgn6r53ifegQ
+	3g+Wb5RrOj7Pu+c+voqtM7Y+enmPEXA0QXLrpihIEi1tDvmXO0hRFC7Mja2PDTFq
+	t24PBLwfL05eMjBjy5cigINp5dXZoPQEeKeRFRObwJRnXSqyoigNqgqVnYLEGOn1
+	grcc0k9Ps+Pny9eVu2+AfQV9GcnYMHW/ZXDpW5TFTdp2Q+A==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 44rs80s6pw-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Feb 2025 11:25:06 -0800 (PST)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 12 Feb 2025 11:25:04 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Wed, 12 Feb 2025 11:25:04 -0800
+Received: from localhost.localdomain (unknown [10.28.36.166])
+	by maili.marvell.com (Postfix) with ESMTP id 978603F7043;
+	Wed, 12 Feb 2025 11:24:58 -0800 (PST)
+From: Suman Ghosh <sumang@marvell.com>
+To: <horms@kernel.org>, <sgoutham@marvell.com>, <gakula@marvell.com>,
+        <sbhatta@marvell.com>, <hkelam@marvell.com>, <davem@davemloft.net>,
+        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lcherian@marvell.com>, <jerinj@marvell.com>,
+        <john.fastabend@gmail.com>, <bbhushan2@marvell.com>, <hawk@kernel.org>,
+        <andrew+netdev@lunn.ch>, <ast@kernel.org>, <daniel@iogearbox.net>,
+        <bpf@vger.kernel.org>, <larysa.zaremba@intel.com>
+CC: Suman Ghosh <sumang@marvell.com>
+Subject: [net-next PATCH v6 0/6] Add af_xdp support for cn10k
+Date: Thu, 13 Feb 2025 00:54:50 +0530
+Message-ID: <20250212192456.2771997-1-sumang@marvell.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: Rinfm1qGTwGETJh9yn1X50WAG7h-QOC4
+X-Proofpoint-ORIG-GUID: Rinfm1qGTwGETJh9yn1X50WAG7h-QOC4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-12_06,2025-02-11_01,2024-11-22_01
 
-On Wed, 12 Feb 2025 16:09:01 +0000
-Caleb Connolly <caleb.connolly@linaro.org> wrote:
+This patchset includes changes to support AF_XDP for cn10k chipsets. Both
+non-zero copy and zero copy will be supported after these changes. Also,
+the RSS will be reconfigured once a particular receive queue is
+added/removed to/from AF_XDP support.
 
-> On 2/12/25 15:37, Mark Brown wrote:
-> > On Wed, Feb 12, 2025 at 03:29:54PM +0000, Caleb Connolly wrote:
-> >   
-> >> I would suggest implementing a proper .is_enabled op to poll the
-> >> status register for OTG_STATE_ENABLED and configuring  
-> > 
-> > No, that would be buggy.  Implement a get_status() operation if the
-> > device can report status.  is_enabled() should report what the
-> > driver asked for.  
-> 
-> Ahh yep, that's right. it should implement .get_status() (as per the 
-> polling code in _regulator_do_enable()).
-> 
+Patch #1: octeontx2-pf: use xdp_return_frame() to free xdp buffers
 
-I am happy to implement the proper get_status() operation, but the
-other half of this, the type-c driver (that is functional on the 845),
-is managing the status portion. With my testing so far, I see the
-regulator resets the USB hub when I remove power and then supplies from
-its own battery. Is this the expected operation? As of yet, I am not
-seeing any failures and the original Android driver lacked the
-knowledge of the output is status.
+Patch #2: octeontx2-pf: Add AF_XDP non-zero copy support
 
-I can dive back into the original driver and the documentation to
-verify. 
+Patch #3: octeontx2-pf: AF_XDP zero copy receive support
 
-Any other thoughts?
+Patch #4: octeontx2-pf: Reconfigure RSS table after enabling AF_XDP
+zerocopy on rx queue
 
-Thank you,
+Patch #5: octeontx2-pf: Prepare for AF_XDP transmit
+
+Patch #6: octeontx2-pf: AF_XDP zero copy transmit support
+
+Geetha sowjanya (1):
+  octeontx2-pf: use xdp_return_frame() to free xdp buffers
+
+Hariprasad Kelam (2):
+  octeontx2-pf: Prepare for AF_XDP
+  octeontx2-pf: AF_XDP zero copy transmit support
+
+Suman Ghosh (3):
+  octeontx2-pf: Add AF_XDP non-zero copy support
+  octeontx2-pf: AF_XDP zero copy receive support
+  octeontx2-pf: Reconfigure RSS table after enabling AF_XDP zerocopy on
+    rx queue
+
+v6 changes:
+- Updated patch #1,#3,#5 and #6 to address review comments
+  from Simon for some code re-arrangement
+
+v5 changes:
+- Updated patch #1 to use xdp_return_frame 
+- Updated patch #6 to use xdp_return_frame
+
+v4 changes:
+- Addressed minor comments from Paolo regarding adding fixes tag in patch#2
+  and removed one unnecessary NULL check from patch#3
+
+v3 changes:
+- Rearrenged patch ordering to fix individual patch compilation issue
+- Fixed un-initialized variable declaration and reverse x-mas tree issue
+  pointed by Simon
+
+v2 changes:
+- Addressed minor review comments from Simon regrading smatch warnings
+
+ .../ethernet/marvell/octeontx2/nic/Makefile   |   2 +-
+ .../ethernet/marvell/octeontx2/nic/cn10k.c    |   7 +-
+ .../marvell/octeontx2/nic/otx2_common.c       | 122 +++++++---
+ .../marvell/octeontx2/nic/otx2_common.h       |  17 +-
+ .../marvell/octeontx2/nic/otx2_ethtool.c      |   6 +-
+ .../ethernet/marvell/octeontx2/nic/otx2_pf.c  |  32 +--
+ .../marvell/octeontx2/nic/otx2_txrx.c         | 188 +++++++++++----
+ .../marvell/octeontx2/nic/otx2_txrx.h         |   9 +
+ .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |  12 +-
+ .../ethernet/marvell/octeontx2/nic/otx2_xsk.c | 225 ++++++++++++++++++
+ .../ethernet/marvell/octeontx2/nic/otx2_xsk.h |  24 ++
+ .../ethernet/marvell/octeontx2/nic/qos_sq.c   |   2 +-
+ 12 files changed, 554 insertions(+), 92 deletions(-)
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/otx2_xsk.c
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/otx2_xsk.h
+
+-- 
+2.25.1
+
