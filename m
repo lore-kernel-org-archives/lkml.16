@@ -1,71 +1,71 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8DA205ADD
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E402066DC
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739352185; cv=none; b=fyPOka6jZs0h2koBwGKvCI9bjFn4XK+hRYshKlqDdYSgqLY/2X+uFeKwahLKVOqdsL9ukzhec8egZbsS2F2OWV9D1A1/r5bhTbF4dp4sCD8w4/dqRkzGfZNuFeEm46gU6Y77MwIDmoMcvpuDCOZxbRwNkKwxkwKp2zdDnCDEylg=
+	t=1739352187; cv=none; b=CXTH6Ci9d5oZf9H0SmreBzlDzwz+z5rovD/daRhZMH+lbzugj5WMBQFjMSJ1TfND0zoq1FPAkdEDK0K4867oCtoVPEr5AA8+xcaMZZ+cpnW50S5badX+w0m0J61iomqDmM7NzwUBuTqmZE2CfgmECu2yR4TODwd9aBHpjRykF+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739352185; c=relaxed/simple;
-	bh=8GQ2IbQO/TBdQ5t+CG7jhfSfm6Az5rcS01/oAUZJR5U=;
+	s=arc-20240116; t=1739352187; c=relaxed/simple;
+	bh=MURvAg/sBedQVDaqiX8ATHeyU/kkbdU1HxDIqzhOcZQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GvZgS1Xca7m10VIrETOCSuE031Tb8vAxW7XdCDpZxoLPF0DOlhQtC/JXIMfhXMwABVRxXT5dU/zuDdLgxr6lwZpQtQxhtGNt7RqP3WeLCVz3KkbMLzz6cyBv1NqWbWCOBqQi66GveQDUYe3QuR2lC3AXbPvKDqNyrLm646ZuDdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PE1Y1mDp; arc=none smtp.client-ip=209.85.214.178
+	 MIME-Version; b=WnxZP9eGi6+Y6Gt/UIk3bBTfmA7PhsIPT04Zihz0XT+BLq5iWlPGOge4M5QwFP5OvqZIksVaARPP117oU2L1yAfHofHd2I4XFBV5HmQf3GUeALJTMItsYNoSEY2Vt+frQCnTD3cMvo14DpPXLG/bVs8MhuMIAw0t3SFD7ISRh9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bgbiMLwj; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PE1Y1mDp"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21f710c17baso71171305ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:23:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgbiMLwj"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f7f03d856so67499665ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:23:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739352182; x=1739956982; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739352185; x=1739956985; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Lu04RjybaCqnANGt/0BrWouaa6SjIJlJpx9c2WRJsXI=;
-        b=PE1Y1mDpj2RLwqNEOeamSYuPZGhIMsgENgNtjbSMV4AHoYCqxhXXGKAzAOypSmkls/
-         vkbFkh0vGdnsLxJV1LEGx+dl8dBK6Gj+FIbhmcn/E+c+y/8R1rv6uvGFewy1ngm6Qy64
-         Pd1hwdwnwmxU0DPAb4Wug9dwpAr/EBSPcMA0ClEWns1t27y/k+L9SiTGBn7+5uUJGOxa
-         nLF4/7p2vWZHpKp7nJ6RfNgdx8rxFtc0jeYJfk4JI+RYEvUMA3CUVNaxSx9374upCdvM
-         387BYe1fKa8Kg9M504RSq55PJDTdcl2JHf/+ApCYgQ9Nwa885QgpM1WSxZLkbRziAFjX
-         OdlQ==
+        bh=NgEO1HivjLZosJKcVciMU/JqLrezg/Bp0TI7/JZ0WxI=;
+        b=bgbiMLwj+l7IT7NteSPVBBSZNpvUDgx5yoB0ZTPX73KH9DYMwVuGyLNVY6UJlVq48x
+         5odXs3wp9RVo7sgH0Olb0XSE9P9x9Gvi8gsYeN4VYAO0Pa+RKRdQXTKMwsw/psJwCp6r
+         6Osl7B9gENC/AiMmvVfj0gudznk8+rHQT+yxtls1GRAxg9EEqsWk8lqZk5lQjUJEuN0Y
+         oCTVgBGGVh6NLG8FWk9OwTqdtnORkw5MVZezfFb3qnOvvB+1Vp+2MWtRT2LZPR1uwada
+         K0NSBvRyWmSI41/T5pn/7TRbZ6RH9TqWVSBNgxeh9Iku6D8ngzW7RRcFBuTY5/GHhYCt
+         YiiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739352182; x=1739956982;
+        d=1e100.net; s=20230601; t=1739352185; x=1739956985;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Lu04RjybaCqnANGt/0BrWouaa6SjIJlJpx9c2WRJsXI=;
-        b=SJiC1MG9kAyoPSBq306z47dr7A54wV3npDvFj/SKJj04C3khGGYj8CuFlzah+QGXcq
-         HLE/gBqmPXWjKS/AjtRHRJhTYs5oRNFp9DPQSEB/gZMLf74MmrpFaddRK3MzMIrVl//7
-         9HA+4KRGdZZZa7R7bQ0AeqMllwh/K4vPdx4oV9gxfnJgFomwVUS9KvX7vEkMXJ7Oa4Hb
-         aGPDXfMki/7SqEkF+K+UkGERpGUIMwEWfP3JCsZbcctF3oGGFihwobrmNl4+BSpOmXOf
-         dsYUMa/Sd82E5PP9Gdb0+iA6tEEPy+LzLriOsaHYHs/4ZgtjXJRcKDNVH4whzgrs/T3d
-         Nptw==
-X-Forwarded-Encrypted: i=1; AJvYcCW6FWnDLXs9QSJvPNJ8jSSM3/1m0nRgc8c359npBcpCDXAPhiDQRgdGLCQM8S6etH6xNnFaC5BCxMC60aU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRXk3NHCatAiFHDdxntPXVtwOr15ZNCX6+9KRvvxw6MatrXEVz
-	wC9WSRQvXHh7hxxdSrP/tGrH+3G1mK9iUwlUfp8XQDpARNSPnyHE
-X-Gm-Gg: ASbGnctn+4he3n7n29VcocogYhmdIXwn46b9X38R5CV4Oe7Gc89U5/KFn6vrjv9mfSV
-	UaAXR1GW17ORnz50saGKddS/0ZdRjWfif7bHnKcehEm5QTWVFB7yxLhx6zWrKfXyKtZIj3UeilH
-	eUZBfFwPkTD3YdsuWcxgJ82X1ktbS8b//luG8eCzzECloTzfU9I4Vilnsmk6dRNVfnpVNs7nG9O
-	f8407qGOlE8S4u+/MkAJf4zcIU+RtjLTTuYHpRcHG2EtYNF6P8YJPg7mJBJJ1r7WJNaIHYNrDK9
-	MY81IfYJA+7UwahoR2zDAwNmFTVVUD+vClSnWXqpRRD/E682HKJELpnvLtcmqw/yfNRKOMcnLxn
-	o
-X-Google-Smtp-Source: AGHT+IEVEHuWDTkCXAnIlbVfuyBTkarR9SODQIlkdYItGRxFMa9+LvgX1ERdoq8t4tLxWuNRs325BA==
-X-Received: by 2002:a05:6a00:804:b0:728:e2cc:bfd6 with SMTP id d2e1a72fcca58-7322c43107bmr3993447b3a.18.1739352182475;
-        Wed, 12 Feb 2025 01:23:02 -0800 (PST)
+        bh=NgEO1HivjLZosJKcVciMU/JqLrezg/Bp0TI7/JZ0WxI=;
+        b=Aum/8ZVqlKWFlrymnH4HruOodr8b42w7LvQoFJ4dEixgHQFkw49uAi0Vyznjw/klF3
+         GZNsMr6vGkQ/VxgvOyTN5vlZ9hJ1KyO2cwooGunEMLLqULAH3OooiPtDki7/QI9VAug+
+         UqgdjuFVM0H/x1jOcqGGYE2xGu1C2s/Fh23xJ+YCa/llUQ0LRXku5Ank4VjqOZOpUPPT
+         77w9wRQ3f9ivqsRX/ocAOu82RdPwW2dzFby0P98O5tn7XjTpuDwcpXHhcPboPRTxUk25
+         GN6zWNd4+v/mjZE3pJ3XRzKPs5PvyAael7jJGZfEu4fMfxi5r8dbcs32qk4jjgV9xcZK
+         7YpA==
+X-Forwarded-Encrypted: i=1; AJvYcCXh5PmCQhFhFBI2KRrkCxX7gGCK5MfO76x1aNT+bYTY6w+fP9YdHmUQbDWCX0xouVlEm0Ti9UHohpSq7hw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKczso+1L79U3+rY6g4YwdlLBMjW7LUD+oyuGBjdMvdeeeiorp
+	OIwSPMPa2BvelIyeFZZCDl/du2uWzIfoDYOwZaoYlzHVDMjb3xL+
+X-Gm-Gg: ASbGnctCGWrVR1Emx5re2xSDXVUQAjY9wZ40SjabJ3wcKHzi7/N34RNPBfNQGT20IEw
+	SJVpv4dhEcw8p9nUstDBQxL3mTw9a2NMK1H6qHdXpwy3It24tIXH9f/wKDPC/Ie2ALNRZ7F0nB/
+	kRPtQa6fkwOOs0z9IYlS3t+jKszrmXHGMzA65zLejF6GNBQuvMnIC6MUGvh0TYMDoQWgnstpda8
+	quI/O4Wp1DOfB08XmZDsZy2hnna+mFKIfRp5R1s3j+Rriwt+OO9KlHvybLvTvzsZwnFq3jCcWke
+	e1N3t0Zfl+XChDjrYBrYf92uSibP5s9PasZo/jG1qf+RJ/cybNolqC/9/QdCSJ7AVW0MnUlmMxm
+	H
+X-Google-Smtp-Source: AGHT+IG1ahvxK+oTK9DbeXMioV1blXV5WcLhl8ADWWvqnSEDFUqzJnKABHHxbLg8LD/6rx9betQF9w==
+X-Received: by 2002:a17:90b:2742:b0:2f4:4003:f3ea with SMTP id 98e67ed59e1d1-2fbf5c6ac92mr4543043a91.33.1739352184850;
+        Wed, 12 Feb 2025 01:23:04 -0800 (PST)
 Received: from DESKTOP-GL3U3CJ (162-207-94-177.lightspeed.irvnca.sbcglobal.net. [162.207.94.177])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73091b2a97asm4838829b3a.152.2025.02.12.01.23.01
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98f9b80sm998177a91.38.2025.02.12.01.23.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 01:23:02 -0800 (PST)
+        Wed, 12 Feb 2025 01:23:04 -0800 (PST)
 From: Ian To <onlyian4981@gmail.com>
 To: gregkh@linuxfoundation.org
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Ian To <onlyian4981@gmail.com>
-Subject: [PATCH v2 1/3] staging: rtl8723bs: format comments
-Date: Wed, 12 Feb 2025 01:22:54 -0800
-Message-ID: <2e6dc11ef35d5af653095e416f2a48b6dbcc0de1.1739351267.git.onlyian4981@gmail.com>
+Subject: [PATCH v2 3/3] staging: rtl8723bs: remove extra blank lines
+Date: Wed, 12 Feb 2025 01:22:56 -0800
+Message-ID: <78f3702e2810424d12785f64334127a0f3cd82ef.1739351267.git.onlyian4981@gmail.com>
 X-Mailer: git-send-email 2.45.3
 In-Reply-To: <cover.1739351267.git.onlyian4981@gmail.com>
 References: <cover.1739351267.git.onlyian4981@gmail.com>
@@ -77,153 +77,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some comments were not formatted correctly. Reported by checkpatch.
+Repeated blank lines were present and removed. Reported by checkpatch.
 
 Signed-off-by: Ian To <onlyian4981@gmail.com>
 ---
- drivers/staging/rtl8723bs/core/rtw_security.c | 92 +++++++++----------
- 1 file changed, 46 insertions(+), 46 deletions(-)
+ drivers/staging/rtl8723bs/core/rtw_security.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
 diff --git a/drivers/staging/rtl8723bs/core/rtw_security.c b/drivers/staging/rtl8723bs/core/rtw_security.c
-index 1e9eff01b1aa..f4556ae54352 100644
+index e8f583206f92..18f640d48701 100644
 --- a/drivers/staging/rtl8723bs/core/rtw_security.c
 +++ b/drivers/staging/rtl8723bs/core/rtw_security.c
-@@ -30,10 +30,10 @@ const char *security_type_str(u8 value)
- /* WEP related ===== */
+@@ -123,7 +123,6 @@ void rtw_wep_decrypt(struct adapter  *padapter, u8 *precvframe)
  
- /*
--	Need to consider the fragment  situation
--*/
-+ *	Need to consider the fragment  situation
-+ */
- void rtw_wep_encrypt(struct adapter *padapter, u8 *pxmitframe)
--{																	/*  exclude ICV */
-+{
- 	union {
- 		__le32 f0;
- 		unsigned char f1[4];
-@@ -342,23 +342,23 @@ static const unsigned short Sbox1[2][256] = {      /* Sbox for hash (can be in R
+ 		/* calculate icv and compare the icv */
+ 		*((u32 *)crc) = ~crc32_le(~0, payload, length - 4);
+-
  	}
- };
+ }
  
-- /*
--**********************************************************************
--* Routine: Phase 1 -- generate P1K, given TA, TK, IV32
--*
--* Inputs:
--*     tk[]      = temporal key                         [128 bits]
--*     ta[]      = transmitter's MAC address            [ 48 bits]
--*     iv32      = upper 32 bits of IV                  [ 32 bits]
--* Output:
--*     p1k[]     = Phase 1 key                          [ 80 bits]
--*
--* Note:
--*     This function only needs to be called every 2**16 packets,
--*     although in theory it could be called every packet.
--*
--**********************************************************************
--*/
-+/*
-+ **********************************************************************
-+ * Routine: Phase 1 -- generate P1K, given TA, TK, IV32
-+ *
-+ * Inputs:
-+ *     tk[]      = temporal key                         [128 bits]
-+ *     ta[]      = transmitter's MAC address            [ 48 bits]
-+ *     iv32      = upper 32 bits of IV                  [ 32 bits]
-+ * Output:
-+ *     p1k[]     = Phase 1 key                          [ 80 bits]
-+ *
-+ * Note:
-+ *     This function only needs to be called every 2**16 packets,
-+ *     although in theory it could be called every packet.
-+ *
-+ **********************************************************************
-+ */
- static void phase1(u16 *p1k, const u8 *tk, const u8 *ta, u32 iv32)
- {
- 	signed int  i;
-@@ -383,30 +383,29 @@ static void phase1(u16 *p1k, const u8 *tk, const u8 *ta, u32 iv32)
- 	}
+@@ -219,10 +218,8 @@ void rtw_secgetmic(struct mic_data *pmicdata, u8 *dst)
+ 	secmicclear(pmicdata);
  }
  
 -
- /*
--**********************************************************************
--* Routine: Phase 2 -- generate RC4KEY, given TK, P1K, IV16
--*
--* Inputs:
--*     tk[]      = Temporal key                         [128 bits]
--*     p1k[]     = Phase 1 output key                   [ 80 bits]
--*     iv16      = low 16 bits of IV counter            [ 16 bits]
--* Output:
--*     rc4key[]  = the key used to encrypt the packet   [128 bits]
--*
--* Note:
--*     The value {TA, IV32, IV16} for Phase1/Phase2 must be unique
--*     across all packets using the same key TK value. Then, for a
--*     given value of TK[], this TKIP48 construction guarantees that
--*     the final RC4KEY value is unique across all packets.
--*
--* Suggested implementation optimization: if PPK[] is "overlaid"
--*     appropriately on RC4KEY[], there is no need for the final
--*     for loop below that copies the PPK[] result into RC4KEY[].
--*
--**********************************************************************
--*/
-+ **********************************************************************
-+ * Routine: Phase 2 -- generate RC4KEY, given TK, P1K, IV16
-+ *
-+ * Inputs:
-+ *     tk[]      = Temporal key                         [128 bits]
-+ *     p1k[]     = Phase 1 output key                   [ 80 bits]
-+ *     iv16      = low 16 bits of IV counter            [ 16 bits]
-+ * Output:
-+ *     rc4key[]  = the key used to encrypt the packet   [128 bits]
-+ *
-+ * Note:
-+ *     The value {TA, IV32, IV16} for Phase1/Phase2 must be unique
-+ *     across all packets using the same key TK value. Then, for a
-+ *     given value of TK[], this TKIP48 construction guarantees that
-+ *     the final RC4KEY value is unique across all packets.
-+ *
-+ * Suggested implementation optimization: if PPK[] is "overlaid"
-+ *     appropriately on RC4KEY[], there is no need for the final
-+ *     for loop below that copies the PPK[] result into RC4KEY[].
-+ *
-+ **********************************************************************
-+ */
- static void phase2(u8 *rc4key, const u8 *tk, const u16 *p1k, u16 iv16)
+ void rtw_seccalctkipmic(u8 *key, u8 *header, u8 *data, u32 data_len, u8 *mic_code, u8 pri)
  {
- 	signed int  i;
-@@ -1456,7 +1455,7 @@ static void gf_mulx(u8 *pad)
- 		pad[AES_BLOCK_SIZE - 1] ^= 0x87;
+-
+ 	struct mic_data	micdata;
+ 	u8 priority[4] = {0x0, 0x0, 0x0, 0x0};
+ 
+@@ -245,7 +242,6 @@ void rtw_seccalctkipmic(u8 *key, u8 *header, u8 *data, u32 data_len, u8 *mic_cod
+ 	}
+ 	rtw_secmicappend(&micdata, &priority[0], 4);
+ 
+-
+ 	rtw_secmicappend(&micdata, data, data_len);
+ 
+ 	rtw_secgetmic(&micdata, mic_code);
+@@ -305,7 +301,6 @@ static const unsigned short Sbox1[2][256] = {      /* Sbox for hash (can be in R
+ 	 0x82C3, 0x29B0, 0x5A77, 0x1E11, 0x7BCB, 0xA8FC, 0x6DD6, 0x2C3A,
+ 	},
+ 
+-
+ 	{  /* second half of table is unsigned char-reversed version of first! */
+ 	 0xA5C6, 0x84F8, 0x99EE, 0x8DF6, 0x0DFF, 0xBDD6, 0xB1DE, 0x5491,
+ 	 0x5060, 0x0302, 0xA9CE, 0x7D56, 0x19E7, 0x62B5, 0xE64D, 0x9AEC,
+@@ -480,7 +475,6 @@ u32 rtw_tkip_encrypt(struct adapter *padapter, u8 *pxmitframe)
+ 
+ 	/* 4 start to encrypt each fragment */
+ 	if (pattrib->encrypt == _TKIP_) {
+-
+ 		{
+ 			if (is_multicast_ether_addr(pattrib->ra))
+ 				prwskey = psecuritypriv->dot118021XGrpKey[psecuritypriv->dot118021XGrpKeyid].skey;
+@@ -525,7 +519,6 @@ u32 rtw_tkip_encrypt(struct adapter *padapter, u8 *pxmitframe)
+ 	return res;
  }
  
--/**
-+/*
-  * omac1_aes_128_vector - One-Key CBC MAC (OMAC1) hash with AES-128
-  * @key: 128-bit key for the hash operation
-  * @num_elem: Number of elements in the data vector
-@@ -1530,7 +1529,7 @@ static int omac1_aes_128_vector(u8 *key, size_t num_elem,
- 	return 0;
+-
+ /* The hlen isn't include the IV */
+ u32 rtw_tkip_decrypt(struct adapter *padapter, u8 *precvframe)
+ {																	/*  exclude ICV */
+@@ -627,11 +620,8 @@ u32 rtw_tkip_decrypt(struct adapter *padapter, u8 *precvframe)
+ 	return res;
  }
  
--/**
-+/*
-  * omac1_aes_128 - One-Key CBC MAC (OMAC1) hash with AES-128 (aka AES-CMAC)
-  * @key: 128-bit key for the hash operation
-  * @data: Data buffer for which a MAC is determined
-@@ -1541,7 +1540,8 @@ static int omac1_aes_128_vector(u8 *key, size_t num_elem,
-  * This is a mode for using block cipher (AES in this case) for authentication.
-  * OMAC1 was standardized with the name CMAC by NIST in a Special Publication
-  * (SP) 800-38B.
-- * modify for CONFIG_IEEE80211W */
-+ * modify for CONFIG_IEEE80211W
-+ */
- int omac1_aes_128(u8 *key, u8 *data, size_t data_len, u8 *mac)
- {
- 	return omac1_aes_128_vector(key, 1, &data, &data_len, mac);
+-
+ /* 3			=====AES related ===== */
+ 
+-
+-
+ #define MAX_MSG_SIZE	2048
+ 
+ /*****************************/
+@@ -664,7 +654,6 @@ static void construct_ctr_preload(u8 *ctr_preload,
+ 
+ static void aes128k128d(u8 *key, u8 *data, u8 *ciphertext);
+ 
+-
+ /****************************************/
+ /* aes128k128d()                        */
+ /* Performs a 128 bit AES encrypt with  */
 -- 
 2.45.3
 
