@@ -1,118 +1,65 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from bsdbackstore.eu (128-116-240-228.dyn.eolo.it [128.116.240.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93914204F8A;
-	Wed, 12 Feb 2025 08:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AE320551A;
+	Wed, 12 Feb 2025 08:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.116.240.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739348605; cv=none; b=NYyA3DRKwd3zjIoBHGIUbQXs+0EF9lX0iFCzdFdHZOZcNfWujwXT0XQJ8d9I4Yf9jrgWFF/hxHN4wJ4/Rv/q7Q8YBUsUBtlSWtmpwK1fpSZRK2/3oEz/7YVPhNCvF/3k3gwnhWkps2hsrvUudVozk4ufvLBenbHxwbgivH3D0/Y=
+	t=1739348612; cv=none; b=Jc8tMbHHcJ7BY0xluQf5igxMWnRW/gE66Y5Kq6VFz9Wr5hO4g3fPCu8K4TZjE7mLswA7azWmFCo0+zbQ0+90IRZo91m4nM3dSwxxB9xcRS8tyrlRTD7A9CN84G71jfcPzDTS1P2v7bo+Bj2Wrsh1Tsew/Ks0qxno2/qHKi8dqdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739348605; c=relaxed/simple;
-	bh=vmpf02CVVjPWtl6ZfSHmTrRC9aOMAKZm4jwhHVDmpIE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=UxDDnQCMMJrI6iu3XHIozGtOrRis4AlegV8pZpInhwaCqkuNANnZDEAlrgylClTIBShnDRwJSvNn28oiPD/eRE/mpmahfwDYV9VAsU10wIwItfh2RX5qZOwzlFGw+GQRp4JH1pHlWLch84QYr9zZrNP2FaIa5/rr5kX8F/iNvXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hNMAYRfF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hNMAYRfF"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BLaE7f011796;
-	Wed, 12 Feb 2025 08:23:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ji/gu4FnZscMok83GZpQCXjQzfYUmEvXJvL6SkN0t88=; b=hNMAYRfFMX87dz7a
-	t4mwn/EZ6X0HXCK+pSvP3erj2T071xWsq1IcKQpkDYkWoLkE0ltejkj5B7ila+lt
-	m4Aq00bSS5PgNFHty0COgqnRDO3Duz/A8F+/LKbuBCCJzOEp/xxtvjrO9gMCCC2d
-	0zXfmlZ8IwB0MNwhMCSNDfcoqisrAjNQnkEYOdkgnn88l8i0J9gY0K0Mz+y+XBxB
-	W3UUnOzR8/D9qz0nqg74pQdgc/rYObgPDdeqvkVuIgYZ7Ti6EUWe2lW43YwgMseK
-	N+aCZzyvJ7qLxrX7a87CpwyTawyqXbNFwplcfBrZgrAL0MaiBiHSTaBxR8ik8su4
-	KaFklQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qewh6vmj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 08:23:20 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51C8NJtU007759
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 08:23:19 GMT
-Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 12 Feb 2025 00:23:14 -0800
-From: Taniya Das <quic_tdas@quicinc.com>
-Date: Wed, 12 Feb 2025 13:52:22 +0530
-Subject: [PATCH v3 4/4] arm64: dts: qcom: qcs6490-rb3gen2: Update the LPASS
- audio node
+	s=arc-20240116; t=1739348612; c=relaxed/simple;
+	bh=U7FibLmnbo459XjlNA7JSk7O9RTrKMRxetmxEmNH7I0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=MheOPbvVwevFsWL4RI8wyQHAvuoQaal95ay7Blh80ignaptHbUs+vHj7reVTOPgewhhAQs7Prz9S+qgklfouHY8LRv471qa2NRCKSWgirAc3hEIr/g4XWMrIue1UbH8tb+cwjVuuJWMHAxrNC4wfJFTZYEaogNd7qB90SIYjYv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu; spf=pass smtp.mailfrom=bsdbackstore.eu; arc=none smtp.client-ip=128.116.240.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsdbackstore.eu
+Received: from localhost (25.205.forpsi.net [80.211.205.25])
+	by bsdbackstore.eu (OpenSMTPD) with ESMTPSA id 7d8026c6 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Wed, 12 Feb 2025 09:23:28 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250212-lpass_qcm6490_resets-v3-4-0b1cfb35b38e@quicinc.com>
-References: <20250212-lpass_qcm6490_resets-v3-0-0b1cfb35b38e@quicinc.com>
-In-Reply-To: <20250212-lpass_qcm6490_resets-v3-0-0b1cfb35b38e@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Taniya Das
-	<quic_tdas@quicinc.com>
-X-Mailer: b4 0.15-dev-aa3f6
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: gaVLH0juE_mi5VPYpE22Mtxx2iuaCnuE
-X-Proofpoint-GUID: gaVLH0juE_mi5VPYpE22Mtxx2iuaCnuE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-12_02,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- impostorscore=0 mlxlogscore=923 phishscore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 malwarescore=0 bulkscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502120064
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 12 Feb 2025 09:23:26 +0100
+Message-Id: <D7QBMEU5WL4L.2FI34UVHXCDC5@bsdbackstore.eu>
+Cc: "mgurtovoy" <mgurtovoy@nvidia.com>, "sagi" <sagi@grimberg.me>, "kbusch"
+ <kbusch@kernel.org>, "sashal" <sashal@kernel.org>, "linux-kernel"
+ <linux-kernel@vger.kernel.org>, "linux-nvme"
+ <linux-nvme@lists.infradead.org>, "linux-block"
+ <linux-block@vger.kernel.org>
+Subject: Re: nvme-tcp: fix a possible UAF when failing to send request
+From: "Maurizio Lombardi" <mlombard@bsdbackstore.eu>
+To: "Maurizio Lombardi" <mlombard@bsdbackstore.eu>,
+ "zhang.guanghui@cestc.cn" <zhang.guanghui@cestc.cn>, "chunguang.xu"
+ <chunguang.xu@shopee.com>
+X-Mailer: aerc
+References: <2025021015413817916143@cestc.cn>
+ <D7OOGIOAJRUH.9LOJ3X4IUKQV@bsdbackstore.eu>
+ <3f1f7ec3-cb49-4d66-b2b0-57276a6c62f0@nvidia.com>
+ <D7OWXONOUZ1Y.19KIRCQDVRTKN@bsdbackstore.eu>
+ <CAAO4dAWdsMjYMp9jdWXd_48aG0mTtVpRONqjJJ1scnc773tHzg@mail.gmail.com>
+ <202502111604342976121@cestc.cn>
+ <D7QBDBZMZTCI.1W40WVL5JJ3O7@bsdbackstore.eu>
+In-Reply-To: <D7QBDBZMZTCI.1W40WVL5JJ3O7@bsdbackstore.eu>
 
-Update the lpassaudio node to support the new compatible as the
-lpassaudio needs to support the reset functionality on the
-QCS6490 RB3Gen2 board and the rest of the Audio functionality would be
-provided from the LPASS firmware.
+On Wed Feb 12, 2025 at 9:11 AM CET, Maurizio Lombardi wrote:
+> Hello, could you try this patch?
+>
+> Concurrent calls to try_recv() should already be protected by
+> sock_lock.
+>
+> +	mutex_lock(&queue->send_mutex);
+>  	nvme_tcp_try_recv(queue);
+> +	r =3D queue->nr_cqe;
+> +	mutex_unlock(&queue->send_mutex);
 
-Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+Well, reading nr_cqe like this is still racy, but should be a minor
+issue and not hard to fix.
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-index 7a36c90ad4ec8b52f30b22b1621404857d6ef336..057bbb187ab35a7e6cca9cff6a3e4569ae045fe2 100644
---- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-@@ -986,3 +986,8 @@ sd_cd: sd-cd-state {
- 		bias-pull-up;
- 	};
- };
-+
-+&lpass_audiocc {
-+	compatible = "qcom,qcm6490-lpassaudiocc";
-+	/delete-property/ power-domains;
-+};
-
--- 
-2.45.2
+Maurizio
 
