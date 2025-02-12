@@ -1,188 +1,135 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AED1206F19;
-	Wed, 12 Feb 2025 09:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8BC2080F0
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739352987; cv=none; b=LcYe4U0S43zMeLBbyqrDFg4gpwINUQwOsdrHyeej5/uqvZo80rP83MKxdGLtKBNIO8aOySOfsDQiJ1QxmgZa5oatmRYYER2+G4FL3qNSSGNiZo8OBqlNP+AvvEGTwrny4UvhryEkmD+uXtuvOkxIBOL8wIY55fWAdLbh0jntiaI=
+	t=1739352989; cv=none; b=Nl2D0Ra1NX5nDGG8ssxx6/WE3DjQtVeAhuP9nCr+WjybSdgo2aOm/EXaGOAdYEmZ7EA2OU9HzEIqnwW0Y7AIKe9Z6kszF5AJctRPbIQ7EBoUloPk4p+4bRZD+8XCJs/Ig9LVUFpzgnAed3hjqcbrGFf4g6hdMUJp+y88GFXYuLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739352987; c=relaxed/simple;
-	bh=tib8//zuKJKEhJG3kxu0c5Y3VhlvqZlKQq1YajL1fnA=;
+	s=arc-20240116; t=1739352989; c=relaxed/simple;
+	bh=I7CFgTkt0jzyGzG4M7RjYnnbGhlCBrEk+jlNQ3TAQts=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rNLnu0ujtEdQKL49fP+tSJ/bqRhaatbpCmnZVUxBk7cbTIfACsukcoDHk69Ywbdc1FthrQzOuutv1jF3TQWtdpwRKFzARfEFBOkjvizCRce9sL91jvAtN0gj/2dGZ7jw34gYWUPslC7Z9gZFpoYg4vTc7CvvFswiIc8MJ6tLx4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=R1e0waUI; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	 MIME-Version:Content-Type; b=GzJQ0wCoeXAioPkZkdsO5eC4mlU3gDVlExq2FW2UDFGELKuh2AmLZMMtaQYZb20KRD+F2pMmM+4Y4pz/GoZPRUIieJkpQrQUkvtjat+PFAdmiHDBnab637xpcc2P1ZFbBysIIOceUuLpyoV668xAt025ROZcbZ6AilJ2KM2xTqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=QrIgjLpE; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="R1e0waUI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=l6drU
-	h2vkH8RFHOt/j1F+EFHKFzeB3WYinyBTPKLRVM=; b=R1e0waUINkeu1t+TME29x
-	E7wim2L2w4DbmO5N68XLALovPgsE0pJGrzV/vqNvFRaTclSTulCOsg0tBZIklQtc
-	QdqHg7rUNULf8eq5NsDR1uIaAYPr8jP4Fdc5Q72l0yO6b0mHpC3aC0JZ0plG7+3m
-	lMNpfRbTitAkTPJRROolO0=
-Received: from ProDesk.. (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wBnG9Fja6xn14FuLQ--.33700S3;
-	Wed, 12 Feb 2025 17:35:36 +0800 (CST)
-From: Andy Yan <andyshrk@163.com>
-To: heiko@sntech.de
-Cc: hjc@rock-chips.com,
-	krzk+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QrIgjLpE"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43934d6b155so3790225e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:36:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739352986; x=1739957786; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SrbuHpRRCn2ojY6FY2MTuNNVYvVFb7ykFJzn4YLtY68=;
+        b=QrIgjLpEkIg4TvIfUDn3FaU9UtGn68UJuWXMMFjnw4pJIp7q01+sRhx2F0VZ4ntyrb
+         DTrq8sVzdwrJu4TaGKOY7n4aBTY3xdvnVEV6RW6DqZIv/2RDmCOBhHwewUPWzzIrta00
+         6z6P91/vFUQ0zF8LZCpJr9M3F5EY9/g8LjPGBEhOfymyTWlJxA4VzKyVrx12AKeSF+YZ
+         N7DVbbx7q2oHHAL1uMEw6zDoSO2LbkqwINA0HKNuZ2PGQp0DLiZj+skDYbmiuEAiXFsf
+         A0t/Z66W3OLN9cEEH23FX16CE5d+yhQDNxfHJo+KiM/hL2ihtEeKhNQeTCl+gYpINcHO
+         cFfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739352986; x=1739957786;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SrbuHpRRCn2ojY6FY2MTuNNVYvVFb7ykFJzn4YLtY68=;
+        b=cHQ+EotKgJdVSx1hGDB0uXhcZ+AGvQ12GBJm3i04dOcWn4vKXrF774Lq5c36ySRxhk
+         IYpLtla3pJfosX9/k95+tmNTVq5asA3Lola3DjFhXd0y7K70fXDsUlwH8fPGT+nQLk7K
+         EbAcNlGNcBL1KKEx7ze0b92YcIh3uJZfhUz7HW6uJAyXEYBMics5Zh1jK9TZnE9sJWCp
+         krqVlAr+i7D6uXs7EkejigF8H1ZeQGgBwOoVyqJkWTZc1JGR9E0m+PF6PeBgEtyUm7Tn
+         BHOyMFDajzSzOZ3c4MtY/QgdTfK9ZxaSvqnh5avnCkZwvQdJsiu3Ip/UQJN8G3TGRSMf
+         zZuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXEwRu4K9OUdzeuvkk0PKFebUiPQzZAQoGTwHyq3B2XSQWYcNT80Q6AkYZIEb4KLv1ZJ43NEeiX4rlpKVU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRfrNZHc5F8eWk54suPOnAgmB0n2uQkbeIFVoN3m734kBe/B8N
+	3mzRjD1av8bCYXEpZlvIdTbSIj8GMs57B5FVMSe+6auAmKCZ1Wx/Y9cR4qXbNMQSo334k0zBwRy
+	w/6Y=
+X-Gm-Gg: ASbGncvMTbhqOlCawqy+HILbGt/OR3CcIRr54NeVHanAd9nVd6iAH+SBRI63ORX4oWm
+	XZM0UB2xLl/LWEUeb/DlLGtk+VTQQS/iIFo76GrUKzLLkvi2wUwsFN+2CiHYXXKhZt0UampLTGJ
+	A8UKkjLsCN9mnuasok5WRWYwZRqSY3DqSd8Pk455y+eGZrrE1yBPcNkFXtkLed/IdmmJKk1l5ZL
+	rTyXU7kRsBW4aFp7+1BKhhUiu698sJ1fZTOXJJAa5nBbOdrPp9I/4xQAUhmozr9RMFfQVVaANXQ
+	RkjxDFWCPztbbFo=
+X-Google-Smtp-Source: AGHT+IFudfgBGV0+IDygsdoLTA/5igyJSZtMJXjbCQPeBSc7oN4L55kdXKAZLq0JA2599sk+IrdqDA==
+X-Received: by 2002:a05:600c:3ac4:b0:434:f9ad:7222 with SMTP id 5b1f17b1804b1-439583b4e03mr18452935e9.7.1739352985575;
+        Wed, 12 Feb 2025 01:36:25 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:521c:13af:4882:344c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd8dee385sm9918965f8f.61.2025.02.12.01.36.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 01:36:25 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Peter Rosin <peda@axentia.se>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	David Lechner <dlechner@baylibre.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	derek.foreman@collabora.com,
-	detlev.casanova@collabora.com,
-	daniel@fooishbar.org,
-	robh@kernel.org,
-	sebastian.reichel@collabora.com,
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v14 01/13] drm/rockchip: vop2: use devm_regmap_field_alloc for cluster-regs
-Date: Wed, 12 Feb 2025 17:34:56 +0800
-Message-ID: <20250212093530.52961-2-andyshrk@163.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250212093530.52961-1-andyshrk@163.com>
-References: <20250212093530.52961-1-andyshrk@163.com>
+	linux-iio@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	linux-sound@vger.kernel.org,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: (subset) [PATCH v3 00/15] gpiolib: add gpiod_multi_set_value_cansleep
+Date: Wed, 12 Feb 2025 10:36:23 +0100
+Message-ID: <173935297467.10817.9536577313319553775.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
+References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBnG9Fja6xn14FuLQ--.33700S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGFW7GFWUWrykJr4fGF17Wrg_yoWrZr4xpF
-	4rCwnxuF45Grn29rWkArn8AF1Fk39rta1rCFn7uwnI9r1qgr97C3Wqk3Wjyrs0kryv9FZr
-	tFs8t3y3ua4Ygr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Uu6wtUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqQjxXmesZ5VJpgABsZ
 
-From: Heiko Stuebner <heiko@sntech.de>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Right now vop2_cluster_init() copies the base vop2_cluster_regs
-and adapts the reg value with the current window's offset before
-adding the fields to the regmap.
 
-This conflicts with the notion of reg_fields being const, see
-https://lore.kernel.org/all/20240706-regmap-const-structs-v1-1-d08c776da787@weissschuh.net/
-for reference, which now causes checkpatch to actually warn about that.
+On Mon, 10 Feb 2025 16:33:26 -0600, David Lechner wrote:
+> This series was inspired by some minor annoyance I have experienced a
+> few times in recent reviews.
+> 
+> Calling gpiod_set_array_value_cansleep() can be quite verbose due to
+> having so many parameters. In most cases, we already have a struct
+> gpio_descs that contains the first 3 parameters so we end up with 3 (or
+> often even 6) pointer indirections at each call site. Also, people have
+> a tendency to want to hard-code the first argument instead of using
+> struct gpio_descs.ndescs, often without checking that ndescs >= the
+> hard-coded value.
+> 
+> [...]
 
-So instead of creating one big copy and changing it afterwards,
-add the reg_fields individually using devm_regmap_field_alloc().
+Applied, thanks!
 
-Functional it is the same, just that the reg_field we're handling
-can stay const.
+[01/15] gpiolib: add gpiod_multi_set_value_cansleep()
+        commit: 91931af18bd22437e08e2471f5484d6fbdd8ab93
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-
----
-
-(no changes since v1)
-
- drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 66 +++++++++-----------
- 1 file changed, 31 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-index afc946ead870..ebc9cb93073c 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-@@ -3400,7 +3400,7 @@ static int vop2_find_rgb_encoder(struct vop2 *vop2)
- 	return -ENOENT;
- }
- 
--static struct reg_field vop2_cluster_regs[VOP2_WIN_MAX_REG] = {
-+static const struct reg_field vop2_cluster_regs[VOP2_WIN_MAX_REG] = {
- 	[VOP2_WIN_ENABLE] = REG_FIELD(RK3568_CLUSTER_WIN_CTRL0, 0, 0),
- 	[VOP2_WIN_FORMAT] = REG_FIELD(RK3568_CLUSTER_WIN_CTRL0, 1, 5),
- 	[VOP2_WIN_RB_SWAP] = REG_FIELD(RK3568_CLUSTER_WIN_CTRL0, 14, 14),
-@@ -3471,28 +3471,26 @@ static struct reg_field vop2_cluster_regs[VOP2_WIN_MAX_REG] = {
- static int vop2_cluster_init(struct vop2_win *win)
- {
- 	struct vop2 *vop2 = win->vop2;
--	struct reg_field *cluster_regs;
--	int ret, i;
--
--	cluster_regs = kmemdup(vop2_cluster_regs, sizeof(vop2_cluster_regs),
--			       GFP_KERNEL);
--	if (!cluster_regs)
--		return -ENOMEM;
--
--	for (i = 0; i < ARRAY_SIZE(vop2_cluster_regs); i++)
--		if (cluster_regs[i].reg != 0xffffffff)
--			cluster_regs[i].reg += win->offset;
-+	int i;
- 
--	ret = devm_regmap_field_bulk_alloc(vop2->dev, vop2->map, win->reg,
--					   cluster_regs,
--					   ARRAY_SIZE(vop2_cluster_regs));
-+	for (i = 0; i < ARRAY_SIZE(vop2_cluster_regs); i++) {
-+		const struct reg_field field = {
-+			.reg = (vop2_cluster_regs[i].reg != 0xffffffff) ?
-+					vop2_cluster_regs[i].reg + win->offset :
-+					vop2_cluster_regs[i].reg,
-+			.lsb = vop2_cluster_regs[i].lsb,
-+			.msb = vop2_cluster_regs[i].msb
-+		};
- 
--	kfree(cluster_regs);
-+		win->reg[i] = devm_regmap_field_alloc(vop2->dev, vop2->map, field);
-+		if (IS_ERR(win->reg[i]))
-+			return PTR_ERR(win->reg[i]);
-+	}
- 
--	return ret;
-+	return 0;
- };
- 
--static struct reg_field vop2_esmart_regs[VOP2_WIN_MAX_REG] = {
-+static const struct reg_field vop2_esmart_regs[VOP2_WIN_MAX_REG] = {
- 	[VOP2_WIN_ENABLE] = REG_FIELD(RK3568_SMART_REGION0_CTRL, 0, 0),
- 	[VOP2_WIN_FORMAT] = REG_FIELD(RK3568_SMART_REGION0_CTRL, 1, 5),
- 	[VOP2_WIN_DITHER_UP] = REG_FIELD(RK3568_SMART_REGION0_CTRL, 12, 12),
-@@ -3559,26 +3557,24 @@ static struct reg_field vop2_esmart_regs[VOP2_WIN_MAX_REG] = {
- static int vop2_esmart_init(struct vop2_win *win)
- {
- 	struct vop2 *vop2 = win->vop2;
--	struct reg_field *esmart_regs;
--	int ret, i;
--
--	esmart_regs = kmemdup(vop2_esmart_regs, sizeof(vop2_esmart_regs),
--			      GFP_KERNEL);
--	if (!esmart_regs)
--		return -ENOMEM;
--
--	for (i = 0; i < ARRAY_SIZE(vop2_esmart_regs); i++)
--		if (esmart_regs[i].reg != 0xffffffff)
--			esmart_regs[i].reg += win->offset;
-+	int i;
- 
--	ret = devm_regmap_field_bulk_alloc(vop2->dev, vop2->map, win->reg,
--					   esmart_regs,
--					   ARRAY_SIZE(vop2_esmart_regs));
-+	for (i = 0; i < ARRAY_SIZE(vop2_esmart_regs); i++) {
-+		const struct reg_field field = {
-+			.reg = (vop2_esmart_regs[i].reg != 0xffffffff) ?
-+				vop2_esmart_regs[i].reg + win->offset :
-+				vop2_esmart_regs[i].reg,
-+			.lsb = vop2_esmart_regs[i].lsb,
-+			.msb = vop2_esmart_regs[i].msb
-+		};
- 
--	kfree(esmart_regs);
-+		win->reg[i] = devm_regmap_field_alloc(vop2->dev, vop2->map, field);
-+		if (IS_ERR(win->reg[i]))
-+			return PTR_ERR(win->reg[i]);
-+	}
- 
--	return ret;
--};
-+	return 0;
-+}
- 
- static int vop2_win_init(struct vop2 *vop2)
- {
+Best regards,
 -- 
-2.34.1
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
