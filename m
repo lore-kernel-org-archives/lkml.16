@@ -1,111 +1,108 @@
-Received: from r-passerv.ralfj.de (r-passerv.ralfj.de [109.230.236.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F44204682;
-	Wed, 12 Feb 2025 07:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.230.236.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68624204682;
+	Wed, 12 Feb 2025 07:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739346192; cv=none; b=ACTzo7eebXIHGfLwexrGzaE3YaXayztq0IM1rWYHHFmoSJ9b9Op2psQpL2EcQlmV9vxLyQbbquXQep3ahk5Drs1rVB98gD9TQ9adZ+bChm0B/Hfx6Y/1MteWeEq5+ifeLnZlooe+ighAN1JvjG6r1M4mP75OudwkNLjq375sluQ=
+	t=1739346198; cv=none; b=HQWBr6eYn3aj2npXoOsJNI+me8KObosUytqKuxMx6WGoA2LXg7seI0wk2pvZcgQ/fcq8s7tXQNMDQldYbNB8zn42RFNr/7SW5eAHobA2gCFG3lnF2qhUgZgNY2CN3CREToDqaASP+reL62fzNfqfAQtz+dxtrE+AVtfsYbzndcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739346192; c=relaxed/simple;
-	bh=dNEJPQCFXFXFYv8LsS8D1rVs3y39N2Beg7o2UW6ryMM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uA1ZTyCiwjJZqb+EwkUbx50hew3cNUGKhpUB+5nGxMJMGkLz3Oe1MYZSTJrloStLGWFtIW/leWkwaeR1/ZbrARyUOFQi9o/7tr0DhZaECE5DsCT+rgjyCb/3TFpUl3jaIw2xjt2FR2Q649w6m/AHm3KVCZSulDkd7Y3ftEBiTjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de; spf=pass smtp.mailfrom=ralfj.de; dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b=H/hn7/sX; arc=none smtp.client-ip=109.230.236.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ralfj.de
+	s=arc-20240116; t=1739346198; c=relaxed/simple;
+	bh=uYeXJyn5UeUw6qcDYRDrfV4PFQBbTfNbcG3JQxPQTfc=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=VM0PshiYb5VNAv9yhYI9ORCfV3X3V/TF42v8pNSzMcR8zNFoKq+0rxi0jCkBex68aZq35xGrbNXVgC9D48VuQwGXkHVOGOFfCO4adXGduPmw0W2OOLSUZUofqtC/RmmhNa0E1glabfeIrHqh7FJvK9mABLDijw+hgbogsI9+CDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L4IPSicf; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b="H/hn7/sX"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ralfj.de; s=mail;
-	t=1739345687; bh=dNEJPQCFXFXFYv8LsS8D1rVs3y39N2Beg7o2UW6ryMM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H/hn7/sX5xM/uw2kg30IfwLHDywFTYAajrHTQq3WN22+Jmf6LCU4Po3PR5oZVnBu6
-	 KDSBUlfksxwBNExOvWdUR3v9Wt3mNE5iQg56I3tYms3SM0yOIExAka4cfZ/ZSrx6gU
-	 NpSnAI3A7GGQgE2vW16DX7RsFEuqEmSF+XKvA7X4=
-Received: from [IPV6:2001:8e0:207e:3500:4ab6:48fe:df57:b084] (2001-8e0-207e-3500-4ab6-48fe-df57-b084.ewm.ftth.ip6.as8758.net [IPv6:2001:8e0:207e:3500:4ab6:48fe:df57:b084])
-	by r-passerv.ralfj.de (Postfix) with ESMTPSA id 267B22050FE1;
-	Wed, 12 Feb 2025 08:34:47 +0100 (CET)
-Message-ID: <1cfca789-bbb9-4899-92e9-94ff78d07c50@ralfj.de>
-Date: Wed, 12 Feb 2025 08:34:44 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4IPSicf"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43944c51e41so31537785e9.0;
+        Tue, 11 Feb 2025 23:43:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739346195; x=1739950995; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=faKuoffM1gAZWq51vkqkknQzyRKywd6R7upna9jS1Us=;
+        b=L4IPSicfRpclfoUch/v+ScJ5YMy7MzfNQ7WWHhArZRMXHvffmWfPQmacbBiHYyIxFQ
+         I+6/FNxANkt+pjydcyVGItxJ+sBfpUh7VrLP27bw8X9jCpyEylglVaJAhLpua3LaQ65P
+         FB/W6MpVCdkZ4OTb7CQHw2Bekp0bSVkhpklz9MEom0Xmuz7Ptb9pJsNXUOV538tgSCTM
+         CF8/O9eQbbDnaFQklAj1+pSUi1YQHd4N+9/T0hanSXBnUvCxg49naiCyLEPrxPSB9I/6
+         Hns7nf3dc49Vlqh5BEVlHJV0eXNDnke8Ad4to9ty/F/be+ifnGXWbId2lL7t4kvLIF/2
+         LRWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739346195; x=1739950995;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=faKuoffM1gAZWq51vkqkknQzyRKywd6R7upna9jS1Us=;
+        b=QeVKR91NzroWotR+IxTCJsgesNfYSY/pCp4rzu4W+jCHQaV17BH0U8Ejfc4sQYVsgE
+         HeUSgX4ZSNNyrJ6N2x2nhs3he1aoZ+JSQIPjc6S7Z7NV432PcRBRJ6lSImcwZ7W/OOIr
+         pAWZhmOrnCelM0LXznetQIlK2nEH078AEvXbh8JcECUpxcIfi/Q9OxcinOQtPWatmBsb
+         BQ+HGKFm4FN/vbQ8/CVu1RFBsNCwLCHCtxS03atYj2A8sae3359QU0XlMy0sp2uJkTE7
+         HuMNWA3qcfLe05c9ZqoG+ZIXFJZeTnNCv7DNGb9q5lKmU2sDK19B/rdBQ59tkcpQ+Nlj
+         lWPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0olTflW3u6B3XVg89SiW+nNyroTQNjUB4Hxn0JvUn/ZmA4SYDdBshgPRb9EEQ6C0MXvfw0D/5cavMIw==@vger.kernel.org, AJvYcCWJzMht2hwMF/x5u1amxgRGxBRD9lQexUFccFQXGtbxLnnpQdKA7ZGBVZUUvko7SA9SJhEMayLytI53qP2D@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIC1CUU/hNRwZEBivVdLPawFWIwrXgnkqGPgSUJoOP395zusp6
+	U6546C6+k3u4fPR1b76DykHKAcYj6BTLKunTj1DlUtAHcIy4TpP9hdzUzPf9fp4=
+X-Gm-Gg: ASbGncvZkCkygdLOdB1Snl+gyWIXJ/j7DcRdiyzh5ZzCwp0XQUdMjpKWdTS3kh2zviE
+	RCHQW3xP98oyHlpFd1LRxgtht3Cb8+ECKHpo4cgqHyI9WTcX3jEPglCcvOSX+bJgVmb6CwkohTQ
+	hXRRt+u85sufInGc8hmlYW53tF9WpWIYw9tdG/P3Ieo1qlBMk9hCBNNYFa49EFTJ66YcxW0A/8h
+	c2JAfrNMhQ7pEzbim/f4lzSAJmNcDWot8bqDVicEhJLsi4a+pSobQ0jwGSCf6o7tnp7HiqYHkBG
+	N18h2ortBVn43P/Djc5uf9TUgFHv6RAIFf98YeUDS8/kphir3zPLn2iOs7X9U4Ip0tjMull9LCm
+	ZZnFc0GN8
+X-Google-Smtp-Source: AGHT+IFLnB8Ymq1rlUTsAloZXjXNuyEHGglxk1LiY+nVnHMEX5ZdXYat3hHkscmmVysqmC10clk5kQ==
+X-Received: by 2002:a05:600c:510c:b0:439:45ce:15c0 with SMTP id 5b1f17b1804b1-439581bed06mr15039995e9.25.1739346194504;
+        Tue, 11 Feb 2025 23:43:14 -0800 (PST)
+Received: from michael-devbox (ec2-52-59-234-77.eu-central-1.compute.amazonaws.com. [52.59.234.77])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a06d22csm11458725e9.22.2025.02.11.23.43.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 23:43:14 -0800 (PST)
+Date: Wed, 12 Feb 2025 07:43:13 +0000
+From: Michael Anckaert <michael.anckaert@gmail.com>
+To: Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+	Teddy Wang <teddy.wang@siliconmotion.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"open list:STAGING - SILICON MOTION SM750 FRAME BUFFER DRIVER" <linux-fbdev@vger.kernel.org>,
+	"open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] staging: sm750fb: fix checkpatch warning architecture
+ specific defines should be avoided
+Message-ID: <Z6xREbLLtexX4_uh@michael-devbox>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: rust: clean Rust 1.85.0 warning using softfloat
- target
-To: Trevor Gross <tmgross@umich.edu>, Miguel Ojeda <ojeda@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- moderated for non-subscribers <linux-arm-kernel@lists.infradead.org>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- patches@lists.linux.dev, stable@vger.kernel.org,
- Matthew Maurer <mmaurer@google.com>, Jubilee Young <workingjubilee@gmail.com>
-References: <20250210163732.281786-1-ojeda@kernel.org>
- <CALNs47uBcyTmBdTBAPXiBcAkE0-4tih9j=VAv1rRcTcf_c2yTg@mail.gmail.com>
-Content-Language: en-US, de-DE
-From: Ralf Jung <post@ralfj.de>
-In-Reply-To: <CALNs47uBcyTmBdTBAPXiBcAkE0-4tih9j=VAv1rRcTcf_c2yTg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Replace architecture-specific defines with CONFIG_X86 checks to improve
+portability and adhere to kernel coding standards.
 
+Fixes checkpatch warning:
+- CHECK: architecture specific defines should be avoided.
 
-On 11.02.25 12:10, Trevor Gross wrote:
-> On Mon, Feb 10, 2025 at 10:38 AM Miguel Ojeda <ojeda@kernel.org> wrote:
->>
->> Starting with Rust 1.85.0 (to be released 2025-02-20), `rustc` warns
->> [1] about disabling neon in the aarch64 hardfloat target:
->>
->>      warning: target feature `neon` cannot be toggled with
->>               `-Ctarget-feature`: unsound on hard-float targets
->>               because it changes float ABI
->>        |
->>        = note: this was previously accepted by the compiler but
->>                is being phased out; it will become a hard error
->>                in a future release!
->>        = note: for more information, see issue #116344
->>                <https://github.com/rust-lang/rust/issues/116344>
->>
->> Thus, instead, use the softfloat target instead.
->>
->> While trying it out, I found that the kernel sanitizers were not enabled
->> for that built-in target [2]. Upstream Rust agreed to backport
->> the enablement for the current beta so that it is ready for
->> the 1.85.0 release [3] -- thanks!
->>
->> However, that still means that before Rust 1.85.0, we cannot switch
->> since sanitizers could be in use. Thus conditionally do so.
->>
->> Cc: <stable@vger.kernel.org> # Needed in 6.12.y and 6.13.y only (Rust is pinned in older LTSs).
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Matthew Maurer <mmaurer@google.com>
->> Cc: Alice Ryhl <aliceryhl@google.com>
->> Cc: Ralf Jung <post@ralfj.de>
->> Cc: Jubilee Young <workingjubilee@gmail.com>
->> Link: https://github.com/rust-lang/rust/pull/133417 [1]
->> Link: https://rust-lang.zulipchat.com/#narrow/channel/131828-t-compiler/topic/arm64.20neon.20.60-Ctarget-feature.60.20warning/near/495358442 [2]
->> Link: https://github.com/rust-lang/rust/pull/135905 [3]
->> Link: https://github.com/rust-lang/rust/issues/116344
->> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-> 
-> This is consistent with what has been discussed for a while on the Rust side.
-> 
-> Reviewed-by: Trevor Gross <tmgross@umich.edu>
+Changes made:
+- Using CONFIG_X86 instead of i386 and x86.
 
-I don't know the kernel side of this, but from a Rust compiler perspective using 
-the "-softfloat" target is definitely the right call here, at least for now 
-(where none of the crypto/compression code that needs SIMD is written in Rust).
+Signed-off-by: Michael Anckaert <michael.anckaert@gmail.com>
+---
+ drivers/staging/sm750fb/ddk750_chip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Ralf Jung <post@ralfj.de>
-
-Kind regards,
-Ralf
+diff --git a/drivers/staging/sm750fb/ddk750_chip.c b/drivers/staging/sm750fb/ddk750_chip.c
+index 02860d3ec365..67a2f60440ca 100644
+--- a/drivers/staging/sm750fb/ddk750_chip.c
++++ b/drivers/staging/sm750fb/ddk750_chip.c
+@@ -229,7 +229,7 @@ int ddk750_init_hw(struct initchip_param *p_init_param)
+ 		reg |= (VGA_CONFIGURATION_PLL | VGA_CONFIGURATION_MODE);
+ 		poke32(VGA_CONFIGURATION, reg);
+ 	} else {
+-#if defined(__i386__) || defined(__x86_64__)
++#ifdef CONFIG_X86
+ 		/* set graphic mode via IO method */
+ 		outb_p(0x88, 0x3d4);
+ 		outb_p(0x06, 0x3d5);
+-- 
+2.39.5
 
