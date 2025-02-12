@@ -1,265 +1,152 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BFBB271822;
-	Wed, 12 Feb 2025 12:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BC4205AAF;
+	Wed, 12 Feb 2025 12:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739362254; cv=none; b=jsYgi/V5MBW6iSuCy6GDX/rpRgbXTeET2eo2bS5ZRvTp+9ured2EeD1bxwQnTbTSmb7X2T6K0aOc/mGDum70pptzSHwMRR89y6SVgyhc9pYOP5RgbR8FUNYhkRdHel9xXbLt4Uu4kDdaCw6+AGKvI8xP6m9kQWLU9rMSLE25QJo=
+	t=1739362283; cv=none; b=NCJvq+00y24ttUastksLh/TCmCEyRWKoS9djNlb3+wQwZSOu4AdTV2OXaQ2jKkMl+ms0qqIx6Q+s05EVToDTCezeqSiwrg2ySzUHDGWbQYdNBTVh3odq4onhx7UOYhKw65+2pMERmoxhMvDBI3QiRrnChqouxYQ+5s2ytUSMdRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739362254; c=relaxed/simple;
-	bh=3cMlbShasNaTjDQlhgec8F70jWl3atG199Ep1PjuelQ=;
+	s=arc-20240116; t=1739362283; c=relaxed/simple;
+	bh=hfRnQRhXFDPkdEJgmQjQac1uhk3WIaBMF/BbN2Omgr4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Obuo7pH5UJXPXDkCkCevsgKGxJRW5N4dBzuqHm2v86yzjGlju6rRzoso5E5MotwtDRAea4A9vx6eQir6stWzIMyKlA6j5Yj6q8wm9FJXByqTMNMGD8bFtAuqgmRz3So0SWkme4b+YUyemyiwmVFs5h1dqVReSbUi9hGgME2aMX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC7A1113E;
-	Wed, 12 Feb 2025 04:11:12 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 399C53F58B;
-	Wed, 12 Feb 2025 04:10:51 -0800 (PST)
-Date: Wed, 12 Feb 2025 12:10:46 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v19 09/11] arm64: Handle BRBE booting requirements
-Message-ID: <20250212121046.GB235556@e132581.arm.com>
-References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
- <20250202-arm-brbe-v19-v19-9-1c1300802385@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=boM0tGAbmWEhb4v541R3PWL/YocOerff4R4ezMRQaRFMHXlS8zc+jetOI6YmjgKiCLn5pIh/8yllRoYqn8YyGSMwhUeE3iFp30/7OSMs98e74RK/ydJ2kLK9m0JdwMVA8YkqSrOdRwrF0bnVCwaw0oT6kvskQC9JJ+xKwAhcxr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uT5v+mE7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HM5DkrZ9; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uT5v+mE7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HM5DkrZ9"
+Date: Wed, 12 Feb 2025 13:11:13 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739362278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7TNBT0J/OEy8YxJkvBLL8wlR8TSxY9KLsjAwzg3RD5Y=;
+	b=uT5v+mE7N7yeiBRcXKtyRYO25ZC9j8Al4cOBRuno5OOctcw+aDUpqUPq92BdBifezgbN4F
+	9u+a5LXCadMGf6UplzQwmBaCwNvZ5Z2wdP5hJCIkSFhkv0JGifwTvkclQTGEn72aqmgOPP
+	GysGRoHIRsVAufNid/6utAkCZPUlQcsr1BljCaF65CDGDOhTIW0i1iKUw6n2mJ9lVBw61J
+	DOnEtcQmoUCJd1TfszpTIgI/Re+kop87GPKG+ky1DKH14ZPhTwceihO1vQfpZa8pwxb+kV
+	q/CWy/BLAU5VYT9/uUUfIrB/vSHzRklLEfvz0dUbuGM4vK2Cotxm256RPucmNA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739362278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7TNBT0J/OEy8YxJkvBLL8wlR8TSxY9KLsjAwzg3RD5Y=;
+	b=HM5DkrZ9tyvbTSgICy7zFN4UfAQH4az1YxHKFMneOnIGHrh2cP4SqEkoDBPucxmk1g+KTF
+	o8BHvK+H7Orm/QAg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Joel Fernandes <joel@joelfernandes.org>,
+	Prakash Sangappa <prakash.sangappa@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+	x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	luto@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
+	bharata@amd.com, raghavendra.kt@amd.com,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
+	Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Clark Williams <clark.williams@gmail.com>, daniel.wagner@suse.com,
+	Joseph Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250212121113.3nJ-kf-6@linutronix.de>
+References: <9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
+ <20250204220418.35949317@gandalf.local.home>
+ <CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
+ <20250205081635.397eacb0@gandalf.local.home>
+ <CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
+ <20250206083039.0916ad24@gandalf.local.home>
+ <20250206134408.lD_POjuG@linutronix.de>
+ <20250210144321.1f5974a6@gandalf.local.home>
+ <20250211082138.iqvedSfG@linutronix.de>
+ <20250211102801.5b32d610@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250202-arm-brbe-v19-v19-9-1c1300802385@kernel.org>
+In-Reply-To: <20250211102801.5b32d610@gandalf.local.home>
 
-On Sun, Feb 02, 2025 at 06:43:03PM -0600, Rob Herring (Arm) wrote:
+On 2025-02-11 10:28:01 [-0500], Steven Rostedt wrote:
+> On Tue, 11 Feb 2025 09:21:38 +0100
+> Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 > 
-> From: Anshuman Khandual <anshuman.khandual@arm.com>
+> > We don't follow this behaviour exactly today.
+> > 
+> > Adding this behaviour back vs the behaviour we have now, doesn't seem to
+> > improve anything at visible levels. We don't have a counter but we can
+> > look at the RCU nesting counter which should be zero once locks have
+> > been dropped. So this can be used for testing.
+> > 
+> > But as I said: using "run to completion" and preempt on the return
+> > userland rather than once the lazy flag is seen and all locks have been
+> > released appears to be better.
+> > 
+> > It is (now) possible that you run for a long time and get preempted
+> > while holding a spinlock_t. It is however more likely that you release
+> > all locks and get preempted while returning to userland.
 > 
-> To use the Branch Record Buffer Extension (BRBE), some configuration is
-> necessary at EL3 and EL2. This patch documents the requirements and adds
-> the initial EL2 setup code, which largely consists of configuring the
-> fine-grained traps and initializing a couple of BRBE control registers.
-> 
-> Before this patch, __init_el2_fgt() would initialize HDFGRTR_EL2 and
-> HDFGWTR_EL2 with the same value, relying on the read/write trap controls
-> for a register occupying the same bit position in either register. The
-> 'nBRBIDR' trap control only exists in bit 59 of HDFGRTR_EL2, while bit
-> 59 of HDFGRTR_EL2 is RES0, and so this assumption no longer holds.
+> IIUC, today, LAZY causes all SCHED_OTHER tasks to act more like
+> PREEMPT_NONE. Is that correct?
 
-s/HDFGRTR_EL2/HDFGWTR_EL2
+Well. First sched-tick will set the LAZY bit, the second sched-tick
+forces a resched.
+On PREEMPT_NONE the sched-tick would be set NEED_RESCHED while nothing
+will force a resched until the task decides to do schedule() on its own.
+So it is slightly different for kernel threads.
 
-> To handle HDFGRTR_EL2 and HDFGWTR_EL2 having (slightly) different bit
-> layouts, __init_el2_fgt() is changed to accumulate the HDFGRTR_EL2 and
-> HDFGWTR_EL2 control bits separately. While making this change the
-> open-coded value (1 << 62) is replaced with
-> HDFG{R,W}TR_EL2_nPMSNEVFR_EL1_MASK.
-> 
-> The BRBCR_EL1 and BRBCR_EL2 registers are unusual and require special
-> initialisation: even though they are subject to E2H renaming, both have
-> an effect regardless of HCR_EL2.TGE, even when running at EL2, and
-> consequently both need to be initialised. This is handled in
-> __init_el2_brbe() with a comment to explain the situation.
-> 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Oliver Upton <oliver.upton@linux.dev>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> [Mark: rewrite commit message, fix typo in comment]
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  Documentation/arch/arm64/booting.rst | 21 +++++++++
->  arch/arm64/include/asm/el2_setup.h   | 86 ++++++++++++++++++++++++++++++++++--
->  2 files changed, 104 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
-> index cad6fdc96b98..0a421757cacf 100644
-> --- a/Documentation/arch/arm64/booting.rst
-> +++ b/Documentation/arch/arm64/booting.rst
-> @@ -352,6 +352,27 @@ Before jumping into the kernel, the following conditions must be met:
-> 
->      - HWFGWTR_EL2.nSMPRI_EL1 (bit 54) must be initialised to 0b01.
-> 
-> +  For CPUs with feature Branch Record Buffer Extension (FEAT_BRBE):
-> +
-> +  - If EL3 is present:
-> +
-> +    - MDCR_EL3.SBRBE (bits 33:32) must be initialised to 0b11.
+Unless we talk about userland, here we would have a resched on the
+return to userland after the sched-tick LAZY or NONE does not matter.
 
-Can MDCR_EL3.SBRBE be 0b01 ?
+> Now that the PREEMPT_RT is not one of the preemption selections, when you
+> select PREEMPT_RT, you can pick between CONFIG_PREEMPT and
+> CONFIG_PREEMPT_LAZY. Where CONFIG_PREEMPT will preempt the kernel at the
+> scheduler tick if preemption is enabled and CONFIG_PREEMPT_LAZY will
+> not preempt the kernel on a scheduler tick and wait for exit to user space.
 
-> +
-> +  - If the kernel is entered at EL1 and EL2 is present:
-> +
-> +    - BRBCR_EL2.CC (bit 3) must be initialised to 0b1.
-> +    - BRBCR_EL2.MPRED (bit 4) must be initialised to 0b1.
+This is not specific to RT but FULL vs LAZY. But yes. However the second
+sched-tick will force preemption point even without the
+exit-to-userland.
 
-Should clarify BRBCR_EL2.TS to be initialised to 0b00 ?  Arm ARM
-claims the reset behaviour of the TS field is unknown value.  The
-assembly code below actually has initializes the TS field as zero.
+> Sebastian,
+> 
+> It appears you only tested the CONFIG_PREEMPT_LAZY selection. Have you
+> tested the difference of how CONFIG_PREEMPT behaves between PREEMPT_RT and
+> no PREEMPT_RT? I think that will show a difference like we had in the past.
 
-Except the above minor comments, I read the assembly code and it looks
-good to me:
+Not that I remember testing PREEMPT vs PREEMPT_RT. I remember people
+complained about high networking load on RT which become visible due to
+threaded interrupts (as in top) while for non-RT it was more or less
+hidden and not clearly visible due to selected accounting. The network
+performance was mostly the same as far as I remember (that is gbit).
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+> I can see people picking both PREEMPT_RT and CONFIG_PREEMPT (Full), but
+> then wondering why their non RT tasks are suffering from a performance
+> penalty from that.
 
-> +
-> +    - HDFGRTR_EL2.nBRBDATA (bit 61) must be initialised to 0b1.
-> +    - HDFGRTR_EL2.nBRBCTL  (bit 60) must be initialised to 0b1.
-> +    - HDFGRTR_EL2.nBRBIDR  (bit 59) must be initialised to 0b1.
-> +
-> +    - HDFGWTR_EL2.nBRBDATA (bit 61) must be initialised to 0b1.
-> +    - HDFGWTR_EL2.nBRBCTL  (bit 60) must be initialised to 0b1.
-> +
-> +    - HFGITR_EL2.nBRBIALL (bit 56) must be initialised to 0b1.
-> +    - HFGITR_EL2.nBRBINJ  (bit 55) must be initialised to 0b1.
-> +
->    For CPUs with the Scalable Matrix Extension FA64 feature (FEAT_SME_FA64):
-> 
->    - If EL3 is present:
-> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-> index 25e162651750..bf21ce513aff 100644
-> --- a/arch/arm64/include/asm/el2_setup.h
-> +++ b/arch/arm64/include/asm/el2_setup.h
-> @@ -163,6 +163,39 @@
->  .Lskip_set_cptr_\@:
->  .endm
-> 
-> +/*
-> + * Configure BRBE to permit recording cycle counts and branch mispredicts.
-> + *
-> + * At any EL, to record cycle counts BRBE requires that both BRBCR_EL2.CC=1 and
-> + * BRBCR_EL1.CC=1.
-> + *
-> + * At any EL, to record branch mispredicts BRBE requires that both
-> + * BRBCR_EL2.MPRED=1 and BRBCR_EL1.MPRED=1.
-> + *
-> + * When HCR_EL2.E2H=1, the BRBCR_EL1 encoding is redirected to BRBCR_EL2, but
-> + * the {CC,MPRED} bits in the real BRBCR_EL1 register still apply.
-> + *
-> + * Set {CC,MPRED} in both BRBCR_EL2 and BRBCR_EL1 so that at runtime we only
-> + * need to enable/disable these in BRBCR_EL1 regardless of whether the kernel
-> + * ends up executing in EL1 or EL2.
-> + */
-> +.macro __init_el2_brbe
-> +       mrs     x1, id_aa64dfr0_el1
-> +       ubfx    x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
-> +       cbz     x1, .Lskip_brbe_\@
-> +
-> +       mov_q   x0, BRBCR_ELx_CC | BRBCR_ELx_MPRED
-> +       msr_s   SYS_BRBCR_EL2, x0
-> +
-> +       __check_hvhe .Lset_brbe_nvhe_\@, x1
-> +       msr_s   SYS_BRBCR_EL12, x0      // VHE
-> +       b       .Lskip_brbe_\@
-> +
-> +.Lset_brbe_nvhe_\@:
-> +       msr_s   SYS_BRBCR_EL1, x0       // NVHE
-> +.Lskip_brbe_\@:
-> +.endm
-> +
->  /* Disable any fine grained traps */
->  .macro __init_el2_fgt
->         mrs     x1, id_aa64mmfr0_el1
-> @@ -170,16 +203,48 @@
->         cbz     x1, .Lskip_fgt_\@
-> 
->         mov     x0, xzr
-> +       mov     x2, xzr
->         mrs     x1, id_aa64dfr0_el1
->         ubfx    x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
->         cmp     x1, #3
->         b.lt    .Lskip_spe_fgt_\@
-> +
->         /* Disable PMSNEVFR_EL1 read and write traps */
-> -       orr     x0, x0, #(1 << 62)
-> +       orr     x0, x0, #HDFGRTR_EL2_nPMSNEVFR_EL1_MASK
-> +       orr     x2, x2, #HDFGWTR_EL2_nPMSNEVFR_EL1_MASK
-> 
->  .Lskip_spe_fgt_\@:
-> +#ifdef CONFIG_ARM64_BRBE
-> +       mrs     x1, id_aa64dfr0_el1
-> +       ubfx    x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
-> +       cbz     x1, .Lskip_brbe_reg_fgt_\@
-> +
-> +       /*
-> +        * Disable read traps for the following registers
-> +        *
-> +        * [BRBSRC|BRBTGT|RBINF]_EL1
-> +        * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
-> +        */
-> +       orr     x0, x0, #HDFGRTR_EL2_nBRBDATA_MASK
-> +
-> +       /*
-> +        * Disable write traps for the following registers
-> +        *
-> +        * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
-> +        */
-> +       orr     x2, x2, #HDFGWTR_EL2_nBRBDATA_MASK
-> +
-> +       /* Disable read and write traps for [BRBCR|BRBFCR]_EL1 */
-> +       orr     x0, x0, #HDFGRTR_EL2_nBRBCTL_MASK
-> +       orr     x2, x2, #HDFGWTR_EL2_nBRBCTL_MASK
-> +
-> +       /* Disable read traps for BRBIDR_EL1 */
-> +       orr     x0, x0, #HDFGRTR_EL2_nBRBIDR_MASK
-> +
-> +.Lskip_brbe_reg_fgt_\@:
-> +#endif /* CONFIG_ARM64_BRBE */
->         msr_s   SYS_HDFGRTR_EL2, x0
-> -       msr_s   SYS_HDFGWTR_EL2, x0
-> +       msr_s   SYS_HDFGWTR_EL2, x2
-> 
->         mov     x0, xzr
->         mrs     x1, id_aa64pfr1_el1
-> @@ -220,7 +285,21 @@
->  .Lset_fgt_\@:
->         msr_s   SYS_HFGRTR_EL2, x0
->         msr_s   SYS_HFGWTR_EL2, x0
-> -       msr_s   SYS_HFGITR_EL2, xzr
-> +       mov     x0, xzr
-> +#ifdef CONFIG_ARM64_BRBE
-> +       mrs     x1, id_aa64dfr0_el1
-> +       ubfx    x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
-> +       cbz     x1, .Lskip_brbe_insn_fgt_\@
-> +
-> +       /* Disable traps for BRBIALL instruction */
-> +       orr     x0, x0, #HFGITR_EL2_nBRBIALL_MASK
-> +
-> +       /* Disable traps for BRBINJ instruction */
-> +       orr     x0, x0, #HFGITR_EL2_nBRBINJ_MASK
-> +
-> +.Lskip_brbe_insn_fgt_\@:
-> +#endif /* CONFIG_ARM64_BRBE */
-> +       msr_s   SYS_HFGITR_EL2, x0
-> 
->         mrs     x1, id_aa64pfr0_el1             // AMU traps UNDEF without AMU
->         ubfx    x1, x1, #ID_AA64PFR0_EL1_AMU_SHIFT, #4
-> @@ -275,6 +354,7 @@
->         __init_el2_hcrx
->         __init_el2_timers
->         __init_el2_debug
-> +       __init_el2_brbe
->         __init_el2_lor
->         __init_el2_stage2
->         __init_el2_gicv3
-> 
-> --
-> 2.47.2
-> 
-> 
+We might want to opt in for lazy by default on RT. That was the case in
+the RT queue until it was replaced with PREEMPT_AUTO.
+But then why not use LAZY in favour of PREEMPT. Mike had numbers
+   https://lore.kernel.org/all/9df22ebbc2e6d426099bf380477a0ed885068896.camel@gmx.de/
+
+where LAZY had mostly the voluntary performance with less context
+switches than preempt. Which means also without the need for
+cond_resched() and friends.
+
+> -- Steve
+
+Sebastian
