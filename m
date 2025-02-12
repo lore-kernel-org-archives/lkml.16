@@ -1,141 +1,109 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689FF256C8E
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 16:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2026C21D59F
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 16:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739378372; cv=none; b=qzy83N4XYjYG7zJIxmaEjGckDcIhNqNUwcELQyxK7bQUEYnEZvxs4delGjdRYMrFsenXTbpw2P+oIjeOhHZIAwFhMiOp08iIeP6kAI24sO+nWiXnt561+pn4KJmQpkA6zeceEvrEGMUEEE3N8/H+Fk+RAY9dghjqSwDh+WEB6Bw=
+	t=1739378438; cv=none; b=a4vZ7ScuoRSXZPStBfHao/TF0K3cdWjO5Mo05x/AosQJjn9zqB1/vJjk4TRVT0KuFOL3Fxg+2h0NUacnlFJZzbtvSac4T652pEK7HleJElkAyjNkG+uFMgx2fAErxfhSxlHtyyWy6CA16e9Snh/o8D9YnyDjBbm7aF5s2l0ZM/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739378372; c=relaxed/simple;
-	bh=SqrHKzrnFGepf7djcq2JyOhODUv+D2vmoBsZ1xq9Mfg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SX2C89UddQyMtBSXTPsIisPBX2ixWRxMOJ2ByYrPF6JVQzjnBY4RC2h+m84f2Z9ZT+RlYh1od4ezSiGyke4cldt35zlvUPQ+7uO5+URMEHGbbWHj+VYvk0QF5Sxc4HzQJVPpceGHDC7f18A5hRrB555aw26BcSVKI7MTAQRZDYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OqJ+9dpa; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1739378438; c=relaxed/simple;
+	bh=fIvihShcE39cxMOgvzvAE4sHjptoKE7mi4lhmy0B4f0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rcx5sfzCWr5S1lsPWVh3KgghtPi/4SMZA0cFkQ1QP5v2SgI2ZuIceyTRkh5xn38kvCB50PfHp6sUMT7uZ/6gY6vfpmr/Eqylurv7PIZi6ak0f96RMRh0WSe1Sb+c79pYDQCQLh/6h4cEiDFMdzdpXrdwDhQck/ImVk6eD25ezsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MjV59ihk; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OqJ+9dpa"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-308edbc368cso36321841fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 08:39:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MjV59ihk"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5de3c29ebaeso8821864a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 08:40:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739378368; x=1739983168; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g9J4VAMrvjFIthFOUeNoRIlqfbAqCet1lDNYxHiSCoI=;
-        b=OqJ+9dpa0raGWq3XzwnErmo6krpYzKu4f4rZe4TPClXbR68Ls746QAppIxzOlmd0vB
-         4vtIq7km1jfFTqW8mZZGyEoi2mSEnfL8F/IJZWcHZIV37N967atcIOjLLeohwbDTHh58
-         QRo/qqNGTlkGcfjMMgxqNjFZKeeQfcYPo5wYdavpeLtCQ3k0tGNcFOed8d5ZTjXXq5Et
-         6tdNMe2qBDmYdGMMXqveuVAs+tZS5b34GtVMv2U9+pfwgHNele+tIuyVmtB2QiU8fsdQ
-         W4saen6qbjVA1bgH8ChEjeZRGUXJLGsgcOx1EyD9pZTiB5Gn/s3BYm3WKFOiOC9XjqWG
-         TiFQ==
+        d=linaro.org; s=google; t=1739378434; x=1739983234; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ypsXxYmlUDNAgS7vll0CP7szhdB/OHfZFzs1nsbbuTk=;
+        b=MjV59ihkdzLi+A18alBCA9M/pl8qcWykYSoTS/yohdfWRFby4TGv7imNQVrw/S6Rl+
+         DwMfxZKoJOU7ZHiise1pEN8+nNXH1iv8i4IUuiRGBJfjSnE2Tz3I0mUIsQEryR2fIPek
+         DMAoN+Jfywkb///gIf6AzMhkRg/EoS/+FZpD8V8JE/iCqvVP82q5CXZ7xybyvmdkZm52
+         KDVtR7dD95CW6mFjeUV6IBLPvdaaDHbIWgY6t4rbbPdU/Ox4GipKs0GwrCq7d43s/DVU
+         RHGk+DZFagmT5ACeud3MSOQF8PTo5TWSArVCSJL0u4XSxOvRCzke0Nw52HAL5SLodmpr
+         gC2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739378368; x=1739983168;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g9J4VAMrvjFIthFOUeNoRIlqfbAqCet1lDNYxHiSCoI=;
-        b=SeyfHipGpxGngclgXSV3srutqjKysc3kL5xLHn4zugkXhaFuNpquI82G2qKbSEgV1u
-         pXMLwcKFMjPU1pg7D/Dt3nvlAxKVBzP3Zblcyu4zkJMhCb3mrwZrss9DaawWDFdLUJrY
-         DZe3HiOZw4pP5iNhuvh9UNBnXk6PtUVNyq675YU7y7jVt7Tugg3CRxOSUEY6YZbNgj4Y
-         Fmx8mWDTRsH5V0gwXd2OZDWqdjzhGZL8mXhWimCDDMXQyYNf88h9gFJZOvIK2uQGQu5y
-         odfHFKdWw1yn9dr7H91VouGWPc1xfRvou3cGviUDbZPr5NGZGwsey7p+IbRSHbHw0Y34
-         Mviw==
-X-Forwarded-Encrypted: i=1; AJvYcCW+Ol/OP/mnBVDWDWxCV1DUf+9a3UggGGp/MtfQhXVrG1HLPGVocgBvMpVFKOqwRgXhCy4laQbF7Vm2byI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoSpzI0HWzVKyqkPK4/qNjOeIkqUy/cmm/hgBthiCgzHE8B1la
-	WoaKP1RWiaL5tdE145hH4TO5/rtdyfarNIEWis+7jpNy8VXafpyjb94SA8ZFLAIWnyUAJ2CE0/T
-	D3bRdMsQExb0MmUsmqwYmUIy09MTdfxF9CgJFEIhS5rhrYhQfTy/oKQ==
-X-Gm-Gg: ASbGnctsB8SF7rJI+PfVZwnrwtpDuWjc0zRjxIoc31LSVWO3JFnHQYRimMxkGgE7e9V
-	ejPEPUDNaU+IBn0BtvCGIcsy+hLpHVjTDc+MOyq09ARnozkt3rUut8MNv0NDoKVui8oO7Trr6P2
-	vrHfAEz/fxryofe3ETTOTo9mlIqDaX
-X-Google-Smtp-Source: AGHT+IGJSilHTkyG543GwkVXgOCLC5wxxAUOH6Du13FUEkPkgsZP4J+t1m6e3kH+6mL7xYbhbLX9btLHN1Ux9+Vvxyw=
-X-Received: by 2002:a2e:a99e:0:b0:308:e9ae:b5a8 with SMTP id
- 38308e7fff4ca-30904fe6b6fmr12180011fa.13.1739378368403; Wed, 12 Feb 2025
- 08:39:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739378434; x=1739983234;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ypsXxYmlUDNAgS7vll0CP7szhdB/OHfZFzs1nsbbuTk=;
+        b=LfXnNdESdX2IUXM9QaEIWZ22gJ6oPrhGtrb+Yl10kNs/S4z97X0NkflxG9cFtsalWx
+         TQyoUt1SuJvQ24Wybh771wavqDGeMrEEbcrUloErBNlW26E5GNzLTqvQ+nEoFS7Itemq
+         0uPDolJEOxXWWhwYvtmdzW3PBUmSclwmp675PIzB1uhHFbK9WCynZhWolvhacTClgM3e
+         dOEx0JdHtCVDuHXM+nnwBBDn+rfBu7rCvf5MWoBDKK/V71VWaR/EeVAJtFcbOu9Z1WZu
+         Jo5T0qK8Mw0PdKzub99wwa2g65SMPl0Z3oKK+Ms8lCVJhHaENHrQCw8qbBYbR6qUnlJy
+         jhWA==
+X-Forwarded-Encrypted: i=1; AJvYcCUq2gXFHUJpb7N4276vBW7ZSOqQyi7KhotwO39K2EhEbMxhwAqqzBvhJ0wsSVhlvR2/V9lvVJKtcyoPRyI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGev9JjErFnQgjk/7ETgdqtCrw3ZT1l8N+F/pZxCXILkPpPhx8
+	HBvignkGP2m9l9Z0e2c+Rq/DvBp2OB1xwcOYORhsebGyVBqwHpTnNQnpyslupMoFnp5eDFYP3ft
+	M
+X-Gm-Gg: ASbGncvhWq7Xopf0P6rMOexkmH8Qd+T2hTItSV2jCDnA6loH2ElmR9T43x7ca9gvo9F
+	xCre+O4BE45jEbVjQDGtUfYd2knK4Rb1kLV6GvL3CBs+iKLalmpksUfO0hYnx3iYB5TjnogVuNb
+	3NtU2XBaaPWn5Z6kcNFT4dNvvxhcM3aw1HUsBmxWjYqf3CfjHCZJJGlwvexs/HbvLC6pfBp1MU2
+	mU+ZQMxNLXKPKpPNk/wZA/8gBrAfYnsBtuUk1l1PMa6br5LfZbemX8Dtfrn/K+Xy3RsfL701cK5
+	IoU1BpBXpRHp30D6Du6E
+X-Google-Smtp-Source: AGHT+IEMax/OSHUJltNQhKyJlOjabg9OH0ij65Z9dSRbXrh3omUujr+vpFNHmyS95enTpRBK7kAIBg==
+X-Received: by 2002:a05:6402:2688:b0:5dc:d913:f896 with SMTP id 4fb4d7f45d1cf-5deadd75028mr3104581a12.4.1739378434362;
+        Wed, 12 Feb 2025 08:40:34 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5de4cbdb434sm10348391a12.20.2025.02.12.08.40.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 08:40:34 -0800 (PST)
+Date: Wed, 12 Feb 2025 19:40:30 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] Bluetooth: L2CAP: Fix NULL dereference in
+ l2cap_recv_acldata()
+Message-ID: <f9975604-6a65-4bcc-b532-15fcaa6da0e5@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212085918.6902-1-brgl@bgdev.pl> <CAMRc=MdFwe2onYhwY__n-kAOSrXKKDWJ38hpbYb0711Nx60DHw@mail.gmail.com>
- <20250212155512.GE2274105@google.com>
-In-Reply-To: <20250212155512.GE2274105@google.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 12 Feb 2025 17:39:16 +0100
-X-Gm-Features: AWEUYZmGJUAGvgR0rK_Au78KUTPXxd0-vdf5bbSOE6eZxG3UNG7JHjJD80yu-r0
-Message-ID: <CAMRc=Met68e5c16ShiJ1mHQM-GSvautN_whVMGh53g3mx7OQSg@mail.gmail.com>
-Subject: Re: [PATCH] leds: aw200xx: don't use return with gpiod_set_value() variants
-To: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@kernel.org>, linux-leds@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-On Wed, Feb 12, 2025 at 4:55=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
->
-> On Wed, 12 Feb 2025, Bartosz Golaszewski wrote:
->
-> > On Wed, Feb 12, 2025 at 9:59=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev=
-.pl> wrote:
-> > >
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > While it now returns void, it will soon be converted to return an
-> > > integer instead. Don't do `return gpiod_set...`.
-> > >
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Closes: https://lore.kernel.org/oe-kbuild-all/202502121512.CmoMg9Q7-l=
-kp@intel.com/
-> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > ---
-> > >  drivers/leds/leds-aw200xx.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/leds/leds-aw200xx.c b/drivers/leds/leds-aw200xx.=
-c
-> > > index 08cca128458c..fe223d363a5d 100644
-> > > --- a/drivers/leds/leds-aw200xx.c
-> > > +++ b/drivers/leds/leds-aw200xx.c
-> > > @@ -379,7 +379,7 @@ static void aw200xx_enable(const struct aw200xx *=
-const chip)
-> > >
-> > >  static void aw200xx_disable(const struct aw200xx *const chip)
-> > >  {
-> > > -       return gpiod_set_value_cansleep(chip->hwen, 0);
-> > > +       gpiod_set_value_cansleep(chip->hwen, 0);
-> > >  }
-> > >
-> > >  static int aw200xx_probe_get_display_rows(struct device *dev,
-> > > --
-> > > 2.45.2
-> > >
-> >
-> > Lee, Pavel:
-> >
-> > If this is OK for you, can you please provide me with an immutable
-> > branch so that I can pull it into the GPIO tree? It seems it's the
-> > only such use-case in the tree apart from the gpio.h header that I can
-> > fix locally. Alternatively you can just Ack this and let me take it
-> > through the GPIO tree.
->
-> I'm okay with it, but why do you need it?
->
+The "conn" pointer is NULL so this "goto drop;" will lead to a NULL
+dereference when we call mutex_unlock(&conn->lock). Free the skb and
+return directly instead.
 
-For historical reasons gpiod_set_value() and its variants don't have a
-return value. However, we now support all kinds of hardware that can
-fail to set a line value: I2C, SPI, USB (hot-unpluggable chips), etc.
-I want to rework the GPIO subsystem to make these functions return int
-and become able to indicate failures. Build-bot complained about my
-series[1] and pointed at this driver after the interface for
-gpiod_set_value_cansleep() changed in patch 1. This is why I want to
-fix it, get it into my tree and then pick up the series.
+Fixes: dd6367916d2d ("Bluetooth: L2CAP: Fix corrupted list in hci_chan_del")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ net/bluetooth/l2cap_core.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Sorry for not explaining it in detail earlier.
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index 6cdc1dc3a7f9..fec11e576f31 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -7456,8 +7456,10 @@ void l2cap_recv_acldata(struct hci_conn *hcon, struct sk_buff *skb, u16 flags)
+ 
+ 	hci_dev_unlock(hcon->hdev);
+ 
+-	if (!conn)
+-		goto drop;
++	if (!conn) {
++		kfree_skb(skb);
++		return;
++	}
+ 
+ 	BT_DBG("conn %p len %u flags 0x%x", conn, skb->len, flags);
+ 
+-- 
+2.47.2
 
-Bart
-
-[1] https://lore.kernel.org/linux-gpio/20250211-gpio-set-retval-v1-0-52d3d6=
-13d7d3@linaro.org/
