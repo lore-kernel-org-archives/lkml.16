@@ -1,171 +1,110 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BAA1E47CA;
-	Wed, 12 Feb 2025 06:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170C6146A68;
+	Wed, 12 Feb 2025 06:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739342759; cv=none; b=TdrhE5CuRuDq+H+6/thAUZd3rDZa3IgtAm1SqeEaf2+sLZJiDGgdw6eNtn4DXlOroxOeHPleTQ/3DYBMmzWUlsSzvzpJdzW87vDYQqn8L+Ui9hp1dq7dJ60KXfMaqD4ZC6WR7ODW3hfF/bRdjZRsMMh5XA0xqVrpujP0Yn7oV7o=
+	t=1739342860; cv=none; b=RVWYM2AUosVTkHHaZmyfRGVRb7WL2X3G1rOGuV8HOx95pUihgXRq2vx/v33oiKbSifKGRcP0o8OvAsJiaJdfZkpuduEBG3m9AAc5yVCXfkiZ047ppX8FTY5UzzYeXTWejxTbcf65qzY5ZAFFy/nmOPuFuwA2A6nudeV0QsOHWss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739342759; c=relaxed/simple;
-	bh=ZQsMnwzTf17KEzJgScmk62+uoLSEHEedJ3pMoj7PFFM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I7PzXEHKLA03dBzx8Qnbxn8UqT94ybh6228P7SozLzgK8QI9LXY/ABmOn1vI5pVxXfGtbP4B9y4EhvQZw5w8UbBMz7DescZ6owGErAFgdPpoa6+pA2waXJ04Pyjz1JnEsqvU4p8dJqWJ+ZP1oWOHS/lPBEHroL6oVcJVnrJAK/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WC0SlDMH; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1739342860; c=relaxed/simple;
+	bh=taHTvKoWTF7BQ5WW8HRGbtCKUPrDALj7zBFaw0w4D0w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LteWL0GT7TR2YqJIqstkq0egkzKfzsYjAxeyn0vQeFi3d9tYNxa6ZuHOYD83cS+nXFBZHAIoSGpZ77gEIiGaTz34v840ru/kvhf6ghplkCJoVoJBkgMg8ealTnWDBGUBgVJmXrPXHCIWRT9qtOkJwqvd9oVtu5UdU8ewYWyhlF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QL4x2ZU4; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WC0SlDMH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=U9ZsS++Scdzt6/PZ8I0ydrljHMoErWwMzMWIoSKzTg4=; t=1739342757;
-	x=1739774757; b=WC0SlDMH3C64LjODizP53N7prNMC1iq4Qe9VROs05tuNMK482GqYmtV/wrdiM
-	/zNMlYZAyeMCMFTeg/f/iQ4Bh+kuplyFNLQmbvyMZThzcYyEZlYlXCAYrJNMGGJisgkGzWvetvTnG
-	0F/MjtC6CIreHnLP8l3F1oniMrZ4XMMv1EUHs9qMnuc/MyrSypuMcCVdRmMwUqQPqUQIx4CAi4zz+
-	vG1I4FD9Cw+/P3bnNCpQbN2ZGNKwOMPMpaaKD6t7rhC8vZT+rmZusTwNPDvIioKQwurrz3j3QvXlG
-	/Ka9nvpTjisz42OngfnMVvbhBR2tgdHj4o/1Uq3HEsjW+AKU0Q==;
-Received: from [185.238.219.16] (helo=[192.168.44.12]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1ti6VN-00FNTJ-1A;
-	Wed, 12 Feb 2025 07:45:53 +0100
-Message-ID: <2c26c5e4-9cf3-4020-b0be-637dc826b4e9@leemhuis.info>
-Date: Wed, 12 Feb 2025 07:45:51 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QL4x2ZU4"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-543d8badc30so6685651e87.0;
+        Tue, 11 Feb 2025 22:47:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739342857; x=1739947657; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=e2YsuTCPphVGemqecyPUG5geUpzSnDZxeT/5yx0AbGM=;
+        b=QL4x2ZU421cpVE5dhLjEZRpOoqwwDXvuEr8jKmbS6gQH6MRNBNNhfz0CgLyo8WNTIB
+         Aw2uJoDiX6e3TbwZj0oR3inlt2EVKYNr+UcCXlWXAbAWBEPdX30ZnktlsvJ0LoIeeuTd
+         25l7wNM5Kpw7PWdqwx9F8d31Yx9kMxQgAMibYp6tJi1d+BMx5DJ5FLW/cmU8WJURSswC
+         pIpnE7oBpONEWohLU8UqEoRRfhE2riGB4Nrq90XidICFylUHlrIjaeiq3VWIshfTLgoO
+         X83x1gTgv3tkKhgHvQb5fqi3h1QbmT4u5+npBWQ5dkZ+Uu0AWY9NdztgqB0IZNcdvdEf
+         qbmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739342857; x=1739947657;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e2YsuTCPphVGemqecyPUG5geUpzSnDZxeT/5yx0AbGM=;
+        b=Xy8YQOcxCkNaxpgtHKTGRgEEtkJnyv3ac/l5e4e+zKf6PYoCaf354612n08ncYOuiX
+         atkwLgQuAkDXIK2fmxunhv5a3FPjQV1wkDOxgY2y0nYMz2ssE9K9ju5P4GDFkbzYkoYH
+         GqyCYFw2y68QZNv75egXxcVF78Teb7RyPzUmFRZJvpb6gYyFIEA3Pccu3zyi0ZF+aLjH
+         RUBIwPAYc11Ac+9e/wp1sYwo1jbhYrQu+Kk9M6agyHwujRmCJ1Z/u3s17pG2SlCNMQRE
+         hRoIxTAI98ueJeAUiNztOX/a66QJcWWFQ8QAnJE1X7zjiDl3naN2EcZNO8Rl58fleEK+
+         AJrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVTznUh5H69xIpXpQHPpb3qG1DinyDxgdD1r3JaWYd3JepFGxoudGhUbMYtj7O1WE3+K23JdY+mW3FMfzj@vger.kernel.org, AJvYcCWVt1vM4YiUqyjcFQYKax8Ro+mNbnPXI4PGnB/TWBoNhq5g6nOtCRXqWMtygJNL+tiiUyIf7X717An8@vger.kernel.org, AJvYcCX2OpZKPumh7bYmLtcBd+yIGATkcfmWxJjrplSseLSnO0/TOidNTkiUCu9WJiplWEQjZJbddX/53GzH23o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg+q/wnbkd/UDZNmCDKxnXBO77p1TvjtJT6RnJ66rWGlSCE1Ka
+	+K6dnYq7HMzer0kd0AAL48kkXu08yXetX59UOka5nIp/+ro3C8+x
+X-Gm-Gg: ASbGncuIKgDPch2zOIIUDLMdY5XrIBDUpgpak+MUyAsycQKFpSMnOlEmLhCQRzqZtyy
+	koMl50vOld3dobQSYYcDkf4KezoE7fcww1643mKubVXCt93S4oKEdBlgFuN1ZvcXUi8iDmQYOIn
+	Azj4H2yJf4iOdRWwuHujaZg46fiai6bjj07kkm3u71j7AS7TGboQpqzdaMBONBggupI7FqlRm3+
+	IKXeUhdMpJGj9cFSgHdqePulvevVJYtcgPFOFaNSDbLkiQ3QZsUD7CnYm0NLatC00Rwdzrgdhsq
+	oIlyVSo=
+X-Google-Smtp-Source: AGHT+IHIgsC2KuIYoI+i/oR54Zj2+nWE2GIveGKb7lMgC3jlfrosajr8ytXqlJ6wSJwC6q17EXoyEg==
+X-Received: by 2002:a05:6512:2389:b0:545:bda:f10 with SMTP id 2adb3069b0e04-5451810fdecmr406848e87.21.1739342856798;
+        Tue, 11 Feb 2025 22:47:36 -0800 (PST)
+Received: from xeon.. ([188.163.112.51])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5450e09e9dbsm748600e87.120.2025.02.11.22.47.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 22:47:36 -0800 (PST)
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Svyatoslav Ryhel <clamor95@gmail.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Emil Gedenryd <emil.gedenryd@axis.com>,
+	Arthur Becker <arthur.becker@sentec.com>,
+	Mudit Sharma <muditsharma.info@gmail.com>,
+	Per-Daniel Olsson <perdaniel.olsson@axis.com>,
+	Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>,
+	Ivan Orlov <ivan.orlov0322@gmail.com>,
+	David Heidelberg <david@ixit.cz>
+Cc: linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH v1 0/3] iio: light: add al3000a als support
+Date: Wed, 12 Feb 2025 08:46:54 +0200
+Message-ID: <20250212064657.5683-1-clamor95@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] unicode: kunit: change tests filename and path
-To: Gabriel Krisman Bertazi <gabriel@krisman.be>,
- Pedro Orlando <porlando@lkcamp.dev>, Kees Cook <keescook@chromium.org>,
- Danilo Pereira <dpereira@lkcamp.dev>
-Cc: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>,
- linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kunit-dev@googlegroups.com, Gabriela Bittencourt <gbittencourt@lkcamp.dev>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240928235825.96961-1-porlando@lkcamp.dev>
- <20240928235825.96961-3-porlando@lkcamp.dev>
- <87iku7u211.fsf@mailhost.krisman.be>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: de-DE, en-US
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <87iku7u211.fsf@mailhost.krisman.be>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1739342757;4d3b9490;
-X-HE-SMSGID: 1ti6VN-00FNTJ-1A
+Content-Transfer-Encoding: 8bit
 
-On 04.10.24 21:00, Gabriel Krisman Bertazi wrote:
-> Pedro Orlando <porlando@lkcamp.dev> writes:
->> From: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
->>
->> Change utf8 kunit test filename and path to follow the style
->> convention on Documentation/dev-tools/kunit/style.rst
->>
->> Co-developed-by: Pedro Orlando <porlando@lkcamp.dev>
->> Signed-off-by: Pedro Orlando <porlando@lkcamp.dev>
->> Co-developed-by: Danilo Pereira <dpereira@lkcamp.dev>
->> Signed-off-by: Danilo Pereira <dpereira@lkcamp.dev>
->> Signed-off-by: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
->> ---
->>  fs/unicode/Makefile                                | 2 +-
->>  fs/unicode/{ => tests}/.kunitconfig                | 0
->>  fs/unicode/{utf8-selftest.c => tests/utf8_kunit.c} | 0
->>  3 files changed, 1 insertion(+), 1 deletion(-)
->>  rename fs/unicode/{ => tests}/.kunitconfig (100%)
->>  rename fs/unicode/{utf8-selftest.c => tests/utf8_kunit.c} (100%)
->>
->> diff --git a/fs/unicode/Makefile b/fs/unicode/Makefile
->> index 37bbcbc628a1..d95be7fb9f6b 100644
->> --- a/fs/unicode/Makefile
->> +++ b/fs/unicode/Makefile
->> @@ -4,7 +4,7 @@ ifneq ($(CONFIG_UNICODE),)
->>  obj-y			+= unicode.o
->>  endif
->>  obj-$(CONFIG_UNICODE)	+= utf8data.o
->> -obj-$(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST) += utf8-selftest.o
->> +obj-$(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST) += tests/utf8_kunit.o
-> 
-> This breaks compilation for me.
-> 
-> fs/unicode/tests/utf8_kunit.c:11:10: fatal error: utf8n.h: No such file or directory
->    11 | #include "utf8n.h"
->       |          ^~~~~~~~~
+AL3000a is an illuminance sensor found in ASUS TF101 tablet.
 
-I encountered the same error when building -next using the Fedora
-rawhide config today. Given that this patch landed in -next today I
-suspect it might be due to this change, but I'm on the road and unable
-to verify that right now.
+Svyatoslav Ryhel (3):
+  dt-bindings: iio: light: al3010: add al3000a support
+  iio: light: Add support for AL3000a illuminance sensor
+  ARM: tegra: tf101: Add al3000a illuminance sensor node
 
-Log:
-https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-x86_64/08642966-next-next-all/builder-live.log.gz
+ .../bindings/iio/light/dynaimage,al3010.yaml  |   6 +-
+ .../boot/dts/nvidia/tegra20-asus-tf101.dts    |  11 +
+ drivers/iio/light/Kconfig                     |  10 +
+ drivers/iio/light/Makefile                    |   1 +
+ drivers/iio/light/al3000a.c                   | 214 ++++++++++++++++++
+ 5 files changed, 240 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/iio/light/al3000a.c
 
-Cioa, Thorsten
-
-> After this patch that local header is now in the parent directory.
-> 
-> I'm building with:
-> 
-> CONFIG_UNICODE=m
-> CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST=m
-> 
->>  unicode-y := utf8-norm.o utf8-core.o
->>  
->> diff --git a/fs/unicode/.kunitconfig b/fs/unicode/tests/.kunitconfig
->> similarity index 100%
->> rename from fs/unicode/.kunitconfig
->> rename to fs/unicode/tests/.kunitconfig
->> diff --git a/fs/unicode/utf8-selftest.c b/fs/unicode/tests/utf8_kunit.c
->> similarity index 100%
->> rename from fs/unicode/utf8-selftest.c
->> rename to fs/unicode/tests/utf8_kunit.c
-> 
+-- 
+2.43.0
 
