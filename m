@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6254220FA8B;
-	Wed, 12 Feb 2025 13:41:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5829620FA84
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 13:41:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739367698; cv=none; b=N5ouzn6b1VJpbenzAHw74njiOhcAYsxYDGqJXJnlvFgkwY7fPCISgwBlSLpaMA0W/VBixETEes4zBiGEQC10G3PzHDvx3N+aamq+ULgkAao7e1FUU6omkGI5Q8MvqylJ1/OreWGIoVLRFOsFavmMPAtprsudQHdJ3QCdXiimq04=
+	t=1739367698; cv=none; b=l0vlp2MNvqBruDG38KaOPJn543HJUKNN0rO/sz0J+vK2Zk90AAvj5q6ITiDz4KMWostt2+M34fPAxCgSfRD4ZAMKn1BQaFyy09Q70cvSsv/XKwvrsoG+aziq8N0pMjrKtuzNisqo60hSkfGRpAr+K/0La17sXz57Jhx+YaMQRnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739367698; c=relaxed/simple;
-	bh=b109fr8xLKB6Xr42RnvTRVQiYkpAsCIXfKaB+vPm0+E=;
+	bh=hK1A6zIsrNJAovrrv0VlTMANs2MhQLrSeZf+N+Ilra4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V6jrJZ/45RNS4tUWaBeUbwa2dlf/xvA1ju+hgMXmRy7N9EPJ5n3lHrHMxh4sgwfv5p0MF1zb3OZ1qaqI9YZmEns9tu4b1lKPflyOcex76tJ2Y63jjk90Y+XAfKpEy6iFLW/hSY9H3k9D4nqGkUdYvW4CMqlbE0pr3uWEDlkgjIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LQgPZVRm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DPkb9BXP; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=MYOB/VgURY3+MOT/a9XUHvgnXlunoA7rpZJZ9Er/JC3zNKOhYq5YStjv4PwXuvp+TdDAHPHFc/UX4+uJR1DlUlhVXm1yqCVAzBr2NnynuYUKzyMxvkv0eijKIMu6u3/gCQCaaQaJrQHY3exTcIVtc/OZHvCIX2rMcIdifiXoGEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DpvM/XPK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IqK5X32R; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LQgPZVRm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DPkb9BXP"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DpvM/XPK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IqK5X32R"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739367694;
+	s=2020; t=1739367693;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4hP9MIj/xfZayutuHmqVzRbNPdN0j7i3yHMFRYnK4OA=;
-	b=LQgPZVRmuBn4LNzN1KHxssrOrPp+EErK7odNx4tZUbsC9iGkQg72pFuDrpZH6Fp7QUGQfu
-	tGamFD122GTVysn8sSD+eH1OimyOB7YcVriz53Gy08/GuwqFrbs2JzSlrKOIl0EmqOk1c0
-	aYJZgC12UYXPaszdBUt+RO+KrkNbGFIOKR5pY3Yv4wPVjGmRYcJG3R76ukvFHyzyM9+kdJ
-	cRoY4hF7wCODJE/2hvI4REFJUFiF7d32QW+pa2PgiZBbsAzt4lbtB0Y1jIDtwXI5d9WPUM
-	ZjYJF7kGkKNv/+mxAij4EcN8ct5s+mo//hFdRpUDR3fv9U5Aaqo16zdLc7UUyg==
+	bh=/1nmWywTWzJzDcPVwkzbvEHu1zvcPiY8k6qmYTOWby8=;
+	b=DpvM/XPKgM376rMH3qIs5mYgJyPGTUARGF6ldxacLiujZFxe2fAIqz/txTYdOtDnAzifjo
+	HRFw7j/AUphkFLiKgFW1727fIyD+xxR/QBTpmySZJZRNUBX87n5Rcbfr5EiMkMAwkpLHU0
+	Djy9XC9upOHKTZn5vDYgkNrr8Us/7HuxpPESnNnm/KzHoweOu7Jtwj5vz2ATYZDQ3QnLZC
+	D0AcCinSO35Q8xcz2VbDQh8uDbjFEvge41a6GR0hAtpq21FCP9RiIcG3sOgsRyQsn7Px57
+	Dhw2mamu82G94XMludoK8qktpofO//0tsU+crWcEjwFJUIDTRC5UEnRCTHmpag==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739367694;
+	s=2020e; t=1739367693;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4hP9MIj/xfZayutuHmqVzRbNPdN0j7i3yHMFRYnK4OA=;
-	b=DPkb9BXPbKtqItzIRd/gIqcbCfHgIwnyyDgWf5WSnMk65ld7bQmVtDTeRVB9X91Nf6cF15
-	4E8kIHF+3+5B+pBw==
+	bh=/1nmWywTWzJzDcPVwkzbvEHu1zvcPiY8k6qmYTOWby8=;
+	b=IqK5X32R2VC2aXTgncFrHDnROztJKexL1DvhN635Kz2aoQU7rlgJDoFRS9Q4dUhvHIhCmq
+	+QfvwPA8tqSW0GBw==
 To: linux-kernel@vger.kernel.org,
 	linux-rt-devel@lists.linux.dev
 Cc: Ben Segall <bsegall@google.com>,
@@ -55,12 +55,14 @@ Cc: Ben Segall <bsegall@google.com>,
 	Vincent Guittot <vincent.guittot@linaro.org>,
 	Will Deacon <will@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3 9/9] tracing: Use preempt_model_str().
-Date: Wed, 12 Feb 2025 14:41:15 +0100
-Message-ID: <20250212134115.2583667-10-bigeasy@linutronix.de>
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH v3 7/9] x86: Rely on generic printing of preemption model.
+Date: Wed, 12 Feb 2025 14:41:13 +0100
+Message-ID: <20250212134115.2583667-8-bigeasy@linutronix.de>
 In-Reply-To: <20250212134115.2583667-1-bigeasy@linutronix.de>
 References: <20250212134115.2583667-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -71,38 +73,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Use preempt_model_str() instead of manually conducting the preemption
-model.
+After __die_header(), __die_body() is always invoked. There we have
+show_regs() -> show_regs_print_info() which prints the current
+preemption model.
+Remove it from the initial line.
 
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-trace-kernel@vger.kernel.org
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- kernel/trace/trace.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ arch/x86/kernel/dumpstack.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 1496a5ac33ae1..77271faab20e9 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4100,12 +4100,7 @@ print_trace_header(struct seq_file *m, struct trace_=
-iterator *iter)
- 		   entries,
- 		   total,
- 		   buf->cpu,
--		   preempt_model_none()      ? "server" :
--		   preempt_model_voluntary() ? "desktop" :
--		   preempt_model_full()      ? "preempt" :
--		   preempt_model_lazy()	     ? "lazy"    :
--		   preempt_model_rt()        ? "preempt_rt" :
--		   "unknown",
-+		   preempt_model_str(),
- 		   /* These are reserved for later use */
- 		   0, 0, 0, 0);
- #ifdef CONFIG_SMP
+diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
+index a7d562697e50e..91639d1e4ec2c 100644
+--- a/arch/x86/kernel/dumpstack.c
++++ b/arch/x86/kernel/dumpstack.c
+@@ -395,18 +395,13 @@ NOKPROBE_SYMBOL(oops_end);
+=20
+ static void __die_header(const char *str, struct pt_regs *regs, long err)
+ {
+-	const char *pr =3D "";
+-
+ 	/* Save the regs of the first oops for the executive summary later. */
+ 	if (!die_counter)
+ 		exec_summary_regs =3D *regs;
+=20
+-	if (IS_ENABLED(CONFIG_PREEMPTION))
+-		pr =3D IS_ENABLED(CONFIG_PREEMPT_RT) ? " PREEMPT_RT" : " PREEMPT";
+-
+ 	printk(KERN_DEFAULT
+-	       "Oops: %s: %04lx [#%d]%s%s%s%s%s\n", str, err & 0xffff,
+-	       ++die_counter, pr,
++	       "Oops: %s: %04lx [#%d]%s%s%s%s\n", str, err & 0xffff,
++	       ++die_counter,
+ 	       IS_ENABLED(CONFIG_SMP)     ? " SMP"             : "",
+ 	       debug_pagealloc_enabled()  ? " DEBUG_PAGEALLOC" : "",
+ 	       IS_ENABLED(CONFIG_KASAN)   ? " KASAN"           : "",
 --=20
 2.47.2
 
