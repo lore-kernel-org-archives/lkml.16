@@ -1,246 +1,155 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0384B204086
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD2720408D
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739399484; cv=none; b=mc808l1g22AnTTIGW3WohJ9baimTIbWbxTinlmlh7rlYgPv9/tiiRk7A/gRVNl6jsV4PMd/eF1JJJeYmnbjutKB2jtyT5g5GnlIjHk8gIfnYLj3x0uaqjjRdq5l6AOR57Xun4YwxnHRCst1P7GcMOjc7QVx8t4mOuZ/WTcR8NZ8=
+	t=1739399497; cv=none; b=M5cCjDoDeSTWrwtYnl8QMPLRJldLvgs/1fy9x8c6TkMFaa+rXL0l1DSwH6kZoSXFmwgJdQdL+m8CQlhFHgiydbR6CvBlpydrMmkhk4CBQcdvycitxxWYg2CRU941WfNMSTCaO3IdOdj52HDws76k3PrxCnf/NTl+kFk2S4fKPxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739399484; c=relaxed/simple;
-	bh=+oY4H/9/iKeBTJJnO2W7fp5SJV9ZRax204HZtg1Ok1k=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YxV4ZzwhDZmNZfzoiM1rfHwSpqFti7F4uYXgQMiZttJGFEA8nyMfCh51RUzaEUQzJrqgfTH4dwYZ9Hq2b+sZ9Q9TFeXYoqCKkJfrauT23KvlqJvpeCPdkFCH/RJS2QZ9JOl9Pziyh3YWq0oOfde/UfduoC7I8/J9PDyP70+UYDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L/fjPlef; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1739399497; c=relaxed/simple;
+	bh=mszfmsBiEXDwMQCXl6w3IWdUwN9jDt5VNdyv/sVVme0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MN+rBlWS+xzSzmpTKVJAZr28EL/h2hR6HXjDAi0KbYgQDwXI1yxbPyb0WPJiEnsim6hH6gDetYiCBgHQOuSTiQq59yiY3NMo1GnK4CtKzVv0thL6VxqGqYys2YPhzLm5WnDeCcyusCryQ5J7vq+UoQfHwiioKKHOuvYKVhyiDBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CFQegtY6; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L/fjPlef"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f9da17946fso924341a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 14:31:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739399482; x=1740004282; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PNqZSc1JLn0dwuRoJKceisL6qvWdg1Q9d+T90xi+KO0=;
-        b=L/fjPlef3CulS5bESkypXCe1VAnl8MAYAYhJRkZghnARlIhDQgvyXliErIA8yh83CK
-         hbA2BHomxq18undsEtWP6HMBB7q2m7OU9UKHe6nxXEkIju0ewfmZ+CMvp+NkTF+gIOye
-         HAZRuj5+oycFZhsQTKMH8flpN3oeawg3NI69IXIXxmd9WLs84gtUNtOjilHAfEaStUMW
-         43oKzBk4akeF5R1/WqCARM9kT4pFd5LKr4tbcfJ/8dyMfKCWEjDbwrbXVSCJ/t79vpDy
-         u/XAi1APxjbDeITtioD830vNMJbygZSaXI6LSWOtfNdipT/tCoQXIoxsGycVFhzy033G
-         Uxzg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CFQegtY6"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CBEduS011562
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:31:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	z10BowKlJuBRBMfLYLm6SSpaFYPkwZh03lVl2JlJJGU=; b=CFQegtY69nmFlfmE
+	AbKBTaKbQZf+R3+TMcd0FhtpVwHaFHF5prvEuhOaG/4qzUAUHgcQUKEC9hKsFlOR
+	XbDigIw84MCbqagzm9UUf7+8ghMmSUdZ48ntvupUQLOm4EFoEw5abw3S8l7B22N1
+	OMJSJZlodGyEtcJ9AZWR3dBl7WvOrU5yjXNhI1Cu6aEmVNh3sbuJoCZHXhnj79aS
+	AiVL7OJiye8zAOZ+aQ+Yee+1kjW80lacmyi7kQaGLPIY+77oxIpYIRf66DtW1K42
+	fd61xGuBTRUtZIKCtQtKtvZoDfEz5yg4dRqFKLQbFu+6qVqd+gkInEAAmwjDlmNu
+	XqFtKg==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qxv3x8ad-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:31:34 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e45cd4145bso856256d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 14:31:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739399482; x=1740004282;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PNqZSc1JLn0dwuRoJKceisL6qvWdg1Q9d+T90xi+KO0=;
-        b=STWef0Pv2oMZwCm7Nu67d8OuJOwi2cOCJ3wEF8CItY+zz4IymTCOKS98D/Z0QB3wfQ
-         qMWZIXsZFi9hwz1LX5tzH6hmcyhmWe9e/GArjcss57kx3an9pyRddaQra1mMGnXNhpnp
-         L3xIR0YzQb5jRdBhYBp8cV+DyJkA87RqRA9UIW+TPt2AP682j9EyIiyszgcv/yw+EbfL
-         aY2KiYTNV1ZfmvWLl92V2cP+jU6MWWbT3Y0fZ0VVe+dE+XvyMQg0wosPwXF5T9/zLs15
-         FRJiQR1kk0LQpiPhKHkKQZ5sOE+LX1lgVlRb993iCDBxb04gE2QBb8L3zQQsZoQfzi7g
-         pF1A==
-X-Gm-Message-State: AOJu0YxIyVqL73/3ALHov/x373n+cy2hlktj6AMKEcALjDPO9fNUDHGE
-	8uT3exTvYU05vZwk0zhEqG81G/DCmlWt+6ZD2+lK5wjvxdpvXqE1cig+zHyk4hCZjSNI3329cMM
-	QRQYJJCcD9fxlshULv5lCOr4ERoyIgL77jRMmrnU/I1kSGHCZUd6u1nNnE0rwYHvmA/e/Iv8ovK
-	vlzQB5/nxAssJgFEeEXpPU9p7X80x2vcA24hWm1S0u
-X-Google-Smtp-Source: AGHT+IHpscGhRRSM86wF3Vg9mBVITGPBSWOzu8ifxEDnBRXopIq1MT6mUs+2OPyt7cpCD2ZCuLBegQyMQXs=
-X-Received: from pjyf13.prod.google.com ([2002:a17:90a:ec8d:b0:2ef:78ff:bc3b])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2f06:b0:2ee:53b3:3f1c
- with SMTP id 98e67ed59e1d1-2fbf5bc1a9dmr7256534a91.5.1739399482247; Wed, 12
- Feb 2025 14:31:22 -0800 (PST)
-Date: Wed, 12 Feb 2025 14:24:55 -0800
-In-Reply-To: <20250212222859.2086080-1-ctshao@google.com>
+        d=1e100.net; s=20230601; t=1739399493; x=1740004293;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z10BowKlJuBRBMfLYLm6SSpaFYPkwZh03lVl2JlJJGU=;
+        b=L8ncoQTAgaTSRFZZZhHuFRvNSnHsmLmWu50wMNv+Aa+WZDaJYm2N1fxLTTEsgRccDo
+         Cah6ovIsliKUghScLOEpjGFKYC/xP3P5uNSSvSd7ZYOW1okjn40FiG4UJ8Wqo4qvLaQW
+         vznz1ixK6xyWkYpp7OOzdQ0LPjPpHMm4bXo0X7LWSTG++l4BKC1L0nI9Lbi+qi4dHJ2j
+         tIqqVP18gQM7P6Vy3AfKvHjNTYMzESDVbfERU+A9BvGG1dhG4Q39HOJwP2wvZuUu4mcI
+         LAVxPccfNDA4AzmZQOL8dwbezr/v85TxszMx1yZINaXeD2PzFAiHwsjb2Wnv9k4Do+BE
+         mkpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqtNabalQHyV02+BgDA/PEOhF2GsP/THb+ttOkzDAnt/faDCdLi8wfxGmuKRz/eyEe3Yht4uY1g5A0ZQ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx311CLRiIdYN7sBPzH5KiIVEg3Rq/HJ3ItSz9wMJL7xfrwH/U/
+	FLwECDJ76ONRNEhDBiuJNSuVKQgaZl6hygkwf9zb0ZCIwNLZ/cfvHQK5duLhMqkbsX2kUFO+W8w
+	MFalanMiJE6PKBqopkGbfKaDpfblZmDrEyzgB+i4n6r9UhJ+dGRRthqkwqwDJNlY=
+X-Gm-Gg: ASbGncuWf1Tjto1JSlXgq5TH3tb0pIJRjAvqKUzXEKdW3GKuAJEdS2sBGEpdNeiTICP
+	BIYtz2Z+1lNsztKUK4duilqsyugQavoKMuY6gRlIcIHdsVRHSDiv35HGfQ66sNJ5pLg8he+sxL+
+	VqqeYtpatdDavee8boy40ZYH1ZWY7A0ALxDzfn/k0vsAUwdlmfSS6i0mXYC9+hjeL+dRc7QXO1E
+	PtVpJ3kPp+uqXVHoPfJKYVC5mMbZGCygDHuAtuNA96de3+1I9CQldr/YqeZ+S6yCtsySmvOs3sy
+	s3gsw5gjvUkNjDz8z6kfPgOzpE7cRQVKTJweP2mTgnQKc1zWMsJxCRXZbIM=
+X-Received: by 2002:a05:622a:1103:b0:471:bb6f:5795 with SMTP id d75a77b69052e-471bb6f5ecbmr14647341cf.1.1739399493682;
+        Wed, 12 Feb 2025 14:31:33 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFXyYvi//prdBibNz4/zYphhtKumOo8H7oI1Q8ccMZf6ifskpReKqY5lbsKkMxrWPMtro9rrA==
+X-Received: by 2002:a05:622a:1103:b0:471:bb6f:5795 with SMTP id d75a77b69052e-471bb6f5ecbmr14647071cf.1.1739399493241;
+        Wed, 12 Feb 2025 14:31:33 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5339a583sm4943066b.135.2025.02.12.14.31.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 14:31:32 -0800 (PST)
+Message-ID: <0d540105-1da7-459b-a812-dbc13097520e@oss.qualcomm.com>
+Date: Wed, 12 Feb 2025 23:31:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250212222859.2086080-1-ctshao@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250212222859.2086080-5-ctshao@google.com>
-Subject: [PATCH v5 4/5] perf lock: Report owner stack in usermode
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: msm8917-xiaomi-riva: Add display
+ backlight
+To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250212-pm8937-pwm-v1-0-a900a779b4ad@mainlining.org>
+ <20250212-pm8937-pwm-v1-2-a900a779b4ad@mainlining.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250212-pm8937-pwm-v1-2-a900a779b4ad@mainlining.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 6PcXeMpSweR8agf48LSSZvLr3nDK9AMb
+X-Proofpoint-ORIG-GUID: 6PcXeMpSweR8agf48LSSZvLr3nDK9AMb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-12_07,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 phishscore=0 adultscore=0 spamscore=0 mlxscore=0
+ bulkscore=0 impostorscore=0 clxscore=1015 lowpriorityscore=0
+ malwarescore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502120159
 
-Parse `owner_lock_stat` into a rb tree, and report owner lock stats with
-stack trace in order.
+On 12.02.2025 11:21 PM, Barnabás Czémán wrote:
+> Redmi 5A display uses pwm backlight, add support for it.
+> 
+> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts | 25 ++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts b/arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts
+> index f1d22535fedd94467ba3f0a88b2110ce5360e7e1..8808306c989f54116052667887f9bf36b63c4c64 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts
+> +++ b/arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts
+> @@ -20,6 +20,14 @@ / {
+>  	qcom,msm-id = <QCOM_ID_MSM8917 0>;
+>  	qcom,board-id = <0x1000b 2>, <0x2000b 2>;
+>  
+> +	pwm_backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pm8937_pwm 0 100000>;
+> +		brightness-levels = <0 255>;
+> +		num-interpolated-steps = <255>;
+> +		default-brightness-level = <128>;
+> +	};
+> +
+>  	battery: battery {
+>  		compatible = "simple-battery";
+>  		charge-full-design-microamp-hours = <3000000>;
+> @@ -131,6 +139,23 @@ bq25601@6b{
+>  	};
+>  };
+>  
+> +&pm8937_gpios {
+> +	pwm_enable_default: pwm-enable-default-state {
+> +		pins = "gpio8";
+> +		function = "dtest2";
 
-Example output:
-  $ sudo ~/linux/tools/perf/perf lock con -abvo -Y mutex-spin -E3 perf bench sched pipe
-  ...
-   contended   total wait     max wait     avg wait         type   caller
+Are you sure?
+> +		output-low;
+> +		bias-disable;
+> +		qcom,drive-strength = <2>;
+> +	};
+> +};
+> +
+> +&pm8937_pwm {
+> +	pinctrl-0 = <&pwm_enable_default>;
+> +	pinctrl-names = "default";
 
-         171      1.55 ms     20.26 us      9.06 us        mutex   pipe_read+0x57
-                          0xffffffffac6318e7  pipe_read+0x57
-                          0xffffffffac623862  vfs_read+0x332
-                          0xffffffffac62434b  ksys_read+0xbb
-                          0xfffffffface604b2  do_syscall_64+0x82
-                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
-          36    193.71 us     15.27 us      5.38 us        mutex   pipe_write+0x50
-                          0xffffffffac631ee0  pipe_write+0x50
-                          0xffffffffac6241db  vfs_write+0x3bb
-                          0xffffffffac6244ab  ksys_write+0xbb
-                          0xfffffffface604b2  do_syscall_64+0x82
-                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
-           4     51.22 us     16.47 us     12.80 us        mutex   do_epoll_wait+0x24d
-                          0xffffffffac691f0d  do_epoll_wait+0x24d
-                          0xffffffffac69249b  do_epoll_pwait.part.0+0xb
-                          0xffffffffac693ba5  __x64_sys_epoll_pwait+0x95
-                          0xfffffffface604b2  do_syscall_64+0x82
-                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+We normally put this under the backlight node, but I'm not sure which
+one is more correct.. it may be that this one is, given we're
+controlling the pin that the PWM signal is sent through
 
-  === owner stack trace ===
-
-           3     31.24 us     15.27 us     10.41 us        mutex   pipe_read+0x348
-                          0xffffffffac631bd8  pipe_read+0x348
-                          0xffffffffac623862  vfs_read+0x332
-                          0xffffffffac62434b  ksys_read+0xbb
-                          0xfffffffface604b2  do_syscall_64+0x82
-                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
-  ...
-
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/builtin-lock.c             | 19 ++++++++--
- tools/perf/util/bpf_lock_contention.c | 54 +++++++++++++++++++++++++++
- tools/perf/util/lock-contention.h     |  7 ++++
- 3 files changed, 77 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 9bebc186286f..3dc100cf30ef 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1817,6 +1817,22 @@ static void print_contention_result(struct lock_contention *con)
- 			break;
- 	}
- 
-+	if (con->owner && con->save_callstack) {
-+		struct rb_root root = RB_ROOT;
-+
-+		if (symbol_conf.field_sep)
-+			fprintf(lock_output, "# owner stack trace:\n");
-+		else
-+			fprintf(lock_output, "\n=== owner stack trace ===\n\n");
-+		while ((st = pop_owner_stack_trace(con)))
-+			insert_to(&root, st, compare);
-+
-+		while ((st = pop_from(&root))) {
-+			print_lock_stat(con, st);
-+			zfree(st);
-+		}
-+	}
-+
- 	if (print_nr_entries) {
- 		/* update the total/bad stats */
- 		while ((st = pop_from_result())) {
-@@ -1962,9 +1978,6 @@ static int check_lock_contention_options(const struct option *options,
- 		}
- 	}
- 
--	if (show_lock_owner)
--		show_thread_stats = true;
--
- 	return 0;
- }
- 
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index 76542b86e83f..dc83b02c9724 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -549,6 +549,60 @@ static const char *lock_contention_get_name(struct lock_contention *con,
- 	return name_buf;
- }
- 
-+struct lock_stat *pop_owner_stack_trace(struct lock_contention *con)
-+{
-+	int stacks_fd, stat_fd;
-+	u64 *stack_trace;
-+	s32 stack_id;
-+	struct contention_key ckey = {};
-+	struct contention_data cdata = {};
-+	size_t stack_size = con->max_stack * sizeof(*stack_trace);
-+	struct lock_stat *st;
-+	char name[KSYM_NAME_LEN];
-+
-+	stacks_fd = bpf_map__fd(skel->maps.owner_stacks);
-+	stat_fd = bpf_map__fd(skel->maps.owner_stat);
-+	if (!stacks_fd || !stat_fd)
-+		return NULL;
-+
-+	stack_trace = zalloc(stack_size);
-+	if (stack_trace == NULL)
-+		return NULL;
-+
-+	if (bpf_map_get_next_key(stacks_fd, NULL, stack_trace))
-+		return NULL;
-+
-+	bpf_map_lookup_elem(stacks_fd, stack_trace, &stack_id);
-+	ckey.stack_id = stack_id;
-+	bpf_map_lookup_elem(stat_fd, &ckey, &cdata);
-+
-+	st = zalloc(sizeof(struct lock_stat));
-+	if (!st)
-+		return NULL;
-+
-+	strcpy(name,
-+	       stack_trace[0] ? lock_contention_get_name(con, NULL, stack_trace, 0) : "unknown");
-+
-+	st->name = strdup(name);
-+	if (!st->name)
-+		return NULL;
-+
-+	st->flags = cdata.flags;
-+	st->nr_contended = cdata.count;
-+	st->wait_time_total = cdata.total_time;
-+	st->wait_time_max = cdata.max_time;
-+	st->wait_time_min = cdata.min_time;
-+	st->callstack = stack_trace;
-+
-+	if (cdata.count)
-+		st->avg_wait_time = cdata.total_time / cdata.count;
-+
-+	bpf_map_delete_elem(stacks_fd, stack_trace);
-+	bpf_map_delete_elem(stat_fd, &ckey);
-+
-+	return st;
-+}
-+
- int lock_contention_read(struct lock_contention *con)
- {
- 	int fd, stack, err = 0;
-diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-index a09f7fe877df..97fd33c57f17 100644
---- a/tools/perf/util/lock-contention.h
-+++ b/tools/perf/util/lock-contention.h
-@@ -168,6 +168,8 @@ int lock_contention_stop(void);
- int lock_contention_read(struct lock_contention *con);
- int lock_contention_finish(struct lock_contention *con);
- 
-+struct lock_stat *pop_owner_stack_trace(struct lock_contention *con);
-+
- #else  /* !HAVE_BPF_SKEL */
- 
- static inline int lock_contention_prepare(struct lock_contention *con __maybe_unused)
-@@ -187,6 +189,11 @@ static inline int lock_contention_read(struct lock_contention *con __maybe_unuse
- 	return 0;
- }
- 
-+struct lock_stat *pop_owner_stack_trace(struct lock_contention *con)
-+{
-+	return NULL;
-+}
-+
- #endif  /* HAVE_BPF_SKEL */
- 
- #endif  /* PERF_LOCK_CONTENTION_H */
--- 
-2.48.1.502.g6dc24dfdaf-goog
-
+Konrad
