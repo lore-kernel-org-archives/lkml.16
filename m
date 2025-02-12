@@ -1,85 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE76526157C;
-	Wed, 12 Feb 2025 18:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 987AE1FC0FD;
+	Wed, 12 Feb 2025 19:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739386764; cv=none; b=ofiwWfYopC7TDYWzFNM4R/JW7cmTv0XuH0rryQ8IUqFP2nVhmje3YQOwiv9j8Tu0Qu4H7Bo07SuM37qSziCB2joCXKv4N39AxNx84CpRPo4BnM+dnYpKxuwE5YIcx2lLmsb2feRJ1FBJ0xpJvtiQDtXX5c3oUFl3v2Wag6L6Ra0=
+	t=1739386810; cv=none; b=hbaEnf+RJ8zFaoYFi1mDcD9yhd1vRmWKvIALj1TWk6+ME/VgyONoafVbrAlAQwk+5aCODT6uVGS2RUNRdNz/v4xz6CWZv2SR/hBZQkYgEVd2ed9mOcS1zc9LULg+a79+DRTxBYET8C1Ct4f4mJmNb4Gma8WLQ9T+iC2Ko1fvQxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739386764; c=relaxed/simple;
-	bh=BicpUrmWt9b8a+/6gyU8AOYGyPtuICIqQMEErkwCKJk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=B9lzqK+sQ45JryTU+ZzNJTNSpSCGKDtd2+c3tMPRJRtK0cnjbQcLLYpzW2YietBNCSCwADCG+IYmp6YCZFkpZtUodoyrq2Kxt80Ux5y6T0Qxppu8jCk1cQxGybiJL5i4neBsBPsQiBRxkH32DKyFu30wp0r8OloUw3CFq3Gea3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCbqqA3D; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCbqqA3D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F952C4CEDF;
-	Wed, 12 Feb 2025 18:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739386764;
-	bh=BicpUrmWt9b8a+/6gyU8AOYGyPtuICIqQMEErkwCKJk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=sCbqqA3DryZ2+EMW2sfdXvrBsfp8TpB3Nx+KZdCO7ok6Hfg4CmVJtfssMdVpSRcoQ
-	 f+XmpruvdVjYsG8hoMzH7NXOgj4232kqbSBIRCdMDGrTt8Y/4Vq0hS+xrDe2qEkZxJ
-	 DZBXeWcZTuMY12ai/mtPqWIergb/vVBcEPpwyTz9mcNmjwNkJHuST1INF21RgTiobi
-	 coSrytK+qDoBJmfrnsnc26BQS8ImBVFRPdUFqFM2MlcQaRUF42UuNet4yrZzsPCrlO
-	 vf5tBvMm2G91bBzH6K8TGq6GCFCG+nX63dHLRJO2fMIXFziwCxGoR3qAkjDD7gEG/B
-	 JIaHd4G2kbN3w==
-From: Mark Brown <broonie@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Nuno Sa <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Stephen Rothwell <sfr@canb.auug.org.au>, kernel test robot <lkp@intel.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>
-In-Reply-To: <20250212-spi-offload-fixes-v1-0-e192c69e3bb3@baylibre.com>
-References: <20250212-spi-offload-fixes-v1-0-e192c69e3bb3@baylibre.com>
-Subject: Re: [PATCH 0/2] spi: offload: fixes
-Message-Id: <173938676238.250565.8485583434084673680.b4-ty@kernel.org>
-Date: Wed, 12 Feb 2025 18:59:22 +0000
+	s=arc-20240116; t=1739386810; c=relaxed/simple;
+	bh=jbZyenDy1ie9/HpamaTs6p37iRE24HZQMtK8SCh2RNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nU6asJx4cxXUtCC4ZYyKi26YDUhdSiAuNvwdczsYqsmWykKnI28CPLeMdoO6Lphuz6sc+SfFIPC5sD8EWpYN7OInU4lh/vIaFB6OwgSKxLW/nKRv7gua8rkUiXaxBzlMKtWczqFcoIdK5wA94Z9YR+5xgwc/aYzZev4MuWti1ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3CD812FC;
+	Wed, 12 Feb 2025 11:00:28 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 732B63F58B;
+	Wed, 12 Feb 2025 11:00:07 -0800 (PST)
+Date: Wed, 12 Feb 2025 19:00:05 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v19 11/11] perf: arm_pmuv3: Add support for the Branch
+ Record Buffer Extension (BRBE)
+Message-ID: <20250212190005.GD235556@e132581.arm.com>
+References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
+ <20250202-arm-brbe-v19-v19-11-1c1300802385@kernel.org>
+ <20250212185227.GC235556@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250212185227.GC235556@e132581.arm.com>
 
-On Wed, 12 Feb 2025 11:33:11 -0600, David Lechner wrote:
-> Fix a couple of issues that were reported with the recently added SPI
-> offload series.
+On Wed, Feb 12, 2025 at 06:52:27PM +0000, Leo Yan wrote:
+
+[...]
+
+> > +static int brbinf_get_mispredict(u64 brbinf)
+> > +{
+> > +       return FIELD_GET(BRBINFx_EL1_MPRED_MASK, brbinf);
+> > +}
 > 
+> I would expect the naming of brbinf_get_mispredict() will cause
+> confusion.  When the function returns 1, it means "Branch was
+> incorrectly predicted".
 > 
+> Maybe consider to use '!FIELD_GET(...)' for a reversed value?
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[1/2] spi: fix missing offload_flags doc
-      commit: d795a052b0ddad3da83dda6ff522c1b1aaa4a525
-[2/2] spi: offload: fix use after free
-      commit: e957c96455e8f4c630d5e374312cad0633ca7e17
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Please ignore this comment. Sorry for my misreading and noise.
