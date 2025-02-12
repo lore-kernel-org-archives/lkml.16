@@ -1,39 +1,39 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B851A207667;
-	Wed, 12 Feb 2025 15:47:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1EE21772B;
+	Wed, 12 Feb 2025 15:47:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739375272; cv=none; b=l8Eobbf43zqqgS1nTCif7WJN4SNHSmkv1sMyZjHHMsSQGdXr3hzXRK0HGj1q7B9jmt4+gyGYTWE7ev0T4ryvWe9zU5Cj8GgknLzkSCPzMXS+b9bh5TzZF1fjJuDwSkCq5y8GeUbpIbTMYXf7sQrz32KbRZvcJiiEtKnOgYPTTJM=
+	t=1739375274; cv=none; b=CRCXEqG3GO6QUao2uPP0pRMJTv9wucNYgh+vBiUAJzvRZmdbi4ItGp+Rc2bLgCZdNc4+GRspOzXOtvFjo++BoB2Rzv1zEYgzQVIVOTA7OvXq1kNYrYIzgxkgEHzfYd1P74UVpv91j5o3oFpn82EX/GsNvjqjTDQPftfpdAeNGT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739375272; c=relaxed/simple;
-	bh=JiiR9fVcT1igBQ8zQ9MI3IXIacvn9Y0GMWLLsV26JlQ=;
+	s=arc-20240116; t=1739375274; c=relaxed/simple;
+	bh=Mlv81zmIhEZHJwT/hcQ3yQ6ZyHpYyAKt5h56HYPA/ZI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RrS0bteHymRvaRPppfNm8iyJOAIxGPmN+GAjVHWsVS7RBGKDT9Z1iwhx6h60HksTR3UZo9VrNXhXd4gg/zddssuBG19PKKvw1sIWoMV7Y4OP7G2xR3dkFMEfUbr9M4BaUxXAyxtwl5HD42NN90NzUJlxiMtjfnhNVwXscuyZtmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GqpzyR3I; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=RnqYZWDlecnhQarlY7Q1ZFOcHy/+p9hvZwdPlNGqcSkBc0/3JvVon9pIA2QFMVWZxBUY5mbYeZJBeEeuqqz0+TccTs+3zr5QwmcG4s3N4DAIl3ZsYZU0hYy1BrxS99ELFOEBAuSLlCEugNpn/ucFdHkVSW8hiwoTZHqezI2GftI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bWhR95VJ; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GqpzyR3I"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A2981440F0;
-	Wed, 12 Feb 2025 15:47:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bWhR95VJ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 09DA1440FB;
+	Wed, 12 Feb 2025 15:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739375267;
+	t=1739375270;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EeJr9FDsSYw8HIYplOiopf+69p0J/ihX2v3ROipEQ7M=;
-	b=GqpzyR3I4uTG51rFsmP2OeUzCa08P781lS4wsNvNHRNmd/hynSxYClZvWG9WFq2IegO/w1
-	A51zUmwAIb0tOVWCNvmAm9n0/A10chDETCHI+1HKsHM/Ovz2OSajwF00FkXJnJE/C15SAs
-	1GkkhvqpLHoqtvNznIDUPJ/QO7jw2R03OEZe0dPHPfZ/rAprtx/OaRnE5ajysaKp7aiJaD
-	NJAPcz7JIiZ2rrwNQdGBgQQl82Varuc7mZ5G61xLisFjCSzBSTTEG6P398TclZh2xpV16S
-	ECf/mp+xCkm4t/Rvk0jOMaTYbLNCBc6adWLKI2NJXyi9GNSzbQy7l/aWePLSdw==
+	bh=3fD1k5bMIW/imRQuzK5KhvhuylFhJp7j2W2nlf3giUE=;
+	b=bWhR95VJSQ5uC0Sndhv/pxDenw+gX0dRpNFdgQqPWiD91pebWItUJdF7NB4RPGLQ8wl8nl
+	GzgiZeiT8vYFJIsXBuf2C8sMvDFiGHOG5+Xq1dU0385nrdyGp/o0jA6HfVkmDJTLoiK42r
+	cECb4VyA8zCdQv/5hiV5tzuV1kDfMWQ8LIHV2feTZlGPW7N0Pa11gKqaSjh360msfQPQ+M
+	cifWlglhSf6M4hT+ELh6sMeMTBTBI0HhjFfg9ZHwvX/Y2ClOqR5fZ1KgjPGIuWoD/MjWIj
+	Zg9rvDivxMjKIteLEfJBhlPH6ZVrne6QjQ3iXkcPenJUOHiuGawqL6ikkMLhhg==
 From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Date: Wed, 12 Feb 2025 16:46:20 +0100
-Subject: [PATCH 01/12] dt-bindings: bluetooth: describe wilc 3000 bluetooth
- chip
+Date: Wed, 12 Feb 2025 16:46:22 +0100
+Subject: [PATCH 03/12] wifi: wilc1000: add lock to prevent concurrent
+ firmware startup
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250212-wilc3000_bt-v1-1-9609b784874e@bootlin.com>
+Message-Id: <20250212-wilc3000_bt-v1-3-9609b784874e@bootlin.com>
 References: <20250212-wilc3000_bt-v1-0-9609b784874e@bootlin.com>
 In-Reply-To: <20250212-wilc3000_bt-v1-0-9609b784874e@bootlin.com>
 To: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>, 
@@ -64,70 +64,94 @@ Cc: Marek Vasut <marex@denx.de>,
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeggedvkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtkeertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjedtjeetgeduueefffevueeuheffudffleehhffgjeefkeeguefhvdejvdekjeeknecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemfhekheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmehfkeehpdhhvghloheplgduledvrdduieekrddurdduleejngdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdegpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvvhhit
- ggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehluhhiiidruggvnhhtiiesghhmrghilhdrtghomh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeggedvkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtkeertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevgefhteffuefhheekkeelffffvdeugffgveejffdtvdffudehtedtieevteetnecukfhppedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmehfkeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemfhekhedphhgvlhhopegludelvddrudeikedruddrudeljegnpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvgedprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdpr
+ hgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhuihiirdguvghnthiisehgmhgrihhlrdgtohhm
 X-GND-Sasl: alexis.lothore@bootlin.com
 
-WILC3000 is a combo chip providing 802.11b/g/n and Bluetooth 5. The wlan
-part is exposed either through SDIO or SPI interface, and the bluetooth
-part is exposed through uart. The notable peculiarity of this chip is
-that the bluetooth part is not fully autonomous: its firmware is not
-loaded through UART interface but through SDIO/SPI interface, so the
-bluetooth description needs a reference to the wlan part to get access
-to the corresponding bus.
+wilc1000 driver supports WILC3000, a combo wifi/bluetooth chip. This
+chip needs a firmware for each radio. Before bringing support for the
+bluetooth side (and so, before adding bluetooth firmware load and
+start), add a dedicated lock around firmware loading and startup for
+wlan side. The bluetooth part will also use this lock to ensure that
+both firmware are not being loaded/started at the same time.
 
 Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
 ---
- .../net/bluetooth/microchip,wilc3000-bt.yaml       | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ drivers/net/wireless/microchip/wilc1000/cfg80211.c | 2 ++
+ drivers/net/wireless/microchip/wilc1000/netdev.c   | 5 +++++
+ drivers/net/wireless/microchip/wilc1000/netdev.h   | 2 ++
+ 3 files changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/bluetooth/microchip,wilc3000-bt.yaml b/Documentation/devicetree/bindings/net/bluetooth/microchip,wilc3000-bt.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..2a83ca3ad90b26fd619b574bc343bee9654a1e43
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/bluetooth/microchip,wilc3000-bt.yaml
-@@ -0,0 +1,41 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/bluetooth/microchip,wilc3000-bt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/net/wireless/microchip/wilc1000/cfg80211.c b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
+index e7aa0f9919232350761d51cbb1b5be87ca39e855..393fff618f919c5a6d3f4a7d894b187399455fb8 100644
+--- a/drivers/net/wireless/microchip/wilc1000/cfg80211.c
++++ b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
+@@ -1736,6 +1736,7 @@ static void wlan_init_locks(struct wilc *wl)
+ 	mutex_init(&wl->cfg_cmd_lock);
+ 	mutex_init(&wl->vif_mutex);
+ 	mutex_init(&wl->deinit_lock);
++	mutex_init(&wl->radio_fw_start);
+ 
+ 	spin_lock_init(&wl->txq_spinlock);
+ 	mutex_init(&wl->txq_add_to_head_cs);
+@@ -1755,6 +1756,7 @@ void wlan_deinit_locks(struct wilc *wilc)
+ 	mutex_destroy(&wilc->txq_add_to_head_cs);
+ 	mutex_destroy(&wilc->vif_mutex);
+ 	mutex_destroy(&wilc->deinit_lock);
++	mutex_destroy(&wilc->radio_fw_start);
+ 	cleanup_srcu_struct(&wilc->srcu);
+ }
+ 
+diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
+index af298021e05041ba4b16a94c8ee768407a208dfc..d24859d12ccd535c966a9b7f46378ac3b3a21d7b 100644
+--- a/drivers/net/wireless/microchip/wilc1000/netdev.c
++++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
+@@ -4,6 +4,7 @@
+  * All rights reserved.
+  */
+ 
++#include "linux/mutex.h"
+ #include <linux/irq.h>
+ #include <linux/kthread.h>
+ #include <linux/firmware.h>
+@@ -534,6 +535,8 @@ static int wilc_wlan_initialize(struct net_device *dev, struct wilc_vif *vif)
+ 			goto fail_irq_init;
+ 		}
+ 
++		mutex_lock(&wl->radio_fw_start);
 +
-+title: Microchip Bluetooth chips
-+
-+description:
-+  This binding describes UART-attached Microchip bluetooth chips. These
-+  chips are dual-radio chips supporting WiFi and Bluetooth. The bluetooth
-+  side works with standard HCI commands over 4-wires UART (with flow
-+  control)
-+
-+maintainers:
-+  - Alexis Lothoré <alexis.lothore@bootlin.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - microchip,wilc3000-bt
-+
-+  wlan:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Phandle to the wlan part of the combo chip
-+
-+required:
-+  - compatible
-+  - wlan
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    serial {
-+        bluetooth {
-+            compatible = "microchip,wilc3000-bt";
-+            wlan = <&wifi>;
-+        };
-+    };
+ 		ret = wilc_wlan_get_firmware(dev);
+ 		if (ret)
+ 			goto fail_irq_enable;
+@@ -562,6 +565,7 @@ static int wilc_wlan_initialize(struct net_device *dev, struct wilc_vif *vif)
+ 			netdev_err(dev, "Failed to configure firmware\n");
+ 			goto fail_fw_start;
+ 		}
++		mutex_unlock(&wl->radio_fw_start);
+ 		wl->initialized = true;
+ 		return 0;
+ 
+@@ -569,6 +573,7 @@ static int wilc_wlan_initialize(struct net_device *dev, struct wilc_vif *vif)
+ 		wilc_wlan_stop(wl, vif);
+ 
+ fail_irq_enable:
++		mutex_unlock(&wl->radio_fw_start);
+ 		if (!wl->dev_irq_num &&
+ 		    wl->hif_func->disable_interrupt)
+ 			wl->hif_func->disable_interrupt(wl);
+diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.h b/drivers/net/wireless/microchip/wilc1000/netdev.h
+index 95bc8b8fe65a584615b6b9021d08d11e4b36408b..5837f8ffe548dad1b756cdbd8543636f2be0e9b0 100644
+--- a/drivers/net/wireless/microchip/wilc1000/netdev.h
++++ b/drivers/net/wireless/microchip/wilc1000/netdev.h
+@@ -287,6 +287,8 @@ struct wilc {
+ 	struct ieee80211_supported_band band;
+ 	u32 cipher_suites[ARRAY_SIZE(wilc_cipher_suites)];
+ 	u8 nv_mac_address[ETH_ALEN];
++	/* Lock to prevent concurrent start of wlan/bluetooth firmware */
++	struct mutex radio_fw_start;
+ };
+ 
+ struct wilc_wfi_mon_priv {
 
 -- 
 2.48.0
