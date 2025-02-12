@@ -1,282 +1,328 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AD72080D5;
-	Wed, 12 Feb 2025 09:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934492046A1
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739352194; cv=none; b=W4/IIJzZOjr+vdbE2BUnO2sXDeAOQd8VpJOfSH9OyFZNsuXQmHHfhkuy0cTDNX7INpvH+I2g9OGhOHmqDsImimG+z+DjBi+PyFlExXtJy89+fYLK4+zBoIzlPij7RIFiObM2nW3LOdiSi+/tSmiHSOKMflLflSW7o8K/Rig8pgk=
+	t=1739352353; cv=none; b=BiiBtDJsxrzSqhDuaFdjfGUONmQhOhNdGREbyd1DqWOKdOBEOgqTEy3/dqgIfYSOE7Ne5D/KmobHuDHXMY4UI4u02ksMfmrBq2wVdPjdhGp5pawgSA2MtXdFVwqA6fgiQOlYeq/gFfptbanZh2xbanDd7VCzYfaSDOfe1oLUkjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739352194; c=relaxed/simple;
-	bh=A1lTgaCSCPH+LFYIcMVq6NgsuaXTkZ36T56r0CfFEyU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=AkVnrfo3ipLsp2nL+nL1fLLvi6f+NbxmDkfMKZp/60SaqhhUxPl8ai0nw47LKBxJlrIseEr4VKMrh/6qPksraOwL0+0swoSCUPEAfRoYahBY5YrTXionc/s9cWaxNlfsszPpk7knq1K8kYa4R3aNYA3HwoUBCSOsQtZHxQxrQ88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=FgKCuSl0; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1739352353; c=relaxed/simple;
+	bh=6YgfDfc86NRoUciimyri1KETzsVX73cHIwFCH9Arezg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QSLOihASCai/rDy2aNB7SbRFmiYQuAIVdr6TC0/ym8JUN9rKi8Lyef+GW+9tq8JqrfBq+c/b6lxZovxUBinlClm7Rm4VST7jIop1lzxkpKUU3flMc5NfK7qQR1Ce80uzWD8g1zuNJzlXhqW76kCz7uEHKlTtCgFaDirB9l2GsZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fWRMmxXj; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="FgKCuSl0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1739352192; x=1770888192;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=A1lTgaCSCPH+LFYIcMVq6NgsuaXTkZ36T56r0CfFEyU=;
-  b=FgKCuSl0mJhSoQ1wIGRf0gLBr4IQSLVtoXEaSB1a/FncVqG45VJPANed
-   r3dj+MaUHEBqBr3GMq5b8ykX67JsPRoel3DxRMJDeJ+rzS4a9MDnzJclV
-   xEiID50ZjBh6699qmSQoB4lDPl/bADqTUetEhhKlBK9p5OTQlhRZvEtKQ
-   df3Q1wldG5fDklGd6IyT1CcaI1fkFut8/1rNvwn7UwtDG4qiDRlJW5p5q
-   vXDVVczyd7SROrHyiGGNmh/he/h5e7Y2AQikeawYYNI+djlTw4G+v/phO
-   iKTQSvZoucQnSclOFV22JvJ22xapxTp4na78zYf1RRnWBhxveAmx3gsdH
-   w==;
-X-CSE-ConnectionGUID: Im7caqcMRgeiMBKdbNTopA==
-X-CSE-MsgGUID: Ydz9VnPsRnKzfMIBBjCRkg==
-X-IronPort-AV: E=Sophos;i="6.13,279,1732604400"; 
-   d="scan'208";a="37190268"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Feb 2025 02:23:03 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 12 Feb 2025 02:22:33 -0700
-Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Wed, 12 Feb 2025 02:22:28 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-Date: Wed, 12 Feb 2025 14:52:11 +0530
-Subject: [PATCH v3 2/2] dt-bindings: mmc: atmel,hsmci: Convert to json
- schema
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fWRMmxXj"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c05b91245fso194867985a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:25:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739352350; x=1739957150; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6YgfDfc86NRoUciimyri1KETzsVX73cHIwFCH9Arezg=;
+        b=fWRMmxXjdDgC8g1bTNApRSPmfQLno5uGGXk+JtjGtBMyBAB3jeFiodHND2JB7tWEiR
+         XnE1db2NdgYMRlJehGibUE028hKsu38PfBM1/N2XglO6G0REoLlQPaZFG2KFuTEz/q85
+         iB/VwaTrbNZdDAslWQ+S15Q0eMiOZUoTO/e3fSgameyMoj6P6htkMaePf9j7PxULy/tK
+         Q8jrNqSe6HoaigZyEJoJQ7me1zn6qpwfBoHo/v3mSQiR+cD6j52iaNXk3HM5+/Eb7FhE
+         Nurhe8dXcN/QISFG/nO86SIe14bnYuCBe2RVQouaD2Cg7tR3+H+zaeD8oAcujxvuTP3v
+         V2xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739352350; x=1739957150;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6YgfDfc86NRoUciimyri1KETzsVX73cHIwFCH9Arezg=;
+        b=Ni790+jUySX9aHO643vXaKdHVKA9Yd6UrZlh4TPqVzpIbYLU+9dKgJUxaVMzuFEjGq
+         1M/lIArv+AAl7XSP+IHKBw7DeGXusNa2OeOGRRGJEE4WDCP9Wg9NBHYflDgEJ+mh/Gqk
+         eLn6HdlYh7jmGDr3ICT9sPwEevOea8m/tYirLpviErZvhm27WcZyqBjBJk9NV5h4G5F3
+         b+EEzVsvyZKtnAv0BjT+g6pBg9CXAzcM8ekrx4xTWRPU3Caq+L+vVQKLI3mDHSzcJnnv
+         QwfGgTv7jbWO9mVcuP48cijgBAhlMyu31EkNzS1fV9LCWPHof9mvlNVNv/CTeUrLe+5H
+         t1cw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZL0B05e10juKo4xqW2Wcflj29jYNvTlQXut2zjP19zUKqVt6NcV85Fhr/kie1SrjkuD3wNR1PEJj8Dag=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQwG5Pdb5yIOji1tLLXVe96BShmavB6H1EKqiLGHCAv/UXcbk7
+	2+7uJKjQSE7FiaoxlI4e6ORpO/vZpNkFH0Z8TbQZ4NMEnh6sD8YXsyj4IbIiyv7AoF0SgHA3r6o
+	KBaSE8Bsyp4b1DzjGfZfptYZhBJHyvdl5iLJa
+X-Gm-Gg: ASbGncvVU/XazON86bThkwWC4rPBKELMyDNGe09bO42Wt4A/vvQBhfpb2H02BZam+9R
+	HGQVhTASuMyOYHp1al5vcrcQu9n6ZvlmGyqnZyQ7BrVlyk8dCiSGhQ8iT1yj9JyA+aohIviclcQ
+	==
+X-Google-Smtp-Source: AGHT+IHNw5Y6ZLhPcYI0G0gzS0F6tvxdjsua0+vnRUKJTjhBZmFE1ueNugZ0Ss95vVCX9IcOJe/oYyu1umapjfUpgxw=
+X-Received: by 2002:ad4:5ba7:0:b0:6e4:3e5e:56d5 with SMTP id
+ 6a1803df08f44-6e46ed77e88mr37961816d6.5.1739352348834; Wed, 12 Feb 2025
+ 01:25:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250212-mmc-slot-v3-2-2bf288207040@microchip.com>
-References: <20250212-mmc-slot-v3-0-2bf288207040@microchip.com>
-In-Reply-To: <20250212-mmc-slot-v3-0-2bf288207040@microchip.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman
-	<khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, "Martin
- Blumenstingl" <martin.blumenstingl@googlemail.com>
-CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, Dharma Balasubiramani
-	<dharma.b@microchip.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739352136; l=4768;
- i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
- bh=A1lTgaCSCPH+LFYIcMVq6NgsuaXTkZ36T56r0CfFEyU=;
- b=Lcp/a3O6yv2QXnNOK3V/BtiNINsPT6P7qaEjWrE56J8XikZUjIugwaqJ43z6SzQYhqTQKUE30
- oVJfL27sDDBClvHBJjSY45HEGAHzmAEoUQ7mDXNEORYqUgBDn0+Uiws
-X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
- pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
+References: <20250204-printf-kunit-convert-v1-0-ecf1b846a4de@gmail.com>
+ <CAKwiHFi6SUCT7UjUTdKmLJ8kiAEqVg=d6ND60R05MJB85Eoj9w@mail.gmail.com>
+ <CAJ-ks9kLmArqqPati8n0dwzhjccLmTuTHtkaSyf_F_1QXzCoRw@mail.gmail.com>
+ <87bjvers3u.fsf@prevas.dk> <CAJ-ks9=0+fk22Dx-65a+CSYhy0dnjTJuot9PtgOCi5Th1_wARA@mail.gmail.com>
+ <87y0yeqafu.fsf@prevas.dk> <CABVgOS=dfuX+X8=EVHcrCZnbOZj3T+wGD922eoeHb-dcOmmzXw@mail.gmail.com>
+ <87h650ri08.fsf@prevas.dk>
+In-Reply-To: <87h650ri08.fsf@prevas.dk>
+From: David Gow <davidgow@google.com>
+Date: Wed, 12 Feb 2025 17:25:35 +0800
+X-Gm-Features: AWEUYZldKbrN14Agxv1vRTC_XGHvqdcjfs3enScjV9pDCmX3JjPjR-hnndI-xPY
+Message-ID: <CABVgOSmYWfBPod8Dq=vdYvmOUE31Nft1Ad-0nRHZ9J2W_f-q_Q@mail.gmail.com>
+Subject: Re: [PATCH 0/2] printf: convert self-test to KUnit
+To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Tamir Duberstein <tamird@gmail.com>, Petr Mladek <pmladek@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000000285c2062dee8768"
 
-Convert atmel,hsmci documentation to yaml format. The new file will inherit
-from mmc-controller.yaml.
+--0000000000000285c2062dee8768
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
----
- .../devicetree/bindings/mmc/atmel,hsmci.yaml       | 106 +++++++++++++++++++++
- .../devicetree/bindings/mmc/atmel-hsmci.txt        |  73 --------------
- 2 files changed, 106 insertions(+), 73 deletions(-)
+On Tue, 11 Feb 2025 at 16:40, Rasmus Villemoes <linux@rasmusvillemoes.dk> w=
+rote:
+>
+> On Tue, Feb 11 2025, David Gow <davidgow@google.com> wrote:
+>
+> > On Mon, 10 Feb 2025 at 19:57, Rasmus Villemoes <linux@rasmusvillemoes.d=
+k> wrote:
+> >>
+> >> On Fri, Feb 07 2025, Tamir Duberstein <tamird@gmail.com> wrote:
+> >>
+> >> > On Fri, Feb 7, 2025 at 5:01=E2=80=AFAM Rasmus Villemoes
+> >> > <linux@rasmusvillemoes.dk> wrote:
+> >> >>
+> >> >> On Thu, Feb 06 2025, Tamir Duberstein <tamird@gmail.com> wrote:
+> >> >>
+> >> >>
+> >> >> I'll have to see the actual code, of course. In general, I find rea=
+ding
+> >> >> code using those KUNIT macros quite hard, because I'm not familiar =
+with
+> >> >> those macros and when I try to look up what they do they turn out t=
+o be
+> >> >> defined in terms of other KUNIT macros 10 levels deep.
+> >> >>
+> >> >> But that still leaves a few points. First, I really like that "388 =
+test
+> >> >> cases passed" tally or some other free-form summary (so that I can =
+see
+> >> >> that I properly hooked up, compiled, and ran a new testcase inside
+> >> >> test_number(), so any kind of aggregation on those top-level test_*=
+ is
+> >> >> too coarse).
+> >> >
+> >> > This one I'm not sure how to address. What you're calling test cases
+> >> > here would typically be referred to as assertions, and I'm not aware
+> >> > of a way to report a count of assertions.
+> >> >
+> >>
+> >> I'm not sure that's accurate.
+> >>
+> >> The thing is, each of the current test() instances results in four
+> >> different tests being done, which is roughly why we end up at the 4*97
+> >> =3D=3D 388, but each of those tests has several assertions being done =
+-
+> >> depending on which variant of the test we're doing (i.e. the buffer
+> >> length used or if we're passing it through kasprintf), we may do only
+> >> some of those assertions, and we do an early return in case one of tho=
+se
+> >> assertions fail (because it wouldn't be safe to do the following
+> >> assertions, and the test as such has failed already). So there are far
+> >> more assertions than those 388.
+> >>
+> >> OTOH, that the number reported is 388 is more a consequence of the
+> >> implementation than anything explicitly designed. I can certainly live
+> >> with 388 being replaced by 97, i.e. that each current test() invocatio=
+n
+> >> would count as one KUNIT case, as that would still allow me to detect =
+a
+> >> PEBKAC when I've added a new test() instance and failed to actually ru=
+n
+> >> that.
+> >
+> > It'd be possible to split things up further into tests, at the cost of
+> > it being a more extensive refactoring, if having the more granular
+> > count tracked by KUnit were desired.
+>
+> I think the problem is that kunit is simply not a good framework to do
+> these kinds of tests in, and certainly it's very hard to retrofit kunit
+> after the fact.
+>
 
-diff --git a/Documentation/devicetree/bindings/mmc/atmel,hsmci.yaml b/Documentation/devicetree/bindings/mmc/atmel,hsmci.yaml
-new file mode 100644
-index 000000000000..feaa98e44955
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/atmel,hsmci.yaml
-@@ -0,0 +1,106 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/atmel,hsmci.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Atmel High-Speed MultiMedia Card Interface (HSMCI)
-+
-+description:
-+  The Atmel HSMCI controller provides an interface for MMC, SD, and SDIO memory
-+  cards.
-+
-+maintainers:
-+  - Nicolas Ferre <nicolas.ferre@microchip.com>
-+  - Aubin Constans <aubin.constans@microchip.com>
-+
-+allOf:
-+  - $ref: mmc-controller.yaml
-+
-+properties:
-+  compatible:
-+    const: atmel,hsmci
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 1
-+
-+  dma-names:
-+    const: rxtx
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: mci_clk
-+
-+  "#address-cells":
-+    const: 1
-+    description: Used for slot IDs.
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^slot@[0-9]+$":
-+    $ref: mmc-slot.yaml
-+    description: A slot node representing an MMC, SD, or SDIO slot.
-+
-+    properties:
-+      reg:
-+        enum: [0, 1]
-+
-+    required:
-+      - reg
-+      - bus-width
-+
-+    unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+anyOf:
-+  - required:
-+      - slot@0
-+  - required:
-+      - slot@1
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/clock/at91.h>
-+    mmc@f0008000 {
-+      compatible = "atmel,hsmci";
-+      reg = <0xf0008000 0x600>;
-+      interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&mci0_clk>;
-+      clock-names = "mci_clk";
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      slot@0 {
-+        reg = <0>;
-+        bus-width = <4>;
-+        cd-gpios = <&pioD 15 0>;
-+        cd-inverted;
-+      };
-+
-+      slot@1 {
-+        reg = <1>;
-+        bus-width = <4>;
-+      };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt b/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
-deleted file mode 100644
-index 07ad02075a93..000000000000
---- a/Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
-+++ /dev/null
-@@ -1,73 +0,0 @@
--* Atmel High Speed MultiMedia Card Interface
--
--This controller on atmel products provides an interface for MMC, SD and SDIO
--types of memory cards.
--
--This file documents differences between the core properties described
--by mmc.txt and the properties used by the atmel-mci driver.
--
--1) MCI node
--
--Required properties:
--- compatible: should be "atmel,hsmci"
--- #address-cells: should be one. The cell is the slot id.
--- #size-cells: should be zero.
--- at least one slot node
--- clock-names: tuple listing input clock names.
--	Required elements: "mci_clk"
--- clocks: phandles to input clocks.
--
--The node contains child nodes for each slot that the platform uses
--
--Example MCI node:
--
--mmc0: mmc@f0008000 {
--	compatible = "atmel,hsmci";
--	reg = <0xf0008000 0x600>;
--	interrupts = <12 4>;
--	#address-cells = <1>;
--	#size-cells = <0>;
--	clock-names = "mci_clk";
--	clocks = <&mci0_clk>;
--
--	[ child node definitions...]
--};
--
--2) slot nodes
--
--Required properties:
--- reg: should contain the slot id.
--- bus-width: number of data lines connected to the controller
--
--Optional properties:
--- cd-gpios: specify GPIOs for card detection
--- cd-inverted: invert the value of external card detect gpio line
--- wp-gpios: specify GPIOs for write protection
--
--Example slot node:
--
--slot@0 {
--	reg = <0>;
--	bus-width = <4>;
--	cd-gpios = <&pioD 15 0>
--	cd-inverted;
--};
--
--Example full MCI node:
--mmc0: mmc@f0008000 {
--	compatible = "atmel,hsmci";
--	reg = <0xf0008000 0x600>;
--	interrupts = <12 4>;
--	#address-cells = <1>;
--	#size-cells = <0>;
--	slot@0 {
--		reg = <0>;
--		bus-width = <4>;
--		cd-gpios = <&pioD 15 0>
--		cd-inverted;
--	};
--	slot@1 {
--		reg = <1>;
--		bus-width = <4>;
--	};
--};
+I think I'd have to disagree on the whole (though I'm admittedly
+biased in KUnit's favour), but I can definitely see that the printf
+tests do provide some unique challenges, and that either way, a port
+would require either some code churn or bloat, a need to reinterpret
+things (such as what unit a 'test' is), or both.
 
--- 
-2.43.0
+Ultimately, I don't want to force KUnit on anyone if it's going to
+make things more difficult, so it's ultimately up to you. My personal
+feeling is that this could work well as a KUnit test, but due to the
+churn involved, it may not be worth it if no-one wants to take
+advantage of the tooling.
 
+> It'd also be possible to make
+> > these more explicitly data driven via a parameterised test (so each
+> > input/output pair is listed in an array, and automatically gets
+> > converted to a KUnit subtest).
+>
+> So that "array of input/output" very much doesn't work for these
+> specific tests: We really want the format string/varargs to be checked
+> by the compiler, and besides, there's no way to store the necessary
+> varargs and generate a call from those in an array. Moreover, we verify a
+> lot more than just that the correct string is produced; it's also a
+> matter of the right return value regardless of the passed buffer size, et=
+c.
+
+Ah, that makes sense. I suspect with enough work and some friendly
+compiler developers, this could be make to work, but it definitely
+doesn't seem worth the effort to me.
+
+> That's also why is nigh impossible to simply change __test() into
+> (another) macro that expands to something that defines an individual
+> struct kunit_case, because the framework is really built around the
+> notion that each case can be represented by a void function call and the
+> name of the test is the stringification of the function name.
+
+Yeah: it may be possible to do something with KUnit's parameter
+generating functions (you can have a function which generates a void*
+test context, as well as a string test name: this could be a struct
+with a format string and a va_list), but it's definitely getting
+complicated.
+
+> So I don't mind the conversion to kunit if that really helps other
+> people, as long as the basic functionality is still present and doesn't
+> impede future extensions - and certainly I don't want to end up in a
+> situation where somebody adds a new %p extension but cannot really add a
+> test for it because kunit makes that hard.
+>
+> But I hope you all agree that it doesn't make much _sense_ to consider
+> test_number() and test_string() and so on individual "test cases"; the
+> atomic units of test being done in the printf suite is each invocation
+> of the __test() function, with one specific format string/varargs
+> combination.
+
+I think this is -- to some extent -- a matter of interpretation. I
+don't think it's wrong to use KUnit test cases to refer to a "thing
+being tested" (e.g., a specific format specifier) rather than an
+"individual invocation": lots of KUnit tests already group very
+related things together. But given the way there are several "checks"
+within each __test() invocation mirrors this already, I understand why
+it'd make sense to keep that as the "test case".
+
+I don't have any immediate plans personally to work on the
+printf/scanf code, so your opinion here definitely matters more than
+mine. But if this does end up as a KUnit test, I'll definitely keep an
+eye on it as part of my regular KUnit test runs.
+
+Cheers,
+-- David
+
+>
+> Rasmus
+
+--0000000000000285c2062dee8768
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIUqgYJKoZIhvcNAQcCoIIUmzCCFJcCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
+4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
+mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
+KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
+VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
+ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
+vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
+BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
+OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
+1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
+ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
+BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
+18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
+bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
+AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
+BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
+A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
+MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
+jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
+0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
+jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
+jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
+C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
+NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
+zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
+A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
+hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
+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
+YE9NAgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
+/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFHgsCGkO2Hex
+N6ybc+GeQEb6790qMFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
+BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
+MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
+LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
+bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
+FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
+c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQAs
+exV05yVDmPhHRqOq9lAbfWOUvEf8zydxabZUHna6bayb83jD2eb9nMGGEprfuNBRmFg35sgF1TyN
++ieuQakvQYmY8tzK49hhHa2Y3qhGCTqYTHO3ypHvhHsZiGbL0gmdgB9P8ssVIws//34ae99GUOxo
+XKTxPwwsQ5Arq42besv3/HXAW+4nRAT8d3ht5ZWCHc5rjL/vdGzu7PaYo3u0da69AZ8Sh4Gf5yoc
+QANr2ZkMrxXbLmSmnRvbkQrzlZp2YbTFnczx46429D6q75/FNFOL1vAjxtRAPzkyACvW0eKvchza
+TMvvD3IWERLlcBL5yXpENc3rI8/wVjqgAWYxlFg1b/4b/TCgYe2MZC0rx4Uh3zTIbmPNiHdN6QZ9
+oDiYzWUcqWZ5jCO4bMKNlVJXeCvdANLHuhcC8FONj5VzNgYXs6gWkp9/Wt6XnQPX4dF4JBa8JdL/
+cT46RJIzoiJHEx/8syO5FparZHIKbkunoq6niPsRaQUGeqWc56H4Z1sQXuBJN9fhqkIkG0Ywfrwt
+uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
+PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
+AmowggJmAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
+BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
+pjANBglghkgBZQMEAgEFAKCB1DAvBgkqhkiG9w0BCQQxIgQgb1zoE/wizLmGoZEFHGUQJzGXwMBH
+h+l1jjmgf8uy9ycwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
+MjEyMDkyNTUwWjBpBgkqhkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
+YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBCjALBgkqhkiG9w0BAQcwCwYJYIZIAWUD
+BAIBMA0GCSqGSIb3DQEBAQUABIIBAC6lMU/ZmndCSHYX+A+wlv3xrji1Axo4q+aWIVRAOwT+/OEw
+FJtnsk85e8g3IsATNVHtlMRq7HRQZJ1LEpA0KVDIfrBlWpHEyungq7lFcCBINZD9Fko/zJ8bEaeM
+gYeIg4eciE+igmTFlI7e1YZPR0To0O07CaiCgJiXbV0fSa5qNZaFUV1hIbCnhMIxDa0f2JPLBGfR
+TT54EaC3tl9XIIn8jM4Ydy0jWFwo8DUOmMot/Ao7wpPiihmS8XKcJn3HMJpBI1MzzOwIKRUqkXh8
+AtgowBr+I5VbyRQwS9+Upwl1WI+5weHpHPs1MMiBkYObGfpPUccgWsmTUdILEtEoyX8=
+--0000000000000285c2062dee8768--
