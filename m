@@ -1,142 +1,337 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1CE25A33E;
-	Wed, 12 Feb 2025 14:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B372225A32B;
+	Wed, 12 Feb 2025 14:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739371077; cv=none; b=oKgfhoP7P8/29+oiy+kWHcvIKba6n/33QfAdvVhAw/5IlNHrncRGEwxxLt1QrjCNCsJTBRCoXv3wLVca4HezUupoPvZ+Po7mD8iMjCrHJKB+vF+yjT538DhQxT0C0qSBh2HgmQ7bmgN5xlTqELUk7qgD5+dekhrvgCPwL47Jc1Y=
+	t=1739371078; cv=none; b=cB8HZIHEutZEL14TzQRee/MA0tTDUuR7cZcaetC+/6TtcIgG/lXkGiziH0rGD/Y1M1fhHYQbFsvQ6C2M0xHxLllaw0rZpswtJK/vO4Or51IW6pVInoRhdmdMfl6Xu20eqyxAoidl31cMYIdWbduxomxVqrzLG+8jMx5TTfIFJDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739371077; c=relaxed/simple;
-	bh=VUBM57jOz21qhzl4JgnGGgiFmJ16K4z/3nSk3V+odWQ=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=s2shW5vJglAG87cdDeYvL24imuL5UvQsf1AjZDX+Yeu2/TwaFKy9yTZxDAWk7sh7XliIjfQq/zfeqBWxeq2o1eTTNsnGLhQqRPaIXrR/fhNhYrDuA/7p062z5ukppZU4Y/6dMdpxFTk8Ao1cjjXMdX8OD15O72sLkw2Eah3N9D4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Je5v/O6R; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Je5v/O6R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B43F8C4CEE4;
-	Wed, 12 Feb 2025 14:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739371076;
-	bh=VUBM57jOz21qhzl4JgnGGgiFmJ16K4z/3nSk3V+odWQ=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Je5v/O6RvOmLtL1lWrIBnUZdIB9qSs5EzOVdh0V7z1Wp5/q7Seycikmd3UDwzVhZd
-	 r60tyUtkLhGWXvRZua2EZbVry+x0exOrN9X7SVOi670+LrPax9T3ze+hHf3T2ZZQlx
-	 qJ3AfWEUNv2W3g7BTWsTnpXRct0ysuDJFPDaK4km1V1sbRsMa51ZkgF4LNXd/YgKfV
-	 8FLPNGgSpj8395pzX311yHjDr5sDyA5Hqhin4D4jIxNmmIMpqqWi3EcLZL9QstKpGG
-	 aTsR2kRVHbQCnBFJD15qKYbIyjx5k7u6LwWO/hTn/KMThp19m0vZvZEkAlWJ7UK6dK
-	 oA8B5HOGhqO1g==
-Date: Wed, 12 Feb 2025 08:37:55 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1739371078; c=relaxed/simple;
+	bh=/7Pz1bo3nG/Q6h30z+CAxTKoCwVikFDtoN1mQ9ijMzw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tPGkrFAmFPkFmW/LLtPdjDW7zFpq+gZzirICg3L/OZgYntmG5+cEKpzARW5y8rBX0dlK9L0zkbCkBM3q5i2YeiE+oG3jgwwBIgBPMCS3iA4SnRENDXdDKiAEHfzv9gfY5trO/r8R1r/wwqTW9aBHbbdXja0Sxtg88jOHFnyOyEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YtLSw36Wbz6J7db;
+	Wed, 12 Feb 2025 22:35:28 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
+	by mail.maildlp.com (Postfix) with ESMTPS id C62E51401DC;
+	Wed, 12 Feb 2025 22:37:53 +0800 (CST)
+Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.169.206) by
+ frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 12 Feb 2025 15:37:51 +0100
+From: <shiju.jose@huawei.com>
+To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <linux-doc@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <mchehab@kernel.org>,
+	<dan.j.williams@intel.com>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <david@redhat.com>, <Vilas.Sridharan@amd.com>,
+	<leo.duran@amd.com>, <Yazen.Ghannam@amd.com>, <rientjes@google.com>,
+	<jiaqiyan@google.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <jthoughton@google.com>,
+	<somasundaram.a@hpe.com>, <erdemaktas@google.com>, <pgonda@google.com>,
+	<duenwen@google.com>, <gthelen@google.com>, <wschwartz@amperecomputing.com>,
+	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
+	<nifan.cxl@gmail.com>, <yazen.ghannam@amd.com>, <tanxiaofei@huawei.com>,
+	<prime.zeng@hisilicon.com>, <roberto.sassu@huawei.com>,
+	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
+	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: [PATCH v20 14/15] EDAC: Update memory repair control interface for memory sparing feature
+Date: Wed, 12 Feb 2025 14:36:52 +0000
+Message-ID: <20250212143654.1893-15-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20250212143654.1893-1-shiju.jose@huawei.com>
+References: <20250212143654.1893-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Will Deacon <will@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Daniil Titov <daniilt971@gmail.com>, 
- =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
- Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Joerg Roedel <joro@8bytes.org>, Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Stephan Gerhold <stephan@gerhold.net>, linux-arm-msm@vger.kernel.org, 
- linux-clk@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
- iommu@lists.linux.dev, Stephen Boyd <sboyd@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, devicetree@vger.kernel.org, 
- linux-gpio@vger.kernel.org, Dang Huynh <danct12@riseup.net>, 
- Konrad Dybcio <konradybcio@kernel.org>, Lee Jones <lee@kernel.org>
-To: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-In-Reply-To: <20250211-msm8937-v1-0-7d27ed67f708@mainlining.org>
-References: <20250211-msm8937-v1-0-7d27ed67f708@mainlining.org>
-Message-Id: <173937096484.3561919.15204410384855360487.robh@kernel.org>
-Subject: Re: [PATCH 00/10] Initial support of MSM8937 and Xiaomi Redmi 3S
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ frapeml500007.china.huawei.com (7.182.85.172)
 
+From: Shiju Jose <shiju.jose@huawei.com>
 
-On Tue, 11 Feb 2025 23:37:44 +0100, Barnabás Czémán wrote:
-> This patch series add initial support for MSM8937 SoC
-> and Xiaomi Redmi 3S (land).
-> 
-> The series is extending the MSM8917 gcc and pinctrl drivers
-> because they are sibling SoCs.
-> MSM8937 have 4 more A53 cores and have one more dsi port then
-> MSM8917.
-> It implements little-big architecture and uses Adreno 505.
-> 
-> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
-> ---
-> Barnabás Czémán (5):
->       dt-bindings: mfd: qcom,tcsr: Add compatible for MSM8937
->       dt-bindings: nvmem: Add compatible for MS8937
->       dt-bindings: iommu: qcom,iommu: Add MSM8937 IOMMU to SMMUv1 compatibles
->       dt-bindings: arm: qcom: Add Xiaomi Redmi 3S
->       arm64: dts: qcom: Add Xiaomi Redmi 3S
-> 
-> Dang Huynh (2):
->       pinctrl: qcom: msm8917: Add MSM8937 wsa_reset pin
->       arm64: dts: qcom: Add initial support for MSM8937
-> 
-> Daniil Titov (3):
->       dt-bindings: clock: gcc-msm8917: Split to separate schema
->       dt-bindings: clock: Add MSM8937 Global Clock controller compatible
->       clk: qcom: gcc: Add support for Global Clock controller found on MSM8937
-> 
->  Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
->  .../bindings/clock/qcom,gcc-msm8909.yaml           |   10 +-
->  .../bindings/clock/qcom,gcc-msm8917.yaml           |   74 +
->  .../devicetree/bindings/iommu/qcom,iommu.yaml      |    1 +
->  .../devicetree/bindings/mfd/qcom,tcsr.yaml         |    1 +
->  .../devicetree/bindings/nvmem/qcom,qfprom.yaml     |    1 +
->  arch/arm64/boot/dts/qcom/Makefile                  |    1 +
->  arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts   |  402 ++++
->  arch/arm64/boot/dts/qcom/msm8937.dtsi              | 2145 ++++++++++++++++++++
->  drivers/clk/qcom/Kconfig                           |    6 +-
->  drivers/clk/qcom/gcc-msm8917.c                     |  617 +++++-
->  drivers/pinctrl/qcom/Kconfig.msm                   |    4 +-
->  drivers/pinctrl/qcom/pinctrl-msm8917.c             |    8 +-
->  include/dt-bindings/clock/qcom,gcc-msm8917.h       |   17 +
->  14 files changed, 3277 insertions(+), 17 deletions(-)
-> ---
-> base-commit: df5d6180169ae06a2eac57e33b077ad6f6252440
-> change-id: 20250210-msm8937-228ef0dc3ec9
-> 
-> Best regards,
-> --
-> Barnabás Czémán <barnabas.czeman@mainlining.org>
-> 
-> 
+Update memory repair control interface for memory sparing feature.
+Examples are CXL memory sparing features.
 
+CXL memory device may support soft and hard memory sparing at cacheline,
+row, bank and rank granularities. Memory sparing is defined as
+a repair function that replaces a portion of memory with a portion of
+functional memory at that same granularity.
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+When a CXL device detects an error in a memory, it may report the host of
+the need for a repair maintenance operation by using an event record where
+the "maintenance needed" flag is set. The event records contains the device
+physical address(DPA) and other attributes of the memory to repair (such as
+bank group, bank, rank, row, column, channel etc). The kernel
+will report the corresponding CXL general media or DRAM trace event to
+userspace, and userspace tools (e.g. rasdaemon) will initiate a repair
+operation in response to the device request via the sysfs repair control.
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ .../ABI/testing/sysfs-edac-memory-repair      | 57 +++++++++++++
+ drivers/edac/mem_repair.c                     | 85 +++++++++++++++++++
+ include/linux/edac.h                          | 28 ++++++
+ 3 files changed, 170 insertions(+)
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250211-msm8937-v1-0-7d27ed67f708@mainlining.org:
-
-arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dtb: gpu@1c00000: clock-names:5: 'alwayson' is not one of ['core', 'iface', 'mem', 'mem_iface', 'alt_mem_iface', 'gfx3d', 'rbbmtimer', 'rbcpr']
-	from schema $id: http://devicetree.org/schemas/display/msm/gpu.yaml#
-arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dtb: clock-controller@1800000: clocks: [[18], [51], [52, 1], [52, 0]] is too short
-	from schema $id: http://devicetree.org/schemas/clock/qcom,gcc-msm8917.yaml#
-arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dtb: clock-controller@1800000: clock-names: ['xo', 'sleep_clk', 'dsi0pll', 'dsi0pllbyte'] is too short
-	from schema $id: http://devicetree.org/schemas/clock/qcom,gcc-msm8917.yaml#
-arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dtb: clock-controller@1800000: Unevaluated properties are not allowed ('clock-names', 'clocks' were unexpected)
-	from schema $id: http://devicetree.org/schemas/clock/qcom,gcc-msm8917.yaml#
-
-
-
-
+diff --git a/Documentation/ABI/testing/sysfs-edac-memory-repair b/Documentation/ABI/testing/sysfs-edac-memory-repair
+index c54f59e4497b..d0d70b094651 100644
+--- a/Documentation/ABI/testing/sysfs-edac-memory-repair
++++ b/Documentation/ABI/testing/sysfs-edac-memory-repair
+@@ -42,6 +42,14 @@ Description:
+ 
+ 		- ppr - Post package repair.
+ 
++		- cacheline-sparing
++
++		- row-sparing
++
++		- bank-sparing
++
++		- rank-sparing
++
+ 		- All other values are reserved.
+ 
+ What:		/sys/bus/edac/devices/<dev-name>/mem_repairX/persist_mode
+@@ -134,6 +142,55 @@ Description:
+ 		related error records and trace events, for eg. CXL DRAM
+ 		and CXL general media error records in CXL memory devices.
+ 
++What:		/sys/bus/edac/devices/<dev-name>/mem_repairX/bank_group
++What:		/sys/bus/edac/devices/<dev-name>/mem_repairX/bank
++What:		/sys/bus/edac/devices/<dev-name>/mem_repairX/rank
++What:		/sys/bus/edac/devices/<dev-name>/mem_repairX/row
++What:		/sys/bus/edac/devices/<dev-name>/mem_repairX/column
++What:		/sys/bus/edac/devices/<dev-name>/mem_repairX/channel
++What:		/sys/bus/edac/devices/<dev-name>/mem_repairX/sub_channel
++Date:		March 2025
++KernelVersion:	6.15
++Contact:	linux-edac@vger.kernel.org
++Description:
++		(RW) The control attributes for the  memory to be repaired.
++		The specific value of attributes to use depends on the
++		portion of memory to repair and will be reported to host
++		in related error records and may be available to userspace
++		in trace events, such as CXL DRAM and CXL general media
++		error records of CXL memory devices.
++
++		When readng back these attributes, it returns the current
++		value of memory requested to be repaired.
++
++		bank_group - The bank group of the memory to repair.
++
++		bank - The bank number of the memory to repair.
++
++		rank - The rank of the memory to repair. Rank is defined as a
++		set of memory devices on a channel that together execute a
++		transaction.
++
++		row - The row number of the memory to repair.
++
++		column - The column number of the memory to repair.
++
++		channel - The channel of the memory to repair. Channel is
++		defined as an interface that can be independently accessed
++		for a transaction.
++
++		sub_channel - The subchannel of the memory to repair.
++
++		The requirement to set these attributes varies based on the
++		repair function. The attributes in sysfs are not present
++		unless required for a repair function.
++
++		For example, CXL spec ver 3.1, Section 8.2.9.7.1.2 Table 8-103
++		soft PPR and Section 8.2.9.7.1.3 Table 8-104 hard PPR operations,
++		these attributes are not required to set. CXL spec ver 3.1,
++		Section 8.2.9.7.1.4 Table 8-105 memory sparing, these attributes
++		are required to set based on memory sparing granularity.
++
+ What:		/sys/bus/edac/devices/<dev-name>/mem_repairX/repair
+ Date:		March 2025
+ KernelVersion:	6.15
+diff --git a/drivers/edac/mem_repair.c b/drivers/edac/mem_repair.c
+index 9fe310050464..47ed5edffc61 100755
+--- a/drivers/edac/mem_repair.c
++++ b/drivers/edac/mem_repair.c
+@@ -22,6 +22,13 @@ enum edac_mem_repair_attributes {
+ 	MEM_REPAIR_MIN_DPA,
+ 	MEM_REPAIR_MAX_DPA,
+ 	MEM_REPAIR_NIBBLE_MASK,
++	MEM_REPAIR_BANK_GROUP,
++	MEM_REPAIR_BANK,
++	MEM_REPAIR_RANK,
++	MEM_REPAIR_ROW,
++	MEM_REPAIR_COLUMN,
++	MEM_REPAIR_CHANNEL,
++	MEM_REPAIR_SUB_CHANNEL,
+ 	MEM_DO_REPAIR,
+ 	MEM_REPAIR_MAX_ATTRS
+ };
+@@ -70,6 +77,13 @@ EDAC_MEM_REPAIR_ATTR_SHOW(dpa, get_dpa, u64, "0x%llx\n")
+ EDAC_MEM_REPAIR_ATTR_SHOW(min_dpa, get_min_dpa, u64, "0x%llx\n")
+ EDAC_MEM_REPAIR_ATTR_SHOW(max_dpa, get_max_dpa, u64, "0x%llx\n")
+ EDAC_MEM_REPAIR_ATTR_SHOW(nibble_mask, get_nibble_mask, u32, "0x%x\n")
++EDAC_MEM_REPAIR_ATTR_SHOW(bank_group, get_bank_group, u32, "%u\n")
++EDAC_MEM_REPAIR_ATTR_SHOW(bank, get_bank, u32, "%u\n")
++EDAC_MEM_REPAIR_ATTR_SHOW(rank, get_rank, u32, "%u\n")
++EDAC_MEM_REPAIR_ATTR_SHOW(row, get_row, u32, "0x%x\n")
++EDAC_MEM_REPAIR_ATTR_SHOW(column, get_column, u32, "%u\n")
++EDAC_MEM_REPAIR_ATTR_SHOW(channel, get_channel, u32, "%u\n")
++EDAC_MEM_REPAIR_ATTR_SHOW(sub_channel, get_sub_channel, u32, "%u\n")
+ 
+ #define EDAC_MEM_REPAIR_ATTR_STORE(attrib, cb, type, conv_func)			\
+ static ssize_t attrib##_store(struct device *ras_feat_dev,			\
+@@ -99,6 +113,13 @@ EDAC_MEM_REPAIR_ATTR_STORE(persist_mode, set_persist_mode, unsigned long, kstrto
+ EDAC_MEM_REPAIR_ATTR_STORE(hpa, set_hpa, u64, kstrtou64)
+ EDAC_MEM_REPAIR_ATTR_STORE(dpa, set_dpa, u64, kstrtou64)
+ EDAC_MEM_REPAIR_ATTR_STORE(nibble_mask, set_nibble_mask, unsigned long, kstrtoul)
++EDAC_MEM_REPAIR_ATTR_STORE(bank_group, set_bank_group, unsigned long, kstrtoul)
++EDAC_MEM_REPAIR_ATTR_STORE(bank, set_bank, unsigned long, kstrtoul)
++EDAC_MEM_REPAIR_ATTR_STORE(rank, set_rank, unsigned long, kstrtoul)
++EDAC_MEM_REPAIR_ATTR_STORE(row, set_row, unsigned long, kstrtoul)
++EDAC_MEM_REPAIR_ATTR_STORE(column, set_column, unsigned long, kstrtoul)
++EDAC_MEM_REPAIR_ATTR_STORE(channel, set_channel, unsigned long, kstrtoul)
++EDAC_MEM_REPAIR_ATTR_STORE(sub_channel, set_sub_channel, unsigned long, kstrtoul)
+ 
+ #define EDAC_MEM_REPAIR_DO_OP(attrib, cb)						\
+ static ssize_t attrib##_store(struct device *ras_feat_dev,				\
+@@ -189,6 +210,62 @@ static umode_t mem_repair_attr_visible(struct kobject *kobj, struct attribute *a
+ 				return 0444;
+ 		}
+ 		break;
++	case MEM_REPAIR_BANK_GROUP:
++		if (ops->get_bank_group) {
++			if (ops->set_bank_group)
++				return a->mode;
++			else
++				return 0444;
++		}
++		break;
++	case MEM_REPAIR_BANK:
++		if (ops->get_bank) {
++			if (ops->set_bank)
++				return a->mode;
++			else
++				return 0444;
++		}
++		break;
++	case MEM_REPAIR_RANK:
++		if (ops->get_rank) {
++			if (ops->set_rank)
++				return a->mode;
++			else
++				return 0444;
++		}
++		break;
++	case MEM_REPAIR_ROW:
++		if (ops->get_row) {
++			if (ops->set_row)
++				return a->mode;
++			else
++				return 0444;
++		}
++		break;
++	case MEM_REPAIR_COLUMN:
++		if (ops->get_column) {
++			if (ops->set_column)
++				return a->mode;
++			else
++				return 0444;
++		}
++		break;
++	case MEM_REPAIR_CHANNEL:
++		if (ops->get_channel) {
++			if (ops->set_channel)
++				return a->mode;
++			else
++				return 0444;
++		}
++		break;
++	case MEM_REPAIR_SUB_CHANNEL:
++		if (ops->get_sub_channel) {
++			if (ops->set_sub_channel)
++				return a->mode;
++			else
++				return 0444;
++		}
++		break;
+ 	case MEM_DO_REPAIR:
+ 		if (ops->do_repair)
+ 			return a->mode;
+@@ -235,6 +312,14 @@ static int mem_repair_create_desc(struct device *dev,
+ 		[MEM_REPAIR_MAX_DPA] = EDAC_MEM_REPAIR_ATTR_RO(max_dpa, instance),
+ 		[MEM_REPAIR_NIBBLE_MASK] =
+ 				EDAC_MEM_REPAIR_ATTR_RW(nibble_mask, instance),
++		[MEM_REPAIR_BANK_GROUP] =
++				EDAC_MEM_REPAIR_ATTR_RW(bank_group, instance),
++		[MEM_REPAIR_BANK] = EDAC_MEM_REPAIR_ATTR_RW(bank, instance),
++		[MEM_REPAIR_RANK] = EDAC_MEM_REPAIR_ATTR_RW(rank, instance),
++		[MEM_REPAIR_ROW] = EDAC_MEM_REPAIR_ATTR_RW(row, instance),
++		[MEM_REPAIR_COLUMN] = EDAC_MEM_REPAIR_ATTR_RW(column, instance),
++		[MEM_REPAIR_CHANNEL] = EDAC_MEM_REPAIR_ATTR_RW(channel, instance),
++		[MEM_REPAIR_SUB_CHANNEL] = EDAC_MEM_REPAIR_ATTR_RW(sub_channel, instance),
+ 		[MEM_DO_REPAIR] = EDAC_MEM_REPAIR_ATTR_WO(repair, instance)
+ 	};
+ 
+diff --git a/include/linux/edac.h b/include/linux/edac.h
+index 060f79a7f72a..a8fd01271582 100644
+--- a/include/linux/edac.h
++++ b/include/linux/edac.h
+@@ -785,6 +785,20 @@ enum edac_mem_repair_cmd {
+  * @get_max_dpa: get the maximum supported device physical address (DPA).
+  * @get_nibble_mask: get current nibble mask of memory to repair.
+  * @set_nibble_mask: set nibble mask of memory to repair.
++ * @get_bank_group: get current bank group of memory to repair.
++ * @set_bank_group: set bank group of memory to repair.
++ * @get_bank: get current bank of memory to repair.
++ * @set_bank: set bank of memory to repair.
++ * @get_rank: get current rank of memory to repair.
++ * @set_rank: set rank of memory to repair.
++ * @get_row: get current row of memory to repair.
++ * @set_row: set row of memory to repair.
++ * @get_column: get current column of memory to repair.
++ * @set_column: set column of memory to repair.
++ * @get_channel: get current channel of memory to repair.
++ * @set_channel: set channel of memory to repair.
++ * @get_sub_channel: get current subchannel of memory to repair.
++ * @set_sub_channel: set subchannel of memory to repair.
+  * @do_repair: Issue memory repair operation for the HPA/DPA and
+  *	       other control attributes set for the memory to repair.
+  *
+@@ -805,6 +819,20 @@ struct edac_mem_repair_ops {
+ 	int (*get_max_dpa)(struct device *dev, void *drv_data, u64 *dpa);
+ 	int (*get_nibble_mask)(struct device *dev, void *drv_data, u32 *val);
+ 	int (*set_nibble_mask)(struct device *dev, void *drv_data, u32 val);
++	int (*get_bank_group)(struct device *dev, void *drv_data, u32 *val);
++	int (*set_bank_group)(struct device *dev, void *drv_data, u32 val);
++	int (*get_bank)(struct device *dev, void *drv_data, u32 *val);
++	int (*set_bank)(struct device *dev, void *drv_data, u32 val);
++	int (*get_rank)(struct device *dev, void *drv_data, u32 *val);
++	int (*set_rank)(struct device *dev, void *drv_data, u32 val);
++	int (*get_row)(struct device *dev, void *drv_data, u32 *val);
++	int (*set_row)(struct device *dev, void *drv_data, u32 val);
++	int (*get_column)(struct device *dev, void *drv_data, u32 *val);
++	int (*set_column)(struct device *dev, void *drv_data, u32 val);
++	int (*get_channel)(struct device *dev, void *drv_data, u32 *val);
++	int (*set_channel)(struct device *dev, void *drv_data, u32 val);
++	int (*get_sub_channel)(struct device *dev, void *drv_data, u32 *val);
++	int (*set_sub_channel)(struct device *dev, void *drv_data, u32 val);
+ 	int (*do_repair)(struct device *dev, void *drv_data, u32 val);
+ };
+ 
+-- 
+2.43.0
 
