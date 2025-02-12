@@ -1,127 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD06209F35;
-	Wed, 12 Feb 2025 10:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD2A2045BC;
+	Wed, 12 Feb 2025 10:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739357969; cv=none; b=ZzCrdtl+uYShwu9z0TVPuwQAKWCCsgeSUeglVBHDqnhbwQ8CNXnER4v0lh0i7DhYCsgeYqoS3bu5VTe89TMdgGuOKckGvBhG3lMrpYvICUP2tv35U6PuG3se0Gr4vFF5jVvDRDzs3aKwZu5Kj5m2r9pXPE7LA6f+5j46YE4RhTE=
+	t=1739358001; cv=none; b=SKtDit5ne2BXWg1EFNo1LInG0K0CZ8P7UCJk+fxKz2cYtsDCuOBrOEvpzjPU2O21Js8SA5xfuK8U56NOxv0kd8JJdMS/wSCYTb2Vbzkhs70R2wiDnzh/qbdjrSu3OCr6UK0oX4YFb+NRzwqYNhGxJXqm88DymawV3ZT9Y+Cizeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739357969; c=relaxed/simple;
-	bh=SWfK5E+asiqNvK5yZlVvwPZxamhKEoIr2RspAVaSiYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pHIVf9L5LBHQ4gPCCTIEeggGUeC+5mZf1q37iX6nFlyT7PMiQ1IgnFJsNmw6QPt3HNrJkCuIUXmsBOwrDoA7mt3nMfO/FA04/otuos2mW0N6CT96vNwmh2JDCGrAZOV9VCthvTbB28wxJ/lBYTrhnnZ2M2sH5WYzGUA2qhRGo9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tMLmFD/O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739358001; c=relaxed/simple;
+	bh=IECdjrzXu5v/OZe0SMdDGL6u05RTxEgdE9UCcnMVYlc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CsiLcIFK9x/qSow49oyecgg1AaD7KJWA6Nz72mtn2OQiTgK8OnL+hXuAXGgaJ+Aegzt3H1VB6TqEHXux1x/BZUJ8n+95rFYdntg+Ld7AkjH9gOtxn0wNSWsXfeMtpjHfehS2WjB+eJF/5J5RHfABwMWXuKq1kYGtRxFCSJK2nZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=zp/YQrkU; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tMLmFD/O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E03CEC4CEDF;
-	Wed, 12 Feb 2025 10:59:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739357968;
-	bh=SWfK5E+asiqNvK5yZlVvwPZxamhKEoIr2RspAVaSiYY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tMLmFD/OmNgxxb45yMeX28QBLtpg/DOvT+SjeE+Uyd+Yp9CTpS5fuVbZEludZP2ga
-	 rpLj5CYe4nBU0aCo5nI+g1JzfU7MrgC+vVXh0wOvUvL5KYUekmR/MzHeakrFX7wqgZ
-	 GTa6N7eMr/0opIkPgDCFwrB2iC+6pd61wKpfbMjbWeVnpjaiwqO4wZAZG70v0C+EQF
-	 ohI094oTMCz7nEWhWaMepScQy4Sq+CwvTAMj9PEHXUZbz+1YYAb0cSiAUrNgnDft6a
-	 QH9Mo2AifpiuGfl2mT0CxEhTwoi7Oktz4uYOJmWNlypp8b7Iiv3lMzbQ3wFi6x+vY+
-	 4O0wMJYDUN5Xw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tiASu-000000001ca-0GAw;
-	Wed, 12 Feb 2025 11:59:36 +0100
-Date: Wed, 12 Feb 2025 11:59:36 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, konradybcio@kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Saranya R <quic_sarar@quicinc.com>,
-	Frank Oltmanns <frank@oltmanns.dev>
-Subject: Re: [PATCH v2] soc: qcom: pdr: Fix the potential deadlock
-Message-ID: <Z6x_GJg92ddzoRwQ@hovoldconsulting.com>
-References: <20250129155544.1864854-1-mukesh.ojha@oss.qualcomm.com>
- <nqsuml3jcblwkp6mcriiekfiz5wlxjypooiygvgd5fjtmfnvdc@zfoaolcjecpl>
- <Z6nE0kxF2ipItB2r@hu-mojha-hyd.qualcomm.com>
- <Z6nKOz97Neb1zZOa@hovoldconsulting.com>
- <Z6uDv3c3DkmgumnM@hu-mojha-hyd.qualcomm.com>
- <Z6xr3ylNSC6iYf-C@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="zp/YQrkU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cMbXNzmQOH8F+1fl7QOJ8vHQpv6KHpW1bwAT7N9Q6cI=; b=zp/YQrkUlM3VKBJk7sx3RuhGte
+	ESyz5mnvx4yt+lVEggZQ2bVDJCW6SIJZ5FeYFX3r4TZ7LlGV6oz6k5sCGy9L19In/4Wjm3jEEfrgx
+	ej0uvffJTtniZjtVY35RINvOV0tLffeNuCvNdw/PNJb6S9SLszQs/bM4SIhcAvwJKeZqIj9LC6SP1
+	5lPjf3g2n6XN2kAcuBgtfyn/WnpLJhb1Pakn4wXesAcI6PslxC6v5RxDNF3rc6vTXwqtjcAuPCc4Q
+	uv7P3vKr0mtLEpfTDpfV3MZ27eItr7qbSkFyOiqKpUCKbjaxmIizNDA7iC1OE1zgjxle/5Q6/jTtX
+	DWvRXEHg==;
+Received: from i53875bc0.versanet.de ([83.135.91.192] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tiAT9-0003GU-5b; Wed, 12 Feb 2025 11:59:51 +0100
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Andy Yan <andyshrk@163.com>
+Cc: hjc@rock-chips.com, krzk+dt@kernel.org, devicetree@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ derek.foreman@collabora.com, detlev.casanova@collabora.com,
+ daniel@fooishbar.org, robh@kernel.org, sebastian.reichel@collabora.com,
+ Andy Yan <andy.yan@rock-chips.com>
+Subject:
+ Re: [PATCH v14 02/13] drm/rockchip: vop2: Rename TRANSFORM_OFFSET to
+ TRANSFORM_OFFS
+Date: Wed, 12 Feb 2025 11:59:50 +0100
+Message-ID: <4064785.VqM8IeB0Os@diego>
+In-Reply-To: <20250212093530.52961-3-andyshrk@163.com>
+References:
+ <20250212093530.52961-1-andyshrk@163.com>
+ <20250212093530.52961-3-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6xr3ylNSC6iYf-C@hovoldconsulting.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Feb 12, 2025 at 10:37:35AM +0100, Johan Hovold wrote:
-> On Tue, Feb 11, 2025 at 10:37:11PM +0530, Mukesh Ojha wrote:
-> > On Mon, Feb 10, 2025 at 10:43:23AM +0100, Johan Hovold wrote:
+Hi Andy,
 
-> > > A Link tag to my report would be good to have as well if this fixes the
-> > > audio regression.
-> > 
-> > I see this is somehow matching the logs you have reported, but this deadlock
-> > is there from the very first day of pdr_interface driver.
-> > 
-> > [   14.565059] PDR: avs/audio get domain list txn wait failed: -110
-> > [   14.571943] PDR: service lookup for avs/audio failed: -110
+Am Mittwoch, 12. Februar 2025, 10:34:57 MEZ schrieb Andy Yan:
+> From: Andy Yan <andy.yan@rock-chips.com>
 > 
-> Yes, but using the in-kernel pd-mapper has exposed a number of existing
-> bugs since it changes the timing of events enough to make it easier to
-> hit them.
+> This help avoid "exceeds 100 columns" warning from checkpatch
 > 
-> The audio regression is a very real regression for users of Snapdragon
-> based laptops like, for example, the Lenovo Yoga Slim 7x.
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+
+I'm not much of a fan of "randomly" renaming individual constants
+(especially when one is now named OFFS, while the rest stay at OFFSET)
+
+- on rk3568 VOP2_CLUSTER_WIN0_TRANSFORMED_OFFSET = WIN0 transformed offset
+- on rk3588 VOP2_CLUSTER0_WIN0_TRANSFORMED_OFFSET = WIN0 transform offset
+- on rk3576 "someone" sadly decided to not provide the 2nd TRM part anymore
+  but I guess it'll be the same.
+
+So instead of just dropping parts from the end, you could also follow
+the TRM naming and drop the "_AFBC" from the register name instead?
+
+So going to VOP2_WIN_TRANSFORM_OFFSET, this would also reduce the line
+length accordingly, and moving the naming closer to the TRM too.
+
+Alternatively, just add a linebreak at the appropriate position instead.
+
+Heiko
+
+
+> ---
 > 
-> If Bjorn has confirmed that this is the same issue (I can try to
-> instrument the code based on your analysis to confirm this too), then I
-> think it would be good to mention this in the commit message and link to
-> the report, for example:
+> (no changes since v1)
 > 
-> 	This specifically also fixes an audio regression when using the
-> 	in-kernel pd-mapper as that makes it easier to hit this race. [1]
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 8 ++++----
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop2.h | 4 ++--
+>  2 files changed, 6 insertions(+), 6 deletions(-)
 > 
-> 	Link: https://lore.kernel.org/lkml/Zqet8iInnDhnxkT9@hovoldconsulting.com/ # [1]
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+> index ebc9cb93073c..8e1b742a7550 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+> @@ -1524,7 +1524,7 @@ static void vop2_plane_atomic_update(struct drm_plane *plane,
+>  		transform_offset = vop2_afbc_transform_offset(pstate, half_block_en);
+>  		vop2_win_write(win, VOP2_WIN_AFBC_HDR_PTR, yrgb_mst);
+>  		vop2_win_write(win, VOP2_WIN_AFBC_PIC_SIZE, act_info);
+> -		vop2_win_write(win, VOP2_WIN_AFBC_TRANSFORM_OFFSET, transform_offset);
+> +		vop2_win_write(win, VOP2_WIN_AFBC_TRANSFORM_OFFS, transform_offset);
+>  		vop2_win_write(win, VOP2_WIN_AFBC_PIC_OFFSET, ((src->x1 >> 16) | src->y1));
+>  		vop2_win_write(win, VOP2_WIN_AFBC_DSP_OFFSET, (dest->x1 | (dest->y1 << 16)));
+>  		vop2_win_write(win, VOP2_WIN_AFBC_PIC_VIR_WIDTH, stride);
+> @@ -1535,7 +1535,7 @@ static void vop2_plane_atomic_update(struct drm_plane *plane,
+>  	} else {
+>  		if (vop2_cluster_window(win)) {
+>  			vop2_win_write(win, VOP2_WIN_AFBC_ENABLE, 0);
+> -			vop2_win_write(win, VOP2_WIN_AFBC_TRANSFORM_OFFSET, 0);
+> +			vop2_win_write(win, VOP2_WIN_AFBC_TRANSFORM_OFFS, 0);
+>  		}
+>  
+>  		vop2_win_write(win, VOP2_WIN_YRGB_VIR, DIV_ROUND_UP(fb->pitches[0], 4));
+> @@ -3448,7 +3448,7 @@ static const struct reg_field vop2_cluster_regs[VOP2_WIN_MAX_REG] = {
+>  	[VOP2_WIN_AFBC_TILE_NUM] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_VIR_WIDTH, 16, 31),
+>  	[VOP2_WIN_AFBC_PIC_OFFSET] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_PIC_OFFSET, 0, 31),
+>  	[VOP2_WIN_AFBC_DSP_OFFSET] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_DSP_OFFSET, 0, 31),
+> -	[VOP2_WIN_AFBC_TRANSFORM_OFFSET] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_TRANSFORM_OFFSET, 0, 31),
+> +	[VOP2_WIN_AFBC_TRANSFORM_OFFS] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_TRANSFORM_OFFS, 0, 31),
+>  	[VOP2_WIN_AFBC_ROTATE_90] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_ROTATE_MODE, 0, 0),
+>  	[VOP2_WIN_AFBC_ROTATE_270] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_ROTATE_MODE, 1, 1),
+>  	[VOP2_WIN_XMIRROR] = REG_FIELD(RK3568_CLUSTER_WIN_AFBCD_ROTATE_MODE, 2, 2),
+> @@ -3547,7 +3547,7 @@ static const struct reg_field vop2_esmart_regs[VOP2_WIN_MAX_REG] = {
+>  	[VOP2_WIN_AFBC_PIC_OFFSET] = { .reg = 0xffffffff },
+>  	[VOP2_WIN_AFBC_PIC_SIZE] = { .reg = 0xffffffff },
+>  	[VOP2_WIN_AFBC_DSP_OFFSET] = { .reg = 0xffffffff },
+> -	[VOP2_WIN_AFBC_TRANSFORM_OFFSET] = { .reg = 0xffffffff },
+> +	[VOP2_WIN_AFBC_TRANSFORM_OFFS] = { .reg = 0xffffffff },
+>  	[VOP2_WIN_AFBC_HDR_PTR] = { .reg = 0xffffffff },
+>  	[VOP2_WIN_AFBC_HALF_BLOCK_EN] = { .reg = 0xffffffff },
+>  	[VOP2_WIN_AFBC_ROTATE_270] = { .reg = 0xffffffff },
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
+> index 29cc7fb8f6d8..8510140b0869 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
+> @@ -118,7 +118,7 @@ enum vop2_win_regs {
+>  	VOP2_WIN_AFBC_PIC_OFFSET,
+>  	VOP2_WIN_AFBC_PIC_SIZE,
+>  	VOP2_WIN_AFBC_DSP_OFFSET,
+> -	VOP2_WIN_AFBC_TRANSFORM_OFFSET,
+> +	VOP2_WIN_AFBC_TRANSFORM_OFFS,
+>  	VOP2_WIN_AFBC_HDR_PTR,
+>  	VOP2_WIN_AFBC_HALF_BLOCK_EN,
+>  	VOP2_WIN_AFBC_ROTATE_270,
+> @@ -335,7 +335,7 @@ enum dst_factor_mode {
+>  #define RK3568_CLUSTER_WIN_DSP_INFO		0x24
+>  #define RK3568_CLUSTER_WIN_DSP_ST		0x28
+>  #define RK3568_CLUSTER_WIN_SCL_FACTOR_YRGB	0x30
+> -#define RK3568_CLUSTER_WIN_AFBCD_TRANSFORM_OFFSET	0x3C
+> +#define RK3568_CLUSTER_WIN_AFBCD_TRANSFORM_OFFS	0x3C
+>  #define RK3568_CLUSTER_WIN_AFBCD_OUTPUT_CTRL	0x50
+>  #define RK3568_CLUSTER_WIN_AFBCD_ROTATE_MODE	0x54
+>  #define RK3568_CLUSTER_WIN_AFBCD_HDR_PTR	0x58
 > 
-> or similar.
 
-I can confirm that audio regression with the in-kernel pd-mapper appears
-to be caused by the race that this patch fixes.
 
-If I insert a short (100-200 ms) sleep before taking the list lock in
-pdr_locator_new_server() to increase the race window, I see the audio
-service failing to register on both the X1E CRD and Lenovo ThinkPad
-X13s:
 
-[   11.118557] pdr_add_lookup - tms/servreg / msm/adsp/charger_pd
-[   11.443632] pdr_locator_new_server
-[   11.558122] pdr_locator_new_server - taking list lock
-[   11.563939] pdr_locator_new_server - releasing list lock
-[   11.582178] pdr_locator_work - taking list lock
-[   11.594468] pdr_locator_work - releasing list lock
-[   11.992018] pdr_add_lookup - avs/audio / msm/adsp/audio_pd
-[   11.992034] pdr_add_lookup - avs/audio / msm/adsp/audio_pd
-[   11.992224] pdr_locator_new_server
-    < 100 ms sleep inserted before taking lock in pdr_locator_new_server() >
-[   11.997937] pdr_locator_work - taking list lock
-[   12.093984] pdr_locator_new_server - taking list lock
-[   17.120169] PDR: avs/audio get domain list txn wait failed: -110
-[   17.127066] PDR: service lookup for avs/audio failed: -110
-[   17.132893] pdr_locator_work - releasing list lock
-[   17.139885] pdr_locator_new_server - releasing list lock
 
-[ On the X13s, where I have not hit this issue with the in-kernel
-  pd-mapper, I had to make sure to insert the sleep only on the second
-  call, possibly because of interaction with the charger_pd registration
-  which happened closer to the audio registration. ]
-
-Please add a comment and link to the audio regression report as I
-suggested above, and feel free to include my:
-
-	Tested-by: Johan Hovold <johan+linaro@kernel.org>
-
-Thanks for fixing this!
-
-Johan
