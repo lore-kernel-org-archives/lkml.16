@@ -1,154 +1,73 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961082080D0;
-	Wed, 12 Feb 2025 09:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92A22063D6
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739353727; cv=none; b=nn+1aFQveMo8WbpMSMWoVRKuhgRg9JbhqnrUoRGPT9mXoMxbUpdxKRSDg69lFYs38NFRtaOn0vtqQNb8JMsoTpFoHTrNBitFxQfap4WKEjc8dhIPuhW2HSk9zUJMt6nmkmB0jymRjNvkuJhPdWrUBDGtq+w3xT1cPESAVkNIRqc=
+	t=1739353744; cv=none; b=sMRTARUs6IObvzE/jlIoc4kp1huaHF/kwUaTtomeSwNGyAC7Jxk8DNsICqbHdteMhjeDGDRu4R58PNP3UAACU4im9zaTiWG/PA6JX0iFonCsa6f4Pnh4AnRMP1C+wbk4gQKGVVy7f9gd3fMQBRIu+QCo9beejEbMTL8tI7+mFPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739353727; c=relaxed/simple;
-	bh=p4lLou9jR/5i5jryQ+c5wNxurkN/k/jBM8ck1oxCZBw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jITlbkwHxp1CpFHJlXRX9m6xvDg6NtmUjz2N794z1IugUJI42OL5lAeg6ASc949+O2jF02iV3u1SyFmr3gGtYLzsOltdBphO0NVoF6I38rmse+zR99Bp2uLjR7rD9px7M5cnrbE1aC+LSfarOje407sEHJ6GGno7psGSB9nBamU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=ALpwiHpd; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ALpwiHpd"
-Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51C6Wr8T026989;
-	Wed, 12 Feb 2025 01:48:26 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=B
-	M1NwnrPgoeHtetmEdpZ7hXW8xXmFgczyGTaEVLIXAE=; b=ALpwiHpdpSTnTUDbb
-	gg2d59DQPK1KGXw1M5xqjpqb9YY78dLU/zNSCyzs7LRPZQNSL6aoDTGWzKBoEa71
-	sYi8+8VJLttvsjXQH2mw35odbXynm6Uw41ljO8NYi9nudrEPKvZ0/1xHBD2sXllU
-	e8Yv8l9oik1DVJfD4QXfL2EZ2l8kAei9dTrV6I44jROMbFoLN50Wqgx00xIrYWf3
-	BwopogGHzKamVPMKwsVmZ56sU4ZIr1LiuCP0RrF/nclfIkRe9/eh3A3I9W+kzo4t
-	G06RUbT1YmOalqp0vbHLrTIVaBP3hoZmWTAqtQwLSHqIAxyBTYtuh7cz+ic0YjxS
-	UiJcw==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 44rpfcramx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 01:48:26 -0800 (PST)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 12 Feb 2025 01:48:25 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 12 Feb 2025 01:48:25 -0800
-Received: from localhost.localdomain (unknown [10.28.36.166])
-	by maili.marvell.com (Postfix) with ESMTP id 54E963F708A;
-	Wed, 12 Feb 2025 01:48:19 -0800 (PST)
-From: Suman Ghosh <sumang@marvell.com>
-To: <horms@kernel.org>, <sgoutham@marvell.com>, <gakula@marvell.com>,
-        <sbhatta@marvell.com>, <hkelam@marvell.com>, <davem@davemloft.net>,
-        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lcherian@marvell.com>, <jerinj@marvell.com>,
-        <john.fastabend@gmail.com>, <bbhushan2@marvell.com>, <hawk@kernel.org>,
-        <andrew+netdev@lunn.ch>, <ast@kernel.org>, <daniel@iogearbox.net>,
-        <bpf@vger.kernel.org>, <larysa.zaremba@intel.com>
-CC: Suman Ghosh <sumang@marvell.com>
-Subject: [net-next PATCH v6 5/6] octeontx2-pf: Prepare for AF_XDP
-Date: Wed, 12 Feb 2025 15:17:37 +0530
-Message-ID: <20250212094738.2671725-6-sumang@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250212094738.2671725-1-sumang@marvell.com>
-References: <20250212094738.2671725-1-sumang@marvell.com>
+	s=arc-20240116; t=1739353744; c=relaxed/simple;
+	bh=rkCwBPKPtJ49YZ4SFX1SLtCIPwcFJwzxFPxxODXwTlA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=dcSAp4GxtlxWYBE/wU+tZvwwpdsFG7nfE55no60ktNwthok3utwRadM20X+bcXeOEIs2jCLjWNv97oE0z3TPojgb6j40j9c9KhcD2kLE74nVzRKpvWfA51SXOOMKtD7Jw39qltXEoNgMrvYCPHqnBGsA4f+GxxZGHlJloR3vOSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85525d6d034so588830839f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:49:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739353742; x=1739958542;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Io45Eohejs+Fvr4vaR6agY2CweeHHv/VVIkUZcuyASM=;
+        b=G/dZDa0J27eUH3YzMQmK7BwBrXwslcvGs9Dom+tSSfeBlUVUkVWI407Us038x6IcA2
+         pnNrXTTTe11UJFysKwXDqthbpDaQSuSLQ0cxAKnmzqXsttIJdptKEu7gJw6M4x3qlYGL
+         RgEFGLa9LGTISMIM+PxpJO8w+zopnpI9mxjawcWXDAK+GPnrRMcupJ4WRv3gfvQF0Bkq
+         OF9Ie8irBRdhXgiDhXKFyakgs9+2cCK8+OUPl7xCnsa8cqTylBAUhFtBux5Atw7MFy5d
+         L6OBD+3AquukiP8mxr0C2IpJMPZX0d998zjFz/IfN2eNg+jEwYiUWSK7BPBWdRoCd4EU
+         Vr0A==
+X-Forwarded-Encrypted: i=1; AJvYcCWsSo7m1yOKXTdypAOyCDhJBD1VTRIEkivO8guH57Ggjvv/dvQO3F0LPlhQjzxDQg6nz9oCvUpl4Gbze/8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw01EgEsyZAv8sFoJDDPtofEcemGwDAKnSZkIbZtrrHmlH7IO+O
+	CbHQqsgxigDiEgSFMzev8DRuma1BS7KuaWsMc1HXbdUsXtP4WnbC8OQB7IvLWiVClYyQ74APAyR
+	TRygxGxRx0+rHGrCMIcqI2PSPY4gvYKA6mu9t0Mlpje1wHXA2+Y17igE=
+X-Google-Smtp-Source: AGHT+IHmzz7MH3fIY10rUZGar542sOj+lOZJTturqEGQw5yGoQNxbyXt3oX2g1mSJu7UbCOXups98TFKVPsi0BkfK4eUHSS2FCE4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: lF42CQDtNwn4B0sOYuZA5wuhUpIz-moB
-X-Proofpoint-GUID: lF42CQDtNwn4B0sOYuZA5wuhUpIz-moB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-12_03,2025-02-11_01,2024-11-22_01
+X-Received: by 2002:a05:6e02:13ad:b0:3d0:47e3:40bb with SMTP id
+ e9e14a558f8ab-3d17bf4a445mr26670935ab.4.1739353741937; Wed, 12 Feb 2025
+ 01:49:01 -0800 (PST)
+Date: Wed, 12 Feb 2025 01:49:01 -0800
+In-Reply-To: <71A3E5DE-50CF-46B9-93A5-8A27C1817F01@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ac6e8d.050a0220.3d72c.0140.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] possible deadlock in pcpu_alloc_noprof
+From: syzbot <syzbot+fe63f377148a6371a9db@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mmpgouride@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Implement necessary APIs required for AF_XDP transmit.
+Hello,
 
-Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
-Signed-off-by: Suman Ghosh <sumang@marvell.com>
----
- .../marvell/octeontx2/nic/otx2_common.h       |  1 +
- .../marvell/octeontx2/nic/otx2_txrx.c         | 25 +++++++++++++++++--
- 2 files changed, 24 insertions(+), 2 deletions(-)
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
-index 60508971b62f..19e9e2e72233 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
-@@ -1181,4 +1181,5 @@ static inline int mcam_entry_cmp(const void *a, const void *b)
- dma_addr_t otx2_dma_map_skb_frag(struct otx2_nic *pfvf,
- 				 struct sk_buff *skb, int seg, int *len);
- void otx2_dma_unmap_skb_frags(struct otx2_nic *pfvf, struct sg_list *sg);
-+int otx2_read_free_sqe(struct otx2_nic *pfvf, u16 qidx);
- #endif /* OTX2_COMMON_H */
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
-index 00b6903ba250..9a6c1f1a3ee0 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
-@@ -30,6 +30,12 @@
- 
- DEFINE_STATIC_KEY_FALSE(cn10k_ipsec_sa_enabled);
- 
-+static int otx2_get_free_sqe(struct otx2_snd_queue *sq)
-+{
-+	return (sq->cons_head - sq->head - 1 + sq->sqe_cnt)
-+		& (sq->sqe_cnt - 1);
-+}
-+
- static bool otx2_xdp_rcv_pkt_handler(struct otx2_nic *pfvf,
- 				     struct bpf_prog *prog,
- 				     struct nix_cqe_rx_s *cqe,
-@@ -1157,7 +1163,7 @@ bool otx2_sq_append_skb(void *dev, struct netdev_queue *txq,
- 	/* Check if there is enough room between producer
- 	 * and consumer index.
- 	 */
--	free_desc = (sq->cons_head - sq->head - 1 + sq->sqe_cnt) & (sq->sqe_cnt - 1);
-+	free_desc = otx2_get_free_sqe(sq);
- 	if (free_desc < sq->sqe_thresh)
- 		return false;
- 
-@@ -1396,6 +1402,21 @@ static void otx2_xdp_sqe_add_sg(struct otx2_snd_queue *sq,
- 	sq->sg[sq->head].skb = (u64)xdpf;
- }
- 
-+int otx2_read_free_sqe(struct otx2_nic *pfvf, u16 qidx)
-+{
-+	struct otx2_snd_queue *sq;
-+	int free_sqe;
-+
-+	sq = &pfvf->qset.sq[qidx];
-+	free_sqe = otx2_get_free_sqe(sq);
-+	if (free_sqe < sq->sqe_thresh) {
-+		netdev_warn(pfvf->netdev, "No free sqe for Send queue%d\n", qidx);
-+		return 0;
-+	}
-+
-+	return free_sqe - sq->sqe_thresh;
-+}
-+
- bool otx2_xdp_sq_append_pkt(struct otx2_nic *pfvf, struct xdp_frame *xdpf,
- 			    u64 iova, int len, u16 qidx, u16 flags)
- {
-@@ -1404,7 +1425,7 @@ bool otx2_xdp_sq_append_pkt(struct otx2_nic *pfvf, struct xdp_frame *xdpf,
- 	int offset, free_sqe;
- 
- 	sq = &pfvf->qset.sq[qidx];
--	free_sqe = (sq->num_sqbs - *sq->aura_fc_addr) * sq->sqe_per_sqb;
-+	free_sqe = otx2_get_free_sqe(sq);
- 	if (free_sqe < sq->sqe_thresh)
- 		return false;
- 
--- 
-2.25.1
+Reported-by: syzbot+fe63f377148a6371a9db@syzkaller.appspotmail.com
+Tested-by: syzbot+fe63f377148a6371a9db@syzkaller.appspotmail.com
 
+Tested on:
+
+commit:         09fbf3d5 Merge tag 'tomoyo-pr-20250211' of git://git.c..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13cba3f8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3c2347dd6174fbe2
+dashboard link: https://syzkaller.appspot.com/bug?extid=fe63f377148a6371a9db
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12f28aa4580000
+
+Note: testing is done by a robot and is best-effort only.
