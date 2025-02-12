@@ -1,176 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46391263C72
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54E1202C45
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739399087; cv=none; b=nYiUUTR1E0k+fz/cqHfSA5Tl1L064dov/JyixOqc0oKvPXpxQjwh1vC0tfKywlmGZaVjVkWVgeBR9r/eNQtiYHaPm33IXazMuJFgmx7Iv7Uej5LBkr2HUD0SbK0G7Ei63wcm7an6JH5qhUxChHkQd3cWT8JYg2EW0snRO8zvunQ=
+	t=1739399148; cv=none; b=bILnvFqAF273m1BduC+bit6Yvjotsfz07nr5l0qzI+r3Yaszqmg6bBX0VFqRnzlz8sDOGzyN4DRYunzRmSNq2PwWvvu5azFqCe3PEeiuCkMZDliqv9mIzutRw3h+w3c8DS/a8DtuqTOSayPRc3+tRZkJsFOtA9ZGbE81HDsj8go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739399087; c=relaxed/simple;
-	bh=yWnkbiNcQ6t7qYxrt46zdDa0QIZXGwyGHgRdFljHBVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qyk9wmSRrE8A3+Lmido5zeVV0OuCSCtSns6M2osFwUQw+32tGPpd9a4pa4htVtwt/wo+ZsShk2ERyZjUUCZNSIqvaGrlyhQ0qU0O7vTPqI5GEVwccQ4QJ3Jh4xEsRac9MXNR3f4VY5Ng58J30i8A8vZgbvRUqNgSpJuDuXta874=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ahBUMkjh; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739399148; c=relaxed/simple;
+	bh=cRsst9VUZPQ4xjX0JjGxH/HZKO6ga8iI/0by98CXMI0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sIqkIKdXMUoXpVmXun4W2BGUTv94drtRyrtQXfGkwIQD9kOU/lPojUMfKH4Zv6o3y1S62xoCCSqNjoKmKTQYSobM93eCbLOZQITuUUASgWx5M9QVzIBorgLx49hdSQN8QoEdkxiUFBMA9AiwaJf2M1J0JSa55647SSSBLdP50zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qGQ57XXI; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ahBUMkjh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739399084;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EHAXmEebuXfGaW+Cbp856q5t3oORgVUeZdmoxZNWAV4=;
-	b=ahBUMkjhlXWOHD0BYgZfEkVjaHEaLahHpS0huenCoCeOysq62ngohN/ng2RdraxXf+9E2U
-	VrILOgCAJ5VD4A/Qy8sK+0TOM2hSNxtEgIJUAiRf3p36bQOXGzsW78cKjR2drRSqb34Qza
-	D3gNRMm6NsNYwmwujoMQMCLj/mgl4Ic=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-117-0JhFd5MBMq-N6YBSpy5hVg-1; Wed,
- 12 Feb 2025 17:24:40 -0500
-X-MC-Unique: 0JhFd5MBMq-N6YBSpy5hVg-1
-X-Mimecast-MFC-AGG-ID: 0JhFd5MBMq-N6YBSpy5hVg_1739399077
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B56B7195608B;
-	Wed, 12 Feb 2025 22:24:36 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.92])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B79951955F21;
-	Wed, 12 Feb 2025 22:24:29 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>
-Cc: David Howells <dhowells@redhat.com>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	Max Kellermann <max.kellermann@ionos.com>,
-	Steve French <sfrench@samba.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	netfs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Ihor Solodrai <ihor.solodrai@pm.me>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	Steve French <stfrench@microsoft.com>
-Subject: [PATCH 3/3] netfs: Fix setting NETFS_RREQ_ALL_QUEUED to be after all subreqs queued
-Date: Wed, 12 Feb 2025 22:24:01 +0000
-Message-ID: <20250212222402.3618494-4-dhowells@redhat.com>
-In-Reply-To: <20250212222402.3618494-1-dhowells@redhat.com>
-References: <20250212222402.3618494-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qGQ57XXI"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d18c325ee4so7635ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 14:25:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739399146; x=1740003946; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eb8NB3DXPVSxp8ymRsumf/Gc3u9+Crn5k7jX9QVoT18=;
+        b=qGQ57XXICBWt4v7pTUUjcg6HduSc4W8c5CDVU+YQVMmLAPquEmLBkBZH60DYSbJV26
+         Fb6ievsf6+gqpMx6bkuJElY46OK+o9q8w3hNUzSFgOsc88Ym5DK5Y5m2uhOmIgMVDTsD
+         f0g442zLMpu+H1aflzNFVXuwCwozaVMfzOO9md7KRH9cHiBaUMJcdtrEarWd6I1Qh6xp
+         uvXPZIHPYfuKkm/+EBgbrHNE5CGa1rPkXcJDajYSRciOArkRVcD9qhU0GyKNG+bPGowd
+         WVqNRGFW2fY3kqYMh4RO//bP6A4Elq03qvGxaTsuw80le+3Pc+SbU1fFio84JGDllNLW
+         d2jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739399146; x=1740003946;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eb8NB3DXPVSxp8ymRsumf/Gc3u9+Crn5k7jX9QVoT18=;
+        b=ppFG/MvVDKxoxMKfQeLScen42BD2VMqRtob6GrlG8FrS279YU50P7jrTT1Zw91wkWA
+         8QOAZaK4WceDZBHXkM9xaYaGpMgsIEuhwaPOAdov0xMMJgHK/EXLWtjNXGksd/ndX76g
+         rIClRD45ugKG9Y6X8LWcOAg2QBRJ9BIm2La4sZsZdZhdWZcp2uaq39I+u0RHEXuoFQU8
+         zZ1e1SJ1Biha4M5QxHSyWZD9Gh6/ymnxlaXS/01k6qZ3EYeLzqI33rC9tJcqMUW1cNCQ
+         B+OamRHUPx1pmAtc9iphpu6Cbqv4RbZqWThxFcZE8a6HQJllx/CPYstTonK+NibCWkKy
+         IpNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXOVhzPeaCCBMbiHMXibss1yViBB+vcJ8QYWPP4NS24l+csIBPQ7CZ+VfRQlp2x8Kc6YzzZzbdejbPtgok=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT5oCVQu1Lpch/Z0HDXopzznjHfnfgpt/uP8sa/yMNhYZxoB6t
+	7J1rF8SyWpUcwM7c9wVObUPFDkeLIHjkQpBCC1Xt0aMsFVL7UmGzQJ50opnPdT1haK56ltkpLXm
+	tCNRiLGTWy3/hBEm63wZ2cPP0u50xslyE6o4V
+X-Gm-Gg: ASbGncs09LX0QRJL+HSxgiB759u5E9i+pEdXyNiqsQSmFHzFL37mw9s22F9ygXZjNPG
+	YUeWaBoo22B6f0nwJtYeveyw0bjBHHmBIv/SjEtRT487nr7bcBek5n/ztZhUvjwTY4STdttJ2sR
+	9ikDFj7K4ni13JtS95TUiKaCSq
+X-Google-Smtp-Source: AGHT+IEPi18vHfc6677zYsQWxRRWLmfPS/2RcM6gJqq5aFJEzAn2ciymxv8IrOUJUOw3+je2EcPOc6fxm7v4RthHM4k=
+X-Received: by 2002:a05:6e02:2405:b0:3d0:5ac6:f493 with SMTP id
+ e9e14a558f8ab-3d18e1e33d2mr339635ab.5.1739399145693; Wed, 12 Feb 2025
+ 14:25:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+References: <20250212221445.437481-1-namhyung@kernel.org>
+In-Reply-To: <20250212221445.437481-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 12 Feb 2025 14:25:34 -0800
+X-Gm-Features: AWEUYZkOKMbZzWVbJGyBP-A50OG1S_X-IxmfIoNOeRJjPef2U-p22t0pd2K8YnM
+Message-ID: <CAP-5=fV4w=y5-mFdwa8_UAxPYJeqnFhdXjyVic88CKwP_XdmSg@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: Use symfs when opening debuginfo by path
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Due to the code that queues a subreq on the active subrequest list getting
-moved to netfs_issue_read(), the NETFS_RREQ_ALL_QUEUED flag may now get set
-before the list-add actually happens.  This is not a problem if the
-collection worker happens after the list-add, but it's a race - and, for
-9P, where the read from the server is synchronous and done in the
-submitting thread, this is a lot more likely.
+On Wed, Feb 12, 2025 at 2:14=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> I found that it failed to load a binary using --symfs option.  Say I
+> have a binary in /home/user/prog/xxx and a perf data file with it.  If I
+> move them to a different machine and use --symfs, it tries to find the
+> binary in some locations under symfs using dso__read_binary_type_filename=
+(),
+> but not the last one.
+>
+>   ${symfs}/usr/lib/debug/home/user/prog/xxx.debug
+>   ${symfs}/usr/lib/debug/home/user/prog/xxx
+>   ${symfs}/home/user/prog/.debug/xxx
+>   /home/user/prog/xxx
+>
+> It should check ${symfs}/home/usr/prog/xxx.  Let's fix it.
+>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-The result is that, if the timing is wrong, a ref gets leaked because the
-collector thinks that all the subreqs have completed (because it can't see
-the last one yet) and clears NETFS_RREQ_IN_PROGRESS - at which point, the
-collection worker no longer goes into the collector.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-This can be provoked with AFS by injecting an msleep() right before the
-final subreq is queued.
+Thanks,
+Ian
 
-Fix this by splitting the queuing part out of netfs_issue_read() into a new
-function, netfs_queue_read(), and calling it separately.  The setting of
-NETFS_RREQ_ALL_QUEUED is then done by netfs_queue_read() whilst it is
-holding the spinlock (that's probably unnecessary, but shouldn't hurt).
-
-It might be better to set a flag on the final subreq, but this could be a
-problem if an error occurs and we can't queue it.
-
-Fixes: e2d46f2ec332 ("netfs: Change the read result collector to only use one work item")
-Reported-by: Ihor Solodrai <ihor.solodrai@pm.me>
-Closes: https://lore.kernel.org/r/a7x33d4dnMdGTtRivptq6S1i8btK70SNBP2XyX_xwDAhLvgQoPox6FVBOkifq4eBinfFfbZlIkMZBe3QarlWTxoEtHZwJCZbNKtaqrR7PvI=@pm.me/
-Signed-off-by: David Howells <dhowells@redhat.com>
-Tested-by: Ihor Solodrai <ihor.solodrai@linux.dev>
-cc: Eric Van Hensbergen <ericvh@kernel.org>
-cc: Latchesar Ionkov <lucho@ionkov.net>
-cc: Dominique Martinet <asmadeus@codewreck.org>
-cc: Christian Schoenebeck <linux_oss@crudebyte.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Steve French <stfrench@microsoft.com>
-cc: Paulo Alcantara <pc@manguebit.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: v9fs@lists.linux.dev
-cc: linux-cifs@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/netfs/buffered_read.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
-
-diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
-index f761d44b3436..0d1b6d35ff3b 100644
---- a/fs/netfs/buffered_read.c
-+++ b/fs/netfs/buffered_read.c
-@@ -155,8 +155,9 @@ static void netfs_read_cache_to_pagecache(struct netfs_io_request *rreq,
- 			netfs_cache_read_terminated, subreq);
- }
- 
--static void netfs_issue_read(struct netfs_io_request *rreq,
--			     struct netfs_io_subrequest *subreq)
-+static void netfs_queue_read(struct netfs_io_request *rreq,
-+			     struct netfs_io_subrequest *subreq,
-+			     bool last_subreq)
- {
- 	struct netfs_io_stream *stream = &rreq->io_streams[0];
- 
-@@ -177,8 +178,17 @@ static void netfs_issue_read(struct netfs_io_request *rreq,
- 		}
- 	}
- 
-+	if (last_subreq) {
-+		smp_wmb(); /* Write lists before ALL_QUEUED. */
-+		set_bit(NETFS_RREQ_ALL_QUEUED, &rreq->flags);
-+	}
-+
- 	spin_unlock(&rreq->lock);
-+}
- 
-+static void netfs_issue_read(struct netfs_io_request *rreq,
-+			     struct netfs_io_subrequest *subreq)
-+{
- 	switch (subreq->source) {
- 	case NETFS_DOWNLOAD_FROM_SERVER:
- 		rreq->netfs_ops->issue_read(subreq);
-@@ -293,11 +303,8 @@ static void netfs_read_to_pagecache(struct netfs_io_request *rreq)
- 		}
- 		size -= slice;
- 		start += slice;
--		if (size <= 0) {
--			smp_wmb(); /* Write lists before ALL_QUEUED. */
--			set_bit(NETFS_RREQ_ALL_QUEUED, &rreq->flags);
--		}
- 
-+		netfs_queue_read(rreq, subreq, size <= 0);
- 		netfs_issue_read(rreq, subreq);
- 		cond_resched();
- 	} while (size > 0);
-
+> ---
+>  tools/perf/util/debuginfo.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
+> index 19acf4775d3587a4..b5deea7cbdf24620 100644
+> --- a/tools/perf/util/debuginfo.c
+> +++ b/tools/perf/util/debuginfo.c
+> @@ -125,8 +125,12 @@ struct debuginfo *debuginfo__new(const char *path)
+>         dso__put(dso);
+>
+>  out:
+> +       if (dinfo)
+> +               return dinfo;
+> +
+>         /* if failed to open all distro debuginfo, open given binary */
+> -       return dinfo ? : __debuginfo__new(path);
+> +       symbol__join_symfs(buf, path);
+> +       return __debuginfo__new(buf);
+>  }
+>
+>  void debuginfo__delete(struct debuginfo *dbg)
+> --
+> 2.48.1.502.g6dc24dfdaf-goog
+>
