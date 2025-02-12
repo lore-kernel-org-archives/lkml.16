@@ -1,52 +1,56 @@
-Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C551260A4E;
-	Wed, 12 Feb 2025 19:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7689C260A4E;
+	Wed, 12 Feb 2025 19:11:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739387405; cv=none; b=oIks1yYWcUOYLTVJpxAtgr29u6ISMU7TR77NxCk1+uUdYfn1UAYoWk0ttKw0RngOgLhD553eGCaRolu1DEMW08S/oIme4b79UYBo2AKGQh3ddxnNbbR2MXGu3NBEjN2Z8bjvZ2puOJ+nkDmoq4uXOufgEVJS5SWx3U3JrxbjDBA=
+	t=1739387510; cv=none; b=OdtBhZa3mqKABXjB5BlRyeYBXS9bvbLZpvEyV2UAkvM4M8l8iXCBgxshkoIYtfWarwTpFWCnKpwPGRwBT6irBrxbiE7aI06pkxxr8mfpZ4C9m8mfP9iXF8Qe3Xd2sHoe7kmWaaw4IY22zjs1MrYPraTWJkzFXD3xz3tTHQnUTRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739387405; c=relaxed/simple;
-	bh=3YhrClgMV1aKi0S4z5olXFmU2m1U1F09UvqrHJPICx4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FswYNfS33tenJuIWYHgv4E12hll3fktjHqeIB7GUBf/L/RxAURngDNAwVlowWeOfXOK41meySj24ym7yancoXoLrRpMk0twQUdpsJXeJyZAL+E8OmAf1Kt4hafsbhNjSMOZa7sGMoLeiIx8jFc72r/cXrqSbHKq5yihuDLAkopg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=matthias-proske.de; spf=pass smtp.mailfrom=matthias-proske.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=JgLa8KsE; arc=none smtp.client-ip=134.0.28.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=matthias-proske.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matthias-proske.de
+	s=arc-20240116; t=1739387510; c=relaxed/simple;
+	bh=eWCfUJWCL3bgCUfdMNvjAiXfNzsUUUtb3s+Qt1Vf1eU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lfVcmGkvo9RRZJB7bV0Fgcg/Q/8PcMikoSQ/hovyJ+4fu3qky2/nT7Ysre5nWZ52pZzAzmREeMGSmVUkyjGykm34Fc2dRbqPWv3ntuN6cXQXs0Mc3bxn8wJzeyGTdOyb7BXuVtb6f1ptKbgeGXm7aDzl2GyTAF273edlmGRcQ6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Mvul/+15; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="JgLa8KsE"
-Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-	by mxout2.routing.net (Postfix) with ESMTP id 93B07601DA;
-	Wed, 12 Feb 2025 19:01:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1739386880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=q+TDqPY/j9LuymxqoSxnd/KR0pzmWLDlKhqHng4rETU=;
-	b=JgLa8KsEvxf83OU/YJW3Jxvkg79AMmbPexqGyMa1YFE3lWzQ9K24njhnA1T2zFciGesa60
-	cq295GydBWSzqjYKdViddtlnAJj5hun6/0rZUe3lZekuVJSPtJVwUdeGdKepT5u0L2GTZP
-	260a6iSPy9Sh9uTweqcOIfsFZmXhgDQ=
-Received: from localhost.localdomain (unknown [217.26.232.248])
-	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 8CC40360077;
-	Wed, 12 Feb 2025 19:01:19 +0000 (UTC)
-From: Matthias Proske <email@matthias-proske.de>
-To: Arend van Spriel <arend.vanspriel@broadcom.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	Norbert van Bolhuis <nvbolhuis@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Ondrej Jirman <megi@xff.cz>,
-	Erick Archer <erick.archer@outlook.com>,
-	Matthias Proske <email@matthias-proske.de>,
-	Jacobe Zang <jacobe.zang@wesion.com>
-Cc: linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] wifi: brcmfmac: keep power during suspend if board requires it
-Date: Wed, 12 Feb 2025 19:59:35 +0100
-Message-ID: <20250212185941.146958-2-email@matthias-proske.de>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Mvul/+15"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51CJBUq83860049
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Feb 2025 13:11:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1739387490;
+	bh=QGHH7UlGVMkaOY7DBbS8GvxoQBLmUX54+zNR+/ztCDM=;
+	h=From:To:CC:Subject:Date;
+	b=Mvul/+157rkXdygk+oE52ViC7ZXIiq932D0G7Z13ZuP+zPzNhU6TE8NebjLO7zDTB
+	 uTGfcD95UMrC5NE4hXfe2DbZpvVWqPp4hFuKuM8n5azbQxWmR+pMFc6NCixyNtVQxT
+	 FE+vgPrDaAkYHE3ZGzo7XqdC4UfzKRcoYz+TdIWM=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51CJBUpW086442
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 12 Feb 2025 13:11:30 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 12
+ Feb 2025 13:11:29 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 12 Feb 2025 13:11:29 -0600
+Received: from DMZ007XYY.dhcp.ti.com (dmz007xyy.dhcp.ti.com [128.247.29.251])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51CJBTMp089207;
+	Wed, 12 Feb 2025 13:11:29 -0600
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+To: <lgirdwood@gmail.com>, <broonie@kernel.org>, <aaro.koskinen@iki.fi>,
+        <andreas@kemnade.info>, <khilman@baylibre.com>, <rogerq@kernel.org>,
+        <tony@atomide.com>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <m-leonard@ti.com>, <praneeth@ti.com>
+Subject: [PATCH v4 0/4] Add TI TPS65214 & TPS65215 Regulator Support
+Date: Wed, 12 Feb 2025 13:11:25 -0600
+Message-ID: <20250212191129.467728-1-s-ramamoorthy@ti.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,92 +58,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: 87371727-d5df-497f-88f1-efc5d1639e48
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-After commit 92cadedd9d5f ("brcmfmac: Avoid keeping power to SDIO card
-unless WOWL is used"), the wifi adapter by default is turned off on
-suspend and then re-probed on resume.
+TPS65214 and TPS65215 are Power Management Integrated Circuits (PMICs) that
+have significant register map overlap with TPS65219 and each other. The 
+series introduces the 2 new PMICs and restructures the existing driver to 
+support multiple devices.
 
-This conflicts with some embedded boards that require to remain powered.
-They will fail on resume with:
+- TPS65214, TPS65215, and TPS65219 each have 3 Buck regulators
+- TPS65214 has 2 LDOS and 1 GPO, whereas TPS65219 has 4 LDOs and 2 GPOs.
+- TPS65214's LDO1 maps to TPS65219's LDO3.
+- A key difference between TPS65215 & TPS65214 are the LDO current and
+  voltage output ranges and the configurable options available.
+- TPS65215 has 2 LDOs, whereas TPS65219 has 4 LDOs.
+- TPS65215's LDO2 maps to TPS65219's LDO3.
+- TPS65215 has 1 GPO, whereas TPS65219 has 2 GPOs.
 
-brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout
-ieee80211 phy1: brcmf_bus_started: failed: -110
-ieee80211 phy1: brcmf_attach: dongle is not responding: err=-110
-brcmfmac: brcmf_sdio_firmware_callback: brcmf_attach failed
+Dependencies:
+- Patches 2 & 3 depend on https://lore.kernel.org/all/20250206173725.386720-5-s-ramamoorthy@ti.com/
+- Patch 4 depends on https://lore.kernel.org/all/20250206173725.386720-6-s-ramamoorthy@ti.com/
 
-This commit checks for the Device Tree property 'cap-power-off-cards'.
-If this property is not set, it means that we do not have the capability
-to power off and should therefore remain powered.
+TPS65214 TRM: https://www.ti.com/lit/pdf/slvud30
+TPS65215 TRM: https://www.ti.com/lit/pdf/slvucw5/
 
-Signed-off-by: Matthias Proske <email@matthias-proske.de>
+AM62L + TPS65214 Test Logs:
+https://gist.github.com/ramamoorthyhs/0793f7813332d94423ca1baee02f62c9
+AM62L + TPS65215 Test Logs:
+https://gist.github.com/ramamoorthyhs/7560eca6110fafc77b51894fa2c0fd22
+
 ---
- .../broadcom/brcm80211/brcmfmac/bcmsdh.c      | 20 ++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+Change Log:
+v3 -> v4:
+- Update commit header to be "regulator: tps65219" since the driver name has not 
+  been changed from TPS65219.
+- Combined TPS65214 & TPS65215 regulator patches into 1 series, 
+  since the series' share a dependency & these patches have overlapping changes
+- Drop tps65215_regulator_irq_types empty array and instead: set irq_types to NULL and dev_irq_size to 0
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-index 60eb95fc19a5..6bc107476a2a 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-@@ -1172,6 +1172,7 @@ static int brcmf_ops_sdio_suspend(struct device *dev)
- 	struct brcmf_bus *bus_if;
- 	struct brcmf_sdio_dev *sdiodev;
- 	mmc_pm_flag_t sdio_flags;
-+	bool cap_power_off;
- 	int ret = 0;
- 
- 	func = container_of(dev, struct sdio_func, dev);
-@@ -1179,19 +1180,23 @@ static int brcmf_ops_sdio_suspend(struct device *dev)
- 	if (func->num != 1)
- 		return 0;
- 
-+	cap_power_off = !!(func->card->host->caps & MMC_CAP_POWER_OFF_CARD);
- 
- 	bus_if = dev_get_drvdata(dev);
- 	sdiodev = bus_if->bus_priv.sdio;
- 
--	if (sdiodev->wowl_enabled) {
-+	if (sdiodev->wowl_enabled || !cap_power_off) {
- 		brcmf_sdiod_freezer_on(sdiodev);
- 		brcmf_sdio_wd_timer(sdiodev->bus, 0);
- 
- 		sdio_flags = MMC_PM_KEEP_POWER;
--		if (sdiodev->settings->bus.sdio.oob_irq_supported)
--			enable_irq_wake(sdiodev->settings->bus.sdio.oob_irq_nr);
--		else
--			sdio_flags |= MMC_PM_WAKE_SDIO_IRQ;
-+
-+		if (sdiodev->wowl_enabled) {
-+			if (sdiodev->settings->bus.sdio.oob_irq_supported)
-+				enable_irq_wake(sdiodev->settings->bus.sdio.oob_irq_nr);
-+			else
-+				sdio_flags |= MMC_PM_WAKE_SDIO_IRQ;
-+		}
- 
- 		if (sdio_set_host_pm_flags(sdiodev->func1, sdio_flags))
- 			brcmf_err("Failed to set pm_flags %x\n", sdio_flags);
-@@ -1213,18 +1218,19 @@ static int brcmf_ops_sdio_resume(struct device *dev)
- 	struct brcmf_sdio_dev *sdiodev = bus_if->bus_priv.sdio;
- 	struct sdio_func *func = container_of(dev, struct sdio_func, dev);
- 	int ret = 0;
-+	bool cap_power_off = !!(func->card->host->caps & MMC_CAP_POWER_OFF_CARD);
- 
- 	brcmf_dbg(SDIO, "Enter: F%d\n", func->num);
- 	if (func->num != 2)
- 		return 0;
- 
--	if (!sdiodev->wowl_enabled) {
-+	if (!sdiodev->wowl_enabled && cap_power_off) {
- 		/* bus was powered off and device removed, probe again */
- 		ret = brcmf_sdiod_probe(sdiodev);
- 		if (ret)
- 			brcmf_err("Failed to probe device on resume\n");
- 	} else {
--		if (sdiodev->settings->bus.sdio.oob_irq_supported)
-+		if (sdiodev->wowl_enabled && sdiodev->settings->bus.sdio.oob_irq_supported)
- 			disable_irq_wake(sdiodev->settings->bus.sdio.oob_irq_nr);
- 
- 		brcmf_sdiod_freezer_off(sdiodev);
+v2 -> v3:
+dt-bindings: 
+- Alphanumeric order for PMIC list
+- add allOf:if:then: which will disallow :false two LDOs and their supplies
+
+regulator.c:
+- Revert addition of 2 probe helper functions
+- Add empty tps65215_regulator_irq_types struct to minimize loops in probe
+- Consolidate patches to define and use func/structs in the same patches to
+  prevent build error due to no users of the defined functions
+- Apply reverse xmas tree style to variable defintions in functions
+- Remove unnecessary new lines & add new line after declarations
+
+v1 -> v2:
+- have any PMIC lists be in alpha-numeric order: TPS65215, then TPS65219
+- Add driver prefix to chip_data struct
+- Have probe() helper functions use dev_err_probe instead of dev_err() to 
+  log the error code in a human readable format & combined with return, it 
+  saves a few LoC since { } can be removed.
+- Add error handling of 'irq_data' in probe() as previously done.
+---
+Shree Ramamoorthy (4):
+  regulator: tps65219: Update struct names
+  regulator: tps65219: Add support for TPS65215 regulator resources
+  regulator: tps65219: Add support for TPS65215 Regulator IRQs
+  regulator: tps65219: Add TI TPS65214 Regulator Support
+
+ drivers/regulator/Kconfig              |  12 +-
+ drivers/regulator/tps65219-regulator.c | 242 ++++++++++++++++++++-----
+ 2 files changed, 202 insertions(+), 52 deletions(-)
+
 -- 
-2.48.1
+2.43.0
 
