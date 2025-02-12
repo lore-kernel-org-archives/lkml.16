@@ -1,102 +1,120 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B367E107;
-	Wed, 12 Feb 2025 03:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD3CC148;
+	Wed, 12 Feb 2025 03:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739329283; cv=none; b=XEltmEOoEqgM24tsB/kv/KxRckDU6YVcXQwraj+Uy30lTcNmP8e1eHZQ/O+/CdqCyDP+7Tsaqi6BkhIsnYU7JOFJDUe7LVu2IP4H/b2aXcCBIIbekcxLucGGSBgqIFBDkGavIaJ13kPR9WW44x9+zX84JGLoregwR7hzmMbayZg=
+	t=1739329680; cv=none; b=o108MTNVVFD10PQjgSkZMBuL6jScGae+AtOq6YRTM+KBQ+qzBsJJEeI6C7wW1sFQdSOcsghQLut37WMStV/01AkAMTj0E5l8D7E8n0ge/dUPeWrCPZyrrjE3NztcSQqV0KDwZAxoc8/GKrmTqxpz3+mH6jkW6GvNCXXEOGB2wFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739329283; c=relaxed/simple;
-	bh=TzeWfyllWEcDqZhvK8KDksLxOw4vt7BAikh95Vs5JlQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=k+dh2DVYCzBLlEW3ybCD3g/bGO63RzZbWVzLi8RTLBukAoPsVJfRzzJ28tsGra+t6ZFQpPDitWZAO2pyZ1Q9zdRj1DRveqvhifevhiF9+wB0A71L/NVo93IQVEfsEJSkdqWDUFkmyNR8rEWuklftn4N9ujdct6i8GvWEUazro4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=NnBU2WbU; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NnBU2WbU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1739329274;
-	bh=JSDlELcyG88ZzzYYBK4LOkJaFlLkawCNJ4tb0QJ74Gc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=NnBU2WbUKxXBea4i0gQC5gxyLMq3pwogplOC6WQGIFbD88xL/mnaB/EzhswRTu+Qd
-	 f2ui4a+Xqd8x2CjawmmIiM7xdCGnTKLfOmz/EoYoA38178Ws8OFDwHZ8dBYcBxaUuE
-	 ApO9xMXY72t/gFvtKVgfrgQplWwEoDwIv6qhV5kCMvr/8k3RTKZok3WAOR4QMDAYEw
-	 vp186dxWKZIsB8Yab0dLwGcxEjsr8rwibBuWvnd8/jD1H0k5BOW0aD03E5YbT+2Vqk
-	 lLZKRs5tcbbkiLHZnBWRxbLn43yO6dypkL5+l5W94a2FrS5BdFDYmxVTHGnRGutas4
-	 ZA2RCQHdHle4A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Yt33t5mH5z4wyh;
-	Wed, 12 Feb 2025 14:01:14 +1100 (AEDT)
-Date: Wed, 12 Feb 2025 14:00:36 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>, Liam
- Girdwood <lgirdwood@gmail.com>
-Cc: Andrei Simion <andrei.simion@microchip.com>, Charan Pedumuru
- <charan.pedumuru@microchip.com>, Durai Manickam KR
- <durai.manickamkr@microchip.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the dmaengine tree with the sound-asoc
- tree
-Message-ID: <20250212140036.6c66be97@canb.auug.org.au>
+	s=arc-20240116; t=1739329680; c=relaxed/simple;
+	bh=jaIYd7cshqR/G5ETbAdsuBDEMdOgq06VwWSRJQs5sBw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JZXNTphVwl8lc7JzxTfEOvr7MYUFOkg0BfXlnS3wuMot1h2JYq7B7fghI1usMyq8HiNU34zLnCASj1SZmYQ5Qo3FoydJ3dIVHKK8ExVh/TM5KkDc7YmRxTarGPW5fd4zR28mzALGWbtciOPn3+hj94BQU31Rq9TVP/+PiOSTmhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Yt3CF69hCz4f3jqb;
+	Wed, 12 Feb 2025 11:07:37 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id E0AF01A0BD9;
+	Wed, 12 Feb 2025 11:07:53 +0800 (CST)
+Received: from hulk-vt.huawei.com (unknown [10.67.174.121])
+	by APP3 (Coremail) with SMTP id _Ch0CgDXKcSBEKxnbyc1Dg--.7428S2;
+	Wed, 12 Feb 2025 11:07:53 +0800 (CST)
+From: Chen Ridong <chenridong@huaweicloud.com>
+To: akpm@linux-foundation.org,
+	mhocko@kernel.org,
+	hannes@cmpxchg.org,
+	yosryahmed@google.com,
+	roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev,
+	muchun.song@linux.dev,
+	davidf@vimeo.com,
+	vbabka@suse.cz,
+	mkoutny@suse.com,
+	paulmck@kernel.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	chenridong@huawei.com,
+	wangweiyang2@huawei.com
+Subject: [PATCH] mm/oom_kill: revert watchdog reset in global OOM process
+Date: Wed, 12 Feb 2025 02:57:07 +0000
+Message-Id: <20250212025707.67009-1-chenridong@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/iW2pTCg=Dr_TNO6ecs9kRM+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgDXKcSBEKxnbyc1Dg--.7428S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7KFy8Kry3Ww48GryrJw1fWFg_yoW8XF48pa
+	98ua4UK398J3Z8ZF47Aa4IvF17J395ZFW8JF9rK34FvwsxtFn2yrWIyr1aqryrAFWS9a4Y
+	vFs8Kr1xJrWavw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
+	n4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8
+	ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IUbmii3UUUUU==
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
---Sig_/iW2pTCg=Dr_TNO6ecs9kRM+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Chen Ridong <chenridong@huawei.com>
 
-Hi all,
+Unlike memcg OOM, which is relatively common, global OOM events are rare
+and typically indicate that the entire system is under severe memory
+pressure. The commit ade81479c7dd ("memcg: fix soft lockup in the OOM
+process") added the touch_softlockup_watchdog in the global OOM handler to
+suppess the soft lockup issues. However, while this change can suppress
+soft lockup warnings, it does not address RCU stalls, which can still be
+detected and may cause unnecessary disturbances. Simply remove the
+modification from the global OOM handler.
 
-Today's linux-next merge of the dmaengine tree got a conflict in:
+Fixes: ade81479c7dd ("memcg: fix soft lockup in the OOM process")
+Signed-off-by: Chen Ridong <chenridong@huawei.com>
+---
+ mm/oom_kill.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-  Documentation/devicetree/bindings/misc/atmel-ssc.txt
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index 25923cfec9c6..2d8b27604ef8 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -44,7 +44,6 @@
+ #include <linux/init.h>
+ #include <linux/mmu_notifier.h>
+ #include <linux/cred.h>
+-#include <linux/nmi.h>
+ 
+ #include <asm/tlb.h>
+ #include "internal.h"
+@@ -431,15 +430,10 @@ static void dump_tasks(struct oom_control *oc)
+ 		mem_cgroup_scan_tasks(oc->memcg, dump_task, oc);
+ 	else {
+ 		struct task_struct *p;
+-		int i = 0;
+ 
+ 		rcu_read_lock();
+-		for_each_process(p) {
+-			/* Avoid potential softlockup warning */
+-			if ((++i & 1023) == 0)
+-				touch_softlockup_watchdog();
++		for_each_process(p)
+ 			dump_task(p, oc);
+-		}
+ 		rcu_read_unlock();
+ 	}
+ }
+-- 
+2.34.1
 
-between commit:
-
-  6603c5133daa ("ASoC: dt-bindings: atmel,at91-ssc: Convert to YAML format")
-
-from the sound-asoc tree and commit:
-
-  a54ec770396c ("dt-bindings: dma: convert atmel-dma.txt to YAML")
-
-from the dmaengine tree.
-
-I fixed it up (I just deleted the file) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/iW2pTCg=Dr_TNO6ecs9kRM+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmesDtQACgkQAVBC80lX
-0Gy0rAf/b1NaTJL57Op69+cXEBMrHevTWdW46IzRqbZb+oPFY0q5xVGRO6v4cl/S
-lcGxvVSwRkNUzFT7mqHImcSiwWafPHtWIZv1nhc+kCOFown0BeRZhc1RQ5Zakg/1
-oGRsOKoXmSzZmTAETWN4iAWZ6Gji5bwdUqaCb6REIVzmAWJNsemna1Vpq6ULIqxQ
-54rxCjCmxdl41vJ1+1QuuhOrmloiHNh+canVvWmLCI/teN/FxJIXg79Lry2k8odM
-91mPlF2vTjx5I2NuDw1Avg3LQ53QryDSTwJTv0arnqmk0zLElzEwhqKaElOU6AgP
-4S9bqgwNphPItNRK6J8XMa63Gmz8SA==
-=TP1T
------END PGP SIGNATURE-----
-
---Sig_/iW2pTCg=Dr_TNO6ecs9kRM+--
