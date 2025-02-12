@@ -1,113 +1,160 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45B71D9688;
-	Wed, 12 Feb 2025 16:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4219E1B21AD;
+	Wed, 12 Feb 2025 16:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739376486; cv=none; b=SusyCN0DiKuw5J4MrjbCOENkGFXXbTTJM24TvQJ7MOEv+nPe3UXkXLNT46RLBqjGZM2L6NKMrxcyoZ82LdHl9DiJ/nKT1n7DGUZBfgcFDtVMmmNTq9CQwhg4B4HAo9xpXISfjaJGmkVObvv3AuYsa6HndhslCr/qHfbQkEIWXrI=
+	t=1739376542; cv=none; b=hbSGvQ+grgZMeKEvHGCBSgiFuuC9WU/KahFQ6IRMLni3LQcTGCjH3+/OVUjd0Xo4GlK/1s1kcOa4I6g12vMQ3gmlI32GgpnhZX5fPb4txtSp5jI1Du2jFCpaw1+U0dtLfXeSk3TippTrH4cMW7ENJnvTz5HCvms6P4EW78txExI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739376486; c=relaxed/simple;
-	bh=VAuhs9u09a/f35HYUTjGbhVG0CNeiFDZpBWCT1Fvqcs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Onjmi50RAg4kAZvYq5M59kIRGR83Hpaj4OSVUHQ69qHRK3u+a6ZEjp8lJ6+2eKTedBDQcKjKdyCCPrP6yhJciexucjeAPbrKTolS/MYnBfFipesNIZogyEQ/YkPNQQ55rrmgaqf1bRpiaZXc4VqxJdUTzOeobM4GwdWyFOCCYzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iRdP0xO5; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739376542; c=relaxed/simple;
+	bh=JGAXxpEzZDp19Tm9FZ+cQGfxxod/rH2XENZjBdQ9YNc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=TgzCdR41Qkx67nM7AMVJOGelBfl8sp56KgjvIFSDY0A+DEI8COBfAG4e2lHsUzfTbhu66dQQUF8AaGG+tXUNnkWzIJOiimnUCU7B9HZ6bilyjs/55MG9/xe3pMpaZrmFFl45MUAtpE75V5Q6cTfl3m7132c8f67Np9OJnzOk8AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gaZMkbsC; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iRdP0xO5"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-439585a0544so6673435e9.1;
-        Wed, 12 Feb 2025 08:08:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739376483; x=1739981283; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=enB6VpwoOzA1BhOL6deI72AZfVPGYPPBVh8XI8rOxME=;
-        b=iRdP0xO50UU5exUzkENcxj34cR/rv4NXwWX1vgvX8+SaG9Nkfz7uhjBxlIYbs7h4fm
-         unwcaTY5nKLEH3zLhkXiTNVyOwYej0U2jwyT+XrHcW64it7I32/Tt6dZ/ODOIdzRxFbw
-         nq2bx9/6WM7hzV4ED9N9DYPxdhZVdxSDgwMyxssu+jGiANvZUrsH3+A9TJoaDmZcoNHW
-         7AzZc0rwe5gqqbaPVFx3HooEYUiAzBpnDH68fgNoL1nbOoeZu0/HY1ulV9h3HXPGp45p
-         Jlteo3JbofaGlcXbmyKhGOzC7LoeiFiD1bAO3jYEF6BgVUwaIEJ3j7PZwRIcexNqXNtg
-         jj8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739376483; x=1739981283;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=enB6VpwoOzA1BhOL6deI72AZfVPGYPPBVh8XI8rOxME=;
-        b=PX0PUJ/8JahgSMTDKo+hKVcyR2kqoFaEpMhpXU3ziQnhyyC7RRnZi6A++/YoD/SaBh
-         G7KURnbXl/RAleyR2UIotsr2IMTjPTadot3MgMndjpiOsNbAVVq67nZqG0hCuEpj1mbs
-         t0Z+1mTf/AcRbUKiC2CqG5Mdp4tTYnZPCKv7VFF1DPSXPYgRD5l3Z99EqGY4BrcjM9Qh
-         AdE8QNpx0beOugZxWgQ9mmwWL+Ot9RysHZOS9bwbZa9C3rwH92uKGWhKaExqrvGPxW22
-         XU28Awp7WftWuf18djTD0WWGq0OYgxAgS+d8eiC4S1yinHQpvVxZnNQAvEy41ta0z32x
-         bMXg==
-X-Forwarded-Encrypted: i=1; AJvYcCWkeh3fXTekIeEjgg1qvjeoS5mhScQU66TVOAj2TmPlc4QkXQ8nAtlZUxO/9vx1S9v5QPcun2ZD0dOYmHg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJ19+bN9009DWsJNaKtGVctdPSDHIdjlXS1G+zfYxO0d0WBIEQ
-	7RjeSJoodJCwD6vrs76WjBpMityhW9kgRjMwjB/L5Jy5ufsH5w5x
-X-Gm-Gg: ASbGncsEqtNbGix3w4Ko0Iov9NqFrVhtt5lzOopmKZYsR3OLj1Pyjsh/2fNRuCHog1Z
-	I1uFPPMC+k5XKx1rfMdGbLUv9T2l3KtSB06Cxybi8BESH4opQjoQNBI2X/judPX6aPn4tThWIiB
-	cf2eMQesqUEbdYTewfq8ySqAuUIbQ4zcjb3XTAPS7jE80/Z0A+lKihPUVdHDi1+6ZL8CwlCf2Ul
-	wz32CC/XETqm9DX9OXFcpfmN83rtaAEkugy7pkJtPKRhj81FJwOPKeD+dxbIXE7S+5edjDbLhKR
-	ynVfBNnc2knmNtTE
-X-Google-Smtp-Source: AGHT+IFZClm954umRgqvsnO48Pxdz7Faf+eQxyE77ajeKZ1ehn9upBDGCss0Soar4O8O5eriAPlKFQ==
-X-Received: by 2002:a05:600c:4f41:b0:434:f131:1e64 with SMTP id 5b1f17b1804b1-43959a2ac15mr29520085e9.9.1739376482705;
-        Wed, 12 Feb 2025 08:08:02 -0800 (PST)
-Received: from localhost ([194.120.133.72])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4395a0725eesm23356605e9.31.2025.02.12.08.08.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 08:08:02 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] signal: improve performance of tgkill and do_rt_tgsigqueueinfo
-Date: Wed, 12 Feb 2025 16:07:34 +0000
-Message-ID: <20250212160734.527199-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gaZMkbsC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B60AA441B7;
+	Wed, 12 Feb 2025 16:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739376537;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pm1shtqxNGtjXJC058AWPq2zZ6H04g+5wOZ4AwYEAdo=;
+	b=gaZMkbsCMNA4g3MAXZ62NrfgKcsAf0zgxcB53muCcxn3u/vvbQnMylh0prT3oM+PEup30c
+	DbbSy+f0cNBSLL0MpsbGvqN04Y4CrgNApzKHsW/RV8CtFBubgfmP5Fh3BFF8Vlt/2bAeH6
+	BAPl7cvjpzh0LjWAIZ6W22X9UjuZ713brxI9JX+c9DYs5frq6D1DAgCqvknNnOlPNfP6iY
+	KnYnqI9InDjwJLthokxPvubL8FtcJT5pVmYPLBiI5RudMtuZOPHXjJ+TgBET0cEMZqJ068
+	x4WOa5QxJvpYjTWRdOh3hJxHCCZDot2NU51IXeQuKwEcPFUBXeYV7OSStbsOxA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 12 Feb 2025 17:08:56 +0100
+Message-Id: <D7QLITNTXRUJ.3NA44E6PQMAUX@bootlin.com>
+Subject: Re: [PATCH v3 4/7] gpio: max7360: Add MAX7360 gpio support
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
+ <20250113-mdb-max7360-support-v3-4-9519b4acb0b1@bootlin.com>
+ <Z5eFGJspoGOINcG6@smile.fi.intel.com>
+ <D7QHGB7D0VSG.X255SDU7DFOF@bootlin.com>
+ <Z6y65SnrprvnpKEa@smile.fi.intel.com>
+In-Reply-To: <Z6y65SnrprvnpKEa@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeggeefvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffuvefhvffofhgjsehtqhertdertdejnecuhfhrohhmpedfofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugdfuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkefhkeeifeethfejteevfeduheduvddvuedvvddugfffhfevkefftefhuefftddunecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudejpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkohesihhnthgvlhdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdro
+ hhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplh
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Adding an unlikely() hint on a couple of unlikely error return
-paths improves run-time performance of tgkill and do_rt_tgsigqueueinfo.
+On Wed Feb 12, 2025 at 4:14 PM CET, Andy Shevchenko wrote:
+> On Wed, Feb 12, 2025 at 01:57:34PM +0100, Mathieu Dubois-Briand wrote:
+> > On Mon Jan 27, 2025 at 2:07 PM CET, Andy Shevchenko wrote:
+> > > On Mon, Jan 13, 2025 at 01:42:28PM +0100, Mathieu Dubois-Briand wrote=
+:
+>
+> ...
+>
+> > > > +	parent =3D to_platform_device(pdev->dev.parent);
+> > >
+> > > Why do you need this? Can't the fwnode be propagated to the children =
+and then
+> > > the respective APIs to be used?
+> >=20
+> > I'm not sure to understand this correctly, what do you mean by
+> > propagating the fwnode to the children?
+> >=20
+> > Just a quick summary of the situation and what I try to do. The device
+> > tree looks like this, only keeping the interesting properties:
+> >=20
+> > io-expander@38 {
+> >   ...
+> >   interrupts =3D <23 IRQ_TYPE_LEVEL_LOW>,
+> >                <24 IRQ_TYPE_LEVEL_LOW>;
+> >   interrupt-names =3D "inti", "intk";
+> >=20
+> >   max7360_gpio: gpio {
+> >     ...
+> >   };
+> >=20
+> >   max7360_gpo: gpo {
+> >     ...
+> >   };
+> > };
+> >=20
+> > Our pdev fwnode points either to the "gpio" or "gpo" nodes, the one fro=
+m
+> > our parent device points to "io-expander@38". Here we need to get the
+> > "inti" interrupt from the parent node. What would be the correct way to
+> > do it?
+>
+> Ah, I see now. This is being used only for IRQs, but don't you want to ca=
+ll
+> actually fwnode_irq_get_byname()? It will makes the intention clearer.
+>
 
-Benchmarking on an i9-12900 shows an improvement of ~5% on a tgkill
-on a process and ~3% improvement on sigqueue. Results based on running
-20 tests and taking geometric mean of number of calls per second. Used
-signal number 0 to check if process exists.
+Sure! I can definitely call fwnode_irq_get_byname().
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- kernel/signal.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> > > > +	if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios)) {
+> > > > +		dev_err(&pdev->dev, "Missing ngpios OF property\n");
+> > > > +		return -ENODEV;
+> > > > +	}
+> > >
+> > > This is not needed, it is already done in GPIOLIB core.
+> >=20
+> > I believe this is still needed:
+> > - For gpos, we need the gpio count to correctly set the partition
+> >   between gpo and keypad columns in max7360_set_gpos_count().
+>
+> Shouldn't be that done somewhere in the GPIO valid mask initialisation?
+>
+> > - For gpios, we need the gpio count to setup the IRQs.
+>
+> Doesn't GPIOLIB parse the property before initializing the IRQ valid mask
+> and other init callbacks?
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 081f19a24506..4ae848ce3a7a 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -4165,7 +4165,7 @@ static int do_tkill(pid_t tgid, pid_t pid, int sig)
- SYSCALL_DEFINE3(tgkill, pid_t, tgid, pid_t, pid, int, sig)
- {
- 	/* This is only valid for single tasks */
--	if (pid <= 0 || tgid <= 0)
-+	if (unlikely(pid <= 0 || tgid <= 0))
- 		return -EINVAL;
- 
- 	return do_tkill(tgid, pid, sig);
-@@ -4233,7 +4233,7 @@ COMPAT_SYSCALL_DEFINE3(rt_sigqueueinfo,
- static int do_rt_tgsigqueueinfo(pid_t tgid, pid_t pid, int sig, kernel_siginfo_t *info)
- {
- 	/* This is only valid for single tasks */
--	if (pid <= 0 || tgid <= 0)
-+	if (unlikely(pid <= 0 || tgid <= 0))
- 		return -EINVAL;
- 
- 	/* Not even root can pretend to send signals from the kernel.
--- 
-2.47.2
+No, I believe I have to register the IRQ before registering the GPIO, so
+I can get the IRQ domain.
+
+Right now I have something like:
+
+irq_chip->num_irqs =3D ngpios;
+devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev), max7360_gpio->regmap,=
+ irq, flags, 0, irq_chip, &irq_chip_data);
+gpio_config.irq_domain =3D regmap_irq_get_domain(irq_chip_data);
+devm_gpio_regmap_register(dev, &gpio_config);
+
+Also, gpiolib will store ngpios in the gpio_chip structure, but while
+using gpio-regmap, this structure is masked behind the opaque
+gpio_regmap structure. So I believe there is no easy way to retrieve its
+value.
+
+This part of the code changed a lot, maybe it would be easier if I push
+a new version of the series and we continue the discussion there?
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
