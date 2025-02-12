@@ -1,38 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7B01FC11A
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 10:00:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D102080D9
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 10:00:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739354423; cv=none; b=tHzAUJQbiqnNgVGbxEC8FoBjeMmVrCEQ3CUf65UsWpnYNVvVQwVFtJcZbwUbCBLSZPag4tcyBQs0sRuWqgNZbncBiHaGC2QHUR1RYtVUNy5/IhO1oUAMS+ie4ccBqDsJmJPjkthOCdfUKgUsTit2a4Fk82gADJDRO4tP+AeSvZk=
+	t=1739354425; cv=none; b=HpYk50dqcq7rx7mhUwBt0eufhvio5Ggzp3C4XeynUGsfB1n17siNzS4haSRXhB9bFvypGNrfgcQW23zAc4iKAbdGyix6CKo7xVcDiEhxYk97gs7BWo1ZD8bgAaP/5vlQakWigNEJsLwB1X5P7N32afs6vn7bCDfLIjbJieY/Rd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739354423; c=relaxed/simple;
-	bh=4OBZG7uX/8CsjJnTc/XKtHc+h4pbWEM3iLpBrSk7XGs=;
+	s=arc-20240116; t=1739354425; c=relaxed/simple;
+	bh=0oCn2xELjVZlzCfZ6/7zjfuG4e61sBTLWv99cxlg43w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aeRJHrzsexmfkCW/NulirgNIAOOGnMn+HKEmKufrbBJK7GJGbXPVSeW7WlvBOoQo+CTjp0cJMBz/NeXGuI+LD70PGIionj5Rt9N8U0WiEFMkdDL0HvbArqXEfYPi0/ouyXCwbh4lIz8pB2aMLvimrR5jbxYTZ06ddnO/07hvsmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mNP2xFoN; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=OoJXUiC8ceMXRws8fj/fcJkvKCJ3gACYuC/J59Z5bSwep1UMK0nhHrC5Ne55X+e5x0dnXFeE0YaQPc6AexucUgaxGXMEe1hYkSAGt5DbjbXjJuZc2p+JL5TDS23dC+oVWxfAjWU+mbBm5914qR3LJ+fdv5WRQFJCsAWhbrbLWqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=n8Y9Oj+s; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mNP2xFoN"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="n8Y9Oj+s"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739354420;
-	bh=4OBZG7uX/8CsjJnTc/XKtHc+h4pbWEM3iLpBrSk7XGs=;
+	s=mail; t=1739354422;
+	bh=0oCn2xELjVZlzCfZ6/7zjfuG4e61sBTLWv99cxlg43w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mNP2xFoNXIDZ7NNXdzVu7NRA4380M6RigKXK+u401dsLvBr+ubh0hYGfQqMGB3jBW
-	 cGsndad8GZZ43KSuv05hI/rIl1TEs7ZqfCy81jLQ9G8w+IbfMPGdOzUZWVT7qYbO3o
-	 TH1Cr3Rf0Qt7vVtIiFpzb85NSHDx6IdcxL2k+W0Cb4iydppLdZN2lmkjYpIQvJsRrA
-	 79dPOXNi3496vj6M/NyPRqtTkypqVwn8YjsBJlLZWljnzlaCwnq+uKZquteTzpQV38
-	 wE+D6EtbCF0uvBNwYbAHuLf6UhJ/JC+c1sPLszRkNByTclR0yQ/bHChyl5mct0tXXd
-	 A4Nwbq2ons27g==
+	b=n8Y9Oj+sD5RPCq9diQsvFAhZ1kHJpBPrfyxShRxuzIbncDL1opgMkcmcATh6KQk95
+	 AE8/iIm9qnP73psINNACJZcHjt9yFT4Qc+V5zhTAgNhNGk6DZ1q6VsUrqZNmS9/OPg
+	 3ppqZcXdVminOKu53Ls7lJ4ubWLP4t8+HO7GxWflnKlfvHMwTr0U0d/jEG2zWtM5Wt
+	 Jvirn/UI9WX5JVuvTDE5NqbFxlXEPFOMzsZYF1tUYsp3bEodylTx74GC3EZYksfNWn
+	 rMeT8699DuAneG3+WuaDVq2tMcsr6oCscYXxfoFOh+TFHo0N/6ueN/jJGHGxqgcaRf
+	 idzrBPoHu5eVw==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id A648717E154E;
-	Wed, 12 Feb 2025 11:00:19 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id BCD9117E155A;
+	Wed, 12 Feb 2025 11:00:21 +0100 (CET)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: matthias.bgg@gmail.com
 Cc: angelogioacchino.delregno@collabora.com,
@@ -43,9 +43,9 @@ Cc: angelogioacchino.delregno@collabora.com,
 	linux-mediatek@lists.infradead.org,
 	pablo.sun@mediatek.com,
 	kernel@collabora.com
-Subject: [PATCH v1 3/8] soc: mediatek: mtk-mmsys: Add compile time check for mmsys routes
-Date: Wed, 12 Feb 2025 11:00:07 +0100
-Message-ID: <20250212100012.33001-4-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v1 6/8] soc: mediatek: mt8365-mmsys: Fix routing table masks and values
+Date: Wed, 12 Feb 2025 11:00:10 +0100
+Message-ID: <20250212100012.33001-7-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250212100012.33001-1-angelogioacchino.delregno@collabora.com>
 References: <20250212100012.33001-1-angelogioacchino.delregno@collabora.com>
@@ -57,56 +57,119 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Every MediaTek SoC with multimedia capabilities has an array of
-structure mtk_mmsys_routes that defines a multimedia connection
-between hardware components.
+The mmsys driver reads the routing table and writes to the
+hardware `val & mask`, but multiple entries in the mmsys
+routing table for the MT8365 SoC are setting a 0x0 mask:
+this effectively writes .. nothing .. to the hardware.
 
-This connection is activated by writing a (masked) value in each
-specific register, and the association between from->to path and
-value to write is expressed as an entry in that array.
+That would never work, and if the display controller was
+actually working with the mmsys doing no routing at all,
+that was only because the bootloader was correctly setting
+the display controller routing registers before booting the
+kernel, and the mmsys was never reset.
 
-Failing to set the right path does not give any meaningful error
-and makes things to simply not work as the data will either not
-be retrieved from the right input port, or will be written to
-the wrong output port (or both): since a misconfiguration may
-effectively still be a possibly correct configuration at the HW
-level, this may be only giving side effects in terms of simply
-getting no functionality but, again, no errors.
+Make this table to actually set the routing by adding the
+correct register masks to it.
 
-In order to reduce room for mistakes in declarations of the
-mmsys routes, add a macro that compile-time checks that the
-provided value does at least fit in the register mask.
+While at it, also change MOUT val definitions to BIT(x), as
+the MOUT registers are effectively checking for each bit to
+enable output to the corresponding HW.
+Please note that, for this SoC, only the MOUT registers are
+checking bits (as those can enable multiple outputs), while
+the others are purely reading a number to select an input.
 
+Fixes: bc3fc5c05100 ("soc: mediatek: mmsys: add MT8365 support")
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/soc/mediatek/mtk-mmsys.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/soc/mediatek/mt8365-mmsys.h | 48 ++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/soc/mediatek/mtk-mmsys.h b/drivers/soc/mediatek/mtk-mmsys.h
-index d370192737ca..d5f6fbdc6f72 100644
---- a/drivers/soc/mediatek/mtk-mmsys.h
-+++ b/drivers/soc/mediatek/mtk-mmsys.h
-@@ -80,6 +80,20 @@
+diff --git a/drivers/soc/mediatek/mt8365-mmsys.h b/drivers/soc/mediatek/mt8365-mmsys.h
+index 7abaf048d91e..ae37945e6c67 100644
+--- a/drivers/soc/mediatek/mt8365-mmsys.h
++++ b/drivers/soc/mediatek/mt8365-mmsys.h
+@@ -14,8 +14,9 @@
+ #define MT8365_DISP_REG_CONFIG_DISP_DPI0_SEL_IN		0xfd8
+ #define MT8365_DISP_REG_CONFIG_DISP_LVDS_SYS_CFG_00	0xfdc
  
- #define MMSYS_RST_NR(bank, bit) (((bank) * 32) + (bit))
++#define MT8365_DISP_MS_IN_OUT_MASK			GENMASK(3, 0)
+ #define MT8365_RDMA0_SOUT_COLOR0			0x1
+-#define MT8365_DITHER_MOUT_EN_DSI0			0x1
++#define MT8365_DITHER_MOUT_EN_DSI0			BIT(0)
+ #define MT8365_DSI0_SEL_IN_DITHER			0x1
+ #define MT8365_RDMA0_SEL_IN_OVL0			0x0
+ #define MT8365_RDMA0_RSZ0_SEL_IN_RDMA0			0x0
+@@ -30,52 +31,43 @@ static const struct mtk_mmsys_routes mt8365_mmsys_routing_table[] = {
+ 	{
+ 		DDP_COMPONENT_OVL0, DDP_COMPONENT_RDMA0,
+ 		MT8365_DISP_REG_CONFIG_DISP_OVL0_MOUT_EN,
+-		MT8365_OVL0_MOUT_PATH0_SEL, MT8365_OVL0_MOUT_PATH0_SEL
+-	},
+-	{
++		MT8365_DISP_MS_IN_OUT_MASK, MT8365_OVL0_MOUT_PATH0_SEL
++	}, {
+ 		DDP_COMPONENT_OVL0, DDP_COMPONENT_RDMA0,
+ 		MT8365_DISP_REG_CONFIG_DISP_RDMA0_SEL_IN,
+-		MT8365_RDMA0_SEL_IN_OVL0, MT8365_RDMA0_SEL_IN_OVL0
+-	},
+-	{
++		MT8365_DISP_MS_IN_OUT_MASK, MT8365_RDMA0_SEL_IN_OVL0
++	}, {
+ 		DDP_COMPONENT_RDMA0, DDP_COMPONENT_COLOR0,
+ 		MT8365_DISP_REG_CONFIG_DISP_RDMA0_SOUT_SEL,
+-		MT8365_RDMA0_SOUT_COLOR0, MT8365_RDMA0_SOUT_COLOR0
+-	},
+-	{
++		MT8365_DISP_MS_IN_OUT_MASK, MT8365_RDMA0_SOUT_COLOR0
++	}, {
+ 		DDP_COMPONENT_COLOR0, DDP_COMPONENT_CCORR,
+ 		MT8365_DISP_REG_CONFIG_DISP_COLOR0_SEL_IN,
+-		MT8365_DISP_COLOR_SEL_IN_COLOR0,MT8365_DISP_COLOR_SEL_IN_COLOR0
+-	},
+-	{
++		MT8365_DISP_MS_IN_OUT_MASK, MT8365_DISP_COLOR_SEL_IN_COLOR0
++	}, {
+ 		DDP_COMPONENT_DITHER0, DDP_COMPONENT_DSI0,
+ 		MT8365_DISP_REG_CONFIG_DISP_DITHER0_MOUT_EN,
+-		MT8365_DITHER_MOUT_EN_DSI0, MT8365_DITHER_MOUT_EN_DSI0
+-	},
+-	{
++		MT8365_DISP_MS_IN_OUT_MASK, MT8365_DITHER_MOUT_EN_DSI0
++	}, {
+ 		DDP_COMPONENT_DITHER0, DDP_COMPONENT_DSI0,
+ 		MT8365_DISP_REG_CONFIG_DISP_DSI0_SEL_IN,
+-		MT8365_DSI0_SEL_IN_DITHER, MT8365_DSI0_SEL_IN_DITHER
+-	},
+-	{
++		MT8365_DISP_MS_IN_OUT_MASK, MT8365_DSI0_SEL_IN_DITHER
++	}, {
+ 		DDP_COMPONENT_RDMA0, DDP_COMPONENT_COLOR0,
+ 		MT8365_DISP_REG_CONFIG_DISP_RDMA0_RSZ0_SEL_IN,
+-		MT8365_RDMA0_RSZ0_SEL_IN_RDMA0, MT8365_RDMA0_RSZ0_SEL_IN_RDMA0
+-	},
+-	{
++		MT8365_DISP_MS_IN_OUT_MASK, MT8365_RDMA0_RSZ0_SEL_IN_RDMA0
++	}, {
+ 		DDP_COMPONENT_RDMA1, DDP_COMPONENT_DPI0,
+ 		MT8365_DISP_REG_CONFIG_DISP_LVDS_SYS_CFG_00,
+ 		MT8365_LVDS_SYS_CFG_00_SEL_LVDS_PXL_CLK, MT8365_LVDS_SYS_CFG_00_SEL_LVDS_PXL_CLK
+-	},
+-	{
++	}, {
+ 		DDP_COMPONENT_RDMA1, DDP_COMPONENT_DPI0,
+ 		MT8365_DISP_REG_CONFIG_DISP_DPI0_SEL_IN,
+-		MT8365_DPI0_SEL_IN_RDMA1, MT8365_DPI0_SEL_IN_RDMA1
+-	},
+-	{
++		MT8365_DISP_MS_IN_OUT_MASK, MT8365_DPI0_SEL_IN_RDMA1
++	}, {
+ 		DDP_COMPONENT_RDMA1, DDP_COMPONENT_DPI0,
+ 		MT8365_DISP_REG_CONFIG_DISP_RDMA1_SOUT_SEL,
+-		MT8365_RDMA1_SOUT_DPI0, MT8365_RDMA1_SOUT_DPI0
++		MT8365_DISP_MS_IN_OUT_MASK, MT8365_RDMA1_SOUT_DPI0
+ 	},
+ };
  
-+/*
-+ * This macro adds a compile time check to make sure that the in/out
-+ * selection bit(s) fit in the register mask, similar to bitfield
-+ * macros, but this does not transform the value.
-+ */
-+#define MMSYS_ROUTE(from, to, reg_addr, reg_mask, selection)		\
-+	{ DDP_COMPONENT_##from, DDP_COMPONENT_##to, reg_addr, reg_mask,	\
-+	  (__BUILD_BUG_ON_ZERO_MSG((reg_mask) == 0, "Invalid mask") +	\
-+	   __BUILD_BUG_ON_ZERO_MSG(~(reg_mask) & (selection),		\
-+				   #selection " does not fit in "	\
-+				   #reg_mask) +				\
-+	   (selection))							\
-+	}
-+
- struct mtk_mmsys_routes {
- 	u32 from_comp;
- 	u32 to_comp;
 -- 
 2.48.1
 
