@@ -1,127 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE7721D59F;
-	Wed, 12 Feb 2025 16:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FDD21A424;
+	Wed, 12 Feb 2025 16:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739378972; cv=none; b=Xh2PB3XTc1Biu5IOawWh/FRcaZd5QClzwKasyI8SUk7lRpFyZSbz5EowdZ3Won7KfD7X05Ko2PFtXNoXA4iuC5E6h5KbmDzcVscrWSDIbJR+pW6IxXFn5chWxMe0z6zTAGYeQHDUtSsjC47WjZNuclDX4IsnKDA+B0tQUB6c63o=
+	t=1739378985; cv=none; b=uIeAyTWsws5Kr3PVhK5Slq2w23ZO/9a+sDrw+geytFKV4sVUKZalgS1XXL4XFlu4P76ChXvm9BopqY8USAn3VckZVWWsjl3WuAzswkJJs3SOVALBONkszm3Z8LeGStA+LqzHGKEwNqb0bpn4DsNyfMfvmKWt5KOHkWiKMlW3+bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739378972; c=relaxed/simple;
-	bh=oiJ709oCpEPB9kcfZlrUorygYDxTbmj70Ft/9Pu06Z4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tnzIOnl4SSU1ZyxR4sGibcBPvNUMBW8V0vW5WmVAYH6e9eG1OaDH4lydieYv3oF0DW7uN3StnqZEv/tHXy6LVRruk2dIlckvftLaMnTiuPvz2ifKtv5WB9Nll3Y7BZ63IGV7vcYz9F2CjjUal0p/g+BQgV5Jx+rtLpb1q5Rk1m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QuDu2vOC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QuDu2vOC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63EE0C4CEE4;
-	Wed, 12 Feb 2025 16:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739378972;
-	bh=oiJ709oCpEPB9kcfZlrUorygYDxTbmj70Ft/9Pu06Z4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QuDu2vOCN8Og5PDN/o0qAWPIh5IehilQX3JPmZt/P8XUJRPwGzvG+wjStZngVMTSl
-	 umJEapzok9F3kB/cWAINOokS19IEqdZ4VAMW+lNASxIi7ZUkpsLkeBLpNfqIHQxwqr
-	 jQOsehRMEzKaQrXoacpV+ZncoACURmd0QTSZp+DIg6Nj+Op885ekt/X8EPckXWixSc
-	 V6p6FdIg12DzZ+hj4JL4SLyMpEwjHjaPwaqKSn+sf6iXvSk/MwbjPY3G7SCekrUnaM
-	 ccYZMeeb0OzvEj7ot1bPk/SWo+j2NO6fbcdgKASSH4bgl0a+Y+aAF78eGlKcDbSufA
-	 jQjkJDPK0NyKA==
-Message-ID: <822d6dca-b2c6-4439-ade5-219620ebc435@kernel.org>
-Date: Wed, 12 Feb 2025 17:49:25 +0100
+	s=arc-20240116; t=1739378985; c=relaxed/simple;
+	bh=5lBfxDqhP6i0fP0vG2l8Jug6aTKM3z+l/r4YqPVpkIg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ON1ygQ+9VcpysEsftY1P05gGQKP83PKWl2Zzc0gM8OdaNXmOLUtMX55RubIUl7Gf6qTpzSnvjAMCZsS5YfPBm0wOTVYXIxzRZllaelvqK2ph5tRCotvftL6dBumavxy42BRpLedqZoqeWOCpivaGswmDPJVw4G1nR9fGY/BftAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YtPQL0YJ9z6K60p;
+	Thu, 13 Feb 2025 00:48:26 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 33261140A90;
+	Thu, 13 Feb 2025 00:49:42 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 12 Feb
+ 2025 17:49:41 +0100
+Date: Wed, 12 Feb 2025 16:49:40 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Zaid Alali <zaidal@os.amperecomputing.com>
+CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>, <robert.moore@intel.com>,
+	<dan.j.williams@intel.com>, <Benjamin.Cheatham@amd.com>,
+	<Avadhut.Naik@amd.com>, <viro@zeniv.linux.org.uk>, <arnd@arndb.de>,
+	<ira.weiny@intel.com>, <dave.jiang@intel.com>,
+	<sthanneeru.opensrc@micron.com>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <acpica-devel@lists.linux.dev>
+Subject: Re: [PATCH v3 6/9] ACPI: APEI: EINJ: Add einjv2 extension struct
+Message-ID: <20250212164940.00005cfb@huawei.com>
+In-Reply-To: <20250210183705.1114624-7-zaidal@os.amperecomputing.com>
+References: <20250210183705.1114624-1-zaidal@os.amperecomputing.com>
+	<20250210183705.1114624-7-zaidal@os.amperecomputing.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: i3c: Add NXP P3H2x4x i3c-hub support
-To: Aman Kumar Pandey <aman.kumarpandey@nxp.com>,
- linux-kernel@vger.kernel.org, linux-i3c@lists.infradead.org,
- alexandre.belloni@bootlin.com, krzk+dt@kernel.org, robh@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org
-Cc: vikash.bansal@nxp.com, priyanka.jain@nxp.com,
- shashank.rebbapragada@nxp.com, Frank.Li@nxp.com
-References: <20250212132227.1348374-1-aman.kumarpandey@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250212132227.1348374-1-aman.kumarpandey@nxp.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 12/02/2025 14:22, Aman Kumar Pandey wrote:
-> P3H2x4x (P3H2440/P3H2441/P3H2840/P3H2841) is multiport I3C hub
-> device which connects to a host CPU via I3C/I2C/SMBus bus on one
-> side and to multiple peripheral devices on the other side.
+On Mon, 10 Feb 2025 10:37:02 -0800
+Zaid Alali <zaidal@os.amperecomputing.com> wrote:
+
+> Add einjv2 extension struct and EINJv2 error types to prepare
+> the driver for EINJv2 support. ACPI specifications(1) enables
+> EINJv2 by extending set_error_type_with_address struct.
 > 
-> Signed-off-by: Aman Kumar Pandey <aman.kumarpandey@nxp.com>
-> Signed-off-by: Vikash Bansal <vikash.bansal@nxp.com>
+> (1) https://bugzilla.tianocore.org/show_bug.cgi?id=4615
+> 
+> Signed-off-by: Zaid Alali <zaidal@os.amperecomputing.com>
 > ---
->  .../bindings/i3c/p3h2x4x_i3c_hub.yaml         | 404 ++++++++++++++++++
->  MAINTAINERS                                   |   7 +
->  2 files changed, 411 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.yaml
+>  drivers/acpi/apei/einj-core.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.yaml b/Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.yaml
-> new file mode 100644
-> index 000000000000..33ea524e5432
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.yaml
+> diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
+> index 369d92e410c1..c604aa875644 100644
+> --- a/drivers/acpi/apei/einj-core.c
+> +++ b/drivers/acpi/apei/einj-core.c
+> @@ -50,6 +50,28 @@
+>   */
+>  static int acpi5;
+>  
+> +struct syndrome_array {
+> +	union {
+> +		u32	acpi_id;
+> +		u32	device_id;
+> +		u32	pcie_sbdf;
+> +		u8	vendor_id[16];
+> +	} comp_id;
+> +	union {
+> +		u32	proc_synd;
+> +		u32	mem_synd;
+> +		u32	pcie_synd;
+> +		u8	vendor_synd[16];
+> +	} comp_synd;
+> +};
+> +
+> +struct einjv2_extension_struct {
+> +	u32 length;
+> +	u16 revision;
+> +	u16 component_arr_count;
+> +	struct syndrome_array component_arr[];
 
-Nothing here looks like being even close to existing coding style. Look
-how other files are written, including file naming, blank lines, style
-of properties and entire layout.
+__counted_by() marking would be a good addition.
 
-Your current code is not only unreadable but also incorrect. But due to
-unreadability, I won't waste time to review.
+> +};
+> +
+>  struct set_error_type_with_address {
+>  	u32	type;
+>  	u32	vendor_extension;
+> @@ -58,6 +80,7 @@ struct set_error_type_with_address {
+>  	u64	memory_address;
+>  	u64	memory_address_range;
+>  	u32	pcie_sbdf;
+> +	struct	einjv2_extension_struct einjv2_struct;
+>  };
+>  enum {
+>  	SETWA_FLAGS_APICID = 1,
 
-You should have make internal review of all this.
-
->  L:	linux-hwmon@vger.kernel.org
-
-
-Best regards,
-Krzysztof
