@@ -1,135 +1,123 @@
-Received: from mx0.infotecs.ru (mx0.infotecs.ru [91.244.183.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC1D1D86F2;
-	Wed, 12 Feb 2025 08:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.244.183.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9D41EE013;
+	Wed, 12 Feb 2025 08:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739348885; cv=none; b=Sjt+8Cjl+Xhn+cxOn9gki6cYK37bzZqMUtvQRJunBr3luALZTLbWNt3Qz6nf2cIA1nwvxWKhP37eCXzpmEmmVzJ074WozEusph6t+7/URO1Emce9HQoRjRIKAnYM32JpAMRagoJrXZfwrCNFE9WXkwUFO+gn39WP46rLvQCjs3A=
+	t=1739348897; cv=none; b=ujDc5xyAXzk26tmbucVnNIOf89iYWoV3fK96DbNNoO5MmKe3MVRHX/U+BNaO0o+ZHatX3maRAGVUfmQqEKD4K1mmG10Usxud0NypBBho4qHfqkjS5tFH/+Tn+oaLwGw1ewt6JxncaUlUlEct6r1m32zxWwO3WfaJuldmF0hYNbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739348885; c=relaxed/simple;
-	bh=1yEjyPyPd55xrfzDLQha4JqWN0HhYlvPPLP2kUZIZwM=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=EUqbXXK154N1ux1tlDO/fQeq0oLAF+HIPczRWt2kjE8WP5pXDOyzbuPUEDNwqd4Z/hLlUaSYzXEq97pDyM565Ay2cHijH17RFJbSeYqd21DLN6BKNXerb47ruLlH6QjLC4yswc+g1IOodH82JP6jFCMdDCqPsT53EAc08hjC344=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru; spf=pass smtp.mailfrom=infotecs.ru; dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b=R/GGP3VP; arc=none smtp.client-ip=91.244.183.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infotecs.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b="R/GGP3VP"
-Received: from mx0.infotecs-nt (localhost [127.0.0.1])
-	by mx0.infotecs.ru (Postfix) with ESMTP id DC74E10713A7;
-	Wed, 12 Feb 2025 11:21:25 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx0.infotecs.ru DC74E10713A7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infotecs.ru; s=mx;
-	t=1739348486; bh=xsDP1LEoMSu7HIkQ5w960VASY/onF6JaEzOXJrcEgEk=;
-	h=From:To:CC:Subject:Date:From;
-	b=R/GGP3VPFBshVBKCYNDVeuaRJ6ofhSHY3zwm4ngu5NYxJ7L7vv8ju9FGARhg+7WEN
-	 f78GERTrCAtF1Z5d2WvSwaPwJv7vp37wwIIBS2UCfhoNRIwQjmhODoqMYnh3ojjM2X
-	 afVVSfkkLMwS6RW6mUZelurZiuMFih5o190WIHBg=
-Received: from msk-exch-01.infotecs-nt (msk-exch-01.infotecs-nt [10.0.7.191])
-	by mx0.infotecs-nt (Postfix) with ESMTP id D937F3045BCA;
-	Wed, 12 Feb 2025 11:21:25 +0300 (MSK)
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-To: Johannes Berg <johannes@sipsolutions.net>
-CC: Julan Hsu <julanhsu@google.com>, "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "lvc-project@linuxtesting.org"
-	<lvc-project@linuxtesting.org>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>
-Subject: [PATCH v4] wifi: mac80211: fix integer overflow in
- hwmp_route_info_get()
-Thread-Topic: [PATCH v4] wifi: mac80211: fix integer overflow in
- hwmp_route_info_get()
-Thread-Index: AQHbfScbaA7QH0ty/EqZGebnxR+Xlw==
-Date: Wed, 12 Feb 2025 08:21:25 +0000
-Message-ID: <20250212082124.4078236-1-Ilia.Gavrilov@infotecs.ru>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-exclaimer-md-config: 208ac3cd-1ed4-4982-a353-bdefac89ac0a
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1739348897; c=relaxed/simple;
+	bh=IrKptbNyGnEsWszE5Znu38EPyhXvclhSWF3aK3/HD0Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=G8zNQBthMuMCqu311C+7QhkzA25nMDKiDuH/nFjQDUaRZtKKcTxISdjjg4SXMRLq7sb4eOiiEuyjkH8419eEN//Dfh2a/bBZtmg3mtkbTc1IlZC7e90cYnqUIuKAlvSJm9GznNBo+M6UT7poV2b4aHH4fV+Xm7tGNg4I+aNGmn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [180.172.76.141])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id B8DB13430A9;
+	Wed, 12 Feb 2025 08:28:11 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Date: Wed, 12 Feb 2025 16:27:28 +0800
+Subject: [PATCH v2] pinctrl: spacemit: enable config option
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KLMS-Rule-ID: 5
-X-KLMS-Message-Action: clean
-X-KLMS-AntiSpam-Status: not scanned, disabled by settings
-X-KLMS-AntiSpam-Interceptor-Info: not scanned
-X-KLMS-AntiPhishing: Clean, bases: 2025/02/12 06:53:00
-X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2025/02/12 04:08:00 #27176921
-X-KLMS-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250212-k1-pinctrl-option-v2-1-bde7da0bc0d9@gentoo.org>
+X-B4-Tracking: v=1; b=H4sIAG9brGcC/32NQQ6DIBBFr2Jm3WmAYDVd9R7GhcqAkzZggJA2x
+ ruXeoAu38//7++QKDIluDc7RCqcOPgK6tLAsk7eEbKpDEqoVijR4VPixn7J8YVhy7WNhtrZWHO
+ btSKouy2S5ffpHMbKK6cc4ue8KPKX/rMViRKpnzrSptdC24cjn0O4huhgPI7jC8myJNOzAAAA
+X-Change-ID: 20250207-k1-pinctrl-option-de5bdfd6b42e
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Alex Elder <elder@kernel.org>, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ spacemit@lists.linux.dev, Conor Dooley <conor.dooley@microchip.com>, 
+ Alex Elder <elder@riscstar.com>, Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2071; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=IrKptbNyGnEsWszE5Znu38EPyhXvclhSWF3aK3/HD0Q=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBnrFuXkQwvpdyu8m47lqJTTAGrb7SfOF2GrOSvL
+ UHu0Hsl9c6JApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ6xbl18UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277dIvEACMYP9kQbngE6dUW3
+ h6H4LM3rRAFvEA0o5jKhCwlXKiw/S4Ck+DqnVKWYBYbtsc3v072HERc3R2mVk8MgGUaA+wyDo9+
+ ddkYXfXpkoCwxNwzgdweUJ87v0WCIFmKn+YbFmse7SRqNGtnmDnbE4hXI+mVLIFE4PcGWc1aCgs
+ fXyUPpYWCGU/ph2WxAsFD+LSQvoXM+ROD1hd72A1e0NbIFi4yoKKcc2UafSUwIb0rhBwHYv3lCu
+ zla1UUPCoVU7Hm0RNetJvncn91o2/DqnDxuhOS5+MTWEqG/TiVY5I5Bj178kt7snAPNw723PUeA
+ Zdze8qsl/11y392nC1bjnTgDFJx1za7Kx+bXY3PJIfvsYBifLI4J/UMQ+2OgMJ1Tz3XuwhCSjr3
+ lJVKBwN1f1P4uz8p4B8PQtRwJSP2jGTg12nmoctTsXn1P0HnQoCDxhmSriDxTM7/aSylC2wNn2k
+ g81X2tjJje+cI8qgoptLoS5JzUkuO3Aoj3Fb/KFGMVlotIaRUnsnCh5PHLIOgEwSimStmcQYooL
+ 7Zvsx5zCPiraRRvx+80oi3qfSQC8E93Ng+lQTdnbGnu1jIGd3W6dP1V3EytBEi12kGK33u3vg3T
+ 3MwEIcur1df6KTJk5W/VTy8cv+9y1D7O5TymH3Dmcu8k1DhV8e5DXQBQSjZIibcKNlWQ==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-Since the new_metric and last_hop_metric variables can reach
-the MAX_METRIC(0xffffffff) value, an integer overflow may occur
-when multiplying them by 10/9. It can lead to incorrect behavior.
+Pinctrl is an essential driver for SpacemiT's SoC,
+so let's enable it by default for this SoC.
 
-Found by InfoTeCS on behalf of Linux Verification Center
-(linuxtesting.org) with SVACE.
+The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
+'make defconfig' to select kernel configuration options.
+This result in a broken uart driver where fail at probe()
+stage due to no pins found.
 
-Fixes: a8d418d9ac25 ("mac80211: mesh: only switch path when new metric is a=
-t least 10% better")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ilia Gavrilov <Ilia.Gavrilov@infotecs.ru>
+Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
+Reported-by: Alex Elder <elder@kernel.org>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Tested-by: Alex Elder <elder@riscstar.com>
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
 ---
-v2:
-- Remove 64-bit arithmetic according to https://lore.kernel.org/all/a6bd38c=
-58f2f7685eac53844f2336432503c328e.camel@sipsolutions.net/
-- Replace multiplication by 10/9 with a function that compares metrics by a=
-dding 10% without integer overflow
-v3:
-- Fix a typo (persent->percent)
-v4:
-- Simplify the is_metric_better() function
-- Remove 'inline', add a comment
- net/mac80211/mesh_hwmp.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+This should fix problem that CONFIG_PINCTRL_SPACEMIT_K1 is not enabled
+when using make defconfig, thus fail to initilize uart driver which requst
+pins during probe stage.
+---
+Changes in v2:
+- set default as y
+- Link to v1: https://lore.kernel.org/r/20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org
+---
+ arch/riscv/Kconfig.socs          | 1 +
+ drivers/pinctrl/spacemit/Kconfig | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
-index 4e9546e998b6..c94a9c7ca960 100644
---- a/net/mac80211/mesh_hwmp.c
-+++ b/net/mac80211/mesh_hwmp.c
-@@ -367,6 +367,12 @@ u32 airtime_link_metric_get(struct ieee80211_local *lo=
-cal,
- 	return (u32)result;
- }
-=20
-+/* Check that the first metric is at least 10% better than the second one =
-*/
-+static bool is_metric_better(u32 x, u32 y)
-+{
-+	return (x < y) && (x < (y - x / 10));
-+}
-+
- /**
-  * hwmp_route_info_get - Update routing info to originator and transmitter
-  *
-@@ -458,8 +464,8 @@ static u32 hwmp_route_info_get(struct ieee80211_sub_if_=
-data *sdata,
- 				    (mpath->sn =3D=3D orig_sn &&
- 				     (rcu_access_pointer(mpath->next_hop) !=3D
- 						      sta ?
--					      mult_frac(new_metric, 10, 9) :
--					      new_metric) >=3D mpath->metric)) {
-+					      !is_metric_better(new_metric, mpath->metric) :
-+					      new_metric >=3D mpath->metric))) {
- 					process =3D false;
- 					fresh_info =3D false;
- 				}
-@@ -533,8 +539,8 @@ static u32 hwmp_route_info_get(struct ieee80211_sub_if_=
-data *sdata,
- 			if ((mpath->flags & MESH_PATH_FIXED) ||
- 			    ((mpath->flags & MESH_PATH_ACTIVE) &&
- 			     ((rcu_access_pointer(mpath->next_hop) !=3D sta ?
--				       mult_frac(last_hop_metric, 10, 9) :
--				       last_hop_metric) > mpath->metric)))
-+				      !is_metric_better(last_hop_metric, mpath->metric) :
-+				       last_hop_metric > mpath->metric))))
- 				fresh_info =3D false;
- 		} else {
- 			mpath =3D mesh_path_add(sdata, ta);
---=20
-2.39.5
+diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+index 1916cf7ba450ec9958265de2ca41dc504d4d2f7c..17606940bb5239d0fdfc6b5aefb50eeb982d14aa 100644
+--- a/arch/riscv/Kconfig.socs
++++ b/arch/riscv/Kconfig.socs
+@@ -26,6 +26,7 @@ config ARCH_SOPHGO
+ 
+ config ARCH_SPACEMIT
+ 	bool "SpacemiT SoCs"
++	select PINCTRL
+ 	help
+ 	  This enables support for SpacemiT SoC platform hardware.
+ 
+diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
+index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..c18d879274e72df251e0bc82a308603ce23738bd 100644
+--- a/drivers/pinctrl/spacemit/Kconfig
++++ b/drivers/pinctrl/spacemit/Kconfig
+@@ -7,6 +7,7 @@ config PINCTRL_SPACEMIT_K1
+ 	tristate "SpacemiT K1 SoC Pinctrl driver"
+ 	depends on ARCH_SPACEMIT || COMPILE_TEST
+ 	depends on OF
++	default y
+ 	select GENERIC_PINCTRL_GROUPS
+ 	select GENERIC_PINMUX_FUNCTIONS
+ 	select GENERIC_PINCONF
+
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250207-k1-pinctrl-option-de5bdfd6b42e
+
+Best regards,
+-- 
+Yixun Lan
+
