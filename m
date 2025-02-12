@@ -1,134 +1,99 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D3F219ED
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 14:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988BE204F84;
+	Wed, 12 Feb 2025 14:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739369564; cv=none; b=as1rJB2tmpgAsWW9WFx8mo35UyDio73zPAqQKoUV+FioCzCP3nqLco/S5oO+UXJGGNAmtiRUeEjLJTqo5uQtl1dCFr6z4ntr8k4afw2UMRwlDIDHZHjf4A2z23pxX5RsPd3iEju8daoIof7yma7fHdWkASSqGYRQvUBVE13e0E4=
+	t=1739369731; cv=none; b=nglsausJd8klSPbL96jgGN654mtV9raEFbv1tBiQTFNbttYTpIYcLj3J+eho3yk8K7TiTicUtic/XTERxfIm/1N2eLGHP44Os7w+6smbG8yHEbccezp2vrKv+I8u+tcq7TreaEA8ylPb9rv1kGI4vaGE3GcAFdsAQjouzXtFq6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739369564; c=relaxed/simple;
-	bh=0PgnPZsTGuDed6/z9wwIBHpTcSBe6JCKQsHjTB4Bkms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UOTJGIJgLBnYFXNfqpQcvixsVe/OuQ4MMzvzK3sNUcEx7aCSLiJwp1H6AATPR8lQEOSy4/BJDMdaGDO8WpvzJX5S+SlYovnsrZDqPs52iU8G+CDPClnqxIdMfnV/2GqpLQ+mQmKMBCSTBII3gv5CpS+72lc+WFD8m0r1zJKQOg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f3SMC5GI; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739369731; c=relaxed/simple;
+	bh=iCWXvj2a4k/niiC9u9wcJPbUXpQIPybramZFQ8uqJqU=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=FWrIfkks34b8/BKiw9jlq/YTXaMp3+e5fbycmq2M0zThXEzJ2kQWg1vkUtlyq/tfvuHmtubQijrElhTW/p4pLqPX6nA6DSAvYCPw8q/eeDjxypd+jOvAh/1H0Ebr2h1MKJnU+YuGJQ6xikWp5MtdIa5aak8ncnuiDOBIC7MDVSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=bRzgpUYc; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f3SMC5GI"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f3c119fe6so155294265ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 06:12:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739369561; x=1739974361; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HYU4s5CugQUFhnoWcNFYM55BtxMFvGMOkBes3VyQjjc=;
-        b=f3SMC5GILB4epmGPy3kd50Bx9NrUvhHpvtVjqNqOgziei3zseALIN+jWYEsEOp3clJ
-         PwSAPcPJtAk707F2h5M0pUOp1S4DkY1XLfnw1EuNbf2aaIXq52vV3GS26Hg4MLYM4ztA
-         yShL1OgH68YXYHLkQjHDiLv2UFF9D65H3y+d9mAS+I2jAyQ3o/hYw5yuSpVw/c/k9cx5
-         bMfzukfgr5CKaui4PPd2XNU4GTRJwHSvDtDheN6rHovaKxQc/ds72neWOvL/pfYhoMjV
-         VT1xJA/030z+9uszp5zCU/dINghc/SJWJ1CNlvlWWTRzl6g6bh2HMsEIyhfG8qQBTWYq
-         4TSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739369561; x=1739974361;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HYU4s5CugQUFhnoWcNFYM55BtxMFvGMOkBes3VyQjjc=;
-        b=xG5G1JXUgfHG306i4Xu+7UdBDUuDFuEmMuICyw08hnzLkekn8MsobmviM33BPuJyJ3
-         A+p2An9XNPPyIgfZxEYgLNVlo7pi/BiqcuUaYNuDP2iCkKh+no5hM/wRCVS6DT2n8TpF
-         XkcNi1/6xB1Nuo9DAVzDixj0fjQW0SPnt0OSDd2+74edlp2CgLdJUvFwUXDLlyIjb5dl
-         o0JHSKGTnbnZAMRjsV4xV4w5Dz2/EuVE4UifOHwyqKMV8PGTxfBGlMXPsTaC0QAbLpH4
-         bEDuGpVeTxiYnHSwxdWl0kpgdFcWsRTa3Re4PSt+bwDjOrBvHHEpKDGrF4hZjZSExUft
-         teqg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLim81+Hllv3OKi5MIs9fwaiu08ikLQN0eDpveofcin8OOIZSOMc7spqndfu6uaptlvWTuc57w0GoSVYY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3LUgM1ijRZvxVjjBZ0+yd2iO4K6qzP/2K51yAKNf7P/VyyNQu
-	izkLxJO4KP1PAvbLa4fgdGsJN+z6VWiWL5RDwHOyI5y+5T1K8Ot1
-X-Gm-Gg: ASbGncu+UKg+a3frvvvXizApcX7v9s2ciB0NUSNAvUY9womzFsS6w4TNMBwlR+adOGg
-	mzRX+iijgOj5dHe5qXLysD4TEUXW5WIvT5OMMJVZ6wz3D9r2lrM1eBu42umOrHc1ZbkIll3Soyh
-	EKTeAMAOWGIb+9t9rjiqm0OkwEtBxTUb+aw8xjynTmCzL5m5Wcpyo9CcFFwpaJkgkLnXPJ78kgO
-	AheeqplXf7zh0jvHQfcxz5FR+weRAujy+0Hy9qYTinCqXtSpMBJW5MHWLiuxD3TI7Yd3YRu+/o9
-	r3APnP3WfFMtCUc=
-X-Google-Smtp-Source: AGHT+IF4x03U2XL3LMqaq/QOPxrusKrZy/Z5j5Q0xTubyppnVW51XdIuOjSID/gBJx3Z/XLDh1+oyQ==
-X-Received: by 2002:a05:6a20:258e:b0:1e0:d6ef:521a with SMTP id adf61e73a8af0-1ee5c732f01mr6135206637.1.1739369560933;
-        Wed, 12 Feb 2025 06:12:40 -0800 (PST)
-Received: from localhost ([216.228.125.129])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048ae7e6dsm11194417b3a.70.2025.02.12.06.12.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 06:12:40 -0800 (PST)
-Date: Wed, 12 Feb 2025 09:12:36 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: I Hsin Cheng <richard120310@gmail.com>
-Cc: David Laight <david.laight.linux@gmail.com>, anshuman.khandual@arm.com,
-	arnd@arndb.de, linux-kernel@vger.kernel.org, jserv@ccns.ncku.edu.tw,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthias Kaehlcke <mka@chromium.org>, skhan@linuxfoundation.org
-Subject: Re: [PATCH 2/2] uapi: Refactor __GENMASK_ULL() for speed-up
-Message-ID: <Z6ysVBWFRfdFdLlT@thinkpad>
-References: <20250211162412.477655-1-richard120310@gmail.com>
- <20250211162412.477655-3-richard120310@gmail.com>
- <20250211223045.5c2b92a4@pumpkin>
- <Z6yWbROu5rREhw85@vaxr-BM6660-BM6360>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="bRzgpUYc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1739369726; x=1739974526; i=markus.elfring@web.de;
+	bh=iCWXvj2a4k/niiC9u9wcJPbUXpQIPybramZFQ8uqJqU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=bRzgpUYc5bFwukP1xFjqV0U09qF7mRfihWuRv8064J8GAYSEQ2Zmp0wEQuaWEeV7
+	 Sw4E/3Ix1A25Son42E1gomKlyLbm8a+DAMKVYY0eq59z66ilOAWCYTx9EeA03CYfB
+	 SOyG5e8S6ORZqHAYgIfh/M6Em+mE7fm5sCkUqlYSUjXR9Kb+sq3bLDZvH3eeujNtj
+	 pzp6Dq+/MKCd2iu5vIEdiZP87c/HrgvFbzrjTxBOq+GvM/pgcrysdV0fp/DuW+xaN
+	 lLRAUsRRsCGssQRu+jIp4b5BtatZtF+0hWa/sy548/IM+Whmab8O39ENBdrGaaxLH
+	 5PqwCIBh48bSCG0UZg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.11]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mo6Jz-1t35GP2LAB-00enKW; Wed, 12
+ Feb 2025 15:15:26 +0100
+Message-ID: <f06c4e1a-54ed-4f3a-9a7c-dfda31cfb74e@web.de>
+Date: Wed, 12 Feb 2025 15:15:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6yWbROu5rREhw85@vaxr-BM6660-BM6360>
+User-Agent: Mozilla Thunderbird
+To: vulab@iscas.ac.cn, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com
+Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
+ <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+References: <20250212021849.275-1-vulab@iscas.ac.cn>
+Subject: Re: [PATCH v2] gpio: stmpe: Check return value of stmpe_reg_read in
+ stmpe_gpio_irq_sync_unlock
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250212021849.275-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:eVHoFBcXsVWoExu1oCJST499N7xA6sGYUk+9smIyUo+VAhMgItd
+ XapbKlBkL+idgPAEziKIMcQ+8DPn0nPg8v8u8HUAZa5CwwxzztVuDFjX730Wlv25BXy/QZs
+ XcfTz8/DiugUW02sEV2u4jEfFdvcmyQxPwPPg3iDO6azH4nXuQRLTf80D8GlqN4N3jT7eSK
+ 940M7jkccaQY2RwYRnYWg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:3QrbsvZSHUs=;9l/kj/POfuaGbCezmxBAoK93rii
+ jYtCIMX0iUkSIHCp3wZx/vllbrrhYjZhjP7jtcd06TV6IBjCFzJ2n0GRvor2AqgFRpVzVLW7w
+ djxycQ9Y/m8byXzLiAPi6IldW31sp5hJ62aTvKAlWdeLFwWEn4zziy8ADZ8TO++0AP1LOLuyG
+ kSqejiANytqM2nsaW0ywFivqY0aBj9QpfN0dChMWxqPd2rNd90VEROIOHTkmCxz3Kc3j7dWOk
+ jMA4T1w/qQqg9IZXWyz4xBODYrQrHRdkIB3iKpLa8PxZutP84uGrJ0Fsa3qwDYiwXYcxCWCk2
+ JC8W7Q1zx8xVEk2lnMT7x8SQ/tL1j/7KlRMn83+TTgt04zhAbRgJkHFaBd81QeP5uotFcWz3v
+ HV8caupclOrsT8aJZ/T/m5f/RG/ifibC46o5TdtsqIToZuH+KB0pBPsagkv4sIJr4iq8VjHhq
+ K8XyF3LdiPtMaFIoG7o7kaQUr0pHNIj89V4U82FNIaKbGoTEJlZHPTn4RGDpgSvQ/TavbYmfc
+ 76TflS/87bPL/gcp5dmWIBx70DrsoPKHvmPxP6QJjY6LR4Yn874e4raANl1wJzndWf/eoM7sx
+ WY1Hhq5uyTWUFrbUKvvVgNs2RBghpbSOFOFTNVvJXdyl1KNzyExQ+X573lI/NCXBGraaCheho
+ 4ffL5b60QbxKvjWhgdevlKPWSArRLmaAHRsTXojKO4xdQohoAtsw2JzZRq1W1sdY2o9dMEAjv
+ xfT/eAZV0lrrRBHg9VwCODH58GCdjjdsHFtEu1w9c2sZD6JZzBgrjuJauWn+9dfMGsipu9Hpv
+ 6IaQbP12EGVKR5h6drO4SRQM43CQERsC5Vtrp7FMEYmQEvqJsvAQM9D3Kg2AIo5xko6DxPrvP
+ 4fF7OIWBwq51dSkHWEQ2PW5mJIpWr6zkQ2oWYJZ6osiZT6T860wgqI29IrDL4JB76jTbkGCW6
+ vVnvK4gsrIpWpmeEeAxO5CMHF/B15da6K+VWaAfoEH4GOgzQVN5C2lVi8rGXjwH2lHbZqVJ+4
+ e3OC8XFuYqCnjGeTbeyoycgq81HOBfMHdlJGJo3mhP0ZP8CEND3c/aDK5mUGsSICK+90pLRro
+ eRiNuhI8XDqa6jtWknBEF/tOD2hyfpvAoVJguVCPAUc90iKKVloCAv3D/Q1FXIVIEzRdE6+JL
+ A6oUvisQWnUxaob5hLv6CImeKK1UW2t6BkKwUwuwvjiqwEyhpFN872UrJLJPS9g3N9vfjGunY
+ D4hM0h+vZxLsLzORuDmEg03bNcJZSZKXJuS3532GnYb9ZIQ/Mbbh3fmrcEUzowd2NYAFaq8Cb
+ 3/0M0g2GlKXr+d0InI+h7/C58y5tJxLHFHHk7t+mnE710q4mlqlayBFuWbGhU8bRUU2F5JyQu
+ 2gPuPb03lpP6Lb9zIw/3hRb6rhiFyV/ImPeF7EsXejW52RxyGqSgv2zFKCGmciFFIrcTxY0lx
+ AgWX0lA==
 
-+ Matthias, Andrew
+=E2=80=A6
+> This patch adds checks for the return value of =E2=80=A6
 
-On Wed, Feb 12, 2025 at 08:39:09PM +0800, I Hsin Cheng wrote:
-> On Tue, Feb 11, 2025 at 10:30:45PM +0000, David Laight wrote:
-> > On Wed, 12 Feb 2025 00:24:12 +0800
-> > I Hsin Cheng <richard120310@gmail.com> wrote:
-> > 
-> > > The calculation of "((~_ULL(0)) - (_ULL(1) << (l)) + 1)" is to generate
-> > > a bitmask with "l" trailing zeroes, which is equivalent to
-> > > "(~_ULL(0) << (l))".
-> > 
-> > Yes, and if you look through the commit history you'll see it was changed
-> > to avoid a compiler warning about the shift losing significant bits.
-> > So you are just reverting that change and the compiler warnings will
-> > reappear.
-> > For non-constants I suspect that (2ul << hi) - (1ul << lo) is the
-> > best answer.
-> > But the compiler (clang with some options?) will still complain
-> > for constants when trying to set the high bit.
-> > 
-> > That version also doesn't need BITS_PER_[U]LONG.
-> > While that is valid for C, the _ULL() are there for the assembler
-> > (when they are no-ops) so there is no way asm copies can be right
-> > for both GENMASK() ans GENMASK_ULL().
-> > 
-> > 	David
-> 
-> Hi David,
-> 
-> Thanks for the review!
-> 
-> > Yes, and if you look through the commit history you'll see it was changed
-> > to avoid a compiler warning about the shift losing significant bits.
-> 
-> I've browse through the commits of include/linux/bits.h , where
-> GENMASK() was placed under. Though I didn't find specific commit of it,
-> would you be so kind to paste the link of the commit?
+See also:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.14-rc2#n94
 
-It's c32ee3d9abd284b4f ("bitops: avoid integer overflow in GENMASK(_ULL)").
 
-[From cover letter] 
+Would you like to append parentheses to any function names?
 
-> $ ./scripts/bloat-o-meter vmlinux_old vmlinux_new
-> add/remove: 0/2 grow/shrink: 46/510 up/down: 464/-1733 (-1269)
-
-You can see, Andrew tested it and found no changes in .text size. If that
-has changed, we need to revert the original patch and suppress warning.
-
-Can you please print the full bloat-o-meter result? Which compiler(s) did
-you try?
-
-Thanks,
-Yury
+Regards,
+Markus
