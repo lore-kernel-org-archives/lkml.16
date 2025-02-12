@@ -1,87 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA26E13DB9F;
-	Wed, 12 Feb 2025 02:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C981C5F39;
+	Wed, 12 Feb 2025 02:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739325606; cv=none; b=peJXYF7MxV5SMSmxnT+k3Y4lRXmzIGrq/CIrxE0XOxU0e7GgrwcIjSSVft8Zl4D1v/ENlZa+eqqfeWW/E3mKQAGJRbJHTjBkj3rXFpnaxtyXfM4OCUpR2SrUgyBz56lKRsxZU8fgz++opXMVi5qMMC3AGWkpoHGrPEZNBiwu5yI=
+	t=1739325613; cv=none; b=PcGhxZfiOcccno6GpoNG9NjRcdjoDyYSzi9YYuyYozCiExMiUcMnhR+OChUaRA9V88wmukYXVPBQDY5k3SYRmkJwTsrAw7ASny9wE3ruCsFHuULkYyQ2Zxp/i57dTPa9HAyv2PZmfrtiBxxx+ebYEhpw0dicTsDisWjA4xae0IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739325606; c=relaxed/simple;
-	bh=oilJiX+VeDtt6XMyhc6T4ILKvqJAoN3URIWrJE3VgHU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=QVqZ8tp629dv7GAAZCe4KJ5tFaSGvTVaquBZCUbOi7hNYPEEtorZ3i8l4nkgQquiqmXS1XZEWo4WgAVTFzYN6ITyUZeG/sSMfu8q1oX/3j2NGVCup2uxprzv55bRpTzFllKET8zCNQKc4XL5iELO/noaFzngIIifP3abXfys4xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJArGJoe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739325613; c=relaxed/simple;
+	bh=QEGOAOYXFEEhIZfm//ohY8nsq6IZgww9eBHAzdq0y1E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N3KeO0rqm+YpkDew1nTnR21KxDYKuV8d3qjjG5HBbDMH/tVamEC/ABKHqz6sGGIHXA2oMM4KZO0KYy0TqiDJjDaycebnu3HkHO0w27zyYuDZ7kn8VTpuDHAzWq++8g+WgJwMPn6zNkei31gQM1Vxkn8ZIG+ADxwfazMM5yiFxxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=czNNuFjW; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJArGJoe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A86C4CEDD;
-	Wed, 12 Feb 2025 02:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739325606;
-	bh=oilJiX+VeDtt6XMyhc6T4ILKvqJAoN3URIWrJE3VgHU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gJArGJoeKrymHt+AHoegfgrxkW/c84h3HcxZgUROZHEyIDEdkCyqsoRJ083JvkSSE
-	 d8GJs/1LNq1y9wjtcIbxMctRYIv41LmGXGZA+8ZIm7oLoY2USWfsEMh//El9wgt5LD
-	 dBqRgJjKIh3zn18XULsttCm8xMU4nCR0FT4wS+OYkynFdHO1AjiPfJI6fNwiVEH0yf
-	 GNg+nKkxdBW+jHGcNfyJfgmUC+ORjzdizUAf7Aj5zVndsKWALUnvY7bOfcTLj289Mc
-	 +AxR3pqfG9D2TqB1gj7OJ4w1et01N6hCQ9nzsES0lFKiUag3inbe9qE5JoeZbVArPg
-	 stj/h8xFDhlzA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34084380AAFF;
-	Wed, 12 Feb 2025 02:00:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czNNuFjW"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6dd01781b56so73291286d6.0;
+        Tue, 11 Feb 2025 18:00:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739325610; x=1739930410; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7VHuRV3JLBd0sDXEd7hwkpdzgjJBnpcclim2XbGuwkA=;
+        b=czNNuFjWcAxC4qq9nVLmvzp8qoe+pRcIFzrTvVmekSwC47HBBnmM0I3k7xiBqWRR+i
+         XurWiIJTeZi0xp2YkAOOTzMN2uXeHmfndiDAp9To0wMlhT9xuDsXVlR6Q0h1n5CabFTb
+         EVRymxgnHk3uzm/ZV/axHqlEKUTgl1uVsybLrFUtyaY5aKIrtVT5uCwCk20Wu3lQ+/cI
+         /NDtp9dp/LEZuE/f2oUYC5lNuWlJQyeXYy1DKtwYyfqOBDdcZhmKEkuOoTRwAk+Gmqi2
+         RbNQ2BV3A8jAI9pzCN+qEIcKcNUtNjzBDM+3HRs7fEqi2o9IulH6qDt+nhCN2UchWGLI
+         0R1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739325610; x=1739930410;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7VHuRV3JLBd0sDXEd7hwkpdzgjJBnpcclim2XbGuwkA=;
+        b=IO/Q39a6Q4iWt9ZA3r7avWydnZNoxfm48eBbGu1C9Eq16Bs4fsvfzc5iKnwPgGBeo0
+         qUiZ6w+0M9x6PJKgMr+N+PRUpu7H4W4/lg/iZrrqlUFSBTGuXWTDbUOU5baIzWHuP1YX
+         3XDS/eZExZhWKhoYr2tWcwan5Qc9KMsy6PuQ0PblqdmqtdWiS7l7EOdlRPrcArSzJZML
+         Sxa/Dd2AobXGmPeZA9t3LKapxvlcTwx0D3dry6ycZ8rAi/Qok5Wpg1uswruMc7eApeQr
+         UHc1On290IxFnkG2EQ5odXEtGNW1AVXhBnIlJbDwlwfmp/KM3uP6WgdjscKfT1GAxZTc
+         xY7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVC8PwfzYksJZuXOxQHDcKM2h+qycEL7SsYoonyOLl48Sh/jw47/PZmEscTHqcqis6SMq7R4F6TAm0a@vger.kernel.org, AJvYcCWxMRjCFXxswZP5VEgJLSuVpVl9TZ8kEvR4/XLI/hmSp0bjuKSTKh4/IIlbb9LWrqwCEG5RMU5i0RxOL5ce@vger.kernel.org, AJvYcCWzaO1JB3oLNsljC5Nst5xhvStTsCXKdCYISzqdFQ9mRFySrSfF643ZWQuRqsbFzEIia7g6lNuGTcZ6spkEiA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcWlkvfRu8HAkvKTCPburANxDRvArVN3P7mkUWxxhdKJ416S80
+	R7tiX/Ck018hlzA5EjVi/Ipj04u6P/u4/Gxqtsz424T5FQcKRywXZg39QZGOkNxFVT+QSJRvsoi
+	LCuS4tPn4Fv8j9BJNSioVEGzfTNNptVlU9vM=
+X-Gm-Gg: ASbGncvzuFT76+l1M8Al5DjSiyVhVBM+7wuNqLde8tGY2l/C4Wo1aHsbKPztnxnFNHp
+	bt3efB4ag6G28RUKCdOXG5gZVNynIMSLVyfG50x7au4HbB14L+wBO4kZ5jqhypPWHXkYQMEm0H9
+	5mKb19jXdXwYvtXNc5Khfd73w0Blnghg==
+X-Google-Smtp-Source: AGHT+IEUFkdtr5qbMiziWtcWyrFIZMakMc2Xt3xf4SJA+jIVIoFYGC3/USIMiDCJSTNGxYXsJYbSafxf7lWIUQsjr3A=
+X-Received: by 2002:a05:6214:4019:b0:6d4:238e:35b0 with SMTP id
+ 6a1803df08f44-6e46ed7f4ccmr26252796d6.17.1739325610034; Tue, 11 Feb 2025
+ 18:00:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 0/5] Use HWMON_CHANNEL_INFO macro to simplify code
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173932563500.69529.13441437064879744393.git-patchwork-notify@kernel.org>
-Date: Wed, 12 Feb 2025 02:00:35 +0000
-References: <20250210054710.12855-1-lihuisong@huawei.com>
-In-Reply-To: <20250210054710.12855-1-lihuisong@huawei.com>
-To: Huisong Li <lihuisong@huawei.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- oss-drivers@corigine.com, irusskikh@marvell.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- louis.peens@corigine.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
- kabel@kernel.org, zhanjie9@hisilicon.com, zhenglifeng1@huawei.com,
- liuyonglong@huawei.com
+References: <20250209-expressatt-bam-v2-1-e6c01c5d8292@gmail.com> <e0ef29dd-afe4-4ad7-95db-d21326744c92@oss.qualcomm.com>
+In-Reply-To: <e0ef29dd-afe4-4ad7-95db-d21326744c92@oss.qualcomm.com>
+From: Rudraksha Gupta <guptarud@gmail.com>
+Date: Tue, 11 Feb 2025 17:59:33 -0800
+X-Gm-Features: AWEUYZms9PJNdelX24SfB9ouO82cZnB7LH--76l0J_cLW14Q56WNbDTJ3tWa0sI
+Message-ID: <CABhZbsXo69FL-xUfg3a20RybO_uRmsOKyMJ2w3qnpk+8pYyUqw@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: qcom: msm8960: Add BAM
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Sam Day <me@samcday.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Mon, 10 Feb 2025 13:47:05 +0800 you wrote:
-> The HWMON_CHANNEL_INFO macro is provided by hwmon.h and used widely by many
-> other drivers. This series use HWMON_CHANNEL_INFO macro to simplify code
-> in net subsystem.
-> 
-> Note: These patches do not depend on each other. Put them togeter just for
-> belonging to the same subsystem.
-> 
-> [...]
-
-Here is the summary with links:
-  - [v2,1/5] net: aquantia: Use HWMON_CHANNEL_INFO macro to simplify code
-    https://git.kernel.org/netdev/net-next/c/43a0d7f26ad7
-  - [v2,2/5] net: nfp: Use HWMON_CHANNEL_INFO macro to simplify code
-    https://git.kernel.org/netdev/net-next/c/e05427c4d138
-  - [v2,3/5] net: phy: marvell: Use HWMON_CHANNEL_INFO macro to simplify code
-    https://git.kernel.org/netdev/net-next/c/0cb595e80edc
-  - [v2,4/5] net: phy: marvell10g: Use HWMON_CHANNEL_INFO macro to simplify code
-    https://git.kernel.org/netdev/net-next/c/4798f4834b2e
-  - [v2,5/5] net: phy: aquantia: Use HWMON_CHANNEL_INFO macro to simplify code
-    https://git.kernel.org/netdev/net-next/c/d6085a23b3b4
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> > +             sdcc3bam: dma-controller@12182000 {
+> > +                     compatible = "qcom,bam-v1.3.0";
+> > +                     reg = <0x12182000 0x2000>;
+>
+> The BAM controller is 0x4000-long
 
 
+Seems like my device splats with this requested change:
+
+Diff: https://pastebin.com/AwzHPCLG
+Log: https://pastebin.com/WQswkndX
+
+
+
+>
+> Otherwise, looks good
+>
+> Konrad
