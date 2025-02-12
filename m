@@ -1,120 +1,145 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB0C253B40
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 16:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D72253F09;
+	Wed, 12 Feb 2025 16:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739379286; cv=none; b=MhEdpV1tGcrxWLKsNgbVCAP4H4V7xj9JD63MprBGp4LBZitt5Vei4QQ3DJ9eFS9MgYSx+cRooHc52jpgc5pub04M+mNmnhpAM13MjbBpInOtu1Yp98Eaa6j51sYsO11EbqA1NmeMz1m5GXEOu12K9N84c6Y+ne5iDYsxmIUufxw=
+	t=1739379332; cv=none; b=jFPVwBvouJ2vWeOKBhwLjvIXgC2cWDuyC8ol2XxIMHTTvcI0RBimE1Tg3HRbjLfIFl3/DiBv6kvRb/XGXcEb/iZoSIrVw17/Becs9enwpamv2/DcU7nB3Z0d4wJRK9Bv/GMKiH5squsPQkwlXgqVGvB2eF2Q169BIbCteBSxlTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739379286; c=relaxed/simple;
-	bh=wkaUg1DENSD4yHymFSi2ejg0prL/M/EWygSMyN+dkvg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sJ7ZJZxDFkMQTJxHrSTghmF47or9BANpeuzgvqNedFiZs6stmT/pKcHhLIn7SQRm7PYHhIe1ulYD66Zw3CoJaeCtmgVtcfba6cGj7HUS9GhHZZNHtQCw2ItO1Ytv228f4JqM12AmOU6+WHebyft2tr7WPaBJJyKoxCAloSCwNW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NU8DpwJ8; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739379332; c=relaxed/simple;
+	bh=60cHMAsDRvIOHo48UF7M2hduYfC6u+0l/5xeFUgi6wc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JnYoKYqR2yyA/iix3FOic6bHk7dfOhJoQr1+l8UtDtKuwAcs2nz4jd6mb7CYwzcrI23oIkyb5bZ1Eqfz9oH/K1/orAhabvhoQVhusbgExZI1C9PnNNLKzGlDOTtq/XSqS+cuFTAEuUmlBXqxcEx/UC1YEYni4JHWArE1IlYSr3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fIDxdnhL; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NU8DpwJ8"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51C91wgD001378
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 16:54:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	nfbHxXfLDJVGtgNZIgeGSymwLVT6zSrgg/aja6UrOP4=; b=NU8DpwJ8CmbsbmiF
-	lsoXBD4n34MNA4ARVp5HzKP90RqInNXWXXHBR6njz5YKZcuXQmpkdHwq6ZNR1OzB
-	YZWT9Cq4eZ/FnRIwA4iR2QTNWR2ZK25uc3VlqYxFj8tKQVGL1b+Zl640Jg/jvW1C
-	0YNKYpwu5zgJBpM+8klt+0MB9jKIsq6vrVMCA39oKNVjfD9/sOlbS6C5MsA/n6O8
-	d1UyD0gybZQ23wBSGlZ7fLXagn8/iUwKRuZVqcIvtC1Ke5MT1hizU0FynsgNpHw+
-	vD9lcahJnutDSOTbmbtqgqXt4dA+M/4oSRj7oXhGnt34EPQCXuI12jST2hYEecO+
-	tZqHiA==
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44rrnfs76w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 16:54:43 +0000 (GMT)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2fbfa786a1aso2850118a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 08:54:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fIDxdnhL"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-308f53aef4fso26946281fa.0;
+        Wed, 12 Feb 2025 08:55:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739379329; x=1739984129; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NBvdLo8gkR8Wy8cwK/8Vm6VLKmV1zg6ayYB1+AAnbp0=;
+        b=fIDxdnhLQCKOzSGFTKVsGCLD3kndMohah1Gk0EIsHt3mBzNvve9EtdU4+WF9qw4+c1
+         JkowzElcUaoQJXfpUZoS9fidWdB4Sq5hLq9xGOT15k/BJWmruZZPAfPM3zMowqiJFoi3
+         4Xkpu+VoHhNSJloriIaUIZjGN86JoTRVtuJEucNJZVJs0oId2Xs46RvQtDUcVfENcpt3
+         xZo0BHhxXm4sVlFUzqS4bDMT4jgfRehnzW97bzpy86+QS3Yy/eqVd1f3/GpigSrSznR0
+         539tcaheXRy3FToUe9HJRa60gWCxk+AA6M1Y3pdwzSp0FNUxrTXgWnA9llp6+mLAJk8N
+         Qd4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739379282; x=1739984082;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nfbHxXfLDJVGtgNZIgeGSymwLVT6zSrgg/aja6UrOP4=;
-        b=xUQw9doOmSoi6Cf/t+vMyKRCEXpoT6g98gOV49uMb/GiBiOxzIgRDSGGeDyF1MwZ+0
-         Rgw1w/Ad6PY8gUauqh/t6zNVBy75f684DeNvI8uyUpY7EDpa3Z2+1W7cAE7uPb705rQL
-         lCwIztlAx6jB0vn3xwG4Z682HToYapm1I98jj6NsNwpQBxk222FFWV6q3bjGia5eFeDG
-         /hR9O+u8TvIBb/tDQ1uWWv2sJ24X3W1idSSoEnfTx0qjITw/ZcdUk6ACu77usqhIk0vL
-         K80VlPnBXeTWUcy2SWAeWfWXBBY9DAo0uwyj6bL/IcJ//DBjFNAHQAJwwL6CE1jKjcef
-         JmAw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUYNj3o48cOMI5mAMxTL+E1SmUv2PWy7SMfVRFQRJMbSfFYz9RZr9mjchZtnWobd7gSI44Sbih4m3Jzkw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3f4v309S061BKdDFvbiwMMIAsFEDYmhB4HmnPsjVb5UV/pOaZ
-	D43c+m371rfG6ihrn85KcGSXYHCoyT3/4vuJZpgfC825hQUT1dvM6pj0/o1UtHGk0NaFPkqzu5m
-	ve0fokEeZ2WfoqaNAopOrSbZnI+aDkNKpOcs921RltnfbZwrZHOSfit4Yqbtmxf0qEvg5Sbk=
-X-Gm-Gg: ASbGnctqOqnHCVV30HIVpK2b2BN+YOXEzDtrvuf5YyrMyhJ5i/Oa2YJ8nlFd/AIoZgi
-	wtRY5vQHRz/7SeSY+7vwdJUei8mwRU59jvnAG1ql0LBbScSEHvQlybERjzOg86Is6G18dHw5dq6
-	4U+AU+o46baojjAArRg+6x9iw30LH0zYvKWwOA/DlnUQfxtRedP/bhcrrJPmcihb2VoRDuvZhr0
-	AoETEfDCQ8t1wEMTW4K9ovsuXcVozlFjOuTJEjpGA+JcvlPpCQXhJWydswKB9tGHguOAZpzkXJI
-	8AsXbEtE4N2GK/2Q2s2EnF6qePwVx3c9Vp64Ymz2XdfTvvng3vHD16bZ6hS9
-X-Received: by 2002:a17:90b:134f:b0:2ea:83a0:47a5 with SMTP id 98e67ed59e1d1-2fbf5bb5735mr6133331a91.4.1739379282023;
-        Wed, 12 Feb 2025 08:54:42 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGx+CWks0nvoqMOT5wEtwjJQXwKdPFly96tXraDduozSmPBMM+3wmzaLt6FvkicFgrTncPtIg==
-X-Received: by 2002:a17:90b:134f:b0:2ea:83a0:47a5 with SMTP id 98e67ed59e1d1-2fbf5bb5735mr6133297a91.4.1739379281639;
-        Wed, 12 Feb 2025 08:54:41 -0800 (PST)
-Received: from [10.227.110.203] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf989bdcfsm1721378a91.3.2025.02.12.08.54.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 08:54:41 -0800 (PST)
-Message-ID: <509cb1aa-a0d9-4444-9a54-0edc0b181d61@oss.qualcomm.com>
-Date: Wed, 12 Feb 2025 08:54:39 -0800
+        d=1e100.net; s=20230601; t=1739379329; x=1739984129;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NBvdLo8gkR8Wy8cwK/8Vm6VLKmV1zg6ayYB1+AAnbp0=;
+        b=XCcEzqnCBa6+autOi24WO1guycqE1r5htjZHs3IZxnXd5BO8xlk5y3szZKHtSRYt4R
+         4kdwx3dWkllMVyV2lulV7kG5voz98/+PW/yPmI1CN9NKGit9K0T67owqK395VG4LMo5U
+         peLTsMwriqo/Zo+1P2XDJxlDhrjzzBi1a5zLZlsDuhNvHtVApzCnjET8uGcCbZtRM1P7
+         k9NIglcGHS0VC0qJBT3llZYTAzuu5afWhW9/BO6HqJOnaXjc1sQk1tUFIfOsAjYEFDqY
+         3tB9QIRK2/TI3OzdV5kXKCIVWHGeWTxMb+072Q1AKIytHR4e3TifWOK1ZOXomJuPsBf9
+         VsxA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1QplbU0HDfRgfWGlzOkp4xMIoDa6PP+MQDksVVvWpMDQjVHZLhmzgECg0DJvhHh/27FaHifhJE7hMwU4=@vger.kernel.org, AJvYcCVxVC8yjmQDyiJ9RG2y8rPPQu2ccOYUbUTMUx6/wCours5L1Z1pcz2vyvIcd1ChQNCQich4T8NHdikS9br8fGBg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsH9DXf+1WUOr2+ThLebtnzXRpvyQzsKAwEMmXK8fHSBAyDnID
+	AzI1QuijGoG34VYwJrQ+Rv+yl1RfxjjS9MQIrX36eRcCABqoXuA+phxrDifotTmlNoK59rEKpXQ
+	OFvXGwPpy7AkPEDKl4w4p45duD8g=
+X-Gm-Gg: ASbGnct3TND1nFLRf+UVyBceNCvvIcpqDTRorTNqYucIXdrBK1h3FKQh3iYg5l0V68+
+	OO48HFoVSID5GjF+Cwc2y+YfgLDvVxEUbRosAY5k8ikZ8PojtSFN2Gc5f8mMavyMdr/KakqGv/P
+	ruxsTzPReolIC1
+X-Google-Smtp-Source: AGHT+IGlPgCSSnQs6QH/QeGmHrfb6k7riD6rc3wGRHOG75RycIS7kEPtaSqxnS6MDYNzFsUjm8bKnI+kG9vozNb7gGA=
+X-Received: by 2002:a05:651c:b2b:b0:307:db5f:c44f with SMTP id
+ 38308e7fff4ca-309036697d7mr17588861fa.19.1739379328691; Wed, 12 Feb 2025
+ 08:55:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: ath12k: cleanup ath12k_mac_mlo_ready()
-To: Ethan Carter Edwards <ethan@ethancedwards.com>,
-        Karthikeyan Periyasamy <quic_periyasa@quicinc.com>
-Cc: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-        Harshitha Prem <quic_hprem@quicinc.com>,
-        Kalle Valo
- <quic_kvalo@quicinc.com>, linux-wireless@vger.kernel.org,
-        ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20250210-ath12k-uninit-v2-1-3596f28dd380@ethancedwards.com>
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <20250210-ath12k-uninit-v2-1-3596f28dd380@ethancedwards.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: MdBXMSZlM1GTwpoQndhkNGxicLgp_L7k
-X-Proofpoint-ORIG-GUID: MdBXMSZlM1GTwpoQndhkNGxicLgp_L7k
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-12_05,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- bulkscore=0 malwarescore=0 mlxlogscore=710 lowpriorityscore=0
- suspectscore=0 adultscore=0 mlxscore=0 spamscore=0 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502120124
+References: <20250211-scanf-kunit-convert-v7-0-c057f0a3d9d8@gmail.com>
+ <Z6tvciJpQgTwYpGx@smile.fi.intel.com> <CAJ-ks9mcxW7zY33FPB+mZ75dQ2Xqo-viM9CpbL=0i0WXUPJRhw@mail.gmail.com>
+ <Z6tytjvT1A-5TOrq@smile.fi.intel.com> <CAJ-ks9kSBMh0=dgPC-NiOhibnK_LhBjBdZ_AQ91h-DBZfYR1sw@mail.gmail.com>
+ <Z6uGPZZ7LioJmekz@smile.fi.intel.com> <CAJ-ks9mGwXmiJ3_Kk4j0MnEqn24A9UJJXVhqtUjcG8W5ifodsA@mail.gmail.com>
+In-Reply-To: <CAJ-ks9mGwXmiJ3_Kk4j0MnEqn24A9UJJXVhqtUjcG8W5ifodsA@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 12 Feb 2025 11:54:52 -0500
+X-Gm-Features: AWEUYZmF5UVTVNJrgqmcY6YHP16q-YpXs83zwjEBlC-szLP67C1U0B5hNhwVw28
+Message-ID: <CAJ-ks9k9d4aX+P9F10h3TqHPOCHEQ5m=QyMAv7bU+Xyb3LRsOQ@mail.gmail.com>
+Subject: Re: [PATCH v7 0/3] scanf: convert self-test to KUnit
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/10/2025 6:49 PM, Ethan Carter Edwards wrote:
-> There is a possibility for an uninitialized *ret* variable to be
-> returned in some code paths.
-> 
-> This explicitly returns 0 without an error. Also removes goto that
-> returned *ret* and simply returns in place.
-> 
-> Closes: https://scan5.scan.coverity.com/#/project-view/63541/10063?selectedIssue=1642337
-> Fixes: b716a10d99a28 ("wifi: ath12k: enable MLO setup and teardown from core")
+On Tue, Feb 11, 2025 at 12:26=E2=80=AFPM Tamir Duberstein <tamird@gmail.com=
+> wrote:
+>
+> > Is it me who cut something or the above missing this information (total=
+ tests)?
+> > If the latter, how are we supposed to answer to the question if the fai=
+led test
+> > is from new bunch of cases I hypothetically added or regression of the =
+existing
+> > ones? Without this it seems like I need to go through all failures. OTO=
+H it may
+> > be needed anyway as failing test case needs an investigation.
+>
+> I assume you mean missing from the new output. Yeah, KUnit doesn't do
+> this counting. Instead you get the test name in the failure message:
+>
+> > > > > > >     vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %=
+4hx %1hx %1hx %4hx %4hx", ...) expected 837828163 got 1044578334
+> > > > > > >             not ok 1 " "
+> > > > > > >         # numbers_list_field_width_val_width: ASSERTION FAILE=
+D at lib/scanf_kunit.c:92
+>
+> I think maybe you're saying: what if I add a new assertion (rather
+> than a new test case), and I start getting failure reports - how do I
+> know if the reporter is running old or new test code?
+>
+> In an ideal world the message above would give you all the information
+> you need by including the line number from the test. This doesn't
+> quite work out in this case because of the various test helper
+> functions; you end up with a line number in the test helper rather
+> than in the test itself. We could fix that by passing around __FILE__
+> and __LINE__ (probably by wrapping the test helpers in a macro). What
+> do you think?
 
-In the pending branch I changed this to:
-Fixes: b716a10d99a2 ("wifi: ath12k: enable MLO setup and teardown from core")
+I gave this a try locally, and it produced this output:
 
-To fix the checkpatch issue:
-WARNING: Please use correct Fixes: style 'Fixes: <12 chars of sha1> ("<title line>")' - ie: 'Fixes: b716a10d99a2 ("wifi: ath12k: enable MLO setup and teardown from core")'
+>     # numbers_list_field_width_val_width: ASSERTION FAILED at lib/scanf_k=
+unit.c:94
+> lib/scanf_kunit.c:555: vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx=
+ %4hx %4hx %1hx %1hx %4hx %4hx", ...) expected 837828163 got 1044578334
+>         not ok 1 " "
+>     # numbers_list_field_width_val_width: ASSERTION FAILED at lib/scanf_k=
+unit.c:94
+> lib/scanf_kunit.c:555: vsscanf("dc2:1c:0:3531:2621:5172:1:7", "%3hx:%2hx:=
+%1hx:%4hx:%4hx:%4hx:%1hx:%1hx", ...) expected 892403712 got 28
+>         not ok 2 ":"
+>     # numbers_list_field_width_val_width: ASSERTION FAILED at lib/scanf_k=
+unit.c:94
+> lib/scanf_kunit.c:555: vsscanf("e083,8f6e,b,70ca,1,1,aab1,10e4", "%4hx,%4=
+hx,%1hx,%4hx,%1hx,%1hx,%4hx,%4hx", ...) expected 1892286475 got 757614
+>         not ok 3 ","
+>     # numbers_list_field_width_val_width: ASSERTION FAILED at lib/scanf_k=
+unit.c:94
+> lib/scanf_kunit.c:555: vsscanf("2e72-8435-1-2fc-7cbd-c2f1-7158-2b41", "%4=
+hx-%4hx-%1hx-%3hx-%4hx-%4hx-%4hx-%4hx", ...) expected 50069505 got 99381
+>         not ok 4 "-"
+>     # numbers_list_field_width_val_width: ASSERTION FAILED at lib/scanf_k=
+unit.c:94
+> lib/scanf_kunit.c:555: vsscanf("403/0/17/1/11e7/1/1fe8/34ba", "%3hx/%1hx/=
+%2hx/%1hx/%4hx/%1hx/%4hx/%4hx", ...) expected 65559 got 1507328
+>         not ok 5 "/"
 
-https://git.kernel.org/pub/scm/linux/kernel/git/ath/ath.git/commit/?h=pending&id=c2f7ae223cd3d781c69337dc804f1fae95789cdd
-
+Andy, Petr: what do you think? I've added this (and the original
+output, as you requested) to the cover letter for when I reroll v8
+(not before next week).
