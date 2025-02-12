@@ -1,98 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3104F190470;
-	Wed, 12 Feb 2025 22:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60FB190470;
+	Wed, 12 Feb 2025 22:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739398594; cv=none; b=EgbdC8vHnueL+CfqF4imaSyMCQwFSMDT8Kthgi+MKvOEfVNlYDK7BFU6MNzKzcg9W75s0mgkUTkoFUoyHGEX2skMDcUf9+WOeHrDpKbi99GQ6tVVsKF1uIuRgKwAKlEriM0jUVFmNuHoWzQ0HNXmqmqT9Os3Ec6xelstD2LLyHo=
+	t=1739398732; cv=none; b=L41gOSsQMw4I0HTV8uWb5JQWs6Dv8NjgslctdSpTZfAtJ0RMOU9rm7qabNIfDFuxWX+8hOv6g6CKIEr9DCHHxm17MtKa95AgGsTH1dpqAlbEtnRV/Up7tHgeoXn8dDqG9xCBa6MCPPzv5qdszan4hTyrfad1VvkRgFEbptYIcXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739398594; c=relaxed/simple;
-	bh=kNDG/gEhiX5P6/7ND6hRtddzOBz2ryqMmMGUppU/+Fs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DLFTWxOBeVPFslLwfYMZ03osgonrBH+Q9ylUudNdSYqiWmspkrne4Wc5k6JPjmsNez2dnaq54lkrmcXbQu5mHgCUoQDsqOFjYxG7a0grxfzlej77ENZpNn5KigG20uYtlUdV+dXik5x0/5ibAlAXALBnjswn9Vzx62nJpa7uJH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RuYw5nad; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739398732; c=relaxed/simple;
+	bh=52RdHhpb+l5jkCHj2GRlvoKj3szd4BEOiqrYg3TgLQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=fbX/CcCB/hQckLxrAd3mvWaSKgffHCxwD0ZG4Q3cgYuFIIsAleYYM77MyvndCO9r95EfyREibgTUkCzpSlpWcP4s4cvg8qnckwzcok9lDqmTejld6WTUNzG5zAjw2g3w9WHCDp3tgXceNpJgO71K8AuvS5qLIau0NJtxm7NL/a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M7zrqNK0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RuYw5nad"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739398592; x=1770934592;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kNDG/gEhiX5P6/7ND6hRtddzOBz2ryqMmMGUppU/+Fs=;
-  b=RuYw5nadeTrNlUZD4udC+PgBvETILiA9ow7QCho22iu0OOjTdzRzS3I9
-   UokC3E3bW8pOUlVWYni4YXtgwUX6mo/OOEMGKxR2gJxYyOku63Mj4m3Dv
-   wJVPNZY0Nrucl492PkXJfiQqbV1lAdQkfxVzyEqdJnOBNQfLK/O6MHbeL
-   xhOOLUWCyKlDHbUuCpsmu+lQ0IRb9dObynNVswm8K1/JeVpLcAFLm+eH8
-   U+bkltvV/X2QmWoWvwDaRgUuc0BFzvpynnENw67N3MXaBziHRUEqBh3JQ
-   zR7a7SuQ0dzVgFahxFz6fG3zi4NooQGLknEEhFm1AJ9LXXduPeFya2X++
-   A==;
-X-CSE-ConnectionGUID: bfFxhWuESvC4SFRK0g+Jxw==
-X-CSE-MsgGUID: h+lgoIbpSfq6Afe4NFWcRA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="51066689"
-X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
-   d="scan'208";a="51066689"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 14:16:32 -0800
-X-CSE-ConnectionGUID: 96gXPdYgRO2hb2f6hjraLw==
-X-CSE-MsgGUID: AkjgMlqmQduJcg5E8fOQcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="150123862"
-Received: from pg15swiplab1181.png.altera.com ([10.244.232.167])
-  by orviesa001.jf.intel.com with ESMTP; 12 Feb 2025 14:16:29 -0800
-From: tien.sung.ang@intel.com
-To: Moritz Fischer <mdf@kernel.org>,
-	Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>,
-	Tom Rix <trix@redhat.com>,
-	linux-fpga@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kuhanh.murugasen.krishnan@intel.com,
-	kuhanh.murugasen.krishnan@altera.com
-Cc: Ang Tien Sung <tien.sung.ang@intel.com>
-Subject: [PATCH] fpga: altera-cvp: Increase credit timeout
-Date: Thu, 13 Feb 2025 06:12:49 +0800
-Message-Id: <20250212221249.2715929-1-tien.sung.ang@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M7zrqNK0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 236DFC4CEDF;
+	Wed, 12 Feb 2025 22:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739398731;
+	bh=52RdHhpb+l5jkCHj2GRlvoKj3szd4BEOiqrYg3TgLQg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=M7zrqNK0MnPZbfFxObAZk5g/QPd8/E1ZL4/LnpU7IgIcfIdF+fD4Jv4d3+AkI2L6j
+	 6ygTuGI8GgScKOcvkvRV1IvUq94fIHFb73hCtb+idiYGfPRFCOMuKtSmSTxKpzlKwr
+	 OxwbC8htLUGoTZzeMyKfEgEzya0xFIym196oR2iNrPcRPU2aiZfY6MEfxOTN7H7qVA
+	 eQ0k363EkhKNZbe47dtqWCdwqxxMvC5/WYRDNo9Z2vchZwgKkkJ8VA7/mo8DoqW89C
+	 MyX5sTz0hi5liI1UnVOeRU6af09ckCqkg25ZQ46NMSI6Mv1GaPvjg/6S/MwQJheZST
+	 aJyjM9N0VQ/lQ==
+Date: Wed, 12 Feb 2025 16:18:49 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mitchell.augustin@canonical.com,
+	ilpo.jarvinen@linux.intel.com, david.laight.linux@gmail.com,
+	Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH v2] PCI: Fix BUILD_BUG_ON usage for old gcc
+Message-ID: <20250212221849.GA93700@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250212185337.293023-1-alex.williamson@redhat.com>
 
-From: Kuhanh Murugasen Krishnan <kuhanh.murugasen.krishnan@intel.com>
+On Wed, Feb 12, 2025 at 11:53:32AM -0700, Alex Williamson wrote:
+> As reported in the below link, it seems older versions of gcc cannot
+> determine that the howmany variable is known for all callers.  Include
+> a test so that newer compilers can enforce this sanity check and older
+> compilers can still work.  Add __always_inline attribute to give the
+> compiler an even better chance to know the inputs.
+> 
+> Fixes: 4453f360862e ("PCI: Batch BAR sizing operations")
+> Link: https://lore.kernel.org/all/20250209154512.GA18688@redhat.com
+> Reported-by: Oleg Nesterov <oleg@redhat.com>
+> Tested-by: Oleg Nesterov <oleg@redhat.com>
+> Tested-by: Mitchell Augustin <mitchell.augustin@canonical.com>
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 
-Increase the timeout for SDM (Secure device manager) data credits from
-20ms to 40ms. Internal stress tests running at 500 loops failed with the
-current timeout of 20ms. At the start of a FPGA configuration, the CVP
-host driver reads the transmit credits from SDM. It then sends bitstream
-FPGA data to SDM based on the total credits. Each credit allows the
-CVP host driver to send 4kBytes of data. There are situations whereby,
-the SDM did not respond in time during testing.
+Applied to pci/for-linus for v6.14 since this fixes a build issue we
+added in v6.14-rc1, thanks, Alex.
 
-Signed-off-by: Ang Tien Sung <tien.sung.ang@intel.com>
-Signed-off-by: Kuhanh Murugasen Krishnan <kuhanh.murugasen.krishnan@intel.com>
----
- drivers/fpga/altera-cvp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
-index 6b0914432445..5af0bd33890c 100644
---- a/drivers/fpga/altera-cvp.c
-+++ b/drivers/fpga/altera-cvp.c
-@@ -52,7 +52,7 @@
- /* V2 Defines */
- #define VSE_CVP_TX_CREDITS		0x49	/* 8bit */
- 
--#define V2_CREDIT_TIMEOUT_US		20000
-+#define V2_CREDIT_TIMEOUT_US		40000
- #define V2_CHECK_CREDIT_US		10
- #define V2_POLL_TIMEOUT_US		1000000
- #define V2_USER_TIMEOUT_US		500000
--- 
-2.25.1
-
+> ---
+> 
+> v2:
+>  - Switch to statically_true (David Laight)
+>  - Add __always_inline (David Laight)
+>  - Included Tested-by reports
+> 
+>  drivers/pci/probe.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index b6536ed599c3..246744d8d268 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -339,13 +339,14 @@ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
+>  	return (res->flags & IORESOURCE_MEM_64) ? 1 : 0;
+>  }
+>  
+> -static void pci_read_bases(struct pci_dev *dev, unsigned int howmany, int rom)
+> +static __always_inline void pci_read_bases(struct pci_dev *dev,
+> +					   unsigned int howmany, int rom)
+>  {
+>  	u32 rombar, stdbars[PCI_STD_NUM_BARS];
+>  	unsigned int pos, reg;
+>  	u16 orig_cmd;
+>  
+> -	BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);
+> +	BUILD_BUG_ON(statically_true(howmany > PCI_STD_NUM_BARS));
+>  
+>  	if (dev->non_compliant_bars)
+>  		return;
+> -- 
+> 2.48.1
+> 
