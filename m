@@ -1,135 +1,124 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B41271828
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B79271828;
+	Wed, 12 Feb 2025 09:45:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739353517; cv=none; b=aknUe/2LvVQhI18XSjUXqsn0nSOLKaNvAPoI3vh5O4I2xvuVdyyjW6qNTQeLAWUgirrGCV3vgrZAQ+5nJ2tZXG4RbYTC6uQkcdH0mAMlA/N5hHrjTfcCV4ghZlo2ZPRG2ivIGXm4k+YGo+g3KFs9An8jCiUDwNCPFVo3dTEUcEY=
+	t=1739353556; cv=none; b=CEkGGI5aPGZi88bAA2lCby4q9oIGdf3Dx5bPs7QT94KJz5TBWHeIRM4dpcfqYydGZ+1DMx0kOgwaQrpmKBF/4KyXLYfIyj3AAIS7YcRqH9VjR3sBULvN1NT9cQQJaI1J/W2IOeDKXsoshsxgmqU0rIKxQOzqvV9fGCcnhBQUvAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739353517; c=relaxed/simple;
-	bh=1NSB5qjI3HdwTQRBQBnjuqJ4TpcqIKiTpLxKV/W6NhQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q2FHzZUMjjeto0nM3D928maSyjJIfU9uh6ux4T6PGvh8+NEV9WfzmQBQKjXz7y0/JizyXCybXLT1Tlgovf+67uAR5TV/5HCB0+66vYNc7ueZy9qf29WXxI+7uVzMlVHzmIE9+mrp6Xtqn2frdWUVTXqoMxyT/4KDosoNKZA58DY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=x6BFk/1X; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1739353556; c=relaxed/simple;
+	bh=kAK1JNEXBVI90rtvbzvhelzR8j2Kk8vnxGVJn1p7bBc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MkvZ842eExKM+/dwU4NVFHBH6MRwW/HezjwdRPzcWTj9AoSKEZItvVZ8Y0gC3+yczqg6S8845YiSdiiOWmMhAeAdGn/C5JaDdUOgUdksuWDbVcmW35grOAF5x5hO5bo93LFwL69NbvQspKkoJJ/KwUHgPwpqgV0tmcVS69gemCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mHammSSf; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="x6BFk/1X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1739353515; x=1770889515;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1NSB5qjI3HdwTQRBQBnjuqJ4TpcqIKiTpLxKV/W6NhQ=;
-  b=x6BFk/1XGcUB3R2pmxS3C67vjeJYpR2FmAfF4Qr966PZO4QWRbyjft7h
-   U6ekL5nnGhbkO2Y/aJh9at9P8YxvDlq1hIZYtVAZCEE6+31VnCocj5htp
-   CF2elUdksoApVaDP3Nm+jiESYreuAVHgpS7chZuM5+SrwjH1WqKkfkOZ2
-   CcxRERMLfsjos8ExeuVOnIJgkvXlIfxUKRTPtQSl4cvRKkWNQ887tYzbM
-   AVENRefYOSBUkwySa4/9DU2pjdy1UtDvXQiayGfYfD9H9nb/iLYS7VkFJ
-   H0qebCaWFzSGcokoi8ZcmJGEXPq8JRBkyu0kS2m5x1x30+CAN7Er/0N4A
-   g==;
-X-CSE-ConnectionGUID: qkANol4LQQKG05F3y7BElw==
-X-CSE-MsgGUID: P7uX/GQ0TOmWM4WVOBVmyA==
-X-IronPort-AV: E=Sophos;i="6.13,279,1732604400"; 
-   d="scan'208";a="37191058"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Feb 2025 02:45:13 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 12 Feb 2025 02:45:08 -0700
-Received: from che-lt-i67131.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 12 Feb 2025 02:45:01 -0700
-From: Manikandan Muralidharan <manikandan.m@microchip.com>
-To: <sam@ravnborg.org>, <bbrezillon@kernel.org>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <lee@kernel.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Manikandan Muralidharan <manikandan.m@microchip.com>, "Dharma
- Balasubiramani" <dharma.b@microchip.com>
-Subject: [PATCH v2 2/3] mfd: atmel-hlcdc: fetch LVDS PLL clock for LVDS display
-Date: Wed, 12 Feb 2025 15:14:48 +0530
-Message-ID: <20250212094449.109622-2-manikandan.m@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250212094449.109622-1-manikandan.m@microchip.com>
-References: <20250212094449.109622-1-manikandan.m@microchip.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mHammSSf"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E398A432FA;
+	Wed, 12 Feb 2025 09:45:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739353551;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CfitNOlVMCBM5pFcbQFIlvndtGb2TiK3zUMFNWZwgDY=;
+	b=mHammSSfAxD36lSKrqFlgQ0FxjGr0GSfooYA6WuHOPvHq9JQbumFr0Ho3U1Q8tbb9rmgj8
+	tzyPK6jPpwkd3G3gLk3e1NimGOsnqsuAFerXeIsRKeyGNl/6qLEg3wHBjMGJoqCzuNpIlu
+	gG5mm//6DtYFd517rnZxUZIplJuyLTrwTsT9S9iFmFmODq2DPfQlcrRjAFf7c3H6SKPIQo
+	cRNPcLf/EXG4VWiBv8ryfwFbhp9vR61Su+ehl48mzUydz6bja2p044wqlsDs8IPX5fY0d3
+	3VQ0BUcWlu/pehPCt64yUHk1WP1jizH/rz1hkKhC60ggLigUfumfX2WaRsFFZw==
+Date: Wed, 12 Feb 2025 10:45:49 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Luca Ceresoli
+ <luca.ceresoli@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [RFC PATCH 3/3] i2c: i2c-core-of: Handle i2c bus extensions
+Message-ID: <20250212104549.6b1d8781@bootlin.com>
+In-Reply-To: <71468d78-07aa-49b1-8b6d-3d98c6fc9893@kernel.org>
+References: <20250205173918.600037-1-herve.codina@bootlin.com>
+	<20250205173918.600037-4-herve.codina@bootlin.com>
+	<71468d78-07aa-49b1-8b6d-3d98c6fc9893@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegfeehhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtvdefvefgiedvtedvgedvgeelhfejkeejgefgvdfguedtudeiiedtieejffduhfenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehkrhiikheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfihsrgdorhgvnhgvshgrshesshgrnhhgqdgvnhhgihhnvggvrhhinhhgrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnv
+ ghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: herve.codina@bootlin.com
 
-The XLCDC IP supports parallel RGB, MIPI DSI and LVDS Display.
-The LCD Generic clock (sys_clk) is used for Parallel RGB and MIPI
-displays, while the LVDS PLL clock (lvds_pll_clk) is used for LVDS
-displays.Since both the clocks cannot co-exist together in the DT
-for a given display, this patch first attempts to retrieve sys_clk
-If that fails,it then tries to acquire lvds_pll_clk.
+Hi Krzysztof,
 
-Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
----
-changes in v2:
-- Rephrase the comments, commit message and err logs
-- Replace dev_err wwith dev_warn
-- Remove Initializing sys_clk and lvds_pll_clk to NULL post
-devm_kzalloc() call
+On Wed, 12 Feb 2025 06:54:19 +0100
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
----
- drivers/mfd/atmel-hlcdc.c       | 16 ++++++++++++++--
- include/linux/mfd/atmel-hlcdc.h |  1 +
- 2 files changed, 15 insertions(+), 2 deletions(-)
+> On 05/02/2025 18:39, Herve Codina wrote:
+> >  
+> >  	dev_dbg(&adap->dev, "of_i2c: walking child nodes from %pOF\n", bus);
+> >  
+> > -	/* Register device directly attached to this bus */
+> > +	/*
+> > +	 * Register device directly described in this bus node before looking
+> > +	 * at extensions.
+> > +	 */
+> >  	for_each_available_child_of_node(bus, node) {
+> > +		/* Filter out extension node */
+> > +		if (of_node_name_eq(node, "i2c-bus-extension"))  
+> 
+> Where is the ABI documented?
+> 
+> > +			continue;
+> > +
+> >  		if (of_node_test_and_set_flag(node, OF_POPULATED))
+> >  			continue;
+> >  
+> > @@ -103,6 +110,23 @@ static void of_i2c_register_children(struct i2c_adapter *adap,
+> >  			of_node_clear_flag(node, OF_POPULATED);
+> >  		}
+> >  	}
+> > +
+> > +	/* Look at extensions */
+> > +	for_each_available_child_of_node(bus, node) {
+> > +		if (!of_node_name_eq(node, "i2c-bus-extension"))
+> > +			continue;
+> > +
+> > +		extension = of_parse_phandle(node, "i2c-bus", 0);  
+> 
+> And this?
+> 
+> > +		if (!extension)
+> > +			continue;
+> > +  
 
-diff --git a/drivers/mfd/atmel-hlcdc.c b/drivers/mfd/atmel-hlcdc.c
-index 4c4e35d404f3..f680392b01ba 100644
---- a/drivers/mfd/atmel-hlcdc.c
-+++ b/drivers/mfd/atmel-hlcdc.c
-@@ -108,10 +108,22 @@ static int atmel_hlcdc_probe(struct platform_device *pdev)
- 		return PTR_ERR(hlcdc->periph_clk);
- 	}
- 
-+	/*
-+	 * Retrieve any one of the Main clk required by the LCD to operate:
-+	 *
-+	 * LCDC Generic Clock (sys_clk) - Parallel RGB and MIPI displays,
-+	 * LVDS PLL (lvds_pll_clk)      - LVDS display
-+	 */
- 	hlcdc->sys_clk = devm_clk_get(dev, "sys_clk");
- 	if (IS_ERR(hlcdc->sys_clk)) {
--		dev_err(dev, "failed to get system clock\n");
--		return PTR_ERR(hlcdc->sys_clk);
-+		dev_warn(dev,
-+			 "failed to get LCDC generic clock, trying for LVDS PLL clock instead\n");
-+
-+		hlcdc->lvds_pll_clk = devm_clk_get(dev, "lvds_pll_clk");
-+		if (IS_ERR(hlcdc->lvds_pll_clk)) {
-+			dev_err(dev, "failed to get LVDS PLL clock\n");
-+			return PTR_ERR(hlcdc->lvds_pll_clk);
-+		}
- 	}
- 
- 	hlcdc->slow_clk = devm_clk_get(dev, "slow_clk");
-diff --git a/include/linux/mfd/atmel-hlcdc.h b/include/linux/mfd/atmel-hlcdc.h
-index 80d675a03b39..07c2081867fd 100644
---- a/include/linux/mfd/atmel-hlcdc.h
-+++ b/include/linux/mfd/atmel-hlcdc.h
-@@ -75,6 +75,7 @@
-  */
- struct atmel_hlcdc {
- 	struct regmap *regmap;
-+	struct clk *lvds_pll_clk;
- 	struct clk *periph_clk;
- 	struct clk *sys_clk;
- 	struct clk *slow_clk;
--- 
-2.25.1
+I know the binding is not present in this RFC series.
 
+As I mentioned in my cover letter, the binding that needs to be updated is
+available in dt-schema repo [0].
+
+When the binding is be accepted in dt-schema repo, I will not be able to
+change it and because two repos are involved, I cannot send the binding and
+the implementation in the same series.
+
+Before sending a patch to update the binding in dt-schema repo, I would
+like first to discuss the proposed i2c bus extension idea in terms of:
+  1) DT properties naming and purpose
+  2) implementation
+
+[0] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/i2c/i2c-controller.yaml
+
+Best regards,
+Hervé
