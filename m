@@ -1,152 +1,221 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6742B20A5C7
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 16:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2840C209F38
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 16:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739378279; cv=none; b=GTeCSP7+jUejvvcDUounXvcY3Ql18V6eLLmfVfKGJTJoYnw7vIb5cDmz6BeS07tNkpcRaH7dOE7POd7j4rnC07EjxRhB0NsT+Ki++7Nvp43GzZA0cCJuvfZkTzVo4/cszXfDVdblW8E4hgNusm49v1jiVL2MrnHRvO57NKXA5eY=
+	t=1739378335; cv=none; b=J40Ewgk5onyAWpg9T7kOA7T2yRjE249t8uohkNH8cG6QVyn/L7uaIzmgd8AWZwxaZhp4Iy1mfML3OBeW+vhqmc6gB750h9SU+XKvxlniKJOAWptlxJ4Lti45zP/J/nTnU8P4RNj/+YQxC2cJG8/a1xCfi4hPTunxdPyAemM+StE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739378279; c=relaxed/simple;
-	bh=j4b7dhlvd1wP8WA9zfT6qk7E5tg7qp09ASBKTq+gjpk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AT8own18ZEBmBYzmInMjOzyMwZiQ1vX3n1IkwMlsQCBEu71YaFSDUpoPPhWHBxZgQQr8XtF/GiFqXcsSwd0GK5YFFR3oGDS4bKoc8ny+QIoHv9RKSzTf2evx7w9I8LQpObSKCJ6ze2BOyjdhMXKUGKrN9KvZXHcMqNviHU87Gq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=HvyIO1vv; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739378335; c=relaxed/simple;
+	bh=yCPQyPB8m7MMG4k8HGjewL6EMln1CRdVD6NoI5zA3yo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MeyBRebDKP6X82G+DJkDdM8CmtgpB7Q7h7yi0BON0AS5+ahyC1/EXMZZfqkWqnsCMevx/VB1hlJalaXl6ePIUfEm5ie4N18yQlrqyXFSZiomahhjwJhUFNmi1QhQMqQ9MM2k/bpwXByGhbyyloi75HTks74Bkd5oteZdpDVzf+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E0CBKqQI; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="HvyIO1vv"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 76B14AB5;
-	Wed, 12 Feb 2025 17:36:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739378196;
-	bh=j4b7dhlvd1wP8WA9zfT6qk7E5tg7qp09ASBKTq+gjpk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HvyIO1vvtrF3dVWw9Zy6WImLqQlMMjUcmYlJDAqikSbnwZw8xYA0J2g3mL1i3Kg+X
-	 1MsZQ4ZMCV3+W6O2uV+EqJA2aiMwJX1ZCUx81ZqaW65fvqbYiddmbtekNvhwacB04F
-	 8lduPv3cGvxd7j8quVruGXpM8js5la5x5M8LPGrQ=
-Message-ID: <baf1ca03-b088-4fe1-9e94-9b3650065f17@ideasonboard.com>
-Date: Wed, 12 Feb 2025 18:37:50 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0CBKqQI"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c079f1d96fso8679385a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 08:38:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739378331; x=1739983131; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X5tx6vpK3HZBw7aJjPT7qFcAgBl4KLdbUjzf9HttGhk=;
+        b=E0CBKqQIdItIJK7kWuYv2Vjj90jtcsTMJSByw4nLsgI02SXY+rzEBC9qJ+xaLe2Ukh
+         cJCZqngq/bFSls09r2lltGIq+k+bHJZx/Z358wiAzShIMKLMQytbEdFDDFsrzXoyIdtu
+         UJ7b8WuQW1ULpsnoaHmDgtnvle1gDIDdT0Bvwb+CFTU0jI/fAvcgZE0Wz3AhoYqBxnxr
+         RpVgMJYdzgMfRwgGlzar0Fe6wm/ZiOu+K13Q8DtIac0D7MGBs1svLGsHrUMktKjmFhlr
+         FHkGTVrEJ+VDr0D8N1IttoSxWLtTWM/EXvwu455F6ijlmOkKsptM7AcQp3unB/IjM5dR
+         h//w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739378331; x=1739983131;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X5tx6vpK3HZBw7aJjPT7qFcAgBl4KLdbUjzf9HttGhk=;
+        b=Roe4Ix24OuDH7gVFbJLJfG8peLQ4aqrU/pmk1OFERjx4n4MHvpIsqISjzwyTZRcF3t
+         bSM6SHzwi4boSIV0vFxTKaDN4tA0mEiLz7EoDOdaRHh72S4caM+1pI/+VSSuk5RdvKjy
+         GsiDROHvIUT0aOBtDEJJfCtOdF1RGql4YOLMdxsq8/VpiUzNRxbkRSVT57YvYJjidk5p
+         mB4p6BSH+sXYjyB/wFKgKB/+sNBhCh/uc2WAqXJXVNs4sgHvZmgXTLDuPohtI9ZAODmH
+         6PmjqoVQP5pGLEAx5CM6w8Zv08KOb/xe2G7HHdEA1gEU1JCRPurV/LsHSvXsQlkMAKX/
+         FHeA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwxht2z2MjfnLGjIeMnygBwWt8R76p2tMSAHHue5KZBp0XzALDo9jA4IxebOlvCTly9oQt71him4rpBJ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbYZUqD+lZ38NH4QoWqKnkSWlZ35x7PQ8yOfpdxYsjSORpI+83
+	SeOmyXHfP7bgG/N/rG3JJ2qizsBGjGbpLleLmLATV3op4ylnDUdi
+X-Gm-Gg: ASbGncsG0Ldb6B87xP0J4lbQtGnkoUerAWOiif7dm5kkXDgv9RS2A6wNUWPfNKU1hQ9
+	e6In9sRVNvHTO/Zwl+WIS/yC3hzKafm4iW+yUDl0EFzMDnrmKy72Yk0H0+suevJMCvOfOpnEgQ1
+	tUyfJwr0RD56rCl7ShT3ulLoOv4yOJwBExWK2laEe2l2bQ/VJuH2agKixMKmK4X6Jqg51vo+S5L
+	EX85cWCerumOUHwgCUxyNP1JYdHq5eabcmJOev/bzKLBRvCJuurdHhbSG7Ix4jIsNowCi6TnNIc
+	+1MeewYuPucqcWH89Rq2JmEuCtREIeNFxvIDe87MV5njzzd90qJuookqB2aSp/7qyy34terK0qF
+	9/SC55Q==
+X-Google-Smtp-Source: AGHT+IGbz1pPKdnBLxyzQrQBiZGGSUFNF62513UzPcbrTxZCtm3q+QOtvHblxSxRMDNq6pOSP4ZrPw==
+X-Received: by 2002:a05:620a:44d4:b0:7c0:6076:76fe with SMTP id af79cd13be357-7c06fc570f9mr513968785a.3.1739378330859;
+        Wed, 12 Feb 2025 08:38:50 -0800 (PST)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0648ebfd3sm376115085a.27.2025.02.12.08.38.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 08:38:50 -0800 (PST)
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfauth.phl.internal (Postfix) with ESMTP id DBFDB120006A;
+	Wed, 12 Feb 2025 11:38:49 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Wed, 12 Feb 2025 11:38:49 -0500
+X-ME-Sender: <xms:mc6sZwwJ7FFKHhnyjtbcdF5YC6-iwBPiksYfA-M8Ob8JhObIwrMMzQ>
+    <xme:mc6sZ0S-pvilmKBI0jZYcC-Y3KoEd3rMTP8xPYN6Vnoy8X0huylghSSNZwT41jsF-
+    rLeEt7bHS5t-4oahA>
+X-ME-Received: <xmr:mc6sZyVzAATZyVD62Nlqu4dMbnw0JSzTDgl9v8vT1sXuMvgAOAdNwnBcCw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeggeefkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
+    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
+    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
+    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
+    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeeipdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehllhhonhhgsehrvgguhhgrthdrtghomhdprh
+    gtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehm
+    ihhnghhosehrvgguhhgrthdrtghomhdprhgtphhtthhopeifihhllhdruggvrggtohhnse
+    grrhhmrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtohepsghoqhhunhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:mc6sZ-iwo5wJ5sDjFv64nb7uAjMETpXnv3R5WWAHKd79bqCCRpDVsQ>
+    <xmx:mc6sZyCHxkRDQ3W0MXI9G5Ez2rphNYfsqtslaNLr0FaZ-K5auqA2vQ>
+    <xmx:mc6sZ_LkVHhYmtQeIJlzRi0dhYtrk2Wmx-XJNJ-hm2bzssJZJ6cy3A>
+    <xmx:mc6sZ5B4jN-S1Hy6ELOM4mNPT2B8HWJXI5HmdymazWxLg2fAgYuErg>
+    <xmx:mc6sZyyCkXDDyrm1GRuo-4qRKUBW3G3tyJA5juDJzvkzAPKm__mUt829>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 12 Feb 2025 11:38:49 -0500 (EST)
+Date: Wed, 12 Feb 2025 08:38:47 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Waiman Long <llong@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] locking/semaphore: Use wake_q to wake up processes
+ outside lock critical section
+Message-ID: <Z6zOlw2moxw0OAsZ@Mac.home>
+References: <20250127013127.3913153-1-longman@redhat.com>
+ <3e45144d-d147-4431-91be-63d0817fa2ce@redhat.com>
+ <Z6w1cvz29NkMZh9b@Mac.home>
+ <5f518ef0-2dbc-4d14-82ce-ad310a780598@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/10] drm: Add new pixel formats for Xilinx Zynqmp
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Vishal Sagar <vishal.sagar@amd.com>,
- Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Michal Simek <michal.simek@amd.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Sean Anderson <sean.anderson@linux.dev>
-References: <20250115-xilinx-formats-v2-0-160327ca652a@ideasonboard.com>
- <r6mwhzcrab75ireqdqm335ayzf6n6nqnytmdnpuhlgcqkiudz5@alqr5ep5ub7m>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <r6mwhzcrab75ireqdqm335ayzf6n6nqnytmdnpuhlgcqkiudz5@alqr5ep5ub7m>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f518ef0-2dbc-4d14-82ce-ad310a780598@redhat.com>
 
-Hi Dmitry,
-
-On 15/01/2025 13:13, Dmitry Baryshkov wrote:
-> On Wed, Jan 15, 2025 at 11:03:29AM +0200, Tomi Valkeinen wrote:
->> Add new DRM pixel formats and add support for those in the Xilinx zynqmp
->> display driver.
->>
->> All of these formats are already supported in upstream gstreamer, except
->> in the gstreamer kmssink, which obviously cannot support the formats
->> without kernel having the formats.
->>
->> Xilinx has support for these formats in their BSP kernel, and Xilinx has
->> a branch here, adding the support to gstreamer kmssink:
->>
->> https://github.com/Xilinx/gst-plugins-bad.git xlnx-rebase-v1.18.5
->>
->> New formats added:
->>
->> DRM_FORMAT_Y8
->> - 8-bit Y-only
->> - fourcc: "GREY"
->> - gstreamer: GRAY8
->>
->> DRM_FORMAT_Y10_LE32
->> - 10-bit Y-only
->> - fourcc: "YPA4"
->> - gstreamer: GRAY10_LE32
->>
->> DRM_FORMAT_XV15
->> - Like NV12, but with 10-bit components
->> - fourcc: "XV15"
->> - gstreamer: NV12_10LE32
->>
->> DRM_FORMAT_XV20
->> - Like NV16, but with 10-bit components
->> - fourcc: "XV20"
->> - gstreamer: NV16_10LE32
->>
->> DRM_FORMAT_X403
->> - 10-bit 4:4:4
->> - fourcc: "X403"
->> - gstreamer: Y444_10LE32
+On Wed, Feb 12, 2025 at 09:10:25AM -0500, Waiman Long wrote:
+> On 2/12/25 12:45 AM, Boqun Feng wrote:
+> > On Tue, Feb 11, 2025 at 09:18:56PM -0500, Waiman Long wrote:
+> > > On 1/26/25 8:31 PM, Waiman Long wrote:
+> > > > A circular lock dependency splat has been seen involving down_trylock().
+> > > > 
+> > > > [ 4011.795602] ======================================================
+> > > > [ 4011.795603] WARNING: possible circular locking dependency detected
+> > > > [ 4011.795607] 6.12.0-41.el10.s390x+debug
+> > > > [ 4011.795612] ------------------------------------------------------
+> > > > [ 4011.795613] dd/32479 is trying to acquire lock:
+> > > > [ 4011.795617] 0015a20accd0d4f8 ((console_sem).lock){-.-.}-{2:2}, at: down_trylock+0x26/0x90
+> > > > [ 4011.795636]
+> > > > [ 4011.795636] but task is already holding lock:
+> > > > [ 4011.795637] 000000017e461698 (&zone->lock){-.-.}-{2:2}, at: rmqueue_bulk+0xac/0x8f0
+> > > > 
+> > > >     the existing dependency chain (in reverse order) is:
+> > > >     -> #4 (&zone->lock){-.-.}-{2:2}:
+> > > >     -> #3 (hrtimer_bases.lock){-.-.}-{2:2}:
+> > > >     -> #2 (&rq->__lock){-.-.}-{2:2}:
+> > > >     -> #1 (&p->pi_lock){-.-.}-{2:2}:
+> > > >     -> #0 ((console_sem).lock){-.-.}-{2:2}:
+> > > > 
+> > > > The console_sem -> pi_lock dependency is due to calling try_to_wake_up()
+> > > > while holding the console.sem raw_spinlock. This dependency can be broken
+> > > > by using wake_q to do the wakeup instead of calling try_to_wake_up()
+> > > > under the console_sem lock. This will also make the semaphore's
+> > > > raw_spinlock become a terminal lock without taking any further locks
+> > > > underneath it.
+> > > > 
+> > > > The hrtimer_bases.lock is a raw_spinlock while zone->lock is a
+> > > > spinlock. The hrtimer_bases.lock -> zone->lock dependency happens via
+> > > > the debug_objects_fill_pool() helper function in the debugobjects code.
+> > > > 
+> > > > [ 4011.795646] -> #4 (&zone->lock){-.-.}-{2:2}:
+> > > > [ 4011.795650]        __lock_acquire+0xe86/0x1cc0
+> > > > [ 4011.795655]        lock_acquire.part.0+0x258/0x630
+> > > > [ 4011.795657]        lock_acquire+0xb8/0xe0
+> > > > [ 4011.795659]        _raw_spin_lock_irqsave+0xb4/0x120
+> > > > [ 4011.795663]        rmqueue_bulk+0xac/0x8f0
+> > > > [ 4011.795665]        __rmqueue_pcplist+0x580/0x830
+> > > > [ 4011.795667]        rmqueue_pcplist+0xfc/0x470
+> > > > [ 4011.795669]        rmqueue.isra.0+0xdec/0x11b0
+> > > > [ 4011.795671]        get_page_from_freelist+0x2ee/0xeb0
+> > > > [ 4011.795673]        __alloc_pages_noprof+0x2c2/0x520
+> > > > [ 4011.795676]        alloc_pages_mpol_noprof+0x1fc/0x4d0
+> > > > [ 4011.795681]        alloc_pages_noprof+0x8c/0xe0
+> > > > [ 4011.795684]        allocate_slab+0x320/0x460
+> > > > [ 4011.795686]        ___slab_alloc+0xa58/0x12b0
+> > > > [ 4011.795688]        __slab_alloc.isra.0+0x42/0x60
+> > > > [ 4011.795690]        kmem_cache_alloc_noprof+0x304/0x350
+> > > > [ 4011.795692]        fill_pool+0xf6/0x450
+> > > > [ 4011.795697]        debug_object_activate+0xfe/0x360
+> > > > [ 4011.795700]        enqueue_hrtimer+0x34/0x190
+> > > > [ 4011.795703]        __run_hrtimer+0x3c8/0x4c0
+> > > > [ 4011.795705]        __hrtimer_run_queues+0x1b2/0x260
+> > > > [ 4011.795707]        hrtimer_interrupt+0x316/0x760
+> > > > [ 4011.795709]        do_IRQ+0x9a/0xe0
+> > > > [ 4011.795712]        do_irq_async+0xf6/0x160
+> > > > 
+> > > > Normally raw_spinlock to spinlock dependency is not legit
+> > > > and will be warned if PROVE_RAW_LOCK_NESTING is enabled,
+> > > > but debug_objects_fill_pool() is an exception as it explicitly
+> > > > allows this dependency for non-PREEMPT_RT kernel without causing
+> > > > PROVE_RAW_LOCK_NESTING lockdep splat. As a result, this dependency is
+> > > > legit and not a bug.
+> > > > 
+> > > > Anyway, semaphore is the only locking primitive left that is still
+> > > > using try_to_wake_up() to do wakeup inside critical section, all the
+> > > > other locking primitives had been migrated to use wake_q to do wakeup
+> > > > outside of the critical section. It is also possible that there are
+> > > > other circular locking dependencies involving printk/console_sem or
+> > > > other existing/new semaphores lurking somewhere which may show up in
+> > > > the future. Let just do the migration now to wake_q to avoid headache
+> > > > like this.
+> > > I can also add the following as another instance where deadlock can happen.
+> > > 
+> > > Reported-by:syzbot+ed801a886dfdbfe7136d@syzkaller.appspotmail.com
+> > > 
+> > FWIW, I already queued in my lockdep-for-tip branch, will send it in a
+> > PR to Peter in one or two weeks (in case he hasn't taken it before
+> > then).
+> > 
+> > BTW, do we need a "Fixes" tag for stable kernels?
 > 
-> Could you possibly add support for those formats to the modetest util?
+> After some more thought, I realize that this patch doesn't really fix the
+> circular lock dependency problem, it just remove console_sem.lock from it.
+> The problem is that printk() can be called in any context. To really solve
+> the problem, we will need some kind of deferred wakeup using workqueue, for
+> instance. As printing to the console is inherently slow, adding some more
 
-I sent a new version for this:
+Hmm... but your patch does remove the dependency console_sem.lock ->
+pi_lock, right? So it does fix the circular lock dependency problem. Or
+do you mean that it doesn't fix all the deadlocks that may cause by
+printk()?
 
-https://lore.kernel.org/all/20250212-xilinx-formats-v3-0-90d0fe106995%40ideasonboard.com/
+Regards,
+Boqun
 
-But I missed adding you to cc. Sorry about that.
-
-  Tomi
-
+> latency to the wakeup process shouldn't really be a problem. This patch will
+> be the first step, I will work on additional patches to complete this
+> deferred wakeup functionality. So I don't need to add a Fixes tag for now.
+> You can either take this patch out or just leave it there.
+> 
+> Cheers,
+> Longman
+> 
