@@ -1,312 +1,120 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7228B25E44E
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 18:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0565C260A47;
+	Wed, 12 Feb 2025 18:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739384234; cv=none; b=axpCbKNSspHmmXasMwfcUHsO7URJb+pRvC8yrsWlhkmw+yplR4kqKlyf8WKzCwTyMCt+XVsOZd8uDO7/6L6kqSmZ3H0PT4n89pRa55rHIP9RlUCUuCpuheJLPXi+g3bOB3FKOOlF8EkNAaSUUgBPpkQxOWPIFbNd7Usmc+IkvGI=
+	t=1739384237; cv=none; b=STPG8EBTSEgw+AQnpVl6UO/aRpOEDagPyZebpuaL0aj7Eqdc0CJxknTUW/y0CFJyk0wugZzau9F+QA0BeBuhFxCGeepOI/6EVHZOZOAOJWZeWeg5tpz/EGzCnma1DKfh4mGa27PNYJmxg09TCgXE5QJKtZyDe3Y1TXHBCnOx8Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739384234; c=relaxed/simple;
-	bh=BZAINun7TpconzyAj2+RapBVfff/XcO/6pVHFwswkrs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j/1NmNI1cZKAtkVg24cT/dV/hW0HpcMPygo8kKcz81uIzFCElBbRNPvFFenQdbtP0bkzOXMUVYA68sa5y+Qal5O33An121Cyabh9TtdZYuuwrmgwxwOWCYVXNwG/aRPrc/8KJST3Po8yU9I2UtjZMFEbTCiZXRqACeFh0usXpgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZqHBJqx3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739384237; c=relaxed/simple;
+	bh=a/5fkw/9B9O10VHmyzZD1LRyjCU4vglXrIMpHZxGZRI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KUPVm2hl531PTvKxZGQDOVqZPFHfpzqAeZwLEHLuWhn8j6HED16NO7kW6ubJPsjncexHjhfQ5WE/YXD0ioluZgcBB+IGxgHBHf1RJHDY+HdZHM4NmYSOZT+oJ14HfdDZm1qsY98km80jS3xNGNXotBY2cK5G0ykaLOy+BIsoI3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=z16tVBkC; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZqHBJqx3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739384231;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BxMveRKFz79cLdG4IH3t2o0E/2y0nocVQjmWDPhVhkA=;
-	b=ZqHBJqx3VRolbWjRI2w5RP1FomQr5oxvxysP1b4/zkmq5ONNqsSu5BwXjLiwij3pLMzdcW
-	g+Pmzay+X3EjVh0oMdTjgCnVCdLZ6wdq7ItoUctKYVNkvBZWG7BB73sWbypebX2ZxRaBPU
-	IlXvCH9bOSDCzEVHLYampR7f23MxcLE=
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
- [209.85.219.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-596-XwiQdUAvO-eSBpiXJ5a1nw-1; Wed, 12 Feb 2025 13:17:10 -0500
-X-MC-Unique: XwiQdUAvO-eSBpiXJ5a1nw-1
-X-Mimecast-MFC-AGG-ID: XwiQdUAvO-eSBpiXJ5a1nw
-Received: by mail-yb1-f197.google.com with SMTP id 3f1490d57ef6-e5798866415so42107276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 10:17:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739384229; x=1739989029;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BxMveRKFz79cLdG4IH3t2o0E/2y0nocVQjmWDPhVhkA=;
-        b=NQqA+JAPgBZrafXRHb7rDm1VgHJ15pUD1sbcLfvhTHAZRASY6XAW1NZES7G0e1SQ8M
-         +Mu1nwyzcci8vkPa26R3/d1xnqEmmFMiEDvtEo8oQwte58mFgtxNYveo9XCGAoHoYiXF
-         QCkmUXgykxCvf9JoKScJx+ty2plzGj7w8Dhn+HUrzonfXOw62U25bPh8n1g6OJjGOtF1
-         NTUbcrgl95edbkk+a96MBi8cnG5AKXh1nEawkdY0P60D0GW58+5VAhBtgQW8DhpgiV3D
-         jZUb6uTRdOy2jTKxnnM8KLkXrjgaGdf/0LdY77RwKy8h9U7aPURsqLSFY0HAIH/FeyuZ
-         9LTw==
-X-Gm-Message-State: AOJu0Yykr3BCsa909r7W425I+G2e/3kzTcmyXcJ0lj4kC5O4h8N3PD/D
-	C8ogLlyf/GNPaBiqfCcR7a+pV1BxWSYAJtsyGBUrgOnTYGCGkb3Td/ZaGcb2bGDICPOZa6BH8Dz
-	JK6vGaLTRMOt6hbHws4ieYPGLxhHDLh0zzu09zKY9CIkDVLbpCWKRk4J+okdjmNdpf90mnClQF7
-	rEGJUZRR6QcDIzlifi2FxOYRRgTHimr/P+DwlA
-X-Gm-Gg: ASbGnctoRCheefDwChztK+9VTPzfCAw1yflJhq/1e0hfsNWLcp92fC/3mYLvIjPfLuY
-	nmSxw65Y2S9fvM3lVGXOqzT64iD//f69BlfepbKD8U+DQulyJYLVHJKgx9OGEnxTHZIusd9/tX1
-	E=
-X-Received: by 2002:a05:6902:723:b0:e5d:92ad:8e75 with SMTP id 3f1490d57ef6-e5d9f0cc9bamr4474898276.10.1739384229323;
-        Wed, 12 Feb 2025 10:17:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFmRWNmGPvTL92tISaSvzmzQRtTZjsAvB2xwfv4LnOVPEt2eDN8nv36YnRCgcFOENrQ+VKt/6e+xrukc/dlMKU=
-X-Received: by 2002:a05:6902:723:b0:e5d:92ad:8e75 with SMTP id
- 3f1490d57ef6-e5d9f0cc9bamr4474848276.10.1739384228926; Wed, 12 Feb 2025
- 10:17:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="z16tVBkC"
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CGx0WI014280;
+	Wed, 12 Feb 2025 13:17:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=tkFxc
+	xTE4GZyrj7JwrgQNbVIJRif/t1yLTIf6Z1MtMU=; b=z16tVBkCxDCJkNRLCBV1V
+	SWghEkSOEUf03rPXNva6aFvW1aPMUu/iEgEU/SyJwbbZONrQ/o7Aq7nlHyfdIBry
+	evBVO0NLyu74wAJ0xTbMONVR5L92jHShBZoDACLZwLlWOqdFG6/x6N29/zz0tsDj
+	uvx/NJGeBXkbLLhY8GZCLDvd2FkAcRYa/knW99lGDYFbkKCFaOKIoMxqkvSNyhwt
+	X1R1YO36E5aSBJCvTQP1c3V1ymFphALQzgcGhqW0qU13ZhfxxXGde+XgTCThYFoh
+	hoVcQpA+BFojQcyaatseqBDx+w8uT8uNilKEPWyBSJDuy5xj794ELkHIKC/NoLVs
+	w==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 44p52a3n7p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Feb 2025 13:17:00 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 51CIGxlq046449
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 12 Feb 2025 13:16:59 -0500
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Wed, 12 Feb 2025 13:16:59 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Wed, 12 Feb 2025 13:16:58 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Wed, 12 Feb 2025 13:16:58 -0500
+Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 51CIGj6F017466;
+	Wed, 12 Feb 2025 13:16:47 -0500
+From: Jonathan Santos <Jonathan.Santos@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Jonathan Santos <Jonathan.Santos@analog.com>, <lars@metafoo.de>,
+        <Michael.Hennerich@analog.com>, <marcelo.schmitt@analog.com>,
+        <jic23@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <jonath4nns@gmail.com>,
+        <marcelo.schmitt1@gmail.com>, <dlechner@baylibre.com>
+Subject: [PATCH RESEND v3 06/17] Documentation: ABI: add wideband filter type to  sysfs-bus-iio
+Date: Wed, 12 Feb 2025 15:16:45 -0300
+Message-ID: <aea512746712f8f6d07d29ec6977609c127fabe0.1739368121.git.Jonathan.Santos@analog.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1739368121.git.Jonathan.Santos@analog.com>
+References: <cover.1739368121.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250211003028.213461-1-npache@redhat.com> <20250211003028.213461-8-npache@redhat.com>
- <9ade1f26-1642-48b3-b7e4-ba571892c7d6@gmail.com>
-In-Reply-To: <9ade1f26-1642-48b3-b7e4-ba571892c7d6@gmail.com>
-From: Nico Pache <npache@redhat.com>
-Date: Wed, 12 Feb 2025 11:16:43 -0700
-X-Gm-Features: AWEUYZn2zZJEb98yoS5kTPZnam4dYVVrwTZCheqvi5KbV76ot14n5LicrQs5wd8
-Message-ID: <CAA1CXcApRSubSNPt03HHCwciqLK=MOz2c37Cc1zD9c3GJ6CpUA@mail.gmail.com>
-Subject: Re: [RFC v2 7/9] khugepaged: add mTHP support
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, ryan.roberts@arm.com, anshuman.khandual@arm.com, 
-	catalin.marinas@arm.com, cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com, 
-	apopple@nvidia.com, dave.hansen@linux.intel.com, will@kernel.org, 
-	baohua@kernel.org, jack@suse.cz, srivatsa@csail.mit.edu, 
-	haowenchao22@gmail.com, hughd@google.com, aneesh.kumar@kernel.org, 
-	yang@os.amperecomputing.com, peterx@redhat.com, ioworker0@gmail.com, 
-	wangkefeng.wang@huawei.com, ziy@nvidia.com, jglisse@google.com, 
-	surenb@google.com, vishal.moola@gmail.com, zokeefe@google.com, 
-	zhengqi.arch@bytedance.com, jhubbard@nvidia.com, 21cnbao@gmail.com, 
-	willy@infradead.org, kirill.shutemov@linux.intel.com, david@redhat.com, 
-	aarcange@redhat.com, raquini@redhat.com, dev.jain@arm.com, 
-	sunnanyong@huawei.com, audra@redhat.com, akpm@linux-foundation.org, 
-	rostedt@goodmis.org, mathieu.desnoyers@efficios.com, tiwai@suse.de, 
-	Johannes Weiner <hannes@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: P_B5qDDXa8H8fZYVR0whn-Ca7N0avieG
+X-Authority-Analysis: v=2.4 cv=FabNxI+6 c=1 sm=1 tr=0 ts=67ace59c cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=T2h4t0Lz3GQA:10 a=gAnH3GRIAAAA:8 a=3Hb1o_MSCnf1oSB8FUQA:9 a=+jEqtf1s3R9VXZ0wqowq2kgwd+I=:19 a=oVHKYsEdi7-vN-J5QA_j:22
+X-Proofpoint-GUID: P_B5qDDXa8H8fZYVR0whn-Ca7N0avieG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-12_05,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ mlxscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0
+ spamscore=0 impostorscore=0 priorityscore=1501 phishscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502120132
 
-On Wed, Feb 12, 2025 at 10:04=E2=80=AFAM Usama Arif <usamaarif642@gmail.com=
-> wrote:
->
->
->
-> On 11/02/2025 00:30, Nico Pache wrote:
-> > Introduce the ability for khugepaged to collapse to different mTHP size=
-s.
-> > While scanning a PMD range for potential collapse candidates, keep trac=
-k
-> > of pages in MIN_MTHP_ORDER chunks via a bitmap. Each bit represents a
-> > utilized region of order MIN_MTHP_ORDER ptes. We remove the restriction
-> > of max_ptes_none during the scan phase so we dont bailout early and mis=
-s
-> > potential mTHP candidates.
-> >
-> > After the scan is complete we will perform binary recursion on the
-> > bitmap to determine which mTHP size would be most efficient to collapse
-> > to. max_ptes_none will be scaled by the attempted collapse order to
-> > determine how full a THP must be to be eligible.
-> >
-> > If a mTHP collapse is attempted, but contains swapped out, or shared
-> > pages, we dont perform the collapse.
-> >
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >  mm/khugepaged.c | 122 ++++++++++++++++++++++++++++++++----------------
-> >  1 file changed, 83 insertions(+), 39 deletions(-)
-> >
-> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index c8048d9ec7fb..cd310989725b 100644
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -1127,13 +1127,14 @@ static int collapse_huge_page(struct mm_struct =
-*mm, unsigned long address,
-> >  {
-> >       LIST_HEAD(compound_pagelist);
-> >       pmd_t *pmd, _pmd;
-> > -     pte_t *pte;
-> > +     pte_t *pte, mthp_pte;
-> >       pgtable_t pgtable;
-> >       struct folio *folio;
-> >       spinlock_t *pmd_ptl, *pte_ptl;
-> >       int result =3D SCAN_FAIL;
-> >       struct vm_area_struct *vma;
-> >       struct mmu_notifier_range range;
-> > +     unsigned long _address =3D address + offset * PAGE_SIZE;
-> >       VM_BUG_ON(address & ~HPAGE_PMD_MASK);
-> >
-> >       /*
-> > @@ -1148,12 +1149,13 @@ static int collapse_huge_page(struct mm_struct =
-*mm, unsigned long address,
-> >               *mmap_locked =3D false;
-> >       }
-> >
-> > -     result =3D alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
-> > +     result =3D alloc_charge_folio(&folio, mm, cc, order);
-> >       if (result !=3D SCAN_SUCCEED)
-> >               goto out_nolock;
-> >
-> >       mmap_read_lock(mm);
-> > -     result =3D hugepage_vma_revalidate(mm, address, true, &vma, cc, H=
-PAGE_PMD_ORDER);
-> > +     *mmap_locked =3D true;
-> > +     result =3D hugepage_vma_revalidate(mm, address, true, &vma, cc, o=
-rder);
-> >       if (result !=3D SCAN_SUCCEED) {
-> >               mmap_read_unlock(mm);
-> >               goto out_nolock;
-> > @@ -1171,13 +1173,14 @@ static int collapse_huge_page(struct mm_struct =
-*mm, unsigned long address,
-> >                * released when it fails. So we jump out_nolock directly=
- in
-> >                * that case.  Continuing to collapse causes inconsistenc=
-y.
-> >                */
-> > -             result =3D __collapse_huge_page_swapin(mm, vma, address, =
-pmd,
-> > -                             referenced, HPAGE_PMD_ORDER);
-> > +             result =3D __collapse_huge_page_swapin(mm, vma, _address,=
- pmd,
-> > +                             referenced, order);
-> >               if (result !=3D SCAN_SUCCEED)
-> >                       goto out_nolock;
-> >       }
-> >
-> >       mmap_read_unlock(mm);
-> > +     *mmap_locked =3D false;
-> >       /*
-> >        * Prevent all access to pagetables with the exception of
-> >        * gup_fast later handled by the ptep_clear_flush and the VM
-> > @@ -1187,7 +1190,7 @@ static int collapse_huge_page(struct mm_struct *m=
-m, unsigned long address,
-> >        * mmap_lock.
-> >        */
-> >       mmap_write_lock(mm);
-> > -     result =3D hugepage_vma_revalidate(mm, address, true, &vma, cc, H=
-PAGE_PMD_ORDER);
-> > +     result =3D hugepage_vma_revalidate(mm, address, true, &vma, cc, o=
-rder);
-> >       if (result !=3D SCAN_SUCCEED)
-> >               goto out_up_write;
-> >       /* check if the pmd is still valid */
-> > @@ -1198,11 +1201,12 @@ static int collapse_huge_page(struct mm_struct =
-*mm, unsigned long address,
-> >       vma_start_write(vma);
-> >       anon_vma_lock_write(vma->anon_vma);
-> >
-> > -     mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, address,
-> > -                             address + HPAGE_PMD_SIZE);
-> > +     mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, _address=
-,
-> > +                             _address + (PAGE_SIZE << order));
-> >       mmu_notifier_invalidate_range_start(&range);
-> >
-> >       pmd_ptl =3D pmd_lock(mm, pmd); /* probably unnecessary */
-> > +
-> >       /*
-> >        * This removes any huge TLB entry from the CPU so we won't allow
-> >        * huge and small TLB entries for the same virtual address to
-> > @@ -1216,10 +1220,10 @@ static int collapse_huge_page(struct mm_struct =
-*mm, unsigned long address,
-> >       mmu_notifier_invalidate_range_end(&range);
-> >       tlb_remove_table_sync_one();
-> >
-> > -     pte =3D pte_offset_map_lock(mm, &_pmd, address, &pte_ptl);
-> > +     pte =3D pte_offset_map_lock(mm, &_pmd, _address, &pte_ptl);
-> >       if (pte) {
-> > -             result =3D __collapse_huge_page_isolate(vma, address, pte=
-, cc,
-> > -                                     &compound_pagelist, HPAGE_PMD_ORD=
-ER);
-> > +             result =3D __collapse_huge_page_isolate(vma, _address, pt=
-e, cc,
-> > +                                     &compound_pagelist, order);
-> >               spin_unlock(pte_ptl);
-> >       } else {
-> >               result =3D SCAN_PMD_NULL;
-> > @@ -1248,8 +1252,8 @@ static int collapse_huge_page(struct mm_struct *m=
-m, unsigned long address,
-> >       anon_vma_unlock_write(vma->anon_vma);
-> >
-> >       result =3D __collapse_huge_page_copy(pte, folio, pmd, _pmd,
-> > -                                        vma, address, pte_ptl,
-> > -                                        &compound_pagelist, HPAGE_PMD_=
-ORDER);
-> > +                                        vma, _address, pte_ptl,
-> > +                                        &compound_pagelist, order);
-> >       pte_unmap(pte);
-> >       if (unlikely(result !=3D SCAN_SUCCEED))
-> >               goto out_up_write;
-> > @@ -1260,20 +1264,37 @@ static int collapse_huge_page(struct mm_struct =
-*mm, unsigned long address,
-> >        * write.
-> >        */
-> >       __folio_mark_uptodate(folio);
-> > -     pgtable =3D pmd_pgtable(_pmd);
-> > -
-> > -     _pmd =3D mk_huge_pmd(&folio->page, vma->vm_page_prot);
-> > -     _pmd =3D maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
-> > -
-> > -     spin_lock(pmd_ptl);
-> > -     BUG_ON(!pmd_none(*pmd));
-> > -     folio_add_new_anon_rmap(folio, vma, address, RMAP_EXCLUSIVE);
-> > -     folio_add_lru_vma(folio, vma);
-> > -     pgtable_trans_huge_deposit(mm, pmd, pgtable);
-> > -     set_pmd_at(mm, address, pmd, _pmd);
-> > -     update_mmu_cache_pmd(vma, address, pmd);
-> > -     deferred_split_folio(folio, false);
-> > -     spin_unlock(pmd_ptl);
-> > +     if (order =3D=3D HPAGE_PMD_ORDER) {
-> > +             pgtable =3D pmd_pgtable(_pmd);
-> > +             _pmd =3D mk_huge_pmd(&folio->page, vma->vm_page_prot);
-> > +             _pmd =3D maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
-> > +
-> > +             spin_lock(pmd_ptl);
-> > +             BUG_ON(!pmd_none(*pmd));
-> > +             folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUS=
-IVE);
-> > +             folio_add_lru_vma(folio, vma);
-> > +             pgtable_trans_huge_deposit(mm, pmd, pgtable);
-> > +             set_pmd_at(mm, address, pmd, _pmd);
-> > +             update_mmu_cache_pmd(vma, address, pmd);
-> > +             deferred_split_folio(folio, false);
-> > +             spin_unlock(pmd_ptl);
-> > +     } else { //mTHP
-> > +             mthp_pte =3D mk_pte(&folio->page, vma->vm_page_prot);
-> > +             mthp_pte =3D maybe_mkwrite(pte_mkdirty(mthp_pte), vma);
-> > +
-> > +             spin_lock(pmd_ptl);
-> > +             folio_ref_add(folio, (1 << order) - 1);
-> > +             folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUS=
-IVE);
-> > +             folio_add_lru_vma(folio, vma);
-> > +             spin_lock(pte_ptl);
-> > +             set_ptes(vma->vm_mm, _address, pte, mthp_pte, (1 << order=
-));
-> > +             update_mmu_cache_range(NULL, vma, _address, pte, (1 << or=
-der));
-> > +             spin_unlock(pte_ptl);
-> > +             smp_wmb(); /* make pte visible before pmd */
-> > +             pmd_populate(mm, pmd, pmd_pgtable(_pmd));
-> > +             deferred_split_folio(folio, false);
->
->
-> Hi Nico,
->
-> This patch will have the same issue as the one I pointed out in
-> https://lore.kernel.org/all/82b9efd1-f2a6-4452-b2ea-6c163e17cdf7@gmail.co=
-m/ ?
+The Wideband Low Ripple filter is used for AD7768-1 Driver.
+Document wideband filter option into filter_type_available
+attribute.
 
-Hi Usama,
+Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+---
+v3 Changes:
+* None, since we still did not agree on a better name for this filter type.
 
-Yes thanks for pointing that out! I'll make sure to remove the
-deferred_split_folio call.
+v2 Changes:
+* Removed FIR mentions.
+---
+ Documentation/ABI/testing/sysfs-bus-iio | 2 ++
+ 1 file changed, 2 insertions(+)
 
->
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index f83bd6829285..9b879e7732cd 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -2291,6 +2291,8 @@ Description:
+ 		* "sinc3+pf2" - Sinc3 + device specific Post Filter 2.
+ 		* "sinc3+pf3" - Sinc3 + device specific Post Filter 3.
+ 		* "sinc3+pf4" - Sinc3 + device specific Post Filter 4.
++		* "wideband" - filter with wideband low ripple passband
++		  and sharp transition band.
+ 
+ What:		/sys/.../events/in_proximity_thresh_either_runningperiod
+ KernelVersion:	6.6
+-- 
+2.34.1
 
