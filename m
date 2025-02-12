@@ -1,235 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4712046BF
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E177820459E;
+	Wed, 12 Feb 2025 09:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739352963; cv=none; b=aXCSS1emB8C4hTvvfxvsZuYqPCFq10SMlti5o0ux25lXhi/0UTdRsSjqn21/2beZO9NkXbZsdB3pwbpegnfIujlUkDxFJRBhraC01pQcrwKWWDlnBUkbDHIhT/HOY7bMFNLupv7V1GLJt66sxEHCn8D4P02DbqpokJn/VnuWchs=
+	t=1739352984; cv=none; b=YVhELoMoOm6EWzm9j+I5rxlcXR8Bz2p0NEL3HnElVL50tfYzKL0TwUWnMWPj96bDktfn/FbxcpoAjeZfKFgbdJ92s5/J1HQ8Vu7wW42O57axbwFoOvXEbCf6slYXXKxaiPjVW4rJ3DYmvQp74/KYyCO3cNrMI0eNcFO8MqE0L5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739352963; c=relaxed/simple;
-	bh=pgsH206nPEenEmQhZW+SG0liBtabwfb1Nu2RC806B+k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=azc/jGghLZQ/ZyX8WB/CGrFDG4O0k8GzwP0RgDn0lN4Q3Q2gqsu1a1HSnYd04y3/ZHPmKxKoVbKcFOXst8FPIiMWXeribIk/3DaS3vTJuKq2bqgdOCI3embU+984D2LUCEfIQFQpZgo0NUKW2qtiyT12ux3uUa5xNxEhq6asc5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iSb3Z8PG; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739352984; c=relaxed/simple;
+	bh=yqkR9PYxQgmlJpMZ1/6dDcKM6m2Kv0PNshFhdy1Btxo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=u0SGZm4JPinq1Ih9QfziIf3SWWCbsqHl+oAEGUmAn9NXOGd2VA3MIuecBoIbHKUZBaKym3MOGkQC0iU1JKzJflTKClyvrM10NcfnLuxKVWv5d6tR0XSzjIRK+/qB0tQv417nG2VP0+e/VBFCS3KcmRqv/t2UExiSgZgmP6Iyt4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=W/U9ojoU; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iSb3Z8PG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739352961; x=1770888961;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=pgsH206nPEenEmQhZW+SG0liBtabwfb1Nu2RC806B+k=;
-  b=iSb3Z8PG4GwUIJIY5x8d3Kg7btdJlXJdKCAkQZwzvoVB2Sj/EuVsvgan
-   wp+bSnbyyovvNOsdXNn9+AMpKNjerBchg99gng/oUT2yMTk9ce7vpt1YF
-   ac0Qf9KdZu/OGB9b+Rd1vfaJj1HVtstAZl0SNMEkOfeLol98Ri+hpA7gk
-   CFZtNKdp4ySifClo2HtOukJindzTetGKOGCdVr+5jroTBp63siNdh6Acn
-   8jR3IU3tHMZkSjzdaASxQWfFUfVfX0FKVzf4PUUyDbsVpJUUC+nqIvv9w
-   zrKfD8Lz4Le0do+2U24TNhQwC2UFs5no+99LGZD0meAfV5zAJn+sJJQb6
-   w==;
-X-CSE-ConnectionGUID: QcE5giz5SiCXooHVc31J/Q==
-X-CSE-MsgGUID: 0/4aF3IyQYe0kwu/C+xE5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="42842046"
-X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="42842046"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 01:36:01 -0800
-X-CSE-ConnectionGUID: Oo0fouXhTxeRkDfuWT5sBw==
-X-CSE-MsgGUID: JsFMgzXiQZKCDAg/1zcBcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117951478"
-Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.167])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 01:35:57 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Egor Vorontsov <sdoregor@sdore.me>, linux-kernel@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Egor Vorontsov
- <sdoregor@sdore.me>
-Subject: Re: [PATCH v2] drm/edid: Implement DisplayID Type IX & X timing
- blocks parsing
-In-Reply-To: <7cab8349bc8bb6fa08d2a7127a724efea155f154.camel@sdore.me>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <7cab8349bc8bb6fa08d2a7127a724efea155f154.camel@sdore.me>
-Date: Wed, 12 Feb 2025 11:35:54 +0200
-Message-ID: <87zfirzerp.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="W/U9ojoU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=URKKB
+	59F/q0mF1SZHAnHb3HC+RFEwqYwuY5f1Lrg/6M=; b=W/U9ojoUFD0Ezbx44WQ/c
+	fKXXxs2TX+q25TzBRH44cdTzvhaA/Am+offgB53//E35EP1B1IMmj84wXor7DtIT
+	FiXioG43/NdbFBT/jpkhk5IUB+T8WyYjZlr2nWgpYak9cknqUP++SEShDrUSVfk7
+	7tMAa8HZ8n++HHv5NK5cEQ=
+Received: from ProDesk.. (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wBnG9Fja6xn14FuLQ--.33700S6;
+	Wed, 12 Feb 2025 17:35:39 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: heiko@sntech.de
+Cc: hjc@rock-chips.com,
+	krzk+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	derek.foreman@collabora.com,
+	detlev.casanova@collabora.com,
+	daniel@fooishbar.org,
+	robh@kernel.org,
+	sebastian.reichel@collabora.com,
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v14 04/13] drm/rockchip: vop2: Merge vop2_cluster/esmart_init function
+Date: Wed, 12 Feb 2025 17:34:59 +0800
+Message-ID: <20250212093530.52961-5-andyshrk@163.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250212093530.52961-1-andyshrk@163.com>
+References: <20250212093530.52961-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBnG9Fja6xn14FuLQ--.33700S6
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWw4UKF17CrWktr18AFykAFb_yoW5Xr1DpF
+	W3Gr43Wr4UGrsFgr4kJrn8uF1Fkr12yaykAa48KwnIkwnrKF9FkFn5JF10yr90krWv9Fy2
+	yFs5K3y5ua4j9r7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UZ6pPUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqAHxXmesZw5TqAABse
 
-On Wed, 12 Feb 2025, Egor Vorontsov <sdoregor@sdore.me> wrote:
-> Some newer high refresh rate consumer monitors (including those by Samsun=
-g)
-> make use of DisplayID 2.1 timing blocks in their EDID data, notably for
-> their highest refresh rate modes. Such modes won't be available as of now.
->
-> Implement partial support for such blocks in order to enable native
-> support of HRR modes of most such monitors for users without having to re=
-ly
-> on EDID patching/override (or need thereof).
->
-> Closes: https://gitlab.freedesktop.org/drm/misc/kernel/-/issues/55
-> Suggested-by: Maximilian Bo=C3=9Fe <max@bosse.io>
-> Signed-off-by: Egor Vorontsov <sdoregor@sdore.me>
-> ---
->  drivers/gpu/drm/drm_displayid_internal.h | 13 +++++
->  drivers/gpu/drm/drm_edid.c               | 63 ++++++++++++++++++++++++
->  2 files changed, 76 insertions(+)
->
-> diff --git a/drivers/gpu/drm/drm_displayid_internal.h b/drivers/gpu/drm/d=
-rm_displayid_internal.h
-> index aee1b86a73c1..88220c107822 100644
-> --- a/drivers/gpu/drm/drm_displayid_internal.h
-> +++ b/drivers/gpu/drm/drm_displayid_internal.h
-> @@ -66,6 +66,7 @@ struct drm_edid;
->  #define DATA_BLOCK_2_STEREO_DISPLAY_INTERFACE	0x27
->  #define DATA_BLOCK_2_TILED_DISPLAY_TOPOLOGY	0x28
->  #define DATA_BLOCK_2_CONTAINER_ID		0x29
-> +#define DATA_BLOCK_2_TYPE_10_FORMULA_TIMING	0x2a
->  #define DATA_BLOCK_2_VENDOR_SPECIFIC		0x7e
->  #define DATA_BLOCK_2_CTA_DISPLAY_ID		0x81
->=20=20
-> @@ -129,6 +130,18 @@ struct displayid_detailed_timing_block {
->  	struct displayid_detailed_timings_1 timings[];
->  };
->=20=20
-> +struct displayid_formula_timings_9 {
-> +	u8 flags;
-> +	__be16 hactive;
-> +	__be16 vactive;
-> +	u8 vrefresh;
-> +} __packed;
-> +
-> +struct displayid_formula_timing_block {
-> +	struct displayid_block base;
-> +	struct displayid_formula_timings_9 timings[];
-> +} __packed;
-> +
->  #define DISPLAYID_VESA_MSO_OVERLAP	GENMASK(3, 0)
->  #define DISPLAYID_VESA_MSO_MODE		GENMASK(6, 5)
->=20=20
-> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> index 13bc4c290b17..9c363df5af9a 100644
-> --- a/drivers/gpu/drm/drm_edid.c
-> +++ b/drivers/gpu/drm/drm_edid.c
-> @@ -6833,6 +6833,66 @@ static int add_displayid_detailed_1_modes(struct d=
-rm_connector *connector,
->  	return num_modes;
->  }
->=20=20
-> +static struct drm_display_mode *drm_mode_displayid_formula(struct drm_de=
-vice *dev,
-> +							   const struct displayid_formula_timings_9 *timings,
-> +							   bool type_10)
-> +{
-> +	struct drm_display_mode *mode;
-> +	u16 hactive =3D be16_to_cpu(timings->hactive) + 1;
-> +	u16 vactive =3D be16_to_cpu(timings->vactive) + 1;
-> +	u8 timing_formula =3D timings->flags & 0x7;
-> +
-> +	/* TODO: support RB-v2 & RB-v3 */
-> +	if (timing_formula > 1)
-> +		return NULL;
-> +
-> +	/* TODO: support video-optimized refresh rate */
-> +	if (timings->flags & (1 << 4))
-> +		return NULL;
+From: Andy Yan <andy.yan@rock-chips.com>
 
-Mmh. I'm not sure I'd go this far. The bit indicates *two* timings, one
-for which the below *is* correct, and another additional one with
-vrefresh * (1000/1001).
+Now these two function share the same logic, the can
+be merged as one.
 
-We could just add a drm_dbg_kms(dev, "<message>") here about missing
-fractional refresh rate, and proceed with the one non-fractional rate?
-Or just have the TODO comment with no checks.
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+---
 
-And I'm not asking you to just implement the fractional refresh rate
-here, because we can't simply do it on the vrefresh due to losing
-precision. Needs to be done on the clock. But it could be a follow-up,
-using the above bit to do something similar to what
-add_alternate_cea_modes() does.
+(no changes since v1)
 
-Either way,
+ drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 42 +++++---------------
+ 1 file changed, 11 insertions(+), 31 deletions(-)
 
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+index a0d961cb5d21..844df4001159 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+@@ -2424,18 +2424,18 @@ static int vop2_find_rgb_encoder(struct vop2 *vop2)
+ 	return -ENOENT;
+ }
+ 
+-static int vop2_cluster_init(struct vop2_win *win)
++static int vop2_regmap_init(struct vop2_win *win, const struct reg_field *regs,
++			    int nr_regs)
+ {
+ 	struct vop2 *vop2 = win->vop2;
+ 	int i;
+ 
+-	for (i = 0; i < vop2->data->nr_cluster_regs; i++) {
++	for (i = 0; i < nr_regs; i++) {
+ 		const struct reg_field field = {
+-			.reg = (vop2->data->cluster_reg[i].reg != 0xffffffff) ?
+-				vop2->data->cluster_reg[i].reg + win->offset :
+-				vop2->data->cluster_reg[i].reg,
+-			.lsb = vop2->data->cluster_reg[i].lsb,
+-			.msb = vop2->data->cluster_reg[i].msb
++			.reg = (regs[i].reg != 0xffffffff) ?
++				regs[i].reg + win->offset : regs[i].reg,
++			.lsb = regs[i].lsb,
++			.msb = regs[i].msb
+ 		};
+ 
+ 		win->reg[i] = devm_regmap_field_alloc(vop2->dev, vop2->map, field);
+@@ -2446,28 +2446,6 @@ static int vop2_cluster_init(struct vop2_win *win)
+ 	return 0;
+ };
+ 
+-static int vop2_esmart_init(struct vop2_win *win)
+-{
+-	struct vop2 *vop2 = win->vop2;
+-	int i;
+-
+-	for (i = 0; i < vop2->data->nr_smart_regs; i++) {
+-		const struct reg_field field = {
+-			.reg = (vop2->data->smart_reg[i].reg != 0xffffffff) ?
+-				vop2->data->smart_reg[i].reg + win->offset :
+-				vop2->data->smart_reg[i].reg,
+-			.lsb = vop2->data->smart_reg[i].lsb,
+-			.msb = vop2->data->smart_reg[i].msb
+-		};
+-
+-		win->reg[i] = devm_regmap_field_alloc(vop2->dev, vop2->map, field);
+-		if (IS_ERR(win->reg[i]))
+-			return PTR_ERR(win->reg[i]);
+-	}
+-
+-	return 0;
+-}
+-
+ static int vop2_win_init(struct vop2 *vop2)
+ {
+ 	const struct vop2_data *vop2_data = vop2->data;
+@@ -2484,9 +2462,11 @@ static int vop2_win_init(struct vop2 *vop2)
+ 		win->win_id = i;
+ 		win->vop2 = vop2;
+ 		if (vop2_cluster_window(win))
+-			ret = vop2_cluster_init(win);
++			ret = vop2_regmap_init(win, vop2->data->cluster_reg,
++					       vop2->data->nr_cluster_regs);
+ 		else
+-			ret = vop2_esmart_init(win);
++			ret = vop2_regmap_init(win, vop2->data->smart_reg,
++					       vop2->data->nr_cluster_regs);
+ 		if (ret)
+ 			return ret;
+ 	}
+-- 
+2.34.1
 
-
-Are you up for the follow-ups too? And since you've got the hang of it,
-maybe fix struct displayid_formula_timings_9 hactive/vactive to __be16
-as well?
-
-BR,
-Jani.
-
-> +
-> +	mode =3D drm_cvt_mode(dev, hactive, vactive, timings->vrefresh + 1, tim=
-ing_formula =3D=3D 1, false, false);
-> +	if (!mode)
-> +		return NULL;
-> +
-> +	/* TODO: interpret S3D flags */
-> +
-> +	mode->type =3D DRM_MODE_TYPE_DRIVER;
-> +	drm_mode_set_name(mode);
-> +
-> +	return mode;
-> +}
-> +
-> +static int add_displayid_formula_modes(struct drm_connector *connector,
-> +				       const struct displayid_block *block)
-> +{
-> +	const struct displayid_formula_timing_block *formula_block =3D (struct =
-displayid_formula_timing_block *)block;
-> +	int num_timings;
-> +	struct drm_display_mode *newmode;
-> +	int num_modes =3D 0;
-> +	bool type_10 =3D block->tag =3D=3D DATA_BLOCK_2_TYPE_10_FORMULA_TIMING;
-> +	int timing_size =3D 6 + ((formula_block->base.rev & 0x70) >> 4);
-> +
-> +	/* extended blocks are not supported yet */
-> +	if (timing_size !=3D 6)
-> +		return 0;
-> +
-> +	if (block->num_bytes % timing_size)
-> +		return 0;
-> +
-> +	num_timings =3D block->num_bytes / timing_size;
-> +	for (int i =3D 0; i < num_timings; i++) {
-> +		const struct displayid_formula_timings_9 *timings =3D &formula_block->=
-timings[i];
-> +
-> +		newmode =3D drm_mode_displayid_formula(connector->dev, timings, type_1=
-0);
-> +		if (!newmode)
-> +			continue;
-> +
-> +		drm_mode_probed_add(connector, newmode);
-> +		num_modes++;
-> +	}
-> +	return num_modes;
-> +}
-> +
->  static int add_displayid_detailed_modes(struct drm_connector *connector,
->  					const struct drm_edid *drm_edid)
->  {
-> @@ -6845,6 +6905,9 @@ static int add_displayid_detailed_modes(struct drm_=
-connector *connector,
->  		if (block->tag =3D=3D DATA_BLOCK_TYPE_1_DETAILED_TIMING ||
->  		    block->tag =3D=3D DATA_BLOCK_2_TYPE_7_DETAILED_TIMING)
->  			num_modes +=3D add_displayid_detailed_1_modes(connector, block);
-> +		else if (block->tag =3D=3D DATA_BLOCK_2_TYPE_9_FORMULA_TIMING ||
-> +			 block->tag =3D=3D DATA_BLOCK_2_TYPE_10_FORMULA_TIMING)
-> +			num_modes +=3D add_displayid_formula_modes(connector, block);
->  	}
->  	displayid_iter_end(&iter);
-
---=20
-Jani Nikula, Intel
