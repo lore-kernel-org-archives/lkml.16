@@ -1,49 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50D1271813;
-	Wed, 12 Feb 2025 19:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2FB1DC07D;
+	Wed, 12 Feb 2025 19:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739388685; cv=none; b=X00wPuXJch/RElv9kGptGtnz7s0oc1BbV/wOczdZMfhNQHlNf7bFbjr0iUIRbcgwTmOeEysiv5v6ujMMRK+JNX35LX2+0htaIVDmIxFLVOWHGFuzXvwUTt3606DM7B+eTnGF+aipAFbF+pRHmke4VTSyoHLtZIT7+7iO5vFFhrM=
+	t=1739388685; cv=none; b=hCYxvoRkA6AF8nMeBHy1/gDLA+vRiSJmO/k/wdygJfvWqlgfXo6+ae9iqLI0tkz8SYMR9SUUQDe18yORRe0g1gYpXOZZ6FXBJc2RnMk8genuceknbcwtsF+ZZWEMKdRH8aaFAxCn8qbJ5qh5tLDIaJ4lwXZQUACLBVb9LT1Qs4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739388685; c=relaxed/simple;
-	bh=ogjElKZkP71ejQJYT0hwP3uHhRqvyb4B8WNqvdEWaog=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PgL0HqDP1enqVJgNvsy0Cv6h3UWSfWlqz1NtzNsALN2iFps+yGTRFQvSxit4ru6ioOSIP71qvId6R2nyjwYOQDXceVJZzVceAMzZsK/KpmQhySvlGF/6B42cKG1I/Ni3WdlvRv00Ow1Ffd7j7ngui/uD1YfjUQgSZ2+rk9aWriU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IjGzuLHY; arc=none smtp.client-ip=198.175.65.18
+	bh=QWfCk6Z9kmUwiT/DGt2f/lMajzR81wKfnu7GN46kOys=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iYz6VxkNP70FAIXQtSkset7utj5BENSeLTbnQivapyrnYxEKGJu9Oig2RdGAXiB3FqNBzn2uEykqANxlCjj9VseqM9Nq4xz4RcXPtQOHKPaNWXp2cla8/dLs42txXBd4SCkjJ/fRw3gFGWAuKSFe6NgV3FzcbCtSFGG2apQ4QCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RHV+S7FJ; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IjGzuLHY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RHV+S7FJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1739388684; x=1770924684;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ogjElKZkP71ejQJYT0hwP3uHhRqvyb4B8WNqvdEWaog=;
-  b=IjGzuLHYasEgLq+YzohumRpuKshVWSErsJphSYvR7S2aFleeoTxJja3f
-   N67iTveLVqdtHuyV+fgSFhh/WdX0R2rNSU6CkY3xJ/vE1RHMcXZ6VMNHJ
-   wBkbtCpcNu1sbCoT7GHITSkkr7QdHJNeXd7Wd7nrpwvOP9MuNudydKi/x
-   KLs5CPsyusE+YiXZK+sLrl3ptvGr0ghUSHWVVUimaG2tvNsJUAQXfpmnO
-   esXOJiGWRrqo51ODfpv1SgcdIQslndcVm+PV8XMBmiWN18B9j3PXZ/0CJ
-   gXN9CnP1+ovEDhNc05dC6DiQbzBkQqyAcrG5z2YjGarNp6kd8eE7fjGEB
-   Q==;
-X-CSE-ConnectionGUID: dbuSkH5STyCes+FDll1E0g==
-X-CSE-MsgGUID: eWUY/nRAQH+Lk1TIymQfng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40183655"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="40183655"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 11:31:23 -0800
-X-CSE-ConnectionGUID: tC83V0vbQ9mAzWQWQQ43FQ==
-X-CSE-MsgGUID: c1U2mCFeTuuJzZZwviugoA==
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=QWfCk6Z9kmUwiT/DGt2f/lMajzR81wKfnu7GN46kOys=;
+  b=RHV+S7FJEOX5oTeFqrx7iWPTcTnXKbQ8HuMCZsumt9lRVAabuttsCqC+
+   E6eXUKGhENQCLT323h0J3f4juLhH8v9atWgUK2TWUCWSlEXQfiw7OXtLz
+   jJFmnBXU3bYsqFfvItYLSQD1BfbgOrQu7QnZA02Sngnowxuc50qcvSGVk
+   MkrsrpF3xvedLXN5NDbvGs23v5QzeDWSHP0LjkxYscVoMHUIQaZ+MGLUy
+   xOgq7XZWA1Ub5tJfHUHMN2pIYKX9m2P+4dI3llY+67GpxaLU65RMBuSBk
+   jSimWopJ/fTNE2m/6RMbwPmM0RqRM+3tMnxoK7Z/+6QdYaOhnlf+3jUAA
+   A==;
+X-CSE-ConnectionGUID: abR/tZHXQaqBourjndWzFQ==
+X-CSE-MsgGUID: GlGls5kWSB2E8Bf3D3/Qng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="50714405"
+X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
+   d="scan'208";a="50714405"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 11:31:24 -0800
+X-CSE-ConnectionGUID: Oi6g4VVQRSWYiCtLZuw10A==
+X-CSE-MsgGUID: SalJIseoSXmw88IeDLGjrQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117542533"
+X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
+   d="scan'208";a="112880548"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 12 Feb 2025 11:31:20 -0800
+  by orviesa006.jf.intel.com with ESMTP; 12 Feb 2025 11:31:21 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 4623011E; Wed, 12 Feb 2025 21:31:19 +0200 (EET)
+	id 7F3C531C; Wed, 12 Feb 2025 21:31:19 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
@@ -54,11 +55,14 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 Cc: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 0/4] usb: dwc3: Avoid using reserved EPs
-Date: Wed, 12 Feb 2025 21:28:00 +0200
-Message-ID: <20250212193116.2487289-1-andriy.shevchenko@linux.intel.com>
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Ferry Toth <fntoth@gmail.com>
+Subject: [PATCH v3 4/4] usb: dwc3: gadget: Avoid using reserved endpoints on Intel Merrifield
+Date: Wed, 12 Feb 2025 21:28:04 +0200
+Message-ID: <20250212193116.2487289-5-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
+In-Reply-To: <20250212193116.2487289-1-andriy.shevchenko@linux.intel.com>
+References: <20250212193116.2487289-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,36 +72,56 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On some platforms (Intel-based and AFAIK ARM-based) the EPs in the gadget
-(USB Device Controller mode) may be reserved for some special means, such as
-tracing. This series extends DT schema and driver to avoid using those.
-Without this the USB gadget mode won't work properly (those devices that
-"luckily" allocated the reserved EPs).
+Intel Merrifield SoC uses these endpoints for tracing and they cannot
+be re-allocated if being used because the side band flow control signals
+are hard wired to certain endpoints:
 
-Changelog v3:
-- split refactoring as preparatory change (Thinh)
-- renamed variable and function (Thinh)
-- added a warning in one place (Thinh)
-- gathered tags (Ferry, Rob, Thinh)
+• 1 High BW Bulk IN (IN#1) (RTIT)
+• 1 1KB BW Bulk IN (IN#8) + 1 1KB BW Bulk OUT (Run Control) (OUT#8)
 
-Changelog v2:
-- added minItems to the schema (Rob)
-- revisited code and add NULL check to avoid crashes (Thinh)
-- rewrote helper function to return error to the user if parsing fails
-- elaborated in the commit message why we need this quirk (Thinh)
-- addressed miscellaneous style issues (Thinh)
+In device mode, since RTIT (EP#1) and EXI/RunControl (EP#8) uses
+External Buffer Control (EBC) mode, these endpoints are to be mapped to
+EBC mode (to be done by EXI target driver). Additionally TRB for RTIT
+and EXI are maintained in STM (System Trace Module) unit and the EXI
+target driver will as well configure the TRB location for EP #1 IN
+and EP#8 (IN and OUT). Since STM/PTI and EXI hardware blocks manage
+these endpoints and interface to OTG3 controller through EBC interface,
+there is no need to enable any events (such as XferComplete etc)
+for these end points.
 
-Andy Shevchenko (4):
-  dt-bindings: usb: dwc3: Add a property to reserve endpoints
-  usb: dwc3: gadget: Refactor loop to avoid NULL endpoints
-  usb: dwc3: gadget: Add support for snps,reserved-endpoints property
-  usb: dwc3: gadget: Avoid using reserved endpoints on Intel Merrifield
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Ferry Toth <fntoth@gmail.com>
+Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+---
+ drivers/usb/dwc3/dwc3-pci.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
- .../bindings/usb/snps,dwc3-common.yaml        | 11 ++++
- drivers/usb/dwc3/dwc3-pci.c                   | 10 +++
- drivers/usb/dwc3/gadget.c                     | 63 +++++++++++++++++--
- 3 files changed, 79 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
+index 052852f80146..54a4ee2b90b7 100644
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -148,11 +148,21 @@ static const struct property_entry dwc3_pci_intel_byt_properties[] = {
+ 	{}
+ };
+ 
++/*
++ * Intel Merrifield SoC uses these endpoints for tracing and they cannot
++ * be re-allocated if being used because the side band flow control signals
++ * are hard wired to certain endpoints:
++ * - 1 High BW Bulk IN (IN#1) (RTIT)
++ * - 1 1KB BW Bulk IN (IN#8) + 1 1KB BW Bulk OUT (Run Control) (OUT#8)
++ */
++static const u8 dwc3_pci_mrfld_reserved_endpoints[] = { 3, 16, 17 };
++
+ static const struct property_entry dwc3_pci_mrfld_properties[] = {
+ 	PROPERTY_ENTRY_STRING("dr_mode", "otg"),
+ 	PROPERTY_ENTRY_STRING("linux,extcon-name", "mrfld_bcove_pwrsrc"),
+ 	PROPERTY_ENTRY_BOOL("snps,dis_u3_susphy_quirk"),
+ 	PROPERTY_ENTRY_BOOL("snps,dis_u2_susphy_quirk"),
++	PROPERTY_ENTRY_U8_ARRAY("snps,reserved-endpoints", dwc3_pci_mrfld_reserved_endpoints),
+ 	PROPERTY_ENTRY_BOOL("snps,usb2-gadget-lpm-disable"),
+ 	PROPERTY_ENTRY_BOOL("linux,sysdev_is_parent"),
+ 	{}
 -- 
 2.45.1.3035.g276e886db78b
 
