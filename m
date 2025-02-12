@@ -1,152 +1,127 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDFA20E020;
-	Wed, 12 Feb 2025 13:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8F820C49F;
+	Wed, 12 Feb 2025 13:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739365429; cv=none; b=oXSx7OEOLCB5TaqqJgVkLpI68312LMYJQIk7d4/gtDIlVsn8on4cTJk8nfNY9vBZ2f5uIQ2F89UWp7bZ9/+ssIiy+aoV+oAUFeniRAWhUNLtVTZ2h7Y1K6woSQx2PrBWmBhBc4Swgj08IxDUuD1fbZRrcxpCrNLorVuOAC1oLeM=
+	t=1739365443; cv=none; b=TJB82xQ3rBn1t9Gb1QI5JoW0bbiNRPNvOrdBoA7MqK9m+ZiQr0c/FUkN8BTildaeN+nQiwPqKLfBXSQ8mUxW+D+Y9n2ZezmATl5zqP7TO+wVZvnFhGdIlyu2I/j1/VLyrpQJFTVpmVAvll4JdpijjZzb+BHCM1vEF/6+3oNRyxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739365429; c=relaxed/simple;
-	bh=CH67KHtOFoFk6tLjTkF6ElKAoDA4yM8zT/sD1gHjNMs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TBcUj8/x+zeAKjyIwvrksgt60bQHBUEUoS5mnStbqn7JHUHdoU31ZcVfUt6HrACm0298zEHVKUchAOjDxm5hbWihxbeaCHWVCMADzT379SAf0gm9pgWMhd9ThpNf7Wrj2J/bRR52VVxEZVemcf9mUImZ/qTHMblixpgbHHhn1x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JexrGaX+; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739365443; c=relaxed/simple;
+	bh=WPpoEVXz6qHST5bg1jg3HxWN+lQyhY1AExJV/hTo36U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ffVf4E5mq0eiCseFDQai4e8qjrP64IZEms7nxcr1Yp3oXaukAgHn0/0+9BEYRjTJB8FD/l5RlldQYYQ10mA0zYjQPfGguRKdUEXwVT9tuQ+6aOAsxAG2N4eWYcN9E5V104CNZ7wI9bVIor9vLjjSmBuJOxSi72nYAqg5B1amWds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yyFkh7uK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OqFRzqLI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JexrGaX+"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CAxSbX013670;
-	Wed, 12 Feb 2025 13:03:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=krHBiN
-	5fDn9iL+VMLKCmrS+HPrhLWm4BXzABiQLQpLw=; b=JexrGaX++PInzP3zdCZjD3
-	KbkFtDaJsk3RVitxji+enBcU3Rt1JPEFclfW7tGURxY+sQK4uiv8/rP6fE5udfuD
-	etkhmGGIaCJmOgGPosuxlqotL8lgDmvzh/6e1qiXkRNnWvh9MCwprerHMA+q/cYm
-	apU79lmHhkus3D6Eb0vJ36I3RFGcwhZgJdnv7k1gj0sK3smFjjBkRx9wRdd7Bpe0
-	1eE2bSH+LxoDCH1q9U0sVX5bsqtWam7aTMCLgCMC9+gJiT04UioUvfWgM+/XoihA
-	0ivcaVGGv9ZM8kEXCy/Vnkjlyx+VsMe0pyMV+guTWlvFM6u0u7jpgsJtZmADWCVA
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44rjfytvs8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 13:03:20 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51CCZBb4028197;
-	Wed, 12 Feb 2025 13:03:19 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44phyygsnt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 13:03:19 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51CD3JrI27132602
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Feb 2025 13:03:19 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1505958077;
-	Wed, 12 Feb 2025 13:03:19 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A32E25806F;
-	Wed, 12 Feb 2025 13:03:17 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.169.88])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 12 Feb 2025 13:03:17 +0000 (GMT)
-Message-ID: <b7dd78f21a9fa9dc3b6f90eae2668cfe5c7670c7.camel@linux.ibm.com>
-Subject: Re: [PATCH v7 2/7] kexec: define functions to map and unmap segments
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com
-Date: Wed, 12 Feb 2025 08:03:17 -0500
-In-Reply-To: <47565966-c735-4758-80a5-523fd93adc72@linux.microsoft.com>
-References: <20250203232033.64123-1-chenste@linux.microsoft.com>
-	 <20250203232033.64123-3-chenste@linux.microsoft.com>
-	 <6fd5510827a2ebb91aee8c72432e248e967fa5be.camel@linux.ibm.com>
-	 <47565966-c735-4758-80a5-523fd93adc72@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yyFkh7uK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OqFRzqLI"
+Date: Wed, 12 Feb 2025 14:03:59 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739365440;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=soGwUcM7FS1/q41UUnp8a+P68mixKiDDmCjv27Yua7g=;
+	b=yyFkh7uKgxkpEzxHO9IJM/Su5JamH2HM8z78zJzBJYgf0Lxpy6M6hWQ1rXpixOlD8fL2rZ
+	hiysYZUa5k84oeZDgPBdlpZlO+Oj68XYfCARPvdqf5dE5wV417yuPq3udxS4nxZgyzOlsk
+	+QD4vLafFb3qOWe6fGvm2qbXpquB9TJUiNsAW1ohhUxRsPts8AlEaIUb7ohKiV++04U4Zw
+	/zSZ32L15VL92eJe2Vh/MWaW55AUPwUcvNLkKiXRXOA7gxreGAd3D4W1k1/bG4jeiPMymy
+	tL3tsOCpnUk8JLEkY8P9tKafkORcFX1Xk0YrCP/PhtAKAtJ7Vl2RY9OeFQj9mg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739365440;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=soGwUcM7FS1/q41UUnp8a+P68mixKiDDmCjv27Yua7g=;
+	b=OqFRzqLIlg24n/tDmtYsX94R48vsZwYDpth0U9pqbAGNaSCr8vHQileOHaoaaTu6hn1vpX
+	yjX+qcIgpSa3+KAA==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: jeffxu@chromium.org
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
+	torvalds@linux-foundation.org, vbabka@suse.cz, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
+	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, hch@lst.de, 
+	ojeda@kernel.org, adobriyan@gmail.com, johannes@sipsolutions.net, 
+	pedro.falcato@gmail.com, hca@linux.ibm.com, willy@infradead.org, anna-maria@linutronix.de, 
+	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
+	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, f.fainelli@gmail.com, 
+	gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org, 
+	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, 
+	enh@google.com, rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, 
+	aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com
+Subject: Re: [RFC PATCH v5 2/7] selftests: x86: test_mremap_vdso: skip if
+ vdso is msealed
+Message-ID: <20250212135000-861e6353-6e0a-43c3-9b28-649ae4dfc607@linutronix.de>
+References: <20250212032155.1276806-1-jeffxu@google.com>
+ <20250212032155.1276806-3-jeffxu@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Wb7pe2c-W48JJx9ojXknjIakieQe4wt2
-X-Proofpoint-ORIG-GUID: Wb7pe2c-W48JJx9ojXknjIakieQe4wt2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-12_04,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- mlxscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
- lowpriorityscore=0 priorityscore=1501 phishscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502120101
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250212032155.1276806-3-jeffxu@google.com>
 
-On Mon, 2025-02-10 at 09:06 -0800, steven chen wrote:
-> On 2/7/2025 11:15 AM, Mimi Zohar wrote:
-> > Hi Steven,
-> >=20
-> > On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
-> > > Currently, the mechanism to map and unmap segments to the kimage
-> > > structure is not available to the subsystems outside of kexec.=C2=A0 =
-This
-> > > functionality is needed when IMA is allocating the memory segments
-> > > during kexec 'load' operation.=C2=A0 Implement functions to map and u=
-nmap
-> > > segments to kimage.
-> > >=20
-> > > Implement kimage_map_segment() to enable mapping of IMA buffer source
-> > > pages to the kimage structure post kexec 'load'.=C2=A0 This function,
-> > > accepting a kimage pointer, an address, and a size, will gather the
-> > > source pages within the specified address range, create an array of p=
-age
-> > > pointers, and map these to a contiguous virtual address range.=C2=A0 =
-The
-> > > function returns the start of this range if successful, or NULL if
-> > > unsuccessful.
-> > >=20
-> > > Implement kimage_unmap_segment() for unmapping segments
-> > > using vunmap().
-> > >=20
-> > > From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> > > Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> > > Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> > > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> > I don't recall previously adding my "Reviewed-by" tag.
-> >=20
-> > Eric, I'd appreciate your reviewing this and the subsequent patch "[PAT=
-CH v7 3/7]
-> > ima: kexec: skip IMA segment validation after kexec soft reboot" in par=
-ticular.
-> Hi Eric, Could you help to review this patch as Mimi mentioned? Thanks!
-> >=20
-> > > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+On Wed, Feb 12, 2025 at 03:21:50AM +0000, jeffxu@chromium.org wrote:
+> From: Jeff Xu <jeffxu@chromium.org>
+> 
+> Add code to detect if the vdso is memory sealed, skip the test
+> if it is.
+> 
+> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> ---
+>  .../testing/selftests/x86/test_mremap_vdso.c  | 38 +++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/x86/test_mremap_vdso.c b/tools/testing/selftests/x86/test_mremap_vdso.c
+> index d53959e03593..c68077c56b22 100644
+> --- a/tools/testing/selftests/x86/test_mremap_vdso.c
+> +++ b/tools/testing/selftests/x86/test_mremap_vdso.c
+> @@ -14,6 +14,7 @@
+>  #include <errno.h>
+>  #include <unistd.h>
+>  #include <string.h>
+> +#include <stdbool.h>
+>  
+>  #include <sys/mman.h>
+>  #include <sys/auxv.h>
+> @@ -55,13 +56,50 @@ static int try_to_remap(void *vdso_addr, unsigned long size)
+>  
+>  }
+>  
+> +#define VDSO_NAME "[vdso]"
+> +#define VMFLAGS "VmFlags:"
+> +#define MSEAL_FLAGS "sl"
+> +#define MAX_LINE_LEN 512
+> +
+> +bool vdso_sealed(FILE *maps)
+> +{
+> +	char line[MAX_LINE_LEN];
+> +	bool has_vdso = false;
+> +
+> +	while (fgets(line, sizeof(line), maps)) {
+> +		if (strstr(line, VDSO_NAME))
+> +			has_vdso = true;
+> +
+> +		if (has_vdso && !strncmp(line, VMFLAGS, strlen(VMFLAGS))) {
+> +			if (strstr(line, MSEAL_FLAGS))
+> +				return true;
+> +
+> +			return false;
 
-Steven, since these patches impact kdump, before re-posting the patch set, =
-please
-include the following tags before your Signed-off-by tag on the kexec patch=
-es.
+This only tests that any mapping after the vdso is sealed.
+There is a real parser for /proc/self/smaps in
+tools/testing/selftests/mm/vm_util.[ch], see check_vmflag_io().
 
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Baoquan He <bhe@redhat.com>                                            =
-=20
-Cc: Vivek Goyal <vgoyal@redhat.com>                                        =
-=20
-Cc: Dave Young <dyoung@redhat.com>  =20
+> +		}
+> +	}
+> +
+> +	return false;
+> +}
 
-> > > Signed-off-by: steven chen <chenste@linux.microsoft.com>
-
-thanks,
-
-Mimi
-
-
+<snip>
