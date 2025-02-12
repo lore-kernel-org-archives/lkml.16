@@ -1,117 +1,98 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F6C203707
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D3812036ED;
+	Wed, 12 Feb 2025 22:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739397951; cv=none; b=Js0465irfx+uWMoSUL2GfuAJ8SYtp1saGcbGa3X1c/7LMB4cHtjoGBi1cu77LQKQ1wRZPwIqg8LMSUPt/Z2vOefPzI4z3sY13R4ASVabvnpxDRYpZTfYkVwNuHP8tvRZmIzv0euhBG289Dbt4VdN0yCtRC/jqbcgpamCzdR8cqA=
+	t=1739397961; cv=none; b=WsCv5ZWatlrmxA3ZWMWqePOYP57fnAKbxtjnMYwGP7ybO8tklg78tjES495ewygq38Yxuv9JdOjSH74BnSHSgIYs0TEotGRkjH/D77m/kBDsZIRO4wNpD3Fpf26/IjXvw7oirGjzdPHPkxyt1G9N2q5TeA89zFVTshaJNe4cc6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739397951; c=relaxed/simple;
-	bh=TIp6IiSw9J6XeW41z4PtWs3Pf5rf0JtnBBQ3ET3vPAw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kmq+3CpM3ZTHikvOtqAXHsIOy111qPcR0BbH7EsqZtNVdSvchbNoTEcyFhQqFKY9O97sVWxM3ao1pCtfCiec12oFpd+cZbvWMgFBbsK50+Ik6rnM9wG8yIDbuN1R9CNKAn/7yfP5ZlnE7x6zAoZAbzQzSej6qaBJpBbr8SYcuFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ttgayTej; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ttgayTej"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-308ec50eb3dso2296361fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 14:05:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739397948; x=1740002748; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AyeS31oOn+dyoHdEWwNg/btCvozuEbvtdJVbwfowCPI=;
-        b=ttgayTejd1PyC4/daUQsPLiIUzmFcgNOFlR3oRFQDJq6S3kvSPz3zjPpvV1zEITOU5
-         bFsCqHW7clcTqeKHUFyRJx9FvFxF8myeI2SvFacrVkD638WTHZY6vB8RKX+608j+lOVM
-         VAXrESsDlx4yS2NX5UWPbYykJUChAV2r6O1nwQrBuMQLQo0Ol/4LInKdyrUKiCBgSOMG
-         +JyMrlhX8jKO8TdafilAekwhxd/6HJ+8abV3KMAaedDS4UUgMLUsqJbT/JF97TSQbavN
-         fSTDsQz1DjHoOMtdjg1fpk1UFYZur9atEfwjVnTXao/p5xOMahyVbOyALsir6RUmsJp5
-         skIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739397948; x=1740002748;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AyeS31oOn+dyoHdEWwNg/btCvozuEbvtdJVbwfowCPI=;
-        b=YHzHCxyOTRedEfCIEc7CQvL7pS2lG3dZYO4amu8MNL0W5lbzhw81Mi6mWq1ZPz4R/q
-         P/o/HDXjBmlomUIL/E7pwQoCt60XIg4ukc14ecYcRIIysD5yfqg7QJwUDD1Cu8V9ANvu
-         ACrBDkiJxoOwdCSVXgQ9yB3pCO6yYwYk7n3vqRy6WigenfKLahH+URl5gXomVEnmGWlW
-         AFH08QEgALL2IkT7e6P5+sA09LvAX4rV9IvyCPLMRC01idrknFDicGO6k8BOvkyhplZ7
-         phxVGAHNNcqgh6HbDrcn3wtfCvOgiu43Ik/zdcj+ZrwtPZo2SWSf39svSyDWuzf0oKZe
-         0JtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+SXV86IHaRtAibZqoD3sducKo1PVIfvOg3rLk/EQhRKvisL5g/wv+YN1/Dgrakuw/9uXVuoXRd7FYPEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8QkPxZsBFc9mJsMpSKDAIyxKNqKNxdZj+CKl7yQCFJRcjBaPY
-	xLF8ytZT52E3zvhu7sVvT7Z09PF6i95Zbf7KOl1qLO99DFV1RQNNDNTAgKpK+sSUAKnGrKs49dI
-	7p3QKtkyEiYKtaWvNGKH+qPPz88Y+1sjvdyJhOw==
-X-Gm-Gg: ASbGnctq0uxNcAVnBE3H0jML+UAz2h4LB8LKyAirHch/sFTE2p3lh8qZJMCXHfwVqLd
-	qxZSMiKwDh1INGuguTgX/iU1N8MnMKlmvaSTKhC1WapvyXCmGctvFpuHBwly4wBSok6zFLxYq
-X-Google-Smtp-Source: AGHT+IFVaagqh0CMTsKcRkmd3v9fDc83O1leceTlQ3IBKxH8tfOt/VuYKAEwsc8W8nqObHABGLW4nQjjLkytNesf0P0=
-X-Received: by 2002:a2e:a9a6:0:b0:301:12:1ef3 with SMTP id 38308e7fff4ca-3090363078fmr16793271fa.4.1739397948015;
- Wed, 12 Feb 2025 14:05:48 -0800 (PST)
+	s=arc-20240116; t=1739397961; c=relaxed/simple;
+	bh=ZGhydeZxTvcnRna3S1bP4MtIhyq1lqgmB9PIFRWKoUg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZAzaVUL86oFPf3dyKKYP2KVJP2cDkUiNEJgduHYVaoznnVHCpY+YsEC4lBN5Y/qH0uH2EDpw7L8LcuiWa8e1foob2EhhzzdofIWecfmdfe6SULCFFRYFrQDzWF/PHJ6nWQ/qIuTSj1LaPkOaX9uZQuydRlFBcCkWJcNFkUx5g6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC0961EDB;
+	Wed, 12 Feb 2025 14:06:19 -0800 (PST)
+Received: from beelzebub.ast.arm.com (u203013-lin.austin.arm.com [10.118.28.29])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D7E983F58B;
+	Wed, 12 Feb 2025 14:05:58 -0800 (PST)
+From: Stuart Yoder <stuart.yoder@arm.com>
+To: linux-integrity@vger.kernel.org,
+	jarkko@kernel.org,
+	peterhuewe@gmx.de,
+	jgg@ziepe.ca,
+	sudeep.holla@arm.com,
+	rafael@kernel.org,
+	lenb@kernel.org
+Cc: linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/5] tpm_crb: refactor check for idle support into TPM into inline function
+Date: Wed, 12 Feb 2025 16:05:45 -0600
+Message-Id: <20250212220548.400447-3-stuart.yoder@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250212220548.400447-1-stuart.yoder@arm.com>
+References: <20250212220548.400447-1-stuart.yoder@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212-kernel-upstreaming-add_gpio_support-v1-0-080e724a21f3@blaize.com>
- <20250212-kernel-upstreaming-add_gpio_support-v1-3-080e724a21f3@blaize.com>
-In-Reply-To: <20250212-kernel-upstreaming-add_gpio_support-v1-3-080e724a21f3@blaize.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 12 Feb 2025 23:05:36 +0100
-X-Gm-Features: AWEUYZlDq7_9jonIwEr0yAB71k3AJVNBKOFS6VlejNFuOFWzLB734tg5VjHuCCs
-Message-ID: <CACRpkdaWSgTO=S=L=m4bCXCU5b7aOG-DzN-TLEvPjb-QZGc72A@mail.gmail.com>
-Subject: Re: [PATCH 3/5] gpio: vsiapb: Add VeriSilicon APB support
-To: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, James Cowgill <james.cowgill@blaize.com>, 
-	Matt Redfearn <matthew.redfearn@blaize.com>, Neil Jones <neil.jones@blaize.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Nikolaos,
+Refactor the two checks for whether the TPM supports idle into a single
+inline function.
 
-thanks for your patch!
+Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
+---
+ drivers/char/tpm/tpm_crb.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-This driver is really high quality, only nitpicks below.
+diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+index ea085b14ab7c..87d69e990249 100644
+--- a/drivers/char/tpm/tpm_crb.c
++++ b/drivers/char/tpm/tpm_crb.c
+@@ -115,6 +115,16 @@ struct tpm2_crb_pluton {
+ 	u64 reply_addr;
+ };
+ 
++static inline bool does_tpm_support_idle(u32 start_method)
++{
++	if ((start_method == ACPI_TPM2_START_METHOD) ||
++	    (start_method == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
++	    (start_method == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
++		return false;
++	else
++		return true;
++}
++
+ static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
+ 				unsigned long timeout)
+ {
+@@ -173,9 +183,7 @@ static int __crb_go_idle(struct device *dev, struct crb_priv *priv)
+ {
+ 	int rc;
+ 
+-	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
+-	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
+-	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
++	if (!does_tpm_support_idle(priv->sm))
+ 		return 0;
+ 
+ 	iowrite32(CRB_CTRL_REQ_GO_IDLE, &priv->regs_t->ctrl_req);
+@@ -222,9 +230,7 @@ static int __crb_cmd_ready(struct device *dev, struct crb_priv *priv)
+ {
+ 	int rc;
+ 
+-	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
+-	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
+-	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
++	if (!does_tpm_support_idle(priv->sm))
+ 		return 0;
+ 
+ 	iowrite32(CRB_CTRL_REQ_CMD_READY, &priv->regs_t->ctrl_req);
+-- 
+2.34.1
 
-With these addressed:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-On Wed, Feb 12, 2025 at 2:47=E2=80=AFPM Nikolaos Pasaloukos
-<nikolaos.pasaloukos@blaize.com> wrote:
-
-> VeriSilicon APB v0.2 is a custom GPIO design provided from VeriSilicon
-> Microelectronics. It has 32 input/output ports which can be
-> configured as edge or level triggered interrupts. It also provides
-> a de-bounce feature.
->
-> Signed-off-by: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
-(...)
-> +config GPIO_VSIAPB
-> +       tristate "Verisilicon APB GPIO support"
-> +       depends on OF_GPIO
-> +       select GPIO_GENERIC
-> +       select GPIOLIB_IRQCHIP
-> +       select IRQ_DOMAIN_HIERARCHY
-
-Are you really using the hierarchical domain?
-
-Not in this driver, right? This is just regular chained IRQ.
-
-> +       /* configure the gpio chip */
-> +       gc =3D &chip->gc;
-> +       gc->owner =3D THIS_MODULE;
-
-I think the core sets up owner for you so you can drop this assignment?
-
-Yours,
-Linus Walleij
