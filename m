@@ -1,76 +1,41 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6409C271838;
-	Wed, 12 Feb 2025 16:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC31271838
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 16:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739377056; cv=none; b=W+2V1AG8dTS8Me6CfCbFBmFiKBAC/ENVkNoetLwAwt12OFZDERMJQeGi3OaikQcidet9JraoxXwXpQLc/F9GXyTS+gFzhYep/QuGq6QN3mMh0N8r7XR5/QDIFwaqLk2EMFCcL8F6dNX4/NnZtF5MyoJUlaw3Mo0oy0zlp2ERBes=
+	t=1739377103; cv=none; b=juNRlMRpVOqRZhmwfm5mlRPfiV69pp3IF8AWCBuPrDC2ccLiKiN8y4az3emWczYPvY+u+ogKU14dCudDc5bi+Er5DK1e+eR+6Scb7Xy0nVJDHcQ+gM9NVHx0dEsv1WVm0EwzmaeCQ6vv8DDTBu8odTkbICUVS4uoA5sH/kyRQHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739377056; c=relaxed/simple;
-	bh=Sx0gjwQ2xWYVGUEXYQCDsZtlY6q7k8a71QG8sWV01LE=;
+	s=arc-20240116; t=1739377103; c=relaxed/simple;
+	bh=FqD0mJejr8NNmIXd9wk8XEQVYpTrD0Yl9WNLvbJBuys=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rn2UzZS2elVqNF47nQg7t8cOROA4xOghPSXz3154nL7Mtcy4rM9GyP59moJSGLqY4Ww3eRVn8sLqypPzls2lbaUMAPSipncm64SA+zUR/EwaSoBLXnzccn6i9njT5U7ou4SeoPCiO6FyqX4eQelPdTA12ycllH7B7oQw1/61rDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TJI3DgFH; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sc/Jx77TBbWXlmnDwwjanaFK6jyXMu5fqUFJNDJuHulWdMc4EQ5Jk7gu2rbY7VIzHbhtM7BrBEdKWA/Hqb34gw4IWZD97uu7hVsZNNMT2F20sc0YGDIFJacHupL5R+dFrxRWbVvcAW2AKVV/jA+03HwBL/NDXSgXF4xnncxpr0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NJDcyJht; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TJI3DgFH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739377055; x=1770913055;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Sx0gjwQ2xWYVGUEXYQCDsZtlY6q7k8a71QG8sWV01LE=;
-  b=TJI3DgFHWncYN37Bnt1RdspZwfQ/G/oBcFQ1gwzdcodFTcB9Mvn9V41N
-   8SZ5t6VHASbKWVNSXX6H3o4bfZRuxx8veEOfbjn1B5Of39cqwOBVXbol2
-   zwqXGeO5yMTeOGcD6jro1SVqCW3RoJuP7KKVSjXPGdnHEcS5Sq5Q9fYpg
-   ZZXkDbR4XZU3NM3sDZ1IlH9bI3qRzGadukPJ8yE21LeBudWKJN5UBQ0AB
-   KaJHdi9YItzD9Ij+fSC7qS+7I6EWJlX0PFNi+iVcttFM/tF7TxT/HagpE
-   E9ZM+HNt3/V+3Fs0z9CISw8y2Wx76fRItZy0+x4yQS/dqQSDwJ0MlYuSv
-   A==;
-X-CSE-ConnectionGUID: q3GkO22OStWlwBuEPOQmbw==
-X-CSE-MsgGUID: zHrETBkGSRy2gsO5VSU1Eg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="65401766"
-X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
-   d="scan'208";a="65401766"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 08:17:34 -0800
-X-CSE-ConnectionGUID: kjQ8+wilTqiuJDRQQb1Ggg==
-X-CSE-MsgGUID: s54xrSM0QgyEtfmNe8TMtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
-   d="scan'208";a="112851499"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 08:17:30 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1tiFQV-0000000At9E-0oX1;
-	Wed, 12 Feb 2025 18:17:27 +0200
-Date: Wed, 12 Feb 2025 18:17:26 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 4/7] gpio: max7360: Add MAX7360 gpio support
-Message-ID: <Z6zJljphfTuEhBTP@smile.fi.intel.com>
-References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
- <20250113-mdb-max7360-support-v3-4-9519b4acb0b1@bootlin.com>
- <Z5eFGJspoGOINcG6@smile.fi.intel.com>
- <D7QHGB7D0VSG.X255SDU7DFOF@bootlin.com>
- <Z6y65SnrprvnpKEa@smile.fi.intel.com>
- <D7QLITNTXRUJ.3NA44E6PQMAUX@bootlin.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NJDcyJht"
+Date: Wed, 12 Feb 2025 16:18:14 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739377099;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8sbZGIrU5ceW1xiKOedooUcjCQRIvPjuNItFFd09wtg=;
+	b=NJDcyJht7AeI00TfUWJEpc2hJhV354L8qmqv/6HzUweMk/x7EIPRjW3crYfABZYrwsLjpQ
+	67Lx5lBG53DcezBuXvk6LKLVIvMFqWPi7OtIh/t8Z6no1UtUZ3CrPDsmAqkK8EA7HxIRkB
+	8NQC68RVipcjk2EDOVuni+N93c8vVvA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Kairui Song <ryncsn@gmail.com>, Minchan Kim <minchan@kernel.org>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 10/18] zsmalloc: factor out pool locking helpers
+Message-ID: <Z6zJxvLbRQ6pKtue@google.com>
+References: <20250212063153.179231-1-senozhatsky@chromium.org>
+ <20250212063153.179231-11-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,64 +44,199 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <D7QLITNTXRUJ.3NA44E6PQMAUX@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250212063153.179231-11-senozhatsky@chromium.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Feb 12, 2025 at 05:08:56PM +0100, Mathieu Dubois-Briand wrote:
-> On Wed Feb 12, 2025 at 4:14 PM CET, Andy Shevchenko wrote:
-> > On Wed, Feb 12, 2025 at 01:57:34PM +0100, Mathieu Dubois-Briand wrote:
-> > > On Mon Jan 27, 2025 at 2:07 PM CET, Andy Shevchenko wrote:
-> > > > On Mon, Jan 13, 2025 at 01:42:28PM +0100, Mathieu Dubois-Briand wrote:
-
-...
-
-> > > > > +	if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios)) {
-> > > > > +		dev_err(&pdev->dev, "Missing ngpios OF property\n");
-> > > > > +		return -ENODEV;
-> > > > > +	}
-> > > >
-> > > > This is not needed, it is already done in GPIOLIB core.
-> > > 
-> > > I believe this is still needed:
-> > > - For gpos, we need the gpio count to correctly set the partition
-> > >   between gpo and keypad columns in max7360_set_gpos_count().
-> >
-> > Shouldn't be that done somewhere in the GPIO valid mask initialisation?
-> >
-> > > - For gpios, we need the gpio count to setup the IRQs.
-> >
-> > Doesn't GPIOLIB parse the property before initializing the IRQ valid mask
-> > and other init callbacks?
+On Wed, Feb 12, 2025 at 03:27:08PM +0900, Sergey Senozhatsky wrote:
+> We currently have a mix of migrate_{read,write}_lock() helpers
+> that lock zspages, but it's zs_pool that actually has a ->migrate_lock
+> access to which is opene-coded.  Factor out pool migrate locking
+> into helpers, zspage migration locking API will be renamed to
+> reduce confusion.
 > 
-> No, I believe I have to register the IRQ before registering the GPIO, so
-> I can get the IRQ domain.
+> It's worth mentioning that zsmalloc locks sync not only migration,
+> but also compaction.
 > 
-> Right now I have something like:
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+
+FWIW I don't see a lot of value in the helpers (renaming the lock is
+useful tho). We open-code other locks like the class lock anyway, and
+the helpers obscure the underlying lock type without adding much value
+in terms of readability/conciseness.
+
+> ---
+>  mm/zsmalloc.c | 63 +++++++++++++++++++++++++++++++++++----------------
+>  1 file changed, 44 insertions(+), 19 deletions(-)
 > 
-> irq_chip->num_irqs = ngpios;
-> devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev), max7360_gpio->regmap,
-> irq, flags, 0, irq_chip, &irq_chip_data);
-> gpio_config.irq_domain = regmap_irq_get_domain(irq_chip_data);
-> devm_gpio_regmap_register(dev, &gpio_config);
+> diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+> index 6d0e47f7ae33..47c638df47c5 100644
+> --- a/mm/zsmalloc.c
+> +++ b/mm/zsmalloc.c
+> @@ -18,7 +18,7 @@
+>  /*
+>   * lock ordering:
+>   *	page_lock
+> - *	pool->migrate_lock
+> + *	pool->lock
+>   *	class->lock
+>   *	zspage->lock
+>   */
+> @@ -224,10 +224,35 @@ struct zs_pool {
+>  	struct work_struct free_work;
+>  #endif
+>  	/* protect page/zspage migration */
+> -	rwlock_t migrate_lock;
+> +	rwlock_t lock;
+>  	atomic_t compaction_in_progress;
+>  };
+>  
+> +static void pool_write_unlock(struct zs_pool *pool)
+> +{
+> +	write_unlock(&pool->lock);
+> +}
+> +
+> +static void pool_write_lock(struct zs_pool *pool)
+> +{
+> +	write_lock(&pool->lock);
+> +}
+> +
+> +static void pool_read_unlock(struct zs_pool *pool)
+> +{
+> +	read_unlock(&pool->lock);
+> +}
+> +
+> +static void pool_read_lock(struct zs_pool *pool)
+> +{
+> +	read_lock(&pool->lock);
+> +}
+> +
+> +static bool pool_lock_is_contended(struct zs_pool *pool)
+> +{
+> +	return rwlock_is_contended(&pool->lock);
+> +}
+> +
+>  static inline void zpdesc_set_first(struct zpdesc *zpdesc)
+>  {
+>  	SetPagePrivate(zpdesc_page(zpdesc));
+> @@ -1206,7 +1231,7 @@ void *zs_map_object(struct zs_pool *pool, unsigned long handle,
+>  	BUG_ON(in_interrupt());
+>  
+>  	/* It guarantees it can get zspage from handle safely */
+> -	read_lock(&pool->migrate_lock);
+> +	pool_read_lock(pool);
+>  	obj = handle_to_obj(handle);
+>  	obj_to_location(obj, &zpdesc, &obj_idx);
+>  	zspage = get_zspage(zpdesc);
+> @@ -1218,7 +1243,7 @@ void *zs_map_object(struct zs_pool *pool, unsigned long handle,
+>  	 * which is smaller granularity.
+>  	 */
+>  	migrate_read_lock(zspage);
+> -	read_unlock(&pool->migrate_lock);
+> +	pool_read_unlock(pool);
+>  
+>  	class = zspage_class(pool, zspage);
+>  	off = offset_in_page(class->size * obj_idx);
+> @@ -1450,16 +1475,16 @@ void zs_free(struct zs_pool *pool, unsigned long handle)
+>  		return;
+>  
+>  	/*
+> -	 * The pool->migrate_lock protects the race with zpage's migration
+> +	 * The pool->lock protects the race with zpage's migration
+>  	 * so it's safe to get the page from handle.
+>  	 */
+> -	read_lock(&pool->migrate_lock);
+> +	pool_read_lock(pool);
+>  	obj = handle_to_obj(handle);
+>  	obj_to_zpdesc(obj, &f_zpdesc);
+>  	zspage = get_zspage(f_zpdesc);
+>  	class = zspage_class(pool, zspage);
+>  	spin_lock(&class->lock);
+> -	read_unlock(&pool->migrate_lock);
+> +	pool_read_unlock(pool);
+>  
+>  	class_stat_sub(class, ZS_OBJS_INUSE, 1);
+>  	obj_free(class->size, obj);
+> @@ -1793,10 +1818,10 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
+>  	pool = zspage->pool;
+>  
+>  	/*
+> -	 * The pool migrate_lock protects the race between zpage migration
+> +	 * The pool lock protects the race between zpage migration
+>  	 * and zs_free.
+>  	 */
+> -	write_lock(&pool->migrate_lock);
+> +	pool_write_lock(pool);
+>  	class = zspage_class(pool, zspage);
+>  
+>  	/*
+> @@ -1833,7 +1858,7 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
+>  	 * Since we complete the data copy and set up new zspage structure,
+>  	 * it's okay to release migration_lock.
+>  	 */
+> -	write_unlock(&pool->migrate_lock);
+> +	pool_write_unlock(pool);
+>  	spin_unlock(&class->lock);
+>  	migrate_write_unlock(zspage);
+>  
+> @@ -1956,7 +1981,7 @@ static unsigned long __zs_compact(struct zs_pool *pool,
+>  	 * protect the race between zpage migration and zs_free
+>  	 * as well as zpage allocation/free
+>  	 */
+> -	write_lock(&pool->migrate_lock);
+> +	pool_write_lock(pool);
+>  	spin_lock(&class->lock);
+>  	while (zs_can_compact(class)) {
+>  		int fg;
+> @@ -1983,14 +2008,14 @@ static unsigned long __zs_compact(struct zs_pool *pool,
+>  		src_zspage = NULL;
+>  
+>  		if (get_fullness_group(class, dst_zspage) == ZS_INUSE_RATIO_100
+> -		    || rwlock_is_contended(&pool->migrate_lock)) {
+> +		    || pool_lock_is_contended(pool)) {
+>  			putback_zspage(class, dst_zspage);
+>  			dst_zspage = NULL;
+>  
+>  			spin_unlock(&class->lock);
+> -			write_unlock(&pool->migrate_lock);
+> +			pool_write_unlock(pool);
+>  			cond_resched();
+> -			write_lock(&pool->migrate_lock);
+> +			pool_write_lock(pool);
+>  			spin_lock(&class->lock);
+>  		}
+>  	}
+> @@ -2002,7 +2027,7 @@ static unsigned long __zs_compact(struct zs_pool *pool,
+>  		putback_zspage(class, dst_zspage);
+>  
+>  	spin_unlock(&class->lock);
+> -	write_unlock(&pool->migrate_lock);
+> +	pool_write_unlock(pool);
+>  
+>  	return pages_freed;
+>  }
+> @@ -2014,10 +2039,10 @@ unsigned long zs_compact(struct zs_pool *pool)
+>  	unsigned long pages_freed = 0;
+>  
+>  	/*
+> -	 * Pool compaction is performed under pool->migrate_lock so it is basically
+> +	 * Pool compaction is performed under pool->lock so it is basically
+>  	 * single-threaded. Having more than one thread in __zs_compact()
+> -	 * will increase pool->migrate_lock contention, which will impact other
+> -	 * zsmalloc operations that need pool->migrate_lock.
+> +	 * will increase pool->lock contention, which will impact other
+> +	 * zsmalloc operations that need pool->lock.
+>  	 */
+>  	if (atomic_xchg(&pool->compaction_in_progress, 1))
+>  		return 0;
+> @@ -2139,7 +2164,7 @@ struct zs_pool *zs_create_pool(const char *name)
+>  		return NULL;
+>  
+>  	init_deferred_free(pool);
+> -	rwlock_init(&pool->migrate_lock);
+> +	rwlock_init(&pool->lock);
+>  	atomic_set(&pool->compaction_in_progress, 0);
+>  
+>  	pool->name = kstrdup(name, GFP_KERNEL);
+> -- 
+> 2.48.1.502.g6dc24dfdaf-goog
 > 
-> Also, gpiolib will store ngpios in the gpio_chip structure, but while
-> using gpio-regmap, this structure is masked behind the opaque
-> gpio_regmap structure. So I believe there is no easy way to retrieve its
-> value.
-> 
-> This part of the code changed a lot, maybe it would be easier if I push
-> a new version of the series and we continue the discussion there?
-
-So, what seems need to be added is some flag to GPIO regmap configuration
-data structure and a code that is called after gpiochip_add_data() in
-gpio_regmap_register() to create a domain. This will solve the above issue
-and helps other drivers to get rid of potential duplication of
-devm_regmap_add_irq_chip_fwnode() calls.
-
-Have you researched this path?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
