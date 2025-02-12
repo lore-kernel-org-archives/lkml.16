@@ -1,186 +1,235 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA951F0E56
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4712046BF
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739352936; cv=none; b=MzEe56AOTuOnDTFyNM+m7OTHt1ZXAvUqCR0jClmxdaG+jEsudr7dy6m+g9xqY7nLeTIUCS2VCzy1t1r+ae4nJy8UIfyuI0CdDTnrsi/tT6eVrFhPiW45BlrX3ymifoDAFPpHCzUaxN7oJLppZSmIJ3VXquoF0QPnsFJ73iTNmIA=
+	t=1739352963; cv=none; b=aXCSS1emB8C4hTvvfxvsZuYqPCFq10SMlti5o0ux25lXhi/0UTdRsSjqn21/2beZO9NkXbZsdB3pwbpegnfIujlUkDxFJRBhraC01pQcrwKWWDlnBUkbDHIhT/HOY7bMFNLupv7V1GLJt66sxEHCn8D4P02DbqpokJn/VnuWchs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739352936; c=relaxed/simple;
-	bh=TywHvju8H//FMXAG5rOoTaJNZv1IFklKjNHqTmhsrSA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ejm7Q1CvWhlH2l0SpYLcKOTcYuJAqXqXtNrmWhmz/n4qJp6KLYquX8shdu0N/FJDqvRtZ4HKKN0wCjvhsPoQX6MaPjfop040VBEuu/jE+gT5xPg50p3TQrZnLsxm3O5r4NVzOwbJQ1nRmzY9KroPyaU4N9eJrLSkQBrCeAiaoYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NoHPEgm7; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	s=arc-20240116; t=1739352963; c=relaxed/simple;
+	bh=pgsH206nPEenEmQhZW+SG0liBtabwfb1Nu2RC806B+k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=azc/jGghLZQ/ZyX8WB/CGrFDG4O0k8GzwP0RgDn0lN4Q3Q2gqsu1a1HSnYd04y3/ZHPmKxKoVbKcFOXst8FPIiMWXeribIk/3DaS3vTJuKq2bqgdOCI3embU+984D2LUCEfIQFQpZgo0NUKW2qtiyT12ux3uUa5xNxEhq6asc5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iSb3Z8PG; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NoHPEgm7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iSb3Z8PG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739352934; x=1770888934;
-  h=date:from:to:cc:subject:message-id;
-  bh=TywHvju8H//FMXAG5rOoTaJNZv1IFklKjNHqTmhsrSA=;
-  b=NoHPEgm7LaK4B52V0pTBjPTFHdJROL9X5lY6QXkkBTCq91HNMc/xVeKc
-   Z1ghtO7T2EaBDdQncx5e0x3vyvKlHMCA6BgREeeOkJqnpI9GBNQt8eM9u
-   7lhCr9LweeQkPgN/labCxcakvEZqQ1ARIvN1u8b2b1MRM2Ee5sz67+joq
-   /tTzxqdw64UNXiihsW4CuChezGpDVflKkX6wBfY5cusAGPYFaqQ0LotEg
-   7nxv5SCoSCOoTo0ICWZTV7LHZbVrDKqXrcom+VEnGxfQpx9WILlGX3rc6
-   unbTGftk4FBQg7BeWACzbhQ4rBmaZBts3YRyVNLYkifUD3dYtgAIn0hhA
+  t=1739352961; x=1770888961;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=pgsH206nPEenEmQhZW+SG0liBtabwfb1Nu2RC806B+k=;
+  b=iSb3Z8PG4GwUIJIY5x8d3Kg7btdJlXJdKCAkQZwzvoVB2Sj/EuVsvgan
+   wp+bSnbyyovvNOsdXNn9+AMpKNjerBchg99gng/oUT2yMTk9ce7vpt1YF
+   ac0Qf9KdZu/OGB9b+Rd1vfaJj1HVtstAZl0SNMEkOfeLol98Ri+hpA7gk
+   CFZtNKdp4ySifClo2HtOukJindzTetGKOGCdVr+5jroTBp63siNdh6Acn
+   8jR3IU3tHMZkSjzdaASxQWfFUfVfX0FKVzf4PUUyDbsVpJUUC+nqIvv9w
+   zrKfD8Lz4Le0do+2U24TNhQwC2UFs5no+99LGZD0meAfV5zAJn+sJJQb6
    w==;
-X-CSE-ConnectionGUID: LHZkZMpoTaK1noHujK8Cew==
-X-CSE-MsgGUID: KcxcLvxLQHmERPWerT9sWw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="62467353"
+X-CSE-ConnectionGUID: QcE5giz5SiCXooHVc31J/Q==
+X-CSE-MsgGUID: 0/4aF3IyQYe0kwu/C+xE5g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="42842046"
 X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="62467353"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 01:35:34 -0800
-X-CSE-ConnectionGUID: qzC1B6reSvmyvrRQi8ud8A==
-X-CSE-MsgGUID: tuKIMIbrTc6VkqCEAKJlPg==
+   d="scan'208";a="42842046"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 01:36:01 -0800
+X-CSE-ConnectionGUID: Oo0fouXhTxeRkDfuWT5sBw==
+X-CSE-MsgGUID: JsFMgzXiQZKCDAg/1zcBcw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="112756475"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 12 Feb 2025 01:35:33 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ti99W-0015Rf-2Q;
-	Wed, 12 Feb 2025 09:35:30 +0000
-Date: Wed, 12 Feb 2025 17:35:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/wfamnae-next20250210] BUILD SUCCESS
- 85e9e79e48ba1042e61ff8bf0f100e35e1b9e3bc
-Message-ID: <202502121748.DuNg35NR-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117951478"
+Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.167])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 01:35:57 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Egor Vorontsov <sdoregor@sdore.me>, linux-kernel@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Egor Vorontsov
+ <sdoregor@sdore.me>
+Subject: Re: [PATCH v2] drm/edid: Implement DisplayID Type IX & X timing
+ blocks parsing
+In-Reply-To: <7cab8349bc8bb6fa08d2a7127a724efea155f154.camel@sdore.me>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <7cab8349bc8bb6fa08d2a7127a724efea155f154.camel@sdore.me>
+Date: Wed, 12 Feb 2025 11:35:54 +0200
+Message-ID: <87zfirzerp.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250210
-branch HEAD: 85e9e79e48ba1042e61ff8bf0f100e35e1b9e3bc  cifs: Avoid multiple -Wflex-array-member-not-at-end warnings
+On Wed, 12 Feb 2025, Egor Vorontsov <sdoregor@sdore.me> wrote:
+> Some newer high refresh rate consumer monitors (including those by Samsun=
+g)
+> make use of DisplayID 2.1 timing blocks in their EDID data, notably for
+> their highest refresh rate modes. Such modes won't be available as of now.
+>
+> Implement partial support for such blocks in order to enable native
+> support of HRR modes of most such monitors for users without having to re=
+ly
+> on EDID patching/override (or need thereof).
+>
+> Closes: https://gitlab.freedesktop.org/drm/misc/kernel/-/issues/55
+> Suggested-by: Maximilian Bo=C3=9Fe <max@bosse.io>
+> Signed-off-by: Egor Vorontsov <sdoregor@sdore.me>
+> ---
+>  drivers/gpu/drm/drm_displayid_internal.h | 13 +++++
+>  drivers/gpu/drm/drm_edid.c               | 63 ++++++++++++++++++++++++
+>  2 files changed, 76 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/drm_displayid_internal.h b/drivers/gpu/drm/d=
+rm_displayid_internal.h
+> index aee1b86a73c1..88220c107822 100644
+> --- a/drivers/gpu/drm/drm_displayid_internal.h
+> +++ b/drivers/gpu/drm/drm_displayid_internal.h
+> @@ -66,6 +66,7 @@ struct drm_edid;
+>  #define DATA_BLOCK_2_STEREO_DISPLAY_INTERFACE	0x27
+>  #define DATA_BLOCK_2_TILED_DISPLAY_TOPOLOGY	0x28
+>  #define DATA_BLOCK_2_CONTAINER_ID		0x29
+> +#define DATA_BLOCK_2_TYPE_10_FORMULA_TIMING	0x2a
+>  #define DATA_BLOCK_2_VENDOR_SPECIFIC		0x7e
+>  #define DATA_BLOCK_2_CTA_DISPLAY_ID		0x81
+>=20=20
+> @@ -129,6 +130,18 @@ struct displayid_detailed_timing_block {
+>  	struct displayid_detailed_timings_1 timings[];
+>  };
+>=20=20
+> +struct displayid_formula_timings_9 {
+> +	u8 flags;
+> +	__be16 hactive;
+> +	__be16 vactive;
+> +	u8 vrefresh;
+> +} __packed;
+> +
+> +struct displayid_formula_timing_block {
+> +	struct displayid_block base;
+> +	struct displayid_formula_timings_9 timings[];
+> +} __packed;
+> +
+>  #define DISPLAYID_VESA_MSO_OVERLAP	GENMASK(3, 0)
+>  #define DISPLAYID_VESA_MSO_MODE		GENMASK(6, 5)
+>=20=20
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index 13bc4c290b17..9c363df5af9a 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -6833,6 +6833,66 @@ static int add_displayid_detailed_1_modes(struct d=
+rm_connector *connector,
+>  	return num_modes;
+>  }
+>=20=20
+> +static struct drm_display_mode *drm_mode_displayid_formula(struct drm_de=
+vice *dev,
+> +							   const struct displayid_formula_timings_9 *timings,
+> +							   bool type_10)
+> +{
+> +	struct drm_display_mode *mode;
+> +	u16 hactive =3D be16_to_cpu(timings->hactive) + 1;
+> +	u16 vactive =3D be16_to_cpu(timings->vactive) + 1;
+> +	u8 timing_formula =3D timings->flags & 0x7;
+> +
+> +	/* TODO: support RB-v2 & RB-v3 */
+> +	if (timing_formula > 1)
+> +		return NULL;
+> +
+> +	/* TODO: support video-optimized refresh rate */
+> +	if (timings->flags & (1 << 4))
+> +		return NULL;
 
-elapsed time: 1457m
+Mmh. I'm not sure I'd go this far. The bit indicates *two* timings, one
+for which the below *is* correct, and another additional one with
+vrefresh * (1000/1001).
 
-configs tested: 109
-configs skipped: 2
+We could just add a drm_dbg_kms(dev, "<message>") here about missing
+fractional refresh rate, and proceed with the one non-fractional rate?
+Or just have the TODO comment with no checks.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+And I'm not asking you to just implement the fractional refresh rate
+here, because we can't simply do it on the vrefresh due to losing
+precision. Needs to be done on the clock. But it could be a follow-up,
+using the above bit to do something similar to what
+add_alternate_cea_modes() does.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250211    gcc-13.2.0
-arc                   randconfig-002-20250211    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                         lpc32xx_defconfig    clang-21
-arm                          pxa910_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250211    gcc-14.2.0
-arm                   randconfig-002-20250211    clang-21
-arm                   randconfig-003-20250211    gcc-14.2.0
-arm                   randconfig-004-20250211    gcc-14.2.0
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250211    clang-17
-arm64                 randconfig-002-20250211    clang-19
-arm64                 randconfig-003-20250211    gcc-14.2.0
-arm64                 randconfig-004-20250211    clang-19
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250211    gcc-14.2.0
-csky                  randconfig-002-20250211    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250211    clang-18
-hexagon               randconfig-002-20250211    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250211    gcc-12
-i386        buildonly-randconfig-002-20250211    gcc-12
-i386        buildonly-randconfig-003-20250211    gcc-12
-i386        buildonly-randconfig-004-20250211    gcc-12
-i386        buildonly-randconfig-005-20250211    gcc-12
-i386        buildonly-randconfig-006-20250211    clang-19
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250211    gcc-14.2.0
-loongarch             randconfig-002-20250211    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                         db1xxx_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250211    gcc-14.2.0
-nios2                 randconfig-002-20250211    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250211    gcc-14.2.0
-parisc                randconfig-002-20250211    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                      cm5200_defconfig    clang-21
-powerpc               mpc834x_itxgp_defconfig    clang-18
-powerpc                      pcm030_defconfig    clang-17
-powerpc               randconfig-001-20250211    clang-15
-powerpc               randconfig-002-20250211    clang-21
-powerpc               randconfig-003-20250211    clang-19
-powerpc                        warp_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250211    clang-21
-powerpc64             randconfig-002-20250211    gcc-14.2.0
-powerpc64             randconfig-003-20250211    clang-17
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-21
-riscv                 randconfig-001-20250211    gcc-14.2.0
-riscv                 randconfig-002-20250211    clang-19
-s390                             alldefconfig    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250211    clang-21
-s390                  randconfig-002-20250211    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250211    gcc-14.2.0
-sh                    randconfig-002-20250211    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250211    gcc-14.2.0
-sparc                 randconfig-002-20250211    gcc-14.2.0
-sparc64               randconfig-001-20250211    gcc-14.2.0
-sparc64               randconfig-002-20250211    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250211    clang-17
-um                    randconfig-002-20250211    clang-15
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250211    clang-19
-x86_64      buildonly-randconfig-002-20250211    gcc-12
-x86_64      buildonly-randconfig-003-20250211    clang-19
-x86_64      buildonly-randconfig-004-20250211    gcc-11
-x86_64      buildonly-randconfig-005-20250211    clang-19
-x86_64      buildonly-randconfig-006-20250211    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250211    gcc-14.2.0
-xtensa                randconfig-002-20250211    gcc-14.2.0
+Either way,
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+
+
+Are you up for the follow-ups too? And since you've got the hang of it,
+maybe fix struct displayid_formula_timings_9 hactive/vactive to __be16
+as well?
+
+BR,
+Jani.
+
+> +
+> +	mode =3D drm_cvt_mode(dev, hactive, vactive, timings->vrefresh + 1, tim=
+ing_formula =3D=3D 1, false, false);
+> +	if (!mode)
+> +		return NULL;
+> +
+> +	/* TODO: interpret S3D flags */
+> +
+> +	mode->type =3D DRM_MODE_TYPE_DRIVER;
+> +	drm_mode_set_name(mode);
+> +
+> +	return mode;
+> +}
+> +
+> +static int add_displayid_formula_modes(struct drm_connector *connector,
+> +				       const struct displayid_block *block)
+> +{
+> +	const struct displayid_formula_timing_block *formula_block =3D (struct =
+displayid_formula_timing_block *)block;
+> +	int num_timings;
+> +	struct drm_display_mode *newmode;
+> +	int num_modes =3D 0;
+> +	bool type_10 =3D block->tag =3D=3D DATA_BLOCK_2_TYPE_10_FORMULA_TIMING;
+> +	int timing_size =3D 6 + ((formula_block->base.rev & 0x70) >> 4);
+> +
+> +	/* extended blocks are not supported yet */
+> +	if (timing_size !=3D 6)
+> +		return 0;
+> +
+> +	if (block->num_bytes % timing_size)
+> +		return 0;
+> +
+> +	num_timings =3D block->num_bytes / timing_size;
+> +	for (int i =3D 0; i < num_timings; i++) {
+> +		const struct displayid_formula_timings_9 *timings =3D &formula_block->=
+timings[i];
+> +
+> +		newmode =3D drm_mode_displayid_formula(connector->dev, timings, type_1=
+0);
+> +		if (!newmode)
+> +			continue;
+> +
+> +		drm_mode_probed_add(connector, newmode);
+> +		num_modes++;
+> +	}
+> +	return num_modes;
+> +}
+> +
+>  static int add_displayid_detailed_modes(struct drm_connector *connector,
+>  					const struct drm_edid *drm_edid)
+>  {
+> @@ -6845,6 +6905,9 @@ static int add_displayid_detailed_modes(struct drm_=
+connector *connector,
+>  		if (block->tag =3D=3D DATA_BLOCK_TYPE_1_DETAILED_TIMING ||
+>  		    block->tag =3D=3D DATA_BLOCK_2_TYPE_7_DETAILED_TIMING)
+>  			num_modes +=3D add_displayid_detailed_1_modes(connector, block);
+> +		else if (block->tag =3D=3D DATA_BLOCK_2_TYPE_9_FORMULA_TIMING ||
+> +			 block->tag =3D=3D DATA_BLOCK_2_TYPE_10_FORMULA_TIMING)
+> +			num_modes +=3D add_displayid_formula_modes(connector, block);
+>  	}
+>  	displayid_iter_end(&iter);
+
+--=20
+Jani Nikula, Intel
