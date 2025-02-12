@@ -1,97 +1,91 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF31F20E714;
-	Wed, 12 Feb 2025 14:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF09219ED;
+	Wed, 12 Feb 2025 14:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739369278; cv=none; b=drFPav8JGA7YSSnnpqI+tWZ4xZVpphojW6vjYLgys7DcDvbhybl/PoJUvFoR6lUMp6/MjrcYi0SAbIUxI3SbNgofTMsL813OXTbiTXQE/CzmGeX5Goj45eNilTpAdPj31Pod8w/CstONoDUA2HOXSdiF34aeF0QHIe0MT53qnr8=
+	t=1739369353; cv=none; b=QNSoBcaOHWEiG/Bk/vqcgjATCkZxPUAHl20x3BbDPTh24qmIbixRf9VgaQfAY9EBijDKXkvNoKe4SSMLORUXQOkJGB8bd1SF32aAnPwgE/QnMoj6bhfzv9L12bX+r+r2kIp6bqL0tfg730+jNg64l5siQKl4+Pl+RtKxfb0yloY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739369278; c=relaxed/simple;
-	bh=KW6EoMcTxAn8bpbomq95y0xiTqFHJk2QJNNPeo6PjAg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=njl9hT29lj5qOh9wVSRF/EJGa1paaQZtjXXowywcl+UBf6K8RTjPERdT4zCj++IsjgBRpx9O1rcieTlXN3nLDSkpAHEu/Cngr3VPBqJ7VrCX6rOvlfSW3ZYhWDLu/PtVTP2+Ape5rMtzm5KFACmyXjbB3gVqt03KJZeavXCO0MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=hjO6sgQv; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1739369353; c=relaxed/simple;
+	bh=Elf/FaTDK9fVRFnIY3VNHEhn1eL3NZf69mLnjaztmRU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=h8ReXykzIjxaUhyNGwcD3jj+w3ittrVt47yipBvF9QkM/YlLep4fMFMXeJYHYK5H2Cu40YYAQ2E29edBRHqXwuXWRZsRNR8kVQ9ePIQ4HXqgJrSVQK11hRfIa81s0TS/+8eov4BmVTOQ9AUF51YeeixZN571q5Zv6Kk/iPXNb1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=UliI5jNo; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="hjO6sgQv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1739369246; x=1739974046; i=markus.elfring@web.de;
-	bh=KW6EoMcTxAn8bpbomq95y0xiTqFHJk2QJNNPeo6PjAg=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=hjO6sgQvHT1s1mwxQ5wRc9loVCtkqy46bKfiNbAZ/X26rZwY51HqZ6mGFqqGpojt
-	 nXVfnvslqemdkoE07RjwKVaj0Jnjb/zjh5Zg8R54q13N23MPcLspIC8br8kA5nBji
-	 5va4Eu008iZZee+FZ4z0KDa7fG2EvavXJn6hPqvOrDGKsHKwViDJT11wrNHESp8Eg
-	 4Ko3AA/tx7k9/xHUbFnezfwedoz9Pmpu9UfLzb371NMezxD/JhwDW5K7MSzSdC0Ae
-	 D/YFKCxWe6UW0AIP3e/ZTqGEKKIJnq43GuMnfiENJnbvbLR58ociewBRaY9yMNSGU
-	 Alxds+7cAb4Z/617yA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.11]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MidHP-1tD1VR2yqV-00ZeSO; Wed, 12
- Feb 2025 15:07:26 +0100
-Message-ID: <a5e45ae1-2c87-46c6-8a30-3186e304aea3@web.de>
-Date: Wed, 12 Feb 2025 15:07:23 +0100
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="UliI5jNo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=Elf/FaTDK9fVRFnIY3VNHEhn1eL3NZf69mLnjaztmRU=;
+	t=1739369351; x=1740578951; b=UliI5jNoVYFHhCXfjiO9AmxmC9CrjGR9PRKwx5E07lBs2Ge
+	Ve0YrTSGxl6USPkgKpVNltFr2s6VFh2Vao/Z6xHfusKKS1+8Tosq7z+qD3emuhXWQPslEbBVYNyjf
+	9lEhsHkUpbtsE/7r9nXNJrq0aXRJ5AXRDfxESyPeUH0bwliuRjUeX+NGq/cfOEHZPOZeA0U0+JSYQ
+	ACVGcOOwO4Rk8hUXBSnmtx9GxIDTS3iEO1cA5pXSKmMBEOclYT5Wl7r7VCRzdiSmV9ZbYl+7N8R3b
+	v5MYHlfDV0jlxioaJZP6wru4o90w8bdhs91QJZCrwmrciQtmKhkhwBYThNPd431A==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1tiDQ5-0000000CFTu-2Jhk;
+	Wed, 12 Feb 2025 15:08:54 +0100
+Message-ID: <c597fdcd4356636fc3163a46da32fc5d6c17aed9.camel@sipsolutions.net>
+Subject: Re: [RFC PATCH v5 0/7] mseal system mappings
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Pedro Falcato
+	 <pedro.falcato@gmail.com>
+Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, torvalds@linux-foundation.org, vbabka@suse.cz, 
+	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, 
+	avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
+	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
+	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, hca@linux.ibm.com, 
+	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
+ rdunlap@infradead.org, 	davem@davemloft.net, peterx@redhat.com,
+ f.fainelli@gmail.com, gerg@kernel.org, 	dave.hansen@linux.intel.com,
+ mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 	42.hyeyoo@gmail.com,
+ peterz@infradead.org, ardb@google.com, enh@google.com, 
+	rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, 
+	aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com
+Date: Wed, 12 Feb 2025 15:08:51 +0100
+In-Reply-To: <7545d5eb-a16e-4cc8-a9e3-5431be01aade@lucifer.local>
+References: <20250212032155.1276806-1-jeffxu@google.com>
+	 <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
+	 <CAKbZUD0TAX8F9kDCEEvGSbcegDD4GLyra3ewtxncBbs45WJZ3g@mail.gmail.com>
+	 <7545d5eb-a16e-4cc8-a9e3-5431be01aade@lucifer.local>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: vulab@iscas.ac.cn, netdev@vger.kernel.org
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Boris Pismenny <borisp@nvidia.com>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-References: <20250212025351.380-1-vulab@iscas.ac.cn>
-Subject: Re: [PATCH] tls: Check return value of get_cipher_desc in fill_sg_out
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250212025351.380-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:OyRS4JtDglS3wh7qHezxVJJ8DeVA4HoAipLGoKUHTjBsfCNJ38A
- FLJpAwgYgb2v8mWJUOdNdFg/pCOtNKcCa/kY4iwHVKihiDY7/C/K+r8g5egLF9PD+M55Cby
- +N/VOd9sWjxDWvAorvdfjlblGGAhYNJFFwrwoNMCv0QQNPdOBt0CD9BM+GnJ1kF7ca+KxUw
- mAtuiJ5A+jXowkVFf7wLg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Rp2tZqP2nWg=;juVcFpIADULyBfYC+BrOBDJknvW
- fpqwVziY02Bzrj9bvxoL0rpXy0rnXFT+S3AK82PHyUvhYpYPbShxIKYtSrVYrrNbBBQ/mOufw
- YdB3yIlwsIV1MAMA45iSFX3Clm7zlxur8mdWrjsq2pnScLsNiv/ZZjtfOnzw7S2Rvyp4g3g/s
- V4MWP/J0XHYWWbxpnI1DlE4xqUlL53t+dpGxdMW1rSzGZ/qibucWrLTQGKU3G/a9PEX4ImzDT
- pJ8TFzYHWHVM1okX05K48iUGymBz8Tb1aCrzfbSrvoQL/anRLH17b2wy5AyJXnjawDPmvgdpx
- 95IxYPb7MjMdVNRQIi78ZA2A9VABk7FAafHbxnMM+HR5A75/uvIdUf+YOS09WHJMGkVRmM+wX
- N5PTURcgCDsZ1lAgczhdEolun+4SWx9Dnu717dcH+ruBrUK5cY8EroPkosSLq8Pd9FHoHti4b
- 1ismg+R2ytzPC6Z9ke2PpxYkHTTZryY4Rm594+qGIcgik/3g0SMEfUBaiQWYBGDsKfnz9BVKK
- vT5YYvwkQ4kZ6uOtPC4Ky1ZTHvwCIOg1OCrSvw5I1TdjlcHoiT4rW007eOkty7xUTGj/S0TAt
- 2KPHbJVpclAtpigQHJ2zTFzvFP6HqUqLpMpBFz+pix63xYTr65l5HxsYa6fhJoNjDM3fP6ogF
- 8RuS/rWMbUiSOPTxgjdI6h5GsIo9xrUeLiXEKdjDG4q6QrNHCbFTPW6osYVPbiyVrft4A8w6V
- QYZlqi3LM+52sMnBhL0s6UNfNeqm8lPVEudhOtDEFnuR4CjTHRstS7On41NQdLZLlhokZeBxv
- 5ear/sQyMe105MlOCWuS8T+CoUTEPAcIIdrd9T+O5lv0IEfFMujmLQXnx0CgKq8pYD7RV7GaY
- m5DRN4R4NcBaADUm3yE3+37/gD4hMQDILA1d1M8H1pMA+cZ8TG0TH2x7IlHmfGUoKdawXEzGA
- 2AOh0oLoQsfzK6c5wOvC6RsDozh8eTN3kprSifUB2qn/nAnqKXPJc2GXgkjDk+7OunQxyftEE
- RU/BHAaDzd7RflCyOlpxl47NEo7hLLDSjTj7HLy1Rv8AMa/vKcqzuwhEPJSmS+npFHzwHM4y5
- /0CM8AYX7J+KPy/40f2lpR3XHwcscgB+g62ar9lyI7Ce/Lcrweopk6mvA//HLHp93sQhdg5A1
- /4StARMEnUU8p9Kxh2oL6oOT8CZFpBmUC5LrfSskyRHHNrzC8Lr8zkcMHcXVfuPgm1FHDlqm4
- G0er7/SqPbcY0qsbb5nh6JaPeypUFh5l8nmpxLq1TX2TUOmTotc3ol3Bd/TQcuiz4yJIIwq9w
- +/ynyeTjTTRkIeU/UrOLifTanfvQ7njX262kYfbPtrpi6ZCxwmr8PSWTsa7+hSshP2O+y2G/2
- VsFjSv1WCWrhySbZ6zfX9fxbvjgqeIP6H1anmxsNuraIF4SK5HJe5wSxOw3xU6BsTRJ5IgLj1
- JmspxBP1UrOL66pd///eiziO4v9c=
+X-malware-bazaar: not-scanned
 
-=E2=80=A6
-> This patch adds a DEBUG_NET_WARN_ON_ONCE check =E2=80=A6
+On Wed, 2025-02-12 at 14:01 +0000, Lorenzo Stoakes wrote:
+> Thanks, yeah that's a good point, it would have to be implemented as a
+> personality or something similar otherwise you're essentially relying on
+> 'unsealing' which can't be permitted.
+>=20
+> I'm not sure how useful that'd be for the likes of rr though. But I suppo=
+se
+> if it makes everything exec'd by a child inherit it then maybe that works
+> for a debugging session etc.?
 
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.14-rc2#n94
+For whatever that's worth, ARCH=3Dum should not need 'unsealing' or 'not
+sealing' it for *itself*, but rather only for the *children* it starts,
+which are for the userspace processes inside of it. Which I suppose
+could actually start without a VDSO in the first place, but I don't
+think that's possible now?
 
+Which I'll note should not have access to the host, so in a way this
+outer security feature (sealing) breaks the inner ARCH=3Dum security, I
+think.
 
-Would you like to append parentheses to any function names?
-
-Regards,
-Markus
+johannes
