@@ -1,123 +1,115 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E2B26AEC
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 08:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CCF26AEC;
+	Wed, 12 Feb 2025 08:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739347324; cv=none; b=mnSw/SZ3G2158+TneRdR3oV1hLISRBwmufmrCNJ/g9o0v8/Uyta90+PsdRsdryOZxeWDl9UeDQft0wAkb7JOhc2+HdsGi3iOQOHarSW7CYwgvTbo5MdNZa5UWRLtBW4EvmYyUCh1t5dY+w5W8WWhFkbMMi5JXfFmRmhgTUE7Fd0=
+	t=1739347407; cv=none; b=G+RQIwQiNM0MZjNHUP3H5LtiuylsGaK8WIniqu5OI9SayXKZF30IiAoJkzksOEaki93v06OEGmnySCyyhOyD8MCPTqXisAmrlh3Iczb+tD/CIms5Kbve+L9O2w8R70ii9ME1r8+anYRNBgW78/bHheY1YkqCKvaZQD1gXev9QrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739347324; c=relaxed/simple;
-	bh=b2f4OM9I4ris2Wv7KW90Di1OF2YNsagTPM7AXVVuLk8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iS3QRp/Txk6jFk9Teu9Fv7KT3h8vBvhanIbc6r1vI2lw5lOv33ALvqHcQZTHnQ00N6cDQC/cOUXHAYWkESp69R9Go7JqKcmfc/354sBHknVNlgAYp5WL1yoKABYZltsSCPyCAYFQ34WWk+FYo4rBtKN5Jmnz6eyS64/XvvXA9ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=i6sE+YWh; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739347407; c=relaxed/simple;
+	bh=pO031soeAN2xTZUcwq6yyzqPBbAKgf77wG9z2Co6OAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uE8PIVzURGR6/2ZQfiupkOwLwtNwE85DOomzDvVlZddyqKI0IxOBVHtG1PdgVsriJgPKBDvQiGEQFiG3j72N8V2jvWXAf9///Hsf6jeLQPfmYr9FnrsF8iQPsc3YBplJrf49P7ICcOaq1SiLFq60Lb3KhcG6TilzjqGkhr5COWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XbYso5MR; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="i6sE+YWh"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 74671220;
-	Wed, 12 Feb 2025 09:00:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739347236;
-	bh=b2f4OM9I4ris2Wv7KW90Di1OF2YNsagTPM7AXVVuLk8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=i6sE+YWhQoCgxlfc2BRNRhLzL+Sfjm6u6d4WGz9zYdSACr6Uh1NmU1rSd4g3xDOyz
-	 8ukbXdBPgaKcO0PtzYP1vmtvpRtrVtIwtm2KCvYXZqZt/CN9YDCyda6T8VhC11R/oy
-	 IQ7VaGD1gaZRHWcJ/xPwJJFhDK5NX1DxyCzppyDQ=
-Message-ID: <71ebf42d-9842-46bc-a4f9-c06e84a02369@ideasonboard.com>
-Date: Wed, 12 Feb 2025 10:01:50 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XbYso5MR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739347405; x=1770883405;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pO031soeAN2xTZUcwq6yyzqPBbAKgf77wG9z2Co6OAQ=;
+  b=XbYso5MRmNLCb1dQeLGQ9DmwQ72bgjp4OGpl6q5yNkpb9BX4WPj9V1a2
+   HZF4esuZKWbdfG8TURw4H44bpqFmET2UQit+U0FCP0DR5akf4SNAiIACj
+   q9amjsG8BY6bax/gT5jlajmuACrfmrgUYnhH5+a59q6yuHt4HW8Cgr5v3
+   ZV8EmjKDaIBcC/KoD4+I2RaE2WGODi20xAurZ4AHhns0mYvILQ0T4Gzf7
+   F+3OfmJcy7ub9acjntmGoV9B/KrlieoYpPfpzekQ+Giti6Wqknf4fdA/4
+   DHlKHUQXmL/pLsHaa0YXoGcsmQvDO3YMUdkTOz4+YRi7eB4yLfAEcz08B
+   w==;
+X-CSE-ConnectionGUID: PTtOYggZTTaQOILKZKVrXg==
+X-CSE-MsgGUID: xUZsNhcKQhKrnLE3dK7GyA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="51384806"
+X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
+   d="scan'208";a="51384806"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 00:03:24 -0800
+X-CSE-ConnectionGUID: FFGiGoEsRq+bQBfIANicbw==
+X-CSE-MsgGUID: RXhg/U3zReqi686kTX0hrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117929688"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 12 Feb 2025 00:03:22 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ti7iJ-0015L9-1O;
+	Wed, 12 Feb 2025 08:03:19 +0000
+Date: Wed, 12 Feb 2025 16:03:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Bamvor Jian Zhang <bamv2005@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Keerthy <j-keerthy@ti.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 01/14] gpiolib: make value setters have return values
+Message-ID: <202502121512.CmoMg9Q7-lkp@intel.com>
+References: <20250211-gpio-set-retval-v1-1-52d3d613d7d3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] drm: zynqmp_dp: Use scope-based mutex helpers
-To: Sean Anderson <sean.anderson@linux.dev>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- "open list:DRM DRIVERS FOR XILINX" <dri-devel@lists.freedesktop.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Michal Simek <michal.simek@amd.com>, Maxime Ripard <mripard@kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Bart Van Assche
- <bvanassche@acm.org>, Dan Carpenter <dan.carpenter@linaro.org>,
- "moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
-References: <20250207162528.1651426-1-sean.anderson@linux.dev>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250207162528.1651426-1-sean.anderson@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211-gpio-set-retval-v1-1-52d3d613d7d3@linaro.org>
 
-Hi,
+Hi Bartosz,
 
-On 07/02/2025 18:25, Sean Anderson wrote:
-> Fix a mutex bug and convert most of the explicit mutex_(un)locks to
-> guards.
-> 
-> Changes in v2:
-> - Convert some conditional return statements to returns of ternary
->    expressions.
-> - Remove unnecessary whitespace change
-> 
-> Bart Van Assche (1):
->    drm: zynqmp_dp: Fix a deadlock in zynqmp_dp_ignore_hpd_set()
-> 
-> Sean Anderson (1):
->    drm: zynqmp_dp: Use scope-based mutex helpers
-> 
->   drivers/gpu/drm/xlnx/zynqmp_dp.c | 147 +++++++++++--------------------
->   1 file changed, 50 insertions(+), 97 deletions(-)
-> 
+kernel test robot noticed the following build warnings:
 
-Thanks, looks good to me and works for me. I'll push to drm-misc-next.
+[auto build test WARNING on df5d6180169ae06a2eac57e33b077ad6f6252440]
 
-  Tomi
+url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpiolib-make-value-setters-have-return-values/20250211-201426
+base:   df5d6180169ae06a2eac57e33b077ad6f6252440
+patch link:    https://lore.kernel.org/r/20250211-gpio-set-retval-v1-1-52d3d613d7d3%40linaro.org
+patch subject: [PATCH 01/14] gpiolib: make value setters have return values
+config: i386-buildonly-randconfig-002-20250212 (https://download.01.org/0day-ci/archive/20250212/202502121512.CmoMg9Q7-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250212/202502121512.CmoMg9Q7-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502121512.CmoMg9Q7-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/leds/leds-aw200xx.c: In function 'aw200xx_disable':
+>> drivers/leds/leds-aw200xx.c:382:16: warning: 'return' with a value, in function returning void [-Wreturn-type]
+     382 |         return gpiod_set_value_cansleep(chip->hwen, 0);
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/leds/leds-aw200xx.c:380:13: note: declared here
+     380 | static void aw200xx_disable(const struct aw200xx *const chip)
+         |             ^~~~~~~~~~~~~~~
+
+
+vim +/return +382 drivers/leds/leds-aw200xx.c
+
+d882762f7950c3 Dmitry Rokosov 2023-11-25  379  
+d882762f7950c3 Dmitry Rokosov 2023-11-25  380  static void aw200xx_disable(const struct aw200xx *const chip)
+d882762f7950c3 Dmitry Rokosov 2023-11-25  381  {
+d882762f7950c3 Dmitry Rokosov 2023-11-25 @382  	return gpiod_set_value_cansleep(chip->hwen, 0);
+d882762f7950c3 Dmitry Rokosov 2023-11-25  383  }
+d882762f7950c3 Dmitry Rokosov 2023-11-25  384  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
