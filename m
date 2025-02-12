@@ -1,134 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E5F8F77;
-	Wed, 12 Feb 2025 02:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BB718D65E;
+	Wed, 12 Feb 2025 02:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739326928; cv=none; b=NGt9smh8t/jpjqLYXkJgPJimwsf9rzylznWsVQ9FP5wHQti3+M5TNfA8POAvPxRbPf/PFZBdvWsFiaKNOMXwiNkzxw4ByaT2vVIlZnaQ1TOAiETx0dPO6j69O+i2d1fPgyC7WwLDv1MOhDuOb/Ly54sAAcMxza7R96/09EVmo0E=
+	t=1739327095; cv=none; b=AcehvUSZei8Djrq32Nv0CLZ70XEiy9WkqLgMtdlyoPgAF9KjvLe1sIQwd47+FuJCW1WYl5/nTi0INvHx5IUsINJnl4inqouav1f70SyBerrgCxN26AYEnI8Rkd+iRcgymFZi36d5CtlOiWSIabi4ln2ebfIRa/9bZO6E7GyK2dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739326928; c=relaxed/simple;
-	bh=PNtMqBcAsc1rDrfqAyOraDXzsZcTf5BbU8fLA+q2i7I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iT2D/uOGs0zXAs4ni56n/kpggfCYZxNdGoqsxMy0DjsH18tzFTIbrucUwTOUK4O94QVNiAxIKo18/T1WVOagk6ChHKcjAcpc5UlxUoZwPhZt7ffOodGZJG1ZWPPVKn7Dd9YdCXEOM+lduBwKghTSGNfsfE5TWO7gMBs+802Be1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bpQu2C9+; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739327095; c=relaxed/simple;
+	bh=E3/R8jTQ7LvAndJhpbaTvwy+/a8I2I7YwVNB1IRmwFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pNTth4q9WRyf4pfK0JPRGLDVsIHfRuV3pvhQEOXP8LZT3XTv25kcyRrjIS4yw4E9BAJMm4TLROh5RkTCA51gf+m0Bsl/7TC4tiAOpDgWaYpZyk8l8MjGoXDMkcLuajhYRG2Yxtz60drH3+GqNoe0msPZWUm+VMEhJAvRefyOnuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnqUsNzw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bpQu2C9+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739326927; x=1770862927;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PNtMqBcAsc1rDrfqAyOraDXzsZcTf5BbU8fLA+q2i7I=;
-  b=bpQu2C9+DCjm9gCG8VGUkL3LzJASwPjF77xCDlhAnrcl8dLYcptYVmg6
-   c2W9N0wwMYapS5R3WbqV426fFFSx2V46BcNf0Vf7gSDXk8VFULXuMH26z
-   sFD18y3jlV5IhwyOAzQzqOap+hhUAc3bx/tsx0XbLeiqcybONBron4ZVK
-   EQkCUMKCJpiZhI/lYygnc+kkCpIPq+D1nVcasonoSWhAwNnn/Xo+l/W9/
-   nAIOTt6I7NiugHE7kJVBJXl/PbEqQtRm9zlrUOnm+qRKGkGxkhsehXFxs
-   Ar8sj969KpUvBAl3hZivPjsHRDvcw+VbHinyS38O0XpdIcTP5Zu13bax7
-   g==;
-X-CSE-ConnectionGUID: Pb7ZV8plQD2Kyj0P5mi6Zw==
-X-CSE-MsgGUID: JsRFjdw+RMuheJ5nKzzkUw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51398364"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="51398364"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 18:22:06 -0800
-X-CSE-ConnectionGUID: 8DVA/s8dSbKfdbiRiKO8ZQ==
-X-CSE-MsgGUID: QtzzeT3pQBeAccp+Z1BFtw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="149866516"
-Received: from unknown (HELO [10.238.0.51]) ([10.238.0.51])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 18:21:16 -0800
-Message-ID: <a771f116-d70e-4f52-ada3-8422e1f45acf@linux.intel.com>
-Date: Wed, 12 Feb 2025 10:21:14 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnqUsNzw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 720C8C4CEDD;
+	Wed, 12 Feb 2025 02:24:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739327094;
+	bh=E3/R8jTQ7LvAndJhpbaTvwy+/a8I2I7YwVNB1IRmwFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fnqUsNzwpYGqb5/3l7RV98d3P4cTsue3AsFvpqDIKyF4GM25+UQMS/MgoQQracU6Z
+	 ZsFCG1YcjIwKGda9GO/HyTmgNeT/Nn/3Uc5Yb9fSfIVx9ef++5ZhTTkacC5JJJa84D
+	 WxC9+ordzwn+h6nPqbXE2liM28llk+QjYb6wUQ7eDkxqBMkAKQkJ6yznmoIUt3Q6Dd
+	 J/Jtxkwo607RGl49A4w8MHWXV4xxeooTbdvw9p8H7E/u6Yq6bndETd+fIPimf0Ta93
+	 pbj/fcXoBVyA5xUnc6r3DmML8ChW6x3vfh62tal7fFU6Og2uRLwZWs+Wgvv2+cxhYC
+	 gYN4lXjaXQSyg==
+Date: Wed, 12 Feb 2025 02:24:53 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>,
+	g@liuwe-devbox-debian-v2
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Hyper-V/Azure@liuwe-devbox-debian-v2, CORE@liuwe-devbox-debian-v2,
+	AND@liuwe-devbox-debian-v2, DRIVERS@liuwe-devbox-debian-v2,
+	status: Supported@liuwe-devbox-debian-v2,
+	PCI@liuwe-devbox-debian-v2, NATIVE@liuwe-devbox-debian-v2,
+	HOST@liuwe-devbox-debian-v2, BRIDGE@liuwe-devbox-debian-v2,
+	ENDPOINT@liuwe-devbox-debian-v2, SUBSYSTEM@liuwe-devbox-debian-v2;
+Subject: Re: [PATCH v2] PCI: hv: Correct a comment
+Message-ID: <Z6wGdTXExwcTh051@liuwe-devbox-debian-v2>
+References: <20250207190716.89995-1-eahariha@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/8] KVM: TDX: Add a place holder for handler of TDX
- hypercalls (TDG.VP.VMCALL)
-To: Sean Christopherson <seanjc@google.com>, Chao Gao <chao.gao@intel.com>
-Cc: pbonzini@redhat.com, kvm@vger.kernel.org, rick.p.edgecombe@intel.com,
- kai.huang@intel.com, adrian.hunter@intel.com, reinette.chatre@intel.com,
- xiaoyao.li@intel.com, tony.lindgren@intel.com, isaku.yamahata@intel.com,
- yan.y.zhao@intel.com, linux-kernel@vger.kernel.org
-References: <20250211025442.3071607-1-binbin.wu@linux.intel.com>
- <20250211025442.3071607-4-binbin.wu@linux.intel.com>
- <Z6sNVHulm4Lovz2T@intel.com> <Z6vhTGHKIC_hK5z4@google.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <Z6vhTGHKIC_hK5z4@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207190716.89995-1-eahariha@linux.microsoft.com>
 
+On Fri, Feb 07, 2025 at 07:07:15PM +0000, Easwar Hariharan wrote:
+> The VF driver controls an endpoint attached to the pci-hyperv
+> controller. An invalidation sent by the PF driver in the host would be
+> delivered *to* the endpoint driver by the controller driver.
+> 
+> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 
-
-On 2/12/2025 7:46 AM, Sean Christopherson wrote:
-> On Tue, Feb 11, 2025, Chao Gao wrote:
->>> @@ -810,6 +829,7 @@ static bool tdx_guest_state_is_invalid(struct kvm_vcpu *vcpu)
->>> static __always_inline u32 tdx_to_vmx_exit_reason(struct kvm_vcpu *vcpu)
->>> {
->>> 	struct vcpu_tdx *tdx = to_tdx(vcpu);
->>> +	u32 exit_reason;
->>>
->>> 	switch (tdx->vp_enter_ret & TDX_SEAMCALL_STATUS_MASK) {
->>> 	case TDX_SUCCESS:
->>> @@ -822,7 +842,21 @@ static __always_inline u32 tdx_to_vmx_exit_reason(struct kvm_vcpu *vcpu)
->>> 		return -1u;
->>> 	}
->>>
->>> -	return tdx->vp_enter_ret;
->>> +	exit_reason = tdx->vp_enter_ret;
->>> +
->>> +	switch (exit_reason) {
->>> +	case EXIT_REASON_TDCALL:
->>> +		if (tdvmcall_exit_type(vcpu))
->>> +			return EXIT_REASON_VMCALL;
->>> +
->>> +		if (tdvmcall_leaf(vcpu) < 0x10000)
->> Can you add a comment for the hard-coded 0x10000?
-> Or better yet, a #define of some kind (with a comment ;-) ).
-
-As Chao pointed out, we should convert the leaves defined in the GHCI spec
-and supported in KVM only.  Specific leaf numbers will be used instead of
-comparing to 0x10000.
-
-I plan to change it to:
-
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 2b24f50ad0ee..af8276402212 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -920,11 +920,17 @@ static __always_inline u32 tdx_to_vmx_exit_reason(struct kvm_vcpu *vcpu)
-                 if (tdvmcall_exit_type(vcpu))
-                         return EXIT_REASON_VMCALL;
-
--               if (tdvmcall_leaf(vcpu) < 0x10000) {
--                       if (tdvmcall_leaf(vcpu) == EXIT_REASON_EPT_VIOLATION)
-+               switch(tdvmcall_leaf(vcpu)) {
-+                       case EXIT_REASON_EPT_VIOLATION:
-                                 return EXIT_REASON_EPT_MISCONFIG;
--
--                       return tdvmcall_leaf(vcpu);
-+                       case EXIT_REASON_CPUID:
-+                       case EXIT_REASON_HLT:
-+                       case EXIT_REASON_IO_INSTRUCTION:
-+                       case EXIT_REASON_MSR_READ:
-+                       case EXIT_REASON_MSR_WRITE:
-+                               return tdvmcall_leaf(vcpu);
-+                       default:
-+                               break;
-                 }
-                 break;
-         case EXIT_REASON_EPT_MISCONFIG:
-
-
-
-
+Applied. Thanks.
