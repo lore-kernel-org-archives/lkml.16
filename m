@@ -1,242 +1,132 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD63261391
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 15:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB96326137A;
+	Wed, 12 Feb 2025 15:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739375283; cv=none; b=OGk3AMxriUtElo1bYqxDbtAWhPv1YnNQdvCUGqXHHYzeUzKdAOsAgr8jqjgWVAnfIyYZ38TAqQWba7Zrji4aUUp0qlAedenflSTgETC/nJO/qfJ2DKZ6K+V4ZhVw3Zyyng5Mgx7nq5mDD3hDpZZ3BcUF5Co9jIUokpgo/n3G7Mc=
+	t=1739375283; cv=none; b=UWObZH77aAmlyPf1il85dGfPmuPfCAc414kD9fQvEFuY+i5+sXyJYQJXJpRfPWqreQr8ubPGSowxxmoH7ajWnvnQv9EhlmA3JgZcUkQjtAFlN1iA4esfF4emXzPqfIBajvAUV+AxtQHTmyTALyaDvUdyyRYRfpKZEUE6Td6sKbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739375283; c=relaxed/simple;
-	bh=iMwraRPqoGZXPSV/ZIi013g4oSfQKmUsDk4bVEfeeAg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ubu1ZtSlSw9p5qMYTNBMP5Mab23w3QrvadeHitRBF7d7QKO0IxLsYfA8S637rvIfyeEA2kB4jSL8XpmKG7H8CU0GZ11Jh789dwA2/cjS1+yUS7r0p7rYJ7VFxxVqyeA8wR6VtmOZxTeF2IDoOkSrIdrwF4jvwck2zq3MuZ9rfBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5deb956aa5eso651264a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 07:48:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739375279; x=1739980079;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+uYrRumV9nMSUYKKSpYn+3g5k4eAh93TeT+WqPiVakU=;
-        b=YIrchr+FWM9PioNkCt2MEdZfhCyWqx7dPCOJpMfGyHeGf7h7wkFpb5Se0+1fbgRgc8
-         zixHzWY9TJz5qU7zoaphcHL3nHLhT2eMsQmvl6o9y0mOAp+LRHu0sZ9p8/f5Fj5oHbES
-         hiKEJfTrUlnzRfVCC/q0DgnEc1w+e3/4CKH4dyPZ8yRxElr6+zo1AQCvdQv67h0dC0Ok
-         NdBnNKiBgjwzV2u6oVEo2R/sumnNkAnf6QlaVP5md9Sc0vU2LK8t+8wPjCDdfxYmA3fT
-         qq+KtNPt7TCPDa+kutig9E5nk0CijgjH7IGmvj3yG1MRPm/H1nYQrA7nKquDQldTMa/o
-         BZBw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2zV9FTjLUx6vt0wxR6L2vfP8W+FBlEsremap1zN2PAdET1CqB0WyrvAZfWo0ILyJgnNQHvdaEVinmubw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqxAHAiGuWQ2l/xhpBuVc+iXLqwmY2JFmI6H9m05/iNBoCnOmA
-	eZX/OamOUmcxeOvTVnHIbt4SfxU7IIgMYulX5nukg+k9s8bl0kELWVwKyjhUFXs=
-X-Gm-Gg: ASbGncuEG+/Qm4I+hQe/0YUUIguac4zU0xHzOnGDW9CuldF7fdGvyxgxY5fJ5825h9E
-	9Z6OXjbPB1z2AC+RvjSJ3ERGGRvlhFpjM1AhKJkmSewgGsLQtntaUugv/lRbnja7LIyAT8+09kS
-	qXAG6ujZd1pRze1BhX6wjnOO57g8bSlIy1OflptGZO+0tz/qYoHdvt/fnQdBFTnDK3vVqhRPhY2
-	qubf+h2VBcgCq/g2iz1Tt7aGNkoSTtISTcM8YQ+N/gS62OXXu8HABAAmEpI18kcS2rPuI9bb1gs
-	3T+5pCYn8fUhBkJXd4hm/wWE2NhQNcmaDrd2R+4sCf6zOw==
-X-Google-Smtp-Source: AGHT+IFmce9tH9dLHP7CWUzbmv5vtbnb++XIvWnNQ8LorV9Zr/rB7MFtIoTaUTNXrBFSD71XPDaB8w==
-X-Received: by 2002:a05:6402:a001:b0:5de:b438:1fdb with SMTP id 4fb4d7f45d1cf-5deb43821eamr3515430a12.30.1739375278693;
-        Wed, 12 Feb 2025 07:47:58 -0800 (PST)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7891ec1d1sm1172552566b.178.2025.02.12.07.47.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 07:47:58 -0800 (PST)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38de1a5f039so2783031f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 07:47:58 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX+J4vc4iMo+c5ulQu6stditLCA+uperIxaEccDGUAKsWXlt7YcZz/iVmhH8X8mYkrhh4JKA3OLGhH8GFg=@vger.kernel.org
-X-Received: by 2002:a5d:588c:0:b0:38a:2b39:9205 with SMTP id
- ffacd0b85a97d-38dea2878bfmr3997807f8f.33.1739375277843; Wed, 12 Feb 2025
- 07:47:57 -0800 (PST)
+	bh=7Nuvq0/XaKtH4YYZYU9GOiSo9SqvZGltin6mD5/9gJA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PBGRRb8U9ZhWSxZT2RZUergO/jH4OF9JnOiahA3PtiqfeRm4tFflnYspijAtRmamtYHYIdkHZb8534TfhR/FVUhmLUhtZJ54B5I9/rrLOPP9OmGp0liaU+yLwfWb/GCwXcaqOf8I0vyE/6Zp9KdZWenlZnKePd9kBtEtjGPshYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=M/Zjyda5; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M/Zjyda5"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0C692440FC;
+	Wed, 12 Feb 2025 15:47:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739375279;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p9mJBeQJc9XrbJbz/UPw2MShuHNEjyFKhfrVFDRUvK8=;
+	b=M/Zjyda56Eh4V0dsM4qeR+/eslwZfJQPAYgKb1WzvTTfRW0i8U2TNFAM697MotdutEeiXS
+	3xlhRpa+zc4gqJOl3N+yWbCuPQqt0mNQhCmyS4XZe5folQvFmsDQNBoD6EULajikDVFBsP
+	HrOMnHdt/+LXGxmMKEWfW3Y1weQVEV/PiIXJiIFfSOdJp2BKbLcvpf8tTaxgoHuFPyiRMc
+	wc+39CjNGKTgTNcbM6p5h510bNColfVX6zgHbV9YhjxA6u4Rt0lNl2f2eD+k9vr+yhe2sb
+	bzTvNkDwqqOAYIGi3uAeV5NKiabl/obLsnlyLNiWkpE5+6SRQnCa8G/PiEtNiA==
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Date: Wed, 12 Feb 2025 16:46:30 +0100
+Subject: [PATCH 11/12] ARM: dts: at91-sama5d27_wlsom1: update bluetooth
+ chip description
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250211-rtkit-more-logging-v1-1-93334e9c1c77@rosenzweig.io>
-In-Reply-To: <20250211-rtkit-more-logging-v1-1-93334e9c1c77@rosenzweig.io>
-From: Neal Gompa <neal@gompa.dev>
-Date: Wed, 12 Feb 2025 10:47:21 -0500
-X-Gmail-Original-Message-ID: <CAEg-Je_XadeDiXBeXckZ=UQ2wYHtGppdM3nPmardyYx7SBgCrg@mail.gmail.com>
-X-Gm-Features: AWEUYZloTNjia8wdzYJXwYEgocjhTE4bAY0UXN52FPIm83DaokT5Zoy8sOwb2VQ
-Message-ID: <CAEg-Je_XadeDiXBeXckZ=UQ2wYHtGppdM3nPmardyYx7SBgCrg@mail.gmail.com>
-Subject: Re: [PATCH] soc: apple: rtkit: Check & log more failures
-To: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Cc: Sven Peter <sven@svenpeter.dev>, asahi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Asahi Lina <lina@asahilina.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250212-wilc3000_bt-v1-11-9609b784874e@bootlin.com>
+References: <20250212-wilc3000_bt-v1-0-9609b784874e@bootlin.com>
+In-Reply-To: <20250212-wilc3000_bt-v1-0-9609b784874e@bootlin.com>
+To: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>, 
+ Marcel Holtmann <marcel@holtmann.org>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Ajay Singh <ajay.kathat@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Marek Vasut <marex@denx.de>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeggedvkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtkeertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevgefhteffuefhheekkeelffffvdeugffgveejffdtvdffudehtedtieevteetnecukfhppedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmehfkeehnecuvehluhhsthgvrhfuihiivgepkeenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemfhekhedphhgvlhhopegludelvddrudeikedruddrudeljegnpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvgedprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdpr
+ hgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhuihiirdguvghnthiisehgmhgrihhlrdgtohhm
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-On Tue, Feb 11, 2025 at 1:00=E2=80=AFPM Alyssa Rosenzweig <alyssa@rosenzwei=
-g.io> wrote:
->
-> From: Asahi Lina <lina@asahilina.net>
->
-> Check and log the following failures:
->
-> * regular messages
-> * management messages
-> * failed buffer requests
->
-> This helps debugging.
->
-> Signed-off-by: Asahi Lina <lina@asahilina.net>
-> Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> ---
-> Originally multiple commits by Asahi Lina, squashed here and
-> checkpatch.pl warn fixed.
-> ---
->  drivers/soc/apple/rtkit.c | 44 ++++++++++++++++++++++++++++++++++-------=
+The SAMA5D27 WLSOM1 plaftorm embeds a wilc3000 chip exposing 802.11b/g/n
+and bluetooth 5. The current description for this chip does not expose
+the bluetooth part: it only configures the relevant flexcom peripheral
+to set it as uart, and relies on user to trigger the corresponding hci
+device creation in kernel through hci_attach. Now that a bluetooth
+driver is available and handles the device creation, replace the bare
+uart description with a proper bluetooth node.
+
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
 ---
->  1 file changed, 34 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/soc/apple/rtkit.c b/drivers/soc/apple/rtkit.c
-> index e6d940292c9fbdfc4cd42020e89aca2662c5cdce..f8077a1ec3a42265eb9565a0e=
-a1ca6a4cf7e79dc 100644
-> --- a/drivers/soc/apple/rtkit.c
-> +++ b/drivers/soc/apple/rtkit.c
-> @@ -97,12 +97,19 @@ bool apple_rtkit_is_crashed(struct apple_rtkit *rtk)
->  }
->  EXPORT_SYMBOL_GPL(apple_rtkit_is_crashed);
->
-> -static void apple_rtkit_management_send(struct apple_rtkit *rtk, u8 type=
-,
-> +static int apple_rtkit_management_send(struct apple_rtkit *rtk, u8 type,
->                                         u64 msg)
->  {
-> +       int ret;
-> +
->         msg &=3D ~APPLE_RTKIT_MGMT_TYPE;
->         msg |=3D FIELD_PREP(APPLE_RTKIT_MGMT_TYPE, type);
-> -       apple_rtkit_send_message(rtk, APPLE_RTKIT_EP_MGMT, msg, NULL, fal=
-se);
-> +       ret =3D apple_rtkit_send_message(rtk, APPLE_RTKIT_EP_MGMT, msg, N=
-ULL, false);
-> +
-> +       if (ret)
-> +               dev_err(rtk->dev, "RTKit: Failed to send management messa=
-ge: %d\n", ret);
-> +
-> +       return ret;
->  }
->
->  static void apple_rtkit_management_rx_hello(struct apple_rtkit *rtk, u64=
- msg)
-> @@ -295,6 +302,9 @@ static int apple_rtkit_common_rx_get_buffer(struct ap=
-ple_rtkit *rtk,
->         return 0;
->
->  error:
-> +       dev_err(rtk->dev, "RTKit: failed buffer request for 0x%zx bytes (=
-%d)\n",
-> +               buffer->size, err);
-> +
->         buffer->buffer =3D NULL;
->         buffer->iomem =3D NULL;
->         buffer->iova =3D 0;
-> @@ -588,11 +598,18 @@ int apple_rtkit_send_message(struct apple_rtkit *rt=
-k, u8 ep, u64 message,
->                 .msg1 =3D ep,
->         };
->
-> -       if (rtk->crashed)
-> +       if (rtk->crashed) {
-> +               dev_warn(rtk->dev,
-> +                        "RTKit: Device is crashed, cannot send message\n=
-");
->                 return -EINVAL;
-> +       }
-> +
->         if (ep >=3D APPLE_RTKIT_APP_ENDPOINT_START &&
-> -           !apple_rtkit_is_running(rtk))
-> +           !apple_rtkit_is_running(rtk)) {
-> +               dev_warn(rtk->dev,
-> +                        "RTKit: Endpoint 0x%02x is not running, cannot s=
-end message\n", ep);
->                 return -EINVAL;
-> +       }
->
->         /*
->          * The message will be sent with a MMIO write. We need the barrie=
-r
-> @@ -742,8 +759,10 @@ static int apple_rtkit_set_ap_power_state(struct app=
-le_rtkit *rtk,
->         reinit_completion(&rtk->ap_pwr_ack_completion);
->
->         msg =3D FIELD_PREP(APPLE_RTKIT_MGMT_PWR_STATE, state);
-> -       apple_rtkit_management_send(rtk, APPLE_RTKIT_MGMT_SET_AP_PWR_STAT=
-E,
-> -                                   msg);
-> +       ret =3D apple_rtkit_management_send(rtk, APPLE_RTKIT_MGMT_SET_AP_=
-PWR_STATE,
-> +                                         msg);
-> +       if (ret)
-> +               return ret;
->
->         ret =3D apple_rtkit_wait_for_completion(&rtk->ap_pwr_ack_completi=
-on);
->         if (ret)
-> @@ -763,8 +782,10 @@ static int apple_rtkit_set_iop_power_state(struct ap=
-ple_rtkit *rtk,
->         reinit_completion(&rtk->iop_pwr_ack_completion);
->
->         msg =3D FIELD_PREP(APPLE_RTKIT_MGMT_PWR_STATE, state);
-> -       apple_rtkit_management_send(rtk, APPLE_RTKIT_MGMT_SET_IOP_PWR_STA=
-TE,
-> -                                   msg);
-> +       ret =3D apple_rtkit_management_send(rtk, APPLE_RTKIT_MGMT_SET_IOP=
-_PWR_STATE,
-> +                                         msg);
-> +       if (ret)
-> +               return ret;
->
->         ret =3D apple_rtkit_wait_for_completion(&rtk->iop_pwr_ack_complet=
-ion);
->         if (ret)
-> @@ -865,6 +886,7 @@ EXPORT_SYMBOL_GPL(apple_rtkit_quiesce);
->  int apple_rtkit_wake(struct apple_rtkit *rtk)
->  {
->         u64 msg;
-> +       int ret;
->
->         if (apple_rtkit_is_running(rtk))
->                 return -EINVAL;
-> @@ -876,8 +898,10 @@ int apple_rtkit_wake(struct apple_rtkit *rtk)
->          * will wait for the completion anyway.
->          */
->         msg =3D FIELD_PREP(APPLE_RTKIT_MGMT_PWR_STATE, APPLE_RTKIT_PWR_ST=
-ATE_ON);
-> -       apple_rtkit_management_send(rtk, APPLE_RTKIT_MGMT_SET_IOP_PWR_STA=
-TE,
-> -                                   msg);
-> +       ret =3D apple_rtkit_management_send(rtk, APPLE_RTKIT_MGMT_SET_IOP=
-_PWR_STATE,
-> +                                         msg);
-> +       if (ret)
-> +               return ret;
->
->         return apple_rtkit_boot(rtk);
->  }
->
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250211-rtkit-more-logging-79cbbbe21eee
->
-> Best regards,
-> --
-> Alyssa Rosenzweig <alyssa@rosenzweig.io>
->
->
+ arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi   |  8 ++++++++
+ arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts | 10 ----------
+ 2 files changed, 8 insertions(+), 10 deletions(-)
 
-Looks good to me.
+diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+index ef11606a82b31c2f745141cdac1318805f473273..10d48a9ef92c9621a8885feebda6119d3f61af75 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
++++ b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+@@ -50,10 +50,18 @@ wifi_pwrseq: wifi_pwrseq {
+ 
+ &flx1 {
+ 	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
++	status = "okay";
+ 
+ 	uart6: serial@200 {
+ 		pinctrl-0 = <&pinctrl_flx1_default>;
+ 		pinctrl-names = "default";
++		atmel,use-dma-rx;
++		atmel,use-dma-tx;
++		status = "okay";
++		bluetooth: bluetooth@0 {
++			compatible = "microchip,wilc3000-bt";
++			wlan = <&wilc>;
++		};
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts
+index 15239834d886edbf9e732ac461a92ac9eea42ae5..8b89ee0b47ccb6e60b67f3e4db6caa827ce9c0bc 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts
+@@ -85,16 +85,6 @@ uart5: serial@200 {
+ 	};
+ };
+ 
+-&flx1 {
+-	status = "okay";
+-
+-	uart6: serial@200 {
+-		atmel,use-dma-rx;
+-		atmel,use-dma-tx;
+-		status = "okay";
+-	};
+-};
+-
+ &macb0 {
+ 	status = "okay";
+ };
 
-Reviewed-by: Neal Gompa <neal@gompa.dev>
+-- 
+2.48.0
 
-
---=20
-=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
-=BC=81/ Always, there's only one truth!
