@@ -1,110 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB751D5176;
-	Wed, 12 Feb 2025 15:25:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E0B21148C;
+	Wed, 12 Feb 2025 15:25:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739373943; cv=none; b=O5of/SLl5/HPkHdnL3FHF+kKnpgiVXuZfm5R4hrb9R4tUdN3G9YKcwzxoJT1U7O6zOrOZqa647NcBWxlp3R7/0V6de6iKutvPOp1ka7r6N4XUt6wZcAk558vG9/62Sde2yHgq0zFTH5tUB5RjgSJBOqkNwmhz5TgKD2J1QX3O9o=
+	t=1739373946; cv=none; b=C6cTX2p/9m8uxPYv/+TqUKYo1SzzhcgR6Ayf3Kl2iYjLxkRE4XAbslcEzfTFKgfBaAREuGMUpmOumzjUX44hEAxtv65aBHHLUsPYfOx8fGDZOwhR8mVKHbrGeDlFRNE9X+w5xoJ6FggoDLTEW+aDY6FIZyHBKqPoXpNkC2VkAlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739373943; c=relaxed/simple;
-	bh=qOaKTVlnmYgcN7aOjL0mxLKBKZwtY1JjrTbqLlmpppI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QeVnxOYQCum1pQq64dHvgYP3JyVt6tA2DAr33hpxsCzrG6mvPIv1VS+OkDVZFxI6XPAcUb9zApTX6OyyNtS/1chgRX42Mq5jlVB90y7jTOg3ix7vc/jKtPYg/Llf59yYaGlsmmdyIlpEnXikayCeZiQ/EiHFy+eHc0LuIUT7SE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQZl/4q/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739373946; c=relaxed/simple;
+	bh=GtFDGbP9nNjWeYtJye1vewMcoENRKBgAVsqnzgxSgI0=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=A+tkM3qQ+41JopsxUDnRiXB6N0VjgpCT8y65JcC3nTwKciv7EfucOhzq/R2mHdO/Z5/g/eTDOTdMsMYuPJhzkz6HaRLdDauNQ3jNEl4aRHCEwl+25F0Q/pX3vIB5f5LKCcN9XDJbLjpNahaSEx/CIItT5+oMbdwbUGLBDYNpL/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iseFGePc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQZl/4q/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9901C4CEDF;
-	Wed, 12 Feb 2025 15:25:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iseFGePc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D831C4CEDF;
+	Wed, 12 Feb 2025 15:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739373941;
-	bh=qOaKTVlnmYgcN7aOjL0mxLKBKZwtY1JjrTbqLlmpppI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IQZl/4q/o1oXdL1aimA/lhWtYFtbeFy6uFfA0kZ6AwDEaT4vmnhUqMmb84JGR8EV8
-	 dbVufWCfOEmFxRXb5pcmvj1Y9APvTGpyIvuhLNpecin/BVAVaw5fB9wjm6GckKEcKh
-	 AIji4hZVbZvzDnuK6YpLOS/cP/9LBkNk5lri7cLn9she0Ipn4nHILa+NPi0GxlE+0L
-	 lNGLxdhsAnbFg0WPPnR2/iofSnyikGZcG800i+1HTK6cfZlIPxZFOqX/dNtMwRFwf4
-	 TclGZl7KeeirfSNyuSccD3m/9zGiMo9EXue8VLxtBb0TjW4VXrgDjTAkoevmz6RwnY
-	 OMrJY1C/sxFSg==
-Message-ID: <9442a87b-ab61-40e3-bbf0-caae87c5731a@kernel.org>
-Date: Wed, 12 Feb 2025 16:25:34 +0100
+	s=k20201202; t=1739373945;
+	bh=GtFDGbP9nNjWeYtJye1vewMcoENRKBgAVsqnzgxSgI0=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=iseFGePcPYC/R6Y61oF51a8Eq7LoH0srFdcyV33nu3JJam3BFkhVV22B3vM3kNvtk
+	 Zzj9PBz8tR1DWLNdFuKZmymt4ucCtHu2JGlYM0ZLGtugDtTpIz1GBm0y0+VV9+pu2i
+	 fKvVMqQpAWCL51xLfc0Ls7v1NY9rsK15n4b8kOfeZwGCBBXjjhqc0Xw19GLKZFUrp7
+	 PBOOTimy65S1sjaj4VVoR8xVKuxfYpX2vPTHrXRkNufaOV8g+QHX966+i8ofXQ2ad2
+	 dZvfNftc3PF0pBSPb4j36vUE6e9o+qTdqTeQX8jJ/yg1o9h6EjBMhBmdVebpUA3Hh6
+	 kYjDPw7i+1v0Q==
+Date: Wed, 12 Feb 2025 09:25:44 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] arm64: defconfig: Add VeriSilicon GPIO driver
-To: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, James Cowgill
- <james.cowgill@blaize.com>, Matt Redfearn <matthew.redfearn@blaize.com>,
- Neil Jones <neil.jones@blaize.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-References: <20250212-kernel-upstreaming-add_gpio_support-v1-0-080e724a21f3@blaize.com>
- <20250212-kernel-upstreaming-add_gpio_support-v1-5-080e724a21f3@blaize.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250212-kernel-upstreaming-add_gpio_support-v1-5-080e724a21f3@blaize.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 12/02/2025 14:46, Nikolaos Pasaloukos wrote:
-> Add support for VeriSilicon GPIO controller.
-
-You enable not add support, but still the main question is: Why? Which
-devices needs it? Why this cannot be a module?
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: shashank.rebbapragada@nxp.com, Frank.Li@nxp.com, krzk+dt@kernel.org, 
+ conor+dt@kernel.org, priyanka.jain@nxp.com, vikash.bansal@nxp.com, 
+ alexandre.belloni@bootlin.com, linux-i3c@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Aman Kumar Pandey <aman.kumarpandey@nxp.com>
+In-Reply-To: <20250212132227.1348374-1-aman.kumarpandey@nxp.com>
+References: <20250212132227.1348374-1-aman.kumarpandey@nxp.com>
+Message-Id: <173937394410.3824870.14744594873271734768.robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: i3c: Add NXP P3H2x4x i3c-hub support
 
 
+On Wed, 12 Feb 2025 15:22:26 +0200, Aman Kumar Pandey wrote:
+> P3H2x4x (P3H2440/P3H2441/P3H2840/P3H2841) is multiport I3C hub
+> device which connects to a host CPU via I3C/I2C/SMBus bus on one
+> side and to multiple peripheral devices on the other side.
+> 
+> Signed-off-by: Aman Kumar Pandey <aman.kumarpandey@nxp.com>
+> Signed-off-by: Vikash Bansal <vikash.bansal@nxp.com>
+> ---
+>  .../bindings/i3c/p3h2x4x_i3c_hub.yaml         | 404 ++++++++++++++++++
+>  MAINTAINERS                                   |   7 +
+>  2 files changed, 411 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.yaml
+> 
 
-Best regards,
-Krzysztof
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.yaml:6:1: [error] syntax error: expected '<document start>', but found '<block mapping start>' (syntax)
+./Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.yaml:251:111: [warning] line too long (118 > 110 characters) (line-length)
+./Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.yaml:260:111: [warning] line too long (111 > 110 characters) (line-length)
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.yaml: ignoring, error parsing file
+./Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.yaml:6:1: expected '<document start>', but found ('<block mapping start>',)
+make[2]: *** Deleting file 'Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.example.dts'
+Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.yaml:6:1: expected '<document start>', but found ('<block mapping start>',)
+make[2]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.example.dts] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1511: dt_binding_check] Error 2
+make: *** [Makefile:251: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250212132227.1348374-1-aman.kumarpandey@nxp.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
