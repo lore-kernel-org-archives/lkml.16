@@ -1,49 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA9C1FCF4F;
-	Wed, 12 Feb 2025 06:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DD81FCF62;
+	Wed, 12 Feb 2025 06:44:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739342553; cv=none; b=iJHvuDMCmGDcl4vcZ3WrO8nFlt98tl9tbplneCIPKUzmAoFVCjY+bAb8rXy9BZq+7bFk7TDjCm1wxqcXmZiUG3xY1HU6VRqkrMBhx7YnVjZ4rRU1aDxyY1586/OzUodOEEe3Ukhr//f2lMUp51kQqpnVcXsep4nuLTDiqJSBPdo=
+	t=1739342673; cv=none; b=Khl/6m7kmGOzcslBjLpwdB3ouxCR8g8RM/EHFRg9pTyA9KaxoOeFcLdH6+lISPupa3oo8PQGoGhXAFt7J+LucWF0y9VohWPjDCxpZVUmiJIyZYA0ImJ9/XHz+MvMahyKKuRC7VlErbr6TV0AK1T3vNt1VITp5fjaK3hl6g+wADc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739342553; c=relaxed/simple;
-	bh=gcWrlH4VJdCzAwzQ0TQ13bD5T421NNpIotpvRoe8/0s=;
+	s=arc-20240116; t=1739342673; c=relaxed/simple;
+	bh=Sv9qNL+TN5TjV7dcAh3uCs0tMgt7UdZj63e5XWo0KJw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lzRzV1neg+FOsd473NZmFZGj0Nf+ROKeoX+h6mODC3B+nFNwe4jIXiBYJBX5IneGttI1CstFh0qk4fUbanLOOz1K87Tq7eJfPSpQDOnPc4sdnLFQPFEy6PUjGF5xUkBj5+SEFqlEBpNV7k8nj5lcK9ZwDRvP/uyK20blkyWli0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJHzF+Vz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=N9ZY+SMSF/GeconY578mi4cml/5ou0CNWSxjlc94e4OCnNMdpjJdgJyA9HWzqNAfzkM+ECrwzF+cSmSS/F3OUFxULjMdQ63VBDEjlVEf3kqje3YkYsAhDnHspl+xMTdSI6rKcWvVHCiwD2oZwFcB2No8NMQaMpZY6bzkMnsilnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tfUXC0BL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJHzF+Vz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94EF6C4CEDF;
-	Wed, 12 Feb 2025 06:42:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tfUXC0BL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 505EEC4CEDF;
+	Wed, 12 Feb 2025 06:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739342552;
-	bh=gcWrlH4VJdCzAwzQ0TQ13bD5T421NNpIotpvRoe8/0s=;
+	s=k20201202; t=1739342672;
+	bh=Sv9qNL+TN5TjV7dcAh3uCs0tMgt7UdZj63e5XWo0KJw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XJHzF+VzfFWlp4P1JPrUMCQkbJ5KBGLBnHIArBL2rm8chHQT3+YCoPK4OJRy5r7E3
-	 sAEvp7f7Om4wRIuJbEio3qwxlaK3G6jul9C+7mhkn+/CcOPn94KJGKuYMJNv4kBrB9
-	 iyu0wu+S5Pof3d5E6GJVuoEPQE0wwdWUJY3opqtFifXLHL3cOus7Plu+nJbBT25k6Z
-	 MLozZWZUL+9x2+p6l1ZevMJfiIYKEVfvQADJL7cew3LCDAreCs1eXEpQof9x5Sqj/D
-	 D/2n2MOO/76zGJrkaqFhCTWkj5d65Lh9hCqXduyTu+7RL200etCIuJx6zTQ6XwCouc
-	 GTngHdXyvPRoQ==
-Date: Wed, 12 Feb 2025 07:42:28 +0100
+	b=tfUXC0BLirlUXBWTvvt0AJzcvF0lHh9wK8R5XaaS+Wl1kkpJ1p251RZ3KuZMnnY4H
+	 hHF8g/BHY2ZqEwg9csC76QN/ORdw2gqcmxpwnGKXUNr7EfLik3ayZfaTyNrgtOMGeZ
+	 fzH8JvLwuIsqof/UnySBYsbry++vdHDaZ0rj+ifOdJovO0mB6MaYCwdT37ZzMu/me9
+	 jqVmmb+GaMwFC1+WfvFoUnehxg6umOkJp3dt7Dwzhm2OYDPWrkVF5t5g43esQPvnAF
+	 WaI4tfXxlwkLNy1xuEfxlIuY0638gIUBdtffuu/kBnld5maDpljDOqAn5E4L1lx3nU
+	 jhNIek9FoKY+w==
+Date: Wed, 12 Feb 2025 07:44:27 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, 
-	catalin.marinas@arm.com, conor+dt@kernel.org, dave.hansen@linux.intel.com, 
-	decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com, krzk+dt@kernel.org, 
-	kw@linux.com, kys@microsoft.com, lpieralisi@kernel.org, 
-	manivannan.sadhasivam@linaro.org, mingo@redhat.com, robh@kernel.org, ssengar@linux.microsoft.com, 
-	tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org, devicetree@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	x86@kernel.org, benhill@microsoft.com, bperkins@microsoft.com, 
-	sunilmut@microsoft.com
-Subject: Re: [PATCH hyperv-next v4 4/6] dt-bindings: microsoft,vmbus: Add GIC
- and DMA coherence to the example
-Message-ID: <20250212-rough-terrier-of-serendipity-68a0db@krzk-bin>
-References: <20250212014321.1108840-1-romank@linux.microsoft.com>
- <20250212014321.1108840-5-romank@linux.microsoft.com>
+To: Jammy Huang <jammy_huang@aspeedtech.com>
+Cc: eajames@linux.ibm.com, mchehab@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au, 
+	linux-media@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] media: dt-bindings: aspeed,video-engine: Convert to
+ json schema
+Message-ID: <20250212-copper-tortoise-from-hyperborea-8dddcc@krzk-bin>
+References: <20250212014711.2181865-1-jammy_huang@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,65 +45,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250212014321.1108840-5-romank@linux.microsoft.com>
+In-Reply-To: <20250212014711.2181865-1-jammy_huang@aspeedtech.com>
 
-On Tue, Feb 11, 2025 at 05:43:19PM -0800, Roman Kisel wrote:
-> The existing example lacks the GIC interrupt controller property
-> making it not possible to boot on ARM64, and it lacks the DMA
-
-GIC controller is not relevant to this binding.
-
-> coherence property making the kernel do more work on maintaining
-> CPU caches on ARM64 although the VMBus trancations are cache-coherent.
+On Wed, Feb 12, 2025 at 09:47:11AM +0800, Jammy Huang wrote:
+> Convert aspeed-video.txt to yaml format.
+> Update aspeed-video.txt to aspeed,video-engine.yaml in MAINTAINER file.
 > 
-> Add the GIC node, specify DMA coherence, and define interrupt-parent
-> and interrupts properties in the example to provide a complete reference
-> for platforms utilizing GIC-based interrupts, and add the DMA coherence
-> property to not do extra work on the architectures where DMA defaults to
-> non cache-coherent.
-> 
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
 > ---
->  .../devicetree/bindings/bus/microsoft,vmbus.yaml      | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  v5:
+>   - Don't put additional changes in this commit.
 
-Last time I said: not tested by automation.
-Now: I see automation build failures, although I do not see anything
-incorrect in the code, so that's a bit surprising. Please confirm that
-binding was tested on latest dtschema.
+But it fails then, right? I asked for justification or separate commit,
+depending on what is really hapenning here.
 
-> 
-> diff --git a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> index a8d40c766dcd..5ec69226ab85 100644
-> --- a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> +++ b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> @@ -44,11 +44,22 @@ examples:
->              #size-cells = <1>;
->              ranges;
->  
-> +            gic: intc@fe200000 {
-> +              compatible = "arm,gic-v3";
-> +              reg = <0x0 0xfe200000 0x0 0x10000>,   /* GIC Dist */
-> +                    <0x0 0xfe280000 0x0 0x200000>;  /* GICR */
-> +              interrupt-controller;
-> +              #interrupt-cells = <3>;
-> +            }
-
-I fail to see how this is relevant here. This is example only of vmbus.
-Look how other bindings are done. Drop the example.
-
-
-> +
->              vmbus@ff0000000 {
->                  compatible = "microsoft,vmbus";
->                  #address-cells = <2>;
->                  #size-cells = <1>;
->                  ranges = <0x0f 0xf0000000 0x0f 0xf0000000 0x10000000>;
-> +                dma-coherent;
-> +                interrupt-parent = <&gic>;
-> +                interrupts = <1 2 1>;
-
-Use proper defines for known constants.
+Are you sure you tested this? I am pretty confident it will fail :/.
 
 Best regards,
 Krzysztof
