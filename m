@@ -1,119 +1,158 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17C720B7F4
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 13:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA91920E6F3
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 13:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739367690; cv=none; b=hVJyVm+zsBkbUrJqt9rG5+57w0/hqUz5f4Mb54EbLOa8m36mc18PVLxxh9/5yIj8f/jjgOc4g9hY5x2GBHG4LBXUyNWutqZdiIg+/3AcDds+Rax24SmCXJf5C546220erDjoUCIInevzQ7O9PwksNfDr230FFUs4H+cDDuPKkJQ=
+	t=1739367693; cv=none; b=jUkIH2c6hZPsUFs72xZZeaLmRe+/+nLrF3xf9jPewT92tN+eVrsS5EmOpOap6/K8r3HAMEKqmE3MF/0ifFeIiFAa/IODiUWka2ko1mOpzdGZuhxYUsiaNfXfegiaA2W6FeAj+/W8fOTxF58vhYbuhIEixMmcADKcloG+nP6O710=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739367690; c=relaxed/simple;
-	bh=Qc9diUGiRv23AkB8zI1xmq2M46jMyn8ZxWRk7S2HU4k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EKfU05qtLBC+cE5xq8mjM5WJU9U2C68aIjHgcRDpAwKlQm40pGe74jNtbEl/FcC/xcyWkG68C9CtnBK7q8rRDpPQT8wYCDgskYdJrd/x2DPmAC+zOzvOobaoYc0B5FAO8t5/mMWQqsWr2uQT1UdbNQSy7cqeEN+haeN3odIFzt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C3GM9MDW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yxseFPLp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C3GM9MDW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yxseFPLp"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739367687;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/4jVEtoPGT8Y3vSH6xG148Zl04rwufFJa2uW/0ATsB0=;
-	b=C3GM9MDWBwCjuKXWogvf3udMnNOoyBec4zXvtTYjEvMbH7aNDoRkQGWE8A7d8JjUFmDZmZ
-	pcZBJacDCdtzd0LVTurDMAVi6dCH7hY3s3Idg+JpKD9kut1pvdEwE+aqt85ZCrZA4vZ5Be
-	Zhs3sWw+kLP9WR/6NzYK2rr/Puyj5h5M/cFUwr2tUcAe3QJQoCNg3EDbJ9jr8sAKY9FyE8
-	HGdxH/HdVcVug4VDJW7nnMQFQO8sbGu1ntTLnmE4Po/JgkwZWPgnnmEO66fMjj9R8oAU0P
-	9yh61MNWnXOWUKhoSKJwf+YSnlrB88PfB1EWbd/R5jFzgkO4K0x4HBtbO0HYnA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739367687;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/4jVEtoPGT8Y3vSH6xG148Zl04rwufFJa2uW/0ATsB0=;
-	b=yxseFPLpKxSwWsCzgJRrGHYXyYJhPEC9+H53IVBJEXTITC09Wv1E8HkDuKnPz6gJRFjgVT
-	TKq8mTGc60Fp6NDg==
-To: linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Cc: Ben Segall <bsegall@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Will Deacon <will@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v3 0/9] preempt: Add a generic function to return the preemption string.
-Date: Wed, 12 Feb 2025 14:41:06 +0100
-Message-ID: <20250212134115.2583667-1-bigeasy@linutronix.de>
+	s=arc-20240116; t=1739367693; c=relaxed/simple;
+	bh=C4JDa3AZTszAFhsNnMRmmsyUBVeHeyukFwGTm4lt7qs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=S7kmEkg/D4VRaMKEUnWukqFbxD2/N6+OWoKNNmZkxQttDJrLR5bTKNTTHZKTa5Jqul/kcbuS+pEzjNcShw+FYjsEOg7c+8VmDCxXdhoETNuYdEe0B6jl3iZ9Y7ngdFpH7PTUYnPTEw34HxxEmeoJO6PiaQZ4eW89yzurBbEWaiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ce7a0ec1easo47830215ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 05:41:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739367691; x=1739972491;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qV2iVCe9A8aeE8PpOX+/swpsuolgCunvj4bgg81YYHY=;
+        b=WJDu1+TNSBDU0jMBJvN4xWrLLMZKVc+qG8x48vQmaCHgCF4XlHdWgAo+tJ57vw+vhZ
+         53NmET1vcIzoJFo1pd9mQdwpfQOTSvuKopP4f2h4Lsd2Ae0Qb5TNsEq0B3c2Qjasr1Uu
+         GHVhX1Hb2PsbrzxWVcw+MZNXVxHqgAXedCsf3uEQKtB/vVJLGDEJusdAqf5CBgbsj6vF
+         3vGgWboLk9kBY+EposQEWx/ni4GTG1KOsXgNuoWs6XVYXYmIfJpD/8EcVO1hZNT4sM+/
+         xRo0MtC8eYpFnZvsAKXSdyMwIT8yqlPjiyoX1Jdkt/bgz3SHNxTripuArOpfZSxe+pKV
+         N1eQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEu8OILP2nW5cHC9E2VDjQQHeqjg2fBbYwGvwujtBUfQ2U6KgkBD5EAUOU7MciEsjdIZsHLGNyrlyswsI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqtLvUBif02o2t0Eo3UAAuyMfB1FHOwpwiIDeoJhC2gZX/gomS
+	tIcVlLRjOUII6Rbs5yWVMlKXBHWx/o5t4LCpv1vWLqVmKU49XfBoSL+KXFcDly/FLtQc8vlBULu
+	llCbuP5icFuI2mcMLiBq2S/STTkYBfXi8spAdoiSK8cOC6x5Fcz1AsQQ=
+X-Google-Smtp-Source: AGHT+IFw3OwkQX0l9K11/EE02bzq89ChU/ndRTGJbtmCcixzlNNvSJVmNCfHLvpjXYJ3PorwatpdzZmdR15fb4b635QsM7hVtVGQ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a05:6e02:138f:b0:3a7:820c:180a with SMTP id
+ e9e14a558f8ab-3d17c108f15mr28738875ab.19.1739367690996; Wed, 12 Feb 2025
+ 05:41:30 -0800 (PST)
+Date: Wed, 12 Feb 2025 05:41:30 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67aca50a.050a0220.110943.004e.GAE@google.com>
+Subject: [syzbot] [modules?] KMSAN: uninit-value in __request_module (6)
+From: syzbot <syzbot+1fcd957a82e3a1baa94d@syzkaller.appspotmail.com>
+To: da.gomez@samsung.com, linux-kernel@vger.kernel.org, 
+	linux-modules@vger.kernel.org, mcgrof@kernel.org, petr.pavlu@suse.com, 
+	samitolvanen@google.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The individual architectures often add the preemption model to the begin
-of the backtrace. This is the case on X86 or ARM64 for the "die" case
-but not for regular warning. With the addition of DYNAMIC_PREEMPT for
-PREEMPT_RT we end up with CONFIG_PREEMPT and CONFIG_PREEMPT_RT set
-simultaneously. That means that everyone who tried to add that piece of
-information gets it wrong for PREEMPT_RT because PREEMPT is checked
-first.
+Hello,
 
-This series adds a generic helper which is used by
-dump_stack_print_info() and other architectures which don't use the
-function and provide this information on their own.
+syzbot found the following issue on:
 
-I collected ACKs for all architectures but x86.
+HEAD commit:    febbc555cf0f Merge tag 'nfsd-6.14-1' of git://git.kernel.o..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=137a78e4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=48f90cac5eea091a
+dashboard link: https://syzkaller.appspot.com/bug?extid=1fcd957a82e3a1baa94d
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177a78e4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16adc3f8580000
 
-v2=E2=80=A6v3 https://lore.kernel.org/all/20250203141632.440554-1-bigeasy@l=
-inutronix.de/
-  - powerpc/ s390 and xtensa had the preemption string twice. Removed
-    from the arch code.
-  - Keeping the same printk() invocation, avoiding adding any level.
-  - #1 has now a table showing which strings are possible.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/f90f94285615/disk-febbc555.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b8a8bb66806c/vmlinux-febbc555.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/c8af6c511559/bzImage-febbc555.xz
 
-RFC=E2=80=A6v2 https://lore.kernel.org/all/20241206113431.Q-VXMlru@linutron=
-ix.de/
-  - Split into individual patches.
-  - Implement preempt_model_str() based on feedback by Peter Zijlstra
-    and Steven Rostedt.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1fcd957a82e3a1baa94d@syzkaller.appspotmail.com
 
-Sebastian Andrzej Siewior (9):
-  sched: Add a generic function to return the preemption string.
-  lib/dump_stack: Use preempt_model_str().
-  arm: Rely on generic printing of preemption model.
-  arm64: Rely on generic printing of preemption model.
-  powerpc: Rely on generic printing of preemption model.
-  s390: Rely on generic printing of preemption model.
-  x86: Rely on generic printing of preemption model.
-  xtensa: Rely on generic printing of preemption model.
-  tracing: Use preempt_model_str().
+=====================================================
+BUG: KMSAN: uninit-value in string_nocheck lib/vsprintf.c:633 [inline]
+BUG: KMSAN: uninit-value in string+0x3ec/0x5f0 lib/vsprintf.c:714
+ string_nocheck lib/vsprintf.c:633 [inline]
+ string+0x3ec/0x5f0 lib/vsprintf.c:714
+ vsnprintf+0xa5d/0x1960 lib/vsprintf.c:2843
+ __request_module+0x252/0x9f0 kernel/module/kmod.c:149
+ team_mode_get drivers/net/team/team_core.c:480 [inline]
+ team_change_mode drivers/net/team/team_core.c:607 [inline]
+ team_mode_option_set+0x437/0x970 drivers/net/team/team_core.c:1401
+ team_option_set drivers/net/team/team_core.c:375 [inline]
+ team_nl_options_set_doit+0x1339/0x1f90 drivers/net/team/team_core.c:2661
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0x1214/0x12c0 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x375/0x650 net/netlink/af_netlink.c:2543
+ genl_rcv+0x40/0x60 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
+ netlink_unicast+0xf52/0x1260 net/netlink/af_netlink.c:1348
+ netlink_sendmsg+0x10da/0x11e0 net/netlink/af_netlink.c:1892
+ sock_sendmsg_nosec net/socket.c:718 [inline]
+ __sock_sendmsg+0x30f/0x380 net/socket.c:733
+ ____sys_sendmsg+0x877/0xb60 net/socket.c:2573
+ ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2627
+ __sys_sendmsg net/socket.c:2659 [inline]
+ __do_sys_sendmsg net/socket.c:2664 [inline]
+ __se_sys_sendmsg net/socket.c:2662 [inline]
+ __x64_sys_sendmsg+0x212/0x3c0 net/socket.c:2662
+ x64_sys_call+0x2ed6/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:47
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
- arch/arm/kernel/traps.c      | 11 ++-------
- arch/arm64/kernel/traps.c    | 10 +-------
- arch/powerpc/kernel/traps.c  |  3 +--
- arch/s390/kernel/dumpstack.c |  7 +-----
- arch/x86/kernel/dumpstack.c  |  9 ++-----
- arch/xtensa/kernel/traps.c   |  6 +----
- include/linux/preempt.h      |  2 ++
- kernel/sched/core.c          | 47 ++++++++++++++++++++++++++++++++++++
- kernel/sched/debug.c         | 10 +++++---
- kernel/sched/sched.h         |  1 +
- kernel/trace/trace.c         |  7 +-----
- lib/dump_stack.c             |  4 +--
- 12 files changed, 67 insertions(+), 50 deletions(-)
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:4121 [inline]
+ slab_alloc_node mm/slub.c:4164 [inline]
+ kmem_cache_alloc_node_noprof+0x907/0xe00 mm/slub.c:4216
+ kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:587
+ __alloc_skb+0x363/0x7b0 net/core/skbuff.c:678
+ alloc_skb include/linux/skbuff.h:1331 [inline]
+ netlink_alloc_large_skb+0x1b4/0x280 net/netlink/af_netlink.c:1196
+ netlink_sendmsg+0xa96/0x11e0 net/netlink/af_netlink.c:1867
+ sock_sendmsg_nosec net/socket.c:718 [inline]
+ __sock_sendmsg+0x30f/0x380 net/socket.c:733
+ ____sys_sendmsg+0x877/0xb60 net/socket.c:2573
+ ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2627
+ __sys_sendmsg net/socket.c:2659 [inline]
+ __do_sys_sendmsg net/socket.c:2664 [inline]
+ __se_sys_sendmsg net/socket.c:2662 [inline]
+ __x64_sys_sendmsg+0x212/0x3c0 net/socket.c:2662
+ x64_sys_call+0x2ed6/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:47
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Sebastian
+CPU: 0 UID: 0 PID: 5814 Comm: syz-executor989 Not tainted 6.14.0-rc2-syzkaller-00034-gfebbc555cf0f #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
