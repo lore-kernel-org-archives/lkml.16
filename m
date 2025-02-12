@@ -1,170 +1,168 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1F620370A;
-	Wed, 12 Feb 2025 21:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4FC2010E2
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 21:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739397190; cv=none; b=FTj6dL/5pmNYOe4yPix3RVBc7qGYM6UMBTVu214FC4VWd0xNPsh5SoPKF/6giYMzpNeKbUK/SYSqldpnuoF+ESfxeoj93SI42oP+E/6Uv0RlmWuxnkkH6v3BKlM+dQosXYQt6qwfBCUnZnuAOA4+/XEbswTcjhzn/CfqAoG6RHQ=
+	t=1739397258; cv=none; b=NZLTlVr4pXx2gN+C+p92FwYTwsazn5fwrQ7WfbGOq+Pa0McBT0wAIQ1Hb+iGFodkdNTXJsWrXuSTxuaP2+kvMdD8hnLspPSHa6iS3hxcX/kdz36L/fkwB7t8P41YgOavd+bCuUzBjsAV1nGBg/tos959utxlTlRIH4I3h4cNcyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739397190; c=relaxed/simple;
-	bh=i3HhJVSj9vjuZZvsLqx6As8CpYfTt4PDTtl75v1pVT8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LxrbM9KWaZ8i2re10nDlwGFdiuYqzOHELcqftIfNmZF7cWioFSZvUmxs4TwcG7K9Eyjx/bhobA2GKZ0+5TfSvBQpRIHMGhimoSXWFqYnFO7PqRvKx1LpuzMxjyStVwVksF+c8x3/arexvg8Ni0+Uy5Z/kVe4mX+2v1awT6AI4aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=cAIItm8Q; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1739397258; c=relaxed/simple;
+	bh=ge4KnJE9iF/Hb51/g1qMq1pqhpakVBP2W0kIbMPxNuI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oEHoBXciVqgHf9vW8Xh6b2qFlvUgWcIW+AKXKLMka11Ph7MluhWCJTRKxV3bl4lV9OEFwYz2ieb1unB6CV7W7g+IO7jpX5gNghr8I7Cq1fN6uBu5jyJ1Vk3g+p1Vyn+VGiAPKPFH2nx4w0m4MQhIMgDyV03nMTXokd/LqkXd3YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=EQGNIl1P; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cAIItm8Q"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51CLqnwT3881030
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Feb 2025 15:52:49 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1739397169;
-	bh=7hCe79F8mvGMzccqeFPQ8ZkkWiDeQrrKNKFDBMGlSGs=;
-	h=From:To:CC:Subject:Date;
-	b=cAIItm8QUtj4Cz72EXw6XANksZqdSf198oJrMq2riMGvGh5i78uQFyJZdgtXnjJo1
-	 jHFKUcmin/gDxM5CSR4oJHM+RxnN2KcikATjFV5YddgYVOWCRd+caJLsireziHtS9V
-	 TGnff8fR4k0JdrI+doKAiZEsIdWBvRiC+sSoG2aU=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51CLqn6N044538
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 12 Feb 2025 15:52:49 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 12
- Feb 2025 15:52:48 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 12 Feb 2025 15:52:48 -0600
-Received: from uda0506412.dhcp.ti.com (uda0506412.dhcp.ti.com [128.247.81.19])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51CLqmj4123789;
-	Wed, 12 Feb 2025 15:52:48 -0600
-From: Kendall Willis <k-willis@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <d-gole@ti.com>, <tony@atomide.com>, <msp@baylibre.com>,
-        <khilman@baylibre.com>, <k-willis@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH] arm64: dts: ti: k3-am62p-j722s-common-wakeup: Configure ti-sysc for wkup_uart0
-Date: Wed, 12 Feb 2025 15:52:48 -0600
-Message-ID: <20250212215248.746838-1-k-willis@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="EQGNIl1P"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2f7d35de32dso54729a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 13:54:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1739397256; x=1740002056; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ge4KnJE9iF/Hb51/g1qMq1pqhpakVBP2W0kIbMPxNuI=;
+        b=EQGNIl1P++FY7kb7pZTgZbLlrejX0W20GP/taow66+5eneahHx/GQKFOHo/txN6QS3
+         Po9uOP6VWZmwxKwxrLWBY4mb7EE8KsAmwCzdaZdHlkKF4/MkTyK6uEaHvDGBfrAHzkej
+         xwN1N4OPicUNywvCetOAZRFIXytNA3MkSxNnuoxqBw7IhhTnb0Olm/ywkN3zbIvidOyh
+         ym+jCHqN0IVfGk4qMykBdPs+3BTwFhI5Q2yMGTOOrokXEpZTYhv0U8WiBPdoyZ2kmnkq
+         t8QkDPPzm++gFT77TWKNCC6EwBDZDRJ5HwJv4oKx1buzEOPCmJaqqWeuZnaCVdtfEIGE
+         Y9iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739397256; x=1740002056;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ge4KnJE9iF/Hb51/g1qMq1pqhpakVBP2W0kIbMPxNuI=;
+        b=CdNIPBaMu7355RNNi5qiqPoxWt/VuZWk6+vgqD8IfAeE/o37DCHMbPlgW78Hhj6OCn
+         tyzWjyuF2yAcTr5SLWBccjpAEO3WPx2eStelF7MlbpKkM27BdwTysxWyX2ixqn6qNnKu
+         VynKTaU3ec1ikKKA60CkptRhlS3Ni00yRm3kh8c7V7q0WWoSwH2QQHc6T9QJlejCUw0l
+         p9cG5dWEVE0NDOMb3hMoFqcaTM64xJ/B5PaxX4e0pfL81wfyFZcHfQngq73c/inm8VfF
+         ykzKBL/pFnQWZhVApWnqfsuVlk2AumqsDLKzXTSIymjMLDprsS5Y6jnlgMa12SFIKX16
+         RUVw==
+X-Forwarded-Encrypted: i=1; AJvYcCXRY71mzyzf1nyos8em5osIDkVu9S8KXeYIPw4CZ2gBy5vXQW3Llfjbb3kKm1YS7NGx9o6GnNZi1v81h9o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXLQnTNKMvcKCCHEVUYCP+wfFIPuy8Yl7B7ZZzp5axcaGT3kbP
+	M1w8H2QSG5GTsJ1zVObuwgWNYI3ucyGeBG8yaKjlDkES1NaU6gc1DTofax3b0LmI3/4QHeFgXEj
+	uumWdFWD5OAEbTb+B/gN/oW8AJp3Cz5AUoZoEkQ==
+X-Gm-Gg: ASbGncv4isFiYyANmSIEmrR8aWdVaVMLexSm0zX3Sr0RqLeWJuKcF1e0SU9lwkrDu17
+	PLkLZfM5FcdEv5G62RutVy5/3DJOSog6GykiAw/4SYUJrjEUJRKrwuQuYsEGiruzY5armbVo=
+X-Google-Smtp-Source: AGHT+IFMPPrqn7iYY9wkKzTPFCyHNXNPaj9gPzkjTZXdJ0obkphwjRRUI8sA0P0Jhavsgh95Xj1lYdfCmXfewd6bbNM=
+X-Received: by 2002:a17:90b:4d10:b0:2ee:6563:20b5 with SMTP id
+ 98e67ed59e1d1-2fbf5ae2309mr2747947a91.0.1739397255602; Wed, 12 Feb 2025
+ 13:54:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250212204546.3751645-1-csander@purestorage.com> <401f9f7a-b813-43b0-b97f-0165072e2758@kernel.dk>
+In-Reply-To: <401f9f7a-b813-43b0-b97f-0165072e2758@kernel.dk>
+From: Caleb Sander <csander@purestorage.com>
+Date: Wed, 12 Feb 2025 13:54:03 -0800
+X-Gm-Features: AWEUYZnzoun66gvLZAA01wN8hsHo0qQJKTPwxuyLywzkWLXEd9UHZi-LzapCfiE
+Message-ID: <CADUfDZqK9+GLsRSdFVd47eZTsz863B3m16GtHc+Buiqdr7Jttg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] uring_cmd SQE corruptions
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Pavel Begunkov <asml.silence@gmail.com>, Riley Thomasson <riley@purestorage.com>, 
+	io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Vibhore Vardhan <vibhore@ti.com>
+On Wed, Feb 12, 2025 at 12:55=E2=80=AFPM Jens Axboe <axboe@kernel.dk> wrote=
+:
+>
+> On 2/12/25 1:45 PM, Caleb Sander Mateos wrote:
+> > In our application issuing NVMe passthru commands, we have observed
+> > nvme_uring_cmd fields being corrupted between when userspace initialize=
+s
+> > the io_uring SQE and when nvme_uring_cmd_io() processes it.
+> >
+> > We hypothesized that the uring_cmd's were executing asynchronously afte=
+r
+> > the io_uring_enter() syscall returned, yet were still reading the SQE i=
+n
+> > the userspace-mapped SQ. Since io_uring_enter() had already incremented
+> > the SQ head index, userspace reused the SQ slot for a new SQE once the
+> > SQ wrapped around to it.
+> >
+> > We confirmed this hypothesis by "poisoning" all SQEs up to the SQ head
+> > index in userspace upon return from io_uring_enter(). By overwriting th=
+e
+> > nvme_uring_cmd nsid field with a known garbage value, we were able to
+> > trigger the err message in nvme_validate_passthru_nsid(), which logged
+> > the garbage nsid value.
+> >
+> > The issue is caused by commit 5eff57fa9f3a ("io_uring/uring_cmd: defer
+> > SQE copying until it's needed"). With this commit reverted, the poisone=
+d
+> > values in the SQEs are no longer seen by nvme_uring_cmd_io().
+> >
+> > Prior to the commit, each uring_cmd SQE was unconditionally memcpy()ed
+> > to async_data at prep time. The commit moved this memcpy() to 2 cases
+> > when the request goes async:
+> > - If REQ_F_FORCE_ASYNC is set to force the initial issue to go async
+> > - If ->uring_cmd() returns -EAGAIN in the initial non-blocking issue
+> >
+> > This patch set fixes a bug in the EAGAIN case where the uring_cmd's sqe
+> > pointer is not updated to point to async_data after the memcpy(),
+> > as it correctly is in the REQ_F_FORCE_ASYNC case.
+> >
+> > However, uring_cmd's can be issued async in other cases not enumerated
+> > by 5eff57fa9f3a, also leading to SQE corruption. These include requests
+> > besides the first in a linked chain, which are only issued once prior
+> > requests complete. Requests waiting for a drain to complete would also
+> > be initially issued async.
+> >
+> > While it's probably possible for io_uring_cmd_prep_setup() to check for
+> > each of these cases and avoid deferring the SQE memcpy(), we feel it
+> > might be safer to revert 5eff57fa9f3a to avoid the corruption risk.
+> > As discussed recently in regard to the ublk zero-copy patches[1], new
+> > async paths added in the future could break these delicate assumptions.
+>
+> I don't think it's particularly delicate - did you manage to catch the
+> case queueing a request for async execution where the sqe wasn't already
+> copied? I did take a quick look after our out-of-band conversation, and
+> the only missing bit I immediately spotted is using SQPOLL. But I don't
+> think you're using that, right? And in any case, lifetime of SQEs with
+> SQPOLL is the duration of the request anyway, so should not pose any
+> risk of overwriting SQEs. But I do think the code should copy for that
+> case too, just to avoid it being a harder-to-use thing than it should
+> be.
 
-Similar to the TI K3-AM62x Soc commit ce27f7f9e328c8582a169f97f1466976561f1
-("arm64: dts: ti: k3-am62-wakeup: Configure ti-sysc for wkup_uart0")
-The devices in the wkup domain are capable of waking up the system from
-suspend. We can configure the wkup domain devices in a generic way using
-the ti-sysc interconnect target module driver like we have done with the
-earlier TI SoCs.
+Yes, even with the EAGAIN case fixed, nvme_validate_passthru_nsid() is
+still catching the poisoned nsids. However, the log lines now come
+from the application thread rather than the iou-wrk thread.
+Indeed, we are not using SQPOLL. But we are using IOSQE_SQE_GROUP from
+Ming's SQE group patch set[1]. Like IOSQE_IO_LINK, subsequent
+operations in a group are issued only once the first completes. The
+first operation in the group is a UBLK_IO_PROVIDE_IO_BUF from Ming's
+other patch set[2], which should complete synchronously. The
+completion should be processed in __io_submit_flush_completions() ->
+io_free_batch_list() and queue the remaining grouped operations to be
+issued in task work. And all the pending task work should be processed
+during io_uring_enter()'s return to userspace.
+But some NVMe passthru operations must be going async because they are
+observing the poisoned values the application thread writes into the
+io_uring SQEs after io_uring_enter() returns. We don't yet have an
+explanation for how they end up being issued async; ftrace shows that
+in the typical case, all the NVMe passthru operations in the group are
+issued during task work before io_uring_enter() returns to userspace.
+Perhaps a pending signal could short-circuit the task work processing?
 
-As ti-sysc manages the SYSCONFIG related registers independent of the
-child hardware device, the wake-up configuration is also set even if
-wkup_uart0 is reserved by sysfw.
+Best,
+Caleb
 
-The wkup_uart0 device has interconnect target module register mapping like
-dra7 wkup uart. There is a 1 MB interconnect target range with one uart IP
-block in the target module. The power domain and clock affects the whole
-interconnect target module.
+[1]: https://lore.kernel.org/io-uring/20240511001214.173711-2-ming.lei@redh=
+at.com/T/
+[2]: https://lore.kernel.org/linux-block/20241107110149.890530-1-ming.lei@r=
+edhat.com/T/
 
-Note we change the functional clock name to follow the ti-sysc binding
-and use "fck" instead of "fclk".
-
-Also note that we need to disable the target module reset as noted by
-Markus. Otherwise the sysfw using wkup_uart0 can get confused on some
-devices leading to boot time issues such as mbox timeouts.
-
-Signed-off-by: Vibhore Vardhan <vibhore@ti.com>
-Signed-off-by: Kendall Willis <k-willis@ti.com>
----
-Tested by suspend/resume with WKUP UART wakeup source on AM62P.
-
-Similar patch was sent for AM62x by Tony,
-https://lore.kernel.org/all/20231219072503.12427-1-tony@atomide.com/
-
-Similar patch was sent for AM62a by Dhruva,
-https://lore.kernel.org/all/20241231-am62a-dt-ti-sysc-wkup-v1-1-a9b0d18a2649@ti.com/
-
-Original patch for AM62p existed in the TI Vendor tree with Vibhore's
-authorship:
-https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/commit/?h=ti-linux-6.6.y&id=efab3fb636673837886599a49cddf1e862c8aeb6
----
- .../dts/ti/k3-am62p-j722s-common-wakeup.dtsi  | 36 +++++++++++++++----
- 1 file changed, 29 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-wakeup.dtsi
-index 6f32135f00a5..6757b37a9de3 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-wakeup.dtsi
-@@ -2,9 +2,11 @@
- /*
-  * Device Tree file for the WAKEUP domain peripherals shared by AM62P and J722S
-  *
-- * Copyright (C) 2023-2024 Texas Instruments Incorporated - https://www.ti.com/
-+ * Copyright (C) 2023-2025 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
-+#include <dt-bindings/bus/ti-sysc.h>
-+
- &cbass_wakeup {
- 	wkup_conf: bus@43000000 {
- 		compatible = "simple-bus";
-@@ -41,14 +43,34 @@ usb1_phy_ctrl: syscon@4018 {
- 		};
- 	};
- 
--	wkup_uart0: serial@2b300000 {
--		compatible = "ti,am64-uart", "ti,am654-uart";
--		reg = <0x00 0x2b300000 0x00 0x100>;
--		interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
-+	target-module@2b300050 {
-+		compatible = "ti,sysc-omap2", "ti,sysc";
-+		reg = <0 0x2b300050 0 0x4>,
-+		      <0 0x2b300054 0 0x4>,
-+		      <0 0x2b300058 0 0x4>;
-+		reg-names = "rev", "sysc", "syss";
-+		ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+				 SYSC_OMAP2_SOFTRESET |
-+				 SYSC_OMAP2_AUTOIDLE)>;
-+		ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+				<SYSC_IDLE_NO>,
-+				<SYSC_IDLE_SMART>,
-+				<SYSC_IDLE_SMART_WKUP>;
-+		ti,syss-mask = <1>;
-+		ti,no-reset-on-init;
- 		power-domains = <&k3_pds 114 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 114 0>;
--		clock-names = "fclk";
--		status = "disabled";
-+		clock-names = "fck";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0x2b300000 0x100000>;
-+
-+		wkup_uart0: serial@0 {
-+			compatible = "ti,am64-uart", "ti,am654-uart";
-+			reg = <0 0x100>;
-+			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	wkup_i2c0: i2c@2b200000 {
-
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
--- 
-2.34.1
-
+>
+> The two patches here look good, I'll go ahead with those. That'll give
+> us a bit of time to figure out where this missing copy is.
+>
+> --
+> Jens Axboe
