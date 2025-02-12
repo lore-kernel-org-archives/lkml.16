@@ -1,117 +1,119 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D677720459F;
-	Wed, 12 Feb 2025 22:23:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94735203704
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739399038; cv=none; b=udcTUpnXRrZM9/SZsa1hPRhuOm3T0Cg/cUDyAK2sXCs53GXsDgKRnfdheQeGHI9vj6jfR+nlLCBmHBMliy4LAv/KCxY/oXTUSSRFI39kiqT/hk9Ma7qvc7ENndx2u2EgK+ze/l6ZgtmxQcs0Ap65LzWQR29oe6/Vw2r5i0eGhmU=
+	t=1739399061; cv=none; b=IP4DE4CfXmVZod9lPU7cfQ6hP5l4kBkdItxhUtbPaFQfofR10HAoYnAbvrOLCJXBUQ8iqjWqvyAYA+XxDqI7O++s/4K4srfBLP/v9BXGpxZzyi06xa6uKd2DV38B3syDIolpOcDa4UKiiPQvmoSqRLla22sc0641dTM7IEOyvSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739399038; c=relaxed/simple;
-	bh=Zm3qk6IXfqOq9LBAuhVvYVET/2+DLHzMgdpfCT9oBiE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eP8drDU0dMpK1uW1ENKW8vhQUNEzVHPmv+qc3DsICE/WWENZweDziYSuysbuoSLYRwbkZIJ/D+F3tq2E3PerkzVZHHRvAQgc/RcQWuBrejkVgt3XDbsxwGPxtCnOdIaK8mrOh41qte8TlPdiXV7QhuYoFApvvyN94KD3XEXvmJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PJL1HxRA; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739399061; c=relaxed/simple;
+	bh=5y/tgsaLquT36eDgvZ3fW9Uidq26vHDDKgSZ/y9JSL0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bgKHjOgi04wZ/toK4BubSHCqZuoxPEJxcmr3s59FkNUB08jBKR7zXdRQ3vFeGV8vphmR20B3QeRD5iBYDG5wvePyQ6Gc1xPSBmf0c0YHzhj08uRsZsLV9gHLksoVUOC3GJqITBS8/F7hfiU3Jb73NBfGfnolzO1LvUOuQz+1Owo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kJ5tsehz; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PJL1HxRA"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30795988ebeso2487701fa.3;
-        Wed, 12 Feb 2025 14:23:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kJ5tsehz"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30761be8fa8so2476801fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 14:24:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739399035; x=1740003835; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1739399058; x=1740003858; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WzPV8xI6x4DGWcbO/p/xTSDSebleAH+JJRzOXv+eWoo=;
-        b=PJL1HxRAyV2Hc1xNZNtbTgLJ7x1OENUpY3TtqsDwMpPvS+kS54MdE4AJs+5j179Uu0
-         Jo8AlKz+u6NSFT9pKF0bqJnrjB/wsFK5UHnrI8QW+lRESTy4CLJgKNHOSxYyDH7HGHIx
-         zE8GdK1v9ERASitVZJamPvzmK8pdT2Wl/hzKHPZuZcuVULWs5jx4cQoS70SoG5MuSvQf
-         YR9uCDKwpOyhO4tPmUGLp5aONF9+PlzQXrkJFZvwzmAMB0BIRotkaW5u/V/gF9TYaAns
-         SiIklT112qmGOFFYXGng6XYnQN9gmXs+ixCd/LGqCV8MtTopAJaRteG/Oy/1sWIyshUT
-         SQQg==
+        bh=mu/vYpK5EdDCessSAfsc81pUNCu3XRPo/EhuZMObYC8=;
+        b=kJ5tsehzFYWrNTpI3SApLy71AcU5tQnrtgv7A5a6gAR65Fmr1P3Zy6/MJEQLLNxcVr
+         PuYwxtmoxeqGQsWQ01n5jOIb82IAOwATTzZ4raOCenQOUyRWR1KA+1IPuSZnuj/zKwEq
+         7+e7nAc00awmy/uSmNZoXNHo06uzXJQkt5SsTRheH6U+UyNKTeyh8cj+SkadOwME2JAr
+         HbSSMoLqo75eo8nUEQOY2NpQdlE+QAbQtA0qdnnVPhHQqJQT3Z+iK1pEzoFAOM/EkaD0
+         2rJlE+iV12GrMtVmRLPTtZXhKBTtc5KLCGaY+CKsM9DkRio8g+oXzPpOkdszom4PFX9/
+         sOLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739399035; x=1740003835;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739399058; x=1740003858;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WzPV8xI6x4DGWcbO/p/xTSDSebleAH+JJRzOXv+eWoo=;
-        b=NQ0u2Km9pM7UAE5isBmoFNufE5PR6vSvpXaasYTkt8u/+2WjXMhcdEoyTSSOicnKaK
-         nOO32Fh1qnr5GWs6u9bxUkkMuO8Tq9iykKIjmg4AcqhiQCr6I9Z0TiyyVAwqjUsrA80i
-         ehdyNoZMVP6LOi3MACLykH1ecyKFSDCHYocyuf+7iw72Mn3rsMnORocaPqOtQ2m0q8Ww
-         lmgHhJ7/tmUAHha4ZYH5C2CyacotlTpWaA7r1d4wYGT5+jTGXgqMpTtIdP1nhf+W6GkI
-         QOXNSKghvUbM10bHjs0jrgZJDxd6n9TJ/vikY7rMfQ8OxuQpF0jBnblsOiZsNMAwavu9
-         7DQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEcr4WCIEKFSXn0d4fhnXiWYOTD3ANWkCz/Yn7OZ0WBU8tNKW3rjC+XABPCetb7alGnolcLXc2bi9jqtYj@vger.kernel.org, AJvYcCWNLGaV0BRbDKIAGUJigfZd7KU6u6CCUyrCiJP3WAzjGDKNcZ3GFhWb2A5mGouoYCI7UBtw1mVrCWwoNiSVCDlB@vger.kernel.org, AJvYcCXkmN3x2bkHJGo5NfqtO+CkmvL3bBahR7y6d63IRQSl7qiFJ29qeeGYrAEEVcHRgg9znyGJQMaMTDX6oI+Pf1Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE0I+KTG3nTeKwV/FqYvlinsWVvn6cpzBNkDxtoatXd7izX0wV
-	frEt0gWk3ADJit7sPQyX/P+xvRZgGN6F4cLdgPeUFkPyoKcAX45gLO4CByY8IOeIO1NDdDTr6Vs
-	KoF0MzmOUCvzy8wWyDuUcvt70zUE=
-X-Gm-Gg: ASbGncviwVsysd1LXmEv6AUqIehjeCf0yKgYYwvd/PgFfzCx2dWQEdMFkhnzVTxi9Pk
-	7uDgURlBDnxeLyVj192KpKyKr1jRH8bOPwdlnqL9jK37ztfvZurZrofOTSTmKXZdywareSTX4mQ
-	==
-X-Google-Smtp-Source: AGHT+IFmIMz5/96ffXlGEO/PiEhxi13fP3EW28PYwfbuAOycQ5rgE8G7lU+aTSRRyZoN+hdXnQT+nm4OMAbTotZA8lg=
-X-Received: by 2002:a05:651c:1505:b0:308:f39c:96b3 with SMTP id
- 38308e7fff4ca-3090ddbfc27mr4014081fa.30.1739399034719; Wed, 12 Feb 2025
- 14:23:54 -0800 (PST)
+        bh=mu/vYpK5EdDCessSAfsc81pUNCu3XRPo/EhuZMObYC8=;
+        b=OI1ot4BAzsIfIEaOlLAcq2AqyvsSyQNr+QfpG3vMwvKGkuVQRpCejPdJBJtizSv7c1
+         KgMF/m3iaoEW47ETlGZGwdkdwTh8X+/5bp7MFRKhOWTe2CfoTMn8odPvvkXjNR4vXwyM
+         wrMt5O518ohY0fxsaGS2K79/eJC0/Wjp/tF+c3swhadA0bD4BFlZiwfHYDTQjb6yOvjU
+         13F49X6xPD/Km5SxVRl4Z3IQswucP9LJr2JLgWVoy3Q9GOqiJPIsUd6bKYxHXVVZeq0i
+         dMC5zI1ETOZcGX2OVv2ZWovf1B5y2F7KjTcOZHgkKiDZ6rQEEVqPz+EUE9hWfVXX+U5s
+         vheA==
+X-Gm-Message-State: AOJu0Yy+pkf1s/fkfm9VSTkuQUeRQBpjJ3DwLrulRs8oiqe63dDBdiZw
+	PSTRRv7Usp7Sn/q860uclkPLhzU6IbLQs8w1gfGu65sxnY9t0Kj0ZI5P9sM8znc=
+X-Gm-Gg: ASbGncuSN1T7k/MiIgpGYIhbqY5Fuv0ff/bwQUptiE8XQBt1iik/Myp7ljf1CPJZf/T
+	b3+AeZOuvx0AFlGnO6zDiExO4u2YymFvhmS+czOoyBIxq9TWY9WxGTKVDDvM0V1+gxb+Q+T89pL
+	tFPuPsSxzgaFdIMGo6y9qOIs9iUsbOBElszN8sWurnDJWpzPMZiodVLw8kjtoPh6loAodwmo1E4
+	8yVZLiVBFtasiuNZXAMrYsvzF6CkyBdJykTNm1Y58RU9s+JFdfFf4VsnpYcFOv5Yx9bclCfaVSy
+	QsGoOdsHgJnF7P/Oy/Zy51jLrGAwiP2WDLKhsChCuIqwCHNjRuIEtG7G2iM=
+X-Google-Smtp-Source: AGHT+IEllG8xsPecNgr5L5f8FoBGVvz0RiYrsFEd203BKL9JYmw0NxRW3Sco6Y7CdnjBxXidfEeaWA==
+X-Received: by 2002:a2e:bc83:0:b0:2fb:8c9a:fe3f with SMTP id 38308e7fff4ca-3090dd56bd0mr4718971fa.22.1739399057615;
+        Wed, 12 Feb 2025 14:24:17 -0800 (PST)
+Received: from eriador.lan (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309100c6415sm150411fa.6.2025.02.12.14.24.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 14:24:16 -0800 (PST)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 0/3] drm/i2c: tda998x: move under drivers/gpu/drm/bridge
+Date: Thu, 13 Feb 2025 00:24:13 +0200
+Message-ID: <173939904858.578381.4749501592256297365.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250113-drm-move-tda998x-v3-0-214e0682a5e4@linaro.org>
+References: <20250113-drm-move-tda998x-v3-0-214e0682a5e4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <f9975604-6a65-4bcc-b532-15fcaa6da0e5@stanley.mountain>
-In-Reply-To: <f9975604-6a65-4bcc-b532-15fcaa6da0e5@stanley.mountain>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Wed, 12 Feb 2025 17:23:42 -0500
-X-Gm-Features: AWEUYZkcyIALuJteIaTDNLZmLlmdJ9IGNfHsTQ6eK0ZDLJ1s_Ft9EEtztmIkhXw
-Message-ID: <CABBYNZK-ibR-+ri_+FFiorLkEvT_1tD2YKSOeSuTsyoS4dM1CA@mail.gmail.com>
-Subject: Re: [PATCH next] Bluetooth: L2CAP: Fix NULL dereference in l2cap_recv_acldata()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>, Marcel Holtmann <marcel@holtmann.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Dan,
+On Mon, 13 Jan 2025 11:53:43 +0200, Dmitry Baryshkov wrote:
+> TDA998x is the HDMI bridge driver, incorporating drm_connector and
+> optional drm_encoder (created via the component bind API by the TICLDC
+> and HDLCD drivers). TDA9950 is an I2C-CEC translator, being present
+> on-die on the TDA9989 and TDA19989 chips.
+> 
+> Move TDA9950 driver to drivers/media/cec/i2c and TDA998x driver to
+> drivers/gpu/drm/bridge/.
+> 
+> [...]
 
-On Wed, Feb 12, 2025 at 11:40=E2=80=AFAM Dan Carpenter <dan.carpenter@linar=
-o.org> wrote:
->
-> The "conn" pointer is NULL so this "goto drop;" will lead to a NULL
-> dereference when we call mutex_unlock(&conn->lock). Free the skb and
-> return directly instead.
->
-> Fixes: dd6367916d2d ("Bluetooth: L2CAP: Fix corrupted list in hci_chan_de=
-l")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  net/bluetooth/l2cap_core.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-> index 6cdc1dc3a7f9..fec11e576f31 100644
-> --- a/net/bluetooth/l2cap_core.c
-> +++ b/net/bluetooth/l2cap_core.c
-> @@ -7456,8 +7456,10 @@ void l2cap_recv_acldata(struct hci_conn *hcon, str=
-uct sk_buff *skb, u16 flags)
->
->         hci_dev_unlock(hcon->hdev);
->
-> -       if (!conn)
-> -               goto drop;
-> +       if (!conn) {
-> +               kfree_skb(skb);
-> +               return;
-> +       }
->
->         BT_DBG("conn %p len %u flags 0x%x", conn, skb->len, flags);
->
-> --
-> 2.47.2
+Applied to drm-misc-next, thanks!
 
-I went ahead and fixed this in place since it has not been sent to net
-yet, I did add your Signed-off-by though.
+[1/3] drm/i2c: tda998x: drop support for platform_data
+      commit: b7c5169ab9ddc3432161412bc2de28111306fbb3
+[2/3] media: cec: move driver for TDA9950 from drm/i2c
+      commit: caa6f4a75e9f8eaebd814a9c2d1602e0926f473d
+[3/3] drm/i2c: move TDA998x driver under drivers/gpu/drm/bridge
+      commit: 325ba852d148434c5bcb06d513af1933a7f77b70
 
---=20
-Luiz Augusto von Dentz
+Best regards,
+-- 
+With best wishes
+Dmitry
+
