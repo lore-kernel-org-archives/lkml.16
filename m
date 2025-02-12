@@ -1,186 +1,262 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA71208A7
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 04:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67010208A7;
+	Wed, 12 Feb 2025 04:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739335739; cv=none; b=nzUoo/uc/LcRc1dyxyOZY5uZMDV7hwPIiwdoSz/dKme2IT+FuBPTBFq+2Lpl/Ampc57k0XhQum+WNKGUGA1zadCgMizF3kge8egaFi20qpmHjUPznGuKVE9TR4RmdtUF7caJbtUJ42UNSEuIMKWzKdGb2U6sTT5CSkhmWQGQvjc=
+	t=1739335751; cv=none; b=bPq67FqzHtJkE50NCBFsS+OH3Vthff4JGcFbGfzEwmfm/6DXAPcG3jPJLJWXpx645D4HzIVHvU4nINg2dm6NyYlVSvUOFCHtI0nvcIsVP0t+SSZ30qblVENKO0SJjMdGsLKHbLIcNqfZ/VJKNnTikjAUzGcpkgOByWC6aR78kRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739335739; c=relaxed/simple;
-	bh=K4goNeS5jx9vOeqxSj6nPJuEvuvWZ7J5t9DWFPlyReg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K2NB7/XCmlEhqat4K1OKA0TfOxeKC5YLEsnz2piUkdLcT3kQWPvdtA4D2A35foG03FF2nktFetrh/pt5BrhmskriOWrKv2zjH/aUUX3N+vBksCOyJIE05RPahqzRjn4WATZp71P/N8/UPgjFLPIxfLzIS/Gx59hYFZo66QJf0jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0lMFWp1T; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739335751; c=relaxed/simple;
+	bh=SZHbFT5hPcDSmpSzZXIPq92JgekFc7wyIuw+QzgaAJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a5aY15b/csWpEsumEMTzeHaOuv0Zdnedq5Sa1C88sXQ7a8+hK8l+a1mkvM56bGAO5ik8f/7NuSIV209gXr1FndaU5GK50NZ3dZc9nlXnOYjjWyurFTRhOpLv1Le3UH6hhIaxuLy0gTcrjPIwBWWwZy77sqTBcebtOIPjYVeNJuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=jesQSFU5; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0lMFWp1T"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e549be93d5eso6097136276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 20:48:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739335736; x=1739940536; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+4vbUZUTkpqr3rG0okFJsZLaxVBB5/ZaX+q2Q50aqnk=;
-        b=0lMFWp1TdCwacy3kz8YACkjR08+KWkzayCjpXQiLuW7PpJ2hDYLa50UZQfwraf6moE
-         rnlD7L9haNaWJhbGxgwJNxFfCvVO2TJ1vNboLSwhP+Slca/akeQHgEya9dbPIkdeA3U9
-         A0zB111syKdCiqXtcBQ20FCUkCnrTrudRzgapGoPPD6ktzrhZGAn0rU546xy/BcddT9W
-         mVaVTGQ4UAuPkaUWNO2zRlhp7lbScglv9XjSpg5fYDUHp8lyadvahiGDXhBoksdlZbna
-         eiAY7xqw/Bj25wdHIB/TZZH3sH5E2tQdx8K5jIPRdYJ3fwih749XirhQD9Wtd/mchSqv
-         le0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739335736; x=1739940536;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+4vbUZUTkpqr3rG0okFJsZLaxVBB5/ZaX+q2Q50aqnk=;
-        b=DBuKNrmb5x9U9QQUjgpi5/MDmuoD8VVWTVHSjUNh8oyecS7XzvsPolkflV+IyveT5d
-         XbK0JZLik+wchRKZZrQVDE104UyOnAtW/q4CwmXD/o1WxCOKzq46+iM7Q0Viwakv0Rc7
-         q9FnJqTdpGtMTjgfBc1mw9hoQ88cXV6eE+R30hn6lhIwTG1iO1lrh9L837BjYTay0cWW
-         L/qbEJM7kZ7+Jp5rLrVyfyw7JfkdEiEaTrAt4K3XrDbcFDUuMQXbiLyyPDJVmNtszZXV
-         kaLVgXDVV4hco2pZMweClx1+IDt/mE0fp6F/eFW40OLS4jI7SgemMNNFkYroQf5PJrQn
-         FMtg==
-X-Forwarded-Encrypted: i=1; AJvYcCV8PsqcqlyvcZQmGQtSNpKfeLlUUZkHJ6IXlIRnEkc59hq/81FWAaXKrW7n9M/pisaj2JB/RlLnkJqgVpM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxykeuYw2vzSudpiccv2TunKex6Kn7ciQPpFBJ+JOVD/uL+ENxs
-	+UGH6iWRTKgIgJh477+RNULEuq1HNal4BS64asYZTdOyFbVnJWVXUuD5Qdci2KjxvOgdad3FNuE
-	FoNGgqesX7GSzNvM+V7dtv61H9CriC3rpTvXJY6Ohob1fbUP+LQ==
-X-Gm-Gg: ASbGncsp1eT4e41CtBWZlW/0h7QdlgLcDyj6Elm8RwmYAH4yty7UXrB0/PKXNxJTWoc
-	bsXf4i7CSrTa9fJLDxYS+KgGUikRGGYqiN2QD2mwinob/dzgTqt0RJGXfNzXrt7hG3SiwZQ3TnQ
-	==
-X-Google-Smtp-Source: AGHT+IE5Xh1/6K2tzqDbm+0FgeX0MVlUKWJGOy0qo7qYqOw3FVUwjaXyDF+x/vvLQfzMSijU6o6iB9CfCXWL7WTL7BE=
-X-Received: by 2002:a05:6902:2d08:b0:e58:173e:abcc with SMTP id
- 3f1490d57ef6-e5d9f0d2103mr1847516276.8.1739335736473; Tue, 11 Feb 2025
- 20:48:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="jesQSFU5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=q5G5BQZ/AdEoSNHs040ekLzH6kmkOaqYgMRUB269QUg=; b=jesQSFU5EzbhRAfZ5zYF7YSu6J
+	QvsxSvRBdX8rjqU6mWBN3O8kQ8o/ExqO11DXK79XfntUUrV0COcMZJ5m5IwH6I3lMLytckw9pDhsy
+	2gWRFdoZHTRYPpRhDPufZvSiDRv/+bkgSZB2WAAWs0ssBTNwCxEKjd92JdyFv5TwbpLEvQ4A78M40
+	DK5UvKTRarZOQjmoa8zRipwrxyWrOWGY2FoBQaFeNIrbyP/TboQ/uMPQb0C96dqMNwTr7MjHDJ2Ko
+	vLVOJJ+yVX9W2i+4JHBQO0K9jwtis8o+rJ+xoGaFTJX9e1hv6wr1eehvNblDmvIs3J7H/aUnVjzPQ
+	XRZ/2jfw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1ti4TG-00HDt4-35;
+	Wed, 12 Feb 2025 12:48:56 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 12 Feb 2025 12:48:55 +0800
+Date: Wed, 12 Feb 2025 12:48:55 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: kernel test robot <lkp@intel.com>
+Cc: Danny Tsen <dtsen@linux.ibm.com>, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [PATCH] crypto: lib/Kconfig - Fix lib built-in failure when arch is
+ modular
+Message-ID: <Z6woN4vgdaywOZxm@gondor.apana.org.au>
+References: <202501230223.ikroNDr1-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210183224.v3.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
- <20250210103244.646150-1-chharry@google.com> <CABBYNZJ1LbN_3H1pJsZ6mH1nY7ijb9nbuPSJJwqyvJnC0=U6PQ@mail.gmail.com>
- <CADg1FFe1DeDFmudxWZp3_thvTnm1N=ZOjXts0sJ7mxaUsFxE5Q@mail.gmail.com> <CABBYNZK8-8k5eZ8TZLM-g4KC_wt8VQ+jx_iryS9_xGxHt+u=1g@mail.gmail.com>
-In-Reply-To: <CABBYNZK8-8k5eZ8TZLM-g4KC_wt8VQ+jx_iryS9_xGxHt+u=1g@mail.gmail.com>
-From: Hsin-chen Chuang <chharry@google.com>
-Date: Wed, 12 Feb 2025 12:48:29 +0800
-X-Gm-Features: AWEUYZk8ctHJOT5ECfu-lAdE4F3G2Nsn_DGEWQAHoeAfkXDpGisSwXscNHVUMjw
-Message-ID: <CADg1FFcsYSM2SsyYULBzqmML67+4Hx9ipemACOv_oLCrwweiWg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] Bluetooth: Add ABI doc for sysfs isoc_alt
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org, 
-	chromeos-bluetooth-upstreaming@chromium.org, 
-	Hsin-chen Chuang <chharry@chromium.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Marcel Holtmann <marcel@holtmann.org>, linux-kernel@vger.kernel.org, 
-	Ying Hsu <yinghsu@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202501230223.ikroNDr1-lkp@intel.com>
 
-Hi Luiz,
+On Thu, Jan 23, 2025 at 02:18:27AM +0800, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   c4b9570cfb63501638db720f3bee9f6dfd044b82
+> commit: b42519dbba838c928e82b55f32712fbe3eed2c45 crypto: ppc/curve25519 - Update Kconfig and Makefile for ppc64le
+> date:   8 months ago
+> config: powerpc64-randconfig-r111-20250122 (https://download.01.org/0day-ci/archive/20250123/202501230223.ikroNDr1-lkp@intel.com/config)
+> compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
+> reproduce: (https://download.01.org/0day-ci/archive/20250123/202501230223.ikroNDr1-lkp@intel.com/reproduce)
 
-Thanks, that makes sense to me. I'll resolve this comment in the next versi=
-on.
+Thanks for the report.  This is the old built-in vs. modular Kconfig
+problem.  This patch should fix it:
 
-On Wed, Feb 12, 2025 at 6:01=E2=80=AFAM Luiz Augusto von Dentz
-<luiz.dentz@gmail.com> wrote:
->
-> Hi Hsin-chen,
->
-> On Mon, Feb 10, 2025 at 11:23=E2=80=AFPM Hsin-chen Chuang <chharry@google=
-.com> wrote:
-> >
-> > Hi Luiz,
-> >
-> > Thanks for the feedback.
-> >
-> > On Tue, Feb 11, 2025 at 2:17=E2=80=AFAM Luiz Augusto von Dentz
-> > <luiz.dentz@gmail.com> wrote:
-> > >
-> > > Hi Hsin-chen,
-> > >
-> > > On Mon, Feb 10, 2025 at 5:32=E2=80=AFAM Hsin-chen Chuang <chharry@goo=
-gle.com> wrote:
-> > > >
-> > > > From: Hsin-chen Chuang <chharry@chromium.org>
-> > > >
-> > > > The functionality was completed in commit 5e5c3898ef49 ("Bluetooth:=
- Fix
-> > > > possible race with userspace of sysfs isoc_alt")
-> > > >
-> > > > Fixes: 5e5c3898ef49 ("Bluetooth: Fix possible race with userspace o=
-f sysfs isoc_alt")
-> > > > Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
-> > > > ---
-> > > >
-> > > > (no changes since v1)
-> > > >
-> > > >  Documentation/ABI/stable/sysfs-class-bluetooth | 12 ++++++++++++
-> > > >  1 file changed, 12 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/ABI/stable/sysfs-class-bluetooth b/Docum=
-entation/ABI/stable/sysfs-class-bluetooth
-> > > > index 36be02471174..1168e0318e35 100644
-> > > > --- a/Documentation/ABI/stable/sysfs-class-bluetooth
-> > > > +++ b/Documentation/ABI/stable/sysfs-class-bluetooth
-> > > > @@ -7,3 +7,15 @@ Description:   This write-only attribute allows us=
-ers to trigger the vendor reset
-> > > >                 The reset may or may not be done through the device=
- transport
-> > > >                 (e.g., UART/USB), and can also be done through an o=
-ut-of-band
-> > > >                 approach such as GPIO.
-> > > > +
-> > > > +What:          /sys/class/bluetooth/hci<index>/isoc_alt
-> > > > +Date:          10-Feb-2025
-> > > > +KernelVersion: 6.13
-> > > > +Contact:       linux-bluetooth@vger.kernel.org
-> > > > +Description:   This attribute allows users to configure the USB Al=
-ternate setting
-> > > > +               for the specific HCI device. Reading this attribute=
- returns the
-> > > > +               current setting, and writing any supported numbers =
-would change
-> > > > +               the setting. See the USB Alternate setting definiti=
-on in Bluetooth
-> > > > +               core spec 5, vol 4, part B, table 2.1.
-> > > > +               If the data is not a valid number, the write fails =
-with -EINVAL.
-> > > > +               The other failures are vendor specific.
-> > >
-> > > Still not really convinced this is the right way to expose it, it is
-> > > not an HCI attribute to begin with, not sure if we couldn't perhaps
-> >
-> > Could you tell more about why this is not an HCI attr to begin with?
-> > The alt setting is bonded to the USB device which is now under btusb's
-> > control, and btusb creates a sysfs node for this. This attr location
-> > decision seems natural to me.
->
-> Well alt setting is (obviously) not covered as part of HCI
-> specification, USB is one possible transport bus of HCI, but that
-> itself is already saying that we would be mixing the transport with
-> actual HCI protocol.
->
-> > > add another node to control it or add via USB device?
-> >
-> > I feel allowing this in the USB sysfs API might be an overkill as that
-> > makes all USB devices' alt settings be controllable from the user
-> > space. Limiting this usage in the scope of BT makes more sense to me.
->
-> Not all, just btusb ones, that said what we could add another level to
-> control transport specific attribute e.g
-> /sys/class/bluetooth/usb#/isoc_alt than that becomes the parent of
-> /sys/class/bluetooth/hci<index>
->
-> > >
-> > > --
-> > > Luiz Augusto von Dentz
-> >
-> > --
-> > Best Regards,
-> > Hsin-chen
->
->
->
-> --
-> Luiz Augusto von Dentz
+---8<---
+The HAVE_ARCH Kconfig options in lib/crypto try to solve the
+modular versus built-in problem, but it still fails when the
+the LIB option (e.g., CRYPTO_LIB_CURVE25519) is selected externally.
+
+Fix this by introducing a level of indirection with ARCH_MAY_HAVE
+Kconfig options, these then go on to select the ARCH_HAVE options
+if the ARCH Kconfig options matches that of the LIB option.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202501230223.ikroNDr1-lkp@intel.com/
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/arch/arm/crypto/Kconfig b/arch/arm/crypto/Kconfig
+index 32650c8431d9..47d9cc59f254 100644
+--- a/arch/arm/crypto/Kconfig
++++ b/arch/arm/crypto/Kconfig
+@@ -6,7 +6,7 @@ config CRYPTO_CURVE25519_NEON
+ 	tristate "Public key crypto: Curve25519 (NEON)"
+ 	depends on KERNEL_MODE_NEON
+ 	select CRYPTO_LIB_CURVE25519_GENERIC
+-	select CRYPTO_ARCH_HAVE_LIB_CURVE25519
++	select CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
+ 	help
+ 	  Curve25519 algorithm
+ 
+@@ -47,7 +47,7 @@ config CRYPTO_NHPOLY1305_NEON
+ config CRYPTO_POLY1305_ARM
+ 	tristate "Hash functions: Poly1305 (NEON)"
+ 	select CRYPTO_HASH
+-	select CRYPTO_ARCH_HAVE_LIB_POLY1305
++	select CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
+ 	help
+ 	  Poly1305 authenticator algorithm (RFC7539)
+ 
+@@ -214,7 +214,7 @@ config CRYPTO_AES_ARM_CE
+ config CRYPTO_CHACHA20_NEON
+ 	tristate "Ciphers: ChaCha20, XChaCha20, XChaCha12 (NEON)"
+ 	select CRYPTO_SKCIPHER
+-	select CRYPTO_ARCH_HAVE_LIB_CHACHA
++	select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
+ 	help
+ 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
+ 	  stream cipher algorithms
+diff --git a/arch/powerpc/crypto/Kconfig b/arch/powerpc/crypto/Kconfig
+index 5b315e9756b3..e453cb0c82d2 100644
+--- a/arch/powerpc/crypto/Kconfig
++++ b/arch/powerpc/crypto/Kconfig
+@@ -6,7 +6,7 @@ config CRYPTO_CURVE25519_PPC64
+ 	tristate "Public key crypto: Curve25519 (PowerPC64)"
+ 	depends on PPC64 && CPU_LITTLE_ENDIAN
+ 	select CRYPTO_LIB_CURVE25519_GENERIC
+-	select CRYPTO_ARCH_HAVE_LIB_CURVE25519
++	select CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
+ 	help
+ 	  Curve25519 algorithm
+ 
+@@ -95,7 +95,7 @@ config CRYPTO_CHACHA20_P10
+ 	depends on PPC64 && CPU_LITTLE_ENDIAN && VSX
+ 	select CRYPTO_SKCIPHER
+ 	select CRYPTO_LIB_CHACHA_GENERIC
+-	select CRYPTO_ARCH_HAVE_LIB_CHACHA
++	select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
+ 	help
+ 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
+ 	  stream cipher algorithms
+diff --git a/arch/x86/crypto/Kconfig b/arch/x86/crypto/Kconfig
+index 4757bf922075..c189dad0969b 100644
+--- a/arch/x86/crypto/Kconfig
++++ b/arch/x86/crypto/Kconfig
+@@ -6,7 +6,7 @@ config CRYPTO_CURVE25519_X86
+ 	tristate "Public key crypto: Curve25519 (ADX)"
+ 	depends on X86 && 64BIT
+ 	select CRYPTO_LIB_CURVE25519_GENERIC
+-	select CRYPTO_ARCH_HAVE_LIB_CURVE25519
++	select CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
+ 	help
+ 	  Curve25519 algorithm
+ 
+@@ -352,7 +352,7 @@ config CRYPTO_CHACHA20_X86_64
+ 	depends on X86 && 64BIT
+ 	select CRYPTO_SKCIPHER
+ 	select CRYPTO_LIB_CHACHA_GENERIC
+-	select CRYPTO_ARCH_HAVE_LIB_CHACHA
++	select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
+ 	help
+ 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
+ 	  stream cipher algorithms
+@@ -420,7 +420,7 @@ config CRYPTO_POLY1305_X86_64
+ 	tristate "Hash functions: Poly1305 (SSE2/AVX2)"
+ 	depends on X86 && 64BIT
+ 	select CRYPTO_LIB_POLY1305_GENERIC
+-	select CRYPTO_ARCH_HAVE_LIB_POLY1305
++	select CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
+ 	help
+ 	  Poly1305 authenticator algorithm (RFC7539)
+ 
+diff --git a/lib/crypto/Kconfig b/lib/crypto/Kconfig
+index b01253cac70a..c542ef1d64d0 100644
+--- a/lib/crypto/Kconfig
++++ b/lib/crypto/Kconfig
+@@ -42,12 +42,17 @@ config CRYPTO_LIB_BLAKE2S_GENERIC
+ 	  of CRYPTO_LIB_BLAKE2S.
+ 
+ config CRYPTO_ARCH_HAVE_LIB_CHACHA
+-	tristate
++	bool
+ 	help
+ 	  Declares whether the architecture provides an arch-specific
+ 	  accelerated implementation of the ChaCha library interface,
+ 	  either builtin or as a module.
+ 
++config CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
++	tristate
++	select CRYPTO_ARCH_HAVE_LIB_CHACHA if CRYPTO_LIB_CHACHA=m
++	select CRYPTO_ARCH_HAVE_LIB_CHACHA if CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA=y
++
+ config CRYPTO_LIB_CHACHA_GENERIC
+ 	tristate
+ 	select CRYPTO_LIB_UTILS
+@@ -60,7 +65,6 @@ config CRYPTO_LIB_CHACHA_GENERIC
+ 
+ config CRYPTO_LIB_CHACHA
+ 	tristate "ChaCha library interface"
+-	depends on CRYPTO_ARCH_HAVE_LIB_CHACHA || !CRYPTO_ARCH_HAVE_LIB_CHACHA
+ 	select CRYPTO_LIB_CHACHA_GENERIC if CRYPTO_ARCH_HAVE_LIB_CHACHA=n
+ 	help
+ 	  Enable the ChaCha library interface. This interface may be fulfilled
+@@ -68,12 +72,17 @@ config CRYPTO_LIB_CHACHA
+ 	  is available and enabled.
+ 
+ config CRYPTO_ARCH_HAVE_LIB_CURVE25519
+-	tristate
++	bool
+ 	help
+ 	  Declares whether the architecture provides an arch-specific
+ 	  accelerated implementation of the Curve25519 library interface,
+ 	  either builtin or as a module.
+ 
++config CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
++	tristate
++	select CRYPTO_ARCH_HAVE_LIB_CURVE25519 if CRYPTO_LIB_CURVE25519=m
++	select CRYPTO_ARCH_HAVE_LIB_CURVE25519 if CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519=y
++
+ config CRYPTO_LIB_CURVE25519_GENERIC
+ 	tristate
+ 	help
+@@ -85,7 +94,6 @@ config CRYPTO_LIB_CURVE25519_GENERIC
+ 
+ config CRYPTO_LIB_CURVE25519
+ 	tristate "Curve25519 scalar multiplication library"
+-	depends on CRYPTO_ARCH_HAVE_LIB_CURVE25519 || !CRYPTO_ARCH_HAVE_LIB_CURVE25519
+ 	select CRYPTO_LIB_CURVE25519_GENERIC if CRYPTO_ARCH_HAVE_LIB_CURVE25519=n
+ 	select CRYPTO_LIB_UTILS
+ 	help
+@@ -104,12 +112,17 @@ config CRYPTO_LIB_POLY1305_RSIZE
+ 	default 1
+ 
+ config CRYPTO_ARCH_HAVE_LIB_POLY1305
+-	tristate
++	bool
+ 	help
+ 	  Declares whether the architecture provides an arch-specific
+ 	  accelerated implementation of the Poly1305 library interface,
+ 	  either builtin or as a module.
+ 
++config CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
++	tristate
++	select CRYPTO_ARCH_HAVE_LIB_POLY1305 if CRYPTO_LIB_POLY1305=m
++	select CRYPTO_ARCH_HAVE_LIB_POLY1305 if CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305=y
++
+ config CRYPTO_LIB_POLY1305_GENERIC
+ 	tristate
+ 	help
+@@ -121,7 +134,6 @@ config CRYPTO_LIB_POLY1305_GENERIC
+ 
+ config CRYPTO_LIB_POLY1305
+ 	tristate "Poly1305 library interface"
+-	depends on CRYPTO_ARCH_HAVE_LIB_POLY1305 || !CRYPTO_ARCH_HAVE_LIB_POLY1305
+ 	select CRYPTO_LIB_POLY1305_GENERIC if CRYPTO_ARCH_HAVE_LIB_POLY1305=n
+ 	help
+ 	  Enable the Poly1305 library interface. This interface may be fulfilled
+@@ -130,8 +142,6 @@ config CRYPTO_LIB_POLY1305
+ 
+ config CRYPTO_LIB_CHACHA20POLY1305
+ 	tristate "ChaCha20-Poly1305 AEAD support (8-byte nonce library version)"
+-	depends on CRYPTO_ARCH_HAVE_LIB_CHACHA || !CRYPTO_ARCH_HAVE_LIB_CHACHA
+-	depends on CRYPTO_ARCH_HAVE_LIB_POLY1305 || !CRYPTO_ARCH_HAVE_LIB_POLY1305
+ 	depends on CRYPTO
+ 	select CRYPTO_LIB_CHACHA
+ 	select CRYPTO_LIB_POLY1305
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
