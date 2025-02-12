@@ -1,45 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E982045A1;
-	Wed, 12 Feb 2025 22:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3104F190470;
+	Wed, 12 Feb 2025 22:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739398487; cv=none; b=reLtFSji+3EDU+rX/n0Arr/OxXHKc4br6agrfapcaajNUlyRGi8J43Ah6owJaYyullehgKZxCQhmgcUk/0oiof4FNpTbQkNaEj+/li8O/NWp3T/fhoXvb8K687lkNUT9H0t/zvbYWi409yPQgxwGoPy68cZxQeAtVwOabzDJ4/4=
+	t=1739398594; cv=none; b=EgbdC8vHnueL+CfqF4imaSyMCQwFSMDT8Kthgi+MKvOEfVNlYDK7BFU6MNzKzcg9W75s0mgkUTkoFUoyHGEX2skMDcUf9+WOeHrDpKbi99GQ6tVVsKF1uIuRgKwAKlEriM0jUVFmNuHoWzQ0HNXmqmqT9Os3Ec6xelstD2LLyHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739398487; c=relaxed/simple;
-	bh=NZW/9uBsUIjGoRgqr43K+mpay3vj7uS6/3JlM50sCdU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nzw9eOz4xfO3MTCZVCAaLlqLh8wQijZSfnBB9gWYW1ePlD49JG6juhwUE9v51t9sfYGXdcJdeZEPlwzeLUMEtAAyHzbYWyXQ8M3nssB4QEZRkxqT1+k+r1YSU2Jn2ph7jOMc/f0CnpdWV2D5VOML+f05sMJVGdwm/FqSRMpc5U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BY3/kzF0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739398594; c=relaxed/simple;
+	bh=kNDG/gEhiX5P6/7ND6hRtddzOBz2ryqMmMGUppU/+Fs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DLFTWxOBeVPFslLwfYMZ03osgonrBH+Q9ylUudNdSYqiWmspkrne4Wc5k6JPjmsNez2dnaq54lkrmcXbQu5mHgCUoQDsqOFjYxG7a0grxfzlej77ENZpNn5KigG20uYtlUdV+dXik5x0/5ibAlAXALBnjswn9Vzx62nJpa7uJH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RuYw5nad; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BY3/kzF0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACDA6C4CEDF;
-	Wed, 12 Feb 2025 22:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739398487;
-	bh=NZW/9uBsUIjGoRgqr43K+mpay3vj7uS6/3JlM50sCdU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BY3/kzF0cVm/Vkm6KiKsM1Vc/PK1cnV8tNW3FWMStTVMpTnSl6XgEqQRaJ1YrQI12
-	 nNOi4B8lstCJK85H+0LhMTZU+MRcWRRGBc6sVF+gE2v6aUWdw4vYvjcDWJ/pjc4zQO
-	 NZXnGslum6p98bvpcT4egXyQnh4I0B3PEF0RWjIRHXSNDewbRbmM4mayG1VNHa1Ptd
-	 gwo3pqwnn9JdhzJ9FSMlX5TGLiJySkNp4Nx8ZC5ccjQa2LlPX8qPJDUyuLXtnc5u2d
-	 W1NRllTKIMEAN80sltfiBi6m4Kr/bW8MqJfhZZs4ZprkyC+Y8DGH41mB6hmI7NotAh
-	 QyrrDdAb2VmFQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH] perf tools: Use symfs when opening debuginfo by path
-Date: Wed, 12 Feb 2025 14:14:45 -0800
-Message-ID: <20250212221445.437481-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RuYw5nad"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739398592; x=1770934592;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kNDG/gEhiX5P6/7ND6hRtddzOBz2ryqMmMGUppU/+Fs=;
+  b=RuYw5nadeTrNlUZD4udC+PgBvETILiA9ow7QCho22iu0OOjTdzRzS3I9
+   UokC3E3bW8pOUlVWYni4YXtgwUX6mo/OOEMGKxR2gJxYyOku63Mj4m3Dv
+   wJVPNZY0Nrucl492PkXJfiQqbV1lAdQkfxVzyEqdJnOBNQfLK/O6MHbeL
+   xhOOLUWCyKlDHbUuCpsmu+lQ0IRb9dObynNVswm8K1/JeVpLcAFLm+eH8
+   U+bkltvV/X2QmWoWvwDaRgUuc0BFzvpynnENw67N3MXaBziHRUEqBh3JQ
+   zR7a7SuQ0dzVgFahxFz6fG3zi4NooQGLknEEhFm1AJ9LXXduPeFya2X++
+   A==;
+X-CSE-ConnectionGUID: bfFxhWuESvC4SFRK0g+Jxw==
+X-CSE-MsgGUID: h+lgoIbpSfq6Afe4NFWcRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="51066689"
+X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
+   d="scan'208";a="51066689"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 14:16:32 -0800
+X-CSE-ConnectionGUID: 96gXPdYgRO2hb2f6hjraLw==
+X-CSE-MsgGUID: AkjgMlqmQduJcg5E8fOQcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="150123862"
+Received: from pg15swiplab1181.png.altera.com ([10.244.232.167])
+  by orviesa001.jf.intel.com with ESMTP; 12 Feb 2025 14:16:29 -0800
+From: tien.sung.ang@intel.com
+To: Moritz Fischer <mdf@kernel.org>,
+	Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>,
+	linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kuhanh.murugasen.krishnan@intel.com,
+	kuhanh.murugasen.krishnan@altera.com
+Cc: Ang Tien Sung <tien.sung.ang@intel.com>
+Subject: [PATCH] fpga: altera-cvp: Increase credit timeout
+Date: Thu, 13 Feb 2025 06:12:49 +0800
+Message-Id: <20250212221249.2715929-1-tien.sung.ang@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,43 +64,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I found that it failed to load a binary using --symfs option.  Say I
-have a binary in /home/user/prog/xxx and a perf data file with it.  If I
-move them to a different machine and use --symfs, it tries to find the
-binary in some locations under symfs using dso__read_binary_type_filename(),
-but not the last one.
+From: Kuhanh Murugasen Krishnan <kuhanh.murugasen.krishnan@intel.com>
 
-  ${symfs}/usr/lib/debug/home/user/prog/xxx.debug
-  ${symfs}/usr/lib/debug/home/user/prog/xxx
-  ${symfs}/home/user/prog/.debug/xxx
-  /home/user/prog/xxx
+Increase the timeout for SDM (Secure device manager) data credits from
+20ms to 40ms. Internal stress tests running at 500 loops failed with the
+current timeout of 20ms. At the start of a FPGA configuration, the CVP
+host driver reads the transmit credits from SDM. It then sends bitstream
+FPGA data to SDM based on the total credits. Each credit allows the
+CVP host driver to send 4kBytes of data. There are situations whereby,
+the SDM did not respond in time during testing.
 
-It should check ${symfs}/home/usr/prog/xxx.  Let's fix it.
-
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Ang Tien Sung <tien.sung.ang@intel.com>
+Signed-off-by: Kuhanh Murugasen Krishnan <kuhanh.murugasen.krishnan@intel.com>
 ---
- tools/perf/util/debuginfo.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/fpga/altera-cvp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-index 19acf4775d3587a4..b5deea7cbdf24620 100644
---- a/tools/perf/util/debuginfo.c
-+++ b/tools/perf/util/debuginfo.c
-@@ -125,8 +125,12 @@ struct debuginfo *debuginfo__new(const char *path)
- 	dso__put(dso);
+diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
+index 6b0914432445..5af0bd33890c 100644
+--- a/drivers/fpga/altera-cvp.c
++++ b/drivers/fpga/altera-cvp.c
+@@ -52,7 +52,7 @@
+ /* V2 Defines */
+ #define VSE_CVP_TX_CREDITS		0x49	/* 8bit */
  
- out:
-+	if (dinfo)
-+		return dinfo;
-+
- 	/* if failed to open all distro debuginfo, open given binary */
--	return dinfo ? : __debuginfo__new(path);
-+	symbol__join_symfs(buf, path);
-+	return __debuginfo__new(buf);
- }
- 
- void debuginfo__delete(struct debuginfo *dbg)
+-#define V2_CREDIT_TIMEOUT_US		20000
++#define V2_CREDIT_TIMEOUT_US		40000
+ #define V2_CHECK_CREDIT_US		10
+ #define V2_POLL_TIMEOUT_US		1000000
+ #define V2_USER_TIMEOUT_US		500000
 -- 
-2.48.1.502.g6dc24dfdaf-goog
+2.25.1
 
