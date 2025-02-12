@@ -1,134 +1,101 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2741DB124;
-	Wed, 12 Feb 2025 04:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8E3271835;
+	Wed, 12 Feb 2025 04:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739332805; cv=none; b=LO2r1flpkZOqXG6QEr4jRRh/6+bDzH85ddPwkFDamde2UZNnNdSiunrb0iiiT04waBFPYphsnsEBe1J+J3Xw2W5tkrL3ofbtAIIsdujk2TChbwBvayPjaen7q5taTpHitH3vr4C/C7EW9A7d2RmkGyQ20E7HgPCiBVGkEwL5L+o=
+	t=1739333114; cv=none; b=MXVpASojqTRrP6WcSvSOW2NKpz4MVd+Ut6TS1kNko4hxEVg4H2ItT67o63wqpfpwiV0Xj/jlNrrv5+JAMNWXrKftja6RUVMVYNEtiPL1f1AJehZNGsjccwcEZuqam85TbX7MD0L7unyg6Mkbxifn4Pjwjt6zUseeIz9fCnhAK9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739332805; c=relaxed/simple;
-	bh=8kcper8CAFRodFkRMBu4A1TuuFMoHJub3pdsXDGvIgo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=DUM5tJ9XhaybkPCna78eOQker5L5P/NKgjXG+5NZJpx0dFbGAwiTj9miBFXNYBjaSwjHwfoBWiRvUYBRwY+kd6mU1bOVIybdl/11au1UyVH1DLqq3Fxx5VJAXjXQBMOfcwlJ986eS7EtqNNC0esrKI4/xnUB3tP+NYCOsR4NytU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Lp+F64K1; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739333114; c=relaxed/simple;
+	bh=ybIygu13oOH3MI8QbIfsK7m4pRQxcHlQE2MUTFs9fjQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=m4ekgV5a1wuf7R7sz3Ssy50LIvyx2/gWOxwyEAAEuqInziP3zN2rkr76+4yFH4KmKnYiq5oTVC3NQYNFD1ZajckTWuABJrBX466SGnfZsrskMtHvVhVtOUUDZeS9dOglhnHX6MNdNSXCepiocDG8j/qy3KZH191Fxi9w8WaZMPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPIDA6ro; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Lp+F64K1"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BIEtd0001430;
-	Wed, 12 Feb 2025 03:59:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=hlrFOGNWh4gxUPbMjBQR/M
-	gi+eoX17QXqjhfpI/BVUU=; b=Lp+F64K1KHncd6IxgvU9UujYwhlk62hQ4moltz
-	Hj2kwdiVaPOJVycQh5vfQVKHmhNlrIeJUhV6pbNypU3/o1xWM3xRCe9+J1khKkih
-	LG7ia+tLTx9AHrQZusBtmiUoSwS/XpzIjlPzzGsUiTELpZpPS+hbd8N8XZf9bEar
-	uFCcp4sD7W1ba4c2Pv25Vo689QR/k2TmmNBh7IGsPelmJu+0bmgqEd6POnmxt/Ba
-	OXJm0Kl6+RbwcliNKYokblCo9mlYGrKWlWy48Udu/MhaJGdzsozdNUk3ascMTWji
-	nnZ0uY5XNFeS6BXpq7jphnjo+gWQSyFI3WWPxwo2lpDo5cEQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qepxp5c1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 03:59:55 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51C3xsXb010904
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 03:59:54 GMT
-Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 11 Feb 2025 19:59:54 -0800
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-Date: Tue, 11 Feb 2025 19:59:19 -0800
-Subject: [PATCH] drm/msm/dpu: Disable dither in phys encoder cleanup
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPIDA6ro"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3850C4CEDF;
+	Wed, 12 Feb 2025 04:05:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739333113;
+	bh=ybIygu13oOH3MI8QbIfsK7m4pRQxcHlQE2MUTFs9fjQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EPIDA6roMboDSVK9Hu+DMva2D4DI1vs1cARp6GDK4B2UlsWiJOvf6Cmrd/HY1pxcM
+	 XChqNqjTc1JLVAsyOyv6wrJja4l6ggvaFtGZxp900mpKsLQJBGMvH10kSEf8TMYzUI
+	 b7Hqhamm9WhTNgyMFNff6AflhioI1v3WAj0L0cGKrb/Qqn/29w0t+2u8gKv68lVdhv
+	 90ST5Aoxlkp8Y1K1aDxeiI0xd8WkpgB0qVrg48B13y3qVRUY3ExcYPVBJU9waGugCy
+	 LaiXh9hSos/9iZlc8XxztDvszX94Nc/lcPZQ6Oei/ql1wGUjIgYh36Dukq8nbv7kSM
+	 mwc4KLZHdWDCQ==
+Date: Wed, 12 Feb 2025 13:05:09 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Andrii Nakryiko
+ <andrii.nakryiko@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, Kees
+ Cook <kees@kernel.org>, Eyal Birger <eyal.birger@gmail.com>, stable
+ <stable@vger.kernel.org>, Jann Horn <jannh@google.com>, LKML
+ <linux-kernel@vger.kernel.org>, linux-trace-kernel
+ <linux-trace-kernel@vger.kernel.org>, Linux API
+ <linux-api@vger.kernel.org>, X86 ML <x86@kernel.org>, bpf
+ <bpf@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, Deepak Gupta
+ <debug@rivosinc.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCHv2 perf/core] uprobes: Harden uretprobe syscall
+ trampoline check
+Message-Id: <20250212130509.ce1987095c6b17b26d3ee40a@kernel.org>
+In-Reply-To: <20250211165940.GB9174@redhat.com>
+References: <20250211111559.2984778-1-jolsa@kernel.org>
+	<CAEf4BzYPmtUirnO3Bp+3F3d4++4ttL_MZAG+yGcTTKTRK2X2vw@mail.gmail.com>
+	<CAADnVQJ05xkXw+c_T1qB+ECUqO5sJxDVJ3bypjS3KSQCTJb-1g@mail.gmail.com>
+	<20250211165940.GB9174@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250211-dither-disable-v1-1-ac2cb455f6b9@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAJYcrGcC/x2MQQqAIBAAvyJ7TnCNkPpKdNBccyEsNCII/550G
- uYw80KhzFRgEi9kurnwkZpgJ2CNNm0k2TcHrfSgNKL0fEXKDcW6naQzxiH1OBoToEVnpsDPP5y
- XWj8Bo4rbYAAAAA==
-X-Change-ID: 20250211-dither-disable-b77b1e31977f
-To: Rob Clark <robdclark@gmail.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>
-CC: <quic_abhinavk@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jessica Zhang <quic_jesszhan@quicinc.com>
-X-Mailer: b4 0.15-dev-f0f05
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739332794; l=1589;
- i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
- bh=8kcper8CAFRodFkRMBu4A1TuuFMoHJub3pdsXDGvIgo=;
- b=YcjriMXuxEwHpAJLvn2pYXby+nxL22zkTApcPQZgxH2kvcg5R1XVGLxETXPDdy37vvHhfSezp
- R7N/hxUCfn3BSIwVoTzqOtfoZlTc+7pt7PYfKcOvs28WIwTrxOlZ8Gk
-X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
- pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: si1Do7P2oqDc3Kr0s6RXFpDYmXpN33Iu
-X-Proofpoint-ORIG-GUID: si1Do7P2oqDc3Kr0s6RXFpDYmXpN33Iu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_10,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- phishscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 impostorscore=0
- mlxlogscore=803 clxscore=1015 lowpriorityscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502120028
 
-Disable pingpong dither in dpu_encoder_helper_phys_cleanup().
+On Tue, 11 Feb 2025 17:59:41 +0100
+Oleg Nesterov <oleg@redhat.com> wrote:
 
-This avoids the issue where an encoder unknowingly uses dither after
-reserving a pingpong block that was previously bound to an encoder that
-had enabled dither.
+> On 02/11, Alexei Starovoitov wrote:
+> >
+> > > > +#define UPROBE_NO_TRAMPOLINE_VADDR ((unsigned long)-1)
+> >
+> > If you respin anyway maybe use ~0UL instead?
+> > In the above and in
+> > uprobe_get_trampoline_vaddr(),
+> > since
+> >
+> > unsigned long trampoline_vaddr = -1;
+> 
+> ... or -1ul in both cases.
+> 
+> I agree, UPROBE_NO_TRAMPOLINE_VADDR has a single user, looks
+> a bit strange...
 
-Reported-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Closes: https://lore.kernel.org/all/jr7zbj5w7iq4apg3gofuvcwf4r2swzqjk7sshwcdjll4mn6ctt@l2n3qfpujg3q/
-Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
----
-This was tested on SC7180 Trogdor by pulling in the concurrent writeback
-series [1] and running the IGT kms_writeback@writeback_check_output
-subtest.
+I think both this function and uprobe_get_trampoline_vaddr()
+should use the same macro as a token.
+(and ~0UL is a bit more comfortable for me too :) )
 
-[1] https://patchwork.freedesktop.org/series/144083/
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +++
- 1 file changed, 3 insertions(+)
+----
+unsigned long uprobe_get_trampoline_vaddr(void)
+{
+	struct xol_area *area;
+	unsigned long trampoline_vaddr = -1;
+----
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 5172ab4dea995..48e6e8d74c855 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -2281,6 +2281,9 @@ void dpu_encoder_helper_phys_cleanup(struct dpu_encoder_phys *phys_enc)
- 		}
- 	}
- 
-+	if (phys_enc->hw_pp && phys_enc->hw_pp->ops.setup_dither)
-+		phys_enc->hw_pp->ops.setup_dither(phys_enc->hw_pp, NULL);
-+
- 	/* reset the merge 3D HW block */
- 	if (phys_enc->hw_pp && phys_enc->hw_pp->merge_3d) {
- 		phys_enc->hw_pp->merge_3d->ops.setup_3d_mode(phys_enc->hw_pp->merge_3d,
+Thank you,
 
----
-base-commit: 866e43b945bf98f8e807dfa45eca92f931f3a032
-change-id: 20250211-dither-disable-b77b1e31977f
+> 
+> Oleg.
+> 
+> 
 
-Best regards,
+
 -- 
-Jessica Zhang <quic_jesszhan@quicinc.com>
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
