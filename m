@@ -1,64 +1,33 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B25520ADF0
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 14:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EFD27180B;
+	Wed, 12 Feb 2025 14:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739370789; cv=none; b=CC8/2HN0XwSICkM6a8bdOd2TL3r7x+VwtOTiJjZ5/KR3G92MTmOeifNPTFxHn+koLuZML36+DcwALJoQubbf+i8ySxBl5EJaAqwz+T3Q+Epsp5JwkyWObNs8TDUONr6F/mD2XnkB1DL7xlyppScIaD0SSnbkd/xXxbOCyCwlW8g=
+	t=1739370841; cv=none; b=n8gnlZ6ejqRj/K45T70gImacNEr5wfUlqfH9TSnNitJ8CHK70vUMGCSPe98L88hnPEWGukZICn1i1A4tf3SazQVma+DbO4DVZjEjSuU/frnVcztZbOfF3cUB+11ox775MiiAOy+SBowmMrHmEjAdXd7ElHVPF5mgwofeDOIDnQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739370789; c=relaxed/simple;
-	bh=0f2EQwDDq9734O0OGjNFVVBvocW3pfd47UxppYEdBgg=;
+	s=arc-20240116; t=1739370841; c=relaxed/simple;
+	bh=QgYvjfxo+X0cHfwEov1X2s9rPdFbVkrA5z+AnagMuOI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J/ncnVv9KHbdCtd/3S3eySGNDF5eENxq9Il0Qm4L8R1NfNZIi0o7QZTpdRoe3rsLQfXHOclVoCZyblBbIy4Wjn0f21rJ7d8pkmQJzS9HFcJ1QnOLtmvf0U0b860Xv/ocYcn8VK+BRHZWEUc42yt6marFaQuCbLsjkgINWw9/tkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=GMzf8MoH; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	 In-Reply-To:Content-Type; b=kOP8DS7U9nWWrNB1QlgUdW54PFitNl3YzES5Rs9s4O6qHiezhMBjIVJjeEd1CWCRsPw8vtA0YWVYVXK9VQa737qbnr+NG4wbHFwayQ9Pedg8fg8FQ2NuUvEvIIen1dxYZWMQwxArS4h9qzeVX5wlhFaB9w6SiDhR8hlSbkOGOOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQs0rJiJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="GMzf8MoH"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-8553108e7a9so83192739f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 06:33:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1739370785; x=1739975585; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=peoerMowyAdqzi3bBvUB4SpI4jby2jAJ6MDoaKDFOw0=;
-        b=GMzf8MoHGnm68DKKzX5k11XwjrNFstJxKL+yEait/2UTPV2qXa09xLQZjlyfwmw6uq
-         wkVXuktUUaLGcWzBtJNo0Evn9L2TmwdgZYlX5ofyqW38VHiuULYL3qBgsPRV0fRjwVv9
-         4bLHnpEOIH/5+0GSSED82YtLANWgvm7mKE15D8AqhL5elm3DOqpnBcFR7t8m1toNVdMy
-         vram3bkdhrwv5D7ByaKVm3eXu/Tai7+fRlHz5nMANaRR3mKSv+aFZ6UYUX9fwwe7NjNG
-         Oe0xC9Zx3dKNj7v/gV9Xkue1uI3DQa8SEbzyzLZPy7TgZv2pPySQ9eFl+WsnWYEszCOB
-         DNoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739370785; x=1739975585;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=peoerMowyAdqzi3bBvUB4SpI4jby2jAJ6MDoaKDFOw0=;
-        b=eqxLlsFJLghQzwkMkzaMaqT1nONIPxCHkkWIAQ5NFpAyV+aTPtjEdQ/jQLpoQKsXHL
-         EtzTpqiGqub/3SnKp09yEn6nYx3feqNmpydJnQMdPkdd1dBAxFiWAow1BVnw1sANsvSn
-         nVNyMzXvskfUGweqlN+hd4dMukFsEGEBzqLEkPnipRxTOh8Zh8WW3spbtFJEQvTVZdI1
-         6vh2ScCUfnkxNCP1xBWYfkQANz7VuTHH0kJUpbhec451Y8JGJnhU+hSyhOmGfmWRoTLc
-         mirKVXCeq/xwXrMrjerTeZoJaBdAhVBkaQadArEFXsJ16ayHtD70Nf8pdxg9HWy7iZY3
-         1MaA==
-X-Forwarded-Encrypted: i=1; AJvYcCXO+TQdbGFMj7AGZc7fy/FoIpm8ffiUiKmGrMjsgU15K79QCzqzjgUc1o6f5qYx46S8wwDvvtJ/WT7DcFU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJEzYDel0PMwgiPe9uH+w9dYCMweJVh5TgfAkUa+31X+XcrM3s
-	7aEcP0aCuIh1FBRstPzRburb5gVHwx+QkjvYmPfs/tBEuZH1c7FfwpGVXi6MklE=
-X-Gm-Gg: ASbGncsYGHNnj1ZYxleXoFuX08A+PkFe9v8QFwMiTj/3VWngw9UtPrW/l0Ht7JUL5gi
-	i3n9K/4LPuP37Y74DhXkS8IGvvgmU/JzB/mggFws7TCY+bvTEvX4nE9G2alFJWdjQ8A08TBB/MO
-	AGKxG6BnB6eaPTGwo711UmTBQASNR6x31KNuC9eDPRVj/utk3FThTUQgGdYyFqeOeu4cM+L6seJ
-	s45eeszm/9Ee60S/WcQ2U4dc6CyjpXvh3eLoaYUDmp6vOXvpiNWVezsQ7eXRqZ+PUM+WFy8V2lb
-	lvBpmMghr2A=
-X-Google-Smtp-Source: AGHT+IFQPl2NACyIg7LsMY27jKX3GfJPi4+tUAjlVGjMYjpj1xJhkpqIUrB9sGSVqKkQRZ4CAmmtDQ==
-X-Received: by 2002:a05:6602:3419:b0:855:6189:26be with SMTP id ca18e2360f4ac-85561892826mr27903439f.10.1739370785211;
-        Wed, 12 Feb 2025 06:33:05 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-85525793678sm173159039f.4.2025.02.12.06.33.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 06:33:04 -0800 (PST)
-Message-ID: <8c21acb0-aee5-4628-a267-a4edc85616c4@kernel.dk>
-Date: Wed, 12 Feb 2025 07:33:03 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQs0rJiJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F985C4CEE2;
+	Wed, 12 Feb 2025 14:33:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739370840;
+	bh=QgYvjfxo+X0cHfwEov1X2s9rPdFbVkrA5z+AnagMuOI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pQs0rJiJgEDjvCI0l0pvtk7cVsUWXVzfgvuDvcYJbfawVHOB8VItrau5u1c2Xfmyw
+	 KEloyytS+zW6NNycj2g4xnIIAUPfQSHYxbAjtIX5Pp33ShfIwhkyqkFdDUpfV5pC4z
+	 FzlPZ5Y9mkT2dLBAoUYeojbjtaK6sRjgobKdUGJK7i1H0TL9glkuUEu8hf3haEBvd2
+	 KbENN44fThevG4yHP3DiMjg4whfNu9+u4eNzU7OKtFMCwEu0VJcTcAUxcl0HtReQZO
+	 XLJi9MgFGZe9mHhwiXsEITD1Mew7oS+GhzUlGYjL0GWWYpfk5aLcwQeQrTzZHxATeW
+	 6U+CVlZwTuB8A==
+Message-ID: <1ad40918-8b5b-43fb-bd32-66db7825726e@kernel.org>
+Date: Wed, 12 Feb 2025 14:33:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,33 +35,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] io_uring: pass struct io_tw_state by value
-To: Caleb Sander Mateos <csander@purestorage.com>,
- Pavel Begunkov <asml.silence@gmail.com>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250211214539.3378714-1-csander@purestorage.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250211214539.3378714-1-csander@purestorage.com>
+Subject: Re: [PATCH bpf-next v4] bpftool: Check map name length when map
+ create
+To: Rong Tao <rtoax@foxmail.com>, andrii@kernel.org, ast@kernel.org
+Cc: rongtao@cestc.cn, Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>,
+ "open list:BPF [TOOLING] (bpftool)" <bpf@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <tencent_B44B3A95F0D7C2512DC40D831DA1FA2C9907@qq.com>
+From: Quentin Monnet <qmo@kernel.org>
+Content-Language: en-GB
+In-Reply-To: <tencent_B44B3A95F0D7C2512DC40D831DA1FA2C9907@qq.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2/11/25 2:45 PM, Caleb Sander Mateos wrote:
-> 8e5b3b89ecaf ("io_uring: remove struct io_tw_state::locked") removed the
-> only field of io_tw_state but kept it as a task work callback argument
-> to "forc[e] users not to invoke them carelessly out of a wrong context".
-> Passing the struct io_tw_state * argument adds a few instructions to all
-> callers that can't inline the functions and see the argument is unused.
+2025-02-12 20:45 UTC+0800 ~ Rong Tao <rtoax@foxmail.com>
+> From: Rong Tao <rongtao@cestc.cn>
 > 
-> So pass struct io_tw_state by value instead. Since it's a 0-sized value,
-> it can be passed without any instructions needed to initialize it.
+> The size of struct bpf_map::name is BPF_OBJ_NAME_LEN (16).
 > 
-> Also add a comment to struct io_tw_state to explain its purpose.
+> bpf(2) {
+>   map_create() {
+>     bpf_obj_name_cpy(map->name, attr->map_name, sizeof(attr->map_name));
+>   }
+> }
+> 
+> When specifying a map name using bpftool map create name, no error is
+> reported if the name length is greater than 15.
+> 
+>     $ sudo bpftool map create /sys/fs/bpf/12345678901234567890 \
+>         type array key 4 value 4 entries 5 name 12345678901234567890
+> 
+> Users will think that 12345678901234567890 is legal, but this name cannot
+> be used to index a map.
+> 
+>     $ sudo bpftool map show name 12345678901234567890
+>     Error: can't parse name
+> 
+>     $ sudo bpftool map show
+>     ...
+>     1249: array  name 123456789012345  flags 0x0
+>     	key 4B  value 4B  max_entries 5  memlock 304B
+> 
+>     $ sudo bpftool map show name 123456789012345
+>     1249: array  name 123456789012345  flags 0x0
+>     	key 4B  value 4B  max_entries 5  memlock 304B
+> 
+> The map name provided in the command line is truncated, but no warning is
+> reported. This submission checks the length of the map name.
+> 
+> Reviewed-by: Quentin Monnet <qmo@kernel.org>
+> Signed-off-by: Rong Tao <rongtao@cestc.cn>
 
-This is nice, reduces the code generated. It'll conflict with the
-fix that Pavel posted, but I can just mangle this one once I get
-the 6.15 branch rebased on top of -rc3. No need to send a v2.
-
--- 
-Jens Axboe
-
+Looks good to me, thank you!
+Quentin
