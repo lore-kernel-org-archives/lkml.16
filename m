@@ -1,156 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE67101E6;
-	Wed, 12 Feb 2025 00:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D7AA50;
+	Wed, 12 Feb 2025 00:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739320849; cv=none; b=bXYyYx2xjPLGbFN2RY0M2IPy5Te1h8CPDC2LoIEC2De/Z8faccUF5C/gQfgI8U8SaZszfLpcEmS1NRMi23EOavqApNlh8uhNAZJNoLeK+0dls7f90vciBP1BWR2YiR6oNVS/qxulDl3kI90CSfC5MlD5U8poXcvRRTM3m9kgxuI=
+	t=1739321131; cv=none; b=HuylgyiuG+e3rCW3P+825pOvXu4eEEoHtwAc+9mafw00iFXEnxTmMQwSRBYJ1ih8CqMuPF7xHSF9HHkiLrO2J9kPOaI6apYLHetKf7Gme5stUH3DN6fgHpyQjjrAuJ6ofRwO3zmrHYL1BoI4tzrskaSuAkRY9Ywmu9yPcoylVLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739320849; c=relaxed/simple;
-	bh=uPz4Rvng21434DWps/FQmF8howOn/6OJsqcHZ7irxWA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fqZbiSOp/ROD9+Fb/w7Gxu4c6Z2V+RpN5HCSQvcvV9C5IbyjpNjRhNpPJHXo2xW1u+qP3imGoLf7iDZB7+kCoT+L928gwMoyn6r4ATPoZ7Mds873aY7yzOrHfVT4hebZmlcNTY2OSc2/c/wLHZLzah1g6o2ZVCbVxyQiD1vxC5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cnQS+/mF; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739321131; c=relaxed/simple;
+	bh=5rRoChObeNqNxfmbCbT8iUIfiBHkKWAFVjiyqgK4VdI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YeqZ0z0NfcyK2P2A7eEX7EhLt+iMzlrsuSq3zYousAJ2lCGqNl9jEJBo71/J9BkCnraEErlq1A3iRTb9vz5MwMsJTELhd2+tfyhH2WCJAKawEQXEpaHcfYyzFmON5Soq3DhNXdKY/bPwukWhZF3qXtpFrADBlVHlGefjPqJ85hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lpFYXFUt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cnQS+/mF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739320848; x=1770856848;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=uPz4Rvng21434DWps/FQmF8howOn/6OJsqcHZ7irxWA=;
-  b=cnQS+/mFCrPLMc4FQNm/G7dOvRO1vWjuTpx+AgZ/kH5ZxdiBzc0A8H2E
-   7hxS9znR57CeCw6Evk4KnvJDMV34miy1FfzpDCwqj7JdoEET1b7619h5a
-   PUaYH2EIIIv4ybGHc+95ZRDPAcb7FpTwH/9WtiWnoAAedagPZwzjAgnzg
-   8uoWOxjKxM7Va35lGExm6VEv+4z5GCkTl3o414ReSubuAhNG7B7Y9Xdgd
-   gir/q/402xNEwc0GZ1ggFZqqRqkblT7UmIWrndf6gnEr1CmUCnN5Zx7LZ
-   O+kxega0+YlqHBVt19SL9kOr9U21t/2T4+iFg2q3hvvWtJNP0nroBs0YG
-   w==;
-X-CSE-ConnectionGUID: cp5ajXC4QrueXGnuWzdyjQ==
-X-CSE-MsgGUID: jeGw07JLSlKCAODD3ACc/g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50601934"
-X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="50601934"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 16:40:47 -0800
-X-CSE-ConnectionGUID: M2+HyNXbRmqKMjf7s7+NVw==
-X-CSE-MsgGUID: yGICoRKnTE6xifg9m1cGTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="117747498"
-Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.108.65]) ([10.125.108.65])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 16:40:45 -0800
-Message-ID: <e10dcf39-f684-4aaa-874c-4a30207fa099@intel.com>
-Date: Tue, 11 Feb 2025 17:40:42 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lpFYXFUt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EDBBC4CEDD;
+	Wed, 12 Feb 2025 00:45:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739321130;
+	bh=5rRoChObeNqNxfmbCbT8iUIfiBHkKWAFVjiyqgK4VdI=;
+	h=From:Date:Subject:To:Cc:From;
+	b=lpFYXFUt+KAocrDCcNBlhRj+YexM6svmmv4blnBwr7/gvIS9+zIFa2M0plNMl0vIH
+	 egkj2HURSf4Yz6L7zsKrF+g4KSONRNDVuTrLYiIv5LPewE3N7dZNY3f4HzYn6Laqc5
+	 8bLm4IlbNyv05uJZfeCKuIfpArbkGgCT+7gKAFzvC40HA+iKQB1AMrqQsMna0HsvUX
+	 vhlHU5x/Lks1kf0dytJd8JBlwm5jIRsFTHuVrWyWPkxzTfvfU6GJO+aP/CEkj0XB6f
+	 HMLDIzLgeqkDXBeMcPGUHnz4+lUPlsVk0dZssZ3PNLE16oOah8UPNVRmgNiiLMIa1N
+	 QDEcxZzugEODA==
+From: Mark Brown <broonie@kernel.org>
+Date: Wed, 12 Feb 2025 00:44:57 +0000
+Subject: [PATCH v7] KVM: arm64: Fix confusion in documentation for pKVM SME
+ assert
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 16/17] PCI/AER: Enable internal errors for CXL Upstream
- and Downstream Switch Ports
-To: Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
- ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
-References: <20250211192444.2292833-1-terry.bowman@amd.com>
- <20250211192444.2292833-17-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250211192444.2292833-17-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250212-kvm-arm64-sme-assert-v7-1-0f786db838d3@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAjvq2cC/4XO3UrEMBAF4FdZcm0kPzNp4pXvIV7kr7thbSvJE
+ pSl7266oKuU4OUZON+ZKykxp1jI0+FKcqyppGVuYXg4EH+y8zHSFFomgglgigE914naPCmgZYr
+ Ulta/ULRhQAwQtVWkVd9zHNPHjX15bfmUymXJn7eVyrfrP2DllFMMRkvQgbFRP59jnuPb45KPZ
+ BOr+K1gRxGbAtJwx5gUI+wUeVcGyTqKbIpWxgBCRO/2v8BdMV0FmiK9CePAg1N6r+CPwgXvKdg
+ UY9DrEDgT6HaK+laQ9RXVFO+F8qACdyD/KOu6fgHzMGksFwIAAA==
+X-Change-ID: 20240604-kvm-arm64-sme-assert-5ad755d4e8a6
+To: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+ linux-kernel@vger.kernel.org
+Cc: Fuad Tabba <tabba@google.com>, Mark Brown <broonie@kernel.org>, 
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+ James Morse <james.morse@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>
+X-Mailer: b4 0.15-dev-1b0d6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3561; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=5rRoChObeNqNxfmbCbT8iUIfiBHkKWAFVjiyqgK4VdI=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBnq+8nYl1hKlgAf8UHLSYhrZpD14NjnmH5zjzaln2A
+ iud10pqJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZ6vvJwAKCRAk1otyXVSH0LWKB/
+ 9WcV7yweaKsEXcht6lTbS/nW+jDulcbredFQ/S5R3OBygrOiXxhYUMUhYQlRIExRnXH0PDMZTvaSoQ
+ zMyBGJN9tL1+P8UhBZTQGSqJp5Gl2l8g92E0lzW25OMVlUwPh6+znCOVyuB311NRYle1PwpH+jHfWv
+ Nl76YHN6j2/owhMof3gXUwZ5u3rgiM56wATZzD0IlpoqG34LEqY1TEHn0k+J4CYcZrjJOZH3aynwLC
+ QcigqJizzoQ1tYUz1QBgmMYNE1g+bm06HQFRe+BZRLY3wzI7OR7FDV7RhoVuI31EY19Py9KCA53Fpb
+ epELU9TEUOZqVllh1DSdfdIRe/PAbq
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
+As raised in the review comments for the original patch the assert and
+comment added in afb91f5f8ad7 ("KVM: arm64: Ensure that SME controls are
+disabled in protected mode") are bogus. The comments says that we check
+that we do not have SME enabled for a pKVM guest but the assert actually
+checks to see if the host has anything set in SVCR which is unrelated to
+the guest features or state, regardless of if those guests are protected
+or not. This check is also made in the hypervisor, it will refuse to run
+a guest if the check fails, so it appears that the assert here is
+intended to improve diagnostics.
 
+Update the comment to reflect the check in the code, and to clarify that
+we do actually enforce this in the hypervisor. While we're here also
+update to use a WARN_ON_ONCE() to avoid log spam if this triggers.
 
-On 2/11/25 12:24 PM, Terry Bowman wrote:
-> The AER service driver enables PCIe Uncorrectable Internal Errors (UIE) and
-> Correctable Internal errors (CIE) for CXL Root Ports. The UIE and CIE are
-> used in reporting CXL Protocol Errors. The same UIE/CIE enablement is
-> needed for CXL Upstream Switch Ports and CXL Downstream Switch Ports
-> inorder to notify the associated Root Port and OS.[1]
-> 
-> Export the AER service driver's pci_aer_unmask_internal_errors() function
-> to CXL namespace.
-> 
-> Remove the function's dependency on the CONFIG_PCIEAER_CXL kernel config
-> because it is now an exported function.
-> 
-> Call pci_aer_unmask_internal_errors() during RAS initialization in:
-> cxl_uport_init_ras_reporting() and cxl_dport_init_ras_reporting().
-> 
-> [1] PCIe Base Spec r6.2-1.0, 6.2.3.2.2 Masking Individual Errors
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: afb91f5f8ad7 ("KVM: arm64: Ensure that SME controls are disabled in protected mode")
+Reviewed-by: Fuad Tabba <tabba@google.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+This has been sent with v6.10 with only positive review comments after
+the first revision, if there is some issue with the change please share
+it.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/core/pci.c | 2 ++
->  drivers/pci/pcie/aer.c | 3 ++-
->  include/linux/aer.h    | 1 +
->  3 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 03ae21a944e0..36e686a31045 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -912,6 +912,7 @@ void cxl_uport_init_ras_reporting(struct cxl_port *port)
->  
->  	cxl_assign_port_error_handlers(pdev);
->  	devm_add_action_or_reset(&port->dev, cxl_clear_port_error_handlers, pdev);
-> +	pci_aer_unmask_internal_errors(pdev);
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_uport_init_ras_reporting, "CXL");
->  
-> @@ -959,6 +960,7 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
->  	cxl_assign_port_error_handlers(pdev);
->  	devm_add_action_or_reset(&port->dev, cxl_clear_port_error_handlers, pdev);
->  	put_device(&port->dev);
-> +	pci_aer_unmask_internal_errors(pdev);
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
->  
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index ee38db08d005..8e3a60411610 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -948,7 +948,7 @@ static bool find_source_device(struct pci_dev *parent,
->   * Note: AER must be enabled and supported by the device which must be
->   * checked in advance, e.g. with pcie_aer_is_native().
->   */
-> -static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
-> +void pci_aer_unmask_internal_errors(struct pci_dev *dev)
->  {
->  	int aer = dev->aer_cap;
->  	u32 mask;
-> @@ -961,6 +961,7 @@ static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
->  	mask &= ~PCI_ERR_COR_INTERNAL;
->  	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
->  }
-> +EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, "CXL");
->  
->  static bool is_cxl_mem_dev(struct pci_dev *dev)
->  {
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 947b63091902..a54545796edc 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -61,5 +61,6 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  int cper_severity_to_aer(int cper_severity);
->  void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
->  		       int severity, struct aer_capability_regs *aer_regs);
-> +void pci_aer_unmask_internal_errors(struct pci_dev *dev);
->  #endif //_AER_H_
->  
+To: Marc Zyngier <maz@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>
+To: James Morse <james.morse@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+To: Will Deacon <will@kernel.org>
+To: Fuad Tabba <tabba@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+---
+Changes in v7:
+- Reword the comment.
+- Link to v6: https://lore.kernel.org/r/20250210-kvm-arm64-sme-assert-v6-1-cc26c46d1b43@kernel.org
+
+Changes in v6:
+- Rebase onto v6.14-rc1.
+- Link to v5: https://lore.kernel.org/r/20241210-kvm-arm64-sme-assert-v5-1-995c8dd1025b@kernel.org
+
+Changes in v5:
+- Rebase onto v6.13-rc1.
+- Link to v4: https://lore.kernel.org/r/20240930-kvm-arm64-sme-assert-v4-1-3c9df71db688@kernel.org
+
+Changes in v4:
+- Rebase onto v6.12-rc1
+- Link to v3: https://lore.kernel.org/r/20240730-kvm-arm64-sme-assert-v3-1-8699454e5cb8@kernel.org
+
+Changes in v3:
+- Rebase onto v6.11-rc1.
+- Link to v2: https://lore.kernel.org/r/20240605-kvm-arm64-sme-assert-v2-1-54391b0032f4@kernel.org
+
+Changes in v2:
+- Commit message tweaks.
+- Change the assert to WARN_ON_ONCE().
+- Link to v1: https://lore.kernel.org/r/20240604-kvm-arm64-sme-assert-v1-1-5d98348d00f8@kernel.org
+---
+ arch/arm64/kvm/fpsimd.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/kvm/fpsimd.c b/arch/arm64/kvm/fpsimd.c
+index 4d3d1a2eb157047b4b2488e9c4ffaabc6f5a0818..e37e53883c357093ff4455f5afdaec90e662d744 100644
+--- a/arch/arm64/kvm/fpsimd.c
++++ b/arch/arm64/kvm/fpsimd.c
+@@ -93,11 +93,14 @@ void kvm_arch_vcpu_load_fp(struct kvm_vcpu *vcpu)
+ 	}
+ 
+ 	/*
+-	 * If normal guests gain SME support, maintain this behavior for pKVM
+-	 * guests, which don't support SME.
++	 * Protected and non-protected KVM modes require that
++	 * SVCR.{SM,ZA} == {0,0} when entering a guest so that no
++	 * host/guest SME state needs to be saved/restored by hyp code.
++	 *
++	 * In protected mode, hyp code will verify this later.
+ 	 */
+-	WARN_ON(is_protected_kvm_enabled() && system_supports_sme() &&
+-		read_sysreg_s(SYS_SVCR));
++	WARN_ON_ONCE(is_protected_kvm_enabled() && system_supports_sme() &&
++		     read_sysreg_s(SYS_SVCR));
+ }
+ 
+ /*
+
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20240604-kvm-arm64-sme-assert-5ad755d4e8a6
+
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
