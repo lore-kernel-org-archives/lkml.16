@@ -1,121 +1,134 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60855271824;
-	Wed, 12 Feb 2025 12:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB19271824;
+	Wed, 12 Feb 2025 12:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739364996; cv=none; b=Hpzv8qiMu0Bq6mpbFzxiGO1ztSEO9b+Bvhsxzwa52ZMlOFxtLV4bfMVbGMUSi77THcFR4bngtDrI959wcLboYXhsKVuIgMSBIbJ9LkNDpafg5l2S5RC9ZUcQA6ItpN2II2BBkqeC8ijrhWkyD3AyMQC7j9R+z1Yz60WXJNrc8dU=
+	t=1739365066; cv=none; b=MRH4x/5gJjNxSXVHRm4TTsuTZpUaKCRjsTAH66uk+zvFrjeLbtupmYEsFdCGJacld/CTwG6BsNKtR5lttMSJv/uFxjhq51yTRw15WYOvj+jrdjsHWAORSqhXKW9I0FE41ti8U+n1qOzRIUhVHIQJJnDs5oYFbTyAVCRqWX9YxyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739364996; c=relaxed/simple;
-	bh=z8cG5NpqhAGB5dmpzplqKZTanH2XS01ETPIpQyDG6Zs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lYoijHGqarYknyvhsOTET6XJ3iSRCOPNnZgTeN8NmrVt7IMoC01Tf5d/jCkF5j2sSB5kYlMeyvJKcquA22ncYOcnCB3NR+pr3IRpbxjNxOghrDUW/dqq9EBWgF4pouky+NCN4LVZL+6cvwgVsv8lkqvGFTzFgm7u3lFKZHwYsb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=bNQmCJ/E; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1739365066; c=relaxed/simple;
+	bh=OPanrCfS1lvnoz7OwCheozB8dxHqLkWEb7Fz9X5l1dg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Subject:Cc:
+	 References:In-Reply-To; b=aaLyzrRBq6JJxWrvkljjezaJJFueHmUns7cRWZ/CiPeLzZknJSBYoWXn04LkFO+Uzr1yPoS2f9n3mQyqdQ1EA50w/S3J+iW8+LTclehzqNKK9t50oQNuPQuaqBsmaS0avs7VdRJ9RcXyUjfK5o7jSwCzYHksvzRgH2TaU7YaX5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B98dfFuc; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="bNQmCJ/E"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=P6iyi8LYf2Q9nhUpNA4gW7Tp0oyXZ3Nz5g0u6VN9kfw=; b=bNQmCJ/EraMnyAIhwDcPnCGe+1
-	V/g+yJrQjMHOKoLvOHESl16Zg6JPZ+yzVFSaiJMfZFL0JfsZNrjKR5Ud9fTeRUmu4e4FypJ/c8OEe
-	abmtxosmPCFTN+WXsOuEK4I0A6ZPOm/Xgk6ggqNTFk9UlVDCgt2FCrXdsu6hL7el7N0kG4jGr8vzU
-	4gGFR5ylsgbPJ/i6Xb4YHiOKqIrPJk4O9PX+mOTqPG81mTYjxuX4FCeVqOnGI3YjSxCWu9EreX6Qd
-	MwRW3HM7sdXqD18e9d4Qt/JPLycBKn0G3wOyiRkuKQ4wocm9BT01jZHE4ZZO+gEMzk0L9rEUeTDnu
-	MTMUVunA==;
-Received: from i53875bc0.versanet.de ([83.135.91.192] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tiCHz-0004Kn-Va; Wed, 12 Feb 2025 13:56:28 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: srinivas.kandagatla@linaro.org, linux-rockchip@lists.infradead.org,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org, detlev.casanova@collabora.com,
- sebastian.reichel@collabora.com
-Subject: Re: [PATCH RESEND v2 0/6] RK3576 OTP support
-Date: Wed, 12 Feb 2025 13:56:27 +0100
-Message-ID: <2965867.ZfL8zNpBrT@diego>
-In-Reply-To: <5943191.DvuYhMxLoT@workhorse>
-References:
- <20250210224510.1194963-1-heiko@sntech.de> <5943191.DvuYhMxLoT@workhorse>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="B98dfFuc"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 68FA242CCD;
+	Wed, 12 Feb 2025 12:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739365056;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UQlDvmMNjG6HkmTEiN6yuUtQAxZ2XiJJ4GjbKF++9lE=;
+	b=B98dfFucobdoepjJa/+I5uJim69YPNxpmIzqWZbtDGtT74sp09+RvN0m8WCOUlplsmj11t
+	C+7hseTbDtcH3dNXP4f+LEAw8LQmksx2rM8BybUWtv9Ml4bJSurqALhWf8UdzL4K4jLlKU
+	JKIIFhLzDosYGbhYwG57aIt99iv8fOhSbw+wdfwpAxmANXeZJYJhGmMsaKir6yzRVKbE1+
+	csNMWKcihRpXeg44ZifqI1T7O8BKb2c0KUPy0yIUrSo5DAm9jkiWYwiOE/yXMSseIPGQ9k
+	oajfa4yP0TsfYqAxEDULdtEDCH+tqaAw7T9oaaiXlyFZaWJftnFCrwTEsdKfxQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 12 Feb 2025 13:57:34 +0100
+Message-Id: <D7QHGB7D0VSG.X255SDU7DFOF@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v3 4/7] gpio: max7360: Add MAX7360 gpio support
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
+ <20250113-mdb-max7360-support-v3-4-9519b4acb0b1@bootlin.com>
+ <Z5eFGJspoGOINcG6@smile.fi.intel.com>
+In-Reply-To: <Z5eFGJspoGOINcG6@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegfeelgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffhvffuvefofhgjsehtqhertdertdejnecuhfhrohhmpedfofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugdfuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheevtdekffeuleehkedtvdejhfeihfegtdduveeghedvveelgfevteekveelleetnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudejpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkohesihhnthgvlhdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdro
+ hhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplh
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Am Mittwoch, 12. Februar 2025, 13:44:15 MEZ schrieb Nicolas Frattaroli:
-> On Monday, 10 February 2025 23:45:04 Central European Standard Time Heiko 
-> Stuebner wrote:
-> > This enables OTP support in the nvmem driver for rk3576.
-> > 
-> > I expect to pick the clock patch (patch1) and the arm64-dts patch (patch6)
-> > myself, after the nvmem-driver and -binding patches have been applied
-> > (patches 2-5).
-> > 
-> > But kept them together for people wanting to try this series.
-> > 
-> > changes in v2:
-> > - fix register constant in clock definition (Diederik)
-> > - add patch to set limits on variant-specific clock-names
-> > - use correct limits for clocks + resets on rk3576 binding
-> > 
-> > 
-> > RESEND, because I messed up my git-send-email which caused it to include
-> > the list of patches 2 times, duplicating everything :-( .
-> > 
-> > Heiko Stuebner (6):
-> >   clk: rockchip: rk3576: define clk_otp_phy_g
-> >   nvmem: rockchip-otp: Move read-offset into variant-data
-> >   dt-bindings: nvmem: rockchip,otp: add missing limits for clock-names
-> >   dt-bindings: nvmem: rockchip,otp: Add compatible for RK3576
-> >   nvmem: rockchip-otp: add rk3576 variant data
-> >   arm64: dts: rockchip: add rk3576 otp node
-> > 
-> >  .../bindings/nvmem/rockchip,otp.yaml          | 25 ++++++++++++
-> >  arch/arm64/boot/dts/rockchip/rk3576.dtsi      | 39 +++++++++++++++++++
-> >  drivers/clk/rockchip/clk-rk3576.c             |  2 +
-> >  drivers/nvmem/rockchip-otp.c                  | 17 +++++++-
-> >  4 files changed, 81 insertions(+), 2 deletions(-)
-> 
-> Hi Heiko,
-> 
-> for the entire series:
-> 
-> Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> 
-> OTPs show up on my Sige5 RK3576 board and read fine. Also compared the OTP 
-> nodes to downstream and the values look consistent with that. The OTPs aren't 
-> documented in the TRM I have, so unfortunately I can't cross-reference that.
+Hi Andy,
 
-thanks a lot for the testing :-)
+Thanks for your review. I've been addressing most of your comments in
+this mail and the ones related to regmap-irq. I should be able to send a
+new version in a few days.
 
-> NB: patchwork's "Series" download for this series somehow lacks patch 2/6, 
-> which tripped me up at first. Not sure if that's a problem with patchwork or 
-> with how you sent the series out, but I thought I'd let others know who run 
-> into this.
+However I have a few questions regarding some of the points.
 
-It looks like patchwork had a bigger hickup with my series.
-Looking at the cover-letter in the Rockchip area of patchwork, it is
-missing _all_ patches attached to it [0].
+On Mon Jan 27, 2025 at 2:07 PM CET, Andy Shevchenko wrote:
+> On Mon, Jan 13, 2025 at 01:42:28PM +0100, Mathieu Dubois-Briand wrote:
+> > +	parent =3D to_platform_device(pdev->dev.parent);
+>
+> Why do you need this? Can't the fwnode be propagated to the children and =
+then
+> the respective APIs to be used?
+>
 
-At least on the mainling list, everything seems to have arrived ok [1],
-so would assume that's a patchwork thing.
+I'm not sure to understand this correctly, what do you mean by
+propagating the fwnode to the children?
 
+Just a quick summary of the situation and what I try to do. The device
+tree looks like this, only keeping the interesting properties:
 
-[0] https://patchwork.kernel.org/project/linux-rockchip/cover/20250210224510.1194963-1-heiko@sntech.de/
-[1] https://lore.kernel.org/all/20250210224510.1194963-1-heiko@sntech.de/
+io-expander@38 {
+  ...
+  interrupts =3D <23 IRQ_TYPE_LEVEL_LOW>,
+               <24 IRQ_TYPE_LEVEL_LOW>;
+  interrupt-names =3D "inti", "intk";
 
+  max7360_gpio: gpio {
+    ...
+  };
+
+  max7360_gpo: gpo {
+    ...
+  };
+};
+
+Our pdev fwnode points either to the "gpio" or "gpo" nodes, the one from
+our parent device points to "io-expander@38". Here we need to get the
+"inti" interrupt from the parent node. What would be the correct way to
+do it?
+
+> > +	if (!max7360_gpio)
+> > +		return -ENOMEM;
+>
+> > +	if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios)) {
+> > +		dev_err(&pdev->dev, "Missing ngpios OF property\n");
+> > +		return -ENODEV;
+> > +	}
+>
+> This is not needed, it is already done in GPIOLIB core.
+>
+
+I believe this is still needed:
+- For gpos, we need the gpio count to correctly set the partition
+  between gpo and keypad columns in max7360_set_gpos_count().
+- For gpios, we need the gpio count to setup the IRQs.
+
+Best regards,
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
