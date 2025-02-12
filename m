@@ -1,185 +1,362 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAA725E44F;
-	Wed, 12 Feb 2025 22:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E003B1FFC57
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739399391; cv=none; b=VzdvFYnwdaSQuON/M/PBQ+ncZu0IwgjtB/7wuWTR9U2dL+THcd802JjP98nXGrA1JJhff/uaobp+pUuT7EeiwWQwbMR/1xmcbkhyeDG81fghJVYNtdksmGCGOaPPLoGVWrtLaBPX7wNPs5AoWE61e2wRTdB/Wri3jdDpD9qZ9uA=
+	t=1739399415; cv=none; b=APn6lvgDZaQdVAqvBd9CiYi7t78iNoWg2RC1yWpxfi1FT2kvDx1t1Bv0ytP6ar6WrJ1xYCEduzvvhUSI2DzTpTCei0RXpIYCU69Vh171+ObackJUTvgT16hiH8RO+ADykL2gLOQYuHiN/90z+f7tes9bVYgNL85T1Wic5QHbFbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739399391; c=relaxed/simple;
-	bh=LhEw9QPpOdavL5WIkqJTDi4TOOtHKEvJtP0Vd84Qijg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OtrQw9DWQv6X74vR4JaWN4Tcfk0ZOj/TITU3HbJVkzicVt53S5LskVIlfv8ZDOnUFVeECp0ElC/VXphYG/jUzdc6FRPIz1a4UkqnKbhH1XKP/GWW+aY8ETp5e7qxBCBfjI2E2twfspA0nUtTNOh+ZhfwZEpk77GgxQxVlm8WHck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G5R9GRrv; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739399415; c=relaxed/simple;
+	bh=VMSWxcNmO8no8BHLvLxOhA30OkINBXw7JvnooWa9Ev0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=heil3n0aVLsN2S+2iDoA4idJCJ04H1o7Yz80INv03XgOCuJ5FgccR9blfYHdSDEAUGnVAD4ISvxSBAOZCLej6Swekg5RuxW26kuLEuBbUHk6TN7myQXszbNrRXbNuY7OpBGKYx04MGAkQMVuL/eh7nVDJObmX8zX35vkqzlYf5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZwVcVAkh; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5R9GRrv"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c077f732faso3277185a.1;
-        Wed, 12 Feb 2025 14:29:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZwVcVAkh"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fa44233a04so535621a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 14:30:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739399389; x=1740004189; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LhEw9QPpOdavL5WIkqJTDi4TOOtHKEvJtP0Vd84Qijg=;
-        b=G5R9GRrvhz0geZwmb87PHGhRb93urTPAhdEz30Io+pWm0RaGoJFm8Hdoj5lrbPFqtQ
-         doQdUHdtkltKw7TGJPtQES/jHj+emO4zR434jomyxI8pCTtNb7klc6QaCqCtL4TywBvi
-         Vl3Lx4EB8vPYjEQwU3TaN5Dqbz4zdHY+UXdK6ymrt+BtUCv7QgaDkbz12ZESAYX/5Fpj
-         YAkDSaK8N/oLILaEBkCzAeUqxB1v2Jd3TFz3y75/jh0CnjAoLCuefz6YjDMbrTsmth/1
-         AW/GT/nOuc8boJ3Nf6JRp/MBkvYbNJo1Ps1vr3qjgeYH5el1KNlLTGxX0Ab9ot7SLA3u
-         75RA==
+        d=google.com; s=20230601; t=1739399413; x=1740004213; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XSbEcYPaOo1Mf2YKv2LhLfOPLMl0BBUQrr31+aE8g7M=;
+        b=ZwVcVAkhqLlD4gZvCjKDKd20hHDT6BBOMO+LEVO6RqsGH7EZIdVYWg4C4I/YADE9Ff
+         /XEekpHIjf4KOM8EOvh+0SgB1IPZdGyWVNBf1wiAWBmG/l1QQnrW4R5v1SSGsCzU/u4F
+         43z9FdkKk3sLaHdo+brKT0ths0y9xoYbc3rf8U7+oOIQ5vml77HQ518SYNWnm4wD9x4/
+         Zy2/QC/WHL3WazjC/DaCUtClMTTO5xVYq810wOQKfkqosPITdsPj+fSiBTZu+X6rUYkK
+         VyneeZyOTsfAP+I/skZLnJLMPwwBRqBA7OuMKe4ETh8lHWTPKdOQpjBZnSL73v5GRV6X
+         h9/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739399389; x=1740004189;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LhEw9QPpOdavL5WIkqJTDi4TOOtHKEvJtP0Vd84Qijg=;
-        b=qYQ/c+fnjiU8HfFdeVpX+tzpPWdS7UBor4YxS2NYy7/nar1cgIMbciHR5PCklXXoU4
-         j8Ya/lqgxFKfip/UQThiipy+K86riHExilZ6px9F10SYGx3yF/12kR0n5B+7ZRk2eE36
-         H5Fd0gDdo2vstK51+0uvXpVXE9t4JloAi8mRPxuOtHSnPycBVJVpgnSNr/kqMho+Qvl5
-         7oHPVDb+v7rro41IkYZVysAcRqzJ1yKWyqOkzJrfbsOsOC4W1nk2zkacNIIm5YDNI8pr
-         uD3tpu/noC+1xzRn35UH2d2mForAokZ2ofWYD5CnqPWq/a3+A2FV8ZT3nU3ITGF7PFdo
-         Pngw==
-X-Forwarded-Encrypted: i=1; AJvYcCWuNcdbRzLw31QrzIBZJHVqhz7KkyUwKOc08wQaD1A1XK3tHjJwgmMgfJcuGscy/elbMt9x3Z6h+IV/Rao=@vger.kernel.org, AJvYcCXWtj0rbJntKxXwDMXpfaaAE66aS8KsJromIC5JSXRQw1rUq5nI56JIDS7oKSsIbrHvyGpobaIjugStbv4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzx0FDRLvCMK/RjYpjVXK0+UoyhcFojhH+COgqRO7zqNDWFxcF+
-	elWoBY7j2WDtiDPWPn9RjkZmSWwNgr1McSbNTNVjkvYFdk4PS1QJ
-X-Gm-Gg: ASbGncuNgvvRz1tATiJaeZDXwslX3UWueRiauf0HlHbuBXO23NM5mZznQjhpD4JFqRl
-	SNEfLclui+Kb+33pbd7umj+eG9tm1ucPzlKGKDhhPm0h1hGTPr9gX3LYiul6lTjtzKedAEQ5141
-	OJVwWNdYio9i3OPz/M1AUuYKDfmFSRKFygfC07Y3tpHEDEDMaIU24TYA3Ro+jbLUk+n8lkyMaZl
-	mZ9yLqsqE6nTb7jTuLUtwddBcSNwZVprR0a4osFIhbRTeXsK+bhVwX7jLmimSeNTHJsTAzfcy1u
-	1cT8I474JjC6Vbnk7PzfAt1nZUHit44lyv6ISBJVfi6qnvnOgPiTYwe5ntLdc8tQmjgk
-X-Google-Smtp-Source: AGHT+IFTQkv4xr0P0x72xV0ZftDGC6yXqRNkIg/YxOLjoPFJ+/5r2iNCx1+FzXPPj42y5Uf0QsfNww==
-X-Received: by 2002:a05:620a:4725:b0:7b6:cb84:8132 with SMTP id af79cd13be357-7c06fcd5338mr271807885a.13.1739399388826;
-        Wed, 12 Feb 2025 14:29:48 -0800 (PST)
-Received: from ?IPv6:2600:1002:a012:94a2:c438:570:6155:5ffc? ([2600:1002:a012:94a2:c438:570:6155:5ffc])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041ded0dcsm908737985a.9.2025.02.12.14.29.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 14:29:48 -0800 (PST)
-Message-ID: <91fbc8f06f4d57f5e3d25dfec99e2fdb76b0a4cb.camel@gmail.com>
-Subject: Re: [PATCH 1/2] media: dt-bindings: Add dt bindings for
- m2m-deinterlace device
-From: Matthew Majewski <mattwmajewski@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Mauro Carvalho Chehab	
- <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski	
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Hans Verkuil	
- <hverkuil@xs4all.nl>, "Dr. David Alan Gilbert" <linux@treblig.org>, Neil
- Armstrong <neil.armstrong@linaro.org>, Uwe Kleine-Konig
- <u.kleine-koenig@baylibre.com>, Andrzej Pietrasiewicz
- <andrzejtp2010@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 12 Feb 2025 17:29:26 -0500
-In-Reply-To: <5e9432d7-0be1-4d98-9a61-cd288e53e772@kernel.org>
-References: <20250212170901.3881838-1-mattwmajewski@gmail.com>
-	 <20250212170901.3881838-2-mattwmajewski@gmail.com>
-	 <5e9432d7-0be1-4d98-9a61-cd288e53e772@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (by Flathub.org) 
+        d=1e100.net; s=20230601; t=1739399413; x=1740004213;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XSbEcYPaOo1Mf2YKv2LhLfOPLMl0BBUQrr31+aE8g7M=;
+        b=MVB0DuaUKeQ4PmB4SziOSo5s444t57kfeLc3/KuB9MbzWzPXkVAjTwepg++K/DYVvA
+         EeSyUSRNksYu89HwYXiL3eVmLq6gXLqgM+tQcTSMa3o+0LGPBbiekcQVvpE1svGWApLO
+         zK8p5VLWkpqhI09GLlf3huOVBBsQJqgqkD3ZOoUWfcHloO6/pTz/ShxivaHwrcIfX3eS
+         eyDnHzE76C+qvP981MrZZ47ZTjoPKH74wldT/yA7SN+1fNidRYim+0jha5sQzB1ZEs59
+         /wsiRVPTauvTnH7IxoimRHdHiHlbr23ml1mxtRwuiiU+q0m7Lp8HCeh9NIjyZiNM308E
+         fDJA==
+X-Gm-Message-State: AOJu0Yw/2w8yvPOJAGFtUMxJ1dLewFP8USZhIEvKsAqnffNrat1QuBAx
+	JP15fgq2LR6cVy7d9uLPhCc8PUXsuUApvAtN6V3rmh7aWH5XGxk03AXR1er7N8iUaY9TvXTyAV8
+	KVuODQC1VdFbx4ttQBAZemfz8rtx07qov1AAEmy8FUPfyM6EPV/HqmXbqINuBgYLlObrA/SMaah
+	THH3oiN39VwJgudoXAFR/ZhWZATgWlwPEC9lyyVnQ1
+X-Google-Smtp-Source: AGHT+IGFKaRYCnm24tciFSPM+jbVn6VUGWLylTtEWjxKMVSlIzJwJ3A/SpYnvLm+ugPwNJmzcDUVpDjNFW4=
+X-Received: from pjur15.prod.google.com ([2002:a17:90a:d40f:b0:2f6:e47c:1747])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:ec84:b0:2f4:f7f8:fc8b
+ with SMTP id 98e67ed59e1d1-2fc0f0b05a8mr1269502a91.27.1739399413221; Wed, 12
+ Feb 2025 14:30:13 -0800 (PST)
+Date: Wed, 12 Feb 2025 14:24:53 -0800
+In-Reply-To: <20250212222859.2086080-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250212222859.2086080-1-ctshao@google.com>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <20250212222859.2086080-3-ctshao@google.com>
+Subject: [PATCH v5 2/5] perf lock: Retrieve owner callstack in bpf program
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Krzysztof, thanks for the quick feedback.=20
+This implements per-callstack aggregation of lock owners in addition to
+per-thread.  The owner callstack is captured using `bpf_get_task_stack()`
+at `contention_begin()` and it also adds a custom stackid function for the
+owner stacks to be compared easily.
 
-On Wed, 2025-02-12 at 18:22 +0100, Krzysztof Kozlowski wrote:
-> On 12/02/2025 18:09, Matthew Majewski wrote:
-> > Create a new yaml schema file to describe the device tree bindings
-> > for
-> > the generic m2m-deinterlace driver.
->=20
->=20
-> Bindings are for hardware, not drivers, and usually not generic.
->=20
+The owner info is kept in a hash map using lock addr as a key to handle
+multiple waiters for the same lock.  At `contention_end()`, it updates the
+owner lock stat based on the info that was saved at `contention_begin()`.
+If there are more waiters, it'd update the owner pid to itself as
+`contention_end()` means it gets the lock now.  But it also needs to check
+the return value of the lock function in case task was killed by a signal
+or something.
 
-Ok, I'll change the wording from "driver" to "device" in V2.
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+ .../perf/util/bpf_skel/lock_contention.bpf.c  | 218 +++++++++++++++++-
+ 1 file changed, 209 insertions(+), 9 deletions(-)
 
-> Please describe here exemplary devices.
+diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+index 23fe9cc980ae..e8b113d5802a 100644
+--- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
++++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+@@ -197,6 +197,9 @@ int data_fail;
+ int task_map_full;
+ int data_map_full;
 
-The m2m-deinterlace device can be used on any hardware that provides a
-MEM_TO_MEM and interleaved capable dma channel. I'll note that in the
-commit message for V2 as well.
++struct task_struct *bpf_task_from_pid(s32 pid) __ksym __weak;
++void bpf_task_release(struct task_struct *p) __ksym __weak;
++
+ static inline __u64 get_current_cgroup_id(void)
+ {
+ 	struct task_struct *task;
+@@ -420,6 +423,61 @@ static inline struct tstamp_data *get_tstamp_elem(__u32 flags)
+ 	return pelem;
+ }
 
-> >=20
-> > +description: |
-> > +=C2=A0 A generic memory2memory device for deinterlacing video
-> > +=C2=A0 using dmaengine.
->=20
-> And what is this generic device supposed to do? What fits to generic
-> device?
->=20
++static inline s32 get_owner_stack_id(u64 *stacktrace)
++{
++	s32 *id, new_id;
++	static s64 id_gen = 1;
++
++	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
++	if (id)
++		return *id;
++
++	new_id = (s32)__sync_fetch_and_add(&id_gen, 1);
++
++	bpf_map_update_elem(&owner_stacks, stacktrace, &new_id, BPF_NOEXIST);
++
++	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
++	if (id)
++		return *id;
++
++	return -1;
++}
++
++static inline void update_contention_data(struct contention_data *data, u64 duration, u32 count)
++{
++	__sync_fetch_and_add(&data->total_time, duration);
++	__sync_fetch_and_add(&data->count, count);
++
++	/* FIXME: need atomic operations */
++	if (data->max_time < duration)
++		data->max_time = duration;
++	if (data->min_time > duration)
++		data->min_time = duration;
++}
++
++static inline void update_owner_stat(u32 id, u64 duration, u32 flags)
++{
++	struct contention_key key = {
++		.stack_id = id,
++		.pid = 0,
++		.lock_addr_or_cgroup = 0,
++	};
++	struct contention_data *data = bpf_map_lookup_elem(&owner_stat, &key);
++
++	if (!data) {
++		struct contention_data first = {
++			.total_time = duration,
++			.max_time = duration,
++			.min_time = duration,
++			.count = 1,
++			.flags = flags,
++		};
++		bpf_map_update_elem(&owner_stat, &key, &first, BPF_NOEXIST);
++	} else {
++		update_contention_data(data, duration, 1);
++	}
++}
++
+ SEC("tp_btf/contention_begin")
+ int contention_begin(u64 *ctx)
+ {
+@@ -437,6 +495,72 @@ int contention_begin(u64 *ctx)
+ 	pelem->flags = (__u32)ctx[1];
 
-The term "generic" was taken from the driver description. It's generic
-insofar as it only relies on the dmaengine API for processing (and
-hence is relatively platform agnostic).
+ 	if (needs_callstack) {
++		u32 i = 0;
++		u32 id = 0;
++		int owner_pid;
++		u64 *buf;
++		struct task_struct *task;
++		struct owner_tracing_data *otdata;
++
++		if (!lock_owner)
++			goto skip_owner;
++
++		task = get_lock_owner(pelem->lock, pelem->flags);
++		if (!task)
++			goto skip_owner;
++
++		owner_pid = BPF_CORE_READ(task, pid);
++
++		buf = bpf_map_lookup_elem(&stack_buf, &i);
++		if (!buf)
++			goto skip_owner;
++		for (i = 0; i < max_stack; i++)
++			buf[i] = 0x0;
++
++		if (!bpf_task_from_pid)
++			goto skip_owner;
++
++		task = bpf_task_from_pid(owner_pid);
++		if (!task)
++			goto skip_owner;
++
++		bpf_get_task_stack(task, buf, max_stack * sizeof(unsigned long), 0);
++		bpf_task_release(task);
++
++		otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
++		id = get_owner_stack_id(buf);
++
++		/*
++		 * Contention just happens, or corner case `lock` is owned by process not
++		 * `owner_pid`. For the corner case we treat it as unexpected internal error and
++		 * just ignore the precvious tracing record.
++		 */
++		if (!otdata || otdata->pid != owner_pid) {
++			struct owner_tracing_data first = {
++				.pid = owner_pid,
++				.timestamp = pelem->timestamp,
++				.count = 1,
++				.stack_id = id,
++			};
++			bpf_map_update_elem(&owner_data, &pelem->lock, &first, BPF_ANY);
++		}
++		/* Contention is ongoing and new waiter joins */
++		else {
++			__sync_fetch_and_add(&otdata->count, 1);
++
++			/*
++			 * The owner is the same, but stacktrace might be changed. In this case we
++			 * store/update `owner_stat` based on current owner stack id.
++			 */
++			if (id != otdata->stack_id) {
++				update_owner_stat(id, pelem->timestamp - otdata->timestamp,
++						  pelem->flags);
++
++				otdata->timestamp = pelem->timestamp;
++				otdata->stack_id = id;
++			}
++		}
++skip_owner:
+ 		pelem->stack_id = bpf_get_stackid(ctx, &stacks,
+ 						  BPF_F_FAST_STACK_CMP | stack_skip);
+ 		if (pelem->stack_id < 0)
+@@ -473,6 +597,7 @@ int contention_end(u64 *ctx)
+ 	struct tstamp_data *pelem;
+ 	struct contention_key key = {};
+ 	struct contention_data *data;
++	__u64 timestamp;
+ 	__u64 duration;
+ 	bool need_delete = false;
 
-I will add more information about the device in the description for V2.
-I'll also mention that it's intended for converting between interlaced
-and non-interlaced formats by line-doubling.=20
+@@ -500,12 +625,94 @@ int contention_end(u64 *ctx)
+ 		need_delete = true;
+ 	}
 
-> > +
-> > +properties:
-> > +=C2=A0 compatible:
-> > +=C2=A0=C2=A0=C2=A0 const: m2m-deinterlace
-> > +
-> > +=C2=A0 dma-names:
-> > +=C2=A0=C2=A0=C2=A0 items:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - const: rxtx
-> > +
-> > +=C2=A0 dmas:
-> > +=C2=A0=C2=A0=C2=A0 items:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - description: mem-to-mem capable DMA c=
-hannel
-> > +
-> > +required:
-> > +=C2=A0 - compatible
-> > +=C2=A0 - dma-names
-> > +=C2=A0 - dmas
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +=C2=A0 - |
-> > +=C2=A0=C2=A0=C2=A0 m2m-deinterlace {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "m2m-deinter=
-lace";
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dma-names =3D "rxtx";
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dmas =3D <&edma 20 0>;
->=20
->=20
-> This all looks rather like bindings for driver and not even quite
-> generic because looks quite simple. I guess media folks will provide
-> more input, but anyway it looks a bit not-DT-enough.
->=20
-> > +=C2=A0=C2=A0=C2=A0 };
+-	duration = bpf_ktime_get_ns() - pelem->timestamp;
++	timestamp = bpf_ktime_get_ns();
++	duration = timestamp - pelem->timestamp;
+ 	if ((__s64)duration < 0) {
+ 		__sync_fetch_and_add(&time_fail, 1);
+ 		goto out;
+ 	}
 
-Yes, the bindings are much simpler than a typical media device, but
-that is because the m2m-deinterlace device only needs to be provided a
-handle to a dma channel to function properly. My reasoning for adding=20
-dt-bindings for this device is because it is a consumer of a dma-
-channel and the dt bindings are a platform-agnostic way to be able to
-provide a specific dma channel to the device.
++	if (needs_callstack && lock_owner) {
++		struct owner_tracing_data *otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
++
++		if (!otdata)
++			goto skip_owner;
++
++		/* Update `owner_stat` */
++		update_owner_stat(otdata->stack_id, timestamp - otdata->timestamp, pelem->flags);
++
++		/* No contention is occurring, delete `lock` entry in `owner_data` */
++		if (otdata->count <= 1)
++			bpf_map_delete_elem(&owner_data, &pelem->lock);
++		/*
++		 * Contention is still ongoing, with a new owner (current task). `owner_data`
++		 * should be updated accordingly.
++		 */
++		else {
++			u32 i = 0;
++			s32 ret = (s32)ctx[1];
++			u64 *buf;
++
++			__sync_fetch_and_add(&otdata->count, -1);
++
++			buf = bpf_map_lookup_elem(&stack_buf, &i);
++			if (!buf)
++				goto skip_owner;
++			for (i = 0; i < (u32)max_stack; i++)
++				buf[i] = 0x0;
++
++			/*
++			 * `ret` has the return code of the lock function.
++			 * If `ret` is negative, the current task terminates lock waiting without
++			 * acquiring it. Owner is not changed, but we still need to update the owner
++			 * stack.
++			 */
++			if (ret < 0) {
++				s32 id = 0;
++				struct task_struct *task;
++
++				if (!bpf_task_from_pid)
++					goto skip_owner;
++
++				task = bpf_task_from_pid(otdata->pid);
++				if (!task)
++					goto skip_owner;
++
++				bpf_get_task_stack(task, buf,
++						   max_stack * sizeof(unsigned long), 0);
++				bpf_task_release(task);
++
++				id = get_owner_stack_id(buf);
++
++				/*
++				 * If owner stack is changed, update `owner_data` and `owner_stat`
++				 * accordingly.
++				 */
++				if (id != otdata->stack_id) {
++					update_owner_stat(id, pelem->timestamp - otdata->timestamp,
++							  pelem->flags);
++
++					otdata->timestamp = pelem->timestamp;
++					otdata->stack_id = id;
++				}
++			}
++			/*
++			 * Otherwise, update tracing data with the current task, which is the new
++			 * owner.
++			 */
++			else {
++				otdata->pid = pid;
++				otdata->timestamp = timestamp;
++				/*
++				 * We don't want to retrieve callstack here, since it is where the
++				 * current task acquires the lock and provides no additional
++				 * information. We simply assign -1 to invalidate it.
++				 */
++				otdata->stack_id = -1;
++			}
++		}
++	}
++skip_owner:
+ 	switch (aggr_mode) {
+ 	case LOCK_AGGR_CALLER:
+ 		key.stack_id = pelem->stack_id;
+@@ -589,14 +796,7 @@ int contention_end(u64 *ctx)
+ 	}
 
-As an example, say on an embedded device I have a dma controller which
-provides multiple interleaved MEM_TO_MEM capable channels. I want the
-m2m-deinterlace device to consume one particular channel because it is
-higher-priority than the others. With these dt-bindings I can simply
-specify the correct dma channel that should be used. Without the
-device-tree bindings I would have to manually edit the driver to filter
-for the correct dma channel to be used, but then the device is no
-longer "generic".
+ found:
+-	__sync_fetch_and_add(&data->total_time, duration);
+-	__sync_fetch_and_add(&data->count, 1);
+-
+-	/* FIXME: need atomic operations */
+-	if (data->max_time < duration)
+-		data->max_time = duration;
+-	if (data->min_time > duration)
+-		data->min_time = duration;
++	update_contention_data(data, duration, 1);
 
-It would be helpful to hear what the media people have to say about it.
-The m2m-deinterlace device is a bit of an edge-case since it's not
-quite a "virtual" device since it relies on the presence of specific
-dma hardware. However, it doesn't follow the typical conventions of any
-other in-tree media driver that consumes a dma channel, which all seem
-to have dt-bindings.=20
+ out:
+ 	pelem->lock = 0;
+--
+2.48.1.502.g6dc24dfdaf-goog
 
-Best,
-Matthew
