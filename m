@@ -1,125 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C72209677;
-	Wed, 12 Feb 2025 10:48:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D9D2AF19;
+	Wed, 12 Feb 2025 10:49:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739357308; cv=none; b=tGpOfvS8EThon7pzV+kTONUDAdwA2FZp9T2JjvrK1Jz8O73OTXRx7uD/SOiyrIFtv26QgI3eiyhIHN9leRZ5ooR70cTJ6UJlAgei/tL+55s86ppiT/b1/6Io9hFmWF9NVcZ6Cizgc7kEP0r5kzE+yM1fqhIPP+xuqee6rm4/vvs=
+	t=1739357377; cv=none; b=f364/g94c7WFYrTgkCyQjaYjOnC/+6xbx8C0R2ccajUHL1U0cBzC4SPb2hMAgp4uxSPmAYHhtD9FFQem9K1nBQIBJxSzZctW8IeZvCSXC5+nWBoYjXzCX0bRT6AUgGn8Rewirf2/j/i7aLKJ99l+yzN1ycY8YE1u/haGMVeAJzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739357308; c=relaxed/simple;
-	bh=MDzi94+7DXP8gki44yU/WMmcUnnz896qVa5iXKJmYdY=;
+	s=arc-20240116; t=1739357377; c=relaxed/simple;
+	bh=SrZ7q3UddXW1p49/GdRvgpUzejtlAUiY6e9x0tcKinE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Itplnomg+e+69AdlxZRdgUa8B/G8f7/3eb3O7b86Z0HEs9Ghg2f8vLAczA2uPT2xU07PfuM/iEVSzIr4z838du7ZbgVKFWrI6L+DLOCsrmK5DQwHGFQ8cq6uMhTluRgKiPZLIk1DeX+b0Bi+ASZxAi8Wn8Ef1SK3SW6fsRL8iW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TMR5XmCv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=D+q4+hvyrftlj3ARhQAJrH9LRybl7B2WkTVVkrl0lqNlUYuB+40DyVMGzt7FYHfzCbiXeNhrdLPpBdZ4zrpzmx00xXe7350ll34veVmDadslLsc21ZEJSi6G7AFYxjvAI/nH/lT+lo9C7s4VaHIp1z66COBE+J1LEPHONsRNLpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsCk99ec; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TMR5XmCv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24B85C4CEDF;
-	Wed, 12 Feb 2025 10:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739357307;
-	bh=MDzi94+7DXP8gki44yU/WMmcUnnz896qVa5iXKJmYdY=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsCk99ec"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01860C4CEDF;
+	Wed, 12 Feb 2025 10:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739357376;
+	bh=SrZ7q3UddXW1p49/GdRvgpUzejtlAUiY6e9x0tcKinE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TMR5XmCv03tfHX7I53UpQYNvbhR6rOKNvq589jk8YUun8HdFzzdq/KL3Ah5GHyImH
-	 XL06WiLcWYnr2QVip5Fc+bFM0rDwJARBf8hGikiCPSRjoVFxqZDwuRMD24I+ywQXOr
-	 PJHdZipeEf3CzAjLCPztGHcG5YN0Vrg1ZB68njx0=
-Date: Wed, 12 Feb 2025 11:47:23 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: heikki.krogerus@linux.intel.com, andre.draszik@linaro.org,
-	linux@roeck-us.net, shufan_lee@richtek.com,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel@collabora.com, pablo.sun@mediatek.com
-Subject: Re: [PATCH] usb: typec: tcpci_rt1711h: Unmask alert interrupts to
- fix functionality
-Message-ID: <2025021214-snowshoe-shortly-602d@gregkh>
-References: <20250212104040.38723-1-angelogioacchino.delregno@collabora.com>
+	b=fsCk99ecgG1X1H4oCmDUZgnbAUfRIvj8fWtdlwdoQ07gzWE7fmKGgOCFbXT8zxU8z
+	 E17uZ/CKSWTiBSsXf6Z6vZWKYpqlNlcKGIyrhcObTMnI1Vs8SOuMqX9285cpyLhl3h
+	 i4BACZrSu2IrhvuCBWekSlYRZzO3qid0P9Ajy4xYJi/PyBLZ+A2HVA8MjrFX049Kga
+	 aC8profD5qguMrsDfEYi5k14CfG/ZS5ZwDrn1/hjq/RJX6KfdiM3+g5V+nuBxEflNE
+	 BuOxNawNPtWooUTQhU4pS84J5mQd1EBbum7ylQPZiEkomLW6MNCo51OZTDyrBZ+Ri7
+	 Mh4FqItv9flOg==
+Date: Wed, 12 Feb 2025 11:49:34 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Florent Tomasin <florent.tomasin@arm.com>
+Cc: Nicolas Dufresne <nicolas@ndufresne.ca>, Vinod Koul <vkoul@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Boris Brezillon <boris.brezillon@collabora.com>, 
+	Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+	"T . J . Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yong Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, nd@arm.com, 
+	Akash Goel <akash.goel@arm.com>
+Subject: Re: [RFC PATCH 1/5] dt-bindings: dma: Add CMA Heap bindings
+Message-ID: <20250212-sweet-nano-penguin-e85e7d@houat>
+References: <cover.1738228114.git.florent.tomasin@arm.com>
+ <771534be8dfa2a3bdc3876502752f518224b9298.1738228114.git.florent.tomasin@arm.com>
+ <ats2unrml5a7vbpdrqrzowodrsfj44bnubpbujg2igk3imeklx@nrpmg5oeq3gz>
+ <be8e6b9f-c3c6-41d1-af9c-3dcd102f0fe3@arm.com>
+ <b02711c901e8acf2bc47926919de7673a0cb0b98.camel@ndufresne.ca>
+ <fae8df2a-3e47-4266-aace-392c5f37581f@arm.com>
+ <20250212-naughty-chipmunk-of-potency-7e0ced@houat>
+ <8ee8e684-0164-4e70-b42e-3827c7885685@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="hofcel2epznouj7x"
 Content-Disposition: inline
-In-Reply-To: <20250212104040.38723-1-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <8ee8e684-0164-4e70-b42e-3827c7885685@arm.com>
 
-On Wed, Feb 12, 2025 at 11:40:40AM +0100, AngeloGioacchino Del Regno wrote:
-> During probe, the TCPC alert interrupts are getting masked to
-> avoid unwanted interrupts during chip setup: this is ok to do
-> but there is no unmasking happening at any later time, which
-> means that the chip will not raise any interrupt, essentially
-> making it not functional as, while internally it does perform
-> all of the intended functions, it won't signal anything to the
-> outside.
-> 
-> Unmask the alert interrupts to fix functionality.
-> 
-> Fixes: ce08eaeb6388 ("staging: typec: rt1711h typec chip driver")
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  drivers/usb/typec/tcpm/tcpci_rt1711h.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/usb/typec/tcpm/tcpci_rt1711h.c b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-> index 64f6dd0dc660..c71b213b2441 100644
-> --- a/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-> +++ b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-> @@ -334,6 +334,11 @@ static int rt1711h_probe(struct i2c_client *client)
->  {
->  	int ret;
->  	struct rt1711h_chip *chip;
-> +	const u16 alert_mask = TCPC_ALERT_TX_SUCCESS | TCPC_ALERT_TX_DISCARDED |
-> +			       TCPC_ALERT_TX_FAILED | TCPC_ALERT_RX_HARD_RST |
-> +			       TCPC_ALERT_RX_STATUS | TCPC_ALERT_POWER_STATUS |
-> +			       TCPC_ALERT_CC_STATUS | TCPC_ALERT_RX_BUF_OVF |
-> +			       TCPC_ALERT_FAULT;
->  
->  	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
->  	if (!chip)
-> @@ -384,6 +389,11 @@ static int rt1711h_probe(struct i2c_client *client)
->  		return ret;
->  	enable_irq_wake(client->irq);
->  
-> +	/* Enable alert interrupts */
-> +	ret = rt1711h_write16(chip, TCPC_ALERT_MASK, alert_mask);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.48.1
-> 
-> 
 
-Hi,
+--hofcel2epznouj7x
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH 1/5] dt-bindings: dma: Add CMA Heap bindings
+MIME-Version: 1.0
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+On Wed, Feb 12, 2025 at 10:29:32AM +0000, Florent Tomasin wrote:
+>=20
+>=20
+> On 12/02/2025 10:01, Maxime Ripard wrote:
+> > On Wed, Feb 12, 2025 at 09:49:56AM +0000, Florent Tomasin wrote:
+> >> Note that the CMA patches were initially shared to help reproduce my
+> >> environment of development, I can isolate them in a separate patch
+> >> series and include a reference or "base-commit:" tag to it in the
+> >> Panthor protected mode RFC, to help progress this review in another
+> >> thread. It will avoid overlapping these two topics:
+> >>
+> >> - Multiple standalone CMA heaps support
+> >> - Panthor protected mode handling
+> >=20
+> > You keep insisting on using CMA here, but it's really not clear to me
+> > why you would need CMA in the first place.
+> >=20
+> > By CMA, do you mean the CMA allocator, and thus would provide buffers
+> > through the usual dma_alloc_* API, or would any allocator providing
+> > physically contiguous memory work?
+>=20
+> You are correct only the CMA allocator is relevant. I needed a way to
+> sub-allocate from a carved-out memory.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+I'm still confused, sorry. You're saying that you require CMA but...
 
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
+> > In the latter case, would something like this work:
+> > https://lore.kernel.org/all/20240515-dma-buf-ecc-heap-v1-1-54cbbd049511=
+@kernel.org/
+>=20
+> Thanks for sharing this link, I was not aware previous work was done
+> on this aspect. The new carveout heap introduced in the series could
+> probably be a good alternative. I will play-around with it and share
+> some updates.
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
+=2E.. you seem to be ok with a driver that doesn't use it?
 
-thanks,
+Maxime
 
-greg k-h's patch email bot
+--hofcel2epznouj7x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6x8uQAKCRAnX84Zoj2+
+dhpNAX9dpZ7jCHWS9XEKQqdeu+k8bL1z43DeFaKsONHamJEssyPacY4cU20LNyHZ
+dE3EP2gBfigcyv0UGOHYi7iyKQFw7lfvXnKfZ2/xUjJoWzSqoXVjjOm3bVKTr4WT
+bTbtf2LYNw==
+=IIBH
+-----END PGP SIGNATURE-----
+
+--hofcel2epznouj7x--
