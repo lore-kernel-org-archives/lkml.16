@@ -1,94 +1,170 @@
-Received: from resqmta-a2p-658785.sys.comcast.net (resqmta-a2p-658785.sys.comcast.net [96.103.146.58])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2071.outbound.protection.outlook.com [40.107.93.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125884502F
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.103.146.58
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739323659; cv=none; b=EQml4BRESBqMyvsyJNcjWJNAEcvgnLjrwO3+ewdImzM+53Gg3EaJQVe1CecdEB+zlnV+v/zKlwfscMEoX430rgKLmswEhKciamMBElX4z7dkBMegN3mTnoL29XwaQTDxFvspumCQX3qeUJGabiFIiPfMrQstSdr9vjPQe3G7Vm4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739323659; c=relaxed/simple;
-	bh=huMXU5PkK5OaSxJhp+YkycjSdx7SpClR99y4NMzsgPU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FaSe6tJ6ONtc77MpbxyRUArTATwRr/tW4OYeOPVqtHdsW8hpCv/unJmRY1MsfHK1a4Zs85LUOY8iG26Ry6nNIbg2+KhCl6wJmgd4itd3jEqbEzErZVJQNETgnuxFXeVKby2cLJSPlc9KxDXOsowBGsSunomLtxfIUQIYgUV9odo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=comcast.net; spf=pass smtp.mailfrom=comcast.net; dkim=pass (2048-bit key) header.d=comcast.net header.i=@comcast.net header.b=M/bEGU3g; arc=none smtp.client-ip=96.103.146.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=comcast.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=comcast.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2D117993
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739323693; cv=fail; b=nPY3FtBxVPCf0fklmzOiwKgkKjODSk8thuMO0zw/miKSaW1JCOJV3APBk/luwLY5Noyxynfs44Zkt+y/5n9djFUGASVHCRK+jyxbYpvxPebit5V3dN7i0LmwCaZU+GrDpD2UPXBWgBFAfTd7+eqhg7IejmhDbMWVA1VG0GDbeQ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739323693; c=relaxed/simple;
+	bh=vS6fbUA23rp+CpRZ1JjDS4N0suZJKdPcS2sh7Bt+L/I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=QPgEPfJi7AURCp1lWzELxv9pg198PFduegPdMBiciP5Q5KDBdi4HYq587UnEs+tbN4Vb3AGiUrd923dsTNAFplxWB6RjpfD0b3ujItJRcIAFWYitPGk9BlyjoyPaRVr6H0O/dCbRsQtPvSLEzf42yHJ+ozm+Na6TFZSZXTI2nyg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nKdlkw6j; arc=fail smtp.client-ip=40.107.93.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=comcast.net header.i=@comcast.net header.b="M/bEGU3g"
-Received: from resomta-a2p-647975.sys.comcast.net ([96.103.145.232])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 256/256 bits)
-	(Client did not present a certificate)
-	by resqmta-a2p-658785.sys.comcast.net with ESMTPS
-	id i0pFt4uRjjNM1i1UqtxDhO; Wed, 12 Feb 2025 01:25:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=comcast.net;
-	s=20190202a; t=1739323500;
-	bh=sqsQOneILkPAi5s6Ecy2iy5+xQ+mWTe+ZD3pipY5ZnU=;
-	h=Received:Received:From:To:Subject:Date:Message-ID:MIME-Version:
-	 Xfinity-Spam-Result;
-	b=M/bEGU3gsdbzzBWZcoFOVI0BSALeeFj3Dsqi4qbSH1TcoZzU2fW9JW3qzJ9VS/LRT
-	 IQTfWlcc50cj6DBEOhuL4wfkp82BpePA7fXPEO4G5OEsU800SAM0IOwvM141WMp8ks
-	 Nljs8Wl8IyTCM7iebDbdEAK8HEG3Ssako5G+pXQWh3uJ+m/CegRBGyJQJU/CkMOQ+g
-	 u5QPg7L4MQYLWO4koRt+KcA9wErTC1D7cI2ng42DvbW8NsC38X9D8Pu83Q4itzWCkF
-	 ufW7AV/4eVpXIgd7oQkaKgSU1GT4kK5erOZiu8kpWGpP2wO230wvMLuUWfI9x0vr08
-	 O1BcUCFe0xLkg==
-Received: from jack-livingood.hsd1.ca.comcast.net
- ([IPv6:2601:647:4d81:b870::c894])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 256/256 bits)
-	(Client did not present a certificate)
-	by resomta-a2p-647975.sys.comcast.net with ESMTPSA
-	id i1UftMnGEnjISi1Uktf2bR; Wed, 12 Feb 2025 01:24:57 +0000
-From: jack Livingood <jacklivingood@comcast.net>
-To: sfr@canb.auug.org.au
-Cc: tiwai@suse.de,
-	linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	Jack Livingood <jacklivingood@comcast.net>
-Subject: [PATCH 1/4] sounds: firewire: isight: changed strcpy to strscpy
-Date: Tue, 11 Feb 2025 17:23:46 -0800
-Message-ID: <20250212012346.83516-1-jacklivingood@comcast.net>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nKdlkw6j"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dkHbk3vWq/S2MrB3Ka/jeEdxAek41tM8VRqhXIF2HsgplBJMVINFEOyhcg5+13yWKe1euK/Lr/YyNgj5Cmzo/B51CnWvygyjHsoKY4DcjOwXZmcvq/glaDHXLQBvU5gouWPou/BqjPRco/ITKEfXVgeRpyvojzXncKEP/skNgwavlhmiuS0vvZaV9MkHPcYDFcCAJ6crQe2P8ImL0FxWhr5z+zx8PWK2Q4LUkOLNY/T1KNrFw6QnwL/dVSASDUQjX5DTuRusDKTje/hmZykfP3qd4uZYkU6ih6pd/yov1c9w+X9K6tDYjH1b3AGJw2s/5LDG2mqacpHpf4RrqFWXwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+LYk0XTjomOlJjlVweOsx89sctN4y8OfLcZppQxoPP4=;
+ b=oc1ibA7VM2Rw1kAFlyiVmC3OiNU6ws1DtfQU8KA7CNv0gA2dEkurdiy/pYeba33TvJf0SwjZzoXZ9WPo+ATSDTbxLlDrOdXxJfZkdORRmBwbB2jhekwuCUbzs7R6Kbs+U8nPUg+Y9Es6gyBAnkbAMxVk93iu+k4LgCRl+UzCrtqqApvUml6lG1oTujlAoHOKl3qilHz3/qjrlw+GS4W6D1qXxH2UCenVHwiWmjQqSDSd/sXdsWDC0kTsMu38m2S+IFvRkP6+DZiGQ1j4urCJvoK6Ejg0zG/PPR6gzsLxUl8+6HVTyOfmqEqToIv0O27Bn6DYm+g9fNJWDgI0hLdKkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+LYk0XTjomOlJjlVweOsx89sctN4y8OfLcZppQxoPP4=;
+ b=nKdlkw6jMM5SV6HnggGBwpau+CUP/rNeq5lm20GcjJQMr7VHbZYQBHdeldNwKjPFQgvhgaEa7eO7POHuepQwHY+9F90vhqOpeZ7oNDF1lswtYMdDGLvwbE3+rXl3xCMOENd3UQEaFv4oz6GlUWn5xIOt8U5ejtVK9xv+8Z29ksSC6PjTEQsJpahCeMrTmPaUVRxQMOSNjzh3zFdUWJ12RKdq6dDMhvNRLdNRCfjkDlXyL1M8IWdTCvJ4VEfQ5pCouGXlzMpUpykVKvatyovxq0XlgtCeJq9Fmhj+ROltgPgghxHwg05g/VWIdeViyKielrZzWhObcdIkpeF2hmV45Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ BN5PR12MB9509.namprd12.prod.outlook.com (2603:10b6:408:2a8::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.11; Wed, 12 Feb
+ 2025 01:28:09 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8422.015; Wed, 12 Feb 2025
+ 01:28:09 +0000
+Date: Wed, 12 Feb 2025 12:28:04 +1100
+From: Alistair Popple <apopple@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	nouveau@lists.freedesktop.org, Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
+	Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>
+Subject: Re: [PATCH v1 2/2] nouveau/svm: don't initialize ret in
+ nouveau_atomic_range_fault()
+Message-ID: <4awlelarrasmkvpjdhnxabto3dr4j26yc2g5qk5cnqcvhrcdrt@sd3cpt7mo5kk>
+References: <20250124181524.3584236-1-david@redhat.com>
+ <20250124181524.3584236-3-david@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250124181524.3584236-3-david@redhat.com>
+X-ClientProxiedBy: SY5P282CA0140.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:205::16) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfHAiJ30Wmtx29GpTwxjkHtaV2oqyinE5N36XH0KTPLa0/Vl93uTAar6MbtN8PmQ+0Ju2JbZd/uGT951ivvrvEg2y+Eo0bkZoSDFNlZ0k7wHcVy/vX7qR
- 22ilMV4o4Md4T6iHXlC7v4UgCGLX+c1SpZe10h+QVmEofQ+9eUL3IoqziY+xlhInIV0rdJgy3zhIYJQbrGuLZDLOXY0iqO7CbuSKtfD61pwKCfFsGVEEH+hn
- yiha/LRQ7ZhxRAsti0NzRljNwL8KHVGszK8ORpa+s6MYIEWIk5sPvBvarGBwvoq3GvFttBc5lDpq2HF9sV7OtvuFcVu+U+chVpDCUpOZ9UBPkClPtXrsr6RX
- XgHuCXyRF8spZ4dkKC2nVRN+VBoF5FfpAxwiF66YBAAa//XrGnE=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|BN5PR12MB9509:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1558211f-0d62-4e70-a603-08dd4b048221
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+GB5d1XBZmnBu6W5AIeV9O8NWIPAEDwm8AsAflh+HrTUQ9ijrnV9rWPsBztm?=
+ =?us-ascii?Q?gbCC/Le+q2XrWVRxxHQ7MSgRQhnvchYnUi74UWU4a5f/v5jWb2msohN6eee6?=
+ =?us-ascii?Q?kp/spynA3x6sUBuh1O3mj1QZGR5ZQ3gMOPswnYiTByvJPJn242xrqpYop1gz?=
+ =?us-ascii?Q?J2Qf6aFxA/arGc4raCIiLfhblOwxSEbOo4MB1fwydgdE7Nf8jRijWt1ATHlF?=
+ =?us-ascii?Q?q6WD9dsY94uGgLKaZCR7AP2Y3Qfo+XzgAPbgSy1Jt4uyhAwWUXw/b+i4RQ6B?=
+ =?us-ascii?Q?o702Z5st1hYzqG35YODZhtXBVrm109xImSEz9n4jYW7+xfNxyO/YJ+OoPWM5?=
+ =?us-ascii?Q?CKpKOu3kpygR5DXpD77tV/4ZU6dMM9NPsFJh0l1lijobrX3f0s1XChjHhCmN?=
+ =?us-ascii?Q?6reTeF/ulUV9my2FpkRt/ZGawAKH2BpHSjiwnGjxU9YU7Y0ggKWo+l2JRWY+?=
+ =?us-ascii?Q?fQxCt61W+mhuainUqCk2te4RY5i3oFDmGDPAxIzphFl2EQnHwT18iP4EB1Wi?=
+ =?us-ascii?Q?Sx7WCe32799CmLGxGkyJ7cOQSp1K0jRotOyN64OQT6ofGpkYvH+X1qxx0JT2?=
+ =?us-ascii?Q?x44oNRDLrqJagCAJml1n0vo8cNNnAR0smtflX1qapRFBi7tTZNJNILgegN//?=
+ =?us-ascii?Q?r69HCSQeA2Wc15hpffbLiyHCHSaUJEnlmInvFhDbU0fngh0yCJK2M3FUBK9M?=
+ =?us-ascii?Q?MNNWRY/Eg4p4/fve9vpN4FadbSPyuasBGMSNu3WwcbUsMi7Ia7GB/pMiTiCh?=
+ =?us-ascii?Q?ljUACb/zFjAk2M6Rdm38tjgjEa8Tx0yrFa7aNiC5GepcwSC69TIO70PsgT0C?=
+ =?us-ascii?Q?QlV3d0yv83hxLetAQtoaAwnxlgi6IMxOXncUjv7PGAyW477aoHzkIlMgE52R?=
+ =?us-ascii?Q?TN0NvlqDNmzH060/8vRXLjJ0ffl145udCMhqAytj6Wpe4vC7juVCir35ycNv?=
+ =?us-ascii?Q?mAD8uTqcgMT/2+Au7b12RN+Y3vnhn9UeP+PpnthBPizmhjQsNXQWTjv6nzaw?=
+ =?us-ascii?Q?5kjqdTuBlpUcDV41WGyvoxaA1hXDng5G6ncRVMCuA3WkCYmoSpiVFStvHFH6?=
+ =?us-ascii?Q?1LBAtTklA7SeX9AWKJzSF47/tugHKghoeFmtW+FQ/VgopTzYwhzoQ7hXADdZ?=
+ =?us-ascii?Q?F9P02zn7C9qY3NuP+OoqHbQi+gaeT64jq9M76tYUZrICHWJnDuScenH/VGlz?=
+ =?us-ascii?Q?C2uoRlXw5dMR7EPVE1HJdqpEPhDWHPLD6JyK7hRBo4Zdu39rTFwsT80GTdaC?=
+ =?us-ascii?Q?ufjzfPL0X3Tt/ozoDPCregMq5E/ZjRrXUplbYI6f7sQnR26CRpfW6h1pXHID?=
+ =?us-ascii?Q?qkZ7iHcHULuGq2YOLH/TKgLjPuU7XFaAApDbWc4DRnMeKaheluLJMyQfM99m?=
+ =?us-ascii?Q?PG0cIYMLKxoGoo25hLynGwi6D/Zw?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ZrD6QMoROEIKK9LVeHBDGAxTbNg4bfqqIKLKiIG8oS4ARefKsqlJghW62N+F?=
+ =?us-ascii?Q?x1PqcocLbQH/jfmHQbJEwpH6fCl/zzVDUOv4iejf7T7tJanuYnp10zJ1jBfl?=
+ =?us-ascii?Q?Go57rQrHta26gjdiDQsCzKkeMh2vMYoSBdgG2P8u6IA2d0gv8hqvl3s9OeCl?=
+ =?us-ascii?Q?7Oxjd2QP58/8B61FEG77/m0ER9/GzJRu/TweSV1iRLlArnEledy8Tdx7hRyH?=
+ =?us-ascii?Q?UOnMfVSy+4mRVva67oZPtnYDVstCUJ8MFd/1LcpnBo9N4TVB5uEGdR3VbJAU?=
+ =?us-ascii?Q?HTmbgZCQJ4hTBu4so7xGc80JPxv8rgfR6RDMh2cVMCEoBpUc79rXRM4VuoC+?=
+ =?us-ascii?Q?KLvQnFk/An49O4PflfZKAK9L6Svk2lX1gqPnYpW059a9swF/xHxeIzkMrx16?=
+ =?us-ascii?Q?UMJnbFi3H3iHwh3J6ZFhv7KOOL0uQhYZH5dp921gpwNyM9qO41UB2/fzr6i5?=
+ =?us-ascii?Q?Nl6xFC+jm/rlYhFGyGbmiN+zIaH65Fa2STu8qPG9eWwtG2HARVvM9UZJtffy?=
+ =?us-ascii?Q?6MomBh4omyVcrGcPKiV91iJjC5fkpMgFzureDCBoNYO3q4LgTRYo5nYBOin+?=
+ =?us-ascii?Q?DsQi6vPmMkFhZjRjbqMJkDIb2237B2qpqO8CamJDx1riPg7X+M0elTg1Lm8a?=
+ =?us-ascii?Q?KC7mg+YJgOM9eAb/YpvQzC0Zvte1KHn5c0DxLwJR1VJ+35YMbLmwaogMVxje?=
+ =?us-ascii?Q?nN7/Hb3M+Kv3sAG+w/dh0Y+mJBYvPGmLTBUR2fJ01b5UrdmNkq2wZLWtdX43?=
+ =?us-ascii?Q?EJGKELu/s6OeFoJgagGrEFnC7BOL4ghQVQUJTLQepZnlVK0Zr985MZ6/+D/C?=
+ =?us-ascii?Q?YozUzBsU/X1mOEvRhuoNDukbfuyz8fkpqetioQSUJPoNM9zvmkLzbR6tWh1h?=
+ =?us-ascii?Q?Pozpo+Q4f18cTwl/i6el4NGkP32+48ywNc6vNXvbfnjmIGLwy/a/VaWyR7O7?=
+ =?us-ascii?Q?7N3fJQzY7ueqT7Fo1ONNputNLuY7guhF6yZJEqgRozbKg7PJIyyez9fuQhNp?=
+ =?us-ascii?Q?nPwxTIwA6mQ2rM2m1ZVeasoVMkkDGvXd8ubSQz5X+Pf1YMvLTNYzw+siHJ+e?=
+ =?us-ascii?Q?VrmrAasW9+L1yEiJ87mgOOqpp6qv46ItsBxSdZ1NLEwsgjlalUsufdb59sIK?=
+ =?us-ascii?Q?3ikaeYCveCPTtlGaNMVTwSV5mnx0qvp2bIfP4qYSAdQcjHzENb5Y7yPMh8hn?=
+ =?us-ascii?Q?IO/dFo8G+m6vvB1RvXVj4feCCiXMhEdkd6wa4AEuxqqg9m70qcxlbfeRFbXq?=
+ =?us-ascii?Q?6byDjo9XlThZ7rCbfaGi3Z8uadUYnfWOBbkRHWxmFAI3at96fvPWLhKaDC0S?=
+ =?us-ascii?Q?qK8MNAnh25SoceboKZ2zUEL2JR85atBSFi+1Tn5qTr1HgrGFu7Wo1YHSbpBI?=
+ =?us-ascii?Q?80QAyKOTKw4Z/SfDxS9SJ6QxhUw5BIFvwudJdEkf2akNpnmsxyEBLNuH10Q1?=
+ =?us-ascii?Q?WVH5OBnVeefvqBcR2/iKG7BJ1BXcuZva4ufx3BfWXQ0viV0Xo3C2duFKrQ4f?=
+ =?us-ascii?Q?hTbrwvCq8xU3zy94uaZDCm2AH+eRd38nOVg9NsOJFVGeQC88E1aItDNbjhmI?=
+ =?us-ascii?Q?d4G1Bxh8l5C6H7PWsJ6g2ofZk8ENoDbUb6Eg9aUI?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1558211f-0d62-4e70-a603-08dd4b048221
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2025 01:28:09.2786
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Vu8bXmx5/CZMnEA5EqpZGMp5k3Uo7xRm190VPlsMRmBugfycUyXBivrjqPZR5/9SkmxT8gHRBsJrw0RasAAADQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN5PR12MB9509
 
-From: Jack Livingood <jacklivingood@comcast.net>
+On Fri, Jan 24, 2025 at 07:15:24PM +0100, David Hildenbrand wrote:
+> ret will be modified immediately afterwards.
 
-fixed a spelling issue in the commit made previous
+Yep. Thanks for fixing.
 
-Signed-off-by: Jack Livingood <jacklivingood@comcast.net>
----
- sound/firewire/isight.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Reviewed-by: Alistair Popple <apopple@nvidia.com>
 
-diff --git a/sound/firewire/isight.c b/sound/firewire/isight.c
-index 806f82c9ceee..e9617fc0a532 100644
---- a/sound/firewire/isight.c
-+++ b/sound/firewire/isight.c
-@@ -637,13 +637,13 @@ static int isight_probe(struct fw_unit *unit,
- 
- 	card->private_free = isight_card_free;
- 
--	strcpy(card->driver, "iSight");
--	strcpy(card->shortname, "Apple iSight");
-+	strscpy(card->driver, "iSight");
-+	strscpy(card->shortname, "Apple iSight");
- 	snprintf(card->longname, sizeof(card->longname),
- 		 "Apple iSight (GUID %08x%08x) at %s, S%d",
- 		 fw_dev->config_rom[3], fw_dev->config_rom[4],
- 		 dev_name(&unit->device), 100 << fw_dev->max_speed);
--	strcpy(card->mixername, "iSight");
-+	strscpy(card->mixername, "iSight");
- 
- 	err = isight_create_pcm(isight);
- 	if (err < 0)
--- 
-2.48.1
-
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/gpu/drm/nouveau/nouveau_svm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
+> index 8ea98f06d39af..2f8b8b978fc08 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_svm.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+> @@ -594,7 +594,7 @@ static int nouveau_atomic_range_fault(struct nouveau_svmm *svmm,
+>  	struct page *page;
+>  	unsigned long start = args->p.addr;
+>  	unsigned long notifier_seq;
+> -	int ret = 0;
+> +	int ret;
+>  
+>  	ret = mmu_interval_notifier_insert(&notifier->notifier, mm,
+>  					args->p.addr, args->p.size,
+> -- 
+> 2.47.1
+> 
