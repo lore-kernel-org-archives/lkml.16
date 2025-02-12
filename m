@@ -1,132 +1,102 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8323D27183B
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 03:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B367E107;
+	Wed, 12 Feb 2025 03:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739329265; cv=none; b=R903+hdI7evDYMk8+WLh8k84gjlCqTHo6t5I6wMdL0rmSK1g2lJrpVxXvQu29Yjhgl81USJVtVQcStuq9skRkza+ddiYY517GvnhuerW+yUYp34l3pU9OqAut+XHNg48SKwCpt4jDRm3WN2JR9xPHjovgN4iEwoWtGf26yBjIRU=
+	t=1739329283; cv=none; b=XEltmEOoEqgM24tsB/kv/KxRckDU6YVcXQwraj+Uy30lTcNmP8e1eHZQ/O+/CdqCyDP+7Tsaqi6BkhIsnYU7JOFJDUe7LVu2IP4H/b2aXcCBIIbekcxLucGGSBgqIFBDkGavIaJ13kPR9WW44x9+zX84JGLoregwR7hzmMbayZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739329265; c=relaxed/simple;
-	bh=XPP9kRN6kzoAOAZHknQN2SY3BFA8CtzNYCTu5ea1JwM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s6HHvB/3vfCiCqhZxfDKKDz7b1xxYdxPLpmJB6O3Abx9Ppy5hTpCwzePowTFIfu48HdXnbD/hh+8SF6WjoKZIxnplYj80l81d6ib1i6rj0sUVqenlDXDLsiPWPpzwp/hVSsDbV7xtiPewekKkC9Fu5i3IblFaVy9ypy2zjNQO3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=PbqxVD2w; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
+	s=arc-20240116; t=1739329283; c=relaxed/simple;
+	bh=TzeWfyllWEcDqZhvK8KDksLxOw4vt7BAikh95Vs5JlQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=k+dh2DVYCzBLlEW3ybCD3g/bGO63RzZbWVzLi8RTLBukAoPsVJfRzzJ28tsGra+t6ZFQpPDitWZAO2pyZ1Q9zdRj1DRveqvhifevhiF9+wB0A71L/NVo93IQVEfsEJSkdqWDUFkmyNR8rEWuklftn4N9ujdct6i8GvWEUazro4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=NnBU2WbU; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="PbqxVD2w"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f61b01630so5704185ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:01:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shopee.com; s=shopee.com; t=1739329263; x=1739934063; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rX+yii2dh/Nt6iZHfj27+NPFJKvRakVXL3zR3FNiPnU=;
-        b=PbqxVD2wnGV9Y/QVtFTK3JnnIfruORn4vsmvKQSubIWNrrKEQbi4yLFGDkS6QbD/OA
-         mxBZhfmi+pPyJojoveR+T8BPtveesaPGJ0Qr74fbBn/Kdb1EerP4Q9p9B64FNZjNmLLF
-         SHXz684PWl4z5AikVtEEEoKlB7kUIVzQCNMIU/qMMTC3gN4JRWPeRBFR4Bj8L/7r9bgg
-         Pojby8vN7Gg/CBwNeHqyhK2pzXGZ4pyE/5C1Ow8oqzR9SEE5BYCFcA9WN7AUUiStY0XO
-         0aN673blVklybvKn5iTAGo4HeaDOq4Obr/bi3IwjnEa1eHqdJqzCqHjv6UBGUpIUKuEk
-         bFQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739329263; x=1739934063;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rX+yii2dh/Nt6iZHfj27+NPFJKvRakVXL3zR3FNiPnU=;
-        b=KF4H4g3mY/4/+ffIKQOpKtr8A9/8eP+Mruhwp0AEfBrra6BTjpnQNT8wDZWRouKWk7
-         eDmBY/6B2QTrjChcUJ1qNC6RrmC16ODxCwrQqBZmDlLC3oeYEgeNnXkX0ZNQjEP1IOJ+
-         szmc7XWzTkMR5hyTzI4cW07hr8mrTh6W0Km2wAhw+vJ1W/+hMSaQUYUZzUdgv+ac2jtk
-         P7JHqykclEHLmQ2XMorSPcIiQvXU9+pwvrma+4HLSc3F0MRojGc8PMGwRAl36UitGv50
-         m1SuqiyUj1DLKOcQWcehGgoBYnTR4MT6Im4z5Vc3w/1tcg6QCRcyikdAhHOMLK5OOV3i
-         FYgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvQBBTl6Fz2DgwmIhZ5ABniP0apXv6Jg9Y+s5TXUIP9xb2LeUMTUv7Yfh2Cx01XcKlWqMDuj/n77kgsaA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxk93Vq4huyP7kJVqXMamXFvm1bPg5bmy3ONbOzzVsU3qZ9EhAB
-	HAh0cajf2vafotNSm/YxYKCqZ0tyViDwVSMHnIP+e/0NoGV2HT269VyhfTPiPsU=
-X-Gm-Gg: ASbGncsjMOan7JT33CIhKyP5PmiA0hpVPTnLqXDVomR4UnfxnFz1ApIXV1C0iqZN+4U
-	r24N0b49wtfevy8G3F56rOowy4pOVUK/qDylvStep1boofyg+R7ibS3rUbyOgMaUbc5LtlcvTwX
-	k6hzjkrqNIcCa0aBJcUZ4by1qFmNhL3wvA4/A4yXMY88DdhW0AyKxOFJw9pn43hYO5Gk/lvWaN2
-	8HH0Om5V1/Urqylzzwmsv9tvVc/hoKHYsc9SQo92kNVIO6uog0jaNrNHveaRLCE7hjRhxl+835r
-X-Google-Smtp-Source: AGHT+IHYiD5282yAI56S5u6sv+uNijoJoeBldjyAL4y6gsfbUi6PiXik3/CCecp77O4OY+bdxO9OlA==
-X-Received: by 2002:a05:6a00:3d03:b0:730:84e7:cc with SMTP id d2e1a72fcca58-7322bdc4f48mr2719774b3a.0.1739329262552;
-        Tue, 11 Feb 2025 19:01:02 -0800 (PST)
-Received: from localhost.localdomain ([143.92.64.17])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73091f94bf9sm4170337b3a.20.2025.02.11.19.00.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 19:01:00 -0800 (PST)
-From: Tang Yizhou <yizhou.tang@shopee.com>
-X-Google-Original-From: Tang Yizhou
-To: axboe@kernel.dk
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tang Yizhou <yizhou.tang@shopee.com>
-Subject: [PATCH] blk-wbt: Cleanup some comments
-Date: Wed, 12 Feb 2025 11:00:55 +0800
-Message-Id: <20250212030055.407090-1-yizhou.tang@shopee.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NnBU2WbU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1739329274;
+	bh=JSDlELcyG88ZzzYYBK4LOkJaFlLkawCNJ4tb0QJ74Gc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=NnBU2WbUKxXBea4i0gQC5gxyLMq3pwogplOC6WQGIFbD88xL/mnaB/EzhswRTu+Qd
+	 f2ui4a+Xqd8x2CjawmmIiM7xdCGnTKLfOmz/EoYoA38178Ws8OFDwHZ8dBYcBxaUuE
+	 ApO9xMXY72t/gFvtKVgfrgQplWwEoDwIv6qhV5kCMvr/8k3RTKZok3WAOR4QMDAYEw
+	 vp186dxWKZIsB8Yab0dLwGcxEjsr8rwibBuWvnd8/jD1H0k5BOW0aD03E5YbT+2Vqk
+	 lLZKRs5tcbbkiLHZnBWRxbLn43yO6dypkL5+l5W94a2FrS5BdFDYmxVTHGnRGutas4
+	 ZA2RCQHdHle4A==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Yt33t5mH5z4wyh;
+	Wed, 12 Feb 2025 14:01:14 +1100 (AEDT)
+Date: Wed, 12 Feb 2025 14:00:36 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>, Liam
+ Girdwood <lgirdwood@gmail.com>
+Cc: Andrei Simion <andrei.simion@microchip.com>, Charan Pedumuru
+ <charan.pedumuru@microchip.com>, Durai Manickam KR
+ <durai.manickamkr@microchip.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the dmaengine tree with the sound-asoc
+ tree
+Message-ID: <20250212140036.6c66be97@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/iW2pTCg=Dr_TNO6ecs9kRM+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: Tang Yizhou <yizhou.tang@shopee.com>
+--Sig_/iW2pTCg=Dr_TNO6ecs9kRM+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-wbt_wait() no longer uses a spinlock as a parameter. Update the
-function comments accordingly.
+Hi all,
 
-Additionally, revise other comments to ensure they align with the
-actual implementation.
+Today's linux-next merge of the dmaengine tree got a conflict in:
 
-Signed-off-by: Tang Yizhou <yizhou.tang@shopee.com>
----
- block/blk-wbt.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+  Documentation/devicetree/bindings/misc/atmel-ssc.txt
 
-diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-index 6dfc659d22e2..f1754d07f7e0 100644
---- a/block/blk-wbt.c
-+++ b/block/blk-wbt.c
-@@ -136,8 +136,9 @@ enum {
- 	RWB_MIN_WRITE_SAMPLES	= 3,
- 
- 	/*
--	 * If we have this number of consecutive windows with not enough
--	 * information to scale up or down, scale up.
-+	 * If we have this number of consecutive windows without enough
-+	 * information to scale up or down, slowly return to center state
-+	 * (step == 0).
- 	 */
- 	RWB_UNKNOWN_BUMP	= 5,
- };
-@@ -446,9 +447,9 @@ static void wb_timer_fn(struct blk_stat_callback *cb)
- 		break;
- 	case LAT_UNKNOWN_WRITES:
- 		/*
--		 * We started a the center step, but don't have a valid
--		 * read/write sample, but we do have writes going on.
--		 * Allow step to go negative, to increase write perf.
-+		 * We don't have a valid read/write sample, but we do have
-+		 * writes going on. Allow step to go negative, to increase
-+		 * write performance.
- 		 */
- 		scale_up(rwb);
- 		break;
-@@ -638,11 +639,7 @@ static void wbt_cleanup(struct rq_qos *rqos, struct bio *bio)
- 	__wbt_done(rqos, flags);
- }
- 
--/*
-- * May sleep, if we have exceeded the writeback limits. Caller can pass
-- * in an irq held spinlock, if it holds one when calling this function.
-- * If we do sleep, we'll release and re-grab it.
-- */
-+/* May sleep, if we have exceeded the writeback limits. */
- static void wbt_wait(struct rq_qos *rqos, struct bio *bio)
- {
- 	struct rq_wb *rwb = RQWB(rqos);
--- 
-2.25.1
+between commit:
 
+  6603c5133daa ("ASoC: dt-bindings: atmel,at91-ssc: Convert to YAML format")
+
+from the sound-asoc tree and commit:
+
+  a54ec770396c ("dt-bindings: dma: convert atmel-dma.txt to YAML")
+
+from the dmaengine tree.
+
+I fixed it up (I just deleted the file) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/iW2pTCg=Dr_TNO6ecs9kRM+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmesDtQACgkQAVBC80lX
+0Gy0rAf/b1NaTJL57Op69+cXEBMrHevTWdW46IzRqbZb+oPFY0q5xVGRO6v4cl/S
+lcGxvVSwRkNUzFT7mqHImcSiwWafPHtWIZv1nhc+kCOFown0BeRZhc1RQ5Zakg/1
+oGRsOKoXmSzZmTAETWN4iAWZ6Gji5bwdUqaCb6REIVzmAWJNsemna1Vpq6ULIqxQ
+54rxCjCmxdl41vJ1+1QuuhOrmloiHNh+canVvWmLCI/teN/FxJIXg79Lry2k8odM
+91mPlF2vTjx5I2NuDw1Avg3LQ53QryDSTwJTv0arnqmk0zLElzEwhqKaElOU6AgP
+4S9bqgwNphPItNRK6J8XMa63Gmz8SA==
+=TP1T
+-----END PGP SIGNATURE-----
+
+--Sig_/iW2pTCg=Dr_TNO6ecs9kRM+--
