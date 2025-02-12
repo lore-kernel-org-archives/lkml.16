@@ -1,246 +1,114 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6980E1FECB4;
-	Wed, 12 Feb 2025 09:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773C82063D6;
+	Wed, 12 Feb 2025 09:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739353900; cv=none; b=UgI/0hAWWOCit2+/LzsEHM0tv5ukYwwpKov4pH6+ZjRX/uK5DccdAjsNeqQaNsvlZ7tvBdk0DfyEG8sTaSxfS+kNh/aENImzgUgZs0yRWpbmi0pFuoUCplucw/qRLbNoBoYoDdGngc6g+QU2qnnaEs+H75ooPEqj3I5BVA/0qPk=
+	t=1739353933; cv=none; b=RuL8SK6aQsT9mdvkWT292791j8Nfe9aeCIJ3c+DBWC+gyopEVTlRMEamsMSviTpK0QyCckVaWlel4UjBomOJg9ES+q5i6JTxeEExAZViujgQ6QdEwvTNlKKWSLMVtRRz7CDbktV9JPY5bXAXmtCzcFswGQcrAN2IbnJ9qYtC3zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739353900; c=relaxed/simple;
-	bh=L02NHes9dz1m1KIFNoSilWsi2x9HBuZey4CboKhKW6k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Quu/akBel7itK+wg3SKkoxqYIXYzwyMFBoR3y6va+jAmaLgbFEmbnjPIBvHNBwHUFlkyixhDIBthGq87vCUdjqYHb/pdFhnYD7NtYoYb4t1in5BRWmo1rRTpIJHWeFrikiHoHkCEdyXzlH5K53Fb2Pd26b+Qwt9zD4TelJEsxsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jBug8AYF; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jBug8AYF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=BKUGH
-	SluIIQMXpbpm6ZoH1kQLhLzzE153adLP7RA+Bc=; b=jBug8AYFCy3FFyGN9h1Ea
-	4J+9rkr4BytTa3sQ/bP7YTyx8HiFaTMFIbu7UtLqOdObpZJJuOmSNs0FHUbRh6us
-	z/DPUnyRqQVeetRHr6jvyGaguwQ6hGaL/wKVkS48yGRKKpFRv6aXKY0Fz0NP6pwN
-	rk3AMBvqcca3dYBIqDAiJM=
-Received: from ProDesk.. (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wBnG9Fja6xn14FuLQ--.33700S10;
-	Wed, 12 Feb 2025 17:35:43 +0800 (CST)
-From: Andy Yan <andyshrk@163.com>
-To: heiko@sntech.de
-Cc: hjc@rock-chips.com,
-	krzk+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	derek.foreman@collabora.com,
-	detlev.casanova@collabora.com,
-	daniel@fooishbar.org,
-	robh@kernel.org,
-	sebastian.reichel@collabora.com,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Michael Riesch <michael.riesch@wolfvision.net>
-Subject: [PATCH v14 08/13] drm/rockchip: vop2: Set plane possible crtcs by possible vp mask
-Date: Wed, 12 Feb 2025 17:35:03 +0800
-Message-ID: <20250212093530.52961-9-andyshrk@163.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250212093530.52961-1-andyshrk@163.com>
-References: <20250212093530.52961-1-andyshrk@163.com>
+	s=arc-20240116; t=1739353933; c=relaxed/simple;
+	bh=cSr1mIEzkXQTd9lr9ZoTJBEI1rewAifGbG4i4w7KKN0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l6CPyp3yCmkGwLH8jEweHZ5EJoev4sXKflAwXWKs8cwBMoQWqyVwN2BJr4M3WppoCpYT8Ktk3dpzsREnGKL8qGc9DhJPA2srfqVb3AblLwTHjynl57aEsrP2moZmQJO1p532QDl0juKSVjbeDuKvSYMGf86hWUiO6nBu/djanZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YtD9W2Fbfz4f3kvv;
+	Wed, 12 Feb 2025 17:51:43 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 08DFB1A0E41;
+	Wed, 12 Feb 2025 17:52:06 +0800 (CST)
+Received: from [10.67.109.79] (unknown [10.67.109.79])
+	by APP1 (Coremail) with SMTP id cCh0CgBnGHlCb6xnEwBSDg--.38612S2;
+	Wed, 12 Feb 2025 17:52:03 +0800 (CST)
+Message-ID: <7dd7109d-7554-4b69-8a46-02620abb8583@huaweicloud.com>
+Date: Wed, 12 Feb 2025 17:52:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBnG9Fja6xn14FuLQ--.33700S10
-X-Coremail-Antispam: 1Uf129KBjvJXoWxtrW8JFWkXF43Zr17tw45GFg_yoWxKrWUpa
-	yxZr13WF4fCr4agry7Ja98ZFyak3sxAw4a93ZrKFsxKr13Kry7Wr1UK3Z8Cr1DWFyxZr1j
-	vw43tryDurnrtrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jFFALUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqArxXmesZw5UBAAAs-
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/oom_kill: revert watchdog reset in global OOM process
+To: Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@suse.com>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, yosryahmed@google.com,
+ roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev,
+ davidf@vimeo.com, mkoutny@suse.com, paulmck@kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+ chenridong@huawei.com, wangweiyang2@huawei.com
+References: <20250212025707.67009-1-chenridong@huaweicloud.com>
+ <Z6xig5sLNpFVFU2T@tiehlicka>
+ <d264a73e-966f-4890-9e23-88d476f0fc81@huaweicloud.com>
+ <bccc9e06-af8b-4a55-a69c-98596f1c1385@suse.cz>
+Content-Language: en-US
+From: Chen Ridong <chenridong@huaweicloud.com>
+In-Reply-To: <bccc9e06-af8b-4a55-a69c-98596f1c1385@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgBnGHlCb6xnEwBSDg--.38612S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw45Jw1rJF4rKr4xCF4rXwb_yoW8WF4kpF
+	W7u3WDKan8G3Wjvr4av34Iqry2kr1xXF4rZF1DJw15Zrn09rnrArW8Cw4Yga4DXwn3ua1j
+	vFn0ga4fJ3y5J37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
+	v3UUUUU
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
-From: Andy Yan <andy.yan@rock-chips.com>
 
-In the upcoming VOP of rk3576, a window cannot attach to all Video
-Ports, we introduce a possible_vp_mask for every window to indicate
-which Video Ports this window can attach to.
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-Tested-by: Michael Riesch <michael.riesch@wolfvision.net> # on RK3568
-Tested-by: Detlev Casanova <detlev.casanova@collabora.com>
----
+On 2025/2/12 17:34, Vlastimil Babka wrote:
+> On 2/12/25 10:19, Chen Ridong wrote:
+>>
+>>
+>> On 2025/2/12 16:57, Michal Hocko wrote:
+>>> On Wed 12-02-25 02:57:07, Chen Ridong wrote:
+>>>> From: Chen Ridong <chenridong@huawei.com>
+>>>>
+>>>> Unlike memcg OOM, which is relatively common, global OOM events are rare
+>>>> and typically indicate that the entire system is under severe memory
+>>>> pressure. The commit ade81479c7dd ("memcg: fix soft lockup in the OOM
+>>>> process") added the touch_softlockup_watchdog in the global OOM handler to
+>>>> suppess the soft lockup issues. However, while this change can suppress
+>>>> soft lockup warnings, it does not address RCU stalls, which can still be
+>>>> detected and may cause unnecessary disturbances. Simply remove the
+>>>> modification from the global OOM handler.
+>>>>
+>>>> Fixes: ade81479c7dd ("memcg: fix soft lockup in the OOM process")
+>>>
+>>> But this is not really fixing anything, is it? While this doesn't
+>>> address a potential RCU stall it doesn't address any actual problem.
+>>> So why do we want to do this?
+>>>
+>>
+>>
+>> [1]
+>> https://lore.kernel.org/cgroups/0d9ea655-5c1a-4ba9-9eeb-b45d74cc68d0@huaweicloud.com/
+>>
+>> As previously discussed, the work I have done on the global OOM is 'half
+>> of the job'. Based on our discussions, I thought that it would be best
+>> to abandon this approach for global OOM. Therefore, I am sending this
+>> patch to revert the changes.
+>>
+>> Or just leave it?
+> 
+> I suggested that part doesn't need to be in the patch, but if it was merged
+> with it, we can just leave it there. Thanks.
 
-(no changes since v1)
+See. Thank you very much.
 
- drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 18 +++++++++++++++++-
- drivers/gpu/drm/rockchip/rockchip_drm_vop2.h |  1 +
- drivers/gpu/drm/rockchip/rockchip_vop2_reg.c | 14 ++++++++++++++
- 3 files changed, 32 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-index d6f22c17b0f9..4a9a397dc06b 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-@@ -2336,6 +2336,10 @@ static int vop2_create_crtcs(struct vop2 *vop2)
- 			if (win->base.type == DRM_PLANE_TYPE_PRIMARY)
- 				continue;
- 
-+			/* If this win can not attached to this VP */
-+			if (!(win->data->possible_vp_mask & BIT(vp->id)))
-+				continue;
-+
- 			if (vop2_is_mirror_win(win))
- 				continue;
- 
-@@ -2367,7 +2371,19 @@ static int vop2_create_crtcs(struct vop2 *vop2)
- 
- 		win->type = DRM_PLANE_TYPE_OVERLAY;
- 
--		possible_crtcs = (1 << nvps) - 1;
-+		possible_crtcs = 0;
-+		nvp = 0;
-+		for (j = 0; j < vop2_data->nr_vps; j++) {
-+			vp = &vop2->vps[j];
-+
-+			if (!vp->crtc.port)
-+				continue;
-+
-+			if (win->data->possible_vp_mask & BIT(vp->id))
-+				possible_crtcs |= BIT(nvp);
-+			nvp++;
-+		}
-+
- 		ret = vop2_plane_init(vop2, win, possible_crtcs);
- 		if (ret) {
- 			drm_err(vop2->drm, "failed to init overlay plane %s: %d\n",
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
-index a9bcaa6e27f6..da0846dfeb2a 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
-@@ -167,6 +167,7 @@ struct vop2_win_data {
- 	unsigned int phys_id;
- 
- 	u32 base;
-+	u32 possible_vp_mask;
- 	enum drm_plane_type type;
- 
- 	u32 nformats;
-diff --git a/drivers/gpu/drm/rockchip/rockchip_vop2_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop2_reg.c
-index 68bcd50c9af4..bca4cba6ea5c 100644
---- a/drivers/gpu/drm/rockchip/rockchip_vop2_reg.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_vop2_reg.c
-@@ -347,6 +347,7 @@ static const struct vop2_win_data rk3568_vop_win_data[] = {
- 		.name = "Smart0-win0",
- 		.phys_id = ROCKCHIP_VOP2_SMART0,
- 		.base = 0x1c00,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2),
- 		.formats = formats_smart,
- 		.nformats = ARRAY_SIZE(formats_smart),
- 		.format_modifiers = format_modifiers,
-@@ -360,6 +361,7 @@ static const struct vop2_win_data rk3568_vop_win_data[] = {
- 	}, {
- 		.name = "Smart1-win0",
- 		.phys_id = ROCKCHIP_VOP2_SMART1,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2),
- 		.formats = formats_smart,
- 		.nformats = ARRAY_SIZE(formats_smart),
- 		.format_modifiers = format_modifiers,
-@@ -373,6 +375,7 @@ static const struct vop2_win_data rk3568_vop_win_data[] = {
- 	}, {
- 		.name = "Esmart1-win0",
- 		.phys_id = ROCKCHIP_VOP2_ESMART1,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2),
- 		.formats = formats_rk356x_esmart,
- 		.nformats = ARRAY_SIZE(formats_rk356x_esmart),
- 		.format_modifiers = format_modifiers,
-@@ -386,6 +389,7 @@ static const struct vop2_win_data rk3568_vop_win_data[] = {
- 	}, {
- 		.name = "Esmart0-win0",
- 		.phys_id = ROCKCHIP_VOP2_ESMART0,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2),
- 		.formats = formats_rk356x_esmart,
- 		.nformats = ARRAY_SIZE(formats_rk356x_esmart),
- 		.format_modifiers = format_modifiers,
-@@ -400,6 +404,7 @@ static const struct vop2_win_data rk3568_vop_win_data[] = {
- 		.name = "Cluster0-win0",
- 		.phys_id = ROCKCHIP_VOP2_CLUSTER0,
- 		.base = 0x1000,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2),
- 		.formats = formats_cluster,
- 		.nformats = ARRAY_SIZE(formats_cluster),
- 		.format_modifiers = format_modifiers_afbc,
-@@ -415,6 +420,7 @@ static const struct vop2_win_data rk3568_vop_win_data[] = {
- 		.name = "Cluster1-win0",
- 		.phys_id = ROCKCHIP_VOP2_CLUSTER1,
- 		.base = 0x1200,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2),
- 		.formats = formats_cluster,
- 		.nformats = ARRAY_SIZE(formats_cluster),
- 		.format_modifiers = format_modifiers_afbc,
-@@ -580,6 +586,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
- 		.name = "Cluster0-win0",
- 		.phys_id = ROCKCHIP_VOP2_CLUSTER0,
- 		.base = 0x1000,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
- 		.formats = formats_cluster,
- 		.nformats = ARRAY_SIZE(formats_cluster),
- 		.format_modifiers = format_modifiers_afbc,
-@@ -598,6 +605,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
- 		.name = "Cluster1-win0",
- 		.phys_id = ROCKCHIP_VOP2_CLUSTER1,
- 		.base = 0x1200,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
- 		.formats = formats_cluster,
- 		.nformats = ARRAY_SIZE(formats_cluster),
- 		.format_modifiers = format_modifiers_afbc,
-@@ -616,6 +624,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
- 		.name = "Cluster2-win0",
- 		.phys_id = ROCKCHIP_VOP2_CLUSTER2,
- 		.base = 0x1400,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
- 		.formats = formats_cluster,
- 		.nformats = ARRAY_SIZE(formats_cluster),
- 		.format_modifiers = format_modifiers_afbc,
-@@ -634,6 +643,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
- 		.name = "Cluster3-win0",
- 		.phys_id = ROCKCHIP_VOP2_CLUSTER3,
- 		.base = 0x1600,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
- 		.formats = formats_cluster,
- 		.nformats = ARRAY_SIZE(formats_cluster),
- 		.format_modifiers = format_modifiers_afbc,
-@@ -651,6 +661,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
- 	}, {
- 		.name = "Esmart0-win0",
- 		.phys_id = ROCKCHIP_VOP2_ESMART0,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
- 		.formats = formats_esmart,
- 		.nformats = ARRAY_SIZE(formats_esmart),
- 		.format_modifiers = format_modifiers,
-@@ -667,6 +678,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
- 	}, {
- 		.name = "Esmart1-win0",
- 		.phys_id = ROCKCHIP_VOP2_ESMART1,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
- 		.formats = formats_esmart,
- 		.nformats = ARRAY_SIZE(formats_esmart),
- 		.format_modifiers = format_modifiers,
-@@ -684,6 +696,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
- 		.name = "Esmart2-win0",
- 		.phys_id = ROCKCHIP_VOP2_ESMART2,
- 		.base = 0x1c00,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
- 		.formats = formats_esmart,
- 		.nformats = ARRAY_SIZE(formats_esmart),
- 		.format_modifiers = format_modifiers,
-@@ -699,6 +712,7 @@ static const struct vop2_win_data rk3588_vop_win_data[] = {
- 	}, {
- 		.name = "Esmart3-win0",
- 		.phys_id = ROCKCHIP_VOP2_ESMART3,
-+		.possible_vp_mask = BIT(0) | BIT(1) | BIT(2) | BIT(3),
- 		.formats = formats_esmart,
- 		.nformats = ARRAY_SIZE(formats_esmart),
- 		.format_modifiers = format_modifiers,
--- 
-2.34.1
+Best regards,
+Ridong
 
