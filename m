@@ -1,135 +1,127 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FBE271803;
-	Wed, 12 Feb 2025 01:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBF52C1A2;
+	Wed, 12 Feb 2025 01:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739323169; cv=none; b=jirNspIztQAeajnxpjPckcSrp2HArivbdep2VQonnYdOkrEPxdR/8RtV644Ebgn7FkSDpLmHfdOGJOocnVJGl0KJjCEFtyB7iRrcgWHMVZ72DOtPByxfPpMCc1e3U2bg8PwTJkoNxB84/r5W3xm2PRLdOlhGHa1rEV0E0sr75Ag=
+	t=1739323419; cv=none; b=qaZA+p0qZMApSsaB3aF8EfFE2/zww6kcpbqgtpWIOPzFmYV7V5HC/rB91Sch6QLRqcIQx3v5LoydhrY6JzQtJwHBOrqWWzFR38H+GyNpkv3pgIgGvHbnsSAn5xpNCblxjFC6DcO0VtX6DxJjkbZPmcG+cMzqIlHQB2zkUvPmPg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739323169; c=relaxed/simple;
-	bh=00zxJ3OFKXToMMcCuMIfZzcplQ6YpZ85EzkT0CxoDFM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DJaZM1pngCZEuqclPCOeWbcAQKdBUchtY1hg6TDNW8K8TC5aEBA/uWCSkw7pvjIZW7WZbXrDxisHwz/z1ROygZl/INyr/LY+9veQuYNbfzlhQsTK3t1ZHUw1mmAvnoKCBSW1OMQ4votX0ybtHYTgmkrLjVF/goOLXGt/L07sLZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=Nq2NDjg4; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1739323419; c=relaxed/simple;
+	bh=NxZg3s6KMEv9gnhHvHFUocnGM1b/XIp3StXzcFhH2Xo=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UuD1p2md9E7lpPuIAdwv2zOJvG/DnX/XTG20uqiJwlhoErzSLFGdEdJh/PAQKkuVL0dddat8yW9wLGZuoEOwQtUmg2+gy5PlTgyRtT3T1LBay5hBM7YQg2cusrrQ7/NzlyeQ+jwaKYT+7DRHJH690Nu7g6+KCGHuWLiaiquAPEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oVWLqG08; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="Nq2NDjg4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1739322858;
-	bh=hkb5PS5uy89LOmO5lpAIKqRbORJKhvE6tJPoRlunrBk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Nq2NDjg4RjFgzYjuz5OzPQmzyQstnxULBvQf/9jeJjimn+nEc0LP7Hi88bqrRGBQR
-	 CD9+9BUCgCxOJtcSe/cknbQX5qlH/vLSQ92gY+PkMBpG1DQgrFvf8/5DfSnrw1MqK2
-	 nTDEU1M19WrEs9G7StPVOXrx3ZBSkM8kWoJCyl8I=
-Received: from [10.56.52.9] ([39.156.73.10])
-	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
-	id 38E8387D; Wed, 12 Feb 2025 09:14:14 +0800
-X-QQ-mid: xmsmtpt1739322854t55ojl0m7
-Message-ID: <tencent_A7CAD02BDAA81222B6C184105ED6F9258706@qq.com>
-X-QQ-XMAILINFO: NafziRg7Bx69mMwsQ4jG/8PoGIMZFthipSV6cS1FfTROqcMWpro5qzgaW3UV/l
-	 jqpdyxZn6JoEfvcfN9WYVMwMQJuRqZ6p6wkW0VgZR/hLt06ugc4RylVrjR7rFnXDdCKXmIA/UQMR
-	 fRopFrH1pqh0BE33ok17bELBjfQ5r5v+PhwDKmrwd+f0XVGS964Dim8dszc1FNtsdHA0sUITD3ZF
-	 zbj1H3UZFeYuIZDdE+woNEGQI2ZUrqRjgfegJti+iayjFIPBKJO/dnR//jblQYHO+JpdM0h5os+z
-	 GhoVWsX227jxGGZeqs6OCDRv5TyEkprlPMF2hVhVvgyUlTEIy38FlseQvvPXRlWz3WSHrHH6DC8S
-	 KUPvw9PVKm/kAhG8TQ+vcZagH1wKXvUe1Voi4FNRk9YPsu02/kmzcm3OSYHoX+VPtvSuIZ3XGFb2
-	 vawJjXYYUbdGzK41qfL/fEJgBkIIKosd6TOt7q5JWdD+I5nAZJ9E/vhqsFNU8PKNKXYuqup+QNfh
-	 P5+541aptDKeVSZ8IpDjNB3Xsp6KGC48oPO4+cSpl9z183G5S12eIkUmc9b+lRFHwnHKMOQIngm2
-	 Lm/GQ/DYmCc00pBWjbMW9BABIJncFVD7EyfnbjySReWTqOC/uKbUVdzhxrgO1z//pVAAqb8RMVEv
-	 JxQ+voRoxkhw6uagGcR9u6/Pg/btXIEKu3qhu8vdHugHB8ISxmITXkrgfSRT4lKKoYRDn0/EeIQ/
-	 RPKDMP2gs17d+W5PMtyqPMvhyQI/ZebI3Rj5InlXu3aZWTstzC4PmIjfR8P5mQo7ziDf8gOSr5FX
-	 ow9r3jU/Xdlg+Rt5G5xGUDDTHbPlTny9mGu8A7u5wuIVOREWl7twttcvFbSzVCIZI+b4zAW+inSu
-	 BzhGn/h0w6ktQKnllFbDZKizuaGZQASx7Iudk5LFzw+j7DUdGdImoBSArSiDszJn3P1c0p1kIgbU
-	 7crqMZGQCYk3zT0nyFQw==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-X-OQ-MSGID: <0b9a0335-8118-4e42-aacc-64c3182f670d@foxmail.com>
-Date: Wed, 12 Feb 2025 09:14:14 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oVWLqG08"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1FD4C4CEDD;
+	Wed, 12 Feb 2025 01:23:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739323418;
+	bh=NxZg3s6KMEv9gnhHvHFUocnGM1b/XIp3StXzcFhH2Xo=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=oVWLqG08PSOIXVkoGpvBSiL9K4kGQ1GwdmXPtyeAygaJn0meND1EiB2qktwJ22JVf
+	 go66AHTs0Cf3DuR6GsEFGt6bRYNSBNihzJP+6imQsIeJ8y+jU2ux129YLsrqJeegRJ
+	 RVmCgUnBlcMePi+eTjrQoAcpuPanxmZHoJFoTk4RjKV9Lf9v7lqoH7puNadklMKJr5
+	 eE+1NSuNulTWL95rJw8t2pmoJsp5RU/ZkWGjmj1ouBSSb1TujhysaTM2fFu38UHGgU
+	 b/slIh2skJHM9AGoogbS0SBO79NplryENo8z6B8yjdmhnjczivKwoL2/TN9DkcYDSi
+	 8LD8TglJLq9fg==
+Date: Tue, 11 Feb 2025 17:23:36 -0800 (PST)
+From: Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
+To: Juergen Gross <jgross@suse.com>
+cc: linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
+    Stefano Stabellini <sstabellini@kernel.org>, 
+    Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
+    xen-devel@lists.xenproject.org, 
+    Jan Vejvalka <jan.vejvalka@lfmotol.cuni.cz>
+Subject: Re: [PATCH 1/2] xen/swiotlb: relax alignment requirements
+In-Reply-To: <20250211120432.29493-2-jgross@suse.com>
+Message-ID: <alpine.DEB.2.22.394.2502111723280.619090@ubuntu-linux-20-04-desktop>
+References: <20250211120432.29493-1-jgross@suse.com> <20250211120432.29493-2-jgross@suse.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v2] bpftool: Check map name length when map
- create
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- Quentin Monnet <qmo@kernel.org>
-Cc: ast@kernel.org, daniel@iogearbox.net, rongtao@cestc.cn,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>,
- "open list:BPF [TOOLING] (bpftool)" <bpf@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <tencent_26592A2BAF08A3A688A50600421559929708@qq.com>
- <c886e85d-4c24-4a01-b04f-1006dbb7b512@kernel.org>
- <CAEf4Bzb9qWbF=H0L7ZF+nfztH8KkkfBJL00XgaKCeNpj25o7xA@mail.gmail.com>
-Content-Language: en-US
-From: Rong Tao <rtoax@foxmail.com>
-In-Reply-To: <CAEf4Bzb9qWbF=H0L7ZF+nfztH8KkkfBJL00XgaKCeNpj25o7xA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+
+On Tue, 11 Feb 2025, Juergen Gross wrote:
+> When mapping a buffer for DMA via .map_page or .map_sg DMA operations,
+> there is no need to check the machine frames to be aligned according
+> to the mapped areas size. All what is needed in these cases is that the
+> buffer is contiguous at machine level.
+> 
+> So carve out the alignment check from range_straddles_page_boundary()
+> and move it to a helper called by xen_swiotlb_alloc_coherent() and
+> xen_swiotlb_free_coherent() directly.
+> 
+> Fixes: 9f40ec84a797 ("xen/swiotlb: add alignment check for dma buffers")
+> Reported-by: Jan Vejvalka <jan.vejvalka@lfmotol.cuni.cz>
+> Tested-by: Jan Vejvalka <jan.vejvalka@lfmotol.cuni.cz>
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+
+Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
 
 
-On 2/12/25 05:07, Andrii Nakryiko wrote:
-> On Tue, Feb 11, 2025 at 2:48 AM Quentin Monnet <qmo@kernel.org> wrote:
->> 2025-02-11 18:38 UTC+0800 ~ Rong Tao <rtoax@foxmail.com>
->>> From: Rong Tao <rongtao@cestc.cn>
->>>
->>> The size of struct bpf_map::name is BPF_OBJ_NAME_LEN (16).
->>>
->>> bpf(2) {
->>>    map_create() {
->>>      bpf_obj_name_cpy(map->name, attr->map_name, sizeof(attr->map_name));
->>>    }
->>> }
->>>
->>> When specifying a map name using bpftool map create name, no error is
->>> reported if the name length is greater than 15.
->>>
->>>      $ sudo bpftool map create /sys/fs/bpf/12345678901234567890 \
->>>          type array key 4 value 4 entries 5 name 12345678901234567890
->>>
->>> Users will think that 12345678901234567890 is legal, but this name cannot
->>> be used to index a map.
->>>
->>>      $ sudo bpftool map show name 12345678901234567890
->>>      Error: can't parse name
->>>
->>>      $ sudo bpftool map show
->>>      ...
->>>      1249: array  name 123456789012345  flags 0x0
->>>        key 4B  value 4B  max_entries 5  memlock 304B
->>>
->>>      $ sudo bpftool map show name 123456789012345
->>>      1249: array  name 123456789012345  flags 0x0
->>>        key 4B  value 4B  max_entries 5  memlock 304B
->>>
->>> The map name provided in the command line is truncated, but no error is
->>> reported. This submission checks the length of the map name.
->>>
->>> Signed-off-by: Rong Tao <rongtao@cestc.cn>
->>
->> Reviewed-by: Quentin Monnet <qmo@kernel.org>
->>
-> Would it make sense to just warn but proceed with a truncated name?
-> libbpf truncates the name when creating a map, but preserves the
-> original name in BTF (and in memory, fetchable through
-> bpf_map__name()). So from the user's perspective that map is still
-> named "blah-blah-something-long", even if the kernel records just a
-> prefix of that.
->
-> Basically, instead of forcing users to count the first 15 characters,
-> warn, but do the right thing anyways?
-
-Yes, you're right, i'll submit v3.
-
-Rong Tao
-
->
->> Thank you!
-
+> ---
+>  drivers/xen/swiotlb-xen.c | 20 ++++++++++++--------
+>  1 file changed, 12 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+> index a337edcf8faf..26c62e0d34e9 100644
+> --- a/drivers/xen/swiotlb-xen.c
+> +++ b/drivers/xen/swiotlb-xen.c
+> @@ -74,19 +74,21 @@ static inline phys_addr_t xen_dma_to_phys(struct device *dev,
+>  	return xen_bus_to_phys(dev, dma_to_phys(dev, dma_addr));
+>  }
+>  
+> +static inline bool range_requires_alignment(phys_addr_t p, size_t size)
+> +{
+> +	phys_addr_t algn = 1ULL << (get_order(size) + PAGE_SHIFT);
+> +	phys_addr_t bus_addr = pfn_to_bfn(XEN_PFN_DOWN(p)) << XEN_PAGE_SHIFT;
+> +
+> +	return IS_ALIGNED(p, algn) && !IS_ALIGNED(bus_addr, algn);
+> +}
+> +
+>  static inline int range_straddles_page_boundary(phys_addr_t p, size_t size)
+>  {
+>  	unsigned long next_bfn, xen_pfn = XEN_PFN_DOWN(p);
+>  	unsigned int i, nr_pages = XEN_PFN_UP(xen_offset_in_page(p) + size);
+> -	phys_addr_t algn = 1ULL << (get_order(size) + PAGE_SHIFT);
+>  
+>  	next_bfn = pfn_to_bfn(xen_pfn);
+>  
+> -	/* If buffer is physically aligned, ensure DMA alignment. */
+> -	if (IS_ALIGNED(p, algn) &&
+> -	    !IS_ALIGNED((phys_addr_t)next_bfn << XEN_PAGE_SHIFT, algn))
+> -		return 1;
+> -
+>  	for (i = 1; i < nr_pages; i++)
+>  		if (pfn_to_bfn(++xen_pfn) != ++next_bfn)
+>  			return 1;
+> @@ -156,7 +158,8 @@ xen_swiotlb_alloc_coherent(struct device *dev, size_t size,
+>  
+>  	*dma_handle = xen_phys_to_dma(dev, phys);
+>  	if (*dma_handle + size - 1 > dma_mask ||
+> -	    range_straddles_page_boundary(phys, size)) {
+> +	    range_straddles_page_boundary(phys, size) ||
+> +	    range_requires_alignment(phys, size)) {
+>  		if (xen_create_contiguous_region(phys, order, fls64(dma_mask),
+>  				dma_handle) != 0)
+>  			goto out_free_pages;
+> @@ -182,7 +185,8 @@ xen_swiotlb_free_coherent(struct device *dev, size_t size, void *vaddr,
+>  	size = ALIGN(size, XEN_PAGE_SIZE);
+>  
+>  	if (WARN_ON_ONCE(dma_handle + size - 1 > dev->coherent_dma_mask) ||
+> -	    WARN_ON_ONCE(range_straddles_page_boundary(phys, size)))
+> +	    WARN_ON_ONCE(range_straddles_page_boundary(phys, size) ||
+> +			 range_requires_alignment(phys, size)))
+>  	    	return;
+>  
+>  	if (TestClearPageXenRemapped(virt_to_page(vaddr)))
+> -- 
+> 2.43.0
+> 
