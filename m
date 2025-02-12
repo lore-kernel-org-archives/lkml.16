@@ -1,129 +1,126 @@
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86F5250BF1;
-	Wed, 12 Feb 2025 16:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B72324C689;
+	Wed, 12 Feb 2025 16:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739376007; cv=none; b=auA2OxyFsDoJWGZA1A2MuDQghnfHBBHTAb2S522UXnRUuTKMDNmYEfGbNNJUwu6Ug/gKbKzlJONUfnzp5Q3zknUfCj7uEzFf+zYgcyhLZZ1Vx0lEbNK4nOMduKSLrH7sPIgM6VtrlhL3FZqPIDn+KzkXoJeeQQojSlC2waTMapw=
+	t=1739376007; cv=none; b=UJopmKoSqi5QJVsFtM1mjHEZ9PDiWesd2zzCyTOxBWp6uDNb+bLJjKPR8CRnbKH9lKjvUg8DzzDZ/9g307whhVOhtIM3ScYswn/0n+tYS3ebXthRXNsItG2KEqg8ZoM4CL0NtXtZNi+r8k+qQr8HPAss8n+jkVJuF7RFEPUA4V4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739376007; c=relaxed/simple;
-	bh=YVN0bSDpktbU6iMj8+ynC1jzK6p3jFXx/L4DWfsrgig=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JrP5Ee3WGi7E3JXBT/8fl2QXHqD1EGSlWyi2sJWaofEfwfpArprCNmUPpxnHXLW24cwLLpaXs3VciMoVJoiOPfUuQYmVeMPkzpWAAR0CcclmLEN31InzS4SCGGMPBKnTLjPA4BN+EFJDnMpS8Rtd813RFsy+nYFF5iBfr+4n458=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=auF1pqAC; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=A4s8XGUWb7zlkOoSQPDJTuTrIelwTXco0/iqa0sjMTw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sL3pokU5xfnleidxg+xvT22/KlKznN/Ccq6bARc8Pe43nySyeNnf1ByejScXEQkUs466pWORm5XKLOEtx30Pp5haRAH5ox3UkAZWvFZeD7xZ25rjkPwsY1EPpSGL9FRXikNQa7CLl+F9n/G3WrNiOJiaxPmD4ObAHRC9fD4MSV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CtyxxtQr; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="auF1pqAC"
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86712bc0508so1447581241.2;
-        Wed, 12 Feb 2025 08:00:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739376005; x=1739980805; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vUTQ/y+vc12sFk3R0yRBFfSrcmurNaqNh41K8Y1JKsk=;
-        b=auF1pqACwo4wr07jsU46HHKXsFDrv1dGVe1Tlj8Kcqn7wm61+bvqRETDjFP29RrZha
-         uky9eyfAkCyN0k23oIZQ5TRUwH7YHpjTHluoUSqTKUCbhARNlD+dvKWljGzrURsypp50
-         3NRpbSUB+Y4rf7VYjCuzSm2witEdEzJH5lejKFn1RimMuyvDj3yPXB9k+SYutnA3G1gh
-         rN8jMEURjDmbHWLDCTKp3Y5opvYX4TqoMsvaorc4SYCdKaO+flkzctUcGyKmpzY1LU3R
-         7G4MEsAscCNcQRUPQXIf2B04wyb2JtebuAt31KK4ERBOw9lL+FxLDSk0FlmTvF0DNEXU
-         Vqmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739376005; x=1739980805;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vUTQ/y+vc12sFk3R0yRBFfSrcmurNaqNh41K8Y1JKsk=;
-        b=vDQLhV8LgzAkys9t8JD5iC6uHM7yvfqrOCZd2AlIZpU82645GHJSDOj1vtLy36195D
-         hRO3dW7tYKLM7iae7Ql80u0yuWFeJGe7QCaFClEzTwidKwvG20pISeUgv09kzzkCLNY7
-         b2CP69XdgVmmINSfnR4MIsCbSoikuyxRW6uTdI+Li0jyxI9CxCulxbbEp7JrvLKLcmS9
-         ToGIspdqqZmyjV5A1ojv3tevcqRFJgJBxrrGlvS9KaEKWmijRBVVMDeK3MFWuHGehqAp
-         DRwyHNnkH2xMzaSDOO7Rulx2niUsevD3nB4aWCEaCVi7L5IxlblCp8T/gXQe2IeTPuB7
-         Fjig==
-X-Forwarded-Encrypted: i=1; AJvYcCVuUnC01SND0XDgnMH/YAnxZteh6pr1ZkBYMb6eLXa+EbGbJLPZhSJG4tvYkj1brgI6oNsD3+MMFfVYEm+6@vger.kernel.org, AJvYcCWUrL0xgQFz5gsB9Y0XNiwLKTlJQdPFppQA0Sa4EUJGxOCj7MjIx7mLsyMIvfOPRoxBbE4JZfCx47n/@vger.kernel.org, AJvYcCWt72hwtP96B9uS7kWzh/b6GovKyOgN40XPeZWtoCnvVeLpxlLflKPzWCkokM7l1sZ005ydp0qah88UlkgPAh38atE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxn2itUpu5PF8iGTDLJXL36UdUCaEl0QlgmL4O2YGbU6PvPhlap
-	BT72WZ7iIv95YehLPX9Q3yQOJCBIksgmiSQs5at0WLQESQLSJ01x
-X-Gm-Gg: ASbGncv3KJRHYR9zS+E+3YEb/rwZMw1/PxSUFX7V4Hyf/QIT54EGVvko26RtNcrYyl5
-	BqzVBRSlTXAHdFnAO+056lVke2MYib26K7wvmPmJ4ICyYlvDPJHmO6oXF9uq7aGMtqpzdop8k39
-	xvOOxtxiSQ4yAxa2jd3U8C/b8WQfsVTc8yqdSmKtEgrKYcQNtvMLVFMlrsinXSwwtUBN6y0YxF7
-	foofdPcyEov68mPOZ3GRBF4kKqYrWg8pBrpiaB2LNsYJmun/32vQPGaVbsb/obTe4i98LjCT/ID
-	knDpPtsI0nS/0W3rHtncuxdySu2bgBei3HSMluJ2Wsbx71UTNCIMWz28zH56U5LBJg5qlTj25e2
-	dUg==
-X-Google-Smtp-Source: AGHT+IEgr0hm73Trz7viRT6b5fEU+HyboLMwNQtkSJQWi6mRSEmY4HU10MDnQcwDYPy7Yx2+iJNaXQ==
-X-Received: by 2002:a05:6122:468c:b0:520:6773:e5bf with SMTP id 71dfb90a1353d-52067c31106mr3019717e0c.1.1739376004523;
-        Wed, 12 Feb 2025 08:00:04 -0800 (PST)
-Received: from localhost.localdomain ([38.44.237.182])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f9636904sm2335213241.3.2025.02.12.08.00.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 08:00:04 -0800 (PST)
-From: Denzeel Oliva <wachiturroxd150@gmail.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	alim.akhtar@samsung.com,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Denzeel Oliva <wachiturroxd150@gmail.com>
-Subject: [PATCH v1 2/2] arm64: dts: exynos990: Add the peric0/1 sysreg node
-Date: Wed, 12 Feb 2025 15:59:43 +0000
-Message-Id: <20250212155943.269-2-wachiturroxd150@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250212155943.269-1-wachiturroxd150@gmail.com>
-References: <20250212155943.269-1-wachiturroxd150@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CtyxxtQr"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D74B4442F8;
+	Wed, 12 Feb 2025 15:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739376003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O1eBjozoNuRF1SRfHVlWdXHtFeACQZPvHsgrTM6WN9s=;
+	b=CtyxxtQrKkXhLEK27onKf7pLUVHTqU6rJ6GqsIIoOBDdn5+aoiWOqOaGohmUj5wYIWTLmm
+	tHISVD92pszINkDKtayJc0i22GXH23j3Xjasdu5e8BU03ckal4CTw5juS4HhsvoYvQGbki
+	7K1N+Vy3JW564uFPcoLKnhrsdRMcOtkrRnQfNp8xSDz4bR93HFDD3AvG8xvMvle2VHL6kh
+	NuqSJBLKae9r+aEPJ0CzcwWT8aQ0KRPTrFfrgs0oTkGFyczWlX5L5Bjd9yuy5hTpKRzTQi
+	GjbstaOz2XFK39C5abxl8aLci/7CSAallJKj7kD9AKOgdA/LkHJAAESMHWAZ6A==
+Date: Wed, 12 Feb 2025 16:59:58 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: davem@davemloft.net
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, thomas.petazzoni@bootlin.com, Andrew Lunn
+ <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Russell King
+ <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, Herve Codina
+ <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner
+ Kallweit <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Marek
+ =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
+ <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
+ mwojtas@chromium.org, Antoine Tenart <atenart@kernel.org>,
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, Romain
+ Gantois <romain.gantois@bootlin.com>
+Subject: Re: [PATCH net-next 05/13] net: phy: Create a phy_port for
+ PHY-driven SFPs
+Message-ID: <20250212165958.6baaf294@fedora.home>
+In-Reply-To: <20250207223634.600218-6-maxime.chevallier@bootlin.com>
+References: <20250207223634.600218-1-maxime.chevallier@bootlin.com>
+	<20250207223634.600218-6-maxime.chevallier@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeggeeftdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrk
+ hgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Add sysreg nodes for the PERIC0 and PERIC1 domains.
-These system registers are used for peripheral configuration
-and control in Exynos990.
+On Fri,  7 Feb 2025 23:36:24 +0100
+Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
 
-Each sysreg node includes its base address, register size, and clock
-dependencies.
+> Some PHY devices may be used as media-converters to drive SFP ports (for
+> example, to allow using SFP when the SoC can only output RGMII). This is
+> already supported to some extend by allowing PHY drivers to registers
+> themselves as being SFP upstream.
+> 
+> However, the logic to drive the SFP can actually be split to a per-port
+> control logic, allowing support for multi-port PHYs, or PHYs that can
+> either drive SFPs or Copper.
+> 
+> To that extent, create a phy_port when registering an SFP bus onto a
+> PHY. This port is considered a "serdes" port, in that it can feed data
+> to anther entity on the link. The PHY driver needs to specify the
+> various PHY_INTERFACE_MODE_XXX that this port supports.
+> 
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+[...]
+>  
+> +/**
+> + * phylink_interfaces_to_linkmodes() - List all possible linkmodes based on a
+> + *				       set of supported interfaces, assuming no
+> + *				       rate matching.
+> + * @linkmodes: the supported linkmodes
+> + * @interfaces: Set of interfaces (PHY_INTERFACE_MODE_XXX)
+> + *
+> + * Compute the exhaustive list of modes that can conceivably be achieved from a
+> + * set of MII interfaces. This is derived from the possible speeds and duplex
+> + * achievable from these interfaces. This list is likely too exhaustive (there
+> + * may not exist any device out there that can convert from an interface to a
+> + * linkmode) and it needs further filtering based on real HW capabilities.
+> + */
+> +void phylink_interfaces_to_linkmodes(unsigned long *linkmodes,
+> +				     const unsigned long *interfaces)
+> +{
+> +	phy_interface_t interface;
+> +	unsigned long caps = 0;
+> +
+> +	linkmode_zero(linkmodes);
+> +
+> +	for_each_set_bit(interface, interfaces, PHY_INTERFACE_MODE_MAX)
+> +		caps = phylink_get_capabilities(interface,
+> +						GENMASK(__fls(MAC_400000FD),
+> +							__fls(MAC_10HD)),
+> +						RATE_MATCH_NONE);
 
-Signed-off-by: Denzeel Oliva <wachiturroxd150@gmail.com>
----
- arch/arm64/boot/dts/exynos/exynos990.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Shoule be :
+		caps |= phylink_get_capabilities(...);
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos990.dtsi b/arch/arm64/boot/dts/exynos/exynos990.dtsi
-index 843587b17..aa056fdae 100644
---- a/arch/arm64/boot/dts/exynos/exynos990.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos990.dtsi
-@@ -242,6 +242,12 @@ cmu_peric0: clock-controller@10400000 {
- 			clock-names = "oscclk", "bus", "ip";
- 		};
- 
-+		sysreg_peric0: syscon@10420000 {
-+			compatible = "samsung,exynos990-peric0-sysreg", "syscon";
-+			reg = <0x10420000 0x10000>;
-+			clocks = <&cmu_peric0 CLK_GOUT_PERIC0_SYSREG_PCLK>;
-+		};
-+
- 		pinctrl_peric1: pinctrl@10730000 {
- 			compatible = "samsung,exynos990-pinctrl";
- 			reg = <0x10730000 0x1000>;
-@@ -259,6 +265,12 @@ cmu_peric1: clock-controller@10700000 {
- 			clock-names = "oscclk", "bus", "ip";
- 		};
- 
-+		sysreg_peric1: syscon@10720000 {
-+			compatible = "samsung,exynos990-peric1-sysreg", "syscon";
-+			reg = <0x10720000 0x10000>;
-+			clocks = <&cmu_peric1 CLK_GOUT_PERIC1_SYSREG_PCLK>;
-+		};
-+
- 		cmu_hsi0: clock-controller@10a00000 {
- 			compatible = "samsung,exynos990-cmu-hsi0";
- 			reg = <0x10a00000 0x8000>;
--- 
-2.48.1
+I'll address that in V2, my bad...
 
+Maxime
