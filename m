@@ -1,107 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25EEB2580EF;
-	Wed, 12 Feb 2025 16:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35AA253340;
+	Wed, 12 Feb 2025 16:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739378054; cv=none; b=Ah6wngHyoXSJDBZkSpEJMVckDrXXuCCTb6mgZpnCfKIU2NHf5TbI22MnmgPvwgVa1knX+uekO6wuTj66WXcosi/Ea6O8k7nHnthgi/QKPx4YTc/cZq9rTZq0P8Jill118f7YOyvKtxELpoWSc4HcDnEViFLyeJsbAETQEe7Pd4k=
+	t=1739378071; cv=none; b=rqrn8PwRnce15271Lid48UiS9s+RHaAwbLQnmd3SzaE+slpXdLMdzsqqC6Rha0HakH4i8a34SBwasp9VVvM0QTUCECUsYE6gXlO0pygYp8o86i88MWqh8jHPQmVcgHTqd4W2bf8bknoMDN/NrPVlP4ahEy5slLblyvwp/zOpZIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739378054; c=relaxed/simple;
-	bh=R5mEhGWTo6M3w0F741dBYLgdNEX23+SYVxfBs3QbmrM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kcduG8Mwh0FISn6TNFmwrDIbtvR4TFyBqCftYmlUN3sN45a7x4dEyR60TurRqW5gOsNYBxV8wTJ1bZmaciJ9preYRff6Ln8I5CfQKgRaU3ptAk+3jf1h9Q4SsJasLjnZvsF1FGWuHBB0sNz9Y6Ni/nAwrvES1MfqBaXHCPPzMG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R5KaA8gr; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739378071; c=relaxed/simple;
+	bh=dBQoUYaXa4d4ogi2nyqmcSgid6trtFQxYEtCTUyXRKY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K5GiJamqAy+BI6uq2gcIZb/3JwfNKdQT8BXIj8cd8TmnIjL8Vlj6mcV8J7seuF9lW8n4VGFZbJaGA9bFYnlk4+yq1wMt8oJ3TwNuPvZV8WL97dSa1LPzwisXp9OvQ+q3wSiPN/iSzxIlI+2iZ6c9yAVbzyDBR3WcAf7koJg1pD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FzQyaAEp; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R5KaA8gr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739378054; x=1770914054;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=R5mEhGWTo6M3w0F741dBYLgdNEX23+SYVxfBs3QbmrM=;
-  b=R5KaA8groKXxC6KOHfMCdaejCJUeV0c9L6B6btjxG9CyjP+cXW+WyN9H
-   kIRGP3E5/fTDzbym52OgaxYbeZblmO4Y8z6us/iwny9AOj/hk6jLGEroz
-   qTTV/WKLBEfjC87p21EiNKGZMp4Upg92CkLkQBWdu50y4ysddBC5UEmP7
-   M6X+cYK3w+vM0+x+IG7w7RCO0EneuP3eugeBYalDkj5TYITlA1rqotH1l
-   ADD1NRL7ZxHL+/fqOCjlYU8n14eW6J8pnZHePAw6a6tk2GZbT1v/rRcln
-   x9TZD//OloP3aaqmQh6vcjK+DtIU8F8iJ2ve/9t23BwFvsyxFrX/8e9lD
-   w==;
-X-CSE-ConnectionGUID: NV7PcVVaREyFgyBR1VPNPw==
-X-CSE-MsgGUID: gp6rQAKqQQWkNldd0n1dXA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="51032386"
-X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
-   d="scan'208";a="51032386"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 08:34:13 -0800
-X-CSE-ConnectionGUID: jWJsVpz+S6CetFgqQaumcw==
-X-CSE-MsgGUID: jyAYbCBiTU+yhgP+2k/P+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
-   d="scan'208";a="117879159"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP; 12 Feb 2025 08:34:08 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id ED65B4AE; Wed, 12 Feb 2025 18:34:01 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org
-Cc: Krzysztof Adamski <krzysztof.adamski@nokia.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Stefan Roese <sr@denx.de>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Subject: [PATCH v1 6/8] i2c: mt7621: Use i2c_10bit_addr_from_msg() helper
-Date: Wed, 12 Feb 2025 18:32:31 +0200
-Message-ID: <20250212163359.2407327-7-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
-In-Reply-To: <20250212163359.2407327-1-andriy.shevchenko@linux.intel.com>
-References: <20250212163359.2407327-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FzQyaAEp"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f7f03d856so77351885ad.1;
+        Wed, 12 Feb 2025 08:34:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739378069; x=1739982869; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VHPS8ONfsNETWz2nc3cOX8k/kEuKPVG4fQ9/eH959Z0=;
+        b=FzQyaAEpBTr2dp2BJ1FAyiUZFe3CBV8urQlicoh9CJ5l7M6QD3Ds+Md3Hbt9C4Mgbm
+         K3QwbX6D6Bq3HLOYASxD+KVqfyAHN2NVwRX2qrQZqGArh8EYvczTO1hH08aIkFc6FiEK
+         HIxmHf7FUabZ5z+v4aEwnZ/q+3Q5zNgHvGIoUXujE97UM+Y12h7B4KGvcMF8x3WTDJNC
+         JjNqRGoPeUigii33I6pHSTLhlgw7Y2BAiVygrE3Hun6PVK7bWG+69khTx6J8Z3ZdsLhj
+         ywVKbp6MoXb8FeI4Y4lrnpV+UbjHPT1PQ92T1cgR15NigW0PSM1NNJ8w5J2OSyafCWrE
+         4c+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739378069; x=1739982869;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VHPS8ONfsNETWz2nc3cOX8k/kEuKPVG4fQ9/eH959Z0=;
+        b=EZM62oYJJXdwfyJ4gU+i4ztyGSm67/92oT2QNDiJmQlSGsvmRyWj7nzZFYz0QVL/nQ
+         Jlk6DOILramjhApLHMAYM6tCotQCvWKMQQolKhTETublmXcp/6QbHOMUOCxS6Dw02xnT
+         7cMp59WNjtdPxt8aEisw6rUVJMQsVQ20BdBp3iu4/7OiIUheron7aZSni9YAJHqv9642
+         X3QbPKBqnpZTDx+yBrrv5Ryio6ifR7sjc+qw0PU4g+UT3V++85tou2uJvh9HIdBY8RjY
+         baBjY5Ccwv1uN/i2Dj0LFiYF4yWLT6Nk0W4YRSdkQcl9y+0IZSVbNDF74fzNDriECfZE
+         29Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/Xn8O5zDmjnKoTZRBe35DnjvcV5ry3xLBmzp2+HgLcYTJ1OqGoAZnhixCUthz9GNAJkSEKbtb+ZQnUyo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRf9S9KNtHwB9QOaWAcW4s/h59mzDtT81jeP/MP0H0UtTPBXg3
+	wKJc9m4S03lBF/JwaDV9qlrJp6rgBtBmm3GkHmGcFGIAnTXbTR26
+X-Gm-Gg: ASbGncuQrRB8NlqCnW3lSoibBLVrGR21LZ8VC8VcMqD8aY7iCdBsltQqMgdfvoFnYDZ
+	VbPF3vGuBW46gmw6iWboC2f7X1Ws5S+vhIFajnr9bt/mENKgb3d66FwZAbLmQae/3u2tjuQUd0I
+	wlNnyfnjy54ZS+EfjFSGO9+5SIyPjA1b9R/hpzpNlFtEqXxz36p/vQl1iFuI4HTcWPiQmIb8PL0
+	0PLeU+QZhVdiRnAdtXueQE5LtVKiwmuYnE6B6APl5pHs6l+aQffcrNBe5RhYSmH/Sl/uumItWjL
+	Fv95cLqNg+JwVx0eLL7khyTUOcWR+G5EQwz45BQYqA==
+X-Google-Smtp-Source: AGHT+IHpWCKkyJHSEXStV4LCf+CwXDSfRaygI/Fta18M0uObTTXfOcrYoXNzZs2kPRJ5RVucDH+dfA==
+X-Received: by 2002:a05:6a00:4188:b0:730:9a55:d921 with SMTP id d2e1a72fcca58-7322c390464mr6068874b3a.14.1739378068903;
+        Wed, 12 Feb 2025 08:34:28 -0800 (PST)
+Received: from jamesmacinnes-VirtualBox ([66.119.214.127])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-730882d214fsm6596794b3a.18.2025.02.12.08.34.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 08:34:28 -0800 (PST)
+Date: Wed, 12 Feb 2025 08:34:24 -0800
+From: "James A. MacInnes" <james.a.macinnes@gmail.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ robdclark@gmail.com, quic_abhinavk@quicinc.com, sean@poorly.run,
+ marijn.suijten@somainline.org, airlied@gmail.com, simona@ffwll.ch
+Subject: Re: [PATCH 0/2] drm/msm/dp: Fix Type-C Timing
+Message-ID: <20250212083424.2bf95a43@jamesmacinnes-VirtualBox>
+In-Reply-To: <yle4tv3rhxkygvxvq56pls2u4muzmuxlzg5mp6ibckkyhbaycm@mv4hmom2e46c>
+References: <20250212034225.2565069-1-james.a.macinnes@gmail.com>
+	<yle4tv3rhxkygvxvq56pls2u4muzmuxlzg5mp6ibckkyhbaycm@mv4hmom2e46c>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Use i2c_10bit_addr_from_msg() helper instead of local copy.
-No functional change intended.
+On Wed, 12 Feb 2025 13:20:01 +0200
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/i2c/busses/i2c-mt7621.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> On Tue, Feb 11, 2025 at 07:42:23PM -0800, James A. MacInnes wrote:
+> > SDM845 DisplayPort output inop on DP Monitor and tears on HDMI.
+> > 
+> > Fixed
+> >  - SDM845 does not support wide mode.
+> >  - SDM845 does not need porch shift.
+> > 
+> > Verified functionality on SDM845.  
+> 
+> Please use ./scripts/get_maintainer.pl to get the To / Cc lists. Your
+> messages missed several mailing lists and maybe some of maintainers.
+> 
 
-diff --git a/drivers/i2c/busses/i2c-mt7621.c b/drivers/i2c/busses/i2c-mt7621.c
-index 2103f21f9ddd..125dc91fb329 100644
---- a/drivers/i2c/busses/i2c-mt7621.c
-+++ b/drivers/i2c/busses/i2c-mt7621.c
-@@ -164,10 +164,8 @@ static int mtk_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 		/* write address */
- 		if (pmsg->flags & I2C_M_TEN) {
- 			/* 10 bits address */
--			addr = 0xf0 | ((pmsg->addr >> 7) & 0x06);
-+			addr = i2c_10bit_addr_from_msg(pmsg);
- 			addr |= (pmsg->addr & 0xff) << 8;
--			if (pmsg->flags & I2C_M_RD)
--				addr |= 1;
- 			iowrite32(addr, i2c->base + REG_SM0D0_REG);
- 			ret = mtk_i2c_cmd(i2c, SM0CTL1_WRITE, 2);
- 			if (ret)
--- 
-2.45.1.3035.g276e886db78b
-
+Will do. The list from get_maintainers.pl was very long and I was
+attempting to not spam everyone. On revision I will include everyone.
