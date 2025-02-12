@@ -1,104 +1,150 @@
-Received: from sdore.me (unknown [95.165.1.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4029D20409E
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.165.1.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A447920409E
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 22:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739399418; cv=none; b=mf8/5dCtSi+GIAOsG1QXKXFJBYLen3Xr0oA2HKkyoo5fh0EMgtVd4JwHw3kNHUOZFJom0W1tYN32HAIqMeC0TjI1ok24Ubtwi7qPDqMKv2DOkxKAHFiddc1qrqLVc5hOKxiLP4GrjDUcXZWpvriq5/kCDotrmYnUQmsOQxDzAn4=
+	t=1739399450; cv=none; b=IUAtYQeZ1qXj6ArIr3QwA9/KaVcXZVttHzJV75r2QDSiYV1lftaHYHXHyfs1I7DE98t/vyaFAR3GfkXA4WJlR98UBJ86N32QCi6Jt3S+v47+psn4tkzZrRqeSugYlCTDzvSndcit7Y8XeUXEMihKt/KWFwbBV9SoCbV2bD/RCjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739399418; c=relaxed/simple;
-	bh=WNonWBF4udDjpPlXnE3uoU9A0SFZBdAVCaeatr2Pkp8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PZQbUUyIsk8weXXC65vjJOyJet/xLP/Qelf0RG5xc9/P7RqE1VXQUbofcUXMRk6/x+IhdS2WwD/yrk6sHPNmn6VlhMQV0wexavLTGIqSt6xb8mYIb16PqNGGcMkS1ruVIxh9s+ziMownms80j/mD5fq8EQGk3jb8N5iS3bV+Fb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sdore.me; spf=pass smtp.mailfrom=sdore.me; dkim=pass (1024-bit key) header.d=sdore.me header.i=@sdore.me header.b=gZbJzqzz; arc=none smtp.client-ip=95.165.1.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sdore.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sdore.me
+	s=arc-20240116; t=1739399450; c=relaxed/simple;
+	bh=4JuFZc5w2LCt7uJHwRk3CddKeQ1pM4baFKxQ+C/RUgI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=XT9XgrxnpHFqIWpl9V7gDGHeZGqQRh89PQHQ0ol58DpcSR1yUVZVCpT9s7l0t5saKqIZGeXFqiXgmeND9iPQxskPh5EdMDsqmAWNGwNKZ4hFVd+pIraRrYdIGMoJgjKLG3W83A7mVSTzvfPqcVcJ5/rGjW3PMDG0EA2pxd4/Oq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tX065EKa; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=sdore.me header.i=@sdore.me header.b="gZbJzqzz"
-Received: from [192.168.1.2] (beast.lan [192.168.1.2])
-	by sdore.me (Postfix) with ESMTPSA id 9F09CEE7BBA38;
-	Thu, 13 Feb 2025 01:30:12 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sdore.me; s=SERV;
-	t=1739399412; bh=WNonWBF4udDjpPlXnE3uoU9A0SFZBdAVCaeatr2Pkp8=;
-	h=Subject:From:Reply-To:To:Cc:Date:In-Reply-To:References;
-	b=gZbJzqzzCk0aTRzEy7iYphVtTMN1EtCpl4X8rR8TN8rUaYLO8Nk9KMeNt5lq9Uj24
-	 PN3VyiBSftdwXVc3nOIX364aWx2Jrns85L8vKPxHDwFq2aWPZ0XLISttf+WUV5A2Ps
-	 87WpnKj/SZ2vfmoSGoqqMaoUOb9Uy5rXb0hseWvg=
-Message-ID: <f0e0d4e7f5d552cb82cf3c9243f15772268fa311.camel@sdore.me>
-Subject: Re: [PATCH v2] drm/edid: Implement DisplayID Type IX & X timing
- blocks parsing
-From: Egor Vorontsov <sdoregor@sdore.me>
-Reply-To: sdoregor@sdore.me
-To: Jani Nikula <jani.nikula@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org, Maarten Lankhorst
-	 <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, Egor Vorontsov <sdoregor@sdore.me>
-Date: Thu, 13 Feb 2025 01:30:12 +0300
-In-Reply-To: <87zfirzerp.fsf@intel.com>
-References: <7cab8349bc8bb6fa08d2a7127a724efea155f154.camel@sdore.me>
-		 <87zfirzerp.fsf@intel.com>
-Autocrypt: addr=sdoregor@sdore.me; prefer-encrypt=mutual;
- keydata=mQINBGDSFnMBEADfvtLiuRL6CHdMzETKrux7sNHWG+eJ2+pgRZ3Nc9pH/YWqjoed8OpFx
- OLeUxr9YSQ3uMD//JEe3+Sgte29Z3PAAHVkCwKBIucCnhHpXbcQZgC9xYMCd6GWR5+DpXN9szOIyb
- kvnEtuqTddz6Q7fYsaFDs0pH3jUUWmSAyCn2JCIRfT22XgO44B/yoqnM3JXHAayeHbEAQOzMe81q3
- deauI9W7SC9ScRT6VkgLuc+SxqH99el/OkiKTe/QpO6I6cVS8leesqnOGffkRPos/o2eRonqgDu0e
- Mw4YTu0x5iNr8Lbr4TefU2W1l6M3MNwOsLmI+58+3fK1vh0QqZ70NC4eyD9UEXk3mJyV7epfNU6fY
- 0mFJbAhGV1TXomcy2MlOD1rDixw85zdK5uUwp0tfEkpxqKtihJmrTdApOTTVed303CLzgDsMokTIe
- aUOPqVZoWFDkvOzq6IppBkApJHBf1lcLlgwEn3cLQlGpYRSSi5NY3+UYtcOEZLDbF3TO6ncY8W2h3
- yQH/sAcSllfKKvkhdqEz4/Mha3GbZQXWgjrLy9BcISsQFj+DBN54I6a6kLm2n5wXH99sOp7s3jMeN
- zSU6PtuxZq4Gkt2K5JGT8yrIdfJfOH7yRUVm+8JqKNKqd6oczlDKV+lzRk9M/kjb8VQivaNSNwTo9
- 3NxEuft0+tZgwARAQABtCJFZ29yIFZvcm9udHNvdiA8c2RvcmVnb3JAc2RvcmUubWU+iQJOBBMBCA
- A4FiEEXlTCjXwaPBiJP3U33a9iH2xv60MFAmDSFnMCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4A
- ACgkQ3a9iH2xv60OquRAAgbgenXi+Ud0tYoAz6giuFKYqzuEYuoSVkjxYvZq90ODrzbu7EdvMVuKA
- qNqYjs3VRBPBMHXhJKEftKbX4bZwCoC2o2wB5oV5O13jVN083r49FTLCxmOoufCkaqscBBxi/X2T6
- +i0n5Nqx5NLBL0kE4NMTk1jxEEyuEjv7bBMs196G/d3EpNJT3YGkLXBUibpaSaVjE6zBr3UygieLD
- 2QXNkRJubx2d0FoD8TezSt5hsHWg9FOElsW6ZImRI+5q+ptL39K3cpjxHMKyhmo7xypD5XNWdmsmV
- 1+STnK7R+id18xs7JUDxHBtG7Z/3K6txgF5CPbPvtaEi9fB3K/uS03BnIzsY2/cY3r9UHHrHa/sP6
- DhDwj9dr2xIFG5w6ZNh4mUTHEJoWKEEsYKwXy2eJCB3XvP7GURAm8fXdIapONbHDYj7XX49Mj+LBr
- s4PNBuKaZTFgGQ6RSc7LpAR56xaEDR93m7zNy84mQtpab/owaox1A+BEujzKK/vEDvj9f8EWlWZRa
- DH2auNNAxdr2ACR8RzkojcFDCErAgc5sFQrgVUlvNmMdn3VL0CWmndzEQxsOdgVk9SwoHHYpHf4Cg
- gtchq3pTQ5XSRaP/wxOtQpzqJWq5uFERBTLU8WRXYv3mM3KMdvtTJadF8+P+KSSnn+/yHahR0HKVx
- PtHSH7Px/vI=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tX065EKa"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21f42c8f5f6so2550435ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 14:30:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739399448; x=1740004248; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xp6JXzWQDgJraueffuAM7pmy5niWB0JPsWhbLqxLJuY=;
+        b=tX065EKaTv2mhh/296KU6+We68bngvpU4VoQcvg4TJpK+hcGk11cPQgmJYQyZXLEIB
+         QP1l5MM75EiEaaGjOEHkdBKNu5ME92ZaHMR27CM2Us0bQGmTaRxpV8N/fsRzrKOYLHkj
+         ww3e1f9ckxTHWtOgVJXn8bYz6qBuBDSGifRrR4otJ2rUR7zvsWzQn4bKTU8sKAq0bVGd
+         1suxjupeIMoibl2EWX2BfFYDQdFlMAVoGdWbtzJI1rMUIgrv92xny91j7OzNyDhFeQLk
+         MyVyvhroQRus3NlQBnuCVT2o2xEALOXWDrkrDIUI6Lxgi0IH8e8VYyTlMsT0j7HSbgkI
+         DwJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739399448; x=1740004248;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xp6JXzWQDgJraueffuAM7pmy5niWB0JPsWhbLqxLJuY=;
+        b=at4mawQlFybv4bRRQ93OwxG4wKmuum8yVyHVABSaFcUcQOx97ncn0CHlc3uhIGm1ML
+         FtXpLA5DbFg1RV02mX6hXrHzkwMZuMjiRA/HXsiMLpnj7lMd31phb3Cu/wj9RpZbdiS6
+         NldBLCVRgwlJ9hkUd+mf1qBVMxj5IJWp0K0+f3pHgi+TgXH9wGnn43qNDfpwRMbwlOl6
+         0s1TQmfLrysxDqje+4Pec6S0L5TJ8T6LPXleR4anF1WIkX7OTqwkhQMv/db13F/sZGGM
+         4uGV9BXungEzC0z7/9WvyCXHXBEhHqmM5KUNtN9uFoFTOLVKDpCEV4X8gj/bDuMoOmaS
+         +59A==
+X-Gm-Message-State: AOJu0YzNGqvYj5Mpvr0SZ8gs/zxuTwnnuQ9EBUjpDDueA5Y01hgddfQq
+	ntfADBEyAhXCfSzVDzy9Tx2dBda6hwBORNvRcAY0wVaup19zG2rQWV1d2nXUnDzGpWezC4x2NiT
+	zOtpMXUcKkwP57V/r5YfhSgHre7zIKq+PgFtpB7V423z3+xufB9+6VKV5lGzsDkKmsTBBwI09/8
+	HtGqAbCq+VRcWfTSa4TgMUM0Ef23+oTTgyHzX/ndz6
+X-Google-Smtp-Source: AGHT+IEBBiJFCF3wEaVNJRVbpU0yixawbj3CSdHQuUgkpm5T1RSKHo6nSIBj+hC+a0gSgUgMG6dxyJIN0Pc=
+X-Received: from pjyp8.prod.google.com ([2002:a17:90a:e708:b0:2f8:4024:b59a])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d549:b0:216:6901:d588
+ with SMTP id d9443c01a7336-220d1ed1f92mr17422035ad.15.1739399447824; Wed, 12
+ Feb 2025 14:30:47 -0800 (PST)
+Date: Wed, 12 Feb 2025 14:24:54 -0800
+In-Reply-To: <20250212222859.2086080-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250212222859.2086080-1-ctshao@google.com>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <20250212222859.2086080-4-ctshao@google.com>
+Subject: [PATCH v5 3/5] perf lock: Make rb_tree helper functions generic
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2025-02-12 at 11:35 +0200, Jani Nikula wrote:
-> > +	/* TODO: support video-optimized refresh rate */
-> > +	if (timings->flags & (1 << 4))
-> > +		return NULL;
->=20
-> Mmh. I'm not sure I'd go this far. The bit indicates *two* timings, one
-> for which the below *is* correct, and another additional one with
-> vrefresh * (1000/1001).
->=20
-> We could just add a drm_dbg_kms(dev, "<message>") here about missing
-> fractional refresh rate, and proceed with the one non-fractional rate?
-> Or just have the TODO comment with no checks.
-I'll go with the former, for now.
+The rb_tree helper functions can be reused for parsing `owner_lock_stat`
+into rb tree for sorting.
 
-> Either way,
-> Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-Thank you. ... But!
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+ tools/perf/builtin-lock.c | 34 +++++++++++++++++++++++-----------
+ 1 file changed, 23 insertions(+), 11 deletions(-)
 
-> Are you up for the follow-ups too? And since you've got the hang of it,
-> maybe fix struct displayid_formula_timings_9 hactive/vactive to __be16
-> as well?
-... at this moment I realised that both the specs and the legacy code
-actually indicate it's indeed *little*-endian shorts!
-I.e. `x[0] | x[1] << 8' -- that's LSB-first.
-
-Also, virtually no code in `drm_edid.c' uses big-endian.
-
-Thus, I'm fixing both my code and `displayid_detailed_timings_1' (I
-suppose you meant this struct instead) to use __le16.
-
-Egor
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 5d405cd8e696..9bebc186286f 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -418,16 +418,13 @@ static void combine_lock_stats(struct lock_stat *st)
+ 	rb_insert_color(&st->rb, &sorted);
+ }
+ 
+-static void insert_to_result(struct lock_stat *st,
+-			     int (*bigger)(struct lock_stat *, struct lock_stat *))
++static void insert_to(struct rb_root *rr, struct lock_stat *st,
++		      int (*bigger)(struct lock_stat *, struct lock_stat *))
+ {
+-	struct rb_node **rb = &result.rb_node;
++	struct rb_node **rb = &rr->rb_node;
+ 	struct rb_node *parent = NULL;
+ 	struct lock_stat *p;
+ 
+-	if (combine_locks && st->combined)
+-		return;
+-
+ 	while (*rb) {
+ 		p = container_of(*rb, struct lock_stat, rb);
+ 		parent = *rb;
+@@ -439,13 +436,21 @@ static void insert_to_result(struct lock_stat *st,
+ 	}
+ 
+ 	rb_link_node(&st->rb, parent, rb);
+-	rb_insert_color(&st->rb, &result);
++	rb_insert_color(&st->rb, rr);
+ }
+ 
+-/* returns left most element of result, and erase it */
+-static struct lock_stat *pop_from_result(void)
++static inline void insert_to_result(struct lock_stat *st,
++				    int (*bigger)(struct lock_stat *,
++						  struct lock_stat *))
++{
++	if (combine_locks && st->combined)
++		return;
++	insert_to(&result, st, bigger);
++}
++
++static inline struct lock_stat *pop_from(struct rb_root *rr)
+ {
+-	struct rb_node *node = result.rb_node;
++	struct rb_node *node = rr->rb_node;
+ 
+ 	if (!node)
+ 		return NULL;
+@@ -453,8 +458,15 @@ static struct lock_stat *pop_from_result(void)
+ 	while (node->rb_left)
+ 		node = node->rb_left;
+ 
+-	rb_erase(node, &result);
++	rb_erase(node, rr);
+ 	return container_of(node, struct lock_stat, rb);
++
++}
++
++/* returns left most element of result, and erase it */
++static struct lock_stat *pop_from_result(void)
++{
++	return pop_from(&result);
+ }
+ 
+ struct trace_lock_handler {
+-- 
+2.48.1.502.g6dc24dfdaf-goog
 
