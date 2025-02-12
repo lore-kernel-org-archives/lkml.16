@@ -1,25 +1,63 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69F6824E4C3
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 15:29:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6D5212FB2
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 15:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739374192; cv=none; b=bdTJ+fAt7HRcM1RLAPNjKRhbBDzw71c4qjukiqQxVsdmFEuJXySRy7g1Wy6xuFq7hZRV/a3+T4ZjeI5J3Ra593vkEf3HBzSDk8SbnO9hbJ2Ji+GSQFcQGzQ4GoABectTfGxI3mk/alrBschjtnLDz1PJ0DfAn+J18xzUOR5g4oM=
+	t=1739374200; cv=none; b=ku4a5VfbRH8ENwfo99XZlkHIkAjwAijxQRp5SiZ5kAFm+tp4byy+2xgVtwpgMMwTm/I6jxTAc5HwyME/kMjhV+e4WmBYFmVDcLm5HMZeOPjoSI3N8E1oXdOFQEEDGd0RjPhKvkWTLvpebNuXOwIeGAQbsHH+88Tox8gDSFm7+tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739374192; c=relaxed/simple;
-	bh=CtoZJWGWVJ7eVeqv8Re3KPnDgrE26s/mH4tdu0q02Ho=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rnjSvCXWPuZMnx3UFycaLkx1dNrydrVC6mBBJlceS94lRT6oiPAhtSg4w6hRdj0XxilVZ5zaI612TheBCMencTRoCWNzpVWpQlIalGpSr0ymqdUziPVoBUVfl3BUbwp+pf0HtFdMVt8EPzqOEvUcGw+KhtzviQ1+maqx5KFzZqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89E2112FC;
-	Wed, 12 Feb 2025 07:30:10 -0800 (PST)
-Received: from [10.57.81.93] (unknown [10.57.81.93])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED99A3F58B;
-	Wed, 12 Feb 2025 07:29:46 -0800 (PST)
-Message-ID: <46ca554b-f768-4981-9794-1dbc581a7bdc@arm.com>
-Date: Wed, 12 Feb 2025 15:29:45 +0000
+	s=arc-20240116; t=1739374200; c=relaxed/simple;
+	bh=HoQBBj3++E9+My0TAo+2Mo6TO9ByQnaMfZrK9weOhQs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OmN5Kwdk+J8YsvZO79aCgcEEL49iBuQPyOAcfGSsJLQf6LPeWj6eJkAMJIh+vcEncLB9Lo62dm7z/i36+tILpIVRlqrbBucPXK9HA48MMcVCgGa9pXck0P815z84+nEgpT6RmI4MyKHdgYKSITK+oAkXvITm//JBsacXtoXv4Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Br9d8BDG; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Br9d8BDG"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38ddc36b81dso624675f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 07:29:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739374196; x=1739978996; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bweCfrHSF4ZtIDowNU7vOYDvCZZ4Q1/RG4GPAIRxK8k=;
+        b=Br9d8BDG78MqPIbahmIpypaCdhCEoyxksZyAen0LDqjD49ZuCZ0mpuhhl73T4cIevk
+         3AGwiVLvBdg8yRqpNOf81eDVwwRDHNK61o2gD/LG1tB/h00ZRRP2pRbjF6VJnSN0iVJD
+         jRCL2zL/qABJClnuGmZLbeJa7+n1k8FdN7aldPmCJ2xeiqjRd2l/BndIxrze9Yxbc3ql
+         JlSQWqdEBmCI6EeGO7aaHfthD7Tw2FAoayLU+ZVjrTpKbTkY7228WcvbQnRoSB+KBzdJ
+         uZgZZoPW5J8DlYKcO1mDIuTrhMdzO6renOl3br4lfCpZVKdJq+gX/yJpCe2jqcHiy9sE
+         2ccw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739374196; x=1739978996;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bweCfrHSF4ZtIDowNU7vOYDvCZZ4Q1/RG4GPAIRxK8k=;
+        b=oR+BjMT/gHrk1kc8DeGQsxRGXyx6AxydXprJ5pFaOzxDQU5Ar5G6kGB9bfxpaPXPfn
+         ss2/aba8H1vz+HdxIyRS9D234g+BpEnGWRAjiC2oDRE8CN4W3gRLYM1eiq385tSznX0T
+         khpsJcf8lXkLN5qfbzU3JvoJl9XyKi4vO0hJWmienz6KRlbZ1kDeQ9hnbX2et3ebOlN8
+         t3vzVR01NT5sl7lg2TD7C09y35sX/OiRrnRsTqMPpWho/u8QuUppP32Zts7yw+KNwTiU
+         kpxrCWuGsPTyBrpfRr1up8AtsPP9+1XeTZ1pmzEzlMXhEMA9WFLwdNdHtHr88rV0HxQo
+         zEAA==
+X-Gm-Message-State: AOJu0Yyk+gVYfqvYn6tPK3+xrWqc7ld/6zZyZvuBYcKprlm+JsAptKM2
+	J7JmEARG/kMoy/dRbAWPhvgJbJQKdq7w3U6MEaORZs8zkzzWp4TmP91o4MpfMDM=
+X-Gm-Gg: ASbGncsYxEfUt+qrb830OoTZa1Gv1d6stIxi9rHUBS83bKOsuU+nGvgIp9p4jcQZoTO
+	MPr7Y2FmI4ssWhcDM5REL0QxrvGkpENJJ/0F4TK0pOOP4vnZAB+pwBIc3iLNWrVqOsArtae86X7
+	gx3aqxcJ6VQwWhDEHhGUEJarAYB9OOlwpRUD+xQu88VlgVouXIJmIzwii2YYROvcWT0HK4zNaji
+	RJSiZJ4UA8vHIbuO79m6V5UMrFL/bA39Lg+LFIy7MsfRr5AbltXWsqQRyyC5vzRT1v3/gvUAumC
+	RYQVXBnJi5qzWbJ09pCPVzsDM5Aa1KB+WvlsGybIyset49UnnLpwjBskvZGZ4wJgkQp4aw==
+X-Google-Smtp-Source: AGHT+IExBFd4nPcaRPvLsr3fKD5JfXaYgQR3Tkp9jcX9QNgCtUfi7m3Zd5l5F1hPifPhlPcl+VYyjg==
+X-Received: by 2002:a05:6000:1787:b0:38d:d5bf:5189 with SMTP id ffacd0b85a97d-38de43a5be6mr6909209f8f.16.1739374196586;
+        Wed, 12 Feb 2025 07:29:56 -0800 (PST)
+Received: from ?IPV6:2a0a:ef40:1d11:ab01:416b:3913:893e:bb4? ([2a0a:ef40:1d11:ab01:416b:3913:893e:bb4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcd21fe18sm14693591f8f.91.2025.02.12.07.29.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 07:29:55 -0800 (PST)
+Message-ID: <fcf907a5-9fb7-4988-a30a-a555740ca817@linaro.org>
+Date: Wed, 12 Feb 2025 15:29:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,233 +65,155 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 06/16] arm64/mm: Refactor __set_ptes() and
- __ptep_get_and_clear()
-Content-Language: en-GB
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Muchun Song <muchun.song@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250205151003.88959-1-ryan.roberts@arm.com>
- <20250205151003.88959-7-ryan.roberts@arm.com>
- <bdd08da7-d978-437a-849f-8a6115933e19@arm.com>
- <0538d186-470e-4c4d-974c-0d7f2c96e549@arm.com>
- <0492ed88-673a-435b-bc89-5f35637b4be6@arm.com>
-In-Reply-To: <0492ed88-673a-435b-bc89-5f35637b4be6@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH 2/3] regulator: qcom_usb_vbus: Add support for PMI8998
+ VBUS
+To: "James A. MacInnes" <james.a.macinnes@gmail.com>,
+ linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ andersson@kernel.org, konradybcio@kernel.org, quic_wcheng@quicinc.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ lgirdwood@gmail.com, broonie@kernel.org
+References: <20250212010744.2554574-1-james.a.macinnes@gmail.com>
+ <20250212010744.2554574-3-james.a.macinnes@gmail.com>
+Content-Language: en-US
+From: Caleb Connolly <caleb.connolly@linaro.org>
+In-Reply-To: <20250212010744.2554574-3-james.a.macinnes@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 07/02/2025 09:38, Ryan Roberts wrote:
-> On 06/02/2025 13:26, Ryan Roberts wrote:
->> On 06/02/2025 11:48, Anshuman Khandual wrote:
->>> On 2/5/25 20:39, Ryan Roberts wrote:
+Hi James,
 
-[...]
+On 2/12/25 01:07, James A. MacInnes wrote:
+> This patch extends the Qualcomm USB VBUS regulator driver to support
+> PMI8998 PMIC alongside the existing support for PM8150B.
 
->>>>
->>>> While we are at it, refactor __ptep_get_and_clear() and
->>>> pmdp_huge_get_and_clear() to use a common ___ptep_get_and_clear() which
->>>> also takes a pgsize parameter. This will provide the huge_pte API the
->>>> means to clear ptes corresponding with the way they were set.
->>>
->>> __ptep_get_and_clear() refactoring does not seem to be related to the
->>> previous __set_ptes(). Should they be separated out into two different
->>> patches instead - for better clarity and review ? Both these clean ups
->>> have enough change and can stand own their own.
->>
->> Yeah I think you're probably right... I was being lazy... I'll separate them.
-
-When looking at this again, I've decided not to split the patch. The same
-approach is being applied to both helper APIs to produce "anysz" versions that
-will be used by the huge_pte helpers. So I think it is reasonable to do all the
-conversion in a single patch. It just looks too small and bitty if I split it out.
-
-I'll rework the commit log to give both API equal promiance since it currently
-sounds like __ptep_get_and_clear is an after thought.
-
-[...]
-
->>> s/___set_ptes/___set_pxds ? to be more generic for all levels.
->>
->> So now we are into naming... I agree that in some senses pte feels specific to
->> the last level. But it's long form "page table entry" seems more generic than
->> "pxd" which implies only pmd, pud, p4d and pgd. At least to me...
->>
->> I think we got stuck trying to figure out a clear and short term for "page table
->> entry at any level" in the past. I think ttd was the best we got; Translation
->> Table Descriptor, which is the term the Arm ARM uses. But that opens a can of
->> worms as now we need tdd_t and all the converters pte_tdd(), tdd_pte(),
->> pmd_tdd(), ... and probably a bunch more stuff on top.
->>
->> So personally I prefer to take the coward's way out and just reuse pte.
+Thanks for the patch!
 > 
-> How about set_ptes_anylvl() and ptep_get_and_clear_anylvl()? I think this makes
-> it explicit and has the benefit of removing the leading underscores. It also
-> means we can reuse pte_t and friends, and we can exetend this nomenclature to
-> other places in future at the expense of a 7 char suffix ("_anylvl").
-> 
-> What do you think?
+> Key changes:
+> - Added current limit tables specific to PMI8998.
 
-I'm going to call them set_ptes_anysz() and ptep_get_and_clear_anysz(). That's
-one char shorter and better reflects that we are passing a size parameter in,
-not a level parameter.
+I also played around with vbus on PMI8998 before for type-c support 
+(unfortunately didn't make it's way to the lists yet...) and I needed 
+some additional changes for this to work correctly. I found that it was 
+possible for the overcurrent protection to be hit if the type-c port 
+manager allowed the peripheral to pull current too early, and it's 
+necessary to allow 2.5ms enable time.
 
-Thanks,
-Ryan
+PM8150b doesn't have these limitations (and supports the instant power 
+role switch feature that's part of the type-c PD spec, allowing the 
+power role to be switched without either side losing power e.g. when you 
+unplug the power supply from a dock), hence it's only necessary for PMI8998.
 
+I would suggest implementing a proper .is_enabled op to poll the status 
+register for OTG_STATE_ENABLED and configuring 
+qcom_usb_vbus_rdesc.enable_time = 250000;
+
+Kind regards,
+
+> - Dynamically configure the VBUS regulator based on the PMIC type.
+> - Updated debug messages to reflect successful initialization for
+>    supported PMICs.
+> - Changed registration log message
 > 
->>
->>>
->>>>  {
->>>> -	__sync_cache_and_tags(pte, nr);
->>>> -	__check_safe_pte_update(mm, ptep, pte);
->>>> -	__set_pte(ptep, pte);
->>>> +	unsigned long stride = pgsize >> PAGE_SHIFT;
->>>> +
->>>> +	switch (pgsize) {
->>>> +	case PAGE_SIZE:
->>>> +		page_table_check_ptes_set(mm, ptep, pte, nr);
->>>> +		break;
->>>> +	case PMD_SIZE:
->>>> +		page_table_check_pmds_set(mm, (pmd_t *)ptep, pte_pmd(pte), nr);
->>>> +		break;
->>>> +	case PUD_SIZE:
->>>> +		page_table_check_puds_set(mm, (pud_t *)ptep, pte_pud(pte), nr);
->>>> +		break;
->>>
->>> This is where the new page table check APIs get used for batch testing.
->>
->> Yes and I anticipate that the whole switch block should be optimized out when
->> page_table_check is disabled.
->>
->>>
->>>> +	default:
->>>> +		VM_WARN_ON(1);
->>>> +	}
->>>> +
->>>> +	__sync_cache_and_tags(pte, nr * stride);
->>>> +
->>>> +	for (;;) {
->>>> +		__check_safe_pte_update(mm, ptep, pte);
->>>> +		__set_pte(ptep, pte);
->>>> +		if (--nr == 0)
->>>> +			break;
->>>> +		ptep++;
->>>> +		pte = pte_advance_pfn(pte, stride);
->>>> +	}
->>>>  }
->>>
->>> LGTM
->>>
->>>>  
->>>> -static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
->>>> -			      pmd_t *pmdp, pmd_t pmd)
->>>> +static inline void __set_ptes(struct mm_struct *mm,
->>>> +			      unsigned long __always_unused addr,
->>>> +			      pte_t *ptep, pte_t pte, unsigned int nr)
->>>>  {
->>>> -	page_table_check_pmd_set(mm, pmdp, pmd);
->>>> -	return __set_pte_at(mm, addr, (pte_t *)pmdp, pmd_pte(pmd),
->>>> -						PMD_SIZE >> PAGE_SHIFT);
->>>> +	___set_ptes(mm, ptep, pte, nr, PAGE_SIZE);
->>>>  }
->>>>  
->>>> -static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
->>>> -			      pud_t *pudp, pud_t pud)
->>>> +static inline void __set_pmds(struct mm_struct *mm,
->>>> +			      unsigned long __always_unused addr,
->>>> +			      pmd_t *pmdp, pmd_t pmd, unsigned int nr)
->>>> +{
->>>> +	___set_ptes(mm, (pte_t *)pmdp, pmd_pte(pmd), nr, PMD_SIZE);
->>>> +}
->>>> +#define set_pmd_at(mm, addr, pmdp, pmd) __set_pmds(mm, addr, pmdp, pmd, 1)
->>>> +
->>>> +static inline void __set_puds(struct mm_struct *mm,
->>>> +			      unsigned long __always_unused addr,
->>>> +			      pud_t *pudp, pud_t pud, unsigned int nr)
->>>>  {
->>>> -	page_table_check_pud_set(mm, pudp, pud);
->>>> -	return __set_pte_at(mm, addr, (pte_t *)pudp, pud_pte(pud),
->>>> -						PUD_SIZE >> PAGE_SHIFT);
->>>> +	___set_ptes(mm, (pte_t *)pudp, pud_pte(pud), nr, PUD_SIZE);
->>>>  }
->>>> +#define set_pud_at(mm, addr, pudp, pud) __set_puds(mm, addr, pudp, pud, 1)
->>>
->>> LGTM
->>>
->>>>  
->>>>  #define __p4d_to_phys(p4d)	__pte_to_phys(p4d_pte(p4d))
->>>>  #define __phys_to_p4d_val(phys)	__phys_to_pte_val(phys)
->>>> @@ -1276,16 +1288,34 @@ static inline int pmdp_test_and_clear_young(struct vm_area_struct *vma,
->>>>  }
->>>>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE || CONFIG_ARCH_HAS_NONLEAF_PMD_YOUNG */
->>>>  
->>>> -static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
->>>> -				       unsigned long address, pte_t *ptep)
->>>> +static inline pte_t ___ptep_get_and_clear(struct mm_struct *mm, pte_t *ptep,
->>>> +				       unsigned long pgsize)
->>>
->>> So address got dropped and page size got added as an argument.
->>>
->>>>  {
->>>>  	pte_t pte = __pte(xchg_relaxed(&pte_val(*ptep), 0));
->>>>  
->>>> -	page_table_check_pte_clear(mm, pte);
->>>> +	switch (pgsize) {
->>>> +	case PAGE_SIZE:
->>>> +		page_table_check_pte_clear(mm, pte);
->>>> +		break;
->>>> +	case PMD_SIZE:
->>>> +		page_table_check_pmd_clear(mm, pte_pmd(pte));
->>>> +		break;
->>>> +	case PUD_SIZE:
->>>> +		page_table_check_pud_clear(mm, pte_pud(pte));
->>>> +		break;
->>>> +	default:
->>>> +		VM_WARN_ON(1);
->>>> +	}
->>>>  
->>>>  	return pte;
->>>>  }
->>>>  
->>>> +static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
->>>> +				       unsigned long address, pte_t *ptep)
->>>> +{
->>>> +	return ___ptep_get_and_clear(mm, ptep, PAGE_SIZE);
->>>> +}
->>>> +
->>>>  static inline void __clear_full_ptes(struct mm_struct *mm, unsigned long addr,
->>>>  				pte_t *ptep, unsigned int nr, int full)
->>>>  {
->>>> @@ -1322,11 +1352,7 @@ static inline pte_t __get_and_clear_full_ptes(struct mm_struct *mm,
->>>>  static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
->>>>  					    unsigned long address, pmd_t *pmdp)
->>>>  {
->>>> -	pmd_t pmd = __pmd(xchg_relaxed(&pmd_val(*pmdp), 0));
->>>> -
->>>> -	page_table_check_pmd_clear(mm, pmd);
->>>> -
->>>> -	return pmd;
->>>> +	return pte_pmd(___ptep_get_and_clear(mm, (pte_t *)pmdp, PMD_SIZE));
->>>>  }
->>>>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->>>>  
->>>
->>> Although currently there is no pudp_huge_get_and_clear() helper on arm64
->>> reworked ___ptep_get_and_clear() will be able to support that as well if
->>> and when required as it now supports PUD_SIZE page size.
->>
->> yep.
->>
->> Thanks for all your review so far!
->>
+> These changes ensure proper VBUS current limit configuration and
+> compatibility across multiple Qualcomm PMICs.
 > 
+> Signed-off-by: James A. MacInnes <james.a.macinnes@gmail.com>
+> ---
+>   drivers/regulator/qcom_usb_vbus-regulator.c | 38 ++++++++++++++++++---
+>   1 file changed, 33 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/regulator/qcom_usb_vbus-regulator.c b/drivers/regulator/qcom_usb_vbus-regulator.c
+> index cd94ed67621f..804dd1a9e057 100644
+> --- a/drivers/regulator/qcom_usb_vbus-regulator.c
+> +++ b/drivers/regulator/qcom_usb_vbus-regulator.c
+> @@ -20,10 +20,30 @@
+>   #define OTG_CFG				0x53
+>   #define OTG_EN_SRC_CFG			BIT(1)
+>   
+> -static const unsigned int curr_table[] = {
+> +struct msm_vbus_desc {
+> +	const unsigned int *curr_table;
+> +	unsigned int n_current_limits;
+> +};
+> +
+> +static const unsigned int curr_table_pm8150b[] = {
+>   	500000, 1000000, 1500000, 2000000, 2500000, 3000000,
+>   };
+>   
+> +static const unsigned int curr_table_pmi8998[] = {
+> +	250000, 500000, 750000, 1000000,
+> +	1250000, 1500000, 1750000, 2000000,
+> +};
+> +
+> +static const struct msm_vbus_desc msm_vbus_desc_pm8150b = {
+> +	.curr_table = curr_table_pm8150b,
+> +	.n_current_limits = ARRAY_SIZE(curr_table_pm8150b),
+> +};
+> +
+> +static const struct msm_vbus_desc msm_vbus_desc_pmi8998 = {
+> +	.curr_table = curr_table_pmi8998,
+> +	.n_current_limits = ARRAY_SIZE(curr_table_pmi8998),
+> +};
+> +
+>   static const struct regulator_ops qcom_usb_vbus_reg_ops = {
+>   	.enable = regulator_enable_regmap,
+>   	.disable = regulator_disable_regmap,
+> @@ -37,8 +57,6 @@ static struct regulator_desc qcom_usb_vbus_rdesc = {
+>   	.ops = &qcom_usb_vbus_reg_ops,
+>   	.owner = THIS_MODULE,
+>   	.type = REGULATOR_VOLTAGE,
+> -	.curr_table = curr_table,
+> -	.n_current_limits = ARRAY_SIZE(curr_table),
+>   };
+>   
+>   static int qcom_usb_vbus_regulator_probe(struct platform_device *pdev)
+> @@ -48,6 +66,7 @@ static int qcom_usb_vbus_regulator_probe(struct platform_device *pdev)
+>   	struct regmap *regmap;
+>   	struct regulator_config config = { };
+>   	struct regulator_init_data *init_data;
+> +	const struct msm_vbus_desc *quirks;
+>   	int ret;
+>   	u32 base;
+>   
+> @@ -68,6 +87,12 @@ static int qcom_usb_vbus_regulator_probe(struct platform_device *pdev)
+>   	if (!init_data)
+>   		return -ENOMEM;
+>   
+> +	quirks = of_device_get_match_data(dev);
+> +	if (!quirks)
+> +		return -ENODEV;
+> +
+> +	qcom_usb_vbus_rdesc.curr_table = quirks->curr_table;
+> +	qcom_usb_vbus_rdesc.n_current_limits = quirks->n_current_limits;
+>   	qcom_usb_vbus_rdesc.enable_reg = base + CMD_OTG;
+>   	qcom_usb_vbus_rdesc.enable_mask = OTG_EN;
+>   	qcom_usb_vbus_rdesc.csel_reg = base + OTG_CURRENT_LIMIT_CFG;
+> @@ -80,18 +105,21 @@ static int qcom_usb_vbus_regulator_probe(struct platform_device *pdev)
+>   	rdev = devm_regulator_register(dev, &qcom_usb_vbus_rdesc, &config);
+>   	if (IS_ERR(rdev)) {
+>   		ret = PTR_ERR(rdev);
+> -		dev_err(dev, "not able to register vbus reg %d\n", ret);
+> +		dev_err(dev, "Failed to register vbus reg %d\n", ret);
+>   		return ret;
+>   	}
+>   
+>   	/* Disable HW logic for VBUS enable */
+>   	regmap_update_bits(regmap, base + OTG_CFG, OTG_EN_SRC_CFG, 0);
+>   
+> +	dev_dbg(dev, "Registered QCOM VBUS regulator\n");
+> +
+>   	return 0;
+>   }
+>   
+>   static const struct of_device_id qcom_usb_vbus_regulator_match[] = {
+> -	{ .compatible = "qcom,pm8150b-vbus-reg" },
+> +	{ .compatible = "qcom,pm8150b-vbus-reg", .data = &msm_vbus_desc_pm8150b },
+> +	{ .compatible = "qcom,pmi8998-vbus-reg", .data = &msm_vbus_desc_pmi8998 },
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(of, qcom_usb_vbus_regulator_match);
+
+-- 
+Caleb (they/them)
 
