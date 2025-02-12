@@ -1,160 +1,118 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364B5204C00
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 08:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8671E9B3B;
+	Wed, 12 Feb 2025 08:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739349669; cv=none; b=FgQXO8Cpt1BHBM7LXsZe0W04Kt3diiIutYT/j/TgpCHwQyKwzq4jOnKxmL/6l5BZQwnek4qNaLv2XdUbsUwZimoRfIdCmLguUT+e6OIg1Iu55zAa8D9vqwBhWx7M/9sAf2XqIadVkZ54fGS0fWoHAdzT9yPauwAwkc5YNl4AknY=
+	t=1739349777; cv=none; b=rXmECmpoqd0JEC1xA0G88+qxkgyiwDLLsWXvhWP7Pm7iMMC8BhEaYbB1GUZskCFOJkjt8fFUWqYdmFZzyEcjaDss7E2OfDyAiZi3PCeoG+Muvj0jKcW5dymmTtwptBCPopAsZkVyG2Jrgl3oBBUgK/AJvbVtVCTMJYnOXHr1GS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739349669; c=relaxed/simple;
-	bh=f9ZCAVmq2gg3N2HN7ui17vIaD9Wt7j6KDCePUL9di18=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VMGrdYdsze/6t9e5u3U4jSZ0Vbt4CqNsPRIl7cAMhhHgFMZ0cde8AFHnNWuzL3vAQ5uBbO8p4HOKXUli1tVq0gSKpi1dV+JLJbfCwVZA7sCwM0CKqrQyp/BpUYtV4RMBZ7WxIX2WaIZkBykaFqf5byrsEw3CXbM6+FYWcCbNfnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=KBWlrinD; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1739349777; c=relaxed/simple;
+	bh=fZ/2cWrlbcdeAC/InzvSZ8DjryDQHpUwgjaOl4okXco=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=PWfCK3eMHioSzfBSBjxxzZuAjOyoP35vOcesh0Eh3K2+LAKNIcyWqmxyrouThyXSqRtNdNCQgCUbWvu/JTMTjnl2nF1qwl5QAOs6+cZ2EOy3kKY8tWNbHFCyE3fw/yGzIQOVfp5VOlIuMS5TwiBGlIl4GV+tRnNMEgDGSupKf1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MmoFFkZO; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="KBWlrinD"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739349656; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=G2dzHAeJclCBBtVnMp2ixJo/1kvecabyqzECUSBfwNg=;
-	b=KBWlrinDY78UgNTay/Mgi4okpwsW/k32s8qj4aVjR2ES0HzYvqvI66JnkuEpFAFZYtc8ayigu+jpoedcs3JFFPDlYOm3go6vYv2n5dRHG+4G3AxJHUnMG7gdsZm5j2aHkpu9JEXdfTnGgM3D4lRiUXyqk6KxCXkNq1Q85NZ0+8U=
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WPJWt4O_1739349655 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 12 Feb 2025 16:40:56 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: Nikhil Dhama <nikhil.dhama@amd.com>
-Cc: <akpm@linux-foundation.org>,  <bharata@amd.com>,
-  <huang.ying.caritas@gmail.com>,  <linux-kernel@vger.kernel.org>,
-  <linux-mm@kvack.org>,  <mgorman@techsingularity.net>,
-  <raghavendra.kodsarathimmappa@amd.com>
-Subject: Re: [FIX PATCH] mm: pcp: fix pcp->free_count reduction on page
- allocation
-In-Reply-To: <20250212050403.17504-1-nikhil.dhama@amd.com> (Nikhil Dhama's
-	message of "Wed, 12 Feb 2025 10:34:03 +0530")
-References: <20250128203118.578a46182beea6a82dcd0b1d@linux-foundation.org>
-	<20250212050403.17504-1-nikhil.dhama@amd.com>
-Date: Wed, 12 Feb 2025 16:40:54 +0800
-Message-ID: <871pw33695.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MmoFFkZO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739349775; x=1770885775;
+  h=from:to:cc:subject:date:message-id;
+  bh=fZ/2cWrlbcdeAC/InzvSZ8DjryDQHpUwgjaOl4okXco=;
+  b=MmoFFkZOd3qaO+Le0kO5v8lLRiXprNv5eLKUtK+IZuhWhHqsdTEr2Q0j
+   BQcnoq+EEP3TZwwOzZctoQYNZZhIe5/B6u25xsc6sTYs74cnwKNeiVtkS
+   cpSU8gwg4qJG60VLuKAd72d/ae9FLw7ZfF5eO6YBSqLFUkzeHBOVj7tZj
+   IVn341n1esC4y0jg2uxz3buf/0XJufohWdz2OAKVMjNAAzBzcjM2pcxf5
+   o2tXbwGdymCRV3Rk0Z+vnvrJU1mg38t9q9H7g9MO3scHIyQU/187B9QzD
+   AipVaglKFQGHB3TS/1/3VKQa9Sc0jTfTo6mtCEZvcZZZOvdb5Ju/72lH9
+   g==;
+X-CSE-ConnectionGUID: zz/yQ7yaTSemo6UrM4dvdQ==
+X-CSE-MsgGUID: wmVXuMFDRiuB55VmwUaVcQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51425149"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="51425149"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 00:42:55 -0800
+X-CSE-ConnectionGUID: lI2/2gr7QW2fM3QIlbhRBw==
+X-CSE-MsgGUID: 6ZDyVIk3S7abahNGOdtVMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="136026824"
+Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 00:42:51 -0800
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+To: Tony Luck <tony.luck@intel.com>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	Ramses <ramses@well-founded.dev>,
+	John <therealgraysky@proton.me>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] EDAC/igen6: Fix the flood of invalid error reports
+Date: Wed, 12 Feb 2025 16:33:54 +0800
+Message-Id: <20250212083354.31919-1-qiuxu.zhuo@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
 
-Nikhil Dhama <nikhil.dhama@amd.com> writes:
+The ECC_ERROR_LOG register of certain SoCs may contain the invalid value
+~0, which results in a flood of invalid error reports in polling mode.
 
-> On 1/29/2025 10:01 AM, Andrew Morton wrote:
->>
->> On Wed, 15 Jan 2025 19:19:02 +0800 "Huang, Ying" <ying.huang@linux.alibaba.com> wrote:
->>
->>> Andrew Morton <akpm@linux-foundation.org> writes:
->>>
->>>> On Tue, 7 Jan 2025 14:47:24 +0530 Nikhil Dhama <nikhil.dhama@amd.com> wrote:
->>>>
->>>>> In current PCP auto-tuning desgin, free_count was introduced to track
->>>>> the consecutive page freeing with a counter, This counter is incremented
->>>>> by the exact amount of pages that are freed, but reduced by half on
->>>>> allocation. This is causing a 2-node iperf3 client to server's network
->>>>> bandwidth to drop by 30% if we scale number of client-server pairs from 32
->>>>> (where we achieved peak network bandwidth) to 64.
->>>>>
->>>>> To fix this issue, on allocation, reduce free_count by the exact number
->>>>> of pages that are allocated instead of halving it.
->>>> The present division by two appears to be somewhat randomly chosen.
->>>> And as far as I can tell, this patch proposes replacing that with
->>>> another somewhat random adjustment.
->>>>
->>>> What's the actual design here?  What are we attempting to do and why,
->>>> and why is the proposed design superior to the present one?
->>> Cc Mel for the original design.
->>>
->>> IIUC, pcp->free_count is used to identify the consecutive, pure, large
->>> number of page freeing pattern.  For that pattern, larger batch will be
->>> used to free pages from PCP to buddy to improve the performance.  Mixed
->>> free/allocation pattern should not make pcp->free_count large, even if
->>> the number of the pages freed is much larger than that of the pages
->>> allocated in the long run.  So, pcp->free_count decreases rapidly for
->>> the page allocation.
->>>
->>> Hi, Mel, please correct me if my understanding isn't correct.
->>>
->> hm, no Mel.
->>
->> Nikhil, please do continue to work on this - it seems that there will
->> be a significant benefit to retuning this.
->
->
-> Hi Andrew,
->
-> I have analyzed the performance of different memory-sensitive workloads for these
-> two different ways to decrement pcp->free_count. I compared the score amongst
-> v6.6 mainline, v6.7 mainline and v6.7 with our patch.
->
-> For all the benchmarks, I used a 2-socket AMD server with 382 logical CPUs.
->
-> Results I got are as follows:
-> All scores are normalized with respect to v6.6 (base).
->
->
-> For all the benchmarks below (iperf3, lmbench3 unix, netperf, redis, gups, xsbench),
-> a higher score is better.
->
->                     iperf3    lmbench3 Unix       1-node netperf       2-node netperf
->                                   (AF_UNIX)   (SCTP_STREAM_MANY)   (SCTP_STREAM_MANY)
->                    -------   --------------   ------------------   ------------------
-> v6.6 (base)            100              100                  100                  100
-> v6.7                    69            113.2                   99                98.59
-> v6.7 with my patch     100            112.1                100.3               101.16
->
->
->                   redis standard    redis core    redis L3 Heavy    Gups    xsbench
->                   --------------    ----------    --------------    ----    -------
-> v6.6 (base)                  100           100              100      100        100
-> v6.7                       99.45        101.66            99.47      100      98.14
-> v6.7 with my patch         99.76        101.12            99.75      100      99.56
->
->
-> and for graph500, hashjoin, pagerank and Kbuild, a lower score is better.
->
->                      graph500     hashjoin      hashjoin    pagerank     Kbuild
->                                (THP always)   (THP never)
->                     ---------  ------------   -----------   --------     ------
-> v6.6 (base)              100           100           100         100        100
-> v6.7                  101.08         101.3         101.9         100       98.8
-> v6.7 with my patch     99.73           100        101.66         100       99.6
->
-> from these result I can conclude that this patch is performing better
-> or as good as base v6.7 on almost all of these workloads.
+Fix the flood of invalid error reports by skipping the invalid ECC error
+log value ~0.
 
-Sorry, this change doesn't make sense to me.
-
-For example, if a large size process exits on a CPU, pcp->free_count
-will increase on this CPU.  This is good, because the process can free
-pages quicker during exiting with the larger batching.  However, after
-that, pcp->free_count may be kept large for a long duration unless a
-large number of page allocation (without large number of page freeing)
-are done on the CPU.  So, the page freeing parameter may be influenced
-by some unrelated workload for long time.  That doesn't sound good.
-
-In effect, the larger pcp->free_count will increase page freeing batch
-size.  That will improve the page freeing throughput but hurt page
-freeing latency.  Please check the page freeing latency too.  If larger
-batch number helps performance without regressions, just increase batch
-number directly instead of playing with pcp->free_count.
-
-And, do you run network related workloads on one machine?  If so, please
-try to run them on two machines instead, with clients and servers run on
-different machines.  At least, please use different sockets for clients
-and servers.  Because larger pcp->free_count will make it easier to
-trigger free_high heuristics.  If that is the case, please try to
-optimize free_high heuristics directly too.
-
+Fixes: e14232afa944 ("EDAC/igen6: Add polling support")
+Reported-by: Ramses <ramses@well-founded.dev>
+Closes: https://lore.kernel.org/all/OISL8Rv--F-9@well-founded.dev/
+Tested-by: Ramses <ramses@well-founded.dev>
+Reported-by: John <therealgraysky@proton.me>
+Closes: https://lore.kernel.org/all/p5YcxOE6M3Ncxpn2-Ia_wCt61EM4LwIiN3LroQvT_-G2jMrFDSOW5k2A9D8UUzD2toGpQBN1eI0sL5dSKnkO8iteZegLoQEj-DwQaMhGx4A=@proton.me/
+Tested-by: John <therealgraysky@proton.me>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 ---
-Best Regards,
-Huang, Ying
+ drivers/edac/igen6_edac.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/edac/igen6_edac.c b/drivers/edac/igen6_edac.c
+index fdf3a84fe698..595908af9e5c 100644
+--- a/drivers/edac/igen6_edac.c
++++ b/drivers/edac/igen6_edac.c
+@@ -785,13 +785,22 @@ static u64 ecclog_read_and_clear(struct igen6_imc *imc)
+ {
+ 	u64 ecclog = readq(imc->window + ECC_ERROR_LOG_OFFSET);
+ 
+-	if (ecclog & (ECC_ERROR_LOG_CE | ECC_ERROR_LOG_UE)) {
+-		/* Clear CE/UE bits by writing 1s */
+-		writeq(ecclog, imc->window + ECC_ERROR_LOG_OFFSET);
+-		return ecclog;
+-	}
++	/*
++	 * Quirk: The ECC_ERROR_LOG register of certain SoCs may contain
++	 *        the invalid value ~0. This will result in a flood of invalid
++	 *        error reports in polling mode. Skip it.
++	 */
++	if (ecclog == ~0)
++		return 0;
+ 
+-	return 0;
++	/* Neither a CE nor a UE. Skip it.*/
++	if (!(ecclog & (ECC_ERROR_LOG_CE | ECC_ERROR_LOG_UE)))
++		return 0;
++
++	/* Clear CE/UE bits by writing 1s */
++	writeq(ecclog, imc->window + ECC_ERROR_LOG_OFFSET);
++
++	return ecclog;
+ }
+ 
+ static void errsts_clear(struct igen6_imc *imc)
+-- 
+2.17.1
+
