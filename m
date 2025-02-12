@@ -1,114 +1,103 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6E8271813;
-	Wed, 12 Feb 2025 19:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50D1271813;
+	Wed, 12 Feb 2025 19:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739388678; cv=none; b=IINz6zE1RqfwQsmMk3QTHI8H/DYZ6bFTnVj63bXUk6d+lESKwSEUUik3w3VOwq70mgsi+KDzFd9Hs6PbwLZjjaVo9MkqUNjrIWWGKZDdS9QhMIT51EWFP/B6bNas5BxAmV9u0DfhusSBl8LINbyzLqS+/cho3Z0TduxZNA5J2Jo=
+	t=1739388685; cv=none; b=X00wPuXJch/RElv9kGptGtnz7s0oc1BbV/wOczdZMfhNQHlNf7bFbjr0iUIRbcgwTmOeEysiv5v6ujMMRK+JNX35LX2+0htaIVDmIxFLVOWHGFuzXvwUTt3606DM7B+eTnGF+aipAFbF+pRHmke4VTSyoHLtZIT7+7iO5vFFhrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739388678; c=relaxed/simple;
-	bh=GfZdTX/Oy7XJ8tKG6LUgqykp1o40xiaIANvWfqZKCJc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ejFbGYOx74PvTr7R2yWtGFZLSsVY+qacMfM2iSl+r4AHZbAbKfOe63b6pzJtHCki5sOOfhn5LWxYYQ5CeAFE0HgU5nG7Y/PEwrfPTJGtHNlO6XFXJAXefc9n8dYIADI/fCT6pCAJTMed45NF7O7bytnqSVn8KwtFqyvh0TDhzz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iuP1EakZ; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739388685; c=relaxed/simple;
+	bh=ogjElKZkP71ejQJYT0hwP3uHhRqvyb4B8WNqvdEWaog=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PgL0HqDP1enqVJgNvsy0Cv6h3UWSfWlqz1NtzNsALN2iFps+yGTRFQvSxit4ru6ioOSIP71qvId6R2nyjwYOQDXceVJZzVceAMzZsK/KpmQhySvlGF/6B42cKG1I/Ni3WdlvRv00Ow1Ffd7j7ngui/uD1YfjUQgSZ2+rk9aWriU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IjGzuLHY; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iuP1EakZ"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6efe4e3d698so1237957b3.0;
-        Wed, 12 Feb 2025 11:31:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739388676; x=1739993476; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jxerhnt8Y8id2USTwJkEjWouua1WjZ12bm3toHhyogY=;
-        b=iuP1EakZsIaBkFdEtP2V7okMjDa0Pzu7YuM2oEEFANOtZybhmovPlBx+SsEl5PegjV
-         HItXKrg3pI+rRui6D+kl6JToNJ9tvTC33HEeCz70vWXLqpdSk3j4ffSNeJ6TnaZMyrLT
-         Dp2M8MR9NnL4swhCJYxkV+Iu7sh8/aOCTNvanYdLZcY2YAqU28/byudeC1lkL5d6po8J
-         qEjujeuzgFJu39zSetZ6GWBCMYAuik7pxwJ/lZ+rv+CwVCxb1d6NFSmMyedsCsSZvxzF
-         p0R+2wOGwoJYwlb5r8quVFAiYjHDPZr6IPrcu3KHcA8IZeWtK3n2XfIULE2KVYsNx+h3
-         p1pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739388676; x=1739993476;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jxerhnt8Y8id2USTwJkEjWouua1WjZ12bm3toHhyogY=;
-        b=IB9D/4GfUeUjNay6uFSAiO8C59eLW64kkA5WFGxfTnLUc3fyn4Bb5FMTTUaGahfCpK
-         oRg4f4055kz1G3aQgCRN94j/4Pv4hPqB98Mdflz7TmaQtMh36Ist6zrx6j2PR5OX1jra
-         b/XuXtwY1LpyTSuQoIlFvN62sNLHI0gttnJei2SKYNOzE70sXjUVUPDZzmwyfBREX9rC
-         zqPgy7Ny/KOl+xXieMnCbpVq+ylb8tSz+pKiwW4ykRX/krswPdPySbBLzLqesACa8jEK
-         3anKMpW/7hpVUFHmeE0AHn9u+1HaueJRiBJN+Xa9jMW8hZ3h4FBojA+rIrR1j5/fMHAX
-         KMZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUqy6buLbmDG/DjnSX5OPbgreYrdzijHZNvMlM1teyBdb0JNtsFZ4ItNffQFsN3Wx1jYnnAeO0bKwsc@vger.kernel.org, AJvYcCWmKuYfk4w9y3R7tMkvGbs70MywBq0xvEqrHer547P8UwlrG8+Ba+19Tja1OIawzZnn9rW59beVPu4x7x0U@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6jsecv8O13luTHx4NFkdzR60wnHUs32/wXk5DvmTjVxXewrt2
-	uCbOXC3Dbs39Gv42xBFJ/64Su9Cg4BubJB5CogkbUGRZrCInpSv9
-X-Gm-Gg: ASbGncuwBm0RTzZvUAjCqf/vAvwsZdiv2BufjAx5pFTPvGlBiXJ/93kD+9JE5s6So3W
-	dBpGiag+BAG5EthFTaGvFBOWCPJSDA1fmRSX7Oht9xQ5Lwr0SPvLpvspNE6uimBhpKKXU2y4JRr
-	BO3ffJH35iZobqwrPikHl0zsFykQ06nBlUjABq8krFCnGlvKNj0xHrrb7SIih6iVNQTlnvmSh8Q
-	3rN4m03z+QDhTLj0XDwWzS2O2AGBWzP6uRQErGQMnDGKOf5OPb79/DktgzM7foZYERcnn75d0vY
-	kcJDNoMkTO7ppJFkTj3ARh07fA==
-X-Google-Smtp-Source: AGHT+IHZTmVClcsZUB5sJHSCBll2LFC3eeHBfHQFpiL4RynRDnie9rUozkzvnBkA6YLecFLTVlH+zQ==
-X-Received: by 2002:a05:690c:350a:b0:6f6:c95c:85b5 with SMTP id 00721157ae682-6fb1f286679mr43317497b3.25.1739388676177;
-        Wed, 12 Feb 2025 11:31:16 -0800 (PST)
-Received: from localhost.localdomain ([2800:bf0:179:113e:f067:4e25:4298:6451])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99fd1fefbsm27889097b3.46.2025.02.12.11.31.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 11:31:15 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Kurt Borja <kuurtb@gmail.com>,
-	Gergo Koteles <soyer@irl.hu>,
-	linux-acpi@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IjGzuLHY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739388684; x=1770924684;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ogjElKZkP71ejQJYT0hwP3uHhRqvyb4B8WNqvdEWaog=;
+  b=IjGzuLHYasEgLq+YzohumRpuKshVWSErsJphSYvR7S2aFleeoTxJja3f
+   N67iTveLVqdtHuyV+fgSFhh/WdX0R2rNSU6CkY3xJ/vE1RHMcXZ6VMNHJ
+   wBkbtCpcNu1sbCoT7GHITSkkr7QdHJNeXd7Wd7nrpwvOP9MuNudydKi/x
+   KLs5CPsyusE+YiXZK+sLrl3ptvGr0ghUSHWVVUimaG2tvNsJUAQXfpmnO
+   esXOJiGWRrqo51ODfpv1SgcdIQslndcVm+PV8XMBmiWN18B9j3PXZ/0CJ
+   gXN9CnP1+ovEDhNc05dC6DiQbzBkQqyAcrG5z2YjGarNp6kd8eE7fjGEB
+   Q==;
+X-CSE-ConnectionGUID: dbuSkH5STyCes+FDll1E0g==
+X-CSE-MsgGUID: eWUY/nRAQH+Lk1TIymQfng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40183655"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="40183655"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 11:31:23 -0800
+X-CSE-ConnectionGUID: tC83V0vbQ9mAzWQWQQ43FQ==
+X-CSE-MsgGUID: c1U2mCFeTuuJzZZwviugoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117542533"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 12 Feb 2025 11:31:20 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 4623011E; Wed, 12 Feb 2025 21:31:19 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Felipe Balbi <balbi@kernel.org>,
+	linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] ACPI: platform_profile: Fix memory leak in profile_class_is_visible()
-Date: Wed, 12 Feb 2025 14:30:58 -0500
-Message-ID: <20250212193058.32110-1-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.48.1
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 0/4] usb: dwc3: Avoid using reserved EPs
+Date: Wed, 12 Feb 2025 21:28:00 +0200
+Message-ID: <20250212193116.2487289-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-If class_find_device() finds a device it's reference count is
-incremented. Call put_device() to drop this reference before returning.
+On some platforms (Intel-based and AFAIK ARM-based) the EPs in the gadget
+(USB Device Controller mode) may be reserved for some special means, such as
+tracing. This series extends DT schema and driver to avoid using those.
+Without this the USB gadget mode won't work properly (those devices that
+"luckily" allocated the reserved EPs).
 
-Fixes: 77be5cacb2c2 ("ACPI: platform_profile: Create class for ACPI platform profile")
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/acpi/platform_profile.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Changelog v3:
+- split refactoring as preparatory change (Thinh)
+- renamed variable and function (Thinh)
+- added a warning in one place (Thinh)
+- gathered tags (Ferry, Rob, Thinh)
 
-diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-index fc92e43d0fe9..2ad53cc6aae5 100644
---- a/drivers/acpi/platform_profile.c
-+++ b/drivers/acpi/platform_profile.c
-@@ -417,8 +417,14 @@ static int profile_class_registered(struct device *dev, const void *data)
- 
- static umode_t profile_class_is_visible(struct kobject *kobj, struct attribute *attr, int idx)
- {
--	if (!class_find_device(&platform_profile_class, NULL, NULL, profile_class_registered))
-+	struct device *dev;
-+
-+	dev = class_find_device(&platform_profile_class, NULL, NULL, profile_class_registered);
-+	if (!dev)
- 		return 0;
-+
-+	put_device(dev);
-+
- 	return attr->mode;
- }
- 
+Changelog v2:
+- added minItems to the schema (Rob)
+- revisited code and add NULL check to avoid crashes (Thinh)
+- rewrote helper function to return error to the user if parsing fails
+- elaborated in the commit message why we need this quirk (Thinh)
+- addressed miscellaneous style issues (Thinh)
 
-base-commit: 3e3e377dd1f300bbdd230533686ce9c9f4f8a90d
+Andy Shevchenko (4):
+  dt-bindings: usb: dwc3: Add a property to reserve endpoints
+  usb: dwc3: gadget: Refactor loop to avoid NULL endpoints
+  usb: dwc3: gadget: Add support for snps,reserved-endpoints property
+  usb: dwc3: gadget: Avoid using reserved endpoints on Intel Merrifield
+
+ .../bindings/usb/snps,dwc3-common.yaml        | 11 ++++
+ drivers/usb/dwc3/dwc3-pci.c                   | 10 +++
+ drivers/usb/dwc3/gadget.c                     | 63 +++++++++++++++++--
+ 3 files changed, 79 insertions(+), 5 deletions(-)
+
 -- 
-2.48.1
+2.45.1.3035.g276e886db78b
 
