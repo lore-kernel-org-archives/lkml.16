@@ -1,116 +1,153 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E10B2080F4
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 11:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C47D207DE3;
+	Wed, 12 Feb 2025 11:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739360505; cv=none; b=LUExHem5yC435F7XXhHNptjTVcW0Q/75G7hNXk5r6EsOQt1zYsfeDcSEWPyPWUW4kRSpUca2SS1mGS7C4c9tmTTqUjcPaFt0oWcfM7BDaHIcCYT3erDB2YiOBFS6CY34G49uEcJloj896mmQAG/0vZQWu3RzByY72U/MKOTQjb4=
+	t=1739360568; cv=none; b=fRbIqQx/5FI2DePYINAAKbM7TjB0fdb2J4M/+8ejgjahNyNhGxl41movdzdVnpuMv+Om083CQ+6To7RwhhbjdOcD8rwhG1oXbdFKHzVhF10ewAEa/Nbi59Sw8UBObgYx36Mp7Tm+081jBsFIdSWQavlt+cUOOHla3cfSOXwEutQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739360505; c=relaxed/simple;
-	bh=JeJ2jv2BwBrIa809Su81UECkCgacincdGK1guJn4zFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sj9ivpiM2ASNeEAnI0ppmMZPI4I2oSo6P48jzisac/uvSNs2+uJvT7wiRfUknbz6Uw9H5cL1+/U/bOrjsI9O8T1mCpqo8zgi3DRe2jurgiCDzGH5E9KChXevByida6qkOLhqz13OP6V9uWYdouIgdZ9MVwHh2kedqT7X1eP2zqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yeh/n+xX; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739360568; c=relaxed/simple;
+	bh=Qr4MclPt2jNvi8MS6wyZRbwpPxzbWaldK4i16cfsStw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Klnlggytw6SusquAvCqYDpd5u29OuXGURPYOE0Wacaq23fpRgPf+gZ7xOp8u/R4m8ixdNffOLM30MROc1k8RwagjTXqdDc9I9p9XymHOfqWpBfEcBlqHnRwcOrbmsyPCxERXAMQ39rnh5VEwhpWsIHUGUjXRB5z8A2dRm4Vmm50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hrw5/h5R; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yeh/n+xX"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5d9837f201aso1508906a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 03:41:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739360502; x=1739965302; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w0j3HfohIwJISbsXU0pbsmUuYrw+P0a5WGZgVgQVxGg=;
-        b=Yeh/n+xX0Tak2hMWoiqQBs5EAgslLgLrfuAK4zXQN5Trsrm0O7OuLm7LSbj0WO2tPp
-         cBx8JETWBpsLyD2ciinTtfapSNvt3zp8ZLptWOnyC7rAOtrS7LaRyKMQIb+MVT1JLWnU
-         /RLrXMMlYf+ZEDOI4bWi+ANbRQ/uzPyfMMrCdd/UJdxkJw83m3DfuEn+nY5SIotUzpdC
-         s6UO1if9d072eEwx9XoWfYT8dFKVMf7Qg9dz02YtN8KRgcHbdIrM9C7WZzClE0g5IqvA
-         1cEEvV2/JTkfiQ5Bl8+kYIMC4Hd01qzTHVvopDObF+JHZrftEta1LNRxvav6RL8kFbMP
-         9Ezw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739360502; x=1739965302;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w0j3HfohIwJISbsXU0pbsmUuYrw+P0a5WGZgVgQVxGg=;
-        b=kLL/M36fQ3Q1FpENJwf1by69FPSdceaq3W+UXQQsJlOhGjAVrAiqqatELKczj3wIpC
-         LiJUfZuWFjWdy31O66cG7IvN9pc0fdZ0TbCdOUlZjOXJvL7j2nlo5OWbTkZwJJaWY63j
-         zo0PE6wKOiBKeT0fFK1HzmtJjFYi84MjBYBN2H13BllUdoO9f7d9SNbgDH9+WyKp1oFt
-         w38lildpBvDHT26xP3RysAUARwS0Adj1E1sUISe8hZJBWSH3e0u+U3N3hwhzyDZh1zWG
-         rSgDEn8uZqcp7paUXhPDngwrtXG9VfnuWiOhqZbm2F0c+YwWP1AgezPCG4F0K8zaYwdV
-         zekg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/I9clel/8jJO/LHLes2eppXUCYtSy/Qp/sYyHbQyzFAlS68w3YNGQczfBEnegohjanCFAjKBOt2sZ5U8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzlPrqz78+O4Vl446TlgCZgA54DMgEvr8YlZc5XL9e1/TWGJbB
-	rUSw5OEkD5le2Z2Ag+fsJwRvVA/qVcJBLCn3COjBxn3r8iwKYFmBPumAiAOZ+Wr1LRt+rxli+tW
-	4
-X-Gm-Gg: ASbGncu8nyhDy8Uob4v0HCk+LUT5WrHkgG8gmmye+LjM1L4UZizy81nS55QYyftTlbr
-	EZC1Y5I2HPZfgHpKqxEXtvUj3sdijcrPJMwxRWXghQ/ydIIe/5XzhM7MeCU8yoZ/URzNfTMI3fq
-	wjCPmHeAmozRPvycaZum9IsWz8Xu282QCnnTuozScqypIm8tIVDXKvWiieQGm4Prd55E4qgmflA
-	GvCT0SrAUvm/X7jjLThxmm3XDY/YhGVQXT+lQtEj6Th4iarydHVOK1KAv+LKWq+ffZsPDKX7m8R
-	ZeCa5Eqjts8WEJTyKeuz
-X-Google-Smtp-Source: AGHT+IGjOAjmf6XjmHjeaqxJH3+fWyGiM1rw3hi7aac7PC39lxHRaWXOjo/vo6+0foG0vbJvgDt8bQ==
-X-Received: by 2002:a17:907:724c:b0:ab3:992d:d98d with SMTP id a640c23a62f3a-ab7dab331c9mr726269366b.0.1739360501945;
-        Wed, 12 Feb 2025 03:41:41 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ab772f893e9sm1267296966b.65.2025.02.12.03.41.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 03:41:41 -0800 (PST)
-Date: Wed, 12 Feb 2025 14:41:38 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, kvmarm@lists.linux.dev,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	virtualization@lists.linux.dev, Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Aishwarya TCV <Aishwarya.TCV@arm.com>
-Subject: Re: kvm: nVHE hyp panic at: __kvm_nvhe_kvm_hyp_handle_sysre
-Message-ID: <3902208d-8814-46fe-ba98-3db833b9a886@stanley.mountain>
-References: <CA+G9fYt6Cuu6=OO9w80yhJbZB77Q0qf7nzYdvjbgDbgAw6t1jw@mail.gmail.com>
- <8634gku30g.wl-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hrw5/h5R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739360567; x=1770896567;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Qr4MclPt2jNvi8MS6wyZRbwpPxzbWaldK4i16cfsStw=;
+  b=hrw5/h5RbRy3DxtynWcUSdvJj4Iz/tb3WJItIw6YgEfrjwCTNqqvdi4q
+   6S9QTPxTXTIxhJfqTV2itbDdE6j0ciqCjZ7pPNR9gip1LjCytObf7KqHw
+   NFREH1n/nbeurdcQ4GGOi5mjeWCU9ljWO7j9ICz0Td8C/+5kBkh8qgALR
+   9DCtkWBO24P2ICX4OSRMHayuk3IMFj8XNXb1rHDi+67LXpG5jE2JZ4j+u
+   Q57kZGZnYIXzp7ZWzYxs4e+c8/1V/LERLBvkQ74fkLGzjWAPPTB9N0XYy
+   qxfceu+kB+WYNM9wG6tdts5LGtKRlCpbmQOhWaiQLG7JquG9FS35rDtf2
+   Q==;
+X-CSE-ConnectionGUID: ek87+OELRiaUahvafPN2kg==
+X-CSE-MsgGUID: scu6/njkTDytEbmEFY5ZVw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="57546223"
+X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
+   d="scan'208";a="57546223"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 03:42:46 -0800
+X-CSE-ConnectionGUID: LlNkJchiS3+gr2by8YlSIw==
+X-CSE-MsgGUID: agbJnvPDQPeTifgBfu018A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
+   d="scan'208";a="113459050"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa009.fm.intel.com with ESMTP; 12 Feb 2025 03:42:44 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 537A41FD; Wed, 12 Feb 2025 13:42:43 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	kernel test robot <oliver.sang@intel.com>
+Subject: [PATCH v1 1/1] serial: 8250_dw: Call dw8250_quirks() conditionally
+Date: Wed, 12 Feb 2025 13:38:17 +0200
+Message-ID: <20250212113817.2208483-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8634gku30g.wl-maz@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 11, 2025 at 11:36:31AM +0000, Marc Zyngier wrote:
-> For the crash at hand, which clearly shows nVHE, can you report
-> whether the following hack fixes it for you?
-> 
-> 	M.
+Not all the cases provide the driver data, that is represented by
+an object instance of struct dw8250_platform_data. Id est the change
+missed the case when the driver is instantiated via board files as
+pure platform driver. Fix this by calling dw8250_quirks() conditionally.
+This will require splitting dw8250_setup_dma_filter() out of dw8250_quirks().
 
-No luck, I'm afraid.  It still crashes the same way.
+Fixes: bfd3d4a40f39 ("serial: 8250_dw: Drop unneeded NULL checks in dw8250_quirks()")
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202502121529.f7e65d49-lkp@intel.com
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/tty/serial/8250/8250_dw.c | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
-https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/anders/tests/2steTT4f2J8ZJjc3jNJFMuow9Cb
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index ac3987513564..288e7826017c 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -421,6 +421,18 @@ static bool dw8250_idma_filter(struct dma_chan *chan, void *param)
+ 	return param == chan->device->dev;
+ }
+ 
++static void dw8250_setup_dma_filter(struct uart_port *p, struct dw8250_data *data)
++{
++	/* Platforms with iDMA 64-bit */
++	if (platform_get_resource_byname(to_platform_device(p->dev), IORESOURCE_MEM, "lpss_priv")) {
++		data->data.dma.rx_param = p->dev->parent;
++		data->data.dma.tx_param = p->dev->parent;
++		data->data.dma.fn = dw8250_idma_filter;
++	} else {
++		data->data.dma.fn = dw8250_fallback_dma_filter;
++	}
++}
++
+ static u32 dw8250_rzn1_get_dmacr_burst(int max_burst)
+ {
+ 	if (max_burst >= 8)
+@@ -491,14 +503,6 @@ static void dw8250_quirks(struct uart_port *p, struct dw8250_data *data)
+ 		p->serial_in = dw8250_serial_in32;
+ 		data->uart_16550_compatible = true;
+ 	}
+-
+-	/* Platforms with iDMA 64-bit */
+-	if (platform_get_resource_byname(to_platform_device(p->dev),
+-					 IORESOURCE_MEM, "lpss_priv")) {
+-		data->data.dma.rx_param = p->dev->parent;
+-		data->data.dma.tx_param = p->dev->parent;
+-		data->data.dma.fn = dw8250_idma_filter;
+-	}
+ }
+ 
+ static void dw8250_reset_control_assert(void *data)
+@@ -532,13 +536,9 @@ static int dw8250_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+-	data->data.dma.fn = dw8250_fallback_dma_filter;
+ 	data->pdata = device_get_match_data(p->dev);
+ 	p->private_data = &data->data;
+ 
+-	data->uart_16550_compatible = device_property_read_bool(dev,
+-						"snps,uart-16550-compatible");
+-
+ 	p->mapbase = regs->start;
+ 	p->mapsize = resource_size(regs);
+ 
+@@ -626,12 +626,16 @@ static int dw8250_probe(struct platform_device *pdev)
+ 	if (err)
+ 		return err;
+ 
+-	dw8250_quirks(p, data);
++	data->uart_16550_compatible = device_property_read_bool(dev, "snps,uart-16550-compatible");
++	if (data->pdata)
++		dw8250_quirks(p, data);
+ 
+ 	/* If the Busy Functionality is not implemented, don't handle it */
+ 	if (data->uart_16550_compatible)
+ 		p->handle_irq = NULL;
+ 
++	dw8250_setup_dma_filter(p, data);
++
+ 	if (!data->skip_autocfg)
+ 		dw8250_setup_port(p);
+ 
+-- 
+2.45.1.3035.g276e886db78b
 
-Click on "Logs: html" for the dmesg.
-
-regards,
-dan carpenter
-
-> 
-> diff --git a/arch/arm64/kvm/hyp/include/hyp/switch.h b/arch/arm64/kvm/hyp/include/hyp/switch.h
-> index f838a45665f26..cb57420a07de2 100644
-> --- a/arch/arm64/kvm/hyp/include/hyp/switch.h
-> +++ b/arch/arm64/kvm/hyp/include/hyp/switch.h
-> @@ -556,7 +556,7 @@ static bool kvm_handle_cntxct(struct kvm_vcpu *vcpu)
->  		return false;
->  	}
->  
-> -	val = compute_counter_value(ctxt);
-> +	val = compute_counter_value(kern_hyp_va(ctxt));
->  
->  	vcpu_set_reg(vcpu, kvm_vcpu_sys_get_rt(vcpu), val);
->  	__kvm_skip_instr(vcpu);
-> 
-> -- 
-> Without deviation from the norm, progress is not possible.
