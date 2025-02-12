@@ -1,133 +1,128 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E993420A5D1
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 11:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5B820B20B;
+	Wed, 12 Feb 2025 11:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739359392; cv=none; b=e+qqwB1Pr3JgYJSMcwnPDRshvTvmihFM67eNGRIxr8sKTRhLntuSylJxAW8ndLo3Y/re8Pdy9Ntild5fNljm7TccLIEX09PASVEtK1LKLYqiKYXp0wf616tnzUhw8K1QT7V8oU1VhuudHpqKxgi9rkOKccHzT0OHoJZ1oXFlf+k=
+	t=1739359394; cv=none; b=NPWzO0fAcDM2OntUYkbwGi35Lu+3QglYPWTECG57ROmW1Va3XkEhRouhP1m80zEzT1Cob8FgsmSIFRGPSAdyO8IWS/6M9RUPX9ULeYZxFu+xVYYmv9Xq2Zz6y0KO7dSGbOshPK3TSRJ3G+Qqc3ZHqVcz4Jd8RsvC6Rfw4DYbKrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739359392; c=relaxed/simple;
-	bh=/aaEg0GUs77SXJXwiTAWCor9c6mN7KhETo0EatnyqEY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lu3P8V4Iaj7lpCwPxy2yYKH+j844QvJLk/vEQ2tYoFAp4nweFO+2LuhBDJd1gI/B7cmBVN4d95oJwvV/ufUdeH3c8A/qAHUYytttiwewi2ISfGN4H2N1o+YzKnPFPbCZfLFMpGWVWo9e98WrO9Zd/YhOZol6y4cMx4o2tbti9LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vEPpvCej; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739359394; c=relaxed/simple;
+	bh=AFkdpmQGP5sZCinnR86xf7GsJoERsE6FIzmh5/b05Wc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VkWAS+w+HWvDkm4oCD6M+g0FqkQC2LO4rOJAXnA+5xIGvui43k5JxHpaBCY2P3/SrZlDX5zYrr4fDnd/ZCoZTOczZmK5/R2dk3K3LnEKKub5sRhiGoSZ+4fDkOmbEGbHJEuwiFvn9BOe93P9B8fNY1h1FtoKDVaAh4Lm4xmxDGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j9oYcWyE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vEPpvCej"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-308e9ff235bso30048771fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 03:23:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739359389; x=1739964189; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=e5mhd6DszF79mgTOhWslIzEoODnT/4x94Ab5tm+ZGKw=;
-        b=vEPpvCejOJJrF4KLy5brfmMXqEkb0YhyKBPfC2BqzC/1vfAGeHD2Y9d+OGmp31h4yo
-         ww5vgqeqDTtilp+O92HNiyOXLX5eBlBCxnX26rUzN63OIvI5iTwRwnlBmXUMWohhWACg
-         rdoPEsT3xhmFBSMwjKPL46exmW/6VoIzgmKKeTIyvw/vB3diGy4V0z48SiYu8b44fMrX
-         1AxZCKi1PUe7xJNqfMD6yfUJJglMZPkmDpeIXANhDXVEaaMz08PWdYSKMzMmvs8tJ+Pr
-         iCoNoBWkDMM4Gfq2/wSmSxYgsacmIQQjH5yzKq/MPmgtOLOI8jnefXkATXS/At9djvVH
-         It6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739359389; x=1739964189;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e5mhd6DszF79mgTOhWslIzEoODnT/4x94Ab5tm+ZGKw=;
-        b=Yt04ce/eSKyvX1DYfQGaY4ODsvz5Aj0lBEENG81lyt2plOisdw42pz5n3QF7fjxl2/
-         8ogQZnF4jlg/8f/zFg7W/P7fxAWv/OciNqQpCUoDTzyDDqZ2cExz9fzk0fpPg9+eHhct
-         kFoyTV5xFnKtuRyGebre8rg8ToPyuQEicAkUez+91EbZwQrx/CZ6lYWNv3QV5GFL4umM
-         nQDEJ4jzbmOaIpr59nHStIZXda0AHxOuu+YooXopX/VPcdlo2wacd4y+ul/HXmTlDCGD
-         suHDXTgyJxifIRXwYevyKmJuUBnnxR1IZr8HZ3L/jD+r44DzoLmb9h+utx5SvM6sQ9xB
-         9O0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVyHMCjuTR995BK2Vdsi0H6Nf5RL3M+Z7xwhwp2mKltpYSQzq/vzgP+L8X7XYiYUoX8ADTfeLtEisOaADc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLmNL+lhVpvo6LkcDB6CbWBCQ9tJBgsddPpwKiLDb0HZvVAkRB
-	DySCVqcHkdrHswqSel/FEfBT5zOfqXfeH1qFzPjMIHBV/wvd9pqKK0qJuFwy7ls=
-X-Gm-Gg: ASbGncsoB8WEgFZzeDjaYYfFLTrGKskwKJ9shvL4jGo/B671UxLSgd8KIy191W0g16R
-	8ST4GaPF4YKvpkkTKXNSEatCU4YrBvCpDweQCxnKJEwqANnGchVhrHe68Bkq1b2++y+0/MNkW+X
-	zPUkFFswLsoz/UGy0UZ0unrKEmbaePqrHtyNsEeJE3BcMqH3ydOBZmrGGqhBtfVn2/vNv5nxxo7
-	bNv2Qv3YHdcVpgImpnq8T4LXPtkTAqmAwMK87N4InmYDZmaovyCCEmcBLuU4eAdmUNr5FEPVnzy
-	q+xVwE/zYW1hHvV2Aj8poca9jg==
-X-Google-Smtp-Source: AGHT+IHTMqYXojqkTP6hLJE6s2yoQfyjlXS0zVkP4hZmvDjU6HV8U27+O3ADPsPzDGK4vKbkksnjiQ==
-X-Received: by 2002:a05:651c:19aa:b0:308:ffa1:88f8 with SMTP id 38308e7fff4ca-309036d733cmr10944651fa.23.1739359388991;
-        Wed, 12 Feb 2025 03:23:08 -0800 (PST)
-Received: from [192.168.1.140] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de1a6531sm18310511fa.45.2025.02.12.03.23.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 03:23:08 -0800 (PST)
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 12 Feb 2025 12:22:57 +0100
-Subject: [PATCH v4 03/31] ARM: entry: Skip ret_slow_syscall label
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j9oYcWyE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FD78C4CEEA;
+	Wed, 12 Feb 2025 11:23:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739359393;
+	bh=AFkdpmQGP5sZCinnR86xf7GsJoERsE6FIzmh5/b05Wc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=j9oYcWyET1Y99zTPzXgG1tUszc57+SXSP9vsTdJewDv42tUKYzpNHJs32gdtQGDyO
+	 znZM6aYzVP66470OQhaejv6lzBkCJZJXegPvQVkdWL8YUixxiAb0FR2V8axhCBt29p
+	 7kotXdoXw/0C9DMPmfX24b87QpgXMSy8zp9iPLZIa+gxS01rckXqrUBgKn/nZvg62E
+	 Y/7BEYPNhywmURoNgHmCeLYFSsAonZhz4/Z5W4SmvbXDcFff54/g+VnWmvt+5/E4/b
+	 DQOjhw91HW6tkkxnWzHRdtdcZoXSf8ZTz1WFP5FX6o70af6uXQmvluf5V9zN+LQPBn
+	 wNRnErW8CI+Rw==
+Message-ID: <3541c732-9c7a-4de9-b658-c194fd52a361@kernel.org>
+Date: Wed, 12 Feb 2025 11:23:09 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v3] bpftool: Check map name length when map
+ create
+To: Rong Tao <rtoax@foxmail.com>, andrii.nakryiko@gmail.com, ast@kernel.org,
+ daniel@iogearbox.net
+Cc: Rong Tao <rongtao@cestc.cn>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>,
+ "open list:BPF [TOOLING] (bpftool)" <bpf@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <tencent_AF066A426F591F977D2A73AF00A34A883808@qq.com>
+From: Quentin Monnet <qmo@kernel.org>
+Content-Language: en-GB
+In-Reply-To: <tencent_AF066A426F591F977D2A73AF00A34A883808@qq.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250212-arm-generic-entry-v4-3-a457ff0a61d6@linaro.org>
-References: <20250212-arm-generic-entry-v4-0-a457ff0a61d6@linaro.org>
-In-Reply-To: <20250212-arm-generic-entry-v4-0-a457ff0a61d6@linaro.org>
-To: Dmitry Vyukov <dvyukov@google.com>, Oleg Nesterov <oleg@redhat.com>, 
- Russell King <linux@armlinux.org.uk>, Kees Cook <kees@kernel.org>, 
- Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- "Paul E. McKenney" <paulmck@kernel.org>, 
- Jinjie Ruan <ruanjinjie@huawei.com>, Arnd Bergmann <arnd@arndb.de>, 
- Ard Biesheuvel <ardb@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.14.2
 
-Don't introduce this extra label anymore now that we have
-a clearly defined entry point for ret_to_user.
+2025-02-12 09:20 UTC+0800 ~ Rong Tao <rtoax@foxmail.com>
+> From: Rong Tao <rongtao@cestc.cn>
+> 
+> The size of struct bpf_map::name is BPF_OBJ_NAME_LEN (16).
+> 
+> bpf(2) {
+>   map_create() {
+>     bpf_obj_name_cpy(map->name, attr->map_name, sizeof(attr->map_name));
+>   }
+> }
+> 
+> When specifying a map name using bpftool map create name, no error is
+> reported if the name length is greater than 15.
+> 
+>     $ sudo bpftool map create /sys/fs/bpf/12345678901234567890 \
+>         type array key 4 value 4 entries 5 name 12345678901234567890
+> 
+> Users will think that 12345678901234567890 is legal, but this name cannot
+> be used to index a map.
+> 
+>     $ sudo bpftool map show name 12345678901234567890
+>     Error: can't parse name
+> 
+>     $ sudo bpftool map show
+>     ...
+>     1249: array  name 123456789012345  flags 0x0
+>     	key 4B  value 4B  max_entries 5  memlock 304B
+> 
+>     $ sudo bpftool map show name 123456789012345
+>     1249: array  name 123456789012345  flags 0x0
+>     	key 4B  value 4B  max_entries 5  memlock 304B
+> 
+> The map name provided in the command line is truncated, but no warning is
+> reported. This submission checks the length of the map name.
+> 
+> Reviewed-by: Quentin Monnet <qmo@kernel.org>
+> Signed-off-by: Rong Tao <rongtao@cestc.cn>
+> ---
+> v2: https://lore.kernel.org/lkml/tencent_26592A2BAF08A3A688A50600421559929708@qq.com/
+> v1: https://lore.kernel.org/lkml/tencent_1C4444032C2188ACD04B4995B0D78F510607@qq.com/
+> ---
+>  tools/bpf/bpftool/map.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
+> index ed4a9bd82931..9617e64d3d11 100644
+> --- a/tools/bpf/bpftool/map.c
+> +++ b/tools/bpf/bpftool/map.c
+> @@ -1270,6 +1270,10 @@ static int do_create(int argc, char **argv)
+>  		} else if (is_prefix(*argv, "name")) {
+>  			NEXT_ARG();
+>  			map_name = GET_ARG();
+> +			if (strlen(map_name) > BPF_OBJ_NAME_LEN - 1) {
+> +				p_info("Warning: map name is longer than %d characters, it will be truncated.\n",
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- arch/arm/kernel/entry-common.S | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
-index f379c852dcb72fa5e960bba5621cc2152f0df0d3..2f93c2f6d5b8fdf6aaf3dda0192bde144fcf238d 100644
---- a/arch/arm/kernel/entry-common.S
-+++ b/arch/arm/kernel/entry-common.S
-@@ -102,7 +102,6 @@ ENDPROC(ret_fast_syscall)
-  * do_work_pending() will update this state if necessary.
-  */
- ENTRY(ret_to_user)
--ret_slow_syscall:
- #if IS_ENABLED(CONFIG_DEBUG_RSEQ)
- 	/* do_rseq_syscall needs interrupts enabled. */
- 	enable_irq_notrace			@ enable interrupts
-@@ -136,7 +135,7 @@ ENTRY(ret_from_fork)
- 	badrne	lr, 1f
- 	retne	r5
- 1:	get_thread_info tsk
--	b	ret_slow_syscall
-+	b	ret_to_user
- ENDPROC(ret_from_fork)
- 
- /*=============================================================================
-@@ -310,13 +309,13 @@ __sys_trace_return_nosave:
- 	enable_irq_notrace
- 	mov	r0, sp
- 	bl	syscall_trace_exit
--	b	ret_slow_syscall
-+	b	ret_to_user
- 
- __sys_trace_return:
- 	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
- 	mov	r0, sp
- 	bl	syscall_trace_exit
--	b	ret_slow_syscall
-+	b	ret_to_user
- 
- 	.macro	syscall_table_start, sym
- 	.equ	__sys_nr, 0
+Change looks mostly good, thanks! Two small things to address with this
+message string:
 
--- 
-2.48.1
+- Please remove the trailing '\n', p_info() adds it already.
+- Please replace %d with %u. The value is unsigned, and we've merged a
+commit to clean these up recently, 17c3dc50294b ("bpftool: Using the
+right format specifiers").
+
+
+> +				      BPF_OBJ_NAME_LEN - 1);
+> +			}
+>  		} else if (is_prefix(*argv, "key")) {
+>  			if (parse_u32_arg(&argc, &argv, &key_size,
+>  					  "key size"))
 
