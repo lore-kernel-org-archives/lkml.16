@@ -1,64 +1,105 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BD3209F5D
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 11:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6351FBCAE;
+	Wed, 12 Feb 2025 11:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739358004; cv=none; b=roQRJn8Qq+X6WymIKjlO8qLlE2eNgpzMf95fv6guguFky0vN0T+DZM4sVRDQlzo0zZok9beO/53Ci77OitEBAyDASODMogqMpvGYigtoW8EhXzmQJEi7QPo/IHRQpOtOuufkOAoa7Q45QiV/+f5u8dML+Mk9kamfsjIlxZK6MOc=
+	t=1739358039; cv=none; b=Doc2jVrncPurznRgC+D/8+WkZNnoihIoTOGMgGXkCzhVI9gYccAIQUNmDNwkYSoHcriUE3KbXpqqwHjHXR/Np14eddEHwj9g9gCXo+ro6eBOsHo6jbfpwJq7pYB0tFEqa76xt8kxSmV1TorT1u5KuCrq16nTGgcXKDZWcOOFAwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739358004; c=relaxed/simple;
-	bh=QxEyctiD+jx1ThZEhRm2KYh8bXdW+7H8Sil5Jz9kbog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rwTpLv5f4eiVTM0PTo1aH9jpTlTiaIQZuU31lnvC8jekELqXJdKsNTAtG+A3qMBxy5OdCkZKOodt7JwVBKmgbZQ1QNm5JiToTLfV/Z5fxXFbY5DnvRNyOIUWL8I4Tm3VCB9Dp1OJDSXFBP9k+U4BuQOk343casyPJgIZQ+8JhNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R/UgK33K; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1739358039; c=relaxed/simple;
+	bh=E804ZwOiCTNhddYYVX+ou/FxeDAYreu1N4qFP54OhB8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TZhdhIOsnlBa81tAXeVyFVmt7juMAuX2+nc3spGHfXMbq2Jl/3WEV0Yt54aRNwas4BlLvXjVLb2zx3QMVyDetxdT92BsZJ+Py8kxDmGqcQP8t16O37/og08vqxV5XVfNiPxHdMqg041HmVhys74X3g7vOTaLMYNxVIZ8hZ5lvcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXbD4JaU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R/UgK33K"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=QxEyctiD+jx1ThZEhRm2KYh8bXdW+7H8Sil5Jz9kbog=; b=R/UgK33K5Zihhun2dy1pRJQ7Vt
-	RmhmlwVl0UXzulM2BYrRhZstuzTTkxWUMSgUc99MX0HolERRxw5Cv/7SPmFyzbt6IkfkcSTKaONu3
-	pqx3OjULsH2HskAQ+wPjgnFjv0he3mL2oj6HLpESvne4K/RRD8KOxPL+pDcvgzlSASIqyHdcUJXlT
-	uYMCJFpHxO9rg58OTczStH+kvE1nYURufei3ecfJzW9GrC/N+OXkDdj6voUucz05APvP4QqD9aLun
-	4X7Kotq+ZfghXlEtco9qeQR+0rDUqya8ns0aykP5io8GYVqA9UK7hAWkq27661obiwNyeyA5wzr8g
-	KsMh8VDw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tiAT4-00000004RTZ-3FdK;
-	Wed, 12 Feb 2025 10:59:46 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E7FF43003E1; Wed, 12 Feb 2025 11:59:45 +0100 (CET)
-Date: Wed, 12 Feb 2025 11:59:45 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: Rik van Riel <riel@surriel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, bp@alien8.de,
-	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
-	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
-	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com,
-	mhklinux@outlook.com, andrew.cooper3@citrix.com
-Subject: Re: [PATCH v10 00/12] AMD broadcast TLB invalidation
-Message-ID: <20250212105945.GG19118@noisy.programming.kicks-ass.net>
-References: <20250211210823.242681-1-riel@surriel.com>
- <20250212102349.GE19118@noisy.programming.kicks-ass.net>
- <CA+i-1C0Sbgkyfan=srXL8dRrqaLoT1g1F5tZesC1rrh6v7L68w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXbD4JaU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEBC8C4CEDF;
+	Wed, 12 Feb 2025 11:00:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739358038;
+	bh=E804ZwOiCTNhddYYVX+ou/FxeDAYreu1N4qFP54OhB8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZXbD4JaUtuLUGXRJYWJ7d6a9x3V5nV6A2Q82MMjQG8tC0agfnDCKw8w1TJfw5naDB
+	 6mpPssTUBo25aOeunMqtZR2ygUDv+aH3XkbOY2N2e788mwfvL8asQD2kc0QJbfqRjw
+	 8R8Dpvj6ncLzxCaned8JhTIXX3SQFCye+hIAYQv8+HLxbWE39EbQd6ZPlxZ90rITJ0
+	 dGcXnnwo4PVyQM4CugO0b7rX7q5nFIIPZnAdtoXGQG0LorbzipY/Ti37CKHzfTlcXN
+	 qY4lJt3jbHvWqpmFvmsGu0itHZdNhYe7/8qMTtZBSiuMsqZqSZsCAHY+AwKmcdf2Bj
+	 gc4ZLrPT95wJw==
+Message-ID: <97fd1bbb-1261-4af5-9321-27353547dbf7@kernel.org>
+Date: Wed, 12 Feb 2025 11:00:34 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+i-1C0Sbgkyfan=srXL8dRrqaLoT1g1F5tZesC1rrh6v7L68w@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next] bpftool: bash-completion: Add nopasswd sudo
+ prefix for bpftool
+To: Rong Tao <rtoax@foxmail.com>, ast@kernel.org, daniel@iogearbox.net,
+ andrii@kernel.org
+Cc: rongtao@cest.ccn, Rong Tao <rongtao@cestc.cn>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Tao Chen <chen.dylane@gmail.com>,
+ Mykyta Yatsenko <yatsenko@meta.com>, Daniel Xu <dxu@dxuuu.xyz>,
+ "open list:BPF [TOOLING] (bpftool)" <bpf@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <tencent_515567355C0AA854BDA68C3A219A18040B0A@qq.com>
+From: Quentin Monnet <qmo@kernel.org>
+Content-Language: en-GB
+In-Reply-To: <tencent_515567355C0AA854BDA68C3A219A18040B0A@qq.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 12, 2025 at 11:44:01AM +0100, Brendan Jackman wrote:
-> They apply to 60675d4ca1ef0 ("Merge branch 'linus' into x86/mm, to
-> pick up fixes").
+2025-02-12 18:14 UTC+0800 ~ Rong Tao <rtoax@foxmail.com>
+> From: Rong Tao <rongtao@cestc.cn>
+> 
+> In the bpftool script of bash-completion, many bpftool commands require
+> superuser privileges to execute. Otherwise, Operation not permission will
+> be displayed. Here, we check whether ordinary users are exempt from
+> entering the sudo password. If so, we need to add the sudo prefix to the
+> bpftool command to be executed. In this way, we can obtain the correct
+> command completion content instead of the wrong one.
+> 
+> For example, when updating array_of_maps, the wrong 'hex' is completed:
+> 
+>     $ sudo bpftool map update name arr_maps key 0 0 0 0 value [tab]
+>     $ sudo bpftool map update name arr_maps key 0 0 0 0 value hex
+> 
+> However, what we need is "id name pinned". Similarly, there is the same
+> problem in getting the map 'name' and 'id':
+> 
+>     $ sudo bpftool map show name [tab] < get nothing
+>     $ sudo bpftool map show id [tab]   < get nothing
+> 
+> This commit fixes the issue.
+> 
+>     $ sudo bpftool map update name arr_maps key 0 0 0 0 value [tab]
+>     id      name    pinned
+> 
+>     $ sudo bpftool map show name
+>     arr_maps         cgroup_hash      inner_arr1       inner_arr2
+> 
+>     $ sudo bpftool map show id
+>     11    1383  4091  4096
+> 
+> Signed-off-by: Rong Tao <rongtao@cestc.cn>
 
-Why some random commit? Shouldn't this be against a sensible branch or
-something, like perhaps tip/x86/mm ?
+Hi, thanks for the patch.
+
+I agree it's annoying to have a partially-working completion for
+non-root users, however, I don't feel very comfortable introducing calls
+to "sudo" in bash completion, without the user noticing. For what it's
+worth, I searched other bash completion files (from
+https://github.com/scop/bash-completion/) and I can't find any of them
+running sudo to help complete commands, so it doesn't seem to be
+something usual in completion. I think I'd rather keep the current state
+(or fix the first example to have the right keywords displayed but
+without running sudo).
+
+Quentin
