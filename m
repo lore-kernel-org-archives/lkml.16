@@ -1,221 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814AF255E27;
-	Wed, 12 Feb 2025 16:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D794520C49B;
+	Wed, 12 Feb 2025 16:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739379223; cv=none; b=cWY4a2wr5EFQimOvmkYgOd6dJoO+lFc+7HkYQea0EqM6RN3Bh9TysgGzA656RMzrXC+0Fj8LghpCl5ez/Mh2ivjUolZlbMURYL731ZuXd5vo/Aaunkf7a7pOAeW/g7NscY5PjBZOocnQFM5//CR5I/YGKNgCjFMpzBQiebFGmAs=
+	t=1739379288; cv=none; b=OpqlPatJkrXOFG1UKgNKre8puL4CTFoRd1J00B69Vciee7hEOZ0hn1czsz6R/scb1CtapaaktYEpKZcc45ke1KwH6GYmdsdyOOhUgv8vDPYiDr4EZSKBLfj064lTgsfdhXqyBqgZvX+TtHNYFLij4xMoBlJlgUYX4AegU7YtRXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739379223; c=relaxed/simple;
-	bh=mr8GjH+15lBi8VHein+7pK0kYx+HbXlrW0PLl41bbgI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tKGm7qap8Rk2TV33crZhCTR+umATADhH2vyJTxNHESduEMr7094z+8v9FCKEKhueHaB5LpDY2fhHx7pujhEOx66xbiI4U9uvCGR3M/BeO1WfmEgstzcHuWLaSSXW5uap9RdcHNXFQ+BsOZaSj9ZSGy7IjTSwJuj35VKr9YnXRbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHsSCn8X; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iHsSCn8X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B51FC4CEDF;
-	Wed, 12 Feb 2025 16:53:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739379221;
-	bh=mr8GjH+15lBi8VHein+7pK0kYx+HbXlrW0PLl41bbgI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iHsSCn8XJSMVzS2R2YduVzicWLVtjzBlcvyemeAYYOK5ilrQ92vm7KYHmjDSgKUVB
-	 FsBw7NG5juZw7q/grxpAJvQDYrkN+qugXz5DzHvaoEdlC/PxEyEJLKRZiWCZSpQz5C
-	 8oejDzd6WHTm5IYKdV3TRQPGthgTZ3HAkZ0gr9DiWP23J4i6X33yE5kz19UWvwR6XI
-	 KDNH4JVmo2ybhup8V3m/9915Bc/LxvOlcG8lRd4Rox2ybvjIQf4w/sx0kKtJjYfPqY
-	 LRMkg1D6iO87JL7blAmgFPzIzOPOUm17LhafOwYmgljLykwFDV423qXJypW7kVDgJO
-	 3baJSHEdDOv3A==
-Message-ID: <76c991dd-f99b-497c-9d68-9e08541be4f0@kernel.org>
-Date: Wed, 12 Feb 2025 17:53:34 +0100
+	s=arc-20240116; t=1739379288; c=relaxed/simple;
+	bh=GuygkFi22sYK5b+cU+tCC++IxONC5HFqPoaVnz3mWM8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=idIWd3yry4CU2mK940Zhe/lLyISPbvVtGxN5vFLEeMxTqJmqAfo+KVcEYW8AqHecelxdULENUEPshMSGoKTFQzOJ+p78+2zz8UYCHSPQJ+GrPWuONPArQIY+zTeo7bCRvj4i3X52Kt6Fz7kZf5nldSzo/e69Q0VUS6aWwsiP6j4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YtPV61hYCz6L5Lh;
+	Thu, 13 Feb 2025 00:51:42 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id CDF601400CB;
+	Thu, 13 Feb 2025 00:54:42 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 12 Feb
+ 2025 17:54:42 +0100
+Date: Wed, 12 Feb 2025 16:54:40 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Zaid Alali <zaidal@os.amperecomputing.com>
+CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>, <robert.moore@intel.com>,
+	<dan.j.williams@intel.com>, <Benjamin.Cheatham@amd.com>,
+	<Avadhut.Naik@amd.com>, <viro@zeniv.linux.org.uk>, <arnd@arndb.de>,
+	<ira.weiny@intel.com>, <dave.jiang@intel.com>,
+	<sthanneeru.opensrc@micron.com>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <acpica-devel@lists.linux.dev>
+Subject: Re: [PATCH v3 7/9] ACPI: APEI: EINJ: Add debugfs files for EINJv2
+ support
+Message-ID: <20250212165440.0000728b@huawei.com>
+In-Reply-To: <20250210183705.1114624-8-zaidal@os.amperecomputing.com>
+References: <20250210183705.1114624-1-zaidal@os.amperecomputing.com>
+	<20250210183705.1114624-8-zaidal@os.amperecomputing.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] drivers: i3c: Add driver for NXP P3H2x4x i3c-hub
- device
-To: Aman Kumar Pandey <aman.kumarpandey@nxp.com>,
- linux-kernel@vger.kernel.org, linux-i3c@lists.infradead.org,
- alexandre.belloni@bootlin.com, krzk+dt@kernel.org, robh@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org
-Cc: vikash.bansal@nxp.com, priyanka.jain@nxp.com,
- shashank.rebbapragada@nxp.com, Frank.Li@nxp.com
-References: <20250212132227.1348374-1-aman.kumarpandey@nxp.com>
- <20250212132227.1348374-2-aman.kumarpandey@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250212132227.1348374-2-aman.kumarpandey@nxp.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 12/02/2025 14:22, Aman Kumar Pandey wrote:
-> +
-> +static void p3h2x4x_of_get_tp_dt_conf(struct device *dev,
-> +					const struct device_node *node)
-> +{
-> +	struct p3h2x4x *priv = dev_get_drvdata(dev);
-> +	struct device_node *dev_node;
-> +	int tp_port;
-> +
-> +	for_each_available_child_of_node(node, dev_node) {
-> +		if (!dev_node->full_name ||
-> +			(sscanf(dev_node->full_name, "target-port@%d", &tp_port) != 1))
+On Mon, 10 Feb 2025 10:37:03 -0800
+Zaid Alali <zaidal@os.amperecomputing.com> wrote:
 
-NAK, undocumented ABI. Also weird code, why are you parsing DT structure
-manually? Use proper functions to get the reg.
+> Create a debugfs blob file to be used for reading the user
+> input for the component array. EINJv2 enables users to inject
+> errors to multiple components/devices at the same time using
+> component array.
+> 
+> Signed-off-by: Zaid Alali <zaidal@os.amperecomputing.com>
+> ---
+>  drivers/acpi/apei/einj-core.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
+> index c604aa875644..40ebdbc4961f 100644
+> --- a/drivers/acpi/apei/einj-core.c
+> +++ b/drivers/acpi/apei/einj-core.c
+> @@ -33,6 +33,7 @@
+>  #define SLEEP_UNIT_MAX		5000			/* 5ms */
+>  /* Firmware should respond within 1 seconds */
+>  #define FIRMWARE_TIMEOUT	(1 * USEC_PER_SEC)
+> +#define COMP_ARR_SIZE		1024
+>  #define ACPI65_EINJV2_SUPP	BIT(30)
+>  #define ACPI5_VENDOR_BIT	BIT(31)
+>  #define MEM_ERROR_MASK		(ACPI_EINJ_MEMORY_CORRECTABLE | \
+> @@ -107,6 +108,9 @@ static struct debugfs_blob_wrapper vendor_blob;
+>  static struct debugfs_blob_wrapper vendor_errors;
+>  static char vendor_dev[64];
+>  
+> +static struct debugfs_blob_wrapper einjv2_component_arr;
+> +static u64 component_count;
+> +static void *user_input;
+>  static u32 available_error_type;
+>  static u32 available_error_type_v2;
+>  
+> @@ -892,6 +896,19 @@ static int __init einj_probe(struct platform_device *pdev)
+>  				   &error_param4);
+>  		debugfs_create_x32("notrigger", S_IRUSR | S_IWUSR,
+>  				   einj_debug_dir, &notrigger);
+> +		if (available_error_type & ACPI65_EINJV2_SUPP) {
+> +			debugfs_create_x64("einjv2_component_count", S_IRUSR | S_IWUSR,
+> +					einj_debug_dir,	&component_count);
+> +			user_input = kzalloc(COMP_ARR_SIZE, GFP_KERNEL);
+> +			if (!user_input) {
+> +				rc = -ENOMEM;
+> +				goto err_release;
+I think you need a new label as need to undo a few more things.
+At least call apei_exec_post_unmap_gars() probably given it is called
+in the remove function.
 
-
-
-> +			continue;
-> +
-> +		if (tp_port < P3H2x4x_TP_MAX_COUNT) {
-> +			priv->tp_bus[tp_port].dt_available = true;
-> +			priv->tp_bus[tp_port].of_node = dev_node;
-> +			priv->tp_bus[tp_port].tp_mask = BIT(tp_port);
-> +			priv->tp_bus[tp_port].priv = priv;
-> +			priv->tp_bus[tp_port].tp_port = tp_port;
+> +			}
+> +			einjv2_component_arr.data = user_input;
+> +			einjv2_component_arr.size = COMP_ARR_SIZE;
+> +			debugfs_create_blob("einjv2_component_array", S_IRUSR | S_IWUSR,
+> +					einj_debug_dir, &einjv2_component_arr);
 > +		}
-> +	}
-> +}
-> +
-> +/* return true when backend node exist */
-> +static bool p3h2x4x_is_backend_node_exist(int port, struct p3h2x4x *priv, u32 addr)
-> +{
-> +	struct smbus_device *backend = NULL;
-> +
-> +	list_for_each_entry(backend,
-> +			&priv->tp_bus[port].tp_device_entry, list) {
-> +		if (backend->addr == addr)
-> +			return true;
-> +	}
-> +	return false;
-> +}
-> +
-> +static int p3h2x4x_read_backend_from_p3h2x4x_dts(struct device_node *i3c_node_target,
-> +					struct p3h2x4x *priv)
-> +{
-> +	struct device_node *i3c_node_tp;
-> +	const char *compatible;
-> +	int tp_port, ret;
-> +	u32 addr_dts;
-> +	struct smbus_device *backend;
-> +
-> +	if (sscanf(i3c_node_target->full_name, "target-port@%d", &tp_port) == 0)
-> +		return -EINVAL;
-> +
-> +	if (tp_port > P3H2x4x_TP_MAX_COUNT)
-> +		return -ERANGE;
-> +
-> +	if (tp_port < 0)
-> +		return -EINVAL;
-> +
-> +	INIT_LIST_HEAD(&priv->tp_bus[tp_port].tp_device_entry);
-> +
-> +	if (priv->settings.tp[tp_port].mode == P3H2x4x_TP_MODE_I3C)
-> +		return 0;
-> +
-> +	for_each_available_child_of_node(i3c_node_target, i3c_node_tp) {
-> +
-> +		ret = of_property_read_u32(i3c_node_tp, "reg", &addr_dts);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if (p3h2x4x_is_backend_node_exist(tp_port, priv, addr_dts))
-> +			continue;
-> +
-> +		ret = of_property_read_string(i3c_node_tp, "compatible", &compatible);
-> +		if (ret)
-> +			return ret;
-> +
-> +		backend = kzalloc(sizeof(*backend), GFP_KERNEL);
-> +		if (!backend)
-> +			return -ENOMEM;
-> +
-> +		backend->addr = addr_dts;
-> +		backend->compatible = compatible;
-> +		backend->tp_device_dt_node = i3c_node_tp;
-> +		backend->client = NULL;
-> +
-> +		list_add(&backend->list,
-> +			&priv->tp_bus[tp_port].tp_device_entry);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void p3h2x4x_parse_dt_tp(struct device *dev,
-> +				const struct device_node *i3c_node_hub,
-> +				struct p3h2x4x *priv)
-> +{
-> +	struct device_node *i3c_node_target;
-> +	int ret;
-> +
-> +	for_each_available_child_of_node(i3c_node_hub, i3c_node_target) {
-> +		if (!strcmp(i3c_node_target->name, "target-port")) {
-> +			ret = p3h2x4x_read_backend_from_p3h2x4x_dts(i3c_node_target, priv);
-> +			if (ret)
-> +				dev_err(dev, "DTS entry invalid - error %d", ret);
-> +		}
-> +	}
-> +}
-> +
-> +static int p3h2x4x_get_tp_local_device_dt_setting(struct device *dev,
-> +					const struct device_node *node, u32 id)
-> +{
-> +	u8 i;
-> +	u32 local_dev_count, local_dev;
-> +	struct p3h2x4x *priv = dev_get_drvdata(dev);
-> +
-> +	if (!of_get_property(node, "local_dev", &local_dev_count))
+>  	}
+>  
+>  	if (vendor_dev[0]) {
+> @@ -941,6 +958,7 @@ static void __exit einj_remove(struct platform_device *pdev)
+>  	apei_resources_fini(&einj_resources);
+>  	debugfs_remove_recursive(einj_debug_dir);
+>  	acpi_put_table((struct acpi_table_header *)einj_tab);
+> +	kfree(user_input);
+Should be place din equivalent location of where you allocate it in probe.
+So probably before einj_exec_ctx_init()
 
-Oh no, read DTS conding style before upstreaming such code.
+Whilst it may make no actual difference a clean reverse order
+is much easier to review as any exception can be easily spotted
+and typically should have a comment on why the order is different.
 
+>  }
+>  
+>  static struct platform_device *einj_dev;
 
-Best regards,
-Krzysztof
