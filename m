@@ -1,100 +1,204 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9325420896E;
-	Wed, 12 Feb 2025 10:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365121FCFF2
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 10:47:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739357086; cv=none; b=X0E0qTCIPf/cxZMVzWqSEoxVbsoihCgq/Dv7QkSeCiIG4Cfcs2Fgqm3E8sM9iU1Ci1PC2on+bt+I+cnlN5L55Lq/czeQ8SJbM2GM4eWGPuhvrH09jmZc4tS+AR7vzJxcZGa1ZioxYJVvjxIOYOat2GIGSVD5pRh9KDIykYJ4CZ8=
+	t=1739357249; cv=none; b=i8XF1apbYBi/ZDiGdywZ/p+hq7b2dLTOH/w0tz0pdwtwrcDoavarffvqu1PB84YEkbImtBsi22Gy2Uz0shI8s717uVk49uB2OULPvOB7bxxaC/izVvgP1CYC2myFWGkgoF3P/qKwb3KDgWCmpqVAu5Z0x5z+94Njnrlffxt7/7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739357086; c=relaxed/simple;
-	bh=qVVPJPtnqsJdp2z+AfZj8jLWGGvu1Agn7BuY6aOLCS4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t3wvUk7Zj/95q6JbisDHEZgM/VBaFz2vjlZahe4V8pELTnz2gTT4B+dYUZPp8pKbO4N+SCNKEV3BCHux+uYkwncoFg90s5jbkMcoHzDCe2QWV8vnCXk49XNf2McNlNc58mQ7rtbbUya2Dp37dfEMbPZrUqr2J+8lSswWqGRKFqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0147F12FC;
-	Wed, 12 Feb 2025 02:45:04 -0800 (PST)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5E1E3F6A8;
-	Wed, 12 Feb 2025 02:44:40 -0800 (PST)
-Date: Wed, 12 Feb 2025 10:44:37 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	<arm-scmi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-rtc@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 4/4] rtc: imx-sm-bbm: Support multiple RTCs
-Message-ID: <Z6x7lemv2y8iMZZA@bogus>
-References: <20250120-rtc-v1-0-08c50830bac9@nxp.com>
- <20250120-rtc-v1-4-08c50830bac9@nxp.com>
- <Z6uCWK8jMTP7wInM@bogus>
- <20250212064117.GC15796@localhost.localdomain>
+	s=arc-20240116; t=1739357249; c=relaxed/simple;
+	bh=lktNSrHADcrlJcpv1LVG3T/72KlRRffskbQB21l2VR4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=kn9EGpdZy9pluryGW2xk2/fzFaG2CLITHxOIgbiilYfukW4xGltESvSs8cbdufBLaeTfjSUwbObbTaj+8tEyFj8YJpizQdkEpWXIGFua5yHNNforD8oKyQ9tjq55tkQfKkS4RbsmGMauRnTNglQrIjgkk8nU7oXNCFynKZzmU1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d054d79dacso112386335ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 02:47:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739357246; x=1739962046;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e1v6IWlc3XiSaFeDTotE3yjGY2oJ++LVh7lE4zelYMc=;
+        b=KRKfUn5TqIEwmty/EVXzJmsmd/oJZ0OsTKbVLlLOiWY1tDa3ESoucFhCCDaLhgl0+a
+         YBGjeuJB0ihRZU7UDPz+LafKwqUfbajJH2LcfFQvA81FV1ZsUX4zoVagrzddj92/Il4z
+         9f1bX7agKfA6wlPWPiEFQytKhDeF96kh17nCk0fnYHxH0/88z6+glW4ZysZsxPzF6pKz
+         7cvT5LwOVDb0dZx9pCLKRauTa9EtMD9Qvxe5MLzc/+cm1sWCj3GuOjZLZPYtdYc5oe/t
+         3hhfvlexqID2c7z6rbRbv2k8CosxhO8oGLCauOUEkve6asXKnu0NceXEVMk6RVtDXPwt
+         DnnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXzlHJpFhyJgFPkaNBmFIrFR8lfyGx16lkCiK5Ug15uH3MEVB/+ysEeELPWUbKQQh0tldBoFKg+LxGyIeY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ6dkNQsbknmRgUPa/IztyZKC8tvJMfKzUqwR/Cru8QcEKjszu
+	4uxGqVSELOfDL6Q1JTB+3Rc1VqKBu0ZM0U23djQYmv0kkP5aiUN427726DvEHV9LsFjaWd5J7pl
+	vcP/IPxWoxlQbdf233JN5TrI1mQpfxEYhsaN6EEWDkEQgrdWPaucQmUw=
+X-Google-Smtp-Source: AGHT+IHPlKtgX0CpACwGTYhnGnVAoCBHYrvZkoxo2Fhep0cNORjv2MZjQxTQCDoedwMSRClJ35xAvxQUFzwLndI55qqDtAGG386q
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250212064117.GC15796@localhost.localdomain>
+X-Received: by 2002:a05:6e02:1445:b0:3a7:88f2:cfa9 with SMTP id
+ e9e14a558f8ab-3d17d0aaff3mr16688825ab.11.1739357246368; Wed, 12 Feb 2025
+ 02:47:26 -0800 (PST)
+Date: Wed, 12 Feb 2025 02:47:26 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ac7c3e.050a0220.110943.004b.GAE@google.com>
+Subject: [syzbot] [bcachefs?] WARNING in bch2_btree_node_mem_alloc
+From: syzbot <syzbot+64fe1897190293e35923@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Feb 12, 2025 at 02:41:17PM +0800, Peng Fan wrote:
-> On Tue, Feb 11, 2025 at 05:01:12PM +0000, Sudeep Holla wrote:
-> >On Mon, Jan 20, 2025 at 10:25:36AM +0800, Peng Fan (OSS) wrote:
-> >> From: Peng Fan <peng.fan@nxp.com>
-> >> 
-> >> i.MX95 EVK has two RTCs exported by SCMI BBM protocol. Current driver
-> >> only enables the 1st RTC inside BBNSM module, leaving the board RTC
-> >> not used by Linux.
-> >> 
-> >> To use the 2nd RTC, use 'bbm_info' to get the number of RTCs, register
-> >> them all, and set 'bbnsm' as private info for rtc device to know which
-> >> RTC it is when using rtc_class_ops to access rtc device.
-> >> 
-> >> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> >> ---
-> >>  drivers/rtc/rtc-imx-sm-bbm.c | 69 +++++++++++++++++++++++++++-----------------
-> >>  1 file changed, 43 insertions(+), 26 deletions(-)
-> >> 
-> >> diff --git a/drivers/rtc/rtc-imx-sm-bbm.c b/drivers/rtc/rtc-imx-sm-bbm.c
-> >> index daa472be7c80697aa3cd3432eccef0c877e4c378..a29b30555d0c0581ecaa8b79760209dc780d2f0e 100644
-> >> --- a/drivers/rtc/rtc-imx-sm-bbm.c
-> >> +++ b/drivers/rtc/rtc-imx-sm-bbm.c
-> >> @@ -15,16 +15,18 @@ struct scmi_imx_bbm {
-> >>  	struct rtc_device *rtc_dev;
-> >>  	struct scmi_protocol_handle *ph;
-> >>  	struct notifier_block nb;
-> >> +	u32 bbm_rtc_id;
-> >
-> >Is it not same as rtc_dev->id ? Why do you need a copy in this wrapper/
-> >container structure ?
-> 
-> In theroy yes. The current system I use that all RTCs are managed by BBM
-> protocol. So only two RTCs are registered.
-> 
-> In case there is other RTCs that not managed BBM, the rtc_dev->id
-> will not be equal to bbm_rtc_id.
-> 
-> For example RTC1 is directly managed by Linux, RTC0 is managed by BBM.
-> 
-> The RTC1 is probed first, so its rtc_dev->id is 0. But from BBM protocol,
-> the RTC0 use id 0 for BBM SCMI server to handle the RTC0.
-> 
-> I maybe overthinking here. But to avoid potential issues, I would like to
-> keep bbm_rtc_id.
-> 
+Hello,
 
-Fair enough, I didn't think of this mix(firmware controlled RTC + Linux
-controlled ones).
+syzbot found the following issue on:
 
---
-Regards,
-Sudeep
+HEAD commit:    7ee983c850b4 Merge tag 'drm-fixes-2025-02-08' of https://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1081cb18580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
+dashboard link: https://syzkaller.appspot.com/bug?extid=64fe1897190293e35923
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-7ee983c8.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/f2f78699fc41/vmlinux-7ee983c8.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ca55e6e8dd01/bzImage-7ee983c8.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+64fe1897190293e35923@syzkaller.appspotmail.com
+
+error reading btree root btree=extents level=0: btree_node_read_error, fixing
+invalid bkey in btree_node btree=inodes level=0: u64s 16 type inode_v3 0:4096:4294967281 len 0 ver 0: (unpack error)
+  invalid variable length fields: delete?, fixing
+invalid bkey in btree_node btree=inodes level=0: u64s 18 type inode_v3 0:4098:U32_MAX len 0 ver 0: (unpack error)
+  invalid variable length fields: delete?, fixing
+bcachefs (loop0): error validating btree node on loop0 at btree subvolumes level 0/0
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq 5b940 written 0 min_key POS_MIN durability: 1 ptr: 0:35:0 gen 0  
+  node offset 0/0: got wrong btree node: got
+  btree=subvolumes level=0 seq c0bef60d07ceb940 1
+  min: POS_MIN
+  max: SPOS_MAX
+bcachefs (loop0): flagging btree subvolumes lost data
+error reading btree root btree=subvolumes level=0: btree_node_read_error, fixing
+bcachefs (loop0): scan_for_btree_nodes...
+bcachefs (loop0): btree node scan found 2 nodes after overwrites
+ done
+bcachefs (loop0): check_topology...
+bcachefs (loop0): btree root extents unreadable, must recover from scan
+no nodes found for btree extents, continuing
+bcachefs (loop0): btree root subvolumes unreadable, must recover from scan
+no nodes found for btree subvolumes, continuing
+ done
+bcachefs (loop0): accounting_read... done
+bcachefs (loop0): alloc_read... done
+bcachefs (loop0): stripes_read... done
+bcachefs (loop0): snapshots_read... done
+bcachefs (loop0): check_allocations...
+btree ptr not marked in member info btree allocated bitmap
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq ac62141f8dc7e261 written 24 min_key POS_MIN durability: 1 ptr: 0:26:0 gen 0, fixing
+btree ptr not marked in member info btree allocated bitmap
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq 7589ab5e0c11cc7a written 24 min_key POS_MIN durability: 1 ptr: 0:38:0 gen 0, fixing
+btree ptr not marked in member info btree allocated bitmap
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq 9aa2895aefce4bdf written 24 min_key POS_MIN durability: 1 ptr: 0:41:0 gen 0, fixing
+btree ptr not marked in member info btree allocated bitmap
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq ebb8d5a9e3463bdb written 16 min_key POS_MIN durability: 1 ptr: 0:32:0 gen 0, fixing
+btree ptr not marked in member info btree allocated bitmap
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq e81e1ed936acf3df written 32 min_key POS_MIN durability: 1 ptr: 0:29:0 gen 0, fixing
+bucket 0:10 gen 0 has wrong data_type: got free, should be journal, fixing
+bucket 0:10 gen 0 data type journal has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:27 gen 0 has wrong data_type: got btree, should be need_discard, fixing
+bucket 0:27 gen 0 data type need_discard has wrong dirty_sectors: got 256, should be 0, fixing
+bucket 0:34 gen 0 has wrong data_type: got user, should be need_discard, fixing
+bucket 0:34 gen 0 data type need_discard has wrong dirty_sectors: got 16, should be 0, fixing
+bucket 0:35 gen 0 has wrong data_type: got btree, should be need_discard, fixing
+bucket 0:35 gen 0 data type need_discard has wrong dirty_sectors: got 256, should be 0, fixing
+ done
+bcachefs (loop0): going read-write
+bcachefs (loop0): journal_replay...
+------------[ cut here ]------------
+btree cache cannibalize failed
+WARNING: CPU: 0 PID: 5320 at fs/bcachefs/btree_cache.c:770 btree_node_cannibalize fs/bcachefs/btree_cache.c:770 [inline]
+WARNING: CPU: 0 PID: 5320 at fs/bcachefs/btree_cache.c:770 bch2_btree_node_mem_alloc+0xf66/0x16f0 fs/bcachefs/btree_cache.c:870
+Modules linked in:
+CPU: 0 UID: 0 PID: 5320 Comm: syz.0.0 Not tainted 6.14.0-rc1-syzkaller-00181-g7ee983c850b4 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:btree_node_cannibalize fs/bcachefs/btree_cache.c:770 [inline]
+RIP: 0010:bch2_btree_node_mem_alloc+0xf66/0x16f0 fs/bcachefs/btree_cache.c:870
+Code: d2 e8 2e 47 53 fd 2e 2e 2e 31 c0 e9 a3 fe ff ff e8 0f 67 83 fd c6 05 e4 7c c9 0b 01 90 48 c7 c7 00 bc 51 8c e8 6b 12 44 fd 90 <0f> 0b 90 90 eb c3 e8 ef 66 83 fd eb 05 e8 e8 66 83 fd 48 8b 5c 24
+RSP: 0018:ffffc9000d425c48 EFLAGS: 00010246
+RAX: c8f2efa4a74c8f00 RBX: ffff888058901cd8 RCX: 0000000000100000
+RDX: ffffc9000edbb000 RSI: 00000000000fffff RDI: 0000000000100000
+RBP: ffff888058901cf8 R08: ffffffff81800c22 R09: 1ffff11003f8519a
+R10: dffffc0000000000 R11: ffffed1003f8519b R12: ffff88801f040000
+R13: ffff88805369e800 R14: ffff888058901cd0 R15: dffffc0000000000
+FS:  00007f80cf7176c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f80ce84cf70 CR3: 00000000437ba000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __bch2_btree_node_alloc fs/bcachefs/btree_update_interior.c:304 [inline]
+ bch2_btree_reserve_get+0x2df/0x1890 fs/bcachefs/btree_update_interior.c:532
+ bch2_btree_update_start+0xe56/0x14e0 fs/bcachefs/btree_update_interior.c:1230
+ bch2_btree_split_leaf+0x121/0x880 fs/bcachefs/btree_update_interior.c:1851
+ bch2_trans_commit_error+0x212/0x1380 fs/bcachefs/btree_trans_commit.c:908
+ __bch2_trans_commit+0x812b/0x97a0 fs/bcachefs/btree_trans_commit.c:1085
+ wb_flush_one fs/bcachefs/btree_write_buffer.c:181 [inline]
+ bch2_btree_write_buffer_flush_locked+0x2c8c/0x5b10 fs/bcachefs/btree_write_buffer.c:379
+ btree_write_buffer_flush_seq+0x1c49/0x1e10 fs/bcachefs/btree_write_buffer.c:551
+ bch2_btree_write_buffer_journal_flush+0xc7/0x150 fs/bcachefs/btree_write_buffer.c:567
+ journal_flush_pins+0x649/0xbb0 fs/bcachefs/journal_reclaim.c:585
+ journal_flush_pins_or_still_flushing+0x2f/0x390 fs/bcachefs/journal_reclaim.c:857
+ journal_flush_done+0x8b/0x400 fs/bcachefs/journal_reclaim.c:872
+ bch2_journal_flush_pins+0x225/0x3a0 fs/bcachefs/journal_reclaim.c:912
+ bch2_journal_flush_all_pins fs/bcachefs/journal_reclaim.h:76 [inline]
+ bch2_journal_replay+0x2744/0x2a70 fs/bcachefs/recovery.c:442
+ bch2_run_recovery_pass+0xf0/0x1e0 fs/bcachefs/recovery_passes.c:226
+ bch2_run_recovery_passes+0x2ad/0xa90 fs/bcachefs/recovery_passes.c:291
+ bch2_fs_recovery+0x265a/0x3de0 fs/bcachefs/recovery.c:936
+ bch2_fs_start+0x37c/0x610 fs/bcachefs/super.c:1041
+ bch2_fs_get_tree+0xd8d/0x1740 fs/bcachefs/fs.c:2203
+ vfs_get_tree+0x90/0x2b0 fs/super.c:1814
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3560
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:4088
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f80ce98e58a
+Code: Unable to access opcode bytes at 0x7f80ce98e560.
+RSP: 002b:00007f80cf716e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f80cf716ef0 RCX: 00007f80ce98e58a
+RDX: 0000400000000200 RSI: 0000400000005900 RDI: 00007f80cf716eb0
+RBP: 0000400000000200 R08: 00007f80cf716ef0 R09: 0000000001000081
+R10: 0000000001000081 R11: 0000000000000246 R12: 0000400000005900
+R13: 00007f80cf716eb0 R14: 0000000000005992 R15: 0000400000000000
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
