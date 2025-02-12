@@ -1,239 +1,162 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8F11F0E25
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FBD1F0E56;
+	Wed, 12 Feb 2025 09:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739352733; cv=none; b=jgCm6duLGziI98CACprnFhutc2E0sG4BNAij8SzLcIUPui2v+0SdNP7YO7hyQJ8H/TqLZcxPfMO4vM3Hl5gSqJGoKHmTvthcIWKaLehPdAWekdtDY77nOsMUcq4pBUHo9Ijlfg2rVu9R/00Y4Cl6bEsPAilDnia2MTMJRcgttrw=
+	t=1739352799; cv=none; b=Q1JudiKATVQOhIxsbF2VHg01gSNhPi6pSdEuJdlZRK6Ik+fJ4CHRM/wPvzfUyXRhY7rlx/ZoxD0vjDK6vBH7IsiTLSvbGj3QlwxpbmCsoOQrTWWTtCdwKUP1Ec3GtgnlDQnOdBvcKgSMypwlNPUrqkTBDXFM9Y1H+9hHrUK5IZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739352733; c=relaxed/simple;
-	bh=1bvn49rgzSMhdkqwDG2bAkkPd2mAkAtTIB3MlGzLfMY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m6iZgRjKSdwGsaGV0mVYJp9+CSQApzTDoog7v0dWLmDFRL/8BNb4Mq6jx2gsWBZO8mM106mL1XzqFlrFU1uxvNOdDYaDP+VeaQ6ibNt7Oqk3DqxXWkYB/a99aL9crPuCRYfGWckSp72ccyUtrB9vO2/HOEIRsa4cAr3K/9rYpXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z+nPvQif; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z+nPvQif"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e4487fce51so26728726d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:32:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739352731; x=1739957531; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=a7WnaaZ4Pw6bE4uchkva2heOV9/H7QEhk9ZVvwjm5d4=;
-        b=z+nPvQifHs9uOUMpV+CmE3nvNpWIWCpCjUtB74Qv5CamZMjdNBh4XD1Xagve/cFIaN
-         qJzAa/7qvvC7V/K1rZeBALW3DJT7bhkYOzJpHW+KhmFFjkRcf6apJ+v0aMwZBb1lCW0B
-         nYft8gnWuQx/JCYtHY8RyfbsqHO/ZbMeWIkcN6mZbIjAM1DuknUyGEyOsO+5ttvlC4ex
-         sBFkH/Z8wGPwttD7zQUvJU9qoP6uN8vfHddL2O4t855EyCrS8gGexviIvQJSfiFoq6My
-         UjhmXbijoR/7VkcRtM8zUC10mJ6zOlz8rRaZLO8GHiDoipwaUfaZ5zaIszsgnvVTQjI4
-         RWNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739352731; x=1739957531;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a7WnaaZ4Pw6bE4uchkva2heOV9/H7QEhk9ZVvwjm5d4=;
-        b=FFnZi1CFGptdV4N2ovVk6bW5u4u7B6An86tSOSj6hPndgG2dxeqezTKdrOW5Et7bwj
-         /6WTUxI0Ef99prFBGHmH+z9S4oxgUJwWpBNMzdf4DecJSjhebezLOx7cuVKtIM0zEV02
-         10p4n468J7sTKJ9tJaLHp2OgMiUqm+d3C+5FMqUp0GeM8vk9Bx8p9/2GJIiSUBbfq1Ec
-         /NmCavmokNL0ngqFbPbXWwIgBECoJGcBwJ9g2e1aL6jfJAHANyKRDKNWVWFNFULK5ey2
-         XeMSfbQh6muo1mY5AFUf5PkF8ko6NFzPDWRefWN1dFW+ur8uMdOf2IVIV9Fa1j1cJhY1
-         UBPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXwgGunxH37alQBlYnwWKVEe52NIJ8XQuWAsEwUEuRA3yYvm/WBEAB//KjkuF+0pM/IExk2DRO+dlaiPkE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzznFd/hxNmHBxw6ziyfcuwx2di7i8BXWr0+M2G+AZsNsrBnoYs
-	LLLT5p8mCgUF7xWRf1OBj9jQp2AIOXRnZuj8vXAvFjZbgFZsf8A4GVZBLLVz8P5rl7fFc4PmWiQ
-	9k/7q3GukcUWjNVyfACmKhfEUUfGE2yyO+ELU
-X-Gm-Gg: ASbGncsUvXLL3iNF+0+Bo3pHt4PMBGhdP+k+M0zH0sZKOCNe2FeX9pH0SP1qq8x7j+h
-	5eVhDVSUh2dLA/t1YXUbnaf8iQc+awo7SRdhFlYEQGMlr7dEYqwhPGlv4U2VpcvDo7HdbUyw/1Q
-	==
-X-Google-Smtp-Source: AGHT+IHqnH56bEzm8NV2ZQyhVWM4msgDhH/69BKhdVG/QGZdCL5Ii2NjLfCLJU+Dv/rnHTmajdo+OnMTWb57Qg2zJXk=
-X-Received: by 2002:ad4:5dec:0:b0:6d8:9a85:5b44 with SMTP id
- 6a1803df08f44-6e46edacf68mr32690266d6.29.1739352730814; Wed, 12 Feb 2025
- 01:32:10 -0800 (PST)
+	s=arc-20240116; t=1739352799; c=relaxed/simple;
+	bh=715Z4OdSCHh6MXtC19TgD3L3sLnavMWEJw8JmA8boCo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dX1VIMZOrKxvE5RKJxpfy1c13V6LWGpIuebMzK58rCxP63v72TXuiHmX2rExoD/iLc2LuELo2mTTPDU88k5wxJ1d69Mod3NidODbnf6LklYQOlbHDAfFrljsQBpP4iBBTvnQVTUGI6FFZWKFcNFji3ZRm6YRtpK/L5y/kZreohU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4YtCgq66YKz1V6dV;
+	Wed, 12 Feb 2025 17:29:27 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 428F7180069;
+	Wed, 12 Feb 2025 17:33:14 +0800 (CST)
+Received: from localhost.localdomain (10.90.30.45) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 12 Feb 2025 17:33:13 +0800
+From: Yunsheng Lin <linyunsheng@huawei.com>
+To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
+CC: <zhangkun09@huawei.com>, <liuyonglong@huawei.com>,
+	<fanghaiqing@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>, Alexander
+ Lobakin <aleksander.lobakin@intel.com>, Robin Murphy <robin.murphy@arm.com>,
+	Alexander Duyck <alexander.duyck@gmail.com>, Andrew Morton
+	<akpm@linux-foundation.org>, IOMMU <iommu@lists.linux.dev>, MM
+	<linux-mm@kvack.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+	<daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
+ Fastabend <john.fastabend@gmail.com>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, <netdev@vger.kernel.org>,
+	<intel-wired-lan@lists.osuosl.org>, <bpf@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>
+Subject: [PATCH net-next v9 0/4] fix the DMA API misuse problem for page_pool
+Date: Wed, 12 Feb 2025 17:25:47 +0800
+Message-ID: <20250212092552.1779679-1-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240928235825.96961-1-porlando@lkcamp.dev> <20240928235825.96961-3-porlando@lkcamp.dev>
- <87iku7u211.fsf@mailhost.krisman.be> <2c26c5e4-9cf3-4020-b0be-637dc826b4e9@leemhuis.info>
-In-Reply-To: <2c26c5e4-9cf3-4020-b0be-637dc826b4e9@leemhuis.info>
-From: David Gow <davidgow@google.com>
-Date: Wed, 12 Feb 2025 17:31:59 +0800
-X-Gm-Features: AWEUYZn7RdReqmwmjJQTGuXVDd9NksDyWUUjhxWNmLfC3iYnfp3ctJ2NpBh2Xxo
-Message-ID: <CABVgOS=36iRrpb+ND4M2awbZzgCKwudYxx5XNvEBEkgss+C-bw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] unicode: kunit: change tests filename and path
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Gabriel Krisman Bertazi <gabriel@krisman.be>, Pedro Orlando <porlando@lkcamp.dev>, 
-	Kees Cook <keescook@chromium.org>, Danilo Pereira <dpereira@lkcamp.dev>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-fsdevel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	Gabriela Bittencourt <gbittencourt@lkcamp.dev>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000b0dfe4062dee9d68"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
---000000000000b0dfe4062dee9d68
-Content-Type: text/plain; charset="UTF-8"
+This patchset fix the dma API misuse problem as mentioned in [1].
 
-On Wed, 12 Feb 2025 at 14:45, Thorsten Leemhuis <linux@leemhuis.info> wrote:
->
-> On 04.10.24 21:00, Gabriel Krisman Bertazi wrote:
-> > Pedro Orlando <porlando@lkcamp.dev> writes:
-> >> From: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
-> >>
-> >> Change utf8 kunit test filename and path to follow the style
-> >> convention on Documentation/dev-tools/kunit/style.rst
-> >>
-> >> Co-developed-by: Pedro Orlando <porlando@lkcamp.dev>
-> >> Signed-off-by: Pedro Orlando <porlando@lkcamp.dev>
-> >> Co-developed-by: Danilo Pereira <dpereira@lkcamp.dev>
-> >> Signed-off-by: Danilo Pereira <dpereira@lkcamp.dev>
-> >> Signed-off-by: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
-> >> ---
-> >>  fs/unicode/Makefile                                | 2 +-
-> >>  fs/unicode/{ => tests}/.kunitconfig                | 0
-> >>  fs/unicode/{utf8-selftest.c => tests/utf8_kunit.c} | 0
-> >>  3 files changed, 1 insertion(+), 1 deletion(-)
-> >>  rename fs/unicode/{ => tests}/.kunitconfig (100%)
-> >>  rename fs/unicode/{utf8-selftest.c => tests/utf8_kunit.c} (100%)
-> >>
-> >> diff --git a/fs/unicode/Makefile b/fs/unicode/Makefile
-> >> index 37bbcbc628a1..d95be7fb9f6b 100644
-> >> --- a/fs/unicode/Makefile
-> >> +++ b/fs/unicode/Makefile
-> >> @@ -4,7 +4,7 @@ ifneq ($(CONFIG_UNICODE),)
-> >>  obj-y                       += unicode.o
-> >>  endif
-> >>  obj-$(CONFIG_UNICODE)       += utf8data.o
-> >> -obj-$(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST) += utf8-selftest.o
-> >> +obj-$(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST) += tests/utf8_kunit.o
-> >
-> > This breaks compilation for me.
-> >
-> > fs/unicode/tests/utf8_kunit.c:11:10: fatal error: utf8n.h: No such file or directory
-> >    11 | #include "utf8n.h"
-> >       |          ^~~~~~~~~
->
-> I encountered the same error when building -next using the Fedora
-> rawhide config today. Given that this patch landed in -next today I
-> suspect it might be due to this change, but I'm on the road and unable
-> to verify that right now.
->
-> Log:
-> https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-x86_64/08642966-next-next-all/builder-live.log.gz
->
-> Cioa, Thorsten
->
+From the below performance data, the overhead is not so obvious
+due to performance variations in arm64 server and less than 1 ns in
+x86 server for time_bench_page_pool01_fast_path() and
+time_bench_page_pool02_ptr_ring, and there is about 10~20ns overhead
+for time_bench_page_pool03_slow(), see more detail in [2].
 
-Hmm... this definitely seems like a problem, but I haven't been able
-to reproduce it here (either under x86_64 or UML, both as a module and
-built-in). The suggested fix of changing the path to "../utf8n.h"
-doesn't seem to have broken it, though.
+arm64 server:
+Before this patchset:
+              fast_path              ptr_ring            slow
+1.         31.171 ns               60.980 ns          164.917 ns
+2.         28.824 ns               60.891 ns          170.241 ns
+3.         14.236 ns               60.583 ns          164.355 ns
 
-Cheers,
--- David
+With patchset:
+6.         26.163 ns               53.781 ns          189.450 ns
+7.         26.189 ns               53.798 ns          189.466 ns
 
---000000000000b0dfe4062dee9d68
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+X86 server:
+| Test name  |Cycles |   1-5 |    | Nanosec |    1-5 |        |      % |
+| (tasklet_*)|Before | After |diff|  Before |  After |   diff | change |
+|------------+-------+-------+----+---------+--------+--------+--------|
+| fast_path  |    19 |    19 |   0|   5.399 |  5.492 |  0.093 |    1.7 |
+| ptr_ring   |    54 |    57 |   3|  15.090 | 15.849 |  0.759 |    5.0 |
+| slow       |   238 |   284 |  46|  66.134 | 78.909 | 12.775 |   19.3 |
 
-MIIUqgYJKoZIhvcNAQcCoIIUmzCCFJcCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
-4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
-mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
-KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
-VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
-ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
-vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
-BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
-OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
-1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
-ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
-BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
-18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
-bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
-AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
-BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
-A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
-MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
-jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
-0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
-jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
-jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
-C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
-NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
-zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
-A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
-hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
-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
-YE9NAgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
-/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFHgsCGkO2Hex
-N6ybc+GeQEb6790qMFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
-BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
-MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
-LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
-bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
-FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQAs
-exV05yVDmPhHRqOq9lAbfWOUvEf8zydxabZUHna6bayb83jD2eb9nMGGEprfuNBRmFg35sgF1TyN
-+ieuQakvQYmY8tzK49hhHa2Y3qhGCTqYTHO3ypHvhHsZiGbL0gmdgB9P8ssVIws//34ae99GUOxo
-XKTxPwwsQ5Arq42besv3/HXAW+4nRAT8d3ht5ZWCHc5rjL/vdGzu7PaYo3u0da69AZ8Sh4Gf5yoc
-QANr2ZkMrxXbLmSmnRvbkQrzlZp2YbTFnczx46429D6q75/FNFOL1vAjxtRAPzkyACvW0eKvchza
-TMvvD3IWERLlcBL5yXpENc3rI8/wVjqgAWYxlFg1b/4b/TCgYe2MZC0rx4Uh3zTIbmPNiHdN6QZ9
-oDiYzWUcqWZ5jCO4bMKNlVJXeCvdANLHuhcC8FONj5VzNgYXs6gWkp9/Wt6XnQPX4dF4JBa8JdL/
-cT46RJIzoiJHEx/8syO5FparZHIKbkunoq6niPsRaQUGeqWc56H4Z1sQXuBJN9fhqkIkG0Ywfrwt
-uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
-PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
-AmowggJmAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
-BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCB1DAvBgkqhkiG9w0BCQQxIgQgbcLcf0jX2zh/A+dk8t6kNSBOTOop
-awlid5ShBd/XnrMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-MjEyMDkzMjExWjBpBgkqhkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
-YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBCjALBgkqhkiG9w0BAQcwCwYJYIZIAWUD
-BAIBMA0GCSqGSIb3DQEBAQUABIIBAHvW6Nr0pOwZxY7o+wo6aOeMspi9sLX0nkAaUNS0ZY3jtpzd
-QKoNcLOmrOto9U3CT4/ILQhVQ4Lp5X9Sh9UVMRLiqYZ3HbA6/OsuydROZFhG8/Zu8+EetX3/aUAQ
-ibyzlcYz0claIpGFbha0bo8xbqvjQRM/cYYhwuIsyW1r2Y9dYKBWlnoX3aMvBYI15lfY3t25Y1aS
-g/8q6ebKWyVrh3xE1hK6Cc6k7iQBmJdGk5AEp6qeRn++w2iiSnh6vPM5nqv+KV2k4UNPXNLoJ0rE
-uDkpBQsvZoJgFoKwx+xbE8L8Deq0HUwvje+QBi8xSblaMpCquYYKz+OvV6de3UkSBXE=
---000000000000b0dfe4062dee9d68--
+And about 16 bytes of memory is also needed for each page_pool owned
+page to fix the dma API misuse problem 
+
+1. https://lore.kernel.org/lkml/8067f204-1380-4d37-8ffd-007fc6f26738@kernel.org/T/
+2. https://lore.kernel.org/all/f558df7a-d983-4fc5-8358-faf251994d23@kernel.org/
+
+CC: Alexander Lobakin <aleksander.lobakin@intel.com>
+CC: Robin Murphy <robin.murphy@arm.com>
+CC: Alexander Duyck <alexander.duyck@gmail.com>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: IOMMU <iommu@lists.linux.dev>
+CC: MM <linux-mm@kvack.org>
+
+Change log:
+V9.
+  1. Drop the fix of a possible time window problem for NPAI recycling.
+  2. Add design description for the fix in patch 2.
+
+V8:
+  1. Drop last 3 patch as it causes observable performance degradation
+     for x86 system.
+  2. Remove rcu read lock in page_pool_napi_local().
+  3. Renaming item function more consistently.
+
+V7:
+  1. Fix a used-after-free bug reported by KASAN as mentioned by Jakub.
+  2. Fix the 'netmem' variable not setting up correctly bug as mentioned
+     by Simon.
+
+V6:
+  1. Repost based on latest net-next.
+  2. Rename page_pool_to_pp() to page_pool_get_pp().
+
+V5:
+  1. Support unlimit inflight pages.
+  2. Add some optimization to avoid the overhead of fixing bug.
+
+V4:
+  1. use scanning to do the unmapping
+  2. spilt dma sync skipping into separate patch
+
+V3:
+  1. Target net-next tree instead of net tree.
+  2. Narrow the rcu lock as the discussion in v2.
+  3. Check the ummapping cnt against the inflight cnt.
+
+V2:
+  1. Add a item_full stat.
+  2. Use container_of() for page_pool_to_pp().
+
+Yunsheng Lin (4):
+  page_pool: introduce page_pool_get_pp() API
+  page_pool: fix IOMMU crash when driver has already unbound
+  page_pool: support unlimited number of inflight pages
+  page_pool: skip dma sync operation for inflight pages
+
+ drivers/net/ethernet/freescale/fec_main.c     |   8 +-
+ .../ethernet/google/gve/gve_buffer_mgmt_dqo.c |   2 +-
+ drivers/net/ethernet/intel/iavf/iavf_txrx.c   |   6 +-
+ drivers/net/ethernet/intel/idpf/idpf_txrx.c   |  14 +-
+ drivers/net/ethernet/intel/libeth/rx.c        |   2 +-
+ .../net/ethernet/mellanox/mlx5/core/en/xdp.c  |   3 +-
+ drivers/net/netdevsim/netdev.c                |   6 +-
+ drivers/net/wireless/mediatek/mt76/mt76.h     |   2 +-
+ include/linux/mm_types.h                      |   2 +-
+ include/linux/skbuff.h                        |   1 +
+ include/net/libeth/rx.h                       |   3 +-
+ include/net/netmem.h                          |  31 +-
+ include/net/page_pool/helpers.h               |  15 +
+ include/net/page_pool/memory_provider.h       |   2 +-
+ include/net/page_pool/types.h                 |  46 +-
+ net/core/devmem.c                             |   6 +-
+ net/core/netmem_priv.h                        |   5 +-
+ net/core/page_pool.c                          | 423 ++++++++++++++++--
+ net/core/page_pool_priv.h                     |  10 +-
+ 19 files changed, 504 insertions(+), 83 deletions(-)
+
+-- 
+2.33.0
+
