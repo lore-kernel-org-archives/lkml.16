@@ -1,98 +1,161 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E441FF601
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 20:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A13201018
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 20:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739390457; cv=none; b=W5sdcxf5jT206XDwGBBlQOdbzAsnD0G8S+koYVwef8amXX7WYM9BJQOZTd8xOK7rwbmJZUow2nqHdjl3WNbTiF8uzOzo84LdK7BFmHYLequkMx0+gKEcLrVY3z53lgrco/ntqO7yqRetitFcD5eAQCDDqLrTC682MIlSTJiaHSE=
+	t=1739390459; cv=none; b=p23GSbP2xBi8aZp59YVV6imD13OSFf7jeplr1sHDK+dB7LQxjjP2lmAcMdA1LWtPn9fpzvvQ4luarlx7SgRC3q09btnSUyd7WcKe92lcGvQcTsh6OgSeVuuw01a4Ioy5fz5WGj5vMhKl4kLoNC/8M3Unq74IB2n+Cq3pWmopDZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739390457; c=relaxed/simple;
-	bh=0pG+JRaVXBqhNYTI0BMGYl5wF4aFO16HNm2CNHXCsRE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EA0NK9s2ChHH6W2ifwxhZi+A0ewfp1b/rSK7pNKfwr+Nm4/7n40alTbK9gmt8Ny7+RmaI4sRwiOcfukhc+XZeZcJ5eIcJ7g56anNCNitDfx6bUbkF4nuiV9BN1WL6Ke1qhwq10WU+Cjzp2eN0gEwYWZ2pZMS3AdUslX/1hgCmt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kR+uY2im; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kR+uY2im"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d18c325ee4so33195ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 12:00:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739390454; x=1739995254; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0pG+JRaVXBqhNYTI0BMGYl5wF4aFO16HNm2CNHXCsRE=;
-        b=kR+uY2im3vikgcdH6pNtrgT5uXPdBLXooyXAIYizJeZg9n92y4SdW9NeOiHeorD06C
-         uWsc/9eWaHlPI+j3FzhnKB5fnUL1TJKTmm3La+0XXAMt4KG9MWUn3ZL4Dquu0xLFE2fM
-         LOw0z07EV3HI2Brd0hS5qO1+qhLKrJK4FCpHHv/8wtiRK/UdTuLPwey6K85qDDM4m4J/
-         0uSSDQSM2knyrXxAzXIbkv+9M2FxI0TUecNLZ5pvQQbwuOr16GxrxqIYoPdaNhz+4w3c
-         xwlwugo41Sw2UxYJyZaQtsuHBxjY1mDXfqrEqLGJfcStdSMwgoAqAbCFyy+OVIHoCtNQ
-         xBrg==
+	s=arc-20240116; t=1739390459; c=relaxed/simple;
+	bh=JLgDjgUjkJJbA9a0GDNnLQFCt4WqWv9kBAZ2UXukXzc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eyvOqW3pnV21mbB3O9kIlUhtEjAKBbSFs98yguoKGe8XI4mQpv8QGZRBeLt8RKh60Ee6AFgsmGYG3Fqez/vnbDqNyPyNxeHprd6IUkuWSpTj07DamSHpsfOXoG1kM354CPaBCF6rBDCXNRZrAC1800rOKypseREDc7Y5oXIQFoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uejji.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uejji.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-726ea524419so54488a34.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 12:00:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739390454; x=1739995254;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739390457; x=1739995257;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0pG+JRaVXBqhNYTI0BMGYl5wF4aFO16HNm2CNHXCsRE=;
-        b=Z4zoPFQiY4EU5hglaGcoQb4PMYOGKcqPn6MCAK2XtLp5wk37aZaR4g5BpJmJO7jYDo
-         nI4PwtIncbwXSfdAtKx03tg1FoSWnl6evL29v1M05N5oqA4AbyXdQON3jHoiR73lvWim
-         mKSq2zXm30IyWZ8a4Ll6t99PkDleAHLGJm/bVcMN61b9WQrHBt9p36OXpsU6W9nVtfOE
-         opJgCHRG4WNU23y3Xfd4KqjfkkvbdAA3JlGGyNKzzRk07hxCHXgYpEtFuAdsAABkdK9T
-         cmcuW0NOOeRNJuupIVlqxd688tVSNUfHnNIk8h3bvjMWXc9PUNA0wZWsEr23HcLR9gEM
-         BmwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1Z6CJM9DpFo58fUWy8/OBjQ0lktNwpLn3xh1KYBAxMS+Hc3mPIobmBjMz30LvMVFcJtGsdBAex3GV1CY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCDKV3mCorsZWDl6yHc+fpOY+iOkxWgYlPnzyfHwaMWwimyB8G
-	S3n/R9Jfov57WACijPXG0hO7pCwbyJOPI/6WoQgNWymXxSM2+/7R4d87HkXS0TyL8TLDuoRZS54
-	L7DOBu5WMOAYyOXs+Rw87bXpZkP/yQ3xrA+nb
-X-Gm-Gg: ASbGncsD6p779VjDzEIUyzW9uvXpzsC46gQk8Sjq50kMN9JGNlnKowz0s93BkK7E+xB
-	ddie54rfwS3P4t2rGf1LrTyb2ZyNqaVMP1C/sWXGE4mIpxCH5EblZQwwXsOv5PhwOwVRHgxE5JH
-	dwqiX+VhUv4BJf3/2Gbw0zips3
-X-Google-Smtp-Source: AGHT+IEB2+AmkIaAIOFeTQ3Nx+SbWIWSCka7nrurGRcxVhzIsTGvQ9larnnNye37zvZb1s5tc7xUC5PpYKHHlDl1Gic=
-X-Received: by 2002:a05:6e02:1d06:b0:3a7:a468:69e0 with SMTP id
- e9e14a558f8ab-3d18cd73592mr371945ab.1.1739390454354; Wed, 12 Feb 2025
- 12:00:54 -0800 (PST)
+        bh=Ty55KN5TBvbN+OmRm4Xf1XcryTkekgKbpKoNCFiEowc=;
+        b=E3JYGk9eeDhTfyVohHKxN60fVd+wrdyOqjdB+o9eBuTHZ2sXis+4BxXtpiiWAa6G4M
+         ko+pxxwb0Ry1shevyitid1sg4wGQhKugtQPjyxcJPHegZ+Z/A7bti8q3I/tP+XfjgX+9
+         8l232SAD6tmnPnLwFzZipOX+AedjmR07xFtxFOwWY3AZS5yFdsV5LnIGImiDtycZc677
+         b53jAeRNwneayQnVEreugcm5AQnjdljYsnhdXIKGAETFt7d8S3xYxKbMoEv9Whw8ywFN
+         525qRdVcqHSogSDDaBef5nNu1cuje9PIA2E/onYcqqpwvIdT2VrWMhtd2gOONYITmNFr
+         Npww==
+X-Forwarded-Encrypted: i=1; AJvYcCV/KBI+/nsfDjE3H66J/0Kfieri9ZtuR+QhROaYkj3WBY1nW71vMYGdk2Hz0sOrKNlrHs3NVEWs3OpUo+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySdtJ7EiTcmWjL5CauqzL1/0KOOkvNirPGTJszWRJ4RoEu8Ii5
+	FYfqVA20mogoZNNgCJBQoDOzixSfRzgxm9fZuRPedTzWQDXbSKEG
+X-Gm-Gg: ASbGncsa7hJPqk9rd8bpub8KY0g/vME2/1B/jSOYULz6q8ThLMvAS4jnYZX9dOrV3DK
+	8MWJWzWeoQYEVig2LpFAjGHOHolLS2QnVJFqUY8phYRCf+veXmy/7aZh9qd3Wdz1YNGy7prMpJU
+	88VUgO5T9LjKQVnNPJTXzhYnrzsaaNe1DtwMU/xfZma9hKA9HDqrPRjRVypIarZ6tPNwJoIiTCo
+	++b0bdblkXE/ePN+x36QFxvG6g2EovpdZ/GHo1Z1P7ywX7cwuZqevh4BZSf0UB1VFu5Pm5v5T56
+	dSNUChQUY3IAWS1Y
+X-Google-Smtp-Source: AGHT+IGwBXZTwtaL7NNRt+QXA+SEREgwN9UnIGCuP6Ps5/KzjD/6y7JCL5eimEfX4dk7oukXCa/CZQ==
+X-Received: by 2002:a05:6870:ed94:b0:29e:43ce:a172 with SMTP id 586e51a60fabf-2b8f8e10fa5mr328542fac.28.1739390456760;
+        Wed, 12 Feb 2025 12:00:56 -0800 (PST)
+Received: from muster.uejji.net ([47.188.205.107])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726afa4d12bsm4848401a34.59.2025.02.12.12.00.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 12:00:56 -0800 (PST)
+From: John Edwards <uejji@uejji.net>
+To: Hans de Goede <hdegoede@redhat.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Cc: John Edwards <uejji@uejji.net>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Andrew Wyatt <fewtarius@steamfork.org>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] Handheld gaming PC panel orientation quirks
+Date: Wed, 12 Feb 2025 19:59:31 +0000
+Message-ID: <20250212195934.91669-2-uejji@uejji.net>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <e64c6778-9698-4970-a3c3-af3aabc232be@redhat.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250111190143.1029906-1-irogers@google.com> <Z6panMzNSm1op8Di@google.com>
- <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
- <Z6rAHhAIdlkAryGJ@google.com> <CAP-5=fXjmJ+Rr7ejL6fCMeu6PZSit7n84hQkjh=0jQhkr1on3Q@mail.gmail.com>
- <Z6uOGNO6p7i9Fese@google.com> <CAP-5=fVxFe4nMS_dHmO=6-ddA40XbVdvouPLuOxj5cenjUr8ng@mail.gmail.com>
- <Z6v-mPJq6m61pFA4@google.com> <CAP-5=fU+-4igQomO4Q41=7xo6YWyDdVqJdZd34dcMUS-Ua=N1Q@mail.gmail.com>
- <Z6zslLa8XM1ubwXj@google.com>
-In-Reply-To: <Z6zslLa8XM1ubwXj@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 12 Feb 2025 12:00:42 -0800
-X-Gm-Features: AWEUYZkPHlCKO0ya0iQ7pvFOSdQsLxZFLpDtuZpM2UOOjOUU8vOMF1oHXBvfyp8
-Message-ID: <CAP-5=fUrzPvV3sD1_wMzQ7dF8xk3hL9_nkdS6toFjt7L+SRsgg@mail.gmail.com>
-Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Hao Ge <gehao@kylinos.cn>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>, 
-	Tengda Wu <wutengda@huaweicloud.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 12, 2025 at 10:46=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
-> It's not completely broken and works sometimes.
+Hello, Thomas and Hans.
 
-No this is the definition of completely broken. If it only works
-sometimes then you can't use it, we can't put a test on it, there is
-no point in it. Even when it doesn't fail on perf_event_open, does it
-work for processes that start after /proc is scanned? No, it is
-completely broken.
+On Wed, Feb 12, 2025 at 5:14 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 12-Feb-25 12:11 PM, Thomas Zimmermann wrote:
+>> Hi
+>>
+>> Am 12.02.25 um 11:51 schrieb Hans de Goede:
+>>> Hi Thomas,
+>>>
+>>> On 11-Feb-25 2:55 PM, Thomas Zimmermann wrote:
+>>>> Hi
+>>>>
+>>>> Am 24.01.25 um 21:46 schrieb John Edwards:
+>>>>> Hello.
+>>>>>
+>>>>> I am submitting a small number of patches to add panel rotation quirks for
+>>>>> a few handheld gaming PCs.  These patches were created by the SteamFork
+>>>>> team and are in daily use by us and/or members of our community.
+>>>>>
+>>>>> The following devices are covered by these patches:
+>>>>> 1: AYANEO 2S
+>>>>> 2: AYANEO Flip DS, AYANEO Flip KB
+>>>>> 3: AYANEO Slide, Antec Core HS
+>>>>> 4: GPD Win 2 (with correct DMI strings)
+>>>>> 5: OneXPlayer Mini (Intel)
+>>>>>
+>>>>> Thank you for your consideration and for taking the time to review these
+>>>>> patches.
+>>>> Did you ever receive any response to this series? If not, then
+>>>>
+>>>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+>>> I had the following remark for 3 new entries added in patches 2/5 + 3/5:
+>>>
+>>> "Since this '}' is closing the .matches initializer it should be indented 2 tabs"
+>>>
+>>> With that fixed, you can add my:
+>>>
+>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>>>
+>>> to the entire series.
+>>>
+>>>> for the series. Let me know if you need assistance for getting the patch files merged.
+>>> Normally I pickup/merge these panel orientation quirks, but I've been swamped
+>>> which is why these have just been sitting on the list.
+>>>
+>>> Thomas, I would appreciate it if you can merge the set into drm-misc-fixes, with
+>>> the 3 minor indentation issues fixed.
+>>
+>> Sure, no problem. I'll wait for John to provide an update. Otherwise, I'll fix it myself while merging the series.
+>
+> Great thank you.
+>
+> Note in the review comments I said that we could likely fixup the indentation
+> issues while merging. If you prefer a new version from John that is fine too,
+> but we need to make clear to John what we want :)
 
-Thanks,
-Ian
+Thank you both for your comments and feedback.  I am more than happy to
+provide a v3 with the noted changes if requested.
+
+We have no other planned changes for this patch series, so if you wish to
+implement the changes while merging that is also acceptable to us.
+
+Thank you both again.
+
+John Edwards
+
+
+
+>>>>> v2:
+>>>>> - Minor rewording of commit messages
+>>>>> - Include Tested-by tag for Paco Avelar in AYANEO Flip DS/KB patch
+>>>>> - Add OneXPlayer Mini (Intel) patch
+>>>>>
+>>>>> v1:
+>>>>> https://lore.kernel.org/dri-devel/20250116155049.39647-2-uejji@uejji.net/
+>>>>>
+>>>>> Andrew Wyatt (5):
+>>>>>     drm: panel-orientation-quirks: Add support for AYANEO 2S
+>>>>>     drm: panel-orientation-quirks: Add quirks for AYA NEO Flip DS and KB
+>>>>>     drm: panel-orientation-quirks: Add quirk for AYA NEO Slide
+>>>>>     drm: panel-orientation-quirks: Add new quirk for GPD Win 2
+>>>>>     drm: panel-orientation-quirks: Add quirk for OneXPlayer Mini (Intel)
+>>>>>
+>>>>>    .../gpu/drm/drm_panel_orientation_quirks.c    | 40 ++++++++++++++++++-
+>>>>>    1 file changed, 38 insertions(+), 2 deletions(-)
+>>>>>
+>>
+>
