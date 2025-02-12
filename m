@@ -1,30 +1,30 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C046384D2B;
-	Wed, 12 Feb 2025 01:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B311679FD;
+	Wed, 12 Feb 2025 01:43:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739324607; cv=none; b=pEihhSse5o84bQUk3hU5FRsNIPtYRetXsylC0qGV3E+ULGVoYk4rX0KNFH4fw96MgBVXA0QdE6kSL3aVvH5NklcHJFMMVJFH+eOJcvlg8nPu1pKMG3YbNJRi4ZVrT0ITWmodpyHylXpbCsotnxogOX2N5ueCxmntHaezmIlWnZQ=
+	t=1739324608; cv=none; b=hv/EPwU1DWpTlxkp2XF0GdYuQfAc/+dKB9Prtkt2WwVdl//wIAiMXVv4jRz5Vm3270sU+DfKwDfQEoFDwXtSB9zq55ePpy7G4EpfMyN/KredOtPgjx+yhNAA+iu/JSw32cyXzMk9bpHZxG4JWLN4WhXBolVLZsYAgC6/6ip+T9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739324607; c=relaxed/simple;
-	bh=u7k2PTzKvmgUe6AXDwrvtgcjqmkTcLF241lU0TwiVgM=;
+	s=arc-20240116; t=1739324608; c=relaxed/simple;
+	bh=cgPL+Vfw7gGPl+BFJl9l5TLMq6djMzz6QyQGMjjJtI4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aydY22wQiM61fclAW5690tH9FFNAMXbFwpzrjbgdoRt6Ui1OyM5Ko70TegtU4W98Kyvo1ohSDb6wo75/qGASryESewzT7Z2iGdx1sQNlxWUzWgk4dzs0zjjEBlTcZ9HkQowDYvZRHBm/wZ5yr2VW0q/KbIYqGTxrZJAUwhqv8gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MEeS3/i8; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=axKVkD9v8AqlVnhrG8vgzRQeyODke8Fhfu7AO6cOKezHl9ZVDFawWhGDd9ZE7ieqqazwenrx3UdBl9aU/puDaBOhlurB57gKth4fXHp41pYgx0hqzDqPHpSUa8Qse8vzFs1c/GKIxWSYN6LSoODu+1cSBl5OuML2n3eNMpT2Iq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ShwoORgj; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MEeS3/i8"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ShwoORgj"
 Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A454C2107ABA;
-	Tue, 11 Feb 2025 17:43:24 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A454C2107ABA
+	by linux.microsoft.com (Postfix) with ESMTPSA id 20D092107ABC;
+	Tue, 11 Feb 2025 17:43:26 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 20D092107ABC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1739324605;
-	bh=2I6sV8b2/c15kNZjhJjV/Tkl7+cbi052r8A5hiFhBws=;
+	s=default; t=1739324606;
+	bh=fxnUth80ZpwN+R8QXh2rnXW3rersdPCTTnOAkFWYgDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MEeS3/i8Slytok4DNZzLy0QLbRZ61+qF1K3tmbmGtwvs6TsmsPyhTNC63itaCGE62
-	 /Bagk8yLXg//tYTlpxii6J6CqEtGkFuy8o2kFW9oSf7blLxIBnWgoodp5MewORRMHK
-	 XXS4PGf5xtqLu2TL59Kv8x909orxwlBkp60KfxLM=
+	b=ShwoORgjejjON2N7A2RFHlzYeBAbDLfGWZ4lEe29wGSWjBl/n8jLBpsASsJolKAbc
+	 Sfic0A88GQiTr0d2oJKBHmrDh42UeiTOvV3t7FHjrVPoqlWGi79DfAjxa9mR2wlFW+
+	 AHR+5D1yr49w35P0Z85bP6dJhHEFrUqJGSpnGwfE=
 From: Roman Kisel <romank@linux.microsoft.com>
 To: arnd@arndb.de,
 	bhelgaas@google.com,
@@ -56,9 +56,9 @@ To: arnd@arndb.de,
 Cc: benhill@microsoft.com,
 	bperkins@microsoft.com,
 	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next v4 3/6] Drivers: hv: Provide arch-neutral implementation of get_vtl()
-Date: Tue, 11 Feb 2025 17:43:18 -0800
-Message-ID: <20250212014321.1108840-4-romank@linux.microsoft.com>
+Subject: [PATCH hyperv-next v4 5/6] Drivers: hv: vmbus: Get the IRQ number from DeviceTree
+Date: Tue, 11 Feb 2025 17:43:20 -0800
+Message-ID: <20250212014321.1108840-6-romank@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250212014321.1108840-1-romank@linux.microsoft.com>
 References: <20250212014321.1108840-1-romank@linux.microsoft.com>
@@ -70,138 +70,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To run in the VTL mode, Hyper-V drivers have to know what
-VTL the system boots in, and the arm64/hyperv code does not
-have the means to compute that.
+The VMBus driver uses ACPI for interrupt assignment on
+arm64 hence it won't function in the VTL mode where only
+DeviceTree can be used.
 
-Refactor the code to hoist the function that detects VTL,
-make it arch-neutral to be able to employ it to get the VTL
-on arm64.
+Update the VMBus driver to discover interrupt configuration
+from DT.
 
 Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
 ---
- arch/x86/hyperv/hv_init.c      | 34 ----------------------------------
- drivers/hv/hv_common.c         | 32 ++++++++++++++++++++++++++++++++
- include/asm-generic/mshyperv.h |  6 ++++++
- include/hyperv/hvgdk_mini.h    |  2 +-
- 4 files changed, 39 insertions(+), 35 deletions(-)
+ drivers/hv/vmbus_drv.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 173005e6a95d..383bca1a3ae2 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -411,40 +411,6 @@ static void __init hv_get_partition_id(void)
- 	local_irq_restore(flags);
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 0f6cd44fff29..9d0c2dbd2a69 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -2335,6 +2335,36 @@ static int vmbus_acpi_add(struct platform_device *pdev)
  }
+ #endif
  
--#if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
--static u8 __init get_vtl(void)
--{
--	u64 control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_REGISTERS;
--	struct hv_input_get_vp_registers *input;
--	struct hv_output_get_vp_registers *output;
--	unsigned long flags;
--	u64 ret;
--
--	local_irq_save(flags);
--	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
--	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
--
--	memset(input, 0, struct_size(input, names, 1));
--	input->partition_id = HV_PARTITION_ID_SELF;
--	input->vp_index = HV_VP_INDEX_SELF;
--	input->input_vtl.as_uint8 = 0;
--	input->names[0] = HV_REGISTER_VSM_VP_STATUS;
--
--	ret = hv_do_hypercall(control, input, output);
--	if (hv_result_success(ret)) {
--		ret = output->values[0].reg8 & HV_X64_VTL_MASK;
--	} else {
--		pr_err("Failed to get VTL(error: %lld) exiting...\n", ret);
--		BUG();
--	}
--
--	local_irq_restore(flags);
--	return ret;
--}
--#else
--static inline u8 get_vtl(void) { return 0; }
--#endif
--
- /*
-  * This function is to be invoked early in the boot sequence after the
-  * hypervisor has been detected.
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index af5d1dc451f6..70f754710170 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -283,6 +283,38 @@ static inline bool hv_output_page_exists(void)
- 	return hv_root_partition || IS_ENABLED(CONFIG_HYPERV_VTL_MODE);
- }
- 
-+#if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
-+u8 __init get_vtl(void)
++static int __maybe_unused vmbus_set_irq(struct platform_device *pdev)
 +{
-+	u64 control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_REGISTERS;
-+	struct hv_input_get_vp_registers *input;
-+	struct hv_output_get_vp_registers *output;
-+	unsigned long flags;
-+	u64 ret;
++	struct irq_data *data;
++	int irq;
++	irq_hw_number_t hwirq;
 +
-+	local_irq_save(flags);
-+	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-+	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
-+
-+	memset(input, 0, struct_size(input, names, 1));
-+	input->partition_id = HV_PARTITION_ID_SELF;
-+	input->vp_index = HV_VP_INDEX_SELF;
-+	input->input_vtl.as_uint8 = 0;
-+	input->names[0] = HV_REGISTER_VSM_VP_STATUS;
-+
-+	ret = hv_do_hypercall(control, input, output);
-+	if (hv_result_success(ret)) {
-+		ret = output->values[0].reg8 & HV_VTL_MASK;
-+	} else {
-+		pr_err("Failed to get VTL(error: %lld) exiting...\n", ret);
-+		BUG();
++	irq = platform_get_irq(pdev, 0);
++	if (irq == 0) {
++		pr_err("VMBus interrupt mapping failure\n");
++		return -EINVAL;
++	}
++	if (irq < 0) {
++		pr_err("VMBus interrupt data can't be read from DeviceTree, error %d\n", irq);
++		return irq;
 +	}
 +
-+	local_irq_restore(flags);
-+	return ret;
++	data = irq_get_irq_data(irq);
++	if (!data) {
++		pr_err("No interrupt data for VMBus virq %d\n", irq);
++		return -ENODEV;
++	}
++	hwirq = irqd_to_hwirq(data);
++
++	vmbus_irq = irq;
++	vmbus_interrupt = hwirq;
++	pr_debug("VMBus virq %d, hwirq %d\n", vmbus_irq, vmbus_interrupt);
++
++	return 0;
 +}
-+#endif
 +
- int __init hv_common_init(void)
+ static int vmbus_device_add(struct platform_device *pdev)
  {
- 	int i;
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index a7bbe504e4f3..bb36856c3467 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -314,4 +314,10 @@ static inline enum hv_isolation_type hv_get_isolation_type(void)
- }
- #endif /* CONFIG_HYPERV */
+ 	struct resource **cur_res = &hyperv_mmio;
+@@ -2349,6 +2379,12 @@ static int vmbus_device_add(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
-+#if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
-+u8 __init get_vtl(void);
-+#else
-+static inline u8 get_vtl(void) { return 0; }
++#ifndef HYPERVISOR_CALLBACK_VECTOR
++	ret = vmbus_set_irq(pdev);
++	if (ret)
++		return ret;
 +#endif
 +
- #endif
-diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-index 155615175965..0f8443595732 100644
---- a/include/hyperv/hvgdk_mini.h
-+++ b/include/hyperv/hvgdk_mini.h
-@@ -1202,7 +1202,7 @@ struct hv_send_ipi {	 /* HV_INPUT_SEND_SYNTHETIC_CLUSTER_IPI */
- 	u64 cpu_mask;
- } __packed;
+ 	for_each_of_range(&parser, &range) {
+ 		struct resource *res;
  
--#define	HV_X64_VTL_MASK			GENMASK(3, 0)
-+#define	HV_VTL_MASK			GENMASK(3, 0)
- 
- /* Hyper-V memory host visibility */
- enum hv_mem_host_visibility {
 -- 
 2.43.0
 
