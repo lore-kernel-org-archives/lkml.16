@@ -1,74 +1,108 @@
-Received: from bsdbackstore.eu (128-116-240-228.dyn.eolo.it [128.116.240.228])
+Received: from sub0000529476.hmk-temp.com (mail.btob-mail.work [180.222.184.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867781DDA1B;
-	Wed, 12 Feb 2025 11:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.116.240.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BAA1DDA1B
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 11:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.222.184.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739360859; cv=none; b=m23tL6SQ7AV86TLg679UW/e0X+kww8Os7T6yMGTv1xv4d/30B9wW5oW/Z3mAR8aAcJ4lGS4og5fMidlTjEYEUdTt1j57Or+tDvrOsSDeEzT6tOh6rWu0qiN5bJay2ltumSQLno47GCC2nVTmKuyWDpbjo8iDkA0x3Mqau9M/+dY=
+	t=1739360874; cv=none; b=b3ucCpkXLZJw7yh2K2KnsbVvlBeuA4YEuPrdtwSRU/zAAlCrFqcTQwIkXGJXyctjrPADLcTnsYYURWubDIJqaJejhk5f4hI01l7yS0p97HdrB1q4gY2RjmdWlR3YEmOuDO6Xwlozu+ai/sop0O5jjDayC+ya74KiovPykubjktA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739360859; c=relaxed/simple;
-	bh=3FtJRc2IltoMj+mCq22wPBFnDdU2IMjYKEhIx6mDmDA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=l/N4FN/riX3lyE+NzqYU+bGDmG/Wiq017Vomo67XeyBJus9Vv6LCP6PJfCFH5xykquuHrZDG+RGH8+7Xt6laWANjl3AkjSn86MQiZV3u085G7Ugdhq7XatMRC7YidJWO+tC5v89Y2GhC/lNVvdOW7q3OXSYY2q+o9O2fer95r/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu; spf=pass smtp.mailfrom=bsdbackstore.eu; arc=none smtp.client-ip=128.116.240.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsdbackstore.eu
-Received: from localhost (25.205.forpsi.net [80.211.205.25])
-	by bsdbackstore.eu (OpenSMTPD) with ESMTPSA id 25b47fee (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Wed, 12 Feb 2025 12:47:34 +0100 (CET)
+	s=arc-20240116; t=1739360874; c=relaxed/simple;
+	bh=s5RkDWMsPAAnwYzVTws6XjcFf+hcblKo4FwS7fr7Sis=;
+	h=From:To:Subject:Content-Type:Date:Message-ID; b=Xi0/+Vbkmxm+y20pEGr590x99p76qZDb/pL2tla+7ZW3NRizeRIAcufmA35o1NHz7+0Z1BMjQdiF63Yj4P9I5xBNuPwKsr8HECrE0xr/+viedv89Ggjzh3XfHX2CyJhbeyCEPU7h3pKt+wLSVROth8tL6mY7IMdi4qx6ElMVofA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=saiyo-shien.biz; spf=fail smtp.mailfrom=saiyo-shien.biz; arc=none smtp.client-ip=180.222.184.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=saiyo-shien.biz
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=saiyo-shien.biz
+Received: (qmail 377 invoked from network); 12 Feb 2025 15:10:16 +0900
+Received: from ai126146095188.53.access-internet.ne.jp (HELO DESKTOP-K0R8I4G) (126.146.95.188)
+  by mail.btob-mail.work with ESMTPSA (DHE-RSA-AES256-GCM-SHA384 encrypted, authenticated); 12 Feb 2025 15:10:16 +0900
+From: =?iso-2022-jp?B?V2l6Qml6GyRCM3Q8MDJxPFIbKEI=?= <info@saiyo-shien.biz>
+To: linux-kernel@vger.kernel.org
+Subject: =?iso-2022-jp?B?GyRCNDE4eEQjJCw1LjxSPiY6YCRyR2MkJCReJDkbKEI=?=
+X-Mailer: Mail Magic Professional Version 16
+Content-Type: text/plain;
+	charset=iso-2022-jp
+Date: Wed, 12 Feb 2025 16:03:55 +0900
+Message-ID: <202502121603550840.61AC5E50E9B44E719672592F716E3705@btob-mail.work>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 12 Feb 2025 12:47:32 +0100
-Message-Id: <D7QFYOJVX22Z.CU0EL0NHPNS8@bsdbackstore.eu>
-Subject: Re: nvme-tcp: fix a possible UAF when failing to send request
-From: "Maurizio Lombardi" <mlombard@bsdbackstore.eu>
-To: "Maurizio Lombardi" <mlombard@bsdbackstore.eu>,
- "zhang.guanghui@cestc.cn" <zhang.guanghui@cestc.cn>, "chunguang.xu"
- <chunguang.xu@shopee.com>
-Cc: "mgurtovoy" <mgurtovoy@nvidia.com>, "sagi" <sagi@grimberg.me>, "kbusch"
- <kbusch@kernel.org>, "sashal" <sashal@kernel.org>, "linux-kernel"
- <linux-kernel@vger.kernel.org>, "linux-nvme"
- <linux-nvme@lists.infradead.org>, "linux-block"
- <linux-block@vger.kernel.org>
-X-Mailer: aerc
-References: <2025021015413817916143@cestc.cn>
- <D7OOGIOAJRUH.9LOJ3X4IUKQV@bsdbackstore.eu>
- <3f1f7ec3-cb49-4d66-b2b0-57276a6c62f0@nvidia.com>
- <D7OWXONOUZ1Y.19KIRCQDVRTKN@bsdbackstore.eu>
- <CAAO4dAWdsMjYMp9jdWXd_48aG0mTtVpRONqjJJ1scnc773tHzg@mail.gmail.com>
- <202502111604342976121@cestc.cn>
- <D7QBDBZMZTCI.1W40WVL5JJ3O7@bsdbackstore.eu>
- <D7QC8AQ7J89A.32TNPSFWV1VNX@bsdbackstore.eu>
- <202502121747455267343@cestc.cn>
- <D7QEA7XPBML4.1R0M64OD4BH43@bsdbackstore.eu>
- <D7QF99BR5YYA.2CXBBA5RYACTY@bsdbackstore.eu>
-In-Reply-To: <D7QF99BR5YYA.2CXBBA5RYACTY@bsdbackstore.eu>
 
-On Wed Feb 12, 2025 at 12:14 PM CET, Maurizio Lombardi wrote:
-> On Wed Feb 12, 2025 at 11:28 AM CET, Maurizio Lombardi wrote:
->> On Wed Feb 12, 2025 at 10:47 AM CET, zhang.guanghui@cestc.cn wrote:
->>> =C2=A0=C2=A0=C2=A0=C2=A0Hi, Thanks.
->>> =C2=A0=C2=A0=C2=A0=C2=A0I will test this patch, but I am worried whethe=
-r it will affect the performance.
->>> Should we also consider null pointer protection?
->>
->> Yes, it will likely affect the performance, just check if it works.
->>
->> Probably it could be optimized by just protecting
->> nvme_tcp_fail_request(), which AFAICT is the only function in the
->> nvme_tcp_try_send() code that calls nvme_complete_rq().
->
-> Something like that, maybe, not tested:
+お世話になっております。
+WizBiz株式会社でございます。
 
-Ah wait, this won't fix anything because it will end up with a double
-completion.
-Ok I am not sure how to fix this, someone else maybe has better ideas.
+さまざまな経営のお役に立つ情報をお届けしております。
 
-Maurizio
+国（＝官公庁）が中小企業との取引に使う費用として
+予算化している金額は、約5兆6,000億円（令和5年度）。
+実際に国と取引をしている企業は全体の「15%」しかありません、
+
+これだけ大きな予算＝マーケットをいかに攻略すれば良いのか？
+そんな疑問を55分で解消する無料セミナーを開催致します。
+
+◆オンラインセミナーの詳細・お申込みはこちら（無料）
+https://wizbiz.jp/seminar/40384/
+
+国＝官公庁といっても、営業ターゲットになるのは、霞が関の中央省庁だけではありません。
+全国各地にターゲットはあります。全国にどれくらい官公庁があるのかを調べてみました。
+
+〜北海道・東北地方〜 1017先
+北海道、青森、岩手、宮城、秋田、山形、福島の７道県
+
+〜関東地方〜 1297先
+群馬、栃木、茨城、埼玉、千葉、東京、神奈川、山梨の８都県
+
+〜中部地方〜 755先
+静岡、愛知、岐阜、三重、福井、石川、富山、新潟、長野の９県
+
+〜近畿地方〜 534先
+滋賀、京都、奈良、和歌山、大阪、兵庫の６府県
+
+〜中国・四国地方、九州・沖縄地方〜 1,328先
+岡山、広島、山口、鳥取、島根、香川、愛媛、徳島、高知、福岡、佐賀、長崎、大分、熊本、宮崎、鹿児島、沖縄の17県
+（順不同）
+
+各地にこれだけの官公庁＝国の行政機関があります。（WizBiz株式会社調べ）
+
+実は、皆さんの地元にあるこれら国の行政機関が、
+新規開拓にはうってつけなのです。 その理由は・・・
+
+★国の行政機関は地元の中小企業と取引しなければならないという法律がある
+★そのための年間予算は、５兆６千億円を超える（令和5年度実績）
+★入札以外にも国と取引する方法があるのに、そんなことを知っている経営者はほとんどいない
+★実際に、国と取引している中小企業はわずか15％しかいない
+★つまり全国の15％の企業で５兆６千億円が独り占めされており、85％の企業は蚊帳の外にいる
+
+つまり国は、地元中小企業と取引するために準備万端なのに、
+中小企業側がアプローチしていないのです。
+
+この事実に、もったいないと感じた経営者様、
+ぜひ一度セミナーをお聞きになり、国との取引にチャレンジしてみませんか？
+
+◆セミナーの詳細・お申込みはこちら（無料）
+https://wizbiz.jp/seminar/40384/
+
+【セミナーで解説する内容を一部ご紹介！】
+
+◎国は中小企業と取引しなければないらない、という「法律」
+◎売上アップ以外にも存在する大きなメリット
+◎どうやって国と新規取引をすればいいのか？
+◎実際に発注を受けた中小企業が国から貰っている金額
+
+マイク、カメラ不要の無料セミナーとなっております。
+お気軽にご参加ください。
+
+◆セミナーの詳細・お申込みはこちら（無料）
+https://wizbiz.jp/seminar/40384/
+
+===================================
+メールの配信停止をご希望の方はお手数をお掛けしますが、
+以下よりお手続きをお願い致します。
+https://form.os7.biz/f/ed730f94/
+===================================
+運営会社：WizBiz株式会社
+住所：東京都港区芝5-16-7　芝ビル3F
+電話：03-6809-3845
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
