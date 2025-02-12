@@ -1,105 +1,108 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82701E282D
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 09:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+Received: from smtp.cecloud.com (unknown [1.203.97.240])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E72AC1EF090;
+	Wed, 12 Feb 2025 09:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739353643; cv=none; b=kjMlp1zqfwfE+eooXcvHU5Gh4Zev5xObQ1NP43YNvSctxhCqE0E1++kdlUS6n1VW1H4mTVNmZuTRSx9Wdqe6Rv8kTGFPpi3/ra3blU437x5YnTCI03IFnyCZY3H0Bg0A3Di6Q+7Pxy515uaIspobEf62hDJDKmJbh45VMC2c4t8=
+	t=1739353681; cv=none; b=KVVfPeYYUNhMYnDbh8M6+ii4nqrG1LKEDX5jI1E6E7hqiLIesfls9LJlcelyON4W9+qZyPc4Ky4Wgeq/zjuc6ODnfdrifPha/qIYix1LJxF+ov1Ho9CEXmYLoALQJPVSClF8P3wuDgDhbgK1RD+VCoGu6OJ0iYQzA60L49DPOlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739353643; c=relaxed/simple;
-	bh=TKqcICL6TXKPxSRegpy9J7XyX60nER860Jd1kslHKlk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NyomYi9fyhLoaOHvbeY/i/Zaabd30OuE/RMFd8S8Rs6M109tUtVqIDzqeCQ9lx6Zm6DCt+fQme5249zxVUz99qneTP0t6QA6ZVjOH4niS/bGGMUpFLtycIlxEfq3kPzML/8+PExQD+y+W/7S9+GqlpkGlPnZRRx6jBM2X825iZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zOD+Ake8; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zOD+Ake8"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ab2b29dfc65so996959966b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 01:47:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739353640; x=1739958440; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TKqcICL6TXKPxSRegpy9J7XyX60nER860Jd1kslHKlk=;
-        b=zOD+Ake8DyXjX6p5UpYt0dkTWSVP3hII4Pb9TTAmi7P/ajGoE4D/QRXJGStq9zuwAK
-         HpJkdDOGnMbcMTGhjKbkKkAIhUq8e4qYeYJiE1u5IE2xT3HqRlJopjmz+dZZ4fjJO9LH
-         bPHYWpCDdOAM/tjO0y+YCTAVi22GmUBBtPN7+oS4WzxmAckeGO8ph9yfQLE+VWbAhw7a
-         2LTnj7H4ZimyzY+zbL7Pto4STZt2bMxo7JDT2gO8hMDz+owHV2GymQqjmEZfe2Wz88gC
-         qd9Kel9Izes7JmuxIXoUAg07SgUvo3JQo7OIHIi+XnkNPnEybnNB3FZ10DLMUU3hPIsZ
-         xm+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739353640; x=1739958440;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TKqcICL6TXKPxSRegpy9J7XyX60nER860Jd1kslHKlk=;
-        b=HWWNwNxJFVrOhYXl+lrlJFaoU738cfDxtweb6NSWfXuaSLreJ2prNe5BQfME0kyaip
-         +Os1elcam0cgaH1od0EwH6rhfGobJUSCRKmP0+to8vPlwLCfHrm9qXuaugZ50iR+uWFk
-         MOCfwUmkrCedcCk1FJXzZVvqXFauRN9ByQ+OoMRErUZ0cceVo5lryoOpBq7u+dZanRRS
-         e3ErbGRkqXaMRGlf/UtgYkiNXnJ4X8g1w1URupWf1ex20KrS8PNdTy5tolbLiAkbcewC
-         igWTErF5jnA59vn5POV0vZBo405V2wMXmJ1BMhjllzEMrEdlKELB865Xxu7DkXQLB8ta
-         IEWw==
-X-Forwarded-Encrypted: i=1; AJvYcCXz3vA/azxSSXU2s7kWBWxcT8Yha1hsSmMC/inQ3z/pTEcqfp1S1U14KkGtSpOpyWRd7JOMKOT6zWm+W+g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/C/bFtVUWzuzcTOrlAQZ9mEQ+QN9sILXuZrFv5yBTgGewSNrZ
-	SNxKd90dU5BYBTlnRzfQwf6RVna+oRo5ecNXSB/76nAMAk0K+3qm/mjIKmHnaNuLBQImkdiIght
-	2BTrmwYk2k/MYB1UOUMMB3s5WVClzaY7PBc6s
-X-Gm-Gg: ASbGncu6Qh1/uKBlFWJrgDQMZnSU1j0n4S//1fq181PoR9ind0AZuURYjlhDklQ9++0
-	AQJQIIYBWAWCyvOyjg7a9WdqSEo7mtza4tfro+tBnJCsagQnvpX1UHZ6EPYcZ7U4bAo6ht6d5it
-	N3sTELb0nnXEcYn5dx55wQkWk/IE09JQ==
-X-Google-Smtp-Source: AGHT+IGQtYtV8hB9z4cqfu+GD6xWt9yKHzH3Tmh6TBoqYNAt+cogJqa1226aKLwvMy8OQDTzT4ej9do/nT4u8m18J2A=
-X-Received: by 2002:a17:907:3f8d:b0:ab7:dc1d:7d7d with SMTP id
- a640c23a62f3a-ab7f33c578dmr199546266b.25.1739353639819; Wed, 12 Feb 2025
- 01:47:19 -0800 (PST)
+	s=arc-20240116; t=1739353681; c=relaxed/simple;
+	bh=xUQ30rhV40fcUwQmaBnExzYBwck0x6MjVWsXHWK2G7Y=;
+	h=Date:From:To:Cc:Subject:References:Mime-Version:Message-ID:
+	 Content-Type; b=CdOL2aPO3sio87N0Ja4qMODlrpBY8erdi0/4TVe1qcBf3rvnDtgMC7Q61Kuxp+NWrOQ7oYdrA4erl56azSDITkkW8IRl3z/yP6+yATj+DDdxk12vJxyJBlEIxy0ez1pHVnsTqHpPpivNtPlxLCvsmx5GC+9oE0bFpcjo5/s4RHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; arc=none smtp.client-ip=1.203.97.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.cecloud.com (Postfix) with ESMTP id B8A1490011B;
+	Wed, 12 Feb 2025 17:47:47 +0800 (CST)
+X-MAIL-GRAY:0
+X-MAIL-DELIVERY:1
+X-SKE-CHECKED:1
+X-ABS-CHECKED:1
+X-ANTISPAM-LEVEL:2
+Received: from desktop-n31qu50 (unknown [39.156.73.12])
+	by smtp.cecloud.com (postfix) whith ESMTP id P3907749T281458761199984S1739353666453316_;
+	Wed, 12 Feb 2025 17:47:47 +0800 (CST)
+X-IP-DOMAINF:1
+X-RL-SENDER:zhang.guanghui@cestc.cn
+X-SENDER:zhang.guanghui@cestc.cn
+X-LOGIN-NAME:zhang.guanghui@cestc.cn
+X-FST-TO:mlombard@bsdbackstore.eu
+X-RCPT-COUNT:9
+X-LOCAL-RCPT-COUNT:0
+X-MUTI-DOMAIN-COUNT:0
+X-SENDER-IP:39.156.73.12
+X-ATTACHMENT-NUM:0
+X-UNIQUE-TAG:<882da0001598ff412ba171defd5e7094>
+X-System-Flag:0
+Date: Wed, 12 Feb 2025 17:47:45 +0800
+From: "zhang.guanghui@cestc.cn" <zhang.guanghui@cestc.cn>
+To: "Maurizio Lombardi" <mlombard@bsdbackstore.eu>, 
+	chunguang.xu <chunguang.xu@shopee.com>
+Cc: mgurtovoy <mgurtovoy@nvidia.com>, 
+	sagi <sagi@grimberg.me>, 
+	kbusch <kbusch@kernel.org>, 
+	sashal <sashal@kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-nvme <linux-nvme@lists.infradead.org>, 
+	linux-block <linux-block@vger.kernel.org>
+Subject: Re: Re: nvme-tcp: fix a possible UAF when failing to send request
+References: <2025021015413817916143@cestc.cn>, 
+	<D7OOGIOAJRUH.9LOJ3X4IUKQV@bsdbackstore.eu>, 
+	<3f1f7ec3-cb49-4d66-b2b0-57276a6c62f0@nvidia.com>, 
+	<D7OWXONOUZ1Y.19KIRCQDVRTKN@bsdbackstore.eu>, 
+	<CAAO4dAWdsMjYMp9jdWXd_48aG0mTtVpRONqjJJ1scnc773tHzg@mail.gmail.com>, 
+	<202502111604342976121@cestc.cn>, 
+	<D7QBDBZMZTCI.1W40WVL5JJ3O7@bsdbackstore.eu>, 
+	<D7QC8AQ7J89A.32TNPSFWV1VNX@bsdbackstore.eu>
+X-Priority: 3
+X-GUID: 9D028B37-D67E-4AA1-BFBF-FC2EAB062C63
+X-Has-Attach: no
+X-Mailer: Foxmail 7.2.25.331[cn]
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <SY8P300MB04210D3E18CFEA27AE9E9338A1FC2@SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM>
-In-Reply-To: <SY8P300MB04210D3E18CFEA27AE9E9338A1FC2@SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 12 Feb 2025 10:47:08 +0100
-X-Gm-Features: AWEUYZmVcw8L3xAI6H_huoGpEXCmHBOAY8OxIyVRj6KAvbkKDGsIbSCp832MFn8
-Message-ID: <CANn89iKxw4=29p_Ys3H0=mDQFOfZYbqxaTuLsRYK2X2tJCuwHQ@mail.gmail.com>
-Subject: Re: BUG: corrupted list in neigh_destroy [with reproducer]
-To: YAN KANG <kangyan91@outlook.com>
-Cc: Joel Granados <joel.granados@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, 
-	"j.granados@samsung.com" <j.granados@samsung.com>, "linux@weissschuh.net" <linux@weissschuh.net>, 
-	"judyhsiao@chromium.org" <judyhsiao@chromium.org>, "James.Z.Li@dell.com" <James.Z.Li@dell.com>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"syzkaller@googlegroups.com" <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Message-ID: <202502121747455267343@cestc.cn>
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-On Wed, Feb 12, 2025 at 10:18=E2=80=AFAM YAN KANG <kangyan91@outlook.com> w=
-rote:
->
-> Hi:
->
-> I found a kernel bug titiled "BUG: corrupted list in neigh_destroy " whil=
-e using modified syzkaller fuzzing tool. I Itested it on the latest Linux u=
-pstream version (6.13.0-rc7), and it was able to be triggered. I found earl=
-y report has no repro. I have a reproducer that can stable trigger this bug=
- .
->
-> early report: https://lore.kernel.org/netdev/20241007202240.bsqczev75yzdg=
-n3g@joelS2.panther.com/
->
-> The bug info is:
->
-> kernel revision: v6.13-rc7
-> OOPS message: BUG: corrupted list in neigh_destroy
-> reproducer:YES
-> subsystem: NETWORKING
+wqDCoMKgwqBIaSwgVGhhbmtzLgrCoMKgwqDCoEkgd2lsbCB0ZXN0IHRoaXMgcGF0Y2gsIGJ1dCBJ
+IGFtIHdvcnJpZWQgd2hldGhlciBpdCB3aWxsIGFmZmVjdCB0aGUgcGVyZm9ybWFuY2UuClNob3Vs
+ZCB3ZSBhbHNvIGNvbnNpZGVyIG51bGwgcG9pbnRlciBwcm90ZWN0aW9uPwoKCnpoYW5nLmd1YW5n
+aHVpQGNlc3RjLmNuCgoKCkZyb206wqBNYXVyaXppbyBMb21iYXJkaQoKCgpEYXRlOsKgMjAyNS0w
+Mi0xMsKgMTY6NTIKCgoKVG86wqBNYXVyaXppbyBMb21iYXJkaTsgemhhbmcuZ3VhbmdodWlAY2Vz
+dGMuY247IGNodW5ndWFuZy54dQoKCgpDQzrCoG1ndXJ0b3ZveTsgc2FnaTsga2J1c2NoOyBzYXNo
+YWw7IGxpbnV4LWtlcm5lbDsgbGludXgtbnZtZTsgbGludXgtYmxvY2sKCgoKU3ViamVjdDrCoFJl
+OiBudm1lLXRjcDogZml4IGEgcG9zc2libGUgVUFGIHdoZW4gZmFpbGluZyB0byBzZW5kIHJlcXVl
+c3QKCgoKT24gV2VkIEZlYiAxMiwgMjAyNSBhdCA5OjExIEFNIENFVCwgTWF1cml6aW8gTG9tYmFy
+ZGkgd3JvdGU6CgoKCj4gT24gVHVlIEZlYiAxMSwgMjAyNSBhdCA5OjA0IEFNIENFVCwgemhhbmcu
+Z3VhbmdodWlAY2VzdGMuY24gd3JvdGU6CgoKCj4+IEhpwqAKCgoKPj4KCgoKPj4gwqAgwqAgVGhp
+cyBpcyBhwqAgcmFjZSBpc3N1ZSzCoMKgSSBjYW4ndCByZXByb2R1Y2UgaXQgc3RhYmx5IHlldC4g
+SSBoYXZlIG5vdCB0ZXN0ZWQgdGhlIGxhdGVzdCBrZXJuZWwuwqAgYnV0IGluIGZhY3QswqDCoEkn
+dmUgc3luY2VkIHNvbWUgbnZtZS10Y3AgcGF0Y2hlcyBmcm9twqAgbGFzdGVzdCB1cHN0cmVhbSwK
+CgoKPgoKCgo+IEhlbGxvLCBjb3VsZCB5b3UgdHJ5IHRoaXMgcGF0Y2g/CgoKCj4KCgoKPiBxdWV1
+ZV9sb2NrIHNob3VsZCBwcm90ZWN0IGFnYWluc3QgY29uY3VycmVudCAiZXJyb3IgcmVjb3Zlcnki
+LAoKCgo+ICsgbXV0ZXhfbG9jaygmcXVldWUtPnF1ZXVlX2xvY2spOwoKCgrCoAoKCgpVbmZvcnR1
+bmF0ZWx5IEkndmUganVzdCByZWFsaXplZCB0aGF0IHF1ZXVlX2xvY2sgd29uJ3Qgc2F2ZSB1cwoK
+Cgpmcm9tIHRoZSByYWNlIGFnYWluc3QgdGhlIGNvbnRyb2xsZXIgcmVzZXQsIGl0J3Mgc3RpbGwg
+cG9zc2libGUKCgoKd2UgbG9jayBhIGRlc3Ryb3llZCBtdXRleC4gU28ganVzdCB0cnkgdGhpcwoK
+CgpzaW1wbGlmaWVkIHBhdGNoLCBJIHdpbGwgdHJ5IHRvIGZpZ3VyZSBvdXQgc29tZXRoaW5nIGVs
+c2U6CgoKCsKgCgoKCmRpZmYgLS1naXQgYS9kcml2ZXJzL252bWUvaG9zdC90Y3AuYyBiL2RyaXZl
+cnMvbnZtZS9ob3N0L3RjcC5jCgoKCmluZGV4IDg0MTIzOGYzOGZkZC4uYjcxNGUxNjkxYzMwIDEw
+MDY0NAoKCgotLS0gYS9kcml2ZXJzL252bWUvaG9zdC90Y3AuYwoKCgorKysgYi9kcml2ZXJzL252
+bWUvaG9zdC90Y3AuYwoKCgpAQCAtMjY2MCw3ICsyNjYwLDEwIEBAIHN0YXRpYyBpbnQgbnZtZV90
+Y3BfcG9sbChzdHJ1Y3QgYmxrX21xX2h3X2N0eCAqaGN0eCwgc3RydWN0IGlvX2NvbXBfYmF0Y2gg
+KmlvYikKCgoKc2V0X2JpdChOVk1FX1RDUF9RX1BPTExJTkcsICZxdWV1ZS0+ZmxhZ3MpOwoKCgpp
+ZiAoc2tfY2FuX2J1c3lfbG9vcChzaykgJiYgc2tiX3F1ZXVlX2VtcHR5X2xvY2tsZXNzKCZzay0+
+c2tfcmVjZWl2ZV9xdWV1ZSkpCgoKCnNrX2J1c3lfbG9vcChzaywgdHJ1ZSk7CgoKCisKCgoKKyBt
+dXRleF9sb2NrKCZxdWV1ZS0+c2VuZF9tdXRleCk7CgoKCm52bWVfdGNwX3RyeV9yZWN2KHF1ZXVl
+KTsKCgoKKyBtdXRleF91bmxvY2soJnF1ZXVlLT5zZW5kX211dGV4KTsKCgoKY2xlYXJfYml0KE5W
+TUVfVENQX1FfUE9MTElORywgJnF1ZXVlLT5mbGFncyk7CgoKCnJldHVybiBxdWV1ZS0+bnJfY3Fl
+OwoKCgp9CgoKCsKgCgoKCk1hdXJpemlvCgoKCsKgCgoKCsKgCgoK
 
-FYI, there are already many public reports using bcachefs to trigger
-'bugs' in networking or other layers.
 
-Do not send other reports, or make sure your repro is _only_ using
-networking stuff.
+
