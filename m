@@ -1,117 +1,58 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1632A2AE69;
-	Wed, 12 Feb 2025 02:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992AE2AE69
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 02:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739326772; cv=none; b=QtzsOKGC6QCXdI4uRWW66fCwsXGfNJaSsmuZSor8tOzRoagapQiFkbxDH4PnZnusGjCJrglBm5sKprZziIPRUKWudNN6dDNhgWQewLJQSTvpITSVaT/d/Mpv6PY4kSlUELelqowTNpg9u2JXLWsqysEj3XYTtwVSqZFvK065Kp8=
+	t=1739326779; cv=none; b=ntKyatQ3LfDV8w5yYzkU9uyv0iVi2nFm7Z0yeSYDwxcA3UW1iy90aetnNXj+D72zb6h64YjcejENpJ5SaMZ0p26AaHVa4SZLPbg8CwpMa/g9RK57asXw94kyJEiJAxyfH5iR7MZN4SVc0CkyFH31YyS4G0dYu2BVhFcSgKzcqDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739326772; c=relaxed/simple;
-	bh=8QGo7rX/XTnY33h1jfbbbpzLdlwYl7IJWM7cUDYjapE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L9nW4kq2Rfog8oszjCwtq2ZIn0+C17TohhwqY7VXdXMYzBNbEVPHsTaYW2rjBXKLLMIyd4LDSltfE4owec1n4izt8bn2xMob45u0j0uIW//ugM88eAx1GmpfR4xBPiZUXbUbzpVPLCKpRDMDhM/OCwXwyin0+5M7Pm23HfWJcfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowABHT9MaBaxnzuKRDA--.62447S2;
-	Wed, 12 Feb 2025 10:19:14 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] gpio: stmpe: Check return value of stmpe_reg_read in stmpe_gpio_irq_sync_unlock
-Date: Wed, 12 Feb 2025 10:18:49 +0800
-Message-ID: <20250212021849.275-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1739326779; c=relaxed/simple;
+	bh=G3DyCsWA6hOD7ERSraNbl8ymdQssGhj7+YKacyKvS34=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=NDL73RZOB0GX0m6IfMGm131smgQg+1WLZW8A1cbPGKV0wballc/SkTFnxlzGpT+4zBZmCMuFk73B2EQyqE7A/Ds7qaJJnBzh6MmJQbYMy6ED4DEiVaGL3fgaEAGLtoQ5/pgbBm+pqOOf1OMBsDfxLnWPqfKQ5734pIiTnjFr1eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oElwa8av; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oElwa8av"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C3C1C4CEDD;
+	Wed, 12 Feb 2025 02:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739326779;
+	bh=G3DyCsWA6hOD7ERSraNbl8ymdQssGhj7+YKacyKvS34=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=oElwa8av0mZa6n0uOiIzT/A2Yhe5awzpcaeI9UjrWgNfoNVBGzs0PRDsXQZgmcE/q
+	 jTH64t9uWY29GGPmEj6ZdLGFBOiFMWihL4EU8ahKNGZP/sWkHRcEP4bKrnAXQE/jJ4
+	 hU14ddTaHL2/fuCG9vapBoLnLwqn2/EPxEf2lIvj2VSLC34R8vLMlrLqGgu07PZLOx
+	 mU4V5xM2Jk/oUJZTgiMy+nBWYl/P7q1j2/zf5DMx/m0JCFSdGIGlT5JyzB73I9+0mc
+	 IBBP8IOxbxgS+Tyad5iQnJcZ5VqVqEIfH4rBIWwFihllova1DXax44fNt3X0sFxEiI
+	 yLeZfBGqBrxuA==
+Message-ID: <31caadac-f56f-469b-bb5d-f58b3ab5e309@kernel.org>
+Date: Wed, 12 Feb 2025 10:19:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowABHT9MaBaxnzuKRDA--.62447S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AFy3tF17Aw4rCF4UWF48WFg_yoW8CFy5pF
-	Wqgr98CryDJa1rZryYyF4rZwnakay8KrW7C3srWrsagr1Fvr9rGFW8XFyaqFn8trWkWw47
-	AF1DtF95tF1kZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9E14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbLFxUUUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBg0LA2erwGWqbgAAsu
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: add ioctl to get IO priority hint
+To: Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net
+References: <20250205214014.3270585-1-jaegeuk@kernel.org>
+ <Z6u6qN2ATQKlfmRQ@google.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <Z6u6qN2ATQKlfmRQ@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The stmpe_reg_read function can fail, but its return value is not checked
-in stmpe_gpio_irq_sync_unlock. This can lead to silent failures and
-incorrect behavior if the hardware access fails.
+On 2/12/25 05:01, Jaegeuk Kim via Linux-f2fs-devel wrote:
+> This patch adds an ioctl to give a per-file priority hint to attach
+> REQ_PRIO.
+> 
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 
-This patch adds checks for the return value of stmpe_reg_read. If the
-function fails, an error message is logged and the function returns
-early to avoid further issues.
+Reviewed-by: Chao Yu <chao@kernel.org>
 
-Fixes: b888fb6f2a27 ("gpio: stmpe: i2c transfer are forbiden in atomic context")
-Cc: stable@vger.kernel.org # 4.16+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/gpio/gpio-stmpe.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpio-stmpe.c b/drivers/gpio/gpio-stmpe.c
-index 75a3633ceddb..222279a9d82b 100644
---- a/drivers/gpio/gpio-stmpe.c
-+++ b/drivers/gpio/gpio-stmpe.c
-@@ -191,7 +191,7 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
- 		[REG_IE][CSB] = STMPE_IDX_IEGPIOR_CSB,
- 		[REG_IE][MSB] = STMPE_IDX_IEGPIOR_MSB,
- 	};
--	int i, j;
-+	int ret, i, j;
- 
- 	/*
- 	 * STMPE1600: to be able to get IRQ from pins,
-@@ -199,8 +199,16 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
- 	 * GPSR or GPCR registers
- 	 */
- 	if (stmpe->partnum == STMPE1600) {
--		stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_LSB]);
--		stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_CSB]);
-+		ret = stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_LSB]);
-+		if (ret < 0) {
-+			dev_err(stmpe->dev, "Failed to read GPMR_LSB: %d\n", ret);
-+			goto err;
-+		}
-+		ret = stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_CSB]);
-+		if (ret < 0) {
-+			dev_err(stmpe->dev, "Failed to read GPMR_CSB: %d\n", ret);
-+			goto err;
-+		}
- 	}
- 
- 	for (i = 0; i < CACHE_NR_REGS; i++) {
-@@ -222,6 +230,7 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
- 		}
- 	}
- 
-+err:
- 	mutex_unlock(&stmpe_gpio->irq_lock);
- }
- 
--- 
-2.42.0.windows.2
-
+Thanks,
