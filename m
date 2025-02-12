@@ -1,100 +1,110 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961A6204F6A;
-	Wed, 12 Feb 2025 13:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A48820CCF5
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 13:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739365404; cv=none; b=dTbEsUAdoYFbLnCn0eANNrqShjt6U/6gkUD3I8v+rjxQR8LKokUFA/12DsW4JaBO2n9nS2zIK9RqCgPjIQkaMLGWD74PZfmHhQ1LUZ0KdyZPO+mrxak3QREssxC8CB6WVYK/2Lma9uXkiIZDhnA/+qMPT0fY2r4bE7fjFsMcslk=
+	t=1739365421; cv=none; b=T02of+ChNUAR4Rc6rLfUgUeT4YQejdUWjvfx81/e7BdKK70wGx8GpB0aS3+huoalvugQxFVAYRvby909unSxCbgs2yyhMAS6Fui6O0QnWQdv+/JR4LrnXBlci9VVWPiP+EhMki9QnXj+VRoG2c+rlfCIgnP+iTWA8uCmJqkS73w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739365404; c=relaxed/simple;
-	bh=+Mc1XOKwygNzl+J75JzAnRhFTS1rDyHjsKiXZ66NZo8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=MZeJs54NEzGxOPlEI/1Mc4IZJomI2Q9mDbXHLr1ckhEk1KeX5UvjjwWScco0zUWorGKEwskGqbub7CyGXZw01MCTMUJWxxC9d9sYCQTRsuzgeoOdyu1GoSH6fnC1mR6KEDKh0Drn+PGBogBcX/Ug1WNQjvNMZ/m1CtCbA2vX9o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ZngAeNPs; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1739365421; c=relaxed/simple;
+	bh=5I+GoDOLPXwxaF/bdd/7zGEhpTleAA3217JXKvjhE4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JKAmruBCXzp958mvka/V1QpFi08LBjPHmcOssl18Zr0G66qnxSgt6gPDPI3wH+oEejajKvylmTHJgba4nkaF2PpyExmr0GAYAJAlM/xE2Y1SrUgWXVZ4Ns0APOk6E92keH/X3CYecd4QGreJjsNe+84liLQx0SfygNUOOILyZqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=ebOHMC8s; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=igHe+GkC; arc=none smtp.client-ip=103.168.172.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ZngAeNPs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1739365380; x=1739970180; i=markus.elfring@web.de;
-	bh=UhVHuDHyu/BxGMdq3OfR7GfxXgzLgEBeqCkCRiMEaAc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ZngAeNPsGmfh2V2NCCDFKLgY2b2/CRp/qVQNY7ScrR3Yw+vQ4IFxxh5HypwU/uZI
-	 x96EUUXKpYshPIoihIrcg6wxctVxdTEX95m8d82A1bdvUT1tCYAcSPV2VmfdoygXV
-	 T19bTeVT/KsCKd2HFQUIaJ1QM7gvwi9QZ/5nulOpvekaOJ7kKd3qWeiM5otfOhnGm
-	 ggKdEQPKpz2lHVVOY62Kfz53zHHU+JpxNLPyY2V2C6tclDkyk9O65hHRvQW7qPJXz
-	 kmI11GHDd7e4ODKZdv+r2N8ROciyAcGjmSyyXRyPRDS0vCJNyIDKg2Qyvf5FATfFR
-	 4pjvEofqsg6GhyiVDA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.11]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MwR4D-1tPhhZ0GMn-00wHo8; Wed, 12
- Feb 2025 14:03:00 +0100
-Message-ID: <612ab8e6-a712-41f7-ae7f-7bdc0e3c1b90@web.de>
-Date: Wed, 12 Feb 2025 14:02:58 +0100
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="ebOHMC8s";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="igHe+GkC"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 330B3114018F;
+	Wed, 12 Feb 2025 08:03:39 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Wed, 12 Feb 2025 08:03:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1739365419; x=
+	1739451819; bh=+Y6Ib/RSqKlmrUGsG+NEeNPWdjzf+UWt/aq1y+kKLoo=; b=e
+	bOHMC8smW1FFDE+T0YMtLUOKeN1+oIci9V47ehV5TsmcVSEDTaBnlfpFVtuV/HlM
+	tojgIXacFPQrNfJAfcXQlcX4vmyGyC62P5JC6z5c5Ti6FtQfK/RnB16QovbR2Vg4
+	yNQltaSxbohA9ce+GWU8Qiizp1UVyvzmaFDDpsY3o408CwbnJ8yzflHOJ+mcct7y
+	wVZbgsgxJWoOnV7fhDAcdnVrtq0CErG/z+UO/W7l60da8/ovSvhnQt5UWHs9D8It
+	bmdyMaxg7M2s81ka/lN6rUhLXCvMX38J9w/TNA8FSxCNGfZk6AxRY60uUr1OMhnX
+	wGP7aVQtDfEjsd8H4jKXw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1739365419; x=1739451819; bh=+Y6Ib/RSqKlmrUGsG+NEeNPWdjzf+UWt/aq
+	1y+kKLoo=; b=igHe+GkC+oO+sjhu6f82OnkmsCRSej4hthz39z6T7SI7A1V7USa
+	C0ChkJr3ZLxH6qdWrz0iVfixykXVIoxcvImA6SMKFZSSRF47ms91195Fgu3uW1dv
+	2G+1mltvF1P7v+1z9fOD0PAIlE3GECltkioTXLvFnAT7m6+nWfFK9XI1c9OlrUaa
+	LZJs4a0WZEjO1ozrr5irYYqs1H5DfjdOZxEfroqDVQ8YAsU7Av3V3tSI2DYi+3L7
+	aj/sdq5Ad12YeXY9YAsZBR4nKYTCV3LRfeVtF7KftgdkQonrQdHJH64RR5KkTIz9
+	oLM2kOSH3TFOr8xsQczzLHbGIzxbqGo7wpg==
+X-ME-Sender: <xms:KpysZ75bDcq_Dv4rOLfzrNvSYQobhozPKD00g9ykeYpNwm5N_OO9xA>
+    <xme:KpysZw7gOqfwR4FcUZAbcilF329sUpIO2-USYUVGeXm5e_SiyYyR1XjAUKSkIywmn
+    ciIIgF8ZJ2omaaXEmY>
+X-ME-Received: <xmr:KpysZydSpsHBuveNzQPtc7PVWNd3DsvmV4Fa4l29PPTXUEAzUVaA8DXV2lowNFBwd7TG4A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegfeelhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdfstddttddv
+    necuhfhrohhmpedfmfhirhhilhhlucetrdcuufhhuhhtvghmohhvfdcuoehkihhrihhllh
+    esshhhuhhtvghmohhvrdhnrghmvgeqnecuggftrfgrthhtvghrnhepffdvveeuteduhffh
+    ffevlefhteefveevkeelveejudduvedvuddvleetudevhfeknecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirhhilhhlsehshhhuthgvmhho
+    vhdrnhgrmhgvpdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhhtpdhrtg
+    hpthhtohepvhgrnhhnrghpuhhrvhgvsehgohhoghhlvgdrtghomhdprhgtphhtthhopeig
+    keeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvh
+    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehpsghonhiiihhnihesrhgvughh
+    rghtrdgtohhmpdhrtghpthhtohepshgvrghnjhgtsehgohhoghhlvgdrtghomhdprhgtph
+    htthhopegvrhguvghmrghkthgrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprggt
+    khgvrhhlvgihthhnghesghhoohhglhgvrdgtohhmpdhrtghpthhtohepjhigghgrohesgh
+    hoohhglhgvrdgtohhmpdhrtghpthhtohepshgrghhishesghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:KpysZ8Jwd7SmUdQWsB3CpA0XEQr-SHdSQ7jlFyvn9SUqaG9MJX2l2Q>
+    <xmx:K5ysZ_ISRZEj5D7uqBAOmfmWJnHizY5LxtmdRkS-1lCC5YHIcKva2A>
+    <xmx:K5ysZ1wZbb3pCgjaOIspFoZ9YvEIdtSY8arRyUhyuYA489Suyb1fBQ>
+    <xmx:K5ysZ7IFqkeMAZ9_wB3Ajs9IzHjgOEavHiMs4s7lUGJRVUTvFT7KlQ>
+    <xmx:K5ysZ467oL4q_Dc7qqNBCmU0GVPQk3MrvpHn2okmIPgDb2hS16BvFaq2>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 12 Feb 2025 08:03:33 -0500 (EST)
+Date: Wed, 12 Feb 2025 15:03:30 +0200
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Vishal Annapurve <vannapurve@google.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
+	seanjc@google.com, erdemaktas@google.com, ackerleytng@google.com, jxgao@google.com, 
+	sagis@google.com, oupton@google.com, pgonda@google.com, 
+	dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, chao.p.peng@linux.intel.com, 
+	isaku.yamahata@gmail.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH V4 4/4] x86/tdx: Remove TDX specific idle routine
+Message-ID: <avodert2s5di3s4m3ays6z4qhskwfz6zxenoq3rsf7crpclkfz@jaq7ptkmco4o>
+References: <20250212000747.3403836-1-vannapurve@google.com>
+ <20250212000747.3403836-5-vannapurve@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Wentao Liang <vulab@iscas.ac.cn>, cgroups@vger.kernel.org,
- linux-block@vger.kernel.org
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>,
- Tejun Heo <tj@kernel.org>
-References: <20250212083203.1030-1-vulab@iscas.ac.cn>
-Subject: Re: [PATCH] block: Check blkg_to_lat() return value to avoid NULL
- dereference
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250212083203.1030-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:oku5XT0L9VHT9UFRSvoG+4mbuVUZMifD03n2hUg0w+6+WPGrNAP
- Xc/Wbq87YEsS0LU84nPcZYuTW1WT9/t3F9NgZDbVsjz2Hwsd7atkKN5uqtzVK5NCLA+uhz4
- leeRuhTgcsVWIPuZOkwFAWXYw+gZKn/7tKMn/HAyWOp6saYqAy3I+giefqXhK7N24gH18BU
- RFUNqC2ZNdf4CfkFZ25Gw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Br8sEHTNNaU=;7Y7yedgzvBUlld/sjcV0dPcHaOM
- 7HNJxMyDRZFkPzc5REL5/tjhqNf4HJeBRJCC2DxMgC559YqNeoVtkRMfeBcP2GsAVtezymQ8q
- Hwe6fexjRkFzTQxoRbJAfcxNMBjOtGwrveenPm+wEJ/WONr5yqLRcjbF8i4OPOWzgJQ5PjgHA
- 3B8QNxe4sSjd0VeUdvWCRzwwEYWNOzOkA8RrQxOvE08wdGMMkx3ysd1uhjG3SJvIdkMj3NnFs
- +gRmLXv02iC5sO3KxXFaArPzxX5V+BTAb3lOEP8L1K5TMvXK+oMj3lFxdQ5x9Pv1AgUahE/3x
- /ki6YUC76RWPfJj3/f9IOrdPC5Hq2Rmg2nH8IQzkMr0Te0GmLDtfzOhxhe/rOKGPerGG/p6e5
- /9d7Y6R1XtGs2M81vEvcU8qZjlB5Fvi10zQQsB69SUf2KX1fxT+rcvgvZHRMlzRcY83NXV1k4
- rcnJfDPfSWmQY8reF15Y4MsWTRNnrLo/BQH/2M1FrRxw4deTIMVsM4fdUHP8eJploh7epLz9B
- J17DEVUTliDQNcpvCrSGYUYi3xhXUPxeXEKwKBvTtlEdhoDJy6P3FqwFM5RePsn5HbTbVXTmb
- s2SfytFSn+TAbtJ+RaUpgkMmvj5TrgkUtnQzSw63rk2JTvJsBQvcb0FyONX1CtdRhfjxap8lu
- NS+Y55WQuDnW4u6GulUC9NfU/iChLbbIXMkxnImXdyqK+wLN38N7GKPyDSGLimF8sS23+EBK/
- 5mu614v9feRwrLSoCBpijCnTyoIYuIZCdFhIiYY3c0sKwPMiXl72Wvm70x4y2f3WUNOtBi3bc
- nmFT9RJNdnBxK7rQpvZSKrXLXkF6Klmwvl2ZQhhBvAd4WtQ6MG42Z/V3rDtOtolm9ZgvB7osu
- aYkRBRrO0jLkJA3i6ki9PcuKvtkUNc0tmE64mICv7MTYRdzPQJIDpB8beeCFq9A/H8k1lHBuk
- SMZFDsgl+GyMKOSQJql85YAoXBzl9rBm0t8+XVsEb6Srcpw8WJUsqQrSstrEvtUYR4go2bD49
- 0usK+I92gQUI1+RAY3Ca+fNOfv1vixylTYcSpwapi0qHx1mBqwzoTYmzKoEX0QVupOr/xS9q8
- rOULITCLT5prF5a0ANHeWIiPRSIEFpSjYvB/vMlQ7nQR98xSZJ+s3EEQybycrQDMyLrK16t2u
- Ton7UNVbFbn3DRDl19BROFlYnx1EXpDOqdjdFDAfPJPCi/qas7f7T7fjhdhUq6z/EmalmyAAO
- v5M6QLELytl4UrGP04OebNUXXIrbHdJw+zbkHJeNQuKxkjvNv/GOWx9bx2UXLtMolPl4Fkenb
- dhGhAcRObIVhSfwoWw9TGrQcZjc1fnKV4lBVz2kOXO30eOvm+nGf3MfpT/WTTpxgh90iTQ01Y
- nxUcBLgxy9wLyGgDVW1evOvWcHogikcGFDGJxkYObAfFVayvxzBj6AlaDCC+HZTi/svDZNP87
- FamWEQvOrlV04zSmdBtJg+lGRk1M=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250212000747.3403836-5-vannapurve@google.com>
 
-=E2=80=A6
-> This patch adds checks for the return values of blkg_to_lat and let it
+On Wed, Feb 12, 2025 at 12:07:47AM +0000, Vishal Annapurve wrote:
+> With explicit dependency on CONFIG_PARAVIRT and TDX specific
+> halt()/safe_halt() routines in place, default_idle() is safe to execute for
+> TDX VMs. Remove TDX specific idle routine override which is now
+> redundant.
 
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.14-rc2#n94
+I am not convinced that it is good idea.
 
+It adds two needless flipping of IF in the hot path: first enabling
+interrupts in tdx_safe_halt() and disabling it back in default_idle().
 
-> returns early if it is NULL, preventing the NULL pointer dereference.
-
-  return?
-
-
-Regards,
-Markus
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
