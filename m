@@ -1,84 +1,97 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250A9204C06;
-	Wed, 12 Feb 2025 08:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA072046AD;
+	Wed, 12 Feb 2025 08:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739347533; cv=none; b=QmUpnxnXlRqMFL0Y2NMPOd3+HtgsoTipz5kJqfGFf96lBIUaYO2VAkOxBEJ0843AhGM5SwTbMVz3XTlgzEGOxQ6pPhaGHFPZdk0HtNp3USpGr0eAIg6n9SrGuPPv5+X5a0fdZrPZeB9jb5ItV0he8QT2RtM0nnQA+eXKjDO+vzY=
+	t=1739347748; cv=none; b=GOtijlAWL4/t6fK1yNGo+lE9whT/3EbacRiDrNZe8a5sOPoAKEmTT572u6bKoX+Aj6GJPS2gfFQGwAL2VKjDy3viaDcC9ZrotsLDLcw/z96qtLBfd7p0ukdQQOfVSkZ/Q5uM5als0ECqCkpfo5KqQAiXsFLlOIEBsiyDG2mkX/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739347533; c=relaxed/simple;
-	bh=3rJjgGCuY6TDIwhfXdqGd1ug45pCfUF4NevCnDbz0sA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EgWWVycI7CisKoQRnBiA+TP14snoV3xT0WXqtP67S9rb5C+P4dKoxUbIAIbjhF9ctddbAiJCG3HE6+JhPJw7nfGm4X18OKmKv0N/ZH/CoPrcsyMBoZ7CXld/SuDoEpUQzrkIT01Y8vOvQyVioI/wbY0j8AmRaGspjmjb84zDTZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Yt9k20gx9z1ltb7;
-	Wed, 12 Feb 2025 16:01:14 +0800 (CST)
-Received: from kwepemg100016.china.huawei.com (unknown [7.202.181.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9D753140383;
-	Wed, 12 Feb 2025 16:04:59 +0800 (CST)
-Received: from huawei.com (10.67.174.33) by kwepemg100016.china.huawei.com
- (7.202.181.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 12 Feb
- 2025 16:04:58 +0800
-From: GONG Ruiqi <gongruiqi1@huawei.com>
-To: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, David
- Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew
- Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, Kees
- Cook <kees@kernel.org>
-CC: Tamas Koczka <poprdi@google.com>, Roman Gushchin
-	<roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, Xiu Jianfeng
-	<xiujianfeng@huawei.com>, <linux-mm@kvack.org>,
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<gongruiqi1@huawei.com>
-Subject: [PATCH v3 0/2] Refine kmalloc caches randomization in kvmalloc
-Date: Wed, 12 Feb 2025 16:15:03 +0800
-Message-ID: <20250212081505.2025320-1-gongruiqi1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1739347748; c=relaxed/simple;
+	bh=hzT0JxmA3i2IqVtMi8UfiZA6vOY5R4unXhUpxwoj1is=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RGZf3MznxyT154aLAYD1c1CGF0E0ryJeXRvubkru5/SdnELVW8hyK17mOU8ciTul/9/81WdoY4l0cZUKbp6Rxj5aU0V+8F6Wb5p6eGZryAOfVd20EnfNPB8NrEeuZEaKcKinozlDqw93NSQ+R5jxS79qnTXkTvlRNvwba79khPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i01zHflA; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i01zHflA"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fa2c456816so7442197a91.1;
+        Wed, 12 Feb 2025 00:09:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739347746; x=1739952546; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Uzz/ztA8J5OEcraVsYIfYsDCP8O1/+bhCpXSvSiKTAk=;
+        b=i01zHflAAfx9VhZO7cgcJv75v+eG2hGXJRyubZCvLpWly+mEvtiaVVBwVz2ZJv09Im
+         h4ZZPBV/M2ccJquVUTAEaKQbt761gZyHMQwxxcJeopKgZAVaLL+8msMjeJIfIJm7s74Y
+         emDJ3HST1UxRmXQAkTle0y1UAaKAKULkFBQ0FzEBQj/ANyW/4RpHrat6t6NT6vNT60jk
+         aSAXDNslC3WcJGjEAcPzkTcYTwhO/R5CaEubHeJkJ5wAr/D5M7gQ4WyPQeejvrFGkXKm
+         PV3M1Zng+pKzTulZzS7NLHSOyzmT/aCN3qfC8RWkv1SRt6kvY72+u7db9Umj/YSWAxwv
+         j/sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739347746; x=1739952546;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Uzz/ztA8J5OEcraVsYIfYsDCP8O1/+bhCpXSvSiKTAk=;
+        b=Y8/Ld1nuIcMZKVg5YJfyoETGh+DqBFfHzj6XHsT5nvoXc9gXy41s6E1aFlxALpamRT
+         t8a2RRnMvO/06hDPEPyJAYkJ96Kexqrlwz25AhiWlbZlQqBbhO85SfuHXnhzABMRYriH
+         OECguzoTVP0dJ0zGq/0x6b1WjSGlnLwiAhQw2TxI2avHx/X8VP0CrI/Bot6Npsf9JnXr
+         W8P0V5j42YLApI9WZL0/Q9og9O7zoLM08ENo9VwwiYyuy4jYL+UlFE5QIXbfc0hRwM1i
+         TVshaAs3JqQwbAw++XsFMG//arqLebDgFDQD5Qors3oy9BL2U3OTpMXFablX2tG9TLXB
+         SWTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXd4sc3m2/OyZF4NDNGNTgT5yZjNE8MDSfWL5BNWYIqzGQrR/aVMS6xr1iYUok+Vv+zpPlP/Lyq3XIakus=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVAF1RRf7jaHAWFMLmvEWmjJxisinGGlRXyBTF70ngrHHjhmS2
+	nVzTKAUA51OkdrMpUbS1do7S7ep4SP598+tVsJqVyII9XBgIYcVL
+X-Gm-Gg: ASbGncs0M8SLl1cevoeif18ZCs1TJbMeUJtv/AC8vJv4i9KLBqRJUmkrKuGv56fwpIw
+	Wb7xifXB7nCv1kYLToV119c/X15wMgZz5yMB2Bca0tCo4sFDS2LOjF8P03iRzEhe3bDbygu0WiS
+	/20zKo7Kqgf0++jkKc6vFUZKJj/H72LwvbyzrPURfEm9IElDShAuhn8bDCUcCbZD9GuEuROA1V6
+	vm0VUHILwkZUuC8VQcj7oOXpOc5PyEVjmK9IL54LoxLlDGuF2KW1a4OBQnioFWoy7t/COefPHJK
+	77QGYan3+owfj8LUpwPPPv0Vtez/3vLfZlUZ3IT9Bl9RzA7vXQ==
+X-Google-Smtp-Source: AGHT+IG2Bzz9E5EiedwHTMJWTWNMK7lgiuQCvQWlS4nGxBclsahMfq5ltIXb5KcmWhLepPoYJs0soA==
+X-Received: by 2002:a17:90a:d64e:b0:2ee:db8a:29f0 with SMTP id 98e67ed59e1d1-2fbf5c603b9mr3426862a91.27.1739347746403;
+        Wed, 12 Feb 2025 00:09:06 -0800 (PST)
+Received: from [172.16.203.237] ([103.233.162.226])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98cfd03sm871927a91.15.2025.02.12.00.09.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 00:09:05 -0800 (PST)
+Message-ID: <f827cbb0-f6ad-4397-9f30-ca43223c4853@gmail.com>
+Date: Wed, 12 Feb 2025 16:08:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg100016.china.huawei.com (7.202.181.57)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] riscv: Optimize crct10dif with zbc extension
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, ardb@kernel.org
+References: <20250205065815.91132-1-zhihang.shao.iscas@gmail.com>
+ <20250205163012.GB1474@sol.localdomain>
+From: Zhihang Shao <zhihang.shao.iscas@gmail.com>
+In-Reply-To: <20250205163012.GB1474@sol.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 2025/2/6 0:30, Eric Biggers wrote:
 
-v3:
-  - move all the way from kmalloc_gfp_adjust to kvrealloc_noprof into
-    mm/slub.c
-  - some rewording for commit logs
-v2: https://lore.kernel.org/all/20250208014723.1514049-1-gongruiqi1@huawei.com/
-  - change the implementation as Vlastimil suggested
-v1: https://lore.kernel.org/all/20250122074817.991060-1-gongruiqi1@huawei.com/
+> Maybe use 'const __be64 *' and 'const __be32 *' for the pointer, and use
+> be64_to_cpu() and be32_to_cpu().  Then the __force cast won't be needed.
+Maybe this problem seems dumb, but I have no idea to adapt both riscv32 
+and riscv64. I have tried to use 'const __be64 *' and 'const __be32 *' 
+pointer in patch v4, but I forgot to test them in riscv32, and it turns 
+out the code failed to compile due to my mistake of defining 'const 
+__be64 * p_ul' and of course it wouldn't be work for riscv32. Maybe I 
+need some inspiration for this problem, or I still think it better to 
+use 'unsigned long const *' since it works fine in both riscv64 and riscv32.
 
-Tamás reported [1] that kmalloc cache randomization doesn't actually
-work for those kmalloc invoked via kvmalloc. For more details, see the
-commit log of patch 2.
+Looking forward to your reply and guidance.
 
-The current solution requires a direct call from __kvmalloc_node_noprof
-to __do_kmalloc_node, a static function in a different .c file. As
-suggested by Vlastimil [2], it's achieved by simply moving
-__kvmalloc_node_noprof from mm/util.c to mm/slub.c, together with some
-other functions of the same family.
+Yours,
 
-Link: https://github.com/google/security-research/blob/908d59b573960dc0b90adda6f16f7017aca08609/pocs/linux/kernelctf/CVE-2024-27397_mitigation/docs/exploit.md?plain=1#L259 [1]
-Link: https://lore.kernel.org/all/62044279-0c56-4185-97f7-7afac65ff449@suse.cz/ [2]
-
-GONG Ruiqi (2):
-  slab: Adjust placement of __kvmalloc_node_noprof
-  slab: Achieve better kmalloc caches randomization in kvmalloc
-
- mm/slub.c | 162 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- mm/util.c | 162 ------------------------------------------------------
- 2 files changed, 162 insertions(+), 162 deletions(-)
-
--- 
-2.25.1
+Zhihang
 
