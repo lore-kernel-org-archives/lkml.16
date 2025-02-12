@@ -1,99 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6736207667;
-	Wed, 12 Feb 2025 14:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B5020E70B;
+	Wed, 12 Feb 2025 14:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739370474; cv=none; b=M51P38mrq3bR94CCcAwG5C7iRWy+eYl/lwDNtOji5D96tXF7zC2xtDwTjGWow9D506qjC5XemlEbKQEs7JdGcSoyoto6Gp5YJC843dR7SxXg9I/LHb++oWaPHfKciuBrE6EEI2u84HMpdzIFMEt3L6zlnmRMEIeLoPxbZKMGXSQ=
+	t=1739370487; cv=none; b=MQo/C9Zr6V2CUx6wjvj5phCSqsu1HWIRgSkHLHpqotNICmqmZ0ATMHkrwWLmVLiEzxv+pizCyzgha5gCD8/Y8a6HfluSEpOSoHJ3HRsOanAETJdB+AsB5zo6GZIo0S5QcDHQGJ7wpohSC8/c7TjrYY9rX2pUt1TXTpRLC/IKz9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739370474; c=relaxed/simple;
-	bh=7Onv8wCoFp82DoYKMFeqXuc971OxNeF9sQrYOQ5F6d8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c76r6y2qa8yp1i6g9ODFcM0I7sq7MAl48HBGlM0ibBM+czWj9c/+2yP7W5/TcoiWy8R41VjYrnVq077kyj546cHaVV0sc9AlI9ECmJAP5KzhDaz/qLYG6LJwzA78+0+Zg6oXqqYMLMjR8IXzS3ME0tIdj9UUT0M7r3i7+OkCHuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OQolyUlq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OQolyUlq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87D00C4CEDF;
-	Wed, 12 Feb 2025 14:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739370474;
-	bh=7Onv8wCoFp82DoYKMFeqXuc971OxNeF9sQrYOQ5F6d8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OQolyUlqhdEcuF3NefxpXApUDXd3HRyCLlnyI1Cj5pDMBl6d9gATlzXF8sc40ShH3
-	 H9/1Mg0uLn6fo2NmW+Rjsgny/IIQII0lqmZZPs4sGBiZo4hX05Zf9MBPD4D/gbxQ7c
-	 qzb6UdhK2ITEYw8oiqpZspToqWF+GKrC6fMQGj6I=
-Date: Wed, 12 Feb 2025 15:26:49 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Selvarasu Ganesan <selvarasu.g@samsung.com>
-Cc: mathias.nyman@intel.com, WeitaoWang-oc@zhaoxin.com,
-	Thinh.Nguyen@synopsys.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jh0801.jung@samsung.com,
-	dh10.jung@samsung.com, naushad@samsung.com, akash.m5@samsung.com,
-	h10.kim@samsung.com, eomji.oh@samsung.com, alim.akhtar@samsung.com,
-	thiagu.r@samsung.com, muhammed.ali@samsung.com,
-	pritam.sutar@samsung.com, cpgs@samsung.com
-Subject: Re: [PATCH 0/2] Fix unassigned variables in xhci driver
-Message-ID: <2025021234-reaction-womankind-1c0b@gregkh>
-References: <CGME20250211115704epcas5p4140a490572fb9c4ac71a82abcb61f291@epcas5p4.samsung.com>
- <1296674576.21739322602698.JavaMail.epsvc@epcpadp1new>
+	s=arc-20240116; t=1739370487; c=relaxed/simple;
+	bh=ufar0w70vXNNGPtC5NL0LW5K23clTayPogTX1Ff5/10=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BlneANpdueLEWsUR/8U8gpTgORJrJyKBfl3mnqfWaE+E0IsgAO7/STlpOWQVOYDoQ7yavQPXGQu05QO+9xWwTApNAoZIhtmrcavPUdcHwAIbeiIf2DJxXevyb70DG2Ja0bWEjdNuIflt/iU0nBWS79fkQwPh92c8bHF4Rax5UHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5203bbb969cso1001993e0c.3;
+        Wed, 12 Feb 2025 06:28:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739370483; x=1739975283;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nhC8rf1vpQF8mEfYpEVkOS/fQGbyABinaAFRiAMwgnc=;
+        b=QNeF8O4Q453wpBp1MVB8Z6bI3JbH3UPg5G4FdgTTARlwo/gKEyYqOlI9dNRrc+q6Fu
+         /oliOMkXmNHdNYvCz8A2hpXtS1yVUUlvhbEz2QhphxJqyQUQBG3NdpvlkH5GdFxTmP9l
+         bycO9WL2e2RED8Nv7KTAeLDoHG5XvAn3Q2UyFEzTxoiL3mzHtHyzkir4yNiTabCJKbqh
+         NMFEF+RRVB21Uik3lcCEesquLVOfuqa2bcojuq2ZCVMCbkDrIrDkwt653e5u8h36T3+R
+         TUAGgq3MbU7GiRbKlFGbIA4qrmleb0eQJuq6R/aT/yh+ZUd3l06wqikd0YXuXi4hM3BO
+         AIlw==
+X-Forwarded-Encrypted: i=1; AJvYcCUS3zLyVje5HTQ9jAMaHnM9JIoPaGw9KGZ0kcr85tadZlW/Nz7MYFovI2p7KG4pbiJJR6MxW+jiRoSJLgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRl1duqVUOurVnbDGqszLgVqRIxbsqtNIgnnwSz7Xt/lRTzTAw
+	ZO2waxARuZpXx8H95EeefCL5c8MLLqUnFE7jXFrNivu50c2CblcTiDK+1YfKEmI=
+X-Gm-Gg: ASbGncsMEs7eboCBgbpMrdW8nQoG3DEi416FIoXpsts5R6GPwrkxsL5r09keWunj9Uj
+	tp9R5ljtExcckPWxBdZhnetnc26Rk2nLK6pf5rPyvpECYXJA1JqXHiVuVZKsuOD1/i6NacI0Zdj
+	V0+4+6beYmnNMAkXLzLbyhHpGpAmZ/SaBro2h2pQ8vQI+JSrXYJK7ANVXU+XpvIwy9CxQfALlTI
+	Pl513i+1MShftc6xfgNd3FDLCQjWN2ngCL+YdCHqmYP2DOvZXQ/mhdh754O/Mo9dkMIe++CafEb
+	N0u2QCr0+epWZZfK0C6TNCgD8l+hDyf1I3gp2+oisyKY8uqzjz0jKQ==
+X-Google-Smtp-Source: AGHT+IFk7A45UpLIIfqXuAg3ZqeVp8n1Q9AmiaFqBrxsIOU3pyplxMffDZXA1UI0Yaqzz2w04ESh/w==
+X-Received: by 2002:a05:6122:1683:b0:520:61ee:c805 with SMTP id 71dfb90a1353d-52067c2e4f3mr2929318e0c.3.1739370482895;
+        Wed, 12 Feb 2025 06:28:02 -0800 (PST)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5204900cfd1sm728366e0c.29.2025.02.12.06.28.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 06:28:02 -0800 (PST)
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4bbefec9362so374175137.1;
+        Wed, 12 Feb 2025 06:28:02 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUCYZLrtAk/xyNn3bDhJYtrOKuKeYCdYXLFAcSrTQ3b2Jb6WIKXf7Y8wx7rsRKafx6cGhaTuO3UA1JZP8Y=@vger.kernel.org
+X-Received: by 2002:a05:6102:50aa:b0:4bb:d062:436 with SMTP id
+ ada2fe7eead31-4bbf1fbb722mr3249274137.0.1739370482234; Wed, 12 Feb 2025
+ 06:28:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1296674576.21739322602698.JavaMail.epsvc@epcpadp1new>
+References: <20250203031213.399914-1-koichiro.den@canonical.com> <20250203031213.399914-5-koichiro.den@canonical.com>
+In-Reply-To: <20250203031213.399914-5-koichiro.den@canonical.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 12 Feb 2025 15:27:50 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXnST1Y3oxEz_r59urauZ42nrtL5P4+rnPEsgiKgENOOg@mail.gmail.com>
+X-Gm-Features: AWEUYZkY4h0ACOAIiyzE48Rv0lGMuOcaZQjgQi3518er7EMQfREuJN-qKiMAuG8
+Message-ID: <CAMuHMdXnST1Y3oxEz_r59urauZ42nrtL5P4+rnPEsgiKgENOOg@mail.gmail.com>
+Subject: Re: [PATCH v2 04/10] gpio: aggregator: add read-write 'name' attribute
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
+	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Feb 11, 2025 at 05:26:28PM +0530, Selvarasu Ganesan wrote:
-> This series of patches to fix the following smatch errors from
-> xhci driver:
-> 
-> drivers/usb/host/xhci-mem.c:2060 xhci_add_in_port() error: unassigned variable 'tmp_minor_revision'
-> drivers/usb/host/xhci-hub.c:71 xhci_create_usb3x_bos_desc() error: unassigned variable 'bcdUSB'
-> 
-> ---
-> Selvarasu Ganesan (2):
->   usb: xhci: Fix unassigned variable 'tmp_minor_revision' in
->     xhci_add_in_port()
->   usb: xhci: Fix unassigned variable 'bcdUSB' in
->     xhci_create_usb3x_bos_desc()
-> 
->  drivers/usb/host/xhci-hub.c | 2 +-
->  drivers/usb/host/xhci-mem.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
-> 
+Hi Den,
 
-Hi,
+On Mon, 3 Feb 2025 at 04:12, Koichiro Den <koichiro.den@canonical.com> wrote:
+> Previously, there is no way to assign names to GPIO lines exported
+> through an aggregator.
+>
+> Allow users to set custom line names via a 'name' attribute.
+>
+> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+Thanks for your patch!
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+> --- a/drivers/gpio/gpio-aggregator.c
+> +++ b/drivers/gpio/gpio-aggregator.c
+> @@ -63,6 +63,8 @@ struct gpio_aggregator_line {
+>         /* Line index within the aggregator device */
+>         int idx;
+>
+> +       /* Custom name for the virtual line */
+> +       char *name;
 
-- This looks like a new version of a previously submitted patch, but you
-  did not list below the --- line any changes from the previous version.
-  Please read the section entitled "The canonical patch format" in the
-  kernel file, Documentation/process/submitting-patches.rst for what
-  needs to be done here to properly describe this.
+This can be const.
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
+>         /* GPIO chip label or line name */
+>         char *key;
 
-thanks,
+Actually this can be const, too.
 
-greg k-h's patch email bot
+>         /* Can be negative to indicate lookup by line name */
+> @@ -678,6 +680,44 @@ gpio_aggr_line_key_store(struct config_item *item, const char *page,
+>
+>  CONFIGFS_ATTR(gpio_aggr_line_, key);
+>
+> +static ssize_t
+> +gpio_aggr_line_name_show(struct config_item *item, char *page)
+> +{
+> +       struct gpio_aggregator_line *line = to_gpio_aggregator_line(item);
+> +       struct gpio_aggregator *aggr = line->parent;
+> +
+> +       guard(mutex)(&aggr->lock);
+> +
+> +       return sprintf(page, "%s\n", line->name ?: "");
+
+sysfs_emit()
+
+> +}
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
