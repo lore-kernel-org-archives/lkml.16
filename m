@@ -1,108 +1,85 @@
-Received: from sub0000529476.hmk-temp.com (mail.btob-mail.work [180.222.184.211])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BAA1DDA1B
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 11:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.222.184.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6C01F8677;
+	Wed, 12 Feb 2025 11:47:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739360874; cv=none; b=b3ucCpkXLZJw7yh2K2KnsbVvlBeuA4YEuPrdtwSRU/zAAlCrFqcTQwIkXGJXyctjrPADLcTnsYYURWubDIJqaJejhk5f4hI01l7yS0p97HdrB1q4gY2RjmdWlR3YEmOuDO6Xwlozu+ai/sop0O5jjDayC+ya74KiovPykubjktA=
+	t=1739360876; cv=none; b=ZD6HO4/Yfm2+fTYEpLDkyHCY2tg0N9NjmAV/R+U1E4hUSqzIk2s347IsJmaD/3C1Sunc+yDxvozimiZJp19A7vnOOwK2m2fv5pnJ+xgUS2ETs1JiS0mb7iRjA8qYCMifb2OQh5paPxprHAPPqWUrQe5wKJDs60E3U+qPiaY6YBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739360874; c=relaxed/simple;
-	bh=s5RkDWMsPAAnwYzVTws6XjcFf+hcblKo4FwS7fr7Sis=;
-	h=From:To:Subject:Content-Type:Date:Message-ID; b=Xi0/+Vbkmxm+y20pEGr590x99p76qZDb/pL2tla+7ZW3NRizeRIAcufmA35o1NHz7+0Z1BMjQdiF63Yj4P9I5xBNuPwKsr8HECrE0xr/+viedv89Ggjzh3XfHX2CyJhbeyCEPU7h3pKt+wLSVROth8tL6mY7IMdi4qx6ElMVofA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=saiyo-shien.biz; spf=fail smtp.mailfrom=saiyo-shien.biz; arc=none smtp.client-ip=180.222.184.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=saiyo-shien.biz
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=saiyo-shien.biz
-Received: (qmail 377 invoked from network); 12 Feb 2025 15:10:16 +0900
-Received: from ai126146095188.53.access-internet.ne.jp (HELO DESKTOP-K0R8I4G) (126.146.95.188)
-  by mail.btob-mail.work with ESMTPSA (DHE-RSA-AES256-GCM-SHA384 encrypted, authenticated); 12 Feb 2025 15:10:16 +0900
-From: =?iso-2022-jp?B?V2l6Qml6GyRCM3Q8MDJxPFIbKEI=?= <info@saiyo-shien.biz>
-To: linux-kernel@vger.kernel.org
-Subject: =?iso-2022-jp?B?GyRCNDE4eEQjJCw1LjxSPiY6YCRyR2MkJCReJDkbKEI=?=
-X-Mailer: Mail Magic Professional Version 16
-Content-Type: text/plain;
-	charset=iso-2022-jp
-Date: Wed, 12 Feb 2025 16:03:55 +0900
-Message-ID: <202502121603550840.61AC5E50E9B44E719672592F716E3705@btob-mail.work>
+	s=arc-20240116; t=1739360876; c=relaxed/simple;
+	bh=hum2AV6g62eH6S1OhXgMsfw49FlheJUL4VYseGM6RI0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VZE020ubLhXke0OZi+DnBELSqjKVgTvk+w+DyXWl3V7pwHJ+q220kZA4jOj3uKPl4YE8DNBwqKehwrSt/DX/I+aK0eeaL7UlhUWsyf5TXfcPaLPzd8oF/zTd/NUt0/nLZYYpW7vSebrqntcoPnJMnRnz3rWMt9moHN7yybJFqyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kG/BX3g4; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kG/BX3g4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739360873; x=1770896873;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hum2AV6g62eH6S1OhXgMsfw49FlheJUL4VYseGM6RI0=;
+  b=kG/BX3g4sCVFMpHGzGUVcv19rzQQB0uTneU2YL50r82g55lcWG1Lxw3M
+   Pib9e079j5xTiluB+tmTk4H8BROXwXFnu2eOAlibUIjd2ojoggcnfg9Lv
+   UqZdRtTW76TYSWRGt7Gcp2UCCwJV6ZMkFaAASwtwmzrMAzad/zojwcIUl
+   ds0pIsE1bfOCge/T9c28MlR5aY02VETtlZzVdichGpUEKtmEeAP9E7oFl
+   RUgWKjeJerDxM2aeQCE+n5+BYgAM907BJttrJ2sAEMGCPtaYBXjhrpcgv
+   dsmD8JWQkGLabwS5Le7uiM1LbFajY5xXc95cZRvyFwQQLSENSta5/b62w
+   A==;
+X-CSE-ConnectionGUID: Qc+u/fRcTFGwPtF8p16vgw==
+X-CSE-MsgGUID: 0ZUfh1zqRhCucFl4RZfDuA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="43941115"
+X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
+   d="scan'208";a="43941115"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 03:47:53 -0800
+X-CSE-ConnectionGUID: eSXLdIOiSeaxFRdbMzoupA==
+X-CSE-MsgGUID: ikxHE1ioR3aztkLfkNI92w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
+   d="scan'208";a="112782602"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 03:47:52 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tiBDZ-0000000Ap3S-3Sqp;
+	Wed, 12 Feb 2025 13:47:49 +0200
+Date: Wed, 12 Feb 2025 13:47:49 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	kernel test robot <oliver.sang@intel.com>
+Subject: Re: [PATCH v1 1/1] serial: 8250_dw: Call dw8250_quirks()
+ conditionally
+Message-ID: <Z6yKZRfy8PH64I-x@smile.fi.intel.com>
+References: <20250212113817.2208483-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250212113817.2208483-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-お世話になっております。
-WizBiz株式会社でございます。
+On Wed, Feb 12, 2025 at 01:38:17PM +0200, Andy Shevchenko wrote:
+> Not all the cases provide the driver data, that is represented by
+> an object instance of struct dw8250_platform_data. Id est the change
+> missed the case when the driver is instantiated via board files as
+> pure platform driver. Fix this by calling dw8250_quirks() conditionally.
+> This will require splitting dw8250_setup_dma_filter() out of dw8250_quirks().
 
-さまざまな経営のお役に立つ情報をお届けしております。
+Scratch it, hit send too early, v2 is coming.
 
-国（＝官公庁）が中小企業との取引に使う費用として
-予算化している金額は、約5兆6,000億円（令和5年度）。
-実際に国と取引をしている企業は全体の「15%」しかありません、
+-- 
+With Best Regards,
+Andy Shevchenko
 
-これだけ大きな予算＝マーケットをいかに攻略すれば良いのか？
-そんな疑問を55分で解消する無料セミナーを開催致します。
 
-◆オンラインセミナーの詳細・お申込みはこちら（無料）
-https://wizbiz.jp/seminar/40384/
-
-国＝官公庁といっても、営業ターゲットになるのは、霞が関の中央省庁だけではありません。
-全国各地にターゲットはあります。全国にどれくらい官公庁があるのかを調べてみました。
-
-〜北海道・東北地方〜 1017先
-北海道、青森、岩手、宮城、秋田、山形、福島の７道県
-
-〜関東地方〜 1297先
-群馬、栃木、茨城、埼玉、千葉、東京、神奈川、山梨の８都県
-
-〜中部地方〜 755先
-静岡、愛知、岐阜、三重、福井、石川、富山、新潟、長野の９県
-
-〜近畿地方〜 534先
-滋賀、京都、奈良、和歌山、大阪、兵庫の６府県
-
-〜中国・四国地方、九州・沖縄地方〜 1,328先
-岡山、広島、山口、鳥取、島根、香川、愛媛、徳島、高知、福岡、佐賀、長崎、大分、熊本、宮崎、鹿児島、沖縄の17県
-（順不同）
-
-各地にこれだけの官公庁＝国の行政機関があります。（WizBiz株式会社調べ）
-
-実は、皆さんの地元にあるこれら国の行政機関が、
-新規開拓にはうってつけなのです。 その理由は・・・
-
-★国の行政機関は地元の中小企業と取引しなければならないという法律がある
-★そのための年間予算は、５兆６千億円を超える（令和5年度実績）
-★入札以外にも国と取引する方法があるのに、そんなことを知っている経営者はほとんどいない
-★実際に、国と取引している中小企業はわずか15％しかいない
-★つまり全国の15％の企業で５兆６千億円が独り占めされており、85％の企業は蚊帳の外にいる
-
-つまり国は、地元中小企業と取引するために準備万端なのに、
-中小企業側がアプローチしていないのです。
-
-この事実に、もったいないと感じた経営者様、
-ぜひ一度セミナーをお聞きになり、国との取引にチャレンジしてみませんか？
-
-◆セミナーの詳細・お申込みはこちら（無料）
-https://wizbiz.jp/seminar/40384/
-
-【セミナーで解説する内容を一部ご紹介！】
-
-◎国は中小企業と取引しなければないらない、という「法律」
-◎売上アップ以外にも存在する大きなメリット
-◎どうやって国と新規取引をすればいいのか？
-◎実際に発注を受けた中小企業が国から貰っている金額
-
-マイク、カメラ不要の無料セミナーとなっております。
-お気軽にご参加ください。
-
-◆セミナーの詳細・お申込みはこちら（無料）
-https://wizbiz.jp/seminar/40384/
-
-===================================
-メールの配信停止をご希望の方はお手数をお掛けしますが、
-以下よりお手続きをお願い致します。
-https://form.os7.biz/f/ed730f94/
-===================================
-運営会社：WizBiz株式会社
-住所：東京都港区芝5-16-7　芝ビル3F
-電話：03-6809-3845
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
