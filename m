@@ -1,195 +1,249 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68306271838;
-	Wed, 12 Feb 2025 16:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E4920E33A
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 16:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739377143; cv=none; b=i1fZufyI17WDOesx/iyCCAAY7GxCBojrUVqyuucZ6WGI7/gTDmmhNY1HjfSI1NKT5cjtK/GSu7Jaj6cRLtb/RebeXnTt6e1pDZ0fzpechUqYHbTcdLMB8nb+NPBxk/UEyrxR5fIKZeYzrIjd100JDCK5yJxVA+uWajtSR4PPhM4=
+	t=1739377155; cv=none; b=hy5KZbHjvOKcN/i4dyhnnz+4ngdrivRnfX++HvM+nf+HJX4GSjKmcYnMKR+llNrK/BFFyLEJQZv9ZbFSIr7l3u7PxDoJMCJwI4hTgBa7s3r6mKXMZG9JfRrNVqhym6zB3+zMcMLmHI0qEI9QJv/akA86pQun2w98WI1Gl1syjSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739377143; c=relaxed/simple;
-	bh=fd1rIWNKriThu5rXMUK4vGL5RkrKeBtxW8qklvaN7Pc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=AjCByNWJbRM6rkpOzmrozUEEOmw7qC40ydM9B4K0goj0NMXX3ggyD2ERzDshuzY6mhY8E38AbTMb88jVEvWcuHp+0HP02lX94qL30OxUzF9UYxyFtVrc4VrQdfGneJ4rQWrsWjb3YlrJwlz++E91DaHAWoKYOyPpgRwL/1cxFak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=dYd+v54K; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ED1ZDPAc; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1739377155; c=relaxed/simple;
+	bh=7eYlVRwQ0d1RdUBW0WXAKB7hae39rT4yLT0S1COpoxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nnrNlX/VuIy4mLMvomqVvSKnanFYio6SVRb7NII+XvMFM/PgrBpaEi/S+Dd38qyq1KMpZe8e5mvcyyFY3nQ/6smKYKv4Lf5BIT8g3S9vc+K38IEHNjkn+ewRBen+lb2gV6/sm5hUAXsqOApOiiI+jTdQQIa6DQn7QKRkatTWRxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rYQzcs9a; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="dYd+v54K";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ED1ZDPAc"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id 4B4BD1380187;
-	Wed, 12 Feb 2025 11:18:59 -0500 (EST)
-Received: from phl-imap-13 ([10.202.2.103])
-  by phl-compute-02.internal (MEProxy); Wed, 12 Feb 2025 11:18:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1739377139;
-	 x=1739463539; bh=trX84HWVK09hJRuBlQRaYQRJ4SXe28SbidelccD92CM=; b=
-	dYd+v54K2k3nKF5j8jMqk5gvfPhQyz5OuaWJcRI0+vy9AegID6/p8hJfe51RgWT0
-	qj3/5VRViE1B8eFtzCUu/VdNATAZc2essu/Amu08pHn5/Rgcxs9vxc2BS6Y5HCN5
-	6kxHskw2TjOe4KW3LaeC/BSE9Lat9BUtvibPFykp0w+8K61w4gNruSymeH6NNiNN
-	u3Gx/YuzCgLRWeb4Wu4nW4CL/Gi6CkqHbJnWkyW1mTu1Z5A18sKRET2Ywo+Dy9FR
-	QaKs1SY1MXUScg6NLXZI+cnwooRislnqwjEXVvyxSWAq9whtNVMxRDx1sZs+ZLg0
-	nJStPt/e0a3t5lrGLE41TA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739377139; x=
-	1739463539; bh=trX84HWVK09hJRuBlQRaYQRJ4SXe28SbidelccD92CM=; b=E
-	D1ZDPAcADbkRVcqY0+FfTrI8fBOfU8aJDVnGEOyGg0NeihyHnutEPN0xcC/OPHSD
-	f3RLEQH3bJOUaRnRJFqAyqrJoeiQKdRPvQ/oLvhrowW/KQkKTo7QA5qZwA6Td9I6
-	nqIQAGM22MSUWj6YBJ2JGk4DwkXe+IeIXGlDAJw32tzbpjUPHTdBfoG3X4N93MTL
-	EJHV6iwGDT6AQwAyqG3manD7iM8U+RxvR9SBvo/tn+KpkFbuN6zUnBhFa9wvQHVi
-	ZvXlfgZbBzZRtHochuuS3alt7/n5Mt7TrP7BUt7vRVySaQAcuHPGzqvrV/V/fLTc
-	6+zJSG52f2ZHvEjH3IysA==
-X-ME-Sender: <xms:88msZx_pETY8sGcRp9bCZn2p47yhvsyMB4rUqPuS8Nimx2w7LHnLVg>
-    <xme:88msZ1s4nC-Da5UHkW8U8znTTgzYSGUOMNZeWeGQoIVd9jRwfb1CJMCuEL8WyhbdG
-    lr0WQ7mmDB-q74KHhM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeggeefhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfevkeejueeukeef
-    hfelleejheeuudfgteffvdetkeffjeduleffvdejkeefhedvnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
-    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepkhhuuhhrthgssehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhl
-    phhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhope
-    hhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgv
-    rhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorh
-    hmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:88msZ_AYanWMMrDeB_NlW4EAW1-O-2mvN3iRSbroPVEEwQrZEYNYVQ>
-    <xmx:88msZ1eqt7I4XV9T66ke-kARspIJkyh2OBQ8mMakm7zXiCiruTBn_g>
-    <xmx:88msZ2N1tdE4Xd01E9VJl7KMVOi15G3ECvPnhUlJVg9YyQgPdpwf5g>
-    <xmx:88msZ3mJ5OMvakrO-0sznubxvQ6_KPv1rI1utD8MIC7vMcwzc-0P7w>
-    <xmx:88msZzo1FHqZdbY0OsnALn5pYDY-XUZxh3OuBuGun1zbgc3eyB17wZxs>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 074AB1F00072; Wed, 12 Feb 2025 11:18:59 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rYQzcs9a"
+Date: Wed, 12 Feb 2025 16:19:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739377151;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WZOew7CJXb7yqNYds4gMMCr1x6GPAYERMcNZxA4F9Js=;
+	b=rYQzcs9a/1y/Tu8SI6xJQG+UIFiCp7J72NIlXMt+4dVDCrGb6vOu2g2/V26SFGCgifIscT
+	ccLIB7GiX8B9d5oumx+D3hdETKBTJqBGZPu4Q3Jd/b4UQ7f182hXF7+5OYgY7asHQGRfVP
+	2+9eROq7sNdk6fb3751Y+ZD0FZNwdj0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Kairui Song <ryncsn@gmail.com>, Minchan Kim <minchan@kernel.org>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 10/18] zsmalloc: factor out pool locking helpers
+Message-ID: <Z6zJ-3exkKoj5n2D@google.com>
+References: <20250212063153.179231-1-senozhatsky@chromium.org>
+ <20250212063153.179231-11-senozhatsky@chromium.org>
+ <Z6zJxvLbRQ6pKtue@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 12 Feb 2025 11:18:38 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, "Kurt Borja" <kuurtb@gmail.com>
-Message-Id: <20c82ad3-03c2-45df-9835-b8dd63fdbb9e@app.fastmail.com>
-In-Reply-To: <6112b35f-fdb4-4beb-490e-03569ce9f17e@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250211173620.16522-1-mpearson-lenovo@squebb.ca>
- <D7PSW9W74P7I.GBMKQD7EGPXT@gmail.com>
- <6112b35f-fdb4-4beb-490e-03569ce9f17e@linux.intel.com>
-Subject: Re: [PATCH v3] platform/x86: thinkpad_acpi: Fix registration of tpacpi
- platform driver
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6zJxvLbRQ6pKtue@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Feb 12, 2025, at 6:50 AM, Ilpo J=C3=A4rvinen wrote:
-> On Tue, 11 Feb 2025, Kurt Borja wrote:
->
->> On Tue Feb 11, 2025 at 12:36 PM -05, Mark Pearson wrote:
->> > When reviewing and testing the recent platform profile changes I had
->> > missed that they prevent the tpacpi platform driver from registerin=
-g.
->> > This error is seen in the kernel logs, and the various tpacpi entri=
-es
->> > are not created:
->> > [ 7550.642171] platform thinkpad_acpi: Resources present before pro=
-bing
->> >
->> > This happens because devm_platform_profile_register() is called bef=
-ore
->> > tpacpi_pdev probes (thanks to Kurt Borja for identifying root cause)
->> >
->> > For now revert back to the old platform_profile_register to fix the
->> > issue. Will work on re-implementing this later as more testing is n=
-eeded
->> > for full solution.
->
-> Hi Mark,
->
-> I've applied this to the review-ilpo-branch. I had to rewrite parts of=20
-> your changelog though to not say "I did/will do this and that". In fut=
-ure,
-> please just state the simple facts. What the issue is and so on, do no=
-t=20
-> write a story about how you came to find that out. :-)
->
-Ah - apologies, and thank you.
-Mark
+On Wed, Feb 12, 2025 at 04:18:14PM +0000, Yosry Ahmed wrote:
+> On Wed, Feb 12, 2025 at 03:27:08PM +0900, Sergey Senozhatsky wrote:
+> > We currently have a mix of migrate_{read,write}_lock() helpers
+> > that lock zspages, but it's zs_pool that actually has a ->migrate_lock
+> > access to which is opene-coded.  Factor out pool migrate locking
+> > into helpers, zspage migration locking API will be renamed to
+> > reduce confusion.
+> > 
+> > It's worth mentioning that zsmalloc locks sync not only migration,
+> > but also compaction.
+> > 
+> > Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> 
+> FWIW I don't see a lot of value in the helpers (renaming the lock is
+> useful tho). We open-code other locks like the class lock anyway, and
+> the helpers obscure the underlying lock type without adding much value
+> in terms of readability/conciseness.
 
-> --=20
->  i.
->
->> > Tested on X1 Carbon G12.
->> >
->> > Fixes: 31658c916fa6 ("platform/x86: thinkpad_acpi: Use devm_platfor=
-m_profile_register()")
->> >
->> > Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>=20
->> I believe this is done now!
->>=20
->> Reviewed-by: Kurt Borja <kuurtb@gmail.com>
->>=20
->> > ---
->> > Changes in v2:
->> > Modified approach to instead revert to old platform_profile_register
->> > method. Will revisit using devm_ version in the future as more test=
-ing
->> > needed.
->> > Changes in v3:
->> > Add check if tpacpi_pprof is valid before releasing.
->> >
->> >  drivers/platform/x86/thinkpad_acpi.c | 11 +++++++++--
->> >  1 file changed, 9 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platfor=
-m/x86/thinkpad_acpi.c
->> > index 1fcb0f99695a..9f6d7e26e700 100644
->> > --- a/drivers/platform/x86/thinkpad_acpi.c
->> > +++ b/drivers/platform/x86/thinkpad_acpi.c
->> > @@ -10646,8 +10646,8 @@ static int tpacpi_dytc_profile_init(struct =
-ibm_init_struct *iibm)
->> >  			"DYTC version %d: thermal mode available\n", dytc_version);
->> > =20
->> >  	/* Create platform_profile structure and register */
->> > -	tpacpi_pprof =3D devm_platform_profile_register(&tpacpi_pdev->dev=
-, "thinkpad-acpi",
->> > -						      NULL, &dytc_profile_ops);
->> > +	tpacpi_pprof =3D platform_profile_register(&tpacpi_pdev->dev, "th=
-inkpad-acpi-profile",
->> > +						 NULL, &dytc_profile_ops);
->> >  	/*
->> >  	 * If for some reason platform_profiles aren't enabled
->> >  	 * don't quit terminally.
->> > @@ -10665,8 +10665,15 @@ static int tpacpi_dytc_profile_init(struct=
- ibm_init_struct *iibm)
->> >  	return 0;
->> >  }
->> > =20
->> > +static void dytc_profile_exit(void)
->> > +{
->> > +	if (!IS_ERR_OR_NULL(tpacpi_pprof))
->> > +		platform_profile_remove(tpacpi_pprof);
->> > +}
->> > +
->> >  static struct ibm_struct  dytc_profile_driver_data =3D {
->> >  	.name =3D "dytc-profile",
->> > +	.exit =3D dytc_profile_exit,
->> >  };
->> > =20
->> >  /*****************************************************************=
-********
->>
+We use helpers for the class lock in the following change, but my point
+stands for that too.
+
+> 
+> > ---
+> >  mm/zsmalloc.c | 63 +++++++++++++++++++++++++++++++++++----------------
+> >  1 file changed, 44 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+> > index 6d0e47f7ae33..47c638df47c5 100644
+> > --- a/mm/zsmalloc.c
+> > +++ b/mm/zsmalloc.c
+> > @@ -18,7 +18,7 @@
+> >  /*
+> >   * lock ordering:
+> >   *	page_lock
+> > - *	pool->migrate_lock
+> > + *	pool->lock
+> >   *	class->lock
+> >   *	zspage->lock
+> >   */
+> > @@ -224,10 +224,35 @@ struct zs_pool {
+> >  	struct work_struct free_work;
+> >  #endif
+> >  	/* protect page/zspage migration */
+> > -	rwlock_t migrate_lock;
+> > +	rwlock_t lock;
+> >  	atomic_t compaction_in_progress;
+> >  };
+> >  
+> > +static void pool_write_unlock(struct zs_pool *pool)
+> > +{
+> > +	write_unlock(&pool->lock);
+> > +}
+> > +
+> > +static void pool_write_lock(struct zs_pool *pool)
+> > +{
+> > +	write_lock(&pool->lock);
+> > +}
+> > +
+> > +static void pool_read_unlock(struct zs_pool *pool)
+> > +{
+> > +	read_unlock(&pool->lock);
+> > +}
+> > +
+> > +static void pool_read_lock(struct zs_pool *pool)
+> > +{
+> > +	read_lock(&pool->lock);
+> > +}
+> > +
+> > +static bool pool_lock_is_contended(struct zs_pool *pool)
+> > +{
+> > +	return rwlock_is_contended(&pool->lock);
+> > +}
+> > +
+> >  static inline void zpdesc_set_first(struct zpdesc *zpdesc)
+> >  {
+> >  	SetPagePrivate(zpdesc_page(zpdesc));
+> > @@ -1206,7 +1231,7 @@ void *zs_map_object(struct zs_pool *pool, unsigned long handle,
+> >  	BUG_ON(in_interrupt());
+> >  
+> >  	/* It guarantees it can get zspage from handle safely */
+> > -	read_lock(&pool->migrate_lock);
+> > +	pool_read_lock(pool);
+> >  	obj = handle_to_obj(handle);
+> >  	obj_to_location(obj, &zpdesc, &obj_idx);
+> >  	zspage = get_zspage(zpdesc);
+> > @@ -1218,7 +1243,7 @@ void *zs_map_object(struct zs_pool *pool, unsigned long handle,
+> >  	 * which is smaller granularity.
+> >  	 */
+> >  	migrate_read_lock(zspage);
+> > -	read_unlock(&pool->migrate_lock);
+> > +	pool_read_unlock(pool);
+> >  
+> >  	class = zspage_class(pool, zspage);
+> >  	off = offset_in_page(class->size * obj_idx);
+> > @@ -1450,16 +1475,16 @@ void zs_free(struct zs_pool *pool, unsigned long handle)
+> >  		return;
+> >  
+> >  	/*
+> > -	 * The pool->migrate_lock protects the race with zpage's migration
+> > +	 * The pool->lock protects the race with zpage's migration
+> >  	 * so it's safe to get the page from handle.
+> >  	 */
+> > -	read_lock(&pool->migrate_lock);
+> > +	pool_read_lock(pool);
+> >  	obj = handle_to_obj(handle);
+> >  	obj_to_zpdesc(obj, &f_zpdesc);
+> >  	zspage = get_zspage(f_zpdesc);
+> >  	class = zspage_class(pool, zspage);
+> >  	spin_lock(&class->lock);
+> > -	read_unlock(&pool->migrate_lock);
+> > +	pool_read_unlock(pool);
+> >  
+> >  	class_stat_sub(class, ZS_OBJS_INUSE, 1);
+> >  	obj_free(class->size, obj);
+> > @@ -1793,10 +1818,10 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
+> >  	pool = zspage->pool;
+> >  
+> >  	/*
+> > -	 * The pool migrate_lock protects the race between zpage migration
+> > +	 * The pool lock protects the race between zpage migration
+> >  	 * and zs_free.
+> >  	 */
+> > -	write_lock(&pool->migrate_lock);
+> > +	pool_write_lock(pool);
+> >  	class = zspage_class(pool, zspage);
+> >  
+> >  	/*
+> > @@ -1833,7 +1858,7 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
+> >  	 * Since we complete the data copy and set up new zspage structure,
+> >  	 * it's okay to release migration_lock.
+> >  	 */
+> > -	write_unlock(&pool->migrate_lock);
+> > +	pool_write_unlock(pool);
+> >  	spin_unlock(&class->lock);
+> >  	migrate_write_unlock(zspage);
+> >  
+> > @@ -1956,7 +1981,7 @@ static unsigned long __zs_compact(struct zs_pool *pool,
+> >  	 * protect the race between zpage migration and zs_free
+> >  	 * as well as zpage allocation/free
+> >  	 */
+> > -	write_lock(&pool->migrate_lock);
+> > +	pool_write_lock(pool);
+> >  	spin_lock(&class->lock);
+> >  	while (zs_can_compact(class)) {
+> >  		int fg;
+> > @@ -1983,14 +2008,14 @@ static unsigned long __zs_compact(struct zs_pool *pool,
+> >  		src_zspage = NULL;
+> >  
+> >  		if (get_fullness_group(class, dst_zspage) == ZS_INUSE_RATIO_100
+> > -		    || rwlock_is_contended(&pool->migrate_lock)) {
+> > +		    || pool_lock_is_contended(pool)) {
+> >  			putback_zspage(class, dst_zspage);
+> >  			dst_zspage = NULL;
+> >  
+> >  			spin_unlock(&class->lock);
+> > -			write_unlock(&pool->migrate_lock);
+> > +			pool_write_unlock(pool);
+> >  			cond_resched();
+> > -			write_lock(&pool->migrate_lock);
+> > +			pool_write_lock(pool);
+> >  			spin_lock(&class->lock);
+> >  		}
+> >  	}
+> > @@ -2002,7 +2027,7 @@ static unsigned long __zs_compact(struct zs_pool *pool,
+> >  		putback_zspage(class, dst_zspage);
+> >  
+> >  	spin_unlock(&class->lock);
+> > -	write_unlock(&pool->migrate_lock);
+> > +	pool_write_unlock(pool);
+> >  
+> >  	return pages_freed;
+> >  }
+> > @@ -2014,10 +2039,10 @@ unsigned long zs_compact(struct zs_pool *pool)
+> >  	unsigned long pages_freed = 0;
+> >  
+> >  	/*
+> > -	 * Pool compaction is performed under pool->migrate_lock so it is basically
+> > +	 * Pool compaction is performed under pool->lock so it is basically
+> >  	 * single-threaded. Having more than one thread in __zs_compact()
+> > -	 * will increase pool->migrate_lock contention, which will impact other
+> > -	 * zsmalloc operations that need pool->migrate_lock.
+> > +	 * will increase pool->lock contention, which will impact other
+> > +	 * zsmalloc operations that need pool->lock.
+> >  	 */
+> >  	if (atomic_xchg(&pool->compaction_in_progress, 1))
+> >  		return 0;
+> > @@ -2139,7 +2164,7 @@ struct zs_pool *zs_create_pool(const char *name)
+> >  		return NULL;
+> >  
+> >  	init_deferred_free(pool);
+> > -	rwlock_init(&pool->migrate_lock);
+> > +	rwlock_init(&pool->lock);
+> >  	atomic_set(&pool->compaction_in_progress, 0);
+> >  
+> >  	pool->name = kstrdup(name, GFP_KERNEL);
+> > -- 
+> > 2.48.1.502.g6dc24dfdaf-goog
+> > 
+> 
