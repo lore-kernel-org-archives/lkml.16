@@ -1,85 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6C01F8677;
-	Wed, 12 Feb 2025 11:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9682E20896A
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 11:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739360876; cv=none; b=ZD6HO4/Yfm2+fTYEpLDkyHCY2tg0N9NjmAV/R+U1E4hUSqzIk2s347IsJmaD/3C1Sunc+yDxvozimiZJp19A7vnOOwK2m2fv5pnJ+xgUS2ETs1JiS0mb7iRjA8qYCMifb2OQh5paPxprHAPPqWUrQe5wKJDs60E3U+qPiaY6YBI=
+	t=1739360952; cv=none; b=bvzPyqx0MEr6KEIUwRo8Jg/yGuy3XwMz4I3v5OTuiTZsZG6yOURWI/qQyv+wPZVAhP6+psrf1ss+JCMjPi+K2cxvXv0j4h8Qz7toXW+vbcDyoYqMc/HcYld/+YTTbFlNUQ1qmZ6Y1vzcor2qhKHFb9FHiX9W9Wd0BirjLEj26RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739360876; c=relaxed/simple;
-	bh=hum2AV6g62eH6S1OhXgMsfw49FlheJUL4VYseGM6RI0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VZE020ubLhXke0OZi+DnBELSqjKVgTvk+w+DyXWl3V7pwHJ+q220kZA4jOj3uKPl4YE8DNBwqKehwrSt/DX/I+aK0eeaL7UlhUWsyf5TXfcPaLPzd8oF/zTd/NUt0/nLZYYpW7vSebrqntcoPnJMnRnz3rWMt9moHN7yybJFqyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kG/BX3g4; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739360952; c=relaxed/simple;
+	bh=5cA9DHvlTH8FDmWvm4ojHRhcd4ghIiXt5VPf9lXr4hY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ej7uMokm4qIbqJIRtYU1+Tra3RD5rkN4IyKDOZxOBTu2bRcMk7DjflVoKSSrXkHtnQOpL3gK2ty/ACBpjdN44rVMg5jmofu+acqc0Vf6grKis7VxZiYN2RU1/+8yCdpxllSN/H8nNc1xTI9hiJozTfpiABThIhNeKZOecNf06KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Rhc0QFhA; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kG/BX3g4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739360873; x=1770896873;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hum2AV6g62eH6S1OhXgMsfw49FlheJUL4VYseGM6RI0=;
-  b=kG/BX3g4sCVFMpHGzGUVcv19rzQQB0uTneU2YL50r82g55lcWG1Lxw3M
-   Pib9e079j5xTiluB+tmTk4H8BROXwXFnu2eOAlibUIjd2ojoggcnfg9Lv
-   UqZdRtTW76TYSWRGt7Gcp2UCCwJV6ZMkFaAASwtwmzrMAzad/zojwcIUl
-   ds0pIsE1bfOCge/T9c28MlR5aY02VETtlZzVdichGpUEKtmEeAP9E7oFl
-   RUgWKjeJerDxM2aeQCE+n5+BYgAM907BJttrJ2sAEMGCPtaYBXjhrpcgv
-   dsmD8JWQkGLabwS5Le7uiM1LbFajY5xXc95cZRvyFwQQLSENSta5/b62w
-   A==;
-X-CSE-ConnectionGUID: Qc+u/fRcTFGwPtF8p16vgw==
-X-CSE-MsgGUID: 0ZUfh1zqRhCucFl4RZfDuA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="43941115"
-X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="43941115"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 03:47:53 -0800
-X-CSE-ConnectionGUID: eSXLdIOiSeaxFRdbMzoupA==
-X-CSE-MsgGUID: ikxHE1ioR3aztkLfkNI92w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="112782602"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 03:47:52 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tiBDZ-0000000Ap3S-3Sqp;
-	Wed, 12 Feb 2025 13:47:49 +0200
-Date: Wed, 12 Feb 2025 13:47:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	kernel test robot <oliver.sang@intel.com>
-Subject: Re: [PATCH v1 1/1] serial: 8250_dw: Call dw8250_quirks()
- conditionally
-Message-ID: <Z6yKZRfy8PH64I-x@smile.fi.intel.com>
-References: <20250212113817.2208483-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Rhc0QFhA"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab7d583d2afso138724366b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 03:49:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1739360949; x=1739965749; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=a4ktuYMZfFjDtI8OUf8Ecv+gnfAOw4b0BObK8n+AqV8=;
+        b=Rhc0QFhAhq3vl72lPfF4pBxmkgpqt0bJTLb/rfYBbHvCOVk2Ufy0lJ74RYB3PnQC42
+         r4p/aDB+z8JS1wfTX7fTbUx6hfKrzE/GxABjMsYiMxCxpzP6MG8L6BrhCRQenkI/uADC
+         6Tw1PHLOeytUD/ucmVPXgpcNDiZxQ1SW5VSsDdX50ALD9gMDltyyPLD21YAdw/q5/JfW
+         ztlyQ9/0RhES59QzM4LwRnWKOfgw9CoXakg7aJPh9po6XyKviVoxd2kOqqg61CpLCQvD
+         iiJ/iDRpRB/YXnpUQ7PRSHNXRMxCLdsWHCWiK5IS2kgru4QSyMypVKVR9P8qup06pv7H
+         au0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739360949; x=1739965749;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a4ktuYMZfFjDtI8OUf8Ecv+gnfAOw4b0BObK8n+AqV8=;
+        b=dEElk35NsGAlTWWqeZtGVe6AT+bvOnp/xtlMtDAdlzaRCxG6s6Sl4TZsbMu+aBgQJj
+         nFK0dbNQx10mrjdhqz5WuixfL3/M0/Hv9e/7yy0UEo15wOkOgSST3ljoBRWnL6pr8rFU
+         6rJJMtUgnfyV24RzZU5RNGhZFCQcHD5eU+veRBn6sPot/tZdmr0Oa704Cepf/1nrsJRY
+         D+R9zmkhV56tZClQLRxHtJySgmazAABsD4+cXRKGcKE4Iz5eck1iZ3oIcBKSqhYbrPD8
+         +rdq9i2/yB3v8HUHI6FSFWXBVLpF2CAtf+/F87nkfHlrCknBpmCRtXnF7kQc8J1krVoZ
+         PLoA==
+X-Forwarded-Encrypted: i=1; AJvYcCX9TRNZsJZV3CdK+ndRJkfOk1RhUvYzd46FkFkaMJxyXLaEynMUZp2VhbZ2Yztdp3NuHSLVQjGUDSYLrT8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOK6lxmypM9cdD7izUgvMEoxSZL2z+Fpc/Ggnr7oi38/Q3p12o
+	qmtHw6VDSFOsIvz/XqXVKxrNDVxC6qhBLFDZ51SF2tKS5viKRVRZNO/F0AMd8A==
+X-Gm-Gg: ASbGncsZDWK/Ma1oz3gfPKJrbN+NyL4CRYUNFjbJaBw5x/YZ+RmLF7p4Xhj5TdaLD0Q
+	LVeqmiN7Xei62UZYMqGq4vSs/dcCf7ViODingFJis+O/bk1+cWsrhlm/xPqUzpIVq+jm4j913er
+	1dSTIhvJuNirrmqklN9JkwStiqE0QAAf65DkO7jsh3oBFzuPVV5UMHrrArMvYSp5tJ1mh+G35YV
+	NS3P+GqhQz/D1d5MYGjFPA5dDAhvi8+sHAsLi9lXqKQMHIOJFli2buw1B/gD6xmDeu3wsNNpUWr
+	KEMJbYx3OPddD3U6VRsQwyYHBlbD9bHkBMbMUU51loGTxUkLM3q253qFLcilApOm8iW+94bEpXO
+	B
+X-Google-Smtp-Source: AGHT+IHk8v1UXTDdoz1889v2GctlPWBa0NT2L4lQ+sQMLxd1NoafDj+R+R3QOKeQxuem4GhhaCwamQ==
+X-Received: by 2002:a17:907:7da0:b0:ab7:b9b5:6104 with SMTP id a640c23a62f3a-ab7f2e8a612mr226475966b.5.1739360948795;
+        Wed, 12 Feb 2025 03:49:08 -0800 (PST)
+Received: from [10.156.60.236] (ip-037-024-206-209.um08.pools.vodafone-ip.de. [37.24.206.209])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7f779d9aesm97924066b.63.2025.02.12.03.49.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 03:49:08 -0800 (PST)
+Message-ID: <38eb09be-67fc-46ff-9e78-c37c30f50e4b@suse.com>
+Date: Wed, 12 Feb 2025 12:49:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250212113817.2208483-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] xen/swiotlb: don't destroy contiguous region in all
+ cases
+To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+ x86@kernel.org, iommu@lists.linux.dev
+References: <20250211120432.29493-1-jgross@suse.com>
+ <20250211120432.29493-3-jgross@suse.com>
+ <abe2138d-b1a7-4e53-ae5f-ea3c393d50c5@suse.com>
+ <ce7320b6-68f3-43b1-8812-3a5bbd75c9c6@suse.com>
+Content-Language: en-US
+From: Jan Beulich <jbeulich@suse.com>
+Autocrypt: addr=jbeulich@suse.com; keydata=
+ xsDiBFk3nEQRBADAEaSw6zC/EJkiwGPXbWtPxl2xCdSoeepS07jW8UgcHNurfHvUzogEq5xk
+ hu507c3BarVjyWCJOylMNR98Yd8VqD9UfmX0Hb8/BrA+Hl6/DB/eqGptrf4BSRwcZQM32aZK
+ 7Pj2XbGWIUrZrd70x1eAP9QE3P79Y2oLrsCgbZJfEwCgvz9JjGmQqQkRiTVzlZVCJYcyGGsD
+ /0tbFCzD2h20ahe8rC1gbb3K3qk+LpBtvjBu1RY9drYk0NymiGbJWZgab6t1jM7sk2vuf0Py
+ O9Hf9XBmK0uE9IgMaiCpc32XV9oASz6UJebwkX+zF2jG5I1BfnO9g7KlotcA/v5ClMjgo6Gl
+ MDY4HxoSRu3i1cqqSDtVlt+AOVBJBACrZcnHAUSuCXBPy0jOlBhxPqRWv6ND4c9PH1xjQ3NP
+ nxJuMBS8rnNg22uyfAgmBKNLpLgAGVRMZGaGoJObGf72s6TeIqKJo/LtggAS9qAUiuKVnygo
+ 3wjfkS9A3DRO+SpU7JqWdsveeIQyeyEJ/8PTowmSQLakF+3fote9ybzd880fSmFuIEJldWxp
+ Y2ggPGpiZXVsaWNoQHN1c2UuY29tPsJgBBMRAgAgBQJZN5xEAhsDBgsJCAcDAgQVAggDBBYC
+ AwECHgECF4AACgkQoDSui/t3IH4J+wCfQ5jHdEjCRHj23O/5ttg9r9OIruwAn3103WUITZee
+ e7Sbg12UgcQ5lv7SzsFNBFk3nEQQCACCuTjCjFOUdi5Nm244F+78kLghRcin/awv+IrTcIWF
+ hUpSs1Y91iQQ7KItirz5uwCPlwejSJDQJLIS+QtJHaXDXeV6NI0Uef1hP20+y8qydDiVkv6l
+ IreXjTb7DvksRgJNvCkWtYnlS3mYvQ9NzS9PhyALWbXnH6sIJd2O9lKS1Mrfq+y0IXCP10eS
+ FFGg+Av3IQeFatkJAyju0PPthyTqxSI4lZYuJVPknzgaeuJv/2NccrPvmeDg6Coe7ZIeQ8Yj
+ t0ARxu2xytAkkLCel1Lz1WLmwLstV30g80nkgZf/wr+/BXJW/oIvRlonUkxv+IbBM3dX2OV8
+ AmRv1ySWPTP7AAMFB/9PQK/VtlNUJvg8GXj9ootzrteGfVZVVT4XBJkfwBcpC/XcPzldjv+3
+ HYudvpdNK3lLujXeA5fLOH+Z/G9WBc5pFVSMocI71I8bT8lIAzreg0WvkWg5V2WZsUMlnDL9
+ mpwIGFhlbM3gfDMs7MPMu8YQRFVdUvtSpaAs8OFfGQ0ia3LGZcjA6Ik2+xcqscEJzNH+qh8V
+ m5jjp28yZgaqTaRbg3M/+MTbMpicpZuqF4rnB0AQD12/3BNWDR6bmh+EkYSMcEIpQmBM51qM
+ EKYTQGybRCjpnKHGOxG0rfFY1085mBDZCH5Kx0cl0HVJuQKC+dV2ZY5AqjcKwAxpE75MLFkr
+ wkkEGBECAAkFAlk3nEQCGwwACgkQoDSui/t3IH7nnwCfcJWUDUFKdCsBH/E5d+0ZnMQi+G0A
+ nAuWpQkjM1ASeQwSHEeAWPgskBQL
+In-Reply-To: <ce7320b6-68f3-43b1-8812-3a5bbd75c9c6@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 12, 2025 at 01:38:17PM +0200, Andy Shevchenko wrote:
-> Not all the cases provide the driver data, that is represented by
-> an object instance of struct dw8250_platform_data. Id est the change
-> missed the case when the driver is instantiated via board files as
-> pure platform driver. Fix this by calling dw8250_quirks() conditionally.
-> This will require splitting dw8250_setup_dma_filter() out of dw8250_quirks().
+On 12.02.2025 12:11, Jürgen Groß wrote:
+> On 12.02.25 08:38, Jan Beulich wrote:
+>> On 11.02.2025 13:04, Juergen Gross wrote:
+>>> In case xen_swiotlb_alloc_coherent() needed to create a contiguous
+>>> region only for other reason than the memory not being compliant with
+>>> the device's DMA mask, there is no reason why this contiguous region
+>>> should be destroyed by xen_swiotlb_free_coherent() later. Destroying
+>>> this region should be done only, if the memory of the region was
+>>> allocated with more stringent placement requirements than the memory
+>>> it did replace.
+>>
+>> I'm not convinced of this: Even the mere property of being contiguous
+>> may already be enough to warrant freeing when possible. The hypervisor
+>> may not have that many contiguous areas available. The bigger the
+>> chunk, the more important to give it back once no longer needed in
+>> this shape.
+> 
+> Really? When creating a domain Xen tries to use GB pages and 2MB pages as
+> much as possible. Why would this special case here have more restrictions?
 
-Scratch it, hit send too early, v2 is coming.
+There aren't many Gb pages to be had from the space below 4Gb; frequently
+there'll be at most one (covering the range from 1 to 2 Gb). For that as
+well as 2Mb ones I think it is a mistake that Xen may hand them out, when
+the caller could fall back to 4k allocations. Thing is that without extra
+information it's hard to come up with a good heuristic to decide whether
+the caller is capable of falling back. Perhaps e.g. populate_physmap()
+should add MEMF_no_dma to higher order allocation requests targeting other
+than the current domain, or when !d->creation_finished.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jan
