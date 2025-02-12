@@ -1,128 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from shrimp.cherry.relay.mailchannels.net (shrimp.cherry.relay.mailchannels.net [23.83.223.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8143B211A2F;
-	Wed, 12 Feb 2025 17:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739380363; cv=none; b=H5RYUr/ou6+Hi/dp4DJwZd2o/peU69+VZOwnCzVVbGb0vXJ1zVc8poSBpjAnzWjXlK/QrzL6dKDZYpqcpdfM/MdOAf6CRu+njwQDRn/4r8NSwJwFSVlQvXgQvhB9zuZXIjt/F+CVrmKViSlXVzlmQ50j3XVv4WPhdcPP8+3QdPc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739380363; c=relaxed/simple;
-	bh=NEROpmptD5XXqtltotIa/faA7aFztFJiZvv2mKC2DWA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mB+ylvnQa8Da2H8GZ9ty8yzyILUHybnyPHGD8HUlRKHu8h1x9Sg5UzAxO4EkTVvXltubjUXnsTa+Ockd6EKIQ2mQ63pogTB8sUUDJVRMyB59mxdr/ngwZ6Wkeng8x+LM/vE5g49OkBaGFckIHVNveSIZ+T72u4KEiq8iIWekcCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAPj7Eph; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC46A250C1A
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 17:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.164
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739380386; cv=pass; b=V7j6fJyYV0wMfvJJWwIYa5lfpD3GJjp/G9nEeRY7mnKKB1mbmprwsTKL/J40WA7fc7GSKXWv1CrspokqfWFE5nX0b+glWIEs4A+qFHeSqQPjv7R6TCFdFnFn3cARspoE399gQItBIKle+0CjPN/3OGTwIDdiVBxjMm1hcOKRt0U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739380386; c=relaxed/simple;
+	bh=BINOaAtuARGQA3WgpBEy2+PrSGh7d+oXhbyEU6vFV1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h5Ckg2iicdXBoTR2y00XhRFFr5jYZ3OEtaK2cwLOl1/QBQgeIb19R6n6+TgG9iCozi5M0JaHVTl14pp1R6TQyIpEbirPo+LI4+PLIEw+4XZ8tKzW6EAhlY4TG4d8VTeIq51mYF3UGYNkpsRiJ4co+xORlPOGgKgOfrHfxaQumCQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=NQrVQr0S; arc=pass smtp.client-ip=23.83.223.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAPj7Eph"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BEF3C4CEE7;
-	Wed, 12 Feb 2025 17:12:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739380363;
-	bh=NEROpmptD5XXqtltotIa/faA7aFztFJiZvv2mKC2DWA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KAPj7EphsmhdQtzSSus/RPCxjskeGJIW1G8qzSgfAJQtXeW0zO39HxSXnc8sTgmmM
-	 aYo/kt//JWkhT8+wO9HSU/6a2IQHizeSWZ+tgE4bKDvUrOfBV+KmKt+G82j/6PVpNH
-	 O+s0hkL+beff7nsdZFV3VIXVkg/oLHiImHzV1uMrKH4rXtD+x3U8re2/9/phGRzbSw
-	 x4Hf/N/d+bO87orSUvkao7r1kNDMnzXATSrEkj9DBww8CTSifsW43t+cEwx7/R3Fzw
-	 zwbbHbwHHST+NRIGnzMl7OILuQTZOGl5ApRmDeaiczbdgyc9mgM5pf9b6rLjt+xWXc
-	 IIan1H4664iFg==
-Message-ID: <f9891a79-7ecb-4492-b526-d5d736d90698@kernel.org>
-Date: Wed, 12 Feb 2025 18:12:32 +0100
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="NQrVQr0S"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 0068E84391;
+	Wed, 12 Feb 2025 17:02:18 +0000 (UTC)
+Received: from pdx1-sub0-mail-a201.dreamhost.com (100-122-220-145.trex-nlb.outbound.svc.cluster.local [100.122.220.145])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 3A06D8340D;
+	Wed, 12 Feb 2025 17:02:17 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1739379737; a=rsa-sha256;
+	cv=none;
+	b=EUw7XLTp+RuAd3nunzoixF+g/nD65Reu/x9aIc8zjRhyeYqBk40OIdTRvcMnsSbV29Gwcj
+	FshDjzTBXUdq1frs0Y8UGmKwVo7l0GmT8G6Tr7Oh59JnyrADwiSYdrqA1Apzr41cevNc68
+	JbwVHXb1R2bK5XgWs3ScwDfBzgpiW9sUghrpP9iUqRB7ZhFsQLPa5ivb7jfxlLkchY8Sd0
+	hy6evbiypIjReYO2G9wOG1ujHY1yU2x66bHrUkW0L9MMLaFrY1JkCik7ns7tpoMfz1M4IL
+	3884N7IB3auSUVbPq+WWuuqkgMh2ZI8e+592lxtIa4E56W6iDfxclZXEqDP61g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1739379737;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=EBzRTmDn9RGkKaDCxFY4rdfvgu3ROy2TO3tpi8O0p14=;
+	b=oR8QP+XzSLMzzN0foqSowV66dZKzjDGNv2ixRZ1PSqIrpTlkoKtU4jvEvzV/hiH++M1i3G
+	edrOFHp6rzg8m5hq/3n3uSCv90+B2AUO0SmFjNyCLfU3xZFB06xpbhhiJpagrSsnSrAUvB
+	UvPX62pqc76vZeyEd8DFxw5C5W0mw2z13H6NimEJXGMyFbAMmdkzU23CBuqzxCTUzYkv5B
+	Qb89Kh9a/KdOg6xo2xla9WO/wGwmXxVXI4iDgCH4Nq4t841yDbp71VmZ2r0CuYKcFtMcWi
+	iI/HbWsofDKkPdHxcECsnROIV6xN7a1XxWz99z7wHn1fYxr8HgqI0dVh8RZ3cQ==
+ARC-Authentication-Results: i=1;
+	rspamd-85897f8565-7nq87;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Madly-Language: 4f2c550c4a5244c8_1739379737734_2344064167
+X-MC-Loop-Signature: 1739379737734:1008128835
+X-MC-Ingress-Time: 1739379737734
+Received: from pdx1-sub0-mail-a201.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.122.220.145 (trex/7.0.2);
+	Wed, 12 Feb 2025 17:02:17 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a201.dreamhost.com (Postfix) with ESMTPSA id 4YtPkH4JB5zGy;
+	Wed, 12 Feb 2025 09:02:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1739379737;
+	bh=EBzRTmDn9RGkKaDCxFY4rdfvgu3ROy2TO3tpi8O0p14=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=NQrVQr0S/AmkFzSOVrM1Zy9gYPnUGcgzM+26l9JvxJ+jRFHVMxsIVU8zQD8qKlx7G
+	 vcYIq+bsREQb1yBnJ/CIL7zKl8lr65H5FMdXCre9vDEc7q/LFuc4J01ybodITETinz
+	 MPmaLFtez1V8+/FF51bFxQM74IWj7ihI/deXmAtHr2l+b+NtNNkLTlVtAh0Kn8yTLa
+	 A5VQ4U3s8uPO8gaNsjr57Hay17mJNMaH1zJMei5WD2Fd+oybyaACBBrgR5o+j6QKDO
+	 C+No67zLJ/8Ik3Tc25PPUYwfDkAeyxLtbw1Xh5v4XVPC2OkRGGzpRET5uipms1KvXe
+	 zsPUMDZXIXv0g==
+Date: Wed, 12 Feb 2025 09:02:12 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Raghavendra K T <raghavendra.kt@amd.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, gourry@gourry.net,
+	nehagholkar@meta.com, abhishekd@meta.com, david@redhat.com,
+	ying.huang@intel.com, nphamcs@gmail.com, akpm@linux-foundation.org,
+	hannes@cmpxchg.org, feng.tang@intel.com, kbusch@meta.com,
+	bharata@amd.com, Hasan.Maruf@amd.com, sj@kernel.org,
+	willy@infradead.org, kirill.shutemov@linux.intel.com,
+	mgorman@techsingularity.net, vbabka@suse.cz, hughd@google.com,
+	rientjes@google.com, shy828301@gmail.com, Liam.Howlett@Oracle.com,
+	peterz@infradead.org, mingo@redhat.com
+Subject: Re: [RFC PATCH V0 0/10] mm: slowtier page promotion based on PTE A
+ bit
+Message-ID: <20250212170212.f5coa462p75fuqj6@offworld>
+Mail-Followup-To: Raghavendra K T <raghavendra.kt@amd.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, gourry@gourry.net,
+	nehagholkar@meta.com, abhishekd@meta.com, david@redhat.com,
+	ying.huang@intel.com, nphamcs@gmail.com, akpm@linux-foundation.org,
+	hannes@cmpxchg.org, feng.tang@intel.com, kbusch@meta.com,
+	bharata@amd.com, Hasan.Maruf@amd.com, sj@kernel.org,
+	willy@infradead.org, kirill.shutemov@linux.intel.com,
+	mgorman@techsingularity.net, vbabka@suse.cz, hughd@google.com,
+	rientjes@google.com, shy828301@gmail.com, Liam.Howlett@Oracle.com,
+	peterz@infradead.org, mingo@redhat.com
+References: <20241201153818.2633616-1-raghavendra.kt@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] dt-bindings: display/msm: Document MDSS on QCS8300
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Yongxing Mou <quic_yongmou@quicinc.com>, Rob Clark <robdclark@gmail.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kuogee Hsieh <quic_khsieh@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org,
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org
-References: <20250120-mdssdt_qcs8300-v4-0-1687e7842125@quicinc.com>
- <20250120-mdssdt_qcs8300-v4-3-1687e7842125@quicinc.com>
- <e620e80d-afeb-4ce1-9798-2f5cdd92b3b1@kernel.org>
- <emfd4gqstixawba64mywtsitbek5srrekoute3hjudi6xhfjhl@7ndrv3ua7uei>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <emfd4gqstixawba64mywtsitbek5srrekoute3hjudi6xhfjhl@7ndrv3ua7uei>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20241201153818.2633616-1-raghavendra.kt@amd.com>
+User-Agent: NeoMutt/20220429
 
-On 12/02/2025 11:05, Dmitry Baryshkov wrote:
-> On Wed, Feb 12, 2025 at 09:38:07AM +0100, Krzysztof Kozlowski wrote:
->> On 20/01/2025 04:49, Yongxing Mou wrote:
->>> Document the MDSS hardware found on the Qualcomm QCS8300 platform.
->>> QCS8300 use the same DPU hardware version as SA8775P, so we reuse it's
->>> driver. But QCS8300 only have one DP controller, and offset is same with
->>> sm8650, so dp controller reuse the sm8650's driver.
->>>
->>> Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
->>> ---
->>>  .../bindings/display/msm/qcom,qcs8300-mdss.yaml    | 244 +++++++++++++++++++++
->>>  1 file changed, 244 insertions(+)
->>
->> Also wrong compatibles used.
-> 
-> Which compatibles are wrong here?
+On Sun, 01 Dec 2024, Raghavendra K T wrote:
 
-According to new patchset, the DP compatibles were different.
+>6. Holding PTE lock before migration.
 
-Best regards,
-Krzysztof
+fyi I tried testing this series with 'perf-bench numa mem' and got a soft lockup,
+unable to take the PTL (and lost the machine to debug further atm), ie:
+
+[ 3852.217675] CPU: 127 UID: 0 PID: 12537 Comm: watch-numa-sche Tainted: G      D      L     6.14.0-rc2-kmmscand-v1+ #3
+[ 3852.217677] Tainted: [D]=DIE, [L]=SOFTLOCKUP
+[ 3852.217678] RIP: 0010:native_queued_spin_lock_slowpath+0x64/0x290
+[ 3852.217683] Code: 77 7b f0 0f ba 2b 08 0f 92 c2 8b 03 0f b6 d2 c1 e2 08 30 e4 09 d0 3d ff 00 00 00 77 57 85 c0 74 10 0f b6 03 84 c0 74 09 f3 90 <0f> b6 03 84 c0 75 f7 b8 01 00 00 00 66 89 03 5b 5d 41 5c 41 5d c3
+[ 3852.217684] RSP: 0018:ff274259b3c9f988 EFLAGS: 00000202
+[ 3852.217685] RAX: 0000000000000001 RBX: ffbd2efd8c08c9a8 RCX: 000ffffffffff000
+[ 3852.217686] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffbd2efd8c08c9a8
+[ 3852.217687] RBP: ff161328422c1328 R08: ff274259b3c9fb90 R09: ff161328422c1000
+[ 3852.217688] R10: 00000000ffffffff R11: 0000000000000004 R12: 00007f52cca00000
+[ 3852.217688] R13: ff274259b3c9fa00 R14: ff16132842326000 R15: ff161328422c1328
+[ 3852.217689] FS:  00007f32b6f92b80(0000) GS:ff161423bfd80000(0000) knlGS:0000000000000000
+[ 3852.217691] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 3852.217692] CR2: 0000564ddbf68008 CR3: 00000080a81cc005 CR4: 0000000000773ef0
+[ 3852.217693] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 3852.217694] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
+[ 3852.217694] PKRU: 55555554
+[ 3852.217695] Call Trace:
+[ 3852.217696]  <IRQ>
+[ 3852.217697]  ? watchdog_timer_fn+0x21b/0x2a0
+[ 3852.217699]  ? __pfx_watchdog_timer_fn+0x10/0x10
+[ 3852.217702]  ? __hrtimer_run_queues+0x10f/0x2a0
+[ 3852.217704]  ? hrtimer_interrupt+0xfb/0x240
+[ 3852.217706]  ? __sysvec_apic_timer_interrupt+0x4e/0x110
+[ 3852.217709]  ? sysvec_apic_timer_interrupt+0x68/0x90
+[ 3852.217712]  </IRQ>
+[ 3852.217712]  <TASK>
+[ 3852.217713]  ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+[ 3852.217717]  ? native_queued_spin_lock_slowpath+0x64/0x290
+[ 3852.217720]  _raw_spin_lock+0x25/0x30
+[ 3852.217723]  __pte_offset_map_lock+0x9a/0x110
+[ 3852.217726]  gather_pte_stats+0x1e3/0x2c0
+[ 3852.217730]  walk_pgd_range+0x528/0xbb0
+[ 3852.217733]  __walk_page_range+0x71/0x1d0
+[ 3852.217736]  walk_page_vma+0x98/0xf0
+[ 3852.217738]  show_numa_map+0x11a/0x3a0
+[ 3852.217741]  seq_read_iter+0x2a6/0x470
+[ 3852.217745]  seq_read+0x12b/0x170
+[ 3852.217748]  vfs_read+0xe0/0x370
+[ 3852.217751]  ? syscall_exit_to_user_mode+0x49/0x210
+[ 3852.217755]  ? do_syscall_64+0x8a/0x190
+[ 3852.217758]  ksys_read+0x6a/0xe0
+[ 3852.217762]  do_syscall_64+0x7e/0x190
+[ 3852.217765]  ? __memcg_slab_free_hook+0xd4/0x120
+[ 3852.217768]  ? __x64_sys_close+0x38/0x80
+[ 3852.217771]  ? kmem_cache_free+0x3bf/0x3e0
+[ 3852.217774]  ? syscall_exit_to_user_mode+0x49/0x210
+[ 3852.217777]  ? do_syscall_64+0x8a/0x190
+[ 3852.217780]  ? do_syscall_64+0x8a/0x190
+[ 3852.217783]  ? __irq_exit_rcu+0x3e/0xe0
+[ 3852.217785]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
