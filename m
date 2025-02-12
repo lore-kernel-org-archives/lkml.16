@@ -1,28 +1,28 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E177820459E;
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECE1B205AA0;
 	Wed, 12 Feb 2025 09:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739352984; cv=none; b=YVhELoMoOm6EWzm9j+I5rxlcXR8Bz2p0NEL3HnElVL50tfYzKL0TwUWnMWPj96bDktfn/FbxcpoAjeZfKFgbdJ92s5/J1HQ8Vu7wW42O57axbwFoOvXEbCf6slYXXKxaiPjVW4rJ3DYmvQp74/KYyCO3cNrMI0eNcFO8MqE0L5s=
+	t=1739352984; cv=none; b=UuheKSVBNipRSDdNtW9JmNcowMaoHY3BmboCVjRZvag9vpP8SFgATOt/EzT2125bGkaU0pgDHDWrz1imRSsOL0SA0M8L8SEaswuII7sOMpFY4yVfnmmzJDoeWTy1mSL57j6Ngs8NQdQCqNThziVF7fk/QcrEDcb1JDgQxbiHdIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739352984; c=relaxed/simple;
-	bh=yqkR9PYxQgmlJpMZ1/6dDcKM6m2Kv0PNshFhdy1Btxo=;
+	bh=qGwBjM6FbmZGTEEQ4HnAUlJREAcryvTJECv+TVQ8dmU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u0SGZm4JPinq1Ih9QfziIf3SWWCbsqHl+oAEGUmAn9NXOGd2VA3MIuecBoIbHKUZBaKym3MOGkQC0iU1JKzJflTKClyvrM10NcfnLuxKVWv5d6tR0XSzjIRK+/qB0tQv417nG2VP0+e/VBFCS3KcmRqv/t2UExiSgZgmP6Iyt4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=W/U9ojoU; arc=none smtp.client-ip=117.135.210.2
+	 MIME-Version; b=dLw/xtNomVNrabFrjF4J8Q+uywGpDusJ/2hkobXO3QE/e0sPPnqKAaOXkZA0rMRTyhi76X1AcaoxUYU6I6q9aKQQ2sn2WVmZBoI7aiCktlDLII3SWS9jnyMWGQQmx1hJ30dF7KQSAW/taDloalxfPyXXsXIFtbqwYXewTDIFxKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XB5vHdJG; arc=none smtp.client-ip=220.197.31.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="W/U9ojoU"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XB5vHdJG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=URKKB
-	59F/q0mF1SZHAnHb3HC+RFEwqYwuY5f1Lrg/6M=; b=W/U9ojoUFD0Ezbx44WQ/c
-	fKXXxs2TX+q25TzBRH44cdTzvhaA/Am+offgB53//E35EP1B1IMmj84wXor7DtIT
-	FiXioG43/NdbFBT/jpkhk5IUB+T8WyYjZlr2nWgpYak9cknqUP++SEShDrUSVfk7
-	7tMAa8HZ8n++HHv5NK5cEQ=
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=sk//P
+	HbsneId3/RrJkXkBvt5LOhcReSat+OU/V8Rlq4=; b=XB5vHdJGwBXy9rgHKzuy3
+	3+kwqjaKuMiGvjI6VzROLhs3S+2vS4YVyeFY3ChcG9a3Ydbn2fldt6iMl3r/Z/H+
+	aBHJ3CTTSftCAPtARBco5Y2gk270iHZI2K0Ovh4IY6eDhabg3NLGdn6RlgvHung2
+	Zj7RuoQMGFyBSHCS2Z79V0=
 Received: from ProDesk.. (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wBnG9Fja6xn14FuLQ--.33700S6;
-	Wed, 12 Feb 2025 17:35:39 +0800 (CST)
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wBnG9Fja6xn14FuLQ--.33700S11;
+	Wed, 12 Feb 2025 17:35:44 +0800 (CST)
 From: Andy Yan <andyshrk@163.com>
 To: heiko@sntech.de
 Cc: hjc@rock-chips.com,
@@ -37,10 +37,11 @@ Cc: hjc@rock-chips.com,
 	daniel@fooishbar.org,
 	robh@kernel.org,
 	sebastian.reichel@collabora.com,
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v14 04/13] drm/rockchip: vop2: Merge vop2_cluster/esmart_init function
-Date: Wed, 12 Feb 2025 17:34:59 +0800
-Message-ID: <20250212093530.52961-5-andyshrk@163.com>
+	Andy Yan <andy.yan@rock-chips.com>,
+	Michael Riesch <michael.riesch@wolfvision.net>
+Subject: [PATCH v14 09/13] drm/rockchip: vop2: Add uv swap for cluster window
+Date: Wed, 12 Feb 2025 17:35:04 +0800
+Message-ID: <20250212093530.52961-10-andyshrk@163.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250212093530.52961-1-andyshrk@163.com>
 References: <20250212093530.52961-1-andyshrk@163.com>
@@ -51,99 +52,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBnG9Fja6xn14FuLQ--.33700S6
-X-Coremail-Antispam: 1Uf129KBjvJXoWxWw4UKF17CrWktr18AFykAFb_yoW5Xr1DpF
-	W3Gr43Wr4UGrsFgr4kJrn8uF1Fkr12yaykAa48KwnIkwnrKF9FkFn5JF10yr90krWv9Fy2
-	yFs5K3y5ua4j9r7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UZ6pPUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqAHxXmesZw5TqAABse
+X-CM-TRANSID:_____wBnG9Fja6xn14FuLQ--.33700S11
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tFW8Ww1kAF4UAw47JFy7ZFb_yoW8XrWfpr
+	43ArWqgw43Kr4Iq34kJFW5ZFWftwnxKayxZws7tw1F9FyagFyDKwnYkFWUArnFyanFka17
+	tF93JrW7Zr1jvrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jFc_-UUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqArxXmesZw5UBAABs+
 
 From: Andy Yan <andy.yan@rock-chips.com>
 
-Now these two function share the same logic, the can
-be merged as one.
+The Cluster windows of upcoming VOP on rk3576 also support
+linear YUV support, we need to set uv swap bit for it.
+
+As the VOP2_WIN_UV_SWA register defined on rk3568/rk3588 is
+0xffffffff, so this register will not be touched on these
+two platforms.
 
 Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Tested-by: Michael Riesch <michael.riesch@wolfvision.net> # on RK3568
+Tested-by: Detlev Casanova <detlev.casanova@collabora.com>
 ---
 
 (no changes since v1)
 
- drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 42 +++++---------------
- 1 file changed, 11 insertions(+), 31 deletions(-)
+ drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-index a0d961cb5d21..844df4001159 100644
+index 4a9a397dc06b..80a15288b805 100644
 --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
 +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-@@ -2424,18 +2424,18 @@ static int vop2_find_rgb_encoder(struct vop2 *vop2)
- 	return -ENOENT;
- }
+@@ -1378,10 +1378,8 @@ static void vop2_plane_atomic_update(struct drm_plane *plane,
  
--static int vop2_cluster_init(struct vop2_win *win)
-+static int vop2_regmap_init(struct vop2_win *win, const struct reg_field *regs,
-+			    int nr_regs)
- {
- 	struct vop2 *vop2 = win->vop2;
- 	int i;
- 
--	for (i = 0; i < vop2->data->nr_cluster_regs; i++) {
-+	for (i = 0; i < nr_regs; i++) {
- 		const struct reg_field field = {
--			.reg = (vop2->data->cluster_reg[i].reg != 0xffffffff) ?
--				vop2->data->cluster_reg[i].reg + win->offset :
--				vop2->data->cluster_reg[i].reg,
--			.lsb = vop2->data->cluster_reg[i].lsb,
--			.msb = vop2->data->cluster_reg[i].msb
-+			.reg = (regs[i].reg != 0xffffffff) ?
-+				regs[i].reg + win->offset : regs[i].reg,
-+			.lsb = regs[i].lsb,
-+			.msb = regs[i].msb
- 		};
- 
- 		win->reg[i] = devm_regmap_field_alloc(vop2->dev, vop2->map, field);
-@@ -2446,28 +2446,6 @@ static int vop2_cluster_init(struct vop2_win *win)
- 	return 0;
- };
- 
--static int vop2_esmart_init(struct vop2_win *win)
--{
--	struct vop2 *vop2 = win->vop2;
--	int i;
--
--	for (i = 0; i < vop2->data->nr_smart_regs; i++) {
--		const struct reg_field field = {
--			.reg = (vop2->data->smart_reg[i].reg != 0xffffffff) ?
--				vop2->data->smart_reg[i].reg + win->offset :
--				vop2->data->smart_reg[i].reg,
--			.lsb = vop2->data->smart_reg[i].lsb,
--			.msb = vop2->data->smart_reg[i].msb
--		};
--
--		win->reg[i] = devm_regmap_field_alloc(vop2->dev, vop2->map, field);
--		if (IS_ERR(win->reg[i]))
--			return PTR_ERR(win->reg[i]);
+ 	rb_swap = vop2_win_rb_swap(fb->format->format);
+ 	vop2_win_write(win, VOP2_WIN_RB_SWAP, rb_swap);
+-	if (!vop2_cluster_window(win)) {
+-		uv_swap = vop2_win_uv_swap(fb->format->format);
+-		vop2_win_write(win, VOP2_WIN_UV_SWAP, uv_swap);
 -	}
--
--	return 0;
--}
--
- static int vop2_win_init(struct vop2 *vop2)
- {
- 	const struct vop2_data *vop2_data = vop2->data;
-@@ -2484,9 +2462,11 @@ static int vop2_win_init(struct vop2 *vop2)
- 		win->win_id = i;
- 		win->vop2 = vop2;
- 		if (vop2_cluster_window(win))
--			ret = vop2_cluster_init(win);
-+			ret = vop2_regmap_init(win, vop2->data->cluster_reg,
-+					       vop2->data->nr_cluster_regs);
- 		else
--			ret = vop2_esmart_init(win);
-+			ret = vop2_regmap_init(win, vop2->data->smart_reg,
-+					       vop2->data->nr_cluster_regs);
- 		if (ret)
- 			return ret;
- 	}
++	uv_swap = vop2_win_uv_swap(fb->format->format);
++	vop2_win_write(win, VOP2_WIN_UV_SWAP, uv_swap);
+ 
+ 	if (fb->format->is_yuv) {
+ 		vop2_win_write(win, VOP2_WIN_UV_VIR, DIV_ROUND_UP(fb->pitches[1], 4));
 -- 
 2.34.1
 
