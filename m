@@ -1,243 +1,166 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C31E205E16;
-	Wed, 12 Feb 2025 11:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CEBF2080F4;
+	Wed, 12 Feb 2025 11:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739360043; cv=none; b=ThSm9EqfcBj4ylG7BQeRgGd7ydfI1pyXv94onixVMD71KXDGnMH1i59SGafem8jJb8h+ioRxf5o7QwM+Z78HcuPb3MEaGEhJSGuW4X9JnY/C/n3GION82+40M+ANkPqCQpnpWxV+MGbU4F30tQ4l0jnHuiXuAPaa773tStqmXwU=
+	t=1739360059; cv=none; b=uq+q90qFXhiB+QD9J2SYVDFrwJ2c6b+9J0s/rcZlIZ/U7uqE2eUPBbSm93IwC+6esv/k1OX6ygNEdEI46LSOckunE6C5/FFNfBRpV498928aNpnIj+659NXF64D4yJOu0mEhqlU6GwDzNDdiPEka4/H1cOOUFj7NhMbihG/3v4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739360043; c=relaxed/simple;
-	bh=Kl9uSHy1YsmOUXOxd5pp5qBC/nEeUs7ScD2erF+GgIM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Vca+Iur/3fOddBC6JI6NzDAooVetUw3v2NySDuEg19wQ207H1mvv+kgK9SRYNOzlH/AwY1Deq44VZLpqJ4eOM7OT916xRl0xUYVycIzF9LtcnMRpIl7G7FGS59+O5u3yls0FB5amNtDTM2O6H8W6DLeKkWTz1wKhFy0SZeNNWoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EhKzYmaF; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739360059; c=relaxed/simple;
+	bh=jZjHZKZTK7fKc5GjpG+xIemr/MItrOAzPizGKwAJztE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Oa4mqOVXsAuZ7RZMezOiATe9dkY+GNySIjaQcvSgySmo0SQIKyTLjN/E6Lf7JVe0va8a//BZ+9Rhc76LVccNsPMmxzJ7a7PwhD57iw4HON9sWS8z6G8H6S6es0xR6cZezw8TZiBSuYxId08DRvsSpldbcwXUHzrJGh9wCDV5xRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z/1wsRpW; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EhKzYmaF"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51C6721W006115;
-	Wed, 12 Feb 2025 11:33:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=U7vfdJrgpLXzf7IGPKeCWF
-	hsGLope4so7q/iE9mgwo0=; b=EhKzYmaFdr7/PYS/x5Os84VInET7VyXfJ+m1u4
-	B+oA3vE/V2gDRca+Fz/WfQIJhgTV+UR7kKiYMDEREoGRNEhMhrUdTGM2nw7373ct
-	HB+7C4RAnxd4+p1cMTmopglQXmu9AbQy9bWk/++WGH2XgiYfPvNvs8L+rBEbUgCp
-	x1ReAmXiJl4hAZu4jYZO6GMMFeZP9c25W/RHdDdkhR7KJzW80ZaGGIEK8q7RPOZi
-	lBu45tot8L2gu91wYXd00PjXdtFVz98SIJJ2vQjQo+HiJ+xX5TbxnQgKhn8wEr9J
-	jyWcOJM+DvBLv7/4C+xdQQ77fr7mlgqmRkeJNtiAeQPN8N5Q==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qe5myc1f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 11:33:57 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51CBXukk008772
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 11:33:56 GMT
-Received: from hu-kotarake-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 12 Feb 2025 03:33:52 -0800
-From: Rakesh Kota <quic_kotarake@quicinc.com>
-To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <konrad.dybcio@oss.qualcomm.com>
-CC: <quic_kotarake@quicinc.com>, <quic_kamalw@quicinc.com>,
-        <quic_jprakash@quicinc.com>
-Subject: [PATCH V3] arm64: dts: qcs6490-rb3gen2: Add vadc and adc-tm channels
-Date: Wed, 12 Feb 2025 17:03:42 +0530
-Message-ID: <20250212113342.873086-1-quic_kotarake@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/1wsRpW"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38f1e8efe84so233938f8f.1;
+        Wed, 12 Feb 2025 03:34:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739360055; x=1739964855; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TxYXr4CIt9/N3PViI2FAcH2d8Gj6tYN9ZRZ0yRJgtpc=;
+        b=Z/1wsRpW4smICWyOKngQm45Ete0OKDgtUZrCfPwMEVMaK53wnnI84gp9U3KzvMQCwW
+         UtI4JlEu0XDJ13qHTR+rK7seXFRN7r3t50shVvOAv58CCqHVc2KetKmRPT3md7O6WZYd
+         YfF3cRvWTzDBLWHeB72TNQ2V0oqii6bXBK2XUqiceRPayl0s1gxKJgAU4L8GfV2COmMQ
+         IP3bXHGC3/Np+dOiIa96gX8HpiO9nFk4UklwbtlHKlJwJ9xg1Uc4fTP8YGKLOFgFobzi
+         HQ9fmrC6fk8YlDuWZRRjYLXnBl+YFbcw64J1nx2y5FSJHgFTOoaq3AGHxYYX/418OA7C
+         Z7jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739360055; x=1739964855;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TxYXr4CIt9/N3PViI2FAcH2d8Gj6tYN9ZRZ0yRJgtpc=;
+        b=LQ0yoQoQZeZi92VYCDV5v9yuSpEMokVjH3ngKBTwtHOQTk+++2/7GUOxL7hvmJeVcE
+         kkfFnoaHhurq7VRG0WXUCaLngESydr7SxTirqLQDSbm3K0SJfY5NEzMMMcgH/nJWCcYN
+         gBywpIKvSQFlLIKMi+7I2Si9I8Pejg51Br+SM0mvxcxGWFxqwS0sCrrnOEUaDXUwoFkZ
+         gXKa/YaZmmRVFWPLo2VAKw6rWzN04MhGTzbi6KFDmnNtFmCKlbhSocGQAuaWdgaIv7W0
+         jmjyWefCByAS+4qb3NI2b5aiiqfPwn9cujhuCaM25oYyrbrv++ikDfEdibMSEtQ3AG/v
+         F9iQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4B9n7cydOGGdwWaaZ21Vkps4kH+ClGEwZsO1E3xg4M131urcfSk2ouIXgNFbQ/RIxeTOJYu7tn0/92xk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZmt9EaIeSLnPXg2Kp9hwxOrp5qPU3golsQgSvPTrZCOMncflX
+	ZPEkXNrgZ9W4e5NiKfU24tWTY5GTEdp8ZdQZqwadrPTsMJsM7H2+kOPoc1sSUl0=
+X-Gm-Gg: ASbGncuz1rlVaDWI/pA+TXCJ+GLn31mD1wH3Hlpfxqgr1uoKrYNf6NkFgsFC8/KqDhr
+	TXhv/vTYoMFQokw3b8zmA9kIPK7L2lSvrw1bJi2oyXAceplDETz83Aquwfk2hMLQfDjg/GQ17vV
+	XBKidW1KGtZuKHKjBgTCT8b6o7thFV6GNAM/SkF0cJAjAlccIf8aJmeAZiwWNzLW+QNa8v0ciOs
+	TEjbrW1hShFS9WERjwBWx8nmxazNI3bkGRjfEL7VcMKIpMkSzLWUkZ6Ayj8jF8GMrumrEJUU3G2
+	AyjhZaokMJxiNuLboMiUSVHScxv/
+X-Google-Smtp-Source: AGHT+IEP2BdLBmTBCC0FpgjDnmPfSyM/uqgfom5XHjxbqTv/prkrItuAVfjhja04p7hdHtH069NJ0Q==
+X-Received: by 2002:a5d:6311:0:b0:38d:badf:9dec with SMTP id ffacd0b85a97d-38dea5f7077mr2329087f8f.38.1739360054420;
+        Wed, 12 Feb 2025 03:34:14 -0800 (PST)
+Received: from localhost.localdomain ([45.128.133.222])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcd21fe18sm14124441f8f.91.2025.02.12.03.34.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 03:34:13 -0800 (PST)
+From: Oscar Maes <oscmaes92@gmail.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	viro@zeniv.linux.org.uk,
+	jiri@resnulli.us,
+	linux-kernel@vger.kernel.org,
+	security@kernel.org,
+	Oscar Maes <oscmaes92@gmail.com>,
+	syzbot <syzbot+91161fe81857b396c8a0@syzkaller.appspotmail.com>
+Subject: [PATCH net] net: 802: enforce underlying device type for GARP and MRP
+Date: Wed, 12 Feb 2025 12:32:18 +0100
+Message-Id: <20250212113218.9859-1-oscmaes92@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: RNyJkEh9ne1EUIWDvGHUVim22sWU-xGT
-X-Proofpoint-ORIG-GUID: RNyJkEh9ne1EUIWDvGHUVim22sWU-xGT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-12_04,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 clxscore=1015 suspectscore=0 mlxscore=0
- lowpriorityscore=0 phishscore=0 impostorscore=0 malwarescore=0 spamscore=0
- mlxlogscore=922 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502120089
 
-Add support for vadc and adc-tm channels which are used for
-monitoring thermistors present on the platform.
+When creating a VLAN device, we initialize GARP (garp_init_applicant)
+and MRP (mrp_init_applicant) for the underlying device.
 
-- Add the necessary includes for qcom,spmi-adc7-pm7325 and
-  qcom,spmi-adc7-pmk8350.
-- Add thermal zones for quiet-thermal, sdm-skin-thermal, and
-  xo-thermal, and define their polling delays and thermal sensors.
-- Configure the pm7325_temp_alarm node to use the pmk8350_vadc
-  channel for thermal monitoring.
-- Configure the pmk8350_adc_tm node to enable its thermal sensors
-  and define their registers and settings.
-- Configure the pmk8350_vadc node to define its channels and settings
+As part of the initialization process, we add the multicast address of
+each applicant to the underlying device, by calling dev_mc_add.
 
-Signed-off-by: Rakesh Kota <quic_kotarake@quicinc.com>
+__dev_mc_add uses dev->addr_len to determine the length of the new
+multicast address.
+
+This causes an out-of-bounds read if dev->addr_len is greater than 6,
+since the multicast addresses provided by GARP and MRP are only 6 bytes
+long.
+
+This behaviour can be reproduced using the following commands:
+
+ip tunnel add gretest mode ip6gre local ::1 remote ::2 dev lo
+ip l set up dev gretest
+ip link add link gretest name vlantest type vlan id 100
+
+Then, the following command will display the address of garp_pdu_rcv:
+
+ip maddr show | grep 01:80:c2:00:00:21
+
+Fix this by enforcing the type and address length of
+the underlying device during GARP and MRP initialization.
+
+Fixes: 22bedad3ce11 ("net: convert multicast list to list_head")
+Reported-by: syzbot <syzbot+91161fe81857b396c8a0@syzkaller.appspotmail.com>
+Closes: https://lore.kernel.org/netdev/000000000000ca9a81061a01ec20@google.com/
+Signed-off-by: Oscar Maes <oscmaes92@gmail.com>
 ---
-Changes from V2:
- - As per Konrad Dybcio’s suggestion, removed all default polling values.
-Changes from V1:
- - Update the Die temp name to Channel as per Documentation.
- - As per Konrad Dybcio’s suggestion, I have sorted the pmk8350_adc_tm
-   channels by unit address instead of alphabetically.
---- 
- arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 108 +++++++++++++++++++
- 1 file changed, 108 insertions(+)
+ net/802/garp.c | 5 +++++
+ net/802/mrp.c  | 5 +++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-index 7a36c90ad4ec..fe2d14865a75 100644
---- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-@@ -9,6 +9,8 @@
- #define PM7250B_SID 8
- #define PM7250B_SID1 9
+diff --git a/net/802/garp.c b/net/802/garp.c
+index 27f0ab146..2f383ee73 100644
+--- a/net/802/garp.c
++++ b/net/802/garp.c
+@@ -9,6 +9,7 @@
+ #include <linux/skbuff.h>
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
++#include <linux/if_arp.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/llc.h>
+ #include <linux/slab.h>
+@@ -574,6 +575,10 @@ int garp_init_applicant(struct net_device *dev, struct garp_application *appl)
  
-+#include <dt-bindings/iio/qcom,spmi-adc7-pmk8350.h>
-+#include <dt-bindings/iio/qcom,spmi-adc7-pm7325.h>
- #include <dt-bindings/leds/common.h>
- #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-@@ -212,6 +214,44 @@ pmic_glink_sbu_in: endpoint {
- 		};
- 	};
+ 	ASSERT_RTNL();
  
-+	thermal-zones {
-+		sdm-skin-thermal {
-+			thermal-sensors = <&pmk8350_adc_tm 3>;
++	err = -EINVAL;
++	if (dev->type != ARPHRD_ETHER || dev->addr_len != ETH_ALEN)
++		goto err1;
 +
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		quiet-thermal {
-+			thermal-sensors = <&pmk8350_adc_tm 1>;
-+
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		xo-thermal {
-+			thermal-sensors = <&pmk8350_adc_tm 0>;
-+
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+	};
-+
- 	vph_pwr: vph-pwr-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vph_pwr";
-@@ -745,6 +785,36 @@ kypd_vol_up_n: kypd-vol-up-n-state {
- 	};
- };
+ 	if (!rtnl_dereference(dev->garp_port)) {
+ 		err = garp_init_port(dev);
+ 		if (err < 0)
+diff --git a/net/802/mrp.c b/net/802/mrp.c
+index e0c96d0da..1efee0b39 100644
+--- a/net/802/mrp.c
++++ b/net/802/mrp.c
+@@ -12,6 +12,7 @@
+ #include <linux/skbuff.h>
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
++#include <linux/if_arp.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+@@ -859,6 +860,10 @@ int mrp_init_applicant(struct net_device *dev, struct mrp_application *appl)
  
-+&pm7325_temp_alarm {
-+	io-channels = <&pmk8350_vadc PM7325_ADC7_DIE_TEMP>;
-+	io-channel-names = "thermal";
-+};
-+
-+&pmk8350_adc_tm {
-+	status = "okay";
-+
-+	xo-therm@0 {
-+		reg = <0>;
-+		io-channels = <&pmk8350_vadc PMK8350_ADC7_AMUX_THM1_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time-us = <200>;
-+	};
-+
-+	quiet-therm@1 {
-+		reg = <1>;
-+		io-channels = <&pmk8350_vadc PM7325_ADC7_AMUX_THM1_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time-us = <200>;
-+	};
-+
-+	sdm-skin-therm@3 {
-+		reg = <3>;
-+		io-channels = <&pmk8350_vadc PM7325_ADC7_AMUX_THM3_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time-us = <200>;
-+	};
-+};
-+
- &pm8350c_pwm {
- 	nvmem = <&pmk8350_sdam_21>,
- 		<&pmk8350_sdam_22>;
-@@ -789,6 +859,44 @@ &pmk8350_rtc {
- 	status = "okay";
- };
+ 	ASSERT_RTNL();
  
-+&pmk8350_vadc {
-+	channel@3 {
-+		reg = <PMK8350_ADC7_DIE_TEMP>;
-+		label = "pmk8350_die_temp";
-+		qcom,pre-scaling = <1 1>;
-+	};
++	err = -EINVAL;
++	if (dev->type != ARPHRD_ETHER || dev->addr_len != ETH_ALEN)
++		goto err1;
 +
-+	channel@44 {
-+		reg = <PMK8350_ADC7_AMUX_THM1_100K_PU>;
-+		label = "xo_therm";
-+		qcom,hw-settle-time = <200>;
-+		qcom,pre-scaling = <1 1>;
-+		qcom,ratiometric;
-+	};
-+
-+	channel@103 {
-+		reg = <PM7325_ADC7_DIE_TEMP>;
-+		label = "pm7325_die_temp";
-+		qcom,pre-scaling = <1 1>;
-+	};
-+
-+	channel@144 {
-+		reg = <PM7325_ADC7_AMUX_THM1_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time = <200>;
-+		qcom,pre-scaling = <1 1>;
-+		label = "pm7325_quiet_therm";
-+	};
-+
-+	channel@146 {
-+		reg = <PM7325_ADC7_AMUX_THM3_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time = <200>;
-+		qcom,pre-scaling = <1 1>;
-+		label = "pm7325_sdm_skin_therm";
-+	};
-+};
-+
- &pon_pwrkey {
- 	status = "okay";
- };
+ 	if (!rtnl_dereference(dev->mrp_port)) {
+ 		err = mrp_init_port(dev);
+ 		if (err < 0)
 -- 
-2.34.1
+2.39.5
 
