@@ -1,128 +1,123 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60A54A08
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 02:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934781FECB4;
+	Thu, 13 Feb 2025 02:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739415455; cv=none; b=fGYx2cnHf3CKgmcoAzgvAE+zR7CbYPOp7al8i31EEF7tTw6r55ml6NR7BqsKIDfEVKYTyShvYDE1GAunMhkAyZ0eC9s0IX+e/RfTrwNAYAO5J1stIykmIyilCM1qBQn4nTxwU0RgbmW47n2oaUIdIUnIddOa4qjbhzGoakXANZY=
+	t=1739415546; cv=none; b=Cq+XDJbKxQLHldGHzaEhfbc6bTUBtVeqXUOpWlJnQv0HITQ6hbCOZDXGLHi5eqroOF2qkBXpIB08UdyKFObyVI8Z4/OgGK2N7IungSBt4efA8XkFyQOwr3e24FHo2UbFA3ImVbB7tBbd9KErWYTR9TFYsXlaPtL/WZ6bCe/JyYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739415455; c=relaxed/simple;
-	bh=CpcRkamTjzxXr7oWqpFy5FD2Fuz+fACZLhbK+eoL7wA=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=W5k0Xx4G9vrMtzT+Ur2rh9pwNj0S67U66XXGW2ehuSYXoJ6ByYwlPIJc8HVApW8SlGpX/LIeXV2UkRD8llqM3fV74OvCbHeGSIkMOUFkvySxBVLgn9jCHzXMGFJ95/+90EC0piXT2kki5AXcnsdbrg357matIoKaVmAIdLNMMog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=u1drbhpy; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739415546; c=relaxed/simple;
+	bh=sm/A5DDYfWFWU/VotvaDeerUCy+HMeubsXLRAwDtoso=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fm9q6F0nOTMOhuhaCSKOktwHJVBh4kR14sILxq0uTQ8qGTokIcwr82iTLZ3wCx2uN89rr+zV23G+UmSi5RoHzWVJMvKXWhY93L18KTMBIP09RtqnCFsyxddxn55aiptGUEL28iQmWBt1yTI4foGAcAwHhZZlxe6Rd4QQus71LH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ay+0USiZ; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="u1drbhpy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ay+0USiZ"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2b1a9cbfc8dso154912fac.2;
+        Wed, 12 Feb 2025 18:59:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739415544; x=1740020344; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v4ZQSX+iTddF0FgfN0z+bWuH3PadR/0Ql3Bz3nbWzqU=;
+        b=Ay+0USiZYpA/DBrmxiINHo1fbxc1NUC7Q2sieYelefXtbKBo2SoX/oAVYkh6BS7BF9
+         coVznKfKEeBFFE2QDj+8lTC8UE7iNNx95TpJ+WsBLcOZNXpOJ+1zN/2QRu+lA+fi6w5f
+         cu3C0X1rM/XtvMHdGDDt25n4joRbeQ68CZTJ2QvPuPOLnGsmafecwI39BLkBdYaSMR8R
+         JGK9UD1sbD4XOz0N558ul4z+wtueYGy0GSsaZz43o/0ilRw1zZ33Y/BYA9Q3CT+DoXZQ
+         q741ZCwI8suUs7vefJCYP92BlId/KY2a/JPsb2k0ihh9uqLAJSLbAo1fibfS7M2nB7WZ
+         FJqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739415544; x=1740020344;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v4ZQSX+iTddF0FgfN0z+bWuH3PadR/0Ql3Bz3nbWzqU=;
+        b=DsLWVfQtQ5rBLU/owdJqCJda6q8ZbwX31nGwawmSujUbb0YBqmCWh5sxBujk90XBoc
+         rBlnPpKLyWdnsq7wEeURgA9UfGP2WQW/FTBUP3KyzjMqzyEnnPivNnV/EBiyPJcZTdDE
+         3YOcsDbIbHsDLVY3slnr2Jlyx5BBegfxBCDUktwh6RJte1BWf3CVJ33SZR4LlcaakBlk
+         /U/YrK0fjLQC8ZoPJvJf/DbIIydems4po0QnwaPw9nSY3P9G3WQIJX9vHzWLtsAd/yDK
+         Lkt31pzWAzFlPGLa+XaDwQ+zkNFWZlzxf7sVWKWUef4lNQPNfOrFr28SG4rP4EIXFU5Q
+         knxA==
+X-Forwarded-Encrypted: i=1; AJvYcCU5U5Mi34o4/PRVw8ZxOUjuQjt0ttjaadYGEe0KKz79OG3sKYegidbu0dAajRCxe5ZN05E=@vger.kernel.org, AJvYcCUqyRVJjnTWYdV4jhFsxKgRV1FIza1p9liU5hFTudNlYBpxUKYASLBBKLxeHBVS6YKu35e3s3s+jnqRV//rlAmHqplS@vger.kernel.org, AJvYcCWGInCIwF1AQmHOgX0VMmwUImltoVBhix0Ee4yAPdaz34yPDna8l8J+6YHtuLE+LBZn3z5JcqzeydU7CFwe@vger.kernel.org, AJvYcCX5vzqYtT3UCloNkpQgRRkiPsmbPxkZvSoNhXknpY//eoFzx+0ogP67Xs67uSyYFXpXLf6WhHxKPT3O@vger.kernel.org, AJvYcCXOk4r1TDkVpdmKxSJPAiFK4gtoapC1yeqDB/LT9o3cn0ygjiVZowR04VdO4wkKgLnGU9d6vg9H@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqOofyjkX/Bu2ORkY0+vfL5i9XEefB3euDeTumEVlM7at1Odlf
+	tP0+xpQJWEqU6zG/OW9/royTBiQn3b6H4D2z17b77h25oLCxjufFx2BBAHFJA4WOTf1DM2wZmHS
+	MOxSAAX2q5y66WRdpckFgNKGIYHw=
+X-Gm-Gg: ASbGncseUdqhvE+silbszctwWCp0OOL5SBv1LbL/Xk4TCKwZvka4pk4lwbYa/ZPmmDT
+	s2fKhG7vD661dhW2EN3tyC/uVF5lNVzKsuYsAXAA7Ja65R9uHn7KBjBk52svziF2IU/4t3CIY
+X-Google-Smtp-Source: AGHT+IFGA+xw9PUj3EPyBJDEfnct8a80eDqwi4eIT1nLpiELpYVP3ZL5tJreXFrsqRlNLfGgFswLTHKffTwAIuAe19c=
+X-Received: by 2002:a05:6871:10b:b0:29e:2422:49f9 with SMTP id
+ 586e51a60fabf-2b8d684addamr3452293fac.25.1739415543729; Wed, 12 Feb 2025
+ 18:59:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739415450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NmWV5qLBGFJ380Q636JbOBAatzAC28wVNjP4Bc1s1jY=;
-	b=u1drbhpyXca+ZGXrN2eKhW797pCKeYFtckSmOgpaly4XqfrUi0RKF0Zi8FCQpWkVWcqLRG
-	wOdHIVDU29LKTCRpasCW+6ns0+bLvOaOi7ssmTz9Aax8GpIqgTGkswExqdQMYk8dCeCo42
-	HxSa1vj8ZjeGQdz/cjFa6wCr/yF6J0o=
-Date: Thu, 13 Feb 2025 02:57:28 +0000
-Content-Type: text/plain; charset="utf-8"
+References: <20250212220433.3624297-1-jolsa@kernel.org> <CALCETrVFdAFVinbpPK+q7pSQHo3=JgGxZSPZVz-y7oaG=xP3fA@mail.gmail.com>
+In-Reply-To: <CALCETrVFdAFVinbpPK+q7pSQHo3=JgGxZSPZVz-y7oaG=xP3fA@mail.gmail.com>
+From: Eyal Birger <eyal.birger@gmail.com>
+Date: Wed, 12 Feb 2025 18:58:52 -0800
+X-Gm-Features: AWEUYZnrOGezMYWshN0W51Wq8NuAF6Ki9dZJOYg4qrtbtnzm3Yom2efk1PBRoAQ
+Message-ID: <CAHsH6GtYpH++etxpa4YDkW5PQTLRA5QiZ8fqBViwZV4+yXG5+A@mail.gmail.com>
+Subject: Re: [PATCHv3 perf/core] uprobes: Harden uretprobe syscall trampoline check
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, Kees Cook <kees@kernel.org>, 
+	stable@vger.kernel.org, Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org, x86@kernel.org, 
+	bpf@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Deepak Gupta <debug@rivosinc.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Yosry Ahmed" <yosry.ahmed@linux.dev>
-Message-ID: <25268fbedb82a06ba0c13e2c490b164846ef508b@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCHv4 14/17] zsmalloc: make zspage lock preemptible
-To: "Sergey Senozhatsky" <senozhatsky@chromium.org>
-Cc: "Sergey Senozhatsky" <senozhatsky@chromium.org>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Minchan Kim" <minchan@kernel.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, "Kairui Song"
- <ryncsn@gmail.com>
-In-Reply-To: <rbco2k74plqedtqvn6ebu6wwssy5urw5mjvsk6n576d3urbjnx@tq43anmdvq35>
-References: <lxottj72e7jcqw634qwudpsyqckfrvpmlhra43en4zlrlz4cip@erufv6w4n5j6>
- <Z6JMIKlO9U5P-5gE@google.com>
- <6vtpamir4bvn3snlj36tfmnmpcbd6ks6m3sdn7ewmoles7jhau@nbezqbnoukzv>
- <Z6O2oPP7lyRGXer_@google.com>
- <6uhsj4bckhursiblkxe54azfgyqal6tq2de3lpkxw6omkised6@uylodcjruuei>
- <Z6ThGFt6wyNpx9xi@google.com>
- <wnffho5jguo24wfy3qv5tvovoargezbu4kcvpk43ludrhyfo6i@6ogtvk5ivfjc>
- <Z6Z2l9uovxAiED6q@google.com>
- <droaoze6w4atf7guiv6t4imhcmkpteyvoaigdnw5p3vdg75ebx@m56xi2y527i4>
- <Z6y_3xS_8pmZ2bCz@google.com>
- <rbco2k74plqedtqvn6ebu6wwssy5urw5mjvsk6n576d3urbjnx@tq43anmdvq35>
-X-Migadu-Flow: FLOW_OUT
 
-February 12, 2025 at 6:18 PM, "Sergey Senozhatsky" <senozhatsky@chromium.=
-org> wrote:
+(sorry for the HTML spam)
 
-
-
->=20
->=20On (25/02/12 15:35), Yosry Ahmed wrote:
->=20
->=20>=20
->=20> Difference at 95.0% confidence
-> >=20
->=20>  -1.03219e+08 +/- 55308.7
-> >=20
->=20>  -27.9705% +/- 0.0149878%
-> >=20
->=20>  (Student's t, pooled s =3D 58864.4)
-> >=20
->=20>=20=20
->=20>=20
->=20>  Thanks for sharing these results, but I wonder if this will captur=
-e
-> >=20
->=20>  regressions from locking changes (e.g. a lock being preemtible)? I=
-IUC
-> >=20
->=20>  this is counting the instructions executed in these paths, and tha=
-t
-> >=20
->=20>  won't change if the task gets preempted. Lock contention may be ca=
-ptured
-> >=20
->=20>  as extra instructions, but I am not sure we'll directly see its ef=
-fect
-> >=20
->=20>  in terms of serialization and delays.
-> >=20
->=20
-> Yeah..
->=20
->=20>=20
->=20> I think we also need some high level testing (e.g. concurrent
-> >=20
->=20>  swapins/swapouts) to find that out. I think that's what Kairui's t=
-esting
-> >=20
->=20>  covers.
-> >=20
->=20
-> I do a fair amount of high-level testing: heavy parallel (make -j36 and
->=20
->=20parallel dd) workloads (multiple zram devices configuration - zram0 e=
-xt4,
->=20
->=20zram1 writeback device, zram2 swap) w/ and w/o lockdep. In addition I=
- also
->=20
->=20run these workloads under heavy memory pressure (a 4GB VM), when oom-=
-killer
->=20
->=20starts to run around with a pair of scissors. But it's mostly regress=
-ion
->=20
->=20testing.
+On Wed, Feb 12, 2025 at 5:37=E2=80=AFPM Andy Lutomirski <luto@kernel.org> w=
+rote:
 >
+> On Wed, Feb 12, 2025 at 2:04=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrot=
+e:
+> >
+> > Jann reported [1] possible issue when trampoline_check_ip returns
+> > address near the bottom of the address space that is allowed to
+> > call into the syscall if uretprobes are not set up.
+> >
+> > Though the mmap minimum address restrictions will typically prevent
+> > creating mappings there, let's make sure uretprobe syscall checks
+> > for that.
+>
+> It would be a layering violation, but we could perhaps do better here:
+>
+> > -       if (regs->ip !=3D trampoline_check_ip())
+> > +       /* Make sure the ip matches the only allowed sys_uretprobe call=
+er. */
+> > +       if (unlikely(regs->ip !=3D trampoline_check_ip(tramp)))
+> >                 goto sigill;
+>
+> Instead of SIGILL, perhaps this should do the seccomp action?  So the
+> logic in seccomp would be (sketchily, with some real mode1 mess):
+>
+> if (is_a_real_uretprobe())
+>     skip seccomp;
+>
+> where is_a_real_uretprobe() is only true if the nr and arch match
+> uretprobe *and* the address is right.
 
-If we can get some numbers from these parallel workloads that would be be=
-tter than the perf stats imo.
+
+
+Why would it make sense to rely on CONFIG_SECCOMP for this check? seems
+this check should be done regardless of seccomp.
+
+Or maybe I missed something in the suggestion.
+
+Eyal.
+
+>
+>
+> --Andy
