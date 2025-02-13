@@ -1,64 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4F220D4F0;
-	Thu, 13 Feb 2025 08:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29862142E7C;
+	Thu, 13 Feb 2025 08:57:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739437002; cv=none; b=S+LPOER6lk8rz/4l68f4KHCzSbdL3naP2sVDrfHWvNLAz4DUS69JA+LVxk9ZlRRZpYyXtv+SMaEWyTFZG78EMWoM0J1B9xHdn716jqISoT/FQMmLQdwpiQqgV0p9nw9mS2Flfrj+gTlxepSaPMF+0A0UVqxJeQaDr/fEFB8MzHA=
+	t=1739437023; cv=none; b=OVJTkHEn2lobzIEQ1NM87RPQAgwmOWDO8l9l0FyqIbI/cjKW5Jq6a0SMgA3YeqPa/kNrap+PntB+jCREEYB4gxKSphvqLAVjtJAMaGdbXhIAFYznmdWU3lKB7/O4MhTMBAxOyZTmmCeQJOQcN7gwAG8DBmKadKpVVVt6/U2NxIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739437002; c=relaxed/simple;
-	bh=u0HLLklJOTFaRYEeDQYu/nDUkCt1ooDe7WmRZLU//hQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e9mTn1YTFh425e/fjOQffQv8qIElezn05qnu3Q5DWOI7r0MpXM+otS6WZYGkOto4zhwbFTORc8wMb2YxaY4MZMYRL4v1UBqjzesiXVP0mTWNuhgO6f2k4+/IdfG7QGkWpVOspu4AETFLBflit7c8w8kh/TdTS8TvfkmMkkFbF4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHCVDPyt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739437023; c=relaxed/simple;
+	bh=leKGUcxLQ1n/vdRAq9/d6YNeVQSfxTGQLV+QXytthp8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vEBPB+4DyLusJ9wmQ+vXwuIfZTmeaMrGiW/dGkJpUIuMbHV7LWG80V4PqqRashasS0kFwygTI87Ge6g5EUNPBFm3ZJSH16AWmKVXaIx+DUNmOCX8BKm+r2dfIndWLDIvDu0lNqMQPzdtWmcYWzwelQHLoj4wfHE9aWMxxgqBwz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eag25fEU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHCVDPyt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32E17C4CED1;
-	Thu, 13 Feb 2025 08:56:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eag25fEU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDA55C4CED1;
+	Thu, 13 Feb 2025 08:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739437001;
-	bh=u0HLLklJOTFaRYEeDQYu/nDUkCt1ooDe7WmRZLU//hQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QHCVDPyt+W4tprbg/BwpXDdvuglkaaSB65Q+Nd4Rvl5C/zhva/XYfp0ffTgdI0/xb
-	 tx4uqxfB1rscXDF9FtdCLFKKGi8QRbc6Zp8SWrHIuUOXK8CHZ9vSCJ5kyq4STDUwfY
-	 pCp43nE++vPlvGhHHmuOxf4g6nv66hNZbJqxPqeLo/LXM+4I72HxibP879CgIaBX5u
-	 tW02cbYMiXK0SxqXJBogKac9F0KOgQpFf4yN1YSwOVo1V3TWqnhXGHy/JDQ0avyHbQ
-	 dnn+DUtmWDBI8JtfKu3QEAHy+WzaN+bkpJUFAv8wqgASaZ48maAkd9bHlQl9SGf5dM
-	 xt4Va2cllf17A==
-From: Maxime Ripard <mripard@kernel.org>
-To: Louis Chauvet <louis.chauvet@bootlin.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Maxime Ripard <mripard@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH next] drm: writeback: Fix use after free in drm_writeback_connector_cleanup()
-Date: Thu, 13 Feb 2025 09:56:33 +0100
-Message-ID: <173943698485.1868200.10958498043496540480.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.48.0
-In-Reply-To: <78abd541-71e9-4b3b-a05d-2c7caf8d5b2f@stanley.mountain>
-References: <78abd541-71e9-4b3b-a05d-2c7caf8d5b2f@stanley.mountain>
+	s=k20201202; t=1739437022;
+	bh=leKGUcxLQ1n/vdRAq9/d6YNeVQSfxTGQLV+QXytthp8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eag25fEUgVVPMYFmgP7IvMPUyjIm8y6mfwhJVJtng1ubP5b6yqYYE0TCiqTMBthlM
+	 rraVe/yCxWBMpg0oDrBjDzwl3xUNaRS0qtATGlA9+72jMQ7YvbfJE+zAmlflnpHVnh
+	 5/xlpYWjRokYrq3VQmhxhdXJxvcgrnd1gu8qGkQliAQGan9WNMyb5sMWXce+2iyXOc
+	 NQfioJb012pWkkhHoJjefTEKq9YI6P/6XmihgODvOwBhD8c0h9AAD8VqGIu0n8pADa
+	 ydQllKA9uo3ab6ysGnMUC0fz+jKUJcnsTalzhA4RALsWUcQnD75qqkdJ0Xrx4gr3J1
+	 Vpo6UKHGidqOQ==
+Date: Thu, 13 Feb 2025 09:56:58 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Tommaso Merciai <tomm.merciai@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, 
+	biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/8] media: dt-bindings: renesas,rzg2l-csi2: Document
+ Renesas RZ/G3E CSI-2 block
+Message-ID: <20250213-lovely-parrot-of-realization-ff3ae2@krzk-bin>
+References: <20250210114540.524790-1-tommaso.merciai.xr@bp.renesas.com>
+ <20250210114540.524790-4-tommaso.merciai.xr@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250210114540.524790-4-tommaso.merciai.xr@bp.renesas.com>
 
-On Wed, 12 Feb 2025 18:23:48 +0300, Dan Carpenter wrote:
-> The drm_writeback_cleanup_job() function frees "pos" so call
-> list_del(&pos->list_entry) first to avoid a use after free.
+On Mon, Feb 10, 2025 at 12:45:35PM +0100, Tommaso Merciai wrote:
+> Document the CSI-2 block which is part of CRU found in Renesas RZ/G3E
+> SoC.
 > 
+> The CSI-2 block on the RZ/G3E SoC is identical to one found on the
+> RZ/V2H(P) SoC.
 > 
+> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
 
-Applied to misc/kernel.git (drm-misc-next).
+From/SoB mismatch.
 
-Thanks!
-Maxime
+Best regards,
+Krzysztof
+
