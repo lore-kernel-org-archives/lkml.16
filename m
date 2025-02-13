@@ -1,173 +1,190 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA85420C49C
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 08:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6731820D510;
+	Thu, 13 Feb 2025 08:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739436953; cv=none; b=BFgXbYD8iUSkeRcJEfdc7j6WL5/Ep/gAchvPa1U+VlrN04JK0cVPS2w/5qIsEWheLf3FwALmLKfSf1UBC4Ph5LqgiJbS17p3B7SENIW2SSpTqoCD5AnJN8jKna8VlRGuGRritkf0WaQ9wv5HdEGbYiOTu/kyec0K7W7IQNmYR7c=
+	t=1739436956; cv=none; b=ekJyEuEpG+g5QUMUVrnFnfxQHYPqsgp3eBOEOBGEEuD4qE4bUdNhJhrDtkM7T1EPgxOm3WdxAM9Th1h9iPCVi12kH8ofGjWbIFyZjTwh5m7BHsp4PLg3x7/1X7lzEgZMz3dl+7rQ5mbk0slap95x6sOqOLA8DnivtwvP/NoRhCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739436953; c=relaxed/simple;
-	bh=7Lb9RZ8Hj6oR7yYjgW0Mfk8ysXQd7lRAjc8omZWQJoM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JjVnmzi3y8MD9aYNJ+iV3lsGP1DT7yOc+BqMcPVEB3qM/YPGIQvoFoKbVwWx1DrIE1DtmRB2Wi/eQq9IZytbnn+uSNUyORb0Yq4V5eK0FMbRsHwO0W0M5Vzi34DGqqcUmtR9oLQ3peDa0pcOhEifNnbFWyrKiXDBKq84I5Hz6CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=MQyTHHh5; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=CCQRalYx; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1739436956; c=relaxed/simple;
+	bh=IOPMin/Lc5WunXnzEYcyj9XzsrWnvgg3E0AxmkqaTmI=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pxjJNOKIldTr+ROGeigI9uhaI4azG2Q+xr33ke6THz+aeYUOnR96wiRaVcY1CLpsSUOHgaRCD5Tbp6WaD/ZUfZf4sl4qHTEtl2+o+leu08sNCN/YKZ936vJ1BsDt9Pko5gdGGSKv+OOVIJdmEjp7eU+hhqLyedl/+eFzn4zlmt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LctM41cZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="MQyTHHh5";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="CCQRalYx"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DA9FF1FBAA;
-	Thu, 13 Feb 2025 08:55:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1739436947; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5roWTjW+RnJz72UMkoQG0UFH3GgE3qHAOCHBzpPQNeA=;
-	b=MQyTHHh5vUOEGZpbG10NkPrZFDPNgDK9dtuo4Tva8KNikzMhp8LfojnVGJ0RYI/qE4HiVf
-	8Vz2UOz9xkbgG2AQIBE7WOkxcQ72JO+LQB4izZbu+g7H4OY36bN0Ve8w/MQuWwWRHOgE8t
-	F8Qq/p2PCtw8MjiL5DF5nEXYLOxgp6c=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1739436946; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5roWTjW+RnJz72UMkoQG0UFH3GgE3qHAOCHBzpPQNeA=;
-	b=CCQRalYxu3fSyIQ1BlZYGQvIsj3ZC/bYV+G30yTRsLllQEMMLXJS4otXsEdjzCwccghlWq
-	K1DYdyPg4m2xIUykGpcgXIjSju4/BJS5IEraQvxOa5Fy0Agdjsjfnwjs2SqwgbaRimmBbV
-	6m87dlOGUhQrBeIRBKiDJjugPIKKK98=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9EB01137DB;
-	Thu, 13 Feb 2025 08:55:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id G3hNJZKzrWcJdgAAD6G6ig
-	(envelope-from <jgross@suse.com>); Thu, 13 Feb 2025 08:55:46 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev
-Cc: Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	xen-devel@lists.xenproject.org,
-	Jan Vejvalka <jan.vejvalka@lfmotol.cuni.cz>
-Subject: [PATCH v2 1/2] xen/swiotlb: relax alignment requirements
-Date: Thu, 13 Feb 2025 09:55:37 +0100
-Message-ID: <20250213085538.17060-2-jgross@suse.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250213085538.17060-1-jgross@suse.com>
-References: <20250213085538.17060-1-jgross@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LctM41cZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF6D9C4CEE2;
+	Thu, 13 Feb 2025 08:55:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739436954;
+	bh=IOPMin/Lc5WunXnzEYcyj9XzsrWnvgg3E0AxmkqaTmI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LctM41cZaQpOgGFyR4yaVnRHOglEmsj1vxHUK2Abf8tFgM8RJSRUUTB16t8OwY7TP
+	 yq0xilekRyINqV8yiHBuMHrmEGNpLRMfc23cQRR/FE7HyAzgsxU+JtWWTrqYGX/GAN
+	 n9iJUfv9ycsTaTB8jUjq3rtE9xNf8/qzSz27D7r9W/urwM9aPQ66IymdP7QtPbQOxF
+	 hglMXhZWkfjrTwv9I2Sq3r7vZsnvME9mfQIlUDATLmpYFHH5JBa04n15KGZbvn9IjD
+	 c56UYjT88K5+B+EW7pxM36cZeLQqLMWZM6p1hdr9zDuXxdERt3J5AsVB2yjB3NllV5
+	 v36Y7oNeTikug==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tiV0i-003bb5-Fo;
+	Thu, 13 Feb 2025 08:55:52 +0000
+Date: Thu, 13 Feb 2025 08:55:52 +0000
+Message-ID: <86tt8yrzon.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Brown <broonie@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Fuad Tabba <tabba@google.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v7] KVM: arm64: Fix confusion in documentation for pKVM SME assert
+In-Reply-To: <Z6yByMUBPDUyEWOr@J2N7QTR9R3>
+References: <20250212-kvm-arm64-sme-assert-v7-1-0f786db838d3@kernel.org>
+	<Z6yByMUBPDUyEWOr@J2N7QTR9R3>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: mark.rutland@arm.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, tabba@google.com, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-When mapping a buffer for DMA via .map_page or .map_sg DMA operations,
-there is no need to check the machine frames to be aligned according
-to the mapped areas size. All what is needed in these cases is that the
-buffer is contiguous at machine level.
+On Wed, 12 Feb 2025 11:11:04 +0000,
+Mark Rutland <mark.rutland@arm.com> wrote:
+> 
+> On Wed, Feb 12, 2025 at 12:44:57AM +0000, Mark Brown wrote:
+> > As raised in the review comments for the original patch the assert and
+> > comment added in afb91f5f8ad7 ("KVM: arm64: Ensure that SME controls are
+> > disabled in protected mode") are bogus. The comments says that we check
+> > that we do not have SME enabled for a pKVM guest but the assert actually
+> > checks to see if the host has anything set in SVCR which is unrelated to
+> > the guest features or state, regardless of if those guests are protected
+> > or not. This check is also made in the hypervisor, it will refuse to run
+> > a guest if the check fails, so it appears that the assert here is
+> > intended to improve diagnostics.
+> > 
+> > Update the comment to reflect the check in the code, and to clarify that
+> > we do actually enforce this in the hypervisor. While we're here also
+> > update to use a WARN_ON_ONCE() to avoid log spam if this triggers.
+> > 
+> > Fixes: afb91f5f8ad7 ("KVM: arm64: Ensure that SME controls are disabled in protected mode")
+> > Reviewed-by: Fuad Tabba <tabba@google.com>
+> > Signed-off-by: Mark Brown <broonie@kernel.org>
+> > ---
+> > This has been sent with v6.10 with only positive review comments after
+> > the first revision, if there is some issue with the change please share
+> > it.
+> > 
+> > To: Marc Zyngier <maz@kernel.org>
+> > To: Oliver Upton <oliver.upton@linux.dev>
+> > To: James Morse <james.morse@arm.com>
+> > To: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > To: Catalin Marinas <catalin.marinas@arm.com>
+> > To: Will Deacon <will@kernel.org>
+> > To: Fuad Tabba <tabba@google.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > ---
+> > Changes in v7:
+> > - Reword the comment.
+> > - Link to v6: https://lore.kernel.org/r/20250210-kvm-arm64-sme-assert-v6-1-cc26c46d1b43@kernel.org
+> > 
+> > Changes in v6:
+> > - Rebase onto v6.14-rc1.
+> > - Link to v5: https://lore.kernel.org/r/20241210-kvm-arm64-sme-assert-v5-1-995c8dd1025b@kernel.org
+> > 
+> > Changes in v5:
+> > - Rebase onto v6.13-rc1.
+> > - Link to v4: https://lore.kernel.org/r/20240930-kvm-arm64-sme-assert-v4-1-3c9df71db688@kernel.org
+> > 
+> > Changes in v4:
+> > - Rebase onto v6.12-rc1
+> > - Link to v3: https://lore.kernel.org/r/20240730-kvm-arm64-sme-assert-v3-1-8699454e5cb8@kernel.org
+> > 
+> > Changes in v3:
+> > - Rebase onto v6.11-rc1.
+> > - Link to v2: https://lore.kernel.org/r/20240605-kvm-arm64-sme-assert-v2-1-54391b0032f4@kernel.org
+> > 
+> > Changes in v2:
+> > - Commit message tweaks.
+> > - Change the assert to WARN_ON_ONCE().
+> > - Link to v1: https://lore.kernel.org/r/20240604-kvm-arm64-sme-assert-v1-1-5d98348d00f8@kernel.org
+> > ---
+> >  arch/arm64/kvm/fpsimd.c | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kvm/fpsimd.c b/arch/arm64/kvm/fpsimd.c
+> > index 4d3d1a2eb157047b4b2488e9c4ffaabc6f5a0818..e37e53883c357093ff4455f5afdaec90e662d744 100644
+> > --- a/arch/arm64/kvm/fpsimd.c
+> > +++ b/arch/arm64/kvm/fpsimd.c
+> > @@ -93,11 +93,14 @@ void kvm_arch_vcpu_load_fp(struct kvm_vcpu *vcpu)
+> >  	}
+> >  
+> >  	/*
+> > -	 * If normal guests gain SME support, maintain this behavior for pKVM
+> > -	 * guests, which don't support SME.
+> > +	 * Protected and non-protected KVM modes require that
+> > +	 * SVCR.{SM,ZA} == {0,0} when entering a guest so that no
+> > +	 * host/guest SME state needs to be saved/restored by hyp code.
+> > +	 *
+> > +	 * In protected mode, hyp code will verify this later.
+> >  	 */
+> > -	WARN_ON(is_protected_kvm_enabled() && system_supports_sme() &&
+> > -		read_sysreg_s(SYS_SVCR));
+> > +	WARN_ON_ONCE(is_protected_kvm_enabled() && system_supports_sme() &&
+> > +		     read_sysreg_s(SYS_SVCR));
+> 
+> As I mentioned on the last round, we can drop the is_protected_kvm_enabled()
+> check, i.e. have:
+> 
+> 	/*
+> 	 * Protected and non-protected KVM modes require that
+> 	 * SVCR.{SM,ZA} == {0,0} when entering a guest so that no
+> 	 * host/guest SME state needs to be saved/restored by hyp code.
+> 	 *
+> 	 * In protected mode, hyp code will verify this later.
+> 	 */
+> 	WARN_ON_ONCE(system_supports_sme() && read_sysreg_s(SYS_SVCR));
+> 
+> Either way:
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> 
+> Marc, are you happy to queue this atop the recent fixes from me? Those
+> try to ensure SVCR.{SM,ZA} == {0,0} regardless of whether KVM is in
+> protected mode.
 
-So carve out the alignment check from range_straddles_page_boundary()
-and move it to a helper called by xen_swiotlb_alloc_coherent() and
-xen_swiotlb_free_coherent() directly.
+In all honesty, I find that at this stage, the comment just gets in
+the way and is over-describing what is at stake here.
 
-Fixes: 9f40ec84a797 ("xen/swiotlb: add alignment check for dma buffers")
-Reported-by: Jan Vejvalka <jan.vejvalka@lfmotol.cuni.cz>
-Tested-by: Jan Vejvalka <jan.vejvalka@lfmotol.cuni.cz>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
----
- drivers/xen/swiotlb-xen.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+The
 
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index a337edcf8faf..26c62e0d34e9 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -74,19 +74,21 @@ static inline phys_addr_t xen_dma_to_phys(struct device *dev,
- 	return xen_bus_to_phys(dev, dma_to_phys(dev, dma_addr));
- }
- 
-+static inline bool range_requires_alignment(phys_addr_t p, size_t size)
-+{
-+	phys_addr_t algn = 1ULL << (get_order(size) + PAGE_SHIFT);
-+	phys_addr_t bus_addr = pfn_to_bfn(XEN_PFN_DOWN(p)) << XEN_PAGE_SHIFT;
-+
-+	return IS_ALIGNED(p, algn) && !IS_ALIGNED(bus_addr, algn);
-+}
-+
- static inline int range_straddles_page_boundary(phys_addr_t p, size_t size)
- {
- 	unsigned long next_bfn, xen_pfn = XEN_PFN_DOWN(p);
- 	unsigned int i, nr_pages = XEN_PFN_UP(xen_offset_in_page(p) + size);
--	phys_addr_t algn = 1ULL << (get_order(size) + PAGE_SHIFT);
- 
- 	next_bfn = pfn_to_bfn(xen_pfn);
- 
--	/* If buffer is physically aligned, ensure DMA alignment. */
--	if (IS_ALIGNED(p, algn) &&
--	    !IS_ALIGNED((phys_addr_t)next_bfn << XEN_PAGE_SHIFT, algn))
--		return 1;
--
- 	for (i = 1; i < nr_pages; i++)
- 		if (pfn_to_bfn(++xen_pfn) != ++next_bfn)
- 			return 1;
-@@ -156,7 +158,8 @@ xen_swiotlb_alloc_coherent(struct device *dev, size_t size,
- 
- 	*dma_handle = xen_phys_to_dma(dev, phys);
- 	if (*dma_handle + size - 1 > dma_mask ||
--	    range_straddles_page_boundary(phys, size)) {
-+	    range_straddles_page_boundary(phys, size) ||
-+	    range_requires_alignment(phys, size)) {
- 		if (xen_create_contiguous_region(phys, order, fls64(dma_mask),
- 				dma_handle) != 0)
- 			goto out_free_pages;
-@@ -182,7 +185,8 @@ xen_swiotlb_free_coherent(struct device *dev, size_t size, void *vaddr,
- 	size = ALIGN(size, XEN_PAGE_SIZE);
- 
- 	if (WARN_ON_ONCE(dma_handle + size - 1 > dev->coherent_dma_mask) ||
--	    WARN_ON_ONCE(range_straddles_page_boundary(phys, size)))
-+	    WARN_ON_ONCE(range_straddles_page_boundary(phys, size) ||
-+			 range_requires_alignment(phys, size)))
- 	    	return;
- 
- 	if (TestClearPageXenRemapped(virt_to_page(vaddr)))
+ 	WARN_ON_ONCE(system_supports_sme() && read_sysreg_s(SYS_SVCR));
+
+is really the only thing that matters. It perfectly shows what we are
+checking for, and doesn't need an exegesis.
+
+As for the Fixes: tag, and given the magnitude of the actual fixes
+that are already queued, I don't think we need it.
+
+Thanks,
+
+	M.
+
 -- 
-2.43.0
-
+Without deviation from the norm, progress is not possible.
