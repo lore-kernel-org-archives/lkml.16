@@ -1,106 +1,78 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD521FFC58
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175BE6F099;
+	Thu, 13 Feb 2025 16:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739462508; cv=none; b=f0GMeQ0u62OJYiUnqQms1Ez7k/fohPGtWtgVXk96FkTMnqo7T9XAdWMhyIVbDyjNwq2bip30Rl1scnvpkh0bPH0ig690DlqwAC3QXAU31Xj3v9OREKznJKfCiEtnSoRPfQmLqg5UMEsgYOtUdnUdOajSvV91odiZYM8NXlNalLA=
+	t=1739462507; cv=none; b=pw6wkuA4ZZ2QeP2w4Y5tLYV3NJwlOJh16IwnhclGG7CxSpSrXDtEfh5g4BAXXIi4vCV8J+uNGl/80C7CFoUPte60hWT5dMjXANJ6c8y79XLwp7gx75cxaReH7Ejd0XVkoURyUSbIhh/PWLlKYKWL5ocEgyz514pBCj4xmzr/2hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739462508; c=relaxed/simple;
-	bh=kHjRefsv4ThbOtqwiuf5n1stwZEZB/5LIQ4AAEYCQqY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YVGwwmtFHsxrYmdJrU8/Q9fQJdA85qUGBNQYXcMDu6NNK03+fQ6R6zdtGk5GpbA/7NEoRJsi9HQvPcvUPb0XlJA33c2ChGANuVFGh/Ba5r/b9MSuN8kuAdu43U8MJ9y7xogKM5ojoOYiiNmkNqGKG/UcU4AoXuictY11Jy2VCGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from cwcc.thunk.org (pool-173-48-82-224.bstnma.fios.verizon.net [173.48.82.224])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 51DG13NZ005146
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 11:01:05 -0500
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id AAA7715C000B; Thu, 13 Feb 2025 11:01:03 -0500 (EST)
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: linux-ext4@vger.kernel.org, Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, adilger.kernel@dilger.ca, jack@suse.cz,
-        ojaswin@linux.ibm.com, yi.zhang@huawei.com, chengzhihao1@huawei.com,
-        yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v5 00/10] ext4: clean up and refactor fallocate
-Date: Thu, 13 Feb 2025 11:00:56 -0500
-Message-ID: <173946232424.399068.12866754767074223463.b4-ty@mit.edu>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241220011637.1157197-1-yi.zhang@huaweicloud.com>
-References: <20241220011637.1157197-1-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1739462507; c=relaxed/simple;
+	bh=zd3CJunqywqI5AKyrBsDBDEx1MdJbDKWUbWp/YwdNJk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BqVJoZk84z+XRceqpxaeG/cyGrsRL2pZrAE9v5Ej/C6qdnmdgdwfDcolDjY4dk4fXiOq++M3Qwf4s2tZSdu2HLWx0Jlw8i8EwwZqxubh3pu5PhIpjtIf9M+b7zgnmt+dyrI4zY9g+sJNXgvrjsmp7l2gIx0LN9ig3cmnxVkXq9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NlLiC48/; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NlLiC48/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739462504;
+	bh=zd3CJunqywqI5AKyrBsDBDEx1MdJbDKWUbWp/YwdNJk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NlLiC48/7e309+ZJIZvbvqiem+LAJBnmRmbnLOw8eR3Jdf9KMrZw+BYMIlZljdsiB
+	 lmUczCdniZJuyVObJTqbsN0bPzgr1LnLBriGGMej8o3W4Dw+X4MUXZ7oTEncuKXHXe
+	 jJIDN07tTeRC8dbMVctjhBuOklt4Q7r53s1/+4i+40d8xcF0DDIf942cejCCk+LSX3
+	 kTNUkTZfP9zYp+QwehJg5r2GXdT5DzgFo+9VHQ5LwDcvaAgznCv5Eon4aEtG0lNvdk
+	 55gsO1yu5hVsb5Z9ymnuLSvlx1S8REQKJJ8GxmG3OfbIkWCEkVuy1JfENw3Ygbli54
+	 u4w+sQO/GDUDg==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 85F2517E153C;
+	Thu, 13 Feb 2025 17:01:43 +0100 (CET)
+Message-ID: <4978f335-38d1-47fe-b029-de6a2f1374c7@collabora.com>
+Date: Thu, 13 Feb 2025 17:01:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/10] i2c: Introduce i2c_10bit_addr_*_from_msg()
+ helpers
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Andi Shyti <andi.shyti@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+Cc: Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Kamal Dasu
+ <kamal.dasu@broadcom.com>, Stefan Roese <sr@denx.de>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Gregory CLEMENT <gregory.clement@bootlin.com>,
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+References: <20250213141045.2716943-1-andriy.shevchenko@linux.intel.com>
+ <20250213141045.2716943-2-andriy.shevchenko@linux.intel.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250213141045.2716943-2-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-On Fri, 20 Dec 2024 09:16:27 +0800, Zhang Yi wrote:
-> Changes since v4:
->  - In patch 1, call ext4_truncate_folio() only if truncating range is
->    PAGE_SIZE unaligned, and rename the variable start_boundary to
->    page_boundary.
-> Changes since v3:
->  - In patch 1, rename ext4_truncate_folios_range() and move journalled
->    mode specified handles and truncate_pagecache_range() into this
->    helper.
->  - In patch 3, switch to use ext4_truncate_page_cache_block_range().
->  - In patch 4, use IS_ALIGNED macro to check offset alignments and
->    introduce EXT4_B_TO_LBLK to do the lblk conversion.
->  - In patch 5, keep the first ext4_alloc_file_blocks() call before
->    truncating pagecache.
->  - In patch 9, rename 'out' label to 'out_inode_lock'.
-> Changes since v2:
->  - Add Patch 1 to address a newly discovered data loss issue that occurs
->    when using mmap to write after zeroing out a partial page on a
->    filesystem with the block size smaller than the page size.
->  - Do not write all data before punching hole, zeroing out and
->    collapsing range as Jan suggested, also drop current data writeback
->    in ext4_punch_hole().
->  - Since we don't write back all data in these 4 operations, we only
->    writeback data during inserting range,so do not factor out new
->    helpers in the last two patches, just move common components of
->    sub-operations into ext4_fallocate().
->  - Only keep Jan's review tag on patch 2 and 8, other patches contain
->    many code adaptations, so please review them again.
-> Changes since v1:
->  - Fix an using uninitialized variable problem in the error out path in
->    ext4_do_fallocate() in patch 08.
+Il 13/02/25 15:07, Andy Shevchenko ha scritto:
+> There are already a lot of drivers that have been using
+> i2c_8bit_addr_from_msg() for 7-bit addresses, now it's time
+> to have the similar for 10-bit addresses.
 > 
-> [...]
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Applied, thanks!
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-[01/10] ext4: remove writable userspace mappings before truncating page cache
-        commit: 17207d0bb209e8b40f27d7f3f96e82a78af0bf2c
-[02/10] ext4: don't explicit update times in ext4_fallocate()
-        commit: 73ae756ecdfa9684446134590eef32b0f067249c
-[03/10] ext4: don't write back data before punch hole in nojournal mode
-        commit: 43d0105e2c7523cc6b14cad65e2044e829c0a07a
-[04/10] ext4: refactor ext4_punch_hole()
-        commit: 982bf37da09d078570650b691d9084f43805a5de
-[05/10] ext4: refactor ext4_zero_range()
-        commit: 53471e0bedad5891b860d02233819dc0e28189e2
-[06/10] ext4: refactor ext4_collapse_range()
-        commit: 162e3c5ad1672ef41dccfb28ad198c704b8aa9e7
-[07/10] ext4: refactor ext4_insert_range()
-        commit: 49425504376c335c68f7be54ae7c32312afd9475
-[08/10] ext4: factor out ext4_do_fallocate()
-        commit: fd2f764826df5489b849a8937b5a093aae5b1816
-[09/10] ext4: move out inode_lock into ext4_fallocate()
-        commit: ea3f17efd36b56c5839289716ba83eaa85893590
-[10/10] ext4: move out common parts into ext4_fallocate()
-        commit: 2890e5e0f49e10f3dadc5f7b7ea434e3e77e12a6
 
-Best regards,
--- 
-Theodore Ts'o <tytso@mit.edu>
