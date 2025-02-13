@@ -1,104 +1,123 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5224326B2C3;
-	Thu, 13 Feb 2025 11:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C4521D3C0;
+	Thu, 13 Feb 2025 11:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739445408; cv=none; b=fGf+zayA1RRi9QiDUMgU8Gjh0deFK2diQeMRv/HBuFDZMHRRfIF5PK5F0pWKKNB7KRcpJBWnZTKdE5iiTSK75wb8QFs1jMphq3ih6bk9SWfOVR9TpwvzH1vXSdjvNb1Ae5Q5/p2B+6Pad9h8yzHQ5bWZu9iPyuLNkhy6Z8nUOxo=
+	t=1739445497; cv=none; b=PKdh6UYYgIwSpdDbl8y2gkFRj1jNvL8LZH+b6zKh5siLgQLr71i/LH9Adq4cAmI4Jxs3oiylBAahfG/BQvZOxMuaWAgVUwNeAHuATTSu0jbKE61rY3ZtGCJUndcP5HIwrazoQUdPi3NFMdTqeKeKfIYVkN571jcXnqjikuyl4z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739445408; c=relaxed/simple;
-	bh=HIOVjcEv+ZGkw7f45KBkYZaWuM7soKabY6Ed0gbXGbE=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=I03cTnPA/Xgjf/x3Mxz7NMHUsi4tRX4xXw+sg5qF5j4lLMd4GnMKPZHDZZiG1TKOWNNlOgK3rwaTQApXKqirjv5XpAhvrt8fx3FLNb5AigD4qd284g7Dz7S8toiZRn2QURvPrFE2WD+/Au897qLBf7A+TvwSkvuVs+wwcRtT/dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Ytt0q0PTRz4f3jsy;
-	Thu, 13 Feb 2025 19:16:27 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 278191A0ACF;
-	Thu, 13 Feb 2025 19:16:43 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgBHq1+Z1K1nox_pDg--.15280S3;
-	Thu, 13 Feb 2025 19:16:43 +0800 (CST)
-Subject: Re: [PATCH v2 2/2] blk-wbt: Cleanup a comment in wb_timer_fn
-To: Tang Yizhou <yizhou.tang@shopee.com>, yukuai1@huaweicloud.com,
- axboe@kernel.dk
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250213100611.209997-1-yizhou.tang@shopee.com>
- <20250213100611.209997-3-yizhou.tang@shopee.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <70741bf4-1d1f-e017-7c76-8b7e3b1d9203@huaweicloud.com>
-Date: Thu, 13 Feb 2025 19:16:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1739445497; c=relaxed/simple;
+	bh=9LpzrPq1k/DfBL7MweeRVJA4rDbePodzUAIyyC7lXQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KuDuOSJ0gbQfWRyXQoaxgM+6B3F0W40WDDsstz7GoqgIFMGdeQEdDgdcY11YY8N8fFnMePl8pEwW7k0XJ0amiHkeN8w6bdbtMIlIwcQXf5/2moCrx1ohv400Xdu4EAlhpwNe4xS9AitlCjYdyUWfGhOxMKXIJQMvy/iKNLHV9aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N1V3YuFw; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N1V3YuFw"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6e4505134c4so10387026d6.2;
+        Thu, 13 Feb 2025 03:18:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739445493; x=1740050293; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jWa5V9+gOF0Da18gHiRuUCSUVEFQiY42ni6Co3x+yiM=;
+        b=N1V3YuFwDjoayr/IXx61Y8Q6jzgNK7a0LTc6sOVkOAIGwbiy8y3oH02rYskTNIFlc8
+         wIOqcTTY4Bv4IFH1BX4jZ468OX6EMviEX5xL2V/ahb8oN2xkyENICTFytAZYgcKjaovK
+         tt3KaCPEdJ3JLWqAuRh6sv0JLH1WRiOX2FVjOS2/exIpzNvPxbCLTCZ/MnZwWM7gwCNn
+         kwkrT0+EFfaNpmD0ujQWhffln33xqLpJ7djnZS0YCipCURXf8zVNwveXVAJzq0dxAu3u
+         M7YeQunSl20qu9rBmaYuDai9gvf8tJ4MJOPCBzLwA3GDJm9cODwNmZvLiJh+EjEBLXoj
+         XKnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739445493; x=1740050293;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jWa5V9+gOF0Da18gHiRuUCSUVEFQiY42ni6Co3x+yiM=;
+        b=uOPXT76RYTGJEufOposJm+Et+Yp/daddKen8ye1BqDqzHg4wP/VkaO5x9T+xCFbfXP
+         X/kMlYnDi9FUBhja1qAw+UFfIoU92dhzdOh7/oc/7r546Rjc+o3njFvw8CNDf6YMan5/
+         vNzxwGAvLKFuIKU7muujR4mwbL9TTU78yF+KhnhA/VHOmu56oKqIEFejFVaRNsaGN+0W
+         o/ulz6blhInZ3kGkZVMsOezdF+6zUdRmJ16DoV3gg77F3fIVGzoxret1tM6u3rxj2PNq
+         ay82ssh/r4N/NvLwQ2QLmFpYrAtINiY1r4q46JyIuvQTr9CZUdLbOpkaErpl1Hi9USpB
+         lgMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUu0armwjBjF1wL98ApZtfh086wtFAIm9ODaf6VlQnr9gwbwUPVrKQNC/OuQCDOojJxIrDz0+X8iW8m@vger.kernel.org, AJvYcCXb2JwsKj5SlW1+DGv4y8oHACbghiAAAKGNpXBf53gkkjYEnaIFYhhwnJt++a+nDyUgCRaEEssUth2TvxjL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVr3lcQPLUa2n369wF3yNGd+o2XuIrDzHeIQ5EKa0b2/i0HcBI
+	lJ+ViKNgCpy0zHdZVT02E/BGCc+iOrqeh9wROXStN5tVLiZVlYfz
+X-Gm-Gg: ASbGncu0u+zSGuLwsz+zr0I4M/qXIjZnnPpxaIF4UxmreL0P5kGzamY0dX/ChPACH1s
+	iHEb/rEijlMtJsxVvLQSbO8ze1vRtCH8MFuSSaSDYNp3SMUkQ2w5N2OsPxt49aPiFtjMO9rMFgm
+	pIQ4oMqbGHSKvcf2o81Q2UUsXQkju9J8wPoKgoe2dYoQQSfasUMPszCnNTbhIgfoFSOcZ9IYYso
+	ul6HhQH6AFAZjooeCxW5I6VUAV1SVD17/E/Q84NdoP3tqS0UzeQdnm1A2OpZCYQGFg=
+X-Google-Smtp-Source: AGHT+IFLRibe0XYKyIJjpp/EoUMufvpGHOsU5BVQtHPrYtw6m74u8WCyHY1uY/X0uZMhys3D7yZtUg==
+X-Received: by 2002:a05:6214:5655:b0:6e6:5ede:7d83 with SMTP id 6a1803df08f44-6e65ede7e93mr16129926d6.25.1739445493556;
+        Thu, 13 Feb 2025 03:18:13 -0800 (PST)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e65daffdbbsm7895126d6.99.2025.02.13.03.18.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 03:18:12 -0800 (PST)
+Date: Thu, 13 Feb 2025 19:18:03 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Inochi Amaoto <inochiama@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>, 
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: reset: add generic bit reset controller
+Message-ID: <j6xw7cpk4mfggonh5dhqz7dqj7abo75sojaann5pv2uar5en67@sdo2ygvttzqj>
+References: <20250213020900.745551-1-inochiama@gmail.com>
+ <20250213020900.745551-2-inochiama@gmail.com>
+ <20250213-cordial-elated-grebe-57aaae@krzk-bin>
+ <619128481807b279e5d3b7967b00e7f094dae7ba.camel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250213100611.209997-3-yizhou.tang@shopee.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBHq1+Z1K1nox_pDg--.15280S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrtr4ruFW8KrWUKFyrAFW8WFg_yoWkGwcEg3
-	97JFn7WF1DAr47u3ZF9F1rGFW8KwsrAw4UWrWrKasxJa4xXwn29ws5tF13WayfXF4UWrnx
-	Krn8ZF1xCry0qjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-	Y487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-	nxnUUI43ZEXa7VUbPl1PUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <619128481807b279e5d3b7967b00e7f094dae7ba.camel@pengutronix.de>
 
-Hi,
-
-ÔÚ 2025/02/13 18:06, Tang Yizhou Ð´µÀ:
-> From: Tang Yizhou <yizhou.tang@shopee.com>
+On Thu, Feb 13, 2025 at 11:22:07AM +0100, Philipp Zabel wrote:
+> On Do, 2025-02-13 at 10:35 +0100, Krzysztof Kozlowski wrote:
+> > On Thu, Feb 13, 2025 at 10:08:54AM +0800, Inochi Amaoto wrote:
+> > > Some SoCs from Aspeed, Allwinner, Sophgo and Synopsys have
+> > > a simple reset controller by toggling bit. It is a hard time
+> > > for each device to add its own compatible to the driver.
+> > > Since this device share a common design, it is possible to
+> > > add a common device to reduce these unnecessary change.
+> > 
+> > SoC components are rarely that simple and even if it is just a bit,
+> > usually it is part of one or few registers.
 > 
-> The original comment contains a grammatical error. Rewrite it into a more
-> easily understandable sentence.
-> 
-> Signed-off-by: Tang Yizhou <yizhou.tang@shopee.com>
-> ---
->   block/blk-wbt.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+> Yes, in those cases (which are probably most of them), I would argue
+> this binding doesn't really fit.
 > 
 
-Personally, I don't think this patch is necessary, people can still
-understand with this error. I'm not expecting a seperate patch :(
+Yes, I agree. 
 
-Thanks,
-Kuai
-
-> diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-> index 8b73c0c11aec..f1754d07f7e0 100644
-> --- a/block/blk-wbt.c
-> +++ b/block/blk-wbt.c
-> @@ -447,9 +447,9 @@ static void wb_timer_fn(struct blk_stat_callback *cb)
->   		break;
->   	case LAT_UNKNOWN_WRITES:
->   		/*
-> -		 * We started a the center step, but don't have a valid
-> -		 * read/write sample, but we do have writes going on.
-> -		 * Allow step to go negative, to increase write perf.
-> +		 * We don't have a valid read/write sample, but we do have
-> +		 * writes going on. Allow step to go negative, to increase
-> +		 * write performance.
->   		 */
->   		scale_up(rwb);
->   		break;
+> > Anyway, there are already bindings for reset-simple and I do not
+> > understand why this has to be duplicated.
 > 
+> I think the motivation is to not have to add a new binding document and
+> modify reset-simple.c every time there is a new SoC. 
+
+Yeah, this is the motivation for me to write this patch. It seems that I
+describe it in a wrong way.
+
+> I wonder if some of this can be mitigated by adding just the 
+> binding document similar to trivial-devices.yaml, without the
+> actual "reset-simple" compatible.
+> 
+
+It is better to keep the original compatible. Adding new base compatible
+will break existing device and make the migration hard.
+
+Regards,
+Inochi
+
 
