@@ -1,93 +1,109 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D155D204C21;
-	Thu, 13 Feb 2025 04:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB841EA84;
+	Thu, 13 Feb 2025 04:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739419716; cv=none; b=W1Gf39aH8uSiVZKckMcViQJvsiycQRp32E9RLlLgFgBAu1UoOpLlkrnnRmbznx3v1v1piwIgQTr/pg70RhhwNCXTO9aTEcT9vgpZYcpyxo+wm6BIVmTnHRwEDNqM8ZoaMDYwB9hcG2zlon9EeF67FaMNAbfeUJ811m3qQDLFrhw=
+	t=1739419776; cv=none; b=ELpPgB7eQXNpDHzpVt5r/lRo7a+/2G/MqIT4RblKIWe7Xqww+IekE7f6t3FEDVfCaCtjFkor8IHNlmElulZgELyCmyfxnxPDlsuINbBY/3UCLutepAayuT5pobcnpDOpnPcIw7B5XTvWCTlB8CHI1K8Y2l9t/7VDEmgkuLzIWR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739419716; c=relaxed/simple;
-	bh=qskS6cXyZce5mqRax3SC9fW74H3DglHCMhSAZY7Cv4o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i4xAbn9nJrEoMv6L4cRpxG44FQ73xfXO+SKJSL231cQC32LnPdZT7wpWAT8a5ci3kkgKwUCKZ52qknHvTi420uVgSh35nnpoz+lZTRDfVor7ksbQ1jqnq5YOZgsD0E/MhXVhxU5NwIbHzvN3kWnCEAGAXimTPTkjjDl5T0QVFcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowABHT6MqcK1nC5CdDA--.51126S2;
-	Thu, 13 Feb 2025 12:08:14 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: vladimir.oltean@nxp.com,
-	claudiu.manoil@nxp.com,
-	alexandre.belloni@bootlin.com,
-	UNGLinuxDriver@microchip.com,
-	andrew@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] net: dsa: felix:  Add NULL check for outer_tagging_rule()
-Date: Thu, 13 Feb 2025 12:07:54 +0800
-Message-ID: <20250213040754.1473-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1739419776; c=relaxed/simple;
+	bh=Vu1hdB6sAQ/ZEPKuBnxx14OA4oc/gBW/ght14YZxFqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Trwtiry1BVgo8X3uCB8PBXJWQ/Q9HtwgE6LvbmjuovsJONTEyfEwZ7Ryt/TQWoiSWCHwNU864dNQdX4v7mT55mp8zJaXNHScqUq3bBkHoWT1kvTnX+8ijbe0kxjQ07jYxFHPkpwNXwSYgpcV0w9muqzGxCuLYL5EJX5yqQIGWuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=qP2gGj9T; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="qP2gGj9T"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7xYKvL/4eIqDcYKwZsggORcTcfd4KIZ9CC7qacZwf7U=; b=qP2gGj9TGvBJVVVl3uhLwitPzd
+	DR8zAFoOTQX1/+Afh0D7dgn74eleW8UWciDdX1OQKgIkYs/ma9KIfCmoNwyTjCLEaj4QLKGAVYbF9
+	WLBGK/g42ShS0lAOWBdcjmu2hTNxIYlCL18JeqJn2nrGd4+s9REi6dhv/DsnLHoWk/FeCa8uBsQPT
+	NxHe6KNxF2IoXXaPMfM+2f8jiWkLkISRC6gfkOjIHJNK9mWeBuunsqkiWLh3pVeo636PL2tTozOwf
+	QtPPTz3HArUosIvOcrQsGxt0a9sLO+J7O5WMTPhfx6J9Kw0BpavzlRGPyFlXgzz/d2Rywy3nOV4mw
+	+m1puGFg==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tiQXb-0000000CQwA-0kAL;
+	Thu, 13 Feb 2025 04:09:31 +0000
+Date: Thu, 13 Feb 2025 04:09:31 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 19/19] nfs: switch to _async for all directory ops.
+Message-ID: <20250213040931.GU1977892@ZenIV>
+References: <20250206054504.2950516-1-neilb@suse.de>
+ <20250206054504.2950516-20-neilb@suse.de>
+ <20250213035116.GT1977892@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowABHT6MqcK1nC5CdDA--.51126S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JrWUGw18Kw4rCFyrXryDGFg_yoWkZFg_Ga
-	s2vF93W34Yv3WYyrnxArs5Xryjkw409Fn3W3ZF9ry3J3yDXr1xtF48Zr13JrsrCFy09a9x
-	Arn5Wry0g342gjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbfxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-	8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW8XwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUca9-UUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgwMA2etbr8D4wAAs+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213035116.GT1977892@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-In felix_update_tag_8021q_rx_rules(), the return value of
-ocelot_vcap_block_find_filter_by_id() is not checked, which could
-lead to a NULL pointer dereference if the filter is not found.
+On Thu, Feb 13, 2025 at 03:51:16AM +0000, Al Viro wrote:
+> On Thu, Feb 06, 2025 at 04:42:56PM +1100, NeilBrown wrote:
+> >  nfs_sillyrename(struct inode *dir, struct dentry *dentry)
+> >  {
+> >  	static unsigned int sillycounter;
+> > @@ -447,7 +451,8 @@ nfs_sillyrename(struct inode *dir, struct dentry *dentry)
+> >  	struct dentry *sdentry;
+> >  	struct inode *inode = d_inode(dentry);
+> >  	struct rpc_task *task;
+> > -	int            error = -EBUSY;
+> > +	struct dentry *base;
+> > +	int error = -EBUSY;
+> >  
+> >  	dfprintk(VFS, "NFS: silly-rename(%pd2, ct=%d)\n",
+> >  		dentry, d_count(dentry));
+> > @@ -461,10 +466,11 @@ nfs_sillyrename(struct inode *dir, struct dentry *dentry)
+> >  
+> >  	fileid = NFS_FILEID(d_inode(dentry));
+> >  
+> > +	base = d_find_alias(dir);
+> 
+> Huh?  That would better be dentry->d_parent and all operations are in
+> that directory, so you don't even need to grab a reference...
+> 
+> >  	sdentry = NULL;
+> >  	do {
+> >  		int slen;
+> > -		dput(sdentry);
+> > +
+> >  		sillycounter++;
+> >  		slen = scnprintf(silly, sizeof(silly),
+> >  				SILLYNAME_PREFIX "%0*llx%0*x",
+> > @@ -474,14 +480,19 @@ nfs_sillyrename(struct inode *dir, struct dentry *dentry)
+> >  		dfprintk(VFS, "NFS: trying to rename %pd to %s\n",
+> >  				dentry, silly);
+> >  
+> > -		sdentry = lookup_one_len(silly, dentry->d_parent, slen);
+> > -		/*
+> > -		 * N.B. Better to return EBUSY here ... it could be
+> > -		 * dangerous to delete the file while it's in use.
+> > -		 */
+> > -		if (IS_ERR(sdentry))
+> > -			goto out;
+> > -	} while (d_inode(sdentry) != NULL); /* need negative lookup */
+> > +		sdentry = lookup_and_lock_one(NULL, silly, slen,
+> > +					      base,
+> > +					      LOOKUP_CREATE | LOOKUP_EXCL
+> > +					      | LOOKUP_RENAME_TARGET
+> > +					      | LOOKUP_PARENT_LOCKED);
+> > +	} while (PTR_ERR_OR_ZERO(sdentry) == -EEXIST); /* need negative lookup */
+> 
+> What's wrong with sdentry == ERR_PTR(-EEXIST)?
 
-Add the necessary check and use `continue` to skip the current CPU
-port if the filter is not found, ensuring that all CPU ports are
-processed.
-
-Fixes: f1288fd7293b ("net: dsa: felix: fix VLAN tag loss on CPU reception with ocelot-8021q")
-Cc: stable@vger.kernel.org # 6.11+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/net/dsa/ocelot/felix.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
-index 3aa9c997018a..10ad43108b88 100644
---- a/drivers/net/dsa/ocelot/felix.c
-+++ b/drivers/net/dsa/ocelot/felix.c
-@@ -348,6 +348,8 @@ static int felix_update_tag_8021q_rx_rules(struct dsa_switch *ds, int port,
- 
- 		outer_tagging_rule = ocelot_vcap_block_find_filter_by_id(block_vcap_es0,
- 									 cookie, false);
-+		if (!outer_tagging_rule)
-+			continue;
- 
- 		felix_update_tag_8021q_rx_rule(outer_tagging_rule, vlan_filtering);
- 
--- 
-2.42.0.windows.2
-
+BTW, do you need to mess with NFS_DATA_BLOCKED with that thing in place?
