@@ -1,129 +1,239 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8733626B087;
-	Thu, 13 Feb 2025 15:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D971B18F2FC
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 15:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739461629; cv=none; b=aDftfEpbRX5xvV6gT6IZFUlpoHM5sg9AUFHDVWpA6MYYioRY1tSytd+IPs1XPeQmxzeVoULkrKYA+tpc/x2B7P0hFwaENEGRJd555+pwVCIlMlEUVulnsAz2S9sBYoJ1P1AXtLQXMuZWiSTTdRek38/4Smp2q2DJif6rZottZ18=
+	t=1739461660; cv=none; b=P/MHcrkSsrhzBc9etUBlfLQbUhoxFKKqi1p/LxW+H9cRuvWWMsDhqWYw94ZWIwon5t31zAHXcjZoInMkRFYSs6/MYk2iKH1jm76VlIkYK1I7UM9xNwc2Pe54LEJ3ScZuV4k5WkMNC32l1OigX7RfWFp5MA9nbgWqFlrNH6pYJ7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739461629; c=relaxed/simple;
-	bh=E1GUjYdJqoBRJw9tQ+cO3lASHQVBixZzsUVVWG/US9E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dpq7mKp6sBksUNIzOxPT5llIyH2Xh6C7M1SDOXCFDGbFvsJetEpbfQOD33NJ2YuUcxMEc75UflR1sE+jY/sd4e+GuF73vgGugGhtO5k/kU9rL8GifTsJ0yIQ4Q0qJcf2bXj0OvOBh8InQvLF802txodUVyxnEqBTW3g1TDs26cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RQRuXCVk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739461660; c=relaxed/simple;
+	bh=hIy5pXh4y/8Q0gYHXdsOqbcgQADp5AC8VTtbqfxyj04=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=OSkZHlQ+GwzCEJ3dVPYSuI7b7igqZneX/Yh9tUH/XEEbqi7K3dVuci8IyCYfUiU8Bb9wxyBrtb+rnovapKuYEFCnlf15+0AS418HLTG1bnmHeTsPd7aBPG8TUVtkJ/OjiNcTkp0M7fJICE3fetwPeuNW9MdzYnAPcnt5W2VIxU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZqNNeqxW; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RQRuXCVk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07B11C4CEE7;
-	Thu, 13 Feb 2025 15:47:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739461629;
-	bh=E1GUjYdJqoBRJw9tQ+cO3lASHQVBixZzsUVVWG/US9E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RQRuXCVkRSWCBtQvf8cddg/93v7kQ+kuCtzjriKQugqc/0tlw0wQ+lIuQ+ZNvuUui
-	 p989xGxi/7Y76OximxiGTexZmIoEu0Qqh0mV1GJrL7YebEkeKO+ONuJC4BLSzj3zEt
-	 k7FQlW+OmTWLVP38lXqSwNRvy05DPdkEWCawW0RzmokqoJAzBa8qcKBHiBdS1hE7Yz
-	 j2NU9vHZr5dTlHD8NfJbR5hV+HdZYWNbYQboBTxSMDv8cU4979M+RoP5MzPeHCs1hf
-	 nFoem2hcaQUbq9+wKv/G1MrPqT5/cgzZBWODqdaqF62d9Cy7/GHRbrgqmJEQh5MJsB
-	 e37j2V26OErgw==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5439a6179a7so1049438e87.1;
-        Thu, 13 Feb 2025 07:47:08 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWCIJYYBa2uFuAZieZXncUfLyjT1IxROfSOzMkH9uyxErgboq9peoxk4c5RLda81dpfExd97VIxNJpvH8Fo@vger.kernel.org, AJvYcCXbbBbEFKyktRqPVDEBMQRcBL7NIN1L0RiIqJTBgLuHAl6VaQ+uOsUdU0ONawe3tdLKK86EnmWXIT+z@vger.kernel.org
-X-Gm-Message-State: AOJu0Yza3XKMmPO71Y1/8IL6qJBFRws8Hr/3n05YSvYqHLSjR2KknT1F
-	pu0+/JnNSxH5GPtX54DSfbMAMvfkaPI2yff8TU/mftd6e1EkCRAXbN1LvOzTP9Hsz7RSXSIBWbS
-	lk0ZnnlWU0renUDv0Q+zguhSqgK0=
-X-Google-Smtp-Source: AGHT+IGv5cDKLfiKWM0AbqmdVhU4cj+YxJl2cKveWSLPMNHSkmFWQco2+fFaxe83V+KevVsWhgrCg8aeW9stFG6GeqA=
-X-Received: by 2002:a05:6512:10d2:b0:545:16ef:d5fa with SMTP id
- 2adb3069b0e04-5451dfdbf37mr1109497e87.12.1739461627368; Thu, 13 Feb 2025
- 07:47:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZqNNeqxW"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fa6409c0baso3542045a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 07:47:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739461658; x=1740066458; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hmNpP4YGEk282karFXTLw7N03fUwb/8MuF654Jepnhw=;
+        b=ZqNNeqxWLUG5Rwx4awZZXcmo0L+HR2MWcWET0uq9XHh1W2mGG2q7tfXoN4QRY9ZjkP
+         SfB1crro1UYbI0+PQjYTGj4sSHTQDD4Q2UqZLPOrG6s4Zq/+ADuYCpwCNE1utFsYM9x5
+         BaG8XfRralEvsLNoCYzLfQqOtPgVbSEDVsE5YKmFnNKJ09Dj68ULhRWkBFbeK1meYmld
+         /iozPzCnrYRQ4q0uVGZTVw5bw/Km6qtfSn3Zvpe6KUd5YxXNd47JGeRYAEFRefjz39yT
+         aKygASU2CRFxoqs4tEfDO/uBg3semFO1Hn0kFl/vETVvAWU0WEttO0aemQV9yx4Ga8WJ
+         UTAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739461658; x=1740066458;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hmNpP4YGEk282karFXTLw7N03fUwb/8MuF654Jepnhw=;
+        b=YEU/9c0watHzHG9Nbq530b0xQ4BrRicT2ebf+L5cI5EprDPFbUa0KTDbvs1UvYY5hs
+         19wHb5I9i4NqNCUINlXm/saCkE3w/tPAWqvs0eNR7jSQDMb3JtHGiRtfR/k849DFqpR+
+         hXU41fKuWMN2kSoMHm2+LmCAF7ow0GFXafM1CppcUD2UqLzNjk0Pqj98AjFMLzhna87W
+         2f+TBhoH5D7jDdwfwiWVGs/kIiFlpt7METsq1SmyHOLvwr1pfYu6hy6PAO7sXw16Nhvf
+         IyLGZ75aTXqfcy9kNgKTX3tZH2aMwxRtOZ6SQrUtjF4ybKmYHsUwHMd5kUE5B2anAcUU
+         h8pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOPdm0J8jyJznvGfYp0Qn1UAJiKKFOdWixaqf99+0RJ5zkUt6vB1qBHfAL4JSPu6ePGXMrs/BB7Ueo1sQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUtITIx5wywGsaKT/KdJYioccU/PlODQlIEh+SVMya9DYC9mWk
+	an8syjmpOzfzsu5u/5HEuzqKsV0Fex2vJy4q/UOa9Gjd9BrOjdlYSYiv78Gae02r09GMY3yDLP4
+	Q8Q==
+X-Google-Smtp-Source: AGHT+IGaLcjab1UGvr0Z7pZ5+q0nKr8aYvYSyIXe+h+lvbdZI1DyQMlmxV/07FFHeYIbV83NKEBsUYCxYZk=
+X-Received: from pfbmb19.prod.google.com ([2002:a05:6a00:7613:b0:730:451c:475c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4fd0:b0:732:23ed:9457
+ with SMTP id d2e1a72fcca58-7322c39b70amr11735578b3a.12.1739461658165; Thu, 13
+ Feb 2025 07:47:38 -0800 (PST)
+Date: Thu, 13 Feb 2025 07:47:31 -0800
+In-Reply-To: <CADrL8HXZed987KOehV7-OroPqm8tQZ0WH0MCpfDzaSs-g_2-ag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250121214219.1455896-1-brahmajit.xyz@gmail.com>
-In-Reply-To: <20250121214219.1455896-1-brahmajit.xyz@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 13 Feb 2025 16:46:56 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGvgad183WbUHPGduXHEahfoWasued-LdJ+Tkhc=z-9GA@mail.gmail.com>
-X-Gm-Features: AWEUYZkFY2PYa8gfx6hGCdnL0CMJypnzzWYdPRULOd_DTaJ2LhpwBLnko3b9nkQ
-Message-ID: <CAMj1kXGvgad183WbUHPGduXHEahfoWasued-LdJ+Tkhc=z-9GA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] ACPI: Fix building with GCC 15
-To: Brahmajit Das <brahmajit.xyz@gmail.com>
-Cc: rafael.j.wysocki@intel.com, lenb@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <67689c62.050a0220.2f3838.000d.GAE@google.com> <20250212221217.161222-1-jthoughton@google.com>
+ <Z60lxSqV1r257yW8@google.com> <CADrL8HXZed987KOehV7-OroPqm8tQZ0WH0MCpfDzaSs-g_2-ag@mail.gmail.com>
+Message-ID: <Z64UE0Uh_3DT1jFA@google.com>
+Subject: Re: [syzbot] [kvm?] WARNING in vmx_handle_exit (2)
+From: Sean Christopherson <seanjc@google.com>
+To: James Houghton <jthoughton@google.com>
+Cc: syzbot+ac0bc3a70282b4d586cc@syzkaller.appspotmail.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mingo@redhat.com, pbonzini@redhat.com, 
+	syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 21 Jan 2025 at 22:42, Brahmajit Das <brahmajit.xyz@gmail.com> wrote=
-:
->
-> Building with GCC 15 results in the following build error:
->
-> ...
->   CC      drivers/acpi/tables.o
-> In file included from ./include/acpi/actbl.h:371,
->                  from ./include/acpi/acpi.h:26,
->                  from ./include/linux/acpi.h:26,
->                  from drivers/acpi/tables.c:19:
-> ./include/acpi/actbl1.h:30:33: error: initializer-string for array of =E2=
-=80=98char=E2=80=99 is too long [-Werror=3Dunterminated-string-initializati=
-on]
->    30 | #define ACPI_SIG_BERT           "BERT"  /* Boot Error Record Tabl=
-e */
->       |                                 ^~~~~~
-> drivers/acpi/tables.c:400:9: note: in expansion of macro =E2=80=98ACPI_SI=
-G_BERT=E2=80=99
->   400 |         ACPI_SIG_BERT, ACPI_SIG_BGRT, ACPI_SIG_CPEP, ACPI_SIG_ECD=
-T,
->       |         ^~~~~~~~~~~~~
-> ./include/acpi/actbl1.h:31:33: error: initializer-string for array of =E2=
-=80=98char=E2=80=99 is too long [-Werror=3Dunterminated-string-initializati=
-on]
->    31 | #define ACPI_SIG_BGRT           "BGRT"  /* Boot Graphics Resource=
- Table */
->       |                                 ^~~~~~
-> drivers/acpi/tables.c:400:24: note: in expansion of macro =E2=80=98ACPI_S=
-IG_BGRT=E2=80=99
->   400 |         ACPI_SIG_BERT, ACPI_SIG_BGRT, ACPI_SIG_CPEP, ACPI_SIG_ECD=
-T,
->       |                        ^~~~~~~~~~~~~
-> ./include/acpi/actbl1.h:34:33: error: initializer-string for array of =E2=
-=80=98char=E2=80=99 is too long [-Werror=3Dunterminated-string-initializati=
-on]
->    34 | #define ACPI_SIG_CPEP           "CPEP"  /* Corrected Platform Err=
-or Polling table */
-> ...
->
-> This is due to GCC having enabled
-> -Werror=3Dunterminated-string-initialization[0] by default. To work aroun=
-d
-> this build time error we're modifying the size of table_sigs from
-> table_sigs[][ACPI_NAMESEG_SIZE] to table_sigs[][ACPI_NAMESEG_SIZE + 1].
-> This ensures space for NUL, thus satisfying GCC.
->
-> [0]: https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wno-un=
-terminated-string-initialization
->
-> Signed-off-by: Brahmajit Das <brahmajit.xyz@gmail.com>
-> ---
->  drivers/acpi/tables.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-> index 9e1b01c35070..5a6524eb79d8 100644
-> --- a/drivers/acpi/tables.c
-> +++ b/drivers/acpi/tables.c
-> @@ -396,7 +396,7 @@ static u8 __init acpi_table_checksum(u8 *buffer, u32 =
-length)
->  }
->
->  /* All but ACPI_SIG_RSDP and ACPI_SIG_FACS: */
-> -static const char table_sigs[][ACPI_NAMESEG_SIZE] __initconst =3D {
-> +static const char table_sigs[][ACPI_NAMESEG_SIZE + 1] __initconst =3D {
->         ACPI_SIG_BERT, ACPI_SIG_BGRT, ACPI_SIG_CPEP, ACPI_SIG_ECDT,
->         ACPI_SIG_EINJ, ACPI_SIG_ERST, ACPI_SIG_HEST, ACPI_SIG_MADT,
->         ACPI_SIG_MSCT, ACPI_SIG_SBST, ACPI_SIG_SLIT, ACPI_SIG_SRAT,
+On Wed, Feb 12, 2025, James Houghton wrote:
+> On Wed, Feb 12, 2025 at 2:50=E2=80=AFPM Sean Christopherson <seanjc@googl=
+e.com> wrote:
+> >
+> > On Wed, Feb 12, 2025, James Houghton wrote:
+> > > Here's what I think is going on (with the C repro anyway):
+> > >
+> > > 1. KVM_RUN a nested VM, and eventually we end up with
+> > >    nested_run_pending=3D1.
+> > > 2. Exit KVM_RUN with EINTR (or any reason really, but I see EINTR in
+> > >    repro attempts).
+> > > 3. KVM_SET_REGS to set rflags to 0x1ac585, which has X86_EFLAGS_VM,
+> > >    flipping it and setting vmx->emulation_required =3D true.
+> > > 3. KVM_RUN again. vmx->emulation_required will stop KVM from clearing
+> > >    nested_run_pending, and then we hit the
+> > >    KVM_BUG_ON(nested_run_pending) in __vmx_handle_exit().
+> > >
+> > > So I guess the KVM_BUG_ON() is a little bit too conservative, but thi=
+s
+> > > is nonsensical VMM behavior. So I'm not really sure what the best
+> > > solution is. Sean, any thoughts?
+> >
+> > Heh, deja vu.  This is essentially the same thing that was fixed by com=
+mit
+> > fc4fad79fc3d ("KVM: VMX: Reject KVM_RUN if emulation is required with p=
+ending
+> > exception"), just with a different WARN.
+> >
+> > This should fix it.  Checking nested_run_pending in handle_invalid_gues=
+t_state()
+> > is overkill, but it can't possibly do any harm, and the weirdness can b=
+e addressed
+> > with a comment.
+>=20
+> Thanks Sean! This works, feel free to add:
+>=20
+> Tested-by: James Houghton <jthoughton@google.com>
+>=20
+> I understand this fix as "KVM cannot emulate a nested vm-enter, so if
+> emulation is required and we have a pending vm-enter, exit to userspace."
+> (This doesn't seem overkill to me... perhaps this explanation is wrong.)
 
-Please add the __nonstring attribute instead.
+Sort of.  It's a horribly convoluted scenario that's exists only because ea=
+rly Intel
+CPUs supported a half-baked version of VMX.
+
+Emulation is "required" if and only if guest state is invalid, and VMRESUME=
+/VMLAUNCH
+VM-Fail (architecturally) if guest state is invalid.  Thus the only way for=
+ emulation
+to be required when a nested VM-Enter is pending, i.e. after nested VMRESUM=
+E/VMLAUNCH
+has succeeded but before KVM has entered L2 to complete emulation, is if KV=
+M misses a
+VM-Fail consistency check, or as is the case here, if userspace stuffs inva=
+lid state
+while KVM is partway through VMRESUME/VMLAUNCH emulation.
+
+Stuffing state from userspace doesn't put KVM in harm's way, but KVM can't =
+emulate
+the impossible state, and more importantly, it trips KVM's sanity check tha=
+t detects
+missed consistency checks.  The KVM_BUG_ON() could also be suppressed by mo=
+ving the
+nested_run_pending check below the emulation_required checks (see below), b=
+ut that
+would largely defeat the purpose of the sanity check.
+
+Just out of sight in the below diff is related handling for the case where =
+userspace,
+or the guest itself via modifying SMRAM before RSM, stuffs bad state.  I.e.=
+ it's
+the same scenario this syzkaller program hit, minus hitting the nested_run_=
+pending=3Dtrue
+window.
+
+		/*
+		 * Synthesize a triple fault if L2 state is invalid.  In normal
+		 * operation, nested VM-Enter rejects any attempt to enter L2
+		 * with invalid state.  However, those checks are skipped if
+		 * state is being stuffed via RSM or KVM_SET_NESTED_STATE.  If
+		 * L2 state is invalid, it means either L1 modified SMRAM state
+		 * or userspace provided bad state.  Synthesize TRIPLE_FAULT as
+		 * doing so is architecturally allowed in the RSM case, and is
+		 * the least awful solution for the userspace case without
+		 * risking false positives.
+		 */
+		if (vmx->emulation_required) {
+			nested_vmx_vmexit(vcpu, EXIT_REASON_TRIPLE_FAULT, 0, 0);
+			return 1;
+		}
+
+The extra wrinkle in all of this is that emulation_required is only ever se=
+t if
+the vCPU lacks Unrestricted Guest (URG).  All CPUs since Westmere support U=
+RG,
+while KVM does allow disabling URG via module param, AFAIK syzbot doesn't r=
+un in
+environments with enable_unrestricted_guest=3D0 (other people do run syzkal=
+ler in
+such setups, but syzbot does not).
+
+And so the only way guest state to be invalid (for emulation_required to be=
+ set),
+is if L1 is running L2 with URG disabled.  I.e. KVM _could_ simply run L2, =
+but
+doing so would violate the VMX architecture from L1's perspective.
+
+static inline bool vmx_guest_state_valid(struct kvm_vcpu *vcpu)
+{
+	return is_unrestricted_guest(vcpu) || __vmx_guest_state_valid(vcpu);
+}
+
+static inline bool is_unrestricted_guest(struct kvm_vcpu *vcpu)
+{
+	return enable_unrestricted_guest && (!is_guest_mode(vcpu) ||
+	    (secondary_exec_controls_get(to_vmx(vcpu)) &
+	    SECONDARY_EXEC_UNRESTRICTED_GUEST));
+}
+
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index f72835e85b6d..42bee8f2cffb 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6492,15 +6492,6 @@ static int __vmx_handle_exit(struct kvm_vcpu *vcpu, =
+fastpath_t exit_fastpath)
+        if (enable_pml && !is_guest_mode(vcpu))
+                vmx_flush_pml_buffer(vcpu);
+=20
+-       /*
+-        * KVM should never reach this point with a pending nested VM-Enter=
+.
+-        * More specifically, short-circuiting VM-Entry to emulate L2 due t=
+o
+-        * invalid guest state should never happen as that means KVM knowin=
+gly
+-        * allowed a nested VM-Enter with an invalid vmcs12.  More below.
+-        */
+-       if (KVM_BUG_ON(vmx->nested.nested_run_pending, vcpu->kvm))
+-               return -EIO;
+-
+        if (is_guest_mode(vcpu)) {
+                /*
+                 * PML is never enabled when running L2, bail immediately i=
+f a
+@@ -6538,10 +6529,16 @@ static int __vmx_handle_exit(struct kvm_vcpu *vcpu,=
+ fastpath_t exit_fastpath)
+                        return 1;
+                }
+=20
++               if (KVM_BUG_ON(vmx->nested.nested_run_pending, vcpu->kvm))
++                       return -EIO;
++
+                if (nested_vmx_reflect_vmexit(vcpu))
+                        return 1;
+        }
+=20
++       if (KVM_BUG_ON(vmx->nested.nested_run_pending, vcpu->kvm))
++               return -EIO;
++
+        /* If guest state is invalid, start emulating.  L2 is handled above=
+. */
+        if (vmx->emulation_required)
+                return handle_invalid_guest_state(vcpu);
+
