@@ -1,113 +1,101 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A678E1514F6
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667361FF7DD
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739466525; cv=none; b=SJf155jln6alwy1bWODJ39Leo+nh/PN4kAoIj/0CazXZIW+7Q5Ka9DgRlF/ZQW9t2jZtUuCyUVNGsPcvoR3P+Tx7K14iuF1y5qcTYhfzcW6mdnaSV/LfJBFHP8+T4WxSsg+6fW3/uD78Jik/Uhu7E0hGdckZ4lh3sPvymAlmSq8=
+	t=1739466549; cv=none; b=TSmymN7EcW+9o1Cbw5a8QDjfh0s+BTxFcGnIPv4BRRdAbthNCtHeHXO/AY4uOEUlBPdsDWCF5iJln/V8NSLwcwPYT/Sger1092M+cH04QKyvYgFiJ6uWwTNyivvLyrNNlWzaw/+VRQX4zbbcSrbDkeNw6Bqe1Bfq38kCUUQSn4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739466525; c=relaxed/simple;
-	bh=CEXSnh9z1BB5hZBm+Fb7GgL/oH61L+ClWNAlOGCKlIQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jXO/D3WlS2GaaOfKKvgC4Ch1O+OAUcGSa32cSJi1+B1OkxUpJpfh+kAWWKhVKpBiejA8irYGFC3ukScE8VYArtoGR9jEpdZAMWO1vvNqI8v8yFDAQ5wXggpUKyBD4Ru+zUZw+gId+XLGyBcnHpumS+o2cIGHhv7qA3QWCgdXjoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tronnes.org; spf=pass smtp.mailfrom=tronnes.org; dkim=pass (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b=y0MOSX0N; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tronnes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tronnes.org
+	s=arc-20240116; t=1739466549; c=relaxed/simple;
+	bh=4x9jxxW0VD/X4SQSVaG2JypaS5X6rvTy8i5aJNkaqGw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nSz2A39w/5Q1O5RYge0/7ntjiF6HWClgJ9betuwm3ncEPXS/bs58wYCnG0f5nQjoPJavKvvTEbxtpZQ3BtA9hFIuk5KJifW0W+82P629zGjSPSHno8pwyHza8luhqD7gcJJmvOKktoPMOv/woRdlniv6uyBpGA8ROT9xNN+kkqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OyzYe8/F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="y0MOSX0N"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
-	; s=ds202412; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:Sender:Reply-To:
-	Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:
-	References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:
-	List-Owner:List-Archive; bh=Fj9cPXNBzdjUMe00oNdIkZqBOoISrAcz9RO9oXC9vBs=; b=y
-	0MOSX0NHaQu3BNw4/MIOQ5IZ9IVsCl9Xjl04n0YQa617awB+Dl8JfdEjYwzTApevlJu+yAbE4+mDk
-	MVgzxaC1PVhUm5y3z7fs0p8gUOPIDWybc8rf6b+vCMRntcmqkQwlft3ZqTbjpOm4bdLiPR7A+inCg
-	/eVb5UQSSIXCF/Kmm6ATxX9IuIcnkXRDr0reoTnGNIK1T92ip6gXWCb/vX6huj49xDO3H04MXTp2K
-	NutoW7906oUcBuofabSvTSa5uKBa7ytjiEsTxolQqlUgu4NsaVld5jkI0bHZ/djhhT3XJSjZk9fj1
-	QM6HD+F39/MD2iNT+tcKQcy0uImqOQf+Q==;
-Received: from smtp
-	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	id 1tichY-0016gn-5f;
-	Thu, 13 Feb 2025 18:08:36 +0100
-Message-ID: <cac5924e-5653-4385-b18f-6c7f1f8d6e8b@tronnes.org>
-Date: Thu, 13 Feb 2025 18:08:32 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OyzYe8/F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF828C4CED1;
+	Thu, 13 Feb 2025 17:09:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739466548;
+	bh=4x9jxxW0VD/X4SQSVaG2JypaS5X6rvTy8i5aJNkaqGw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OyzYe8/FSw0fl1CP4gUZZpa5MWXZthpkiUG+mI9U9lf93L2MaIccibO3nE4sWJ818
+	 p+cEWlfzkMX/GuNQ9+3yultf7t7/GyBdPh5VdjwsUpkB2WbwJJQ2X0yqtkVvqQ0aDD
+	 G3SYthnFz3F/udB8mazLb+24drxHpMXr9MUHi8XNYehaqHDWsf7coFGd7fqmgKdt4R
+	 9Pdjd658XnbsDREowp3+HltvYyCjf7pcLt8R8plvGnNhGLaZi9yG2qGBp36JDTV5Bw
+	 e3pbnWF2pohnY5SGCG7XN4xTxArGp3+e8+t8N0p9NyyIUBQ7MispuEjYLCc9Rrxb8+
+	 oNjymN98zlMWw==
+Date: Thu, 13 Feb 2025 22:29:45 +0530
+From: Naveen N Rao <naveen@kernel.org>
+To: Anthony Iliopoulos <ailiop@suse.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc64/ftrace: fix module loading without patchable
+ function entries
+Message-ID: <wlscshbqan2svtqkz5xc6v47tzndfnsvge7h4lbfn67zoplekl@elt2oxwhrp6f>
+References: <20250204231821.39140-1-ailiop@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/repaper: fix integer overflows in repeat functions
-To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Alex Lanzano <lanzano.alex@gmail.com>
-Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- lvc-project@linuxtesting.org
-References: <20250116134801.22067-1-n.zhandarovich@fintech.ru>
- <d9e1c3a9-0a82-4908-b455-99227c5a2bd5@fintech.ru>
-Content-Language: en-US
-From: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
-In-Reply-To: <d9e1c3a9-0a82-4908-b455-99227c5a2bd5@fintech.ru>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204231821.39140-1-ailiop@suse.com>
 
-Adding Alex who is now the driver maintainer.
-
-
-On 13.02.2025 17:57, Nikita Zhandarovich wrote:
-> Gentle ping :)
+On Wed, Feb 05, 2025 at 12:18:21AM +0100, Anthony Iliopoulos wrote:
+> get_stubs_size assumes that there must always be at least one patchable
+> function entry, which is not always the case (modules that export data
+> but no code), otherwise it returns -ENOEXEC and thus the section header
+> sh_size is set to that value. During module_memory_alloc() the size is
+> passed to execmem_alloc() after being page-aligned and thus set to zero
+> which will cause it to fail the allocation (and thus module loading) as
+> __vmalloc_node_range() checks for zero-sized allocs and returns null:
 > 
-> On 1/16/25 16:48, Nikita Zhandarovich wrote:
->> There are conditions, albeit somewhat unlikely, under which right hand
->> expressions, calculating the end of time period in functions like
->> repaper_frame_fixed_repeat(), may overflow.
->>
->> For instance, if 'factor10x' in repaper_get_temperature() is high
->> enough (170), as is 'epd->stage_time' in repaper_probe(), then the
->> resulting value of 'end' will not fit in unsigned int expression.
->>
->> Mitigate this by casting 'epd->factored_stage_time' to wider type before
->> any multiplication is done.
->>
->> Found by Linux Verification Center (linuxtesting.org) with static
->> analysis tool SVACE.
->>
->> Fixes: 3589211e9b03 ("drm/tinydrm: Add RePaper e-ink driver")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
->> ---
->>  drivers/gpu/drm/tiny/repaper.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/tiny/repaper.c b/drivers/gpu/drm/tiny/repaper.c
->> index 77944eb17b3c..d76c0e8e05f5 100644
->> --- a/drivers/gpu/drm/tiny/repaper.c
->> +++ b/drivers/gpu/drm/tiny/repaper.c
->> @@ -456,7 +456,7 @@ static void repaper_frame_fixed_repeat(struct repaper_epd *epd, u8 fixed_value,
->>  				       enum repaper_stage stage)
->>  {
->>  	u64 start = local_clock();
->> -	u64 end = start + (epd->factored_stage_time * 1000 * 1000);
->> +	u64 end = start + ((u64)epd->factored_stage_time * 1000 * 1000);
->>  
->>  	do {
->>  		repaper_frame_fixed(epd, fixed_value, stage);
->> @@ -467,7 +467,7 @@ static void repaper_frame_data_repeat(struct repaper_epd *epd, const u8 *image,
->>  				      const u8 *mask, enum repaper_stage stage)
->>  {
->>  	u64 start = local_clock();
->> -	u64 end = start + (epd->factored_stage_time * 1000 * 1000);
->> +	u64 end = start + ((u64)epd->factored_stage_time * 1000 * 1000);
->>  
->>  	do {
->>  		repaper_frame_data(epd, image, mask, stage);
+> [  115.466896] module_64: cast_common: doesn't contain __patchable_function_entries.
+> [  115.469189] ------------[ cut here ]------------
+> [  115.469496] WARNING: CPU: 0 PID: 274 at mm/vmalloc.c:3778 __vmalloc_node_range_noprof+0x8b4/0x8f0
+> ...
+> [  115.478574] ---[ end trace 0000000000000000 ]---
+> [  115.479545] execmem: unable to allocate memory
+
+Ugh, that's nasty.
+
 > 
+> Fix this by removing the check completely, since it is anyway not
+> helpful to propagate this as an error upwards.
+> 
+> Fixes: eec37961a56a ("powerpc64/ftrace: Move ftrace sequence out of line")
+> Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
+> ---
+>  arch/powerpc/kernel/module_64.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+
+Thanks for fixing this. It might also be good to add a check in 
+setup_ftrace_ool_stubs(). Something like this:
+
+diff --git a/arch/powerpc/kernel/module_64.c b/arch/powerpc/kernel/module_64.c
+index 34a5aec4908f..c10a9c66cfe3 100644
+--- a/arch/powerpc/kernel/module_64.c
++++ b/arch/powerpc/kernel/module_64.c
+@@ -1125,6 +1125,10 @@ static int setup_ftrace_ool_stubs(const Elf64_Shdr *sechdrs, unsigned long addr,
+        unsigned int i, total_stubs, num_stubs;
+        struct ppc64_stub_entry *stub;
+ 
++       /* Bail out early if no traceable functions */
++       if (!me->arch.ool_stub_count)
++               return 0;
++
+        total_stubs = sechdrs[me->arch.stubs_section].sh_size / sizeof(*stub);
+        num_stubs = roundup(me->arch.ool_stub_count * sizeof(struct ftrace_ool_stub),
+                            sizeof(struct ppc64_stub_entry)) / sizeof(struct ppc64_stub_entry);
+
+
+Regardless of that, for this patch:
+Acked-by: Naveen N Rao (AMD) <naveen@kernel.org>
+
+
+- Naveen
 
