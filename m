@@ -1,104 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6420A2080D4;
-	Thu, 13 Feb 2025 10:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127472080D4;
+	Thu, 13 Feb 2025 10:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739444056; cv=none; b=nICtqrLy+MoPNvdmsIRxkmj2lG7MktUj7+0MR7oQn/oGM12X00WmBLPIwaQNh3ua2pg3kToPpvIWDlPgcboTvWDY8WbvK7Gn+PQ8QGcWyWlCWwCRvRiC8gcIvW5zt8fKxCjGvsmmcdc1h8woKtKlJgwO0lUSrAxDpcETgRlewUE=
+	t=1739444101; cv=none; b=qstCZgsRrXFnHqpywE0oSYuiqeDFsdaFvF1ruZVVj0Vf/rKzss5sRy9KVzriw5qzXrUwu7XHdP+QCLh5BRmR+gzVJulvU2etpS5f/kEDmXV94qZExNnDGUKK2I3GQSHtyKeszTZlMm6FxzZNusSQO3dbuKvGPedNOxQgo3dbCVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739444056; c=relaxed/simple;
-	bh=9OPAesnOCUzi4Km5CRU+TtzIORFDBAW74zMoy8WINR8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jmj6F+A1F4rf2rZTRAWBAksTtaSGllGBZ7JhELPag2jscCkKmCO4W6bKJVTA2dgKulklyEAaFwnEkyxoAGg1ll9faLYLWxF0B/rxAuMyk1argxELffI7s5rBw5Qx1iNvv1ldJIMiIeOieF69f92wrvvg/YDLYzy7sJC8cV+EyUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TdUv/MpA; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739444101; c=relaxed/simple;
+	bh=FC+osHMM1wMl321HcyQTgueNyff8+QNBAFPiwB2uKhA=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KplAdQOrM8MRDRg3EXTwFwlNbAVw/nw/439mydLaLBd+9uvkWCFbNKW8t0RoFgJRRoIZPT7SJw59nyTZd7Cm9wnYW7sasB7OGUVHxcNnQLxo8di4SRUkjaDQG6pwXt642xwpUrx4Q21Qru/zJDnjrD3cHv9jIPK0OqFY/gPFfWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fD9ywQCV; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TdUv/MpA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fD9ywQCV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739444054; x=1770980054;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9OPAesnOCUzi4Km5CRU+TtzIORFDBAW74zMoy8WINR8=;
-  b=TdUv/MpAgQaS7/vmuG9M8vDNOaOnSpZ3XRIkGoKhop560wc9E27be+lK
-   LgeTXNU6BI4WxOEKsnbRgVwtpozuLTFr5YQ05NS9zGrflmO//YJ5IyXuD
-   1frdzGIO360i5u1zMOLKkszkRP2W6+yEaQ9uCkWG3cxMAScL5k4FKNXPl
-   z+zZTYk8UZgbZhx6b6Ou75R2KzFqAsrCJeczYvJqELXF4/MzUeVeb0D30
-   tpz7BBxrOfnqPyFGlUYINHoWutYl35+pFWlVscTocByKupeYTmNJCo3aR
-   4lcuG+L3gim/hBzw2WHftJ8kpjxjgIPlx4w+YWW1FTaBOvND0vi5aOISV
-   g==;
-X-CSE-ConnectionGUID: Wm7Z1C6iTEeINbmWMm1B6w==
-X-CSE-MsgGUID: Mo05yCPFQ42Cc4dvDOCwCQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="57673388"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="57673388"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 02:54:14 -0800
-X-CSE-ConnectionGUID: lO0KYberQwC7NkEJfamVAQ==
-X-CSE-MsgGUID: Ou446Z8VR4mkejzBDNBgsw==
+  t=1739444100; x=1770980100;
+  h=date:from:to:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=FC+osHMM1wMl321HcyQTgueNyff8+QNBAFPiwB2uKhA=;
+  b=fD9ywQCVVFS5poMpcIhvz1Qn5xemPV+daill3TqDq6QLJr0r3OitD5Nn
+   RRKP5FHX4XYfo1Bo1NyIRYPE+M1gCLZQJ6/Lm2Aux2fm4f6LG4wFROWWO
+   8W6hcHVQOp6asrbt1cPQxorPClEAlkTcw17ncjcbBSLs14KjFCk2kqSrn
+   WHxF2tfBe6enIGSZ78S2GtRc1AFJLwHxCXLGbpHqxj3OzXFnjYzgJlf/p
+   Y5bTvCXIu89NarEM8/yS6hD9b+XXPhEzbuFgMvNscj8S/8XIlMGm7wjuG
+   aegjKppc+BcxzjVCfBIIlOp7QkBBRGX/WMsq6W5lFDl2TIlXQILUzSXWC
+   w==;
+X-CSE-ConnectionGUID: pQUG0r1vR92RAZ0faSmmUw==
+X-CSE-MsgGUID: X6rHjMlpSCWyngjdH0vcrQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51568223"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="51568223"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 02:54:59 -0800
+X-CSE-ConnectionGUID: gH7RkWeCSpOd3hLhl3vVuA==
+X-CSE-MsgGUID: qaKLpqIXQIm8x0zlic78AQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="112974167"
-Received: from pg15swiplab1181.png.altera.com ([10.244.232.167])
-  by fmviesa006.fm.intel.com with ESMTP; 13 Feb 2025 02:54:11 -0800
-From: niravkumar.l.rabara@intel.com
-To: Dinh Nguyen <dinguyen@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	niravkumar.l.rabara@intel.com,
-	nirav.rabara@altera.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: socfpga: agilex5: fix gpio0 address
-Date: Thu, 13 Feb 2025 18:50:36 +0800
-Message-Id: <20250213105036.3170943-1-niravkumar.l.rabara@intel.com>
-X-Mailer: git-send-email 2.25.1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="118049979"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 02:54:55 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tiWrr-0000000B8iO-2JGV;
+	Thu, 13 Feb 2025 12:54:51 +0200
+Date: Thu, 13 Feb 2025 12:54:51 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org,
+	Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Stefan Roese <sr@denx.de>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Subject: Re: [PATCH v1 1/8] i2c: Introduce i2c_10bit_addr_from_msg()
+Message-ID: <Z63Pe1clM4VZBmIX@smile.fi.intel.com>
+References: <20250212163359.2407327-1-andriy.shevchenko@linux.intel.com>
+ <20250212163359.2407327-2-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdW1wxQ0cddeE72D+Sii4HkT4bJfeTWX4-8FfHiFr+=3DA@mail.gmail.com>
+ <Z6zwqbzd5evG0H2z@smile.fi.intel.com>
+ <Z63DT_XdzEWrP4eR@shikoro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z63DT_XdzEWrP4eR@shikoro>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
+On Thu, Feb 13, 2025 at 11:02:55AM +0100, Wolfram Sang wrote:
+> 
+> Just a generic comment: please don't spend too much energy on 10-bit
+> support. I have never seen it used in the wild. It seems more like an
+> academic excercise.
 
-Use the correct gpio0 address for Agilex5.
+True, but still it makes sense to reduce the respective code base.
 
-Fixes: 3f7c869e143a ("arm64: dts: socfpga: agilex5: Add gpio0 node and spi dma handshake id")
-Cc: stable@vger.kernel.org
-Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
----
-
-changes in v2:
-  * Fix dtbs_check warning and update commit message for better
-    clarity. 
-
-link to v1:
- - https://lore.kernel.org/all/20250212100131.2668403-1-niravkumar.l.rabara@intel.com/
-
- arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
-index 51c6e19e40b8..7d9394a04302 100644
---- a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
-@@ -222,9 +222,9 @@ i3c1: i3c@10da1000 {
- 			status = "disabled";
- 		};
- 
--		gpio0: gpio@ffc03200 {
-+		gpio0: gpio@10c03200 {
- 			compatible = "snps,dw-apb-gpio";
--			reg = <0xffc03200 0x100>;
-+			reg = <0x10c03200 0x100>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			resets = <&rst GPIO0_RESET>;
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
