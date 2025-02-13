@@ -1,244 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE62E270ED2
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 20:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6599A266180;
+	Thu, 13 Feb 2025 20:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739479566; cv=none; b=R8Awlemd1Q+zG++RrfahoeyWqGPrDlukhJzBjkLsXeic4U5ufU4npfKkobGn7EJpSFPAEaZIdUJD/sb3sKq+8soNvKdJdcssWwdEIytcRtfx4xe/34UeLgI3Vf6M2swWxfZpvr2fiIK2kKGqdUCafoLp9ZhnqJTmfBwEugeXwjk=
+	t=1739479580; cv=none; b=sOT5SJUxyLH9xcuz+gTdaWbU0eIu5/RCcHsRC16BAg2DqM9js+T/oVRpnsb7aKNGhkXEGqx2mt1KE5INGIYCimGPWztifNPHrTQL2c4+/bsr5MPBARmtyQ0VO49bF7jaA9xl9d9Dz0RuGG1az50Nrah1Y6Q3pXI1eHq+WuKUXss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739479566; c=relaxed/simple;
-	bh=+I+VRf68pub7QtDDgc2t195rQtaTteShHv9verWdpIw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bfA9rq4drGvbpD5FWCzmY/YnpYLkwD1JnepChW0tLHXdJAxzMo4fv4csDYQuRCkaUunzhFkuheww+TNckyi2xPGx5MrmoqnKxFLKP5VnU23/XrE/XH/XR5MonS2VWZP23PFKN9rBeJvvpTu+28jkK/EgyzS3BYbfrecrAOIhyds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LbWGyClu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739479580; c=relaxed/simple;
+	bh=1Hv1W5PIRbegvr3gIqvOw2rrDiC6G9t1Dr/tCrD03e4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UvI4WUPxBVnfcYLVEr9sVoHAfTzg/stJojri+xercZjVvn6MDLXN8Sm0SJeFdBGjSsM66zFQRjUe9aZeW9h/tJ1wzgDE3TpSiW5o+46C9OTGqfG1xM9sAjoXqUZXlzwwdLXqu6o63UYhxzTfUfWXfcuJOZES9vH++hBM5I8NIJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pc+cVpYp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LbWGyClu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739479564;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dJlrIKSurYkXvX4GL8/YLGu0FEvUvuu47DJYVtCqeOc=;
-	b=LbWGyClumMrDbCOm1Ey07FyPA+mZfuyk8Ntvg0FNn4aXjzbN0+Ha4rRXyx7MBHm8Fryd9g
-	2zhQJKoJym74VXw+JToua+OEWRHDrKeQ8JwmteJsFsAm5nr/HPqRo5uw1E+/rxRd98C9Td
-	+Jrr8EOAk9XX766t08Kn9XbWxEfAQ64=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-333-B7o60zkpPGSupJW3M0rBRA-1; Thu,
- 13 Feb 2025 15:45:56 -0500
-X-MC-Unique: B7o60zkpPGSupJW3M0rBRA-1
-X-Mimecast-MFC-AGG-ID: B7o60zkpPGSupJW3M0rBRA_1739479554
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D1DC18E6952;
-	Thu, 13 Feb 2025 20:45:54 +0000 (UTC)
-Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.199])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E7BA219373D9;
-	Thu, 13 Feb 2025 20:45:50 +0000 (UTC)
-From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Thu, 13 Feb 2025 15:44:36 -0500
-Subject: [PATCH 19/20] drm/panel: Remove deprecated functions
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pc+cVpYp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CADCCC4CEE9;
+	Thu, 13 Feb 2025 20:46:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739479579;
+	bh=1Hv1W5PIRbegvr3gIqvOw2rrDiC6G9t1Dr/tCrD03e4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pc+cVpYpVZcf6SPMc0R4TZfa9dQgW/98u31mFBPL6EqlUEgpeqxiquPXLdZZPUMHr
+	 XKlJVilhTTClQTbKNTB0MAKFBw86OLoP4k30EQ0+OHdMP0uszjwwhnmCkH2FaiGAaS
+	 eCRjHlGOvhxl3xY/o1DmVFpRMvF8zYtzYzM8+LSRKzD6q569tkZUbmnVre5GQqJhjg
+	 BoM+rpVOjjRGo/vbisYr2rlyw8glE6AZ7dXlw/bFDU/b4fs7CLTQegiMGHMG1svc94
+	 8uCQTaioL8TWofbISnJ0wtN3WwqCegD3iJe8wcxYr/JTdi29y9Pw8yqRaqXJ7FLJTd
+	 94RUXcfCZPpsw==
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3cfc79a8a95so3431405ab.2;
+        Thu, 13 Feb 2025 12:46:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWBzvWWJQbD0ZaNDqbaaG+uFKEI7kRYg05FHMKDhPKfBmLh6cN6CdxTpi9KsJ/pEPfQFnZXbyZ5e89VA+c=@vger.kernel.org, AJvYcCWjN/2FIkaEaCdf3Yz2rtVvZvdDoYjL8Ts2yRTJHGf7jXVFJm0wQkDUZ6OgIg9rTF/UYQpn8QoFY9aBxy453w==@vger.kernel.org, AJvYcCXlkp/Z1xatYO2jLNpciORGYWQRkz07kQDq5lJ8j73S4kOFqFmUTa+y5tuZFf7DGg8vZtwThn/4CyilrfcQeZ++VQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVk2R6RKg8QrLDD3wvX/zvzJnnKbx4CG/XbsyMZoSzd86x3pW4
+	wFgIHIIv6NBQfA1AINgBx0dwKvKo1U/dncOr3L2pjcQrH6G3wmzTQEC9of8BuR48hPxO+WRqNZk
+	guzCkYy91qXOZeTmDiS3Nl8KU0LA=
+X-Google-Smtp-Source: AGHT+IGQ7pJ/TiGbTLryDYR2+5szRZiiwjnj755YU/aasn/qcPVr55ah50aMoRFrQI9umJnTpry+8wekUMj6OpAzbMc=
+X-Received: by 2002:a05:6e02:20cc:b0:3cf:f844:68eb with SMTP id
+ e9e14a558f8ab-3d17bdff4afmr78463815ab.4.1739479579147; Thu, 13 Feb 2025
+ 12:46:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250213-mipi_cocci_multi-v1-19-67d94ff319cc@redhat.com>
-References: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
-In-Reply-To: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Joel Selvaraj <jo@jsfamily.in>, Ondrej Jirman <megi@xff.cz>, 
- Javier Martinez Canillas <javierm@redhat.com>, 
- Jianhua Lu <lujianhua000@gmail.com>, Robert Chiras <robert.chiras@nxp.com>, 
- Artur Weber <aweber.kernel@gmail.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739479476; l=6569;
- i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=+I+VRf68pub7QtDDgc2t195rQtaTteShHv9verWdpIw=;
- b=4f7vsxU2rR19xH91jp30oUsAOFAjhYShDY70+PUObTMl2wOBmiyGzINJrVwnB6hvTTnvteNZM
- EcvFuJEMyp9BUwRQQ2U3rDB7Vq5wHCLVAeCTD3lOFBq1HWgFBT3cueZ
-X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
- pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20250127213310.2496133-1-wnliu@google.com> <CAPhsuW6S1JPn0Dp+bhJiSVs9iUv7v7HThBSE85iaDAvw=_2TUw@mail.gmail.com>
+ <00fa304d-84bf-4fca-9b9a-f3b56cd97424@oracle.com> <CAPhsuW4ct6W_4B0LFEjLePH1pAeNm4h8ePuQ3HcSoknXhQWN0w@mail.gmail.com>
+ <mb61p1pw21f0v.fsf@kernel.org> <CAPhsuW5VCmuPLd8wwzBp_Divnu=uaZQcrRLsjsEOJ9GmA0TR5A@mail.gmail.com>
+ <mb61pseoiz1cq.fsf@kernel.org>
+In-Reply-To: <mb61pseoiz1cq.fsf@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Thu, 13 Feb 2025 12:46:08 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW7bo4efVYb8uPkQ1v9TE95_CQ6+G3q4kVyt-8g-3JD6Cw@mail.gmail.com>
+X-Gm-Features: AWEUYZkl0WveZP-8jA0rX6lZvo2HZZiSPy4b5e09ftMa4XtdnE-_yHKMbg6ADZc
+Message-ID: <CAPhsuW7bo4efVYb8uPkQ1v9TE95_CQ6+G3q4kVyt-8g-3JD6Cw@mail.gmail.com>
+Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: Indu Bhagat <indu.bhagat@oracle.com>, Weinan Liu <wnliu@google.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev, 
+	Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>, linux-toolchains@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org, 
+	joe.lawrence@redhat.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With transition to newer functions, remove
-older ones that are no longer used.
+On Thu, Feb 13, 2025 at 12:38=E2=80=AFAM Puranjay Mohan <puranjay@kernel.or=
+g> wrote:
+[...]
+>
+> P.S. - The livepatch doesn't have copy_process() but only copy_signal(),
+> yours had copy_process() somehow.
 
-Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
----
- drivers/gpu/drm/drm_mipi_dsi.c | 56 ------------------------------------------
- include/drm/drm_mipi_dsi.h     | 47 -----------------------------------
- 2 files changed, 103 deletions(-)
+In my build, copy_signal is inlined to copy_process, unless I add noinline.
+If I do add noinline, the issue will not reproduce.
 
-diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
-index 5e5c5f84daacc6913a73f9dda0f49cc78f83479a..33f68d4057aadd772afe6cccbb7c27f1730b581f 100644
---- a/drivers/gpu/drm/drm_mipi_dsi.c
-+++ b/drivers/gpu/drm/drm_mipi_dsi.c
-@@ -768,34 +768,6 @@ ssize_t mipi_dsi_generic_write(struct mipi_dsi_device *dsi, const void *payload,
- }
- EXPORT_SYMBOL(mipi_dsi_generic_write);
- 
--/**
-- * mipi_dsi_generic_write_chatty() - mipi_dsi_generic_write() w/ an error log
-- * @dsi: DSI peripheral device
-- * @payload: buffer containing the payload
-- * @size: size of payload buffer
-- *
-- * Like mipi_dsi_generic_write() but includes a dev_err()
-- * call for you and returns 0 upon success, not the number of bytes sent.
-- *
-- * Return: 0 on success or a negative error code on failure.
-- */
--int mipi_dsi_generic_write_chatty(struct mipi_dsi_device *dsi,
--				  const void *payload, size_t size)
--{
--	struct device *dev = &dsi->dev;
--	ssize_t ret;
--
--	ret = mipi_dsi_generic_write(dsi, payload, size);
--	if (ret < 0) {
--		dev_err(dev, "sending generic data %*ph failed: %zd\n",
--			(int)size, payload, ret);
--		return ret;
--	}
--
--	return 0;
--}
--EXPORT_SYMBOL(mipi_dsi_generic_write_chatty);
--
- /**
-  * mipi_dsi_generic_write_multi() - mipi_dsi_generic_write_chatty() w/ accum_err
-  * @ctx: Context for multiple DSI transactions
-@@ -912,34 +884,6 @@ ssize_t mipi_dsi_dcs_write_buffer(struct mipi_dsi_device *dsi,
- }
- EXPORT_SYMBOL(mipi_dsi_dcs_write_buffer);
- 
--/**
-- * mipi_dsi_dcs_write_buffer_chatty - mipi_dsi_dcs_write_buffer() w/ an error log
-- * @dsi: DSI peripheral device
-- * @data: buffer containing data to be transmitted
-- * @len: size of transmission buffer
-- *
-- * Like mipi_dsi_dcs_write_buffer() but includes a dev_err()
-- * call for you and returns 0 upon success, not the number of bytes sent.
-- *
-- * Return: 0 on success or a negative error code on failure.
-- */
--int mipi_dsi_dcs_write_buffer_chatty(struct mipi_dsi_device *dsi,
--				     const void *data, size_t len)
--{
--	struct device *dev = &dsi->dev;
--	ssize_t ret;
--
--	ret = mipi_dsi_dcs_write_buffer(dsi, data, len);
--	if (ret < 0) {
--		dev_err(dev, "sending dcs data %*ph failed: %zd\n",
--			(int)len, data, ret);
--		return ret;
--	}
--
--	return 0;
--}
--EXPORT_SYMBOL(mipi_dsi_dcs_write_buffer_chatty);
--
- /**
-  * mipi_dsi_dcs_write_buffer_multi - mipi_dsi_dcs_write_buffer_chatty() w/ accum_err
-  * @ctx: Context for multiple DSI transactions
-diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
-index 94400a78031f1b5f515c4a1519f604c0df7f3e0c..8d191d211f4fc67b8f8760571091885a1924310c 100644
---- a/include/drm/drm_mipi_dsi.h
-+++ b/include/drm/drm_mipi_dsi.h
-@@ -287,8 +287,6 @@ void mipi_dsi_picture_parameter_set_multi(struct mipi_dsi_multi_context *ctx,
- 
- ssize_t mipi_dsi_generic_write(struct mipi_dsi_device *dsi, const void *payload,
- 			       size_t size);
--int mipi_dsi_generic_write_chatty(struct mipi_dsi_device *dsi,
--				  const void *payload, size_t size);
- void mipi_dsi_generic_write_multi(struct mipi_dsi_multi_context *ctx,
- 				  const void *payload, size_t size);
- ssize_t mipi_dsi_generic_read(struct mipi_dsi_device *dsi, const void *params,
-@@ -326,8 +324,6 @@ enum mipi_dsi_dcs_tear_mode {
- 
- ssize_t mipi_dsi_dcs_write_buffer(struct mipi_dsi_device *dsi,
- 				  const void *data, size_t len);
--int mipi_dsi_dcs_write_buffer_chatty(struct mipi_dsi_device *dsi,
--				     const void *data, size_t len);
- void mipi_dsi_dcs_write_buffer_multi(struct mipi_dsi_multi_context *ctx,
- 				     const void *data, size_t len);
- ssize_t mipi_dsi_dcs_write(struct mipi_dsi_device *dsi, u8 cmd,
-@@ -380,27 +376,6 @@ void mipi_dsi_dcs_set_page_address_multi(struct mipi_dsi_multi_context *ctx,
- void mipi_dsi_dcs_set_tear_scanline_multi(struct mipi_dsi_multi_context *ctx,
- 					  u16 scanline);
- 
--/**
-- * mipi_dsi_generic_write_seq - transmit data using a generic write packet
-- *
-- * This macro will print errors for you and will RETURN FROM THE CALLING
-- * FUNCTION (yes this is non-intuitive) upon error.
-- *
-- * Because of the non-intuitive return behavior, THIS MACRO IS DEPRECATED.
-- * Please replace calls of it with mipi_dsi_generic_write_seq_multi().
-- *
-- * @dsi: DSI peripheral device
-- * @seq: buffer containing the payload
-- */
--#define mipi_dsi_generic_write_seq(dsi, seq...)                                \
--	do {                                                                   \
--		static const u8 d[] = { seq };                                 \
--		int ret;                                                       \
--		ret = mipi_dsi_generic_write_chatty(dsi, d, ARRAY_SIZE(d));    \
--		if (ret < 0)                                                   \
--			return ret;                                            \
--	} while (0)
--
- /**
-  * mipi_dsi_generic_write_seq_multi - transmit data using a generic write packet
-  *
-@@ -416,28 +391,6 @@ void mipi_dsi_dcs_set_tear_scanline_multi(struct mipi_dsi_multi_context *ctx,
- 		mipi_dsi_generic_write_multi(ctx, d, ARRAY_SIZE(d)); \
- 	} while (0)
- 
--/**
-- * mipi_dsi_dcs_write_seq - transmit a DCS command with payload
-- *
-- * This macro will print errors for you and will RETURN FROM THE CALLING
-- * FUNCTION (yes this is non-intuitive) upon error.
-- *
-- * Because of the non-intuitive return behavior, THIS MACRO IS DEPRECATED.
-- * Please replace calls of it with mipi_dsi_dcs_write_seq_multi().
-- *
-- * @dsi: DSI peripheral device
-- * @cmd: Command
-- * @seq: buffer containing data to be transmitted
-- */
--#define mipi_dsi_dcs_write_seq(dsi, cmd, seq...)                               \
--	do {                                                                   \
--		static const u8 d[] = { cmd, seq };                            \
--		int ret;                                                       \
--		ret = mipi_dsi_dcs_write_buffer_chatty(dsi, d, ARRAY_SIZE(d)); \
--		if (ret < 0)                                                   \
--			return ret;                                            \
--	} while (0)
--
- /**
-  * mipi_dsi_dcs_write_seq_multi - transmit a DCS command with payload
-  *
+I tried more combinations. The issue doesn't reproduce if I either
+1) add noinline to copy_signal, so we are not patching the whole
+   copy_process function;
+or
+2) Switch compiler from gcc 14.2.1 to gcc 11.5.0.
 
--- 
-2.47.0
+So it appears something in gcc 14.2.1 is causing live patch to fail
+for copy_process().
 
+Thanks,
+Song
+
+[...]
