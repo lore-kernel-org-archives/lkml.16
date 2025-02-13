@@ -1,46 +1,48 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732C324169B;
-	Thu, 13 Feb 2025 17:31:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0E024168D;
+	Thu, 13 Feb 2025 17:31:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739467909; cv=none; b=pM8Wdic5V6X8i9YlKfOTWUU+e6dW4a89UPQ6kpqiMV5CQ1+JyC6Qbc0qrzgmWXqxQRR6M9LfA8rVQw4/yKeV0eXW7829e2P5O/dSZmtkJ0skaaw5DIdgfVDmsQkzxmze3+puftakwkStpdYMJPXQdwpaetqQ6NRkJ/52sKX3LNM=
+	t=1739467908; cv=none; b=qyFPAgml8HyUS8KWmtH439IAs+pKsaT3p/TIWeiN7xvUqY/OGts4RALD6YkGxpwYp/zlQOA4DgyCwdpKheidZjHWy2SMdTvm7dN9qR23bDnFT0EsrlAjsxJG8nJCuLKEXtTC/i22nla1LKfhC+Ky1AxnSh0rM/SkwItvQ+yoApw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739467909; c=relaxed/simple;
-	bh=hViWmk89vOoLMLnKK9no0UZbnJA6UFqyx+SjlMdI49w=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QZJDqkLrhN6Vk1NNgCRGeukgTbeUO2VPF0SsmaaVcJBsps5MuVj9KVi3+UOdYVjupBfHMm7Ij+n6yhs8TkqMjXb/s+nRggRh6b8x1lwBwiq8soXN8WW+JpoBCQU8JGDWdt6m6qfaYY2t3ATcF74g11SZ5nZL0U4Q2t7PxNLkON0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Wthce/YT; arc=none smtp.client-ip=67.231.148.174
+	s=arc-20240116; t=1739467908; c=relaxed/simple;
+	bh=/hJAUXzhZHbOu0YiwDCVSrBmC4ZRt6p2ZRx/8kSsuR4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LWzSiHKo/aIfaewC/qsI9uURFqo9beKxOaCJlZvEJ3+srkqEkvig2k73FrsX5MAqmcri7mjrFuylMlu36xjbosNzjGQWJEiqApoKO9zw+C9zDzSC243tilzACqC8oLfT1SN+QY258hnSAJAMSDflNeKFA/+7K3bfC1V7vBBtz8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=HNQ3qhtR; arc=none smtp.client-ip=67.231.148.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Wthce/YT"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DH3oIG011522;
-	Thu, 13 Feb 2025 09:31:25 -0800
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="HNQ3qhtR"
+Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DAqTYk024810;
+	Thu, 13 Feb 2025 09:31:23 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pfpt0220; bh=UCWnjri5y386AVebKSsSLIf
-	eeCS4TIG2rSsyU2i/7Ms=; b=Wthce/YTdpv3LZ4WFpyhdn04I4qDys0HfpTjcHY
-	RHP/WLS6LuFE3e59gQraOzzuBwGkn9X38bjr/XHY7kPpQD9Gh1uFlp3GJ30qix6f
-	MzCGdG6j9t2fs8WQbmx1ZXdB7OzEWxFNh1nh2x6UvrwLFYIG3IDMGNsI2Pw07hzO
-	49wn7zoQ7vaQ/x6igQSNkXIcuffGPNEtQvlKB0nJIlMQB7UcuvCdQb8Cv43ElzIZ
-	5CBB/PIA0IgivseW+oq5JdDYaRG8yCXkJtSEuz4jCLn6A1mtcZ6qMykEUKt5mIMj
-	15G4wmBkXx/IUPxSHJsQWFKT545BBxh/y/Qh5sGEQ2fWNBA==
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=L
+	tDONrv3UZR8/NufuCJdLlCRglUTNNaq/UnBMGVIp1w=; b=HNQ3qhtR5pX1Q2tRC
+	xed4ONH5hO5jGokrzBFPAaPX35fySpLfRojpaYObJNE19BW4cIMiCTo0BPvff2v+
+	T8097WrhzGX90Hjun1hVDncIjtpnKkTYgjYJvgOzK0XfDeJSnUTMuxuS0xJoOqG+
+	HlxI2n/h1cAjGq3Lu6CO+1iKEsSvNiSPbBliPuyKcqrZdUjCujzgQx5ZsI1KIX6U
+	BFkzxhrvo4SVpGjq1sHGmi4R51BimoVgTtvZw7olEOhOuMCs19n6upbjR65wjxJZ
+	/f7K2DWPuYhTKMSMU+ugvGA2V8CrENvRb/FAkKddFocGXU2U95jYkQjrJfxIqOzt
+	a0LAw==
 Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 44smtb04b9-1
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 44sfbygtsb-3
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 09:31:25 -0800 (PST)
+	Thu, 13 Feb 2025 09:31:22 -0800 (PST)
 Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
  DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 13 Feb 2025 09:31:22 -0800
+ 15.2.1544.4; Thu, 13 Feb 2025 09:31:18 -0800
 Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
  (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Thu, 13 Feb 2025 09:31:22 -0800
+ Transport; Thu, 13 Feb 2025 09:31:18 -0800
 Received: from hyd1425.marvell.com (unknown [10.29.37.152])
-	by maili.marvell.com (Postfix) with ESMTP id 61C9E3F70F7;
-	Thu, 13 Feb 2025 09:05:08 -0800 (PST)
+	by maili.marvell.com (Postfix) with ESMTP id BC9763F7126;
+	Thu, 13 Feb 2025 09:05:38 -0800 (PST)
 From: Sai Krishna <saikrishnag@marvell.com>
 To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
         <pabeni@redhat.com>, <netdev@vger.kernel.org>,
@@ -49,10 +51,12 @@ To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
         <hkelam@marvell.com>, <sbhatta@marvell.com>, <andrew+netdev@lunn.ch>,
         <kalesh-anakkur.purayil@broadcom.com>
 CC: Sai Krishna <saikrishnag@marvell.com>
-Subject: [net-next PATCH v9 0/6] CN20K silicon with mbox support
-Date: Thu, 13 Feb 2025 22:34:58 +0530
-Message-ID: <20250213170504.3892412-1-saikrishnag@marvell.com>
+Subject: [net-next PATCH v9 6/6] octeontx2-pf: CN20K mbox implementation between PF-VF
+Date: Thu, 13 Feb 2025 22:35:04 +0530
+Message-ID: <20250213170504.3892412-7-saikrishnag@marvell.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250213170504.3892412-1-saikrishnag@marvell.com>
+References: <20250213170504.3892412-1-saikrishnag@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,158 +65,337 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-GUID: 0ePm4JEfuACCh3qEDS-2VH2MvawUNC-D
-X-Proofpoint-ORIG-GUID: 0ePm4JEfuACCh3qEDS-2VH2MvawUNC-D
+X-Proofpoint-GUID: 82tQcowMYNcikKQr_idBRv3gpWOXeVcX
+X-Proofpoint-ORIG-GUID: 82tQcowMYNcikKQr_idBRv3gpWOXeVcX
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-13_07,2025-02-13_01,2024-11-22_01
 
-CN20K is the next generation silicon in the Octeon series with various
-improvements and new features.
+This patch implements the CN20k MBOX communication between PF and
+it's VFs. CN20K silicon got extra interrupt of MBOX response for trigger
+interrupt. Also few of the CSR offsets got changed in CN20K against
+prior series of silicons.
 
-Along with other changes the mailbox communication mechanism between RVU
-(Resource virtualization Unit) SRIOV PFs/VFs with Admin function (AF) has
-also gone through some changes.
-
-Some of those changes are
-- Separate IRQs for mbox request and response/ack.
-- Configurable mbox size, default being 64KB.
-- Ability for VFs to communicate with RVU AF instead of going through
-  parent SRIOV PF.
-
-Due to more memory requirement due to configurable mbox size, mbox memory
-will now have to be allocated by
-- AF (PF0) for communicating with other PFs and all VFs in the system.
-- PF for communicating with it's child VFs.
-
-On previous silicons mbox memory was reserved and configured by firmware.
-
-This patch series add basic mbox support for AF (PF0) <=> PFs and
-PF <=> VFs. AF <=> VFs communication and variable mbox size support will
-come in later.
-
-Patch #1 Supported co-existance of bit encoding PFs and VFs in 16-bit
-         hardware pcifunc format between CN20K silicon and older octeon
-         series. Also exported PF,VF masks and shifts present in mailbox
-         module to all other modules.
-
-Patch #2 Added basic mbox operation APIs and structures to support both
-         CN20K and previous version of silicons.
-
-Patch #3 This patch adds support for basic mbox infrastructure
-         implementation for CN20K silicon in AF perspective. There are
-         few updates w.r.t MBOX ACK interrupt and offsets in CN20k.
-         
-Patch #4 Added mbox implementation between NIC PF and AF for CN20K.
-
-Patch #5 Added mbox communication support between AF and AF's VFs.
-
-Patch #6 This patch adds support for MBOX communication between NIC PF and
-         its VFs.
-
-
-Sai Krishna (5):
-  octeontx2-af: CN20k basic mbox operations and structures
-  octeontx2-af: CN20k mbox to support AF REQ/ACK functionality
-  octeontx2-pf: CN20K mbox REQ/ACK implementation for NIC PF
-  octeontx2-af: CN20K mbox implementation for AF's VF
-  octeontx2-pf: CN20K mbox implementation between PF-VF
-
-Subbaraya Sundeep (1):
-  octeontx2: Set appropriate PF, VF masks and shifts based on silicon
-
+Signed-off-by: Sunil Kovvuri Goutham <sgoutham@marvell.com>
+Signed-off-by: Sai Krishna <saikrishnag@marvell.com>
 ---
-v9 changes:
-	Addressed review comments given by Jakub Kicinski
-	 1. Removed macro indirections and converted PF func mask, shift macros
-	 usage into helper APIs and used the same in different modules.
-
-v8 changes:
-	No changes, re-posting, as the previous patchset got deferred.
-
-v7 changes:
-	Addressed review comments given by Jakub Kicinski
-	1. Fixed few clang warnings of enum conversion related to the patchset.
-
-v6 changes:
-	Addressed review comments given by Jakub Kicinski
-	1. Fixed minor line alignment issue to fit in 80 char.
-	2. Jakub also suggested to convert macros from patch1 into helper APIs.
-	   Since this will result in lot of changes (at >100 places across
-	   multiple drivers), will submit that patch as a separate cleanup
-	   patch.
-
-v5 changes:
-	No changes, re-posting.
-
-v4 changes:
-	Addressed minor conflits suggested by Jakub Kicinski
-        1. This V4 version of patch set is just a rebase of V3 on top of
-	net-next to address some minor conflicts.
-
-v3 changes:
-	Addressed review comments given by Jakub Kicinski, Simon Horman
-        1. Fixed sparse errors, warnings.
-        2. Fixed a comment mistake, inline with kernel-doc format.
-        3. Removed un-necessary type casting to honor Networking code format.
-
-v2 changes:
-	Addressed review comments given by Kalesh Anakkur Purayil
-        1. Optimized code in parts of patches, removed redundant code
-        2. Fixed sparse warning
-        3. Removed debug log.
-
- .../marvell/octeontx2/otx2_cpt_common.h       |   5 +-
- .../marvell/octeontx2/otx2_cptpf_mbox.c       |  13 +-
- .../marvell/octeontx2/otx2_cptpf_ucode.c      |   4 +-
- .../marvell/octeontx2/otx2_cptvf_mbox.c       |   6 +-
- .../ethernet/marvell/octeontx2/af/Makefile    |   2 +-
- .../ethernet/marvell/octeontx2/af/cn20k/api.h |  34 ++
- .../marvell/octeontx2/af/cn20k/mbox_init.c    | 421 ++++++++++++++++++
- .../ethernet/marvell/octeontx2/af/cn20k/reg.h |  81 ++++
- .../marvell/octeontx2/af/cn20k/struct.h       |  40 ++
  .../ethernet/marvell/octeontx2/af/common.h    |   2 +-
- .../net/ethernet/marvell/octeontx2/af/mbox.c  | 106 ++++-
- .../net/ethernet/marvell/octeontx2/af/mbox.h  |   8 +
- .../marvell/octeontx2/af/mcs_rvu_if.c         |   6 +-
- .../net/ethernet/marvell/octeontx2/af/rvu.c   | 226 +++++++---
- .../net/ethernet/marvell/octeontx2/af/rvu.h   |  81 +++-
- .../ethernet/marvell/octeontx2/af/rvu_cgx.c   |  68 +--
- .../ethernet/marvell/octeontx2/af/rvu_cn10k.c |   4 +-
- .../ethernet/marvell/octeontx2/af/rvu_cpt.c   |   4 +-
- .../marvell/octeontx2/af/rvu_debugfs.c        |  22 +-
- .../ethernet/marvell/octeontx2/af/rvu_nix.c   |  54 +--
- .../ethernet/marvell/octeontx2/af/rvu_npc.c   |   8 +-
- .../marvell/octeontx2/af/rvu_npc_hash.c       |  16 +-
- .../marvell/octeontx2/af/rvu_npc_hash.h       |   4 +-
- .../ethernet/marvell/octeontx2/af/rvu_rep.c   |  13 +-
- .../ethernet/marvell/octeontx2/af/rvu_sdp.c   |  10 +-
- .../marvell/octeontx2/af/rvu_struct.h         |   6 +-
- .../marvell/octeontx2/af/rvu_switch.c         |   8 +-
- .../ethernet/marvell/octeontx2/nic/Makefile   |   2 +-
- .../ethernet/marvell/octeontx2/nic/cn10k.c    |  18 +-
- .../ethernet/marvell/octeontx2/nic/cn10k.h    |   1 +
- .../marvell/octeontx2/nic/cn10k_ipsec.c       |   2 +-
- .../marvell/octeontx2/nic/cn10k_ipsec.h       |   2 +-
- .../ethernet/marvell/octeontx2/nic/cn20k.c    | 252 +++++++++++
- .../ethernet/marvell/octeontx2/nic/cn20k.h    |  17 +
- .../marvell/octeontx2/nic/otx2_common.c       |  10 +-
- .../marvell/octeontx2/nic/otx2_common.h       |  35 +-
- .../ethernet/marvell/octeontx2/nic/otx2_pf.c  | 173 +++++--
- .../ethernet/marvell/octeontx2/nic/otx2_reg.h |  49 +-
- .../ethernet/marvell/octeontx2/nic/otx2_tc.c  |   3 +-
- .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |  44 +-
- .../net/ethernet/marvell/octeontx2/nic/rep.c  |   7 +-
- include/linux/soc/marvell/silicons.h          |  25 ++
- 42 files changed, 1574 insertions(+), 318 deletions(-)
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/cn20k/api.h
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/cn20k/mbox_init.c
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/cn20k/reg.h
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/cn20k/struct.h
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/cn20k.c
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/cn20k.h
- create mode 100644 include/linux/soc/marvell/silicons.h
+ .../ethernet/marvell/octeontx2/nic/cn20k.c    | 142 ++++++++++++++++++
+ .../ethernet/marvell/octeontx2/nic/cn20k.h    |   3 +
+ .../marvell/octeontx2/nic/otx2_common.h       |   2 +
+ .../ethernet/marvell/octeontx2/nic/otx2_pf.c  |  59 ++++++--
+ 5 files changed, 194 insertions(+), 14 deletions(-)
 
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/common.h b/drivers/net/ethernet/marvell/octeontx2/af/common.h
+index 406c59100a35..8a08bebf08c2 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/common.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/common.h
+@@ -39,7 +39,7 @@ struct qmem {
+ 	void            *base;
+ 	dma_addr_t	iova;
+ 	int		alloc_sz;
+-	u16		entry_sz;
++	u32		entry_sz;
+ 	u8		align;
+ 	u32		qsize;
+ };
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.c b/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.c
+index ef37aa0564b5..ccee79b17043 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.c
+@@ -13,6 +13,7 @@
+ static struct dev_hw_ops cn20k_hw_ops = {
+ 	.pfaf_mbox_intr_handler = cn20k_pfaf_mbox_intr_handler,
+ 	.vfaf_mbox_intr_handler = cn20k_vfaf_mbox_intr_handler,
++	.pfvf_mbox_intr_handler = cn20k_pfvf_mbox_intr_handler,
+ };
+ 
+ void cn20k_init(struct otx2_nic *pfvf)
+@@ -108,3 +109,144 @@ irqreturn_t cn20k_vfaf_mbox_intr_handler(int irq, void *vf_irq)
+ 
+ 	return IRQ_HANDLED;
+ }
++
++void cn20k_enable_pfvf_mbox_intr(struct otx2_nic *pf, int numvfs)
++{
++	/* Clear PF <=> VF mailbox IRQ */
++	otx2_write64(pf, RVU_MBOX_PF_VFPF_INTX(0), ~0ull);
++	otx2_write64(pf, RVU_MBOX_PF_VFPF_INTX(1), ~0ull);
++	otx2_write64(pf, RVU_MBOX_PF_VFPF1_INTX(0), ~0ull);
++	otx2_write64(pf, RVU_MBOX_PF_VFPF1_INTX(1), ~0ull);
++
++	/* Enable PF <=> VF mailbox IRQ */
++	otx2_write64(pf, RVU_MBOX_PF_VFPF_INT_ENA_W1SX(0), INTR_MASK(numvfs));
++	otx2_write64(pf, RVU_MBOX_PF_VFPF1_INT_ENA_W1SX(0), INTR_MASK(numvfs));
++	if (numvfs > 64) {
++		numvfs -= 64;
++		otx2_write64(pf, RVU_MBOX_PF_VFPF_INT_ENA_W1SX(1),
++			     INTR_MASK(numvfs));
++		otx2_write64(pf, RVU_MBOX_PF_VFPF1_INT_ENA_W1SX(1),
++			     INTR_MASK(numvfs));
++	}
++}
++
++void cn20k_disable_pfvf_mbox_intr(struct otx2_nic *pf, int numvfs)
++{
++	int vector, intr_vec, vec = 0;
++
++	/* Disable PF <=> VF mailbox IRQ */
++	otx2_write64(pf, RVU_MBOX_PF_VFPF_INT_ENA_W1CX(0), ~0ull);
++	otx2_write64(pf, RVU_MBOX_PF_VFPF_INT_ENA_W1CX(1), ~0ull);
++	otx2_write64(pf, RVU_MBOX_PF_VFPF1_INT_ENA_W1CX(0), ~0ull);
++	otx2_write64(pf, RVU_MBOX_PF_VFPF1_INT_ENA_W1CX(1), ~0ull);
++
++	otx2_write64(pf, RVU_MBOX_PF_VFPF_INTX(0), ~0ull);
++	otx2_write64(pf, RVU_MBOX_PF_VFPF1_INTX(0), ~0ull);
++
++	if (numvfs > 64) {
++		otx2_write64(pf, RVU_MBOX_PF_VFPF_INTX(1), ~0ull);
++		otx2_write64(pf, RVU_MBOX_PF_VFPF1_INTX(1), ~0ull);
++	}
++
++	for (intr_vec = RVU_MBOX_PF_INT_VEC_VFPF_MBOX0; intr_vec <=
++			RVU_MBOX_PF_INT_VEC_VFPF1_MBOX1; intr_vec++, vec++) {
++		vector = pci_irq_vector(pf->pdev, intr_vec);
++		free_irq(vector, pf->hw.pfvf_irq_devid[vec]);
++	}
++}
++
++irqreturn_t cn20k_pfvf_mbox_intr_handler(int irq, void *pf_irq)
++{
++	struct pf_irq_data *irq_data = pf_irq;
++	struct otx2_nic *pf = irq_data->pf;
++	struct mbox *mbox;
++	u64 intr;
++
++	/* Sync with mbox memory region */
++	rmb();
++
++	/* Clear interrupts */
++	intr = otx2_read64(pf, irq_data->intr_status);
++	otx2_write64(pf, irq_data->intr_status, intr);
++	mbox = pf->mbox_pfvf;
++
++	if (intr)
++		trace_otx2_msg_interrupt(pf->pdev, "VF(s) to PF", intr);
++
++	irq_data->pf_queue_work_hdlr(mbox, pf->mbox_pfvf_wq, irq_data->start,
++				     irq_data->mdevs, intr);
++
++	return IRQ_HANDLED;
++}
++
++int cn20k_register_pfvf_mbox_intr(struct otx2_nic *pf, int numvfs)
++{
++	struct otx2_hw *hw = &pf->hw;
++	struct pf_irq_data *irq_data;
++	int intr_vec, ret, vec = 0;
++	char *irq_name;
++
++	/* irq data for 4 PF intr vectors */
++	irq_data = devm_kcalloc(pf->dev, 4,
++				sizeof(struct pf_irq_data), GFP_KERNEL);
++	if (!irq_data)
++		return -ENOMEM;
++
++	for (intr_vec = RVU_MBOX_PF_INT_VEC_VFPF_MBOX0; intr_vec <=
++			RVU_MBOX_PF_INT_VEC_VFPF1_MBOX1; intr_vec++, vec++) {
++		switch (intr_vec) {
++		case RVU_MBOX_PF_INT_VEC_VFPF_MBOX0:
++			irq_data[vec].intr_status =
++						RVU_MBOX_PF_VFPF_INTX(0);
++			irq_data[vec].start = 0;
++			irq_data[vec].mdevs = 64;
++			break;
++		case RVU_MBOX_PF_INT_VEC_VFPF_MBOX1:
++			irq_data[vec].intr_status =
++						RVU_MBOX_PF_VFPF_INTX(1);
++			irq_data[vec].start = 64;
++			irq_data[vec].mdevs = 96;
++			break;
++		case RVU_MBOX_PF_INT_VEC_VFPF1_MBOX0:
++			irq_data[vec].intr_status =
++						RVU_MBOX_PF_VFPF1_INTX(0);
++			irq_data[vec].start = 0;
++			irq_data[vec].mdevs = 64;
++			break;
++		case RVU_MBOX_PF_INT_VEC_VFPF1_MBOX1:
++			irq_data[vec].intr_status =
++						RVU_MBOX_PF_VFPF1_INTX(1);
++			irq_data[vec].start = 64;
++			irq_data[vec].mdevs = 96;
++			break;
++		}
++		irq_data[vec].pf_queue_work_hdlr = otx2_queue_vf_work;
++		irq_data[vec].vec_num = intr_vec;
++		irq_data[vec].pf = pf;
++
++		/* Register mailbox interrupt handler */
++		irq_name = &hw->irq_name[intr_vec * NAME_SIZE];
++		if (pf->pcifunc)
++			snprintf(irq_name, NAME_SIZE,
++				 "RVUPF%d_VF%d Mbox%d", rvu_get_pf(pf->pdev,
++				 pf->pcifunc), vec / 2, vec % 2);
++		else
++			snprintf(irq_name, NAME_SIZE, "RVUPF_VF%d Mbox%d",
++				 vec / 2, vec % 2);
++
++		hw->pfvf_irq_devid[vec] = &irq_data[vec];
++		ret = request_irq(pci_irq_vector(pf->pdev, intr_vec),
++				  pf->hw_ops->pfvf_mbox_intr_handler, 0,
++				  irq_name,
++				  &irq_data[vec]);
++		if (ret) {
++			dev_err(pf->dev,
++				"RVUPF: IRQ registration failed for PFVF mbox0 irq\n");
++			return ret;
++		}
++	}
++
++	cn20k_enable_pfvf_mbox_intr(pf, numvfs);
++
++	return 0;
++}
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.h b/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.h
+index 712bb2b5e2ae..832adaf8c57f 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.h
+@@ -11,4 +11,7 @@
+ #include "otx2_common.h"
+ 
+ void cn20k_init(struct otx2_nic *pfvf);
++int cn20k_register_pfvf_mbox_intr(struct otx2_nic *pf, int numvfs);
++void cn20k_disable_pfvf_mbox_intr(struct otx2_nic *pf, int numvfs);
++void cn20k_enable_pfvf_mbox_intr(struct otx2_nic *pf, int numvfs);
+ #endif /* CN20K_H */
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+index 1757d183b775..8361e68d2baa 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+@@ -65,6 +65,7 @@
+ irqreturn_t otx2_pfaf_mbox_intr_handler(int irq, void *pf_irq);
+ irqreturn_t cn20k_pfaf_mbox_intr_handler(int irq, void *pf_irq);
+ irqreturn_t cn20k_vfaf_mbox_intr_handler(int irq, void *vf_irq);
++irqreturn_t cn20k_pfvf_mbox_intr_handler(int irq, void *pf_irq);
+ irqreturn_t otx2_pfvf_mbox_intr_handler(int irq, void *pf_irq);
+ 
+ enum arua_mapped_qtypes {
+@@ -368,6 +369,7 @@ struct dev_hw_ops {
+ 	void	(*aura_freeptr)(void *dev, int aura, u64 buf);
+ 	irqreturn_t (*pfaf_mbox_intr_handler)(int irq, void *pf_irq);
+ 	irqreturn_t (*vfaf_mbox_intr_handler)(int irq, void *pf_irq);
++	irqreturn_t (*pfvf_mbox_intr_handler)(int irq, void *pf_irq);
+ };
+ 
+ #define CN10K_MCS_SA_PER_SC	4
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+index 503d73ce5661..d84b538d3169 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+@@ -569,6 +569,23 @@ irqreturn_t otx2_pfvf_mbox_intr_handler(int irq, void *pf_irq)
+ 	return IRQ_HANDLED;
+ }
+ 
++static void *cn20k_pfvf_mbox_alloc(struct otx2_nic *pf, int numvfs)
++{
++	struct qmem *mbox_addr;
++	int err;
++
++	err = qmem_alloc(&pf->pdev->dev, &mbox_addr, numvfs, MBOX_SIZE);
++	if (err) {
++		dev_err(pf->dev, "qmem alloc fail\n");
++		return ERR_PTR(-ENOMEM);
++	}
++
++	otx2_write64(pf, RVU_PF_VF_MBOX_ADDR, (u64)mbox_addr->iova);
++	pf->pfvf_mbox_addr = mbox_addr;
++
++	return mbox_addr->base;
++}
++
+ static int otx2_pfvf_mbox_init(struct otx2_nic *pf, int numvfs)
+ {
+ 	void __iomem *hwbase;
+@@ -590,19 +607,27 @@ static int otx2_pfvf_mbox_init(struct otx2_nic *pf, int numvfs)
+ 	if (!pf->mbox_pfvf_wq)
+ 		return -ENOMEM;
+ 
+-	/* On CN10K platform, PF <-> VF mailbox region follows after
+-	 * PF <-> AF mailbox region.
++	/* For CN20K, PF allocates mbox memory in DRAM and writes PF/VF
++	 * regions/offsets in RVU_PF_VF_MBOX_ADDR, the RVU_PFX_FUNC_PFAF_MBOX
++	 * gives the aliased address to access PF/VF mailbox regions.
+ 	 */
+-	if (test_bit(CN10K_MBOX, &pf->hw.cap_flag))
+-		base = pci_resource_start(pf->pdev, PCI_MBOX_BAR_NUM) +
+-		       MBOX_SIZE;
+-	else
+-		base = readq((pf->reg_base + RVU_PF_VF_BAR4_ADDR));
++	if (is_cn20k(pf->pdev)) {
++		hwbase = (void __iomem *)cn20k_pfvf_mbox_alloc(pf, numvfs);
++	} else {
++		/* On CN10K platform, PF <-> VF mailbox region follows after
++		 * PF <-> AF mailbox region.
++		 */
++		if (test_bit(CN10K_MBOX, &pf->hw.cap_flag))
++			base = pci_resource_start(pf->pdev, PCI_MBOX_BAR_NUM) +
++						  MBOX_SIZE;
++		else
++			base = readq((pf->reg_base + RVU_PF_VF_BAR4_ADDR));
+ 
+-	hwbase = ioremap_wc(base, MBOX_SIZE * pf->total_vfs);
+-	if (!hwbase) {
+-		err = -ENOMEM;
+-		goto free_wq;
++		hwbase = ioremap_wc(base, MBOX_SIZE * pf->total_vfs);
++		if (!hwbase) {
++			err = -ENOMEM;
++			goto free_wq;
++		}
+ 	}
+ 
+ 	mbox = &pf->mbox_pfvf[0];
+@@ -626,7 +651,7 @@ static int otx2_pfvf_mbox_init(struct otx2_nic *pf, int numvfs)
+ 	return 0;
+ 
+ free_iomem:
+-	if (hwbase)
++	if (hwbase && !(is_cn20k(pf->pdev)))
+ 		iounmap(hwbase);
+ free_wq:
+ 	destroy_workqueue(pf->mbox_pfvf_wq);
+@@ -645,8 +670,10 @@ static void otx2_pfvf_mbox_destroy(struct otx2_nic *pf)
+ 		pf->mbox_pfvf_wq = NULL;
+ 	}
+ 
+-	if (mbox->mbox.hwbase)
++	if (mbox->mbox.hwbase && !is_cn20k(pf->pdev))
+ 		iounmap((void __iomem *)mbox->mbox.hwbase);
++	else
++		qmem_free(&pf->pdev->dev, pf->pfvf_mbox_addr);
+ 
+ 	otx2_mbox_destroy(&mbox->mbox);
+ }
+@@ -670,6 +697,9 @@ static void otx2_disable_pfvf_mbox_intr(struct otx2_nic *pf, int numvfs)
+ {
+ 	int vector;
+ 
++	if (is_cn20k(pf->pdev))
++		return cn20k_disable_pfvf_mbox_intr(pf, numvfs);
++
+ 	/* Disable PF <=> VF mailbox IRQ */
+ 	otx2_write64(pf, RVU_PF_VFPF_MBOX_INT_ENA_W1CX(0), ~0ull);
+ 	otx2_write64(pf, RVU_PF_VFPF_MBOX_INT_ENA_W1CX(1), ~0ull);
+@@ -691,6 +721,9 @@ static int otx2_register_pfvf_mbox_intr(struct otx2_nic *pf, int numvfs)
+ 	char *irq_name;
+ 	int err;
+ 
++	if (is_cn20k(pf->pdev))
++		return cn20k_register_pfvf_mbox_intr(pf, numvfs);
++
+ 	/* Register MBOX0 interrupt handler */
+ 	irq_name = &hw->irq_name[RVU_PF_INT_VEC_VFPF_MBOX0 * NAME_SIZE];
+ 	if (pf->pcifunc)
 -- 
 2.25.1
 
