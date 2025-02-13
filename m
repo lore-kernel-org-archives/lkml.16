@@ -1,92 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4586023A9AE;
-	Thu, 13 Feb 2025 17:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9753B2063E1;
+	Thu, 13 Feb 2025 17:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739469345; cv=none; b=ix8q3YxsjA3CQ3grRnmnK3OIu5JC5diQV0lIoKkXuw8CCPG4vpeeiH5XRQ88iM35AfnyNXWMEMgueiolSfumFXinr6bbKR3KlHZ5p7s3GqvDsC9n6cPw3qaDvB70qfMiL+sFSdiL3qKOmLDwy1i2UMVp6gZYeZlNZ7kE8rm79w8=
+	t=1739469389; cv=none; b=J2FfI7ABvxZIuPqN4qEyvMVdnbn6i0RljwSxK/ijJ8hGgKHITWwTSVbOU7bFOFQ0PdHVk3c8ozR1w/o7ZM3U84PeqfEK16SWcr/8rIqVvzwp6AhT8PpdT8nRm717I+szeY2S6hIYJ5IoSZnplKlSK9NA7oubZVYX0cQ2qXTSiOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739469345; c=relaxed/simple;
-	bh=/PNpSbgiLWG9bLBWpPA4uVPKXUWGs7jN8qVFPTrfZTk=;
+	s=arc-20240116; t=1739469389; c=relaxed/simple;
+	bh=VJ9/7u5dm3yhevUGmYiN3uNdAeAmMy1lBqGWU8RiYq4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ar1Hn/hqVCDEbZSfKs13fV2SKQ4UG4+dsj6k29Wksev8kpNmjWQuiUHSRvfCRZksaOpp1wVEsOjRClDr8T/7Zf+ddS64s7ykPlt9OhJTLUcEQNrbEx2S0hP1GHiL74izRfm/WDEc9r2M+qELZm23mgiScbia5ZfNVr3NN6gFxFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NByeFNW2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NByeFNW2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B818C4CEE5;
-	Thu, 13 Feb 2025 17:55:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739469344;
-	bh=/PNpSbgiLWG9bLBWpPA4uVPKXUWGs7jN8qVFPTrfZTk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NByeFNW2HNKG+Or1s9nAySboW83Ggzz0b+NOyt3FmxlW23UICV1ytS5xRVjQzEeeg
-	 4iJNSm97SoPyNAqfp5g1tVZ65hAFPAlED3c3qWsS4JwMZVlZaZPWHQc9EGpClUrkbA
-	 m/KKbHaNX/khx5EIpDIOHfXYOVdk0Ge+R3ZgWuKN7qbe4To0dT57j+dLf/I7tdjfSx
-	 j1LTxDNehVvEnZ+G1qUDffvJuopixRbVWOwUFno1lKLsmEhdPclEUeJFauTXsJn46I
-	 ufcJp0CbcbIcVx3oN0eZhgAeXsoEHxgx5PuyBh+K7P//iB8HlrciSItjHlYy+yXj12
-	 FG5rYbSe8wVDg==
-Date: Thu, 13 Feb 2025 10:55:39 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Sam Ravnborg <sam@ravnborg.org>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] kbuild: userprogs: fix bitsize and target detection
- on clang
-Message-ID: <20250213175539.GB2756218@ax162>
-References: <20250213-kbuild-userprog-fixes-v1-0-f255fb477d98@linutronix.de>
- <20250213-kbuild-userprog-fixes-v1-1-f255fb477d98@linutronix.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EZffHj+lJBgb12qZP82t6+z1FONUmXVAetXrOW0093G63mQ01aJUvIFbgSwyshxDYHSfZl11gm+p4dJns8qOBUo+nxber710u0Qg+/2NnO7HW9xlNT/gd6U+wT9E7x9FPnQr882lrpTFZnft5hp14nbS1Gx9WFQPzkixs+rekCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8239B113E;
+	Thu, 13 Feb 2025 09:56:47 -0800 (PST)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 202C73F5A1;
+	Thu, 13 Feb 2025 09:56:23 -0800 (PST)
+Date: Thu, 13 Feb 2025 17:56:20 +0000
+From: Dave Martin <Dave.Martin@arm.com>
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: "Chatre, Reinette" <reinette.chatre@intel.com>,
+	Babu Moger <babu.moger@amd.com>,
+	"peternewman@google.com" <peternewman@google.com>,
+	"corbet@lwn.net" <corbet@lwn.net>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"paulmck@kernel.org" <paulmck@kernel.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"thuth@redhat.com" <thuth@redhat.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"xiongwei.song@windriver.com" <xiongwei.song@windriver.com>,
+	"pawan.kumar.gupta@linux.intel.com" <pawan.kumar.gupta@linux.intel.com>,
+	"daniel.sneddon@linux.intel.com" <daniel.sneddon@linux.intel.com>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
+	"perry.yuan@amd.com" <perry.yuan@amd.com>,
+	"sandipan.das@amd.com" <sandipan.das@amd.com>,
+	"Huang, Kai" <kai.huang@intel.com>,
+	"Li, Xiaoyao" <xiaoyao.li@intel.com>,
+	"seanjc@google.com" <seanjc@google.com>,
+	"Li, Xin3" <xin3.li@intel.com>,
+	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
+	"ebiggers@google.com" <ebiggers@google.com>,
+	"mario.limonciello@amd.com" <mario.limonciello@amd.com>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	"tan.shaopeng@fujitsu.com" <tan.shaopeng@fujitsu.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>,
+	"Eranian, Stephane" <eranian@google.com>
+Subject: Re: [PATCH v11 00/23] x86/resctrl : Support AMD Assignable Bandwidth
+ Monitoring Counters (ABMC)
+Message-ID: <Z64yRKyaG+yUhc2N@e133380.arm.com>
+References: <cover.1737577229.git.babu.moger@amd.com>
+ <Z6zeXby8ajh0ax6i@e133380.arm.com>
+ <9e849476-7c4b-478b-bd2a-185024def3a3@intel.com>
+ <SJ1PR11MB6083A2CD66FAE5DBEDCB96C0FCFF2@SJ1PR11MB6083.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250213-kbuild-userprog-fixes-v1-1-f255fb477d98@linutronix.de>
+In-Reply-To: <SJ1PR11MB6083A2CD66FAE5DBEDCB96C0FCFF2@SJ1PR11MB6083.namprd11.prod.outlook.com>
 
-On Thu, Feb 13, 2025 at 03:55:17PM +0100, Thomas Weiﬂschuh wrote:
-> scripts/Makefile.clang was changed in the linked commit to move --target from
-> KBUILD_CFLAGS to KBUILD_CPPFLAGS, as that generally has a broader scope.
-> However that variable is not inspected by the userprogs logic,
-> breaking cross compilation on clang.
-> 
-> Use both variables to detect bitsize and target arguments for userprogs.
-> 
-> Fixes: feb843a469fb ("kbuild: add $(CLANG_FLAGS) to KBUILD_CPPFLAGS")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+Hi Tony,
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+On Thu, Feb 13, 2025 at 12:11:13AM +0000, Luck, Tony wrote:
+> > I do not think that resctrl's current support of the mbm_total_bytes and
+> > mbm_local_bytes should be considered as the "only" two available "slots"
+> > into which all possible events should be forced into. "mon_features" exists
+> > to guide user space to which events are supported and as I see it new events
+> > can be listed here to inform user space of their availability, with their
+> > associated event files available in the resource groups.
+> 
+> 100%  I have a number of "events" in the pipeline that do not fit these
+> names. I'm planning on new files with descriptive[1] names for the events
+> they report.
+> 
+> -Tony
+> 
+> [1] When these are ready to post we can discuss the names I chose and
+> change them if there are better names that work across architectures.
 
-> ---
->  Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 9e0d63d9d94b90672f91929e5e148e5a0c346cb6..bb5737ce7f9e79f4023c9c1f578a49a951d1e239 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1120,8 +1120,8 @@ LDFLAGS_vmlinux += --orphan-handling=$(CONFIG_LD_ORPHAN_WARN_LEVEL)
->  endif
->  
->  # Align the bit size of userspace programs with the kernel
-> -KBUILD_USERCFLAGS  += $(filter -m32 -m64 --target=%, $(KBUILD_CFLAGS))
-> -KBUILD_USERLDFLAGS += $(filter -m32 -m64 --target=%, $(KBUILD_CFLAGS))
-> +KBUILD_USERCFLAGS  += $(filter -m32 -m64 --target=%, $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
-> +KBUILD_USERLDFLAGS += $(filter -m32 -m64 --target=%, $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
->  
->  # make the checker run with the right architecture
->  CHECKFLAGS += --arch=$(ARCH)
-> 
-> -- 
-> 2.48.1
-> 
+Do any of the approaches discussed in [2] look viable for this?
+
+(Ideally, reply over there.)
+
+Cheers
+---Dave
+
+[2] https://lore.kernel.org/lkml/Z64tw2NbJXbKpLrH@e133380.arm.com/
