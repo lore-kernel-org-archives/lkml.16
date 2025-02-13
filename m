@@ -1,39 +1,71 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CB320B7FF;
-	Thu, 13 Feb 2025 10:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDDD20B7FF
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 10:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739441549; cv=none; b=PRP9/JvBSOMLtaa85icDun1x4fF/cfwbm0A94P3B7sxXHwBvvP9UhajUQVxHvxuhSc4hbsMflEfF2f/u/fs1n7vSSPMc+lqrBD5A9kScEBtS1U8CsiW86LFsY+rPQQreTwdtlVtPyySS08GEQ0c7XaayRaKGUqFyPx4LPkL937o=
+	t=1739441589; cv=none; b=QIpEDz+TduIswSfmHBX6mVykc/u9Kza1tsWXl0GDMKPQvQp4z8lB/tFIeOToWql9viWmC0uXA9YVogEFWxwcDPTnTC/dDlfwoQ+trS1AXV4QhveOb1yFxzJMNfAZaqYwjzLfxfoLFLCsQU32vBNgQykSq2/w+cB1UG7LP+j55K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739441549; c=relaxed/simple;
-	bh=tqZpQK4xeMb6tw5FODUf9H7mRn5t/kDt5GIcHJeyn70=;
+	s=arc-20240116; t=1739441589; c=relaxed/simple;
+	bh=TPJ/nTIknPS5cx18/Sqpw2qu6ixwnIbzogcI8kwGoP8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TToDRaf3IFCKWLp+dzHzB2j4ZyH/ho5mb1rv/5/diXvgsaQNIAUcdicrvkqJor9Q7YHNqMBUZ4wQdN1cKWsgtH/YQrKul81/VgeNwFbLtyS7Mnh8HD+wz7iMdj0mgnIX5Y4sVYN3MkgIElO1AC4cvXo6APIfbFj3p74BuoCGWS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Ls/dh3Zg; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	 In-Reply-To:Content-Type; b=QWsS6yzoQFsq7M+RjzT0y/6xZNz8msfmp7DrGR30Jmp1UMnZIRfnaJneo09CPR0RCEvIUlbnW56DyK7R/Dui3hfw6IQsZCcEMnTgrSAO/UOZZ4OLA+OVcQHG4BPG3F/tzjNn8R+P8XEjuMSlrmQSUEog7HGo8VJHEcub6jqvGdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UEtG5sMd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Ls/dh3Zg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8STFsjk7nOxsasLEFEuYQgNFVyCF5cAX4BptmfIOi4Q=; b=Ls/dh3ZgUKW/U/cAWuYSQT+DXG
-	urVOzTXiTK7YnlFR1tT8//CNzHfPnSleW12WEJLxYFdyqTKHWVq9rrrwkw1HCMmVeYVi+WgjF47TI
-	DIHhsi7Qnd+lQyijZmoNaCoxHYdsKElIt/GNcmiGoJg7H4xR7S6I/0Hs9LnlI6m9T0MMAdu/mP5qt
-	DJDghDwFs2sX7RU3LBnvX1wCM0aI4JMq6i6QqBAxR4TYUmbeAEPy3SYPlTDmr4lmCpL8C3TaIGK2p
-	OEGn3rlc3g1azbBM7xyD/EiXLYUQ6MtnLz7D7giP7EHcURxeLU0Em7aH1ad4gUMI4qvYYA1WVlZ0V
-	eOY4VBEQ==;
-Received: from [106.101.129.218] (helo=[192.168.202.21])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1tiWCI-009uTh-Vz; Thu, 13 Feb 2025 11:12:01 +0100
-Message-ID: <90eda54b-6898-40bb-adbb-409404ad185f@igalia.com>
-Date: Thu, 13 Feb 2025 19:11:47 +0900
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UEtG5sMd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739441586;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kir0xP/eZn19J/5p1I2ZFGYt8Aw6idVAPW8577Id44g=;
+	b=UEtG5sMdVaabwnNkpE+fweK0GZvaxOYNJ5PznfQqss50V0b9KeFylLnXMBsVOtqNp9n29h
+	VHeC6cKMDDp3bXp1D/1zxS74koh8lnJG8IPXfZ1EttJ5m9tXMKWdXwoXsg7xIpBHPntTLl
+	vfDeAIAr+lfO5yoz2PMDrdoI4vkU/Ck=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-680-Ujs3xY7tMHuv6QRjmJruMA-1; Thu, 13 Feb 2025 05:13:04 -0500
+X-MC-Unique: Ujs3xY7tMHuv6QRjmJruMA-1
+X-Mimecast-MFC-AGG-ID: Ujs3xY7tMHuv6QRjmJruMA
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-438e4e9a53fso5042965e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 02:13:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739441583; x=1740046383;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kir0xP/eZn19J/5p1I2ZFGYt8Aw6idVAPW8577Id44g=;
+        b=n4OSJAhRy7oGsXYPigKUjCJxGxpH8/IHfOAGoJASBxnZ1j0QP0awxC5GF3DMz/dUTZ
+         4kNs9RUXw6A4TKTEy+JCJhnAWPfPGDPO9/3WHWpJvzs74SSXzrOWkmYqpSthf3sSis18
+         n3nDl1FUvrR9nJOqaKRoYGjDx7n+iRI9QGbHtOnodwczdmBll834R2jupvUAgK1DUt0i
+         +DufGz/OtMUaUDglWPFG5N4im0L6bvxjqCYRbTo2MdYuQMP1ogMXiU6SKKdq1A7eyAzf
+         0OMIEGclCd92WkWPCYFTUGJOrZxjWld7Z4pjKaJ28zwuSvRZMEObnKDnEcRVqnwMD4AY
+         tWzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFofdIXs63wIxp2jjCwr72tWS1Ud1J4TauMG9iMsAhHLYjJgSwp6QREmmsCQXajIhuACC7Sh3QVPHEo0E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyLmkHNoSwhlVc30Oa72rPQdxmKF717PnEwZgrtRNdT0aPyh45
+	H1BYRaK+A8G3O0S0QVg5+VXgjFNwvttMhndeWWyFYPLyQiu3DbherfumrFlikyQRr7a0x8ajIvS
+	uyXixdMVR2PTqVCOpODI0S5Iohzb08tfDitFaadu+9m9lr2UkYO2pZilDb0W0Zw==
+X-Gm-Gg: ASbGncstiU7v7TVzrpo5UxQK6thqHh1/yXZOTu5FIAQci00SVnliF0At4iaoQjScSlo
+	bx8tHztP7pxu9siNoue5AINCOS+LVzilqPzpE0zMkaMGZkqqgXJHNSMuY8mc4L9Q415FO1b8LEW
+	I3pZW4sHOBku2T3QMAC+aaxqTU5kKgYVBBMheKnGW7jxWF8pf6RdjezW7LAWOj2z/vKttNFgPvc
+	FSuy6+L8i+0N0QcVXWn+cVjdJC/7YAccsFkWd8yMDXGG1dP21QSLEe10HdeWlOX3zvGBTEf1KBa
+	iNXmb4xrkqhPIabqiesJK4Lf5NR0yxZuVEE=
+X-Received: by 2002:a05:600c:1d85:b0:436:f960:3428 with SMTP id 5b1f17b1804b1-439581c9cffmr67587485e9.29.1739441583339;
+        Thu, 13 Feb 2025 02:13:03 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEr/ZoioARrAtsjEX0T4uArnjm6HRk8PKz7oSXppRfbi28wR4BrFT3aKjCq8hOmcWroASjtgw==
+X-Received: by 2002:a05:600c:1d85:b0:436:f960:3428 with SMTP id 5b1f17b1804b1-439581c9cffmr67587045e9.29.1739441582954;
+        Thu, 13 Feb 2025 02:13:02 -0800 (PST)
+Received: from [192.168.88.253] (146-241-31-160.dyn.eolo.it. [146.241.31.160])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439618a9970sm12953035e9.33.2025.02.13.02.13.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 02:13:02 -0800 (PST)
+Message-ID: <3bd1622d-438a-4903-b87a-08987f98c449@redhat.com>
+Date: Thu, 13 Feb 2025 11:13:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,58 +73,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next] bpf: Add a retry after refilling the free list
- when unit_alloc() fails
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: Song Liu <song@kernel.org>, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, tj@kernel.org,
- arighi@nvidia.com, kernel-dev@igalia.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250212084851.150169-1-changwoo@igalia.com>
- <CAPhsuW44cRU6rfrpnkdd-+6MRm7fbQ2ucnhtueaD9wBKXYnn8Q@mail.gmail.com>
- <1a158ad7-f988-42bf-9a1e-b673ff9122c2@igalia.com>
- <CAP01T77mcUi4h_dT6QfEPg_xeUGhsegcV+NCqpQSY-VtxuLV4A@mail.gmail.com>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <CAP01T77mcUi4h_dT6QfEPg_xeUGhsegcV+NCqpQSY-VtxuLV4A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH] net/mlx4_core: Avoid impossible mlx4_db_alloc() order
+ value
+To: Justin Stitt <justinstitt@google.com>,
+ Tariq Toukan <ttoukan.linux@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Yishai Hadas <yishaih@nvidia.com>,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250210174504.work.075-kees@kernel.org>
+ <3biiqfwwvlbkvo5tx56nmcl4rzbq5w7u3kxn5f5ctwsolxpubo@isskxigmypwz>
+ <d11de4d4-1205-43d0-8a7d-a43d55a4f3eb@gmail.com>
+ <CAFhGd8om_1W7inq+V4a4EP3e5y1y+qw7C3wi3DR4WpspYzZenQ@mail.gmail.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <CAFhGd8om_1W7inq+V4a4EP3e5y1y+qw7C3wi3DR4WpspYzZenQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hello Kumar,
-
-On 25. 2. 13. 18:05, Kumar Kartikeya Dwivedi wrote:
-> On Thu, 13 Feb 2025 at 09:42, Changwoo Min <changwoo@igalia.com> wrote:
->>
->> Hello Song,
->>
->> Thank you for the review!
->>
->> On 25. 2. 13. 03:33, Song Liu wrote:
->>> On Wed, Feb 12, 2025 at 12:49 AM Changwoo Min <changwoo@igalia.com> wrote:
+On 2/13/25 1:10 AM, Justin Stitt wrote:
+> On Tue, Feb 11, 2025 at 6:22 AM Tariq Toukan <ttoukan.linux@gmail.com> wrote:
+>> On 11/02/2025 2:01, Justin Stitt wrote:
+>>>> diff --git a/drivers/net/ethernet/mellanox/mlx4/alloc.c b/drivers/net/ethernet/mellanox/mlx4/alloc.c
+>>>> index b330020dc0d6..f2bded847e61 100644
+>>>> --- a/drivers/net/ethernet/mellanox/mlx4/alloc.c
+>>>> +++ b/drivers/net/ethernet/mellanox/mlx4/alloc.c
+>>>> @@ -682,9 +682,9 @@ static struct mlx4_db_pgdir *mlx4_alloc_db_pgdir(struct device *dma_device)
+>>>>   }
 >>>>
->>>> When there is no entry in the free list (c->free_llist), unit_alloc()
->>>> fails even when there is available memory in the system, causing allocation
->>>> failure in various BPF calls -- such as bpf_mem_alloc() and
->>>> bpf_cpumask_create().
+>>>>   static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
+>>>> -                                struct mlx4_db *db, int order)
+>>>> +                                struct mlx4_db *db, unsigned int order)
+>>>>   {
+>>>> -    int o;
+>>>> +    unsigned int o;
+>>>>      int i;
 >>>>
->>>> Such allocation failure can happen, especially when a BPF program tries many
->>>> allocations -- more than a delta between high and low watermarks -- in an
->>>> IRQ-disabled context.
+>>>>      for (o = order; o <= 1; ++o) {
 >>>
->>> Can we add a selftests for this scenario?
+>>>    ^ Knowing now that @order can only be 0 or 1 can this for loop (and
+>>>    goto) be dropped entirely?
+>>>
 >>
->> It would be a bit tricky to create an IRQ-disabled case in a BPF
->> program. However, I think it will be possible to reproduce the
->> allocation failure issue when allocating sufficiently enough
->> small allocations.
+>> Maybe I'm missing something...
+>> Can you please explain why you think this can be dropped?
 > 
-> You can also make use of recently introduced
-> bpf_local_irq_{save,restore} in the selftest.
+> I meant "rewritten to use two if statements" instead of "dropped". I
+> think "replaced" or "refactored" was the word I wanted.
 
-Thank you for the suggestion. I will try it out.
+IMHO that would be a significant uglification, not worthy to address an
+issue that could be solved with the patch proposed here.
 
-Regards,
-Changwoo Min
+@Tariq: are you ok with this patch?
+
+Thanks,
+
+Paolo
 
