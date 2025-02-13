@@ -1,623 +1,340 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0888211A19;
-	Thu, 13 Feb 2025 09:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19E9211A20
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739437729; cv=none; b=rcbIgXabJJ2yfMqbEupzcCuBqhWxxMJH3lx/dveIZExKqNaeKvd5LB85hMPi6PiuM4MZVySW8pFSPz6gJtuxCN/EgpPPUN3zmzN+TFYtc8JYs8SWvu9zogk4r5/aCddkDIFS2BsIoM41KzHfr2kuj6RdzdJpWC/OB2WkuLOln1o=
+	t=1739437732; cv=none; b=XBs1bMqQP8cGOPpvh4lZe2sw+VFh3ZDDCoQCVS457BQe5RKZdB/sN24toqz5aBdTBiHI42buxCS4vIaMfZSgo6cLnWmuZcnRqCI8gM8KGAk2xXAJPoOodIbS+uAsZay/sxIINT3i+nRGhGFdz/9+88ShACSQwHQV5MxKp4TvORU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739437729; c=relaxed/simple;
-	bh=GIUlT9LC1ocTQlyq1ULMc6PUaVMG6RnWLIb/+PjLhqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ps1uHrBRK8yDhWPnS7PZ2HtpVtNI1z9dwqevHimdw+6gs/s//IbenGHIqRWLJBRbG4PCMHexx21n5INmIufwSSztMTZ0FIz6ArlNn35KIZxw1ZcKC4OE4F2F74X+9S+5UGifqhdoddpDaWZUkwoxdaXn1IL33QcnB8B3uOwmoPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXfOiApS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739437732; c=relaxed/simple;
+	bh=hHsYh4Wj2aKIk+sbbDk+eoksuvTL9kE1wTEO+n06vms=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=MGPwKaJWK50ZgsuETc0TD/vkZIBtFrf5M3UvP1BdWtILfZ1e+tHqZbugpeG8A7PaFyRD+gWc5117KYo2e6r6BjHzQSmXqKmF+LG3pbeXHMfA8EuQOqZKM/97fJZMT7sjLzujHZYzG6nzsffRUgRvuDPi/n67a5pQ798XuGvdcis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BhXcywJ8; arc=none smtp.client-ip=209.85.218.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXfOiApS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16921C4CEED;
-	Thu, 13 Feb 2025 09:08:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739437729;
-	bh=GIUlT9LC1ocTQlyq1ULMc6PUaVMG6RnWLIb/+PjLhqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cXfOiApS4CvYmByz2sWdMw+soFywSC19cqDepOvB0PcH14Q6cVXWVQoRd3TBsxD8W
-	 5L51snHJgowUfNjJVq1kanTsMQRbzDzbWbXir5oA4Ys9DT4bGskWAbU/NTfYR8SJOX
-	 NST7rnPvIjPbafyYgvCm3XxSccEHcXHHMrznyfPJB34tkz77b0sg7So+WUJy0SeBrx
-	 WUu9HUmFIuE+n1k+Z3SSkuRynCJNFkbz1XUVKp4i3skAuVIrkyFITQh0wT9NEC0uNU
-	 cSJdxb9X+kOkHMSOwN/z0WrO2wwbs0Zl8R9Lc9asejqL+UfTpBx+88ZlDhgNeyU1tQ
-	 reyVY3lOp4tcw==
-Date: Thu, 13 Feb 2025 10:08:45 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Richard Cochran <richardcochran@gmail.com>, devicetree@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 04/10] arm64: dts: st: introduce stm32mp23 SoCs family
-Message-ID: <20250213-intrepid-peridot-dinosaur-c5d0bc@krzk-bin>
-References: <20250210-b4-stm32mp2_new_dts-v1-0-e8ef1e666c5e@foss.st.com>
- <20250210-b4-stm32mp2_new_dts-v1-4-e8ef1e666c5e@foss.st.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BhXcywJ8"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-aa6b904a886so56919066b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 01:08:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739437728; x=1740042528; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=T2iUxOYgcCaQTSWGHwDxztwJgFH0wzbbb/8+hafzV1k=;
+        b=BhXcywJ8sUsLPqM+lEwgE4a9JdDuZo7iRB4JA9R1yUXlJKxHjrTU6jNyAm0kDQA0Ez
+         vMF1GNbXDmNGvDQRuCBkYbqai6X4qqyGyJ7Ksh/lgQHeyohIIC5XUFDPgvYK7u4zv7Dt
+         IWCoA7uy4bg1eVQmChDo0r82QKaDj1wsNf5/A6wNjZ+3fGLfccAKdFzFhHQuop5Xmn9s
+         1vI3PtQiyczagguw4KvkGQrgKtqWl5jOniRFCh/CS9zkRw076+Xh4Ye5CQ8ZNPHkMf3A
+         1ldRnxSy63HnlfiQe5/+jvCETK6lCHnBiMse50nQKFprHPKVjEKtZ6D8V/1vnmJaSY4L
+         61Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739437728; x=1740042528;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=T2iUxOYgcCaQTSWGHwDxztwJgFH0wzbbb/8+hafzV1k=;
+        b=RsNHlhadZH5VGa8OkPCS4/9sLl+5uDg4tEYMkLf7fJAL0ieM8lD6nqd9Gl6TMD4gK/
+         poDiwlisJKBpXW5YsmsNjgHuztff3cS8kvagViNxgKTqX1qFTkUDZsR49aZ4MDbjNaaQ
+         lZ4pXlzBaBVQP8AEv8AmUcKdZdBnUJKzPtnWM0cDL2krdRddTTC55kM+g744ZR2VDK8S
+         duHJsE6WGkBEKaKRKU9QvrTBH6DIeUYjtBzzhDkL3GCobI+Ivg6HSP8d715EaI0pJT1P
+         pY9DfAg2GQ1M8kMWFxT6UiFtacgZvcUkwilPzq0/NPwtGrpa1gzgKeB3mzY1wvVODF2S
+         Snbw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7Hjj4BIlEeK7TUDsThjDGE81ObOod/85KKCt0Ql3X/8kd7KqsLqigzmv6XABopBYMQyI2ZupM1EGb9+c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIzao2NdxpKUENHbbWhP2tsdhHRmerDxGRgcMp7JzHXX2qYbhW
+	w830b9h2M4xiiFkDdZtpRqZ8oiKgvmAX+byvf1lM03ov5C3gH+PV3NLBwydg5LubGxhcqzbSkuX
+	dJeq/Gg==
+X-Google-Smtp-Source: AGHT+IFpfvIQ0Sg4w0j91B9TGflRTIxP/RoKsnyIB+IfuX0sf2113hN1CEdmW8p2me+OaamqbmaPRnW3Kgnv
+X-Received: from ejbb16.prod.google.com ([2002:a17:906:30d0:b0:ab7:b8ec:cf22])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:2da1:b0:ab6:f06b:4a26
+ with SMTP id a640c23a62f3a-ab7f33e0e2amr761382466b.34.1739437728204; Thu, 13
+ Feb 2025 01:08:48 -0800 (PST)
+Date: Thu, 13 Feb 2025 10:08:20 +0100
+In-Reply-To: <cover.1739437531.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250210-b4-stm32mp2_new_dts-v1-4-e8ef1e666c5e@foss.st.com>
+Mime-Version: 1.0
+References: <cover.1739437531.git.dvyukov@google.com>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <a13f270ed33cedb03ce9ebf9ddbd064854ca0f19.1739437531.git.dvyukov@google.com>
+Subject: [PATCH v7 7/9] perf report: Add latency and parallelism profiling documentation
+From: Dmitry Vyukov <dvyukov@google.com>
+To: namhyung@kernel.org, irogers@google.com, acme@kernel.org, 
+	ak@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 10, 2025 at 04:20:58PM +0100, Amelie Delaunay wrote:
-> From: Alexandre Torgue <alexandre.torgue@foss.st.com>
-> 
-> STM32MP23 family is composed of 3 SoCs defined as following:
-> 
-> -STM32MP231: common part composed of 1*Cortex-A35, common peripherals
-> like SDMMC, UART, SPI, I2C, parallel display, 1*ETH ...
-> 
-> -STM32MP233: STM32MP231 + 1*Cortex-A35 (dual CPU), a second ETH, CAN-FD.
-> 
-> -STM32MP235: STM32MP233 + GPU/AI and video encode/decode, DSI and LDVS
-> display.
-> 
-> A second diversity layer exists for security features/ A35 frequency:
-> -STM32MP23xY, "Y" gives information:
->  -Y = A means A35@1.2GHz + no cryp IP and no secure boot.
->  -Y = C means A35@1.2GHz + cryp IP and secure boot.
->  -Y = D means A35@1.5GHz + no cryp IP and no secure boot.
->  -Y = F means A35@1.5GHz + cryp IP and secure boot.
-> 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-> ---
->  arch/arm64/boot/dts/st/stm32mp231.dtsi  | 1216 +++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/st/stm32mp233.dtsi  |   94 +++
->  arch/arm64/boot/dts/st/stm32mp235.dtsi  |   16 +
->  arch/arm64/boot/dts/st/stm32mp23xc.dtsi |    8 +
->  arch/arm64/boot/dts/st/stm32mp23xf.dtsi |    8 +
->  5 files changed, 1342 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/st/stm32mp231.dtsi b/arch/arm64/boot/dts/st/stm32mp231.dtsi
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..ee93f5412096a7cd30b228b85a5280a551fbfaf4
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/st/stm32mp231.dtsi
-> @@ -0,0 +1,1216 @@
-> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
-> + * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
-> + */
-> +#include <dt-bindings/clock/st,stm32mp25-rcc.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/regulator/st,stm32mp25-regulator.h>
-> +#include <dt-bindings/reset/st,stm32mp25-rcc.h>
-> +
-> +/ {
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			compatible = "arm,cortex-a35";
-> +			device_type = "cpu";
-> +			reg = <0>;
-> +			enable-method = "psci";
-> +			power-domains = <&CPU_PD0>;
-> +			power-domain-names = "psci";
-> +		};
-> +	};
-> +
-> +	arm-pmu {
-> +		compatible = "arm,cortex-a35-pmu";
-> +		interrupts = <GIC_SPI 368 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-affinity = <&cpu0>;
-> +		interrupt-parent = <&intc>;
-> +	};
-> +
-> +	arm_wdt: watchdog {
-> +		compatible = "arm,smc-wdt";
-> +		arm,smc-id = <0xb200005a>;
-> +		status = "disabled";
-> +	};
-> +
-> +	clocks {
+Describe latency and parallelism profiling, related flags, and differences
+with the currently only supported CPU-consumption-centric profiling.
 
-Drop
+Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-> +		clk_dsi_txbyte: txbyteclk {
+---
 
-Use consistent naming style. Either prefix or suffix. Or better, use
-what is recommended.
+Changes in v7:
+ - add tips.txt example with time/time-quantum
+---
+ .../callchain-overhead-calculation.txt        |  5 +-
+ .../cpu-and-latency-overheads.txt             | 85 +++++++++++++++++++
+ tools/perf/Documentation/perf-report.txt      | 49 +++++++----
+ tools/perf/Documentation/tips.txt             |  4 +
+ 4 files changed, 124 insertions(+), 19 deletions(-)
 
-See: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/fixed-clock.yaml?h=v6.11-rc1
-
-> +			#clock-cells = <0>;
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <0>;
-> +		};
-> +
-> +		clk_rcbsec: clk-rcbsec {
-> +			#clock-cells = <0>;
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <64000000>;
-> +		};
-> +	};
-> +
-> +	firmware {
-> +		optee: optee {
-> +			compatible = "linaro,optee-tz";
-> +			method = "smc";
-> +			interrupt-parent = <&intc>;
-> +			interrupts = <GIC_PPI 15 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
-> +		};
-> +
-> +		scmi {
-> +			compatible = "linaro,scmi-optee";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			linaro,optee-channel-id = <0>;
-> +
-> +			scmi_clk: protocol@14 {
-> +				reg = <0x14>;
-> +				#clock-cells = <1>;
-> +			};
-> +
-> +			scmi_reset: protocol@16 {
-> +				reg = <0x16>;
-> +				#reset-cells = <1>;
-> +			};
-> +
-> +			scmi_voltd: protocol@17 {
-> +				reg = <0x17>;
-> +
-> +				scmi_regu: regulators {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					scmi_vddio1: regulator@0 {
-> +						reg = <VOLTD_SCMI_VDDIO1>;
-> +						regulator-name = "vddio1";
-> +					};
-> +					scmi_vddio2: regulator@1 {
-> +						reg = <VOLTD_SCMI_VDDIO2>;
-> +						regulator-name = "vddio2";
-> +					};
-> +					scmi_vddio3: regulator@2 {
-> +						reg = <VOLTD_SCMI_VDDIO3>;
-> +						regulator-name = "vddio3";
-> +					};
-> +					scmi_vddio4: regulator@3 {
-> +						reg = <VOLTD_SCMI_VDDIO4>;
-> +						regulator-name = "vddio4";
-> +					};
-> +					scmi_vdd33ucpd: regulator@5 {
-> +						reg = <VOLTD_SCMI_UCPD>;
-> +						regulator-name = "vdd33ucpd";
-> +					};
-> +					scmi_vdda18adc: regulator@7 {
-> +						reg = <VOLTD_SCMI_ADC>;
-> +						regulator-name = "vdda18adc";
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	intc: interrupt-controller@4ac00000 {
-
-Part of Soc most likely.
-
-> +		compatible = "arm,cortex-a7-gic";
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <1>;
-> +		interrupt-controller;
-> +		reg = <0x0 0x4ac10000 0x0 0x1000>,
-> +		      <0x0 0x4ac20000 0x0 0x2000>,
-> +		      <0x0 0x4ac40000 0x0 0x2000>,
-> +		      <0x0 0x4ac60000 0x0 0x2000>;
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +
-> +		CPU_PD0: power-domain-cpu0 {
-
-All labels are always lowercase.
-
-> +			#power-domain-cells = <0>;
-> +			power-domains = <&CLUSTER_PD>;
-> +		};
-> +
-> +		CLUSTER_PD: power-domain-cluster {
-> +			#power-domain-cells = <0>;
-> +			power-domains = <&RET_PD>;
-> +		};
-> +
-> +		RET_PD: power-domain-retention {
-> +			#power-domain-cells = <0>;
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupt-parent = <&intc>;
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
-> +		always-on;
-> +	};
-> +
-> +	soc@0 {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		interrupt-parent = <&intc>;
-> +		ranges = <0x0 0x0 0x0 0x80000000>;
-
-Same comments as for all other patches.
-
-> +
-> +		hpdma: dma-controller@40400000 {
-> +			compatible = "st,stm32mp25-dma3";
-> +			reg = <0x40400000 0x1000>;
-> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&scmi_clk CK_SCMI_HPDMA1>;
-> +			#dma-cells = <3>;
-> +		};
-> +
-> +		hpdma2: dma-controller@40410000 {
-> +			compatible = "st,stm32mp25-dma3";
-> +			reg = <0x40410000 0x1000>;
-> +			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&scmi_clk CK_SCMI_HPDMA2>;
-> +			#dma-cells = <3>;
-> +		};
-> +
-> +		hpdma3: dma-controller@40420000 {
-> +			compatible = "st,stm32mp25-dma3";
-> +			reg = <0x40420000 0x1000>;
-> +			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&scmi_clk CK_SCMI_HPDMA3>;
-> +			#dma-cells = <3>;
-> +		};
-> +
-> +		rifsc: bus@42080000 {
-> +			compatible = "st,stm32mp25-rifsc", "simple-bus";
-> +			reg = <0x42080000 0x1000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			#access-controller-cells = <1>;
-> +			ranges;
-> +
-> +			i2s2: audio-controller@400b0000 {
-
-Confusing: device has address outside of the bus. What does the bus
-address represent?
-
-> +				compatible = "st,stm32mp25-i2s";
-> +				reg = <0x400b0000 0x400>;
-> +				#sound-dai-cells = <0>;
-> +				interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&rcc CK_BUS_SPI2>, <&rcc CK_KER_SPI2>;
-> +				clock-names = "pclk", "i2sclk";
-> +				resets = <&rcc SPI2_R>;
-> +				dmas = <&hpdma 51 0x43 0x12>,
-> +				       <&hpdma 52 0x43 0x21>;
-> +				dma-names = "rx", "tx";
-> +				access-controllers = <&rifsc 23>;
-> +				status = "disabled";
-> +			};
-> +
-
-...
-
-> +			sdmmc1: mmc@48220000 {
-> +				compatible = "st,stm32mp25-sdmmc2", "arm,pl18x", "arm,primecell";
-> +				arm,primecell-periphid = <0x00353180>;
-> +				reg = <0x48220000 0x400>, <0x44230400 0x8>;
-> +				interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&rcc CK_KER_SDMMC1 >;
-> +				clock-names = "apb_pclk";
-> +				resets = <&rcc SDMMC1_R>;
-> +				cap-sd-highspeed;
-> +				cap-mmc-highspeed;
-> +				max-frequency = <120000000>;
-> +				access-controllers = <&rifsc 76>;
-> +				status = "disabled";
-> +			};
-> +
-> +			ethernet1: ethernet@482c0000 {
-> +				compatible = "st,stm32mp25-dwmac", "snps,dwmac-5.20";
-> +				reg = <0x482c0000 0x4000>;
-> +				reg-names = "stmmaceth";
-> +				interrupts-extended = <&intc GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>;
-
-Why extended?
-
-> +				interrupt-names = "macirq";
-> +				clock-names = "stmmaceth",
-> +					      "mac-clk-tx",
-> +					      "mac-clk-rx",
-> +					      "ptp_ref",
-> +					      "ethstp",
-> +					      "eth-ck";
-
-...
-
-> +		rcc: clock-controller@44200000 {
-> +			compatible = "st,stm32mp25-rcc";
-> +			reg = <0x44200000 0x10000>;
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +			clocks = <&scmi_clk CK_SCMI_HSE>,
-> +				<&scmi_clk CK_SCMI_HSI>,
-> +				<&scmi_clk CK_SCMI_MSI>,
-> +				<&scmi_clk CK_SCMI_LSE>,
-> +				<&scmi_clk CK_SCMI_LSI>,
-> +				<&scmi_clk CK_SCMI_HSE_DIV2>,
-> +				<&scmi_clk CK_SCMI_ICN_HS_MCU>,
-> +				<&scmi_clk CK_SCMI_ICN_LS_MCU>,
-> +				<&scmi_clk CK_SCMI_ICN_SDMMC>,
-> +				<&scmi_clk CK_SCMI_ICN_DDR>,
-> +				<&scmi_clk CK_SCMI_ICN_DISPLAY>,
-> +				<&scmi_clk CK_SCMI_ICN_HSL>,
-> +				<&scmi_clk CK_SCMI_ICN_NIC>,
-> +				<&scmi_clk CK_SCMI_ICN_VID>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_07>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_08>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_09>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_10>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_11>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_12>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_13>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_14>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_15>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_16>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_17>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_18>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_19>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_20>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_21>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_22>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_23>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_24>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_25>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_26>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_27>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_28>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_29>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_30>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_31>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_32>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_33>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_34>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_35>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_36>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_37>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_38>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_39>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_40>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_41>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_42>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_43>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_44>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_45>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_46>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_47>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_48>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_49>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_50>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_51>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_52>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_53>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_54>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_55>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_56>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_57>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_58>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_59>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_60>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_61>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_62>,
-> +				<&scmi_clk CK_SCMI_FLEXGEN_63>,
-> +				<&scmi_clk CK_SCMI_ICN_APB1>,
-> +				<&scmi_clk CK_SCMI_ICN_APB2>,
-> +				<&scmi_clk CK_SCMI_ICN_APB3>,
-> +				<&scmi_clk CK_SCMI_ICN_APB4>,
-> +				<&scmi_clk CK_SCMI_ICN_APBDBG>,
-> +				<&scmi_clk CK_SCMI_TIMG1>,
-> +				<&scmi_clk CK_SCMI_TIMG2>,
-> +				<&scmi_clk CK_SCMI_PLL3>,
-> +				<&clk_dsi_txbyte>;
-> +				access-controllers = <&rifsc 156>;
-> +		};
-> +
-> +		exti1: interrupt-controller@44220000 {
-> +			compatible = "st,stm32mp1-exti", "syscon";
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			reg = <0x44220000 0x400>;
-> +			interrupts-extended =
-
-Why extended?
-
-> +				<&intc GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_0 */
-> +				<&intc GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 273 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 274 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 275 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 276 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 277 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_10 */
-> +				<&intc GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 1   IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>,
-> +				<0>,						/* EXTI_20 */
-> +				<&intc GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_30 */
-> +				<&intc GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
-> +				<0>,
-> +				<&intc GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_40 */
-> +				<&intc GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_50 */
-> +				<0>,
-> +				<0>,
-> +				<0>,
-> +				<0>,
-> +				<0>,
-> +				<0>,
-> +				<0>,
-> +				<0>,
-> +				<&intc GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>,
-> +				<0>,						/* EXTI_60 */
-> +				<&intc GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>,
-> +				<0>,
-> +				<0>,
-> +				<&intc GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>,
-> +				<0>,
-> +				<0>,
-> +				<&intc GIC_SPI 10  IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-> +				<0>,
-> +				<&intc GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_70 */
-> +				<0>,
-> +				<&intc GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>,
-> +				<0>,						/* EXTI_80 */
-> +				<0>,
-> +				<0>,
-> +				<&intc GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&intc GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		syscfg: syscon@44230000 {
-> +			compatible = "st,stm32mp25-syscfg", "syscon";
-> +			reg = <0x44230000 0x10000>;
-> +		};
-> +
-> +		pinctrl: pinctrl@44240000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-
-Please fix coding style everywhere here.
-
-
-> +			compatible = "st,stm32mp257-pinctrl";
-> +			ranges = <0 0x44240000 0xa0400>;
-> +			interrupt-parent = <&exti1>;
-> +			st,syscfg = <&exti1 0x60 0xff>;
-> +			pins-are-numbered;
-> +
-
-...
-
-> diff --git a/arch/arm64/boot/dts/st/stm32mp23xc.dtsi b/arch/arm64/boot/dts/st/stm32mp23xc.dtsi
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..e33b00b424e1207dc6212e75235785f8c61e5055
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/st/stm32mp23xc.dtsi
-> @@ -0,0 +1,8 @@
-> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
-> + * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
-> + */
-> +
-
-What is the point of this file?
-
-Best regards,
-Krzysztof
+diff --git a/tools/perf/Documentation/callchain-overhead-calculation.txt b/tools/perf/Documentation/callchain-overhead-calculation.txt
+index 1a757927195ed..e0202bf5bd1a0 100644
+--- a/tools/perf/Documentation/callchain-overhead-calculation.txt
++++ b/tools/perf/Documentation/callchain-overhead-calculation.txt
+@@ -1,7 +1,8 @@
+ Overhead calculation
+ --------------------
+-The overhead can be shown in two columns as 'Children' and 'Self' when
+-perf collects callchains.  The 'self' overhead is simply calculated by
++The CPU overhead can be shown in two columns as 'Children' and 'Self'
++when perf collects callchains (and corresponding 'Wall' columns for
++wall-clock overhead).  The 'self' overhead is simply calculated by
+ adding all period values of the entry - usually a function (symbol).
+ This is the value that perf shows traditionally and sum of all the
+ 'self' overhead values should be 100%.
+diff --git a/tools/perf/Documentation/cpu-and-latency-overheads.txt b/tools/perf/Documentation/cpu-and-latency-overheads.txt
+new file mode 100644
+index 0000000000000..3b6d637054651
+--- /dev/null
++++ b/tools/perf/Documentation/cpu-and-latency-overheads.txt
+@@ -0,0 +1,85 @@
++CPU and latency overheads
++-------------------------
++There are two notions of time: wall-clock time and CPU time.
++For a single-threaded program, or a program running on a single-core machine,
++these notions are the same. However, for a multi-threaded/multi-process program
++running on a multi-core machine, these notions are significantly different.
++Each second of wall-clock time we have number-of-cores seconds of CPU time.
++Perf can measure overhead for both of these times (shown in 'overhead' and
++'latency' columns for CPU and wall-clock time correspondingly).
++
++Optimizing CPU overhead is useful to improve 'throughput', while optimizing
++latency overhead is useful to improve 'latency'. It's important to understand
++which one is useful in a concrete situation at hand. For example, the former
++may be useful to improve max throughput of a CI build server that runs on 100%
++CPU utilization, while the latter may be useful to improve user-perceived
++latency of a single interactive program build.
++These overheads may be significantly different in some cases. For example,
++consider a program that executes function 'foo' for 9 seconds with 1 thread,
++and then executes function 'bar' for 1 second with 128 threads (consumes
++128 seconds of CPU time). The CPU overhead is: 'foo' - 6.6%, 'bar' - 93.4%.
++While the latency overhead is: 'foo' - 90%, 'bar' - 10%. If we try to optimize
++running time of the program looking at the (wrong in this case) CPU overhead,
++we would concentrate on the function 'bar', but it can yield only 10% running
++time improvement at best.
++
++By default, perf shows only CPU overhead. To show latency overhead, use
++'perf record --latency' and 'perf report':
++
++-----------------------------------
++Overhead  Latency  Command
++  93.88%   25.79%  cc1
++   1.90%   39.87%  gzip
++   0.99%   10.16%  dpkg-deb
++   0.57%    1.00%  as
++   0.40%    0.46%  sh
++-----------------------------------
++
++To sort by latency overhead, use 'perf report --latency':
++
++-----------------------------------
++Latency  Overhead  Command
++ 39.87%     1.90%  gzip
++ 25.79%    93.88%  cc1
++ 10.16%     0.99%  dpkg-deb
++  4.17%     0.29%  git
++  2.81%     0.11%  objtool
++-----------------------------------
++
++To get insight into the difference between the overheads, you may check
++parallelization histogram with '--sort=latency,parallelism,comm,symbol --hierarchy'
++flags. It shows fraction of (wall-clock) time the workload utilizes different
++numbers of cores ('Parallelism' column). For example, in the following case
++the workload utilizes only 1 core most of the time, but also has some
++highly-parallel phases, which explains significant difference between
++CPU and wall-clock overheads:
++
++-----------------------------------
++  Latency  Overhead     Parallelism / Command / Symbol
+++  56.98%     2.29%     1
+++  16.94%     1.36%     2
+++   4.00%    20.13%     125
+++   3.66%    18.25%     124
+++   3.48%    17.66%     126
+++   3.26%     0.39%     3
+++   2.61%    12.93%     123
++-----------------------------------
++
++By expanding corresponding lines, you may see what commands/functions run
++at the given parallelism level:
++
++-----------------------------------
++  Latency  Overhead     Parallelism / Command / Symbol
++-  56.98%     2.29%     1
++      32.80%     1.32%     gzip
++       4.46%     0.18%     cc1
++       2.81%     0.11%     objtool
++       2.43%     0.10%     dpkg-source
++       2.22%     0.09%     ld
++       2.10%     0.08%     dpkg-genchanges
++-----------------------------------
++
++To see the normal function-level profile for particular parallelism levels
++(number of threads actively running on CPUs), you may use '--parallelism'
++filter. For example, to see the profile only for low parallelism phases
++of a workload use '--latency --parallelism=1-2' flags.
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 66794131aec48..3376c47105750 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -44,7 +44,7 @@ OPTIONS
+ --comms=::
+ 	Only consider symbols in these comms. CSV that understands
+ 	file://filename entries.  This option will affect the percentage of
+-	the overhead column.  See --percentage for more info.
++	the overhead and latency columns.  See --percentage for more info.
+ --pid=::
+         Only show events for given process ID (comma separated list).
+ 
+@@ -54,12 +54,12 @@ OPTIONS
+ --dsos=::
+ 	Only consider symbols in these dsos. CSV that understands
+ 	file://filename entries.  This option will affect the percentage of
+-	the overhead column.  See --percentage for more info.
++	the overhead and latency columns.  See --percentage for more info.
+ -S::
+ --symbols=::
+ 	Only consider these symbols. CSV that understands
+ 	file://filename entries.  This option will affect the percentage of
+-	the overhead column.  See --percentage for more info.
++	the overhead and latency columns.  See --percentage for more info.
+ 
+ --symbol-filter=::
+ 	Only show symbols that match (partially) with this filter.
+@@ -68,6 +68,16 @@ OPTIONS
+ --hide-unresolved::
+         Only display entries resolved to a symbol.
+ 
++--parallelism::
++        Only consider these parallelism levels. Parallelism level is the number
++        of threads that actively run on CPUs at the time of sample. The flag
++        accepts single number, comma-separated list, and ranges (for example:
++        "1", "7,8", "1,64-128"). This is useful in understanding what a program
++        is doing during sequential/low-parallelism phases as compared to
++        high-parallelism phases. This option will affect the percentage of
++        the overhead and latency columns. See --percentage for more info.
++        Also see the `CPU and latency overheads' section for more details.
++
+ --latency::
+         Show latency-centric profile rather than the default
+         CPU-consumption-centric profile
+@@ -92,6 +102,7 @@ OPTIONS
+ 	entries are displayed as "[other]".
+ 	- cpu: cpu number the task ran at the time of sample
+ 	- socket: processor socket number the task ran at the time of sample
++	- parallelism: number of running threads at the time of sample
+ 	- srcline: filename and line number executed at the time of sample.  The
+ 	DWARF debugging info must be provided.
+ 	- srcfile: file name of the source file of the samples. Requires dwarf
+@@ -102,12 +113,14 @@ OPTIONS
+ 	- cgroup_id: ID derived from cgroup namespace device and inode numbers.
+ 	- cgroup: cgroup pathname in the cgroupfs.
+ 	- transaction: Transaction abort flags.
+-	- overhead: Overhead percentage of sample
+-	- overhead_sys: Overhead percentage of sample running in system mode
+-	- overhead_us: Overhead percentage of sample running in user mode
+-	- overhead_guest_sys: Overhead percentage of sample running in system mode
++	- overhead: CPU overhead percentage of sample.
++	- latency: latency (wall-clock) overhead percentage of sample.
++	  See the `CPU and latency overheads' section for more details.
++	- overhead_sys: CPU overhead percentage of sample running in system mode
++	- overhead_us: CPU overhead percentage of sample running in user mode
++	- overhead_guest_sys: CPU overhead percentage of sample running in system mode
+ 	on guest machine
+-	- overhead_guest_us: Overhead percentage of sample running in user mode on
++	- overhead_guest_us: CPU overhead percentage of sample running in user mode on
+ 	guest machine
+ 	- sample: Number of sample
+ 	- period: Raw number of event count of sample
+@@ -130,8 +143,8 @@ OPTIONS
+ 	- weight2: Average value of event specific weight (2nd field of weight_struct).
+ 	- weight3: Average value of event specific weight (3rd field of weight_struct).
+ 
+-	By default, comm, dso and symbol keys are used.
+-	(i.e. --sort comm,dso,symbol)
++	By default, overhead, comm, dso and symbol keys are used.
++	(i.e. --sort overhead,comm,dso,symbol).
+ 
+ 	If --branch-stack option is used, following sort keys are also
+ 	available:
+@@ -206,9 +219,9 @@ OPTIONS
+ --fields=::
+ 	Specify output field - multiple keys can be specified in CSV format.
+ 	Following fields are available:
+-	overhead, overhead_sys, overhead_us, overhead_children, sample, period,
+-	weight1, weight2, weight3, ins_lat, p_stage_cyc and retire_lat.  The
+-	last 3 names are alias for the corresponding weights.  When the weight
++	overhead, latency, overhead_sys, overhead_us, overhead_children, sample,
++	period, weight1, weight2, weight3, ins_lat, p_stage_cyc and retire_lat.
++	The last 3 names are alias for the corresponding weights.  When the weight
+ 	fields are used, they will show the average value of the weight.
+ 
+ 	Also it can contain any sort key(s).
+@@ -294,7 +307,7 @@ OPTIONS
+ 	Accumulate callchain of children to parent entry so that then can
+ 	show up in the output.  The output will have a new "Children" column
+ 	and will be sorted on the data.  It requires callchains are recorded.
+-	See the `overhead calculation' section for more details. Enabled by
++	See the `Overhead calculation' section for more details. Enabled by
+ 	default, disable with --no-children.
+ 
+ --max-stack::
+@@ -447,9 +460,9 @@ OPTIONS
+ 	--call-graph option for details.
+ 
+ --percentage::
+-	Determine how to display the overhead percentage of filtered entries.
+-	Filters can be applied by --comms, --dsos and/or --symbols options and
+-	Zoom operations on the TUI (thread, dso, etc).
++	Determine how to display the CPU and latency overhead percentage
++	of filtered entries. Filters can be applied by --comms, --dsos, --symbols
++	and/or --parallelism options and Zoom operations on the TUI (thread, dso, etc).
+ 
+ 	"relative" means it's relative to filtered entries only so that the
+ 	sum of shown entries will be always 100%.  "absolute" means it retains
+@@ -632,6 +645,8 @@ include::itrace.txt[]
+ --skip-empty::
+ 	Do not print 0 results in the --stat output.
+ 
++include::cpu-and-latency-overheads.txt[]
++
+ include::callchain-overhead-calculation.txt[]
+ 
+ SEE ALSO
+diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
+index 67b326ba00407..3fee9b2a88ea9 100644
+--- a/tools/perf/Documentation/tips.txt
++++ b/tools/perf/Documentation/tips.txt
+@@ -62,3 +62,7 @@ To show context switches in perf report sample context add --switch-events to pe
+ To show time in nanoseconds in record/report add --ns
+ To compare hot regions in two workloads use perf record -b -o file ... ; perf diff --stream file1 file2
+ To compare scalability of two workload samples use perf diff -c ratio file1 file2
++For latency profiling, try: perf record/report --latency
++For parallelism histogram, try: perf report --hierarchy --sort latency,parallelism,comm,symbol
++To analyze particular parallelism levels, try: perf report --latency --parallelism=32-64
++To see how parallelism changes over time, try: perf report -F time,latency,parallelism --time-quantum=1s
+-- 
+2.48.1.502.g6dc24dfdaf-goog
 
