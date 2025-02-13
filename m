@@ -1,629 +1,272 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11020081.outbound.protection.outlook.com [52.101.193.81])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2046.outbound.protection.outlook.com [40.107.223.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560B6221725
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 12:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD56227E90;
+	Thu, 13 Feb 2025 12:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739450069; cv=fail; b=uw1EtPoN3b014ITAibt0WRtH0NkS9O3FbYYG1vqjFVVnjZdzaWEE9YtLBoQyc0ueiG/qIrL7uS+mU41BLRDXMZZZSyFijqtBI4G6ELCBQ2ZRdLoxnMajQ8WhM27+w1oFruLnN+p7rD5Q75wMAmfbrp9xjRi3ChfU/WfHJXzJBGM=
+	t=1739450164; cv=fail; b=a6367O5t8e71mGUniubSW4JP7XJefcVBGQz8qwGwNpUa5Sv6Syuddjot2F7GajFJAANBrnq8d9dGq/2lOqMiaNaoeL3FYxSRKd3ja9T2HUb6iv4IT61LsOw+9DJY3N+21DRa1xCanqj9isqOTZeqxP2f9KPZE7qyR6v+pOlmtJs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739450069; c=relaxed/simple;
-	bh=NBVR1ofA4tcZ9pmd1jp0UbGHTyxM4QRHm8RZ8GqLC2Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ZpnwEjxoEPEAXV/cHx9dZLL1TF1oV7HtuceatTntkcY1LcChY26MWYmqlXbwr8BSPzx4ZW0mmPoSsavdcAQPNzhq60DovD9g4BWJgRFV2Y1ZrTzsT4aOzuPWNd3tS0Naxso4W1F0fm4DLGhsz4kD/CyQXVitIZs5DGQXRuvD0TY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analogixsemi.com; spf=pass smtp.mailfrom=analogixsemi.com; dkim=pass (1024-bit key) header.d=analogixsemi.com header.i=@analogixsemi.com header.b=MHc4eOJg; arc=fail smtp.client-ip=52.101.193.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analogixsemi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analogixsemi.com
+	s=arc-20240116; t=1739450164; c=relaxed/simple;
+	bh=7EwSUJ2rAP32QZEpY84ec90ouDmkQuHzPGXtw+Eqp9Y=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UUuWUCDox1dVfZNAIALRYJqA5gUF+/nhvpSvAoTXTHVOxYyZBGiSwjc8M3hDUMa0e0xOGLejJJRv0rExEpLicpwO+p4Ayx1Y/cpXke1D2GlU7VnTTBndMwtX85NMc02T+ocpEKVhLsRGn6FOItX1lXgk0F1YRnc/gsBxdxmG/ag=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NJj9BVwP; arc=fail smtp.client-ip=40.107.223.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=analogixsemi.com header.i=@analogixsemi.com header.b="MHc4eOJg"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NJj9BVwP"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ln/zJi42KuwCj9gCAdtYmJT+bN+od/xvrLBGAlEim/+Ypq65C7h67uG4dONjQ40pVzis/ZSR7HUpcZDxAzVe+/cnFRwjoQQxLUH16KnLJ34NygxwMcTA9/5sKkXb+mNwKI1tfKzTovRyEwBBa+VP22+5OJsvxxve/yaKz6PNu13LLozscGsXqPnvuBQ6bqH0IFqUuAq7YRxY+k1Y4pSAS/KLbXHtVQNbLKW4yqcrh+2GTyAgre59rxJCv+oa/sGgwIUKuBoBmZeqrk07Y5NWFAVoBW4Jsr50o72hQLBS+jzeuCB2PDj6bYClpG4MS+bnzIEYpAH5jArAVD36Iy9Axw==
+ b=M/a8rHLD+/h2F7KFrvxbLhr01s0Xv3i8R3sJDxzITAheEq7h0jnHbzyvNdpM/W1hukrQGUVUz+a04wiNAKOafT9lFMrI6OLRVIrqkn984fa4ipI6Y+zrvLydx8eN4SsR6JI/i57QKPZhAd5ryw5jTzy8+mbw3yHnH9aTx4UhUWUbkkIOSkDLjkZqcFBLNzVYGXrOZO2OsJbUxBltBvR/tg3/05zXS8EDbU5x5NQug2mRjeNy6VIdd6D+8FdobMYnIY4UnQZuJorLu6L2fpDouveVIMXvnenLudbxEKbUbCSsEkfmD1mfgnSTGh5jfqXASmTQZqKHKRq9bvCpjf7t2A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KyuhkLiSd3DLPGa1/SVI4AATqiVzjfkDU4NHpNBTc3E=;
- b=IDVqBiV1sl3BkCWdoasDzNpM+0W7mKq94iRNGvNhmBqn2bGaGVr4Mr5t7DDJLUWsVVAGs7JRcEqKJXVLn47Ptt9JCU1sf3gt6KHF+3kJ6Bqy2krMsZqmYhLY7XeCCDoRUtYLs6KnAhDug+WZLAXJYXAuYyNGhRNbI4zLysI/U9LcmpyIo8Dx4j6lgjtBiRUNDseSt01gdJW2XyyOdo3DOpH+CLnDcdpo/YvSBCXez45MToMSXdLqehgW/S708EPTraA8MURJT3IT6j9FaCXoYXdTWYxQPJmabg5HgJc7y1y5nuyLl67clp1gmqENmoLY1NG22aMj108ri0xDOzsnEA==
+ bh=7EwSUJ2rAP32QZEpY84ec90ouDmkQuHzPGXtw+Eqp9Y=;
+ b=A+w8MSeIioNZxK7AfnX1YuurucioMTD7wrHMQUIrCQ/a7qh5j6yNsBdiFZT72dUDTStdkPK+4nqCjpHBkm3K34xnCNKlwo34UzNmZex9RNYeR6M03xR9M37X6UPQ2ekxk9m6hHlrlhrNYqmfYzcB3klnlBjgbz2ERv6D3toO3O4/X3VByq/HcUD/wmBQSvGah7Ax9owHfS8fQLO11Elf3QiZhZb4J/qrWTlzDRHIDjMTTo3H2iQksuBfDOMUuNq/lynh8+p/LTn4/caLuIidTVXlkVEI2c4J/Z0XUaltABTJha/8/mcYwiVaWEZr9TzFnyHs2wi+YEj126iBlxJeHQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analogixsemi.com;
- s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KyuhkLiSd3DLPGa1/SVI4AATqiVzjfkDU4NHpNBTc3E=;
- b=MHc4eOJgec4z9HELiy0JsSE/f9eaFtFNG2028tVmWOYhrEEbCpzwJk85oJyY8FluebTU3TXkWOBPYpM3LDCr58VsWGVATCYvTta4sCexU30Ojm7gl9MFQEVTD60Um5EF8pKv+ZkTeg1u+tbsa9rAGT2Hr2BUED7DYVEkeheuSdM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=analogixsemi.com;
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
- by MW4PR04MB7218.namprd04.prod.outlook.com (2603:10b6:303:76::23) with
+ bh=7EwSUJ2rAP32QZEpY84ec90ouDmkQuHzPGXtw+Eqp9Y=;
+ b=NJj9BVwPf+pz/kNq4nyAhUDKLutNIdPsLMdBKhKVvWgEtT20jH8tukD28JmY9ELC2M5WfscHACsxLGxGF/jzwz7dxixc/LijJde0F8kH5tDehOY6zp9lXdrbwdXteVWRV5NgmkJtA3rLJ4d0eTsWNc4uZza+DGfZ4C9Lk7EmPhXnuOvDgRW4bQSQ072Esw8RGnGn/0YXZRdi9Zp4HnA3hXI+OXcUsmCNgPie5EhW5FDLs/kiqnUmYeoKUw/Mx4b556kYtoc/oTKbXFy2RNrnRhLGqB1IOxjnznUy/cAgj/GAJvWO4hZOvU/4i7TmCVe9EgAXsakAsjkGUuUihnjuig==
+Received: from MN0PR12MB5716.namprd12.prod.outlook.com (2603:10b6:208:373::14)
+ by DS0PR12MB9059.namprd12.prod.outlook.com (2603:10b6:8:c5::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Thu, 13 Feb
- 2025 12:34:22 +0000
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::5a7e:9e8c:138f:1815]) by BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::5a7e:9e8c:138f:1815%5]) with mapi id 15.20.8445.015; Thu, 13 Feb 2025
- 12:34:21 +0000
-From: Xin Ji <xji@analogixsemi.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: bliang@analogixsemi.com,
-	qwen@analogixsemi.com,
-	treapking@google.com,
-	Xin Ji <xji@analogixsemi.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/bridge:anx7625: Enable DSC feature
-Date: Thu, 13 Feb 2025 20:33:30 +0800
-Message-Id: <20250213123331.3016824-1-xji@analogixsemi.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TP0P295CA0029.TWNP295.PROD.OUTLOOK.COM (2603:1096:910:5::9)
- To BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
+ 2025 12:35:59 +0000
+Received: from MN0PR12MB5716.namprd12.prod.outlook.com
+ ([fe80::1770:161a:675f:7861]) by MN0PR12MB5716.namprd12.prod.outlook.com
+ ([fe80::1770:161a:675f:7861%4]) with mapi id 15.20.8445.013; Thu, 13 Feb 2025
+ 12:35:59 +0000
+From: Kartik Rajput <kkartik@nvidia.com>
+To: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+CC: Jon Hunter <jonathanh@nvidia.com>, "robh@kernel.org" <robh@kernel.org>,
+	"robert.marko@sartura.hr" <robert.marko@sartura.hr>, "arnd@kernel.org"
+	<arnd@kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "geert+renesas@glider.be"
+	<geert+renesas@glider.be>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "jirislaby@kernel.org" <jirislaby@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "hvilleneuve@dimonoff.com"
+	<hvilleneuve@dimonoff.com>, "gregkh@linuxfoundation.org"
+	<gregkh@linuxfoundation.org>, "schnelle@linux.ibm.com"
+	<schnelle@linux.ibm.com>, "linux-serial@vger.kernel.org"
+	<linux-serial@vger.kernel.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] serial: tegra-utc: Add driver for Tegra UART Trace
+ Controller (UTC)
+Thread-Topic: [PATCH v4 2/2] serial: tegra-utc: Add driver for Tegra UART
+ Trace Controller (UTC)
+Thread-Index: AQHbfgc9ouGFIJvl6UOQeoaxqnNceLNFK5sA
+Date: Thu, 13 Feb 2025 12:35:59 +0000
+Message-ID: <a167c98a02e8020c81f377d2aea0878a53965581.camel@nvidia.com>
+References: <20250213100442.45773-1-kkartik@nvidia.com>
+	 <20250213100442.45773-3-kkartik@nvidia.com>
+	 <Z63SAPtHXR6KN9qa@smile.fi.intel.com>
+In-Reply-To: <Z63SAPtHXR6KN9qa@smile.fi.intel.com>
+Reply-To: Kartik Rajput <kkartik@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.52.3-0ubuntu1 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR12MB5716:EE_|DS0PR12MB9059:EE_
+x-ms-office365-filtering-correlation-id: 4141dfb5-1fdf-48f1-1830-08dd4c2af83e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?S1pvVjBmV1g0S1hod3Z4SkNMeEU3eHVCcVMrOXZYQUFSOEUrS2hCMnhLWFUr?=
+ =?utf-8?B?a2N6dGlQNnM0dUc3Zy83OFRPUVRFSVRzZDIrS0dXVEZmTXVqTkprMUczOWNk?=
+ =?utf-8?B?UGJnMVBDRm9aTE5pdHR5R1ptZ3RqaGpvdGRlZ1hudHV3anNvUXRya2x6ZjVI?=
+ =?utf-8?B?ZGg2ME9TZU5GMjJJaE5YOTBFUGRWOG1rdU4rWmVnUkdpdUZRVlFuc0VKd0Zs?=
+ =?utf-8?B?OVNxNysrSVlXdkRVTldPaEt6b3R1UGlqZHpmL1ZTLzJaTGd4bVhXYitiN0J5?=
+ =?utf-8?B?c3Vwdyt4cXBMbFBzVmM3SHJ0WjdHcWdVMDlvSmUyZFBEODQwZGFXZnJYM1oz?=
+ =?utf-8?B?UEFnMVlWbE9QcEo5dncxWUliQmxKYW9jREhZVVBsdTNTSVNCQWNIUmQ3Mi9q?=
+ =?utf-8?B?NTlHSzFLV01hWDJab1NobC9nWmNoRHE4V3pDVjZDWjduRitmbHMvYVNhQ29a?=
+ =?utf-8?B?S0dzc2o3QmJjc0ErR1VyeWR6TWt3V0hMT2RRUHFYbHFtVWkxeG1KNlNRL0hj?=
+ =?utf-8?B?VHJFS010WHl3K3pia0RnY3BKYUJjQ3FMQXdmRVMzdk1uOS9RanpMYXVISEY0?=
+ =?utf-8?B?UDRRNG0reGVnWkw5K0M3LzBSUm9uV3NFRDkrKzBLcE5ETUs2bmJrenZscW9S?=
+ =?utf-8?B?ZHZRU2JUUW1Fd1pOMFRvTnJYU0dHQ0kyYnUxdFZwaGo2U2NUOTNFK2huS3Fz?=
+ =?utf-8?B?eUNVdmtWckZYZVoxL1Q0OEpUNzNXNTFhUllONmpIUG5nNEpIRk1GMTFwMnNJ?=
+ =?utf-8?B?ZkxFWXdidEVQaU5iMzJOaDV0ekpONTh3WHJWd1RnNHVBbmxyVFlYM0dPeTA5?=
+ =?utf-8?B?M1lqRm02c3BScmVnNkVBU1BheUdWVFZSVHRmQzJQbGhMTzBPd3NPRW9sUWdH?=
+ =?utf-8?B?SU5kc3N4N2JhMEt3a3NycEJpeS9aQjNBdnNmMjFNZzNmQXhTVXhtWW9ja0Vw?=
+ =?utf-8?B?Q3hNVXFaeDJLWnNHTWlBenhpbUlwYmpPNmMzQkFuVE1VTDNCSGkvb01LeGJP?=
+ =?utf-8?B?NUVIeGtCUFBHV1NDS014cUEwV2xjVVJVL2ZWYXFzTE5sQXN5ZGNnTzJYZlND?=
+ =?utf-8?B?MEFKNCtUWUhMbjl1YkEySWI2ZUk3TEFCVlJKbUtJK2hsays4cFEwdGttZlkr?=
+ =?utf-8?B?cENZQjZQYmtuRi9BcUFTSndTdERBWjc3ZnBlakFvRzduN2lOWjNZdjRkVThk?=
+ =?utf-8?B?RmgvQ2ViQVpzSnZ1Vk9yZDY3VTJhYUc3QVhLazZ6cVRMRy9oRWZheHRxTE5v?=
+ =?utf-8?B?cWhlaHpERDdEbW1YVjNVUTZLaGRxYmNaekZFbzNZNFlvWVBBSVR0ZXY5UjY3?=
+ =?utf-8?B?cFI2NGl3ZlJ6MFd4ZG9pRzZQWUNpRlppSGc1RlIrUUNHa2JQWi9JTWdWcXBL?=
+ =?utf-8?B?QkJhaDAreW9ZRWc3QStZL1FlR1ZFcEFwNGVtTVJ4cVVMOEE4amgyUkZiN24y?=
+ =?utf-8?B?alM0V0o3eWtDK2QyS0tCWmgxYUoxTFRiVUFBcG40b0hZd29MemlXaE8zaklF?=
+ =?utf-8?B?S2ZCMmxLNjhXd1Z5Tk9KY3czUk9uWU14aEpLdnZ6UVBrL0FCMHIzaFExMDdw?=
+ =?utf-8?B?VlMvV2tFUjR5c1pzRHZGTXcxZGd3SFVNUkhUN2g0TjFJSmpMaFhrWE15Zmtn?=
+ =?utf-8?B?SVZRL25kdGFRYVZpMlNJc2ZrQVZJRk9Wd012OXU2TTFrQnVBelErRnhVdWlo?=
+ =?utf-8?B?QmNhUnhheWJ3WWdTSmU4UjFheDV4YVlYQ2lBeDVCRStRTkl6MG0waGFWR3g3?=
+ =?utf-8?B?Wjl6OEZ0amh6SmNTaDhTU3duTkNkbGZHc1ZBMGVFYWRhL29Db2xmYlJpSGVv?=
+ =?utf-8?B?cXptcDZJZnQ2UUVHOExDUTh6MlNDRUFXZGVxMWRNaitUa2ZPNjZzbVJFdEtn?=
+ =?utf-8?B?Zyt3RTNxZWxrNGQwMzFCQyttWjVOang1ajhFY3ByNVowRm9MYmkzNk5CeFBa?=
+ =?utf-8?Q?zUKjZcqgFITgV6HbfGLxs1+OKX9jw3VW?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5716.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?MU9EbnMzQUl4aWtSNGt2THpCd2tuU0wrV20zOC83N0NiLzc5VEtpVXAyRktU?=
+ =?utf-8?B?TnZwMTZhTncvbDc3c2VLdmhaOVRxRGIvNC83THk0ZnMrWXEvUFRDcU9BSUdm?=
+ =?utf-8?B?N0VVUG9MQ09sUi9ZSnY2Z1JpenVTWUdYT3J5NlFzV2xBOTNhbndqU2pKckYw?=
+ =?utf-8?B?dmdWNUNzdUl6b1AyWXArYUdNeUhUYW94cTN2NjlhRm1pd2puQlZwYjFxQUcw?=
+ =?utf-8?B?K09WMHdPMzRDc1U1Tnpsd3FNcE5QRlhFdkYyU0pyUzZUVUJRTEFWNG9RRjNu?=
+ =?utf-8?B?UExianJPWWhkeEEyNmF4T0NKZG0ramhTUHdCdkFubDdjaGgyV1BMOTVFMTUr?=
+ =?utf-8?B?bW9mN1daNjdkOWpIbS91djhETm52em8zMDdTSk83N3lETFI2cms2TVpHTGQ0?=
+ =?utf-8?B?c0tZTE14QmdVM0lLcHBEV1lPN3BGWG5keXFoczlRbE43MTRkRng3SzhkanVS?=
+ =?utf-8?B?WWdzTXQxbzNnRG9vdFNXODc1cUNHV2t4K09pa0pYL2tneC9KUjcwZTZjVGpX?=
+ =?utf-8?B?ZUh5M1lveEJCVXNhSHVHUmFIZDIvSXhTZG1GZkFpaE5Yc29pN1NEK29KRmZU?=
+ =?utf-8?B?akJRYk1QVlgrMGlKdktQTktHMHA1OSszdDJQSlIrV0F4cU1YOWRvQm94b1RC?=
+ =?utf-8?B?cVR4UmxCb3M4RTllc0NzRml6OEJCTi9jeXdHRU9uTTk1d1FoV2ZZOUdIMEp4?=
+ =?utf-8?B?dkt5Nk9sRGhnUVhmY3ZQU0lVejh5QzhmQzBXZXVocTJnY3E1cDhBOTg3dll3?=
+ =?utf-8?B?dEhIOHF2VUdPOStpSGU0NlJyenFKeUhhbmJBdkxCT0FsL3RWSDQxWHdKeG1B?=
+ =?utf-8?B?MFpvd1d4TFFCNHhjYy9TUTY5RjEzVWVncGVLUnM2dTNQYzFXdTFUWWlkY09M?=
+ =?utf-8?B?NXR2UjhQNWRyWGZHS2lsVzhaTElUUzJQOXFaRldHbURyUUcvaVNoVEtYL0Js?=
+ =?utf-8?B?bnRSMHFaZWJJbWRjcjZONnRwSzlUWFMxQU43bUhhT2tnekxxOW1vM3BWSDVO?=
+ =?utf-8?B?T2I2bzlFM3djUS8wNnd4ZDJqcHhnK085LzN4bHozL2tjUjFsMFNLM3RXQ0tX?=
+ =?utf-8?B?d2NjcGRXV2ZxQTNDV2QvcVJMbHhtbVNLbjdaRTJKaGRTaURwYkV0UEJLcHRx?=
+ =?utf-8?B?L3JUQUNBR1c5ajQ4dW8wNThnQ3QwM0ZITXhzU3Y3dWl1a3Rlb1RucFJiWG9y?=
+ =?utf-8?B?U2xwK0FYMTdvbmlIcElsWkNYSkNCM1VnY29pdDcwbzQyTCs1a0h2bUQ1S0xV?=
+ =?utf-8?B?eHFlSW1iZXE2VE11QTkvNWFrZGZUL3ZjVmFpVWFpQ2Q2cUhnLys0TDlxWjNW?=
+ =?utf-8?B?VDhuaFZBQUR6aVFZaXgrOTJtL2pGQUM0QXVoWTc4MzhPYitQOTNHeVhNY1hR?=
+ =?utf-8?B?TFl0MFBTdHZ2Z08wVThPSmw5bDdxUWF5WnR2WHBGNkkxajAzcnFkNjQ5U2la?=
+ =?utf-8?B?YzhweWN6bnRvZnpvakVobTBvZmJlUGhjT0FxaFlIYmlPWjhkS0lKM08rYjZz?=
+ =?utf-8?B?UWkzUDRlbFhzYlNweE9MMDhqcXVGSjZJTEdya1QzMDhiQnBRaEJHQ3BpWUIv?=
+ =?utf-8?B?SElWbEsxWkZQMHdLcmszemgrMElCRSs1VXdTVitpNytkeWhGWkpxY2RIN0g2?=
+ =?utf-8?B?VUZFNVVBUFJLTHhyUWMyVnhmbEM5ZkQvWTNXODk1L0Vna3puanVTMTVxWTdF?=
+ =?utf-8?B?ZWNXNDRUSmFvdHNBdWJlaDZYOVZoV3ZOa3pqekxKRUlFVUs0enJSeXp1Y3Q0?=
+ =?utf-8?B?ZS9iOWZjODdHQ21kWHJFUHU3ZFM4aWFvZEdHMlpoNmo1eFUxY2YxQ0JyWC9V?=
+ =?utf-8?B?NWFaZ3hwVXEwc3oyNGlZZHlXclk2STFQQ1huMnpySjJrTEZRNDl0OUc0bm9V?=
+ =?utf-8?B?MUk5ckQzdDhEZjJxaXFlT1hqZmFYSS9BNWRXalA2NEtFV2FEQS8ydjRqcVZU?=
+ =?utf-8?B?MjBVMEM5VjFJN1lQK0l0TEg2SlhRWFppSDRSYVhBOWRPK0toa25Md0ZQWlYr?=
+ =?utf-8?B?bC8ybSt4MEVJem5KSVhpazJnblVwQkZKZkhsbU5JS0VIbnRRQTMzTTYzaHhJ?=
+ =?utf-8?B?NktSRDBqYnFaTU9MQUViTytLb2tFL3poZWxPRjVCV0lpK3JuWjErRllBTkhM?=
+ =?utf-8?B?MGNnSVRvMTRUcjRvc0hLY2kwelRMcGNlbDNaOFJWOVphVVdYdWI1VDl0YXRp?=
+ =?utf-8?B?aUE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D1C8A0CD967C6F488D26678EB949606C@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR04MB6739:EE_|MW4PR04MB7218:EE_
-X-MS-Office365-Filtering-Correlation-Id: efdd7b95-1be8-49d0-d1ea-08dd4c2abde9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|366016|376014|1800799024|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?iL9EO/vberFS7E3yoKgRnl4RHqHkBI/ZKBW8RZTgz7HyvOmiCOHa+ZPMZ0/U?=
- =?us-ascii?Q?XnKy5cVffp39w/yLX23DA60QQz2idUhNP6fqgoGDVsDo/PaxCqGOGJgp3vm9?=
- =?us-ascii?Q?IT+2Q4qkverpcuClB+9z7YZt9IcCG9ERtLVDxeb53tPWm2tGa8A3Y1JC7Jos?=
- =?us-ascii?Q?87EqudIRI+L1bZRjl/SaEgKNfvdxsfOXrHF/zJU5sPKCNP+6y13y/bf9XuGq?=
- =?us-ascii?Q?7O8pwuFjLpJ6/bodIolqJhzDNYfyzMVOeqXlbo8DrUADcZfpsgjoiJofHfbK?=
- =?us-ascii?Q?IM+TTCGEK0DipAlye7ymUmM4cKNfwa4OjuN74b/9giay9LBjBnHjP3eHQ+cu?=
- =?us-ascii?Q?gv/n2ZC1magBP5ZEQDOJTsA+NIXBMCZ1OANTSucj5VFPDgh5HZ/jZVX/x5OG?=
- =?us-ascii?Q?Ev+37wTHAVhSGumh5XlGsNOnygZuVdEfAfOAyr3msyyhKoCSJputOm5J+Vod?=
- =?us-ascii?Q?abmxg+Jnm921JT/Sb4LDDNO2GquaYRlc3VLBfAK/9f224QB9NonnIrlIrh3b?=
- =?us-ascii?Q?qauDlBCf/CE6rICTq1o9MydRi+1vAN3hdR0Ip8bHPESs/qZH2XYlKVIex2Qr?=
- =?us-ascii?Q?76vBGDIFPLWDJpTpFryWAoNWYBLNSe9aPhh2gZD7ZhL+P25BvjsEsPZtyr8a?=
- =?us-ascii?Q?XxJgGNFQIwNomdPxZ99S7XwXQ/Xxu1/54hm061Hqbe0ql1JEM72eqEZoTuwU?=
- =?us-ascii?Q?j7v8Zlx+6P6JHnuMoY1OtdkaFbJzoWbshYiFhvre+tZv7vb0iU3PQQJxMiox?=
- =?us-ascii?Q?p1egplX5ten6GMxdM+0UMlDxa54ap+dildwF+74qFa5MEzWsyyOK79ZLkTan?=
- =?us-ascii?Q?CjeF26JFFZHKZQYf5e9PqnTNESMgSh5+F2TftkUEmPxBX0Ib8XU+iAzgfNp6?=
- =?us-ascii?Q?8oXOR39VF1VUSpob1ZnOYkSl0cV/CMx360vkvlHdaaeq5EacJyAeJb0Un6rC?=
- =?us-ascii?Q?0YbaTunQiJ41fU6rIT1py7k/WGw8RsEgwIGDwoo4YIxHkAlxq1b4IKMEGWx2?=
- =?us-ascii?Q?2jKjhhTBiGXq99xU/L5rqoFPZJrnGvzJgTGd9mw6sG6rkpxFyB95LXlnzyfv?=
- =?us-ascii?Q?4Fa0c3n7AwhJfgIJviZF0iNIltN+6rTDa3u8/Hr71790eyX4iamn3cYL6UgI?=
- =?us-ascii?Q?KO+am6qHHseDSlE2ezmGmF71TlkRGnVFyGYIeoy9QzYfQp9lPMJrTf6lfGr3?=
- =?us-ascii?Q?te/pFQd2XbQ0r4yxtmbiajLB3EEAMPgxc/SvcpNyROeDhThFTxuKSYB8TALV?=
- =?us-ascii?Q?ln8lG5CC8zG8fZ8XcEwQllxYj+s0i+RL3QU/JAJU0rNyp85br7+WZG5c7PnQ?=
- =?us-ascii?Q?eiFWakkZtAtGxNqmOo0E45XCz+eKaG6y0K4r+IzuXKbSqT0MotuZq8crNTYf?=
- =?us-ascii?Q?cFVomtiyE47NOSk2kznd3B+SLp7w/VetSb5W1eLwXdqUd8/Of9G7XdKVLTup?=
- =?us-ascii?Q?O8IY+7YHi3BuEMQUynF4VLUlL55AOvgLc8s3j8lG8u9dqID+h+Oczg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(366016)(376014)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?hUZN1/vdh8co7Is2E5txYbfk1BhHxx5mk40gGjhYioT6hOzhrEo0KuksZEEw?=
- =?us-ascii?Q?JQ+4zYjhtFFB7vk/m195KUUCVhEhvhXTTemGz+y5bfoA9CFAxIzOHws1pVB/?=
- =?us-ascii?Q?7mFAUXdSwIKpfmp/Ol8JzQFrgUq7s2a8OCPUMfceCxc2U/AIpdQuHJ8u1oCz?=
- =?us-ascii?Q?5lawyHmmGacVMzVEb0qcVM6TlQuMBtItE2dvvhspa+kVwx9VhU2yuVEuhFgL?=
- =?us-ascii?Q?VvWs68Ji/1888nDxXeM8n/0OMjJiqwPXYiaLrVx+v/i6YMX1tJalQvNuHkdb?=
- =?us-ascii?Q?OMSldWU3niCBOxq5kRiEE6ZQL2+Zvq8B0ZYoTXblmnr08/NdVNFaMPyTLeby?=
- =?us-ascii?Q?gbpR1zIKI8wZVtn4+Q0UU+1/97uyXZReHr9OwvFVTOjepQyyyp0sHSeoET0U?=
- =?us-ascii?Q?3pz206HVkSgLYkTUTQs4EAtDwO9o5+K3sID+A2Hb/YwiZ7SLkEnUoutqjdoA?=
- =?us-ascii?Q?CpaPXZgrOtlQVBuRpTqUqcftaT3UdIvLW41U7pVhBsp/6pGqXQ4ZUMSiMOKm?=
- =?us-ascii?Q?AFTl0wnndurkPBbS9Yyo7WhyYuPlRv/78fviEgPc12r6kxdC1tacNZPNkMvR?=
- =?us-ascii?Q?hSM1PoxMfGRKFtWW5KzCyqjWygjKZ5U/7YeY4fdrDyGFyPTPaiBgGZbsVRvL?=
- =?us-ascii?Q?jIl+7C/HbYD1cMSKL8ICaNDb8ePZ+hwh2W7jVvLydpjwQeCpB07vkhomHkHt?=
- =?us-ascii?Q?8N1L8GlJI5o219Hh/SIaVIK4MNYZM2CLbuS77cvinG24rzIuS0gAfhcXeHA3?=
- =?us-ascii?Q?O+8qx1cITuxylIP6QlKC+7UDs+/N10EDfVMPiMXVp5FGEt9J5LKTmLgsUYmo?=
- =?us-ascii?Q?2E8zX32ZXgeyk22EK391u4LVTUnZ9HhQB7XkX8+eI9imX8fAHdPOt7UUd7BZ?=
- =?us-ascii?Q?wl3ZKXaH6f7XpcUUOtQl7QqGmjpbxNN32yubD06EfCZzSrNmO+1gWxqcRKMT?=
- =?us-ascii?Q?QGijKskf8Zg5BMelAJbBoQc5QA1vNVJJJc2m2E27eTMksAjGUqb4Kqxw0MH1?=
- =?us-ascii?Q?ijfWm5Z+NtbAbx9w8uuufssXBpMYxpscKZarvwQW0jDWoEpketkQQItovWO0?=
- =?us-ascii?Q?EXHU+neYoQvxi8glrIWmZdkVs+UbpTdVp3r6ENR3X8h/m1AaYAKK23/7dp3u?=
- =?us-ascii?Q?mwtxZPfR5HAa0/r/HSmJwXqoyuQjcc4+LrdqLYMyJAfqOWB8QLPnJtd7szyQ?=
- =?us-ascii?Q?Oqo76pb11VBaNwX+k90bjs6FK+5zKXqcPLxIs5ePVToBIUj89z64Sw0jMr6P?=
- =?us-ascii?Q?VN9qFK5wgko6WfB1U6BN+mzGBJaR+T+Gz0IqibuaXiS+WQ5SgQxbqDklpqSg?=
- =?us-ascii?Q?o0B87wcmgqIQdW8K29sFXWJ+fcEUwmmvhvZLX2awYz+SJ7Z8z5y3uaj7MFDd?=
- =?us-ascii?Q?JmhtHHXWrqqZscCUK5VtrdzoiLoqCzMSLZssDv7mn1qSTbtdrf4aYuq7a3GY?=
- =?us-ascii?Q?c+P4TZfkcThIQGJnfWRMSmQlKWDe1ac20NVhq8cuOVONLrHLnUEdu5DOx7+5?=
- =?us-ascii?Q?lmLMDaGfa/fzv/QozInxqiBOZ/X8gMi/5UL/RQQ0TNbvB7BNb+xOyz2WrBIp?=
- =?us-ascii?Q?1g9X2y/heAFCiLAH1KZNVBBgXWX6te8FxtJDjaPF?=
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: efdd7b95-1be8-49d0-d1ea-08dd4c2abde9
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR04MB6739.namprd04.prod.outlook.com
+X-OriginatorOrg: Nvidia.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 12:34:21.7123
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5716.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4141dfb5-1fdf-48f1-1830-08dd4c2af83e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2025 12:35:59.3495
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7ZFfHn2wnh00uKqPeycA6+rtP1h7pAl9lzIJ5+37A9+fT2DmCAxRmYnAMFxEkfvQ1wyjX01qKmleKTLOPkPB+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR04MB7218
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Sp1x07tyhobOZvAU8k6ARqTH96plcDGDZa7muqMRscvPaFT5/WQSynyoRKQoM36e1tq1PW+cAvTaAX3GyboYKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9059
 
-As anx7625 MIPI RX bandwidth(maximum 1.5Gbps per lane) and internal
-pixel clock(maximum 300M) limitation. Anx7625 must enable DSC feature
-while MIPI source want to output 4K30 resolution.
-
-Signed-off-by: Xin Ji <xji@analogixsemi.com>
----
- drivers/gpu/drm/bridge/analogix/anx7625.c | 300 ++++++++++++++++++----
- drivers/gpu/drm/bridge/analogix/anx7625.h |  32 +++
- 2 files changed, 284 insertions(+), 48 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
-index 4be34d5c7a3b..7d86ab02f71c 100644
---- a/drivers/gpu/drm/bridge/analogix/anx7625.c
-+++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
-@@ -22,6 +22,7 @@
- 
- #include <drm/display/drm_dp_aux_bus.h>
- #include <drm/display/drm_dp_helper.h>
-+#include <drm/display/drm_dsc_helper.h>
- #include <drm/display/drm_hdcp_helper.h>
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_bridge.h>
-@@ -476,6 +477,138 @@ static int anx7625_set_k_value(struct anx7625_data *ctx)
- 				 MIPI_DIGITAL_ADJ_1, 0x3D);
- }
- 
-+static int anx7625_set_dsc_params(struct anx7625_data *ctx)
-+{
-+	int ret, i;
-+	u16 htotal, vtotal;
-+
-+	if (!ctx->dsc_en)
-+		return 0;
-+
-+	/* Htotal */
-+	htotal = ctx->dt.hactive.min + ctx->dt.hfront_porch.min +
-+		ctx->dt.hback_porch.min + ctx->dt.hsync_len.min;
-+	ret = anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-+				HORIZONTAL_TOTAL_PIXELS_L, htotal);
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-+				 HORIZONTAL_TOTAL_PIXELS_H, htotal >> 8);
-+	/* Hactive */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-+				 HORIZONTAL_ACTIVE_PIXELS_L,
-+				 ctx->dt.hactive.min);
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-+				 HORIZONTAL_ACTIVE_PIXELS_H,
-+				 ctx->dt.hactive.min >> 8);
-+	/* HFP */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-+				 HORIZONTAL_FRONT_PORCH_L,
-+				 ctx->dt.hfront_porch.min);
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-+				 HORIZONTAL_FRONT_PORCH_H,
-+				 ctx->dt.hfront_porch.min >> 8);
-+	/* HWS */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-+				 HORIZONTAL_SYNC_WIDTH_L,
-+				 ctx->dt.hsync_len.min);
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-+				 HORIZONTAL_SYNC_WIDTH_H,
-+				 ctx->dt.hsync_len.min >> 8);
-+	/* HBP */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-+				 HORIZONTAL_BACK_PORCH_L,
-+				 ctx->dt.hback_porch.min);
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-+				 HORIZONTAL_BACK_PORCH_H,
-+				 ctx->dt.hback_porch.min >> 8);
-+	/* Vtotal */
-+	vtotal = ctx->dt.vactive.min + ctx->dt.vfront_porch.min +
-+		 ctx->dt.vback_porch.min + ctx->dt.vsync_len.min;
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client, TOTAL_LINES_L,
-+				 vtotal);
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client, TOTAL_LINES_H,
-+				 vtotal >> 8);
-+	/* Vactive */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client, ACTIVE_LINES_L,
-+				 ctx->dt.vactive.min);
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client, ACTIVE_LINES_H,
-+				 ctx->dt.vactive.min >> 8);
-+	/* VFP */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-+				 VERTICAL_FRONT_PORCH, ctx->dt.vfront_porch.min);
-+	/* VWS */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-+				 VERTICAL_SYNC_WIDTH, ctx->dt.vsync_len.min);
-+	/* VBP */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-+				 VERTICAL_BACK_PORCH, ctx->dt.vback_porch.min);
-+
-+	/* Htotal */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client, TOTAL_PIXEL_L_7E,
-+				 htotal);
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client, TOTAL_PIXEL_H_7E,
-+				 htotal >> 8);
-+	/* Hactive */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-+				 ACTIVE_PIXEL_L_7E, ctx->dt.hactive.min);
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-+				 ACTIVE_PIXEL_H_7E, ctx->dt.hactive.min >> 8);
-+	/* HFP */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-+				 HORIZON_FRONT_PORCH_L_7E,
-+				 ctx->dt.hfront_porch.min);
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-+				 HORIZON_FRONT_PORCH_H_7E,
-+				 ctx->dt.hfront_porch.min >> 8);
-+	/* HWS */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-+				 HORIZON_SYNC_WIDTH_L_7E,
-+				 ctx->dt.hsync_len.min);
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-+				 HORIZON_SYNC_WIDTH_H_7E,
-+				 ctx->dt.hsync_len.min >> 8);
-+	/* HBP */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-+				 HORIZON_BACK_PORCH_L_7E,
-+				 ctx->dt.hback_porch.min);
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-+				 HORIZON_BACK_PORCH_H_7E,
-+				 ctx->dt.hback_porch.min >> 8);
-+
-+	/* Config DSC decoder internal blank timing for decoder to start */
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
-+				 H_BLANK_L,
-+				 dsc_div(htotal - ctx->dt.hactive.min));
-+	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
-+				 H_BLANK_H,
-+				 dsc_div(htotal - ctx->dt.hactive.min) >> 8);
-+
-+	/* Compress ratio  RATIO bit[7:6] */
-+	ret |= anx7625_write_and(ctx, ctx->i2c.rx_p0_client, R_I2C_1, 0x3F);
-+	ret |= anx7625_write_or(ctx, ctx->i2c.rx_p0_client, R_I2C_1,
-+				(5 - DSC_COMPRESS_RATIO) << 6);
-+	/*PPS table*/
-+	for (i = 0; i < PPS_SIZE; i += PPS_BLOCK_SIZE)
-+		ret |= anx7625_reg_block_write(ctx, ctx->i2c.rx_p2_client,
-+					       R_PPS_REG_0 + i, PPS_BLOCK_SIZE,
-+					       &ctx->pps_table[i]);
-+
-+	return ret;
-+}
-+
-+static int anx7625_timing_write(struct anx7625_data *ctx,
-+				struct i2c_client *client,
-+				u8 reg_addr, u16 reg_val, bool high_byte)
-+{
-+	u8 reg_data;
-+
-+	if (ctx->dsc_en)
-+		reg_val = dsc_div(reg_val);
-+
-+	reg_data = (high_byte ? (reg_val >> 8) : reg_val) & 0xFF;
-+
-+	return anx7625_reg_write(ctx, client, reg_addr, reg_data);
-+}
-+
- static int anx7625_dsi_video_timing_config(struct anx7625_data *ctx)
- {
- 	struct device *dev = ctx->dev;
-@@ -506,34 +639,33 @@ static int anx7625_dsi_video_timing_config(struct anx7625_data *ctx)
- 	ret |= anx7625_write_or(ctx, ctx->i2c.rx_p1_client,
- 				MIPI_LANE_CTRL_0, ctx->pdata.mipi_lanes - 1);
- 
--	/* Htotal */
- 	htotal = ctx->dt.hactive.min + ctx->dt.hfront_porch.min +
--		ctx->dt.hback_porch.min + ctx->dt.hsync_len.min;
--	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
--			HORIZONTAL_TOTAL_PIXELS_L, htotal & 0xFF);
--	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
--			HORIZONTAL_TOTAL_PIXELS_H, htotal >> 8);
-+			 ctx->dt.hback_porch.min + ctx->dt.hsync_len.min;
-+	/* Htotal */
-+	ret |= anx7625_timing_write(ctx, ctx->i2c.rx_p2_client,
-+			HORIZONTAL_TOTAL_PIXELS_L, htotal, false);
-+	ret |= anx7625_timing_write(ctx, ctx->i2c.rx_p2_client,
-+			HORIZONTAL_TOTAL_PIXELS_H, htotal, true);
- 	/* Hactive */
--	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
--			HORIZONTAL_ACTIVE_PIXELS_L, ctx->dt.hactive.min & 0xFF);
--	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
--			HORIZONTAL_ACTIVE_PIXELS_H, ctx->dt.hactive.min >> 8);
-+	ret |= anx7625_timing_write(ctx, ctx->i2c.rx_p2_client,
-+			HORIZONTAL_ACTIVE_PIXELS_L, ctx->dt.hactive.min, false);
-+	ret |= anx7625_timing_write(ctx, ctx->i2c.rx_p2_client,
-+			HORIZONTAL_ACTIVE_PIXELS_H, ctx->dt.hactive.min, true);
- 	/* HFP */
--	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
--			HORIZONTAL_FRONT_PORCH_L, ctx->dt.hfront_porch.min);
--	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
--			HORIZONTAL_FRONT_PORCH_H,
--			ctx->dt.hfront_porch.min >> 8);
-+	ret |= anx7625_timing_write(ctx, ctx->i2c.rx_p2_client,
-+			HORIZONTAL_FRONT_PORCH_L, ctx->dt.hfront_porch.min, false);
-+	ret |= anx7625_timing_write(ctx, ctx->i2c.rx_p2_client,
-+			HORIZONTAL_FRONT_PORCH_H, ctx->dt.hfront_porch.min, true);
- 	/* HWS */
--	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
--			HORIZONTAL_SYNC_WIDTH_L, ctx->dt.hsync_len.min);
--	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
--			HORIZONTAL_SYNC_WIDTH_H, ctx->dt.hsync_len.min >> 8);
-+	ret |= anx7625_timing_write(ctx, ctx->i2c.rx_p2_client,
-+			HORIZONTAL_SYNC_WIDTH_L, ctx->dt.hsync_len.min, false);
-+	ret |= anx7625_timing_write(ctx, ctx->i2c.rx_p2_client,
-+			HORIZONTAL_SYNC_WIDTH_H, ctx->dt.hsync_len.min, true);
- 	/* HBP */
--	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
--			HORIZONTAL_BACK_PORCH_L, ctx->dt.hback_porch.min);
--	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
--			HORIZONTAL_BACK_PORCH_H, ctx->dt.hback_porch.min >> 8);
-+	ret |= anx7625_timing_write(ctx, ctx->i2c.rx_p2_client,
-+			HORIZONTAL_BACK_PORCH_L, ctx->dt.hback_porch.min, false);
-+	ret |= anx7625_timing_write(ctx, ctx->i2c.rx_p2_client,
-+			HORIZONTAL_BACK_PORCH_H, ctx->dt.hback_porch.min, true);
- 	/* Vactive */
- 	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client, ACTIVE_LINES_L,
- 			ctx->dt.vactive.min);
-@@ -663,9 +795,15 @@ static int anx7625_dsi_config(struct anx7625_data *ctx)
- 
- 	DRM_DEV_DEBUG_DRIVER(dev, "config dsi.\n");
- 
--	/* DSC disable */
--	ret = anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
--				R_DSC_CTRL_0, ~DSC_EN);
-+	ret = anx7625_set_dsc_params(ctx);
-+	if (ctx->dsc_en)
-+		/* DSC enable */
-+		ret |= anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
-+					R_DSC_CTRL_0, DSC_EN);
-+	else
-+		/* DSC disable */
-+		ret |= anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
-+					 R_DSC_CTRL_0, ~DSC_EN);
- 
- 	ret |= anx7625_api_dsi_config(ctx);
- 
-@@ -2083,6 +2221,7 @@ static int anx7625_setup_dsi_device(struct anx7625_data *ctx)
- 		MIPI_DSI_MODE_VIDEO_HSE	|
- 		MIPI_DSI_HS_PKT_END_ALIGNED;
- 
-+	dsi->dsc = &ctx->dsc;
- 	ctx->dsi = dsi;
- 
- 	return 0;
-@@ -2186,20 +2325,68 @@ anx7625_bridge_mode_valid(struct drm_bridge *bridge,
- 	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
- 	struct device *dev = ctx->dev;
- 
--	DRM_DEV_DEBUG_DRIVER(dev, "drm mode checking\n");
-+	dev_dbg(dev, "drm mode checking\n");
-+	if (mode->clock > SUPPORT_PIXEL_CLOCK)
-+		return MODE_CLOCK_HIGH;
-+
-+	if (mode->clock < SUPPORT_MIN_PIXEL_CLOCK)
-+		return MODE_CLOCK_LOW;
- 
--	/* Max 1200p at 5.4 Ghz, one lane, pixel clock 300M */
--	if (mode->clock > SUPPORT_PIXEL_CLOCK) {
--		DRM_DEV_DEBUG_DRIVER(dev,
--				     "drm mode invalid, pixelclock too high.\n");
-+	if (mode->clock > DSC_PIXEL_CLOCK && (mode->hdisplay % 3 != 0))
- 		return MODE_CLOCK_HIGH;
--	}
- 
--	DRM_DEV_DEBUG_DRIVER(dev, "drm mode valid.\n");
-+	dev_dbg(dev, "drm mode valid.\n");
- 
- 	return MODE_OK;
- }
- 
-+static void anx7625_dsc_enable(struct anx7625_data *ctx, bool en)
-+{
-+	int ret;
-+	struct device *dev = ctx->dev;
-+
-+	ctx->dsc_en = en;
-+
-+	if (en) {
-+		ctx->dsc.dsc_version_major = 1;
-+		ctx->dsc.dsc_version_minor = 1;
-+		ctx->dsc.slice_height = 8;
-+		ctx->dsc.slice_width = ctx->dt.hactive.min / DSC_SLICE_NUM;
-+		ctx->dsc.slice_count = DSC_SLICE_NUM;
-+		ctx->dsc.bits_per_component = 8;
-+		ctx->dsc.bits_per_pixel = 8 << 4; /* 4 fractional bits */
-+		ctx->dsc.block_pred_enable = true;
-+		ctx->dsc.native_420 = false;
-+		ctx->dsc.native_422 = false;
-+		ctx->dsc.simple_422 = false;
-+		ctx->dsc.vbr_enable = false;
-+		ctx->dsc.rc_model_size = DSC_RC_MODEL_SIZE_CONST;
-+		ctx->dsc.pic_width = ctx->dt.hactive.min;
-+		ctx->dsc.pic_height = ctx->dt.vactive.min;
-+		ctx->dsc.convert_rgb = 1;
-+		ctx->dsc.vbr_enable = 0;
-+
-+		drm_dsc_set_rc_buf_thresh(&ctx->dsc);
-+		drm_dsc_set_const_params(&ctx->dsc);
-+
-+		ctx->dsc.initial_scale_value = drm_dsc_initial_scale_value(&ctx->dsc);
-+		ctx->dsc.line_buf_depth = ctx->dsc.bits_per_component + 1;
-+		ret = drm_dsc_setup_rc_params(&ctx->dsc, DRM_DSC_1_2_444);
-+		if (ret < 0)
-+			dev_warn(dev, "drm_dsc_setup_rc_params ret %d\n", ret);
-+
-+		drm_dsc_compute_rc_parameters(&ctx->dsc);
-+
-+		drm_dsc_pps_payload_pack((struct drm_dsc_picture_parameter_set *)&ctx->pps_table,
-+					 &ctx->dsc);
-+		dev_dbg(dev, "anx7625 enable dsc\n");
-+	} else {
-+		ctx->dsc.dsc_version_major = 0;
-+		ctx->dsc.dsc_version_minor = 0;
-+		dev_dbg(dev, "anx7625 disable dsc\n");
-+	}
-+}
-+
- static void anx7625_bridge_mode_set(struct drm_bridge *bridge,
- 				    const struct drm_display_mode *old_mode,
- 				    const struct drm_display_mode *mode)
-@@ -2244,6 +2431,11 @@ static void anx7625_bridge_mode_set(struct drm_bridge *bridge,
- 	DRM_DEV_DEBUG_DRIVER(dev, "vsync_end(%d),vtotal(%d).\n",
- 			     mode->vsync_end,
- 			     mode->vtotal);
-+
-+	if (mode->clock > DSC_PIXEL_CLOCK)
-+		anx7625_dsc_enable(ctx, true);
-+	else
-+		anx7625_dsc_enable(ctx, false);
- }
- 
- static bool anx7625_bridge_mode_fixup(struct drm_bridge *bridge,
-@@ -2258,26 +2450,33 @@ static bool anx7625_bridge_mode_fixup(struct drm_bridge *bridge,
- 
- 	DRM_DEV_DEBUG_DRIVER(dev, "drm mode fixup set\n");
- 
--	/* No need fixup for external monitor */
--	if (!ctx->pdata.panel_bridge)
--		return true;
--
- 	hsync = mode->hsync_end - mode->hsync_start;
- 	hfp = mode->hsync_start - mode->hdisplay;
- 	hbp = mode->htotal - mode->hsync_end;
- 	hblanking = mode->htotal - mode->hdisplay;
- 
--	DRM_DEV_DEBUG_DRIVER(dev, "before mode fixup\n");
--	DRM_DEV_DEBUG_DRIVER(dev, "hsync(%d), hfp(%d), hbp(%d), clock(%d)\n",
--			     hsync, hfp, hbp, adj->clock);
--	DRM_DEV_DEBUG_DRIVER(dev, "hsync_start(%d), hsync_end(%d), htot(%d)\n",
--			     adj->hsync_start, adj->hsync_end, adj->htotal);
--
-+	dev_dbg(dev, "before mode fixup\n");
-+	dev_dbg(dev, "hsync(%d), hfp(%d), hbp(%d), clock(%d)\n",
-+		hsync, hfp, hbp, adj->clock);
-+	dev_dbg(dev, "hsync_start(%d), hsync_end(%d), htot(%d)\n",
-+		adj->hsync_start, adj->hsync_end, adj->htotal);
- 	adj_hfp = hfp;
- 	adj_hsync = hsync;
- 	adj_hbp = hbp;
- 	adj_hblanking = hblanking;
- 
-+	if (mode->clock > DSC_PIXEL_CLOCK) {
-+		adj_hsync = DSC_HSYNC_LEN;
-+		adj_hfp = DSC_HFP_LEN;
-+		adj_hbp = DSC_HBP_LEN;
-+		vref = (u64)adj->clock * 1000 * 1000 / (adj->htotal * adj->vtotal);
-+		goto calculate_timing;
-+	}
-+
-+	/* No need fixup for external monitor */
-+	if (!ctx->pdata.panel_bridge)
-+		return true;
-+
- 	/* HFP needs to be even */
- 	if (hfp & 0x1) {
- 		adj_hfp += 1;
-@@ -2349,16 +2548,21 @@ static bool anx7625_bridge_mode_fixup(struct drm_bridge *bridge,
- 			adj_hfp -= delta_adj;
- 	}
- 
--	DRM_DEV_DEBUG_DRIVER(dev, "after mode fixup\n");
--	DRM_DEV_DEBUG_DRIVER(dev, "hsync(%d), hfp(%d), hbp(%d), clock(%d)\n",
--			     adj_hsync, adj_hfp, adj_hbp, adj->clock);
-+calculate_timing:
-+
-+	dev_dbg(dev, "after mode fixup\n");
-+	dev_dbg(dev, "hsync(%d), hfp(%d), hbp(%d), clock(%d)\n",
-+		adj_hsync, adj_hfp, adj_hbp, adj->clock);
- 
- 	/* Reconstruct timing */
- 	adj->hsync_start = adj->hdisplay + adj_hfp;
- 	adj->hsync_end = adj->hsync_start + adj_hsync;
- 	adj->htotal = adj->hsync_end + adj_hbp;
--	DRM_DEV_DEBUG_DRIVER(dev, "hsync_start(%d), hsync_end(%d), htot(%d)\n",
--			     adj->hsync_start, adj->hsync_end, adj->htotal);
-+	if (mode->clock > DSC_PIXEL_CLOCK)
-+		adj->clock = (u64)vref * adj->htotal * adj->vtotal / 1000 / 1000;
-+
-+	dev_dbg(dev, "hsync_start(%d), hsync_end(%d), htot(%d), clock(%d)\n",
-+		adj->hsync_start, adj->hsync_end, adj->htotal, adj->clock);
- 
- 	return true;
- }
-diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.h b/drivers/gpu/drm/bridge/analogix/anx7625.h
-index eb5580f1ab2f..db931f5800b1 100644
---- a/drivers/gpu/drm/bridge/analogix/anx7625.h
-+++ b/drivers/gpu/drm/bridge/analogix/anx7625.h
-@@ -149,6 +149,8 @@
- #define HFP_HBP_DEF		((HBLANKING_MIN - SYNC_LEN_DEF) / 2)
- #define VIDEO_CONTROL_0	0x08
- 
-+#define  TOTAL_LINES_L          0x12
-+#define  TOTAL_LINES_H          0x13
- #define  ACTIVE_LINES_L         0x14
- #define  ACTIVE_LINES_H         0x15  /* Bit[7:6] are reserved */
- #define  VERTICAL_FRONT_PORCH   0x16
-@@ -166,6 +168,32 @@
- #define  HORIZONTAL_BACK_PORCH_L      0x21
- #define  HORIZONTAL_BACK_PORCH_H      0x22  /* Bit[7:4] are reserved */
- 
-+#define  H_BLANK_L                    0x3E
-+#define  H_BLANK_H                    0x3F
-+#define  DSC_COMPRESS_RATIO           3
-+#define  dsc_div(X)                   ((X) / DSC_COMPRESS_RATIO)
-+#define  DSC_SLICE_NUM                2
-+#define  DSC_PIXEL_CLOCK              250000
-+#define  DSC_HSYNC_LEN                90
-+#define  DSC_HFP_LEN                  177
-+#define  DSC_HBP_LEN                  297
-+
-+#define  TOTAL_PIXEL_L_7E             0x50
-+#define  TOTAL_PIXEL_H_7E             0x51  /* bit[7:6] are reserved */
-+#define  ACTIVE_PIXEL_L_7E            0x52
-+#define  ACTIVE_PIXEL_H_7E            0x53  /* bit[7:6] are reserved */
-+#define  HORIZON_FRONT_PORCH_L_7E     0x54
-+#define  HORIZON_FRONT_PORCH_H_7E     0x55
-+#define  HORIZON_SYNC_WIDTH_L_7E      0x56
-+#define  HORIZON_SYNC_WIDTH_H_7E      0x57
-+#define  HORIZON_BACK_PORCH_L_7E      0x58
-+#define  HORIZON_BACK_PORCH_H_7E      0x59
-+
-+#define  PPS_SIZE                     128
-+#define  PPS_BLOCK_SIZE               32
-+#define  R_PPS_REG_0                  0x80
-+#define  R_I2C_1                      0x81
-+
- /******** END of I2C Address 0x72 *********/
- 
- /***************************************************************/
-@@ -415,6 +443,7 @@ enum audio_wd_len {
- #define MAX_EDID_BLOCK	3
- #define EDID_TRY_CNT	3
- #define SUPPORT_PIXEL_CLOCK	300000
-+#define SUPPORT_MIN_PIXEL_CLOCK	50000
- 
- /***************** Display End *****************/
- 
-@@ -454,6 +483,7 @@ struct anx7625_data {
- 	int hpd_high_cnt;
- 	int dp_en;
- 	int hdcp_cp;
-+	bool dsc_en;
- 	/* Lock for work queue */
- 	struct mutex lock;
- 	struct device *dev;
-@@ -479,6 +509,8 @@ struct anx7625_data {
- 	struct drm_connector *connector;
- 	struct mipi_dsi_device *dsi;
- 	struct drm_dp_aux aux;
-+	struct drm_dsc_config dsc;
-+	char pps_table[PPS_SIZE];
- };
- 
- #endif  /* __ANX7625_H__ */
--- 
-2.25.1
-
+T24gVGh1LCAyMDI1LTAyLTEzIGF0IDEzOjA1ICswMjAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
+Cj4gRXh0ZXJuYWwgZW1haWw6IFVzZSBjYXV0aW9uIG9wZW5pbmcgbGlua3Mgb3IgYXR0YWNobWVu
+dHMKPiAKPiAKPiBPbiBUaHUsIEZlYiAxMywgMjAyNSBhdCAwMzozNDo0MlBNICswNTMwLCBLYXJ0
+aWsgUmFqcHV0IHdyb3RlOgo+ID4gVGhlIFRlZ3JhMjY0IFNvQyBzdXBwb3J0cyB0aGUgVUFSVCBU
+cmFjZSBDb250cm9sbGVyIChVVEMpLCB3aGljaAo+ID4gYWxsb3dzCj4gPiBtdWx0aXBsZSBmaXJt
+d2FyZSBjbGllbnRzICh1cCB0byAxNikgdG8gc2hhcmUgYSBzaW5nbGUgcGh5c2ljYWwKPiA+IFVB
+UlQuCj4gPiBFYWNoIGNsaWVudCBpcyBwcm92aWRlZCB3aXRoIGl0cyBvd24gaW50ZXJydXB0IGFu
+ZCBoYXMgYWNjZXNzIHRvIGEKPiA+IDEyOC1jaGFyYWN0ZXIgd2lkZSBGSUZPIGZvciBib3RoIHRy
+YW5zbWl0IChUWCkgYW5kIHJlY2VpdmUgKFJYKQo+ID4gb3BlcmF0aW9ucy4KPiA+IAo+ID4gQWRk
+IHRlZ3JhLXV0YyBkcml2ZXIgdG8gc3VwcG9ydCBUZWdyYSBVQVJUIFRyYWNlIENvbnRyb2xsZXIg
+KFVUQykKPiA+IGNsaWVudC4KPiAKPiBCdHcsIG5laXRoZXIgdGhlIGNvbW1pdCBtZXNzYWdlIG5v
+ciBjb3ZlciBsZXR0ZXIgZXhwbGFpbiB3aHkgdGhlIG5ldwo+IGRyaXZlcgo+IGlzIG5lZWRlZC4g
+VGhlcmUgYXJlIHNvbWUgc2VyaWFsIFRlZ3JhIGRyaXZlcnMgYWxyZWFkeS4gSXMgdGhpcyBvbmUK
+PiBjb21wbGV0ZWx5Cj4gZGlmZmVyZW50IGZyb20gdGhlIGV4aXN0aW5nIGRyaXZlcnM/Cj4gCgpU
+ZWdyYTI2NCBwbGF0Zm9ybXMgaGF2ZSBhIHNpbmdsZSBkZWJ1ZyBVQVJUIHdoaWNoIGlzIHNoYXJl
+ZCBhY3Jvc3MKbXVsdGlwbGUgZmlybXdhcmVzIGFuZCB0aGUgT1MuIFRoZSBUZWdyYSBVVEMgaXMg
+YWRkZWQgdG8gYWRkcmVzcyB0aGlzCmlzc3VlLgoKSXQgaXMgYSBjb21wbGV0ZWx5IGRpZmZlcmVu
+dCBkcml2ZXIuCgo+IC4uLgo+IAo+ID4gKyNkZWZpbmUgVEVHUkFfVVRDX0VOQUJMRcKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMHgwCj4gCj4gSXQgd291bGQgYmUgbmlj
+ZSB0byB1c2UgZml4ZWQgd2lkdGggdmFsdWVzIGZvciB0aGUgcmVnaXN0ZXIgb2Zmc2V0cywKPiBl
+LmcuLCAweDAwMCBoZXJlLgo+IAoKQWNrLgoKPiA+ICsjZGVmaW5lIFRFR1JBX1VUQ19FTkFCTEVf
+Q0xJRU5UX0VOQUJMRcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgQklUKDApCj4gPiArCj4g
+PiArI2RlZmluZSBURUdSQV9VVENfRklGT19USFJFU0hPTETCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgMHg4Cj4gPiArCj4gPiArI2RlZmluZSBURUdSQV9VVENfQ09NTUFORMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDB4Ywo+IAo+IERpdHRvLgo+IAoKQWNrLgoKPiA+ICsj
+ZGVmaW5lIFRFR1JBX1VUQ19DT01NQU5EX1JFU0VUwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIEJJVCgwKQo+ID4gKyNkZWZpbmUgVEVHUkFfVVRDX0NPTU1BTkRfRkxV
+U0jCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgQklUKDEpCj4gCj4g
+PiArI2RlZmluZSBURUdSQV9VVENfREFUQcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAweDIwCj4gCj4gRGl0dG8uCj4gCgpBY2suCgo+
+ID4gKyNkZWZpbmUgVEVHUkFfVVRDX0ZJRk9fU1RBVFVTwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAweDEwMAo+ID4gKyNkZWZpbmUgVEVHUkFfVVRDX0ZJRk9f
+RU1QVFnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBCSVQoMCkKPiA+ICsjZGVmaW5l
+IFRFR1JBX1VUQ19GSUZPX0ZVTEzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIEJJ
+VCgxKQo+ID4gKyNkZWZpbmUgVEVHUkFfVVRDX0ZJRk9fUkVRwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIEJJVCgyKQo+ID4gKyNkZWZpbmUgVEVHUkFfVVRDX0ZJRk9fT1ZFUkZM
+T1fCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgQklUKDMpCj4gPiAr
+I2RlZmluZSBURUdSQV9VVENfRklGT19USU1FT1VUwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgQklUKDQpCj4gPiArCj4gPiArI2RlZmluZSBURUdSQV9VVENfRklG
+T19PQ0NVUEFOQ1nCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMHgxMDQKPiA+ICsKPiA+ICsjZGVm
+aW5lIFRFR1JBX1VUQ19JTlRSX1NUQVRVU8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgMHgxMDgKPiA+ICsjZGVmaW5lIFRFR1JBX1VUQ19JTlRSX1NFVMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAweDEwYwo+ID4gKyNkZWZpbmUgVEVHUkFf
+VVRDX0lOVFJfTUFTS8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMHgxMTAKPiA+
+ICsjZGVmaW5lIFRFR1JBX1VUQ19JTlRSX0NMRUFSwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgMHgxMTQKPiA+ICsjZGVmaW5lIFRFR1JBX1VUQ19JTlRSX0VNUFRZwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgQklUKDApCj4gPiArI2RlZmluZSBURUdSQV9VVENfSU5UUl9G
+VUxMwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBCSVQoMSkKPiA+ICsjZGVmaW5l
+IFRFR1JBX1VUQ19JTlRSX1JFUcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBC
+SVQoMikKPiA+ICsjZGVmaW5lIFRFR1JBX1VUQ19JTlRSX09WRVJGTE9XwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIEJJVCgzKQo+ID4gKyNkZWZpbmUgVEVHUkFfVVRD
+X0lOVFJfVElNRU9VVMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IEJJVCg0KQo+IAo+IC4uLgo+IAo+ID4gKyNpZiBJU19FTkFCTEVEKENPTkZJR19TRVJJQUxfVEVH
+UkFfVVRDX0NPTlNPTEUpCj4gPiArI2RlZmluZSBURUdSQV9VVENfREVGQVVMVF9GSUZPX1RIUkVT
+SE9MRMKgwqDCoMKgIDB4NAo+IAo+IEhtbS4uLiBJcyB0aGlzIGEgcmVnaXN0ZXIgb2Zmc2V0PyBJ
+ZiBub3QsIHdoeSBpdCdzIGluIGEgaGV4YWRlY2ltYWwKPiBmb3JtYXQ/Cj4gCgpUaGlzIGlzIG5v
+dCBhIHJlZ2lzdGVyIG9mZnNldC4gSSB3aWxsIHVzZSBhIGRlY2ltYWwgdmFsdWUgaGVyZS4KCj4g
+PiArI2RlZmluZSBURUdSQV9VVENfRUFSTFlDT05fTUFYX0JVUlNUX1NJWkXCoMKgwqAgMTI4Cj4g
+Cj4gLi4uCj4gCj4gPiArc3RhdGljIGludCB0ZWdyYV91dGNfcHJvYmUoc3RydWN0IHBsYXRmb3Jt
+X2RldmljZSAqcGRldikKPiA+ICt7Cj4gPiArwqDCoMKgwqAgY29uc3QgdW5zaWduZWQgaW50ICpz
+b2NfZmlmb3NpemU7Cj4gPiArwqDCoMKgwqAgc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRl
+djsKPiA+ICvCoMKgwqDCoCBzdHJ1Y3QgdGVncmFfdXRjX3BvcnQgKnR1cDsKPiA+ICvCoMKgwqDC
+oCBpbnQgcmV0Owo+ID4gKwo+ID4gK8KgwqDCoMKgIHR1cCA9IGRldm1fa3phbGxvYygmcGRldi0+
+ZGV2LCBzaXplb2YoKnR1cCksIEdGUF9LRVJORUwpOwo+IAo+IFVzZSBkZXY/CgpUaGFua3MgZm9y
+IGNhdGNoaW5nIHRoaXMsIHRoaXMgc2hvdWxkJ3ZlIGJlZW4gZG9uZSBiZWZvcmUuIEkgd2lsbAp1
+cGRhdGUgdGhpcy4KCj4gCj4gPiArwqDCoMKgwqAgaWYgKCF0dXApCj4gPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIHJldHVybiAtRU5PTUVNOwo+ID4gKwo+ID4gK8KgwqDCoMKgIHJldCA9IGRl
+dmljZV9wcm9wZXJ0eV9yZWFkX3UzMihkZXYsICJ0eC10aHJlc2hvbGQiLCAmdHVwLQo+ID4gPnR4
+X3RocmVzaG9sZCk7Cj4gPiArwqDCoMKgwqAgaWYgKHJldCkKPiA+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgcmV0dXJuIGRldl9lcnJfcHJvYmUoZGV2LCByZXQsICJtaXNzaW5nICVzCj4gPiBw
+cm9wZXJ0eVxuIiwgInR4LXRocmVzaG9sZCIpOwo+ID4gKwo+ID4gK8KgwqDCoMKgIHJldCA9IGRl
+dmljZV9wcm9wZXJ0eV9yZWFkX3UzMihkZXYsICJyeC10aHJlc2hvbGQiLCAmdHVwLQo+ID4gPnJ4
+X3RocmVzaG9sZCk7Cj4gPiArwqDCoMKgwqAgaWYgKHJldCkKPiA+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgcmV0dXJuIGRldl9lcnJfcHJvYmUoZGV2LCByZXQsICJtaXNzaW5nICVzCj4gPiBw
+cm9wZXJ0eVxuIiwgInJ4LXRocmVzaG9sZCIpOwo+ID4gKwo+ID4gK8KgwqDCoMKgIHNvY19maWZv
+c2l6ZSA9IGRldmljZV9nZXRfbWF0Y2hfZGF0YSgmcGRldi0+ZGV2KTsKPiA+ICvCoMKgwqDCoMKg
+CgpUaGlzIG5lZWRzIHVwZGF0ZSBhcyB3ZWxsLgoKPiA+IHR1cC0+Zmlmb3NpemUgPSAqc29jX2Zp
+Zm9zaXplOwo+ID4gKwo+ID4gK8KgwqDCoMKgIHR1cC0+dHhfYmFzZSA9IGRldm1fcGxhdGZvcm1f
+aW9yZW1hcF9yZXNvdXJjZV9ieW5hbWUocGRldiwKPiA+ICJ0eCIpOwo+ID4gK8KgwqDCoMKgIGlm
+IChJU19FUlIodHVwLT50eF9iYXNlKSkKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0
+dXJuIFBUUl9FUlIodHVwLT50eF9iYXNlKTsKPiA+ICsKPiA+ICvCoMKgwqDCoCB0dXAtPnJ4X2Jh
+c2UgPSBkZXZtX3BsYXRmb3JtX2lvcmVtYXBfcmVzb3VyY2VfYnluYW1lKHBkZXYsCj4gPiAicngi
+KTsKPiA+ICvCoMKgwqDCoCBpZiAoSVNfRVJSKHR1cC0+cnhfYmFzZSkpCj4gPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHJldHVybiBQVFJfRVJSKHR1cC0+cnhfYmFzZSk7Cj4gCj4gPiArwqDC
+oMKgwqAgcmV0ID0gdGVncmFfdXRjX3NldHVwX3BvcnQoJnBkZXYtPmRldiwgdHVwKTsKPiAKPiBE
+aXR0by4KCkFjay4KCj4gCj4gPiArwqDCoMKgwqAgaWYgKHJldCkKPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgZGV2X2Vycl9wcm9iZShkZXYsIHJldCwgImZhaWxlZCB0byBzZXR1cCB1YXJ0
+Cj4gPiBwb3J0XG4iKTsKPiA+ICsKPiA+ICvCoMKgwqDCoCBwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShw
+ZGV2LCB0dXApOwo+ID4gKwo+ID4gK8KgwqDCoMKgIHJldHVybiB0ZWdyYV91dGNfcmVnaXN0ZXJf
+cG9ydCh0dXApOwo+ID4gK30KPiAKPiAuLi4KPiAKPiBXaXRoIHRoZSBhYm92ZSBiZWluZyBhZGRy
+ZXNzZWQsIEZXSVcsCj4gUmV2aWV3ZWQtYnk6IEFuZHkgU2hldmNoZW5rbyA8YW5kcml5LnNoZXZj
+aGVua29AbGludXguaW50ZWwuY29tPgo+IAo+IC0tCj4gV2l0aCBCZXN0IFJlZ2FyZHMsCj4gQW5k
+eSBTaGV2Y2hlbmtvCj4gCj4gCgpUaGFua3MgJiBSZWdhcmRzLApLYXJ0aWsK
