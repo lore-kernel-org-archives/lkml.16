@@ -1,151 +1,117 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823A428A2A6
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D9828A2CE;
+	Thu, 13 Feb 2025 19:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739475040; cv=none; b=H9MMjgnw/emhyPTjXgcnZYJTS+IY3O+BrnZ1stVwnRG1gSsi4RqFs8tCbybmBienTtA8awus3xMEW283IX6C37/S6sO/ko9s//0pIJWObHMXNO98kpi2jqWdjv4fzLvn1Z5+KV4F/WgrSC9A1GLCyIXBrCutoJjuXXY1OqdbK9w=
+	t=1739475118; cv=none; b=mcXkO3r/jimHFnbw85Ue2CzIA6FzmPBk0XC7Cdp0WzVI9fwyxGSLOc7aOto+M/E1lcTwkKlLjVle4Tff7DrPCzDTJI35tmxQ5FcdcwpOOZGa7f9xfcuHlhZ3LUyRLoSZLSrrTIq2noN6Cgx3pjrynzABFExq2ECK9qFZqAM0Lk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739475040; c=relaxed/simple;
-	bh=M3Xtj7RQJ68uhGe29VzgQq5XlLmgymGY4bXdENOCD3s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NTeQyCZB3gsO6WpZj6z+NaI4D9W2zLJKFdy00MbennP0c8bVnJMV0FL4OjNg+6oXs2GcNF3IH2L0cBXmUYZc3fobX2F5uJudlcXYxFgawpuqpTWrcfLV/MvUsLtOE9XtM6aMouJd1r3p2LBLlwQ2MJkCviqWYNzIr5IBNZXr/xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TG3HaU5B; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739475118; c=relaxed/simple;
+	bh=3isR7VFoqzfVxZrvhDXXIeUYz1Uzy8aLfsgglxXjle0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qo1fM8rvd/0QIxXCvHs46VYpdf8Bktl5C9I9ayZt/wLvgfu61vLB8RHJtYpSL7J5Hte5CuFNqStTqaNpZFZXGzJIDLbpGFCgWnh6bp0G29wJlJRtU0ROpoSBa38XVXELNVmFiRHWXKXBGDPzqhcvHXUxU3F6iAAL0jg87Pw1N1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GHAnpFY2; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TG3HaU5B"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5fcb00ae5edso26651eaf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:30:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739475037; x=1740079837; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KC+znPA2H1vB7HU6VZGH/VUzzp6EPafRFN/wfL/kwkY=;
-        b=TG3HaU5B3NHNVDypwQ8TEP3h/ytDcogcAYp/fGIALKEcydUiOCTlIuvxL+8mMkiy/s
-         hBkJZdDAgqhXKgvncAcyM3AayVR+F6lEX5dLmoUb/rh/XurYrnF+p7teIAhy90swY/t2
-         7jOPS6JIXWJiwV0T8s1kdrs+JiTkjkoAMb6k0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739475037; x=1740079837;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KC+znPA2H1vB7HU6VZGH/VUzzp6EPafRFN/wfL/kwkY=;
-        b=iOQO3keSNGr2UrPpdG2vG7Mpabl5iPkj9qg9h2EGRNVGZgnKKHiNv3CyYgZW2JLbD6
-         3blEPY3voKlMcclEMmUcRMzVN5UEZTHU4jamxf6tp2LXy9DnLxx18Tm7G9UB+NCojwhJ
-         0Y4dBy9aj64TqPWY8ZmuYt3k3J7Qe4xu2OXUr/ISBNeSXkxn2H6ld0dlJ9+zAHF3Jc5o
-         QO+x4wzLAPmGsSn0Q+hEjeUPcGUm5xzvWU4zuh/Fd2nRmicYSF2ubd+FadimGzTfAlNT
-         SRI8LqGtmyZmyG+VAIAJo+5xSpVPVDrneYmRZ8nSv3I1bl/A75m7jQqlugOAb2l8Ux85
-         L7Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUMB95E2y0iMB6b92XdfBk+YveejPb4qfVVJ8zCOZOSkp57X/Sry+EbQ2REks6BDbSgX/tUca8c7w6PYo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziQzStrKcSIQ+44NBsdNkK5FWU0+ahchl+quw5v2bMBZQE80Dc
-	7A3AxkbcPolMn1WEATeQqvUIAlFHQ//xGaOnuyjJS2TN1/5gseM/3rXmEBcpqjJsHhNspBpIoIv
-	Dzg==
-X-Gm-Gg: ASbGncvXniG2R5fVwUCvTT1I05v3hhTK0B/l2d3aZopi2iI8x4KSw2OOVQ2hjq2uImN
-	Q4NpW76Pd6GI97ht1BKiFIMiv0EJMzFFw2zc0RWtF7rujknBBTyMkfzLkJpLCzsqcpN+GzpW3FP
-	eqKJvifWELKhEdD9wTMxchWoqW3VVf/dSOXTtF/sa2bmC7OnhJpojJ1PmygPTwD2SUJMd/+E3eZ
-	C7lF8a9OK0NacZLSQnpp3h+9VjpHIavymCTJOiI8kbBEfETW/ZK2IRrGuUqtRmcadMFtu889tQC
-	pvGWttmnndmXG8pW8zstuFKIKR4A7atbmmUoeiNqtVLl5Y73jTJ7Ves=
-X-Google-Smtp-Source: AGHT+IHy7BfKBEyVj40kyJZXDjYaGW3VfZn1rtl3M6sdQStOmMG0Lw5pPaSiVruRg7wU8jdT+UG2tw==
-X-Received: by 2002:a4a:d8d9:0:b0:5fc:a870:d84e with SMTP id 006d021491bc7-5fcbadd9ebamr64481eaf.1.1739475037312;
-        Thu, 13 Feb 2025 11:30:37 -0800 (PST)
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com. [209.85.210.44])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fcb16a5a5csm783759eaf.9.2025.02.13.11.30.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 11:30:36 -0800 (PST)
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-726819aa3fcso792177a34.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:30:36 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXDl0Y121tsClaA4AYH4RKStPhVJerzxYJuzpPPQi40/R9t+pMLnP73FQIr1S48xUWLkDfVnWkeIvkYQMs=@vger.kernel.org
-X-Received: by 2002:a17:90b:274e:b0:2fa:17d2:166 with SMTP id
- 98e67ed59e1d1-2fbf5c6f900mr11663838a91.31.1739474591586; Thu, 13 Feb 2025
- 11:23:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GHAnpFY2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739475117; x=1771011117;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3isR7VFoqzfVxZrvhDXXIeUYz1Uzy8aLfsgglxXjle0=;
+  b=GHAnpFY2xzbmKNtalUB5N7/dIGX8pQx8WfVM5FGV73WFTLcqkIYPAgBa
+   JnaZD2riiqvr7mCetvCBZ3YZrdjaqTaJa5EmyfM4LwO9kCJjFNy4dBoYn
+   jEkQL3lnjdJF7idy1rLSDccNtqGcIH481r/NtEblIGfmeokm4MrS7jMmW
+   ejJjUIIsZQj+h/fRlCE9loSiM76wPJnabZJ09lAE90rMO+y/7j5Py1F8A
+   aYhdbQnKTKmzyRXnuHRmbxsQuuf3hqVrE6Jig+bqIS0RGutgZDVJ+pEVT
+   BMnXSBKGqHE5y2tFd8yphSKOHvkHMUggg2MgetMhn3bTjQNJb8dyN52QB
+   Q==;
+X-CSE-ConnectionGUID: yjR+eW4VSwSKsBHdARw2Qw==
+X-CSE-MsgGUID: 4vKCwn0dS9iSY79yGun8/g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="39386877"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="39386877"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 11:31:56 -0800
+X-CSE-ConnectionGUID: ilCaPk/2Qx+K/0Rtci5tTQ==
+X-CSE-MsgGUID: ltjIHdYaRPem+FF+Ox2RJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="136472326"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa002.fm.intel.com with ESMTP; 13 Feb 2025 11:31:54 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 6A1B91FD; Thu, 13 Feb 2025 21:31:53 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	openbmc@lists.ozlabs.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 1/1] pinctrl: : Switch to use for_each_gpiochip_node() helper
+Date: Thu, 13 Feb 2025 21:31:52 +0200
+Message-ID: <20250213193152.3120396-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213-virtio-shm-page-size-v1-0-5ee1f9984350@redhat.com> <20250213-virtio-shm-page-size-v1-3-5ee1f9984350@redhat.com>
-In-Reply-To: <20250213-virtio-shm-page-size-v1-3-5ee1f9984350@redhat.com>
-From: Daniel Verkamp <dverkamp@chromium.org>
-Date: Thu, 13 Feb 2025 11:22:45 -0800
-X-Gmail-Original-Message-ID: <CABVzXA=r=X+GYnSxgeyktKzfKCW2DW+v++c4v_+BHBDHZ_Bzyw@mail.gmail.com>
-X-Gm-Features: AWEUYZnbyEFvCjOaJipQpOfb1MF9Gi7XhI32b8q-z-30QmKnx8ZNHSfRGuJzTvI
-Message-ID: <CABVzXA=r=X+GYnSxgeyktKzfKCW2DW+v++c4v_+BHBDHZ_Bzyw@mail.gmail.com>
-Subject: Re: [PATCH RFC 3/5] virtio-pci: extend virtio_pci_cap to hold page_size
-To: Sergio Lopez <slp@redhat.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
-	Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu <olvaffe@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
-	Dmitry Osipenko <dmitry.osipenko@collabora.com>, fnkl.kernel@gmail.com, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 13, 2025 at 7:54=E2=80=AFAM Sergio Lopez <slp@redhat.com> wrote=
-:
->
-> Turn the 16 bit padding into a page_size field to allow the device to
-> pass its required page size with format PAGE_SIZE >> 12.
->
-> Signed-off-by: Sergio Lopez <slp@redhat.com>
-> ---
->  drivers/virtio/virtio_pci_modern.c | 29 +++++++++++++++++++++++++----
->  include/uapi/linux/virtio_pci.h    |  2 +-
->  2 files changed, 26 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_p=
-ci_modern.c
-> index 79616ce5057bf3b2b88cae7e8fb7729efa9dd632..26e9cd5148c0f10209c34d12e=
-65d64490a855d75 100644
-> --- a/drivers/virtio/virtio_pci_modern.c
-> +++ b/drivers/virtio/virtio_pci_modern.c
-[...]
-> +               if (__virtio_test_bit(vdev, VIRTIO_F_SHM_PAGE_SIZE)) {
-> +                       pci_read_config_word(dev, pos + offsetof(struct v=
-irtio_pci_cap,
-> +                                                                page_siz=
-e), &res_psize);
-> +                       if (!res_psize) {
-> +                               dev_err(&dev->dev, "%s: shm cap with inva=
-lid page size on "
-> +                                       "a device with VIRTIO_F_SHM_PAGE_=
-SIZE feature\n",
-> +                                       __func__);
+Switch the code to use for_each_gpiochip_node() helper.
 
-Maybe this should also constrain the page size to be a power of 2?
+While at it, correct header inclusion as device property APIs
+are provided in property.h.
 
-[...]
-> diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_=
-pci.h
-> index 8549d4571257142ac6c9dad5c01369923791a85a..fb0ccb7a125d8178c1f78333c=
-4d2f43540e1764b 100644
-> --- a/include/uapi/linux/virtio_pci.h
-> +++ b/include/uapi/linux/virtio_pci.h
-> @@ -127,7 +127,7 @@ struct virtio_pci_cap {
->         __u8 cfg_type;          /* Identifies the structure. */
->         __u8 bar;               /* Where to find it. */
->         __u8 id;                /* Multiple capabilities of the same type=
- */
-> -       __u8 padding[2];        /* Pad to full dword. */
-> +       __u16 page_size;        /* Device page size (PAGE_SIZE >> 12). */
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/nuvoton/pinctrl-wpcm450.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-This comment should probably clarify that the page_size field is only
-valid when cfg_type is VIRTIO_PCI_CAP_SHARED_MEMORY_CFG, assuming
-that's the case. Or should the device be expected to provide the
-page_size for all capabilities regardless of type?
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+index cdad4ef11a2f..2f97accef837 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+@@ -10,7 +10,6 @@
+ //   block, shared between all GPIO banks
+ 
+ #include <linux/device.h>
+-#include <linux/fwnode.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+@@ -18,6 +17,7 @@
+ #include <linux/module.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include <linux/regmap.h>
+ 
+ #include <linux/pinctrl/pinconf.h>
+@@ -1033,7 +1033,7 @@ static int wpcm450_gpio_register(struct platform_device *pdev,
+ 		return dev_err_probe(dev, PTR_ERR(pctrl->gpio_base),
+ 				     "Resource fail for GPIO controller\n");
+ 
+-	device_for_each_child_node(dev, child)  {
++	for_each_gpiochip_node(dev, child) {
+ 		void __iomem *dat = NULL;
+ 		void __iomem *set = NULL;
+ 		void __iomem *dirout = NULL;
+@@ -1044,9 +1044,6 @@ static int wpcm450_gpio_register(struct platform_device *pdev,
+ 		u32 reg;
+ 		int i;
+ 
+-		if (!fwnode_property_read_bool(child, "gpio-controller"))
+-			continue;
+-
+ 		ret = fwnode_property_read_u32(child, "reg", &reg);
+ 		if (ret < 0)
+ 			return ret;
+-- 
+2.45.1.3035.g276e886db78b
 
-It seems like the name should also ideally make it clearer that this
-is page_size/4096 rather than the actual page size to avoid confusing
-device implementers.
-
->         __le32 offset;          /* Offset within bar. */
->         __le32 length;          /* Length of the structure, in bytes. */
->  };
