@@ -1,328 +1,116 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2051.outbound.protection.outlook.com [40.107.243.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C733204F91;
-	Thu, 13 Feb 2025 03:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739418252; cv=fail; b=TTmhbOFfxdOS2NBCQWn08G4AY0Q7n8pcJOj5VPmkWNlTwDuicPX+8AhZn58b2s2UE0j47lov4X8Ag6+QjSBukxPjgWe39rFnm8wXYpFmKeXALDGqFwHroexyldx5OfWTuwueHPs64iDFun3UuJnqF5JpEvTpv8mmEH47s/6BLUs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739418252; c=relaxed/simple;
-	bh=7hq7HXRvRTRUjEhMPGre7EXJiiSdpbqfqVHgLWE13ck=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aXDgZF9NX6yyvXAcUk+sw7gcTMlGeZks7I2scEi229e0xgxhKdn8Lxt0pbc9fc/I8uHukU8r1DlRIRDt9CDh0NjHN8erC4ZVRcFRjxG1WLkyXD/OfrmBihhAsUN0xDyPk0fdr8v3drWLTtMborEanPCu9KIC9EG7R+UHJcOC+Y0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=X63yJOHz; arc=fail smtp.client-ip=40.107.243.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C50204F82
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 03:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739418255; cv=none; b=DQYxJtlpaVv3LeZRVREIHcEkJMhPCW9ACTlqQ2X6BISbrb6GyyCSWDX1S1X0vC9rrD7x4Xt+k1vADsT2lX16QL26i55vzXxr+6wMlysadfJUXRlDmPZ9rKiFoF3LY7YxM7z+c7hz/vQ26j0UPR5yoKEhc25QIcKb3uWTl3xKszU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739418255; c=relaxed/simple;
+	bh=lu+K44rTXY8XHrP1xqlITq2h780w9Fa06jttTuxcf40=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=jFoYzvJ0T/8f5CenIN/8MfaQIkxC5f+aEobO+AQ1z78TDmqkH/brd6TvgqGi6RpJbHCi2ze/I9bfUGvfxdOQZBmWC4sSd3PcEbddRGs2LXaQZdUUOQ+ejWuKBU3ysA9x3OUmIq01jBRPUEm25DPLYih4nOGD3Gf3jydew3L8Jcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--chharry.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v075Jfi8; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--chharry.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="X63yJOHz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DnDzcwYZFgHZdgkCu8OUbAu7ZMCfOPKmgpESS/wkws81zragX3PHd4EMzCv4ngvnYtubOh0ZP6ZHNhJTijGebWDsGoYHj2+WwJhqru7cg5NLGqNVHQc5CNKYq6ocWNeaDHd11Lx5lQGnXbc67M5PlRJSJiOuhkQ2Z5IienhV22q+BRzWfGalsWptO/97+EuvM6om+t3lg0NVQXfSUAfWZZ4rjNYZWdTtVHPOGHSjSDF/pEuIGwnOQFlCo+swDGZguU3AflvDeNTlcTNylVdnI9SY3gp5N5PcHpy4VRUTAR/QO1JNg+T9+OzSZV4gPM0N4os+wZksG5/VRhtL2IjaQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=arKOQe462duZLGgRb8IwStyimqTscy81tSdsFMgbflI=;
- b=dWjNbMxbquwjLsKnqNh2y5kkjUTHYPW90E22tlO0z4hZJlE9dRHmhLlP1D9XXZVnoaNTa/jXPC+7ezULhtvNzzFpYfRLvv+hWpfZ2bTjjd9aSojKGdSvnyo/mwGAcTk6wKo9r0sz29PLIoGbOfbHU/HYy9m+zbPmBksEJHEEQWdC+vt/oIixW0OHRiQ9TuWaempKjJChemz11NNlEAIuTsGjd06a5vZ/7QYlwUacoRnpJ2zW2SDdEYZuF4T9T0Oc/jPzGgoCF3xXIhgTgTTJyCKfnwNN1CTob7HxPbTqUyqXyRBsgx5Og5a6Xt0oMgpCTYzAvPQyDxhMceAJPDyp6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=arKOQe462duZLGgRb8IwStyimqTscy81tSdsFMgbflI=;
- b=X63yJOHzrEafK8k5+NfGb2tcgfeikEiL1augvQ5Y4jpEwhzRsZP50xrv8bOE5U12f1Ls/l8yvlaK1HeqBz5DF809gaJvJr70l76FefJv8xEw0klJVpG/z9PhPXgjGFmEm6lQsrN6O/fQrfbQ9YHh4hRKxKak2GsAhSvI4rD/qyaStqa+Okn/AX8esr2p8PIYIsjCyzF2yUeTjI4qyGRPNFtiLJ3HMgNHu0g1kSw/uP1gkqJNSXZYoYmsDmE9XTN2jWPdKbnkMA2CcNsOe2m8dxE4+DUgE0UCHoklVYsNhiu0Xr5eKjqtpu7R+unm9b3P2CWO8eFM4eM/h4D34nEg/Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- DM3PR12MB9434.namprd12.prod.outlook.com (2603:10b6:0:4b::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8422.12; Thu, 13 Feb 2025 03:44:07 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8445.013; Thu, 13 Feb 2025
- 03:44:07 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Matthew Wilcox <willy@infradead.org>,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Kairui Song <kasong@tencent.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	linux-kernel@vger.kernel.org,
-	Zi Yan <ziy@nvidia.com>
-Subject: [PATCH 1/2] mm/filemap: use xas_try_split() in __filemap_add_folio().
-Date: Wed, 12 Feb 2025 22:43:54 -0500
-Message-ID: <20250213034355.516610-2-ziy@nvidia.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250213034355.516610-1-ziy@nvidia.com>
-References: <20250213034355.516610-1-ziy@nvidia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BN0PR07CA0007.namprd07.prod.outlook.com
- (2603:10b6:408:141::24) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v075Jfi8"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-21f6c90a8ddso13430035ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 19:44:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739418253; x=1740023053; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zcMsAG9yErYMXfZzDMubfi8AYhSUZZ1p7DLoUqRwf84=;
+        b=v075Jfi8n7uCtgaqbe5F+WzEuWXGSKYnI2Lcyda7koZH7aP4BTfv6N5+d4nqrRQc4y
+         RF26+VhU5WLALz7xpmN3wcJqp4rRWNY6iNMYuaWJBCkRQ6ZXgGlSwhD2n4vx2htRqs/u
+         DQHtDOoRtpOTIKCl9kudPwgipLq6HGNZ7wfeKqrSioVt1rDaDilTGehz8OhiNU799SWa
+         FnhsgWom3vVi7H/n4ljOCYjZU2rq7Vd3iSJgjETsFK1n1OO5WiOO98hBWQVeYJt3XC7a
+         k/8QgnZEuhOGaZ2zXEYr/E9yyT1MOxYdvfgY2kCzGM2gmG3W+d94BQbqzeGEVj9pQZxM
+         mTRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739418253; x=1740023053;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zcMsAG9yErYMXfZzDMubfi8AYhSUZZ1p7DLoUqRwf84=;
+        b=i8XJmh3DIoeLXi/mAzS1GX+8dJF4x7LCu08d8Igqw4/3XFL0ejuOGeD3kN16XBCSTm
+         650b8V0ojVWX7OTAvbAwkJXQGAAysyNRtykEPkPDst91XRYqf9ibDgJy7TVmwY8YX3WO
+         UA2stmelZff1eaY98s6b+dW4DbntTg5smlpg+8aa/Z5+h5JIbWdAPv3/OeJXTSKHS0nS
+         cAsvsJ+kqi0uNY7K0vRNGdS6gYIjZFP5wzXqWrQqVPKMfmH59wvll9SbDyBRgh1tSnnN
+         A0KJb8aCNhcF3y4tImPvuiNBJ+aOEmF5q0PWRG3FTHnaZxiMzRQcKRWI5Cq2OlGJF6Ez
+         fjVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVWaLGJG5WVB9iAoS8NzY8XHVIvaTOgUWv7BvZp0E3uFBeR1u+V6OrmsVfo4oSpAsQUPEeKn3/SJOQ6zhE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3IH0yzLid2lYRSkVuBU4Iq6Ahz6MH9pz0C3XknCk4bNlaNQfd
+	rphGxHh5qMvAm6c7remQ4hSbMo7d2git1yWdQwC+XixW2P0krdjJU11LddbBKYmPUUBt36Ql/S8
+	HX1bXdQ==
+X-Google-Smtp-Source: AGHT+IHK9w9UpX37k7oeAo+CDeYGncD+J6qpnDGzSPKR70jVF/4aze/v5ktbnZ+WivlFBRP2+EsAlWQGjIY4
+X-Received: from pldp13.prod.google.com ([2002:a17:902:eacd:b0:21d:dca4:21b0])
+ (user=chharry job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e850:b0:21f:78f:c178
+ with SMTP id d9443c01a7336-220d1ec1f7bmr27790965ad.3.1739418253438; Wed, 12
+ Feb 2025 19:44:13 -0800 (PST)
+Date: Thu, 13 Feb 2025 11:44:00 +0800
+In-Reply-To: <20250213114400.v4.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DM3PR12MB9434:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f726e5c-e83c-4600-6b4c-08dd4be0aaf7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?JaNN4P14DDN9Ts/m3M7ieaSND9q+KihDDWGPx2xLfsQfqfxe3FM2lV/Llkms?=
- =?us-ascii?Q?Ra35U4W/hT2jwYpbBWg9hwfCGTfnaCPM7jvUVFpeOL4YKvWKWmQfT3ZrD1YC?=
- =?us-ascii?Q?1OWrZ9GrcqCItTl526TkNCqN5LHkgrK1Nd+Ep8PqitNM8Eg7xneucCrg6l8z?=
- =?us-ascii?Q?kJcHhwXJAFs0A+v4VVps+8nMNHZaOO26hNWKcXUTYo0rovA1BDjCiN8C33vE?=
- =?us-ascii?Q?hZd4C8y2vrJJHSOnKtUPaPHtx5qkhf5wHje07wKEixJ7hTqbJtcCVwlQjKPP?=
- =?us-ascii?Q?ttWrOogj89uF7yGrvdv7f3Ykkl6jMHcMY7URFHhRNMnltQxGWeM7SkMRuYei?=
- =?us-ascii?Q?MoZUUe/Ctba0IgVGlFvx3yhaQboF+PCvtKheF3sivDcDnn5R3kFhfh6o2Gs8?=
- =?us-ascii?Q?lnde/2BwwMwewngt/3I0Mideb8fn153JcKznKphq4jixIEHxfTbqu6y8lPn/?=
- =?us-ascii?Q?AlZyqR+O/fV8ayxXAUUzpbXd8D+BvkTKa/EK1eyQQ9FRMSI9Jfx8H7S0p5WG?=
- =?us-ascii?Q?luTwWOG2LaL63T5vBWs+7b0CCj6+JP+vgD3MKqxq7wYmd8lICc7UE52U2FFz?=
- =?us-ascii?Q?8XBdgIGdzyB2TBxn8mWLAbIrjvMDW2QTg6qT3zp8QWc5LjqFB9UIn+aNSz+1?=
- =?us-ascii?Q?MF7Z06ttwjtdxnI4GZBrbMUcPEENt6PCmaciK4eT+JuACqha/GKliOm60Y8G?=
- =?us-ascii?Q?8USKxPbWn/r3euzejFPkXbONPJWgNDeMze6gx+ZX1iCeuNc7F5DzIgeVcQZ5?=
- =?us-ascii?Q?zPABHGU2mLegreZt/z2/wTRx39zlgMXxgw7u1sM7V0zDdz3qvwwrnyVWnTih?=
- =?us-ascii?Q?Z4Y9qo5+CAUiLZt+oni22ITQm1gL6gt7bKZ+1eUXYTf6XzUTWc2ma4V3NqMP?=
- =?us-ascii?Q?QF93HB2lL4hraLZKbyVC5ZlNAeeJohX1zhYm/4HqJVdfRMs7z4WSS3nxOOCu?=
- =?us-ascii?Q?adOObbY3vTN5fCbhSc46eGXayQBZhQFT5BwyUsHUrlNm5P1mcUWG4oo5J1cZ?=
- =?us-ascii?Q?LTo1d9+R9Ub7YAJus36P5ebArOsHb8OMXhjG8k7dMFuoL4MfYzOkZCcBXqGi?=
- =?us-ascii?Q?pSY1+ql/3Zmf6MTebkwCV7pjhhlhLxImjReBiSDXshUCOBcf/eEci4VXhBa3?=
- =?us-ascii?Q?FB/R/OPP+fGhB0vLOww4JNXWlDmbzcurMTOKMs86DMp3ue3eN8h9L4HzwCne?=
- =?us-ascii?Q?5R7svenAafqdfZx5ZJ22IpFllpN7Mx4JXW48l0Hg3ODNIF9o8+6B6A88yvVU?=
- =?us-ascii?Q?5QvAZhWWi7eGm0GTxduFMiOSituSgyQ2dCAiS2WC1z1I63el52ArEXe49Q1F?=
- =?us-ascii?Q?acyp/7+4ZXJ7mVXQiptpUjnDKVnJPDI7v4sxYDHVYaage7tmeW9v3UEvFHsf?=
- =?us-ascii?Q?hVI4qiYWJfbkAg5zybDG3z1zfWyd?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?oXajlNh9K0jvbG8HNGCTudk5but1SJnjN/gajXcJ7faXTJCbdUDZ0FROgarJ?=
- =?us-ascii?Q?k9Rj//axjghncrxoA3nuEaRWZV0zVoIdOnXk5EZVemYeEREUC+EYnTSxx4k/?=
- =?us-ascii?Q?VJcycF75RE7396VC7LFy8RrAunPwk6f35h1XoTFJG32kMJ3aIK5CbvLD0tB9?=
- =?us-ascii?Q?9nKyov+vxvD1YXlrjo93NJtASx0EdVSOkEt7BrmC+oJd4VBGdgFgomkPen1B?=
- =?us-ascii?Q?2nwPLFhQJ4ULXWoso/wITKvEzDBTnCamiMtdwn1/2KY533zfmoURXlc1mJ/d?=
- =?us-ascii?Q?TaZSBnAIOUTh6gg6CQLp1C0zgRD4RQGUJiez470ITDZs33KMlFUF5PzE1hJN?=
- =?us-ascii?Q?eo6ovQVfCoCGZRudvLPlBr4XMJOXJKgs84B0+nLQEY0unDTg0RliQUpM4MQR?=
- =?us-ascii?Q?73SugE4ksWYYack22a/Zj1RWFUYb5bQ8FGBD3vwEVvLOVIA3hZ4k3jIwwZac?=
- =?us-ascii?Q?wtBZBz6mHwykwTNoqzNJIFZbv85etIWWQGt07e/xh7Oo55SSxesci/kOFOFr?=
- =?us-ascii?Q?itL9QuTheTYOCE19WAS0JJgv5rghm7h1x4kDYOvjh1XNTDddTAXeVAUhm470?=
- =?us-ascii?Q?dsyVNvkZUSm5t8i9YOMQyl75A2ERgva7cLY23EsF03IUHd08U9p0df/We54x?=
- =?us-ascii?Q?8eLLLVhIg/mQ2zvNBoL8b3J+oIcwSv9yufvcJwYlumI64doMlt/pR9/9feRU?=
- =?us-ascii?Q?5TabNcDb4NeQmJBCAHXjGdLH0ssswzImI6O+MHZFXXJw2+fSvzwwcPuOea4S?=
- =?us-ascii?Q?LxDMARbvsaVYi3CLemWvQuzo5FH3dPgBLxrU/JihYMsmsPYar0H8rIjFMfO+?=
- =?us-ascii?Q?+4jaDIQVTM0X0VSI4jNzqzV3cibMeImIdopePFecRyoEO1ePGV+pRrtlILBt?=
- =?us-ascii?Q?nrE5VKNhEt92itBQ1r2PhN9HHhTRP68PhzXiaxHY7hV7dmvfaj/shLCE2cfx?=
- =?us-ascii?Q?288vVESFb5SFTREjdOS3MIYmjiuST+m2x+9FKIBaXqG1EmpIxivT+bblwtFu?=
- =?us-ascii?Q?S7Rs30HUlp6R1jKXX2TqTJ4XqrbBHdQDJfw2z8IhAQAhtsYQd/oji5yYmjeP?=
- =?us-ascii?Q?MQ88OMrtIQ0vwub4zSHa2/9OX6cY6XKpMtHY+Q3boRIOM2aSO2kp3jVeUejt?=
- =?us-ascii?Q?j0UHsPktpm/BP3oL6SzzODIS2WD27flw+utsYRRyrPmL1ut4Xvq4z4Azmglo?=
- =?us-ascii?Q?StT3DkTtjVyaTxjrDhRwOc0S1eviSYDlPOKuYVaVt9cpSUKUXp8Lz0EznxTk?=
- =?us-ascii?Q?VipSZpYffSmozewray8SMnVIPqs2T8wr1OexWWJvPdY4UVjWuWiOE2Esewex?=
- =?us-ascii?Q?znRdwgwCc73suhFdQtnAw6c0O5Or75By8QwQEqMx3kKHP7yt71i3vxx6SEz/?=
- =?us-ascii?Q?H7D/RiuFpUnmwp7NSjE9JFUQE9y0v/12Me4T8ZKkvql+i7cV9TIfEKWhZa44?=
- =?us-ascii?Q?S8laKwIjyeqqroldZIgPjmszyoOxNBUtAMRwzgnYZ2YH1kqoAR75TuLyapP/?=
- =?us-ascii?Q?1EXd3jICYByATnBedkpklJTNKn/4SSRpAoywaVp1SZ5x7JfOKn2f/+agb+6Z?=
- =?us-ascii?Q?g9PTqjAj3O8JN9uR2Gg5suJpqc1QhBHUCgH+NoOV?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f726e5c-e83c-4600-6b4c-08dd4be0aaf7
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 03:44:07.0605
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: K6HKpw9gcrWuHmhGhmT891TxB1+4wEt9JQw1AkBCOHxxj1Gu3/V4xok0btbwM9p4
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9434
+Mime-Version: 1.0
+References: <20250213114400.v4.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <20250213114400.v4.2.I6e9e94dcded65e4a9ed42ad23ca8a5d81f680382@changeid>
+Subject: [PATCH v4 2/3] Bluetooth: Always allow SCO packets for user channel
+From: Hsin-chen Chuang <chharry@google.com>
+To: linux-bluetooth@vger.kernel.org, luiz.dentz@gmail.com, 
+	gregkh@linuxfoundation.org
+Cc: chromeos-bluetooth-upstreaming@chromium.org, 
+	Hsin-chen Chuang <chharry@chromium.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Ying Hsu <yinghsu@chromium.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-During __filemap_add_folio(), a shadow entry is covering n slots and a
-folio covers m slots with m < n is to be added. Instead of splitting all
-n slots, only the m slots covered by the folio need to be split and the
-remaining n-m shadow entries can be retained with orders ranging from m to
-n-1. This method only requires (n/XA_CHUNK_SHIFT) - (m/XA_CHUNK_SHIFT)
-new xa_nodes instead of
-(n % XA_CHUNK_SHIFT) * ((n/XA_CHUNK_SHIFT) - (m/XA_CHUNK_SHIFT)) new
-xa_nodes, compared to the original xas_split_alloc() + xas_split() one.
-For example, to insert an order-0 folio when an order-9 shadow entry is
-present (assuming XA_CHUNK_SHIFT is 6), 1 xa_node is needed instead of 8.
+From: Hsin-chen Chuang <chharry@chromium.org>
 
-xas_try_split_min_order() is introduced to reduce the number of calls to
-xas_try_split() during split.
+The SCO packets from Bluetooth raw socket are now rejected because
+hci_conn_num is left 0. This patch allows such the usecase to enable
+the userspace SCO support.
 
-Signed-off-by: Zi Yan <ziy@nvidia.com>
+Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to control USB alt setting")
+Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
 ---
- include/linux/xarray.h |  7 +++++++
- lib/xarray.c           | 25 +++++++++++++++++++++++
- mm/filemap.c           | 46 +++++++++++++++++-------------------------
- 3 files changed, 51 insertions(+), 27 deletions(-)
 
-diff --git a/include/linux/xarray.h b/include/linux/xarray.h
-index 9eb8c7425090..6ef3d682b189 100644
---- a/include/linux/xarray.h
-+++ b/include/linux/xarray.h
-@@ -1557,6 +1557,7 @@ void xas_split(struct xa_state *, void *entry, unsigned int order);
- void xas_split_alloc(struct xa_state *, void *entry, unsigned int order, gfp_t);
- void xas_try_split(struct xa_state *xas, void *entry, unsigned int order,
- 		gfp_t gfp);
-+unsigned int xas_try_split_min_order(unsigned int order);
- #else
- static inline int xa_get_order(struct xarray *xa, unsigned long index)
- {
-@@ -1583,6 +1584,12 @@ static inline void xas_try_split(struct xa_state *xas, void *entry,
- 		unsigned int order, gfp_t gfp)
- {
- }
-+
-+static inline unsigned int xas_try_split_min_order(unsigned int order)
-+{
-+	return 0;
-+}
-+
- #endif
+(no changes since v2)
+
+Changes in v2:
+- Check HCI_USER_CHANNEL rather than just remove the hci_conn_num check
+
+ drivers/bluetooth/btusb.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index cb3db18bb72c..01f84da27a30 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -2132,7 +2132,8 @@ static int btusb_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
+ 		return submit_or_queue_tx_urb(hdev, urb);
  
- /**
-diff --git a/lib/xarray.c b/lib/xarray.c
-index c38beca77830..1805fde1c361 100644
---- a/lib/xarray.c
-+++ b/lib/xarray.c
-@@ -1133,6 +1133,28 @@ void xas_split(struct xa_state *xas, void *entry, unsigned int order)
- }
- EXPORT_SYMBOL_GPL(xas_split);
+ 	case HCI_SCODATA_PKT:
+-		if (hci_conn_num(hdev, SCO_LINK) < 1)
++		if (!hci_dev_test_flag(hdev, HCI_USER_CHANNEL) &&
++		    hci_conn_num(hdev, SCO_LINK) < 1)
+ 			return -ENODEV;
  
-+/**
-+ * xas_try_split_min_order() - Minimal split order xas_try_split() can accept
-+ * @order: Current entry order.
-+ *
-+ * xas_try_split() can split a multi-index entry to smaller than @order - 1 if
-+ * no new xa_node is needed. This function provides the minimal order
-+ * xas_try_split() supports.
-+ *
-+ * Return: the minimal order xas_try_split() supports
-+ *
-+ * Context: Any context.
-+ *
-+ */
-+unsigned int xas_try_split_min_order(unsigned int order)
-+{
-+	if (order % XA_CHUNK_SHIFT == 0)
-+		return order == 0 ? 0 : order - 1;
-+
-+	return order - (order % XA_CHUNK_SHIFT);
-+}
-+EXPORT_SYMBOL_GPL(xas_try_split_min_order);
-+
- /**
-  * xas_try_split() - Try to split a multi-index entry.
-  * @xas: XArray operation state.
-@@ -1145,6 +1167,9 @@ EXPORT_SYMBOL_GPL(xas_split);
-  * be allocated, the function will use @gfp to get one. If more xa_node are
-  * needed, the function gives EINVAL error.
-  *
-+ * NOTE: use xas_try_split_min_order() to get next split order instead of
-+ * @order - 1 if you want to minmize xas_try_split() calls.
-+ *
-  * Context: Any context.  The caller should hold the xa_lock.
-  */
- void xas_try_split(struct xa_state *xas, void *entry, unsigned int order,
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 804d7365680c..e28a7a623889 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -860,11 +860,10 @@ EXPORT_SYMBOL_GPL(replace_page_cache_folio);
- noinline int __filemap_add_folio(struct address_space *mapping,
- 		struct folio *folio, pgoff_t index, gfp_t gfp, void **shadowp)
- {
--	XA_STATE(xas, &mapping->i_pages, index);
--	void *alloced_shadow = NULL;
--	int alloced_order = 0;
-+	XA_STATE_ORDER(xas, &mapping->i_pages, index, folio_order(folio));
- 	bool huge;
- 	long nr;
-+	unsigned int forder = folio_order(folio);
+ 		urb = alloc_isoc_urb(hdev, skb);
+@@ -2606,7 +2607,8 @@ static int btusb_send_frame_intel(struct hci_dev *hdev, struct sk_buff *skb)
+ 		return submit_or_queue_tx_urb(hdev, urb);
  
- 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
- 	VM_BUG_ON_FOLIO(folio_test_swapbacked(folio), folio);
-@@ -873,7 +872,6 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- 	mapping_set_update(&xas, mapping);
+ 	case HCI_SCODATA_PKT:
+-		if (hci_conn_num(hdev, SCO_LINK) < 1)
++		if (!hci_dev_test_flag(hdev, HCI_USER_CHANNEL) &&
++		    hci_conn_num(hdev, SCO_LINK) < 1)
+ 			return -ENODEV;
  
- 	VM_BUG_ON_FOLIO(index & (folio_nr_pages(folio) - 1), folio);
--	xas_set_order(&xas, index, folio_order(folio));
- 	huge = folio_test_hugetlb(folio);
- 	nr = folio_nr_pages(folio);
- 
-@@ -883,7 +881,7 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- 	folio->index = xas.xa_index;
- 
- 	for (;;) {
--		int order = -1, split_order = 0;
-+		int order = -1;
- 		void *entry, *old = NULL;
- 
- 		xas_lock_irq(&xas);
-@@ -901,21 +899,26 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- 				order = xas_get_order(&xas);
- 		}
- 
--		/* entry may have changed before we re-acquire the lock */
--		if (alloced_order && (old != alloced_shadow || order != alloced_order)) {
--			xas_destroy(&xas);
--			alloced_order = 0;
--		}
--
- 		if (old) {
--			if (order > 0 && order > folio_order(folio)) {
-+			if (order > 0 && order > forder) {
-+				unsigned int split_order = max(forder,
-+						xas_try_split_min_order(order));
-+
- 				/* How to handle large swap entries? */
- 				BUG_ON(shmem_mapping(mapping));
--				if (!alloced_order) {
--					split_order = order;
--					goto unlock;
-+
-+				while (order > forder) {
-+					xas_set_order(&xas, index, split_order);
-+					xas_try_split(&xas, old, order,
-+						      GFP_NOWAIT);
-+					if (xas_error(&xas))
-+						goto unlock;
-+					order = split_order;
-+					split_order =
-+						max(xas_try_split_min_order(
-+							    split_order),
-+						    forder);
- 				}
--				xas_split(&xas, old, order);
- 				xas_reset(&xas);
- 			}
- 			if (shadowp)
-@@ -939,17 +942,6 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- unlock:
- 		xas_unlock_irq(&xas);
- 
--		/* split needed, alloc here and retry. */
--		if (split_order) {
--			xas_split_alloc(&xas, old, split_order, gfp);
--			if (xas_error(&xas))
--				goto error;
--			alloced_shadow = old;
--			alloced_order = split_order;
--			xas_reset(&xas);
--			continue;
--		}
--
- 		if (!xas_nomem(&xas, gfp))
- 			break;
- 	}
+ 		urb = alloc_isoc_urb(hdev, skb);
 -- 
-2.47.2
+2.48.1.502.g6dc24dfdaf-goog
 
