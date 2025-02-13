@@ -1,157 +1,89 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47108212FB1
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8EA421422A;
+	Thu, 13 Feb 2025 11:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739447105; cv=none; b=te/3xU+wOqvgT9ycEOperb0i99L6A0MA5cYw1ttuV40Z+jyJIIBwcV4pqUxxUpyI7wLBAH32efHyW9/dMgl8TKItuXVcbZgIFI6pafWp8+hZSR6WTUnpLXzmKx1SEB09M3PtcO4D1lHkkVCFWEMoLV6OtE+8A2JRnSao4cJZPcE=
+	t=1739447110; cv=none; b=k0SsreSZ3N1vb4JTBqpPYfYV8v3fST4Jyd2Axwb1DzvQnoP3HO76J/rJN4fQ5aQ+x8+vxzk/xIUDef6Y6Nw94c+fMPOZDDQaJ2fue8YhT6XysFii+FphbNuQkMzTJ4z4abwB0yia8Z/YVirmTb+PeMPbSshNrlPRnWGohKgLAzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739447105; c=relaxed/simple;
-	bh=7PtZe0tSJIetPwypQyiZo24A/z2QBMIiJyjFAjqbFBc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LmfMg+twgyYxLBifCVnCwt7HvezCOYE4e3DPwDSKEg0Jnd85Ew8PnR5rD0GWx5nZJ/ZpZjo8RLy1GuW6VH3j1y4YvUZfTClXUQ8CLmuz+03mhH7lqnU4BtPsJa1HrgQGIBi9Bwc2kafI5gm4ltZj1Q+obqoYsqhe8uvnyAsNBXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=twS3QFWf; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739447110; c=relaxed/simple;
+	bh=mOOLLj+OAy5y5nKK1dSt8RN8ouLFYKPIqvCP4TBrOv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wo1iIJc064qZYipgQCNNOwSb9GGJkMberQeJjPT/3NJ0x/ynxChe5bX1zUdcxQXBdYzWFh4y4GMgt5yBWz3coZkKTBQpf9ZbVrzzGI+pk5JIMkdepoTCG9DvbYsCk+y4iE14zL7jqxJArN3Gp6ubE+CrtOz567CG4jfTFonDDQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMG7NNJF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="twS3QFWf"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-436ce2ab251so5299985e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 03:45:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739447100; x=1740051900; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=B864o0fggh+K1JfNxHrkc432l7fxNgcBloINRuCFBwY=;
-        b=twS3QFWfAlmH026H6yFe9sNWWcDXHLNDQ6d3N2Fw7niGxOd5nbZZTVbK3Cbr/rad8o
-         2mg2LEnpIORi7F9SCkAFkw70/xvVYXq5omR60cFAhAYRR3+Z/aucvLdPDjmJ/OWsJBeR
-         ViQKiz/q32m78pAU7gH/5y/junQsVILhIgaW46HGFRueeypIBl5rVHOI9IkZ5eeNaKlP
-         r8vcL8aMEidy7c3wUqpIC3hkTmvuEMikSzt6WknrmuaZOv3RB/tUtbk0ebp+qfistzOa
-         Ymppjaav8JiRpPcTqrzEAL6VRN4TRQt2BnMtLVeRhCpd1u9t3ZNFyi/bggO0tImbJZuJ
-         YPkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739447100; x=1740051900;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B864o0fggh+K1JfNxHrkc432l7fxNgcBloINRuCFBwY=;
-        b=M30ZpIfiPuZUQXF9nXr8zebBjO+BoYL9ZDZyvOVD2v95xYi47owU5iYxuyC41jV60q
-         g1wkx9R+nuGrgJRfjqQTiklZupGu7mJ89X4eO0b0sUxJnq61d69QHOxe8U/YW/Jkxumd
-         wDHEwxZVnikLFHUglTS5j8ynCIVzh09LA3UwzGhIDBlXB2jxSxKtL6sAaJFgTwEkDaad
-         AQpvLyFuRpQK94vODDJLL78L5WGnsodd1pdRUZPNIIPjQjfvkgkXil+mT+LsZBpXDxFD
-         MdDBm7JtMxKqSmxHwR0162+nU6E8Bdqz89Oa86rTPys2iNAthSphSC7zmZHlD+Rl/LYT
-         O1mA==
-X-Forwarded-Encrypted: i=1; AJvYcCXDaFN4/sdsYUrzJcOwa8j3iZglZJc4VP7CKxu7mdJ7RsvXvih22G688Jdb3+I2GsRc73TidJGti4FqJwM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp8mBQDAb2aH0mujiT0wujrTrP6r67n7/5DTC2fOEA1OeLrQ9P
-	V+4/C0lo0pDoR4KX2xT3l92iXzmqspnrKBH7b6iMRkAqVn4QV53jzQKZ+MRcVABDgRvOz2/VaM2
-	QvIY=
-X-Gm-Gg: ASbGncu0cvO0hCZAM3a36vvXXKPJlJsdplM8mlVdXHu8/3/ucp2BuQYmzYS7+q6CRSE
-	KZ67sGsxyTh0q1zbLpohSk8Xx2OOQfOAlss6S9yXO1XqVfFcgeMPYigSfm838Nwd9bUot8oOvEI
-	zNXYQ9Iz6U+SoWqPgAwBlGl0msl0PNn1sjF0glkAM8Frwo8vcT62cAKwMXFEcJyrHo2LyU1NEk9
-	RrdIOjqbFpH6ZLk9B0gSeTR72XeVty960KUsralidC4sczxo1uhnOHaLKECJXgFkEGzbnWKqLq0
-	90ZHYTRRkfH/W7BJQDQ=
-X-Google-Smtp-Source: AGHT+IHKD0ms8VgaTWGBDJMvklWj7HpF1w1pq+OTWxzqSwoHxcvtoBbQvKht7o4Zc8bM5Shdt4UGsA==
-X-Received: by 2002:a5d:584e:0:b0:38d:d79a:f82a with SMTP id ffacd0b85a97d-38dea256f8emr5496991f8f.7.1739447100552;
-        Thu, 13 Feb 2025 03:45:00 -0800 (PST)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258b41b5sm1688110f8f.14.2025.02.13.03.44.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 03:45:00 -0800 (PST)
-Message-ID: <58af4b607adbe74725d4869f8f5a09cd5d3be2d3.camel@linaro.org>
-Subject: Re: [PATCH] usb: typec: tcpm/tcpci_maxim: better interrupt name
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Peter Griffin
- <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Will
- McVicker <willmcvicker@google.com>, kernel-team@android.com,
- linux-usb@vger.kernel.org,  linux-kernel@vger.kernel.org
-Date: Thu, 13 Feb 2025 11:44:59 +0000
-In-Reply-To: <2025021302-malformed-captivity-e862@gregkh>
-References: <20250213-max33359-irq-name-v1-1-1900da7a1e79@linaro.org>
-	 <2025021302-malformed-captivity-e862@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2-2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMG7NNJF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E026C4CEE7;
+	Thu, 13 Feb 2025 11:45:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739447110;
+	bh=mOOLLj+OAy5y5nKK1dSt8RN8ouLFYKPIqvCP4TBrOv8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MMG7NNJFwxt/ZZSSaYrBF1pZzHuNU8g/iOuIMkgoOhoGsEl6FOH9szsYcntNMZCZI
+	 lYVR9QILZyWjlvs937vrDA73/FOwFRrqhIfL2pjgcDlyPRuvgaa7hgLqwwYjPJwkcB
+	 s6ju/uZy0wn9eyhjwRzrAP6I0DfHXiAWyeXOnCf2WLzlgj8+hA1usc2SrE7uGikWDz
+	 vCb/a+1OYPjr4/9o/GJgd3LGYHXLnbFax6R+6BTLFsZ8Zh54HP+2VoFZKNeXNHVLsc
+	 jf47WrCUnGAhvRFcTbOgfDS0gNpWWaGQjqyGMY02zyHAXY4lcY5CssrwgTqzsK7836
+	 VTivT3D76IP2w==
+Date: Thu, 13 Feb 2025 11:45:04 +0000
+From: Will Deacon <will@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Oliver Upton <oliver.upton@linux.dev>, linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Zheng Zengkai <zhengzengkai@huawei.com>
+Subject: Re: [PATCH] ACPI: GTDT: Relax sanity checking on Platform Timers
+ array count
+Message-ID: <20250213114503.GA11508@willie-the-truck>
+References: <20250128001749.3132656-1-oliver.upton@linux.dev>
+ <Z5i2j9gFB2iyN9g4@lpieralisi>
+ <Z5lBMBY7XoFJmpGM@linux.dev>
+ <Z6x4987CJ0zgmw3s@lpieralisi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6x4987CJ0zgmw3s@lpieralisi>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi Greg,
+On Wed, Feb 12, 2025 at 11:33:27AM +0100, Lorenzo Pieralisi wrote:
+> > > I think this should be fine as things stand (but see above).
+> > > 
+> > > It is used in:
+> > > 
+> > > gtdt_sbsa_gwdt_init() - just to check if there are platform timers entries
+> > > 
+> > > arch_timer_mem_acpi_init() - to create a temporary array to init arch mem timer
+> > > 			     entries (the array is oversized because it
+> > > 			     includes watchdog entries in the count)
+> > > 
+> > > In both cases taking the
+> > > 
+> > > min(cnt, gtdt->platform_timer_count);
+> > > 
+> > > should work AFAICS
+> > 
+> > It was probably worth noting in the changelog that I did this to
+> > gracefully handle the reverse of this issue where we could dereference
+> > platform timer entries that are within the bounds of the GTDT but exceed
+> > gtdt->platform_timer_count.
+> 
+> Hi Oliver,
+> 
+> I was about to ask Catalin/Will to pick this up, don't know if you have
+> time to update the changelog and send a v2 - a Link: to this thread will
+> be added anyway.
 
-On Thu, 2025-02-13 at 11:11 +0100, Greg Kroah-Hartman wrote:
-> On Thu, Feb 13, 2025 at 09:37:54AM +0000, Andr=C3=A9 Draszik wrote:
-> > This changes the output of /proc/interrupts from the non-descriptive:
-> > =C2=A0=C2=A0=C2=A0 1-0025
-> > (or similar) to a more descriptive:
-> > =C2=A0=C2=A0=C2=A0 1-0025-max33359
-> >=20
-> > This makes it easier to find the device, in particular if there are
-> > multiple i2c devices, as one doesn't have to remember (or lookup) where
-> > it is located.
-> >=20
-> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> > ---
-> > =C2=A0drivers/usb/typec/tcpm/tcpci_maxim_core.c | 13 ++++++++++---
-> > =C2=A01 file changed, 10 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/drivers/usb/typec/tcpm/tcpci_maxim_core.c b/drivers/usb/ty=
-pec/tcpm/tcpci_maxim_core.c
-> > index fd1b80593367..46fc626589db 100644
-> > --- a/drivers/usb/typec/tcpm/tcpci_maxim_core.c
-> > +++ b/drivers/usb/typec/tcpm/tcpci_maxim_core.c
-> > @@ -420,12 +420,14 @@ static irqreturn_t max_tcpci_isr(int irq, void *d=
-ev_id)
-> > =C2=A0	return IRQ_WAKE_THREAD;
-> > =C2=A0}
-> > =C2=A0
-> > -static int max_tcpci_init_alert(struct max_tcpci_chip *chip, struct i2=
-c_client *client)
-> > +static int max_tcpci_init_alert(struct max_tcpci_chip *chip,
-> > +				struct i2c_client *client,
-> > +				const char *name)
-> > =C2=A0{
-> > =C2=A0	int ret;
-> > =C2=A0
-> > =C2=A0	ret =3D devm_request_threaded_irq(chip->dev, client->irq, max_tc=
-pci_isr, max_tcpci_irq,
-> > -					(IRQF_TRIGGER_LOW | IRQF_ONESHOT), dev_name(chip->dev),
-> > +					(IRQF_TRIGGER_LOW | IRQF_ONESHOT), name,
-> > =C2=A0					chip);
-> > =C2=A0
-> > =C2=A0	if (ret < 0)
-> > @@ -485,6 +487,7 @@ static int max_tcpci_probe(struct i2c_client *clien=
-t)
-> > =C2=A0	int ret;
-> > =C2=A0	struct max_tcpci_chip *chip;
-> > =C2=A0	u8 power_status;
-> > +	const char *name;
-> > =C2=A0
-> > =C2=A0	chip =3D devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
-> > =C2=A0	if (!chip)
-> > @@ -531,7 +534,11 @@ static int max_tcpci_probe(struct i2c_client *clie=
-nt)
-> > =C2=A0
-> > =C2=A0	chip->port =3D tcpci_get_tcpm_port(chip->tcpci);
-> > =C2=A0
-> > -	ret =3D max_tcpci_init_alert(chip, client);
-> > +	name =3D devm_kasprintf(&client->dev, GFP_KERNEL, "%s-%s",
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_name(&client->dev), client->name=
-);
-> > +	if (!name)
-> > +		return -ENOMEM;
->=20
-> Please always test your code before sending it out.=C2=A0 You just leaked=
- a
-> bunch of stuff here :(
+I'll pick it up with the Link: tag, no need to resend.
 
-Thanks for the review!
+Thanks, both!
 
-I can not see what leak you're referring to. Could you please clarify?
-
-Thanks,
-Andre'
-
+Will
