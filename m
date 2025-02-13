@@ -1,229 +1,221 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD45914AD20;
-	Thu, 13 Feb 2025 18:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739470690; cv=none; b=TkS7/muN2QQ1ShEiMCtRRscflZqqBTReLPOT7+xOJCjtJHnhqtUwd0sOO8em+mVGgJ9k1EBYljv6D6hLLlOPWYLJ9i8tMHklwVtAbp5TnzQR841eTy6qj6MBfkrNM4ek8uBmboeUf1LZrIy+ZpYIslZTdMpJRAx+J4XklwkHucI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739470690; c=relaxed/simple;
-	bh=XPe6RGG+3E8LPDsiWJclm164C2zfaeDhBS6YIN9n964=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gvbuj64fLLoMxYXA/QWfmfF71iOyTkiFlauMik64rJMQxNA+fEwP2xxwwS/JYWdBbnfxSXSK4ImLi7aZlp9r6/WMageqPeObTQDmCx3/H7m1hq6DxIrYTSc2taQOBvyDhRYUk9YdA7QbTp8oj6KNBAsAuefKOj2PLctbGNHUVHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7558113E;
-	Thu, 13 Feb 2025 10:18:28 -0800 (PST)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B2903F5A1;
-	Thu, 13 Feb 2025 10:18:04 -0800 (PST)
-Date: Thu, 13 Feb 2025 18:18:01 +0000
-From: Dave Martin <Dave.Martin@arm.com>
-To: "Moger, Babu" <babu.moger@amd.com>
-Cc: peternewman@google.com, corbet@lwn.net, reinette.chatre@intel.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, tony.luck@intel.com, x86@kernel.org,
-	hpa@zytor.com, paulmck@kernel.org, akpm@linux-foundation.org,
-	thuth@redhat.com, rostedt@goodmis.org, xiongwei.song@windriver.com,
-	pawan.kumar.gupta@linux.intel.com, daniel.sneddon@linux.intel.com,
-	jpoimboe@kernel.org, perry.yuan@amd.com, sandipan.das@amd.com,
-	kai.huang@intel.com, xiaoyao.li@intel.com, seanjc@google.com,
-	xin3.li@intel.com, andrew.cooper3@citrix.com, ebiggers@google.com,
-	mario.limonciello@amd.com, james.morse@arm.com,
-	tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
-	eranian@google.com
-Subject: Re: [PATCH v11 00/23] x86/resctrl : Support AMD Assignable Bandwidth
- Monitoring Counters (ABMC)
-Message-ID: <Z643WdXYARTADSBy@e133380.arm.com>
-References: <cover.1737577229.git.babu.moger@amd.com>
- <Z6zeXby8ajh0ax6i@e133380.arm.com>
- <5e9a5b3e-793c-4873-a1d2-33b62614ec31@amd.com>
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1084514AD20;
+	Thu, 13 Feb 2025 18:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739470752; cv=fail; b=mky1XgnM0YFi86KpwTEUDLh63yHQZZzsgRfQgNhlcRtGKHQ8H3fhiqiFyglZM6nQZpRJbxRzaAjrFFThDCH4mzIUobsCTvIObxrKS666VC0EGAKVijvaTnnzX4eo8r0TNhDwqMvFPVU8+Zz8o/onIjvwP8i9OVtHs7v0ANHkGrI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739470752; c=relaxed/simple;
+	bh=6r2uEJu8qQhggqq3BPKN5xN2QcI6X1zL+A+QFLZOSWo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HeQMTlQeG+8UHWmh1yUZc9jY3gZKfRUmC/rbv46XzyDL0O/5/rxGQ7e94Xo4pAj0cdXuqg613495X+ZlmXtvSWdRH/xLoQR43X3jSdhzPWmj01CkuaFOeBe8qFZUeZXqB0e7HfnGJzO67Ftcqif+9ux3gepWlT3vcipF2R8GV3g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Z3+1UFOO; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ASpps0Lt; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Z3+1UFOO";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ASpps0Lt"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DGfXfA027454;
+	Thu, 13 Feb 2025 18:18:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=FHZT+6B4eEEKrQiJVYaY3M5f4NGJfj97nMnc72SUNSs=; b=
+	Z3+1UFOOfbAwSOTXLxytzwEVKOCclXLIARrPuYWV2Ah8knubqg5k1Cq8jWdgQaiy
+	HZCHEh8Bctxwv6ISVNI+uRUcd+eEzqxl0zLA0sMjCbxhTw5tgbtEvVEaODRtdVYV
+	cOXs4S2XhpACyMoMVEU5BEeApQBmP+l0kwJTsyDDuHPDEVCc7FAiEM5ND5ydshYE
+	i6Vn07PhdOxiW8hycyraJu6g/IOp9wzFtFYNF//N7zlk5HVyyb3JFIp+2A27Kpm7
+	KgaTPDbDE7VddCOYLekYpnNIdsvXo9mSZv/NmKnjxv+IHIU6hsGeIb/21tJZhMtG
+	u2OxkrYvI16p/D8x7hmoVQ==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44p0qaj5br-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 13 Feb 2025 18:18:51 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51DHG2W0005110;
+	Thu, 13 Feb 2025 18:18:50 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2176.outbound.protection.outlook.com [104.47.58.176])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44nwqc2ahq-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 13 Feb 2025 18:18:50 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VBatCQxL7+oZZZ8VOuZBN7K1ALSOhr1TGZHenJHRfiRSzjhydAntEH++Ut4Bo924PEGGA2o3ofXQTI+94mwLKcZCVWOwkzo620SjhC5iLv2snlSczQYMHowLi9oYiTs782jqETbqy4cATSsnE8jBHNyTtDmxpoaj19RR7fBS3P7AQbEUGy6j/OeBIB4i4idmBA1W9ZlT4aRrlC5+IxQagrwT0pQfead851cBNvnmAZ5ZdxY8BNF8LHpjPkKTWkC2fzu4EPW4UisVVt8H1zsAp1040n9XGgxyGIqB/qc7CF9kMz+krTVsS9IswO+GbMBfqrw15DAALpHfWHB2Kx40nQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FHZT+6B4eEEKrQiJVYaY3M5f4NGJfj97nMnc72SUNSs=;
+ b=dJoG1MmDKdLsU17WjHJMJLLWuAPqpof1iUekQkwvRf7UVzGi+NU8NFqgBiVTyu2aYQJKlJdOjl4fSpyMavFDz35li7yCYDfPEtmCmYeFm3+4gwQZRfDYT93/isfVeMbIbILQ4dv//qeN0P3IVDvNf6ns68xIYvMI1Y4E4wH6IUe2n7JZVfcWuRFq3O+r0R1PNAg+LSoZVO3stj+6Pkxkw9gi6KUGEyfaOy/K8Eg7CCX6y3zyYX8ilmTaKH2rYz/1x/6YuO/G/7goOwEE0SgrVrPpEZVU7VqRU97GmB22nmvCYRzBHEbdtbdDCOUohlIxmV2gHHcVo1ck9TdX375I2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FHZT+6B4eEEKrQiJVYaY3M5f4NGJfj97nMnc72SUNSs=;
+ b=ASpps0LtcwjwmIIuRAMPIE+yrxYIeNF3Ib/Lnzubr0t2wYcOAvguuRsFztGStgK4dy+avNY31InCQl+Bad7o8uG5ybbh8/RcIDvWQowMSkfHg6sO25tQlj46eDM60w6AbTOyImI05DAoGN4F0v02aWoj4HlX1oOaJ4XeBnfleuA=
+Received: from BYAPR10MB3366.namprd10.prod.outlook.com (2603:10b6:a03:14f::25)
+ by PH8PR10MB6387.namprd10.prod.outlook.com (2603:10b6:510:1c2::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Thu, 13 Feb
+ 2025 18:18:34 +0000
+Received: from BYAPR10MB3366.namprd10.prod.outlook.com
+ ([fe80::baf2:dff1:d471:1c9]) by BYAPR10MB3366.namprd10.prod.outlook.com
+ ([fe80::baf2:dff1:d471:1c9%4]) with mapi id 15.20.8398.025; Thu, 13 Feb 2025
+ 18:18:34 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>,
+        "Paul E . McKenney" <paulmck@kernel.org>, Jann Horn <jannh@google.com>,
+        David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org,
+        John Hubbard <jhubbard@nvidia.com>, Juan Yescas <jyescas@google.com>,
+        Kalesh Singh <kaleshsingh@google.com>
+Subject: [PATCH 1/4] mm: allow guard regions in file-backed and read-only mappings
+Date: Thu, 13 Feb 2025 18:17:00 +0000
+Message-ID: <d885cb259174736c2830a5dfe07f81b214ef3faa.1739469950.git.lorenzo.stoakes@oracle.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1739469950.git.lorenzo.stoakes@oracle.com>
+References: <cover.1739469950.git.lorenzo.stoakes@oracle.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P123CA0471.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a8::8) To BYAPR10MB3366.namprd10.prod.outlook.com
+ (2603:10b6:a03:14f::25)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5e9a5b3e-793c-4873-a1d2-33b62614ec31@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR10MB3366:EE_|PH8PR10MB6387:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7215fc94-5150-4998-be5e-08dd4c5ad405
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?njc/wCA/B41T4d6Dx/3/hojGtuBfzMbiLE+MZ+h3tgT3hvfChiaK79Cjo17r?=
+ =?us-ascii?Q?kmvjocHYxMw3JFbTFo51fJ62Oy1hRh0ttZE0b2qLhvbLcBDOv9YTnZQMrmFA?=
+ =?us-ascii?Q?cjv8d7p78bmAMQbXEFOZe3BAzQGeYQtOjFlMAMj8CgT8DQRLSDnl7HQx+CpY?=
+ =?us-ascii?Q?wV693I/Qmw35ViHDSgVmWc4kDRQckVNGfbXlh/VNyXATNl+VtSbSy4nacQ8h?=
+ =?us-ascii?Q?UzhUJsGoCnR6iAJCMLIX2aNPpiPfRm02DXtUw2ysGY9XJ7+M3eX0Pr/OZo/E?=
+ =?us-ascii?Q?x8hlilxnSC5JyjoRmvS8rA3UFXA5vIFY67EFYuSkIsRI2kj/ktv16PYfdpux?=
+ =?us-ascii?Q?udkb6/LetWGsSLhwtftzE1HW1GhPH5PteEKp4zcuLQEZBfcD13WzBGSHdIYj?=
+ =?us-ascii?Q?Pq5CXmi7T5GqLz9oKXUa5jI6GDMR9AIhkjBzI7235edpJpumUUWmr/8l0hkj?=
+ =?us-ascii?Q?PQ464sKf3mK/LbLXyT5QNMotvq2cNA9+S74eY6Dlpv9YB/RCYhTZxVGb6VTl?=
+ =?us-ascii?Q?tbPo2ox44AkvYRYRA72XUSRkuRjD638rF21Bh9xc7hoq0rp6cNWj3DL7ATEy?=
+ =?us-ascii?Q?pSv84fPvZoIgAQ7zmOJ22eFOS0qup79X6W5AyT/vbe0wzRsbFu6Romi4w+oE?=
+ =?us-ascii?Q?X0gUL4NQS3Fx0Q9wBUEBCJk+CLrBNM0MqHF4PFt5WmPVYgkMD4wwrNMnRVDW?=
+ =?us-ascii?Q?yd+uBMwxrpnZbiZCtJRiaE3axQrvaX2slpAZwXNZgWIrTG/YjQEzPh3PrjWL?=
+ =?us-ascii?Q?mdvaaMK04jm+lzuwUcaJgdve9M1njwYsvvY+pbJ/mg+QELd6GfnMWZpcF6qu?=
+ =?us-ascii?Q?+CZxnUC2jZ9ZUcpk7xeZhHL8okEfQswETIqemjL6O65Vqxj4+QpS6WIaof9e?=
+ =?us-ascii?Q?Ajhs9CnXB2ttAUmVDo6xaUKAADZY7faV4o1KwfOEPRAFwJpc5JePmBmTxWVj?=
+ =?us-ascii?Q?FwaGSnfK+DNuULfWMr5Os9C2KOzqs52EXEou/Ud4Ts4eGW/nRt6ttzm43Cde?=
+ =?us-ascii?Q?HyMkaRoiApBakJAwxs6U8WvndqpGemqeR3akEhvklwwWxgzo3SjBzSgHFs3l?=
+ =?us-ascii?Q?SFqEG0fBy6mc6VzcNXpG15KydUJFUekn/Jm8Ot5kjSR2xVXc74hokPBqbROp?=
+ =?us-ascii?Q?jyO+Gxh5MAd1cXS82BaTG+0tV5fbD9FtFP3JFFhSg3QpnJrWKI/13Q+P8Ucr?=
+ =?us-ascii?Q?sJUoNB3lmZw25grx+ytQXATE6z8UhhMsKM1QsBw5rNME2U8r/0tvcaH9a3Tt?=
+ =?us-ascii?Q?5FwYdkI1hIzz2GCFCvYQ89xH+rKfyFgXuGlrJrHqzAIQy/g7L+l4/RZXwFZE?=
+ =?us-ascii?Q?BucmCJywsK+gFEBo/kkzxTg8heW4FRk6e8uCijrl2FERwmItFhxWGWgXWOOJ?=
+ =?us-ascii?Q?uLKEdOfprSNnPYsWwi7C/tgS9JCN?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB3366.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?K+DAUquBEiy1J2SJ9+Usfo8iFwxXynbZUyNC2RhbzYXnNiOeN1Dx709IG8tq?=
+ =?us-ascii?Q?EjLoKRLd+PMj5oprIUkxTqOCifqNUsi+ahVCS8hqnmf9inm1OXriz+ucDwGg?=
+ =?us-ascii?Q?u5bsWhH22VLl1tidtfk1LJnAfAnwXXECKWDANbsEj0sjCPfDkZq5XXufZaVD?=
+ =?us-ascii?Q?rI+JDZPfXIevppo/+6u6eqHQo00JhdDztDVOXR5/nOi5SJqKswEzB853QU1H?=
+ =?us-ascii?Q?qg4iHxgwkb4tW8OhnNN44t+ZkDSAfb/6sRr/YZQmnG4QY0ALwx4iLPIub1DG?=
+ =?us-ascii?Q?C5h6egn7cN//Re6ANGnBD4GdauLZdfQOxbrmjnwiSuneyRdBqVFoGJVsYcPS?=
+ =?us-ascii?Q?kDgvg3Y3tC/Vut/L+Qi7EzQK/f85ALAtbqpVZPnPH7/TM+v51mwOxbLJSUdz?=
+ =?us-ascii?Q?b83JwkZOlObrqG8fXs9Eq8xpsyGVTyGT9mSoEoOlS+3Td/RncvbHi3T48N8/?=
+ =?us-ascii?Q?9iDp54O/G/R2lw/IOgK7eVsZvKurXqO3m8XEVVdq5BJdZgUHJTQw4MbNpD5b?=
+ =?us-ascii?Q?HlG26M8bUtn469/9XqGMobfSeIBW8RvFqmaiEhG9ge95wLiuDkBhn5kVJIN1?=
+ =?us-ascii?Q?K75I4NSX6cJ/MQTtIUGuUKSKZAiz9eexrBIVyqZebW1NzxDDFuTLKZ4fLl3L?=
+ =?us-ascii?Q?pzUpzqZJfXIR/1FZ/qGMoL5KSPHULq8Z9lNeBuNO0Yv6tM6pJxluQNkg3is+?=
+ =?us-ascii?Q?sqTquqV+48HinINpkCv3a099S7KqR3FkyMUW7LexIp+35JPgBWUV7zs4Cdo7?=
+ =?us-ascii?Q?w3Zd7ap8iHuv5zoxgnXmBqYmK0VUMR8RsTxrNX4ZDxIVvJOoR33e3VbqsA+t?=
+ =?us-ascii?Q?URMG/UmS7KTVs5AgcmADORL1BiuKkVUCvAlhLqjkcok3VNwPJBX2S5TZ08Qw?=
+ =?us-ascii?Q?gQHdBzUkYDXN7FOl4AyWYSbOcURkYXzWcXdv2/RPf4x9jLQDG9n3VlfJWIPi?=
+ =?us-ascii?Q?4zvDp8QkmXPKrU59no5RnMQyuYcx7UpJA+KZQ1ll5j+5A0sqF3OGSRUnltfx?=
+ =?us-ascii?Q?S3kZ+DJtPlz0AHU1vdjqQmnEPan1yDugh4F2BOEKXcCcKGAdOqFykgZV1LlI?=
+ =?us-ascii?Q?j1YvTc8jBAHM7tStaTfTliZEpxs+mxSjxHw4LOmVtACxQPUI6UuI0Iw7Z0TL?=
+ =?us-ascii?Q?2fwHqVo5QcrjxvCXRchRaYnaeO1JNzVBOs+5rVU42DO//LbensnygC412jAR?=
+ =?us-ascii?Q?2a8DynbmWWbx8FKnLw+/0E32uL3MG5RIaauCIRYUceKRadcDlKPZj2KYozaL?=
+ =?us-ascii?Q?VYB9QYcJfQ4WKK/AjpDGIWRzJzRuq3jJKlhySwAAZ3z9FG6BhgfPtO20ossL?=
+ =?us-ascii?Q?6Na5l7AVC5j4VnYLSJsFvo3yQf4NO1iugCFUwxtqDZdYUlyKguT7A2HQ3gf9?=
+ =?us-ascii?Q?N3fDnASxLvTDSGLaudgov50Zaz61PplkxjQ6h3ixfxY1BUfaCUkdKyozgW08?=
+ =?us-ascii?Q?rJ3eZdi/oacl9m8Y8dX9y7Gi3/lk/PV2geTvnNHHzpSF6u9TSzF/fxXyHY13?=
+ =?us-ascii?Q?+tDANiSPuztt5TxgzJ+jOuldido3ixxZ+WB3IOHpVyu7j1fdR1g4rjnEoK5y?=
+ =?us-ascii?Q?CiO+nsqk0fNxdexCCG8HC8L0zPJTL3VkLHU1B1XpS28kNnwnaY2G2e8uldar?=
+ =?us-ascii?Q?tw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	iDkLaITbsPDYWfIzFRQmzBMAx937h1Bz4S465H7dAaSgmHLiyM1kpMZViQUbf9652wQWfI5EwBImbpUhoddFNkQMFxAplCpYR1EMPVK995UgMm4NZp0DUUYPQvwlh+E66Ey3sS/xck6fcQDvQpXukNY319TguyHFhjSVPYiAvODcNUz1+wJcaO9y2t++lG6BIL0Lfm4Do2xh056XnFAG5PVglENPwuN5KhOP+SYrQUVusEjm8D8ACGpvYNSy0dkj6J3dUwls3ztCNB3OWVxPYlzUSYhUVEyzHUf53DWBKgWqdss4jtlBFEutLnMGmmmJQN5GxNLta4PwZF16z+6RhpU0z/vd/kv1V6UEQ1ncnEdecT9ubyEL7sCYozSht+cOl2gvvNBR8ks8bpniQzhMNH9pb8VTuHhQGnYKb+c28y9VVJr0KEGJHjqEGS+XfWbHBk6rDD7Tu6cbx0A6iOFUgIQPYBQfAA0793RDIkj+g0Y7JzxK6wCqoJjr8zZJrbJMQZ9DogCitx/zV9Bw3CiSJ2ghE/2ATdgu9J6yd3JjXv5xg9CKmpZT38PoXuwUnWst4HNYuhoGBlCj+JbFjKX4ns1WFoo3l+vtqqDMJ8XZbWg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7215fc94-5150-4998-be5e-08dd4c5ad405
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB3366.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 18:18:34.5440
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HkJKjk56lXAZkWO0V5KXQ2XdPKPJQEPDXtRIt3rBkknLcqJ8Y6dDrug4bkeEcLRgbsSfCqqvWJoqWscoskXw3xoOBSIsFTnhH2UzvwvJwnI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR10MB6387
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-13_07,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ adultscore=0 mlxscore=0 phishscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2501170000 definitions=main-2502130130
+X-Proofpoint-GUID: d_cKQjRQc-1B66vucJnoXWFu0EIkOkpF
+X-Proofpoint-ORIG-GUID: d_cKQjRQc-1B66vucJnoXWFu0EIkOkpF
 
-Hi,
+There is no reason to disallow guard regions in file-backed mappings -
+readahead and fault-around both function correctly in the presence of PTE
+markers, equally other operations relating to memory-mapped files function
+correctly.
 
-On Thu, Feb 13, 2025 at 10:19:29AM -0600, Moger, Babu wrote:
-> Hi Dave,
-> 
-> Thanks for your help. Reinette has asked few questions already. I have few
-> more questions on top of that.
-> 
-> On 2/12/25 11:46, Dave Martin wrote:
-> > Hi there,
-> > 
-> > On Wed, Jan 22, 2025 at 02:20:08PM -0600, Babu Moger wrote:
-> >>
-> >> This series adds the support for Assignable Bandwidth Monitoring Counters
-> >> (ABMC). It is also called QoS RMID Pinning feature
+Additionally, read-only mappings if introducing guard-regions, only
+restrict the mapping further, which means there is no violation of any
+access rights by permitting this to be so.
 
-[...]
+Removing this restriction allows for read-only mapped files (such as
+executable files) correctly which would otherwise not be permitted.
 
-> >> a. Check if ABMC support is available
-> >> 	#mount -t resctrl resctrl /sys/fs/resctrl/
-> >>
-> >> 	# cat /sys/fs/resctrl/info/L3_MON/mbm_assign_mode
-> >> 	[mbm_cntr_assign]
-> >> 	default
-> > 
-> > (Nit: can this be called "mbm_counter_assign"?  The name is already
-> > long, so I wonder whether anything is gained by using a cryptic
-> > abbreviation for "counter".  Same with all the "cntrs" elsewhere.
-> > This is purely cosmetic, though -- the interface works either way.)
-> 
-> Yes. We can do that.
+Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+---
+ mm/madvise.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-Thanks (note, I'm also happy without this change, if you aren't
-planning do a substantial respin of the series.)
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 6ecead476a80..e01e93e179a8 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -1051,13 +1051,7 @@ static bool is_valid_guard_vma(struct vm_area_struct *vma, bool allow_locked)
+ 	if (!allow_locked)
+ 		disallowed |= VM_LOCKED;
+ 
+-	if (!vma_is_anonymous(vma))
+-		return false;
+-
+-	if ((vma->vm_flags & (VM_MAYWRITE | disallowed)) != VM_MAYWRITE)
+-		return false;
+-
+-	return true;
++	return !(vma->vm_flags & disallowed);
+ }
+ 
+ static bool is_guard_pte_marker(pte_t ptent)
+-- 
+2.48.1
 
-[...]
-
-> >> b. Check how many ABMC counters are available. 
-> >>
-> >> 	# cat /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs 
-> >> 	32
-> > 
-> > Is this file needed?
-> > 
-> > With MPAM, it is more difficult to promise that the same number of
-> > counters will be available everywhere.
-> > 
-> > Rather than lie, or report a "safe" value here that may waste some
-> > counters, can we just allow the number of counters to be be discovered
-> > per domain via available_mbm_cntrs?
-> 
-> As  Reinette suggested below we can display per domain supported counters
-> here.
-> https://lore.kernel.org/lkml/9e849476-7c4b-478b-bd2a-185024def3a3@intel.com/
-
-Although I'm still not convinced that this file is necessary, MPAM
-should be able to work with this.
-
-(I'm assuming that ABMC hardware has a set of counters for each
-monitoring domain, of course -- otherwise this doesn't make sense.)
-
-[...]
-
-> >> c. Check how many ABMC counters are available in each domain.
-> >>
-> >> 	# cat /sys/fs/resctrl/info/L3_MON/available_mbm_cntrs 
-> >> 	0=30;1=30
-> > 
-> > For MPAM, this seems supportable.  Each monitoring domain will have
-> > some counters, and a well-defined number of them will be available for
-> > allocation at any one time.
-
-[...]
-
-> >>        Flags can be one of the following:
-> >>
-> >>         t  MBM total event is enabled.
-> >>         l  MBM local event is enabled.
-> >>         tl Both total and local MBM events are enabled.
-> >>         _  None of the MBM events are enabled
-> >>
-> >> 	Examples:
-> > 
-> > [...]
-> > 
-> > I think that this basically works for MPAM.
-> > 
-> > The local/total distinction doesn't map in a consistent way onto MPAM,
-> > but this problem is not specific to ABMC.  It feels sensible for ABMC
-> > to be built around the same concepts that resctrl already has elsewhere
-> > in the interface.  MPAM will do its best to fit (as already).
-> > 
-> > Regarding Peter's use case of assiging multiple counters to a
-> > monitoring group [1], I feel that it's probably good enough to make
-> > sure that the ABMC interface can be extended in future in a backwards
-> > compatible way so as to support this, without trying to support it
-> > immediately.
-> > 
-> > [1] https://lore.kernel.org/lkml/CALPaoCjY-3f2tWvBjuaQPfoPhxveWxxCxHqQMn4BEaeBXBa0bA@mail.gmail.com/
-> > 
-> > 
-> > For example, if we added new generic "letters" -- say, "0" to "9",
-> > combined with new counter files in resctrlfs, that feels like a
-> > possible approach.  ABMC (as in this series) should just reject such
-> > such assignments, and the new counter files wouldn't exist.
-> 
-> What is "combined with new counter files"? Does MPAM going to add new
-> files to support counter assignment in ARM?
-> 
-> Also what is  "0" to "9"? Is this counter ids?
-> 
-> 
-> > 
-> > Availability of this feature could also be reported as a distinct mode
-> > in mbm_assign_mode, say "mbm_cntr_generic", or whatever.
-> 
-> Yes. That should be fine.
-> 
-> > 
-> > 
-> > A _sketch_ of this follows.  This is NOT a proposal -- the key
-> > question is whether we are confident that we can extend the interface
-> > in this way in the future without breaking anything.
-> > 
-> > If "yes", then the ABMC interface (as proposed by this series) works as
-> > a foundation to build on.
-> > 
-> > --8<--
-> > 
-> > [artists's impression]
-> > 
-> > # cat /sys/fs/resctrl/info/L3_MON/mbm_assign_mode
-> >  	mbm_cntr_generic
-> >  	[mbm_cntr_assign]
-> >  	default
-> 
-> Yes. This looks good.
-
-Good to know, thanks.  (Just to be clear, I am *not* suggesting adding
-anything like this just now -- just checking whether the idea works
-at all.)
-
-
-> > # echo mbm_cntr_generic >/sys/fs/resctrl/info/L3_MON/mbm_assign_mode
-> > # echo '//0=01;1=23' >/sys/fs/resctrl/info/L3_MON/mbm_assign_control
-> 
-> Looks like you are assigning counter ids to domains here. That is
-> different than ABMC. In ABMC, we assign events (local or total) to the
-> domain. We internally handle the counter ids based on the availability.
-
-The numbers are not supposed to have an hardware significance.
-
-	'//0=6'
-
-just "means assign some unused counter for domain 0, and create files
-in resctrl so I can configure and read it".
-
-The "6" is really just a tag for labelling the resulting resctrl
-file names so that the user can tell them apart.  It's not supposed
-to imply any specific hardware counter or event.
-
-> Can MPAM follow the same concept?  It is possible?
-
-[...]
-
-> Thanks
-> Babu Moger
-
-Yes, although there is some hard-to-avoid fuzz about the precise
-meaning of "local" and "total".
-
-As Reinette pointed out, there is the also the possibility of adding
-new named events other than "local" and "total" if we find that some
-kinds of event don't fit these categories.
-
-Cheers
----Dave
