@@ -1,151 +1,113 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485FE23F420
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B7C22172A;
+	Thu, 13 Feb 2025 13:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739452699; cv=none; b=T7XAVGYMS5mDLTGCdWjTYAIl5Vb0mLUqINzE1T5xJSnHY9EHofVk9U4j4ktyMeRV4R3AcEoewb1WDgSR4ZAzkuaLdvo6LNZCuMBLiBf6HoU0maWUH5Ol6ebytsgsJjuhSelBBXwrLdu+PEPTIXxbwDi7fVo19hp+0EcCRdxINFE=
+	t=1739452734; cv=none; b=uHFTFBcMrEsh+fqamoTO6OwrAegMCGAqwSk8Ck3BgXGbOu9KWcyWL6iqZXMuT/9YcKrN5F1AYpMM92iGDTtlRxWv4MT8BgzzNCO1RXiJwEe9X3AUbHbI4kewUD/I+lW39kP8qyUQqOiq/0rOv+ODlPNXt3251A9aB2AUZ6mlJbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739452699; c=relaxed/simple;
-	bh=VYOekO3BhgmyJ2mRkTHWmdQc7mvwMTx6VCsRCmwif3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VhmvphR/P6gNnA7jtREZxSQ75jPtfZml4KTDdV7Ch6k9mCLHQKnEdUusI3MU+p1uOrHTeI4RzF+4CbTlsidkw2/N+N22dmrZvodk0q9ivOBnyICDvXlVDxcECoWVdCpauZUbDYXXv47IjXt7V9qEAqHeIefoxevFG13StMqYXlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fO/1QNBH; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fO/1QNBH"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43957634473so9412435e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 05:18:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739452694; x=1740057494; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FWhe4fmPRfS/OuuLJyzpwpMFHkOJTb48vA//XF7nq9c=;
-        b=fO/1QNBHYu64PUCvliYqzbVO+9vtspSOPymDC4RZwvxk/2ngkxyt5z/MoPfpV139eI
-         zBQlLsTYrhcv8XMHQAmkiU99JE1zT5Mo50pPcGqjgESyrsiMlktaNGpV2nhplgQgbfQ6
-         iI86K7iDM7vTw+OdMbKFmhDgEotvTfWKdLdyjmJP/UHvK55rR972ko/q5KTIrZjR9LGG
-         mX6fgBsPbSxLlD7LOBwzJRLO1bohK1OmQGtWgQpQla0NDzEAk3RxqSmZ2OkHCQKGk1LQ
-         i1m8xcrKRAT8+TDAzpevtzzsZWZX2RkbTlKggZoJEfOp99QW169iFBsTLd+JBm9nrjqk
-         LE5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739452694; x=1740057494;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FWhe4fmPRfS/OuuLJyzpwpMFHkOJTb48vA//XF7nq9c=;
-        b=F6UIOIb6ehSWQl0NPuOBABKy1bdiT/o8KgEWddHPwCTn20Mdg94bjdHInmO1aLJHn+
-         xjMeB3YP6ce/BdaQ8xVn6W0tMBQMDwm3DKOraLnlX/U+j1Ydsn0ATphgHN/mUtf8QUVa
-         p8BnTlOhTgrVSlVoK/333xjXf5wiovTheyBSmz7FGYU42qdYnE86/IP10PoYSyjx1RL8
-         8gMA2BH3nqeFQMC07ZMWLvmcjdLezMVlrmhW/DQdz1Z25RX+wRj+Mx85TidujJGbBQuL
-         hTzK4EbHrYnRWA78c/vWJSpq+kyeGnqhiWwSPRjtRaSKgf4mbV3rgin40LfxGBTZwl9X
-         T+9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWqIVAEWWtfxDGws2FI8sQICJjvVdnOLoRM0/Dxr7JTUancVuM9rYsI12NBa/t+q6r7b/DDjEhFk6rUYpU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsIquQBXxsAHucoM7sIfqNRi/qf0Us6a9qW+JUp3DtByueWYue
-	KSnhidEGHuuCZhwTjwxJq/FO/3thGCMhcGEEIIjtGOxDwesb91GYhxLljECu+Ag=
-X-Gm-Gg: ASbGnct+zoFGmVOYY/mdB61F3H4+7V1t/Tz/L39OFClRmGoJvxmwWMMD4tcmEnCRlmI
-	Jvsi1qyZ6kJKQDzhCLKFbvGar3HuN+hqnBns33IwP5Nbr7bC2MjO1yn9fp6+s+8euYSW9dZvHiG
-	mh0RIR9HOlUj/IfSoPnYJQV0ORCgQboSelExde8TIFEvED650tC749IhrUyKoF4lKMo5eGZcH5q
-	355zxGiZFYLcq7I5jJTlpGL+ChtW1CjLRx6EIfOgHOOIT60LyX2lXol7XkE1jKcD6ilOTyUizNt
-	EVWY3RCyfR8HC6TFyROepzsNgFA=
-X-Google-Smtp-Source: AGHT+IGHqjRAk+WlggZTFqzb819IIhxvnxQcq7g9sio13JgVwPMgDgJww0I8NXCQ3krJi8bYVfB3tQ==
-X-Received: by 2002:a05:600c:3b92:b0:439:4c83:2b8b with SMTP id 5b1f17b1804b1-439581b192dmr69872385e9.19.1739452694323;
-        Thu, 13 Feb 2025 05:18:14 -0800 (PST)
-Received: from linaro.org ([2a02:2454:ff21:ef30:5695:683f:dbf5:a2f6])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439618a9b03sm17254135e9.38.2025.02.13.05.18.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 05:18:13 -0800 (PST)
-Date: Thu, 13 Feb 2025 14:18:09 +0100
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Johan Hovold <johan@kernel.org>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: x1e80100: Add crypto engine
-Message-ID: <Z63xEdcvCRHchHWu@linaro.org>
-References: <20250213-x1e80100-crypto-v1-1-f93afdd4025a@linaro.org>
+	s=arc-20240116; t=1739452734; c=relaxed/simple;
+	bh=XIzr+PvuXP2KTBlj+0Qas/W7CfoHCr/ilC9hkHMevkY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CjPPqE6LWKdiMu0zbHGTYCycFUcj4vJH7B8c+NA8ImSLbwiqE7nhs4hmc1/xeo/7MKXg8Jxpq/Awwim3Wg32fqqxbSsSWFK+lHX7DNyLSC4QPcJNSSib65iwC2jsEcKyNaJfmKZ8eLY8W6B4FwD9Z4ELzs8CFEr2KiFh+Kc6bhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YtwjY3XVGz4f3kvt;
+	Thu, 13 Feb 2025 21:18:25 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 420A41A160B;
+	Thu, 13 Feb 2025 21:18:48 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgAXe1828a1nMAXxDg--.16673S4;
+	Thu, 13 Feb 2025 21:18:48 +0800 (CST)
+From: linan666@huaweicloud.com
+To: song@kernel.org,
+	yukuai3@huawei.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linan666@huaweicloud.com,
+	yangerkun@huawei.com,
+	zhangxiaoxu5@huawei.com,
+	wanghai38@huawei.com
+Subject: [PATCH] md: ensure resync is prioritized over recovery
+Date: Thu, 13 Feb 2025 21:15:30 +0800
+Message-Id: <20250213131530.3698600-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213-x1e80100-crypto-v1-1-f93afdd4025a@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAXe1828a1nMAXxDg--.16673S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar47XFy7Gw15tr1rCr17ZFb_yoW8Xw1fpa
+	1fJFsxurWrtFWfAFWUtw1kXay5Cry0yry8tFy3W3yrZry3tr13ArW5Wa1jvFyUGFyIqa1j
+	qr4kJrWfZF1fCw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+	648v4I1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjTa0DUUUUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-On Thu, Feb 13, 2025 at 02:44:02PM +0200, Abel Vesa wrote:
-> On X Elite, there is a crypto engine IP block similar to ones found on
-> SM8x50 platforms.
-> 
-> Describe the crypto engine and its BAM.
-> 
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> ---
-> https://lore.kernel.org/all/20250213-dt-bindings-qcom-qce-x1e80100-v1-1-d17ef73a1c12@linaro.org/
-> ---
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> index 9d38436763432892ceef95daf0335d4cf446357c..5a2c5dd1dc2950b918af23c0939a112cbe47398b 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> @@ -3708,6 +3708,36 @@ pcie4_phy: phy@1c0e000 {
->  			status = "disabled";
->  		};
->  
-> +		cryptobam: dma-controller@1dc4000 {
-> +			compatible = "qcom,bam-v1.7.0";
+From: Li Nan <linan122@huawei.com>
 
-Hm, I would expect this is at least "qcom,bam-v1.7.4", "qcom,bam-v1.7.0"
-given that this is a pretty recent SoC. I don't think this makes any
-functional difference though, and we don't seem to have it on other
-recent SoCs...
+If a new disk is added during resync, the resync process is interrupted,
+and recovery is triggered, causing the previous resync to be lost. In
+reality, disk addition should not terminate resync, fix it.
 
-> +			reg = <0 0x01dc4000 0 0x28000>;
-> +
-> +			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			#dma-cells = <1>;
-> +
-> +			iommus = <&apps_smmu 0x480 0>,
-> +				 <&apps_smmu 0x481 0>;
+Steps to reproduce the issue:
+  mdadm -CR /dev/md0 -l1 -n3 -x1 /dev/sd[abcd]
+  mdadm --fail /dev/md0 /dev/sdc
 
-Should be same as <&apps_smmu 0x480 0x1> (0x1 is applied as mask to the
-SID, and 0x481 & ~0x1 = 0x480).
+Signed-off-by: Li Nan <linan122@huawei.com>
+---
+ drivers/md/md.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-> +
-> +			qcom,ee = <0>;
-> +			qcom,controlled-remotely;
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 30b3dbbce2d2..827646b3eb59 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -9460,6 +9460,13 @@ static bool md_choose_sync_action(struct mddev *mddev, int *spares)
+ 		return true;
+ 	}
+ 
++	/* Check if resync is in progress. */
++	if (mddev->recovery_cp < MaxSector) {
++		set_bit(MD_RECOVERY_SYNC, &mddev->recovery);
++		clear_bit(MD_RECOVERY_RECOVER, &mddev->recovery);
++		return true;
++	}
++
+ 	/*
+ 	 * Remove any failed drives, then add spares if possible. Spares are
+ 	 * also removed and re-added, to allow the personality to fail the
+@@ -9476,13 +9483,6 @@ static bool md_choose_sync_action(struct mddev *mddev, int *spares)
+ 		return true;
+ 	}
+ 
+-	/* Check if recovery is in progress. */
+-	if (mddev->recovery_cp < MaxSector) {
+-		set_bit(MD_RECOVERY_SYNC, &mddev->recovery);
+-		clear_bit(MD_RECOVERY_RECOVER, &mddev->recovery);
+-		return true;
+-	}
+-
+ 	/* Delay to choose resync/check/repair in md_do_sync(). */
+ 	if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery))
+ 		return true;
+-- 
+2.39.2
 
-Please add "num-channels" and "qcom,num-ees". Otherwise you risk causing
-crashes if the interconnect listed below isn't up (anymore) when the
-driver probes the device. See:
-https://lore.kernel.org/linux-arm-msm/20250213-x1e80100-crypto-v1-1-f93afdd4025a@linaro.org/T/
-
-> +		};
-> +
-> +		crypto: crypto@1dfa000 {
-> +			compatible = "qcom,x1e80100-qce", "qcom,sm8150-qce", "qcom,qce";
-> +			reg = <0 0x01dfa000 0 0x6000>;
-> +
-> +			interconnects = <&aggre2_noc MASTER_CRYPTO QCOM_ICC_TAG_ALWAYS
-> +					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
-> +			interconnect-names = "memory";
-> +
-> +			dmas = <&cryptobam 4>, <&cryptobam 5>;
-> +			dma-names = "rx", "tx";
-> +
-> +			iommus = <&apps_smmu 0x480 0>,
-> +				 <&apps_smmu 0x481 0>;
-
-<&apps_smmu 0x480 0x1>;
-
-Thanks,
-Stephan
