@@ -1,262 +1,165 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F27535951
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 00:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89BE4A29
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 00:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739405908; cv=none; b=eUmgPb2JSrtFWPL0LOFxsaxBusbuD9NF4ceiH3PaXSoLc31Q3nUm9QzHzYBaG3O9UxuBnqR88KPdIV1UIAB42pwBXj3kMJiaouZ0DT6/nWdw6MwHNBxRQb64T8Kxbe/5tkgPMRM/vrwY8YSQWeGLbghX1KlqRqgxoG7YdaUqJDI=
+	t=1739406048; cv=none; b=hQ4rFHjurJOFash/LMSQwZViVfN8MV53EBWCV0PP9s4lloevEx6fwUU8I50sgtjIFbK/fyURjoMQcBmCd0OIXC/adZzs5IoUwlTtorkaP2P3fgO/dcwAof9qpiRIyLwyl5t2iVx2MnyqbBic3PEWu7FbCexQbMZS+3rpxbeM31g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739405908; c=relaxed/simple;
-	bh=eeo81TLl+NrulkZxb+gAEcW0C1qMa9U8FP29Vzfxab4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GsiqJvgtCFj4Q4KjW92EmI+L6I5cjWTRKoi/fC83Sq1+aNet+3jzpOcIlyGJIEhOCll3EETbDL/QQi1AP17xq8eDvDSIQHwc9vSOh/Etju3FZTT4xCIwdnKYC/0+ZS1HE2nqTIv5sGnL3BzOnkdP/IfyUFuvpOEWlybFRsTVfjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WV4uuY6Y; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739406048; c=relaxed/simple;
+	bh=QiyX/b7o6aoVr7+FLINVljRVt+/cZ0yqMI8VVVXXSbQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HqIjh9sf095hJ8VZXc35bCq6rsU+e00gRbpgek7d11k2CrnzyvyFaXmWx68nlpWCPmIwKcvpDoQsogSAu0iHCB2tsDPasyK+jhyg05fmRCsPEWrrwranHL569oV49iO5p/KJ4gwoU45spRyNn8LLkUaICl/ZdKmPlT5+HuZE7GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CRql5tcK; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WV4uuY6Y"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30761be8fa8so3224771fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 16:18:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRql5tcK"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4395561ab71so3102405e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 16:20:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739405904; x=1740010704; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NYwMl8hYId1dHgVixRuFQX5UO/e6ftwN7SI4dVqr4nw=;
-        b=WV4uuY6YAdV7hVb731C9oY7JedLlKVgdB0Wkx8dzduLmhyszcgQK3sTSCwLLDr+/sF
-         ykG39OA/v+B+Uyq8TWD+tdxVVFulYLrsaRPBAOvPe0GuSDL8bYS/Nk7R3JCSKXzMWPSJ
-         4UsfugzkCwKkN6nI1s1owVTP+snfnArl8RHs4wJkaRSNdQF/nW5q2AAqup7WWyR+puc1
-         an+tyhu/Hq6l/dz3mUI1YF9VaI/edzmKrIy8nvObxeWVJinZZmbethcHKIjVnOPl4lau
-         BacRxZc9zZWR9liZTubPHZ5fwn16tpj8J7gTKpBL5bzUS7x0COuxnxJzDrekrdZRKaRP
-         W2xg==
+        d=gmail.com; s=20230601; t=1739406045; x=1740010845; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X84lYtUnaPKcu+sxp9VlxXdEt5jePr1I7AgWIclWzJo=;
+        b=CRql5tcKi81tgFBCK3mK+7Q1ZpwqpftD06KMwUx+0h44WeP/M27NvFO4jHDqiX1NXl
+         GwvC/pxOh+k/dHHMIkvdGrRm+3bgPDSPkt1h05Jh8whNmVmCLAgajyhSYPoI+vWCqr6c
+         kCFbj2+cZKwCKEYZdN7PIvEPxWmFK2J44RO6emhDYZaawBGREq5/LjZNJ7g834zgXrTP
+         3DVkfm/Zn9gP+CE61NJC+seN6anpvWtY4a55PA3/aRmK6ocixEqtgbiXdkydsxX/VsbO
+         s5gGiDqMsU7inA1MhQY7WCHdlAp03jxMNaahhNi6a4z8oKW3ur+GQxuWTtW60LR2cwyj
+         PNVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739405904; x=1740010704;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NYwMl8hYId1dHgVixRuFQX5UO/e6ftwN7SI4dVqr4nw=;
-        b=o5lX/YgdD5mxQ2lCtFgMYwyqwNZ85Jv2FBbHM4beeHcvPO2pf3oKVHYB6rtkMEGPCo
-         F+ynSR6g9aGmCx3XE4H3Z5eSlIPCTzvtCo6RObBC9neVnw3AjJK4A58rBHtMJ1cTb5ZF
-         WSCBoMdI0RqdaM7I/R3jaY5eD74MNhhogGHIoxmxCujfvhV8wjiBWdIp2+3u8XaWBcoX
-         I3JKxrf1Pw9LJ1kIB8CXDFEQx27KGKP3zpCw0++GhmJaz1fFcPTxny5IbxOudGG1MRZt
-         ptYJt+QrFbkkfeP/6sYJodYeYTRrp66JlLvZvITyFULl5rDwnDCiP3OculY5gFAmWovT
-         WwTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXxV/cEfHe7oz/fv2UzbG8ndq4/A7IzBMF5F8+gdlQ8ohXAfhI5MqieRJFhEQrF1H2JEcGZoCeI/M8Pvp4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw12Fiy9+rVYmYKCmF0Ex66BQVVXCQv1/7P0FKOE78R+EQPgdAF
-	dqXjDnmBK52Io9JAvqWyjoloqz9hIm418PvqVOhosHim5YDHOw6k2wrQ2oYdIdg=
-X-Gm-Gg: ASbGnctb3GwGPvsNugwjuZsFfixVfE4PgFidiGDnm3ylGGk5xhdO57Zv3EfypTIX5BW
-	rHkzZLZ7XP3XQptZkYhNLKbmk2tp9ghzkzdyTycM/mMsFpCajG4EprSKaVBdW8EI7+JE19S1J2d
-	Le/v9MUwraZqA69w/jlMsrBH8y9XXF5XNz0/JhoR2UEXW22n0PqKHenFqctBokC09ODiiO18Blu
-	DIwCEekIHBKLKLhP4g2bqB+oCepMWHKdoUYAQDeQ4Gjz99CCAFntQfpr7oAFpnxijeUCrkwm/ic
-	xEdUduYsjxMWgvqz2wtHW5doFnHOjEWF9oaqx+HONcalVqYB1PVirpA6WhwyvPeJZbFhzNM=
-X-Google-Smtp-Source: AGHT+IEGBtbida/nkyz2iSc/ztiC9h+P0x7PpqIb2FckqspMzJVGwE6/YlJrL2BX/gLygIxkY5XDvw==
-X-Received: by 2002:a2e:b8c8:0:b0:309:bc3:3a56 with SMTP id 38308e7fff4ca-3090db47b6bmr5792721fa.0.1739405904383;
-        Wed, 12 Feb 2025 16:18:24 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309100c691fsm388161fa.5.2025.02.12.16.18.22
+        d=1e100.net; s=20230601; t=1739406045; x=1740010845;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X84lYtUnaPKcu+sxp9VlxXdEt5jePr1I7AgWIclWzJo=;
+        b=DU59elUWJjekeozxDGWeTAaIL/9xqerwcMWIbY1kHJtSnS3dWTtzt7rU4+cj2sgbC6
+         Fu7gJ8IofGCoLeKxi8QnOXNPNIWbztEwj0SuX6mGu4dnFeyIMV8mlF6VQ2bla+CYJMvD
+         aSCHsXG8NzQ4H8T0uYlNb4VTw+hgODSqGNnYdKDC2tWSfGRgRVNb+Uf8WREv/SrKFHyx
+         watvLeG0ih5AQKHjAYkfd52J+uqJ8XYQFHbCCATcK9rOo/m/xGLYP9Ws/u6eCxDV13Lv
+         Xyid/3qfkuq03EF6zIL3nfUQ4v3AY9S21/V4KSs0N4oq9n2hf1VtZ8vTz1GXoPrO38t1
+         FrIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVhGvy7wdn/oSQk1k9AlC1N5Xe30iHtrxgcjyDo1lwmTCtur1j6bD+EvuIXEqutDjTC5DYZuvXHbXImxOA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI6lA5ehEQ1niV4SmEUgsMZoT9rWvEJxKP+4pku5BB6fziFj3p
+	hCsIWq6hHZsPOXP3+bE+962ODsU91Zp0UAiggfqPX6vtCHN/cLWL
+X-Gm-Gg: ASbGncuEmzyq1zmxRlATBTqXzT/HFSRKby3wItRu6JaOpWv1xi1MsVchBsGjq8/EmOO
+	HWAPF3QwBoy05X3tZFlg2XiZyw9aPGE1x2Qi3QfP8yeHrBBauRZ6WjZNQZhwOSYWl6pAZuqxmCs
+	dDCAM0sFPkvjubxALb6enI4RR1gGPm/9sjY6l4CgGWh/KZHk4mW+7ce6LT7ZiqNBMVcPOG3uUwr
+	7vG25Js344WOWkfJ/aC8AIJngzADMLPrfr82SMA5drb3WmKq6MR/HcJdeukvJxgvs/s1eCqxtyA
+	DkFEHzpbzXcdKjXg
+X-Google-Smtp-Source: AGHT+IF9zrFLHKVKmPSx9KGxXSoCk0hMnf8jkpOryo17zak+fTnqo0TeSRGwZkokpw4GpxYL4MZ87g==
+X-Received: by 2002:a5d:588a:0:b0:38f:2073:14a7 with SMTP id ffacd0b85a97d-38f24526be2mr1294596f8f.47.1739406044857;
+        Wed, 12 Feb 2025 16:20:44 -0800 (PST)
+Received: from qasdev.Home ([2a02:c7c:6696:8300:a5eb:311f:6a00:dedb])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f2591570esm332014f8f.59.2025.02.12.16.20.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 16:18:23 -0800 (PST)
-Date: Thu, 13 Feb 2025 02:18:20 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Yongbang Shi <shiyongbang@huawei.com>
-Cc: xinliang.liu@linaro.org, tiantao6@hisilicon.com, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
-	daniel@ffwll.ch, kong.kongxinwei@hisilicon.com, liangjian010@huawei.com, 
-	chenjianmin@huawei.com, lidongming5@huawei.com, libaihan@huawei.com, 
-	shenjian15@huawei.com, shaojijie@huawei.com, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 drm-dp 5/7] drm/hisilicon/hibmc: Get link status and
- dpcd caps
-Message-ID: <yiaq5suivzbgjzc2q5pjxwmfmwaqdhg6of3nn44wirmer3g62w@ytvgyr4h773l>
-References: <20250210144959.100551-1-shiyongbang@huawei.com>
- <20250210144959.100551-6-shiyongbang@huawei.com>
+        Wed, 12 Feb 2025 16:20:43 -0800 (PST)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: shaggy@kernel.org,
+	zhaomengmeng@kylinos.cn,
+	llfamsec@gmail.com,
+	gregkh@linuxfoundation.org,
+	ancowi69@gmail.com
+Cc: jfs-discussion@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	syzbot <syzbot+4e6e7e4279d046613bc5@syzkaller.appspotmail.com>
+Subject: [PATCH] jfs: fix slab-out-of-bounds read in ea_get()
+Date: Thu, 13 Feb 2025 00:20:25 +0000
+Message-Id: <20250213002025.6602-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210144959.100551-6-shiyongbang@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 10:49:57PM +0800, Yongbang Shi wrote:
-> From: Baihan Li <libaihan@huawei.com>
-> 
-> Prepare the hibmc_dp_get_foo() functions for debugfs using in
-> next patch. We also add dpcd's if statement in link training process,
-> because we have the dpcd.
+During the "size_check" label in ea_get(), the code checks if the extended 
+attribute list (xattr) size matches ea_size. If not, it logs 
+"ea_get: invalid extended attribute" and calls print_hex_dump().
 
-Unrelated, split to a separate patch.
+Here, EALIST_SIZE(ea_buf->xattr) returns 4110417968, which exceeds 
+INT_MAX (2,147,483,647). Then ea_size is clamped:
 
-> 
-> Signed-off-by: Baihan Li <libaihan@huawei.com>
-> Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
-> ---
->  drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h |  3 ++
->  drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c   | 15 ++++++++
->  drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h   |  3 ++
->  drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c | 39 ++++++++++++++++----
->  4 files changed, 52 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
-> index d613da8b544c..8eb1659c7685 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
-> @@ -26,6 +26,9 @@ struct hibmc_link_status {
->  struct hibmc_link_cap {
->  	u8 link_rate;
->  	u8 lanes;
-> +	int rx_dpcd_revision;
-> +	bool is_tps3;
-> +	bool is_tps4;
->  };
->  
->  struct hibmc_dp_link {
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
-> index 8adace0befde..5e889c377117 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
-> @@ -227,6 +227,21 @@ int hibmc_dp_mode_set(struct hibmc_dp *dp, struct drm_display_mode *mode)
->  	return 0;
->  }
->  
-> +u8 hibmc_dp_get_link_rate(struct hibmc_dp *dp)
-> +{
-> +	return dp->dp_dev->link.cap.link_rate;
-> +}
-> +
-> +u8 hibmc_dp_get_lanes(struct hibmc_dp *dp)
-> +{
-> +	return dp->dp_dev->link.cap.lanes;
-> +}
-> +
-> +int hibmc_dp_get_dpcd(struct hibmc_dp *dp)
-> +{
-> +	return dp->dp_dev->link.cap.rx_dpcd_revision;
-> +}
-> +
->  static const struct hibmc_dp_color_raw g_rgb_raw[] = {
->  	{CBAR_COLOR_BAR, 0x000, 0x000, 0x000},
->  	{CBAR_WHITE,     0xfff, 0xfff, 0xfff},
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
-> index 621a0a1d7eb7..823544b8008b 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
-> @@ -54,6 +54,9 @@ struct hibmc_dp {
->  int hibmc_dp_hw_init(struct hibmc_dp *dp);
->  int hibmc_dp_mode_set(struct hibmc_dp *dp, struct drm_display_mode *mode);
->  void hibmc_dp_display_en(struct hibmc_dp *dp, bool enable);
-> +int hibmc_dp_get_dpcd(struct hibmc_dp *dp);
-> +u8 hibmc_dp_get_link_rate(struct hibmc_dp *dp);
-> +u8 hibmc_dp_get_lanes(struct hibmc_dp *dp);
->  void hibmc_dp_set_cbar(struct hibmc_dp *dp, const struct hibmc_dp_cbar_cfg *cfg);
->  
->  #endif
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
-> index 4a99a9b7e3c4..39345fc78c06 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
-> @@ -7,6 +7,7 @@
->  #include "dp_comm.h"
->  #include "dp_reg.h"
->  #include "dp_serdes.h"
-> +#include "dp_config.h"
->  
->  #define HIBMC_EQ_MAX_RETRY 5
->  
-> @@ -42,11 +43,7 @@ static int hibmc_dp_link_training_configure(struct hibmc_dp_dev *dp)
->  		return ret >= 0 ? -EIO : ret;
->  	}
->  
-> -	ret = drm_dp_read_dpcd_caps(dp->aux, dp->dpcd);
-> -	if (ret)
-> -		drm_err(dp->dev, "dp aux read dpcd failed, ret: %d\n", ret);
-> -
-> -	return ret;
-> +	return 0;
->  }
->  
->  static int hibmc_dp_link_set_pattern(struct hibmc_dp_dev *dp, int pattern)
-> @@ -189,15 +186,17 @@ static int hibmc_dp_link_training_cr(struct hibmc_dp_dev *dp)
->  	bool level_changed;
->  	u32 voltage_tries;
->  	u32 cr_tries;
-> +	u32 max_cr;
->  	int ret;
->  
->  	/*
->  	 * DP 1.4 spec define 10 for maxtries value, for pre DP 1.4 version set a limit of 80
->  	 * (4 voltage levels x 4 preemphasis levels x 5 identical voltage retries)
->  	 */
-> +	max_cr = dp->link.cap.rx_dpcd_revision >= DP_DPCD_REV_14 ? 10 : 80;
->  
->  	voltage_tries = 1;
-> -	for (cr_tries = 0; cr_tries < 80; cr_tries++) {
-> +	for (cr_tries = 0; cr_tries < max_cr; cr_tries++) {
->  		drm_dp_link_train_clock_recovery_delay(dp->aux, dp->dpcd);
->  
->  		ret = drm_dp_dpcd_read_link_status(dp->aux, lane_status);
-> @@ -234,7 +233,7 @@ static int hibmc_dp_link_training_cr(struct hibmc_dp_dev *dp)
->  		voltage_tries = level_changed ? 1 : voltage_tries + 1;
->  	}
->  
-> -	drm_err(dp->dev, "dp link training clock recovery 80 times failed\n");
-> +	drm_err(dp->dev, "dp link training clock recovery %u times failed\n", max_cr);
->  	dp->link.status.clock_recovered = false;
->  
->  	return 0;
-> @@ -244,9 +243,17 @@ static int hibmc_dp_link_training_channel_eq(struct hibmc_dp_dev *dp)
->  {
->  	u8 lane_status[DP_LINK_STATUS_SIZE] = {0};
->  	u8 eq_tries;
-> +	int tps;
->  	int ret;
->  
-> -	ret = hibmc_dp_link_set_pattern(dp, DP_TRAINING_PATTERN_2);
-> +	if (dp->link.cap.is_tps4)
-> +		tps = DP_TRAINING_PATTERN_4;
-> +	else if (dp->link.cap.is_tps3)
-> +		tps = DP_TRAINING_PATTERN_3;
-> +	else
-> +		tps = DP_TRAINING_PATTERN_2;
-> +
-> +	ret = hibmc_dp_link_set_pattern(dp, tps);
->  	if (ret)
->  		return ret;
->  
-> @@ -313,11 +320,27 @@ static int hibmc_dp_link_downgrade_training_eq(struct hibmc_dp_dev *dp)
->  	return hibmc_dp_link_reduce_rate(dp);
->  }
->  
-> +static void hibmc_dp_update_caps(struct hibmc_dp_dev *dp)
-> +{
-> +	dp->link.cap.rx_dpcd_revision = dp->dpcd[DP_DPCD_REV];
-> +
-> +	dp->link.cap.is_tps3 = (dp->dpcd[DP_DPCD_REV] >= DP_DPCD_REV_13) &&
-> +			       (dp->dpcd[DP_MAX_LANE_COUNT] & DP_TPS3_SUPPORTED);
-> +	dp->link.cap.is_tps4 = (dp->dpcd[DP_DPCD_REV] >= DP_DPCD_REV_14) &&
-> +			       (dp->dpcd[DP_MAX_DOWNSPREAD] & DP_TPS4_SUPPORTED);
-> +}
-> +
->  int hibmc_dp_link_training(struct hibmc_dp_dev *dp)
->  {
->  	struct hibmc_dp_link *link = &dp->link;
->  	int ret;
->  
-> +	ret = drm_dp_read_dpcd_caps(dp->aux, dp->dpcd);
-> +	if (ret)
-> +		drm_err(dp->dev, "dp aux read dpcd failed, ret: %d\n", ret);
-> +
-> +	hibmc_dp_update_caps(dp);
-> +
->  	while (true) {
->  		ret = hibmc_dp_link_training_cr_pre(dp);
->  		if (ret)
-> -- 
-> 2.33.0
-> 
+	int size = clamp_t(int, ea_size, 0, EALIST_SIZE(ea_buf->xattr));
 
+Although clamp_t aims to bound ea_size between 0 and 4110417968, the upper 
+limit is treated as an int, causing an overflow above 2^31 - 1. This leads 
+"size" to wrap around and become negative (-184549328).
+
+The "size" is then passed to print_hex_dump() (called "len" in 
+print_hex_dump()), it is passed as type size_t (an unsigned 
+type), this is then stored inside a variable called 
+"int remaining", which is then assigned to "int linelen" which 
+is then passed to hex_dump_to_buffer(). In print_hex_dump() 
+the for loop, iterates through 0 to len-1, where len is 
+18446744073525002176, calling hex_dump_to_buffer() 
+on each iteration:
+
+	for (i = 0; i < len; i += rowsize) {
+		linelen = min(remaining, rowsize);
+		remaining -= rowsize;
+
+		hex_dump_to_buffer(ptr + i, linelen, rowsize, groupsize,
+				   linebuf, sizeof(linebuf), ascii);
+	
+		...
+	}
+	
+The expected stopping condition (i < len) is effectively broken 
+since len is corrupted and very large. This eventually leads to 
+the "ptr+i" being passed to hex_dump_to_buffer() to get closer 
+to the end of the actual bounds of "ptr", eventually an out of 
+bounds access is done in hex_dump_to_buffer() in the following 
+for loop:
+
+	for (j = 0; j < len; j++) {
+			if (linebuflen < lx + 2)
+				goto overflow2;
+			ch = ptr[j];
+		...
+	}
+
+To fix this we should validate "EALIST_SIZE(ea_buf->xattr)" 
+before it is utilised.
+
+Reported-by: syzbot <syzbot+4e6e7e4279d046613bc5@syzkaller.appspotmail.com>
+Tested-by: syzbot <syzbot+4e6e7e4279d046613bc5@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=4e6e7e4279d046613bc5
+Fixes: d9f9d96136cb ("jfs: xattr: check invalid xattr size more strictly")
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+---
+ fs/jfs/xattr.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/fs/jfs/xattr.c b/fs/jfs/xattr.c
+index 24afbae87225..7575c51cce9b 100644
+--- a/fs/jfs/xattr.c
++++ b/fs/jfs/xattr.c
+@@ -559,11 +555,16 @@ static int ea_get(struct inode *inode, struct ea_buffer *ea_buf, int min_size)
+ 
+       size_check:
+ 	if (EALIST_SIZE(ea_buf->xattr) != ea_size) {
+-		int size = clamp_t(int, ea_size, 0, EALIST_SIZE(ea_buf->xattr));
+-
+-		printk(KERN_ERR "ea_get: invalid extended attribute\n");
+-		print_hex_dump(KERN_ERR, "", DUMP_PREFIX_ADDRESS, 16, 1,
+-				     ea_buf->xattr, size, 1);
++		if (unlikely(EALIST_SIZE(ea_buf->xattr) > INT_MAX)) {
++			printk(KERN_ERR "ea_get: extended attribute size too large: %u > INT_MAX\n",
++			       EALIST_SIZE(ea_buf->xattr));
++		} else {
++			int size = clamp_t(int, ea_size, 0, EALIST_SIZE(ea_buf->xattr));
++
++			printk(KERN_ERR "ea_get: invalid extended attribute\n");
++			print_hex_dump(KERN_ERR, "", DUMP_PREFIX_ADDRESS, 16, 1,
++				       ea_buf->xattr, size, 1);
++		}
+ 		ea_release(inode, ea_buf);
+ 		rc = -EIO;
+ 		goto clean_up;
 -- 
-With best wishes
-Dmitry
+2.39.5
+
