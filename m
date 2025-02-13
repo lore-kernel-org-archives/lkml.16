@@ -1,103 +1,98 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723401FECCA
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4868202F72
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739463207; cv=none; b=T9IeaAfMVbgF9VYxbLdKXp6rz29/zVfwqnqEWjabOFFeiZ4vK6ytJHm/otVr38COCwiwTBmM+0wyL86y2fiiwfuW5HnXzoTwyPpjKKkGHVyP1OsC7EPOry9gYwoqw6TgVr+wdJVpt6FGZoTm7Sm7oj3lWDk+Gx1/9K9/W+hN680=
+	t=1739463212; cv=none; b=XkhW+B1Oxy1P/cDtCaOL3JWdNdeb3eyHcZrKrT4bklAai9aXnr5TtvKmLSvIAZbx86MLJiVM9xjd/tggFBv+66TKBIfeILqEOflHq+pcWFaX5M1u10UEDk7r2OlYISweNwxUzb90F7BpxDKoHfY2apukDX4NU+plzIgQr5+q73s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739463207; c=relaxed/simple;
-	bh=dj/QgEpVTVainOviqrNs84aI3G2nI6U8+K2Q2ckkKmM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gLskECSRwYRRd0PnilamTwW0QNoOqicfuzsfcBcJ+WZvMEcvF5zd1PY+PL52dHl1iPDPSwbFs2Ltl+RzKne0L0rIFgOOrMeHpEkx5KTfO0AKXp9dfB0Tl/tPIKCMmsqz0btxLzc6hhHMNDZVy058K2ofqAOkzuPXf+2DX7QDKAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=gGpvePTh; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="gGpvePTh"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1739463203;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D9CoS5efnNhs2HIJLsLL5qOupZo4J7abKpW0xblWXuM=;
-	b=gGpvePThmOrXYKJAbCRDx3qCBrj4gqVY8GJCPsuAzYZRuO2FxMLi8uf6PfuYjZh/p0hB8w
-	d/2tNLl1p75oWWUfTWvEY9xVGo6xUlz0zxXhPwLlWqAb8bOG1atqBBVgnlSDol1ZPCdZPy
-	5u8LoQbevgUXTUydAUn+4y4kXMmhbb9j5zCVgh7DQ4I8Jt9YKxIOQW+orgpC8wHsr/T8YC
-	IDWeGUz2MfJ5PXvP22N4Rpys1uJh0r75fOi2aHGeDsSM/t+2pweXeunjpgHpNUpQm3iQM9
-	vXpQvB+0ZCVa46JfErURVZcu1cnuuS6cIwkhRhx6AvkhiFFU7wLPZ/XNv/0eCA==
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Date: Thu, 13 Feb 2025 11:12:59 -0500
-Subject: [PATCH v2 2/2] apple-nvme: Release power domains when probe fails
+	s=arc-20240116; t=1739463212; c=relaxed/simple;
+	bh=MJNeQypHksqBGTQi1UN/30/JOXYdU1SM+UCWIlibTlk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GglNKmr8mDX1GJ1b36RtHNN4IHWM/62TShNW5M88di6/B00FjxGBlJZEdyWCjn+trxzNebQ2EYqC4a/4JiA2pQfJA0BlSh1OQPXJ7+edl63k+j/NmCQ0CiSh2gv3l7lEkIZLo5Lcz7BpOcflhLH6AWMCncUMuvpTLFDaiz1HCZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 598D21756;
+	Thu, 13 Feb 2025 08:13:50 -0800 (PST)
+Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.64])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE70B3F6A8;
+	Thu, 13 Feb 2025 08:13:27 -0800 (PST)
+From: Steven Price <steven.price@arm.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+	David Airlie <airlied@gmail.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Simona Vetter <simona@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Steven Price <steven.price@arm.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Will Deacon <will@kernel.org>
+Subject: [PATCH] drm/panthor: Clean up FW version information display
+Date: Thu, 13 Feb 2025 16:12:48 +0000
+Message-Id: <20250213161248.1642392-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250213-nvme-fixes-v2-2-a20032d13e38@rosenzweig.io>
-References: <20250213-nvme-fixes-v2-0-a20032d13e38@rosenzweig.io>
-In-Reply-To: <20250213-nvme-fixes-v2-0-a20032d13e38@rosenzweig.io>
-To: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
- Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
- Philipp Zabel <p.zabel@pengutronix.de>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=896; i=alyssa@rosenzweig.io;
- h=from:subject:message-id; bh=Cw3j5ZwF0ZpXtZjtAYoiFOLvFEyNrVEWrLNZJYk08lA=;
- b=owEBbQKS/ZANAwAIAf7+UFoK9VgNAcsmYgBnrhocGrC88sbMtudltmIRFFMhJDEYdLnbqgA1c
- B2attrG8DyJAjMEAAEIAB0WIQRDXuCbsK8A0B2q9jj+/lBaCvVYDQUCZ64aHAAKCRD+/lBaCvVY
- DcFHD/9HNGYW9xjWXZ9DMBfT4a7mVIYsL65qQMmrdbU/r6jbvPTceMAEFdvhzS4ctH/rfYJ5D1C
- v4roY6Q8CMsuo440S9NtnOQzj9z5RI8gy36qRvhwvKSlWedO/WoVmpibf8YFMPRSvHou3UEK+E3
- VRIQdYkwXXeYNeIfVegD4RcTzZ9D9CEUAF/32UShMSG1zLI433NGESgptfoNZL9Jn/lmgnmiKqZ
- +VMkL4AXhhzmjtdFp8HBTWOFAOSnR7ntWVgO4fv4jwVTRr4ffrM2O7rJos0773rG1lUgnv0llSz
- 8yj3Rv5Ja5HAYpoJrtLKr9jnnb0vp4wH0jGytf57fhPiXnxpl+DzzFishxMPjr4CNmZ8XE/1mtm
- PzJm2AXI6HZyXRNwSGfnmN3ekgHkA5k4LWDIxo619yXqj7CbnzHMz8r5ranJeN6gwjNpYRjaYQM
- cxs8ii91su9Fpoj998qGLUmx0coUMuWkxzPpHyjRQd+u1cbIZ3M5so9on6Ta5HjiG5fXYLlF1pV
- ucy1ZNszllRF9RX0gWGsWlDs+f2ctZ6rd0G5Sv0ufOhriJcAe3hV2bVJWWPFuz96SbCGsr5JbMd
- UjemxVBWfWIy+oDu5qO9b6ocCf2dkNHWUmklDgFj5uQ9qorqH4mdpXQ+bYYNr5V47VqJgYAxy0s
- DScqoDigzuEODDg==
-X-Developer-Key: i=alyssa@rosenzweig.io; a=openpgp;
- fpr=435EE09BB0AF00D01DAAF638FEFE505A0AF5580D
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-From: Hector Martin <marcan@marcan.st>
+Assigning a string to an array which is too small to include the NUL
+byte at the end causes a warning on some compilers. But this function
+also has some other oddities like the 'header' array which is only ever
+used within sizeof().
 
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Reviewed-by: Neal Gompa <neal@gompa.dev>
-Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Tidy up the function by removing the 'header' array, allow the NUL byte
+to be present in git_sha_header, and calculate the length directly from
+git_sha_header.
+
+Reported-by: Will Deacon <will@kernel.org>
+Fixes: 9d443deb0441 ("drm/panthor: Display FW version information")
+Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- drivers/nvme/host/apple.c | 2 ++
- 1 file changed, 2 insertions(+)
+Note that there should be no functional change from this patch.
+---
+ drivers/gpu/drm/panthor/panthor_fw.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/nvme/host/apple.c b/drivers/nvme/host/apple.c
-index 5e1c01a67ee81a36faa3da2f86a3a24fefcdfd6f..a060f69558e76970bfba046cca5127243e8a51b7 100644
---- a/drivers/nvme/host/apple.c
-+++ b/drivers/nvme/host/apple.c
-@@ -1528,6 +1528,7 @@ static struct apple_nvme *apple_nvme_alloc(struct platform_device *pdev)
+diff --git a/drivers/gpu/drm/panthor/panthor_fw.c b/drivers/gpu/drm/panthor/panthor_fw.c
+index 4a9c4afa9ad7..645fc6d2e63b 100644
+--- a/drivers/gpu/drm/panthor/panthor_fw.c
++++ b/drivers/gpu/drm/panthor/panthor_fw.c
+@@ -636,8 +636,8 @@ static int panthor_fw_read_build_info(struct panthor_device *ptdev,
+ 				      u32 ehdr)
+ {
+ 	struct panthor_fw_build_info_hdr hdr;
+-	char header[9];
+-	const char git_sha_header[sizeof(header)] = "git_sha: ";
++	const char git_sha_header[] = "git_sha: ";
++	const int header_len = sizeof(git_sha_header) - 1;
+ 	int ret;
  
- 	return anv;
- put_dev:
-+	apple_nvme_detach_genpd(anv);
- 	put_device(anv->dev);
- 	return ERR_PTR(ret);
- }
-@@ -1561,6 +1562,7 @@ static int apple_nvme_probe(struct platform_device *pdev)
- 	nvme_uninit_ctrl(&anv->ctrl);
- out_put_ctrl:
- 	nvme_put_ctrl(&anv->ctrl);
-+	apple_nvme_detach_genpd(anv);
- 	return ret;
- }
+ 	ret = panthor_fw_binary_iter_read(ptdev, iter, &hdr, sizeof(hdr));
+@@ -651,8 +651,7 @@ static int panthor_fw_read_build_info(struct panthor_device *ptdev,
+ 		return 0;
+ 	}
  
-
+-	if (memcmp(git_sha_header, fw->data + hdr.meta_start,
+-		   sizeof(git_sha_header))) {
++	if (memcmp(git_sha_header, fw->data + hdr.meta_start, header_len)) {
+ 		/* Not the expected header, this isn't metadata we understand */
+ 		return 0;
+ 	}
+@@ -665,7 +664,7 @@ static int panthor_fw_read_build_info(struct panthor_device *ptdev,
+ 	}
+ 
+ 	drm_info(&ptdev->base, "Firmware git sha: %s\n",
+-		 fw->data + hdr.meta_start + sizeof(git_sha_header));
++		 fw->data + hdr.meta_start + header_len);
+ 
+ 	return 0;
+ }
 -- 
-2.48.1
+2.39.5
 
