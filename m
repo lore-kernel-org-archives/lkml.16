@@ -1,119 +1,213 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BEC4A01
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 04:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A453711CAF;
+	Thu, 13 Feb 2025 04:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739422212; cv=none; b=npQrhMDDJxyYPHxXmaiUZhNc8n8bpzXswmu72nANyCwdcVBVprcHl98XbBGXvA/YMXeSO+dKQ/aYIQOtj+G3QKQgYHo7zclcTJEg6f+mOfeU5IRb1LabUBJCEDlV3/ZEwxjIB6hOOts3n9GkNvIjZZyd6wXBouNohrAn1N7A0nY=
+	t=1739422239; cv=none; b=SyMnUnNzRX9dicpBGi8QkCBj4Ip8XpltbZff9pCrNyscNtaZItWPJhRH23hVHX9YNuSIJNtgUr1tU9pGIVhwgHC++/4osT+1GYVUtlMLIxQWg4oq36nbk9pJHE+K0SEtCEWd083EjoZEaUUnPa1X+7m+unW0YOPjjewzlAcSLHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739422212; c=relaxed/simple;
-	bh=1qutgmmCyzqh7lmkL8B2/VZyPUL+g3Ct4p0UPt0iBTk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 References; b=Qgs1QyAk8qdMZAvbQYxnJcHm2LiYqdcq142W3srokKJ1cN5Dx/+akxYBJbU7th+VEKTnhcLPQiEsw2R1gGsyjTFp9pX/EQ1huoRVViEIUS2lAlHEnkO7+hvi8hmlUWj3vv1q+w39XsJ5p+D4BXjO/C22NMoqP1J/69E8a7DryEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nOCFxsqG; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1739422239; c=relaxed/simple;
+	bh=t/XlHmnF4em2TJtn+6iu7CW23sHU9iPmvCmeRbckjSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FJ2vjivT7OLMPGgwCFMJfyt6GmZLZ1zwwc6+3Mq9kvPubOBov2u1xyCEVdoEcXWaJM1C2hnzwoGem8equc98UqzexKyM5ac4GQkZ1b/nl02g4vWTFWZ2VnuUIgR96r3vHOOqH9qJRdewbl38OzKURrlDTjrEsIMuQk/12B54Chw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TT17ZfW4; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nOCFxsqG"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250213045007epoutp0373b91095f5e19cfe6a0105b0ce9f250e~jq0giOusX2434824348epoutp03R
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 04:50:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250213045007epoutp0373b91095f5e19cfe6a0105b0ce9f250e~jq0giOusX2434824348epoutp03R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1739422207;
-	bh=UjyVcvuqR69NF8lFY3Le8i9E2SxNIAgCWkUw1oNQ8B8=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=nOCFxsqG0848DmnQKYeS8caRhTKhwSfNgwI+fdnxNnqWjpCKW+XXfhQWtveTdlcuh
-	 XEOOHISNo9vSYqiXRD/VN+Q7CGlhJFPIchLZOYsFUd4i3y86S4fCCob6grR2SOEiQA
-	 03lJbX+rWr8fyUsAuyo1itql6SlyLHEbiHdUCeCI=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20250213045006epcas5p139ff638558a7d10b1d42ec1598da5137~jq0gKpJ_j2465824658epcas5p1Y;
-	Thu, 13 Feb 2025 04:50:06 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4YtjR26s69z4x9Q7; Thu, 13 Feb
-	2025 04:50:06 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250213042208epcas5p2f9dd1305a647d26d6ee55d15dd1967dc~jqcFXN5Dj1925619256epcas5p2r;
-	Thu, 13 Feb 2025 04:22:08 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250213042208epsmtrp214b24b092a4717951d8084915dc91119~jqcFWYbCy2954629546epsmtrp2H;
-	Thu, 13 Feb 2025 04:22:08 +0000 (GMT)
-X-AuditID: b6c32a52-205fe700000083ab-a5-67ad73700fe2
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	11.BD.33707.0737DA76; Thu, 13 Feb 2025 13:22:08 +0900 (KST)
-Received: from INBRO002811.samsungds.net (unknown [107.122.5.126]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250213042206epsmtip1b37fb1abdb2f33eab02cb87e26605067~jqcC6j9-J3201432014epsmtip1b;
-	Thu, 13 Feb 2025 04:22:06 +0000 (GMT)
-From: Selvarasu Ganesan <selvarasu.g@samsung.com>
-To: mathias.nyman@intel.com, gregkh@linuxfoundation.org,
-	WeitaoWang-oc@zhaoxin.com, Thinh.Nguyen@synopsys.com,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: jh0801.jung@samsung.com, dh10.jung@samsung.com, naushad@samsung.com,
-	akash.m5@samsung.com, h10.kim@samsung.com, eomji.oh@samsung.com,
-	alim.akhtar@samsung.com, thiagu.r@samsung.com, muhammed.ali@samsung.com,
-	pritam.sutar@samsung.com, cpgs@samsung.com, Selvarasu Ganesan
-	<selvarasu.g@samsung.com>
-Subject: [PATCH v2 0/2] Fix unassigned variables in xhci driver
-Date: Thu, 13 Feb 2025 09:51:24 +0530
-Message-ID: <1279309678.121739422206958.JavaMail.epsvc@epcpadp1new>
-X-Mailer: git-send-email 2.46.0.windows.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TT17ZfW4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739422235; x=1770958235;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=t/XlHmnF4em2TJtn+6iu7CW23sHU9iPmvCmeRbckjSQ=;
+  b=TT17ZfW4Lki7OK2LBb8OEm/xn3vbw0hQ7PKASCsh98TteSDTE/L0n7j6
+   bZ6fxS7bEuTtR8PQ7049v3ZiiKOO1hAIoNVXC1512hfmq3X3SkLQzx8em
+   VXV6Qp4rFpJft8T7qoEWxp6piEmDKFz/nsoxYbhnrV7iA8kuCO/al/i57
+   cGPl2sAKb9rjSLkJkN6SSFOariM04fUOe20UNU36NsyI/DuobJrOosKPD
+   zAiMTih59VPN1n2kOMqyy8Sw8JKbc8hdNNq+NpBFvhwvl9uFp4IPD61FH
+   NwFPTKSTmXOyvfy6CoEpWLHDaQhFxzSba6ynkVsfF0yME0IeGgjIJqyn2
+   Q==;
+X-CSE-ConnectionGUID: Ng8JBD5bRXqsi8P8LAb+5w==
+X-CSE-MsgGUID: zPmzKgQfRDmYSWE4/Ob02g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="44040952"
+X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
+   d="scan'208";a="44040952"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 20:50:34 -0800
+X-CSE-ConnectionGUID: 26WSsSaMQJuJsUnWv50m/A==
+X-CSE-MsgGUID: /9MYp2giS+aUJMG84VU6Zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113512256"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 12 Feb 2025 20:50:32 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tiRBF-0016Ww-2Q;
+	Thu, 13 Feb 2025 04:50:29 +0000
+Date: Thu, 13 Feb 2025 12:49:37 +0800
+From: kernel test robot <lkp@intel.com>
+To: Akhil R <akhilrajeev@nvidia.com>, herbert@gondor.apana.org.au,
+	davem@davemloft.net, thierry.reding@gmail.com, jonathanh@nvidia.com,
+	linux-crypto@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Akhil R <akhilrajeev@nvidia.com>
+Subject: Re: [PATCH v2 06/10] crypto: tegra: Fix HASH intermediate result
+ handling
+Message-ID: <202502131216.RDQlFu1f-lkp@intel.com>
+References: <20250211171713.65770-7-akhilrajeev@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKLMWRmVeSWpSXmKPExsWy7bCSnG5B8dp0g/U7jCzeXF3FavFg3jY2
-	i5eHNC3uLJjGZHFq+UImi+bF69ks/t6+yGpx9+EPFovLu+awWSxa1sps0bxpCqvF+RddrBaf
-	jv5ntXh2bwWbxZHlH5ksVjQDZVctOMBu8ejnXCYHIY/Fe14yeeyfu4bdo2/LKkaPLfs/M3p8
-	3iTn8evWLZYAtigum5TUnMyy1CJ9uwSujOuPfjIXvGStuPLjK3MD40eWLkZODgkBE4lj7ZPY
-	uxi5OIQEtjNKPD85mQkiIS3xelYXI4QtLLHy33Oooq+MEk9fbWTuYuTgYBMwlHh2wgYkLiKw
-	gVHi6pnZrCANzAIHmCTmX1EHsYUF7CW+nL3LCFLPIqAqcXinNUiYV8BK4smvI1DzNSXW7t3D
-	BBEXlDg58wkLxBh5ieats5knMPLNQpKahSS1gJFpFaNoakFxbnpucoGhXnFibnFpXrpecn7u
-	JkZwTGgF7WBctv6v3iFGJg7GQ4wSHMxKIrwS09akC/GmJFZWpRblxxeV5qQWH2KU5mBREudV
-	zulMERJITyxJzU5NLUgtgskycXBKNTApLf71knnrtAObMy/nXDw+r/9G2KoFs2OLvn/ardjc
-	4aGYaViiJVe0VrDnLGfa+nvfHs33kr+g7Pq9bDZ/Y8aX+9mKVa4HTij7q0eW8B8vTL+hs7j/
-	+SuPXXZ7C/keW7s8zz0SMHu6+NSs9Pnfb6senFooFmJc8P9hV633B85q7k0TtkddaQgNO5G0
-	r75hWYqh9Z/3zOYnvsu5/nTLUhbvn3pqTTCXi987657k5du+PY5wq19u9No4SN9Sf9Uli3Wr
-	ndyDVecsX5m50uHVNhv7REmH6HrNNZzTAzeebLyxb4ea0pP2u9z1H0xOLnx759Dx6mlsET0K
-	Ll+DHfpCDXfNUnKdbTTtUIMT31vFo0eUWIozEg21mIuKEwFnuVP3+AIAAA==
-X-CMS-MailID: 20250213042208epcas5p2f9dd1305a647d26d6ee55d15dd1967dc
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20250213042208epcas5p2f9dd1305a647d26d6ee55d15dd1967dc
-References: <CGME20250213042208epcas5p2f9dd1305a647d26d6ee55d15dd1967dc@epcas5p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211171713.65770-7-akhilrajeev@nvidia.com>
 
-This series of patches to fix the following smatch errors from
-xhci driver:
+Hi Akhil,
 
-drivers/usb/host/xhci-mem.c:2060 xhci_add_in_port() error: unassigned variable 'tmp_minor_revision'
-drivers/usb/host/xhci-hub.c:71 xhci_create_usb3x_bos_desc() error: unassigned variable 'bcdUSB'
+kernel test robot noticed the following build warnings:
 
-Change in v2: 
- - Fix bot error from Greg
- - https://lore.kernel.org/linux-usb/2025021234-reaction-womankind-1c0b@gregkh/
+[auto build test WARNING on herbert-crypto-2.6/master]
+[also build test WARNING on herbert-cryptodev-2.6/master linus/master v6.14-rc2 next-20250212]
+[cannot apply to tegra/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Selvarasu Ganesan (2):
-  usb: xhci: Fix unassigned variable 'tmp_minor_revision' in
-    xhci_add_in_port()
-  usb: xhci: Fix unassigned variable 'bcdUSB' in
-    xhci_create_usb3x_bos_desc()
+url:    https://github.com/intel-lab-lkp/linux/commits/Akhil-R/crypto-tegra-Use-separate-buffer-for-setkey/20250212-012434
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git master
+patch link:    https://lore.kernel.org/r/20250211171713.65770-7-akhilrajeev%40nvidia.com
+patch subject: [PATCH v2 06/10] crypto: tegra: Fix HASH intermediate result handling
+config: arm-randconfig-004-20250213 (https://download.01.org/0day-ci/archive/20250213/202502131216.RDQlFu1f-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250213/202502131216.RDQlFu1f-lkp@intel.com/reproduce)
 
- drivers/usb/host/xhci-hub.c | 2 +-
- drivers/usb/host/xhci-mem.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502131216.RDQlFu1f-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/linux/device.h:15,
+                    from include/linux/dma-mapping.h:5,
+                    from drivers/crypto/tegra/tegra-se-hash.c:8:
+   drivers/crypto/tegra/tegra-se-hash.c: In function 'tegra_sha_prep_cmd':
+>> drivers/crypto/tegra/tegra-se-hash.c:342:26: warning: format '%lu' expects argument of type 'long unsigned int', but argument 6 has type 'ssize_t' {aka 'int'} [-Wformat=]
+     342 |         dev_dbg(se->dev, "msg len %llu msg left %llu sz %lu cfg %#x",
+         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:139:49: note: in definition of macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                 ^~~
+   include/linux/dev_printk.h:171:40: note: in expansion of macro 'dev_fmt'
+     171 |         dev_no_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                        ^~~~~~~
+   drivers/crypto/tegra/tegra-se-hash.c:342:9: note: in expansion of macro 'dev_dbg'
+     342 |         dev_dbg(se->dev, "msg len %llu msg left %llu sz %lu cfg %#x",
+         |         ^~~~~~~
+   drivers/crypto/tegra/tegra-se-hash.c:342:59: note: format string is defined here
+     342 |         dev_dbg(se->dev, "msg len %llu msg left %llu sz %lu cfg %#x",
+         |                                                         ~~^
+         |                                                           |
+         |                                                           long unsigned int
+         |                                                         %u
+   drivers/crypto/tegra/tegra-se-hash.c: In function 'tegra_sha_digest':
+   drivers/crypto/tegra/tegra-se-hash.c:701:13: warning: unused variable 'ret' [-Wunused-variable]
+     701 |         int ret;
+         |             ^~~
+
+
+vim +342 drivers/crypto/tegra/tegra-se-hash.c
+
+   265	
+   266	static int tegra_sha_prep_cmd(struct tegra_sha_ctx *ctx, u32 *cpuvaddr,
+   267				      struct tegra_sha_reqctx *rctx)
+   268	{
+   269		struct tegra_se *se = ctx->se;
+   270		u64 msg_len, msg_left;
+   271		int i = 0;
+   272	
+   273		msg_len = rctx->total_len * 8;
+   274		msg_left = rctx->datbuf.size * 8;
+   275	
+   276		/*
+   277		 * If IN_ADDR_HI_0.SZ > SHA_MSG_LEFT_[0-3] to the HASH engine,
+   278		 * HW treats it as the last buffer and process the data.
+   279		 * Therefore, add an extra byte to msg_left if it is not the
+   280		 * last buffer.
+   281		 */
+   282		if (rctx->task & SHA_UPDATE) {
+   283			msg_left += 8;
+   284			msg_len += 8;
+   285		}
+   286	
+   287		cpuvaddr[i++] = host1x_opcode_setpayload(8);
+   288		cpuvaddr[i++] = se_host1x_opcode_incr_w(SE_SHA_MSG_LENGTH);
+   289		cpuvaddr[i++] = lower_32_bits(msg_len);
+   290		cpuvaddr[i++] = upper_32_bits(msg_len);
+   291		cpuvaddr[i++] = 0;
+   292		cpuvaddr[i++] = 0;
+   293		cpuvaddr[i++] = lower_32_bits(msg_left);
+   294		cpuvaddr[i++] = upper_32_bits(msg_left);
+   295		cpuvaddr[i++] = 0;
+   296		cpuvaddr[i++] = 0;
+   297		cpuvaddr[i++] = host1x_opcode_setpayload(2);
+   298		cpuvaddr[i++] = se_host1x_opcode_incr_w(SE_SHA_CFG);
+   299		cpuvaddr[i++] = rctx->config;
+   300	
+   301		if (rctx->task & SHA_FIRST) {
+   302			cpuvaddr[i++] = SE_SHA_TASK_HASH_INIT;
+   303			rctx->task &= ~SHA_FIRST;
+   304		} else {
+   305			/*
+   306			 * If it isn't the first task, program the HASH_RESULT register
+   307			 * with the intermediate result from the previous task
+   308			 */
+   309			i += tegra_se_insert_hash_result(ctx, cpuvaddr + i, rctx);
+   310		}
+   311	
+   312		cpuvaddr[i++] = host1x_opcode_setpayload(4);
+   313		cpuvaddr[i++] = se_host1x_opcode_incr_w(SE_SHA_IN_ADDR);
+   314		cpuvaddr[i++] = rctx->datbuf.addr;
+   315		cpuvaddr[i++] = (u32)(SE_ADDR_HI_MSB(upper_32_bits(rctx->datbuf.addr)) |
+   316					SE_ADDR_HI_SZ(rctx->datbuf.size));
+   317	
+   318		if (rctx->task & SHA_UPDATE) {
+   319			cpuvaddr[i++] = rctx->intr_res.addr;
+   320			cpuvaddr[i++] = (u32)(SE_ADDR_HI_MSB(upper_32_bits(rctx->intr_res.addr)) |
+   321						SE_ADDR_HI_SZ(rctx->intr_res.size));
+   322		} else {
+   323			cpuvaddr[i++] = rctx->digest.addr;
+   324			cpuvaddr[i++] = (u32)(SE_ADDR_HI_MSB(upper_32_bits(rctx->digest.addr)) |
+   325						SE_ADDR_HI_SZ(rctx->digest.size));
+   326		}
+   327	
+   328		if (rctx->key_id) {
+   329			cpuvaddr[i++] = host1x_opcode_setpayload(1);
+   330			cpuvaddr[i++] = se_host1x_opcode_nonincr_w(SE_SHA_CRYPTO_CFG);
+   331			cpuvaddr[i++] = SE_AES_KEY_INDEX(rctx->key_id);
+   332		}
+   333	
+   334		cpuvaddr[i++] = host1x_opcode_setpayload(1);
+   335		cpuvaddr[i++] = se_host1x_opcode_nonincr_w(SE_SHA_OPERATION);
+   336		cpuvaddr[i++] = SE_SHA_OP_WRSTALL | SE_SHA_OP_START |
+   337				SE_SHA_OP_LASTBUF;
+   338		cpuvaddr[i++] = se_host1x_opcode_nonincr(host1x_uclass_incr_syncpt_r(), 1);
+   339		cpuvaddr[i++] = host1x_uclass_incr_syncpt_cond_f(1) |
+   340				host1x_uclass_incr_syncpt_indx_f(se->syncpt_id);
+   341	
+ > 342		dev_dbg(se->dev, "msg len %llu msg left %llu sz %lu cfg %#x",
+   343			msg_len, msg_left, rctx->datbuf.size, rctx->config);
+   344	
+   345		return i;
+   346	}
+   347	
 
 -- 
-2.17.1
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
