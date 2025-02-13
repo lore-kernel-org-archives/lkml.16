@@ -1,159 +1,140 @@
-Received: from out203-205-221-233.mail.qq.com (out203-205-221-233.mail.qq.com [203.205.221.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEAC200112
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 08:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F8320767B
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 08:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739436677; cv=none; b=fKetwnc6W3kyoptYGNJMoNzVA/Pf9/MR/embzfF/iUdu8wuVYp9zwXcwHXy9eadK9NhejchFPtwrkLZSDju+Uh9RT+zc9II3kmPMccpGn92nLZfNcYMqAiKuqR5/V4rCl1TwrJ02WAtLk+AUjjIojdd0qPnDv92jj9Th/7+B/Hg=
+	t=1739436773; cv=none; b=tBGfAPRy8UE2PTzwiigNOixKfqvc0BccNUmAk+4ADiGjEBtd4Ag3fTbDpyye/JVWk1c5FWraz5vou0qXaPWnW+NJjMOeehjRyNKHibig3KP4XqCHgfLCCikZmfiwdPUXk1/iWbQ08lyTJBPPOyNzmsOq1VqKUianuSEHn3fMPGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739436677; c=relaxed/simple;
-	bh=UcvF4sBVk0HG0g4bnNFQQiWcgR0wcXqOPwEKfCEjei4=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=HVAIEnu5PqENrYVjVbxXoop+bilFVArBBe3zcz5nyLXQDAKHv8Qzt8VnzUypLAP+m/oqXAWvbjFgC4qzTOYhTntY5spoYwvp6c6Jx7N9vMPTB8B66mahdwze4BMrE6+EaqtdZGJ2fsUSF5mcUmTM1QuMnr3YUMRScCF0LXbT6tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=pass smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=l6nq1MRF; arc=none smtp.client-ip=203.205.221.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1739436773; c=relaxed/simple;
+	bh=aeltaq5F+EMvjtZgSTQeyt72v0Z1F94i/IxbvZGjCiA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C9TGMJKh+64OxKI3P3TxB4CaKgDDrnP8ams/93atfVTNFGmZkstF28dtwOJ2qwm0lrsNe7r9+CK55DF/hx33vuiv4n9702ZWvXkuuK9j2bVF7aJUom60SiB5kyxvg1gEXw+qydgVbzqz/fdo41Qd7CPxfqHos8ylFkFLdnGMBQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CGrcc83C; arc=none smtp.client-ip=209.85.217.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="l6nq1MRF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1739436670; bh=KhaBNpb95Gi1j4dcCqAqa7XYiZGUbfkjJsMy2avvVao=;
-	h=From:To:Cc:Subject:Date;
-	b=l6nq1MRFsL3GV1FCGQy1eafmE5GyecgiTKnNDyjYJsOp9YoEpVTBDgm4K5dbbwAgY
-	 iKC83uJ/cXNhM16iwXdALWYKDLlZOFWt2BAqBWxs8Xj4iFJ5r0xpmqszxa2rO3RjtS
-	 7qjgFtPACajQyyb7J4KxWvOghK088xg5ec7H8Blg=
-Received: from cyy-pc.lan ([240e:379:2251:3600:f57b:26f9:9718:486c])
-	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
-	id B2330E54; Thu, 13 Feb 2025 16:44:35 +0800
-X-QQ-mid: xmsmtpt1739436275tf62qoxf2
-Message-ID: <tencent_D4ED18476ADCE818E31084C60E3E72C14907@qq.com>
-X-QQ-XMAILINFO: OcN56dxiYj5TKvs7kfZibyvxHrdbil8FBd+bY5ZT7gc3Jj7B62kZYye07kdBtv
-	 pkuNbbtuagFWAmjnpSOjxuKK0o1iYgXUiJjXtLZOOaCnJBPYTlxepxpofP2WkhWjt4vhlIt/G0mC
-	 xY5SlOCqxPl4E15O7QMr56o83XRpGTXACrbJzhaVw/Xf4qhwsFWtwYQ9mTJdkzc2RDI/sy8Wav9L
-	 f2lDSmD/5qDeP74cE1IxH43i30aYQxS5u5zkZQ0W0HVfggr5MNE9a/0LtMr/1YXcFFg0siA3Z8dL
-	 d5JjUkKemrm43RVWMmcQs3zw2dUC1XYFfYuJkecVyUnbRK4Mu5afolhmtpeMXA6v6sWYcGDWD5Hc
-	 79mzX9dGqozQmWwxbBGr3qJBCgARzGMQIJT488XmyVdS3toP1v9Al8Ab/cJc03sRLGBoyAD8sp0M
-	 ArH9veK8hEkcQXbQj8k7DTrT6jCye5YUs//rVGqi8EaLdm96nuCZLVcC+T/PUfL3xTYIZsj7GKxh
-	 4rzR8iUHtVFgFiPuPHcqy8dOKXOafineMmg+x9j8Sm3FbbQZrOcyHI1RDPWVPF2p01+IFyNMwKKK
-	 gd3ueMHNCFEbvLAag+ZbnO/FkpUhLzSrWEKN8NcpJnLrzF54F62mUe6PqShNTud5ph9NARB5yG0z
-	 HoL+2D24wD22QKSaoq9VgPiHJaN5KLSfukOgWjqbjcZBDjdA2/DbYMYhWKn2sw50csMJr66WU1b3
-	 bLLpTavxqwmyHbhux+RSG5Qe031tcHi1zegAsBGU1/RyBezTC5ZLBmbn0Z7TgNH/vo7ka9KV/fE4
-	 mw/ChjO2jX6QZijG27yuvldo0MPClGdFyi/AjMIGM/51lhweYHSFTWqoUI/C9el8XMJwKQh/IgCM
-	 MyyJHFKKbw9dB5+AZ0bpDXgC8qaaAu8rHPoMfroD0g4PoVtN89Oa/YD1SAaApLEPUqR64FoN0h9Q
-	 UAqqPMCoXeAJTTsfaMo8Y1qhRKLIywbRg7onUXhJyFcIip5Ex4OQ==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Yangyu Chen <cyy@cyyself.name>
-To: linux-perf-users@vger.kernel.org,
-	james.clark@linaro.org,
-	irogers@google.com,
-	namhyung@kernel.org
-Cc: acme@kernel.org,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	fj3333bs@aa.jp.fujitsu.com,
-	fj5100bi@fujitsu.com,
-	john.g.garry@oracle.com,
-	jolsa@kernel.org,
-	kan.liang@linux.intel.com,
-	leo.yan@linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	mark.rutland@arm.com,
-	mike.leach@linaro.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	will@kernel.org,
-	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH] perf vendor events arm64: Fix incorrect CPU_CYCLE in metrics expr
-Date: Thu, 13 Feb 2025 16:44:09 +0800
-X-OQ-MSGID: <20250213084409.109774-1-cyy@cyyself.name>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CGrcc83C"
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4bbd3cff198so373501137.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 00:52:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739436770; x=1740041570; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KRQ3dUIptAKwY6MQYxUEHGw6dXXH6tF8Q68IhjO6QLY=;
+        b=CGrcc83Cg5kvPo/fjxbpDmNB9go8s1rJtlk8neDix/jTiFs5ztLGObdJeB2BAYmmuM
+         cAhcZqs54NSB781n7Q31UAI4ITwrbYb5N6O1LMwR+5urOYAH6Z9+dDqS0VZnnFTyRkXW
+         XCVHlRIKnQ3yckTg+u2meqbycIofUUtEBRKnLxOLliNpboecCRzlcjBcPwRnVRItwxqf
+         t/f5+Dgop4QCvx0LoMFY+YGF1WLzvmjPhQvp3wqrJon/Ax4mV22SmZVwl4UfnZJ1znyi
+         CXx7AY33togDQOjnWy73ZrTJ8MOuZZ8bDUjs18A+tO+GCNCPtaHXmbvpsPa5pyTMxi11
+         iJQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739436770; x=1740041570;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KRQ3dUIptAKwY6MQYxUEHGw6dXXH6tF8Q68IhjO6QLY=;
+        b=EqAKi7upHVT7aMRBGqWxCUK4yBrM9dYgyDYmb1YR8Oj6yKOx8EhSYeFi7GcNF7MZZ5
+         ph+DZLc66MtsUrj74MSeMclthCJxQyPQzZiYVzsltNVLy12LbbSIntehaXpcrcUjUS7P
+         5T3UizU6W3NsBUWZr/r4QiDqLZuEBTSleQoocQwcUAvFOLdrExiB2hEyX1vMt9upDHlK
+         4D7qV91Ge9t1HWDYOd/dbvdCuQbQTuXoviIC2rQtJNyneQXml70dYQfa8iOxD9Hlo+ok
+         uGP97zNIxcsLb5SnEc8aV+3d1jzgBl02bwNsa+wMyWB1PNV/mh8Fubi2ckm0CVD8uLS7
+         xE6A==
+X-Forwarded-Encrypted: i=1; AJvYcCU5sQaRCB5rFcV9AlMYMtmDLDOA0Vl7xkNmYqjpdlUeYSK+/hAOYDIhBaaltUph843+khDFnhiOdIPjZsI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7ADHkBnxYHxEOid0B9SbdLmNK94YU1Qw4QFd/fwgsuKVqNSLT
+	I3TkOOMK7Er2kU4EAqcAWkYXc+lFBW0sNuPazG2gkZElvRmifYXNPsCn6KEvUAT89p+VSmkYUkJ
+	azHkIr1hLTXrZo5ghvdGMJpuY6SVx3n88uvX1M8SYnrUa80lsVXw=
+X-Gm-Gg: ASbGncsPUZWAbui1nzBaMDoBZh6WJ4iYeMJvF3yktkzdalNxba6xh4Cj30e+fgmxbqh
+	/2KVoTITZYCjnF/VFv94IkyxR4/cBs6TGCyrTmhxiuhAZypg+XOkNsIbDxATRHqKxJtQ4ouHj3Q
+	0=
+X-Google-Smtp-Source: AGHT+IFnDuYWfE3Q7CuyUtwzYDsXyv9n6Um+OIw404XCQ3zk/sY/TE8+9JT3A2om7er1oTaCb7OwGKlKwkPboIKhvIY=
+X-Received: by 2002:a05:6102:4187:b0:4bb:d062:452 with SMTP id
+ ada2fe7eead31-4bbf207219fmr5886514137.3.1739436770171; Thu, 13 Feb 2025
+ 00:52:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYt6Cuu6=OO9w80yhJbZB77Q0qf7nzYdvjbgDbgAw6t1jw@mail.gmail.com>
+ <8634gku30g.wl-maz@kernel.org> <3902208d-8814-46fe-ba98-3db833b9a886@stanley.mountain>
+ <86wmdvs1oh.wl-maz@kernel.org>
+In-Reply-To: <86wmdvs1oh.wl-maz@kernel.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 13 Feb 2025 14:22:39 +0530
+X-Gm-Features: AWEUYZlmVi_oOrzpHstaYQ-1DQU14Cx8usJ0Mr5C5xxxvEXLMKHSQVpMklUZaec
+Message-ID: <CA+G9fYtKxd8C5W4e5sO93TMC77pRVyJYL8w+i6q988jHk6ztxw@mail.gmail.com>
+Subject: Re: kvm: nVHE hyp panic at: __kvm_nvhe_kvm_hyp_handle_sysre
+To: Marc Zyngier <maz@kernel.org>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, kvmarm@lists.linux.dev, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, virtualization@lists.linux.dev, 
+	Mark Brown <broonie@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
+	Aishwarya TCV <Aishwarya.TCV@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Some existing metrics for Neoverse N3 and V3 expressions use CPU_CYCLE
-to represent the number of cycles, but this is incorrect. The correct
-event to use is CPU_CYCLES.
+On Wed, 12 Feb 2025 at 19:30, Marc Zyngier <maz@kernel.org> wrote:
+>
+> On Wed, 12 Feb 2025 11:41:38 +0000,
+> Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> >
+> > On Tue, Feb 11, 2025 at 11:36:31AM +0000, Marc Zyngier wrote:
+> > > For the crash at hand, which clearly shows nVHE, can you report
+> > > whether the following hack fixes it for you?
+> > >
+> > >     M.
+> >
+> > No luck, I'm afraid.  It still crashes the same way.
+>
+> Right. It was one level deeper. The following change fixes it for
+> me. YMMV.
 
-I encountered this issue while working on a patch to add pmu events for
-Cortex A720 and A520 by reusing the existing patch for Neoverse N3 and
-V3 by James Clark [1] and my check script [2] reported this issue.
+Anders applied this patch and tested on rk3399-rock-pi-4b,
+and confirmed that the regression is resolved.
 
-[1] https://lore.kernel.org/lkml/20250122163504.2061472-1-james.clark@linaro.org/
-[2] https://github.com/cyyself/arm-pmu-check
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Signed-off-by: Yangyu Chen <cyy@cyyself.name>
----
- .../perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json | 6 +++---
- .../perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Link:
+ - https://lkft.validation.linaro.org/scheduler/job/8119717#L1251
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
-index 1f7c9536cb88..eb3a35f244e7 100644
---- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
-@@ -169,7 +169,7 @@
-     },
-     {
-         "MetricName": "fp_ops_per_cycle",
--        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLE",
-+        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLES",
-         "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by any instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-         "MetricGroup": "FP_Arithmetic_Intensity",
-         "ScaleUnit": "1operations per cycle"
-@@ -383,7 +383,7 @@
-     },
-     {
-         "MetricName": "nonsve_fp_ops_per_cycle",
--        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLE",
-+        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLES",
-         "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by an instruction that is not an SVE instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-         "MetricGroup": "FP_Arithmetic_Intensity",
-         "ScaleUnit": "1operations per cycle"
-@@ -421,7 +421,7 @@
-     },
-     {
-         "MetricName": "sve_fp_ops_per_cycle",
--        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLE",
-+        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLES",
-         "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by SVE instructions. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-         "MetricGroup": "FP_Arithmetic_Intensity",
-         "ScaleUnit": "1operations per cycle"
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json
-index d022ae25c864..4a671f55eaf3 100644
---- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json
-@@ -169,7 +169,7 @@
-     },
-     {
-         "MetricName": "fp_ops_per_cycle",
--        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLE",
-+        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLES",
-         "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by any instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-         "MetricGroup": "FP_Arithmetic_Intensity",
-         "ScaleUnit": "1operations per cycle"
-@@ -383,7 +383,7 @@
-     },
-     {
-         "MetricName": "nonsve_fp_ops_per_cycle",
--        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLE",
-+        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLES",
-         "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by an instruction that is not an SVE instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-         "MetricGroup": "FP_Arithmetic_Intensity",
-         "ScaleUnit": "1operations per cycle"
-@@ -421,7 +421,7 @@
-     },
-     {
-         "MetricName": "sve_fp_ops_per_cycle",
--        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLE",
-+        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLES",
-         "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by SVE instructions. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-         "MetricGroup": "FP_Arithmetic_Intensity",
-         "ScaleUnit": "1operations per cycle"
--- 
-2.47.2
+>
+>         M.
+>
+> diff --git a/arch/arm64/kvm/hyp/include/hyp/switch.h b/arch/arm64/kvm/hyp/include/hyp/switch.h
+> index f838a45665f26..b899d815d272f 100644
+> --- a/arch/arm64/kvm/hyp/include/hyp/switch.h
+> +++ b/arch/arm64/kvm/hyp/include/hyp/switch.h
+> @@ -501,9 +501,22 @@ static inline bool handle_tx2_tvm(struct kvm_vcpu *vcpu)
+>         return true;
+>  }
+>
+> +/* Open-coded version of timer_get_offset() to allow for kern_hyp_va() */
+> +static inline u64 hyp_timer_get_offset(struct arch_timer_context *ctxt)
+> +{
+> +       u64 offset = 0;
+> +
+> +       if (ctxt->offset.vm_offset)
+> +               offset += *kern_hyp_va(ctxt->offset.vm_offset);
+> +       if (ctxt->offset.vcpu_offset)
+> +               offset += *kern_hyp_va(ctxt->offset.vcpu_offset);
+> +
+> +       return offset;
+> +}
+> +
+>  static inline u64 compute_counter_value(struct arch_timer_context *ctxt)
+>  {
+> -       return arch_timer_read_cntpct_el0() - timer_get_offset(ctxt);
+> +       return arch_timer_read_cntpct_el0() - hyp_timer_get_offset(ctxt);
+>  }
+>
+>  static bool kvm_handle_cntxct(struct kvm_vcpu *vcpu)
+>
+> --
+> Without deviation from the norm, progress is not possible.
 
+--
+Linaro LKFT
+https://lkft.linaro.org
