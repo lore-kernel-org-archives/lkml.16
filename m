@@ -1,112 +1,128 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56E6C23F40D;
-	Thu, 13 Feb 2025 13:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA0F23F42D
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739452117; cv=none; b=EZxNIxqpMvus7Mzey5q7YJUfBe0cholMD5z8Srg94LVf6+Qs7MBBWFJrmpCRn9/V/037+mm63PWMXDaLr1ENT1TaQbieOaj2XeaJhG5GooyAQEjPkbq4+ZJFSYXNs/mwx14DJYDDGJMoYPaAcXNkQjctTlrQLX8J08Z2vRdA0jg=
+	t=1739452121; cv=none; b=lmipUHaL03fpo+mw/UBfvjc46K21ESuPYj0ZQASL73oaqUncwla7jhv4L+PM00CZ3H0aIR6qnot5rInTWW/3EmOuY9oVCHazL6qTzGj6xUiQlJfx+8YxbTJ/e2TvdeQLJAK7HptqWK9aHz98Mi9/nKAul5yOz1/ugTrrjRDPlpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739452117; c=relaxed/simple;
-	bh=66HnS2WU7zn4HR8Ta71sxVZqxMt8cAFKsInmnCjPJwo=;
+	s=arc-20240116; t=1739452121; c=relaxed/simple;
+	bh=WB4utiqEoEE/vY/GQYhBmlPqe6tcH8mD5sNTsPpqeAk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g2WkyQ5f7DctxZllE8EATZ3BY2R0VpyU7GI8ngMOXy1SUcyIpxB5NFBA+yzQg2MyDyBAw33L14n/5G6EpVAbrj+1tVhoAUYnc/U/72UngGfUuFSTRr+BsPxv5okZZ4/YF6cQAySZSVj0QW/7kQCV0o/S4IVYrU41rUxnzP3nrgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3D1E16F3;
-	Thu, 13 Feb 2025 05:08:54 -0800 (PST)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18FD83F58B;
-	Thu, 13 Feb 2025 05:08:31 -0800 (PST)
-Date: Thu, 13 Feb 2025 13:08:19 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Saravana Kannan <saravanak@google.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Peng Fan <peng.fan@oss.nxp.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v2 1/4] firmware: arm_scmi: Bypass setting fwnode for
- scmi cpufreq
-Message-ID: <Z63uttFGqXx4kqNr@pluto>
-References: <20250120-scmi-fwdevlink-v2-0-3af2fa37dbac@nxp.com>
- <20250120-scmi-fwdevlink-v2-1-3af2fa37dbac@nxp.com>
- <7a29ec8f-fef8-4f1c-a2eb-16a63f2b820c@stanley.mountain>
- <20250206105218.GA22527@localhost.localdomain>
- <e20415aa-517c-4e72-a1c3-9c02769c1149@stanley.mountain>
- <Z6SgFGb4Z88v783c@pluto>
- <CAGETcx8MXpLntMu4=9qECdZJzJLJbWa8ziH8XcW=yJNDAgD=Vw@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=hvuQdkDTaK5iZvzrmjvbhmYy2Q0vCwOY1lj9E1PgRqjzAr74lOP1ND48R5Lbw10QKge37DoOgwULOxU+4siX8V2hnv0IbbzGKh0Eld+Srcr85PEy7y9HKSw/GKHoJcY8jSP38w5JiWX2cf1w6KsSCwQi3dA4EHHBD0rtUwLNIVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RYZa6kWD; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RYZa6kWD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Aapw2IErGtlo9KJno5VNShbCsvVlA1z8qG2MhjGNFrk=; b=RYZa6kWD/sfxt+//pyVvCW0/aN
+	wwfbeYdcWxJ78NJsleXEWRLQGPxTfS/yVMPr0FxLlUaVLd8JhuJf1TzYYE3blhi4V240K3Z7P7Op4
+	5tqLpD3Hbfy7iucyUdEHtAXcgJtapko0PtOpY6iRy+1ph7HO9pEekzom5ssY5XwXtMRN8tvsRCjJZ
+	5IUfOU9NxKUKhnZA+eLCJeUfTghk8APUxVvDz6hqoKbsrjAkGdUppN+t7Ycmjp1amxJUnSjRoP5WF
+	A2OW3qb0Z0MuldnD2mz0hODqjJj61CvWhowSoMJFFC19EwDmlOO1W5ZeU4WdxqZZnny26NX+CraUp
+	ZDfSFhBA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tiYxG-00000000zsJ-0R1X;
+	Thu, 13 Feb 2025 13:08:34 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id AF5A73001AC; Thu, 13 Feb 2025 14:08:33 +0100 (CET)
+Date: Thu, 13 Feb 2025 14:08:33 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: mingo@kernel.org, lucas.demarchi@intel.com,
+	linux-kernel@vger.kernel.org, willy@infradead.org, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com
+Subject: Re: [PATCH v2 24/24] perf: Make perf_pmu_unregister() useable
+Message-ID: <20250213130833.GH28068@noisy.programming.kicks-ass.net>
+References: <20250205102120.531585416@infradead.org>
+ <20250205102450.888979808@infradead.org>
+ <1f4e4bb1-ba5e-4e5f-b6e3-e7603e3d6b0e@amd.com>
+ <20250212124945.GH19118@noisy.programming.kicks-ass.net>
+ <57fa247d-9c85-4f20-9723-d568272651f9@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGETcx8MXpLntMu4=9qECdZJzJLJbWa8ziH8XcW=yJNDAgD=Vw@mail.gmail.com>
+In-Reply-To: <57fa247d-9c85-4f20-9723-d568272651f9@amd.com>
 
-On Thu, Feb 13, 2025 at 12:17:06AM -0800, Saravana Kannan wrote:
-> On Thu, Feb 6, 2025 at 3:42 AM Cristian Marussi
-> <cristian.marussi@arm.com> wrote:
-> >
-> > On Thu, Feb 06, 2025 at 02:31:19PM +0300, Dan Carpenter wrote:
-> > > On Thu, Feb 06, 2025 at 06:52:20PM +0800, Peng Fan wrote:
-> > > > On Wed, Feb 05, 2025 at 03:45:00PM +0300, Dan Carpenter wrote:
-> > > > >On Mon, Jan 20, 2025 at 03:13:29PM +0800, Peng Fan (OSS) wrote:
-> > > > >> diff --git a/drivers/firmware/arm_scmi/bus.c b/drivers/firmware/arm_scmi/bus.c
-> > > > >> index 2c853c84b58f530898057e4ab274ba76070de05e..7850eb7710f499888d32aebf5d99df63db8bfa26 100644
-> > > > >> --- a/drivers/firmware/arm_scmi/bus.c
-> > > > >> +++ b/drivers/firmware/arm_scmi/bus.c
-> > > > >> @@ -344,6 +344,21 @@ static void __scmi_device_destroy(struct scmi_device *scmi_dev)
-> > > > >>          device_unregister(&scmi_dev->dev);
-> > > > >>  }
-> > > > >>
-> > > > >> +static int
-> > > > >> +__scmi_device_set_node(struct scmi_device *scmi_dev, struct device_node *np,
-> > > > >> +                       int protocol, const char *name)
-> > > > >> +{
-> > > > >> +        /* cpufreq device does not need to be supplier from devlink perspective */
-> > > > >> +        if ((protocol == SCMI_PROTOCOL_PERF) && !strcmp(name, "cpufreq")) {
-> > > > >
-> > > > >I don't love this...  It seems like an hack.  Could we put a flag
-> > > > >somewhere instead?  Perhaps in scmi_device?  (I'm just saying that
-> > > > >because that's what we're passing to this function).
-> > > >
-> > > > This means when creating scmi_device, a flag needs to be set which requires
-> > > > to extend scmi_device_id to include a flag entry or else.
-> > > >
-> > > > As below in scmi-cpufreq.c
-> > > > { SCMI_PROTOCOL_PERF, "cpufreq", SCMI_FWNODE_NO }
-> > > >
-> > >
-> > > Yeah, I like that.
-> > >
-> > > -     if ((protocol == SCMI_PROTOCOL_PERF) && !strcmp(name, "cpufreq")) {
-> > > +     if (scmi_dev->flags & SCMI_FWNODE_NO) {
-> > >
-> > > Or we could do something like "if (scmi_dev->no_fwnode) {"
-> >
-> > I proposed a flag a few review ago about this, it shoule come somehow
-> > from the device_table above like Peng was proposing, so that a driver
-> > can just declare that does NOT need fw_devlink.
+On Thu, Feb 13, 2025 at 01:22:55PM +0530, Ravi Bangoria wrote:
+> > Does this work?
+> > 
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -2303,6 +2303,7 @@ static void perf_child_detach(struct per
+> >  
+> >  	sync_child_event(event);
+> >  	list_del_init(&event->child_list);
+> > +	event->parent = NULL;
+> >  }
+> >  
+> >  static bool is_orphaned_event(struct perf_event *event)
 > 
-> Sorry, looks I replied to v1 series. Can you take a look at that
-> response please?
-> https://lore.kernel.org/lkml/CAGETcx87Stfkru9gJrc1sf=PtFGLY7=jrfFaCzK5Z4hq+2TCzg@mail.gmail.com/
+> Apparently not, it ends up with:
 > 
-> If that suggestion I gave there would work, then that's the cleanest
-> approach. This patch series is just kicking the can down the road (or
-> down an inch).
+>   ------------[ cut here ]------------
+>   WARNING: CPU: 145 PID: 5459 at kernel/events/core.c:281 event_function+0xd2/0xf0
 
-Thanks for the reply, I will answer on that other thread.
-Cristian
+Durr, do you have an updated test case?
+
+> Something like below instead? I haven't tested it thoroughly though.
+> 
+> ---
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index d2b87a425e75..4e131b1c37ad 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -13645,20 +13645,25 @@ perf_event_exit_event(struct perf_event *event,
+>  	unsigned long detach_flags = DETACH_EXIT;
+>  
+>  	if (parent_event) {
+> -		/*
+> -		 * Do not destroy the 'original' grouping; because of the
+> -		 * context switch optimization the original events could've
+> -		 * ended up in a random child task.
+> -		 *
+> -		 * If we were to destroy the original group, all group related
+> -		 * operations would cease to function properly after this
+> -		 * random child dies.
+> -		 *
+> -		 * Do destroy all inherited groups, we don't care about those
+> -		 * and being thorough is better.
+> -		 */
+> -		detach_flags |= DETACH_GROUP | DETACH_CHILD;
+>  		mutex_lock(&parent_event->child_mutex);
+> +		if (event->attach_state & PERF_ATTACH_CHILD) {
+> +			/*
+> +			 * Do not destroy the 'original' grouping; because of the
+> +			 * context switch optimization the original events could've
+> +			 * ended up in a random child task.
+> +			 *
+> +			 * If we were to destroy the original group, all group related
+> +			 * operations would cease to function properly after this
+> +			 * random child dies.
+> +			 *
+> +			 * Do destroy all inherited groups, we don't care about those
+> +			 * and being thorough is better.
+> +			 */
+> +			detach_flags |= DETACH_GROUP | DETACH_CHILD;
+> +		} else {
+> +			mutex_unlock(&parent_event->child_mutex);
+> +			parent_event = NULL;
+> +		}
+>  	}
+
+Yeah, that might do, but not really nice. But perhaps its the best we
+can do. I'll give it some thought.
