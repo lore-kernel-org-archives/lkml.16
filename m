@@ -1,50 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3838824A04C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0A720764A;
 	Thu, 13 Feb 2025 19:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739476587; cv=none; b=dE2xVmCpMc20RC0SQXXsjIpNovy3JwIv4X1DIfqXMb8pO9Rdl7oJDhh5gJu3G/PW975LNTTcqVNpzvEBYEpz/njsz4Mwr2B70sr+iXIvG4oomkX/9GTA1I+YJoJDN5QMlkRZ4Aqdoq3T9W+lMTrRnBe+bkXSwU4J7iDN1o6hoFE=
+	t=1739476588; cv=none; b=VxA3MDd46a0ExStUh3X0NL0UEzWbZJbCJEo6M/xGZtY6UA4En+qTNKZBGv/yw6dAXLGwUm0/VENJxItO6Jky8E9bMbBh67dIWejHQKMF9Ridyi7cC/37wvVZxqwOalnFGscnOWrwCA43rQv9KJJI8IUbNT1CeTYuK16vkUanfk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739476587; c=relaxed/simple;
-	bh=3SdugL5iTLTHLtxG9CDRWvnEvj74QRJ9r6nUGkd2tRc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kHf4eLMzoN+TP8gEa4Ui3ZTDJ7fnfmuJkh9015tLTT5SZvVyUgwVz7v6UtCJhdNDCJYTw1Oc73PhDbF25qzSKSF6jzWMK98zYvA/1295LCogRIi7MMJDWOKNHqcnUTiyHHIsLlNPjYnZ4pIlipz+A/2uPp6x+VrIMa/Y+GaXSn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nwEulxT+; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1739476588; c=relaxed/simple;
+	bh=gCDADqQWjq1tNbhyIVjnHO18Ouy+/I4UEioZNq9HWds=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ryXO8Iy4OlpEvvXXQTw3sAugPgjSUHkitwPOnCVv7Ks0+MZuFaANcd8ttlO41Yf+iteYQ6tQ1xS5uOda3YU5LHLRUvvJT/gAEmRVCu5dKHt1id8i98FcPOSrPRJzpfX2znZTg9jcxarce0KYTA3WySx8olABlJlV8auQhnzw66s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AKHlzUZI; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nwEulxT+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AKHlzUZI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1739476586; x=1771012586;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3SdugL5iTLTHLtxG9CDRWvnEvj74QRJ9r6nUGkd2tRc=;
-  b=nwEulxT+RrH4e51rLvbbb7ETtej7Eqqvp/KdxnOVgBmS3kJ9QkTgM5w8
-   /4rMgGNO/Hf2QNzVje7QS9JvKqVDa/ycGJJAaMXuh2opSHqAabCm805+Z
-   o6AFjxdawKELsqO2gWlsl++AYwthKnhnb9vqLECeExrIbl+EYu5kg+qTU
-   5e9rZNR+nwUIdiFCJ26Z7a4NbAAYz+UBvHlnYXqCCy2WOZy7z7hff7mdb
-   MIlQoS4cpT9LcF+I3O0Kr+U3t6dvDEPiw0W/gYsivhSyid26CUCDeGSkK
-   owIriWv3+YOdjF9gXiD1FHSdgxFgIql6leXwol9q5pyt+XV9hNTIkTOv0
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gCDADqQWjq1tNbhyIVjnHO18Ouy+/I4UEioZNq9HWds=;
+  b=AKHlzUZIYdEhOtKVly8oGUSL4a9/d/4KC9YP0IJf+ENvSyjmMKXq92LZ
+   KJv/5so64wTq+B/oi/3COF99iQ5h95lUKDecFHQTAjfxRN7mn6rShQpgI
+   QdEjjmSWnNlDKPLcD2bpCQbszxC4xpVe1WToy8Kg2Nbu+BMjg4Q+pGnRp
+   7WrHK3MyclLXxoiuYhW9QscUuvoZYI4m4LZDhlTQD03ih3fJHs7I5DbvX
+   qoKdArUk42g1+PWTQdaYDcuaaOUbGXoqSdxW21r1zZwua6IBXGzOr+4KV
+   by/7zS1m58zSsBQd9Jq91xUAwriOucC8tEfQecKrawi33K966bXPgOtwV
    w==;
-X-CSE-ConnectionGUID: pPflms1QQI+R2b8ykYpZmg==
-X-CSE-MsgGUID: b5SxgA/mRu+6Y4tdQP/Cww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40078530"
+X-CSE-ConnectionGUID: SrDbJGz4T6mJp3c4CYXG4Q==
+X-CSE-MsgGUID: 3B7r02DGR9+oajg/4KYMbg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40466021"
 X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="40078530"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 11:56:25 -0800
-X-CSE-ConnectionGUID: L/wvlg1cQmWzSjHqq1JkNQ==
-X-CSE-MsgGUID: OKM3m+yzSi+qlOq9CB5nDA==
+   d="scan'208";a="40466021"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 11:56:25 -0800
+X-CSE-ConnectionGUID: jg2X7t55RnqL/4CrxLcFTg==
+X-CSE-MsgGUID: qFx77ugdSs+oELbf7xYWnQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="150421158"
+   d="scan'208";a="113745541"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 13 Feb 2025 11:56:24 -0800
+  by orviesa007.jf.intel.com with ESMTP; 13 Feb 2025 11:56:23 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 139BB2CA; Thu, 13 Feb 2025 21:56:22 +0200 (EET)
+	id E34271FD; Thu, 13 Feb 2025 21:56:21 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
@@ -54,12 +53,10 @@ Cc: Michael Walle <mwalle@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
 	athieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Subject: [PATCH v1 2/5] gpiolib: Use fwnode instead of device in gpiochip_get_ngpios()
-Date: Thu, 13 Feb 2025 21:48:47 +0200
-Message-ID: <20250213195621.3133406-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 0/5] gpio: regmap: Make use of 'ngpios' property
+Date: Thu, 13 Feb 2025 21:48:45 +0200
+Message-ID: <20250213195621.3133406-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
-In-Reply-To: <20250213195621.3133406-1-andriy.shevchenko@linux.intel.com>
-References: <20250213195621.3133406-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,32 +65,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The gpiochip_get_ngpios() can be used in the cases where passed device
-is not a provider of the certain property. Use fwnode instead.
+It appears that regmap GPIO doesn't take into account 'ngpios' property
+and requires hard coded values or duplication of the parsing the same
+outside of GPIO library. This miniseries addresses that.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+For the record, I have checked all bgpio_init() users and haven't seen
+the suspicious code that this series might break, e.g., an equivalent of
+something like this:
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 0f93aa7736c6..0ede5e3eecfd 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -900,11 +900,12 @@ static struct fwnode_handle *gpiochip_choose_fwnode(struct gpio_chip *gc)
- 
- int gpiochip_get_ngpios(struct gpio_chip *gc, struct device *dev)
- {
-+	struct fwnode_handle *fwnode = gpiochip_choose_fwnode(gc);
- 	u32 ngpios = gc->ngpio;
- 	int ret;
- 
- 	if (ngpios == 0) {
--		ret = device_property_read_u32(dev, "ngpios", &ngpios);
-+		ret = fwnode_property_read_u32(fwnode, "ngpios", &ngpios);
- 		if (ret == -ENODATA)
- 			/*
- 			 * -ENODATA means that there is no property found and
+static int foo_probe(struct device *dev)
+{
+	struct gpio_chip *gc = devm_kzalloc(...);
+	struct fwnode_handle *fwnode = ...; // NOT dev_fwnode(dev)!
+
+	...
+	gc->parent = dev;
+	gc->fwnode = fwnode;
+
+	ret = bgpio_init(gc, dev, ...);
+	...
+}
+
+Reported-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+
+Andy Shevchenko (5):
+  gpiolib: Extract gpiochip_choose_fwnode() for wider use
+  gpiolib: Use fwnode instead of device in gpiochip_get_ngpios()
+  gpio: regmap: Group optional assignments together for better
+    understanding
+  gpio: regmap: Move optional assignments down in the code
+  gpio: regmap: Allow ngpio to be read from the property
+
+ drivers/gpio/gpio-regmap.c  | 41 +++++++++++++++++++++----------------
+ drivers/gpio/gpiolib.c      | 27 ++++++++++++++++--------
+ include/linux/gpio/regmap.h |  4 ++--
+ 3 files changed, 43 insertions(+), 29 deletions(-)
+
 -- 
 2.45.1.3035.g276e886db78b
 
