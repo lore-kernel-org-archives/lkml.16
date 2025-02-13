@@ -1,156 +1,259 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6669E281346;
-	Thu, 13 Feb 2025 14:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219DC281356
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739456565; cv=none; b=eBE11aZVQWYTwPkLiXHxBUdUzpOAafC3+XH1UShMaEydnm7n/PVgdlaSHUNXvApRoKpwpI7goO6o5ZMiGWdvCF2nTxnYY9oLLG5mIVKj9Pv7re81ckvK/TwA3fjn+A/Qr1f8erjRVtDspTYXc+XZwOi10oQOWtKJT++XBhzurV8=
+	t=1739456584; cv=none; b=YjHxMEyHruCfhU8MBaxcB8+ForUFWvkcpgvw1blU3Yy7EJKDKbe6c41LW3aheRd74D7pngLj8/bUYuyqgm+sSX2bOcnIVieDffr3ndRPg5I1gZaDp50vihriSE86hR3JB93oIW5Jna+kqO6kQIwkssjOkzc2ISBX5dueDLV0ky0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739456565; c=relaxed/simple;
-	bh=gp/dO/Ps7kKSFA+bpO1ArTJtw3cZrvtuU4i1UR7bb88=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NKYGu99q9iPIMOFVtmJslJ25f9D4zAIZuGrAzsPmfXrphwgLhjGhkUr+KGUJdjep1/5riTSKRoECVS1NNxix/KJe52LqNeUMz0B/FvVR2sV8icB2ppZEz42d9pHzneFpg2SmzaRswQuko2o9+0IykiY9jJ4lIdAjMg2tyXirgLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jj3dfVsd; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739456584; c=relaxed/simple;
+	bh=qHRTE181T1PnysTCfj0zjudXcIcINF8uJ5Wje6gwCc4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F2FOmjoxS6JDsoOUYfSezubJyGRHkiyDVzqIKPKrbBApd9pBp5SJZDZhdwk6Zf9dPMEgK63ZoeZPSFOJzqD9rxj3bpPWjjFuF9FZBTfZj97xo3qYNAdK4rqvXD/C09MabCbE9FUVRaU4oFXo9ZUuHywmxZzLGJjq4PKte28yYZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mgxLoCPb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ciMnBOPe; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=q2aNPY+f; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bqFBSvFb; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jj3dfVsd"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-308e9ff235bso8366371fa.2;
-        Thu, 13 Feb 2025 06:22:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739456561; x=1740061361; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wZmWSiUWpnRK0ksjdmL98E8SgC5cSifduv2jJAfiEPY=;
-        b=Jj3dfVsd4tqZmupytHtEHUVB/6pmOt+DNsrKxewTBR5DYXQ1QWEKswTaT9Hsb3145o
-         rJhBFkOnLK/wfk75i7u6XkmyDLIM20UdhOSIVz6VBwtWP0FPdnBBWVlwUsGp7sJfrwsO
-         Tu9CGh9uVgX6BGhXlUcrLgYZ4EAdYERbcgPcq+8+p2uQDyfaR2X4wGhrvhRkypMQYEAv
-         yrqhOrSceRQTGdxAkilC5ybDMVoCti1fw0sQ9TInyogWHtTMMHQdy4MSN7mJruBJLjBx
-         z1rNa2nqu+nwXd/uLARTIvX9B8GaYWCeChfW56oiiw3EMnDEYxz0RxBACmPAAVjHnGQN
-         TJmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739456561; x=1740061361;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wZmWSiUWpnRK0ksjdmL98E8SgC5cSifduv2jJAfiEPY=;
-        b=D7gyJhArTtDgSg33wSzuXR+XAxKdL/ejsttTIJ6/9h9f3r3ra4bSuXNKyHaHmSP5xu
-         6/CvLULbiZGby2Bw/65d0lRQGLf93IAWkmjrIHxasrIv79Xumcta3EvOz5qcodZWpuML
-         41MDVCs29m+8C3FVKbnQ+2HYU/IZfqUoTbwnXPIDRShwcysVRDaH6Ww7HQdw17LpQD4N
-         eVvdq0Qjr3A/Vge1xTplSZGiG5M3CdA8/vo3SfuxKSsKXJWbtMk8n1/E+d47yzHfKuwI
-         fPgroUd2ZJBf6uN980D2pgOoM1ANxr5H/0+T9n1Ky66GTXsZGkmuBLyOVSuLPbTaBWB3
-         n+sw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlPHAil7KEznDtKCEntwMLhtcGlG4c55S9nX/wKSGB2YpLrg8Pas+xnD0JJnRTfVYV2fFkS3fjrn474hKg@vger.kernel.org, AJvYcCXKEL0hDlqDFUQMWOteU194aRT1AVnU56a5jB6HBrYpPnvI8Crso1+jZrGaguMNbJXt0DEKURVVk763kHpQ/40=@vger.kernel.org, AJvYcCXdW5vLrPeU8G/AIq35MJskk0evhC55qmmO/iOmGTksBbImCbQOKh7KdS9g+9pkWT+hw9lKypa7@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZx6/33/gJ/vEMb6cM0qsYb/R7E93jOEInXxaFecnSUIaeDi1K
-	hOjeMFXGHQFA8aAJrsnNLMvmO5R8Huw878Hz2wQTK0xh6DPXdWQ/gbkRoPR+PZhyt7rQLPQZcN5
-	oyoqqewpA4f8UluXaUOxWD4ztq3E=
-X-Gm-Gg: ASbGncuu2LpY3ihRTHGpm7IZkXq2c/9XI9ylwFul2eTmQBxnjgps1UZHfFyUPsEXIzu
-	FURhALoV4l55ZdKRgNdBv7XpXZEPHuf0eeEdvaB8umKeXP2yft4/pLOcwYD7lNVeDlfZvyMA=
-X-Google-Smtp-Source: AGHT+IE1Ui4s9arYtwU9tac297UTOfK+baxbi60/IuRWMEIkYSnWEjH6X0OJlTlu0WS7f8Bynj5q63KuRkpdg8b3Lsw=
-X-Received: by 2002:a05:651c:1507:b0:307:5879:e7d8 with SMTP id
- 38308e7fff4ca-309036d7adcmr28642701fa.30.1739456560967; Thu, 13 Feb 2025
- 06:22:40 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mgxLoCPb";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ciMnBOPe";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="q2aNPY+f";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bqFBSvFb"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 194541F86A;
+	Thu, 13 Feb 2025 14:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739456579; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jJaqS2b6QNx5/ZiATh45FTV2cstJyYJjHzc2Xo5SIsM=;
+	b=mgxLoCPbqG61h9bz/Gtrk+2U0O+38aTjh0cKaDgyEZ+tfwUa8tHwJ2ucYsjVYji0uU/Bbj
+	NiJ3pJ9rL93flDLRZmW7S/bR+hgpPHJTNnWsVcPnAdysEgu53iSViaKhUbwpuGsMcgdNt8
+	r+NxJmBfwJREZqM6okF6cmQRBgDAnYg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739456579;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jJaqS2b6QNx5/ZiATh45FTV2cstJyYJjHzc2Xo5SIsM=;
+	b=ciMnBOPebYAEK1O/pSWXwrwCWB/sjqnYO2yOJcnT1kZ3WEOUolvSy9Tvux9O+VHM/8z7cI
+	mAjQG/iBHlZdP2BA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=q2aNPY+f;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=bqFBSvFb
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739456578; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jJaqS2b6QNx5/ZiATh45FTV2cstJyYJjHzc2Xo5SIsM=;
+	b=q2aNPY+f0OIgHVQHJ2GXzNqUeVeyK3szP7NNgX1mjmFsk3J/yhWXAfTrLMuPRa8q/MV0hD
+	Urv1PbP4pcbxExQlGKvWkpm2snTKTVUhUB4ZVm2UbTGMXgd2StvO0OFfvfsJL6UrL79PTp
+	XlbBorOLRuj+sDiUKTSQqztM7jKzHg4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739456578;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jJaqS2b6QNx5/ZiATh45FTV2cstJyYJjHzc2Xo5SIsM=;
+	b=bqFBSvFb0pJJ7e1xXaeu61cS5JDvHDe957AbYk8idG2uzHxCjQa9kNgWlJpElOixMqxNzo
+	o3lgfM9Mv8W92FDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 08B9E137DB;
+	Thu, 13 Feb 2025 14:22:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id n9xqAUIArmc3ZgAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Thu, 13 Feb 2025 14:22:58 +0000
+Date: Thu, 13 Feb 2025 15:22:57 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: Daniel Wagner <wagi@kernel.org>, 
+	James Smart <james.smart@broadcom.com>, Keith Busch <kbusch@kernel.org>, hch <hch@lst.de>, 
+	Sagi Grimberg <sagi@grimberg.me>, Hannes Reinecke <hare@suse.de>, Paul Ely <paul.ely@broadcom.com>, 
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/3] nvme-fc: do not ignore connectivity loss during
+ connecting
+Message-ID: <cb11609e-9657-4f41-ba27-567d5fe1b1e3@flourine.local>
+References: <20250109-nvme-fc-handle-com-lost-v4-0-fe5cae17b492@kernel.org>
+ <20250109-nvme-fc-handle-com-lost-v4-3-fe5cae17b492@kernel.org>
+ <denqwui6sl5erqmz2gvrwueyxakl5txzbbiu3fgebryzrfxunm@iwxuthct377m>
+ <6b6fea1e-671c-4a6a-98ba-a27bb2a4a95a@flourine.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213114400.v4.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
- <2025021352-dairy-whomever-f8bd@gregkh> <CADg1FFdez0OdNDPRFPFxNHL_JcKmHE6KNxnYvt4sK7i+Uw6opA@mail.gmail.com>
- <2025021347-washboard-slashed-5d08@gregkh> <CADg1FFdbKx3z+SPWFmY4+xZmewh0MnnZp_gmYEdY0z-mxutmEw@mail.gmail.com>
- <2025021318-regretful-factsheet-79a1@gregkh>
-In-Reply-To: <2025021318-regretful-factsheet-79a1@gregkh>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Thu, 13 Feb 2025 09:22:28 -0500
-X-Gm-Features: AWEUYZnlhlrfRU7G4FrgTrcb9H-dsDkPENLIZdLh14jFn2kgy6dsYsfxDnsDfjg
-Message-ID: <CABBYNZL4tEBTT3Hrf3JUGNuseLg1SNLmazo88EitmMfhUWUQxw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] Bluetooth: Fix possible race with userspace of
- sysfs isoc_alt
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Hsin-chen Chuang <chharry@google.com>, linux-bluetooth@vger.kernel.org, 
-	chromeos-bluetooth-upstreaming@chromium.org, 
-	Hsin-chen Chuang <chharry@chromium.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Ying Hsu <yinghsu@chromium.org>, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6b6fea1e-671c-4a6a-98ba-a27bb2a4a95a@flourine.local>
+X-Rspamd-Queue-Id: 194541F86A
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-Hi Greg,
+On Thu, Feb 13, 2025 at 10:14:46AM +0100, Daniel Wagner wrote:
+> That means the idea to synchronize the state change with the
+> ASSOC_FAILED bit under the lock is not going to work. I am trying to
+> figure out a solution.
 
-On Thu, Feb 13, 2025 at 8:45=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Thu, Feb 13, 2025 at 09:33:34PM +0800, Hsin-chen Chuang wrote:
-> > On Thu, Feb 13, 2025 at 8:10=E2=80=AFPM Greg KH <gregkh@linuxfoundation=
-.org> wrote:
-> > >
-> > > A: http://en.wikipedia.org/wiki/Top_post
-> > > Q: Were do I find info about this thing called top-posting?
-> > > A: Because it messes up the order in which people normally read text.
-> > > Q: Why is top-posting such a bad thing?
-> > > A: Top-posting.
-> > > Q: What is the most annoying thing in e-mail?
-> > >
-> > > A: No.
-> > > Q: Should I include quotations after my reply?
-> > >
-> > > http://daringfireball.net/2007/07/on_top
-> > >
-> > > On Thu, Feb 13, 2025 at 07:57:15PM +0800, Hsin-chen Chuang wrote:
-> > > > The btusb driver data is allocated by devm_kzalloc and is
-> > > > automatically freed on driver detach, so I guess we don't have
-> > > > anything to do here.
-> > >
-> > > What?  A struct device should NEVER be allocated with devm_kzalloc.
-> > > That's just not going to work at all.
-> >
-> > Noted. Perhaps that needs to be refactored together.
-> >
-> > >
-> > > > Or perhaps we should move btusb_disconnect's content here? Luiz, wh=
-at
-> > > > do you think?
-> > >
-> > > I think something is really wrong here.  Why are you adding a new str=
-uct
-> > > device to the system?  What requires that?  What is this new device
-> > > going to be used for?
-> >
-> > The new device is only for exposing a new sysfs attribute.
->
-> That feels crazy.
->
-> > So originally we had a device called hci_dev, indicating the
-> > implementation of the Bluetooth HCI layer. hci_dev is directly the
-> > child of the usb_interface (the Bluetooth chip connected through USB).
-> > Now I would like to add an attribute for something that's not defined
-> > in the HCI layer, but lower layer only in Bluetooth USB.
-> > Thus we want to rephrase the structure: usb_interface -> btusb (new
-> > device) -> hci_dev, and then we could place the new attribute in the
-> > new device.
-> >
-> > Basically I kept the memory management in btusb unchanged in this
-> > patch, as the new device is only used for a new attribute.
-> > Would you suggest we revise the memory management since we added a
-> > device in this module?
->
-> If you add a new device in the tree, it HAS to work properly with the
-> driver core (i.e. life cycles are unique, you can't have empty release
-> functions, etc.)  Put it on the proper bus it belongs to, bind the
-> needed drivers to it, and have it work that way, don't make a "fake"
-> device for no good reason.
+I found a possible solution. The only 'catch' is to make the state
+machine a bit more restrictive. The only valid transition to LIVE would
+be from CONNECTING. We can do this because even the PCI driver is doing
+all the state transitions NEW -> CONNECTING -> LIVE. It's important that
+we can't enter LIVE from RESETTING to get the patch below working.
 
-Well we could just introduce it to USB device, since alternate setting
-is a concept that is coming from there, but apparently the likes of
-/sys/bus/usb/devices/usbX/bAlternateSetting is read-only, some
-Bluetooth profiles (HFP) requires switching the alternate setting and
-because Google is switching to handle this via userspace thus why
-there was this request to add a new sysfs to control it.
+We don't have to rely on another variable to figure in which state the
+ctrl is. The nvme_fc_ctrl_connectivity_loss callback needs always to
+trigger a reset. If the ctrl is not in LIVE it is a no-op. This makes it
+possible to remove the lock around the ASSOC_FAILED and the state read
+operation.
 
---=20
-Luiz Augusto von Dentz
+In nvme_fc_create_association we only have to check if we can enter the
+LIVE state (thus we were in CONNECTING) and if this fails we entered the
+RESETTING state and should return an error.
+
+
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 818d4e49aab5..f028913e2e62 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -564,8 +564,6 @@ bool nvme_change_ctrl_state(struct nvme_ctrl *ctrl,
+ 	switch (new_state) {
+ 	case NVME_CTRL_LIVE:
+ 		switch (old_state) {
+-		case NVME_CTRL_NEW:
+-		case NVME_CTRL_RESETTING:
+ 		case NVME_CTRL_CONNECTING:
+ 			changed = true;
+ 			fallthrough;
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index f4f1866fbd5b..e740814fd1ea 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -781,61 +781,12 @@ nvme_fc_abort_lsops(struct nvme_fc_rport *rport)
+ static void
+ nvme_fc_ctrl_connectivity_loss(struct nvme_fc_ctrl *ctrl)
+ {
+-	enum nvme_ctrl_state state;
+-	unsigned long flags;
+-
+ 	dev_info(ctrl->ctrl.device,
+ 		"NVME-FC{%d}: controller connectivity lost. Awaiting "
+ 		"Reconnect", ctrl->cnum);
+
+-	spin_lock_irqsave(&ctrl->lock, flags);
+ 	set_bit(ASSOC_FAILED, &ctrl->flags);
+-	state = nvme_ctrl_state(&ctrl->ctrl);
+-	spin_unlock_irqrestore(&ctrl->lock, flags);
+-
+-	switch (state) {
+-	case NVME_CTRL_NEW:
+-	case NVME_CTRL_LIVE:
+-		/*
+-		 * Schedule a controller reset. The reset will terminate the
+-		 * association and schedule the reconnect timer.  Reconnects
+-		 * will be attempted until either the ctlr_loss_tmo
+-		 * (max_retries * connect_delay) expires or the remoteport's
+-		 * dev_loss_tmo expires.
+-		 */
+-		if (nvme_reset_ctrl(&ctrl->ctrl)) {
+-			dev_warn(ctrl->ctrl.device,
+-				"NVME-FC{%d}: Couldn't schedule reset.\n",
+-				ctrl->cnum);
+-			nvme_delete_ctrl(&ctrl->ctrl);
+-		}
+-		break;
+-
+-	case NVME_CTRL_CONNECTING:
+-		/*
+-		 * The association has already been terminated and the
+-		 * controller is attempting reconnects.  No need to do anything
+-		 * futher.  Reconnects will be attempted until either the
+-		 * ctlr_loss_tmo (max_retries * connect_delay) expires or the
+-		 * remoteport's dev_loss_tmo expires.
+-		 */
+-		break;
+-
+-	case NVME_CTRL_RESETTING:
+-		/*
+-		 * Controller is already in the process of terminating the
+-		 * association.  No need to do anything further. The reconnect
+-		 * step will kick in naturally after the association is
+-		 * terminated.
+-		 */
+-		break;
+-
+-	case NVME_CTRL_DELETING:
+-	case NVME_CTRL_DELETING_NOIO:
+-	default:
+-		/* no action to take - let it delete */
+-		break;
+-	}
++	nvme_reset_ctrl(&ctrl->ctrl);
+ }
+
+ /**
+@@ -3177,23 +3128,18 @@ nvme_fc_create_association(struct nvme_fc_ctrl *ctrl)
+ 		else
+ 			ret = nvme_fc_recreate_io_queues(ctrl);
+ 	}
++	if (!ret && test_bit(ASSOC_FAILED, &ctrl->flags))
++		ret = -EIO;
+ 	if (ret)
+ 		goto out_term_aen_ops;
+
+-	spin_lock_irqsave(&ctrl->lock, flags);
+-	if (!test_bit(ASSOC_FAILED, &ctrl->flags))
+-		changed = nvme_change_ctrl_state(&ctrl->ctrl, NVME_CTRL_LIVE);
+-	else
++	if (!nvme_change_ctrl_state(&ctrl->ctrl, NVME_CTRL_LIVE)) {
+ 		ret = -EIO;
+-	spin_unlock_irqrestore(&ctrl->lock, flags);
+-
+-	if (ret)
+ 		goto out_term_aen_ops;
++	}
+
+ 	ctrl->ctrl.nr_reconnects = 0;
+-
+-	if (changed)
+-		nvme_start_ctrl(&ctrl->ctrl);
++	nvme_start_ctrl(&ctrl->ctrl);
+
+ 	return 0;	/* Success */
