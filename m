@@ -1,62 +1,62 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C10C28A2CB;
-	Thu, 13 Feb 2025 20:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA3E28A2CF
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 20:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739476968; cv=none; b=Sr9OKO/PdCzTfpk1CnLLoRHL4ipjmQNWgcyxWCRgfjQQfmTJMd0qrWIbKDAiAkNnQ2PfPlvQBQAlCs/HYnnjU6OANaPI7XgBuNZPSiTyHRBdd7un9XtS1rxd7uiwqQ0mVGQDBXjYn/nsrDgvDIllI/QAVeq94bkcAEMzwQfofl0=
+	t=1739476967; cv=none; b=swh2uz1Hrqg3TuRXEnx6VYDgLKlfQUd6HmJUmSZct+y//fYBR2ZEvKjfeGRbZetLY/Z0n5jQW+3Jx1sI4cYIh61Z6BFJoKVIsEvzz71B/MS68UbGCS7WFkQbctj1hwnTjBV2xPfMcRT8y57Cls1dgn4VriGpCOou4sVaxirRfiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739476968; c=relaxed/simple;
-	bh=vKI+/VyZyuyXDySF2CgE26qyrB7GCzu7H7S9aWPJHOU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XImTnuctdfw+U54oo3j17TH5biRYEtYfkcev8voot/hv9kq2Lj/1twUyQirUso+uGoGIk7B5qFYR3zrxY6H6ecPZS61TvBGuM3PMrGsR1YCb+p/hT1i38z42y9fKgpRdx+Dw+OlLtdtB8ZIQ0p0kJciWZ9QVgqX6fkHZpueEuQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=dvPaCot+; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=qaDHjsEv; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1739476967; c=relaxed/simple;
+	bh=A+ih5m/Peky6swazciVfmxJpolWiWfF0hfS+XSSF0uU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XdLtx7a9x0y/SD4h/G5skyRKfXMRx0HQ515Ob4Gnsr4/NQnA5719lTAgaumIjHw7TWMyZzuYSSemP5Cvrh/2FDhdbYHLR2VeXQp8Mkgj9TeNBwBusq/spGi3G6pzlNBpwV1GOaM5+6Sybo9FQNEVznv35/0Q/FerQD/kmRzUNGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kil9nCyi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="dvPaCot+";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="qaDHjsEv"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kil9nCyi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739476965;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hlf6x/2m+ZIY8uOQVOMDgFdeACA4Rc/2FVHmDJRTfuE=;
+	b=Kil9nCyieBXSUCa5FXuwd8LMEzhBCUYQHABloSB3u5EeuhX+4JrbVpBF2TtzHR9T11iY9w
+	3wQ6ZNsDRLEIpuj9aUya7l440xTJue3O0+FLaRGhoVHLz96xl6Hg4MY0gyo8D3LPO0qUZo
+	33qT8kinpJzG3cXmy3q7o3ziCfYVs8k=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-7NPXp59oPO-5ALDO5t9JgA-1; Thu,
+ 13 Feb 2025 15:02:41 -0500
+X-MC-Unique: 7NPXp59oPO-5ALDO5t9JgA-1
+X-Mimecast-MFC-AGG-ID: 7NPXp59oPO-5ALDO5t9JgA
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E68A3220CF;
-	Thu, 13 Feb 2025 20:02:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1739476964; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=JE7zJK9MWCb/ubVE/xyIp52g1kxFJ07FN8eQVA5JPwc=;
-	b=dvPaCot+txYXRlgyLUM4Qt/vemdrBj6V9sk1Dw15Xb9iTHBv//KwWPYRKSVqcnS/zEKRvU
-	K4ji6JMpoMVQyFIQ1Y8QRqHKkFK57AlcbLaITdMV3KG6VKAmUZW9pbn4aTIlxs3ErIu95C
-	CCCmpu/yr1wTuize0kugQkb0kluZcyw=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=qaDHjsEv
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1739476963; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=JE7zJK9MWCb/ubVE/xyIp52g1kxFJ07FN8eQVA5JPwc=;
-	b=qaDHjsEv0wtyvXBezbzbAfvO1iXrq8ifCev/EqATNDoT2jjY1RixkX10YopZYRLOKDUfx9
-	SmZID2jTtuSIOnRg54H9fXw1Dx25AUmG4PVSaKCaE0sBcJMf0Cv0gy7PZsYHLFad3ceDcf
-	LaYa2hj3MJ9BPXpO0o3Ta+M471sU/T0=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DF70313874;
-	Thu, 13 Feb 2025 20:02:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id lh6JNuNPrmepWAAAD6G6ig
-	(envelope-from <dsterba@suse.com>); Thu, 13 Feb 2025 20:02:43 +0000
-From: David Sterba <dsterba@suse.com>
-To: torvalds@linux-foundation.org
-Cc: David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 6.14-rc3
-Date: Thu, 13 Feb 2025 21:02:41 +0100
-Message-ID: <cover.1739475780.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.47.1
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 095201800876;
+	Thu, 13 Feb 2025 20:02:39 +0000 (UTC)
+Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.88.174])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 17C4C1800872;
+	Thu, 13 Feb 2025 20:02:35 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will.deacon@arm.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Marco Elver <elver@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH v4 0/4] locking/lockdep: Disable KASAN instrumentation of lockdep.c
+Date: Thu, 13 Feb 2025 15:02:24 -0500
+Message-ID: <20250213200228.1993588-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,69 +64,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: E68A3220CF
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Hi,
+ v3: 
+  - Add another patch to insert lock events into lockdep.c.
+  - Rerun all the tests with the simpler defconfig kernel build and do
+    further analysis of the of the performance difference between the
+    the RT and non-RT debug kernels.
 
-please pull, a few more btrfs fixes. Thanks.
+ v4:
+  - Update test results in patch 3 after incorporating CONFIG_KASAN_INLINE
+    into the test matrix.
+  - Add patch 4 to call kasan_check_byte() in lock_acquire.
 
-- fix stale page cache after race between readahead and direct IO write
+It is found that disabling KASAN instrumentation when compiling
+lockdep.c can significantly improve the performance of RT debug kernel
+while the performance benefit of non-RT debug kernel is relatively
+modest.
 
-- fix hole expansion when writing at an offset beyond EOF, the range
-  will not be zeroed
+This series also include patches to add locking events to the rtmutex
+slow paths and the lockdep code for better analysis of the different
+performance behavior between RT and non-RT debug kernels.
 
-- use proper way to calculate offsets in folio ranges
+Waiman Long (4):
+  locking/lock_events: Add locking events for rtmutex slow paths
+  locking/lock_events: Add locking events for lockdep
+  locking/lockdep: Disable KASAN instrumentation of lockdep.c
+  locking/lockdep: Add kasan_check_byte() check in lock_acquire()
 
-----------------------------------------------------------------
-The following changes since commit fdef89ce6fada462aef9cb90a140c93c8c209f0f:
+ kernel/locking/Makefile           |  3 ++-
+ kernel/locking/lock_events_list.h | 29 +++++++++++++++++++++++++++++
+ kernel/locking/lockdep.c          | 22 +++++++++++++++++++++-
+ kernel/locking/rtmutex.c          | 29 ++++++++++++++++++++++++-----
+ 4 files changed, 76 insertions(+), 7 deletions(-)
 
-  btrfs: avoid starting new transaction when cleaning qgroup during subvolume drop (2025-01-23 22:34:17 +0100)
+-- 
+2.48.1
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.14-rc2-tag
-
-for you to fetch changes up to da2dccd7451de62b175fb8f0808d644959e964c7:
-
-  btrfs: fix hole expansion when writing at an offset beyond EOF (2025-02-11 23:09:03 +0100)
-
-----------------------------------------------------------------
-Filipe Manana (2):
-      btrfs: fix stale page cache after race between readahead and direct IO write
-      btrfs: fix hole expansion when writing at an offset beyond EOF
-
-Matthew Wilcox (Oracle) (1):
-      btrfs: fix two misuses of folio_shift()
-
- fs/btrfs/extent_io.c | 29 ++++++++++++++++++++---------
- fs/btrfs/file.c      |  4 +---
- 2 files changed, 21 insertions(+), 12 deletions(-)
