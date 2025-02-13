@@ -1,345 +1,343 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340C821506C
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76346215058
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739437772; cv=none; b=LLdYwFfloofPYXoFkFoe+LfSiYeoat5qdG3UVZUTnY8dCAGs90UHX5RJOboYZspvzE7oBwZumYrjjHsAgbjqIq+IWBT5Q03YG9EH0D8NpuAGg0nLfMJG//yPSU1N/4Cuz6wB1PRhgClgyenTUIDFO/sfy3+TErwG7aSeEqsAkeg=
+	t=1739437773; cv=none; b=qJQZYUhzlRLmSCtqP6FNg7eIw5/OFGZnY9wr1UYhafCFZSkd1vgxk1AeeADIKW6vSwnDTsY+SbQ9KxBzFIWLLp7aoryJ6+XXRL8VcOxdqRLhd5RxGFkKVSmQ6RQ4x66hmuecET+CerofeRNclR8pjS2AGzUZN3nux22jMJg7ETo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739437772; c=relaxed/simple;
-	bh=KcBD2cPQmGBfq6elz01c8ijxlyjzLUstdIiX1VSTJv8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GUq8jscjHxB3Jx9I2l5w4LwfzUbZKUwVmGK3B8YsjxqQBtNOUXbw2Vq/Z1/vsqkrbLIi/uOoCXBZzI2CxVnRDgABFmHsrirnaiqKgU2jUfxrbGx0c+Gh4JRDaetfubwg7g/pxLngiJX05q6r/qsCDh9kpGEpvK5pnpNX3C96HTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dWFrJCAn; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739437773; c=relaxed/simple;
+	bh=IY7DU1BhjQRR5Coi7wNZ7++4LSEJz4/d+wLFVatOJNE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HC0JkQ6BZsO9tvgs3YXJLaXYygLdTD3L+kPq0pFhsoeTsWZxQU6T9dHSlWBE5BIWoIL2PfSsZKYBYxCQsV79OcBaupf/NkCv/+t2qh0hS/j0CGQyIs2+JR5sWgrREiexjMW2VW8xP0LH8BjCd3MDMyBcwhvgXVATT4u/9azmwUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P+YoPBi4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dWFrJCAn"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30613802a6bso7026691fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 01:09:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739437768; x=1740042568; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kAudk4OBy3oQ5BFlJBkk/G/IpQ0/neUpevp/6wokGyc=;
-        b=dWFrJCAn8OeawCz9LqjsdNsRey0sTbVdVZ91WSXo4h1bysqlBAFkediTtx4/yia9lj
-         gWOqzID6sTBrWljJiKFRUf+PV2koiv3VyJkQLUPrirBrmafbuYPGRKJ52KllqFhUtFMh
-         RnX7mqhOafGdhrD/2KO73P4DA6qq4s0gKdmmmdC/MTvygva9v3XyLCkrrAnx5uegE3Nc
-         LAW+HRdTkJgA+GvP/TYPxw/S3+qhG1vcSLIkoWzToWZYhgyKSl3Vi1QPTzs0HAi+6xwG
-         7m81LrHrKQIpH/nO+QZkSC/u4tF5Gu2Zw42VtWoilcOD3mTr+2B3ewMEyPLPwrjztbVh
-         XEwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739437768; x=1740042568;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kAudk4OBy3oQ5BFlJBkk/G/IpQ0/neUpevp/6wokGyc=;
-        b=gdITQDPVpUjqGkmjjLolU/CGiC6NI41Dul4bCE5gB+Aoj5qohYyLQd8elTl9DBQeOF
-         CumDUOjKC/KWn7ouvKe4KqlBML4ATfgIh6/85C2Qt1JWNe7JVqsGMeIo3Y5SUjmFEYrn
-         sBIdZ7f0hIApSmKfqomxjO5moKkQ3oSbnOIbBhIPVDXb2a25k8/Xof2OU6APsrURfXP1
-         OTK2y3XJmWyTnucWQtxPZneF6sm+JBp92OrnNGCd5BVmC1UO7HIoXpmlW4ujLoJnpz7t
-         fyxXld0OcqAIFdtZsjHYDvr8bKJHCvnvpVyWG1yzjQ3CPBlsUgMoBgh5OexXeTdpaIKE
-         xjSg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1fdNuiJw0yiDAToVQO6hZUrJZAgnf/chk3+gEpz99wpYJr34DnCYTUkk3r8vHLAew1j9eeOsg7BirKEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLgkwsRoIBmEl+gZDRG//If9gfLJFDFt5UKGOkS26accRXaojS
-	Pssoe4Fs5qCaRA8mN2dJLPhvhBTl83faUT6Z2sb/ztjHnx+iTdth4yeMFLfHFq1yKPoDrOnNk3t
-	q3VydQTa3iKrFuiFYGe5zeZ0mVjHpHF+qt6eU
-X-Gm-Gg: ASbGncsFIZKLArH4wCwFgWnN37EaNCULdyKaO1zYUHNjcyf1rJSfjEtRmJRcK/m+uAb
-	QVB/pBtQ9AKO7hpBNOjfguwWY5EpQfiiTd8AWlV2NZSqYhF+LPtVPj29Ddxr/zNvvkb5lvx2KI5
-	by5ibfh3Ei64kpRtMpBLLccLmDh9oNkQ==
-X-Google-Smtp-Source: AGHT+IGytENfR1Y5HPvNb7G5JdouX7QcgKyJucqODl7HSF99koYksEWn58+z7u0X5kP6vJmWxmRVKbLTknVp9MubMeE=
-X-Received: by 2002:a2e:be9a:0:b0:307:c829:f170 with SMTP id
- 38308e7fff4ca-3090dcba09cmr7118641fa.4.1739437767915; Thu, 13 Feb 2025
- 01:09:27 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P+YoPBi4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739437770;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rPPwrQnu9UKt/4NbsUXxMh/AuN498RxwAC9aj1izwuk=;
+	b=P+YoPBi4RcY1tQqzQsVDBJTZrFVCWuqtw3g/02FkGt6IL9JjynSowcnzSLLyFFlzGWrhCy
+	0G34F5o76QMPZrtQBofFwBDOaH16Fp/tTojl5VFkSdYzFSC+QK/syY7GNlL0TZK9m6xRmL
+	acPRP7ICLQDfkSl3nDGyWq3CvmHKzyE=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-177-9wd51bs7NIy53NyX5dF7pg-1; Thu,
+ 13 Feb 2025 04:09:26 -0500
+X-MC-Unique: 9wd51bs7NIy53NyX5dF7pg-1
+X-Mimecast-MFC-AGG-ID: 9wd51bs7NIy53NyX5dF7pg_1739437765
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F2C5B19373C4;
+	Thu, 13 Feb 2025 09:09:24 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.81])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8A7C11800365;
+	Thu, 13 Feb 2025 09:09:20 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-doc@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	Clark Williams <williams@redhat.com>
+Subject: [PATCH v2 10/11] Documentation/rv: Add docs for the sched monitors
+Date: Thu, 13 Feb 2025 10:08:08 +0100
+Message-ID: <20250213090819.419470-11-gmonaco@redhat.com>
+In-Reply-To: <20250213090819.419470-1-gmonaco@redhat.com>
+References: <20250213090819.419470-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738772628.git.dvyukov@google.com> <eb32b9b13856b0d508836b61b3e8377aef9163a3.1738772628.git.dvyukov@google.com>
- <Z6WBsruddcx0SFV5@google.com> <CACT4Y+afC5WfTMaKGtg760PS5oXkkurzAyHVyKr9TsPs9RU2DQ@mail.gmail.com>
- <Z6qhjFs0YOMTzk9W@google.com> <CACT4Y+brgj5vRoxQtZ76hUVcHWUJJ2u_8n89EwuTAoyXXbGDCw@mail.gmail.com>
- <Z6uMBAG0hePL9JV3@google.com> <CACT4Y+YB_Ckfptkyu6yiF5Daa8q4MgGyf_1u7RPjoTsdQ3h=qw@mail.gmail.com>
- <Z6z6znWi3o-ewuNs@google.com>
-In-Reply-To: <Z6z6znWi3o-ewuNs@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Thu, 13 Feb 2025 10:09:15 +0100
-X-Gm-Features: AWEUYZnvPHNlsYlZPnafaUYgaXRAn2-afRgaVBuyItL5BtSYs1zIW7nxeO7UJYw
-Message-ID: <CACT4Y+aBsT5VddEHQPtkjWkO_2NF_Ra3BDzi=AwvjvxwYo1gMA@mail.gmail.com>
-Subject: Re: [PATCH v5 6/8] perf report: Add --latency flag
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Wed, 12 Feb 2025 at 20:47, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> On Tue, Feb 11, 2025 at 09:23:30PM +0100, Dmitry Vyukov wrote:
-> > On Tue, 11 Feb 2025 at 18:42, Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > On Tue, Feb 11, 2025 at 09:42:16AM +0100, Dmitry Vyukov wrote:
-> > > > On Tue, 11 Feb 2025 at 02:02, Namhyung Kim <namhyung@kernel.org> wr=
-ote:
-> > > > >
-> > > > > On Fri, Feb 07, 2025 at 08:23:58AM +0100, Dmitry Vyukov wrote:
-> > > > > > On Fri, 7 Feb 2025 at 04:44, Namhyung Kim <namhyung@kernel.org>=
- wrote:
-> > > [SNIP]
-> > > > > > > > @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_out=
-put(struct perf_hpp_list *list,
-> > > > > > > >       return 0;
-> > > > > > > >  }
-> > > > > > > >
-> > > > > > > > -int hpp_dimension__add_output(unsigned col)
-> > > > > > > > +int hpp_dimension__add_output(unsigned col, bool implicit)
-> > > > > > > >  {
-> > > > > > > > +     struct hpp_dimension *hd;
-> > > > > > > > +
-> > > > > > > >       BUG_ON(col >=3D PERF_HPP__MAX_INDEX);
-> > > > > > > > -     return __hpp_dimension__add_output(&perf_hpp_list, &h=
-pp_sort_dimensions[col]);
-> > > > > > > > +     hd =3D &hpp_sort_dimensions[col];
-> > > > > > > > +     if (implicit && !hd->was_taken)
-> > > > > > > > +             return 0;
-> > > > > > >
-> > > > > > > I don't think you need these implicit and was_taken things.
-> > > > > > > Just removing from the sort list when it's unregistered seems=
- to work.
-> > > > > > >
-> > > > > > > ---8<---
-> > > > > > > @@ -685,6 +685,7 @@ void perf_hpp_list__prepend_sort_field(st=
-ruct perf_hpp_list *list,
-> > > > > > >  static void perf_hpp__column_unregister(struct perf_hpp_fmt =
-*format)
-> > > > > > >  {
-> > > > > > >         list_del_init(&format->list);
-> > > > > > > +       list_del_init(&format->sort_list);
-> > > > > > >         fmt_free(format);
-> > > > > > >  }
-> > > > > > >
-> > > > > > > ---8<---
-> > > > > >
-> > > > > > It merely suppresses the warning, but does not work the same wa=
-y. See
-> > > > > > this for details:
-> > > > > > https://lore.kernel.org/all/CACT4Y+ZREdDL7a+DMKGFGae1ZjX1C8uNRw=
-CGF0c8iUJtTTq0Lw@mail.gmail.com/
-> > > > >
-> > > > > But I think it's better to pass --latency option rather than addi=
-ng it
-> > > > > to -s option.  If you really want to have specific output fields,=
- then
-> > > > > please use -F latency,sym instead.
-> > > > >
-> > > > > Also I've realized that it should add one sort key in setup_overh=
-ead()
-> > > > > to support hierarchy mode properly.  Something like this?
-> > > > >
-> > > > > Thanks,
-> > > > > Namhyung
-> > > > >
-> > > > >
-> > > > > ---8<---
-> > > > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> > > > > index 2b6023de7a53ae2e..329c2e9bbc69a725 100644
-> > > > > --- a/tools/perf/util/sort.c
-> > > > > +++ b/tools/perf/util/sort.c
-> > > > > @@ -3817,22 +3817,15 @@ static char *setup_overhead(char *keys)
-> > > > >                 return keys;
-> > > > >
-> > > > >         if (symbol_conf.prefer_latency) {
-> > > > > -               keys =3D prefix_if_not_in("overhead", keys);
-> > > > > -               keys =3D prefix_if_not_in("latency", keys);
-> > > > > -               if (symbol_conf.cumulate_callchain) {
-> > > > > -                       keys =3D prefix_if_not_in("overhead_child=
-ren", keys);
-> > > > > +               if (symbol_conf.cumulate_callchain)
-> > > > >                         keys =3D prefix_if_not_in("latency_childr=
-en", keys);
-> > > > > -               }
-> > > > > -       } else if (!keys || (!strstr(keys, "overhead") &&
-> > > > > -                       !strstr(keys, "latency"))) {
-> > > > > -               if (symbol_conf.enable_latency)
-> > > > > +               else
-> > > > >                         keys =3D prefix_if_not_in("latency", keys=
-);
-> > > > > -               keys =3D prefix_if_not_in("overhead", keys);
-> > > > > -               if (symbol_conf.cumulate_callchain) {
-> > > > > -                       if (symbol_conf.enable_latency)
-> > > > > -                               keys =3D prefix_if_not_in("latenc=
-y_children", keys);
-> > > > > +       } else {
-> > > > > +               if (symbol_conf.cumulate_callchain)
-> > > > >                         keys =3D prefix_if_not_in("overhead_child=
-ren", keys);
-> > > > > -               }
-> > > > > +               else
-> > > > > +                       keys =3D prefix_if_not_in("overhead", key=
-s);
-> > > > >         }
-> > > > >
-> > > > >         return keys;
-> > > >
-> > > >
-> > > > Have I decoded the patch correctly?
-> > > >
-> > > >         if (symbol_conf.prefer_latency) {
-> > > >                 if (symbol_conf.cumulate_callchain)
-> > > >                         keys =3D prefix_if_not_in("latency_children=
-", keys);
-> > > >                 else
-> > > >                         keys =3D prefix_if_not_in("latency", keys);
-> > > >         } else {
-> > > >                 if (symbol_conf.cumulate_callchain)
-> > > >                         keys =3D prefix_if_not_in("overhead_childre=
-n", keys);
-> > > >                 else
-> > > >                         keys =3D prefix_if_not_in("overhead", keys)=
-;
-> > > >         }
-> > > >
-> > >
-> > > Yep, that's correct.
-> > >
-> > >
-> > > > If I decoded the patch correctly, it's not what we want.
-> > > >
-> > > > For the default prefer_latency case we also want to add overhead, t=
-hat
-> > > > was intentional for the --latency preset. It does not harm, and all=
-ows
-> > > > to see/compare differences in latency and overhead.
-> > > > Again, if a user wants something custom, there is no way to second
-> > > > guess all possible intentions. For non-default cases, we just let t=
-he
-> > > > user say what exactly they want, and we will follow that.
-> > > >
-> > > > "latency" should be added even if cumulate_callchain.
-> > >
-> > > Please note that it just sets the sort key - which column you want to
-> > > order the result.  The output fields for overhead and children will b=
-e
-> > > added in perf_hpp__init() if you remove the 'was_taken' logic.  So I
-> > > think this change will have the same output with that.
-> >
-> > Yes, but perf_hpp__init() does not have the logic that's currently
-> > contained in setup_overhead().
-> >
-> > If the user specified a "latency" field, and we don't want to add
-> > "overhead" in that case, then _both_ setup_overhead() and
-> > perf_hpp__init() must not add "overhead".
->
-> Ok, I see your point.  But I think it'd be much easier if you allow the
-> 'overhead' column in that case too.
+Add man page and kernel documentation for the sched monitors, as sched
+is a container of other monitors, document all in the same page.
+sched is the first nested monitor, also explain what is a nested monitor
+and how enabling containers or children monitors work.
 
+To: Ingo Molnar <mingo@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>
+Cc: Clark Williams <williams@redhat.com>
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ Documentation/tools/rv/rv-mon-sched.rst  |  69 +++++++++
+ Documentation/trace/rv/monitor_sched.rst | 171 +++++++++++++++++++++++
+ 2 files changed, 240 insertions(+)
+ create mode 100644 Documentation/tools/rv/rv-mon-sched.rst
+ create mode 100644 Documentation/trace/rv/monitor_sched.rst
 
-It may be possible. However, one of my motivations that I did not
-fully explain and realized myself is as follows.
+diff --git a/Documentation/tools/rv/rv-mon-sched.rst b/Documentation/tools/rv/rv-mon-sched.rst
+new file mode 100644
+index 0000000000000..da0fe4c79ae52
+--- /dev/null
++++ b/Documentation/tools/rv/rv-mon-sched.rst
+@@ -0,0 +1,69 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++============
++rv-mon-sched
++============
++-----------------------------
++Scheduler monitors collection
++-----------------------------
++
++:Manual section: 1
++
++SYNOPSIS
++========
++
++**rv mon sched** [*OPTIONS*]
++
++**rv mon <NESTED_MONITOR>** [*OPTIONS*]
++
++**rv mon sched:<NESTED_MONITOR>** [*OPTIONS*]
++
++DESCRIPTION
++===========
++
++The scheduler monitor collection is a container for several monitors to model
++the behaviour of the scheduler. Each monitor describes a specification that
++the scheduler should follow.
++
++As a monitor container, it will enable all nested monitors and set them
++according to OPTIONS.
++Nevertheless nested monitors can also be activated independently both by name
++and by specifying sched: , e.g. to enable only monitor tss you can do any of:
++
++    # rv mon sched:tss
++
++    # rv mon tss
++
++See kernel documentation for further information about this monitor:
++<https://docs.kernel.org/trace/rv/monitor_sched.html>
++
++OPTIONS
++=======
++
++.. include:: common_ikm.rst
++
++NESTED MONITOR
++==============
++
++The available nested monitors are:
++  * scpd: schedule called with preemption disabled
++  * snep: schedule does not enable preempt
++  * sncid: schedule not called with interrupt disabled
++  * snroc: set non runnable on its own context
++  * sco: scheduling context operations
++  * tss: task switch while scheduling
++
++SEE ALSO
++========
++
++**rv**\(1), **rv-mon**\(1)
++
++Linux kernel *RV* documentation:
++<https://www.kernel.org/doc/html/latest/trace/rv/index.html>
++
++AUTHOR
++======
++
++Written by Gabriele Monaco <gmonaco@redhat.com>
++
++.. include:: common_appendix.rst
+diff --git a/Documentation/trace/rv/monitor_sched.rst b/Documentation/trace/rv/monitor_sched.rst
+new file mode 100644
+index 0000000000000..24b2c62a3bc26
+--- /dev/null
++++ b/Documentation/trace/rv/monitor_sched.rst
+@@ -0,0 +1,171 @@
++Scheduler monitors
++==================
++
++- Name: sched
++- Type: container for multiple monitors
++- Author: Gabriele Monaco <gmonaco@redhat.com>, Daniel Bristot de Oliveira <bristot@kernel.org>
++
++Description
++-----------
++
++Monitors describing complex systems, such as the scheduler, can easily grow to
++the point where they are just hard to understand because of the many possible
++state transitions.
++Often it is possible to break such descriptions into smaller monitors,
++sharing some or all events. Enabling those smaller monitors concurrently is,
++in fact, testing the system as if we had one single larger monitor.
++Splitting models into multiple specification is not only easier to
++understand, but gives some more clues when we see errors.
++
++The sched monitor is a set of specifications to describe the scheduler behaviour.
++It includes several per-cpu and per-task monitors that work independently to verify
++different specifications the scheduler should follow.
++
++To make this system as straightforward as possible, sched specifications are *nested*
++monitors, whereas sched itself is a *container*.
++From the interface perspective, sched includes other monitors as sub-directories,
++enabling/disabling or setting reactors to sched, propagates the change to all monitors,
++however single monitors can be used independently as well.
++
++It is important that future modules are built after their container (sched, in
++this case), otherwise the linker would not respect the order and the nesting
++wouldn't work as expected.
++To do so, simply add them after sched in the Makefile.
++
++Specifications
++--------------
++
++The specifications included in sched are currently a work in progress, adapting the ones
++defined in by Daniel Bristot in [1].
++
++Currently we included the following:
++
++Monitor tss
++~~~~~~~~~~~
++
++The task switch while scheduling (tss) monitor ensures a task switch happens
++only in scheduling context, that is inside a call to `__schedule`::
++
++                     |
++                     |
++                     v
++                   +-----------------+
++                   |     thread      | <+
++                   +-----------------+  |
++                     |                  |
++                     | schedule_entry   | schedule_exit
++                     v                  |
++    sched_switch                        |
++  +---------------                      |
++  |                       sched         |
++  +-------------->                     -+
++
++Monitor sco
++~~~~~~~~~~~
++
++The scheduling context operations (sco) monitor ensures changes in a task state
++happen only in thread context::
++
++
++                        |
++                        |
++                        v
++    sched_set_state   +------------------+
++  +------------------ |                  |
++  |                   |  thread_context  |
++  +-----------------> |                  | <+
++                      +------------------+  |
++                        |                   |
++                        | schedule_entry    | schedule_exit
++                        v                   |
++                                            |
++                       scheduling_context  -+
++
++Monitor snroc
++~~~~~~~~~~~~~
++
++The set non runnable on its own context (snroc) monitor ensures changes in a
++task state happens only in the respective task's context. This is a per-task
++monitor::
++
++                        |
++                        |
++                        v
++                      +------------------+
++                      |  other_context   | <+
++                      +------------------+  |
++                        |                   |
++                        | sched_switch_in   | sched_switch_out
++                        v                   |
++    sched_set_state                         |
++  +------------------                       |
++  |                       own_context       |
++  +----------------->                      -+
++
++Monitor scpd
++~~~~~~~~~~~~
++
++The schedule called with preemption disabled (scpd) monitor ensures schedule is
++called with preemption disabled::
++
++                       |
++                       |
++                       v
++                     +------------------+
++                     |    cant_sched    | <+
++                     +------------------+  |
++                       |                   |
++                       | preempt_disable   | preempt_enable
++                       v                   |
++    schedule_entry                         |
++    schedule_exit                          |
++  +-----------------      can_sched        |
++  |                                        |
++  +---------------->                      -+
++
++Monitor snep
++~~~~~~~~~~~~
++
++The schedule does not enable preempt (snep) monitor ensures a schedule call
++does not enable preemption::
++
++                        |
++                        |
++                        v
++    preempt_disable   +------------------------+
++    preempt_enable    |                        |
++  +------------------ | non_scheduling_context |
++  |                   |                        |
++  +-----------------> |                        | <+
++                      +------------------------+  |
++                        |                         |
++                        | schedule_entry          | schedule_exit
++                        v                         |
++                                                  |
++                          scheduling_contex      -+
++
++Monitor sncid
++~~~~~~~~~~~~~
++
++The schedule not called with interrupt disabled (sncid) monitor ensures
++schedule is not called with interrupt disabled::
++
++                       |
++                       |
++                       v
++    schedule_entry   +--------------+
++    schedule_exit    |              |
++  +----------------- |  can_sched   |
++  |                  |              |
++  +----------------> |              | <+
++                     +--------------+  |
++                       |               |
++                       | irq_disable   | irq_enable
++                       v               |
++                                       |
++                        cant_sched    -+
++
++References
++----------
++
++[1] - https://bristot.me/linux-task-model
+-- 
+2.48.1
 
-You referred to fields and sort order as to different things. However,
-for a person not working on perf code internals these are mostly the
-same thing.
-
-Fields are merged into sort order, sort order elements appear as fields.
-Say, if I do "-F symbol,overhead", output will be sorted by symbols
-first, so fields =3D=3D sort. Similarly, anything specified in --sort
-appears as fields in output, so sort =3D=3D fields.
-
-My current code keeps behavior for them consistent. Making it
-non-consistent may be confusing for users.
-
-For example, --hierarchy requires --sort (fails with -F), so I tend to
-use it more than F (commands with --sort are already in my bash
-history).
-So if I want latency and symbol I tend to do:
-
-perf report --sort latency,symbol
-
-and with my current code this behaves the same way as:
-
-perf report -F latency,symbol
-
-Which matches my mental model of F/sort being the same.
-However, if we remove was_taken, then the above commands behave
-differently, which for end user like me is:
-=C2=AF\_(=E3=83=84)_/=C2=AF
-
-
-After reading the code, I think I understand the difference
-(hopefully), e.g. it allows me to do a subtle things like:
--F symbol,overhead --sort overhead,symbol
-(not sure how useful this is compared to always sticking to field
-order for sorting)
-
-
-
-
-> > If we do what you proposed, then perf_hpp__init() will still add
-> > "overhead" and we go back to square 0.
->
-> Right, but currently the default perf report and with --latency option,
-> will show both overhead and latency columns.  That's why I thought you
-> wanted to display them together.
->
-> Actually I don't want to use -s option to describe output fields (like
-> overhead and latency) but I cannot prevent people from doing that. :(
-> Maybe you can skip the setup_overhead() if user gives either 'overhead'
-> or 'latency' explicitly - oh, you have that in the !prefer_latency case.
->
-> >
-> > I used was_taken to not duplicate this non-trivial logic in both
-> > functions. As I mentioned in the previous replies, I tried that but it
-> > was messier/more complex. was_taken is a simple way to not duplicate
-> > logic and keep these functions consistent.
->
-> Hmm.. ok.  Maybe we can update this part later.  Can you please add a
-> comment in the perf_hpp__init() that says overhead and latency columns
-> are added to the sort list in setup_overhead() so it's added implicitly
-> here only if it's already taken?
-
-Added a comment capturing some of this discussion in v7
-
-
-> > > > For the !prefer_latency case, we don't want to mess with
-> > > > overhead/latency fields if the user specified any of them explicitl=
-y.
-> > > > Otherwise this convenience part gets in the user's way and does not
-> > > > allow them to do what they want. User says "I want X" and perf says
-> > > > "screw you, I will give you Y instead, and won't allow you to possi=
-bly
-> > > > do X".
-> > >
-> > > That's what -F option does.  The -s option used to specify how to gro=
-up
-> > > the histogram entries and it will add 'overhead' (and/or 'latency') i=
-f
-> > > it's not even requested.  So I think it's ok to add more output colum=
-n
-> > > when -s option is used.
-> > >
-> > > But unfortunately, using -F and -s together is confusing and change t=
-he
-> > > meaning of -s option - it now says how it sort the result.
-> > >
-> > > >
-> > > > And see above: -F does not work with --hierarchy, so this part is u=
-nskippable.
-> > >
-> > > Yep, but I mean it fixes --hierarchy and --latency.  I'm thinking of =
-a
-> > > way to support -F and --hierarchy in general.
-> >
-> > I don't know why it was disabled. There are likely other things to
-> > improve, but please let's not tie that to this change.
->
-> Right, it's a separate issue.  I was afraid of mixing output fields and
-> sort keys in an unexpected order.  But maybe we can support that if
-> that's what user wants.
->
-> Thanks,
-> Namhyung
->
