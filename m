@@ -1,133 +1,182 @@
-Received: from mta21.hihonor.com (mta21.hihonor.com [81.70.160.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E5B20C021
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9A320C021
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739437651; cv=none; b=HOCK8VgWmoe4RrzKDck2jqi9lZAv+20eueBPUMh6mQ2v7LkBFJq1h922Zd++3j8ujQKi+T/8ncRrQVp3jYvhnPLvQW5CnWikOubztcGNF/5dh0W+wwVBg4iikjQPVjx6sSNrHb4sK2sm2VqRQo24PvKcZhAflGjbUFtifwTqUU8=
+	t=1739437714; cv=none; b=WAml+CCP8JRBVhY55J8H+I6TSn8Fu2JpO7VnxK8kibzhB1n7cBxUdc47eFPM/Hekg88zO/fE1tmKvzY9ivt6vKuMBa/az+MgiIDD1eUWfFqBm7YACG53YscYhxkU0RuaSwJISgBLh6bOmOGMFaBGLMhE1WkqExAya8bp3x28KGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739437651; c=relaxed/simple;
-	bh=Hw6IowBtLjlg/5mH7kGlh+2fXzdGZbe1BmyBSe/xScA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ajHn5X1kJG3YGrZGbpg4/YKn7pEHaE6031AkYqzbkDuP6JoHWuTTluK1bvvXjWjnzIP0FCz3Ajz34DCI1GuI+uvTtivtF18PkdYwc443YM7a0G03+++4ieYlroWqSwZ/WMkTlLC90yWBFjnlAY4Y2q52EpenYiYoEuIXXM0wMWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w013.hihonor.com (unknown [10.68.26.19])
-	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4Ytpn92QmtzYlDsM;
-	Thu, 13 Feb 2025 16:51:09 +0800 (CST)
-Received: from a003.hihonor.com (10.68.18.8) by w013.hihonor.com (10.68.26.19)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 13 Feb
- 2025 16:51:58 +0800
-Received: from a007.hihonor.com (10.68.22.31) by a003.hihonor.com (10.68.18.8)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 13 Feb
- 2025 16:51:57 +0800
-Received: from a007.hihonor.com ([fe80::e866:83ac:f23b:c25c]) by
- a007.hihonor.com ([fe80::e866:83ac:f23b:c25c%10]) with mapi id
- 15.02.1544.011; Thu, 13 Feb 2025 16:51:57 +0800
-From: gaoxu <gaoxu2@honor.com>
-To: Nhat Pham <nphamcs@gmail.com>
-CC: Andrew Morton <akpm@linux-foundation.org>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Suren Baghdasaryan <surenb@google.com>, Barry
- Song <21cnbao@gmail.com>, yipengxiang <yipengxiang@honor.com>
-Subject: =?utf-8?B?5Zue5aSNOiBbUEFUQ0hdIG1tOiBGaXggcG9zc2libGUgTlVMTCBwb2ludGVy?=
- =?utf-8?B?IGRlcmVmZXJlbmNlIGluIF9fc3dhcF9kdXBsaWNhdGU=?=
-Thread-Topic: [PATCH] mm: Fix possible NULL pointer dereference in
- __swap_duplicate
-Thread-Index: Adt8+0GogoLTL6hgQfOcUIXDGgpBSQAehvKAAB6JUvA=
-Date: Thu, 13 Feb 2025 08:51:56 +0000
-Message-ID: <a67e670777474ae2ad1a29707f00ea3f@honor.com>
-References: <44655569e3a1419f800952004f07e714@honor.com>
- <CAKEwX=NgTfnU8EzpPmC_h5mY1UePAPR6_W2rrBNGs3EZA96FsQ@mail.gmail.com>
-In-Reply-To: <CAKEwX=NgTfnU8EzpPmC_h5mY1UePAPR6_W2rrBNGs3EZA96FsQ@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1739437714; c=relaxed/simple;
+	bh=ScTVU/MQJB7IkiEU4cB1inpPWCkD4EJVVuZEp7l1f5M=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fXgYa53HVn83E74QppHXhGMYjx/DfRak800Jf+bCxSDHpzsUUCuZhy7mP/aPR9v+6ZJ1cesQ/WrPNjyR9NY4grezOaQBrqd3eTuMqWAXOzV3sR2o47Xae9N49Zovjr2abSFE+PleAUB7SgpZzV61hMY/pWFMA2eAqg/ywpxjBL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RYJ8uRZu; arc=none smtp.client-ip=209.85.218.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RYJ8uRZu"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-ab7ea7376b0so81297166b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 01:08:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739437710; x=1740042510; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lwq1U/9dmqMgTloqyJjS+/Baoe2IW32eAKGxqeymvb4=;
+        b=RYJ8uRZuEsW1GBqFdterOcGRmJAFREAsEqnF13nCNMV4gj9hxYyKe5rfbeSxGqbS8C
+         Ei8WH59rvd2RYled6wYCbFFxQ3f7iWz4TZQjXGD8j9auWhdCGn1eiN6wyDO62AI3glDk
+         Ke9mVXvSFrr3tXbVwkwFOf2Fg7lVmioM6FCnyT8RGLPHpZYgdMFZlegAtzKTfnQWAvGB
+         Sr7dc+EjsRZ/Q2F++YXr8+6+U1UvXHTc/7a7inInyb91LYxIo9n+ggZDPKyzwb0HWZu4
+         GZSerU2wd2HavEdXIntNLJvkpDvHAY58aejVCi9PJeGDDPThvp/orPTdmOLyHLuJzzFK
+         UdPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739437710; x=1740042510;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lwq1U/9dmqMgTloqyJjS+/Baoe2IW32eAKGxqeymvb4=;
+        b=UQuN6JfOJYP3zbopkXu400c11Fieok3UIQZEbWO/NirEojq5lJzquSq8VoHFcvYAsw
+         eE2/u1v7wp/zFEn/6AeSLYPacHBuhE6Amsr6Y2cAVM0j5GmD3Yv9CyKz4W0rd+nXMpa1
+         oQuvJ/P8r56xIlAMnwhXTpqslyLVDPsza45YUL1uHqcPsW/buVAdm+mYtUO52mmBa6OF
+         OkLJYYkb8jmKueCKSfszwXNyuoole+sPmnmD1RGV/SaUnslyg6oiTZK5EVsuEoUniL72
+         i9wV4d/v7BQLxFBiX9mTaWOhM5VBsf01BIZ5WzWS05nQWolD7uzZ7otWFd1TXPaXvAIp
+         LIIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/qcszBMlvVMGq2Jh9YBD2GSyIk1VrUTN3DCa0syQiLXcDcgAeskZ8RaGASxSnkkfZjvTHIbX1lTZy8wo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMEZNZrXAS0bJjnpANNdi6H4jNzvaJCZd7yMgZt2VmuPIsKdiA
+	DkWvxx9cD8FlQmbXXYO+sjKdIjgUAudVFXCKKZckSBFRzRcQ20GLVx0p1CXz5CnkW8Uj1j149+8
+	jp9Ks8A==
+X-Google-Smtp-Source: AGHT+IGMQmMxtKN+kCWbG03liPyhiTe9RyjrrEbIb/9J2qaN+xdNDJm1mjpBtXp1gEA+vk6720DdFOl7ER0I
+X-Received: from ejcff15.prod.google.com ([2002:a17:906:9c0f:b0:ab7:c9e3:1bc6])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:1c08:b0:ab7:6d4c:a280
+ with SMTP id a640c23a62f3a-aba4eb88da1mr194377066b.12.1739437710757; Thu, 13
+ Feb 2025 01:08:30 -0800 (PST)
+Date: Thu, 13 Feb 2025 10:08:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <cover.1739437531.git.dvyukov@google.com>
+Subject: [PATCH v7 0/9] perf report: Add latency and parallelism profiling
+From: Dmitry Vyukov <dvyukov@google.com>
+To: namhyung@kernel.org, irogers@google.com, acme@kernel.org, 
+	ak@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-PiANCj4gT24gVHVlLCBGZWIgMTEsIDIwMjUgYXQgNzoxNOKAr1BNIGdhb3h1IDxnYW94dTJAaG9u
-b3IuY29tPiB3cm90ZToNCj4gPg0KPiA+IHN3cF9zd2FwX2luZm8oKSBtYXkgcmV0dXJuIG51bGw7
-IGl0IGlzIG5lY2Vzc2FyeSB0byBjaGVjayB0aGUgcmV0dXJuDQo+ID4gdmFsdWUgdG8gYXZvaWQg
-TlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlLiBUaGUgY29kZSBmb3Igb3RoZXIgY2FsbHMgdG8NCj4g
-PiBzd3Bfc3dhcF9pbmZvKCkgaW5jbHVkZXMgY2hlY2tzLCBhbmQgX19zd2FwX2R1cGxpY2F0ZSgp
-IHNob3VsZCBhbHNvDQo+ID4gaW5jbHVkZSBjaGVja3MuDQo+ID4NCj4gPiBUaGUgcmVhc29uIHdo
-eSBzd3Bfc3dhcF9pbmZvKCkgcmV0dXJucyBOVUxMIGlzIHVuY2xlYXI7IGl0IG1heSBiZSBkdWUN
-Cj4gPiB0byBDUFUgY2FjaGUgaXNzdWVzIG9yIEREUiBiaXQgZmxpcHMuIFRoZSBwcm9iYWJpbGl0
-eSBvZiB0aGlzIGlzc3VlIGlzDQo+ID4gdmVyeSBzbWFsbCwgYW5kIHRoZSBzdGFjayBpbmZvIHdl
-IGVuY291bnRlcmVkIGlzIGFzIGZvbGxvd3PvvJoNCj4gPiBVbmFibGUgdG8gaGFuZGxlIGtlcm5l
-bCBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UgYXQgdmlydHVhbCBhZGRyZXNzDQo+ID4gMDAwMDAw
-MDAwMDAwMDA1OA0KPiA+IFtSQi9FXXJiX3NyZWFzb25fc3RyX3NldDogc3JlYXNvbl9zdHIgc2V0
-IG51bGxfcG9pbnRlciBNZW0gYWJvcnQgaW5mbzoNCj4gPiAgIEVTUiA9IDB4MDAwMDAwMDA5NjAw
-MDAwNQ0KPiA+ICAgRUMgPSAweDI1OiBEQUJUIChjdXJyZW50IEVMKSwgSUwgPSAzMiBiaXRzDQo+
-ID4gICBTRVQgPSAwLCBGblYgPSAwDQo+ID4gICBFQSA9IDAsIFMxUFRXID0gMA0KPiA+ICAgRlND
-ID0gMHgwNTogbGV2ZWwgMSB0cmFuc2xhdGlvbiBmYXVsdCBEYXRhIGFib3J0IGluZm86DQo+ID4g
-ICBJU1YgPSAwLCBJU1MgPSAweDAwMDAwMDA1LCBJU1MyID0gMHgwMDAwMDAwMA0KPiA+ICAgQ00g
-PSAwLCBXblIgPSAwLCBUbkQgPSAwLCBUYWdBY2Nlc3MgPSAwDQo+ID4gICBHQ1MgPSAwLCBPdmVy
-bGF5ID0gMCwgRGlydHlCaXQgPSAwLCBYcyA9IDAgdXNlciBwZ3RhYmxlOiA0ayBwYWdlcywNCj4g
-PiAzOS1iaXQgVkFzLCBwZ2RwPTAwMDAwMDA4YTgwZTUwMDAgWzAwMDAwMDAwMDAwMDAwNThdDQo+
-ID4gcGdkPTAwMDAwMDAwMDAwMDAwMDAsIHA0ZD0wMDAwMDAwMDAwMDAwMDAwLA0KPiA+IHB1ZD0w
-MDAwMDAwMDAwMDAwMDAwDQo+ID4gSW50ZXJuYWwgZXJyb3I6IE9vcHM6IDAwMDAwMDAwOTYwMDAw
-MDUgWyMxXSBQUkVFTVBUIFNNUCBTa2lwIG1kIGZ0cmFjZQ0KPiA+IGJ1ZmZlciBkdW1wIGZvcjog
-MHgxNjA5ZTAgLi4uDQo+ID4gcGMgOiBzd2FwX2R1cGxpY2F0ZSsweDQ0LzB4MTY0DQo+ID4gbHIg
-OiBjb3B5X3BhZ2VfcmFuZ2UrMHg1MDgvMHgxZTc4DQo+ID4gc3AgOiBmZmZmZmZjMGYyYTY5OWUw
-DQo+ID4geDI5OiBmZmZmZmZjMGYyYTY5OWUwIHgyODogZmZmZmZmOGE1YjI4ZDM4OCB4Mjc6IGZm
-ZmZmZjhiMDY2MDMzODgNCj4gPiB4MjY6IGZmZmZmZmRmNzI5MWZlNzAgeDI1OiAwMDAwMDAwMDAw
-MDAwMDA2IHgyNDogMDAwMDAwMDAwMDEwMDA3Mw0KPiA+IHgyMzogMDAwMDAwMDAwMDJkMmQyZiB4
-MjI6IDAwMDAwMDAwMDAwMDAwMDggeDIxOiAwMDAwMDAwMDAwMDAwMDAwDQo+ID4geDIwOiAwMDAw
-MDAwMDAwMmQyZDJmIHgxOTogMTgwMDAwMDAwMDJkMmQyZiB4MTg6IGZmZmZmZmRmNzI2ZmFlYzAN
-Cj4gPiB4MTc6IDAwMDAwMDAwMDAwMDAwMDAgeDE2OiAwMDEwMDAwMDAwMDAwMDAxIHgxNTogMDA0
-MDAwMDAwMDAwMDAwMQ0KPiA+IHgxNDogMDQwMDAwMDAwMDAwMDAwMSB4MTM6IGZmN2ZmZmZmZmZm
-ZmZiN2YgeDEyOiBmZmVmZmZmZmZmZmZmYmZmDQo+ID4geDExOiBmZmZmZmY4YTVjN2UxODk4IHgx
-MDogMDAwMDAwMDAwMDAwMDAxOCB4OSA6IDAwMDAwMDAwMDAwMDAwMDYNCj4gPiB4OCA6IDE4MDAw
-MDAwMDAwMDAwMDAgeDcgOiAwMDAwMDAwMDAwMDAwMDAwIHg2IDogZmZmZmZmODA1N2MwMWYxMA0K
-PiA+IHg1IDogMDAwMDAwMDAwMDAwYTMxOCB4NCA6IDAwMDAwMDAwMDAwMDAwMDAgeDMgOiAwMDAw
-MDAwMDAwMDAwMDAwDQo+ID4geDIgOiAwMDAwMDA2ZGFmMjAwMDAwIHgxIDogMDAwMDAwMDAwMDAw
-MDAwMSB4MCA6IDE4MDAwMDAwMDAyZDJkMmYgQ2FsbA0KPiA+IHRyYWNlOg0KPiA+ICBzd2FwX2R1
-cGxpY2F0ZSsweDQ0LzB4MTY0DQo+ID4gIGNvcHlfcGFnZV9yYW5nZSsweDUwOC8weDFlNzgNCj4g
-PiAgY29weV9wcm9jZXNzKzB4MTI3OC8weDIxY2MNCj4gPiAga2VybmVsX2Nsb25lKzB4OTAvMHg0
-MzgNCj4gPiAgX19hcm02NF9zeXNfY2xvbmUrMHg1Yy8weDhjDQo+ID4gIGludm9rZV9zeXNjYWxs
-KzB4NTgvMHgxMTANCj4gPiAgZG9fZWwwX3N2YysweDhjLzB4ZTANCj4gPiAgZWwwX3N2YysweDM4
-LzB4OWMNCj4gPiAgZWwwdF82NF9zeW5jX2hhbmRsZXIrMHg0NC8weGVjDQo+ID4gIGVsMHRfNjRf
-c3luYysweDFhOC8weDFhYw0KPiA+IENvZGU6IDkxMzljMzVhIDcxMDA2ZjNmIDU0MDAwNTY4IGY4
-Nzk3YjU1IChmOTQwMmVhOCkgLS0tWyBlbmQgdHJhY2UNCj4gPiAwMDAwMDAwMDAwMDAwMDAwIF0t
-LS0gS2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IE9vcHM6IEZhdGFsDQo+ID4gZXhjZXB0aW9u
-DQo+ID4gU01QOiBzdG9wcGluZyBzZWNvbmRhcnkgQ1BVcw0KPiA+DQo+ID4gVGhlIHBhdGNoIHNl
-ZW1zIHRvIG9ubHkgcHJvdmlkZSBhIHdvcmthcm91bmQsIGJ1dCB0aGVyZSBhcmUgbm8gbW9yZQ0K
-PiA+IGVmZmVjdGl2ZSBzb2Z0d2FyZSBzb2x1dGlvbnMgdG8gaGFuZGxlIHRoZSBiaXQgZmxpcHMg
-cHJvYmxlbS4gVGhpcw0KPiA+IHBhdGggd2lsbCBjaGFuZ2UgdGhlIGlzc3VlIGZyb20gYSBzeXN0
-ZW0gY3Jhc2ggdG8gYSBwcm9jZXNzIGV4Y2VwdGlvbiwNCj4gPiB0aGVyZWJ5IHJlZHVjaW5nIHRo
-ZSBpbXBhY3Qgb24gdGhlIGVudGlyZSBtYWNoaW5lLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
-Z2FvIHh1IDxnYW94dTJAaG9ub3IuY29tPg0KPiANCj4gWWVhaCB0aGlzIHNtZWxscyBsaWtlIGEg
-YnVnLiBBIGJpdCBzdHJhbmdlIHRob3VnaCAtIEkgaGF2ZSBleWViYWxsZWQgdGhlIGNvZGUsIGFu
-ZA0KPiB3ZSAoc2hvdWxkIGhhdmU/KSBsb2NrZWQgdGhlIFBURSBiZWZvcmUgcmVzb2x2aW5nIGl0
-IGludG8gdGhlIHN3YXAgZW50cnkgZm9ybWF0Lg0KPiBXaGljaCBzaG91bGQgaGF2ZSBiZWVuIGVu
-b3VnaCB0byBwcmV2ZW50IHRoZSBzd2FwIGVudHJ5IGZyb20gYmVpbmcNCj4gdW5tYXBwZWQgYW5k
-IGZyZWVkIHVwLiBXaGljaCBzaG91bGQgaGF2ZSBiZWVuIGVub3VnaCB0byBwcmV2ZW50IHN3YXBv
-ZmYuLi4/DQo+IA0KPiAoYXJlIHlvdSBldmVuIGRvaW5nIGNvbmN1cnJlbnQgc3dhcG9mZj8pDQpO
-bywgdGhlIHN3YXBvZmYgb3BlcmF0aW9uIHdhcyBub3QgZXhlY3V0ZWQuDQo+IA0KPiBDYW4geW91
-IHByb3ZpZGUgbW9yZSBjb250ZXh0PyBXaGF0IGtlcm5lbCB2ZXJzaW9uIGlzIHRoaXMsIHdoYXQg
-a2luZCBvZg0KPiB3b3JrbG9hZCBpcyB0aGlzLCBhbnkgcmVwcm9kdWNlciwgZXRjLj8NCmtlcm5l
-bCB2ZXJzaW9uIGlzIGxpbnV4IDYuNiwgIEFuZHJvaWQxNSAtIGxpbnV4Ni42LjMwLg0KDQpUaGUg
-aXNzdWVzIGVuY291bnRlcmVkIGJ5IG1vYmlsZSB1c2VycyBkdXJpbmcgdXNhZ2UuDQpUaGUgc3lz
-dGVtIGxvYWQgc2hvdWxkIG5vdCBiZSBoaWdoLCBhcyB0aGVyZSBpcyBubyBpbmZvIHJlbGF0ZWQg
-dG8gbG93DQptZW1vcnkgZm91bmQgaW4gdGhlIGxvZ3MuDQpUaGUgcHJvYmFiaWxpdHkgb2YgdGhp
-cyBpc3N1ZSBvY2N1cnJpbmcgaXMgdmVyeSBsb3cgYW5kIGlycmVndWxhci4NCldlIGNhbm5vdCBy
-ZXByb2R1Y2UgdGhlIHByb2JsZW0gZHVyaW5nIHN0cmVzcyB0ZXN0aW5nIGluIHRoZSBsYWJvcmF0
-b3J5Lg0KDQpJIGZvdW5kIHNvbWVvbmUgcmVwb3J0aW5nIGEgc2ltaWxhciBpc3N1ZSBvbiB0aGUg
-d2ViLCBzZWU6DQpodHRwczovL2xrbWwuaW5kaWFuYS5lZHUvaHlwZXJtYWlsL2xpbnV4L2tlcm5l
-bC8yNDA2LjAvMDIzODAuaHRtbA0KaHR0cHM6Ly9mb3J1bS5wcm94bW94LmNvbS90aHJlYWRzL2dl
-dF9zd2FwX2RldmljZS1iYWQtc3dhcC1maWxlLWVudHJ5LjE1NTU4MS8NCmh0dHBzOi8vZm9ydW1z
-LnVucmFpZC5uZXQvdG9waWMvMTQ1NDk3LXNlcnZlci1jcmFzaGVzLXdpdGgtcmVwZWF0ZWQtZ2V0
-X3N3YXBfZGV2aWNlLWJhZC1zd2FwLWZpbGUtZW50cnktM2ZmZmZmZmZmZmZmZi8NCg0KDQoNCg==
+There are two notions of time: wall-clock time and CPU time.
+For a single-threaded program, or a program running on a single-core
+machine, these notions are the same. However, for a multi-threaded/
+multi-process program running on a multi-core machine, these notions are
+significantly different. Each second of wall-clock time we have
+number-of-cores seconds of CPU time.
+
+Currently perf only allows to profile CPU time. Perf (and all other
+existing profilers to the be best of my knowledge) does not allow to
+profile wall-clock time.
+
+Optimizing CPU overhead is useful to improve 'throughput', while
+optimizing wall-clock overhead is useful to improve 'latency'.
+These profiles are complementary and are not interchangeable.
+Examples of where latency profile is needed:
+ - optimzing build latency
+ - optimizing server request latency
+ - optimizing ML training/inference latency
+ - optimizing running time of any command line program
+
+CPU profile is useless for these use cases at best (if a user understands
+the difference), or misleading at worst (if a user tries to use a wrong
+profile for a job).
+
+This series add latency and parallelization profiling.
+See the added documentation and flags descriptions for details.
+
+Brief outline of the implementation:
+ - add context switch collection during record
+ - calculate number of threads running on CPUs (parallelism level)
+   during report
+ - divide each sample weight by the parallelism level
+This effectively models that we were taking 1 sample per unit of
+wall-clock time.
+
+We still default to the CPU profile, so it's up to users to learn
+about the second profiling mode and use it when appropriate.
+
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Changes in v7:
+ - add comment perf_hpp__init() re was_taken logic
+ - add tips.txt example with time/time-quantum
+ - rebased to perf-tools-next HEAD
+
+Changes in v6:
+ - remove latency column in perf_hpp__cancel_latency if
+   sort order is specified, but does not include latency
+ - add tests
+ - rebased to perf-tools-next HEAD
+
+Changes in v5:
+ - fixed formatting of latency field in --stdout mode
+ - added description of --latency flag in Documentation flags
+
+Changes in v4:
+ - added "Shrink struct hist_entry size" commit
+ - rebased to perf-tools-next HEAD
+
+Changes in v3:
+ - rebase and split into patches
+ - rename 'wallclock' to 'latency' everywhere
+ - don't enable latency profiling by default,
+   instead add record/report --latency flag
+
+Dmitry Vyukov (9):
+  perf report: Add machine parallelism
+  perf report: Add parallelism sort key
+  perf report: Switch filtered from u8 to u16
+  perf report: Add parallelism filter
+  perf report: Add latency output field
+  perf report: Add --latency flag
+  perf report: Add latency and parallelism profiling documentation
+  perf test: Add tests for latency and parallelism profiling
+  perf hist: Shrink struct hist_entry size
+
+ .../callchain-overhead-calculation.txt        |   5 +-
+ .../cpu-and-latency-overheads.txt             |  85 +++++++++++++
+ tools/perf/Documentation/perf-record.txt      |   4 +
+ tools/perf/Documentation/perf-report.txt      |  54 +++++---
+ tools/perf/Documentation/tips.txt             |   4 +
+ tools/perf/builtin-record.c                   |  20 +++
+ tools/perf/builtin-report.c                   |  39 ++++++
+ tools/perf/tests/shell/base_report/setup.sh   |  18 ++-
+ .../tests/shell/base_report/test_basic.sh     |  52 ++++++++
+ tools/perf/ui/browsers/hists.c                |  27 ++--
+ tools/perf/ui/hist.c                          | 117 ++++++++++++------
+ tools/perf/util/addr_location.c               |   1 +
+ tools/perf/util/addr_location.h               |   7 +-
+ tools/perf/util/event.c                       |  11 ++
+ tools/perf/util/events_stats.h                |   2 +
+ tools/perf/util/hist.c                        |  90 +++++++++++---
+ tools/perf/util/hist.h                        |  32 ++++-
+ tools/perf/util/machine.c                     |   7 ++
+ tools/perf/util/machine.h                     |   6 +
+ tools/perf/util/sample.h                      |   2 +-
+ tools/perf/util/session.c                     |  12 ++
+ tools/perf/util/session.h                     |   1 +
+ tools/perf/util/sort.c                        |  69 ++++++++++-
+ tools/perf/util/sort.h                        |   3 +-
+ tools/perf/util/symbol.c                      |  34 +++++
+ tools/perf/util/symbol_conf.h                 |   8 +-
+ 26 files changed, 614 insertions(+), 96 deletions(-)
+ create mode 100644 tools/perf/Documentation/cpu-and-latency-overheads.txt
+
+
+base-commit: ee8aef2d232142e5fdfed9c16132815969a0bf81
+-- 
+2.48.1.502.g6dc24dfdaf-goog
+
