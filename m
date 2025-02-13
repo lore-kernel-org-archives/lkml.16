@@ -1,161 +1,132 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F52D28A2CE
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29E624A06C;
+	Thu, 13 Feb 2025 19:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739475139; cv=none; b=gQnm1AdL6MY/70UVtKVf9ZQfS+9NpqmLNB8OfbbeCjLqqy406uByPC80dYUYfZbJUrHzghbtFd2UY/cLxXE+sr7O5UM+RZ7y32OaG6dQRViiaXwUcJJ3Yam4loocoCXhd/LpSvF98j+/E1UL6wh9wuNSgjQ+5Sy17DjutNYYf2w=
+	t=1739475145; cv=none; b=iKfrbAgQeVu/7HuaG5ioCxAiK49kOXHsAHChVcaC4vk3CWc8Ftx/TRHNkHO4bz05HLsgiCCOQbDCJHjUUo9cbkzh7U7s3OWpV09vHUaYFYxIsqG0YJP2e2EDxTSfsuQJw0vQS3MeHYB5XknO522gJVPbs5JsdP2X52gt7ry3Pxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739475139; c=relaxed/simple;
-	bh=vN3xU5PUlBtz0G8Jkp9LPRqLUaC4SYRlG+96xxoP57k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SYUN8HMYfvAIubuD8ON5SqT/N5z9Z1DwHKGzvZh9A9bbSk7xdU/4jzto9yoCxEco3z4a3qmSr5JtTnsva4Aa4nkLKS+pmxP8BxGKL9Jxd1Vio/45oLXYIVt9O2SAgXzRkak6kUQDEHCsuv7DiE/XGzgCDU0N75OCf16mwJVDCZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=S2X13KZ0; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739475145; c=relaxed/simple;
+	bh=Qj+F86dsqXkmAV7Wp0h+E2C2QouUJZ9pZ8c3ZCoW/Lo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FIyOUiDUVEVs4m+AzdJHioPFjFZ8YypYWnw0dWXRyPsvSULWMY9DgRED0qhxudUAhTlK83ZNFiyKY/GUY0VwkFAtCXTor8iyb8kJ/EhC6SJPDdzg3l3dOMfM2O4b+3SnKk6gtuvDlE/mseCHhu0Xdpfg7oGKlX5E7tYUnA6wmVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fTgtnaQA; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S2X13KZ0"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-220ea8ed64eso508445ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:32:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739475136; x=1740079936; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lHPT8j19eeATQvpAXIQ4iMz+8wtwWzqZEPxJSsWFp70=;
-        b=S2X13KZ0dkyTrWvaM7CB9faTeO1FqEnVjgsELnklfPTLXhVnka5E4ftOqglknn2VBy
-         P3NHl6GTFSWsB7MI28Zov7HHANxwSa6jiXWAwFHPVrS0FgO2FhayLxY5CWpnWFEXJ4Fi
-         XUpOa1TBFeuQ1IVvsW5+xXzYB1KLb6geGCbAk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739475136; x=1740079936;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lHPT8j19eeATQvpAXIQ4iMz+8wtwWzqZEPxJSsWFp70=;
-        b=aJYkrO5K3cj/3mmM/rVGRNNu8JoaglDG0bX2Kmxtap1hMxtIAfy0y7YCMn4FVYbQr6
-         2roF+IAlfHfjWimEZzY7VQM3CCWDkukSMViNjDKVQ5NYX1QD6jK7VlnIsaqehRAwI2wG
-         0qo2cxj8uMOQQB/vlyGE5nns1wAoaY7NORHs4IKWJfdyjuXpOrPAHGdP+dMx9Z0CYpQ3
-         YAQbLBjnURTsz3RntRFcXQzbdOw5BfM2IW5VgKXkqIAxWt7QC9oG6ZjioS/PBJKurRFN
-         cH0kFrBcI2CDoBHo4ZqIEgtfeFFGTV9xp/mDVddjFRRW7ZuU25gcfA82kgEtZnLKR6ID
-         YjVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFxd4XZ2pi2v0p1KV5t+F5kxd7eLofYhqMI2cytqlL2bvNXWwimIkLUacMiPg9gHXrgoL7s/7upzYpLPQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcISYuAXrwRbpADSRzo9vjBdvZtmEKpswKgRkYLEgcCkQh3jo/
-	8uT2VtOC20Gqq6uek+h66K1Al9gVeUCo2UNwLf5i6a0t5nL5Ls5LLtjO+dZj2uEIusfaTNaPOx0
-	6tQ==
-X-Gm-Gg: ASbGncv/MdOWMZpI9ZXUGs4P+5uWbrJWU5ZyxRsX6/9pAF2x8Fks6OCFZnmJhHhmIKh
-	p7XCRvYNgJrSXZN6wh2jAMQsTH8Vid4Rui9/jcJua/Nf5OVljRz3TDUO4Hcgg2tg7kPh0x1IJ5Y
-	E+GrMJEmqCEXlvZ6OHp372eLJYEXurnZ07eQKB0xdNqMu29EbHvs80uHlfNezpvoWUqJdBIXtqX
-	+7qqsrBWqBOwoIpMoT9nucdLsnz1DplZ51LV4A/kmTftAfyy2dcJKyANBqbYdmftT6IQOk57uW2
-	hi+leoV/DbDiRycAz5d2D+c7TUUulXWq7khA7Fqm4T3bAa8ZlGuMw9L9EVU=
-X-Google-Smtp-Source: AGHT+IF44iKUkMdvRMinOPPaHfl0bnYUPohV6e4Sm6hrg733dWNwZvDSQRyVP1hi86pINUi6p2jV1w==
-X-Received: by 2002:a05:6a00:c93:b0:730:83c1:1f79 with SMTP id d2e1a72fcca58-7324f6053c8mr41671b3a.3.1739475136487;
-        Thu, 13 Feb 2025 11:32:16 -0800 (PST)
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com. [209.85.214.178])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73242580889sm1656516b3a.83.2025.02.13.11.32.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 11:32:15 -0800 (PST)
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-220c8eb195aso23997265ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:32:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU4/peSYMUGOfsTyWeM9WNbsRLqYReY7rfQn8Kb1eWxeu2TMrYvVZMCYnoMDPxFmokIUCxgHFiZrI3WL3g=@vger.kernel.org
-X-Received: by 2002:a17:902:da92:b0:21b:b3c9:38ff with SMTP id
- d9443c01a7336-220bbc5a245mr127466175ad.37.1739475134479; Thu, 13 Feb 2025
- 11:32:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fTgtnaQA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739475142; x=1771011142;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Qj+F86dsqXkmAV7Wp0h+E2C2QouUJZ9pZ8c3ZCoW/Lo=;
+  b=fTgtnaQA3wW5KwrQFWZ+3YlPgSqWMp6bYRVq87avJOoTMHTIz+iPzHr4
+   N8i+h5/osJD/TFTJ7b7nL5lecznn1z1S1M0HpYY+zeq7fcsG7WfMDFjJt
+   wldDuDLmOGTkyI9XYLD9d6UPNQtWDiBF2ptIUgKQlE3W7UDiomoGbsbQ+
+   9PqMWC8UkHAUE3gC5uNUbRIhGQBXyFsulPGcC00TUbGObvrdlQ4Mk5p5V
+   W3JVByypqAlZxzgXNV3If6FHUvF7cg+N/Khxyr6TbmHJXsxNeny3K9KzJ
+   P9a9OnQNFQrwpDiylDfEyuXsf6pz3jck9JrBc9LC1OPcHLNTsjBj2+HoD
+   A==;
+X-CSE-ConnectionGUID: 3XIx1N+iSGCK0vwpOgtZHw==
+X-CSE-MsgGUID: 5pAEXOnvTOWFzoUt9Gkl+w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="44132343"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="44132343"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 11:32:22 -0800
+X-CSE-ConnectionGUID: Cm3tK4RqQkm+dkgYGdCBBw==
+X-CSE-MsgGUID: U7H7sMZsTgey4v5itG7VNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="113194614"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 13 Feb 2025 11:32:18 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tiewa-0018d9-0v;
+	Thu, 13 Feb 2025 19:32:16 +0000
+Date: Fri, 14 Feb 2025 03:32:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Cryolitia PukNgae via B4 Relay <devnull+Cryolitia.gmail.com@kernel.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Cryolitia PukNgae <Cryolitia@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org, Celeste Liu <CoelacanthusHex@gmail.com>,
+	Yao Zi <ziyao@disroot.org>,
+	Derek John Clark <derekjohn.clark@gmail.com>,
+	Marcin =?utf-8?Q?Str=C4=85gowski?= <marcin@stragowski.com>,
+	someone5678 <someone5678.dev@gmail.com>,
+	Justin Weiss <justin@justinweiss.com>
+Subject: Re: [PATCH v5 1/2] hwmon: add GPD devices sensor driver
+Message-ID: <202502140302.IkW9UALU-lkp@intel.com>
+References: <20250211-gpd_fan-v5-1-608f4255f0e1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213-virtio-shm-page-size-v1-0-5ee1f9984350@redhat.com>
- <20250213-virtio-shm-page-size-v1-3-5ee1f9984350@redhat.com> <CABVzXA=r=X+GYnSxgeyktKzfKCW2DW+v++c4v_+BHBDHZ_Bzyw@mail.gmail.com>
-In-Reply-To: <CABVzXA=r=X+GYnSxgeyktKzfKCW2DW+v++c4v_+BHBDHZ_Bzyw@mail.gmail.com>
-From: Daniel Verkamp <dverkamp@chromium.org>
-Date: Thu, 13 Feb 2025 11:31:47 -0800
-X-Gmail-Original-Message-ID: <CABVzXAkFPr-GiALnk2v53CzX0b5Y0yG=KoRoOFR7fy98Xeyb3w@mail.gmail.com>
-X-Gm-Features: AWEUYZk5k0yVhKRl6x_CJTphuuoRNXkv7QK8mgqxAE6j9hp4qpFVaj_QTvwQhdQ
-Message-ID: <CABVzXAkFPr-GiALnk2v53CzX0b5Y0yG=KoRoOFR7fy98Xeyb3w@mail.gmail.com>
-Subject: Re: [PATCH RFC 3/5] virtio-pci: extend virtio_pci_cap to hold page_size
-To: Sergio Lopez <slp@redhat.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
-	Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu <olvaffe@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
-	Dmitry Osipenko <dmitry.osipenko@collabora.com>, fnkl.kernel@gmail.com, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211-gpd_fan-v5-1-608f4255f0e1@gmail.com>
 
-On Thu, Feb 13, 2025 at 11:22=E2=80=AFAM Daniel Verkamp <dverkamp@chromium.=
-org> wrote:
->
-> On Thu, Feb 13, 2025 at 7:54=E2=80=AFAM Sergio Lopez <slp@redhat.com> wro=
-te:
-> >
-> > Turn the 16 bit padding into a page_size field to allow the device to
-> > pass its required page size with format PAGE_SIZE >> 12.
-> >
-> > Signed-off-by: Sergio Lopez <slp@redhat.com>
-> > ---
-> >  drivers/virtio/virtio_pci_modern.c | 29 +++++++++++++++++++++++++----
-> >  include/uapi/linux/virtio_pci.h    |  2 +-
-> >  2 files changed, 26 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio=
-_pci_modern.c
-> > index 79616ce5057bf3b2b88cae7e8fb7729efa9dd632..26e9cd5148c0f10209c34d1=
-2e65d64490a855d75 100644
-> > --- a/drivers/virtio/virtio_pci_modern.c
-> > +++ b/drivers/virtio/virtio_pci_modern.c
-> [...]
-> > +               if (__virtio_test_bit(vdev, VIRTIO_F_SHM_PAGE_SIZE)) {
-> > +                       pci_read_config_word(dev, pos + offsetof(struct=
- virtio_pci_cap,
-> > +                                                                page_s=
-ize), &res_psize);
-> > +                       if (!res_psize) {
-> > +                               dev_err(&dev->dev, "%s: shm cap with in=
-valid page size on "
-> > +                                       "a device with VIRTIO_F_SHM_PAG=
-E_SIZE feature\n",
-> > +                                       __func__);
->
-> Maybe this should also constrain the page size to be a power of 2?
->
-> [...]
-> > diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virti=
-o_pci.h
-> > index 8549d4571257142ac6c9dad5c01369923791a85a..fb0ccb7a125d8178c1f7833=
-3c4d2f43540e1764b 100644
-> > --- a/include/uapi/linux/virtio_pci.h
-> > +++ b/include/uapi/linux/virtio_pci.h
-> > @@ -127,7 +127,7 @@ struct virtio_pci_cap {
-> >         __u8 cfg_type;          /* Identifies the structure. */
-> >         __u8 bar;               /* Where to find it. */
-> >         __u8 id;                /* Multiple capabilities of the same ty=
-pe */
-> > -       __u8 padding[2];        /* Pad to full dword. */
-> > +       __u16 page_size;        /* Device page size (PAGE_SIZE >> 12). =
-*/
->
-> This comment should probably clarify that the page_size field is only
-> valid when cfg_type is VIRTIO_PCI_CAP_SHARED_MEMORY_CFG, assuming
-> that's the case. Or should the device be expected to provide the
-> page_size for all capabilities regardless of type?
->
-> It seems like the name should also ideally make it clearer that this
-> is page_size/4096 rather than the actual page size to avoid confusing
-> device implementers.
+Hi Cryolitia,
 
-Alternatively, this could be represented as a single u8 page_shift,
-where page_size =3D 1 << (page_shift + 12), and then existing devices
-would "just work" (assuming they filled the padding with 0). It is
-probably still a good idea to guard it with a feature bit, though, so
-it doesn't really make that much difference.
+kernel test robot noticed the following build warnings:
 
-Thanks,
--- Daniel
+[auto build test WARNING on ffd294d346d185b70e28b1a28abe367bbfe53c04]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Cryolitia-PukNgae-via-B4-Relay/hwmon-add-GPD-devices-sensor-driver/20250211-150418
+base:   ffd294d346d185b70e28b1a28abe367bbfe53c04
+patch link:    https://lore.kernel.org/r/20250211-gpd_fan-v5-1-608f4255f0e1%40gmail.com
+patch subject: [PATCH v5 1/2] hwmon: add GPD devices sensor driver
+config: i386-randconfig-002-20250214 (https://download.01.org/0day-ci/archive/20250214/202502140302.IkW9UALU-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250214/202502140302.IkW9UALU-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502140302.IkW9UALU-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/hwmon/gpd-fan.c:361:3: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+     361 |                 const struct gpd_board_drvdata *drvdata = gpd_driver_priv.drvdata;
+         |                 ^
+   drivers/hwmon/gpd-fan.c:452:4: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+     452 |                         int ret = gpd_read_pwm();
+         |                         ^
+   drivers/hwmon/gpd-fan.c:478:4: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+     478 |                         u8 var = clamp_val(val, 0, 255);
+         |                         ^
+   3 warnings generated.
+
+
+vim +361 drivers/hwmon/gpd-fan.c
+
+   352	
+   353	static int gpd_win_mini_set_pwm_enable(enum FAN_PWM_ENABLE pwm_enable)
+   354	{
+   355		switch (pwm_enable) {
+   356		case DISABLE:
+   357			return gpd_generic_write_pwm(255);
+   358		case MANUAL:
+   359			return gpd_generic_write_pwm(gpd_driver_priv.pwm_value);
+   360		case AUTOMATIC:
+ > 361			const struct gpd_board_drvdata *drvdata = gpd_driver_priv.drvdata;
+   362	
+   363			return gpd_ecram_write(drvdata, drvdata->pwm_write, 0);
+   364		}
+   365		return 0;
+   366	}
+   367	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
