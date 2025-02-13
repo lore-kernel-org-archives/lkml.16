@@ -1,110 +1,134 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A268114658D
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 15:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36BD81411DE;
+	Thu, 13 Feb 2025 15:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739460332; cv=none; b=ReKF/A+1gG94B6U8aSMkzGX3IIX9sbVuE/cWMd7aEOs5iWdMqc/xNJ5frijGmJhFEseIRLFyyZRlWkQcjoiX1uF+T+l/RTX0Bf6VtKorvwR7coosxZQbAwElGGbfl2KuexKgsFzqJp2RMqBY/inJyX378DMECx1KtRQM/RSKVOM=
+	t=1739460339; cv=none; b=V9ok485DrGketHw8hI8SqNpXl8SLErCh0idzSrzXg9COF2u3sWx7U2JP3RmAV4u1+kZeQJy+XAaTidgljA5i/d24NhWUHBmNwjCgkazXuYZg5DIyiVpot/hAbmPbrHw/i/em7gihuzKIdHi2JAR+Xub1Un3SPy3WlSJGsE3cjIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739460332; c=relaxed/simple;
-	bh=47MX4lxq18x870VrivuXRInAcdpWr6+m9NQ2x2mmm4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U00g/s5+XjXxU8BaG/P57cZhJMwJ2pBqbk10pQDq+1q4hmfRVu5ixoCOsLhIJVVd3NkZvTaUgxQIc0steZv+EgaefV2t0xEJjHPcdn5TxS9faxVw6RyGb3W8bljjvUBgU0C0EVGlxKm5EzcZLlqIXmsfMDatbQmB1GLyilNzVF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DIs7JKMt; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739460339; c=relaxed/simple;
+	bh=TPjq4XjQPNfxakLg3n1C4p8+KUOyyY7/h6//Panzx9I=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=RNX1TGiEWw2crqPzdVwHzYT3SsXETy95KaPXbb96mobx6cWYBSmmtNslv8urQE86QT2yFdrxc6Lr3Lc6uYfI6BBeSEAy1FUhBNCSx4ZB8RiACpF/o8L1b/S+y4Yl7mL3B2eoDe/6pyagnqLSYNjJDi9x6p3Nyo39/cffK40pugo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Zlt2CV4z; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DIs7JKMt"
-Date: Thu, 13 Feb 2025 15:25:19 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739460326;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Zlt2CV4z"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 09B78432B4;
+	Thu, 13 Feb 2025 15:25:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739460335;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Qn2aq+FZ3Hyqy2TbNenZIG+7osbs9ZE4AKyqzZGbbyw=;
-	b=DIs7JKMtT/YsgYOIQdrgvaPADhWvCup7aZLxJ2zgyVcB3izlX78OSJl+ACBmh0MhI3Rwaq
-	BLF37xY4f/7vnNOdhOx1S9ULcX+GEW6jwj+E1oaGNOoBzcMqqHLiDHrC9Ov6cGmiKNLqpi
-	ujNrnsjYiy/tZxWUdw/g1BtppKJAgC8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Kairui Song <ryncsn@gmail.com>
-Subject: Re: [PATCHv4 14/17] zsmalloc: make zspage lock preemptible
-Message-ID: <Z64O3w2p1NrXoicl@google.com>
-References: <6uhsj4bckhursiblkxe54azfgyqal6tq2de3lpkxw6omkised6@uylodcjruuei>
- <Z6ThGFt6wyNpx9xi@google.com>
- <wnffho5jguo24wfy3qv5tvovoargezbu4kcvpk43ludrhyfo6i@6ogtvk5ivfjc>
- <Z6Z2l9uovxAiED6q@google.com>
- <droaoze6w4atf7guiv6t4imhcmkpteyvoaigdnw5p3vdg75ebx@m56xi2y527i4>
- <Z6y_3xS_8pmZ2bCz@google.com>
- <rbco2k74plqedtqvn6ebu6wwssy5urw5mjvsk6n576d3urbjnx@tq43anmdvq35>
- <25268fbedb82a06ba0c13e2c490b164846ef508b@linux.dev>
- <huhxeq3k4q5lscj5xy6lldivku2wps6midxmt4swr67mce4nva@7mxupdxphs5a>
- <y6y67njsxrc3orfpqjkj5jsy2jma77mmwhxirt3vb7h6uhlylx@5ftvcrqmjtce>
+	bh=lFuRc4vnJDC+U8vlunBJUoC5VAZxPPiCI440ctYMhMM=;
+	b=Zlt2CV4zcUYBMgVH8rk5q0w7VMbNXWZqUiByPBR1Qdrmcku9kewtaX4Fzk9SAgMH5rddsF
+	WixvDN8UgC5QEOGXUw5p+PRqfbJWjwzFG6FbnXlEI3/7TOE/Gr0oy0K896FcZwt3IVdXh6
+	e03IpWT0pHlAuodihUQTKMBMbNTcrGko5PwNzcp1InTVGKKwyc8QWr8dronU0o1m6aEUO5
+	OFWiNk02TA+bKSa5eSv3X9fSGXkXEA4GHF62aUDU3IMaa05LHhvBHxGfd3jZq9UVkIr25r
+	yipJY+cw7hVDkqCtszC5/xG+Q3q1EvJokHHpFgrh5LB0SK/ZZelOQ3kpvtD2Zw==
+Message-ID: <99247019-bb41-4fd9-bc0c-d31e5688533b@bootlin.com>
+Date: Thu, 13 Feb 2025 16:25:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <y6y67njsxrc3orfpqjkj5jsy2jma77mmwhxirt3vb7h6uhlylx@5ftvcrqmjtce>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+From: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Subject: Re: [PATCH 01/12] dt-bindings: bluetooth: describe wilc 3000
+ bluetooth chip
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Ajay Singh <ajay.kathat@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Marek Vasut <marex@denx.de>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, linux-bluetooth@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250212-wilc3000_bt-v1-0-9609b784874e@bootlin.com>
+ <20250212-wilc3000_bt-v1-1-9609b784874e@bootlin.com>
+ <20250213-chamois-of-unexpected-glory-dd3eab@krzk-bin>
+Content-Language: en-US
+In-Reply-To: <20250213-chamois-of-unexpected-glory-dd3eab@krzk-bin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegjedufecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfhffuvfevfhgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepleejhfevledvgeehvdevueejgeduhfelffegkeejteejveevieejvdeifeekuedtnecuffhomhgrihhnpehmihgtrhhotghhihhprdgtohhmpdgsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrvddungdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdegpdhrtghpthhtohepkhhriihksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrtggvlheshhholhhtmhgrnhhnrdhorhhgpdhrtghpthhtoheplhhuihiirdguvghnthiisehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhop
+ ehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghjrgihrdhkrghthhgrthesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopegtlhgruhguihhurdgsvgiinhgvrgesthhugihonhdruggvvh
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-On Thu, Feb 13, 2025 at 05:22:20PM +0900, Sergey Senozhatsky wrote:
-> On (25/02/13 16:21), Sergey Senozhatsky wrote:
-> > BASE
-> > ====
-> > 
-> > 1363.64user 157.08system 1:30.89elapsed 1673%CPU (0avgtext+0avgdata 825692maxresident)k
-> > 
-> > lock stats
-> > 
-> >                               class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-> >                    &pool->migrate_lock-R:             0              0           0.00           0.00           0.00           0.00          10001         702081           0.14         104.74      125571.64           0.18
-> >                             &class->lock:             1              1           0.25           0.25           0.25           0.25           6320         840542           0.06         809.72      191214.87           0.23
-> >                          &zspage->lock-R:             0              0           0.00           0.00           0.00           0.00           6452         664129           0.12         660.24      201888.61           0.30
-> >                 &zram->table[index].lock:             0              0           0.00           0.00           0.00           0.00        1716362        3096466           0.07         811.10      365551.24           0.12
-> >                             &zstrm->lock:             0              0           0.00           0.00           0.00           0.00              0         664129           1.68        1004.80    14853571.32          22.37
-> > 
-> > PATCHED
-> > =======
-> > 
-> > 1366.50user 154.89system 1:30.33elapsed 1684%CPU (0avgtext+0avgdata 825692maxresident)k
-> > 
-> > lock stats
-> > 
-> >                               class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-> >                          &pool->lock#3-R:             0              0           0.00           0.00           0.00           0.00           3648         701979           0.12          44.09      107333.02           0.15
-> >                             &class->lock:             0              0           0.00           0.00           0.00           0.00           5038         840434           0.06        1245.90      211814.60           0.25
-> >                          zsmalloc-page-R:             0              0           0.00           0.00           0.00           0.00              0         664078           0.05         699.35      236641.75           0.36
-> >                         zram-entry->lock:             0              0           0.00           0.00           0.00           0.00              0        3098328           0.06        2987.02      313339.11           0.10
-> >    &per_cpu_ptr(comp->stream, cpu)->lock:             0              0           0.00           0.00           0.00           0.00             23         664078           1.77        7071.30    14838397.61          22.34
+Hi Krzysztof,
+
+On 2/13/25 10:25, Krzysztof Kozlowski wrote:
+>> +  wlan:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +    description:
+>> +      Phandle to the wlan part of the combo chip
 > 
-> So...
-> 
-> I added lock-stat handling to zspage->lock and to zram (in zram it's only
-> trylock that we can track, but it doesn't really bother me).  I also
-> renamed zsmalloc-page-R to old zspage->lock-R and zram-entry->lock to
-> old zram->table[index].lock, just in case if anyone cares.
-> 
-> Now bounces stats for zspage->lock and zram->table[index].lock look
-> pretty much like in BASE case.
-> 
-> PATCHED
-> =======
-> 
->                               class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
->                          &pool->lock#3-R:             0              0           0.00           0.00           0.00           0.00           2702         703841           0.22         873.90      197110.49           0.28
->                             &class->lock:             0              0           0.00           0.00           0.00           0.00           4590         842336           0.10        3329.63      256595.70           0.30
->                           zspage->lock-R:             0              0           0.00           0.00           0.00           0.00           4750         665011           0.08        3360.60      258402.21           0.39
->                  zram->table[index].lock:             0              0           0.00           0.00           0.00           0.00        1722291        3099346           0.12        6943.09      721282.34           0.23
->    &per_cpu_ptr(comp->stream, cpu)->lock:             0              0           0.00           0.00           0.00           0.00             23         665011           2.84        7062.18    14896206.16          22.40
+> No resources here and judging by the driver everything is part of wifi.
+> Either you wrote it to match driver or indeed hardware is like that. In
+> the first case, why this cannot be part of WiFi with phandle to serial
+> bus? In the second case, this needs to be proper hardware description
+
+First, I'd like to reclarify what the chip exactly is, to make sure that we are
+talking about the same thing. The wilc3000 ([1]) is a single physical device
+packaging two different discrete modules inside (one for 802.11, one for
+bluetooth). The WLAN part has its own binding integrated in upstream kernel
+([2]) and is based on a similar chip in the same family (wilc1000, which only
+have 802.11, and so only SPI/SDIO, no UART).
+
+Now that it is said, no, I did not write this binding only aiming to match the
+new driver. I tried to base this description on how similar WLAN/BT combo chips
+are usually described (based on those which have existing bindings), and they
+seem to describe distinctly the two internal parts of those chips as well. For
+those who use HCI commands over uart for the bluetooth part, they expose a
+dedicated child node of a serial controller (distinct from the wlan part,
+described as another node on PCI/SDIO/SPI/etc). The hardware architecture for
+wilc3000 is similar to those, so since the serial bus is the primary interface
+to operate the bluetooth part inside the chip, doesn't it makes sense to have it
+under a serial controller node (and then to refer to wlan for the additional
+operations needed on sdio/spi), than the other way around ?
+
+About the lack of other resources in the new node: there are indeed additional
+resources that affect bluetooth, but I am not sure how it should be handled:
+there are for example a reset input and a chip enable input exposed by this
+chip, which in fact do not only affect the WLAN part but the two parts inside
+the chip. But those are currently described and handled by the WLAN part. I
+guess that an improvement regarding this point could then be to move those out
+of the wlan binding, and find a way to describe it as shared resources between
+those two parts of the chip, but how should it be handled ? Is it ok to remove
+those from an existing binding (and if so, where to put those ? It is not
+bluetooth specific neither) ? Is the issue rather about current WILC3000 binding
+kind of mixing overall chip description and internal wlan part description ?
+
+Thanks,
+
+Alexis
+
+[1]
+https://ww1.microchip.com/downloads/aemDocuments/documents/OTH/ProductDocuments/DataSheets/IEEE-802.11-b-g-n-Link-Controller-Module-with-Integrated-Bluetooth-5.0-DS70005327B.pdf
+[2]
+https://elixir.bootlin.com/linux/v6.12.6/source/Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml
+> Best regards,
+> Krzysztof
 > 
 
-holdtime-max and holdtime-total are higher in the patched kernel. Not
-sure if this is just an artifact of lock holders being preemtible. 
+
+-- 
+Alexis Lothoré, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
