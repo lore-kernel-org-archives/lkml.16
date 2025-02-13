@@ -1,125 +1,99 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6752753EB
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04322753E4;
+	Thu, 13 Feb 2025 22:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739487498; cv=none; b=MsVAyzaUaJ1mrkko6440jCj7yF8Tp4FCTTsJO0WsZzfjTobDHOK8tOB64KmaQia/8giA1XKW3bGrNHhT3pPmMyxNcDz9+iublVibfm1D/73JZiSlfItn39V5TwWmJNkkNPUe4QmDBAk9Xqj+4lsr3PwJ4eJ6+kPmxTKJnun1Mt4=
+	t=1739487511; cv=none; b=TS2Vzln3DmK05WXLsObLGvh4mwD3dbmXhoCPXguvxglrsNxyo/ualUlIIXdo4BUaKmVvOm2vMPTg9ru+FoiCppIpkBJfr6VvNLJdTSEDqDkufytvEmsECmPBJIPDoPB+NYJgtkHznfjom4FI9ypg3C15Uh8mJeQqdhu7zDkpO/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739487498; c=relaxed/simple;
-	bh=Y27dhfw8v4BA3YPmRiUGr4aKS1BFKwdnmIIc52BuMys=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zcr+gzwV2ELcTErqCgORu7K5FmUvPowCynyw+tQ4fWLphSf2duuvPc36Z9/XVEl/83LoQgERFBYXiSk7xFbhjqrK3cZHRqICz3xw1NvqV8YOVKGJPFlCxwJCLi0lDWCGucChnXMqbJzs/1AhiyWj6OOyRRwRiiEtqfK+Q1H7rC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fcKCaSsh; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739487511; c=relaxed/simple;
+	bh=pl5eDlWA6ePF7cc4Q0QQtxNqWR9ncyFEtPSRdm1YD8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=GNFZ0N7DM6NOP7fZ7+S7YWDSbgsEvRX4ag6nqocS9VEcNPSGB8/2x/xB8deRXUgRxVsNnuEihjeJHwMOUoG0M6NzHbUSv53NyLNaOTwlSA3ZpE/iCzJh1kt302k4J628SeRNNq5R/27LXGlPjZ8zV5wXO8o5Ltvy3j/4RQvaN7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=gFqmlEOy; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fcKCaSsh"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DMvG6j001130;
-	Thu, 13 Feb 2025 22:57:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=5Eh7zljLNWHH82zXNllR4wLMW+pcLetr2vsY7QBQP
-	8M=; b=fcKCaSshWLQCjnh827XCWKFIIXEcrfzpyDiOpg5AycPuGKcxDf68S4UQf
-	bHVMQ0yZqT4D5fGfnIxjQJLIP6D1WouYXvLg5wt+Q+aDkrkPQLHHHo45FE5TomoF
-	rvB3zdn7WnotUpNora2am4YJsXkUmg4YsCgx7QPEXr2+trF6SY0iV+ULnlHoRTWG
-	ZMhNlaLm4p1jV3RQpOpYqi4PUcMURaBW9vakZuH/m8oRN6jpc5xmmnkmRkPKfzE0
-	4W/9Dxk7xnJhHKf886RN0J1bC6BjstCTXGCoGd2yIiG4VPtxxRyijY74isqHxAGJ
-	/+dQvquZXKr9jxUH5c/XR/5+C76fQ==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44saj8n1c5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 22:57:58 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51DKbxjD028758;
-	Thu, 13 Feb 2025 22:57:57 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44pma20a74-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 22:57:57 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51DMvtUJ29819530
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Feb 2025 22:57:55 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 73DFA58055;
-	Thu, 13 Feb 2025 22:57:55 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 486D858043;
-	Thu, 13 Feb 2025 22:57:55 +0000 (GMT)
-Received: from slate16.aus.stglabs.ibm.com (unknown [9.61.104.210])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 13 Feb 2025 22:57:55 +0000 (GMT)
-From: Eddie James <eajames@linux.ibm.com>
-To: linux-kernel@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, eajames@linux.ibm.com, jk@ozlabs.org,
-        joel@jms.id.au, alistair@popple.id.au, linux-fsi@lists.ozlabs.org,
-        ninad@linux.ibm.com
-Subject: [PATCH v2 RESEND] MAINTAINERS: change maintainer for FSI
-Date: Thu, 13 Feb 2025 16:57:46 -0600
-Message-ID: <20250213225746.2159118-1-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gFqmlEOy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1739487504;
+	bh=VmZXBAO1YU4VOG5/2bPJFI2vkGDrBFcYFL3VSKWh1jY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=gFqmlEOyw+0s0SKzuvC79mxpKccTQBq+uyuV8RanCb7inni3/wMd/NXAx4muKUrVE
+	 hmBwsGf/LWl1MjyDlco7ZEg0yep8OnwzRUKUc8Xyq2Bqs2w3dEFKBWOV/L2YYM4k7X
+	 1/3m7kVYi2mgqDqsm2BU+LKSqxhbmRdlIZN035dCcFL6QKP6DsxXoHUNJG84IFMtll
+	 7pwvFzebcR9eY91s2tXas7d1BK9htUkDnBMsj6yrFhIYt0SwTcJD2YNAvEqXftjZj5
+	 I7ENPY9Wibs7gs67jq6/kOto4eYec6c9gtNqLVSt2EWG/Nh4z8xcEuyL8Y7rtaIxoC
+	 0h2fGFqyi8s4g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Yv9Zm0WmYz4x2J;
+	Fri, 14 Feb 2025 09:58:23 +1100 (AEDT)
+Date: Fri, 14 Feb 2025 09:58:23 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the ext4 tree
+Message-ID: <20250214095823.2fdf796f@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: cBI5atXhIrYQCefTMGonVft6czH-SS6a
-X-Proofpoint-ORIG-GUID: cBI5atXhIrYQCefTMGonVft6czH-SS6a
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-13_08,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 mlxlogscore=999 impostorscore=0 malwarescore=0
- spamscore=0 suspectscore=0 mlxscore=0 bulkscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502130158
+Content-Type: multipart/signed; boundary="Sig_/7sC=F_=hi+Q17s8aZejg+69";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Due to job transitions, both Joel and Jeremy can no longer maintain
-the FSI subsystem. I will take over.
-I also replaced Alistair with Ninad as a reviewer, as Alistair doesn't
-have access to hardware and hasn't been active.
-I also removed the link to Joel's FSI tree as he won't be maintaining
-it.
+--Sig_/7sC=F_=hi+Q17s8aZejg+69
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Acked-by: Jeremy Kerr <jk@ozlabs.org>
----
-Sorry for the resend; I forgot Jeremy's ack.
+Hi all,
 
-Changes since v1:
- - Remove Alistair as reviewer
- - Add Ninad as reviewer
- - Don't add Joel and Jeremy as reviewers.
+After merging the ext4 tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
- MAINTAINERS | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+In file included from fs/ext4/namei.c:28:
+fs/ext4/namei.c: In function '__ext4_find_entry':
+include/linux/fs.h:1258:12: error: 'struct super_block' has no member named=
+ 's_encoding_flags'
+ 1258 |         (sb->s_encoding_flags & SB_ENC_NO_COMPAT_FALLBACK_FL)
+      |            ^~
+fs/ext4/namei.c:1602:27: note: in expansion of macro 'sb_no_casefold_compat=
+_fallback'
+ 1602 |                 else if (!sb_no_casefold_compat_fallback(dir->i_sb)=
+ &&
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1f65a2a1cde5b..59a6b47e9c278 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9441,14 +9441,11 @@ F:	include/linux/fscrypt.h
- F:	include/uapi/linux/fscrypt.h
- 
- FSI SUBSYSTEM
--M:	Jeremy Kerr <jk@ozlabs.org>
--M:	Joel Stanley <joel@jms.id.au>
--R:	Alistar Popple <alistair@popple.id.au>
--R:	Eddie James <eajames@linux.ibm.com>
-+M:	Eddie James <eajames@linux.ibm.com>
-+R:	Ninad Palsule <ninad@linux.ibm.com>
- L:	linux-fsi@lists.ozlabs.org
- S:	Supported
- Q:	http://patchwork.ozlabs.org/project/linux-fsi/list/
--T:	git git://git.kernel.org/pub/scm/linux/kernel/git/joel/fsi.git
- F:	drivers/fsi/
- F:	include/linux/fsi*.h
- F:	include/trace/events/fsi*.h
--- 
-2.43.5
+Caused by commit
 
+  ab00acfcfc62 ("ext4: introduce linear search for dentries")
+
+# CONFIG_UNICODE is not set
+
+I have used the ext4 tree from next-20250213 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/7sC=F_=hi+Q17s8aZejg+69
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmeueQ8ACgkQAVBC80lX
+0Gx9EAf7Bz24LLyg8t0LOiN8GeDVj5swQ3JY2NGe/xhyNBbq1ykJri24fDczwcqP
+x4r8WsmNRrZb6RvOj4Of3dmvnRNpjhprs+qp5Wd5hYCBu7hze3Or+vCmef6Wp43D
+H05RnQdtIbb9BKJZiNwbqtP6Ac3SHrP2l3yHWk4rXHfoPH5Ks5YIkVUOvzXnDW4x
+1boJDi2Z4MsixAhwfu/JIIcyRwHLwyr+vLLcEMCiuDOaJ+JM5hm/s3N67M0yE0o+
+PGFEYRDEA3urPHylwT180kmEWU1yi7iI9UywcEmmm3qRVwCVppRs32+EbkyORv3/
+dKdsKcSp3XCJgFzzHZbo0YXT9m/hKw==
+=CyeF
+-----END PGP SIGNATURE-----
+
+--Sig_/7sC=F_=hi+Q17s8aZejg+69--
