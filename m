@@ -1,135 +1,137 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BD420D4F2
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427B8212FA5
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739438190; cv=none; b=NrZeK6EiadopjH1f1nTuEaLkpkbwHyRT1RLMxYhelZJwdpkhJ5Ak5KK1JIDWAZnW20zX7wwlPEEr9dExBPi4RQezacfbD4ypBBsti5YfDQfCWTzEO675tsUN4RmEFoBQ6xWfwsE+hLVm3Bwjg1rsGvBAovQSWIbDWYWNPsrMrK8=
+	t=1739438204; cv=none; b=dS7bj24I/J6czJ9fL0Qz2snTmMJi8uAoKnCbZ33H3F2np5n6WxCNdtENAlEywHKd18z0uZghKHpMogWwcRwF+7YtctWrTIHrnWAslGK/Xuijq/DL/o7WPNxNIN+tTKeHli2pOVQhX+MtpY4W5vjKPwuM34wNDmqIIEJvEP3ZBf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739438190; c=relaxed/simple;
-	bh=SrbPKHU6Zc9z3xk8GW7dms8xnnUi3DUyQCLUdW3knsA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VizqndwTP1jskEXGgt+YSK1P6nLftygeO7ke0hDccA5H/ilwb1PWTOAEiVCgNu6VJ6v/yYF8gWsZ68KT5L5NgQvs7Mt2NTJmVidr198x0Bo0MBtK8uy8j5k/1M0eQi3CSL+5wSYrVc5IwQlrTKew9rzHHxD5ILO4/BaL1YFEgFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 51D9Fxs0077971;
-	Thu, 13 Feb 2025 17:15:59 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4YtqF15GfXz2RysxG;
-	Thu, 13 Feb 2025 17:11:49 +0800 (CST)
-Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Thu, 13 Feb 2025 17:15:56 +0800
-From: Xuewen Yan <xuewen.yan@unisoc.com>
-To: <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
-        <vincent.guittot@linaro.org>
-CC: <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>, <bsegall@google.com>,
-        <mgorman@suse.de>, <vschneid@redhat.com>, <qyousef@layalina.io>,
-        <ke.wang@unisoc.com>, <di.shen@unisoc.com>, <xuewen.yan94@gmail.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/2] sched/uclamp: Alaways using uclamp_is_used()
-Date: Thu, 13 Feb 2025 17:15:53 +0800
-Message-ID: <20250213091554.2593-1-xuewen.yan@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1739438204; c=relaxed/simple;
+	bh=HXAoZXhnlM5axrIxBksyjI5+MHvfsmvzr+K/6Bh+ZG4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RqU0X7V5D2dXjAo3u9+QcPyYycqP+YbJ0c5e4FEMXoCtC22MHBqEjjiqsljphgvYn0KxxVz9pqgEMwz5yG/w3To1FyxDT62MNX/s/lAHzUmpzedJWWuVbvHF0CGVlKrOfFevrwnMMj/07odtxkN932HvSUqZtE18Y5n/fZx4vk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=SGW+z/8R; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="SGW+z/8R"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aaecf50578eso142482866b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 01:16:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1739438200; x=1740043000; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=zRkrWPOd0IsaAl/i1cBAd/UOOJHGETsQN4vhzcb7v/E=;
+        b=SGW+z/8RLXchMNHVw6JfIH1Yocm11GclvvJZ7Sh92MzALDZrN7m5z4O4wJuqQm9eba
+         8EfneZzXn9b9B3Fk/Yx9qIaVEXS1dJuZo7SWiHcGfhlfeWAveUIzFwTSWEgINvnK5nJF
+         dZuLnddieyekcYlGtyyTGHJ1bne2UMJMo2kd5FOctJBjZQzPzSF6yHWy1vQ0crBJyjlm
+         CiV9uZ5nNp5S3NC+m1w0bC49q0rjDR0NkWuJ1QmFeEGcb4QV/giktQdTHBIMlxrSIVA5
+         DJkva8RUD9gFaRpUk+KoXXe7ElYyiab+5feU4aTKBQRi1YsGSfBUXmOMWsuN5dHGutpW
+         OhQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739438200; x=1740043000;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zRkrWPOd0IsaAl/i1cBAd/UOOJHGETsQN4vhzcb7v/E=;
+        b=TRfSo00HjCPMl72PDHl61hOn/OXML7PsfH5FE1AT0ZrOAlWSQULkHFWe2ZlIWmXsEJ
+         oshripm5zLto6Z/qRFS7R6mtFJRTDhgNipiyjcAdybaoIRgrYZWPWcaPThe/b2jtASHO
+         A3Qm4EVUsp94rJ8RZ/wi0B3LANczUYSKkKelvsDWAMblSDz9GwsO//1wT9t/0B4n2VW1
+         PTrFx52IZwtTbTQKufJ6qyOqs5e9+JgdUFfVjb3UMzK693V1vyjZYTJOyYbhzTUXK5dQ
+         R4Q0vh7Ay2Nd5JHdq3wSBJ6MltJXFUJhcGXHLBDTpPAZSnv0kAIqJejwFQ7jsdPsaBKo
+         SiKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLncnlCpyLUlcJfNajj66ZBMeWT63uN3naOefKdUNTgEnQlkJV68Dus2IrseQRv4gCQ1ni3CHJNuVTE9Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1r92h3AshPDdLRp7RxCNz7uaGdzq5Z/iHYVGxpdXdI3NgRRSE
+	omX3ig9nTsjXAX2hEOw7oDDrrnDC9g1rYm6KcmIJpt59h4bvABMsivKfZqjuzQ==
+X-Gm-Gg: ASbGncsEdoLVvQELCbhKgpNVX8oGz3gNdJ2/3vodP44/HKmqWqw/fO0ILyk/DO8GVKn
+	/A5I82EwI9Z0WHLQEGJqohIMUW8MX96D1gfVQcmR9ryVWoGhyg02kDP22O4qw5qiVKrYGmidXwN
+	PL7+OyTVorty1CFtkER72uoJgZa14WL0dwrxNxcNFVKNsm7+B4Hv/tTIRMituRLJyTCL73T/TyZ
+	C5yMK2eqj/gMySLvZ78ncz4UsTlheuxGJ8XKfBuRxU8hzC7MNKAi1vT8NgYGqYmg52w3iWxNA6B
+	vQ4Pq8EvN/gx49z8d4B8mBRQHw1b0uSNKcbocA+IurOqUsQqOoWjVGpEmLF/0EnTOqrFmV8KiM3
+	A
+X-Google-Smtp-Source: AGHT+IHWRf/+KzG9HrxCQBidwzrnatPQtCqKYeDgQtIB6T/iJ+L0xT4HnzOW1pZMcfuVnIaruw9ImQ==
+X-Received: by 2002:a17:906:c10c:b0:ab7:d6c:5781 with SMTP id a640c23a62f3a-ab7f33a1557mr632279566b.24.1739438200532;
+        Thu, 13 Feb 2025 01:16:40 -0800 (PST)
+Received: from [10.156.60.236] (ip-037-024-206-209.um08.pools.vodafone-ip.de. [37.24.206.209])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5325b58bsm91116766b.74.2025.02.13.01.16.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 01:16:40 -0800 (PST)
+Message-ID: <b6eac47f-648f-4197-8f6d-96bc71cf15b8@suse.com>
+Date: Thu, 13 Feb 2025 10:16:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 51D9Fxs0077971
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] x86/xen: allow larger contiguous memory regions in
+ PV guests
+To: Juergen Gross <jgross@suse.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, xen-devel@lists.xenproject.org,
+ Alan Robinson <Alan.Robinson@fujitsu.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org
+References: <20250213085538.17060-1-jgross@suse.com>
+ <20250213085538.17060-3-jgross@suse.com>
+Content-Language: en-US
+From: Jan Beulich <jbeulich@suse.com>
+Autocrypt: addr=jbeulich@suse.com; keydata=
+ xsDiBFk3nEQRBADAEaSw6zC/EJkiwGPXbWtPxl2xCdSoeepS07jW8UgcHNurfHvUzogEq5xk
+ hu507c3BarVjyWCJOylMNR98Yd8VqD9UfmX0Hb8/BrA+Hl6/DB/eqGptrf4BSRwcZQM32aZK
+ 7Pj2XbGWIUrZrd70x1eAP9QE3P79Y2oLrsCgbZJfEwCgvz9JjGmQqQkRiTVzlZVCJYcyGGsD
+ /0tbFCzD2h20ahe8rC1gbb3K3qk+LpBtvjBu1RY9drYk0NymiGbJWZgab6t1jM7sk2vuf0Py
+ O9Hf9XBmK0uE9IgMaiCpc32XV9oASz6UJebwkX+zF2jG5I1BfnO9g7KlotcA/v5ClMjgo6Gl
+ MDY4HxoSRu3i1cqqSDtVlt+AOVBJBACrZcnHAUSuCXBPy0jOlBhxPqRWv6ND4c9PH1xjQ3NP
+ nxJuMBS8rnNg22uyfAgmBKNLpLgAGVRMZGaGoJObGf72s6TeIqKJo/LtggAS9qAUiuKVnygo
+ 3wjfkS9A3DRO+SpU7JqWdsveeIQyeyEJ/8PTowmSQLakF+3fote9ybzd880fSmFuIEJldWxp
+ Y2ggPGpiZXVsaWNoQHN1c2UuY29tPsJgBBMRAgAgBQJZN5xEAhsDBgsJCAcDAgQVAggDBBYC
+ AwECHgECF4AACgkQoDSui/t3IH4J+wCfQ5jHdEjCRHj23O/5ttg9r9OIruwAn3103WUITZee
+ e7Sbg12UgcQ5lv7SzsFNBFk3nEQQCACCuTjCjFOUdi5Nm244F+78kLghRcin/awv+IrTcIWF
+ hUpSs1Y91iQQ7KItirz5uwCPlwejSJDQJLIS+QtJHaXDXeV6NI0Uef1hP20+y8qydDiVkv6l
+ IreXjTb7DvksRgJNvCkWtYnlS3mYvQ9NzS9PhyALWbXnH6sIJd2O9lKS1Mrfq+y0IXCP10eS
+ FFGg+Av3IQeFatkJAyju0PPthyTqxSI4lZYuJVPknzgaeuJv/2NccrPvmeDg6Coe7ZIeQ8Yj
+ t0ARxu2xytAkkLCel1Lz1WLmwLstV30g80nkgZf/wr+/BXJW/oIvRlonUkxv+IbBM3dX2OV8
+ AmRv1ySWPTP7AAMFB/9PQK/VtlNUJvg8GXj9ootzrteGfVZVVT4XBJkfwBcpC/XcPzldjv+3
+ HYudvpdNK3lLujXeA5fLOH+Z/G9WBc5pFVSMocI71I8bT8lIAzreg0WvkWg5V2WZsUMlnDL9
+ mpwIGFhlbM3gfDMs7MPMu8YQRFVdUvtSpaAs8OFfGQ0ia3LGZcjA6Ik2+xcqscEJzNH+qh8V
+ m5jjp28yZgaqTaRbg3M/+MTbMpicpZuqF4rnB0AQD12/3BNWDR6bmh+EkYSMcEIpQmBM51qM
+ EKYTQGybRCjpnKHGOxG0rfFY1085mBDZCH5Kx0cl0HVJuQKC+dV2ZY5AqjcKwAxpE75MLFkr
+ wkkEGBECAAkFAlk3nEQCGwwACgkQoDSui/t3IH7nnwCfcJWUDUFKdCsBH/E5d+0ZnMQi+G0A
+ nAuWpQkjM1ASeQwSHEeAWPgskBQL
+In-Reply-To: <20250213085538.17060-3-jgross@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Now, we have the uclamp_is_used() func to judge the uclamp enabled,
-so replace the static_branch_unlikely(&sched_uclamp_used) with it.
+On 13.02.2025 09:55, Juergen Gross wrote:
+> Today a PV guest (including dom0) can create 2MB contiguous memory
+> regions for DMA buffers at max. This has led to problems at least
+> with the megaraid_sas driver, which wants to allocate a 2.3MB DMA
+> buffer.
+> 
+> The limiting factor is the frame array used to do the hypercall for
+> making the memory contiguous, which has 512 entries and is just a
+> static array in mmu_pv.c.
+> 
+> In order to not waste memory for non-PV guests, put the initial
+> frame array into .init.data section and dynamically allocate an array
+> from the .init_after_bootmem hook of PV guests.
+> 
+> In case a contiguous memory area larger than the initially supported
+> 2MB is requested, allocate a larger buffer for the frame list. Note
+> that such an allocation is tried only after memory management has been
+> initialized properly, which is tested via a flag being set in the
+> .init_after_bootmem hook.
+> 
+> Fixes: 9f40ec84a797 ("xen/swiotlb: add alignment check for dma buffers")
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> Tested-by: Alan Robinson <Alan.Robinson@fujitsu.com>
 
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
----
- kernel/sched/core.c  |  4 ++--
- kernel/sched/sched.h | 28 ++++++++++++++--------------
- 2 files changed, 16 insertions(+), 16 deletions(-)
+Reviewed-by: Jan Beulich <jbeulich@suse.com>
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 165c90ba64ea..841147759ec7 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1756,7 +1756,7 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
- 	 * The condition is constructed such that a NOP is generated when
- 	 * sched_uclamp_used is disabled.
- 	 */
--	if (!static_branch_unlikely(&sched_uclamp_used))
-+	if (!uclamp_is_used())
- 		return;
- 
- 	if (unlikely(!p->sched_class->uclamp_enabled))
-@@ -1783,7 +1783,7 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
- 	 * The condition is constructed such that a NOP is generated when
- 	 * sched_uclamp_used is disabled.
- 	 */
--	if (!static_branch_unlikely(&sched_uclamp_used))
-+	if (!uclamp_is_used())
- 		return;
- 
- 	if (unlikely(!p->sched_class->uclamp_enabled))
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 38e0e323dda2..f5de05354d80 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -3394,6 +3394,19 @@ static inline bool update_other_load_avgs(struct rq *rq) { return false; }
- 
- unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
- 
-+/*
-+ * When uclamp is compiled in, the aggregation at rq level is 'turned off'
-+ * by default in the fast path and only gets turned on once userspace performs
-+ * an operation that requires it.
-+ *
-+ * Returns true if userspace opted-in to use uclamp and aggregation at rq level
-+ * hence is active.
-+ */
-+static inline bool uclamp_is_used(void)
-+{
-+	return static_branch_likely(&sched_uclamp_used);
-+}
-+
- static inline unsigned long uclamp_rq_get(struct rq *rq,
- 					  enum uclamp_id clamp_id)
- {
-@@ -3417,7 +3430,7 @@ static inline bool uclamp_rq_is_capped(struct rq *rq)
- 	unsigned long rq_util;
- 	unsigned long max_util;
- 
--	if (!static_branch_likely(&sched_uclamp_used))
-+	if (!uclamp_is_used())
- 		return false;
- 
- 	rq_util = cpu_util_cfs(cpu_of(rq)) + cpu_util_rt(rq);
-@@ -3426,19 +3439,6 @@ static inline bool uclamp_rq_is_capped(struct rq *rq)
- 	return max_util != SCHED_CAPACITY_SCALE && rq_util >= max_util;
- }
- 
--/*
-- * When uclamp is compiled in, the aggregation at rq level is 'turned off'
-- * by default in the fast path and only gets turned on once userspace performs
-- * an operation that requires it.
-- *
-- * Returns true if userspace opted-in to use uclamp and aggregation at rq level
-- * hence is active.
-- */
--static inline bool uclamp_is_used(void)
--{
--	return static_branch_likely(&sched_uclamp_used);
--}
--
- #define for_each_clamp_id(clamp_id) \
- 	for ((clamp_id) = 0; (clamp_id) < UCLAMP_CNT; (clamp_id)++)
- 
--- 
-2.25.1
 
