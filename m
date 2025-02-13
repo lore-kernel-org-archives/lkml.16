@@ -1,92 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841AC35949;
-	Thu, 13 Feb 2025 02:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18DF35949
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 02:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739414446; cv=none; b=g2IJbDogbkybNxV40uKx+AoF7IGTEdaVM89Y2fn1LCTOhQUc/L3FYWUxqzhp1wRTIDQKTEdQpFgoWiowuN5T0tdSg3hvcbVG/gXjNb9XdMTLY0xLiFHAwjlS3ke7iSUKQmXA/ohyP/CU2XGvlkEsyFyi7PUvywzSgCzWVkpAlM4=
+	t=1739414535; cv=none; b=WjfhVXJY9SwhvIkc5mXUUWVtj6bh5b+pViADFFS7UEE37fjcEL8HC+0xIWMLYZWgSD+BAhJ2ZLTJ/oz68SmiFGORgc3eOD7HiESA6OJgVYbktAp3yfhg5E6jmNRMMp+jVLDr+I/0tvA4MlWELe20c/7hNAsl9jE7YQetpOOUi9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739414446; c=relaxed/simple;
-	bh=cE2iJB3OrulRpc7Rb4dCoPZ4Ky4vgHwwheI4oec45n4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S8HlJ0XXzF61RqTYtJ+vzi54eezbBHQPPV12ZqPSpDKEfcirJuSYsiGGDYwOB6jXm6cAlHMJszQ8iFKHCM/pZrqCCA4oSn7a8h0BRpkpp+JGNGjLBZxE1/UQLxYHKG1nRxrGC1VQYeQP0Zhp8uSbXDHkkNeocmfbuKoMIfTe9lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SvZ1xzTP; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739414535; c=relaxed/simple;
+	bh=K2aQ3cwuV+990+3vtec95gEw4HSxZaYIFBG3XzYjQm0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uCP6WUeP9UNXS5ZK3wqOVgWPj70u+jyZxVl3MUapXbibzEZXYYYP6pyEvbfDCCaoKaKRyp2qOzVL75ujV6lMtnCGzUFmpJRgJ61+qVjBmk1TTRhzxJSgp0s79s6k7smkM2Vcac0ThZRsQubHYEH22lQxWdUil4Mw739q0Mhoz3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=mzAxwb9c; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SvZ1xzTP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739414444; x=1770950444;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=cE2iJB3OrulRpc7Rb4dCoPZ4Ky4vgHwwheI4oec45n4=;
-  b=SvZ1xzTPeI1CbGBOkENiuNYb9h0blaCyC7oku/3zuHrIA9TQ4EHRckzh
-   M5Mv4RnJTY/DmQAlCCpo2zJVPUpcdYsoOmfVZ3OWw6qFq/e1HQRg66P10
-   Z12yYHuCrCAp06L1PonmrokqJgSJ4fBlemAjBoz8JWi6Ccev/QX2KYdgV
-   ho0KSjznW9jMExkQTffH6xyo9tikJfw0dlzmw2WWI+UmbSMgByBmXCV2b
-   +326JSpi30bCbItUpBhXe2Ta2+585FD6efc3m+/4KIe58zXYET3bNcmLd
-   5b2W8gf6ZODZFc0jDqNL8ypA5tQaWkWrx74euJ9Y/jL4CPLDvID5uwS1Z
-   w==;
-X-CSE-ConnectionGUID: pOksh8PISk+pdtrsQG4btA==
-X-CSE-MsgGUID: 2vUloj2VSLuI3HwbZwJ+DQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="39802393"
-X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
-   d="scan'208";a="39802393"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 18:40:43 -0800
-X-CSE-ConnectionGUID: 3sGc4uU/RF6xYYIvPyHpsA==
-X-CSE-MsgGUID: UXSroWr9R0CFX4g5Xw7f3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
-   d="scan'208";a="112863616"
-Received: from shsensorbuild.sh.intel.com ([10.239.133.18])
-  by fmviesa006.fm.intel.com with ESMTP; 12 Feb 2025 18:40:41 -0800
-From: Even Xu <even.xu@intel.com>
-To: david.laight.linux@gmail.com,
-	jikos@kernel.org,
-	bentiss@kernel.org
-Cc: srinivas.pandruvada@linux.intel.com,
-	mpearson-lenovo@squebb.ca,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Even Xu <even.xu@intel.com>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] Hid: Intel-thc-hid: Intel-thc: Fix "dubious: !x | !y" issue
-Date: Thu, 13 Feb 2025 10:40:21 +0800
-Message-Id: <20250213024021.2477473-1-even.xu@intel.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="mzAxwb9c"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4395f81db4dso1940435e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 18:42:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1739414532; x=1740019332; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ee3D7VT2isu05jkFSM78Pj/eKelqSL1+sY1eaNmkBQE=;
+        b=mzAxwb9cxSfD2hziZNprfcC1AuvdUyrNPHSHNGGOsnKU0BCqw2J4WChM6eVzYC2nKH
+         M3XXH0K6sxObP2BKL54IwyITtCGML1xirkyXA32TOGzTmSYRXeCtMWJdeRv7K+4MfG8Q
+         HVvfhu/zQCgKVTZts8qhysdQ+7eP93TVdtN/Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739414532; x=1740019332;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ee3D7VT2isu05jkFSM78Pj/eKelqSL1+sY1eaNmkBQE=;
+        b=sq5kgPp2m7PAUOxtQrRKdXae2kxZoMCTMvV+lDDgdDn20DYoz3iHzkskw9gSgrVeBA
+         r1UaVPoSVTzHulrtogF/GnBRjpqtT787x9xy52YfgErYRz+nIc4A3wHDphEq8GNDsK0E
+         m1lHAp+PWeVv+aTee1lwxAjwlUGGmVvrnNE2TYdViTIQYdoylx3bCy5A/8KkoUG8zF93
+         VUA8p6RfVlvEDO4Tkml7sVosPDfCnhHzxZORrBC0D8Et9FsStF6PXocohF3ZaZGVBBjj
+         V7dUXQIKBQxJGfe3QwGgdAPXigOzga+NwwCqGi5LMItfvhUlLkEOSXVyQ5EAU3jEqueX
+         ePYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWulu36cTwPyPIJZGWuefdwaEF2z1R/3JAvF3HJpsGjwqPgjQCDAw3CsACTt7Obg85FG2uXRj6oXvvk9G8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8WoeJO3i/Oc6Ywb2URT5gmZVNXlkh6A1+yHwabBO0DIQcmU4B
+	rbgcKg+x6yDQbm4g6YHCXrfIT9yUDpQFXOonc3nrkQ2ztn3/LzeYcsRufiX8xfw=
+X-Gm-Gg: ASbGncvIGJUWiHMz4Shvn+AKJhGNo/gGQkWEL4LXgbV3zqzMfjfHWwXm5FotJSH4YGN
+	sQgWaZQDao28cXkhfAquLjQghlv+vrAY9JnnnKBpB5dEZhGL2wSPg/+5AYtWJhybFA4sEI1fi2W
+	xGM9AVbwpCdXQIrF/nNzWo/lM1c/42FEOTvelrvakHbz00iGVqkAn2OHXW6bz0lYCOgkUEUpJ3g
+	lHm+DYzlzPIzWQ33NyXOTKmtzkGJMY9VBKiVdxd/Vj9G5bvSuI8PCfGRfRWcLyWmXFzkuMPSnVv
+	0EUTr1fRiGvduxX2OjaHahpgH8XKCV0QPaqKGwAna74r4eG2llF1vMk=
+X-Google-Smtp-Source: AGHT+IH3hGu5AwpJoqKdL7w+YFkCqgGVAPI86oFHC6u4KPZ+60ICstSirho6rz5s2LGI7RkyogahQA==
+X-Received: by 2002:a05:600c:19c6:b0:439:4a4a:7863 with SMTP id 5b1f17b1804b1-43960ecd6b7mr7969585e9.15.1739414531935;
+        Wed, 12 Feb 2025 18:42:11 -0800 (PST)
+Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43961826cd4sm4296145e9.24.2025.02.12.18.42.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 18:42:11 -0800 (PST)
+Message-ID: <1cf8d5a5-bf3e-4667-bc6a-d1b1d662d822@citrix.com>
+Date: Thu, 13 Feb 2025 02:42:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
+To: Jann Horn <jannh@google.com>
+Cc: jmill@asu.edu, joao@overdrivepizza.com, kees@kernel.org,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ luto@kernel.org, samitolvanen@google.com,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>
+References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
+ <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
+ <CAG48ez0h0wUS6y+W1HTOwN14V95gKmmFZ_2TamAX+JKTmXT=DA@mail.gmail.com>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <CAG48ez0h0wUS6y+W1HTOwN14V95gKmmFZ_2TamAX+JKTmXT=DA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Change to use "||" to make it more readable and avoid miss
-understanding.
+On 13/02/2025 2:09 am, Jann Horn wrote:
+> On Thu, Feb 13, 2025 at 2:31 AM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+>>>> Assuming this is an issue you all feel is worth addressing, I will
+>>>> continue working on providing a patch. I'm concerned though that the
+>>>> overhead from adding a wrmsr on both syscall entry and exit to
+>>>> overwrite and restore the KERNEL_GS_BASE MSR may be quite high, so
+>>>> any feedback in regards to the approach or suggestions of alternate
+>>>> approaches to patching are welcome :)
+>>> Since the kernel, as far as I understand, uses FineIBT without
+>>> backwards control flow protection (in other words, I think we assume
+>>> that the kernel stack is trusted?),
+>> This is fun indeed.  Linux cannot use supervisor shadow stacks because
+>> the mess around NMI re-entrancy (and IST more generally) requires ROP
+>> gadgets in order to function safely.  Implementing this with shadow
+>> stacks active, while not impossible, is deemed to be prohibitively
+>> complicated.
+>>
+>> Linux's supervisor shadow stack support is waiting for FRED support,
+>> which fixes both the NMI re-entrancy problem, and other exceptions
+>> nesting within NMIs, as well as prohibiting the use of the SWAPGS
+>> instruction as FRED tries to make sure that the correct GS is always in
+>> context.
+>>
+>> But, FRED support is slated for PantherLake/DiamondRapids which haven't
+>> shipped yet, so are no use to the problem right now.
+>>
+>>> could we build a cheaper
+>>> check on that basis somehow? For example, maybe we could do something like:
+>>>
+>>> ```
+>>> endbr64
+>>> test rsp, rsp
+>>> js slowpath
+>>> swapgs
+>>> ```
+>> I presume it's been pointed out already, but there are 3 related
+>> entrypoints here.  SYSCALL64 which is discussed, SYSCALL32 and SYSENTER
+>> which are related.
+>>
+>> But, any other IDT entry is in a similar bucket.  If we're corrupting a
+>> function pointer or return address to redirect here, then the check of
+>> CS(%rsp) to control the conditional SWAPGS is an OoB read in the callers
+>> stack frame.
+>>
+>> For IDT entries, checking %rsp is reasonable, because userspace can't
+>> forge a kernel-like %rsp.  However, SYSCALL64 specifically leaves %rsp
+>> entirely attacker controlled (and even potentially non-canonical), so
+>> I'm wondering what you hand in mind for the slowpath to truly
+>> distinguish kernel context from user context?
+> Hm, yeah, that seems hard - maybe the best we could do is to make sure
+> that the inactive gsbase has the correct value for our CPU's kernel
+> gsbase? Kinda like a paranoid_entry, except more painful because we'd
+> first have to figure out a place to spill registers to before we can
+> start using stuff like rdmsr... Then a function pointer overwrite
+> might still turn into returning to userspace with a sysret with GPRs
+> full of kernel pointers, but at least we wouldn't run off of a bogus
+> gsbase anymore?
 
-Signed-off-by: Even Xu <even.xu@intel.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202501292144.eFDq4ovr-lkp@intel.com
----
- drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thinking about this some more, I think it's impossible to distinguish.
 
-diff --git a/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c b/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c
-index eb23bea77686..8f97e71df7f4 100644
---- a/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c
-+++ b/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c
-@@ -295,7 +295,7 @@ static void release_dma_buffers(struct thc_device *dev,
- 		return;
- 
- 	for (i = 0; i < config->prd_tbl_num; i++) {
--		if (!config->sgls[i] | !config->sgls_nent[i])
-+		if (!config->sgls[i] || !config->sgls_nent[i])
- 			continue;
- 
- 		dma_unmap_sg(dev->dev, config->sgls[i],
--- 
-2.40.1
+One of the many sharp edges of SYSCALL (and SYSENTER for that matter) is
+that they're instructions expected to be only be used by userspace, but
+that be executed in supervisor too[1].  They're asymmetric with their
+SYSRET (and SYSEXIT) counterparts which are CPL0 instructions that
+strictly transition into CPL3.
 
+The SYSCALL behaviour TLDR is:
+
+    %rcx = %rip
+    %r11 = %eflags
+    %cs = fixed attr
+    %ss = fixed attr
+    %rip = MSR_LSTAR
+
+which means that %rcx (old rip) is the only piece of state which
+userspace can't feasibly forge (and therefore could distinguish a
+SYSCALL from user vs kernel mode), yet if we're talking about a JOP
+chain to get here, then %rcx is under attacker control too.
+
+There are a variety of solutions to this problem that involve not using
+%gs for per-cpu data.  I also expect that to be wholly unpopular and
+dismissed as an approach.
+
+~Andrew
+
+[1] No-one back then was brave enough to design CPL3-only instructions.
