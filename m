@@ -1,107 +1,112 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D4621D3C2
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8088721D3C0;
+	Thu, 13 Feb 2025 11:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739445517; cv=none; b=ZadubUKQ2tIdGomJwE/M2kqrgNBu+bMKLvva2v3OmP8USEH9PftaS5HDKhs6kZ+J1vbgq/v8cKWTFXAKtB5FFW0gVeqifN0O/pNrsq72Xr8PjcGyDRfhgSkN1BTpYWX5hYP0nXt2aNXLJWt6qNHLi++vFz3A/c/77WzHWDOo8bg=
+	t=1739445569; cv=none; b=d+kcjshSYSZ9b/gBLEHpgOlcrjrnrhhQYYfm4kqX56BgodGtVZFouxPbbKs9BLrbj/1zP1p272BRJyOnC5BPHoiG1+cUkTzkLRQ7P4gHMiinoGYKRXkn16hSCBffdgrAuAg6Iqr/1xvh54+XFq8yTpwz2wConbXvEx9NLPz+/uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739445517; c=relaxed/simple;
-	bh=yZykid4Tnvw6uTxZTfPXzibToPkb2UoxKH9qc3uHcNo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=swK/AzbeHU1VUiIek4Jh7eUrnkyTLbqEwf2afZwriEkgkbeLjij0nMPzZSUU8KjXHsiHVdzTG1/z3QipcyIWfzouZt9b+6mDqF8HBaNL2B2VYo3c1dvfBwSLR45MT47Aux9VI6SfAkrra+7z+Kr7tjQ/23EiG9JCpXIflxmOcqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ctHLYeM1; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739445569; c=relaxed/simple;
+	bh=JdIo+E+SDO2PpXqGE31iS5BduX/7fzUOoJLxV9EOoIs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PCBhRROZDEnTirPpgKCT8Eft/Mz+I/2SeLSn7pS3IOgjJqM85+SyEUIHJ9V2JUadBG0FayEo9LaNIXVVJ42Vgbtl6sGZJgvb/LwyfCf2JM+utKo0rmcKpPmxfwWh07vO84JIOMeYzJ0044Kg67CiWlZhUU8gNOg7+du+gXn4TQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=D7rFTfN/; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ctHLYeM1"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aaec61d0f65so187145366b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 03:18:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739445514; x=1740050314; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hcwZpuTU02sMJrS+Mjy6fqoBX8jKwW0TxWQW8Ahv3FY=;
-        b=ctHLYeM1IfEkck3J3Cxo6hb6m9Siv2hYx9JCDXSnCzVT2barqfiz2NkOTh5nOUrGRj
-         /QDcxe5yroQxerUUKt2ruc1Tm7VWG34mEvowk6GHu/sFNOUW+HiE1J7WwEgJye/8FUC4
-         U7OuJ/gMWyLGHcoHNDEar45unT8hFTEUU2FiJfzpJ0cOGVV5ZE9osjyBtqjdaN9we4Oq
-         lRHDaOVc0zsDGemru95jMv07M//qxqgatAsA7R437xf5UTENksmSeQ/FopyvfhMfBdQ4
-         98/ub44F9MBv9MlyT5jN5gpy9Qz6+VvHG7eVHwZSi2ayRPJs/JKoO/gPtIX67AgvQURb
-         6HUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739445514; x=1740050314;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hcwZpuTU02sMJrS+Mjy6fqoBX8jKwW0TxWQW8Ahv3FY=;
-        b=dDO1hv7cynrXWp4TBY48ZEnRCyTSaYd7BY+FmkvsOPVXJFZlX0n2/E0GmduSTWPR4l
-         zFmstDeXZUh38GYzyNWJBjQ5pWwZZnUI+8otxt2mxMdAJEcVN/V1MDkkhGJI6gxBz7ee
-         VDA6eitiwzXNoYtPxNNGuZmnYWPmrywH6hv7qMwwwgMh+jPtmYxvay40oSTnaLaoWBgh
-         zsmVR7TfITvH8SoZ/FzEKUgv44N+XLyiRjQz3JnyhHZdrwlIIqRaRJjJpIuokgVpKbEo
-         wfICQ4RwwDLcF2B9uGIBzL9vSynEYKiQ+A/R6Ua516LHEUTb25Heg/lIaufJlT+03jtX
-         HXgg==
-X-Forwarded-Encrypted: i=1; AJvYcCV4wXECrBoYkT2zOa9UzvPhH3/91y3bSZiHkeRa2RUlRwQxBzYpFoJetglP1YLpiWMNUzNtmB35iTmmsQ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLqWOCxalJb7DasIXzpqTYDnZioNDwi0murv1orxuOmYOL6aaY
-	U95qQAcxuKNBmmsm3I7T9+nUW6nHgjA8+Tn0E5+iod/UTiSO+qA78kpzn05pMbc=
-X-Gm-Gg: ASbGncvsMqZrzhz+h4MVAmZBDDZXGAq0qir+OvoP502RR79dIdmYwKy2JfS4SqGPBH6
-	pAlyxerXk647Hx7NFFv9Oz/f1WLsWXMG50LmY4R5kQ0yligmmBQ4BpUQjO5QVRiZw9qJPecEDpb
-	MmJWtOjvB1OD6tNF1TViUA5+4R6Tti7q6MEPjT0aG9vjg0fbMkagpvjSdxXl+dTCd5S+j40eGTs
-	VMHrB2VP2Aa6M4yTciasQAPTwsv/zJiatNj+EXqFAVnQ4b7gcnW+4PsEUMV3Ii/uwBFAoS2PB5q
-	1xIy7WONpnPPqfwDrhH+CcMR+lFEjn4tSelgBKfMtBP+qLPLjiJT5bUNl0oONWHosNG6+eUbMDQ
-	=
-X-Google-Smtp-Source: AGHT+IFqhBKKdWnQWpVYsZu06h2i4EkJM5xC3kZZLUKj1tfy2dbaEBJKgl9UFEL/OvS6Ziz5q2en9A==
-X-Received: by 2002:a17:906:730f:b0:aae:fd36:f511 with SMTP id a640c23a62f3a-aba501a9d85mr265032166b.47.1739445513994;
-        Thu, 13 Feb 2025 03:18:33 -0800 (PST)
-Received: from puffmais.c.googlers.com (30.171.91.34.bc.googleusercontent.com. [34.91.171.30])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba532832dcsm110618866b.85.2025.02.13.03.18.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 03:18:33 -0800 (PST)
-From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Thu, 13 Feb 2025 11:18:30 +0000
-Subject: [PATCH] power: supply: max1720x: fix a comment typo
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="D7rFTfN/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1739445565; x=1740050365; i=ps.report@gmx.net;
+	bh=JdIo+E+SDO2PpXqGE31iS5BduX/7fzUOoJLxV9EOoIs=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=D7rFTfN/YKkRmt9Fj/2eYQEEJUzBb0H7a2/8prAvepjJo6sX/77qQj4Yza5E6Uu6
+	 zglQvGQPi8+UNbKT7TDA96Zt5OixAtVR3ZCUTI0OQY91Ab8ZMEgt2HoQzfH74i2SK
+	 WJqLUZvLVreTf6hG5BWe4C6xtxUsQdApKVjJgq+DnQy+aq22nA5oSS1TX7k4bO607
+	 6u2R9BZ4Yj12YQzy0LOocT4gGmmnmziw7JCpi+2UNALUF1YVqXNouvHRWSfFTs6y8
+	 Vb7vsw0tfcs4MWQOpQurl83VqcPggB+bqgz4fWolWE28zPHGptESsQ5gGENrbY/Qu
+	 cHcx9u/er/XVyz92ug==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.fritz.box ([82.135.81.197]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MQvCv-1u3cV82hRn-00IDQ4; Thu, 13
+ Feb 2025 12:19:25 +0100
+From: Peter Seiderer <ps.report@gmx.net>
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Peter Seiderer <ps.report@gmx.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Artem Chernyshev <artem.chernyshev@red-soft.ru>,
+	Nam Cao <namcao@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: [PATCH net-next v5 2/8] net: pktgen: remove extra tmp variable (re-use len instead)
+Date: Thu, 13 Feb 2025 12:19:14 +0100
+Message-ID: <20250213111920.1439021-3-ps.report@gmx.net>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250213111920.1439021-1-ps.report@gmx.net>
+References: <20250213111920.1439021-1-ps.report@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250213-max1720x-typo-v1-1-9c88611cac34@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAAXVrWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDI0Nj3dzECkNzI4MK3ZLKgnxdEyPT1MQUg2QzY+NkJaCegqLUtMwKsHn
- RsbW1APaP83ZfAAAA
-To: Sebastian Reichel <sre@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: base64
+X-Provags-ID: V03:K1:H/PhhsIqx8cvF9Ak2WsVYrmclqrSpkz9+min1pgZUT1xDT4qsQH
+ 7xMtbPuTOVWzdAQ3TWmIIJb6XkD7zBQ6+0DSYwTB5OBZ5FlmFyEquGy5fGwn5zbnMa9YASr
+ oNC/Y2RLuxBhKDdlVxZnYr5Zd0yALIBnJGoEhm5llBBdUacpZhdtHVevY28af2ESxip12ay
+ KF/dflynkBTKpH2iQ/7Lw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:HjEOTSD51mo=;X8dO7O9PvvITsu6aujW8bHs2GWS
+ 65Q+Zux3IQizWR0aRLcld2+IXXhzFgLmdOasekr9AhfBXd56FWPIjXoyV+9OnDc/rZ610qJ50
+ ljK8iF2xfVwwJ02saDABPkOnnYMlnLzlfUWt5QUZg/CzGhXBt0JX0ESO3t6uMyXij8W2R+Wt8
+ Naj36fEdGivrzF7wyKsQ/QU0atgTHcFuZEeVNvvyUwxosVi6pCQNzVjQwji1vcnCcOLpTe60c
+ MC6fVibx70xtY/3fnVCXnB452Sq1m2FS5kpkwH9lTFIH5qw3T4CeTXObPCR52ZUhQiTa3bWEJ
+ X5Ui/i4lghrEfIhGJUHUCsZQSd5/u7diwMl60E69yx156CvhcsXxCwEJMINNdU1wyquoGjtRp
+ f/wZkkofAsYVwQy9IDMeADyHPEbtqq0zFGeBmdFORqWFAMOP8VClO1VEBlT9HgMxavZJpFeD4
+ 6X9A2Hh1E9bYAzXku/JBtBPgjPcLtx3fuWH/fJg7bCW3RpB4Go4h0p3BavfkWUMsRNVq/GbYb
+ d+VoN44TlIAGwvEhpLLtlhm44KCee/ORkFV1kRBCRwUGbQgfcdHeqjm8DKVjVqTFuFtjltGPc
+ RDTKleOIAXD/uWFkZ+VTcWpWAOmo5kUQfds2dLcU2fBceRyeas8UPOJqexNrnOCGBNAU3DBsW
+ r4fGpZqnxgUDlgkR+T+a2fjZWsoQL+jMRRaeKr/XJfywk5F6pjmClZPaO7z66UhN86FmuwNMg
+ 2UuE+B8e5RCZaemH+R/eed18ihG38tYkPU0UbqTe7HjglmP/zzY81jG09W3voHQkgPMfGC3M6
+ nEfAcDAIogiJvm2+oeOlrU/np4GUEhB34jhdWNrtrKURzfa/1lXpf9XmUkLL68mhFRN1dl9o4
+ q9IfKWpv/Am1yhcKjKDMoQ/v5Y7E9PuCNKqY0vnGxsYrrjHWPFZ4mBLvyalJrhI4lXmsrlomG
+ ++cmIerPapHQPQGHaNf0CvrRKSo7oVYrmvjghsAnQsEsSinq2YJy9h775TaNhhuK0ne7dYRQh
+ 9RwN7CaeF9wCYlN8640XNrFZTfc8FwjrqRYW7FchJZBCXKq5gdvBsclIX4o6Iza/IVjfKiHAh
+ gYvqT3pwxtU8KSZ1uPz7fq4TdtZa0k0foF1fmZx2G23w5WdZeF3BPh38sbxcQy0CndCIUZI3Z
+ GwkVQpoOKbXp3XCfq3e0IYogS4HdSxGT/BOPZxpqACNCTbMLtOF0rbK0vzwT9YcvMhhXld5u2
+ G0gN3mGrDVFpgPJJ+MaQR/rjOstS/hCIb+X3IvEGj0bsjqbg/qyn5UDHbmyUpYr6iq7RITY08
+ 7sxzdG5LUb9VTLk8ooULdX1mKhWFyXQbKjin5YgftbHqInSsIAm6mPDXNBGFHcfvdcF+98tap
+ G0FXZqc+dv8uLbJCQACQ/PrELA54GO3m/dvT19gzDsvMdI3dYUtxlLI/mz
 
-mesaurment -> measurement
-
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
----
- drivers/power/supply/max1720x_battery.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/power/supply/max1720x_battery.c b/drivers/power/supply/max1720x_battery.c
-index 11580e414713..2c9aea4f5d7f 100644
---- a/drivers/power/supply/max1720x_battery.c
-+++ b/drivers/power/supply/max1720x_battery.c
-@@ -302,7 +302,7 @@ static int max172xx_temperature_to_ps(unsigned int reg)
- /*
-  * Calculating current registers resolution:
-  *
-- * RSense stored in 10^-5 Ohm, so mesaurment voltage must be
-+ * RSense stored in 10^-5 Ohm, so measurement voltage must be
-  * in 10^-11 Volts for get current in uA.
-  * 16 bit current reg fullscale +/-51.2mV is 102400 uV.
-  * So: 102400 / 65535 * 10^5 = 156252
-
----
-base-commit: 808eb958781e4ebb6e9c0962af2e856767e20f45
-change-id: 20250213-max1720x-typo-425ead0c633c
-
-Best regards,
--- 
-André Draszik <andre.draszik@linaro.org>
-
+UmVtb3ZlIGV4dHJhIHRtcCB2YXJpYWJsZSBpbiBwa3RnZW5faWZfd3JpdGUgKHJlLXVzZSBsZW4g
+aW5zdGVhZCkuCgpTaWduZWQtb2ZmLWJ5OiBQZXRlciBTZWlkZXJlciA8cHMucmVwb3J0QGdteC5u
+ZXQ+ClJldmlld2VkLWJ5OiBTaW1vbiBIb3JtYW4gPGhvcm1zQGtlcm5lbC5vcmc+Ci0tLQpDaGFu
+Z2VzIHY0IC0+IHY1CiAgLSBzcGxpdCB1cCBwYXRjaHNldCBpbnRvIHBhcnQgaS9paSAoc3VnZ2Vz
+dGVkIGJ5IFNpbW9uIEhvcm1hbikKICAtIGFkZCByZXYtYnkgU2ltb24gSG9ybWFuCgpDaGFuZ2Vz
+IHYzIC0+IHY0CiAgLSBuZXcgcGF0Y2ggKGZhY3RvcmVkIG91dCBvZiBwYXRjaCAnbmV0OiBwa3Rn
+ZW46IGZpeCBhY2Nlc3Mgb3V0c2lkZSBvZiB1c2VyCiAgICBnaXZlbiBidWZmZXIgaW4gcGt0Z2Vu
+X2lmX3dyaXRlKCknKQotLS0KIG5ldC9jb3JlL3BrdGdlbi5jIHwgOSArKysrLS0tLS0KIDEgZmls
+ZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEv
+bmV0L2NvcmUvcGt0Z2VuLmMgYi9uZXQvY29yZS9wa3RnZW4uYwppbmRleCAzNmVlMDQyMmM2Y2Mu
+LmI5ZDhlMzNhYmUxZSAxMDA2NDQKLS0tIGEvbmV0L2NvcmUvcGt0Z2VuLmMKKysrIGIvbmV0L2Nv
+cmUvcGt0Z2VuLmMKQEAgLTk3MCw3ICs5NzAsNiBAQCBzdGF0aWMgc3NpemVfdCBwa3RnZW5faWZf
+d3JpdGUoc3RydWN0IGZpbGUgKmZpbGUsCiAJY2hhciBuYW1lWzE2XSwgdmFsc3RyWzMyXTsKIAl1
+bnNpZ25lZCBsb25nIHZhbHVlID0gMDsKIAljaGFyICpwZ19yZXN1bHQgPSBOVUxMOwotCWludCB0
+bXAgPSAwOwogCWNoYXIgYnVmWzEyOF07CiAKIAlwZ19yZXN1bHQgPSAmKHBrdF9kZXYtPnJlc3Vs
+dFswXSk7CkBAIC05ODEsMTIgKzk4MCwxMiBAQCBzdGF0aWMgc3NpemVfdCBwa3RnZW5faWZfd3Jp
+dGUoc3RydWN0IGZpbGUgKmZpbGUsCiAJfQogCiAJbWF4ID0gY291bnQ7Ci0JdG1wID0gY291bnRf
+dHJhaWxfY2hhcnModXNlcl9idWZmZXIsIG1heCk7Ci0JaWYgKHRtcCA8IDApIHsKKwlsZW4gPSBj
+b3VudF90cmFpbF9jaGFycyh1c2VyX2J1ZmZlciwgbWF4KTsKKwlpZiAobGVuIDwgMCkgewogCQlw
+cl93YXJuKCJpbGxlZ2FsIGZvcm1hdFxuIik7Ci0JCXJldHVybiB0bXA7CisJCXJldHVybiBsZW47
+CiAJfQotCWkgPSB0bXA7CisJaSA9IGxlbjsKIAogCS8qIFJlYWQgdmFyaWFibGUgbmFtZSAqLwog
+Ci0tIAoyLjQ4LjEKCg==
