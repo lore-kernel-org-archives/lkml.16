@@ -1,81 +1,118 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9481124A079;
-	Thu, 13 Feb 2025 16:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1690828A2AA;
+	Thu, 13 Feb 2025 16:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739465206; cv=none; b=fb+dUFF0ioyY7lj+5fyVj1W9NwUPgwMIy9B7lb5rlbPzfBphrSypMt2Yi1RsxBu/e4oTrEC61pVUJgLM/uNz6jhVO2XfswZRPjaXL6A8rlplxLieRrgxgITyUMsJwizfv9se3kH8q24XdK25+q925GEh4uZtS7hACsTYhK9O61E=
+	t=1739465233; cv=none; b=b5R1u1oIuSN3zVdYeqjcUNlwOXJjRb3i0OwInCv6puxMhZ/x7I31lmCYZKpIx8eONDRNAvk4on4GS++Kx7FkrYmMutg7+Mcgv0NyttymSdGziiDO5BR2j9vg0udIx+rjLbz5a9uRAfuBhhu86zKftZXYLWLyTJ2SkvzXIalHdeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739465206; c=relaxed/simple;
-	bh=DBrzRiKfHQhUieCoS1jd2keEcouyy2TAdA8Hy9eT5CU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ph/snXJcvS9iU/BQN3h/qmgoDefHWgcmzJObM4qCWxaRuHCM79RQ4Y1mnr6LTe4LxgPrC2e2Ds0/bV8G9yCHUfep2+5OsipeByUQbnVg58TJSWRaPQKLcM7ezHRT1zeEOETlJfc6eDYeffVdY9K9bsDfYmbkXrqpO60gEFukkfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=d32GejBx; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="d32GejBx"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net B8FA748EBD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1739465203; bh=KEZqGb45tLQV/Ib54LAY03Ohsm5zJrAVnCYgVwcKUjQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=d32GejBx45dnSb/JQzlubScBvTOOS0S7DlEwWWfk/pxYJNoqzMlWA4gFE95h3srLh
-	 tO2ErhayEOPoWLvpoH5g2WQc3N8Ktu2Gq92AQ/QtXbz3NXTAUFBoyNmpz6jsXu1TkX
-	 4JajJBAmyUaFlUp+A7xx6eCG0w3UtP/ge9n2g2XJONiD+nwGEu3qLMF6JuvRyBdBXG
-	 IyrxS2TfGmdCOD+dzXkVnHypsNTw9MKyz/0MzRFyb9QavYHDVl5q4aMZ5jIEegrPdV
-	 K5LT3mJccGWY3QbNydb9fbw4u9NpsBry2Fkng1aP1V7XsKAVXb9q8za1Kv3OpSWfbV
-	 2sKA+T43jTD5w==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id B8FA748EBD;
-	Thu, 13 Feb 2025 16:46:43 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
- List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Mauro Carvalho Chehab
- <mchehab+huawei@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: trace: decode_msr.py: make it compatible with
- python 3
-In-Reply-To: <88bb0d47100feaa3cda215e68bf6500dc67da7b3.1739257245.git.mchehab+huawei@kernel.org>
-References: <88bb0d47100feaa3cda215e68bf6500dc67da7b3.1739257245.git.mchehab+huawei@kernel.org>
-Date: Thu, 13 Feb 2025 09:46:42 -0700
-Message-ID: <87frkh6bd9.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1739465233; c=relaxed/simple;
+	bh=Q+7RTh/pTrWkDGeB5wUpAsRMuOZ7iBoJrIrT5Q6Tqpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hVQV0mBUXrt/cecamvVre44vzAWTkCOZCOjdhcR4dngFx6wmm+Ku0b++zIAqaExMbNG3jC5Jp5tH2OpQRiuJF3j7x2HXtTIPpyDophgHmlPx3pCCBpxFixEUik2K7oTqSERCYLaY6ZbxKsSMsC/wG0WiidleOGCxCZ4pqsbGEws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ABDBC4CED1;
+	Thu, 13 Feb 2025 16:47:11 +0000 (UTC)
+Date: Thu, 13 Feb 2025 11:47:21 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Purva Yeshi <purvayeshi550@gmail.com>
+Cc: mhiramat@kernel.org, corbet@lwn.net, skhan@linuxfoundation.org,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2] docs: trace: Refactor index documentation
+Message-ID: <20250213114721.23d07909@gandalf.local.home>
+In-Reply-To: <1906f93a-dc32-4dbe-9b11-eabd4aad196e@gmail.com>
+References: <20250206141453.139613-1-purvayeshi550@gmail.com>
+	<20250210174556.70fc53b7@gandalf.local.home>
+	<1906f93a-dc32-4dbe-9b11-eabd4aad196e@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+On Thu, 13 Feb 2025 17:26:21 +0530
+Purva Yeshi <purvayeshi550@gmail.com> wrote:
 
-> This script uses print <foo> instead of print(foo), which is
-> incompatible with Python 3.
->
-> Fix it.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/trace/postprocess/decode_msr.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/trace/postprocess/decode_msr.py b/Documentation/trace/postprocess/decode_msr.py
-> index aa9cc7abd5c2..f5609b16f589 100644
-> --- a/Documentation/trace/postprocess/decode_msr.py
-> +++ b/Documentation/trace/postprocess/decode_msr.py
-> @@ -32,6 +32,6 @@ for j in sys.stdin:
->  					break
->  		if r:
->  			j = j.replace(" " + m.group(2), " " + r + "(" + m.group(2) + ")")
-> -	print j,
-> +	print(j)
+> >> +Tracing in the Linux kernel is a powerful mechanism that allows
+> >> +developers and system administrators to analyze and debug system
+> >> +behavior. This guide provides documentation on various tracing
+> >> +frameworks and tools available in the Linux kernel.
+> >> +
+> >> +Introduction to Tracing
+> >> +-----------------------
+> >> +
+> >> +This section provides an overview of Linux tracing mechanisms
+> >> +and debugging approaches.
+> >>   
+> >>   .. toctree::
+> >> -   :maxdepth: 2
+> >> +   :maxdepth: 1  
+> > 
+> > I don't really know what the maxdepth gives here, but there was no mention
+> > in the change log why it had to be converted from 2 to 1.
+> >   
+> 
+> I changed :maxdepth: from 2 to 1 to simplify the table of contents, 
+> keeping only document titles instead of also including second-level 
+> section headings. The intent was to improve readability and navigation.
+> 
+> Additionally, I referred to commit '270beb5b2aae', as suggested by 
+> Jonathan Corbet in the v1 patch, to align the documentation structure 
+> accordingly.
+> 
+> I'll update the commit message in the next revision to explicitly 
+> mention this change.
+> 
 
-This does make me wonder when this script was last used ... it hasn't
-seen a real change since it was added in 2015.  Oh well, it should at
-least work with current Python ... applied, thanks.
+Can you make that a separate patch. A commit should do only one thing and
+that change isn't necessary to be part of the rest of the changes.
 
-jon
+> >>   
+> >> -   ftrace-design
+> >> +   debugging
+> >> +   tracepoints
+> >>      tracepoint-analysis
+> >> +
+
+> >> +
+> >> +Hardware and Performance Tracing
+> >> +--------------------------------
+> >> +
+> >> +This section covers tracing features that monitor hardware
+> >> +interactions and system performance.
+> >> +
+> >> +.. toctree::
+> >> +   :maxdepth: 1
+> >> +
+> >>      intel_th  
+> >   
+> >>      ring-buffer-design  
+> > 
+> > The ring-buffer-design should be in "Core Tracing Frameworks".
+> >   
+> 
+> I'll move 'ring-buffer-design' to the Core Tracing Frameworks section.
+> 
+> >>      ring-buffer-map  
+> > 
+> > This describes how to map the ring buffer in user space. Maybe it should go
+> > at the "Introduction" section?
+> > 
+> >   
+> 
+> For ring-buffer-map, placing it in the Introduction section could 
+> provide early context, but since it is more implementation-specific, it 
+> might fit better under Core Tracing Frameworks alongside 
+> ring-buffer-design. Would that placement works?
+
+
+But it's not kernel implementation. It describes how to use it in user
+space. That is, it's not part of the tracing framework.
+
+-- Steve
