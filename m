@@ -1,136 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8109A227E8B;
-	Thu, 13 Feb 2025 11:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F910227E85;
+	Thu, 13 Feb 2025 11:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739445944; cv=none; b=HZnIhc1EZgKhSfkVRlT6dyEvEiug+oBPXJ628G/nEAEUcXWfDTPeiE+G6fPelzfcWf4aYcHsEZlyTpaV65FwX1m0rLnu7ZszChH5gb8nNNMvJDlPM+RDUxEiL5OPeqKYeASzoa2rV2D5CnkX0YnnahiD0I9hw9Sz3DciJZcmV80=
+	t=1739445975; cv=none; b=bkDEGqzf4yVXyxVaS1POhKiGo6Sa4EUHa2vNYjzGS87hRaplsrBLmSrpAMYf8v559uctKMF3Y7LgRUodAEQGHQlTk/PI2KGAxWqKsA8MGnuOSRX165Slf/LR8fkP/8+X5/fGqSqbFHVZID6iA8g3yREDl/WbNDUQ6G3tWQVt+GQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739445944; c=relaxed/simple;
-	bh=EVAUuBDBMmfoOHTQ3D16fxtASQyPWClWKsW6lBNhEzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b/qCESuG1ZM8kQCVIgjesPwRNF20LWxao5ph4RSkmujTJG5mai0eHk1QsDTewmOopUVfeHnwirl0BzWx5CP7UkiO6mbTkmL/qg31YlC5OK5kNp63MEBRoK8oJA/RF3nF9Hms1+2/Pkv058p7J+SVrZuclHVj0JCoCCCjyF0EA0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rc5YUrNt; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rc5YUrNt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739445943; x=1770981943;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EVAUuBDBMmfoOHTQ3D16fxtASQyPWClWKsW6lBNhEzg=;
-  b=Rc5YUrNtSUxrPBtbJB2wQdLrnQpyYWvzOqxx1I9Za4CZpiTKdfdLywTE
-   OHU8pSGumQhBq3fERmj1NBBkb3QqBE3cmV8lUmu5tm85owNJ/Ip/r8+06
-   4dd2q9ZazkHbRzj5Tpgog6Lj8h//DGxJB9Hq6ZQo7+x6ALn5gD7wZ4nig
-   fu5bzlgUdgScH2L3Bw37uiEHPfR8xYPQNxR02RvU3ZCDqghWR3xQUN/FQ
-   Q6AN/er2gJ7J3lZ7kTWT9KpBuuOUeEt6kzj4x5tRqR/BezMLFSLN9bGKd
-   gew0A/KAZAVtVs36fs3s4hBMycfEVZ6WpXw3iwzCI4cZVv/KzE95soDcx
-   A==;
-X-CSE-ConnectionGUID: f7hjgxBeRjCiItQq7oYKqQ==
-X-CSE-MsgGUID: zU49gNWfTeWfOB+tmEI/fQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="43911389"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="43911389"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 03:25:42 -0800
-X-CSE-ConnectionGUID: eASTbBQoRtKW+uWVNLxbOA==
-X-CSE-MsgGUID: e7u4gQZ2Rn6BPVjTgQ5C7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112951902"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by orviesa010.jf.intel.com with SMTP; 13 Feb 2025 03:25:39 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 13 Feb 2025 13:25:38 +0200
-Date: Thu, 13 Feb 2025 13:25:38 +0200
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Elson Roy Serrao <quic_eserrao@quicinc.com>
-Cc: gregkh@linuxfoundation.org, xu.yang_2@nxp.com,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] usb: roles: set switch registered flag early on
-Message-ID: <Z63Wsng27QfhyjLd@kuha.fi.intel.com>
-References: <20250206193950.22421-1-quic_eserrao@quicinc.com>
+	s=arc-20240116; t=1739445975; c=relaxed/simple;
+	bh=d6iyyItJ3UXuj5zewdFS49nBRey4JJs4EZsMNEp0BWs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BpM/tLuH9gD1OwWEnDXF/DrYVDtFYB8bR0Ins1gLg5+gxasX1vQB9oFinSOhgBpzs3Of9qfs27jjNUCYdXCjt/xwvw3whyY5H75oA/8dRH0SJ+KieLijbk4HKupAQrqQadZlqpqhMM9pIQGTueqaP2waTvTDRTbiPIM9Ch4gBAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YttCg1r6jz4f3jsy;
+	Thu, 13 Feb 2025 19:25:51 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 591DC1A08FE;
+	Thu, 13 Feb 2025 19:26:07 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgB321_N1q1nQbvpDg--.19969S4;
+	Thu, 13 Feb 2025 19:26:07 +0800 (CST)
+From: libaokun@huaweicloud.com
+To: linux-ext4@vger.kernel.org
+Cc: tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	jack@suse.cz,
+	bfoster@redhat.com,
+	linux-kernel@vger.kernel.org,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	libaokun@huaweicloud.com,
+	Baokun Li <libaokun1@huawei.com>
+Subject: [PATCH] ext4: goto right label 'out_mmap_sem' in ext4_setattr()
+Date: Thu, 13 Feb 2025 19:22:47 +0800
+Message-Id: <20250213112247.3168709-1-libaokun@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206193950.22421-1-quic_eserrao@quicinc.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgB321_N1q1nQbvpDg--.19969S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF45ZFykGryDuryfWw4Uurg_yoW8Ww1Upr
+	y3KFykKr4UWFZF9F40gr1FgFyjkan8C3yUWF92yry7ZF9xtr1aqF17tF1UZFW7GrWUXa4S
+	qFn8Zr1xZry5A3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9C14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+	v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUSLvNUUUUU=
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAgAQBWerBPsbNgACsL
 
-On Thu, Feb 06, 2025 at 11:39:50AM -0800, Elson Roy Serrao wrote:
-> The role switch registration and set_role() can happen in parallel as they
-> are invoked independent of each other. There is a possibility that a driver
-> might spend significant amount of time in usb_role_switch_register() API
-> due to the presence of time intensive operations like component_add()
-> which operate under common mutex. This leads to a time window after
-> allocating the switch and before setting the registered flag where the set
-> role notifications are dropped. Below timeline summarizes this behavior
-> 
-> Thread1				|	Thread2
-> usb_role_switch_register()	|
-> 	|			|
-> 	---> allocate switch	|
-> 	|			|
-> 	---> component_add()	|	usb_role_switch_set_role()
-> 	|			|	|
-> 	|			|	--> Drop role notifications
-> 	|			|	    since sw->registered
-> 	|			|	    flag is not set.
-> 	|			|
-> 	--->Set registered flag.|
-> 
-> To avoid this, set the registered flag early on in the switch register
-> API.
-> 
-> Fixes: b787a3e78175 ("usb: roles: don't get/set_role() when usb_role_switch is unregistered")
-> cc: stable@vger.kernel.org
-> Signed-off-by: Elson Roy Serrao <quic_eserrao@quicinc.com>
+From: Baokun Li <libaokun1@huawei.com>
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Otherwise, if ext4_inode_attach_jinode() fails, a hung task will
+happen because filemap_invalidate_unlock() isn't called to unlock
+mapping->invalidate_lock. Like this:
 
-> ---
-> Changes in v2:
->  - Set the switch registered flag from the get-go as suggested by
->    Heikki.
->  - Modified subject line and commit next as per the new logic.
->  - Link to v1: https://lore.kernel.org/all/20250127230715.6142-1-quic_eserrao@quicinc.com/
-> 
->  drivers/usb/roles/class.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-> index c58a12c147f4..30482d4cf826 100644
-> --- a/drivers/usb/roles/class.c
-> +++ b/drivers/usb/roles/class.c
-> @@ -387,8 +387,11 @@ usb_role_switch_register(struct device *parent,
->  	dev_set_name(&sw->dev, "%s-role-switch",
->  		     desc->name ? desc->name : dev_name(parent));
->  
-> +	sw->registered = true;
-> +
->  	ret = device_register(&sw->dev);
->  	if (ret) {
-> +		sw->registered = false;
->  		put_device(&sw->dev);
->  		return ERR_PTR(ret);
->  	}
-> @@ -399,8 +402,6 @@ usb_role_switch_register(struct device *parent,
->  			dev_warn(&sw->dev, "failed to add component\n");
->  	}
->  
-> -	sw->registered = true;
-> -
->  	/* TODO: Symlinks for the host port and the device controller. */
->  
->  	return sw;
-> -- 
-> 2.17.1
+EXT4-fs error (device sda) in ext4_setattr:5557: Out of memory
+INFO: task fsstress:374 blocked for more than 122 seconds.
+      Not tainted 6.14.0-rc1-next-20250206-xfstests-dirty #726
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:fsstress state:D stack:0     pid:374   tgid:374   ppid:373
+                                  task_flags:0x440140 flags:0x00000000
+Call Trace:
+ <TASK>
+ __schedule+0x2c9/0x7f0
+ schedule+0x27/0xa0
+ schedule_preempt_disabled+0x15/0x30
+ rwsem_down_read_slowpath+0x278/0x4c0
+ down_read+0x59/0xb0
+ page_cache_ra_unbounded+0x65/0x1b0
+ filemap_get_pages+0x124/0x3e0
+ filemap_read+0x114/0x3d0
+ vfs_read+0x297/0x360
+ ksys_read+0x6c/0xe0
+ do_syscall_64+0x4b/0x110
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
+Fixes: c7fc0366c656 ("ext4: partial zero eof block on unaligned inode size extension")
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+---
+ fs/ext4/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 3cc8da6357aa..04ffd802dbde 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5452,7 +5452,7 @@ int ext4_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 			    oldsize & (inode->i_sb->s_blocksize - 1)) {
+ 				error = ext4_inode_attach_jinode(inode);
+ 				if (error)
+-					goto err_out;
++					goto out_mmap_sem;
+ 			}
+ 
+ 			handle = ext4_journal_start(inode, EXT4_HT_INODE, 3);
 -- 
-heikki
+2.39.2
+
