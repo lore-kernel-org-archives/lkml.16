@@ -1,29 +1,29 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F17221720
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4319B221732
 	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739451704; cv=none; b=fl/TAhkeSbyPtnDMqGiVl7wkidk9jS41Qgm4G5UIe0ak6B2o6Qhvfp8LojXf7oYGQ1XhKTVvmIVmOVqRWaEB5m6GykIBARB7GVLRQWGHj6cPqUCUojEw68kPuHb0Z/+l2t6YeOKXAlx0/JXVtzNTHf21CixhIZQZu3evQNkjK2A=
+	t=1739451705; cv=none; b=DKKXMeshsjewoKBhZtv3dp9A4wjO0urNCF03s+ASn2DZ0iFghJCHkzNcAWU0RAgh4J0lgOUm7qHPg4P6ToRn1eMQ+j+lqG5u/If2LHboENdt4DsMtW5NCbqEnibN6QUbUjt44T0tTDVF3GbvsYW6yZ2z6BJ3I6AUEzQ0to8GgaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739451704; c=relaxed/simple;
-	bh=kNBtBl/O1S5LGKY+VSAno0uOTcxxwHXG1EaqmK4MovU=;
+	s=arc-20240116; t=1739451705; c=relaxed/simple;
+	bh=sypRHtkrJIT4rcWElWoHc/gyLu99NISS9qLQraFpv98=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WjLfhvfOOyi4bveBim7dJ896+zQGC6m5NqMlLyNpFdIrCYJNmF75k2I/vmiVZMaMM9YQAJqr9vhowX265gCmQV5hBIrcQ2YcYnLQctV8NHNwGsGtWUX78uKLVwHzSnxhUovJtnUKWnVCOjikUj20WzpDzWM77L0J+ES3dIcc9gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	 MIME-Version:Content-Type; b=bE6bX8dQZ3rlgVwe7XvTindamTqfZuhgAx/Xc4UVToek8BOrtRWtpCiL/rxBDkfp8wv4wFeZNXu1SBAS2lfil6Rf7IYVvvxeRZiJsZUOJ9ehjwLuJ/hzONZ609MrsfaZwfTRg576TlHkm/6rjMTfHQYWaCtfpV7DxJfYujKyDHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4YtwF20b00z11Pxg;
-	Thu, 13 Feb 2025 20:57:10 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4YtwFs1rQvz1V6fb;
+	Thu, 13 Feb 2025 20:57:53 +0800 (CST)
 Received: from kwepemg200008.china.huawei.com (unknown [7.202.181.35])
-	by mail.maildlp.com (Postfix) with ESMTPS id BBD2618010B;
-	Thu, 13 Feb 2025 21:01:38 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1B738140202;
+	Thu, 13 Feb 2025 21:01:41 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemg200008.china.huawei.com
  (7.202.181.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 13 Feb
- 2025 21:01:37 +0800
+ 2025 21:01:39 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <oleg@redhat.com>,
 	<sstabellini@kernel.org>, <tglx@linutronix.de>, <peterz@infradead.org>,
@@ -41,9 +41,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <oleg@redhat.com>,
 	<Dave.Martin@arm.com>, <joey.gouly@arm.com>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <xen-devel@lists.xenproject.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH -next v6 4/8] arm64: entry: Rework arm64_preempt_schedule_irq()
-Date: Thu, 13 Feb 2025 21:00:03 +0800
-Message-ID: <20250213130007.1418890-5-ruanjinjie@huawei.com>
+Subject: [PATCH -next v6 6/8] arm64: entry: Refactor preempt_schedule_irq() check code
+Date: Thu, 13 Feb 2025 21:00:05 +0800
+Message-ID: <20250213130007.1418890-7-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250213130007.1418890-1-ruanjinjie@huawei.com>
 References: <20250213130007.1418890-1-ruanjinjie@huawei.com>
@@ -58,86 +58,155 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  kwepemg200008.china.huawei.com (7.202.181.35)
 
-The generic entry code has the form:
-
-| raw_irqentry_exit_cond_resched()
-| {
-| 	if (!preempt_count()) {
-| 		...
-| 		if (need_resched())
-| 			preempt_schedule_irq();
-| 	}
-| }
-
-In preparation for moving arm64 over to the generic entry code, align
-the structure of the arm64 code with raw_irqentry_exit_cond_resched() from
+ARM64 requires an additional check whether to reschedule on return
+from interrupt. So add arch_irqentry_exit_need_resched() as the default
+NOP implementation and hook it up into the need_resched() condition in
+raw_irqentry_exit_cond_resched(). This allows ARM64 to implement
+the architecture specific version for switching over to
 the generic entry code.
 
+To align the structure of the code with irqentry_exit_cond_resched()
+from the generic entry code, hoist the need_irq_preemption()
+and IS_ENABLED() check earlier. And different preemption check functions
+are defined based on whether dynamic preemption is enabled.
+
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Suggested-by: Kevin Brodsky <kevin.brodsky@arm.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
 v6:
 - Update the commit message.
+- Hoist the IS_ENABLED() and need_irq_preemption() check earlier.
+- Merge the 4 pathes.
 ---
- arch/arm64/kernel/entry-common.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ arch/arm64/include/asm/preempt.h |  4 ++++
+ arch/arm64/kernel/entry-common.c | 35 ++++++++++++++++++--------------
+ kernel/entry/common.c            | 16 ++++++++++++++-
+ 3 files changed, 39 insertions(+), 16 deletions(-)
 
+diff --git a/arch/arm64/include/asm/preempt.h b/arch/arm64/include/asm/preempt.h
+index 0159b625cc7f..0f0ba250efe8 100644
+--- a/arch/arm64/include/asm/preempt.h
++++ b/arch/arm64/include/asm/preempt.h
+@@ -85,6 +85,7 @@ static inline bool should_resched(int preempt_offset)
+ void preempt_schedule(void);
+ void preempt_schedule_notrace(void);
+ 
++void raw_irqentry_exit_cond_resched(void);
+ #ifdef CONFIG_PREEMPT_DYNAMIC
+ 
+ DECLARE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+@@ -92,11 +93,14 @@ void dynamic_preempt_schedule(void);
+ #define __preempt_schedule()		dynamic_preempt_schedule()
+ void dynamic_preempt_schedule_notrace(void);
+ #define __preempt_schedule_notrace()	dynamic_preempt_schedule_notrace()
++void dynamic_irqentry_exit_cond_resched(void);
++#define irqentry_exit_cond_resched()	dynamic_irqentry_exit_cond_resched()
+ 
+ #else /* CONFIG_PREEMPT_DYNAMIC */
+ 
+ #define __preempt_schedule()		preempt_schedule()
+ #define __preempt_schedule_notrace()	preempt_schedule_notrace()
++#define irqentry_exit_cond_resched()	raw_irqentry_exit_cond_resched()
+ 
+ #endif /* CONFIG_PREEMPT_DYNAMIC */
+ #endif /* CONFIG_PREEMPTION */
 diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-index 8e597d32433d..94e4132213ce 100644
+index dceef4cb140b..1b4936d4cf6e 100644
 --- a/arch/arm64/kernel/entry-common.c
 +++ b/arch/arm64/kernel/entry-common.c
-@@ -289,10 +289,10 @@ DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
- #define need_irq_preemption()	(IS_ENABLED(CONFIG_PREEMPTION))
- #endif
- 
--static void __sched arm64_preempt_schedule_irq(void)
-+static inline bool arm64_preempt_schedule_irq(void)
- {
- 	if (!need_irq_preemption())
--		return;
-+		return false;
- 
- 	/*
- 	 * Note: thread_info::preempt_count includes both thread_info::count
-@@ -300,7 +300,7 @@ static void __sched arm64_preempt_schedule_irq(void)
- 	 * preempt_count().
- 	 */
- 	if (READ_ONCE(current_thread_info()->preempt_count) != 0)
--		return;
-+		return false;
- 
- 	/*
- 	 * DAIF.DA are cleared at the start of IRQ/FIQ handling, and when GIC
-@@ -309,7 +309,7 @@ static void __sched arm64_preempt_schedule_irq(void)
- 	 * DAIF we must have handled an NMI, so skip preemption.
- 	 */
- 	if (system_uses_irq_prio_masking() && read_sysreg(daif))
--		return;
-+		return false;
- 
- 	/*
- 	 * Preempting a task from an IRQ means we leave copies of PSTATE
-@@ -319,8 +319,10 @@ static void __sched arm64_preempt_schedule_irq(void)
- 	 * Only allow a task to be preempted once cpufeatures have been
- 	 * enabled.
- 	 */
--	if (system_capabilities_finalized())
--		preempt_schedule_irq();
-+	if (!system_capabilities_finalized())
-+		return false;
-+
-+	return true;
+@@ -281,19 +281,8 @@ static void noinstr arm64_exit_el1_dbg(struct pt_regs *regs,
+ 		lockdep_hardirqs_on(CALLER_ADDR0);
  }
  
- static void do_interrupt_handler(struct pt_regs *regs,
-@@ -591,7 +593,8 @@ static __always_inline void __el1_irq(struct pt_regs *regs,
+-#ifdef CONFIG_PREEMPT_DYNAMIC
+-DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+-#define need_irq_preemption() \
+-	(static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
+-#else
+-#define need_irq_preemption()	(IS_ENABLED(CONFIG_PREEMPTION))
+-#endif
+-
+ static inline bool arm64_preempt_schedule_irq(void)
+ {
+-	if (!need_irq_preemption())
+-		return false;
+-
+ 	/*
+ 	 * DAIF.DA are cleared at the start of IRQ/FIQ handling, and when GIC
+ 	 * priority masking is used the GIC irqchip driver will clear DAIF.IF
+@@ -576,6 +565,24 @@ static __always_inline void __el1_pnmi(struct pt_regs *regs,
+ 	arm64_exit_nmi(regs, state);
+ }
+ 
++void raw_irqentry_exit_cond_resched(void)
++{
++	if (!preempt_count()) {
++		if (need_resched() && arm64_preempt_schedule_irq())
++			preempt_schedule_irq();
++	}
++}
++
++#ifdef CONFIG_PREEMPT_DYNAMIC
++DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
++void dynamic_irqentry_exit_cond_resched(void)
++{
++	if (!static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
++		return;
++	raw_irqentry_exit_cond_resched();
++}
++#endif
++
+ static __always_inline void __el1_irq(struct pt_regs *regs,
+ 				      void (*handler)(struct pt_regs *))
+ {
+@@ -585,10 +592,8 @@ static __always_inline void __el1_irq(struct pt_regs *regs,
  	do_interrupt_handler(regs, handler);
  	irq_exit_rcu();
  
--	arm64_preempt_schedule_irq();
-+	if (arm64_preempt_schedule_irq())
-+		preempt_schedule_irq();
+-	if (!preempt_count() && need_resched()) {
+-		if (arm64_preempt_schedule_irq())
+-			preempt_schedule_irq();
+-	}
++	if (IS_ENABLED(CONFIG_PREEMPTION))
++		irqentry_exit_cond_resched();
  
  	exit_to_kernel_mode(regs, state);
+ }
+diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+index b82032777310..4aa9656fa1b4 100644
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -142,6 +142,20 @@ noinstr irqentry_state_t irqentry_enter(struct pt_regs *regs)
+ 	return ret;
+ }
+ 
++/**
++ * arch_irqentry_exit_need_resched - Architecture specific need resched function
++ *
++ * Invoked from raw_irqentry_exit_cond_resched() to check if need resched.
++ * Defaults return true.
++ *
++ * The main purpose is to permit arch to skip preempt a task from an IRQ.
++ */
++static inline bool arch_irqentry_exit_need_resched(void);
++
++#ifndef arch_irqentry_exit_need_resched
++static inline bool arch_irqentry_exit_need_resched(void) { return true; }
++#endif
++
+ void raw_irqentry_exit_cond_resched(void)
+ {
+ 	if (!preempt_count()) {
+@@ -149,7 +163,7 @@ void raw_irqentry_exit_cond_resched(void)
+ 		rcu_irq_exit_check_preempt();
+ 		if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
+ 			WARN_ON_ONCE(!on_thread_stack());
+-		if (need_resched())
++		if (need_resched() && arch_irqentry_exit_need_resched())
+ 			preempt_schedule_irq();
+ 	}
  }
 -- 
 2.34.1
