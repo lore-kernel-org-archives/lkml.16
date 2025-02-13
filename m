@@ -1,159 +1,119 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1CB24290D;
-	Thu, 13 Feb 2025 18:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9346D245011
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 18:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739470828; cv=none; b=Yi8J0sjP+24GDQ4UWy7dcFczJjmjWRUslEYahx9Hv//Ru+b2Yjz7RTj0KBVzU/XP2VTPYuQM4kkjPcCpQma/lD+9ofvZaC3iNHm9VRjt2wdn6oRnNhZ64+WGJxGQoLKQlNQhUlHHxcEB+oRuEWfJyD/vAwdA2eROIgoFJ42uQfE=
+	t=1739470837; cv=none; b=tnzUhcPy8JlTJH9z87sTJ0VI0slc8VY1Z7Q5kk9EoMP1MzRI30ug5gjXlMVfU6sXfXUzPoMDbpxyTnXbcLXum5sxo9pfZ6kuGIRrRzZBk58KWG0InvMOGasGc5/LjyZp+M0oIrvabsX34YFvR0W/HMRF3Ds7QH5JrG+pXQEXV+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739470828; c=relaxed/simple;
-	bh=nn1TJ96SmMsHE1+nkWEwcCwred9dzrqlVbvlr5vSZdk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OL0NZkHfy+ZFku5IZkIWeX7REtdbbergolYGF8vBcyN4kLn8lJBNrMfNEMAWe9mPKI6r+LcHf+PG6Rnq4PysgLoSZh+BBrwjEzPsmcEcOZ/clqliF8MLFyzunpK0JRYOyQIiKA78QyB2aWRcs+8+2du1HhTg8TJe/Zyb9CBl1Lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nopO/OdN; arc=none smtp.client-ip=209.85.160.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739470837; c=relaxed/simple;
+	bh=/LyGFbPE1BAmB++z38OZpHSq6dQ7FxIc5VWLCNL1wxM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K5x8revCP92YfiDqZNvdGisga2Ndv1jEIHZxSH02CSS+S3W4oLXNueerfd/1O3I0M1ybENyHOwfq/54IJn2ndQVpVv6mAiiI+8QgfBqIs7CR6LE6koEaHV3mc1Lobp48kzhnL8yJQ/4Csbkv3zsD+igm5MXpQimqZM28HfjMMyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BF3dlGVd; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nopO/OdN"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2b8a0c095cfso393836fac.0;
-        Thu, 13 Feb 2025 10:20:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BF3dlGVd"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d1925db9e7so8005ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 10:20:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739470825; x=1740075625; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1739470834; x=1740075634; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+ZBkaywCyi0GV8xxymyrGiudWcvm4XG/kArmEhEzir4=;
-        b=nopO/OdNGC1t0/YfTOH6hAFeBAkQxZiJwDaq3VVGbMHpiLhNRCR8eVxw/rKbTdhtdD
-         Y13GWsnbh1iVYeqKSSgrQq04RbqpTctYv0/gO0KZ0jr60aUgZDjriuO4BRz6daARF+Fs
-         8pVELf11GELCbzy58nID5qkDkV5O4G7V9/7/1d4gtYaNF3Z3w7p0s0mWgqNV3Bbr4aUu
-         21jJNxOY/3rZLFy/Sj0euuy5ZXhVE/5XKMgmlJJDsIdGYbBBdCkm8e8UcTKbav+DaaPB
-         /j5cScGWCcvRAWE5KOWu3FiiFz/BYRlOMSnr9peYh+flyF2F0H12invgcjksUwrRjIfM
-         9/Dw==
+        bh=d5Yi8A4+6Jiha2cMKDJFdE3ONJ7D37Fd1pQ+hUL3DkA=;
+        b=BF3dlGVdcRl9DT7czH2XHbCT00Wo5+vx2GcQrf0auN2HyHFmLi+VPGCFQRIdaC51pC
+         joCYbwSTGm+AXpKwRXlofMG3gd4iwbytrS+vKPAYIdAcH71dqPMPCsQMDyTo/uIO/Ink
+         8cTsFmI9DSfRJys6gf0isMbNrhapMbWc95YwRfHHPoMfMk8DpbwAM4fy8EQc3pdoCj+a
+         8XDKN7OfBFZs0JSAMdQY+bac7tNz9UvY7N6l2Vag5XKA/IeWtfn1mTm7lpxzvVjWg5OE
+         3FWoY42IcivGalcb7Sq0s4rLic2ZJjMS0crdoF5GJKFn/Wxslg2z+mfBY6wESAkkyX9D
+         o7/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739470825; x=1740075625;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739470834; x=1740075634;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+ZBkaywCyi0GV8xxymyrGiudWcvm4XG/kArmEhEzir4=;
-        b=TpdzD2vF/7kxnRqm48joJHlHKSVjcDqxy9Nah1otsgFGVl75veO5GbAW9PozA4VYSn
-         mjS6x8yvRgylVVxqpZjH843D0OrhwfgvpqqhRgW1QQadGGVRJLwiocqU/AZHkkLltr37
-         fMRPXbxh8/E3x9MjPZyFk3vIX5C3rKfBzQzbfwno8ofWD2cQnCw0+wLWvu0oATxdDjy4
-         eub/aglkxY6VhuuetwQLT8smLTwN77Ti1ehSqtLERh25SC1oRJG1G8tNzMCiCZ4m2KvT
-         mWnyOjLIwWEkX6WuA8Ycn6i4dMaA2M+a7RiaicAtfoafPQOP5oRCio3DqkfS+i03wmaM
-         NmCg==
-X-Forwarded-Encrypted: i=1; AJvYcCULUxXkRfQBSrN5B25Ixg/AUtDrmE4Dh0Nz59ZCb2vj4W2isTkBZ3HApmRlEfJcecXCZiODfxOHkDm5f2lCGk0=@vger.kernel.org, AJvYcCXC841l0VTt73pRJ1+vWv+tu530FL8mhV57lEpV29IgdYEVM9C+JZFYsYCk3ZGqpnbS3HMyiLNz1zciSqQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yywa94tq9HvIMqrCr3u2l6XVZv1yRG+LpKokQ4idplvtYIOqmrp
-	vG/2qRBthlA+HmqRdhZ07vrEKamqEADf1ejuQgk+3P8XhnsgEKQC
-X-Gm-Gg: ASbGnctDBp/94zyfLibbxRMrJCB32051XPrBNPfkM5yjN8fSCsnjLMvHQXPJpJGdH/v
-	M/Fx5xcAMc6Fs1PJd/u/u+rXOMT/gyESFvsLw3W1xWFvMTEeBoPnXPCNCa09NAai0PI/VcLxK31
-	oaeoewNyhVxEqX0RR1+4fEfmtogBlwnaxnV0gJsLj6UIrB9RdXxc+qaGkYrj97FYWJ9gLuuizYl
-	HUskf67xVLuQZnKfVB4b8g5MWAax5b/miMt3EzalWZbPNeVw508ryUla2ntbzVuaeXn0OZWwgoQ
-	9/0Wcy1bCiCMxy4Pi0MIjWhD
-X-Google-Smtp-Source: AGHT+IEucI6lp69xUj1WajbwijNWxr0LzFbCbo1FprtVZD6slif9HEyP13Do0/QOH9cwUaQ6O4DxEg==
-X-Received: by 2002:a05:6870:aa86:b0:29e:7a13:1341 with SMTP id 586e51a60fabf-2b8f8ab8101mr2432533fac.8.1739470825534;
-        Thu, 13 Feb 2025 10:20:25 -0800 (PST)
-Received: from linuxsimoes.. ([187.120.154.251])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2bc659995d3sm575069fac.22.2025.02.13.10.20.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 10:20:24 -0800 (PST)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: joe@perches.com
-Cc: a.hindborg@kernel.org,
-	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	apw@canonical.com,
-	arnd@arndb.de,
-	aswinunni01@gmail.com,
-	axboe@kernel.dk,
-	benno.lossin@proton.me,
-	bhelgaas@google.com,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	dakr@kernel.org,
-	dwaipayanray1@gmail.com,
-	ethan.twardy@gmail.com,
-	fujita.tomonori@gmail.com,
-	gary@garyguo.net,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	lukas.bulwahn@gmail.com,
-	ojeda@kernel.org,
-	pbonzini@redhat.com,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu,
-	trintaeoitogc@gmail.com,
-	walmeida@microsoft.com
-Subject: Re: [PATCH 3/3] checkpatch: throw error in malformed arrays
-Date: Thu, 13 Feb 2025 15:20:11 -0300
-Message-Id: <20250213182011.201234-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <3a6b43bad48592887d4e67ca854eef2728464b1c.camel@perches.com>
-References: <3a6b43bad48592887d4e67ca854eef2728464b1c.camel@perches.com>
+        bh=d5Yi8A4+6Jiha2cMKDJFdE3ONJ7D37Fd1pQ+hUL3DkA=;
+        b=SzuuW4pMTkBs6Zbkmq3V872JM8aKzq1NT25QjRcsbBhf5brIShGltToiQga+RpvJzj
+         Uj5ZgJhmrSfLU5aWqOIJS6Y2O2h1eiJ2nLWnqIekuSUfb7mh7lD/kemeDQCTqgBBG71m
+         WG2JtImMrwQ4vlxcKb9Js5cfff+1FlukMZbw7JdEnS2H8FGdq+ngLQcI1wQ+0Gk/Cqoc
+         VeeJigFcvXQiIbBDZst+GWA2+NgVtFXEY/ze5KnlCrw3KU1pALeku9aG5Dj/PgCM3VmG
+         l6hZWjTJB0CeRb6iVMjm3E7N8QH5UnsIDljun/1fin05KlSoQ/kX2q/mr9sFbRzrJ3wN
+         d6UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUF8tR+nKcNpyObBw+o1nfsUvP6rM0v5wWbrMxfAh1/RcC3LoIGR3xH/K9iQmQ+xp34q1Rj874YXph+au4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzVRqMFFaD3ifjlQiMRCQWqTEm6mDH3KM1+gK/5PPaYWRPus5v
+	1ZTyjm0+wKXMyy8bZ6aW0a50Rl+nR01OXKYZdztfo8q6IfRYbPgIj0oZAcSu0127QGaR8XB3oQ1
+	5X+uW2wHmt5oZ15bhlcfuKp6S4edu/x1xynjv4cH/ect3xRe1gEW0
+X-Gm-Gg: ASbGnctmeFV6+XZGYM6NbuMT9RBvEslZ322vtGDX54TvOWeGjxXTCM3T7mb4QDgG85K
+	5SFSJzhC+Mi/dhTlbFmNSNxOnacwr7YnR1Wh+GKVgAf99Ha8N2OKeOgV5muJbE7fj9RNTpU0Hse
+	uA7GLtRvC0fDAvJ7GizvlNS2W3
+X-Google-Smtp-Source: AGHT+IE/SiI13+b7bF+C4AfY+GjkVCmV2TCoGjBbfEPBrkZXoZpHcK6Pj2DJbKttS1cXo3XAtbnSEyYT2uGv8O9+aIY=
+X-Received: by 2002:a05:6e02:308d:b0:3ce:46e2:42c7 with SMTP id
+ e9e14a558f8ab-3d18e265567mr4170575ab.13.1739470834440; Thu, 13 Feb 2025
+ 10:20:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAOQCU67EsHyw_FsqGbRuityahZTSAtWzffU=hLUJ7K=aZ=1hhA@mail.gmail.com>
+ <CAP-5=fW94Q2i4EHGoM7kczTZUsfmD4nK4sAjVtcLzqZy29Quxg@mail.gmail.com> <CAOQCU67xtf4ndP2fo6fFxgsb7q_6uUooHQK4mb+Xi4fZR_ir0g@mail.gmail.com>
+In-Reply-To: <CAOQCU67xtf4ndP2fo6fFxgsb7q_6uUooHQK4mb+Xi4fZR_ir0g@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 13 Feb 2025 10:20:23 -0800
+X-Gm-Features: AWEUYZl_wnASXQm9eB-3X2u_vxgEDQP_7aR4Fco6U72vV9FWxU9cBPy7bFLQors
+Message-ID: <CAP-5=fVqCUYrMDac520c1AvwGXmBRstGTZEeY8VeC=0hoCBrEg@mail.gmail.com>
+Subject: Re: perf: Question about machine__create_extra_kernel_maps and
+ trampoline symbols
+To: =?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Joe Perches <joe@perches.com> wrotes:
-> Isn't this is a style desire not a parsing limitation?
-Yes.
+On Thu, Feb 13, 2025 at 10:17=E2=80=AFAM Krzysztof =C5=81opatowski
+<krzysztof.m.lopatowski@gmail.com> wrote:
+>
+> Hi Ian,
+>
+> > We do have a kallsyms parsing benchmark:
+>
+> Yes, I've looked at `perf bench internals kallsyms-parse`. It returns for=
+ me
+>     Average kallsyms__parse took: 99,994 ms (+- 0,199 ms)
+> However, this benchmark only measures the raw parsing speed of the kallsy=
+ms
+> file, without any of the symbol processing that happens in real usage.
+>
+> > I was curious to know if the regression is also visible there?
+>
+> You can call it a regression if you mean from 2018 ;-)
+> I gave measurements at the top to give a sense of scale and show it's not
+> an already solved problem.
+>
+> The core issue is that we're calling 'kallsyms__parse' multiple times, wh=
+en
+> we could likely consolidate these calls since most of the overhead comes
+> from reading and parsing, not from processing the symbols.
+>
+> Notably, the third call I mentioned (in machine__create_extra_kernel_maps=
+)
+> accounts for about half of the total kallsyms parsing time, yet appears t=
+o
+> have no effect on my test system. This is why I'm questioning whether we
+> need to keep this functionality.
+>
+> Ultimately, I believe we should explore ways to avoid reading /proc/kalls=
+yms
+> altogether, given how expensive this operation is.
 
-> Probably not useful to add hungarian style naming.
-hungarian style naminng ? Do you think that is better `array_parse_module` ?
-
-> \s*.* could be just .*
-> 
-> > +			$inline = 1;
-> > +
-> > +			if ($line =~ /author/) {
-> > +				$parse_module_arr{'author'} = 1;
-> > +			}
-> > +
-> > +			if ($line =~ /alias/) {
-> > +				$parse_module_arr{'alias'} = 1;
-> > +			}
-> > +
-> > +			if ($line =~ /firmware/) {
-> > +				$parse_module_arr{'firmware'} = 1;
-> > +			}
-> 
-> $parse_module_arr{$1} = 1;
-hmm, ok thanks.
-
-> > +			if ($line =~ $more_than_one_vl) {
-> > +					ERROR("ERR_ARRAY_MODULE_MACRO",
-> > +						"the key $key have more than one values in same line\n$here\n". cat_vet($rawline));
-> 
-> "Prefer one value per line\n"
-> 
-> ERR_ error prefixes are not useful.
-> These seem more like a WARN than an ERROR
-> Bad indentation
-> And please use a $herevet temporary
-> 
-> 
-> > +			}
-> > +			elsif ($inline && $line !~ /\]/ && $line =~ /\["/) {
-> > +					ERROR("ERR_ARRAY_MODULE_MACRO",
-> > +						qq~the key $key need a new line after declare the key\n$here\n~ . cat_vet($rawline) . qq~\nFor example:
-> 
-> Use } elsif
-> 
-> "Prefer declaring keys on separate lines"
-> 
-> Are quote characters allowed in keys?
-> If not, this seems unnecessarily complicated.
-> 
-> $herevet
-> 
-> I think the qq is unnecessary and the for example
-> should refer to some style documentation and not
-> be explicit in checkpatch.
-Okay, I will submit a v2 with your hints
+Agreed. We had similar expensive operations in event parsing and that
+has now largely been made lazy - so you can craft your command line to
+not require all the costs. I can't answer your question but it seems
+adding the symbol processing to the benchmark would have value.
 
 Thanks,
-Guilherme
+Ian
