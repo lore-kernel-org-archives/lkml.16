@@ -1,157 +1,338 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6F921D3E8;
-	Thu, 13 Feb 2025 11:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F26221D3E9;
+	Thu, 13 Feb 2025 11:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739445581; cv=none; b=EfW3vj2pLAqx3L5D+G8ewwU25sCVI4NU6nelBkl18KeEArhb6V2B8I1bzZUNOcnw9Kb+PF21cF5QT3A9Cozo4XAY/+YuDYvFMpx3VrjfDsetp2TmVkhUqpTzl1nzDC2tsTmyOc10R/j/UVGw6glPQteotaaBvuFmlCzbUwe3bSY=
+	t=1739445581; cv=none; b=MKyCKkGsSPaIt/2L52AB7OemLGU5CG0aSzZbUTjME5ATVtQQ0v7h+lAskL5DPxK6NqaC79pOIti+L4MxzJ2zOj+ykoNTjsVGMQgXRfEo7f3h7oL9EyQXdwAjXu59/nQpOPhNbKPJ3MKgYmqu46b+RXqeluhi7e0PVG4PAPDHmuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739445581; c=relaxed/simple;
-	bh=PPRujci8tehuD+R56FULZVH8pZlNtu9IzdM/CxcRGws=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VIMLZ0pjfW753oDOONRHpyo+my+XT5Pxn1wa/lF4jM5ZH1N1YwHH4W9+AoFxotmNhva0y57YlhgNmMuHQt1NrG+JM0zL3mTgN8Th4dt2qsEnC9SD9uhuOLHs5QqBZIMwIAIOH6SC8UGtoGdo7YopMY7owap+BqtiRfwkk7cjU5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=li2AQ3Ln; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	bh=VVhA35UgQ4EjgRH1273ow+5alTEwIxmTUO6BAj3/0hA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qslQYCBJsXYY0L10MneiGLsgjhXOx1P1uDJBt1kE3tbAVXtuj8rluLpITf5UZZmUXYq/FTjM6iYJVPZx9nsYYzhG1JgtYoV441ihVP4eFb/lFGo8zDr6+7lLezLLz7HlsgEmwLW3RHFqPM2gi2rLadEWIA5hYmmtI3N14ItKJA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lC/Ab5sz; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="li2AQ3Ln"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1739445565; x=1740050365; i=ps.report@gmx.net;
-	bh=PPRujci8tehuD+R56FULZVH8pZlNtu9IzdM/CxcRGws=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=li2AQ3Lnu2K2BqEupAnNIjYnHIF15uOWvTCWqBHeSCiO8ehQwpq7G2AlQAD4+xy+
-	 kdahvmiN1OOwvcrXu3C5hMX/qOiRJt51ST4tKX4Bc/1JiAVj4q25vn99GfOjP36N3
-	 cQ0Nj8eyJXwI+vjUMaIZMFDGU3uHyARhDP7ikwfWDQKO2rBrScrOM6PtdSwmXc8s5
-	 5/b3KhBYOl5LpREZUpU8XNX15BxEufK9rlPYmoMAO9kQrxrLWi/LIl8/V4KCqCfTg
-	 krWtNqxHP8bbohIfSgPwEEsuzRRAiOT//yFiZ+/1gTDL23JTH6vwu2RvQ3Ffz8z5s
-	 oApVVMtHgn0dDUu+zw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.fritz.box ([82.135.81.197]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N2mBa-1tEfcP16aa-016c3T; Thu, 13
- Feb 2025 12:19:25 +0100
-From: Peter Seiderer <ps.report@gmx.net>
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Peter Seiderer <ps.report@gmx.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Artem Chernyshev <artem.chernyshev@red-soft.ru>,
-	Nam Cao <namcao@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH net-next v5 1/8] net: pktgen: fix mix of int/long
-Date: Thu, 13 Feb 2025 12:19:13 +0100
-Message-ID: <20250213111920.1439021-2-ps.report@gmx.net>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lC/Ab5sz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739445572;
+	bh=VVhA35UgQ4EjgRH1273ow+5alTEwIxmTUO6BAj3/0hA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lC/Ab5szm2bjYLMRdo2NwKIc4yP96pKFqC/r+kjQYzHzMkPDYzTGyJcngvjRTEPPH
+	 vsy9t12N+qBdKAtMkogaiMu9dIlnc2DVhbWzUt/giiyk+OPfWh9s7qBPUs63XkSuos
+	 3yzObN7Q2sbf11WZMsVyQkBtP03wxLw9fDexGMsaW2KOciy01cWEltIdwW8jTrzFj4
+	 n+A7gwicu0AePss2sNH3wXG8wXxv6pP1ppx2eoopHLBbLdrJgSzhhA+6eu88TcsNg0
+	 hIMNw6MJsshTz+RJ9EIn3eg+JhzACCPxqoHDmrzWEQ/kIbTu21aRvEoqupoQ/7mNQX
+	 kyKp9T1y0ZR9g==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id CAF1A17E0E93;
+	Thu, 13 Feb 2025 12:19:31 +0100 (CET)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: matthias.bgg@gmail.com
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	angelogioacchino.delregno@collabora.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	kernel@collabora.com,
+	pablo.sun@mediatek.com
+Subject: [PATCH] arm64: dts: mediatek: mt8188: Add MTU3 nodes and correctly describe USB
+Date: Thu, 13 Feb 2025 12:19:28 +0100
+Message-ID: <20250213111928.56259-1-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250213111920.1439021-1-ps.report@gmx.net>
-References: <20250213111920.1439021-1-ps.report@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:VaU+mn2E25mkSpJg8l+UeQBYipo3hq2Fw+UVGOWrdklO1R8Dett
- SLHWuHFLoQgPUv0MXY/3dPOVJUI+7pAQ2HWI2NNMgK1G7KtQ+pHtt8g4LbtuqpjW86Yyigm
- j00BnwDf8K+70pZbmIk42AHKkIX1bTY8UIybDbWfufNJ0vLk6DKJxeq1AiSsbCkzhk6YF10
- OYK1QpnBhnVX1ykAigJiw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:P0ApSs0MSjQ=;uCOnJJF/QvqPlD+n39NoqMXmVLS
- eM5EWb0Ud6xyEV3W8w/grya8xA9V41C45L4wdxBJCT2CuB1AylAxQED28stme8xWHu6Mm0kmG
- OpibkqglQPf01Ogn6u/hZq/XCKb1NHLIYsRFGuD0U0Hiwtw3xuFfXzVFw0ZVb6d2JpAUixNN6
- NnW4c7KLEErKDy0uz+nbU5cxOu6toJpTPs+TnDFf+XudgboDGPkPB7B/mjYBxOsPh5FgZQZSJ
- fF7JX4+pJQBUHgAl7J09Yis1ubqLHWazN6MJfHoysovULwxOE64TPJd+NDSqx2BlAYHvAGkDD
- 1jezLWMAFsNQjjFcsYvDUTmK0ukU2MA6Y6s/i7bc83Sal8DnDzPWRU50IjNe8R7BEcreo8yKL
- FzmvAJJ47rM6vKfTrMDdLsjpZDp4mLC539eRLNYsfVGeMDWj07GhU1FSBVdQGfAZR0gsmhHcd
- 1mK0lNeMm8bkVPJqM6irDjQNbeWiI6LvxECQUHusEf/FGX5QThWRKGEKPupkdnGfVtz+v0yTh
- yUixr8IIwn/H+7d97p6SluJKrbMuv92oJkyXltU7Hf4+QQbyl0zobqldJ3QQQkwgcqWQVeWsE
- 6XsS5bypImJg+628k9D/hILPVQBVRMCh22DW4ttu+Dfft7vQiycEb/jfbfjHnPauBZj5ys+Z1
- 7Qci0wxw3FNSVF14/jjihXgiii345SWM3gMhIyoM5HtBOlUuNWHGKtKEabn4iE56M+CtCdr36
- QNGmvgIFZuU7UBvgEmvlgasOh67X59Poskvr1AnWEl+E/NtoWtHHsRhpJWIhzbJogtJe8Iwdt
- GX1yYpAAN/tFm/hPU2c7WlOIKqML7bOESsuGKoRbFQtyuVCYwoSOaGxEtkODOWM6JcPY3yhv6
- pCzyfPaAPKr9os/FrsRG1DPw0xaZKbbpL9u2ZXP9U4ruoPC1+/QBnFaJankEpUUkYnXH/lP+7
- 9DrcwdNzs3ISz5Plks3KqPIhP6kKnyc9E65OgW5ECMhgrrZ0rjHmteX34Mx0v5gV2HLlJvtvD
- obdruaQsgxkhmBy4fGPArauSXJOey3mIViIAVJohcUvMvC+uyHBh+bQkxmW1FVRUfpqW2Fnsj
- UstRLggHIsyVj/Fh9aHwDXqVSCKYWgHCt7xEz8MiyMP6Lcy53cmSaQtVbJmDixsP9rMYCrFCi
- xdRL5gkGqMaJnaB4A5qcC05pvM7V78KS68SU2dEjL48YPBad0zZ42qFFKvViRT7Y6naMjcBy8
- RuhECNp2BEbGRPjGPUvyuS0MM+VPaFodHtDY/8bsyXQInZg8Upf8B3Rbf1X/lO+9/Nn/Mw7/H
- An6mVSRfgHmbrv74iX2FMR8pAeuxfpYVQ0XmECTbxu3A9GL0S1aOveqb7GiZgDlQ3tsFwDxcG
- mx2FPFWRzS3zqEhMdiyY5/GYqcNXmKr7is5DZkPtrdzeZHdP7nuMLoC9kw
+Content-Transfer-Encoding: 8bit
 
-Rml4IG1peCBvZiBpbnQvbG9uZyAoYW5kIG11bHRpcGxlIGNvbnZlcnNpb24gZnJvbS90bykgYnkg
-dXNpbmcgY29uc2VxdWVudGx5CnNpemVfdCBmb3IgaSBhbmQgbWF4IGFuZCBzc2l6ZV90IGZvciBs
-ZW4gYW5kIGFkanVzdCBmdW5jdGlvbiBzaWduYXR1cmVzCm9mIGhleDMyX2FyZygpLCBjb3VudF90
-cmFpbF9jaGFycygpLCBudW1fYXJnKCkgYW5kIHN0cm5fbGVuKCkgYWNjb3JkaW5nbHkuCgpTaWdu
-ZWQtb2ZmLWJ5OiBQZXRlciBTZWlkZXJlciA8cHMucmVwb3J0QGdteC5uZXQ+Ci0tLQpDaGFuZ2Vz
-IHY0IC0+IHY1CiAgLSBzcGxpdCB1cCBwYXRjaHNldCBpbnRvIHBhcnQgaS9paSAoc3VnZ2VzdGVk
-IGJ5IFNpbW9uIEhvcm1hbikKICAtIGluc3RlYWQgb2YgYWxpZ24gdG8gbW9zdCBjb21tb24gcGF0
-dGVybiAoaW50KSBhZGp1c3QgYWxsIHVzYWdlcyB0bwogICAgc2l6ZV90IGZvciBpIGFuZCBtYXgg
-YW5kIHNzaXplX3QgZm9yIGxlbiBhbmQgYWRqdXN0IGZ1bmN0aW9uIHNpZ25hdHVyZXMKICAgIG9m
-IGhleDMyX2FyZygpLCBjb3VudF90cmFpbF9jaGFycygpLCBudW1fYXJnKCkgYW5kIHN0cm5fbGVu
-KCkgYWNjb3JkaW5nbHkKICAtIHJlc3BlY3QgcmV2ZXJzZSB4bWFzIHRyZWUgb3JkZXIgZm9yIGxv
-Y2FsIHZhcmlhYmxlIGRlY2xhcmF0aW9ucyAod2hlcmUKICAgIHBvc3NpYmxlIHdpdGhvdXQgdG9v
-IG11Y2ggY29kZSBjaHVybikKICAtIHVwZGF0ZSBzdWJqZWN0IGxpbmUgYW5kIHBhdGNoIGRlc2Ny
-aXB0aW9uCiAgLSBmaXggY2hlY2twYXRjaCB3YXJuaW5nICciZm9vICogYmFyIiBzaG91bGQgYmUg
-ImZvbyAqYmFyIicgZm9yCiAgICBjb3VudF90cmFpbF9jaGFycygpIGFuZCBzdHJuX2xlbigpCgpD
-aGFuZ2VzIHYzIC0+IHY0CiAgLSBuZXcgcGF0Y2ggKGZhY3RvcmVkIG91dCBvZiBwYXRjaCAnbmV0
-OiBwa3RnZW46IGZpeCBhY2Nlc3Mgb3V0c2lkZSBvZiB1c2VyCiAgICBnaXZlbiBidWZmZXIgaW4g
-cGt0Z2VuX2lmX3dyaXRlKCknKQotLS0KIG5ldC9jb3JlL3BrdGdlbi5jIHwgMzcgKysrKysrKysr
-KysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDIwIGluc2VydGlv
-bnMoKyksIDE3IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL25ldC9jb3JlL3BrdGdlbi5jIGIv
-bmV0L2NvcmUvcGt0Z2VuLmMKaW5kZXggNGYyMDFhMmRiMmRjLi4zNmVlMDQyMmM2Y2MgMTAwNjQ0
-Ci0tLSBhL25ldC9jb3JlL3BrdGdlbi5jCisrKyBiL25ldC9jb3JlL3BrdGdlbi5jCkBAIC03NTUs
-MTAgKzc1NSwxMSBAQCBzdGF0aWMgaW50IHBrdGdlbl9pZl9zaG93KHN0cnVjdCBzZXFfZmlsZSAq
-c2VxLCB2b2lkICp2KQogfQogCiAKLXN0YXRpYyBpbnQgaGV4MzJfYXJnKGNvbnN0IGNoYXIgX191
-c2VyICp1c2VyX2J1ZmZlciwgdW5zaWduZWQgbG9uZyBtYXhsZW4sCi0JCSAgICAgX191MzIgKm51
-bSkKK3N0YXRpYyBzc2l6ZV90IGhleDMyX2FyZyhjb25zdCBjaGFyIF9fdXNlciAqdXNlcl9idWZm
-ZXIsIHNpemVfdCBtYXhsZW4sCisJCQkgX191MzIgKm51bSkKIHsKLQlpbnQgaSA9IDA7CisJc2l6
-ZV90IGkgPSAwOworCiAJKm51bSA9IDA7CiAKIAlmb3IgKDsgaSA8IG1heGxlbjsgaSsrKSB7CkBA
-IC03NzcsMTAgKzc3OCwxMCBAQCBzdGF0aWMgaW50IGhleDMyX2FyZyhjb25zdCBjaGFyIF9fdXNl
-ciAqdXNlcl9idWZmZXIsIHVuc2lnbmVkIGxvbmcgbWF4bGVuLAogCXJldHVybiBpOwogfQogCi1z
-dGF0aWMgaW50IGNvdW50X3RyYWlsX2NoYXJzKGNvbnN0IGNoYXIgX191c2VyICogdXNlcl9idWZm
-ZXIsCi0JCQkgICAgIHVuc2lnbmVkIGludCBtYXhsZW4pCitzdGF0aWMgc3NpemVfdCBjb3VudF90
-cmFpbF9jaGFycyhjb25zdCBjaGFyIF9fdXNlciAqdXNlcl9idWZmZXIsCisJCQkJIHNpemVfdCBt
-YXhsZW4pCiB7Ci0JaW50IGk7CisJc2l6ZV90IGk7CiAKIAlmb3IgKGkgPSAwOyBpIDwgbWF4bGVu
-OyBpKyspIHsKIAkJY2hhciBjOwpAQCAtODAyLDEwICs4MDMsMTAgQEAgc3RhdGljIGludCBjb3Vu
-dF90cmFpbF9jaGFycyhjb25zdCBjaGFyIF9fdXNlciAqIHVzZXJfYnVmZmVyLAogCXJldHVybiBp
-OwogfQogCi1zdGF0aWMgbG9uZyBudW1fYXJnKGNvbnN0IGNoYXIgX191c2VyICp1c2VyX2J1ZmZl
-ciwgdW5zaWduZWQgbG9uZyBtYXhsZW4sCi0JCQkJdW5zaWduZWQgbG9uZyAqbnVtKQorc3RhdGlj
-IHNzaXplX3QgbnVtX2FyZyhjb25zdCBjaGFyIF9fdXNlciAqdXNlcl9idWZmZXIsIHNpemVfdCBt
-YXhsZW4sCisJCSAgICAgICB1bnNpZ25lZCBsb25nICpudW0pCiB7Ci0JaW50IGk7CisJc2l6ZV90
-IGk7CiAJKm51bSA9IDA7CiAKIAlmb3IgKGkgPSAwOyBpIDwgbWF4bGVuOyBpKyspIHsKQEAgLTgy
-MSw5ICs4MjIsOSBAQCBzdGF0aWMgbG9uZyBudW1fYXJnKGNvbnN0IGNoYXIgX191c2VyICp1c2Vy
-X2J1ZmZlciwgdW5zaWduZWQgbG9uZyBtYXhsZW4sCiAJcmV0dXJuIGk7CiB9CiAKLXN0YXRpYyBp
-bnQgc3Rybl9sZW4oY29uc3QgY2hhciBfX3VzZXIgKiB1c2VyX2J1ZmZlciwgdW5zaWduZWQgaW50
-IG1heGxlbikKK3N0YXRpYyBzc2l6ZV90IHN0cm5fbGVuKGNvbnN0IGNoYXIgX191c2VyICp1c2Vy
-X2J1ZmZlciwgc2l6ZV90IG1heGxlbikKIHsKLQlpbnQgaTsKKwlzaXplX3QgaTsKIAogCWZvciAo
-aSA9IDA7IGkgPCBtYXhsZW47IGkrKykgewogCQljaGFyIGM7CkBAIC04NTMsOCArODU0LDggQEAg
-c3RhdGljIGludCBzdHJuX2xlbihjb25zdCBjaGFyIF9fdXNlciAqIHVzZXJfYnVmZmVyLCB1bnNp
-Z25lZCBpbnQgbWF4bGVuKQogc3RhdGljIHNzaXplX3QgZ2V0X2ltaXhfZW50cmllcyhjb25zdCBj
-aGFyIF9fdXNlciAqYnVmZmVyLAogCQkJCXN0cnVjdCBwa3RnZW5fZGV2ICpwa3RfZGV2KQogewot
-CWludCBpID0gMDsKLQlsb25nIGxlbjsKKwlzaXplX3QgaSA9IDA7CisJc3NpemVfdCBsZW47CiAJ
-Y2hhciBjOwogCiAJcGt0X2Rldi0+bl9pbWl4X2VudHJpZXMgPSAwOwpAQCAtOTAzLDkgKzkwNCw5
-IEBAIHN0YXRpYyBzc2l6ZV90IGdldF9pbWl4X2VudHJpZXMoY29uc3QgY2hhciBfX3VzZXIgKmJ1
-ZmZlciwKIHN0YXRpYyBzc2l6ZV90IGdldF9sYWJlbHMoY29uc3QgY2hhciBfX3VzZXIgKmJ1ZmZl
-ciwgc3RydWN0IHBrdGdlbl9kZXYgKnBrdF9kZXYpCiB7CiAJdW5zaWduZWQgaW50IG4gPSAwOwor
-CXNpemVfdCBpID0gMDsKKwlzc2l6ZV90IGxlbjsKIAljaGFyIGM7Ci0Jc3NpemVfdCBpID0gMDsK
-LQlpbnQgbGVuOwogCiAJcGt0X2Rldi0+bnJfbGFiZWxzID0gMDsKIAlkbyB7CkBAIC05NjQsNyAr
-OTY1LDggQEAgc3RhdGljIHNzaXplX3QgcGt0Z2VuX2lmX3dyaXRlKHN0cnVjdCBmaWxlICpmaWxl
-LAogewogCXN0cnVjdCBzZXFfZmlsZSAqc2VxID0gZmlsZS0+cHJpdmF0ZV9kYXRhOwogCXN0cnVj
-dCBwa3RnZW5fZGV2ICpwa3RfZGV2ID0gc2VxLT5wcml2YXRlOwotCWludCBpLCBtYXgsIGxlbjsK
-KwlzaXplX3QgaSwgbWF4OworCXNzaXplX3QgbGVuOwogCWNoYXIgbmFtZVsxNl0sIHZhbHN0clsz
-Ml07CiAJdW5zaWduZWQgbG9uZyB2YWx1ZSA9IDA7CiAJY2hhciAqcGdfcmVzdWx0ID0gTlVMTDsK
-QEAgLTE4OTEsNyArMTg5Myw4IEBAIHN0YXRpYyBzc2l6ZV90IHBrdGdlbl90aHJlYWRfd3JpdGUo
-c3RydWN0IGZpbGUgKmZpbGUsCiB7CiAJc3RydWN0IHNlcV9maWxlICpzZXEgPSBmaWxlLT5wcml2
-YXRlX2RhdGE7CiAJc3RydWN0IHBrdGdlbl90aHJlYWQgKnQgPSBzZXEtPnByaXZhdGU7Ci0JaW50
-IGksIG1heCwgbGVuLCByZXQ7CisJc2l6ZV90IGksIG1heDsKKwlzc2l6ZV90IGxlbiwgcmV0Owog
-CWNoYXIgbmFtZVs0MF07CiAJY2hhciAqcGdfcmVzdWx0OwogCi0tIAoyLjQ4LjEKCg==
+The MT8188 SoC has three USB controllers, and all of them are behind
+the MTU3 DRD controller.
+
+Add the missing MTU3 nodes, default disabled, for all USB controllers
+and move the related XHCI nodes to be children of their MTU3 DRD to
+correctly describe the SoC.
+
+In order to retain USB functionality on all of the MT8188 and MT8390
+boards, also move the vusb33 supply and enable the relevant MTU3 nodes
+with special attention to the MT8188 Geralt Chromebooks, where it was
+necessary to set the dr_mode of all MTU3 controllers to host to avoid
+interfering with the EC performing DRD on its own.
+
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ .../boot/dts/mediatek/mt8188-geralt.dtsi      |  18 +++
+ arch/arm64/boot/dts/mediatek/mt8188.dtsi      | 121 ++++++++++++------
+ .../dts/mediatek/mt8390-genio-700-evk.dts     |  28 ++++
+ 3 files changed, 125 insertions(+), 42 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi b/arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi
+index b6abecbcfa81..faed5c8bc721 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi
+@@ -1103,6 +1103,12 @@ &u3phy2 {
+ };
+ 
+ /* USB detachable base */
++&ssusb0 {
++	dr_mode = "host";
++	vusb33-supply = <&pp3300_s3>;
++	status = "okay";
++};
++
+ &xhci0 {
+ 	/* controlled by EC */
+ 	vbus-supply = <&pp3300_z1>;
+@@ -1110,6 +1116,12 @@ &xhci0 {
+ };
+ 
+ /* USB3 hub */
++&ssusb1 {
++	dr_mode = "host";
++	vusb33-supply = <&pp3300_s3>;
++	status = "okay";
++};
++
+ &xhci1 {
+ 	vusb33-supply = <&pp3300_s3>;
+ 	vbus-supply = <&pp5000_usb_vbus>;
+@@ -1117,6 +1129,12 @@ &xhci1 {
+ };
+ 
+ /* USB BT */
++&ssusb2 {
++	dr_mode = "host";
++	vusb33-supply = <&pp3300_s3>;
++	status = "okay";
++};
++
+ &xhci2 {
+ 	/* no power supply since MT7921's power is controlled by PCIe */
+ 	/* MT7921's USB BT has issues with USB2 LPM */
+diff --git a/arch/arm64/boot/dts/mediatek/mt8188.dtsi b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
+index f324d5f57789..ce676b0465d4 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8188.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
+@@ -1650,6 +1650,38 @@ spi5: spi@11019000 {
+ 			status = "disabled";
+ 		};
+ 
++		ssusb1: usb@11201000 {
++			compatible = "mediatek,mt8188-mtu3", "mediatek,mtu3";
++			reg = <0 0x11201000 0 0x2dff>, <0 0x11203e00 0 0x0100>;
++			reg-names = "mac", "ippc";
++			ranges = <0 0 0 0x11200000 0 0x3f00>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			interrupts-extended = <&gic GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH 0>;
++			assigned-clocks = <&topckgen CLK_TOP_USB_TOP>;
++			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>;
++			clocks = <&pericfg_ao CLK_PERI_AO_SSUSB_BUS>,
++				 <&topckgen CLK_TOP_SSUSB_TOP_REF>,
++				 <&pericfg_ao CLK_PERI_AO_SSUSB_XHCI>;
++			clock-names = "sys_ck", "ref_ck", "mcu_ck";
++			phys = <&u2port1 PHY_TYPE_USB2>, <&u3port1 PHY_TYPE_USB3>;
++			wakeup-source;
++			mediatek,syscon-wakeup = <&pericfg 0x468 2>;
++			status = "disabled";
++
++			xhci1: usb@0 {
++				compatible = "mediatek,mt8188-xhci", "mediatek,mtk-xhci";
++				reg = <0 0 0 0x1000>;
++				reg-names = "mac";
++				interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH 0>;
++				assigned-clocks = <&topckgen CLK_TOP_SSUSB_XHCI>;
++				assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>;
++				clocks = <&pericfg_ao CLK_PERI_AO_SSUSB_XHCI>;
++				clock-names = "sys_ck";
++				status = "disabled";
++			};
++		};
++
+ 		eth: ethernet@11021000 {
+ 			compatible = "mediatek,mt8188-gmac", "mediatek,mt8195-gmac",
+ 				     "snps,dwmac-5.10a";
+@@ -1747,27 +1779,6 @@ queue3 {
+ 			};
+ 		};
+ 
+-		xhci1: usb@11200000 {
+-			compatible = "mediatek,mt8188-xhci", "mediatek,mtk-xhci";
+-			reg = <0 0x11200000 0 0x1000>,
+-			      <0 0x11203e00 0 0x0100>;
+-			reg-names = "mac", "ippc";
+-			interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH 0>;
+-			phys = <&u2port1 PHY_TYPE_USB2>,
+-			       <&u3port1 PHY_TYPE_USB3>;
+-			assigned-clocks = <&topckgen CLK_TOP_USB_TOP>,
+-					  <&topckgen CLK_TOP_SSUSB_XHCI>;
+-			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>,
+-						 <&topckgen CLK_TOP_UNIVPLL_D5_D4>;
+-			clocks = <&pericfg_ao CLK_PERI_AO_SSUSB_BUS>,
+-				 <&topckgen CLK_TOP_SSUSB_TOP_REF>,
+-				 <&pericfg_ao CLK_PERI_AO_SSUSB_XHCI>;
+-			clock-names = "sys_ck", "ref_ck", "mcu_ck";
+-			mediatek,syscon-wakeup = <&pericfg 0x468 2>;
+-			wakeup-source;
+-			status = "disabled";
+-		};
+-
+ 		mmc0: mmc@11230000 {
+ 			compatible = "mediatek,mt8188-mmc", "mediatek,mt8183-mmc";
+ 			reg = <0 0x11230000 0 0x10000>,
+@@ -1868,42 +1879,68 @@ imp_iic_wrap_c: clock-controller@11283000 {
+ 			#clock-cells = <1>;
+ 		};
+ 
+-		xhci2: usb@112a0000 {
+-			compatible = "mediatek,mt8188-xhci", "mediatek,mtk-xhci";
+-			reg = <0 0x112a0000 0 0x1000>,
+-			      <0 0x112a3e00 0 0x0100>;
++		ssusb2: usb@112a1000 {
++			compatible = "mediatek,mt8188-mtu3", "mediatek,mtu3";
++			reg = <0 0x112a1000 0 0x2dff>, <0 0x112a3e00 0 0x0100>;
+ 			reg-names = "mac", "ippc";
+-			interrupts = <GIC_SPI 536 IRQ_TYPE_LEVEL_HIGH 0>;
+-			phys = <&u2port2 PHY_TYPE_USB2>;
+-			assigned-clocks = <&topckgen CLK_TOP_SSUSB_XHCI_3P>,
+-					  <&topckgen CLK_TOP_USB_TOP_3P>;
+-			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>,
+-						 <&topckgen CLK_TOP_UNIVPLL_D5_D4>;
++			ranges = <0 0 0 0x112a0000 0 0x3f00>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			interrupts-extended = <&gic GIC_SPI 535 IRQ_TYPE_LEVEL_HIGH 0>;
++			assigned-clocks = <&topckgen CLK_TOP_USB_TOP_3P>;
++			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>;
+ 			clocks = <&pericfg_ao CLK_PERI_AO_SSUSB_3P_BUS>,
+ 				 <&topckgen CLK_TOP_SSUSB_TOP_P3_REF>,
+ 				 <&pericfg_ao CLK_PERI_AO_SSUSB_3P_XHCI>;
+ 			clock-names = "sys_ck", "ref_ck", "mcu_ck";
++			phys = <&u2port2 PHY_TYPE_USB2>;
++			wakeup-source;
++			mediatek,syscon-wakeup = <&pericfg 0x470 2>;
+ 			status = "disabled";
++
++			xhci2: usb@0 {
++				compatible = "mediatek,mt8188-xhci", "mediatek,mtk-xhci";
++				reg = <0 0 0 0x1000>;
++				reg-names = "mac";
++				interrupts = <GIC_SPI 536 IRQ_TYPE_LEVEL_HIGH 0>;
++				assigned-clocks = <&topckgen CLK_TOP_SSUSB_XHCI_3P>;
++				assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>;
++				clocks = <&pericfg_ao CLK_PERI_AO_SSUSB_3P_XHCI>;
++				clock-names = "sys_ck";
++				status = "disabled";
++			};
+ 		};
+ 
+-		xhci0: usb@112b0000 {
+-			compatible = "mediatek,mt8188-xhci", "mediatek,mtk-xhci";
+-			reg = <0 0x112b0000 0 0x1000>,
+-			      <0 0x112b3e00 0 0x0100>;
++		ssusb0: usb@112b1000 {
++			compatible = "mediatek,mt8188-mtu3", "mediatek,mtu3";
++			reg = <0 0x112b1000 0 0x2dff>, <0 0x112b3e00 0 0x0100>;
+ 			reg-names = "mac", "ippc";
+-			interrupts = <GIC_SPI 533 IRQ_TYPE_LEVEL_HIGH 0>;
+-			phys = <&u2port0 PHY_TYPE_USB2>;
+-			assigned-clocks = <&topckgen CLK_TOP_SSUSB_XHCI_2P>,
+-					  <&topckgen CLK_TOP_USB_TOP_2P>;
+-			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>,
+-						 <&topckgen CLK_TOP_UNIVPLL_D5_D4>;
++			ranges = <0 0 0 0x112b0000 0 0x3f00>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			interrupts-extended = <&gic GIC_SPI 532 IRQ_TYPE_LEVEL_HIGH 0>;
++			assigned-clocks = <&topckgen CLK_TOP_SSUSB_XHCI_2P>;
++			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>;
+ 			clocks = <&pericfg_ao CLK_PERI_AO_SSUSB_2P_BUS>,
+ 				 <&topckgen CLK_TOP_SSUSB_TOP_P2_REF>,
+ 				 <&pericfg_ao CLK_PERI_AO_SSUSB_2P_XHCI>;
+ 			clock-names = "sys_ck", "ref_ck", "mcu_ck";
+-			mediatek,syscon-wakeup = <&pericfg 0x460 2>;
++			phys = <&u2port0 PHY_TYPE_USB2>;
+ 			wakeup-source;
++			mediatek,syscon-wakeup = <&pericfg 0x460 2>;
+ 			status = "disabled";
++
++			xhci0: usb@0 {
++				compatible = "mediatek,mt8188-xhci", "mediatek,mtk-xhci";
++				reg = <0 0 0 0x1000>;
++				reg-names = "mac";
++				interrupts = <GIC_SPI 533 IRQ_TYPE_LEVEL_HIGH 0>;
++				assigned-clocks = <&topckgen CLK_TOP_USB_TOP_2P>;
++				assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>;
++				clocks = <&pericfg_ao CLK_PERI_AO_SSUSB_2P_XHCI>;
++				clock-names = "sys_ck";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		pcie: pcie@112f0000 {
+diff --git a/arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dts b/arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dts
+index 92eb09dc959b..d1a4bd428767 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dts
+@@ -1300,13 +1300,25 @@ vdosys1_ep_ext: endpoint@1 {
+ 	};
+ };
+ 
++&ssusb0 {
++	dr_mode = "host";
++	vusb33-supply = <&mt6359_vusb_ldo_reg>;
++	status = "okay";
++};
++
+ &xhci0 {
+ 	status = "okay";
++};
++
++&ssusb1 {
++	dr_mode = "host";
+ 	vusb33-supply = <&mt6359_vusb_ldo_reg>;
++	status = "okay";
+ };
+ 
+ &xhci1 {
+ 	status = "okay";
++	vdd-supply = <&usb_hub_fixed_3v3>;
+ 	vusb33-supply = <&mt6359_vusb_ldo_reg>;
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+@@ -1326,6 +1338,22 @@ hub_3_0: hub@2 {
+ 		reset-gpios = <&pio 7 GPIO_ACTIVE_HIGH>;
+ 		vdd-supply = <&usb_hub_fixed_3v3>;
+ 	};
++
++	port {
++		xhci_ss_ep: endpoint {
++			remote-endpoint = <&typec_con_ss>;
++		};
++	};
++};
++
++&ssusb2 {
++	interrupts-extended = <&gic GIC_SPI 536 IRQ_TYPE_LEVEL_HIGH 0>,
++			      <&pio 220 IRQ_TYPE_LEVEL_HIGH>;
++	interrupt-names = "host", "wakeup";
++
++	dr_mode = "host";
++	vusb33-supply = <&mt6359_vusb_ldo_reg>;
++	status = "okay";
+ };
+ 
+ &xhci2 {
+-- 
+2.48.1
+
