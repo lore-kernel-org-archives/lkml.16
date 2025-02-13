@@ -1,132 +1,125 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4CE145A11
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852C9281344;
+	Thu, 13 Feb 2025 14:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739455775; cv=none; b=MePwjJGBZom9fgsvtmuaOc4RavwtdcKcQUAfTrQRLLzM/sigVmirZoyVS4IeSYKASPPH8lX5w6+2/ZZgePlJV4kp9dhm/ovrMy31REkqBVsPS47I8Q3AI5gdIEv3Skb9k+zTxPNnL+eubyCpjYQF90G/xPNTO0pLFotQWp+XNF8=
+	t=1739455855; cv=none; b=maxbeGFJEKFM/1mLuasDLGMbmsa2Ih8wciN3iRHnzmF4MXm9pjKVajamp0NbvRWi2CNxNyQqoCVF6ZwbgYe/ouh9gabjcVUUO1XB2injDwVZSDW/q5uEIN2OlEtbR3ntU+QYVEJQ/rBAnVe63diMlaXm8epSYqGdKcYjkDgWbDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739455775; c=relaxed/simple;
-	bh=bITAd8mMpklIAUS4JC6xN0NXMsNUvXCDm5eahLi6O7A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aI/PozGTw2ru7RtcQI6j0ytGGlmlEahywcS+lXNAdlNYPCVjhqqm172eauF5AHOS7j2Teza1UvsKM8L0rSQ6CfFIOBNqAr/WpMwh9iazMQ+qkfl/nCi2DamyChTBQy0KyUbqJWyL2vom6N2j1SzVwbZyDbkAsvisWjOQaOWWg+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=j+SsLrO5; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1739455855; c=relaxed/simple;
+	bh=ctb+xk7MY+w2rTHBydALLPpKRzkmBYWDd9xLRSlOFgk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kskDPIQDUmUnmoAHhilzDiO8piAcPSb7/4qItARgrKmKFe29Cjf7G+ExOL2H46lmGyd2FZ/gPNF2SPMY+xO1UJWth5LN93DGu5EDvaUhNuGqGsBRenChc5X4fCicMTW/W+TGYwPydjsj9he2VZsD7721ytuk0ILhNDVlPGa8+WQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TDaKGdhh; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="j+SsLrO5"
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 416943FE6F
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:09:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1739455765;
-	bh=uT1aaGr8G8g8+cxLYkpklpbAkzbJ8av1g9g9BSJeMyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=j+SsLrO5prjZQAikljdkXfD0SRYTa3VmPG2pNML2dUz+MUD/DQdkbXRcW3FCk82xT
-	 hJqsEi4LNi7FZgaa0Tk5bSFCxD06gfxC37Q9CsCYkgGf/7Kb/dr3y67bHjy5gVyRib
-	 hn66GjJgiKKEjfONrm4yHRS6fx2MrYgG1Xbesu5CVn1tS/Cfno8Od80NzC5B2Gqegs
-	 2DeZ6kLWQ4THBc66kVHgOwD6CALyRHtcamVX3AQ8nW7iLGdZriTf2Pii+/RtlIjcS7
-	 3ydWCh7AXECFKBf/tdnAZVEjd9KNi/wY/+L7goQxc4VK3JiQD2pw/53q51z8rtuFpd
-	 MZJFs8LC/rTcA==
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2fa3fd30d61so2166455a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 06:09:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739455763; x=1740060563;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uT1aaGr8G8g8+cxLYkpklpbAkzbJ8av1g9g9BSJeMyk=;
-        b=F6DQzmG1eAyLXkWl6GiSCSXZe47G4hyGLkQmxsUfCIc/mpu1V4hlcdvs5qgzL7IOqX
-         nOM0F8DBtWQjTfmSXbq93mrqk161g7a+tnoVRosLe0ODA/uzMFwdBbyj4/R6/zXeiyGX
-         cSgTtRwhxxyNBhHldWAo2UZym8r8ILkguK/dptOIgJRvw2JmqnJK+cnUYLB6VJm5Ni/U
-         F3AP7WbgmQzh1zD/urFFHbG0Y3X1+eViqatIXpfznkA0oyjMV6vL6fntVP3TADMSPt82
-         9FKcqCstXaViqzR87FpGjVIel+njVy0EGNznB5EXIprQXVp1bX+U7CCXKwktSNossNE4
-         X5Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUseMNASDkaSWhcWuqgTIpVFlRWHaY+7ckl1SnheV5U3UbzTsuQF0JF0q3BuZ8LtmICjUKJgkk8hM9NgY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTgCAeQ7PvVJPEl6y8wZLsRvrzlOXfZ2elrap0Ib93zO/VAe3p
-	9EHltV2sggHmuTpC5B+YJfVlXw2WZixxhYrrdhYpfk+WKvo9LDYL8Z6faRuMkfkabglRr5TeZEK
-	4cOFA/DnpdLTmmVBmsUoHBm/TsAsdnz4YyMtEsAQdg0TWKm5IrasRIBxXc9Vg5+VIGYl8EO+h22
-	fQWA==
-X-Gm-Gg: ASbGncvlK/3WWIqeurvMu+xGYUjaleg5OWYlqFr//uEA2IqkQ3IzivqyWR6t3TcigL3
-	nH/5NRMwVAcWZOKVaS3POk2ZkLp6czcfQzJoI/SadRg+vCh5uRGjByByy3VIFVoVC3v8iUk+MMi
-	Fa1af06BESPTLJWU3GtCi7tFhoO7Ibu7K3oEcHwmMXWLULPRcHKhcfQ8CQHAUTo09lsXcfE+fH5
-	/WUlu7hTWQ0fS5NVdIIGb/c6Pj1HyJ2+s6Jty4F//gVieCst1XVtXbvAOw+lmTGNgbIPA2svCZr
-	gz7MuUc=
-X-Received: by 2002:aa7:88c5:0:b0:725:e4b9:a600 with SMTP id d2e1a72fcca58-7322c5febe0mr8531715b3a.16.1739455763650;
-        Thu, 13 Feb 2025 06:09:23 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG2OC7Bly/7WjTJr49UdcU8b8bQ1YL9E84be+nLYkBfeQGCe4GDRRo2znH/scSBpDczXDVcaQ==
-X-Received: by 2002:aa7:88c5:0:b0:725:e4b9:a600 with SMTP id d2e1a72fcca58-7322c5febe0mr8531682b3a.16.1739455763273;
-        Thu, 13 Feb 2025 06:09:23 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:5439:d90c:a342:e2bb])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7324256f0dbsm1355536b3a.68.2025.02.13.06.09.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 06:09:22 -0800 (PST)
-Date: Thu, 13 Feb 2025 23:09:20 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
-	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/10] Introduce configfs-based interface for
- gpio-aggregator
-Message-ID: <ziupltbphzkj6hngeqpjktwchqtj5ni2oum6cq5oa7agds5u2l@pwo7kdc3qiph>
-References: <20250203031213.399914-1-koichiro.den@canonical.com>
- <CAMuHMdVoCf2VmgZOtNOPxhpTdYBWEWgCozLM+opaL7wOtF10_A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TDaKGdhh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739455854; x=1770991854;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ctb+xk7MY+w2rTHBydALLPpKRzkmBYWDd9xLRSlOFgk=;
+  b=TDaKGdhh0E/Zl0vJORBN+rZDZDaeuXuoYguQ7fcvMzIfwyWwA8o0vFqR
+   3F6GXx8oLfXbd7lf1VLvtQYWfpUPHJoINrhA4jTHGm6b4Xay2A3lKxfPb
+   IuJvyKtnfC1gfr5XHB8e1y/vzDUAfrXbbXWXyM1woESRlsn0dJDeJueiC
+   e/T04HqxNaXK0UsK0IJFetMYCPyVzBr+LX6Ub+dbUpr56raxahAXGT2Bh
+   jHWfjjhoEeDa+uxyrsfUfiU0+bE7M3xZzCxLcOytKz4B70Irf28JkQN68
+   RRJbNyVqGFHdXr9xbICFOl30aFwLeC5RuMeX4/M+Fjmt+nCeBZLfataZe
+   A==;
+X-CSE-ConnectionGUID: TlqD/77cTVyAnGTFIEGIUQ==
+X-CSE-MsgGUID: W7I08v6eSQmo/yy8hx9v7Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40280879"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="40280879"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 06:10:53 -0800
+X-CSE-ConnectionGUID: PFagJQ/uTyy19AXdvQFGPQ==
+X-CSE-MsgGUID: xtLFa7DZSjSggc3zBYFKzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="113682998"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa010.fm.intel.com with ESMTP; 13 Feb 2025 06:10:48 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 623E1322; Thu, 13 Feb 2025 16:10:47 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org
+Cc: Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Kamal Dasu <kamal.dasu@broadcom.com>,
+	Stefan Roese <sr@denx.de>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Subject: [PATCH v2 04/10] i2c: brcmstb: Use i2c_10bit_addr_*_from_msg() helpers
+Date: Thu, 13 Feb 2025 16:07:18 +0200
+Message-ID: <20250213141045.2716943-5-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
+In-Reply-To: <20250213141045.2716943-1-andriy.shevchenko@linux.intel.com>
+References: <20250213141045.2716943-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVoCf2VmgZOtNOPxhpTdYBWEWgCozLM+opaL7wOtF10_A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 12, 2025 at 02:14:23PM GMT, Geert Uytterhoeven wrote:
-> Hi Den-san,
-> 
-> On Mon, 3 Feb 2025 at 04:12, Koichiro Den <koichiro.den@canonical.com> wrote:
-> > This patch series introduces a configfs-based interface to gpio-aggregator
-> > to address limitations in the existing 'new_device' interface.
-> >
-> > The existing 'new_device' interface has several limitations:
-> >
-> >   #1. No way to determine when GPIO aggregator creation is complete.
-> >   #2. No way to retrieve errors when creating a GPIO aggregator.
-> >   #3. No way to trace a GPIO line of an aggregator back to its
-> >       corresponding physical device.
-> >   #4. The 'new_device' echo does not indicate which virtual gpiochip<N>
-> >       was created.
-> >   #5. No way to assign names to GPIO lines exported through an aggregator.
-> >
-> > Although Issue#1 to #3 could technically be resolved easily without
-> > configfs, using configfs offers a streamlined, modern, and extensible
-> > approach, especially since gpio-sim and gpio-virtuser already utilize
-> > configfs.
-> 
-> Thanks for your series!
-> 
-> I gave it a try using all three ways of configuration (sysfs, configs,
-> DT), and it works fine!
-> 
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> Gr{oetje,eeting}s,
+Use i2c_10bit_addr_*_from_msg() helpers instead of local copy.
+No functional change intended.
 
-Thank you very much for the through review! I'll reply to each of your comment.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/i2c/busses/i2c-brcmstb.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-Koichiro
+diff --git a/drivers/i2c/busses/i2c-brcmstb.c b/drivers/i2c/busses/i2c-brcmstb.c
+index 00f1a046e985..5fa30e8926c5 100644
+--- a/drivers/i2c/busses/i2c-brcmstb.c
++++ b/drivers/i2c/busses/i2c-brcmstb.c
+@@ -414,23 +414,22 @@ static int brcmstb_i2c_do_addr(struct brcmstb_i2c_dev *dev,
+ 
+ 	if (msg->flags & I2C_M_TEN) {
+ 		/* First byte is 11110XX0 where XX is upper 2 bits */
+-		addr = 0xF0 | ((msg->addr & 0x300) >> 7);
++		addr = i2c_10bit_addr_hi_from_msg(msg) & ~I2C_M_RD;
+ 		bsc_writel(dev, addr, chip_address);
+ 
+ 		/* Second byte is the remaining 8 bits */
+-		addr = msg->addr & 0xFF;
++		addr = i2c_10bit_addr_lo_from_msg(msg);
+ 		if (brcmstb_i2c_write_data_byte(dev, &addr, 0) < 0)
+ 			return -EREMOTEIO;
+ 
+ 		if (msg->flags & I2C_M_RD) {
+ 			/* For read, send restart without stop condition */
+-			brcmstb_set_i2c_start_stop(dev, COND_RESTART
+-						   | COND_NOSTOP);
++			brcmstb_set_i2c_start_stop(dev, COND_RESTART | COND_NOSTOP);
++
+ 			/* Then re-send the first byte with the read bit set */
+-			addr = 0xF0 | ((msg->addr & 0x300) >> 7) | 0x01;
++			addr = i2c_10bit_addr_hi_from_msg(msg);
+ 			if (brcmstb_i2c_write_data_byte(dev, &addr, 0) < 0)
+ 				return -EREMOTEIO;
+-
+ 		}
+ 	} else {
+ 		addr = i2c_8bit_addr_from_msg(msg);
+-- 
+2.45.1.3035.g276e886db78b
 
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
