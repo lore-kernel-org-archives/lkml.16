@@ -1,120 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f74.google.com (mail-ot1-f74.google.com [209.85.210.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CFF24290C;
-	Thu, 13 Feb 2025 18:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D182423A9BF
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 18:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739469855; cv=none; b=qd38jjys2Lehv+B5mWdd9PFOzEQBpSJ4OVO5D5tQjM85HvHsreLLZJvkcrw0oGH77F+ttHT786L0nI8hV0YML7patLn0Ocxe8uZ9+h33BMl5txlIXgn0dX2Y9rv023v74KQVR4JwctP3b5pcvYyEHb4DEBXDgOd8Typ3xotSn7o=
+	t=1739469918; cv=none; b=dHeF9OSvq7O0CsDOae1vI2pJk7+p0I4ZuVj32Qz3WvjoJXt1lPpLs05eD+sh3n/O68gjcjexjRfrA7Cv/fWPxQPkhM2zhK0jlkAK99Jt3bcagg6jLSOiFV8dQqW8mK+NqM8DGowWCSDTbwwbAPoJlLtfy8Xomkg21qfd/GkYgfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739469855; c=relaxed/simple;
-	bh=F3mVXg5snyDpxEsavZ/5IjthjylA1qbTG8dFGI27YYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uXtazYKQiWlGmstBigXdYwRrMFPTIAvBstJZVg90mC9XWSJh4XwE8GyXf9/F9C2PCREbRdHMiojTrRbW2sr7ictL7Kfm1N0fQf5lL//OBrPbyVKVv2ZUKab6UgviEFfRGaOYjwmbHOFY1lpyG51k+95tcZUuzpq2Jb1WZcS/nJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qm9yNc2T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739469918; c=relaxed/simple;
+	bh=XXMTdbhQZ5qRWr2cYeBk2dfkftdsQbT7KMI+qPc6Who=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=g9flNIgUr2tOQATP9zob7XSBaetthgoFDoKl5h5Uh/ZG009KmmlPl5vibGPOh7fnwlyZuxG5v5hwBpJhXMir+O5ARRpo+mNPTEO8X8lh/BqIU+zUFrVv1YUglT/9YvUq1mR3nJDj8ic/ugKwgeMulnYUOcR7hDw1eEo+r3hsaEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EmGFHf8j; arc=none smtp.client-ip=209.85.210.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qm9yNc2T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7FC6C4CED1;
-	Thu, 13 Feb 2025 18:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739469854;
-	bh=F3mVXg5snyDpxEsavZ/5IjthjylA1qbTG8dFGI27YYM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qm9yNc2T/FZRL+nWkoWqyuclWyXIxj7RSCvd8Il+j9Mcr0q18gifQlmhE4Jqn/QtT
-	 SHV5jzlLb+lJgNVOXSn63z76y+Ab9cQ/uBggC1lAEVvOvpJMRDdlJ7eNAqOL0k0vD3
-	 8EmxbuLba8Z//xg/3GRX+7JX5hhPxSeMBAyFgX04i1TWpJYrULPt6OqVD+JM1wqM6C
-	 jZ+/gP3k681pGkaYyHLuoIN3tn66OHhTGDdamLv9vrL3kdfMV/4mOLV+/STaB37IOb
-	 odPhRLQZz0kNZMUsQ0bLZiVqKnrdXn1A3kIG5447I5PAaxpI+lgX6UV3+FiuroBz6m
-	 k5bnVgDCx1VrA==
-Date: Thu, 13 Feb 2025 18:04:05 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
-	netdev@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-sound@vger.kernel.org,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: (subset) [PATCH v3 00/15] gpiolib: add
- gpiod_multi_set_value_cansleep
-Message-ID: <a98d8255-6267-4c4f-9b75-8f3fbdaadc90@sirena.org.uk>
-References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
- <173935301204.11039.10193374588878813157.b4-ty@linaro.org>
- <801b5364-129f-42e9-bf9a-a90d9eeb4629@baylibre.com>
- <CAMRc=MeXTvPnEPjOmPd5Vw0FYKHzndsB0SVjQErA4CY_0MGsMQ@mail.gmail.com>
- <7989a6a0-b761-416c-ad97-69bd23fdc2c4@sirena.org.uk>
- <CAMRc=Mea5imComkraP=v9TKsxLDoBm4XtbLL1QxCbhJ8d4uxcA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EmGFHf8j"
+Received: by mail-ot1-f74.google.com with SMTP id 46e09a7af769-727063ace2fso368921a34.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 10:05:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739469915; x=1740074715; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wTjCHNALhtJm9kkINHAhPaKfRIpf+UugZZ6g0+G4iFA=;
+        b=EmGFHf8jepiFEAaXm5sNdcjafuaoVfLuX55JiA1q8N6pAz0IOi9JZfN0vENo45j+Yd
+         SKyIOEmXpKzHRcwRE+NthrfBBdtli3TulWoZT9M+DHN0dyX+V85YjBWZ6xr+xztf8F4p
+         3j/9lrjRazLCzR/CE7rhxch2c0s00viAmyaRVweOKF3wFayyqNUTuIiXMDhsU6Nu+ikH
+         KuLWWe79aGdWW0RiJ617DhZ35hO9BpLybPLWUB7KhsZC7LmsAFWPx6Wotg3at4gSsBo/
+         pYX32BBXTkb3tZafhGczlppzCo0WWWklKC1yE3cWPrPBiFGyg6OXigVXorHAVp8Hgn/h
+         uIkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739469915; x=1740074715;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wTjCHNALhtJm9kkINHAhPaKfRIpf+UugZZ6g0+G4iFA=;
+        b=ARYURcGjv9l69mLGI3XaadAmKxJ8X22P6V6H4e9QbJDnYmrfcwf4nnJmEoq3CdMaTF
+         4H5LT0ddokrIGeQGmMrir4COnsOhfsw0qLG3YiZ2XYRDvo3NGrdrNvDL8SaR7BKKd2/g
+         PH50HHCMoCg8qEQSSNcIZizcyxdbZq2578QRW5uaNYqukRFQy8TmpNqJq9yobPI2fpJA
+         dNtd4iKrcrb0vKnHQJ2nDIEw71RhWs931ETAUgU/GudEp8LP+G+mCuU3G0D0MufkVoWp
+         PmJJwN36kzgY1BzSeoeKwgex5gCk7ky3NqV+tJtxbpPr07su1G9qP63YbOn1vcoKz5oz
+         pGVw==
+X-Forwarded-Encrypted: i=1; AJvYcCXUzsKgT3rGzaQ1Wn8MrvxNt0ggrCfZvBGRrzpX8enQwG1yWoRjy8LTgcaAD0lc4BuRqjvfE9g6pxYZ9JM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr7zMZacLJpUVxm/tim6NEdH8ptlTIk4/uhpwc4C7lUD8Df80w
+	rV4yGABYhX9QcyvGWmWBuE5vbCF0CR4nHKTyGxIUZtCAXZjNkQgeyaNrWyg/zRVaplI1LHT/tif
+	SuGQTl4haMtfx8lCItsfqzQ==
+X-Google-Smtp-Source: AGHT+IGskVqY6i9bRXfX/e76DJqFlexfmJ+792ViVNAj9Su+9gvc9IWKEbkYdQXuRHWIlqliVBeP0nYN3f0kCSEvKQ==
+X-Received: from otbcv2.prod.google.com ([2002:a05:6830:6882:b0:71d:f81f:c595])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6830:410a:b0:71d:415a:5d18 with SMTP id 46e09a7af769-726f302e609mr5209306a34.3.1739469914886;
+ Thu, 13 Feb 2025 10:05:14 -0800 (PST)
+Date: Thu, 13 Feb 2025 18:03:09 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8dqGeFBusm2eevtX"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mea5imComkraP=v9TKsxLDoBm4XtbLL1QxCbhJ8d4uxcA@mail.gmail.com>
-X-Cookie: Take it easy, we're in a hurry.
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+Message-ID: <20250213180317.3205285-1-coltonlewis@google.com>
+Subject: [RFC PATCH v3 0/8] PMU partitioning driver support
+From: Colton Lewis <coltonlewis@google.com>
+To: kvm@vger.kernel.org
+Cc: Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, Colton Lewis <coltonlewis@google.com>
+Content-Type: text/plain; charset="UTF-8"
+
+This series introduces support in the KVM and ARM PMUv3 driver for
+partitioning PMU counters into two separate ranges by taking advantage
+of the MDCR_EL2.HPMN register field.
+
+The advantage of a partitioned PMU would be to allow KVM guests direct
+access to a subset of PMU functionality, greatly reducing the overhead
+of performance monitoring in guests.
+
+While this feature could be accepted on its own merits, practically
+there is a lot more to be done before it will be fully useful, so I'm
+sending as an RFC for now.
+
+v3:
+* Include cpucap definition for FEAT_HPMN0 to allow for setting HPMN
+  to 0
+
+* Include PMU header cleanup provided by Marc [1] with some minor
+  changes so compilation works
+
+* Pull functions out of pmu-emul.c that aren't specific to the
+  emulated PMU. This and the previous item aren't strictly
+  needed but they provide a nicer starting point.
+
+* As suggested by Oliver, start a file for partitioned PMU functions
+  and move the reserved_host_counters parameter and MDCR handling into
+  KVM so the driver does not have to know about it and we need fewer
+  hacks to keep the driver working on 32-bit ARM. This was not a
+  complete separation because the driver still needs to start and stop
+  the host counters all at once and needs to toggle MDCR_EL2.HPME to
+  do that. Introduce kvm_pmu_host_counters_{enable,disable}()
+  functions to handle this and define them as no ops on 32-bit ARM.
+
+* As suggested by Oliver, don't limit PMCR.N on emulated PMU. This
+  value will be read correctly when the right traps are disabled to
+  use the partitioned PMU
+
+v2:
+https://lore.kernel.org/kvm/20250208020111.2068239-1-coltonlewis@google.com/
+
+v1:
+https://lore.kernel.org/kvm/20250127222031.3078945-1-coltonlewis@google.com/
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=kvm-arm64/pmu-includes
+
+Colton Lewis (7):
+  arm64: cpufeature: Add cap for HPMN0
+  arm64: Generate sign macro for sysreg Enums
+  KVM: arm64: Reorganize PMU functions
+  KVM: arm64: Introduce module param to partition the PMU
+  perf: arm_pmuv3: Generalize counter bitmasks
+  perf: arm_pmuv3: Keep out of guest counter partition
+  KVM: arm64: selftests: Reword selftests error
+
+Marc Zyngier (1):
+  KVM: arm64: Cleanup PMU includes
+
+ arch/arm/include/asm/arm_pmuv3.h              |   2 +
+ arch/arm64/include/asm/arm_pmuv3.h            |   2 +-
+ arch/arm64/include/asm/kvm_host.h             | 199 +++++++-
+ arch/arm64/include/asm/kvm_pmu.h              |  47 ++
+ arch/arm64/kernel/cpufeature.c                |   8 +
+ arch/arm64/kvm/Makefile                       |   2 +-
+ arch/arm64/kvm/arm.c                          |   1 -
+ arch/arm64/kvm/debug.c                        |  10 +-
+ arch/arm64/kvm/hyp/include/hyp/switch.h       |   1 +
+ arch/arm64/kvm/pmu-emul.c                     | 464 +-----------------
+ arch/arm64/kvm/pmu-part.c                     |  63 +++
+ arch/arm64/kvm/pmu.c                          | 454 +++++++++++++++++
+ arch/arm64/kvm/sys_regs.c                     |   2 +
+ arch/arm64/tools/cpucaps                      |   1 +
+ arch/arm64/tools/gen-sysreg.awk               |   1 +
+ arch/arm64/tools/sysreg                       |   6 +-
+ drivers/perf/arm_pmuv3.c                      |  73 ++-
+ include/kvm/arm_pmu.h                         | 204 --------
+ include/linux/perf/arm_pmu.h                  |  16 +-
+ include/linux/perf/arm_pmuv3.h                |  27 +-
+ .../selftests/kvm/arm64/vpmu_counter_access.c |   2 +-
+ virt/kvm/kvm_main.c                           |   1 +
+ 22 files changed, 882 insertions(+), 704 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kvm_pmu.h
+ create mode 100644 arch/arm64/kvm/pmu-part.c
+ delete mode 100644 include/kvm/arm_pmu.h
 
 
---8dqGeFBusm2eevtX
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Feb 13, 2025 at 06:58:04PM +0100, Bartosz Golaszewski wrote:
-> On Thu, Feb 13, 2025 at 6:53=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
-rote:
-
-> > If people are acking things that generally means they're expecting them
-> > to go along with the rest of the series.  When you didn't apply the ASoC
-> > patch I did actually put into CI but it was a bit surprising that you
-> > seemed to be expecting that.
-
-> There was no clear consensus. Some patches are still not acked.
-
-What I would do in that situation is apply the patches that were acked
-and leave the rest.
-
-> No worries, I will take the acked ones. I didn't see any b4
-> notifications from your side yet, so I assume the patches are still
-> pending?
-
-Yes, like I say they're in CI.
-
---8dqGeFBusm2eevtX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmeuNBUACgkQJNaLcl1U
-h9D7XAf/ZOJbznj+kR0nWMA9aMwpcy+sZtOGrPU2NlEuXbE9T6iSncOwANVAM/WG
-qy0hFl8VWIWtR5k6vSTQqcIXIDfpzlG9WivypRx4LeCZf2k0NwqoTffiijgvzYzG
-4+n/G6f1+tWy4gMxAWSiCWihVjnY6OzIdnwZ/h1OyIk1udqQlKCgJ3/wPbCh5HzM
-nWQdusaZRMBjQrHhbtzsWbTuilCb5US2Hu0/eDDjxo1ebJizZm2oIr8mcdu51rSf
-YlLi5/GlFwwo+ItSnnbI8Dl7BbrcLWr3MOXyLOSISKN4jA/VT+MKUU/NHl5FvsrX
-4fwSx/1bsqjSeBP6FjEdoniRW8UjPw==
-=t6DC
------END PGP SIGNATURE-----
-
---8dqGeFBusm2eevtX--
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+--
+2.48.1.601.g30ceb7b040-goog
