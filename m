@@ -1,203 +1,134 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE71E21518E;
-	Thu, 13 Feb 2025 10:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E4F2153FC
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 10:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739441790; cv=none; b=dHRcrPDuv3uD41CJ9cuAv+q+y1L1YG85xsYSsUpHm7VtsORfn03kRmshh/TMqfUCG7GUrMeuc5BjIZDEJze650LU17koxlihbRC5sP2ikKJqF7rFAoKDtMzlMKLNM9+tMKbtSadJnR/A02aCHku82AIeHaFqgQpTUGXcaTdsTCI=
+	t=1739441791; cv=none; b=MmYny7qTPnwIUa3w10DzPuAaUgjGdih6Pu/DgapYCO4vM4+Y2Mi97cLnsjTuq7DFK+kdpHb//VNHAaf0uAzcSf0CaqBV6WIB2k75NyEPPa8z9vzjfLN1muJQQ2WtQWzy7tXIMrr8oagblOQOGdzXQOLReX8iQySJOBsaPzA+JVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739441790; c=relaxed/simple;
-	bh=hemBzyjFQ+O0AlsyITM8BZpJSeDBCkhQTfcEBcYZBnI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b9XgzagWx7TtXOLn0nfTaiymApIvIpo8LpiOvfGCthVrTO2U9f4nQPJh1MRqmSTSAeadTGzl7nGP7W2CUB+prs0bdg1r+cH4mk6T49nn8DalfVrx5kB7uxi8HaSr8B8CK3NK7LlCSH2ZgNMhpYpt7zFUfuFlfYqe0wF/FDs9hVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=N1yXTFa0; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1739441791; c=relaxed/simple;
+	bh=xmBDEx12/MlSpiH6V4WRagCuKEu5iUiwWGczemVxZ74=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XC+QFPDCicDcbHhGu/v6NVy46cTNyn9Zbphq1fgSf93cgKL+1Ns1xT98hIuCyIHszUoGVO8q96qL5b+DMp/GaQvoRer9eBnGTZFNkYIgsVeX88OxU5NIbVmi/n3GTwEkoOAd0ss7OLWih3euKfxsAkwoaQEp8lSp6oLIdwrYGv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=baYxDlmE; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="N1yXTFa0"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B77AB44210;
-	Thu, 13 Feb 2025 10:16:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739441786;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jtLsvV16GBwSx3TwXlyY2ZATBi3c4UZT9POelSuIL5w=;
-	b=N1yXTFa0LHVrNXoNqcP7wSvY6Xvt1RJg2RBxDi4TZEZo5f3E0xKjQKaheP6pKlDsOmxxu1
-	9mxIHfA2wFa+HIwzvJ0Rut1cIHe3bPvDXRAO7S42Q1E9lLpoQc7eYnjTz7UJvGVYvpzPdX
-	CTB/1F8quXCy9C9rsUm7LEnhBbKj5FN60RSWL5vy0ieUUhT7WgOJgN7TUT/WQpB8AhelYz
-	3WJfe4zSl9xdrndL1a44xWbD5F0w+Oheor3BEAMmShRZoAgDLAqUQotQlePlwpfzIMCc18
-	CMOVMUKp/iQBKKu6PWHXIaIDkAszIkNjJoQxD8EXFj5ZUkAnZD7CUb5vnt0MyA==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	mwojtas@chromium.org,
-	Antoine Tenart <atenart@kernel.org>,
-	devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Dimitri Fedrau <dimitri.fedrau@liebherr.com>,
-	Sean Anderson <seanga2@gmail.com>
-Subject: [PATCH net-next v4 09/15] net: phy: marvell10g: Support SFP through phy_port
-Date: Thu, 13 Feb 2025 11:15:57 +0100
-Message-ID: <20250213101606.1154014-10-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250213101606.1154014-1-maxime.chevallier@bootlin.com>
-References: <20250213101606.1154014-1-maxime.chevallier@bootlin.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="baYxDlmE"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38f1e8efe84so245102f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 02:16:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739441787; x=1740046587; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:user-agent
+         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xmBDEx12/MlSpiH6V4WRagCuKEu5iUiwWGczemVxZ74=;
+        b=baYxDlmEYIYvjfbu4jxW8q+NipL4xiZzYboYksA07dYyC/9+JEBKzgZ121waBA1QzK
+         TTceqAW87LKEBjGo+NGh/r7H5TwGcK3hjbiQMnJdKL7Uo9smDwE8zpaZCJRHDvgsLSPx
+         hUCWXEx+872+qjNfzWL42GE55KPXCCbsloGM+ZMmxG5AIOtXthF2sreQoq5aq7FoovhB
+         5HBUIFPQVDaNQtgtoZAakH2ejW5TyNE+jD4zKdWPVCcUSW6aOxFgk8VGJfQATww5mQaU
+         vKoNZJIYOFk4LRYA9skQPjAPwngn7lS3bpHUeJntCndndGpgHev2xXY8LigkonNYcOY2
+         ayEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739441787; x=1740046587;
+        h=content-transfer-encoding:mime-version:message-id:date:user-agent
+         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xmBDEx12/MlSpiH6V4WRagCuKEu5iUiwWGczemVxZ74=;
+        b=MGm6UUMv5bKALajFKA/oqELklu3ablFat3WJcV3FQke772AptmyyV9FTxHbuhtyfEs
+         CkEn24brVWoxwtGVKwNgeeTxGCUawP1okXQxFZD5zUWfq2/03WYOSLBAWhjnCaRlvKIy
+         iius5+K74kku1QWwV/WB9r65FtRKAYHT8W0kIHKxKz5Sbe4SL/Euy2fjjwi3JR9bT7O5
+         7dpZAwhluBvta7gvus0up2e+TyVpbxSgvz9klkFvZBM9EAyRoetaYRalmpAIvMbX4rHf
+         8c7eR7VkrWx878NYDOv0QiqxZqCJ4DLB200GTe9q9jV7XkKaskdQHhVz72/suE+UeQKM
+         JyLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVr06f6molBuaI5I/u/ad9unoQrHMnRr54i+5tq/6NbE+bKcZyID3QUIBl8QjcbqUdd87g/NmSKsSJmxvg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf0oS6GqmKzRa9G639p9+nrw8kSx4irqxaiaDwkUd1A1jFJG+O
+	XCWvgu8FjRmRZH9IqCfeDJwKLTnpLowu9CezYue34zA0jUHvf4lTCp/XplTxquA=
+X-Gm-Gg: ASbGnctuxBT9UZVRflkm4DPXbiorsw72FauRrUU8Yhko1zx3XZyEbev092PRZHrsaNp
+	Gwr5ne/u8dGK9AHKRTp59sd2vXxsEMIgK/BRhpZNxxw2QxbIr1ppDcxZX3KbPTMYYpkzDB4ZhYY
+	Y/GR7OHLpFEZbpDpJQquEBcVbGOtMmSguxOCXwppTQWmszU59Wk1sMmfZ9RGZeoDZxcVp17U9S1
+	hA2R/nwed6BruKSH5XBO+qgRPEXwThjnXL/gzKJfy9hB8A3/OwsJeDaWskuzrqGiibgLZtqOxZt
+	vaAojwtFxv07hg==
+X-Google-Smtp-Source: AGHT+IEffmNN4Pb9+ARCo3GKUiuLAJbsEVpvuLGQpUwyPZc6Fg0ln2kIswpBpy9K/UypDXBJlkii1A==
+X-Received: by 2002:a05:6000:1884:b0:38d:d8d1:a4e1 with SMTP id ffacd0b85a97d-38dea3c42dcmr5386478f8f.4.1739441787185;
+        Thu, 13 Feb 2025 02:16:27 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:b617:2c1:fc8c:2705])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259f8602sm1451341f8f.94.2025.02.13.02.16.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 02:16:26 -0800 (PST)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: =?utf-8?Q?Th=C3=A9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Dave Ertman"
+ <david.m.ertman@intel.com>,  "Ira Weiny" <ira.weiny@intel.com>,  "Rafael
+ J. Wysocki" <rafael@kernel.org>,  "Stephen Boyd" <sboyd@kernel.org>,
+  "Arnd Bergmann" <arnd@arndb.de>,  "Danilo Krummrich" <dakr@kernel.org>,
+  "Conor Dooley" <conor.dooley@microchip.com>,  "Daire McNamara"
+ <daire.mcnamara@microchip.com>,  "Philipp Zabel" <p.zabel@pengutronix.de>,
+  "Douglas Anderson" <dianders@chromium.org>,  "Andrzej Hajda"
+ <andrzej.hajda@intel.com>,  "Neil Armstrong" <neil.armstrong@linaro.org>,
+  "Robert Foss" <rfoss@kernel.org>,  "Laurent Pinchart"
+ <Laurent.pinchart@ideasonboard.com>,  "Jonas Karlman" <jonas@kwiboo.se>,
+  "Jernej Skrabec" <jernej.skrabec@gmail.com>,  "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>,  "Maxime Ripard"
+ <mripard@kernel.org>,  "Thomas Zimmermann" <tzimmermann@suse.de>,  "David
+ Airlie" <airlied@gmail.com>,  "Simona Vetter" <simona@ffwll.ch>,  "Hans de
+ Goede" <hdegoede@redhat.com>,  Ilpo =?utf-8?Q?J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,  "Bryan O'Donoghue"
+ <bryan.odonoghue@linaro.org>,  "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>,  "Gregory CLEMENT"
+ <gregory.clement@bootlin.com>,  "Michael Turquette"
+ <mturquette@baylibre.com>,  "Abel Vesa" <abelvesa@kernel.org>,  "Peng Fan"
+ <peng.fan@nxp.com>,  "Shawn Guo" <shawnguo@kernel.org>,  "Sascha Hauer"
+ <s.hauer@pengutronix.de>,  "Pengutronix Kernel Team"
+ <kernel@pengutronix.de>,  "Fabio Estevam" <festevam@gmail.com>,  "Kevin
+ Hilman" <khilman@baylibre.com>,  "Martin Blumenstingl"
+ <martin.blumenstingl@googlemail.com>,  <linux-kernel@vger.kernel.org>,
+  <linux-riscv@lists.infradead.org>,  <dri-devel@lists.freedesktop.org>,
+  <platform-driver-x86@vger.kernel.org>,  <linux-mips@vger.kernel.org>,
+  <linux-clk@vger.kernel.org>,  <imx@lists.linux.dev>,
+  <linux-arm-kernel@lists.infradead.org>,
+  <linux-amlogic@lists.infradead.org>
+Subject: Re: [PATCH v3 7/7] clk: amlogic: axg-audio: use the auxiliary reset
+ driver - take 2
+In-Reply-To: <D7QJX632CRCV.P0ZI0WWT083Z@bootlin.com> (=?utf-8?Q?=22Th?=
+ =?utf-8?Q?=C3=A9o?= Lebrun"'s message
+	of "Wed, 12 Feb 2025 15:53:38 +0100")
+References: <20250211-aux-device-create-helper-v3-0-7edb50524909@baylibre.com>
+	<20250211-aux-device-create-helper-v3-7-7edb50524909@baylibre.com>
+	<D7QJX632CRCV.P0ZI0WWT083Z@bootlin.com>
+User-Agent: mu4e 1.12.8; emacs 29.4
+Date: Thu, 13 Feb 2025 11:16:26 +0100
+Message-ID: <1ja5aq175x.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegieehudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpeehnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefvddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkv
- ghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Convert the Marvell10G driver to use the generic SFP handling, through a
-dedicated .attach_port() handler to populate the port's supported
-interfaces. As there's no logic to setup the interface for now (as only
-10GBaseR is supported for serdes line interfaces), no extra logic is
-required.
+On Wed 12 Feb 2025 at 15:53, Th=C3=A9o Lebrun <theo.lebrun@bootlin.com> wro=
+te:
 
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
-V4: no changes
+> Hello Jerome,
+>
+> Why the " - take 2" in the commit first line?
 
- drivers/net/phy/marvell10g.c | 37 ++++++++++++++++--------------------
- 1 file changed, 16 insertions(+), 21 deletions(-)
+Because, at the origin of the dicussion for this patchet, there was
+another change doing the same thing [1]. The change was reverted do
+perform some rework and now it is back. It was another series entirely
+so v2, v3, etc ... did not really apply well.
 
-diff --git a/drivers/net/phy/marvell10g.c b/drivers/net/phy/marvell10g.c
-index 5354c8895163..034887c6b443 100644
---- a/drivers/net/phy/marvell10g.c
-+++ b/drivers/net/phy/marvell10g.c
-@@ -28,7 +28,7 @@
- #include <linux/hwmon.h>
- #include <linux/marvell_phy.h>
- #include <linux/phy.h>
--#include <linux/sfp.h>
-+#include <linux/phy_port.h>
- #include <linux/netdevice.h>
- 
- #define MV_PHY_ALASKA_NBT_QUIRK_MASK	0xfffffffe
-@@ -463,36 +463,23 @@ static int mv3310_set_edpd(struct phy_device *phydev, u16 edpd)
- 	return err;
- }
- 
--static int mv3310_sfp_insert(void *upstream, const struct sfp_eeprom_id *id)
-+static int mv3310_attach_port(struct phy_device *phydev, struct phy_port *port)
- {
--	struct phy_device *phydev = upstream;
--	__ETHTOOL_DECLARE_LINK_MODE_MASK(support) = { 0, };
--	DECLARE_PHY_INTERFACE_MASK(interfaces);
--	phy_interface_t iface;
-+	/* Nothing special to do to handle non-serdes ports */
-+	if (!port->is_serdes)
-+		return 0;
- 
--	sfp_parse_support(phydev->sfp_bus, id, support, interfaces);
--	iface = sfp_select_interface(phydev->sfp_bus, support);
-+	__set_bit(PHY_INTERFACE_MODE_10GBASER, port->interfaces);
- 
--	if (iface != PHY_INTERFACE_MODE_10GBASER) {
--		dev_err(&phydev->mdio.dev, "incompatible SFP module inserted\n");
--		return -EINVAL;
--	}
- 	return 0;
- }
- 
--static const struct sfp_upstream_ops mv3310_sfp_ops = {
--	.attach = phy_sfp_attach,
--	.detach = phy_sfp_detach,
--	.connect_phy = phy_sfp_connect_phy,
--	.disconnect_phy = phy_sfp_disconnect_phy,
--	.module_insert = mv3310_sfp_insert,
--};
--
- static int mv3310_probe(struct phy_device *phydev)
- {
- 	const struct mv3310_chip *chip = to_mv3310_chip(phydev);
- 	struct mv3310_priv *priv;
- 	u32 mmd_mask = MDIO_DEVS_PMAPMD | MDIO_DEVS_AN;
-+	DECLARE_PHY_INTERFACE_MASK(interfaces);
- 	int ret;
- 
- 	if (!phydev->is_c45 ||
-@@ -543,9 +530,13 @@ static int mv3310_probe(struct phy_device *phydev)
- 	if (ret)
- 		return ret;
- 
-+	__set_bit(PHY_INTERFACE_MODE_10GBASER, interfaces);
-+
- 	chip->init_supported_interfaces(priv->supported_interfaces);
- 
--	return phy_sfp_probe(phydev, &mv3310_sfp_ops);
-+	phydev->max_n_ports = 2;
-+
-+	return 0;
- }
- 
- static void mv3310_remove(struct phy_device *phydev)
-@@ -1402,6 +1393,7 @@ static struct phy_driver mv3310_drivers[] = {
- 		.set_loopback	= genphy_c45_loopback,
- 		.get_wol	= mv3110_get_wol,
- 		.set_wol	= mv3110_set_wol,
-+		.attach_port	= mv3310_attach_port,
- 	},
- 	{
- 		.phy_id		= MARVELL_PHY_ID_88X3310,
-@@ -1421,6 +1413,7 @@ static struct phy_driver mv3310_drivers[] = {
- 		.set_tunable	= mv3310_set_tunable,
- 		.remove		= mv3310_remove,
- 		.set_loopback	= genphy_c45_loopback,
-+		.attach_port	= mv3310_attach_port,
- 	},
- 	{
- 		.phy_id		= MARVELL_PHY_ID_88E2110,
-@@ -1441,6 +1434,7 @@ static struct phy_driver mv3310_drivers[] = {
- 		.set_loopback	= genphy_c45_loopback,
- 		.get_wol	= mv3110_get_wol,
- 		.set_wol	= mv3110_set_wol,
-+		.attach_port	= mv3310_attach_port,
- 	},
- 	{
- 		.phy_id		= MARVELL_PHY_ID_88E2110,
-@@ -1459,6 +1453,7 @@ static struct phy_driver mv3310_drivers[] = {
- 		.set_tunable	= mv3310_set_tunable,
- 		.remove		= mv3310_remove,
- 		.set_loopback	= genphy_c45_loopback,
-+		.attach_port	= mv3310_attach_port,
- 	},
- };
- 
--- 
-2.48.1
+Just giving a change to people using google or lore to distinguish the
+two, that's all.
 
+[1]: https://lore.kernel.org/lkml/f9fc8247-331e-4cdb-992e-bc2f196aa12c@lina=
+ro.org/T/#m9ab35b541a31b25bdd812082ed70f9dac087096e
+
+>
+> Thanks,
+
+--=20
+Jerome
