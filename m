@@ -1,111 +1,170 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BD1266B7B
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 21:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB465266B74;
+	Thu, 13 Feb 2025 21:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739480802; cv=none; b=QPQLH7yJGGYPAWGjuCiyzxE5CdE9jXz38vUVVkmwfJI+OIAqkVSv7KlNNHGPTOgCcKgxU46eMtvVlhWXyN4QghyfmcITxS9LXW23z1FsZeJWB259fbsRArTaEvWasqzeQ7ewgxTQZp15zHMFHQbqDXa2Wn8+23YF4hG2GrmClhk=
+	t=1739480802; cv=none; b=aabK6U/1+tWbdLhZkTIXLShurzndj3owq22NuVo+lsc1pdvjTL8K5soRb8gNtXZ4d6aOCkzoPspgWY4szb5AxwKktBftzYTO0TacaMlcdbg4+/pIm+iX5KX1WpjVmerYN8nPCvpdHdoU8xDgFuPAbsYGpqXC9YYv4VsyMKl51iU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739480802; c=relaxed/simple;
-	bh=k9mUIBYNVf/m3XiK/9d9o923sm1DZskoR9Bay1kygxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PIHUS4C04QiEyrhAiJywh7QMvM+05bob+d7GGi3rP+xDKgbDtH6pAQ7AuibI9Iw//2ZkifLb2FeDwYgLu0HlVsmNlJTSCnJ70i+ZuAl/XNvdRbzijeM4Na5mP9QvNwYNqAd13mtSYl4CPcBAHjIrZ8uVP+kiR1lE2fNng0WSy8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TW30Dy6Q; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	bh=hK2r8d4CW/cwvDuuMbpTukJ/vvFf/JZqXrC75rIGDrs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XdQCd9i8utX4ugpuMh5prMj1rgXn1TH9vr7vd8b880mR+6UiNsJ6meAfb/WjsHAdIiVK3Lt6OYnqYEwcYqvxN71S9x9GjUw8AimT879j8rdysmDpeEo/RhTyDPvBX99xyZpjmgyKH4vAvEkmLcNq4StH1mddJx0YzPUG917oHtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B/5JdAUG; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TW30Dy6Q"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-308f71d5efcso13928221fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:06:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/5JdAUG"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43967004304so1170285e9.2;
+        Thu, 13 Feb 2025 13:06:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739480798; x=1740085598; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LmXeuchpKSKK7itV+jnu4GAZDK3KHsa9YGIjB4lMa4Y=;
-        b=TW30Dy6QT95yxjWWGUnpGo/in5g4tK0AuYc+aeQ+KTlScGAhHzTxqrJPsXJCLyVG/d
-         MrQGZ5P/rf2nAMOl2FVK35q7MZHZhflSE0S7x1pTKSJ281Pmjp4IDvZ/xpgkEpCcF5st
-         KpkPpy0PdtBZmlkT1PhYEbNhv9Q9CdxML9JrnzSLUOtpmIDRUB22rAYnO5zHQdiJZw5J
-         VntZsM+4WErwyMDfUkj8/GbOvr14jrgJL1AzhesEdCr5hQLTxnblfHwsserSsB7MxJ98
-         d3JTldMRuAxop3ngGOgeZ1RKzR0RDu4Tl4qkEQPj6SAKXdx06y0/WKQniAgkE7iOTu6d
-         +eww==
+        d=gmail.com; s=20230601; t=1739480799; x=1740085599; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=V4SxlfpmEUW0FnLcr8a0midof5G/rcbn5Skbhr1r78A=;
+        b=B/5JdAUGfkj2nE1Qgku47w9uD/qT9GLVN7NwYF9AoTNNUPrbDgIHr3XK6DllhwFP3t
+         77DcwyhpUcdJjA4ojt7mCMXzV+ywmi+/rl9aTHNJebaPBAyuIQvJIN1f6Vm77YfSLw0J
+         nlfyngTcSseOHn5JnC7pCaZ57DoZR5d13xgedE/R6uEEwCCnW8+iQmVhrAABYUItH0BT
+         RirAlJ//dRN9b/vonOwNsjp0eC2976Z5ogXsDE2H5ip7CKsiBKQt20AZm1bX+85LD3WX
+         iMyA8vPewikZha09vypTVsmIq9xi3fh1sYGW/iYwir97iLMr2HNAB6BbeAGKG/VM4w5w
+         Tn9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739480798; x=1740085598;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LmXeuchpKSKK7itV+jnu4GAZDK3KHsa9YGIjB4lMa4Y=;
-        b=KDOTCvQtzueLRy2Y84Uk0QJhVqUqfLw/+ngsH8VMpSJxUyImbRJ6XzEyOMTU3xynyz
-         Yyi3derh3yEf3FC+oZOF8f+bQBKqm4swUgxYKxrTgVkMDlIxPhxzIdFDHr3724d7BdRA
-         taNEyaduo/MpJJxE261OAN46mgUbMx+OGRYH04aj4kfGMLZ6lBPtZCOVHpV2XEZvuaWx
-         N38I6hxy4Ua4Qo97E75yA9QsxY4ON6TNdIYYMYphjHXm/st24w0kNi6mks6YUasfCwUu
-         4t+TOwedlLxEr99Nx3dSqYVNJxx+snpTCJmDRkiqOqu2/SwlElesQqEwLfCcrs8uSKtm
-         3eQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWxEW7TShWdyIAwFRORsoxFWld69Dx+FbOIJtxn3Gs1NaFSSzbcvsULpUCGQydNnx2IMv4I2HjgINnSdI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywyJWsm8h7JHihtdpER2fpg9CYjF+Pm3+7gMWVrOccD54scYCz
-	u7zs/Ya2UPjyHT3atCEIR0k5FtX/nRuu1rTesVT8N+GUDSQ0KP+xY0y8o4vH75M=
-X-Gm-Gg: ASbGnculKPPm939EYpz5Ya6VDfv8cDHu5I1vdge7i/Bd1AkwnxI0yFoY8ZEiJrUm0l4
-	mjk/wuNiytSaW/LI25IhoZ0VfbU4YizKjERtglIfefcJgezHadm1ii0IlM6K9jOvRGL/6+wWdfT
-	CnK96S3GmAmEOlyzYsc/UpSwwy8UeUB3lCa/RY+z2qWt9kZ/C8Tbu82Vgh0pUBs7iRBezmlP5F3
-	py9Htov9n7wJUhEOViGFK5K/UzcCP+BLG3Qx8H8fOymLqyNZkm5cdRLasvxUinzjM6KJEOiY442
-	qiEyn4bwDuYRiazn4rRcwbSkPHDTaBMt7d9DKfglM4rkKz0X2M0Sh87MhAeU9XIJhpG9qno=
-X-Google-Smtp-Source: AGHT+IE+Pbr51O7WuqBXkQBPlJzNzEXWSwgmC055Mxz7GAD+fo2hMYKs8st3+0i1dxoABKmhCmeD7A==
-X-Received: by 2002:a05:651c:221d:b0:304:4e03:f9d9 with SMTP id 38308e7fff4ca-30903911d8cmr25004601fa.28.1739480798491;
+        d=1e100.net; s=20230601; t=1739480799; x=1740085599;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=V4SxlfpmEUW0FnLcr8a0midof5G/rcbn5Skbhr1r78A=;
+        b=FhN14Y9GSlMWlOzrZt2hOhqSYbcv5x6BT4W4u106R2nPRacKlHTLsOVoAq8RF5t51b
+         cR43SxwlDlPEQW+CIjJMT/ORFJtPt8QYcC9rY0OZOgWyEtn4EjIaWlfVZy8OpqpN2nMs
+         /L3hjaUGlN0y1pNlhYA0yDjSoG58HJYYouyZNjcmtHAJKgrVKVYkw+X8Su2GaM0+6FBm
+         tDkek0DO+hkAltJISzeHycUG2p9GGWJ503ekGnndsDQNP7nS75n3Mzhxh0PZhWJOoRgg
+         +JLaF1XSFhhRH5WJzxk6OtVgY4v0J1fP7oMcT/XI0zSvcsHUchX810BcZ3HO5yRYG7bC
+         ytVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCfBtVxYLNiWdvJwsaVPiSbvh6DhXToSaNw5pZ1Fj/i+1zf6C0H/TlNHUqPiuAp/O/J2aPlGZl@vger.kernel.org, AJvYcCV0LzE8KOURAz2mYfsuzKoRYkfetj/l59MKrLzCV4vaQ8J4a9O2vkQx9HDP+XtoTjFrtNseeihfmJp/GVQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRNjgl0znenGxfhX4Gl1CNZgEpP7WTWBAI7gYRc0z7yDe0Z4qf
+	8x/VXLcCuFlrKiknvTjYyM7GwIyXPJCw6alBHOqBoeJlqSAKiTUj
+X-Gm-Gg: ASbGncvx0m7k2gUi8nR54yw7DAdyZvwxhRtDDz9NO+/t0zWR/GMIgIx3Ppol9G8ux3g
+	k9lgMb5b+Do17jExqeBtk2ItjURqoV+yLBzeoAJRvFhbozp02fC505vzsZdnr+oDlwOtjiqaAKk
+	1BfDyJ/9hqa2nVeT8VG4DOYKEMBwimph7XIzfHtISm/0eMSnlXPEjcBS8OZv6C0Vi5zmRxZ+ElA
+	ciQhO5gV6L+fqjHWjTtPywQxPH3DuudFXOyNFBbGNZOl6PFub4JpYC2AoONN0lh23aF/fvqzlHB
+	SfaXC4KlOxGQwkvr
+X-Google-Smtp-Source: AGHT+IF7u7hR4wJ9MUECIOlUfhxo/vYJ/M4oO5lTySXwILQOrrh7aVaRI3hMredeSbdzBUL62uyBnw==
+X-Received: by 2002:a05:600c:1d88:b0:439:574c:bf77 with SMTP id 5b1f17b1804b1-439601799b2mr65697825e9.8.1739480798965;
         Thu, 13 Feb 2025 13:06:38 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3091e04742esm109391fa.86.2025.02.13.13.06.36
+Received: from qasdev.Home ([2a02:c7c:6696:8300:594f:c4b7:a2b1:c822])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a04ee48sm59038735e9.3.2025.02.13.13.06.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 13 Feb 2025 13:06:37 -0800 (PST)
-Date: Thu, 13 Feb 2025 23:06:34 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Joel Selvaraj <jo@jsfamily.in>, 
-	Ondrej Jirman <megi@xff.cz>, Javier Martinez Canillas <javierm@redhat.com>, 
-	Jianhua Lu <lujianhua000@gmail.com>, Robert Chiras <robert.chiras@nxp.com>, 
-	Artur Weber <aweber.kernel@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 01/20] drm/panel/xpp055c272: Move to using
- mipi_dsi_*_multi() variants
-Message-ID: <6zfcqybwxycywlm45ou2wges5qjb63emndmlstieck6qgzsjt4@rdb5hevlufms>
-References: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
- <20250213-mipi_cocci_multi-v1-1-67d94ff319cc@redhat.com>
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: shaggy@kernel.org,
+	zhaomengmeng@kylinos.cn,
+	llfamsec@gmail.com,
+	gregkh@linuxfoundation.org,
+	ancowi69@gmail.com
+Cc: jfs-discussion@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	syzbot <syzbot+4e6e7e4279d046613bc5@syzkaller.appspotmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] jfs: fix slab-out-of-bounds read in ea_get()
+Date: Thu, 13 Feb 2025 21:05:53 +0000
+Message-Id: <20250213210553.28613-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213-mipi_cocci_multi-v1-1-67d94ff319cc@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 13, 2025 at 03:44:18PM -0500, Anusha Srivatsa wrote:
-> Stop using deprecated API.
-> Used Coccinelle to make the change.
-> 
+During the "size_check" label in ea_get(), the code checks if the extended 
+attribute list (xattr) size matches ea_size. If not, it logs 
+"ea_get: invalid extended attribute" and calls print_hex_dump().
 
-[...]
+Here, EALIST_SIZE(ea_buf->xattr) returns 4110417968, which exceeds 
+INT_MAX (2,147,483,647). Then ea_size is clamped:
 
-> 
-> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
-> ---
->  drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c | 138 +++++++++++------------
->  1 file changed, 67 insertions(+), 71 deletions(-)
+	int size = clamp_t(int, ea_size, 0, EALIST_SIZE(ea_buf->xattr));
 
-This one has been converted a month ago
+Although clamp_t aims to bound ea_size between 0 and 4110417968, the upper 
+limit is treated as an int, causing an overflow above 2^31 - 1. This leads 
+"size" to wrap around and become negative (-184549328).
 
-commit 8025f23728e9bc817495d48a04954cdee27462bd
-Author:     Tejas Vipin <tejasvipin76@gmail.com>
-AuthorDate: Tue Jan 7 14:55:10 2025 +0530
-Commit:     Douglas Anderson <dianders@chromium.org>
-CommitDate: Mon Jan 13 08:22:30 2025 -0800
+The "size" is then passed to print_hex_dump() (called "len" in 
+print_hex_dump()), it is passed as type size_t (an unsigned 
+type), this is then stored inside a variable called 
+"int remaining", which is then assigned to "int linelen" which 
+is then passed to hex_dump_to_buffer(). In print_hex_dump() 
+the for loop, iterates through 0 to len-1, where len is 
+18446744073525002176, calling hex_dump_to_buffer() 
+on each iteration:
 
-    drm/panel: xinpeng-xpp055c272: transition to mipi_dsi wrapped functions
+	for (i = 0; i < len; i += rowsize) {
+		linelen = min(remaining, rowsize);
+		remaining -= rowsize;
 
+		hex_dump_to_buffer(ptr + i, linelen, rowsize, groupsize,
+				   linebuf, sizeof(linebuf), ascii);
+	
+		...
+	}
+	
+The expected stopping condition (i < len) is effectively broken 
+since len is corrupted and very large. This eventually leads to 
+the "ptr+i" being passed to hex_dump_to_buffer() to get closer 
+to the end of the actual bounds of "ptr", eventually an out of 
+bounds access is done in hex_dump_to_buffer() in the following 
+for loop:
 
+	for (j = 0; j < len; j++) {
+			if (linebuflen < lx + 2)
+				goto overflow2;
+			ch = ptr[j];
+		...
+	}
+
+To fix this we should validate "EALIST_SIZE(ea_buf->xattr)" 
+before it is utilised.
+
+Reported-by: syzbot <syzbot+4e6e7e4279d046613bc5@syzkaller.appspotmail.com>
+Tested-by: syzbot <syzbot+4e6e7e4279d046613bc5@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=4e6e7e4279d046613bc5
+Fixes: d9f9d96136cb ("jfs: xattr: check invalid xattr size more strictly")
+Cc: stable@vger.kernel.org
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+---
+ v2:
+- Added Cc stable tag
+
+ fs/jfs/xattr.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/fs/jfs/xattr.c b/fs/jfs/xattr.c
+index 24afbae87225..7575c51cce9b 100644
+--- a/fs/jfs/xattr.c
++++ b/fs/jfs/xattr.c
+@@ -559,11 +555,16 @@ static int ea_get(struct inode *inode, struct ea_buffer *ea_buf, int min_size)
+ 
+       size_check:
+ 	if (EALIST_SIZE(ea_buf->xattr) != ea_size) {
+-		int size = clamp_t(int, ea_size, 0, EALIST_SIZE(ea_buf->xattr));
+-
+-		printk(KERN_ERR "ea_get: invalid extended attribute\n");
+-		print_hex_dump(KERN_ERR, "", DUMP_PREFIX_ADDRESS, 16, 1,
+-				     ea_buf->xattr, size, 1);
++		if (unlikely(EALIST_SIZE(ea_buf->xattr) > INT_MAX)) {
++			printk(KERN_ERR "ea_get: extended attribute size too large: %u > INT_MAX\n",
++			       EALIST_SIZE(ea_buf->xattr));
++		} else {
++			int size = clamp_t(int, ea_size, 0, EALIST_SIZE(ea_buf->xattr));
++
++			printk(KERN_ERR "ea_get: invalid extended attribute\n");
++			print_hex_dump(KERN_ERR, "", DUMP_PREFIX_ADDRESS, 16, 1,
++				       ea_buf->xattr, size, 1);
++		}
+ 		ea_release(inode, ea_buf);
+ 		rc = -EIO;
+ 		goto clean_up;
 -- 
-With best wishes
-Dmitry
+2.39.5
+
