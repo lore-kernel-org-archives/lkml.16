@@ -1,130 +1,63 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC72F24166D
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 18:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F6F14AD20;
+	Thu, 13 Feb 2025 18:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739470544; cv=none; b=oFmw5kotV45qMMS79nEkyEexEmzmxWwCOhpiXNxuyZYb//46i1gsOxBzQ3pTrj1QHG6EHk/KxDrO01Ut+D99HLHyuf7FnRg0CMrFFOLjPQKDZUZKGk9GiKmHyCDXECxruOq2mXuCimwIKmlMUldRwlr8jEEl0FELFM0qQ/Hmlkc=
+	t=1739470575; cv=none; b=s/V2sjNn5H0pd7i7ZCD/FdSYyncj0SiZQVCn9dYtjhP3miJeaHV6s+laAEpzvsw6T2UfVxPL87npMjLqPqxP9g21lnbvlS8aFz48xozJNYWIu3jz9YjiQhFsoN/SNvQNlJk0ojdwHK5FsJFIfEqsJO48hUc2Z4AKyeOtj4BQz+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739470544; c=relaxed/simple;
-	bh=8PZEmGXiV6pVd97uS7r+2Qg+cgLSJWnlAYS4C/wVFvs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CTCg7J5EgI4KOn4DsFLVf5scqBV4oyREuKeIv7zCxly+epkLMoW1Jt07XhfF3Xxe/MXVgj+6lakjRujzVhBms1mEYlghpH5bxIuipBg4FXeVWf0HbIPthSiVHc7GyNuN1gGe8NVsWZO6LjPmxmI/fKXXTPlFpofNR9s+W99X94k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3CFB113E;
-	Thu, 13 Feb 2025 10:16:02 -0800 (PST)
-Received: from [10.57.79.221] (unknown [10.57.79.221])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA4A93F5A1;
-	Thu, 13 Feb 2025 10:15:38 -0800 (PST)
-Message-ID: <d7713049-5b44-4e86-8c0d-ca2c365c925f@arm.com>
-Date: Thu, 13 Feb 2025 18:15:37 +0000
+	s=arc-20240116; t=1739470575; c=relaxed/simple;
+	bh=VKeWINN+I2FPL3qjsLK8rBanrLL0rtiLwX+1IuvgtFM=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=BRnx3PG8i6UUpR1GcHfMab2+v/UkcLwMIjBE3ksPrX3tYFMoUqceu3wykPLghNZPA5e+p/LzLn3zwgtX1sgL/lsAAog6Dj39iFO2OhUJ8CZOQ86wRR9WjFgPeRXAvXJzcAZGHEOcO+RjJ8TzBS9xrZFspvFYTfPFp0To1Tn5III=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0Yqjv9m; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0Yqjv9m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCEBDC4CED1;
+	Thu, 13 Feb 2025 18:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739470574;
+	bh=VKeWINN+I2FPL3qjsLK8rBanrLL0rtiLwX+1IuvgtFM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=P0Yqjv9mrkHc4MhEVkzwE7gQrsKbmCi4ixzF/jYR7Y90t1p1SDXPfhrgHdt78y4hz
+	 CJQ1yhHjaN5HO4uxxIWpqLfdRAv+Sr9FZL86NK45q8mVhQyYxVe/Hp2MffQhcwWt24
+	 h4aLMS+s00p54Rt3PDkoWTCXtbP86SbzV3vzp+qX5OnCid99GtD/bPOwWSKD1vS6US
+	 dtiEi0lFeIugBEq8JBpjDUZlI0w2kWnVcQAqciUD8SrcBrckxJTlmowY6pHFTy09Fr
+	 RUJFPxJFReRzER0Rfhe54+DsF4AyzP0UKwDjCqE341rDmabtqnAPlaOex3/do6fvpt
+	 L2YPsuu4SzZOQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33FE8380CEEF;
+	Thu, 13 Feb 2025 18:16:45 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for v6.14-3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <pdx86-pr-20250213141423-15116495@linux.intel.com>
+References: <pdx86-pr-20250213141423-15116495@linux.intel.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <pdx86-pr-20250213141423-15116495@linux.intel.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-3
+X-PR-Tracked-Commit-Id: b3e127dacad60a384c92baafdc74f1508bf7dd47
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d63609e4129596cbf86d91c1fb6903273ca26269
+Message-Id: <173947060379.1325136.12811767297991525959.pr-tracker-bot@kernel.org>
+Date: Thu, 13 Feb 2025 18:16:43 +0000
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] sched/uclamp: Alaways using uclamp_is_used()
-To: Xuewen Yan <xuewen.yan@unisoc.com>, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org
-Cc: dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, qyousef@layalina.io,
- ke.wang@unisoc.com, di.shen@unisoc.com, xuewen.yan94@gmail.com,
- linux-kernel@vger.kernel.org
-References: <20250213091554.2593-1-xuewen.yan@unisoc.com>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <20250213091554.2593-1-xuewen.yan@unisoc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 2/13/25 09:15, Xuewen Yan wrote:
-> Now, we have the uclamp_is_used() func to judge the uclamp enabled,
-> so replace the static_branch_unlikely(&sched_uclamp_used) with it.
-> 
-> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> ---
->  kernel/sched/core.c  |  4 ++--
->  kernel/sched/sched.h | 28 ++++++++++++++--------------
->  2 files changed, 16 insertions(+), 16 deletions(-)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 165c90ba64ea..841147759ec7 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -1756,7 +1756,7 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
->  	 * The condition is constructed such that a NOP is generated when
->  	 * sched_uclamp_used is disabled.
->  	 */
-> -	if (!static_branch_unlikely(&sched_uclamp_used))
-> +	if (!uclamp_is_used())
->  		return;
->  
->  	if (unlikely(!p->sched_class->uclamp_enabled))
-> @@ -1783,7 +1783,7 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
->  	 * The condition is constructed such that a NOP is generated when
->  	 * sched_uclamp_used is disabled.
->  	 */
-> -	if (!static_branch_unlikely(&sched_uclamp_used))
-> +	if (!uclamp_is_used())
->  		return;
->  
->  	if (unlikely(!p->sched_class->uclamp_enabled))
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 38e0e323dda2..f5de05354d80 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -3394,6 +3394,19 @@ static inline bool update_other_load_avgs(struct rq *rq) { return false; }
->  
->  unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
->  
-> +/*
-> + * When uclamp is compiled in, the aggregation at rq level is 'turned off'
-> + * by default in the fast path and only gets turned on once userspace performs
-> + * an operation that requires it.
-> + *
-> + * Returns true if userspace opted-in to use uclamp and aggregation at rq level
-> + * hence is active.
-> + */
-> +static inline bool uclamp_is_used(void)
-> +{
-> +	return static_branch_likely(&sched_uclamp_used);
-> +}
-> +
->  static inline unsigned long uclamp_rq_get(struct rq *rq,
->  					  enum uclamp_id clamp_id)
->  {
-> @@ -3417,7 +3430,7 @@ static inline bool uclamp_rq_is_capped(struct rq *rq)
->  	unsigned long rq_util;
->  	unsigned long max_util;
->  
-> -	if (!static_branch_likely(&sched_uclamp_used))
-> +	if (!uclamp_is_used())
->  		return false;
->  
->  	rq_util = cpu_util_cfs(cpu_of(rq)) + cpu_util_rt(rq);
-> @@ -3426,19 +3439,6 @@ static inline bool uclamp_rq_is_capped(struct rq *rq)
->  	return max_util != SCHED_CAPACITY_SCALE && rq_util >= max_util;
->  }
->  
-> -/*
-> - * When uclamp is compiled in, the aggregation at rq level is 'turned off'
-> - * by default in the fast path and only gets turned on once userspace performs
-> - * an operation that requires it.
-> - *
-> - * Returns true if userspace opted-in to use uclamp and aggregation at rq level
-> - * hence is active.
-> - */
-> -static inline bool uclamp_is_used(void)
-> -{
-> -	return static_branch_likely(&sched_uclamp_used);
-> -}
-> -
->  #define for_each_clamp_id(clamp_id) \
->  	for ((clamp_id) = 0; (clamp_id) < UCLAMP_CNT; (clamp_id)++)
->  
+The pull request you sent on Thu, 13 Feb 2025 14:14:23 +0200:
 
-Reviewed-by: Christian Loehle <christian.loehle@arm.com>
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-3
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d63609e4129596cbf86d91c1fb6903273ca26269
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
