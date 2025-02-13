@@ -1,51 +1,35 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98412281375;
-	Thu, 13 Feb 2025 14:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A7102222CD
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739457117; cv=none; b=tSXIa/AtzSSWJUKtAeA7FqK72Kfvzi2uT9DFl5QBmIUSbpbegWIawCmlirKzqmKTWmxqWcsJFbp5qScWj6y2mO3XH9hil3r8yuWfC7scZdOWIXEEES0Eij7D95LbO19sOoIKWgat8C9zXk6soDloJmD/s+/FMZhiXi6rrlotsCs=
+	t=1739457123; cv=none; b=EY4A5qVT+ws7tyaK5Ihhn8dmlAt7peIP2jQalvKMTqI4rzM2SNEay8R/1Ioh4iD5WLsdfZVETKmiFokCXqxCacGA5IIMIPmxV1gy9ysQNmX9QLxh96PsBGc+CrnGDRTb8y0Yl70ic+JflgbphnRk2+r87whn2uf/IyaweVveitM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739457117; c=relaxed/simple;
-	bh=QbYu5tcFJpICXFPEleK/DPk1kwwWWDH/Zmndr3rc+8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xuv6vHj59SppblXu2QgUFSpfOZrRoXoTiAOsjH8JWpSXFkLVaM+0vyU5dS3gc4aEY3AB9SHD7xuXunkfyUv/eoLOr8B3u8ONG24ULkIGHYgqfyD4LArL5vwuEkuvxp4Yo071y982tY4m2ONCcqyz0WD2UMm7AVb/BtG4UPCU60w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=u7vCvmRu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="u7vCvmRu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C33E6C4CED1;
-	Thu, 13 Feb 2025 14:31:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739457117;
-	bh=QbYu5tcFJpICXFPEleK/DPk1kwwWWDH/Zmndr3rc+8o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u7vCvmRuSXw4hqiJVLVwMMOR6kg+fgLZasX79/KiMON+qIhqzaC/aJiaKVGIPg71q
-	 +n9dSrqzdD1l6eDwUVbxEvgQzCiKvkV2Of0Jvzd6K4Wm7RaXCSdeiD3uFHpeUoKMp2
-	 pBkc6L/oZNT06bJ9MrFJx+m/9eta4g5MUe6v0vLc=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
+	s=arc-20240116; t=1739457123; c=relaxed/simple;
+	bh=MbKSHc6S9QS5zxVP19dlAsVUWqhbyd3VguIpTvCey6k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=vAyjavZ0Z2cCkTIcRMXMekgwSxB1Fdpbqd+4YxIwTrYuDvHeSAuXI9HJ7j8U5+XJU7YU75M/LdvYdxkD9kWSEGFBHNAR/f5ZPfsHfgBM8yojWxASMOpDwbnq9/aF1/XGn/TzZD7ihUoRwiagoQvlcu5FsBvPeHRlgZ19Ec1YHaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.156])
+	by gateway (Coremail) with SMTP id _____8AxWXFfAq5n1EN0AA--.5453S3;
+	Thu, 13 Feb 2025 22:31:59 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.156])
+	by front1 (Coremail) with SMTP id qMiowMAxSsRbAq5nLSUQAA--.1557S2;
+	Thu, 13 Feb 2025 22:31:58 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Gavin Shan <gshan@redhat.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.12 005/422] arm64/mm: Ensure adequate HUGE_MAX_HSTATE
-Date: Thu, 13 Feb 2025 15:22:34 +0100
-Message-ID: <20250213142436.629719861@linuxfoundation.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250213142436.408121546@linuxfoundation.org>
-References: <20250213142436.408121546@linuxfoundation.org>
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.14-rc3
+Date: Thu, 13 Feb 2025 22:31:48 +0800
+Message-ID: <20250213143148.1450556-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,61 +37,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxSsRbAq5nLSUQAA--.1557S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7AF4UGrW5GrWfZr17KF17Arc_yoW8CFW3pr
+	y3urnxJr45GrW3X3Zrt347Wr1DXr1xGr1IqF1ay348AF1UZr1UXr18WrykXFyUJ34rJr1F
+	qF1rJw1qqF1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
+	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
+	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
+	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
+	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU
+	0xZFpf9x07jepB-UUUUU=
 
-6.12-stable review patch.  If anyone has any objections, please let me know.
+The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
 
-------------------
+  Linux 6.14-rc2 (2025-02-09 12:45:03 -0800)
 
-From: Anshuman Khandual <anshuman.khandual@arm.com>
+are available in the Git repository at:
 
-[ Upstream commit 1e5823c8e86de83a43d59a522b4de29066d3b306 ]
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.14-1
 
-This asserts that HUGE_MAX_HSTATE is sufficient enough preventing potential
-hugetlb_max_hstate runtime overflow in hugetlb_add_hstate() thus triggering
-a BUG_ON() there after.
+for you to fetch changes up to 3011b29ec5a33ec16502e687c4264d57416a8b1f:
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-Link: https://lore.kernel.org/r/20241202064407.53807-1-anshuman.khandual@arm.com
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/mm/hugetlbpage.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+  LoongArch: KVM: Set host with kernel mode when switch to VM mode (2025-02-13 12:02:56 +0800)
 
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index 5f1e2103888b7..0a6956bbfb326 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -508,6 +508,18 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
- 
- static int __init hugetlbpage_init(void)
- {
-+	/*
-+	 * HugeTLB pages are supported on maximum four page table
-+	 * levels (PUD, CONT PMD, PMD, CONT PTE) for a given base
-+	 * page size, corresponding to hugetlb_add_hstate() calls
-+	 * here.
-+	 *
-+	 * HUGE_MAX_HSTATE should at least match maximum supported
-+	 * HugeTLB page sizes on the platform. Any new addition to
-+	 * supported HugeTLB page sizes will also require changing
-+	 * HUGE_MAX_HSTATE as well.
-+	 */
-+	BUILD_BUG_ON(HUGE_MAX_HSTATE < 4);
- 	if (pud_sect_supported())
- 		hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
- 
--- 
-2.39.5
+----------------------------------------------------------------
+LoongArch fixes for v6.14-rc3
 
+Fix bugs about idle, kernel_page_present(), IP checksum and KVM, plus
+some trival cleanups.
+----------------------------------------------------------------
+Bibo Mao (3):
+      LoongArch: KVM: Fix typo issue about GCFG feature detection
+      LoongArch: KVM: Remove duplicated cache attribute setting
+      LoongArch: KVM: Set host with kernel mode when switch to VM mode
 
+Huacai Chen (1):
+      LoongArch: Fix kernel_page_present() for KPRANGE/XKPRANGE
+
+Marco Crivellari (1):
+      LoongArch: Fix idle VS timer enqueue
+
+Yuli Wang (3):
+      LoongArch: Use str_yes_no() helper function for /proc/cpuinfo
+      LoongArch: Remove the deprecated notifier hook mechanism
+      LoongArch: csum: Fix OoB access in IP checksum code for negative lengths
+
+ arch/loongarch/include/asm/cpu-info.h | 21 ---------------------
+ arch/loongarch/include/asm/smp.h      |  2 ++
+ arch/loongarch/kernel/genex.S         | 28 +++++++++++++++-------------
+ arch/loongarch/kernel/idle.c          |  3 +--
+ arch/loongarch/kernel/proc.c          | 29 +++--------------------------
+ arch/loongarch/kernel/reset.c         |  6 +++---
+ arch/loongarch/kvm/main.c             |  4 ++--
+ arch/loongarch/kvm/switch.S           |  2 +-
+ arch/loongarch/kvm/vcpu.c             |  3 ---
+ arch/loongarch/lib/csum.c             |  2 +-
+ arch/loongarch/mm/pageattr.c          |  3 ++-
+ 11 files changed, 30 insertions(+), 73 deletions(-)
 
