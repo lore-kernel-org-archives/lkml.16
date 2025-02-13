@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AD0274271
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A921F274274
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739486840; cv=none; b=GquX+6VEUD23toFMStJAP5YAeQKMtATL+hsnzRRCAe7Q0fCvRf2fkmB4amWjMrDcE/vHR7W1b0trY2jaEvHU/ywYn2Fo6Btrv+4neXjudx9x5wmQO0Hud/kGYiTojMbx/8Z0Mn40UzxP7OaCIBfOUfABxsz30T0Qb2VIc8sCfFk=
+	t=1739486844; cv=none; b=W2l9rUx0R8QTsvFNPbESIwdE9Et2Qo/FDu+xY7z+p6h5XlbDpY/N+zoQi/w3P+LK1EKmlrwCqyopIvBQsxSvSvmxb/RVeq+Ly3lEt1wvWbTc6qHkvjccqYcWrnLz8xoHfXBgw/w7ir3SNtYpbFmyeisHJuIww2MY0lAgQzxIZNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739486840; c=relaxed/simple;
-	bh=Y4hMd1vQU5kJmXf3djw5SF9D6KSEwo+wW27aKEsq5PI=;
+	s=arc-20240116; t=1739486844; c=relaxed/simple;
+	bh=WpaO6E6d4lQ17I42nTsw4iPOWxgreoNygD4rGF1BfSY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Q2t1m2Ka39NOSoTHTJ0SqFjXhmfEtBLzaoRbHQMGlb++SUR2aWulmpJYmV8QYMIccnizHRu5ZiXCNaH/NV9MZOaBWU2qAPDHnljeZVMuVT4fEGcNumvn2a90sU6aVWhdBLziqN50wIQxPcKw4Tal+kZDCrskt2Toy6R4g4MrE94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g+5+IuDc; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=F3vG+FZIar0PSR4f3Ov8ebHQ1MMfH8DwrA1Pf47wVjbE1pxNwYzdii9ShXEw9U9NxYHy3vzlhba2JkLH9XWP3L5pMXXymNwVVVEqTJdVF5LTGPpCi9I89WPyUaD9QS9Hh7uaIeK+kZGvkaqove4GVIinjWTeG1OnhfEVWHDLxgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=is4xf5wa; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g+5+IuDc"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc1c7c8396so1868133a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:47:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="is4xf5wa"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-220d1c24b25so31170575ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:47:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739486838; x=1740091638; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1739486842; x=1740091642; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YNoCxF31vK1w52ANaPw+siaL/yNI9CD2wHk/1nIOSYo=;
-        b=g+5+IuDcL2JDSdwxIS2lyLPKLwz9qSKJ6G/fDejQTqxKb552in/KKjFqBX3Z10WUEI
-         RljhEmJxkdxAskjo+LHrrhI0SkX1lcPRyAyua/e58b6+JPHhlUQ0PZx1UAZhc011o4OQ
-         Y4TPF7Vmnlxa0NsHrBtjwHrRKsnrfYJtOQzyIFPQ/ZDhQ1hPnBMq4LqXCuXRhzUmFA1+
-         JavTXxwF/3vHOkxQJ7VGH3VazWShFib2S16v4ZbEXxNXkTKaEfKnz5cvp2W9l2rkkw+h
-         pdyih6g/Tw6PRKAhMXKX0YLm4HXq3EfMa22yjK67KMhH6mxSkwxUN2Ak1ZhUDtduNByD
-         56Nw==
+        bh=T2U39AcH2pHA/F+TfYeY5gc/lOd8HOvLuGlgxJNlsXk=;
+        b=is4xf5wa8TO0pYycgep56N9Yc5hT4s+jgrvcfvJnE+iXCwxCagqapXniBmlASdKRbK
+         lHSq4JbwytZjaquZ8SqtZeSsIQ1e4cHkmPARw7VMoxrT6m/oUV6/ghmJ2auOVdTDRjF/
+         UhntJLKxP9+AhRDlFXTXXH57UA3Sg6bCaOzyrXEKaQFSSsOR3WbWfOB47M32YbkYdhd4
+         NmS7zYynMF1UVcGJp0Qik7rb0Ii04Snpqz+UK3XjahifpuNS3ezZlVoni1y9MhxLsrqI
+         CBFCEFWxSLYdtbPFzyQTf3IXCEgyQhzOmApwnDPBUmiQNVwQMRdqQ3EyDsWglVmW5afu
+         2i1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739486838; x=1740091638;
+        d=1e100.net; s=20230601; t=1739486842; x=1740091642;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YNoCxF31vK1w52ANaPw+siaL/yNI9CD2wHk/1nIOSYo=;
-        b=NjgOrvA/BXixg47PF6FxOBHbEphXMT6mI8KZSBW7IWmXbnJGoMqrteXE1vVQnwVqZ2
-         dXJO+1uzHoCixcOwyWW4xLkZpE2VbwUchM3glfZf11KjwFdQNp4eqMgGagjJpDMifFMY
-         lpQwAuTtKrgxnu3D6JVxi1FNxlBmr6ZyxnqEg2TVJKbvFJofiANijCds0xfHDpHRuMIY
-         TTTcb3R/fZJa8Y8EQs4XlkvGKc7tjFTlKeysBlj+DCcGbAVI1Vm2IyZgzVkVeYj/T80P
-         b5h/5Q7sepVjCMblstNXKZkQX6ogoAj8gMhLo+a+95uWqa971f42bLEKknbTpH8URP1F
-         ovBw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/vxI77wsn3Wsd7WfBG9aexKtgS1rRNOK25jQl+Ewgfy5XZLs2SUcbO9EjHrjbzp27T9/XUyUnVwL96do=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyo2kzBkF4YNnnTYvmZJ1EdLkcu+Px1Iiqdp0R+X2xHIzA2+5D8
-	0Hh98zObyDBjUeXxn5mRi4mflNlPUHzEYNjZtSPL1WqOiWSV3c3GkLoEgb9YAfX4nnoWF4BQ9Lm
-	7nQ==
-X-Google-Smtp-Source: AGHT+IErQJcr8UIFZH8RFb6dXrkV59J3DVPaTleZ6Gt1R/Rh5Le0xTpOCinKGJEwYZoy9GO+2bPedgwmiK8=
-X-Received: from pjm4.prod.google.com ([2002:a17:90b:2fc4:b0:2ea:5613:4d5d])
- (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:54c4:b0:2ee:ab29:1a65
- with SMTP id 98e67ed59e1d1-2fbf5bc07e4mr13915594a91.4.1739486838053; Thu, 13
- Feb 2025 14:47:18 -0800 (PST)
-Date: Thu, 13 Feb 2025 14:46:46 -0800
+        bh=T2U39AcH2pHA/F+TfYeY5gc/lOd8HOvLuGlgxJNlsXk=;
+        b=R2QZh6TYcwMBYZcWS43VNgyIFcIyTykq+d6KnZUbU1hfl06Pz2GImPe0fsTAgQMgCa
+         KIqTjHdnVN9e8wS39X8mOnpnNJUhW2iJZLqQ7qSmbaiAyZDthNynljDg1Jk9O6pRFOyp
+         U8sAIBErKKpJkx8RlL/O08HI0yDu+I09yjXYIZcmzbXIgo5EaPl2ifspjJAJ4yU+/oYC
+         YzBAY9AhAKgCA2MY91vBt0op+M5j9AlFpZhNFrDxEQPo9lo4iBdkw4i91jjOmWnqPO7U
+         n03EXbhcmUge1rs2acxH16gpfapHQIyGtK5D5zl4OIycDbX1dIlV9ZCBv/0BvzzG1c/d
+         5odQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXD9z4Z5qwuOC8ZJdR+nZp/du2rSaHOjq/havgcyuhHk5xi14W9enY5j0EGTsIt1zSXvpQt6y1ngpSH0wQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj2BH9iw4umwTsm73nCIW8K2k9XbqSTKilFtoAVwYo+yukLVVu
+	IfXgDGEZO0QtV46FaNGIAUrEphgSG3oV30eDMcZkE7XYZHV0Fw3uyedYr2zPVSBg8DCvz1MqrNP
+	ppg==
+X-Google-Smtp-Source: AGHT+IH/ab4L3c0kIEwgibMtPWiyLfRxDS8XonLWZO0QHAdpAq0IEkMMWm+kC4zlUCoEzXuh3expkwlJzJM=
+X-Received: from pji4.prod.google.com ([2002:a17:90b:3fc4:b0:2ea:aa56:49c])
+ (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f706:b0:21f:7964:e989
+ with SMTP id d9443c01a7336-220d2368b12mr72348425ad.52.1739486841935; Thu, 13
+ Feb 2025 14:47:21 -0800 (PST)
+Date: Thu, 13 Feb 2025 14:46:48 -0800
 In-Reply-To: <20250213224655.1680278-1-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250213224655.1680278-1-surenb@google.com>
 X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <20250213224655.1680278-10-surenb@google.com>
-Subject: [PATCH v10 09/18] mm: uninline the main body of vma_start_write()
+Message-ID: <20250213224655.1680278-12-surenb@google.com>
+Subject: [PATCH v10 11/18] refcount: introduce __refcount_{add|inc}_not_zero_limited_acquire
 From: Suren Baghdasaryan <surenb@google.com>
 To: akpm@linux-foundation.org
 Cc: peterz@infradead.org, willy@infradead.org, liam.howlett@oracle.com, 
@@ -76,79 +76,65 @@ Cc: peterz@infradead.org, willy@infradead.org, liam.howlett@oracle.com,
 	kernel-team@android.com, surenb@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-vma_start_write() is used in many places and will grow in size very soon.
-It is not used in performance critical paths and uninlining it should
-limit the future code size growth.
-No functional changes.
+Introduce functions to increase refcount but with a top limit above which
+they will fail to increase (the limit is inclusive). Setting the limit to
+INT_MAX indicates no limit.
 
 Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 ---
 Changes since v9 [1]:
-- Add Reviewed-by, per Lorenzo Stoakes
+- Change refcount limit to be used with xxx_acquire functions
 
-[1] https://lore.kernel.org/all/20250111042604.3230628-10-surenb@google.com/
+[1] https://lore.kernel.org/all/20250111042604.3230628-11-surenb@google.com/
 
- include/linux/mm.h | 12 +++---------
- mm/memory.c        | 14 ++++++++++++++
- 2 files changed, 17 insertions(+), 9 deletions(-)
+ include/linux/refcount.h | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 7fa7c39162fd..557d66e187ff 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -787,6 +787,8 @@ static bool __is_vma_write_locked(struct vm_area_struct *vma, unsigned int *mm_l
- 	return (vma->vm_lock_seq == *mm_lock_seq);
+diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+index 4589d2e7bfea..80dc023ac2bf 100644
+--- a/include/linux/refcount.h
++++ b/include/linux/refcount.h
+@@ -213,13 +213,20 @@ static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
  }
  
-+void __vma_start_write(struct vm_area_struct *vma, unsigned int mm_lock_seq);
+ static inline __must_check __signed_wrap
+-bool __refcount_add_not_zero_acquire(int i, refcount_t *r, int *oldp)
++bool __refcount_add_not_zero_limited_acquire(int i, refcount_t *r, int *oldp,
++					     int limit)
+ {
+ 	int old = refcount_read(r);
+ 
+ 	do {
+ 		if (!old)
+ 			break;
 +
- /*
-  * Begin writing to a VMA.
-  * Exclude concurrent readers under the per-VMA lock until the currently
-@@ -799,15 +801,7 @@ static inline void vma_start_write(struct vm_area_struct *vma)
- 	if (__is_vma_write_locked(vma, &mm_lock_seq))
- 		return;
++		if (i > limit - old) {
++			if (oldp)
++				*oldp = old;
++			return false;
++		}
+ 	} while (!atomic_try_cmpxchg_acquire(&r->refs, &old, old + i));
  
--	down_write(&vma->vm_lock.lock);
--	/*
--	 * We should use WRITE_ONCE() here because we can have concurrent reads
--	 * from the early lockless pessimistic check in vma_start_read().
--	 * We don't really care about the correctness of that early check, but
--	 * we should use WRITE_ONCE() for cleanliness and to keep KCSAN happy.
--	 */
--	WRITE_ONCE(vma->vm_lock_seq, mm_lock_seq);
--	up_write(&vma->vm_lock.lock);
-+	__vma_start_write(vma, mm_lock_seq);
+ 	if (oldp)
+@@ -231,6 +238,18 @@ bool __refcount_add_not_zero_acquire(int i, refcount_t *r, int *oldp)
+ 	return old;
  }
  
- static inline void vma_assert_write_locked(struct vm_area_struct *vma)
-diff --git a/mm/memory.c b/mm/memory.c
-index e600a5ff3c7a..3d9c5141193f 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -6393,6 +6393,20 @@ struct vm_area_struct *lock_mm_and_find_vma(struct mm_struct *mm,
- #endif
- 
- #ifdef CONFIG_PER_VMA_LOCK
-+void __vma_start_write(struct vm_area_struct *vma, unsigned int mm_lock_seq)
++static inline __must_check bool
++__refcount_inc_not_zero_limited_acquire(refcount_t *r, int *oldp, int limit)
 +{
-+	down_write(&vma->vm_lock.lock);
-+	/*
-+	 * We should use WRITE_ONCE() here because we can have concurrent reads
-+	 * from the early lockless pessimistic check in vma_start_read().
-+	 * We don't really care about the correctness of that early check, but
-+	 * we should use WRITE_ONCE() for cleanliness and to keep KCSAN happy.
-+	 */
-+	WRITE_ONCE(vma->vm_lock_seq, mm_lock_seq);
-+	up_write(&vma->vm_lock.lock);
++	return __refcount_add_not_zero_limited_acquire(1, r, oldp, limit);
 +}
-+EXPORT_SYMBOL_GPL(__vma_start_write);
 +
- /*
-  * Lookup and lock a VMA under RCU protection. Returned VMA is guaranteed to be
-  * stable and not isolated. If the VMA is not found or is being modified the
++static inline __must_check __signed_wrap
++bool __refcount_add_not_zero_acquire(int i, refcount_t *r, int *oldp)
++{
++	return __refcount_add_not_zero_limited_acquire(i, r, oldp, INT_MAX);
++}
++
+ /**
+  * refcount_add_not_zero_acquire - add a value to a refcount with acquire ordering unless it is 0
+  *
 -- 
 2.48.1.601.g30ceb7b040-goog
 
