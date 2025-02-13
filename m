@@ -1,133 +1,68 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311A141C6A;
-	Thu, 13 Feb 2025 10:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A066190477
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 10:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739443573; cv=none; b=pL1piTszIEgDv1zQiwbSaPUZGrDn4w2t0QyJC0sJGRhm1K9d8bk+eqI2+vuk3Cp9j/liIM5hRjL4EyJIBeZDcUqb2+BHHGzS5SYO0eIg5D/rpilxK3lmpEOFxAPJZa7uUiiusUGLVVrKfTx1UNW4yTkt3EaRa1emXuMI9WWp3/8=
+	t=1739443658; cv=none; b=JRaAqREKEjs21QNXpMnGKbSYexrDkaf5RNZeJouQh6yxSmmc3DsUAbBiGOnOsECRt72ahkCaShHuxYkSn3HcJFiEpODgtH0xJmZcGqqpBK1Vjc9AeCkbjSLNx2DSN8jDipRpfKqeAAQuhep2Zic98zrmmh3YUZqhsNrWqY7EShw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739443573; c=relaxed/simple;
-	bh=PRion708stDyzBpzkg+ZHWYiT0IPCeU96XYPIsMRHLA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f5lOztILNf4RbwFbuY+hnJq97N9p+ZixA7RSkdejqwd2KGV8Ekn804J4AaP2Yv0SsXNwGDvo+k1BIMFFAIBT0mzP3ICbLMnHve2DuUNCWPezUGEqcXTt0h8JvZLCvBOVnfkfb7XDw7cHkCiNpU+8reS0HK2+X2FSDT7WRQBl+fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=kcgsIF7h; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="kcgsIF7h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1739443571; x=1770979571;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2T1/qBmI0DiKHiEvUpkWL+IkG1IE3CLB5FcNc97aZNM=;
-  b=kcgsIF7hO9fC4e/6wAtM4w7nZRwa4mMhw5wBf5EbbgBssKhvj7vYmj2Z
-   tuyckOs0aDbJOCHl4bqjmt7PQ35rfvxnB/6y8wBLTcO/zpddMaU5b7Buk
-   kjeZPVp1Y2VbmrKPB15FzFZNMcsAxJPtcFhEJYx5lu3Ru5d4Eu1BD+c5F
-   0=;
-X-IronPort-AV: E=Sophos;i="6.13,282,1732579200"; 
-   d="scan'208";a="718442685"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 10:45:48 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.7.35:48797]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.32.208:2525] with esmtp (Farcaster)
- id 90872893-0365-47d5-86c4-9357a97ba155; Thu, 13 Feb 2025 10:45:47 +0000 (UTC)
-X-Farcaster-Flow-ID: 90872893-0365-47d5-86c4-9357a97ba155
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Thu, 13 Feb 2025 10:45:47 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.37.244.7) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 13 Feb 2025 10:45:41 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <leitao@debian.org>
-CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <dsahern@kernel.org>,
-	<edumazet@google.com>, <horms@kernel.org>, <kernel-team@meta.com>,
-	<kuba@kernel.org>, <kuniyu@amazon.co.jp>, <kuniyu@amazon.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, <ushankar@purestorage.com>
-Subject: Re: [PATCH net-next v3 1/3] net: document return value of dev_getbyhwaddr_rcu()
-Date: Thu, 13 Feb 2025 19:45:31 +0900
-Message-ID: <20250213104531.36861-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250213-kickass-orchid-wildebeest-3ec3ae@leitao>
-References: <20250213-kickass-orchid-wildebeest-3ec3ae@leitao>
+	s=arc-20240116; t=1739443658; c=relaxed/simple;
+	bh=gb2lywRTuISE8Acijb3xotjXVJzZlSaXWQBshazghYs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=h4iavN1RrfnKZDtpKosbXEXduJOA2cQAgxYi1kdiqvoNkUjuAzMxoKZORhjtf/kkSBf5PXh6UYXh5FFxTFa1gViwcN/NBPrSpeictMjOu1dUKe6c78res4wjzYNdTiWc0RgZD2W2lY7RrH+1n5kSyefMaILrBRRjwbGrKO/oxIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tiWki-0003sp-2b; Thu, 13 Feb 2025 11:47:28 +0100
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tiWkg-000jie-0j;
+	Thu, 13 Feb 2025 11:47:26 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tiWkg-0003g4-0Z;
+	Thu, 13 Feb 2025 11:47:26 +0100
+Message-ID: <3516a8364bfe64bd24f5330b006b17581150e717.camel@pengutronix.de>
+Subject: Re: [PATCH 2/6] irqchip/renesas-rzg2l: Use
+ devm_reset_control_get_exclusive_deasserted()
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Thomas Gleixner
+	 <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, Lad
+ Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ linux-renesas-soc@vger.kernel.org
+Date: Thu, 13 Feb 2025 11:47:26 +0100
+In-Reply-To: <20250212182034.366167-3-fabrizio.castro.jz@renesas.com>
+References: <20250212182034.366167-1-fabrizio.castro.jz@renesas.com>
+	 <20250212182034.366167-3-fabrizio.castro.jz@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D044UWA003.ant.amazon.com (10.13.139.43) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-From: Breno Leitao <leitao@debian.org>
-Date: Thu, 13 Feb 2025 02:16:36 -0800
-> Hello Kuniyuki,
-> 
-> On Thu, Feb 13, 2025 at 04:47:48PM +0900, Kuniyuki Iwashima wrote:
-> > From: Kuniyuki Iwashima <kuniyu@amazon.com>
-> > Date: Thu, 13 Feb 2025 16:36:46 +0900
-> > > From: Breno Leitao <leitao@debian.org>
-> > > Date: Wed, 12 Feb 2025 09:47:24 -0800
-> > > > diff --git a/net/core/dev.c b/net/core/dev.c
-> > > > index d5ab9a4b318ea4926c200ef20dae01eaafa18c6b..0b3480a125fcaa6f036ddf219c29fa362ea0cb29 100644
-> > > > --- a/net/core/dev.c
-> > > > +++ b/net/core/dev.c
-> > > > @@ -1134,8 +1134,8 @@ int netdev_get_name(struct net *net, char *name, int ifindex)
-> > > >   *	The returned device has not had its ref count increased
-> > > >   *	and the caller must therefore be careful about locking
-> > > >   *
-> > > > + *	Return: pointer to the net_device, or NULL if not found
-> > > >   */
-> > > 
-> I am a bit confused about what you are saying.
-> > > I noticed here we still mention RTNL and it should be removed.
-> 
-> I have no mention RTNL in this patch at all:
+On Mi, 2025-02-12 at 18:20 +0000, Fabrizio Castro wrote:
+> Use devm_reset_control_get_exclusive_deasserted() to simplify
+> rzg2l_irqc_common_init().
+>=20
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 
-Yes, and patch 2 removes the part from kernel-doc of
-dev_getbyhwaddr_rcu().
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-
-> 
-> 	# git log -n1 --oneline HEAD~2
-> 	6d34fd4700231 net: document return value of dev_getbyhwaddr_rcu()
-> 	# git show  HEAD~2  | grep -i rtnl
-> 
-> > I missed this part is removed in patch 2, but the Return: part
-> > is still duplicate.
-> 
-> This part is also unclear to me. What do you mean the "Return:" part is
-> still duplicated?
-> 
-> This is how the documentation looks like, after the patch applied:
-> 
-> 	/**
-> 	*      dev_getbyhwaddr_rcu - find a device by its hardware address
-> 	*      @net: the applicable net namespace
-> 	*      @type: media type of device
-> 	*      @ha: hardware address
-> 	*
-> 	*      Search for an interface by MAC address. Returns NULL if the device
-                                                       ^^^^^^^
-Sorry, I meant this part is redundant as we have Return: now.
-
-
-> 	*      is not found or a pointer to the device.
-> 	*      The caller must hold RCU.
-> 	*      The returned device has not had its ref count increased
-> 	*      and the caller must therefore be careful about locking
-> 	*
-> 	*      Return: pointer to the net_device, or NULL if not found
-> 	*/
-> 	struct net_device *dev_getbyhwaddr_rcu(struct net *net, unsigned short type,
-> 						const char *ha)
-> 	{
-> 		<snip>
-> 	}
+regards
+Philipp
