@@ -1,181 +1,663 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2070.outbound.protection.outlook.com [40.107.237.70])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13DC280A3A;
-	Thu, 13 Feb 2025 16:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739463748; cv=fail; b=egOI2q57iP3J6BWg5jnmTH/LPaGh2IsMjkR/+LuBTkdj2O4yCpgxXkaTHKDuZqzSNlYTFQ6Sv4tyrAWCZBsrbGR5wv2abwgxsu9AtzKfkaNptFiNns85PrXyLgLi2A0JKOYsuED5nYGy11nFn4NrJvM4/zPYL9CIwuitsjQvuj8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739463748; c=relaxed/simple;
-	bh=YM2qLD24y66piQ+GdtGtYu3mACCqVzBE0sMDKS+4wBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=k9rnWvA9akrTnXd8gtRwyb7FcId4s4sqZBI3g8pmiE4JdCLiztNrRHB4NjZNV82am/MMc4K1R9o5t6pEDj/ZrIwYyJi/gb4weCW6ILTJ+EgURqpI9+AOagpiTGYG8KspbkEuqshFB6UQdvlGL4t6jUhzWiAElnR2romOxMtLJh8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aE4GqxG5; arc=fail smtp.client-ip=40.107.237.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aE4GqxG5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EFRjeC0TsqhhKSHAWVN0y2cagOerQ29n0kLMiVrM0e0S1MHNDWcO+LyfylLJjPvUKU1YB2fKpZKDvBQw94q+LgAT/IfNcviPKLGQP5pPJLUu8sYqw7N1P9XugOMu25pvDG+n/UmAowIoCeQXfBt30tDy4nIHn6xBP6XSgeS237j0BbwOMoQ89q3Nn+LC6bl6pUKjApwbpm0bujShSsr2q+8EaWLKv+4ryr2hrdOmivDwrBsPXLoVPwMXjwewgRxQ5IIwIvGbSdEfXzj8ekhvT9IeZD7BFUfCAKj6nJNUiWW6fFRH3qBstktvPAC0n7TDUCnFHYYILnsP3pZO2sW/Og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SwWhwwiVSKhnxyU4BqpG/Ah5D+xpCqYeiNZ0lSdvjBA=;
- b=Bkfu/NdTAVf+KhrxR3vZMnFzmX8l0JuaEROR1Tu54HVJb1DFL0dT+GLMZYHbq9iK+T9/qfkX0LQ7bhbesuPVS86bpxOtEJ8+fHiYuNkhAqoVDWgFjJfUyjR7Q8sElc7XeWuXBS0QhfxosdlHNqdgoyiL1pJwTJ7cyDTFOrhniDTeOnoiuMH+INXKaka6s9NsSW9pv5lJmF7lxWvq/5PaNACJ4Z8ZFf3Fb1McPV5qZNRETdNT6T2WYWtzcnx9hUQ12MVb0cD0k4C+osVNtgJwNjQ8LJbPK2BOGFZCa50UmGup+6kZ6enr7zy9Kz3pPTju7V9c6ql71wN4P0XoxbEzlw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SwWhwwiVSKhnxyU4BqpG/Ah5D+xpCqYeiNZ0lSdvjBA=;
- b=aE4GqxG5Q+FPBbEu3ydPGyJyCi4zvw1TdoVrxpPHaBhX6bOd5gUan63DiY58bwgbO+IIi/NTSjhMOsv4s+1u38oxLrNcjaAjT0E99SaIRzzeHcOPlmLxi8H0FyreO1ibOF3WAaNY/s3ypZrGZL30DZcClmKFVE3vPr9iK23T4ZlYd8//EzMGOrPm9xSdg91HBV/afUw/QUNHDidj+09mU7z5E+R3SKXK/ld7rNL8DCDbiMcgYBzl2WgHf6xi/pXiNiaETvMR/wYK/bpAahHelp+UxRlgjBRUAHj9OTP9YRXJCeDtZbBQo6I46/XbRDDyWqfy9vzD0PeFC5uiC1cvaw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
- by CY8PR12MB8067.namprd12.prod.outlook.com (2603:10b6:930:74::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Thu, 13 Feb
- 2025 16:22:23 +0000
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5%7]) with mapi id 15.20.8445.013; Thu, 13 Feb 2025
- 16:22:23 +0000
-Date: Thu, 13 Feb 2025 17:22:19 +0100
-From: Andrea Righi <arighi@nvidia.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Joel Fernandes <joel@joelfernandes.org>, Ian May <ianm@nvidia.com>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/7] sched_ext: idle: Introduce
- SCX_OPS_BUILTIN_IDLE_PER_NODE
-Message-ID: <Z64cO6Y-aWUT07vN@gpd3>
-References: <20250212165006.490130-1-arighi@nvidia.com>
- <20250212165006.490130-6-arighi@nvidia.com>
- <Z64Y4Sgw30Pdj81J@thinkpad>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z64Y4Sgw30Pdj81J@thinkpad>
-X-ClientProxiedBy: FR2P281CA0023.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:14::10) To CY5PR12MB6405.namprd12.prod.outlook.com
- (2603:10b6:930:3e::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913521E8854
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739463775; cv=none; b=h14/5FlSPMMzXDA8TxF+qIap8dZsbr1kc79N1HPpSJeypNoRBd40axjoNvs03RPvdiTdPTKWLjK6JY+jXbMERDa/5h7xvHvO0DNpokMVJMkcBLO+DNlf2CXj+okQw7QI+i2akPis8cxgGv7pi7tGIcNw2y90jpnK4kuws/8LeWY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739463775; c=relaxed/simple;
+	bh=hT4ccKrkdRXEy/lEWE9GAqZww8DaoNd/o/cIk1+i4fw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IiuaZs5arnd5lAiud+muZwUPRwbeocyIy0GPf1pM3I6622jNYEGPqabRdNE/P76cADgAtcIaLnzXsc39RQ/pk3zVjd/UHIGiFtuEucl/ThFrZvc9kiyf2QLDMOi2UzKFX+FKkaxhwe4G765W7efatHtwmYG5qOKAzfvQYA59zvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1tibr7-000000003xx-15FB;
+	Thu, 13 Feb 2025 11:14:25 -0500
+From: Rik van Riel <riel@surriel.com>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	bp@alien8.de,
+	peterz@infradead.org,
+	dave.hansen@linux.intel.com,
+	zhengqi.arch@bytedance.com,
+	nadav.amit@gmail.com,
+	thomas.lendacky@amd.com,
+	kernel-team@meta.com,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	jackmanb@google.com,
+	jannh@google.com,
+	mhklinux@outlook.com,
+	andrew.cooper3@citrix.com,
+	Rik van Riel <riel@surriel.com>,
+	Manali Shukla <Manali.Shukla@amd.com>
+Subject: [PATCH v11 09/12] x86/mm: enable broadcast TLB invalidation for multi-threaded processes
+Date: Thu, 13 Feb 2025 11:14:00 -0500
+Message-ID: <20250213161423.449435-10-riel@surriel.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250213161423.449435-1-riel@surriel.com>
+References: <20250213161423.449435-1-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|CY8PR12MB8067:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e6623ed-08e7-4061-81be-08dd4c4a98c2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cD07tkuTlw+FW5zrDIqgxrwjNLYF/6yxzY6wczDYmhlLgzrTynlpt4/clxw0?=
- =?us-ascii?Q?wlv6YAKLqOByza83rl2j8q23fkz8/iMuMg7+VDuAWqG6gQ9tVG69y2ERW64V?=
- =?us-ascii?Q?MgUELS/Wah6OQqPJiZlCgezVXnUO7TwtsorpDrj4CqMKlqGWd0MHhgtyuAR9?=
- =?us-ascii?Q?/e6xG3c38CqjkUfxc2vpD/rsLKj0JCbLtBfMxBphZ3KBywWcfvsob/5p1vVA?=
- =?us-ascii?Q?OLgG0ddd5Nq2nltCPiDWclDnTj+lh2IiiQq63xFFqAy7/9naAs9jK314TFFf?=
- =?us-ascii?Q?WcPPYI56Yv/13wQ/IAFTt7+pzmsjIYvJpfMQcI8hVGfXHC3XkcuZ9l+A/l5K?=
- =?us-ascii?Q?MJm9E+sB7LrwAF0rbSlLpHycPqdDWVIZPi4YCDBTX5fx8NQMzDmMItB91DXy?=
- =?us-ascii?Q?m2tPN0z2JggerQTiax3WWzdx3naZr7n5hh4aQslxJ4GvqlD644iu6IFAMxSa?=
- =?us-ascii?Q?SfoUbfBkOp1AVn99n+ISnpvn/yr1PS/dfQwpafZTmRXEZ6JOvhxOVhndapf5?=
- =?us-ascii?Q?fDdYuUj6kAin6xJ6AVFSs6Oc+BGmn1uSXv0MvL6dL87ptIlMby0MPLNOD+CL?=
- =?us-ascii?Q?qusbRW8+eRe3s2xftd0dGIl5Lbo3oaZboz9mLyFd8odej35FIWsrmUzyLymE?=
- =?us-ascii?Q?801IwpNOapIN/8AxOC2yscnvmrtAs+/SA0MVjJ82bd3NT4b5bVk7WgWWvO9F?=
- =?us-ascii?Q?cQw+aku4WSXZKMkxV6L9uXWxQBTvE8MGQaoS0KmyEyvjPuSqR2gv8yXadiWa?=
- =?us-ascii?Q?RdlWyI65OHNjMRyjFj56aH1dPq/VzVW2lkVtimCjXw4cOp+WTxQaU2CQ6nQK?=
- =?us-ascii?Q?Kad7hcXOXJO7ix14150W07wnnT+hXbZP7mmeji5d7FGwMiLo+41h6OLuecrz?=
- =?us-ascii?Q?7JnlMXB9xccDsyb/+16MrOqDtDVESkiuxz1utKL9BsY67Uh5XdZznW72uPKp?=
- =?us-ascii?Q?j5VJ852UPvaTuGwDhaxqb0qUf1tTCGZCmNlJL0He3CCk7RcNrdsqpY+DRUox?=
- =?us-ascii?Q?A9iN4jUq9f1niepiKipAXIF5z7Mm0ZXMpxYBEqUMvn9DVSasCAmOYh0j8Co7?=
- =?us-ascii?Q?hVGOimMgt72J+FsIpmiBVsMbP4nt6ly+f0uyj9cH/j96P48fwdBCDp/4Xxw8?=
- =?us-ascii?Q?VF9KcWxUEKIgQ95QuFEtsW3mAp+a1tm+S1MJcusx7RV0lp7/G6JFjMYgzI86?=
- =?us-ascii?Q?d3n9cNfVsVHyZYsARdY0DqXn4lt/M2VtXc0NSehu+bD/gAW6C9OVoXuQGeIb?=
- =?us-ascii?Q?YGmjdIHjCnv+JqDRjQuGO4TLCnpmjk9WJQvZxVHQuCkEbT/fd26N0TTgGr4f?=
- =?us-ascii?Q?BJjh0ZoZRuAcmNRNuzOPulLWMwYuSDBTYUeyCTe//+Itaect7BKcn0yI3LzB?=
- =?us-ascii?Q?xGoaD8/vEtMpFXvhERv5kfvQGbbz?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?bn1OBOEY6TfenvFuSWT743FvU3Lwmcfm9g1Ci4KvUX4ikoJM36vL5nETZdIv?=
- =?us-ascii?Q?JJhSpgMYnANirQ9h/12Hd1ujzsU+YuvM5lEiQhBcS36X5rnBUX/QSjYwPnq9?=
- =?us-ascii?Q?pN+r47Bc2JIU2sjLWP1rqJPJH5pEyg7Y/nFg/mRT4flylX12zAHzwVDKxPGG?=
- =?us-ascii?Q?8lw66oDHEHhbjuNjY5cQhz4KLPXW68CBDWQWoVAJ0UIc1WJcJt3wriX8C6Cs?=
- =?us-ascii?Q?OCD5L5Iz19zF9G08fmYvrRRfnih0x7kxgO3XNPBACObLoNvr/zmqnYR0ZK82?=
- =?us-ascii?Q?OKW148uo4WAiPPc9MkxoyQsH09QAb7ViR93SXLqPxNIABYJjrRVRxP2iFw43?=
- =?us-ascii?Q?z37E0u918vPzERCQLgMzjnV2OOoQfTcfO+v8qMAKHwTOq6Y6m7yhNCtMUsjR?=
- =?us-ascii?Q?oa1sagdUBrM9N1ftcoH7pmeofpTTXLO3yoH1J+VF9qH6cbTZ5xy4Pt1kflg4?=
- =?us-ascii?Q?+rieanfudBvdlwTxsOEJrfFPjAMcczvgaFwtRlD1N62PZ44/WyFgICT02Aes?=
- =?us-ascii?Q?6HYiLBwrsPFgMX4u4Ks2DCyEm43dY4ybL/aNQCh4bjiC/CeYDddB1lV/JH3s?=
- =?us-ascii?Q?U9cZLqCKpR4g/TYmFQOoBkRNfZ+4MeOgveonGWQW1WaM89drw+Uogp7kBC1Y?=
- =?us-ascii?Q?/nRVRYAfmowy8GLJ7PrFz2cywlckuK8GRUABpXE8FLFRsSkw/eUElzeylDOS?=
- =?us-ascii?Q?JAfjSsrDb7g1RXI6jAs/phkbRdZ1pmJBtMG4ywM16zpqvVBjGJKY4qTXVbcr?=
- =?us-ascii?Q?pmoW2+m25Ea5M3TBzrtE6al77vozZGzphdzQh7VFHwSLR422Nw8TuI0NUByD?=
- =?us-ascii?Q?UZqjV5IM8alQgV+WMZTZcUM1pK+9aMljXQ2sF7Gzi1UJtl2AANA+THWr7Jsp?=
- =?us-ascii?Q?7xrJb3QSHfjH7QpeiMUouUDlEBQdnIfmtcaHmo7BeysLQKnwGbfi+m1oHku4?=
- =?us-ascii?Q?lFljOkQQESWbaqz1yMWs8scgAAi+XzMKEwyLVEtd6CWmJdx9h3Imeqw2pHH2?=
- =?us-ascii?Q?wBO/5MhURPg5TWtioIRjXJmNM78OOEtnTK4oKxFf0WIHUXqXPHb+ny2KWR6p?=
- =?us-ascii?Q?K1P2IUjQemzVckN/4Q026UCWzHwJCHaie+FTEvgBF5R9vnu0n1Ol+V77snny?=
- =?us-ascii?Q?R5c1mSQvY4Rw/pn4y/T+drcAQxC8EzdmTCC7ofw3nTJHTAisNheIpmM7ujFJ?=
- =?us-ascii?Q?azhjbfwdphPVT9vtFomSGiOGgFYWiILaY1/azd7g0KPHMuw6WZJnp4i6LCcb?=
- =?us-ascii?Q?zaMcHy3GEtFdrrBz9l6KAIVhG/RoFzEeNVV9k0GdylX+kUOwrbR1DltkKtyC?=
- =?us-ascii?Q?nX6kKaxSmbykyIJJVKylR3dLhZWFwiwHUM73qqiKYGs3DYuj9c2jzffy5Ji3?=
- =?us-ascii?Q?IPFcSdAQf5LhKuZKTIfKiR5XbN9BG0u1vMjmakDigQtkk+2PYFWM5CDt5TsP?=
- =?us-ascii?Q?QJJ32alZG+Ygms40ZiQRqwQwo2Tu1OIBwfuUWSI6Nl1nKESgqQmc58nZ2bjT?=
- =?us-ascii?Q?SjHv1z/KduUBbHLFNlLR44V82TzWjgvv/DQDbFDzWh7xmblI6Ow09s92NEJR?=
- =?us-ascii?Q?mtlrpwMIyNE9mZnEgHtzNrnali044U+Rzlyjp4F5?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e6623ed-08e7-4061-81be-08dd4c4a98c2
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 16:22:23.3278
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QyxrZ/g2PSNfiOGh1MOQqjoht/KZs6zfwyIGsrkdNPgKoe3vleirlvsZviXVSTe71y6/Q5xhuVu6vV3xrVtq8A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8067
+Content-Transfer-Encoding: 8bit
+Sender: riel@surriel.com
 
-On Thu, Feb 13, 2025 at 11:08:01AM -0500, Yury Norov wrote:
-...
-> > @@ -237,13 +240,19 @@ void scx_idle_update_selcpu_topology(void)
-> >  	 * If all CPUs belong to the same NUMA node and the same LLC domain,
-> >  	 * enabling both NUMA and LLC optimizations is unnecessary, as checking
-> >  	 * for an idle CPU in the same domain twice is redundant.
-> > +	 *
-> > +	 * If SCX_OPS_BUILTIN_IDLE_PER_NODE is enabled ignore the NUMA
-> > +	 * optimization, as we would naturally select idle CPUs within
-> > +	 * specific NUMA nodes querying the corresponding per-node cpumask.
-> >  	 */
-> > -	nr_cpus = numa_weight(cpu);
-> > -	if (nr_cpus > 0) {
-> > -		if (nr_cpus < num_online_cpus() && llc_numa_mismatch())
-> > -			enable_numa = true;
-> > -		pr_debug("sched_ext: NUMA=%*pb weight=%u\n",
-> > -			 cpumask_pr_args(numa_span(cpu)), numa_weight(cpu));
-> > +	if (!(ops->flags & SCX_OPS_BUILTIN_IDLE_PER_NODE)) {
-> > +		nr_cpus = numa_weight(cpu);
-> > +		if (nr_cpus > 0) {
-> > +			if (nr_cpus < num_online_cpus() && llc_numa_mismatch())
-> > +				enable_numa = true;
-> > +			pr_debug("sched_ext: NUMA=%*pb weight=%u\n",
-> > +				 cpumask_pr_args(numa_span(cpu)), numa_weight(cpu));
-> 
-> No need to call numa_weight(cpu) for the 2nd time, right?
+Use broadcast TLB invalidation, using the INVPLGB instruction, on AMD EPYC 3
+and newer CPUs.
 
-Ah good catch, will fix that.
+In order to not exhaust PCID space, and keep TLB flushes local for single
+threaded processes, we only hand out broadcast ASIDs to processes active on
+4 or more CPUs.
 
-Thanks,
--Andrea
+Signed-off-by: Rik van Riel <riel@surriel.com>
+Reviewed-by: Nadav Amit <nadav.amit@gmail.com>
+Tested-by: Manali Shukla <Manali.Shukla@amd.com>
+Tested-by: Brendan Jackman <jackmanb@google.com>
+Tested-by: Michael Kelley <mhklinux@outlook.com>
+---
+ arch/x86/include/asm/mmu.h         |   6 +
+ arch/x86/include/asm/mmu_context.h |  14 ++
+ arch/x86/include/asm/tlbflush.h    |  73 ++++++
+ arch/x86/mm/tlb.c                  | 341 ++++++++++++++++++++++++++++-
+ 4 files changed, 422 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
+index 3b496cdcb74b..d71cd599fec4 100644
+--- a/arch/x86/include/asm/mmu.h
++++ b/arch/x86/include/asm/mmu.h
+@@ -69,6 +69,12 @@ typedef struct {
+ 	u16 pkey_allocation_map;
+ 	s16 execute_only_pkey;
+ #endif
++
++#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
++	u16 global_asid;
++	bool asid_transition;
++#endif
++
+ } mm_context_t;
+ 
+ #define INIT_MM_CONTEXT(mm)						\
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index 795fdd53bd0a..d670699d32c2 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -139,6 +139,8 @@ static inline void mm_reset_untag_mask(struct mm_struct *mm)
+ #define enter_lazy_tlb enter_lazy_tlb
+ extern void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk);
+ 
++extern void destroy_context_free_global_asid(struct mm_struct *mm);
++
+ /*
+  * Init a new mm.  Used on mm copies, like at fork()
+  * and on mm's that are brand-new, like at execve().
+@@ -161,6 +163,14 @@ static inline int init_new_context(struct task_struct *tsk,
+ 		mm->context.execute_only_pkey = -1;
+ 	}
+ #endif
++
++#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
++	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
++		mm->context.global_asid = 0;
++		mm->context.asid_transition = false;
++	}
++#endif
++
+ 	mm_reset_untag_mask(mm);
+ 	init_new_context_ldt(mm);
+ 	return 0;
+@@ -170,6 +180,10 @@ static inline int init_new_context(struct task_struct *tsk,
+ static inline void destroy_context(struct mm_struct *mm)
+ {
+ 	destroy_context_ldt(mm);
++#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
++	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
++		destroy_context_free_global_asid(mm);
++#endif
+ }
+ 
+ extern void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index bda7080dec83..3080cb8d21dc 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -6,6 +6,7 @@
+ #include <linux/mmu_notifier.h>
+ #include <linux/sched.h>
+ 
++#include <asm/barrier.h>
+ #include <asm/processor.h>
+ #include <asm/cpufeature.h>
+ #include <asm/special_insns.h>
+@@ -239,6 +240,78 @@ void flush_tlb_one_kernel(unsigned long addr);
+ void flush_tlb_multi(const struct cpumask *cpumask,
+ 		      const struct flush_tlb_info *info);
+ 
++#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
++static inline bool is_dyn_asid(u16 asid)
++{
++	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
++		return true;
++
++	return asid < TLB_NR_DYN_ASIDS;
++}
++
++static inline bool is_global_asid(u16 asid)
++{
++	return !is_dyn_asid(asid);
++}
++
++static inline bool in_asid_transition(struct mm_struct *mm)
++{
++	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
++		return false;
++
++	return mm && READ_ONCE(mm->context.asid_transition);
++}
++
++static inline u16 mm_global_asid(struct mm_struct *mm)
++{
++	u16 asid;
++
++	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
++		return 0;
++
++	asid = smp_load_acquire(&mm->context.global_asid);
++
++	/* mm->context.global_asid is either 0, or a global ASID */
++	VM_WARN_ON_ONCE(asid && is_dyn_asid(asid));
++
++	return asid;
++}
++#else
++static inline bool is_dyn_asid(u16 asid)
++{
++	return true;
++}
++
++static inline bool is_global_asid(u16 asid)
++{
++	return false;
++}
++
++static inline bool in_asid_transition(struct mm_struct *mm)
++{
++	return false;
++}
++
++static inline u16 mm_global_asid(struct mm_struct *mm)
++{
++	return 0;
++}
++
++static inline bool needs_global_asid_reload(struct mm_struct *next, u16 prev_asid)
++{
++	return false;
++}
++
++static inline void broadcast_tlb_flush(struct flush_tlb_info *info)
++{
++	VM_WARN_ON_ONCE(1);
++}
++
++static inline void consider_global_asid(struct mm_struct *mm)
++{
++}
++#endif
++
+ #ifdef CONFIG_PARAVIRT
+ #include <asm/paravirt.h>
+ #endif
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index de3f6e4ed16d..0ce0b71a5378 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -74,13 +74,15 @@
+  * use different names for each of them:
+  *
+  * ASID  - [0, TLB_NR_DYN_ASIDS-1]
+- *         the canonical identifier for an mm
++ *         the canonical identifier for an mm, dynamically allocated on each CPU
++ *         [TLB_NR_DYN_ASIDS, MAX_ASID_AVAILABLE-1]
++ *         the canonical, global identifier for an mm, identical across all CPUs
+  *
+- * kPCID - [1, TLB_NR_DYN_ASIDS]
++ * kPCID - [1, MAX_ASID_AVAILABLE]
+  *         the value we write into the PCID part of CR3; corresponds to the
+  *         ASID+1, because PCID 0 is special.
+  *
+- * uPCID - [2048 + 1, 2048 + TLB_NR_DYN_ASIDS]
++ * uPCID - [2048 + 1, 2048 + MAX_ASID_AVAILABLE]
+  *         for KPTI each mm has two address spaces and thus needs two
+  *         PCID values, but we can still do with a single ASID denomination
+  *         for each mm. Corresponds to kPCID + 2048.
+@@ -225,6 +227,20 @@ static void choose_new_asid(struct mm_struct *next, u64 next_tlb_gen,
+ 		return;
+ 	}
+ 
++	/*
++	 * TLB consistency for global ASIDs is maintained with broadcast TLB
++	 * flushing. The TLB is never outdated, and does not need flushing.
++	 */
++	if (static_cpu_has(X86_FEATURE_INVLPGB)) {
++		u16 global_asid = mm_global_asid(next);
++
++		if (global_asid) {
++			*new_asid = global_asid;
++			*need_flush = false;
++			return;
++		}
++	}
++
+ 	if (this_cpu_read(cpu_tlbstate.invalidate_other))
+ 		clear_asid_other();
+ 
+@@ -251,6 +267,269 @@ static void choose_new_asid(struct mm_struct *next, u64 next_tlb_gen,
+ 	*need_flush = true;
+ }
+ 
++#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
++/*
++ * Logic for broadcast TLB invalidation.
++ */
++static DEFINE_RAW_SPINLOCK(global_asid_lock);
++static u16 last_global_asid = MAX_ASID_AVAILABLE;
++static DECLARE_BITMAP(global_asid_used, MAX_ASID_AVAILABLE) = { 0 };
++static DECLARE_BITMAP(global_asid_freed, MAX_ASID_AVAILABLE) = { 0 };
++static int global_asid_available = MAX_ASID_AVAILABLE - TLB_NR_DYN_ASIDS - 1;
++
++static void reset_global_asid_space(void)
++{
++	lockdep_assert_held(&global_asid_lock);
++
++	/*
++	 * A global TLB flush guarantees that any stale entries from
++	 * previously freed global ASIDs get flushed from the TLB
++	 * everywhere, making these global ASIDs safe to reuse.
++	 */
++	invlpgb_flush_all_nonglobals();
++
++	/*
++	 * Clear all the previously freed global ASIDs from the
++	 * broadcast_asid_used bitmap, now that the global TLB flush
++	 * has made them actually available for re-use.
++	 */
++	bitmap_andnot(global_asid_used, global_asid_used,
++			global_asid_freed, MAX_ASID_AVAILABLE);
++	bitmap_clear(global_asid_freed, 0, MAX_ASID_AVAILABLE);
++
++	/*
++	 * ASIDs 0-TLB_NR_DYN_ASIDS are used for CPU-local ASID
++	 * assignments, for tasks doing IPI based TLB shootdowns.
++	 * Restart the search from the start of the global ASID space.
++	 */
++	last_global_asid = TLB_NR_DYN_ASIDS;
++}
++
++static u16 get_global_asid(void)
++{
++
++	u16 asid;
++
++	lockdep_assert_held(&global_asid_lock);
++
++	/* The previous allocated ASID is at the top of the address space. */
++	if (last_global_asid >= MAX_ASID_AVAILABLE - 1)
++		reset_global_asid_space();
++
++	asid = find_next_zero_bit(global_asid_used, MAX_ASID_AVAILABLE, last_global_asid);
++
++	if (asid >= MAX_ASID_AVAILABLE) {
++		/* This should never happen. */
++		VM_WARN_ONCE(1, "Unable to allocate global ASID despite %d available\n",
++				global_asid_available);
++		return 0;
++	}
++
++	/* Claim this global ASID. */
++	__set_bit(asid, global_asid_used);
++	last_global_asid = asid;
++	global_asid_available--;
++	return asid;
++}
++
++/*
++ * Returns true if the mm is transitioning from a CPU-local ASID to a global
++ * (INVLPGB) ASID, or the other way around.
++ */
++static bool needs_global_asid_reload(struct mm_struct *next, u16 prev_asid)
++{
++	u16 global_asid = mm_global_asid(next);
++
++	/* Process is transitioning to a global ASID */
++	if (global_asid && prev_asid != global_asid)
++		return true;
++
++	/* Transition from global->local ASID does not currently happen. */
++	if (!global_asid && is_global_asid(prev_asid))
++		return true;
++
++	return false;
++}
++
++void destroy_context_free_global_asid(struct mm_struct *mm)
++{
++	if (!mm->context.global_asid)
++		return;
++
++	guard(raw_spinlock_irqsave)(&global_asid_lock);
++
++	/* The global ASID can be re-used only after flush at wrap-around. */
++	__set_bit(mm->context.global_asid, global_asid_freed);
++
++	mm->context.global_asid = 0;
++	global_asid_available++;
++}
++
++/*
++ * Check whether a process is currently active on more than "threshold" CPUs.
++ * This is a cheap estimation on whether or not it may make sense to assign
++ * a global ASID to this process, and use broadcast TLB invalidation.
++ */
++static bool mm_active_cpus_exceeds(struct mm_struct *mm, int threshold)
++{
++	int count = 0;
++	int cpu;
++
++	/* This quick check should eliminate most single threaded programs. */
++	if (cpumask_weight(mm_cpumask(mm)) <= threshold)
++		return false;
++
++	/* Slower check to make sure. */
++	for_each_cpu(cpu, mm_cpumask(mm)) {
++		/* Skip the CPUs that aren't really running this process. */
++		if (per_cpu(cpu_tlbstate.loaded_mm, cpu) != mm)
++			continue;
++
++		if (per_cpu(cpu_tlbstate_shared.is_lazy, cpu))
++			continue;
++
++		if (++count > threshold)
++			return true;
++	}
++	return false;
++}
++
++/*
++ * Assign a global ASID to the current process, protecting against
++ * races between multiple threads in the process.
++ */
++static void use_global_asid(struct mm_struct *mm)
++{
++	u16 asid;
++
++	guard(raw_spinlock_irqsave)(&global_asid_lock);
++
++	/* This process is already using broadcast TLB invalidation. */
++	if (mm->context.global_asid)
++		return;
++
++	/* The last global ASID was consumed while waiting for the lock. */
++	if (!global_asid_available) {
++		VM_WARN_ONCE(1, "Ran out of global ASIDs\n");
++		return;
++	}
++
++	asid = get_global_asid();
++	if (!asid)
++		return;
++
++	/*
++	 * Notably flush_tlb_mm_range() -> broadcast_tlb_flush() ->
++	 * finish_asid_transition() needs to observe asid_transition = true
++	 * once it observes global_asid.
++	 */
++	mm->context.asid_transition = true;
++	smp_store_release(&mm->context.global_asid, asid);
++}
++
++/*
++ * x86 has 4k ASIDs (2k when compiled with KPTI), but the largest
++ * x86 systems have over 8k CPUs. Because of this potential ASID
++ * shortage, global ASIDs are handed out to processes that have
++ * frequent TLB flushes and are active on 4 or more CPUs simultaneously.
++ */
++static void consider_global_asid(struct mm_struct *mm)
++{
++	if (!static_cpu_has(X86_FEATURE_INVLPGB))
++		return;
++
++	/* Check every once in a while. */
++	if ((current->pid & 0x1f) != (jiffies & 0x1f))
++		return;
++
++	if (!READ_ONCE(global_asid_available))
++		return;
++
++	/*
++	 * Assign a global ASID if the process is active on
++	 * 4 or more CPUs simultaneously.
++	 */
++	if (mm_active_cpus_exceeds(mm, 3))
++		use_global_asid(mm);
++}
++
++static void finish_asid_transition(struct flush_tlb_info *info)
++{
++	struct mm_struct *mm = info->mm;
++	int bc_asid = mm_global_asid(mm);
++	int cpu;
++
++	if (!READ_ONCE(mm->context.asid_transition))
++		return;
++
++	for_each_cpu(cpu, mm_cpumask(mm)) {
++		/*
++		 * The remote CPU is context switching. Wait for that to
++		 * finish, to catch the unlikely case of it switching to
++		 * the target mm with an out of date ASID.
++		 */
++		while (READ_ONCE(per_cpu(cpu_tlbstate.loaded_mm, cpu)) == LOADED_MM_SWITCHING)
++			cpu_relax();
++
++		if (READ_ONCE(per_cpu(cpu_tlbstate.loaded_mm, cpu)) != mm)
++			continue;
++
++		/*
++		 * If at least one CPU is not using the global ASID yet,
++		 * send a TLB flush IPI. The IPI should cause stragglers
++		 * to transition soon.
++		 *
++		 * This can race with the CPU switching to another task;
++		 * that results in a (harmless) extra IPI.
++		 */
++		if (READ_ONCE(per_cpu(cpu_tlbstate.loaded_mm_asid, cpu)) != bc_asid) {
++			flush_tlb_multi(mm_cpumask(info->mm), info);
++			return;
++		}
++	}
++
++	/* All the CPUs running this process are using the global ASID. */
++	WRITE_ONCE(mm->context.asid_transition, false);
++}
++
++static void broadcast_tlb_flush(struct flush_tlb_info *info)
++{
++	bool pmd = info->stride_shift == PMD_SHIFT;
++	unsigned long asid = info->mm->context.global_asid;
++	unsigned long addr = info->start;
++
++	/*
++	 * TLB flushes with INVLPGB are kicked off asynchronously.
++	 * The inc_mm_tlb_gen() guarantees page table updates are done
++	 * before these TLB flushes happen.
++	 */
++	if (info->end == TLB_FLUSH_ALL) {
++		invlpgb_flush_single_pcid_nosync(kern_pcid(asid));
++		/* Do any CPUs supporting INVLPGB need PTI? */
++		if (static_cpu_has(X86_FEATURE_PTI))
++			invlpgb_flush_single_pcid_nosync(user_pcid(asid));
++	} else do {
++		unsigned long nr = 1;
++
++		if (info->stride_shift <= PMD_SHIFT) {
++			nr = (info->end - addr) >> info->stride_shift;
++			nr = clamp_val(nr, 1, invlpgb_count_max);
++		}
++
++		invlpgb_flush_user_nr_nosync(kern_pcid(asid), addr, nr, pmd);
++		if (static_cpu_has(X86_FEATURE_PTI))
++			invlpgb_flush_user_nr_nosync(user_pcid(asid), addr, nr, pmd);
++
++		addr += nr << info->stride_shift;
++	} while (addr < info->end);
++
++	finish_asid_transition(info);
++
++	/* Wait for the INVLPGBs kicked off above to finish. */
++	tlbsync();
++}
++#endif /* CONFIG_X86_BROADCAST_TLB_FLUSH */
++
+ /*
+  * Given an ASID, flush the corresponding user ASID.  We can delay this
+  * until the next time we switch to it.
+@@ -556,8 +835,9 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+ 	 */
+ 	if (prev == next) {
+ 		/* Not actually switching mm's */
+-		VM_WARN_ON(this_cpu_read(cpu_tlbstate.ctxs[prev_asid].ctx_id) !=
+-			   next->context.ctx_id);
++		VM_WARN_ON(is_dyn_asid(prev_asid) &&
++				this_cpu_read(cpu_tlbstate.ctxs[prev_asid].ctx_id) !=
++				next->context.ctx_id);
+ 
+ 		/*
+ 		 * If this races with another thread that enables lam, 'new_lam'
+@@ -573,6 +853,23 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+ 				 !cpumask_test_cpu(cpu, mm_cpumask(next))))
+ 			cpumask_set_cpu(cpu, mm_cpumask(next));
+ 
++		/*
++		 * Check if the current mm is transitioning to a new ASID.
++		 */
++		if (needs_global_asid_reload(next, prev_asid)) {
++			next_tlb_gen = atomic64_read(&next->context.tlb_gen);
++
++			choose_new_asid(next, next_tlb_gen, &new_asid, &need_flush);
++			goto reload_tlb;
++		}
++
++		/*
++		 * Broadcast TLB invalidation keeps this PCID up to date
++		 * all the time.
++		 */
++		if (is_global_asid(prev_asid))
++			return;
++
+ 		/*
+ 		 * If the CPU is not in lazy TLB mode, we are just switching
+ 		 * from one thread in a process to another thread in the same
+@@ -606,6 +903,13 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+ 		 */
+ 		cond_mitigation(tsk);
+ 
++		/*
++		 * Let nmi_uaccess_okay() and finish_asid_transition()
++		 * know that we're changing CR3.
++		 */
++		this_cpu_write(cpu_tlbstate.loaded_mm, LOADED_MM_SWITCHING);
++		barrier();
++
+ 		/*
+ 		 * Leave this CPU in prev's mm_cpumask. Atomic writes to
+ 		 * mm_cpumask can be expensive under contention. The CPU
+@@ -620,14 +924,12 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+ 		next_tlb_gen = atomic64_read(&next->context.tlb_gen);
+ 
+ 		choose_new_asid(next, next_tlb_gen, &new_asid, &need_flush);
+-
+-		/* Let nmi_uaccess_okay() know that we're changing CR3. */
+-		this_cpu_write(cpu_tlbstate.loaded_mm, LOADED_MM_SWITCHING);
+-		barrier();
+ 	}
+ 
++reload_tlb:
+ 	new_lam = mm_lam_cr3_mask(next);
+ 	if (need_flush) {
++		VM_WARN_ON_ONCE(is_global_asid(new_asid));
+ 		this_cpu_write(cpu_tlbstate.ctxs[new_asid].ctx_id, next->context.ctx_id);
+ 		this_cpu_write(cpu_tlbstate.ctxs[new_asid].tlb_gen, next_tlb_gen);
+ 		load_new_mm_cr3(next->pgd, new_asid, new_lam, true);
+@@ -746,7 +1048,7 @@ static void flush_tlb_func(void *info)
+ 	const struct flush_tlb_info *f = info;
+ 	struct mm_struct *loaded_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
+ 	u32 loaded_mm_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
+-	u64 local_tlb_gen = this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen);
++	u64 local_tlb_gen;
+ 	bool local = smp_processor_id() == f->initiating_cpu;
+ 	unsigned long nr_invalidate = 0;
+ 	u64 mm_tlb_gen;
+@@ -769,6 +1071,16 @@ static void flush_tlb_func(void *info)
+ 	if (unlikely(loaded_mm == &init_mm))
+ 		return;
+ 
++	/* Reload the ASID if transitioning into or out of a global ASID */
++	if (needs_global_asid_reload(loaded_mm, loaded_mm_asid)) {
++		switch_mm_irqs_off(NULL, loaded_mm, NULL);
++		loaded_mm_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
++	}
++
++	/* Broadcast ASIDs are always kept up to date with INVLPGB. */
++	if (is_global_asid(loaded_mm_asid))
++		return;
++
+ 	VM_WARN_ON(this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].ctx_id) !=
+ 		   loaded_mm->context.ctx_id);
+ 
+@@ -786,6 +1098,8 @@ static void flush_tlb_func(void *info)
+ 		return;
+ 	}
+ 
++	local_tlb_gen = this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen);
++
+ 	if (unlikely(f->new_tlb_gen != TLB_GENERATION_INVALID &&
+ 		     f->new_tlb_gen <= local_tlb_gen)) {
+ 		/*
+@@ -953,7 +1267,7 @@ STATIC_NOPV void native_flush_tlb_multi(const struct cpumask *cpumask,
+ 	 * up on the new contents of what used to be page tables, while
+ 	 * doing a speculative memory access.
+ 	 */
+-	if (info->freed_tables)
++	if (info->freed_tables || in_asid_transition(info->mm))
+ 		on_each_cpu_mask(cpumask, flush_tlb_func, (void *)info, true);
+ 	else
+ 		on_each_cpu_cond_mask(should_flush_tlb, flush_tlb_func,
+@@ -1049,9 +1363,12 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+ 	 * a local TLB flush is needed. Optimize this use-case by calling
+ 	 * flush_tlb_func_local() directly in this case.
+ 	 */
+-	if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids) {
++	if (mm_global_asid(mm)) {
++		broadcast_tlb_flush(info);
++	} else if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids) {
+ 		info->trim_cpumask = should_trim_cpumask(mm);
+ 		flush_tlb_multi(mm_cpumask(mm), info);
++		consider_global_asid(mm);
+ 	} else if (mm == this_cpu_read(cpu_tlbstate.loaded_mm)) {
+ 		lockdep_assert_irqs_enabled();
+ 		local_irq_disable();
+-- 
+2.47.1
+
