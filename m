@@ -1,52 +1,49 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B99214238;
-	Thu, 13 Feb 2025 11:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC8620AF66
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739444919; cv=none; b=inyAkcEJUhzYJXNG9pMI9L3ebbbu0BdtMqS8GEWtKQ0DvRqCZdQYBMBBNR6JZdOkh0K/3E9/Glre6UpaUdJx1L8E4he5P5SjgOrsD9V4WWJDjUVvizK4NgDrBaWwdJGMAqtlQWg5wYBOfKfw8lvVDmU8x1a8Yk3xGWXIBFJcpnY=
+	t=1739444994; cv=none; b=EVJCFWbjTOvRq492Rqh7kMijWYxRBRGLyI2Bz+1eKpSQ0jBoL9JSPLMAOwS53dcPpNnpgnmaMWCIcQBTaziMDuBZcvkirNIi151d+18Uqnsif+c/oOFA9EKzVYmnGXdBYBBB7xP4TI15R5gO2xwV4iYb+1q6xEHCGfO6ndfNAcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739444919; c=relaxed/simple;
-	bh=EOBiQL2i0ZXLCxz8ZRPi5i6PvJHEc5UOe7SQ5492xeI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=d+2L9N6nydX+bzPd4IzyRa0w4d/fddKA1FixtByWXCInUQvXrH/OqSYcwJb2mJnjAHMitT6MDwm00q73VeMf41YFOTUUo5OjhkRAHuHjQAKFUrPLvtf+fnC9TTtKQwvHoBKyfe88bufamotbvnRmLVNx5afil6wcurac/gKPw1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=NIgwJXjN; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="NIgwJXjN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Date:References:In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=DznlSHtJ15TXUJBEI7kzkOuDVk92KIybVPX2ql7XlRc=; b=NIgwJXjNiNh4TOL4r74Z1Wm82s
-	RlWiIxFQXEyRa2Kj2qNTxUQPo+yE0teNHh0p0/cCtJcFVLN6euqFY25Bcsrl9tc7nc4Dnl8AkAOi7
-	pwqF56OvbU2wpgaLfVYAXFi0DqKkgBeY2Cf5NpBOYtA+ua9X9haOnrxZtChDx80mMmoSAShRawLxD
-	juem+hTJD98dXAd6/gYxoVo+dftZbjzxjI/9TmoyZ2jNndcc/CWQ+sxCzEosVrypFzPypl3/rpZKv
-	p3gIRUGoT4/iOxLpD/KQyTAOVqZXZ7s7u59v47O6Csg9VfiYNZILJK0C9I1E5wzKIEX4K4rfH4L5+
-	hoyqfPjA==;
-Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
-	by fanzine2.igalia.com with utf8esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tiX4x-00AAdl-0g; Thu, 13 Feb 2025 12:08:28 +0100
-From: Luis Henriques <luis@igalia.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>,  linux-fsdevel@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  Matt Harvey <mharvey@jumptrading.com>,
-  Bernd Schubert <bschubert@ddn.com>,  Joanne Koong
- <joannelkoong@gmail.com>
-Subject: Re: [PATCH v4] fuse: add new function to invalidate cache for all
- inodes
-In-Reply-To: <Z60bD3C_p_PHao0n@dread.disaster.area> (Dave Chinner's message of
-	"Thu, 13 Feb 2025 09:05:03 +1100")
-References: <20250211092604.15160-1-luis@igalia.com>
-	<Z6u5dumvZHf_BDHM@dread.disaster.area> <875xlf4cvb.fsf@igalia.com>
-	<Z60bD3C_p_PHao0n@dread.disaster.area>
-Date: Thu, 13 Feb 2025 11:08:28 +0000
-Message-ID: <87mseqcdar.fsf@igalia.com>
+	s=arc-20240116; t=1739444994; c=relaxed/simple;
+	bh=VD0c+OPc0seUh3YTRx7sZu7G1wp5gYG+LsPTC74ne3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PKvGASYBa0zxP/gwVEvGS8oZ263qfiL2Stk9YlhehOetsRn/XwvAYOi49na+EPzC0MLUt8ezrC1u2JtBr/I9Bxm3raCs8+yKfuGip+SZ/gJBU2hqlQ+qmkrDSTGN+a+f0oJvi6WxHPb1q9YvR+8ry/bbuCJqoWcooSmd6BMdvAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tiX6J-0007jb-K1; Thu, 13 Feb 2025 12:09:47 +0100
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tiX6J-000k1B-0L;
+	Thu, 13 Feb 2025 12:09:47 +0100
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tiX6J-00CqV5-01;
+	Thu, 13 Feb 2025 12:09:47 +0100
+Date: Thu, 13 Feb 2025 12:09:46 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Avri Altman <Avri.Altman@sandisk.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mark Brown <broonie@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v1 1/1] mmc: core: Handle undervoltage events and
+ register regulator notifiers
+Message-ID: <Z63S-nQKwPws2-C3@pengutronix.de>
+References: <20250212132403.3978175-1-o.rempel@pengutronix.de>
+ <PH7PR16MB619609C650452062D6BC2385E5FF2@PH7PR16MB6196.namprd16.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,170 +51,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <PH7PR16MB619609C650452062D6BC2385E5FF2@PH7PR16MB6196.namprd16.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13 2025, Dave Chinner wrote:
+On Thu, Feb 13, 2025 at 10:14:00AM +0000, Avri Altman wrote:
+> > Extend the MMC core to handle undervoltage events by implementing
+> > infrastructure to notify the MMC bus about voltage drops.
+> > 
+> > Background & Decision at LPC24:
+> > 
+> > This solution was proposed and refined during LPC24 in the talk "Graceful
+> > Under Pressure: Prioritizing Shutdown to Protect Your Data in Embedded
+> > Systems" which aimed to address how Linux should handle power fluctuations
+> > in embedded devices to prevent data corruption or storage damage.
+> > 
+> > At the time, multiple possible solutions were considered:
+> > 
+> > 1. Triggering a system-wide suspend or shutdown: when undervoltage is
+> >    detected, with device-specific prioritization to ensure critical
+> >    components shut down first.
+> >    - This approach was disliked by Greg Kroah-Hartman, as it introduced
+> >      complexity and was not suitable for all use cases.
+> > 
+> > 2. Notifying relevant devices through the regulator framework: to allow
+> >    graceful per-device handling.
+> >    - This approach was agreed upon as the most acceptable: by participants
+> >      in the discussion, including Greg Kroah-Hartman, Mark Brown,
+> >      and Rafael J. Wysocki.
+> >    - This patch implements that decision by integrating undervoltage
+> >      handling into the MMC subsystem.
+> > 
+> > This patch was tested on iMX8MP based system with SDHCI controller.
+> Has it been considered, to rely on user-space and not the kernel to handle
+> those extreme conditions?
+> E.g. a pollable sysfs that would be monitored by select(), poll(), etc.
+> As Android might use?
 
-> On Wed, Feb 12, 2025 at 11:32:40AM +0000, Luis Henriques wrote:
->> On Wed, Feb 12 2025, Dave Chinner wrote:
->>=20
->> > [ FWIW: if the commit message directly references someone else's
->> > related (and somewhat relevant) work, please directly CC those
->> > people on the patch(set). I only noticed this by chance, not because
->> > I read every FUSE related patch that goes by me. ]
->>=20
->> Point taken -- I should have included you on CC since the initial RFC.
->>=20
->> > On Tue, Feb 11, 2025 at 09:26:04AM +0000, Luis Henriques wrote:
->> >> Currently userspace is able to notify the kernel to invalidate the ca=
-che
->> >> for an inode.  This means that, if all the inodes in a filesystem nee=
-d to
->> >> be invalidated, then userspace needs to iterate through all of them a=
-nd do
->> >> this kernel notification separately.
->> >>=20
->> >> This patch adds a new option that allows userspace to invalidate all =
-the
->> >> inodes with a single notification operation.  In addition to invalida=
-te
->> >> all the inodes, it also shrinks the sb dcache.
->> >
->> > That, IMO, seems like a bit naive - we generally don't allow user
->> > controlled denial of service vectors to be added to the kernel. i.e.
->> > this is the equivalent of allowing FUSE fs specific 'echo 1 >
->> > /proc/sys/vm/drop_caches' via some fuse specific UAPI. We only allow
->> > root access to /proc/sys/vm/drop_caches because it can otherwise be
->> > easily abused to cause system wide performance issues.
->> >
->> > It also strikes me as a somewhat dangerous precendent - invalidating
->> > random VFS caches through user APIs hidden deep in random fs
->> > implementations makes for poor visibility and difficult maintenance
->> > of VFS level functionality...
->>=20
->> Hmm... OK, I understand the concern and your comment makes perfect sense.
->> But would it be acceptable to move this API upper in the stack and make =
-it
->> visible at the VFS layer?  Something similar to the 'drop_caches' but wi=
-th
->> a superblock granularity.  I haven't spent any time thinking how could
->> that be done, but it wouldn't be "hidden deep" anymore.
->
-> I'm yet to see any justification for why 'user driven entire
-> filesystem cache invalidation' is needed. Get agreement on whether
-> the functionality should exist first, then worry about how to
-> implement it.
->
->> >> Signed-off-by: Luis Henriques <luis@igalia.com>
->> >> ---
->> >> * Changes since v3
->> >> - Added comments to clarify semantic changes in fuse_reverse_inval_in=
-ode()
->> >>   when called with FUSE_INVAL_ALL_INODES (suggested by Bernd).
->> >> - Added comments to inodes iteration loop to clarify __iget/iput usage
->> >>   (suggested by Joanne)
->> >> - Dropped get_fuse_mount() call -- fuse_mount can be obtained from
->> >>   fuse_ilookup() directly (suggested by Joanne)
->> >>=20
->> >> (Also dropped the RFC from the subject.)
->> >>=20
->> >> * Changes since v2
->> >> - Use the new helper from fuse_reverse_inval_inode(), as suggested by=
- Bernd.
->> >> - Also updated patch description as per checkpatch.pl suggestion.
->> >>=20
->> >> * Changes since v1
->> >> As suggested by Bernd, this patch v2 simply adds an helper function t=
-hat
->> >> will make it easier to replace most of it's code by a call to function
->> >> super_iter_inodes() when Dave Chinner's patch[1] eventually gets merg=
-ed.
->> >>=20
->> >> [1] https://lore.kernel.org/r/20241002014017.3801899-3-david@fromorbi=
-t.com
->> >
->> > That doesn't make the functionality any more palatable.
->> >
->> > Those iterators are the first step in removing the VFS inode list
->> > and only maintaining it in filesystems that actually need this
->> > functionality. We want this list to go away because maintaining it
->> > is a general VFS cache scalability limitation.
->> >
->> > i.e. if a filesystem has internal functionality that requires
->> > iterating all instantiated inodes, the filesystem itself should
->> > maintain that list in the most efficient manner for the filesystem's
->> > iteration requirements not rely on the VFS to maintain this
->> > information for it.
->>=20
->> Right, and in my use-case that's exactly what is currently being done: t=
-he
->> FUSE API to invalidate individual inodes is being used.
->>
->> This new
->> functionality just tries to make life easier to userspace when *all* the
->> inodes need to be invalidated. (For reference, the use-case is CVMFS, a
->> read-only FS, where new generations of a filesystem snapshot may become
->> available at some point and the previous one needs to be wiped from the
->> cache.)
->
-> But you can't actually "wipe" referenced inodes from cache. That is a
-> use case for revoke(), not inode cache invalidation.
+Yes, the advantage of solving this in the kernel is:  
 
-I guess the word "wipe" wasn't the best choice.  See below.
+- The regulator framework already provides all the necessary components,
+  including event support.  
+- The MMC framework already supports regulators, making the implementation
+  straightforward.  
+- This approach works even if userspace is not ready at boot time.  
 
->> > I'm left to ponder why the invalidation isn't simply:
->> >
->> > 	/* Remove all possible active references to cached inodes */
->> > 	shrink_dcache_sb();
->> >
->> > 	/* Remove all unreferenced inodes from cache */
->> > 	invalidate_inodes();
->> >
->> > Which will result in far more of the inode cache for the filesystem
->> > being invalidated than the above code....
->>=20
->> To be honest, my initial attempt to implement this feature actually used
->> invalidate_inodes().  For some reason that I don't remember anymore why I
->> decided to implement the iterator myself.  I'll go look at that code aga=
-in
->> and run some tests on this (much!) simplified version of the invalidation
->> function your suggesting.
->
-> The above code, while simpler, still doesn't resolve the problem of
-> invalidation of inodes that have active references (e.g. open files
-> on them). They can't be "invalidated" in this way - they can't be
-> removed from cache until all active references go away.
+On the other hand, you are right that a userspace implementation would offer
+more flexibility. However, I believe this can be built as an extension of the
+current implementation. The regulator framework supports Netlink notifications
+to userspace, eliminating the need for sysfs polling. The MMC framework would
+also require a sysfs interface to force a quick shutdown - if such an interface
+does not already exist - and a filter for regulator notifications to ignore
+undervoltage events when they are handled in userspace.  
 
-Sure, I understand that and that's *not* what I'm trying to do.  I guess
-I'm just failing to describe my goal.  If there's a userspace process that
-has a file open for an inode that does not exist anymore, that process
-will continue using it -- the user-space filesystem will have to deal with
-that.
-
-Right now, fuse allows the user-space filesystem to notify the kernel that
-*one* inode is not valid anymore.  This is a per inode operation.  I guess
-this is very useful, for example, for network filesystems, where an inode
-may have been deleted from somewhere else.
-
-However, when user-space wants to do this for all the filesystem inodes,
-it will be slow.  With my patch all I wanted to do is to make it a bit
-less painful by moving the inodes iteration into the kernel.
-
-Cheers,
---=20
-Lu=C3=ADs
-
-> i.e. any operation that is based on the assumption that we can
-> remove all references to inodes and dentries by walking across them
-> and dropping cache references to them is fundamentally flawed. To do
-> this reliably, all active references have to be hunted down and
-> released before the inodes can be removed from VFS visibility. i.e.
-> the mythical revoke() operation would need to be implemented for
-> this to work...
->
-> -Dave.
->
-> --=20
-> Dave Chinner
-> david@fromorbit.com
-
+Best Regards,
+Oleksij
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
