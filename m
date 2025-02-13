@@ -1,152 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD231DDC33
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 15:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981D626B0B1
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 15:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739461845; cv=none; b=dhs86fJZU1JMKEy5t2UozLPlE+VnZlpWoHwi4MvtLdjf00KlV+FwZGb8P2eBhc94Zm1UMtTQY5zNC+oKJaQ5UFYgR1WbBh1YValUMzQSs4tYZAz9ZxGNnvW+PIUZZQhIjaWsssIC9ENLP2DUZ9phmcjdXDrvzH0YSSCNQZTkVic=
+	t=1739461846; cv=none; b=bNw/3gIadXfPofgf3GzX2pb1WuxH7N7AdyQi2TfcFgSvWfE7BfJ5HCahzAPK6HJCiEKAdiZsnsBTMcWtzN/kKr6x9uQKAuXvCqZm6Bzc49+aKHLLEGZ0ZkOuYlGIqAQfopskSWsHrvX6l+6y6n17UltoO42UjzsV47UDdRp1O2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739461845; c=relaxed/simple;
-	bh=QFdyFSfT3/4SWG9ZxXlf5iQzWwyJCONhEMZSH8OxQDM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oTYnLpgYgNciNwEGSkuEOJeuWRJ0vZ/xFxMOuXT0GqcfK/iqF8FbOkAxDhpAxUtA5X4ttLZtZ9AAGK6vAOu/iQ7SBxepZRs84vkw4qVqu4XngvPz+7AcSUr8BcO9a4+yybnEeeoRAv+etJPqALhY4N8+idZhNyZtEOTVkFN7Q1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SjIEHs7T; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739461846; c=relaxed/simple;
+	bh=pKKOW+0rlAIXhNsy+k3pB2L0K5ftmPyShJsJGVMM3aE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pY/CiwFQhCiXaMujlpP9qS9sgEq6MIIelJHcDxrr+grzN0l0QaKIf3HJffl/AJsI5aJqg1SgycB6OhqSfHNT+uQ7+dn9+vFznxv6bSRFxfENIMiUz3GPMonw09Xt/IDqJz4xPi9bDRqfdXNZJE48GyB0ouZYeIw/D9Fm1BFFRk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VTI68t1z; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SjIEHs7T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739461842;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6TQz/AuXSm/jcXE77n/JSiGUw0PfjU842fJdja2/VcI=;
-	b=SjIEHs7TRAbm/FHHHtK86P3l4HEJmWaiw78E6KeX0dQYjpMiGe49EAarH85FoDUbrO2esV
-	DJCiUV9pgSCemoP7QjypMV5ufZuV6L5heV7cHLBfry2Zf2nNI0gkJP2G+ClPf+bQJ9kc3l
-	j8pJYrVLVUExqVrDqhCEVUeqijskb4I=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-324-52usUm0fP0qRHnq_Qf1pew-1; Thu,
- 13 Feb 2025 10:50:33 -0500
-X-MC-Unique: 52usUm0fP0qRHnq_Qf1pew-1
-X-Mimecast-MFC-AGG-ID: 52usUm0fP0qRHnq_Qf1pew_1739461831
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4AD4818004A7;
-	Thu, 13 Feb 2025 15:50:31 +0000 (UTC)
-Received: from [127.0.1.1] (unknown [10.44.33.58])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 93C9B1800365;
-	Thu, 13 Feb 2025 15:50:25 +0000 (UTC)
-From: Sergio Lopez <slp@redhat.com>
-Date: Thu, 13 Feb 2025 16:49:16 +0100
-Subject: [PATCH RFC 2/5] virtio: introduce VIRTIO_F_SHM_PAGE_SIZE
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VTI68t1z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739461844; x=1770997844;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=pKKOW+0rlAIXhNsy+k3pB2L0K5ftmPyShJsJGVMM3aE=;
+  b=VTI68t1z36LXzAp0KWh23dF8iOWFKpw+eMFXWgmbgZ2H4GNw6wanQA4u
+   bLBrJw0HTiPlZbWd6MYJ/ywvoU4rKHSuJkQ0zDSM0cKFUxbccL+XaTANQ
+   Qv9OispgRXjFbbBMp/zrK2fIyLzWj0kQPaEmR+gWsBm4eZNierkbYhYle
+   9ROjJIuzjz3JVg9mCd6VNIHzAfzfrxap3wHs/DgNJxL2L02rT7+oN9WPI
+   06+5hAX1bEXnRPady0mVD9UagDhm/j8BaQ/Qb2GDbOWzTcB3xP6SFxDCA
+   lXda3UuFq+YBOnHAiTotkUuEfLgc8muaio0YvpnDblaw5mb5c7D8BElaQ
+   Q==;
+X-CSE-ConnectionGUID: d5JWeTuHR0SRzy2QgcMYLg==
+X-CSE-MsgGUID: +5eF8/6bQHqmVCn0i7W6pw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="39400963"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="39400963"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 07:50:44 -0800
+X-CSE-ConnectionGUID: RJHEPWKPQ6CqyH85gm2NpA==
+X-CSE-MsgGUID: b8aiYEQoR+C142Of0nSiqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117295307"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.108.188]) ([10.125.108.188])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 07:50:43 -0800
+Message-ID: <69dc7277-7aa8-4091-8993-ff1195ef4c3a@intel.com>
+Date: Thu, 13 Feb 2025 07:50:42 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] kexec_core: Accept unaccepted kexec segments'
+ destination addresses
+To: Yan Zhao <yan.y.zhao@intel.com>, ebiederm@xmission.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-coco@lists.linux.dev, x86@kernel.org, rick.p.edgecombe@intel.com,
+ kirill.shutemov@linux.intel.com, bhe@redhat.com
+References: <20241213094930.748-1-yan.y.zhao@intel.com>
+ <20241213095449.881-1-yan.y.zhao@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20241213095449.881-1-yan.y.zhao@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250213-virtio-shm-page-size-v1-2-5ee1f9984350@redhat.com>
-References: <20250213-virtio-shm-page-size-v1-0-5ee1f9984350@redhat.com>
-In-Reply-To: <20250213-virtio-shm-page-size-v1-0-5ee1f9984350@redhat.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
- Gurchetan Singh <gurchetansingh@chromium.org>, 
- Chia-I Wu <olvaffe@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
- Dmitry Osipenko <dmitry.osipenko@collabora.com>, fnkl.kernel@gmail.com
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, Sergio Lopez <slp@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2345; i=slp@redhat.com;
- h=from:subject:message-id; bh=QFdyFSfT3/4SWG9ZxXlf5iQzWwyJCONhEMZSH8OxQDM=;
- b=owEBbQKS/ZANAwAIAfRpJ40vDAI1AcsmYgBnrhStylNLMTT77Zr70CH3mC0kJqxktuN3LCCsg
- tnCFcVTa3yJAjMEAAEIAB0WIQS+1fz3US2GgJFC6KL0aSeNLwwCNQUCZ64UrQAKCRD0aSeNLwwC
- NZqmD/9DXwIcQu7/ILLvZOWvdxn9+Ye3CGeCADk5JnxPU0Z81fskxGRGa5lTCHCY87Gl6QFEQvG
- UINwli3B85/HdKrWo022BePUxPTQLp5FozatRSG+T0//2+1gw0lolaTesnkIjXxfCgXGxh5s4gD
- gon6X0A+PtUWkum0UJokqKyxVxoIHg1SeQGpSYZwBzKNuTx8gNz4CVmaIZIx3lEFL8/UjduIzY6
- aYA+EwkVMrmxdpdNPHRoWvl/qnurDh2eLUqHeHt61PzwaxUmoSZZgxhjxc9/44WZUI4PIJdQtZe
- xFZlFVIGMrMPlEHk98UIIdgre9Np2XB3mhuntMoP+7LEDp8EYOBxvMPxWWQkTL/M/8s0BqAjKjG
- ja3grjYBvXaEPT8F8MJmsRnDKCJb57A2Wi6mQE+YBQ6TKLR0lKp0GzbLm05FuQWigxRhQnDa/qA
- Yztgpc4cpiZRsgqBs37g/+/S4c6sv8EcKtD/M0Wy7SA0yQtKPHVJglGxTwgguF89CqM7rW3Ozg4
- QslBotsRTVlGACVi9qQwHmSKL1Rb/AWw8sz9OviHsYVkGwWpR8J81ToeFq4Zvd8luCRQhlD73kW
- YpvG7lyZEUdPEhyAkRDZaQ4IP4BQlHcQTm4Wu7fedAfdWYWFB1tJYWPx1lonn8AbXvZxppC4Qf3
- TkqlXm2Fs5sykTQ==
-X-Developer-Key: i=slp@redhat.com; a=openpgp;
- fpr=BED5FCF7512D86809142E8A2F469278D2F0C0235
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Introduce VIRTIO_F_SHM_PAGE_SIZE, a feature bit which indicates that the
-transport provides the page size for SHM regions.
+On 12/13/24 01:54, Yan Zhao wrote:
+> +	/*
+> +	 * The destination addresses are searched from system RAM rather than
+> +	 * being allocated from the buddy allocator, so they are not guaranteed
+> +	 * to be accepted by the current kernel.  Accept the destination
+> +	 * addresses before kexec swaps their content with the segments' source
+> +	 * pages to avoid accessing memory before it is accepted.
+> +	 */
+> +	for (i = 0; i < nr_segments; i++)
+> +		accept_memory(image->segment[i].mem, image->segment[i].memsz);
 
-Signed-off-by: Sergio Lopez <slp@redhat.com>
----
- drivers/virtio/virtio_pci_modern.c | 3 +++
- drivers/virtio/virtio_ring.c       | 2 ++
- include/uapi/linux/virtio_config.h | 7 ++++++-
- 3 files changed, 11 insertions(+), 1 deletion(-)
+The "searched from system RAM" phrase both here and in the changelog
+doesn't quite parse for me.
 
-diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-index 4e6c28aacd1b5dfc117337a689a25d668805e334..79616ce5057bf3b2b88cae7e8fb7729efa9dd632 100644
---- a/drivers/virtio/virtio_pci_modern.c
-+++ b/drivers/virtio/virtio_pci_modern.c
-@@ -367,6 +367,9 @@ static void vp_transport_features(struct virtio_device *vdev, u64 features)
- 
- 	if (features & BIT_ULL(VIRTIO_F_ADMIN_VQ))
- 		__virtio_set_bit(vdev, VIRTIO_F_ADMIN_VQ);
-+
-+	if (features & BIT_ULL(VIRTIO_F_SHM_PAGE_SIZE))
-+		__virtio_set_bit(vdev, VIRTIO_F_SHM_PAGE_SIZE);
- }
- 
- static int __vp_check_common_size_one_feature(struct virtio_device *vdev, u32 fbit,
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index fdd2d2b07b5a2aca864bc917306536685afb66a6..d853d5cf7e553be8bbe0ff461dc7312b258c6e58 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -2983,6 +2983,8 @@ void vring_transport_features(struct virtio_device *vdev)
- 			break;
- 		case VIRTIO_F_NOTIFICATION_DATA:
- 			break;
-+		case VIRTIO_F_SHM_PAGE_SIZE:
-+			break;
- 		default:
- 			/* We don't understand this bit. */
- 			__virtio_clear_bit(vdev, i);
-diff --git a/include/uapi/linux/virtio_config.h b/include/uapi/linux/virtio_config.h
-index 2445f365bce74b4e926c6929322b269252ab6830..3171e3792263c2cd472ac09da18e593ab400751d 100644
---- a/include/uapi/linux/virtio_config.h
-+++ b/include/uapi/linux/virtio_config.h
-@@ -52,7 +52,7 @@
-  * rest are per-device feature bits.
-  */
- #define VIRTIO_TRANSPORT_F_START	28
--#define VIRTIO_TRANSPORT_F_END		42
-+#define VIRTIO_TRANSPORT_F_END		43
- 
- #ifndef VIRTIO_CONFIG_NO_LEGACY
- /* Do we get callbacks when the ring is completely used, even if we've
-@@ -120,4 +120,9 @@
-  */
- #define VIRTIO_F_ADMIN_VQ		41
- 
-+/*
-+ * This feature indicates that the transport provides the SHM page size.
-+ */
-+#define VIRTIO_F_SHM_PAGE_SIZE		42
-+
- #endif /* _UAPI_LINUX_VIRTIO_CONFIG_H */
+Also "System RAM" is the normal phrase that I use to describe the memory
+that mostly ends up _going_ into the buddy allocator. It's not just me:
 
--- 
-2.48.1
+	cat /proc/iomem  | grep 'System RAM'
+
+I think a more useful comment (and changelog) might be something like this:
+
+	The core kernel focuses on accepting memory which is known to be
+	System RAM. However, there might be areas that are reserved in
+	the memory map, not exposed to the kernel as "System RAM" and
+	not accepted by firmware. Accept the memory before kexec touches
+	it.
+
 
