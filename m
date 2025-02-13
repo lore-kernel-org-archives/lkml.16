@@ -1,193 +1,145 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C7226E14F;
-	Thu, 13 Feb 2025 23:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5A026FA6A;
+	Thu, 13 Feb 2025 23:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739487624; cv=none; b=mPJ8pWs0fP7dleN1odcsRhyIX63oY3kN5QNuyhb7axSJBpRYEgQYe0HO0yurgpi7Fki6J1yDT3Qtl1MppSZPQF74qQeq1KC/qh1ZJfOtp+pKzbjpPn/7vTYDvHdJE8f6KfDCfNwDOOH0mGVcYLuuGSMZ24mci7MWLU5WyLjoc0M=
+	t=1739487625; cv=none; b=CjXdViQC3oc1lheocqH/zakpDvOrJFiRPwxe72GWUgyUMiuDLrcVe46izHCNZpO4EUqQp0B95wixYTWV5wVA8XUks+o+UnAh5KzVAQlWfA8Fk/DDrTRhkn2XZ6F5tDxxZnzMeZ2rBNqE9Uj3unB36TlwCZ4pId6zn1lqX6uWnE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739487624; c=relaxed/simple;
-	bh=qSew3Ilv6r0V80osYWxsPxiGy+drA6ufbjQbXlIjsNE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ii/+XEq9P72iRCmOK3sPqWyss+sBG8sJXrRHJauyi1pfcV1OccIkgT8DUYX3UTZSYZn7GgbgIPX1tuwVAJ5yUPtxJ3eNJIgqN9SuSliwsim0z2275Zp8oZs+EEdL1wxQGbZ1TZqxIFLOJRiSctcByh7GoW6hg9twBcbozILYzM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Az83w22h; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1739487625; c=relaxed/simple;
+	bh=Pqez/aGnMBPJahMHse06GPvbqP7rG0cCe15F1SQqc0o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MEgAIzGyc9605wJOTH9yLN/o6Ac4qxiDOrwUmkKTnoNUoVDATV6SrHfsXfo/vNeUmDz4wy5qOk7WUjVpqporPV5IU+UlJgB0CDR9dLNXNNRZen/9ESsjgw3gRWfTO63rWjxtKqfzFOhx7yS30NWbiclHa7QjFXmloYGstLcMxKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NcDBNVg+; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Az83w22h"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AC5C31F764;
-	Thu, 13 Feb 2025 23:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739487619;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SMbFIP0hXOQDBlKRcsdm79YcouV95TghdG4+3UcuP1c=;
-	b=Az83w22hwSpu+jWDQlxwg7RHVZLeWBu7AS+PA2fadSCbJgw5KY1KWHpslgnWrP3HiRoHPk
-	CXU4GNZsewKrTXhfECA8omUnixYr60bQeUenYOPaSFb6J1Bl6xWZ1/OimRRASoDH7L7tYM
-	JdHiywvV3RA6u9VU+JBT2wmVkxKFv6BFf/a/QRsVyHhnWZ37plwSkmivSr9ls6oKrh+752
-	E/qXCvZ7cVTWgLlg0zJkjFbQyvyX6/hqf88zl3xAzmSxyjrlzklGfooGx1aQbFn3U8ek1c
-	JPkRNRPlQNTCUYBBCdJs0ZV3g5bcUHsENTFbq53dh7cSjQ5qePTt+cjczuhQow==
-Date: Fri, 14 Feb 2025 00:00:17 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-rtc@vger.kernel.org, Inochi Amaoto <inochiama@gmail.com>,
-	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, unicorn_wang@outlook.com,
-	inochiama@outlook.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, dlan@gentoo.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcDBNVg+"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2fa1fb3c445so2148532a91.2;
+        Thu, 13 Feb 2025 15:00:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739487622; x=1740092422; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mrDkT78AbLp193RSVHymTnt8PVvEiWM3gXo16d10Ee8=;
+        b=NcDBNVg+GfwxOmVPnC6oLo5x/etqWs6gSf981lAl3Z4XdA8ntvyviVpsRdsLfYUctY
+         JkXuoM1Jqn7kKnGm+Epbu7UCUGChULjLdhp8mEQnl4aRxB/8L84t8jnUns6/Jgl5HTeE
+         QhhTzJtuyQL6XdA5xOq2W0ZbCfkgTAFddAbJ5T1Zuac/TxWzxVqALdEOOgEAJXryd3uN
+         sePv3QGu3S8MBoAw4QqJ+OBHzAHaYcMIaFeZYiABjuqB3TM7L/PU2iPEbKddIjHSfzxa
+         IjmZOYpR4cWyzemRSYBjcubVTU0CeTvHnROxDbiju6WiBNKzXmpoGYA/pPvQUppRUwj6
+         sTnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739487622; x=1740092422;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mrDkT78AbLp193RSVHymTnt8PVvEiWM3gXo16d10Ee8=;
+        b=t+rAzntDMez9dR2L/Mhkjt57a6dSuczUYJz+EsgurNxFcaaf4oxaPO4igsBVdxUsQO
+         cOjXot0ZDUR3ZPqJX5WgpYC9rKmMrocgh8SpufjrSg0lf6T/yMjxsjifqzA5Mougv9Q4
+         NORP1AH2QDdBfjEN7xp0duxJ5J49ndsR3ZzH8oZ04deax5g3qlXQnJwm1I+hTbBzhI+F
+         xz1v1uDRwvlpaMyhttaAJsHJCFsDPkJY8am2i3vaqzM6NApFk5kLmV87gLf0FkoPh03/
+         S1pD7QTgGZkyvO6IPbFpYcxstyM/bSZt5Yb6AMj73nrLiSn+UbnFt9tbKQtfFdn5xHwm
+         Lsag==
+X-Forwarded-Encrypted: i=1; AJvYcCVBO2mLiDTnNUHMjBFy5l0UDAQ16uNHZYos96AUwPTq+M0OWDfaf7LThTIYJXmfyAR8DBLFUYLzd+jYqyE=@vger.kernel.org, AJvYcCVPU/ki0r2L8QH7+Amy/mGRzOquUiGdTwrF+1wVHpd1tQ/whwUZ2KCfntj/bGODejvLbx5DGXZTbn53M7otJwfjew==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGVbNOk5STEynEBjNtj6KCxN+8GHJsh3pREpoXX2NJ3MhWOUzX
+	WY3suXYTlZmrbhwJLpkOvPziFQHvy9/eVyqtG6nMzmAr/JyWJHiK
+X-Gm-Gg: ASbGncvxmV6T7OYJ6Aut2GpNWaHQC+hQYRI2CcoMaJu2DA8U06Swbn3bUTm/U31VGoO
+	QzlfyqPtSRF28aO7+8n8fH/gD/LcZXjvX4ldecr72fVA8BB04a0SH+2sR7YqbarXTEBQ8Mfd3D/
+	5LqfK46K+0LYlfY8dOEwXoIhp+hFZ8njdEPvCHjcj8WEYNlDW+oSZzPczI6uMzUPm6YldjT8EyX
+	PlvQj35/RcF37ZMwiwemTxZ2OGWbGOzjuCXsjpsVTHoqt7KoBYWNXWJ/TSAdOY3rda/0EjZBdMZ
+	ZpsIW6rc7nxgFEOApaQY5wbtaqZVXkdrM0JY1PX2TxQVZyk=
+X-Google-Smtp-Source: AGHT+IGVG4jPUE2Vy3GKr7ThKUQyZply+qxvizrvUmFRuNzLEG7JPuoxpuF3oziSYxBhOn3eRPUBwg==
+X-Received: by 2002:a17:90b:4a10:b0:2ee:b66d:6576 with SMTP id 98e67ed59e1d1-2fbf9134584mr11216916a91.30.1739487621585;
+        Thu, 13 Feb 2025 15:00:21 -0800 (PST)
+Received: from mbp.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5349210sm17641735ad.11.2025.02.13.15.00.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 15:00:21 -0800 (PST)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: namhyung@kernel.org,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Jingbao Qiu <qiujingbao.dlmu@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v11 3/3] rtc: sophgo: cv18xx: Add restart handler
-Message-ID: <20250213230017eaa89034@mail.local>
-References: <20250213215655.2311793-1-alexander.sverdlin@gmail.com>
- <20250213215655.2311793-4-alexander.sverdlin@gmail.com>
+	Howard Chu <howardchu95@gmail.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v15 06/10] perf record --off-cpu: Disable perf_event's callchain collection
+Date: Thu, 13 Feb 2025 15:00:05 -0800
+Message-ID: <20250213230009.1450907-7-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250213230009.1450907-1-howardchu95@gmail.com>
+References: <20250213230009.1450907-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213215655.2311793-4-alexander.sverdlin@gmail.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegkedtgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegieduueethefhkeegjeevfefhiedujeeuhffgleejgfejgeekueejuefgheeggfenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedujedprhgtphhtthhopegrlhgvgigrnhguvghrrdhsvhgvrhgulhhinhesghhmrghilhdrtghomhdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtp
- hhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhttgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehinhhotghhihgrmhgrsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiihihsiihtohhfrdhkohiilhhofihskhhiodgutheslhhinhgrrhhordhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: alexandre.belloni@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On 13/02/2025 22:56:47+0100, Alexander Sverdlin wrote:
-> Currently provided ATF firmware for ARM64 Sophgo SoCs is binary-only.
-> To make Linux independent from this binary firmware, provide restart
-> handler triggering COLD or WARM reboot directly via RTC HW block as
-> alternative to PSCI interface.
-> 
-> Handler priority SYS_OFF_PRIO_DEFAULT of 0 is desired, because if PSCI
-> is indeed present, its priority of 129 will override the new one. On RiskV
-> side the behaviour is unchanged as well because SBI SRST handler has higher
-> priority as well (192).
-> 
-> Tested on SG2000 in ARM64 mode.
-> 
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-> ---
-> v11:
-> - patch introduced;
-> 
->  drivers/rtc/rtc-cv1800.c | 51 +++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 50 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/rtc/rtc-cv1800.c b/drivers/rtc/rtc-cv1800.c
-> index 5c30f7388983..586d7195f1f4 100644
-> --- a/drivers/rtc/rtc-cv1800.c
-> +++ b/drivers/rtc/rtc-cv1800.c
-> @@ -9,17 +9,23 @@
->  #include <linux/irq.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/notifier.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> +#include <linux/reboot.h>
->  #include <linux/regmap.h>
->  #include <linux/rtc.h>
->  
-> +#define CTRL_UNLOCKKEY         0x0004
-> +#define CTRL0                  0x0008
->  #define SEC_PULSE_GEN          0x1004
->  #define ALARM_TIME             0x1008
->  #define ALARM_ENABLE           0x100C
->  #define SET_SEC_CNTR_VAL       0x1010
->  #define SET_SEC_CNTR_TRIG      0x1014
->  #define SEC_CNTR_VAL           0x1018
-> +#define EN_PWR_CYC_REQ         0x10C8
-> +#define EN_WARM_RST_REQ        0x10CC
->  
->  /*
->   * When in VDDBKUP domain, this MACRO register
-> @@ -28,6 +34,10 @@
->  #define MACRO_RO_T             0x14A8
->  #define MACRO_RG_SET_T         0x1498
->  
-> +/* CTRL0 bits */
-> +#define REQ_PWR_CYC            BIT(3)
-> +#define REQ_WARM_RST           BIT(4)
-> +
->  #define ALARM_ENABLE_MASK      BIT(0)
->  #define SEL_SEC_PULSE          BIT(31)
->  
-> @@ -160,6 +170,29 @@ static const struct rtc_class_ops cv1800_rtc_ops = {
->  	.alarm_irq_enable = cv1800_rtc_alarm_irq_enable,
->  };
->  
-> +static int cv1800_restart_handler(struct sys_off_data *data)
-> +{
-> +	struct cv1800_rtc_priv *info = data->cb_data;
-> +	u32 reg_en = EN_WARM_RST_REQ;
-> +	u32 request = 0xFFFF0800;
-> +
-> +	if (data->mode == REBOOT_COLD) {
-> +		reg_en = EN_PWR_CYC_REQ;
-> +		request |= REQ_PWR_CYC;
-> +	} else {
-> +		request |= REQ_WARM_RST;
-> +	}
-> +
-> +	/* Enable reset request */
-> +	regmap_write(info->rtc_map, reg_en, 1);
-> +	/* Enable CTRL0 register access */
-> +	regmap_write(info->rtc_map, CTRL_UNLOCKKEY, 0xAB18);
-> +	/* Request reset */
-> +	regmap_write(info->rtc_map, CTRL0, request);
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
->  static int cv1800_rtc_probe(struct platform_device *pdev)
->  {
->  	struct cv1800_rtc_priv *rtc;
-> @@ -205,7 +238,23 @@ static int cv1800_rtc_probe(struct platform_device *pdev)
->  		return dev_err_probe(&pdev->dev, ret,
->  				     "cannot register interrupt handler\n");
->  
-> -	return devm_rtc_register_device(rtc->rtc_dev);
-> +	ret = devm_rtc_register_device(rtc->rtc_dev);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "cannot register RTC\n");
+There is a check in evsel.c that does this:
 
-This message is useless, there is no failure path without a message in
-devm_rtc_register_device.
+if (evsel__is_offcpu_event(evsel))
+	evsel->core.attr.sample_type &= OFFCPU_SAMPLE_TYPES;
 
-> +
-> +	/*
-> +	 * SYS_OFF_PRIO_DEFAULT of 0 is desired here because both RiscV SBI SRST
-> +	 * (prio 192) and ARM PSCI (prio 129) will override this one; this
-> +	 * handler shall serve as a fallback in cases where firmware is not
-> +	 * present.
-> +	 */
-> +	ret = devm_register_restart_handler(&pdev->dev, cv1800_restart_handler,
-> +					    rtc);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				     "cannot register restart handler\n");
+This along with:
 
+ #define OFFCPU_SAMPLE_TYPES  (PERF_SAMPLE_IDENTIFIER | PERF_SAMPLE_IP | \
+			      PERF_SAMPLE_TID | PERF_SAMPLE_TIME | \
+			      PERF_SAMPLE_ID | PERF_SAMPLE_CPU | \
+			      PERF_SAMPLE_PERIOD | PERF_SAMPLE_CALLCHAIN | \
+			      PERF_SAMPLE_CGROUP)
 
-Probe must never fail after devm_rtc_register_device.
+will tell perf_event to collect callchain.
 
-> +
-> +	return 0;
->  }
->  
->  static const struct of_device_id cv1800_dt_ids[] = {
-> -- 
-> 2.48.1
-> 
+We don't need the callchain from perf_event when collecting off-cpu
+samples, because it's prev's callchain, not next's callchain.
 
+   (perf_event)     (task_storage) (needed)
+   prev             next
+   |                  |
+   ---sched_switch---->
+
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20241108204137.2444151-8-howardchu95@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/off_cpu.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/off_cpu.h b/tools/perf/util/off_cpu.h
+index 2dd67c60f211..2a4b7f9b2c4c 100644
+--- a/tools/perf/util/off_cpu.h
++++ b/tools/perf/util/off_cpu.h
+@@ -13,7 +13,7 @@ struct record_opts;
+ #define OFFCPU_SAMPLE_TYPES  (PERF_SAMPLE_IDENTIFIER | PERF_SAMPLE_IP | \
+ 			      PERF_SAMPLE_TID | PERF_SAMPLE_TIME | \
+ 			      PERF_SAMPLE_ID | PERF_SAMPLE_CPU | \
+-			      PERF_SAMPLE_PERIOD | PERF_SAMPLE_CALLCHAIN | \
++			      PERF_SAMPLE_PERIOD | PERF_SAMPLE_RAW | \
+ 			      PERF_SAMPLE_CGROUP)
+ 
+ 
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.45.2
+
