@@ -1,102 +1,150 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26EF824A076;
-	Thu, 13 Feb 2025 19:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E400B245B05;
+	Thu, 13 Feb 2025 19:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739476100; cv=none; b=oOkp/ArFX1FjjUG0xaeKdaJFplSaAGmjrrLsXmR/g9bsSRPiOUxbSqp8FdWB3FZ/anWfImGmruxILzXWwCRah0zb5d8bvZKmVb7ckcu132S9VOPeC7Pblj8XSykBjxFdjzCLXe2BqSan3/Ztnktn7xIL7zRxstEc7OmhTV/mAU0=
+	t=1739476321; cv=none; b=sVZxW6ymSfSmJmJx8tf9PykTDDIYxTwjeyf49jf8efNPdGOmhav6k+Ot4tfF2nNeVOB+srByfXAvMA2QqHSxokeUWIcifqviYWZ3oFa7SPbuUy1YetipuYRFDi+V6g/+I763gD8gxK4Vm0WQV29WHqY6p2a6fHmYG265YnsHPvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739476100; c=relaxed/simple;
-	bh=3DE0Oow5LSSgKdQH0UZt78l1F3EVsTesxe1o9g/oZzM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OMybHj/yVMH/NinKJ0Hb7j4Q+VPB+AswIJ+zVBlpF3Bkoznjhn2BaPylJ3nzHYx3XxXW8i/47CuFQf6ciiWEku+QfwNZ3H1ZkvTd11VIiX5MVDlhqqFFQAC+K9lfBMwXD4Fpo9cs7g1o0BXXlD4HZixH+GTZFTpJppfs2oyY6aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SQagRKgC; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739476321; c=relaxed/simple;
+	bh=dvNGHrTeA6ys468eoHNYSsVhvMpC15PcGXt3+qXaffg=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=AT39sSkdu0vPHqZ54LCgLBWVVQ5fMi5ITySqIaFIJucWsXHE9brmzN72/zRZD1DEuwmDvTG5+nm5sWvl5/5r0tw8D5oSqGrmCO8nPFKWs0CdxGDgjOYrin+Gw3B6VuDs/2nNDUoJw4kxdIbGj2Kvdkfg2kSdmj/+55jm20TeoOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=KV6je5oO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jNKk9yU4; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQagRKgC"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6e44cb7adeeso2038036d6.0;
-        Thu, 13 Feb 2025 11:48:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739476098; x=1740080898; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3DE0Oow5LSSgKdQH0UZt78l1F3EVsTesxe1o9g/oZzM=;
-        b=SQagRKgC37Erf68uZH4z+eNqbd/F6iXk685ps7q+iyMAbYDyYoY5YNZ2ryNlhKvOZZ
-         MHiba2tQjAwFMVEtO0pZ2UgNStSAZQkz9jvgDodaknXEggGNR5lUy/G/BuKCKjH2iFjx
-         Oo8JLXPhiHE6L9sisTmKnxPTkhZkwp8jKU5aMQjuxp3oDORgA4lsVt96DbgAuEq6+/ZV
-         2ZoCxVlSZ4WIglOW+Pe/Vf/tGRmBZ2ix1iI3JhmFsbTANnKRBPnOtkFE9Ja29C9lA8e1
-         fgU8wavH1lEVYF0UlNVopLEpJllADPmbuTdBnf/0UmUCqU8C3xaCjm3Fz8fgK2pJSDFg
-         4a9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739476098; x=1740080898;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3DE0Oow5LSSgKdQH0UZt78l1F3EVsTesxe1o9g/oZzM=;
-        b=ElTkTVaPWfOc8Hsotj1H5a9yIc+FB1udDtZc5Sjwv7ccGfLM9DyIS10xg9CgQrtAFx
-         ghvlJCnA0Os/8cPmx0MGh0UOap2OrB+ryGrrsu4mnTdY70QAp9T5j31an5uVVpDNZkPJ
-         9m+V/Zcwyz0Jk5XKwFP6OJYHHTnGyOWMjDz8l0eVljmZFFGod/1Ei15Dwwp7l6rqjcJl
-         MfLf/5p/KivIFTiS9zsMB1GUXSQ9dyUZuLkfLGJ+flw+ZRnWZef7Yqu1nPyxkJbtZ42M
-         ziukP1cUlXdZ1I54XCWPKo/PNnCA8V9Ri0wXITxRSddOKe+97/qudLkSApjE0iWw/qMl
-         ITpA==
-X-Forwarded-Encrypted: i=1; AJvYcCUD1VZJOshdp1ErZkKHd+oZtukY+ggPCrnbl5xSjt+c5YBlICM5B299h+v3Z37e/gNaEr00xmWp2VrFXwU=@vger.kernel.org, AJvYcCW52+KNrAmkr197+8/OOhroK7YOxLAz5hh4Pt6YBecu2KC3839YDBTi1fPlzWUNcoZ7/MTr3Mv+zx13N3c2@vger.kernel.org, AJvYcCX0n3ndjSZZXI0SQLi4doUGDdzAOFNwRZGmYBzOjO3hLofBftntz1Sv2F6EmeaVavMi1FmJvV0iCnhb@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKUPc2nUj0HAspSCIHX42nbbcmwQfPQj8nuNTZSPaqeVL7XaGR
-	Gc4HBxCqMx/iRSmKDdHXK8+o7RtGVXnXq0i1GlILwGO1bQkA96Out1wArIoy
-X-Gm-Gg: ASbGncti8PESh0IaA5JJBCd6DTpzEfseVBsEhWjPJcAtC0kTbrLjAW1todTiLbHQuu+
-	FblwSftmOvs0MdIra1gjfgT+UNQR+dgZLTJtPVaEzS4Rcs05/gU5D2wBxYglyYfYsQzrEJk5xm2
-	zwIlZhCmoV4WTKkbN/vdtCu6X+yOHigZVzoOxRzSiexBQAIiK85R+SZCXzq5iTzRW1mNt6G9g4Y
-	Hd8GIzlKULryP3UvU/6ljVEdajW8bcqbtG67FEqesLdRkMWYmZdBQIzcCT54I2sdgpGLjXBhFoT
-	zSKv3ntqylR7h4TsFT9pZGe/CmXIqAoInR2p96bDS8SSvgK7MjAoi5niwf/f830XjzW4yJ4=
-X-Google-Smtp-Source: AGHT+IHp9GzUUXSp5ry9ZFQa8Y0j46zUpIFKRjQoHWRsRwYI3qfYVnjr8wQ8EdKvyDwXAaRm8t1PcA==
-X-Received: by 2002:ad4:5d49:0:b0:6d8:f750:b2f1 with SMTP id 6a1803df08f44-6e66521c4cfmr851286d6.11.1739476097859;
-        Thu, 13 Feb 2025 11:48:17 -0800 (PST)
-Received: from ?IPv6:2600:1002:a012:94a2:8c01:f07b:dda3:f9c3? ([2600:1002:a012:94a2:8c01:f07b:dda3:f9c3])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65d9f5c9fsm12902356d6.83.2025.02.13.11.48.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 11:48:17 -0800 (PST)
-Message-ID: <4f947fcb44be348830772a5d774bda81fdcabc6f.camel@gmail.com>
-Subject: Re: [PATCH 1/2] media: dt-bindings: Add dt bindings for
- m2m-deinterlace device
-From: Matthew Majewski <mattwmajewski@gmail.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, Uwe Kleine-Konig	
- <u.kleine-koenig@baylibre.com>, Neil Armstrong <neil.armstrong@linaro.org>,
-  "Dr. David Alan Gilbert"	 <linux@treblig.org>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, 	linux-media@vger.kernel.org, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, 	linux-kernel@vger.kernel.org, Andrzej Pietrasiewicz
- <andrzejtp2010@gmail.com>, 	devicetree@vger.kernel.org, Hans Verkuil
- <hverkuil@xs4all.nl>
-Date: Thu, 13 Feb 2025 14:48:15 -0500
-In-Reply-To: <173938841678.103791.15257194096562741977.robh@kernel.org>
-References: <20250212170901.3881838-1-mattwmajewski@gmail.com>
-	 <20250212170901.3881838-2-mattwmajewski@gmail.com>
-	 <173938841678.103791.15257194096562741977.robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (by Flathub.org) 
+	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="KV6je5oO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jNKk9yU4"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id DC5611140222;
+	Thu, 13 Feb 2025 14:51:57 -0500 (EST)
+Received: from phl-imap-07 ([10.202.2.97])
+  by phl-compute-10.internal (MEProxy); Thu, 13 Feb 2025 14:51:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
+	 t=1739476317; x=1739562717; bh=+1icS1ornuLOryc0NeZcleF/lysfwDHd
+	eIVIyTWVEzA=; b=KV6je5oOvDIlLt2IcOKKIavwfangEhqoB+zLeVLNjrhtb8ga
+	ko1I6oJrJzwJI0euTefgVhxm2kbY5xzyv2RV2XCFsCh7EnNqhbcvsRqV8TUI4Lsz
+	A3xdPdxGbH2jaoJGSDReNrRP3Mm0/JXhOouR4F7Aendba5svC5sVxkdbwzXI2lR8
+	D7ITQRsq4RMkmL2/PwqTGWO2IcgAGRQ4y5sz03KJ/NAh2wWA8sJBmdjeo5T2CnoN
+	TAC1AUr9D+bRPVP885VVIcHpLCS3Efyr83E6Y1jACHBmlbkBYVW//mF91GcdjpOy
+	lvcME+rNn7EC0Ob76NDXPOjKN7Z6cjgXTuokYw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739476317; x=
+	1739562717; bh=+1icS1ornuLOryc0NeZcleF/lysfwDHdeIVIyTWVEzA=; b=j
+	NKk9yU4fJCx9uyRFkIOvviP8jixh33cVwdZSooMJ+mN45xl1qK8kPJ7gtQazgoKg
+	gZzzEtUpWM6MCbI0bVduq4FqPWQNZtmrc1oChTGj1eom9nJ9B5a/t5u3RuXXUzv0
+	6LAOM6CnoVuwaQHvVMzs88DEEWNPqzWjzaCa9nD1AlPjhsNsFY0/LrblA3ciQszb
+	va8AgUyDnN6tFl1In4C/7l1xs7JqONRMoyx5Gh3tLOm8qo7ZYXNMGS6F9EYtOZur
+	LQmqHnXKQXfpWzEbnJdfTElldsIwW7ZMMBVKMiVI7ToQDzO4tCtW+tdBKV1akjYx
+	cwbUuyl/aST1GzFrV7+lg==
+X-ME-Sender: <xms:XU2uZybhXhFLU0OeqFw5r7L3mpSEfL0QlDD6zoef10vdrtLeWXWdwA>
+    <xme:XU2uZ1YdrG79cucHNEjBZ2JiNE7dxcAYNFCF6qEx33LDHyzJK7N-rQANe6tywi4bv
+    BnyIcJJWSdZvs02QqM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegjeeiiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdfuvhgvnhcurfgvthgvrhdfuceoshhvvghnsehsvhgvnhhpvghtvg
+    hrrdguvghvqeenucggtffrrghtthgvrhhnpeelfeetueegudduueduuefhfeehgeevkeeu
+    feffvdffkedtffffleevffdvvdeuffenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehsvhgvnhesshhvvghnphgvthgvrhdruggvvhdpnhgspghr
+    tghpthhtohepudejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehsthgrnhestg
+    horhgvlhhlihhumhdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgv
+    rdgtohhmpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlphhivghr
+    rghlihhsiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgriieskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehm
+    rghnihhvrghnnhgrnhdrshgrughhrghsihhvrghmsehlihhnrghrohdrohhrghdprhgtph
+    htthhopehkfieslhhinhhugidrtghomh
+X-ME-Proxy: <xmx:XU2uZ88ZTFgef8cAWzc8dX8o9v685TS2_ZzLi1GHY__qmJsqtlyaSQ>
+    <xmx:XU2uZ0pjTonlmsWbpyay6fwx5DEuaYtHCISTD-LlOH_Rt5IW_YyOfg>
+    <xmx:XU2uZ9qGENScLPwOvIevVSsLZZr_mP0EvPTI5fjO6sPoTgr-C4H8LA>
+    <xmx:XU2uZyTjDwJjL5mJ7S5FefJZ0FIiRnjdZGnvxbGeCdqbxiJwG7hfiA>
+    <xmx:XU2uZzZKl2o40-GDvILbgU7vTYyK6xpADGju3BZ9aQPnlOz7YPfR1-yP>
+Feedback-ID: i51094778:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 0C5C3BA0070; Thu, 13 Feb 2025 14:51:56 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Date: Thu, 13 Feb 2025 20:51:31 +0100
+From: "Sven Peter" <sven@svenpeter.dev>
+To: "Marc Zyngier" <maz@kernel.org>,
+ "Alyssa Rosenzweig" <alyssa@rosenzweig.io>
+Cc: "Hector Martin" <marcan@marcan.st>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
+ "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Mark Kettenis" <kettenis@openbsd.org>,
+ "Stan Skowronek" <stan@corellium.com>, asahi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <ae7bdc0c-c691-43a7-8cd7-b1c22c7623c0@app.fastmail.com>
+In-Reply-To: <86y0ybsd0d.wl-maz@kernel.org>
+References: <20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io>
+ <20250211-pcie-t6-v1-7-b60e6d2501bb@rosenzweig.io>
+ <86y0ybsd0d.wl-maz@kernel.org>
+Subject: Re: [PATCH 7/7] PCI: apple: Add T602x PCIe support
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Rob, thanks for the feedback.=20
+Hi,
 
-On Wed, 2025-02-12 at 13:26 -0600, Rob Herring (Arm) wrote:
->=20
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up
-> to
-> date:
->=20
+On Wed, Feb 12, 2025, at 10:55, Marc Zyngier wrote:
+> On Tue, 11 Feb 2025 19:54:32 +0000,
+> Alyssa Rosenzweig <alyssa@rosenzweig.io> wrote:
+>> 
+>> From: Hector Martin <marcan@marcan.st>
+>> 
+>> This version of the hardware moved around a bunch of registers, so we
+>> drop the old compatible for these and introduce register offset
+>> structures to handle the differences.
+>> 
+>> Signed-off-by: Hector Martin <marcan@marcan.st>
+>> Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+>> ---
+>>  drivers/pci/controller/pcie-apple.c | 125 ++++++++++++++++++++++++++++++------
+>>  1 file changed, 105 insertions(+), 20 deletions(-)
+>> 
+>> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+>> index 7f4839fb0a5b15a9ca87337f53c14a1ce08301fc..7c598334427cb56ca066890ac61143ae1d3ed744 100644
+...
+>
+>> +	else
+>> +		rmw_set(PHY_LANE_CFG_REFCLKCGEN, port->phy + PHY_LANE_CFG);
+>> +	rmw_clear(PORT_APPCLK_CGDIS, port->base + PORT_APPCLK);
+>> +
+>
+> Can you elaborate on this particular change?
+>
+> I always assumed this was some clock-gating that needed to occur
+> *before* the link training was started. This is now taking place after
+> training, and the commit message doesn't say anything about it.
 
-Yup, I missed a yaml syntax error and didn't notice because I was
-missing yamllint and dt_binding_check came back ok. Will fix for V2...
-thanks again.=20
+It's been a while but as far as I can tell APPCLK seems to be related
+to the IOMMUs attached to this controller. If it's disabled all reads
+from the respective IOMMU MMIO either came back as 0xffff.. or SError
+(don't remember which one it was) but pcie itself worked just fine
+(until any device tried DMA ofc).
 
-Best,
-Matthew
+At least on M1 this entire sequence only works because we already
+setup PORT_APPCLK_EN inside m1n1. If we didn't do this (like e.g
+for the thunderbolt pcie/dart) the DART probe would already fail.
+
+
+
+Sven
