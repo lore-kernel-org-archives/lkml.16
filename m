@@ -1,103 +1,144 @@
-Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF421CEEBB
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 15:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91678145A11;
+	Thu, 13 Feb 2025 15:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739460981; cv=none; b=jOtu5gNQPgh49MJReZiuF9+ObEmHHVBHLLM7aLpLU5oKpAPWbmb0Df7tU+fn+Odc2yRdaexGe0ucnwYa/MkVk3xRwzpMSqyN9Algt+S9znkVRc1XrV87tCj5EPfWoPQyiXy4ceekNkSsRFtPUYkhE/YcbmMyiq9VQWTrOoIg9hk=
+	t=1739461163; cv=none; b=El12uo/VmffOXB8V318Gy35CKnQDTwd5KjfbVTnzw/Ajvte+3on4WefOTx0O7pKAx3ZJfbh7EUQePNHyr/23uzYWESI3tRImY3HEpvILiLNyBmQ/MdqSvquX8FysTyzTyNWuRO36A0UXtIgy0atoGVML5B9Nv8AHjLrk0I8/K0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739460981; c=relaxed/simple;
-	bh=rUUmr1qKa0raoRIrehordGqRHzgfGvgm6PX24wnH2XI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=X6U0BjIpkTH7sJEyPG9d6MAoQUuOTeGxoPDXWMBPGbZRjgTm++bSmHhDlyKZUSMhMNj6LFGP1G21zhoTqOTy0L8PC1/X+C5gB1R3/4fLa6D2g5bCKEVMaQi+JwTAdrmiob+fp2BsgL/e7DRd+a8ifP3Q8taveGvWN4SLBTo3PE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gHi5+LjJ; arc=none smtp.client-ip=209.85.218.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com
+	s=arc-20240116; t=1739461163; c=relaxed/simple;
+	bh=6q/QewPzbnUsX7jiMLeE2mjex5cyWOE6tyicxoA6Dog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VCza6QyG4Fs4goIQVTPmUlPfdLJ2bqxPvzODx+vn35jAkasY881rRtm2biTmaObUBV/NSaeDTrtneeQYdjN5JN7tAc5gNdHMlnnTKwEnq3P5dH90L1J74CmlrZozccntUD72OH6tJSyi5XjWw7Io65F6hTKv4lt6zEnJMcJETR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yKtY76j5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gHi5+LjJ"
-Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-ab39f65dc10so126026766b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 07:36:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739460977; x=1740065777; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yY1niH8bXpIvQxfdtYMW2hEB9nSt1maMeFqvo9y07nE=;
-        b=gHi5+LjJ7N5vxzSNkNrM+6Ugu2Jj/m1kWQlmxkhSZFgOmKWUCoqawpPRM0W7rcTUl/
-         zqc9gt6LRHY6WGm3vBkcs3RvyLs+QThYHg8Ye6VHrs0sKHP4FzQqXtIdknlJ9hwPh5Tr
-         0NZtc2/8LynfTEMHERNmSVAF2QZfcQkLkiBU9VgOVeSM+w0rYAzDDJfvpwv7OzEf3gIh
-         qVfXty4YEcQSFXJ3CNt9vbV3R2GX3iH6Sankf2dValhDeCPLmu0LkKV/AKAPpjolRa1V
-         uqXXDIL+Viy2nxIzzsst/RcHahIRFZqwk4G/jGnZJvzkXzn4anOHQ3dSwvKukJg9GUF8
-         xjiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739460977; x=1740065777;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yY1niH8bXpIvQxfdtYMW2hEB9nSt1maMeFqvo9y07nE=;
-        b=eLr8xfTdxrhEQAdt22cHQnax319CPx0iRI87z/tTmjTyl1+tqEeYS4v88/DB+MbvN+
-         ZpvLcs1zWmxq+E8XnGsuSxdIRxTgy/Oev/wEWGaMGMyuwXPjheOSCQT7Obc8lmQq0Q52
-         FbcSb5GCxaJihLt+Nphna3//gD+1207ebT6e1STqo+Q6o1Z/ClVlqk0G0+xh2CT9a0Sz
-         c5986nbNCdF25cRMOblQOC/Hc0aAM3zWoKHwsUuwRfYC/J77PPn3o4oLbxgNpUAmn60h
-         pbH2/wb+zqMK/XhfNLVYVzG9q+uMl3/zaU0lCBGxpP1hRhCXVaHGE5j5K/ldrVGr9d3s
-         6YgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVH4Akc1m0WGAAt0tB9SNUw8JM04U2O1U4l9XOZm7whT7oQ/hpfKCGWBqCQzErheJnQorC1xIP7Ns7sago=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAxYnkP3Hab3D4XxU/DFjl9yyymYrCYT2TIMydX/K0rxTe5tCH
-	fLDsvsro5Yzif94WDK3rmj656zALdW0dssLq5ZgofgU1zJzVrm/ywZUqsOFoX4KE6Aa7FNaGb5f
-	9TecMrA==
-X-Google-Smtp-Source: AGHT+IGNnBpl+X2qDDZkAqsl1W2uWg0qrWcC8MQ3Hvm0c9bsOTfUcxx6R0kvEkmQWiyS31Y+rdhEd3ntyWG8
-X-Received: from ejkk8.prod.google.com ([2002:a17:906:32c8:b0:ab7:bfda:26f5])
- (user=qperret job=prod-delivery.src-stubby-dispatcher) by 2002:a17:906:730f:b0:aae:fd36:f511
- with SMTP id a640c23a62f3a-aba501a9d85mr376452566b.47.1739460976992; Thu, 13
- Feb 2025 07:36:16 -0800 (PST)
-Date: Thu, 13 Feb 2025 15:36:14 +0000
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yKtY76j5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40FD7C4CED1;
+	Thu, 13 Feb 2025 15:39:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739461163;
+	bh=6q/QewPzbnUsX7jiMLeE2mjex5cyWOE6tyicxoA6Dog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=yKtY76j52li0sEk5y5KPMU6muU6YekOq4KWdWkuzQRyQUaU6VWQp/uBAqzQ5ctSTy
+	 s0AbUnLkrGyTjPyPDtNcI38J2dZuq3C0P2N37SQ0mX+MsCcy9gMS9kRJ0VFRQ5AO+P
+	 O9OUyCgR3u9oJQTN7RffyfCc3+zp3+3/NLUR10fk=
+Date: Thu, 13 Feb 2025 15:35:45 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Hsin-chen Chuang <chharry@google.com>, linux-bluetooth@vger.kernel.org,
+	chromeos-bluetooth-upstreaming@chromium.org,
+	Hsin-chen Chuang <chharry@chromium.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+	Ying Hsu <yinghsu@chromium.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] Bluetooth: Fix possible race with userspace of
+ sysfs isoc_alt
+Message-ID: <2025021347-exalted-calculate-b313@gregkh>
+References: <20250213114400.v4.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
+ <2025021352-dairy-whomever-f8bd@gregkh>
+ <CADg1FFdez0OdNDPRFPFxNHL_JcKmHE6KNxnYvt4sK7i+Uw6opA@mail.gmail.com>
+ <2025021347-washboard-slashed-5d08@gregkh>
+ <CADg1FFdbKx3z+SPWFmY4+xZmewh0MnnZp_gmYEdY0z-mxutmEw@mail.gmail.com>
+ <2025021318-regretful-factsheet-79a1@gregkh>
+ <CABBYNZL4tEBTT3Hrf3JUGNuseLg1SNLmazo88EitmMfhUWUQxw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250213153615.3642515-1-qperret@google.com>
-Subject: [PATCH] KVM: arm64: Fix alignment of kvm_hyp_memcache allocations
-From: Quentin Perret <qperret@google.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>
-Cc: Keir Fraser <keirf@google.com>, Ben Simner <ben.simner@cl.cam.ac.uk>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABBYNZL4tEBTT3Hrf3JUGNuseLg1SNLmazo88EitmMfhUWUQxw@mail.gmail.com>
 
-When allocating guest stage-2 page-table pages at EL2, pKVM can consume
-pages from the host-provided kvm_hyp_memcache. As pgtable.c expects
-zeroed pages, guest_s2_zalloc_page() actively implements this zeroing
-with a PAGE_SIZE memset. Unfortunately, we don't check the page
-alignment of the host-provided address before doing so, which could
-lead to the memset overrunning the page if the host was malicious.
+On Thu, Feb 13, 2025 at 09:22:28AM -0500, Luiz Augusto von Dentz wrote:
+> Hi Greg,
+> 
+> On Thu, Feb 13, 2025 at 8:45 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Feb 13, 2025 at 09:33:34PM +0800, Hsin-chen Chuang wrote:
+> > > On Thu, Feb 13, 2025 at 8:10 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > A: http://en.wikipedia.org/wiki/Top_post
+> > > > Q: Were do I find info about this thing called top-posting?
+> > > > A: Because it messes up the order in which people normally read text.
+> > > > Q: Why is top-posting such a bad thing?
+> > > > A: Top-posting.
+> > > > Q: What is the most annoying thing in e-mail?
+> > > >
+> > > > A: No.
+> > > > Q: Should I include quotations after my reply?
+> > > >
+> > > > http://daringfireball.net/2007/07/on_top
+> > > >
+> > > > On Thu, Feb 13, 2025 at 07:57:15PM +0800, Hsin-chen Chuang wrote:
+> > > > > The btusb driver data is allocated by devm_kzalloc and is
+> > > > > automatically freed on driver detach, so I guess we don't have
+> > > > > anything to do here.
+> > > >
+> > > > What?  A struct device should NEVER be allocated with devm_kzalloc.
+> > > > That's just not going to work at all.
+> > >
+> > > Noted. Perhaps that needs to be refactored together.
+> > >
+> > > >
+> > > > > Or perhaps we should move btusb_disconnect's content here? Luiz, what
+> > > > > do you think?
+> > > >
+> > > > I think something is really wrong here.  Why are you adding a new struct
+> > > > device to the system?  What requires that?  What is this new device
+> > > > going to be used for?
+> > >
+> > > The new device is only for exposing a new sysfs attribute.
+> >
+> > That feels crazy.
+> >
+> > > So originally we had a device called hci_dev, indicating the
+> > > implementation of the Bluetooth HCI layer. hci_dev is directly the
+> > > child of the usb_interface (the Bluetooth chip connected through USB).
+> > > Now I would like to add an attribute for something that's not defined
+> > > in the HCI layer, but lower layer only in Bluetooth USB.
+> > > Thus we want to rephrase the structure: usb_interface -> btusb (new
+> > > device) -> hci_dev, and then we could place the new attribute in the
+> > > new device.
+> > >
+> > > Basically I kept the memory management in btusb unchanged in this
+> > > patch, as the new device is only used for a new attribute.
+> > > Would you suggest we revise the memory management since we added a
+> > > device in this module?
+> >
+> > If you add a new device in the tree, it HAS to work properly with the
+> > driver core (i.e. life cycles are unique, you can't have empty release
+> > functions, etc.)  Put it on the proper bus it belongs to, bind the
+> > needed drivers to it, and have it work that way, don't make a "fake"
+> > device for no good reason.
+> 
+> Well we could just introduce it to USB device, since alternate setting
+> is a concept that is coming from there, but apparently the likes of
+> /sys/bus/usb/devices/usbX/bAlternateSetting is read-only, some
+> Bluetooth profiles (HFP) requires switching the alternate setting and
+> because Google is switching to handle this via userspace thus why
+> there was this request to add a new sysfs to control it.
 
-Fix this by simply force-aligning all kvm_hyp_memcache allocations to
-page boundaries.
+That's fine, just don't add devices where there shouldn't be devices, or
+if you do, make them actually work properly (i.e. do NOT have empty
+release callbacks...)
 
-Fixes: 60dfe093ec13 ("KVM: arm64: Instantiate guest stage-2 page-tables at EL2")
-Reported-by: Ben Simner <ben.simner@cl.cam.ac.uk>
-Signed-off-by: Quentin Perret <qperret@google.com>
----
- arch/arm64/include/asm/kvm_host.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If you want to switch alternate settings in a USB device, do it the
+normal way from userspace that has been there for decades!  Don't make
+up some other random sysfs file for this please, that would be crazy,
+and wrong.
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 7cfa024de4e3..d9db6dfbad09 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -100,7 +100,7 @@ static inline void push_hyp_memcache(struct kvm_hyp_memcache *mc,
- static inline void *pop_hyp_memcache(struct kvm_hyp_memcache *mc,
- 				     void *(*to_va)(phys_addr_t phys))
- {
--	phys_addr_t *p = to_va(mc->head);
-+	phys_addr_t *p = to_va(mc->head & PAGE_MASK);
- 
- 	if (!mc->nr_pages)
- 		return NULL;
--- 
-2.48.1.502.g6dc24dfdaf-goog
+So what's wrong with the current api we have today that doesn't work for
+bluetooth devices?
 
+thanks,
+
+greg k-h
