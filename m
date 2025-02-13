@@ -1,125 +1,311 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAD320409D
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEC9201025
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739463531; cv=none; b=tw0kJKLl/P+VToZ5Xc6Vh1dFw+KNvXk35yhgbghe7GOB8pYQh+50cb5qLo9yJKYwa1wWXEsGubmIygYXMg2rto1J+HCdTU8EZPmjuWAzeqfWAYQlBjpIvxLZ7a4Md111uSuFfX+EnXCqRS3n1fpoPte1r1NPpf46/XFxA4C891I=
+	t=1739463540; cv=none; b=JBZIh4+vT34qItxGzl7sSm5jjcZo6T43pgxCLNmaXgdyODQSuZuwmTTbgej/J6G7AsGP5QeQMhNggUsJB5NR83DEUbOXpn0CKZxiISLYlaKf6PFWQimYFuWL3/3PMVFCGiz6QA2g3Wbs06OiKkcEyt+HWXTe7sHzOs3osePj5tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739463531; c=relaxed/simple;
-	bh=FPEZM9FyvR3U6n4xCdl/NKl6rhtE2PyRI2Op+6EI5MQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C7U+BDYFsFjAieKHPw31KSki6MDAU4nRifIXaG2Jo0Mb7B+sYhUKZJdsxrQuuaNcbBaUXtn8XWvPUaDfMZ8+v5pZxnnU/yHVqf4f/CJgvnqFGAi4SXZ7RCQO0A38uuHnNiKM7CviMTMe1oAZRGFw4UIf/h+ednqkjGWlAyS/3BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mnJDTdqL; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mnJDTdqL"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-726fec215d7so675544a34.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 08:18:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739463529; x=1740068329; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wk0Ke649msGfj609eFpxLZzrb3zbWSGeBEU/UMBg818=;
-        b=mnJDTdqLOdB8K44ye0GFUh8u40ijPypdKkXPA8svvypjDgZ3hyYZbRuROW1vdsN5jI
-         tFh9PtX5YWp0yAHTkdRDN8BYiuoMG4b7CWQ5cRHZcRSfKERc8AgnrnnPUfzWha6YtHPM
-         Y3M4uqd8eVPKcT9iA5z3Qgwzc/N08CuGTRX+9uAWRCC/FKM4XaqUT3vyw7Hi1T4TOpJt
-         r+6WPb3y71ygwT1WjJzxb4Y3SMFYfow++Gkq+o9fs284aRFKZT22Zy8rccCZ+OdDHak9
-         BAkd9ZyxF61Q5UJOXEobm6lpmFo0QChIowkaIluJD/ewf5/DZEXm/Cqur9PtN/X/ltQ2
-         vOWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739463529; x=1740068329;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wk0Ke649msGfj609eFpxLZzrb3zbWSGeBEU/UMBg818=;
-        b=OuY7wsVYIGzqWYT0IWDFDNth4cv7/iCsBR0xW8KTO6jANviOHObryRrGv7MfDKyfGJ
-         NzoVje12ypN9ouBucdArBUIUBX91TFrTuLpHkI5Ag/6NGsWFzkhIbv3w4mJ+i1AvIZOe
-         91KwX3zrojb1ZmOlPyjI7AD6+yaWJEiV34hCDd/FJMvrdJXf8Z/oZYYFeWq+Jchu9l2b
-         PCBtTV5T+cghXtLe9T0LBc0VAP7DIomLQaoTQuLJkoyrKqeB16z3BpXuXDpr232XgW+P
-         JorG9qPuTQsyuX9MT+uKnmAVf8r88wndbGfC0Ug+Cl6EQE3JbUeCeCShE4o9LKioSbZg
-         OHvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIXoBzGkUqbX+3oIESqBaAhv9c5QXh7KmN8+up1MhKu3oF7k7+rbN4i6IKkOHMDQpIhNya0nzlqFSAVN8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQfS1K50ECArrm6wLcjuyRAkM9UbQeRt39rvDgJZQMdYFzEIk+
-	rGibCzkLoDDRLxHEdKMyCsf4jhlXJfDd9yrNyLRp2dlLQHBoag0RyMozOhQA3q8=
-X-Gm-Gg: ASbGncsH0q5YF9DNn+h7x9cfNtkSC/BL1GhaVh3rz3p5yrEJGVj6qByFKlj2vKZhE5K
-	fLAe581BIXotplgkwDgpykhywbrL+FDbfpnG4WGTvNuLuSCgwvqnmiqG+5hjpI5A55C+iWe44RX
-	OvCFlOPwiROTsHOhIUUpDI+0heDHUJ9zn6H+daSMbdEoWPXDamrxx8GL7vymkuKFsHD6vOdBNMU
-	et6FrGcR5trtPmHfxTDaCf6MisjWbEgfk9R+uWzmdUteczoIUnrgrphIP1anJAIlGL7aGNtXTqA
-	IBwbY3ZeKVSgVcMM8Eqctr1OK94bLctrilcvfpBjMgKrrnjSFI4j
-X-Google-Smtp-Source: AGHT+IEGLLAr3ZCm1qk6HJfeJrpeKZVxdyf5Q+R8bhFa0Q5GeLkClKacnVaUNLgJ0z38uu3iJ2EimA==
-X-Received: by 2002:a05:6830:6487:b0:71d:ffa1:6b0a with SMTP id 46e09a7af769-726f1d18a26mr5080482a34.23.1739463528835;
-        Thu, 13 Feb 2025 08:18:48 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-727001ff3absm693643a34.39.2025.02.13.08.18.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 08:18:48 -0800 (PST)
-Message-ID: <dacc7cd7-961d-4c30-8b8c-4622132d2cbc@baylibre.com>
-Date: Thu, 13 Feb 2025 10:18:47 -0600
+	s=arc-20240116; t=1739463540; c=relaxed/simple;
+	bh=ONh9SwCBm2GjrBAQ91qkiZi9N0Hr3U0l+zrorDvo3Xk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=P0TwTpNxtf/KrCcUKKMy+SBy34U09NpEeMT2Bvot5QMrOKimb/VBKDs2B58JKHpVS6fbxinoHxpG8lCDZThlajgawTgNnBxF0DZFH0ehRSg3xxnSdEMShtFyJZVRQGjLtO30Ynzat0Hr1Wr3ptbgOmpnvhtXncuG9abm46z0zR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1tibr7-000000003xx-1CB0;
+	Thu, 13 Feb 2025 11:14:25 -0500
+From: Rik van Riel <riel@surriel.com>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	bp@alien8.de,
+	peterz@infradead.org,
+	dave.hansen@linux.intel.com,
+	zhengqi.arch@bytedance.com,
+	nadav.amit@gmail.com,
+	thomas.lendacky@amd.com,
+	kernel-team@meta.com,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	jackmanb@google.com,
+	jannh@google.com,
+	mhklinux@outlook.com,
+	andrew.cooper3@citrix.com,
+	Rik van Riel <riel@surriel.com>,
+	Manali Shukla <Manali.Shukla@amd.com>
+Subject: [PATCH v11 10/12] x86/mm: do targeted broadcast flushing from tlbbatch code
+Date: Thu, 13 Feb 2025 11:14:01 -0500
+Message-ID: <20250213161423.449435-11-riel@surriel.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250213161423.449435-1-riel@surriel.com>
+References: <20250213161423.449435-1-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/5] pinctrl: Support ROHM BD79124 pinmux / GPO
-To: Linus Walleij <linus.walleij@linaro.org>,
- Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Nuno Sa <nuno.sa@analog.com>,
- Dumitru Ceclan <mitrutzceclan@gmail.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- Matteo Martelli <matteomartelli3@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <cover.1738328714.git.mazziesaccount@gmail.com>
- <3d85fe979fca352bed4d9841e3233c055dfaf154.1738328714.git.mazziesaccount@gmail.com>
- <6867812e-7269-4686-9fc2-55afd9fa91bf@gmail.com>
- <CACRpkdaP6biD8ueeezBDw1P3LP6ARoJw0zfkmxC-QKK0fw79YQ@mail.gmail.com>
- <a52933a2-8b87-4e49-a346-91266fe3b675@gmail.com>
- <CACRpkdYMytiXoXrjTX3ts6ce1T6Xf4rSyk=sDP9fYz730Q-3bQ@mail.gmail.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <CACRpkdYMytiXoXrjTX3ts6ce1T6Xf4rSyk=sDP9fYz730Q-3bQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Sender: riel@surriel.com
 
-On 2/13/25 5:53 AM, Linus Walleij wrote:
-> On Thu, Feb 6, 2025 at 11:09 AM Matti Vaittinen
-> <mazziesaccount@gmail.com> wrote:
-> 
->> I just realized I should've shared the link to the v2 - which may not
->> include all the recipients (because it no longer touches all the
->> subsystems - and the get_maintainer.pl probably reduced the list of
->> recipients). So, for anyone interested, here's the v2:
->>
->> https://lore.kernel.org/all/cover.1738761899.git.mazziesaccount@gmail.com/
-> 
-> Well it touches (uses) the gpio subsystem so the GPIO maintainers
-> should have been on CC...
-> 
-> This is one of the shortcomings of get_maintainers.pl really (also what
-> b4 is using): it does not know that if you use some specific APIs from
-> some specific .h files then some specific maintainers need to be on
-> CC.
+Instead of doing a system-wide TLB flush from arch_tlbbatch_flush,
+queue up asynchronous, targeted flushes from arch_tlbbatch_add_pending.
 
-Can't we do that with `K:` in MAINTAINERS? 
+This also allows us to avoid adding the CPUs of processes using broadcast
+flushing to the batch->cpumask, and will hopefully further reduce TLB
+flushing from the reclaim and compaction paths.
 
-I see:
+Signed-off-by: Rik van Riel <riel@surriel.com>
+Tested-by: Manali Shukla <Manali.Shukla@amd.com>
+Tested-by: Brendan Jackman <jackmanb@google.com>
+Tested-by: Michael Kelley <mhklinux@outlook.com>
+---
+ arch/x86/include/asm/invlpgb.h  | 20 ++++-----
+ arch/x86/include/asm/tlbflush.h | 19 ++++----
+ arch/x86/mm/tlb.c               | 79 +++++++++++++++++++++++++++++++--
+ 3 files changed, 96 insertions(+), 22 deletions(-)
 
-K:	(devm_)?gpio_(request|free|direction|get|set)
-
-to catch use of old gpio apis. Maybe should add 
-
-K:	(devm_)?gpiochip_add_data
-
-to catch anyone registering a gpio controller?
+diff --git a/arch/x86/include/asm/invlpgb.h b/arch/x86/include/asm/invlpgb.h
+index a1d5dedd5217..43c331507cc0 100644
+--- a/arch/x86/include/asm/invlpgb.h
++++ b/arch/x86/include/asm/invlpgb.h
+@@ -31,7 +31,7 @@ static inline void __invlpgb(unsigned long asid, unsigned long pcid,
+ }
+ 
+ /* Wait for INVLPGB originated by this CPU to complete. */
+-static inline void tlbsync(void)
++static inline void __tlbsync(void)
+ {
+ 	cant_migrate();
+ 	/* TLBSYNC: supported in binutils >= 0.36. */
+@@ -61,19 +61,19 @@ static inline void invlpgb_flush_user(unsigned long pcid,
+ 				      unsigned long addr)
+ {
+ 	__invlpgb(0, pcid, addr, 0, 0, INVLPGB_PCID | INVLPGB_VA);
+-	tlbsync();
++	__tlbsync();
+ }
+ 
+-static inline void invlpgb_flush_user_nr_nosync(unsigned long pcid,
+-						unsigned long addr,
+-						u16 nr,
+-						bool pmd_stride)
++static inline void __invlpgb_flush_user_nr_nosync(unsigned long pcid,
++						  unsigned long addr,
++						  u16 nr,
++						  bool pmd_stride)
+ {
+ 	__invlpgb(0, pcid, addr, nr - 1, pmd_stride, INVLPGB_PCID | INVLPGB_VA);
+ }
+ 
+ /* Flush all mappings for a given PCID, not including globals. */
+-static inline void invlpgb_flush_single_pcid_nosync(unsigned long pcid)
++static inline void __invlpgb_flush_single_pcid_nosync(unsigned long pcid)
+ {
+ 	__invlpgb(0, pcid, 0, 0, 0, INVLPGB_PCID);
+ }
+@@ -82,11 +82,11 @@ static inline void invlpgb_flush_single_pcid_nosync(unsigned long pcid)
+ static inline void invlpgb_flush_all(void)
+ {
+ 	__invlpgb(0, 0, 0, 0, 0, INVLPGB_INCLUDE_GLOBAL);
+-	tlbsync();
++	__tlbsync();
+ }
+ 
+ /* Flush addr, including globals, for all PCIDs. */
+-static inline void invlpgb_flush_addr_nosync(unsigned long addr, u16 nr)
++static inline void __invlpgb_flush_addr_nosync(unsigned long addr, u16 nr)
+ {
+ 	__invlpgb(0, 0, addr, nr - 1, 0, INVLPGB_INCLUDE_GLOBAL);
+ }
+@@ -95,7 +95,7 @@ static inline void invlpgb_flush_addr_nosync(unsigned long addr, u16 nr)
+ static inline void invlpgb_flush_all_nonglobals(void)
+ {
+ 	__invlpgb(0, 0, 0, 0, 0, 0);
+-	tlbsync();
++	__tlbsync();
+ }
+ 
+ #endif /* _ASM_X86_INVLPGB */
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index 3080cb8d21dc..27ba17603e0b 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -106,6 +106,9 @@ struct tlb_state {
+ 	 * need to be invalidated.
+ 	 */
+ 	bool invalidate_other;
++#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
++	bool need_tlbsync;
++#endif
+ 
+ #ifdef CONFIG_ADDRESS_MASKING
+ 	/*
+@@ -310,6 +313,10 @@ static inline void broadcast_tlb_flush(struct flush_tlb_info *info)
+ static inline void consider_global_asid(struct mm_struct *mm)
+ {
+ }
++
++static inline void tlbsync(void)
++{
++}
+ #endif
+ 
+ #ifdef CONFIG_PARAVIRT
+@@ -359,21 +366,15 @@ static inline u64 inc_mm_tlb_gen(struct mm_struct *mm)
+ 	return atomic64_inc_return(&mm->context.tlb_gen);
+ }
+ 
+-static inline void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
+-					     struct mm_struct *mm,
+-					     unsigned long uaddr)
+-{
+-	inc_mm_tlb_gen(mm);
+-	cpumask_or(&batch->cpumask, &batch->cpumask, mm_cpumask(mm));
+-	mmu_notifier_arch_invalidate_secondary_tlbs(mm, 0, -1UL);
+-}
+-
+ static inline void arch_flush_tlb_batched_pending(struct mm_struct *mm)
+ {
+ 	flush_tlb_mm(mm);
+ }
+ 
+ extern void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
++extern void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
++					     struct mm_struct *mm,
++					     unsigned long uaddr);
+ 
+ static inline bool pte_flags_need_flush(unsigned long oldflags,
+ 					unsigned long newflags,
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 0ce0b71a5378..8880bc7456ed 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -492,6 +492,37 @@ static void finish_asid_transition(struct flush_tlb_info *info)
+ 	WRITE_ONCE(mm->context.asid_transition, false);
+ }
+ 
++static inline void tlbsync(void)
++{
++	if (!this_cpu_read(cpu_tlbstate.need_tlbsync))
++		return;
++	__tlbsync();
++	this_cpu_write(cpu_tlbstate.need_tlbsync, false);
++}
++
++static inline void invlpgb_flush_user_nr_nosync(unsigned long pcid,
++						unsigned long addr,
++						u16 nr, bool pmd_stride)
++{
++	__invlpgb_flush_user_nr_nosync(pcid, addr, nr, pmd_stride);
++	if (!this_cpu_read(cpu_tlbstate.need_tlbsync))
++		this_cpu_write(cpu_tlbstate.need_tlbsync, true);
++}
++
++static inline void invlpgb_flush_single_pcid_nosync(unsigned long pcid)
++{
++	__invlpgb_flush_single_pcid_nosync(pcid);
++	if (!this_cpu_read(cpu_tlbstate.need_tlbsync))
++		this_cpu_write(cpu_tlbstate.need_tlbsync, true);
++}
++
++static inline void invlpgb_flush_addr_nosync(unsigned long addr, u16 nr)
++{
++	__invlpgb_flush_addr_nosync(addr, nr);
++	if (!this_cpu_read(cpu_tlbstate.need_tlbsync))
++		this_cpu_write(cpu_tlbstate.need_tlbsync, true);
++}
++
+ static void broadcast_tlb_flush(struct flush_tlb_info *info)
+ {
+ 	bool pmd = info->stride_shift == PMD_SHIFT;
+@@ -791,6 +822,8 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+ 	if (IS_ENABLED(CONFIG_PROVE_LOCKING))
+ 		WARN_ON_ONCE(!irqs_disabled());
+ 
++	tlbsync();
++
+ 	/*
+ 	 * Verify that CR3 is what we think it is.  This will catch
+ 	 * hypothetical buggy code that directly switches to swapper_pg_dir
+@@ -970,6 +1003,8 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+  */
+ void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+ {
++	tlbsync();
++
+ 	if (this_cpu_read(cpu_tlbstate.loaded_mm) == &init_mm)
+ 		return;
+ 
+@@ -1633,9 +1668,7 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+ 	 * a local TLB flush is needed. Optimize this use-case by calling
+ 	 * flush_tlb_func_local() directly in this case.
+ 	 */
+-	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
+-		invlpgb_flush_all_nonglobals();
+-	} else if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids) {
++	if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids) {
+ 		flush_tlb_multi(&batch->cpumask, info);
+ 	} else if (cpumask_test_cpu(cpu, &batch->cpumask)) {
+ 		lockdep_assert_irqs_enabled();
+@@ -1644,12 +1677,52 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+ 		local_irq_enable();
+ 	}
+ 
++	/*
++	 * If we issued (asynchronous) INVLPGB flushes, wait for them here.
++	 * The cpumask above contains only CPUs that were running tasks
++	 * not using broadcast TLB flushing.
++	 */
++	tlbsync();
++
+ 	cpumask_clear(&batch->cpumask);
+ 
+ 	put_flush_tlb_info();
+ 	put_cpu();
+ }
+ 
++void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
++					     struct mm_struct *mm,
++					     unsigned long uaddr)
++{
++	u16 asid = mm_global_asid(mm);
++
++	if (asid) {
++		invlpgb_flush_user_nr_nosync(kern_pcid(asid), uaddr, 1, false);
++		/* Do any CPUs supporting INVLPGB need PTI? */
++		if (static_cpu_has(X86_FEATURE_PTI))
++			invlpgb_flush_user_nr_nosync(user_pcid(asid), uaddr, 1, false);
++
++		/*
++		 * Some CPUs might still be using a local ASID for this
++		 * process, and require IPIs, while others are using the
++		 * global ASID.
++		 *
++		 * In this corner case we need to do both the broadcast
++		 * TLB invalidation, and send IPIs. The IPIs will help
++		 * stragglers transition to the broadcast ASID.
++		 */
++		if (in_asid_transition(mm))
++			asid = 0;
++	}
++
++	if (!asid) {
++		inc_mm_tlb_gen(mm);
++		cpumask_or(&batch->cpumask, &batch->cpumask, mm_cpumask(mm));
++	}
++
++	mmu_notifier_arch_invalidate_secondary_tlbs(mm, 0, -1UL);
++}
++
+ /*
+  * Blindly accessing user memory from NMI context can be dangerous
+  * if we're in the middle of switching the current user task or
+-- 
+2.47.1
 
