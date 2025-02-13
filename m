@@ -1,116 +1,184 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0526021519F;
-	Thu, 13 Feb 2025 11:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51552153DF
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739444696; cv=none; b=NEwRfQ/xbaQdGyqLVyUhiD6/XqXhudlTSzb0U3ln3LHYaN97DqXqxXnE4zzsso1ouSKqr4j7zJdrVhBol1m0Rbpnzic1mUGXRC2tWusnNVs3O+qR9krQiUecD7SDz7yWHf/9aw24zQ4eoiP+KMl7DzHZm9mVX7wyANQfSr5F+zU=
+	t=1739444695; cv=none; b=TDn3GjLHFVol9bMa4blvDGaYP1MqaLJrTLrWA2M3+CI1lO5XVvY92PfRjrFB4QJCO3HrcnAzfetVuANvBvMgqRZjoQo6cVVhrp5OImI+27VjzpWrAUdTsCBVroVvtv9B4eAdmStBsRetSWWoXQz/TKB0SYNNEYNXBQgNxFSPN08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739444696; c=relaxed/simple;
-	bh=PzBfe4atz6vSeVyd/u+d7DpT2Rrcjc+RgX6K/j/Og7I=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=JbuorxMCkmaxiL871lkJpgCLQGI4u0h6OvQYoGuOoiJj4DbEnxOSBl3YizRF5bp17jZi+nC8Qxlt6F2q31ehBok6bUQuSuivJyZoS5O+iSmkHKy/HxCSyBYZL1BUClWbuQ2XaiJW3acL+yGn9rhBu1rir3XbRD8L9Az4FIPKt4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Ytskr0xNwz4f3kvq;
-	Thu, 13 Feb 2025 19:04:20 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id DB6FF1A0BDF;
-	Thu, 13 Feb 2025 19:04:42 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgBXul7J0a1nLFToDg--.14503S3;
-	Thu, 13 Feb 2025 19:04:42 +0800 (CST)
-Subject: Re: [PATCH v2 1/2] blk-wbt: Fix some comments
-To: Tang Yizhou <yizhou.tang@shopee.com>, yukuai1@huaweicloud.com,
- axboe@kernel.dk
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250213100611.209997-1-yizhou.tang@shopee.com>
- <20250213100611.209997-2-yizhou.tang@shopee.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <76cd73b1-52f5-1f19-ae37-c856a765ebc4@huaweicloud.com>
-Date: Thu, 13 Feb 2025 19:04:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1739444695; c=relaxed/simple;
+	bh=2M89B3p91FPP25Gw8Y6SiWDXagycK/dpbfENE1t2aLQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pmaYVvcgW/HXWcFAyD7fDm5fr3TZ/qbKdU7rmqmb2YqM/SQgFtUSp71RYRcntIaNz/Qa9bIjw6viPE1P8+shzGdzbgkvmv2Yb0+QeEGAsMZHk73MJYr7SEjmMl1KjMJma/J0PsFS8PoXRIYoThm43t5vWJBPErgd4h1gfq6jE5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wa6jmLKm; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wa6jmLKm"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4394b2c19ccso5659255e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 03:04:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739444692; x=1740049492; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=m2sxvAYKNr0+htAaMCuMZG0BVvvnjrhzSWzEt2rFCZM=;
+        b=Wa6jmLKm9aMrO3rEu72QUgUbIYWOHlJzVY0ND1bFkkiD06lGvxSOWD7uKhsJhjYCKL
+         QgB3SlBpm0O3PlZa/jldUvZT9LdKFP9cPVdC8jAOUIWnhx5GNirfs2qO8mcBtLBHuq9V
+         vRMlgBVOZCg1PcOA6aR1NfDptK4nOtMb4s3fQpzg7O7DnXpWfV5faPpbGOPH0SinLSTq
+         qJRZNRhAfNGJq9s+CPuPALmrjW1Sdw0BSuGoXgVWxUXVQhTzN/ekoS9ryRzEm+NXNUdl
+         loexXsGFsByW30Cn+ab3G/uuE7qckoam2yxsLVye6/9n7Q9mYJ04IocMzKC8cxDBY22S
+         p15w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739444692; x=1740049492;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m2sxvAYKNr0+htAaMCuMZG0BVvvnjrhzSWzEt2rFCZM=;
+        b=Vf9uy1uui4uabtgEfQ28iXKeWSDtUijYHfFeUZECpJBFGixY+cDKdmBt5+ChMVJzZz
+         TKn3jNc/QDui7T7s6HauvkLFQICMleGcslhBIg3AaESqByoupW+mwH58Nv4vE2tbYAtE
+         QJnd9bi+y63gKBrhrZQf44nCvdPzPK3rh4g1zeZluq3Q7mIwhCfkWsGmRrpFwQWuOOu4
+         F+MdFzsQeWJeg9of6oGKdq5jpOFQTiubfsz7MQJ/weAHsVxZvjgd6hTL+nk8yr2Rc8Py
+         ry2F1kexlcypVIOT5/DAT+T/++Qj9iM/CDpiNrzY1hsNAtAqglmx9sxjjSnTyxiS1v6m
+         7W2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW4buRYZPTxscEbGhNwXE0U+vkdlPo8rC8z2ceuqZDRxAQi2PAlxgVHxl/z1eNG+3eiIDmd+TGasJz0uRA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlyxQjq/ql3gAT44RWYKR0SwyfnT9fivjWOml0JFd0hjh4rxCF
+	+2vdxWRXs355WSTVrYC08KXvJ0nWBLjuMkzFmUAXOvbVC3IFBe/MJtqbvAXaFEpijDALYp5Ei7r
+	xQxhGtPK67zfEaA==
+X-Google-Smtp-Source: AGHT+IEB3aP700Hf+T0Y9hXFswWx+oBLY+WAVsjCa34dg3231EVe8adDYbhQ2hlUMA3P7Xrq6PWzNabIh7UH2D4=
+X-Received: from wmgg21.prod.google.com ([2002:a05:600d:15:b0:439:3c3e:f0e8])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3f12:b0:439:45ce:15da with SMTP id 5b1f17b1804b1-439601c10a2mr29099955e9.25.1739444692374;
+ Thu, 13 Feb 2025 03:04:52 -0800 (PST)
+Date: Thu, 13 Feb 2025 11:04:06 +0000
+In-Reply-To: <20250213-vma-v14-0-b29c47ab21f5@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20250213100611.209997-2-yizhou.tang@shopee.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXul7J0a1nLFToDg--.14503S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7AryDKr1fCry8GFW7ZF1UZFb_yoW8XF18p3
-	Z2kw1UuF1xKFWxuwnrXa9rZr4fGF4rGF18tryxWrnIqr13Wr1Fvan0kr40vr4FvrWfWr4x
-	X3Wj9F95AF48u3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-	Y487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-	nxnUUI43ZEXa7VUbSfO7UUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Mime-Version: 1.0
+References: <20250213-vma-v14-0-b29c47ab21f5@google.com>
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3859; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=2M89B3p91FPP25Gw8Y6SiWDXagycK/dpbfENE1t2aLQ=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnrdHBNVpj/HCfF1bMPs0sT3j/Jo2hPFWd70C3l
+ iOXvQTr0YyJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ63RwQAKCRAEWL7uWMY5
+ RtHcEACcBTXyAj1CXLqb0ECe7oLoK6K8Pl+NeXmHTuMk/Ev7mlbfXpB1nTJjbWRsYCabctv6mkD
+ G9xvp3vC3cneN8bB44qp9x+ebNayRdV32qqfyi8cfv/2t5alAL3cKGTErJW6gEeIGyTAi7Mmyem
+ stGNNElApGyVgVocm3n6dDGebZ5GQgXMWmtUzojC+mhcF7jIE00ry3mrPAxCQA/Q4SgFWZE2Uhy
+ HasbIcqybKe2sgVO1R2tJ2sA2ba6ybalTf2ORz3h4PheSouXcsG51HIepwvqn/mhb9nyocthl88
+ bZIptuUR1O79gMUyLSpctcApRDnt8YbFqX/DCLY3mVxCq55sbcHRT3caJ+bCIsGG0a/vsONgeaX
+ /jdSt0JbUYbE9+PpBd7IHqjgZxw9z6HRZITmoLhIUaQa00mEbtASKRL0pCOLFK093wxdw2Gy5BO
+ V8rsvOruaOrT6AIdS4sDOtMyRXbp6TjKq6EioB92dhZnRPmb1a0Xwv6Td7GifsTVOa6msSoYugx
+ DF/+4YZOrTawLkkY/1b4vb/8cgLTehGuS4ASNFFHBbOPFjhWh1PRCvnapev05NtEZ1A+JYbrBSj
+ QDyex48V5rO7SbbnmgPgMbO5gTtVde02PpFkw2+qxRX88cQiVaOaFOODzsaMmVS/zYWyz+FXlaz MAB1NXQrXMto4PQ==
+X-Mailer: b4 0.13.0
+Message-ID: <20250213-vma-v14-7-b29c47ab21f5@google.com>
+Subject: [PATCH v14 7/8] rust: miscdevice: add mmap support
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	John Hubbard <jhubbard@nvidia.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>, Suren Baghdasaryan <surenb@google.com>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, rust-for-linux@vger.kernel.org, 
+	Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Hi,
+Add the ability to write a file_operations->mmap hook in Rust when using
+the miscdevice abstraction. The `vma` argument to the `mmap` hook uses
+the `VmaNew` type from the previous commit; this type provides the
+correct set of operations for a file_operations->mmap hook.
 
-ÔÚ 2025/02/13 18:06, Tang Yizhou Ð´µÀ:
-> From: Tang Yizhou <yizhou.tang@shopee.com>
-> 
-> wbt_wait() no longer uses a spinlock as a parameter. Update the function
-> comments accordingly.
-> 
-> RWB_UNKNOWN_BUMP is used when we gradually adjust scale_steps toward the
-> center state, which is a value of 0.
-> 
-> Signed-off-by: Tang Yizhou <yizhou.tang@shopee.com>
-> ---
->   block/blk-wbt.c | 11 ++++-------
->   1 file changed, 4 insertions(+), 7 deletions(-)
-> 
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+ rust/kernel/miscdevice.rs | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-LGTM
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
+index e14433b2ab9d..e4a2c5996832 100644
+--- a/rust/kernel/miscdevice.rs
++++ b/rust/kernel/miscdevice.rs
+@@ -14,6 +14,7 @@
+     error::{to_result, Error, Result, VTABLE_DEFAULT_ERROR},
+     ffi::{c_int, c_long, c_uint, c_ulong},
+     fs::File,
++    mm::virt::VmaNew,
+     prelude::*,
+     seq_file::SeqFile,
+     str::CStr,
+@@ -119,6 +120,22 @@ fn release(device: Self::Ptr, _file: &File) {
+         drop(device);
+     }
+ 
++    /// Handle for mmap.
++    ///
++    /// This function is invoked when a user space process invokes the `mmap` system call on
++    /// `file`. The function is a callback that is part of the VMA initializer. The kernel will do
++    /// initial setup of the VMA before calling this function. The function can then interact with
++    /// the VMA initialization by calling methods of `vma`. If the function does not return an
++    /// error, the kernel will complete initialization of the VMA according to the properties of
++    /// `vma`.
++    fn mmap(
++        _device: <Self::Ptr as ForeignOwnable>::Borrowed<'_>,
++        _file: &File,
++        _vma: &VmaNew,
++    ) -> Result {
++        kernel::build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
+     /// Handler for ioctls.
+     ///
+     /// The `cmd` argument is usually manipulated using the utilties in [`kernel::ioctl`].
+@@ -176,6 +193,7 @@ impl<T: MiscDevice> VtableHelper<T> {
+         const VTABLE: bindings::file_operations = bindings::file_operations {
+             open: Some(fops_open::<T>),
+             release: Some(fops_release::<T>),
++            mmap: maybe_fn(T::HAS_MMAP, fops_mmap::<T>),
+             unlocked_ioctl: maybe_fn(T::HAS_IOCTL, fops_ioctl::<T>),
+             #[cfg(CONFIG_COMPAT)]
+             compat_ioctl: if T::HAS_COMPAT_IOCTL {
+@@ -257,6 +275,32 @@ impl<T: MiscDevice> VtableHelper<T> {
+     0
+ }
+ 
++/// # Safety
++///
++/// `file` must be a valid file that is associated with a `MiscDeviceRegistration<T>`.
++/// `vma` must be a vma that is currently being mmap'ed with this file.
++unsafe extern "C" fn fops_mmap<T: MiscDevice>(
++    file: *mut bindings::file,
++    vma: *mut bindings::vm_area_struct,
++) -> c_int {
++    // SAFETY: The mmap call of a file can access the private data.
++    let private = unsafe { (*file).private_data };
++    // SAFETY: This is a Rust Miscdevice, so we call `into_foreign` in `open` and `from_foreign` in
++    // `release`, and `fops_mmap` is guaranteed to be called between those two operations.
++    let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
++    // SAFETY: The caller provides a vma that is undergoing initial VMA setup.
++    let area = unsafe { VmaNew::from_raw(vma) };
++    // SAFETY:
++    // * The file is valid for the duration of this call.
++    // * There is no active fdget_pos region on the file on this thread.
++    let file = unsafe { File::from_raw_file(file) };
++
++    match T::mmap(device, file, area) {
++        Ok(()) => 0,
++        Err(err) => err.to_errno(),
++    }
++}
++
+ /// # Safety
+ ///
+ /// `file` must be a valid file that is associated with a `MiscDeviceRegistration<T>`.
 
-> diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-> index 6dfc659d22e2..8b73c0c11aec 100644
-> --- a/block/blk-wbt.c
-> +++ b/block/blk-wbt.c
-> @@ -136,8 +136,9 @@ enum {
->   	RWB_MIN_WRITE_SAMPLES	= 3,
->   
->   	/*
-> -	 * If we have this number of consecutive windows with not enough
-> -	 * information to scale up or down, scale up.
-> +	 * If we have this number of consecutive windows without enough
-> +	 * information to scale up or down, slowly return to center state
-> +	 * (step == 0).
->   	 */
->   	RWB_UNKNOWN_BUMP	= 5,
->   };
-> @@ -638,11 +639,7 @@ static void wbt_cleanup(struct rq_qos *rqos, struct bio *bio)
->   	__wbt_done(rqos, flags);
->   }
->   
-> -/*
-> - * May sleep, if we have exceeded the writeback limits. Caller can pass
-> - * in an irq held spinlock, if it holds one when calling this function.
-> - * If we do sleep, we'll release and re-grab it.
-> - */
-> +/* May sleep, if we have exceeded the writeback limits. */
->   static void wbt_wait(struct rq_qos *rqos, struct bio *bio)
->   {
->   	struct rq_wb *rwb = RQWB(rqos);
-> 
+-- 
+2.48.1.502.g6dc24dfdaf-goog
 
