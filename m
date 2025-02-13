@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E03421D3EE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEFB227EBD;
 	Thu, 13 Feb 2025 12:06:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739448388; cv=none; b=SopNSy5e95MPOlXtjH7RVGkPofmMnDovz1iIm0Vrm39FV2VwYVvgc00S81rNZbu26qQbT5gwWHOiqLNicmzsa7muHpvE3bhC5lQGhxWzAgbX+K0Yde/8cMHvOLveVYT8jq3ZQWLnbQ9aIVsy1GGxwdM4V03HcMzp+QF/5Ib2o0g=
+	t=1739448388; cv=none; b=rAsAOc6yw68C/47YgYSwuBCA8pcTzVilTsguq+R3jdRLlKi2IEAAal6h1ITcYZqXfH7Jemc9lm7vo/eqkZzIXsXUCiqJaJRUUI9q2ZTswzWN6qiygkHXNcj9B2G49+mjdDLUgpvXf2G/nqoCA4Dp89Vg29A2097ymSeZelJjbTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739448388; c=relaxed/simple;
-	bh=/Amj8QMX4cjKrM7YxDVeFIGaF99CFoJ+BqTe2Cuk59w=;
+	bh=heN5uzw9akfWGw1tZbJvgZxzr34v25wO2kkfWNOwXhI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gvXMpcAxVHlqixuwFLrT3Qz0dg93j/1bqvrtjUKeMypNeG5bhWX0QeI2nf07B1ToegPSOYAeP1mQ5K9nC/KI4HozW/I2YcyyRwvNsEUYcCNZk4QQSYQEj2nPpjdSY4KE3sRw2aE7gdJEsytXd3u5Fz/yshskD7CRZG1Q3UsI/n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElRnAjM2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TIaE/6LfkrUtv0HNO0QZa+dK9o8elWrgJwg0ou5U5YR07HZ3jDBCBxMN6mbtn0yQQQB/RgZHI/t7EYBRGl+6nPk+a1jJYr+jtCzWp0vvebeBaLMvuyFIIOYkir8cVnlORc2i/gp7DgFiXSw9rm95GvCllIce9jiRP70fp1VCA+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAZcqoOc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElRnAjM2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5B54C4CEE6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NAZcqoOc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D64DCC4CED1;
 	Thu, 13 Feb 2025 12:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739448388;
-	bh=/Amj8QMX4cjKrM7YxDVeFIGaF99CFoJ+BqTe2Cuk59w=;
+	s=k20201202; t=1739448387;
+	bh=heN5uzw9akfWGw1tZbJvgZxzr34v25wO2kkfWNOwXhI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ElRnAjM2qTYuEjtNgrjahFrZky1+vAlgWHIzeNs2dRnH3ZrchN4ZXMvj33cy0cO7J
-	 E43J81Q09oOxmkByjIRViVA7LUo2WQKUdp5v9k+5BLTawTsYFYfHpYVT8+rekwzOl5
-	 eLNGHi9dFq3BEORWJo6/fjzSNqWaMLjza/lxWr2p6WwwzkNvrriy1NLGpqt7CynTAw
-	 Zwao8IB2d0MDmLOUXOj3qc+n+khKSgpSr8vCwvCsvaUyKYtpKtwImSdBBozVPxLcag
-	 g4h0tTfvRqmpJfcZe41+/fS2Z3KjoUOMarp6dvtBQYpw20kH88Syvb++iRLSFhogV3
-	 0p6ttRaX108+w==
+	b=NAZcqoOc8qkNBk/QG3pFaUHHwH5J3tbsED7ru4bOKulXrw1JpJoaD0dCZ3kuw2g4w
+	 80FlRmvxafhzTCGgg1EsBDXcn3A84MEZQ9IVu+/ebbk3K+u50HPxFKI7A4VQnCBK0Z
+	 xEM9uJMd3d4LkvZwetBnQUgSHajHK5YD8Ywbn+o9Hi/iz+/TNcj287lWMowJl6zrmu
+	 iyYharUCVHxQ9hh4DN4sgb0lay5b7a28BUgrluK8XyYQAWTU7FJtpPC5o3W2c7vNm3
+	 aJqhwgJDE1ar0A9eq55bbNb1Y6kfv/lhVD8nXmr3lw/MEWcLLDLYMI5zh9JGCsXhdV
+	 n9VQ6aqKwR09A==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tiXz7-0000000BIVC-1bq7;
+	id 1tiXz7-0000000BIV3-1OV4;
 	Thu, 13 Feb 2025 13:06:25 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH RFCv2 3/5] scripts/kernel-doc: don't add not needed new lines
-Date: Thu, 13 Feb 2025 13:06:16 +0100
-Message-ID: <5b5017631b7499d53c4da9ff9b0288eb0d1f914d.1739447912.git.mchehab+huawei@kernel.org>
+Subject: [PATCH RFCv2 1/5] include/asm-generic/io.h: fix kerneldoc markup
+Date: Thu, 13 Feb 2025 13:06:14 +0100
+Message-ID: <6d69b25e9c720e0e7fc037928695ece7c8a35034.1739447912.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1739447912.git.mchehab+huawei@kernel.org>
 References: <cover.1739447912.git.mchehab+huawei@kernel.org>
@@ -51,29 +53,56 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-This helps comparing kernel-doc output with the new .py version
-of it.
+Kerneldoc requires a "-" after the name of a function for it
+to be recognized as a function.
+
+Add it.
+
+Fix those kernel-doc warnings:
+
+include/asm-generic/io.h:1215: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+ * memset_io    Set a range of I/O memory to a constant value
+include/asm-generic/io.h:1227: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+ * memcpy_fromio        Copy a block of data from I/O memory
+include/asm-generic/io.h:1239: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+ * memcpy_toio          Copy a block of data into I/O memory
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/kernel-doc | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/asm-generic/io.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-index 70da9a3369c6..0dfee1c3d365 100755
---- a/scripts/kernel-doc
-+++ b/scripts/kernel-doc
-@@ -816,6 +816,10 @@ sub output_highlight_rst {
-     if ($block) {
-         $output .= highlight_block($block);
-     }
-+
-+    $output =~ s/^\n+//g;
-+    $output =~ s/\n+$//g;
-+
-     foreach $line (split "\n", $output) {
-         print $lineprefix . $line . "\n";
-     }
+diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+index a5cbbf3e26ec..3c61c29ff6ab 100644
+--- a/include/asm-generic/io.h
++++ b/include/asm-generic/io.h
+@@ -1212,7 +1212,7 @@ static inline void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
+ 
+ #ifndef memset_io
+ /**
+- * memset_io	Set a range of I/O memory to a constant value
++ * memset_io -	Set a range of I/O memory to a constant value
+  * @addr:	The beginning of the I/O-memory range to set
+  * @val:	The value to set the memory to
+  * @count:	The number of bytes to set
+@@ -1224,7 +1224,7 @@ void memset_io(volatile void __iomem *addr, int val, size_t count);
+ 
+ #ifndef memcpy_fromio
+ /**
+- * memcpy_fromio	Copy a block of data from I/O memory
++ * memcpy_fromio -	Copy a block of data from I/O memory
+  * @dst:		The (RAM) destination for the copy
+  * @src:		The (I/O memory) source for the data
+  * @count:		The number of bytes to copy
+@@ -1236,7 +1236,7 @@ void memcpy_fromio(void *dst, const volatile void __iomem *src, size_t count);
+ 
+ #ifndef memcpy_toio
+ /**
+- * memcpy_toio		Copy a block of data into I/O memory
++ * memcpy_toio -	Copy a block of data into I/O memory
+  * @dst:		The (I/O memory) destination for the copy
+  * @src:		The (RAM) source for the data
+  * @count:		The number of bytes to copy
 -- 
 2.48.1
 
