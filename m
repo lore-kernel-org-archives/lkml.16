@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0B320A5FC;
-	Thu, 13 Feb 2025 14:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906192222C3;
+	Thu, 13 Feb 2025 14:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739455861; cv=none; b=ONj6Jp/Nwh69Xwn0WfRaT6MQqw3DdzzG54fczHb5fbu6HonCE9at5IOh4YP41Yk9QOo0PuvV80Ou9itQ5hfsRyMgkgob9e00VgvMg6rxG3vikk/oYnZL8sOPLh1IuK4R6syi4usRYnQmhJUZmEtyGAbo9j6kwkrIEe04WS/d5xQ=
+	t=1739455863; cv=none; b=aq05Z7LFtjjusQuimTJGk3NF1Dtd5jfqPRg0C8eBOyq7AoPKaCLOROUaAO4eOB8lSsQGquEScymMdMW/yS7hADBsIUMgjwl4eTLCR0P2AP021GkuuVyGFXLuOoDge2LkTyqWVqAyQ+oYzzJ9gMaRy+6t8jFXHAw4+HIf4/uRC88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739455861; c=relaxed/simple;
-	bh=Yp4FrWXW4JaF+mT3WDe29SXBFmsQXNetyMj2cbrB3Lc=;
+	s=arc-20240116; t=1739455863; c=relaxed/simple;
+	bh=VA1tfbqQVZF5jK+NE8+kVijBTK5o1VLx6VaYd48u/1E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tNvIdlW890n/w8SQTwNXRbFXlCStiEXo/tjFme6XMmNr9zqOVYXaqhsICp2xU0lHU5tEUbCD3NwAUNPRgt4qUgkXkj1uNbW7aBZxUiFTamHcZ7HpkQXANb9C8KhK0r0Z9bi3MzIdxGxkrjwRECQ5AExrOZv6+xhgo5se3ps7OsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QmQMcXe+; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version; b=L7wl33gyi3CA4BCui6qp/RfW/ERPJ/9G7XHBzZ/T73WmqxfPZnurgI+yH2D+XcXnHA6OavaAUc7jr3nimSSb58fpdqxWBE7KPKeiOqQqQUnoDcaZMUhLwS0LtKNPtNFwZbxQamW1mNcM+tptx+CFPITLWLDwayMl0urYREuTe68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iq7PF/fN; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QmQMcXe+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iq7PF/fN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739455860; x=1770991860;
+  t=1739455862; x=1770991862;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Yp4FrWXW4JaF+mT3WDe29SXBFmsQXNetyMj2cbrB3Lc=;
-  b=QmQMcXe+0Jw/YQFAgK6i+OYyk3rAG6SnYoFN28hZJnIaKoW5S5xwL+5x
-   OYtYCB5YmdklzjItgXlmwYnix2TTUWwW45fjPIofwLaUlaqQHC6pVSqgJ
-   KCHHUbk9wBcim5B8DKay17A9GcApIbQ2xsgQQ98Nh/F2T0Kt76TcnoxCA
-   XOcTTpcU/M5JLhwCAUGR4Gwhm8NZ51efx5sjPB3QxKVYKAoPA3uOWT6/n
-   kEg7CdBVvIAlvAQrZi+8K9svHf2QYtBUGfB5IbsOKAznVmBQvlxM1bIiO
-   fuYuXhxQEqR733460I3NFyujQnlF1N8OlU7pLBqn/cMTXFnpne84W7pZC
-   A==;
-X-CSE-ConnectionGUID: 0TjNgBOVSO6tvN/kGGrCNw==
-X-CSE-MsgGUID: ogAOugOcREmAS1fxZHCsMg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40273362"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="40273362"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 06:10:55 -0800
-X-CSE-ConnectionGUID: N12ApcrZTLmSWu4H86qDJw==
-X-CSE-MsgGUID: 59+8kRuIQtSBaiDwgv5slQ==
+  bh=VA1tfbqQVZF5jK+NE8+kVijBTK5o1VLx6VaYd48u/1E=;
+  b=iq7PF/fNiJev5id6TGOsi3z9Tr3zWGRtOE0QiaFvQqRL4tJzbmf7TuLQ
+   lp973ENHqhQjfwdsjV3SdeXjbC6TwSGFxsMqlQfLjAV3AZ+E7A2nt0fmP
+   8zyCSJL8UoKzXuX1zTURBbLhRaco/lHKhNMQ1kmHuubZsMfWP07+rx2sa
+   YETfjmuS4Ut9/yq7QHk1j24+ZAATmQw1D3fpCiE8enzKRKQHa6orYazB8
+   2iGVXtaQdUIM60etNv1GW8t/BABshPbbE1/kgCGurCDExTw7zFSKFSDx/
+   O7jcFKYVsuVEPyEQkxDz4BIvgkCbRVfxZ9nn2bor4mJ9WHz+er5BLuguI
+   w==;
+X-CSE-ConnectionGUID: EiLCZZXcQPO/oadTK7BGmg==
+X-CSE-MsgGUID: d8tf/KtPSA2PizGLX2ARTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40190582"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="40190582"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 06:10:59 -0800
+X-CSE-ConnectionGUID: CC5XQBZoRu+4nrrfc8HM9A==
+X-CSE-MsgGUID: /UI5GoifQOepe8vvQPR4ww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="113815328"
+   d="scan'208";a="118162151"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 13 Feb 2025 06:10:48 -0800
+  by orviesa004.jf.intel.com with ESMTP; 13 Feb 2025 06:10:54 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 31DD11F5; Thu, 13 Feb 2025 16:10:47 +0200 (EET)
+	id A899058B; Thu, 13 Feb 2025 16:10:47 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
@@ -65,9 +65,9 @@ Cc: Krzysztof Adamski <krzysztof.adamski@nokia.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Gregory CLEMENT <gregory.clement@bootlin.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Subject: [PATCH v2 01/10] i2c: Introduce i2c_10bit_addr_*_from_msg() helpers
-Date: Thu, 13 Feb 2025 16:07:15 +0200
-Message-ID: <20250213141045.2716943-2-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 10/10] i2c: mv64xxx: Use i2c_*bit_addr*_from_msg() helpers
+Date: Thu, 13 Feb 2025 16:07:24 +0200
+Message-ID: <20250213141045.2716943-11-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
 In-Reply-To: <20250213141045.2716943-1-andriy.shevchenko@linux.intel.com>
 References: <20250213141045.2716943-1-andriy.shevchenko@linux.intel.com>
@@ -79,40 +79,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are already a lot of drivers that have been using
-i2c_8bit_addr_from_msg() for 7-bit addresses, now it's time
-to have the similar for 10-bit addresses.
+Use i2c_*bit_addr*_from_msg() helpers instead of local copy.
+No functional change intended.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/i2c.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/i2c/busses/i2c-mv64xxx.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 997e80649889..e23b373b6b57 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -952,6 +952,20 @@ static inline u8 i2c_8bit_addr_from_msg(const struct i2c_msg *msg)
- 	return (msg->addr << 1) | (msg->flags & I2C_M_RD);
+diff --git a/drivers/i2c/busses/i2c-mv64xxx.c b/drivers/i2c/busses/i2c-mv64xxx.c
+index 874309580c33..8fc26a511320 100644
+--- a/drivers/i2c/busses/i2c-mv64xxx.c
++++ b/drivers/i2c/busses/i2c-mv64xxx.c
+@@ -27,7 +27,6 @@
+ #include <linux/err.h>
+ #include <linux/delay.h>
+ 
+-#define MV64XXX_I2C_ADDR_ADDR(val)			((val & 0x7f) << 1)
+ #define MV64XXX_I2C_BAUD_DIV_N(val)			(val & 0x7)
+ #define MV64XXX_I2C_BAUD_DIV_M(val)			((val & 0xf) << 3)
+ 
+@@ -176,22 +175,17 @@ static void
+ mv64xxx_i2c_prepare_for_io(struct mv64xxx_i2c_data *drv_data,
+ 	struct i2c_msg *msg)
+ {
+-	u32	dir = 0;
+-
+ 	drv_data->cntl_bits = MV64XXX_I2C_REG_CONTROL_ACK |
+ 			      MV64XXX_I2C_REG_CONTROL_TWSIEN;
+ 
+ 	if (!drv_data->atomic)
+ 		drv_data->cntl_bits |= MV64XXX_I2C_REG_CONTROL_INTEN;
+ 
+-	if (msg->flags & I2C_M_RD)
+-		dir = 1;
+-
+ 	if (msg->flags & I2C_M_TEN) {
+-		drv_data->addr1 = 0xf0 | (((u32)msg->addr & 0x300) >> 7) | dir;
+-		drv_data->addr2 = (u32)msg->addr & 0xff;
++		drv_data->addr1 = i2c_10bit_addr_hi_from_msg(msg);
++		drv_data->addr2 = i2c_10bit_addr_lo_from_msg(msg);
+ 	} else {
+-		drv_data->addr1 = MV64XXX_I2C_ADDR_ADDR((u32)msg->addr) | dir;
++		drv_data->addr1 = i2c_8bit_addr_from_msg(msg);
+ 		drv_data->addr2 = 0;
+ 	}
  }
- 
-+/*
-+ * 10-bit address
-+ *   addr_1: 5'b11110 | addr[9:8] | (R/nW)
-+ *   addr_2: addr[7:0]
-+ */
-+static inline u8 i2c_10bit_addr_hi_from_msg(const struct i2c_msg *msg)
-+{
-+	return 0xf0 | ((msg->addr & GENMASK(9, 8)) >> 7) | (msg->flags & I2C_M_RD);
-+}
-+static inline u8 i2c_10bit_addr_lo_from_msg(const struct i2c_msg *msg)
-+{
-+	return msg->addr & GENMASK(7, 0);
-+}
-+
- u8 *i2c_get_dma_safe_msg_buf(struct i2c_msg *msg, unsigned int threshold);
- void i2c_put_dma_safe_msg_buf(u8 *buf, struct i2c_msg *msg, bool xferred);
- 
 -- 
 2.45.1.3035.g276e886db78b
 
