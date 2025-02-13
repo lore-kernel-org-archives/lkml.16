@@ -1,223 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06ACA11CAF;
-	Thu, 13 Feb 2025 04:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CEB205E37
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 05:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739422762; cv=none; b=YUqbm3w/fv9k5KFM6PDjXn60MDwGd/HRLconOvLadhMgOgLbxJe9Btw+bhpT0+j5rYhVoq/A3euQtSOfWnnk3t8XtbW6moeql2KtJm+T/r9LGcEjlAyj6uXuZZxg49XmlZjG4bxuz0x6A+4zuZzFML77d+vZYsi209cHI2ofHGc=
+	t=1739423008; cv=none; b=HruZR6Fd5LU3FoZ5/LeMIATiUOzSMxPOtq8kehVWcEN6Jla9Y5qf+/KwmqQEPo1TXEitnXNzBWyXaKcLtEHGKiCJO9G93wY92TI8KZry9bIomYEkhDSnq06ZRUEEywqjt8sn5isboFT2DQ4tZd6bEqn5Zfdsnyf2TH5ZnHpAcOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739422762; c=relaxed/simple;
-	bh=+nL/t8KJmXr78QWaFZl9COVC+ons7uiJayM6FVQt2mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KO0KBGFRfrEa+ZD9/RT1R188/p5oahVyi98qInDD6MHU/IHk9MbvkwoBBXVoMJ0vuXbSeTZbG7cpYvJTwwnEXnUiTI3vvNnbEaG8UyNtzNh9DqrL40T4Gz91/S4c36mk3TA+AeZHi/8gdtyO43CQHucG72SlvQilcCtQ3F6MrGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YmdUGCSJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739423008; c=relaxed/simple;
+	bh=RED9UTuHiLfroWYaDsP+pbbtivJ4I+Sr+JzJvs1I6Kc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:Content-Type:
+	 References; b=Nbg/7wfmnwHhWb7wFAZTGFp6yKpPF5a++3NAUdztTf1nmP/FrtUBUJ6A1BcpV6FJoi2VnUWd7paeTkI30rvAWG1RK952kG+pOdNKq+SutuLPtXVHt/Ss+IP3Cwmkb1ljH31OkxAXdePGmlnB86TNkCLOmjnurbp/FlmkiDGovsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Cv0VPl9Q; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YmdUGCSJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11B16C4CED1;
-	Thu, 13 Feb 2025 04:59:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739422761;
-	bh=+nL/t8KJmXr78QWaFZl9COVC+ons7uiJayM6FVQt2mg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=YmdUGCSJU8lwwiNu0T7UO178FByNZKXqoHct9TNDvHDa4PW4lzI9+vA1qLsgIX/Rr
-	 OoRaxXEex1/0CCpYrpwR2ZQ/rLMRfqkydpFCbT1rhe9b/O/fGwglL+9DG/5tyd760w
-	 FCiy78K+yYpPsK/XBYwOnM8+A4wLsHsw0u5iP6LDwRGgIfDdBO0b2nA9XCQZInF37N
-	 4ZTzmDLqV3bfPZwqcpBR2IxZazUHfVqOi5dpRnwZwr+u8xN8GRxxqXdZI8a34zx0/u
-	 eX2PjZUAk7KQjaEqEJczStaAL00xg4muSX10mlUByJjivO9djDRA6VF2IOKNXf8kc3
-	 8+UuNvfPZhoAQ==
-Date: Thu, 13 Feb 2025 15:29:12 +1030
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>
-Cc: nvdimm@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] UAPI: ndctl / acpi: intel: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z618ILbAR8YAvTkd@kspp>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Cv0VPl9Q"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250213050323epoutp0400f05a45600ecc5ffcaaecb27fa5e76c~jrAF6QnoM3176031760epoutp04a
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 05:03:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250213050323epoutp0400f05a45600ecc5ffcaaecb27fa5e76c~jrAF6QnoM3176031760epoutp04a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739423003;
+	bh=UnR8x/QWGaZyJdHs9NP0syapfl2485/0TtsJYsze2qw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Cv0VPl9QmjA+BtoAQ+TQLgceunFMLARJsDvwRGJZaxoGUBHQ8O6aCEQIeejbiA+9P
+	 JrzbrGnYf3ESqMLASI+lPFCQlfS6O1LhOnZgTq3Xru5ifMDixP4Rp63aVnePwBQrIr
+	 Ho6qzdmBfnhKKP3KWbfpOQMVJ2IV7xScGbixrTx4=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20250213050322epcas5p2efed3bea7e9560cf1c30805f076501a2~jrAFSJzCV2150221502epcas5p2I;
+	Thu, 13 Feb 2025 05:03:22 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4YtjkK37cLz4x9Q3; Thu, 13 Feb
+	2025 05:03:21 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	5C.90.19710.91D7DA76; Thu, 13 Feb 2025 14:03:21 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250213044959epcas5p1b6f6d5554f69b5c24a5b4a15c8bf1fc9~jq0ZmeAK42465824658epcas5p1G;
+	Thu, 13 Feb 2025 04:49:59 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250213044959epsmtrp25c6fcdab4c48ef3ad722134f7e40dc7c~jq0ZlgrzH1368713687epsmtrp2j;
+	Thu, 13 Feb 2025 04:49:59 +0000 (GMT)
+X-AuditID: b6c32a44-363dc70000004cfe-0a-67ad7d19d0ec
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	0C.F0.18949.7F97DA76; Thu, 13 Feb 2025 13:49:59 +0900 (KST)
+Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250213044956epsmtip28a8b2eb288a328ea94a315978a58de69~jq0WyXiQY2273222732epsmtip2o;
+	Thu, 13 Feb 2025 04:49:56 +0000 (GMT)
+From: Swathi K S <swathi.ks@samsung.com>
+To: krzk+dt@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+	conor+dt@kernel.org, richardcochran@gmail.com, mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com
+Cc: rmk+kernel@armlinux.org.uk, swathi.ks@samsung.com,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 2/2] net: stmmac: dwc-qos: Add FSD EQoS support
+Date: Thu, 13 Feb 2025 10:16:24 +0530
+Message-Id: <20250213044624.37334-3-swathi.ks@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250213044624.37334-1-swathi.ks@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCJsWRmVeSWpSXmKPExsWy7bCmlq5k7dp0g+5PwhY/X05jtFj+YAer
+	xZq955gs5pxvYbGYf+Qcq8XTY4/YLW4e2Mlk8XLWPTaLC9v6WC02Pb7GanF51xw2i65rT1gt
+	5v1dy2pxbIGYxbfTbxgtFm39wm7x8MMedosjZ14wW1zqn8hk8X/PDnaLLxtvsjuIely+dpHZ
+	Y8vKm0weT/u3snvsnHWX3WPBplKPTas62Tw2L6n32LnjM5PH+31X2Tz6tqxi9Di4z9Dj8ya5
+	AJ6obJuM1MSU1CKF1Lzk/JTMvHRbJe/geOd4UzMDQ11DSwtzJYW8xNxUWyUXnwBdt8wcoF+V
+	FMoSc0qBQgGJxcVK+nY2RfmlJakKGfnFJbZKqQUpOQUmBXrFibnFpXnpenmpJVaGBgZGpkCF
+	CdkZ6+aFFPQLVdx6u4G5gbGLv4uRk0NCwETi9Kz3TCC2kMBuRolVqwq6GLmA7E+MEguenGOE
+	cL4xSrxaOZe9i5EDrOP4hWyI+F5GiZ9Te9kgnC+MEnMWt7GCjGIT0JC4vmI7O0hCROAXo8SH
+	SaeZQRxmgbuMEpt677KBVAkLOElsfNfECjKWRUBVou83WDOvgJVE49zXzBD3yUus3nAAzOYU
+	sJaYNukDK8gcCYE7HBJfl61jgyhykVg+9xgjhC0s8er4FnYIW0ri87u9UDXxEqv7rrJA2BkS
+	d39NhIrbSxy4MocF5AZmAU2J9bv0IcKyElNPrQOHC7MAn0Tv7ydMEHFeiR3zYGxlib+vr0GN
+	lJTYtvQ91FoPiYUtjdCg62OUOPH3G9sERrlZCCsWMDKuYpRMLSjOTU9NNi0wzEsth0dacn7u
+	JkZwctZy2cF4Y/4/vUOMTByMhxglOJiVRHglpq1JF+JNSaysSi3Kjy8qzUktPsRoCgy/icxS
+	osn5wPyQVxJvaGJpYGJmZmZiaWxmqCTO27yzJV1IID2xJDU7NbUgtQimj4mDU6qBKeDMpda2
+	AGtRr2X53EcUz6xkq089JJG0w+z3AztBk56MW6tE1pkvNWAo1E264TmpwG6BW9Gy2pPdv6UK
+	Xr/ljGDqcBXyT2AwtT37M/sPm2tPz/KMyeaX1fMal+u9brp4+XdWz6q/rmYKPjtua59uZixd
+	saZZj2m99Q3vkJW8kl4bUh8bHfHTnF+7/RW3VNYuvt3WhyMM/365M0O9qzR7Xd38j61F+QoV
+	Gs7TbV3cPXxvel3nPPzpsOz2X/EsHBsvFG8597TFsbvwpaP3j5/Guw4tr/ZQlKqe7XDSa9tn
+	fvm8/jkx0u0p4b2WDUFb5/FnTmh1l7jSmfJkisIEhUXHlLZHTLVOY5rTJBnsWa7EUpyRaKjF
+	XFScCAB+7qbWVwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNLMWRmVeSWpSXmKPExsWy7bCSvO73yrXpBkce6lv8fDmN0WL5gx2s
+	Fmv2nmOymHO+hcVi/pFzrBZPjz1it7h5YCeTxctZ99gsLmzrY7XY9Pgaq8XlXXPYLLquPWG1
+	mPd3LavFsQViFt9Ov2G0WLT1C7vFww972C2OnHnBbHGpfyKTxf89O9gtvmy8ye4g6nH52kVm
+	jy0rbzJ5PO3fyu6xc9Zddo8Fm0o9Nq3qZPPYvKTeY+eOz0we7/ddZfPo27KK0ePgPkOPz5vk
+	AniiuGxSUnMyy1KL9O0SuDLWzQsp6BequPV2A3MDYxd/FyMHh4SAicTxC9ldjFwcQgK7GSVm
+	T1vA0sXICRSXlPjUPJUVwhaWWPnvOTtE0SdGie7bC8ASbAIaEtdXbAdLiAh0MEnsmXqSGcRh
+	FnjMKPHg1X82kCphASeJje+aWEHWsQioSvT9BmvmFbCSaJz7mhlig7zE6g0HwGxOAWuJaZM+
+	gNUIAdWsermPcQIj3wJGhlWMkqkFxbnpucWGBUZ5qeV6xYm5xaV56XrJ+bmbGMHxo6W1g3HP
+	qg96hxiZOBgPMUpwMCuJ8EpMW5MuxJuSWFmVWpQfX1Sak1p8iFGag0VJnPfb694UIYH0xJLU
+	7NTUgtQimCwTB6dUA9OetINT2j97ylpwT+4zTFDSrldpLonc0T7j4Yn3V6cr7Ti75n9Jz+b3
+	vAy/Z8hNmX5D+u+v+KrUml2zk4+GqKdemPes8qgo/6PVDS7LY1oFgo0Pl/tK1x2unDZXtOSY
+	DbPK/OIVbW6b/P4w+DqbVSqxy014yxH3//nhDc/DT0nvC1bWOF7h29ke2CX470mK0cpCsVVB
+	RyQF/c7Iem2c1Hz/zI4PpmVXvRb8WfA0JsrudtGGGIdrh+O6o4WfGgtNPOkT2l/5cGHd7/0H
+	vjxz3LxezvqpZlHLlMnX2PbzX9/5I9ei1YrP4GV9++RH+aG1rrf7ohWTJ296IiCtmJZfa+/u
+	EdXelsbotapHOZyhRYmlOCPRUIu5qDgRAJYD578OAwAA
+X-CMS-MailID: 20250213044959epcas5p1b6f6d5554f69b5c24a5b4a15c8bf1fc9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250213044959epcas5p1b6f6d5554f69b5c24a5b4a15c8bf1fc9
+References: <20250213044624.37334-1-swathi.ks@samsung.com>
+	<CGME20250213044959epcas5p1b6f6d5554f69b5c24a5b4a15c8bf1fc9@epcas5p1.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+The FSD SoC contains two instance of the Synopsys DWC ethernet QOS IP core.
+The binding that it uses is slightly different from existing ones because
+of the integration (clocks, resets).
 
-So, in order to avoid ending up with flexible-array members in the
-middle of other structs, we use the `__struct_group()` helper to
-separate the flexible array from the rest of the members in the
-flexible structure. We then use the newly created tagged `struct
-nd_cmd_pkg_hdr` to replace the type of the objects causing trouble
-(`pkg`) in multiple structs.
-
-So, with these changes, fix the following warnings:
-
-drivers/acpi/nfit/intel.c:692:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/acpi/nfit/intel.c:59:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/acpi/nfit/intel.c:586:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/acpi/nfit/intel.c:522:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/acpi/nfit/intel.c:411:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/acpi/nfit/intel.c:358:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/acpi/nfit/intel.c:322:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/acpi/nfit/intel.c:281:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/acpi/nfit/intel.c:238:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/acpi/nfit/intel.c:199:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/acpi/nfit/intel.c:157:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/acpi/nfit/intel.c:124:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Swathi K S <swathi.ks@samsung.com>
 ---
- drivers/acpi/nfit/intel.c  | 24 ++++++++++++------------
- include/uapi/linux/ndctl.h | 15 +++++++++------
- 2 files changed, 21 insertions(+), 18 deletions(-)
+ .../stmicro/stmmac/dwmac-dwc-qos-eth.c        | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
-index 3902759abcba..fe561ce0ddec 100644
---- a/drivers/acpi/nfit/intel.c
-+++ b/drivers/acpi/nfit/intel.c
-@@ -56,7 +56,7 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
- 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
- 	unsigned long security_flags = 0;
- 	struct {
--		struct nd_cmd_pkg pkg;
-+		struct nd_cmd_pkg_hdr pkg;
- 		struct nd_intel_get_security_state cmd;
- 	} nd_cmd = {
- 		.pkg = {
-@@ -121,7 +121,7 @@ static int intel_security_freeze(struct nvdimm *nvdimm)
- {
- 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
- 	struct {
--		struct nd_cmd_pkg pkg;
-+		struct nd_cmd_pkg_hdr pkg;
- 		struct nd_intel_freeze_lock cmd;
- 	} nd_cmd = {
- 		.pkg = {
-@@ -154,7 +154,7 @@ static int intel_security_change_key(struct nvdimm *nvdimm,
- 		NVDIMM_INTEL_SET_MASTER_PASSPHRASE :
- 		NVDIMM_INTEL_SET_PASSPHRASE;
- 	struct {
--		struct nd_cmd_pkg pkg;
-+		struct nd_cmd_pkg_hdr pkg;
- 		struct nd_intel_set_passphrase cmd;
- 	} nd_cmd = {
- 		.pkg = {
-@@ -196,7 +196,7 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
- {
- 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
- 	struct {
--		struct nd_cmd_pkg pkg;
-+		struct nd_cmd_pkg_hdr pkg;
- 		struct nd_intel_unlock_unit cmd;
- 	} nd_cmd = {
- 		.pkg = {
-@@ -235,7 +235,7 @@ static int intel_security_disable(struct nvdimm *nvdimm,
- 	int rc;
- 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
- 	struct {
--		struct nd_cmd_pkg pkg;
-+		struct nd_cmd_pkg_hdr pkg;
- 		struct nd_intel_disable_passphrase cmd;
- 	} nd_cmd = {
- 		.pkg = {
-@@ -278,7 +278,7 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
- 	unsigned int cmd = ptype == NVDIMM_MASTER ?
- 		NVDIMM_INTEL_MASTER_SECURE_ERASE : NVDIMM_INTEL_SECURE_ERASE;
- 	struct {
--		struct nd_cmd_pkg pkg;
-+		struct nd_cmd_pkg_hdr pkg;
- 		struct nd_intel_secure_erase cmd;
- 	} nd_cmd = {
- 		.pkg = {
-@@ -319,7 +319,7 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
- 	int rc;
- 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
- 	struct {
--		struct nd_cmd_pkg pkg;
-+		struct nd_cmd_pkg_hdr pkg;
- 		struct nd_intel_query_overwrite cmd;
- 	} nd_cmd = {
- 		.pkg = {
-@@ -355,7 +355,7 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
- 	int rc;
- 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
- 	struct {
--		struct nd_cmd_pkg pkg;
-+		struct nd_cmd_pkg_hdr pkg;
- 		struct nd_intel_overwrite cmd;
- 	} nd_cmd = {
- 		.pkg = {
-@@ -408,7 +408,7 @@ static int intel_bus_fwa_businfo(struct nvdimm_bus_descriptor *nd_desc,
- 		struct nd_intel_bus_fw_activate_businfo *info)
- {
- 	struct {
--		struct nd_cmd_pkg pkg;
-+		struct nd_cmd_pkg_hdr pkg;
- 		struct nd_intel_bus_fw_activate_businfo cmd;
- 	} nd_cmd = {
- 		.pkg = {
-@@ -519,7 +519,7 @@ static int intel_bus_fwa_activate(struct nvdimm_bus_descriptor *nd_desc)
- {
- 	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
- 	struct {
--		struct nd_cmd_pkg pkg;
-+		struct nd_cmd_pkg_hdr pkg;
- 		struct nd_intel_bus_fw_activate cmd;
- 	} nd_cmd = {
- 		.pkg = {
-@@ -583,7 +583,7 @@ static int intel_fwa_dimminfo(struct nvdimm *nvdimm,
- 		struct nd_intel_fw_activate_dimminfo *info)
- {
- 	struct {
--		struct nd_cmd_pkg pkg;
-+		struct nd_cmd_pkg_hdr pkg;
- 		struct nd_intel_fw_activate_dimminfo cmd;
- 	} nd_cmd = {
- 		.pkg = {
-@@ -689,7 +689,7 @@ static int intel_fwa_arm(struct nvdimm *nvdimm, enum nvdimm_fwa_trigger arm)
- 	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
- 	struct acpi_nfit_desc *acpi_desc = nfit_mem->acpi_desc;
- 	struct {
--		struct nd_cmd_pkg pkg;
-+		struct nd_cmd_pkg_hdr pkg;
- 		struct nd_intel_fw_activate_arm cmd;
- 	} nd_cmd = {
- 		.pkg = {
-diff --git a/include/uapi/linux/ndctl.h b/include/uapi/linux/ndctl.h
-index 73516e263627..34c11644d5d7 100644
---- a/include/uapi/linux/ndctl.h
-+++ b/include/uapi/linux/ndctl.h
-@@ -227,12 +227,15 @@ enum ars_masks {
-  */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
+index 5d2dd123979b..e3b383d8e7ef 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
+@@ -308,6 +308,29 @@ static void tegra_eqos_remove(struct platform_device *pdev)
+ 	gpiod_set_value(eqos->reset, 1);
+ }
  
- struct nd_cmd_pkg {
--	__u64   nd_family;		/* family of commands */
--	__u64   nd_command;
--	__u32   nd_size_in;		/* INPUT: size of input args */
--	__u32   nd_size_out;		/* INPUT: size of payload */
--	__u32   nd_reserved2[9];	/* reserved must be zero */
--	__u32   nd_fw_size;		/* OUTPUT: size fw wants to return */
-+	/* New members MUST be added within the __struct_group() macro below. */
-+	__struct_group(nd_cmd_pkg_hdr, __hdr, /* no attrs */,
-+		__u64   nd_family;		/* family of commands */
-+		__u64   nd_command;
-+		__u32   nd_size_in;		/* INPUT: size of input args */
-+		__u32   nd_size_out;		/* INPUT: size of payload */
-+		__u32   nd_reserved2[9];	/* reserved must be zero */
-+		__u32   nd_fw_size;		/* OUTPUT: size fw wants to return */
-+	);
- 	unsigned char nd_payload[];	/* Contents of call      */
++static int fsd_eqos_probe(struct platform_device *pdev,
++			  struct plat_stmmacenet_data *data,
++			  struct stmmac_resources *res)
++{
++	struct clk *clk_rx1 = NULL;
++	struct clk *clk_rx2 = NULL;
++
++	for (int i = 0; i < data->num_clks; i++) {
++		if (strcmp(data->clks[i].id, "slave_bus") == 0)
++			data->stmmac_clk = data->clks[i].clk;
++		else if (strcmp(data->clks[i].id, "eqos_rxclk_mux") == 0)
++			clk_rx1 = data->clks[i].clk;
++		else if (strcmp(data->clks[i].id, "eqos_phyrxclk") == 0)
++			clk_rx2 = data->clks[i].clk;
++	}
++
++	/* Eth0 RX clock doesn't support MUX */
++	if (clk_rx1)
++		clk_set_parent(clk_rx1, clk_rx2);
++
++	return 0;
++}
++
+ struct dwc_eth_dwmac_data {
+ 	int (*probe)(struct platform_device *pdev,
+ 		     struct plat_stmmacenet_data *data,
+@@ -324,6 +347,10 @@ static const struct dwc_eth_dwmac_data tegra_eqos_data = {
+ 	.remove = tegra_eqos_remove,
  };
  
++static const struct dwc_eth_dwmac_data fsd_eqos_data = {
++	.probe = fsd_eqos_probe,
++};
++
+ static int dwc_eth_dwmac_probe(struct platform_device *pdev)
+ {
+ 	const struct dwc_eth_dwmac_data *data;
+@@ -402,6 +429,7 @@ static void dwc_eth_dwmac_remove(struct platform_device *pdev)
+ static const struct of_device_id dwc_eth_dwmac_match[] = {
+ 	{ .compatible = "snps,dwc-qos-ethernet-4.10", .data = &dwc_qos_data },
+ 	{ .compatible = "nvidia,tegra186-eqos", .data = &tegra_eqos_data },
++	{ .compatible = "tesla,fsd-ethqos", .data = &fsd_eqos_data },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, dwc_eth_dwmac_match);
 -- 
-2.43.0
+2.17.1
 
