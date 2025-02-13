@@ -1,180 +1,181 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2656F1A5AA
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C382E1A5AA
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739451634; cv=none; b=XGWk9asVwAan3Dlu94ijuosgJQRRY7Yqm8OBTpD23PlNnCQ4syraXDvSRtUq6MNYZtib+BmJnFa8RSTKwls4+Nojppc2cwwHjG21vZymp3faPs/WgyAByyb53hkuxm7LhFIHPWDqivks+nISyjop2uUrZP0lFKtDmnGMEoXHHu4=
+	t=1739451700; cv=none; b=iNWR8XCE0RBa960n15ozuYjTuM1u0tMLeOKITX6LSkTZ0MhMWcyboCV7TEUUrJ6YB8z7ltWUgnNNxmaVtfToksX4yJD1khra1SNZuG9E6cm5CwApywvp3pI18eu2t/p9IaRzqlf2R/blObi/g1mR56tRiNyQqY9u5UMplH/Jm2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739451634; c=relaxed/simple;
-	bh=GbzcbGEYBt47KyUoS53m6l55tTHSiW3/zYp7rU8qJxg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=laLPvDrjKnx+IZIw2a2dBPESmB+995Z++T7ImWo18cv7AJntc8hhMSktV1XCMVCNKfoyUpgXsPV3JTJYnMmrQ9AnCn/uvbneSVxVqSmB8BIsoWT8iXCUhOLD55/y/KqZDCrTn/zAAiJKln3ijXYXgDOjwo+xT+ehWFLT1gA/VMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HWp2zhrn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HWp2zhrn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739451632;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mfnvsrTaO3psu4jmIyQdi8eiJDFREwQyTUaQ4HeOqrE=;
-	b=HWp2zhrnZsI2mjmGDGSmHgYT/GdMup27w2DJrdIE4gUKMSatLshUoaCqypmuK4M+TeKKkA
-	ciRUjnl5AgJQsQIoO3lUX+vWP3gwrDOYAxECjkq6JtP3MtvOgoB8guh02OykYDhcd0SUc6
-	+nsjpWSIlz8JrwMtdD16svqP7XkvvZ4=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-163-_0Db4M4hOAeio_DrWZ33lw-1; Thu, 13 Feb 2025 08:00:31 -0500
-X-MC-Unique: _0Db4M4hOAeio_DrWZ33lw-1
-X-Mimecast-MFC-AGG-ID: _0Db4M4hOAeio_DrWZ33lw_1739451629
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38dcc9653caso434636f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 05:00:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739451629; x=1740056429;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mfnvsrTaO3psu4jmIyQdi8eiJDFREwQyTUaQ4HeOqrE=;
-        b=EPDee2+Ym5+IjNaCAVUxN+QjjLsU53OuhEFpQNF/Hw6luWOWU6ATQebw2VJOjL3su3
-         NwRPO6EhoIEWiiuT0RAUF58wwJWKMiJfAQEfslUxit1qNgXZmLteS/GJi4PSTx9pzLlO
-         LnVr9VkA+XGmBkHL8sgybGiPb6UMNbMxA0MPSA23nlDnNAjXqIkOxaF3Is5WYDVIy/0o
-         1zwhsZ6O44znlUR0OrWjfUFyQ7IlQNlNNA+XX6K1A/pwo0z5Wb+mRoKLmFSVvslhYRmI
-         F1L3zQ2289IDvVqGV6w+XhCacpJF0dTeAuBHq61Ax8W7WO2dnjWTGdxlQ70l8P2Zw1eS
-         VFiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUargtKzm3ipurLH94dyMjvSsHqxlnWNQ4B27/QFy+zOfuJ2Yl55w0Gmx6C8sJ6OSfclcVd744fJuxjisw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywu0A3AEw/kG4fi84NbL+Zj4lC6ybhh6l7UvqsVN7BNppRZt9FC
-	LvnrN92Uc+bkXtVZ9DHyJsagSK5Z2k8rqmoBCm4tcXSkbmtC2PdqOoXaHYYZn0AKc6NIZdf/49K
-	bXVXLnoVD59irJSnQ2DpaAspSXUiEQjB20KL8qSYGNgFm2vIcRZC6438MKf0pgw==
-X-Gm-Gg: ASbGncuscQTyXeQKALCOApUG9NoWPhoSXeNtIrOAzwwrUus2j4xC0Ob1gTkq4NHjwie
-	71ZxwL39VtzxkusFITNQP/ltx/kZI+M/Al7GvTaljyYNHNfwW+sx3gVHdZeu10cEA6NvYRc4Zi+
-	w1yryP++Yy+t5DHIqxguZXeLbS5Te1c4reCcDaB27/S3/8ZqY46QELBtITQcbThxAP5t3bmDLXu
-	3vUHbWGy+hQWEcyzTAwyP9cPyKYdlIApScV2TLouTbaWQCDbHJ0MT/fc2wOs9eZJAesxzAn/Reg
-	dCsp6aVNNMH7gfIHYRfBrXRY0+mGvnwf1893a7WT42vGFvnJ1gJssoFly8sYnJhmKAcS9yLrmhP
-	NEaJ2iCmegxPlMWj8C2NtYj00yQubmg==
-X-Received: by 2002:a5d:5885:0:b0:38d:da79:c27 with SMTP id ffacd0b85a97d-38f244d5085mr3181650f8f.2.1739451622096;
-        Thu, 13 Feb 2025 05:00:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGibeuFs5cDXtn7xG1Fnqp50UyOedeKGyfYtUsGJrtkfYfZ0quTGv8DvIIEgk1u1kG0YtabFA==
-X-Received: by 2002:a5d:5885:0:b0:38d:da79:c27 with SMTP id ffacd0b85a97d-38f244d5085mr3179420f8f.2.1739451611117;
-        Thu, 13 Feb 2025 05:00:11 -0800 (PST)
-Received: from ?IPV6:2003:cb:c718:100:347d:db94:161d:398f? (p200300cbc7180100347ddb94161d398f.dip0.t-ipconnect.de. [2003:cb:c718:100:347d:db94:161d:398f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258b4423sm1871351f8f.11.2025.02.13.05.00.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 05:00:09 -0800 (PST)
-Message-ID: <9fb47de6-0d39-43df-b11a-ec188ecd90c8@redhat.com>
-Date: Thu, 13 Feb 2025 14:00:08 +0100
+	s=arc-20240116; t=1739451700; c=relaxed/simple;
+	bh=KvSQ1mhHbzdjBYaZFoG9oQkYb3OLr1N4RbEZ2BIeTjs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fNBXvs6gPzwOKg5tfdhWimACb02m0aaurYR5X263bf//f3cfhOb3zXpNZ9ar+iBQvPwvUyAZ+8NXfGGf7pItZaT8IKcj04eQBZKVOHhLxoh4YUYljVvfAfycuKUXS92j7dXLVEur78XLzX5PwhhpRwgjdAHL6bDmdo9zX5ZwJco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4YtwFk0ckFz1V6dk;
+	Thu, 13 Feb 2025 20:57:46 +0800 (CST)
+Received: from kwepemg200008.china.huawei.com (unknown [7.202.181.35])
+	by mail.maildlp.com (Postfix) with ESMTPS id E5DB3180042;
+	Thu, 13 Feb 2025 21:01:33 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemg200008.china.huawei.com
+ (7.202.181.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 13 Feb
+ 2025 21:01:32 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <oleg@redhat.com>,
+	<sstabellini@kernel.org>, <tglx@linutronix.de>, <peterz@infradead.org>,
+	<luto@kernel.org>, <mingo@redhat.com>, <juri.lelli@redhat.com>,
+	<vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>,
+	<rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
+	<vschneid@redhat.com>, <kees@kernel.org>, <aliceryhl@google.com>,
+	<ojeda@kernel.org>, <samitolvanen@google.com>, <masahiroy@kernel.org>,
+	<rppt@kernel.org>, <xur@google.com>, <paulmck@kernel.org>, <arnd@arndb.de>,
+	<mark.rutland@arm.com>, <puranjay@kernel.org>, <broonie@kernel.org>,
+	<mbenes@suse.cz>, <sudeep.holla@arm.com>, <guohanjun@huawei.com>,
+	<prarit@redhat.com>, <liuwei09@cestc.cn>, <Jonathan.Cameron@huawei.com>,
+	<dwmw@amazon.co.uk>, <kristina.martsenko@arm.com>, <liaochang1@huawei.com>,
+	<ptosi@google.com>, <thiago.bauermann@linaro.org>, <kevin.brodsky@arm.com>,
+	<Dave.Martin@arm.com>, <joey.gouly@arm.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <xen-devel@lists.xenproject.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH -next v6 0/8] arm64: entry: Convert to generic irq entry
+Date: Thu, 13 Feb 2025 20:59:59 +0800
+Message-ID: <20250213130007.1418890-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm 1/1] filemap: Remove redundant folio_test_large check
- in filemap_free_folio
-To: 'Guanjun' <guanjun@linux.alibaba.com>, willy@infradead.org,
- akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250213055612.490993-1-guanjun@linux.alibaba.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250213055612.490993-1-guanjun@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemg200008.china.huawei.com (7.202.181.35)
 
-On 13.02.25 06:56, 'Guanjun' wrote:
-> From: Guanjun <guanjun@linux.alibaba.com>
-> 
-> The folio_test_large check in filemap_free_folio is unnecessary because
-> folio_nr_pages, which is called internally, already performs this check.
-> Removing the redundant condition simplifies the code and avoids double
-> validation.
-> 
-> This change improves code readability and reduces unnecessary operations
-> in the folio freeing path.
-> 
-> Signed-off-by: Guanjun <guanjun@linux.alibaba.com>
-> ---
->   mm/filemap.c | 5 +----
->   1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 804d7365680c..2b860b59a521 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -227,15 +227,12 @@ void __filemap_remove_folio(struct folio *folio, void *shadow)
->   void filemap_free_folio(struct address_space *mapping, struct folio *folio)
->   {
->   	void (*free_folio)(struct folio *);
-> -	int refs = 1;
->   
->   	free_folio = mapping->a_ops->free_folio;
->   	if (free_folio)
->   		free_folio(folio);
->   
-> -	if (folio_test_large(folio))
-> -		refs = folio_nr_pages(folio);
-> -	folio_put_refs(folio, refs);
-> +	folio_put_refs(folio, folio_nr_pages(folio));
->   }
->   
->   /**
+Currently, x86, Riscv, Loongarch use the generic entry. Convert arm64
+to use the generic entry infrastructure from kernel/entry/*. The generic
+entry makes maintainers' work easier and codes more elegant, which will
+make PREEMPT_DYNAMIC and PREEMPT_LAZY available and remove a lot of
+duplicate code.
 
-Acked-by: David Hildenbrand <david@redhat.com>
+This patch series split the generic entry into generic irq entry and
+generic syscall entry first, and then convert arm64 to use the generic
+irq entry. arm64 will be completely converted to generic entry in another
+patch series.
 
+The main convert steps are as follows:
+- Split generic entry into generic irq entry and generic syscall to
+  make the single patch more concentrated in switching to one thing.
+- Make arm64 easier to use irqentry_enter/exit().
+- Make arm64 closer to the PREEMPT_DYNAMIC code of generic entry.
+- Switch to generic irq entry.
+
+Changes in v6:
+- Rebased on 6.14 rc2 next.
+- Put the syscall bits aside and split it out.
+- Have the split patch before the arm64 changes.
+- Merge some tightly coupled patches.
+- Adjust the order of some patches to make them more reasonable.
+- Define regs_irqs_disabled() by inline function.
+- Define interrupts_enabled() in terms of regs_irqs_disabled().
+- Delete the fast_interrupts_enabled() macro.
+- irqentry_state_t -> arm64_irqentry_state_t.
+- Remove arch_exit_to_user_mode_prepare() and pull local_daif_mask() later
+  in the arm64 exit sequence
+- Update the commit message.
+
+Changes in v5:
+- Not change arm32 and keep inerrupts_enabled() macro for gicv3 driver.
+- Move irqentry_state definition into arch/arm64/kernel/entry-common.c.
+- Avoid removing the __enter_from_*() and __exit_to_*() wrappers.
+- Update "irqentry_state_t ret/irq_state" to "state"
+  to keep it consistently.
+- Use generic irq entry header for PREEMPT_DYNAMIC after split
+  the generic entry.
+- Also refactor the ARM64 syscall code.
+- Introduce arch_ptrace_report_syscall_entry/exit(), instead of
+  arch_pre/post_report_syscall_entry/exit() to simplify code.
+- Make the syscall patches clear separation.
+- Update the commit message.
+
+Changes in v4:
+- Rework/cleanup split into a few patches as Mark suggested.
+- Replace interrupts_enabled() macro with regs_irqs_disabled(), instead
+  of left it here.
+- Remove rcu and lockdep state in pt_regs by using temporary
+  irqentry_state_t as Mark suggested.
+- Remove some unnecessary intermediate functions to make it clear.
+- Rework preempt irq and PREEMPT_DYNAMIC code
+  to make the switch more clear.
+- arch_prepare_*_entry/exit() -> arch_pre_*_entry/exit().
+- Expand the arch functions comment.
+- Make arch functions closer to its caller.
+- Declare saved_reg in for block.
+- Remove arch_exit_to_kernel_mode_prepare(), arch_enter_from_kernel_mode().
+- Adjust "Add few arch functions to use generic entry" patch to be
+  the penultimate.
+- Update the commit message.
+- Add suggested-by.
+
+Changes in v3:
+- Test the MTE test cases.
+- Handle forget_syscall() in arch_post_report_syscall_entry()
+- Make the arch funcs not use __weak as Thomas suggested, so move
+  the arch funcs to entry-common.h, and make arch_forget_syscall() folded
+  in arch_post_report_syscall_entry() as suggested.
+- Move report_single_step() to thread_info.h for arm64
+- Change __always_inline() to inline, add inline for the other arch funcs.
+- Remove unused signal.h for entry-common.h.
+- Add Suggested-by.
+- Update the commit message.
+
+Changes in v2:
+- Add tested-by.
+- Fix a bug that not call arch_post_report_syscall_entry() in
+  syscall_trace_enter() if ptrace_report_syscall_entry() return not zero.
+- Refactor report_syscall().
+- Add comment for arch_prepare_report_syscall_exit().
+- Adjust entry-common.h header file inclusion to alphabetical order.
+- Update the commit message.
+
+Jinjie Ruan (8):
+  entry: Split generic entry into generic exception and syscall entry
+  arm64: ptrace: Replace interrupts_enabled() with regs_irqs_disabled()
+  arm64: entry: Refactor the entry and exit for exceptions from EL1
+  arm64: entry: Rework arm64_preempt_schedule_irq()
+  arm64: entry: Use preempt_count() and need_resched() helper
+  arm64: entry: Refactor preempt_schedule_irq() check code
+  arm64: entry: Move arm64_preempt_schedule_irq() into
+    __exit_to_kernel_mode()
+  arm64: entry: Switch to generic IRQ entry
+
+ MAINTAINERS                           |   1 +
+ arch/Kconfig                          |   9 +
+ arch/arm64/Kconfig                    |   1 +
+ arch/arm64/include/asm/daifflags.h    |   2 +-
+ arch/arm64/include/asm/entry-common.h |  56 ++++
+ arch/arm64/include/asm/preempt.h      |   2 -
+ arch/arm64/include/asm/ptrace.h       |  13 +-
+ arch/arm64/include/asm/xen/events.h   |   2 +-
+ arch/arm64/kernel/acpi.c              |   2 +-
+ arch/arm64/kernel/debug-monitors.c    |   2 +-
+ arch/arm64/kernel/entry-common.c      | 378 ++++++++-----------------
+ arch/arm64/kernel/sdei.c              |   2 +-
+ arch/arm64/kernel/signal.c            |   3 +-
+ include/linux/entry-common.h          | 382 +------------------------
+ include/linux/irq-entry-common.h      | 389 ++++++++++++++++++++++++++
+ kernel/entry/Makefile                 |   3 +-
+ kernel/entry/common.c                 | 176 ++----------
+ kernel/entry/syscall-common.c         | 159 +++++++++++
+ kernel/sched/core.c                   |   8 +-
+ 19 files changed, 766 insertions(+), 824 deletions(-)
+ create mode 100644 arch/arm64/include/asm/entry-common.h
+ create mode 100644 include/linux/irq-entry-common.h
+ create mode 100644 kernel/entry/syscall-common.c
 
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
