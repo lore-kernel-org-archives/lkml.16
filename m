@@ -1,676 +1,623 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01E020E6F3
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0888211A19;
+	Thu, 13 Feb 2025 09:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739437728; cv=none; b=aYtBey4lQ9XOXYjjA/nw1z/nTZqEHtdz17Vlkd4dED2gxiKXalpunUfdeuc6crU9WPQgoxT1vw6LgRFbZDl6s3wk+zLmnvUowyEbqFb+YeWLIL4uR0Dgo/iSx6jxj441CU4EX8uUrs3sA4w+Ystt6RVcZ2QhTYG/5OBR6sZ8N3E=
+	t=1739437729; cv=none; b=rcbIgXabJJ2yfMqbEupzcCuBqhWxxMJH3lx/dveIZExKqNaeKvd5LB85hMPi6PiuM4MZVySW8pFSPz6gJtuxCN/EgpPPUN3zmzN+TFYtc8JYs8SWvu9zogk4r5/aCddkDIFS2BsIoM41KzHfr2kuj6RdzdJpWC/OB2WkuLOln1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739437728; c=relaxed/simple;
-	bh=sOhn0KnO2WzqPNgeHhQYU9u8KXnTV/qmcB6LUFGm99A=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rxZUVCZ5YhpXNiC/oUNQftiRAZzP9/sHtCi/C1IxljqYDLjf0vs/cF+h26uSImBMH2+TGCOneIVJMwWDqHrQftqqQaKG26T35yY5nFNqmd3DcbV0x0117inYeIO82QML8GKLZs7V64NHrGJvUE2cOrXBQz6YD2dPgxRBA+DTypg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zIuDAkId; arc=none smtp.client-ip=209.85.218.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+	s=arc-20240116; t=1739437729; c=relaxed/simple;
+	bh=GIUlT9LC1ocTQlyq1ULMc6PUaVMG6RnWLIb/+PjLhqQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ps1uHrBRK8yDhWPnS7PZ2HtpVtNI1z9dwqevHimdw+6gs/s//IbenGHIqRWLJBRbG4PCMHexx21n5INmIufwSSztMTZ0FIz6ArlNn35KIZxw1ZcKC4OE4F2F74X+9S+5UGifqhdoddpDaWZUkwoxdaXn1IL33QcnB8B3uOwmoPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXfOiApS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zIuDAkId"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-ab7e718b232so55299966b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 01:08:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739437723; x=1740042523; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Z+v5W5R67xiAzE9NJMzr/vTsU6YAr1VcvF4I8FLOHM=;
-        b=zIuDAkIdYBDeKWRwRZiG+Qq2kHZTPnoXBC01L8BT7oHynkgnSjCASNTlVgcQBXDEDW
-         RnvGrGe/Whj6IwXNXfOhab7oCWlg/beekw9pte7LhLHbZA6RLO7RpDmDrBS86kQAuS+J
-         7QV6iHPckQeB3guIugqo8biKJf7FvkI6k2HwXkudFehXDuphRw/1sJglRlV0Axkhp/sm
-         subGsGx3OJbBZltk2S51F0gb3tDB3YIETkOizmCFYy/QeJWX9Dp7hRexrlrJo0QBQ9t7
-         WiE5aEbi9r53abv3fDBkFBDDkgB2soRKFGEVAeeAYEV67+xNDrcYHupGu5T8e2DThx6K
-         1zgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739437723; x=1740042523;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Z+v5W5R67xiAzE9NJMzr/vTsU6YAr1VcvF4I8FLOHM=;
-        b=GQzTLwvQ4ynNJpg598K9LyT6WbR3OqOO0qILjc7nxs3F4EUb8gfk/ofoGqlWRj7Erp
-         z2xgr5y38LdFbb+owlYNtNM7cprjR/NyqvlxwhsrRHW5ivtX1BULQ7zn/Vkcakp4FNox
-         H7Oy2FAAwaGLPPM1VrQmrRnXBWfiRiVO8GuaCjluKjIqD3TeBIZKAP+9lCB9aUiu0boI
-         C18YyklXDnuMpmBZBt3C/ILGBu5F7qNAvtAAal7UfXiMAoFj9cWfLyODoUJ7XZ8X2wLa
-         2bCFPXSoGVhB8VSUxOOkgUvwtNzMpGJ5Hpg8JcuZMhL+ATbtBHahDoFrtxnoB3W5jFZb
-         Lcow==
-X-Forwarded-Encrypted: i=1; AJvYcCViqaBIgAUza63rQNkkj6BN3VHh4hAcUYQugjuHIVPyz87Axi8L8fYdk++rCU1Mog78zxOpFwFlIurn7/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz688r1g4HGFcvE9w1iUXJjcRcH5cMIxPE+Y1gjgC1B3NwDzuvE
-	nM2x5v9kZpW+GoiYLJ49aMNjCYVn42yTmJ5BQMRUE/fOgI/qNvKGHnCFS3rvsEo9qKqL7haRTP/
-	4K2XbLQ==
-X-Google-Smtp-Source: AGHT+IFmPTKCGQ78dUTm1fXq7nuM3HBLRpBEfRo1LsilhRV0iGFHtJ9LkJark6gWC1lJxU9/tgtVVJrO8rDn
-X-Received: from edbev17.prod.google.com ([2002:a05:6402:5411:b0:5de:a947:20d8])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:5285:b0:5dc:7374:261d
- with SMTP id 4fb4d7f45d1cf-5dec9d2c146mr6289068a12.7.1739437723228; Thu, 13
- Feb 2025 01:08:43 -0800 (PST)
-Date: Thu, 13 Feb 2025 10:08:18 +0100
-In-Reply-To: <cover.1739437531.git.dvyukov@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXfOiApS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16921C4CEED;
+	Thu, 13 Feb 2025 09:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739437729;
+	bh=GIUlT9LC1ocTQlyq1ULMc6PUaVMG6RnWLIb/+PjLhqQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cXfOiApS4CvYmByz2sWdMw+soFywSC19cqDepOvB0PcH14Q6cVXWVQoRd3TBsxD8W
+	 5L51snHJgowUfNjJVq1kanTsMQRbzDzbWbXir5oA4Ys9DT4bGskWAbU/NTfYR8SJOX
+	 NST7rnPvIjPbafyYgvCm3XxSccEHcXHHMrznyfPJB34tkz77b0sg7So+WUJy0SeBrx
+	 WUu9HUmFIuE+n1k+Z3SSkuRynCJNFkbz1XUVKp4i3skAuVIrkyFITQh0wT9NEC0uNU
+	 cSJdxb9X+kOkHMSOwN/z0WrO2wwbs0Zl8R9Lc9asejqL+UfTpBx+88ZlDhgNeyU1tQ
+	 reyVY3lOp4tcw==
+Date: Thu, 13 Feb 2025 10:08:45 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Amelie Delaunay <amelie.delaunay@foss.st.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Richard Cochran <richardcochran@gmail.com>, devicetree@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 04/10] arm64: dts: st: introduce stm32mp23 SoCs family
+Message-ID: <20250213-intrepid-peridot-dinosaur-c5d0bc@krzk-bin>
+References: <20250210-b4-stm32mp2_new_dts-v1-0-e8ef1e666c5e@foss.st.com>
+ <20250210-b4-stm32mp2_new_dts-v1-4-e8ef1e666c5e@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1739437531.git.dvyukov@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <b6269518758c2166e6ffdc2f0e24cfdecc8ef9c1.1739437531.git.dvyukov@google.com>
-Subject: [PATCH v7 5/9] perf report: Add latency output field
-From: Dmitry Vyukov <dvyukov@google.com>
-To: namhyung@kernel.org, irogers@google.com, acme@kernel.org, 
-	ak@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250210-b4-stm32mp2_new_dts-v1-4-e8ef1e666c5e@foss.st.com>
 
-Latency output field is similar to overhead, but represents overhead for
-latency rather than CPU consumption. It's re-scaled from overhead by dividing
-weight by the current parallelism level at the time of the sample.
-It effectively models profiling with 1 sample taken per unit of wall-clock
-time rather than unit of CPU time.
+On Mon, Feb 10, 2025 at 04:20:58PM +0100, Amelie Delaunay wrote:
+> From: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> 
+> STM32MP23 family is composed of 3 SoCs defined as following:
+> 
+> -STM32MP231: common part composed of 1*Cortex-A35, common peripherals
+> like SDMMC, UART, SPI, I2C, parallel display, 1*ETH ...
+> 
+> -STM32MP233: STM32MP231 + 1*Cortex-A35 (dual CPU), a second ETH, CAN-FD.
+> 
+> -STM32MP235: STM32MP233 + GPU/AI and video encode/decode, DSI and LDVS
+> display.
+> 
+> A second diversity layer exists for security features/ A35 frequency:
+> -STM32MP23xY, "Y" gives information:
+>  -Y = A means A35@1.2GHz + no cryp IP and no secure boot.
+>  -Y = C means A35@1.2GHz + cryp IP and secure boot.
+>  -Y = D means A35@1.5GHz + no cryp IP and no secure boot.
+>  -Y = F means A35@1.5GHz + cryp IP and secure boot.
+> 
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+> ---
+>  arch/arm64/boot/dts/st/stm32mp231.dtsi  | 1216 +++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/st/stm32mp233.dtsi  |   94 +++
+>  arch/arm64/boot/dts/st/stm32mp235.dtsi  |   16 +
+>  arch/arm64/boot/dts/st/stm32mp23xc.dtsi |    8 +
+>  arch/arm64/boot/dts/st/stm32mp23xf.dtsi |    8 +
+>  5 files changed, 1342 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/st/stm32mp231.dtsi b/arch/arm64/boot/dts/st/stm32mp231.dtsi
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..ee93f5412096a7cd30b228b85a5280a551fbfaf4
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/st/stm32mp231.dtsi
+> @@ -0,0 +1,1216 @@
+> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+> +/*
+> + * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
+> + * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
+> + */
+> +#include <dt-bindings/clock/st,stm32mp25-rcc.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/regulator/st,stm32mp25-regulator.h>
+> +#include <dt-bindings/reset/st,stm32mp25-rcc.h>
+> +
+> +/ {
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			compatible = "arm,cortex-a35";
+> +			device_type = "cpu";
+> +			reg = <0>;
+> +			enable-method = "psci";
+> +			power-domains = <&CPU_PD0>;
+> +			power-domain-names = "psci";
+> +		};
+> +	};
+> +
+> +	arm-pmu {
+> +		compatible = "arm,cortex-a35-pmu";
+> +		interrupts = <GIC_SPI 368 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-affinity = <&cpu0>;
+> +		interrupt-parent = <&intc>;
+> +	};
+> +
+> +	arm_wdt: watchdog {
+> +		compatible = "arm,smc-wdt";
+> +		arm,smc-id = <0xb200005a>;
+> +		status = "disabled";
+> +	};
+> +
+> +	clocks {
 
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Drop
 
----
-Changes in v5:
- - fixed formatting of latency field in --stdout mode
----
- tools/perf/ui/browsers/hists.c  | 27 ++++++++-----
- tools/perf/ui/hist.c            | 69 ++++++++++++++++++---------------
- tools/perf/util/addr_location.h |  2 +
- tools/perf/util/event.c         |  6 +++
- tools/perf/util/events_stats.h  |  2 +
- tools/perf/util/hist.c          | 55 +++++++++++++++++++-------
- tools/perf/util/hist.h          | 12 ++++++
- tools/perf/util/sort.c          |  2 +
- 8 files changed, 120 insertions(+), 55 deletions(-)
+> +		clk_dsi_txbyte: txbyteclk {
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 49ba82bf33918..35c10509b797f 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -1226,7 +1226,7 @@ int __hpp__slsmg_color_printf(struct perf_hpp *hpp, const char *fmt, ...)
- 	return ret;
- }
- 
--#define __HPP_COLOR_PERCENT_FN(_type, _field)				\
-+#define __HPP_COLOR_PERCENT_FN(_type, _field, _fmttype)			\
- static u64 __hpp_get_##_field(struct hist_entry *he)			\
- {									\
- 	return he->stat._field;						\
-@@ -1238,10 +1238,10 @@ hist_browser__hpp_color_##_type(struct perf_hpp_fmt *fmt,		\
- 				struct hist_entry *he)			\
- {									\
- 	return hpp__fmt(fmt, hpp, he, __hpp_get_##_field, " %*.2f%%",	\
--			__hpp__slsmg_color_printf, true);		\
-+			__hpp__slsmg_color_printf, _fmttype);		\
- }
- 
--#define __HPP_COLOR_ACC_PERCENT_FN(_type, _field)			\
-+#define __HPP_COLOR_ACC_PERCENT_FN(_type, _field, _fmttype)		\
- static u64 __hpp_get_acc_##_field(struct hist_entry *he)		\
- {									\
- 	return he->stat_acc->_field;					\
-@@ -1262,15 +1262,18 @@ hist_browser__hpp_color_##_type(struct perf_hpp_fmt *fmt,		\
- 		return ret;						\
- 	}								\
- 	return hpp__fmt(fmt, hpp, he, __hpp_get_acc_##_field,		\
--			" %*.2f%%", __hpp__slsmg_color_printf, true);	\
-+			" %*.2f%%", __hpp__slsmg_color_printf,		\
-+			_fmttype);					\
- }
- 
--__HPP_COLOR_PERCENT_FN(overhead, period)
--__HPP_COLOR_PERCENT_FN(overhead_sys, period_sys)
--__HPP_COLOR_PERCENT_FN(overhead_us, period_us)
--__HPP_COLOR_PERCENT_FN(overhead_guest_sys, period_guest_sys)
--__HPP_COLOR_PERCENT_FN(overhead_guest_us, period_guest_us)
--__HPP_COLOR_ACC_PERCENT_FN(overhead_acc, period)
-+__HPP_COLOR_PERCENT_FN(overhead, period, PERF_HPP_FMT_TYPE__PERCENT)
-+__HPP_COLOR_PERCENT_FN(latency, latency, PERF_HPP_FMT_TYPE__LATENCY)
-+__HPP_COLOR_PERCENT_FN(overhead_sys, period_sys, PERF_HPP_FMT_TYPE__PERCENT)
-+__HPP_COLOR_PERCENT_FN(overhead_us, period_us, PERF_HPP_FMT_TYPE__PERCENT)
-+__HPP_COLOR_PERCENT_FN(overhead_guest_sys, period_guest_sys, PERF_HPP_FMT_TYPE__PERCENT)
-+__HPP_COLOR_PERCENT_FN(overhead_guest_us, period_guest_us, PERF_HPP_FMT_TYPE__PERCENT)
-+__HPP_COLOR_ACC_PERCENT_FN(overhead_acc, period, PERF_HPP_FMT_TYPE__PERCENT)
-+__HPP_COLOR_ACC_PERCENT_FN(latency_acc, latency, PERF_HPP_FMT_TYPE__LATENCY)
- 
- #undef __HPP_COLOR_PERCENT_FN
- #undef __HPP_COLOR_ACC_PERCENT_FN
-@@ -1279,6 +1282,8 @@ void hist_browser__init_hpp(void)
- {
- 	perf_hpp__format[PERF_HPP__OVERHEAD].color =
- 				hist_browser__hpp_color_overhead;
-+	perf_hpp__format[PERF_HPP__LATENCY].color =
-+				hist_browser__hpp_color_latency;
- 	perf_hpp__format[PERF_HPP__OVERHEAD_SYS].color =
- 				hist_browser__hpp_color_overhead_sys;
- 	perf_hpp__format[PERF_HPP__OVERHEAD_US].color =
-@@ -1289,6 +1294,8 @@ void hist_browser__init_hpp(void)
- 				hist_browser__hpp_color_overhead_guest_us;
- 	perf_hpp__format[PERF_HPP__OVERHEAD_ACC].color =
- 				hist_browser__hpp_color_overhead_acc;
-+	perf_hpp__format[PERF_HPP__LATENCY_ACC].color =
-+				hist_browser__hpp_color_latency_acc;
- 
- 	res_sample_init();
- }
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index 34fda1d5eccb4..6de6309595f9e 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -27,9 +27,10 @@ static int __hpp__fmt_print(struct perf_hpp *hpp, struct hists *hists, u64 val,
- 			    int nr_samples, const char *fmt, int len,
- 			    hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
- {
--	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
-+	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT || fmtype == PERF_HPP_FMT_TYPE__LATENCY) {
- 		double percent = 0.0;
--		u64 total = hists__total_period(hists);
-+		u64 total = fmtype == PERF_HPP_FMT_TYPE__PERCENT ? hists__total_period(hists) :
-+			hists__total_latency(hists);
- 
- 		if (total)
- 			percent = 100.0 * val / total;
-@@ -128,7 +129,7 @@ int hpp__fmt(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 				  print_fn, fmtype);
- 	}
- 
--	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT)
-+	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT || fmtype == PERF_HPP_FMT_TYPE__LATENCY)
- 		len -= 2; /* 2 for a space and a % sign */
- 	else
- 		len -= 1;
-@@ -356,7 +357,7 @@ static int hpp_entry_scnprintf(struct perf_hpp *hpp, const char *fmt, ...)
- 	return (ret >= ssize) ? (ssize - 1) : ret;
- }
- 
--#define __HPP_COLOR_PERCENT_FN(_type, _field)					\
-+#define __HPP_COLOR_PERCENT_FN(_type, _field, _fmttype)				\
- static u64 he_get_##_field(struct hist_entry *he)				\
- {										\
- 	return he->stat._field;							\
-@@ -366,15 +367,15 @@ static int hpp__color_##_type(struct perf_hpp_fmt *fmt,				\
- 			      struct perf_hpp *hpp, struct hist_entry *he) 	\
- {										\
- 	return hpp__fmt(fmt, hpp, he, he_get_##_field, " %*.2f%%",		\
--			hpp_color_scnprintf, PERF_HPP_FMT_TYPE__PERCENT);	\
-+			hpp_color_scnprintf, _fmttype);				\
- }
- 
--#define __HPP_ENTRY_PERCENT_FN(_type, _field)					\
-+#define __HPP_ENTRY_PERCENT_FN(_type, _field, _fmttype)				\
- static int hpp__entry_##_type(struct perf_hpp_fmt *fmt,				\
- 			      struct perf_hpp *hpp, struct hist_entry *he) 	\
- {										\
- 	return hpp__fmt(fmt, hpp, he, he_get_##_field, " %*.2f%%",		\
--			hpp_entry_scnprintf, PERF_HPP_FMT_TYPE__PERCENT);	\
-+			hpp_entry_scnprintf, _fmttype);	\
- }
- 
- #define __HPP_SORT_FN(_type, _field)						\
-@@ -384,7 +385,7 @@ static int64_t hpp__sort_##_type(struct perf_hpp_fmt *fmt __maybe_unused, 	\
- 	return __hpp__sort(a, b, he_get_##_field);				\
- }
- 
--#define __HPP_COLOR_ACC_PERCENT_FN(_type, _field)				\
-+#define __HPP_COLOR_ACC_PERCENT_FN(_type, _field, _fmttype)			\
- static u64 he_get_acc_##_field(struct hist_entry *he)				\
- {										\
- 	return he->stat_acc->_field;						\
-@@ -394,15 +395,15 @@ static int hpp__color_##_type(struct perf_hpp_fmt *fmt,				\
- 			      struct perf_hpp *hpp, struct hist_entry *he) 	\
- {										\
- 	return hpp__fmt_acc(fmt, hpp, he, he_get_acc_##_field, " %*.2f%%", 	\
--			    hpp_color_scnprintf, PERF_HPP_FMT_TYPE__PERCENT);	\
-+			    hpp_color_scnprintf, _fmttype);			\
- }
- 
--#define __HPP_ENTRY_ACC_PERCENT_FN(_type, _field)				\
-+#define __HPP_ENTRY_ACC_PERCENT_FN(_type, _field, _fmttype)			\
- static int hpp__entry_##_type(struct perf_hpp_fmt *fmt,				\
- 			      struct perf_hpp *hpp, struct hist_entry *he) 	\
- {										\
- 	return hpp__fmt_acc(fmt, hpp, he, he_get_acc_##_field, " %*.2f%%",	\
--			    hpp_entry_scnprintf, PERF_HPP_FMT_TYPE__PERCENT);	\
-+			    hpp_entry_scnprintf, _fmttype);			\
- }
- 
- #define __HPP_SORT_ACC_FN(_type, _field)					\
-@@ -453,14 +454,14 @@ static int64_t hpp__sort_##_type(struct perf_hpp_fmt *fmt __maybe_unused, 	\
- }
- 
- 
--#define HPP_PERCENT_FNS(_type, _field)					\
--__HPP_COLOR_PERCENT_FN(_type, _field)					\
--__HPP_ENTRY_PERCENT_FN(_type, _field)					\
-+#define HPP_PERCENT_FNS(_type, _field, _fmttype)			\
-+__HPP_COLOR_PERCENT_FN(_type, _field, _fmttype)				\
-+__HPP_ENTRY_PERCENT_FN(_type, _field, _fmttype)				\
- __HPP_SORT_FN(_type, _field)
- 
--#define HPP_PERCENT_ACC_FNS(_type, _field)				\
--__HPP_COLOR_ACC_PERCENT_FN(_type, _field)				\
--__HPP_ENTRY_ACC_PERCENT_FN(_type, _field)				\
-+#define HPP_PERCENT_ACC_FNS(_type, _field, _fmttype)			\
-+__HPP_COLOR_ACC_PERCENT_FN(_type, _field, _fmttype)			\
-+__HPP_ENTRY_ACC_PERCENT_FN(_type, _field, _fmttype)			\
- __HPP_SORT_ACC_FN(_type, _field)
- 
- #define HPP_RAW_FNS(_type, _field)					\
-@@ -471,12 +472,14 @@ __HPP_SORT_RAW_FN(_type, _field)
- __HPP_ENTRY_AVERAGE_FN(_type, _field)					\
- __HPP_SORT_AVERAGE_FN(_type, _field)
- 
--HPP_PERCENT_FNS(overhead, period)
--HPP_PERCENT_FNS(overhead_sys, period_sys)
--HPP_PERCENT_FNS(overhead_us, period_us)
--HPP_PERCENT_FNS(overhead_guest_sys, period_guest_sys)
--HPP_PERCENT_FNS(overhead_guest_us, period_guest_us)
--HPP_PERCENT_ACC_FNS(overhead_acc, period)
-+HPP_PERCENT_FNS(overhead, period, PERF_HPP_FMT_TYPE__PERCENT)
-+HPP_PERCENT_FNS(latency, latency, PERF_HPP_FMT_TYPE__LATENCY)
-+HPP_PERCENT_FNS(overhead_sys, period_sys, PERF_HPP_FMT_TYPE__PERCENT)
-+HPP_PERCENT_FNS(overhead_us, period_us, PERF_HPP_FMT_TYPE__PERCENT)
-+HPP_PERCENT_FNS(overhead_guest_sys, period_guest_sys, PERF_HPP_FMT_TYPE__PERCENT)
-+HPP_PERCENT_FNS(overhead_guest_us, period_guest_us, PERF_HPP_FMT_TYPE__PERCENT)
-+HPP_PERCENT_ACC_FNS(overhead_acc, period, PERF_HPP_FMT_TYPE__PERCENT)
-+HPP_PERCENT_ACC_FNS(latency_acc, latency, PERF_HPP_FMT_TYPE__LATENCY)
- 
- HPP_RAW_FNS(samples, nr_events)
- HPP_RAW_FNS(period, period)
-@@ -548,11 +551,13 @@ static bool hpp__equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
- 
- struct perf_hpp_fmt perf_hpp__format[] = {
- 	HPP__COLOR_PRINT_FNS("Overhead", overhead, OVERHEAD),
-+	HPP__COLOR_PRINT_FNS("Latency", latency, LATENCY),
- 	HPP__COLOR_PRINT_FNS("sys", overhead_sys, OVERHEAD_SYS),
- 	HPP__COLOR_PRINT_FNS("usr", overhead_us, OVERHEAD_US),
- 	HPP__COLOR_PRINT_FNS("guest sys", overhead_guest_sys, OVERHEAD_GUEST_SYS),
- 	HPP__COLOR_PRINT_FNS("guest usr", overhead_guest_us, OVERHEAD_GUEST_US),
- 	HPP__COLOR_ACC_PRINT_FNS("Children", overhead_acc, OVERHEAD_ACC),
-+	HPP__COLOR_ACC_PRINT_FNS("Latency", latency_acc, LATENCY_ACC),
- 	HPP__PRINT_FNS("Samples", samples, SAMPLES),
- 	HPP__PRINT_FNS("Period", period, PERIOD),
- 	HPP__PRINT_FNS("Weight1", weight1, WEIGHT1),
-@@ -601,6 +606,11 @@ static void fmt_free(struct perf_hpp_fmt *fmt)
- 		fmt->free(fmt);
- }
- 
-+static bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
-+{
-+	return a->equal && a->equal(a, b);
-+}
-+
- void perf_hpp__init(void)
- {
- 	int i;
-@@ -671,30 +681,26 @@ static void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
- 
- void perf_hpp__cancel_cumulate(void)
- {
--	struct perf_hpp_fmt *fmt, *acc, *ovh, *tmp;
-+	struct perf_hpp_fmt *fmt, *acc, *ovh, *acc_lat, *tmp;
- 
- 	if (is_strict_order(field_order))
- 		return;
- 
- 	ovh = &perf_hpp__format[PERF_HPP__OVERHEAD];
- 	acc = &perf_hpp__format[PERF_HPP__OVERHEAD_ACC];
-+	acc_lat = &perf_hpp__format[PERF_HPP__LATENCY_ACC];
- 
- 	perf_hpp_list__for_each_format_safe(&perf_hpp_list, fmt, tmp) {
--		if (acc->equal(acc, fmt)) {
-+		if (fmt_equal(acc, fmt) || fmt_equal(acc_lat, fmt)) {
- 			perf_hpp__column_unregister(fmt);
- 			continue;
- 		}
- 
--		if (ovh->equal(ovh, fmt))
-+		if (fmt_equal(ovh, fmt))
- 			fmt->name = "Overhead";
- 	}
- }
- 
--static bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
--{
--	return a->equal && a->equal(a, b);
--}
--
- void perf_hpp__setup_output_field(struct perf_hpp_list *list)
- {
- 	struct perf_hpp_fmt *fmt;
-@@ -819,6 +825,7 @@ void perf_hpp__reset_width(struct perf_hpp_fmt *fmt, struct hists *hists)
- 
- 	switch (fmt->idx) {
- 	case PERF_HPP__OVERHEAD:
-+	case PERF_HPP__LATENCY:
- 	case PERF_HPP__OVERHEAD_SYS:
- 	case PERF_HPP__OVERHEAD_US:
- 	case PERF_HPP__OVERHEAD_ACC:
-diff --git a/tools/perf/util/addr_location.h b/tools/perf/util/addr_location.h
-index f83d74e370b2f..663e9a55d8ed3 100644
---- a/tools/perf/util/addr_location.h
-+++ b/tools/perf/util/addr_location.h
-@@ -24,6 +24,8 @@ struct addr_location {
- 	s32	      socket;
- 	/* Same as machine.parallelism but within [1, nr_cpus]. */
- 	int	      parallelism;
-+	/* See he_stat.latency. */
-+	u64	      latency;
- };
- 
- void addr_location__init(struct addr_location *al);
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 6ceed46acd5a4..c23b77f8f854a 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -771,6 +771,12 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
- 	al->parallelism = max(1, min(machine->parallelism, machine__nr_cpus_avail(machine)));
- 	if (test_bit(al->parallelism, symbol_conf.parallelism_filter))
- 		al->filtered |= (1 << HIST_FILTER__PARALLELISM);
-+	/*
-+	 * Multiply it by some const to avoid precision loss or dealing
-+	 * with floats. The multiplier does not matter otherwise since
-+	 * we only print it as percents.
-+	 */
-+	al->latency = sample->period * 1000 / al->parallelism;
- 
- 	if (al->map) {
- 		if (symbol_conf.dso_list &&
-diff --git a/tools/perf/util/events_stats.h b/tools/perf/util/events_stats.h
-index eabd7913c3092..dcff697ed2529 100644
---- a/tools/perf/util/events_stats.h
-+++ b/tools/perf/util/events_stats.h
-@@ -57,6 +57,8 @@ struct events_stats {
- struct hists_stats {
- 	u64 total_period;
- 	u64 total_non_filtered_period;
-+	u64 total_latency;
-+	u64 total_non_filtered_latency;
- 	u32 nr_samples;
- 	u32 nr_non_filtered_samples;
- 	u32 nr_lost_samples;
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 446342246f5ee..a29324e33ed04 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -305,9 +305,10 @@ static long hist_time(unsigned long htime)
- 	return htime;
- }
- 
--static void he_stat__add_period(struct he_stat *he_stat, u64 period)
-+static void he_stat__add_period(struct he_stat *he_stat, u64 period, u64 latency)
- {
- 	he_stat->period		+= period;
-+	he_stat->latency	+= latency;
- 	he_stat->nr_events	+= 1;
- }
- 
-@@ -322,6 +323,7 @@ static void he_stat__add_stat(struct he_stat *dest, struct he_stat *src)
- 	dest->weight2		+= src->weight2;
- 	dest->weight3		+= src->weight3;
- 	dest->nr_events		+= src->nr_events;
-+	dest->latency		+= src->latency;
- }
- 
- static void he_stat__decay(struct he_stat *he_stat)
-@@ -331,6 +333,7 @@ static void he_stat__decay(struct he_stat *he_stat)
- 	he_stat->weight1 = (he_stat->weight1 * 7) / 8;
- 	he_stat->weight2 = (he_stat->weight2 * 7) / 8;
- 	he_stat->weight3 = (he_stat->weight3 * 7) / 8;
-+	he_stat->latency = (he_stat->latency * 7) / 8;
- }
- 
- static void hists__delete_entry(struct hists *hists, struct hist_entry *he);
-@@ -338,7 +341,7 @@ static void hists__delete_entry(struct hists *hists, struct hist_entry *he);
- static bool hists__decay_entry(struct hists *hists, struct hist_entry *he)
- {
- 	u64 prev_period = he->stat.period;
--	u64 diff;
-+	u64 prev_latency = he->stat.latency;
- 
- 	if (prev_period == 0)
- 		return true;
-@@ -348,12 +351,16 @@ static bool hists__decay_entry(struct hists *hists, struct hist_entry *he)
- 		he_stat__decay(he->stat_acc);
- 	decay_callchain(he->callchain);
- 
--	diff = prev_period - he->stat.period;
--
- 	if (!he->depth) {
--		hists->stats.total_period -= diff;
--		if (!he->filtered)
--			hists->stats.total_non_filtered_period -= diff;
-+		u64 period_diff = prev_period - he->stat.period;
-+		u64 latency_diff = prev_latency - he->stat.latency;
-+
-+		hists->stats.total_period -= period_diff;
-+		hists->stats.total_latency -= latency_diff;
-+		if (!he->filtered) {
-+			hists->stats.total_non_filtered_period -= period_diff;
-+			hists->stats.total_non_filtered_latency -= latency_diff;
-+		}
- 	}
- 
- 	if (!he->leaf) {
-@@ -368,7 +375,7 @@ static bool hists__decay_entry(struct hists *hists, struct hist_entry *he)
- 		}
- 	}
- 
--	return he->stat.period == 0;
-+	return he->stat.period == 0 && he->stat.latency == 0;
- }
- 
- static void hists__delete_entry(struct hists *hists, struct hist_entry *he)
-@@ -594,14 +601,17 @@ static filter_mask_t symbol__parent_filter(const struct symbol *parent)
- 	return 0;
- }
- 
--static void hist_entry__add_callchain_period(struct hist_entry *he, u64 period)
-+static void hist_entry__add_callchain_period(struct hist_entry *he, u64 period, u64 latency)
- {
- 	if (!hist_entry__has_callchains(he) || !symbol_conf.use_callchain)
- 		return;
- 
- 	he->hists->callchain_period += period;
--	if (!he->filtered)
-+	he->hists->callchain_latency += latency;
-+	if (!he->filtered) {
- 		he->hists->callchain_non_filtered_period += period;
-+		he->hists->callchain_non_filtered_latency += latency;
-+	}
- }
- 
- static struct hist_entry *hists__findnew_entry(struct hists *hists,
-@@ -614,6 +624,7 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 	struct hist_entry *he;
- 	int64_t cmp;
- 	u64 period = entry->stat.period;
-+	u64 latency = entry->stat.latency;
- 	bool leftmost = true;
- 
- 	p = &hists->entries_in->rb_root.rb_node;
-@@ -632,10 +643,10 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 		if (!cmp) {
- 			if (sample_self) {
- 				he_stat__add_stat(&he->stat, &entry->stat);
--				hist_entry__add_callchain_period(he, period);
-+				hist_entry__add_callchain_period(he, period, latency);
- 			}
- 			if (symbol_conf.cumulate_callchain)
--				he_stat__add_period(he->stat_acc, period);
-+				he_stat__add_period(he->stat_acc, period, latency);
- 
- 			block_info__delete(entry->block_info);
- 
-@@ -672,7 +683,7 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 		return NULL;
- 
- 	if (sample_self)
--		hist_entry__add_callchain_period(he, period);
-+		hist_entry__add_callchain_period(he, period, latency);
- 	hists->nr_entries++;
- 
- 	rb_link_node(&he->rb_node_in, parent, p);
-@@ -751,6 +762,7 @@ __hists__add_entry(struct hists *hists,
- 			.weight1 = sample->weight,
- 			.weight2 = sample->ins_lat,
- 			.weight3 = sample->p_stage_cyc,
-+			.latency = al->latency,
- 		},
- 		.parent = sym_parent,
- 		.filtered = symbol__parent_filter(sym_parent) | al->filtered,
-@@ -1768,12 +1780,14 @@ static void hists__reset_filter_stats(struct hists *hists)
- {
- 	hists->nr_non_filtered_entries = 0;
- 	hists->stats.total_non_filtered_period = 0;
-+	hists->stats.total_non_filtered_latency = 0;
- }
- 
- void hists__reset_stats(struct hists *hists)
- {
- 	hists->nr_entries = 0;
- 	hists->stats.total_period = 0;
-+	hists->stats.total_latency = 0;
- 
- 	hists__reset_filter_stats(hists);
- }
-@@ -1782,6 +1796,7 @@ static void hists__inc_filter_stats(struct hists *hists, struct hist_entry *h)
- {
- 	hists->nr_non_filtered_entries++;
- 	hists->stats.total_non_filtered_period += h->stat.period;
-+	hists->stats.total_non_filtered_latency += h->stat.latency;
- }
- 
- void hists__inc_stats(struct hists *hists, struct hist_entry *h)
-@@ -1791,6 +1806,7 @@ void hists__inc_stats(struct hists *hists, struct hist_entry *h)
- 
- 	hists->nr_entries++;
- 	hists->stats.total_period += h->stat.period;
-+	hists->stats.total_latency += h->stat.latency;
- }
- 
- static void hierarchy_recalc_total_periods(struct hists *hists)
-@@ -1802,6 +1818,8 @@ static void hierarchy_recalc_total_periods(struct hists *hists)
- 
- 	hists->stats.total_period = 0;
- 	hists->stats.total_non_filtered_period = 0;
-+	hists->stats.total_latency = 0;
-+	hists->stats.total_non_filtered_latency = 0;
- 
- 	/*
- 	 * recalculate total period using top-level entries only
-@@ -1813,8 +1831,11 @@ static void hierarchy_recalc_total_periods(struct hists *hists)
- 		node = rb_next(node);
- 
- 		hists->stats.total_period += he->stat.period;
--		if (!he->filtered)
-+		hists->stats.total_latency += he->stat.latency;
-+		if (!he->filtered) {
- 			hists->stats.total_non_filtered_period += he->stat.period;
-+			hists->stats.total_non_filtered_latency += he->stat.latency;
-+		}
- 	}
- }
- 
-@@ -2791,6 +2812,12 @@ u64 hists__total_period(struct hists *hists)
- 		hists->stats.total_period;
- }
- 
-+u64 hists__total_latency(struct hists *hists)
-+{
-+	return symbol_conf.filter_relative ? hists->stats.total_non_filtered_latency :
-+		hists->stats.total_latency;
-+}
-+
- int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool show_freq)
- {
- 	char unit;
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index c2236e0d89f2a..91159f16c60b2 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -109,6 +109,8 @@ struct hists {
- 	u64			nr_non_filtered_entries;
- 	u64			callchain_period;
- 	u64			callchain_non_filtered_period;
-+	u64			callchain_latency;
-+	u64			callchain_non_filtered_latency;
- 	struct thread		*thread_filter;
- 	const struct dso	*dso_filter;
- 	const char		*uid_filter_str;
-@@ -170,6 +172,12 @@ struct res_sample {
- 
- struct he_stat {
- 	u64			period;
-+	/*
-+	 * Period re-scaled from CPU time to wall-clock time (divided by the
-+	 * parallelism at the time of the sample). This represents effect of
-+	 * the event on latency rather than CPU consumption.
-+	 */
-+	u64			latency;
- 	u64			period_sys;
- 	u64			period_us;
- 	u64			period_guest_sys;
-@@ -374,6 +382,7 @@ void hists__output_recalc_col_len(struct hists *hists, int max_rows);
- struct hist_entry *hists__get_entry(struct hists *hists, int idx);
- 
- u64 hists__total_period(struct hists *hists);
-+u64 hists__total_latency(struct hists *hists);
- void hists__reset_stats(struct hists *hists);
- void hists__inc_stats(struct hists *hists, struct hist_entry *h);
- void hists__inc_nr_events(struct hists *hists);
-@@ -555,11 +564,13 @@ extern struct perf_hpp_fmt perf_hpp__format[];
- enum {
- 	/* Matches perf_hpp__format array. */
- 	PERF_HPP__OVERHEAD,
-+	PERF_HPP__LATENCY,
- 	PERF_HPP__OVERHEAD_SYS,
- 	PERF_HPP__OVERHEAD_US,
- 	PERF_HPP__OVERHEAD_GUEST_SYS,
- 	PERF_HPP__OVERHEAD_GUEST_US,
- 	PERF_HPP__OVERHEAD_ACC,
-+	PERF_HPP__LATENCY_ACC,
- 	PERF_HPP__SAMPLES,
- 	PERF_HPP__PERIOD,
- 	PERF_HPP__WEIGHT1,
-@@ -615,6 +626,7 @@ void hists__reset_column_width(struct hists *hists);
- enum perf_hpp_fmt_type {
- 	PERF_HPP_FMT_TYPE__RAW,
- 	PERF_HPP_FMT_TYPE__PERCENT,
-+	PERF_HPP_FMT_TYPE__LATENCY,
- 	PERF_HPP_FMT_TYPE__AVERAGE,
- };
- 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 3055496358ebb..bc4c3acfe7552 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -2628,11 +2628,13 @@ struct hpp_dimension {
- 
- static struct hpp_dimension hpp_sort_dimensions[] = {
- 	DIM(PERF_HPP__OVERHEAD, "overhead"),
-+	DIM(PERF_HPP__LATENCY, "latency"),
- 	DIM(PERF_HPP__OVERHEAD_SYS, "overhead_sys"),
- 	DIM(PERF_HPP__OVERHEAD_US, "overhead_us"),
- 	DIM(PERF_HPP__OVERHEAD_GUEST_SYS, "overhead_guest_sys"),
- 	DIM(PERF_HPP__OVERHEAD_GUEST_US, "overhead_guest_us"),
- 	DIM(PERF_HPP__OVERHEAD_ACC, "overhead_children"),
-+	DIM(PERF_HPP__LATENCY_ACC, "latency_children"),
- 	DIM(PERF_HPP__SAMPLES, "sample"),
- 	DIM(PERF_HPP__PERIOD, "period"),
- 	DIM(PERF_HPP__WEIGHT1, "weight1"),
--- 
-2.48.1.502.g6dc24dfdaf-goog
+Use consistent naming style. Either prefix or suffix. Or better, use
+what is recommended.
+
+See: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/fixed-clock.yaml?h=v6.11-rc1
+
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <0>;
+> +		};
+> +
+> +		clk_rcbsec: clk-rcbsec {
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <64000000>;
+> +		};
+> +	};
+> +
+> +	firmware {
+> +		optee: optee {
+> +			compatible = "linaro,optee-tz";
+> +			method = "smc";
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <GIC_PPI 15 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
+> +		};
+> +
+> +		scmi {
+> +			compatible = "linaro,scmi-optee";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			linaro,optee-channel-id = <0>;
+> +
+> +			scmi_clk: protocol@14 {
+> +				reg = <0x14>;
+> +				#clock-cells = <1>;
+> +			};
+> +
+> +			scmi_reset: protocol@16 {
+> +				reg = <0x16>;
+> +				#reset-cells = <1>;
+> +			};
+> +
+> +			scmi_voltd: protocol@17 {
+> +				reg = <0x17>;
+> +
+> +				scmi_regu: regulators {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					scmi_vddio1: regulator@0 {
+> +						reg = <VOLTD_SCMI_VDDIO1>;
+> +						regulator-name = "vddio1";
+> +					};
+> +					scmi_vddio2: regulator@1 {
+> +						reg = <VOLTD_SCMI_VDDIO2>;
+> +						regulator-name = "vddio2";
+> +					};
+> +					scmi_vddio3: regulator@2 {
+> +						reg = <VOLTD_SCMI_VDDIO3>;
+> +						regulator-name = "vddio3";
+> +					};
+> +					scmi_vddio4: regulator@3 {
+> +						reg = <VOLTD_SCMI_VDDIO4>;
+> +						regulator-name = "vddio4";
+> +					};
+> +					scmi_vdd33ucpd: regulator@5 {
+> +						reg = <VOLTD_SCMI_UCPD>;
+> +						regulator-name = "vdd33ucpd";
+> +					};
+> +					scmi_vdda18adc: regulator@7 {
+> +						reg = <VOLTD_SCMI_ADC>;
+> +						regulator-name = "vdda18adc";
+> +					};
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	intc: interrupt-controller@4ac00000 {
+
+Part of Soc most likely.
+
+> +		compatible = "arm,cortex-a7-gic";
+> +		#interrupt-cells = <3>;
+> +		#address-cells = <1>;
+> +		interrupt-controller;
+> +		reg = <0x0 0x4ac10000 0x0 0x1000>,
+> +		      <0x0 0x4ac20000 0x0 0x2000>,
+> +		      <0x0 0x4ac40000 0x0 0x2000>,
+> +		      <0x0 0x4ac60000 0x0 0x2000>;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +
+> +		CPU_PD0: power-domain-cpu0 {
+
+All labels are always lowercase.
+
+> +			#power-domain-cells = <0>;
+> +			power-domains = <&CLUSTER_PD>;
+> +		};
+> +
+> +		CLUSTER_PD: power-domain-cluster {
+> +			#power-domain-cells = <0>;
+> +			power-domains = <&RET_PD>;
+> +		};
+> +
+> +		RET_PD: power-domain-retention {
+> +			#power-domain-cells = <0>;
+> +		};
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupt-parent = <&intc>;
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
+> +		always-on;
+> +	};
+> +
+> +	soc@0 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		interrupt-parent = <&intc>;
+> +		ranges = <0x0 0x0 0x0 0x80000000>;
+
+Same comments as for all other patches.
+
+> +
+> +		hpdma: dma-controller@40400000 {
+> +			compatible = "st,stm32mp25-dma3";
+> +			reg = <0x40400000 0x1000>;
+> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&scmi_clk CK_SCMI_HPDMA1>;
+> +			#dma-cells = <3>;
+> +		};
+> +
+> +		hpdma2: dma-controller@40410000 {
+> +			compatible = "st,stm32mp25-dma3";
+> +			reg = <0x40410000 0x1000>;
+> +			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&scmi_clk CK_SCMI_HPDMA2>;
+> +			#dma-cells = <3>;
+> +		};
+> +
+> +		hpdma3: dma-controller@40420000 {
+> +			compatible = "st,stm32mp25-dma3";
+> +			reg = <0x40420000 0x1000>;
+> +			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&scmi_clk CK_SCMI_HPDMA3>;
+> +			#dma-cells = <3>;
+> +		};
+> +
+> +		rifsc: bus@42080000 {
+> +			compatible = "st,stm32mp25-rifsc", "simple-bus";
+> +			reg = <0x42080000 0x1000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			#access-controller-cells = <1>;
+> +			ranges;
+> +
+> +			i2s2: audio-controller@400b0000 {
+
+Confusing: device has address outside of the bus. What does the bus
+address represent?
+
+> +				compatible = "st,stm32mp25-i2s";
+> +				reg = <0x400b0000 0x400>;
+> +				#sound-dai-cells = <0>;
+> +				interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&rcc CK_BUS_SPI2>, <&rcc CK_KER_SPI2>;
+> +				clock-names = "pclk", "i2sclk";
+> +				resets = <&rcc SPI2_R>;
+> +				dmas = <&hpdma 51 0x43 0x12>,
+> +				       <&hpdma 52 0x43 0x21>;
+> +				dma-names = "rx", "tx";
+> +				access-controllers = <&rifsc 23>;
+> +				status = "disabled";
+> +			};
+> +
+
+...
+
+> +			sdmmc1: mmc@48220000 {
+> +				compatible = "st,stm32mp25-sdmmc2", "arm,pl18x", "arm,primecell";
+> +				arm,primecell-periphid = <0x00353180>;
+> +				reg = <0x48220000 0x400>, <0x44230400 0x8>;
+> +				interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&rcc CK_KER_SDMMC1 >;
+> +				clock-names = "apb_pclk";
+> +				resets = <&rcc SDMMC1_R>;
+> +				cap-sd-highspeed;
+> +				cap-mmc-highspeed;
+> +				max-frequency = <120000000>;
+> +				access-controllers = <&rifsc 76>;
+> +				status = "disabled";
+> +			};
+> +
+> +			ethernet1: ethernet@482c0000 {
+> +				compatible = "st,stm32mp25-dwmac", "snps,dwmac-5.20";
+> +				reg = <0x482c0000 0x4000>;
+> +				reg-names = "stmmaceth";
+> +				interrupts-extended = <&intc GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>;
+
+Why extended?
+
+> +				interrupt-names = "macirq";
+> +				clock-names = "stmmaceth",
+> +					      "mac-clk-tx",
+> +					      "mac-clk-rx",
+> +					      "ptp_ref",
+> +					      "ethstp",
+> +					      "eth-ck";
+
+...
+
+> +		rcc: clock-controller@44200000 {
+> +			compatible = "st,stm32mp25-rcc";
+> +			reg = <0x44200000 0x10000>;
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +			clocks = <&scmi_clk CK_SCMI_HSE>,
+> +				<&scmi_clk CK_SCMI_HSI>,
+> +				<&scmi_clk CK_SCMI_MSI>,
+> +				<&scmi_clk CK_SCMI_LSE>,
+> +				<&scmi_clk CK_SCMI_LSI>,
+> +				<&scmi_clk CK_SCMI_HSE_DIV2>,
+> +				<&scmi_clk CK_SCMI_ICN_HS_MCU>,
+> +				<&scmi_clk CK_SCMI_ICN_LS_MCU>,
+> +				<&scmi_clk CK_SCMI_ICN_SDMMC>,
+> +				<&scmi_clk CK_SCMI_ICN_DDR>,
+> +				<&scmi_clk CK_SCMI_ICN_DISPLAY>,
+> +				<&scmi_clk CK_SCMI_ICN_HSL>,
+> +				<&scmi_clk CK_SCMI_ICN_NIC>,
+> +				<&scmi_clk CK_SCMI_ICN_VID>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_07>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_08>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_09>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_10>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_11>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_12>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_13>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_14>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_15>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_16>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_17>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_18>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_19>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_20>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_21>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_22>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_23>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_24>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_25>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_26>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_27>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_28>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_29>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_30>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_31>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_32>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_33>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_34>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_35>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_36>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_37>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_38>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_39>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_40>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_41>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_42>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_43>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_44>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_45>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_46>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_47>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_48>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_49>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_50>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_51>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_52>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_53>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_54>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_55>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_56>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_57>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_58>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_59>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_60>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_61>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_62>,
+> +				<&scmi_clk CK_SCMI_FLEXGEN_63>,
+> +				<&scmi_clk CK_SCMI_ICN_APB1>,
+> +				<&scmi_clk CK_SCMI_ICN_APB2>,
+> +				<&scmi_clk CK_SCMI_ICN_APB3>,
+> +				<&scmi_clk CK_SCMI_ICN_APB4>,
+> +				<&scmi_clk CK_SCMI_ICN_APBDBG>,
+> +				<&scmi_clk CK_SCMI_TIMG1>,
+> +				<&scmi_clk CK_SCMI_TIMG2>,
+> +				<&scmi_clk CK_SCMI_PLL3>,
+> +				<&clk_dsi_txbyte>;
+> +				access-controllers = <&rifsc 156>;
+> +		};
+> +
+> +		exti1: interrupt-controller@44220000 {
+> +			compatible = "st,stm32mp1-exti", "syscon";
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			reg = <0x44220000 0x400>;
+> +			interrupts-extended =
+
+Why extended?
+
+> +				<&intc GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_0 */
+> +				<&intc GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 273 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 274 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 275 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 276 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 277 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_10 */
+> +				<&intc GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 1   IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>,
+> +				<0>,						/* EXTI_20 */
+> +				<&intc GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_30 */
+> +				<&intc GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
+> +				<0>,
+> +				<&intc GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_40 */
+> +				<&intc GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_50 */
+> +				<0>,
+> +				<0>,
+> +				<0>,
+> +				<0>,
+> +				<0>,
+> +				<0>,
+> +				<0>,
+> +				<0>,
+> +				<&intc GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>,
+> +				<0>,						/* EXTI_60 */
+> +				<&intc GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>,
+> +				<0>,
+> +				<0>,
+> +				<&intc GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>,
+> +				<0>,
+> +				<0>,
+> +				<&intc GIC_SPI 10  IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
+> +				<0>,
+> +				<&intc GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_70 */
+> +				<0>,
+> +				<&intc GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>,
+> +				<0>,						/* EXTI_80 */
+> +				<0>,
+> +				<0>,
+> +				<&intc GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&intc GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		syscfg: syscon@44230000 {
+> +			compatible = "st,stm32mp25-syscfg", "syscon";
+> +			reg = <0x44230000 0x10000>;
+> +		};
+> +
+> +		pinctrl: pinctrl@44240000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+
+Please fix coding style everywhere here.
+
+
+> +			compatible = "st,stm32mp257-pinctrl";
+> +			ranges = <0 0x44240000 0xa0400>;
+> +			interrupt-parent = <&exti1>;
+> +			st,syscfg = <&exti1 0x60 0xff>;
+> +			pins-are-numbered;
+> +
+
+...
+
+> diff --git a/arch/arm64/boot/dts/st/stm32mp23xc.dtsi b/arch/arm64/boot/dts/st/stm32mp23xc.dtsi
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e33b00b424e1207dc6212e75235785f8c61e5055
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/st/stm32mp23xc.dtsi
+> @@ -0,0 +1,8 @@
+> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+> +/*
+> + * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
+> + * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
+> + */
+> +
+
+What is the point of this file?
+
+Best regards,
+Krzysztof
 
