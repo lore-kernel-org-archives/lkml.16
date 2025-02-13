@@ -1,122 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDCB2063EB
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 04:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F4B11CAF
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 04:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739422241; cv=none; b=F6O/A8HiFkFp0gYSWSvnQ40xNJQjo6J+KiqhWa58p5LpYufIxg5th4aV7IlSYP7Xra25Luh3+1qsKfmHvelX7Lgkm9zhnpFyBpR95jpsuI38A8BDi3Hi0444Yx8uw5vr0y6VBYfdXywh+TXrKgux8ccfVJ7ZbyyZtClT1X6wIww=
+	t=1739422388; cv=none; b=fQCAB4K52j2FASNteCYp4+gT381Rsbnub4wqU4sEdnU8bHTOqXjDIMwmd0Lrf2JkT/6by9RHgtbLRwF++qsP6q6kmxdhcQV3ezWnnURyAnvpYGggclyapjdNha/Vh8QH+OdosAOwMVdzeinYT3/iG4RuFV5pxZYELF5nLNsO+ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739422241; c=relaxed/simple;
-	bh=lYeQPfSpuQr5PHMAB14GyfZkUqhe2I9jhiDBnLqysn4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b1C8TqzNr02+tYhJlvlhztNCiVEKgZbz/c18LsDrdFjXiWRzG5wglB2zihfjl9R0TYDTaPEvV8d+zAPGFj554XxJ2pj8DwOl1l8iTdpaONe8RYcJntm9+MnS+e2U+bMZHNHbl+twApEZ1bTn90fYh8QFZuP1Ea73bs73c05FWOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=In4s51T2; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739422388; c=relaxed/simple;
+	bh=btuuGAHN0yAwnIydrz9luogYPZ/niqFXv+Dh58AVsiA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=pJnG/9GMS21CKzEFmyuuzFJkK9PLHshCM8bN+6Us9hMpFqF7R6Hk5TISXU4wIhJokbXUgLcsVeUNmKnAxVKUekNyq9r3JKrrAU6mXhznXF/8UK7bjYNeMM5J8O/5P6ZiCg780g9ahl0UoCe5CXiSclkNKwyGTXuVHIAbaaN2Ql0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QYaM+0B3; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="In4s51T2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739422240; x=1770958240;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lYeQPfSpuQr5PHMAB14GyfZkUqhe2I9jhiDBnLqysn4=;
-  b=In4s51T22vW81Bb85WdF4w6sf9FY0RCah1xcIWXoZEA909/fkKpFSRg6
-   53tPrD+v2wCY+fvxIKMmcW9tq8Mu1hx0Q70GTlNQ/leEyqGT1uSywF0A0
-   4NC6zTGBIH83DeqOTpvvdEN9GvojVdPOlYce0hUoPZDjwk8KRZV7xXV5q
-   9r7NT9G49IMbjjeEAVBUNmLc6veyDCCJD+A569ZJpg6TqrgAaHGQe3LwG
-   xtUz95IqPUVEToeI8ugjnaQWgqsVUs5p6N0VMBWhcqksMQpN4NglypjsB
-   oBEWwDzQEC8yejyHbsVha39Vm5LtBMlmR4F+GqUcqlUD4D2AU27qAI+F5
-   Q==;
-X-CSE-ConnectionGUID: DsxvNf8GTr+BTlxyizTrkA==
-X-CSE-MsgGUID: NCH7PZfhQp2fkNj9oxhUPw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="50326288"
-X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
-   d="scan'208";a="50326288"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 20:50:39 -0800
-X-CSE-ConnectionGUID: I78Tzd9eRy6mwrpveFehrQ==
-X-CSE-MsgGUID: JFvV0IQfQLiEVyjTt+LrVA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="136273609"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.108.131]) ([10.125.108.131])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 20:50:38 -0800
-Message-ID: <15c69d57-4ffb-4ea1-8cbc-0ba6d3d7b14f@intel.com>
-Date: Wed, 12 Feb 2025 20:50:40 -0800
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QYaM+0B3"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250213045303epoutp01ddfce1736369d7df07f00c2fe45cecf4~jq3ErCW0Z1737217372epoutp01v
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 04:53:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250213045303epoutp01ddfce1736369d7df07f00c2fe45cecf4~jq3ErCW0Z1737217372epoutp01v
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739422383;
+	bh=xYvadG4L9+uv4OCgstcXZU5FpbGiAZUr3Y8c/BN7ytA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QYaM+0B3j9pjY1TchDSszmCugRCkRiXQwm5wy3XOQifa1U+f5EuYFZON/x+IbH6UP
+	 EC8tRPtMHM05s0b3x5o+yqShojCi7Zd/rIbFesI8sRnAoCWFaK/r0NDNKnreHxkI9Q
+	 LBHnp6fGUCwOiVw6aavtMjtvOlbVYvGLsRWqbKbI=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20250213045303epcas5p19913f8bc0828c7d50bca0a2cd6c5c8fa~jq3ETvyCN2465924659epcas5p1E;
+	Thu, 13 Feb 2025 04:53:03 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4YtjVR1cyBz4x9QN; Thu, 13 Feb
+	2025 04:53:03 +0000 (GMT)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250213042240epcas5p3c1ac4f97ebf36054abdccc962329273d~jqciYgmG22763127631epcas5p3Q;
+	Thu, 13 Feb 2025 04:22:40 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250213042240epsmtrp1b8af1613244bed48759d265c9aeff182~jqciXf9BW0967609676epsmtrp1E;
+	Thu, 13 Feb 2025 04:22:40 +0000 (GMT)
+X-AuditID: b6c32a28-9a4e470000005bc0-f0-67ad738f2189
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	BA.C6.23488.F837DA76; Thu, 13 Feb 2025 13:22:39 +0900 (KST)
+Received: from INBRO002811.samsungds.net (unknown [107.122.5.126]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250213042237epsmtip16ed2c89451a5e8a08fdec56d33b3a3b1~jqcftTghr3115331153epsmtip1M;
+	Thu, 13 Feb 2025 04:22:37 +0000 (GMT)
+From: Selvarasu Ganesan <selvarasu.g@samsung.com>
+To: mathias.nyman@intel.com, gregkh@linuxfoundation.org,
+	WeitaoWang-oc@zhaoxin.com, Thinh.Nguyen@synopsys.com,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: jh0801.jung@samsung.com, dh10.jung@samsung.com, naushad@samsung.com,
+	akash.m5@samsung.com, h10.kim@samsung.com, eomji.oh@samsung.com,
+	alim.akhtar@samsung.com, thiagu.r@samsung.com, muhammed.ali@samsung.com,
+	pritam.sutar@samsung.com, cpgs@samsung.com, Selvarasu Ganesan
+	<selvarasu.g@samsung.com>, stable@vger.kernel.org
+Subject: [PATCH v2 2/2] usb: xhci: Fix unassigned variable 'bcdUSB' in
+ xhci_create_usb3x_bos_desc()
+Date: Thu, 13 Feb 2025 09:51:26 +0530
+Message-ID: <158453976.61739422383216.JavaMail.epsvc@epcpadp2new>
+X-Mailer: git-send-email 2.46.0.windows.1
+In-Reply-To: <20250213042130.858-1-selvarasu.g@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] tsm: Unified Measurement Register ABI for TVMs
-To: Cedric Xing <cedric.xing@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20250212-tdx-rtmr-v1-0-9795dc49e132@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250212-tdx-rtmr-v1-0-9795dc49e132@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LZdlhJTre/eG26wef3NhZvrq5itXgwbxub
+	xctDmhZ3Fkxjsji1fCGTRfPi9WwWf29fZLW4+/AHi8XlXXPYLBYta2W2aN40hdXi/IsuVotP
+	R/+zWjy7t4LN4sjyj0wWCzY+YrRY0QxUsmrBAXaLRz/nMjkIeyze85LJY//cNewefVtWMXps
+	2f+Z0ePzJjmPX7dusQSwRXHZpKTmZJalFunbJXBlXL/+mLWgib3ix82VTA2MH1i7GDk5JARM
+	JJbMmsjUxcjFISSwm1HiyJU9UAlpidezuhghbGGJlf+es4PYQgJfGSXWrDbsYuTgYBMwlHh2
+	wgakV0RgA6PE1TOzWUEcZoFbTBIH/35gBmkQFkiWWPf9FhuIzSKgKjFvwgYmEJtXwEpi++sz
+	UMs0Jdbu3QMW5xSwlrjYeQFqmZVE/9bVjBD1ghInZz5hAbGZBeQlmrfOZp7AKDALSWoWktQC
+	RqZVjJKpBcW56bnJhgWGeanlesWJucWleel6yfm5mxjBcaWlsYPx3bcm/UOMTByMhxglOJiV
+	RHglpq1JF+JNSaysSi3Kjy8qzUktPsQozcGiJM670jAiXUggPbEkNTs1tSC1CCbLxMEp1cA0
+	cQvPtUoVDuMHs9VrBGt++7+YYX7YeO2Rzlrn89HyF+ZWV1l4Pjw36UZffqfNcwW2m7dU9R5a
+	Ns7q03wyn8PUmfusp+hPletK+qzO/luU15zneKlxa73mb+6XzjLOgjfeVboa7DYVerorMdvP
+	MWDBvlV8tkLrLwZ6C2somMprmm82mML859BW8XmJUus/XObqmcQ8IcqlWbG08MN3uzIHabm5
+	j4/m/Yy1O3Qv7PzF3Nz3AUde2O6asyDTy7n4cOgyvpmTHjOJhiewip4Knrz13s/96gZ6uV6P
+	g31W1hjWNJ++1B+Z5+rEMrXjbv7xVMaitZHHPmx6v6nvXEDhd9O7RcVNm3MZVBdHGNUf6FVi
+	Kc5INNRiLipOBADwarM9GgMAAA==
+X-CMS-MailID: 20250213042240epcas5p3c1ac4f97ebf36054abdccc962329273d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250213042240epcas5p3c1ac4f97ebf36054abdccc962329273d
+References: <20250213042130.858-1-selvarasu.g@samsung.com>
+	<CGME20250213042240epcas5p3c1ac4f97ebf36054abdccc962329273d@epcas5p3.samsung.com>
 
-On 2/12/25 18:23, Cedric Xing wrote:
-> NOTE: This patch series introduces the Measurement Register (MR) ABI, and
-> is a continuation of the RFC series on the same topic [1].
+Fix the following smatch error:
+drivers/usb/host/xhci-hub.c:71 xhci_create_usb3x_bos_desc() error: unassigned variable 'bcdUSB'
 
-Hi Cedric,
+Fixes: eb02aaf21f29 ("usb: xhci: Rewrite xhci_create_usb3_bos_desc()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Selvarasu Ganesan <selvarasu.g@samsung.com>
+---
+ drivers/usb/host/xhci-hub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Could you please explain how the benefits of this series are helpful to
-end users?
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index 9693464c0520..5715a8bdda7f 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -39,7 +39,7 @@ static int xhci_create_usb3x_bos_desc(struct xhci_hcd *xhci, char *buf,
+ 	struct usb_ss_cap_descriptor	*ss_cap;
+ 	struct usb_ssp_cap_descriptor	*ssp_cap;
+ 	struct xhci_port_cap		*port_cap = NULL;
+-	u16				bcdUSB;
++	u16				bcdUSB = 0;
+ 	u32				reg;
+ 	u32				min_rate = 0;
+ 	u8				min_ssid;
+-- 
+2.17.1
+
+
