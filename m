@@ -1,101 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667361FF7DD
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590B5200115
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739466549; cv=none; b=TSmymN7EcW+9o1Cbw5a8QDjfh0s+BTxFcGnIPv4BRRdAbthNCtHeHXO/AY4uOEUlBPdsDWCF5iJln/V8NSLwcwPYT/Sger1092M+cH04QKyvYgFiJ6uWwTNyivvLyrNNlWzaw/+VRQX4zbbcSrbDkeNw6Bqe1Bfq38kCUUQSn4k=
+	t=1739466562; cv=none; b=ZmpM+WojPYOpQYCpIkcU2OPP1/zBMbAVSlaQzOISa9b5hjeGykceu4um45VplQ09e8ulRNci9Okn4rQ7uAzZsVa+cv0vvcfaCsrU86WwRfq64ORDa7COzk0vU3/8Wx9YLcjse3yZXCN65AA1ugmomElYd3xMCsUpHHxeo1S9TlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739466549; c=relaxed/simple;
-	bh=4x9jxxW0VD/X4SQSVaG2JypaS5X6rvTy8i5aJNkaqGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nSz2A39w/5Q1O5RYge0/7ntjiF6HWClgJ9betuwm3ncEPXS/bs58wYCnG0f5nQjoPJavKvvTEbxtpZQ3BtA9hFIuk5KJifW0W+82P629zGjSPSHno8pwyHza8luhqD7gcJJmvOKktoPMOv/woRdlniv6uyBpGA8ROT9xNN+kkqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OyzYe8/F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739466562; c=relaxed/simple;
+	bh=y5FM6tAQMNQALlSwxU0i/GnC+v0z9iqKKDzyHmSz7F0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RPIG6xPpz8Q711b6wOp+EppGOjJq0ENE3q9fJpT+dT5Jo9Oq5afgE/FnPRQCRWUaJS1xAao3qFflUu6SA274ZxnB0/DxBTVjWsjZYx2qSgpZzdmMhf+ChzkBJSiYRz1/asg+yNXiCWNKKuXO23bUUdAsn0fzNTWGIKgq17G7A9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=buSHgC4a; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OyzYe8/F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF828C4CED1;
-	Thu, 13 Feb 2025 17:09:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739466548;
-	bh=4x9jxxW0VD/X4SQSVaG2JypaS5X6rvTy8i5aJNkaqGw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OyzYe8/FSw0fl1CP4gUZZpa5MWXZthpkiUG+mI9U9lf93L2MaIccibO3nE4sWJ818
-	 p+cEWlfzkMX/GuNQ9+3yultf7t7/GyBdPh5VdjwsUpkB2WbwJJQ2X0yqtkVvqQ0aDD
-	 G3SYthnFz3F/udB8mazLb+24drxHpMXr9MUHi8XNYehaqHDWsf7coFGd7fqmgKdt4R
-	 9Pdjd658XnbsDREowp3+HltvYyCjf7pcLt8R8plvGnNhGLaZi9yG2qGBp36JDTV5Bw
-	 e3pbnWF2pohnY5SGCG7XN4xTxArGp3+e8+t8N0p9NyyIUBQ7MispuEjYLCc9Rrxb8+
-	 oNjymN98zlMWw==
-Date: Thu, 13 Feb 2025 22:29:45 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Anthony Iliopoulos <ailiop@suse.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc64/ftrace: fix module loading without patchable
- function entries
-Message-ID: <wlscshbqan2svtqkz5xc6v47tzndfnsvge7h4lbfn67zoplekl@elt2oxwhrp6f>
-References: <20250204231821.39140-1-ailiop@suse.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="buSHgC4a"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab7c07e8b9bso203310066b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:09:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739466558; x=1740071358; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nc5IWJ1qyPsINmgWoKig4MjxnUBL7Tefy6WoHZCaboU=;
+        b=buSHgC4aTd4Nvmi76Rix4as/QUFxavQLlF9aYeKjuATgaYu/I/6tUQ6dpvcKrRhrEr
+         PClVc5ikkaJvJWlfpdEd21TT/Rb4wVDwEclI53yxDsNACg9dzhRiNepp9oLoautva0L2
+         9ay80x2PZbLaqkvbgT9IfrDaDvFKiswcqBx1pyHM2Ch9PBwe03PvydjmjiLUGv8I4LiN
+         bZfa2aiuivoydNjJorCaLQVyXt2//AuxraieYJEIYEa25sap1yua+6jCSDgBm+VRR663
+         ymX/UgVwMFcZifq+hnieIeU/C9mMXpw0Je6r/OeRpUFAwKhHxboZAYnhmn0mN/zEtn/K
+         TxsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739466558; x=1740071358;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nc5IWJ1qyPsINmgWoKig4MjxnUBL7Tefy6WoHZCaboU=;
+        b=uUnbiClYxqV/B+EUpOT0451/Xg/uVAf8v8mMJLp4EMMqCM5/tJXK45Pr2wvPXjkOoi
+         Y4TOU2qSCRdVLcEMR/S4BYTmOhSdJXfCk54Frh2hOZRlq4y9wm6tVzOL9teYugnb11Ln
+         68/8as6UCzY3A0ldRgZGM6Uq5RnjcoYGtLrAldwSgdh6un7xlLuGvRc2/wQHHd5PCdyA
+         Z977NDOYJjm4FdQLAxmyBWmqr+bj4e9etOCMWqKQq1yyfk4SOD9trH+9gkQkCuNWzthV
+         1tlA1kEwjtQrGI1x5dxirmEK5AYbFE1KyO3sec5TVvV53st2AazQHK/ZM9/gO9rMwgza
+         I1og==
+X-Gm-Message-State: AOJu0YwxEhkMeypOR/ZUt76T+d8e7lh+Y44CSzF6imEIj6zPKrr/2HGA
+	aKuFspKVbSETS0X8+JS1nsWKWcGqW3mJTQfJkiif2+FwxAwgSJ6n
+X-Gm-Gg: ASbGnctYNFFfIegRQXeLCRlqKkQs57DT4Na9bP/fV81pkdmgVyp7EqWk7rbaMOo5s2X
+	GHUK3dUkHD2tz26efObMfeMRFz/ZGQ1XIbhiCvKOW1dVz3umdjh07tLw7S9V+Dmp0dorgGuy1xA
+	nyIWqwGvfFzHwNcnwbJoGD/78UTK9cZqJpdQ2xInViP+ohkDPmIz8LsZUyGx3XTuPs8An1r+zov
+	XkvdpBKURJTYXTQLq14OK5MuNhK+Xe5afGIlnrD2bI3rkT7/LWZIb+0QLRjzolARnr94EzJmnqL
+	L3IHsjBUKfzazHf9NnnQd72PMCShA/aXNg==
+X-Google-Smtp-Source: AGHT+IEWCTz2wo77yFYcCRTneg7CKminQHiXFzAYmkGn1WyJxqCdc+HF0JboUvBzhuA9jGeI9+9ZKg==
+X-Received: by 2002:a17:906:c14c:b0:ab6:362c:a8ab with SMTP id a640c23a62f3a-ab7f33f651fmr779828666b.29.1739466558231;
+        Thu, 13 Feb 2025 09:09:18 -0800 (PST)
+Received: from f.. (cst-prg-82-124.cust.vodafone.cz. [46.135.82.124])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba53376ad1sm167892066b.90.2025.02.13.09.09.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 09:09:17 -0800 (PST)
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: kees@kernel.org,
+	luto@amacapital.net,
+	wad@chromium.org
+Cc: linux-kernel@vger.kernel.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH v2] seccomp: avoid the lock trip seccomp_filter_release in common case
+Date: Thu, 13 Feb 2025 18:09:10 +0100
+Message-ID: <20250213170911.1140187-1-mjguzik@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204231821.39140-1-ailiop@suse.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 05, 2025 at 12:18:21AM +0100, Anthony Iliopoulos wrote:
-> get_stubs_size assumes that there must always be at least one patchable
-> function entry, which is not always the case (modules that export data
-> but no code), otherwise it returns -ENOEXEC and thus the section header
-> sh_size is set to that value. During module_memory_alloc() the size is
-> passed to execmem_alloc() after being page-aligned and thus set to zero
-> which will cause it to fail the allocation (and thus module loading) as
-> __vmalloc_node_range() checks for zero-sized allocs and returns null:
-> 
-> [  115.466896] module_64: cast_common: doesn't contain __patchable_function_entries.
-> [  115.469189] ------------[ cut here ]------------
-> [  115.469496] WARNING: CPU: 0 PID: 274 at mm/vmalloc.c:3778 __vmalloc_node_range_noprof+0x8b4/0x8f0
-> ...
-> [  115.478574] ---[ end trace 0000000000000000 ]---
-> [  115.479545] execmem: unable to allocate memory
+Vast majority of threads don't have any seccomp filters, all while the
+lock taken here is shared between all threads in given process and
+frequently used.
 
-Ugh, that's nasty.
+Safety of the check relies on the following:
+- seccomp_filter_release is only legally called for PF_EXITING threads
+- SIGNAL_GROUP_EXIT is only ever set with the sighand lock held
+- PF_EXITING is only ever set with the sighand lock held *or* after
+  SIGNAL_GROUP_EXIT is set *or* the process is single-threaded
+- seccomp_sync_threads holds the sighand lock and skips all threads if
+  SIGNAL_GROUP_EXIT is set, PF_EXITING threads if not
 
-> 
-> Fix this by removing the check completely, since it is anyway not
-> helpful to propagate this as an error upwards.
-> 
-> Fixes: eec37961a56a ("powerpc64/ftrace: Move ftrace sequence out of line")
-> Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
-> ---
->  arch/powerpc/kernel/module_64.c | 4 ----
->  1 file changed, 4 deletions(-)
-> 
+Resulting reduction of contention gives me a 5% boost in a
+microbenchmark spawning and killing threads within the same process.
 
-Thanks for fixing this. It might also be good to add a check in 
-setup_ftrace_ool_stubs(). Something like this:
+Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+---
 
-diff --git a/arch/powerpc/kernel/module_64.c b/arch/powerpc/kernel/module_64.c
-index 34a5aec4908f..c10a9c66cfe3 100644
---- a/arch/powerpc/kernel/module_64.c
-+++ b/arch/powerpc/kernel/module_64.c
-@@ -1125,6 +1125,10 @@ static int setup_ftrace_ool_stubs(const Elf64_Shdr *sechdrs, unsigned long addr,
-        unsigned int i, total_stubs, num_stubs;
-        struct ppc64_stub_entry *stub;
+So I slept on it and did an actual analysis instead of a lazy skim,
+benchmarked as well. :)
+
+ kernel/seccomp.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index 0ce17c616150..41aa761c7738 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -574,6 +574,9 @@ void seccomp_filter_release(struct task_struct *tsk)
+ 	if (WARN_ON((tsk->flags & PF_EXITING) == 0))
+ 		return;
  
-+       /* Bail out early if no traceable functions */
-+       if (!me->arch.ool_stub_count)
-+               return 0;
++	if (READ_ONCE(tsk->seccomp.filter) == NULL)
++		return;
 +
-        total_stubs = sechdrs[me->arch.stubs_section].sh_size / sizeof(*stub);
-        num_stubs = roundup(me->arch.ool_stub_count * sizeof(struct ftrace_ool_stub),
-                            sizeof(struct ppc64_stub_entry)) / sizeof(struct ppc64_stub_entry);
-
-
-Regardless of that, for this patch:
-Acked-by: Naveen N Rao (AMD) <naveen@kernel.org>
-
-
-- Naveen
+ 	spin_lock_irq(&tsk->sighand->siglock);
+ 	orig = tsk->seccomp.filter;
+ 	/* Detach task from its filter tree. */
+@@ -599,6 +602,13 @@ static inline void seccomp_sync_threads(unsigned long flags)
+ 	BUG_ON(!mutex_is_locked(&current->signal->cred_guard_mutex));
+ 	assert_spin_locked(&current->sighand->siglock);
+ 
++	/*
++	 * Don't touch any of the threads if the process is being killed.
++	 * This allows for a lockless check in seccomp_filter_release.
++	 */
++	if (current->signal->flags & SIGNAL_GROUP_EXIT)
++		return;
++
+ 	/* Synchronize all threads. */
+ 	caller = current;
+ 	for_each_thread(caller, thread) {
+-- 
+2.43.0
 
