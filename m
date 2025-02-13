@@ -1,137 +1,116 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795B4211A06;
-	Thu, 13 Feb 2025 11:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B39211A06
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739447619; cv=none; b=Ytcw50O8voywwWjuRgOH6fj9VrYKeQzPXyveReHlbJkUbVZpEVZ4TuWPTscXl2mHYcX6n+Bi3zMBY4scCT60rKCiW0HXiFbZu2kT2iMIQojF8pHcMdfJzv9+Z5/BsI064Lrj4XVEqleYjYGwkQ68I31ywHBRB5EuuSaet7mxJaU=
+	t=1739447649; cv=none; b=UzCGGOpdrmMQD8SJzt2wmZH6jp21b1osWeUaUIqJbXo0WyoF9Pz6c+lYZ9NCbE4+x13Fjk9PQdeYkqpJuZbuipdg1iz3SmDdvMd5CfNwrMdX0SCvqoGZ0zuZ1j/ZDAo52fdlLQvI8GOs3JRqli2wUhcSswkAn0CpVrjKRahbIXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739447619; c=relaxed/simple;
-	bh=1m0OGVvYiMzyU/Al+rHj9xfSMxsEdfHNWdimWID281g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qGNH4GEmbq39iYl0vMnEhqh/U5yD+9FRI/j+Dca/XygToYmsiwdIK9Mk52WYRTyExidXAhLjLARP5g62OIzu15NC46tG+fUll6TPQ9XLDQ24lG/wkzD4ko+WUmXNqEBIHceBIHl315omKEWgkgYRrwMsuy4NJVWyZwUVQ9XZdrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id CBE93160C95;
-	Thu, 13 Feb 2025 11:17:16 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf07.hostedemail.com (Postfix) with ESMTPA id 2846C20024;
-	Thu, 13 Feb 2025 11:17:10 +0000 (UTC)
-Message-ID: <3a6b43bad48592887d4e67ca854eef2728464b1c.camel@perches.com>
-Subject: Re: [PATCH 3/3] checkpatch: throw error in malformed arrays
-From: Joe Perches <joe@perches.com>
-To: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
- a.hindborg@kernel.org, 	alex.gaynor@gmail.com, aliceryhl@google.com,
- apw@canonical.com, arnd@arndb.de, 	aswinunni01@gmail.com, axboe@kernel.dk,
- benno.lossin@proton.me, 	bhelgaas@google.com, bjorn3_gh@protonmail.com,
- boqun.feng@gmail.com, 	dakr@kernel.org, dwaipayanray1@gmail.com,
- ethan.twardy@gmail.com, 	fujita.tomonori@gmail.com, gary@garyguo.net,
- gregkh@linuxfoundation.org, 	lukas.bulwahn@gmail.com, ojeda@kernel.org,
- pbonzini@redhat.com, tmgross@umich.edu, 	walmeida@microsoft.com
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 13 Feb 2025 03:17:09 -0800
-In-Reply-To: <20250212194857.192057-2-trintaeoitogc@gmail.com>
-References: <20250212194857.192057-1-trintaeoitogc@gmail.com>
-		 <20250212194857.192057-2-trintaeoitogc@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1739447649; c=relaxed/simple;
+	bh=qdkW8qVhkXrO1qQ34NhKHK7+tmQMaR4sdKcyxB0QKpc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oDjWy20C7A0liYJqlsLT9GOpv01eWZmhnnHEYXdjuwsLfXe9yRVkpXM5wcdDNayZ47qZlp686Y7CnFKdyzMiLyLw3ceuOhUugnEvaCDUqJ+uEvCrZ8oUStyiVdMduf7T69/hG4bGSJseLIZI/m5Qw3yRlzHa22cwdvbDjBhdmHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RNj5Dadh; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RNj5Dadh"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38ddfee3ba9so608374f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 03:54:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739447646; x=1740052446; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EBrYoGQXFZ0WeFWAVcXCIsjpFEawdA5CdRolKv8MZAk=;
+        b=RNj5DadhQ+ume+LMXaSIFpGNnIaNmU6oJjsCYwrpBAii/FwRnTiPlZvlk8mIOrY51b
+         e8/nTy1d51AM20h3nc6uRsByPzimH8LTCHfhWcXD4WL3rBkpjHP72CN79XfbvzBCRRFI
+         YYiZiVVOmQvcRSUEDDIKIy+iegLLY9tZqNOWdRJCE0f4UFZsK+w+Gv5daPZjo66g+u9+
+         mJw0mPFrBnVQF+2yjUrqw55grQH1KcqCVeg2DziprVbAs2gLsSn6M0jC2lEA4yAC0IPO
+         ZvJrjjphzU22ofdRuTj1/Y7lCR473N6ZS5B1dUAA5u+7vauVlUQ8rVzQstA5AgQqgInn
+         l+yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739447646; x=1740052446;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EBrYoGQXFZ0WeFWAVcXCIsjpFEawdA5CdRolKv8MZAk=;
+        b=B1LS2UZQnTrWv2otHUSpODEvWcmdaNmLutwJyntFpFTSl/FFVelsgyGnU6GhGYMXLz
+         WgJPrC7ZshNJmcSuBQy05QxbjWXZSsaqi9UqtzKVhj4ue2+8V3nfFL7//QVJ2srTL30l
+         CDxL1yfjCV1ilrHovNrhcopcgztY9jbDDETb9zvmEaEx3NXiee3kVHSLOg8HrkHjpDJR
+         AvWPxDLsfeK9nsjLgOyV3VSwjByATDDmMSu5fsI7DnZx8nUWHRaTJJZPPb/YImvVSgHd
+         tEi1g8A+2Lpj+Spa66TXle0Blxr/0I1HUvTBJRXuU0MQ9wQeI/XifeFKRXfsyQ2F+N1J
+         LavA==
+X-Forwarded-Encrypted: i=1; AJvYcCXwqmacg8v1nhgOKjgPzzSkpHTg7yf1II+jL7hMWkNc9oKYON40mpjxrTnRPDU8d4PqbxoYCoNc4KxF+qY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx06J5JjGIKx+fh0EvtB01y3j7inye+aet4xA3KHt2MCouu7RL8
+	W5u/XrWVzCdVJ5qcXAGURVWTbEs06Es8flntdWq566TWMJ+kJts6WcyFzyQEkKBbaOOk6Wk+696
+	hPMsmQjWY/kcCw7HPPyAIALkY4vXzTEVq36qs
+X-Gm-Gg: ASbGnct0gaeix8WsPySsnAOlH7lxEu2dfPLI6MCY9s235ahujbXNFx7XdJY8Q0U43QH
+	Ey8K8uO8v6JFW+H7QJ4mtGIQho0PiTbPe79oPrdeRF/2Kh8KnsxV+ScwRWWwqXiI3mvAmkQ==
+X-Google-Smtp-Source: AGHT+IEe6v6MtacDeSEL/xLecSNxTwstqznSfHAOfDBwLvpFYDx3oaHfufee2aQ6e0ic/Zi9JnZINLqGhsXjmZIHMlM=
+X-Received: by 2002:a5d:5188:0:b0:385:fd07:85f4 with SMTP id
+ ffacd0b85a97d-38dea290941mr5344862f8f.31.1739447644908; Thu, 13 Feb 2025
+ 03:54:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: 2846C20024
-X-Stat-Signature: e96gph4aujxetmny1csqx8nicmteb6q7
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX18H8+KsScZnw537mEqSkVKamgRYHz6HC0g=
-X-HE-Tag: 1739445430-615866
-X-HE-Meta: U2FsdGVkX18gOCee0rqLeEKBX9xiZX2lYSDmNX3ywTtEr4285ESqEpiNK9y1ltxdBVEnTg1/mu60UvNitBUAyEuQm0XiNvWn4nK9aK4KGi6tD7AgsMDSeiwhQ7JoSwZNi3Hx7EscCFJ4eNq5nmm1XwXf4d2ZqFfyMADFb2fIGMCeBCUz6vLYpreDf4hRBBSaMAtLrfrVsQMjHuAOGh//ytT5e1MKjKD/sDZg1014RMV/cAPf30OxE3bBvWe1/rXZIT2X2wMGBnxMGEHnBwC9w5fPj3RnDR+jgJUlC6CXULaZFO4/ShGXiXGKv5kX2kb4
+References: <20250213-vma-v14-0-b29c47ab21f5@google.com> <8130a6d5-a7e5-402b-b05c-2d0703ac1ed2@lucifer.local>
+ <CANiq72nBx3cRTUC9HWVR8K64Jbq3GCVMss5wuABzra3OLhRUQw@mail.gmail.com> <c8e78762-1429-4ab6-9398-ce52370eec08@lucifer.local>
+In-Reply-To: <c8e78762-1429-4ab6-9398-ce52370eec08@lucifer.local>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 13 Feb 2025 12:53:51 +0100
+X-Gm-Features: AWEUYZlcKhn2J09IfN1Ume_UmXDcGf-Su7T6SzVglnPGleBem6pGdl5tq8gfdG4
+Message-ID: <CAH5fLgipyRs+0qMkMN4EZDewtEy_8FvcJgvB+gd=58RgaddN1Q@mail.gmail.com>
+Subject: Re: [PATCH v14 0/8] Rust support for mm_struct, vm_area_struct, and mmap
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, John Hubbard <jhubbard@nvidia.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	rust-for-linux@vger.kernel.org, Balbir Singh <balbirs@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2025-02-12 at 16:48 -0300, Guilherme Giacomo Simoes wrote:
-> In module! macro, some fields have a string array type, and we need a
-> check for guarantee a good formatation.
+On Thu, Feb 13, 2025 at 12:50=E2=80=AFPM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> On Thu, Feb 13, 2025 at 12:32:27PM +0100, Miguel Ojeda wrote:
+> > On Thu, Feb 13, 2025 at 12:14=E2=80=AFPM Lorenzo Stoakes
+> > <lorenzo.stoakes@oracle.com> wrote:
+> > >
+> > > the maintainers for the subsystem generally take series (though of co=
+urse,
+> > > it is entirely maintained and managed by rust people).
+> >
+> > Just in case: I am not sure what "rust people" means here, but if you
+> > meant the Rust subsystem, then it is not the case. Maintenance depends
+> > on what the subsystem wants to do (including how to handle patches,
+> > but also the actual maintenance), who steps up to maintain it, whether
+> > the subsystem wants new co-maintainers or sub-maintainers, etc.
+> >
+> >     https://rust-for-linux.com/rust-kernel-policy#how-is-rust-introduce=
+d-in-a-subsystem
+> >     https://rust-for-linux.com/rust-kernel-policy#who-maintains-rust-co=
+de-in-the-kernel
+> >
+> > That is why the cover letter asks about the `MAINTAINERS` file.
+>
+> Right, I don't mean the rust subsystem, I mean designated rust
+> maintainers. The point being that this won't add workload to Andrew, nor
+> require him nor other mm C people to understand rust.
+>
+> As stated, I agree we need to add an entry to MAINTAINERS for this, which
+> is why I explicitly chased this up.
 
-Isn't this is a style desire not a parsing limitation?
+I am happy to be listed as a maintainer of this code.
 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -2775,6 +2775,9 @@ sub process {
->  	$realcnt =3D 0;
->  	$linenr =3D 0;
->  	$fixlinenr =3D -1;
-> +
-> +	my %parse_module_arr;
-
-Probably not useful to add hungarian style naming.
-
-> @@ -3567,6 +3570,71 @@ sub process {
->  # ignore non-hunk lines and lines being removed
->  		next if (!$hunk_line || $line =3D~ /^-/);
-> =20
-> +# check if arrays has more than one value in the same line
-> +		my $inline =3D 0;
-> +		if ($line =3D~ /^\+\s*.*\b(author|alias|firmware)\s*:\s*\[/) {
-
-\s*.* could be just .*
-
-> +			$inline =3D 1;
-> +
-> +			if ($line =3D~ /author/) {
-> +				$parse_module_arr{'author'} =3D 1;
-> +			}
-> +
-> +			if ($line =3D~ /alias/) {
-> +				$parse_module_arr{'alias'} =3D 1;
-> +			}
-> +
-> +			if ($line =3D~ /firmware/) {
-> +				$parse_module_arr{'firmware'} =3D 1;
-> +			}
-
-$parse_module_arr{$1} =3D 1;
-
-> +		}
-> +
-> +		if (keys %parse_module_arr) {
-> +			my @keys =3D keys %parse_module_arr;
-> +			my $key =3D $keys[0];
-> +
-> +			my $more_than_one_vl =3D qr/".+",\s*".+"/;
-> +
-> +			if ($line =3D~ $more_than_one_vl) {
-> +					ERROR("ERR_ARRAY_MODULE_MACRO",
-> +						"the key $key have more than one values in same line\n$here\n". ca=
-t_vet($rawline));
-
-"Prefer one value per line\n"
-
-ERR_ error prefixes are not useful.
-These seem more like a WARN than an ERROR
-Bad indentation
-And please use a $herevet temporary
-
-
-> +			}
-> +			elsif ($inline && $line !~ /\]/ && $line =3D~ /\["/) {
-> +					ERROR("ERR_ARRAY_MODULE_MACRO",
-> +						qq~the key $key need a new line after declare the key\n$here\n~ . =
-cat_vet($rawline) . qq~\nFor example:
-
-Use } elsif
-
-"Prefer declaring keys on separate lines"
-
-Are quote characters allowed in keys?
-If not, this seems unnecessarily complicated.
-
-$herevet
-
-I think the qq is unnecessary and the for example
-should refer to some style documentation and not
-be explicit in checkpatch.
-
+Alice
