@@ -1,203 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95607283809
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2920266B48;
+	Thu, 13 Feb 2025 16:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739463405; cv=none; b=TE9NSlzp0aUI4XRGJhcit7wTlOuiD0HySfYzdJsMO61QHTaRp6gRFeHmYFbRACL0b+PjglWKyZit7b7miWtjrpP+5rNtDjC9gS0aJF6RXl0Bfd2r0+9sNX9yhDajbogXFB1wAwYPJ2ONRGkcKS03M2gZITysFrU25pad6CsB5+Q=
+	t=1739463411; cv=none; b=nz/kzzWTulPTepuGhog0e4r6XbJQyHCtHQMO9/37aQspGKe9sCqYnq6Yu40DrpZHzD3bSJQNABrv1IDFJ0OCAmyQ8XpheZwIVpRGVEZfsj/bRlibS0BRIBfUcU4/c6JvyNkz+rO19+BZNBrl2XnXsvZx3n2FMCxvtpmdvPv/GUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739463405; c=relaxed/simple;
-	bh=wQfQUDOlMKIqY8ONyz/bt5HloO+0R2vMZiTEsqnsuu8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B1StBNdo1gWu6EH87/Bw+D+8wXGWHAcYi2eBfW6WsmcUXT/eudZYSrBA2iduBcbPnyGx9ieiIqu5wXlc1zkmA4EDvxyOYwmc9+hx5526Nf/CCYS2hrAsmA0AqDdt/KOVBtOFj9zdJTx5TXrO+cdqo/yHTvvIHEcLAgDQWd3UJWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UOUi8GQK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UOUi8GQK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739463402;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=K9INglP8UbI2R4zAa8G0HHDOGm0nrMySeYcN3jzl1jQ=;
-	b=UOUi8GQKUcZKWP5NrlPfnd1d4Bk3o0B0dhqozGvRCVvbJIonhFjzFeNgq5CbgnHPdvtxa6
-	65iS9XhN0xJEV6ZQWslkpVijNuPgDz8NlARyfk3ljkGB0/pNnCHJRB1YO/rlzNBB/XV9Ld
-	lx72jVWyKioBgtUMVcia15hO8ue34Qk=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-kGDM7ihbNWCDO9U0ZI6GrQ-1; Thu, 13 Feb 2025 11:16:41 -0500
-X-MC-Unique: kGDM7ihbNWCDO9U0ZI6GrQ-1
-X-Mimecast-MFC-AGG-ID: kGDM7ihbNWCDO9U0ZI6GrQ
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38dce0d3d34so719957f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 08:16:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739463400; x=1740068200;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=K9INglP8UbI2R4zAa8G0HHDOGm0nrMySeYcN3jzl1jQ=;
-        b=c+qfjVwvvIb5AyUYP2ntoDnZby/zGhg/QXwJCJ22uJPeRJspfFSdP4EjnRioGeq6IW
-         Jwm5M/RkHLHYTcWQrzpWg0pO8bTFbrhszxcnv34ueBmCVICR3lrR1hIw32NJE95yXa5S
-         KyFSbuIFGRgHy3/iO7HzD4QGKVw6E6KJd7g2lsOMnNORF4nqKF9yc3JfbGbnBcnnxiZe
-         Hytnmpux11ZQVwdAxjZZbgMoOTyL68zONmEb3LHs0jfVxo5kJxc+5XOnCqOB3cvCatob
-         wzy50i9m9v6+LK1vA8K1nHDkysBJU0IQZw6MFJrmKln+h8jXU3Y4bMtG3ee5S4IqzVUp
-         usrw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPGBWrwLnUZl4+EFcfyc7dRLGvz6yI/MXX3gqaduUMcaW6DLZk4X/9cf6yt0QD28leXH9W9ShGYx2MVa4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhNpYWCynzVKVtNU6G7KObI2Ik28V6gFZFvvYhCgP/giHiAm8y
-	ou7urBWkROd01m/hohI0t7GVCw6P1KYfM7ow+guEetB1kILP4cR/iFdauy10neXXVJlW0jlbPRA
-	L8isQZF2pSoUgv3Pd9UZqhGlqmvLMOo0ZFWLV35gADPMPBMBcVGmQ/KyZf+C9ow==
-X-Gm-Gg: ASbGncs1oBiDDvZGqkLgvT0FVYL+db+ZCfLqqjFI9pO2RqhP8jxg+vMSFgXPGhHamFF
-	U6tc8bhBdvKEkZaoWUAI94IcDFHuIv/O+FpdwMuvYDl4GAZxo2AIbPm28NCsT+hscVdRRLmt1Em
-	gL4C5tkNGNA1j5hYc2qm5SnBf1sjDwBRRuzqmlq99B0AlmjhaXzx2JH3zGaYjiefSFuAe7nXX19
-	+quDCB1urxvAM30r42d58wvLacfCBtwIz8r9QvWMmK60ZNkdZicH6y7a54JyzqSnruzxF74XYVp
-	8ldUDytAfYe08jMm5NUPDS+LssTSVcCEc7KR6TfhjVdJC73H1srDVeePe34gHf8L2xxU6FO4YZz
-	LQSn3Cyu/dElia77IlJOEepky8o6iYg==
-X-Received: by 2002:adf:e78a:0:b0:38d:df05:4d9 with SMTP id ffacd0b85a97d-38dea5f6f0cmr6761894f8f.43.1739463399962;
-        Thu, 13 Feb 2025 08:16:39 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEaWYsikH2Lv8Z9qNVRrad0h+UPZ783FaoONtNdxJEhnSMR7NUvcampLUBmQfrbd517d1dGFg==
-X-Received: by 2002:adf:e78a:0:b0:38d:df05:4d9 with SMTP id ffacd0b85a97d-38dea5f6f0cmr6761850f8f.43.1739463399532;
-        Thu, 13 Feb 2025 08:16:39 -0800 (PST)
-Received: from ?IPV6:2003:cb:c718:100:347d:db94:161d:398f? (p200300cbc7180100347ddb94161d398f.dip0.t-ipconnect.de. [2003:cb:c718:100:347d:db94:161d:398f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a04f217sm52297485e9.1.2025.02.13.08.16.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 08:16:38 -0800 (PST)
-Message-ID: <b2964ea1-a22c-4b66-89ef-3082b6d00d21@redhat.com>
-Date: Thu, 13 Feb 2025 17:16:37 +0100
+	s=arc-20240116; t=1739463411; c=relaxed/simple;
+	bh=z4iIg6nTbGxCcl9qQUA1uEECwhWV8EhQe6HRi7S9brY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sDFxY2DM8oZkYJ3Ai4/QFYptPPG5rvTt5f5lS/+W7HECdCu83jupYRzYlVK3tycaLbfbkbXIfzeIZo4sjl29OyGN0dnGcfXfgjvFqhRLv9If/I1QNjz3sp4f4AZitDw9Lg1madJS31rA9YrvuC1GL6BBnxpQf6KnYZ+ChmcxmUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F04B26BA;
+	Thu, 13 Feb 2025 08:17:10 -0800 (PST)
+Received: from e122027.cambridge.arm.com (e122027.cambridge.arm.com [10.1.32.44])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44FB73F6A8;
+	Thu, 13 Feb 2025 08:16:45 -0800 (PST)
+From: Steven Price <steven.price@arm.com>
+To: kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Cc: Joey Gouly <joey.gouly@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+	Gavin Shan <gshan@redhat.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	Alper Gun <alpergun@google.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Steven Price <steven.price@arm.com>
+Subject: [PATCH v7 28/45] arm64: rme: support RSI_HOST_CALL
+Date: Thu, 13 Feb 2025 16:14:08 +0000
+Message-ID: <20250213161426.102987-29-steven.price@arm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250213161426.102987-1-steven.price@arm.com>
+References: <20250213161426.102987-1-steven.price@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] arm64: mm: Populate vmemmap/linear at the page level
- for hotplugged sections
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Zhenhua Huang <quic_zhenhuah@quicinc.com>, anshuman.khandual@arm.com,
- will@kernel.org, ardb@kernel.org, ryan.roberts@arm.com,
- mark.rutland@arm.com, joey.gouly@arm.com, dave.hansen@linux.intel.com,
- akpm@linux-foundation.org, chenfeiyang@loongson.cn, chenhuacai@kernel.org,
- linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, quic_tingweiz@quicinc.com,
- stable@vger.kernel.org
-References: <20250213075703.1270713-1-quic_zhenhuah@quicinc.com>
- <9bc91fe3-c590-48e2-b29f-736d0b056c34@redhat.com> <Z64UcwSGQ53mFmWF@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Z64UcwSGQ53mFmWF@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 13.02.25 16:49, Catalin Marinas wrote:
-> On Thu, Feb 13, 2025 at 01:59:25PM +0100, David Hildenbrand wrote:
->> On 13.02.25 08:57, Zhenhua Huang wrote:
->>> On the arm64 platform with 4K base page config, SECTION_SIZE_BITS is set
->>> to 27, making one section 128M. The related page struct which vmemmap
->>> points to is 2M then.
->>> Commit c1cc1552616d ("arm64: MMU initialisation") optimizes the
->>> vmemmap to populate at the PMD section level which was suitable
->>> initially since hot plug granule is always one section(128M). However,
->>> commit ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
->>> introduced a 2M(SUBSECTION_SIZE) hot plug granule, which disrupted the
->>> existing arm64 assumptions.
->>>
->>> Considering the vmemmap_free -> unmap_hotplug_pmd_range path, when
->>> pmd_sect() is true, the entire PMD section is cleared, even if there is
->>> other effective subsection. For example page_struct_map1 and
->>> page_strcut_map2 are part of a single PMD entry and they are hot-added
->>> sequentially. Then page_struct_map1 is removed, vmemmap_free() will clear
->>> the entire PMD entry freeing the struct page map for the whole section,
->>> even though page_struct_map2 is still active. Similar problem exists
->>> with linear mapping as well, for 16K base page(PMD size = 32M) or 64K
->>> base page(PMD = 512M), their block mappings exceed SUBSECTION_SIZE.
->>> Tearing down the entire PMD mapping too will leave other subsections
->>> unmapped in the linear mapping.
->>>
->>> To address the issue, we need to prevent PMD/PUD/CONT mappings for both
->>> linear and vmemmap for non-boot sections if corresponding size on the
->>> given base page exceeds SUBSECTION_SIZE(2MB now).
->>>
->>> Cc: <stable@vger.kernel.org> # v5.4+
->>> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
->>> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
->>> Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
->>
->> Just so I understand correctly: for ordinary memory-sections-size hotplug
->> (NVDIMM, virtio-mem), we still get a large mapping where possible?
-> 
-> Up to 2MB blocks only since that's the SUBSECTION_SIZE value. The
-> vmemmap mapping is also limited to PAGE_SIZE mappings (we could use
-> contiguous mappings for vmemmap but it's not wired up; I don't think
-> it's worth the hassle).
+From: Joey Gouly <joey.gouly@arm.com>
 
-But that's messed up, no?
+Forward RSI_HOST_CALLS to KVM's HVC handler.
 
-If someone hotplugs a memory section, they have to hotunplug a memory 
-section, not parts of it.
+Signed-off-by: Joey Gouly <joey.gouly@arm.com>
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+Changes since v4:
+ * Setting GPRS is now done by kvm_rec_enter() rather than
+   rec_exit_host_call() (see previous patch - arm64: RME: Handle realm
+   enter/exit). This fixes a bug where the registers set by user space
+   were being ignored.
+---
+ arch/arm64/kvm/rme-exit.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-That's why x86 does in vmemmap_populate():
-
-if (end - start < PAGES_PER_SECTION * sizeof(struct page))
-	err = vmemmap_populate_basepages(start, end, node, NULL);
-else if (boot_cpu_has(X86_FEATURE_PSE))
-	err = vmemmap_populate_hugepages(start, end, node, altmap);
-...
-
-Maybe I'm missing something. Most importantly, why the weird subsection 
-stuff is supposed to degrade ordinary hotplug of dimms/virtio-mem etc.
-
+diff --git a/arch/arm64/kvm/rme-exit.c b/arch/arm64/kvm/rme-exit.c
+index c785005f821f..4f7602aa3c6c 100644
+--- a/arch/arm64/kvm/rme-exit.c
++++ b/arch/arm64/kvm/rme-exit.c
+@@ -107,6 +107,26 @@ static int rec_exit_ripas_change(struct kvm_vcpu *vcpu)
+ 	return -EFAULT;
+ }
+ 
++static int rec_exit_host_call(struct kvm_vcpu *vcpu)
++{
++	int ret, i;
++	struct realm_rec *rec = &vcpu->arch.rec;
++
++	vcpu->stat.hvc_exit_stat++;
++
++	for (i = 0; i < REC_RUN_GPRS; i++)
++		vcpu_set_reg(vcpu, i, rec->run->exit.gprs[i]);
++
++	ret = kvm_smccc_call_handler(vcpu);
++
++	if (ret < 0) {
++		vcpu_set_reg(vcpu, 0, ~0UL);
++		ret = 1;
++	}
++
++	return ret;
++}
++
+ static void update_arch_timer_irq_lines(struct kvm_vcpu *vcpu)
+ {
+ 	struct realm_rec *rec = &vcpu->arch.rec;
+@@ -168,6 +188,8 @@ int handle_rec_exit(struct kvm_vcpu *vcpu, int rec_run_ret)
+ 		return rec_exit_psci(vcpu);
+ 	case RMI_EXIT_RIPAS_CHANGE:
+ 		return rec_exit_ripas_change(vcpu);
++	case RMI_EXIT_HOST_CALL:
++		return rec_exit_host_call(vcpu);
+ 	}
+ 
+ 	kvm_pr_unimpl("Unsupported exit reason: %u\n",
 -- 
-Cheers,
-
-David / dhildenb
+2.43.0
 
