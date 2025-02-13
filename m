@@ -1,150 +1,139 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.120])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090632080D2;
-	Thu, 13 Feb 2025 07:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B2D20766B
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 07:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739431241; cv=none; b=KioYGiwgm6fuMhkJeCRt1m1aqaPJ9CJTYiHUEW0Ie45PPBA0ljCE2B+27dLWB6dX1uxvD/rYlmZVYYb/9PBqwI8xYjTsN/WQYwai82Q2989k8vXC8unPIluNz96uCEo57sPbNnLQc0ijRcjQd2hC4N+I+A8DTCFpKHW/Uw18yNU=
+	t=1739431300; cv=none; b=lVWf1naWoP6I/8CCm5YK7E0X18vOELJRFJ3TY1EQKLb1F43H3lG//tjq1MsOcO9X0U3Q45OXPvOcvrrJJyaLueiUCjrsjIYLjscbSJ6J/znaxeqPjOzp3V57H9prfWavfL30Es+I42UqHiFiewMJoiOOeMzoqoSBM3zyhnAfO8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739431241; c=relaxed/simple;
-	bh=+UmDyGFYqbRGqxiUXDzk0wYia4DEJ/qtggUagtruh1U=;
+	s=arc-20240116; t=1739431300; c=relaxed/simple;
+	bh=GE8T84RxcCWKKCHACB70lEaGn9zzdUJ584guTWIe8ZE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J/g0UPOzXzj81+/sLY+uDBkBiGRzip4yA1ndUWX73gOyq4vsgM4jGBgt12TrhR97Woclf1C5F7bXEn0d8dTuAcGKpVP3R7pUShsVi2j9uF95bWLCft/WpVqRTFksEKoDxxW9A9cji3ocTBGs+/bKoNwI0k0rME0xGOdsuQDEupk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=OHgeQudZ; arc=none smtp.client-ip=212.42.244.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=sKB02x/0NwrryWWUqKpbTL+h1j97yo5ggMvzpLkGeF7of9tt7//Cn2/RxYxhg3YoDFchAKZyizuzxjDKIfFOhHKX/NlYJsyKALGS7/qgGuW75q9c76Kr4dd4TZzMKL9rcmVzgdFbuBibdFgmAsPeelEyEBu0C1hIrZ8fQUxDz+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MrMcJV6g; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="OHgeQudZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1739431188; bh=+UmDyGFYqbRGqxiUXDzk0wYia4DEJ/qtggUagtruh1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OHgeQudZxxT0wgi5FGAagv7q2QLFdFIkd0t7eygA7wxw/marKM8WnD45X7azm8HUM
-	 31EnxHXdDNyET2f/Y/k98z4tGVCY2lYF5djVeG+CkfRgpvh9dAeohwS1GgQ4F+LZK3
-	 zzyqrcRmkF8IiVKSYPI8wXg1bR22JFIxo0Lypzwg=
-Received: from [212.42.244.71] (helo=mail.avm.de)
-	by mail.avm.de with ESMTP (eXpurgate 4.52.1)
-	(envelope-from <n.schier@avm.de>)
-	id 67ad9d14-038b-7f0000032729-7f0000018ad4-1
-	for <multiple-recipients>; Thu, 13 Feb 2025 08:19:48 +0100
-Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Thu, 13 Feb 2025 08:19:48 +0100 (CET)
-Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
-	by mail-auth.avm.de (Postfix) with ESMTPA id 39DA480175;
-	Thu, 13 Feb 2025 08:19:49 +0100 (CET)
-Received: by buildd.core.avm.de (Postfix, from userid 1000)
-	id 2A47B182D0A; Thu, 13 Feb 2025 08:19:49 +0100 (CET)
-Date: Thu, 13 Feb 2025 08:19:49 +0100
-From: Nicolas Schier <n.schier@avm.de>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>, linux-kbuild@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	moderated for non-subscribers <linux-arm-kernel@lists.infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH] kbuild: rust: add rustc-min-version support function
-Message-ID: <20250213-masked-wombat-of-painting-8afb53@buildd>
-References: <20250210164245.282886-1-ojeda@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MrMcJV6g"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-220d398bea9so7229075ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 23:21:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739431298; x=1740036098; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BU3EWX6NrO4XjLrf6OxWj7A2H39JQ/DGxsHXZ8vqb08=;
+        b=MrMcJV6giunKfCKuBxa1bhC0XUESqdtwh4t1H0APRjEFy6eqTtdZwq5dl/g3wmD+vt
+         L4KjTvmU+wT4SAV1xNoqKxThtZaUvXWUloH+lwvXgx1/xPj3JuXlfEuMjJyUhMs6M9SR
+         RTKN29ptzYNkiYkWx0hGoAiFqqhb9QiwzavoY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739431298; x=1740036098;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BU3EWX6NrO4XjLrf6OxWj7A2H39JQ/DGxsHXZ8vqb08=;
+        b=PPyqI0Z4IS75bRGMyB30e7yCHAtSZAqSgr9PYHjMCcD/fwwykP/sG0Q2k8vbpd8Ssg
+         9MvbgCzxEpHpcI2+bIKTxYlhrm+0miG7SU+l/AUjmzqPnFi2/ulLJssKf64vumkAgNHf
+         lzymvEKVdMmkmzbOIm2IZL8c+YGuP/2npeTjPNs4gasm0UsVAJ+oqYj1ynK4U32vQNRC
+         sSYm+5aD+al0cmL3/TnCOb0YYJXpNHIEsqOYw6QKTBEXuSFaVpiIZ2WmYf65Wuih6+58
+         rqD3opiMLRGMXhWBUKDiimvPQGjtWLldfn7hqpzNc4FS2rguY6EhYiIAoTMT9zOn2R0p
+         +zVA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/jOdfi4UPIUqQgPyvfGFPtyaZius0zPGS/Vs+2WUXcUVOvvg7LSa4ikXuLgo4CZgxzKs380OVJ2BssJQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIAJ0ZApwNeq3H8gZrMRrHHYpoM8ctcwB1JTm4Tk0+LIM4G9gx
+	WisT2Ylbf2LQUSgexxBN4u8yQWWDgbieeAc/MBgTfB5ss5gDbmFJDcm+X+C0bw==
+X-Gm-Gg: ASbGncsm85LsFKRPTeQ7xjA44K1yVpTWftFOTMqXBGgtr2HEyUfL8DjZIG1tXqOmlpG
+	cE8cYA1rYE8JO1lRpbM/IzZKb4ES6aVrEiFCxJh/4M8mi59gj/wplh+HwbOn+rOIkmY5ob5KVsI
+	j1yQuSybOWuD6hWsRdvhnLS50CxzHeOqOkT6kOvkzirQOPltAzHJirF6ZqhvABzn5287WiqCp2m
+	cEjlUgHlcx7VNMddVI3ByycCbcSNE/548aid/jhsTlKg4vNi2D+Anp3qC4cpw7KURoKTQOkUhCU
+	N4MdMMMjH9kfsZMXnOs=
+X-Google-Smtp-Source: AGHT+IGrrMRSC9vH8hDZG+Sr73gos+a8WvcZbQzmGErKu6FhLXQnnI1jbWLKVzxORygaoGElOvivdg==
+X-Received: by 2002:a05:6a21:78a8:b0:1e1:cdff:5f18 with SMTP id adf61e73a8af0-1ee5c72e4f4mr10509093637.4.1739431298139;
+        Wed, 12 Feb 2025 23:21:38 -0800 (PST)
+Received: from google.com ([2401:fa00:8f:203:3ed3:97ce:5f5f:1f61])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-adb57c5e00dsm573320a12.12.2025.02.12.23.21.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 23:21:37 -0800 (PST)
+Date: Thu, 13 Feb 2025 16:21:32 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Kairui Song <ryncsn@gmail.com>
+Subject: Re: [PATCHv4 14/17] zsmalloc: make zspage lock preemptible
+Message-ID: <huhxeq3k4q5lscj5xy6lldivku2wps6midxmt4swr67mce4nva@7mxupdxphs5a>
+References: <6vtpamir4bvn3snlj36tfmnmpcbd6ks6m3sdn7ewmoles7jhau@nbezqbnoukzv>
+ <Z6O2oPP7lyRGXer_@google.com>
+ <6uhsj4bckhursiblkxe54azfgyqal6tq2de3lpkxw6omkised6@uylodcjruuei>
+ <Z6ThGFt6wyNpx9xi@google.com>
+ <wnffho5jguo24wfy3qv5tvovoargezbu4kcvpk43ludrhyfo6i@6ogtvk5ivfjc>
+ <Z6Z2l9uovxAiED6q@google.com>
+ <droaoze6w4atf7guiv6t4imhcmkpteyvoaigdnw5p3vdg75ebx@m56xi2y527i4>
+ <Z6y_3xS_8pmZ2bCz@google.com>
+ <rbco2k74plqedtqvn6ebu6wwssy5urw5mjvsk6n576d3urbjnx@tq43anmdvq35>
+ <25268fbedb82a06ba0c13e2c490b164846ef508b@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250210164245.282886-1-ojeda@kernel.org>
-X-purgate-ID: 149429::1739431188-4EA08E17-E08D2BED/0/0
-X-purgate-type: clean
-X-purgate-size: 3033
-X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
-X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
-X-purgate: clean
+In-Reply-To: <25268fbedb82a06ba0c13e2c490b164846ef508b@linux.dev>
 
-On Mon, Feb 10, 2025 at 05:42:45PM +0100, Miguel Ojeda wrote:
-> Introduce `rustc-min-version` support function that mimics
-> `{gcc,clang}-min-version` ones, following commit 88b61e3bff93
-> ("Makefile.compiler: replace cc-ifversion with compiler-specific macros").
-> 
-> In addition, use it in the first use case we have in the kernel (which
-> was done independently to minimize the changes needed for the fix).
-> 
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-> ---
-> This is based on top of the fix so that the fix remains as simple as
-> possible:
-> 
->     https://lore.kernel.org/rust-for-linux/20250210163732.281786-1-ojeda@kernel.org/
-> 
->  Documentation/kbuild/makefiles.rst | 14 ++++++++++++++
->  arch/arm64/Makefile                |  2 +-
->  scripts/Makefile.compiler          |  4 ++++
->  3 files changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-> index d36519f194dc..2608aa32c762 100644
-> --- a/Documentation/kbuild/makefiles.rst
-> +++ b/Documentation/kbuild/makefiles.rst
-> @@ -670,6 +670,20 @@ cc-cross-prefix
->              endif
->      endif
-> 
-> +$(RUSTC) support functions
-> +--------------------------
-> +
-> +rustc-min-version
-> +  rustc-min-version tests if the value of $(CONFIG_RUSTC_VERSION) is greater
-> +  than or equal to the provided value and evaluates to y if so.
-> +
-> +  Example::
-> +
-> +    rustflags-$(call rustc-min-version, 108500) := -Cfoo
-> +
-> +  In this example, rustflags-y will be assigned the value -Cfoo if
-> +  $(CONFIG_RUSTC_VERSION) is >= 1.85.0.
-> +
->  $(LD) support functions
->  -----------------------
-> 
-> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-> index 2b25d671365f..1d5dfcd1c13e 100644
-> --- a/arch/arm64/Makefile
-> +++ b/arch/arm64/Makefile
-> @@ -48,7 +48,7 @@ KBUILD_CFLAGS	+= $(CC_FLAGS_NO_FPU) \
->  KBUILD_CFLAGS	+= $(call cc-disable-warning, psabi)
->  KBUILD_AFLAGS	+= $(compat_vdso)
-> 
-> -ifeq ($(call test-ge, $(CONFIG_RUSTC_VERSION), 108500),y)
-> +ifeq ($(call rustc-min-version, 108500),y)
->  KBUILD_RUSTFLAGS += --target=aarch64-unknown-none-softfloat
->  else
->  KBUILD_RUSTFLAGS += --target=aarch64-unknown-none -Ctarget-feature="-neon"
-> diff --git a/scripts/Makefile.compiler b/scripts/Makefile.compiler
-> index 8c1029687e2e..8956587b8547 100644
-> --- a/scripts/Makefile.compiler
-> +++ b/scripts/Makefile.compiler
-> @@ -67,6 +67,10 @@ gcc-min-version = $(call test-ge, $(CONFIG_GCC_VERSION), $1)
->  # Usage: cflags-$(call clang-min-version, 110000) += -foo
->  clang-min-version = $(call test-ge, $(CONFIG_CLANG_VERSION), $1)
-> 
-> +# rustc-min-version
-> +# Usage: rustc-$(call rustc-min-version, 108500) += -Cfoo
-> +rustc-min-version = $(call test-ge, $(CONFIG_RUSTC_VERSION), $1)
-> +
->  # ld-option
->  # Usage: KBUILD_LDFLAGS += $(call ld-option, -X, -Y)
->  ld-option = $(call try-run, $(LD) $(KBUILD_LDFLAGS) $(1) -v,$(1),$(2),$(3))
-> --
-> 2.48.1
+On (25/02/13 02:57), Yosry Ahmed wrote:
+> > > I think we also need some high level testing (e.g. concurrent
+> > >
+> > >  swapins/swapouts) to find that out. I think that's what Kairui's testing
+> > >
+> > >  covers.
+> > >
+> >
+> > I do a fair amount of high-level testing: heavy parallel (make -j36 and
+> >
+> > parallel dd) workloads (multiple zram devices configuration - zram0 ext4,
+> >
+> > zram1 writeback device, zram2 swap) w/ and w/o lockdep. In addition I also
+> >
+> > run these workloads under heavy memory pressure (a 4GB VM), when oom-killer
+> >
+> > starts to run around with a pair of scissors. But it's mostly regression
+> >
+> > testing.
+> >
 
-Reviewed-by: Nicolas Schier <n.schier@avm.de>
+// JFI it seems your email client/service for some reason injects a lot
+// of empty lines
+
+> If we can get some numbers from these parallel workloads that would be better than the perf stats imo.
+
+make -j24  CONFIG_PREEMPT
+
+
+BASE
+====
+
+1363.64user 157.08system 1:30.89elapsed 1673%CPU (0avgtext+0avgdata 825692maxresident)k
+
+lock stats
+
+                              class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
+                   &pool->migrate_lock-R:             0              0           0.00           0.00           0.00           0.00          10001         702081           0.14         104.74      125571.64           0.18
+                            &class->lock:             1              1           0.25           0.25           0.25           0.25           6320         840542           0.06         809.72      191214.87           0.23
+                         &zspage->lock-R:             0              0           0.00           0.00           0.00           0.00           6452         664129           0.12         660.24      201888.61           0.30
+                &zram->table[index].lock:             0              0           0.00           0.00           0.00           0.00        1716362        3096466           0.07         811.10      365551.24           0.12
+                            &zstrm->lock:             0              0           0.00           0.00           0.00           0.00              0         664129           1.68        1004.80    14853571.32          22.37
+
+PATCHED
+=======
+
+1366.50user 154.89system 1:30.33elapsed 1684%CPU (0avgtext+0avgdata 825692maxresident)k
+
+lock stats
+
+                              class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
+                         &pool->lock#3-R:             0              0           0.00           0.00           0.00           0.00           3648         701979           0.12          44.09      107333.02           0.15
+                            &class->lock:             0              0           0.00           0.00           0.00           0.00           5038         840434           0.06        1245.90      211814.60           0.25
+                         zsmalloc-page-R:             0              0           0.00           0.00           0.00           0.00              0         664078           0.05         699.35      236641.75           0.36
+                        zram-entry->lock:             0              0           0.00           0.00           0.00           0.00              0        3098328           0.06        2987.02      313339.11           0.10
+   &per_cpu_ptr(comp->stream, cpu)->lock:             0              0           0.00           0.00           0.00           0.00             23         664078           1.77        7071.30    14838397.61          22.34
