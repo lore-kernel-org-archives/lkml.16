@@ -1,364 +1,119 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2918D204C15
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 04:44:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BEC4A01
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 04:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739421873; cv=none; b=mudCBqeB+1mEc0uUUaMgoBK5+g7tphSrGjrid7zG8kteudXG9dLmqTN/NuehOR2kJZUTmJUg2aC1qL3k1fZGobv9h78cW9+GO/jEcHK4kpOOWNKsfg+09/ox96imc8YODd+wd6z1FB19O5vtpKJv/QBNjdsfc45VoMBog+Od5B0=
+	t=1739422212; cv=none; b=npQrhMDDJxyYPHxXmaiUZhNc8n8bpzXswmu72nANyCwdcVBVprcHl98XbBGXvA/YMXeSO+dKQ/aYIQOtj+G3QKQgYHo7zclcTJEg6f+mOfeU5IRb1LabUBJCEDlV3/ZEwxjIB6hOOts3n9GkNvIjZZyd6wXBouNohrAn1N7A0nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739421873; c=relaxed/simple;
-	bh=6oelQRv5vY9tqZgO91bQBN5JARJo6ydy8CdahFUmdvg=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=TKcUjcuhef8tnemAC28YKGRebrEdGnjQOz/m9Qn41dkLqW89rmUl+Unt5j9DAb5e6L85M0b7K8d2fmGarwaI7PQO71/ZEiSdUVZX3TEULafbIqXpeO6hEGMvES7UgFQ9J584abefRfoZDRrZ1oL3+Os/BpMnIQvb13VxG25t8i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=HGJUUeKs; arc=none smtp.client-ip=203.254.224.25
+	s=arc-20240116; t=1739422212; c=relaxed/simple;
+	bh=1qutgmmCyzqh7lmkL8B2/VZyPUL+g3Ct4p0UPt0iBTk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 References; b=Qgs1QyAk8qdMZAvbQYxnJcHm2LiYqdcq142W3srokKJ1cN5Dx/+akxYBJbU7th+VEKTnhcLPQiEsw2R1gGsyjTFp9pX/EQ1huoRVViEIUS2lAlHEnkO7+hvi8hmlUWj3vv1q+w39XsJ5p+D4BXjO/C22NMoqP1J/69E8a7DryEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nOCFxsqG; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HGJUUeKs"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250213044429epoutp02f5d346e0df66a349d561a79ae6510206~jqvlZHwWF3171231712epoutp02r
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 04:44:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250213044429epoutp02f5d346e0df66a349d561a79ae6510206~jqvlZHwWF3171231712epoutp02r
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nOCFxsqG"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250213045007epoutp0373b91095f5e19cfe6a0105b0ce9f250e~jq0giOusX2434824348epoutp03R
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 04:50:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250213045007epoutp0373b91095f5e19cfe6a0105b0ce9f250e~jq0giOusX2434824348epoutp03R
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1739421869;
-	bh=Nboyogv1mQ9wZ1hrsaNVtoIMK2Z9r1c3kpg7/2WbzPQ=;
+	s=mail20170921; t=1739422207;
+	bh=UjyVcvuqR69NF8lFY3Le8i9E2SxNIAgCWkUw1oNQ8B8=;
 	h=From:To:Cc:Subject:Date:References:From;
-	b=HGJUUeKsHmp4rAktdT3l5o2Vd+O9Plax+tyGRprk985Z+TYFJdVJur5P1W+bd+CIS
-	 vLqqa8sGYnjf62nJnvd51YqLMdSkoObgOstHlAD/Q8DNOj3YN1gCzXo3dJMu+g/AwW
-	 /cW9xphYkxqAsjQRG0K9Vt7MHWCmNO/pB2m0XMrk=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	b=nOCFxsqG0848DmnQKYeS8caRhTKhwSfNgwI+fdnxNnqWjpCKW+XXfhQWtveTdlcuh
+	 XEOOHISNo9vSYqiXRD/VN+Q7CGlhJFPIchLZOYsFUd4i3y86S4fCCob6grR2SOEiQA
+	 03lJbX+rWr8fyUsAuyo1itql6SlyLHEbiHdUCeCI=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
 	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20250213044428epcas5p1373a28dc7c0e465179d72bb2729747de~jqvk1aI2X1954419544epcas5p1I;
-	Thu, 13 Feb 2025 04:44:28 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4YtjJV1gWlz4x9Q9; Thu, 13 Feb
-	2025 04:44:26 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	C6.59.19933.AA87DA76; Thu, 13 Feb 2025 13:44:26 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250213041925epcas5p4d37d50047359b923efd9fdcaf4b2f6d2~jqZszLiDZ0682606826epcas5p4e;
-	Thu, 13 Feb 2025 04:19:25 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250213041925epsmtrp18442c9ee4664b9279916ab0f4d7579f9~jqZsyBTaE0828408284epsmtrp1E;
-	Thu, 13 Feb 2025 04:19:25 +0000 (GMT)
-X-AuditID: b6c32a4a-b87c770000004ddd-76-67ad78aa5c6d
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	A9.AD.18949.CC27DA76; Thu, 13 Feb 2025 13:19:24 +0900 (KST)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250213041922epsmtip258a82fe1948022b022d2ebaa50688558~jqZp4ovui0454604546epsmtip22;
-	Thu, 13 Feb 2025 04:19:21 +0000 (GMT)
-From: Swathi K S <swathi.ks@samsung.com>
-To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com
-Cc: rmk+kernel@armlinux.org.uk, swathi.ks@samsung.com,
-	fancer.lancer@gmail.com, krzk@kernel.org, Joao.Pinto@synopsys.com,
-	treding@nvidia.com, ajayg@nvidia.com, Jisheng.Zhang@synaptics.com,
-	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2] net: stmmac: refactor clock management in EQoS
- driver
-Date: Thu, 13 Feb 2025 09:45:59 +0530
-Message-Id: <20250213041559.106111-1-swathi.ks@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WTe0xTVxzHc+7tk6V4Uxg7YHBQJRkuhZbRcnAwzURykRmZskQMpqv0ru3o
-	K72FIcsmmwSUIQwVIkgYOpABoqUCKw8FMTBg2QB5iYsLYJlDttEAouORraVl+++T3+/7Pb/H
-	OYeD8wdYfhy1zkQZdXKNgOXBaLkfHCysy2hQioYquGjk/gYL/T1XAlDNlJWJygezGWi2d4aN
-	zGfLmWiyqxVDJZM1DPRypgdHg4NmNhpqKWAiy5NxJhppK2ehvHEbE1VsNDBRb6UPWvnxD4Cu
-	NS+z0bS9g40eFBZhaLlxko1+WfPc50OOjA/jZFPtJEbOFjazydayx2yy0pJGWurOscjbVafJ
-	VusSRp4/8xeLXLg7xiILmuoAee+umLww+rPD2LkEyCXLjoRtx1OjVJRcQRkDKF2KXqHWKaMF
-	8Udl+2USqUgsFEeiCEGATq6logUx7yUIY9Uax/iCgHS5Js0RSpDTtCD0nSijPs1EBaj0tCla
-	QBkUGkO4IYSWa+k0nTJER5n2iEWiMIlD+GGqauybfrbhRmTG06rrjCzQEZoHuBxIhMMvrWV4
-	HvDg8Il2AK89bGA5E3xiEcDnw96uxAqA39qHHCrOpqP91l5X/A6AF/OfuN3LAOb0PGI73Szi
-	DTjx3feb7E1UAThz3ccpwol+DN5byWc4E15EIlzYqN0UMYggaH1+G3cyj3gbtg3PsV39vQ7r
-	zV24i20caO/iuTgGjvY0uTVe8NkPW+wH5wpz3CyD9QVjDBer4OPVIpaL98Ku0XKGcxqcCIa3
-	2tyr8IfFAzcxJ+OEJzy/ZsNccR60VmzxTrgxP+4+0he2VC+4S5HQYp8Ers2dgJb1Nvxr4F/2
-	f4VKAOqAL2WgtUqKlhjCdNQn/91Til5rAZuPevdBK5iesod0A4wDugHk4AJvHiy5oeTzFPJT
-	mZRRLzOmaSi6G0gcKyvC/V5N0Tt+hc4kE4dHisKlUml45FtSseA13pnWbCWfUMpNVCpFGSjj
-	lg/jcP2yMMViL/an9YPx3+I9Xrxsn4i5mXQBnToGp0oHfperYxnzkS8CFUG2kzts9LkHlyOO
-	XKpXnQh8evX97p212wI/y5+VFJs/pxIbP6o5gAkTss2XJ/y4wccOVx8q/7jvYPKlnt5pfmnU
-	7Jp20KN+/kAKNzf3q4GzccyKOr3slQTOeqMks2riYRw/h9EMEvuK8WXPjPTT9JCoL6TzUPq6
-	etdsi+yn6X9OLniZn4Xu0wuThQou96omKeRRZZIpYFfUYmnyYd/sL379NFNqf7erP8u7g/2m
-	uml9+52gI2ua6pLk41fsq62rV7ZrcktS43LSM6KFe2ojijvj/Y/CuLAYbXNskvfF/QIGrZKL
-	d+NGWv4v0onNM10EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOLMWRmVeSWpSXmKPExsWy7bCSvO6ZorXpBgvv2FhcPvyXzeLny2mM
-	Fssf7GC1mHO+hcXi6bFH7BYbOuawWtw8sJPJYtrN5SwWPx4dZbY4f34Du8WFbX2sFpseX2O1
-	uLxrDptF17UnrBbz/q5ltTi2QMzi2+k3jBaLtn5ht3j4YQ+7xaX+iUwWXzbeZLe4/ZvPQczj
-	8rWLzB5bVt5k8njav5XdY+esu+weCzaVemxa1cnmsXlJvcfOHZ+ZPHqb37F5vN93lc2jb8sq
-	Ro+D+ww9Jl05B9S4/zOjx+dNcgH8UVw2Kak5mWWpRfp2CVwZV+efZC9YY1nxfMkylgbGPfpd
-	jBwcEgImErvX23cxcnEICexmlLjSeJS1i5ETKC4p8al5KpQtLLHy33N2iKJPjBJnXnaygyTY
-	BDQkrq/YDpYQEVjDKNFy+CgjiMMscJ1JYv7XX2wgK4QFgiSae+xBGlgEVCV2fN3MDGLzClhL
-	7Lr4kh1ig7zE6g0HmCcw8ixgZFjFKJlaUJybnltsWGCUl1quV5yYW1yal66XnJ+7iREcN1pa
-	Oxj3rPqgd4iRiYPxEKMEB7OSCK/EtDXpQrwpiZVVqUX58UWlOanFhxilOViUxHm/ve5NERJI
-	TyxJzU5NLUgtgskycXBKNTCttmRSzT/nuM44aemLSZyN0Y3b41eIHP+18mlkIcvrS1yr1C74
-	MkyY06c5cx3Hgw/Lqnrym0u4XNepHIgylDbNTP2d1pZvcfaKycX5qyU56h5IvCu5FGqzPfDG
-	u+s5iZNuPlq3446eqF3se/Pnlk7/p/22f67VrblYd89rDW7vA+deKVza/CX6eNqptDgOvStL
-	XP2nBc5Qv6zS9Oqi6KP/1x6bzbhUdF66wUWI6wOvuFXCq9/he0uL9adNnC/769T+YAZ5xTNH
-	lCZEhfyrEt5ZrSl50VnSLK55pX8bywfv6Yfitlvvr9jHVryC8fUd3QNatr7TC8wKeOKnpFmx
-	evse73j6aX/A+s4dC5jcdQOVWIozEg21mIuKEwF27ye7CgMAAA==
-X-CMS-MailID: 20250213041925epcas5p4d37d50047359b923efd9fdcaf4b2f6d2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250213041925epcas5p4d37d50047359b923efd9fdcaf4b2f6d2
-References: <CGME20250213041925epcas5p4d37d50047359b923efd9fdcaf4b2f6d2@epcas5p4.samsung.com>
+	20250213045006epcas5p139ff638558a7d10b1d42ec1598da5137~jq0gKpJ_j2465824658epcas5p1Y;
+	Thu, 13 Feb 2025 04:50:06 +0000 (GMT)
+Received: from epcpadp1new (unknown [182.195.40.141]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4YtjR26s69z4x9Q7; Thu, 13 Feb
+	2025 04:50:06 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250213042208epcas5p2f9dd1305a647d26d6ee55d15dd1967dc~jqcFXN5Dj1925619256epcas5p2r;
+	Thu, 13 Feb 2025 04:22:08 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250213042208epsmtrp214b24b092a4717951d8084915dc91119~jqcFWYbCy2954629546epsmtrp2H;
+	Thu, 13 Feb 2025 04:22:08 +0000 (GMT)
+X-AuditID: b6c32a52-205fe700000083ab-a5-67ad73700fe2
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	11.BD.33707.0737DA76; Thu, 13 Feb 2025 13:22:08 +0900 (KST)
+Received: from INBRO002811.samsungds.net (unknown [107.122.5.126]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250213042206epsmtip1b37fb1abdb2f33eab02cb87e26605067~jqcC6j9-J3201432014epsmtip1b;
+	Thu, 13 Feb 2025 04:22:06 +0000 (GMT)
+From: Selvarasu Ganesan <selvarasu.g@samsung.com>
+To: mathias.nyman@intel.com, gregkh@linuxfoundation.org,
+	WeitaoWang-oc@zhaoxin.com, Thinh.Nguyen@synopsys.com,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: jh0801.jung@samsung.com, dh10.jung@samsung.com, naushad@samsung.com,
+	akash.m5@samsung.com, h10.kim@samsung.com, eomji.oh@samsung.com,
+	alim.akhtar@samsung.com, thiagu.r@samsung.com, muhammed.ali@samsung.com,
+	pritam.sutar@samsung.com, cpgs@samsung.com, Selvarasu Ganesan
+	<selvarasu.g@samsung.com>
+Subject: [PATCH v2 0/2] Fix unassigned variables in xhci driver
+Date: Thu, 13 Feb 2025 09:51:24 +0530
+Message-ID: <1279309678.121739422206958.JavaMail.epsvc@epcpadp1new>
+X-Mailer: git-send-email 2.46.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKLMWRmVeSWpSXmKPExsWy7bCSnG5B8dp0g/U7jCzeXF3FavFg3jY2
+	i5eHNC3uLJjGZHFq+UImi+bF69ks/t6+yGpx9+EPFovLu+awWSxa1sps0bxpCqvF+RddrBaf
+	jv5ntXh2bwWbxZHlH5ksVjQDZVctOMBu8ejnXCYHIY/Fe14yeeyfu4bdo2/LKkaPLfs/M3p8
+	3iTn8evWLZYAtigum5TUnMyy1CJ9uwSujOuPfjIXvGStuPLjK3MD40eWLkZODgkBE4lj7ZPY
+	uxi5OIQEtjNKPD85mQkiIS3xelYXI4QtLLHy33Oooq+MEk9fbWTuYuTgYBMwlHh2wgYkLiKw
+	gVHi6pnZrCANzAIHmCTmX1EHsYUF7CW+nL3LCFLPIqAqcXinNUiYV8BK4smvI1DzNSXW7t3D
+	BBEXlDg58wkLxBh5ieats5knMPLNQpKahSS1gJFpFaNoakFxbnpucoGhXnFibnFpXrpecn7u
+	JkZwTGgF7WBctv6v3iFGJg7GQ4wSHMxKIrwS09akC/GmJFZWpRblxxeV5qQWH2KU5mBREudV
+	zulMERJITyxJzU5NLUgtgskycXBKNTApLf71knnrtAObMy/nXDw+r/9G2KoFs2OLvn/ardjc
+	4aGYaViiJVe0VrDnLGfa+nvfHs33kr+g7Pq9bDZ/Y8aX+9mKVa4HTij7q0eW8B8vTL+hs7j/
+	+SuPXXZ7C/keW7s8zz0SMHu6+NSs9Pnfb6senFooFmJc8P9hV633B85q7k0TtkddaQgNO5G0
+	r75hWYqh9Z/3zOYnvsu5/nTLUhbvn3pqTTCXi987657k5du+PY5wq19u9No4SN9Sf9Uli3Wr
+	ndyDVecsX5m50uHVNhv7REmH6HrNNZzTAzeebLyxb4ea0pP2u9z1H0xOLnx759Dx6mlsET0K
+	Ll+DHfpCDXfNUnKdbTTtUIMT31vFo0eUWIozEg21mIuKEwFnuVP3+AIAAA==
+X-CMS-MailID: 20250213042208epcas5p2f9dd1305a647d26d6ee55d15dd1967dc
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250213042208epcas5p2f9dd1305a647d26d6ee55d15dd1967dc
+References: <CGME20250213042208epcas5p2f9dd1305a647d26d6ee55d15dd1967dc@epcas5p2.samsung.com>
 
-Refactor clock management in EQoS driver for code reuse and to avoid
-redundancy. This way, only minimal changes are required when a new platform
-is added.
+This series of patches to fix the following smatch errors from
+xhci driver:
 
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Swathi K S <swathi.ks@samsung.com>
----
-Changes since v1:
-1. Respinning the patch including only the ML reported by get_maintainers
-output
-2. Adding the target tree ('net-next') in the subject prefix
+drivers/usb/host/xhci-mem.c:2060 xhci_add_in_port() error: unassigned variable 'tmp_minor_revision'
+drivers/usb/host/xhci-hub.c:71 xhci_create_usb3x_bos_desc() error: unassigned variable 'bcdUSB'
 
- .../stmicro/stmmac/dwmac-dwc-qos-eth.c        | 131 +++++-------------
- include/linux/stmmac.h                        |   2 +
- 2 files changed, 34 insertions(+), 99 deletions(-)
+Change in v2: 
+ - Fix bot error from Greg
+ - https://lore.kernel.org/linux-usb/2025021234-reaction-womankind-1c0b@gregkh/
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
-index bd4eb187f8c6..1fadb8ba1d2f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
-@@ -29,10 +29,8 @@ struct tegra_eqos {
- 	void __iomem *regs;
- 
- 	struct reset_control *rst;
--	struct clk *clk_master;
- 	struct clk *clk_slave;
- 	struct clk *clk_tx;
--	struct clk *clk_rx;
- 
- 	struct gpio_desc *reset;
- };
-@@ -123,49 +121,14 @@ static int dwc_qos_probe(struct platform_device *pdev,
- 			 struct plat_stmmacenet_data *plat_dat,
- 			 struct stmmac_resources *stmmac_res)
- {
--	int err;
--
--	plat_dat->stmmac_clk = devm_clk_get(&pdev->dev, "apb_pclk");
--	if (IS_ERR(plat_dat->stmmac_clk)) {
--		dev_err(&pdev->dev, "apb_pclk clock not found.\n");
--		return PTR_ERR(plat_dat->stmmac_clk);
--	}
--
--	err = clk_prepare_enable(plat_dat->stmmac_clk);
--	if (err < 0) {
--		dev_err(&pdev->dev, "failed to enable apb_pclk clock: %d\n",
--			err);
--		return err;
--	}
--
--	plat_dat->pclk = devm_clk_get(&pdev->dev, "phy_ref_clk");
--	if (IS_ERR(plat_dat->pclk)) {
--		dev_err(&pdev->dev, "phy_ref_clk clock not found.\n");
--		err = PTR_ERR(plat_dat->pclk);
--		goto disable;
--	}
--
--	err = clk_prepare_enable(plat_dat->pclk);
--	if (err < 0) {
--		dev_err(&pdev->dev, "failed to enable phy_ref clock: %d\n",
--			err);
--		goto disable;
-+	for (int i = 0; i < plat_dat->num_clks; i++) {
-+		if (strcmp(plat_dat->clks[i].id, "apb_pclk") == 0)
-+			plat_dat->stmmac_clk = plat_dat->clks[i].clk;
-+		else if (strcmp(plat_dat->clks[i].id, "phy_ref_clk") == 0)
-+			plat_dat->pclk = plat_dat->clks[i].clk;
- 	}
- 
- 	return 0;
--
--disable:
--	clk_disable_unprepare(plat_dat->stmmac_clk);
--	return err;
--}
--
--static void dwc_qos_remove(struct platform_device *pdev)
--{
--	struct net_device *ndev = platform_get_drvdata(pdev);
--	struct stmmac_priv *priv = netdev_priv(ndev);
--
--	clk_disable_unprepare(priv->plat->pclk);
--	clk_disable_unprepare(priv->plat->stmmac_clk);
- }
- 
- #define SDMEMCOMPPADCTRL 0x8800
-@@ -278,52 +241,19 @@ static int tegra_eqos_probe(struct platform_device *pdev,
- 	if (!is_of_node(dev->fwnode))
- 		goto bypass_clk_reset_gpio;
- 
--	eqos->clk_master = devm_clk_get(&pdev->dev, "master_bus");
--	if (IS_ERR(eqos->clk_master)) {
--		err = PTR_ERR(eqos->clk_master);
--		goto error;
--	}
--
--	err = clk_prepare_enable(eqos->clk_master);
--	if (err < 0)
--		goto error;
--
--	eqos->clk_slave = devm_clk_get(&pdev->dev, "slave_bus");
--	if (IS_ERR(eqos->clk_slave)) {
--		err = PTR_ERR(eqos->clk_slave);
--		goto disable_master;
--	}
--
--	data->stmmac_clk = eqos->clk_slave;
--
--	err = clk_prepare_enable(eqos->clk_slave);
--	if (err < 0)
--		goto disable_master;
--
--	eqos->clk_rx = devm_clk_get(&pdev->dev, "rx");
--	if (IS_ERR(eqos->clk_rx)) {
--		err = PTR_ERR(eqos->clk_rx);
--		goto disable_slave;
--	}
--
--	err = clk_prepare_enable(eqos->clk_rx);
--	if (err < 0)
--		goto disable_slave;
--
--	eqos->clk_tx = devm_clk_get(&pdev->dev, "tx");
--	if (IS_ERR(eqos->clk_tx)) {
--		err = PTR_ERR(eqos->clk_tx);
--		goto disable_rx;
-+	for (int i = 0; i < data->num_clks; i++) {
-+		if (strcmp(data->clks[i].id, "slave_bus") == 0) {
-+			eqos->clk_slave = data->clks[i].clk;
-+			data->stmmac_clk = eqos->clk_slave;
-+		} else if (strcmp(data->clks[i].id, "tx") == 0) {
-+			eqos->clk_tx = data->clks[i].clk;
-+		}
- 	}
- 
--	err = clk_prepare_enable(eqos->clk_tx);
--	if (err < 0)
--		goto disable_rx;
--
- 	eqos->reset = devm_gpiod_get(&pdev->dev, "phy-reset", GPIOD_OUT_HIGH);
- 	if (IS_ERR(eqos->reset)) {
- 		err = PTR_ERR(eqos->reset);
--		goto disable_tx;
-+		return err;
- 	}
- 
- 	usleep_range(2000, 4000);
-@@ -365,15 +295,7 @@ static int tegra_eqos_probe(struct platform_device *pdev,
- 	reset_control_assert(eqos->rst);
- reset_phy:
- 	gpiod_set_value(eqos->reset, 1);
--disable_tx:
--	clk_disable_unprepare(eqos->clk_tx);
--disable_rx:
--	clk_disable_unprepare(eqos->clk_rx);
--disable_slave:
--	clk_disable_unprepare(eqos->clk_slave);
--disable_master:
--	clk_disable_unprepare(eqos->clk_master);
--error:
-+
- 	return err;
- }
- 
-@@ -383,10 +305,6 @@ static void tegra_eqos_remove(struct platform_device *pdev)
- 
- 	reset_control_assert(eqos->rst);
- 	gpiod_set_value(eqos->reset, 1);
--	clk_disable_unprepare(eqos->clk_tx);
--	clk_disable_unprepare(eqos->clk_rx);
--	clk_disable_unprepare(eqos->clk_slave);
--	clk_disable_unprepare(eqos->clk_master);
- }
- 
- struct dwc_eth_dwmac_data {
-@@ -398,7 +316,6 @@ struct dwc_eth_dwmac_data {
- 
- static const struct dwc_eth_dwmac_data dwc_qos_data = {
- 	.probe = dwc_qos_probe,
--	.remove = dwc_qos_remove,
- };
- 
- static const struct dwc_eth_dwmac_data tegra_eqos_data = {
-@@ -434,9 +351,19 @@ static int dwc_eth_dwmac_probe(struct platform_device *pdev)
- 	if (IS_ERR(plat_dat))
- 		return PTR_ERR(plat_dat);
- 
-+	ret = devm_clk_bulk_get_all(&pdev->dev, &plat_dat->clks);
-+	if (ret < 0)
-+		return dev_err_probe(&pdev->dev, ret, "Failed to retrieve all required clocks\n");
-+	plat_dat->num_clks = ret;
-+
-+	ret = clk_bulk_prepare_enable(plat_dat->num_clks, plat_dat->clks);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Failed to enable clocks\n");
-+
- 	ret = data->probe(pdev, plat_dat, &stmmac_res);
- 	if (ret < 0) {
- 		dev_err_probe(&pdev->dev, ret, "failed to probe subdriver\n");
-+		clk_bulk_disable_unprepare(plat_dat->num_clks, plat_dat->clks);
- 		return ret;
- 	}
- 
-@@ -451,7 +378,8 @@ static int dwc_eth_dwmac_probe(struct platform_device *pdev)
- 	return ret;
- 
- remove:
--	data->remove(pdev);
-+	if (data->remove)
-+		data->remove(pdev);
- 
- 	return ret;
- }
-@@ -459,10 +387,15 @@ static int dwc_eth_dwmac_probe(struct platform_device *pdev)
- static void dwc_eth_dwmac_remove(struct platform_device *pdev)
- {
- 	const struct dwc_eth_dwmac_data *data = device_get_match_data(&pdev->dev);
-+	struct plat_stmmacenet_data *plat_data = dev_get_platdata(&pdev->dev);
- 
- 	stmmac_dvr_remove(&pdev->dev);
- 
--	data->remove(pdev);
-+	if (data->remove)
-+		data->remove(pdev);
-+
-+	if (plat_data)
-+		clk_bulk_disable_unprepare(plat_data->num_clks, plat_data->clks);
- }
- 
- static const struct of_device_id dwc_eth_dwmac_match[] = {
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index c9878a612e53..24422ac4e417 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -254,6 +254,8 @@ struct plat_stmmacenet_data {
- 	struct clk *clk_ptp_ref;
- 	unsigned long clk_ptp_rate;
- 	unsigned long clk_ref_rate;
-+	struct clk_bulk_data *clks;
-+	int num_clks;
- 	unsigned int mult_fact_100ns;
- 	s32 ptp_max_adj;
- 	u32 cdc_error_adj;
+Selvarasu Ganesan (2):
+  usb: xhci: Fix unassigned variable 'tmp_minor_revision' in
+    xhci_add_in_port()
+  usb: xhci: Fix unassigned variable 'bcdUSB' in
+    xhci_create_usb3x_bos_desc()
+
+ drivers/usb/host/xhci-hub.c | 2 +-
+ drivers/usb/host/xhci-mem.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
 -- 
 2.17.1
+
 
