@@ -1,99 +1,92 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3B024A043
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1C324A06A;
+	Thu, 13 Feb 2025 19:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739476483; cv=none; b=AYdRP4vPEoQDbTF3BnTIHCpiPLV3r6mQA20OzENnpPZaemLFUGRVte+p8uJKvh0Bl6YNdEYTr3/nuGZn7dY0gj6stFalAjH08N/QaZeQTTCq7ZFoMY67+SMR3CUZlUPumklKFmGuN1gNUa91qBSBVoAzxV7jsqdEwQyeALAc9kQ=
+	t=1739476498; cv=none; b=dVStbte7OyqpVRE4yDuYyEQs7EcOte46foTlwTe/DMACxMCA2Bgb0JcuwIUqaL9wqog3er4jU3NRxUn4gwoQ3JiqS38j6HObmZisE4Ug8yPjIgqTGiws0xMJXBIsLhRrTedbzPGVe9dpUWPYh7af+gJQn9oFjjXarAOQUSSCKE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739476483; c=relaxed/simple;
-	bh=DTFVmRKr/sRy0lujQpNPmaprPhJHgvIYAyhefq5wfhs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pxOlSBTx5DFsESNr7zJWkBXUm8S7qmFFVd+Fr+JjCpjDizZKqXx7M0W7yGX2gOl1R2/x8jcKiI8EJOfVLG4OxRsBfg9bKcQbhJtayHRZ1uEKCQKLtryZH4HHfJrds7WrLSIZekBtb82XsjvMjxzaPITloUpfHaUYhBDmF1x8tuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MOnFxECN; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739476498; c=relaxed/simple;
+	bh=yQ+yZqSC2THtcqvSadW/Sj93NBtrZeQuFK22KFvPb0Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tp7DDFKIawoKttECJ0b5WhLxX3vYxODjUOj/V2Yxs2zI7Eq1zG2q0G3w1WfTJ/v4p73l5Wv2oyx3X/KBAa23ohJ2gAmQj3EG6+UFW9quwv/BFAEuFfxKGoXAceamovzbVIlSCmH25bIGWFb8id1vxvSMhy7pnnEKUyXbtN4usmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=VIf+hNUC; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MOnFxECN"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739476468;
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="VIf+hNUC"
+Received: from [192.168.244.162] (254C08C9.nat.pool.telekom.hu [37.76.8.201])
+	by mail.mainlining.org (Postfix) with ESMTPSA id C0E8DBB837;
+	Thu, 13 Feb 2025 19:54:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1739476489;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=239vtdGQF+N49EPmM+HoBTCJVsqE4ZMPXJ8M+TXlAZE=;
-	b=MOnFxECN+fL3mGdpw0PfKGtjVpIR4qzFZJS7s8hkyHScierwD8RT5IOCC+peRMIAn5bd5H
-	2tdgaamZDqpnENViNDU1Z/nXuJwm+1gc7EAMeh9HYFs8ysNcZQ96oZNIRhq/FTYmwItStz
-	uQI1aqFVR0zrKrSY3aXWuNab62/AcWk=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Don Brace <don.brace@microchip.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	storagedev@microchip.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] scsi: hpsa: Replace deprecated strncpy() with strscpy()
-Date: Thu, 13 Feb 2025 20:53:33 +0100
-Message-ID: <20250213195332.1464-3-thorsten.blum@linux.dev>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kzxpk7hXgkZO4dVg/m2OCYGoHOodAZp0rVH2XDhtHtw=;
+	b=VIf+hNUCvIuNv71AskKr8shluIKg51erdcrD9+IDHSEn2cOf77jYdIvJ0yhPkGGgiqRWnA
+	jPxco4G7fmCrnWUcliknqDksRMmc2xfFGAeR3EUUeZdE/J5G43pzY8S2He6SVKLBStDLJl
+	5MRC6D/bhe1Ff8X0e5XAd72IMSnWwobp2WtldLGCxXHh6vJLQSw0alqDorRVgPfUkEWiNB
+	WdsMkN2v/XCD2GKSGirpRj3ASlQekq/1/cX2J6GR5FCNhGJZe2K3xzGqQoMmI349kOtW2U
+	zxffI+E2aznJyIEKX6Z217ZWvu5KLbAZJcUaRQklsr6b5AxqymaGLITHw5k3dw==
+From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Date: Thu, 13 Feb 2025 20:54:47 +0100
+Subject: [PATCH v2 1/3] dt-bindings: leds: qcom-lpg: Document PM8937 PWM
+ compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Message-Id: <20250213-pm8937-pwm-v2-1-49ea59801a33@mainlining.org>
+References: <20250213-pm8937-pwm-v2-0-49ea59801a33@mainlining.org>
+In-Reply-To: <20250213-pm8937-pwm-v2-0-49ea59801a33@mainlining.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Pavel Machek <pavel@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739476487; l=958;
+ i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
+ bh=yQ+yZqSC2THtcqvSadW/Sj93NBtrZeQuFK22KFvPb0Q=;
+ b=N5tmZ3B27EdaMvA2SREnKrLfUUL/64bZ9yZsGRt/TYwJjwL3r7FAsbz2G0QjWKtGl+/3+cb1W
+ PReOWzFEBUtAsc1Y/oTDh+UrRiUNE/XOb5qeQVlOPl9abiLI0McHVI2
+X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
+ pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-strncpy() is deprecated for NUL-terminated destination buffers. Use
-strscpy() instead and remove the manual NUL-termination.
+The PM8937 PWM modules are compatible with the PM8916 PWM modules,
+document the PM8937 PWM compatible as fallback for the PM8916 PWM.
 
-Use min() to simplify the size calculation.
-
-Compile-tested only.
-
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Suggested-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
 ---
-Changes in v2:
-- Adjust len to copy the same number of bytes as with strncpy()
-- Link to v1: https://lore.kernel.org/r/34BB4FDE-062D-4C1B-B246-86CB55F631B8@linux.dev/
----
- drivers/scsi/hpsa.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 84d8de07b7ae..c7ebae24b09f 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -460,9 +460,8 @@ static ssize_t host_store_hp_ssd_smart_path_status(struct device *dev,
+diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
+index 8b82c45d1a48be6ff63193aae9d67625a943a72b..841a0229c472a4764426d25d9dbb900adc20fc11 100644
+--- a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
++++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
+@@ -39,6 +39,10 @@ properties:
+           - enum:
+               - qcom,pm8550-pwm
+           - const: qcom,pm8350c-pwm
++      - items:
++          - enum:
++              - qcom,pm8937-pwm
++          - const: qcom,pm8916-pwm
  
- 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
- 		return -EACCES;
--	len = count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
--	strncpy(tmpbuf, buf, len);
--	tmpbuf[len] = '\0';
-+	len = min(count + 1, sizeof(tmpbuf));
-+	strscpy(tmpbuf, buf, len);
- 	if (sscanf(tmpbuf, "%d", &status) != 1)
- 		return -EINVAL;
- 	h = shost_to_hba(shost);
-@@ -484,9 +483,8 @@ static ssize_t host_store_raid_offload_debug(struct device *dev,
- 
- 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
- 		return -EACCES;
--	len = count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
--	strncpy(tmpbuf, buf, len);
--	tmpbuf[len] = '\0';
-+	len = min(count + 1, sizeof(tmpbuf));
-+	strscpy(tmpbuf, buf, len);
- 	if (sscanf(tmpbuf, "%d", &debug_level) != 1)
- 		return -EINVAL;
- 	if (debug_level < 0)
+   "#pwm-cells":
+     const: 2
+
 -- 
 2.48.1
 
