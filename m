@@ -1,110 +1,110 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D8B28A2AB;
-	Thu, 13 Feb 2025 17:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40ADA2040B7;
+	Thu, 13 Feb 2025 17:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739468743; cv=none; b=buKOwgbaQ/8WeSaTfPp/gJ9YVg50m0Mwui/3v7rdHuxRAY7KrDOKEcSHol5ToCkw+Tyq9TPJ9e4TafGj7AAquQWHIH430rF+n80BdwIb3ajKeFv9lnQA2Yvallze0s8Zq8QL1nwYEfOdZuyW7QKBJRvp+QqQrpVDO7wj8gUrsv4=
+	t=1739468744; cv=none; b=aLlTLwJHmY8nKXGKm/AlylExHNrctWj8TBzeVGJBy/8pl14xSdKhaDvVPHx3ceO6t6UkzGCgI+UPTMGBuj022y5G87uaEEaBstv7Tjjfw6umvNHfe25VRrs7Mvk+mvA4xFH6yg9jjcdlsSovncX6mtKmglc5WGcWmfGc8Jf2z7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739468743; c=relaxed/simple;
-	bh=PmAdWEbi90xoXbqeyhZd9i11ObSkywA5DyrbKNqngoU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QO/IJHs6rDA8hK9I4SNklE8W9IRvLQo8Jd4zyIeJkJeYU1yVKvBiGyt8ZHFAf7AChP/Pah8oDKxjgvue6TKoXQgOnFoVony3iliwugSey8iN58g+2ZEG94oKsvZKEAFpUh2tlXakSbyYLp8vfD26hlbLkaqOgMx6RzEBrfz3STg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fJcm7I66; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739468744; c=relaxed/simple;
+	bh=9g9XvpJ4vTHZRdoVn0NNOAe0M9fMrmh7qRY4E5RBo5I=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JaRg7IidlKAQiBO4hGtq62ejHDNeya3befkWh7RYalf+92TzzDR2PJFtN6D3BKgVriWc/QsnRwtmnQLNK0gKn0wLnbvi/aHzIh+06UuPRUEPj1t96ZRi2b9Xbh6ZWGsb79MRdTILvmmMji50gKfCVYe8c/Ic2c+52AHMy5M/UDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MqwOKrlM; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJcm7I66"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab7b80326cdso221291266b.3;
-        Thu, 13 Feb 2025 09:45:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739468740; x=1740073540; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+DxAeba9M2XA2A0lJ5DQh+1tf+Q3Gd7KjdbaW+Nt1Yo=;
-        b=fJcm7I66ysjF1ave9jCY4fBikPQutwNXtCWWT8sLa4eKOGxn/HprI8tlBY3OXhUsEP
-         GTkKaSldEQooezFyggXZjk7n0BA+ZO8ShnUO/a9OsC4HzoViSnU+uhtSWKuJMmhqc1Tj
-         S/jCCwXw4SP7f7aOr7QSNRnuBbqZye0dCz1qhd6kFeITHiyFwcVQhGG57L0rzr7OoZ51
-         IBIr3VDTwNvLGrTPrmhWjZ6/mh2OcmnP0xXorJfyKBXTj+IcIOf4nE2mR2ac4PSNEq+G
-         2oPLjh2qOQX/4MUH4idBJLkEk1DSDYNVcx+PxKXUNQw4WD7VYhGnr5xFqxuKuQAg+JEo
-         om+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739468740; x=1740073540;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+DxAeba9M2XA2A0lJ5DQh+1tf+Q3Gd7KjdbaW+Nt1Yo=;
-        b=ZQILLvz3AjFDX/yfzhQVX+6zmbf9kSVs6HnRqdo2MgPn2QBS6GR4r4aClfEKDRaE5E
-         CKixGaO1Rz2TveF/Zv6x2te5VG91dMthn/LsokSLIKJGmuowai5Ewko128sP62MTeTc5
-         0Jg7/flLxHceNBbdspxld6xu+HsAab/5M4yY8Zc0cv8SMSL7v2AJEkmwTgTgwMciEdx5
-         TtQSmVWgnwVcWBUnrx4Nn0ksJa76NhR0zyIlKQdM+oaymdYrLwmF5FEeceFRxuOCYy/8
-         lDY8TQEGlG3GKAPA5u7zgbENjkqi0vXWLEd+NmkUh1mY856wBIrWJf1dNOU7xveS5gE+
-         D/cg==
-X-Forwarded-Encrypted: i=1; AJvYcCXDO7ZMzqEY6hoil2APwvn7cYDY81xMO5a0OLjfusGF4WTZMauH7oA6bFLoljY7ipQPsvNdZ/yWji5/qMy4@vger.kernel.org, AJvYcCXz43yBAEQvsVa8si+DpfrIKj00a90L3xKk3QbwQqtNg+Zlv4ksFKW6N64+4BsUGnludcg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhT336rzVrcqods5tH4mCJsWWzG09ZHYN4pKz6YdIcCFegtfsb
-	NBdSXmvrglYJltLPBA+2ayUMsveMv0igTCWpA2V9gj7p/mB4hymKKWYoKF/zVbKPQ3m0ozbgTH9
-	xKy+3esqI7ZHL53WicTYDCyWFq20=
-X-Gm-Gg: ASbGncst1ECKNyB6AVmwaURHIX14eo7fMXDgHYg+argLphfQqG8IDGwapEbBxEnpEQ5
-	Al7K915nuHO3ryAOtpxhX/R/ncI05eP+/WYLzx6UlG4fkyU1dH2Rf84eyqwaQ2v197tX4i4D/PS
-	a6dkLVI6lIz6FE5/cRaRaa6wAvpyxk
-X-Google-Smtp-Source: AGHT+IHqeY5d+52cUyWchdA3Vyx85e0DJbAPSnBMk7d3/pOwkPFNLrSVtTvldPrjQfjfxc1TpwrAhxbSoV5cG/cv57g=
-X-Received: by 2002:a17:907:d0f:b0:ab7:d87:50f2 with SMTP id
- a640c23a62f3a-aba5018c398mr418557766b.44.1739468739508; Thu, 13 Feb 2025
- 09:45:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MqwOKrlM"
+Received: from [100.65.1.94] (unknown [20.236.11.69])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D7186203D61D;
+	Thu, 13 Feb 2025 09:45:40 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D7186203D61D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739468742;
+	bh=CjdDB9uvZBBF3c03e9VylpCG5WkQPsjk1qSKlO3MQtE=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=MqwOKrlM0wNKTlUgCtpn9gJKIpfGiwVh9dHGNNF4ycPmXa/idcQ30iiksOd4FJJaH
+	 jrqNCD9r00CbzdjGOPFOZ+MnFU6woy29/+YEkOfP14iTKCcgK64o8pGQaLxlVNUpHe
+	 bIb4sXQD9rr6g8CsvFcC34/zgx+kxX5/LItW+SLg=
+Message-ID: <8f80b65e-724c-439c-a094-4bfbb1e296f1@linux.microsoft.com>
+Date: Thu, 13 Feb 2025 09:45:41 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212084851.150169-1-changwoo@igalia.com>
-In-Reply-To: <20250212084851.150169-1-changwoo@igalia.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 13 Feb 2025 09:45:26 -0800
-X-Gm-Features: AWEUYZk0AK_5uP6Hf6gl3zD-S3O24aXnOI3BDH9qrEu9XNHWmPV9rS-7BIWOISE
-Message-ID: <CAADnVQLRrhyOHGPb1O0Ju=7YVCNexdhwtoJaGYrfU9Vh2cBbgw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: Add a retry after refilling the free list
- when unit_alloc() fails
-To: Changwoo Min <changwoo@igalia.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Tejun Heo <tj@kernel.org>, Andrea Righi <arighi@nvidia.com>, kernel-dev@igalia.com, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: eahariha@linux.microsoft.com, Yaron Avizrat <yaron.avizrat@intel.com>,
+ Oded Gabbay <ogabbay@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
+ Nicolas Palix <nicolas.palix@imag.fr>, James Smart
+ <james.smart@broadcom.com>, Dick Kennedy <dick.kennedy@broadcom.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>,
+ Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>,
+ Xiubo Li <xiubli@redhat.com>, Damien Le Moal <dlemoal@kernel.org>,
+ Niklas Cassel <cassel@kernel.org>, Carlos Maiolino <cem@kernel.org>,
+ "Darrick J. Wong" <djwong@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Frank Li <Frank.Li@nxp.com>,
+ Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Selvin Xavier <selvin.xavier@broadcom.com>,
+ Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ cocci@inria.fr, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-sound@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-spi@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+ linux-rdma@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 00/16] Converge on using secs_to_jiffies() part two
+To: Andrew Morton <akpm@linux-foundation.org>
+References: <20250128-converge-secs-to-jiffies-part-two-v1-0-9a6ecf0b2308@linux.microsoft.com>
+ <20250128161643.289d9fe705ef2fdba0b82a52@linux-foundation.org>
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <20250128161643.289d9fe705ef2fdba0b82a52@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 12, 2025 at 12:49=E2=80=AFAM Changwoo Min <changwoo@igalia.com>=
- wrote:
->
-> (e.g., bpf_cpumask_create), allocate the additional free entry in an atom=
-ic
-> manner (atomic =3D true in alloc_bulk).
+On 1/28/2025 4:16 PM, Andrew Morton wrote:
+> On Tue, 28 Jan 2025 18:21:45 +0000 Easwar Hariharan <eahariha@linux.microsoft.com> wrote:
+> 
+>> This is the second series (part 1*) that converts users of msecs_to_jiffies() that
+>> either use the multiply pattern of either of:
+>> - msecs_to_jiffies(N*1000) or
+>> - msecs_to_jiffies(N*MSEC_PER_SEC)
+>>
+>> where N is a constant or an expression, to avoid the multiplication.
+>>
+>> The conversion is made with Coccinelle with the secs_to_jiffies() script
+>> in scripts/coccinelle/misc. Attention is paid to what the best change
+>> can be rather than restricting to what the tool provides.
+>>
+>> Andrew has kindly agreed to take the series through mm.git modulo the
+>> patches maintainers want to pick through their own trees.
+> 
+> I added patches 2-16 to mm.git.  If any of these later get merged into
+> a subsystem tree, Stephen will tell us and I'll drop the mm.git copy.
 
-...
-> +       if (unlikely(!llnode && !retry)) {
-> +               int cpu =3D smp_processor_id();
-> +               alloc_bulk(c, 1, cpu_to_node(cpu), true);
+Hi Andrew, I don't see these in mm-nonmm-unstable. Did these get dropped in the confusion around
+casting secs_to_jiffies() to unsigned long[1]? That has since been merged in 6.14-rc2 via tglx' tree,
+and I have a v2 for just the ceph patches that needed some fixups at [2].
 
-This is broken.
-Passing atomic doesn't help.
-unit_alloc() can be called from any context
-including NMI/IRQ/kprobe deeply nested in slab internals.
-kmalloc() is not safe from there.
-The whole point of bpf_mem_alloc() is to be safe from
-unknown context. If we could do kmalloc(GFP_NOWAIT)
-everywhere bpf_mem_alloc() would be needed.
+[1] https://lore.kernel.org/all/20250130192701.99626-1-eahariha@linux.microsoft.com/
+[2] https://lore.kernel.org/all/20250203-converge-secs-to-jiffies-part-two-v2-0-d7058a01fd0e@linux.microsoft.com/
 
-But we may do something.
-Draining free_by_rcu_ttrace and waiting_for_gp_ttrace can be done,
-but will it address your case?
-The commit log is too terse to understand what exactly is going on.
-Pls share the call stack. What is the allocation size?
-How many do you do in a sequence?
-Why irq-s are disabled? Isn't this for scx ?
-
-pw-bot: cr
+Thanks,
+Easwar (he/him)
