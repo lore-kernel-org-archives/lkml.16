@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8903B20B21A;
-	Thu, 13 Feb 2025 10:16:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF4B2147FC;
+	Thu, 13 Feb 2025 10:16:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739441784; cv=none; b=d2QojD14aI0Fdqs9/j3AgcSZrFXtXdCaQ6xN7PFyk5E1I9omZsP0/GUZwNUUmg9VTIGur9S2eW5KiTLtD7/vqbgUw28OLkC+PPx8Z2hawQFtpnEMG54EcBEabsHAXya3aTEpl8EYfqTzlpZasonJJMoH397zBchdd9DgkSoBCBU=
+	t=1739441788; cv=none; b=fiY0Af9yQv9J+L7cwn31JvNXIFQ0lqT70bW+m4GJ6X0AiqVF+Fk4KfKdirbM9Hnntqbl7J7dR8lJqCDSW3ICjZhwiEe5Q7LH4DPbFpp0UJ1RySVTUmIBsAVoUYampzJs35j1cLcj7ddfb6ArFgn5FEZHtSXLYjRr5XWo/ctpUa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739441784; c=relaxed/simple;
-	bh=tk1rix5n6nc4FXs/2ZixmkHS4we31KTLyO3sLtjteY4=;
+	s=arc-20240116; t=1739441788; c=relaxed/simple;
+	bh=9lETPVo88vO01XtXfb0NXCceWEqn5Uv6ZSNkYCYNACs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uYbT4qq3MUYFsL4eaadMuJTyNOwsj2A3sunJ13AA9ofWwNrmmnBy9QJ7xo16DtXjx+svE4OvFsQrjOvOqjwiisoSG0sn6pU0B/GZydBn9B4Plja9+jP0y6HsFOgRZ0Q0U/2qfDWdwr3GmcOOjxbNNDcsufd7JhkRg7tI+G+evHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QUdCxrbQ; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=AADjnOb0Cdoo6zLUk9Pc0py1liW+0qn9HOf21bP8x6Iy3Yy0nSR5afqhtNp8EvVY1cGNRElTgqv/wwQpht+H8gkR5NgOuNZ+mGU9f6IGoM0JNl+argox7wVs8pAaxcHOHnEP3HKs7R6mNKtmZgg7l6hgWzOkHLiVWoj62+w2EBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HysC6Nio; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QUdCxrbQ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EF792441CB;
-	Thu, 13 Feb 2025 10:16:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HysC6Nio"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 141054420D;
+	Thu, 13 Feb 2025 10:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739441773;
+	t=1739441784;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=X3wEHVyLhkaKopTPljFK6gVvN7FlL718r+lMYDCOEKs=;
-	b=QUdCxrbQ/MzAKDkKMmU8XVeAvWQ97smQ6P0nQ0d1Y1NPz0rwpz+26R7xAAxAauD3QlHQfl
-	FZiUrdtfPJPtBMCvbeMJzWhnJhnpblUUkypUbTVzIO4jy68n4vOk6iuIcU+HmeYDSd7p7S
-	BVu0C8X2Kwkzotrj7a5XX3E/c+TB0+YgzA+WJ6en7yBtqFyqiemKoJM3DDnrM7NCzE+LmA
-	pPDwNCZhjBAD4LcZhgEIhbGtOn6wXybD/G6opvjy8pu+7W8QuqEGR8EBCQzk1GXg01KAs5
-	BhepAU6nvDLk9y2Vb4gH2BdKAD5DffRLRzF/I2gQN4c+6x1bvl0lL3e3DdC4iw==
+	bh=XvcDUqW+6V7sJ+NQgmk7dIFwTVv6TEBC2sY3q1Qe8Cc=;
+	b=HysC6NioX+wT7UkkDVAshTphrIfXNt2x+5k2pzpSGOnvu71kYE6+675PlPp098oBt3QGdi
+	SJ9QvyJVMzHIG+lE+xIzhi5AjWGINcgg4AwnD8Qsvptgq1LUYwOZ4N19EUEvizAAU2fZbL
+	2w0fBTAe8M4xDWF8rsgJVghCGIkyy6ZB8oKfBb1g95dbkT2Dbirx3aHRP1ldfNz1uDN3LB
+	qoUvzxdnoK7JTtp+TYDN0DjdMKl3m3ozRVVVLRmz/fgaWippD1IV1c2H35xC9c+o4yyT0L
+	ShGWMT1/N8HN0FkMn7fSY+1TKgOWHvDNs28+/sKRHALvt93//23tJbcKZMeZqA==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -63,9 +63,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Daniel Golle <daniel@makrotopia.org>,
 	Dimitri Fedrau <dimitri.fedrau@liebherr.com>,
 	Sean Anderson <seanga2@gmail.com>
-Subject: [PATCH net-next v4 01/15] net: ethtool: Introduce ETHTOOL_LINK_MEDIUM_* values
-Date: Thu, 13 Feb 2025 11:15:49 +0100
-Message-ID: <20250213101606.1154014-2-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v4 08/15] net: phy: marvell: Support SFP through phy_port interface
+Date: Thu, 13 Feb 2025 11:15:56 +0100
+Message-ID: <20250213101606.1154014-9-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250213101606.1154014-1-maxime.chevallier@bootlin.com>
 References: <20250213101606.1154014-1-maxime.chevallier@bootlin.com>
@@ -78,425 +78,184 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegieehudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefvddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkv
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegieehudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpeehnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefvddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkv
  ghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrgh
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-In an effort to have a better representation of Ethernet ports,
-introduce enumeration values representing the various ethernet Mediums.
-
-This is part of the 802.3 naming convention, for example :
-
-1000 Base T 4
- |    |   | |
- |    |   | \_ lanes (4)
- |    |   \___ Medium (T == Twisted Copper Pairs)
- |    \_______ Baseband transmission
- \____________ Speed
-
- Other example :
-
-10000 Base K X 4
-           | | \_ lanes (4)
-           | \___ encoding (BaseX is 8b/10b while BaseR is 66b/64b)
-           \_____ Medium (K is backplane ethernet)
-
-In the case of representing a physical port, only the medium and number
-of lanes should be relevant. One exception would be 1000BaseX, which is
-currently also used as a medium in what appears to be any of
-1000BaseSX, 1000BaseCX and 1000BaseLX. This was reflected in the mediums
-associated with the 1000BaseX linkmode.
-
-These mediums are set in the net/ethtool/common.c lookup table that
-maintains a list of all linkmodes with their number of lanes, medium,
-encoding, speed and duplex.
-
-One notable exception to this is 100M BaseT Ethernet. 100BaseTX is a 2-lanes
-protocol but it will also work on 4-lanes cables, so the lookup table
-contains 2 sets of lane numbers, indicating the min number of lanes for
-a protocol to work and the "nominal" number of lanes as well.
-
-Another set of exceptions are linkmodes such 100000baseLR4_ER4, where
-the same link mode seems to represent 100GBaseLR4 and 100GBaseER4. The
-macro __DEFINE_LINK_MODE_PARAMS_MEDIUMS is here used to populate the
-.mediums bitfield with all appropriate mediums.
+Convert the Marvell driver (especially the 88e1512 driver) to use the
+phy_port interface to handle SFPs. This means registering a
+.attach_port() handler to detect when a serdes line interface is used
+(most likely, and SFP module).
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
-V4: - 1000BaseX and 2500BaseX are now multi-mediums, fixed the E/L/F modes
-    - mediums is now a bitfield
+V4: no changes
 
- include/linux/ethtool.h |  48 ++++++++
- net/ethtool/common.c    | 249 ++++++++++++++++++++++------------------
- net/ethtool/common.h    |   2 +
- 3 files changed, 190 insertions(+), 109 deletions(-)
+ drivers/net/phy/marvell.c | 100 +++++++++++++++-----------------------
+ 1 file changed, 39 insertions(+), 61 deletions(-)
 
-diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
-index 870994cc3ef7..206965690dc6 100644
---- a/include/linux/ethtool.h
-+++ b/include/linux/ethtool.h
-@@ -210,6 +210,54 @@ static inline u8 *ethtool_rxfh_context_key(struct ethtool_rxfh_context *ctx)
+diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
+index dd254e36ca8a..152cd602174f 100644
+--- a/drivers/net/phy/marvell.c
++++ b/drivers/net/phy/marvell.c
+@@ -29,10 +29,10 @@
+ #include <linux/ethtool.h>
+ #include <linux/ethtool_netlink.h>
+ #include <linux/phy.h>
++#include <linux/phy_port.h>
+ #include <linux/marvell_phy.h>
+ #include <linux/bitfield.h>
+ #include <linux/of.h>
+-#include <linux/sfp.h>
  
- void ethtool_rxfh_context_lost(struct net_device *dev, u32 context_id);
+ #include <linux/io.h>
+ #include <asm/irq.h>
+@@ -3561,42 +3561,38 @@ static int marvell_probe(struct phy_device *phydev)
+ 	return marvell_hwmon_probe(phydev);
+ }
  
-+enum ethtool_link_medium {
-+	ETHTOOL_LINK_MEDIUM_BASET = 0,
-+	ETHTOOL_LINK_MEDIUM_BASEK,
-+	ETHTOOL_LINK_MEDIUM_BASES,
-+	ETHTOOL_LINK_MEDIUM_BASEC,
-+	ETHTOOL_LINK_MEDIUM_BASEL,
-+	ETHTOOL_LINK_MEDIUM_BASED,
-+	ETHTOOL_LINK_MEDIUM_BASEE,
-+	ETHTOOL_LINK_MEDIUM_BASEF,
-+	ETHTOOL_LINK_MEDIUM_BASEV,
-+	ETHTOOL_LINK_MEDIUM_BASEMLD,
-+	ETHTOOL_LINK_MEDIUM_BASEX,
-+	ETHTOOL_LINK_MEDIUM_NONE,
-+
-+	__ETHTOOL_LINK_MEDIUM_LAST,
-+};
-+
-+static inline const char *phy_mediums(enum ethtool_link_medium medium)
-+{
-+	switch (medium) {
-+	case ETHTOOL_LINK_MEDIUM_BASET:
-+		return "BaseT";
-+	case ETHTOOL_LINK_MEDIUM_BASEK:
-+		return "BaseK";
-+	case ETHTOOL_LINK_MEDIUM_BASES:
-+		return "BaseS";
-+	case ETHTOOL_LINK_MEDIUM_BASEC:
-+		return "BaseC";
-+	case ETHTOOL_LINK_MEDIUM_BASEL:
-+		return "BaseL";
-+	case ETHTOOL_LINK_MEDIUM_BASED:
-+		return "BaseD";
-+	case ETHTOOL_LINK_MEDIUM_BASEE:
-+		return "BaseE";
-+	case ETHTOOL_LINK_MEDIUM_BASEF:
-+		return "BaseF";
-+	case ETHTOOL_LINK_MEDIUM_BASEV:
-+		return "BaseV";
-+	case ETHTOOL_LINK_MEDIUM_BASEMLD:
-+		return "BaseMLD";
-+	case ETHTOOL_LINK_MEDIUM_BASEX:
-+		return "BaseX";
-+	case ETHTOOL_LINK_MEDIUM_NONE:
-+		return "None";
-+	default: return "unknown";
-+	}
-+}
-+
- /* declare a link mode bitmap */
- #define __ETHTOOL_DECLARE_LINK_MODE_MASK(name)		\
- 	DECLARE_BITMAP(name, __ETHTOOL_LINK_MODE_MASK_NBITS)
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index 5489d0c9d13f..4f06efa553dc 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -279,12 +279,32 @@ static_assert(ARRAY_SIZE(link_mode_names) == __ETHTOOL_LINK_MODE_MASK_NBITS);
- #define __LINK_MODE_LANES_DR8_2		8
- #define __LINK_MODE_LANES_T1BRR		1
+-static int m88e1510_sfp_insert(void *upstream, const struct sfp_eeprom_id *id)
++static int mv88e1510_port_configure_serdes(struct phy_port *port, bool enable,
++				    phy_interface_t interface)
+ {
+-	DECLARE_PHY_INTERFACE_MASK(interfaces);
+-	struct phy_device *phydev = upstream;
+-	phy_interface_t interface;
++	struct phy_device *phydev = port_phydev(port);
+ 	struct device *dev;
+ 	int oldpage;
+ 	int ret = 0;
+ 	u16 mode;
  
--#define __DEFINE_LINK_MODE_PARAMS(_speed, _type, _duplex)	\
-+#define __DEFINE_LINK_MODE_PARAMS_LANES(_speed, _type, _min_lanes, _lanes, _duplex, _medium) \
- 	[ETHTOOL_LINK_MODE(_speed, _type, _duplex)] = {		\
- 		.speed  = SPEED_ ## _speed, \
-+		.min_lanes  = _min_lanes, \
-+		.lanes  = _lanes, \
-+		.duplex	= __DUPLEX_ ## _duplex, \
-+		.mediums = BIT(ETHTOOL_LINK_MEDIUM_BASE ## _medium) \
-+	}
-+
-+#define __DEFINE_LINK_MODE_PARAMS(_speed, _type, _duplex, _medium)	\
-+	[ETHTOOL_LINK_MODE(_speed, _type, _duplex)] = {		\
-+		.speed  = SPEED_ ## _speed, \
-+		.min_lanes  = __LINK_MODE_LANES_ ## _type, \
-+		.lanes  = __LINK_MODE_LANES_ ## _type, \
-+		.duplex	= __DUPLEX_ ## _duplex, \
-+		.mediums = BIT(ETHTOOL_LINK_MEDIUM_BASE ## _medium) \
-+	}
-+#define __DEFINE_LINK_MODE_PARAMS_MEDIUMS(_speed, _type, _duplex, _mediums)	\
-+	[ETHTOOL_LINK_MODE(_speed, _type, _duplex)] = {		\
-+		.speed  = SPEED_ ## _speed, \
-+		.min_lanes  = __LINK_MODE_LANES_ ## _type, \
- 		.lanes  = __LINK_MODE_LANES_ ## _type, \
--		.duplex	= __DUPLEX_ ## _duplex \
-+		.duplex	= __DUPLEX_ ## _duplex, \
-+		.mediums = (_mediums) \
- 	}
-+#define __MED(_medium)	(BIT(ETHTOOL_LINK_MEDIUM_BASE ## _medium))
- #define __DUPLEX_Half DUPLEX_HALF
- #define __DUPLEX_Full DUPLEX_FULL
- #define __DEFINE_SPECIAL_MODE_PARAMS(_mode) \
-@@ -292,134 +312,145 @@ static_assert(ARRAY_SIZE(link_mode_names) == __ETHTOOL_LINK_MODE_MASK_NBITS);
- 		.speed	= SPEED_UNKNOWN, \
- 		.lanes	= 0, \
- 		.duplex	= DUPLEX_UNKNOWN, \
-+		.mediums = BIT(ETHTOOL_LINK_MEDIUM_NONE), \
+-	__ETHTOOL_DECLARE_LINK_MODE_MASK(supported) = { 0, };
+-
+ 	dev = &phydev->mdio.dev;
+ 
+-	sfp_parse_support(phydev->sfp_bus, id, supported, interfaces);
+-	interface = sfp_select_interface(phydev->sfp_bus, supported);
+-
+-	dev_info(dev, "%s SFP module inserted\n", phy_modes(interface));
+-
+-	switch (interface) {
+-	case PHY_INTERFACE_MODE_1000BASEX:
+-		mode = MII_88E1510_GEN_CTRL_REG_1_MODE_RGMII_1000X;
++	if (enable) {
++		switch (interface) {
++		case PHY_INTERFACE_MODE_1000BASEX:
++			mode = MII_88E1510_GEN_CTRL_REG_1_MODE_RGMII_1000X;
+ 
+-		break;
+-	case PHY_INTERFACE_MODE_100BASEX:
+-		mode = MII_88E1510_GEN_CTRL_REG_1_MODE_RGMII_100FX;
++			break;
++		case PHY_INTERFACE_MODE_100BASEX:
++			mode = MII_88E1510_GEN_CTRL_REG_1_MODE_RGMII_100FX;
+ 
+-		break;
+-	case PHY_INTERFACE_MODE_SGMII:
+-		mode = MII_88E1510_GEN_CTRL_REG_1_MODE_RGMII_SGMII;
++			break;
++		case PHY_INTERFACE_MODE_SGMII:
++			mode = MII_88E1510_GEN_CTRL_REG_1_MODE_RGMII_SGMII;
+ 
+-		break;
+-	default:
+-		dev_err(dev, "Incompatible SFP module inserted\n");
++			break;
++		default:
++			dev_err(dev, "Incompatible SFP module inserted\n");
+ 
+-		return -EINVAL;
++			return -EINVAL;
++		}
++	} else {
++		mode = MII_88E1510_GEN_CTRL_REG_1_MODE_RGMII;
  	}
  
- const struct link_mode_info link_mode_params[] = {
--	__DEFINE_LINK_MODE_PARAMS(10, T, Half),
--	__DEFINE_LINK_MODE_PARAMS(10, T, Full),
--	__DEFINE_LINK_MODE_PARAMS(100, T, Half),
--	__DEFINE_LINK_MODE_PARAMS(100, T, Full),
--	__DEFINE_LINK_MODE_PARAMS(1000, T, Half),
--	__DEFINE_LINK_MODE_PARAMS(1000, T, Full),
-+	__DEFINE_LINK_MODE_PARAMS_LANES(10, T, 2, 4, Half, T),
-+	__DEFINE_LINK_MODE_PARAMS_LANES(10, T, 2, 4, Full, T),
-+	__DEFINE_LINK_MODE_PARAMS_LANES(100, T, 2, 4, Half, T),
-+	__DEFINE_LINK_MODE_PARAMS_LANES(100, T, 2, 4, Full, T),
-+	__DEFINE_LINK_MODE_PARAMS(1000, T, Half, T),
-+	__DEFINE_LINK_MODE_PARAMS(1000, T, Full, T),
- 	__DEFINE_SPECIAL_MODE_PARAMS(Autoneg),
- 	__DEFINE_SPECIAL_MODE_PARAMS(TP),
- 	__DEFINE_SPECIAL_MODE_PARAMS(AUI),
- 	__DEFINE_SPECIAL_MODE_PARAMS(MII),
- 	__DEFINE_SPECIAL_MODE_PARAMS(FIBRE),
- 	__DEFINE_SPECIAL_MODE_PARAMS(BNC),
--	__DEFINE_LINK_MODE_PARAMS(10000, T, Full),
-+	__DEFINE_LINK_MODE_PARAMS(10000, T, Full, T),
- 	__DEFINE_SPECIAL_MODE_PARAMS(Pause),
- 	__DEFINE_SPECIAL_MODE_PARAMS(Asym_Pause),
--	__DEFINE_LINK_MODE_PARAMS(2500, X, Full),
-+	__DEFINE_LINK_MODE_PARAMS_MEDIUMS(2500, X, Full,
-+					  __MED(C) | __MED(S) | __MED(L)),
- 	__DEFINE_SPECIAL_MODE_PARAMS(Backplane),
--	__DEFINE_LINK_MODE_PARAMS(1000, KX, Full),
--	__DEFINE_LINK_MODE_PARAMS(10000, KX4, Full),
--	__DEFINE_LINK_MODE_PARAMS(10000, KR, Full),
-+	__DEFINE_LINK_MODE_PARAMS(1000, KX, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(10000, KX4, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(10000, KR, Full, K),
- 	[ETHTOOL_LINK_MODE_10000baseR_FEC_BIT] = {
- 		.speed	= SPEED_10000,
- 		.lanes	= 1,
- 		.duplex = DUPLEX_FULL,
+ 	oldpage = phy_select_page(phydev, MII_MARVELL_MODE_PAGE);
+@@ -3613,49 +3609,30 @@ static int m88e1510_sfp_insert(void *upstream, const struct sfp_eeprom_id *id)
+ 
+ error:
+ 	return phy_restore_page(phydev, oldpage, ret);
+-}
+-
+-static void m88e1510_sfp_remove(void *upstream)
+-{
+-	struct phy_device *phydev = upstream;
+-	int oldpage;
+-	int ret = 0;
+-
+-	oldpage = phy_select_page(phydev, MII_MARVELL_MODE_PAGE);
+-	if (oldpage < 0)
+-		goto error;
+-
+-	ret = __phy_modify(phydev, MII_88E1510_GEN_CTRL_REG_1,
+-			   MII_88E1510_GEN_CTRL_REG_1_MODE_MASK,
+-			   MII_88E1510_GEN_CTRL_REG_1_MODE_RGMII);
+-	if (ret < 0)
+-		goto error;
+ 
+-	ret = __phy_set_bits(phydev, MII_88E1510_GEN_CTRL_REG_1,
+-			     MII_88E1510_GEN_CTRL_REG_1_RESET);
+-
+-error:
+-	phy_restore_page(phydev, oldpage, ret);
++	return 0;
+ }
+ 
+-static const struct sfp_upstream_ops m88e1510_sfp_ops = {
+-	.module_insert = m88e1510_sfp_insert,
+-	.module_remove = m88e1510_sfp_remove,
+-	.attach = phy_sfp_attach,
+-	.detach = phy_sfp_detach,
+-	.connect_phy = phy_sfp_connect_phy,
+-	.disconnect_phy = phy_sfp_disconnect_phy,
++static const struct phy_port_ops mv88e1510_serdes_port_ops = {
++	.configure_mii = mv88e1510_port_configure_serdes,
+ };
+ 
+-static int m88e1510_probe(struct phy_device *phydev)
++static int m88e1510_attach_port(struct phy_device *phy_device,
++				struct phy_port *port)
+ {
+-	int err;
++	/* For classic Copper operation, we don't have any port-specific
++	 * control to do.
++	 */
++	if (!port->is_serdes)
++		return 0;
+ 
+-	err = marvell_probe(phydev);
+-	if (err)
+-		return err;
++	port->ops = &mv88e1510_serdes_port_ops;
++
++	__set_bit(PHY_INTERFACE_MODE_SGMII, port->interfaces);
++	__set_bit(PHY_INTERFACE_MODE_1000BASEX, port->interfaces);
++	__set_bit(PHY_INTERFACE_MODE_100BASEX, port->interfaces);
+ 
+-	return phy_sfp_probe(phydev, &m88e1510_sfp_ops);
++	return 0;
+ }
+ 
+ static struct phy_driver marvell_drivers[] = {
+@@ -3915,7 +3892,7 @@ static struct phy_driver marvell_drivers[] = {
+ 		.driver_data = DEF_MARVELL_HWMON_OPS(m88e1510_hwmon_ops),
+ 		.features = PHY_GBIT_FIBRE_FEATURES,
+ 		.flags = PHY_POLL_CABLE_TEST,
+-		.probe = m88e1510_probe,
++		.probe = marvell_probe,
+ 		.config_init = m88e1510_config_init,
+ 		.config_aneg = m88e1510_config_aneg,
+ 		.read_status = marvell_read_status,
+@@ -3941,6 +3918,7 @@ static struct phy_driver marvell_drivers[] = {
+ 		.led_hw_is_supported = m88e1318_led_hw_is_supported,
+ 		.led_hw_control_set = m88e1318_led_hw_control_set,
+ 		.led_hw_control_get = m88e1318_led_hw_control_get,
++		.attach_port = m88e1510_attach_port,
  	},
--	__DEFINE_LINK_MODE_PARAMS(20000, MLD2, Full),
--	__DEFINE_LINK_MODE_PARAMS(20000, KR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(40000, KR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(40000, CR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(40000, SR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(40000, LR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(56000, KR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(56000, CR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(56000, SR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(56000, LR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(25000, CR, Full),
--	__DEFINE_LINK_MODE_PARAMS(25000, KR, Full),
--	__DEFINE_LINK_MODE_PARAMS(25000, SR, Full),
--	__DEFINE_LINK_MODE_PARAMS(50000, CR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(50000, KR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(100000, KR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(100000, SR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(100000, CR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(100000, LR4_ER4, Full),
--	__DEFINE_LINK_MODE_PARAMS(50000, SR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(1000, X, Full),
--	__DEFINE_LINK_MODE_PARAMS(10000, CR, Full),
--	__DEFINE_LINK_MODE_PARAMS(10000, SR, Full),
--	__DEFINE_LINK_MODE_PARAMS(10000, LR, Full),
--	__DEFINE_LINK_MODE_PARAMS(10000, LRM, Full),
--	__DEFINE_LINK_MODE_PARAMS(10000, ER, Full),
--	__DEFINE_LINK_MODE_PARAMS(2500, T, Full),
--	__DEFINE_LINK_MODE_PARAMS(5000, T, Full),
-+	__DEFINE_LINK_MODE_PARAMS(20000, MLD2, Full, MLD),
-+	__DEFINE_LINK_MODE_PARAMS(20000, KR2, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(40000, KR4, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(40000, CR4, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS(40000, SR4, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS(40000, LR4, Full, L),
-+	__DEFINE_LINK_MODE_PARAMS(56000, KR4, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(56000, CR4, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS(56000, SR4, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS(56000, LR4, Full, L),
-+	__DEFINE_LINK_MODE_PARAMS(25000, CR, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS(25000, KR, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(25000, SR, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS(50000, CR2, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS(50000, KR2, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(100000, KR4, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(100000, SR4, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS(100000, CR4, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS_MEDIUMS(100000, LR4_ER4, Full,
-+					  __MED(L) | __MED(E)),
-+	__DEFINE_LINK_MODE_PARAMS(50000, SR2, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS_MEDIUMS(1000, X, Full,
-+					  __MED(C) | __MED(S) | __MED(L)),
-+	__DEFINE_LINK_MODE_PARAMS(10000, CR, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS(10000, SR, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS(10000, LR, Full, L),
-+	__DEFINE_LINK_MODE_PARAMS(10000, LRM, Full, L),
-+	__DEFINE_LINK_MODE_PARAMS(10000, ER, Full, E),
-+	__DEFINE_LINK_MODE_PARAMS(2500, T, Full, T),
-+	__DEFINE_LINK_MODE_PARAMS(5000, T, Full, T),
- 	__DEFINE_SPECIAL_MODE_PARAMS(FEC_NONE),
- 	__DEFINE_SPECIAL_MODE_PARAMS(FEC_RS),
- 	__DEFINE_SPECIAL_MODE_PARAMS(FEC_BASER),
--	__DEFINE_LINK_MODE_PARAMS(50000, KR, Full),
--	__DEFINE_LINK_MODE_PARAMS(50000, SR, Full),
--	__DEFINE_LINK_MODE_PARAMS(50000, CR, Full),
--	__DEFINE_LINK_MODE_PARAMS(50000, LR_ER_FR, Full),
--	__DEFINE_LINK_MODE_PARAMS(50000, DR, Full),
--	__DEFINE_LINK_MODE_PARAMS(100000, KR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(100000, SR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(100000, CR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(100000, LR2_ER2_FR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(100000, DR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, KR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, SR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, LR4_ER4_FR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, DR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, CR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(100, T1, Full),
--	__DEFINE_LINK_MODE_PARAMS(1000, T1, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, KR8, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, SR8, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, LR8_ER8_FR8, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, DR8, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, CR8, Full),
-+	__DEFINE_LINK_MODE_PARAMS(50000, KR, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(50000, SR, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS(50000, CR, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS_MEDIUMS(50000, LR_ER_FR, Full,
-+					  __MED(L) | __MED(E) | __MED(F)),
-+	__DEFINE_LINK_MODE_PARAMS(50000, DR, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(100000, KR2, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(100000, SR2, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS(100000, CR2, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS_MEDIUMS(100000, LR2_ER2_FR2, Full,
-+					  __MED(L) | __MED(E) | __MED(F)),
-+	__DEFINE_LINK_MODE_PARAMS(100000, DR2, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(200000, KR4, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(200000, SR4, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS_MEDIUMS(200000, LR4_ER4_FR4, Full,
-+					  __MED(L) | __MED(E) | __MED(F)),
-+	__DEFINE_LINK_MODE_PARAMS(200000, DR4, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(200000, CR4, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS(100, T1, Full, T),
-+	__DEFINE_LINK_MODE_PARAMS(1000, T1, Full, T),
-+	__DEFINE_LINK_MODE_PARAMS(400000, KR8, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(400000, SR8, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS_MEDIUMS(400000, LR8_ER8_FR8, Full,
-+					  __MED(L) | __MED(E) | __MED(F)),
-+	__DEFINE_LINK_MODE_PARAMS(400000, DR8, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(400000, CR8, Full, C),
- 	__DEFINE_SPECIAL_MODE_PARAMS(FEC_LLRS),
--	__DEFINE_LINK_MODE_PARAMS(100000, KR, Full),
--	__DEFINE_LINK_MODE_PARAMS(100000, SR, Full),
--	__DEFINE_LINK_MODE_PARAMS(100000, LR_ER_FR, Full),
--	__DEFINE_LINK_MODE_PARAMS(100000, DR, Full),
--	__DEFINE_LINK_MODE_PARAMS(100000, CR, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, KR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, SR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, LR2_ER2_FR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, DR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, CR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, KR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, SR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, LR4_ER4_FR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, DR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, CR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(100, FX, Half),
--	__DEFINE_LINK_MODE_PARAMS(100, FX, Full),
--	__DEFINE_LINK_MODE_PARAMS(10, T1L, Full),
--	__DEFINE_LINK_MODE_PARAMS(800000, CR8, Full),
--	__DEFINE_LINK_MODE_PARAMS(800000, KR8, Full),
--	__DEFINE_LINK_MODE_PARAMS(800000, DR8, Full),
--	__DEFINE_LINK_MODE_PARAMS(800000, DR8_2, Full),
--	__DEFINE_LINK_MODE_PARAMS(800000, SR8, Full),
--	__DEFINE_LINK_MODE_PARAMS(800000, VR8, Full),
--	__DEFINE_LINK_MODE_PARAMS(10, T1S, Full),
--	__DEFINE_LINK_MODE_PARAMS(10, T1S, Half),
--	__DEFINE_LINK_MODE_PARAMS(10, T1S_P2MP, Half),
--	__DEFINE_LINK_MODE_PARAMS(10, T1BRR, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, CR, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, KR, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, DR, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, DR_2, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, SR, Full),
--	__DEFINE_LINK_MODE_PARAMS(200000, VR, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, CR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, KR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, DR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, DR2_2, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, SR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(400000, VR2, Full),
--	__DEFINE_LINK_MODE_PARAMS(800000, CR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(800000, KR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(800000, DR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(800000, DR4_2, Full),
--	__DEFINE_LINK_MODE_PARAMS(800000, SR4, Full),
--	__DEFINE_LINK_MODE_PARAMS(800000, VR4, Full),
-+	__DEFINE_LINK_MODE_PARAMS(100000, KR, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(100000, SR, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS_MEDIUMS(100000, LR_ER_FR, Full,
-+					  __MED(L) | __MED(E) | __MED(F)),
-+	__DEFINE_LINK_MODE_PARAMS(100000, DR, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(100000, CR, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS(200000, KR2, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(200000, SR2, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS_MEDIUMS(200000, LR2_ER2_FR2, Full,
-+					  __MED(L) | __MED(E) | __MED(F)),
-+	__DEFINE_LINK_MODE_PARAMS(200000, DR2, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(200000, CR2, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS(400000, KR4, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(400000, SR4, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS_MEDIUMS(400000, LR4_ER4_FR4, Full,
-+					  __MED(L) | __MED(E) | __MED(F)),
-+	__DEFINE_LINK_MODE_PARAMS(400000, DR4, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(400000, CR4, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS(100, FX, Half, F),
-+	__DEFINE_LINK_MODE_PARAMS(100, FX, Full, F),
-+	__DEFINE_LINK_MODE_PARAMS(10, T1L, Full, T),
-+	__DEFINE_LINK_MODE_PARAMS(800000, CR8, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS(800000, KR8, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(800000, DR8, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(800000, DR8_2, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(800000, SR8, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS(800000, VR8, Full, V),
-+	__DEFINE_LINK_MODE_PARAMS(10, T1S, Full, T),
-+	__DEFINE_LINK_MODE_PARAMS(10, T1S, Half, T),
-+	__DEFINE_LINK_MODE_PARAMS(10, T1S_P2MP, Half, T),
-+	__DEFINE_LINK_MODE_PARAMS(10, T1BRR, Full, T),
-+	__DEFINE_LINK_MODE_PARAMS(200000, CR, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS(200000, KR, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(200000, DR, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(200000, DR_2, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(200000, SR, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS(200000, VR, Full, V),
-+	__DEFINE_LINK_MODE_PARAMS(400000, CR2, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS(400000, KR2, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(400000, DR2, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(400000, DR2_2, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(400000, SR2, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS(400000, VR2, Full, V),
-+	__DEFINE_LINK_MODE_PARAMS(800000, CR4, Full, C),
-+	__DEFINE_LINK_MODE_PARAMS(800000, KR4, Full, K),
-+	__DEFINE_LINK_MODE_PARAMS(800000, DR4, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(800000, DR4_2, Full, D),
-+	__DEFINE_LINK_MODE_PARAMS(800000, SR4, Full, S),
-+	__DEFINE_LINK_MODE_PARAMS(800000, VR4, Full, V),
- };
- static_assert(ARRAY_SIZE(link_mode_params) == __ETHTOOL_LINK_MODE_MASK_NBITS);
- 
-diff --git a/net/ethtool/common.h b/net/ethtool/common.h
-index 850eadde4bfc..9d00b0329754 100644
---- a/net/ethtool/common.h
-+++ b/net/ethtool/common.h
-@@ -16,8 +16,10 @@
- 
- struct link_mode_info {
- 	int				speed;
-+	u8				min_lanes;
- 	u8				lanes;
- 	u8				duplex;
-+	u16				mediums;
- };
- 
- struct genl_info;
+ 	{
+ 		.phy_id = MARVELL_PHY_ID_88E1540,
 -- 
 2.48.1
 
