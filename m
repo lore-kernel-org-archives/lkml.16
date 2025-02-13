@@ -1,80 +1,157 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C452227EB3;
-	Thu, 13 Feb 2025 13:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A14923A986
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739454199; cv=none; b=WWr+eIZRsyrW3ONDe3zBYufMfy+yHbpWR/AI1746kTF6wz83eYKGgF8m8l8+9mpimrcRLeorYQsKWsiqgu0WbkEWaVHbrWopcKLEHKzJyI5jOD5Lsoq0pDu+0ZqGQUJ97+nuZf5ZzytL/nxjzj4iCSs9vc4mUphQamzBttysKTA=
+	t=1739454200; cv=none; b=SJWBx+3cZFn3tCKWb+JZGCzE0uQ2W6pPCpi+Z4YDxVVbyoa2LBBljc/KS1Bn3SMuYc+2/WUL5qQY03z48eNi3IaavOnOf0NPpq+jv2ZY3qMqk9Od7ha+1LKKjWE2F+1FBN9aZFTO3wN/skur6gJSdPWtLSnULCjpzyGbUBSfszE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739454199; c=relaxed/simple;
-	bh=ebgNp+yu/75osAcSngnR77FHcIFvn/fYZhFpRyoSv44=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M/xyJ/7fbECga8AAXffZO3T6ScNLCZpxmYAVdQ1sDNRImY0Ir5dpe0qlZvxSot3wOJmC32drb99FkBONikYvyDrhCWlaUZu0Yrs8Q5XdPt1BIAGN8t4RToYxZauJhQFPnZVN3+bXqEyH4Js1sUc/StRSUTu/dA+H68A1heRdLTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a7KiYR8x; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d/F0i+jH; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739454200; c=relaxed/simple;
+	bh=fNjNmI5Rl5Y5oA9MbVoyWFB1Ivbf4aZs4eKe5ZtHeJI=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=M39e1XpFZtvHXsPS/On48HeYMQQ3AvUmxAcSDqPGKiVN3d8o8agUhqJC3GEk/07itjY3htSW5SluA1Gw5rNER+ESiuceN0S2xEuUpY13NEEA7c5GQJQZglu6p9cilZGT75fJ7DXz/4Blw+5n7bFBl0v3m8XRA72TrYnjWgBMxPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Fu99oUMS; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a7KiYR8x";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d/F0i+jH"
-Date: Thu, 13 Feb 2025 14:43:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739454191;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ebgNp+yu/75osAcSngnR77FHcIFvn/fYZhFpRyoSv44=;
-	b=a7KiYR8xBV8RPvJSblYbogU2++Ph2RS10v+xmFFkZQuiy9UyJH5LKakgSMdvEns2TK2jKF
-	hD+zxyIcUjEc4TbRojYly/pWeF62EDiip7U8fG0YjeVaIhXLZSKU8OsNV7roDGjyFgV2w2
-	GRBdwP+d8/9qUgsrZPvUaYZy4YO9/wsQ+Pv4bZTJB5G1RmZSm44jhZlvvh7yZJIeVFjKEx
-	1ey5IDD7eAK5pzwilj6q6SzifANnIjR4d89YrH7mFEYpspsTmA0YjVjR2O9TMha61GXL0V
-	xP2lCt9Lmv0QhgD1VgvvjtcHjiCNFm2E6E+gzMSq04vxIg6qsgcAYXFf7KFSow==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739454191;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ebgNp+yu/75osAcSngnR77FHcIFvn/fYZhFpRyoSv44=;
-	b=d/F0i+jH7duEjQXv3ZYotuG7OmGmwZCMcuA9byuWB6Sj5F0rtvPDorEt1Bthg4Zubsnh/c
-	LXdicr2EzS7eFFAw==
-From: Nam Cao <namcao@linutronix.de>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 23/31] watchdog: Switch to use hrtimer_setup()
-Message-ID: <20250213134306.4FjZjhmJ@linutronix.de>
-References: <cover.1738746821.git.namcao@linutronix.de>
- <a5c62f2b5e1ea1cf4d32f37bc2d21a8eeab2f875.1738746821.git.namcao@linutronix.de>
- <882031d8-5b8b-455c-9f5e-90090408304e@roeck-us.net>
- <874j0yksc8.ffs@tglx>
- <d94a8e53-41e4-40b9-aac4-0041ad5db9af@roeck-us.net>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Fu99oUMS"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250213134310epoutp04ee8339ce2b0a451c7877826fe94db904~jyF7E9ha63252132521epoutp04B
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:43:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250213134310epoutp04ee8339ce2b0a451c7877826fe94db904~jyF7E9ha63252132521epoutp04B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739454190;
+	bh=Cr1W+A1j9eKhEIpkh0PbU+eTR3PGjKL2Pnrw2rmrfgw=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=Fu99oUMSsPLDHN9WJPdT5aF+eIchVr0EHm8C4qVuhm3/UGEy3jE708CTGOU/ClYrk
+	 64tgJ+gCsuZUz8KvfZCSQ2yM+pWxTvv9MVkIxI7eLX63NDq1+Gl0JSDHjXZ4RnnHhY
+	 fs5TvWN30ceW2L44F7fruvf8q7f1vPx8SC/BsxW0=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20250213134309epcas5p3649909ccba39f7b333257285fc35e5d4~jyF6Ldf5d0812908129epcas5p30;
+	Thu, 13 Feb 2025 13:43:09 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.174]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4YtxG41MXTz4x9Ps; Thu, 13 Feb
+	2025 13:43:08 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	81.08.19710.CE6FDA76; Thu, 13 Feb 2025 22:43:08 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250213132731epcas5p44671005103247c9c8d82de4dfc81097d~jx4Qvh9sJ0970909709epcas5p41;
+	Thu, 13 Feb 2025 13:27:31 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250213132731epsmtrp2545a452aa4992565cdb85a3dd701ce37~jx4QtxdUW2782827828epsmtrp2d;
+	Thu, 13 Feb 2025 13:27:31 +0000 (GMT)
+X-AuditID: b6c32a44-36bdd70000004cfe-de-67adf6ecae95
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	08.58.18949.343FDA76; Thu, 13 Feb 2025 22:27:31 +0900 (KST)
+Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250213132729epsmtip1d130c10a8bb2ff3f0395988d728c1ff7~jx4OjkTTW0863808638epsmtip1-;
+	Thu, 13 Feb 2025 13:27:29 +0000 (GMT)
+From: Swathi K S <swathi.ks@samsung.com>
+To: krzk+dt@kernel.org, linux-fsd@tesla.com, robh@kernel.org,
+	conor+dt@kernel.org, richardcochran@gmail.com, alim.akhtar@samsung.com
+Cc: jayati.sahu@samsung.com, swathi.ks@samsung.com,
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v6 0/2] arm64: dts: fsd: Add Ethernet support for FSD SoC
+Date: Thu, 13 Feb 2025 18:53:26 +0530
+Message-Id: <20250213132328.4405-1-swathi.ks@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphk+LIzCtJLcpLzFFi42LZdlhTQ/fNt7XpBg+Ps1o8mLeNzWLN3nNM
+	FvOPnGO1uHlgJ5PFkVNLmCxezrrHZrHp8TVWi4evwi0u75rDZjHj/D4mi2MLxCwWbf3CbvHw
+	wx52iyNnXjBb/N+zg93iy8ab7A4CHjtn3WX32LSqk81j85J6j74tqxg9/jXNZff4vEkugC0q
+	2yYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMH6GolhbLE
+	nFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToFJgV5xYm5xaV66Xl5qiZWhgYGRKVBhQnbG
+	lu2TmQvWcldcP9jH1sC4hLOLkZNDQsBEYu+qryxdjFwcQgK7GSW+LvzJDOF8YpRonLeREcL5
+	xihx99RNRpiWo3/eQlXtZZR4/34xO4TzhVHixsr5rCBVbAIaEtdXbAdLiAi0MUoce9oI5jAL
+	XGaUWLrtFTNIlbCAp8Szvp1MIDaLgKrEiiVNYDavgKXEtN6XUPvkJVZvOAC2T0LgJ7tE05vl
+	rBAJF4n7V3ayQNjCEq+Ob2GHsKUkPr/bywZhx0us7rsKVZMhcffXRKi4vcSBK3OA4hxAF2lK
+	rN+lDxGWlZh6ah3YDcwCfBK9v58wQcR5JXbMg7GVJf6+vgY1UlJi29L3UGs9JHpXtjKCjBQS
+	iJU4dEB4AqPsLIQFCxgZVzFKphYU56anJpsWGOallsOjKjk/dxMjODlquexgvDH/n94hRiYO
+	xkOMEhzMSiK8EtPWpAvxpiRWVqUW5ccXleakFh9iNAUG2URmKdHkfGB6ziuJNzSxNDAxMzMz
+	sTQ2M1QS523e2ZIuJJCeWJKanZpakFoE08fEwSnVwHSWLz7oyYOg8utLD/26LMzG1Sdl9eCC
+	6OeOguN91rOnd71tnyZ2McTzflKa7ybnhf1t3t4Ppp04u+tji2hhvH9krsQJyR2Lwq1W7Gey
+	1u2x+vxBpz7onuNmp2PLjhaZt3O/2vOiWDvtZH+Z6PzfArX9J6Rs5u4/PfP1n+MbZjxjUbp8
+	t1+sbeqvxzp5HK/LAo+u4DZzPnh7KvtlnSNM2sXf+O93uuxznKZzZPWjzUKllyxSn/022t2b
+	Fy+1r3h27ocPN5SXtfu+vrfg38xukaW+i+X9UqVP8p14NL2/f1lFpslx+cAAjVOHV5/8HVO+
+	JF0w886GdxVz1Duz5xh/rOCwlvJfMomj0N4o8BWDxjslluKMREMt5qLiRAD6skt5FwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrALMWRmVeSWpSXmKPExsWy7bCSnK7z57XpBu+mylk8mLeNzWLN3nNM
+	FvOPnGO1uHlgJ5PFkVNLmCxezrrHZrHp8TVWi4evwi0u75rDZjHj/D4mi2MLxCwWbf3CbvHw
+	wx52iyNnXjBb/N+zg93iy8ab7A4CHjtn3WX32LSqk81j85J6j74tqxg9/jXNZff4vEkugC2K
+	yyYlNSezLLVI3y6BK2PL9snMBWu5K64f7GNrYFzC2cXIySEhYCJx9M9b5i5GLg4hgd2MEt1r
+	XrNCJCQlPjVPhbKFJVb+e84OUfSJUeLrhsPsIAk2AQ2J6yu2gyVEBPoYJTZsb2UBcZgFbjJK
+	fFv/mBmkSljAU+JZ304mEJtFQFVixZImMJtXwFJiWu9LRogV8hKrNxxgnsDIs4CRYRWjZGpB
+	cW56brFhgVFearlecWJucWleul5yfu4mRnCgamntYNyz6oPeIUYmDsZDjBIczEoivBLT1qQL
+	8aYkVlalFuXHF5XmpBYfYpTmYFES5/32ujdFSCA9sSQ1OzW1ILUIJsvEwSnVwLSZJ9aQg8U/
+	oyxXe7qAe7f3fRUn35CMwIlfd016khJ5/vzEE5XbVT4q5b17eknXOOFaq7JAE//8TVIF+m93
+	Pb67LO7/OvvEDXPWORu+OBq1Rfnr3HlNkuIdDpWSq0Qi8xIuB3rK5bnt1llTkFBjnpo78c6r
+	PbvuTmFyWMbDOjd/0batbr1XorduKgyXfcG2K38G/z4lNWe5i9Pq4ldf/1Bqqc0dPbdks3VH
+	wcsJu/o/BW2xfj1rsUyd7ry/6+19Z0qfPpxdLLQgqbgrfMl8yc0rY3ZIvHuSuX/Gj1pPEaGT
+	93Jbj4vfUzv5/Vasxo1/K/l0Iu1PGm5g+KOQsuby9psdih79sTPXTT/LEcOX66rEUpyRaKjF
+	XFScCAA/jEe1wwIAAA==
+X-CMS-MailID: 20250213132731epcas5p44671005103247c9c8d82de4dfc81097d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250213132731epcas5p44671005103247c9c8d82de4dfc81097d
+References: <CGME20250213132731epcas5p44671005103247c9c8d82de4dfc81097d@epcas5p4.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d94a8e53-41e4-40b9-aac4-0041ad5db9af@roeck-us.net>
 
-Hi Guenter,
+FSD platform has two instances of EQoS IP, one is in FSYS0 block and
+another one is in PERIC block. This patch series add required DT file
+modifications for the same.
 
-On Thu, Feb 13, 2025 at 04:24:25AM -0800, Guenter Roeck wrote:
-> I have no idea what changed since v1 or why. If you can see that
-> in the patch description, good for you.
+Changes since v1:
+1. Addressed the format related corrections.
+2. Addressed the MAC address correction.
 
-The change log is in the cover letter [1]. I just noticed that I forgot to Cc
-the cover letter to the watchdog mailing list, sorry about that!
+Changes since v2:
+1. Corrected intendation issues.
 
-This v2 is sent due to conflict with 6.14-rc1. Most patches (including this
-one) are the same.
+Changes since v3:
+1. Removed alias names of ethernet nodes
 
-Best regards,
-Nam
+Changes since v4:
+1. Added more details to the commit message as per review comment.
 
-[1] https://lore.kernel.org/lkml/cover.1738746821.git.namcao@linutronix.de/
+Changes since v5:
+1. Avoided inserting node in the end and inserted it in between as per
+address.
+2. Changed the node label.
+3. Separating DT patches from net patches and posting in different
+branches.
+
+Here is the link to v5 patches for reference:
+https://lore.kernel.org/netdev/1cb63ff4-8926-4bbc-8a78-59103d167140@kernel.org/
+
+This patch depends on the DT binding patch
+https://lore.kernel.org/netdev/20250213044624.37334-2-swathi.ks@samsung.com/
+
+And the driver patch
+https://lore.kernel.org/netdev/20250213044624.37334-3-swathi.ks@samsung.com/
+
+Swathi K S (2):
+  arm64: dts: fsd: Add Ethernet support for FSYS0 Block of FSD SoC
+  arm64: dts: fsd: Add Ethernet support for PERIC Block of FSD SoC
+
+ arch/arm64/boot/dts/tesla/fsd-evb.dts      |  18 ++++
+ arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi | 112 +++++++++++++++++++++
+ arch/arm64/boot/dts/tesla/fsd.dtsi         |  49 +++++++++
+ 3 files changed, 179 insertions(+)
+
+-- 
+2.17.1
+
