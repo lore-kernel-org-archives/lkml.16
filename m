@@ -1,241 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6910211299
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A232116E9
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739437783; cv=none; b=grqRaPtl7JCv63PDgjRsbqG99tS6RXaj8GzbGdn2+L2gufxwCffxh4fPXApiA+s/jvTLXolBzeL046nXlL/LFLnQgNr4mICeztdSpABsV60kKwYc6XVFhEnSjUSmiMP/8IfCd6+RT9a1UaNFrDnzgcCVP8SJuM0K5zM00AhOMzg=
+	t=1739437789; cv=none; b=lR0WHjuhjJtMyijrb/Of1CQDL/QHt0J3XSeuBuXLdcj9s5OnoYM9YdTB1hkcQfxHq7DdtSN8CFFEb47phitXTkmlVdPr1EDP9qa17l6eEOpg0vY/vimATW21tppxPcgrI4Yd6jB9z5clEZGdkIi6OPyb3NaDaCjUHnlKlR3k39U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739437783; c=relaxed/simple;
-	bh=MFyJzG3kxv6rgiXk0F67ley3QB9Ga1PK84Oojs3YhRQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AHbqTyhOB7aSNr3AiaUeJOd+GltTYHT5MeAoxBviQ30cUdx9LlMUwt4sfXib9HhZ3LQqNuNhSoQZHOAb5eQP9bo6eK1J/KPLMAnY8a5BiuUBGQChWwjpvrxNta3L01gKeXTKlQiQww0iIXOJd6x8W0I87hGHC18aK1aVkRTEX04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YQ0XkJiA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739437789; c=relaxed/simple;
+	bh=yIofNp3DOnt44hzmtEVn7QWYrlSOhhx9bqOniqpFPVA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=tmJrZynZhMczIbKkbi8DWqJooFMiHzUVAAM7cx2fHIw9cg4fs8KAjFZSR3eifrJ99xMKm7OYf+wR5sLjG2LftD68YBSpRneyQ3bTAnIqADNiAW3Qh0atuvlGaPkMiaYABvNQoxEdCyXtzTpY32EULR2rpXqkKHUe1ifihfdATo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=F2euJgpp; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YQ0XkJiA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739437780;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BnR6oqxI0UEcO9ewCzZls4ELgDlHtvYrPUmSJgsWcEQ=;
-	b=YQ0XkJiAnhGj4+h5UaZbAG1nEyYOr+xnJn2og2jEUMMj00oQ4OdSHNV0Xy1Se4kojOtZ/u
-	KyU7UaArIYs1YlqYmoFBuvIqbok+xl8JpmRf9Jz0DdbIK/Yt8Ltl33fo7AnldUluqiD2Fa
-	vodt/RdvAyMNfgPhrP5xj2cLjpTU0Xk=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-438-KrICtANXMgWFCqapAM3SxA-1; Thu,
- 13 Feb 2025 04:09:31 -0500
-X-MC-Unique: KrICtANXMgWFCqapAM3SxA-1
-X-Mimecast-MFC-AGG-ID: KrICtANXMgWFCqapAM3SxA
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CB8C51903080;
-	Thu, 13 Feb 2025 09:09:28 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.81])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0A7A31800570;
-	Thu, 13 Feb 2025 09:09:25 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH v2 11/11] tools/rv: Allow rv list to filter for container
-Date: Thu, 13 Feb 2025 10:08:09 +0100
-Message-ID: <20250213090819.419470-12-gmonaco@redhat.com>
-In-Reply-To: <20250213090819.419470-1-gmonaco@redhat.com>
-References: <20250213090819.419470-1-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="F2euJgpp"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab7d451f7c4so96260766b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 01:09:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1739437785; x=1740042585; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Xs0dMv8Lg47llTTsTqc4aG+TvIPsuFrqAsJa4mSZy7s=;
+        b=F2euJgpp4YTqZUodflHiB4s/i48Vmhmi2JlmW9jAOX30OqqD6CsjV0DMBbnUVwHnkk
+         qnNp+7G8HPy8m32zM/bEnL2lc4WyWI6VvTMQPq9YQh04F/MqhK4PW5O/BNb4EMbjzpTc
+         moyJJZntr9VQ4Cfl9cDDXQzIzg7yZSCgzeGus74Ivq0j3gZ4Fpd1T4T+++QwtJ6ox+yU
+         qZjEEI6w+mfzK/qI4Mw+k9KVATGi761jCQmogCdJAb+ZUMvaxOQda4HM7vdS4DvtXawu
+         V/d5vj9NrJdvj9IwPMDQQErFPUR4DpSTEZhaS2eSpTjBmBkFAK7+KOjUHxTN6lBwdFyd
+         m6Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739437785; x=1740042585;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xs0dMv8Lg47llTTsTqc4aG+TvIPsuFrqAsJa4mSZy7s=;
+        b=m9infchjemeEZb1IYnaOJCLzBscIdakbOrEfwtHKQBLrCcm/Gu52LPsfhZf3zMj7yR
+         FFyy5tPsKiuJfUM/NB/2bjWzG+94gndgy351K34m3iDwDeWyS6lm8b+xQLkqRZmK2Z0C
+         SivnSQPpujWkFuV5T+CHWrI1MWKLkYDrS5CUZYeNVq09FWVO+vyxu2BX+KpwjKm9IV4V
+         FeTO4TBJwY2bz+3T7PnR+X/oY5g9sUK8Wwar2Wmq5j+zV5wnAMjbi83fqejukYbSh8EN
+         TNusmSE14Yyqh6w2eLoXelD3NpOIOR6uNg3+JtqjdriOCmI1dCcRlFQgiY9Naa5adxxC
+         axtA==
+X-Forwarded-Encrypted: i=1; AJvYcCXCg4jzEQ179+D7pwUU4PSWNMae7ZmcBUuwGw5Fn3lBMS/DCJbHN3TgH7c/OeA2NSRQSE5XhGyPn8MZw/E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ6+DDenVP9Vh1fvCz7TDwXKqL6ELossvlO6ol+0gkJx2u2YMp
+	bgHRo2MNj2uzXUDt6R2xtiO6zxe5/2zHSFTru3XYoHtJOibj+dilRC8VSvirC3EnCnZxY/+bssc
+	B
+X-Gm-Gg: ASbGncvAnQe3fuTP1Gag0kuDxhP0tiHz0SH/O+GfQFNF54G0zC2ENLcbvrCBRcsB4r7
+	I78w5TsxdPCy89BidiBnztTOsk0UJtbI6ewXPq4VeeZy/L5CMePXKV6LUl8PKmaiQ7L99A5m3U3
+	IS19YnNRHYgaSe6hyfqKyWaERoICc6f0IqC2CYGHcNG1+75dBTzDH8D+kdjoIdmN4uPIxNNk9qp
+	Q8Ue0Vze48emCTFdCn25/Z0nGBk+1vJpn0lik6UT2wSScIDIYQ2FIIEMcbQg+qKtVm+Bp7ikBSB
+	FiSKnzfRkH+sHRM1aFA=
+X-Google-Smtp-Source: AGHT+IFfQRdWjBtuKVsNwvUqDft33DU0Ymv+Yih3Ck/9OfZla4U74TcMTKYM4uEfh0wH5+ykvybEyA==
+X-Received: by 2002:a17:907:6d29:b0:ab7:e91c:77e5 with SMTP id a640c23a62f3a-ab7f334447emr670362566b.11.1739437785520;
+        Thu, 13 Feb 2025 01:09:45 -0800 (PST)
+Received: from [10.100.51.161] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5339d96dsm89457866b.153.2025.02.13.01.09.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 01:09:45 -0800 (PST)
+Message-ID: <ba4e7509-cab5-4987-ba2e-4a00eebcc348@suse.com>
+Date: Thu, 13 Feb 2025 10:09:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [modules?] KMSAN: uninit-value in __request_module (6)
+To: da.gomez@samsung.com, linux-modules@vger.kernel.org, mcgrof@kernel.org,
+ samitolvanen@google.com
+References: <67aca50a.050a0220.110943.004e.GAE@google.com>
+Content-Language: en-US
+Cc: syzbot <syzbot+1fcd957a82e3a1baa94d@syzkaller.appspotmail.com>,
+ linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <67aca50a.050a0220.110943.004e.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add possibility to supply the container name to rv list:
+On 2/12/25 14:41, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    febbc555cf0f Merge tag 'nfsd-6.14-1' of git://git.kernel.o..
+> git tree:       upstream
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=137a78e4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=48f90cac5eea091a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=1fcd957a82e3a1baa94d
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177a78e4580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16adc3f8580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/f90f94285615/disk-febbc555.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/b8a8bb66806c/vmlinux-febbc555.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/c8af6c511559/bzImage-febbc555.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+1fcd957a82e3a1baa94d@syzkaller.appspotmail.com
+> 
+> =====================================================
+> BUG: KMSAN: uninit-value in string_nocheck lib/vsprintf.c:633 [inline]
+> BUG: KMSAN: uninit-value in string+0x3ec/0x5f0 lib/vsprintf.c:714
+>  string_nocheck lib/vsprintf.c:633 [inline]
+>  string+0x3ec/0x5f0 lib/vsprintf.c:714
+>  vsnprintf+0xa5d/0x1960 lib/vsprintf.c:2843
+>  __request_module+0x252/0x9f0 kernel/module/kmod.c:149
+>  team_mode_get drivers/net/team/team_core.c:480 [inline]
+>  team_change_mode drivers/net/team/team_core.c:607 [inline]
+>  team_mode_option_set+0x437/0x970 drivers/net/team/team_core.c:1401
+>  team_option_set drivers/net/team/team_core.c:375 [inline]
+>  team_nl_options_set_doit+0x1339/0x1f90 drivers/net/team/team_core.c:2661
+>  genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+>  genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+>  genl_rcv_msg+0x1214/0x12c0 net/netlink/genetlink.c:1210
+>  netlink_rcv_skb+0x375/0x650 net/netlink/af_netlink.c:2543
+>  genl_rcv+0x40/0x60 net/netlink/genetlink.c:1219
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
+>  netlink_unicast+0xf52/0x1260 net/netlink/af_netlink.c:1348
+>  netlink_sendmsg+0x10da/0x11e0 net/netlink/af_netlink.c:1892
+>  sock_sendmsg_nosec net/socket.c:718 [inline]
+>  __sock_sendmsg+0x30f/0x380 net/socket.c:733
+>  ____sys_sendmsg+0x877/0xb60 net/socket.c:2573
+>  ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2627
+>  __sys_sendmsg net/socket.c:2659 [inline]
+>  __do_sys_sendmsg net/socket.c:2664 [inline]
+>  __se_sys_sendmsg net/socket.c:2662 [inline]
+>  __x64_sys_sendmsg+0x212/0x3c0 net/socket.c:2662
+>  x64_sys_call+0x2ed6/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:47
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> Uninit was created at:
+>  slab_post_alloc_hook mm/slub.c:4121 [inline]
+>  slab_alloc_node mm/slub.c:4164 [inline]
+>  kmem_cache_alloc_node_noprof+0x907/0xe00 mm/slub.c:4216
+>  kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:587
+>  __alloc_skb+0x363/0x7b0 net/core/skbuff.c:678
+>  alloc_skb include/linux/skbuff.h:1331 [inline]
+>  netlink_alloc_large_skb+0x1b4/0x280 net/netlink/af_netlink.c:1196
+>  netlink_sendmsg+0xa96/0x11e0 net/netlink/af_netlink.c:1867
+>  sock_sendmsg_nosec net/socket.c:718 [inline]
+>  __sock_sendmsg+0x30f/0x380 net/socket.c:733
+>  ____sys_sendmsg+0x877/0xb60 net/socket.c:2573
+>  ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2627
+>  __sys_sendmsg net/socket.c:2659 [inline]
+>  __do_sys_sendmsg net/socket.c:2664 [inline]
+>  __se_sys_sendmsg net/socket.c:2662 [inline]
+>  __x64_sys_sendmsg+0x212/0x3c0 net/socket.c:2662
+>  x64_sys_call+0x2ed6/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:47
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> CPU: 0 UID: 0 PID: 5814 Comm: syz-executor989 Not tainted 6.14.0-rc2-syzkaller-00034-gfebbc555cf0f #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+> =====================================================
 
-  # rv list sched
-  mon1
-  mon2
-  mon3
+For the record in linux-modules, Eric Dumazet posted a fix for this
+issue at:
+https://lore.kernel.org/netdev/20250212134928.1541609-1-edumazet@google.com/
 
-This lists only monitors in sched, without indentation.
-Supplying -h, any option (string starting with -) or more than 1
-argument will still print the usage.
-Passing a non-existent container prints nothing and passing no container
-continues to print all monitors, showing indentation for nested
-monitors, reported after their container.
-
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
- tools/verification/rv/include/in_kernel.h |  2 +-
- tools/verification/rv/src/in_kernel.c     | 36 +++++++++++++++------
- tools/verification/rv/src/rv.c            | 38 +++++++++++++++--------
- 3 files changed, 53 insertions(+), 23 deletions(-)
-
-diff --git a/tools/verification/rv/include/in_kernel.h b/tools/verification/rv/include/in_kernel.h
-index 3090638c8d710..f3bfd3b9895fe 100644
---- a/tools/verification/rv/include/in_kernel.h
-+++ b/tools/verification/rv/include/in_kernel.h
-@@ -1,3 +1,3 @@
- // SPDX-License-Identifier: GPL-2.0
--int ikm_list_monitors(void);
-+int ikm_list_monitors(char *container);
- int ikm_run_monitor(char *monitor, int argc, char **argv);
-diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
-index 032b851019290..c0dcee795c0de 100644
---- a/tools/verification/rv/src/in_kernel.c
-+++ b/tools/verification/rv/src/in_kernel.c
-@@ -180,19 +180,25 @@ static char *ikm_read_desc(char *monitor_name)
- /*
-  * ikm_fill_monitor_definition - fill monitor's definition
-  *
-- * Returns -1 on error, 0 otherwise.
-+ * Returns -1 on error, 1 if the monitor does not belong in the container, 0 otherwise.
-+ * container can be NULL
-  */
--static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
-+static int ikm_fill_monitor_definition(char *name, struct monitor *ikm, char *container)
- {
- 	int enabled;
- 	char *desc, *nested_name;
- 
- 	nested_name = strstr(name, ":");
- 	if (nested_name) {
-+		/* it belongs in container if it starts with "container:" */
-+		if (container && strstr(name, container) != name)
-+			return 1;
- 		*nested_name = '/';
- 		++nested_name;
- 		ikm->nested = 1;
- 	} else {
-+		if (container)
-+			return 1;
- 		nested_name = name;
- 		ikm->nested = 0;
- 	}
-@@ -328,12 +334,12 @@ static int ikm_has_id(char *monitor_name)
-  *
-  * Returns 0 on success, -1 otherwise.
-  */
--int ikm_list_monitors(void)
-+int ikm_list_monitors(char *container)
- {
- 	char *available_monitors;
- 	struct monitor ikm = {0};
- 	char *curr, *next;
--	int retval;
-+	int retval, list_monitor = 0;
- 
- 	available_monitors = tracefs_instance_file_read(NULL, "rv/available_monitors", NULL);
- 
-@@ -347,17 +353,29 @@ int ikm_list_monitors(void)
- 		next = strstr(curr, "\n");
- 		*next = '\0';
- 
--		retval = ikm_fill_monitor_definition(curr, &ikm);
--		if (retval)
-+		retval = ikm_fill_monitor_definition(curr, &ikm, container);
-+		if (retval < 0)
- 			err_msg("ikm: error reading %d in kernel monitor, skipping\n", curr);
- 
--		printf("%s%-*s %s %s\n", ikm.nested ? " - " : "",
--		       ikm.nested ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
--		       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
-+		if (!retval) {
-+			int indent = ikm.nested && !container;
-+
-+			list_monitor = 1;
-+			printf("%s%-*s %s %s\n", indent ? " - " : "",
-+			       indent ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
-+			       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
-+		}
- 		curr = ++next;
- 
- 	} while (strlen(curr));
- 
-+	if (!list_monitor) {
-+		if (container)
-+			printf("-- No monitor found in container %s --\n", container);
-+		else
-+			printf("-- No monitor found --\n");
-+	}
-+
- 	free(available_monitors);
- 
- 	return 0;
-diff --git a/tools/verification/rv/src/rv.c b/tools/verification/rv/src/rv.c
-index 1ddb855328165..239de054d1e06 100644
---- a/tools/verification/rv/src/rv.c
-+++ b/tools/verification/rv/src/rv.c
-@@ -41,30 +41,42 @@ static void rv_list(int argc, char **argv)
- {
- 	static const char *const usage[] = {
- 		"",
--		"  usage: rv list [-h]",
-+		"  usage: rv list [-h] [container]",
- 		"",
- 		"	list all available monitors",
- 		"",
- 		"	-h/--help: print this menu",
-+		"",
-+		"	[container]: list only monitors in this container",
- 		NULL,
- 	};
--	int i;
--
--	if (argc > 1) {
-+	int i, print_help = 0, retval = 0;
-+	char *container = NULL;
-+
-+	if (argc == 2) {
-+		if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")) {
-+			print_help = 1;
-+			retval = 0;
-+		} else if (argv[1][0] == '-') {
-+			/* assume invalid option */
-+			print_help = 1;
-+			retval = 1;
-+		} else
-+			container = argv[1];
-+	} else if (argc > 2) {
-+		/* more than 2 is always usage */
-+		print_help = 1;
-+		retval = 1;
-+	}
-+	if (print_help) {
- 		fprintf(stderr, "rv version %s\n", VERSION);
--
--		/* more than 1 is always usage */
- 		for (i = 0; usage[i]; i++)
- 			fprintf(stderr, "%s\n", usage[i]);
--
--		/* but only -h is valid */
--		if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))
--			exit(0);
--		else
--			exit(1);
-+		exit(retval);
- 	}
- 
--	ikm_list_monitors();
-+	ikm_list_monitors(container);
-+
- 	exit(0);
- }
- 
--- 
-2.48.1
-
+-- Petr
