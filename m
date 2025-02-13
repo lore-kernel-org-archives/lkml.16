@@ -1,139 +1,132 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0213B221554
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A55823F439;
+	Thu, 13 Feb 2025 13:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739453645; cv=none; b=Cj4ZY+1m7MPXzqRBf82/CPNApYOp8RZ2RcHqgp2jl3AJ3S658KNmfOSkvEC2e3+pjDsw3xDfK1f9ouyzVeBaGgm3m3bwhuYaou4BR6Vm+/r9zCqYmGuCIncVmrjzb++2V5mZkAm/ns7/0IhUDakZFmpcbRz44dRhNehQIzbMntw=
+	t=1739453748; cv=none; b=kBY8stcJOOHpP+bc0Bcd0WKKwth4puuy4CxbLh1/+yMNlY1V9gGGySvuWik6Raj8VRPBDUfTOxQ+vmD1xDhcaU5/ApxfliYKxIPNcevDIIHVFdVZGhegyjOAW7giWLJTzbV310EwZbytx6OzXvlCOr8Ko7gxkyIjhpJkBAqbLnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739453645; c=relaxed/simple;
-	bh=1Zo/b2fnH+KRJJ+uyJsBTTf+jevAOBBplgRMa6qKklE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mq2Ep5+UCk20HPfgwTWH9X152Itwg0h+puH4w7vF0f80z1WUdwgvF3ImtxulY50D2qBFALbveZACPeqw+tQ3eZH8lmD/jrf04lAvZtRWFVKYrc7Nd9bqWuQzUUN9SgMxy65TAEwV8mA0QoqrGYB3uQ+Y5iC6M0UElLCQ0XloDLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q9zWcLC5; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739453748; c=relaxed/simple;
+	bh=LAJ2zcQtXURfChEloX6J+PyoNgE5CNbfUKecNJ4qpMA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=krAy0G75028t+vAKpAqmD+NVy3W76nsmBhnPTM1cpfblhEacrmvPVxC9+kQK/aUCE62WKEIZyABgWCtJDVDsL5oImjFUUC0B7EQflHadTB9nH+yIg/TXXGZZ8rLAcnRL7i59yiyvMWbS064pQsjkrOaMt8cY165io+xbnFpjQho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=arw9M1in; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q9zWcLC5"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6f9cc6fefa8so5969377b3.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 05:34:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739453642; x=1740058442; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DRxuVvwSNDjMnXgRSeSCG5b6A90Xszx88z8fNg1clK0=;
-        b=Q9zWcLC5MOx55iLr+RiiOPTjRTERPPm4EWn/zqn2wlrkxZnS6VXwKq1pH2VLIwFJ1r
-         w5VyxYwXWSHYbEEXMf8guc0ASjNIMgR8lBkJ8ceRF5jW0ZGL10eFRYOuPNqKidKrQZ1u
-         RhtYaYOyCXpGvrlO4p+AHgPB8cDGvlg6DOJ6DJLlTIwKcsUVQpMTc6Fl3gH1l+4uzOUD
-         npjEhZDmLQ7gNQ0jN6adx3moD3WpPZcODqwnxcuR1FhqjuEGNvf+Jqvxh9iltVHlVm6a
-         z55KGMtEOhvunWUcq3enTH+KtfxpXbvVon0pbki5rOxjpwXD5gmOvdsge+mq50Ew2qHF
-         i8Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739453642; x=1740058442;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DRxuVvwSNDjMnXgRSeSCG5b6A90Xszx88z8fNg1clK0=;
-        b=Z6EWHjnzEdiR8JHiizGHVKSZMecrLwR8i8Pgqt+Dl94SsxIplLxhjoAtPuSfiMBC+z
-         3BPXoX5ZJGS1BYQLrRMrBjKMKvP3jUqqjCXxgd91o+oh4Y8UKcEh/Rc7eMVSl5pswl9H
-         wssxCvWum7uro4oWjRsMk0bUcc/0FnCpwpu9eSpVKcM79NPoupO4XkCCvkYpA63ccCZ5
-         Gwudd3mFm0LWR02/05l4SSSEucM5sUBSgnML8MRJ4pNFwDVIvquExbCKfD1fMSp9D1om
-         j1jeIrT5ZZtB28LTeQfQD9aR3iSoGlU1ksyfiBolcZuyGgV5RJ8AlQYNQY3A8VZCeDp3
-         4teA==
-X-Forwarded-Encrypted: i=1; AJvYcCXV0bu4ojj0+rdWxybRIPEUfht53SxawQnVdxryQGlb/hxy48nIHENsyXGncHONPJJeTrPFtH2i+G5MyqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYglqc5j1finW4v29GrAN9lnjxaM0LqboQcVdx/TSWALq4RoVv
-	1NgEu6TGj5QwtV0HhQVTV7zLNKkYAT4keQj9CK3zLDSK9+OgOusi2AVOojUtpFnXBtSaz9XqP2/
-	PjxsSWD5a5e5Rleih5S9hRpRwu8gfzVFJ+toW
-X-Gm-Gg: ASbGncstx+E/6Zvruyym/RIuT7IvvCD1rFCOCJ77tlOHerJjHjVFqzdVYa1pEqb4dGK
-	Q7g5ww0YSiwvKj5oDvzG13Ok80obedoKCXislG3sc2QETuOcVCztGHBnBVyQ374Zi5plS7g==
-X-Google-Smtp-Source: AGHT+IF30ZkMMq8IrQ1Se84n4sKD0GvX5J7aA84qCQbXLCMSoSpfvD+rGWf1JdZYduPjA+px3O11cfkJuPs60tUkK7k=
-X-Received: by 2002:a05:690c:9a05:b0:6f7:50b7:8fe0 with SMTP id
- 00721157ae682-6fb1f171ef9mr76470707b3.1.1739453641740; Thu, 13 Feb 2025
- 05:34:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="arw9M1in"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68F15C4CED1;
+	Thu, 13 Feb 2025 13:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739453747;
+	bh=LAJ2zcQtXURfChEloX6J+PyoNgE5CNbfUKecNJ4qpMA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=arw9M1inPJ3KBtNIz/FdWR/6iSGrlOOOicAFLkNuJMdh3JxN6wiSlv3HP1roeq7jo
+	 exmPjmlT7Xm/kp+INfcLmqal7CQ5r46w+bXWXdoaRKw2Cq66+wQLmfG8A+QeUGqpfI
+	 4hrgyXoy64bm4SW2uKsK3mt5FEAjtOfeslUmlpvsp13vwIojLujCwTtEOBytzvl2yq
+	 /Giv/NdvQscOclSh9QYAoSN52fPB5PBsCsf3oRmQUQI/r4a9v/4quhJzdJn6ig4G7g
+	 eh20wMBpR+8SN2EssbmHnT5CrIauBRHDVLTX2AI4y0QCol304uwZM7TG42sPQY06sA
+	 4WRawVqKCxo2w==
+Date: Thu, 13 Feb 2025 22:35:42 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Sami Tolvanen <samitolvanen@google.com>, Steven Rostedt
+ <rostedt@goodmis.org>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Gabriel de Perthuis <g2p.code@gmail.com>, Haiyue Wang <haiyuewa@163.com>,
+ Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
+ x86@kernel.org, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
+ get_kernel_nofault()
+Message-Id: <20250213223542.44542e542434158056d3b7ed@kernel.org>
+In-Reply-To: <20250213102634.GA30841@noisy.programming.kicks-ass.net>
+References: <20250206081225.GI7145@noisy.programming.kicks-ass.net>
+	<20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
+	<20250206121328.GN7145@noisy.programming.kicks-ass.net>
+	<20250206123307.GO7145@noisy.programming.kicks-ass.net>
+	<20250207085959.b3e9d922eab33edf885368e3@kernel.org>
+	<20250210173016.0ce79bc8@gandalf.local.home>
+	<20250211100914.GA29593@noisy.programming.kicks-ass.net>
+	<20250211105002.31b5a517@gandalf.local.home>
+	<CABCJKudwf11wAbv9NdKh_FN-Z+pLaupMHJxNGtRKK1-1D94hCQ@mail.gmail.com>
+	<20250213100836.GC28068@noisy.programming.kicks-ass.net>
+	<20250213102634.GA30841@noisy.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250213114400.v4.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
- <2025021352-dairy-whomever-f8bd@gregkh> <CADg1FFdez0OdNDPRFPFxNHL_JcKmHE6KNxnYvt4sK7i+Uw6opA@mail.gmail.com>
- <2025021347-washboard-slashed-5d08@gregkh>
-In-Reply-To: <2025021347-washboard-slashed-5d08@gregkh>
-From: Hsin-chen Chuang <chharry@google.com>
-Date: Thu, 13 Feb 2025 21:33:34 +0800
-X-Gm-Features: AWEUYZm_SnsYMtD42yF00_gIA0hMGPrnexms2cvVn9JmpgVsDbzt-5pObZIgJMo
-Message-ID: <CADg1FFdbKx3z+SPWFmY4+xZmewh0MnnZp_gmYEdY0z-mxutmEw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] Bluetooth: Fix possible race with userspace of
- sysfs isoc_alt
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: luiz.dentz@gmail.com, linux-bluetooth@vger.kernel.org, 
-	chromeos-bluetooth-upstreaming@chromium.org, 
-	Hsin-chen Chuang <chharry@chromium.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Ying Hsu <yinghsu@chromium.org>, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 13, 2025 at 8:10=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> A: http://en.wikipedia.org/wiki/Top_post
-> Q: Were do I find info about this thing called top-posting?
-> A: Because it messes up the order in which people normally read text.
-> Q: Why is top-posting such a bad thing?
-> A: Top-posting.
-> Q: What is the most annoying thing in e-mail?
->
-> A: No.
-> Q: Should I include quotations after my reply?
->
-> http://daringfireball.net/2007/07/on_top
->
-> On Thu, Feb 13, 2025 at 07:57:15PM +0800, Hsin-chen Chuang wrote:
-> > The btusb driver data is allocated by devm_kzalloc and is
-> > automatically freed on driver detach, so I guess we don't have
-> > anything to do here.
->
-> What?  A struct device should NEVER be allocated with devm_kzalloc.
-> That's just not going to work at all.
+On Thu, 13 Feb 2025 11:26:34 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Noted. Perhaps that needs to be refactored together.
+> On Thu, Feb 13, 2025 at 11:08:36AM +0100, Peter Zijlstra wrote:
+> > On Wed, Feb 12, 2025 at 08:52:27AM -0800, Sami Tolvanen wrote:
+> > > On Tue, Feb 11, 2025 at 7:49 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+> > > >
+> > > > On Tue, 11 Feb 2025 11:09:14 +0100
+> > > > Peter Zijlstra <peterz@infradead.org> wrote:
+> > > >
+> > > > > I was aiming my patch for x86/core, but if there's a reason to expedite
+> > > > > them, I can stick it in x86/urgent I suppose.
+> > > > >
+> > > > > Just need a reason -- what's this compile error nonsense about, my
+> > > > > kernels build just fine?
+> > > >
+> > > > Masami,
+> > > >
+> > > > Do you have a config that fails to build without this fix? If so, can you
+> > > > please reply with it, and then this can go in as a quick fix.
+> > > 
+> > > x86 builds with both CONFIG_GENDWARFKSYMS and CONFIG_FUNCTION_TRACER
+> > > are broken without this fix. Here's how to reproduce:
+> > > 
+> > > $ make defconfig
+> > > $ ./scripts/config -e DEBUG_INFO -e DEBUG_INFO_DWARF5 -e MODVERSIONS
+> > > -e GENDWARFKSYMS -e FUNCTION_TRACER
+> > > $ make olddefconfig && make -j
+> > > ...
+> > > In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
+> > >                  from <stdin>:3:
+> > > ./arch/x86/include/asm/ftrace.h: In function ‘arch_ftrace_get_symaddr’:
+> > > ./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of
+> > > function ‘get_kernel_nofault’ [-Wimplicit-function-declaration]
+> > >    46 |                 if (get_kernel_nofault(instr, (u32
+> > > *)(fentry_ip - ENDBR_INSN_SIZE)))
+> > > ...
+> > 
+> > It breaks much sooner, complaining about not having dwarf.h.. let me go
+> > figure out what package provides that :/
+> 
+> Bah, ofcourse there's libdwarf-dev and libdw-dev, both providing
+> dwarf.h. Obviously I installed libdwarf-dev and instead I need libdw-dev
+> *hate*
 
->
-> > Or perhaps we should move btusb_disconnect's content here? Luiz, what
-> > do you think?
->
-> I think something is really wrong here.  Why are you adding a new struct
-> device to the system?  What requires that?  What is this new device
-> going to be used for?
+Agreed. :(
 
-The new device is only for exposing a new sysfs attribute.
+> 
+> Anyway, yes, compile now fails as advertised.
+> 
+> And patch fixes it -- now I need to figure out what to do about urgent,
+> because applying it on top of Linus' tree will create conflicts with
+> patches already in tip/x86/mm *sigh*.
 
-So originally we had a device called hci_dev, indicating the
-implementation of the Bluetooth HCI layer. hci_dev is directly the
-child of the usb_interface (the Bluetooth chip connected through USB).
-Now I would like to add an attribute for something that's not defined
-in the HCI layer, but lower layer only in Bluetooth USB.
-Thus we want to rephrase the structure: usb_interface -> btusb (new
-device) -> hci_dev, and then we could place the new attribute in the
-new device.
+Hmm, if so, can you pick my patch [1], which does not introduce any
+additional header including issue?
 
-Basically I kept the memory management in btusb unchanged in this
-patch, as the new device is only used for a new attribute.
-Would you suggest we revise the memory management since we added a
-device in this module?
+[1] https://lore.kernel.org/all/173881156244.211648.1242168038709680511.stgit@devnote2/
 
->
-> confused,
->
->
-> greg k-h
 
---=20
-Best Regards,
-Hsin-chen
+Thank you,
+
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
