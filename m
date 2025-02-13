@@ -1,62 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FC626E159;
-	Thu, 13 Feb 2025 22:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.mvand.net (mail.mvand.net [185.229.52.35])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 842E226E15D;
+	Thu, 13 Feb 2025 22:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.229.52.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739485560; cv=none; b=itEjXxblOnYPhirfPF7DRSU1QkpDRNGFiXr+PRe4LIVV3sdhnqHBKaFoyMTfJ9S9NqgUZVsEkudDAub6FGUvvA/SvOT097OWBcI95lL+wLLmsgYq5sfuOQeeMBUhgov7YIHk4DGZx2g02nMczH3SfO/Z0eBJFXMH2Ip7fwgrUao=
+	t=1739485566; cv=none; b=aI+61OJ1w7NwRlZKustztxzzWorMdQgRqCwLUZ6RzuYmjPK/wZuwvVHgX68mUKJ3NG5GVXarU0RVuwmZf8U9rL3npQzYIHa2fuJg7RKl9Sa0YFs19Bl6tTNwap+l3iFsD+UFvkekiUJ0HfT2UA3Na8PlFYkp/Po1Amyy+4agNtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739485560; c=relaxed/simple;
-	bh=ylVap6Al2775f4UI/B+6B7Ze8RIOMoqYidVKiT1nRzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PA5IHDp6MQ8ypeb6RgwhRf3408IrvsHvKRjnsIXw5RFEXcGtQ0BEEqJ6anidAtHTyG/WR9c6+v9AO6ylMFlvEbYl7jO/XywqxJHmQrXGbG43GCcYUmOBgwnreJIrUVdHvjCTaQV8411n0xPcOoKFOc2Yjg3mNW20d9qSNgikpgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NazImkbr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739485566; c=relaxed/simple;
+	bh=++zlBheuf2ghp6IKg2VkyhrcpY1H9g9JvPugZj9lb6c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ItujleHTMyDivYxde2Rv8tNb0aDPCir5ZnLrRexg+6EJb6nXSGhu43qI3mhHRZPF6ZMDvw0Yi9c7ys4YRXMEYsyqbZIyMs4AdzAuDhw4HCOHZNgsxsxFrCxbl/2+VYHjJ3YQOz+lYz9jh9TeY7mPOelI9PADTcwZC4oYkA7oaqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=martijnvandeventer.nl; spf=pass smtp.mailfrom=martijnvandeventer.nl; dkim=pass (2048-bit key) header.d=martijnvandeventer.nl header.i=@martijnvandeventer.nl header.b=wQ+otXL/; arc=none smtp.client-ip=185.229.52.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=martijnvandeventer.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=martijnvandeventer.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NazImkbr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B0BC4CED1;
-	Thu, 13 Feb 2025 22:26:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739485560;
-	bh=ylVap6Al2775f4UI/B+6B7Ze8RIOMoqYidVKiT1nRzo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NazImkbryysz2Jvih95SKmjuQnQiAMTB//xSzr1LvehUbFQnJRpC8JM2rHAxMXQxU
-	 xH/0xGmpr53HO9L79ZJXUhp/Vtd0hyk4E7kKn+EhoyNbpKfiv3gF47ze8byUqz94dg
-	 CHRiCJVJVJdxg9LRysj+JZpiKk7FWgkVzvB7TQ0ZXFGwQDSK7Yammx5E94MqvGEmxM
-	 c4ordmNx9Vd2FFS9G7e5Qy76jwZzmAboZxN8NpQoVPPbvu20DMqSgLHQXWvT2wPRUp
-	 TrFsDMXwiLJo+RB+tRZu0ARu+2lRASDGww1EDn80F1Z2p0oDPecsAz2KesWV7AOmM6
-	 bFDtaXVm9LXEw==
-Date: Thu, 13 Feb 2025 23:25:55 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: linux-kernel@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: Add maintainer for Qualcomm's I2C GENI
- driver
-Message-ID: <nozabphomzcwgdnwlibzibuy3jdx2juihyewsrwaslbgk32nz7@kkw47rlus3xi>
-References: <20250123084147.3632023-1-quic_msavaliy@quicinc.com>
+	dkim=pass (2048-bit key) header.d=martijnvandeventer.nl header.i=@martijnvandeventer.nl header.b="wQ+otXL/"
+Received: from xrossbuild.mvand.net (mail.mvand.net [185.229.52.35])
+	by mail.mvand.net (Postfix) with ESMTPSA id 4E4D21FF3D;
+	Thu, 13 Feb 2025 23:17:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=martijnvandeventer.nl; s=default; t=1739485043;
+	bh=++zlBheuf2ghp6IKg2VkyhrcpY1H9g9JvPugZj9lb6c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=wQ+otXL/AsRnI0M5Wli7eTKcR1/hhmmL/vCU/O1IhJgNCGT7hTbuBSjpI+2RlDVQ2
+	 vNBKUGLbrLt7BuIbR/sr98pFGcsxJpO4V6wg7ZEfTK9x9PtOAL8a0vwBYaW0+jDfSE
+	 yv3oblxoousTZWjoAWLYGD3akzcFCRTO+f5jC51/VEjvVR7dUubb0MD8Rl0fSQWVdN
+	 QaXHBZkqMHh6HClJNQBSgndP8VJwIZ2HXQ2a4NZsoiEWa+ItYcVlLje011BRFs8yKe
+	 6CMAAdUy04lLaOLmm2IIYfOIZefKiENDwZzArE4ADVmbMHRE6EXVPKJTX1Y2yDE8yb
+	 PT6ice7j7RwIw==
+From: Martijn van Deventer <linux@martijnvandeventer.nl>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: meson: g12a: Fix kernel warnings when no display attached
+Date: Thu, 13 Feb 2025 23:17:01 +0100
+Message-Id: <20250213221702.606-1-linux@martijnvandeventer.nl>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250123084147.3632023-1-quic_msavaliy@quicinc.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Mukesh,
+When booting SM1 or G12A boards without a dislay attached to HDMI,
+the kernel shows the following warning:
 
-> +QUALCOMM I2C QCOM GENI DRIVER
-> +M:	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-> +M:	Viken Dadhaniya <quic_vdadhani@quicinc.com>
+[CRTC:46:meson_crtc] vblank wait timed out
+WARNING: CPU: 2 PID: 265 at drivers/gpu/drm/drm_atomic_helper.c:1682 drm_atomic_helper_wait_for_vblanks.part.0+0x240/0x264
+CPU: 2 UID: 0 PID: 265 Comm: setfont Tainted: G         C
+Tainted: [C]=CRAP
+pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : drm_atomic_helper_wait_for_vblanks.part.0+0x240/0x264
+lr : drm_atomic_helper_wait_for_vblanks.part.0+0x240/0x264
+Call trace:
+ drm_atomic_helper_wait_for_vblanks.part.0+0x240/0x264
+ drm_atomic_helper_commit_tail_rpm+0x84/0xa0
+ commit_tail+0xa4/0x18c
+ drm_atomic_helper_commit+0x164/0x178
+ drm_atomic_commit+0xb4/0xec
+ drm_client_modeset_commit_atomic+0x210/0x270
+ drm_client_modeset_commit_locked+0x5c/0x188
+ drm_fb_helper_pan_display+0xb8/0x1d4
+ fb_pan_display+0x7c/0x120
+ bit_update_start+0x20/0x48
+ fbcon_switch+0x418/0x54c
+ el0t_64_sync+0x194/0x198
 
-Thanks for stepping up here, I really wanted to have some
-maintainership on this driver.
+This happens when the kernel disables the unused clocks.
+Sometimes this causes the boot to hang.
 
-Applied to i2c/i2c-host-fixes.
+By (re)adding the flag CLK_IGNORE_UNUSED to the VCLK2 clocks, these
+clocks will not be disabled.
 
-Thanks,
-Andi
+This partially reverts commit b70cb1a21a54 ("clk: meson: g12a:
+make VCLK2 and ENCL clock path configurable by CCF").
 
-PS Please don't forget to include the i2c mailing list. the LKML
-   is a bit of a black hole.
+Fixes: b70cb1a21a54 ("clk: meson: g12a: make VCLK2 and ENCL clock path configurable by CCF").
+Signed-off-by: Martijn van Deventer <linux@martijnvandeventer.nl>
+---
+ drivers/clk/meson/g12a.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+index cfffd434e998..1651898658f5 100644
+--- a/drivers/clk/meson/g12a.c
++++ b/drivers/clk/meson/g12a.c
+@@ -3234,7 +3234,7 @@ static struct clk_regmap g12a_vclk2_div = {
+ 			&g12a_vclk2_input.hw
+ 		},
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_GATE,
++		.flags = CLK_SET_RATE_GATE | CLK_IGNORE_UNUSED,
+ 	},
+ };
+ 
+@@ -3270,7 +3270,7 @@ static struct clk_regmap g12a_vclk2 = {
+ 		.ops = &meson_vclk_gate_ops,
+ 		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2_div.hw },
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT,
++		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+ 	},
+ };
+ 
+@@ -3354,7 +3354,7 @@ static struct clk_regmap g12a_vclk2_div1 = {
+ 		.ops = &clk_regmap_gate_ops,
+ 		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2.hw },
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT,
++		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+ 	},
+ };
+ 
+@@ -3368,7 +3368,7 @@ static struct clk_regmap g12a_vclk2_div2_en = {
+ 		.ops = &clk_regmap_gate_ops,
+ 		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2.hw },
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT,
++		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+ 	},
+ };
+ 
+@@ -3382,7 +3382,7 @@ static struct clk_regmap g12a_vclk2_div4_en = {
+ 		.ops = &clk_regmap_gate_ops,
+ 		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2.hw },
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT,
++		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+ 	},
+ };
+ 
+@@ -3396,7 +3396,7 @@ static struct clk_regmap g12a_vclk2_div6_en = {
+ 		.ops = &clk_regmap_gate_ops,
+ 		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2.hw },
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT,
++		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+ 	},
+ };
+ 
+-- 
+2.39.2
+
