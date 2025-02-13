@@ -1,214 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1CF281341;
-	Thu, 13 Feb 2025 14:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE31281349;
+	Thu, 13 Feb 2025 14:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739457266; cv=none; b=YRRelRcj50de8MstzCqikwEQ1O+tCT7r29C0o+CeAdDGGR4dpkMk+phJ1+m4tl9bitqm18d6Lp4WP/WwHUqa/ajYmHsxgXHKnTrI2HSudHZSfa6dLH9Kmn7NHFu3VR2gfYpGr4/OI4PZyM2WesCGhJVCA+dKnFtF4ayo92ACIcg=
+	t=1739457386; cv=none; b=lQsWmRNQHBoowDYEPH88UYRnjEYJ3oQSvmzzVvIGlCUkE/LLMJLXBf5jG8+lqpwsixzv4u06EexqrziNCUDYCY05U2FnteCI0c1uWEy/Ugjieu277fUtbONqlERxmn9ECA7yYxaTRQEsGbAH2IRA3Ys6aZ6wgl4iANWjDTtB+aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739457266; c=relaxed/simple;
-	bh=x9esiaGq0KK2qewu87bHS3Bit8mLr73xNbk4rWWChKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fGzoeKWB19eRwvH/yhfBsZaZ2zL1xOYbE3mKUWmz9wljxjU/z6pKF6helrZ0ssUEZEf50pShrBJ899dEXCApXDP4fHlR4L2etG/dT1aq1GPelUlCpB9qQR4XJOv3qv2tLdRQGGcjRm1nYVbWOREFzhh2jaLhf8cpsutEAjX2o3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z5Q2IoWj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739457386; c=relaxed/simple;
+	bh=HlJsqhb8XnHHNzy8AdqFixPhoif08uRtRpp/JRim2Eo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CABg438vIZ2haBzrgub5Vau9c6QizHKwIxgax3KyHyZF5E4CBjdggSTZFWiStBm5nXrMaiJuDScw4AkhgmK4ofWelE7bWb+K/E8CCZ1gJ7Rzhkjo7F3VzIVqUI9pjAOK0JJD//qYluWFk5r/MriFENfGIpsGcUoquw1rLxuDKc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F2GDkk8h; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z5Q2IoWj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3D77C4CEE7;
-	Thu, 13 Feb 2025 14:34:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739457266;
-	bh=x9esiaGq0KK2qewu87bHS3Bit8mLr73xNbk4rWWChKQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z5Q2IoWjfOynnESM6yPsukIJs9UG7UgPVA9SZHtmsMk+3lplnYggDYx4hcy5DMM63
-	 wlA1aUM+jPufjIgVLgH+9dknto67zahYpd+1s4iRousCKmfExM7HFPbHc5BdBFoaK8
-	 Rfoc9kbZDknt/9Zz6eqAsKfmr7oPPRgSUkleUquqGUWh0rYE5F8XNy5JgOCI+pIlRH
-	 aPT4ZnJQ2nKPGmOVP+h0gEttCFn04mp7/c3SqeC7AFzPkFH8uuEGC+HxJ8/6w1jq0f
-	 5mHCHzstuEYRA0OHLhaQT30WRLnrYdgXPuRonn+Eq9nNDBet0jGwm8d9yaA6FnczJn
-	 OdguZOtp8h4sw==
-Date: Thu, 13 Feb 2025 15:34:21 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: jingoohan1@gmail.com, shradha.t@samsung.com,
-	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	Frank.Li@nxp.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rockswang7@gmail.com
-Subject: Re: [v2] PCI: dwc: Add the debugfs property to provide the LTSSM
- status of the PCIe link
-Message-ID: <Z64C7dzY3J7hCbZy@ryzen>
-References: <20250206151343.26779-1-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2GDkk8h"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2fbfa8c73a6so1848789a91.2;
+        Thu, 13 Feb 2025 06:36:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739457383; x=1740062183; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7s1AnEsbDOxMifWlKKO96YvdNulNwpNMwNrlUq5WAgw=;
+        b=F2GDkk8hyPSXXPEh9mkExKzdjCxo3/SXeC+htdQqqZy5+InDSabOcB7yMLKPkfiOTq
+         tdx601pqd/TGxStbhiKtWlpfr9HqjgNY+U0kQKpiyjBP53hz3uWexvC3x32GftlOEfLY
+         g7jHxXV582zxG3i7LhxJ3QNtcTNQdidnqpBgJ+kDzvtL7IWbem1cGdVcENqQhXs6JlYz
+         V99+lWEoLShlvd+nXFWLjr0DwCEaK/YnGoxlg3e2eol3MwaGXD2mE8AaOZDyNFZ1GISB
+         P+/2dnPK+DxgkAMm/agFGVQRvaanbkqPXL5vKpNksX7D2ca6ezFpHoTw91gExMlI7wCl
+         HXQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739457383; x=1740062183;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7s1AnEsbDOxMifWlKKO96YvdNulNwpNMwNrlUq5WAgw=;
+        b=v8yGn9KH/wCGgLY3CR4gv41Vm1wK3VOUbb6hCBPJ+dhsm3Ftu4jiPHl3NB4MoZyp/g
+         neWPEANwiQ5rwDueBsvWa3gKzXICHwZ102m8KF25PO9lho7NctgGmlbNvSvIh0KoCqpq
+         bS/rh7DbVoLWN5OpeO6sVdF1QTPvg6+3pjK/hSHWFkUvlbSmY3HzoM72XtAks4niLT5x
+         4/PN3KcaeP1ddGVHjelnpU02X9IoCUtL3K7iCcMikK5m8mPn5LNg1OezcqJBKiffAf7G
+         RYxfSnn5KK/qBO7jfHg8JZ7s7KJA4oTP7FpTSqK+3EyHJ8cmPJDQbzglVrSRC9is+eh9
+         Yggg==
+X-Forwarded-Encrypted: i=1; AJvYcCVIJaZVeG2TinyY32Llydisdie/f4/NlFZ3/DbBi5yzQLyfKFDz4RDwJJ0oEIgxt9/SQ/5lYtEInB1QfBOiN7Vj2w==@vger.kernel.org, AJvYcCVilPTfdOoHDMQmMDeUtukNYguKGsAjNyWBi6prKood4L9FG5um695+Xo4SuJlh0GQmMqNd2DUSnLLQ@vger.kernel.org, AJvYcCW0Zw3oZqqryuH4Pl5qa2jbifCor/hhpxWaL25/jSRpspKUhX2vDpK0H4p59vxdkVZ3RAr5ncv0B+Z6T7dT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+GxPSlzo6yFl5sddEt7/LV6+jHkxK35wfTaSZJNmrklF/d8zE
+	3e9U6Br9jE21o62wTSxMBeC6hqWzCdk8ISRuAJAn/hqG+BXZzfrB
+X-Gm-Gg: ASbGncvYcvMUpqzmeGpCqZSFJr/rizu7ERZyLKHXdD1fYvPz2598eyrRbpYaagzU5yq
+	19BoizAn3m2vb4/fyxYoFQCuERHZPYJy4JtLUyJu7ta5QXWGoVlGvTZl9nMHr8yVKg4oqh0RvuC
+	7Cwqe0EWwouUvB0yY/KFlEKpEtfBFY7NCeki4retCK8GpT1fBDk+JfZSO9PB+loe+mVLEjsPXhq
+	koJFytUsLmm22XHo6G6xwWCBvYYiTEGwxgYfoC06jnH/POrl16Tr/kEE5trBYHgoK1He6pI6gKw
+	gyWLsGu1Ney1r6MWMg==
+X-Google-Smtp-Source: AGHT+IFhfs9TjAcjn/ErTnxMN1WJfk7JOQCk0pFIocG3OaK+NCISwQFpuudm6tJWQ1iLr3j32Tlxow==
+X-Received: by 2002:a17:90b:2c8e:b0:2ea:712d:9a82 with SMTP id 98e67ed59e1d1-2fbf5c71357mr11037562a91.29.1739457383189;
+        Thu, 13 Feb 2025 06:36:23 -0800 (PST)
+Received: from [127.0.1.1] ([59.188.211.160])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2fbf999b5b4sm3655165a91.30.2025.02.13.06.36.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 06:36:22 -0800 (PST)
+From: Nick Chan <towinchenmi@gmail.com>
+Subject: [PATCH v3 00/10] drivers/perf: apple_m1: Add Apple A7-A11, T2 SoC
+ support
+Date: Thu, 13 Feb 2025 22:36:02 +0800
+Message-Id: <20250213-apple-cpmu-v3-0-be7f8aded81f@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206151343.26779-1-18255117159@163.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFIDrmcC/1XMywrCMBCF4VcpWRtpZlobXfke4mJM03agl5BoU
+ Erf3bQg1OU58H+zCNazDeKSzcLbyIGnMQ08ZMJ0NLZWcp22gBzKHJSS5FxvpXHDS5ZUEtaE50K
+ jSIHztuH3ht3uaXccnpP/bHZU6/tjYM9EJXPZaFM1QEZVBV7bgbg/mmkQKxNhn+JfCinV1QNP6
+ oxgtd6ny7J8AfHpc4DfAAAA
+X-Change-ID: 20250211-apple-cpmu-5a5a3da39483
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Nick Chan <towinchenmi@gmail.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1988; i=towinchenmi@gmail.com;
+ h=from:subject:message-id; bh=HlJsqhb8XnHHNzy8AdqFixPhoif08uRtRpp/JRim2Eo=;
+ b=owEBbQKS/ZANAwAIAQHKCLemxQgkAcsmYgBnrgNiM5TkmibLzic5zEE81YsjeEvk1L/dOVFUD
+ dU7mRTs/A2JAjMEAAEIAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCZ64DYgAKCRABygi3psUI
+ JKjfD/9mscaarB494OgyW4uYq1QJXorP6V5eRfYcimmfTN9369PcFCxeFReuiEaPK98qUT+2YF/
+ CBI/e3iAMHFZI3YcOgVE7ZNjBuYvLxxaqFPqhxYQRcJPG6MZZnZFDuT3tdL62Ue4NEGdDYeShaC
+ Er7IK91opJjC6qqaNrprt2d2GkuStvOK9TbZLJh+/OCVJSXzp+TsSzLurHBWHm/Bo4lpPf5RVhJ
+ oqXinanCkSZbovdZUJlPb+q6bpge/+kNpLSsc3/Zl2tfnz8zNXpr8MpPj8MRKYrwITwRKFnvDSp
+ uFNecTEscCTbURrjoFq34VMUYACEheQlq2v4AkOTA5jLpMWp3zmcayTEKsQuY98vBAvcoGeixiP
+ dhxsIKSMTSmEKPwNssoRtrdKMJCGKVSNlZP46Uxp3A18p6W0VOvQ7IMhvQBZG/B1px6CcXxD/di
+ rmCB3ispE2rueghdb1CgBCIK8UVdXYY6HCtFoUtKQBs+o6BXPBMMr2sPLIyeKQ49hs8fj9vH+FF
+ DsAn8Sqdm6Uyj0aUIxXA4eoiuOuc3C16QyvsL6IG427z/oEyGqEr4z/K10gkY5ZtWHKjfm1wTjX
+ 3M/d+NQZ8VCscIuB52fHn2zrHmsx3o9RdOLquraPTzyiKMto9DQiU2D7HV02uq2wKe6INiUl3vu
+ hC1DzYdr7M/KW5A==
+X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
+ fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
 
-On Thu, Feb 06, 2025 at 11:13:43PM +0800, Hans Zhang wrote:
-> Add the debugfs property to provide a view of the current link's LTSSM
-> status from the root port device.
-> 
->   /sys/kernel/debug/dwc_pcie_<dev>/ltssm_status
-> 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
-> Changes since v1:
-> https://lore.kernel.org/linux-pci/20250123071326.1810751-1-18255117159@163.com/
-> 
-> - Do not place into sysfs node as recommended by maintainer. Shradha-based patch
->   is put into debugfs.
-> - Submissions based on the following patches:
-> https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-2-shradha.t@samsung.com/
-> https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-3-shradha.t@samsung.com/
-> https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-4-shradha.t@samsung.com/
-> https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-5-shradha.t@samsung.com/
-> ---
->  Documentation/ABI/testing/debugfs-dwc-pcie    |  6 ++
->  .../controller/dwc/pcie-designware-debugfs.c  | 70 ++++++++++++++++---
->  .../pci/controller/dwc/pcie-designware-ep.c   |  4 +-
->  .../pci/controller/dwc/pcie-designware-host.c | 54 +++++++++++++-
->  drivers/pci/controller/dwc/pcie-designware.h  | 43 ++++++++++--
->  5 files changed, 159 insertions(+), 18 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/debugfs-dwc-pcie b/Documentation/ABI/testing/debugfs-dwc-pcie
-> index d3f84f46b400..bf0116012175 100644
-> --- a/Documentation/ABI/testing/debugfs-dwc-pcie
-> +++ b/Documentation/ABI/testing/debugfs-dwc-pcie
-> @@ -142,3 +142,9 @@ Description:	(RW) Some lanes in the event list are lane specific events. These i
->  		events 1) - 11) and 34) - 35).
->  		Write lane number for which counter needs to be enabled/disabled/dumped.
->  		Read will return the current selected lane number. Lane0 is selected by default.
-> +
-> +What:		/sys/kernel/debug/dwc_pcie_<dev>/ltssm_status
-> +Date:		February 2025
-> +Contact:	Hans Zhang <18255117159@163.com>
-> +Description:	(RO) Read will return the current value of the PCIe link status raw value and
-> +		string status.
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> index 5d883b13be84..ddfb854aa684 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> @@ -465,7 +465,7 @@ static const struct file_operations dwc_pcie_counter_value_ops = {
->  	.read = counter_value_read,
->  };
->  
-> -void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
-> +static void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
->  {
->  	struct dwc_pcie_rasdes_info *rinfo = pci->rasdes_info;
->  
-> @@ -473,13 +473,12 @@ void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
->  	mutex_destroy(&rinfo->reg_lock);
->  }
->  
-> -int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci)
-> +static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
->  {
-> -	struct dentry *dir, *rasdes_debug, *rasdes_err_inj, *rasdes_event_counter, *rasdes_events;
-> +	struct dentry *rasdes_debug, *rasdes_err_inj, *rasdes_event_counter, *rasdes_events;
->  	struct dwc_pcie_rasdes_info *rasdes_info;
->  	struct dwc_pcie_rasdes_priv *priv_tmp;
->  	const struct dwc_pcie_vendor_id *vid;
-> -	char dirname[DWC_DEBUGFS_BUF_MAX];
->  	struct device *dev = pci->dev;
->  	int ras_cap, i, ret;
->  
-> @@ -498,12 +497,6 @@ int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci)
->  	if (!rasdes_info)
->  		return -ENOMEM;
->  
-> -	/* Create main directory for each platform driver */
-> -	snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
-> -	dir = debugfs_create_dir(dirname, NULL);
-> -	if (IS_ERR(dir))
-> -		return PTR_ERR(dir);
-> -
->  	/* Create subdirectories for Debug, Error injection, Statistics */
->  	rasdes_debug = debugfs_create_dir("rasdes_debug", dir);
->  	rasdes_err_inj = debugfs_create_dir("rasdes_err_inj", dir);
-> @@ -559,3 +552,60 @@ int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci)
->  	dwc_pcie_rasdes_debugfs_deinit(pci);
->  	return ret;
->  }
-> +
-> +static int dwc_pcie_ltssm_status_show(struct seq_file *s, void *v)
-> +{
-> +	struct dw_pcie *pci = s->private;
-> +	enum dw_pcie_ltssm val;
-> +
-> +	val = dw_pcie_get_ltssm(pci);
-> +	seq_printf(s, "%s (0x%02x)\n", dw_ltssm_sts_string(val), val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int dwc_pcie_ltssm_status_open(struct inode *inode, struct file *file)
-> +{
-> +	return single_open(file, dwc_pcie_ltssm_status_show, inode->i_private);
-> +}
-> +
-> +static const struct file_operations dwc_pcie_ltssm_status_ops = {
-> +	.open = dwc_pcie_ltssm_status_open,
-> +	.read = seq_read,
-> +};
-> +
-> +static void dwc_pcie_ltssm_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
-> +{
-> +	debugfs_create_file("ltssm_status", 0444, dir, pci,
-> +			    &dwc_pcie_ltssm_status_ops);
-> +}
-> +
-> +void dwc_pcie_debugfs_deinit(struct dw_pcie *pci)
-> +{
-> +	dwc_pcie_rasdes_debugfs_deinit(pci);
-> +	debugfs_remove_recursive(pci->debugfs);
-> +}
-> +
-> +int dwc_pcie_debugfs_init(struct dw_pcie *pci)
-> +{
-> +	char dirname[DWC_DEBUGFS_BUF_MAX];
-> +	struct device *dev = pci->dev;
-> +	struct dentry *dir;
-> +	int ret;
-> +
-> +	/* Create main directory for each platform driver */
-> +	snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
-> +	dir = debugfs_create_dir(dirname, NULL);
-> +	if (IS_ERR(dir))
-> +		return PTR_ERR(dir);
-> +
-> +	pci->debugfs = dir;
-> +	ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
-> +	if (ret)
-> +		dev_dbg(dev, "rasdes debugfs init failed\n");
-> +
-> +	dwc_pcie_ltssm_debugfs_init(pci, dir);
-> +
-> +	return 0;
-> +}
-> +
+This series adds support for the CPU PMU in the older Apple A7-A11, T2
+SoCs. These PMUs may have a different event layout, less counters, or
+deliver their interrupts via IRQ instead of a FIQ. Since some of those
+older SoCs support 32-bit EL0, counting for 32-bit EL0 also need to
+be enabled by the driver where applicable.
 
-Stray newline here.
-This causes:
+Patch 1 adds the DT bindings.
+Patch 2-5 prepares the driver to allow adding support for those 
+older SoCs.
+Patch 6-10 adds support for the older SoCs.
 
-/home/nks/src/linux/.git/worktrees/linux-scratch/rebase-apply/patch:136: new blank line at EOF.
-+
-warning: 1 line adds whitespace errors.
+Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+---
+Changes in v3:
+- Configure PMC8 and PMC9 for 32-bit EL0
+- Remove redundant _common suffix from shared functions
+- Link to v2: https://lore.kernel.org/r/20250213-apple-cpmu-v2-0-87b361932e88@gmail.com
 
-when doing git am.
+Changes in v2:
+- Remove unused flags parameter from apple_pmu_init_common()
+- Link to v1: https://lore.kernel.org/r/20250212-apple-cpmu-v1-0-f8c7f2ac1743@gmail.com
 
+---
+Nick Chan (10):
+      dt-bindings: arm: pmu: Add Apple A7-A11 SoC CPU PMU compatibles
+      drivers/perf: apple_m1: Support per-implementation event tables
+      drivers/perf: apple_m1: Support a per-implementation number of counters
+      drivers/perf: apple_m1: Support configuring counters for 32-bit EL0
+      drivers/perf: apple_m1: Support per-implementation PMU start
+      drivers/perf: apple_m1: Add Apple A7 support
+      drivers/perf: apple_m1: Add Apple A8/A8X support
+      drivers/perf: apple_m1: Add A9/A9X support
+      drivers/perf: apple_m1: Add Apple A10/A10X/T2 Support
+      drivers/perf: apple_m1: Add Apple A11 Support
 
-Also, this patch does not apply anymore, because of a conflict introduce by:
-112aba9a7934 ("PCI: dwc: Remove LTSSM state test in dw_pcie_suspend_noirq()")
+ Documentation/devicetree/bindings/arm/pmu.yaml |   6 +
+ arch/arm64/include/asm/apple_m1_pmu.h          |   3 +
+ drivers/perf/apple_m1_cpu_pmu.c                | 779 ++++++++++++++++++++++++-
+ 3 files changed, 756 insertions(+), 32 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250211-apple-cpmu-5a5a3da39483
 
-Which added:
-+       DW_PCIE_LTSSM_DETECT_WAIT = 0x6,
-to drivers/pci/controller/dwc/pcie-designware.h
+Best regards,
+-- 
+Nick Chan <towinchenmi@gmail.com>
 
-
-Kind regards,
-Niklas
