@@ -1,153 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C602063E1;
-	Thu, 13 Feb 2025 17:56:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644A823A9BA;
+	Thu, 13 Feb 2025 17:56:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739469393; cv=none; b=j0xwBA79IopgiOLzYX3ddJiSUWlG26nJ6EOfX8yGbgNhVMwY31telahMeBEn+1ECGZ8NugBNz4+Gv1CVe/VuOSUMMCDpf99yblyMZWXYbssjZsXZnUdIVtPPOJdPSa51gy60DM9bSG/v7nLKTV15iU7X8x/kZGJ8TIw1Vbc4KN4=
+	t=1739469419; cv=none; b=ORWWxP+Uh330omxq5KitABzOF/kQESzz/lrfwS9BuCvxFxykQ6/sdtkoZfkxGJDCmsOt4fr10V6mmi/bh6PfAXTqIvlB/FjunSqyHLE+ND5akkspmiahMcAgYfHXx7OTAZWL2QpbaUTFyrNBHH0LGzUNJ2/LdsYFs8cMnYISC8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739469393; c=relaxed/simple;
-	bh=zu6XwvxRWfLZhbU+NQRFBvpihnBJdGqYI23riG2Rn94=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PJ98NOwgqDr7LMkjKwJcBYoMvGJ1kwZr7Z7YG+RzfOESA+k5eWN9YC3hGk1izSaQik7r0/AYKy8w2PpZfYUJ07p27cTaEEZkQUnIdP9/qrnGeWwPcbB2HefzI9AtcqKNmIr3OlawSnXxYmK/uvMy/p+O8i1/4WFw+FL6yqHl2vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DQSCv8KV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DQSCv8KV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B50CC4CEE7;
-	Thu, 13 Feb 2025 17:56:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739469392;
-	bh=zu6XwvxRWfLZhbU+NQRFBvpihnBJdGqYI23riG2Rn94=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DQSCv8KVcTJfUl5QCqlb1aPWdpHME3qfxr2BivoYk1VpoYEyZwZG/Pk73Czq+skEu
-	 oKKCCD/YJjrItngdSK0146kMNHvpo0YkaPBs2GSQF3YY6jsjbUj1Qmd70VJ6dqs9vx
-	 GnfnwHfUjdQv3ruq2pVdRmm4oX3pqAjgUizmTb1TfQrk/IxgTI5462HQQ/XYudg5mb
-	 VCo1ECe0H2RaG8JXOcuWkm5I9C6hXAOnFQT2ZcXtvOPnPWmZjv3wiqBa2zd6tVfEYI
-	 d9oguZ7nRm0jEJEWZSDpj+xYvjAVtW1lSsY6CbbfbEt+iq73hNwrnGSNtLsgDGZlj+
-	 FOUMn/2lxIQfA==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5d9837f201aso4621005a12.0;
-        Thu, 13 Feb 2025 09:56:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUIfLZpIQshHB/gOvxJ0PCHLzF0trXLMiqv6HOS+uL9/mbPUS0rh7eOPnZFciinGxAC9g1CjSOSauG9@vger.kernel.org, AJvYcCV3zT8XUB2FMuEjBsRFJJFArZpb7/f2LoWnCNRRv300sNjbqyMqGAMCWY2vVemfOvoObOwRHDyknsZm@vger.kernel.org, AJvYcCVu+zJUXoWtTP3teq1jQdJIYmg32b4s6+4tIjoA0V+SkmCJnbtGu2q47dQY7TcIyim7T5kJqQXctWn4HK1d@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB0tnBpmMLm42Vh1PaH9KBAilQQLdTD3qIMaOIBYGGREUV62Da
-	/TM6XWR9GNhHrpWGyAX5l9RploI3QeKhmky4DsZww2B6Nwh6t83RWQ97ZEjfGhWdanIPAljuYkg
-	lvzXF/Jfj7mRHVvB40f4RXpoh9g==
-X-Google-Smtp-Source: AGHT+IHTeCe7WowntB6fs9UcxQzrutTfaoimXk6oistVCJvHwS4uUZuMCGZVr/Sa699J0jyvKNfSQ6RXSzn0q5mmsec=
-X-Received: by 2002:a05:6402:2755:b0:5de:a972:8c7 with SMTP id
- 4fb4d7f45d1cf-5decba4bf54mr3906685a12.5.1739469390719; Thu, 13 Feb 2025
- 09:56:30 -0800 (PST)
+	s=arc-20240116; t=1739469419; c=relaxed/simple;
+	bh=0WV2CmcTZUiH+zQk/eImcSLFCn6EHvq25FoHekBJf6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ha6eaXpPiA+MVWaYPHynquYne2hrTGsL2/5eb8ZxObU5uCfas3uwsuL4/JYn1oj1SLkUShR8dK1iVeHmtvI7xnCzyBfK8arDtTf+mpSZ+g7ELjXus6MsahgubF1pEwF3LeysjKrjaPOiSZSWjZVceFIIe7eyVnn3IhppqVbdWtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 220B4C4CED1;
+	Thu, 13 Feb 2025 17:56:55 +0000 (UTC)
+Date: Thu, 13 Feb 2025 17:56:53 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Zhenhua Huang <quic_zhenhuah@quicinc.com>, anshuman.khandual@arm.com,
+	will@kernel.org, ardb@kernel.org, ryan.roberts@arm.com,
+	mark.rutland@arm.com, joey.gouly@arm.com,
+	dave.hansen@linux.intel.com, akpm@linux-foundation.org,
+	chenfeiyang@loongson.cn, chenhuacai@kernel.org, linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	quic_tingweiz@quicinc.com, stable@vger.kernel.org
+Subject: Re: [PATCH v6] arm64: mm: Populate vmemmap/linear at the page level
+ for hotplugged sections
+Message-ID: <Z64yZRPpyR9A_BiR@arm.com>
+References: <20250213075703.1270713-1-quic_zhenhuah@quicinc.com>
+ <9bc91fe3-c590-48e2-b29f-736d0b056c34@redhat.com>
+ <Z64UcwSGQ53mFmWF@arm.com>
+ <b2964ea1-a22c-4b66-89ef-3082b6d00d21@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io> <20250211-pcie-t6-v1-7-b60e6d2501bb@rosenzweig.io>
-In-Reply-To: <20250211-pcie-t6-v1-7-b60e6d2501bb@rosenzweig.io>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 13 Feb 2025 11:56:19 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ-sYsy-11_UiEKrKok49-a-VJUvm3vBGbpu9vY3TKLUw@mail.gmail.com>
-X-Gm-Features: AWEUYZnNrV6AeqfriIoD2NAW7TvpHv4rdwKYJwl0y8ybKwiiM0n7mQqePyuXunc
-Message-ID: <CAL_JsqJ-sYsy-11_UiEKrKok49-a-VJUvm3vBGbpu9vY3TKLUw@mail.gmail.com>
-Subject: Re: [PATCH 7/7] PCI: apple: Add T602x PCIe support
-To: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Mark Kettenis <kettenis@openbsd.org>, 
-	Marc Zyngier <maz@kernel.org>, Stan Skowronek <stan@corellium.com>, asahi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b2964ea1-a22c-4b66-89ef-3082b6d00d21@redhat.com>
 
-On Tue, Feb 11, 2025 at 1:54=E2=80=AFPM Alyssa Rosenzweig <alyssa@rosenzwei=
-g.io> wrote:
->
-> From: Hector Martin <marcan@marcan.st>
->
-> This version of the hardware moved around a bunch of registers, so we
-> drop the old compatible for these and introduce register offset
-> structures to handle the differences.
->
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> ---
->  drivers/pci/controller/pcie-apple.c | 125 ++++++++++++++++++++++++++++++=
-------
->  1 file changed, 105 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller=
-/pcie-apple.c
-> index 7f4839fb0a5b15a9ca87337f53c14a1ce08301fc..7c598334427cb56ca066890ac=
-61143ae1d3ed744 100644
-> --- a/drivers/pci/controller/pcie-apple.c
-> +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -26,6 +26,7 @@
->  #include <linux/list.h>
->  #include <linux/module.h>
->  #include <linux/msi.h>
-> +#include <linux/of_device.h>
+On Thu, Feb 13, 2025 at 05:16:37PM +0100, David Hildenbrand wrote:
+> On 13.02.25 16:49, Catalin Marinas wrote:
+> > On Thu, Feb 13, 2025 at 01:59:25PM +0100, David Hildenbrand wrote:
+> > > On 13.02.25 08:57, Zhenhua Huang wrote:
+> > > > On the arm64 platform with 4K base page config, SECTION_SIZE_BITS is set
+> > > > to 27, making one section 128M. The related page struct which vmemmap
+> > > > points to is 2M then.
+> > > > Commit c1cc1552616d ("arm64: MMU initialisation") optimizes the
+> > > > vmemmap to populate at the PMD section level which was suitable
+> > > > initially since hot plug granule is always one section(128M). However,
+> > > > commit ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+> > > > introduced a 2M(SUBSECTION_SIZE) hot plug granule, which disrupted the
+> > > > existing arm64 assumptions.
+> > > > 
+> > > > Considering the vmemmap_free -> unmap_hotplug_pmd_range path, when
+> > > > pmd_sect() is true, the entire PMD section is cleared, even if there is
+> > > > other effective subsection. For example page_struct_map1 and
+> > > > page_strcut_map2 are part of a single PMD entry and they are hot-added
+> > > > sequentially. Then page_struct_map1 is removed, vmemmap_free() will clear
+> > > > the entire PMD entry freeing the struct page map for the whole section,
+> > > > even though page_struct_map2 is still active. Similar problem exists
+> > > > with linear mapping as well, for 16K base page(PMD size = 32M) or 64K
+> > > > base page(PMD = 512M), their block mappings exceed SUBSECTION_SIZE.
+> > > > Tearing down the entire PMD mapping too will leave other subsections
+> > > > unmapped in the linear mapping.
+> > > > 
+> > > > To address the issue, we need to prevent PMD/PUD/CONT mappings for both
+> > > > linear and vmemmap for non-boot sections if corresponding size on the
+> > > > given base page exceeds SUBSECTION_SIZE(2MB now).
+> > > > 
+> > > > Cc: <stable@vger.kernel.org> # v5.4+
+> > > > Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+> > > > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> > > > Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+> > > 
+> > > Just so I understand correctly: for ordinary memory-sections-size hotplug
+> > > (NVDIMM, virtio-mem), we still get a large mapping where possible?
+> > 
+> > Up to 2MB blocks only since that's the SUBSECTION_SIZE value. The
+> > vmemmap mapping is also limited to PAGE_SIZE mappings (we could use
+> > contiguous mappings for vmemmap but it's not wired up; I don't think
+> > it's worth the hassle).
+> 
+> But that's messed up, no?
+> 
+> If someone hotplugs a memory section, they have to hotunplug a memory
+> section, not parts of it.
+> 
+> That's why x86 does in vmemmap_populate():
+> 
+> if (end - start < PAGES_PER_SECTION * sizeof(struct page))
+> 	err = vmemmap_populate_basepages(start, end, node, NULL);
+> else if (boot_cpu_has(X86_FEATURE_PSE))
+> 	err = vmemmap_populate_hugepages(start, end, node, altmap);
+> ...
+> 
+> Maybe I'm missing something. Most importantly, why the weird subsection
+> stuff is supposed to degrade ordinary hotplug of dimms/virtio-mem etc.
 
-Drivers should not need this...
+I think that's based on the discussion for a previous version assuming
+that the hotplug/unplug sizes are not guaranteed to be symmetric:
 
-> +const struct reg_info t602x_hw =3D {
-> +       .phy_lane_ctl =3D 0,
-> +       .port_msiaddr =3D PORT_T602X_MSIADDR,
-> +       .port_msiaddr_hi =3D PORT_T602X_MSIADDR_HI,
-> +       .port_refclk =3D 0,
-> +       .port_perst =3D PORT_T602X_PERST,
-> +       .port_rid2sid =3D PORT_T602X_RID2SID,
-> +       .port_msimap =3D PORT_T602X_MSIMAP,
-> +       .max_rid2sid =3D 512, /* 16 on t602x, guess for autodetect on fut=
-ure HW */
-> +       .max_msimap =3D 512, /* 96 on t602x, guess for autodetect on futu=
-re HW */
-> +};
-> +
-> +static const struct of_device_id apple_pcie_of_match_hw[] =3D {
-> +       { .compatible =3D "apple,t6020-pcie", .data =3D &t602x_hw },
-> +       { .compatible =3D "apple,pcie", .data =3D &t8103_hw },
-> +       { }
-> +};
+https://lore.kernel.org/lkml/a720aaa5-a75e-481e-b396-a5f2b50ed362@quicinc.com/
 
-You should not have 2 match tables.
+If that's not the case, we can indeed ignore the SUBSECTION_SIZE
+altogether and just rely on the start/end of the hotplugged region.
 
-> @@ -750,13 +828,19 @@ static int apple_pcie_init(struct pci_config_window=
- *cfg)
->         struct platform_device *platform =3D to_platform_device(dev);
->         struct device_node *of_port;
->         struct apple_pcie *pcie;
-> +       const struct of_device_id *match;
->         int ret;
->
-> +       match =3D of_match_device(apple_pcie_of_match_hw, dev);
-> +       if (!match)
-> +               return -ENODEV;
-> +
->         pcie =3D devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
->         if (!pcie)
->                 return -ENOMEM;
->
->         pcie->dev =3D dev;
-> +       pcie->hw =3D match->data;
->
->         mutex_init(&pcie->lock);
->
-> @@ -795,6 +879,7 @@ static const struct pci_ecam_ops apple_pcie_cfg_ecam_=
-ops =3D {
->  };
->
->  static const struct of_device_id apple_pcie_of_match[] =3D {
-> +       { .compatible =3D "apple,t6020-pcie", .data =3D &apple_pcie_cfg_e=
-cam_ops },
->         { .compatible =3D "apple,pcie", .data =3D &apple_pcie_cfg_ecam_op=
-s },
->         { }
-
-You are going to need to merge the data to 1 struct.
-
-And then use (of_)?device_get_match_data() in probe().
-
-Rob
+-- 
+Catalin
