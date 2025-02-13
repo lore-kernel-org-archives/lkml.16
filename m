@@ -1,121 +1,136 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E187C1FF7AD;
-	Thu, 13 Feb 2025 16:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D0C26B0AE;
+	Thu, 13 Feb 2025 16:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739463013; cv=none; b=DxO9wE3eU6c5HtEUxPWzdtzCpGF5eQK4rc8OopfB3hgsyRBcBB9fCmZJ7kh7eOrYXWRI0jN+BLS9fC12ESHezK666UvlIHw4sRnSSmaukxerRXNBXpezp40zo9z5HXdS6iiEvzAfJIKxCBtmGcF4AptThJpFOO4zf+cbBDmO+lo=
+	t=1739463054; cv=none; b=U4GXCJO6IYyIo0EUCE0cRntCx5qVR8WVrtnMdsTvatZDd0HDmS0MumAkVykptICyHYoRY6PY3BWvgwAmG06RZUsDI5uswiseK79LNx/c0VcKWByz5EWPZD9rhV+r7myavBxtXYf0KIgLNWAS2J1gd6rRD8USR2+W8zEFw//AbHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739463013; c=relaxed/simple;
-	bh=POTqR1VX2kzjYfEvTFA26l8160v8n9AbEOUXWdKYD90=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aTijN77az5e+UCMODT/z30ipWNFTGsLMGJm+vZQzTbh726rQU6cWkCRqB2a5G//3oZSiYh7dGJrmNijkVRVL4VDdanHFyYj+QFv7Vjdrf1Js3FCxhfQZDTtPBYo1BUPhCxelniMy1mXHDkXQi9ZAJpCnsnwHdj0hNdvaSSMr0l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sg631rK5; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739463054; c=relaxed/simple;
+	bh=WuR3peFWCiiP4y40/7sn77mVtQotfsJB+UuS/7nLy9g=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=Qth3y6LpKkz/D0oB9HvXCTLiUPyPtZKWtxkyPiHsUCprAD+QEYbhEmwu5vsgYIFMEDuwMsbNYzrarhAwRsSOhz3ihYM0gWzg9a2D3lhtBMgAQVlYtPecZqWMaMkHCaTAwgcEh9RoATZsX7rf3H9JtW7OMLZ7Vrbtidjf3XmQPuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eofMLLMH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sg631rK5"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aaeec07b705so173625466b.2;
-        Thu, 13 Feb 2025 08:10:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739463010; x=1740067810; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V0RSOTS6ZSx+7JkkuLcQ7G9Qngd1d3DUrkPX9jU/Jl8=;
-        b=Sg631rK5IXFJjkcC/aD9d5Xc0ZLROTj59icMkWD/dKbkGgmL/QnbHoATUbKpW+Xo+M
-         Wc2WpG+H6+MWwVdCVI06uP09VfzZyVrEgyHu2eeEuc1vEuQ1YTljqscDn2lsa2AFjTN4
-         7BKBjfeRu5/EqbRitkJ6qhzPH+GHzCLylYQQGFH7+x//DYl7dfQCqa47Peh5K7/XiL5M
-         f5jyKJiIwUFAx8hNgYOVegb9iYPXAjYLqhdNUl1igUxILhLUoGOIpWhfAOectnLyQ61f
-         zy1mFeqjKUH4GB8B7HoVSsyIelWyRWuQoRQXf1PEe+Nwjv0d+7z1+g4MXCXqgMrcqXH8
-         3xQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739463010; x=1740067810;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V0RSOTS6ZSx+7JkkuLcQ7G9Qngd1d3DUrkPX9jU/Jl8=;
-        b=le0bmBxfwGjllkdbjQKVaWGwjBJOJalFwffa1Zs54CBsFOCc+/mako/a2b9mPXQtEU
-         3Qt1h6r/yGOpi1uDc8m4jtcfsFxQhqXAW5eUg15ZntDF2cQEFEmJPNZnjIDtg1LM5yOk
-         GvWWqT51u66OKzt8QSBwdVzvN2FtcFR/MzcFO1+t5/lm7TWf+hehG9qnaa+OG7j4gf2y
-         wVCezfVpDlxn4MSyPIS+C/n/uz2fs1gLzwXKrOyBfJ27zedkr+wvH5cyUOQak06eqgnX
-         37jkH7f7hPYYZo5PJYOauyDpGemGpsw/haySxibF7Fx0ne3TVLDoTAkDkpXSBFfUnn87
-         smpg==
-X-Forwarded-Encrypted: i=1; AJvYcCVYXx9v+LVDDyb/bLoRY/KDTVSgSuS8lQFUuP1yjEwedM7PkQqPpgR/c12fQilrPNndmq552iDixQ==@vger.kernel.org, AJvYcCX3ONmZT5eaZDRTNUREWuIMf7lUQGhkc/caVMHEWVIR0yXddvrrplw8ErCFrfg6gzuDtIND+XrW5aqtuM1O@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8LtaMiuetScO7YdXGmiPWyDNikxAaPhG4T9iPEF9iWbhqXcxg
-	iYDzuMT11XvHcx0PKypQXFlslmlmOkGamlzoZuX2ww2V5+DPjjKMl8jl0g==
-X-Gm-Gg: ASbGncuUZxDuXc7L6cNdR6rs1Oqgl0IjQiyXxRRb+UgIo/o1Hh2GAIMJ3LofEMMBmHQ
-	T3Fm11EFBXgblbY3orFOUTcan8QzXBnzCf/6uzAAlHuZ01DXrzuzt9uVacVXdh/XZumwvLf/4Uz
-	iHtZ/E0X5bGXP7c2rTBoeM20gwZKMiU88eqB1pdvBFg56pqSHinLP83GhFV7JdF55yWbFmukpEr
-	iFkyOy54FFC6A0ZvSjWX9QxSizJ1QDaWgrtb8ptr8EsHV3xsUOyTlSA0UEM7U6hLET1Ky6XSPVQ
-	hfDxpMJAadTcHMpLX0Ce0R75lC0Exi6Mwy/hu6LPBsAlJDyE
-X-Google-Smtp-Source: AGHT+IEPoar4Py0W2CI3KG0085jOkCPO1nsqdfRM3qpd6t++4MrTabzKUKLmtbPLsuiG4mbg6sFSnw==
-X-Received: by 2002:a17:907:1909:b0:ab3:84ac:4dbc with SMTP id a640c23a62f3a-ab7f31a3665mr873085466b.0.1739463009583;
-        Thu, 13 Feb 2025 08:10:09 -0800 (PST)
-Received: from ?IPV6:2620:10d:c096:325:77fd:1068:74c8:af87? ([2620:10d:c092:600::1:1cb7])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba53281cfcsm156447866b.79.2025.02.13.08.10.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 08:10:08 -0800 (PST)
-Message-ID: <d7496fbf-ccec-4b38-81da-8b5674993b15@gmail.com>
-Date: Thu, 13 Feb 2025 16:11:08 +0000
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eofMLLMH"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DAcEbo002191;
+	Thu, 13 Feb 2025 16:10:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=3HL6sl92zaxhx0opG+pobi
+	HfF3pojHqEdIfAEm4d0Hs=; b=eofMLLMHFdQ+yWZbiGxl+ua2DFD8FTd7RSdbec
+	ismgr7VY4LeBSsTozsqibbtA/cRcshm2KIs/chwjXf2RvzZTIHkf/MTOMaCguRam
+	DpTIs6GecLtI3gBNyQXZ5VNszoZVTOpvy+1ieQniFQm7BmQ65EuTmV+u+DEo8mCQ
+	CQbizqVv0SBwkKE6UUJY3ZwGsfp6trlBwWMHzzzvM7iPiplAgPJ/EW4e497dAhxQ
+	gJfoslKeHbXp0C12IzZy68PEkBQek3dJGuZL0oJqx1H6hGe1d7kQexWJivXHa3P4
+	izI5GPDp0JTJkLtQILurA+Dh9DzWg958ZSsT6v51uc01YHqA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44s5w4a9hk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Feb 2025 16:10:38 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51DGAbTg004607
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Feb 2025 16:10:37 GMT
+Received: from [10.213.111.143] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 13 Feb
+ 2025 08:10:31 -0800
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Subject: [PATCH 0/5] EDITME: Support for Adreno 623 GPU
+Date: Thu, 13 Feb 2025 21:40:05 +0530
+Message-ID: <20250213-a623-gpu-support-v1-0-993c65c39fd2@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] uring_cmd SQE corruptions
-To: Caleb Sander Mateos <csander@purestorage.com>,
- Keith Busch <kbusch@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Riley Thomasson <riley@purestorage.com>,
- io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250212204546.3751645-1-csander@purestorage.com>
- <401f9f7a-b813-43b0-b97f-0165072e2758@kernel.dk>
- <CADUfDZqK9+GLsRSdFVd47eZTsz863B3m16GtHc+Buiqdr7Jttg@mail.gmail.com>
- <999d55a6-b039-4a76-b0f6-3d055e91fd48@kernel.dk>
- <CADUfDZrjDF+xH1F98mMdR6brnPMARZ64yomfTYZ=5NStFM5osQ@mail.gmail.com>
- <Z60s3ryl5UotleV-@kbusch-mbp>
- <CADUfDZqa5v7Rb-EXp-v_iMXAESts8u-DisMtjdBEu2+kK-ykeQ@mail.gmail.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <CADUfDZqa5v7Rb-EXp-v_iMXAESts8u-DisMtjdBEu2+kK-ykeQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAF0ZrmcC/02Nyw6DIBQFf4XcdW/DQ4n1VxoXQEFZoBTEmBj/v
+ UQ3Xc5JzswB2SZvM/TkgGQ3n/0yV2APAmZS82jRfyoDp7ylnAlUkgscY8FcYlzSik7KVyepcLp
+ rod5iss7vl/I93Jzst1Tzeo+gVbZolhD82pNNPlmDyXD4T/bkCjLBUDeok5rNhKPbMYdQUFPBJ
+ XtJQWXTby0M5/kDMURev8kAAAA=
+To: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        "Konrad
+ Dybcio" <konradybcio@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Jie Zhang <quic_jiezh@quicinc.com>,
+        "Akhil P
+ Oommen" <quic_akhilpo@quicinc.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739463031; l=1493;
+ i=quic_akhilpo@quicinc.com; s=20240726; h=from:subject:message-id;
+ bh=WuR3peFWCiiP4y40/7sn77mVtQotfsJB+UuS/7nLy9g=;
+ b=96aU8j1P4fpykQ0YA6UdYOeoBcRwuJwxxNgJcFX8HcKtbk3qJXvvnORjxhU5AsKeL16Ekc/QZ
+ /YLoDXGK50fAPlgTsuCRd84kP1aqzyqep8LnMTi0GvLccxQ+V/P2huX
+X-Developer-Key: i=quic_akhilpo@quicinc.com; a=ed25519;
+ pk=lmVtttSHmAUYFnJsQHX80IIRmYmXA4+CzpGcWOOsfKA=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: zc7jQoVuuJbv4zusTslYyUk3wiZdWcat
+X-Proofpoint-ORIG-GUID: zc7jQoVuuJbv4zusTslYyUk3wiZdWcat
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-13_07,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ phishscore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
+ malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502130118
 
-On 2/12/25 23:46, Caleb Sander Mateos wrote:
-> On Wed, Feb 12, 2025 at 3:21 PM Keith Busch <kbusch@kernel.org> wrote:
->>
->> On Wed, Feb 12, 2025 at 03:07:30PM -0800, Caleb Sander Mateos wrote:
->>>
->>> Yes, we completely agree. We are working on incorporating Keith's
->>> patchset now. It looks like there is still an open question about
->>> whether userspace will need to enforce ordering between the requests
->>> (either using linked operations or waiting for completions before
->>> submitting the subsequent operations).
->>
->> In its current form, my series depends on you *not* using linked
->> requests. I didn't think it would be a problem as it follows an existing
->> pattern from the IORING_OP_FILES_UPDATE operation. That has to complete
->> in its entirety before prepping any subsequent commands that reference
->> the index, and using links would get the wrong results.
-> 
-> As implementers of a ublk server, we would also prefer the current
-> interface in your patch series! Having to explicitly order the
-> requests would definitely make the interface more cumbersome and
-> probably less performant. I was just saying that Ming and Pavel had
-> raised some concerns about guaranteeing the order in which io_uring
-> issues SQEs. IORING_OP_FILES_UPDATE is a good analogy. Do we have any
-> examples of how applications use it? Are they waiting for a
-> completion, linking it, or relying on io_uring to issue it
-> synchronously?
+This series adds support for A623 GPU found in QCS8300 chipsets. This
+GPU IP is very similar to A621 GPU, except for the UBWC configuration
+and the GMU firmware.
 
-With files you either handle it in user space by waiting for
-completion or link them. The difference with buffers is that
-linking wouldn't currently work for buffers, but we can change
-that.
+Both DT patches are for Bjorn and rest of the patches for Rob Clark to
+pick up.
 
+---
+Jie Zhang (5):
+      drm/msm/a6xx: Fix gpucc register block for A621
+      drm/msm/a6xx: Add support for Adreno 623
+      dt-bindings: display/msm/gmu: Add Adreno 623 GMU
+      arm64: dts: qcom: qcs8300: Add gpu and gmu nodes
+      arm64: dts: qcom: qcs8300-ride: Enable Adreno 623 GPU
+
+ .../devicetree/bindings/display/msm/gmu.yaml       |  1 +
+ arch/arm64/boot/dts/qcom/qcs8300-ride.dts          |  8 ++
+ arch/arm64/boot/dts/qcom/qcs8300.dtsi              | 93 ++++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/a6xx_catalog.c          | 29 +++++++
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c              |  8 ++
+ drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c        | 13 ++-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h        | 17 ++++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h            |  5 ++
+ 8 files changed, 171 insertions(+), 3 deletions(-)
+---
+base-commit: 6a25088d268ce4c2163142ead7fe1975bb687cb7
+change-id: 20250213-a623-gpu-support-f6698603fb85
+prerequisite-change-id: 20250131-b4-branch-gfx-smmu-b03261963064:v5
+prerequisite-patch-id: f8fd1a2020c940e595e58a8bd3c55d00d3d87271
+prerequisite-patch-id: 08a0540f75b0f95fd2018b38c9ed5c6f96433b4d
+
+Best regards,
 -- 
-Pavel Begunkov
+Akhil P Oommen <quic_akhilpo@quicinc.com>
 
