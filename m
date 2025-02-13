@@ -1,132 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A55823F439;
-	Thu, 13 Feb 2025 13:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D3A227EA3
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739453748; cv=none; b=kBY8stcJOOHpP+bc0Bcd0WKKwth4puuy4CxbLh1/+yMNlY1V9gGGySvuWik6Raj8VRPBDUfTOxQ+vmD1xDhcaU5/ApxfliYKxIPNcevDIIHVFdVZGhegyjOAW7giWLJTzbV310EwZbytx6OzXvlCOr8Ko7gxkyIjhpJkBAqbLnw=
+	t=1739453762; cv=none; b=Uqq1bUwGn128nDzthKWC8saBA9rXvAwG1v7pUlrS3WtPJRxfM60gwxs8vlMnp5EKGaAcAvroLTbLiV1zkNseQFVUm9sG8go9g0GdTFmjV+bE/ZoPLf8/xkqRNUubjLXRN0KaMlJOEn2DhKTmwebu+pxQtYGCRFEnwKL8R6DFMYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739453748; c=relaxed/simple;
-	bh=LAJ2zcQtXURfChEloX6J+PyoNgE5CNbfUKecNJ4qpMA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=krAy0G75028t+vAKpAqmD+NVy3W76nsmBhnPTM1cpfblhEacrmvPVxC9+kQK/aUCE62WKEIZyABgWCtJDVDsL5oImjFUUC0B7EQflHadTB9nH+yIg/TXXGZZ8rLAcnRL7i59yiyvMWbS064pQsjkrOaMt8cY165io+xbnFpjQho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=arw9M1in; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739453762; c=relaxed/simple;
+	bh=yVvqosbfBaZN59lYnyfV7wTLt5V4gEraGzYMEdvy9dQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZuWkd3NciHORxjbvyJ3Fq8QseBfv3e+h2s+JpQVSTDrw/46DyH38xqB0of+6ABswVfpKbFnF2m/cJCfhZzPLorEB4mUuiKJYWzqsBv8JLJXgQkvuXkps8rBIe0NhnY1bEUC9h8TuZABUZ+oedbrn1p/KPXo+YgiVzKbFjKBkIto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Kwt7lkya; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="arw9M1in"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68F15C4CED1;
-	Thu, 13 Feb 2025 13:35:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739453747;
-	bh=LAJ2zcQtXURfChEloX6J+PyoNgE5CNbfUKecNJ4qpMA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=arw9M1inPJ3KBtNIz/FdWR/6iSGrlOOOicAFLkNuJMdh3JxN6wiSlv3HP1roeq7jo
-	 exmPjmlT7Xm/kp+INfcLmqal7CQ5r46w+bXWXdoaRKw2Cq66+wQLmfG8A+QeUGqpfI
-	 4hrgyXoy64bm4SW2uKsK3mt5FEAjtOfeslUmlpvsp13vwIojLujCwTtEOBytzvl2yq
-	 /Giv/NdvQscOclSh9QYAoSN52fPB5PBsCsf3oRmQUQI/r4a9v/4quhJzdJn6ig4G7g
-	 eh20wMBpR+8SN2EssbmHnT5CrIauBRHDVLTX2AI4y0QCol304uwZM7TG42sPQY06sA
-	 4WRawVqKCxo2w==
-Date: Thu, 13 Feb 2025 22:35:42 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>, Steven Rostedt
- <rostedt@goodmis.org>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Gabriel de Perthuis <g2p.code@gmail.com>, Haiyue Wang <haiyuewa@163.com>,
- Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
- x86@kernel.org, linux-trace-kernel@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
- get_kernel_nofault()
-Message-Id: <20250213223542.44542e542434158056d3b7ed@kernel.org>
-In-Reply-To: <20250213102634.GA30841@noisy.programming.kicks-ass.net>
-References: <20250206081225.GI7145@noisy.programming.kicks-ass.net>
-	<20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
-	<20250206121328.GN7145@noisy.programming.kicks-ass.net>
-	<20250206123307.GO7145@noisy.programming.kicks-ass.net>
-	<20250207085959.b3e9d922eab33edf885368e3@kernel.org>
-	<20250210173016.0ce79bc8@gandalf.local.home>
-	<20250211100914.GA29593@noisy.programming.kicks-ass.net>
-	<20250211105002.31b5a517@gandalf.local.home>
-	<CABCJKudwf11wAbv9NdKh_FN-Z+pLaupMHJxNGtRKK1-1D94hCQ@mail.gmail.com>
-	<20250213100836.GC28068@noisy.programming.kicks-ass.net>
-	<20250213102634.GA30841@noisy.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Kwt7lkya"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4395f81db4dso5337145e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 05:36:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739453759; x=1740058559; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4lyrHtSipeKghn9xCx+8COWh0BWty29N6DnBPAUwOek=;
+        b=Kwt7lkyaR7i6RrsjyNhunBJrvwQ8PXiwnQrRIwvma4UE9b7JHJrXhnWmKdcHFUd412
+         vgm9xVjTo4qjZ/7U96UoghzM4axpKsuVKDaGOsPAg1CAU5hd6tl8gh4QSYcueulLlTHu
+         FOFu3Md9p8T/s9a0/YQyUG/UOD3FVUaXvm8N22vT6JNGk/nWq/9a0J/HyI9gZBY9p7ZQ
+         82VSje2duFX2/HKYxhCsKl0XibsWajIn52wj4a+mulVCLFUTii/5xS/04GoYzQkwpuIr
+         4K0edys8eZrTSRk52uIyTxC96ieJjwefLQETEldsFGRnnjeL71qnfYv+L1h529jznoOG
+         8kZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739453759; x=1740058559;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4lyrHtSipeKghn9xCx+8COWh0BWty29N6DnBPAUwOek=;
+        b=QofdEfdklwWVHKVkzxdS6GOzvo3BXGa04ErgSM84JA2vauWKIFQG3Gld0v3ZTXvk2U
+         qaLu7N8+fz/WXCfZxxCfInFjrxP7yFZuUpOvPbHvsifEE+QoR7ycKrXhm2YArvez0u/E
+         h2Edn/kF+OlQeA0IDnbZjryX8MC27UqdZU0FtzJYOiqgqI2LKJIOUBOjHYg3/rzKGilv
+         30JmODfhFd2YeuZlknv6tNlBoAoRAo+UNZaeYed1wgwinYE3G86MJuoqIl2djRk7V9ks
+         6i5mt0EjHsaebnHi1rkbEJbbadUBmtuYtTtoxcF1k4S7BcTedllz/8GWQ37nGSDHbiQP
+         eQFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8tDn8n20ngV2umpfcWeLv1Q2RjA/DrRhmSr6CJPySkb7T64vgfEbulWex4ijk8GdXOjCDgFfq9GNeXdA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywWtH/LqylaKnCPdpKfJxl/N39ULKBwXkydZvIKAafYLlTwqOa
+	PU+pKMpCEqvMW9IvsRrLBH8NVGKuynnFMnLtikBhx0TDyXOxw4oZ87aRZWiCk4g=
+X-Gm-Gg: ASbGncsNO+/zcT8EtYThhEvXs9cXZqNZAkH88t8D6DOeeAsP6BeBjw/uP+VYlMCwQ32
+	s5EZOf9nz/0aXXm91N+8F5EsKJ9XsOW+hw4TLSliYgxNsRjWeRGmegWElSW+jvV8ozribB/gnPE
+	CtBtG89hFo2sXi38VD/ghyo2WCdqaGyN2cxw3UQGY9doPU+vcB2V8ndD1QQkwQ16H8yI3YpXlII
+	I3leeEZ+m9JSG+CS8FyYjdHulN4aDHESEa7rK5YuBiZH09D+9Y4sJli6UJCJqaIJw7FdC0h+IFi
+	biy+hTaDfGqm9w==
+X-Google-Smtp-Source: AGHT+IFlyyROQN/jp5N25OPHAwGGncnJ/FLwqH6qkR/P/8dmal2Zk5G/l0wZieziiMnBJNT5H1Y22g==
+X-Received: by 2002:a05:600c:a0c:b0:434:f1bd:1e40 with SMTP id 5b1f17b1804b1-43960e81b92mr29235125e9.6.1739453758160;
+        Thu, 13 Feb 2025 05:35:58 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:b617:2c1:fc8c:2705])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a056151sm49618825e9.16.2025.02.13.05.35.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 05:35:57 -0800 (PST)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: "Arnd Bergmann" <arnd@arndb.de>
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Dave Ertman"
+ <david.m.ertman@intel.com>,  "Ira Weiny" <ira.weiny@intel.com>,  "Rafael J
+ . Wysocki" <rafael@kernel.org>,  "Stephen Boyd" <sboyd@kernel.org>,
+  "Danilo Krummrich" <dakr@kernel.org>,  "Conor.Dooley"
+ <conor.dooley@microchip.com>,  "Daire McNamara"
+ <daire.mcnamara@microchip.com>,  "Philipp Zabel" <p.zabel@pengutronix.de>,
+  "Doug Anderson" <dianders@chromium.org>,  "Andrzej Hajda"
+ <andrzej.hajda@intel.com>,  "Neil Armstrong" <neil.armstrong@linaro.org>,
+  "Robert Foss" <rfoss@kernel.org>,  "laurent.pinchart"
+ <Laurent.pinchart@ideasonboard.com>,  "Jonas Karlman" <jonas@kwiboo.se>,
+  "Jernej Skrabec" <jernej.skrabec@gmail.com>,  "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>,  "Maxime Ripard"
+ <mripard@kernel.org>,  "Thomas Zimmermann" <tzimmermann@suse.de>,  "Dave
+ Airlie" <airlied@gmail.com>,  "Simona Vetter" <simona@ffwll.ch>,  "Hans de
+ Goede" <hdegoede@redhat.com>,  Ilpo =?utf-8?Q?J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,  "Bryan O'Donoghue"
+ <bryan.odonoghue@linaro.org>,  "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>,  "Gregory Clement"
+ <gregory.clement@bootlin.com>,  =?utf-8?Q?Th=C3=A9o?= Lebrun
+ <theo.lebrun@bootlin.com>,
+  "Michael Turquette" <mturquette@baylibre.com>,  "Abel Vesa"
+ <abelvesa@kernel.org>,  "Peng Fan" <peng.fan@nxp.com>,  "Shawn Guo"
+ <shawnguo@kernel.org>,  "Sascha Hauer" <s.hauer@pengutronix.de>,
+  "Pengutronix Kernel Team" <kernel@pengutronix.de>,  "Fabio Estevam"
+ <festevam@gmail.com>,  "Kevin Hilman" <khilman@baylibre.com>,  "Martin
+ Blumenstingl" <martin.blumenstingl@googlemail.com>,
+  linux-kernel@vger.kernel.org,  linux-riscv@lists.infradead.org,
+  dri-devel@lists.freedesktop.org,  platform-driver-x86@vger.kernel.org,
+  linux-mips@vger.kernel.org,  linux-clk@vger.kernel.org,
+  imx@lists.linux.dev,  linux-arm-kernel@lists.infradead.org,
+  linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v3 7/7] clk: amlogic: axg-audio: use the auxiliary reset
+ driver - take 2
+In-Reply-To: <73c1ab6b-fd5e-47e3-8815-8f74758535f1@app.fastmail.com> (Arnd
+	Bergmann's message of "Thu, 13 Feb 2025 13:26:12 +0100")
+References: <20250211-aux-device-create-helper-v3-0-7edb50524909@baylibre.com>
+	<20250211-aux-device-create-helper-v3-7-7edb50524909@baylibre.com>
+	<73c1ab6b-fd5e-47e3-8815-8f74758535f1@app.fastmail.com>
+User-Agent: mu4e 1.12.8; emacs 29.4
+Date: Thu, 13 Feb 2025 14:35:56 +0100
+Message-ID: <1j1pw20xxf.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Thu, 13 Feb 2025 11:26:34 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu 13 Feb 2025 at 13:26, "Arnd Bergmann" <arnd@arndb.de> wrote:
 
-> On Thu, Feb 13, 2025 at 11:08:36AM +0100, Peter Zijlstra wrote:
-> > On Wed, Feb 12, 2025 at 08:52:27AM -0800, Sami Tolvanen wrote:
-> > > On Tue, Feb 11, 2025 at 7:49 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > > >
-> > > > On Tue, 11 Feb 2025 11:09:14 +0100
-> > > > Peter Zijlstra <peterz@infradead.org> wrote:
-> > > >
-> > > > > I was aiming my patch for x86/core, but if there's a reason to expedite
-> > > > > them, I can stick it in x86/urgent I suppose.
-> > > > >
-> > > > > Just need a reason -- what's this compile error nonsense about, my
-> > > > > kernels build just fine?
-> > > >
-> > > > Masami,
-> > > >
-> > > > Do you have a config that fails to build without this fix? If so, can you
-> > > > please reply with it, and then this can go in as a quick fix.
-> > > 
-> > > x86 builds with both CONFIG_GENDWARFKSYMS and CONFIG_FUNCTION_TRACER
-> > > are broken without this fix. Here's how to reproduce:
-> > > 
-> > > $ make defconfig
-> > > $ ./scripts/config -e DEBUG_INFO -e DEBUG_INFO_DWARF5 -e MODVERSIONS
-> > > -e GENDWARFKSYMS -e FUNCTION_TRACER
-> > > $ make olddefconfig && make -j
-> > > ...
-> > > In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
-> > >                  from <stdin>:3:
-> > > ./arch/x86/include/asm/ftrace.h: In function ‘arch_ftrace_get_symaddr’:
-> > > ./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of
-> > > function ‘get_kernel_nofault’ [-Wimplicit-function-declaration]
-> > >    46 |                 if (get_kernel_nofault(instr, (u32
-> > > *)(fentry_ip - ENDBR_INSN_SIZE)))
-> > > ...
-> > 
-> > It breaks much sooner, complaining about not having dwarf.h.. let me go
-> > figure out what package provides that :/
-> 
-> Bah, ofcourse there's libdwarf-dev and libdw-dev, both providing
-> dwarf.h. Obviously I installed libdwarf-dev and instead I need libdw-dev
-> *hate*
+> On Tue, Feb 11, 2025, at 18:28, Jerome Brunet wrote:
+>>
+>>  I also think this is more readeable and maintainable than a bunch of
+>>  'default CONFIG_FOO if CONFIG_FOO' for CONFIG_RESET_MESON_AUX. This approach
+>>  also would have several pitfall, such as picking the value of the first config
+>>  set or the config of RESET_MESON_AUX staying to 'n' if CONFIG_FOO is turned on
+>>  with menuconfig.
+>
+> I still think you should just drop the 'imply' line, all it does it
+> force reviewers to double-check that you didn't make a mistake
+> here, so it's a waste of time.
 
-Agreed. :(
+Arnd, you've made you preference clear and this note has been added
+specifically for this reason, and transparency. 
 
-> 
-> Anyway, yes, compile now fails as advertised.
-> 
-> And patch fixes it -- now I need to figure out what to do about urgent,
-> because applying it on top of Linus' tree will create conflicts with
-> patches already in tip/x86/mm *sigh*.
+I've exposed a technical reason for my choice. Going with the 'default'
+approach makes things more difficult in the long run for those
+maintaining this platform, me included.
 
-Hmm, if so, can you pick my patch [1], which does not introduce any
-additional header including issue?
+The trouble of having to coordinate changes in 2 different subsystems to
+have an appropriate configuration and the pitfalls of using 'default'
+outweigh the extra review trouble of using 'imply' ... especially when
+the pitfall mentioned in documentation is explicitly addressed in the
+description.
 
-[1] https://lore.kernel.org/all/173881156244.211648.1242168038709680511.stgit@devnote2/
+If there something wrong with 'imply' existing and being used, maybe the
+Documentation should be updated to reflect this, or the support be
+removed entirely.
 
+ATM, it exists and it makes things a lot easier for me to support and
+maintain this device.
 
-Thank you,
+This all started with a maintainer request to move some resets away
+from clock. More requests have been added along the way, making things
+more generic. I'm more than happy to have contributed my effort and
+time on this and I don't think anybody's time has been wasted so far.
 
-> 
-> 
-
+>
+>     Arnd
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Jerome
