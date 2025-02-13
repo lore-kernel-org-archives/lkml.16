@@ -1,190 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-70.smtpout.orange.fr [80.12.242.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1B626FA71
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 20:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A549026FA5C;
+	Thu, 13 Feb 2025 20:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739479556; cv=none; b=Hf10ypXcEK5zwFWWcgbTbvDtFxdwIKdn75fIYra0IV9RlVi3YAOpVWGe6xy9axOn+Zf1amR/YgXfGtrV8coUFnt1qDZ8C17/6rBa21zA7z0nc+qYkVXCNm1ql3hbwxmlRveGBBZoUJtYS69aCObbhoEPwii2kMm1LZo53fbk1a0=
+	t=1739479556; cv=none; b=cCTihtvZ5Fxx7eE7w7uuQcPZ6qb2fswTmm5qZWyJ/mdaISt7NOJA+cZVJVYoN2kCDUFe92LBEplIHKf+fFXOeApQAIiARhUZq4IfRvkkcTB8vPKQ9qzQ4rOLBwfU8ZfD1HsIoGqapj1TWi7V5O+RpZ77mP3BnedEb7HLXu6vOos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739479556; c=relaxed/simple;
-	bh=9ij0uVaTeDs4is6+7/x2i7Ri96XvZclRRyO946H8tyM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YGjwmAvLDZZlMpocXTMU70aU8jkumtoOTUg/LcyNr8mz5gJ2tsquNKFtYzrsoJ0BQPpo/KNqXdp5Q12L0LexkvzYaBgBYR8xFUiYfdz7ehrdVoiuj9VVCAA8o4H7WltREIV3ecxLL097C1TUwGdEDNfkZw9JmF6pbolDxU8WQ7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J6IZJPJI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=QW4zP2U+IjjpQ+TStpydmk8FGeVp2iCrn2W8AjIobw0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=anokXfmgwLR7ecdWLU+BS4op3dKpkw8XN452zVEgpUxrvW3ShS4V0vc4P1vNeZNaIJGBttimP3CWzp0lcpnO3C8ef8+mcvSAO7BEPP+Y4xQyq5AgyMsCIbSDm+4bDaQtuoCqrrKSpc+wfnve8Dmt7g88Tk7LOTeAmSse8j5Zc7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=rfykS5mE; arc=none smtp.client-ip=80.12.242.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J6IZJPJI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739479553;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AmQ3mjp9kFOvrdVNVEAgmnoRRwXVxjvUqWTBj31m/sA=;
-	b=J6IZJPJIouAKVC6dbBzXSd/zRXU7z2wvVQpqbynPWrbuV361usaII9iBJt7aXbYSWLCT+o
-	tzHCUtbH+J1ei8MSofnK0aQ+WgCtLlXNyhq7A7uV53RclvfuIchHZ34rR8TupTbCGbZfXB
-	q3+KOS5coMTri7m82BJeZXYnYm28FlM=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-115-QDTwFv0UNsyI34cFWaNwGg-1; Thu,
- 13 Feb 2025 15:45:48 -0500
-X-MC-Unique: QDTwFv0UNsyI34cFWaNwGg-1
-X-Mimecast-MFC-AGG-ID: QDTwFv0UNsyI34cFWaNwGg_1739479546
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B6FBE1903089;
-	Thu, 13 Feb 2025 20:45:46 +0000 (UTC)
-Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.199])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 81D5919373D9;
-	Thu, 13 Feb 2025 20:45:43 +0000 (UTC)
-From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Thu, 13 Feb 2025 15:44:34 -0500
-Subject: [PATCH 17/20] drm/panel/ls060t1sx01: Move to using
- mipi_dsi_*_multi() variants
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="rfykS5mE"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id ig4StaDDcmXj3ig4WtV2Gv; Thu, 13 Feb 2025 21:44:33 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1739479473;
+	bh=CJcCjCLAQO2O/5OGGV8ihwCBev8U59q2w5V0fw84bJc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=rfykS5mEu2ZOi/fL+ggzdVq/VcOTVyE9iLa25pLgKL0Wcvlrl2BPIUjYk8CnIkHwX
+	 7UAt4xBoAWcJ1jLUVcl7PhwXCD4YftswLdXshu/FRnI10Ryu1LUMPZZK6tywAHyeJh
+	 FnlO/OWOOjOyku/z53bDq74C3uxdiat6sQsRnb/vTcAF7mgHgAqtmbDQUCwPR3mypB
+	 bXOjvyHVCPZLXjCsS6qCRA1bG0JI8kVDecHs5DWFqGQpchP1fggEHpBHMU7wohQ42D
+	 ltZiDg8eO5k6ijjuV4Q5/z61cNPaaXUBe8jnKgljpEENDTPd2F/EdqGS4QVls0lOO5
+	 9P9Bn+KhP6fDA==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Thu, 13 Feb 2025 21:44:33 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <a1af3a07-1e76-488b-82f7-87b3a4907f26@wanadoo.fr>
+Date: Thu, 13 Feb 2025 21:44:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250213-mipi_cocci_multi-v1-17-67d94ff319cc@redhat.com>
-References: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
-In-Reply-To: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Joel Selvaraj <jo@jsfamily.in>, Ondrej Jirman <megi@xff.cz>, 
- Javier Martinez Canillas <javierm@redhat.com>, 
- Jianhua Lu <lujianhua000@gmail.com>, Robert Chiras <robert.chiras@nxp.com>, 
- Artur Weber <aweber.kernel@gmail.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739479476; l=3110;
- i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=9ij0uVaTeDs4is6+7/x2i7Ri96XvZclRRyO946H8tyM=;
- b=BOuQF0pMIgxvtx7EnxNKtl981MbCnWdKx50VWPvTyJ1dlnAOJX6DrOpm6ZFJRp+iRPXskTBq8
- Zt6thwUzGD6B032TGVZ60Qqpfm5Ay0cRTX5FkaWDwGuUUf0dfwU/Zv3
-X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
- pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH] PCI: cpci: remove unused fields
+To: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>, scott@spiteful.org,
+ bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250213173925.200404-1-trintaeoitogc@gmail.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250213173925.200404-1-trintaeoitogc@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Stop using deprecated API.
-Used Coccinelle to make the change.
+Le 13/02/2025 à 18:39, Guilherme Giacomo Simoes a écrit :
+> The `get_power()` and `set_power()` function pointers in the
+> `cpci_hp_controller ops` struct were declared but never implemented by
+> any driver. To improve code readability and reduce resource usage,
+> remove this pointers and replace with a `flags` field.
+> 
+> Use the new `flags` field in `enable_slot()`, `disable_slot()`, and
+> `cpci_get_power_s atus()` to track the slot's power state using the
+> `SLOT_ENABLED` macro.
+> 
+> Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+> ---
+>   drivers/pci/hotplug/cpci_hotplug.h      |  3 +--
+>   drivers/pci/hotplug/cpci_hotplug_core.c | 21 +++++++--------------
+>   2 files changed, 8 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
+> index 03fa39ab0c88..c5cb12cad2b4 100644
+> --- a/drivers/pci/hotplug/cpci_hotplug.h
+> +++ b/drivers/pci/hotplug/cpci_hotplug.h
+> @@ -44,8 +44,7 @@ struct cpci_hp_controller_ops {
+>   	int (*enable_irq)(void);
+>   	int (*disable_irq)(void);
+>   	int (*check_irq)(void *dev_id);
+> -	u8  (*get_power)(struct slot *slot);
+> -	int (*set_power)(struct slot *slot, int value);
+> +	int flags;
+>   };
+>   
+>   struct cpci_hp_controller {
+> diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
+> index d0559d2faf50..87a743c2a5f1 100644
+> --- a/drivers/pci/hotplug/cpci_hotplug_core.c
+> +++ b/drivers/pci/hotplug/cpci_hotplug_core.c
+> @@ -27,6 +27,8 @@
+>   #define DRIVER_AUTHOR	"Scott Murray <scottm@somanetworks.com>"
+>   #define DRIVER_DESC	"CompactPCI Hot Plug Core"
+>   
+> +#define SLOT_ENABLED 0x00000001
+> +
+>   #define MY_NAME	"cpci_hotplug"
+>   
+>   #define dbg(format, arg...)					\
+> @@ -71,13 +73,12 @@ static int
+>   enable_slot(struct hotplug_slot *hotplug_slot)
+>   {
+>   	struct slot *slot = to_slot(hotplug_slot);
+> -	int retval = 0;
+>   
+>   	dbg("%s - physical_slot = %s", __func__, slot_name(slot));
+>   
+> -	if (controller->ops->set_power)
+> -		retval = controller->ops->set_power(slot, 1);
+> -	return retval;
+> +	controller->ops->flags |= SLOT_ENABLED;
+> +
+> +	return 0;
+>   }
+>   
+>   static int
+> @@ -109,11 +110,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
+>   	}
+>   	cpci_led_on(slot);
+>   
+> -	if (controller->ops->set_power) {
+> -		retval = controller->ops->set_power(slot, 0);
+> -		if (retval)
+> -			goto disable_error;
+> -	}
+> +	controller->ops->flags &= ~SLOT_ENABLED;
+>   
+>   	slot->adapter_status = 0;
+>   
+> @@ -129,11 +126,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
+>   static u8
+>   cpci_get_power_status(struct slot *slot)
+>   {
+> -	u8 power = 1;
+> -
+> -	if (controller->ops->get_power)
+> -		power = controller->ops->get_power(slot);
+> -	return power;
+> +	return controller->ops->flags & SLOT_ENABLED;
 
-@rule_3@
-identifier dsi_var;
-identifier r;
-identifier func;
-type t;
-position p;
-expression dsi_device;
-expression list es;
-@@
-t func(...) {
-...
-struct mipi_dsi_device *dsi_var = dsi_device;
-+struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi_var };
-<+...
-(
--mipi_dsi_dcs_write_seq(dsi_var,es);
-+mipi_dsi_dcs_write_seq_multi(&dsi_ctx,es);
-|
--r = mipi_dsi_dcs_exit_sleep_mode(dsi_var)@p;
-+mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
-|
--r = mipi_dsi_dcs_enter_sleep_mode(dsi_var)@p;
-+mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
-|
--r = mipi_dsi_dcs_set_display_off(dsi_var)@p;
-+mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
-|
-.....//rest of the mipi APIs with _multi variant
-)
-<+...
--if(r < 0) {
--...
--}
-...+>
-}
+If neither get_power nor set_power where defined in any driver, then 
+cpci_get_power_status() was always returning 1.
 
-Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
----
- drivers/gpu/drm/panel/panel-sharp-ls060t1sx01.c | 34 ++++++-------------------
- 1 file changed, 8 insertions(+), 26 deletions(-)
+IIUC, now it may return 1 or 0 depending of if enable_slot() or 
+disable_slot() have been called.
 
-diff --git a/drivers/gpu/drm/panel/panel-sharp-ls060t1sx01.c b/drivers/gpu/drm/panel/panel-sharp-ls060t1sx01.c
-index 74c760ee0c2d1c4f1e857872e6ad38de08ab8b2a..adf287e5f4101981dbd82988c45d9f9060961fb2 100644
---- a/drivers/gpu/drm/panel/panel-sharp-ls060t1sx01.c
-+++ b/drivers/gpu/drm/panel/panel-sharp-ls060t1sx01.c
-@@ -44,26 +44,17 @@ static void sharp_ls060_reset(struct sharp_ls060 *ctx)
- static int sharp_ls060_on(struct sharp_ls060 *ctx)
- {
- 	struct mipi_dsi_device *dsi = ctx->dsi;
--	struct device *dev = &dsi->dev;
--	int ret;
-+	struct mipi_dsi_multi_context dsi_ctx = {.dsi = dsi };
- 
- 	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
- 
--	mipi_dsi_dcs_write_seq(dsi, 0xbb, 0x13);
--	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_MEMORY_START);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xbb, 0x13);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_MEMORY_START);
- 
--	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
--		return ret;
--	}
-+	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
- 	msleep(120);
- 
--	ret = mipi_dsi_dcs_set_display_on(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to set display on: %d\n", ret);
--		return ret;
--	}
-+	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
- 	msleep(50);
- 
- 	return 0;
-@@ -72,23 +63,14 @@ static int sharp_ls060_on(struct sharp_ls060 *ctx)
- static int sharp_ls060_off(struct sharp_ls060 *ctx)
- {
- 	struct mipi_dsi_device *dsi = ctx->dsi;
--	struct device *dev = &dsi->dev;
--	int ret;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
- 
- 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
- 
--	ret = mipi_dsi_dcs_set_display_off(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to set display off: %d\n", ret);
--		return ret;
--	}
-+	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
- 	usleep_range(2000, 3000);
- 
--	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
--		return ret;
--	}
-+	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
- 	msleep(121);
- 
- 	return 0;
+I don't know the impact of this change and I dont know if it is correct, 
+but I think you should explain why this change of behavior is fine.
 
--- 
-2.47.0
+Just my 2c.
+
+CJ
+
+
+>   }
+>   
+>   static int
 
