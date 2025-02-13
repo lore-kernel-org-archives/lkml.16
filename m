@@ -1,62 +1,62 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7482723A9BE
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8508D28A2B8
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739464637; cv=none; b=dYn4AY0nCI6cb4/NTSx5jPaX5wIsS4kfJPd2lySnUcWG6oM7UjesaE9yEVhgTgvoRgr4hZ0RSX6u9l7/JWqfOBKi06JV3UwqcSq4+QJjx/l/3RnBBYS4YUfa3YmBeW5aCAnHv5NP3eqXzcFBiIYlsY9uqQO7Ld4x7+7xoHwX2xk=
+	t=1739464681; cv=none; b=ly1Sl5lmqrjLHdd1epIOqGz2ueFkP/+iGLZeXNjazTzUNA9pCWi4M/7NxPyt4GjOcoRZyzHGi3wbFP2Ev31nxAFlBMrJKdNzibTUoDIXLyjkZMNfhxGMlXsMVXEBZgJVQqoKDYYDuqO+nMVC3C3ImaBl2ydDTiIZoixbyEvHLVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739464637; c=relaxed/simple;
-	bh=GmAGQpoza31CoAWCZS5s5yqCPDGiX4VXEioPVpXUPG8=;
+	s=arc-20240116; t=1739464681; c=relaxed/simple;
+	bh=u69ZlDQN1aRduApNgy23RQ5UF70C+blD8tASjHVhGlM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VCQTMXpLugnD4B2QXh1TSXF9dOT7WQo430ReNYH88xqnwAS1tgYvYw09FAgHpNAMfoSNOsTOCs3xnMPnaSPnHbby/1Uqi1Kq1LLoUDkKa7iLlyxgmdiuTDdYESH7gx1a0vhaeJ559VCC6oQuxsuEposRG73SVORWClddDJo3ZgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s48LYZHM; arc=none smtp.client-ip=209.85.167.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=Na9o0Q2D2ufsurBY6iH6xyWAmEhqGgjxTi86TZSIB/LftOdiD5ZvQn7ffR6lqUyA2ZP43zCzHxX0jx7d6lriWYXg3gqu7gChQFydT51xCXzMkmYfPUc+hsobFACnXh+mAxch7JRxstLTxDxv2iTSAWb7Hy8EUBo67W1fgHOxhN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dJcg9s0U; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s48LYZHM"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5450408455dso1178890e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 08:37:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dJcg9s0U"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-308ee953553so12121381fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 08:37:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739464633; x=1740069433; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739464677; x=1740069477; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K5yI9mtbA6TbP9BSYi0Lu15w4ixyZW4/1lyfqxBYhqc=;
-        b=s48LYZHMpI/i8Q+prVZR6Bczow/uwoJt3fiF+COzbXvQ8TGPetye+x6AP2wwTtgBEW
-         hjOmSLTwfoWbu39nrACLUypwvO+NSW3dZglPGw6YV5JzMjHfmJN5t3SQgvrstPSE9fGU
-         A8NM78ZKOXCfcstKtRRi1hv5Bxv+dX9fVAEKX+4k6ZW8nsCUbbRPJIznLKOub9LqA1sB
-         kaikKA1/CZONhmO7hEezllhpsEzsA+H8GePoCJQPCuT530RN6cQYhuKq55Rs36VQ2wwP
-         R69B90rlU46EMXWLbMUnvKc3dDntHi+i+92waE9mdkJrJzCreD6LFFj5ctUvRCzUoNgo
-         KRrg==
+        bh=i2OJO2GugyrIDT84GECqN9j4PJ39hKLweHZ/9c9DZPE=;
+        b=dJcg9s0U1tlcUs6IYt9MJ8vKCUaBOtkDygnSZjVFjtN8R9S+dEDYazt4I8uUyXPXWH
+         EM2CUN7cqQtxprKKP6Tcr9P5dHp2RRglTB8EBnvXXLAw4K9GGjpJqN3PGy9IwOQItNjq
+         gKBgOekHUHeoBjusFQZQajGgVkjsI9wzooPnmpCy5P3hfUfyIwR4XtFSVGOVronAe4kX
+         eppb1imNZbEvFWrt2O9HA9ln/ABiKaT94gfHvFpLz7m9MpeTPoquVHa/PD2MyI7hVkrN
+         PjPn3sgesHPTfsZs9+BCXhKWBbkQsJzpCLBNM1KJuSHGQH7baLcrqlQocKNl/ZpXbb+X
+         ZjYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739464633; x=1740069433;
+        d=1e100.net; s=20230601; t=1739464677; x=1740069477;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=K5yI9mtbA6TbP9BSYi0Lu15w4ixyZW4/1lyfqxBYhqc=;
-        b=CxqOhWtpUJoQZXV1/feA7nW+IP9M/tvUO4sxYbEnBvY19YjhX5qyCt1NAJo+/RFeh/
-         oDyHIlUjH8cVdaiUqrg+Uixn8JRffHyvpe/DbVfV+Xshe6OLedTYqzCtYLBwphgdzDiF
-         1T/tKdeWdaKEUxznVNY4JBfckyAonAvM1SfsdsPMSxjlXPBzLWPw9WA1mwlf4/wE2LWe
-         CxqSfy1tZ4qepZPs/ODb8YWpNso57qDbkiQoBHwuLyEll+oDIRdKrk0WsJAFOU6Jwui6
-         oL8qlbOah/EBmMDY6LW/BP95KlOxSRm0AwvpFS2KwLuldwhyqqvJ6cOxXW3yMo3LVkfC
-         OXJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhECVa9mN9Xr/aJv58cformOG1KKWrlbyKAnk1koiRizSWWRXqX/yG15KQ6LHs8TI1AABOTabKCe/nyhw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybJUWsRyEUf6KRvyrdi7dX3Sib4JwwVnq/UGUx/ZZIOAM0hZVV
-	gCao0YL/Qi0vTBPRlbWFBOVUgrqTVxETB+ScxfBxtu0lmpHxpAo+Kl5yUWBexM8=
-X-Gm-Gg: ASbGncslTGHvwWoYn8o9+uNNAg1idMPruBtk88CnkU6PCpLr6C90Hq/bunEkS8Eqg4V
-	l452qX3QLsu2m+kPmG5wv28PdQul3wGeVwHOsaD4KKQapy++wBkM1F+9kHBAh2Lit+IBzEsZELm
-	2kAEj3pjrOzO/LdwJFJxKY3eIJBdpEQvca1hzwaAb68ceodZlClDjQxemGLL6yp68TzyWv2efs/
-	pkHEFzj6UoWmn5cGNVwXsq7boIXbaQ1F45b+Pesics4ShmNPQt3DzhbY3hMZh/zCuJkGB7SinHI
-	rORejyyo08uqYW8u6y/HRo3ZhRTIG/HWGp/iY0oN4heV/Au3FMaBemFMwreviH4RC75LUeQ=
-X-Google-Smtp-Source: AGHT+IH+q3SO0AlGiFI6AM0BmNsLF/QARW+Zixtb4EjiMyrDyQLHtQ7O4U+e0SrdUEIxNCY9ztY0GQ==
-X-Received: by 2002:a05:6512:6c5:b0:545:6a2:e56 with SMTP id 2adb3069b0e04-5451ddd65f0mr1158897e87.37.1739464633491;
-        Thu, 13 Feb 2025 08:37:13 -0800 (PST)
+        bh=i2OJO2GugyrIDT84GECqN9j4PJ39hKLweHZ/9c9DZPE=;
+        b=ajuhheVlUgbGnmLkjM6GNdFNW7tX/RitFNrzDM8ZivyX5I1EwFDjgTjT7aRQIQY/kv
+         8q0IM1QIwZVM/WsSRwMPUvXNPfILFDo9O41Vq6Yr3EmieYL8VbCQW1ZQZa7ZbQJt6v8U
+         vsrqylNPyzJ8ZcJXygdoCL4jgosGISGbOUUL1NtV/8vUU2rw03MwCHGc+vlWzScan5JU
+         O8R+EXHecHuibLZEpZfdeaCu3B/m4a/cyE6QdNpIkzT6/1N+yE18j2CkSfSjatmD4xRX
+         wadiHS5QE1voWzjtC02IjQ7do4RpLN2kfhMHP+nRsAvibrv2aBGiYSODO89KLILe3kTB
+         7SFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAYu8iiioR2VhUXoSNcJ8Ys+5OTACeJ1CXFCqERx+8QoGSTuKxIzlNAljOGHFKdQ9Q3ckdUYpe1p/byqw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWVUir8AwiO2Y+a8ZZbPzWl/D5QRaCz2PZClgVj0bWq8TVnBNZ
+	9NI+nd8TJ/4YlYjKiNz6KLKkVBaGB+VcWVeLB/Ch3hHWEqu1aouZL/oJ3yEsDfg=
+X-Gm-Gg: ASbGncuolv8Di9NDh4nL/8WUJ/6RJ1RwJWmE1o1O1c7bwByexKJ/MWxOTGK9vc2PKqB
+	CXEGwUuffW5gl0Sm5s6l4x3Gg65Bux25PXPsBAZmTaLuqMOo6x1PRE5n/XQjH7eUqaU89GhrLlb
+	tJnk3G13hVLIpDWD0Sf9GVJR3CP5yVoxLBzjbWx+xj1sbmOoK0IfUnpjO8r4qtMwlf7xxCStt3M
+	jkleVVnABvGI2RTcK7NBZh6fV+iCIoRL+I1ok5sMMxfa2OsNUt7wnHtYdMEzMiXa7T/CH+QRRig
+	zhOxXFaFEV0ILwAjyBCV9G04lUBcvch2twUFn016RdD0sAjiue+a06R3Oh4Jxkn8bkYnNQo=
+X-Google-Smtp-Source: AGHT+IEYPr8PatrnM+bo756o01wElcjGGflpyRxlOCKGCeLdga6SpFD3q+R7NLU0ZfCSCaUqAuY7lg==
+X-Received: by 2002:a05:651c:154b:b0:307:dc28:750b with SMTP id 38308e7fff4ca-309037c134cmr27597481fa.13.1739464677494;
+        Thu, 13 Feb 2025 08:37:57 -0800 (PST)
 Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5451f105ea1sm213021e87.124.2025.02.13.08.37.12
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309100c643fsm2502811fa.17.2025.02.13.08.37.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 08:37:12 -0800 (PST)
-Date: Thu, 13 Feb 2025 18:37:11 +0200
+        Thu, 13 Feb 2025 08:37:56 -0800 (PST)
+Date: Thu, 13 Feb 2025 18:37:53 +0200
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To: Maxime Ripard <mripard@kernel.org>
 Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -66,11 +66,10 @@ Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
 	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
 	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 35/37] drm/bridge: tc358768: Stop disabling when
- failing to enable
-Message-ID: <dsccxyorddnhjiff37zxmwh6mwerwtlabxxp6csugomalsgfwv@mfnsky7pacha>
+Subject: Re: [PATCH v3 36/37] drm/bridge: tc358768: Convert to atomic helpers
+Message-ID: <hydowq7gzniv4m2ynsswtn7iarh25gl6tvkpooflpq3dwck7up@ea5rudjawzrd>
 References: <20250213-bridge-connector-v3-0-e71598f49c8f@kernel.org>
- <20250213-bridge-connector-v3-35-e71598f49c8f@kernel.org>
+ <20250213-bridge-connector-v3-36-e71598f49c8f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,32 +78,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250213-bridge-connector-v3-35-e71598f49c8f@kernel.org>
+In-Reply-To: <20250213-bridge-connector-v3-36-e71598f49c8f@kernel.org>
 
-On Thu, Feb 13, 2025 at 03:43:54PM +0100, Maxime Ripard wrote:
-> The tc358768 bridge driver, if enabling it fails, tries to disable it.
-> This is pretty uncommon in bridge drivers, and also stands in the way
-> for further reworks.
+On Thu, Feb 13, 2025 at 03:43:55PM +0100, Maxime Ripard wrote:
+> The tc358768 driver follows the drm_encoder->crtc pointer that is
+> deprecated and shouldn't be used by atomic drivers.
 > 
-> Worse, since pre_enable and enable aren't expected to fail, disable and
-> post_disable might be called twice: once to handle the failure, and once
-> to actually disable the bridge.
-> 
-> Since post_disable uses regulators and clocks, this would lead to enable
-> count imbalances.
-> 
-> In order to prevent that imbalance, and to allow further reworks, let's
-> drop the calls to disable and post_disable, but keep the warning to let
-> users know about what's going on.
+> This was due to the fact that we did't have any other alternative to
+> retrieve the CRTC pointer. Fortunately, the crtc pointer is now provided
+> in the bridge state, so we can move to atomic callbacks and drop that
+> deprecated pointer usage.
 > 
 > Signed-off-by: Maxime Ripard <mripard@kernel.org>
 > ---
->  drivers/gpu/drm/bridge/tc358768.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
+>  drivers/gpu/drm/bridge/tc358768.c | 26 +++++++++++++++++---------
+>  1 file changed, 17 insertions(+), 9 deletions(-)
 > 
 
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> 
 
 -- 
 With best wishes
