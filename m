@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F8715252D
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:00:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181AE245B15
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:00:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739473211; cv=none; b=c2nI2ehItvMCupX8DeV4NNBGhCSZD23nNbWTUw3MURRSIX+f0wKIXJ+udDXySEy5VgFMevD8Ekot04lF9K9buBL3Omr05LaEjQsox0Rmh6JQfwZHqa+tJ3zRMgDb4/OAfRB3zF1QO8LHfoVhZ79Mo48iZiTJqDkGsNRGBSheFNI=
+	t=1739473229; cv=none; b=YccaqmG/TV48k6EMPvbYEaW9c9WA0Wm5ECyr8brbTBKxU28vSdpv3MNOQr8d6bMMnL3pD0ll71AyeprrlmEg51K7xoakpUDnJcozqXLSieedntqmSSdLArDtZeAesM75znhzF8+Qd5qCJeoPjkm2ivPMUEqxg1M206F8a2Htruk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739473211; c=relaxed/simple;
-	bh=/cBGHGTAKeFBZ48OFF60j7+MiUDe7fnqRQSSmhD8ya8=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=p45iekk9GIr8V7m0zzjNk1oCNzTjox58eT7F1DyCuAcd9HKbvYbSAlNqL0JqZji1QI+TAMBjzLupA5TW0RqzzAixjFH2h7V9wAEDZp2sZF/SUESneSUxvYT+pFImCtIzHGitmOHU9RpmqT9Iwr+MY9ngjGFXGHGz5mG7KP7nEso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rBcZWwge; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739473229; c=relaxed/simple;
+	bh=hxWopbeRhDie3KprxW1B1Z9l0aq0Jj2wHB7Dl7kis4M=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=dgX6zm/i12kaf6YlCLkySEyxfcEa+TQBVhsQoE4BE9sZItnAtwFrb3sjUz1zxrgxL6DlTDaeNqsJ1aET/mrOOlfKAfCtIMbL+GPX516pIOaTg2W2RS0EogmleCFh+wu2eKpVLYaTHaQjafH9/AccjtRfT/1wgtcxjKlM3WsSTik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fEKpqizx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rBcZWwge"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06C2BC4CED1;
-	Thu, 13 Feb 2025 19:00:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fEKpqizx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C80BC4CED1;
+	Thu, 13 Feb 2025 19:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739473211;
-	bh=/cBGHGTAKeFBZ48OFF60j7+MiUDe7fnqRQSSmhD8ya8=;
+	s=k20201202; t=1739473228;
+	bh=hxWopbeRhDie3KprxW1B1Z9l0aq0Jj2wHB7Dl7kis4M=;
 	h=From:To:Cc:Subject:Date:From;
-	b=rBcZWwgeRjRAWO4Ej0MyJa7ScTl07r6e7wiYfLSGizsoKD90eKxA8McUqIwS2SDsY
-	 vvLrXq/XZbYMG3KTH4+8Km2vYG/mLwhdkywFmLpSxxKBnk/LA/IHubPeFsEmNIoBeT
-	 VOyN4IzDPNvEmvrs/eMB14RR3zVHyYmfmJrdKINbVHQ0TH8CIcO/VjG/nY1kVWkxO6
-	 cTZlKkkFrcIfMkn2hIWRBOFEOGZY9/PQMg4Zadm18OFaff3AomBlCsA1QdZfR08jrj
-	 hWuFQNG7rtRK5PMsCbqkwCkBV1kvDcfVgdrNWT9HMUaweo4UI9HhjyKegCjVOfLK9k
-	 QgLZAyY4uAuLA==
-Message-ID: <c3dbdf8692edfa264e6c7471a72c0175.broonie@kernel.org>
+	b=fEKpqizxH6UoMONlazTl9HW5G0eL0diUHALkeAw9AeojrUq3SjxwCT56fgYKY6W92
+	 EZpLOo4xzM/4U3YBT+OtZmolb+BYb9dY2N0IJ71qJO3FXfJSHQmSXASTGUZI0Fftzb
+	 8gJPCW/seGbDnn3IcuBMGvXvh4Y2KfSkCKlzsUn4arByiAQNE4WZd4R0pS86c81K9G
+	 qqLK4YkrhbBTUpeoEVYOVudoXpor/QWzIz0bu/VgRkn7/yWYjSm3rGYcnTvWSCN65L
+	 dRdCZtmS/H4R0wjgs2jDIFQTHcNd4M0gzRTjFyiRxCWpN8RO7v2FaHk74qhC9VkQXn
+	 O8rXkoiN+EP4w==
+Message-ID: <e25038550cd571bab188a0e61e2c2b2c.broonie@kernel.org>
 From: Mark Brown <broonie@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] regmap fixes for v6.14-rc2
-Date: Thu, 13 Feb 2025 18:59:56 +0000
+Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] regulator fixes for v6.14-rc2
+Date: Thu, 13 Feb 2025 19:00:14 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,20 +43,31 @@ The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
 are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-fix-v6.14-rc2
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v6.14-rc2
 
-for you to fetch changes up to 32ffed055dcee17f6705f545b069e44a66067808:
+for you to fetch changes up to 35e21de48e693af1dcfdbf2dc3d73dcfa3c8f2d9:
 
-  regmap-irq: Add missing kfree() (2025-02-05 11:55:42 +0000)
-
-----------------------------------------------------------------
-regmap: Fix for v6.14
-
-A simple fix for memory leaks when deallocating regmap-irq controllers.
+  regulator: core: let dt properties override driver init_data (2025-02-11 16:29:01 +0000)
 
 ----------------------------------------------------------------
-Jiasheng Jiang (1):
-      regmap-irq: Add missing kfree()
+regulator: Fixes for v6.14
 
- drivers/base/regmap/regmap-irq.c | 2 ++
- 1 file changed, 2 insertions(+)
+The main change here is a revert for a cleanup that was done in the
+core, attempting to resolve some confusion about how we handle systems
+where we've somehow managed to end up with both platform data and device
+tree data for the same device.  Unfortunately it turns out there are
+actually a few systems that deliberately do this and were broken by the
+change so we've just reverted it.
+
+There's also a new Qualcomm device ID.
+
+----------------------------------------------------------------
+Jerome Brunet (1):
+      regulator: core: let dt properties override driver init_data
+
+Varadarajan Narayanan (1):
+      regulator: qcom_smd: Add l2, l5 sub-node to mp5496 regulator
+
+ .../bindings/regulator/qcom,smd-rpm-regulator.yaml |  2 +-
+ drivers/regulator/core.c                           | 61 ++++++++++------------
+ 2 files changed, 28 insertions(+), 35 deletions(-)
