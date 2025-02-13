@@ -1,78 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26947200132;
-	Thu, 13 Feb 2025 10:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4C821128A
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 10:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739441598; cv=none; b=LX5WwjmN2afkEg3xZ/5VHmRpvnHPJMTnA35B/7vqVb8/4m80AJ4mlK3JIp8zpHOOPET8Kpi0jlz7aKZtH7jQ832UaqFqAGsdBWVtZHsR0rdkq8hbq1qJpqmD4dd3vu5HHuNk6heMNymmrZ5gUvUJvXRmtD8IRIakGm+9cItCwHU=
+	t=1739441608; cv=none; b=H3Y+A50Xba9Gf+cdziWi/Jqdb0Q0xmO+pJPUuCK+3aKZEuJ6DRlwXZxyxr/WR8qa1xjMBYoi0+VrAlMdRjcI6UErpropU6Yr+NvBnZ7HbDnNf0DpiXyyJmXkDcij5gK4Jmgmds3fExciZGlcFeTYFhGgYu7NWVZij6pOlcrAilQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739441598; c=relaxed/simple;
-	bh=20OLqeMxi5b375ShKZ/eaJDM4oD7NMZZLvo46Vj8rBU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lw/5D2J108rrByq4xFai4Ac3wtmo9ew84njI8xfEkrhtXv4Nk4BDEq6jHTbHlRYBNMDZv8uSd6e9feNLfwUPodb08RrkaGK3nyjJ4bw9/uqFoUNwLnPVNb+SYAkJFMY+SY+/5tKw/3tzFcF3rJltBncbFmfxx/Ur2yxINHctQBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=x7iLD3u7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739441608; c=relaxed/simple;
+	bh=OOkRWYRRFR6Zppbte+d+FFqoC+1Y9EFEFDdqlrrJuOA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hGmWvniOynA1/DLqNYKF6lOLCWAUMxzqBrnI/p7He04qqG1/M3/1pih8b+6fn2P4QCDdB0l5b2aoq88GHa6VcHElh1iNHSTLKmEFRrO9PxurxfWMvN5aaPUbCDp1PTgOuRHMWHNk/DM85ylVJGORcP6isKIt7hBOnsJMWTWZ1no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=R6QGk3km; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="x7iLD3u7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF11C4CED1;
-	Thu, 13 Feb 2025 10:13:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739441597;
-	bh=20OLqeMxi5b375ShKZ/eaJDM4oD7NMZZLvo46Vj8rBU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=x7iLD3u7FNklh5ERcnMHjOFAzkRiiyowmNr/kfMrqLydhg8nWE0cXCA0bq6yv9YGi
-	 MpU9Mf2D20AUCDxHTV4SOZTPH8akPwX8Liixsij2TRj151+lMJG7UkEQA0DqdfhMXY
-	 QBPO1gycnrZ51ZJbHd3/MeLMrN7eT8Y0AUb0iJ6w=
-Date: Thu, 13 Feb 2025 11:13:14 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Hsin-chen Chuang <chharry@google.com>
-Cc: linux-bluetooth@vger.kernel.org, luiz.dentz@gmail.com,
-	chromeos-bluetooth-upstreaming@chromium.org,
-	Hsin-chen Chuang <chharry@chromium.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] Bluetooth: Add ABI doc for sysfs isoc_alt
-Message-ID: <2025021328-limes-hacking-2ddc@gregkh>
-References: <20250213114400.v4.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
- <20250213034413.3808375-1-chharry@google.com>
- <2025021325-faction-upward-6395@gregkh>
- <CADg1FFc9_QH10UqxGqjf8hnJkHWjhy6EMPrfDCgvBx2OdOydLg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="R6QGk3km"
+Message-ID: <632baf9c-773f-4bb0-b01f-cd689e0ed1e2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739441603;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o/IcxawvhyafEXR3b1yO2+HaP7Jg3pLfdgT6ck+3Ic4=;
+	b=R6QGk3kmCG9WN2mH4/s4tDxXW/HKVq8O5JMjOgAU9HgAiw4vOqr28QSxS3uBCfqn0ATn6+
+	P2LvE6Wyu/fHxxFMLEQTvEqVpNpnX6hV3TfT96sB9WZSk5haJXQRvwOfTMGRG1FeGisWJ5
+	M2WSjdLOyNTTkq7K3VqvNNzD7a7wvF8=
+Date: Thu, 13 Feb 2025 18:12:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [PATCH 1/2] docs/zh_CN: add maintainer tree for Chinese doc
+ pickup
+To: alexs@kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250213054222.21776-1-alexs@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250213054222.21776-1-alexs@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADg1FFc9_QH10UqxGqjf8hnJkHWjhy6EMPrfDCgvBx2OdOydLg@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Feb 13, 2025 at 06:07:59PM +0800, Hsin-chen Chuang wrote:
-> On Thu, Feb 13, 2025 at 6:01 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Feb 13, 2025 at 11:44:01AM +0800, Hsin-chen Chuang wrote:
-> > > From: Hsin-chen Chuang <chharry@chromium.org>
-> > >
-> > > The functionality was completed in commit c04f2e4f4ea1 ("Bluetooth: Fix
-> > > possible race with userspace of sysfs isoc_alt")
-> > >
-> > > Fixes: c04f2e4f4ea1 ("Bluetooth: Fix possible race with userspace of sysfs isoc_alt")
-> >
-> > Where is this git id?  I don't see it in linux-next, are you sure it is
-> > correct?
-> 
-> This hash is the first patch of this series.
 
-That's not a valid git id as it only exists on your local system and no
-where else :(
+在 2/13/25 1:42 PM, alexs@kernel.org 写道:
+> From: Alex Shi <alexs@kernel.org>
+>
+>  From now on, the Chinese translation doc should be aimed here for base.
+>
+> Signed-off-by: Alex Shi <alexs@kernel.org>
 
-> So I guess I should send this patch after the ancestors are all
-> applied then.
+Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
 
-Or better yet, include the api addition as part of the patch that
-actually adds the new api.
 
-thanks,
+> Cc: Yanteng Si <siyanteng@loongson.cn>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>   MAINTAINERS | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c27f3190737f..dbb7f982e9c3 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5306,6 +5306,7 @@ F:	Documentation/dev-tools/checkpatch.rst
+>   CHINESE DOCUMENTATION
+>   M:	Alex Shi <alexs@kernel.org>
+>   M:	Yanteng Si <siyanteng@loongson.cn>
 
-greg k-h
+I have left LOONGSON, which means I have permanently lost this email 
+account. Could you please help me update it conveniently?
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 92fc0eca7061..e00e0baead9f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5411,7 +5411,7 @@ F: Documentation/dev-tools/checkpatch.rst
+
+  CHINESE DOCUMENTATION
+  M:     Alex Shi <alexs@kernel.org>
+-M:     Yanteng Si <siyanteng@loongson.cn>
++M:     Yanteng Si <si.yanteng@linux.dev>
+  S:     Maintained
+  F:     Documentation/translations/zh_CN/
+
+
+If it's not convenient for you, I'll submit a patch separately later. :)
+
+
+Thanks,
+
+Yanteng
+
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/alexs/linux.git
+>   S:	Maintained
+>   F:	Documentation/translations/zh_CN/
+>   
