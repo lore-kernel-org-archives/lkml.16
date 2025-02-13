@@ -1,111 +1,92 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE1944C7C
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E80A44C7C;
+	Thu, 13 Feb 2025 22:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739484989; cv=none; b=QwQQdweKLdEWEB/wDfPMs2jpjSYUnXPrTL4ymJqMQy2djI1cTZAn+0LoOQnoykdaYmP6CuS+nY7IgIKgi+L8DXCPjsVLEq3hey1oT8nZCbjk3cdJI1m474s0rw+RD30IPkK4NIvvBEd1H3TcvoRqIQ6ihlzr2eclXBGXFmsOooY=
+	t=1739485081; cv=none; b=I16WLd36gNMtKl/HzqZqYZbialCaq+UTu1609Qq0IFkmJC65gexlpGa0ZYZIuBhFbdkSMT1AbBfiZ1EyFRxiLJX3zpA1t8pOgU8aZPHGH/7kQ7MSGrbMzEy1Bf/4M8hLxwxPKITnGxkMNzSd+JQLUz5KxSYHQJAFcoby+OwowK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739484989; c=relaxed/simple;
-	bh=1Fz1RtUXPFobVz87/yFbKQq+ysQWBDo8vvhwHHfaRrs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lQCPY52aysWwbNmtZxIsrgH71h9fcT0dEnFlwMKCZ6/osNyeCCvZowavUbvheujNRi5qdyX0KlE3fnIeqBd96Xx7qYZqUinT2uRRCcDY4CZTcawu6zDAn7HCuL/VR++TyC/iNbTpxntQbMo45j9C2kjryK+VPkRe8Y83CeCb6VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G+yBzUM2; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+yBzUM2"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38dd93ace00so779610f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:16:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739484986; x=1740089786; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HcGHwBHCshi0yz2RQGryrnPpLkVHnABt1yCMpCIlUPI=;
-        b=G+yBzUM2pqDGK59ZeAu4mxiDFx+rgsBELTe/TasveNrKQx8lHHRdoxx9+zMz4YumtU
-         gSLG9DuIO/lJh0LxnDZc81juVZX62/ffAZG2LPSUjF8+rej25K7C1ExzL33R+xhWdALY
-         Wp11hYA9q3qQAfdQqScbYJPkwU1WxYR6csTHBhRyBllUM3USS+BB3MZ7cVTBHCPOQgwz
-         B3BdbEwNcRignfmDlwfbqjCONhV6cPxVreWcgNmDoVrKnVOluNcyqBUn5nGOeVjFT/AX
-         M/r2yTv5YxFAQHZnwJwAO5AT0+KLkIJxbmiSQxrmC1uaGCUSY1lN1+6BENQeVOS9QMgH
-         CiiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739484986; x=1740089786;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HcGHwBHCshi0yz2RQGryrnPpLkVHnABt1yCMpCIlUPI=;
-        b=PxR95e3+1U0lG56ooku7btyxAlL8ZCYzRo2+HvoluolZoLYRoErgVMotT/jahIizl7
-         vdgNuxjzmmTWM7TfBilpXy3UM5gnEEoBx2tTc3NGSY/z+5JQ+BcCcidkzi1o607HoDtB
-         uB+O0xIGCtVDjIqVnDXyWkyUGBWUnUo+5mUkrrhX+kOcjIzeH/2h0WLXfPRmPOniY/Gt
-         ue0AaoOvCcU26dJD6zdDMPmmkIa4zvI0lCDkxandHFwwqn5LzkVYzDgSwrReI6NeCAvj
-         BjVxGot5Oktj2ePtTapINpPi/jpa1jIpSdG4Mt/qLTmfUuofxijDX3uZbYMERj9s5sAv
-         yL4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWIpnpWVv3QCTti5ruYhsKqFbYatxIrPnoyklUJSU92tbvh6mM1w0aELWzxpxhkzqpLH89F8caE4+ZcrLY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHC+Rydyl525ArjmxSqz6tv9yPWTrI1+T3Z7d66GyqQRyTckiQ
-	fA9NGu20Gwaup4xOYigejd+ghs89pwTrpme2r6EH9zciLPLvu6wW
-X-Gm-Gg: ASbGncvpzZvaoyInZCGqdPtvTAoaStVPa1dyiEaDJq0EzDbYIJ1kvVOey46zxlbNaFw
-	XSub19/ucxP9fPgLtqhD7wcIS39he5Cik9XeJRVugePEjt3zZSQEd9BahQ8osDpnwWh5XgmrkWH
-	0bLUa5kozF21tZeUa0bVKFQFcH3oUEp6hqLwHIVXnHXzXIwHQ/hbdFnX12vAqlX68oTFFP4ITpN
-	XGsI0tEDKkXqHfx3z62cNvseD17xTo63aq5niYsSPWFmgZap4lPfGpfEvvGqWdQ8ef6wMCFH9Kl
-	e4U31nHrV3NOCVAu
-X-Google-Smtp-Source: AGHT+IGECzW3fSF1xoqweSC//Ej3VoquTbE09pIlohYYLP6905BQnHOPle4p2ajo3BzRgmjrjGxIzg==
-X-Received: by 2002:a05:6000:186b:b0:38f:278f:58e4 with SMTP id ffacd0b85a97d-38f278f5963mr2846752f8f.12.1739484985733;
-        Thu, 13 Feb 2025 14:16:25 -0800 (PST)
-Received: from qasdev.Home ([2a02:c7c:6696:8300:594f:c4b7:a2b1:c822])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258dcc45sm2974803f8f.33.2025.02.13.14.16.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 14:16:25 -0800 (PST)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: james.smart@broadcom.com,
-	kbusch@kernel.org,
-	axboe@kernel.dk,
-	hch@lst.de,
-	sagi@grimberg.me
-Cc: linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] nvme-fc: Utilise min3() to simplify queue count calculation
-Date: Thu, 13 Feb 2025 22:16:22 +0000
-Message-Id: <20250213221622.81457-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1739485081; c=relaxed/simple;
+	bh=wqefMj2OjBMV9f903IECS9IfnZFQxMtV9+o7b+D27sU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aFn6+IqNfM1WkVpdw8S5/FWNJQa5RcAJDi2Ogev9gSOecOU7PU6xxz+Jxk6jSByu8fdClVc9UGgIs3JJGKuVM0OdQCS/NjgrXKDbwc+xWliXifn9thGJ50FkyxRjMwkByfeXSoGjRVjkR6vO0DlS75saFAXdfrpEXD1+I8q7OJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B436106F;
+	Thu, 13 Feb 2025 14:18:18 -0800 (PST)
+Received: from [10.122.17.146] (unknown [10.122.17.146])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36CEA3F5A1;
+	Thu, 13 Feb 2025 14:17:57 -0800 (PST)
+Message-ID: <b9a7d98a-2723-45e0-bb3b-19cd31473251@arm.com>
+Date: Thu, 13 Feb 2025 16:17:56 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] Documentation: tpm: add documentation for the CRB
+ FF-A interface
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+ sudeep.holla@arm.com, rafael@kernel.org, lenb@kernel.org,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250212220548.400447-1-stuart.yoder@arm.com>
+ <20250212220548.400447-6-stuart.yoder@arm.com> <Z65uKkt2f0WYxjHi@kernel.org>
+Content-Language: en-US
+From: Stuart Yoder <stuart.yoder@arm.com>
+In-Reply-To: <Z65uKkt2f0WYxjHi@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Refactor nvme_fc_create_io_queues() and nvme_fc_recreate_io_queues() to
-use the min3() macro to find the minimum between 3 values instead of
-multiple min()'s. This shortens the code and makes it easier to read.
 
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- drivers/nvme/host/fc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index 094be164ffdc..4fd1669231fd 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -2897,7 +2897,7 @@ nvme_fc_create_io_queues(struct nvme_fc_ctrl *ctrl)
- 	unsigned int nr_io_queues;
- 	int ret;
- 
--	nr_io_queues = min(min(opts->nr_io_queues, num_online_cpus()),
-+	nr_io_queues = min3(opts->nr_io_queues, num_online_cpus(),
- 				ctrl->lport->ops->max_hw_queues);
- 	ret = nvme_set_queue_count(&ctrl->ctrl, &nr_io_queues);
- 	if (ret) {
-@@ -2951,7 +2951,7 @@ nvme_fc_recreate_io_queues(struct nvme_fc_ctrl *ctrl)
- 	unsigned int nr_io_queues;
- 	int ret;
- 
--	nr_io_queues = min(min(opts->nr_io_queues, num_online_cpus()),
-+	nr_io_queues = min3(opts->nr_io_queues, num_online_cpus(),
- 				ctrl->lport->ops->max_hw_queues);
- 	ret = nvme_set_queue_count(&ctrl->ctrl, &nr_io_queues);
- 	if (ret) {
--- 
-2.39.5
+On 2/13/25 4:11 PM, Jarkko Sakkinen wrote:
+> On Wed, Feb 12, 2025 at 04:05:48PM -0600, Stuart Yoder wrote:
+>> Add documentation providing details of how the CRB driver interacts
+>> with FF-A.
+>>
+>> Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
+>> ---
+>>   Documentation/security/tpm/tpm_ffa_crb.rst | 65 ++++++++++++++++++++++
+>>   1 file changed, 65 insertions(+)
+>>   create mode 100644 Documentation/security/tpm/tpm_ffa_crb.rst
+>>
+>> diff --git a/Documentation/security/tpm/tpm_ffa_crb.rst b/Documentation/security/tpm/tpm_ffa_crb.rst
+>> new file mode 100644
+>> index 000000000000..c70f8904a93d
+>> --- /dev/null
+>> +++ b/Documentation/security/tpm/tpm_ffa_crb.rst
+>> @@ -0,0 +1,65 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +========================
+>> +TPM CRB over FF-A Driver
+>> +========================
+>> +
+>> +The TPM Command Response Buffer (CRB) interface is a standard TPM interface
+>> +defined in the TCG PC Client Platform TPM Profile (PTP) Specification [1]_.
+>> +The CRB provides a structured set of control registers a client uses when
+>> +interacting with a TPM as well as a data buffer for storing TPM commands and
+>> +responses. A CRB interface can be implemented in:
+>> +
+>> +- hardware registers in a discrete TPM chip
+>> +
+>> +- in memory for a TPM running in isolated environment where shared memory
+>> +  allows a client to interact with the TPM
+>> +
+>> +The Firmware Framework for Arm A-profile (FF-A) [2]_ is a specification
+>> +that defines interfaces and protocols for the following purposes:
+>> +
+>> +- Compartmentalize firmware into software partitions that run in the Arm
+>> +  Secure world environment (also know as TrustZone)
+> 
+> Does that also cover ARM CCA? Just a question (not a review question).
 
+No, CCA is for confidential VMs which is a separate trusted execution
+environment and FF-A is not used there.
+
+Thanks,
+Stuart
