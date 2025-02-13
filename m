@@ -1,107 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D1E1865EE;
-	Thu, 13 Feb 2025 15:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07857202F93;
+	Thu, 13 Feb 2025 15:35:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739460784; cv=none; b=ZmUQwT6La6N18cbEnKIHFMfolvOKQ0JEMkbgx1BCo0op1TFByod0MdvHVarnO11ZGE9FQ1OAqlj7rqyNioxmuWEV7hAKicsoueqxJ9jv6lSoXbxbUzY9joC0qrwHHyb1Alc0pXKBmKAgWbZbeDfLNQB+8znaaetWm3w01B5JSWE=
+	t=1739460919; cv=none; b=LcbUdO8N1HPq9suLEJo86gN602nP2YRaQsvzQZAYvNFlAzHOfBrLg5LR7nm64Vutb/TGZb5xVsRhXQYQCLhyAnjbBIPmhUQwXeru2H2/NSPTFxCAo27HTFrrvC46ZCeBfeidZAf5tloaSmOp2FA7wRx+MpSHntP4vvKOA7rDX5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739460784; c=relaxed/simple;
-	bh=t8QMv5hVTQ+R0IqU8p9CIOvH1ExAEP3a6Vf8v5IaDu0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nwBFaZkdW1J/PlPyP+BmZFLXz+yWNPvTB71Epa5iLXBk6vBM1m4/G36f5fvZitjFaIzBdzsZxHx0xXdUx2nN95Q3Hp7YGzmxgiPtCYqx0G3I+KGlObbBtUZIAW0+zDKBINKmXS6tKED+dkZbl59ndLde3g/isscwl7mXl/o0A5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zu0rm2RY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739460919; c=relaxed/simple;
+	bh=KIzQ6vooyU6QmwLx00RHWtl6/ppL9caxsWCQFHdtPas=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rfKo5SRMujYwUhWZT4hq+5YURs3NeMPLvVjOqL+NJg0iEO0foz9/vUGIV6H+XwLzuhI5UiHl8pVLbjl9cDsMEzTYkL4dP0L93Z01+tLocMypFO3Eueg8awelB5NmjANeiveCZJJnrzEGeVwE5gUnHS4ZQiHbviptEaV72J6Bjyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=htRqOzQH; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zu0rm2RY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1DC6C4CEF8;
-	Thu, 13 Feb 2025 15:33:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739460783;
-	bh=t8QMv5hVTQ+R0IqU8p9CIOvH1ExAEP3a6Vf8v5IaDu0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Zu0rm2RYHRQAFLzKn4r1HNUMm8YFtDy2MYYtFUpabmqvXs66874sy8GDK5fdm9ZHY
-	 w5QC+it44v0XhZy8u8SLZWzM+Uo8+2eibnrdhjONcomdz+gkA8LKnLBcvxYEa3awEK
-	 4waS3GORPbRaeRFxe5NCxvQ6EoBVx5VNLpueKTNBqvdUV4k8fp5uUc1dCq0vmuQ03H
-	 QuGWQedP5GwbmxOZI29HQuY93RVX6y37ArJWxIhnXpzsKFhWpzXmyLol1k+UYuNb0k
-	 Ggp6cSPIzMlGEwTKeAOmsHe+NmdczDjA7zD9K3RavX3gAEnscHDnItccaRUyQHOAJp
-	 yCkILzAzWDACg==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54506b54268so968742e87.3;
-        Thu, 13 Feb 2025 07:33:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUYWBBNQ5Ut66pjosYl8YRPKT8qAOfI9qCECcALv/0hv0kSpe+/hjmyKx19wWRJjS3r99NCLmq+@vger.kernel.org, AJvYcCV96RfVCZSCTZSmw4JAwYKdHaRIJhCHXEi7X7s3LFkQ/Ky7GHwyxb/bCwtuDOp2x+4saD9JwIMBOCcj9AI=@vger.kernel.org, AJvYcCVtdghud2YIuYvpDvbffBF2KUOvKZvtjwgnjHhMUgMvGhNs2h+UL9P4Upo2azWxPTHmbzX34HxnzS1kO9X/EiI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/0yRR0gi+aUHMUzJZuApMo0Pfn5wdxM29VfYyWZ+LETbBtvtl
-	yh5HZukYXT0YxSfqNUEz4yBuT7DZGy2ABXMmuWQvQnlRiQxRKO+vbvQHcDDkuAlOjiopAUSKXkr
-	G+oS3nsFgvmMnr+swMF3T2lOjyIc=
-X-Google-Smtp-Source: AGHT+IFn/vzxAa1gLojO/0597IUwEJuHjE+ZMbhdN6Wkn18KpSJ16vMq38P8PaQcagI5saZOuyRj6jrZinDRQOOBjFs=
-X-Received: by 2002:a05:6512:1111:b0:545:6cf:6f3e with SMTP id
- 2adb3069b0e04-5451dde81aemr1356458e87.49.1739460781858; Thu, 13 Feb 2025
- 07:33:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="htRqOzQH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=P9KCq207AYFiKquz58kkroM53MgkDG0PAHpKTjgiJoU=; b=htRqOzQHvtSCd7OSdJjBfJQwM+
+	kU1/R0KuL0nmL6BhJ6EOWiRmsFxRZ8Ptt13b8iomO4q7VywBTYXh1goom0LH5I9UZLuBTCOb4gtFd
+	NyC2+5mreJmgWNVU+YsR5uX/SRIrKj3bm2pD19BHnjVw1YykjnOhLtML/wAq5i+GUANM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tibEv-00DmDc-Mc; Thu, 13 Feb 2025 16:34:57 +0100
+Date: Thu, 13 Feb 2025 16:34:57 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: SkyLake Huang =?utf-8?B?KOm7g+WVn+a+pCk=?= <SkyLake.Huang@mediatek.com>,
+	"dqfext@gmail.com" <dqfext@gmail.com>,
+	Steven Liu =?utf-8?B?KOWKieS6uuixqik=?= <steven.liu@mediatek.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+	"hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+	"horms@kernel.org" <horms@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>
+Subject: Re: [PATCH net-next 1/3] net: phy: mediatek: Add token ring access
+ helper functions in mtk-phy-lib
+Message-ID: <81234e04-f37c-4b10-81e6-d8508c9fb487@lunn.ch>
+References: <20250116012159.3816135-1-SkyLake.Huang@mediatek.com>
+ <20250116012159.3816135-2-SkyLake.Huang@mediatek.com>
+ <5546788b-606e-489b-bb1a-2a965e8b2874@lunn.ch>
+ <385ba7224bbcc5ad9549b1dfb60ace63e80f2691.camel@mediatek.com>
+ <64b70b2d-b9b6-4925-b3f6-f570ddb70e95@lunn.ch>
+ <Z633GUUhyxinwWiP@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210163732.281786-1-ojeda@kernel.org>
-In-Reply-To: <20250210163732.281786-1-ojeda@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 13 Feb 2025 16:32:50 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHgjwHkLsJkM3H2pjEPXDvD80V+XhH_Gsjv8N4Cf6Bvkw@mail.gmail.com>
-X-Gm-Features: AWEUYZmhbBgIMQcrZGkDUPbbIKzS9-BDPJ0yLZaCMkeMRCLb0heF4J8bVRc0_r0
-Message-ID: <CAMj1kXHgjwHkLsJkM3H2pjEPXDvD80V+XhH_Gsjv8N4Cf6Bvkw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: rust: clean Rust 1.85.0 warning using softfloat target
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, 
-	moderated for non-subscribers <linux-arm-kernel@lists.infradead.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org, 
-	Matthew Maurer <mmaurer@google.com>, Ralf Jung <post@ralfj.de>, 
-	Jubilee Young <workingjubilee@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z633GUUhyxinwWiP@makrotopia.org>
 
-On Mon, 10 Feb 2025 at 17:38, Miguel Ojeda <ojeda@kernel.org> wrote:
->
-> Starting with Rust 1.85.0 (to be released 2025-02-20), `rustc` warns
-> [1] about disabling neon in the aarch64 hardfloat target:
->
->     warning: target feature `neon` cannot be toggled with
->              `-Ctarget-feature`: unsound on hard-float targets
->              because it changes float ABI
->       |
->       = note: this was previously accepted by the compiler but
->               is being phased out; it will become a hard error
->               in a future release!
->       = note: for more information, see issue #116344
->               <https://github.com/rust-lang/rust/issues/116344>
->
-> Thus, instead, use the softfloat target instead.
->
+> > > Those registers with Mrvl* prefix were originally designed for
+> > > connection with certain Marvell devices. It's our DSP parameters.
+> > 
+> > Will this code work with real Marvell devices? Is this PHY actually
+> > licensed from Marvell?
+> 
+> >From what I understood the tuning of those parameters is required
+> to connect to a Marvell PHY link partner on the other end.
 
-We have to carefully make the distinction here between codegen and ABI.
+If so, the naming is bad. I assume you need the same settings for
+Microchip, Atheros, Broadcom, etc. These settings just tune the
+hardware to be standards conforming?
 
-The arm64 C code in the kernel is built with -mgeneral-regs-only
-because FP/SIMD registers are not preserved/restored like GPRs, and so
-they must be used only in carefully controlled circumstances, i.e., in
-assembler code called under kernel_neon_begin()/kernel_neon_end()
-[modulo some exceptions related to NEON intrinsics]
+	Andrew
 
-This does not impact the ABI, which remains hard-float [this was the
-only arm64 calling convention that existed until about a year ago].
-Any function that takes or returns floats or doubles (or NEON
-intrinsic types) is simply rejected by the compiler.
-
-Changing this to softfloat for Rust modifies this calling convention,
-i.e., it will result in floats and doubles being accepted as function
-parameters and return values, but there is no code in the kernel that
-actually supports/implements that. Also, it should be clarified
-whether using a softfloat ABI permits the compiler to use FP/SIMD
-registers in codegen. We might still need -Ctarget-feature="-neon"
-here afaict.
-
-Ideally, we'd have a target/target-feature combo that makes this more
-explicit: no FP/SIMD codegen at all, without affecting the ABI,
-therefore making float/double types in function prototypes illegal.
-AIUI, this change does something different.
