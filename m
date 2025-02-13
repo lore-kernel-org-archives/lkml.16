@@ -1,149 +1,119 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAEB820A5DC
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C54B1E376E;
+	Thu, 13 Feb 2025 09:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739438674; cv=none; b=U1RjrIrUe1d4t55h/ME7Rkmicq59y0nwzQ2p0Th0ihZIZQueyw1CE0kSA5/6SYplWa8gkUqn+EsoHeiyL0Si8RQWDe3V2+NMvLqJK6NNnngoQH4bvZKNCqZ8fI8gk6qDZonEI2Q94Wq2aL8930ZX+Wwvlk/n49LW30gCV1dVzyc=
+	t=1739438734; cv=none; b=Gxhyh91fdfKRvQog98G8xW4e2PzWV/+ZBbWKxDUq2SLXYLBIVV119wHUUFifq+14JO8ZR+gIGox/dICxdgKcNOs7cfhKHym9TAJMBbd9nIjqBYBs4rvlO+nJIV5jqP09IbfsDTH1jxLZ3Jt8WK5xjWtt/KkgqJ+GFKlvx+ILOGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739438674; c=relaxed/simple;
-	bh=iqZX9vlmTh8Gz3IOozatDHf855QCyukvJ48qmfrPENU=;
+	s=arc-20240116; t=1739438734; c=relaxed/simple;
+	bh=38I1hCRodY+InrLjRVaigHjIIKw+PjXL6lLJvQekN7A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e4lkXPZ3yzzpJn9GXGpw7u2bkBalrCaIIGhaU/ftuw8w8wcptpguQnnejE3uMhpuFeiGwJemwt6egxnBBnvuRPL5++Z4XH800L94juqWAJkxEbxDSc8fM77Mb0sqX3kXH/Z76T1Xe8WkQXty4Zj6vuBvUxvUAwCuhjHVKSMsTcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE7BE16F3;
-	Thu, 13 Feb 2025 01:24:51 -0800 (PST)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 77FCF3F58B;
-	Thu, 13 Feb 2025 01:24:29 -0800 (PST)
-Date: Thu, 13 Feb 2025 09:24:22 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Fuad Tabba <tabba@google.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v7] KVM: arm64: Fix confusion in documentation for pKVM
- SME assert
-Message-ID: <Z626RqzA3HMskwJd@J2N7QTR9R3>
-References: <20250212-kvm-arm64-sme-assert-v7-1-0f786db838d3@kernel.org>
- <Z6yByMUBPDUyEWOr@J2N7QTR9R3>
- <86tt8yrzon.wl-maz@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZIUrsHl43Ds1EYPoqtlGg/pQNCI6O1GahUGG6xBFPhMwODjHWqkzjOz3FsSVzlyEeFkPxam+ttFQe37myuFRyoD0BUP0tLXwNtoo9GxNyWyzNciT/PjPohm/X5HrwSfeW1XTNTydGbA7nEnKVZ3adPTr7QAPpcQPoi0jwJaGDMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sginmXz6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sginmXz6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 259A1C4CED1;
+	Thu, 13 Feb 2025 09:25:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739438733;
+	bh=38I1hCRodY+InrLjRVaigHjIIKw+PjXL6lLJvQekN7A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sginmXz6gdKXf7jVIfQ0FNV/ngeUfT/8xmJIzEGm4eWEnBbttHIEwzjevmFvIfpRN
+	 Pd+aVA8YKEsxtvkAEIsmRuXcI2XmrfQ9mkiVyqYNu42bQ6Xx+6A33CVQB6BzeWgn36
+	 JcAoSYUfAKjtHSWiXjyAzNibfZuwngivq41ju803wH/zi5OpIvQWu0LlpC6Y59ExR7
+	 GremGc+JcHlVjDURRnp3PR3kWlKPDxYtxCg6+gLJHhbQ4Y3teq3AcMEyaexQ+uvsPm
+	 QSdRe6v/Z6sOkkYI9K8GkLr08MYctWhZx0Cnfzjq508crSSSRD0gcwwL77xFfdwkkL
+	 RAX0Sakwu6FVg==
+Date: Thu, 13 Feb 2025 10:25:30 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Alexis =?utf-8?Q?Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Ajay Singh <ajay.kathat@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Kalle Valo <kvalo@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Marek Vasut <marex@denx.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 01/12] dt-bindings: bluetooth: describe wilc 3000
+ bluetooth chip
+Message-ID: <20250213-chamois-of-unexpected-glory-dd3eab@krzk-bin>
+References: <20250212-wilc3000_bt-v1-0-9609b784874e@bootlin.com>
+ <20250212-wilc3000_bt-v1-1-9609b784874e@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <86tt8yrzon.wl-maz@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250212-wilc3000_bt-v1-1-9609b784874e@bootlin.com>
 
-On Thu, Feb 13, 2025 at 08:55:52AM +0000, Marc Zyngier wrote:
-> On Wed, 12 Feb 2025 11:11:04 +0000,
-> Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Wed, Feb 12, 2025 at 12:44:57AM +0000, Mark Brown wrote:
-> > > diff --git a/arch/arm64/kvm/fpsimd.c b/arch/arm64/kvm/fpsimd.c
-> > > index 4d3d1a2eb157047b4b2488e9c4ffaabc6f5a0818..e37e53883c357093ff4455f5afdaec90e662d744 100644
-> > > --- a/arch/arm64/kvm/fpsimd.c
-> > > +++ b/arch/arm64/kvm/fpsimd.c
-> > > @@ -93,11 +93,14 @@ void kvm_arch_vcpu_load_fp(struct kvm_vcpu *vcpu)
-> > >  	}
-> > >  
-> > >  	/*
-> > > -	 * If normal guests gain SME support, maintain this behavior for pKVM
-> > > -	 * guests, which don't support SME.
-> > > +	 * Protected and non-protected KVM modes require that
-> > > +	 * SVCR.{SM,ZA} == {0,0} when entering a guest so that no
-> > > +	 * host/guest SME state needs to be saved/restored by hyp code.
-> > > +	 *
-> > > +	 * In protected mode, hyp code will verify this later.
-> > >  	 */
-> > > -	WARN_ON(is_protected_kvm_enabled() && system_supports_sme() &&
-> > > -		read_sysreg_s(SYS_SVCR));
-> > > +	WARN_ON_ONCE(is_protected_kvm_enabled() && system_supports_sme() &&
-> > > +		     read_sysreg_s(SYS_SVCR));
-> > 
-> > As I mentioned on the last round, we can drop the is_protected_kvm_enabled()
-> > check, i.e. have:
-> > 
-> > 	/*
-> > 	 * Protected and non-protected KVM modes require that
-> > 	 * SVCR.{SM,ZA} == {0,0} when entering a guest so that no
-> > 	 * host/guest SME state needs to be saved/restored by hyp code.
-> > 	 *
-> > 	 * In protected mode, hyp code will verify this later.
-> > 	 */
-> > 	WARN_ON_ONCE(system_supports_sme() && read_sysreg_s(SYS_SVCR));
-> > 
-> > Either way:
-> > 
-> > Acked-by: Mark Rutland <mark.rutland@arm.com>
-> > 
-> > Marc, are you happy to queue this atop the recent fixes from me? Those
-> > try to ensure SVCR.{SM,ZA} == {0,0} regardless of whether KVM is in
-> > protected mode.
-> 
-> In all honesty, I find that at this stage, the comment just gets in
-> the way and is over-describing what is at stake here.
-> 
-> The
-> 
->  	WARN_ON_ONCE(system_supports_sme() && read_sysreg_s(SYS_SVCR));
-> 
-> is really the only thing that matters. It perfectly shows what we are
-> checking for, and doesn't need an exegesis.
-> 
-> As for the Fixes: tag, and given the magnitude of the actual fixes
-> that are already queued, I don't think we need it.
+On Wed, Feb 12, 2025 at 04:46:20PM +0100, Alexis Lothor=C3=A9 wrote:
+> WILC3000 is a combo chip providing 802.11b/g/n and Bluetooth 5. The wlan
+> part is exposed either through SDIO or SPI interface, and the bluetooth
+> part is exposed through uart. The notable peculiarity of this chip is
+> that the bluetooth part is not fully autonomous: its firmware is not
+> loaded through UART interface but through SDIO/SPI interface, so the
+> bluetooth description needs a reference to the wlan part to get access
+> to the corresponding bus.
+>=20
+> Signed-off-by: Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com>
+> ---
+>  .../net/bluetooth/microchip,wilc3000-bt.yaml       | 41 ++++++++++++++++=
+++++++
+>  1 file changed, 41 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/bluetooth/microchip,wi=
+lc3000-bt.yaml b/Documentation/devicetree/bindings/net/bluetooth/microchip,=
+wilc3000-bt.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..2a83ca3ad90b26fd619b574bc=
+343bee9654a1e43
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/bluetooth/microchip,wilc3000-=
+bt.yaml
+> @@ -0,0 +1,41 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/bluetooth/microchip,wilc3000-bt.y=
+aml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip Bluetooth chips
+> +
+> +description:
+> +  This binding describes UART-attached Microchip bluetooth chips. These
+> +  chips are dual-radio chips supporting WiFi and Bluetooth. The bluetooth
+> +  side works with standard HCI commands over 4-wires UART (with flow
+> +  control)
+> +
+> +maintainers:
+> +  - Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - microchip,wilc3000-bt
+> +
+> +  wlan:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Phandle to the wlan part of the combo chip
 
-That's fair; if you haven't spun a patch for that already, I guess we're
-after the following?
+No resources here and judging by the driver everything is part of wifi.
+Either you wrote it to match driver or indeed hardware is like that. In
+the first case, why this cannot be part of WiFi with phandle to serial
+bus? In the second case, this needs to be proper hardware description.
 
-Mark.
-
----->8----
-From 4d05f6dd6d39c747c175782b7b44daa775251994 Mon Sep 17 00:00:00 2001
-From: Mark Rutland <mark.rutland@arm.com>
-Date: Thu, 13 Feb 2025 09:15:31 +0000
-Subject: [PATCH] KVM: arm64: Simplify warning in kvm_arch_vcpu_load_fp()
-
-At the end of kvm_arch_vcpu_load_fp() we check that no bits are set in
-SVCR. We only check this for protected mode despite this mattering
-equally for non-protected mode, and the comment above this is confusing.
-
-Remove the comment and simplify the check, moving from WARN_ON() to
-WARN_ON_ONCE() to avoid spamming the log.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
----
- arch/arm64/kvm/fpsimd.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/arch/arm64/kvm/fpsimd.c b/arch/arm64/kvm/fpsimd.c
-index 3cbb999419af7..7f6e43d256915 100644
---- a/arch/arm64/kvm/fpsimd.c
-+++ b/arch/arm64/kvm/fpsimd.c
-@@ -65,12 +65,7 @@ void kvm_arch_vcpu_load_fp(struct kvm_vcpu *vcpu)
- 	fpsimd_save_and_flush_cpu_state();
- 	*host_data_ptr(fp_owner) = FP_STATE_FREE;
- 
--	/*
--	 * If normal guests gain SME support, maintain this behavior for pKVM
--	 * guests, which don't support SME.
--	 */
--	WARN_ON(is_protected_kvm_enabled() && system_supports_sme() &&
--		read_sysreg_s(SYS_SVCR));
-+	WARN_ON_ONCE(system_supports_sme() && read_sysreg_s(SYS_SVCR));
- }
- 
- /*
--- 
-2.30.2
+Best regards,
+Krzysztof
 
