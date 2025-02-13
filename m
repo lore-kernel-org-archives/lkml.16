@@ -1,62 +1,46 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC77211292;
-	Thu, 13 Feb 2025 09:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E6541C6A;
+	Thu, 13 Feb 2025 10:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739440769; cv=none; b=ZwK3Yzx1B2SWD8Nm/qv3klAQAJBT7AQQG0Rqbe/OQMAG0alRV2JWO3RyvCMNo5qtLqYO/2IKOdqQru5i+BkgSFouqbNC985GMlRk2C0Syi2hpMqxfpKiM/nNeBnqY+x50tSPSd2QyQggWpMx7iFXVAcnUbgGfUy2qAtXVqXtyuE=
+	t=1739440882; cv=none; b=sXe2YHJdpOkeIQRh1JB6uT52Vktzq3UNi3Nisz/0ss22ys0ZahIFk0jqvrrG61pBwGz812SA3EYxql4Tsg3/fEb7iNhKFZPhasIHR6Hub8v2Xz1pr7EaM3ONyqwNnF1/bu+DWnoLdcohxnqYajzEmTRIlZ2yRt7BXHNViG4NYmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739440769; c=relaxed/simple;
-	bh=80ywDfww+kmELyRiFn0bexIaEho8JtvhUo8i8AyBu3E=;
+	s=arc-20240116; t=1739440882; c=relaxed/simple;
+	bh=ZIqYDH1BfJZcAkTWwvMK4oFyPuJrzrCNOnu8RYStqJg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JfAtTBZtW5rV04M4NGsFSBM7q6XYSlYjkdw80YDDsbI4kMimZagAJ2ps3ZLvRhWuGk706HGkLIhOff1zV5WuaCICRd+YRzNyorN8FcXVQdPCjZt13cubJFSeWW2rZBkWQNcJ3cAQ5q6wx7lKsn4TVr2iLdP3GUavbb3BdAIAqrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WPw+oqHN; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=F5bVCcDDZWL4dOEniVPSVDUrylL4882Kbq55NhTstweSSNeLQrLE7toUELhMLEV7qR96vN+xTB00+BGY0Am9t+5lxbizfKVqr8guuW6zKo/4UeEnnEZpu8lrnD/c0gzo4zvjm30YPjlXj4aVh4pWhEMZ153tdLkuycenMGXUIWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CT80kOy+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WPw+oqHN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=pJc3YrbSrZjb+1WUbDYoQQxBsow526Z2Yq1LAQIerb4=; b=WPw+oqHNIzSpQadkIEozzuYPCc
-	QD+mVmk1T0MZVKzQvFvpAyjOg5GDQgMLWKWtdccpnC1bjnNtDQhUBlhUPK6PLYgFf5h/MJE+3Q/rN
-	oT7aUhrYy6jKadGcY4/mVAtseuFTfUG+b+VBL3V8IM2jqJBow6WoTA/Z48M/5Zsiq8w13GONkf23b
-	1CdwiX6+AZd/lmYib1M8wVMwgzVSK/CsZ7xg2ojI0XO/aSq/W6t1vbYPWm0LeHnMegImCBPK2Jxkg
-	kTopfL/r/vHQQ/fw/VbdzFDH9Prp+iUV6+fwdU2ObBrtzZBqzhC8o/11V9usdg1M0Am5aSWwbbtaT
-	K7W0k1DA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tiW07-00000000xD3-0Ago;
-	Thu, 13 Feb 2025 09:59:19 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9D39A3002E5; Thu, 13 Feb 2025 10:59:18 +0100 (CET)
-Date: Thu, 13 Feb 2025 10:59:18 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>, bpf <bpf@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>,
-	Dohyun Kim <dohyunkim@google.com>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	Kernel Team <kernel-team@meta.com>
-Subject: Re: [PATCH bpf-next v2 00/26] Resilient Queued Spin Lock
-Message-ID: <20250213095918.GB28068@noisy.programming.kicks-ass.net>
-References: <20250206105435.2159977-1-memxor@gmail.com>
- <20250210093840.GE10324@noisy.programming.kicks-ass.net>
- <20250210104931.GE31462@noisy.programming.kicks-ass.net>
- <CAADnVQ+3wu0WB2pXs4cccxfkbTb3TK8Z+act5egytiON+qN9tA@mail.gmail.com>
- <20250211104352.GC29593@noisy.programming.kicks-ass.net>
- <CAADnVQJ=81PE19JWeNjq6aNOy+GM-wo6n7WU9StX1b6kevqCUw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CT80kOy+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE24CC4CED1;
+	Thu, 13 Feb 2025 10:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739440881;
+	bh=ZIqYDH1BfJZcAkTWwvMK4oFyPuJrzrCNOnu8RYStqJg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CT80kOy+UBc1F93xZBALWXH0fBw+w/Wl/AbuBRUZ5RA9pmydy3NjIF+nI0Cs6gAyB
+	 FaX6b6pwa36QQ5fOJUslSk9QaLd9e48+cI6/tJwSlRyRVa91hSeU11nCDDKuvkGhOQ
+	 167EKf9CBvO0ISoqVdxpt9jKdIZnJATxTOLRlXiQ=
+Date: Thu, 13 Feb 2025 11:01:17 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Hsin-chen Chuang <chharry@google.com>
+Cc: linux-bluetooth@vger.kernel.org, luiz.dentz@gmail.com,
+	chromeos-bluetooth-upstreaming@chromium.org,
+	Hsin-chen Chuang <chharry@chromium.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+	Ying Hsu <yinghsu@chromium.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] Bluetooth: Fix possible race with userspace of
+ sysfs isoc_alt
+Message-ID: <2025021352-dairy-whomever-f8bd@gregkh>
+References: <20250213114400.v4.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,102 +49,81 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAADnVQJ=81PE19JWeNjq6aNOy+GM-wo6n7WU9StX1b6kevqCUw@mail.gmail.com>
+In-Reply-To: <20250213114400.v4.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
 
-On Tue, Feb 11, 2025 at 10:33:00AM -0800, Alexei Starovoitov wrote:
-
-> Ohh. No unpriv here.
-> Since spectre was discovered unpriv bpf died.
-> BPF_UNPRIV_DEFAULT_OFF=y was the default for distros and
-> all hyperscalers for quite some time.
-
-Ah, okay. Time to remove the option then?
-
-> > So much details not clear to me and not explained either :/
+On Thu, Feb 13, 2025 at 11:43:59AM +0800, Hsin-chen Chuang wrote:
+> From: Hsin-chen Chuang <chharry@chromium.org>
 > 
-> Yes. The plan is to "kill" bpf prog when it misbehaves.
-> But this is orthogonal to this res_spin_lock set which is
-> a building block.
+> Expose the isoc_alt attr with device group to avoid the racing.
 > 
-> > Right, but it might have already modified things, how are you going to
-> > recover from that?
+> Now we create a dev node for btusb. The isoc_alt attr belongs to it and
+> it also becomes the parent device of hci dev.
 > 
-> Tracking resources acquisition and release by the bpf prog
-> is a normal verifier job.
-> When bpf prog does bpf_rcu_read_lock() the verifier makes sure
-> that all execution paths from there on have bpf_rcu_read_unlock()
-> before program reaches the exit.
-> Same thing with locks.
-
-Ah, okay, this wasn't stated anywhere. This is rather crucial
-information.
-
-> If bpf_res_spin_lock() succeeds the verifier will make sure
-> there is matching bpf_res_spin_unlock().
-> If some resource was acquired before bpf_res_spin_lock() and
-> it returned -EDEADLK the verifier will not allow early return
-> without releasing all acquired resources.
-
-Good.
-
-> > Have the program structured such that it must acquire all locks before
-> > it does a modification / store -- and have the verifier enforce this.
-> > Then any lock failure can be handled by the bpf core, not the program
-> > itself. Core can unlock all previously acquired locks, and core can
-> > either re-attempt the program or 'skip' it after N failures.
+> Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to control USB alt setting")
+> Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
+> ---
 > 
-> We definitely don't want to bpf core to keep track of acquired resources.
-> That just doesn't scale.
-> There could be rcu_read_locks, all kinds of refcounted objects,
-> locks taken, and so on.
-> The verifier makes sure that the program does the release no matter
-> what the execution path.
-> That's how it scales.
-> On my devserver I have 152 bpf programs running.
-> All of them keep acquiring and releasing resources (locks, sockets,
-> memory) million times a second.
-> The verifier checks that each prog is doing its job individually.
-
-Well, this patch set tracks the held lock stack -- which is required in
-order to do the deadlock thing after all.
-
-> > It does mean the bpf core needs to track the acquired locks -- which you
-> > already do,
+> Changes in v4:
+> - Create a dev node for btusb. It's now hci dev's parent and the
+>   isoc_alt now belongs to it.
+> - Since the changes is almost limitted in btusb, no need to add the
+>   callbacks in hdev anymore.
 > 
-> We don't. 
-
-This patch set does exactly that. Is required for deadlock analysis.
-
-> The bpf infra does static checks only.
-> The core doesn't track objects at run-time.
-> The only exceptions are map elements.
-> bpf prog might store an acquired object in a map.
-> Only in that case bpf infra will free that object when it frees
-> the whole map.
-> But that doesn't apply to short lived things like RCU CS and
-> locks. Those cannot last long. They must complete within single
-> execution of the prog.
-
-Right. Held lock stack is like that.
-
-> > > That was a conscious trade-off. Deadlocks are not normal.
-> >
-> > I really do think you should assume they are normal, unpriv and all
-> > that.
+> Changes in v3:
+> - Make the attribute exported only when the isoc_alt is available.
+> - In btusb_probe, determine data->isoc before calling hci_alloc_dev_priv
+>   (which calls hci_init_sysfs).
+> - Since hci_init_sysfs is called before btusb could modify the hdev,
+>   add new argument add_isoc_alt_attr for btusb to inform hci_init_sysfs.
 > 
-> No unpriv and no, we don't want deadlocks to be considered normal
-> by bpf users. They need to hear "fix your broken prog" message loud
-> and clear. Patch 14 splat is a step in that direction.
-> Currently it's only for in-kernel res_spin_lock() usage
-> (like in bpf hashtab). Eventually we will deliver the message to users
-> without polluting dmesg. Still debating the actual mechanism.
+>  drivers/bluetooth/btusb.c        | 98 +++++++++++++++++++++++++-------
+>  include/net/bluetooth/hci_core.h |  1 +
+>  net/bluetooth/hci_sysfs.c        |  3 +-
+>  3 files changed, 79 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index 1caf7a071a73..cb3db18bb72c 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -920,6 +920,8 @@ struct btusb_data {
+>  	int oob_wake_irq;   /* irq for out-of-band wake-on-bt */
+>  
+>  	struct qca_dump_info qca_dump;
+> +
+> +	struct device dev;
+>  };
+>  
+>  static void btusb_reset(struct hci_dev *hdev)
+> @@ -3693,6 +3695,9 @@ static ssize_t isoc_alt_store(struct device *dev,
+>  	int alt;
+>  	int ret;
+>  
+> +	if (!data->hdev)
+> +		return -ENODEV;
+> +
+>  	if (kstrtoint(buf, 10, &alt))
+>  		return -EINVAL;
+>  
+> @@ -3702,6 +3707,34 @@ static ssize_t isoc_alt_store(struct device *dev,
+>  
+>  static DEVICE_ATTR_RW(isoc_alt);
+>  
+> +static struct attribute *btusb_sysfs_attrs[] = {
+> +	NULL,
+> +};
+> +ATTRIBUTE_GROUPS(btusb_sysfs);
+> +
+> +static void btusb_sysfs_release(struct device *dev)
+> +{
+> +	// Resource release is managed in btusb_disconnect
 
-OK; how is the user supposed to handle locking two hash buckets? Does
-the BPF prog create some global lock to serialize the multi bucket case?
+That is NOT how the driver model works, do NOT provide an empty
+release() function just to silence the driver core from complaining
+about it.
 
+If for some reason the code thinks it is handling devices differently
+than it should be, fix that instead.
 
-Anyway, I wonder. Since the verifier tracks all this, it can determine
-lock order for the prog. Can't it do what lockdep does and maintain lock
-order graph of all loaded BPF programs?
+thanks,
 
-This is load-time overhead, rather than runtime.
+greg k-h
