@@ -1,141 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B8D1FFC59;
-	Thu, 13 Feb 2025 19:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DD9201100
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739475755; cv=none; b=eYwyZx5wEdG9Wm5Ajv70380mm+XArNjTz8tLxNWtBVjpe8iQLw6QNU5kb4aulMJaZhlHg9sinEh55KbWDOOlFbJHvqSE3dFNvQWLu+DFK45OnP6Qz+uirqxEyng+NGU23hnN/Q/cZDnTOuSLTyN/z59h6rJGaunjH+klF6zWd5g=
+	t=1739476011; cv=none; b=PO1+avB4NZU/Iv+JsNaw2OwsxL+GVDDPGgjkU6tnjszRxvhlD657q0Td6Mrbt/j3l64/iALtNtf4ABqfpmdMgxzkTMu+kdrn5kddXjnjz060j0XDP4SDTH5DXN1ssMud3GB0/UnnA8bcWTFjb8Hvv3CkcSve+oSnNcqI2zAhNYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739475755; c=relaxed/simple;
-	bh=zhca3lHw3HGHPYdbqXqIVn9+d+GeoxPMDbYAYuwBREU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HiYSNjMY07LbawdEQSrBbNqal5d2LaAM6jyIZ9pxhCKYglk73eZF3wbczTm++pBsyWDMV8x19mZjqIrtcUS4ubjj2cdiNseAJAZiRll8sk+ZfCc2gPO1VGmWOtZwtEUHM/xW0qrKv/fFe7R6TIFDIJRVtiu5x/OzH+rzGN2t/r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F58sqAOP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739476011; c=relaxed/simple;
+	bh=TPLaz7zjy3zkE2OPYHHcRx0GOTQvu1hBDURDHpSWk/Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TNed53JMexVpMkEiB4tngJXEQTYPLXt1cfXzbRfgQHPzhNbxBRWby+EDtGEdtDdSkDzxjYmfYt1yMXzsgSzIj1KFro1FjSnrezZtuWSujY2XqHWCjWFtnV8DHGI/EOEUAdoWtyser/Y+99M1L544BWc7z+y5Zl8uZohGHpq9nCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=TO9C96gR; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F58sqAOP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FEBFC4CEEB;
-	Thu, 13 Feb 2025 19:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739475754;
-	bh=zhca3lHw3HGHPYdbqXqIVn9+d+GeoxPMDbYAYuwBREU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F58sqAOPUzD1iqPKvsUuTHv9lybwmwlvsyOcWe6mQh+HPB9WgVvuJiWFy+FFtKADI
-	 A8lbwZSdi6q/iSISINI0+HyOKB0zkUw85NUFFcOD2F2+QYHdTXPDjSlNz+e2sCUlpa
-	 gBYbH3R1qumoytxHxsKkKADtqQqCf5jq3W6bWEFxgwnplaNFd1FLrEaEsRyxHOPqH4
-	 PuYkJjF8y9e2t/AZ8qO3cTNaeT/S7NX7poN6uCTbo5xMSAQWy1/g/r5mKzYTn7vUPv
-	 U3VLlwsGCyKISxGIsDghahpMGxukWq3Y+wXyKqVSFDcNo8OytXyL9YMpmYkzoIrBnE
-	 gGfU2I0TyG9jA==
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3cfcf8b7455so9635425ab.3;
-        Thu, 13 Feb 2025 11:42:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU2S6h6YHizzEteLXOGnH0aZgAznxoRqfPF46CL2r9c0xOzj8dRYItcdoQ1saaabFn3QOOii7y6/YzPoIjRcZjmBw==@vger.kernel.org, AJvYcCX3FtPeMDo6DLfgccXbj0irCULQM9WsVyvVFlO3VYWIR0ul19PR70nrBCNXPiWFAx9GH9hRQ/1RW6lnbCI=@vger.kernel.org, AJvYcCXsC9rfj6uFw/+3uuoUej9BEVnPi05GCwk9ei2bSoT2U22u4s1C3o/zfVca4/vPRuLCmy7jOKbbsdsO8QYqbQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLjU+DOYyK0lga2vdXyXQTn1KtLEKAHW4eDHv05H0oK+BRVL+o
-	GAx6k+Hpc7c+QDbnMDyUxG74B3HG/Gsq7G9IWwO5YCt33irrfAgqreNVpOSPM573LQ4ZqZ88dB8
-	XyLLc9i0tdIoMnuqmD9Z16WacwGk=
-X-Google-Smtp-Source: AGHT+IHIbENSDq5CQfP65nDFBkOkSbpX1IICiXpHBzu8dGuTeZ21sZHkLP/NkVnz62zNuV6m+CoRpUcWrEyLrDSzEik=
-X-Received: by 2002:a05:6e02:1a4d:b0:3d0:2477:83ec with SMTP id
- e9e14a558f8ab-3d17bfde009mr71824235ab.14.1739475753535; Thu, 13 Feb 2025
- 11:42:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="TO9C96gR"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38dd14c9a66so634167f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:46:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openvpn.net; s=google; t=1739476007; x=1740080807; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZkHXqpDyF1cQnu6X6Y845W/JOuPpcf7g2ixUcfTTjag=;
+        b=TO9C96gRtUYo5YF4nBbJgoZ3eKqwdCjOL5/doYPMTSYMF7GdUaj3hsNF3Jw0Yoq7Dg
+         Jp72uMPHR7CUO+uVplAvSXfyaSImHcABC4LpUr/q4So1aym/zQQ5ZpyhyhCQkb1tEWSE
+         cgxdyAQcDExanHJVpwL0jfhpY/Nh7wRyb/oWp5746LhCiWctBAcPP9eN4Sxim0F3OiNV
+         HQFULy//2FrYOixV//zjbEdEeZvwwwdNoSUpCONKL/crDaCXT+YOyj6rbe4EZxpGi+8k
+         EzziwkG28O0DfiKUcth9GvCeMFfU41AbcdOsUhsaMv8ZLpdDH6cQpMZpHFwJDpgvcrfn
+         bCBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739476007; x=1740080807;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZkHXqpDyF1cQnu6X6Y845W/JOuPpcf7g2ixUcfTTjag=;
+        b=BT8i1Od4KiJWvkgA85n9Udh3mMPv/5/iFwl82jhWSWcRZAiLf5PDAo9HQdyHchoXJd
+         aLzqLspsoWFV4o8U8PnMz3g31FYSHUlGA0SES5XJPcA9XkxWwUGWq4CIYKoRPvR1Qr9c
+         8Kw8fLCt397BC0mapk1JQZCwCe7UVncyl0CG7uhukkd+L36IgFNSRYitnJmTHKUrhF7J
+         l6bPDTMbKx9rheORJwVXIMMLeZ63cZ7ecyFI4B8k55hjQd5CM59FdkIrvLlZRN6NCnsW
+         gyZdH551sKtehZROY6IwSMaFDvhOl5cZg0dB/MMY8z5x/b1SuaBiSg5NrnoeQC7SNzRC
+         hxBw==
+X-Forwarded-Encrypted: i=1; AJvYcCVvrelOEPjwHLxGRTH85gc7u8TQf9XXiIbMycb0+7XP9JUDrwR4KASpxfFqwv7XD5442dqPjTHs+tNNh80=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0rkfJs9ok08EzjSdfUSZk9gTPEDzB4pdSeOfOTm9ZM65L4uRR
+	me+KUYIGM5C+Zgomtcf+EPBLZD2hdyLzYc/JubglylcY8vY+bTF6jTAnkWJqbd8=
+X-Gm-Gg: ASbGncsgaBVJ0DvZmxgyso2H3A+mTEGjEMFcTwYREK8fEunncMVFPwftcfa9XZjCbKN
+	TaK4M1T7yo5dfhYBXnbu0jBk3PUoucZMbtLYVncFCBvvZC0Yhwm847tHhJHGS6oIEECk7JJSEmB
+	Y/t+xxotaw5IzWkwsIgC0430NNk1x4/1rqpMkbqGGPAUg1dEFUdRhRID/ilynRAZW7sW4HHlV9C
+	xzIsu/yX45xwCPlSBZBVcAl7oN4QtZ9+dSvKLEYZO3BkBZ76ibjawRS9xI9qjCyIOfUeHEBrv3w
+	UM1H3X7b2jBrYtaGi5eOnCCbyrTC3Iv2qSJmd/RPO2zcgSZ04strOQ==
+X-Google-Smtp-Source: AGHT+IFbRfm/q+D5e5B9OtzP7lF9wXMiYrSTURLmazKapx5hCkJN5kLnPkTh6Is/FD24ZaN+9zmCaQ==
+X-Received: by 2002:a05:6000:4027:b0:38d:e401:fd50 with SMTP id ffacd0b85a97d-38dea25a83dmr8676740f8f.6.1739476007347;
+        Thu, 13 Feb 2025 11:46:47 -0800 (PST)
+Received: from ?IPV6:2001:67c:2fbc:1:8ed1:f279:ecc1:ee2e? ([2001:67c:2fbc:1:8ed1:f279:ecc1:ee2e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258dcc50sm2733861f8f.34.2025.02.13.11.46.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 11:46:46 -0800 (PST)
+Message-ID: <558dd7fd-bd6e-464e-8dd2-e211956edc99@openvpn.net>
+Date: Thu, 13 Feb 2025 20:46:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127213310.2496133-1-wnliu@google.com> <CAPhsuW6S1JPn0Dp+bhJiSVs9iUv7v7HThBSE85iaDAvw=_2TUw@mail.gmail.com>
- <00fa304d-84bf-4fca-9b9a-f3b56cd97424@oracle.com> <CAPhsuW4ct6W_4B0LFEjLePH1pAeNm4h8ePuQ3HcSoknXhQWN0w@mail.gmail.com>
- <mb61p1pw21f0v.fsf@kernel.org> <CAPhsuW5VCmuPLd8wwzBp_Divnu=uaZQcrRLsjsEOJ9GmA0TR5A@mail.gmail.com>
- <mb61pv7tez3ew.fsf@kernel.org>
-In-Reply-To: <mb61pv7tez3ew.fsf@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Thu, 13 Feb 2025 11:42:22 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW6pivqMnuudyqMy3XG4waiQHGt=LzvJfUZtJ2xbennN4A@mail.gmail.com>
-X-Gm-Features: AWEUYZkZU3DHZIHWjT3TEVWQVY-TSsGUvKIT-xBdS_Hi3qdY8ySN3-kwjSp89jE
-Message-ID: <CAPhsuW6pivqMnuudyqMy3XG4waiQHGt=LzvJfUZtJ2xbennN4A@mail.gmail.com>
-Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
-To: Puranjay Mohan <puranjay@kernel.org>
-Cc: Indu Bhagat <indu.bhagat@oracle.com>, Weinan Liu <wnliu@google.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev, 
-	Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>, linux-toolchains@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org, 
-	joe.lawrence@redhat.com, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v19 00/26] Introducing OpenVPN Data Channel
+ Offload
+To: Sean Anderson <seanga2@gmail.com>
+Cc: Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>,
+ steffen.klassert@secunet.com, antony.antony@secunet.com,
+ willemdebruijn.kernel@gmail.com, David Ahern <dsahern@kernel.org>,
+ Andrew Lunn <andrew@lunn.ch>, Shuah Khan <skhan@linuxfoundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>, netdev@vger.kernel.org,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, sd@queasysnail.net, ryazanov.s.a@gmail.com,
+ Andrew Lunn <andrew+netdev@lunn.ch>
+References: <20250211-b4-ovpn-v19-0-86d5daf2a47a@openvpn.net>
+ <2dc054c7-c596-b283-b26a-86c52e48efe0@gmail.com>
+Content-Language: en-US
+From: Antonio Quartulli <antonio@openvpn.net>
+Autocrypt: addr=antonio@openvpn.net; keydata=
+ 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
+Organization: OpenVPN Inc.
+In-Reply-To: <2dc054c7-c596-b283-b26a-86c52e48efe0@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 12, 2025 at 11:53=E2=80=AFPM Puranjay Mohan <puranjay@kernel.or=
-g> wrote:
->
-> Song Liu <song@kernel.org> writes:
->
-> > On Wed, Feb 12, 2025 at 11:26=E2=80=AFPM Puranjay Mohan <puranjay@kerne=
-l.org> wrote:
-> >>
-> >> Song Liu <song@kernel.org> writes:
-> >>
-> >> > On Wed, Feb 12, 2025 at 4:10=E2=80=AFPM Indu Bhagat <indu.bhagat@ora=
-cle.com> wrote:
-> >> >>
-> >> >> On 2/12/25 3:32 PM, Song Liu wrote:
-> >> >> > I run some tests with this set and my RFC set [1]. Most of
-> >> >> > the test is done with kpatch-build. I tested both Puranjay's
-> >> >> > version [3] and my version [4].
-> >> >> >
-> >> >> > For gcc 14.2.1, I have seen the following issue with this
-> >> >> > test [2]. This happens with both upstream and 6.13.2.
-> >> >> > The livepatch loaded fine, but the system spilled out the
-> >> >> > following warning quickly.
-> >> >> >
-> >> >>
-> >> >> In presence of the issue
-> >> >> https://sourceware.org/bugzilla/show_bug.cgi?id=3D32666, I'd expect=
- bad
-> >> >> data in SFrame section.  Which may be causing this symptom?
-> >> >>
-> >> >> To be clear, the issue affects loaded kernel modules.  I cannot tel=
-l for
-> >> >> certain - is there module loading involved in your test ?
-> >> >
-> >> > The KLP is a module, I guess that is also affected?
-> >> >
-> >> > During kpatch-build, we added some logic to drop the .sframe section=
-.
-> >> > I guess this is wrong, as we need the .sframe section when we apply
-> >> > the next KLP. However, I don't think the issue is caused by missing
-> >> > .sframe section.
-> >>
-> >> Hi, I did the same testing and did not get the Warning.
-> >>
-> >> I am testing on the 6.12.11 kernel with GCC 11.4.1.
-> >
-> > Could you please also try kernel 6.13.2?
-> >
-> >> Just to verify, the patch we are testing is:
-> >
-> > Yes, this is the test patch.
-> >>
-> >> --- >8 ---
-> > [...]
-> >> --- 8< ---
-> >>
-> >> P.S. - I have a downstream patch for create-diff-object to generate .s=
-frame sections for
-> >> livepatch module, will add it to the PR after some cleanups.
-> >
-> > Yeah, I think the .sframe section is still needed.
-> >
->
-> Hi Song,
->
-> Can you try with this:
-> https://github.com/puranjaymohan/kpatch/tree/arm64_wip
->
-> This has the .sframe logic patch, but it looks as if I wrote that code
-> in a 30 minute leetcode interview. I need to refactor it before I send
-> it for review with the main PR.
->
-> Can you test with this branch with your setup?
+Hi Sean,
 
-This branch has the same issue as the other branch.
+On 13/02/2025 15:26, Sean Anderson wrote:
+> Hi Antonio,
+> 
+> On 2/10/25 19:39, Antonio Quartulli wrote:
+>> NOTE: TCP tests are still showing the following warning while running
+>> iperf.
+>> I have analysed the report several times, but it definitely looks like
+>> a false positive to me, so nothing to worry about.
+>>
+>> Basically the lockdep engine gets confused thinking that we are
+>> acquiring the lock twice on the same sock, but actually:
+>> 1) the kernel is first locking the 'iperf' (user) TCP socket;
+>> 2) ovpn is later locking the underlying TCP trasport socket.
+>>
+>> So there is NO risk of deadlock (and indeed nothing hangs), but I
+>> couldn't find a way to make the warning go away.
+> 
+> I think you can use a "nested" lock to avoid this. See e.g. commit
+> 86a41ea9fd79 ("l2tp: fix lockdep splat") for an example.
 
-Song
+Thanks a lot for this pointer.
+By reading the commit message it seems I am hitting the very same "issue".
+
+I will try to port the same solution to ovpn then :)
+
+Thanks again!
+
+Regards,
+
+> 
+> --Sean
+> 
+> [1] https://www.kernel.org/doc/html/latest/locking/lockdep- 
+> design.html#exception-nested-data-dependencies-leading-to-nested-locking
+
+-- 
+Antonio Quartulli
+OpenVPN Inc.
+
