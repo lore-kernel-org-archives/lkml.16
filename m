@@ -1,129 +1,127 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F6F21148B;
-	Thu, 13 Feb 2025 09:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8249920E000;
+	Thu, 13 Feb 2025 09:41:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739439675; cv=none; b=MWt2kbYeS8k5k6JP7gRg7eOMIznZu5m0YphUm1WHg6tFHmFSxIiIcdZDiAhpntqzA/0IFJi47RQkYEyf6tfZpoGAFBh0XQ1NWcaCqHwecdiq0lXR0AyO5EMb6ROZljVCbTc4zvVPnn8AKN4U+F0svnxEaoXhShw8Q01A0TBjTZA=
+	t=1739439692; cv=none; b=hGB9mN/c11FRon19mC1fFrDvqGtSOKDzAPwXLOucS8+aKATfNMboUSh5V2LFG2KddDXi+mhH07z3mrQSE02DMaYd3KfHERgnb88POVz2EvWjo3rJoY76TH0TGwdTHtsKj0iokiyshkeiut/jzdBbVj78qa2JP8YAFwblqDJ2q7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739439675; c=relaxed/simple;
-	bh=BHjvuHtxcGbYTJxuDTg/fs/1zRBNwMIIEfEqMmhl7qw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eVqagJFD5g1rvry+16P3EZEtIVSpZttv1rCgcmVQouEsA73OmcKtCUg3FzJLGkAAaJn2uSWgceuj8JQscCMuQjgSHqDiAGUMHXu9oPz7FxhzFzo3SVdz6VKH7TwtgOx3hkQXj2QiXKh37Kvz9AU+/xzDmLsw5TXZsUlTrz9gcb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NQLL/MzJ; arc=none smtp.client-ip=209.85.167.43
+	s=arc-20240116; t=1739439692; c=relaxed/simple;
+	bh=uFhapaUQfkxoA7dAZqiBdPzVXHQAqj/uXlnLguurdXk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UjMWM8EfivRCkQ2hyXxcu3yZTqASV2vh75hgjia2D2IQ4ICz2+tM22FIDfJKYvyASoqqLd8sDpSibQSbboDplzOA3+4cEkvQpyqbxID8pUkzscaMj1/+XdnKPomlTWVMfH7HqMFDVdZaPOwA1T65Vts75npPSC2vLUWYtKdtRrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gW+zx3Cn; arc=none smtp.client-ip=209.85.221.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQLL/MzJ"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5451d1d56a7so738198e87.0;
-        Thu, 13 Feb 2025 01:41:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gW+zx3Cn"
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5205539e38cso153005e0c.0;
+        Thu, 13 Feb 2025 01:41:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739439671; x=1740044471; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1739439689; x=1740044489; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RYYMYkxftkNwTdyqS8CRT4NccxOq5tlDjvnPZc99yTM=;
-        b=NQLL/MzJvnRr0uOfpjLksWEst1PwfbumlXH7KFX2BSH2vcLguLQ2ZmPSVOWz69X4HF
-         ySfD+l5UDUfv3/Z3RXPZP7aD2ZtSC8KFW0OoFUHFS50v3JMyF7FS51xMGTXYNYcYpOL3
-         B2rZHrZ7prqLji19WGx4+SWbgDfEeOO01WUgqWN3TF87tfP5jykaAMJ3cFvNpmd/J4GD
-         zcQWYBEWt0K0t0Nw/VNs4a7PgnLNJdgWr0g/Mw7YyHvm5Sm2WAbMyhkpuO6HgVixSR6C
-         8W3zwzBPy7LmIB8bu3RONRlOQopHtJemrX+7fvgthLBSOj3QJNRKtGcgTtTBtMMU8BSO
-         S7wg==
+        bh=37ciusaJ+8RMFR5h5MX5uauDdXI2VmQzbf/ScIuHlpo=;
+        b=gW+zx3CnNvQbVhL8AVPQre/JN7ei54UQXoF01KkMcMXGf0HovlmBwe9yOqLamxDw3c
+         DkMoFGdDXOO9qFvGxVVrfRzIcqWuqoIhM8vRAsC8f1SAdiVrsVyHVRi6/nxMw/kO8YIV
+         IInWxJVRgHxyxnrqmLfFsX7rmCjDrD/hkTGXbkwYDEWiT7dM8Dm737qP0KiDd1CorLF7
+         pir0WC9UCz8qKSBtWnZaCr/DSsrXd72o6Ag1gg29U6weci7hA1TohrHWbeX/oQEkSEbC
+         2Wi2Xj6V1UD0zeOCKqVnIL2Nfg2H70ps/nkEc33RFYrs48YrbO9GBsM0XpDDmxpZooVD
+         MzNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739439671; x=1740044471;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739439689; x=1740044489;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RYYMYkxftkNwTdyqS8CRT4NccxOq5tlDjvnPZc99yTM=;
-        b=oymqbpseLzj/PO/t66yL5Tl26gTyyzWAK9D8cVhT2JZd+ErOebZlGJo3RMkec4UJ1Q
-         bpPMysmj6zlug6L5TfEceGOcXVehjSL6N6SM/6Dn59s3Uzp9ndoYc4zl1IpyBEahTjTe
-         BmzUlbcZ60XtkoawbeuViOBYI175FCiVcTUp3rg7p54LxigZ7yg8WQVTfkhFxVHGVYrm
-         OGknPPMswXG1iwXoOvRpME+HpvxjmB6rG7cvNc0qWHH9hsOXj9TnUakm2DEju7WNpnDE
-         tIwcydIDrHsERe2C6xbOgGsCQvUfe+99+wP0qCChlVoeJrQJ9Zch1oJEH14PUfaM9z1C
-         oMwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPqxq99TYIi9y2XCVts47q/FVmjt2RHjBSVpjX85qcXy1QfL1awgkSJ7s4Yt2ssRXSaN7/NAYIVjmN@vger.kernel.org, AJvYcCWRaatzD1L9DMI+u6n3uWiISrMn68RZ9/iZ53cD5KqQfu+8H3nCfjNkyOiryoai1GTG6JhEVOT2K32A@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/nEdCyOwzsc92Fl3JhOxhhwvOYRXlVLGf1utshgZPPgYxsTmG
-	iBwcnVuSGbzvd7pIVEGIZ7lqeteHJzzlsh7vzLhBVBWF9K7gIWta6VpRPJ2Iys9X
-X-Gm-Gg: ASbGncvCLi9s1C6Kn/CreJvLkHKdi98s331gghlCLLpNHC+42AKPR5JjE+xZHx6zfVB
-	VwyD7T8FQmmAD1uTcYd/VBLZ7WX840ZJ++5+NYro3UNX2Oa5c8OswJRqPEHEBSVdn6Sk8dO46mi
-	aDMkzx3Xn6saQE0QEfwmcHjcgHWtY3So3lQ/VYfT0Ih8LraVaaBWrHgRLjcs+ChKCVAq4uacfOO
-	uZo2SVQk6bRBMcR0EPE9V5S8Nbj4fCU7Tsrh+6cnhUSfSbkUxgDZ4YYnpe43S5WZmR5KcwEgk5L
-	nbFtLzZ7iQN3VVr1jRkcS4kXIgyiLWs=
-X-Google-Smtp-Source: AGHT+IEU1Xe2lAmPO6iNBTAj5sggwrT8IjsKe7vRboIZMPv0WTY0Zwji2mjdrlZbGMkJm2gu+P6b7Q==
-X-Received: by 2002:a05:6512:3d1b:b0:545:8f7:8596 with SMTP id 2adb3069b0e04-5451e5080e4mr706332e87.17.1739439671065;
-        Thu, 13 Feb 2025 01:41:11 -0800 (PST)
-Received: from localhost.localdomain ([178.176.176.188])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5451f10cae7sm119518e87.183.2025.02.13.01.41.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 01:41:10 -0800 (PST)
-From: Aleksandr Shubin <privatesub2@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Aleksandr Shubin <privatesub2@gmail.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Cheo Fusi <fusibrandon13@gmail.com>,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH v11 3/3] riscv: dts: allwinner: d1: Add pwm node
-Date: Thu, 13 Feb 2025 12:40:14 +0300
-Message-Id: <20250213094018.134081-4-privatesub2@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250213094018.134081-1-privatesub2@gmail.com>
-References: <20250213094018.134081-1-privatesub2@gmail.com>
+        bh=37ciusaJ+8RMFR5h5MX5uauDdXI2VmQzbf/ScIuHlpo=;
+        b=qQFa4PuyBrQPXc34QgUSoks55T9cQC0o1LeYCefzTPBzRVHZCNmGj5cVBfLpQ7VLDp
+         uls/ZlCVQEK8BtNWWODc6eLJVFUF7NhkYJnVMRA8x1cVPX18KG8+1VpPtibxeRQtE7Cw
+         2O2ffZIua1ZyXO/biM2IKORutvWSbme35mCI3fHXxNfVrwLjJ7O8NNFLkGSZPf1xtpv2
+         aaVoiRF4/5GWIf6rFtS5Yf7QAU1q2r9CfU6KVhhtfedTXn9aIHZIPrYqqH6j8g1LaCZ+
+         C6r4egvkwyzKv3DW0oJqc46c5RyCyhpBZnpH3kcgrETalJNI3TDWWBOo4Jj7u1NWkLFe
+         O+mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWI5yKJkJvYtTkyS6Yze6d3loqmo94xaUPmYed/FqWbdPflv0Ctskh1wCyEcC+b0vlv5EU16fnSKUf6vrE=@vger.kernel.org, AJvYcCXuGTFs1F0pcpvQ43CscdLa+3X6wZoapdDbr1shuSYCLHaGghW2J3r9Muo7t3Ec3fSYjprdfxsrcRtqXOZuG3hoJpE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxtg0OSVu4RsQesxt55vX0KSVxDysyte+tGJII0/nXxVfHx1bMU
+	y3pdO+YhuFwxTLaunMqzLmAIqjlqTO6XgPSLmRSPOEJ3SclW9plF4+gwXpHp8KBqiURiZLdL4YN
+	Ejw4HkwwobGCXfZlKKfRyu3sBhfc=
+X-Gm-Gg: ASbGncvpT5AxSpRJ20J5573dVOUKFgTXMFUe19iPP39wL45YKTcguGr99DR0BpArKrN
+	6cubUzZVtlOtz1HjdcG4migLO8ocBHgxUXIR/E06ONQFhmsCA9biDMr6yZWGO9AGKo1Ndli8/Ly
+	OC74bHam4zsD+RCEgQ1B5qlyU4fVKFQA==
+X-Google-Smtp-Source: AGHT+IEI4YtFBpNRLZFtF4xIZ/+cFLLhKtBQuSrv9pOnQoFq5seU3++mSfAibMAmYyi0UTdE6jsQWRjNBQm/hULjJCQ=
+X-Received: by 2002:a05:6122:2186:b0:518:791a:3462 with SMTP id
+ 71dfb90a1353d-52069dd8b0bmr5611151e0c.9.1739439689320; Thu, 13 Feb 2025
+ 01:41:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250212182034.366167-1-fabrizio.castro.jz@renesas.com> <20250212182034.366167-5-fabrizio.castro.jz@renesas.com>
+In-Reply-To: <20250212182034.366167-5-fabrizio.castro.jz@renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 13 Feb 2025 09:41:03 +0000
+X-Gm-Features: AWEUYZnRRp0wvLZswZuXrKA-4zGh3tK3gjZ8eSbAGkGxKSEvw3LLx4lrIJcYVdc
+Message-ID: <CA+V-a8vV1omcm3ASq00KQVPj8Aj06fczmYqkUDu2Dte1YbVsuQ@mail.gmail.com>
+Subject: Re: [PATCH 4/6] irqchip/renesas-rzg2l: Remove pm_put label
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-D1 and T113s contain a pwm controller with 8 channels.
-This controller is supported by the sun20i-pwm driver.
+On Wed, Feb 12, 2025 at 6:22=E2=80=AFPM Fabrizio Castro
+<fabrizio.castro.jz@renesas.com> wrote:
+>
+> No need to keep label `pm_put`, as it's only used once.
+> Call pm_runtime_put() directly from the error path.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> ---
+>  drivers/irqchip/irq-renesas-rzg2l.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
+>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Add a device tree node for it.
+Cheers,
+Prabhakar
 
-Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
----
- arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-index e4175adb028d..2c26cb8b2b07 100644
---- a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-+++ b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-@@ -145,6 +145,18 @@ uart3_pb_pins: uart3-pb-pins {
- 			};
- 		};
- 
-+		pwm: pwm@2000c00 {
-+			compatible = "allwinner,sun20i-d1-pwm";
-+			reg = <0x02000c00 0x400>;
-+			clocks = <&ccu CLK_BUS_PWM>,
-+				 <&dcxo>,
-+				 <&ccu CLK_APB0>;
-+			clock-names = "bus", "hosc", "apb";
-+			resets = <&ccu RST_BUS_PWM>;
-+			status = "disabled";
-+			#pwm-cells = <0x3>;
-+		};
-+
- 		ccu: clock-controller@2001000 {
- 			compatible = "allwinner,sun20i-d1-ccu";
- 			reg = <0x2001000 0x1000>;
--- 
-2.25.1
-
+> diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-re=
+nesas-rzg2l.c
+> index c024023a1832..0f325ceb0f53 100644
+> --- a/drivers/irqchip/irq-renesas-rzg2l.c
+> +++ b/drivers/irqchip/irq-renesas-rzg2l.c
+> @@ -586,9 +586,9 @@ static int rzg2l_irqc_common_init(struct device_node =
+*node, struct device_node *
+>                                               node, &rzg2l_irqc_domain_op=
+s,
+>                                               rzg2l_irqc_data);
+>         if (!irq_domain) {
+> +               pm_runtime_put(dev);
+>                 dev_err(dev, "failed to add irq domain\n");
+> -               ret =3D -ENOMEM;
+> -               goto pm_put;
+> +               return -ENOMEM;
+>         }
+>
+>         register_syscore_ops(&rzg2l_irqc_syscore_ops);
+> @@ -605,11 +605,6 @@ static int rzg2l_irqc_common_init(struct device_node=
+ *node, struct device_node *
+>         dev =3D NULL;
+>
+>         return 0;
+> -
+> -pm_put:
+> -       pm_runtime_put(dev);
+> -
+> -       return ret;
+>  }
+>
+>  static int __init rzg2l_irqc_init(struct device_node *node,
+> --
+> 2.34.1
+>
+>
