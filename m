@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA9C1662F1;
-	Thu, 13 Feb 2025 14:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AFD15689A;
+	Thu, 13 Feb 2025 14:50:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739458231; cv=none; b=e0I6HLyWEIDpjwRug/w1NkVDm7Raap5sjW4L9ekPmNbPVRrLKswQQL3WLxUGg/PPbrRQJ0dvuJeIk1IVYp5mQLqbbw79K7bZXaDpS7X+1KvVkCUl/zlcY3yuOnrfwIrFBb2G5na/lhgJLC/nIrG3bRamca1C3qHvHEnFPAkM5yY=
+	t=1739458232; cv=none; b=DrT5oO+Mr2ET037jYy6naoNhHDk5y/A3DsMl9N/W7hlObpYTtTMmSGS1k5lFYU93lt27I7FnkeKh1oGLbgRAJ+Pw7iX+8hNl8xT7Hx7M42V6VRnU1cNlktIC4L8BcmDp65pbLIf3GywnzLi0ORMGP6sFHrSgkOB6z+0+551VV9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739458231; c=relaxed/simple;
-	bh=ooG5yP6zVaxqY2K8LRqPqXXAG1fOpYsy6mj+ZEC+ewc=;
+	s=arc-20240116; t=1739458232; c=relaxed/simple;
+	bh=+kwU2zFUMmyb0jS6OU6MFBxnBiiwKa4vGC/wQUaUfq4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nv4L+fl6dsYMiusCFd6S9rb3jnNy9yIg13IkgfSpP2r+/ZUNJyL9DxB5O+Wijk69Y5DcaRu7R4vr3NvD+10F590XcK2bliVGvhXXTXbjtCKv0d0gK8dNd+C5+426CVwh+EL1fKbC9NrLfM/Y9vQAnCdhNgF/p6uc9hVWzgrmXFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cbp2Qp/j; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9kBDsie3; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=PiEXeW+8nJV0Ur7IOdO9qavCLnZrbOBnwJ420DstHdanJ/A2HdkHLf61488lbqiNZg8vL7rJDm++0J7PHOufRYmciatapp+4H857MRwsXBYNFtQX8w8BJospsV6N2k1HFmD70SXQGRTyyHcjFJaDIey3atY6Z+nyHgR2zfGEzX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jD6wb4yJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZDwxIv2F; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cbp2Qp/j";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9kBDsie3"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jD6wb4yJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZDwxIv2F"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739458227;
+	s=2020; t=1739458228;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QPLDklNtFE+iTPQIJ/xmrGTiOmYJUteN8bRbdDEb5X4=;
-	b=cbp2Qp/jQDYpJaYiPJqp+0QBmIxhMPnuhQVm59aZSf5g/6hqeosrPmjOofv4ctB2xrqYgq
-	UrdAsvdla/d7GXmFbl63pK9+eQFifVcPFZ3nhr92TxIB8GbwJGk2UqCzdnEI9DdMhhtD5O
-	7AJbtowH3HW4g27QWK9WlfgBhngYHK1IbiA8iqEkxSVLc2/5tuO+LAbbJUN3BBV4ekqSGq
-	3se17aW3da0Bu2ejiQkfxw7hlwUqjqQGIdPhreIjqxYJqGzv0AErGwFQ9GqEExWzbcswCg
-	asvwYeOjuPWpvwGBctfVf8pQGJWiqKuDLsJNTNks8/4oqFI1SYh3KaMcF6mgNw==
+	bh=TQFaRwsMWqeRZCHTYyBsT4gxYaSSc81PYJjjcc6W9Sk=;
+	b=jD6wb4yJYr5PP6JxT8dH3Gkr4RwhUaKgDQootmD/AF/fXUKEYfRdoeqee1r2+62adLz0xv
+	cAl93rFqvPMLxW6432uIx8uzx8gSwPGfkuvvFuDoXol+PPq2Jc0IKdZgaoQT7eWEb9P2ee
+	7kSfUbKRqX0ou3NsGCOpr2X5V6vf9Dvl61uKOZlVhr4Ar/MqC7dEHqQV0Z4CoN4buOrc5a
+	svOsaqkFb3B6sgKfHfQ/32oq6RpCfWcKczZEiwCWSMzsUBt1QUiXns3nXult5a3AFRD87Q
+	M3ch4n+oO8Pk++lT+HNTl2COj/Ac14pUmkDd/tpb1KVKMYeMMjlSc4hevhodBw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739458227;
+	s=2020e; t=1739458228;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QPLDklNtFE+iTPQIJ/xmrGTiOmYJUteN8bRbdDEb5X4=;
-	b=9kBDsie3W4k2vLLwiJBkeLQbL7B5dS2VuWstK5N6ba1iZtXf6Ukg+8cUHkB+9nWxID/OCD
-	4+KisYgZ6k1ZuDCw==
+	bh=TQFaRwsMWqeRZCHTYyBsT4gxYaSSc81PYJjjcc6W9Sk=;
+	b=ZDwxIv2FO0vZf94P8TbVb5TQSjdLm5c2QBCH6BNRDgVzFVq8B1CD/N4VaTrZjpS3DBNs+R
+	sjtdP9ZniLRnAkDw==
 To: cgroups@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
@@ -51,9 +51,9 @@ Cc: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
 	Tejun Heo <tj@kernel.org>,
 	tglx@linutronix.de,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v8 1/6] kernfs: Acquire kernfs_rwsem in kernfs_notify_workfn().
-Date: Thu, 13 Feb 2025 15:50:18 +0100
-Message-ID: <20250213145023.2820193-2-bigeasy@linutronix.de>
+Subject: [PATCH v8 3/6] kernfs: Acquire kernfs_rwsem in kernfs_node_dentry().
+Date: Thu, 13 Feb 2025 15:50:20 +0100
+Message-ID: <20250213145023.2820193-4-bigeasy@linutronix.de>
 In-Reply-To: <20250213145023.2820193-1-bigeasy@linutronix.de>
 References: <20250213145023.2820193-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -64,40 +64,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-kernfs_notify_workfn() dereferences kernfs_node::name and passes it
-later to fsnotify(). If the node is renamed then the previously observed
-name pointer becomes invalid.
+kernfs_node_dentry() passes kernfs_node::name to
+lookup_positive_unlocked().
 
-Acquire kernfs_root::kernfs_rwsem to block renames of the node.
+Acquire kernfs_root::kernfs_rwsem to ensure the node is not renamed
+during the operation.
 
 Acked-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- fs/kernfs/file.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/kernfs/mount.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
-index 0eb320617d7b1..c4ffa8dc89ebc 100644
---- a/fs/kernfs/file.c
-+++ b/fs/kernfs/file.c
-@@ -911,6 +911,7 @@ static void kernfs_notify_workfn(struct work_struct *wo=
-rk)
- 	/* kick fsnotify */
+diff --git a/fs/kernfs/mount.c b/fs/kernfs/mount.c
+index b9b16e97bff18..4a0ff08d589ca 100644
+--- a/fs/kernfs/mount.c
++++ b/fs/kernfs/mount.c
+@@ -209,6 +209,7 @@ struct dentry *kernfs_node_dentry(struct kernfs_node *k=
+n,
+ {
+ 	struct dentry *dentry;
+ 	struct kernfs_node *knparent;
++	struct kernfs_root *root;
 =20
- 	down_read(&root->kernfs_supers_rwsem);
-+	down_read(&root->kernfs_rwsem);
- 	list_for_each_entry(info, &kernfs_root(kn)->supers, node) {
- 		struct kernfs_node *parent;
- 		struct inode *p_inode =3D NULL;
-@@ -947,6 +948,7 @@ static void kernfs_notify_workfn(struct work_struct *wo=
-rk)
- 		iput(inode);
- 	}
+ 	BUG_ON(sb->s_op !=3D &kernfs_sops);
 =20
-+	up_read(&root->kernfs_rwsem);
- 	up_read(&root->kernfs_supers_rwsem);
- 	kernfs_put(kn);
- 	goto repeat;
+@@ -218,6 +219,9 @@ struct dentry *kernfs_node_dentry(struct kernfs_node *k=
+n,
+ 	if (!kn->parent)
+ 		return dentry;
+=20
++	root =3D kernfs_root(kn);
++	guard(rwsem_read)(&root->kernfs_rwsem);
++
+ 	knparent =3D find_next_ancestor(kn, NULL);
+ 	if (WARN_ON(!knparent)) {
+ 		dput(dentry);
 --=20
 2.47.2
 
