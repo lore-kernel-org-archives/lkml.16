@@ -1,187 +1,287 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB11212FB3
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784FB2135DC
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739437734; cv=none; b=OUVgajxi9P3h4ZwEDw86pVelhjoZNkvtNR9Jgghs34VoYBuvfNrUU51zFD2y4wHnPL3yhc49s/HLmt4jGcpAlDTXy/lVYBWiwnuBv+AS5V1C/lWbsw7/L6g7fchcLcPzkQb8U9huJC6KxCiez+EsJPNXrUaTMkGMWTP5RMkd9fQ=
+	t=1739437736; cv=none; b=PgxNUOUI3d3nsLSYW4kkTdjPuVwpPbRxNT9/BW1EOcSiaW5eDUFPAgSU9/8iMa4ZFbhQgETMJjm0SQ1JPNb0q125+TMRYGffCP+yvDSR4WKBwR7Gqj1IdccJrePir+zaE7WQ7tIMUnLkGmx8M0zU33gFslzxrsd1UD5D7Mf4SZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739437734; c=relaxed/simple;
-	bh=vNm1zipX8l+y8MG6tw9MJGfiW0u+S4OqXwmISHUwx04=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Touw4UNp4NVqZdtGgyAcsNJfdLuqHcsSWmSlEa1MOUX37oqlMrKSl/l2ju+KMU2R4iTLxUdkODr5qXYbFYoXFqYs/6DXlhO/r+m6fwFAdOYtgojKHYa0+gIY+FHmSksvPl2IEHrm4nkMbsKzdKVlNQ0f4bs095WIMoSXa6DipgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eOJy0YYE; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+	s=arc-20240116; t=1739437736; c=relaxed/simple;
+	bh=n9h6xaHG6FZTB+LOc8LA7L0udGp7N3YFDDAeebA3Tdw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CVg7roc6Ka/mQV4L4Yu9BwrjtEGodFC03Pm9zsDZdNd6xuyZ6sJpO3QB6dMoPXeJ4oIs6lsdHNv9p/gFVoSCeO5crUAYu/VLVsXdSFyDcTcvd/fxVWb/xOic1GXTuHqUNkCDim3A91CCBt9K3PKipUwfhTXCF1saTzCSKu7LKk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AXlFS9uo; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eOJy0YYE"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-38dcb65c717so353206f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 01:08:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739437730; x=1740042530; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WdHp3gJt+sZl9/jkaomemfmjBrhePbLjx4QyMp6pEyY=;
-        b=eOJy0YYEpsenc/2wRFr2tJFNFNO8Lbvz8chrSjR4XYyZpGdB9z4h/d5FDRw86FSprj
-         Dct1fLhPPxIyG8D2BD+BPK9E1jcTKWHL55xvkt2ehiPEMqJuozsfN0E53l7uMGLroX6n
-         MdIrbHpHqSIt3wLBgfHO2buIzx4Iez1/OZ3UiF80gcQ+1G4QCSBHxpCQ/z/QuxZfGijk
-         vp+SmdNT3iFLierNWa2oXYwlRu+9GXGc4wtphkn4ZPhWNFU+DnqesjD2WBW+8Zky7kh7
-         tB/dqPvktN516ib5i78pVPswtvUoR3ZjESLKOnf0aAzMe32LvS/FwIMTKA20pTMNDegE
-         Y6Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739437730; x=1740042530;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WdHp3gJt+sZl9/jkaomemfmjBrhePbLjx4QyMp6pEyY=;
-        b=Py7wMJ367HX302iAZrn9+Yp9uC6gye1pJ2RvbnCV9dVKccWYRIQxx/s9QcAui/NQec
-         62Iv7yV1zzxcz9ZtcLiiQdMgNq9MSWgTn8Kocj1iW8nU5mCriJbXJEzsCyFxdcLLSDs/
-         qMgggtKeDSl2O59xy3bBu91aZgcYb+Sbe1GCREwTCw802cE6PLeSVPqiWvocrpRQGBp3
-         uBQoeC9ofBAFw9Wec+QEuscRuuVw+6yQkhSCM5nwmWZ3N9q87G/+mJ08LeYC/fyXFjeQ
-         7pzUVGkgeSzPF/VqqR7jivy4sMzaGeNka1gLKfyOHPwowBWJqwXSCIvT6dwsxwd8Rd04
-         Krnw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFkArGgPUjPyYyfeHtIKfOObkW6jRh1sqCZ0z+22AElR1QpJZNQk3edXOkUEQY9KqrdJr1ROU7BCtck4o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3b1c6MGa/tfMXuY6fV43aicNoP7vt1EnisYk/cE+81JPtpsTG
-	5hnqrtTqxMfRXjw+TAimc2g6I7ApbYL9oSuBN5YtS7J4/v33OL/07nRpbz+osP7JwXnnlCeclyD
-	+BbfpOQ==
-X-Google-Smtp-Source: AGHT+IF+G4BAyfyJWSsO64c7Jj+8HIOb0dhGOApcR2eIgjNiak3y9klCm22xFuNKZ49XTx39xgEZTtsr9OtS
-X-Received: from wmbg1.prod.google.com ([2002:a05:600c:a401:b0:439:6370:39d])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:c0b:b0:38f:2352:4314
- with SMTP id ffacd0b85a97d-38f24519e3dmr2304748f8f.38.1739437730701; Thu, 13
- Feb 2025 01:08:50 -0800 (PST)
-Date: Thu, 13 Feb 2025 10:08:21 +0100
-In-Reply-To: <cover.1739437531.git.dvyukov@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AXlFS9uo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739437733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OU4vMcEWWd6TGrz7C2wcx7VqJ980jsrzAs2MszvfsbU=;
+	b=AXlFS9uoaSnrBXgWSYpiQ0fgw5SrVwy+Ho460GoVOgHiuKXq1xTYnmB5pjpVwKBXJUeE7Z
+	IDbSVz3+jJQZeDWTWee3bY4ZOXVvo2YHHUd6ge1mzM6IC/FnuNWoCmPzsF163I0qEZaiYQ
+	eZGoV0YQHktOT3ICJFCb9FLWeweAK4s=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-669-ILZ7J3yKPk6q8uFxa4Txtg-1; Thu,
+ 13 Feb 2025 04:08:49 -0500
+X-MC-Unique: ILZ7J3yKPk6q8uFxa4Txtg-1
+X-Mimecast-MFC-AGG-ID: ILZ7J3yKPk6q8uFxa4Txtg
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B74AE19373D8;
+	Thu, 13 Feb 2025 09:08:48 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.81])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 742731800365;
+	Thu, 13 Feb 2025 09:08:45 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCH v2 03/11] sched: Add sched tracepoints for RV task model
+Date: Thu, 13 Feb 2025 10:08:01 +0100
+Message-ID: <20250213090819.419470-4-gmonaco@redhat.com>
+In-Reply-To: <20250213090819.419470-1-gmonaco@redhat.com>
+References: <20250213090819.419470-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1739437531.git.dvyukov@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <c129c8f02f328f68e1e9ef2cdc582f8a9786a97d.1739437531.git.dvyukov@google.com>
-Subject: [PATCH v7 8/9] perf test: Add tests for latency and parallelism profiling
-From: Dmitry Vyukov <dvyukov@google.com>
-To: namhyung@kernel.org, irogers@google.com, acme@kernel.org, 
-	ak@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Ensure basic operation of latency/parallelism profiling and that
-main latency/parallelism record/report invocations don't fail/crash.
+Add the following tracepoints:
+* sched_entry(bool preempt, ip)
+    Called while entering __schedule
+* sched_exit(bool is_switch, ip)
+    Called while exiting __schedule
+* sched_set_state(task, curr_state, state)
+    Called when a task changes its state (to and from running)
 
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+These tracepoints are useful to describe the Linux task model and are
+adapted from the patches by Daniel Bristot de Oliveira
+(https://bristot.me/linux-task-model/).
+
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/perf/tests/shell/base_report/setup.sh   | 18 ++++++-
- .../tests/shell/base_report/test_basic.sh     | 52 +++++++++++++++++++
- 2 files changed, 69 insertions(+), 1 deletion(-)
+ include/linux/rv.h                 |  2 +-
+ include/linux/sched.h              | 16 ++++++++++++++++
+ include/trace/events/sched.h       | 13 +++++++++++++
+ kernel/sched/core.c                | 26 +++++++++++++++++++++++++-
+ tools/verification/rv/include/rv.h |  2 +-
+ 5 files changed, 56 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/shell/base_report/setup.sh b/tools/perf/tests/shell/base_report/setup.sh
-index b03501b2e8fc5..8634e7e0dda6a 100755
---- a/tools/perf/tests/shell/base_report/setup.sh
-+++ b/tools/perf/tests/shell/base_report/setup.sh
-@@ -15,6 +15,8 @@
- # include working environment
- . ../common/init.sh
+diff --git a/include/linux/rv.h b/include/linux/rv.h
+index 8883b41d88ec4..55d458be53a4c 100644
+--- a/include/linux/rv.h
++++ b/include/linux/rv.h
+@@ -7,7 +7,7 @@
+ #ifndef _LINUX_RV_H
+ #define _LINUX_RV_H
  
-+TEST_RESULT=0
-+
- test -d "$HEADER_TAR_DIR" || mkdir -p "$HEADER_TAR_DIR"
+-#define MAX_DA_NAME_LEN	24
++#define MAX_DA_NAME_LEN	32
  
- SW_EVENT="cpu-clock"
-@@ -26,7 +28,21 @@ PERF_EXIT_CODE=$?
- CHECK_EXIT_CODE=$?
+ #ifdef CONFIG_RV
+ /*
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 9632e3318e0d6..60d2cda16a136 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -46,6 +46,7 @@
+ #include <linux/rv.h>
+ #include <linux/livepatch_sched.h>
+ #include <linux/uidgid_types.h>
++#include <linux/tracepoint-defs.h>
+ #include <asm/kmap_size.h>
  
- print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "prepare the perf.data file"
--TEST_RESULT=$?
-+(( TEST_RESULT += $? ))
-+
-+# Some minimal parallel workload.
-+$CMD_PERF record --latency -o $CURRENT_TEST_DIR/perf.data.1 bash -c "for i in {1..100} ; do cat /proc/cpuinfo 1> /dev/null & done; sleep 1" 2> $LOGS_DIR/setup-latency.log
-+PERF_EXIT_CODE=$?
-+
-+echo ==================
-+cat $LOGS_DIR/setup-latency.log
-+echo ==================
-+
-+../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/setup-latency.log
-+CHECK_EXIT_CODE=$?
-+
-+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "prepare the perf.data.1 file"
-+(( TEST_RESULT += $? ))
+ /* task_struct member predeclarations (sorted alphabetically): */
+@@ -186,6 +187,12 @@ struct user_event_mm;
+ # define debug_rtlock_wait_restore_state()	do { } while (0)
+ #endif
  
- print_overall_results $TEST_RESULT
- exit $?
-diff --git a/tools/perf/tests/shell/base_report/test_basic.sh b/tools/perf/tests/shell/base_report/test_basic.sh
-index 2398eba4d3fdd..adfd8713b8f87 100755
---- a/tools/perf/tests/shell/base_report/test_basic.sh
-+++ b/tools/perf/tests/shell/base_report/test_basic.sh
-@@ -183,6 +183,58 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "symbol filter"
- (( TEST_RESULT += $? ))
++#define trace_set_current_state(state_value)                     \
++	do {                                                     \
++		if (tracepoint_enabled(sched_set_state_tp))      \
++			__do_trace_set_current_state(state_value); \
++	} while (0)
++
+ /*
+  * set_current_state() includes a barrier so that the write of current->__state
+  * is correctly serialised wrt the caller's subsequent test of whether to
+@@ -226,12 +233,14 @@ struct user_event_mm;
+ #define __set_current_state(state_value)				\
+ 	do {								\
+ 		debug_normal_state_change((state_value));		\
++		trace_set_current_state(state_value);			\
+ 		WRITE_ONCE(current->__state, (state_value));		\
+ 	} while (0)
  
+ #define set_current_state(state_value)					\
+ 	do {								\
+ 		debug_normal_state_change((state_value));		\
++		trace_set_current_state(state_value);			\
+ 		smp_store_mb(current->__state, (state_value));		\
+ 	} while (0)
  
-+### latency and parallelism
-+
-+# Record with --latency should record with context switches.
-+$CMD_PERF report -i $CURRENT_TEST_DIR/perf.data.1 --stdio --header-only > $LOGS_DIR/latency_header.log
-+PERF_EXIT_CODE=$?
-+
-+../common/check_all_patterns_found.pl ", context_switch = 1, " < $LOGS_DIR/latency_header.log
-+CHECK_EXIT_CODE=$?
-+
-+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "latency header"
-+(( TEST_RESULT += $? ))
-+
-+
-+# The default report for latency profile should show Overhead and Latency fields (in that order).
-+$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data.1 > $LOGS_DIR/latency_default.log 2> $LOGS_DIR/latency_default.err
-+PERF_EXIT_CODE=$?
-+
-+../common/check_all_patterns_found.pl "# Overhead   Latency  Command" < $LOGS_DIR/latency_default.log
-+CHECK_EXIT_CODE=$?
-+../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/latency_default.err
-+(( CHECK_EXIT_CODE += $? ))
-+
-+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "default report for latency profile"
-+(( TEST_RESULT += $? ))
-+
-+
-+# The latency report for latency profile should show Latency and Overhead fields (in that order).
-+$CMD_PERF report --latency --stdio -i $CURRENT_TEST_DIR/perf.data.1 > $LOGS_DIR/latency_latency.log 2> $LOGS_DIR/latency_latency.err
-+PERF_EXIT_CODE=$?
-+
-+../common/check_all_patterns_found.pl "#  Latency  Overhead  Command" < $LOGS_DIR/latency_latency.log
-+CHECK_EXIT_CODE=$?
-+../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/latency_latency.err
-+(( CHECK_EXIT_CODE += $? ))
-+
-+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "latency report for latency profile"
-+(( TEST_RESULT += $? ))
-+
-+
-+# Ensure parallelism histogram with parallelism filter does not fail/crash.
-+$CMD_PERF report --hierarchy --sort latency,parallelism,comm,symbol --parallelism=1,2 --stdio -i $CURRENT_TEST_DIR/perf.data.1 > $LOGS_DIR/parallelism_hierarchy.log 2> $LOGS_DIR/parallelism_hierarchy.err
-+PERF_EXIT_CODE=$?
-+
-+../common/check_all_patterns_found.pl "#           Latency  Parallelism / Command / Symbol" < $LOGS_DIR/parallelism_hierarchy.log
-+CHECK_EXIT_CODE=$?
-+../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/parallelism_hierarchy.err
-+(( CHECK_EXIT_CODE += $? ))
-+
-+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "parallelism histogram"
-+(( TEST_RESULT += $? ))
-+
-+
- # TODO: $CMD_PERF report -n --showcpuutilization -TUxDg 2> 01.log
+@@ -247,6 +256,7 @@ struct user_event_mm;
+ 									\
+ 		raw_spin_lock_irqsave(&current->pi_lock, flags);	\
+ 		debug_special_state_change((state_value));		\
++		trace_set_current_state(state_value);			\
+ 		WRITE_ONCE(current->__state, (state_value));		\
+ 		raw_spin_unlock_irqrestore(&current->pi_lock, flags);	\
+ 	} while (0)
+@@ -282,6 +292,7 @@ struct user_event_mm;
+ 		raw_spin_lock(&current->pi_lock);			\
+ 		current->saved_state = current->__state;		\
+ 		debug_rtlock_wait_set_state();				\
++		trace_set_current_state(TASK_RTLOCK_WAIT);		\
+ 		WRITE_ONCE(current->__state, TASK_RTLOCK_WAIT);		\
+ 		raw_spin_unlock(&current->pi_lock);			\
+ 	} while (0);
+@@ -291,6 +302,7 @@ struct user_event_mm;
+ 		lockdep_assert_irqs_disabled();				\
+ 		raw_spin_lock(&current->pi_lock);			\
+ 		debug_rtlock_wait_restore_state();			\
++		trace_set_current_state(TASK_RUNNING);			\
+ 		WRITE_ONCE(current->__state, current->saved_state);	\
+ 		current->saved_state = TASK_RUNNING;			\
+ 		raw_spin_unlock(&current->pi_lock);			\
+@@ -327,6 +339,10 @@ extern void io_schedule_finish(int token);
+ extern long io_schedule_timeout(long timeout);
+ extern void io_schedule(void);
  
- # print overall results
++/* wrapper function to trace from this header file */
++DECLARE_TRACEPOINT(sched_set_state_tp);
++extern void __do_trace_set_current_state(int state_value);
++
+ /**
+  * struct prev_cputime - snapshot of system and user cputime
+  * @utime: time spent in user mode
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 9ea4c404bd4ef..cc3be04fe9986 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -824,6 +824,19 @@ DECLARE_TRACE(sched_compute_energy_tp,
+ 		 unsigned long max_util, unsigned long busy_time),
+ 	TP_ARGS(p, dst_cpu, energy, max_util, busy_time));
+ 
++DECLARE_TRACE(sched_entry_tp,
++	TP_PROTO(bool preempt, unsigned long ip),
++	TP_ARGS(preempt, ip));
++
++DECLARE_TRACE(sched_exit_tp,
++	TP_PROTO(bool is_switch, unsigned long ip),
++	TP_ARGS(is_switch, ip));
++
++DECLARE_TRACE_CONDITION(sched_set_state_tp,
++	TP_PROTO(struct task_struct *tsk, int curr_state, int state),
++	TP_ARGS(tsk, curr_state, state),
++	TP_CONDITION(!!curr_state != !!state));
++
+ #endif /* _TRACE_SCHED_H */
+ 
+ /* This part must be outside protection */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 165c90ba64ea9..4aa6af026e05c 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -491,6 +491,19 @@ sched_core_dequeue(struct rq *rq, struct task_struct *p, int flags) { }
+ 
+ #endif /* CONFIG_SCHED_CORE */
+ 
++/* need a wrapper since we may need to trace from modules */
++EXPORT_TRACEPOINT_SYMBOL(sched_set_state_tp);
++
++/*
++ * Do not call this function directly since it won't check if the tp is enabled.
++ * Call the helper macro trace_set_current_state instead.
++ */
++void __do_trace_set_current_state(int state_value)
++{
++	__do_trace_sched_set_state_tp(current, current->__state, state_value);
++}
++EXPORT_SYMBOL(__do_trace_set_current_state);
++
+ /*
+  * Serialization rules:
+  *
+@@ -5306,6 +5319,12 @@ asmlinkage __visible void schedule_tail(struct task_struct *prev)
+ 	 */
+ 
+ 	finish_task_switch(prev);
++	/*
++	 * This is a special case: the newly created task has just
++	 * switched the context for the fist time. It is returning from
++	 * schedule for the first time in this path.
++	 */
++	trace_sched_exit_tp(true, CALLER_ADDR0);
+ 	preempt_enable();
+ 
+ 	if (current->set_child_tid)
+@@ -6649,12 +6668,15 @@ static void __sched notrace __schedule(int sched_mode)
+ 	 * as a preemption by schedule_debug() and RCU.
+ 	 */
+ 	bool preempt = sched_mode > SM_NONE;
++	bool is_switch = false;
+ 	unsigned long *switch_count;
+ 	unsigned long prev_state;
+ 	struct rq_flags rf;
+ 	struct rq *rq;
+ 	int cpu;
+ 
++	trace_sched_entry_tp(preempt, CALLER_ADDR0);
++
+ 	cpu = smp_processor_id();
+ 	rq = cpu_rq(cpu);
+ 	prev = rq->curr;
+@@ -6722,7 +6744,8 @@ static void __sched notrace __schedule(int sched_mode)
+ 	rq->last_seen_need_resched_ns = 0;
+ #endif
+ 
+-	if (likely(prev != next)) {
++	is_switch = prev != next;
++	if (likely(is_switch)) {
+ 		rq->nr_switches++;
+ 		/*
+ 		 * RCU users of rcu_dereference(rq->curr) may not see
+@@ -6767,6 +6790,7 @@ static void __sched notrace __schedule(int sched_mode)
+ 		__balance_callbacks(rq);
+ 		raw_spin_rq_unlock_irq(rq);
+ 	}
++	trace_sched_exit_tp(is_switch, CALLER_ADDR0);
+ }
+ 
+ void __noreturn do_task_dead(void)
+diff --git a/tools/verification/rv/include/rv.h b/tools/verification/rv/include/rv.h
+index 770fd6da36107..0cab1037a98f7 100644
+--- a/tools/verification/rv/include/rv.h
++++ b/tools/verification/rv/include/rv.h
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ #define MAX_DESCRIPTION 1024
+-#define MAX_DA_NAME_LEN	24
++#define MAX_DA_NAME_LEN	32
+ 
+ struct monitor {
+ 	char name[MAX_DA_NAME_LEN];
 -- 
-2.48.1.502.g6dc24dfdaf-goog
+2.48.1
 
