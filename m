@@ -1,77 +1,91 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mta20.hihonor.com (mta20.honor.com [81.70.206.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9781A5AA;
-	Thu, 13 Feb 2025 13:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C063123F414
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.206.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739452135; cv=none; b=ogm0Bxy/02ncdIrzUGTv1ozk8k6iYMDRfJvbTWBYefImFk3X3ym/iiPC6GyiGpkdWxJnIPDTUT8l4v1FxPOYLrr9oUGZidLJ+vnGwogooKlb4u7oWl3KN+/MeUBN/rFj1v+BvSPsCTJklHAweQs6gUskhIykEVISxNVmsloosg8=
+	t=1739452146; cv=none; b=UsEd2ORm8txI1qqNIfuZ4lD9m2l7k9UiQ7mWPPpsLBAaABUQuxsEjaNUAF6tuCQfS8oL0HbNQVUUfUFp2NL6nKkhFSYGdpdwwoBep5kCf73bOxqylfURowheKNk5ZHKTsfNjjt8ZspmuAXf40BtlfKTQIEzqHrYFrfyg8nX4ZKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739452135; c=relaxed/simple;
-	bh=9s7MimE+YYoctk+mnufjjoHfb5s4zIIEoaK1K0eE10Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r8c8fyxdYRBcN50Iybwfu2jkaVKbQxJSNoQJXnLyGkv4OSjlrZFtAPiSG9hTe0mrmFCdr8IqN6KfjVZvTuG3TN2LTW977TFZ6kyxIlWCMjetxkBLb1HHt9DQbTJp4vZDAkSA18VRMf3+ZlNM1uNT0mtTF00IMToL7w9OZDt83CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=NNLCppql; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NNLCppql"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=M9/Oig8k2SAjxriJP00zkicDUzgrwHu+QT+BDfkghm8=; b=NNLCppqlXEu1bqbdg8rysui6Su
-	UFiy1+HGCbGry+7stYjruvsQ+P5E7G0o4E8qI77Z/yfEnpRSeVpBrNLZp0AWLZloVjFAWRWvBDxPW
-	wz/38krf9fAk67S/rBFdK6CBM4crfCOSPjHt4wnE+T09/W7WJ/d2k6N09pZhFBtBWX4A=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tiYxB-00Dk4S-3x; Thu, 13 Feb 2025 14:08:29 +0100
-Date: Thu, 13 Feb 2025 14:08:29 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: vladimir.oltean@nxp.com, claudiu.manoil@nxp.com,
-	alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: felix:  Add NULL check for outer_tagging_rule()
-Message-ID: <a3b6a30d-2a9a-48f2-a6b5-bb6517f7e4e8@lunn.ch>
-References: <20250213040754.1473-1-vulab@iscas.ac.cn>
+	s=arc-20240116; t=1739452146; c=relaxed/simple;
+	bh=ntM782/2jzL/G23Vl7z0e6iSOMLQDb1SW0hS+eVSL0E=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=AzWjBkQprYfYDtrgdXmxYRmfGORLmbpI67e+VL5/lia7OKe729WZ1hI9HdlLvbsWfSfoTCPlpwz8XzwpXVP8Ht/gCy1dXLLiPMZgPvg1mQrqgSgsHSwEAFb/93oA6pE+eK0HyX/auJN2SSf82itOe5Q7Qfp61iKNj1kdaUVqlmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.206.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w012.hihonor.com (unknown [10.68.27.189])
+	by mta20.hihonor.com (SkyGuard) with ESMTPS id 4YtwTM24NfzYmW0V;
+	Thu, 13 Feb 2025 21:07:51 +0800 (CST)
+Received: from a003.hihonor.com (10.68.18.8) by w012.hihonor.com
+ (10.68.27.189) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 13 Feb
+ 2025 21:08:54 +0800
+Received: from a007.hihonor.com (10.68.22.31) by a003.hihonor.com (10.68.18.8)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 13 Feb
+ 2025 21:08:54 +0800
+Received: from a007.hihonor.com ([fe80::e866:83ac:f23b:c25c]) by
+ a007.hihonor.com ([fe80::e866:83ac:f23b:c25c%10]) with mapi id
+ 15.02.1544.011; Thu, 13 Feb 2025 21:08:54 +0800
+From: gaoxu <gaoxu2@honor.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+CC: "linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Suren Baghdasaryan <surenb@google.com>, Barry
+ Song <21cnbao@gmail.com>, yipengxiang <yipengxiang@honor.com>, "Hugh Dickins"
+	<hughd@google.com>, Chris Li <chrisl@kernel.org>
+Subject: =?utf-8?B?5Zue5aSNOiBbUEFUQ0hdIG1tOiBGaXggcG9zc2libGUgTlVMTCBwb2ludGVy?=
+ =?utf-8?B?IGRlcmVmZXJlbmNlIGluIF9fc3dhcF9kdXBsaWNhdGU=?=
+Thread-Topic: [PATCH] mm: Fix possible NULL pointer dereference in
+ __swap_duplicate
+Thread-Index: Adt8+0GogoLTL6hgQfOcUIXDGgpBSQAbnlYAACsSnkA=
+Date: Thu, 13 Feb 2025 13:08:54 +0000
+Message-ID: <da7e1ee115454cf8898b4bbe228a5a9c@honor.com>
+References: <44655569e3a1419f800952004f07e714@honor.com>
+ <20250212161820.4fda79a3333d2345b60cef72@linux-foundation.org>
+In-Reply-To: <20250212161820.4fda79a3333d2345b60cef72@linux-foundation.org>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213040754.1473-1-vulab@iscas.ac.cn>
 
-On Thu, Feb 13, 2025 at 12:07:54PM +0800, Wentao Liang wrote:
-> In felix_update_tag_8021q_rx_rules(), the return value of
-> ocelot_vcap_block_find_filter_by_id() is not checked, which could
-> lead to a NULL pointer dereference if the filter is not found.
-> 
-> Add the necessary check and use `continue` to skip the current CPU
-> port if the filter is not found, ensuring that all CPU ports are
-> processed.
-
-Thanks for reworking the commit message.
-
-You should include a version number in the Subject: line, so we can
-keep track of the different versions:
-
-https://docs.kernel.org/process/submitting-patches.html
-
-See the Section about "Subject Line".
-
-Also, you should include a brief history of the patches, what changed
-between each version under the --- marker.
-
-There is no need to resend, please just remember these things for you
-next patch you submit.
-
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+PiANCj4gT24gV2VkLCAxMiBGZWIgMjAyNSAwMzoxMzo0NiArMDAwMCBnYW94dSA8Z2FveHUyQGhv
+bm9yLmNvbT4gd3JvdGU6DQo+IA0KPiA+IHN3cF9zd2FwX2luZm8oKSBtYXkgcmV0dXJuIG51bGw7
+IGl0IGlzIG5lY2Vzc2FyeSB0byBjaGVjayB0aGUgcmV0dXJuDQo+ID4gdmFsdWUgdG8gYXZvaWQg
+TlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlLiBUaGUgY29kZSBmb3Igb3RoZXIgY2FsbHMgdG8NCj4g
+PiBzd3Bfc3dhcF9pbmZvKCkgaW5jbHVkZXMgY2hlY2tzLCBhbmQgX19zd2FwX2R1cGxpY2F0ZSgp
+IHNob3VsZCBhbHNvDQo+ID4gaW5jbHVkZSBjaGVja3MuDQo+IA0KPiBBY3R1YWxseSB2ZXJ5IGZl
+dyBvZiB0aGUgc3dwX3N3YXBfaW5mbygpIGNhbGxlcnMgY2hlY2sgZm9yIGEgTlVMTCByZXR1cm4u
+DQpUaGUgc3dhcGZpbGUuYyBmaWxlIGNvbnRhaW5zIHRocmVlIGluc3RhbmNlcyB3aGVyZSB0aGUg
+cmV0dXJuIHZhbHVlIG9mDQpzd3Bfc3dhcF9pbmZvKCkgaXMgY2hlY2tlZCBmb3IgYSBOVUxMIHJl
+dHVybi4gSW4gb3RoZXIgZmlsZXMgdGhhdCBjYWxsDQpzd3Bfc3dhcF9pbmZvKCksIEkgaGF2ZSBj
+b25maXJtZWQgdGhhdCB0aGVyZSBhcmUgbm8gc3VjaCBjaGVja3MuDQpUaGUgZGVzY3JpcHRpb24g
+aW4gdGhlIHBhdGNoIGlzIGluYWNjdXJhdGUsIGFuZCBJIGhhdmUgbWFkZSBtb2RpZmljYXRpb25z
+DQppbiBwYXRjaCB2Mi4NCj4gDQo+ID4gVGhlIHJlYXNvbiB3aHkgc3dwX3N3YXBfaW5mbygpIHJl
+dHVybnMgTlVMTCBpcyB1bmNsZWFyOyBpdCBtYXkgYmUgZHVlDQo+ID4gdG8gQ1BVIGNhY2hlIGlz
+c3VlcyBvciBERFIgYml0IGZsaXBzLg0KPiANCj4gUXVpdGUgcG9zc2libHkgaXQncyBhIGtlcm5l
+bCBidWcuDQo+IA0KPiA+IFRoZSBwcm9iYWJpbGl0eSBvZiB0aGlzIGlzc3VlIGlzIHZlcnkNCj4g
+PiBzbWFsbCwgYW5kIHRoZSBzdGFjayBpbmZvIHdlIGVuY291bnRlcmVkIGlzIGFzIGZvbGxvd3Pv
+vJoNCj4gPiBVbmFibGUgdG8gaGFuZGxlIGtlcm5lbCBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2Ug
+YXQgdmlydHVhbCBhZGRyZXNzDQo+ID4gMDAwMDAwMDAwMDAwMDA1OA0KPiA+DQo+ID4gLi4uDQo+
+ID4NCj4gPiAtLS0gYS9tbS9zd2FwZmlsZS5jDQo+ID4gKysrIGIvbW0vc3dhcGZpbGUuYw0KPiA+
+IEBAIC0zNTIxLDYgKzM1MjEsOCBAQCBzdGF0aWMgaW50IF9fc3dhcF9kdXBsaWNhdGUoc3dwX2Vu
+dHJ5X3QgZW50cnksDQo+IHVuc2lnbmVkIGNoYXIgdXNhZ2UsIGludCBucikNCj4gPiAgCWludCBl
+cnIsIGk7DQo+ID4NCj4gPiAgCXNpID0gc3dwX3N3YXBfaW5mbyhlbnRyeSk7DQo+ID4gKwlpZiAo
+dW5saWtlbHkoIXNpKSkNCj4gPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gPg0KPiA+ICAJb2Zmc2V0
+ID0gc3dwX29mZnNldChlbnRyeSk7DQo+ID4gIAlWTV9XQVJOX09OKG5yID4gU1dBUEZJTEVfQ0xV
+U1RFUiAtIG9mZnNldCAlIFNXQVBGSUxFX0NMVVNURVIpOw0KPiANCj4gT0ssIEkgZ3Vlc3MgYXZv
+aWRpbmcgdGhlIGNyYXNoIGlzIGdvb2QuICBCdXQgcGxlYXNlIGxldCdzIGluY2x1ZGUgYSBXQVJO
+IHNvIHRoYXQNCj4gd2UgY2FuIHBlcmhhcHMgZml4IHRoZSBidWcsIGlmIG9uZSBpcyB0aGVyZS4N
+Ckdvb2QuIEknbGwgY2hhbmdlIGl0IGFzIG1lbnRpb25lZCBhbmQgc2VuZCBhIG5ldyBwYXRjaC4N
+CglzaSA9IHN3cF9zd2FwX2luZm8oZW50cnkpOw0KKwlpZiAodW5saWtlbHkoIXNpKSkgew0KKwkJ
+V0FSTigxLCBLRVJOX0VSUiAiJXM6ICVzJTA4bHhcbiIsIF9fZnVuY19fLCBCYWRfZmlsZSwgZW50
+cnkudmFsKTsNCisJCXJldHVybiAtRUlOVkFMOw0KKwl9DQoNCg0K
