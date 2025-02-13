@@ -1,132 +1,158 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2043.outbound.protection.outlook.com [40.107.95.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7721935951;
-	Thu, 13 Feb 2025 12:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739450869; cv=none; b=Sd0SbCf9DKaaWgEIHXBWKw+o2VNpVzuIx/J40RP5ZaujWqARJ4cQ/1HN/QtEKA3ezpNVHVWbwi0mCmZRZZnYTqYANlate3gfxUbg/E2cwM6/40Ygl5MX3AZlih+3rLRtRdT3qut4hwmlPKJ3urO4pBIWq6JWPSeu+X1ttNtghmc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739450869; c=relaxed/simple;
-	bh=UjqKuT7cBx0BC8IA1E06aYBT48DU6uO5RO8mYWBW0UY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jPEkBZ6/xbfrykgEF6pk4ZMcLQK5j4SdvIdMIDSQpEgzT9GLVqtLD+VWU9UN1XjVF+nDT8LMFpdFJHXkm3l9iaP3AFC7A3ZSnIlvfv1VbH4MyjOLsoUPfch1QJXHYwcn7jVIZgJZ+rOUjBqHQv3/Ujwt9NTdD+kMheQP50QfNWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iSZiPgiH; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385F533998;
+	Thu, 13 Feb 2025 12:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739450929; cv=fail; b=kYq4ztFwvfGn9sQDrf8+z++l5wydLrKgfh6FcblMCHkBXGGxr2Uqgyq/PjnX4zTfgERitFH+qTJH0AQ5sWHzVcOFQ0/djsS4L/EMWRw5aqF3sv5fn6YW6bt0dlwLrTkojgYd0o7fZlY+zInPJBGemU+Ewrja9T0poB7rHMwxxjo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739450929; c=relaxed/simple;
+	bh=Jlf6YrZjZjyKswlRWcGZen7WrnylwvP7ClaIDq75Jbw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=saGK+xnVp/6pzhAKVAN23OKC2sXTbWd4eqtRvq0DY4kRx0kRoKTtJDfbdzEQiZRDhv1dzZjUxxeqbfshdi8UxCF/gmMcNbg/UeZNEzg2FwBeD3ifi/0wbyT+GUCcTebs46OsiHun0LAh6sGW5nsc6gdr+zve7GZI5I8hsC6wxJ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=sm69r93N; arc=fail smtp.client-ip=40.107.95.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iSZiPgiH"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51D7WvfK014686;
-	Thu, 13 Feb 2025 12:47:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=1eQPev
-	v+zfRx7xSJsTOA/iarbbLg4H24SjJBcTfyK/Q=; b=iSZiPgiHAOWHpB37SjtNaX
-	CtHomNChMfpYzkkb+dJljGWolAHFzQU4AyYYWvpxpE7FvJ92tpfi4Tp/okw+NcYw
-	ao44uffaQhrSt9NZYLx6JzNwKtaP1hy2HvevnDRkolU7r4b6f5DvfVC1HoaciP+3
-	mST2IU6hoiD61f51DTba93d77zbmPzTLBJcow8K3GXUoENjeHa7ibkpvryRfwKN4
-	wH0a70qokvI7gcZaA231vce0dJbyaezD+BgGkxq1cy29GmVY+KksqfARg7mSotxi
-	eWY1eAZYtwS9HWXQmnGXrVaBnkMmn7TPPqepVFUv0AXWUMruMqFJjE31hJuIQ+Cw
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44sceq1hc3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 12:47:29 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51DBBSrj028197;
-	Thu, 13 Feb 2025 12:47:28 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44phyypcpa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 12:47:28 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51DClQxF40436212
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Feb 2025 12:47:26 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 726B420040;
-	Thu, 13 Feb 2025 12:47:26 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 454FE2004B;
-	Thu, 13 Feb 2025 12:47:26 +0000 (GMT)
-Received: from [9.152.222.93] (unknown [9.152.222.93])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 13 Feb 2025 12:47:26 +0000 (GMT)
-Message-ID: <008b57f5-96d3-4aca-b304-19ced4fa1efd@linux.ibm.com>
-Date: Thu, 13 Feb 2025 13:47:26 +0100
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="sm69r93N"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZTKwpNdI611DUr36UpDBztDuLYNT8LwFlC444CtCCFJF7i5JqoihMJZ96tQmsOuMnL1JX4+/1HSf5TyLVva3sRWieGr9YLdR0GK4QHEbaHuV8Jq7RDCZ2Dw4W7So5qVs1xZIRCiXTiJL2B46dZ80NN2TYM2N8Bt54Tp6cYa6LQe2x5I0hamgEgtgimDcoMW2m30hAj632e8YS53Agvt+JMcrGpcozrOK6A3TBjEhQEaRzXKxR46QQ9BUpOIMbudkiymwjkXdenEJnbmgiQnV9/+737z7RdcDGUaCucfDHHHXUjniRP67BDHCc5rP4Eku2Nf8SoLu0PRxoALoGZUuqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p4UVKXAu2bMNuD93pjAvo/2q8qW5+sybznugIUZsc9s=;
+ b=Jx9HOxyMMl2cP+N+E1Fp+pVzA6qfg+1iCvvk4gnVYi/nqFg3dCwoR6KuAhr1w2uFCVJaK/EKy4fMAp0VoCxbwKdT6+5I7q3hgHDoqZygvxM1wH0TnrK94BgROg/niXqWOwfIB1DVApPB8zCRUyVBD/4w1doLood/1zt8PwCgyueZKXMemMoM8ppxuHuGcg+Zhk2yegEd2bbt4vqQyuH8TOhKgDwg60etqGgTqlh+kbEae64WZ3h44Mc1jCs4bDSOd09CxaV2tBlIQ0cpb7OTh1qDhvDcKbu0evR9yYYcKHf+Gx9dXyaijPpAX4Yy7NzGX8SV0z9OGW4qlf/48nA9tA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p4UVKXAu2bMNuD93pjAvo/2q8qW5+sybznugIUZsc9s=;
+ b=sm69r93N8Fiu/xOHu2Ldf3EuurZnmLRdHPl4m+2s/bCrmadDhm1xAqQVUHeVXufNMmrmnuPVjBJwJKhE1oOGacidI9iwX1xzFsm7t0TGfBJjWaZz3vhprFlCm7u8g6Ue95eiurLjZdC9PRoiAc6Mvvj4WcyDzYAmNQTd8Qgu4PiW9eCxfGbxoyXDVN2JKiSpoAg3YMVE1gor+BInwb2NFmHnmjANc/wKbAPDVRaumeLiHvuxIRfIFzw2lHjPC195jHggMp9M8JqmBmc9zZ4qFvPtmquZihVLAayuO0E08z8kHaXqfDqdQZKqpc83vgAGVNIqvlAc3Nq4kRb7K30NNA==
+Received: from BLAPR05CA0009.namprd05.prod.outlook.com (2603:10b6:208:36e::16)
+ by CH3PR12MB8583.namprd12.prod.outlook.com (2603:10b6:610:15f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.11; Thu, 13 Feb
+ 2025 12:48:45 +0000
+Received: from BL02EPF00021F69.namprd02.prod.outlook.com
+ (2603:10b6:208:36e:cafe::fb) by BLAPR05CA0009.outlook.office365.com
+ (2603:10b6:208:36e::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.8 via Frontend Transport; Thu,
+ 13 Feb 2025 12:48:44 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BL02EPF00021F69.mail.protection.outlook.com (10.167.249.5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8445.10 via Frontend Transport; Thu, 13 Feb 2025 12:48:44 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 13 Feb
+ 2025 04:48:28 -0800
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 13 Feb
+ 2025 04:48:27 -0800
+Received: from NV-2XGVVG3.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Thu, 13 Feb 2025 04:48:23 -0800
+From: Kartik Rajput <kkartik@nvidia.com>
+To: <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <thierry.reding@gmail.com>,
+	<jonathanh@nvidia.com>, <hvilleneuve@dimonoff.com>, <arnd@kernel.org>,
+	<geert+renesas@glider.be>, <robert.marko@sartura.hr>,
+	<schnelle@linux.ibm.com>, <andriy.shevchenko@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>
+Subject: [PATCH v5 0/2] Add support for Tegra UART Trace Controller (UTC) client
+Date: Thu, 13 Feb 2025 18:18:03 +0530
+Message-ID: <20250213124805.2588-1-kkartik@nvidia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/vDSO: fix GNU hash table entry size for s390x
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-        Shuah Khan <shuah@kernel.org>, Fangrui Song <i@maskray.me>,
-        Xi Ruoyao <xry111@xry111.site>
-Cc: Shuah Khan <skhan@linuxfoundation.org>,
-        Heiko Carstens
- <hca@linux.ibm.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250213-selftests-vdso-s390-gnu-hash-v1-1-ace3bcc940a3@linutronix.de>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250213-selftests-vdso-s390-gnu-hash-v1-1-ace3bcc940a3@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: rVzIw933K76OpH6HmtqRR14uAtMfb1Kp
-X-Proofpoint-ORIG-GUID: rVzIw933K76OpH6HmtqRR14uAtMfb1Kp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-13_05,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 mlxlogscore=999
- clxscore=1011 malwarescore=0 spamscore=0 phishscore=0 suspectscore=0
- bulkscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502130096
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF00021F69:EE_|CH3PR12MB8583:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6a78aea1-f6a6-487e-580c-08dd4c2cc091
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|82310400026|36860700013|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?u6tb8A9pG0r88vmJPavMvnWFOYz25e05sx2UAFM/Xmk2JZ0z63i2Ml5Vci/L?=
+ =?us-ascii?Q?uGyaCOsvMhiBr8VVhYSFZcLNOhSdwRbECOUL+x6EVidDtpesecH8RX5xY9IW?=
+ =?us-ascii?Q?8AB8jeyeHK/bGu1W7rxNy0CLltesSgEmuMANucLdQKtpki1oJPLhO/JoSW/L?=
+ =?us-ascii?Q?FqLdUKZgoj6R9929IfOUpWZoaKQAHEbf+ZABqrrWNNHdqeH4UFHUnqHrd/pp?=
+ =?us-ascii?Q?8idWrDpOWS/xneDqhtdezDOpoBjA7yY85vepgqPRYsp3i7qCdTjHWrUfcy84?=
+ =?us-ascii?Q?2A6Us4fjioKXoE1x/XUYFsClpHEHiTcCuvfjgLzmG8hBnnrh7s90lfwLwotF?=
+ =?us-ascii?Q?pQLw6Zandgwwtuac5dfiCGNTW9967jfnoOs+XsnPMIuJdtiWeUf4uMybRNcX?=
+ =?us-ascii?Q?xLvoTo5uWu/EkcauQjsgfYTbKSiJsGezGis6v+T9uKOYVLtdT36ZKiE5SAsQ?=
+ =?us-ascii?Q?F/RxxY7Qa6D7elQNKiaf1npJvhxhnoCT8nSuUKIf92kTvuKn5G82tRWJYvjZ?=
+ =?us-ascii?Q?ilSoEXWwaUHGBA2eCSe4Bu6t1BEJDHRutB6orqIVOk8K6moK+JxxkDLb8KA8?=
+ =?us-ascii?Q?bneKpDtuVKk2AqY0jsvxraytFDmbJ4S5IpZmqK3qAF5Mrxn6XWpPUE465crn?=
+ =?us-ascii?Q?1XJdWhVJlxjSQQU1hUrw3PIUgxcgUnSNlCvi9f4oVGZSkg8UaPrf3DPujAb2?=
+ =?us-ascii?Q?s1BmJaPbkNqrio/zzXOOJunbCeY9PAi1ksoQ0Lg/J08ZSJ2wQRu8y1Iidngc?=
+ =?us-ascii?Q?V1wdsBvP0v7atZ/ZbLi65dIdAZZTH2U4m2sCA9/X/j47xforMHvA2Y35DD4p?=
+ =?us-ascii?Q?EutklOyTNqQP7HFgbN6COeEAHU0cVuep14079yJuPMEa24gq/gszjSbAFMno?=
+ =?us-ascii?Q?/ezJDtR875ARGCu2I4EOo7n5451Jfy8dqSLFgNW6SqoIMMCzYVrvbcEU7Mt9?=
+ =?us-ascii?Q?4mwGyjKWzsu2oieF52hykK/V2/Ab05L49Dq6fVEH1QF6gdr7LLjZtLA2gzIu?=
+ =?us-ascii?Q?tnwphol6jU/N2Ysp31RlN46qm01ivjXcEP1HjW2xxEQL7kU2nGU1ATfrGjbC?=
+ =?us-ascii?Q?IJS27bIvuRV7L2/iKm5s5yBrDSLdJ0oukZNEphaWrqUWyMufISU1E130Fcw9?=
+ =?us-ascii?Q?5sKvCQ5F7aSIRPQdD1SXb/bjX1fU0/AOwaaANdT9DghlnxWADqZTAyfMJ4Nc?=
+ =?us-ascii?Q?o6f2XHrF2d6X9KGBZqtSMZMy6YgRR58NhROYUq8lswMlxiESCRuqcreMbPFy?=
+ =?us-ascii?Q?uwGr2Nwjm2l1QP9SWQHRiDEKuMgatuFqaQHxLWkRaUBIEhOTZpi920yP2y8I?=
+ =?us-ascii?Q?kr7ACjY36XuhhBWIS5AsOTaSDRoJ2FZ/gy1kVzAUKSh8vsSEmQFXkdtvdx9C?=
+ =?us-ascii?Q?6IfEiZHmUrnslUmsoRoUy79JLQowOwd3Wst5mYW7SBKWGfhhgWP9UjzW3YEG?=
+ =?us-ascii?Q?Nlxa4RsOnqA6ZukWxv7rpMSCqUgMNObW4GmPvQvw/86BRDh9mlLR5TCgosbv?=
+ =?us-ascii?Q?QdBSfeBospVJ/rU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(82310400026)(36860700013)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 12:48:44.7313
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a78aea1-f6a6-487e-580c-08dd4c2cc091
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00021F69.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8583
 
-On 13.02.2025 10:41, Thomas Weißschuh wrote:
-> Commit 14be4e6f3522 ("selftests: vDSO: fix ELF hash table entry size for s390x")
-> changed the type of the ELF hash table entries to 64bit on s390x.
-> However the *GNU* hash tables entries are always 32bit.
-> The "bucket" pointer is shared between both hash algorithms.
-> On s390x the GNU algorithm assigns and dereferences this 64bit pointer as a
-> 32bit pointer, leading to compiler warnings and runtime crashes.
+The Tegra UTC (UART Trace Controller) is a hardware controller that allows
+multiple systems within the Tegra SoC to share a hardware UART interface.
+It supports up to 16 clients, with each client having its own interrupt and a
+FIFO buffer for both RX (receive) and TX (transmit), each capable of holding
+128 characters.
 
-Nit: The compiler complains about assignments between incompatible pointer
-types (e.g. "Elf64_Xword *" and "Elf64_Word *").  The size of the pointers
-themselves is not different, as it is usually defined by the architecture
-regardless of the type of data pointed at.  The real issue is that the
-32-bit GNU hash entries are erroneously accessed as if they were 64-bit
-entries via "bucket" on s390x.
+The Tegra UTC uses 8-N-1 configuration and operates on a pre-configured
+baudrate, which is configured by the bootloader.
 
-> Introduce a new dedicated "gnu_bucket" pointer which is used by the GNU hash.
-> 
-> Fixes: e0746bde6f82 ("selftests/vDSO: support DT_GNU_HASH")
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> ---
->   tools/testing/selftests/vDSO/parse_vdso.c | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
+Kartik Rajput (2):
+  dt-bindings: serial: Add bindings for nvidia,tegra264-utc
+  serial: tegra-utc: Add driver for Tegra UART Trace Controller (UTC)
 
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+ .../bindings/serial/nvidia,tegra264-utc.yaml  |  73 ++
+ drivers/tty/serial/Kconfig                    |  23 +
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/tegra-utc.c                | 625 ++++++++++++++++++
+ 4 files changed, 722 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/nvidia,tegra264-utc.yaml
+ create mode 100644 drivers/tty/serial/tegra-utc.c
 
-Thanks for taking care!
-
-Regards,
-Jens
 -- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+2.43.0
 
