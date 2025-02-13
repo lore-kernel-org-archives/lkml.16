@@ -1,135 +1,94 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A75533F6;
-	Thu, 13 Feb 2025 00:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4A44A29;
+	Thu, 13 Feb 2025 00:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739406310; cv=none; b=rcjc5oWTEzeasDLI5Cya5k5iAPzbPv8jzdsyiF83gY62kDvpzRceYqS+cF/5c2MNkYYX8T3goCvfOlDwoD+Iy7p5KhMx3fEjWslOYOIanxTGEQ72ozQkSemfXp0+eu3t89clgUjR09m4O+al6Bo6AqnPrrq7gn5E0Okq7QwKOLc=
+	t=1739406335; cv=none; b=GJ9yis8LgadAyQ4pWYEWKM4V0mfRce5TjZFlNmH5henTrYXanWPvUK+ncV5jEqobbpLubHrJaVbnCjSVKJIWv0Td1SKKe8YAF8D7XsVWguoi9hCSe0J4DGHY9exAG9yTY7gzyLo8QZg5ZdqbZHUSskNBdSs3Pv3O/o618mwjpeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739406310; c=relaxed/simple;
-	bh=fzyna7PLtoUbYbs8+fX5Za4SKqKoUCKcoou8JqjRvYI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V+nAl/qBIWK1tUaZqZK5fQDe9UEBMLRm7lCyohOwr1jKkaZ7Gc8RkuLerdPgHjtPdlmkomc7ARU671Cvfmj7WGYwbHgs9kjpXiELyK+UZvcesqqufk1fJjGXE1gubsNwUbO2CdsUVQxXnkrODaKe+TiAcyFi9wLg/FtZndlhljk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kA5Outsz; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739406335; c=relaxed/simple;
+	bh=/mMC9qm0+Vl0uwd0+1LavG/Aikmcvdnbmr+fUHIwL/U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=oj2wEku0Fs+S13014Z1WDJCHdttXHAiX9MQMlDuXddDEgFaMHwGh7WQoIL3NdQjJ5kWaknMdW+oOqCyqOaoBao/F+KC/v7zBAl3NcxuvSd8JfpO5ru5XzLqpyXxe5L863JmT3oQhwT34KRfAJ6f1P3ttm6DblIN2wX0eplJvx4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=ffe5/fVd; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kA5Outsz"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5d9837f201aso2946503a12.0;
-        Wed, 12 Feb 2025 16:25:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="ffe5/fVd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739406307; x=1740011107; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W8dBeeEoSDm4SD/YCzWVE+gxCVxcw7YRX7A4c8VioMo=;
-        b=kA5OutszU8dgyo/YxArxToAJa4O1j/qmGf8sX5yViyzzSWo0PH3/eTguC3hoLs/zgA
-         Q9XBH3m7Lk7fQSKyppe2lHIKnuaBuzr6BA8Si13QvxZ/2h20dh5PAqBnuYbhkNnaw1FK
-         W81DGJrYp4UafRjgeuIksUPLXfdBbDDt7uvUdlQKKFIp/hK9AOWzz7wvc8XZG6yLEIUl
-         iie63YD0Y5A9dVdyvX2sumgsOvZ48Abn//T55/IlyDJEHiBnNHzMRKWAoR8djTttSu60
-         RV61YwLS9HFTE+mkHX4INgI/F4k7Nsh832xjw/bW3IlToFnKqB4SdIwalDLm7qmTAHQ2
-         +nuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739406307; x=1740011107;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W8dBeeEoSDm4SD/YCzWVE+gxCVxcw7YRX7A4c8VioMo=;
-        b=sCJ2jRUHjgdEkS37IBPRfMDjJTh0bW4Ws5QmiWaxn0jcgTGyWA7EOH6EM9DQKk3FOx
-         7VTywNzxgU3zTI0TAHMegn3/mxgPkyxn/i6ziohEaItrJeDe9zRjPmO6aR0DbnM1a6iP
-         8KIYt8oBYE8eEglGyDgHr1JLcIq998IPGzX+BuEll8pSMqB9dpC0LAhe9Ul92VNa3eU3
-         2oSZdzl3F5dvoKFJ3QWukP1+srkfxH9l0xLWn6M0063e3/1fu0UNa8qQtjIdved7+uDh
-         VMbiwFrUOgPjYUsgFY3DHVmGaUC+UaQD1sN1e+CkIZeTlkfwAgjpDH9uuJhDaKGV+ubV
-         pJAA==
-X-Forwarded-Encrypted: i=1; AJvYcCWNFWBE+GQ8Cybehp43clBKYP6y4N31LFSpI1ia9MTaoRQEn6rEZLH1pGhPA1WMji4isqsc00QKeIxfLpzU/a4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw92guc59yA7ixOSHiCquArI1KmJGKwDHn+cMln7MZQqLE+NLPg
-	ETTfppNkXdx/vp6CgDeJx768jRvNwVwDID3Fy6NI8/P5Nbo65hm9vjxKTBSywAWxt9Qc7n1e3cT
-	x8QpFuN6yejIb609PwZZLQ1tTbT/ffih+ywk=
-X-Gm-Gg: ASbGnctbs41isiEyTBR8hTEFhWBf12zjSg4aQo/IyFkLSS2oXaUYgtkxyNJaI16L6LG
-	uRa3sVfjFDyBBbfXVtAZyvZ1SAW5cAM/YpEE8poZbL45GRpHYzoeAbQZm4YJWkeAmqPVq
-X-Google-Smtp-Source: AGHT+IFBywya4EAS7dAbROUy9T3txlKiirfcuRq/lCa9/agwJBGHdQZO3s7MfYbRi2pIqybSTqIUYoXFU4GzJwdxoXY=
-X-Received: by 2002:a05:6402:1d50:b0:5db:68bd:ab78 with SMTP id
- 4fb4d7f45d1cf-5decba815dcmr736936a12.10.1739406306489; Wed, 12 Feb 2025
- 16:25:06 -0800 (PST)
+	d=codeconstruct.com.au; s=2022a; t=1739406331;
+	bh=/mMC9qm0+Vl0uwd0+1LavG/Aikmcvdnbmr+fUHIwL/U=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=ffe5/fVdezqIZZvy9MisTNaxaYIRRrnOH7EpxbtHMGgRprWW3OUVD7hrEUKWRd84F
+	 aFN2Hfpd8dKq+kIyrDH6xVajfpDkwhQNkGMHcdvRe+SDek3r16jPUonSQTAU1MZJmE
+	 Sg7aii55lQa3/2HYDTfQtFhL6qsL8WteF7j73UfkBDAIvSukdsVFu65IKLLZjcl6oj
+	 uClq2BZG0gDFPnyCCMfHvEiUN2wFq/8NY7+1Dzmd5oEiSGAbLUeI18u3vyAlE03GQH
+	 cDnsMSJFZk+XUxVtUts9PwStbgyRbqYJa0XJPqtZGYP6wR3RmdrS6CMEN4zKSokCvo
+	 rnG2Cy6SEv+ng==
+Received: from [192.168.68.112] (203-173-7-184.dyn.iinet.net.au [203.173.7.184])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id B701E7576E;
+	Thu, 13 Feb 2025 08:25:30 +0800 (AWST)
+Message-ID: <27d51c2c498cc5921998829e5279bf136d10f2dc.camel@codeconstruct.com.au>
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon: ir38060: Move & update dt
+ binding
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Guenter Roeck <linux@roeck-us.net>, Conor Dooley <conor@kernel.org>, 
+	Naresh Solanki <naresh.solanki@9elements.com>
+Cc: broonie@kernel.org, Jean Delvare <jdelvare@suse.com>, Rob Herring
+	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	 <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 13 Feb 2025 10:55:29 +1030
+In-Reply-To: <c8dc4bdc-5374-4648-8092-55687be85f12@roeck-us.net>
+References: <20250204180306.2755444-1-naresh.solanki@9elements.com>
+	 <20250204-mulled-evaluate-8a690cdfbd4d@spud>
+	 <CABqG17jHKfwJEfZxto_YA4opS8=QwqTqfNdkku8kcEv2_iW+XA@mail.gmail.com>
+	 <20250205-purge-debating-21273d3b0f40@spud>
+	 <CABqG17j4tKXnMZ5=vcjBvfe6JwCLQ6NbkQmJC9ySK_bmGEv=iQ@mail.gmail.com>
+	 <20250206-camera-mashed-48cf0cf1715f@spud>
+	 <4619661d7375c71710a22520f6ebbf353a5aff59.camel@codeconstruct.com.au>
+	 <c8dc4bdc-5374-4648-8092-55687be85f12@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250128170447.12918-1-alessandro.zanni87@gmail.com>
-In-Reply-To: <20250128170447.12918-1-alessandro.zanni87@gmail.com>
-From: Alessandro Zanni <alessandro.zanni87@gmail.com>
-Date: Thu, 13 Feb 2025 01:24:30 +0100
-X-Gm-Features: AWEUYZk-ObCPdB1sCqh0rfANabmxISt7chbnNtEsESdDCHQ8OJSszw4wtsrkSNM
-Message-ID: <CABq9Dx53aaX1t2Jidi_zDtR6VDB4UvWo1LkO5GYhCnwfs3ycsQ@mail.gmail.com>
-Subject: Re: [PATCH] selftests: pid_namespace and pidfd missing include
-To: brauner@kernel.org, shuah@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-> Running "make kselftest" results in several errors like these:
->
-> pidfd_fdinfo_test.c:231:36: error: =E2=80=98MS_REC=E2=80=99 undeclared (f=
-irst use in
-> this function)
->   231 |         r =3D mount(NULL, "/", NULL, MS_REC | MS_PRIVATE, 0);
->
-> pidfd_fdinfo_test.c:231:45: error: =E2=80=98MS_PRIVATE=E2=80=99 undeclare=
-d (first use
-> in this function); did you mean =E2=80=98MAP_PRIVATE=E2=80=99?
->   231 |         r =3D mount(NULL, "/", NULL, MS_REC | MS_PRIVATE, 0);
->
-> pid_max.c:48:9: warning: implicit declaration of function =E2=80=98umount=
-2=E2=80=99;
-> did you mean =E2=80=98SYS_umount2=E2=80=99? [-Wimplicit-function-declarat=
-ion]
->    48 |         umount2("/proc", MNT_DETACH);
->
-> This patch adds the <sys/mount.h> include in pidfd_fdinfo_test.c and
-> pid_max.c files to find the variables MS_REC, MS_PRIVATE, MNT_DETACH.
->
-> Signed-off-by: Alessandro Zanni <alessandro.zanni87@gmail.com>
-> ---
->  tools/testing/selftests/pid_namespace/pid_max.c   | 1 +
->  tools/testing/selftests/pidfd/pidfd_fdinfo_test.c | 1 +
->  2 files changed, 2 insertions(+)
->
-> diff --git a/tools/testing/selftests/pid_namespace/pid_max.c b/tools/test=
-ing/selftests/pid_namespace/pid_max.c
-> index 51c414faabb0..972bedc475f1 100644
-> --- a/tools/testing/selftests/pid_namespace/pid_max.c
-> +++ b/tools/testing/selftests/pid_namespace/pid_max.c
-> @@ -11,6 +11,7 @@
->  #include <string.h>
->  #include <syscall.h>
->  #include <sys/wait.h>
-> +#include <sys/mount.h>
->
->  #include "../kselftest_harness.h"
->  #include "../pidfd/pidfd.h"
-> diff --git a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c b/tools/te=
-sting/selftests/pidfd/pidfd_fdinfo_test.c
-> index f062a986e382..f718aac75068 100644
-> --- a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
-> +++ b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
-> @@ -13,6 +13,7 @@
->  #include <syscall.h>
->  #include <sys/wait.h>
->  #include <sys/mman.h>
-> +#include <sys/mount.h>
->
->  #include "pidfd.h"
->  #include "../kselftest.h"
-> --
-> 2.43.0
+Hi Guenter,
 
-Hello,
+On Wed, 2025-02-12 at 06:46 -0800, Guenter Roeck wrote:
+> Hi Andrew,
+>=20
+> On 2/12/25 02:43, Andrew Jeffery wrote:
+> [ ... ]
+> > The history of the problem from what I can see looks like:
+> >=20
+> > =C2=A0=C2=A0=C2=A0 1. pmbus regulator support exploiting "regulators" a=
+s an OF
+> > child
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 node was merged for 3.19[1]
+>=20
+> I hope you mean "make full use of and derive benefit from (a
+> resource)"
+> and not "use (a situation or person) in an unfair or selfish way".
 
-I'm reaching out to know if you have any comments or
-feedbacks about this patch.
+Certainly "make full use of and derive benefit from (a
+resource)" and nothing further.
+
+> If you think it is not appropriate for PMBus devices to register as
+> regulators, please let me know, and feel free to suggest a better
+> solution.
+
+My only intent was to observe the history of the problem highlighted by
+Naresh's patch. I don't have any concerns about PMBus devices
+registering as regulators.
 
 Thanks,
-Alessandro
+
+Andrew
