@@ -1,126 +1,110 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4B62063DA
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 08:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000E920C49E;
+	Thu, 13 Feb 2025 08:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739436944; cv=none; b=tKpefE6S1rlTlooEhVc4MUF75xuptxoUqAWiavdbQYus0vhYYFS+MW8piHQ4YXmkL5ZJSrnlSjhzwSbtEdAccAInoPAVLM/lHrODvUtXtQ6JQimh/zysbGVmopkcVn0lf+joqNJR+ZDL79BBidsBOHnKQ1LfwDjqXegHQGTbscI=
+	t=1739436952; cv=none; b=NnUGNX8qgNOgJdm6k/vpOKan2H4XEpM91W1d3fVzI70jYPeWLm2Jdn6xobYduXr23TzA4Ocwgvu8FBDOVkriDuSAsQRaRHS1JOYOTMDDxrm/jzUvMk9QBmg1+qNymkM6S+OiTs64AMP5cSxpV1p4Dgoh+wU3RrCQVpXXPDJYb8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739436944; c=relaxed/simple;
-	bh=l0geTxDlQteuQqauKvsshWGcclhOIB4qO6Um2LY9Biw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F/VfE0JqhKvSMDDabrZXDqRdlwMWn0niJrjcvVkeVPG7X00/s/wNnwx0+Ygr2oovAvy3bdeKe+xmTrFHAFId/JkOztfc+xiMEV5PRMK/7/K6hAJbfHJZORGEClNiMe4/vXfdMKitGngKglvD7UdFGUhXqsNQpwKPfy9g/l0OUIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=ajQAG182; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=ajQAG182; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1739436952; c=relaxed/simple;
+	bh=b9Piwl1nQzB7vJzY0MVy96I/7TITjuMOl/dFawyQO+Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FAC1nqsGiw8Q3b0lO2CpL2Ppqtefj+rkKEJznLWdL5R1dcV9V9h7R+rdwsMsGXAKUaYxA4iJytUi+LEY0HQkL+BLrUJUEGzIAccFSRoOVScFyYtF1NGYSJmxKzJ/gOhW8dPTDKCWKwb9oDHdpre86AZqpP7ldTT6mMuNf4X5lUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NgFwiH1/; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="ajQAG182";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="ajQAG182"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3B4A52295F;
-	Thu, 13 Feb 2025 08:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1739436941; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=dvp+2zva3b1OzC9c49Z/oXKVc7Zk8EYxQY79anNSCaA=;
-	b=ajQAG1827NLagTbTwYjbfqQpSVsCL9eywPM/N7ZN63lNQYOI5o/irGXlYPnLcGmryG1TwU
-	Bt2mljd+T16zbOo+h8qZA30lhYwzIjATaCPxa4HAPErBPIKbco6haDbLyPcmWJDhQAWtX7
-	UadBSlkpVPO2nglFEQoSN1iI2SoVrfQ=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=ajQAG182
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1739436941; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=dvp+2zva3b1OzC9c49Z/oXKVc7Zk8EYxQY79anNSCaA=;
-	b=ajQAG1827NLagTbTwYjbfqQpSVsCL9eywPM/N7ZN63lNQYOI5o/irGXlYPnLcGmryG1TwU
-	Bt2mljd+T16zbOo+h8qZA30lhYwzIjATaCPxa4HAPErBPIKbco6haDbLyPcmWJDhQAWtX7
-	UadBSlkpVPO2nglFEQoSN1iI2SoVrfQ=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C2402137DB;
-	Thu, 13 Feb 2025 08:55:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 8W7qLYyzrWcCdgAAD6G6ig
-	(envelope-from <jgross@suse.com>); Thu, 13 Feb 2025 08:55:40 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev,
-	x86@kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	xen-devel@lists.xenproject.org,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v2 0/2] xen/swiotlb: two fixes
-Date: Thu, 13 Feb 2025 09:55:36 +0100
-Message-ID: <20250213085538.17060-1-jgross@suse.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgFwiH1/"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-307bc125e2eso6948241fa.3;
+        Thu, 13 Feb 2025 00:55:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739436948; x=1740041748; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ISvOoc8ZLh2lLWyF+k1j00TNjsRMMcy7FI/7Z6/03RE=;
+        b=NgFwiH1/f8kLzy9k7IRglRyuXKRV6jWAWxI5bZlgMQ8bnXhnhHn2d1sDU+Og0jE9FM
+         oXrNE7RmvHnToZAVzerp79w7giPNpy300Ph74U69H5fso+bGBhqiDMOX4x37IPgiFhe7
+         UkzblpJW6WItOvx65yomcupr7IwJulko79/BOL2dBOAblJHRZKdiv7+HqRyHUW/DxKBP
+         ZaxJK/yzylh5lPZcaCAisy9ybiWPZ+df5ZrigBQbX43GsYhEz8ebYOO39GlvA9A5X13/
+         HZWNwhrntZEPS6m+5aEJ+iJ8eZ+w4NdbM2QuH/lw+MWyZEnx7pnYhPJg173KKorvnPSL
+         NEgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739436948; x=1740041748;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ISvOoc8ZLh2lLWyF+k1j00TNjsRMMcy7FI/7Z6/03RE=;
+        b=DyUrSvGkoHpJYVp+IrGjuUSE/Q/nzGSBRgSdAft+WvFi1PRtefnLIRTJ+c3fDBySop
+         Xr9nWAe9Wtlgl6M6j7TKdb5Rh3A/4pHJsKAMYRe5JcbYF8hmnco33XZJ6/2T2QPU+SjI
+         yTn7pVBnPsHeD/oMi/8SSdhe8thrRvEK4032T+uP0hCfxmmmit8anIj9rBqD5ZxokSfw
+         W2O6TxgelJZCugvYwh+3azVRqQGYP56+tRAUDZITkIN/juJQxbgfkbAOlVYNgm6jE6XE
+         3QPITqf/hz2dxR4qdZa3dw31BacWtSzPuBoxF+rvNiynx4tPclEsI2b5ZUtxtcwYM1+5
+         085g==
+X-Forwarded-Encrypted: i=1; AJvYcCW+rtbmzZugtO1WzUtqk48TRgHUb1Br5md10ylNiieUqrplIw0GHkv35CfduFhig+YlXneT8488FiDUo5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzf02yGFuvs8+ZeXTlsenBxDuVeD6YFrrUvl6M7zUzntqco3BJM
+	YGYN5WwtBNGc19fHWks0+41PEmxniYDTgKyTOTWFXMmAKtK7KJ9QWqpxEQ==
+X-Gm-Gg: ASbGncuaMCdybX+WaONKVhk27RJCJkb4G5trmtONTe6qwiowNT+iACR38B+R2ft0flz
+	BHPyRedljXUqsFboIokKSg9lgm+V7Jk5mPdZCHtaz/sN0GThER2OperoMQCB2Lcz2758jGxVlDg
+	WOvyKXIlu84JJrQ87U9GUoLym33lGEH7HjEoU7D9mN2CNarmWJubVpTpTaUXvh0PnlerGJ3IAmR
+	F1l3rR48ZCqhprgAQsVQKVom9IIJlBr3/s5yoy5CItWwrYJkSMb0YnOKaezF7W238cum4dpjH+Q
+	zJSd3GaDYrxlGE6UczRCHXYGw+/VAzLaHkYX8FCAIKLvs+PlRR//8f1sPwBbZBBfjLmMOD7W
+X-Google-Smtp-Source: AGHT+IGW8hG4ZSdW4/ynvfOmGmfyG4J7bnB6/czfWfePjml4V4zcl/kwzU92567pa0MdZPlL5FAAdw==
+X-Received: by 2002:a05:651c:2106:b0:305:d86a:4f01 with SMTP id 38308e7fff4ca-3090ddc6cf8mr7698091fa.31.1739436947507;
+        Thu, 13 Feb 2025 00:55:47 -0800 (PST)
+Received: from ?IPV6:2a00:1fa0:48f0:1acb:121e:9475:d238:84ad? ([2a00:1fa0:48f0:1acb:121e:9475:d238:84ad])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3091011ed97sm1375651fa.48.2025.02.13.00.55.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 00:55:46 -0800 (PST)
+Message-ID: <309b356f-a7b8-4f1f-92b7-ed5b144bd039@gmail.com>
+Date: Thu, 13 Feb 2025 11:55:43 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usb: fix error while OF and ACPI all config Y
+To: 412574090@163.com, gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ weiyufeng <weiyufeng@kylinos.cn>
+References: <20250213060804.114558-1-412574090@163.com>
+Content-Language: en-US
+From: Sergey Shtylyov <sergei.shtylyov@gmail.com>
+In-Reply-To: <20250213060804.114558-1-412574090@163.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 3B4A52295F
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
 
-Patch 1 removes an unneeded alignment requirement, which resulted in
-exhausting the SWIOTLB with normal use cases.
+On 2/13/25 9:08 AM, 412574090@163.com wrote:
 
-Patch 2 allows to allocate larger continuous regions by reallocating
-the frame list if needed.
+> From: weiyufeng <weiyufeng@kylinos.cn>
+> 
+> When both OF and ACPI are configured as Y simultaneously，this may
+> cause error while install os with usb disk，while reading data from
+> the usb disk, the onboard_ hub driver will reinitialize the
+> hub, causing system installation exceptions.
+> 
+> Signed-off-by: weiyufeng <weiyufeng@kylinos.cn>
+> ---
+>  drivers/usb/misc/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/misc/Kconfig b/drivers/usb/misc/Kconfig
+> index 6497c4e81e95..9ffb51191621 100644
+> --- a/drivers/usb/misc/Kconfig
+> +++ b/drivers/usb/misc/Kconfig
+> @@ -318,7 +318,7 @@ config BRCM_USB_PINMAP
+>  
+>  config USB_ONBOARD_DEV
+>  	tristate "Onboard USB device support"
+> -	depends on OF
+> +	depends on (OF && !ACPI)
 
-Changes in V2:
-- drop former patch 2 for now in order to avoid more lengthy discussion
-- new patch 2
+   I don't think () are needed here.
 
-Juergen Gross (2):
-  xen/swiotlb: relax alignment requirements
-  x86/xen: allow larger contiguous memory regions in PV guests
+[...]
 
- arch/x86/xen/mmu_pv.c     | 71 ++++++++++++++++++++++++++++++++++-----
- drivers/xen/swiotlb-xen.c | 20 ++++++-----
- 2 files changed, 74 insertions(+), 17 deletions(-)
-
--- 
-2.43.0
+MBR, Sergey
 
