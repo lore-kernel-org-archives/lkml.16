@@ -1,139 +1,106 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B2D20766B
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 07:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF162AD21;
+	Thu, 13 Feb 2025 07:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739431300; cv=none; b=lVWf1naWoP6I/8CCm5YK7E0X18vOELJRFJ3TY1EQKLb1F43H3lG//tjq1MsOcO9X0U3Q45OXPvOcvrrJJyaLueiUCjrsjIYLjscbSJ6J/znaxeqPjOzp3V57H9prfWavfL30Es+I42UqHiFiewMJoiOOeMzoqoSBM3zyhnAfO8g=
+	t=1739431547; cv=none; b=SvUfHjAnHH/Ys2rUdwVwWLT5E2imWS8teMF53bQvsMpTz0dcUaCWbiFBw/Wlnt9QXKcR6JhKTfPUmjWQhF5guRMFK7wLei7MZJGATge/gNGnfqUNfGMRYXCedlJI7fCzQZ9y4Lh39VCW/dKj99B9qvtovXkA8qdAA0fpVXpwY2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739431300; c=relaxed/simple;
-	bh=GE8T84RxcCWKKCHACB70lEaGn9zzdUJ584guTWIe8ZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sKB02x/0NwrryWWUqKpbTL+h1j97yo5ggMvzpLkGeF7of9tt7//Cn2/RxYxhg3YoDFchAKZyizuzxjDKIfFOhHKX/NlYJsyKALGS7/qgGuW75q9c76Kr4dd4TZzMKL9rcmVzgdFbuBibdFgmAsPeelEyEBu0C1hIrZ8fQUxDz+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MrMcJV6g; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739431547; c=relaxed/simple;
+	bh=Mdhn4iY3/7ldgAmeXQDc31wnKUIyr6Cj0fSP8rx9KqE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ADzRsucLS7AFcTOmEBzTkJCYcjR0X/xaG3F6TrBsRuYxF05FMywQonDMGCtr2EYAHE5+BfyNq2DLJ2skp/lFkwCHfJ1aj3wAmwzA4MG/4St/zSfadhq46hruBCXtzBqRSWohvllGrqIadp8Gh3KoHuMmk3XqJLtS5kyT7ISmlzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KBqEN41o; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MrMcJV6g"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-220d398bea9so7229075ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 23:21:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBqEN41o"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21f78b1fb7dso7988275ad.3;
+        Wed, 12 Feb 2025 23:25:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739431298; x=1740036098; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BU3EWX6NrO4XjLrf6OxWj7A2H39JQ/DGxsHXZ8vqb08=;
-        b=MrMcJV6giunKfCKuBxa1bhC0XUESqdtwh4t1H0APRjEFy6eqTtdZwq5dl/g3wmD+vt
-         L4KjTvmU+wT4SAV1xNoqKxThtZaUvXWUloH+lwvXgx1/xPj3JuXlfEuMjJyUhMs6M9SR
-         RTKN29ptzYNkiYkWx0hGoAiFqqhb9QiwzavoY=
+        d=gmail.com; s=20230601; t=1739431544; x=1740036344; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RdhKtYnDPgRCWPUyQUqaukbPuM9+6e0p6cBMMadCyTQ=;
+        b=KBqEN41oaonEfoiGJC0SMQQbSJdQLZaowm3sf7B7Bc03EKFbsTlZyQgeLpDyTS4W92
+         RcV9E26fjYoWlEAdWxRXEC7+C08tYd92DWRQ1rYJ30C3Pte169+Msi+gwxB1l4TRzSwP
+         5Iol8XBKf26xPota0rVJcuZ//+vLmKFTnIq8LVVTTClTH9QmYlo8mJnGaxcDCi5Ad3/p
+         g7owDL7qQrgeuPZrfpvHC6h4nxf1tzZ8RV1alKcpD2Yrxzjy+/F4RPmjSwXn/iQ5gz6W
+         QM/qOBRMARYi7OY4kxeV8gRaSC1nnCrpgELBMnv8sGFbLJQdJgvzmG0SN9/RsLEu9tBp
+         vmjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739431298; x=1740036098;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BU3EWX6NrO4XjLrf6OxWj7A2H39JQ/DGxsHXZ8vqb08=;
-        b=PPyqI0Z4IS75bRGMyB30e7yCHAtSZAqSgr9PYHjMCcD/fwwykP/sG0Q2k8vbpd8Ssg
-         9MvbgCzxEpHpcI2+bIKTxYlhrm+0miG7SU+l/AUjmzqPnFi2/ulLJssKf64vumkAgNHf
-         lzymvEKVdMmkmzbOIm2IZL8c+YGuP/2npeTjPNs4gasm0UsVAJ+oqYj1ynK4U32vQNRC
-         sSYm+5aD+al0cmL3/TnCOb0YYJXpNHIEsqOYw6QKTBEXuSFaVpiIZ2WmYf65Wuih6+58
-         rqD3opiMLRGMXhWBUKDiimvPQGjtWLldfn7hqpzNc4FS2rguY6EhYiIAoTMT9zOn2R0p
-         +zVA==
-X-Forwarded-Encrypted: i=1; AJvYcCX/jOdfi4UPIUqQgPyvfGFPtyaZius0zPGS/Vs+2WUXcUVOvvg7LSa4ikXuLgo4CZgxzKs380OVJ2BssJQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIAJ0ZApwNeq3H8gZrMRrHHYpoM8ctcwB1JTm4Tk0+LIM4G9gx
-	WisT2Ylbf2LQUSgexxBN4u8yQWWDgbieeAc/MBgTfB5ss5gDbmFJDcm+X+C0bw==
-X-Gm-Gg: ASbGncsm85LsFKRPTeQ7xjA44K1yVpTWftFOTMqXBGgtr2HEyUfL8DjZIG1tXqOmlpG
-	cE8cYA1rYE8JO1lRpbM/IzZKb4ES6aVrEiFCxJh/4M8mi59gj/wplh+HwbOn+rOIkmY5ob5KVsI
-	j1yQuSybOWuD6hWsRdvhnLS50CxzHeOqOkT6kOvkzirQOPltAzHJirF6ZqhvABzn5287WiqCp2m
-	cEjlUgHlcx7VNMddVI3ByycCbcSNE/548aid/jhsTlKg4vNi2D+Anp3qC4cpw7KURoKTQOkUhCU
-	N4MdMMMjH9kfsZMXnOs=
-X-Google-Smtp-Source: AGHT+IGrrMRSC9vH8hDZG+Sr73gos+a8WvcZbQzmGErKu6FhLXQnnI1jbWLKVzxORygaoGElOvivdg==
-X-Received: by 2002:a05:6a21:78a8:b0:1e1:cdff:5f18 with SMTP id adf61e73a8af0-1ee5c72e4f4mr10509093637.4.1739431298139;
-        Wed, 12 Feb 2025 23:21:38 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:3ed3:97ce:5f5f:1f61])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-adb57c5e00dsm573320a12.12.2025.02.12.23.21.35
+        d=1e100.net; s=20230601; t=1739431544; x=1740036344;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RdhKtYnDPgRCWPUyQUqaukbPuM9+6e0p6cBMMadCyTQ=;
+        b=Up8Ma6zTx2K5iXFa4uBZo36Wwy1T8QC3rkiOL+GJCBtfDCWbFbd5nfonk/g1/n0i5R
+         zo9fEQcVnNCzW91LBfD5O4Vq1TlK4tPMt1QwAcmnCLGBkUZ0Irc0BW1TZXp0XNgHuDLC
+         zWFr8F7GYIsRZVcThlkLqtYuWkvLtOclyBPYXPp/8rRtp2kUKpi+V6ETVim6XObU3lGD
+         YBOdXC6hBkqHrmW7NLRY4AVlH3V2i9hX7Lox6iLbuA0k+sRt+7TQRhljgod1QUQ+YOsY
+         puqHTE+3K9K2d63nwKjf5dde7KrVFVtREdbUVyI9TTg3vupR1rSGjtzKDC51/3Szngh6
+         xmRw==
+X-Forwarded-Encrypted: i=1; AJvYcCVReKCIP3NSXfsjWsrQXb/wuh9++EXUIMUGjMAnMWGR9J2c0dS5vb5gPPgV3LH46Bll6i8V3zDeNmXMx8kT@vger.kernel.org, AJvYcCVpKMS5gD7jIGTzQprMqrn8Av4CRNGp0hv9nzj1L2cdCs1wGbQ5YUogmKKkYftdYT+ywI1L8UsrPsAfRqCvs1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVEgYWJKVf3c9I2ITVpO64qXF7/J2KX3fvvnOJIbGJT7Sp1c7P
+	KyGqGOvKy7WAa3MXSrR2L4f9RFRlmfbv0yVKF+4oXyZm29hXHw3ZDhi6xg==
+X-Gm-Gg: ASbGncu+TykVm7g7JaBz4RHrx0LZIPxe4LL3e/A0SFV6z0wdBDgiYLAp862s7oCrhjI
+	NiXcNLeK/LBJMp9BuL3lyMSdENztX4LZoPN2b15FPl0P/wAXYFY7UtQn9nS6sr4r3oqJqb15+Kw
+	I4YKqXu5T6mlkkxsFEBkm3H9UCacrb9DhF84f4N0PkCHpIzr7Kqgb6Iq57RJYxjKqGmBxGwWH7T
+	BO2tAebStVKr3xYJvZrgYoN+PX+VYg5mbAkuPUuqIH3j20EavnVZxzzoeaaUxvpRfcoKDkI6EHT
+	yIhHoqqmVLy5b6uEykZ9RKmNRTkIYy4UhA==
+X-Google-Smtp-Source: AGHT+IHqB2fpwOa0FDVZHD+N9cSkpCkJYHc9SkXnbZBWOwy1PCL+FrnhEpwdY+L10Y1edbOMLwTc7g==
+X-Received: by 2002:a17:903:2451:b0:21d:cd54:c7ef with SMTP id d9443c01a7336-220bbab32e7mr95596175ad.9.1739431544126;
+        Wed, 12 Feb 2025 23:25:44 -0800 (PST)
+Received: from localhost.localdomain ([212.102.51.249])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5348f12sm6427185ad.46.2025.02.12.23.25.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 23:21:37 -0800 (PST)
-Date: Thu, 13 Feb 2025 16:21:32 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Kairui Song <ryncsn@gmail.com>
-Subject: Re: [PATCHv4 14/17] zsmalloc: make zspage lock preemptible
-Message-ID: <huhxeq3k4q5lscj5xy6lldivku2wps6midxmt4swr67mce4nva@7mxupdxphs5a>
-References: <6vtpamir4bvn3snlj36tfmnmpcbd6ks6m3sdn7ewmoles7jhau@nbezqbnoukzv>
- <Z6O2oPP7lyRGXer_@google.com>
- <6uhsj4bckhursiblkxe54azfgyqal6tq2de3lpkxw6omkised6@uylodcjruuei>
- <Z6ThGFt6wyNpx9xi@google.com>
- <wnffho5jguo24wfy3qv5tvovoargezbu4kcvpk43ludrhyfo6i@6ogtvk5ivfjc>
- <Z6Z2l9uovxAiED6q@google.com>
- <droaoze6w4atf7guiv6t4imhcmkpteyvoaigdnw5p3vdg75ebx@m56xi2y527i4>
- <Z6y_3xS_8pmZ2bCz@google.com>
- <rbco2k74plqedtqvn6ebu6wwssy5urw5mjvsk6n576d3urbjnx@tq43anmdvq35>
- <25268fbedb82a06ba0c13e2c490b164846ef508b@linux.dev>
+        Wed, 12 Feb 2025 23:25:43 -0800 (PST)
+From: Tatsuya S <tatsuya.s2862@gmail.com>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Tatsuya S <tatsuya.s2862@gmail.com>,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Bluetooth: btbcm: Fix reset errors at setup
+Date: Thu, 13 Feb 2025 16:05:22 +0900
+Message-ID: <20250213070520.9308-4-tatsuya.s2862@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <25268fbedb82a06ba0c13e2c490b164846ef508b@linux.dev>
+Content-Transfer-Encoding: 8bit
 
-On (25/02/13 02:57), Yosry Ahmed wrote:
-> > > I think we also need some high level testing (e.g. concurrent
-> > >
-> > >  swapins/swapouts) to find that out. I think that's what Kairui's testing
-> > >
-> > >  covers.
-> > >
-> >
-> > I do a fair amount of high-level testing: heavy parallel (make -j36 and
-> >
-> > parallel dd) workloads (multiple zram devices configuration - zram0 ext4,
-> >
-> > zram1 writeback device, zram2 swap) w/ and w/o lockdep. In addition I also
-> >
-> > run these workloads under heavy memory pressure (a 4GB VM), when oom-killer
-> >
-> > starts to run around with a pair of scissors. But it's mostly regression
-> >
-> > testing.
-> >
+After the Bluetooth USB controller is connected, error may occur
+on the first reset HCI command.
 
-// JFI it seems your email client/service for some reason injects a lot
-// of empty lines
+[    5.678408] Bluetooth: hci0: command 0x0c03 tx timeout
+[    5.678435] Bluetooth: hci0: BCM: Reset failed (-110)
+[   18.030627] usb 1-8: Failed to suspend device, error -110
 
-> If we can get some numbers from these parallel workloads that would be better than the perf stats imo.
+To reduce this error, insert a little sleep for warmup.
 
-make -j24  CONFIG_PREEMPT
+Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
+---
+ drivers/bluetooth/btbcm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+index 0a60660fc8ce..026d8571adf5 100644
+--- a/drivers/bluetooth/btbcm.c
++++ b/drivers/bluetooth/btbcm.c
+@@ -733,6 +733,9 @@ int btbcm_setup_apple(struct hci_dev *hdev)
+ 	struct sk_buff *skb;
+ 	int err;
+ 
++	/* Waiting for hardware warmup */
++	msleep(200);
++
+ 	/* Reset */
+ 	err = btbcm_reset(hdev);
+ 	if (err)
+-- 
+2.48.1
 
-BASE
-====
-
-1363.64user 157.08system 1:30.89elapsed 1673%CPU (0avgtext+0avgdata 825692maxresident)k
-
-lock stats
-
-                              class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-                   &pool->migrate_lock-R:             0              0           0.00           0.00           0.00           0.00          10001         702081           0.14         104.74      125571.64           0.18
-                            &class->lock:             1              1           0.25           0.25           0.25           0.25           6320         840542           0.06         809.72      191214.87           0.23
-                         &zspage->lock-R:             0              0           0.00           0.00           0.00           0.00           6452         664129           0.12         660.24      201888.61           0.30
-                &zram->table[index].lock:             0              0           0.00           0.00           0.00           0.00        1716362        3096466           0.07         811.10      365551.24           0.12
-                            &zstrm->lock:             0              0           0.00           0.00           0.00           0.00              0         664129           1.68        1004.80    14853571.32          22.37
-
-PATCHED
-=======
-
-1366.50user 154.89system 1:30.33elapsed 1684%CPU (0avgtext+0avgdata 825692maxresident)k
-
-lock stats
-
-                              class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-                         &pool->lock#3-R:             0              0           0.00           0.00           0.00           0.00           3648         701979           0.12          44.09      107333.02           0.15
-                            &class->lock:             0              0           0.00           0.00           0.00           0.00           5038         840434           0.06        1245.90      211814.60           0.25
-                         zsmalloc-page-R:             0              0           0.00           0.00           0.00           0.00              0         664078           0.05         699.35      236641.75           0.36
-                        zram-entry->lock:             0              0           0.00           0.00           0.00           0.00              0        3098328           0.06        2987.02      313339.11           0.10
-   &per_cpu_ptr(comp->stream, cpu)->lock:             0              0           0.00           0.00           0.00           0.00             23         664078           1.77        7071.30    14838397.61          22.34
