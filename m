@@ -1,157 +1,239 @@
-Received: from smtp.smtpout.orange.fr (smtp-70.smtpout.orange.fr [80.12.242.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A549026FA5C;
-	Thu, 13 Feb 2025 20:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09608270EAA
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 20:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739479556; cv=none; b=cCTihtvZ5Fxx7eE7w7uuQcPZ6qb2fswTmm5qZWyJ/mdaISt7NOJA+cZVJVYoN2kCDUFe92LBEplIHKf+fFXOeApQAIiARhUZq4IfRvkkcTB8vPKQ9qzQ4rOLBwfU8ZfD1HsIoGqapj1TWi7V5O+RpZ77mP3BnedEb7HLXu6vOos=
+	t=1739479560; cv=none; b=VvBTqorUilDf3K6Elrj/xQ99WrU+xoSUozwnodLe/SvNmuWi4l94QQhqYnkpPGmGtjdDuyAuu4M7sp7rbb1gvlmqrw8fuw1QVMnepaeR9QClhMxYJfxPai4n2ha8kGZthDDttsnFTuFnV71we247kyyeLKYXnmuUwP32j7futZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739479556; c=relaxed/simple;
-	bh=QW4zP2U+IjjpQ+TStpydmk8FGeVp2iCrn2W8AjIobw0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=anokXfmgwLR7ecdWLU+BS4op3dKpkw8XN452zVEgpUxrvW3ShS4V0vc4P1vNeZNaIJGBttimP3CWzp0lcpnO3C8ef8+mcvSAO7BEPP+Y4xQyq5AgyMsCIbSDm+4bDaQtuoCqrrKSpc+wfnve8Dmt7g88Tk7LOTeAmSse8j5Zc7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=rfykS5mE; arc=none smtp.client-ip=80.12.242.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1739479560; c=relaxed/simple;
+	bh=gTl4Ci+2gjhamtU/3T75E5+BSCXZ3886wCUSXyinBkY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Sgh9/fogYjVcI1Vxc6POw6FmCapyeNa66cDLoaQnSOPb2mWOyhLVGAhrnSy+xteJEAmNCPVla4MJiEr8W+Nw22FgZnW+yExvnyMXmVLPeO6s1dbmLjjpqAVnHMjC7DQdcCSkJ+MW1c72eUwj81CQhXcTcLOBTAa92BS7ohgSjWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GqJ4rcEG; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="rfykS5mE"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id ig4StaDDcmXj3ig4WtV2Gv; Thu, 13 Feb 2025 21:44:33 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1739479473;
-	bh=CJcCjCLAQO2O/5OGGV8ihwCBev8U59q2w5V0fw84bJc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=rfykS5mEu2ZOi/fL+ggzdVq/VcOTVyE9iLa25pLgKL0Wcvlrl2BPIUjYk8CnIkHwX
-	 7UAt4xBoAWcJ1jLUVcl7PhwXCD4YftswLdXshu/FRnI10Ryu1LUMPZZK6tywAHyeJh
-	 FnlO/OWOOjOyku/z53bDq74C3uxdiat6sQsRnb/vTcAF7mgHgAqtmbDQUCwPR3mypB
-	 bXOjvyHVCPZLXjCsS6qCRA1bG0JI8kVDecHs5DWFqGQpchP1fggEHpBHMU7wohQ42D
-	 ltZiDg8eO5k6ijjuV4Q5/z61cNPaaXUBe8jnKgljpEENDTPd2F/EdqGS4QVls0lOO5
-	 9P9Bn+KhP6fDA==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Thu, 13 Feb 2025 21:44:33 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <a1af3a07-1e76-488b-82f7-87b3a4907f26@wanadoo.fr>
-Date: Thu, 13 Feb 2025 21:44:27 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GqJ4rcEG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739479556;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KSgNnSnducV1KuVAaiLd55RfZrAqOdN0xd9+oyM1zBg=;
+	b=GqJ4rcEGMMVizdb9cD7gtUbf382EEooX6KvL4UAj+w3vrStX/eUbJs7M6ofnJ9vH+gRzVP
+	H/9czOPvXDHkM3Uxii9XZ5MT8PUUhkGUfazA1EUQVBAFrRH3h5QWNm8Ot3N9vvYBev3m5W
+	mk+gTGiPkBtdwEwlgmMDHicpUPj45rU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-124-I7vpj8HgO7eNDPHcjyZSNQ-1; Thu,
+ 13 Feb 2025 15:45:53 -0500
+X-MC-Unique: I7vpj8HgO7eNDPHcjyZSNQ-1
+X-Mimecast-MFC-AGG-ID: I7vpj8HgO7eNDPHcjyZSNQ_1739479550
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9A7D61975AFC;
+	Thu, 13 Feb 2025 20:45:50 +0000 (UTC)
+Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.199])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0EB8A19373D9;
+	Thu, 13 Feb 2025 20:45:46 +0000 (UTC)
+From: Anusha Srivatsa <asrivats@redhat.com>
+Date: Thu, 13 Feb 2025 15:44:35 -0500
+Subject: [PATCH 18/20] drm/panel/sony-td4353-jdi: Move to using
+ mipi_dsi_*_multi() variants
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH] PCI: cpci: remove unused fields
-To: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>, scott@spiteful.org,
- bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250213173925.200404-1-trintaeoitogc@gmail.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250213173925.200404-1-trintaeoitogc@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250213-mipi_cocci_multi-v1-18-67d94ff319cc@redhat.com>
+References: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
+In-Reply-To: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Joel Selvaraj <jo@jsfamily.in>, Ondrej Jirman <megi@xff.cz>, 
+ Javier Martinez Canillas <javierm@redhat.com>, 
+ Jianhua Lu <lujianhua000@gmail.com>, Robert Chiras <robert.chiras@nxp.com>, 
+ Artur Weber <aweber.kernel@gmail.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739479476; l=4663;
+ i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
+ bh=gTl4Ci+2gjhamtU/3T75E5+BSCXZ3886wCUSXyinBkY=;
+ b=GDzcgbuTQk8xOrsIOeKVGnQfu3FKfRHs0ffg0/lxbylTEKShBKcdh6zKKFfG1i9olM4/dluKH
+ MGbH9kMyE+eAmLTJMdxJgAb5QQa6pOhr8oMaxsF79ezsVjs19vgfrhD
+X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
+ pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Le 13/02/2025 à 18:39, Guilherme Giacomo Simoes a écrit :
-> The `get_power()` and `set_power()` function pointers in the
-> `cpci_hp_controller ops` struct were declared but never implemented by
-> any driver. To improve code readability and reduce resource usage,
-> remove this pointers and replace with a `flags` field.
-> 
-> Use the new `flags` field in `enable_slot()`, `disable_slot()`, and
-> `cpci_get_power_s atus()` to track the slot's power state using the
-> `SLOT_ENABLED` macro.
-> 
-> Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-> ---
->   drivers/pci/hotplug/cpci_hotplug.h      |  3 +--
->   drivers/pci/hotplug/cpci_hotplug_core.c | 21 +++++++--------------
->   2 files changed, 8 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
-> index 03fa39ab0c88..c5cb12cad2b4 100644
-> --- a/drivers/pci/hotplug/cpci_hotplug.h
-> +++ b/drivers/pci/hotplug/cpci_hotplug.h
-> @@ -44,8 +44,7 @@ struct cpci_hp_controller_ops {
->   	int (*enable_irq)(void);
->   	int (*disable_irq)(void);
->   	int (*check_irq)(void *dev_id);
-> -	u8  (*get_power)(struct slot *slot);
-> -	int (*set_power)(struct slot *slot, int value);
-> +	int flags;
->   };
->   
->   struct cpci_hp_controller {
-> diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
-> index d0559d2faf50..87a743c2a5f1 100644
-> --- a/drivers/pci/hotplug/cpci_hotplug_core.c
-> +++ b/drivers/pci/hotplug/cpci_hotplug_core.c
-> @@ -27,6 +27,8 @@
->   #define DRIVER_AUTHOR	"Scott Murray <scottm@somanetworks.com>"
->   #define DRIVER_DESC	"CompactPCI Hot Plug Core"
->   
-> +#define SLOT_ENABLED 0x00000001
-> +
->   #define MY_NAME	"cpci_hotplug"
->   
->   #define dbg(format, arg...)					\
-> @@ -71,13 +73,12 @@ static int
->   enable_slot(struct hotplug_slot *hotplug_slot)
->   {
->   	struct slot *slot = to_slot(hotplug_slot);
-> -	int retval = 0;
->   
->   	dbg("%s - physical_slot = %s", __func__, slot_name(slot));
->   
-> -	if (controller->ops->set_power)
-> -		retval = controller->ops->set_power(slot, 1);
-> -	return retval;
-> +	controller->ops->flags |= SLOT_ENABLED;
-> +
-> +	return 0;
->   }
->   
->   static int
-> @@ -109,11 +110,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
->   	}
->   	cpci_led_on(slot);
->   
-> -	if (controller->ops->set_power) {
-> -		retval = controller->ops->set_power(slot, 0);
-> -		if (retval)
-> -			goto disable_error;
-> -	}
-> +	controller->ops->flags &= ~SLOT_ENABLED;
->   
->   	slot->adapter_status = 0;
->   
-> @@ -129,11 +126,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
->   static u8
->   cpci_get_power_status(struct slot *slot)
->   {
-> -	u8 power = 1;
-> -
-> -	if (controller->ops->get_power)
-> -		power = controller->ops->get_power(slot);
-> -	return power;
-> +	return controller->ops->flags & SLOT_ENABLED;
+Stop using deprecated API.
+Used Coccinelle to make the change.
 
-If neither get_power nor set_power where defined in any driver, then 
-cpci_get_power_status() was always returning 1.
+@rule_3@
+identifier dsi_var;
+identifier r;
+identifier func;
+type t;
+position p;
+expression dsi_device;
+expression list es;
+@@
+t func(...) {
+...
+struct mipi_dsi_device *dsi_var = dsi_device;
++struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi_var };
+<+...
+(
+-mipi_dsi_dcs_write_seq(dsi_var,es);
++mipi_dsi_dcs_write_seq_multi(&dsi_ctx,es);
+|
+-r = mipi_dsi_dcs_exit_sleep_mode(dsi_var)@p;
++mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
+|
+-r = mipi_dsi_dcs_enter_sleep_mode(dsi_var)@p;
++mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
+|
+-r = mipi_dsi_dcs_set_display_off(dsi_var)@p;
++mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
+|
+.....//rest of the mipi APIs with _multi variant
+)
+<+...
+-if(r < 0) {
+-...
+-}
+...+>
+}
 
-IIUC, now it may return 1 or 0 depending of if enable_slot() or 
-disable_slot() have been called.
+Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+---
+ drivers/gpu/drm/panel/panel-sony-td4353-jdi.c | 71 +++++++--------------------
+ 1 file changed, 18 insertions(+), 53 deletions(-)
 
-I don't know the impact of this change and I dont know if it is correct, 
-but I think you should explain why this change of behavior is fine.
+diff --git a/drivers/gpu/drm/panel/panel-sony-td4353-jdi.c b/drivers/gpu/drm/panel/panel-sony-td4353-jdi.c
+index 472195d4bbbe43fe81037707888f0e87ddb9c615..9281540a9c3d3dd150e7c34748fe9634b24c054f 100644
+--- a/drivers/gpu/drm/panel/panel-sony-td4353-jdi.c
++++ b/drivers/gpu/drm/panel/panel-sony-td4353-jdi.c
+@@ -47,60 +47,30 @@ static inline struct sony_td4353_jdi *to_sony_td4353_jdi(struct drm_panel *panel
+ static int sony_td4353_jdi_on(struct sony_td4353_jdi *ctx)
+ {
+ 	struct mipi_dsi_device *dsi = ctx->dsi;
+-	struct device *dev = &dsi->dev;
+-	int ret;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+ 
+ 	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+ 
+-	ret = mipi_dsi_dcs_set_column_address(dsi, 0x0000, 1080 - 1);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set column address: %d\n", ret);
+-		return ret;
+-	}
++	mipi_dsi_dcs_set_column_address_multi(&dsi_ctx, 0x0000, 1080 - 1);
++	mipi_dsi_dcs_set_page_address_multi(&dsi_ctx, 0x0000, 2160 - 1);
++	mipi_dsi_dcs_set_tear_scanline_multi(&dsi_ctx, 0);
+ 
+-	ret = mipi_dsi_dcs_set_page_address(dsi, 0x0000, 2160 - 1);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set page address: %d\n", ret);
+-		return ret;
+-	}
++	mipi_dsi_dcs_set_tear_on_multi(&dsi_ctx, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
+ 
+-	ret = mipi_dsi_dcs_set_tear_scanline(dsi, 0);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set tear scanline: %d\n", ret);
+-		return ret;
+-	}
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_SET_ADDRESS_MODE,
++				     0x00);
+ 
+-	ret = mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set tear on: %d\n", ret);
+-		return ret;
+-	}
++	mipi_dsi_dcs_set_pixel_format_multi(&dsi_ctx, 0x77);
+ 
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_SET_ADDRESS_MODE, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_SET_PARTIAL_ROWS,
++				     0x00, 0x00, 0x08, 0x6f);
+ 
+-	ret = mipi_dsi_dcs_set_pixel_format(dsi, 0x77);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set pixel format: %d\n", ret);
+-		return ret;
+-	}
+-
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_SET_PARTIAL_ROWS,
+-			  0x00, 0x00, 0x08, 0x6f);
+-
+-	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
+-		return ret;
+-	}
++	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
+ 	msleep(70);
+ 
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_MEMORY_START);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_MEMORY_START);
+ 
+-	ret = mipi_dsi_dcs_set_display_on(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to turn display on: %d\n", ret);
+-		return ret;
+-	}
++	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
+ 
+ 	return 0;
+ }
+@@ -108,16 +78,15 @@ static int sony_td4353_jdi_on(struct sony_td4353_jdi *ctx)
+ static int sony_td4353_jdi_off(struct sony_td4353_jdi *ctx)
+ {
+ 	struct mipi_dsi_device *dsi = ctx->dsi;
++	struct mipi_dsi_multi_context dsi_ctx = {
++		.dsi = dsi
++		};
+ 	struct device *dev = &dsi->dev;
+ 	int ret;
+ 
+ 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
+ 
+-	ret = mipi_dsi_dcs_set_display_off(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set display off: %d\n", ret);
+-		return ret;
+-	}
++	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
+ 	msleep(22);
+ 
+ 	ret = mipi_dsi_dcs_set_tear_off(dsi);
+@@ -126,11 +95,7 @@ static int sony_td4353_jdi_off(struct sony_td4353_jdi *ctx)
+ 		return ret;
+ 	}
+ 
+-	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
+-		return ret;
+-	}
++	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
+ 	msleep(80);
+ 
+ 	return 0;
 
-Just my 2c.
-
-CJ
-
-
->   }
->   
->   static int
+-- 
+2.47.0
 
