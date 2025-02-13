@@ -1,178 +1,116 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F9021422E
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0526021519F;
+	Thu, 13 Feb 2025 11:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739444691; cv=none; b=GXOH9stTHXuHdA8PiO9rkStuos0U2nAfsBnuEooypuIiOqop2X4AeO0y63nDNDOXiiN3iTyT37hz+AtW3laJXLYPIZ2wfmgs9AZ9WwAAsusfMKOP6K2MMlmVscyPm3ZajxPGE5tJgXAnusarE0v1G16X/DJ0Lr5uo5nq7G88LdQ=
+	t=1739444696; cv=none; b=NEwRfQ/xbaQdGyqLVyUhiD6/XqXhudlTSzb0U3ln3LHYaN97DqXqxXnE4zzsso1ouSKqr4j7zJdrVhBol1m0Rbpnzic1mUGXRC2tWusnNVs3O+qR9krQiUecD7SDz7yWHf/9aw24zQ4eoiP+KMl7DzHZm9mVX7wyANQfSr5F+zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739444691; c=relaxed/simple;
-	bh=Y+J2tVj51QjuipDpR/j89prtBvkMX66gHrDq3YgpYsQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ws05inAFbeKszpk3SRClcKBCtm6wqzCNtTMn+XCjzCHQsjPgpn6vC7BPd65JeA+zh7Rmv0MyCEH6eH/9FUZitDF9KPg1x1NdR6yOMEsGOw8uczoqqhyC7vxqQ+03Dzzhhy7a6UJVt0N+2OG+xqesj7CFVWH29RTt2XxRXFCQoy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LR41BsWb; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LR41BsWb"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43945f32e2dso5520025e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 03:04:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739444688; x=1740049488; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CgLb6B+K0IFKSCneh1iu8CxwdcsXLyqW6hdJtG80sPw=;
-        b=LR41BsWb9ipBoHjJV/HB6jwj0jZ4DSOCsJk9hLW9ynxyhTR5JtwwBFH71Ulxv/y4o/
-         O0Cz9GW/SeBehw7aXiGX6OAcQPpNV27Lectj/BFm7Y8CHQjKs09nC+m2WfUE5yAqnCVJ
-         8NYw9YmVp8utd9u5ZV1oAOfk2H750n9Hg6Hm676MCxIKu62WDrZcGEJrZRRKEhC0USMe
-         awrz1FwxYuNyhMxJ02pVehzEMvB9QiuS6S7mjCl8RkhpvPnyRllL1vyslZs2vNZ2uhQn
-         o2iHfviXd8iD/YGu+wh8KvQWu/Omrg23CTkCXn41QV+DZMX8J2kozhwaqtJwOTXwO0xM
-         6QYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739444688; x=1740049488;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CgLb6B+K0IFKSCneh1iu8CxwdcsXLyqW6hdJtG80sPw=;
-        b=RhmsD2kgQ5HLVCigRrCgU8yB/tN61b/Qh325XS+dY1TM+8S9sW0uRQrQJ6LGRZ3u1A
-         InX4OnU8jHiRpX/aizhhRQ7yVGaEH8dK3bjjxbyBfeRJIxL68OQ+59KYVlAVycA5DYX6
-         LjbxlkdZactPt1pmgo1WlcTLWprIxL40PN8r00Rko08hHMv+xs59/RQEXatJuo0+ZWC/
-         lIEtnuPIeulXKC+okqoIW3/EmY4Yoprkd/DETX9P4kuc1BaZ7W4UOeyflVph+RtbjzBC
-         WdoWL+jyg90NKHR1H+MfRzKM7TircLYlaVxTTX1um76D+cfaWIwjL+offZDqV7qWDpMt
-         Wing==
-X-Forwarded-Encrypted: i=1; AJvYcCU9kgsAOg6aDfdwcLEm1bExBB8gX+chkmWVlEQGTAAXzdHjZWYOoiiBUI1HiiNN7jKc4dBcV1puS4ldSLM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxD+iZDOSw1FyIxCPyiESUuwisAsVo+zZin0CurgEbsfBpnBlb1
-	q3IN9n54m63VfqDOUUBPeg40f8bb8dUh6VYU9dc7rlva1QIlFC1S75T8El+uJliMLKZktxyLvkR
-	olab1GWw5o2UWVw==
-X-Google-Smtp-Source: AGHT+IEE4mERgLHcPxh4Z0XFIOmAvsYP5lm1mfa5000wNXTddJEmQQVgk4sP9gXH2gaDBiy234o63CvPhb4kDSo=
-X-Received: from wmrn40.prod.google.com ([2002:a05:600c:5028:b0:439:5d9c:5d7e])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:46cc:b0:436:18d0:aa6e with SMTP id 5b1f17b1804b1-43960185e92mr36208335e9.5.1739444688303;
- Thu, 13 Feb 2025 03:04:48 -0800 (PST)
-Date: Thu, 13 Feb 2025 11:04:04 +0000
-In-Reply-To: <20250213-vma-v14-0-b29c47ab21f5@google.com>
+	s=arc-20240116; t=1739444696; c=relaxed/simple;
+	bh=PzBfe4atz6vSeVyd/u+d7DpT2Rrcjc+RgX6K/j/Og7I=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=JbuorxMCkmaxiL871lkJpgCLQGI4u0h6OvQYoGuOoiJj4DbEnxOSBl3YizRF5bp17jZi+nC8Qxlt6F2q31ehBok6bUQuSuivJyZoS5O+iSmkHKy/HxCSyBYZL1BUClWbuQ2XaiJW3acL+yGn9rhBu1rir3XbRD8L9Az4FIPKt4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Ytskr0xNwz4f3kvq;
+	Thu, 13 Feb 2025 19:04:20 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id DB6FF1A0BDF;
+	Thu, 13 Feb 2025 19:04:42 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgBXul7J0a1nLFToDg--.14503S3;
+	Thu, 13 Feb 2025 19:04:42 +0800 (CST)
+Subject: Re: [PATCH v2 1/2] blk-wbt: Fix some comments
+To: Tang Yizhou <yizhou.tang@shopee.com>, yukuai1@huaweicloud.com,
+ axboe@kernel.dk
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250213100611.209997-1-yizhou.tang@shopee.com>
+ <20250213100611.209997-2-yizhou.tang@shopee.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <76cd73b1-52f5-1f19-ae37-c856a765ebc4@huaweicloud.com>
+Date: Thu, 13 Feb 2025 19:04:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250213-vma-v14-0-b29c47ab21f5@google.com>
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3164; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=Y+J2tVj51QjuipDpR/j89prtBvkMX66gHrDq3YgpYsQ=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnrdHABUIA7xn4otWDfLthBx/LSs7Na9aVE8qME
- MbIMzywdJOJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ63RwAAKCRAEWL7uWMY5
- RjJsD/9N/t+Xpj0ZBHju/OxddzbE+XEa6J7uMG5lNLfo03HNmsU7+6msxBvBQJ5vmKKjXjm3x9c
- oQ6hTWK6bPKhSrlen4dQyjRbw9cwqTxkxsgiLMGpqYZsYazH+ZkFqGJ/jfsq4gKS8grIm0Rj2G+
- D10/6vhw9ak557lgN3VdinlGRP3uz2TAMd3uiMGmlNInXAPtA58zBnPDFgrNmvoFWahp559WW6I
- 20YGQWCPZKHjnbkMUCKsvkUbV18BxMTsLDTA0RIic2VyHQPOn2hB7hkCZOmdSzYtn0wBwZaCwjD
- ceaujq4uwhd+WV5miM++gFGrD9oJCHg8/ZOkc4ktS3GEoYRLvOVVzfFgCbNuP9YAnCercllEqfY
- GpfkQhzlFm+//Jxpm4fvqK7SVcfK/wbHpnXqx24ZgF2e+rJRoCrORcAttWL1atKC4oLtF96Q4GY
- /eZdG2B1Lep6R4PMqWwNOJ0oA7sOd1VvPSpKMs9k8B7dPLICaYDyu/9LWb6Gy47AyIlT2q5i4XD
- 31iiqx+C7U8sGa0Z9N3uV28UyrkCD9qSFEJZc/0iTVZwnPn9tjuRtmOu5y5iaItpLQn+Wnxv7UL
- svXiQQz4GpRz1fQx3xZJrfYl8541aByQWVHo//K0h2RGgCSJV55vtoHEr5dKkxDfGptyf/REv5J Q+YfAvaP2OZ/9Vg==
-X-Mailer: b4 0.13.0
-Message-ID: <20250213-vma-v14-5-b29c47ab21f5@google.com>
-Subject: [PATCH v14 5/8] mm: rust: add mmput_async support
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	John Hubbard <jhubbard@nvidia.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>, Suren Baghdasaryan <surenb@google.com>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, rust-for-linux@vger.kernel.org, 
-	Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+In-Reply-To: <20250213100611.209997-2-yizhou.tang@shopee.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXul7J0a1nLFToDg--.14503S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7AryDKr1fCry8GFW7ZF1UZFb_yoW8XF18p3
+	Z2kw1UuF1xKFWxuwnrXa9rZr4fGF4rGF18tryxWrnIqr13Wr1Fvan0kr40vr4FvrWfWr4x
+	X3Wj9F95AF48u3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+	Y487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
+	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+	nxnUUI43ZEXa7VUbSfO7UUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Adds an MmWithUserAsync type that uses mmput_async when dropped but is
-otherwise identical to MmWithUser. This has to be done using a separate
-type because the thing we are changing is the destructor.
+Hi,
 
-Rust Binder needs this to avoid a certain deadlock. See commit
-9a9ab0d96362 ("binder: fix race between mmput() and do_exit()") for
-details. It's also needed in the shrinker to avoid cleaning up the mm in
-the shrinker's context.
+ÔÚ 2025/02/13 18:06, Tang Yizhou Ð´µÀ:
+> From: Tang Yizhou <yizhou.tang@shopee.com>
+> 
+> wbt_wait() no longer uses a spinlock as a parameter. Update the function
+> comments accordingly.
+> 
+> RWB_UNKNOWN_BUMP is used when we gradually adjust scale_steps toward the
+> center state, which is a value of 0.
+> 
+> Signed-off-by: Tang Yizhou <yizhou.tang@shopee.com>
+> ---
+>   block/blk-wbt.c | 11 ++++-------
+>   1 file changed, 4 insertions(+), 7 deletions(-)
+> 
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-Acked-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com> (for mm bits)
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- rust/kernel/mm.rs | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+LGTM
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
 
-diff --git a/rust/kernel/mm.rs b/rust/kernel/mm.rs
-index 618aa48e00a4..42decd311740 100644
---- a/rust/kernel/mm.rs
-+++ b/rust/kernel/mm.rs
-@@ -110,6 +110,48 @@ fn deref(&self) -> &Mm {
-     }
- }
- 
-+/// A wrapper for the kernel's `struct mm_struct`.
-+///
-+/// This type is identical to `MmWithUser` except that it uses `mmput_async` when dropping a
-+/// refcount. This means that the destructor of `ARef<MmWithUserAsync>` is safe to call in atomic
-+/// context.
-+///
-+/// # Invariants
-+///
-+/// Values of this type are always refcounted using `mmget`. The value of `mm_users` is non-zero.
-+#[repr(transparent)]
-+pub struct MmWithUserAsync {
-+    mm: MmWithUser,
-+}
-+
-+// SAFETY: It is safe to call `mmput_async` on another thread than where `mmget` was called.
-+unsafe impl Send for MmWithUserAsync {}
-+// SAFETY: All methods on `MmWithUserAsync` can be called in parallel from several threads.
-+unsafe impl Sync for MmWithUserAsync {}
-+
-+// SAFETY: By the type invariants, this type is always refcounted.
-+unsafe impl AlwaysRefCounted for MmWithUserAsync {
-+    fn inc_ref(&self) {
-+        // SAFETY: The pointer is valid since self is a reference.
-+        unsafe { bindings::mmget(self.as_raw()) };
-+    }
-+
-+    unsafe fn dec_ref(obj: NonNull<Self>) {
-+        // SAFETY: The caller is giving up their refcount.
-+        unsafe { bindings::mmput_async(obj.cast().as_ptr()) };
-+    }
-+}
-+
-+// Make all `MmWithUser` methods available on `MmWithUserAsync`.
-+impl Deref for MmWithUserAsync {
-+    type Target = MmWithUser;
-+
-+    #[inline]
-+    fn deref(&self) -> &MmWithUser {
-+        &self.mm
-+    }
-+}
-+
- // These methods are safe to call even if `mm_users` is zero.
- impl Mm {
-     /// Returns a raw pointer to the inner `mm_struct`.
-@@ -161,6 +203,13 @@ pub unsafe fn from_raw<'a>(ptr: *const bindings::mm_struct) -> &'a MmWithUser {
-         unsafe { &*ptr.cast() }
-     }
- 
-+    /// Use `mmput_async` when dropping this refcount.
-+    #[inline]
-+    pub fn into_mmput_async(me: ARef<MmWithUser>) -> ARef<MmWithUserAsync> {
-+        // SAFETY: The layouts and invariants are compatible.
-+        unsafe { ARef::from_raw(ARef::into_raw(me).cast()) }
-+    }
-+
-     /// Attempt to access a vma using the vma read lock.
-     ///
-     /// This is an optimistic trylock operation, so it may fail if there is contention. In that
-
--- 
-2.48.1.502.g6dc24dfdaf-goog
+> diff --git a/block/blk-wbt.c b/block/blk-wbt.c
+> index 6dfc659d22e2..8b73c0c11aec 100644
+> --- a/block/blk-wbt.c
+> +++ b/block/blk-wbt.c
+> @@ -136,8 +136,9 @@ enum {
+>   	RWB_MIN_WRITE_SAMPLES	= 3,
+>   
+>   	/*
+> -	 * If we have this number of consecutive windows with not enough
+> -	 * information to scale up or down, scale up.
+> +	 * If we have this number of consecutive windows without enough
+> +	 * information to scale up or down, slowly return to center state
+> +	 * (step == 0).
+>   	 */
+>   	RWB_UNKNOWN_BUMP	= 5,
+>   };
+> @@ -638,11 +639,7 @@ static void wbt_cleanup(struct rq_qos *rqos, struct bio *bio)
+>   	__wbt_done(rqos, flags);
+>   }
+>   
+> -/*
+> - * May sleep, if we have exceeded the writeback limits. Caller can pass
+> - * in an irq held spinlock, if it holds one when calling this function.
+> - * If we do sleep, we'll release and re-grab it.
+> - */
+> +/* May sleep, if we have exceeded the writeback limits. */
+>   static void wbt_wait(struct rq_qos *rqos, struct bio *bio)
+>   {
+>   	struct rq_wb *rwb = RQWB(rqos);
+> 
 
