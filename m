@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EB421322B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142962135BD;
 	Thu, 13 Feb 2025 10:16:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739441785; cv=none; b=T+v/PI95a2r2svId0pnqCS/kYjgOhgzV9yUyCAQab6IjuUWYFbehnN+mrmFIqj9Wq3C0TJuUwvCJqhCyC0GlmCfTiGUVM02kQtbEOG3ikeO9A6OEMRFSP0tb4cDtBt6HD6deekpRb+4lhjiBhe8YwKfedNzC5CO4RV6xKUuuxy8=
+	t=1739441786; cv=none; b=TFKux6rELvQ9nBUwDLj3Umtl+/a9R1nnH/ilSgNn5KVmGyd1H2JBttnDHX55RBlgTZhS/epVmiiEDoMcL+7ieRndHmRCXqLXRLHQbBvZ1XJwHGHMrlvVSbV+TJlc/DU1erulVjTbLybOf3Wg1lg4/vVGI7+fBdIrMUGj6agXOPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739441785; c=relaxed/simple;
-	bh=Gqv6IFE79uMHua5KO5uqY0xH9eEHkzo9omMlPGALQYI=;
+	s=arc-20240116; t=1739441786; c=relaxed/simple;
+	bh=WrZ3ZlwbyPHxQID08OR8+0dAwwwvd3XA7oMW76eu18E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TlMrHMOwVDFHhqfHt8dFbFWNW+tgXpJCE8MfHmVmGU/A5cHGxdPSjAA3KSfgEBRENY/cuC94JzCUxJERGeLaNi0vAlVTNBrLuSCT0/Gex+e5PzzAg14NAyyMpx3QbDRidNmk7fkxyWtLguP1HuiTe4p406yMWjrGFbHlWf+H+e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Hg2LfUxS; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=iB+eBX6n3vhAp22/HQDxQPqnaiWlZXWV1dEiqXsqm1J0VxaQeIekY3KYCKCxYpSClgzzOT40314GWAAVQWttEl1OJfczvB97sC08RmJlrZ7Smj5uzK+EO9wKltD5JkE+ojq/AKH9dsMjKh9UFzJz1O13N8DzZlCSK8EKFObi1q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mFSj9Dfi; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Hg2LfUxS"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9A1CE432B7;
-	Thu, 13 Feb 2025 10:16:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mFSj9Dfi"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EF383432C1;
+	Thu, 13 Feb 2025 10:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739441775;
+	t=1739441781;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=j2Ojc9qcBvqj2LarFOOe3ioAtOzYlbt9nmEBUMJAtiI=;
-	b=Hg2LfUxS9mNsPghZQZxEfekjkNkCtoruY5J6qtUIMk7cfFPd05T3VZY/E0kL874FxrMlQw
-	y5y8l40uI61E0Cb+wjQwnSzbTNxuHYfwB9Q9ihV5HoyU3wHVy7hcBxSYjnEjThwefHdpw2
-	XTi08NXCmZw2OuI8ZlWZDUZv3arycaZGn4IG1D3W13YlHge0pAU17fFZ+WjCWJ3DidSmh9
-	fQgF8zJ2Om38DF/nEK9Qk1BL9sUCmRCw4sSX2wHYqWYNIy2Y96ES/BdfDjyVmgACqVg17N
-	5BEl8NER54dcCdL2LbsaunGl7IBiKRWCtZ4N97e/Qo9VVBOoLYAidrja7SWBWw==
+	bh=0032LIQqY+4YIRUbUZdK5FU/7X5Al+gsY6RzxuK3QJs=;
+	b=mFSj9DfiISBtFe5RwCvn/J5aXU49zvhcw9SSOrIEZ3mQtl8iRmjWCPsgBZ5J0zp+YHczHV
+	TGBA/HLp+NZFWdyZdHBIakMKE2ePiYXBhi+XvOTScHbYmyk8IJN3s94iCX3Tsqk0MsJzOp
+	CEzXDZjBPEMCKibhZVBSnvUif1ne989tmLEzn06KzfHFpLwoG8FfVAjWXGlUTiLmmuLjTy
+	jCAyPuj5nLQ+e2Yg+FGGws3zijguSg50NNUBtpzbm+4lrVelIjzScjMJ+wGDQJUV/FUEI5
+	jyf1O2ex8iK4orU2xo/AHM2ADUlCAPtNFLLpqpk8SFgysyQm0VJm+2IXIpJcJg==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -63,9 +63,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Daniel Golle <daniel@makrotopia.org>,
 	Dimitri Fedrau <dimitri.fedrau@liebherr.com>,
 	Sean Anderson <seanga2@gmail.com>
-Subject: [PATCH net-next v4 02/15] net: ethtool: Export the link_mode_params definitions
-Date: Thu, 13 Feb 2025 11:15:50 +0100
-Message-ID: <20250213101606.1154014-3-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v4 06/15] net: phy: Introduce generic SFP handling for PHY drivers
+Date: Thu, 13 Feb 2025 11:15:54 +0100
+Message-ID: <20250213101606.1154014-7-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250213101606.1154014-1-maxime.chevallier@bootlin.com>
 References: <20250213101606.1154014-1-maxime.chevallier@bootlin.com>
@@ -78,86 +78,211 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegieehudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefvddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkv
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegieehudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpeehnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefvddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkv
  ghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrgh
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-link_mode_params contains a lookup table of all 802.3 link modes that
-are currently supported with structured data about each mode's speed,
-duplex, number of lanes and mediums.
+There are currently 4 PHY drivers that can drive downstream SFPs:
+marvell.c, marvell10g.c, at803x.c and marvell-88x2222.c. Most of the
+logic is boilerplate, either calling into generic phylib helpers (for
+SFP PHY attach, bus attach, etc.) or performing the same tasks with a
+bit of validation :
+ - Getting the module's expected interface mode
+ - Making sure the PHY supports it
+ - Optionnaly perform some configuration to make sure the PHY outputs
+   the right mode
 
-As a preparation for a port representation, export that table for the
-rest of the net stack to use.
+This can be made more generic by leveraging the phy_port, and its
+configure_mii() callback which allows setting a port's interfaces when
+the port is a serdes.
+
+Introduce a generic PHY SFP support. If a driver doesn't probe the SFP
+bus itself, but an SFP phandle is found in devicetree/firmware, then the
+generic PHY SFP support will be used, relying on port ops.
+
+PHY driver need to :
+ - Register a .attach_port() callback
+ - When a serdes port is registered to the PHY, drivers must set
+   port->interfaces to the set of PHY_INTERFACE_MODE the port can output
+ - If the port has limitations regarding speed, duplex and aneg, the
+   port can also fine-tune the final linkmodes that can be supported
+ - The port may register a set of ops, including .configure_mii(), that
+   will be called at module_insert time to adjust the interface based on
+   the module detected.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
-V4: Updated the struct definition now that mediums is a bitfield
+V4: No changes
 
- include/linux/ethtool.h | 10 ++++++++++
- net/ethtool/common.c    |  1 +
- net/ethtool/common.h    |  9 ---------
- 3 files changed, 11 insertions(+), 9 deletions(-)
+ drivers/net/phy/phy_device.c | 107 +++++++++++++++++++++++++++++++++++
+ drivers/net/phy/phylink.c    |   8 +--
+ include/linux/phy.h          |   2 +
+ 3 files changed, 113 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
-index 206965690dc6..75bd8b6df232 100644
---- a/include/linux/ethtool.h
-+++ b/include/linux/ethtool.h
-@@ -258,6 +258,16 @@ static inline const char *phy_mediums(enum ethtool_link_medium medium)
- 	}
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index fc0b3a344cee..8d2ee51cc1c0 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1420,6 +1420,87 @@ void phy_sfp_detach(void *upstream, struct sfp_bus *bus)
  }
+ EXPORT_SYMBOL(phy_sfp_detach);
  
-+struct link_mode_info {
-+	int                             speed;
-+	u8                              min_lanes;
-+	u8                              lanes;
-+	u8                              duplex;
-+	u16				mediums;
++static int phy_sfp_module_insert(void *upstream, const struct sfp_eeprom_id *id)
++{
++	struct phy_device *phydev = upstream;
++	struct phy_port *port = phy_get_sfp_port(phydev);
++
++	__ETHTOOL_DECLARE_LINK_MODE_MASK(sfp_support);
++	DECLARE_PHY_INTERFACE_MASK(interfaces);
++	phy_interface_t iface;
++
++	linkmode_zero(sfp_support);
++
++	if (!port)
++		return -EINVAL;
++
++	sfp_parse_support(phydev->sfp_bus, id, sfp_support, interfaces);
++
++	if (phydev->n_ports == 1)
++		phydev->port = sfp_parse_port(phydev->sfp_bus, id, sfp_support);
++
++	linkmode_and(sfp_support, port->supported, sfp_support);
++
++	if (linkmode_empty(sfp_support)) {
++		dev_err(&phydev->mdio.dev, "incompatible SFP module inserted\n");
++		return -EINVAL;
++	}
++
++	iface = sfp_select_interface(phydev->sfp_bus, sfp_support);
++
++	/* Check that this interface is supported */
++	if (!test_bit(iface, port->interfaces)) {
++		dev_err(&phydev->mdio.dev, "incompatible SFP module inserted\n");
++		return -EINVAL;
++	}
++
++	if (port->ops && port->ops->configure_mii)
++		return port->ops->configure_mii(port, true, iface);
++
++	return 0;
++}
++
++static void phy_sfp_module_remove(void *upstream)
++{
++	struct phy_device *phydev = upstream;
++	struct phy_port *port = phy_get_sfp_port(phydev);
++
++	if (port && port->ops && port->ops->configure_mii)
++		port->ops->configure_mii(port, false, PHY_INTERFACE_MODE_NA);
++
++	if (phydev->n_ports == 1)
++		phydev->port = PORT_NONE;
++}
++
++static void phy_sfp_link_up(void *upstream)
++{
++	struct phy_device *phydev = upstream;
++	struct phy_port *port = phy_get_sfp_port(phydev);
++
++	if (port && port->ops && port->ops->link_up)
++		port->ops->link_up(port);
++}
++
++static void phy_sfp_link_down(void *upstream)
++{
++	struct phy_device *phydev = upstream;
++	struct phy_port *port = phy_get_sfp_port(phydev);
++
++	if (port && port->ops && port->ops->link_down)
++		port->ops->link_down(port);
++}
++
++static const struct sfp_upstream_ops sfp_phydev_ops = {
++	.attach = phy_sfp_attach,
++	.detach = phy_sfp_detach,
++	.module_insert = phy_sfp_module_insert,
++	.module_remove = phy_sfp_module_remove,
++	.link_up = phy_sfp_link_up,
++	.link_down = phy_sfp_link_down,
++	.connect_phy = phy_sfp_connect_phy,
++	.disconnect_phy = phy_sfp_disconnect_phy,
 +};
 +
-+extern const struct link_mode_info link_mode_params[];
+ static int phy_add_port(struct phy_device *phydev, struct phy_port *port)
+ {
+ 	int ret = 0;
+@@ -3554,6 +3635,13 @@ static int phy_setup_ports(struct phy_device *phydev)
+ 	if (ret)
+ 		return ret;
+ 
++	/* Use generic SFP probing only if the driver didn't do so already */
++	if (!phydev->sfp_bus) {
++		ret = phy_sfp_probe(phydev, &sfp_phydev_ops);
++		if (ret)
++			goto out;
++	}
 +
- /* declare a link mode bitmap */
- #define __ETHTOOL_DECLARE_LINK_MODE_MASK(name)		\
- 	DECLARE_BITMAP(name, __ETHTOOL_LINK_MODE_MASK_NBITS)
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index 4f06efa553dc..d54de8b3ffd4 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -453,6 +453,7 @@ const struct link_mode_info link_mode_params[] = {
- 	__DEFINE_LINK_MODE_PARAMS(800000, VR4, Full, V),
- };
- static_assert(ARRAY_SIZE(link_mode_params) == __ETHTOOL_LINK_MODE_MASK_NBITS);
-+EXPORT_SYMBOL_GPL(link_mode_params);
+ 	if (phydev->n_ports < phydev->max_n_ports) {
+ 		ret = phy_default_setup_single_port(phydev);
+ 		if (ret)
+@@ -3587,6 +3675,25 @@ static int phy_setup_ports(struct phy_device *phydev)
+ 	return ret;
+ }
  
- const char netif_msg_class_names[][ETH_GSTRING_LEN] = {
- 	[NETIF_MSG_DRV_BIT]		= "drv",
-diff --git a/net/ethtool/common.h b/net/ethtool/common.h
-index 9d00b0329754..ee250a5c5364 100644
---- a/net/ethtool/common.h
-+++ b/net/ethtool/common.h
-@@ -14,14 +14,6 @@
++/**
++ * phy_get_sfp_port() - Returns the first valid SFP port of a PHY
++ * @phydev: pointer to the PHY device to get the SFP port from
++ *
++ * Returns: The first active SFP (serdes) port of a PHY device, NULL if none
++ * exist.
++ */
++struct phy_port *phy_get_sfp_port(struct phy_device *phydev)
++{
++	struct phy_port *port;
++
++	list_for_each_entry(port, &phydev->ports, head)
++		if (port->active && port->is_serdes)
++			return port;
++
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(phy_get_sfp_port);
++
+ /**
+  * fwnode_mdio_find_device - Given a fwnode, find the mdio_device
+  * @fwnode: pointer to the mdio_device's fwnode
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index a49edc012636..ea6969c16aea 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -695,10 +695,10 @@ void phylink_interfaces_to_linkmodes(unsigned long *linkmodes,
+ 	linkmode_zero(linkmodes);
  
- #define __SOF_TIMESTAMPING_CNT (const_ilog2(SOF_TIMESTAMPING_LAST) + 1)
+ 	for_each_set_bit(interface, interfaces, PHY_INTERFACE_MODE_MAX)
+-		caps = phylink_get_capabilities(interface,
+-						GENMASK(__fls(MAC_400000FD),
+-							__fls(MAC_10HD)),
+-						RATE_MATCH_NONE);
++		caps |= phylink_get_capabilities(interface,
++						 GENMASK(__fls(MAC_400000FD),
++							 __fls(MAC_10HD)),
++						 RATE_MATCH_NONE);
  
--struct link_mode_info {
--	int				speed;
--	u8				min_lanes;
--	u8				lanes;
--	u8				duplex;
--	u16				mediums;
--};
--
- struct genl_info;
- struct hwtstamp_provider_desc;
+ 	phylink_set(linkmodes, Autoneg);
+ 	phylink_caps_to_linkmodes(linkmodes, caps);
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index bcc2a6b468c7..51ee8803f2e1 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -2205,6 +2205,8 @@ int __phy_hwtstamp_set(struct phy_device *phydev,
+ 		       struct kernel_hwtstamp_config *config,
+ 		       struct netlink_ext_ack *extack);
  
-@@ -34,7 +26,6 @@ tunable_strings[__ETHTOOL_TUNABLE_COUNT][ETH_GSTRING_LEN];
- extern const char
- phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN];
- extern const char link_mode_names[][ETH_GSTRING_LEN];
--extern const struct link_mode_info link_mode_params[];
- extern const char netif_msg_class_names[][ETH_GSTRING_LEN];
- extern const char wol_mode_names[][ETH_GSTRING_LEN];
- extern const char sof_timestamping_names[][ETH_GSTRING_LEN];
++struct phy_port *phy_get_sfp_port(struct phy_device *phydev);
++
+ static inline int phy_package_address(struct phy_device *phydev,
+ 				      unsigned int addr_offset)
+ {
 -- 
 2.48.1
 
