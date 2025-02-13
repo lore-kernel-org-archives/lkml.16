@@ -1,101 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFB523F400;
-	Thu, 13 Feb 2025 13:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6048E23F40C
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739451885; cv=none; b=oiBSdEo6L23Su5vAT24W0+dnonZ1dUxdT3C0cxvkZHWLLa5CPkdGyd8aTCRw7PMFucQ6/EXqWTdD1ECzlRblA2EYp0WH2GFxhLQhBcCYFDZyk634fLCNgMLycbdwZ4oz3WUZ0ZTAOyC6W8pEKkpS1xSdRVhHhOom6GORvaaPiH8=
+	t=1739451920; cv=none; b=i3R2p0JqWMybLAsMQQPKk5L/nJGTvYbkpFykazDPZIvUd3fzVg04P618o6/k+JT3CZIkdSYH3iA2lQEVBPYQGDyprj6HnCypdOguzwPT21ftbNdwKWNI5YC8YUkGIoJgiJNOejwwpTuFSXSM95Knr31EjgQ4YyYq/vK9jSroghE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739451885; c=relaxed/simple;
-	bh=1ao/hLWrKoa83auIAZK5YxLztQb4shphbE+wPtgggOw=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F8ro+p5zpJTx+3yIpgG6CtW0jP1G6gKVqUWTWfY/0sOoNQVIRdv/UOjIPiwPCBjXl8Ez5RO2yOsHzkdFEE87ONJmzk8KLsksA5ClqqiKhEhgdnUrHVz9+LX0VAzyyMUmnYZX6dTBxfJFX1GmDl2NmOkHLZu768rTOyWNbi60NnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ehw7sZCa; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739451920; c=relaxed/simple;
+	bh=ygfKgwFm02MPjCPY1HixRGigRORpbX7fhEuE+FfQvu4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XmxS+CRB5BznOUmYkVPgyhojCwic7DOkGgIwEoM8UepvbInTXf+o1S71ctPrscyqqupRwBUZy5gxA8uE7Ebq06hKizjR9zr5cB2Kb6008vr97DR1yea+tquqfQ0RHxqEy7/WRZSpxLlb7D7IvOlUO8Ls8wBRskuVOiJit+H2iuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x9I52c7a; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ehw7sZCa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739451884; x=1770987884;
-  h=date:from:to:subject:message-id:references:mime-version:
-   in-reply-to;
-  bh=1ao/hLWrKoa83auIAZK5YxLztQb4shphbE+wPtgggOw=;
-  b=ehw7sZCaFPN8vo+vcxwqRsGX2LcEmDHVvaOPUZqy4nJ414sKxosrlsfn
-   C9IpP5yxdds95pgCt7/E04ihnetxQELcq6l8Us51jxtToe+t//sbAS3IA
-   tpbWvpmYHJ8Ow6D9MCQhsjzDyFoURO8pgTigFusyyZdOGos9BB6FrB87C
-   QGP94Fp4u0cNI+SihnAZVpPUMWq+FGZC96moLLKbena07hAJjXuTJVKwx
-   OhMc86V8QsmS5/jJzv779jXPOBMd4ikVQtGJQWGYooBfRvGOEhpqms/zZ
-   vnzgmDM8hUuv58ypF+yfUkwl4nqc81nBPRPvXNmPP7Ork/YjfQripKJLB
-   A==;
-X-CSE-ConnectionGUID: 0p+L1U/wRleR1huBOEpSCA==
-X-CSE-MsgGUID: mVPUQjgWR2KXFl3SEVZoZg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="62620706"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="62620706"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 05:04:44 -0800
-X-CSE-ConnectionGUID: +jlj1GxVRC2wIJFPhxSM/g==
-X-CSE-MsgGUID: 94nDy0MzRWeyG3Eoe5LYYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112975678"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 05:04:39 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tiYtQ-0000000BATf-1YMb;
-	Thu, 13 Feb 2025 15:04:36 +0200
-Date: Thu, 13 Feb 2025 15:04:36 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	Krzysztof Adamski <krzysztof.adamski@nokia.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Stefan Roese <sr@denx.de>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Subject: Re: [PATCH v1 1/8] i2c: Introduce i2c_10bit_addr_from_msg()
-Message-ID: <Z63t5KcQ6tq5uDG3@smile.fi.intel.com>
-References: <20250212163359.2407327-1-andriy.shevchenko@linux.intel.com>
- <20250212163359.2407327-2-andriy.shevchenko@linux.intel.com>
- <CAMuHMdW1wxQ0cddeE72D+Sii4HkT4bJfeTWX4-8FfHiFr+=3DA@mail.gmail.com>
- <Z6zwqbzd5evG0H2z@smile.fi.intel.com>
- <Z63DT_XdzEWrP4eR@shikoro>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x9I52c7a"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4395b367329so5412345e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 05:05:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739451916; x=1740056716; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iDZLTKxxQDiElbpYU/xxls41XiMypbn1c9DwAMmHY20=;
+        b=x9I52c7aXZhpVAfUTJB130E/cUxCl8VYVsarP/2SoMQLzqN4qIzjxKPhZm6JUjmzpv
+         6BoupP2jeBN9726dMQ85qexfHs7SgMEs3f2wMfUtcAeZmOy3wz1mLVz0jZsR4mcJ/kUP
+         F7iQou6hT076RTlu+YPJjEuk6r8k6K78HtKdp5J8mx2jdq7K74HEcg7YntGVeQtHpE5M
+         ZSLyJAWboSVakFIRC9VCY7Vb+5KQqIeiKP/NYxUP5YF6l+fV4NrGehW6XUOzDMnBKYir
+         gkskuJuZXcUWhudm68RGIIW3geTE0UCdapmSEL6D5nZP1sDz5ix5J0vXJ5sR9DPI4rsw
+         MAJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739451916; x=1740056716;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iDZLTKxxQDiElbpYU/xxls41XiMypbn1c9DwAMmHY20=;
+        b=eEMJPSyO2uji3kNSIpaplnXed3Psz0hcj5bspW58L7Tedd0TZFtceh04IHYnS8V4Qe
+         QqSGr7FLIWAIFj1LJjeX0VxaMM90sbmNWaYDS11ZGGwLOAmBvx+iDsHoJ5ChYqne2QFG
+         W1znkrALsdXv1pp9S+7eaZxEHY4vnI47wi+6ts0+PGAH8DmfxcWtCSY3/Y8sJRdxUVzR
+         yug8ppeML2CTo3NuSwt0K854aP9nKKwAkVycUjbazrjZL4GovfNXNwpoHa+uFZYBSaza
+         jqPsOkeB3pTcFlIVf45TpxxPlNTNJw7RZghVgGEfnMug8YGvjT4COmXQ3o+lLTtlkF3f
+         qrXQ==
+X-Gm-Message-State: AOJu0YzuL1/n8IDjD/XcMqTtcWUNaGl8644FAXxUhAgJgDTMzejdR1i6
+	c5sS4HMcnB4AvEHAtSrgyGIpyXN1C2zrqtKr72xIZPn4+/7oiWLEcC8tnu26kw8=
+X-Gm-Gg: ASbGncs2eHh3l5iIYnkZ8mz3YFwvIIipYLslKVCDLkdFIEt6mbPwntU585jfgh2NWXg
+	kPv6SqEGrVhxgXc/LJoDipnOTGu90aR5fThVtVfWmz264il6iUZclKhv21YO1rlHfdtaUSE9HHH
+	Xpa2ncxol6olJzH6HDD94cJ1atDF5Rv2bypUJAQ8FAuViDnreCD8OcQVNlbAQ55ZzjbWfSC3TuR
+	KpNjIKFSntj1erDI75PDvDB/4LXIl17UJIl/xr+/33q1/G0l7srQtGKSDHmESczoj9GAGwBg2U2
+	M+vD7r4eogsTKx2LO4REfqJi6xQo30CRS7oqCyP8yo4y+5Rl8uF1xED+UMsWfrCGxgM+7ng=
+X-Google-Smtp-Source: AGHT+IE5WnMtblBw9bIRTim3qtt24a1KeYp9jziJc9822H6YJkG6wfJIr/g5tZ1Z/h2vjMhWRm4IyA==
+X-Received: by 2002:a05:600c:2309:b0:439:59cf:8e0a with SMTP id 5b1f17b1804b1-439601a11afmr36920925e9.24.1739451916481;
+        Thu, 13 Feb 2025 05:05:16 -0800 (PST)
+Received: from ta2.c.googlers.com (169.178.77.34.bc.googleusercontent.com. [34.77.178.169])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43961884251sm17004025e9.31.2025.02.13.05.05.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 05:05:16 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+Date: Thu, 13 Feb 2025 13:05:14 +0000
+Subject: [PATCH v9 1/3] dt-bindings: firmware: add google,gs101-acpm-ipc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z63DT_XdzEWrP4eR@shikoro>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250213-gs101-acpm-v9-1-8b0281b93c8b@linaro.org>
+References: <20250213-gs101-acpm-v9-0-8b0281b93c8b@linaro.org>
+In-Reply-To: <20250213-gs101-acpm-v9-0-8b0281b93c8b@linaro.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Jassi Brar <jassisinghbrar@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ andre.draszik@linaro.org, kernel-team@android.com, willmcvicker@google.com, 
+ peter.griffin@linaro.org, daniel.lezcano@linaro.org, 
+ vincent.guittot@linaro.org, ulf.hansson@linaro.org, arnd@arndb.de, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739451915; l=2127;
+ i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
+ bh=ygfKgwFm02MPjCPY1HixRGigRORpbX7fhEuE+FfQvu4=;
+ b=p+BdejU3bp4Gn9o8URtHOIITqvqQBk9qAN4b77rnytls72rwCC5qbe+5PGAN7kGVTb6VHNFUE
+ JOS9Y0RwVIRByzxT/6brrSn8HdcGJjC2twSMQD/8ol6iU9XphUUIK2d
+X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
+ pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
 
-On Thu, Feb 13, 2025 at 11:02:55AM +0100, Wolfram Sang wrote:
-> 
-> Just a generic comment: please don't spend too much energy on 10-bit
-> support. I have never seen it used in the wild. It seems more like an
-> academic excercise.
+Add bindings for the Samsung Exynos ACPM mailbox protocol.
 
-Just for the record, AFAICS nomadik, octeon-core, qup, and maybe others
-(that are not covered in the series) have bugs for 10-bit address mode.
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../bindings/firmware/google,gs101-acpm-ipc.yaml   | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-FWIW, I2C_M_TEN is mentioned in a dozen of drivers outside of
-i2c subsystem folder.
+diff --git a/Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml b/Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml
+new file mode 100644
+index 000000000000..2cdad1bbae73
+--- /dev/null
++++ b/Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright 2024 Linaro Ltd.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/firmware/google,gs101-acpm-ipc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung Exynos ACPM mailbox protocol
++
++maintainers:
++  - Tudor Ambarus <tudor.ambarus@linaro.org>
++
++description: |
++  ACPM (Alive Clock and Power Manager) is a firmware that operates on the
++  APM (Active Power Management) module that handles overall power management
++  activities. ACPM and masters regard each other as independent hardware
++  component and communicate with each other using mailbox messages and
++  shared memory.
++
++  This binding is intended to define the interface the firmware implementing
++  ACPM provides for OSPM in the device tree.
++
++properties:
++  compatible:
++    const: google,gs101-acpm-ipc
++
++  mboxes:
++    maxItems: 1
++
++  shmem:
++    description:
++      List of phandle pointing to the shared memory (SHM) area. The memory
++      contains channels configuration data and the TX/RX ring buffers that
++      are used for passing messages to/from the ACPM firmware.
++    maxItems: 1
++
++required:
++  - compatible
++  - mboxes
++  - shmem
++
++additionalProperties: false
++
++examples:
++  - |
++    power-management {
++        compatible = "google,gs101-acpm-ipc";
++        mboxes = <&ap2apm_mailbox>;
++        shmem = <&apm_sram>;
++    };
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.48.1.502.g6dc24dfdaf-goog
 
