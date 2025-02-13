@@ -1,113 +1,134 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E84520F061
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 10:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F180B206F31
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 10:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739440980; cv=none; b=j7K1NbXQypmRY6mqF7Xe2OJcqFmpwk3mdG+8Jgf3CnR1MGvd5sEMl2oKom7akaWkTVQZDwVHLchyTIcDwzteS3V9MXnZwz0KQorX7MDT0plNw++QkJJeohJp7lH8xHL+M1Mrn/CbxsU1tjNMFl4RR1dj1z12T177cVYcl0XyKgg=
+	t=1739441117; cv=none; b=DaGfrGPrvzFy3xNjtyD9yjaHi5fJGflG5ZYwSN1374mKubLi2MOrtCvj2T0qyYcrGWfkI2mCLIIcJ6ew7si/IWimmRo/8nWepRZ9E150Gphlr/qqelFhh1xiMnLDO4Zz9L/KItVcA8a/KvzIYb4XW7oOBT3CIGI9NsFx+X71kD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739440980; c=relaxed/simple;
-	bh=UnlssmYuhIn+vcCNx5MG2qEpYo19Mi6vK6bTbOK52kg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mVe3m5kePwirvjm1GWxgF0fiyrQHFI30oM2yGm4kKa3dY7QH3tZ3Xv6NOLWIM3XIjFQKGCZN6rxkXrjjBQyz97tozlKgkd+hIJnNU6/TnszDRXCiOJxA//AdaWsnFFe6fKmOVFTvEG543zhY2kJkzc6trHj76Fg3u9B5WCCEMLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=lJ3Ixv9P; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1739441117; c=relaxed/simple;
+	bh=0406GFPtDEjE5dIMqr9miDjxVI9YA3p9INMJF/p9PUQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=TnFAz9qveftp7rEtOjcJldPq/x0kxeJT0JVJvSmeaUjJvMxSZpdmT6CERUGpVwDnTFOo867u7fad/5Vj8UQgGocZCyXi7u4EMFR+yosDNHrtsifOcrEQu68nY1otN4WYrpWcwVdpTraYWg5v4RJVa1Hv5lE6AFFVwLElmomFaoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OxnvmkgF; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="lJ3Ixv9P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=Unls
-	smYuhIn+vcCNx5MG2qEpYo19Mi6vK6bTbOK52kg=; b=lJ3Ixv9PpDUPZy+veSDx
-	ziTRqgIsOzwTnHddIoiDBXPFEseEJoG1keRyAs9yKz58AyHx+dto1xstv6SsJBlD
-	cHh0saavR8n2B+kcgw2b0pnrG2gzY/ztdM/09hWnqBLizcPgmLQUbecXC5SKKpDU
-	0lBVwBH+NU21FsEcURx5TU51xG56lNRQ4cYcGyd1Zj7giHXpsot/m1SaWaseV37U
-	rZSXdttsmML8+ouc7rvSRfjF8fBgpYLVdnGE27n8N1qseFjWwd81RvoT8HYywvDD
-	wJePDoyrx4FO03lPiva4MOrX0sVKdZbaUOFD7RS0GpCP7NkQznf4wpdyC7ZIKbZU
-	0g==
-Received: (qmail 1823272 invoked from network); 13 Feb 2025 11:02:55 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Feb 2025 11:02:55 +0100
-X-UD-Smtp-Session: l3s3148p1@JVB1KQMusMxehh99
-Date: Thu, 13 Feb 2025 11:02:55 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	Krzysztof Adamski <krzysztof.adamski@nokia.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Stefan Roese <sr@denx.de>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Subject: Re: [PATCH v1 1/8] i2c: Introduce i2c_10bit_addr_from_msg()
-Message-ID: <Z63DT_XdzEWrP4eR@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	Krzysztof Adamski <krzysztof.adamski@nokia.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Stefan Roese <sr@denx.de>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-References: <20250212163359.2407327-1-andriy.shevchenko@linux.intel.com>
- <20250212163359.2407327-2-andriy.shevchenko@linux.intel.com>
- <CAMuHMdW1wxQ0cddeE72D+Sii4HkT4bJfeTWX4-8FfHiFr+=3DA@mail.gmail.com>
- <Z6zwqbzd5evG0H2z@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OxnvmkgF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739441116; x=1770977116;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=0406GFPtDEjE5dIMqr9miDjxVI9YA3p9INMJF/p9PUQ=;
+  b=OxnvmkgFuQaeAM+L+ORo1Ok4Sr9Qdxqcw/4ZsCKLnCadxIOhYmKGWHd9
+   +O1JxG9i5lZLCEBH9uYMoXEbj4JCOWUQUxsuwb+s/3CleQWdu/faTQEY5
+   s3opnKDtG3yOXXXXNbDPLvxQt7nUD8WycQ9KuPZqcjJLPCYj0cvbn6LfN
+   PbsPrEGP8lMcUHdyPDq/DK389ZNs8efiDrDuUcCndyLsnp/F2IHj1DeU9
+   88xP5gcDcfIP18oi3+nMtLsagpI+gbnURtCVGyQTne7dp79jXRIxXP531
+   j+S24ppEAGkXrudlmz4ZTFnwwti5YeSgMblMrF4BJEhhhqCg/Ks2JCTmy
+   w==;
+X-CSE-ConnectionGUID: BzNh4Q5+SRqYjjmeQynEnA==
+X-CSE-MsgGUID: 9K4SJvseTL6QlG2N6eEmzA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="65488297"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="65488297"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 02:05:15 -0800
+X-CSE-ConnectionGUID: ndRMcKpXS8KLBnxiHfgZzQ==
+X-CSE-MsgGUID: K4k22xYdSIuGToVNQnMcmw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="112864984"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 13 Feb 2025 02:05:13 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tiW5m-0016tm-1X;
+	Thu, 13 Feb 2025 10:05:10 +0000
+Date: Thu, 13 Feb 2025 18:05:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wang Qing <wangqing@vivo.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Tony Lindgren <tony@atomide.com>
+Subject: arch/arm/mach-omap2/clockdomain.c:1303: warning: Function parameter
+ or struct member 'unused' not described in '_clkdm_save_context'
+Message-ID: <202502131858.NrCAEuh6-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="knIGSBLjShPS7lvY"
-Content-Disposition: inline
-In-Reply-To: <Z6zwqbzd5evG0H2z@smile.fi.intel.com>
-
-
---knIGSBLjShPS7lvY
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
+Hi Wang,
 
-Just a generic comment: please don't spend too much energy on 10-bit
-support. I have never seen it used in the wild. It seems more like an
-academic excercise.
+FYI, the error/warning still remains.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   4dc1d1bec89864d8076e5ab314f86f46442bfb02
+commit: 320f6f90cbe4818cf0d0f9441772d23aa441c506 ARM: OMAP2+: fix spellint typo
+date:   4 years, 1 month ago
+config: arm-randconfig-r011-20220722 (https://download.01.org/0day-ci/archive/20250213/202502131858.NrCAEuh6-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250213/202502131858.NrCAEuh6-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502131858.NrCAEuh6-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   arch/arm/mach-omap2/clockdomain.c:546: warning: Function parameter or struct member 'user' not described in 'clkdm_for_each'
+   arch/arm/mach-omap2/clockdomain.c:1003: warning: expecting prototype for clkdm_deny_idle(). Prototype was for clkdm_deny_idle_nolock() instead
+   arch/arm/mach-omap2/clockdomain.c:1165: warning: Function parameter or struct member 'unused' not described in 'clkdm_clk_enable'
+   arch/arm/mach-omap2/clockdomain.c:1165: warning: Excess function parameter 'clk' description in 'clkdm_clk_enable'
+   arch/arm/mach-omap2/clockdomain.c:1303: warning: Function parameter or struct member 'clkdm' not described in '_clkdm_save_context'
+>> arch/arm/mach-omap2/clockdomain.c:1303: warning: Function parameter or struct member 'unused' not described in '_clkdm_save_context'
+   arch/arm/mach-omap2/clockdomain.c:1316: warning: Function parameter or struct member 'clkdm' not described in '_clkdm_restore_context'
+>> arch/arm/mach-omap2/clockdomain.c:1316: warning: Function parameter or struct member 'unused' not described in '_clkdm_restore_context'
 
 
---knIGSBLjShPS7lvY
-Content-Type: application/pgp-signature; name="signature.asc"
+vim +1303 arch/arm/mach-omap2/clockdomain.c
 
------BEGIN PGP SIGNATURE-----
+d459bfe01f5239 Paul Walmsley 2008-08-19  1295  
+1096d1c10bb3d8 Russ Dill     2018-05-16  1296  /**
+1096d1c10bb3d8 Russ Dill     2018-05-16  1297   * _clkdm_save_context - save the context for the control of this clkdm
+1096d1c10bb3d8 Russ Dill     2018-05-16  1298   *
+1096d1c10bb3d8 Russ Dill     2018-05-16  1299   * Due to a suspend or hibernation operation, the state of the registers
+1096d1c10bb3d8 Russ Dill     2018-05-16  1300   * controlling this clkdm will be lost, save their context.
+1096d1c10bb3d8 Russ Dill     2018-05-16  1301   */
+320f6f90cbe481 Wang Qing     2020-09-17  1302  static int _clkdm_save_context(struct clockdomain *clkdm, void *unused)
+1096d1c10bb3d8 Russ Dill     2018-05-16 @1303  {
+1096d1c10bb3d8 Russ Dill     2018-05-16  1304  	if (!arch_clkdm || !arch_clkdm->clkdm_save_context)
+1096d1c10bb3d8 Russ Dill     2018-05-16  1305  		return -EINVAL;
+1096d1c10bb3d8 Russ Dill     2018-05-16  1306  
+1096d1c10bb3d8 Russ Dill     2018-05-16  1307  	return arch_clkdm->clkdm_save_context(clkdm);
+1096d1c10bb3d8 Russ Dill     2018-05-16  1308  }
+1096d1c10bb3d8 Russ Dill     2018-05-16  1309  
+1096d1c10bb3d8 Russ Dill     2018-05-16  1310  /**
+1096d1c10bb3d8 Russ Dill     2018-05-16  1311   * _clkdm_restore_context - restore context for control of this clkdm
+1096d1c10bb3d8 Russ Dill     2018-05-16  1312   *
+1096d1c10bb3d8 Russ Dill     2018-05-16  1313   * Restore the register values for this clockdomain.
+1096d1c10bb3d8 Russ Dill     2018-05-16  1314   */
+320f6f90cbe481 Wang Qing     2020-09-17  1315  static int _clkdm_restore_context(struct clockdomain *clkdm, void *unused)
+1096d1c10bb3d8 Russ Dill     2018-05-16 @1316  {
+1096d1c10bb3d8 Russ Dill     2018-05-16  1317  	if (!arch_clkdm || !arch_clkdm->clkdm_restore_context)
+1096d1c10bb3d8 Russ Dill     2018-05-16  1318  		return -EINVAL;
+1096d1c10bb3d8 Russ Dill     2018-05-16  1319  
+1096d1c10bb3d8 Russ Dill     2018-05-16  1320  	return arch_clkdm->clkdm_restore_context(clkdm);
+1096d1c10bb3d8 Russ Dill     2018-05-16  1321  }
+1096d1c10bb3d8 Russ Dill     2018-05-16  1322  
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmetw0sACgkQFA3kzBSg
-Kba7ew/+Kqcp2Fze4DeH75uP2OB/QbNpx80sb7qHDvTBoOdL9TX6daJGbx9NejYD
-4cXfgTJtWcAuiwn1QkGFPTMUqUzpc/0KOK3GC6OAGvm5ey4/HDXKzBiue8zKbiOa
-da195dsvzjs7f9kMARVNMzzqXYr3NZXcLAZDPlR2ifCiFGVnK3xYkUPACWjZEWzI
-fy15U37jiPuCE/3TSHBc+1/q8p2T/vQ2h0AApKD8NgpsnORqYx5oeXMf/ztjI+RM
-vfzNPKvxb6Y2ppaPZWx6teAZfCA52Bn2twzmbwQBpsRdR8s8lUp00IO9aX/xZGQi
-zCVMD74Kz7B0lvmAvJHv/23vHofoRiZmIATiL0zl6u2wm1zlzsTv0zFk0PVqBLGZ
-ZZ3DEOORzPNpfx/csYx9U1J0L1OIoqgc+/y2FnfQIIXmTOvnwHNJb9AD5pTr7b1u
-YjfwprDAc9yJI/ps63zcYwioTc6CjTENNLeHwTSFgmjdvPn2KJTLNiG5GHB8zY5T
-QrOPvOGOI2hLs6LbWrCxQnRcrItIsjAV8ClxwlTRIllAXeqMZAc+2W6KhmukwsOs
-Uin3nyrmWNw1vx50tN/mJ+BeN7A5Kh9vhwLp1+40Auz5CUErrJtyfuPV8kNzH8wz
-5zooWxoWZMwZ2x2SFgTy1iVtPJZ9m0ytQi6P+Yv6Xu8uqDgy+Q0=
-=+YyW
------END PGP SIGNATURE-----
+:::::: The code at line 1303 was first introduced by commit
+:::::: 1096d1c10bb3d869b5630dfa88f4c18f3d579752 ARM: OMAP2+: Add functions to save and restore clockdomain context en-masse.
 
---knIGSBLjShPS7lvY--
+:::::: TO: Russ Dill <Russ.Dill@ti.com>
+:::::: CC: Tony Lindgren <tony@atomide.com>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
