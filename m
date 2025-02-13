@@ -1,75 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A20242908;
-	Thu, 13 Feb 2025 16:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F5224293C
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739464693; cv=none; b=D1N8mhn5CmYcPAc0RbaKDRT5tF19fkojHuVNIBQ+OhKtcT49KjK1HxPzoXq42DcQD9sfziahbAMs0szrf8QbQ6Z145O6vCjpfH2kOQEKWGbHm7DS34TnDc65qsxJg+nmXVAYx02OYZpPY6Pv/hormZlXRAyPu7yopttzYtMja8c=
+	t=1739464702; cv=none; b=mh/+GH+yKgkdghkcEs2XxDwTt4pAtzthFo5u+iU0RajI22cJiYphsRc86yaJyjqXRhpxVEJoueVs5zTSKgPs+ggdBtQ0Id410vqMu+eb1q56MKBJNCMplevHfNNnQQM/D5bqFIg+/5Dx9L9Cdt/tSm5N6JuyjIMYBe/kOovxogE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739464693; c=relaxed/simple;
-	bh=Z4F6lLs5DIJbPs+bwuRZBqYEa3kLjWUhgDzZWRR+fM8=;
+	s=arc-20240116; t=1739464702; c=relaxed/simple;
+	bh=B5qWNfoYlBUiLxITY+9+aauApKTPG+g5BRSPRnoh8jg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JPfxYddmi+yr6DvT/w/9ldSvnK22Qea+/1T6nYjXq8Pdo+X+L1BhCTwPY1peMyT6qmjNnL7134UqHP4fSVXg+IIBYEiKkYalhmgnT2jtKndPCQd3juEWKMR68JFYJys+0Eo3yQIs0s2g458x5CaCvBP/PtFO0gzOHh2Mhyo9c5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=axcWBZ+7; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hfT+Gr1n13iIji/pXJaJO5WtYkV1Kg+F5f5HE3E9uNAumkDrP3ubiRd8E+AppcAs7z68RYMd1KsPKr3yVRU5t3iVjgnb0LkTOuZ1nKubz7TcQ9/ua+CRLXArTBHtJTTvZYzdstSD20Smmj/W01VoTrrvyrPiS/ca/rBEN7VmNl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W9nYBn4l; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="axcWBZ+7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739464692; x=1771000692;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Z4F6lLs5DIJbPs+bwuRZBqYEa3kLjWUhgDzZWRR+fM8=;
-  b=axcWBZ+7WsgafvA1HPWo7UoyuASzT1FIDSUSm0yE2L3TNNsy+DNO8K+D
-   g+dps3mdJW54nJ1cIwxd6n0sXQC1Ai06Plx+5/Frytzn4smojmRBskZ4v
-   SuBwKzpSZTd3FBFRVPit82Ox2CQD+ODRGPZ/LhnlLIP3Gnl8mAUl8ESEa
-   FCgPH4L9w/RnRE1Xl02LAKGAutHc+JsplyN/hhA+6c07OfDfbTcCOrTLx
-   3n09DFtNkVnyEmx+Xrg03LCYiTmbsVgntc7HRzH/0NSfYSyjlqv8rXq5h
-   HyKmSP+2QFlJ3t+4+okOEcxm37IZwdDfrzuEaeq+bc3SLElMO8h+SiHhs
-   w==;
-X-CSE-ConnectionGUID: hpl5/Cy6S5+xcAk4w/WYkw==
-X-CSE-MsgGUID: 19hP06hkRMCCs2mehMjoiA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="57584173"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="57584173"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 08:37:47 -0800
-X-CSE-ConnectionGUID: niTSu+OLRH6SflrjdnL4zw==
-X-CSE-MsgGUID: nDLWUmqKQx2tp+6jE5OMkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="118279941"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 08:37:43 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1ticDb-0000000BDvA-3sGX;
-	Thu, 13 Feb 2025 18:37:39 +0200
-Date: Thu, 13 Feb 2025 18:37:39 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	Krzysztof Adamski <krzysztof.adamski@nokia.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Kamal Dasu <kamal.dasu@broadcom.com>, Stefan Roese <sr@denx.de>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Subject: Re: [PATCH v2 07/10] i2c: mt7621: Use i2c_10bit_addr_*_from_msg()
- helpers
-Message-ID: <Z64f08OhKlXuoYP-@smile.fi.intel.com>
-References: <20250213141045.2716943-1-andriy.shevchenko@linux.intel.com>
- <20250213141045.2716943-8-andriy.shevchenko@linux.intel.com>
- <ceb1cb01-78b8-4ed4-b4fc-23fdac78ab21@collabora.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W9nYBn4l"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-307d1ab59c6so11438821fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 08:38:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739464699; x=1740069499; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=H7oNCp/RNw3t/6zsGfDVg/YzDuWbFw2qOHPXbSLVPyM=;
+        b=W9nYBn4lgLCcIBYQerBHFujHHOJ3XcJLsxoZDBzXbWMIIcjHIcxI/ZGhrweg/prXll
+         b2Guacgl8kzDCeH7NmaOPM531okS2Tpi1b+ujz70wEGrp8fUMoeEY/2f+uFBTFccBUEE
+         d4JpCKOu3Xyfs8wH5vEcYsgIqz04YPX2XVug68HAoBVG7JZTCZWWvUlAD6y28VY+Pj+N
+         u+wwuNAv09tGq5OVQapyUYfJMdYMr6jfdLmvobi3WyEbaSw8AbqAbgX7ZyQpjTWJUNvd
+         0IhQjYHHO00gn1EmhW4EHgGjfqCjKoAC+mXYpLB14YIgx0xFvqCHbeZUZDhLDSBVOToF
+         LzYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739464699; x=1740069499;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H7oNCp/RNw3t/6zsGfDVg/YzDuWbFw2qOHPXbSLVPyM=;
+        b=pfIOcjZjM9LnwqUyYQ0PgD2kwWkFG/T/Bc043gxwbtkQ5VngZYqPcjdOo3+0bIpt6X
+         SCVVLqHKyCznbvGcwP2kWm0dEFSxRxrUyaaKZJ6mxjyQeAirmPNj9Fan4q6qExC7/zRk
+         DWfQNUl9GitYgKQegXggOI0tosP5ETu1awGMqwqAV6r7BmZPmYM+RKpP027AbFnzg7dJ
+         GUOrUgxSNSSOEjuwRzZ2OXHGtNNL/WNZ9Xs4+RgyFJjjw0y2q9TkXEHef5LBYT8zjviO
+         GDMzQ/CMNAxqidcQp//6Pj9opDoHIwTs7ab8XdD7vdJddRiiUIiO0wrxmoE5xEwJUsZd
+         BUQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVvAHkorRdF2jqhrISnfFSw9YvZOTGcMlrrOo5jvZ+OprUsUJ1BaAFzV3/m8Y7Zole2OM4yBeluc71/ldw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxALS5oQunJYAfA3DxYpRz0fU3yNPCiJCKfnHu22Rc1Bi0+qMu9
+	dP53MLmYR7LbpLlNDMUdZK4qWFY4nFywxbMO/rR+sbG5zVOc+C0k+Vf/zDwunTM=
+X-Gm-Gg: ASbGncsu1QpYzvstFRTpSomX+ABRYn7D7IK/Q69lQjmI96fZ194lkMGSyLcgA4zPUOo
+	WUwcPKGx73uSesECCi3zud5BI13CzKv8r+6BtV8vHEdU9+PuddQVQhk8WXOBLMXRZ0/9/mWf/32
+	XHik3bLUtMyWBZ4ShthNzSW9dh4aG9Vsbcpi22MVRI1xDEMjyCDUVH3DMZ6z8LOYu2S/xi/KnKh
+	xPrvxoz5V6eiguB5uITb8pDj6AzOvPe/XVEo9mqj3MUKlySdeFOUZtuWXhelP58meEjmZRv77Xg
+	4dzN7LqpCBaI7y9g0xz2qKV6qgYV4KfxP5gr4Ra08hyFfUSOZqCpdy4Ope3YYgS/JuYFDm4=
+X-Google-Smtp-Source: AGHT+IGW0S6KCFdTWz+vmS0HhCwPaLiMVHP6qtL5u7XOftiqOSqmrNbkzxLuEikhD4tCSFf2PgGIuA==
+X-Received: by 2002:a05:6512:3e14:b0:544:1093:ee3a with SMTP id 2adb3069b0e04-545181165a8mr3170001e87.24.1739464699023;
+        Thu, 13 Feb 2025 08:38:19 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5451f09aa6csm220892e87.60.2025.02.13.08.38.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 08:38:17 -0800 (PST)
+Date: Thu, 13 Feb 2025 18:38:15 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 34/37] drm/bridge: tc358775: Switch to atomic commit
+Message-ID: <ydee2uig6zpjzmvbprz74z2yhsxrfqh6wvtr573ajzpkx7dfqp@me5npf22nypv>
+References: <20250213-bridge-connector-v3-0-e71598f49c8f@kernel.org>
+ <20250213-bridge-connector-v3-34-e71598f49c8f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,27 +78,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ceb1cb01-78b8-4ed4-b4fc-23fdac78ab21@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250213-bridge-connector-v3-34-e71598f49c8f@kernel.org>
 
-On Thu, Feb 13, 2025 at 05:01:20PM +0100, AngeloGioacchino Del Regno wrote:
-> Il 13/02/25 15:07, Andy Shevchenko ha scritto:
-> > Use i2c_10bit_addr_*_from_msg() helpers instead of local copy.
-> > No functional change intended.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Thu, Feb 13, 2025 at 03:43:53PM +0100, Maxime Ripard wrote:
+> The tc358775 driver follows the drm_encoder->crtc pointer that is
+> deprecated and shouldn't be used by atomic drivers.
 > 
-> Can we please do the helper conversion as one commit and the (much needed)
-> cleanup of assigning len and de-duplicating the call to mtk_i2c_cmd() as
-> two commits?
+> This was due to the fact that we did't have any other alternative to
+> retrieve the CRTC pointer. Fortunately, the CRTC pointer is now provided
+> in the bridge state, so we can move to atomic callbacks and drop that
+> deprecated pointer usage.
 > 
-> One with just the conversion, one with the cleanup (or in inverse order,
-> as you wish).
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>  drivers/gpu/drm/bridge/tc358775.c | 41 +++++++++++++++++----------------------
+>  1 file changed, 18 insertions(+), 23 deletions(-)
+> 
 
-Yes we can.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+With best wishes
+Dmitry
