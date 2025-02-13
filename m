@@ -1,252 +1,142 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E5824BBE0;
-	Thu, 13 Feb 2025 13:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A98338389
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739455003; cv=none; b=ZegdpDrvpWAqCuKYCtMsMkQqcA99QGp/bZZAHndJSZPuJhzrNcyYoRXpwHHPVVqCd6ewwTx+2OUy9r1yfFOpNwX/NBCLxdjBNu1NxtPixDSO5KBBZVgeomlqvsXbO3o044tvsaWJezY7VCb451Z+RruxYPn679VfePD7eBg0dy4=
+	t=1739455004; cv=none; b=epJ2DytmNP/DCvUZVPu+wWEkjRlMv7hAtIPiXuEzojsfYWRTuEO9p3Y/FwLtYhg5jKOfBXWfDj9g5t5ffVicSnXTlTh572zxAVOcgGu5JLVMxziVfvGXWpip3EB99ITZh/UrwnoFjOXT/LJfSnGVdV+AGJ2iFkGxHXVpAQl0Wkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739455003; c=relaxed/simple;
-	bh=MjbfY61IU0YUEm7VqTwHxj+rCjCkApQN3mOQK0DAL34=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cMLF2wH7mWMCTsJyvdI8bhRvFpBGHmfSyGAdnkpTzxcUj1nPJUaWpi7sC4gveSvo1K9U2MCOXrnEJhvr4QRiZo9yz8w2lFvERbiu21JncKOI7b1TJ9PaAugDpEl8PIj6rjT0SU/2MDzmRclVQ4JdqnYZ5IR7bb+wto3h2nkKd9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IgFTW3VU; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739455004; c=relaxed/simple;
+	bh=gKR0VUGxdh0cr2JhegKNYOQZ5sBrhLajIFrYqh1qMs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ENWhsoQ1A4ca4gxvEShOk2XRoNabQkR/tqBRxSy0EdC0h1Cay+iEc+Ko0F4VL1FHH50haMt5cr4LXuW7RlOTVHw/V/K9tTrrWLyxYoUThKYXlXIPhZ+RPHlSWmuUu//ukzeIt48LLZETNlv1Pm1bwBe04/mJnetXfBneHKZ+qe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U85BoUYP; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IgFTW3VU"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54509f46614so896862e87.0;
-        Thu, 13 Feb 2025 05:56:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739454999; x=1740059799; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b1IGkQScRodOBygrIsMSnLoiENI5KM9I94X/GE+75SU=;
-        b=IgFTW3VUoGra4JzCs/phe+2ZBekGCX5d6ybAaKMUBTW7L0Hftahf4ysFSBp+yo37Bs
-         a/mLFCL8aYzl/7vQjy5y6llDL/WE4Ulutu4l0UXy3WN5zFNN0htelMutFbmr8C+tIP5H
-         c+YStMWcSMxm3u5PwCe6cLldOEE5JHNErrztNZlo7ZahAbnZyEFB3IxM6bw8IIrk3kFV
-         /URUO4osDyo/0dLAsg5gwE6/+8S6zdveK5pf21P7Hbi9ejWmhyPZVswd0/T6BursnHSQ
-         101pUJXdQVbtk6XkZh4fy3eaKUhQgpIe9lFcXDXZHmcJECLHzUmdvwn1ZdJpyrWhUs2i
-         wrOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739454999; x=1740059799;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b1IGkQScRodOBygrIsMSnLoiENI5KM9I94X/GE+75SU=;
-        b=GPOf6cVqpDfbyPVOUij0gFv5qSh14jj6LIEn5h9LdU3i6mjb8to//U8Tye8KQU+Vmt
-         x0hWwpPVrGgTrDnglQ2S/GRH9FqIM7V1kH+OAlpt64isjsGZKSiNhmbcGDFQF3FfCytG
-         is3C2AaagUcvxSrUMgzGxFYaxx+i+H8N7wqIYeuZwXKghmWr1/NQ7raftRPsZv1ZDQ4p
-         ldmUE9BdrhkITxeWSIDKFbpT0+qGjzWVP4uhhKa2JSDeYOJfWEFBYgtOQ2JrwEYj/E+k
-         a8ZcMTRPpPF2Reig7RhlrdNB1N+sAY1itfy9RifL2IF/U+tANn2d/XqM35PHAnTScg6d
-         6w4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ9onLUzVCl4a6bULjHjt49rkANlmi/ZFc9gk5f9ot7gmhzQir/UBix51eG0IP1lIR+oZekhgquah4@vger.kernel.org, AJvYcCW8MM3MhG/9N8UmvYVGhUUMT9LiwgALCa7NlsuTTXhiDczhdMtKknX8hHuz/gxCL2KFftqQ6MU0q/fOaKOx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4JEeejZKBlpeP4jXVkpLfkdRT0aYIZuLndPD8S+y3pZpo76mc
-	HdPjdTvDzOb0H8gwDW17pcAY7bzmKPEJ9NWywNS7Hq2NapKgbMGm
-X-Gm-Gg: ASbGncsuKPHlwcUoFBrTtcD5AlBzsozk2CHRr044eRCW0J/zOlPhJGoCCheCAqeM96C
-	pQvvwVpjMTefhoQPhAOU+FtSPuka0dKFWK2MiOa7hPNHVzxcwGOrfZgYlNbqlCTp69BivFsaS9Z
-	EFsdE3mi033WSLJLaajVxohURtbZmaeotcCLZvlCs6mbM5/WdiA8Yy7h+ytaseHj4evlb6L9CKg
-	4KGa0aulAKS169EDdI0PXnLtSRIdHKsMSkZRzPTb60RRQatY7xTd/k7qURKXNRsupJJXcuciXWC
-	qAIGzw==
-X-Google-Smtp-Source: AGHT+IEQ5oFs1ifcABBwjOpA5t4U65S3XXvUcxsC19cuCWeiLav/s9wwWL2jOoOY4wqwjyi0rQBVhA==
-X-Received: by 2002:a05:6512:3d0d:b0:545:d7d:ac4a with SMTP id 2adb3069b0e04-545181771d1mr2208375e87.36.1739454998935;
-        Thu, 13 Feb 2025 05:56:38 -0800 (PST)
-Received: from xeon.. ([188.163.112.51])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5451f105cdcsm177789e87.116.2025.02.13.05.56.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 05:56:38 -0800 (PST)
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] dt-bindings: display: bridge: Document Solomon SSD2825
-Date: Thu, 13 Feb 2025 15:56:04 +0200
-Message-ID: <20250213135605.157650-2-clamor95@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250213135605.157650-1-clamor95@gmail.com>
-References: <20250213135605.157650-1-clamor95@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U85BoUYP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739455001; x=1770991001;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=gKR0VUGxdh0cr2JhegKNYOQZ5sBrhLajIFrYqh1qMs4=;
+  b=U85BoUYP8z75FSi8h4KMnM31NhPqMhKgiYbbkf0jdq6lSc/kQvUelhD8
+   oeeaJXrhheGuDiEiX7UHRen4kVj+v/20E2/vsX57HLktFzTBC6LQIHCP8
+   fSylQuvgLWXx8lJx/cbeOQVhkpKJjdP1JkY8EP0ce6r1/YdGrJpIJW7gC
+   79yxqRxLxf0HWRkam4Ug9MjS7wM3fRQ6BmBW5NHsbUIBIMJQfWtM0athe
+   +3q9mmymhXK7sCfWLUk5auEM1/GxYLPXL7GJW0yAuvWCm5pkbTG+0BNvb
+   BAQCZvq3n3khUbLgLroWHoBzMiKWoxIqb5Z9xPW+tEmfyDfM2ZDedXjM9
+   g==;
+X-CSE-ConnectionGUID: iVgchGv5TOm5+57WKuXl7A==
+X-CSE-MsgGUID: A+yRT8VcTzCLlzayFQ/d2g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="57691518"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="57691518"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 05:56:39 -0800
+X-CSE-ConnectionGUID: A7OBQl8zQKC8bG+Kg5TsMA==
+X-CSE-MsgGUID: XL96oDiVSreBqsp/IxEhIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="136376497"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 13 Feb 2025 05:56:38 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tiZhj-00177J-1m;
+	Thu, 13 Feb 2025 13:56:35 +0000
+Date: Thu, 13 Feb 2025 21:55:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Quinn Tran <qutran@marvell.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Himanshu Madhani <himanshu.madhani@oracle.com>,
+	Nilesh Javali <njavali@marvell.com>
+Subject: drivers/scsi/qla2xxx/qla_isr.c:3724: warning: Function parameter or
+ struct member 'rsp_q_in' not described in 'qla_chk_cont_iocb_avail'
+Message-ID: <202502132151.4yPO6rz0-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Add bindings for Solomon SSD2825 MIPI master bridge chip that connects an
-application processor with traditional parallel LCD interface and an LCD
-driver with MIPI slave interface. The SSD2825 supports both parallel RGB
-interface and serial SPI interface.
+Hi Quinn,
 
-Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
----
- .../display/bridge/solomon,ssd2825.yaml       | 140 ++++++++++++++++++
- 1 file changed, 140 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml
+FYI, the error/warning still remains.
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml b/Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml
-new file mode 100644
-index 000000000000..cd7ff971495c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml
-@@ -0,0 +1,140 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/solomon,ssd2825.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Solomon SSD2825 RGB to MIPI-DSI bridge
-+
-+maintainers:
-+  - Svyatoslav Ryhel <clamor95@gmail.com>
-+
-+allOf:
-+  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-+
-+properties:
-+  compatible:
-+    const: solomon,ssd2825
-+
-+  reg:
-+    maxItems: 1
-+
-+  reset-gpios: true
-+
-+  dvdd-supply:
-+    description: Regulator for 1.2V digital power supply.
-+
-+  avdd-supply:
-+    description: Regulator for 1.2V analog power supply.
-+
-+  vddio-supply:
-+    description: Regulator for 1.8V IO power supply.
-+
-+  spi-max-frequency:
-+    maximum: 1000000
-+
-+  spi-cpha: true
-+  spi-cpol: true
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: tx_clk
-+
-+  solomon,hs-zero-delay-ns:
-+    description:
-+      HS zero delay period
-+    default: 133
-+
-+  solomon,hs-prep-delay-ns:
-+    description:
-+      HS prep delay period
-+    default: 40
-+
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/$defs/port-base
-+        unevaluatedProperties: false
-+        description:
-+          Video port for RGB input
-+
-+        properties:
-+          endpoint:
-+            $ref: /schemas/graph.yaml#/$defs/endpoint-base
-+            unevaluatedProperties: false
-+
-+            properties:
-+              bus-width:
-+                enum: [ 16, 18, 24 ]
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          Video port for DSI output (panel or connector)
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+required:
-+  - compatible
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        dsi@2 {
-+            compatible = "solomon,ssd2825";
-+            reg = <2>;
-+
-+            spi-max-frequency = <1000000>;
-+
-+            spi-cpha;
-+            spi-cpol;
-+
-+            reset-gpios = <&gpio 114 GPIO_ACTIVE_LOW>;
-+
-+            dvdd-supply = <&vdd_1v2>;
-+            avdd-supply = <&vdd_1v2>;
-+            vddio-supply = <&vdd_1v8_io>;
-+
-+            solomon,hs-zero-delay-ns = <300>;
-+            solomon,hs-prep-delay-ns = <65>;
-+
-+            clocks = <&ssd2825_tx_clk>;
-+            clock-names = "tx_clk";
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+
-+                    bridge_input: endpoint {
-+                        remote-endpoint = <&dpi_output>;
-+                        bus-width = <24>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+
-+                    bridge_output: endpoint {
-+                        remote-endpoint = <&panel_input>;
-+                    };
-+                };
-+            };
-+        };
-+    };
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   4dc1d1bec89864d8076e5ab314f86f46442bfb02
+commit: c019cd656e717349ff22d0c41d6fbfc773f48c52 scsi: qla2xxx: edif: Fix dropped IKE message
+date:   2 years, 7 months ago
+config: i386-randconfig-011-20240921 (https://download.01.org/0day-ci/archive/20250213/202502132151.4yPO6rz0-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250213/202502132151.4yPO6rz0-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502132151.4yPO6rz0-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/scsi/qla2xxx/qla_isr.c:3724: warning: Function parameter or struct member 'rsp_q_in' not described in 'qla_chk_cont_iocb_avail'
+
+
+vim +3724 drivers/scsi/qla2xxx/qla_isr.c
+
+e84067d7430107 Duane Grigsby 2017-06-21  3713  
+fac2807946c10b Quinn Tran    2021-06-23  3714  /**
+fac2807946c10b Quinn Tran    2021-06-23  3715   * qla_chk_cont_iocb_avail - check for all continuation iocbs are available
+fac2807946c10b Quinn Tran    2021-06-23  3716   *   before iocb processing can start.
+fac2807946c10b Quinn Tran    2021-06-23  3717   * @vha: host adapter pointer
+fac2807946c10b Quinn Tran    2021-06-23  3718   * @rsp: respond queue
+fac2807946c10b Quinn Tran    2021-06-23  3719   * @pkt: head iocb describing how many continuation iocb
+fac2807946c10b Quinn Tran    2021-06-23  3720   * Return: 0 all iocbs has arrived, xx- all iocbs have not arrived.
+fac2807946c10b Quinn Tran    2021-06-23  3721   */
+fac2807946c10b Quinn Tran    2021-06-23  3722  static int qla_chk_cont_iocb_avail(struct scsi_qla_host *vha,
+c019cd656e7173 Quinn Tran    2022-07-12  3723  	struct rsp_que *rsp, response_t *pkt, u32 rsp_q_in)
+fac2807946c10b Quinn Tran    2021-06-23 @3724  {
+c019cd656e7173 Quinn Tran    2022-07-12  3725  	int start_pkt_ring_index;
+c019cd656e7173 Quinn Tran    2022-07-12  3726  	u32 iocb_cnt = 0;
+fac2807946c10b Quinn Tran    2021-06-23  3727  	int rc = 0;
+fac2807946c10b Quinn Tran    2021-06-23  3728  
+fac2807946c10b Quinn Tran    2021-06-23  3729  	if (pkt->entry_count == 1)
+fac2807946c10b Quinn Tran    2021-06-23  3730  		return rc;
+fac2807946c10b Quinn Tran    2021-06-23  3731  
+fac2807946c10b Quinn Tran    2021-06-23  3732  	/* ring_index was pre-increment. set it back to current pkt */
+fac2807946c10b Quinn Tran    2021-06-23  3733  	if (rsp->ring_index == 0)
+fac2807946c10b Quinn Tran    2021-06-23  3734  		start_pkt_ring_index = rsp->length - 1;
+fac2807946c10b Quinn Tran    2021-06-23  3735  	else
+fac2807946c10b Quinn Tran    2021-06-23  3736  		start_pkt_ring_index = rsp->ring_index - 1;
+fac2807946c10b Quinn Tran    2021-06-23  3737  
+c019cd656e7173 Quinn Tran    2022-07-12  3738  	if (rsp_q_in < start_pkt_ring_index)
+c019cd656e7173 Quinn Tran    2022-07-12  3739  		/* q in ptr is wrapped */
+c019cd656e7173 Quinn Tran    2022-07-12  3740  		iocb_cnt = rsp->length - start_pkt_ring_index + rsp_q_in;
+fac2807946c10b Quinn Tran    2021-06-23  3741  	else
+c019cd656e7173 Quinn Tran    2022-07-12  3742  		iocb_cnt = rsp_q_in - start_pkt_ring_index;
+fac2807946c10b Quinn Tran    2021-06-23  3743  
+c019cd656e7173 Quinn Tran    2022-07-12  3744  	if (iocb_cnt < pkt->entry_count)
+fac2807946c10b Quinn Tran    2021-06-23  3745  		rc = -EIO;
+fac2807946c10b Quinn Tran    2021-06-23  3746  
+c019cd656e7173 Quinn Tran    2022-07-12  3747  	ql_dbg(ql_dbg_init, vha, 0x5091,
+c019cd656e7173 Quinn Tran    2022-07-12  3748  	       "%s - ring %p pkt %p entry count %d iocb_cnt %d rsp_q_in %d rc %d\n",
+c019cd656e7173 Quinn Tran    2022-07-12  3749  	       __func__, rsp->ring, pkt, pkt->entry_count, iocb_cnt, rsp_q_in, rc);
+fac2807946c10b Quinn Tran    2021-06-23  3750  
+fac2807946c10b Quinn Tran    2021-06-23  3751  	return rc;
+fac2807946c10b Quinn Tran    2021-06-23  3752  }
+fac2807946c10b Quinn Tran    2021-06-23  3753  
+
+:::::: The code at line 3724 was first introduced by commit
+:::::: fac2807946c10b9a509b9c348afd442fa823c5f7 scsi: qla2xxx: edif: Add extraction of auth_els from the wire
+
+:::::: TO: Quinn Tran <qutran@marvell.com>
+:::::: CC: Martin K. Petersen <martin.petersen@oracle.com>
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
