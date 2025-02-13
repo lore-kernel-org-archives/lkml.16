@@ -1,167 +1,208 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E0620E6F9
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7A9202C58
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739438090; cv=none; b=qYkHjR2lQk9Jm6ePxYT5v2MRjnLWM18N5uSUyX0SX/G9QUtHkYds9oUrd2LCagrzw+Qr4yXUZo5Ud3/aBZSPqRdrDAgJPXTmuzKTWaq8oe+UacIXqanBfEwGmxsa4/oWwfJ4op0mIxSs2sT5m1ikTNb3QtimlETmoufOQBC6tTk=
+	t=1739438175; cv=none; b=S/+GXW3FhipHWjkS67wLjdVuFrRZ5d1iE0OxZjO6mQEDhluMhOoVuGjTO6AiUgTGSbpwWqK+dJLnBJV6tKadAqbJPzaL/805LTWgapLsTOVCytwgh49YJk4d1VeUyR2gBmFAfoVt3KcB36OOwg3O/r6vrtZuf9zmaj8WthiPwLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739438090; c=relaxed/simple;
-	bh=92IBaEFCeb59c1L/Dvak6FygRZtPJWtnPcxYGLuUZbQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q1KQT0fTsORhx4VAskmf6xSM3DjJqDFShFDsCLlYqKL/AbFi+KgndzPjoA+2ICzuYW3/YvxgdDD0atEzaxAlRR5tnVVaS+iOyxTmiN+NW7QS+gPm3RbGyiVpFZ9DvCI9BjQG2CekyN5/Aml9/VX82ZxtCW7CVVzFfkGuJB3RPDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vjWXI/Io; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=E7gbKSHO; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vjWXI/Io; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=E7gbKSHO; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1739438175; c=relaxed/simple;
+	bh=BAacpC/hwDG/mtj28XuI3plzqqG6lLKWx9Gqjj8DVbw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kAax6we8K8s5nRv14RHzJnUnhtxMN+15AhDUJ3XOFF7OA78BO39BcJzWHiAeHGDOYrumol7WgftcQ0kfL/HLVlPYnHUNiV/TmqtWgvsif8X7T/khJUxBZnihFbo6iyD5p/Ad5bcLV3VwPwdFvsxAywOQvNpg6ns9JUqIVofWtHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bGK35HcU; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vjWXI/Io";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="E7gbKSHO";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vjWXI/Io";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="E7gbKSHO"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D4BB91FB6C;
-	Thu, 13 Feb 2025 09:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739438086; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qlhAx95V05ksFYdiTUnLZGUxdkhjoMbHS0kdh8Y7vzk=;
-	b=vjWXI/Iokcxl66jyxMHHRmQUExJDlH+8uVTdSL0KiwI/1pFACaZL4v+lWLytkRLBIqZT8n
-	r1K9HEOSDmXvWOLRLoC0WV4Vw2IAopMesfTtTLxAdqeZCufcCeSGPFt0wRubqabsjGvNEV
-	6A+kwnNAJ9bmXVvKERiTEpjzmz5HOZA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739438086;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qlhAx95V05ksFYdiTUnLZGUxdkhjoMbHS0kdh8Y7vzk=;
-	b=E7gbKSHOIaPLeFNgb4YZg6Cv826KzB9a4rmQjasvHjlS66YdJFaBzG7dBZqWYzHdQ5npW5
-	lgH4YAoQQz4EU4Bw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="vjWXI/Io";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=E7gbKSHO
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739438086; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qlhAx95V05ksFYdiTUnLZGUxdkhjoMbHS0kdh8Y7vzk=;
-	b=vjWXI/Iokcxl66jyxMHHRmQUExJDlH+8uVTdSL0KiwI/1pFACaZL4v+lWLytkRLBIqZT8n
-	r1K9HEOSDmXvWOLRLoC0WV4Vw2IAopMesfTtTLxAdqeZCufcCeSGPFt0wRubqabsjGvNEV
-	6A+kwnNAJ9bmXVvKERiTEpjzmz5HOZA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739438086;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qlhAx95V05ksFYdiTUnLZGUxdkhjoMbHS0kdh8Y7vzk=;
-	b=E7gbKSHOIaPLeFNgb4YZg6Cv826KzB9a4rmQjasvHjlS66YdJFaBzG7dBZqWYzHdQ5npW5
-	lgH4YAoQQz4EU4Bw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C257413874;
-	Thu, 13 Feb 2025 09:14:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id CzOHLga4rWd1fAAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Thu, 13 Feb 2025 09:14:46 +0000
-Date: Thu, 13 Feb 2025 10:14:46 +0100
-From: Daniel Wagner <dwagner@suse.de>
-To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: Daniel Wagner <wagi@kernel.org>, 
-	James Smart <james.smart@broadcom.com>, Keith Busch <kbusch@kernel.org>, hch <hch@lst.de>, 
-	Sagi Grimberg <sagi@grimberg.me>, Hannes Reinecke <hare@suse.de>, Paul Ely <paul.ely@broadcom.com>, 
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 3/3] nvme-fc: do not ignore connectivity loss during
- connecting
-Message-ID: <6b6fea1e-671c-4a6a-98ba-a27bb2a4a95a@flourine.local>
-References: <20250109-nvme-fc-handle-com-lost-v4-0-fe5cae17b492@kernel.org>
- <20250109-nvme-fc-handle-com-lost-v4-3-fe5cae17b492@kernel.org>
- <denqwui6sl5erqmz2gvrwueyxakl5txzbbiu3fgebryzrfxunm@iwxuthct377m>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bGK35HcU"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-866e8ca2e07so191642241.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 01:16:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739438172; x=1740042972; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BAacpC/hwDG/mtj28XuI3plzqqG6lLKWx9Gqjj8DVbw=;
+        b=bGK35HcUSNOQnieapheMrO16NJzE05eFRFEbjW5B08JXsJ791jx9Z2lJUaLbS6gDgi
+         sZCsemkw1llT98hffttdGwRGOL3Ar3D6Th/4dCH2VdOB9PGyZqRgXTbw/TlRIBYc9Gaa
+         sljRDJHhHQcApp2x6++vnIUiTEAfFetsjzwlJHVnmWqYdIfm0j5nsg4IPYJRd482aGHw
+         VBpGoLlNdRxeBp0Rovyba2wiK5fjPztB2uiQ74YB3GIyaTQOb4xpsuVBQVOGSTP9sP3n
+         KxQVm5HkHDDLwHKD8y8/E3SiWUrkLqf/6L3e8KkYSQ+ASfzeOG7347FvdkijH3vZjryP
+         Nv3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739438172; x=1740042972;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BAacpC/hwDG/mtj28XuI3plzqqG6lLKWx9Gqjj8DVbw=;
+        b=XSMuWvGkH7DmueHJ/iWBb0+sPdns8NwF+6rsAPE8su5dEkZpLl8xIEYedRbckXTUd1
+         R4TBOtfvGj2D5hGGDXxMTRFP4IworjLchXaFzqTSg5tONsABPhaFMLZyhcNvbsdgf5nj
+         026YR63eL6LhmoS+tEcfznjmK8e7TSmfV6Z6xXA7rAvvGP6Q+FgUOJopzwwh+VUhrzBE
+         aMA1pjhQI6a421qDrpjex1cH94DRE8iEIiHPzPTLxJ/wAf7pQ9yrQwikMinY8VicFVQ0
+         npT+upK3UAQg/MTXomyxTVfDhldaYX6nbP/V7bmyJcXgpjQo52AKU+UzcoqhbAh1RGjg
+         ZxZw==
+X-Forwarded-Encrypted: i=1; AJvYcCW4kCxGCSEfHIh/6y+4b30Wz6Z5mVpDhcNn6uzOsS1DVwwWH5ZJDnEo+dl1H6uv1NWWqcJrcLZxBl1m8Io=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygQ5cGmqLqRQTwvWBtBuX9k3YTBEBtNzpeJqgdyS608luzgIdk
+	cPKR95aSlvirfma2ZNc7t62Jv/ty+ttVknTQOH1YSN23pmkXc/qgsqGfXdc73VLEBNvaQ3ejgmv
+	DC8PCyWetzFO/r/aO6DzXkCxrOok2f+LX2kC8KA==
+X-Gm-Gg: ASbGncuJOP1wrX2BeXEa++EZbMuvAE/TYFPhBuzlsX3OISfhxMtcunvgo7KRsi9kt8W
+	47hSXu2mdJM6n1+06iQr/YMInaOhDOtPVgprncBBJZVGw6rXsEpBkrVgkTyZQi/iZCHxZzVYaQ8
+	c=
+X-Google-Smtp-Source: AGHT+IHuPpL4xteSdbWgrL0r9v96spUDd3pY29fru20lM3gKm1cy1XWf5xoLNbeh3qhFcvaDPibH3i24OVPTFa+BmLk=
+X-Received: by 2002:a05:6102:2912:b0:4b9:bc52:e050 with SMTP id
+ ada2fe7eead31-4bc0351978amr3199364137.2.1739438172547; Thu, 13 Feb 2025
+ 01:16:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <denqwui6sl5erqmz2gvrwueyxakl5txzbbiu3fgebryzrfxunm@iwxuthct377m>
-X-Rspamd-Queue-Id: D4BB91FB6C
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <20241217100809.3962439-1-jens.wiklander@linaro.org>
+ <20250212205613.4400a888@collabora.com> <CAFA6WYOaGEPj0xNEDBCoEmjJreEHChjQ2hyXRJ_CYoGhiBonfw@mail.gmail.com>
+ <20250213093557.278f5d19@collabora.com>
+In-Reply-To: <20250213093557.278f5d19@collabora.com>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Thu, 13 Feb 2025 14:46:01 +0530
+X-Gm-Features: AWEUYZm0Wp1I6dLShCTCErZfuQ5_X523x-MqvIqYj1fsBxxxtOs8WA89SI1vekc
+Message-ID: <CAFA6WYOJkSRsH-15QdqXNMd08Q=Dg4NkRd1Cr9LXA+5nozTF6g@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] TEE subsystem for restricted dma-buf allocations
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, op-tee@lists.trustedfirmware.org, 
+	linux-arm-kernel@lists.infradead.org, Olivier Masse <olivier.masse@nxp.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, Yong Wu <yong.wu@mediatek.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
+	Florent Tomasin <florent.tomasin@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 13, 2025 at 07:16:31AM +0000, Shinichiro Kawasaki wrote:
-> On Jan 09, 2025 / 14:30, Daniel Wagner wrote:
-> > When a connectivity loss occurs while nvme_fc_create_assocation is
-> > being executed, it's possible that the ctrl ends up stuck in the LIVE
-> > state:
+On Thu, 13 Feb 2025 at 14:06, Boris Brezillon
+<boris.brezillon@collabora.com> wrote:
+>
+> On Thu, 13 Feb 2025 12:11:52 +0530
+> Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> > Hi Boris,
 > >
-> [...]
-> > 
-> > There is already the ASSOC_FAILED flag to track connectivity loss event
-> > but this bit is set too late in the recovery code path. Move this into
-> > the connectivity loss event handler and synchronize it with the state
-> > change. This ensures that the ASSOC_FAILED flag is seen by
-> > nvme_fc_create_io_queues and it does not enter the LIVE state after a
-> > connectivity loss event. If the connectivity loss event happens after we
-> > entered the LIVE state the normal error recovery path is executed.
-> 
-> I found many test cases in blktests nvme group fail with v6.14-rc2 kernel with
-> fc transport. I bisected and found this patch, as the commit ee59e3820ca9, is
-> the trigger. When I revert the commit from v6.14-rc2, the failure disappears.
-> 
-> Here I share the kernel message log observed at the test case nvme/003. The
-> kernel reported "BUG: sleeping function called from invalid context".
+> > On Thu, 13 Feb 2025 at 01:26, Boris Brezillon
+> > <boris.brezillon@collabora.com> wrote:
+> > >
+> > > +Florent, who's working on protected-mode support in Panthor.
+> > >
+> > > Hi Jens,
+> > >
+> > > On Tue, 17 Dec 2024 11:07:36 +0100
+> > > Jens Wiklander <jens.wiklander@linaro.org> wrote:
+> > >
+> > > > Hi,
+> > > >
+> > > > This patch set allocates the restricted DMA-bufs via the TEE subsystem.
+> > >
+> > > We're currently working on protected-mode support for Panthor [1] and it
+> > > looks like your series (and the OP-TEE implementation that goes with
+> > > it) would allow us to have a fully upstream/open solution for the
+> > > protected content use case we're trying to support. I need a bit more
+> > > time to play with the implementation but this looks very promising
+> > > (especially the lend rstmem feature, which might help us allocate our
+> > > FW sections that are supposed to execute code accessing protected
+> > > content).
+> >
+> > Glad to hear that, if you can demonstrate an open source use case
+> > based on this series then it will help to land it. We really would
+> > love to see support for restricted DMA-buf consumers be it GPU, crypto
+> > accelerator, media pipeline etc.
+> >
+> > >
+> > > >
+> > > > The TEE subsystem handles the DMA-buf allocations since it is the TEE
+> > > > (OP-TEE, AMD-TEE, TS-TEE, or perhaps a future QCOMTEE) which sets up the
+> > > > restrictions for the memory used for the DMA-bufs.
+> > > >
+> > > > I've added a new IOCTL, TEE_IOC_RSTMEM_ALLOC, to allocate the restricted
+> > > > DMA-bufs. This IOCTL reaches the backend TEE driver, allowing it to choose
+> > > > how to allocate the restricted physical memory.
+> > >
+> > > I'll probably have more questions soon, but here's one to start: any
+> > > particular reason you didn't go for a dma-heap to expose restricted
+> > > buffer allocation to userspace? I see you already have a cdev you can
+> > > take ioctl()s from, but my understanding was that dma-heap was the
+> > > standard solution for these device-agnostic/central allocators.
+> >
+> > This series started with the DMA heap approach only here [1] but later
+> > discussions [2] lead us here. To point out specifically:
+> >
+> > - DMA heaps require reliance on DT to discover static restricted
+> > regions carve-outs whereas via the TEE implementation driver (eg.
+> > OP-TEE) those can be discovered dynamically.
+>
+> Hm, the system heap [1] doesn't rely on any DT information AFAICT.
 
-Thanks for digging into it.
+Yeah but all the prior vendor specific secure/restricted DMA heaps
+relied on DT information.
 
-The problem is that the patch moves the nvme_change_ctrl_state call
-under the ctrl->lock and nvme_change_ctrl_state is also
-cancel_delayed_work_sync which doesn't work:
+> The dynamic allocation scheme, where the TEE implementation allocates a
+> chunk of protected memory for us would have a similar behavior, I guess.
 
-  spin_lock_irqsave
-    nvme_change_ctrl_state
-      nvme_stop_failfast_work
-        cancel_delayed_work_sync
+In a dynamic scheme, the allocation will still be from CMA or system
+heap depending on TEE implementation capabilities but the restriction
+will be enforced via interaction with TEE.
 
-I've checked if there is another caller of nvme_change_ctrl_state is
-taking a lock, all looks fine. If there would be way to move the
-failfast code bits out of the nvme_change_ctrl_state function would be a
-nice solution.
+>
+> > - Dynamic allocation of buffers and making them restricted requires
+> > vendor specific driver hooks with DMA heaps whereas the TEE subsystem
+> > abstracts that out with underlying TEE implementation (eg. OP-TEE)
+> > managing the dynamic buffer restriction.
+>
+> Yeah, the lend rstmem feature is clearly something tee specific, and I
+> think that's okay to assume the user knows the protection request
+> should go through the tee subsystem in that case.
 
-That means the idea to synchronize the state change with the
-ASSOC_FAILED bit under the lock is not going to work. I am trying to
-figure out a solution.
+Yeah but how will the user discover that? Rather than that it's better
+for the user to directly ask the TEE device to allocate restricted
+memory without worrying about how the memory restriction gets
+enforced.
+
+>
+> > - TEE subsystem already has a well defined user-space interface for
+> > managing shared memory buffers with TEE and restricted DMA buffers
+> > will be yet another interface managed along similar lines.
+>
+> Okay, so the very reason I'm asking about the dma-buf heap interface is
+> because there might be cases where the protected/restricted allocation
+> doesn't go through the TEE (Mediatek has a TEE-free implementation
+> for instance, but I realize vendor implementations are probably not the
+> best selling point :-/).
+
+You can always have a system with memory and peripheral access
+permissions setup during boot (or even have a pre-configured hardware
+as a special case) prior to booting up the kernel too. But that even
+gets somehow configured by a TEE implementation during boot, so
+calling it a TEE-free implementation seems over-simplified and not a
+scalable solution. However, this patchset [1] from Mediatek requires
+runtime TEE interaction too.
+
+[1] https://lore.kernel.org/linux-arm-kernel/20240515112308.10171-1-yong.wu@mediatek.com/
+
+> If we expose things as a dma-heap, we have
+> a solution where integrators can pick the dma-heap they think is
+> relevant for protected buffer allocations without the various drivers
+> (GPU, video codec, ...) having to implement a dispatch function for all
+> possible implementations. The same goes for userspace allocations,
+> where passing a dma-heap name, is simpler than supporting different
+> ioctl()s based on the allocation backend.
+
+There have been several attempts with DMA heaps in the past which all
+resulted in a very vendor specific vertically integrated solution. But
+the solution with TEE subsystem aims to make it generic and vendor
+agnostic.
+
+>
+> [1]https://elixir.bootlin.com/linux/v6.13.2/source/drivers/dma-buf/heaps/system_heap.c#L424
+
+-Sumit
