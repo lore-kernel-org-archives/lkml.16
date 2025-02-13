@@ -1,104 +1,173 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55F8227EBA
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B442227EB6
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739447137; cv=none; b=SlJVkR+5jTe3yGwshfORsb6dHgP0s90GReVX9NXrgTkRnVWu1Ax7SJ0M9tvI3tJcS3jUeTU+0XXK84KxhEFLj2M8T9Pdr8O7Yjb7fnPgMjxA/Jcn0yBX2yNF60BDaIi8h+DKZb6B87MNg02+iupLfBJi6CSLH0WRK9khxbpTTCk=
+	t=1739447157; cv=none; b=DofDRI+VAdgwaxKoqpi07AGVXqY5pYWsgo7QY5nKNzUdAyJvooy0/aOdJWVfVTknrMTOqpCK4hEY6vNFE1V28YjJKCyjuY17OtWPmVz/W54IRUpsUvQ0AP1898160A4+6t/QuGGlu/vQ1uRJrEOGVK+VEzuZxy6AlULm6A+HS7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739447137; c=relaxed/simple;
-	bh=YY+OU/b5R2NZDBv+XG+fDZujvR+B8cCjfW4SIV4pBfI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jbyhubX/0iDmqDSgH4oc3D7hjYa24+zdfMoFDgRpjDIQ5PRxxTbVMzxVKHs5Jt5Y+uqo+X56+dAi3GafrZh84CZHdkFmRsSLjTNfmuGRj82kcJlbsamVMLWL7MDcrOM39norrhxuehzslEy52dbeETx6MxKCRavuO0pHJ+1ZsbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=D3Ygj82W; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1739447157; c=relaxed/simple;
+	bh=wnO+LqqljARF7zFGsjfnzayc7yBAYtpzFvs/xZU9Lh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V0Bh0cz/433W6Gyc8D23vUipyzl0JU1zjA//fnmtLlkCzjHM0s5fvSJh+PBBFAODzvQhx86FokUGr/tM88nda++kJK0NJNPAt19wM1AlqQExk5dXgeJ7fY0B4xfiThRb+kUb6AyPMLD9deSPDLMWxV3rRc7eRnmuWLPDsIpuD7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T8i9M/0B; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="D3Ygj82W"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab7ee6f5535so14887366b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 03:45:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1739447133; x=1740051933; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zNK7rLFtZxlsVr2HlY81+ucXl/w9wHCFQRGCafrM+CU=;
-        b=D3Ygj82W+/FoU+wszva4D3Pv4SGz0w68bY9agF1aosOgZAMx5aLqJnslYdZ3hWbzsz
-         XIGEQGN6nU3BS+1NDLrf4XpWwINUoACa1XGP94ZXgHvUHeUtvJSDyQKVK++O1RvAtUZL
-         U7y14eUWvbNIPcgUECwp9sVYDVvbPii6k5Wj5yGTIzy7DXrpaLGlSQqzCFsoQPGPpe8k
-         DyD5Yp8YCJrlC91xhhOCTp+KSU/wDDdP4Lpw1Qg2A5oUtKoq9at31B8uvcOLx8tH53JM
-         QigWfu///41DwuXIw2Dku1Cm1NcPeS+fF3NPJSUwbgP1Q+GTbaV8mLcdRXnSy9/xLF1V
-         WXWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739447133; x=1740051933;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zNK7rLFtZxlsVr2HlY81+ucXl/w9wHCFQRGCafrM+CU=;
-        b=QVXi5HiFw5lRyMi106gvkOS8qVQ8G4RW0pFcT8NcAE7W2M59HEk5ZB8ZBssnIRdZzb
-         0QcLorkwjm2hS4TKQZ4IwMogThAU9uKKYLP9LoTCKEXSLf+F1Of4ynYdiYxrrPQav6gY
-         ie0KDs72M0ya7t5kpqz8Z4IrNUBpxu8Zt3FoaD8CEKIKyZcKpG8zesSH6XjS3s8bDF+W
-         SuUGqs2cM/ksy4rwRNSq1Je/UAlIgp8S996kPZ1Zpw0SAV8guw8xhR3toFRRvvxO6fJr
-         19ffYVLhRVxkMBKS9plLYWMX4kTlEv5DYLWnPEsOsX5O3PkVtNQOJ2NmSUx6ngZOQhOJ
-         fa+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWtJQiElly9aqX+GN6yzbcN6WF4fLRP+cWk/UPnll25aU1oDIk2SZKFv5650DOiRHa6rLvqlKs40hXF+Aw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMAdyIeTmsPnVEZAnubAOJM/1S5qxU3ST3iOumTLPBJDFrGzvD
-	4FMHeGh66M1kce14oUZzl/05mxI0fIcVIarqxzQEkTdn4tpL5kcSzp6VBsKemmM=
-X-Gm-Gg: ASbGnctBAPh02FpCrmAz+mOAle66wDJyGn5PsiQ9JxwJe53rVpC1UiAvzK7jOjyxs/d
-	O5onIi0spOehb5gU2GNv+oMRyDEaHeVB+dHs6XbP4olDWbL818Yw5NhH9pUzkK5hwsRy9D+aYlz
-	uROkJg/WedQChG0dOl4eyIHNMgP+xy8fOmE817f4IdeBfjSyWaOw5hx02fmapRrvhTtWTl1uUjl
-	OId92XSA/S948wfQj4/IZ0stESKn3TTurNwI5a3oku1mp2akSyRlPBU+J6YPcd51QtbqAp2BG5J
-	xLIke1rB0CGALzORu+ld/U/x6Dn3jUAfiCOKbuhqiwDQBil800v+/OGCkozWQ+oTeBRlcMy9bcq
-	14o6tug==
-X-Google-Smtp-Source: AGHT+IFhwk4ltxE1xQ3p0mGfeZawu/5MpD6Z/sNSEWalFb7gtGBPeQtv4gNW8tEYCXMCRKVGAjZ0ow==
-X-Received: by 2002:a17:907:60d2:b0:ab6:eec4:c9c2 with SMTP id a640c23a62f3a-ab7f33cd42emr238790366b.7.1739447133131;
-        Thu, 13 Feb 2025 03:45:33 -0800 (PST)
-Received: from localhost (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5339dec3sm115780666b.157.2025.02.13.03.45.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 03:45:32 -0800 (PST)
-From: Petr Tesarik <ptesarik@suse.com>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	maple-tree@lists.infradead.org (open list:MAPLE TREE)
-Cc: linux-mm@kvack.org (open list:MAPLE TREE),
-	linux-kernel@vger.kernel.org (open list:LIBRARY CODE),
-	Petr Tesarik <ptesarik@suse.com>
-Subject: [PATCH] maple_tree: Remove a BUG_ON() in mas_alloc_nodes()
-Date: Thu, 13 Feb 2025 12:44:53 +0100
-Message-ID: <20250213114453.1078318-1-ptesarik@suse.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T8i9M/0B"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=4e4iRZQzfs5/TgKoEzkPjUoLhuH9cDxxCyB6VN1NHA4=; b=T8i9M/0BQPMbJKsQmbH2N1c5lg
+	m+j9eWngfDTJeqEVfU/SKgRG+A2Dr9jMf9PCUgREOpReagjwO6187u6oyCVQO5r533iEeyjx/Nl6M
+	J/GDI3HjAYsnUjhMzDB0gdf7wOZInf5tq/LijgELanW5TP+N53/cnpRRoGzX2EI3m//ZaOmY5twJa
+	+lMvvdtNF3yNsPvusnVK6aQYRUw0mKua2pijHT3bCDJkP2kEkJUkLo4Pp7NliycKwvKtFXcuIJPQ/
+	KXWwqBcAWNA/2kVa3Yab+UC34HIFymWqoKd0+xejj86+yxksN18d2zM6f7DtAVF88ccv+9N2qICwD
+	k2DXK7cQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tiXfA-00000008Asc-3tFE;
+	Thu, 13 Feb 2025 11:45:49 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9858E3001FD; Thu, 13 Feb 2025 12:45:47 +0100 (CET)
+Date: Thu, 13 Feb 2025 12:45:47 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sami Tolvanen <samitolvanen@google.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, alyssa.milburn@intel.com,
+	scott.d.constable@intel.com, joao@overdrivepizza.com,
+	andrew.cooper3@citrix.com, jpoimboe@kernel.org,
+	jose.marchesi@oracle.com, hjl.tools@gmail.com,
+	ndesaulniers@google.com, nathan@kernel.org, ojeda@kernel.org,
+	kees@kernel.org, alexei.starovoitov@gmail.com, mhiramat@kernel.org
+Subject: Re: [PATCH 00/11] x86/ibt: FineIBT-BHI
+Message-ID: <20250213114547.GB30841@noisy.programming.kicks-ass.net>
+References: <20250207121529.222723073@infradead.org>
+ <CABCJKudA8aUf=SDsVOOsWX_Cq6LAcioOjgtpv+uq+WGwJbxFPA@mail.gmail.com>
+ <20250213104802.GE28068@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213104802.GE28068@noisy.programming.kicks-ass.net>
 
-Remove a BUG_ON() right before a WARN_ON() with the same condition.
+On Thu, Feb 13, 2025 at 11:48:02AM +0100, Peter Zijlstra wrote:
 
-Calling WARN_ON() and BUG_ON() here is definitely wrong.  Since the goal is
-generally to remove BUG_ON() invocations from the kernel, keep only the
-WARN_ON().
+> > One thing I realized is that CONFIG_CFI_PERMISSIVE doesn't actually do
+> > anything when FineIBT is used since we lose track of CFI trap
+> > locations. I'm not sure if that's worth fixing, but perhaps we could
+> > disable FineIBT when permissive mode is enabled to avoid confusion?
+> 
+> Hmm, yeah, that's one thing I keep forgetting about. Let me try and fix
+> it and see how ugly it gets before offering an opinion :-)
 
-Fixes: 067311d33e65 ("maple_tree: separate ma_state node from status")
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+Completely untested and on top of this series minus the last two patches
+-- basically what I just pushed into:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/core
+
+WDYT?
+
 ---
- lib/maple_tree.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/lib/maple_tree.c b/lib/maple_tree.c
-index f7153ade1be5..0f2111d436c4 100644
---- a/lib/maple_tree.c
-+++ b/lib/maple_tree.c
-@@ -1245,7 +1245,6 @@ static inline void mas_alloc_nodes(struct ma_state *mas, gfp_t gfp)
- 	if (mas->mas_flags & MA_STATE_PREALLOC) {
- 		if (allocated)
- 			return;
--		BUG_ON(!allocated);
- 		WARN_ON(!allocated);
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index e285933506e9..1fec1e445a25 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1410,6 +1410,36 @@ static void poison_cfi(void *addr)
  	}
+ }
  
--- 
-2.48.1
-
++bool decode_fineibt_insn(struct pt_regs *regs, unsigned long *target, u32 *type)
++{
++	/*
++	 * FineIBT preamble:
++	 *
++	 *  __cfi_foo:
++	 *     endbr64
++	 *     subl $0x12345678, %r10d
++	 *     jz   1f
++	 *     ud2
++	 *  1: nop
++	 *  foo:
++	 *
++	 * regs->ip points to the UD2 instruction.
++	 */
++	unsigned long addr = regs->ip - (4+7+2);
++	u32 hash;
++
++	if (!is_endbr((void *)addr)) {
++Efault:
++		return false;
++	}
++
++	*target = addr + fineibt_preamble_size;
++
++	__get_kernel_nofault(&hash, *(u32 *)(addr + fineibt_preamble_hash), u32, Efault);
++	*type = (u32)regs->r10 + hash;
++	return true;
++}
++
+ #else
+ 
+ static void __apply_fineibt(s32 *start_retpoline, s32 *end_retpoline,
+@@ -1421,6 +1451,11 @@ static void __apply_fineibt(s32 *start_retpoline, s32 *end_retpoline,
+ static void poison_cfi(void *addr) { }
+ #endif
+ 
++bool decode_fineibt_insn(struct pt_regs *regs, unsigned long *target, u32 *type)
++{
++	return false;
++}
++
+ #endif
+ 
+ void apply_fineibt(s32 *start_retpoline, s32 *end_retpoline,
+diff --git a/arch/x86/kernel/cfi.c b/arch/x86/kernel/cfi.c
+index e6bf78fac146..4c682076c656 100644
+--- a/arch/x86/kernel/cfi.c
++++ b/arch/x86/kernel/cfi.c
+@@ -61,6 +61,8 @@ static bool decode_cfi_insn(struct pt_regs *regs, unsigned long *target,
+ 	return true;
+ }
+ 
++extern bool decode_fineibt_insn(struct pt_regs *regs, unsigned long *target, u32 *type);
++
+ /*
+  * Checks if a ud2 trap is because of a CFI failure, and handles the trap
+  * if needed. Returns a bug_trap_type value similarly to report_bug.
+@@ -70,11 +72,25 @@ enum bug_trap_type handle_cfi_failure(struct pt_regs *regs)
+ 	unsigned long target;
+ 	u32 type;
+ 
+-	if (!is_cfi_trap(regs->ip))
+-		return BUG_TRAP_TYPE_NONE;
++	switch (cfi_mode) {
++	case CFI_KCFI:
++		if (!is_cfi_trap(regs->ip))
++			return BUG_TRAP_TYPE_NONE;
++
++		if (!decode_cfi_insn(regs, &target, &type))
++			return report_cfi_failure_noaddr(regs, regs->ip);
++
++		break;
+ 
+-	if (!decode_cfi_insn(regs, &target, &type))
+-		return report_cfi_failure_noaddr(regs, regs->ip);
++	case CFI_FINEIBT:
++		if (!decode_fineibt_insn(regs, &target, &type))
++			return BUG_TRAP_TYPE_NONE;
++
++		break;
++
++	default:
++		return BUG_TRAP_TYPE_NONE;
++	}
+ 
+ 	return report_cfi_failure(regs, regs->ip, &target, type);
+ }
