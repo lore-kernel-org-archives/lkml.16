@@ -1,102 +1,81 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3C22222BB
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3B7266181;
+	Thu, 13 Feb 2025 16:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739464844; cv=none; b=awAS2PZp+MD6cg5wXs3DsYDG3h5t9PHxWMaP9CC3B4sAJbmwMFlCorXDMIlWnc36UEmj2qBx1SaVp37P89GFdvYZJwAkKu2dFZCMJtuNp+hOinaDsIX6d/knS4GAW/NQgIFXYWm4+VzfZvP4Rz3LjmtlUUG+kEnbyhLWjjS2z1E=
+	t=1739464853; cv=none; b=qaGH3jN+kDdFi+up8NYi6sbx6G96nGb6TRImT7eAadpTMmoZn84MukSzVzyTnt1CjjlD4sbeqbpuUMmQQy56lgh2DvyF6cxbOntGS+/jIsV1qd8AU2aUEZz58PYD/3vraCeyMvRLEJFRMf+l6PSA/dweeMAoJTHcZIy0p5xHu8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739464844; c=relaxed/simple;
-	bh=rYWHCyQgChfPqlVZdXh5q9e52cZ5xrcrBOIQ5aKETPQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OC6afIgIdM9bvZv9Blq4Zq0f3FrolhQ7CLTxbj218EaD7D+z6XM9P2Ud3MDnq2q7efdT4P12C8sTRLMABB3t57F3ghd3j1uzmcZGI8hMjDMRZONSNRA6BdpsVxi5DfgRnjOgBCZzKHnd+arvSXcXOp7+N+rS+ngHPqoTaufoUl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b4ovIyUi; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739464853; c=relaxed/simple;
+	bh=+NmJvozCvHqYo27+QZ99g9mKJER+YVCPI759srgIddc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=deLiy6h3QeLd7SsEUAl5j0BdCn+RalHtUt+Wcclq8F2xJUAyfKX/kXTq3om/+6HbmZ6S06avP9/P+sUBHUtxB0c1LleTj7VnTI5DiGelEF5WbYnPKg9U4KWxFfLXu+mpumBYWzQvX6++pBGu3rRcQRgRbMMHQ6QohOXoQtm0Ek0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=mHu6CIWh; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b4ovIyUi"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-307325f2436so9878301fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 08:40:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739464840; x=1740069640; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LMnzVOaqbPiWJZc1ATkgCkD1AufYLWgWH5h8h9uqtDQ=;
-        b=b4ovIyUiG02Ejjb/Ps6zAq8K8prfCmBK2NqeXAKQDg9hCmyw+H5p1UK1wl2eMjr1Tc
-         9Ad4DBwN98/PywFy6mzNdLVLYuwusqX2/OyVwiMJv6SRbMGpr0EyFKdgdGB0pifmrvJJ
-         eGzeYlpOQbeRBfJY2cSZM+nuRfecj3w3ouDOkji/b9Fag8vulhn/Wh0sIjfRTspwhgme
-         AVkNAdZm4U3eLKjCg6JxSnEZYIJ3+ZWdbh1vt0P6yKax/WIUS63IKI83NXk+rdMGqT6x
-         MN+N2UAktZvGHACGYzxExZXYiZVe2MqVE4+L0FJqFy9tczLS0KkS+4wSbYn41FSeUgwA
-         UOsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739464840; x=1740069640;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LMnzVOaqbPiWJZc1ATkgCkD1AufYLWgWH5h8h9uqtDQ=;
-        b=eVJYSOCNndA0AxJHTkCxVraRpGmRNLLfhMV1r89Pm19hzOAypgS767EbYRVIVIWHJD
-         GxyVQ/6A5LY8WG9tbQHXnjbA02RWOCom00ekvhFQkWG4i9AtILPwpO48FC3ScE7/9HkS
-         O7sc52gYQY2/A7MG0N7gXiBkLme3PDzj/jgMwAg69F08DfnX1j08jRkHWI2Aigy8gHBO
-         NJnTQaOmj5GFjm/VziwFDvxLAcMcVIFiAyrB7bYKUWKeHIBSMaXCHrTWRP6FtPNnvwZn
-         jOyT0ZXAsGA/Vnyb38pt8e2G5xz//PaS6Z01WmSDpLxSXQn7KH03IS3SYq3oTBO+Kdm8
-         Tmkw==
-X-Forwarded-Encrypted: i=1; AJvYcCXbCJTSnTmuKzwNGFlzqNCq6qTSz27DMG4bB7PEcMefqbvh/vT+z+CC29A5qEXBJn7uPgt3nxa0pkoCgq8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXMcNdkeCzmdoM5XvW76KsUMbdzsKDH5tqqrJBKSK0xbRY2nlw
-	amMaZLQZV/dddFkI/QrlEYMUkWCCBVGLAaihRjTYQXGKbNQvBte8fIcyxyzGIew=
-X-Gm-Gg: ASbGncuHxZVvdqmoMTOgY5p18uQsKTpTMJM7C0GV+rnaRVzWOMj5TIYN5HJeKBiWCf9
-	z9Qh/uFdLuC7IoEOMCGzXRVDDPHOU14Sr2mIb1PL0f57UbfICYoWpeD0TreXnfpVK8rC2xoyk5B
-	ZIwbWKKW8Zn028u+TesSNErz8LLIMaGHzr2BNsoe3INLLG4fBb0Lu3wmZvdztcO3PruOltFGLG7
-	H6TEwoktPoPuwd3rRkrJKLVrLV5401PYFXUH1G6ZYOHLmGeeWsDvv+wDgVkeMrUgPuQjJJp1x8C
-	xDrjQ8LVms9sVFvzlHwnvOuqL344S7qTSKreuXXu6gR707ZkEAeXbTnVK77z7I7wYffTRYE=
-X-Google-Smtp-Source: AGHT+IE+DLZp2bM7y7i3VvWDlRtn34R3/3QTYkYHVUJ0a3IROZ4IO4tvISTZRCot/igQUEAuu0KXWw==
-X-Received: by 2002:a2e:be86:0:b0:306:124c:69d5 with SMTP id 38308e7fff4ca-309037615d5mr30076241fa.34.1739464839693;
-        Thu, 13 Feb 2025 08:40:39 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3090ffc695dsm2463621fa.0.2025.02.13.08.40.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 08:40:38 -0800 (PST)
-Date: Thu, 13 Feb 2025 18:40:36 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 22/37] drm/atomic-helper: Change parameter name of
- drm_atomic_helper_commit_hw_done()
-Message-ID: <2dmba5jptkg5epllhukxzt2teuf2pbt2w5cw44jh7vbma7q2os@hfcg6zjm7tuv>
-References: <20250213-bridge-connector-v3-0-e71598f49c8f@kernel.org>
- <20250213-bridge-connector-v3-22-e71598f49c8f@kernel.org>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="mHu6CIWh"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net B85D444097
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1739464850; bh=0XfX4xkUPnhb3Qg4pir8Dg6wUP9Xma+uY4HBJFMOGuQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=mHu6CIWhUFtFxJvqpyTvgeZSXxUegMO2ofWHiYbxqel+lpFK6TQEueZhCy9TX30ea
+	 DEO0CsXG3P3Su+N03pSD4LFjKPemVO4kRAMVrFzplcIpV/0FAbhBg+Hzk4mXpalnRL
+	 hKi7ZHERh1oZTIqHSeqyeK9ZgafTxadjJlxV2IC+34pmOjvMK/2cSJJCKKulrGyM9x
+	 KSdUt+MqViP2eIEhgl0wSBZaHVK7Lj07MnUlnKI3lxgEEPZ+np4G4JfyZKi6UEjkV2
+	 vTybn1XeZJhnoEI0j7xA2vIs8qMB3IS4oSMjOT694n8dkFIpUc4oU4qOa3SML9Y+CA
+	 D7ESS8vnIYt9Q==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id B85D444097;
+	Thu, 13 Feb 2025 16:40:50 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
+ List <linux-doc@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Mauro Carvalho Chehab
+ <mchehab+huawei@kernel.org>, linux-kernel@vger.kernel.org, kernel test
+ robot <lkp@intel.com>
+Subject: Re: [PATCH] docs: Makefile: use the new script to check for bad ABI
+ references
+In-Reply-To: <20250211054446.1696826-1-mchehab+huawei@kernel.org>
+References: <20250211054446.1696826-1-mchehab+huawei@kernel.org>
+Date: Thu, 13 Feb 2025 09:40:49 -0700
+Message-ID: <87o6z56bn2.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213-bridge-connector-v3-22-e71598f49c8f@kernel.org>
+Content-Type: text/plain
 
-On Thu, Feb 13, 2025 at 03:43:41PM +0100, Maxime Ripard wrote:
-> drm_atomic_helper_commit_hw_done() signals hardware completion of a
-> given commit. It takes the drm_atomic_state being committed as a
-> parameter.
-> 
-> However, that parameter name is called (and documented) as old_state,
-> which is pretty confusing. Let's rename that variable as state.
-> 
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+
+> The get_abi.pl script was replaced by get_abi.py. Update it at docs
+> makefile.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202502110736.ZGWaWsep-lkp@intel.com/
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  drivers/gpu/drm/drm_atomic_helper.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
+>  Documentation/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/Makefile b/Documentation/Makefile
+> index 52c6c5a3efa9..63094646df28 100644
+> --- a/Documentation/Makefile
+> +++ b/Documentation/Makefile
+> @@ -12,7 +12,7 @@ endif
+>  
+>  # Check for broken ABI files
+>  ifeq ($(CONFIG_WARN_ABI_ERRORS),y)
+> -$(shell $(srctree)/scripts/get_abi.pl validate --dir $(srctree)/Documentation/ABI)
+> +$(shell $(srctree)/scripts/get_abi.py --dir $(srctree)/Documentation/ABI validate)
+>  endif
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Applied, thanks.
 
--- 
-With best wishes
-Dmitry
+jon
