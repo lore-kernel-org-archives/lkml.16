@@ -1,210 +1,204 @@
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1662753E9
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5731F2753E8
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739487086; cv=none; b=VmC6A3kLLLSK4Vowj/mC5iCIddRONeX6zNb0zeorThxcrNfDeQRKkSFKsP4J9t9YSVRRSkrd/6PjKIWX+ED3vCk3JrYjGGTcKDBgelvcRVSuqORZetq1ysNnc3J7c36wdCnDsYX7YkdQdFmeWd4pA2AVdoFykw2NpKvj/6TaGSA=
+	t=1739487164; cv=none; b=pPYhNQHg1fjSqcFpfW/Nd12PU+pCyySfd65YG9BhlhftHdv14xwD6sN1hk3+cApeGIhyQ4QshGyavFDsXux4NpPUqh0opV8hwvLDY+o8wFmY3XU9Kd5zUvaA/mOpmSqVAVFLOuZqtpPiQpd6oMd6EP+gHHXhx3UGR54SGBuS/Qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739487086; c=relaxed/simple;
-	bh=ZQiJI6r35L8re7VmaSmuwT9/cCtn0u60zuPKAx+YoYI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TtUmiiaNDf17zSF3F7HvFZVtCUt4Jrq5mjBdFKquJwSa1cgtJ6qwwsNrDsoZ49rVSViVVcBZvIgNzz8gSvtpkUHh6dyDq7WLIa0CbZ0gosLtrAg+GTVl5zQhH/6j/P71IfHE7peh+XfyX8cntXUaSDfToWM+iOBv/319l6JFocI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
-	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-	id de340431-ea5c-11ef-9d70-005056bd6ce9;
-	Fri, 14 Feb 2025 00:50:06 +0200 (EET)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 14 Feb 2025 00:50:05 +0200
-To: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
-Cc: Andi Shyti <andi.shyti@kernel.org>,
-	Markus Elfring <Markus.Elfring@web.de>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH v10 2/2] i2c: octeon: Add block-mode i2c operations
-Message-ID: <Z653HU3WnvapYb0x@surfacebook.localdomain>
-References: <20241010025317.2040470-1-aryan.srivastava@alliedtelesis.co.nz>
- <20241010025317.2040470-3-aryan.srivastava@alliedtelesis.co.nz>
+	s=arc-20240116; t=1739487164; c=relaxed/simple;
+	bh=ZdAaRSQBdHLvutJUD7iiNJZZ+fgTiSlLTbKntKkz7V0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tu3GF8MqvLrHusjGKCnmOcYCaaCtfK8GefzsIU18iXmAx+eB+qBEiTV4Z72AagSiMUC2NgRjV5YRHe7LpcKr/5usIQOcVfqUYCAwUthvFMkJyGR73Zq3QzwGM7todybNj3fa3zUiLA5Lo+ufF6LkRq/VaS+oo0j6spqZIjClxps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DYpCm9iJ; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DYpCm9iJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739487162; x=1771023162;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ZdAaRSQBdHLvutJUD7iiNJZZ+fgTiSlLTbKntKkz7V0=;
+  b=DYpCm9iJbEMP9VV3CSirv+NgwsfIdOPyih5S7EImXX3cZKgYWUZPLJL+
+   ma8fyYao2YSbc0JKQ2aYRHJUbwXBvH5S504fABmATJQc84pS5ZS/95u+O
+   R2vJRC2ZHQhSshQeaO1tCgG09znWgmPrdXt4ojA9JqXnniJrD8I9XhyMA
+   PTB/qATGEb/ytjo/uMCe+w0TIDDsTMjQoar3z75luLhCtB2nNwsA/WhEU
+   vvszYa1/ymCmEBSlnfjwRXtDtgOb2lb6fjYPycZaQIbgYD5grZ0ZktAWJ
+   3Bjde0kechRpszdKRG/nH1iG/Sj2ECC1R2Ym+htf5RhYDchn19JrNg28R
+   g==;
+X-CSE-ConnectionGUID: yXpAlbY+TEW8tkQtVEg+MQ==
+X-CSE-MsgGUID: BP7NsZk2T6yjRrIuxgTbyQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="50842165"
+X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
+   d="scan'208";a="50842165"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 14:52:42 -0800
+X-CSE-ConnectionGUID: nO8NP5xVRum/6p8UR7u41w==
+X-CSE-MsgGUID: to+9fr9RTWugbrVZwm1FDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="150459322"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.108.188]) ([10.125.108.188])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 14:52:42 -0800
+Message-ID: <87194c62-7e97-41d3-98bd-14288e8bde8f@intel.com>
+Date: Thu, 13 Feb 2025 14:52:41 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241010025317.2040470-3-aryan.srivastava@alliedtelesis.co.nz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND 2/2] x86/locking: Use asm_inline for
+ {,try_}cmpxchg{64,128} emulations
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>
+References: <20250213191457.12377-1-ubizjak@gmail.com>
+ <20250213191457.12377-2-ubizjak@gmail.com>
+ <62965669-bf1d-461f-9401-20e303c6d619@intel.com>
+ <CAFULd4ZyCNy3MaCLqcuqyJKABMvbiToA5aZxfEt3iMgdRuLuYg@mail.gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <CAFULd4ZyCNy3MaCLqcuqyJKABMvbiToA5aZxfEt3iMgdRuLuYg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thu, Oct 10, 2024 at 03:53:16PM +1300, Aryan Srivastava kirjoitti:
-> Add functions to perform block read and write operations. This applies
-> for cases where the requested operation is for >8 bytes of data.
+On 2/13/25 14:13, Uros Bizjak wrote:
+> On Thu, Feb 13, 2025 at 9:48 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>> On 2/13/25 11:14, Uros Bizjak wrote:
+>>> According to [1], the usage of asm pseudo directives in the asm template
+>>> can confuse the compiler to wrongly estimate the size of the generated
+>>> code. ALTERNATIVE macro expands to several asm pseudo directives, so
+>>> its usage in {,try_}cmpxchg{64,128} causes instruction length estimate
+>>> to fail by an order of magnitude (the compiler estimates the length of
+>>> an asm to be more than 20 instructions).
+>>
+>> Just curious, but how did you come up with the "20 instructions" number?
 > 
-> When not using the block mode transfer, the driver will attempt a series
-> of 8 byte i2c operations until it reaches the desired total. For
-> example, for a 40 byte request the driver will complete 5 separate
-> transactions. This results in large transactions taking a significant
-> amount of time to process.
-> 
-> Add block mode such that the driver can request larger transactions, up
-> to 1024 bytes per transfer.
-> 
-> Many aspects of the block mode transfer is common with the regular 8
-> byte operations. Use generic functions for parts of the message
-> construction and sending the message. The key difference for the block
-> mode is the usage of separate FIFO buffer to store data.
-> 
-> Write to this buffer in the case of a write (before command send).
-> Read from this buffer in the case of a read (after command send).
-> 
-> Data is written into this buffer by placing data into the MSB onwards.
-> This means the bottom 8 bits of the data will match the top 8 bits, and
-> so on and so forth.
-> 
-> Set specific bits in message for block mode, enable block mode transfers
-> from global i2c management registers, construct message, send message,
-> read or write from FIFO buffer as required.
-> 
-> The block-mode transactions result in a significant speed increase in
-> large i2c requests.
+> Currently, a patched GCC compiler is needed (please see
+> asm_insn_count() and asm_str_count() functions in gcc/final.cc on how
+> the asm length is calculated) to report the length. For historic
+> reasons, the length of asm is not printed in asm dumps, but recently a
+> GCC PR was filled with a request to change this).
+
+So, that's also good info to add. You can  even do it in the changelog
+with little more space than the existing changelog:
+
+	... fail by an order of magnitude (a hacked-up gcc shows that it
+	estimates the length of an asm to be more than 20 instructions).
 
 ...
+>> Is any of this measurable? Is there any objective data to support that
+>> this change is a good one?
+> 
+> Actually, "asm inline" was added to the GCC compiler just for this
+> purpose by request from the linux community [1].
 
-> +/**
-> + * octeon_i2c_hlc_block_comp_read - high-level-controller composite block read
-> + * @i2c: The struct octeon_i2c
-> + * @msgs: msg[0] contains address, place read data into msg[1]
-> + *
-> + * i2c core command is constructed and written into the SW_TWSI register.
-> + * The execution of the command will result in requested data being
-> + * placed into a FIFO buffer, ready to be read.
-> + * Used in the case where the i2c xfer is for greater than 8 bytes of read data.
+Wow, that's really important important information. Shouldn't the fact
+that this is leveraging a new feature that we asked for specifically get
+called out somewhere?
 
-> + * Returns 0 on success, otherwise a negative errno.
+Who asked for it? Are they on cc? Do they agree that this feature fills
+the gap they wanted filled?
 
-Please, validate the kernel-doc properly. This has a warning.
+> My patch follows the
+> example of other similar macros (e.g. arch/x86/include/alternative.h)
+> and adds the same cure to asms that will undoubtedly result in a
+> single instruction [*].  The benefit is much more precise length
+> estimation, so compiler heuristic is able to correctly estimate the
+> benefit of inlining, not being skewed by excessive use of
+> __always_inline directive. OTOH, it is hard to back up compiler
+> decisions by objective data, as inlining decisions depend on several
+> factors besides function size (e.g. how hot/cold is function), so a
+> simple comparison of kernel sizes does not present the full picture.
 
-> + */
-> +static int octeon_i2c_hlc_block_comp_read(struct octeon_i2c *i2c, struct i2c_msg *msgs)
-> +{
-> +	int len, ret = 0;
-> +	u64 cmd = 0;
-> +
-> +	octeon_i2c_hlc_enable(i2c);
-> +	octeon_i2c_block_enable(i2c);
-> +
-> +	/* Write (size - 1) into block control register */
-> +	len = msgs[1].len - 1;
-> +	octeon_i2c_writeq_flush((u64)(len), i2c->twsi_base + OCTEON_REG_BLOCK_CTL(i2c));
-> +
-> +	/* Prepare core command */
-> +	cmd = SW_TWSI_V | SW_TWSI_R | SW_TWSI_SOVR;
+Yes, the world is complicated. But, honestly, one data point is a
+billion times better than zero. Right now, we're at zero.
 
-> +	cmd |= (u64)(msgs[0].addr & 0x7full) << SW_TWSI_ADDR_SHIFT;
+>> It's quite possible that someone did the "asm" on purpose because
+>> over-estimating the size was a good thing.
+> 
+> I doubt this would be the case, and I would consider the code that
+> depends on this detail defective. The code that results in one asm
+> instruction should be accounted as such, no matter what internal
+> details are exposed in the instruction asm template.
 
-Can you, please, remove 10-bit address "support" from the driver to avoid false
-impression that it works. I haven't found any evidence that the upper 3 bits
-are being anyhow used in it.
+Yeah, but defective or not, if this causes a regression, it's either not
+getting applied to gets reverted.
 
-> +	/* Send core command */
-> +	ret = octeon_i2c_hlc_read_cmd(i2c, msgs[0], cmd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	cmd = __raw_readq(i2c->twsi_base + OCTEON_REG_SW_TWSI(i2c));
-> +	if ((cmd & SW_TWSI_R) == 0)
-> +		return octeon_i2c_check_status(i2c, false);
-> +
-> +	/* read data in FIFO */
-> +	octeon_i2c_writeq_flush(TWSX_BLOCK_STS_RESET_PTR,
-> +				i2c->twsi_base + OCTEON_REG_BLOCK_STS(i2c));
-> +	for (int i = 0; i < len; i += 8) {
-> +		u64 rd = __raw_readq(i2c->twsi_base + OCTEON_REG_BLOCK_FIFO(i2c));
-> +		/* Place data into msg buf from FIFO, MSB onwards */
-> +		for (int j = 7; j >= 0; j--)
-> +			msgs[1].buf[i + (7 - j)] = (rd >> (8 * j)) & 0xff;
+All that I'm asking here is that someone look at the kernel after the
+patch gets applied and sanity check it. Absolutely basic scientific
+method stuff. Make a hypothesis about what it will do:
 
-Use proper put_unaligned_be64() / put_unalined_le64() depending on what you
-need. No reinveted wheels, please.
+	1. Inline these locking functions
+	2. Make the kernel go faster for _something_
 
-> +	}
-> +
-> +	octeon_i2c_block_disable(i2c);
-> +	return ret;
-> +}
+and if it doesn't match the hypothesis, then try and figure out why. You
+don't have to do every config or every compiler. Just do one config and
+one modern compiler.
 
-...
+Right now, this patch is saying:
 
-> +/**
-> + * octeon_i2c_hlc_block_comp_write - high-level-controller composite block write
-> + * @i2c: The struct octeon_i2c
-> + * @msgs: msg[0] contains address, msg[1] contains data to be written
-> + *
-> + * i2c core command is constructed and write data is written into the FIFO buffer.
-> + * The execution of the command will result in HW write, using the data in FIFO.
-> + * Used in the case where the i2c xfer is for greater than 8 bytes of write data.
-> + *
-> + * Returns 0 on success, otherwise a negative errno.
+	1. gcc appears to have done something that might be suboptimal
+	2. gcc has a new feature that might make it less suboptimal
+	3. here's a patch that should optimize things
+	...
 
-Same issue with the kernel-doc.
+but then it leaves us hanging.  There's a lot of "mights" and "shoulds"
+in there, but nothing that shows that this actually does anything
+positive in practice.
 
-> + */
-> +static int octeon_i2c_hlc_block_comp_write(struct octeon_i2c *i2c, struct i2c_msg *msgs)
-> +{
-> +	bool set_ext = false;
-> +	int len, ret = 0;
-> +	u64 cmd, ext = 0;
-> +
-> +	octeon_i2c_hlc_enable(i2c);
-> +	octeon_i2c_block_enable(i2c);
-> +
-> +	/* Write (size - 1) into block control register */
-> +	len = msgs[1].len - 1;
-> +	octeon_i2c_writeq_flush((u64)(len), i2c->twsi_base + OCTEON_REG_BLOCK_CTL(i2c));
-> +
-> +	/* Prepare core command */
-> +	cmd = SW_TWSI_V | SW_TWSI_SOVR;
-> +	cmd |= (u64)(msgs[0].addr & 0x7full) << SW_TWSI_ADDR_SHIFT;
-
-Same issue with 10-bit address.
-
-> +	/* Set parameters for extended message (if required) */
-> +	set_ext = octeon_i2c_hlc_ext(i2c, msgs[0], &cmd, &ext);
-> +
-> +	/* Write msg into FIFO buffer */
-> +	octeon_i2c_writeq_flush(TWSX_BLOCK_STS_RESET_PTR,
-> +				i2c->twsi_base + OCTEON_REG_BLOCK_STS(i2c));
-> +	for (int i = 0; i < len; i += 8) {
-> +		u64 buf = 0;
-> +		/* Place data from msg buf into FIFO, MSB onwards */
-> +		for (int j = 7; j >= 0; j--)
-> +			buf |= (msgs[1].buf[i + (7 - j)] << (8 * j));
-
-Same issue with unaligned accesses, use get_unaligned_*64().
-
-> +		octeon_i2c_writeq_flush(buf, i2c->twsi_base + OCTEON_REG_BLOCK_FIFO(i2c));
-> +	}
-> +	if (set_ext)
-> +		octeon_i2c_writeq_flush(ext, i2c->twsi_base + OCTEON_REG_SW_TWSI_EXT(i2c));
-> +
-> +	/* Send command to core (send data in FIFO) */
-> +	ret = octeon_i2c_hlc_cmd_send(i2c, cmd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	cmd = __raw_readq(i2c->twsi_base + OCTEON_REG_SW_TWSI(i2c));
-> +	if ((cmd & SW_TWSI_R) == 0)
-> +		return octeon_i2c_check_status(i2c, false);
-> +
-> +	octeon_i2c_block_disable(i2c);
-> +	return ret;
-> +}
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Maybe I'm just a dummy and this is just an obvious improvement that I
+can't grasp. If so, sorry for being so dense, but I'm going to need a
+little more education before this gets applied.
