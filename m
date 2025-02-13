@@ -1,122 +1,135 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E3D2B2CF;
-	Thu, 13 Feb 2025 01:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923B078F26
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 01:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739409647; cv=none; b=q3x1ps+4AWdF0aj/hhZ1/sgqjt5yU28df3L69ok4KiQcvlI5f98phu0lKOrlrEHs9o9jvhEftF9Xk2sHiyBIC3jJd8fWS7dGUVSTVE4OOZPGiexMTiYYDTGiciLbpBiRIjCog/fezzbevaHMSB/de5IzjhVddHAahFHUCewYMjc=
+	t=1739409708; cv=none; b=YH433UuCNPGPHKmvqiWe9mt27bnN9f6T3bKJYBX9d9+Wu8eYQO7R5JrCSzhLBaomcZNOPLIfdzf2TcxtGau5d13Jyif96NJMRQFBwGPwqMKk9PrxqYv7gpDEzVF5rYazl/cYpuzPWGLULsLev5ooRuCzEYIN15y+h7osTZr5W5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739409647; c=relaxed/simple;
-	bh=rxEvVCmlC6MPxnMiH9JBv8rF6gOzCBcYoGHTEUfNjXQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=PfjvBRe7qcECFuMhGS7NJQwhcSfmp1sl54hnLobX47IbU5DQwBeT5p55zrBXcrMmt1wTRSKI2mpUQYwflst8Va6YlqfpMxCXwF8KtjipGiG54STTYUADcTivVGKIPdHPehBfkfEatIK/G30fAYn+dDd01hY5RjZ1i78ASp4AkN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Fya2az38; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739409708; c=relaxed/simple;
+	bh=q+nCXvcuGbP6lZuLocKajT0ORe5EGrF6T3/N8VpC8fs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KueByD88zh6dkx1DYuM+ia0sATnA8R+pRuv0j62qvl4CGtwJBXW1kTy7G8haRPDAopWLBy6JYu0Pc4jrpocoK9C5odA8MahMbaxDgq1c7YyC3iF8VhzpQKn3JrTRxuUU0mvxpUBPbLYp7XPWKhb0sTAjha/9R4YgtsBo85SfyRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HfjYpt8w; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Fya2az38"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CL8NZi014045;
-	Thu, 13 Feb 2025 01:20:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7Ri0W6r4i5tXARi04wYAv3UCDFcI7Ko3HG/Vs83wysM=; b=Fya2az38kbB2EQWK
-	nzc6XcCM+EXUr+QdV1K+V0BhkUXHVjulM1pWcD81yNb1V/ijlfbMzlPsdvyInr2Q
-	q5s2W/qYYti7aTBtPgnBEO+jcynpJ/XrtcsCzinARHFa+4zXtiXRPekfIalmxKXe
-	RO56VtPubZFh+XCQk7Ecv8KKwFtUWubAyDL0MvgO2b1IfBochAPA5BTgsQu/TdGw
-	NZjnbCvmAI+04D29MMzKPwAWY3DElMvMX6goZqLT3CH59Kmm+da5Jt6Xo9KMgjVG
-	RV0uAE2xWa5uRQyp/jmFBqYlWPxkgfrpzIjz4wUfoRXfBBpIgbcCX+I71pd7zSJG
-	euSD2A==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44rsd7t4jk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 01:20:38 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51D1Kb3T006178
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 01:20:37 GMT
-Received: from [10.71.110.136] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Feb
- 2025 17:20:36 -0800
-Message-ID: <82da87d8-70d1-4013-ace7-ec90331d18e5@quicinc.com>
-Date: Wed, 12 Feb 2025 17:20:35 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HfjYpt8w"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43956fcd608so1977485e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 17:21:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739409705; x=1740014505; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q+nCXvcuGbP6lZuLocKajT0ORe5EGrF6T3/N8VpC8fs=;
+        b=HfjYpt8wQHhUYd2ZRQuf3oSOgLs6yha3tTp4A+R34vbmrAbTWh5TVtKS3eLS+iO6g4
+         maDCkH/nNp/ZOHuhialk9S6PFGYBcSpYiFJh19PDkIxsEhqHu67n2Bh1P+EIw/2o6YKA
+         e33iXmpR/zB8cvDmIW3g4q2nqVnqqaXP8DqsroS13hZuhxJCvf4Q9MK0JIYDo9BfNz8J
+         hdprjRXFgcpzEMqp/8eTH6GAil0gRUyHvQHO1LolG5draZPPu9aJYOK+2UgTzLllXMci
+         qpGhj5COTTQIzS1/3Cn2pBLuM+fePxvX6+f2nv7XU+wQeMI4fUVGbowzl0UT/eZhupBC
+         ZP6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739409705; x=1740014505;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q+nCXvcuGbP6lZuLocKajT0ORe5EGrF6T3/N8VpC8fs=;
+        b=l5lBv4H8r2rBd2BKqS2FTLm7w3WnEQZ0D27gPYiiwKTRx9IceK3+fAdroJLMAGbun2
+         hYsn8JTI16Km+RonDnZqvE3yoE8XvkQjKxSNpzYHqOh3iT49x+OeNmXcnsv1ou4UkgJ7
+         A757zvLEfuor2oifC+4UpOHa3sS1+CkugwzVgcuvPiedE1+bJG2rlHeATLJWQpgi13hv
+         cUyH65jkbGTdA3II3wiVikft+iPkf3q4prU2AoBHVHqAmigOtGlTsJNwGXyupIZFphQn
+         V9j3gCn4aTzSMh/kUe54MqDHvMAZqRIpba53nlgmnDFm6xmHZq9bSL9EeqwUKJVQscaH
+         WA9w==
+X-Forwarded-Encrypted: i=1; AJvYcCU/2tQ8y7mSpjED8xTsQ536Cz1n3sl+TJL2t4JrJbv2l6t1qKtDawzR3JxAvVLIMH4Hfr3Lw/Z8W8GFeOc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjucxttkvSdwIiw5UXC1arWok/AAb7VIsoxu8q6txRHviM9IBE
+	VNYWs20VfPf0dgXUUn9+drVqFCe+X4L5o4BJWDqY3MV9TF+UBAKjdPUxwIANConlHSz+pfM6mTo
+	AFqmkpxQjnjMdExtyNnCed5Rl2xE=
+X-Gm-Gg: ASbGnctVbHnPN3yqnh5oEyGv/SD0DWbNFKtCpYruKE3XU6MYJsMW1vAehE0tRcn1wJq
+	V3/jWa41cF5KYHP90ecKzYZS2IfhkCMKOsfG4S2Bt6OXvxrGu4q7ubIn6R/2iY49k342sDccw6K
+	Q=
+X-Google-Smtp-Source: AGHT+IEjJMkC/hHaotdqSukhMJQZrOiaCkGtVrbEkJiI15zjYiRvHohJ4FkUwvWx7PY95qrg/tcG6HP5nsDWETkesBs=
+X-Received: by 2002:a05:600c:198b:b0:439:60bc:71b3 with SMTP id
+ 5b1f17b1804b1-43960bc744emr6893225e9.25.1739409704648; Wed, 12 Feb 2025
+ 17:21:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/msm/dpu: Disable dither in phys encoder cleanup
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-To: Jessica Zhang <quic_jesszhan@quicinc.com>,
-        Rob Clark
-	<robdclark@gmail.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        "Sean
- Paul" <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        "David Airlie" <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20250211-dither-disable-v1-1-ac2cb455f6b9@quicinc.com>
- <3606b749-a476-4c52-9f8b-5e4b465c5e79@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <3606b749-a476-4c52-9f8b-5e4b465c5e79@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 9kpn3MEPN0nfLv44TXmfh8EJ_w127KH0
-X-Proofpoint-GUID: 9kpn3MEPN0nfLv44TXmfh8EJ_w127KH0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-12_08,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- mlxlogscore=999 mlxscore=0 adultscore=0 spamscore=0 phishscore=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502130008
+References: <20241022015913.3524425-1-samuel.holland@sifive.com>
+ <20241022015913.3524425-2-samuel.holland@sifive.com> <CA+fCnZeBEe3VWm=VfYvG-f4eh2jAFP-p4Xn4SLEeFCGTudVuEw@mail.gmail.com>
+ <e7t5yzfw3dq5stp5xjy5yclcx6ikne4vwz7d6w2ukfw2b7gr6t@oomoynf3b2jl>
+ <zjuvfdbl7q76ahdxk3lrgaznk7vjj43f5ftzfgrnca6dqtcd5x@5qj24womzgyq>
+ <CA+fCnZfySpeRy0FCFidLdUUeqp97eBdjAqQyYPpz1WxYwcsW9A@mail.gmail.com> <aqhm7lc57srsfuff3bceb3dcmsdyxksb7t6bgwbqi54ppevpoh@apolj3nteaz6>
+In-Reply-To: <aqhm7lc57srsfuff3bceb3dcmsdyxksb7t6bgwbqi54ppevpoh@apolj3nteaz6>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Thu, 13 Feb 2025 02:21:33 +0100
+X-Gm-Features: AWEUYZnQToSGphLmBmZFBpfuiZIg1iWlon9vHp3PXB7Fk9evMSAokOcZX5tZFRE
+Message-ID: <CA+fCnZdjTkreTcoo+J8wMhwDuAFM4g33U5BFy0OPtE0UCvyJbQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] kasan: sw_tags: Use arithmetic shift for shadow computation
+To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+Cc: Samuel Holland <samuel.holland@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	linux-riscv@lists.infradead.org, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com, 
+	llvm@lists.linux.dev, Catalin Marinas <catalin.marinas@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Will Deacon <will@kernel.org>, 
+	Evgenii Stepanov <eugenis@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Feb 11, 2025 at 7:07=E2=80=AFPM Maciej Wieczor-Retman
+<maciej.wieczor-retman@intel.com> wrote:
+>
+> I did some experiments with multiple addresses passed through
+> kasan_mem_to_shadow(). And it seems like we can get almost any address ou=
+t when
+> we consider any random bogus pointers.
+>
+> I used the KASAN_SHADOW_OFFSET from your example above. Userspace address=
+es seem
+> to map to the range [KASAN_SHADOW_OFFSET - 0xffff8fffffffffff]. Then goin=
+g
+> through non-canonical addresses until 0x0007ffffffffffff we reach the end=
+ of
+> kernel LA and we loop around. Then the addresses seem to go from 0 until =
+we
+> again start reaching the kernel space and then it maps into the proper sh=
+adow
+> memory.
+>
+> It gave me the same results when using the previous version of
+> kasan_mem_to_shadow() so I'm wondering whether I'm doing this experiment
+> incorrectly or if there aren't any addresses we can rule out here?
 
+By the definition of the shadow mapping, if we apply that mapping to
+the whole 64-bit address space, the result will only contain 1/8th
+(1/16th for SW/HW_TAGS) of that space.
 
-On 2/12/2025 12:23 PM, Abhinav Kumar wrote:
-> 
-> 
-> On 2/11/2025 7:59 PM, Jessica Zhang wrote:
->> Disable pingpong dither in dpu_encoder_helper_phys_cleanup().
->>
->> This avoids the issue where an encoder unknowingly uses dither after
->> reserving a pingpong block that was previously bound to an encoder that
->> had enabled dither.
->>
->> Reported-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> Closes: https://lore.kernel.org/all/ 
->> jr7zbj5w7iq4apg3gofuvcwf4r2swzqjk7sshwcdjll4mn6ctt@l2n3qfpujg3q/
->> Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
->> ---
->> This was tested on SC7180 Trogdor by pulling in the concurrent writeback
->> series [1] and running the IGT kms_writeback@writeback_check_output
->> subtest.
->>
->> [1] https://patchwork.freedesktop.org/series/144083/
->> ---
->>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
-> 
-> Was an extremely tricky issue to debug.
-> 
-> Glad this one is resolved,
-> 
-> Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+For example, with the current upstream value of KASAN_SHADOW_OFFSET on
+x86 and arm64, the value of the top 3 bits (4 for SW/HW_TAGS) of any
+shadow address are always the same: KASAN_SHADOW_OFFSET's value is
+such that the shadow address calculation never overflows. Addresses
+that have a different value for those top 3 bits are the once we can
+rule out.
 
-Also going to add,
+The KASAN_SHADOW_OFFSET value from my example does rely on the
+overflow (arguably, this makes things more confusing [1]). But still,
+the possible values of shadow addresses should only cover 1/16th of
+the address space.
 
-Fixes: 3c128638a07d ("drm/msm/dpu: add support for dither block in display")
+So whether the address belongs to that 1/8th (1/16th) of the address
+space is what we want to check in kasan_non_canonical_hook().
 
+The current upstream version of kasan_non_canonical_hook() actually
+does a simplified check by only checking for the lower bound (e.g. for
+x86, there's also an upper bound: KASAN_SHADOW_OFFSET +
+(0xffffffffffffffff >> 3) =3D=3D 0xfffffbffffffffff), so we could improve
+it.
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=3D218043
