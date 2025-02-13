@@ -1,121 +1,128 @@
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D00200130
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36F9A2222D8;
+	Thu, 13 Feb 2025 16:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739463294; cv=none; b=b2FPYhE5Cggujvic8QrIJfK1K2tLGiE3uhlMx2tofLrJCTI/8jqqhp2RSyl2MTBoxaw9kxdBrZauQgGSAzjrC3BnNKS5TkqKn6Gk9KWnSyR0m7l6KeVkO/8Xi/lu7U3q84XaDs2SNa4NxaQZPgEPf5zDRehRrmUIUII2IsQ9vsc=
+	t=1739463300; cv=none; b=h51e1Nr+9nJb7pmZ7vDkKF5YyhftjWrrQiAu/JPqKImQ6EZoqMLP7h3Can7Un99dI7QuhzNzVOOUpNNg3EUIPgVY9mb2dgfhjSb2VJa2JMF0U7/s/pR8comFxQ/fS6/BH6e/mYZK9h6LQd73Wz63zFSGUUZEpxgdBzp3cObBL+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739463294; c=relaxed/simple;
-	bh=vB2tLQ8luJCtcby10TZWuCWKxWvuKnuAiaEweV/fb5c=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=JJ6VDQKyTx5pQQPmwLyj7pfL0naP0/uwPlzPZCkNIMs2oeRna2tgRCYgmIvszoWjHJdoR3pUCaQr+zktFrM2hBIeu4PnTkexmjgNr+1i4z+BAl9LSKkFgATtaCkUdXb3IAlMMZg/aAkTRIlOLUfgmutkvBOWUW9xRCyHjPkwYwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=9Hy452L+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aEIBhSP1; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="9Hy452L+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aEIBhSP1"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id 5E87F138009C;
-	Thu, 13 Feb 2025 11:14:51 -0500 (EST)
-Received: from phl-imap-07 ([10.202.2.97])
-  by phl-compute-10.internal (MEProxy); Thu, 13 Feb 2025 11:14:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
-	 t=1739463291; x=1739549691; bh=vB2tLQ8luJCtcby10TZWuCWKxWvuKnuA
-	iaEweV/fb5c=; b=9Hy452L+xFsWrycvvvMpOR9cm+RELglLGmf10ti5XFJpCPra
-	aAFURThZV4MJxFN3JrXiPzcJYC7oyrXNsemLBK8G0WWPHSLU+8Uj4DYiTJE2Z15S
-	NHiuo6kmBUERoogKifYuNLdDfz+zzEurt0CbIWRgKaZM7LEj+YIWLGu9UmTJZmM5
-	+Tc7X5ySExZ0Ee8GRJt9AFuhr9j2TUWMwmNict5HHxJi1RHisypS5LGwXfFMVXDO
-	1OcGHZDyzCOB6Rk0VYfATbMSJdmeBNAxhKATpLcGosUIFov+2IpBTvNwc0VJYgL+
-	F2rKYC5+c2qORhR1reHTRbIXaeopPI7dtk/oNQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739463291; x=
-	1739549691; bh=vB2tLQ8luJCtcby10TZWuCWKxWvuKnuAiaEweV/fb5c=; b=a
-	EIBhSP1UMOzP32rXYDdRMd9nK+mSv0CVZBScor0GRIswWzchuBi4SKCIljXYZWzD
-	ZIDUGqG5UMu6qDxoWN0FfW+5SWXnI5bVr+WybgQDGHeLjrB9Np8WhLzrYp1Qge3U
-	HUsYTxsiYfHZ8xoOMNul0s/qzc4WJSQ1xL6A/M0UN/WpZx3o2wkLJoCh/6xQHZzb
-	Cr0lEluVENMTss/xAalNIwEnMEH6N53wizYoCjrZdxLQH0rb600v9FbXRYUVjNvd
-	HcvzCFTlDU3pvnG7sKh1quEaTu4LlA1Ql/lhJiRWspSQlvm5QhZHxizW8Sl9RWRZ
-	qFUZUMRjokZdk/6ynXpLA==
-X-ME-Sender: <xms:eRquZ1tInnf9kRqzkJYdsJgqzfmpV6gZGjgjXJNIFJbokixtEqKbHw>
-    <xme:eRquZ-esQAlMFQFvO1mBsM7OZ1UtJrb7tQAERI6MmUBx3BZf2pre8nnJFwsGb-9m8
-    6GjRV5ggtbEn5v9BEA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegjedvvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdfuvhgvnhcurfgvthgvrhdfuceoshhvvghnsehsvhgvnhhpvghtvg
-    hrrdguvghvqeenucggtffrrghtthgvrhhnpeelfeetueegudduueduuefhfeehgeevkeeu
-    feffvdffkedtffffleevffdvvdeuffenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehsvhgvnhesshhvvghnphgvthgvrhdruggvvhdpnhgspghr
-    tghpthhtohepuddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnvggrlhesgh
-    homhhprgdruggvvhdprhgtphhtthhopehsrghgihesghhrihhmsggvrhhgrdhmvgdprhgt
-    phhtthhopegrgigsohgvsehkvghrnhgvlhdrughkpdhrtghpthhtohepkhgsuhhstghhse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlhes
-    lhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhnvh
-    hmvgeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegrshgrhhhi
-    sehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohephhgthheslhhsthdruggvpd
-    hrtghpthhtohepmhgrrhgtrghnsehmrghrtggrnhdrshht
-X-ME-Proxy: <xmx:eRquZ4yANbrFpU9QyTEousZ9LrqnpIPXkZxxa-PGG083rHBHu56Czg>
-    <xmx:eRquZ8PvOIgF_dIudDTbFb3hYzN3VV57sFtxSNSpx9W30UeOKXeH-Q>
-    <xmx:eRquZ18Mr4WTOqZxZktpBpbJjwc7YzYHAPIvbJRaxFJOFw4lUyP2xA>
-    <xmx:eRquZ8U6IHsHWO0WvdWVOadkBlGVRqHWhGvy7Uw0Z-yEspRiaaBPbQ>
-    <xmx:exquZ8WIfkMqIOhgPSSFSrjSXxYGnq_gLIRbnQGTv-MXeOuObrmogYKI>
-Feedback-ID: i51094778:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 798FDBA0070; Thu, 13 Feb 2025 11:14:49 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1739463300; c=relaxed/simple;
+	bh=5cN+/qXLzjbQW/K17YHt6ES4HPrN1y15P6RnpwWBj1I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=h7/IH1+VWX66Fpen9cC4nNW0/XMDPzQZOebl4WUCHcPOfMaGym0jz6iCoWz/OSF+0ZOujUSY7+Kin9qc+cAMUpuhWdYIMpYIdcm+TZIGrbBZ2QvxhiuIlmc7rceY+aVnY5MBVw8/BWPe9/nGUuvlgAzOwCD7BdAtu1/6BYC9i5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 092FE1756;
+	Thu, 13 Feb 2025 08:15:19 -0800 (PST)
+Received: from e122027.cambridge.arm.com (e122027.cambridge.arm.com [10.1.32.44])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A06C83F6A8;
+	Thu, 13 Feb 2025 08:14:54 -0800 (PST)
+From: Steven Price <steven.price@arm.com>
+To: kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Cc: Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+	Gavin Shan <gshan@redhat.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	Alper Gun <alpergun@google.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+Subject: [PATCH v7 03/45] arm64: RME: Handle Granule Protection Faults (GPFs)
+Date: Thu, 13 Feb 2025 16:13:43 +0000
+Message-ID: <20250213161426.102987-4-steven.price@arm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250213161426.102987-1-steven.price@arm.com>
+References: <20250213161426.102987-1-steven.price@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 13 Feb 2025 17:14:28 +0100
-From: "Sven Peter" <sven@svenpeter.dev>
-To: "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
- "Hector Martin" <marcan@marcan.st>, "Keith Busch" <kbusch@kernel.org>,
- "Jens Axboe" <axboe@kernel.dk>, "hch@lst.de" <hch@lst.de>,
- "sagi@grimberg.me" <sagi@grimberg.me>,
- "Philipp Zabel" <p.zabel@pengutronix.de>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
- "Neal Gompa" <neal@gompa.dev>
-Message-Id: <dec49be0-c49c-4c37-8faf-72d9f89e4d53@app.fastmail.com>
-In-Reply-To: <20250213-nvme-fixes-v2-0-a20032d13e38@rosenzweig.io>
-References: <20250213-nvme-fixes-v2-0-a20032d13e38@rosenzweig.io>
-Subject: Re: [PATCH v2 0/2] apple-nvme: bug fixes
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 13, 2025, at 17:12, Alyssa Rosenzweig wrote:
-> This small series fixes two unrelated issues with the Apple NVMe driver.
->
-> * fix NVMe on certain combinations of firmware + machine
-> * fix a power domain leak
->
-> Although these are strict bug fixes, given the early stage of mainlining
-> for these SoCs, none of this needs to be backported.
->
-> Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> ---
+If the host attempts to access granules that have been delegated for use
+in a realm these accesses will be caught and will trigger a Granule
+Protection Fault (GPF).
 
-For both patches:
+A fault during a page walk signals a bug in the kernel and is handled by
+oopsing the kernel. A non-page walk fault could be caused by user space
+having access to a page which has been delegated to the kernel and will
+trigger a SIGBUS to allow debugging why user space is trying to access a
+delegated page.
 
-Reviewed-by: Sven Peter <sven@svenpeter.dev>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+Changes since v2:
+ * Include missing "Granule Protection Fault at level -1"
+---
+ arch/arm64/mm/fault.c | 31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
+diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+index ef63651099a9..29821dc89f73 100644
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -844,6 +844,25 @@ static int do_tag_check_fault(unsigned long far, unsigned long esr,
+ 	return 0;
+ }
+ 
++static int do_gpf_ptw(unsigned long far, unsigned long esr, struct pt_regs *regs)
++{
++	const struct fault_info *inf = esr_to_fault_info(esr);
++
++	die_kernel_fault(inf->name, far, esr, regs);
++	return 0;
++}
++
++static int do_gpf(unsigned long far, unsigned long esr, struct pt_regs *regs)
++{
++	const struct fault_info *inf = esr_to_fault_info(esr);
++
++	if (!is_el1_instruction_abort(esr) && fixup_exception(regs))
++		return 0;
++
++	arm64_notify_die(inf->name, regs, inf->sig, inf->code, far, esr);
++	return 0;
++}
++
+ static const struct fault_info fault_info[] = {
+ 	{ do_bad,		SIGKILL, SI_KERNEL,	"ttbr address size fault"	},
+ 	{ do_bad,		SIGKILL, SI_KERNEL,	"level 1 address size fault"	},
+@@ -880,12 +899,12 @@ static const struct fault_info fault_info[] = {
+ 	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 32"			},
+ 	{ do_alignment_fault,	SIGBUS,  BUS_ADRALN,	"alignment fault"		},
+ 	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 34"			},
+-	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 35"			},
+-	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 36"			},
+-	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 37"			},
+-	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 38"			},
+-	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 39"			},
+-	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 40"			},
++	{ do_gpf_ptw,		SIGKILL, SI_KERNEL,	"Granule Protection Fault at level -1" },
++	{ do_gpf_ptw,		SIGKILL, SI_KERNEL,	"Granule Protection Fault at level 0" },
++	{ do_gpf_ptw,		SIGKILL, SI_KERNEL,	"Granule Protection Fault at level 1" },
++	{ do_gpf_ptw,		SIGKILL, SI_KERNEL,	"Granule Protection Fault at level 2" },
++	{ do_gpf_ptw,		SIGKILL, SI_KERNEL,	"Granule Protection Fault at level 3" },
++	{ do_gpf,		SIGBUS,  SI_KERNEL,	"Granule Protection Fault not on table walk" },
+ 	{ do_bad,		SIGKILL, SI_KERNEL,	"level -1 address size fault"	},
+ 	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 42"			},
+ 	{ do_translation_fault,	SIGSEGV, SEGV_MAPERR,	"level -1 translation fault"	},
+-- 
+2.43.0
 
-
-Best,
-
-
-Sven
