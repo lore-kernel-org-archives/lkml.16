@@ -1,142 +1,109 @@
 Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D72524BC0C;
-	Thu, 13 Feb 2025 19:47:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07478201100;
+	Thu, 13 Feb 2025 19:47:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739476032; cv=none; b=XlivwJA5t67bc733zB7s9BOLkHaH3v7IhfaH9cvIVSyyuhuScc7fFxRmWuvv4/xJUy8hBo/w8hf20nOU026O2Jc9PfFpxw/Bo/muUXO8ODgbz8D1ejYsz7qSN1lCwlLb2Ga3l5Ub1k9oSS+I2wNihrgne+183BrSV8HJuhAdLRU=
+	t=1739476079; cv=none; b=U6uz4HCJj/NAnRcdJgw/GEngc0o9KWSu9BlKzZlK9rF6X1U/BFAIKEBjxLbn178tskBnjVQh27nPgQzVf0HhTjgtdVoqBGXGvfayXFkNxn3z60sTYbMHe4zZX0QblilVFHtxSg3hel+H4pe+4/iCzQHlzt4WLlTRSIYkVnQ2hao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739476032; c=relaxed/simple;
-	bh=puLrtcz6AIAWbE2vZFFCXVMYzIc06mHsrui5HAiPCPM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pZOyFh8SW3akbAC8KJVJyDwQDz+DQBvwWqok2fxMLlOR66XZHnTrfXwkV8Eiy1+JcfO0FYvKnFnovrhl2DBziUAoVmCfw8doxfm6jhl6AiRVAqJh19tfGI7rCFDCYfdbrwwyWyQftqnjKfj+PfXFTesIZave1EdNY2XR4Bm08GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CY5EuzZy; arc=none smtp.client-ip=209.85.160.53
+	s=arc-20240116; t=1739476079; c=relaxed/simple;
+	bh=WkGskC06wVsS+V4YhoGHGuUZXjLzmZ72ZPFNMA/fYbQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aPWDf0gIwJenf/4bYTKlTy9s0kEu4Tg8GtNuUtAADKVoyuKs7bRm4hQj1X93wLk9Lj3FuV6uq7inrk6jchEP+LOkOILLNQNqRmkQmtz6MiHAve12h+r9jFrrxBNkaGy2cuV/0dklnpxhSvo7rThhjgiqRis9hjgFQsNgJ99Ns9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZPGAOqBg; arc=none smtp.client-ip=209.85.160.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CY5EuzZy"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2a88c7fabdeso759031fac.1;
-        Thu, 13 Feb 2025 11:47:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPGAOqBg"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2b86e13e978so698915fac.2;
+        Thu, 13 Feb 2025 11:47:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739476030; x=1740080830; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ejSc6IfEiSjDT7Iw01feIusRQUmaVdCjxM/l2LoismY=;
-        b=CY5EuzZy0G2qCcLoFQ5sFjW3z+rqax+ZoD7skp46GPFP98vr+r5J4OMrWYF87wm288
-         aQZIp+hNkCffv/Jvd1GoyJWNU2GmtNDADOQMZfTLPPGtcOZN98UDSNTFelyOmpqBUGkB
-         7FI1vF8/KUkmmhkfaaqU5er6okQTclBmrjZG4iDZ5rFgjY5d8drm62WcxeF7Cblcc5ph
-         i54DTR0p1lmab307i0Fq52DrGnl+xtj348MX48KWEMsh/dFOwmPBcgE4qEnxndvEKztd
-         dXMAapv5p3gvCtJRAooKZJ1AKq8GHkLvkHLCW6rgAtauckVg0EzKlBeF4Hs3rEBPVVaK
-         DIBA==
+        d=gmail.com; s=20230601; t=1739476077; x=1740080877; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wgc8m2ffW0K8m7hNVPYrvZDbb5H5c3q0ozQ5Jpfyw6M=;
+        b=ZPGAOqBgYo2ZrsanuHX1hAZS2S4oVYK8bfNaAno8FM6tMjgs1gcCrCcJcHyeAuK8jj
+         vff/V4QHKFdLjy2uE8JjniTS9n6m9K9L1kJJtb9voz12+uNs62nVHR5by80aNCJc0cKg
+         v6s+aytgFQvUm518nXKxN0WFQprN7uL9cb1UQl2U/7O1eoKcdx2vxpFYF1PMcTvSMu02
+         H2FXbM2Vssirbz1bbfizIPMA5Ij0pz3Thv/pfe74W4OsbWm6IvSJSybQC4buaFwRfmgd
+         WFi8QN50XRfcci5GmOKPzCBe9CbSDi0PQjbN9XTxuqlLvV+umnIX0yx1TKe05X3yR0Ku
+         l55g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739476030; x=1740080830;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1739476077; x=1740080877;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ejSc6IfEiSjDT7Iw01feIusRQUmaVdCjxM/l2LoismY=;
-        b=mPxTRDzaVv1Tt/8Uqcb6kd9cppyaXu7jfIM6h+x714hEeOwWmHIz9YqYtpwkHgeBp/
-         jith2R9o62KkJNNj3S4c7NJAEm0SFmtV65+2HvXoEGx1gAenCu/ttw+UQ2XkNJ741EBU
-         vR4v6p9IlYelMsaiRcBNHb6B/zK60Nb6ay4nrRn/mOHkrhSPmlG82WKb9pWR8Bikbkui
-         iipmq8eg9b2YM3w+JFUsoLtpIH0MSGKrD278UjmiLsr18ua9x0pVIugh4K0HtejUdY+O
-         Vi8tUvliGT8ba0Ju2R2NZ6b1FuXV/LsITJ7p9WVs2cN5SqleV+GcaoQKlT5vOr5ktoA0
-         3/kw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8dRMcFXaKUR8QGchW9wSsCWUyqIqCbaqYEH3d9FhDFKv9MyMCaZWn1g8anDM01yzQCawCaZsCBvcRWkc=@vger.kernel.org, AJvYcCXaoMcN2QohZ/Ohk0tQaOro8fPbuor3o/c5D9gKBCCRHbTDcE7X/SRNj9MiEh55BNjE+0Ya+z1b@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcruwOId1zs/8EESuKM04bDYUDrwkmw3ef5Ya+RXfxvE5uZ8R6
-	czxpxLm4Nmbac/cwIovbInFuR3zAcnnzr0e8Z6lk1w5T6jAWgHXl
-X-Gm-Gg: ASbGncsZoWUwDKoYNMc1Vz5/aBbutTR4UIxCEWit2u+0kdZCZeIYvZPpmFLVLtV+pSK
-	0rdnopQcm3Y1DaAv1UYyt27Jdl4DcLxHT8cE/Fkx5CVQG1/k7ajMCCzWKgHAtvGH5feWzbxWrco
-	2ZfMRAxT+V+alj6x8F9EyeyzqEoiudr8GL6MQO5JCH3NOrQQArJsbljK1H5VghTlylJYOInjOZ2
-	f2rqrw2XriO0WXgzk7XL9X57tp6TouLNg7aq6FYVmdjtFUr4T+GYMggy+Pqlg5FWXA/rRSSk69l
-	9uuvuVrkXBr0QRc6IZhc9PgXCVgY8gZIHUF+G7ITv/Y=
-X-Google-Smtp-Source: AGHT+IHwRTZarXLdEKWzV9O2i3pS1uzAWAz1vppIh74WiI7c0L9xdzsJdq59YLvUZmVxAmbbveoh8Q==
-X-Received: by 2002:a05:6870:6107:b0:29e:3921:b1ea with SMTP id 586e51a60fabf-2b8d67b9020mr5774131fac.30.1739476029625;
-        Thu, 13 Feb 2025 11:47:09 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b963a100d2sm1011611fac.44.2025.02.13.11.47.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 11:47:08 -0800 (PST)
-Message-ID: <0fe544d1-4d32-4b5f-a543-8fd056772db1@gmail.com>
-Date: Thu, 13 Feb 2025 11:47:06 -0800
+        bh=Wgc8m2ffW0K8m7hNVPYrvZDbb5H5c3q0ozQ5Jpfyw6M=;
+        b=Zj2q4Fd6cPyH2/74bxLyj9vLe79/J/arxJZEoTZDvl0eS5GpvawL1zzDc4TGusDAic
+         DMG7Losb+JuBPE/CrakNhudyP02ExPlEyIHJBP5ZmKsT9CgheTtO2VVO0a2VMskA+zqg
+         4/fvPDyIe8UxgLLw9izONcX8SOhznV+LUd1R3auncryCi5yseEAoar8GiEQ/MM7pn+ie
+         KpwpsnENzR2VkhFFWSuo6r0K9ttKMEORO/HS1ZvHXUNOsRCtLboMcYI6RK+JZhFnVu26
+         jchHxBxH9hFpP6k/2DynZwLfnTEwA4uaqeYTQEjbNypQkFVo0Mt/vsrsMH4TKBXXRvSa
+         t0vw==
+X-Forwarded-Encrypted: i=1; AJvYcCUR1falV+Dn9RcUEzzV+EgCHsCivjr7Sj50WUMfPnh/lbuC0f/5a0Ll9bHlXooHpjaseu7qz6PcvBuJ@vger.kernel.org, AJvYcCUfHDOl7lAoZerKWGqdGzzGL8Qp0zkhH2DaNVy5oczkyFMRBO7y/+d9VqPncL5VbqshTwd5vAysXQP5@vger.kernel.org, AJvYcCUl4vpO6qZYbzFPMWMtDgouUzHQZBRGfkIPQHzN9IRw/kJegjm/63xXWjqnnuymkvePhc4pQXpWSuaXz62l@vger.kernel.org, AJvYcCWq//PtxqXN2D+Kd1HdkGFsqEsObvNUkGzVlLPdD83eDwrwinkdVPGNOL3BuzNlMZ7hvYkA9E5nXIxJtjV3UMh0iYE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtRlU7eH9f/biwEi0HWvU+5o5PRCjh7J+9Yor/HAiC0fDtZGjC
+	xPc58Y/DGpZGY/CKzcEk1fXz819FFXXO9pdcAExISSZaUJWXHAFV
+X-Gm-Gg: ASbGncsKJs/H1omvTbkP0JcHHXzRSQZKR1c6aEiTMx9fJlRXLK4WjgROb2BfIQ+XSWS
+	k6r5zt+LUrtowDVzvysVWaYQtaCjfzaDp1GkZPaf6VussCBtBukgzQr4W/xXz0Ry0cxS/uYScbI
+	mE5edmfbFCY69vEFYhGEF8w+J/wdyRP3g5siczz78YM4XKfJGh3vjKezUIBHODPZ7rYQnA+cgGV
+	io88QasjgeQKEoswAeN5BVTgYyXKaTz2WeLeurpAf6pI61FswhKMWFg90ajDQdkOOHHS13iMuwp
+	dHqoFYi5GMLHmnjz8Rj89lbvoYlhj9ZF7m5/wS1B4/2vlnRdIzQvT0MkjKjHwQ==
+X-Google-Smtp-Source: AGHT+IH40VRoRAnhhkBrdBVL3wpw5PZCEeEg4F12l8trpqePnOjbk6m3KtGHvVNpBjAdLQge2XaEhA==
+X-Received: by 2002:a05:6871:7b0a:b0:284:ff51:58ad with SMTP id 586e51a60fabf-2b8daf08a71mr5152420fac.27.1739476076940;
+        Thu, 13 Feb 2025 11:47:56 -0800 (PST)
+Received: from droid-r8s ([38.44.237.182])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b95a6bf7b3sm1049692fac.32.2025.02.13.11.47.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 11:47:56 -0800 (PST)
+Date: Thu, 13 Feb 2025 19:47:45 +0000
+From: Denzeel Oliva <wachiturroxd150@gmail.com>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: alim.akhtar@samsung.com, andi.shyti@kernel.org,
+	andre.draszik@linaro.org, broonie@kernel.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, krzk+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org,
+	peter.griffin@linaro.org, robh@kernel.org,
+	wachiturroxd150@gmail.com
+Subject: Re: [PATCH v1 0/2] spi: s3c64xx: add support for
+ samsung,exynos990-spi
+Message-ID: <Z65MYSNuDdCFNlv6@droid-r8s>
+References: <20250212191241.280-1-wachiturroxd150@gmail.com>
+ <bad7b5b6-c61b-4e93-9415-6476976c8e81@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/422] 6.12.14-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250213142436.408121546@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
-In-Reply-To: <20250213142436.408121546@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bad7b5b6-c61b-4e93-9415-6476976c8e81@linaro.org>
 
-On 2/13/25 06:22, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.14 release.
-> There are 422 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 15 Feb 2025 14:23:11 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.14-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+On Thu, Feb 13, 2025 at 07:05:22AM +0000, Tudor Ambarus wrote:
+> gs101 mandates 32-bit accesses too.
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+Also in exynos990 [0]
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+> > the SPI node where it will have to be specified in DT (Device Tree).
+> 
+> gs101 has some USI nodes that can work only in uart mode and indeed the
+> fifosize there is 256. Does downstream define SPI nodes with 256 bytes
+> FIFOs? Can you please point me the the downstream code?
+> 
+
+Yes, Exynos990 has SPI nodes with 256-byte FIFOs, and you can see this in
+the downstream kernel. Here are some relevant references:
+
+- SPI8: [1]
+- SPI9: [2]
+- SPI10: [3]
+
+Best regards,
+Denzeel
+
+[0] https://github.com/pascua28/android_kernel_samsung_s20fe/blob/3be539e9cd22b89ba3cc8282945a0c46ff27341d/drivers/spi/spi-s3c64xx.c#L767
+[1] https://github.com/pascua28/android_kernel_samsung_s20fe/blob/3be539e9cd22b89ba3cc8282945a0c46ff27341d/arch/arm64/boot/dts/exynos/exynos9830-usi.dtsi#L1641
+[2] https://github.com/pascua28/android_kernel_samsung_s20fe/blob/3be539e9cd22b89ba3cc8282945a0c46ff27341d/arch/arm64/boot/dts/exynos/exynos9830-usi.dtsi#L1662
+[3] https://github.com/pascua28/android_kernel_samsung_s20fe/blob/3be539e9cd22b89ba3cc8282945a0c46ff27341d/arch/arm64/boot/dts/exynos/exynos9830-usi.dtsi#L1683
