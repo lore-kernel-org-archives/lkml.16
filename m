@@ -1,119 +1,98 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0390F20B1EB;
-	Thu, 13 Feb 2025 08:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1900E20B209;
+	Thu, 13 Feb 2025 08:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739434152; cv=none; b=N1SdBBZySN5XLXY3ZRCQLw/ICgC5iZchEuny+HQweCWVcWByppb5dD97Vo1VrK7PT+BdSjFq179wRbG1LeBoSvu5ZwijsM9lrxs9u458LB6qsuNiLKb7EO9aRT6XU+uDm62SambjTGrv9+akU1bjVXEbk0IX88ubqf4hQXep8ek=
+	t=1739434168; cv=none; b=ARlbKRBPX7O0dt2Ym5jlaRYvCXhUTpsFc0NmGswNkGSh0RWNw4BhOg3v7bELHyKuYmS6aqsVqmB+09TaickUGDqW7vUAcE7FvUSV7dyhdXv+SWT+oQrKCpt3rPGx1Uj8yXd0n/mK3mtWjH3OmHXxVIUr3juyjL3uRIxEJBieCCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739434152; c=relaxed/simple;
-	bh=l+5HQx8cFcT2yRLskL7WUfWIjvy287sZBw2u4XjGjiw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CYHU4AYlpLoaYhOjR2hyKykAqoYFs+a2Ahadt+P+AcJWCO56N3oPq9to8eokNfndAxA4qpSFzzsqnLJ8Jhu5tQ93ubADlGjBQH4vMAViv4EbjPpITmQ3v1IxqlzktC9vWsL66FnRfFnhk5AAJO13icK9SJaZ/jduNpV+GslaCys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=HVOLk+Bq; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1739434168; c=relaxed/simple;
+	bh=W9slmLEgwfMI1MJeemIMaWcXhgHgot5xKS72Ii/ulmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uh7ehd16h1w5j/fwF5HmE2wr9rv0t2vP8gkZ4/wI2aCOqPlHXQRkOsVe9s795gq4Dv5xtaByPgixU8RADghgYwMFk8dyf3914/tIARtiuonDIGjl47dW4Ot8qYXdTG5WOMseCJtBtx7a/sJZtkO0Iw4DroWp6jnvPh8pSD9AVrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MXcuYDKA; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HVOLk+Bq"
-X-UUID: cae47d66e9e111efb8f9918b5fc74e19-20250213
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Z2GfcKvn7LI0JHLtBK2d2zXW0LLZLDrS62rSfHY8ssk=;
-	b=HVOLk+BqQTh7XEv95DxEs6v4zhCRUREI4Rwi26vUkNfcceX+9wcDtSqoB+J4f6Szgr+ONZDh8E6p5X/g5JVr7SIFHt7xA6Wg9uJGWxTm3x2BK9mqFZDpYt6engoAhhWRjoIKmwnp0x4thRbnXl+vzMtX6P5GvxkcH/S0oPCIYVw=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:b44ae555-bfec-4b62-a50b-ab0d88778ebe,IP:0,U
-	RL:0,TC:0,Content:0,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:60aa074,CLOUDID:1b2468a1-97df-4c26-9c83-d31de0c9db26,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:1,
-	IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:
-	0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: cae47d66e9e111efb8f9918b5fc74e19-20250213
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
-	(envelope-from <skylake.huang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1467896638; Thu, 13 Feb 2025 16:09:05 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 13 Feb 2025 16:09:03 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Thu, 13 Feb 2025 16:09:03 +0800
-From: Sky Huang <SkyLake.Huang@mediatek.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
-	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
-	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, "Simon
- Horman" <horms@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>
-CC: Steven Liu <Steven.Liu@mediatek.com>, Sky Huang
-	<skylake.huang@mediatek.com>
-Subject: [PATCH net-next v2 5/5] net: phy: mediatek: Move some macros to phy-lib for later use
-Date: Thu, 13 Feb 2025 16:05:53 +0800
-Message-ID: <20250213080553.921434-6-SkyLake.Huang@mediatek.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250213080553.921434-1-SkyLake.Huang@mediatek.com>
-References: <20250213080553.921434-1-SkyLake.Huang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MXcuYDKA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739434167; x=1770970167;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=W9slmLEgwfMI1MJeemIMaWcXhgHgot5xKS72Ii/ulmU=;
+  b=MXcuYDKAg8Rwhds6gS+fsX/amMmSKQvJuLjgdeEDLUQyN7BkR1F1P81n
+   2VkSxslmMxWBGebgpk/gTXnqniQWA51V5RI4Jf3A+9wxrFUoXIG5Fi369
+   q+IxnCWzorQ+Inb2w9K+Y3di5Oxdo2f8tbiwuUOfBLy4841FfHwQuqjvk
+   L/9+y2+4mp/PDT7XKUvTU80xYxtj+YrFDJJJr22BOmS/iqsj6GdIZUdu7
+   ZRxesQoSZkvWfSljOzq9VGldDUi/UIGDx0fWaKr/3CLMr7eWzA60lD45c
+   1zaDQpNl0CmWZotvKm6RKNj6Sxc5MThhlB0rE05RlhNSx2sdpk86NGs4f
+   Q==;
+X-CSE-ConnectionGUID: 5SW3goOhR7epPZHOnj9lBA==
+X-CSE-MsgGUID: qAjLNwPRSoeq4eupKmhrmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="39310948"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="39310948"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 00:09:26 -0800
+X-CSE-ConnectionGUID: P3lpblIAQcefB4B+R52lfA==
+X-CSE-MsgGUID: sx1hI1lLQkqqOvfWD3cbBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113968316"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 00:09:21 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tiUHe-0000000B6H9-0ZfZ;
+	Thu, 13 Feb 2025 10:09:18 +0200
+Date: Thu, 13 Feb 2025 10:09:17 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Kartik Rajput <kkartik@nvidia.com>, gregkh@linuxfoundation.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	thierry.reding@gmail.com, jonathanh@nvidia.com,
+	hvilleneuve@dimonoff.com, arnd@kernel.org, geert+renesas@glider.be,
+	robert.marko@sartura.hr, schnelle@linux.ibm.com,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] serial: tegra-utc: Add driver for Tegra UART
+ Trace Controller (UTC)
+Message-ID: <Z62orWpDF5obQZLy@smile.fi.intel.com>
+References: <20250212104132.61060-1-kkartik@nvidia.com>
+ <20250212104132.61060-3-kkartik@nvidia.com>
+ <Z6y5vRGyouZsQWyj@smile.fi.intel.com>
+ <6f3e6958-25eb-4835-88e1-2d531c892dbe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f3e6958-25eb-4835-88e1-2d531c892dbe@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Sky Huang <skylake.huang@mediatek.com>
+On Thu, Feb 13, 2025 at 08:38:15AM +0100, Jiri Slaby wrote:
+> On 12. 02. 25, 16:09, Andy Shevchenko wrote:
 
-Move some macros to phy-lib because MediaTek's 2.5G built-in
-ethernet PHY will also use them.
+...
 
-Signed-off-by: Sky Huang <skylake.huang@mediatek.com>
----
- drivers/net/phy/mediatek/mtk-ge.c | 4 ----
- drivers/net/phy/mediatek/mtk.h    | 4 ++++
- 2 files changed, 4 insertions(+), 4 deletions(-)
+> > > +	pending = uart_port_tx(port, c,
+> > > +		     !(tegra_utc_tx_readl(tup, TEGRA_UTC_FIFO_STATUS) & TEGRA_UTC_FIFO_FULL),
+> > > +		     tegra_utc_tx_writel(tup, c, TEGRA_UTC_DATA));
+> > 
+> > Make the last two to reside in temporary variables with self-explanatory names.
+> 
+> Not sure what you mean here? They are needed to be evaluated (read/written)
+> in every loop.
 
-diff --git a/drivers/net/phy/mediatek/mtk-ge.c b/drivers/net/phy/mediatek/mtk-ge.c
-index 79663da..937254a 100644
---- a/drivers/net/phy/mediatek/mtk-ge.c
-+++ b/drivers/net/phy/mediatek/mtk-ge.c
-@@ -8,10 +8,6 @@
- #define MTK_GPHY_ID_MT7530		0x03a29412
- #define MTK_GPHY_ID_MT7531		0x03a29441
- 
--#define MTK_PHY_PAGE_EXTENDED_1			0x0001
--#define MTK_PHY_AUX_CTRL_AND_STATUS		0x14
--#define   MTK_PHY_ENABLE_DOWNSHIFT		BIT(4)
--
- #define MTK_PHY_PAGE_EXTENDED_2			0x0002
- #define MTK_PHY_PAGE_EXTENDED_3			0x0003
- #define MTK_PHY_RG_LPI_PCS_DSP_CTRL_REG11	0x11
-diff --git a/drivers/net/phy/mediatek/mtk.h b/drivers/net/phy/mediatek/mtk.h
-index 4e4468d..320f76f 100644
---- a/drivers/net/phy/mediatek/mtk.h
-+++ b/drivers/net/phy/mediatek/mtk.h
-@@ -8,7 +8,11 @@
- #ifndef _MTK_EPHY_H_
- #define _MTK_EPHY_H_
- 
-+#define MTK_PHY_AUX_CTRL_AND_STATUS		0x14
-+#define   MTK_PHY_ENABLE_DOWNSHIFT		BIT(4)
-+
- #define MTK_EXT_PAGE_ACCESS			0x1f
-+#define MTK_PHY_PAGE_EXTENDED_1			0x0001
- #define MTK_PHY_PAGE_STANDARD			0x0000
- #define MTK_PHY_PAGE_EXTENDED_52B5		0x52b5
- 
+Ah, uart_port_tx() is a macro!
+
 -- 
-2.18.0
+With Best Regards,
+Andy Shevchenko
+
 
