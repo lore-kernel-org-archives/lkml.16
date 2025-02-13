@@ -1,213 +1,129 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CF020AF78
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 07:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA24F12BF24;
+	Thu, 13 Feb 2025 07:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739432403; cv=none; b=TIR6YbSqBBtx92MumnWGQbVV4denIDblysfB1iwdYkaO+ii/O3Jyr2WONXftAm6i78ghkuGT40fNTK1zOzyE26mtP9Bl0s6ZYI6YK5SX1H2qDAs/Z/czb1zy3GnbaKTL/91eS86xYMoZJ7CE3YgjmNv0EP2IlbGFDpHFHqZOjmc=
+	t=1739432430; cv=none; b=uHOSq6JbnRRDvTsiUQJHq67qbhQByWKr1NF1R6YP07VvZrYI2XAPsSxo8NOa9xqYzZzlq1Ru/9GOpfmHAi90mMR0TbQ1EOAjwfECWKxpnhMzzBDILmzHVJHXA7yoEy4pFU8pS6ACxXl0ML3fr+OrfndXI/fW0p3ZCt9wV1laD3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739432403; c=relaxed/simple;
-	bh=2T30BevOB9XiIxAoHVVgmvnHj9B+QRiUyFtk7KSMJE8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ukDXyacoZ2aDd+mTIuVsk8/SCwkg2DBbs7sDbgpXt+kf9OK6h/RBHr4aBqja1JlQX74700jiF6Zj07d0hIo0HEazhbVlia6e3g7yByNtUNM9/ya300KKxNerRtlMHQc9ZFqaAfm4vLuiMO1LFmJTCrVjMqXkiqVC/eguXMfgOoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DCqA4QEy; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DCqA4QEy"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5fcabc7f9d2so327310eaf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 23:40:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739432400; x=1740037200; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nn3iWZ9Vvx98SyYpyhfzHaWOOngUmcQwzZmkfNNZfS8=;
-        b=DCqA4QEyU1gPMGh2pDHzuRIZk2Z/7fUD6S8/D7/YFC5GSoOqm+mbzA5BoGOW+nLpGh
-         KbmWY2oN8qZB5LKrkjE4m2gbHkXiub6Lr/Yi61TQHV8ziwwSULPM/imMYNmWcL2LQSKB
-         HTzEggFXxN/ovRk/fkqICEDJmZAkvgYqoj+MTwmw8EUFGpT0RRpbfQpbOhyi8F4PdDtV
-         J6EdvfSVWox2Gmd3R9D7OKoOslakbA9KX6x02EMHqN2EQh7zW1kxApanqpYBFlTBFk31
-         Ct4eZMM9Q3ZuIZOvw2KcZGa8PfT25C0f2cOcYrx7R3FQAqvl17CV2/kT6lOAf6odsRxH
-         TqVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739432400; x=1740037200;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nn3iWZ9Vvx98SyYpyhfzHaWOOngUmcQwzZmkfNNZfS8=;
-        b=FXvGIKw8niwtQKUAKTGDuu5kYUnD+NmnMprqpoD1xUiGJVjp8i9tahER/VbkrHvbF7
-         9FYt6e4LuirpEyWt58knEFzYn0y1IUUpLopPNHwD0TRgeKOxhIN+DDpKscupGGaVMmB8
-         /c1ccIYiB6g80V7GKpsvUI74y05LVZ8De18Gi8yX/MW6/OO036Aj83bj/cET+Mj/uzd0
-         ICDNsU/kN8oKvNBG8I14p3APmn7P3TNUc/LI5ER0Mli1lRuGp4ak0E3F9bTvQe7pMk4T
-         UYoPoy6Z4hlls9fudpjpBwRGHoFyNLFzcOMytSy94mlp+EWN8QjB489r2LnW++tn5Ffd
-         7NdA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPjYZaE9yXMCxh6LyBFiNuw6YfHtvUnT9IiiEXN2RiB4A/ejrPH/YwZE5682i7dFoXUZpcCcvg0ZfZvsE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuiPvxW3aTG4HBrDikARaKMDeS3kR9BItUFKy5Is5YNOg1Q5t9
-	2ySmbF5fgzPJA0wtZdZfj/K9fpV+Bc7fG7N+9QPhaZgPjjzsqzL30NvTW6c9Nm6cmFyG4KtLIpu
-	U/Bgi8areISWuzqaeFWpT+l1glA+cPeggwGhk
-X-Gm-Gg: ASbGnculFNERuhufit0QRQzOnVmbpSskiIiv4zpTg/vVR11eDCMVIvfMdE4mvNq0smm
-	ERbFJkaxso/wVDXaErvWOGZNVx9pn2PxtTPx2HeJWLMaj9TnRSe5DBkqqCyXPbh8HvW1GOCozSb
-	cosPDxayyrt6+T4d2Ry3FuIjXLg2WO7Q==
-X-Google-Smtp-Source: AGHT+IEmWRZMThO2wEWSszSDzWm2q2TnncSjr48IcwK+B9Ld8r0dbyztwtW5YcyGOGFQFHmYF4WhC8//RaVtCQyIZYI=
-X-Received: by 2002:a05:6871:551:b0:28c:8476:dd76 with SMTP id
- 586e51a60fabf-2b8d67bc79fmr4365708fac.29.1739432400498; Wed, 12 Feb 2025
- 23:40:00 -0800 (PST)
+	s=arc-20240116; t=1739432430; c=relaxed/simple;
+	bh=LCaCKoBbqnfW10Dhp71lZqFMwhbW5s29S+SnKD/4N9g=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=GAN6UTiB6LPNUoc7eXwATQLtR1tXTI6lavtxt15FU5MPuMVMOY2tXWBV/htgVEov+h3A4Rgou7YNjECYs2IxHZ8XG++kHdBNtkGJ6pz2GUNuxuibQYRPaTkKn8o8v3kJbBfdFtVnLoQRtSj6XW0zynwepLILLZyOC3lRtgSJFB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YtnCB75MZz4f3jt0;
+	Thu, 13 Feb 2025 15:40:06 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 192EB1A0838;
+	Thu, 13 Feb 2025 15:40:23 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP2 (Coremail) with SMTP id Syh0CgDnpGfloa1nx+vHDg--.7502S2;
+	Thu, 13 Feb 2025 15:40:22 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: willy@infradead.org,
+	akpm@linux-foundation.org,
+	geert@linux-m68k.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] test_xarray: fix failure in check_pause when CONFIG_XARRAY_MULTI is not defined
+Date: Fri, 14 Feb 2025 00:36:59 +0800
+Message-Id: <20250213163659.414309-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208033129.3524423-1-badhri@google.com> <20250211002155.62lyfqjlygod7cdp@synopsys.com>
- <CAPTae5LisYMjx63Jz_xmZ9zA5PtaxRA49gh2FA-fONsJ12sXeg@mail.gmail.com> <20250211005508.qeselc6eakgnys74@synopsys.com>
-In-Reply-To: <20250211005508.qeselc6eakgnys74@synopsys.com>
-From: Badhri Jagan Sridharan <badhri@google.com>
-Date: Wed, 12 Feb 2025 23:39:24 -0800
-X-Gm-Features: AWEUYZnIe5TMgsUPDmshm_Nttj-h2KlK1DcEzbN4aiPOxceFmMNfSjaqjTDAWOo
-Message-ID: <CAPTae5+RENJkgSLJAfzh-LryHvkU+i12ELjYqo_b22CT5HXm7w@mail.gmail.com>
-Subject: Re: [PATCH v2] usb: dwc3: gadget: Prevent irq storm when TH re-executes
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
-	"felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, 
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jameswei@google.com" <jameswei@google.com>, 
-	"stable@kernel.org" <stable@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgDnpGfloa1nx+vHDg--.7502S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr47tFyktFykZr1DuF17KFg_yoW8uFyfpF
+	W7Wa4Ivry8Jrn2yw1DAa1xu34Fgw1rWa13KrW5Gr10yF9xur12yw1UKFyqvr9rCFW0vay5
+	AanYgrnFganrAa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_
+	tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gc
+	CE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxI
+	r21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87
+	Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAa
+	w2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r12
+	6r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07
+	jSYL9UUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On Mon, Feb 10, 2025 at 4:55=E2=80=AFPM Thinh Nguyen <Thinh.Nguyen@synopsys=
-.com> wrote:
->
-> On Mon, Feb 10, 2025, Badhri Jagan Sridharan wrote:
-> > .
-> >
-> > On Mon, Feb 10, 2025 at 4:22=E2=80=AFPM Thinh Nguyen <Thinh.Nguyen@syno=
-psys.com> wrote:
-> > >
-> > > On Sat, Feb 08, 2025, Badhri Jagan Sridharan wrote:
-> > > > While commit d325a1de49d6 ("usb: dwc3: gadget: Prevent losing event=
-s in
-> > > > event cache") makes sure that top half(TH) does not end up overwrit=
-ing the
-> > > > cached events before processing them when the TH gets invoked more =
-than one
-> > > > time, returning IRQ_HANDLED results in occasional irq storm where t=
-he TH
-> > > > hogs the CPU. The irq storm can be prevented by clearing the flag b=
-efore
-> > > > event handler busy is cleared. Default enable interrupt moderation =
-in all
-> > > > versions which support them.
-> > > >
-> > > > ftrace event stub during dwc3 irq storm:
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000866: irq_handler_ex=
-it: irq=3D14 ret=3Dhandled
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000872: irq_handler_en=
-try: irq=3D504 name=3Ddwc3
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000874: irq_handler_ex=
-it: irq=3D504 ret=3Dhandled
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000881: irq_handler_en=
-try: irq=3D504 name=3Ddwc3
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000883: irq_handler_ex=
-it: irq=3D504 ret=3Dhandled
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000889: irq_handler_en=
-try: irq=3D504 name=3Ddwc3
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000892: irq_handler_ex=
-it: irq=3D504 ret=3Dhandled
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000898: irq_handler_en=
-try: irq=3D504 name=3Ddwc3
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000901: irq_handler_ex=
-it: irq=3D504 ret=3Dhandled
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000907: irq_handler_en=
-try: irq=3D504 name=3Ddwc3
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000909: irq_handler_ex=
-it: irq=3D504 ret=3Dhandled
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000915: irq_handler_en=
-try: irq=3D504 name=3Ddwc3
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000918: irq_handler_ex=
-it: irq=3D504 ret=3Dhandled
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000924: irq_handler_en=
-try: irq=3D504 name=3Ddwc3
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000927: irq_handler_ex=
-it: irq=3D504 ret=3Dhandled
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000933: irq_handler_en=
-try: irq=3D504 name=3Ddwc3
-> > > >     irq/504_dwc3-1111  ( 1111) [000] .... 70.000935: irq_handler_ex=
-it: irq=3D504 ret=3Dhandled
-> > > >     ....
-> > > >
-> > > > Cc: stable@kernel.org
-> > > > Suggested-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-> > > > Fixes: d325a1de49d6 ("usb: dwc3: gadget: Prevent losing events in e=
-vent cache")
-> > > > Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> > > > ---
-> > > >  drivers/usb/dwc3/core.c   |  2 +-
-> > > >  drivers/usb/dwc3/gadget.c | 10 +++++++---
-> > > >  2 files changed, 8 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> > > > index dfa1b5fe48dc..6df971ef7285 100644
-> > > > --- a/drivers/usb/dwc3/core.c
-> > > > +++ b/drivers/usb/dwc3/core.c
-> > > > @@ -1835,7 +1835,7 @@ static void dwc3_get_properties(struct dwc3 *=
-dwc)
-> > > >       dwc->tx_thr_num_pkt_prd =3D tx_thr_num_pkt_prd;
-> > > >       dwc->tx_max_burst_prd =3D tx_max_burst_prd;
-> > > >
-> > > > -     dwc->imod_interval =3D 0;
-> > > > +     dwc->imod_interval =3D 1;
-> > >
-> > > Use dwc3_has_imod() to determine whether to set this. Otherwise we ge=
-t
-> > > a warning on setups that don't support imod.
-> >
-> > Hi Thinh,
-> >
-> > dwc3_check_params() which gets invoked after dwc3_get_properties() at
-> > https://urldefense.com/v3/__https://elixir.bootlin.com/linux/v6.14-rc1/=
-source/drivers/usb/dwc3/core.c*L1851__;Iw!!A4F2R9G_pg!Zar83WUe4sM-EF4c2wR2-=
-vWBJHgYOCWEc1ijhOsWQHiXtzCF0d_t2gckS0YJUv4lAZgGZl2C-oSp1QMIx28$
-> > seems to already call dwc3_has_imod(). Do you prefer me to add an
-> > explicit check here as well ?
-> >
->
-> Yes. I don't want to see dev_warn print when there shouldn't be any for
-> setup that don't support imod.
+In case CONFIG_XARRAY_MULTI is not defined, xa_store_order can store a
+multi-index entry but xas_for_each can't tell sbiling entry from valid
+entry. So the check_pause failed when we store a multi-index entry and
+wish xas_for_each can handle it normally. Avoid to store multi-index
+entry when CONFIG_XARRAY_MULTI is disabled to fix the failure.
 
-Hi Thinh,
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+ lib/test_xarray.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-Looks like adding dwc3_has_imod() in dwc3_get_properties() would not
-be possible as the dwc->revision gets filled in much later at
-dwc3_core_is_valid():
-https://elixir.bootlin.com/linux/v6.14-rc2/source/drivers/usb/dwc3/core.c#L=
-2218,
-also, the core is still not brought out of reset yet. Would it be
-reasonable to initialize dwc->imod_interval to 1 in
-dwc3_check_params() like below ?
+diff --git a/lib/test_xarray.c b/lib/test_xarray.c
+index 6932a26f4927..0e865bab4a10 100644
+--- a/lib/test_xarray.c
++++ b/lib/test_xarray.c
+@@ -1418,7 +1418,7 @@ static noinline void check_pause(struct xarray *xa)
+ {
+ 	XA_STATE(xas, xa, 0);
+ 	void *entry;
+-	unsigned int order;
++	int order;
+ 	unsigned long index = 1;
+ 	unsigned int count = 0;
+ 
+@@ -1450,7 +1450,7 @@ static noinline void check_pause(struct xarray *xa)
+ 	xa_destroy(xa);
+ 
+ 	index = 0;
+-	for (order = XA_CHUNK_SHIFT; order > 0; order--) {
++	for (order = order_limit - 1; order >= 0; order--) {
+ 		XA_BUG_ON(xa, xa_store_order(xa, index, order,
+ 					xa_mk_index(index), GFP_KERNEL));
+ 		index += 1UL << order;
+@@ -1462,24 +1462,25 @@ static noinline void check_pause(struct xarray *xa)
+ 	rcu_read_lock();
+ 	xas_for_each(&xas, entry, ULONG_MAX) {
+ 		XA_BUG_ON(xa, entry != xa_mk_index(index));
+-		index += 1UL << (XA_CHUNK_SHIFT - count);
++		index += 1UL << (order_limit - count - 1);
+ 		count++;
+ 	}
+ 	rcu_read_unlock();
+-	XA_BUG_ON(xa, count != XA_CHUNK_SHIFT);
++	XA_BUG_ON(xa, count != order_limit);
+ 
+ 	index = 0;
+ 	count = 0;
+-	xas_set(&xas, XA_CHUNK_SIZE / 2 + 1);
++	/* test unaligned index */
++	xas_set(&xas, 1 % (1UL << (order_limit - 1)));
+ 	rcu_read_lock();
+ 	xas_for_each(&xas, entry, ULONG_MAX) {
+ 		XA_BUG_ON(xa, entry != xa_mk_index(index));
+-		index += 1UL << (XA_CHUNK_SHIFT - count);
++		index += 1UL << (order_limit - count - 1);
+ 		count++;
+ 		xas_pause(&xas);
+ 	}
+ 	rcu_read_unlock();
+-	XA_BUG_ON(xa, count != XA_CHUNK_SHIFT);
++	XA_BUG_ON(xa, count != order_limit);
+ 
+ 	xa_destroy(xa);
+ 
+-- 
+2.30.0
 
-+++ b/drivers/usb/dwc3/core.c
-@@ -1835,8 +1835,6 @@ static void dwc3_get_properties(struct dwc3 *dwc)
-        dwc->tx_thr_num_pkt_prd =3D tx_thr_num_pkt_prd;
-        dwc->tx_max_burst_prd =3D tx_max_burst_prd;
-
--       dwc->imod_interval =3D 1;
--
-        dwc->tx_fifo_resize_max_num =3D tx_fifo_resize_max_num;
- }
-
-@@ -1858,6 +1856,8 @@ static void dwc3_check_params(struct dwc3 *dwc)
-        if (dwc->imod_interval && !dwc3_has_imod(dwc)) {
-                dev_warn(dwc->dev, "Interrupt moderation not supported\n");
-                dwc->imod_interval =3D 0;
-+       } else if (!dwc->imod_interval && dwc3_has_imod(dwc)) {
-+               dwc->imod_interval =3D 1;
-        }
-
-Thanks,
-Badhri
-
->
-> BR,
-> Thinh
