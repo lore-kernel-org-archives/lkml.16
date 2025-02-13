@@ -1,179 +1,111 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC0E266B78;
-	Thu, 13 Feb 2025 21:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BD1266B7B
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 21:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739480788; cv=none; b=iIPlBM3iNAz27UB4alZsXma1SnA+EUPGa/YfuiDr5ekmzMprpyZvacTgu+IuempaQGH5r1IkI8LQRLeqyyI8SpuQUodCLTy/xZBbEpck45/GJuhC9yQ0HSC3sw9W0lndvSKEEkvYJFB2vcsufU7QLy8rJSNKyq2DRIqHpqoCnrk=
+	t=1739480802; cv=none; b=QPQLH7yJGGYPAWGjuCiyzxE5CdE9jXz38vUVVkmwfJI+OIAqkVSv7KlNNHGPTOgCcKgxU46eMtvVlhWXyN4QghyfmcITxS9LXW23z1FsZeJWB259fbsRArTaEvWasqzeQ7ewgxTQZp15zHMFHQbqDXa2Wn8+23YF4hG2GrmClhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739480788; c=relaxed/simple;
-	bh=3tFaTvFQTkwIx9h7jpRjIoSdngbdR6x/1hAEEFdKF6U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PK8/104WfTepem1pP/IvzXBxvatGTlq55oF4IAsGlhXmF9SK7A9CP+9Ol6kkd02TQRrdROpeOSrnWOlkkMGkYYxJuBJhf3sLvYo4F5TD1HNAXPOsXrneJFbzRU7z4YpscQvPZvmU1a0T0fTS0vcU7rxeQSkM5MWfROUYALVHjw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=UyWQrri0; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1739480802; c=relaxed/simple;
+	bh=k9mUIBYNVf/m3XiK/9d9o923sm1DZskoR9Bay1kygxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PIHUS4C04QiEyrhAiJywh7QMvM+05bob+d7GGi3rP+xDKgbDtH6pAQ7AuibI9Iw//2ZkifLb2FeDwYgLu0HlVsmNlJTSCnJ70i+ZuAl/XNvdRbzijeM4Na5mP9QvNwYNqAd13mtSYl4CPcBAHjIrZ8uVP+kiR1lE2fNng0WSy8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TW30Dy6Q; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="UyWQrri0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=BsG0d/imTYQP9d0JqoCLk7g5rxR8R590EgJ5QvdKLdI=; b=UyWQrri0zUMR9lDhNQsvt/azJI
-	2CITNHmRV/+cuqTK42hNM9ncsE9O4F4CDPRB6KdRMACnFSG54xM/V71fYNnkpNFWTiy7PpYxnwFUx
-	XtAGr9tfb8s70MNaecdycwxPcep9Qp8x49xibhQD7vUPLOaOYrAMlpsE4RmKaBekJGQ38ySvLMSNU
-	pKWBO2pC+Nodbs1J27xmWIieZecrbYmvA27K9rfDKPVNHVGfpFxmnALHUxCJW1ZqEd2SKlKiYimeu
-	+ITGretgdOUTgeKv2CkLeyjH9QLD+9oHpscAggwyOIsiw4UPkU7bZtjwibC07eNkdoD94eGajhBe6
-	us85BrmQ==;
-Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tigPZ-0006WG-KN; Thu, 13 Feb 2025 22:06:17 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: vkoul@kernel.org,
-	kishon@kernel.org
-Cc: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	quentin.schulz@cherry.de,
-	sebastian.reichel@collabora.com,
-	heiko@sntech.de,
-	linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	dse@thaumatec.com,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v6 1/2] dt-bindings: phy: Add Rockchip MIPI C-/D-PHY schema
-Date: Thu, 13 Feb 2025 22:05:47 +0100
-Message-ID: <20250213210554.1645755-2-heiko@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250213210554.1645755-1-heiko@sntech.de>
-References: <20250213210554.1645755-1-heiko@sntech.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TW30Dy6Q"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-308f71d5efcso13928221fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:06:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739480798; x=1740085598; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LmXeuchpKSKK7itV+jnu4GAZDK3KHsa9YGIjB4lMa4Y=;
+        b=TW30Dy6QT95yxjWWGUnpGo/in5g4tK0AuYc+aeQ+KTlScGAhHzTxqrJPsXJCLyVG/d
+         MrQGZ5P/rf2nAMOl2FVK35q7MZHZhflSE0S7x1pTKSJ281Pmjp4IDvZ/xpgkEpCcF5st
+         KpkPpy0PdtBZmlkT1PhYEbNhv9Q9CdxML9JrnzSLUOtpmIDRUB22rAYnO5zHQdiJZw5J
+         VntZsM+4WErwyMDfUkj8/GbOvr14jrgJL1AzhesEdCr5hQLTxnblfHwsserSsB7MxJ98
+         d3JTldMRuAxop3ngGOgeZ1RKzR0RDu4Tl4qkEQPj6SAKXdx06y0/WKQniAgkE7iOTu6d
+         +eww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739480798; x=1740085598;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LmXeuchpKSKK7itV+jnu4GAZDK3KHsa9YGIjB4lMa4Y=;
+        b=KDOTCvQtzueLRy2Y84Uk0QJhVqUqfLw/+ngsH8VMpSJxUyImbRJ6XzEyOMTU3xynyz
+         Yyi3derh3yEf3FC+oZOF8f+bQBKqm4swUgxYKxrTgVkMDlIxPhxzIdFDHr3724d7BdRA
+         taNEyaduo/MpJJxE261OAN46mgUbMx+OGRYH04aj4kfGMLZ6lBPtZCOVHpV2XEZvuaWx
+         N38I6hxy4Ua4Qo97E75yA9QsxY4ON6TNdIYYMYphjHXm/st24w0kNi6mks6YUasfCwUu
+         4t+TOwedlLxEr99Nx3dSqYVNJxx+snpTCJmDRkiqOqu2/SwlElesQqEwLfCcrs8uSKtm
+         3eQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWxEW7TShWdyIAwFRORsoxFWld69Dx+FbOIJtxn3Gs1NaFSSzbcvsULpUCGQydNnx2IMv4I2HjgINnSdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywyJWsm8h7JHihtdpER2fpg9CYjF+Pm3+7gMWVrOccD54scYCz
+	u7zs/Ya2UPjyHT3atCEIR0k5FtX/nRuu1rTesVT8N+GUDSQ0KP+xY0y8o4vH75M=
+X-Gm-Gg: ASbGnculKPPm939EYpz5Ya6VDfv8cDHu5I1vdge7i/Bd1AkwnxI0yFoY8ZEiJrUm0l4
+	mjk/wuNiytSaW/LI25IhoZ0VfbU4YizKjERtglIfefcJgezHadm1ii0IlM6K9jOvRGL/6+wWdfT
+	CnK96S3GmAmEOlyzYsc/UpSwwy8UeUB3lCa/RY+z2qWt9kZ/C8Tbu82Vgh0pUBs7iRBezmlP5F3
+	py9Htov9n7wJUhEOViGFK5K/UzcCP+BLG3Qx8H8fOymLqyNZkm5cdRLasvxUinzjM6KJEOiY442
+	qiEyn4bwDuYRiazn4rRcwbSkPHDTaBMt7d9DKfglM4rkKz0X2M0Sh87MhAeU9XIJhpG9qno=
+X-Google-Smtp-Source: AGHT+IE+Pbr51O7WuqBXkQBPlJzNzEXWSwgmC055Mxz7GAD+fo2hMYKs8st3+0i1dxoABKmhCmeD7A==
+X-Received: by 2002:a05:651c:221d:b0:304:4e03:f9d9 with SMTP id 38308e7fff4ca-30903911d8cmr25004601fa.28.1739480798491;
+        Thu, 13 Feb 2025 13:06:38 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3091e04742esm109391fa.86.2025.02.13.13.06.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 13:06:37 -0800 (PST)
+Date: Thu, 13 Feb 2025 23:06:34 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Joel Selvaraj <jo@jsfamily.in>, 
+	Ondrej Jirman <megi@xff.cz>, Javier Martinez Canillas <javierm@redhat.com>, 
+	Jianhua Lu <lujianhua000@gmail.com>, Robert Chiras <robert.chiras@nxp.com>, 
+	Artur Weber <aweber.kernel@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 01/20] drm/panel/xpp055c272: Move to using
+ mipi_dsi_*_multi() variants
+Message-ID: <6zfcqybwxycywlm45ou2wges5qjb63emndmlstieck6qgzsjt4@rdb5hevlufms>
+References: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
+ <20250213-mipi_cocci_multi-v1-1-67d94ff319cc@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213-mipi_cocci_multi-v1-1-67d94ff319cc@redhat.com>
 
-From: Heiko Stuebner <heiko.stuebner@cherry.de>
+On Thu, Feb 13, 2025 at 03:44:18PM -0500, Anusha Srivatsa wrote:
+> Stop using deprecated API.
+> Used Coccinelle to make the change.
+> 
 
-Add dt-binding schema for the MIPI C-/D-PHY found on
-Rockchip RK3588 SoCs.
+[...]
 
-Tested-by: Daniel Semkowicz <dse@thaumatec.com>
-Tested-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
----
- .../phy/rockchip,rk3588-mipi-dcphy.yaml       | 87 +++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/rockchip,rk3588-mipi-dcphy.yaml
+> 
+> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+> ---
+>  drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c | 138 +++++++++++------------
+>  1 file changed, 67 insertions(+), 71 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/rockchip,rk3588-mipi-dcphy.yaml b/Documentation/devicetree/bindings/phy/rockchip,rk3588-mipi-dcphy.yaml
-new file mode 100644
-index 000000000000..c8ff5ba22a86
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/rockchip,rk3588-mipi-dcphy.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/rockchip,rk3588-mipi-dcphy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip MIPI D-/C-PHY with Samsung IP block
-+
-+maintainers:
-+  - Guochun Huang <hero.huang@rock-chips.com>
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,rk3576-mipi-dcphy
-+      - rockchip,rk3588-mipi-dcphy
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 1
-+    description: |
-+      Argument is mode to operate in. Supported modes are:
-+        - PHY_TYPE_DPHY
-+        - PHY_TYPE_CPHY
-+      See include/dt-bindings/phy/phy.h for constants.
-+
-+  clocks:
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+      - const: ref
-+
-+  resets:
-+    maxItems: 4
-+
-+  reset-names:
-+    items:
-+      - const: m_phy
-+      - const: apb
-+      - const: grf
-+      - const: s_phy
-+
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Phandle to the syscon managing the 'mipi dcphy general register files'.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - "#phy-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
-+    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
-+
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      phy@feda0000 {
-+        compatible = "rockchip,rk3588-mipi-dcphy";
-+        reg = <0x0 0xfeda0000 0x0 0x10000>;
-+        clocks = <&cru PCLK_MIPI_DCPHY0>,
-+                 <&cru CLK_USBDPPHY_MIPIDCPPHY_REF>;
-+        clock-names = "pclk", "ref";
-+        resets = <&cru SRST_M_MIPI_DCPHY0>,
-+                 <&cru SRST_P_MIPI_DCPHY0>,
-+                 <&cru SRST_P_MIPI_DCPHY0_GRF>,
-+                 <&cru SRST_S_MIPI_DCPHY0>;
-+        reset-names = "m_phy", "apb", "grf", "s_phy";
-+        rockchip,grf = <&mipidcphy0_grf>;
-+        #phy-cells = <1>;
-+      };
-+    };
+This one has been converted a month ago
+
+commit 8025f23728e9bc817495d48a04954cdee27462bd
+Author:     Tejas Vipin <tejasvipin76@gmail.com>
+AuthorDate: Tue Jan 7 14:55:10 2025 +0530
+Commit:     Douglas Anderson <dianders@chromium.org>
+CommitDate: Mon Jan 13 08:22:30 2025 -0800
+
+    drm/panel: xinpeng-xpp055c272: transition to mipi_dsi wrapped functions
+
+
 -- 
-2.47.2
-
+With best wishes
+Dmitry
