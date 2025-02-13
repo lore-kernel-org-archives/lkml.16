@@ -1,167 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3C928A2AE;
-	Thu, 13 Feb 2025 18:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1000811CAF;
+	Thu, 13 Feb 2025 18:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739469698; cv=none; b=gbid2NpzVzdT6yB/73i2uE7xVKpKKPyNQpLoZ1C4DyABYS74+eHFTWyIADE4WkKCU0nkiCGK+tna6rfafyMdb1qeccBO9WJ+/E0FIKX97zIEP7+R7chmbPuj/Bt10W7meM0CHwlatcRDrogAcGJNyoV2Jrzrq7eO7lqnpnuCp00=
+	t=1739469717; cv=none; b=GwGzvhPxxFZG3gItuKWBPMi6CEMzf5qfI6LLlmz9Wq5AdRPalobxKiIIC5CK4CsI2uw/nHh9+TzdwFS9jkUOGqXEdm0ERF9PJ+98hIz8ctByy0+uI280+uXVyof1FfsweLSbu/PN53TrjxP+7FlwYXKB07aqVgXUeUgjdmIB3Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739469698; c=relaxed/simple;
-	bh=NW1OYpe2mVwwte24KvqPb9pRL5isVReq3c3DtOOBBMA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bfHK71XE+ZeO9pXVHwCccTxoo2bA6241SbkPLdtqBAupemSKXoD0t7Dgye8oV+Cdck94jh/0tepfPTNfYjKKPMV45FBNgF5xqZtLQcElUdowIEdW0mWcgig24KCJcEqnApB0HJH8U9/91DpTXf68TRyefgITvLPBFZd2ArbZmLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKkAptOe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739469717; c=relaxed/simple;
+	bh=iyhqa4FySUjQ5g0GozFIhZ9M1QVxH9ovbvFV+x1tQmg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OWz4+bfDvvStC+GXLEqc0Z5xdWi7qBlABFtu0wcRkBv9AD5mg3uW0HcWbCo2WZaO8hXaxWBeqTY19sm7sS2amADi/lkRk5A19qvFvJtnMdA/SRZ+CEvnM5dZEEF2yWjOZofuIciEWzxatRLiMlxbdN18/8BV8Iv6bdUtbNhwqcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=kLRdeKr0; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKkAptOe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC4BC4CED1;
-	Thu, 13 Feb 2025 18:01:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739469697;
-	bh=NW1OYpe2mVwwte24KvqPb9pRL5isVReq3c3DtOOBBMA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lKkAptOe5ZG6vP8rPEis0AlEiA/1jNEChi09tTGq67mYGQvoYjq2QsQirFo+qzZgb
-	 lQ+hWQtnhgTT5QDZIgLE0LLK/qzdHBxEs1u3jP1jbVy94VndeSRhUaa42fTPoXmUqj
-	 pivxwi3j9oPp4knqLBaU597hhT9pV1fhknls8UaWBTrKic1gyFlvuxDovPaJkjkHow
-	 fOkRlYpLpYgd8zNL2X4qtYZnDaLpQS5UPyQudbGm2tBsFUeanF/x7OySGyxItxrZ2K
-	 CIQ52uBM+57WBFOnOJvGIdA3m2yKZ4t4E+ybCY5Pd/bwH1tUj0GrrJZymNHMOSdvEg
-	 JRwnbdjsJbEOQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tidWn-003nTm-Sy;
-	Thu, 13 Feb 2025 18:01:35 +0000
-Date: Thu, 13 Feb 2025 18:01:33 +0000
-Message-ID: <86r041sozm.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,	Hector Martin
- <marcan@marcan.st>,	Sven Peter <sven@svenpeter.dev>,	Bjorn Helgaas
- <bhelgaas@google.com>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,	Krzysztof
- =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,	Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>,	Krzysztof Kozlowski
- <krzk+dt@kernel.org>,	Conor Dooley <conor+dt@kernel.org>,	Mark Kettenis
- <kettenis@openbsd.org>,	Stan Skowronek <stan@corellium.com>,
-	asahi@lists.linux.dev,	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="kLRdeKr0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=N/YGsSevGDKmsz4LAefFC+UEHA9OmLmk4wbOJrxTVu8=; b=kLRdeKr0dKZDhXr64HOZS652ZS
+	2waUMiIGGakszULoeykRUGX1NpC8m6N8tg5U0gvYm131ahaYGnHDv21o9kA/7mfCmovSepwGAOab6
+	OCNFt1XG9rIiYuPeB6eTpdKg6kQUu8dlpIpTIgrM+o3zH+nKcLTqOIAkJ/8dao8RlVprldUV8Q31/
+	zcuyGJa18scY52Y9Hb6oF1I+CCAp9AA7yI0VxFgmSqLEbX6OpQcRWYmv7nh1uSV3ZBbXvSjnXScUH
+	Za39SwzC3209qdTpPFFOrahPRtmdvf94XrhIGxTQx633u1P0xA4MCAr1FzENW9Dqu8cNc5USrf1DX
+	hyWx1Eyw==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tidX5-0000000CwYA-1VgB;
+	Thu, 13 Feb 2025 18:01:51 +0000
+Date: Thu, 13 Feb 2025 18:01:51 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] PCI: apple: Add T602x PCIe support
-In-Reply-To: <CAL_JsqJ-sYsy-11_UiEKrKok49-a-VJUvm3vBGbpu9vY3TKLUw@mail.gmail.com>
-References: <20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io>
-	<20250211-pcie-t6-v1-7-b60e6d2501bb@rosenzweig.io>
-	<CAL_JsqJ-sYsy-11_UiEKrKok49-a-VJUvm3vBGbpu9vY3TKLUw@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Subject: Re: [PATCH 19/19] nfs: switch to _async for all directory ops.
+Message-ID: <20250213180151.GW1977892@ZenIV>
+References: <20250206054504.2950516-1-neilb@suse.de>
+ <20250206054504.2950516-20-neilb@suse.de>
+ <20250213035116.GT1977892@ZenIV>
+ <20250213040931.GU1977892@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: robh@kernel.org, alyssa@rosenzweig.io, marcan@marcan.st, sven@svenpeter.dev, bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, krzk+dt@kernel.org, conor+dt@kernel.org, kettenis@openbsd.org, stan@corellium.com, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213040931.GU1977892@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Thu, 13 Feb 2025 17:56:19 +0000,
-Rob Herring <robh@kernel.org> wrote:
->=20
-> On Tue, Feb 11, 2025 at 1:54=E2=80=AFPM Alyssa Rosenzweig <alyssa@rosenzw=
-eig.io> wrote:
-> >
-> > From: Hector Martin <marcan@marcan.st>
-> >
-> > This version of the hardware moved around a bunch of registers, so we
-> > drop the old compatible for these and introduce register offset
-> > structures to handle the differences.
-> >
-> > Signed-off-by: Hector Martin <marcan@marcan.st>
-> > Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> > ---
-> >  drivers/pci/controller/pcie-apple.c | 125 ++++++++++++++++++++++++++++=
-++------
-> >  1 file changed, 105 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controll=
-er/pcie-apple.c
-> > index 7f4839fb0a5b15a9ca87337f53c14a1ce08301fc..7c598334427cb56ca066890=
-ac61143ae1d3ed744 100644
-> > --- a/drivers/pci/controller/pcie-apple.c
-> > +++ b/drivers/pci/controller/pcie-apple.c
-> > @@ -26,6 +26,7 @@
-> >  #include <linux/list.h>
-> >  #include <linux/module.h>
-> >  #include <linux/msi.h>
-> > +#include <linux/of_device.h>
->=20
-> Drivers should not need this...
->=20
-> > +const struct reg_info t602x_hw =3D {
-> > +       .phy_lane_ctl =3D 0,
-> > +       .port_msiaddr =3D PORT_T602X_MSIADDR,
-> > +       .port_msiaddr_hi =3D PORT_T602X_MSIADDR_HI,
-> > +       .port_refclk =3D 0,
-> > +       .port_perst =3D PORT_T602X_PERST,
-> > +       .port_rid2sid =3D PORT_T602X_RID2SID,
-> > +       .port_msimap =3D PORT_T602X_MSIMAP,
-> > +       .max_rid2sid =3D 512, /* 16 on t602x, guess for autodetect on f=
-uture HW */
-> > +       .max_msimap =3D 512, /* 96 on t602x, guess for autodetect on fu=
-ture HW */
-> > +};
-> > +
-> > +static const struct of_device_id apple_pcie_of_match_hw[] =3D {
-> > +       { .compatible =3D "apple,t6020-pcie", .data =3D &t602x_hw },
-> > +       { .compatible =3D "apple,pcie", .data =3D &t8103_hw },
-> > +       { }
-> > +};
->=20
-> You should not have 2 match tables.
->=20
-> > @@ -750,13 +828,19 @@ static int apple_pcie_init(struct pci_config_wind=
-ow *cfg)
-> >         struct platform_device *platform =3D to_platform_device(dev);
-> >         struct device_node *of_port;
-> >         struct apple_pcie *pcie;
-> > +       const struct of_device_id *match;
-> >         int ret;
-> >
-> > +       match =3D of_match_device(apple_pcie_of_match_hw, dev);
-> > +       if (!match)
-> > +               return -ENODEV;
-> > +
-> >         pcie =3D devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> >         if (!pcie)
-> >                 return -ENOMEM;
-> >
-> >         pcie->dev =3D dev;
-> > +       pcie->hw =3D match->data;
-> >
-> >         mutex_init(&pcie->lock);
-> >
-> > @@ -795,6 +879,7 @@ static const struct pci_ecam_ops apple_pcie_cfg_eca=
-m_ops =3D {
-> >  };
-> >
-> >  static const struct of_device_id apple_pcie_of_match[] =3D {
-> > +       { .compatible =3D "apple,t6020-pcie", .data =3D &apple_pcie_cfg=
-_ecam_ops },
-> >         { .compatible =3D "apple,pcie", .data =3D &apple_pcie_cfg_ecam_=
-ops },
-> >         { }
->=20
-> You are going to need to merge the data to 1 struct.
->=20
-> And then use (of_)?device_get_match_data() in probe().
+On Thu, Feb 13, 2025 at 04:09:31AM +0000, Al Viro wrote:
+> > > +	} while (PTR_ERR_OR_ZERO(sdentry) == -EEXIST); /* need negative lookup */
+> > 
+> > What's wrong with sdentry == ERR_PTR(-EEXIST)?
+> 
+> BTW, do you need to mess with NFS_DATA_BLOCKED with that thing in place?
 
-No, that will break the driver. This isn't a standalone driver, but
-only an ECAM shim (as you can tell from the actual probe function).
+That'd be NFS_FSDATA_BLOCKED, of course, and apparently it's still needed for
+the "not busy, not sillyrenaming" cases in rename and unlink...
 
-	M.
-
---=20
-Without deviation from the norm, progress is not possible.
+Nevermind, just looking into getting rid of d_drop/d_rehash on the AFS side
+of things.
