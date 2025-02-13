@@ -1,83 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E91B26B096;
-	Thu, 13 Feb 2025 15:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E558326B0A5
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 15:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739459668; cv=none; b=HoJdx1iW2LjHt4aWT7DanosN4hnwb1ocoiNoW02rs2sm0XvFZXYH1WYuyyFUstRqeY+Z0u4qPZ3eeNJh4ZVNInOdUsB2UktdxuFhaKvd4QbsxxSmbCjf4lKG0SJgmDjRh8h/ZG6coLyvFH9t6wTGpw8ePh2z+gD1qBN1sGbUzrA=
+	t=1739459790; cv=none; b=dOwygd3lqhaOE8euqvrcTqDuKp6PuHziZwwpPenyE4wKFDaZwlpCO9Ev0hR0guHI0AqcM/3f1jCzOSF9/SxzMrwPF9na/DjIIbIgcvx5uiRFxpHc79bzc/XwAjpKYituNFPLx7Kc9NUMWUShxULgTkYbsGLDKFY1yX16yxt+ox4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739459668; c=relaxed/simple;
-	bh=gMdiIVUMcHjZUDzR7lF3FJr6ZBcIC1aeITxPEs6sI7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gCtcTbqsosVD96UGYF76STqvd4d7aUlOqNoD5bveIbnS1yUqsqADlwlKMDwc2TvF1cZY7KjXYhCtwgp9UXTAja5sgbbsMJx2Cw6SZsxAdYjUqQFJNVAxhiVDvanE851LrNQqkSDs6uZbS0kAIZ76ELFprZk3MxEMJtbU508SYIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jlb8sWMg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739459790; c=relaxed/simple;
+	bh=u1tycONx8xrIlRIwVEeLJ9RUkmtAWrxWBxjKd4EoMgs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pr0W88PcyRniFxnj/laN+eYI2qFJ706bm4IV5XoxOALo1jEM68MOO9HUL4S1Gr29JRGxxrfZsYWiyKLedUi751n+nDNJ+gC6fSSvfteGFhcI/v8kJjDNn7NUiaEaJ/n2Ngg250+ok1sGv63YGHsUeEHdlGBfqvcJdNcbwSOGDmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KBYTuc4d; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aQsNIKk1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jlb8sWMg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 304F9C4CEE4;
-	Thu, 13 Feb 2025 15:14:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739459667;
-	bh=gMdiIVUMcHjZUDzR7lF3FJr6ZBcIC1aeITxPEs6sI7Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Jlb8sWMgH44PTGqFMBYMw9Y8Tt9z/EOPEO3jWLywlSYxAxaoKlZ/eyuEclbhDLuYM
-	 Edtmr/J4lPP0Ikl4nb58U29ZhuXGKW8SMGyPnU/+6dz3BekR1SiJQ0Ea/+ubtAT/46
-	 HhEMfJ5Ck0CR+/ncSVfAlk9lIn0RHJ61AJc6ojF7A62aap5WHzL6bY5vAbjs20TLLH
-	 MK7WMqx/Ss0TxnVJoygreN6OOoJcgu8zKwfpxBJUmHjsoKW5FeLRzlI984E8AXlQ6c
-	 vzazyc3/qAM/pzwxKuVkMQbs0WcFxUeq7iAQFfAwYk84okB2/QzCGOX1cPe8SMKk2I
-	 TgAmYr1wFHTLg==
-Date: Thu, 13 Feb 2025 07:14:26 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo
- Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Boqun Feng
- <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Hayes Wang
- <hayeswang@realtek.com>, linux-usb@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 1/2] net: Assert proper context while calling
- napi_schedule()
-Message-ID: <20250213071426.01490615@kernel.org>
-In-Reply-To: <20250213-translucent-nightingale-of-upgrade-b41f2e@leitao>
-References: <20250212174329.53793-1-frederic@kernel.org>
-	<20250212174329.53793-2-frederic@kernel.org>
-	<20250212194820.059dac6f@kernel.org>
-	<20250213-translucent-nightingale-of-upgrade-b41f2e@leitao>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KBYTuc4d";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aQsNIKk1"
+Date: Thu, 13 Feb 2025 16:16:25 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739459787;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wrn5daFneqsUrvUsze0qjYwxaGnN6y9LMP2YO22Sm3I=;
+	b=KBYTuc4d2vjaLQ6gWz/ZgoE9AaJyQiNRcXi7O/6GrNPmObo72K1DHra2NjU7HZKgd68JVK
+	+AfV8+rpflXa2kmnud9XSRsbSWSnCoAA72L8dG6qciGAhuYqxc6J7uQl+bilKnXOdY4jMq
+	KBGHjPfmGCzFAcGFTKowrlKYEGyTvLRbxbfPZWKFKv16CdZ3NFOvU08dc43MrUU/CZH75B
+	gfmkpn6LcxfApWMaBNUfRRzRy94HMaHM0tAPeUxRTPFkp/6xMTpicPx4lzG/FFipPjblZf
+	dpzEUUeMRgJckbIvfx/PMj2oPFMxYLrsvu5G0V2B+OnsKFtxS01WdF9YJkIk2g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739459787;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wrn5daFneqsUrvUsze0qjYwxaGnN6y9LMP2YO22Sm3I=;
+	b=aQsNIKk1x6XH+n0xJAcZwMOp5arKtJDiEF10t+BK2Ts0b89qzfS4RTEKm/mRIpcqolm/e7
+	+Asmjd5GS79/mJBw==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: Richard Fitzgerald <rf@opensource.cirrus.com>, 
+	Simon Trimmer <simont@opensource.cirrus.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	patches@opensource.cirrus.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] firmware: cs_dsp: Remove usage of GFP_DMA
+Message-ID: <20250213161059-a4c53711-fdf6-480c-af49-f9f36227ba42@linutronix.de>
+References: <20250211-cs_dsp-gfp_dma-v1-0-afc346363832@linutronix.de>
+ <0e9c1cca-592f-4983-93f4-ab2f76a3c97e@opensource.cirrus.com>
+ <e93d1b72-43da-4e96-9523-e1bbf3853031@opensource.cirrus.com>
+ <1e251815-5d58-436b-9120-e88f75a7ecaa@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1e251815-5d58-436b-9120-e88f75a7ecaa@sirena.org.uk>
 
-On Thu, 13 Feb 2025 01:58:17 -0800 Breno Leitao wrote:
-> > Looks like netcons is hitting this warning in netdevsim:
-> > 
-> > [   16.063196][  T219]  nsim_start_xmit+0x4e0/0x6f0 [netdevsim]
-> > [   16.063219][  T219]  ? netif_skb_features+0x23e/0xa80
-> > [   16.063237][  T219]  netpoll_start_xmit+0x3c3/0x670
-> > [   16.063258][  T219]  __netpoll_send_skb+0x3e9/0x800
-> > [   16.063287][  T219]  netpoll_send_skb+0x2a/0xa0
-> > [   16.063298][  T219]  send_ext_msg_udp+0x286/0x350 [netconsole]
-> > [   16.063325][  T219]  write_ext_msg+0x1c6/0x230 [netconsole]
-> > [   16.063346][  T219]  console_emit_next_record+0x20d/0x430
-> > 
-> > https://netdev-3.bots.linux.dev/vmksft-net-drv-dbg/results/990261/7-netcons-basic-sh/stderr
-> > 
-> > We gotta fix that first.  
+On Thu, Feb 13, 2025 at 03:06:59PM +0000, Mark Brown wrote:
+> On Thu, Feb 13, 2025 at 02:28:06PM +0000, Richard Fitzgerald wrote:
+> > On 11/02/2025 5:21 pm, Richard Fitzgerald wrote:
 > 
-> Thanks Jakub,
+> > > > Not tested on real hardware.
+> > > > This came up while porting kunit to mips64.
+> > > > Apparently GFP_DMA does not work there, but IMO the usage of GFP_DMA by
 > 
-> I understand that it will be fixed by this patchset, right?
+> > I would say that is a bug in mips64 that should be fixed in mips64.
+> > It is not reasonable to expect generic drivers to have special cases for
+> > platforms that don't handle GFP_DMA.
 
-The problem is a bit nasty, on a closer look. We don't know if netcons
-is called in IRQ context or not. How about we add an hrtimer to netdevsim,
-schedule it to fire 5usec in the future instead of scheduling NAPI
-immediately? We can call napi_schedule() from a timer safely.
+Indeed, I did that, too.
 
-Unless there's another driver which schedules NAPI from xmit.
-Then we'd need to try harder to fix this in netpoll.
-veth does use NAPI on xmit but it sets IFF_DISABLE_NETPOLL already.
+> What specifically is the issue?  If it's a build time issue I'd
+> definitely agree that we should just be able to assume that platforms at
+> least build.  IIRC there is a Kconfig you can depend on for DMA but it
+> seems more trouble than it's worth to fix all users.
+
+More details in [0], It's only a runtime issue.
+
+I'm still wondering how all the on-stack buffers used with regmap_raw_read()
+and regmap_raw_write() by cs_dsp are satisfying the DMA requirements.
+
+[0] https://lore.kernel.org/lkml/20250212-kunit-mips-v1-1-eb49c9d76615@linutronix.de/
