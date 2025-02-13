@@ -1,218 +1,488 @@
-Received: from YT3PR01CU008.outbound.protection.outlook.com (mail-canadacentralazon11020106.outbound.protection.outlook.com [52.101.189.106])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407F728A2B2
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.189.106
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739467868; cv=fail; b=QJJxpEBp1WH93qulIK0BBC5liispFuVk9qWfYOecnHSlYygfDgg1hqjTlx+5KBdPqL90eKIwE1wHBihvnZNhtcsTV159zsbfYxWbh6mITPbzfyTtdSWJ5n6ORsL7SMkH0evdxmjKb3WhSdoZKKKB++PPfgMjdqgG4FRn2TFVYK4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739467868; c=relaxed/simple;
-	bh=CwMLkd+VVTAU89DGjLQh4AaNw1teBxA9pqvB8ULETHU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jQJbYUZLGGlughQIMB4wg0YuTXu91uVGM19HJ5qJFvOKMpg61CWqAW/3HinOqTGpk5PShSVEwvLsjALjBjiQq6SuVcpCP7uGueWPesUa8PJj3o4s5IBKlt7y3+OlPVauSMm52/SyaTM4xwszy6Z5Wp62LPKQstsiIbhIi1qQPOQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=H6UpFJvm; arc=fail smtp.client-ip=52.101.189.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE227200BB4;
+	Thu, 13 Feb 2025 17:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739467899; cv=none; b=clh65caT7sLLLUTWDuK1bN38o22SZBcG17BQxL45vySplVndqIlLgTBy2eFNI1p13YSmcD8ydrqeW2BBoKEEUy6bsusT+41XjsxxFzdgZjCDc3qhECPMbZpOv6rm4NXrA1ZA3WC2L+KD85c1ZfhN5BvNidpxW0VmFN6d8+nFsLo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739467899; c=relaxed/simple;
+	bh=hkilgrwEj+mYXR+301azID5UFMMvGrrsIKVTQm1S06M=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gsn95zupV5w3PKhNkA3Vo6k4pwE9V4HdmRZXpA4Z68ESbBpk8gjDWaWDTuTNExpaiE2d0HH5khLCtma9FvgkthXWMGSHjqP0uefxMC75GVYtM/L+yw8KgggFGIB7AaW1lOvnPoIJA3a0iM8ZIgLUW7OXyj9hLESzdos75pcj2gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=lCJSCOyt; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="H6UpFJvm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=remFzjXgxoARxFK7YRQOhr8V+EnlfvLHTBJLKlHlgFBY2C0SSReJU3uFtlY49bwqp8HSG/0QY9ywUTxJ67nGZ8LD71K4XvrjqdnRE45Q3Ic/PRyXkwam8XboafEE5bGEoRzC9B5Sfnd2fC03UKhOIAKnmenVcQv7kznpK1JMq5oayxwTb5X9Ms6V6RRzrQIo4M6iHHVH8UM79Lu5umAvPgXyUbSW4nosLN9aReU0+91EV88Ktz9ncWUyRXVrrPavO5hRpT6jD9o6ieBLryInKpcpxzyGYGaXVr+qWlOfU5Uy/IrS+p9XeO6dOFs1Z5poGLQtHtxjelta8t3/eQNpbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jEdaDiqzjtilg4W1TxRAff1jsOzdPBiyjvke3z6s39o=;
- b=IC7Q/VJu12Uwte1zYeLcsMMTeTywF4ptWBm2TwkmVKat2bdz84j33F89m7Hd5gmlXcz9ZN4VddtpHp3imnmtoMtBsX70v2YKNtHH6ahjjWOczAQAb24Gly4TBXAlTuaqEZKLzGJgfJtcBarvZ6iqUgpuoRkq5HDdGbYD0WDGTjNgB/NDVIe4XK/T/evXWAw7HwyXf/7pDSJUNpSM7cRxFBMgKzE/kkDlaFcLs9oI80r5DleGPFe0a1mpk54IvgudhehVVzSCIUajY0XrZSx8UnddaVEsGSHJwEo+3l/YAgBLs0DroAPIIjCmrHanQ8vcgvgbI3866WioPMdCgVwMEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jEdaDiqzjtilg4W1TxRAff1jsOzdPBiyjvke3z6s39o=;
- b=H6UpFJvmEbWuTU6qzQPwh29pBnlmdm0CW8WIfhOK/0WcRb9AIFTUg2ewE883LvGhxvfE9fN1zahxf2HM44yyknCSv/3BgoCqwUd/OhvoXpMadO7Imhx28IwJkLorSqMI2RQ9xXh5UMGA1QUHZ3c2QNyENZok0mMVG5ixBQcs12p0spxXFgoKiqNxPxgqLE3G3i536KlTxwyyFr8+cWX306ivo3Oe2x/Xe7ZlaoaDtQwekRoHC8XPS9UibSTF6oUG38HtRiRZZ8fTziEBuQSHFSM4Zvb4qy9FCMdAwYHg3Ch3UbsSfvMcjnqqlSgH1kBoRj2tv7gi4d7Xlo0Re86IKg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT3PR01MB9297.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:a2::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.16; Thu, 13 Feb
- 2025 17:31:03 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4%4]) with mapi id 15.20.8445.016; Thu, 13 Feb 2025
- 17:31:03 +0000
-Message-ID: <0888d6a3-8dea-455b-893f-d8d929e827e2@efficios.com>
-Date: Thu, 13 Feb 2025 12:31:02 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/3] sched: Move task_mm_cid_work to mm delayed work
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, aubrey.li@linux.intel.com, yu.c.chen@intel.com,
- Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>, Shuah Khan <shuah@kernel.org>
-References: <202502131405.1ba0803f-lkp@intel.com>
- <17bda9071b6962414f61668698fa840501819172.camel@redhat.com>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <17bda9071b6962414f61668698fa840501819172.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YQBPR01CA0082.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:3::18) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="lCJSCOyt"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DFFMdI016418;
+	Thu, 13 Feb 2025 09:31:21 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=o
+	V8BQ6xRqVbFGjOLXD91DmwBQmvltut0FqtrvCqSf9E=; b=lCJSCOytyTc4QL44J
+	np+8rcYO69k3epwVrJ0WjZ6B3idYQ9x3Ob4AQi+FWZnc94/0T+8efcpBCaW7Cx9b
+	9ImEBOf3RkxTvzDp+scbR/N9HMjZRckXMvNYaEgQD5DHq7XUukaT14ZhDpUrxqf0
+	RuM/0+n9aSddhEqjU5dvgs8OadSqrS/5OQHOU5EgZy2jHx8T4elpIeKGTWcB7YnX
+	W3ZREYasB9wMFy0ZZXZns/6C0KbzYXv6m5VGGLuKRNBVa2AxUL4avfbyLvap6BW6
+	aDpm9JQFLg4KtjmEc6S1oElpYnE+j14ujUQNMdcyq6koEKOtQQR8yD3PfEfpJDlR
+	71Sig==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 44sk7h8bej-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Feb 2025 09:31:20 -0800 (PST)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 13 Feb 2025 09:31:19 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 13 Feb 2025 09:31:19 -0800
+Received: from hyd1425.marvell.com (unknown [10.29.37.152])
+	by maili.marvell.com (Postfix) with ESMTP id CBE6C3F7122;
+	Thu, 13 Feb 2025 09:05:28 -0800 (PST)
+From: Sai Krishna <saikrishnag@marvell.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sgoutham@marvell.com>,
+        <gakula@marvell.com>, <lcherian@marvell.com>, <jerinj@marvell.com>,
+        <hkelam@marvell.com>, <sbhatta@marvell.com>, <andrew+netdev@lunn.ch>,
+        <kalesh-anakkur.purayil@broadcom.com>
+CC: Sai Krishna <saikrishnag@marvell.com>
+Subject: [net-next PATCH v9 4/6] octeontx2-pf: CN20K mbox REQ/ACK implementation for NIC PF
+Date: Thu, 13 Feb 2025 22:35:02 +0530
+Message-ID: <20250213170504.3892412-5-saikrishnag@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250213170504.3892412-1-saikrishnag@marvell.com>
+References: <20250213170504.3892412-1-saikrishnag@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT3PR01MB9297:EE_
-X-MS-Office365-Filtering-Correlation-Id: 85554313-c041-4f94-c32b-08dd4c5430b2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|10070799003|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UTlPRnkwZk96S05uZ0NabmlZMGZ3NlBKOHdYYmlwSTRDQWhZOGhvYkR0eE9D?=
- =?utf-8?B?V21jMnZ5VmN0VjlTUGtYeHA0ajUxOGN3dHN2YTUvK0RDdWczTHBxZTU2N2o5?=
- =?utf-8?B?MXpSSDkyK0hXa29qL250MzJhMmIvYkUrUWRLVFI0TEtjWHk0TXRMd2hSZE4x?=
- =?utf-8?B?dU1pcXZTT1M3SW1ORE02YURBMzFmVGNwWVU4dlBQOVhpT1dpTnhCU0pxWnRa?=
- =?utf-8?B?ek8ycUplQWJOTGZzQnJDRE95OXNQcmprT3lnT2lDWnVNTVRRWTJzRzY3d1dL?=
- =?utf-8?B?SWR6RS9uSUk0Y0hqbHlqaUxudU42dzZnUnI1STlIdU83SnFNbklKVHZOeTQ2?=
- =?utf-8?B?bWR5NUkrTU1EbG9UUVhvY1BDMisvUTFoQW56Nm1WdkljbSt3RmJ5VCtOL2tV?=
- =?utf-8?B?UXU2S1pCbXNseVkwMkxmQTNyYW9JTjNyMjBrNmxLWFF6UVdZWnVIMkk3emRZ?=
- =?utf-8?B?OGZtSFh2OGJZY0czcS8xZyt4UWxuSVJOTHhMZlVjSjljMkNTRkhLSEpIU0Yy?=
- =?utf-8?B?ZFNTcldsOUc2a3N3OUJaSWNKbHR4N09oaUpCNHFVa3ZiK2lsREJkb0N1MjBx?=
- =?utf-8?B?cjk0OVUwcjhTejBGdU9BZGNuUGZyQmprR0dLVjdDRk01c2ZjSmhtT09IN3JM?=
- =?utf-8?B?SG5PcmhIZ0RqOEQwa2EzTDVTWW5CUlFIcXQwVkhUNEJ0YXVoc2tIaWFCcHE5?=
- =?utf-8?B?ZlBJTFZOVm92NHZNeDFtVmhaeVo2VjVRM1dRN3d2M1FTZWZTRktJelo4Yjc1?=
- =?utf-8?B?OFlyWkw0VmRUNzM0QWFIYk9LRk9CY0xycTZLd3VaU1V0N1duejZnK21oYURH?=
- =?utf-8?B?RndONGFkbVFnekxrTExEemNaTGtNK1RmcmFDd1RJQkJ3dGhpdlFVWko0ZGlW?=
- =?utf-8?B?dklWc2k4bFBLbnFHby94UTJXRktiTmtsZHNpMmdiNm1LTGRDMnF0ZUduTTd5?=
- =?utf-8?B?dmZucGdYTWhMUzlxaUphZGNGb1BYc2dhc0NnUFhSMVo3VE1QNmlBajhXN2pS?=
- =?utf-8?B?cXVtRWdsZFJWK2NhTGM3WXdtVFhuQXR2TitNYS9aNnU1UkNMQ1pOcUMzTjMv?=
- =?utf-8?B?R0tGN0srdFI0WDVRN1lNU0haYWU4bVJPTFJOWUJuOTNGTktMSXZ2dGxDQjVS?=
- =?utf-8?B?WGlRWDRkNy9TK2RRZlc3bFZ0YXVMMXRhNjBlRmFDS3l6T2pOOTRlVE5FWEtn?=
- =?utf-8?B?NXQxdlJmczVwaWZwRXlDTzhCQkdhdlZoNTh6ZlNuQytzL0NWQTNrbkdEcG41?=
- =?utf-8?B?bENuK0FUSWlwQlpZVzJMOVZ2UlRYcGVIREo0ZFJiWVVkNHlaZ0dnQWJyNUg0?=
- =?utf-8?B?ZktlNEVZMnRHYUtpSlV0SitFcWhVZmVGb0tHMzJTTFN1bFVqMEhjcG9VWGdP?=
- =?utf-8?B?bnJHTjg1QThQM01RaVRWeW5UZmRycHlHenRxRUxqQjc4aUF4T2pMdmJUenNY?=
- =?utf-8?B?RDZmazBNSnJIb0lNeXlMWEQ0a3d1UERISkc0QTVWdmdscHFSQWQ1WDBLSTZx?=
- =?utf-8?B?TkRERlVyYlpUcmYyWDF2WkFheUcxSC9heWNkcTluQ3J3aEVWM0dhNmRnMkwv?=
- =?utf-8?B?bERNTHhMaUFndDNTVVBxR1E3NXRQWm5vZGxrVkJWYVRoeUtWajd3aGNYYVZN?=
- =?utf-8?B?d3VpcXYvYU4yMlRJMXZKSGU0OUcxM0tYRi80ZUFIN1d5MlZaQlJXaStZS2ZS?=
- =?utf-8?B?RCs1QXlYdEFRME5BQy9aRFZ5MU5YSG5Cb0wveGZ0cHN5SzhWb2VXa1krTmU0?=
- =?utf-8?Q?r2fXMTei7NivUS1srADvvIJKj8R0Kx9m+7qeqbs?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(376014)(7416014)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cFJCMGZWWWRxNWw1ZXJsMmxTaEZBQmwxTURLV1p3SUc1QVZ3VUNveEtCZzB1?=
- =?utf-8?B?aTNUQ1AvSUwrcWl3OVVoWmRpWHVrb05rb0dQVE95dzFXVjdZdkdVNUtrQjMr?=
- =?utf-8?B?WklaUk9HQ3RMTHdONXNtVzFuVFNQZHBYVWh4SklnZnovZjN0ZUdUNFBwQk4x?=
- =?utf-8?B?MnpDVTVPSlNZQ3hRZ216VWZLQWhHRHpOMHN4L3llOER6bm43cGttUjdyd1N0?=
- =?utf-8?B?YVFvOHV2aU1kTHgzbXNURFVhNDhJN29PNjZmMytKRGlrbUU2S1J4eEYzem5t?=
- =?utf-8?B?TVFtQ0IxUmtQVExRZkFpUSsrb3hkTGtMZ1hSNmpKdEoydmVDYXAyNTR5SENk?=
- =?utf-8?B?TzJGbDFPYVNlUDlWRVVrWGtqd1BGZlU0dUV1eDQvMFRoOVpSYU9NV2hMWkhO?=
- =?utf-8?B?ZnpPSEowMVRlNUFiVkZGWTR6Rm1Td0lMSENqMHJHR3p3SEFVOGlKZ2lBejBr?=
- =?utf-8?B?MVBSMnJncXQ5NW00NHdxQ2VQamJLdkpnQnNXZ1pKVFdjZmJNbUl0a05FYzU1?=
- =?utf-8?B?eGFtVXhLejZSWjBwQjBNTGZxaGFSdXhGNTFabm5iQWplS20vSHVFRHFQOWVX?=
- =?utf-8?B?cTRodGFZTmJ4aS9EMVoyVGRrZllZT0s4QU9PMmZKMjFyZkx4bUFzRlVRc2o4?=
- =?utf-8?B?RWkxNmxjUUVLZndmTXhLM1NJWVRZRFBKc0MxTTI2N0FPOHFLbUlRMGVsendi?=
- =?utf-8?B?UHBuN0JRQWY3aEJ4alUvNDJCc25zRVp0WmpteFgvek9ONk5lOTROOXBFY01l?=
- =?utf-8?B?SGNRNy94TWcvQ0VSb0tENlRqMzVocnkwVGs3MWU3MTlZbTBoMkdpRUs5VnVE?=
- =?utf-8?B?ZXJnQ1MzL0RVaU5aSXBtODl1a1A5VTRyL0lzL3IwM1hCRlZJbWpkREU2VkpS?=
- =?utf-8?B?RWJ1T0xPTnkvWjVOYkVDSlAwUkgzSUNLMTd0b1lMenEwN0NsWTFpT0l5UHdX?=
- =?utf-8?B?cERZQ2hsUUZ4a2dPQ09XbHVQaWJvV21lVVlFenA5ay9wNkFFdWhKTHd1Q0hI?=
- =?utf-8?B?aHU0UXFWeTJOUkg3UG9nVUlaL041ZTRtWHI0eWZRa1p5U1E3emw1MWtrcm5K?=
- =?utf-8?B?cHpWQmJZYmRGaERNak9MMGI2UWRrQWlweVYwcHFRZm1aRWU5bnJNL2FjQ0x2?=
- =?utf-8?B?NHlmcTA1V0dVVGkyQzQxNldiMHFLUi85eGNvRVk4WjY4a20zTnljck9UQ0lk?=
- =?utf-8?B?Tyt2UThJQkVMZThFejRtQkx6WjZpaVhqdVpsb3ZrQnh0aFJzWEZjTmZXNTR6?=
- =?utf-8?B?cVFoSlpPNUZHVW54aEN4RHNLNGdGQ1M1VEVwOFFQQUIzU3pnVEJiOHFySDdo?=
- =?utf-8?B?K1JVTUdFY1EzT1FTWVk3R1h3WngvZGxQWGZYYU1BWWlwc2dFelh1a2FsVEZK?=
- =?utf-8?B?b3M3TnNwWVlCUDNRYmx5cUFwUnRkWkh2V3k0MDB4bjUxbkRPUm1CWE52K1dF?=
- =?utf-8?B?bTdKSlNQUS9wY1VQQjQxekNybTJHUEd0MlppSFpsOU5VUXRpNVZ0TXpDWTNF?=
- =?utf-8?B?NkI2UTg1NVJBcXhQTVlpUERJZ2tack02amo4enJjV3BqV0JPdmFxNlFWVldS?=
- =?utf-8?B?OG12OVZPckNPcTNXbTkrVWJqMkUydStXMlpacURuV1ozN1RabWJ5WlVwY3Ev?=
- =?utf-8?B?SFcwTndva2dEaGs3SWVxWmtVZmY1VmlwazVIam9kcitFQ0FrNU9DZjIyV3BZ?=
- =?utf-8?B?N3h4TWdwVDJNUmxFb1JmYTFHZTVHbjg3OEhCVXpEREJJemlSbWQrNFNJYlNq?=
- =?utf-8?B?NmM3UStmRXVXaWVrZFdldzJGNzdBOWNFZnU1VmtJV2JrbU9OK093Uk5UZjFz?=
- =?utf-8?B?OWVOU2pBdWYxSk83VnUyTXdEb2M0RzZKVURaYWdLZFJwVzNzcWE4KzVSaXFJ?=
- =?utf-8?B?RzhvUEJpcnFpbFJxZHlzWlcweElzcVZHWFVKY2Y3RmwxOXNkU2Z1TWd2dVNk?=
- =?utf-8?B?aENHaDJmTFdaQ3BzcTEwdVpUSFlFbWdWeDc4cFJqY2RIcUxrT2Z6cHNVdWRl?=
- =?utf-8?B?V0hzeGswSHc2OHh2ZzFOYVhrZTl1eXVFSVIxMDhTNi9zcFN0NFN1NWtUd2pu?=
- =?utf-8?B?a0ZQNTY3WkFrSDh2VEw1VzVsWHhJV3NZN3JBaDUxREVPWHJOZ2U5NTZXMVU5?=
- =?utf-8?B?Y2daQ3VsWUJhZUxXTGxBclRRYUtqUWhPRDFPdytQZnE1Rmp4NWZhT1RycW5U?=
- =?utf-8?B?VFdiTVJKRXZtNW94dzZpUTRJZmpoTFFQWXJCdE9OSnVKMmpPYWxjUkJiV3hZ?=
- =?utf-8?Q?831fdo9S3+UP6yPwTNQ5KyM3TRP/JGfFbSVAfO4oXU=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85554313-c041-4f94-c32b-08dd4c5430b2
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 17:31:03.6608
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Sh4ezo9jSd8/L3w6040t0W0dKVVJfgIFa9CPalR+uVtGhI4QIdqvb8OjuLLihYbBJP/eF02K31WsH2BRQt8uwCQXVy4mHwbEEetAMV3WiTU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT3PR01MB9297
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: 5XylKQXCLmsQAzNpJIaaL0EglOtrGsLj
+X-Proofpoint-ORIG-GUID: 5XylKQXCLmsQAzNpJIaaL0EglOtrGsLj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-13_07,2025-02-13_01,2024-11-22_01
 
-On 2025-02-13 08:25, Gabriele Monaco wrote:
-> On Thu, 2025-02-13 at 14:52 +0800, kernel test robot wrote:
->> kernel test robot noticed
->> "WARNING:at_kernel/workqueue.c:#__queue_delayed_work" on:
->>
->> [    2.640924][    T0] ------------[ cut here ]------------
->> [ 2.641646][ T0] WARNING: CPU: 0 PID: 0 at kernel/workqueue.c:2495
->> __queue_delayed_work (kernel/workqueue.c:2495 (discriminator 9))
->> [    2.642874][    T0] Modules linked in:
->> [    2.643381][    T0] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted
->> 6.14.0-rc2-00002-g287adf9e9c1f #1
->> [    2.644582][    T0] Hardware name: QEMU Standard PC (i440FX +
->> PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
->> [ 2.645943][ T0] RIP: 0010:__queue_delayed_work
->> (kernel/workqueue.c:2495 (discriminator 9))
-> 
-> There seem to be major problems with this configuration, I'm trying to
-> understand what's wrong but, for the time being, this patchset is not
-> ready for inclusion.
+This implementation uses separate trigger interrupts for request,
+response messages against using trigger message data in CN10K.
+This patch adds support for basic mbox implementation for CN20K
+from NIC PF side.
 
-I'm staring at this now, and I'm thinking we could do a simpler change
-that would solve your RT issues without having to introduce a dependency
-on workqueue.c.
+Signed-off-by: Sunil Kovvuri Goutham <sgoutham@marvell.com>
+Signed-off-by: Sai Krishna <saikrishnag@marvell.com>
+---
+ .../marvell/octeontx2/af/cn20k/struct.h       | 15 ++++
+ .../ethernet/marvell/octeontx2/nic/Makefile   |  2 +-
+ .../ethernet/marvell/octeontx2/nic/cn10k.c    | 18 ++++-
+ .../ethernet/marvell/octeontx2/nic/cn10k.h    |  1 +
+ .../ethernet/marvell/octeontx2/nic/cn20k.c    | 63 +++++++++++++++
+ .../ethernet/marvell/octeontx2/nic/cn20k.h    | 14 ++++
+ .../marvell/octeontx2/nic/otx2_common.h       |  5 ++
+ .../ethernet/marvell/octeontx2/nic/otx2_pf.c  | 80 +++++++++++++++----
+ .../ethernet/marvell/octeontx2/nic/otx2_reg.h |  4 +
+ .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |  6 ++
+ 10 files changed, 186 insertions(+), 22 deletions(-)
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/cn20k.c
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/cn20k.h
 
-So if the culprit is that task_mm_cid_work() runs for too long on large
-many-cpus systems, why not break it up into smaller iterations ?
-
-So rather than iterating on "for_each_possible_cpu", we could simply
-break this down into iteration on at most N cpus, so:
-
-tick #1: iteration on CPUs 0 ..   N - 1
-tick #2: iteration on CPUs N .. 2*N - 1
-...
-circling back to 0 when it reaches the number of possible cpus.
-
-This N value could be configurable, e.g. CONFIG_RSEQ_CID_SCAN_BATCH,
-with a sane default. An RT system could decide to make that value lower.
-
-Then all we need to do is remember which was that last observed cpu
-number in the mm struct, so the next tick picks up from there.
-
-The main downside of this approach compared to scheduling delayed
-work in a workqueue is that it depends on having the mm be current when
-the scheduler tick happens. But perhaps this is something we could fix
-in a different way that does not add a dependency on workqueue. I'm not
-sure how though.
-
-Thoughts ?
-
-Thanks,
-
-Mathieu
-
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/cn20k/struct.h b/drivers/net/ethernet/marvell/octeontx2/af/cn20k/struct.h
+index fccad6e422e8..76ce3ec6da9c 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/cn20k/struct.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/cn20k/struct.h
+@@ -8,6 +8,21 @@
+ #ifndef STRUCT_H
+ #define STRUCT_H
+ 
++/*
++ * CN20k RVU PF MBOX Interrupt Vector Enumeration
++ *
++ * Vectors 0 - 3 are compatible with pre cn20k and hence
++ * existing macros are being reused.
++ */
++enum rvu_mbox_pf_int_vec_e {
++	RVU_MBOX_PF_INT_VEC_VFPF_MBOX0	= 0x4,
++	RVU_MBOX_PF_INT_VEC_VFPF_MBOX1	= 0x5,
++	RVU_MBOX_PF_INT_VEC_VFPF1_MBOX0	= 0x6,
++	RVU_MBOX_PF_INT_VEC_VFPF1_MBOX1	= 0x7,
++	RVU_MBOX_PF_INT_VEC_AFPF_MBOX	= 0x8,
++	RVU_MBOX_PF_INT_VEC_CNT		= 0x9,
++};
++
+ /* RVU Admin function Interrupt Vector Enumeration */
+ enum rvu_af_cn20k_int_vec_e {
+ 	RVU_AF_CN20K_INT_VEC_POISON		= 0x0,
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/Makefile b/drivers/net/ethernet/marvell/octeontx2/nic/Makefile
+index cb6513ab35e7..9791f10b7bd6 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/Makefile
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/Makefile
+@@ -8,7 +8,7 @@ obj-$(CONFIG_OCTEONTX2_VF) += rvu_nicvf.o otx2_ptp.o
+ obj-$(CONFIG_RVU_ESWITCH) += rvu_rep.o
+ 
+ rvu_nicpf-y := otx2_pf.o otx2_common.o otx2_txrx.o otx2_ethtool.o \
+-               otx2_flows.o otx2_tc.o cn10k.o otx2_dmac_flt.o \
++               otx2_flows.o otx2_tc.o cn10k.o cn20k.o otx2_dmac_flt.o \
+                otx2_devlink.o qos_sq.o qos.o
+ rvu_nicvf-y := otx2_vf.o
+ rvu_rep-y := rep.o
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
+index a15cc86635d6..bd7e2c669cac 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
+@@ -14,6 +14,7 @@ static struct dev_hw_ops	otx2_hw_ops = {
+ 	.sqe_flush = otx2_sqe_flush,
+ 	.aura_freeptr = otx2_aura_freeptr,
+ 	.refill_pool_ptrs = otx2_refill_pool_ptrs,
++	.pfaf_mbox_intr_handler = otx2_pfaf_mbox_intr_handler,
+ };
+ 
+ static struct dev_hw_ops cn10k_hw_ops = {
+@@ -21,8 +22,20 @@ static struct dev_hw_ops cn10k_hw_ops = {
+ 	.sqe_flush = cn10k_sqe_flush,
+ 	.aura_freeptr = cn10k_aura_freeptr,
+ 	.refill_pool_ptrs = cn10k_refill_pool_ptrs,
++	.pfaf_mbox_intr_handler = otx2_pfaf_mbox_intr_handler,
+ };
+ 
++void otx2_init_hw_ops(struct otx2_nic *pfvf)
++{
++	if (!test_bit(CN10K_LMTST, &pfvf->hw.cap_flag)) {
++		pfvf->hw_ops = &otx2_hw_ops;
++		return;
++	}
++
++	pfvf->hw_ops = &cn10k_hw_ops;
++}
++EXPORT_SYMBOL(otx2_init_hw_ops);
++
+ int cn10k_lmtst_init(struct otx2_nic *pfvf)
+ {
+ 
+@@ -30,12 +43,9 @@ int cn10k_lmtst_init(struct otx2_nic *pfvf)
+ 	struct otx2_lmt_info *lmt_info;
+ 	int err, cpu;
+ 
+-	if (!test_bit(CN10K_LMTST, &pfvf->hw.cap_flag)) {
+-		pfvf->hw_ops = &otx2_hw_ops;
++	if (!test_bit(CN10K_LMTST, &pfvf->hw.cap_flag))
+ 		return 0;
+-	}
+ 
+-	pfvf->hw_ops = &cn10k_hw_ops;
+ 	/* Total LMTLINES = num_online_cpus() * 32 (For Burst flush).*/
+ 	pfvf->tot_lmt_lines = (num_online_cpus() * LMT_BURST_SIZE);
+ 	pfvf->hw.lmt_info = alloc_percpu(struct otx2_lmt_info);
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.h b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.h
+index e3f0bce9908f..945ab10bd4ed 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.h
+@@ -39,4 +39,5 @@ int cn10k_alloc_leaf_profile(struct otx2_nic *pfvf, u16 *leaf);
+ int cn10k_set_ipolicer_rate(struct otx2_nic *pfvf, u16 profile,
+ 			    u32 burst, u64 rate, bool pps);
+ int cn10k_free_leaf_profile(struct otx2_nic *pfvf, u16 leaf);
++void otx2_init_hw_ops(struct otx2_nic *pfvf);
+ #endif /* CN10K_H */
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.c b/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.c
+new file mode 100644
+index 000000000000..d7a5f5449d55
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.c
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Marvell RVU Ethernet driver
++ *
++ * Copyright (C) 2024 Marvell.
++ *
++ */
++
++#include "otx2_common.h"
++#include "otx2_reg.h"
++#include "otx2_struct.h"
++#include "cn10k.h"
++
++static struct dev_hw_ops cn20k_hw_ops = {
++	.pfaf_mbox_intr_handler = cn20k_pfaf_mbox_intr_handler,
++};
++
++void cn20k_init(struct otx2_nic *pfvf)
++{
++	pfvf->hw_ops = &cn20k_hw_ops;
++}
++EXPORT_SYMBOL(cn20k_init);
++/* CN20K mbox AF => PFx irq handler */
++irqreturn_t cn20k_pfaf_mbox_intr_handler(int irq, void *pf_irq)
++{
++	struct otx2_nic *pf = pf_irq;
++	struct mbox *mw = &pf->mbox;
++	struct otx2_mbox_dev *mdev;
++	struct otx2_mbox *mbox;
++	struct mbox_hdr *hdr;
++	int pf_trig_val;
++
++	pf_trig_val = otx2_read64(pf, RVU_PF_INT) & 0x3;
++
++	/* Clear the IRQ */
++	otx2_write64(pf, RVU_PF_INT, pf_trig_val);
++
++	if (pf_trig_val & BIT_ULL(0)) {
++		mbox = &mw->mbox_up;
++		mdev = &mbox->dev[0];
++		otx2_sync_mbox_bbuf(mbox, 0);
++
++		hdr = (struct mbox_hdr *)(mdev->mbase + mbox->rx_start);
++		if (hdr->num_msgs)
++			queue_work(pf->mbox_wq, &mw->mbox_up_wrk);
++
++		trace_otx2_msg_interrupt(pf->pdev, "UP message from AF to PF",
++					 BIT_ULL(0));
++	}
++
++	if (pf_trig_val & BIT_ULL(1)) {
++		mbox = &mw->mbox;
++		mdev = &mbox->dev[0];
++		otx2_sync_mbox_bbuf(mbox, 0);
++
++		hdr = (struct mbox_hdr *)(mdev->mbase + mbox->rx_start);
++		if (hdr->num_msgs)
++			queue_work(pf->mbox_wq, &mw->mbox_wrk);
++		trace_otx2_msg_interrupt(pf->pdev, "DOWN reply from AF to PF",
++					 BIT_ULL(1));
++	}
++
++	return IRQ_HANDLED;
++}
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.h b/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.h
+new file mode 100644
+index 000000000000..712bb2b5e2ae
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn20k.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Marvell RVU Ethernet driver
++ *
++ * Copyright (C) 2024 Marvell.
++ *
++ */
++
++#ifndef CN20K_H
++#define CN20K_H
++
++#include "otx2_common.h"
++
++void cn20k_init(struct otx2_nic *pfvf);
++#endif /* CN20K_H */
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+index d44a6cc3e863..fc1200f51215 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+@@ -32,6 +32,7 @@
+ #include "qos.h"
+ #include "rep.h"
+ #include "cn10k_ipsec.h"
++#include "cn20k.h"
+ 
+ /* IPv4 flag more fragment bit */
+ #define IPV4_FLAG_MORE				0x20
+@@ -61,6 +62,9 @@
+ /* Number of segments per SG structure */
+ #define MAX_SEGS_PER_SG 3
+ 
++irqreturn_t otx2_pfaf_mbox_intr_handler(int irq, void *pf_irq);
++irqreturn_t cn20k_pfaf_mbox_intr_handler(int irq, void *pf_irq);
++
+ enum arua_mapped_qtypes {
+ 	AURA_NIX_RQ,
+ 	AURA_NIX_SQ,
+@@ -359,6 +363,7 @@ struct dev_hw_ops {
+ 			     int size, int qidx);
+ 	int	(*refill_pool_ptrs)(void *dev, struct otx2_cq_queue *cq);
+ 	void	(*aura_freeptr)(void *dev, int aura, u64 buf);
++	irqreturn_t (*pfaf_mbox_intr_handler)(int irq, void *pf_irq);
+ };
+ 
+ #define CN10K_MCS_SA_PER_SC	4
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+index acd9e1ca6d2b..e4b99c25f849 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+@@ -995,7 +995,7 @@ static void otx2_pfaf_mbox_up_handler(struct work_struct *work)
+ 	otx2_mbox_msg_send(mbox, 0);
+ }
+ 
+-static irqreturn_t otx2_pfaf_mbox_intr_handler(int irq, void *pf_irq)
++irqreturn_t otx2_pfaf_mbox_intr_handler(int irq, void *pf_irq)
+ {
+ 	struct otx2_nic *pf = (struct otx2_nic *)pf_irq;
+ 	struct mbox *mw = &pf->mbox;
+@@ -1047,10 +1047,18 @@ static irqreturn_t otx2_pfaf_mbox_intr_handler(int irq, void *pf_irq)
+ 
+ void otx2_disable_mbox_intr(struct otx2_nic *pf)
+ {
+-	int vector = pci_irq_vector(pf->pdev, RVU_PF_INT_VEC_AFPF_MBOX);
++	int vector;
+ 
+ 	/* Disable AF => PF mailbox IRQ */
+-	otx2_write64(pf, RVU_PF_INT_ENA_W1C, BIT_ULL(0));
++	if (!is_cn20k(pf->pdev)) {
++		vector = pci_irq_vector(pf->pdev, RVU_PF_INT_VEC_AFPF_MBOX);
++		otx2_write64(pf, RVU_PF_INT_ENA_W1C, BIT_ULL(0));
++	} else {
++		vector = pci_irq_vector(pf->pdev,
++					RVU_MBOX_PF_INT_VEC_AFPF_MBOX);
++		otx2_write64(pf, RVU_PF_INT_ENA_W1C,
++			     BIT_ULL(0) | BIT_ULL(1));
++	}
+ 	free_irq(vector, pf);
+ }
+ EXPORT_SYMBOL(otx2_disable_mbox_intr);
+@@ -1063,10 +1071,24 @@ int otx2_register_mbox_intr(struct otx2_nic *pf, bool probe_af)
+ 	int err;
+ 
+ 	/* Register mailbox interrupt handler */
+-	irq_name = &hw->irq_name[RVU_PF_INT_VEC_AFPF_MBOX * NAME_SIZE];
+-	snprintf(irq_name, NAME_SIZE, "RVUPFAF Mbox");
+-	err = request_irq(pci_irq_vector(pf->pdev, RVU_PF_INT_VEC_AFPF_MBOX),
+-			  otx2_pfaf_mbox_intr_handler, 0, irq_name, pf);
++	if (!is_cn20k(pf->pdev)) {
++		irq_name = &hw->irq_name[RVU_PF_INT_VEC_AFPF_MBOX * NAME_SIZE];
++		snprintf(irq_name, NAME_SIZE, "RVUPF%d AFPF Mbox",
++			 rvu_get_pf(pf->pdev, pf->pcifunc));
++		err = request_irq(pci_irq_vector
++				  (pf->pdev, RVU_PF_INT_VEC_AFPF_MBOX),
++				  pf->hw_ops->pfaf_mbox_intr_handler,
++				  0, irq_name, pf);
++	} else {
++		irq_name = &hw->irq_name[RVU_MBOX_PF_INT_VEC_AFPF_MBOX *
++						NAME_SIZE];
++		snprintf(irq_name, NAME_SIZE, "RVUPF%d AFPF Mbox",
++			 rvu_get_pf(pf->pdev, pf->pcifunc));
++		err = request_irq(pci_irq_vector
++				  (pf->pdev, RVU_MBOX_PF_INT_VEC_AFPF_MBOX),
++				  pf->hw_ops->pfaf_mbox_intr_handler,
++				  0, irq_name, pf);
++	}
+ 	if (err) {
+ 		dev_err(pf->dev,
+ 			"RVUPF: IRQ registration failed for PFAF mbox irq\n");
+@@ -1076,8 +1098,14 @@ int otx2_register_mbox_intr(struct otx2_nic *pf, bool probe_af)
+ 	/* Enable mailbox interrupt for msgs coming from AF.
+ 	 * First clear to avoid spurious interrupts, if any.
+ 	 */
+-	otx2_write64(pf, RVU_PF_INT, BIT_ULL(0));
+-	otx2_write64(pf, RVU_PF_INT_ENA_W1S, BIT_ULL(0));
++	if (!is_cn20k(pf->pdev)) {
++		otx2_write64(pf, RVU_PF_INT, BIT_ULL(0));
++		otx2_write64(pf, RVU_PF_INT_ENA_W1S, BIT_ULL(0));
++	} else {
++		otx2_write64(pf, RVU_PF_INT, BIT_ULL(0) | BIT_ULL(1));
++		otx2_write64(pf, RVU_PF_INT_ENA_W1S, BIT_ULL(0) |
++			     BIT_ULL(1));
++	}
+ 
+ 	if (!probe_af)
+ 		return 0;
+@@ -1108,7 +1136,7 @@ void otx2_pfaf_mbox_destroy(struct otx2_nic *pf)
+ 		pf->mbox_wq = NULL;
+ 	}
+ 
+-	if (mbox->mbox.hwbase)
++	if (mbox->mbox.hwbase && !is_cn20k(pf->pdev))
+ 		iounmap((void __iomem *)mbox->mbox.hwbase);
+ 
+ 	otx2_mbox_destroy(&mbox->mbox);
+@@ -1128,12 +1156,20 @@ int otx2_pfaf_mbox_init(struct otx2_nic *pf)
+ 	if (!pf->mbox_wq)
+ 		return -ENOMEM;
+ 
+-	/* Mailbox is a reserved memory (in RAM) region shared between
+-	 * admin function (i.e AF) and this PF, shouldn't be mapped as
+-	 * device memory to allow unaligned accesses.
++	/* For CN20K, AF allocates mbox memory in DRAM and writes PF
++	 * regions/offsets in RVU_MBOX_AF_PFX_ADDR, the RVU_PFX_FUNC_PFAF_MBOX
++	 * gives the aliased address to access AF/PF mailbox regions.
+ 	 */
+-	hwbase = ioremap_wc(pci_resource_start(pf->pdev, PCI_MBOX_BAR_NUM),
+-			    MBOX_SIZE);
++	if (is_cn20k(pf->pdev))
++		hwbase = pf->reg_base + RVU_PFX_FUNC_PFAF_MBOX +
++			((u64)BLKADDR_MBOX << RVU_FUNC_BLKADDR_SHIFT);
++	else
++		/* Mailbox is a reserved memory (in RAM) region shared between
++		 * admin function (i.e AF) and this PF, shouldn't be mapped as
++		 * device memory to allow unaligned accesses.
++		 */
++		hwbase = ioremap_wc(pci_resource_start
++				    (pf->pdev, PCI_MBOX_BAR_NUM), MBOX_SIZE);
+ 	if (!hwbase) {
+ 		dev_err(pf->dev, "Unable to map PFAF mailbox region\n");
+ 		err = -ENOMEM;
+@@ -2988,8 +3024,13 @@ int otx2_init_rsrc(struct pci_dev *pdev, struct otx2_nic *pf)
+ 	if (err)
+ 		return err;
+ 
+-	err = pci_alloc_irq_vectors(hw->pdev, RVU_PF_INT_VEC_CNT,
+-				    RVU_PF_INT_VEC_CNT, PCI_IRQ_MSIX);
++	if (!is_cn20k(pf->pdev))
++		err = pci_alloc_irq_vectors(hw->pdev, RVU_PF_INT_VEC_CNT,
++					    RVU_PF_INT_VEC_CNT, PCI_IRQ_MSIX);
++	else
++		err = pci_alloc_irq_vectors(hw->pdev, RVU_MBOX_PF_INT_VEC_CNT,
++					    RVU_MBOX_PF_INT_VEC_CNT,
++					    PCI_IRQ_MSIX);
+ 	if (err < 0) {
+ 		dev_err(dev, "%s: Failed to alloc %d IRQ vectors\n",
+ 			__func__, num_vec);
+@@ -2998,6 +3039,11 @@ int otx2_init_rsrc(struct pci_dev *pdev, struct otx2_nic *pf)
+ 
+ 	otx2_setup_dev_hw_settings(pf);
+ 
++	if (is_cn20k(pf->pdev))
++		cn20k_init(pf);
++	else
++		otx2_init_hw_ops(pf);
++
+ 	/* Init PF <=> AF mailbox stuff */
+ 	err = otx2_pfaf_mbox_init(pf);
+ 	if (err)
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_reg.h b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_reg.h
+index 858f084b9d47..901f8cf7f27a 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_reg.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_reg.h
+@@ -58,6 +58,10 @@
+ #define	RVU_VF_MSIX_PBAX(a)		    (0xF0000 | (a) << 3)
+ #define RVU_VF_MBOX_REGION                  (0xC0000)
+ 
++/* CN20K RVU_MBOX_E: RVU PF/VF MBOX Address Range Enumeration */
++#define RVU_MBOX_AF_PFX_ADDR(a)             (0x5000 | (a) << 4)
++#define RVU_PFX_FUNC_PFAF_MBOX		    (0x80000)
++
+ #define RVU_FUNC_BLKADDR_SHIFT		20
+ #define RVU_FUNC_BLKADDR_MASK		0x1FULL
+ 
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+index e926c6ce96cf..9c69d06a36cd 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+@@ -618,6 +618,12 @@ static int otx2vf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	}
+ 
+ 	otx2_setup_dev_hw_settings(vf);
++
++	if (is_cn20k(vf->pdev))
++		cn20k_init(vf);
++	else
++		otx2_init_hw_ops(vf);
++
+ 	/* Init VF <=> PF mailbox stuff */
+ 	err = otx2vf_vfaf_mbox_init(vf);
+ 	if (err)
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+2.25.1
+
