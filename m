@@ -1,80 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE181FECCA;
-	Thu, 13 Feb 2025 16:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E96D155326;
+	Thu, 13 Feb 2025 16:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739463260; cv=none; b=A2H3oO275pb30gaQPibECnLMPw2rFllDj6P6fLhLPqceop37a7HqUj+WAI+EzDw7hAamypX87cDjOu8aBKPY1ZAFnhSQcc7ar1VBADutSWTvWSZsBL1EGrFdnBcbul0q5sTuvHJpwQ2rokNCE2f/oacO6LcN1JqHqarGAGcZbxo=
+	t=1739463283; cv=none; b=Ba/sOifu0MnOPiDwu8Jz7IYi9GG6+m7OSG8QJp4uaq7FXt1n3sBCqIk2+BbvUEom9ucAZzpIAFg0M1GFjolBms0RQuRLkRhnMo7kTFxXKMbaOiljCckOsrKpvNxDHbuuaLLAtj4bt2cuQnF0U6duGlU9Rw8pCSPfEjcqP1h0lK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739463260; c=relaxed/simple;
-	bh=G6cjVJpboDfJPKkTHx0NgdsYqd0fONgDYXmdRT7GVCQ=;
+	s=arc-20240116; t=1739463283; c=relaxed/simple;
+	bh=vGJnb1m4SzGUIvD8C7Q70RDN83mTiA+BJaGjQwL7LEo=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f2kU946AlLAPI8OslAS42my7e9MwhMIB/ET8Jj8xsTBtWwCUWLTR4Lakg+2VzxYdYNYk+gFqj2yRIHI0B21BBEEmPJVkgYngkpNfoDG3AqHCeO6tDOjWls68H0vi/vm7QkxQLXtFLoHowqm0aA3Y06K5FfLa8ATN/ngw0tLr/JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVbkAzt5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=uuOACICQBD7QZc41KJo4DNMVeNA3Sm5/SOG5ME0ILN3VXAMDSPboIt2lOnL2vCG9xDuATwC/EIn5idZ6TDEiKPPygnsxjv4hf0Qy4/tAMohsiydIBNRcv8Qum01JSa199dFDpzigxrYCbJZFCmExn7FVUYMUjizgopA9EoyMC3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o/ragaeq; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVbkAzt5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A3FCC4CED1;
-	Thu, 13 Feb 2025 16:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739463259;
-	bh=G6cjVJpboDfJPKkTHx0NgdsYqd0fONgDYXmdRT7GVCQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CVbkAzt5yvYnfw2Sq0Qi7BWnhuC23Fmz8tv6H7yaGpJxnOUVdBaVUMlaH2H212m8J
-	 p920+c30/ZKkMWC03uL/pdiXmTzYByFwNWxfJNH9ItS2PVNiZbOUTqmOhoOyO015I0
-	 vOAO9qT0c8R6N9DRz+9GOEUsHLEJUzH2BMmdn7RXixOEJolPgqRLjkBbDflgtmPqoH
-	 XPA3jsCTSFvAYzDdXdeWLkNKg81UdymE66B2zRTFsHuTMD65Cnewogru1zA8md57b8
-	 UGic4HHNukPG3Dds5YUb5spQfwMJRFZ6Gf7pi3h9et7PhlhQlBKp3TSU0B7imhQf4T
-	 Em9Rm1KnHxGEA==
-Date: Thu, 13 Feb 2025 08:14:18 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Joe Damato <jdamato@fastly.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
- rdunlap@infradead.org, bagasdotme@gmail.com, ahmed.zaki@intel.com, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Simon
- Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open
- list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2] documentation: networking: Add NAPI config
-Message-ID: <20250213081418.6d3966af@kernel.org>
-In-Reply-To: <Z633ggyM-F2pfAkG@LQ3V64L9R2>
-References: <CALALjgz_jtONSFLAhOTYFcfL2-UwDct9AxhaT4BFGOnnt2UF8A@mail.gmail.com>
-	<013921c8-1fd0-410d-9034-278fc56ff8f5@redhat.com>
-	<Z633ggyM-F2pfAkG@LQ3V64L9R2>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o/ragaeq"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 25360441D0;
+	Thu, 13 Feb 2025 16:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739463278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0TVSfnhO/D9vf7kVKocZCtgHhLvkRIYScp2kiZ0Rn5s=;
+	b=o/ragaeqE14+pkiUyeerhxStHnHzUEuBaR1MDzBW+7wdy/u3tp+KketwFkv6a1sl29X91R
+	bazTwFPopWFSaJGSUnKpDZQLBGOmVuo2ndmrlnYUDCz/CfzWgQ3cFrXnEsLh/o5rj6Vzn4
+	VVkvrSy7CFWtMgXit8j7dBcts6buJjY42hvgI8s8rJOqOX6cPCwaWN1Rs4f9k222J2ouyg
+	g8hqm/3JkLHGpxJAL0LWtcSlVMlhaRHgSzcKAdhZtP9y9aopwC7UfNpKr9ixsbQlI3cumA
+	81i+wvtWy8TucWElCaV+3PwElF+2fBxbpdNArU7gYJqnCwdZinWA3a/2fuPrjw==
+Date: Thu, 13 Feb 2025 17:14:35 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Phil Elwell <phil@raspberrypi.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>, andrew@lunn.ch, Arnd
+ Bergmann <arnd@arndb.de>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com,
+ brgl@bgdev.pl, Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
+ <conor+dt@kernel.org>, derek.kiernan@amd.com, devicetree@vger.kernel.org,
+ dragan.cvetic@amd.com, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org,
+ kw@linux.com, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open
+ list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
+ <linux-pci@vger.kernel.org>, "moderated list:BROADCOM BCM2711/BCM2835 ARM
+ ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+ lpieralisi@kernel.org, luca.ceresoli@bootlin.com,
+ manivannan.sadhasivam@linaro.org, masahiroy@kernel.org, Michael Turquette
+ <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
+ saravanak@google.com, Stephen Boyd <sboyd@kernel.org>,
+ thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon
+ <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <20250213171435.1c2ce376@bootlin.com>
+In-Reply-To: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
+References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegjedvvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeehpdhrtghpthhtohepphhhihhlsehrrghsphgsvghrrhihphhirdgtohhmpdhrtghpthhtoheprghnughrvggrrdhpohhrthgrsehsuhhsvgdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtoheps
+ ggtmhdqkhgvrhhnvghlqdhfvggvuggsrggtkhdqlhhishhtsegsrhhorggutghomhdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhm
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Thu, 13 Feb 2025 05:45:38 -0800 Joe Damato wrote:
-> On Thu, Feb 13, 2025 at 12:45:01PM +0100, Paolo Abeni wrote:
-> > On 2/11/25 9:06 PM, Joe Damato wrote:  
-> > > +++ b/Documentation/networking/napi.rst
-> > > @@ -171,12 +171,43 @@ a channel as an IRQ/NAPI which services queues
-> > > of a given type. For example,  
-> > 
-> > It looks like your client mangled the patch; the above lines are
-> > corrupted (there should be no line split)
-> > 
-> > Please respin  
-> 
-> I must be missing something: I don't see the line split when looking
-> at the original email and I just tried applying the patch directly
-> from my email and it applied just fine.
-> 
-> Are you sure its not something with your client?
-> 
-> See the message on lore:
-> 
-> https://lore.kernel.org/netdev/20250211151543.645d1c57@kernel.org/T/
+Hi Phil,
 
-It's also broken on lore.
+On Thu, 13 Feb 2025 15:18:45 +0000
+Phil Elwell <phil@raspberrypi.com> wrote:
 
-The first diff block starting with the @@ line overflows and gets
-broken into the next line. All lines within a diff block must start
-with a space, + or -. The "of a given type. For example," line breaks
-that.
+> Hi Andrea,
+> 
+> The problem with this approach (loading an overlay from the RP1 PCIe
+> driver), and it's one that I have raised with you offline, is that
+> (unless anyone can prove otherwise) it becomes impossible to create a
+> Pi 5 DTS file which makes use of the RP1's resources. How do you
+> declare something as simple as a button wired to an RP1 GPIO, or fan
+> connected to a PWM output?
+
+The driver could be improved in a second step.
+For instance, it could load the dtbo from user-space using request_firmare()
+instead of loading the embedded dtbo.
+
+> 
+> If this is the preferred route to upstream adoption, I would prefer it
+> if rp1.dtso could be split in two - an rp1.dtsi similar to what we
+> have downstream, and an rp1.dtso that #includes it. In this way we can
+> keep the patching and duplication to a minimum.
+
+Indeed, having a rp1.dtsi avoid duplication but how the rp1.dtso in
+the the kernel sources could include user customization (button, fan, ...)
+without being modified ?
+At least we have to '#include <my_rp1_customizations.dtsi>'.
+
+Requesting the dtbo from user-space allows to let the user to create
+its own dtso without the need to modify the one in kernel sources.
+
+Does it make sense ?
+
+Best regards,
+Hervé
