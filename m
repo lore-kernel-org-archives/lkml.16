@@ -1,193 +1,117 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B0120B807;
-	Thu, 13 Feb 2025 08:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE6A1FCFE2;
+	Thu, 13 Feb 2025 08:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739433685; cv=none; b=RRfNH0lngw3EtASjCCgIXB7+DP2worExnytYNa7ON1rTJ+dEE4GklsiZWKzerV6mYxO255B66o9DNDwUQ/qaohPwcEt2+9VktljCLIAnGxvUXH26LWWQF4JjSbkGWgiVwCZnbRaLPNfz1v29boypkgVqzsehmHqijNEVBmoQ/jA=
+	t=1739433783; cv=none; b=F5YyAcBVY8Hk/Deq9QdhE/DRK7wRz7ad22OUT8g0Pz2QiKrQnv+BVa3K6/HWm4UeIKBOJmcYnOT35veqNWoEGvkPbR7T9pIj8GJX9AphcXD1ZRk8mi5bZ3LSAUK3joSwGdAn8XcLEtlM8zoV6IGblFFnFCJVeH8wHbYZXUTPqGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739433685; c=relaxed/simple;
-	bh=pNq8G6LE8l1psUY/haRyxNqBqOZZoRzN8NqbB5DpIzA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UqrgGqXRdTj6B8w+epLIDy/4TPBu4z9tqt00R3rSsbRIc+Tyu+Fq1EiZyrnTuFsgXAEjfn5jjCGq+QACdC/NwzAaD8/VFNx22dNlcfwt7kge6vdo+gQL13Z+YOMiJBVAuitV1Y+BNHpKSYbv63Oq+RznFROOqF96ncBgFQphpeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=T20nn3sm; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1739433783; c=relaxed/simple;
+	bh=pfT5sc7hzajU5onSqToJLvsnBMeoQjI5q0FLEyT7wkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J8nM0qhWoYmUVPToVwKNJSYbWyJX9pfSW6B+hT33nEtbwY2vABGtskywjvx7YqLaXbSiMolabRIrY2yGSDzsxk5vIDeJ6bMI1Hd52O132YqF71fSs6sJ+wb6RYdbZgaCOmb9A9y2ax+18zi6ySrGsPVxq8zCS+AysIDhdlb5VOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fCqQtozR; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="T20nn3sm"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51D7H7fP032643;
-	Thu, 13 Feb 2025 08:01:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	q6uyma+HDaTr80GZgI9jQtPOtdwyIuNDfTKOJAgOfB8=; b=T20nn3smej6HwXNC
-	ag/TBMOO8EyEcJRhuz28UbUSFUkzkDlA0+fTX2O+0sFdwpS9ySc0TmzMDc6Y5xLT
-	QAEcJ8Qk/nr49tyvDWliXgq9lpVSe8/Wxzu5EOl1Cshqx+dGxnANXPAqnBHjEayI
-	8p7M47S1rCEdE1/dPjgMVB+5wi2MRJfilexd+bUk+cfwRt/nY8Fhyckcw+Om5g55
-	Dukwlhltk9ac9tC5Ownxaf9qYeB3JGLUqP+k1Y71QaPqceWx1SIBi/CMmYxQse7V
-	to0SC16AZohxz1DUcvw/IMMt1vofcsQJ2uRFBtFjwc9Lb3t3v2+PIKI5tyRsklWr
-	cSEP/g==
-Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44sc7b83aw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 08:00:59 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 51D80v1f020926;
-	Thu, 13 Feb 2025 08:00:57 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 44p0bkxycb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 08:00:57 +0000
-Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51D80uOs020920;
-	Thu, 13 Feb 2025 08:00:56 GMT
-Received: from cbsp-sh-gv.ap.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 51D80uSV020918
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 08:00:56 +0000
-Received: by cbsp-sh-gv.ap.qualcomm.com (Postfix, from userid 393357)
-	id 84A9040C04; Thu, 13 Feb 2025 16:00:55 +0800 (CST)
-From: Ziqi Chen <quic_ziqichen@quicinc.com>
-To: quic_cang@quicinc.com, bvanassche@acm.org, mani@kernel.org,
-        beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com,
-        martin.petersen@oracle.com, quic_ziqichen@quicinc.com,
-        quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
-        peter.wang@mediatek.com, quic_rampraka@quicinc.com
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andrew Halaney <ahalaney@redhat.com>,
-        Eric Biggers <ebiggers@google.com>, Minwoo Im <minwoo.im@samsung.com>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC support:Keyword:mediatek),
-        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC support:Keyword:mediatek)
-Subject: [PATCH v5 7/8] scsi: ufs: core: Toggle Write Booster during clock scaling base on gear speed
-Date: Thu, 13 Feb 2025 16:00:07 +0800
-Message-Id: <20250213080008.2984807-8-quic_ziqichen@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250213080008.2984807-1-quic_ziqichen@quicinc.com>
-References: <20250213080008.2984807-1-quic_ziqichen@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fCqQtozR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739433782; x=1770969782;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pfT5sc7hzajU5onSqToJLvsnBMeoQjI5q0FLEyT7wkk=;
+  b=fCqQtozR2iusV9bGs3EHobVvYYMMJ+4vm4TYCnJy7MBql8JbG7AOx8y9
+   b3EGn8ObNjaql3YNW3Azvgx9axSkv2ej9XHo+Z/t3BpmKQ2kWIjpmQjc5
+   qAJLB4ejY15KSx+tWCg+MPNwWxd6+MhnsFhz3eEimdE8emvpy57DEkH6J
+   +UGn43Pak9uQBqLpW+aBnjpppi1THjS0z7gSRVzgvWSXkUKhtR3ULMbyw
+   kFcH6BwE1SthxqKMpZHH1soRKEIvq136wN4gExPoD57Qsrr2YEggz8bzX
+   52mLlgQ3qUzdlwSRdK7T5abOmWeYYqXh4r6PjAaQBtpWuA0dyDvPSzKn4
+   g==;
+X-CSE-ConnectionGUID: UbvZ8aKzTrm3HTG1KP5h1g==
+X-CSE-MsgGUID: 1Iol/4BnSmadv8EV9CsbvQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="51516696"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="51516696"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 00:03:01 -0800
+X-CSE-ConnectionGUID: ArrV/TiYTpa5i+1/kH3lCA==
+X-CSE-MsgGUID: +SZ3HFKERlGPAbVLzdZ7Eg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="118257002"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 00:02:56 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tiUBR-0000000B6BT-25ED;
+	Thu, 13 Feb 2025 10:02:53 +0200
+Date: Thu, 13 Feb 2025 10:02:53 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Felipe Balbi <balbi@kernel.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Ferry Toth <fntoth@gmail.com>
+Subject: Re: [PATCH v2 2/3] usb: dwc3: gadget: Add support for
+ snps,reserved-endpoints property
+Message-ID: <Z62nLY_m_FG1Phc7@smile.fi.intel.com>
+References: <20250203191524.3730346-1-andriy.shevchenko@linux.intel.com>
+ <20250203191524.3730346-3-andriy.shevchenko@linux.intel.com>
+ <20250212011013.xumqgguhluxdslpz@synopsys.com>
+ <Z6x5lB4hGpz-9IzS@smile.fi.intel.com>
+ <20250213011610.ov3q2rq6bfzdzqlk@synopsys.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: aM9pWxy1_Z6ESXLoG0QYa55UUxTaOM6c
-X-Proofpoint-GUID: aM9pWxy1_Z6ESXLoG0QYa55UUxTaOM6c
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-13_02,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
- phishscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
- bulkscore=0 mlxscore=0 malwarescore=0 clxscore=1015 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502130060
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213011610.ov3q2rq6bfzdzqlk@synopsys.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Can Guo <quic_cang@quicinc.com>
+On Thu, Feb 13, 2025 at 01:16:15AM +0000, Thinh Nguyen wrote:
+> On Wed, Feb 12, 2025, Andy Shevchenko wrote:
+> > On Wed, Feb 12, 2025 at 01:10:17AM +0000, Thinh Nguyen wrote:
+> > > On Mon, Feb 03, 2025, Andy Shevchenko wrote:
 
-During clock scaling, Write Booster is toggled on or off based on
-whether the clock is scaled up or down. However, with OPP V2 powered
-multi-level gear scaling, the gear can be scaled amongst multiple gear
-speeds, e.g., it may scale down from G5 to G4, or from G4 to G2. To provide
-flexibilities, add a new field for clock scaling such that during clock
-scaling Write Booster can be enabled or disabled based on gear speeds but
-not based on scaling up or down.
+...
 
-Signed-off-by: Can Guo <quic_cang@quicinc.com>
-Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
-Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
-Reviewed-by: Peter Wang <peter.wang@mediatek.com>
+> > > >  	/* Reset resource allocation flags */
+> > > > -	for (i = resource_index; i < dwc->num_eps && dwc->eps[i]; i++)
+> > > > -		dwc->eps[i]->flags &= ~DWC3_EP_RESOURCE_ALLOCATED;
+> > > > +	for (i = resource_index; i < dwc->num_eps; i++) {
+> > > > +		dep = dwc->eps[i];
+> > > > +		if (!dep)
+> > > > +			continue;
+> > > > +
+> > > > +		dep->flags &= ~DWC3_EP_RESOURCE_ALLOCATED;
+> > > > +	}
+> > > 
+> > > Please keep code refactoring as a separate patch.
+> > 
+> > It's induced by the change you asked for, it's not a simple refactoring.
+> > 
+> > Or do you want me to have the patch to check eps against NULL to be separated
+> > from this one (see (1) above)?
+> 
+> The condition "i < dwc->num && dwc->eps[i]" already does the NULL check.
+> The change here only move things around.
 
----
+Yes, but the problem is that the loop will stop on the first gap, but we would
+like to continue.
 
-v1 - > v2:
-Initialize the local variables "wb_en" as "false".
-v3 -> v4:
-1. Add comment for default initialized wb_gear.
-2. Remove the unnecessary variable “wb_en" in function
-   ufshcd_clock_scaling_unprepare().
----
- drivers/ufs/core/ufshcd.c | 12 ++++++++----
- include/ufs/ufshcd.h      |  3 +++
- 2 files changed, 11 insertions(+), 4 deletions(-)
+> > > >  	return 0;
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 727ca930c2ef..628bf2aebbeb 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -1393,13 +1393,13 @@ static int ufshcd_clock_scaling_prepare(struct ufs_hba *hba, u64 timeout_us)
- 	return ret;
- }
- 
--static void ufshcd_clock_scaling_unprepare(struct ufs_hba *hba, int err, bool scale_up)
-+static void ufshcd_clock_scaling_unprepare(struct ufs_hba *hba, int err)
- {
- 	up_write(&hba->clk_scaling_lock);
- 
--	/* Enable Write Booster if we have scaled up else disable it */
-+	/* Enable Write Booster if current gear requires it else disable it */
- 	if (ufshcd_enable_wb_if_scaling_up(hba) && !err)
--		ufshcd_wb_toggle(hba, scale_up);
-+		ufshcd_wb_toggle(hba, hba->pwr_info.gear_rx >= hba->clk_scaling.wb_gear);
- 
- 	mutex_unlock(&hba->wb_mutex);
- 
-@@ -1454,7 +1454,7 @@ static int ufshcd_devfreq_scale(struct ufs_hba *hba, unsigned long freq,
- 	}
- 
- out_unprepare:
--	ufshcd_clock_scaling_unprepare(hba, ret, scale_up);
-+	ufshcd_clock_scaling_unprepare(hba, ret);
- 	return ret;
- }
- 
-@@ -1814,6 +1814,10 @@ static void ufshcd_init_clk_scaling(struct ufs_hba *hba)
- 	if (!hba->clk_scaling.min_gear)
- 		hba->clk_scaling.min_gear = UFS_HS_G1;
- 
-+	if (!hba->clk_scaling.wb_gear)
-+		/* Use intermediate gear speed HS_G3 as the default wb_gear */
-+		hba->clk_scaling.wb_gear = UFS_HS_G3;
-+
- 	INIT_WORK(&hba->clk_scaling.suspend_work,
- 		  ufshcd_clk_scaling_suspend_work);
- 	INIT_WORK(&hba->clk_scaling.resume_work,
-diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
-index b34301de3cf8..6633c1a1c224 100644
---- a/include/ufs/ufshcd.h
-+++ b/include/ufs/ufshcd.h
-@@ -447,6 +447,8 @@ struct ufs_clk_gating {
-  * @resume_work: worker to resume devfreq
-  * @target_freq: frequency requested by devfreq framework
-  * @min_gear: lowest HS gear to scale down to
-+ * @wb_gear: enable Write Booster when HS gear scales above or equal to it, else
-+ *		disable Write Booster
-  * @is_enabled: tracks if scaling is currently enabled or not, controlled by
-  *		clkscale_enable sysfs node
-  * @is_allowed: tracks if scaling is currently allowed or not, used to block
-@@ -467,6 +469,7 @@ struct ufs_clk_scaling {
- 	struct work_struct resume_work;
- 	unsigned long target_freq;
- 	u32 min_gear;
-+	u32 wb_gear;
- 	bool is_enabled;
- 	bool is_allowed;
- 	bool is_initialized;
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
