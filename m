@@ -1,274 +1,151 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF7E20D4F7
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 08:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4704A20B20E;
+	Thu, 13 Feb 2025 08:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739436956; cv=none; b=j9syenHtzdjh2FkYTzeSvBIMoe4DMSaKja+OkEUp7YutAgb3UuC4HyyWnhQ67nF+uDJ6mpTO8TUyc2p9iWsJpg7SGRF5bgEw8DhModPIC6NnUcJKfosjkrFTt15nGqH/SpYCG4VO3oXm0llGsLgQ+xQBb2yhumKKHZJu7+XJBkM=
+	t=1739436966; cv=none; b=qoqw1fiqZObsdmOTWD5xwhOfeuUBvd00Z1RvxOSDW2wN3Hnh3aNyFXNayqLgWgz0/Zk90gnCY4UWGA2bRpKTf75U92+DwrSQ2Zu/jNsuUEPNvZqNGl1HIZiYnvzPJ058tRjE899WNqZr/lo/KKePdQ+A94TlA5ipR3roq6BQeu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739436956; c=relaxed/simple;
-	bh=9ppVcNcPZbGGAWENgzxLMFQF9NvMYRyT2JjDDBSU2ao=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qhcRcSOrv1UOoptRkLIgzuG8HNYxqacpQ+eBWkxGMuJW5ptxi1uhmrU6mqV+HuMBDQnF81wGRgOgyvfpThw/jevdoTV7HWP8dPfkATc4VzLFiLvn5Di6VqdkBogYWH8hrnUjaCRjDQX8vU2aeytI0g2egwQZlCFbqDD05tW8iaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=iAFR59lb; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=iAFR59lb; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1739436966; c=relaxed/simple;
+	bh=VzJ8mzMtg0VF/N7v7BKnBiXAXYeg/wsIV06ZO+o3aKk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qui/e6Dy4Asn2qadQd0eY4Oapqrb/UJOgwIc0Vd3I3jBH3CJ+vTqqsBpTw3+x1rQTVt7ouCLnKmNHnw/tJgCtbU3BpmycfJM+iYZFej9G2zrmzDDN/uie1i2gR8jbEPYWFvG1r4K8lkjzVvkOA0L04lkFQ0LG4gnSIAEOZ6Ehu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WWyx397J; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="iAFR59lb";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="iAFR59lb"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9D522229A7;
-	Thu, 13 Feb 2025 08:55:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1739436952; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RIJbT7p+RWBm8N1M1rf2T5LjDA7WDiFc9SjxPhO+fQ0=;
-	b=iAFR59lbL84z0ot4Z/yIZP3ZboFOospn171yHp7M1F2cUBYOPkUaVKKceH4Ihxo77o4UbP
-	WeHu04klIY8m25kkbE75/5C9NPY7I0z1cFzE2HtM5zQ4IMowd0yl+nArOAbsvwLy7L0Rvj
-	/mlyH84br7HmAF/poky0Y9fAsR8cKec=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=iAFR59lb
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1739436952; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RIJbT7p+RWBm8N1M1rf2T5LjDA7WDiFc9SjxPhO+fQ0=;
-	b=iAFR59lbL84z0ot4Z/yIZP3ZboFOospn171yHp7M1F2cUBYOPkUaVKKceH4Ihxo77o4UbP
-	WeHu04klIY8m25kkbE75/5C9NPY7I0z1cFzE2HtM5zQ4IMowd0yl+nArOAbsvwLy7L0Rvj
-	/mlyH84br7HmAF/poky0Y9fAsR8cKec=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 49F83137DB;
-	Thu, 13 Feb 2025 08:55:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id M4uOEJizrWcTdgAAD6G6ig
-	(envelope-from <jgross@suse.com>); Thu, 13 Feb 2025 08:55:52 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	xen-devel@lists.xenproject.org,
-	Alan Robinson <Alan.Robinson@fujitsu.com>
-Subject: [PATCH v2 2/2] x86/xen: allow larger contiguous memory regions in PV guests
-Date: Thu, 13 Feb 2025 09:55:38 +0100
-Message-ID: <20250213085538.17060-3-jgross@suse.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250213085538.17060-1-jgross@suse.com>
-References: <20250213085538.17060-1-jgross@suse.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WWyx397J"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab771575040so349560566b.1;
+        Thu, 13 Feb 2025 00:56:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739436963; x=1740041763; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=xPuFBsCSVoD+xcmX67kIpEiS1D1ZaBsI+2yMrUgbqbM=;
+        b=WWyx397JNTIOGRQGacfXhYvgZietR6BMk1G+cxqlBW3Rq5fCGPgJq4ItrDvEA8ChK0
+         qX+ciH9QNmUE1rrwBg6XleeMe/wH0SerBXpnXN+prYHT7Ax+7ajFHgZCy+rg9pqow+o3
+         dRpv5+TA2h6iVhj6a6yB6+VGprAl19sSFKOMmGA1b12qyvCvwbKI/2Jr2p34hif/d1ya
+         17T0+tevXomcE4lNkdcTAQOeg8FFV8VFSeXUinObIooEwCLYkva7jYYLnNShHX7NyM/d
+         fM3abOah2agcN9FKh1kNb54OeAJihagd6hFfRpKgOyzsSlUnguiGrA7sxuIyJh0dJlEZ
+         Jq2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739436963; x=1740041763;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xPuFBsCSVoD+xcmX67kIpEiS1D1ZaBsI+2yMrUgbqbM=;
+        b=cBpEhgmQFlFA2eqMb1OpPtJkOBZT+PdW7n+LWmP7qLTNezJbpec1fqvRZFNKqprQLW
+         VLpeZVC8N7KMcZi8JIHSwKJ8AE5upidj+GqSwb8p2xSu+X3c3Mn8/h7SAXlFVEAqwY9j
+         xru3qyIOcTbI212acup2Z61L7/N80ioCCJ+xUPVyiE6seCLbvvpGQBmz0m5eywVhLrzS
+         InvQ7CW5+JD39i9fylDlsyDXIq6KCGeUQwhoKj+Q17iZs2UsVK7b/NcCHh6+hClRZK4u
+         jZVk542LeL73czz9po3qQRJ4GvVyvK2rMYZcQ9/d1zCwsN1K38xOiYwIeNr63/NAW5u8
+         DSDw==
+X-Forwarded-Encrypted: i=1; AJvYcCWE6/DsS3Z7LsLy21FNXC0vGjA9yWFk2sawq3c5rRqRr8CKg6TtM+OK2bhNV0SkYLPa9ZPKzzlMYA1A@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGuy5PiQrQ1ov0/UrRwmhC4iByhz2CNqTTxJCbnl63LhQoL4gH
+	2PUHlhnTDckhtS1Y8seQOek9YDoEcYWpQUVoVAx5XYylM12fmhHC
+X-Gm-Gg: ASbGncs4++fOPP6nb6QcmMjHpNUbxUz+M7H77xByiwml9c7BuYtfRqtMMT3dTJdfSIo
+	CvrtAx+OV8b0JZkdTCviuWB943H9UtTfmrltcsXpx4IaFx2BvVue8NQr+C2PyLL1KCANr5FvvwW
+	++zYrm8IkhxfljYU3HeHpfHSJg2kQCLz8rP2pfVmyLyAhr5YJYdmAKp+b6kLFSMbDa8A86TTR0A
+	Y8f8inXElbrZ2ZNqZmIs/u8xxBmm6XyeJQcF5FxKgBwaVFoQGCaaUJLm81blZDDeWk70RzL6nha
+	cDUvaUck/KoJ2ZrfWQk=
+X-Google-Smtp-Source: AGHT+IGTLJ1TzfQVL1W7w3T6PH+I6Gvx1UbwD+CQSAdOm+Omf8MXJPVdWjhmv8ZQHke8Y5nCuE0K1A==
+X-Received: by 2002:a17:907:6d2a:b0:ab7:c9a3:a3be with SMTP id a640c23a62f3a-aba510de32amr185191666b.23.1739436963259;
+        Thu, 13 Feb 2025 00:56:03 -0800 (PST)
+Received: from [192.168.2.177] ([81.0.8.231])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba53231fd5sm87685066b.26.2025.02.13.00.56.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 00:56:02 -0800 (PST)
+Message-ID: <9288348b-5792-4122-8705-76c00e463eae@gmail.com>
+Date: Thu, 13 Feb 2025 09:56:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 9D522229A7
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Fixes tag needs some work in the mediatek tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250213082522.52ca62e0@canb.auug.org.au>
+Content-Language: en-US, ca-ES, es-ES
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; keydata=
+ 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
+In-Reply-To: <20250213082522.52ca62e0@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Today a PV guest (including dom0) can create 2MB contiguous memory
-regions for DMA buffers at max. This has led to problems at least
-with the megaraid_sas driver, which wants to allocate a 2.3MB DMA
-buffer.
 
-The limiting factor is the frame array used to do the hypercall for
-making the memory contiguous, which has 512 entries and is just a
-static array in mmu_pv.c.
 
-In order to not waste memory for non-PV guests, put the initial
-frame array into .init.data section and dynamically allocate an array
-from the .init_after_bootmem hook of PV guests.
+On 12/02/2025 22:25, Stephen Rothwell wrote:
+> Hi all,
+> 
+> In commit
+> 
+>    c4d75a56d161 ("arm64: dts: mediatek: mt8188: Assign apll1 clock as parent to avoid hang")
+> 
+> Fixes tag
+> 
+>    Fixes: 4dbec3a59a71 ("arm64: dts: mediatek: mt8188: Add audio support")
+> 
+> has these problem(s):
+> 
+>    - Target SHA1 does not exist
+> 
+> Maybe you meant
+> 
+> Fixes: bd568ce198b8 ("arm64: dts: mediatek: mt8188: Add audio support")
+> 
 
-In case a contiguous memory area larger than the initially supported
-2MB is requested, allocate a larger buffer for the frame list. Note
-that such an allocation is tried only after memory management has been
-initialized properly, which is tested via a flag being set in the
-.init_after_bootmem hook.
+Yes, that seems correct.
+Angelo will you update v6.14-next/dts64 ?
 
-Fixes: 9f40ec84a797 ("xen/swiotlb: add alignment check for dma buffers")
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Tested-by: Alan Robinson <Alan.Robinson@fujitsu.com>
----
-Note that the "Fixes:" tag is not really correct, as that patch didn't
-introduce the problem, but rather made it visible. OTOH it is the best
-indicator we have to identify kernel versions this patch should be
-backported to.
----
- arch/x86/xen/mmu_pv.c | 71 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 62 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
-index 2c70cd35e72c..d078de2c952b 100644
---- a/arch/x86/xen/mmu_pv.c
-+++ b/arch/x86/xen/mmu_pv.c
-@@ -111,6 +111,51 @@ static pud_t level3_user_vsyscall[PTRS_PER_PUD] __page_aligned_bss;
-  */
- static DEFINE_SPINLOCK(xen_reservation_lock);
- 
-+/* Protected by xen_reservation_lock. */
-+#define MIN_CONTIG_ORDER 9 /* 2MB */
-+static unsigned int discontig_frames_order = MIN_CONTIG_ORDER;
-+static unsigned long discontig_frames_early[1UL << MIN_CONTIG_ORDER] __initdata;
-+static unsigned long *discontig_frames __refdata = discontig_frames_early;
-+static bool discontig_frames_dyn;
-+
-+static int alloc_discontig_frames(unsigned int order)
-+{
-+	unsigned long *new_array, *old_array;
-+	unsigned int old_order;
-+	unsigned long flags;
-+
-+	BUG_ON(order < MIN_CONTIG_ORDER);
-+	BUILD_BUG_ON(sizeof(discontig_frames_early) != PAGE_SIZE);
-+
-+	new_array = (unsigned long *)__get_free_pages(GFP_KERNEL,
-+						      order - MIN_CONTIG_ORDER);
-+	if (!new_array)
-+		return -ENOMEM;
-+
-+	spin_lock_irqsave(&xen_reservation_lock, flags);
-+
-+	old_order = discontig_frames_order;
-+
-+	if (order > discontig_frames_order || !discontig_frames_dyn) {
-+		if (!discontig_frames_dyn)
-+			old_array = NULL;
-+		else
-+			old_array = discontig_frames;
-+
-+		discontig_frames = new_array;
-+		discontig_frames_order = order;
-+		discontig_frames_dyn = true;
-+	} else {
-+		old_array = new_array;
-+	}
-+
-+	spin_unlock_irqrestore(&xen_reservation_lock, flags);
-+
-+	free_pages((unsigned long)old_array, old_order - MIN_CONTIG_ORDER);
-+
-+	return 0;
-+}
-+
- /*
-  * Note about cr3 (pagetable base) values:
-  *
-@@ -814,6 +859,9 @@ static void __init xen_after_bootmem(void)
- 	SetPagePinned(virt_to_page(level3_user_vsyscall));
- #endif
- 	xen_pgd_walk(&init_mm, xen_mark_pinned, FIXADDR_TOP);
-+
-+	if (alloc_discontig_frames(MIN_CONTIG_ORDER))
-+		BUG();
- }
- 
- static void xen_unpin_page(struct mm_struct *mm, struct page *page,
-@@ -2203,10 +2251,6 @@ void __init xen_init_mmu_ops(void)
- 	memset(dummy_mapping, 0xff, PAGE_SIZE);
- }
- 
--/* Protected by xen_reservation_lock. */
--#define MAX_CONTIG_ORDER 9 /* 2MB */
--static unsigned long discontig_frames[1<<MAX_CONTIG_ORDER];
--
- #define VOID_PTE (mfn_pte(0, __pgprot(0)))
- static void xen_zap_pfn_range(unsigned long vaddr, unsigned int order,
- 				unsigned long *in_frames,
-@@ -2323,18 +2367,25 @@ int xen_create_contiguous_region(phys_addr_t pstart, unsigned int order,
- 				 unsigned int address_bits,
- 				 dma_addr_t *dma_handle)
- {
--	unsigned long *in_frames = discontig_frames, out_frame;
-+	unsigned long *in_frames, out_frame;
- 	unsigned long  flags;
- 	int            success;
- 	unsigned long vstart = (unsigned long)phys_to_virt(pstart);
- 
--	if (unlikely(order > MAX_CONTIG_ORDER))
--		return -ENOMEM;
-+	if (unlikely(order > discontig_frames_order)) {
-+		if (!discontig_frames_dyn)
-+			return -ENOMEM;
-+
-+		if (alloc_discontig_frames(order))
-+			return -ENOMEM;
-+	}
- 
- 	memset((void *) vstart, 0, PAGE_SIZE << order);
- 
- 	spin_lock_irqsave(&xen_reservation_lock, flags);
- 
-+	in_frames = discontig_frames;
-+
- 	/* 1. Zap current PTEs, remembering MFNs. */
- 	xen_zap_pfn_range(vstart, order, in_frames, NULL);
- 
-@@ -2358,12 +2409,12 @@ int xen_create_contiguous_region(phys_addr_t pstart, unsigned int order,
- 
- void xen_destroy_contiguous_region(phys_addr_t pstart, unsigned int order)
- {
--	unsigned long *out_frames = discontig_frames, in_frame;
-+	unsigned long *out_frames, in_frame;
- 	unsigned long  flags;
- 	int success;
- 	unsigned long vstart;
- 
--	if (unlikely(order > MAX_CONTIG_ORDER))
-+	if (unlikely(order > discontig_frames_order))
- 		return;
- 
- 	vstart = (unsigned long)phys_to_virt(pstart);
-@@ -2371,6 +2422,8 @@ void xen_destroy_contiguous_region(phys_addr_t pstart, unsigned int order)
- 
- 	spin_lock_irqsave(&xen_reservation_lock, flags);
- 
-+	out_frames = discontig_frames;
-+
- 	/* 1. Find start MFN of contiguous extent. */
- 	in_frame = virt_to_mfn((void *)vstart);
- 
--- 
-2.43.0
-
+Regards,
+Matthias
