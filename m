@@ -1,161 +1,249 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A15241674;
-	Thu, 13 Feb 2025 17:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739468019; cv=pass; b=IdJIYhUMF0VV2/OLpaG3V4USlAMWH+cKYdOoFDrIb3+K47zK3cwey0CR3D/vey0lSpmGHNVmhdu3HeaYXkbtbNVe1Yv1+mX44sm2Hd5zkaaoUQYBQOmP38KbkCc8rLJUIo/nwKghtriuYs/6q8Wc30DU7x3vexBL0DjWN6iMd1o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739468019; c=relaxed/simple;
-	bh=6ByzMOuDBh5R+FUdNwn2gk3LwiXzk/aPZNyTOpzuZOU=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CECF27462
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739468029; cv=none; b=YJvwodSFqETN3Snu1/UG6sc/Urpk4CsKmwhN3eAFwZBTE9S0wvOCjThWhBpv6FSkU9HceZNvwINFTXLXfdwzRXJ03nKe8fpxhnsCqD1oavBCzvPdL6XMUQD4lppDETDgoiV1Y27XlqIGvLmd/fZQ7EwxWXkl/8TOfPT3y9n55nM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739468029; c=relaxed/simple;
+	bh=OLlLdmRACH9Jzq+bqtQeIftoTiK9CHgJ+/4Ge+x1PKQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y2JE5KJ3DmaGKhMZoK0uhx2pFjO77zVuu9ImaDEUkBCQISVHoy/Q2QHGgiDuCR+tKJ3i90UBnL+BwJ2HS49ZPW4nl86S976ivTpAW9f7oY4761tosIE3ZWADchN8+ve7LmZG9obOpNKL56o9i1aq3vH+WDy//4vl+jr517PFT6A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=gHt2sI3u; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SFMD1C/CglSsfEuIWh208X9h+5HelAXpPkktd+H1dStrrDr/48DVF3bmc3u6syTMhm+Ga1uMZUF+R8mkTZeVY/TbY16kgiyp1Pvkh8ISor2x9k1S4Lrv3HQ4sL+OfCO64jkIvKvJYXZh0CY5he7vLX3O/HrMJqbDvtcbUe+XJoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d0Ly6HDi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="gHt2sI3u"
-ARC-Seal: i=1; a=rsa-sha256; t=1739467992; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=fsZ9tyPjguNsUc2+X1eFr5QgUPWPBVzABYeF+VSOoUx8sOk2o9TIpuy6IFgXZUjG9vZWe2oUATvThyog4cB1QGSF+7jMYZN0kw9K4ETfX3PdZ8MffVDq/wZ0EpgjNyprDhV/ILksMWZTFad0oAv+bAEhZnMftm6shmu4Q2uh+DQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739467992; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=6ByzMOuDBh5R+FUdNwn2gk3LwiXzk/aPZNyTOpzuZOU=; 
-	b=bta+8ZPQPOcCe9SZHB2yjLV1NS6qrkM+JiDqDJdXEM7/kUS9MuT5tKC+9VCVfIfzD8aCiVovVkZOSqExBy9M8mRQ2Z1mRt6G56DXfOz4tq350B3ZIYmhlv8R4Xu045K9k3bY3npdzZbBAxK2WJU2vsEIWL+tbEYKPRv8yV6terI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739467992;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=6ByzMOuDBh5R+FUdNwn2gk3LwiXzk/aPZNyTOpzuZOU=;
-	b=gHt2sI3u9x/IyIOL7Gz7LHOOPs0dHmzj8DCoJ1j0HswtKdfzbJT6zBFQ67GzwLvu
-	MPP/pAtZ4COd1DYdY5C/SpKgmnR6xnfTJ29gG6h2mt4W0K63gqqZ94CkCqga8aVXh6i
-	twwysP6rbc9WuqaBcE7MNq1IW8GqH8cgBGP/ll5k=
-Received: by mx.zohomail.com with SMTPS id 1739467989609795.4274306368665;
-	Thu, 13 Feb 2025 09:33:09 -0800 (PST)
-Received: by venus (Postfix, from userid 1000)
-	id 858F21806DE; Thu, 13 Feb 2025 18:33:04 +0100 (CET)
-Date: Thu, 13 Feb 2025 18:33:04 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Diederik de Haas <didi.debian@cknow.org>
-Cc: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>, 
-	Damon Ding <damon.ding@rock-chips.com>, heiko@sntech.de, robh@kernel.org, conor+dt@kernel.org, 
-	algea.cao@rock-chips.com, rfoss@kernel.org, devicetree@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, hjc@rock-chips.com, kever.yang@rock-chips.com, 
-	dmitry.baryshkov@linaro.org, vkoul@kernel.org, andy.yan@rock-chips.com, krzk+dt@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
-Subject: Re: [PATCH v6 00/14] Add eDP support for RK3588
-Message-ID: <m3ovwhg3h2njsjpuj2wdahxex6zq2udmxonublgmnlrdfred4z@zxtyd6xvhram>
-References: <20250123100747.1841357-1-damon.ding@rock-chips.com>
- <5044FFCB-B325-40D0-BA82-03AF64EAF029@gmail.com>
- <D7RH63Z1VBBD.1AIOQJIWPZIXS@cknow.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d0Ly6HDi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C290CC4CED1;
+	Thu, 13 Feb 2025 17:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739468028;
+	bh=OLlLdmRACH9Jzq+bqtQeIftoTiK9CHgJ+/4Ge+x1PKQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d0Ly6HDik4ly2gwcEjojakaew4PSxpA25eU/bOTiu3yhGtPYfI8bARLLTICj99Ftr
+	 45urSsZSlKfgoxAwNxjzY6QOYJNGVs5linnnBLIAUMfto236nOKBAu2+cIiEAAqwJF
+	 0Gzacvfpph/yDviYjo7Mhq6rW7HoPv7CImjdoKQ21SkvrFNn7IOO+9DyOuGSTGemm9
+	 CRKv0gN+hAYBBGqX0fgMoDdRZ7y5KPtuXpxkPpm9643NlirH7Us9/OvDZ9vTDrAq/p
+	 VNi81ehEHcP4REqqnJsZ5c7NBm7cHLitaJ4+dyBEktfPqreC8TQoLFIFF0iaZhwyGg
+	 bA7u4M44pVzCg==
+Date: Thu, 13 Feb 2025 07:33:47 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Neel Natu <neelnatu@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>, Barret Rhoden <brho@google.com>,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	sched-ext@meta.com
+Subject: [PATCH sched_ext/for-6.15 v2] sched_ext: Implement
+ SCX_OPS_ALLOW_QUEUED_WAKEUP
+Message-ID: <Z64s-7xN6WcsbRhQ@slm.duckdns.org>
+References: <Z60p755gE1aDiimC@slm.duckdns.org>
+ <CAJDe-OLcEe8AuOeffusdxhktTyoAkCgG-7zWAvcuSWWGfDrakQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6djyuz6okfpd5ae6"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <D7RH63Z1VBBD.1AIOQJIWPZIXS@cknow.org>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.3.1/239.467.69
-X-ZohoMailClient: External
+In-Reply-To: <CAJDe-OLcEe8AuOeffusdxhktTyoAkCgG-7zWAvcuSWWGfDrakQ@mail.gmail.com>
 
+From 3539c6411a7c9d6c5895f78750f93160705cd250 Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Wed, 12 Feb 2025 13:08:31 -1000
 
---6djyuz6okfpd5ae6
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 00/14] Add eDP support for RK3588
-MIME-Version: 1.0
+A task wakeup can be either processed on the waker's CPU or bounced to the
+wakee's previous CPU using an IPI (ttwu_queue). Bouncing to the wakee's CPU
+avoids the waker's CPU locking and accessing the wakee's rq which can be
+expensive across cache and node boundaries.
 
-Hi,
+When ttwu_queue path is taken, select_task_rq() and thus ops.select_cpu()
+may be skipped in some cases (racing against the wakee switching out). As
+this confused some BPF schedulers, there wasn't a good way for a BPF
+scheduler to tell whether idle CPU selection has been skipped, ops.enqueue()
+couldn't insert tasks into foreign local DSQs, and the performance
+difference on machines with simple toplogies were minimal, sched_ext
+disabled ttwu_queue.
 
-On Thu, Feb 13, 2025 at 05:56:55PM +0100, Diederik de Haas wrote:
-> On Thu Feb 13, 2025 at 3:54 PM CET, Piotr Oniszczuk wrote:
-> >
-> >
-> >> Wiadomo=C5=9B=C4=87 napisana przez Damon Ding <damon.ding@rock-chips.c=
-om> w dniu 23 sty 2025, o godz. 11:07:
-> >>=20
-> >> Picked from:
-> >> https://patchwork.kernel.org/project/linux-rockchip/list/?series=3D923=
-593
-> >>=20
-> >> These patchs have been tested with a 1536x2048p60 eDP panel on
-> >> RK3588S EVB1 board, and HDMI 1080P/4K display also has been verified
-> >> on RK3588 EVB1 board. Furthermore, the eDP display has been rechecked
-> >> on RK3399 sapphire excavator board.
-> >> ...
-> >> 9 files changed, 401 insertions(+), 89 deletions(-)
-> >>=20
-> >> --=20
-> >> 2.34.1
-> >>=20
-> >
-> > Damon,
-> >
-> > I=E2=80=99m playing with hdmi0 port enablement on radxa rock5 itx board=
- with 6.14 mainline.
-> >
-> > rock5 itx has 2 hdmi ports: hdmi0 is wired to rk3588 typeC1/eDP1 eDP wi=
-th ra620 eDP->HDMI converter and hdmi1 from hdmi/edp tx1
-> > (see page3 & page29 at https://dl.radxa.com/rock5/5itx/v1110/radxa_rock=
-_5itx_v1110_schematic.pdf)
-> >
-> > I=E2=80=99m on 6.14-rc2 with applied:=20
-> > [1] Cristicc hdmi code (https://gitlab.collabora.com/cristicc/linux-nex=
-t/-/commits/rk3588-hdmi-bridge)
-> > [2] eDP support for RK3588 (https://patchwork.kernel.org/project/linux-=
-rockchip/list/?series=3D927765)
-> > [3] Add eDP mode support for Rockchip Samsung HDPTX PHY (https://patchw=
-ork.kernel.org/project/linux-rockchip/cover/20250205105157.580060-1-damon.d=
-ing@rock-chips.com/)
-> >
-> > Is edp1 supported by yours [2] series?
-> >
-> > If yes - may you pls hint me about required dts additions in https://gi=
-t.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arch/arm64/boot=
-/dts/rockchip/rk3588-rock-5-itx.dts?h=3Dv6.14-rc2 ?
->=20
-> I don't know if it's relevant, but while HDMI0 got enabled for quite a
-> few devices in 6.13, it did NOT get enabled for Rock 5 ITX.
-> I made a local patch (which does the same thing as was done for Rock 5B)
-> but I have no idea if it actually works (I don't have the board).
+However, this optimization makes noticeable difference on more complex
+topologies and a BPF scheduler now has an easy way tell whether
+ops.select_cpu() was skipped since 9b671793c7d9 ("sched_ext, scx_qmap: Add
+and use SCX_ENQ_CPU_SELECTED") and can insert tasks into foreign local DSQs
+since 5b26f7b920f7 ("sched_ext: Allow SCX_DSQ_LOCAL_ON for direct
+dispatches").
 
-I don't have the board either, but the schematics suggests that your
-patch is not correct. On the Rock 5 ITX the RK3588's first HDMI/eDP
-port should be enabled in eDP mode to be used with an eDP panel via
-connector J11. This series is needed for that.
+Implement SCX_OPS_ALLOW_QUEUED_WAKEUP which allows BPF schedulers to choose
+to enable ttwu_queue optimization.
 
-Greetings,
+v2: Update the patch description and comment re. ops.select_cpu() being
+    skipped in some cases as opposed to always as per Neel.
 
--- Sebastian
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Neel Natu <neelnatu@google.com>
+Reported-by: Barret Rhoden <brho@google.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Andrea Righi <arighi@nvidia.com>
+---
+ kernel/sched/core.c |  9 ++-------
+ kernel/sched/ext.c  | 32 ++++++++++++++++++++++++++------
+ kernel/sched/ext.h  | 10 ++++++++++
+ 3 files changed, 38 insertions(+), 13 deletions(-)
 
---6djyuz6okfpd5ae6
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index e77897a62442..618bb0a5eb1c 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3921,13 +3921,8 @@ bool cpus_share_resources(int this_cpu, int that_cpu)
+ 
+ static inline bool ttwu_queue_cond(struct task_struct *p, int cpu)
+ {
+-	/*
+-	 * The BPF scheduler may depend on select_task_rq() being invoked during
+-	 * wakeups. In addition, @p may end up executing on a different CPU
+-	 * regardless of what happens in the wakeup path making the ttwu_queue
+-	 * optimization less meaningful. Skip if on SCX.
+-	 */
+-	if (task_on_scx(p))
++	/* See SCX_OPS_ALLOW_QUEUED_WAKEUP. */
++	if (!scx_allow_ttwu_queue(p))
+ 		return false;
+ 
+ 	/*
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 98d5f2f68f38..2e1a1e4fc304 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -96,7 +96,7 @@ enum scx_ops_flags {
+ 	/*
+ 	 * Keep built-in idle tracking even if ops.update_idle() is implemented.
+ 	 */
+-	SCX_OPS_KEEP_BUILTIN_IDLE = 1LLU << 0,
++	SCX_OPS_KEEP_BUILTIN_IDLE	= 1LLU << 0,
+ 
+ 	/*
+ 	 * By default, if there are no other task to run on the CPU, ext core
+@@ -104,7 +104,7 @@ enum scx_ops_flags {
+ 	 * flag is specified, such tasks are passed to ops.enqueue() with
+ 	 * %SCX_ENQ_LAST. See the comment above %SCX_ENQ_LAST for more info.
+ 	 */
+-	SCX_OPS_ENQ_LAST	= 1LLU << 1,
++	SCX_OPS_ENQ_LAST		= 1LLU << 1,
+ 
+ 	/*
+ 	 * An exiting task may schedule after PF_EXITING is set. In such cases,
+@@ -117,13 +117,13 @@ enum scx_ops_flags {
+ 	 * depend on pid lookups and wants to handle these tasks directly, the
+ 	 * following flag can be used.
+ 	 */
+-	SCX_OPS_ENQ_EXITING	= 1LLU << 2,
++	SCX_OPS_ENQ_EXITING		= 1LLU << 2,
+ 
+ 	/*
+ 	 * If set, only tasks with policy set to SCHED_EXT are attached to
+ 	 * sched_ext. If clear, SCHED_NORMAL tasks are also included.
+ 	 */
+-	SCX_OPS_SWITCH_PARTIAL	= 1LLU << 3,
++	SCX_OPS_SWITCH_PARTIAL		= 1LLU << 3,
+ 
+ 	/*
+ 	 * A migration disabled task can only execute on its current CPU. By
+@@ -136,7 +136,23 @@ enum scx_ops_flags {
+ 	 * current CPU while p->nr_cpus_allowed keeps tracking p->user_cpus_ptr
+ 	 * and thus may disagree with cpumask_weight(p->cpus_ptr).
+ 	 */
+-	SCX_OPS_ENQ_MIGRATION_DISABLED = 1LLU << 4,
++	SCX_OPS_ENQ_MIGRATION_DISABLED	= 1LLU << 4,
++
++	/*
++	 * Queued wakeup (ttwu_queue) is a wakeup optimization that invokes
++	 * ops.enqueue() on the ops.select_cpu() selected or the wakee's
++	 * previous CPU via IPI (inter-processor interrupt) to reduce cacheline
++	 * transfers. When this optimization is enabled, ops.select_cpu() is
++	 * skipped in some cases (when racing against the wakee switching out).
++	 * As the BPF scheduler may depend on ops.select_cpu() being invoked
++	 * during wakeups, queued wakeup is disabled by default.
++	 *
++	 * If this ops flag is set, queued wakeup optimization is enabled and
++	 * the BPF scheduler must be able to handle ops.enqueue() invoked on the
++	 * wakee's CPU without preceding ops.select_cpu() even for tasks which
++	 * may be executed on multiple CPUs.
++	 */
++	SCX_OPS_ALLOW_QUEUED_WAKEUP	= 1LLU << 5,
+ 
+ 	/*
+ 	 * CPU cgroup support flags
+@@ -147,6 +163,7 @@ enum scx_ops_flags {
+ 				  SCX_OPS_ENQ_LAST |
+ 				  SCX_OPS_ENQ_EXITING |
+ 				  SCX_OPS_ENQ_MIGRATION_DISABLED |
++				  SCX_OPS_ALLOW_QUEUED_WAKEUP |
+ 				  SCX_OPS_SWITCH_PARTIAL |
+ 				  SCX_OPS_HAS_CGROUP_WEIGHT,
+ };
+@@ -897,6 +914,7 @@ DEFINE_STATIC_KEY_FALSE(__scx_switched_all);
+ static struct sched_ext_ops scx_ops;
+ static bool scx_warned_zero_slice;
+ 
++DEFINE_STATIC_KEY_FALSE(scx_ops_allow_queued_wakeup);
+ static DEFINE_STATIC_KEY_FALSE(scx_ops_enq_last);
+ static DEFINE_STATIC_KEY_FALSE(scx_ops_enq_exiting);
+ static DEFINE_STATIC_KEY_FALSE(scx_ops_enq_migration_disabled);
+@@ -4717,6 +4735,7 @@ static void scx_ops_disable_workfn(struct kthread_work *work)
+ 	static_branch_disable(&__scx_ops_enabled);
+ 	for (i = SCX_OPI_BEGIN; i < SCX_OPI_END; i++)
+ 		static_branch_disable(&scx_has_op[i]);
++	static_branch_disable(&scx_ops_allow_queued_wakeup);
+ 	static_branch_disable(&scx_ops_enq_last);
+ 	static_branch_disable(&scx_ops_enq_exiting);
+ 	static_branch_disable(&scx_ops_enq_migration_disabled);
+@@ -5348,9 +5367,10 @@ static int scx_ops_enable(struct sched_ext_ops *ops, struct bpf_link *link)
+ 		if (((void (**)(void))ops)[i])
+ 			static_branch_enable(&scx_has_op[i]);
+ 
++	if (ops->flags & SCX_OPS_ALLOW_QUEUED_WAKEUP)
++		static_branch_enable(&scx_ops_allow_queued_wakeup);
+ 	if (ops->flags & SCX_OPS_ENQ_LAST)
+ 		static_branch_enable(&scx_ops_enq_last);
+-
+ 	if (ops->flags & SCX_OPS_ENQ_EXITING)
+ 		static_branch_enable(&scx_ops_enq_exiting);
+ 	if (ops->flags & SCX_OPS_ENQ_MIGRATION_DISABLED)
+diff --git a/kernel/sched/ext.h b/kernel/sched/ext.h
+index 1079b56b0f7a..1bda96b19a1b 100644
+--- a/kernel/sched/ext.h
++++ b/kernel/sched/ext.h
+@@ -8,6 +8,8 @@
+  */
+ #ifdef CONFIG_SCHED_CLASS_EXT
+ 
++DECLARE_STATIC_KEY_FALSE(scx_ops_allow_queued_wakeup);
++
+ void scx_tick(struct rq *rq);
+ void init_scx_entity(struct sched_ext_entity *scx);
+ void scx_pre_fork(struct task_struct *p);
+@@ -34,6 +36,13 @@ static inline bool task_on_scx(const struct task_struct *p)
+ 	return scx_enabled() && p->sched_class == &ext_sched_class;
+ }
+ 
++static inline bool scx_allow_ttwu_queue(const struct task_struct *p)
++{
++	return !scx_enabled() ||
++		static_branch_likely(&scx_ops_allow_queued_wakeup) ||
++		p->sched_class != &ext_sched_class;
++}
++
+ #ifdef CONFIG_SCHED_CORE
+ bool scx_prio_less(const struct task_struct *a, const struct task_struct *b,
+ 		   bool in_fi);
+@@ -52,6 +61,7 @@ static inline void scx_rq_activate(struct rq *rq) {}
+ static inline void scx_rq_deactivate(struct rq *rq) {}
+ static inline int scx_check_setscheduler(struct task_struct *p, int policy) { return 0; }
+ static inline bool task_on_scx(const struct task_struct *p) { return false; }
++static inline bool scx_allow_ttwu_queue(const struct task_struct *p) { return true; }
+ static inline void init_sched_ext_class(void) {}
+ 
+ #endif	/* CONFIG_SCHED_CLASS_EXT */
+-- 
+2.48.1
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmeuLNAACgkQ2O7X88g7
-+pqj/g/+Ko9YwegFYiHHFc2NJHqSn9Er7V2IhdDxANKuYmDWkl238DIkPbx5N++z
-dP6qxCV8/YD123iERKtHSvIikWgw7rRaV8GKkT95xc3AAfYfyt4Zjf3wWwwOrNXH
-w1UK+68lroyq4n+JPwQuZlkRhKclMpv78w5lZJ2fXX/ni8PWf3m8DyBGzES03yDK
-l5e0sp6dEFaxL6plKIDdB7Xw/CYW75UiJStCuBYKka1pr3I5X8IgWMuQ+oK5Lde3
-hzO/3TLG9WKTiRoehs4ocJngsz0sS8o70GWVMXSiSybaMbK0NEf6NonBv1f6hA0J
-RrCYZGZEsKaPnveI+HlwnvXJlTnISIjs2jw7HF35HSVl4ZaYLf9k4HFE6vrl+y7N
-GPplG9bzgVKsZgK5rv1ddxBQbMZ30LlyP1/BxDPqY/78+ZyFg/9vjovfF7rG6DUa
-KIgcrgB/rD/4P1wdOGhz+bwbi2mwsc0yfzAWS6qXxCw70RQ0YNKhE/ha5cM0bfwh
-IyKOUaxLceZBVLXuXXXKo1aeOxLHiVSB+kblT/Dq85b4Vl71n5v81x/jfo47O80Z
-LjNdgoLngofz67wKl+BHJsJAvtRvXP/NI9nNpsSgY1tLzUeKsnllS1mWYh3WE24u
-vPH7IuyON+11TRur6JqaEd5LbafrMcQ2+Fqz0UdscgafmzsTyTw=
-=1OmE
------END PGP SIGNATURE-----
-
---6djyuz6okfpd5ae6--
