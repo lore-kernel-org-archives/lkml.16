@@ -1,141 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264B3190477;
-	Thu, 13 Feb 2025 10:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E3621325A;
+	Thu, 13 Feb 2025 10:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739444186; cv=none; b=hLkAg2XhEIaZYNjvblJHidhEtc7dfqE7B9wM330/oNjl0eX9GJcr6Ws0l3LY3C1Q7oz5Ayh5Z9gULwwa9lPY2yPmoDRHBgJRpB6l3pSh3LnmsHvHhlwRsoZoKR+A99/ayOVGRT/P1rVD4DMwIK4/Ryxu7DurJ1zlOT6guukllt4=
+	t=1739444264; cv=none; b=a95eu/oCenK0QcxH9Y50CzDc+Zq0CBNCBlVurdNny5bmss+ahHGd9j4YACmTS9ZZTBaWkQbDN1bs4J7qXgWRQo7WkNIYZ17Tnvnc0lNqeZ4mbu/ecLImCktJQkex1C07MQcmIsh1xob8a3Xpwv1I3Hx3WXNIUmZ60xRjC8UfOPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739444186; c=relaxed/simple;
-	bh=AWQ9Pe1GOHo90EUe82d6uyA1a+MiIOWdBo0xg647hR4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gtK1Jygaa+Pfgz0LYL8g/DiKdH+dgHNTjESIfoPDkLoJSbBjlDP3WsEHdQVe3Ht5Uyaa/5xHYD6zE/E8itvcCOYYtbXFqYmPI6ecOwxluJRTiW520RfdGfQjWGAv4v7Pvqrv7r75COW3KlloueX+LT5FBgsauhySH8GPy/8k/Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+u3coxc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739444264; c=relaxed/simple;
+	bh=pyF2QmNloyMOS+ooiXdEaWxfi2Vx+bDKuVx6p+SkU6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hYrqCLStKJteLbicCnhD1hWeahrb9TlxDGKMvvN/Oge1nNGF3bPAXtkWywqpw1LvmgoIcbtRHh4K+OnNZHSMh40Oe0GOrWC0tcLuJWzZY9Zt3gSsUZx9NqsFGCJaQIFspB+BKAU0gSSdGJaU/p0jFHNNe7OvoBV62o5yK266yXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ewD05as5; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+u3coxc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84B18C4CED1;
-	Thu, 13 Feb 2025 10:56:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739444185;
-	bh=AWQ9Pe1GOHo90EUe82d6uyA1a+MiIOWdBo0xg647hR4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=X+u3coxc8I8AO5CVa23DSr3lHAzSa2nGrfJOg2QM+FG+j261Z3D5lhIJLUbE6JeTB
-	 vTgLsKL7HnHlQ7B4Wzm2dqvvS5Pd5aZjjEyHu98M7HYFLqDZcyUxGOrBsiFiU+118C
-	 yKrlFCWrTRRCkjn9UDvee07GVuWz+7T32CkpdMPFrvbPIexF7oi5Yy7hJe/E8ltlum
-	 uq75zhqkP7WkPqRhx+0na1IE14xIekfL50odCkvQkiBOP4jP40Q2FDyP8b7XiRT21e
-	 53IXHDUoB12kyEOWvjbDiQ8ss0LM/F+VptTDm6HmHdFciA7Ug0jl54ZNY8CHTuN1LB
-	 oxGvSfPDcrRSQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tiWtK-003e0Q-Sv;
-	Thu, 13 Feb 2025 10:56:22 +0000
-Date: Thu, 13 Feb 2025 10:56:22 +0000
-Message-ID: <86seoiru3t.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Mark Brown <broonie@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Fuad Tabba <tabba@google.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v7] KVM: arm64: Fix confusion in documentation for pKVM SME assert
-In-Reply-To: <Z626RqzA3HMskwJd@J2N7QTR9R3>
-References: <20250212-kvm-arm64-sme-assert-v7-1-0f786db838d3@kernel.org>
-	<Z6yByMUBPDUyEWOr@J2N7QTR9R3>
-	<86tt8yrzon.wl-maz@kernel.org>
-	<Z626RqzA3HMskwJd@J2N7QTR9R3>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ewD05as5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739444262; x=1770980262;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=pyF2QmNloyMOS+ooiXdEaWxfi2Vx+bDKuVx6p+SkU6c=;
+  b=ewD05as5swo7iwL2SqdBFwse7ftzTOb6b7CaO1cXbgNSyeEfkhwfnj1D
+   Gy0pqBRwaSpTIOmWmcTgVDAwDG6ahj0lRPnOqdu6NPSzxg/rNnOA/hD92
+   lPRYX1FAZx9+hPHbBi5dUTFS2L3+YKsOLdi8YdnxsYSE0mSEt/+b/VdHv
+   6w83KXAMUMU4vLgu3l/TTu51bW+z571cOt42RxnlQbFI959u8PPTolpzH
+   6EYUPB2Vh/LiGV69uFnrlGPCApNevTfpX9vWJki/+O4xkd4VZHkXWaLZd
+   M6cvRAuwobBbiwYgqHeb8iGApwVvTedST6b/fG8pCLDYBVqLi/xrb7RXx
+   Q==;
+X-CSE-ConnectionGUID: lnH5xp24T1KyGOKkpRfm7w==
+X-CSE-MsgGUID: qVNyYJJ8Sr+QUKYke6/7YA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="57673742"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="57673742"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 02:57:41 -0800
+X-CSE-ConnectionGUID: P9Bh1cBQShitd1WRAq7ksg==
+X-CSE-MsgGUID: R1RQoslhSjeSCVtbJOXViQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="112974706"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 02:57:38 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tiWuV-0000000B8kk-0Vn6;
+	Thu, 13 Feb 2025 12:57:35 +0200
+Date: Thu, 13 Feb 2025 12:57:34 +0200
+From: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+To: Kartik Rajput <kkartik@nvidia.com>
+Cc: Jon Hunter <jonathanh@nvidia.com>, "robh@kernel.org" <robh@kernel.org>,
+	"robert.marko@sartura.hr" <robert.marko@sartura.hr>,
+	"arnd@kernel.org" <arnd@kernel.org>,
+	"thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"geert+renesas@glider.be" <geert+renesas@glider.be>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"jirislaby@kernel.org" <jirislaby@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"hvilleneuve@dimonoff.com" <hvilleneuve@dimonoff.com>,
+	"schnelle@linux.ibm.com" <schnelle@linux.ibm.com>,
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] serial: tegra-utc: Add driver for Tegra UART
+ Trace Controller (UTC)
+Message-ID: <Z63QHvayYRS0U8Ln@smile.fi.intel.com>
+References: <20250212104132.61060-1-kkartik@nvidia.com>
+ <20250212104132.61060-3-kkartik@nvidia.com>
+ <Z6y5vRGyouZsQWyj@smile.fi.intel.com>
+ <ec06322386adbf4404e2fbc5d7656e3465eb4320.camel@nvidia.com>
+ <Z63Bk6sgQryG1pFK@smile.fi.intel.com>
+ <88a54c9bf88dac0a3316224b08d0e2378e8fc6f0.camel@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: mark.rutland@arm.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, tabba@google.com, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <88a54c9bf88dac0a3316224b08d0e2378e8fc6f0.camel@nvidia.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, 13 Feb 2025 09:24:22 +0000,
-Mark Rutland <mark.rutland@arm.com> wrote:
+On Thu, Feb 13, 2025 at 10:11:36AM +0000, Kartik Rajput wrote:
+> On Thu, 2025-02-13 at 11:55 +0200, andriy.shevchenko@linux.intel.com
+> wrote:
+> > On Thu, Feb 13, 2025 at 09:05:36AM +0000, Kartik Rajput wrote:
+> > > On Wed, 2025-02-12 at 17:09 +0200, Andy Shevchenko wrote:
+> > > > On Wed, Feb 12, 2025 at 04:11:32PM +0530, Kartik Rajput wrote:
+
+...
+
+> > > > > +     for (i = 0; i < len; i++) {
+> > > > > +             if (!nbcon_enter_unsafe(wctxt))
+> > > > > +                     break;
+> > > > > +
+> > > > > +             read_poll_timeout_atomic(tegra_utc_tx_readl, val,
+> > > > > !(val & TEGRA_UTC_FIFO_FULL),
+> > > > > +                                      0, USEC_PER_SEC, false,
+> > > > > tup,
+> > > > > TEGRA_UTC_FIFO_STATUS);
+> > > > 
+> > > > No error check?
+> > > 
+> > > I'm not sure about this. The case where the TX FIFO doesn't clear
+> > > up,
+> > > even after polling for 1 second, is highly unlikely, especially
+> > > since
+> > > there's no flow control involved here. Even if that did happen,
+> > > writing
+> > > to the TX FIFO should just result in an overflow, which is probably
+> > > acceptable in this scenario.
+> > 
+> > Perhaps a warning (debug?) message in such a case?
 > 
-> On Thu, Feb 13, 2025 at 08:55:52AM +0000, Marc Zyngier wrote:
-> > On Wed, 12 Feb 2025 11:11:04 +0000,
-> > Mark Rutland <mark.rutland@arm.com> wrote:
-> > > On Wed, Feb 12, 2025 at 12:44:57AM +0000, Mark Brown wrote:
-> > > > diff --git a/arch/arm64/kvm/fpsimd.c b/arch/arm64/kvm/fpsimd.c
-> > > > index 4d3d1a2eb157047b4b2488e9c4ffaabc6f5a0818..e37e53883c357093ff4455f5afdaec90e662d744 100644
-> > > > --- a/arch/arm64/kvm/fpsimd.c
-> > > > +++ b/arch/arm64/kvm/fpsimd.c
-> > > > @@ -93,11 +93,14 @@ void kvm_arch_vcpu_load_fp(struct kvm_vcpu *vcpu)
-> > > >  	}
-> > > >  
-> > > >  	/*
-> > > > -	 * If normal guests gain SME support, maintain this behavior for pKVM
-> > > > -	 * guests, which don't support SME.
-> > > > +	 * Protected and non-protected KVM modes require that
-> > > > +	 * SVCR.{SM,ZA} == {0,0} when entering a guest so that no
-> > > > +	 * host/guest SME state needs to be saved/restored by hyp code.
-> > > > +	 *
-> > > > +	 * In protected mode, hyp code will verify this later.
-> > > >  	 */
-> > > > -	WARN_ON(is_protected_kvm_enabled() && system_supports_sme() &&
-> > > > -		read_sysreg_s(SYS_SVCR));
-> > > > +	WARN_ON_ONCE(is_protected_kvm_enabled() && system_supports_sme() &&
-> > > > +		     read_sysreg_s(SYS_SVCR));
-> > > 
-> > > As I mentioned on the last round, we can drop the is_protected_kvm_enabled()
-> > > check, i.e. have:
-> > > 
-> > > 	/*
-> > > 	 * Protected and non-protected KVM modes require that
-> > > 	 * SVCR.{SM,ZA} == {0,0} when entering a guest so that no
-> > > 	 * host/guest SME state needs to be saved/restored by hyp code.
-> > > 	 *
-> > > 	 * In protected mode, hyp code will verify this later.
-> > > 	 */
-> > > 	WARN_ON_ONCE(system_supports_sme() && read_sysreg_s(SYS_SVCR));
-> > > 
-> > > Either way:
-> > > 
-> > > Acked-by: Mark Rutland <mark.rutland@arm.com>
-> > > 
-> > > Marc, are you happy to queue this atop the recent fixes from me? Those
-> > > try to ensure SVCR.{SM,ZA} == {0,0} regardless of whether KVM is in
-> > > protected mode.
-> > 
-> > In all honesty, I find that at this stage, the comment just gets in
-> > the way and is over-describing what is at stake here.
-> > 
-> > The
-> > 
-> >  	WARN_ON_ONCE(system_supports_sme() && read_sysreg_s(SYS_SVCR));
-> > 
-> > is really the only thing that matters. It perfectly shows what we are
-> > checking for, and doesn't need an exegesis.
-> > 
-> > As for the Fixes: tag, and given the magnitude of the actual fixes
-> > that are already queued, I don't think we need it.
-> 
-> That's fair; if you haven't spun a patch for that already, I guess we're
-> after the following?
+> I would prefer avoiding any prints in this function, as we are writing
+> debug messages to the UART HW here.
 
-Yup. Applied to fixes.
+Not every printf() goes to UART, but to your point the NBCON should solve that
+issue to some extent. Of course, if the HW in a broken (unrecoverable) state,
+nothing won't help.
 
-Thanks,
-
-	M.
+> > > > > +             uart_console_write(&tup->port, wctxt->outbuf + i,
+> > > > > 1,
+> > > > > tegra_utc_console_putchar);
+> > > > > +
+> > > > > +             if (!nbcon_exit_unsafe(wctxt))
+> > > > > +                     break;
+> > > > > +     }
 
 -- 
-Without deviation from the norm, progress is not possible.
+With Best Regards,
+Andy Shevchenko
+
+
