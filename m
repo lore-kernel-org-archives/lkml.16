@@ -1,148 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8410424501D;
-	Thu, 13 Feb 2025 19:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823A428A2A6
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739474933; cv=none; b=DruzjHw/UPhV7btP6REj4Ao2WqTk8BhlS4oByhgGl3Y6h1ebT+ceW2UlJscKikHqjJbXTGoaUd7IoOXPGG7hBlGgADNxJOxQcCndKdQ4+NdFeuxNAV08LoKgtFDu9cde//avfbHhOh0eNidECfBiJpEu61tNXua4O5dqSMR3o5Y=
+	t=1739475040; cv=none; b=H9MMjgnw/emhyPTjXgcnZYJTS+IY3O+BrnZ1stVwnRG1gSsi4RqFs8tCbybmBienTtA8awus3xMEW283IX6C37/S6sO/ko9s//0pIJWObHMXNO98kpi2jqWdjv4fzLvn1Z5+KV4F/WgrSC9A1GLCyIXBrCutoJjuXXY1OqdbK9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739474933; c=relaxed/simple;
-	bh=mibcqrVU2uUXKuhqlBMEkG07gDq9k41HSPc+WHje23Q=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Eto8Vx92GjwaocAfqFdOuWNDQ1NXQ+nIxQWBcr9uIeKV3F//ZF86qr82IG5thA55gNHupiJsEDEkTMxoRTbzc2nKMeR/vRsp/OOKbN4+6KzdktDk65EJryHnciTp9AAkTjokB9sDnRixwDHqiCcIBVcynwf/YWvzJJVtZFu6FD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTgs3Rm+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739475040; c=relaxed/simple;
+	bh=M3Xtj7RQJ68uhGe29VzgQq5XlLmgymGY4bXdENOCD3s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NTeQyCZB3gsO6WpZj6z+NaI4D9W2zLJKFdy00MbennP0c8bVnJMV0FL4OjNg+6oXs2GcNF3IH2L0cBXmUYZc3fobX2F5uJudlcXYxFgawpuqpTWrcfLV/MvUsLtOE9XtM6aMouJd1r3p2LBLlwQ2MJkCviqWYNzIr5IBNZXr/xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TG3HaU5B; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTgs3Rm+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB96AC4CED1;
-	Thu, 13 Feb 2025 19:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739474933;
-	bh=mibcqrVU2uUXKuhqlBMEkG07gDq9k41HSPc+WHje23Q=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=DTgs3Rm+nbOxlgfoiaTiQqBOE0wEmIf7hztGsSl1tGCzEJZyM/QgMjEuyb4JkqEQr
-	 XSK5P9At+tJeEYTKaJ1ovatF7Tqa+U/dZxAQRtpd8UuFqwAEAnQqwC7HFYx3jFiVmd
-	 /4vzpJ3/MJH1PlN0mzOoczIHvEfCYgsRC3aqLOsVdaAebBGsSqFuEy7nDSQmrkRqFo
-	 8RArS1fDJCdW1y1F2ELajwZ5oevMr6QdDZes2tT5BHOsg1FYf2/MN9eZOBhQj7YIqn
-	 mXScvbUF9GFt10DX05nyRFZexGzuSdYS3iLjYm4m+AirJb0c/aboS3/ZkfNXz4kZNX
-	 D5u4JComVXO4g==
-Date: Thu, 13 Feb 2025 11:28:50 -0800
-From: Kees Cook <kees@kernel.org>
-To: Jeff Xu <jeffxu@chromium.org>,
- =?ISO-8859-1?Q?Thomas_Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-CC: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
- torvalds@linux-foundation.org, vbabka@suse.cz, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com,
- avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org,
- sroettger@google.com, hch@lst.de, ojeda@kernel.org, adobriyan@gmail.com,
- johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com,
- willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com,
- linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
- rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
- f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
- mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com,
- peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com,
- groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
- mike.rapoport@gmail.com
-Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_v5_2/7=5D_selftests=3A_x86=3A_t?=
- =?US-ASCII?Q?est=5Fmremap=5Fvdso=3A_skip_if_vdso_is_msealed?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CABi2SkUCviiTbd1roeBiqSk98S87R1WwSP9rUYh4t3JfSD+2ZA@mail.gmail.com>
-References: <20250212032155.1276806-1-jeffxu@google.com> <20250212032155.1276806-3-jeffxu@google.com> <20250212135000-861e6353-6e0a-43c3-9b28-649ae4dfc607@linutronix.de> <CABi2SkUCviiTbd1roeBiqSk98S87R1WwSP9rUYh4t3JfSD+2ZA@mail.gmail.com>
-Message-ID: <35C0FD0B-0483-4663-AD60-701AB8D9247A@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TG3HaU5B"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5fcb00ae5edso26651eaf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:30:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739475037; x=1740079837; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KC+znPA2H1vB7HU6VZGH/VUzzp6EPafRFN/wfL/kwkY=;
+        b=TG3HaU5B3NHNVDypwQ8TEP3h/ytDcogcAYp/fGIALKEcydUiOCTlIuvxL+8mMkiy/s
+         hBkJZdDAgqhXKgvncAcyM3AayVR+F6lEX5dLmoUb/rh/XurYrnF+p7teIAhy90swY/t2
+         7jOPS6JIXWJiwV0T8s1kdrs+JiTkjkoAMb6k0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739475037; x=1740079837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KC+znPA2H1vB7HU6VZGH/VUzzp6EPafRFN/wfL/kwkY=;
+        b=iOQO3keSNGr2UrPpdG2vG7Mpabl5iPkj9qg9h2EGRNVGZgnKKHiNv3CyYgZW2JLbD6
+         3blEPY3voKlMcclEMmUcRMzVN5UEZTHU4jamxf6tp2LXy9DnLxx18Tm7G9UB+NCojwhJ
+         0Y4dBy9aj64TqPWY8ZmuYt3k3J7Qe4xu2OXUr/ISBNeSXkxn2H6ld0dlJ9+zAHF3Jc5o
+         QO+x4wzLAPmGsSn0Q+hEjeUPcGUm5xzvWU4zuh/Fd2nRmicYSF2ubd+FadimGzTfAlNT
+         SRI8LqGtmyZmyG+VAIAJo+5xSpVPVDrneYmRZ8nSv3I1bl/A75m7jQqlugOAb2l8Ux85
+         L7Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUMB95E2y0iMB6b92XdfBk+YveejPb4qfVVJ8zCOZOSkp57X/Sry+EbQ2REks6BDbSgX/tUca8c7w6PYo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziQzStrKcSIQ+44NBsdNkK5FWU0+ahchl+quw5v2bMBZQE80Dc
+	7A3AxkbcPolMn1WEATeQqvUIAlFHQ//xGaOnuyjJS2TN1/5gseM/3rXmEBcpqjJsHhNspBpIoIv
+	Dzg==
+X-Gm-Gg: ASbGncvXniG2R5fVwUCvTT1I05v3hhTK0B/l2d3aZopi2iI8x4KSw2OOVQ2hjq2uImN
+	Q4NpW76Pd6GI97ht1BKiFIMiv0EJMzFFw2zc0RWtF7rujknBBTyMkfzLkJpLCzsqcpN+GzpW3FP
+	eqKJvifWELKhEdD9wTMxchWoqW3VVf/dSOXTtF/sa2bmC7OnhJpojJ1PmygPTwD2SUJMd/+E3eZ
+	C7lF8a9OK0NacZLSQnpp3h+9VjpHIavymCTJOiI8kbBEfETW/ZK2IRrGuUqtRmcadMFtu889tQC
+	pvGWttmnndmXG8pW8zstuFKIKR4A7atbmmUoeiNqtVLl5Y73jTJ7Ves=
+X-Google-Smtp-Source: AGHT+IHy7BfKBEyVj40kyJZXDjYaGW3VfZn1rtl3M6sdQStOmMG0Lw5pPaSiVruRg7wU8jdT+UG2tw==
+X-Received: by 2002:a4a:d8d9:0:b0:5fc:a870:d84e with SMTP id 006d021491bc7-5fcbadd9ebamr64481eaf.1.1739475037312;
+        Thu, 13 Feb 2025 11:30:37 -0800 (PST)
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com. [209.85.210.44])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fcb16a5a5csm783759eaf.9.2025.02.13.11.30.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 11:30:36 -0800 (PST)
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-726819aa3fcso792177a34.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:30:36 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXDl0Y121tsClaA4AYH4RKStPhVJerzxYJuzpPPQi40/R9t+pMLnP73FQIr1S48xUWLkDfVnWkeIvkYQMs=@vger.kernel.org
+X-Received: by 2002:a17:90b:274e:b0:2fa:17d2:166 with SMTP id
+ 98e67ed59e1d1-2fbf5c6f900mr11663838a91.31.1739474591586; Thu, 13 Feb 2025
+ 11:23:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20250213-virtio-shm-page-size-v1-0-5ee1f9984350@redhat.com> <20250213-virtio-shm-page-size-v1-3-5ee1f9984350@redhat.com>
+In-Reply-To: <20250213-virtio-shm-page-size-v1-3-5ee1f9984350@redhat.com>
+From: Daniel Verkamp <dverkamp@chromium.org>
+Date: Thu, 13 Feb 2025 11:22:45 -0800
+X-Gmail-Original-Message-ID: <CABVzXA=r=X+GYnSxgeyktKzfKCW2DW+v++c4v_+BHBDHZ_Bzyw@mail.gmail.com>
+X-Gm-Features: AWEUYZnbyEFvCjOaJipQpOfb1MF9Gi7XhI32b8q-z-30QmKnx8ZNHSfRGuJzTvI
+Message-ID: <CABVzXA=r=X+GYnSxgeyktKzfKCW2DW+v++c4v_+BHBDHZ_Bzyw@mail.gmail.com>
+Subject: Re: [PATCH RFC 3/5] virtio-pci: extend virtio_pci_cap to hold page_size
+To: Sergio Lopez <slp@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
+	Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu <olvaffe@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
+	Dmitry Osipenko <dmitry.osipenko@collabora.com>, fnkl.kernel@gmail.com, 
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-
-
-On February 13, 2025 6:14:00 AM PST, Jeff Xu <jeffxu@chromium=2Eorg> wrote=
+On Thu, Feb 13, 2025 at 7:54=E2=80=AFAM Sergio Lopez <slp@redhat.com> wrote=
 :
->On Wed, Feb 12, 2025 at 5:04=E2=80=AFAM Thomas Wei=C3=9Fschuh
-><thomas=2Eweissschuh@linutronix=2Ede> wrote:
->>
->> On Wed, Feb 12, 2025 at 03:21:50AM +0000, jeffxu@chromium=2Eorg wrote:
->> > From: Jeff Xu <jeffxu@chromium=2Eorg>
->> >
->> > Add code to detect if the vdso is memory sealed, skip the test
->> > if it is=2E
->> >
->> > Signed-off-by: Jeff Xu <jeffxu@chromium=2Eorg>
->> > ---
->> >  =2E=2E=2E/testing/selftests/x86/test_mremap_vdso=2Ec  | 38 +++++++++=
-++++++++++
->> >  1 file changed, 38 insertions(+)
->> >
->> > diff --git a/tools/testing/selftests/x86/test_mremap_vdso=2Ec b/tools=
-/testing/selftests/x86/test_mremap_vdso=2Ec
->> > index d53959e03593=2E=2Ec68077c56b22 100644
->> > --- a/tools/testing/selftests/x86/test_mremap_vdso=2Ec
->> > +++ b/tools/testing/selftests/x86/test_mremap_vdso=2Ec
->> > @@ -14,6 +14,7 @@
->> >  #include <errno=2Eh>
->> >  #include <unistd=2Eh>
->> >  #include <string=2Eh>
->> > +#include <stdbool=2Eh>
->> >
->> >  #include <sys/mman=2Eh>
->> >  #include <sys/auxv=2Eh>
->> > @@ -55,13 +56,50 @@ static int try_to_remap(void *vdso_addr, unsigned=
- long size)
->> >
->> >  }
->> >
->> > +#define VDSO_NAME "[vdso]"
->> > +#define VMFLAGS "VmFlags:"
->> > +#define MSEAL_FLAGS "sl"
->> > +#define MAX_LINE_LEN 512
->> > +
->> > +bool vdso_sealed(FILE *maps)
->> > +{
->> > +     char line[MAX_LINE_LEN];
->> > +     bool has_vdso =3D false;
->> > +
->> > +     while (fgets(line, sizeof(line), maps)) {
->> > +             if (strstr(line, VDSO_NAME))
->> > +                     has_vdso =3D true;
->> > +
->> > +             if (has_vdso && !strncmp(line, VMFLAGS, strlen(VMFLAGS)=
-)) {
->> > +                     if (strstr(line, MSEAL_FLAGS))
->> > +                             return true;
->> > +
->> > +                     return false;
->>
->> This only tests that any mapping after the vdso is sealed=2E
 >
->The code above begins by searching for the "[vdso]" string, then looks
->for the first line that starts with "VmFlags:", and looks for the "sl"
->substring within that line=2E We're assuming the format of smaps won't
->change from release to release=2E
-
-Oh, I missed this in my reviews: nothing _resets_ has_vdso to false, so if=
- any other mapping follows vdso that happens to be sealed, this will return=
- true=2E=2E=2E
-
+> Turn the 16 bit padding into a page_size field to allow the device to
+> pass its required page size with format PAGE_SIZE >> 12.
 >
->> There is a real parser for /proc/self/smaps in
->> tools/testing/selftests/mm/vm_util=2E[ch], see check_vmflag_io()=2E
->>
->This test is in selftest/x86, which makes it hard to include the
->vm_util from selftest/mm, if that's what you're asking=2E
+> Signed-off-by: Sergio Lopez <slp@redhat.com>
+> ---
+>  drivers/virtio/virtio_pci_modern.c | 29 +++++++++++++++++++++++++----
+>  include/uapi/linux/virtio_pci.h    |  2 +-
+>  2 files changed, 26 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_p=
+ci_modern.c
+> index 79616ce5057bf3b2b88cae7e8fb7729efa9dd632..26e9cd5148c0f10209c34d12e=
+65d64490a855d75 100644
+> --- a/drivers/virtio/virtio_pci_modern.c
+> +++ b/drivers/virtio/virtio_pci_modern.c
+[...]
+> +               if (__virtio_test_bit(vdev, VIRTIO_F_SHM_PAGE_SIZE)) {
+> +                       pci_read_config_word(dev, pos + offsetof(struct v=
+irtio_pci_cap,
+> +                                                                page_siz=
+e), &res_psize);
+> +                       if (!res_psize) {
+> +                               dev_err(&dev->dev, "%s: shm cap with inva=
+lid page size on "
+> +                                       "a device with VIRTIO_F_SHM_PAGE_=
+SIZE feature\n",
+> +                                       __func__);
 
-Hm, we have done these kinds of inter-tests dependencies before=2E (E=2Eg=
-=2E seccomp includes stuff from the clone tests=2E) I think it should be po=
-ssible if it can just be a header include=2E Linking across tests would be =
-more frustrating=2E
+Maybe this should also constrain the page size to be a power of 2?
 
--Kees
+[...]
+> diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_=
+pci.h
+> index 8549d4571257142ac6c9dad5c01369923791a85a..fb0ccb7a125d8178c1f78333c=
+4d2f43540e1764b 100644
+> --- a/include/uapi/linux/virtio_pci.h
+> +++ b/include/uapi/linux/virtio_pci.h
+> @@ -127,7 +127,7 @@ struct virtio_pci_cap {
+>         __u8 cfg_type;          /* Identifies the structure. */
+>         __u8 bar;               /* Where to find it. */
+>         __u8 id;                /* Multiple capabilities of the same type=
+ */
+> -       __u8 padding[2];        /* Pad to full dword. */
+> +       __u16 page_size;        /* Device page size (PAGE_SIZE >> 12). */
 
---=20
-Kees Cook
+This comment should probably clarify that the page_size field is only
+valid when cfg_type is VIRTIO_PCI_CAP_SHARED_MEMORY_CFG, assuming
+that's the case. Or should the device be expected to provide the
+page_size for all capabilities regardless of type?
+
+It seems like the name should also ideally make it clearer that this
+is page_size/4096 rather than the actual page size to avoid confusing
+device implementers.
+
+>         __le32 offset;          /* Offset within bar. */
+>         __le32 length;          /* Length of the structure, in bytes. */
+>  };
