@@ -1,76 +1,43 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761192222BB
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CE826619D
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739464853; cv=none; b=Jxm6MJm1+u8NFpwy1ckWE3O2FZG7cMj7FeB0TbPHhkaerQMNdEs2sKQY7y2qZZjctzc/0Q75Wb4Ow1XNDJcaIhdYlavTWl69K/kyaCosSHDhrhfvKnQ99F0wtvFcIYhdNyJ/fbSffpQ5/Ib8TjZ3B34xcr3f6/yKCzWD89ynGyQ=
+	t=1739464854; cv=none; b=gIu04pVsu2hBu8ea6Yr+7zmLCRe7UzIwDJmR8O3Mpzx9d1c2HXB2dH8mYBvhzwl21zhU5mnBT/Ch68XBPv7E8/WZV6qIa20ZZ6QHgFpPtVIZn7nTGyZTVA984caewN+8Qxob+qQ9wNQsEkaX+B/D5QnIxwtoQhQYwTU3M1b1/sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739464853; c=relaxed/simple;
-	bh=ilVtVdtqcdvqiRvrD72tm27UFvZ1C8aH9lSN5V+V/uo=;
+	s=arc-20240116; t=1739464854; c=relaxed/simple;
+	bh=SDJ9xPx+V/kUYuCd1lfpdiNdJdkLWVzRtwki/MC6fQc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X8azuRPDZifSMLgfDET/KFVavGdbUPN3HnWrw0NCLZhaUGLtdDldePJoYq/A0PAbHKdCXnqsF+EiUr8Gl+twO7JlAWMwpRuUAZaXr0JagJYGmTut7AUHJgFakiz2mLKFFEdjT5YqlzCivPK7uTTLeJ+50s3ypcT6vhJb9M6hsy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pRAbFqoU; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=mmUIpa/0nRMFdMgcaeoHLA6QhnZq5xV5L0/xlvBhvIq2D1bxZEaPRqjXd0R07sNh39fae+YYE0FTP9CWOXfMUsWHXe7iwcoJ/+kM9NI7XVPWTZpKP2hoTxjGzKnZWlxDPlTi6+qr3oFXM+J7ZQBLksLRHFJe2hJObryOVxTBvow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S9UOxC17; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pRAbFqoU"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-308eebd4938so10867551fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 08:40:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739464850; x=1740069650; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nsPlqa+XTMTRmx7s7nIfzGqoebmJYSoLC3HQNsZuS7I=;
-        b=pRAbFqoUbKS+BBxStE2Y2crUMkTOCOHTYtO1zsj1vYuVhkvkup3OZf8ZQM4B5udmW7
-         lf+NRVZ1zHlP5S1MziHn3IxEpnLiFdTUR4bC8YfTmY4S4VGm1ySXk5WfRi+k/ZApSlYP
-         7YvU/K0NrL5NnZELwmRL8cuViK+LHvLPLCSXhGz0LZ908O7dmhqqV2nDDSGlztJue9bp
-         QncGtCaP2wW+JM0X4qT3e3mQWQGyn/Fk/Y8ZIghGUd9+sGv3tTaWapQKY7bCUMW7+4VK
-         566e04xE+Oxtq8issZrtySht+pSy7R1XVzsOlgaqRWQ8fKf6lgzGNnMrdsvMzSrC78xD
-         5pnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739464850; x=1740069650;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nsPlqa+XTMTRmx7s7nIfzGqoebmJYSoLC3HQNsZuS7I=;
-        b=sdBNE6tavNDK7T6vLj2XMu40TKvj6v/PLEl+X+MFY4ulamvOp7j6cfqJRtw92+yCrH
-         12rVWHoec3fux5C9QXdJ24kp6AKWj6ywcN9hUyiRXgoSGLgqjRnw+49MgANK0jJlnH4L
-         gdfzp7gWNzmov5ogqAGPTV+KEzNrdEMM3avWVMYJ88PD0IjtMKup6UxWBCFvTR8lC6XC
-         ulgc8qLGlxYW9g0PJGMeefXSW/lDU2sgZPkL8LRrOr+x0xS3K9J3z8dcp/MouR5y5ysi
-         iUlJCAB/hF9eRKMp2vcJCGWDjVZYBSVuBOY+9dG1ZiPEShyZU5S1CbpXjhMRt5u/GFBp
-         OU2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUa8fZi4gBjHATyLaHpsL7iki4fhHq8XuyrwFhexJcGbLJr2BG4YLyfVq7ghThW9aBX8BKL9o9ZYsGkhgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9yhiEIIR93yjq2y+RUzMoOaO9PBNrZSE+vUBgXTkiuLEftPwQ
-	SJMjxJESds8sj3T1RGW3V936La5/iIp9TG3grDOHbY+hNabNn2VEBun3+/GpjUE=
-X-Gm-Gg: ASbGnctHRcG4tdDFdyuWp6M0xGBirOalL45jaL4Ov3z4No6pJYPTSzjUjcKwG5uWU9M
-	6+KTkzxx8aNhNpcroSzhuHPGGM0FvPPw7opfEvlU1X+uFiQZsxrnDM3J1YSPzoUdh2Rc+wQZafV
-	4cV96SIxCPxTXG2LY2SWkXOKC43INHA2tmIaf8/ZzMftBEgkKA+HhiySuToyDf23/m+Yv2SOw2y
-	qxczCSnQ2q/y9Xg87liBBZnL40i151FVODu++XA4xkZq3hygHs3cFA0ijSviLsBO+Sz5O7NDqUB
-	KoLa4ymQrA7wjERMoGjw3unGKDMLKdOiCNIAl4PiJPMjhzPpBzKj0MUYkgekd9iVSB7Y9Gc=
-X-Google-Smtp-Source: AGHT+IGip08e5QTGk3qyb9I5cPtwD3jegXUdt4j8V13l5pv6V2QbFSdwK/CpTAFSowcbbEVHqypdqg==
-X-Received: by 2002:a2e:7c14:0:b0:308:f580:72a8 with SMTP id 38308e7fff4ca-309037c2656mr26625411fa.11.1739464849643;
-        Thu, 13 Feb 2025 08:40:49 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309102767b4sm2462881fa.78.2025.02.13.08.40.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 08:40:48 -0800 (PST)
-Date: Thu, 13 Feb 2025 18:40:47 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 23/37] drm/atomic-helper: Change parameter name of
- drm_atomic_helper_wait_for_vblanks()
-Message-ID: <demffp3zswofiu6e2mee6g3p42k6qvfchnbgirn2xok47t477i@aodrfqjpejho>
-References: <20250213-bridge-connector-v3-0-e71598f49c8f@kernel.org>
- <20250213-bridge-connector-v3-23-e71598f49c8f@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S9UOxC17"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B22E4C4CED1;
+	Thu, 13 Feb 2025 16:40:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739464853;
+	bh=SDJ9xPx+V/kUYuCd1lfpdiNdJdkLWVzRtwki/MC6fQc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S9UOxC175AtipJQE4sLG6QW53cPJbHCMIJQnzSXjuo2JAHnhghALsN2C70ykL2S0L
+	 OCty/aXyKS+GYgGdzwGUTuRS7/Gzf9u/68frrvwzxvygWX7SFu7mMp4FRjl7+Kg/E3
+	 RM5aVSTFfI5lj3gzZALBPQCfh78DrDgg/ecWTH7O6+9hTDbPv/9XZn9pD3KJ7Na4la
+	 WM7D/S+Li1FbzNyO/Y+u9cVhi2ac34LRYDpv+OMsIenOzFmHsAkQr5gmqAWkpJRzl1
+	 /ZTQAk8oEGAZ9odoLnW7Za7xrevSAAL/4Uv+3OihxCfCtV+K9BOPhxZB9yqwyKOZ1Z
+	 srxJRI4uBdtKg==
+Date: Thu, 13 Feb 2025 06:40:52 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>,
+	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Cc: Neel Natu <neelnatu@google.com>, Barret Rhoden <brho@google.com>,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	sched-ext@meta.com
+Subject: Re: [PATCH sched_ext/for-6.15] sched_ext: Implement
+ SCX_OPS_ALLOW_QUEUED_WAKEUP
+Message-ID: <Z64glOKTNBMLD0ca@slm.duckdns.org>
+References: <Z60p755gE1aDiimC@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,24 +46,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250213-bridge-connector-v3-23-e71598f49c8f@kernel.org>
+In-Reply-To: <Z60p755gE1aDiimC@slm.duckdns.org>
 
-On Thu, Feb 13, 2025 at 03:43:42PM +0100, Maxime Ripard wrote:
-> drm_atomic_helper_wait_for_vblanks() waits for vblank events on all the
-> CRTCs affected by a commit. It takes the drm_atomic_state being
-> committed as a parameter.
+On Wed, Feb 12, 2025 at 01:08:31PM -1000, Tejun Heo wrote:
+> A task wakeup can be either processed on the waker's CPU or bounced to the
+> wakee's previous CPU using an IPI (ttwu_queue). Bouncing to the wakee's CPU
+> avoids the waker's CPU locking and accessing the wakee's rq which can be
+> expensive across cache and node boundaries.
 > 
-> However, that parameter name is called (and documented) as old_state,
-> which is pretty confusing. Let's rename that variable as state.
+> When ttwu_queue path is taken, select_task_rq() and thus ops.select_cpu()
+> are skipped. As this confused some BPF schedulers, there wasn't a good way
+> for a BPF scheduler to tell whether idle CPU selection has been skipped,
+> ops.enqueue() couldn't insert tasks into foreign local DSQs, and the
+> performance difference on machines with simple toplogies were minimal,
+> sched_ext disabled ttwu_queue.
 > 
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> ---
->  drivers/gpu/drm/drm_atomic_helper.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+> However, this optimization makes noticeable difference on more complex
+> topologies and a BPF scheduler now has an easy way tell whether
+> ops.select_cpu() was skipped since 9b671793c7d9 ("sched_ext, scx_qmap: Add
+> and use SCX_ENQ_CPU_SELECTED") and can insert tasks into foreign local DSQs
+> since 5b26f7b920f7 ("sched_ext: Allow SCX_DSQ_LOCAL_ON for direct
+> dispatches").
 > 
+> Implement SCX_OPS_ALLOW_QUEUED_WAKEUP which allows BPF schedulers to choose
+> to enable ttwu_queue optimization.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Reported-by: Neel Natu <neelnatu@google.com>
+> Reported-by: Barret Rhoden <brho@google.com>
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Applying to sched_ext/for-6.15. Peter, the core side change is trivial but
+please holler for any concerns.
+
+Thanks.
 
 -- 
-With best wishes
-Dmitry
+tejun
