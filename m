@@ -1,76 +1,79 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5389A20A5E1;
-	Thu, 13 Feb 2025 09:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4656C20D4FC
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739438185; cv=none; b=ZHyVAGY53TKk1CAu7T1IWaZZVTsN5+EUWSH7QcEm1ToOpMmpgv0dZZX5AWkEG3Mm4OSMgiqKaIRQY2FN4hL2dsskMKVJsnVlBKDAddvhKH18f7wKBLFefxAL/ObjFS5XJ5opehvzY4DYAQvuUaEmacwDZgXeWKbkPes9cuYsXGo=
+	t=1739438188; cv=none; b=qd9i9QeBEI0am1ujZ0/BS/W5/ihZITCjwezMOEjxrLMZdU8LDOqQPBBqNfKwoXE2G34DECeDjJ+8h37zpj3u7PsXf90l+FpY+7ixyayrWLk9Zz4fReqcPpN8EJLHnVqj+dX4nhICNqgYus9Pbu2BYYYzPdhjyZ14Ubh3lGFjpXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739438185; c=relaxed/simple;
-	bh=TujycZlDf27LHQSqZ01TZSVk6JIbq4JJ/a/o3Xjv8Wk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=uQqjXs2Vs86Qkct4aUr0I07rhzSIDarO9bE2INTnpGoUA49EbTbI+PMhPyJs1qq/BALGhAjn3HWd8OfGEfjT/Wg5EatRrDZ+LOBhRCHubye0yqPzQQvtakjw2wB0PaYJer9RpdpbDcpDCF/6AOQ4SM69f11/O8ZtH60o1uf0YG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OVeNTmQO; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OVeNTmQO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
-	Content-Type; bh=eZXyY+rIJ9uiwcgEZTwKxYAgqtlUWLn2/QpYJQwBpRw=;
-	b=OVeNTmQO9dM4IS/w/kqPc1gl6uXuJobsdBdoxWbraMKFpv70PhJ5GG+y94yvK4
-	veDS+8+IPAkvGMmGSjx1TDduy23OvTaoRxs4vlAri65fo8HG653R8Er0wGycfhlG
-	q2UW/sTnpEf0HKQH19/QDaUnbTC0FiDfEddVzcl2SOgAM=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wDn3ylLuK1n5NkFMA--.5233S2;
-	Thu, 13 Feb 2025 17:15:55 +0800 (CST)
-From: 412574090@163.com
-To: gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	weiyufeng <weiyufeng@kylinos.cn>
-Subject: [PATCH] usb: fix error while OF and ACPI all config Y
-Date: Thu, 13 Feb 2025 17:15:53 +0800
-Message-Id: <20250213091553.198050-1-412574090@163.com>
+	s=arc-20240116; t=1739438188; c=relaxed/simple;
+	bh=cMHDtDnatGx8NsJ+MRpY90M7aAPc2RuqrfU1Ql40cw0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JPvYwroQdSUrR+xE8Hgqh6/tnsD4Wd3umXBWdfXflAVupIFqHfv0rTF1lsJkM943/H4Q0tnQArxB3bS22xrt+u7g6i0Z/YWRwBsKcgrlEvrzFIXCb/HxfzJE0cZxIUQtUFPdGHb9niqwzc9oYtUZASgQdiRnxn2AhsD4HFk5yhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 51D9G28O078123;
+	Thu, 13 Feb 2025 17:16:02 +0800 (+08)
+	(envelope-from Xuewen.Yan@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4YtqF44zF3z2PFSxC;
+	Thu, 13 Feb 2025 17:11:52 +0800 (CST)
+Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Thu, 13 Feb 2025 17:15:59 +0800
+From: Xuewen Yan <xuewen.yan@unisoc.com>
+To: <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
+        <vincent.guittot@linaro.org>
+CC: <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>, <bsegall@google.com>,
+        <mgorman@suse.de>, <vschneid@redhat.com>, <qyousef@layalina.io>,
+        <ke.wang@unisoc.com>, <di.shen@unisoc.com>, <xuewen.yan94@gmail.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/2] sched/uclamp: Add uclamp_is_used() check before enable it
+Date: Thu, 13 Feb 2025 17:15:54 +0800
+Message-ID: <20250213091554.2593-2-xuewen.yan@unisoc.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250213091554.2593-1-xuewen.yan@unisoc.com>
+References: <20250213091554.2593-1-xuewen.yan@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDn3ylLuK1n5NkFMA--.5233S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtF4ruFW3Xr45Gr1rtr1xAFb_yoWfCrc_K3
-	Wq9rWxG34rC34jkr15Kr4Fvw1Ska1DWry8uF1Dt3sxXFW2kw4UX3Z09FyUta1UGayDJF1D
-	WryFvryjkF409jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUb5fH5UUUUU==
-X-CM-SenderInfo: yursklauqziqqrwthudrp/1tbiPQryAGetq0vqJwAAsi
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 51D9G28O078123
 
-From: weiyufeng <weiyufeng@kylinos.cn>
+Because the static_branch_enable() would get the cpus_read_lock(),
+and sometimes users may frequently set the uclamp value of tasks,
+and the uclamp_validate() would call the static_branch_enable()
+frequently, so add the uclamp_is_used() check to prevent calling
+the cpus_read_lock() frequently.
 
-When both OF and ACPI are configured as Y simultaneously，this may
-cause error while install os with usb disk，while reading data from
-the usb disk, the onboard_ hub driver will reinitialize the
-hub, causing system installation exceptions.
-
-Signed-off-by: weiyufeng <weiyufeng@kylinos.cn>
+Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
 ---
- drivers/usb/misc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/syscalls.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/misc/Kconfig b/drivers/usb/misc/Kconfig
-index 6497c4e81e95..94e75e7adcc1 100644
---- a/drivers/usb/misc/Kconfig
-+++ b/drivers/usb/misc/Kconfig
-@@ -318,7 +318,7 @@ config BRCM_USB_PINMAP
+diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
+index 456d339be98f..d718fddadb03 100644
+--- a/kernel/sched/syscalls.c
++++ b/kernel/sched/syscalls.c
+@@ -368,7 +368,8 @@ static int uclamp_validate(struct task_struct *p,
+ 	 * blocking operation which obviously cannot be done while holding
+ 	 * scheduler locks.
+ 	 */
+-	static_branch_enable(&sched_uclamp_used);
++	if (!uclamp_is_used())
++		static_branch_enable(&sched_uclamp_used);
  
- config USB_ONBOARD_DEV
- 	tristate "Onboard USB device support"
--	depends on OF
-+	depends on OF && !ACPI
- 	help
- 	  Say Y here if you want to support discrete onboard USB devices
- 	  that don't require an additional control bus for initialization,
+ 	return 0;
+ }
 -- 
 2.25.1
 
