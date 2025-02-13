@@ -1,106 +1,96 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF162AD21;
-	Thu, 13 Feb 2025 07:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249D5208992;
+	Thu, 13 Feb 2025 07:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739431547; cv=none; b=SvUfHjAnHH/Ys2rUdwVwWLT5E2imWS8teMF53bQvsMpTz0dcUaCWbiFBw/Wlnt9QXKcR6JhKTfPUmjWQhF5guRMFK7wLei7MZJGATge/gNGnfqUNfGMRYXCedlJI7fCzQZ9y4Lh39VCW/dKj99B9qvtovXkA8qdAA0fpVXpwY2s=
+	t=1739431596; cv=none; b=hXY8MMqdMmJXlUecSi+XZeZdKR6NQmd24Uog4VzUhLO/wfEfSKjcqiGX3o9v9sXy/m3CiQwXOAR1j58j3fMZhrqm6xRXliuzdvHWAPrx0wmu4lUnGneYvoB7ug4teHbClBgHWrdYONTPQWUNv5ktum0PIs+Kbrnrtkc8zZG0Zu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739431547; c=relaxed/simple;
-	bh=Mdhn4iY3/7ldgAmeXQDc31wnKUIyr6Cj0fSP8rx9KqE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ADzRsucLS7AFcTOmEBzTkJCYcjR0X/xaG3F6TrBsRuYxF05FMywQonDMGCtr2EYAHE5+BfyNq2DLJ2skp/lFkwCHfJ1aj3wAmwzA4MG/4St/zSfadhq46hruBCXtzBqRSWohvllGrqIadp8Gh3KoHuMmk3XqJLtS5kyT7ISmlzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KBqEN41o; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739431596; c=relaxed/simple;
+	bh=OTiYJTw6dWzO6R+bnZPo5eajbZ/LQMlpQREGfDWsYh8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=oDMGR0hJFIjIOJO8mXU53gWFL5DyeDJEM7/MRq8q5ivThekoCwF71AfTjFnHhrI7Xxc3VFhZ0EcgyvrEVYxdCWu6aj08Y1RmSGHGiqYW1ljV2bmfyVzllLTwMupqWoYUHubts7lCGxJhG5Kt/ZIexlXs5q4L3AswcJwG/9sBotI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=G02y8nMl; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBqEN41o"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21f78b1fb7dso7988275ad.3;
-        Wed, 12 Feb 2025 23:25:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739431544; x=1740036344; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RdhKtYnDPgRCWPUyQUqaukbPuM9+6e0p6cBMMadCyTQ=;
-        b=KBqEN41oaonEfoiGJC0SMQQbSJdQLZaowm3sf7B7Bc03EKFbsTlZyQgeLpDyTS4W92
-         RcV9E26fjYoWlEAdWxRXEC7+C08tYd92DWRQ1rYJ30C3Pte169+Msi+gwxB1l4TRzSwP
-         5Iol8XBKf26xPota0rVJcuZ//+vLmKFTnIq8LVVTTClTH9QmYlo8mJnGaxcDCi5Ad3/p
-         g7owDL7qQrgeuPZrfpvHC6h4nxf1tzZ8RV1alKcpD2Yrxzjy+/F4RPmjSwXn/iQ5gz6W
-         QM/qOBRMARYi7OY4kxeV8gRaSC1nnCrpgELBMnv8sGFbLJQdJgvzmG0SN9/RsLEu9tBp
-         vmjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739431544; x=1740036344;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RdhKtYnDPgRCWPUyQUqaukbPuM9+6e0p6cBMMadCyTQ=;
-        b=Up8Ma6zTx2K5iXFa4uBZo36Wwy1T8QC3rkiOL+GJCBtfDCWbFbd5nfonk/g1/n0i5R
-         zo9fEQcVnNCzW91LBfD5O4Vq1TlK4tPMt1QwAcmnCLGBkUZ0Irc0BW1TZXp0XNgHuDLC
-         zWFr8F7GYIsRZVcThlkLqtYuWkvLtOclyBPYXPp/8rRtp2kUKpi+V6ETVim6XObU3lGD
-         YBOdXC6hBkqHrmW7NLRY4AVlH3V2i9hX7Lox6iLbuA0k+sRt+7TQRhljgod1QUQ+YOsY
-         puqHTE+3K9K2d63nwKjf5dde7KrVFVtREdbUVyI9TTg3vupR1rSGjtzKDC51/3Szngh6
-         xmRw==
-X-Forwarded-Encrypted: i=1; AJvYcCVReKCIP3NSXfsjWsrQXb/wuh9++EXUIMUGjMAnMWGR9J2c0dS5vb5gPPgV3LH46Bll6i8V3zDeNmXMx8kT@vger.kernel.org, AJvYcCVpKMS5gD7jIGTzQprMqrn8Av4CRNGp0hv9nzj1L2cdCs1wGbQ5YUogmKKkYftdYT+ywI1L8UsrPsAfRqCvs1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVEgYWJKVf3c9I2ITVpO64qXF7/J2KX3fvvnOJIbGJT7Sp1c7P
-	KyGqGOvKy7WAa3MXSrR2L4f9RFRlmfbv0yVKF+4oXyZm29hXHw3ZDhi6xg==
-X-Gm-Gg: ASbGncu+TykVm7g7JaBz4RHrx0LZIPxe4LL3e/A0SFV6z0wdBDgiYLAp862s7oCrhjI
-	NiXcNLeK/LBJMp9BuL3lyMSdENztX4LZoPN2b15FPl0P/wAXYFY7UtQn9nS6sr4r3oqJqb15+Kw
-	I4YKqXu5T6mlkkxsFEBkm3H9UCacrb9DhF84f4N0PkCHpIzr7Kqgb6Iq57RJYxjKqGmBxGwWH7T
-	BO2tAebStVKr3xYJvZrgYoN+PX+VYg5mbAkuPUuqIH3j20EavnVZxzzoeaaUxvpRfcoKDkI6EHT
-	yIhHoqqmVLy5b6uEykZ9RKmNRTkIYy4UhA==
-X-Google-Smtp-Source: AGHT+IHqB2fpwOa0FDVZHD+N9cSkpCkJYHc9SkXnbZBWOwy1PCL+FrnhEpwdY+L10Y1edbOMLwTc7g==
-X-Received: by 2002:a17:903:2451:b0:21d:cd54:c7ef with SMTP id d9443c01a7336-220bbab32e7mr95596175ad.9.1739431544126;
-        Wed, 12 Feb 2025 23:25:44 -0800 (PST)
-Received: from localhost.localdomain ([212.102.51.249])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5348f12sm6427185ad.46.2025.02.12.23.25.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 23:25:43 -0800 (PST)
-From: Tatsuya S <tatsuya.s2862@gmail.com>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Tatsuya S <tatsuya.s2862@gmail.com>,
-	linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] Bluetooth: btbcm: Fix reset errors at setup
-Date: Thu, 13 Feb 2025 16:05:22 +0900
-Message-ID: <20250213070520.9308-4-tatsuya.s2862@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="G02y8nMl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1739431587; x=1740036387; i=markus.elfring@web.de;
+	bh=OTiYJTw6dWzO6R+bnZPo5eajbZ/LQMlpQREGfDWsYh8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=G02y8nMl36P0PqPsSbh/94j3hGJZ8voPUGs4Syqukmyz1liCfWDSW5e9W6MynhOk
+	 0IAuxhtpJa6pO5i4jwGoR4pUnwRUPXfHLz8PZKiWz/5DBce15tpeI1m/QDew8XaC9
+	 rWsUzYcuMcEf61qDLfpfSkJwyRAHk07B2xDWTSWUbQKsjBYKXdpUEJoSTHPFBk5qR
+	 3xqEaSmea7W3iFzK2jDCJFK9OmeYyVBfMyMEaBkkp6AE9qCsYsyby7IcB4YkzwLam
+	 QyVHs5tJWJ5R/wP4oSf3mJVySvNvrPVYJt/rSIFO0v7rhxCAITcE31/LezKRhQc1a
+	 dOurSElu3+Qt6zCqOg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.78]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N7QQD-1tIq7S0kof-00vmXo; Thu, 13
+ Feb 2025 08:26:27 +0100
+Message-ID: <491e74f2-b503-4486-a8e0-b4eddc16b2be@web.de>
+Date: Thu, 13 Feb 2025 08:26:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: vulab@iscas.ac.cn, linux-sound@vger.kernel.org
+Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Cezary Rojewski <cezary.rojewski@intel.com>, Jaroslav Kysela
+ <perex@perex.cz>, Julia Lawall <Julia.Lawall@inria.fr>,
+ Takashi Iwai <tiwai@suse.com>
+References: <20250213070546.1572-1-vulab@iscas.ac.cn>
+Subject: Re: [PATCH] ALSA: hda: Add error check for snd_ctl_rename_id() in
+ snd_hda_create_dig_out_ctls()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250213070546.1572-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:A4/AA8rcihgpl6rsOFxSGFatHFrVBRGoijQL0IrZrjwgjadffvq
+ S0FidvsMStG9EpfZtYOFtiL+iwZsXpcZBZu7OzXP7rgwUl4LCOIa4djO4IH/ZkeD4mpClTl
+ qe54W6/8UBAcvnUZ+z8SiPsIHQ6DikdiOl18VjGVsrRofkMo6A30xXFT/oUT/o4eOFWQxCO
+ Ee4CrlVdLkOna1IjKriTw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Dj6pCAqs3Ks=;XbWPrYIAhujbPECWV0/rzt+UUsY
+ R+hCQFFiGkuvLCkdo2lTGMaMyd5tTaRD35SFIRRto61K7Wh3Pmt/LYaIOv07VoVO2KnN+MYxC
+ D0DRAxbfLnOxnQDAayhHe/QXgNvxnTyoi1v8OIGu51hv0ZrRiqiTvtZksy5LdtFuMcdABlGST
+ tuCnWwxij04KoewGBQKZ9cU8b/MmXX+YuU6+kOn45dqxgLByV0Lh8L8qIHosrrDV1RQl1EcSL
+ rAI8UWmqu/VlrTb7LacPH0BhWfyWnPDX4axTK1zDz0DuL/+HcjczYzqzLM5ajED9m+vWxU91V
+ KgkIgYOHAGsKaj/75SaU+EhwzqKga2B7MLZGCIyjOqF7ABOSb1IFuQFW29OuvxDvMQVOl4Tmi
+ IBmvsStqiKOkMz4/nAg6aAv0y77gQ/0UhA/RULCs/8s1dzH9IDJTxeRSfHaGVhIvQTEpdprfA
+ RMTBYgMqRsl+pfZ7/++QfZ6nYX1x5ljdZhxB4EYU9DfDOEmSJ4au8VerTyxDun+nHLR1Cped5
+ r5tBlHyYNCFSQF1YAowmjgfj8qy0E6Yi0bz940OSyIVNjNr4GjDJ/aJveHTAb64WAP5830FD/
+ zyn3Nu1p7yyvISKoAoXSYqLGSEq89tEy7KObCHgMr011q0y2kJptfsZQmBe1yRLmy429+q2yb
+ iurlKfqfNqf2ihll9aU6XhXnkcBQ6+FXzfmDWgEvaTS6B+0lHilQImbi+1GPD11sBTtRv+dBP
+ yhF60+Q80NX3cSvW4m/xoP8lpKARKM3bqMhd14OdYOcxjMPrjp3rm6A/CFev/WITautHpcSR1
+ AFiD14mKBfyWSuJaq1PE6rKX9nLwfFiWQfOZl1pYgy9B8ESsWvPAIAnFLyHPwuJc3wRIYQd6r
+ GICP4Ooud+5jh1tON2ykw244dXN68zG6m182Xlg3d//rTEPIMmipfp2Cmee0rlSfUv7g9AbOG
+ DFMSJXYEcJbCiVb6y3iVOeaQWbE8jklthDH+gDGE5Icuq4v7+JqxC+AXwMhB8qCfJ2DueuSIt
+ tlPNnnDFysmkLZPdlzZWpPL2lOarfqfDA1N1qNLl92zH3d/RU70T7o6oLiAu8+bPHXH/AQpAv
+ vfcH/DWt37hB9BLws7SsRuyT9FhUOlExXL1eznXASLjvZLH35k7CA48JWNnPUIosaAaXMjzNd
+ OUy0vx7PwZRsSXYu2TXJqjlJe+s7UO4UWEkFH24O5s78hnsnITyQ+0zZwQye14jN0rhUTnT+x
+ ou1NXt8P7lWpZt0fCJPXArqBzlR7RqkgPwdRlAdwaW7B+iBDA2IGGs6OsxJBc/06Yid+J7jaf
+ TZg9mKro6TZt4vr9maX5rxZgXJoRIH3DAQfdjuSaUEPh49GFKFE3U9uNPD2I1woEzFWO7W96g
+ 1RyKNkLWmrzS2QC2dN84cVSmnrkA2eHgkTlxmb/SnbGwrfb+MSSqVrJeLaLOWsQQkvSBrCDSO
+ AOfsjicdFL8QuzwoJD1NRb4nOubs=
 
-After the Bluetooth USB controller is connected, error may occur
-on the first reset HCI command.
+> Check the return value of snd_ctl_rename_id() in
+> snd_hda_create_dig_out_ctls(). Ensure that potential
+> failures are properly handled.
 
-[    5.678408] Bluetooth: hci0: command 0x0c03 tx timeout
-[    5.678435] Bluetooth: hci0: BCM: Reset failed (-110)
-[   18.030627] usb 1-8: Failed to suspend device, error -110
+I would prefer a change description variant without the word =E2=80=9Cpote=
+ntial=E2=80=9D
+for this issue.
+https://cwe.mitre.org/data/definitions/252.html
 
-To reduce this error, insert a little sleep for warmup.
-
-Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
----
- drivers/bluetooth/btbcm.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-index 0a60660fc8ce..026d8571adf5 100644
---- a/drivers/bluetooth/btbcm.c
-+++ b/drivers/bluetooth/btbcm.c
-@@ -733,6 +733,9 @@ int btbcm_setup_apple(struct hci_dev *hdev)
- 	struct sk_buff *skb;
- 	int err;
- 
-+	/* Waiting for hardware warmup */
-+	msleep(200);
-+
- 	/* Reset */
- 	err = btbcm_reset(hdev);
- 	if (err)
--- 
-2.48.1
-
+Regards,
+Markus
