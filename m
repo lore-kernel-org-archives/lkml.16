@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3681245030
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 18:17:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E237245AE8
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 18:17:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739470624; cv=none; b=abzYWTldnJEYZ+HNrSe93l1yXc95XqehNuDeR7GNg5yVh2wsCeIEak1A/frUoA+h8bEp7hLE7BjeUCUOztkEbnfpr/XyvrbNDx0L/Z6tSiBIcvyL2hajTH7rLQSvUEg3be9XTlpf6mVrkT/zi8XU0VPNXcy7+stS/LN0qHadJQg=
+	t=1739470627; cv=none; b=NbJowjTMo/geTKJ2xXZYHSBbW85h1fzFABQ7DPSv+zh7IxZo2bQhDYuR5BbbRBh54zm/DCrA1XPgmJ63iMKFon4tFlO74Yy7d+GdQP3tZedwJRq3SgGvzTXzzhSLMQKlxZxesHZWS5GZC/xkfy7ZhevzkoBurm2rcvtwMEgIIGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739470624; c=relaxed/simple;
-	bh=OL4dYF305QXhH4qXKBx1QHuLXwMdLA2pA/wG6iulJos=;
+	s=arc-20240116; t=1739470627; c=relaxed/simple;
+	bh=xyiEG1qVnqJ0dR2fvj2d0MpnQnkVPFFoDUNGG3CsxIk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hsPjJaB6Qxj6tMjpJn6BRjeqyD8fm/xtozj+xpZWahosAudOJAVycaEWzNvgprRbCKJfYWw0OriyKuwb56ImPhTtI761gjaK8ASrnzDC/T4MJB0QYQ86n2vIik6eQlwMkf0sIkpTFzA+iYJHp30kUr/sYVik+FDhdfQyZFPUCew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGe7qyOt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=C+Qwu+H6VHdS4pfzoekLBWZUMiNcvQpI2VpCZns9U/vk1RC36+gBcoOOjpHCNuXn9XVVfZuf5pCvBwiVwA/59wNkIAnTRdQ093Mdhsa6DMpYl6p8mjaE1n/bXQNMVOJq3qhgxpj9GtpGhek/5yqNMlZ5uQXSbt3URW/CgSel5Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jRb/038q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGe7qyOt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2344CC4CEE5;
-	Thu, 13 Feb 2025 18:17:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jRb/038q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E57DC4CEE7;
+	Thu, 13 Feb 2025 18:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739470624;
-	bh=OL4dYF305QXhH4qXKBx1QHuLXwMdLA2pA/wG6iulJos=;
+	s=k20201202; t=1739470627;
+	bh=xyiEG1qVnqJ0dR2fvj2d0MpnQnkVPFFoDUNGG3CsxIk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=VGe7qyOtM0BKL/p/Nbjgjow1OHW4jD6ULOIjuBji1MLIqLvbTlV1mtX4MYBGEqkmG
-	 Qp8uC1or2PGChwk5w8TqiXQnmpSpoFbODVNfWl23rhFH9Nh2StCo9+6TDjwYlbhpW8
-	 zvMIvAWZA6/5I7Gd0dvL0vHxAwUqBTGmZhWIAE+ikDeplZBg6cCiqOWOGtQ+/RzAKC
-	 QLeqE8RNkiINXSgjS28CrGrATGQlvykKG4l3WtQo5qkA479vviNBdnVWrwfH+UU9K0
-	 BuJRV9e1ioFPoXM1E8bk9jAGDuJpL9ss+WXYmRZiaghUC/kaEDOocX9/j5nDTIqTIm
-	 ZVEFCgPK0NLlw==
+	b=jRb/038q9zceA3lpyR3cBILkOtsy6JXEI7w8/AC9SGenuJbL0Iqahi7XlIYiHhWDK
+	 9+617DqLSS7AUF09QfXno2ZFt55Vsv0ykmss5eX+B+jNGVrb2kiXY0R7FNyxx9LRpC
+	 PH55vKZWNbQ71FphZ6jSD/hjzOttsdUIeakbJuNUCqhY8wukBZYSz1gMLvACwnb6Hf
+	 nVNfI2zUukWooSHArKj842JvE9Mh2hiqHVYzeIxrxhzuMLRCj+wcUHxJMx6cdq/1pX
+	 9do1RwE9jlv6ZEbWeXxI6N25f0ua1JPRhDNmytB051Yoahyh4MhtnILZtQrt3EYCa3
+	 FxGtEWWbsec7g==
 From: Vinod Koul <vkoul@kernel.org>
-To: Kishon Vijay Abraham I <kishon@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Damon Ding <damon.ding@rock-chips.com>
-In-Reply-To: <20250209-phy-fix-set-moe-v2-1-76e248503856@linaro.org>
-References: <20250209-phy-fix-set-moe-v2-1-76e248503856@linaro.org>
-Subject: Re: [PATCH v2] phy: core: don't require set_mode() callback for
- phy_get_mode() to work
-Message-Id: <173947062273.294083.8317890397960470675.b4-ty@kernel.org>
-Date: Thu, 13 Feb 2025 23:47:02 +0530
+To: aford173@gmail.com, kishon@kernel.org, linux-phy@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, xiaopeitux@foxmail.com
+Cc: Pei Xiao <xiaopei01@kylinos.cn>
+In-Reply-To: <tencent_9087BCE04E38E6AA5C4B2252B82FA99C2009@qq.com>
+References: <tencent_9087BCE04E38E6AA5C4B2252B82FA99C2009@qq.com>
+Subject: Re: [PATCH] phy: freescale: fsl-samsung-hdmi: Use helper function
+ devm_clk_get_enabled()
+Message-Id: <173947062491.294083.16177229110785904684.b4-ty@kernel.org>
+Date: Thu, 13 Feb 2025 23:47:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,21 +47,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Sun, 09 Feb 2025 14:31:45 +0200, Dmitry Baryshkov wrote:
-> As reported by Damon Ding, the phy_get_mode() call doesn't work as
-> expected unless the PHY driver has a .set_mode() call. This prompts PHY
-> drivers to have empty stubs for .set_mode() for the sake of being able
-> to get the mode.
+On Sat, 08 Feb 2025 11:44:01 +0800, xiaopeitux@foxmail.com wrote:
+> Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for prepared
+> and enabled clocks"), devm_clk_get() and clk_prepare_enable() can now be
+> replaced by devm_clk_get_enabled() when driver enables the clocks for the
+> whole lifetime of the device. Moreover, it is no longer necessary to
+> unprepare and disable the clocks explicitly.
 > 
-> Make .set_mode() callback truly optional and update PHY's mode even if
-> it there is none.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] phy: core: don't require set_mode() callback for phy_get_mode() to work
-      commit: d58c04e305afbaa9dda7969151f06c4efe2c98b0
+[1/1] phy: freescale: fsl-samsung-hdmi: Use helper function devm_clk_get_enabled()
+      commit: 279950205dde78bc0e3ca73a8dfee6842f0e1edc
 
 Best regards,
 -- 
