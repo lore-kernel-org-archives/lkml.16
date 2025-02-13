@@ -1,148 +1,107 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9492144A0;
-	Thu, 13 Feb 2025 11:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4898421323A;
+	Thu, 13 Feb 2025 11:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739444891; cv=none; b=mNaVQk6x/aCiwZimjDPxrFpT8oU+a4BAVQTBuNO2pHFpz0+qFNTL6Rac3TwT9SEhbJVliJ9bVDgWI7L4QH+aZnqYMhIFsBWtvQZfovql/jtlRgK3no25z3y83MOlotrFGP2/7zy0NU1v1VwHTASiBxjSpJ23wpIhIUxYlAdCTL0=
+	t=1739444918; cv=none; b=R6Hd7JgEBv5Pmtn76OjEezchct1QbEp+5KSoRv5hGalOtpS1mlkHAdmcY3Z2d04x+ey1d2Vb6k3+xK0VvyDDc4mk0hAZeJvJeqTfYhA2e/EmRl/Jbtz0yZ+Cih6f5Z3HhkgoF8ygF1HMovTnGHbygB6OAAHDnI1ZNVkn20N5YF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739444891; c=relaxed/simple;
-	bh=OG5B5PQ05uKmKSRdIZOTWyQ7mU/To8TRZjFZrsJMyPg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=MFX7gFMb/7lLkBOy2Vumvy6R5luz2Oeewf0M4kw7c1f8LJwiKyHOVVAJ1oO7sHyTEY08U6F/9Ic7PKz7WsRwxzS91PuTBkAp3drb2Ku05fDcHT0Al+po2mYG5OHqR3fWtIuKsOLwRGyEicG9lPkQXoiY0ELUe+TOVFrg1HVHjw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Ytspr0pwDz4f3jsy;
-	Thu, 13 Feb 2025 19:07:48 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 31F321A092F;
-	Thu, 13 Feb 2025 19:08:04 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgCnCl+T0q1npo7oDg--.15155S3;
-	Thu, 13 Feb 2025 19:08:04 +0800 (CST)
-Subject: Re: [PATCH v2] blk-cgroup: improve policy registration error handling
-To: Chen Linxuan <chenlinxuan@uniontech.com>, Tejun Heo <tj@kernel.org>,
- Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>
-Cc: Wen Tao <wentao@uniontech.com>, cgroups@vger.kernel.org,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <D8F5396BD45124E9+20250213033545.993799-2-chenlinxuan@uniontech.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <89cadf52-236f-1e0b-cff8-dcff16296e62@huaweicloud.com>
-Date: Thu, 13 Feb 2025 19:08:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1739444918; c=relaxed/simple;
+	bh=NzeAgOEUcs1QCtjHEiz1U/3sMurLrKohd3+BYTsEIm4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KqT/vxyLQy6h+puhu3yhrWY7HcIrGRPWJcacdx90lC1d+D8ExTy2WQyCWsKma0nd4pzEHNL+4TuvGLfoIdBmhzE/YC2jSVzP492fD7yZr674yXkqXJvb7kprx9/ZW6zC1AV+vuU69+N9WC3zsNesKNR3Ao1YLATbj1oEBNC1j6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f3B6so7R; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f3B6so7R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8EDCC4CED1;
+	Thu, 13 Feb 2025 11:08:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739444917;
+	bh=NzeAgOEUcs1QCtjHEiz1U/3sMurLrKohd3+BYTsEIm4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=f3B6so7RtGdEdY1n55i816+qWWtGUmOwoJrHGIYJj4ODxYsSHFcw5V9tDasFO13uL
+	 Ns7IjsoQX2V/8YMlGLXQJfUIhXUi6gQXBkmKGsfXlQCxsNcvSCagCX2uhmYxGF0I5P
+	 W8L5bRG7L13FGtzZ2LyDbc2knelqlxARTmY5Y4MtTBkScvF5UQF8dilWWEWptQcfi6
+	 tSf3MnZBS2iV2tubIoE15GRZ3/nQ8EjgKIcxnOqtJuE+UK40d+lew/BAQX1VMR02yV
+	 Xxpv1cRNhW7CaNEiKLD2CkQegwmWXUcrNF8+Ds/pjsyMTcBOzRJxg77PxQK6GUZ+Mi
+	 A0Dk3gPTPj+RA==
+Message-ID: <5d3c0ffd-2661-415c-8008-3f09523a82af@kernel.org>
+Date: Thu, 13 Feb 2025 12:08:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <D8F5396BD45124E9+20250213033545.993799-2-chenlinxuan@uniontech.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnCl+T0q1npo7oDg--.15155S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxXw1kXFW5JFW5tw45AF18Zrb_yoW5Jw4UpF
-	W3K3sxCryktF1xuFsxK3WUtF1rJanYqw4UG345X3WSyr4IyrZ5Kw1jy3WkXFWxurn7JF45
-	tFZ0qay0kF1Ut37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUOB
-	MKDUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: dts: socfpga: agilex5: fix gpio0 address
+To: niravkumar.l.rabara@intel.com, Dinh Nguyen <dinguyen@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, nirav.rabara@altera.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20250213105036.3170943-1-niravkumar.l.rabara@intel.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250213105036.3170943-1-niravkumar.l.rabara@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-ÔÚ 2025/02/13 11:35, Chen Linxuan Ð´µÀ:
-> This patch improve the returned error code of blkcg_policy_register().
+On 13/02/2025 11:50, niravkumar.l.rabara@intel.com wrote:
+> From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
 > 
-> 1. Move the validation check for cpd/pd_alloc_fn and cpd/pd_free_fn
->     function pairs to the start of blkcg_policy_register(). This ensures
->     we immediately return -EINVAL if the function pairs are not correctly
->     provided, rather than returning -ENOSPC after locking and unlocking
->     mutexes unnecessarily.
+> Use the correct gpio0 address for Agilex5.
 > 
->     Those locks should not contention any problems, as error of policy
->     registration is a super cold path.
-> 
-> 2. Return -ENOMEM when cpd_alloc_fn() failed.
-> 
-> Co-authored-by: Wen Tao <wentao@uniontech.com>
-> Signed-off-by: Wen Tao <wentao@uniontech.com>
-> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+> Fixes: 3f7c869e143a ("arm64: dts: socfpga: agilex5: Add gpio0 node and spi dma handshake id")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
 > ---
-> 
-> v1->v2: Also change the return value to -ENOMEM from error path err_free_cpds
-> 
-> ---
->   block/blk-cgroup.c | 22 ++++++++++++----------
->   1 file changed, 12 insertions(+), 10 deletions(-)
->
-LGTM
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
 
-> diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-> index 9ed93d91d754..2609f7294427 100644
-> --- a/block/blk-cgroup.c
-> +++ b/block/blk-cgroup.c
-> @@ -1727,27 +1727,27 @@ int blkcg_policy_register(struct blkcg_policy *pol)
->   	struct blkcg *blkcg;
->   	int i, ret;
->   
-> +	/*
-> +	 * Make sure cpd/pd_alloc_fn and cpd/pd_free_fn in pairs, and policy
-> +	 * without pd_alloc_fn/pd_free_fn can't be activated.
-> +	 */
-> +	if ((!pol->cpd_alloc_fn ^ !pol->cpd_free_fn) ||
-> +	    (!pol->pd_alloc_fn ^ !pol->pd_free_fn))
-> +		return -EINVAL;
-> +
->   	mutex_lock(&blkcg_pol_register_mutex);
->   	mutex_lock(&blkcg_pol_mutex);
->   
->   	/* find an empty slot */
-> -	ret = -ENOSPC;
->   	for (i = 0; i < BLKCG_MAX_POLS; i++)
->   		if (!blkcg_policy[i])
->   			break;
->   	if (i >= BLKCG_MAX_POLS) {
->   		pr_warn("blkcg_policy_register: BLKCG_MAX_POLS too small\n");
-> +		ret = -ENOSPC;
->   		goto err_unlock;
->   	}
->   
-> -	/*
-> -	 * Make sure cpd/pd_alloc_fn and cpd/pd_free_fn in pairs, and policy
-> -	 * without pd_alloc_fn/pd_free_fn can't be activated.
-> -	 */
-> -	if ((!pol->cpd_alloc_fn ^ !pol->cpd_free_fn) ||
-> -	    (!pol->pd_alloc_fn ^ !pol->pd_free_fn))
-> -		goto err_unlock;
-> -
->   	/* register @pol */
->   	pol->plid = i;
->   	blkcg_policy[pol->plid] = pol;
-> @@ -1758,8 +1758,10 @@ int blkcg_policy_register(struct blkcg_policy *pol)
->   			struct blkcg_policy_data *cpd;
->   
->   			cpd = pol->cpd_alloc_fn(GFP_KERNEL);
-> -			if (!cpd)
-> +			if (!cpd) {
-> +				ret = -ENOMEM;
->   				goto err_free_cpds;
-> +			}
->   
->   			blkcg->cpd[pol->plid] = cpd;
->   			cpd->blkcg = blkcg;
-> 
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
+Best regards,
+Krzysztof
