@@ -1,179 +1,167 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E582128A2AE
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 18:01:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3C928A2AE;
+	Thu, 13 Feb 2025 18:01:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739469684; cv=none; b=M/xKASLIiflolaNLBMOmHt6LEmDCroAfaOHxxul+u8nxhKyG49jDE+yMZad81N+gPruPX8AN5oyTbe5X1UQHdR/di0ALSik7tTw9tI2I9o/tjffwb6VS64yllaRSpoFRPcNbpwmFs8Qw4LtGT8rYUHklu/QNL10fh8/a9rvkJJQ=
+	t=1739469698; cv=none; b=gbid2NpzVzdT6yB/73i2uE7xVKpKKPyNQpLoZ1C4DyABYS74+eHFTWyIADE4WkKCU0nkiCGK+tna6rfafyMdb1qeccBO9WJ+/E0FIKX97zIEP7+R7chmbPuj/Bt10W7meM0CHwlatcRDrogAcGJNyoV2Jrzrq7eO7lqnpnuCp00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739469684; c=relaxed/simple;
-	bh=D+/vdJ8x43Y7tH3mHS8FOCprLNgHQv5bttwXyXFdFJo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QhTg6QVHCEuQEN/c9G4mHGvjtXdI5ASUJq33j0rjH72G2fP1qTOX1ja961Ta3s7K28lJzJweIL8MONHTQ4xJE/puNXaN1GV1/9F+Cvx4sc+4JduDRia7A+YZrhNIS3dAJ1azRkGtbH9u7qEVb8qMRH4EUFxIcHhbaN1F9SwAGq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VM1JBmkc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739469698; c=relaxed/simple;
+	bh=NW1OYpe2mVwwte24KvqPb9pRL5isVReq3c3DtOOBBMA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bfHK71XE+ZeO9pXVHwCccTxoo2bA6241SbkPLdtqBAupemSKXoD0t7Dgye8oV+Cdck94jh/0tepfPTNfYjKKPMV45FBNgF5xqZtLQcElUdowIEdW0mWcgig24KCJcEqnApB0HJH8U9/91DpTXf68TRyefgITvLPBFZd2ArbZmLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKkAptOe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VM1JBmkc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99098C4CED1;
-	Thu, 13 Feb 2025 18:01:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKkAptOe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC4BC4CED1;
+	Thu, 13 Feb 2025 18:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739469683;
-	bh=D+/vdJ8x43Y7tH3mHS8FOCprLNgHQv5bttwXyXFdFJo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VM1JBmkc8yxs32Xupt2EZs2OpEisQNQWdebs/TDoPAlu+gpcHeIBwLiWGqOvV0NH3
-	 g4L5kxBZWtMzm+y4+aAfX3XfRtSHVeN5jmFGJTlyNj21n6k7UIVYwfhY1sbHnslxHh
-	 Ijj5rAhSUUSnu7zWOZasGTK2v9PE/s4av8xpvaga6cKM3SKvftAH1Mkg/9DzB9RV8P
-	 UxVTU8J/jPssXzukxy9yZUCGM9xwmF64r401jIWtm6ZjAXhqV6lbcRdCHWd+VA8vxh
-	 pYVAn7m/3wnqF99xWsLobH9zeG1Xz8oVa4/DwTnVX09jypq6yAatIFLVxUvu7/dCb5
-	 /2vz3TByplLdw==
-Date: Thu, 13 Feb 2025 18:01:21 +0000
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	syzbot+b6b347b7a4ea1b2e29b6@syzkaller.appspotmail.com
-Subject: Re: [PATCH] f2fs: fix to avoid accessing uninitialized curseg
-Message-ID: <Z64zcac0_dw1_rML@google.com>
-References: <20250212075242.988652-1-chao@kernel.org>
+	s=k20201202; t=1739469697;
+	bh=NW1OYpe2mVwwte24KvqPb9pRL5isVReq3c3DtOOBBMA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lKkAptOe5ZG6vP8rPEis0AlEiA/1jNEChi09tTGq67mYGQvoYjq2QsQirFo+qzZgb
+	 lQ+hWQtnhgTT5QDZIgLE0LLK/qzdHBxEs1u3jP1jbVy94VndeSRhUaa42fTPoXmUqj
+	 pivxwi3j9oPp4knqLBaU597hhT9pV1fhknls8UaWBTrKic1gyFlvuxDovPaJkjkHow
+	 fOkRlYpLpYgd8zNL2X4qtYZnDaLpQS5UPyQudbGm2tBsFUeanF/x7OySGyxItxrZ2K
+	 CIQ52uBM+57WBFOnOJvGIdA3m2yKZ4t4E+ybCY5Pd/bwH1tUj0GrrJZymNHMOSdvEg
+	 JRwnbdjsJbEOQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tidWn-003nTm-Sy;
+	Thu, 13 Feb 2025 18:01:35 +0000
+Date: Thu, 13 Feb 2025 18:01:33 +0000
+Message-ID: <86r041sozm.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,	Hector Martin
+ <marcan@marcan.st>,	Sven Peter <sven@svenpeter.dev>,	Bjorn Helgaas
+ <bhelgaas@google.com>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,	Krzysztof
+ =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,	Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>,	Krzysztof Kozlowski
+ <krzk+dt@kernel.org>,	Conor Dooley <conor+dt@kernel.org>,	Mark Kettenis
+ <kettenis@openbsd.org>,	Stan Skowronek <stan@corellium.com>,
+	asahi@lists.linux.dev,	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/7] PCI: apple: Add T602x PCIe support
+In-Reply-To: <CAL_JsqJ-sYsy-11_UiEKrKok49-a-VJUvm3vBGbpu9vY3TKLUw@mail.gmail.com>
+References: <20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io>
+	<20250211-pcie-t6-v1-7-b60e6d2501bb@rosenzweig.io>
+	<CAL_JsqJ-sYsy-11_UiEKrKok49-a-VJUvm3vBGbpu9vY3TKLUw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250212075242.988652-1-chao@kernel.org>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: robh@kernel.org, alyssa@rosenzweig.io, marcan@marcan.st, sven@svenpeter.dev, bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, krzk+dt@kernel.org, conor+dt@kernel.org, kettenis@openbsd.org, stan@corellium.com, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 02/12, Chao Yu wrote:
-> syzbot reports a f2fs bug as below:
-> 
-> F2FS-fs (loop3): Stopped filesystem due to reason: 7
-> kworker/u8:7: attempt to access beyond end of device
-> BUG: unable to handle page fault for address: ffffed1604ea3dfa
-> RIP: 0010:get_ckpt_valid_blocks fs/f2fs/segment.h:361 [inline]
-> RIP: 0010:has_curseg_enough_space fs/f2fs/segment.h:570 [inline]
-> RIP: 0010:__get_secs_required fs/f2fs/segment.h:620 [inline]
-> RIP: 0010:has_not_enough_free_secs fs/f2fs/segment.h:633 [inline]
-> RIP: 0010:has_enough_free_secs+0x575/0x1660 fs/f2fs/segment.h:649
->  <TASK>
->  f2fs_is_checkpoint_ready fs/f2fs/segment.h:671 [inline]
->  f2fs_write_inode+0x425/0x540 fs/f2fs/inode.c:791
->  write_inode fs/fs-writeback.c:1525 [inline]
->  __writeback_single_inode+0x708/0x10d0 fs/fs-writeback.c:1745
->  writeback_sb_inodes+0x820/0x1360 fs/fs-writeback.c:1976
->  wb_writeback+0x413/0xb80 fs/fs-writeback.c:2156
->  wb_do_writeback fs/fs-writeback.c:2303 [inline]
->  wb_workfn+0x410/0x1080 fs/fs-writeback.c:2343
->  process_one_work kernel/workqueue.c:3236 [inline]
->  process_scheduled_works+0xa66/0x1840 kernel/workqueue.c:3317
->  worker_thread+0x870/0xd30 kernel/workqueue.c:3398
->  kthread+0x7a9/0x920 kernel/kthread.c:464
->  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
->  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-> 
-> Commit 8b10d3653735 ("f2fs: introduce FAULT_NO_SEGMENT") allows to trigger
-> no free segment fault in allocator, then it will update curseg->segno to
-> NULL_SEGNO, though, CP_ERROR_FLAG has been set, f2fs_write_inode() missed
-> to check the flag, and access invalid curseg->segno directly in below call
-> path, then resulting in panic:
-> 
-> - f2fs_write_inode
->  - f2fs_is_checkpoint_ready
->   - has_enough_free_secs
->    - has_not_enough_free_secs
->     - __get_secs_required
->      - has_curseg_enough_space
->       - get_ckpt_valid_blocks
->       : access invalid curseg->segno
-> 
-> To avoid this issue, let's:
-> - check CP_ERROR_FLAG flag in prior to f2fs_is_checkpoint_ready() in
-> f2fs_write_inode().
-> - in has_curseg_enough_space(), a) verify status of curseg before accessing
-> its field, and b) grab curseg_mutex lock to avoid race condition.
-> 
-> Fixes: 8b10d3653735 ("f2fs: introduce FAULT_NO_SEGMENT")
-> Reported-by: syzbot+b6b347b7a4ea1b2e29b6@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/all/67973c2b.050a0220.11b1bb.0089.GAE@google.com
-> Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
->  fs/f2fs/inode.c   |  7 +++++++
->  fs/f2fs/segment.h | 27 ++++++++++++++++++++++-----
->  2 files changed, 29 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> index 02f1b69d03d8..5c1b515eab36 100644
-> --- a/fs/f2fs/inode.c
-> +++ b/fs/f2fs/inode.c
-> @@ -799,6 +799,13 @@ int f2fs_write_inode(struct inode *inode, struct writeback_control *wbc)
->  		!is_inode_flag_set(inode, FI_DIRTY_INODE))
->  		return 0;
->  
-> +	/*
-> +	 * no need to update inode page, ultimately f2fs_evict_inode() will
-> +	 * clear dirty status of inode.
-> +	 */
-> +	if (f2fs_cp_error(sbi))
-> +		return -EIO;
-> +
->  	if (!f2fs_is_checkpoint_ready(sbi)) {
->  		f2fs_mark_inode_dirty_sync(inode, true);
->  		return -ENOSPC;
-> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-> index 943be4f1d6d2..e9fcf2b85b76 100644
-> --- a/fs/f2fs/segment.h
-> +++ b/fs/f2fs/segment.h
-> @@ -559,15 +559,23 @@ static inline bool has_curseg_enough_space(struct f2fs_sb_info *sbi,
->  			unsigned int node_blocks, unsigned int data_blocks,
->  			unsigned int dent_blocks)
->  {
-> -
-> +	struct curseg_info *curseg;
->  	unsigned int segno, left_blocks, blocks;
->  	int i;
->  
->  	/* check current data/node sections in the worst case. */
->  	for (i = CURSEG_HOT_DATA; i < NR_PERSISTENT_LOG; i++) {
-> -		segno = CURSEG_I(sbi, i)->segno;
-> -		left_blocks = CAP_BLKS_PER_SEC(sbi) -
-> +		curseg = CURSEG_I(sbi, i);
-> +
-> +		mutex_lock(&curseg->curseg_mutex);
-> +		if (!curseg->inited || curseg->segno == NULL_SEGNO) {
-> +			left_blocks = 0;
-> +		} else {
-> +			segno = curseg->segno;
-> +			left_blocks = CAP_BLKS_PER_SEC(sbi) -
->  				get_ckpt_valid_blocks(sbi, segno, true);
-> +		}
-> +		mutex_unlock(&curseg->curseg_mutex);
+On Thu, 13 Feb 2025 17:56:19 +0000,
+Rob Herring <robh@kernel.org> wrote:
+>=20
+> On Tue, Feb 11, 2025 at 1:54=E2=80=AFPM Alyssa Rosenzweig <alyssa@rosenzw=
+eig.io> wrote:
+> >
+> > From: Hector Martin <marcan@marcan.st>
+> >
+> > This version of the hardware moved around a bunch of registers, so we
+> > drop the old compatible for these and introduce register offset
+> > structures to handle the differences.
+> >
+> > Signed-off-by: Hector Martin <marcan@marcan.st>
+> > Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> > ---
+> >  drivers/pci/controller/pcie-apple.c | 125 ++++++++++++++++++++++++++++=
+++------
+> >  1 file changed, 105 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controll=
+er/pcie-apple.c
+> > index 7f4839fb0a5b15a9ca87337f53c14a1ce08301fc..7c598334427cb56ca066890=
+ac61143ae1d3ed744 100644
+> > --- a/drivers/pci/controller/pcie-apple.c
+> > +++ b/drivers/pci/controller/pcie-apple.c
+> > @@ -26,6 +26,7 @@
+> >  #include <linux/list.h>
+> >  #include <linux/module.h>
+> >  #include <linux/msi.h>
+> > +#include <linux/of_device.h>
+>=20
+> Drivers should not need this...
+>=20
+> > +const struct reg_info t602x_hw =3D {
+> > +       .phy_lane_ctl =3D 0,
+> > +       .port_msiaddr =3D PORT_T602X_MSIADDR,
+> > +       .port_msiaddr_hi =3D PORT_T602X_MSIADDR_HI,
+> > +       .port_refclk =3D 0,
+> > +       .port_perst =3D PORT_T602X_PERST,
+> > +       .port_rid2sid =3D PORT_T602X_RID2SID,
+> > +       .port_msimap =3D PORT_T602X_MSIMAP,
+> > +       .max_rid2sid =3D 512, /* 16 on t602x, guess for autodetect on f=
+uture HW */
+> > +       .max_msimap =3D 512, /* 96 on t602x, guess for autodetect on fu=
+ture HW */
+> > +};
+> > +
+> > +static const struct of_device_id apple_pcie_of_match_hw[] =3D {
+> > +       { .compatible =3D "apple,t6020-pcie", .data =3D &t602x_hw },
+> > +       { .compatible =3D "apple,pcie", .data =3D &t8103_hw },
+> > +       { }
+> > +};
+>=20
+> You should not have 2 match tables.
+>=20
+> > @@ -750,13 +828,19 @@ static int apple_pcie_init(struct pci_config_wind=
+ow *cfg)
+> >         struct platform_device *platform =3D to_platform_device(dev);
+> >         struct device_node *of_port;
+> >         struct apple_pcie *pcie;
+> > +       const struct of_device_id *match;
+> >         int ret;
+> >
+> > +       match =3D of_match_device(apple_pcie_of_match_hw, dev);
+> > +       if (!match)
+> > +               return -ENODEV;
+> > +
+> >         pcie =3D devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> >         if (!pcie)
+> >                 return -ENOMEM;
+> >
+> >         pcie->dev =3D dev;
+> > +       pcie->hw =3D match->data;
+> >
+> >         mutex_init(&pcie->lock);
+> >
+> > @@ -795,6 +879,7 @@ static const struct pci_ecam_ops apple_pcie_cfg_eca=
+m_ops =3D {
+> >  };
+> >
+> >  static const struct of_device_id apple_pcie_of_match[] =3D {
+> > +       { .compatible =3D "apple,t6020-pcie", .data =3D &apple_pcie_cfg=
+_ecam_ops },
+> >         { .compatible =3D "apple,pcie", .data =3D &apple_pcie_cfg_ecam_=
+ops },
+> >         { }
+>=20
+> You are going to need to merge the data to 1 struct.
+>=20
+> And then use (of_)?device_get_match_data() in probe().
 
-This looks a bit worrisome, as it'll block user-facing allocation. Can we
-have another way to prevent the issue?
+No, that will break the driver. This isn't a standalone driver, but
+only an ECAM shim (as you can tell from the actual probe function).
 
->  
->  		blocks = i <= CURSEG_COLD_DATA ? data_blocks : node_blocks;
->  		if (blocks > left_blocks)
-> @@ -575,9 +583,18 @@ static inline bool has_curseg_enough_space(struct f2fs_sb_info *sbi,
->  	}
->  
->  	/* check current data section for dentry blocks. */
-> -	segno = CURSEG_I(sbi, CURSEG_HOT_DATA)->segno;
-> -	left_blocks = CAP_BLKS_PER_SEC(sbi) -
-> +	curseg = CURSEG_I(sbi, CURSEG_HOT_DATA);
-> +
-> +	mutex_lock(&curseg->curseg_mutex);
-> +	if (!curseg->inited || curseg->segno == NULL_SEGNO) {
-> +		left_blocks = 0;
-> +	} else {
-> +		segno = curseg->segno;
-> +		left_blocks = CAP_BLKS_PER_SEC(sbi) -
->  			get_ckpt_valid_blocks(sbi, segno, true);
-> +	}
-> +	mutex_unlock(&curseg->curseg_mutex);
-> +
->  	if (dent_blocks > left_blocks)
->  		return false;
->  	return true;
-> -- 
-> 2.48.1.502.g6dc24dfdaf-goog
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
