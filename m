@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0709205516
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 04:09:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98CAC2063FD
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 04:09:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739419787; cv=none; b=dE9R65BJJnRiggYjRCEwQwZ8V0D6S65MNbh7Ox6yZFNHlIM3EZD8ArE6IXFSwheQ7i1So35D7mBGzmPfw32fZ5kyfCgvT44ny/jqB1gdFCWuvIMrOenChXcYBB+s9DlBUplcwdzPdJQezrYPH0kX5yWXSCGTlirc0zperLCVAC4=
+	t=1739419790; cv=none; b=TNj6DNf9nWx3JR0pWqXUk+pyWnXqikJldsv4B8cg/XwhG6QV75pcY0TUTLNeRN1B3yy1NYBXlGEgm3fQUwPuJ5t66mB1VegozevfU1UbxS+P/x1KMURrdxiVKks3a3dLoNzUIFVpx92e49MkIKPZAD3LmmNIIm7+RlQENbfLG/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739419787; c=relaxed/simple;
-	bh=weL/r20d8+Z+/j8PfQ9Ur3v6J833zCYgy8dzDgx5vC4=;
+	s=arc-20240116; t=1739419790; c=relaxed/simple;
+	bh=gAjYa2loiYOQDDtfqqOeBDMNOulNnJUyC6hS8qEctOY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EsOSYaZgc15fmZq74X7Djk2YSfUbmulI7o3VK7h9tcr2+Firm5aUNemcE8ymfCrSgqVovF7PKKDpVHgpJpx+TufBAIgqv52S0TA5oxvrZxRI8Ab/xjrSwD1PiBUoCgtZZY9EnjN51+6RkDtgC14Eu4kdDW3WwqR+Stn8oKiRvR8=
+	 MIME-Version; b=f5V2MsCA27lOOA7Huj9WGtrHVv0CCMunpeGjsLv9nPzkR+scLHfda5rH8NYYeaqDtDpYXZFBBpTbdpCaMrrPrYI/Stlwtmj3ws4DqIu2icMXgLkBKi0L2JMLCoycn4QoG2pZoT1fQDIJA3da/ecPKX/dU7oYzJL0/1xUabfSXR0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 178101762;
-	Wed, 12 Feb 2025 20:10:06 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A49851762;
+	Wed, 12 Feb 2025 20:10:08 -0800 (PST)
 Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.16.135])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3BB513F58B;
-	Wed, 12 Feb 2025 20:09:42 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C55293F58B;
+	Wed, 12 Feb 2025 20:09:45 -0800 (PST)
 From: Anshuman Khandual <anshuman.khandual@arm.com>
 To: linux-mm@kvack.org
 Cc: steven.price@arm.com,
@@ -25,9 +25,9 @@ Cc: steven.price@arm.com,
 	Anshuman Khandual <anshuman.khandual@arm.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] configs: Drop GENERIC_PTDUMP from debug.config
-Date: Thu, 13 Feb 2025 09:39:31 +0530
-Message-Id: <20250213040934.3245750-2-anshuman.khandual@arm.com>
+Subject: [PATCH 2/4] mm: Make DEBUG_WX depdendent on GENERIC_PTDUMP
+Date: Thu, 13 Feb 2025 09:39:32 +0530
+Message-Id: <20250213040934.3245750-3-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250213040934.3245750-1-anshuman.khandual@arm.com>
 References: <20250213040934.3245750-1-anshuman.khandual@arm.com>
@@ -39,31 +39,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The platforms that support GENERIC_PTDUMP select the config explicitly. But
-enabling this feature on platforms that don't really support - does nothing
-or might cause a build failure. Hence just drop GENERIC_PTDUMP from generic
-debug.config
+DEBUG_WX selects PTDUMP_CORE without even ensuring that the given platform
+implements GENERIC_PTDUMP. This problem has been latent until now, as all
+the platforms subscribing ARCH_HAS_DEBUG_WX also subscribe GENERIC_PTDUMP.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- kernel/configs/debug.config | 1 -
- 1 file changed, 1 deletion(-)
+ mm/Kconfig.debug | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/configs/debug.config b/kernel/configs/debug.config
-index 20552f163930..8aafd050b754 100644
---- a/kernel/configs/debug.config
-+++ b/kernel/configs/debug.config
-@@ -73,7 +73,6 @@ CONFIG_DEBUG_VM=y
- CONFIG_DEBUG_VM_PGFLAGS=y
- CONFIG_DEBUG_VM_RB=y
- CONFIG_DEBUG_VM_VMACACHE=y
--CONFIG_GENERIC_PTDUMP=y
- CONFIG_KASAN=y
- CONFIG_KASAN_GENERIC=y
- CONFIG_KASAN_INLINE=y
+diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+index 41a58536531d..a51a1149909a 100644
+--- a/mm/Kconfig.debug
++++ b/mm/Kconfig.debug
+@@ -186,6 +186,7 @@ config ARCH_HAS_DEBUG_WX
+ config DEBUG_WX
+ 	bool "Warn on W+X mappings at boot"
+ 	depends on ARCH_HAS_DEBUG_WX
++	depends on GENERIC_PTDUMP
+ 	depends on MMU
+ 	select PTDUMP_CORE
+ 	help
 -- 
 2.25.1
 
