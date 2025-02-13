@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19CD208984;
-	Thu, 13 Feb 2025 07:36:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09982054E7;
+	Thu, 13 Feb 2025 07:36:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739432181; cv=none; b=e4lLcNhjqf+GisvqDJz25uhLOkCDgEaYtnlYzy4BHoCPb0Xk8kASWrXsyc5KhNMZnHCFQcrTrphw3AMt4jtRac368MOchIrQA1cgRwg1bOvnw6HByyY/XNWjbbsu9wjDqlyspqAEEXm3JELRTXs5VBkURzyLnw2f8Ngm0+XSF7w=
+	t=1739432217; cv=none; b=DxMwGimG6x+k7VPKGqzPxdRcLHShXJym5oS87PhP6NF0D011Gmr1idVZTgPS79sruFcIA5E6O4p+U+6K5/6U0mnKNSqCwTflnbiu5CtY1qf2i8AfJxmkgX0oqVdF5F/eH7xjEYl+7qgoBffx4MrYK6u984U8KqEnlxrulfkDmeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739432181; c=relaxed/simple;
-	bh=jgZWbR1LgPob7kORygAYU9eAvimwTdXQQn3JaJQgLEQ=;
+	s=arc-20240116; t=1739432217; c=relaxed/simple;
+	bh=WeHC1y9R+t2B8ydUXRXIWObdJdt22FfEB/46t2wWZMI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O8/6rpKFtvT2J/Uelh6OEB/+AB0rAYMQOElPsoh7yf4MB/99SSXwiZeJzaNclOqWK/oi+X0dDbOn/+AInOXvbtJuXkVdlhfXNjf6CLwQ75KZs5KhnqNKsj4+esW6uPj5/ZdbztPhFDjVY8CFp6rBbEpUugS7ujS5Gbff4GZAZ2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BMUO0Hqu; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=d+mYwQPz2r5BkSXAbmVeREIxyBnKU66xihsZxmxFBOcMPlaSq2tF/lOtBk6VZhm6nT9ePhejVjvI6JTUj6dE5QIRGA8ArtJZLO4YqraCm/kjC0nku+iVFZ67xNBdX6WuG7muMZljVev46AhDhWhRhaB60iJ1UZ5QYPxoL9IGOK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oY48PR3Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BMUO0Hqu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03794C4CED1;
-	Thu, 13 Feb 2025 07:36:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oY48PR3Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD17CC4CED1;
+	Thu, 13 Feb 2025 07:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739432181;
-	bh=jgZWbR1LgPob7kORygAYU9eAvimwTdXQQn3JaJQgLEQ=;
+	s=k20201202; t=1739432217;
+	bh=WeHC1y9R+t2B8ydUXRXIWObdJdt22FfEB/46t2wWZMI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BMUO0HquFfkb1It5hc0fqis9/vcKjbMVZ8kocrdiM9Rzu2t6skGI2qWFWqqgnGXHS
-	 xYKukMKt3iAnnDs5jso0zt0pC4LSYiUJjoLrEyQSiW24G5wj9zq/SvdhGk6AboaQpP
-	 f8F/5OdLyGf0GynCjAhyAKkLLr1OPq02jmAFShCBut9BXZlLo/d6zrIeQcn53kHK2S
-	 d3nWNJecE5WOzTPRxeJrCM+AgUsJoqdYN7O5AW7X0a65byy32OozWb9jUNJL7Q99ZK
-	 FvM8HHBfEjAJuOY+xujpWuKCoaXl+8rbKUU3SvFlxulUFy8wxggXDoQoVBwix23LM0
-	 H17zqSob/NTpQ==
-Message-ID: <8879a35c-7ea6-4e98-98fe-76d607285696@kernel.org>
-Date: Thu, 13 Feb 2025 08:36:11 +0100
+	b=oY48PR3QNDHBpEkD1+UhaME/3NEV2yxRAn+corn6xkWBjFibsPIROBP8eMw4NEHvR
+	 OBLf0kiYAQmUHHXTLivxG5gnzd1peD5zAOx8NT00XFfVIRwcZpNalmY0Mk7lmDbzXd
+	 eGtd94LeEpyPrJp0XAntiARduDDhwnBOxe/1zCZ1dmBkjMhS+EK9JEFnGcyj/HuEf6
+	 zu0w45D6+mjKM8zPYPf0S+mi/OP77MxeCM/4jBNELJTmjLbg+lQlg47+m6UJ/HEJrZ
+	 6RSTvcuA1/bJlHlBq1G6QSk7w1mzpNCJXGb9b85+IDerhkH+yJSWujvOpS2GmKvb5M
+	 j/pY3FrEBUq0Q==
+Message-ID: <b9edb462-bf94-4c6f-a6dc-e22024a8bcb2@kernel.org>
+Date: Thu, 13 Feb 2025 08:36:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +35,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/3] dt-bindings: media: cdns,csi2rx.yaml: Add
- optional interrupts for cdns-csi2rx
-To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-Cc: mripard@kernel.org, mchehab@kernel.org, jai.luthra@linux.dev,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, devarsht@ti.com,
- vaishnav.a@ti.com, r-donadkar@ti.com, u-kumar1@ti.com
-References: <20250212131244.1397722-1-y-abhilashchandra@ti.com>
- <20250212131244.1397722-2-y-abhilashchandra@ti.com>
- <912dc0d1-6236-43cf-b423-54368eeed2e7@kernel.org>
- <94112ab7-5462-4a5b-90f3-636a7f8e5989@ti.com>
+Subject: Re: [PATCH v1 1/1] arm64: dts: qcom: qcs8300-ride: enable BT on
+ qcs8300-ride
+To: Cheng Jiang <quic_chejiang@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, quic_jiaymao@quicinc.com,
+ quic_shuaz@quicinc.com, quic_zijuhu@quicinc.com, quic_mohamull@quicinc.com
+References: <20250211104421.1172892-1-quic_chejiang@quicinc.com>
+ <20250211104421.1172892-2-quic_chejiang@quicinc.com>
+ <eebcc0e7-4f87-45d5-8ad4-9d24145ef5b2@kernel.org>
+ <6149d02f-21a2-459e-91f2-6c91b5093807@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -92,38 +93,29 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <94112ab7-5462-4a5b-90f3-636a7f8e5989@ti.com>
+In-Reply-To: <6149d02f-21a2-459e-91f2-6c91b5093807@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 13/02/2025 08:16, Yemike Abhilash Chandra wrote:
-> 
-> On 13/02/25 00:58, Krzysztof Kozlowski wrote:
->> On 12/02/2025 14:12, Yemike Abhilash Chandra wrote:
->>> The Cadence CSI2RX IP exposes 3 interrupts [0] 12.7 camera subsystem.
->>> Enabling these interrupts will provide additional information about a CSI
->>> packet or an individual frame. So, add support for optional interrupts
->>> and interrupt-names properties.
->>>
->>> [0]: http://www.ti.com/lit/pdf/spruil1
+On 13/02/2025 06:56, Cheng Jiang wrote:
+> Yes, label is not needed. 
+>>> +		compatible = "qcom,wcn6855-bt";
+>>> +		firmware-name = "QCA6698/hpnv21", "QCA6698/hpbtfw21.tlv";
+>>> +
+>>> +		pinctrl-names = "default";
+>>> +		pinctrl-0 = <&bt_en_state>;
+>>> +		enable-gpios = <&tlmm 55 GPIO_ACTIVE_HIGH>; /* BT_EN */
+>>> +
+>>> +		vddio-supply       = <&vreg_conn_pa>;         /* bt-vdd-ctrl1-supply */
+>>> +		vddbtcxmx-supply   = <&vreg_conn_1p8>;        /* bt-vdd-ctrl2-supply */
 >>
+>> Only one space before '='.
 >>
->> Why is this RFC?
+>> I think this has multiple test failures.
 >>
-> 
-> I sent this as an RFC to gather input from different vendors using the 
-> cdns,csi2rx driver
-> and its device tree bindings. so I just wanted to get their feedback as 
-> well.
+> Ack, Will change in next version. 
 
-Then document it clearly that you do not expect review.
-
-> If there are no concerns from any of the them, I will proceed with 
-> sending this as v1.
-
-No, this was v1.
-
-
+Are you going to test it as well?
 
 Best regards,
 Krzysztof
