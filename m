@@ -1,224 +1,251 @@
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020137.outbound.protection.outlook.com [52.101.196.137])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04601227EB6;
-	Thu, 13 Feb 2025 11:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.137
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739445702; cv=fail; b=iTgETIc8y0R37FbdKgXyoAWcmaM4VJZay3Tdr27slNEUZkuZm7rdFZMi89U9ccu84tAWeaSB3YduShAzZCGrNLd0RGOYLBqF9tAZe8pJZT6nhVdAf94deRU1alKIYKYz/LU4UgUOq16gSRI5opNu6ECYemtnMk+TMtHZh4jjrnA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739445702; c=relaxed/simple;
-	bh=zkYKGURITM4btT7FISriNJWnfFlX+Tv6TTpCw8DrnJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fezE8DT1rMwBEAOVBVlSm9/ZyozoJDsKdXE0ScSj0zphidBmRHfvkaFau8gLmWzwOTPVLam2BSkYRtnoxI5E/Z+CHxXmJQtDFE0Kj6mCAwmjMQvHk8MH37C+ZVGe8ldavFA5xO8W8JV4fQAHFLtuJDo2NUjwM2h10bX60baXsgo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=nIm9kdC2; arc=fail smtp.client-ip=52.101.196.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE611C84D4
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739445715; cv=none; b=BbQoNTKKvRXyTjo/81vbB6SOvMpQkiozFfBRDKwenfdjEgBkLi7ZgY/r/I12MYo+172Dere8ZCFaQQSoAKHFyw/pzzzEyoLbVPYg6k2SEYjhIMIuRjmNe3gnCcJE+ys7/I69cqNjKhbFMJzOFKNiiklMA+AwStzu3Nfneur6WnI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739445715; c=relaxed/simple;
+	bh=Pi4eMn80Vkv3stDJ2Ryeq1gBOrxrcjdgjXuoH7Kh8vw=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=B8xrSqFQkmxSTdS3quzel8tQV3Pra608HcPGycyB3LkD9X/tH4pxyzrtqr0lnCnrzh62fMFMGJ8dP4CNYTqBAelTTJCqmTDwsHAn1QxVV/E+MFSrNdAWMsZL2EcOR1987fwAhRpoyvu5Dnu1LskY4tG7GoU2vfVS13nPBVlTltc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=qj29tY/i; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="nIm9kdC2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I72p4F96LDww6H9YEZfffR/5OSbxQj1h9cOm/mYC507B98rSJFxnwSxrmfTGiuMCQwl0Mfkl6k7mGsvqnkfCR4CSIPKn9o1A7tKbOO/1qd0+40/jA+qCFVRKO6tbf9QD5FU34NivB2iZyHE/H4tDGlCElB/UtcZ2lNqOCOvI1FnQcFo43g4pfcNfKgRiTgqHXqQVL3eeSZtegyTY1G7hpOr445MF7gDNycxzchEeZLA2o9zac77ocrIIYKeGrOzC8OC3wJDOxCnhorsUffMT8JAyzT0pRiZQOay0TtC/9bRYrymXRWbuhfjXx3yTRZYfEdmPoDXRc4u9X0E450YKPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=n4GJ+z3nPwNyVEMvEmBwNI/3Se6eivbUhsyaPF26nFM=;
- b=QvkcJNHup5eohnOUBBxqEs0ZH3wWWGWl9ltOqOpsjNI0S8w+OrCi8sQ2wSHHWv0yRh3HNUfQkaak+AFLKmLZNCcKsLeSZcF9wPQOM5bsB0ScJa6iPgWGeiprBdYMIHbRNi/Jd4DNPUK9ADK8eZwmm3iJyGuoapFU5A5xbZvdN3kIqJQmnyxtM/TEpf7xgb7Gi/9mckx4TfVZ2GSnZYVfEnHUD4dsBUXW/a4bh8unPz7+VlLN6qcFBYwOixGiUVeEvcIvJAY/3Fm21A1XUmJ+yM/nrlsWGFnX3lO2qNVlLB6rf0vBGWSLQdpCt79vvcS12qKhj45fDqS542mO0nENDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
- dkim=pass header.d=garyguo.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n4GJ+z3nPwNyVEMvEmBwNI/3Se6eivbUhsyaPF26nFM=;
- b=nIm9kdC2ViM6zBtRV/dgGKOyjOco7AqTJyQCJ33LbM+23ZIl1Z9pTuXCEg0cVE+rexSXBWnolGRkO/8uSBsC+T+wkVL9/zLTCdpsnAlbUPC+itr7hoqslVYYi+QWYxXEFA+hse8GtZy2Tsu7AQ+KLu/wfjdB6WQKihjdi/RSddw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=garyguo.net;
-Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:253::10)
- by LOYP265MB2158.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:116::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.16; Thu, 13 Feb
- 2025 11:21:37 +0000
-Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1818:a2bf:38a7:a1e7]) by LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1818:a2bf:38a7:a1e7%4]) with mapi id 15.20.8445.015; Thu, 13 Feb 2025
- 11:21:37 +0000
-Date: Thu, 13 Feb 2025 11:21:35 +0000
-From: Gary Guo <gary@garyguo.net>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, DJ
- Delorie <dj@redhat.com>, Eric Blake <eblake@redhat.com>, Paul Eggert
- <eggert@cs.ucla.edu>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
- <boqun.feng@gmail.com>, =?UTF-8?B?QmrDtnJu?= Roy Baron
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas
- Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
- Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org,
- linux-man@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] rust: alloc: satisfy POSIX alignment requirement
-Message-ID: <20250213112135.7319862c@eugeo>
-In-Reply-To: <Z6zT6mZuxonewQ9z@pollux>
-References: <20250212-aligned-alloc-v5-1-c51e0b17dee9@gmail.com>
-	<Z6zA9UNm_UckccRm@pollux>
-	<20250212163848.22e8dcff@eugeo>
-	<Z6zT6mZuxonewQ9z@pollux>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0188.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a4::13) To LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:253::10)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qj29tY/i"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250213112151epoutp03b8f3d9d01c23eea41504a060b269ed03~jwKikKnWj1967919679epoutp03O
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:21:51 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250213112151epoutp03b8f3d9d01c23eea41504a060b269ed03~jwKikKnWj1967919679epoutp03O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739445711;
+	bh=FYeA0egZv4FF41HWS+5lY5RJ3ar8Pphs0FsmtbhyRSE=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=qj29tY/iSIOX/IKeNwEWLUhYSOojk/p0yq39MyLUD5o9EhMrlTrfigvInh/f3eecq
+	 84a7nGp1x9AltRNUKXaTRFq1GhRgM7M05Jp+LqCej7VEd5vtVEEIO+C/IeAU42+Yjt
+	 9eaRUYaXidA013VMkA3nAAG5lk5HvpMbpBwigtMw=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20250213112150epcas5p432ded18de14682cc3b9c16d15c3a6f1b~jwKh9cVoO2775827758epcas5p4Q;
+	Thu, 13 Feb 2025 11:21:50 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.176]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4Ytt710fwvz4x9Pr; Thu, 13 Feb
+	2025 11:21:49 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	AF.8A.19710.CC5DDA76; Thu, 13 Feb 2025 20:21:48 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250213110439epcas5p4363f12d24845f86de9f5e0d1c15bcaf9~jv7hQbNb63061630616epcas5p4_;
+	Thu, 13 Feb 2025 11:04:39 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250213110439epsmtrp1713a253bece086c0e65de979af9e8830~jv7hPeule2200722007epsmtrp1E;
+	Thu, 13 Feb 2025 11:04:39 +0000 (GMT)
+X-AuditID: b6c32a44-363dc70000004cfe-d8-67add5cc2674
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	CF.18.23488.7C1DDA76; Thu, 13 Feb 2025 20:04:39 +0900 (KST)
+Received: from FDSFTE596 (unknown [107.122.82.131]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250213110436epsmtip2c8a8209a8c3b9ff20b96d86af3fac0e3~jv7ezI9zW2340823408epsmtip2R;
+	Thu, 13 Feb 2025 11:04:36 +0000 (GMT)
+From: "Swathi K S" <swathi.ks@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>
+Cc: <krzk+dt@kernel.org>, <andrew+netdev@lunn.ch>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<robh@kernel.org>, <conor+dt@kernel.org>, <richardcochran@gmail.com>,
+	<mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+	<rmk+kernel@armlinux.org.uk>, <netdev@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20250213-adorable-arboreal-degu-6bdcb8@krzk-bin>
+Subject: RE: [PATCH v6 1/2] dt-bindings: net: Add FSD EQoS device tree
+ bindings
+Date: Thu, 13 Feb 2025 16:34:29 +0530
+Message-ID: <009a01db7e07$132feb60$398fc220$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LO2P265MB5183:EE_|LOYP265MB2158:EE_
-X-MS-Office365-Filtering-Correlation-Id: e001c9bc-7244-4f5f-5a69-08dd4c20946d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cXEcIT6ZUGsVM+eIgrg3Am+LNP0RwqA/IFeJmerNMMcWm4bxFsjcH2o2Icrl?=
- =?us-ascii?Q?dIcwjLEZwVoqw19Y0qbuX23+OfJOi1nrEfdFkzANVimthyX5VMsfvlE6Pqec?=
- =?us-ascii?Q?20YpI2h5tG7W0FLYB+GPikD8e9xNMEhjWyCdX8I7/s6+aPk2OateNruzD2al?=
- =?us-ascii?Q?kW+qEhkD0j874vJTwV+Y5+APs8QUqCiVC9ob8ScefFM/X6czG8v1XlQ29pAi?=
- =?us-ascii?Q?mDJYBhtGKAsAnIrX5nzFoOOlafyN+c4SAkTYAk85WxM6swxJhFoGhL0fJ7Ak?=
- =?us-ascii?Q?5mHlwjOch01yySRXrdHFH8hdvTdaUOfDAIsW4xVvAEQWEPqREkcd6ikqUeUq?=
- =?us-ascii?Q?Qfp5qFgrBP9QTKYkKj9MCO0G79SPXPEfRGorTuoYWOF1a8R42TW00XOaSyqu?=
- =?us-ascii?Q?l/kbbdx8QsEcabhL+z+OqVJLlAVRGbiarHcurNFKmhktgLnW2cmd08s9g3I5?=
- =?us-ascii?Q?X+1xVqThV0wqrqn0oVBzllWSSu1ntToDbgkkIT/uNxsP/UF3hOyiVw/8VQnT?=
- =?us-ascii?Q?TVMBjK8b2adVnyMYiFy9ZIm68Q5DIf4R5M+ydTys0k7I7tXFoSzUtk3cv/LC?=
- =?us-ascii?Q?rZ0nMoimCBP8uYsf0s04a1d+0kWMAB90/19XsgY8L5tGw8jtZBOISdaTzQpf?=
- =?us-ascii?Q?6u068u7mAnQbiRFybnJRiEgerLfr2LexCtUm7urdxoUwMojE/96OCHNER79m?=
- =?us-ascii?Q?gZyxm4/AuB6eB8oepT+9/MIl2i6TurGr6uzORtKRISdRru4lwv6Z8KWKErjd?=
- =?us-ascii?Q?pTeMDjrCxV88XMkRMu0//JAQuqmjQ2hS8dvu6zUQu3TcqsKbE1Tu+HUD36cf?=
- =?us-ascii?Q?+iyjMwt15ZOyUTYmrlRc29s3I/+u0ZDucqDeEKhBIRcRCXDGOJJ+5PXFtOIN?=
- =?us-ascii?Q?kmTZnPViZJhwT4lm1yFryRc0Mt0oN0E9kXFIE+rRTVLLyFmYD3yfjmjC7REh?=
- =?us-ascii?Q?9VF4MSF0o9HrsBHbMAtY34f4SHTAmeg4C64n3igNlRjLigqUpA5wzEOA2OOq?=
- =?us-ascii?Q?TD79No1nwm3T8VAb61S6s0snxIrsViiSdjY1O6VDFmgUmMXw82eb3NXC6J24?=
- =?us-ascii?Q?5Ci4+xiDxNnPifTSsnKYQ0FtNSIyWeZrGFC5DJgr7wBInQsl5ZRY3YqOEDXe?=
- =?us-ascii?Q?ts2wz8Ba/hKDw982w5rwM+M/3rEFljKE1HS102OIeKIaJzPFc0HKXKgq7rrn?=
- =?us-ascii?Q?9sjGo2CLf50Tak5LbdpdMAyBguyNcCFfkkR7DHMFMd3vzCDtKMioJPWmRC3T?=
- =?us-ascii?Q?M9ejEhPbdJurFFbQxRqAEz4E/N1rGNCfet6RJdasZs8kATpinCURJkYIukSu?=
- =?us-ascii?Q?xekqRWAyR9YDwRbaf/2sc6+gvSUQXAs+JySkuJuQDgFRcR16mJJqEo2o0C8y?=
- =?us-ascii?Q?VZgpHTGcIyFrh7Sya0UPFqpn9g7F?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?yHPs5vuSolA4i/qzHhueGSHVGGWRgmZj9+7g6T3kVDyFG8WQVmVFxJLErsxj?=
- =?us-ascii?Q?Szx6Zau4j6mhee59Kp8bWdSUnQtQobCDfZgCd8jceZZrqulrdGf0RJtQiPjd?=
- =?us-ascii?Q?u6lDzO82ncEZkpQsPp97O9xk3/IsbmpW07lj8SOPPRu+fXy2UYS/nzjPJLfB?=
- =?us-ascii?Q?h/WxRbPqHkT6VH87wap4OAGUTtjW01i0JiTsSay4p3BwrGDkQoCHcFJYdf9i?=
- =?us-ascii?Q?gnoC05PeOvOVILjWpmIqykjeoKhUZJJp7mmHSpzHh7p1SADX6obGqFcZNrI8?=
- =?us-ascii?Q?/o2Kl6RGE0dG1zOP2J8iBH+YEpC1Yc3vDcBqe8pOPFOG9VlJdlVrK4TZbSsx?=
- =?us-ascii?Q?WEkDyt44RRPvm++Z03g/fHHzZbq0fvyq85NfgOaNb7G/9zvfFsl5UEoxkHWb?=
- =?us-ascii?Q?yl/4ya2XeMki55H5fZAWst4ZtYShT1oY0L9mPCx0ihtl+YCd1gNNV6UlbKm7?=
- =?us-ascii?Q?ZEQ2U1UXySBDd0WzWZipGQcl5F+ttYI6b/T9PPKXfXm232WjIJV/oDGthKgQ?=
- =?us-ascii?Q?caLUw+jNEOaj1hed0Vm3B6FGly6WadkiDWdE84oPrLOmUzgqvhPE+ARJ9j24?=
- =?us-ascii?Q?yNl6SjrYdzrZpWVWcKSPxVrUg5PQ5KuYNGBtBl1NOi7S7lQGqtu31nOYIuH3?=
- =?us-ascii?Q?YwSCwRjmUzbNRmcE50ONBGXlF5RydvkS7GZhJxTF6yD8mWq7iPMCa7qcbSvh?=
- =?us-ascii?Q?7D/0WvcOO/WWFh6uo66P4ZoLkmkvw3IYngTDiX0NrCxASqCE7TJ4cwmGM2y2?=
- =?us-ascii?Q?YanaxK/yH5zjtXv77ysVNtNKqmQPLrRIMvZkouAeU6zrsrEzMu1VTzbHh+D1?=
- =?us-ascii?Q?bQkvFvvLmwzyUSn1WOdAbDX7gmeZhjK4xSpUD99rq3e+mzuNPTvYW9AkD54j?=
- =?us-ascii?Q?Ptg4bJJBL73RaC4cp2Ei1mfcyyL0MFjT6dFPIgo6fXYlUU3W8h7pGHoCmAlJ?=
- =?us-ascii?Q?ol+cy1RNxjjHGRFpAplV9TcLKt+5ic9TV2mf8ev9BPMDNcHyUo0bA0FLHuSQ?=
- =?us-ascii?Q?P6bbIzvCv+9EqYaG/J+yCkZhOetmFJjGeFYHZNAdDuSrGZTeIdlZEL1yE+Ff?=
- =?us-ascii?Q?u6pQZi8BSf1q0A3p6rlEkd/UWfdr9PB2XgaJpRxGRL4HVhdRLuLKgd6FwSRo?=
- =?us-ascii?Q?O8LOJdwBgqZ/4lvPK4aYb8f7E9dHxUpe/g/8V46rtPT6j+vdk1Txi9mkTrjK?=
- =?us-ascii?Q?1LWQiHwob8KX564tlD4ux9gKmhnd1E/QkmZ8+WGA59GXWIDq5+nkgHXE0MUy?=
- =?us-ascii?Q?li37HLRfb3gc2Hk7aecRw8vy8lWStxgfTJBiydtB1dEQ4KqqvFD2AEsI+35g?=
- =?us-ascii?Q?3YMIgyrkN25zN2VcDNWY5Pk7DwSHTL5Qvy8Ta3wL50qSKTw2NLYAwIZh2AJo?=
- =?us-ascii?Q?dH8VXrWEQudoXGeK/EFULtp6Sd5bd/WP3vildTwVk+pNI8hRHeJEcR1CScBE?=
- =?us-ascii?Q?uShpZwixrUIfoaxFpO4PWLtlyDkITYcfexR/gc3YpsZwY4LoCucGjdOO/4iA?=
- =?us-ascii?Q?CG37GRkVK21TI81DFR78yQcJtzwVFHTBQpqAGDsQEobyTlNHWXiSOdcUoIq4?=
- =?us-ascii?Q?iZbZ9E1ERzStN5DobU0503VUMTrKQjnSQX8kbaND?=
-X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: e001c9bc-7244-4f5f-5a69-08dd4c20946d
-X-MS-Exchange-CrossTenant-AuthSource: LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 11:21:37.1315
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9FqstqBguhZZXRKlvAAMykYzTwMccrWnHt+tebrzbXccW+u/yq/CCOgpgsJeRvQ07+nO7oSUhDw6YVIWlGILOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOYP265MB2158
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFMfZy5LnHh86L+CikZ+hKlrx3PbgHP/Q5uAh59lGQBgzSo3LQ3hOaA
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta1BUZRjuO2cvB2mZ44LywUSuJ7twWdjFZT3bLFhKzhZWFD9yGJWOcGYX
+	2dvsLlJNTRZGiALSJLELrgsjFw1IF12X6wQhjkKAFzYoKBJIbjOMohgY0C4Hin/P9z7P+z3v
+	810wlD/NCcRStSbaoKXUBGcDy/FT8CvCrr4apWjotpycnygEZOWwk01WN3cjZEnPMRZ5tr2b
+	TY513OOSE5bfOWRPz0Uu2evIY5P2ERebvNNQwiFzXKNs0rpYwyY7bJvJuc5pQLZ3jaPk7fwC
+	hFxucnJf4yvuuG6hisvnBxDFWP4VrqLeMsRV2OzpCvuF4xxF3bnPFfXOWUQx09LHUbS2iBWz
+	9ufjvRPT5CqaSqENAlqbrEtJ1SqjibiEpN1JUVKRWCiWkTsIgZbS0NFE7N544Z5UtTsXIThC
+	qdPdpXjKaCQiYuQGXbqJFqh0RlM0QetT1HqJPtxIaYzpWmW4lja9KhaJIqPcwg/TVHXmZkTf
+	L/joQeEQ6yho9M8BXhjEJXDw7/sgB2zA+HgjgOaqRZaH4OMPAcy5F8YQcwDen/6StdZR9bAI
+	YYhmAK2OBpRZjAP4XfYj4FFx8BBYltfC9WA/XAjr+iu5HhGKD6PwZFHJylZeeAzMnc10Exjm
+	i78Hs675eMos/EVYUDLH8WAeLoNtrTdZDN4Ib5hHVzCKh8KK0imUmUgA58cq2IzXHvi0eAkw
+	Gn94bf7kynAQP+EFKx1ONtMQCwfrMjkM9oWT1y9zGRwIJ/KzVnES/D6vbzWyCg4tFKzqd8If
+	73rmx9wGwfCHhgimHARP36xFGF8fmPt0FGHqPOi0ruEX4OKUa3XLAOgon+GeAoRlXTTLumiW
+	dREs/7vZAOsCCKD1Ro2STo7Si7V0xn8XnqzT2MHKsw+JdYL+s0vhbQDBQBuAGEr48WBhtZLP
+	S6E+/oQ26JIM6Wra2Aai3OddgAZuSta5/43WlCSWyEQSqVQqkW2Xigl/Xmb9MSUfV1ImOo2m
+	9bRhrQ/BvAKPIgc6R20J2dih0IMR7KyNGO9464I690zYvi/eBI7HTwJcj4sOTVyJ9HZs23vu
+	ZdOmxbjSwb4y76L9w16/1XduaSWoLuuutPlk+tKIf6LQ/M6ULYgM3Uw0Fl/tiKm6WP3rQfR9
+	LeIzvlQxkLaj3CqMvH7a71NNwfmF7N3tQfWnmpb/GbYkbGFDyaQm8sHXR3wzUrfJ5Rr71pqr
+	5jFZ8K7Kv575Y1jfe2BfapP88I0Pen+Je/Qz/nbG5FuijlvWmbvdxW9cop6bebf3z5eeTYzM
+	bnrdpAz7Ft0pFwwcXlbXfmOuLaXPTA9FDQpkrv6ZphNSqq56ZHvtmKUs74ntM5+Y8v21X6ki
+	CJZRRYlDUIOR+hfqY4fEfwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsWy7bCSvO7xi2vTDTY+EbD4+XIao8XyBztY
+	LdbsPcdkMed8C4vF/CPnWC2eHnvEbvFy1j02i/PnN7BbXNjWx2qx6fE1VovLu+awWXRde8Jq
+	Me/vWlaLYwvELL6dfsNoceTMC2aLS/0TmSz+79nB7iDkcfnaRWaPLStvMnk87d/K7rFz1l12
+	jwWbSj02repk89i8pN5j547PTB7v911l8zi4z9Dj8ya5AO4oLpuU1JzMstQifbsErowFGyaw
+	FjyXr9jY3svcwHhCrIuRk0NCwERixacZTF2MXBxCArsZJWadX84MkZCU+NQ8lRXCFpZY+e85
+	O0TRM0aJvnUbGEESbAJaEov69rGD2CICuhKbbywHK2IW+MIsMfv+ZKixbxklrjYdYAGp4hSw
+	k+j93AzWISzgL/G+9ySYzSKgKjFxzjc2EJtXwFLi0MFTLBC2oMTJmU/AbGYBbYmnN5/C2csW
+	voY6VUHi59NlrBBXuEn8nv2PEaJGXOLozx7mCYzCs5CMmoVk1Cwko2YhaVnAyLKKUTK1oDg3
+	PTfZsMAwL7Vcrzgxt7g0L10vOT93EyM46rU0djC++9akf4iRiYPxEKMEB7OSCK/EtDXpQrwp
+	iZVVqUX58UWlOanFhxilOViUxHlXGkakCwmkJ5akZqemFqQWwWSZODilGpi6QvQf7P8iaav1
+	4mzOiq3nQy7PXRN8est2l/dRqXdY64ofqt09IMTynvtnrWVB0NezPutdg3yCGjhmeX06veyJ
+	mPB2izvXC/zU0vPPBuYdCJZJiBD1TEvhWnKrn4275uh649r6jXwL/GWz/M9+/uP2oNm//yfr
+	7xOvJ5eu8IrUd8zhV6n4/nTXuzuxFv95hZ6xG01qcFPiCTh5polz6oZ4Sx7Zd/mzN93f2Fcr
+	pl/w9u2cubtnyGiesm9R/Nebe/lY5nTBmqcPZvned5C0/6gmK1sWzrAs19Rk2tGGDcGzJOS2
+	dZX3TpvcO+POet7aXA6vFwGPUueLrJvacYm7b2NiNkuc7ZZNVlJThGt+7FBiKc5INNRiLipO
+	BACb1ffZaQMAAA==
+X-CMS-MailID: 20250213110439epcas5p4363f12d24845f86de9f5e0d1c15bcaf9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250213044955epcas5p110d1e582c8ee02579ead73f9686819ff
+References: <20250213044624.37334-1-swathi.ks@samsung.com>
+	<CGME20250213044955epcas5p110d1e582c8ee02579ead73f9686819ff@epcas5p1.samsung.com>
+	<20250213044624.37334-2-swathi.ks@samsung.com>
+	<20250213-adorable-arboreal-degu-6bdcb8@krzk-bin>
 
-On Wed, 12 Feb 2025 18:01:30 +0100
-Danilo Krummrich <dakr@kernel.org> wrote:
 
-> On Wed, Feb 12, 2025 at 04:38:48PM +0000, Gary Guo wrote:
-> > On Wed, 12 Feb 2025 16:40:37 +0100
-> > Danilo Krummrich <dakr@kernel.org> wrote:
-> >   
-> > > On Wed, Feb 12, 2025 at 09:43:02AM -0500, Tamir Duberstein wrote:  
-> > > > diff --git a/rust/kernel/alloc/allocator_test.rs b/rust/kernel/alloc/allocator_test.rs
-> > > > index e3240d16040b..17a475380253 100644
-> > > > --- a/rust/kernel/alloc/allocator_test.rs
-> > > > +++ b/rust/kernel/alloc/allocator_test.rs
-> > > > @@ -62,6 +62,26 @@ unsafe fn realloc(
-> > > >              ));
-> > > >          }
-> > > >  
-> > > > +        // ISO C (ISO/IEC 9899:2011) defines `aligned_alloc`:
-> > > > +        //
-> > > > +        // > The value of alignment shall be a valid alignment supported by the implementation
-> > > > +        // [...].
-> > > > +        //
-> > > > +        // As an example of the "supported by the implementation" requirement, POSIX.1-2001 (IEEE
-> > > > +        // 1003.1-2001) defines `posix_memalign`:
-> > > > +        //
-> > > > +        // > The value of alignment shall be a power of two multiple of sizeof (void *).
-> > > > +        //
-> > > > +        // and POSIX-based implementations of `aligned_alloc` inherit this requirement. At the time
-> > > > +        // of writing, this is known to be the case on macOS (but not in glibc).
-> > > > +        //
-> > > > +        // Satisfy the stricter requirement to avoid spurious test failures on some platforms.
-> > > > +        let min_align = core::mem::size_of::<*const crate::ffi::c_void>();
-> > > > +        let layout = layout.align_to(min_align).unwrap_or_else(|_err| {
-> > > > +            crate::build_error!("invalid alignment")    
-> > > 
-> > > That's not what I thought this patch will look like. I thought you'll directly
-> > > follow Gary's proposal, which is why I said you can keep the ACK.
-> > > 
-> > > build_error!() doesn't work here, there is no guarantee that this can be
-> > > evaluated at compile time.  
-> > 
-> > `align_to` will only fail if `min_align` is not a valid alignment (i.e.
-> > not power of two), which the compiler should be easy to notice that the
-> > size of pointer is indeed power of 2.  
-> 
-> From the documentation of align_to():
-> 
-> "Returns an error if the combination of self.size() and the given align violates
-> the conditions listed in Layout::from_size_align."
-> 
-> Formally self.size() may still be unknown at compile time.
-> 
-> Do I miss anything?
 
-Ah, I think you're indeed correct. If I get a type that has the size of
-`isize::MAX - 1` and alignment of 1, and then trying to align up to
-pointer size will cause an error.
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk=40kernel.org>
+> Sent: 13 February 2025 13:24
+> To: Swathi K S <swathi.ks=40samsung.com>
+> Cc: krzk+dt=40kernel.org; andrew+netdev=40lunn.ch; davem=40davemloft.net;
+> edumazet=40google.com; kuba=40kernel.org; pabeni=40redhat.com;
+> robh=40kernel.org; conor+dt=40kernel.org; richardcochran=40gmail.com;
+> mcoquelin.stm32=40gmail.com; alexandre.torgue=40foss.st.com;
+> rmk+kernel=40armlinux.org.uk; netdev=40vger.kernel.org;
+> devicetree=40vger.kernel.org; linux-stm32=40st-md-mailman.stormreply.com;
+> linux-arm-kernel=40lists.infradead.org; linux-kernel=40vger.kernel.org
+> Subject: Re: =5BPATCH v6 1/2=5D dt-bindings: net: Add FSD EQoS device tre=
+e
+> bindings
+>=20
+> On Thu, Feb 13, 2025 at 10:16:23AM +0530, Swathi K S wrote:
+> > +  clock-names:
+> > +    minItems: 5
+> > +    maxItems: 10
+> > +    contains:
+> > +      enum:
+> > +        - ptp_ref
+> > +        - master_bus
+> > +        - slave_bus
+> > +        - tx
+> > +        - rx
+> > +        - master2_bus
+> > +        - slave2_bus
+> > +        - eqos_rxclk_mux
+> > +        - eqos_phyrxclk
+> > +        - dout_peric_rgmii_clk
+>=20
+> This does not match the previous entry. It should be strictly ordered wit=
+h
+> minItems: 5.
 
-We should proceed with `map_err` then.
+Hi Krzysztof,
+Thanks for reviewing.
+In FSD SoC, we have 2 instances of ethernet in two blocks.
+One instance needs 5 clocks and the other needs 10 clocks.
 
-Best,
-Gary
+I tried to understand this by looking at some other dt-binding files as giv=
+en below, but looks like they follow similar approach
+Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+Documentation/devicetree/bindings/net/rockchip-dwmac.yaml
 
-> 
-> > 
-> > I think both `build_error!` and `map_err` version below is fine to me. 
-> > 
-> > Best,
-> > Gary
-> >   
-> > > 
-> > > I think this should just be:
-> > > 
-> > > let layout = layout.align_to(min_align).map_err(|_| AllocError)?.pad_to_align();
-> > > 
-> > > - Danilo
+Could you please guide me on how to implement this?
+Also, please help me understand what is meant by 'strictly ordered'
+
+>=20
+>=20
+> > +
+> > +  iommus:
+> > +    maxItems: 1
+> > +
+> > +  phy-mode:
+> > +    enum:
+> > +      - rgmii-id
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - clock-names
+> > +  - iommus
+> > +  - phy-mode
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +examples:
+> > +  - =7C
+> > +    =23include <dt-bindings/clock/fsd-clk.h>
+> > +    =23include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    soc =7B
+> > +        =23address-cells =3D <2>;
+> > +        =23size-cells =3D <2>;
+> > +        ethernet1: ethernet=4014300000 =7B
+> > +            compatible =3D =22tesla,fsd-ethqos=22;
+> > +            reg =3D <0x0 0x14300000 0x0 0x10000>;
+> > +            interrupts =3D <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+> > +            interrupt-names =3D =22macirq=22;
+> > +            clocks =3D <&clock_peric
+> PERIC_EQOS_TOP_IPCLKPORT_CLK_PTP_REF_I>,
+> > +                     <&clock_peric PERIC_EQOS_TOP_IPCLKPORT_ACLK_I>,
+> > +                     <&clock_peric PERIC_EQOS_TOP_IPCLKPORT_HCLK_I>,
+> > +                     <&clock_peric PERIC_EQOS_TOP_IPCLKPORT_RGMII_CLK_=
+I>,
+> > +                     <&clock_peric PERIC_EQOS_TOP_IPCLKPORT_CLK_RX_I>,
+> > +                     <&clock_peric PERIC_BUS_D_PERIC_IPCLKPORT_EQOSCLK=
+>,
+> > +                     <&clock_peric PERIC_BUS_P_PERIC_IPCLKPORT_EQOSCLK=
+>,
+> > +                     <&clock_peric PERIC_EQOS_PHYRXCLK_MUX>,
+> > +                     <&clock_peric PERIC_EQOS_PHYRXCLK>,
+> > +                     <&clock_peric PERIC_DOUT_RGMII_CLK>;
+> > +            clock-names =3D =22ptp_ref=22, =22master_bus=22, =22slave_=
+bus=22,=22tx=22,
+> > +                          =22rx=22, =22master2_bus=22, =22slave2_bus=
+=22, =22eqos_rxclk_mux=22,
+> > +                          =22eqos_phyrxclk=22,=22dout_peric_rgmii_clk=
+=22;
+> > +            pinctrl-names =3D =22default=22;
+> > +            pinctrl-0 =3D <&eth1_tx_clk>, <&eth1_tx_data>, <&eth1_tx_c=
+trl>,
+> > +                        <&eth1_phy_intr>, <&eth1_rx_clk>, <&eth1_rx_da=
+ta>,
+> > +                        <&eth1_rx_ctrl>, <&eth1_mdio>;
+> > +            iommus =3D <&smmu_peric 0x0 0x1>;
+> > +            phy-mode =3D =22rgmii-id=22;
+> > +       =7D;
+>=20
+> Misaligned/misindented.
+
+Ack
+
+>=20
+> Best regards,
+> Krzysztof
+
+
