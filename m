@@ -1,89 +1,148 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4838213E72
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 10:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAB3212B35;
+	Thu, 13 Feb 2025 10:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739442141; cv=none; b=Z5SBHp8ayt235pogkgvr/8mbu5d9yq5hVyLpRIbheNA8vV8O4XyEPMBjrR+2viO6f7FzdqCAL8QlgL03nLcF/cBMLJ9NoZW5sh0z9DHH2aqVFFpYgHG7jyEsW42Qvy46oLgM/nzXMSQzNLWgbRR4gdzu3LPIdsbr/tzH9c3zjGU=
+	t=1739442141; cv=none; b=a6e/wi0X233YjQMGttVm3rJWQGwAu9mCpUbmyga3Bov1ZimGa1xqcNO4LX4+PcHR7xjQWXL6DOLskBV8ehNEhWC7rIKHvBSdxeCuV0EyseDpIea1MI3s6Tb678yyAW1yfcBMyYExt3AgwjxEapT2pGe1NfbI4+Ue+BIu4Ybynm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739442141; c=relaxed/simple;
-	bh=p+GnX/qBn0tmrY1mpd3KjfQNTyibWtkyaubFDEJRmsI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=E+uzR0jsjpHZNwTVYQRfLIpjM0KkFTnrGXJQYFNoYg/CTyWD20oC8NU5mFH+NghJ+p52vCj5HpwKsQuyuB4+ZTk09gexB/s8mlL0y6OvFHezSbfJRvf2MIOOx3f09ggCkKAVsOCrC4CM7oVOOB9ZBkRFd8lKl8bhfvknlvZcw6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tiWMC-0000vH-7c; Thu, 13 Feb 2025 11:22:08 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tiWMB-000jZp-2V;
-	Thu, 13 Feb 2025 11:22:07 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tiWMB-0003C6-2H;
-	Thu, 13 Feb 2025 11:22:07 +0100
-Message-ID: <619128481807b279e5d3b7967b00e7f094dae7ba.camel@pengutronix.de>
-Subject: Re: [PATCH 1/4] dt-bindings: reset: add generic bit reset controller
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Inochi Amaoto
- <inochiama@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-  Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren
- <guoren@kernel.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <u.kleine-koenig@baylibre.com>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, sophgo@lists.linux.dev, 
- linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>, Longbin Li
- <looong.bin@gmail.com>
-Date: Thu, 13 Feb 2025 11:22:07 +0100
-In-Reply-To: <20250213-cordial-elated-grebe-57aaae@krzk-bin>
-References: <20250213020900.745551-1-inochiama@gmail.com>
-	 <20250213020900.745551-2-inochiama@gmail.com>
-	 <20250213-cordial-elated-grebe-57aaae@krzk-bin>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	bh=E8K7OdmM5TDtx1MdCwoTg1FK1STUogCMX2UO9Gzh+1Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UZlnIxVVzSwpkaVnB+54Z7/J3OTAEBfM9DeDmooqpzl0KXkDuVTLWEcamUoj2ZZd78qYgIzRb8N0ICk8zX/5DlNUbcx0TveNreVvFqnbW/navBGgxhxK9x+5uZDYQuIyNPNRsrRlLxxaY6/jba59MCmi58L7nhiB9k8OifxWXRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CTWWnjQi; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CTWWnjQi"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51DALqDA3988680
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 13 Feb 2025 04:21:52 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1739442112;
+	bh=gq7ND6kmYg+T1S0KrCZyvliNRe+2JR8aZgE6LYBivnI=;
+	h=From:To:CC:Subject:Date;
+	b=CTWWnjQigDlXoqighn2ZaQgQOLwJUB+Og4DOsg93qv1gboYxQx/dFzW14jTZkx8vC
+	 /48qtGiEH/ByGsKuCmcYdcob4cE/0lZaac7zgf7wgeeljNouvWz7gGDOxvBA8PsA9C
+	 ch9VUk4AQEe53QQIYhJYYT2RDY1IcRiDGEOM13LQ=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51DALqVX011050
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 13 Feb 2025 04:21:52 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
+ Feb 2025 04:21:52 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 13 Feb 2025 04:21:52 -0600
+Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51DALpnC077706;
+	Thu, 13 Feb 2025 04:21:51 -0600
+From: Chintan Vankar <c-vankar@ti.com>
+To: Rosen Penev <rosenp@gmail.com>,
+        Christophe JAILLET
+	<christophe.jaillet@wanadoo.fr>,
+        Chintan Vankar <c-vankar@ti.com>, Paolo
+ Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
+	<edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King
+	<linux@armlinux.org.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>, Andrew Lunn
+	<andrew@lunn.ch>
+CC: <s-vadapalli@ti.com>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+Subject: [PATCH] net: phy: mscc: Add auto-negotiation feature to VSC8514
+Date: Thu, 13 Feb 2025 15:51:50 +0530
+Message-ID: <20250213102150.2400429-1-c-vankar@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Do, 2025-02-13 at 10:35 +0100, Krzysztof Kozlowski wrote:
-> On Thu, Feb 13, 2025 at 10:08:54AM +0800, Inochi Amaoto wrote:
-> > Some SoCs from Aspeed, Allwinner, Sophgo and Synopsys have
-> > a simple reset controller by toggling bit. It is a hard time
-> > for each device to add its own compatible to the driver.
-> > Since this device share a common design, it is possible to
-> > add a common device to reduce these unnecessary change.
->=20
-> SoC components are rarely that simple and even if it is just a bit,
-> usually it is part of one or few registers.
+Add function vsc85xx_config_inband_aneg() in mscc_main.c to enable
+auto-negotiation. The function enables auto-negotiation by configuring
+the MAC SerDes PCS Control register of VSC8514.
 
-Yes, in those cases (which are probably most of them), I would argue
-this binding doesn't really fit.
+Invoke the vsc85xx_config_inband_aneg() function from the
+vsc8514_config_init() function present in mscc_main.c to start the
+auto-negotiation process. This is required to get Ethernet working with
+the Quad port Ethernet Add-On card connected to J7 common processor board.
 
-> Anyway, there are already bindings for reset-simple and I do not
-> understand why this has to be duplicated.
+Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+---
 
-I think the motivation is to not have to add a new binding document and
-modify reset-simple.c every time there is a new SoC. I wonder if some
-of this can be mitigated by adding just the binding document similar to
-trivial-devices.yaml, without the actual "reset-simple" compatible.
+This patch is based on commit '7b7a883c7f4d' of linux-next branch of
+Mainline Linux.
 
->=20
-regards
-Philipp
+Regards,
+Chintan.
+
+ drivers/net/phy/mscc/mscc.h      |  2 ++
+ drivers/net/phy/mscc/mscc_main.c | 20 ++++++++++++++++++++
+ 2 files changed, 22 insertions(+)
+
+diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
+index 6a3d8a754eb8..3baa0a418bae 100644
+--- a/drivers/net/phy/mscc/mscc.h
++++ b/drivers/net/phy/mscc/mscc.h
+@@ -196,6 +196,8 @@ enum rgmii_clock_delay {
+ #define MSCC_PHY_EXTENDED_INT_MS_EGR	  BIT(9)
+ 
+ /* Extended Page 3 Registers */
++#define MSCC_PHY_SERDES_PCS_CTRL          16
++#define MSCC_PHY_SERDES_ANEG              BIT(7)
+ #define MSCC_PHY_SERDES_TX_VALID_CNT	  21
+ #define MSCC_PHY_SERDES_TX_CRC_ERR_CNT	  22
+ #define MSCC_PHY_SERDES_RX_VALID_CNT	  28
+diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+index 19cf12ee8990..f1f36ee1cc59 100644
+--- a/drivers/net/phy/mscc/mscc_main.c
++++ b/drivers/net/phy/mscc/mscc_main.c
+@@ -1699,6 +1699,21 @@ static int vsc8574_config_host_serdes(struct phy_device *phydev)
+ 			   PROC_CMD_RST_CONF_PORT | PROC_CMD_FIBER_1000BASE_X);
+ }
+ 
++static int vsc85xx_config_inband_aneg(struct phy_device *phydev, bool enabled)
++{
++	u16 reg_val = 0;
++	int rc;
++
++	if (enabled)
++		reg_val = MSCC_PHY_SERDES_ANEG;
++
++	rc = phy_modify_paged(phydev, MSCC_PHY_PAGE_EXTENDED_3,
++			      MSCC_PHY_SERDES_PCS_CTRL, MSCC_PHY_SERDES_ANEG,
++			      reg_val);
++
++	return rc;
++}
++
+ static int vsc8584_config_init(struct phy_device *phydev)
+ {
+ 	struct vsc8531_private *vsc8531 = phydev->priv;
+@@ -2107,6 +2122,11 @@ static int vsc8514_config_init(struct phy_device *phydev)
+ 
+ 	ret = genphy_soft_reset(phydev);
+ 
++	if (ret)
++		return ret;
++
++	ret = vsc85xx_config_inband_aneg(phydev, true);
++
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.34.1
+
