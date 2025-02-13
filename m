@@ -1,175 +1,153 @@
-Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF6E2135C0;
-	Thu, 13 Feb 2025 10:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86D33212D95;
+	Thu, 13 Feb 2025 10:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739443958; cv=none; b=TeL/WuPQ9ucNuejySdio6iwnHzz4q4c8T59mJyy40pW/3M4ylUznhzmXC/kHZrsxVPRiACgwv80ehy6/MlS7jr8H+cR3mpRr4XpP3zsy+N76WEQ3kkS29UwEvAVVv8AAJc2hCpFqxPeSQwJQQfP53jGUuq/Bh9SqQouD71mFc28=
+	t=1739443988; cv=none; b=K3guinkKa74DowOnn4OozXxa4elie1xhnOb+aRqhBiYs/UY1LeyDjM8dGw7ca6UOquScZUImnA2G7WEb/rG6MMobB1j5dT2qFKH/U/ntntaLpkfw4BNd1d52iy86HqluVtu6zMniLtLxHfNfbZs76rlTxVxjrNrvu8s7A0M9SfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739443958; c=relaxed/simple;
-	bh=ly+HI5iL3ovE/Qp0+AEPxYcJXgikpZNZ61yNY81pso0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=orujBMxvzzfgmBbv1JKUnk0BNSTHiW8C1AbIU+hJejMEZAHZJo9ECBRRSCuUdnJIMdZjSQt4V3S/C0+/FSNDrJjbxaDb3M526O/HS5EZE0VkdofY9wwrx8yH/7kcRCznzgtuQ4jKMn73K2qBdsYHvsbFWXUtnQefRHwTMgq6dE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Mi6TSQLO; arc=none smtp.client-ip=52.119.213.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1739443988; c=relaxed/simple;
+	bh=mtwfNueCsCv+ny57q0pPLNJ3IhsnL/0IKJ1LF/DCjjk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=UCLxQeFlcjFoEqVFX+lXE72JQEjCKbglK9TIMtd7Nfwvl5nAdo3+xKIbYLg23JYu9hrmPkyc1dJCrl6MFcCbeTRx5lVHS3FfkAm+l0DZvZ6ptqG8mtaa+ynDHAaWj2MaZcF7452Pb+KF6l9wuQbd91tSJyuIm3g4Uv+cSirIpAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=gBZS8PN0 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Mi6TSQLO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1739443957; x=1770979957;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IgkvtMvOSSagKNz50Lh9hAQXzCe7woRbEqIyJBXRz38=;
-  b=Mi6TSQLOk26Z7SPnCQffJxy+SBK9oNUmxyfB4aVl6AWweJwH6bEkzsUy
-   8QDIEmA1HxrnMXlowNRV3VDIeZWjEP5TgkCeFOfx4ESny/DmvnB+9A2P8
-   WAvrkEFUU6t3PBlU8NGPxro4+wodN+iCyHH1EDzs/9vRCiJgV1V/EfIlp
-   Q=;
-X-IronPort-AV: E=Sophos;i="6.13,282,1732579200"; 
-   d="scan'208";a="270834013"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 10:52:33 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.21.151:32225]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.9.187:2525] with esmtp (Farcaster)
- id 0f73d3cd-62b2-4599-a33c-974a909bd3bb; Thu, 13 Feb 2025 10:52:32 +0000 (UTC)
-X-Farcaster-Flow-ID: 0f73d3cd-62b2-4599-a33c-974a909bd3bb
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Thu, 13 Feb 2025 10:52:31 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.37.244.7) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 13 Feb 2025 10:52:26 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <leitao@debian.org>
-CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <dsahern@kernel.org>,
-	<edumazet@google.com>, <horms@kernel.org>, <kernel-team@meta.com>,
-	<kuba@kernel.org>, <kuniyu@amazon.co.jp>, <kuniyu@amazon.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, <ushankar@purestorage.com>
-Subject: Re: [PATCH net-next v3 2/3] net: Add dev_getbyhwaddr_rtnl() helper
-Date: Thu, 13 Feb 2025 19:52:17 +0900
-Message-ID: <20250213105217.37429-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250213-prudent-olivine-bobcat-ffa64f@leitao>
-References: <20250213-prudent-olivine-bobcat-ffa64f@leitao>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="gBZS8PN0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=TL7u1+0RPJwIYMqwhWmm0JTU9TwqfMb9V5VorOXWC2Y=; b=g
+	BZS8PN0A84pnDNg//1uoSVWxe9y7ghhfk2KjZSY5ZCjhod+qyhmrF1hMTiM/QrWe
+	1HFOWNJ51Exatvbi7lisTV4Hnc56472WmedlGFVCeb9TchWYUXqev5TWCt6o4uwi
+	RHLtkrujHhygALEWD0PS4YQqTsmRnYrI4YAq7Rk7uo=
+Received: from andyshrk$163.com ( [58.22.7.114] ) by
+ ajax-webmail-wmsvr-40-110 (Coremail) ; Thu, 13 Feb 2025 18:52:04 +0800
+ (CST)
+Date: Thu, 13 Feb 2025 18:52:04 +0800 (CST)
+From: "Andy Yan" <andyshrk@163.com>
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: hjc@rock-chips.com, krzk+dt@kernel.org, devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, derek.foreman@collabora.com,
+	detlev.casanova@collabora.com, daniel@fooishbar.org, robh@kernel.org,
+	sebastian.reichel@collabora.com,
+	"Andy Yan" <andy.yan@rock-chips.com>
+Subject: Re:Re: [PATCH v14 02/13] drm/rockchip: vop2: Rename
+ TRANSFORM_OFFSET to TRANSFORM_OFFS
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <4064785.VqM8IeB0Os@diego>
+References: <20250212093530.52961-1-andyshrk@163.com>
+ <20250212093530.52961-3-andyshrk@163.com> <4064785.VqM8IeB0Os@diego>
+X-NTES-SC: AL_Qu2YC/ifvEEp4iKfYukfmkcVgOw9UcO5v/Qk3oZXOJF8jCfp9QItX3BTPFnE+fmDLiaLnQiHUThC4O5bbYVcZKAwKM+aBKFYQz+/TB/Eqg9O9g==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D040UWB003.ant.amazon.com (10.13.138.8) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Message-ID: <4878d34d.835d.194feefed3d.Coremail.andyshrk@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:bigvCgBH7lrUzq1n7qrEAA--.50216W
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqQ3yXmetw8LDhQABsE
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-From: Breno Leitao <leitao@debian.org>
-Date: Thu, 13 Feb 2025 02:29:38 -0800
-> Hello Kuniyuki,
-> 
-> On Thu, Feb 13, 2025 at 04:31:29PM +0900, Kuniyuki Iwashima wrote:
-> > > Subject: [PATCH net-next v3 2/3] net: Add dev_getbyhwaddr_rtnl() helper
-> > 
-> > s/_rtnl//
-> 
-> Ack!
-> 
-> > looks like Uday's comment was missed due to the lore issue.
-> 
-> hmm, I haven't seen Uday's comment. Didn't it reach lore?
-
-I saw the reply and my another one on lore but somehow they
-were removed :)
-
-
-> 
-> > From: Breno Leitao <leitao@debian.org>
-> > Date: Wed, 12 Feb 2025 09:47:25 -0800
-> > > +/**
-> > > + *	dev_getbyhwaddr - find a device by its hardware address
-> > 
-> > While at it, could you replace '\t' after '*' to a single '\s'
-> > for all kernel-doc comment lines below ?
-> > 
-> > 
-> > > + *	@net: the applicable net namespace
-> > > + *	@type: media type of device
-> > > + *	@ha: hardware address
-> > > + *
-> > > + *	Similar to dev_getbyhwaddr_rcu(), but the owner needs to hold
-> > > + *	rtnl_lock.
-> > 
-> > Otherwise the text here is mis-aligned.
-> 
-> Sorry, what is misaligned specifically? I generated the documentation,
-> and I can't see it misaligned.
-> 
-> This is what I see when generating the document (full log at
-> https://pastebin.mozilla.org/YkotEoHh#L250,271)
-> 
-> 
-> 	dev_getbyhwaddr_rcu(9)                                                         Kernel Hacker's Manual                                                         dev_getbyhwaddr_rcu(9)
-> 
-> 	NAME
-> 	dev_getbyhwaddr_rcu - find a device by its hardware address
-> 
-> 	SYNOPSIS
-> 	struct net_device * dev_getbyhwaddr_rcu (struct net *net , unsigned short type , const char *ha );
-> 
-> 	ARGUMENTS
-> 	net         the applicable net namespace
-> 
-> 	type        media type of device
-> 
-> 	ha          hardware address
-> 
-> 			Search for an interface by MAC address. Returns NULL if the device is not found or a pointer to the device.  The caller must hold RCU.  The returned  device  has
-                        ^^^^^^
-This scentence starts from a weird position when we use '\t' after '*'.
-You will see it start from the head if '\s' follows '*'.
-
-
-> 			not had its ref count increased and the caller must therefore be careful about locking
-> 
-> 	RETURN
-> 	pointer to the net_device, or NULL if not found
-> 
-> 	dev_getbyhwaddr(9)                                                             Kernel Hacker's Manual                                                             dev_getbyhwaddr(9)
-> 
-> 	NAME
-> 	dev_getbyhwaddr - find a device by its hardware address
-> 
-> 	SYNOPSIS
-> 	struct net_device * dev_getbyhwaddr (struct net *net , unsigned short type , const char *ha );
-> 
-> 	ARGUMENTS
-> 	net         the applicable net namespace
-> 
-> 	type        media type of device
-> 
-> 	ha          hardware address
-> 
-> 			Similar to dev_getbyhwaddr_rcu, but the owner needs to hold rtnl_lock.
-> 
-> 	RETURN
-> 	pointer to the net_device, or NULL if not found
-> 
-> 
-> >   $ ./scripts/kernel-doc -man net/core/dev.c | \
-> >     scripts/split-man.pl /tmp/man && \
-> >     man /tmp/man/dev_getbyhwaddr.9
-> > 
-> > Also, the latter part should be in Context:
-> > 
-> > Context: rtnl_lock() must be held.
-> 
-> Sure. Should I do something similar for _rcu function as well?
-> 
-> 	Context: caller must hold rcu_read_lock
-
-Yes, that would be nice.
-
-https://lore.kernel.org/netdev/20250213073646.14847-1-kuniyu@amazon.com/
+CkhpIEhlaWtvLAoKQXQgMjAyNS0wMi0xMiAxODo1OTo1MCwgIkhlaWtvIFN0w7xibmVyIiA8aGVp
+a29Ac250ZWNoLmRlPiB3cm90ZToKPkhpIEFuZHksCj4KPkFtIE1pdHR3b2NoLCAxMi4gRmVicnVh
+ciAyMDI1LCAxMDozNDo1NyBNRVogc2NocmllYiBBbmR5IFlhbjoKPj4gRnJvbTogQW5keSBZYW4g
+PGFuZHkueWFuQHJvY2stY2hpcHMuY29tPgo+PiAKPj4gVGhpcyBoZWxwIGF2b2lkICJleGNlZWRz
+IDEwMCBjb2x1bW5zIiB3YXJuaW5nIGZyb20gY2hlY2twYXRjaAo+PiAKPj4gU2lnbmVkLW9mZi1i
+eTogQW5keSBZYW4gPGFuZHkueWFuQHJvY2stY2hpcHMuY29tPgo+Cj5JJ20gbm90IG11Y2ggb2Yg
+YSBmYW4gb2YgInJhbmRvbWx5IiByZW5hbWluZyBpbmRpdmlkdWFsIGNvbnN0YW50cwo+KGVzcGVj
+aWFsbHkgd2hlbiBvbmUgaXMgbm93IG5hbWVkIE9GRlMsIHdoaWxlIHRoZSByZXN0IHN0YXkgYXQg
+T0ZGU0VUKQo+Cj4tIG9uIHJrMzU2OCBWT1AyX0NMVVNURVJfV0lOMF9UUkFOU0ZPUk1FRF9PRkZT
+RVQgPSBXSU4wIHRyYW5zZm9ybWVkIG9mZnNldAo+LSBvbiByazM1ODggVk9QMl9DTFVTVEVSMF9X
+SU4wX1RSQU5TRk9STUVEX09GRlNFVCA9IFdJTjAgdHJhbnNmb3JtIG9mZnNldAo+LSBvbiByazM1
+NzYgInNvbWVvbmUiIHNhZGx5IGRlY2lkZWQgdG8gbm90IHByb3ZpZGUgdGhlIDJuZCBUUk0gcGFy
+dCBhbnltb3JlCj4gIGJ1dCBJIGd1ZXNzIGl0J2xsIGJlIHRoZSBzYW1lLgo+Cj5TbyBpbnN0ZWFk
+IG9mIGp1c3QgZHJvcHBpbmcgcGFydHMgZnJvbSB0aGUgZW5kLCB5b3UgY291bGQgYWxzbyBmb2xs
+b3cKPnRoZSBUUk0gbmFtaW5nIGFuZCBkcm9wIHRoZSAiX0FGQkMiIGZyb20gdGhlIHJlZ2lzdGVy
+IG5hbWUgaW5zdGVhZD8KPgo+U28gZ29pbmcgdG8gVk9QMl9XSU5fVFJBTlNGT1JNX09GRlNFVCwg
+dGhpcyB3b3VsZCBhbHNvIHJlZHVjZSB0aGUgbGluZQo+bGVuZ3RoIGFjY29yZGluZ2x5LCBhbmQg
+bW92aW5nIHRoZSBuYW1pbmcgY2xvc2VyIHRvIHRoZSBUUk0gdG9vLgoKSSAgY2hvb3NlIHRvIGRy
+b3AgdGhlIEFGQkMgcHJlZml4LiBBcyB0aGlzIHJlZ2lzdGVyIG5lZWRzIHRvIGJlIGNvbmZpZ3Vy
+ZWQgbm90IG9ubHkKaW4gQUZCQyBtb2RlLCBidXQgYWxzbyBpbiB0aWxlIG1vZGUuCkFuZCBJIGRv
+bid0IHBhcnRpY3VsYXJseSBsaWtlIHVzZSBsaW5lYnJlYWsuCgo+Cj5BbHRlcm5hdGl2ZWx5LCBq
+dXN0IGFkZCBhIGxpbmVicmVhayBhdCB0aGUgYXBwcm9wcmlhdGUgcG9zaXRpb24gaW5zdGVhZC4K
+Pgo+SGVpa28KPgo+Cj4+IC0tLQo+PiAKPj4gKG5vIGNoYW5nZXMgc2luY2UgdjEpCj4+IAo+PiAg
+ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AyLmMgfCA4ICsrKystLS0t
+Cj4+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcDIuaCB8IDQgKyst
+LQo+PiAgMiBmaWxlcyBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4+
+IAo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92
+b3AyLmMgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcDIuYwo+PiBp
+bmRleCBlYmM5Y2I5MzA3M2MuLjhlMWI3NDJhNzU1MCAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AyLmMKPj4gKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AyLmMKPj4gQEAgLTE1MjQsNyArMTUyNCw3IEBA
+IHN0YXRpYyB2b2lkIHZvcDJfcGxhbmVfYXRvbWljX3VwZGF0ZShzdHJ1Y3QgZHJtX3BsYW5lICpw
+bGFuZSwKPj4gIAkJdHJhbnNmb3JtX29mZnNldCA9IHZvcDJfYWZiY190cmFuc2Zvcm1fb2Zmc2V0
+KHBzdGF0ZSwgaGFsZl9ibG9ja19lbik7Cj4+ICAJCXZvcDJfd2luX3dyaXRlKHdpbiwgVk9QMl9X
+SU5fQUZCQ19IRFJfUFRSLCB5cmdiX21zdCk7Cj4+ICAJCXZvcDJfd2luX3dyaXRlKHdpbiwgVk9Q
+Ml9XSU5fQUZCQ19QSUNfU0laRSwgYWN0X2luZm8pOwo+PiAtCQl2b3AyX3dpbl93cml0ZSh3aW4s
+IFZPUDJfV0lOX0FGQkNfVFJBTlNGT1JNX09GRlNFVCwgdHJhbnNmb3JtX29mZnNldCk7Cj4+ICsJ
+CXZvcDJfd2luX3dyaXRlKHdpbiwgVk9QMl9XSU5fQUZCQ19UUkFOU0ZPUk1fT0ZGUywgdHJhbnNm
+b3JtX29mZnNldCk7Cj4+ICAJCXZvcDJfd2luX3dyaXRlKHdpbiwgVk9QMl9XSU5fQUZCQ19QSUNf
+T0ZGU0VULCAoKHNyYy0+eDEgPj4gMTYpIHwgc3JjLT55MSkpOwo+PiAgCQl2b3AyX3dpbl93cml0
+ZSh3aW4sIFZPUDJfV0lOX0FGQkNfRFNQX09GRlNFVCwgKGRlc3QtPngxIHwgKGRlc3QtPnkxIDw8
+IDE2KSkpOwo+PiAgCQl2b3AyX3dpbl93cml0ZSh3aW4sIFZPUDJfV0lOX0FGQkNfUElDX1ZJUl9X
+SURUSCwgc3RyaWRlKTsKPj4gQEAgLTE1MzUsNyArMTUzNSw3IEBAIHN0YXRpYyB2b2lkIHZvcDJf
+cGxhbmVfYXRvbWljX3VwZGF0ZShzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSwKPj4gIAl9IGVsc2Ug
+ewo+PiAgCQlpZiAodm9wMl9jbHVzdGVyX3dpbmRvdyh3aW4pKSB7Cj4+ICAJCQl2b3AyX3dpbl93
+cml0ZSh3aW4sIFZPUDJfV0lOX0FGQkNfRU5BQkxFLCAwKTsKPj4gLQkJCXZvcDJfd2luX3dyaXRl
+KHdpbiwgVk9QMl9XSU5fQUZCQ19UUkFOU0ZPUk1fT0ZGU0VULCAwKTsKPj4gKwkJCXZvcDJfd2lu
+X3dyaXRlKHdpbiwgVk9QMl9XSU5fQUZCQ19UUkFOU0ZPUk1fT0ZGUywgMCk7Cj4+ICAJCX0KPj4g
+IAo+PiAgCQl2b3AyX3dpbl93cml0ZSh3aW4sIFZPUDJfV0lOX1lSR0JfVklSLCBESVZfUk9VTkRf
+VVAoZmItPnBpdGNoZXNbMF0sIDQpKTsKPj4gQEAgLTM0NDgsNyArMzQ0OCw3IEBAIHN0YXRpYyBj
+b25zdCBzdHJ1Y3QgcmVnX2ZpZWxkIHZvcDJfY2x1c3Rlcl9yZWdzW1ZPUDJfV0lOX01BWF9SRUdd
+ID0gewo+PiAgCVtWT1AyX1dJTl9BRkJDX1RJTEVfTlVNXSA9IFJFR19GSUVMRChSSzM1NjhfQ0xV
+U1RFUl9XSU5fQUZCQ0RfVklSX1dJRFRILCAxNiwgMzEpLAo+PiAgCVtWT1AyX1dJTl9BRkJDX1BJ
+Q19PRkZTRVRdID0gUkVHX0ZJRUxEKFJLMzU2OF9DTFVTVEVSX1dJTl9BRkJDRF9QSUNfT0ZGU0VU
+LCAwLCAzMSksCj4+ICAJW1ZPUDJfV0lOX0FGQkNfRFNQX09GRlNFVF0gPSBSRUdfRklFTEQoUksz
+NTY4X0NMVVNURVJfV0lOX0FGQkNEX0RTUF9PRkZTRVQsIDAsIDMxKSwKPj4gLQlbVk9QMl9XSU5f
+QUZCQ19UUkFOU0ZPUk1fT0ZGU0VUXSA9IFJFR19GSUVMRChSSzM1NjhfQ0xVU1RFUl9XSU5fQUZC
+Q0RfVFJBTlNGT1JNX09GRlNFVCwgMCwgMzEpLAo+PiArCVtWT1AyX1dJTl9BRkJDX1RSQU5TRk9S
+TV9PRkZTXSA9IFJFR19GSUVMRChSSzM1NjhfQ0xVU1RFUl9XSU5fQUZCQ0RfVFJBTlNGT1JNX09G
+RlMsIDAsIDMxKSwKPj4gIAlbVk9QMl9XSU5fQUZCQ19ST1RBVEVfOTBdID0gUkVHX0ZJRUxEKFJL
+MzU2OF9DTFVTVEVSX1dJTl9BRkJDRF9ST1RBVEVfTU9ERSwgMCwgMCksCj4+ICAJW1ZPUDJfV0lO
+X0FGQkNfUk9UQVRFXzI3MF0gPSBSRUdfRklFTEQoUkszNTY4X0NMVVNURVJfV0lOX0FGQkNEX1JP
+VEFURV9NT0RFLCAxLCAxKSwKPj4gIAlbVk9QMl9XSU5fWE1JUlJPUl0gPSBSRUdfRklFTEQoUksz
+NTY4X0NMVVNURVJfV0lOX0FGQkNEX1JPVEFURV9NT0RFLCAyLCAyKSwKPj4gQEAgLTM1NDcsNyAr
+MzU0Nyw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmVnX2ZpZWxkIHZvcDJfZXNtYXJ0X3JlZ3Nb
+Vk9QMl9XSU5fTUFYX1JFR10gPSB7Cj4+ICAJW1ZPUDJfV0lOX0FGQkNfUElDX09GRlNFVF0gPSB7
+IC5yZWcgPSAweGZmZmZmZmZmIH0sCj4+ICAJW1ZPUDJfV0lOX0FGQkNfUElDX1NJWkVdID0geyAu
+cmVnID0gMHhmZmZmZmZmZiB9LAo+PiAgCVtWT1AyX1dJTl9BRkJDX0RTUF9PRkZTRVRdID0geyAu
+cmVnID0gMHhmZmZmZmZmZiB9LAo+PiAtCVtWT1AyX1dJTl9BRkJDX1RSQU5TRk9STV9PRkZTRVRd
+ID0geyAucmVnID0gMHhmZmZmZmZmZiB9LAo+PiArCVtWT1AyX1dJTl9BRkJDX1RSQU5TRk9STV9P
+RkZTXSA9IHsgLnJlZyA9IDB4ZmZmZmZmZmYgfSwKPj4gIAlbVk9QMl9XSU5fQUZCQ19IRFJfUFRS
+XSA9IHsgLnJlZyA9IDB4ZmZmZmZmZmYgfSwKPj4gIAlbVk9QMl9XSU5fQUZCQ19IQUxGX0JMT0NL
+X0VOXSA9IHsgLnJlZyA9IDB4ZmZmZmZmZmYgfSwKPj4gIAlbVk9QMl9XSU5fQUZCQ19ST1RBVEVf
+MjcwXSA9IHsgLnJlZyA9IDB4ZmZmZmZmZmYgfSwKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
+L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9wMi5oIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tj
+aGlwL3JvY2tjaGlwX2RybV92b3AyLmgKPj4gaW5kZXggMjljYzdmYjhmNmQ4Li44NTEwMTQwYjA4
+NjkgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1f
+dm9wMi5oCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9w
+Mi5oCj4+IEBAIC0xMTgsNyArMTE4LDcgQEAgZW51bSB2b3AyX3dpbl9yZWdzIHsKPj4gIAlWT1Ay
+X1dJTl9BRkJDX1BJQ19PRkZTRVQsCj4+ICAJVk9QMl9XSU5fQUZCQ19QSUNfU0laRSwKPj4gIAlW
+T1AyX1dJTl9BRkJDX0RTUF9PRkZTRVQsCj4+IC0JVk9QMl9XSU5fQUZCQ19UUkFOU0ZPUk1fT0ZG
+U0VULAo+PiArCVZPUDJfV0lOX0FGQkNfVFJBTlNGT1JNX09GRlMsCj4+ICAJVk9QMl9XSU5fQUZC
+Q19IRFJfUFRSLAo+PiAgCVZPUDJfV0lOX0FGQkNfSEFMRl9CTE9DS19FTiwKPj4gIAlWT1AyX1dJ
+Tl9BRkJDX1JPVEFURV8yNzAsCj4+IEBAIC0zMzUsNyArMzM1LDcgQEAgZW51bSBkc3RfZmFjdG9y
+X21vZGUgewo+PiAgI2RlZmluZSBSSzM1NjhfQ0xVU1RFUl9XSU5fRFNQX0lORk8JCTB4MjQKPj4g
+ICNkZWZpbmUgUkszNTY4X0NMVVNURVJfV0lOX0RTUF9TVAkJMHgyOAo+PiAgI2RlZmluZSBSSzM1
+NjhfQ0xVU1RFUl9XSU5fU0NMX0ZBQ1RPUl9ZUkdCCTB4MzAKPj4gLSNkZWZpbmUgUkszNTY4X0NM
+VVNURVJfV0lOX0FGQkNEX1RSQU5TRk9STV9PRkZTRVQJMHgzQwo+PiArI2RlZmluZSBSSzM1Njhf
+Q0xVU1RFUl9XSU5fQUZCQ0RfVFJBTlNGT1JNX09GRlMJMHgzQwo+PiAgI2RlZmluZSBSSzM1Njhf
+Q0xVU1RFUl9XSU5fQUZCQ0RfT1VUUFVUX0NUUkwJMHg1MAo+PiAgI2RlZmluZSBSSzM1NjhfQ0xV
+U1RFUl9XSU5fQUZCQ0RfUk9UQVRFX01PREUJMHg1NAo+PiAgI2RlZmluZSBSSzM1NjhfQ0xVU1RF
+Ul9XSU5fQUZCQ0RfSERSX1BUUgkweDU4Cj4+IAo+Cj4KPgo+Cj4KPl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj5MaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxp
+c3QKPkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKPmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
