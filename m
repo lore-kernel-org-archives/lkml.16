@@ -1,169 +1,200 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F6F227EA9;
-	Thu, 13 Feb 2025 11:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864AD207641
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739446008; cv=none; b=dy7fnytYaBcxtzeSmqMVR7DE8ZjbK7ZjorIETlnoCMhY4nA8VcPo730hKnpGH8CzkXCCDVdiZXKf2JmEnSP0sAsBCuKXCT4ScV4+KtBamT/pzN78jJcCehgheRz9IQSErBLPbaTDmGovdp3sUGPMBfZ7YmVzVV06HLvrb7jLYMI=
+	t=1739446008; cv=none; b=AxCxCOr2oBsNpnSvG1upUZ22OCmjSNCcukxO1nDhRdbZYY4d5Xy6riGmjZ6MNYvFybi+7KTLJ90gAHWUwjYHab7gr86GeRvwijlQnhhF0HJOSL7ac99RQUxIO4NCP6z1Bt2hcVENfx4/YujAs8EabNH5OfBARLFu0LmMG5r+jBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739446008; c=relaxed/simple;
-	bh=UvF0qyEAeD84uggiYEODW362+ZzeFxJVzIiWPhGyHzc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=U9Pjc/Pl/ALr8wiIbLC/TN49VWLME+ypO+/q0ImXk2c1ZYX0wV4T67RUI1jfAM9DFxetdaShGtnU8VWHytmZp4y3FFalgfRQp+j3k6MD/Vav/TpEOag5j/TPy8JUx8OR+q0tEUI6IywKL1t7FmJvfeAe55V/yGSGFRZ05N0hYeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jmnLr5lU; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=OFEYoRmXcaat/EDDO/nBEH7BW35gmoxvFIhgg+omAPI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GHhvVPIC3fuT4Cf04ihcoAPjdIZInAjKwmb1K2G/qze05oGfWsP7xe/tDWJDhixjLk+Emk1yANM8whkaZLEcGdg2euAKEq2yyr3319O7sRVTKtwEkP1QUbT8uVLNzI37eZXImTDiNmbN9IuIJD6ZJjpTPA49/EU0J3/cxwY6qLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Aowz9sqz; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jmnLr5lU"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-46c7855df10so12745231cf.3;
-        Thu, 13 Feb 2025 03:26:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739446005; x=1740050805; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LHaCd/GVQXhCshi75jh/YdL77wv4MeC4IivvaIzYoSQ=;
-        b=jmnLr5lU5IaGcx0paRC9MntDoiurx7ANjTaUczkuMJZnNLK9tcScO9GB9JBW7nAnLT
-         xkWyywONA/tNIlW2B91WMnrs1djwDL0yCGZRTAiB3l5BS06JHAU+i2I7bnVgcktlDaCn
-         gj5Kl21KK5legZyTHKasRy9TFcXkc3Raqg5f66m3q0FYUJM+nFlPhh1eoFVu1JH3nTJ/
-         SDgy2UxGJHcAlhashMYKJBsQqLAXuiyBoSTfehHl83B90obKwfChRKXdOToVynKp6z2p
-         1kT52scQmi9Pa7VaQQgA9K4JzK9UkSMPoSRzCUuNBldqTs/U2DKVd5zHtjqqtpraRkht
-         78zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739446005; x=1740050805;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LHaCd/GVQXhCshi75jh/YdL77wv4MeC4IivvaIzYoSQ=;
-        b=p0zSWLsGI/V5a3UTeL2NeZomtgw6dEIARCLy6VhO1TzjZCZILaaAuslz94K0IEa40a
-         iTfZVaHDiunKH2u/hmxx5/3rfU3A88dXfdwPKA6p7wUXnSnA1YXokqr2RHiX9IlezD5G
-         Fa/9qwuRqodsqJFJ4La9NbPIT80mzkxB7pk4Awh63GHYdJRuUtpBs3nZSvoo1ufOBSMQ
-         KJxBbNLyCaqmW1AzWH4hx7zuduurKi0k6+8bh6uRyQv4n+07Dx76IAJEsYtDJHvMCXd1
-         Cfy13eAyYsB7R6gYgT03ExXjDDoOEcyeXYWFqzzognN6xLGKe+RVU+RKiM4zRbKGk5Z1
-         jwzw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1ALHVZqGI5+KIiBW1vfb1F69LcfVP/hXSBgKK3s40WS0swhiTw6aZzTp3sJqukvurKTetaXeuuIKAqco=@vger.kernel.org, AJvYcCWFcmkAUMlMUIwEK58H6ItRJ9EA9P8BPLMYvNuHw+n/8UqDr5mLSkSIJ1+9ZsMt17Cf0G+njxd/nmRy@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIbc1VBhO8lbrRTkzu31fhARZhFA3SDiPpXZIH1eIgPF2etGcd
-	LCV6tGesdq8jaH5L5niq0WZDlyobnlGXm/d4bIkgSXQJgrPnukZo
-X-Gm-Gg: ASbGncuYdaVuiLJ/oOFqv7ttsz5d7p4sKQBVQCUHQfYebFdlP+P7N1sQcVw7pV5RDey
-	2vu39O1jqq5AL0CKzDYazx4aQt+mJTs6SqWXehRbrrBjFDM7btyO4q8ImX96SYoqiGXQ6OWu1vl
-	LzDEnwvsPMm5YI6+QR+P/6s4UhnWozATdgLUly6Aab6OhUmB5e8xaz0wAsbyTKM4xQQRPzpk0Q7
-	g73Zfo9m4FSDX4Sjst92lf2qAFzVKnR+fs95r10ArVv5C8Z3BTYV8YWJD0jnxRzMPIf3lpvvMIv
-	CiTNg8MmcLwgNPJJ+GRht4LywUP2OdL9Gz30weM5tnbXrbgwV4qtNybuUn+E5uWfTVJIYzd0WBC
-	WPl7vT2DLAKQGXJsNe03HHNCXVYM8gmrcWMfg8w==
-X-Google-Smtp-Source: AGHT+IHGRagn7x8eSs7Z/JyfOoyd3nmFtQG9HGa52jb6SXFkz2tqApWeqtO3XMaNdGLZypac/vL7rA==
-X-Received: by 2002:a05:622a:1e85:b0:45d:8be9:b0e6 with SMTP id d75a77b69052e-471bee35d02mr50933101cf.43.1739446005044;
-        Thu, 13 Feb 2025 03:26:45 -0800 (PST)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2600:4041:5be7:7c00:c8d8:9808:e9c7:ed5b])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471c2af335asm6641891cf.55.2025.02.13.03.26.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 03:26:43 -0800 (PST)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 13 Feb 2025 06:26:41 -0500
-Subject: [PATCH v6] rust: alloc: satisfy POSIX alignment requirement
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Aowz9sqz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739446004;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6um4Kcaeb4NdKi+D149AnS1RI14lXiqlmboCk/ZVFJA=;
+	b=Aowz9sqzUxZBr5mPro286k3WZiJ2ahsORIYHRN/+tT0t1UqYKGHYm13gVatruOnwIob+yD
+	Cgguu84hdjKr0Ii01nia6qqeeubu1uPf2R6RhH+pImoEMjvYo3iYizDu90u5CWefV5W8LN
+	73pQ/UyvXhNw1BACfnLxsEFGADarLgk=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-62-ApZsPklgOgCfApaClvXd_g-1; Thu,
+ 13 Feb 2025 06:26:39 -0500
+X-MC-Unique: ApZsPklgOgCfApaClvXd_g-1
+X-Mimecast-MFC-AGG-ID: ApZsPklgOgCfApaClvXd_g_1739445998
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C023A18EB2C6;
+	Thu, 13 Feb 2025 11:26:37 +0000 (UTC)
+Received: from hydra.redhat.com (unknown [10.45.225.79])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DE1603000197;
+	Thu, 13 Feb 2025 11:26:33 +0000 (UTC)
+From: Jocelyn Falempe <jfalempe@redhat.com>
+To: Jani Nikula <jani.nikula@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: Jocelyn Falempe <jfalempe@redhat.com>
+Subject: [PATCH v4 1/8] drm/i915/fbdev: Add intel_fbdev_get_map()
+Date: Thu, 13 Feb 2025 12:19:25 +0100
+Message-ID: <20250213112620.1923927-2-jfalempe@redhat.com>
+In-Reply-To: <20250213112620.1923927-1-jfalempe@redhat.com>
+References: <20250213112620.1923927-1-jfalempe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250213-aligned-alloc-v6-1-4fd7f248600b@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAPDWrWcC/3XPwWrDMAwG4FcpPs9DlmJ36anvMXawZTk1pElJR
- tgoefc5PWUuPYlf8P1IdzXLlGVWp8NdTbLkOY9DCe7toPjih050jiUrBLSAYLTvczdILLMfWQe
- LHJAs8QeqYm6TpPzz6Pv8KvmS5+9x+n3UL2bbvmpajDaa29YfKRGH2Jy7q8/9O49XtTUtuNdYa
- yza+gTBphgbl2pNe+1qTUUDBwYfgMDFWjc7baDWTdEOWibvkhhqa233+ulyu/1tjUAwxyjyT6/
- r+gcSwogkogEAAA==
-X-Change-ID: 20250201-aligned-alloc-b52cb2353c82
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- DJ Delorie <dj@redhat.com>, Eric Blake <eblake@redhat.com>, 
- Paul Eggert <eggert@cs.ucla.edu>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>
-Cc: rust-for-linux@vger.kernel.org, linux-man@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-ISO C's `aligned_alloc` is partially implementation-defined; on some
-systems it inherits stricter requirements from POSIX's `posix_memalign`.
+The vaddr of the fbdev framebuffer is private to the struct
+intel_fbdev, so this function is needed to access it for drm_panic.
+Also the struct i915_vma is different between i915 and xe, so it
+requires a few functions to access fbdev->vma->iomap.
 
-This causes the call added in commit dd09538fb409 ("rust: alloc:
-implement `Cmalloc` in module allocator_test") to fail on macOS because
-it doesn't meet the requirements of `posix_memalign`.
-
-Adjust the call to meet the POSIX requirement and add a comment. This
-fixes failures in `make rusttest` on macOS.
-
-Acked-by: Danilo Krummrich <dakr@kernel.org>
-Fixes: dd09538fb409 ("rust: alloc: implement `Cmalloc` in module allocator_test")
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
 ---
-Changes in v6:
-- Replace unsound use of build_error with map_err. (Danilo Krummrich)
-- Link to v5: https://lore.kernel.org/r/20250212-aligned-alloc-v5-1-c51e0b17dee9@gmail.com
 
-Changes in v5:
-- Remove errant newline in commit message. (Miguel Ojeda)
-- Use more succinct expression. (Gary Guo)
-- Drop and then add Danilo's Acked-by again.
-- Link to v4: https://lore.kernel.org/r/20250210-aligned-alloc-v4-1-609c3a6fe139@gmail.com
 
-Changes in v4:
-- Revert to `aligned_alloc` and correct rationale. (Miguel Ojeda)
-- Apply Danilo's Acked-by from v2.
-- Rebase on v6.14-rc2.
-- Link to v3: https://lore.kernel.org/r/20250206-aligned-alloc-v3-1-0cbc0ab0306d@gmail.com
-
-Changes in v3:
-- Replace `aligned_alloc` with `posix_memalign` for portability.
-- Link to v2: https://lore.kernel.org/r/20250202-aligned-alloc-v2-1-5af0b5fdd46f@gmail.com
-
-Changes in v2:
-- Shorten some variable names. (Danilo Krummrich)
-- Replace shadowing alignment variable with a second call to
-  Layout::align. (Danilo Krummrich)
-- Link to v1: https://lore.kernel.org/r/20250201-aligned-alloc-v1-1-c99a73f3cbd4@gmail.com
----
- rust/kernel/alloc/allocator_test.rs | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/rust/kernel/alloc/allocator_test.rs b/rust/kernel/alloc/allocator_test.rs
-index e3240d16040b..e68775078e90 100644
---- a/rust/kernel/alloc/allocator_test.rs
-+++ b/rust/kernel/alloc/allocator_test.rs
-@@ -62,6 +62,24 @@ unsafe fn realloc(
-             ));
-         }
+v2:
+ * Add intel_fb_get_vaddr() and i915_vma_get_iomap() to build with Xe driver.
  
-+        // ISO C (ISO/IEC 9899:2011) defines `aligned_alloc`:
-+        //
-+        // > The value of alignment shall be a valid alignment supported by the implementation
-+        // [...].
-+        //
-+        // As an example of the "supported by the implementation" requirement, POSIX.1-2001 (IEEE
-+        // 1003.1-2001) defines `posix_memalign`:
-+        //
-+        // > The value of alignment shall be a power of two multiple of sizeof (void *).
-+        //
-+        // and POSIX-based implementations of `aligned_alloc` inherit this requirement. At the time
-+        // of writing, this is known to be the case on macOS (but not in glibc).
-+        //
-+        // Satisfy the stricter requirement to avoid spurious test failures on some platforms.
-+        let min_align = core::mem::size_of::<*const crate::ffi::c_void>();
-+        let layout = layout.align_to(min_align).map_err(|_| AllocError)?.pad_to_align();
-+        let layout = layout.pad_to_align();
+v4:
+ * rename to get_map(), and return the struct iosys_map mapping.
+ * implement the Xe variant.
+ 
+ drivers/gpu/drm/i915/display/intel_fb_pin.c | 5 +++++
+ drivers/gpu/drm/i915/display/intel_fb_pin.h | 2 ++
+ drivers/gpu/drm/i915/display/intel_fbdev.c  | 5 +++++
+ drivers/gpu/drm/i915/display/intel_fbdev.h  | 6 ++++++
+ drivers/gpu/drm/i915/i915_vma.h             | 5 +++++
+ drivers/gpu/drm/xe/display/xe_fb_pin.c      | 5 +++++
+ 6 files changed, 28 insertions(+)
+
+diff --git a/drivers/gpu/drm/i915/display/intel_fb_pin.c b/drivers/gpu/drm/i915/display/intel_fb_pin.c
+index d3a86f9c6bc86..3d346d51900f0 100644
+--- a/drivers/gpu/drm/i915/display/intel_fb_pin.c
++++ b/drivers/gpu/drm/i915/display/intel_fb_pin.c
+@@ -327,3 +327,8 @@ void intel_plane_unpin_fb(struct intel_plane_state *old_plane_state)
+ 			intel_dpt_unpin_from_ggtt(fb->dpt_vm);
+ 	}
+ }
 +
-         // SAFETY: Returns either NULL or a pointer to a memory allocation that satisfies or
-         // exceeds the given size and alignment requirements.
-         let dst = unsafe { libc_aligned_alloc(layout.align(), layout.size()) } as *mut u8;
-
----
-base-commit: 8a5aae7dbbfb612509c8a2f112f7e0f79029ed45
-change-id: 20250201-aligned-alloc-b52cb2353c82
-
-Best regards,
++void intel_fb_get_map(struct i915_vma *vma, struct iosys_map *map)
++{
++	iosys_map_set_vaddr_iomem(map, i915_vma_get_iomap(vma));
++}
+diff --git a/drivers/gpu/drm/i915/display/intel_fb_pin.h b/drivers/gpu/drm/i915/display/intel_fb_pin.h
+index ac0319b53af08..a5e7cec4e2c86 100644
+--- a/drivers/gpu/drm/i915/display/intel_fb_pin.h
++++ b/drivers/gpu/drm/i915/display/intel_fb_pin.h
+@@ -12,6 +12,7 @@ struct drm_framebuffer;
+ struct i915_vma;
+ struct intel_plane_state;
+ struct i915_gtt_view;
++struct iosys_map;
+ 
+ struct i915_vma *
+ intel_fb_pin_to_ggtt(const struct drm_framebuffer *fb,
+@@ -25,5 +26,6 @@ void intel_fb_unpin_vma(struct i915_vma *vma, unsigned long flags);
+ 
+ int intel_plane_pin_fb(struct intel_plane_state *plane_state);
+ void intel_plane_unpin_fb(struct intel_plane_state *old_plane_state);
++void intel_fb_get_map(struct i915_vma *vma, struct iosys_map *map);
+ 
+ #endif
+diff --git a/drivers/gpu/drm/i915/display/intel_fbdev.c b/drivers/gpu/drm/i915/display/intel_fbdev.c
+index 00852ff5b2470..39a39e8672309 100644
+--- a/drivers/gpu/drm/i915/display/intel_fbdev.c
++++ b/drivers/gpu/drm/i915/display/intel_fbdev.c
+@@ -695,3 +695,8 @@ struct intel_framebuffer *intel_fbdev_framebuffer(struct intel_fbdev *fbdev)
+ 
+ 	return to_intel_framebuffer(fbdev->helper.fb);
+ }
++
++void intel_fbdev_get_map(struct intel_fbdev *fbdev, struct iosys_map *map)
++{
++	intel_fb_get_map(fbdev->vma, map);
++}
+diff --git a/drivers/gpu/drm/i915/display/intel_fbdev.h b/drivers/gpu/drm/i915/display/intel_fbdev.h
+index 08de2d5b34338..3782e65bc8207 100644
+--- a/drivers/gpu/drm/i915/display/intel_fbdev.h
++++ b/drivers/gpu/drm/i915/display/intel_fbdev.h
+@@ -12,11 +12,13 @@ struct drm_device;
+ struct drm_i915_private;
+ struct intel_fbdev;
+ struct intel_framebuffer;
++struct iosys_map;
+ 
+ #ifdef CONFIG_DRM_FBDEV_EMULATION
+ void intel_fbdev_setup(struct drm_i915_private *dev_priv);
+ void intel_fbdev_set_suspend(struct drm_device *dev, int state, bool synchronous);
+ struct intel_framebuffer *intel_fbdev_framebuffer(struct intel_fbdev *fbdev);
++void intel_fbdev_get_map(struct intel_fbdev *fbdev, struct iosys_map *map);
+ #else
+ static inline void intel_fbdev_setup(struct drm_i915_private *dev_priv)
+ {
+@@ -30,6 +32,10 @@ static inline struct intel_framebuffer *intel_fbdev_framebuffer(struct intel_fbd
+ {
+ 	return NULL;
+ }
++
++static inline void intel_fbdev_get_map(struct intel_fbdev *fbdev, struct iosys_map *map)
++{
++}
+ #endif
+ 
+ #endif /* __INTEL_FBDEV_H__ */
+diff --git a/drivers/gpu/drm/i915/i915_vma.h b/drivers/gpu/drm/i915/i915_vma.h
+index 6a6be8048aa83..4ae610927fa77 100644
+--- a/drivers/gpu/drm/i915/i915_vma.h
++++ b/drivers/gpu/drm/i915/i915_vma.h
+@@ -353,6 +353,11 @@ static inline bool i915_node_color_differs(const struct drm_mm_node *node,
+ 	return drm_mm_node_allocated(node) && node->color != color;
+ }
+ 
++static inline void __iomem *i915_vma_get_iomap(struct i915_vma *vma)
++{
++	return READ_ONCE(vma->iomap);
++}
++
+ /**
+  * i915_vma_pin_iomap - calls ioremap_wc to map the GGTT VMA via the aperture
+  * @vma: VMA to iomap
+diff --git a/drivers/gpu/drm/xe/display/xe_fb_pin.c b/drivers/gpu/drm/xe/display/xe_fb_pin.c
+index 9fa51b84737ca..2773f55bb7143 100644
+--- a/drivers/gpu/drm/xe/display/xe_fb_pin.c
++++ b/drivers/gpu/drm/xe/display/xe_fb_pin.c
+@@ -423,3 +423,8 @@ u64 intel_dpt_offset(struct i915_vma *dpt_vma)
+ {
+ 	return 0;
+ }
++
++void intel_fb_get_map(struct i915_vma *vma, struct iosys_map *map)
++{
++	*map = vma->bo->vmap;
++}
 -- 
-Tamir Duberstein <tamird@gmail.com>
+2.47.1
 
