@@ -1,94 +1,86 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D209227EBE
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 12:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BEB227EBD;
+	Thu, 13 Feb 2025 12:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739448530; cv=none; b=EKAFx5L9z/NaaQV/r0xfXFTUqSUYn4QcAub+dFf20zccnvdiXIfWs0uMg3H65UV/D4veWij0/+jFTqK6WhvuqaYKdfGa/Id/QE0mMNdOlnlOJOlVro/01acR/SpY9lThkflL7ykOKMDTKvGMj8a/Cs9FnYtxgyNcVqeYaoRHFHQ=
+	t=1739448615; cv=none; b=djLfzIp12WCLxKmB8RjAK7rhwWtjlvRsffCQdt9fXvI4wlslDvRvhGNS14J4giypsv3PZNswCQ6xdq9Dh04HDvrN5QcHbQhRFmKNRhaY3r0GIFZFQTv0LYl5Jda/UM/ZFmNf8AjnsmwgcTXUX9Whb2fwTk4WDJ0yGc9XFRd+frk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739448530; c=relaxed/simple;
-	bh=1E2id50uaFPfC7LT/+pAYwSJ84qVWP+x2iiRvyauSDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SwZcaNqWxjnsgsSWyqtXDP39R9cNmGQh8yFHvz7m4su7k8X2LjcPVUF29HKJX7vHPyI6Cfr7Qv6zTJRVLxh0AwrzzRNSa/WbTfX/bA8kbblpijybrYyHdlS1LLyh29NTsUIxVgYI51uNOCWHEqcAx35gd4bOLKgCA8w/yuNFEIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WKp9ULP8; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739448615; c=relaxed/simple;
+	bh=0K3K8Ve6Nf+QbJw4fodrmcsL0YTbcamOy8gUjErmc2g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ldWnFFj+1B6/mI7q9lDpuyI4IXycda7KaxTxgj3344SAsaPjanXd+ECdAmrls15nVJpi4PHsIQLnq0tCH1KtiEZWnwKJ8LANYjMcTaVVnRwB39tyg7myR+wgg5nB3phAGWSEqWfQG5hfdkLD1D6bjr+HJ/B/svJh8nxzW3k6h6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ixSxsLst; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WKp9ULP8"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-308ea905387so442491fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 04:08:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739448526; x=1740053326; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y+OUyVkZpcEX7ghjnK0CsopW32NOBTOfeekkc+Viasc=;
-        b=WKp9ULP89WDPKUsTpyJzGvK1xorCJ5aQLPg5iVZof3/os25yndzFGVrd3dOc9WUG8u
-         3JuOPlaHYdxMEfOAJA9JB2JDz/AdbJgTzpK4Cn8KgK4uzludgrvWsj2OB3MFfV7uPY14
-         pAaumR1pW292Ikb4AYgXxpzr0AtkFyWiChT1Dax1dyNog4lazOzQOYTB4gIIXhoHUidO
-         SNGa1qUJvz37cMevPaxBM7q9W78IqD/nbeKSWi3qGwA8J8e9WhDp0TNndl23wO1xELaP
-         /JCi2ezOyU9Pa5fXAx0E8VCFvzjf2Odi1F+JNDdc3ZaMxRz4yE+84LpOTcuIAumDFJXN
-         kIJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739448526; x=1740053326;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y+OUyVkZpcEX7ghjnK0CsopW32NOBTOfeekkc+Viasc=;
-        b=DoPQ1lmlDGGoG7k6ziEgVT1x31D5Ah36UaPjde0P++NsCUrkZkRaps+ZfydXtPqJoO
-         2pqGlayh3h6IYes3iycu36sef56kt/F+ocnxNnZ8GU0SQD6ZhA57RF0pO5bxO5V/d+Hk
-         aulnO4JT5rE/0GGC4qHnDo9hF2G+GknFGYxcyEX0xLZy+wOSvjb84zByOUu3XHxm88jJ
-         UU36WLOHSWhfmca1NmipbYVnZDOG6rLqQJZHsUfB1mjDIAsknW+Ps1BqG4P59TxKNiOq
-         8aqawau+ER3ZDCiQXEdoNJYHBKXte45RIlzQAGuyg9dJh8oeFnWOqEgfYGyAHjMea9Q+
-         704A==
-X-Forwarded-Encrypted: i=1; AJvYcCVvKL+H1xRBWze5B//UFKIXiI1GC1HFoPVL7NYQ1YfILMAoS3UJ72KN1rUBOYlZlPGXe8LcxBBTexunNzQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZSHwy/gfktzT+dL7YJTv59MFV9w+NtIklIyr5jRCeITRBDwCF
-	q5T9wpIpVeMyhHiTpsAknF3IAaOaREJr5/uLyG9ji+Ru/oLOqICWybBedybiquw=
-X-Gm-Gg: ASbGncsHjg/m3Frxry5QlLpztAURfmJJ4KIVNhv/BARKKtLSAbVnQbvNXzP1lXACHDL
-	tN89TIFenSM4Swdltjdj3K52tGIg4RGrvW/fXuFSIif+6mHzGYE7WzksWOkBl4uSJV/BQSZC9jT
-	iPeiUUiVA83g65WwpCgW93+wQahd+Qkz1TcjxOWdhSl8JGnIX2ybr3HITQ60WARjNtdnL5VHiHc
-	uEtniEIy1mEJu39DCBLHP2Hu7SbJOr/VwxpvzTyNcbwrpDD36sMeXG9uufdCtjCeWlqC1rcKCxu
-	WFqFO6AxeDC5aAUFZ3jFBin9sZYJwZe7F90s1AvK0EAU5rO/S1Jhd4q6EfifxwJoqFI2/A==
-X-Google-Smtp-Source: AGHT+IGsPJrOcFQQnf+A25Wzl5ciCuJH/GUL3mTZ6Ip2nmGrIOQr357sCNfSXwJhOsr7Fk7zmP7O7w==
-X-Received: by 2002:a05:651c:a0a:b0:308:ed4d:629e with SMTP id 38308e7fff4ca-309036d922fmr8815131fa.5.1739448526360;
-        Thu, 13 Feb 2025 04:08:46 -0800 (PST)
-Received: from [192.168.1.4] (88-112-131-206.elisa-laajakaista.fi. [88.112.131.206])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5451f115ccbsm147666e87.210.2025.02.13.04.08.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 04:08:45 -0800 (PST)
-Message-ID: <da37555d-b471-4f3a-94ea-4809fd184dee@linaro.org>
-Date: Thu, 13 Feb 2025 14:08:45 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ixSxsLst"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C0ACC4CED1;
+	Thu, 13 Feb 2025 12:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739448614;
+	bh=0K3K8Ve6Nf+QbJw4fodrmcsL0YTbcamOy8gUjErmc2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ixSxsLstbWTuePxMz3K5LBIMEBN5+UAXB9TpGsYtjORULLl23r3uXZScfa6jCdtAW
+	 eJPFPf29GJ07aFQ7mOOM+Bc4S8DPhswkESUeWlXrHZVLfGcbAUMsWsD4UpxbwAWTQP
+	 2pIvoBZgGl270Q6ixbbAn2sTFd/sTkXqjf+y85Zw=
+Date: Thu, 13 Feb 2025 13:10:11 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Hsin-chen Chuang <chharry@google.com>
+Cc: luiz.dentz@gmail.com, linux-bluetooth@vger.kernel.org,
+	chromeos-bluetooth-upstreaming@chromium.org,
+	Hsin-chen Chuang <chharry@chromium.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+	Ying Hsu <yinghsu@chromium.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] Bluetooth: Fix possible race with userspace of
+ sysfs isoc_alt
+Message-ID: <2025021347-washboard-slashed-5d08@gregkh>
+References: <20250213114400.v4.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
+ <2025021352-dairy-whomever-f8bd@gregkh>
+ <CADg1FFdez0OdNDPRFPFxNHL_JcKmHE6KNxnYvt4sK7i+Uw6opA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] i2c: Unexport i2c_of_match_device()
-Content-Language: ru-RU
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- =?UTF-8?B?QmVuY2UgQ3PDs2vDoXM=?= <csokas.bence@prolan.hu>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Samuel Holland <samuel@sholland.org>, Sebastian Reichel <sre@kernel.org>
-References: <20250213114613.2646933-1-andriy.shevchenko@linux.intel.com>
- <20250213114613.2646933-3-andriy.shevchenko@linux.intel.com>
-From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-In-Reply-To: <20250213114613.2646933-3-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADg1FFdez0OdNDPRFPFxNHL_JcKmHE6KNxnYvt4sK7i+Uw6opA@mail.gmail.com>
 
-On 2/13/25 13:45, Andy Shevchenko wrote:
-> i2c_of_match_device() is not used anymore outside of I²C framework,
-> unexport it.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+A: http://en.wikipedia.org/wiki/Top_post
+Q: Were do I find info about this thing called top-posting?
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
 
-Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+A: No.
+Q: Should I include quotations after my reply?
 
---
-Best wishes,
-Vladimir
+http://daringfireball.net/2007/07/on_top
+
+On Thu, Feb 13, 2025 at 07:57:15PM +0800, Hsin-chen Chuang wrote:
+> The btusb driver data is allocated by devm_kzalloc and is
+> automatically freed on driver detach, so I guess we don't have
+> anything to do here.
+
+What?  A struct device should NEVER be allocated with devm_kzalloc.
+That's just not going to work at all.
+
+> Or perhaps we should move btusb_disconnect's content here? Luiz, what
+> do you think?
+
+I think something is really wrong here.  Why are you adding a new struct
+device to the system?  What requires that?  What is this new device
+going to be used for?
+
+confused,
+
+
+greg k-h
