@@ -1,109 +1,244 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66005271263
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 20:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE62E270ED2
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 20:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739479567; cv=none; b=ht0O70uUSVuwJVRV/4iLjn9j4fishJuIfu66w9/cna2nxfQzeK63FX21VNSJRQ26Ic+BoJ5Tmb5+09WnsEtCzOSCamSCqh3bIzs5zBtXEadBqqy+gcItepMCSDy5APt1ciEbtqyhXnvRvey2bHua1jDljlAS3hOo1PxpBDs5vwA=
+	t=1739479566; cv=none; b=R8Awlemd1Q+zG++RrfahoeyWqGPrDlukhJzBjkLsXeic4U5ufU4npfKkobGn7EJpSFPAEaZIdUJD/sb3sKq+8soNvKdJdcssWwdEIytcRtfx4xe/34UeLgI3Vf6M2swWxfZpvr2fiIK2kKGqdUCafoLp9ZhnqJTmfBwEugeXwjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739479567; c=relaxed/simple;
-	bh=OGxeZxl9MlwMBKkNj3NJO7s7b1UlFvhoi6keYgIvf9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HIz/EedBCbZkJO+IGNBEEGx/CWYBmp9+QKr8zgPVB1HoOfCvIKEfe2SNcEGnQC2jf+/BHgzkWUFvgQtFU8zrppaYopYDFGWBWZqK6WcIHMso207eigS20cyJG3nihnUQKcVGoSNAQeSSPvaHkBxNjVVp7MwKw6qYz3k/vZWs79s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ioaBjtSc; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739479566; c=relaxed/simple;
+	bh=+I+VRf68pub7QtDDgc2t195rQtaTteShHv9verWdpIw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=bfA9rq4drGvbpD5FWCzmY/YnpYLkwD1JnepChW0tLHXdJAxzMo4fv4csDYQuRCkaUunzhFkuheww+TNckyi2xPGx5MrmoqnKxFLKP5VnU23/XrE/XH/XR5MonS2VWZP23PFKN9rBeJvvpTu+28jkK/EgyzS3BYbfrecrAOIhyds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LbWGyClu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ioaBjtSc"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 06597166A;
-	Thu, 13 Feb 2025 21:44:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739479482;
-	bh=OGxeZxl9MlwMBKkNj3NJO7s7b1UlFvhoi6keYgIvf9Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ioaBjtSc7MDjGl3dQR4Kx1hSh/TmsnvJdmvkucmS7hSHcLNjqz6y9wJXSQNQp2RWW
-	 EmEtkCGUsvGEvw8rIONwKz2DREMybjg7g5d/hB+VODfHp8ReodmB1ydGjGLuW/K3l1
-	 yCpN7crRSLCe7EELvwuZMOAgOK1HLKawU20L2xCo=
-Date: Thu, 13 Feb 2025 22:45:49 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Vishal Sagar <vishal.sagar@amd.com>,
-	Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Michal Simek <michal.simek@amd.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 07/11] drm: xlnx: zynqmp: Use drm helpers when
- calculating buffer sizes
-Message-ID: <20250213204549.GC22998@pendragon.ideasonboard.com>
-References: <20250212-xilinx-formats-v3-0-90d0fe106995@ideasonboard.com>
- <20250212-xilinx-formats-v3-7-90d0fe106995@ideasonboard.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LbWGyClu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739479564;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dJlrIKSurYkXvX4GL8/YLGu0FEvUvuu47DJYVtCqeOc=;
+	b=LbWGyClumMrDbCOm1Ey07FyPA+mZfuyk8Ntvg0FNn4aXjzbN0+Ha4rRXyx7MBHm8Fryd9g
+	2zhQJKoJym74VXw+JToua+OEWRHDrKeQ8JwmteJsFsAm5nr/HPqRo5uw1E+/rxRd98C9Td
+	+Jrr8EOAk9XX766t08Kn9XbWxEfAQ64=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-333-B7o60zkpPGSupJW3M0rBRA-1; Thu,
+ 13 Feb 2025 15:45:56 -0500
+X-MC-Unique: B7o60zkpPGSupJW3M0rBRA-1
+X-Mimecast-MFC-AGG-ID: B7o60zkpPGSupJW3M0rBRA_1739479554
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D1DC18E6952;
+	Thu, 13 Feb 2025 20:45:54 +0000 (UTC)
+Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.199])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E7BA219373D9;
+	Thu, 13 Feb 2025 20:45:50 +0000 (UTC)
+From: Anusha Srivatsa <asrivats@redhat.com>
+Date: Thu, 13 Feb 2025 15:44:36 -0500
+Subject: [PATCH 19/20] drm/panel: Remove deprecated functions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250212-xilinx-formats-v3-7-90d0fe106995@ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250213-mipi_cocci_multi-v1-19-67d94ff319cc@redhat.com>
+References: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
+In-Reply-To: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Joel Selvaraj <jo@jsfamily.in>, Ondrej Jirman <megi@xff.cz>, 
+ Javier Martinez Canillas <javierm@redhat.com>, 
+ Jianhua Lu <lujianhua000@gmail.com>, Robert Chiras <robert.chiras@nxp.com>, 
+ Artur Weber <aweber.kernel@gmail.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739479476; l=6569;
+ i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
+ bh=+I+VRf68pub7QtDDgc2t195rQtaTteShHv9verWdpIw=;
+ b=4f7vsxU2rR19xH91jp30oUsAOFAjhYShDY70+PUObTMl2wOBmiyGzINJrVwnB6hvTTnvteNZM
+ EcvFuJEMyp9BUwRQQ2U3rDB7Vq5wHCLVAeCTD3lOFBq1HWgFBT3cueZ
+X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
+ pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Hi Tomi,
+With transition to newer functions, remove
+older ones that are no longer used.
 
-Thank you for the patch.
+Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+---
+ drivers/gpu/drm/drm_mipi_dsi.c | 56 ------------------------------------------
+ include/drm/drm_mipi_dsi.h     | 47 -----------------------------------
+ 2 files changed, 103 deletions(-)
 
-On Wed, Feb 12, 2025 at 04:56:11PM +0200, Tomi Valkeinen wrote:
-> Use drm helpers, drm_format_info_plane_width(),
-> drm_format_info_plane_height() and drm_format_info_min_pitch() to
-> calculate sizes for the DMA.
-> 
-> This cleans up the code, but also makes it possible to support more
-> complex formats (like XV15, XV20).
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> ---
->  drivers/gpu/drm/xlnx/zynqmp_disp.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> index 80d1e499a18d..3d4ade571f0f 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> @@ -1116,16 +1116,18 @@ int zynqmp_disp_layer_update(struct zynqmp_disp_layer *layer,
->  		return 0;
->  
->  	for (i = 0; i < info->num_planes; i++) {
-> -		unsigned int width = state->crtc_w / (i ? info->hsub : 1);
-> -		unsigned int height = state->crtc_h / (i ? info->vsub : 1);
->  		struct zynqmp_disp_layer_dma *dma = &layer->dmas[i];
->  		struct dma_async_tx_descriptor *desc;
-> +		unsigned int width, height;
-
-I'd got with one variable per line.
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
->  		dma_addr_t dma_addr;
->  
-> +		width = drm_format_info_plane_width(info, state->crtc_w, i);
-> +		height = drm_format_info_plane_height(info, state->crtc_h, i);
-> +
->  		dma_addr = drm_fb_dma_get_gem_addr(state->fb, state, i);
->  
->  		dma->xt.numf = height;
-> -		dma->sgl.size = width * info->cpp[i];
-> +		dma->sgl.size = drm_format_info_min_pitch(info, i, width);
->  		dma->sgl.icg = state->fb->pitches[i] - dma->sgl.size;
->  		dma->xt.src_start = dma_addr;
->  		dma->xt.frame_size = 1;
+diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
+index 5e5c5f84daacc6913a73f9dda0f49cc78f83479a..33f68d4057aadd772afe6cccbb7c27f1730b581f 100644
+--- a/drivers/gpu/drm/drm_mipi_dsi.c
++++ b/drivers/gpu/drm/drm_mipi_dsi.c
+@@ -768,34 +768,6 @@ ssize_t mipi_dsi_generic_write(struct mipi_dsi_device *dsi, const void *payload,
+ }
+ EXPORT_SYMBOL(mipi_dsi_generic_write);
+ 
+-/**
+- * mipi_dsi_generic_write_chatty() - mipi_dsi_generic_write() w/ an error log
+- * @dsi: DSI peripheral device
+- * @payload: buffer containing the payload
+- * @size: size of payload buffer
+- *
+- * Like mipi_dsi_generic_write() but includes a dev_err()
+- * call for you and returns 0 upon success, not the number of bytes sent.
+- *
+- * Return: 0 on success or a negative error code on failure.
+- */
+-int mipi_dsi_generic_write_chatty(struct mipi_dsi_device *dsi,
+-				  const void *payload, size_t size)
+-{
+-	struct device *dev = &dsi->dev;
+-	ssize_t ret;
+-
+-	ret = mipi_dsi_generic_write(dsi, payload, size);
+-	if (ret < 0) {
+-		dev_err(dev, "sending generic data %*ph failed: %zd\n",
+-			(int)size, payload, ret);
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL(mipi_dsi_generic_write_chatty);
+-
+ /**
+  * mipi_dsi_generic_write_multi() - mipi_dsi_generic_write_chatty() w/ accum_err
+  * @ctx: Context for multiple DSI transactions
+@@ -912,34 +884,6 @@ ssize_t mipi_dsi_dcs_write_buffer(struct mipi_dsi_device *dsi,
+ }
+ EXPORT_SYMBOL(mipi_dsi_dcs_write_buffer);
+ 
+-/**
+- * mipi_dsi_dcs_write_buffer_chatty - mipi_dsi_dcs_write_buffer() w/ an error log
+- * @dsi: DSI peripheral device
+- * @data: buffer containing data to be transmitted
+- * @len: size of transmission buffer
+- *
+- * Like mipi_dsi_dcs_write_buffer() but includes a dev_err()
+- * call for you and returns 0 upon success, not the number of bytes sent.
+- *
+- * Return: 0 on success or a negative error code on failure.
+- */
+-int mipi_dsi_dcs_write_buffer_chatty(struct mipi_dsi_device *dsi,
+-				     const void *data, size_t len)
+-{
+-	struct device *dev = &dsi->dev;
+-	ssize_t ret;
+-
+-	ret = mipi_dsi_dcs_write_buffer(dsi, data, len);
+-	if (ret < 0) {
+-		dev_err(dev, "sending dcs data %*ph failed: %zd\n",
+-			(int)len, data, ret);
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL(mipi_dsi_dcs_write_buffer_chatty);
+-
+ /**
+  * mipi_dsi_dcs_write_buffer_multi - mipi_dsi_dcs_write_buffer_chatty() w/ accum_err
+  * @ctx: Context for multiple DSI transactions
+diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
+index 94400a78031f1b5f515c4a1519f604c0df7f3e0c..8d191d211f4fc67b8f8760571091885a1924310c 100644
+--- a/include/drm/drm_mipi_dsi.h
++++ b/include/drm/drm_mipi_dsi.h
+@@ -287,8 +287,6 @@ void mipi_dsi_picture_parameter_set_multi(struct mipi_dsi_multi_context *ctx,
+ 
+ ssize_t mipi_dsi_generic_write(struct mipi_dsi_device *dsi, const void *payload,
+ 			       size_t size);
+-int mipi_dsi_generic_write_chatty(struct mipi_dsi_device *dsi,
+-				  const void *payload, size_t size);
+ void mipi_dsi_generic_write_multi(struct mipi_dsi_multi_context *ctx,
+ 				  const void *payload, size_t size);
+ ssize_t mipi_dsi_generic_read(struct mipi_dsi_device *dsi, const void *params,
+@@ -326,8 +324,6 @@ enum mipi_dsi_dcs_tear_mode {
+ 
+ ssize_t mipi_dsi_dcs_write_buffer(struct mipi_dsi_device *dsi,
+ 				  const void *data, size_t len);
+-int mipi_dsi_dcs_write_buffer_chatty(struct mipi_dsi_device *dsi,
+-				     const void *data, size_t len);
+ void mipi_dsi_dcs_write_buffer_multi(struct mipi_dsi_multi_context *ctx,
+ 				     const void *data, size_t len);
+ ssize_t mipi_dsi_dcs_write(struct mipi_dsi_device *dsi, u8 cmd,
+@@ -380,27 +376,6 @@ void mipi_dsi_dcs_set_page_address_multi(struct mipi_dsi_multi_context *ctx,
+ void mipi_dsi_dcs_set_tear_scanline_multi(struct mipi_dsi_multi_context *ctx,
+ 					  u16 scanline);
+ 
+-/**
+- * mipi_dsi_generic_write_seq - transmit data using a generic write packet
+- *
+- * This macro will print errors for you and will RETURN FROM THE CALLING
+- * FUNCTION (yes this is non-intuitive) upon error.
+- *
+- * Because of the non-intuitive return behavior, THIS MACRO IS DEPRECATED.
+- * Please replace calls of it with mipi_dsi_generic_write_seq_multi().
+- *
+- * @dsi: DSI peripheral device
+- * @seq: buffer containing the payload
+- */
+-#define mipi_dsi_generic_write_seq(dsi, seq...)                                \
+-	do {                                                                   \
+-		static const u8 d[] = { seq };                                 \
+-		int ret;                                                       \
+-		ret = mipi_dsi_generic_write_chatty(dsi, d, ARRAY_SIZE(d));    \
+-		if (ret < 0)                                                   \
+-			return ret;                                            \
+-	} while (0)
+-
+ /**
+  * mipi_dsi_generic_write_seq_multi - transmit data using a generic write packet
+  *
+@@ -416,28 +391,6 @@ void mipi_dsi_dcs_set_tear_scanline_multi(struct mipi_dsi_multi_context *ctx,
+ 		mipi_dsi_generic_write_multi(ctx, d, ARRAY_SIZE(d)); \
+ 	} while (0)
+ 
+-/**
+- * mipi_dsi_dcs_write_seq - transmit a DCS command with payload
+- *
+- * This macro will print errors for you and will RETURN FROM THE CALLING
+- * FUNCTION (yes this is non-intuitive) upon error.
+- *
+- * Because of the non-intuitive return behavior, THIS MACRO IS DEPRECATED.
+- * Please replace calls of it with mipi_dsi_dcs_write_seq_multi().
+- *
+- * @dsi: DSI peripheral device
+- * @cmd: Command
+- * @seq: buffer containing data to be transmitted
+- */
+-#define mipi_dsi_dcs_write_seq(dsi, cmd, seq...)                               \
+-	do {                                                                   \
+-		static const u8 d[] = { cmd, seq };                            \
+-		int ret;                                                       \
+-		ret = mipi_dsi_dcs_write_buffer_chatty(dsi, d, ARRAY_SIZE(d)); \
+-		if (ret < 0)                                                   \
+-			return ret;                                            \
+-	} while (0)
+-
+ /**
+  * mipi_dsi_dcs_write_seq_multi - transmit a DCS command with payload
+  *
 
 -- 
-Regards,
+2.47.0
 
-Laurent Pinchart
