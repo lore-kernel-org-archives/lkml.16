@@ -1,247 +1,179 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5695F201259
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8183415689A;
+	Thu, 13 Feb 2025 17:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739467016; cv=none; b=rCPtWOgZJnKTKx0FNOKRbc+yub12T50vbUcqpLsbC4UVYUkkkZ6Z2hJ2CC/b5WlKcD2GBWNqUt53nguQE6V1cBngq2TSymw2pt2f8RhonrbtXxLS5ZNDu98788U5VWDr8OdLKortTIm9yEuNk/YFbZOTgHuTspQBvpUiB79b3t0=
+	t=1739467023; cv=none; b=XokJcihu/BY+zVDUiqXRxBe3WQeQCXYQhLv+mMbfKAiXM2CBgAlhMqYveRk1PP2pzTLkyPb6Za2kxs04C1rzVioo9Dsle8CEJo2NOSXJgc7EA8PFS+MH6bcHe5FHcA8GgQ6Moz2W4V8A8fv+sZo9fbkCQ+Ov6EW85PfGuluFAgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739467016; c=relaxed/simple;
-	bh=GnnlHo3AN2X6voTtxaBU3/Xd7w16hkql2u/UErCIXZc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=hwgrvi+HkOqrEw7+LnrUWa0j3oP2cJvhRS0LGklDkF9XV6U5Br3EOYl6w19poy/djltl8TyiVfX5ny0oX07gfIprUkW0z0T+2r1V0tZsta4LLRBd5X7w6dJwCt00YCBmq8IIhSUrlAb3G+O+x7dYWFuKFMckoYgy7FDKba3abmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SjK9gTRg; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739467023; c=relaxed/simple;
+	bh=rwN68ZfFZpS+p7Snpl6+Vm3SkAwnIbf/+yQkfbEaAY4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=f1dIPeOL7QlQSjthceaOtymcNoWSgl0JmJ3T2m6ulJDNcO1yQfs3KxVz55R4aQVipuauzjdL1hthrujRTk2OCLaWO1gBL7r9ltR2eaLKEYaggfeIehDR5UXX+i2RzJF9RVfH7OiKacV4jdgpV02x7sGmyarbhsFnburef0Q0tyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=n8wGfp1k; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SjK9gTRg"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2b8a8c8cf8dso24854fac.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:16:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739467013; x=1740071813; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tBy9giu2XuH33LZCPuALTlrK7I4fNXTlE0NtPV35u4I=;
-        b=SjK9gTRg/q6brHd1qyx/ShNJhosbomtMC4+LFoZM/JeDtEfp184HCA1qnnKq0JEAjj
-         hDeotNdBcFLwYKx4bCrH+734R6NtcmmauojIPf08X5AX0xrbv9BFCulUVPgP5upWsGL8
-         c+0Umv7erJ8e1BKu01c6Q32XC9kGJlEu9GkK4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739467013; x=1740071813;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tBy9giu2XuH33LZCPuALTlrK7I4fNXTlE0NtPV35u4I=;
-        b=sVZ6XRLtpjh74hvESOk3Ffcqoy8k4bLl8qz3tPKIkr/FuqL39PhNqE8Als1Nd4MUvr
-         wwtbVTSGgZLyrbm4+s7U7r9S8Vk/YNvyxNWD9Ds+VfyGtv9v+eTdGIfjRNzCRNzAij5t
-         5niWItyYqGok8HEKGyjoEJ0P37yUw63XB77krLkwCZ4oAx8qsStusx/hRQ7c/aguAxiM
-         9i+utsQbQRM8pywh79wkp8XBMSReyKspZH8AcNUWAPU1sZAacUkCVmzb5edIEUljndO1
-         bY252xfkZbIa3/I1yfYKnq6lLDUPzedxBA78CchvtuiKBc1pvekCSBBRkv+K2mQ/TxEc
-         4MmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVaktNY4anRFtEu5XaJNm7hfR5GNwAkb8OXSmdXsdkaoF1X6EVIEKaORiLHK71X70RLtim9wTwBeFRZWU8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWPfhVsjFDUUoaqx22QJ2pSkOTMpqeC9iLIQH376YVNlgC9tZP
-	lxp2pPsBwPxUMbvN+nlfJuUS3oWVgC8quR92QTGjjQauIUMHdRe8pyBtLU+e0LEk6Ky5XMp6fc+
-	J2lDEqI6nQc5FDXwlCIaOY0GVLk30ZOdElKSg
-X-Gm-Gg: ASbGncubC3hSHi3DS7UqeCJ+kHv8z7jHbo9HS4l6d8eEXkyIpLJ4+PEY8jw1NhbdkpT
-	qDqxQBB18sHGCxMxuC/57c0t7mxSNTtPGqo2FAwhK4uJT76A2J+/XroUDUaGq78m62yuC4vkAOd
-	yvixDZepL+pj1DDnodrgwdTTTuyXOBbw==
-X-Google-Smtp-Source: AGHT+IFgl+AN2r8X6K1wzkDWdEWSCbY3TrGWVYP851EsxR7f08xemuxZwcDGWA0t2Tv/VeZB1tHKMo1KROF0nlz+v0E=
-X-Received: by 2002:a05:6870:648b:b0:2b7:f564:a35b with SMTP id
- 586e51a60fabf-2b8d67f0b49mr1726124fac.8.1739467013249; Thu, 13 Feb 2025
- 09:16:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="n8wGfp1k"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DGrp5V008337;
+	Thu, 13 Feb 2025 17:16:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9wlBFv7Tbou/aWwuZJOkNHqYSnFsBzD7OpLRH3DjcgI=; b=n8wGfp1kx+Ww46ol
+	ltmCjQpJU3aOzBoaDeDY4u+maocy7k2uTi82/nUtkufbwtkHKKLndqXaOi9Y2Yt8
+	+pTEg8bDooUoEpskn6yVReNONteybJLKgFXjXVZFSWCxufFQICiSBmvTaCCs/Yej
+	OJ+uxVpmr5DWivVF8wbVvJCF0sDIq6/HJ5bVq9WmOyYz4MyIyaixYip2YO3aqXvV
+	kuNvAewXOkCqMtQbLkxfvIwMyxESmZKzl887iFr30MO2PE2gVQA+FBJA/ga08qeH
+	kikHG9YSuY+Ueef5eSeZI0YvRVshrHGb7NhHKlKG9EuXHT6t5foSc+PmKhlDN6WW
+	KolIBQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qewhbm77-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Feb 2025 17:16:48 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51DHGlHA013022
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Feb 2025 17:16:47 GMT
+Received: from [10.216.44.15] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 13 Feb
+ 2025 09:16:40 -0800
+Message-ID: <30c91617-8307-4ea5-8a56-4b3b987f2bdc@quicinc.com>
+Date: Thu, 13 Feb 2025 22:46:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212032155.1276806-1-jeffxu@google.com> <20250212032155.1276806-2-jeffxu@google.com>
- <qrxmfa6jvaojedmo6fle2e6vd5k4hzihcuxdc6zk43dclf6nsd@dvuzolusdtz4>
-In-Reply-To: <qrxmfa6jvaojedmo6fle2e6vd5k4hzihcuxdc6zk43dclf6nsd@dvuzolusdtz4>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 13 Feb 2025 09:15:00 -0800
-X-Gm-Features: AWEUYZk-H7IZgTRLevdACXtvIkKevRsUdXrms45ENhCkHRV0gRY9quOaw4ihuIE
-Message-ID: <CABi2SkUWGXtWAir5j1TO1c7FwOhbNmSwEzwTrxRgzfBydus=2A@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 1/7] mseal, system mappings: kernel config and
- header change
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
-	keescook@chromium.org, jannh@google.com, torvalds@linux-foundation.org, 
-	vbabka@suse.cz, lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org, 
-	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, hch@lst.de, 
-	ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
-	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
-	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
-	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
-	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
-	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
-	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
-	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
-	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
-	mike.rapoport@gmail.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] arm64: dts: qcom: qcs8300: Add gpu and gmu nodes
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        "Konrad
+ Dybcio" <konradybcio@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Jie Zhang
+	<quic_jiezh@quicinc.com>
+References: <20250213-a623-gpu-support-v1-0-993c65c39fd2@quicinc.com>
+ <20250213-a623-gpu-support-v1-4-993c65c39fd2@quicinc.com>
+ <p36nz6p6bbzur7uoitbzc63hv4qf7hhsix3mqa36igarasj67b@evcdfpeybgsh>
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <p36nz6p6bbzur7uoitbzc63hv4qf7hhsix3mqa36igarasj67b@evcdfpeybgsh>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 5TEdcz_SSSncZOitpVLLRmj3C4D-DxYh
+X-Proofpoint-GUID: 5TEdcz_SSSncZOitpVLLRmj3C4D-DxYh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-13_07,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ impostorscore=0 mlxlogscore=999 phishscore=0 clxscore=1015 adultscore=0
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502130123
 
-On Wed, Feb 12, 2025 at 7:05=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
->
-...
-> >
-> > In this version, we've improved the handling of system mapping sealing =
-from
-> > previous versions, instead of modifying the _install_special_mapping
-> > function itself, which would affect all architectures, we now call
-> > _install_special_mapping with a sealing flag only within the specific
-> > architecture that requires it. This targeted approach offers two key
-> > advantages: 1) It limits the code change's impact to the necessary
-> > architectures, and 2) It aligns with the software architecture by keepi=
-ng
-> > the core memory management within the mm layer, while delegating the
-> > decision of sealing system mappings to the individual architecture, whi=
-ch
-> > is particularly relevant since 32-bit architectures never require seali=
-ng.
-> >
-> > Additionally, this patch introduces a new header,
-> > include/linux/usrprocess.h, which contains the mseal_system_mappings()
-> > function. This function helps the architecture determine if system
-> > mapping is enabled within the current kernel configuration. It can be
-> > extended in the future to handle opt-in/out prctl for enabling system
-> > mapping sealing at the process level or a kernel cmdline feature.
-> >
-> > A new header file was introduced because it was difficult to find the
-> > best location for this function. Although include/linux/mm.h was
-> > considered, this feature is more closely related to user processes
-> > than core memory management. Additionally, future prctl or kernel
-> > cmd-line implementations for this feature would not fit within the
-> > scope of core memory management or mseal.c. This is relevant because
-> > if we add unit-tests for mseal.c in the future, we would want to limit
-> > mseal.c's dependencies to core memory management.
-> >
-...
-> >
-> > diff --git a/include/linux/userprocess.h b/include/linux/userprocess.h
-> > new file mode 100644
-> > index 000000000000..bd11e2e972c5
-> > --- /dev/null
-> > +++ b/include/linux/userprocess.h
-> > @@ -0,0 +1,18 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _LINUX_USER_PROCESS_H
-> > +#define _LINUX_USER_PROCESS_H
-> > +#include <linux/mm.h>
->
-> Why is this in a new file and not mm.h directly?  Anyone who needs to
-> use this will pull in mm.h anyways, and probably already has mm.h
-> included.
->
-The commit message includes the reason. I've snipped and left the
-relevant portion for easy reference, please see the beginning of this
-email.
+On 2/13/2025 10:26 PM, Dmitry Baryshkov wrote:
+> On Thu, Feb 13, 2025 at 09:40:09PM +0530, Akhil P Oommen wrote:
+>> From: Jie Zhang <quic_jiezh@quicinc.com>
+>>
+>> Add gpu and gmu nodes for qcs8300 chipset.
+>>
+>> Signed-off-by: Jie Zhang <quic_jiezh@quicinc.com>
+>> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
+>> ---
+>>  arch/arm64/boot/dts/qcom/qcs8300.dtsi | 93 +++++++++++++++++++++++++++++++++++
+>>  1 file changed, 93 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+>> index f1c90db7b0e6..2dc487dcc584 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+>> @@ -2660,6 +2660,99 @@ serdes0: phy@8909000 {
+>>  			status = "disabled";
+>>  		};
+>>  
+>> +		gpu: gpu@3d00000 {
+>> +			compatible = "qcom,adreno-623.0", "qcom,adreno";
+>> +			reg = <0x0 0x03d00000 0x0 0x40000>,
+>> +			      <0x0 0x03d9e000 0x0 0x1000>,
+>> +			      <0x0 0x03d61000 0x0 0x800>;
+>> +			reg-names = "kgsl_3d0_reg_memory",
+>> +				    "cx_mem",
+>> +				    "cx_dbgc";
+>> +			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
+>> +			iommus = <&adreno_smmu 0 0xc00>,
+>> +				 <&adreno_smmu 1 0xc00>;
+>> +			operating-points-v2 = <&gpu_opp_table>;
+>> +			qcom,gmu = <&gmu>;
+>> +			interconnects = <&gem_noc MASTER_GFX3D QCOM_ICC_TAG_ALWAYS
+>> +					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
+>> +			interconnect-names = "gfx-mem";
+>> +			#cooling-cells = <2>;
+>> +
+>> +			status = "disabled";
+>> +
+>> +			gpu_zap_shader: zap-shader {
+>> +				memory-region = <&gpu_microcode_mem>;
+>> +			};
+>> +
+>> +			gpu_opp_table: opp-table {
+>> +				compatible = "operating-points-v2";
+>> +
+>> +				opp-877000000 {
+>> +					opp-hz = /bits/ 64 <877000000>;
+>> +					opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
+>> +					opp-peak-kBps = <12484375>;
+>> +				};
+>> +
+>> +				opp-780000000 {
+>> +					opp-hz = /bits/ 64 <780000000>;
+>> +					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
+>> +					opp-peak-kBps = <10687500>;
+>> +				};
+>> +
+>> +				opp-599000000 {
+>> +					opp-hz = /bits/ 64 <599000000>;
+>> +					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
+>> +					opp-peak-kBps = <8171875>;
+>> +				};
+>> +
+>> +				opp-479000000 {
+>> +					opp-hz = /bits/ 64 <479000000>;
+>> +					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
+>> +					opp-peak-kBps = <5285156>;
+>> +				};
+> 
+> Does it have no speed bins or are they pending on the nvmem patchset?
 
-> > +
-> > +/*
-> > + * mseal of userspace process's system mappings.
-> > + */
-> > +static inline unsigned long mseal_system_mappings(void)
-> > +{
-> > +#ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
-> > +     return VM_SEALED;
-> > +#else
-> > +     return 0;
-> > +#endif
-> > +}
-> > +
-> > +#endif
->
-> Looking in mm.h, there are examples of config checks which either set
-> the bit or set it to 0.  This means you wouldn't need the function at
-> all and the precompiler would do all the work (although with a static
-> inline, I'm not sure it would make a big difference in instructions).
->
-> For instance, you could do:
-> #ifdef CONFIG_64BIT
-> /* VM is sealed, in vm_flags */
-> #define VM_SEALED       _BITUL(63)
->
-> #ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
-> #define VM_SYSTEM_SEAL          VM_SEALED
-> else
-> #define VM_SYSTEM_SEAL          VM_NONE
-> #endif
->
-> #else /* CONFIG_64BIT */
-> #define VM_SYSTEM_SEAL          VM_NONE
-> #endif
->
-> Then you can use VM_SYSTEM_SEAL in the system mappings function in the
-> list of flags instead of having a variable + calling the static
-> function.
->
-> I didn't look close enough to see if the 32bit version is necessary.
->
-I'm aware of the other pattern.
+Product team hasn't shared the details of GPU SKUs or the SKU detection
+mechanism yet. The default assumption is single SKU.
 
-VM_SEALED isn't defined in 32-bit systems, and mseal.c isn't part of
-the build. This is intentional. Any 32-bit code trying to use the
-sealing function or the VM_SEALED flag will immediately fail
-compilation. This makes it easier to identify incorrect usage.
+-Akhil.
 
-> > diff --git a/init/Kconfig b/init/Kconfig
-> > index d0d021b3fa3b..892d2bcdf397 100644
-> > --- a/init/Kconfig
-> > +++ b/init/Kconfig
-> > @@ -1882,6 +1882,24 @@ config ARCH_HAS_MEMBARRIER_CALLBACKS
-> >  config ARCH_HAS_MEMBARRIER_SYNC_CORE
-> >       bool
-> >
-> > +config ARCH_HAS_MSEAL_SYSTEM_MAPPINGS
->
-> ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS is more clear.  HAS may mean it's
-> supported or it could mean it's enabled. SUPPORTS is more clear that
-> this is set if an arch supports the feature.  After all, I think HAS
-> here means it "has support for" mseal system mappings.
->
-> I see that both are used (HAS and SUPPORTS), but I'm still not sure what
-> HAS means in other contexts without digging.
->
-The existing pattern is to indicate arch support with
-CONFIG_ARCH_HAS_N and   security/KConfig to have CONFIG_N as the main
-switch. For example, CONFIG_ARCH_HAS_FORTIFY_SOURCE and
-CONFIG_FORTIFY_SOURCE. Since the MSEAL_SYSTEM_MAPPINGS is placed in
-security/Kconfig, hence I'm following the existing pattern in
-security/Kconfig.
+> 
+>> +			};
+>> +		};
+>> +
+> 
 
-> > diff --git a/security/Kconfig b/security/Kconfig
-> > index f10dbf15c294..bfb35fc7a3c6 100644
-> > --- a/security/Kconfig
-> > +++ b/security/Kconfig
-> > @@ -51,6 +51,24 @@ config PROC_MEM_NO_FORCE
-> >
-> >  endchoice
-> >
-> > +config MSEAL_SYSTEM_MAPPINGS
-> > +     bool "mseal system mappings"
-> > +     depends on 64BIT
-> > +     depends on ARCH_HAS_MSEAL_SYSTEM_MAPPINGS
-> > +     depends on !CHECKPOINT_RESTORE
-> > +     help
-> > +       Seal system mappings such as vdso, vvar, sigpage, uprobes, etc.
-> > +
-> > +       A 64-bit kernel is required for the memory sealing feature.
-> > +       No specific hardware features from the CPU are needed.
-> > +
-> > +       Note: CHECKPOINT_RESTORE, UML, gVisor are known to relocate or
-> > +       unmap system mapping, therefore this config can't be enabled
-> > +       universally.
->
-> I guess add rr to the list, since that's also reported to have issues as
-> well.
->
-sure.
-
-Thanks for reviewing.
-
--Jeff
