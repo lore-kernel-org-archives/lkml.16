@@ -1,126 +1,110 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A8013A3EC
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAD9202C4C
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739468338; cv=none; b=knT56caw3xgB6hzcOKCE0uJb9hoiFFw+RWwl2y0lwqzXDgXpSV62YljGFRkE0tz82uyFq5HEB7yntLy1Xv+k1ugyN+JJMcw33oHD/TguglxQS9W+8iCfvOe7GVT2bMS7lYeDU0sy60YxqemXXkcsMKb2gJbgZbQsrTEzgBrzCvQ=
+	t=1739468372; cv=none; b=UGM8EpQYwJ5NPnfGtTSI/TiNkb3fTDXc+7eWqkl2UsvLbtMjPgnQYiml9jdKLkopoCDLDKbwl9P84+kuSt0ZeqEK44Fx2R9qTb6iWtwLvAC5Q2KBt7Lk0AxcuT1fcNMgmFW2Mv2M/kqjrr8V3wAZqb77O7ctFd2kMK98QSlydWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739468338; c=relaxed/simple;
-	bh=b7N+8dSPQ0OnlGTOQ+2/iyi4f6259SWAIHYoRWb24J8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S0OYEQtyp/D7PfLAxeQKJxRI+XFABM8osgvxTn3Mm83BssN1fkSnSOhlLY/qwo/W+IkH1oxcGSfIzVtC3NIL+EOKkXcg2I8ddVi7RpzeWZ7rERk/QP3yvZdxMLuSziTstGSOz/ELkGq6U3Lcd2KkjH1y14l6n4psovEvBr0avs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=ECU7WBy3; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1739468372; c=relaxed/simple;
+	bh=KO5CjaRrsMmSyUYYfavhvo6x6sn7CHl2RDcCF2tZcE8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nYhkFlf2cXga9wb0Knen8nptWTxL8IGq8H7hluyfdMe4cF4s4+tUtBuRV9EO4xPa6jc7q6DjofL6edFUK3KSofsfJN59mIbQskV4yQHPPD3vFnnPnPSnKdqMazzBRup+qWp9dRTVdIsjmq9FSMGDnMMJkwEppwmgOufdNPB0mCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=Eyh1K3WK; arc=none smtp.client-ip=78.40.148.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="ECU7WBy3"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21f6d2642faso30084245ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:38:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1739468336; x=1740073136; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oLC9kfYPwLBjTLU9fLAjv67CM2H+dgqHjhipB5hFLZc=;
-        b=ECU7WBy3jbHPomLP0Xv0uYG7Q3Uwur/tm0kyRQqp1L0sCK3uTarWXuth+a+LOA4Umw
-         brm3i/Kbk3Vk7W8H4zDLq4Q1KDeVz7TDOn6nyJ0Vyx+UXJHl1q8INHTYUENkFqDu5bgj
-         SabyGG1Yp9h18+gTUcWsm7IM+4/kyExktlqaI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739468336; x=1740073136;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oLC9kfYPwLBjTLU9fLAjv67CM2H+dgqHjhipB5hFLZc=;
-        b=Yj4GAg94yq4qqYkeuHgIF0s5hlL6byvq92ptqp/FaD7sNOZzwJ4JweNmbOb7q/Riwg
-         Y0A9Lw1fRRi0Q5ATSuq9Jjfo1OnNTSsJQDs08mRDELmfMsSt+YEHAH0bonS4tl+0QvfR
-         A4XOWGvd2b2p2FAxt680AXHfPQNhX0IQ0iqMWKjVVaoU52eRQR+EH1tsnTlsYxk3O40S
-         8c2YY/rilAOQWkkorD4UB3UCRVu0h+hnOVF76NZzndlWzQc40MLz3W76rz1XA1bt6BtW
-         fq/fO9pDJ+gII5EHlYNWshn1yqEfUSbivFULZayStJLIZjaWzgJoIzl4l0bHiv0UX8fH
-         e4uA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnxGpUINSfGxFM9IA2al7OSoydOmJmq2sq9EgcDf9qjlkW4M3h61jRWWx9E+bCm8WqYqlfDZ06Pmkd6SQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMzixOcV+S9XBbNtzyuVouAnl1iZCwS/9TLB4GF0GCcSyVRSWt
-	0WLTCDI9UoJ+DBHJy7gbix5Mv4WRjKJ24PQv9qfWVEWk1rpBzyuTr+fsxX/wy9+itXSfswx70ds
-	9
-X-Gm-Gg: ASbGncurINvPUhBhHfs5Swlemc4xAsXkcbQMlhJ11ENZFk1rpiR08NBMbGBnNCXmLYg
-	wYeshCOUZ2RHdSTJGzsjj10PgPmNWGUXGiEch8yoAY5WcmdWiXkxP4MTW0nDhc82k95stitSjvh
-	eg9P5E8ajCMdj2Vc/NNuEKIw2oyX5+4/nNJlW8zL+dgWKx1R/bUXyJMc+J/TmAaczvNg0KJAGDk
-	t1X8ntutalnDVKeAagbmhAMwyKcoReBoe4ARzMteNTS9+iTrwlF8098J0dDYOCuYeso3uTNVBjF
-	vrgrDlKinKa3k+cz0MnChnsfo0/v3KnljeTWT+TqLVyMjpXM/WBrpDg35Q==
-X-Google-Smtp-Source: AGHT+IHKx7UoBaIYvNAKG4jbdIsvHPKTWLspdf35/yTjPBwhkv4ORzitL5INUVr5HwUTUERzhGKRNQ==
-X-Received: by 2002:a05:6a00:2e1c:b0:732:1ffc:36f5 with SMTP id d2e1a72fcca58-7322c374111mr12059457b3a.5.1739468335955;
-        Thu, 13 Feb 2025 09:38:55 -0800 (PST)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7324273e4casm1588770b3a.103.2025.02.13.09.38.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 09:38:55 -0800 (PST)
-Date: Thu, 13 Feb 2025 09:38:52 -0800
-From: Joe Damato <jdamato@fastly.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-	rdunlap@infradead.org, bagasdotme@gmail.com, ahmed.zaki@intel.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2] documentation: networking: Add NAPI config
-Message-ID: <Z64uLN63gD0nNvk_@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, rdunlap@infradead.org, bagasdotme@gmail.com,
-	ahmed.zaki@intel.com, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-References: <CALALjgz_jtONSFLAhOTYFcfL2-UwDct9AxhaT4BFGOnnt2UF8A@mail.gmail.com>
- <013921c8-1fd0-410d-9034-278fc56ff8f5@redhat.com>
- <Z633ggyM-F2pfAkG@LQ3V64L9R2>
- <20250213081418.6d3966af@kernel.org>
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="Eyh1K3WK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cKiGkcsixPn4QQtTKc7Lsw9RVigZQY9fPXwk3glZ0vE=; b=Eyh1K3WK+bt6eeYNEDl6HFh6MG
+	Pu53wMhcj8neZh7w/pUF5gbJCETid3gJAMO5ZWdY2aWMZe4tqMloacovCGkLmhbzaYKm3m+lB+RHd
+	Vx47vQWHi5WJ4W3znn72Ta73MlQCRb2Rm+oDHOahy1KH6rvvU5khKRlUSMBMGJQggF56VmmZXai3q
+	xz3az8d2FmgVyCykADzIPUgKnuo7Ewmd1gA4qKj88Fe201qa3w+8xNWlGxLoD/pqLStfaZXEt9lB9
+	8bbt7RwbdRdOlV0+RiEEi1pHq1D83YRmAMGO/kR1Bqe2hQ/SsuX9IWBK59m5w10TFAUoF9a3tZ2XF
+	oLlaihcQ==;
+Received: from [167.98.27.226] (helo=[10.35.6.157])
+	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1ticoo-0081al-LJ; Thu, 13 Feb 2025 17:16:06 +0000
+Message-ID: <a994e94c-3211-4bb4-ab41-71a2c1abebd4@codethink.co.uk>
+Date: Thu, 13 Feb 2025 17:16:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213081418.6d3966af@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] riscv: implement user_access_begin and families
+To: Cyril Bur <cyrilbur@tenstorrent.com>,
+ Charlie Jenkins <charlie@rivosinc.com>
+Cc: palmer@dabbelt.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Jisheng Zhang <jszhang@kernel.org>
+References: <20241118230112.2872978-1-cyrilbur@tenstorrent.com>
+ <20241118230112.2872978-2-cyrilbur@tenstorrent.com> <Z4rl8BgoV8tygCn9@ghost>
+ <b45aab1e-6d37-4027-9a15-4fa917d806b9@codethink.co.uk>
+ <e4a4c688-b78c-468b-8196-68d2df980167@tenstorrent.com>
+Content-Language: en-GB
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+In-Reply-To: <e4a4c688-b78c-468b-8196-68d2df980167@tenstorrent.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Sender: ben.dooks@codethink.co.uk
 
-On Thu, Feb 13, 2025 at 08:14:18AM -0800, Jakub Kicinski wrote:
-> On Thu, 13 Feb 2025 05:45:38 -0800 Joe Damato wrote:
-> > On Thu, Feb 13, 2025 at 12:45:01PM +0100, Paolo Abeni wrote:
-> > > On 2/11/25 9:06 PM, Joe Damato wrote:  
-> > > > +++ b/Documentation/networking/napi.rst
-> > > > @@ -171,12 +171,43 @@ a channel as an IRQ/NAPI which services queues
-> > > > of a given type. For example,  
-> > > 
-> > > It looks like your client mangled the patch; the above lines are
-> > > corrupted (there should be no line split)
-> > > 
-> > > Please respin  
-> > 
-> > I must be missing something: I don't see the line split when looking
-> > at the original email and I just tried applying the patch directly
-> > from my email and it applied just fine.
-> > 
-> > Are you sure its not something with your client?
-> > 
-> > See the message on lore:
-> > 
-> > https://lore.kernel.org/netdev/20250211151543.645d1c57@kernel.org/T/
+On 13/02/2025 17:07, Cyril Bur wrote:
 > 
-> It's also broken on lore.
 > 
-> The first diff block starting with the @@ line overflows and gets
-> broken into the next line. All lines within a diff block must start
-> with a space, + or -. The "of a given type. For example," line breaks
-> that.
+> On 6/2/2025 1:08 am, Ben Dooks wrote:
+>> On 17/01/2025 23:21, Charlie Jenkins wrote:
+>>> On Mon, Nov 18, 2024 at 11:01:09PM +0000, Cyril Bur wrote:
+>>>> From: Jisheng Zhang <jszhang@kernel.org>
+>>>>
+>>>> Currently, when a function like strncpy_from_user() is called,
+>>>> the userspace access protection is disabled and enabled
+>>>> for every word read.
+>>>>
+>>>> By implementing user_access_begin and families, the protection
+>>>> is disabled at the beginning of the copy and enabled at the end.
+>>>>
+>>>> The __inttype macro is borrowed from x86 implementation.
+>>>>
+>>>> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+>>>> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
+>>
+>> If we're doing this, then saving the STATUS.SUM flag is going to
+>> be more important than before. We had this discussion when the
+>> initial user-access with syzbot stress testing turned up.
+>>
+>> We partially fixed this by rewriting the ordering in the __put_user
+>> function to stop the 'x' argument being evaluated inside the area
+>> where SUM is enabled, but this is going to make the window of
+>> opportunity of a thread switch much bigger and the bug will just
+>> come back and bite harder.
+>>
+>> If you want I can look at re-doing my original patch and resubmitting.
+> 
+> Oh! Could you please link the patch? I haven't seen it and can't seem to 
+> find it now.
 
-I see; I think it's this oauth2 helper I've been trying to use with
-my google cloud account. Arg.
+https://lore.kernel.org/linux-riscv/20210318151010.100966-1-ben.dooks@codethink.co.uk/
 
-I'll RESEND this and my XSK attribute thing, too, which for some
-reason isn't on lore but is on other sites (like spinics).
+> Thanks.
+> 
+>>
+>>
+> 
+> 
+
+
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+
+https://www.codethink.co.uk/privacy.html
