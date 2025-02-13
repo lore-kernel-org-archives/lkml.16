@@ -1,191 +1,199 @@
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFC32753F3
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 23:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739488053; cv=none; b=CIXnXX+H+ZfLR4PIfbTJJ826F06BDIdMad7aGgFFevYyLiOcztFJMiE1NYIzziGQ/i9ENxiJx62u3O+uzgv8xb4fZsSiAmnrH5df3/Z+U1wfnurQhNzSsIUUcGS0Dwzp1ElEquf5E9+2hAN4NMjejwXenWrdmgE5sot6gG0Kszw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739488053; c=relaxed/simple;
-	bh=60XrE/J6wIlwuNawEb259r4V2dGxlH4yUnxGaEbYWNs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c1joJswAxzKN/NhxAJM3P9GeGnT2G0SokcYMoMSFixF5T3lIBppaNvaT+FYqWEwE3ZXyX1FLVxe00DaY+yBqiG8tlgPTrKr0ZyKBv+sukLo0/dbzsY92AqVJykkH1+3Sl2QpJxZI2rk/YwoHmcQZYestT8GDV+EPEMSKvbwfU4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ap/H7Op9; arc=none smtp.client-ip=209.85.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDBC2753F5;
+	Thu, 13 Feb 2025 23:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739488558; cv=fail; b=W27dm6G81EafQGFOjv6wFGX7QayM69t9Z1Xi2gQObpru82YIpnwYkZ1QKoiYfs87/Ld33Vxq5tNHxoCE6K+a20uHkwAsEYf878lelndllsbEL2VILmg4/7qCtJlZCxbVOc8iD882MHOBLlYoCb8syRfhRxM2k5grGBk8ZDAA6k8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739488558; c=relaxed/simple;
+	bh=yhqp78H5OtULd1a8af5fApAtTL0amNdx2hzQHm1dDgU=;
+	h=Date:From:To:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=cPTsEWlv0FM+QKUvfXohToBE4eHd6dubKKVCpl4Fx4WMSksjgVxuO2KhHVCBYwLMQT1dHjIa5KLNIxJ/L6BwpAeHNodTcynRgSVn93PYJ0g90IhDa3a2iq2PiA7vYeqr+Fb8bVNV9baAZby0q6nn66/u51A/yZt0p6aT1BCjQmA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fze4OOh8; arc=fail smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ap/H7Op9"
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-868f322b8dfso406086241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 15:07:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739488050; x=1740092850; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ckcD7kf8hbhTKxgQjWiNmXpiRbxO5jasuP7uxcmPy2A=;
-        b=ap/H7Op9q5FjWIhbvxHhi7EtPPpDtoI4L34LlFn+r2kdEyBriKnUXK7iasGF75iE7O
-         E2MhSmn0ToVcoava3X8YO+aQmB9sIvaSBSRxGkaj+Pvr7HJSe6c0UQKwc9yefMc3FKzp
-         bcB+6NgO50jb0AlEz0lJ8DXVfqbyZ1uDX3iDk9e7BrIXjvOV9EogRMYfaKMXgqf+Lu8/
-         R4LQWKglwKHIx94ZYwU8NGJ/8RsxkfPubaJ0a/ArPeuZsbgjSIN70X6N5K449Ncrci+E
-         SJj7vX3TAn18Ow1b6m1VfdCq+RbLYvbTVf+43tYcwkl25fjjcYFFxuhVGvqRmbfIlZGw
-         Opmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739488050; x=1740092850;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ckcD7kf8hbhTKxgQjWiNmXpiRbxO5jasuP7uxcmPy2A=;
-        b=qO13XDID5Gre/+74UQ0g8yIWXgyLyYCVmoOoXXQDa7QaKhPtQsGIuAvnfZnlBxew5J
-         n2EOsULM4KG4RDOZL0NyUzdWVMm4oh70XFegu2I93dZ6GKnWjJVksXmXXmh+E9a26bXJ
-         IaBKKAfsL2iuRi9zlbEMO5D6ES4jeOUz/cX3oiirDfXoeGf6F3f1bJSfA01f/owH1+Dw
-         BvblhJNzpyHnPYJp6J9DB4nyUjMd2K9AcUkIqB0Nkb1x7XI372+urTiaaU6NkMiu5fOr
-         W5ro4G8cBERotaz9U8IMU+FSEp2o6ZbUHSEz+SEeQ0yO5m53hkAjIbtJbR+ArQqQA5Ov
-         rXUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVlLsEenlHT2m1pg8PfXlhmYBNA7L2JLZPMZ7ZyV5pJUlbBtq7A9OdmtYXaRon01poG9/ALNzMRxoFLv+M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3KEj/JSTLJjLloYT+F8YrgQzeenVhCOXn9VFU4+5qEZE9dbx7
-	eEtTvZBn8rxhEmMP1pbmSVkzy97tdabryGV0P/NDNpzAlOcIvgVYw9ddJvQ2K8xVBZxlB8dPANf
-	CKNhe/K90H4vRMWFskxgqqtj/p6U=
-X-Gm-Gg: ASbGncsJFTjS2YSkNhdxm2iN4RhIA8RN4NFoKL99lgvqzAncsdj5OIv9UbBjjHmS2jJ
-	X4hkNyaA1mel3WEMsUGXm8KGh5Fu5lUm3mC21cc71/86aLr9ns/GmlixizMhnjhoF2LlGgtV7
-X-Google-Smtp-Source: AGHT+IGRs+BkoBsAvtouPrFHW7HnicJHJ8jpxEWAuwpW1xi8ZW2LJ23bl+SEP/M/9S4ga9OTOT4n8KwOARop3H3a0E0=
-X-Received: by 2002:a05:6102:d86:b0:4b2:cdf4:81f7 with SMTP id
- ada2fe7eead31-4bc054487bcmr4169348137.5.1739488049976; Thu, 13 Feb 2025
- 15:07:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fze4OOh8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739488556; x=1771024556;
+  h=date:from:to:subject:message-id:references:in-reply-to:
+   mime-version;
+  bh=yhqp78H5OtULd1a8af5fApAtTL0amNdx2hzQHm1dDgU=;
+  b=Fze4OOh8E/lscsAAT8PlKatMo0XqOfblamyUXRtowuyGIyoZJcYazuP/
+   FdMOYVEkNm+l9IjG5o0ozx3fOfWLOa52oCBtkGv4juVy24v8G7Prj7qs7
+   35Y8TjPZ9bAaL/mjr4s1n4QG13IJk5ofef55v66dENNsNdNbbueQ6+ntz
+   6JTNeC7L1fk93j1wuJnuhcVhxmIStwnoYtfCnXL1LkPGa0B9m/r0f+HIN
+   IuU4YShEKWZqUHWbJ2U2pJfwzHfG0cO4PUIQYFWNDnRmXnexjhgZzW9c7
+   p8El6pjDuIDIFCWJro5w1QlsdQFfEpZwgZ3IREIzzkTi3Xnw6sI3EfTSG
+   g==;
+X-CSE-ConnectionGUID: TP5Zr1RNT5yMxdm5DmgWgQ==
+X-CSE-MsgGUID: COD6nRBPQ0CmX4AFwlgAOg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="43987709"
+X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
+   d="scan'208";a="43987709"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 15:15:56 -0800
+X-CSE-ConnectionGUID: 2gWfZEHuQiakXe554OtcXA==
+X-CSE-MsgGUID: wUTgxg27TTyKoRLa9A6aTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="118494448"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Feb 2025 15:15:56 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 13 Feb 2025 15:15:55 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 13 Feb 2025 15:15:55 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.47) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 13 Feb 2025 15:15:53 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SbZSXhV1zmd1GEY7Rc0tiBgD09aqH68dP2id0JuWtYDoyY1F4Ug87lJUknhWPMLrA+rv5kJRR+rcq0ykWWsZYhWJpk+jXUQNv2FBEwL1tiiGA8NXFA291+Krf+zKhz+NxynT4pQJPpHioAaG5oDZ7Hiu27mL3QR/pNIfRLzQFnHgLHWiFlGjD77VigQ/6ZfQ+Z5YwjnBlv9XFxiiFJ9icIG6o8pjoZWwb6+KdQj4DVPZmGn9tFKVegYjkS/VHLzPF3nqRV62Hol4jMAUMRJtzN4x2zJu0fxfrsQkbIJ21cYyy7TjHs8Y5T1BJQyRpGc/N8BoyWsGC/4wqIifZYzxSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VrrqgFXWxaRSNFNUFVKoimFrz0QRRELMPXA1Cyx3KpM=;
+ b=apQPRXNhvuG36g6cvrvYdGp69iqU6WH4etw2GhMpPBv6FEbxk092Ziu6YGZfpNhb2Za6caaZLiySzmf0U7+V1E+0BCDJW6CkEfjgof0Lh3WoqE3zW3PZFfoClNhYWaQYcbH7QxVp1nx6ZA+zwMoP76+GNPB0+9TdFp0iGrupFA10HnhZnrT2dDvVtgKGNT0Dn0QBJDh4sEzgWZr+BeTxOeUQotJlmTf1B58t5eh7fPC3OxVLyVEPLK1+XeKgGIioLtAgBPQ0s5/rq/hSBFkBbU4kq3/2mX0AGCQh1YK7yj8vkRbjhSRo6GLRYbAOaJV6U43tbzRB2btPtRchLiQE4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CYYPR11MB8386.namprd11.prod.outlook.com (2603:10b6:930:bf::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Thu, 13 Feb
+ 2025 23:15:51 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8445.008; Thu, 13 Feb 2025
+ 23:15:51 +0000
+Date: Thu, 13 Feb 2025 15:15:48 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Terry Bowman <terry.bowman@amd.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<nifan.cxl@gmail.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>
+Subject: Re: [PATCH v7 11/17] cxl/pci: Change find_cxl_port() to non-static
+Message-ID: <67ae7d24bfedd_2d1e294b1@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250211192444.2292833-1-terry.bowman@amd.com>
+ <20250211192444.2292833-12-terry.bowman@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250211192444.2292833-12-terry.bowman@amd.com>
+X-ClientProxiedBy: MW4P222CA0030.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:303:114::35) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <44655569e3a1419f800952004f07e714@honor.com> <CAKEwX=NgTfnU8EzpPmC_h5mY1UePAPR6_W2rrBNGs3EZA96FsQ@mail.gmail.com>
- <a67e670777474ae2ad1a29707f00ea3f@honor.com>
-In-Reply-To: <a67e670777474ae2ad1a29707f00ea3f@honor.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 14 Feb 2025 12:07:18 +1300
-X-Gm-Features: AWEUYZlY7gtO0rr19Ytfl3Ld6Hz4B8ESkZMQk0sLn_tD-hLaqvoDUM53FTUDFqU
-Message-ID: <CAGsJ_4zFrBNoJhedN2AiCAeHmKPk513Vfn-gmEd2wsqXTRhY4A@mail.gmail.com>
-Subject: Re: [PATCH] mm: Fix possible NULL pointer dereference in __swap_duplicate
-To: gaoxu <gaoxu2@honor.com>
-Cc: Nhat Pham <nphamcs@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	yipengxiang <yipengxiang@honor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CYYPR11MB8386:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5e55dd33-841c-4be3-62d0-08dd4c845bc7
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007|921020;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?SCgiLOKBS0KtXt6DRftq19bOTkxJu2Z3PIorhD/EYUGoAf76lrlPcQ1DXnOG?=
+ =?us-ascii?Q?jjNwVkS5Ifep9lsIOedr2Y4zTbYw5UTP++zuY6smKaDxATP3lkjdE6KQCyDf?=
+ =?us-ascii?Q?Mia5HD2AR4fp36rGTSNuYJ6zfFsjnsmdLgSzHUszhuc7HYbBcjjNiSImQkEa?=
+ =?us-ascii?Q?txYYdRciThPzg7u2tQIYmKQDDtVEZ6ZHYmaeSgW/JJIiFTqu5jfEJLvXfZtC?=
+ =?us-ascii?Q?VZfBu5biRJQnN/uATGw4oUEq7ATbFkKlfKMRBMQeqEDSNydMlu/DCa6rZ5mQ?=
+ =?us-ascii?Q?wAELP0Z5FobjgOLtJSFdNvuReTKbOt2mFIm0nwPbMQOtw4mQhuzJzwxCJE1y?=
+ =?us-ascii?Q?zx8N4M5tCyY4vL9luoqnanpcDTJK7xLyXHSL1xMjpH2ylkkc0qgwLsMAt2uJ?=
+ =?us-ascii?Q?SLlbJMFc15psPrmaXZY1Q/OxaVVzAqklNxWNQ6rpTsdvH6kIDHRCtOO1E9VL?=
+ =?us-ascii?Q?+S6OwWucN/mnWUja0fbrOGcYTLoQMzRTJln05zqwtZO115XMVsAAk6mBaLv7?=
+ =?us-ascii?Q?0A0U6bAMIqcpfeQXLzYyUVaW2OQ+YiJyTPtbAer8BE9R0qMfURkoNn8+3aqV?=
+ =?us-ascii?Q?c/hC5/p4hks7zwWkSsf/Am1NSK9NcJfjbACdu1Mpco+cpfprlxuq7YI8NBWv?=
+ =?us-ascii?Q?gF8Naxm6R+wT43Wv1JSFa8AdtR7wnZZ0RarIGFIo1BRqdIGYX2mK4JI9sP3M?=
+ =?us-ascii?Q?DObqXiggqM1a7sibDF4s7vu9qCpG2eeE1TVIN6jCRzFwql6XPs6KZAKoM0re?=
+ =?us-ascii?Q?6L6l4+cI9YtZdsUO7NfP/qdodjk+3J6OiXVrImOyumZCW/6HEXFFoIV+Rfxz?=
+ =?us-ascii?Q?Y88YZBoxkP6jxp/rDcTnhV/tkhS1r/4HMymRNEBO3tjXzFss6reJSvhrQoBK?=
+ =?us-ascii?Q?wjQ9oePRCkqJUt6pLaypbfakq9eyKVcn2arOLe9zbgZwOg3XY982I1Px0dRD?=
+ =?us-ascii?Q?/DrEa897ccKtHjFUX5XurwEACKqjZIyWmE67Dw+dwxhWdGTndnQ+X3WtEymt?=
+ =?us-ascii?Q?HpgGvfSguzQLg/Th95LQCizK5fHBp6HA7zJ7qLLWDKSA56sOfS32l0SByTVE?=
+ =?us-ascii?Q?UZMZFwSmqPJUCYrwj2UeR+svOuAFtMafEH6qfIq4vUPU+dqROdXWHdO6oxdh?=
+ =?us-ascii?Q?XbsUbW5VmuLqW8uCizR/dXuwk3Qt4ktKqiUQTHXNkm70pugZg7SCxVkv2NAN?=
+ =?us-ascii?Q?2m9U8WDvGgmN5KmwHpSsRwHOuzwikSgvvVeEaMfvHWjYG0rcxtoHHTxNrUCO?=
+ =?us-ascii?Q?xaXSJ0/FyhWU7nnG6XqPLt4V3Jw5IQiJUHZ9tE7UujjnOSsG46+7puaLuzwY?=
+ =?us-ascii?Q?w7cMMjyU++APRsnrbdmc5+j51x52rt2Je9By46Zovv9R1uk/DLVHbhZuVziM?=
+ =?us-ascii?Q?2l/NyLckVhyVh81LYurIQhI6hwA53vnDl5hJyLa3gdSwRyrHAPdYliKO7A4i?=
+ =?us-ascii?Q?4oM0rK09uZI=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5T6NVkaooERG3v1TxmU09JSNSSL40Af0X9CP7HF+brQ8lWWVi+PuCc8Su4yR?=
+ =?us-ascii?Q?XUZdp4yx5inhCxX/bO0DDs7+a/3HBLOzSgMYHB4x+Ay8I2vWd3fL/cmA9QuW?=
+ =?us-ascii?Q?r45yk3c9nFhvjEH9xX0MBsGZQvc2fR6alw4N+Ak9YzgMXmGF1a4iK4/Kd6vh?=
+ =?us-ascii?Q?0GlwaeaGG9TriozcbUp0kykMPq2KF3M691jwApLvXg3y2zIZy9hdK4ot2qcC?=
+ =?us-ascii?Q?FEf353N8cQUfL1nMewTt4s2Fp4X3P8AzRNvg1jAAbE1NtGyE2waz0AnZGZ7T?=
+ =?us-ascii?Q?3U/eMEQ6lQUVxwhz8trwpd5Z6Yn1C+OmdhotHpLxstUrS8WYfGoh7nMQb0cI?=
+ =?us-ascii?Q?LWodsg5Epuj4abpoMRySuNI7JvHHZwYNl38Vtd52v/X4JNHUXPh33lHh/H+g?=
+ =?us-ascii?Q?OKhgkeQ9LRWMrugkZfkfusqcD8q0sEAB7l6b2HvVhnQvuLUIn/5DuG1WhAx4?=
+ =?us-ascii?Q?iTb2fFP42J/b0NkFVx4Qj2iLT7wKhuTPSqbEMcfAbor3SvfbADNW4v1nxG/E?=
+ =?us-ascii?Q?tp0MwVWyfL7bc3/bGXnXeYYUhD7o+vMEGkvPKAvbVmalsBK2Gke5mXDL4ZgV?=
+ =?us-ascii?Q?7Q62ZprhOOZQMy4Kklb6czVNAWnFw+oN1knchV5S/49Axro5Mn2ncG7jjBnO?=
+ =?us-ascii?Q?h8g2bhoJiCPm0J5TVXh9CpXED2qgz7WIJkke/Q94sc+lGFi6sqO4wNsMdBPr?=
+ =?us-ascii?Q?+nm7Q3TuZm/MxvCsz7QVURRARQtf5d5J6Lu72UfQaKAhoR3AHi64poMIzt9s?=
+ =?us-ascii?Q?htoepKAfpX+1wsFtMfJUN/xGLEa5c8n4ebT7cEtybMnzcznd3qZRiqPo7Nuy?=
+ =?us-ascii?Q?n9uatMZB3uOPUjM4aaSeqnosoh8m9edNHys7ME/vlWnuYkDCRKrVnkh1KMfB?=
+ =?us-ascii?Q?Qp8Le9WAEIHHQpve2z+Xcfw3tnw7ARZgCXwk+9L0lpwb1r8FJykgLN0N/Li0?=
+ =?us-ascii?Q?jVSZhphcz1ShsnM5mrjSC9XERWi3D7N1t6U8NqLGWUTN2F9rUvjBdwNirV9O?=
+ =?us-ascii?Q?rEs/2mf9ZPXePQt6YAx32o3ffi50QEyC8Lb3MYZjjmhuRI7t+eyYWyhtABN+?=
+ =?us-ascii?Q?Fk2JeZOLlMiiWtfis3sW+zwCCZvJZwOAwhV0BXJpLX7fa0GmjCSkDOw4paHh?=
+ =?us-ascii?Q?VaucK3yj0ztNcQNG8EcwnRjm/UwcVpr+eOhZVW+aCcneqVntbuA6CUtGpFz/?=
+ =?us-ascii?Q?8BxoW3Vxgl+VPrwqv2xLAWqMrapU4yTml2a+PGVyWnrrsWFzEwbqehLuuEh6?=
+ =?us-ascii?Q?hruwKO6O6QE2AynulkjrRolZwnePDN6tT63xZMUPh0QOiukxL9penzOudr6E?=
+ =?us-ascii?Q?ViTmIzWggVLfXhHca8Ivwpf++3cpmwhHqwS0X3wpH38vt9UbAe3CHpW4AFv7?=
+ =?us-ascii?Q?MYMqS6RV/R04Z0Ha9M/PJ9Wle8EofvovkYL7lK5CItrfpx3OYooR8jO2jjc7?=
+ =?us-ascii?Q?GvITCduZm6ZmgYV/460UgHLKaDYL7Ottn9EFgUs+aN+mJxj/vTXOxp80dHCl?=
+ =?us-ascii?Q?LdRwLHZBtIy27cQdh9R5Or089z67weBu9dz84wsCNtB1fXdwTpO5FhmEx3i9?=
+ =?us-ascii?Q?dDHra7JnXt0cxHJIk5SfLbkjiYJLpTO72zuDlwNJKZvQAGVtKPulirgpS3RY?=
+ =?us-ascii?Q?Og=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e55dd33-841c-4be3-62d0-08dd4c845bc7
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 23:15:51.7499
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: t+rfFLxUHRpDRnUUr9WvoiQ7dRtz2VwVrlD4wEAmGk0Z01Wg38EpL5BG8ZsBgvWrqgtf0A65egXqqMQeIsOh9yEHq0ooLNu12Ink62yf81Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR11MB8386
+X-OriginatorOrg: intel.com
 
-On Thu, Feb 13, 2025 at 9:52=E2=80=AFPM gaoxu <gaoxu2@honor.com> wrote:
->
-> >
-> > On Tue, Feb 11, 2025 at 7:14=E2=80=AFPM gaoxu <gaoxu2@honor.com> wrote:
-> > >
-> > > swp_swap_info() may return null; it is necessary to check the return
-> > > value to avoid NULL pointer dereference. The code for other calls to
-> > > swp_swap_info() includes checks, and __swap_duplicate() should also
-> > > include checks.
-> > >
-> > > The reason why swp_swap_info() returns NULL is unclear; it may be due
-> > > to CPU cache issues or DDR bit flips. The probability of this issue i=
-s
-> > > very small, and the stack info we encountered is as follows=EF=BC=9A
-> > > Unable to handle kernel NULL pointer dereference at virtual address
-> > > 0000000000000058
-> > > [RB/E]rb_sreason_str_set: sreason_str set null_pointer Mem abort info=
-:
-> > >   ESR =3D 0x0000000096000005
-> > >   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
-> > >   SET =3D 0, FnV =3D 0
-> > >   EA =3D 0, S1PTW =3D 0
-> > >   FSC =3D 0x05: level 1 translation fault Data abort info:
-> > >   ISV =3D 0, ISS =3D 0x00000005, ISS2 =3D 0x00000000
-> > >   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
-> > >   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0 user pgtable: 4k=
- pages,
-> > > 39-bit VAs, pgdp=3D00000008a80e5000 [0000000000000058]
-> > > pgd=3D0000000000000000, p4d=3D0000000000000000,
-> > > pud=3D0000000000000000
-> > > Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP Skip md ftrac=
-e
-> > > buffer dump for: 0x1609e0 ...
-> > > pc : swap_duplicate+0x44/0x164
-> > > lr : copy_page_range+0x508/0x1e78
-> > > sp : ffffffc0f2a699e0
-> > > x29: ffffffc0f2a699e0 x28: ffffff8a5b28d388 x27: ffffff8b06603388
-> > > x26: ffffffdf7291fe70 x25: 0000000000000006 x24: 0000000000100073
-> > > x23: 00000000002d2d2f x22: 0000000000000008 x21: 0000000000000000
-> > > x20: 00000000002d2d2f x19: 18000000002d2d2f x18: ffffffdf726faec0
-> > > x17: 0000000000000000 x16: 0010000000000001 x15: 0040000000000001
-> > > x14: 0400000000000001 x13: ff7ffffffffffb7f x12: ffeffffffffffbff
-> > > x11: ffffff8a5c7e1898 x10: 0000000000000018 x9 : 0000000000000006
-> > > x8 : 1800000000000000 x7 : 0000000000000000 x6 : ffffff8057c01f10
-> > > x5 : 000000000000a318 x4 : 0000000000000000 x3 : 0000000000000000
-> > > x2 : 0000006daf200000 x1 : 0000000000000001 x0 : 18000000002d2d2f Cal=
-l
-> > > trace:
-> > >  swap_duplicate+0x44/0x164
-> > >  copy_page_range+0x508/0x1e78
-> > >  copy_process+0x1278/0x21cc
-> > >  kernel_clone+0x90/0x438
-> > >  __arm64_sys_clone+0x5c/0x8c
-> > >  invoke_syscall+0x58/0x110
-> > >  do_el0_svc+0x8c/0xe0
-> > >  el0_svc+0x38/0x9c
-> > >  el0t_64_sync_handler+0x44/0xec
-> > >  el0t_64_sync+0x1a8/0x1ac
-> > > Code: 9139c35a 71006f3f 54000568 f8797b55 (f9402ea8) ---[ end trace
-> > > 0000000000000000 ]--- Kernel panic - not syncing: Oops: Fatal
-> > > exception
-> > > SMP: stopping secondary CPUs
-> > >
-> > > The patch seems to only provide a workaround, but there are no more
-> > > effective software solutions to handle the bit flips problem. This
-> > > path will change the issue from a system crash to a process exception=
-,
-> > > thereby reducing the impact on the entire machine.
-> > >
-> > > Signed-off-by: gao xu <gaoxu2@honor.com>
-> >
-> > Yeah this smells like a bug. A bit strange though - I have eyeballed th=
-e code, and
-> > we (should have?) locked the PTE before resolving it into the swap entr=
-y format.
-> > Which should have been enough to prevent the swap entry from being
-> > unmapped and freed up. Which should have been enough to prevent swapoff=
-...?
-> >
-> > (are you even doing concurrent swapoff?)
-> No, the swapoff operation was not executed.
-> >
-> > Can you provide more context? What kernel version is this, what kind of
-> > workload is this, any reproducer, etc.?
-> kernel version is linux 6.6,  Android15 - linux6.6.30.
->
-> The issues encountered by mobile users during usage.
-> The system load should not be high, as there is no info related to low
-> memory found in the logs.
-> The probability of this issue occurring is very low and irregular.
-> We cannot reproduce the problem during stress testing in the laboratory.
->
-> I found someone reporting a similar issue on the web, see:
-> https://lkml.indiana.edu/hypermail/linux/kernel/2406.0/02380.html
-> https://forum.proxmox.com/threads/get_swap_device-bad-swap-file-entry.155=
-581/
-> https://forums.unraid.net/topic/145497-server-crashes-with-repeated-get_s=
-wap_device-bad-swap-file-entry-3ffffffffffff/
+Terry Bowman wrote:
+> CXL PCIe Port Protocol Error support will be added in the future. This
+> requires searching for a CXL PCIe Port device in the CXL topology as
+> provided by find_cxl_port(). But, find_cxl_port() is defined static
+> and as a result is not callable outside of this source file.
+> 
+> Update the find_cxl_port() declaration to be non-static.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> ---
+>  drivers/cxl/core/core.h | 2 ++
+>  drivers/cxl/core/port.c | 4 ++--
+>  2 files changed, 4 insertions(+), 2 deletions(-)
 
-It might be a non-swap entry mistakenly passed to swap functions. I remembe=
-r
-fixing a similar issue in the Android Common Kernel 6.6:
-
-https://android.googlesource.com/kernel/common/+/119351fe20bc73b71c6
-
-where a migration entry is mistakenly passed to swap APIs.
-
-In any case, we need to identify and fix the actual bug.
-
->
->
->
-
-Thanks
-Barry
+Looks ok, but this tiny patch has no justification by itself and should
+be squashed with the first consumer.
