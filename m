@@ -1,160 +1,95 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9D626B0B4
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 15:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB1D15A856;
+	Thu, 13 Feb 2025 15:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739460421; cv=none; b=WBr9Qbdtq09hO3t3XwlxSccqFFdCHTfM46tKKBilmdKdJNVwPjVOB2h0gb+fzABfAWXjN8M9o2AWziHkEmg+EwnUS1CWXg+IRsrnp6WirllnVb6iwF5oJoOH/5umA0e8rPI9/GtrOZM9pGKSCvW97UFezdRb6KZjMotm7rHQ/mk=
+	t=1739460459; cv=none; b=Cmt8Psy9KbzrgT20G+ytN9xpWBYBa4dt1utXP3cjIN0Ct62UulSKgoHnUqn1NNihWzphxc+OmqTZ1eJ2tvPoeTkoYTby/N1ModPdkgHpKt5+BqGOK0I7vqLGRRWNX+sYSLrpWibLJQX6Ys9hPRbtgVoOxRt+H4vZitvrJVUROyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739460421; c=relaxed/simple;
-	bh=6s3HMVKobwg2gqP5NkxBRBqUWe4aZp/ZMyt7t/7QJyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C8JV035shlx2L7GDBn2D+K/Ug5yMuv5a0JKs95S83Y7EowmTK7lTwikHZQo5GnXfJ8WGMWM9e8XlVVMe2PAxwqhMsAs5JEB8NUkTXkb7OI2o1YPrBsPbK6MlNDbNt3xJ6t9KKFQYadXqAYtjiF5fPUYt8an6awcWpiAXEZxi2nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WRS9keBd; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1739460459; c=relaxed/simple;
+	bh=MuP+XmkFAfCI9gqjMWhacbC6RlNrrf77w1csG5Met0s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z6+6Iw830PDNn0D9Qp0DcYMeGddruEL4JnT3BJKc7sAyAwhgS9WgjPdmhtm6AhkOh4YrGqZL0FI/jpmfTS6Ce9ftG5ewC8P/c5zDxmDuc2lZw9Yx6Ysv59LeASLip6xLTHsuxj/k6pQRpuI64OHJIYw/2cHqLYLvrcE7X1ssDVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Km/EJqId; arc=none smtp.client-ip=209.85.210.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WRS9keBd"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4395561ab71so11736325e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 07:26:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Km/EJqId"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-726ea524419so342433a34.1;
+        Thu, 13 Feb 2025 07:27:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739460418; x=1740065218; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wZ8ZpchhsuyR5ZoxAfEGSuPJ2IZfU52CW6+CcKm/nhw=;
-        b=WRS9keBdFk9l2/Ojl5Azj64TLM+RXlRQGrBy0/cTqQWxozCZ1Bc2fSgAjZkT+wwYKx
-         pjgLbLdMxrH04h9AFZvR3FVrDCgyACCRWAhPLVsLcKpoSK8kPy/F5m1Rp6B5mo5bcnSA
-         pqnZdRJ+Y0wvyp4qckyGFXXgMhl7MF2h0aAdb7PDWUobR4O+tKbPNzvaqC8j2+0uO2cX
-         CiansP4gkFAYXzCdEKWfPpO6n8GqvZkgDFvi3QOFCIfp7IImH5ZoNaOkJVmsptud74e7
-         rCUst4IgJ1rC0IGAkjSoubKbLcYg6DaOa8ep6vxTfIwMwJypAjX1hox6GCFSVoJ55RUa
-         t/MQ==
+        d=gmail.com; s=20230601; t=1739460457; x=1740065257; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MuP+XmkFAfCI9gqjMWhacbC6RlNrrf77w1csG5Met0s=;
+        b=Km/EJqIdl/77IQQ8o0at1ncuzVxZjmMsmkaAH82LeS4iimDQVjOO8tADzMRfCwsEUZ
+         ieVmapuvIbdb0y1IzGtrwXUe64Z3YbdzKRNUjyRwO1orJFA9jQWy7/olNWc94wzwNYt8
+         oHhvsZkEeS54lvamoOhYxx5g5t1Tp8eGkV67qwT7csxn1tsOvaq70zIIuJxiwjGx2KeJ
+         jx7cLQ2e6BNZMVeN5IDgbgPg1eju4Jrx3vw25MJKdhPL0dW5gk9ij4VPjTxI+6kztVGA
+         2vngqgcUMSYa6Gw5F/u/P6ZCaDKY892Un0i/27hXWPQBD+Uyx4R9dmhqWmfi3lSgB2Yv
+         HwOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739460418; x=1740065218;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wZ8ZpchhsuyR5ZoxAfEGSuPJ2IZfU52CW6+CcKm/nhw=;
-        b=laNp0jg84mTKDclJLVwnif3e+3p9oYt5U8O5firt6EhtlNiYMOU3qjfPGslntuHMRs
-         s9FdCuTjBgpRLWxfKftmeH6PwVOOLurWR49qqbs8ciZfdvF4csjzTTAFA47mPhFoBBTR
-         vYhayRp+XJPaeM3ijE+VOX9h3obXqG0isgbroiYRehzLFULmNU2mddiauxN6BXXYtJBH
-         T0gbO2zougrPFHYyUQZNm8PkshEXZVN9dcgCk/2xFGj/UdXgJ9O6UEZHFogbSgAqHbsA
-         YfpS/+6WtiVifiyB/Oe03zgtJePLXgGjn9/TJQDJ+ehydRPIKuGuthzQEuBPIt9bojwr
-         1TuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUt1QFI+MFkRXMTf/Lw593w7ApcYVLooi9YKnzVNJLZHKyy2Z+MIaoyd0H1UwPwvJWrvjG5DqMS7PTUr64=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywbq3Kh6mK9nSKV2QkTtCWbsGclJADsUNUDv4E81b3ktYbs/K5J
-	gN2lPYHe2oZwBHMgmh8NVwNVrweKG9il0Zoo8tDUH0aVwvVOGyXKoxBhwxZn
-X-Gm-Gg: ASbGncvZUZSx+sZADJ8f4BivwoiQhw+X2sauYTA0ppN8FnUyqatDfuh2bxmmYpj57t/
-	BA1wogj1l5500sueIr6SFQhWLWcplURAfaYaGxdgUGWUvDPiGgP9FyW6KxSRqEpj8RrFESOk2+e
-	uVLy3r3EBxcJCSs7GLMNCGGJm0lbIoDg+XgjWLuGeSCIOQrJUWObq9uR4dWyc3gSENfXehAaTlU
-	Rrt7i5kDfhpcmAR8rGbDGWN9MO8dnmoEWG5SaBgCDZYystx5VRIbpTx7pqRnTyyuTuhdkagyyXn
-	7FdTbLo/nL+j3e8=
-X-Google-Smtp-Source: AGHT+IFJN2idfeKviFAXxT0FMTPm4iA4ABO72SDLoUa4IX8M3gdwMQpklCgVqavU1tPGVp+KVL34Dg==
-X-Received: by 2002:a05:600c:1d1d:b0:430:57e8:3c7e with SMTP id 5b1f17b1804b1-439601c5066mr46025755e9.28.1739460417641;
-        Thu, 13 Feb 2025 07:26:57 -0800 (PST)
-Received: from fedora ([213.94.27.232])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394dc48d9dsm44747855e9.0.2025.02.13.07.26.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 07:26:56 -0800 (PST)
-Date: Thu, 13 Feb 2025 16:26:54 +0100
-From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-To: Louis Chauvet <louis.chauvet@bootlin.com>
-Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/13] drm/vkms: Allow to configure multiple CRTCs
-Message-ID: <Z64PPk5At0JGB4Xp@fedora>
-References: <20250129110059.12199-1-jose.exposito89@gmail.com>
- <20250129110059.12199-9-jose.exposito89@gmail.com>
- <Z5uDJFHnn1HzWOz4@louis-chauvet-laptop>
- <Z6sqFdvtwSxHD-FO@fedora>
- <2466f201-2d2b-4626-a359-50f58c873c2c@bootlin.com>
+        d=1e100.net; s=20230601; t=1739460457; x=1740065257;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MuP+XmkFAfCI9gqjMWhacbC6RlNrrf77w1csG5Met0s=;
+        b=qqn6JDQFimbYFzITFKEOJ3p2t5U2oJBBiVfki0qot/Eo2yY+hDOD8ES9cpval9wqQ3
+         E8BNElf7Cf4cgZG3HmNgo90niY5ZLh1ni+uPZQQyCg/7EJp21o3jtHSo1QdjYBUM8RA5
+         OoLDJ1wHxlK0A1OZPLB9SHMVF5Cv/xxq4CgOzTrvimEhFKW/+ttHEmVYGp1y9IqH6Jfx
+         xH16QoaZViauwRxJOIsJ9qG1gdGUS2TqUV/V0wP/8umMCKFpRQr8g9tVM3oEyafyz/Fo
+         ybAp3c4Up5tE9vVklHG4jKbPA45TcZ201CIXSBR6zvDYJm0DAtvMJU3in3+NJAyusTcH
+         nlfw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgy7CCZ7WjBlrGYDEsidNlSMDwbZTx47ZH710Ci2PJflSBKCdHKBLFJEQEYt/RWDHkCoyTck/XNsPjgQJq@vger.kernel.org, AJvYcCXF2/qdl5bU5RkddBtMeTWw2Rte4HMUonEIAQlSQu4R43mQ2US8GenHF30WVDqm05iCHuyZM2eh32WYOAgn@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxHMhBDoFq3y1RzYE9bIJ2N8xxrB2vwSV0ptGtDfiylqILcZbO
+	Lzf+fLm0yuyDQF0jz4m5eavWY1To1S1CVxnIKLk8jNr8em3bhBEldgm6MVrwAFJ+v9ZJBuQ4dsw
+	3wN/Eqbdt3pcArMvIrLyzT2lY/a4=
+X-Gm-Gg: ASbGnctI8fx0xx+uzeDTIeSt/ZJp624ZhMPUMKr77CvoMVcDrphEZqvAx881m0AUFsu
+	IFeYVXBfFqorSwDof33MFicRJeRSW1tlt7dy3F1JKdWvuTBd79jmOreNM0iysjrErU6jV+Gr2IV
+	s=
+X-Google-Smtp-Source: AGHT+IHMXUwmI/PVw+wJieNWH/dKc/pl6QNWwBDvTkzNh0bPHVCVw8B+ttVQAi+r7a8Hj92o5/2R6JVC3hzPvvkDdcI=
+X-Received: by 2002:a05:6830:3c84:b0:726:fca9:bb9 with SMTP id
+ 46e09a7af769-726fe76785emr2517272a34.5.1739460456672; Thu, 13 Feb 2025
+ 07:27:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2466f201-2d2b-4626-a359-50f58c873c2c@bootlin.com>
+References: <CABXGCsMnkng1vqZ_8ODeFrynL1sskce1SWGskHtrHLmGo5qfDA@mail.gmail.com>
+ <9f3ad2da-3a85-4b1e-94b5-968a34ee7a7a@oracle.com>
+In-Reply-To: <9f3ad2da-3a85-4b1e-94b5-968a34ee7a7a@oracle.com>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Thu, 13 Feb 2025 20:27:24 +0500
+X-Gm-Features: AWEUYZnqOhkmMlR-uyVrXGvAiRy96jCtbuqAhyRMQ3CgIDqFoSRRt7ZCb3imdZo
+Message-ID: <CABXGCsP9vPxu=hN5CO5MPJ5QVNJURKsBbbeb-NLoq60=M=CN3Q@mail.gmail.com>
+Subject: Re: 6.14/regression/bisected - commit b9b588f22a0c somehow broke HW
+ acceleration in the Google Chrome
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: brauner@kernel.org, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, linux-fsdevel@vger.kernel.org, 
+	chromium-dev@chromium.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hey Louis,
+On Thu, Feb 13, 2025 at 7:18=E2=80=AFPM Chuck Lever <chuck.lever@oracle.com=
+> wrote:
+> I need a simpler reproducer, please. "Chrome stopped working" doesn't
+> give me anything actionable.
+>
 
-On Wed, Feb 12, 2025 at 03:12:13PM +0100, Louis Chauvet wrote:
-> 
-> 
-> Le 11/02/2025 à 11:44, José Expósito a écrit :
-> > On Thu, Jan 30, 2025 at 02:48:20PM +0100, Louis Chauvet wrote:
-> > > On 29/01/25 - 12:00, José Expósito wrote:
-> > > > Add a list of CRTCs to vkms_config and helper functions to add and
-> > > > remove as many CRTCs as wanted.
-> > > > 
-> > > > For backwards compatibility, add one CRTC to the default configuration.
-> > > > 
-> > > > A future patch will allow to attach planes and CRTCs, but for the
-> > > > moment there are no changes in the way the output is configured.
-> > > > 
-> > > > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> > > > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
-> > > 
-> > > Co-developped-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> > > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> > > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
-> > > 
-> > > [...]
-> > > 
-> > > > +++ b/drivers/gpu/drm/vkms/vkms_drv.c
-> > > > @@ -181,7 +181,8 @@ static int vkms_create(struct vkms_config *config)
-> > > >   		goto out_devres;
-> > > >   	}
-> > > > -	ret = drm_vblank_init(&vkms_device->drm, 1);
-> > > > +	ret = drm_vblank_init(&vkms_device->drm,
-> > > > +			      vkms_config_get_num_crtcs(config));
-> > > 
-> > > At this point we only create one crtc, can you move this change in the
-> > > commit where you create multiple crtc?
-> > 
-> > Since the code to add more than one CRTCs is unused but technically present, I
-> > think that this is the right patch to use this function.
-> 
-> I don't totally agree: you can create multiple vkms_config_crtc, but the
-> code only creates one drm_crtc.
-> 
-> For me it is more logical to keep 1 here, as the rest of the code only
-> creates one CRTC. With the next patch, the code will create more than one
-> CRTC, so it makes sense to use vkms_config_get_num_crtcs.
-> 
-> It is not a strong blocking point, but if a v3 is needed, could you change
-> it?
+After applying commit b9b588f22a0c, the internal page chrome://gpu/ in
+Google Chrome indicates that GPU acceleration is no longer functional.
+I apologize, but as I am not a Google Chrome engineer, I have no idea
+how to create more clean reproducer code.
+I only noticed as a Web browser user that when I scrolled through
+pages with a lot of images, Google Chrome got substantially sluggish.
+Hopefully, someone from chromium-dev will read my message and help us.
 
-Fair enough, moved to the next patch in my local branch.
-
-I'll send it in v3.
-
-Jose
-
-> > Anyway, at the moment it'll always return 1, so it is a no-op.
-> 
-> The current user is only default_config, so yes I agree, it is always 1.
-> 
-> > I didn't change it in v2, let me know if it works for you.
-> > 
-> > Thanks,
-> > Jose
-> > 
-> > > >   	if (ret) {
-> > > >   		DRM_ERROR("Failed to vblank\n");
-> > > >   		goto out_devres;
-> > > > -- 
-> > > > 2.48.1
-> > > > 
-> 
-> -- 
-> Louis Chauvet, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
+--=20
+Best Regards,
+Mike Gavrilov.
