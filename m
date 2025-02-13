@@ -1,93 +1,200 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD93124A043;
-	Thu, 13 Feb 2025 19:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5330245B05
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739476350; cv=none; b=l3WA72TDKpTNO9u7iRWWQx+AcuQbItcJJ4FmYwjIOrLxbsOGnO2VOW8ZLFpftaK1xGVcwwX3wsvEtoK+y2Za7DYU7cFtj2wbVjGx/RsHhFpqeCuDFMwF9jlfvBykhg3TByiC2XwCddHs3EUocN8M5Sqa+DFdajgPpVfj0URzboI=
+	t=1739476472; cv=none; b=MNUAAM/pfc4QJKvm388LDjJ+kN6agusiq2S4cIychYnXnVm3ClaCae0XZJA6PN1rNv6lhnjSXc6Zef5WHtN6bA5wXuYLN5N0BVaUi6eGBHixGk0s1CM97KIDGuaSFHDn6pxnNQoAEkJ4D+oR3hNHeG32jRMtKeE3SV6rfNJx/DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739476350; c=relaxed/simple;
-	bh=uwaceXBbc9DYhWrRaNpwMVDjME8wm5WFYH6UetaQs6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HikhYIDPW34wQyW5waoGHUhMmdUn3tsclCDUFgGkvWpv0NRLMVPoNhjqW3pV7J65C8Qmdxl5gjcPYJaKMa9oVSD5r9M82NjlQBKwc+oy1YmQxusUgFp7RVa8Cfuaq+dm52juwnsFeSdclNpuz+++KK+LtvZ0as0OtDfshOjYXwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gGRAuJxp; arc=none smtp.client-ip=209.85.216.47
+	s=arc-20240116; t=1739476472; c=relaxed/simple;
+	bh=5BQkpRyVYSfcyb9CTMv2NXIuU/asrygZfNiZc3+8dhg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eIwbRzuoxGLjmzNk6HFqFqt/zTflN3RB7MksgT4L40j46/SyKu9zsBF7MtxKWiJdUJPmsMSkVIDjEcD8652hZUbgE9Eu3hRL2aeUZko2NS2qlnWo0PC+62SlvHZaEyJav06QapdhUqhuzcm7seFXgc7L7REnZ7rmvPyq0T/fd4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SO7QDCEL; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gGRAuJxp"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2fa0f70bfecso276766a91.2;
-        Thu, 13 Feb 2025 11:52:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SO7QDCEL"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-220e989edb6so8733825ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:54:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739476348; x=1740081148; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uwaceXBbc9DYhWrRaNpwMVDjME8wm5WFYH6UetaQs6s=;
-        b=gGRAuJxp2MSfiHis6gjGvnylDfVHERbXX4hC+AlinSIaUYKC5YeATjdFxrWXwZFlY6
-         t/IMzWaFHBCMrBigwEkvZPFScvw2lKZMHZyhPGx5k/OpilZ84P50ruJEAE5P3UuAC4sz
-         XqtoKIhDcCAwBoJNGiEO/oF512TjtqEkbMLywn8sMmj66SCAPE86DaOe/T/IRd1sGI05
-         nLmSFWNGxyRgu+3nGxEhflxITTi18SXd8V9coSar6Y6H20pxo5mOqEg2veUkvOZVdI++
-         Rj6slYMiM1Rigpp5jtiavvb1QJgoYLdRjFtFpS54wFp3ROl58SezS6eGOoiMqjoIdrNc
-         4HhA==
+        d=gmail.com; s=20230601; t=1739476470; x=1740081270; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=B3ySLHI4iFeLZR5Ten5dkpY/Jqs46fJKQx6AsYm1dyc=;
+        b=SO7QDCELPxAitMzFsONqqnx6I0SDK/bJdc2hokjt4Ai3t5NMVVewpsFraVEJHV1eKZ
+         PJtk0DudUZnREPb/B7q3/mrC0bguJXXG8kCZTtvZmZV0eD2muGX4GuhOz1gE/CK8j88l
+         /bAQD4cxWhxVUg+ZFTCqbtRbTs8VIbYclrOY65IjTd9l53YsdLFxNysU9QWfgCbBa9Bj
+         maloFYq7kabCeE9mRZy62cRQD3gDe8HUUi7s6a90aY78p+I9NV+ZkBICpMqa4RBW6jJo
+         mwwMDwKoxsNGwypi7pr2AQOHWh+RzHCBq9Tgvc7QarDs9AlGiZ1q2WaOZWGnVex/vyoD
+         GjcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739476348; x=1740081148;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uwaceXBbc9DYhWrRaNpwMVDjME8wm5WFYH6UetaQs6s=;
-        b=YFA5VCF5/2T5+7qryrLv+g/wgpOcePpSeKBN6KWtulCPXx1IkM1/NmicVikETIpgjq
-         0rXeWbTpITi6OtBAXTat9ZirwNM1fMtVKpJBD8hK+qsbAa2qUi3eLZZOka7ygJ7NFEG1
-         hYPEj+7nIhFlO/8qTMNovhNNHJXTy3kYN8akc6rJZTJLP46T84PJm2yj2bTxf5SIad+g
-         gdGNDi4QQyXApGC4cwKW/7femD9COSPPujZEaO0sI3M3kZ7O6zS0rlE9B+cqrnbWndQj
-         8EPfEUBYLu1fUvUSPekGS1LIyY/z+SWlvF0u5J8M7alllNyRw1GTrIsQmq56EySUsh0n
-         tR2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVHpYeFpFwPKw6O2Uofrx0ssAD2+cY4mAH+KXfUzGqHQxOEe2ip9wm7vYkJBV5hDzMHjoPvNBWrNTJ6X6Y=@vger.kernel.org, AJvYcCXKT93JtuQXddXI5QtQW6JGWYOg8Bh48dgpJJw3UY80HId5aSaJlXxQg9foB7TCSyag3JMjpfUmzrPFv1BFV0c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKJHPsrLDM7BFNYBY8WU2UKq73Fi0dHtDCJcOGrAaLFMfNbGLa
-	sgBm2sBKEqW2DpXrZS+G94cMi4z7TkhV7AJLKYEK9DXGhxgcrTAS9QznoNM2PjWg7MxayRWYQCD
-	Z3/h8qXBvM3I7VXjofxEWSLtBOKA=
-X-Gm-Gg: ASbGncsgDbrNfewjeK+iDsWi/ckHyW8nlbrNy3lwz03RPe3pMFVzdI/XGkVPgOrN9kU
-	ze+BhxvUuyafQlz1aal4pP9uxHDGks4sYWxd2jWxfye/vDF6BWPrBUinsOyU5FUH5+TuGL6fV
-X-Google-Smtp-Source: AGHT+IEiv/zlIZZbyCdj/X6Q0o+jGzwhquBkcBkXIEbWfZa3doUwn+Fbd2U3g1vBfbkjWtWIz0ax/rMiMtuVEGcMgXc=
-X-Received: by 2002:a17:90b:4d09:b0:2ee:d372:91bd with SMTP id
- 98e67ed59e1d1-2fbf5bb3414mr4940846a91.2.1739476348047; Thu, 13 Feb 2025
- 11:52:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739476470; x=1740081270;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B3ySLHI4iFeLZR5Ten5dkpY/Jqs46fJKQx6AsYm1dyc=;
+        b=Of5Xpr96e2XwAz1ld2+JJTACfERRzUtlbgdqKKILieU6PKnUWCzxRIEOzDXKhrTNHC
+         EC+R9mDaDS/+2gkthZSLrW9Q41+tfjHkilYIuUDe3gj6MHa4oXe6ow3olgI3Sb1Hh7F+
+         J17osAkEPg4Gx13llL+XmsKDG9l2zJrKgUxU8b01iVPXy3U2S2aLe4/qr4m2Yi3VFgjG
+         2PjbH27VAQV8eJaLnCSyQOhvHc9veKmZ1LCu/OQYlhsiMrUiBsDkpqkvh7mYe87NoDLy
+         rTp3AYFlWwgoztEjyLY8PoiFA0mfM9uoB7y/pIWiDFci96M706/6GD5fyXcumUlOp8qc
+         O1Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCWT4NZAHZJuSgQWMNWUju/oBM6iLoLOdHxDxdlaavlWk3VOA8UIqNICkJ22Y1O80kXVXAHmCIVHjwNK4q4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywRy4aPMW08chL8uT55w0tDxBDwiCWvPorVXUfi8eGJOwwITKV
+	BQRfHLHTrXBQ7gAGmvjGEkQ1OAoMPlXwT9EN519uOLpvRqhM0Eva
+X-Gm-Gg: ASbGnctokGRTgjLt6+QsYmxMo4r+MBXFVKh2m1XrErfH/W+jkh4PQxRy9wdzmux4sII
+	BvoSnVV28kwEK0hDyBvdyJffEKY0vsF2dUOelt/s7WaeRrSR/zZEYqxvb+iJtpgN+YPe82F4Yic
+	pZfFfL6DMmXJwpAUv0g8slNzWLudMXcMLQn/4pcAqzpQdgCt/BjNGuPA8rZapU1jVYNX0BEFjVh
+	3WDrpWOCol09ZMmwiT+6nTlnAcVhmz4cB53AaHD3zNea8wxbCcOwjb0aN783BqLHGsVEQGoVi+n
+	EGik6IsLGUR4nHNscR4YxglFrUNWpQaRiabpIXY=
+X-Google-Smtp-Source: AGHT+IEul0GbxV36jI6X+D85Z4/JV/MIqDf0jZeDrXfnayPCi9B2Kjj8Effog9JH9Ch7/vc7o8kWQQ==
+X-Received: by 2002:a05:6a21:3a93:b0:1ea:db1d:99b with SMTP id adf61e73a8af0-1ee6b30cf39mr9329148637.3.1739476469870;
+        Thu, 13 Feb 2025 11:54:29 -0800 (PST)
+Received: from localhost (maglev-oncall.nvidia.com. [216.228.125.128])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-adb5a52af2esm1567047a12.54.2025.02.13.11.54.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 11:54:29 -0800 (PST)
+Date: Thu, 13 Feb 2025 14:54:27 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: I Hsin Cheng <richard120310@gmail.com>
+Cc: anshuman.khandual@arm.com, arnd@arndb.de, linux-kernel@vger.kernel.org,
+	jserv@ccns.ncku.edu.tw, skhan@linuxfoundation.org,
+	Matthias Kaehlcke <mka@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/2] uapi: Refactor __GENMASK() for speed-up
+Message-ID: <Z65N81jXcyKIu95l@thinkpad>
+References: <20250211162412.477655-1-richard120310@gmail.com>
+ <20250211162412.477655-2-richard120310@gmail.com>
+ <Z6uZZPpQ9YYfrL-I@thinkpad>
+ <Z6uaW9XzaKjSrWYC@thinkpad>
+ <Z6ypqCN_KI2gaSJ4@vaxr-BM6660-BM6360>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213-vma-v14-0-b29c47ab21f5@google.com> <8130a6d5-a7e5-402b-b05c-2d0703ac1ed2@lucifer.local>
- <CANiq72nBx3cRTUC9HWVR8K64Jbq3GCVMss5wuABzra3OLhRUQw@mail.gmail.com>
- <c8e78762-1429-4ab6-9398-ce52370eec08@lucifer.local> <CANiq72mKyvoyk_tgbMKUdzs-sJOoyEH7f1M9ipiET+XYgwCqRw@mail.gmail.com>
- <2d132129-fdf7-404d-b1f1-8ee87b838dcf@lucifer.local>
-In-Reply-To: <2d132129-fdf7-404d-b1f1-8ee87b838dcf@lucifer.local>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 13 Feb 2025 20:52:14 +0100
-X-Gm-Features: AWEUYZlaLFLcNnUiCyCAZuinnyDyfGxQjG8KCqfTO_s0QUprt9i-zxzyahMMZh8
-Message-ID: <CANiq72mpFzCdg8GJOZe=q8hnSbDv__obJbkCV0o-fP8iXOirrQ@mail.gmail.com>
-Subject: Re: [PATCH v14 0/8] Rust support for mm_struct, vm_area_struct, and mmap
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, John Hubbard <jhubbard@nvidia.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	rust-for-linux@vger.kernel.org, Balbir Singh <balbirs@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6ypqCN_KI2gaSJ4@vaxr-BM6660-BM6360>
 
-On Thu, Feb 13, 2025 at 1:16=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> Ack, for the record I'm happy to help with any work that might come up.
++ Andrew, Matthias
 
-Thanks a lot Lorenzo and Liam! Very much appreciated.
+On Wed, Feb 12, 2025 at 10:01:12PM +0800, I Hsin Cheng wrote:
+> On Tue, Feb 11, 2025 at 01:44:18PM -0500, Yury Norov wrote:
+> > On Tue, Feb 11, 2025 at 01:39:34PM -0500, Yury Norov wrote:
+> > > On Wed, Feb 12, 2025 at 12:24:11AM +0800, I Hsin Cheng wrote:
+> > > > The calculation of "((~_UL(0)) - (_UL(1) << (l)) + 1)" is to generate a
+> > > > bitmask with "l" trailing zeroes, which is equivalent to
+> > > > "(~_UL(0) << (l))".
+> > > 
+> > > I used to think that GENMASK() is a compile-time macro. __GENMASK() is
+> > > not, but it has very limited usage through the kernel, all in the uapi.
+> > >  
+> > > > Refactor the calculation so the number of arithmetic instruction will be
+> > > > reduced from 3 to 1.
+> > > 
+> > > I'd like to look at it! Please share disassembly.
+> > > 
+> > > > Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+> > > > ---
+> > > > Test is done to show the speed-up we can get from reducing the number of
+> > > > instruction. The test machine runs with 6.9.0-0-generic kernel on x86_64
+> > > > architecture with processor AMD Ryzen 7 5700X3D 8-Core Processor.
+> > > 
+> > > So you CC arm maintainers and provide tests against x86_64. Are your
+> > > improvements consistent for arm, power and other arches?
+> > > 
+> > > Can you run bloat-o-meter against your change?
+> > 
+> > Ah, sorry, overlooked you bloat-o-meter results in cover letter.
+> > Anyways, can you provide it for each patch individually?
+> 
+> Oh ok, let me paste them here first, I'll attach them along with v2 as
+> well.
+> 
+> In the section below, vmlinux_old uses old version of GENMASK() and
+> GENMASK_ULL(), vmlinux_p1 use new version of GENMASK() and old version
+> of GENMASK_ULL(), vmlinux_p2 use new version of GENMASK() and new
+> version of GENMASK_ULL().
+> 
+> $ ./scripts/bloat-o-meter vmlinux_old vmlinux_p1
+> add/remove: 0/2 grow/shrink: 46/505 up/down: 464/-1717 (-1253)
 
-Cheers,
-Miguel
+So, I ran the build myself and I confirm that reverting c32ee3d9abd284b4
+(which this patch actually does) helps to save over 1k of .text. In my
+case it's 1269 bytes on x86_64 + defconfig for GENMASK() only.
+
+I looked at some functions affected by this revert, and I found that
+they call for_each_*_cpu() macros. This eventually boils down to bitmap
+functions like this:
+
+  static __always_inline
+  unsigned long find_next_bit(const unsigned long *addr, unsigned long size,
+                              unsigned long offset)
+  {
+          if (small_const_nbits(size)) {
+                  unsigned long val;
+  
+                  if (unlikely(offset >= size))
+                          return size;
+  
+                  val = *addr & GENMASK(size - 1, offset);
+                  return val ? __ffs(val) : size;
+          }   
+  
+          return _find_next_bit(addr, size, offset);
+  }
+
+The 'size' here is NR_CPUS, which on my machine is 64. 
+
+GENMASK is used with non-constant parameters, but it's OK because
+from compiler's point of view, the GENMASK_INPUT_CHECK() which is
+just:
+        BUILD_BUG_ON_ZERO(const_true((l) > (h)))
+
+It is passed as the 'offset > size', and it's is indeed a constant
+expression at that point because it's explicitly tested before.
+
+Is this for_each_cpu() thing the only case - I don't know, but it's
+enough to consider reverting back to the original version.
+
+I Hsing,
+
+At first, thank you for catching this up.
+
+I think performance testing part is trivial here, so let's focus on
+code generation and consistency.
+
+Can you please run your build against few recent GCC and clang versions?
+Can you also build the kernel for ARM64? You don't need to run it on
+real hardware (but maybe on VM). I just need to make sure that the
+result is consistent for all important arches.
+
+Matthias didn't mention how did he build his kernel. Did clang emit
+that warning against W=0, 1 or higher, and which code triggered the
+warning? Maybe clang already fixed it?
+
+Can you please check how would it work if NR_CPUS is set to be say 1024?
+This way the small_const_nbits optimization will be disabled.
+
+If you will find that clang still emits warnings at lower than W=2,
+can you please resend this patches together with a patch that
+suppresses clang warning?
+
+Can you also please attach one or two examples of code generation for
+real functions, not an artificial one as you did before. And maybe a
+link to goldbolt?
+
+For the next iteration can you please make sure that you refer your
+series as a revert of Matthias's patch? 
+
+Thank you for discovering this. I realize that I'm asking you to do
+some extra work, but we all need to be 100% sure that it's not a fluke
+before reverting the c32ee3d9abd284b4 because it potentially leads to
+suppressing another clang warning.
+
+Thanks,
+Yury
