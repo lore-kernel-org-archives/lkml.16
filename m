@@ -1,212 +1,311 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2051.outbound.protection.outlook.com [40.107.243.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1D42046A0;
-	Thu, 13 Feb 2025 03:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739418250; cv=fail; b=pIkMnWfJtcln/EIceoIp3B+BLfxSicGX3Cf+pfXJ74VexKGFXXpNpG0jWKZq+JZ6i0UJYiDDJOkg4HxBwoQ17TliPJ5eeagiS4uNgjgzac33CgV2lw/H0A46/tLaNLtQRBFKEWo1+7BUmmBrq6wna08qWy1QJuf9XSfYsXOugto=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739418250; c=relaxed/simple;
-	bh=ZhXrQrsnZMhTKpSb6NwG81Dd729JZhO63Qy/8V4xTDU=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=XfA8hwX4s1H7F3HI2ydmzkp7ua6jkF4aI3bR68OdlkebI2rIiQPF5Tlqp57xQZ255ZZzTZweptqYyKvgFqyKpczv+LZMuMuZs+37zmtVs9rLoFVmbpOO3fEQtlCqfhpUZR0yG/CC1YnTpfY211/g6U/6/hurcPyCgYG41cM3Mb0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=iNKR/mPT; arc=fail smtp.client-ip=40.107.243.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A21204F8B
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 03:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739418252; cv=none; b=bIyPXseRklW2iQd5sCkQZMAIoV1q8wyWXKKOrt2lduL1zpgNvr5zyunQrliR3/BG1YahaXO+sW3p7HOQ/mgYV3wHs1+Sai+q1X9jt9KoMzLgq57j6VNOh9zD1etM6SKWbFY5owZ7OrA/YTAvZhSlAQmj0UjanZOJVIlGMGwRkHQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739418252; c=relaxed/simple;
+	bh=0BW2M125WsliCB8ED4LdihaF0s69mMeqnQMjcrf6UQk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=niuugkGYFHclePR0eQuKXqgBQ7ki2pvcxAoHVKSTw1BVXYGF048CXu3A793oJvkYv3p0RGmRSVYo/lE64Ar5AVPvM8kZ/B8trobvr4Zz7xYA1MT01P4uaC++o8ZKoEYP/7qDadiVKoUmynk3Cw9/pFcRvoCK60z3Vp9XcF0Sisg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--chharry.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QYx3Rq7N; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--chharry.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="iNKR/mPT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eOfDiZafDv8S1gudP5Ky5/gU+UT/RojfjkvOLerVVuTlPh0F44N+2k+Mnww/hknRHJs0A5Xdgwm2qlfTCoufg1lWCGS2nhvI2cnIkQ4GsSz/lIBdBvlUnS3yB+FG2U9oYhjcdISjI+dCsfeBPWBJQLLYDtiavX5o6NR8eiWbg5TgWUxdFdaOAXiyextXRwbVqYU96+cKOFqreDaegrh/Bm58OqaCSGPIiGDfMPvsyfjXTLS24v+KX7+FKkpHDRyNK92WVoIOItFkFOb6dbiddNuXwEjjuo7tnB18l0H+qH9fKcHrgSddFWPOqYW0wMvGGwLFdrvqxfTUdwYCOQs1ZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VInofvJmKEQrkuI9e0xkzHXnPkIrtJJSW7rPPx61bN0=;
- b=QLBeDE3kIhWLbbM65zBQ0gTwoFAoT0LzNOLDxKSw/oPKelj301MwF329rpZRn/MpX83By4iGSc88lGBqh8hbd0RiO5t18hErildoq4/uL6UrEJHfH+PDwOmuYbpI5NyoxGztOOtPVLYLb3skn7Bb5rlJ8jZ5+0tpmtOE89A7CnqTtxCYqmPQrHE7QsvVguU5pGiuAedmeF57C56GpUlf0Yr3ISbaAQnerUNJB/RT/tdJVwfrcP1sfkQaSnL2lxiyGAwWKCTssA83Ho8Q7BC10kRrF8po6VlQuD2/ZkwMabVhdej4RUzZhd+SfIJ7l72pw0/nYbQtuHoFycKfZPUsQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VInofvJmKEQrkuI9e0xkzHXnPkIrtJJSW7rPPx61bN0=;
- b=iNKR/mPTtJZWSxifLOrjfipdvxJ9+iv7xt9qKlKNu8jgXgUGplSyf/AsCRf4LBEDHceDEoFRHwuXopvdDbQWPKSk+CDcdqKXvI8W7Tp1nj2BWgjtqHtwiFxtpoR1mrd7XiZlpjzUhmIN2lfA7gd93CSCaky1velH2rzOXNMr7d5r9kTJSVL9RPNJ1U+B4A01JRvrTjVf4TTEh93+1Jy4S4wc81GSiLDNieIWD6gQahTtv39cSC2OjhUF3gnqbmn+DELg75vgafKoVXViwNO4oedXOCLAg3AJGr1TDi1prM+jQyjbop8wZf6KnczqpQeVoCTMgjcpWyN3WWrOkfHrUg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- DM3PR12MB9434.namprd12.prod.outlook.com (2603:10b6:0:4b::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8422.12; Thu, 13 Feb 2025 03:44:05 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8445.013; Thu, 13 Feb 2025
- 03:44:05 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Matthew Wilcox <willy@infradead.org>,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Kairui Song <kasong@tencent.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	linux-kernel@vger.kernel.org,
-	Zi Yan <ziy@nvidia.com>
-Subject: [PATCH 0/2] Minimize xa_node allocation during xarry split
-Date: Wed, 12 Feb 2025 22:43:53 -0500
-Message-ID: <20250213034355.516610-1-ziy@nvidia.com>
-X-Mailer: git-send-email 2.47.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BN0PR07CA0001.namprd07.prod.outlook.com
- (2603:10b6:408:141::12) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QYx3Rq7N"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fa3e1f08a0so1537600a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 19:44:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739418249; x=1740023049; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lsOLf4vzSChByZXaeUeGFRADTpIyzst12ye8nQJf8JM=;
+        b=QYx3Rq7NZrkvqFYMRUMVgX5/RP5kpdFjLlWZj1Afh/SoaznCeF7UZBoWbXbDjjDNoH
+         Mv8CpCQ8f23bBgyCdls+bWRV/zuzeCoT0Xa1OMCU+AXS65R+bJFbdZXsuvYqd9sK7Pjn
+         GKJoUYC2BS1AH/2rZuuwfhvQB71vfkFIC4wNzaKgYg3WaP+xc3V6xtwZ2XP/a1MQXa8h
+         1nWTybldaVfL+CknwbSWx0C0TNYQqN/pLmFLt4vBJy/5TCquNN8vTjKc4VC+ljjR18ZP
+         +eLX2T4nK2/C8AHFaGO1+wPgfnoclb4Jijaz8oVwoV39obzC8QVcBBxZSPX9MGyc3kk3
+         2XbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739418249; x=1740023049;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lsOLf4vzSChByZXaeUeGFRADTpIyzst12ye8nQJf8JM=;
+        b=a4NG4wxaMbnrzNplNaVf281DHETnb4FyTriytgZ9w3V165EfQeuQjt50pYNg6nXqGz
+         Lqj+F8UM02sViRhuVBNl0V9evUEFxnNAfK+QTk9nVAqIgvMPqoqegI6VzR42A81dZExa
+         bBoJtlo/OOyAmhAvJP/PQbC5DBODguOrcG+f5hAkpHtknwGNoH0yoyK3IfEw7H+bEUyl
+         OYUNnjSPwThb7ZIvc9sdxKABbuYxumBr76OqSbMz4vAxfwFUI1osKmXH1UvPRVwdWj/m
+         PLUvd7+ddpi+Nqd3v2ZK5Gfwvdua8gHDg6/g5/eX7XfpaMcZTeTF7LJKNRh/gbzXebB0
+         hJWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmHq2fPN5r2QdU+NP4FidNif1p6OsdeQgql90KIZ8VXO4wS4xYq1y2oCgT2wWjur9/ssyqEtLBYNgF6DA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+T6uUY/Gu9hB0Hx0SGq3tNaUD1NKPqoGyI+u3do/mZcr+USVA
+	RSSIZq4W2/kQOaBu1XNbxVxEC/qJSIAvNBq6vclk8Is+gABRn2acC9w8W10lxTvu0LIW9HVp/wk
+	7sZf43Q==
+X-Google-Smtp-Source: AGHT+IFPhIYt5Rdxe8/DSnQSNBGl29ADwD9aPL9TkbgNFB6DiQH825XmJfmTGbqIE3tcb89hKtAyOL1xkHWN
+X-Received: from pgpf9.prod.google.com ([2002:a65:4009:0:b0:ad5:4620:b05d])
+ (user=chharry job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:618f:b0:1e1:9fef:e960
+ with SMTP id adf61e73a8af0-1ee5c733361mr10241161637.6.1739418249528; Wed, 12
+ Feb 2025 19:44:09 -0800 (PST)
+Date: Thu, 13 Feb 2025 11:43:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DM3PR12MB9434:EE_
-X-MS-Office365-Filtering-Correlation-Id: 14d754a9-c501-4bf2-fb23-08dd4be0aa20
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QtbocV5ztZV41GnzNQD6cZ3MWYn1v3LNy2SVLXK9w/Nwo6sJfdUSBYXpZsKg?=
- =?us-ascii?Q?aL+IQj38ZZjj4SelSjIvCZ2/hW7MsAvk6COQJBsU/bdp4fbCEiecAHq0C9Qm?=
- =?us-ascii?Q?jmyeWau3dmxoQRFTRwOaRAI27XRwLiSTOQec56xhw4CZolBpogxEcHDkFOWh?=
- =?us-ascii?Q?27NmSMOdNndJaVw5fHLXQcDTscQgR7SxU/NHE5o3pJwQrX30FsLH1ctzlcK5?=
- =?us-ascii?Q?UiWebo/PiepH8I85Ge1My6SOVx4we2mmy5TqxAXD1Yme4vejzfvSDvd/s5qz?=
- =?us-ascii?Q?PQbHzmQYbotZQKp9MUukzsNSOM2mVLGiL0XJpk8hK78J0wGQxCsdYaV3bvig?=
- =?us-ascii?Q?91jGh3oyUePJ9ZcozLgL1KxYjQpCWV6xg5uC4YW1B5ONrWbhstwXCQ0tYxrc?=
- =?us-ascii?Q?D3whRsimsr8wipBmllcyV5KPO93a/2NhjW8WMr+D20GL+0Ozvpc+8O4WGgbl?=
- =?us-ascii?Q?anFWeS5BG9JSutr1Kk1wNBFcFGwCgXsRAZ71gCGee0PkNC0fKBk3Fk75PBAV?=
- =?us-ascii?Q?JAbtB/7SQ++bq1Z7CC9w4OLc08jPIQAEamqOqSeLFAPSwmOZ6DGQNJ4GmyCE?=
- =?us-ascii?Q?V9Lr588YotVCJYvxkIpWbf4eaJQPiBxZ9x90AgTfcj29rVKxYEEnPGrzw28a?=
- =?us-ascii?Q?3ICQrLOpJtYawEZS6u5Yfs4DTKsrLgeq6oTbVsFXlTBaiC2mOo7g6d04T1en?=
- =?us-ascii?Q?z+0IgNa4z68GynB+4v8hUBdPbaeeKnTmoX8wYBQRV1L4dP/Gn1Nuo9EobF6m?=
- =?us-ascii?Q?Nq22BSodOq2JlNSXl/5fuysa4NckZ73f7wuuUTAKagQ1W8u0RNkuGNo2WoVl?=
- =?us-ascii?Q?QrcIoFbImCFbBIbjn/0tjsuMCMvUF/S7btgnzq5cPlcfrJh1IG34j3wAY/2m?=
- =?us-ascii?Q?9TjK6ppPKaUYZPOvfp3lvuWfQYQLwdw6ASOGXzNn6NKM0FcxEMMqgP2lm4ls?=
- =?us-ascii?Q?+6VLZjfJiVpf6ZCBTAsovUKmSFwzynAHey3Y9wzXgxD6+vAi8SL3YUetkfxJ?=
- =?us-ascii?Q?hsqoA7Grsnjn7YO679CurspX2Lhnth66hzNLvBQbA6NwX/j4zvwqJRcdR2q8?=
- =?us-ascii?Q?RWATQnWdbB3ImAzMcodzBHAnts3xxA7NMflxrFfSqRU1jbqJvGFtWE5PPCzb?=
- =?us-ascii?Q?QMQlbLo1iOAzixUzXyFQdXbtyrxybAyLx8RwvyybfX0pBPe+P8y54O1WFayR?=
- =?us-ascii?Q?VT2nKusAHzAWRh6tAdbDbwL0ESIFHdBePlYR7xfsQik8Cks/3SvzDn0eLej9?=
- =?us-ascii?Q?VM1EGUpsyoc/QoUssv2j1E6DAN8znpTUKtG9Obh3dHOsDpRVv0Wa4/vr7E/x?=
- =?us-ascii?Q?uMPmS5DOghAghxHetrY7A5xyBOe/5hLNu+/rfTbSXBKEf59t1awCBKlw8Ebk?=
- =?us-ascii?Q?kdudi0pAyWgk0DSFvpNnorQtEZUl?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IMGVceIC+9f8AjCLDzBzbsuzNivBQONrf4a3sfQksZBw8wYRi8lAJk/ZLqRV?=
- =?us-ascii?Q?pj0PG1Pt0NhbhpEx4qRR81YsiarfMRjHgPMa3nuXbhK7BGEwhp6ZGpjq4gF+?=
- =?us-ascii?Q?bWk1Kec/CBwq8ZX7R9BpWCRaS0FKh2/NmPdrI9VEj2Nfwg57B5XEN8PWUA2w?=
- =?us-ascii?Q?8DfNI/iBQftcJhs7i24bj7txuGijP6Hl/vBPh1RF1LopWq34B3x26AAUrPXR?=
- =?us-ascii?Q?zcfa3TYi0aXYj661ljzTWu4Pi5Kw4ZMItnyijH6IXkMeM0EsPyMabJAOFb2F?=
- =?us-ascii?Q?qbiIQG5T9oWQeS5QNHO5VMELsnpaZmkmXYrO+Zo8bQRVyeeJ4xyZlTnHX9GX?=
- =?us-ascii?Q?TT27FJIpnsUfrRvWBpZYsSL6L3Ow0WvsO6VfwukYp0i+PekEsOzKVbbqr+fw?=
- =?us-ascii?Q?2Wy5gia26f0Gm8DKK7lUnyO42EQ9bUYxa0Hiu8E0RO6CS9McA2WySY7xaghB?=
- =?us-ascii?Q?HXRs3bKCZws+pAz7uJHKrRuVf9DgGKLxIl6l550eMvfWfLvV1oncUegMKMxJ?=
- =?us-ascii?Q?jDiUhmEpv3qtaR+wb/sOHMs67JjkXRv5fUylI8K7FXcFNf1xxi+Op9bb955O?=
- =?us-ascii?Q?pHGqYjtv3Dm2nAsTuA/D9ajW9ZznT/QNnH1nBEiBmXkj7fJe0NqcVjjRYhJ1?=
- =?us-ascii?Q?RmVw4KvGggEHpKm2AuU5B0G11nlqRCBVOViqn04rF3F/HOk8c57oZCO3RbFl?=
- =?us-ascii?Q?ds29Z3/K2HqljBxSrFm8fzn0vO10DZ16+aQjXZHaZ7bS7yizxi5Lox6D2Xro?=
- =?us-ascii?Q?MP2ZWmTps6Eve6r4J4rS+kj1JSPpedQHIIAW3/n9TGbv0etFNjqg3QjQ3lOx?=
- =?us-ascii?Q?uYAksSdqKwS/3kPhYnvGPEIuIfkYwEyadjFQ6cPHXOYX2XIskzyfGwuu1/Dh?=
- =?us-ascii?Q?3WCFU5udfdXzRnaH7fxwlB337fXG1ILIFA2QN7DPFFvo8e9wktY5EYMZ5Gwm?=
- =?us-ascii?Q?hAua2lBD3+1vTF0Y0vTqXH6yRyr2edGLjZfLMKL6s/WUs5kthKyfeWoJBKtm?=
- =?us-ascii?Q?W7Z7f5oNLwTv9y3EYRAls1B8pFe56Fw/ooQTAYTyDwGWVzjMTvsWygNI4baz?=
- =?us-ascii?Q?zh35YYDDxVo6R3z72Dfx5sDOuvfY/95yOSOBR0qdacCQPFEmfaM5JokQNsX2?=
- =?us-ascii?Q?gMwc1BV37gs7CIU7RaQ8ZRJTst4Hs7vFujfmbjGCAWJkXrMxxMPDFXel955z?=
- =?us-ascii?Q?3UVDoCLQeaXopAmen1txdH5lnq3slcJrbZENOqF2sRPmhA+dJW1KBFpXQq38?=
- =?us-ascii?Q?WOssOjtz4oWP6t0NrfTa3/MJIshx6W9wOkJiWxi4zJc056to/FxylhAFmJIC?=
- =?us-ascii?Q?91Aq2mhLTJSiThZLZ8xmZTHCdYFPN5ufpzpAu9NCNSGak9QGcemrvgoMUgoL?=
- =?us-ascii?Q?mi3jef0GNfsMgIKTamQcDXonTtQ9Qo7aYHbFuz1RThvcKjjooc6A3k+zUZVC?=
- =?us-ascii?Q?XjOOWJPZzCZ3+xebbpy6FSka8GyBVG230zIuIxPmz9ETCezSmSY9siWO+0wS?=
- =?us-ascii?Q?HI8q4MYG01xJVCokAAM7ceBeNnt9iWNW9nwRbCjBN56yR2sC2Gylw4r27zP0?=
- =?us-ascii?Q?NAcsJtb0lzhQ5UY9KpJtGpPgznSEV/S7NuTh1MDo?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14d754a9-c501-4bf2-fb23-08dd4be0aa20
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 03:44:05.6716
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YrxT9ede1Ud3buDavK67404aQBpiNxbx7fM9BlzKYRg4xgPyR6gm9OXPVCY5z6rj
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9434
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <20250213114400.v4.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
+Subject: [PATCH v4 1/3] Bluetooth: Fix possible race with userspace of sysfs isoc_alt
+From: Hsin-chen Chuang <chharry@google.com>
+To: linux-bluetooth@vger.kernel.org, luiz.dentz@gmail.com, 
+	gregkh@linuxfoundation.org
+Cc: chromeos-bluetooth-upstreaming@chromium.org, 
+	Hsin-chen Chuang <chharry@chromium.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Johan Hedberg <johan.hedberg@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Ying Hsu <yinghsu@chromium.org>, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi all,
+From: Hsin-chen Chuang <chharry@chromium.org>
 
-When splitting a multi-index entry in XArray from order-n to order-m,
-existing xas_split_alloc()+xas_split() approach requires
-2^(n % XA_CHUNK_SHIFT) xa_node allocations. But its callers,
-__filemap_add_folio() and shmem_split_large_entry(), use at most 1 xa_node.
-To minimize xa_node allocation and remove the limitation of no split from
-order-12 (or above) to order-0 (or anything between 0 and 5)[1],
-xas_try_split() was added[2], which allocates
-(n / XA_CHUNK_SHIFT - m / XA_CHUNK_SHIFT) xa_node. It is used
-for non-uniform folio split, but can be used by __filemap_add_folio()
-and shmem_split_large_entry().
+Expose the isoc_alt attr with device group to avoid the racing.
 
-xas_split_alloc() and xas_split() split an order-9 to order-0:
+Now we create a dev node for btusb. The isoc_alt attr belongs to it and
+it also becomes the parent device of hci dev.
 
-         ---------------------------------
-         |   |   |   |   |   |   |   |   |
-         | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
-         |   |   |   |   |   |   |   |   |
-         ---------------------------------
-           |   |                   |   |
-     -------   ---               ---   -------
-     |           |     ...       |           |
-     V           V               V           V
------------ -----------     ----------- -----------
-| xa_node | | xa_node | ... | xa_node | | xa_node |
------------ -----------     ----------- -----------
+Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to control USB alt setting")
+Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
+---
 
-xas_try_split() splits an order-9 to order-0:
-   ---------------------------------
-   |   |   |   |   |   |   |   |   |
-   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
-   |   |   |   |   |   |   |   |   |
-   ---------------------------------
-     |
-     |
-     V
------------
-| xa_node |
------------
+Changes in v4:
+- Create a dev node for btusb. It's now hci dev's parent and the
+  isoc_alt now belongs to it.
+- Since the changes is almost limitted in btusb, no need to add the
+  callbacks in hdev anymore.
 
-xas_try_split() is designed to be called iteratively with n = m + 1.
-xas_try_split_mini_order() is added to minmize the number of calls to
-xas_try_split() by telling the caller the next minimal order to split to
-instead of n - 1. Splitting order-n to order-m when m= l * XA_CHUNK_SHIFT
-does not require xa_node allocation and requires 1 xa_node
-when n=l * XA_CHUNK_SHIFT and m = n - 1, so it is OK to use
-xas_try_split() with n > m + 1 when no new xa_node is needed.
+Changes in v3:
+- Make the attribute exported only when the isoc_alt is available.
+- In btusb_probe, determine data->isoc before calling hci_alloc_dev_priv
+  (which calls hci_init_sysfs).
+- Since hci_init_sysfs is called before btusb could modify the hdev,
+  add new argument add_isoc_alt_attr for btusb to inform hci_init_sysfs.
 
-xfstests quick group test passed on xfs and tmpfs.
+ drivers/bluetooth/btusb.c        | 98 +++++++++++++++++++++++++-------
+ include/net/bluetooth/hci_core.h |  1 +
+ net/bluetooth/hci_sysfs.c        |  3 +-
+ 3 files changed, 79 insertions(+), 23 deletions(-)
 
-Let me know your comments.
-
-
-[1] https://lore.kernel.org/linux-mm/Z6YX3RznGLUD07Ao@casper.infradead.org/
-[2] https://lore.kernel.org/linux-mm/20250211155034.268962-2-ziy@nvidia.com/
-
-Zi Yan (2):
-  mm/filemap: use xas_try_split() in __filemap_add_folio().
-  mm/shmem: use xas_try_split() in shmem_split_large_entry().
-
- include/linux/xarray.h |  7 +++++++
- lib/xarray.c           | 25 +++++++++++++++++++++++
- mm/filemap.c           | 46 +++++++++++++++++-------------------------
- mm/shmem.c             | 43 +++++++++++++++------------------------
- 4 files changed, 67 insertions(+), 54 deletions(-)
-
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 1caf7a071a73..cb3db18bb72c 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -920,6 +920,8 @@ struct btusb_data {
+ 	int oob_wake_irq;   /* irq for out-of-band wake-on-bt */
+ 
+ 	struct qca_dump_info qca_dump;
++
++	struct device dev;
+ };
+ 
+ static void btusb_reset(struct hci_dev *hdev)
+@@ -3693,6 +3695,9 @@ static ssize_t isoc_alt_store(struct device *dev,
+ 	int alt;
+ 	int ret;
+ 
++	if (!data->hdev)
++		return -ENODEV;
++
+ 	if (kstrtoint(buf, 10, &alt))
+ 		return -EINVAL;
+ 
+@@ -3702,6 +3707,34 @@ static ssize_t isoc_alt_store(struct device *dev,
+ 
+ static DEVICE_ATTR_RW(isoc_alt);
+ 
++static struct attribute *btusb_sysfs_attrs[] = {
++	NULL,
++};
++ATTRIBUTE_GROUPS(btusb_sysfs);
++
++static void btusb_sysfs_release(struct device *dev)
++{
++	// Resource release is managed in btusb_disconnect
++}
++
++static const struct device_type btusb_sysfs = {
++	.name    = "btusb",
++	.release = btusb_sysfs_release,
++	.groups  = btusb_sysfs_groups,
++};
++
++static struct attribute *btusb_sysfs_isoc_alt_attrs[] = {
++	&dev_attr_isoc_alt.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(btusb_sysfs_isoc_alt);
++
++static const struct device_type btusb_sysfs_isoc_alt = {
++	.name    = "btusb",
++	.release = btusb_sysfs_release,
++	.groups  = btusb_sysfs_isoc_alt_groups,
++};
++
+ static int btusb_probe(struct usb_interface *intf,
+ 		       const struct usb_device_id *id)
+ {
+@@ -3821,16 +3854,47 @@ static int btusb_probe(struct usb_interface *intf,
+ 
+ 	data->recv_acl = hci_recv_frame;
+ 
++	if (id->driver_info & BTUSB_AMP) {
++		/* AMP controllers do not support SCO packets */
++		data->isoc = NULL;
++	} else {
++		/* Interface orders are hardcoded in the specification */
++		data->isoc = usb_ifnum_to_if(data->udev, ifnum_base + 1);
++		data->isoc_ifnum = ifnum_base + 1;
++	}
++
++	if (id->driver_info & BTUSB_BROKEN_ISOC)
++		data->isoc = NULL;
++
++	/* Init a dev for btusb. The attr depends on the support of isoc. */
++	if (data->isoc)
++		data->dev.type = &btusb_sysfs_isoc_alt;
++	else
++		data->dev.type = &btusb_sysfs;
++	data->dev.class = &bt_class;
++	data->dev.parent = &intf->dev;
++
++	err = dev_set_name(&data->dev, "btusb%s", dev_name(&intf->dev));
++	if (err)
++		return err;
++
++	dev_set_drvdata(&data->dev, data);
++	err = device_register(&data->dev);
++	if (err < 0)
++		goto out_put_sysfs;
++
+ 	hdev = hci_alloc_dev_priv(priv_size);
+-	if (!hdev)
+-		return -ENOMEM;
++	if (!hdev) {
++		err = -ENOMEM;
++		goto out_free_sysfs;
++	}
+ 
+ 	hdev->bus = HCI_USB;
+ 	hci_set_drvdata(hdev, data);
+ 
+ 	data->hdev = hdev;
+ 
+-	SET_HCIDEV_DEV(hdev, &intf->dev);
++	SET_HCIDEV_DEV(hdev, &data->dev);
+ 
+ 	reset_gpio = gpiod_get_optional(&data->udev->dev, "reset",
+ 					GPIOD_OUT_LOW);
+@@ -3969,15 +4033,6 @@ static int btusb_probe(struct usb_interface *intf,
+ 		hci_set_msft_opcode(hdev, 0xFD70);
+ 	}
+ 
+-	if (id->driver_info & BTUSB_AMP) {
+-		/* AMP controllers do not support SCO packets */
+-		data->isoc = NULL;
+-	} else {
+-		/* Interface orders are hardcoded in the specification */
+-		data->isoc = usb_ifnum_to_if(data->udev, ifnum_base + 1);
+-		data->isoc_ifnum = ifnum_base + 1;
+-	}
+-
+ 	if (IS_ENABLED(CONFIG_BT_HCIBTUSB_RTL) &&
+ 	    (id->driver_info & BTUSB_REALTEK)) {
+ 		btrtl_set_driver_name(hdev, btusb_driver.name);
+@@ -4010,9 +4065,6 @@ static int btusb_probe(struct usb_interface *intf,
+ 			set_bit(HCI_QUIRK_FIXUP_BUFFER_SIZE, &hdev->quirks);
+ 	}
+ 
+-	if (id->driver_info & BTUSB_BROKEN_ISOC)
+-		data->isoc = NULL;
+-
+ 	if (id->driver_info & BTUSB_WIDEBAND_SPEECH)
+ 		set_bit(HCI_QUIRK_WIDEBAND_SPEECH_SUPPORTED, &hdev->quirks);
+ 
+@@ -4065,10 +4117,6 @@ static int btusb_probe(struct usb_interface *intf,
+ 						 data->isoc, data);
+ 		if (err < 0)
+ 			goto out_free_dev;
+-
+-		err = device_create_file(&intf->dev, &dev_attr_isoc_alt);
+-		if (err)
+-			goto out_free_dev;
+ 	}
+ 
+ 	if (IS_ENABLED(CONFIG_BT_HCIBTUSB_BCM) && data->diag) {
+@@ -4099,6 +4147,13 @@ static int btusb_probe(struct usb_interface *intf,
+ 	if (data->reset_gpio)
+ 		gpiod_put(data->reset_gpio);
+ 	hci_free_dev(hdev);
++
++out_free_sysfs:
++	device_del(&data->dev);
++
++out_put_sysfs:
++	put_device(&data->dev);
++
+ 	return err;
+ }
+ 
+@@ -4115,10 +4170,8 @@ static void btusb_disconnect(struct usb_interface *intf)
+ 	hdev = data->hdev;
+ 	usb_set_intfdata(data->intf, NULL);
+ 
+-	if (data->isoc) {
+-		device_remove_file(&intf->dev, &dev_attr_isoc_alt);
++	if (data->isoc)
+ 		usb_set_intfdata(data->isoc, NULL);
+-	}
+ 
+ 	if (data->diag)
+ 		usb_set_intfdata(data->diag, NULL);
+@@ -4150,6 +4203,7 @@ static void btusb_disconnect(struct usb_interface *intf)
+ 		gpiod_put(data->reset_gpio);
+ 
+ 	hci_free_dev(hdev);
++	device_unregister(&data->dev);
+ }
+ 
+ #ifdef CONFIG_PM
+diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+index 05919848ea95..776dd6183509 100644
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -1843,6 +1843,7 @@ int hci_get_adv_monitor_offload_ext(struct hci_dev *hdev);
+ 
+ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb);
+ 
++extern const struct class bt_class;
+ void hci_init_sysfs(struct hci_dev *hdev);
+ void hci_conn_init_sysfs(struct hci_conn *conn);
+ void hci_conn_add_sysfs(struct hci_conn *conn);
+diff --git a/net/bluetooth/hci_sysfs.c b/net/bluetooth/hci_sysfs.c
+index 041ce9adc378..aab3ffaa264c 100644
+--- a/net/bluetooth/hci_sysfs.c
++++ b/net/bluetooth/hci_sysfs.c
+@@ -6,9 +6,10 @@
+ #include <net/bluetooth/bluetooth.h>
+ #include <net/bluetooth/hci_core.h>
+ 
+-static const struct class bt_class = {
++const struct class bt_class = {
+ 	.name = "bluetooth",
+ };
++EXPORT_SYMBOL(bt_class);
+ 
+ static void bt_link_release(struct device *dev)
+ {
 -- 
-2.47.2
+2.48.1.502.g6dc24dfdaf-goog
 
