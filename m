@@ -1,203 +1,381 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CB1207A27;
-	Thu, 13 Feb 2025 06:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83116207641;
+	Thu, 13 Feb 2025 06:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739428012; cv=none; b=l0Invs58l0MMFRgZ1rObmDFAu8isPhdyw6pHyEdOdori8/AhkpvV0rzdIBnbDYaiEGbjwIkPPkwsZPh1x+J59VSgrquuDC+uNzAAED8hqs0UpmKRRFXCGDiZtCfO1j8rS5pu0OA/J4dNBeofaxTvu0FwA6PqkV9NfOSCfXFX6B8=
+	t=1739428078; cv=none; b=AsXbdA9fcignhyhhMIkVSD/J1Oly9SgG0lYLNTkP+mEwZFhgRaBQtH5DYzXQxa6plWOodpryHRdQuNVcTo2/NBIQ5lCvbAxKDmM/luKgBs3SntOI7CO7Ah0aZuM/4UEyu/vZM7O65y22NAXIODbKqjUooEEroxzDZxhawiAWwAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739428012; c=relaxed/simple;
-	bh=mQm/3JCmAFSW/VKjAt7raIjpfolCLORdQ9Y3kbWdC00=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qb+5E+kHigeNGNxl6IkvgwNDbTeJqU0ea2kUqTJ5Txfp8a6BPXopYQ9sNhdtW7WKrUC19TcLgHFxGaZwc6DSKOy1eaip5zhyc2jOiWHh1vk0607NYCgJgjFkg0Q1fsz/+jN95a1dqzRTU4DmJkP5xmf9I3n/gwVBCa6bPCrPKdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gKnmBs4W; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739428078; c=relaxed/simple;
+	bh=/ITHLgy9JYrnb84+uFgHUA5tidkL9hWALUk8ObVqab8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ImxK5oAunCbG8tjNFB9FKPJA9z+FXC0HadAi32iUcPey/S+p9yVT0ddm9dXemFD0VMVpf/d0+wfzf59fJsalHlXsECy1Tg6YurUmSqU4kFg+CZNWzzDzXam9NrAk0YPSefv3C+WuTlQ6g2b5/fy+/Et9YSFncQagAZggv2GqgW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d4B6blvA; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gKnmBs4W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739428012; x=1770964012;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mQm/3JCmAFSW/VKjAt7raIjpfolCLORdQ9Y3kbWdC00=;
-  b=gKnmBs4Wnhq5j1h23bfkRNynwQnIdaT30LZUbS3xYTZIY4Y7CWcK6Ffb
-   Q4DFEzS5MgrJDB1oGJQFz7VeX1V5x2+9tWHx3rGFHv3IvL0mVZu1kpjdc
-   GCk5L4fXYTogGgTzZ6ObP8EwxYVAKBJDKMgHcISTIi7TyKoy9nfJ/s8Iv
-   zg+aOEsObYmgok78AXr3knKFE8hYj85En4FbBmqh1E/zVxyOsKE/ylGet
-   f0Blu+xtxdvFXR5vmV+xZlU+iA8q5To1zR2yUF6B3BVhybvNkfa4C3QaB
-   q0iXp4AUgWapCSVA2vOAY0IDOCmICHXgjB8I6WeTG60wrbVeA7ar///P7
-   Q==;
-X-CSE-ConnectionGUID: a6fCV4CaSFmC7M+srx9KzQ==
-X-CSE-MsgGUID: xdDEFEkYQm2kkqYLUOwHMw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="62581479"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="62581479"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 22:26:51 -0800
-X-CSE-ConnectionGUID: K+jPRXdLSNGIt2MHy6vbiQ==
-X-CSE-MsgGUID: 2TpqkmqkQaetEU8VWMJi0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="143992863"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 12 Feb 2025 22:26:45 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tiSgN-0016dj-0c;
-	Thu, 13 Feb 2025 06:26:43 +0000
-Date: Thu, 13 Feb 2025 14:26:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Philipp Stanner <phasta@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Yinggang Gu <guyinggang@loongson.cn>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Philipp Stanner <pstanner@redhat.com>
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] stmmac: Replace deprecated PCI functions
-Message-ID: <202502131415.1kfrLXGp-lkp@intel.com>
-References: <20250212145831.101719-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d4B6blvA"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38f22fe889aso278960f8f.3;
+        Wed, 12 Feb 2025 22:27:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739428075; x=1740032875; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wOzwMl8VwHYfyLhIMZVPabSmX4hCvOI4+kS23hOataA=;
+        b=d4B6blvAcgBEkF8PskjpLe7uR5BSu4Xd/uGftz8wkaYn8rtsNEQLXUl55cETS3F9RR
+         AIW6X0MIh1NF5KP2hfkGfBqpgUFtLJkWfYjXG12heAK+F1nbgck4DHWULhyxEJNYZ4kK
+         RDbyf6f2tmhmA4cBiXmVT95v3BtNC7c7m/b0TKxYsAFZKBKKVku5O3EvHY42gkJsdWW6
+         p4Ia7RiqUB1zHEaPFI0U+UwYL5ZgpHTukESnnmA3jIBJ+Bucvv3wNkw+NAzMdn0Sg8Ly
+         va2yMGoCL0BNRqsnM9hzVojeAqsMXxpKcToUt0syGsK0e8BIKMEVHZAoxLhbAcu0OOTO
+         SPqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739428075; x=1740032875;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wOzwMl8VwHYfyLhIMZVPabSmX4hCvOI4+kS23hOataA=;
+        b=eowXEO/GgFNSfM2ib19BlSyJy/D+hm3VDeVofhThSi4a7SqZkqp6jGdjXTQsLVR4lD
+         pb98XzeTAdx16wAkhPbhEdUsJzGyzLS2ZehL5DW4HTeCBTt/pXs5iSAnvDeI3pLJ+DY8
+         tYVqduywwTiNLkHAlk/8qHff/agTfdo/CVSfy9Km9oH0j9jYCzSAX43eVjnOF47TlVVz
+         LXoqcBaiMc8EgLQpxXec6alLNDAQ0ImelcnsEHlddtt9RfrwpuPAbhqVywPF2uXRuLiC
+         DdlSvtorT9HT0QTP7ZH1pNuEN4WQcuZ0bn/zWWNu0g84As7rySn/KT8RFiQCKViUQUKn
+         Ng1w==
+X-Forwarded-Encrypted: i=1; AJvYcCV5NGZGXGmV5hxbM7Ui82gGH9udXBFjhLcXKqvFYE3A4wdZ7u3sJabqrnBQG3kocflpQ1Aa3g6lA5yVvKbl@vger.kernel.org, AJvYcCVzjFn1yijuYw2nU4SuF0CmYvQ8jbprXZLUtfdO3nz/dhYXRn/NrKUGLPsuoPdl1RFvi/MpCO1kBK3PWw==@vger.kernel.org, AJvYcCWhklCF3Bb6LveHmdCE0D+IhDIBheT83NSeTgw/2woWP8lAPkvVmPJoiKRO0v3f1YLkS4Hj3WdzgomM@vger.kernel.org, AJvYcCWyVJ8XkTMhaemhDk590NBQ5hL7/LXRWr+0mtE3L7EE+Yl7hhkkZ+/tUB7aiXNtM+vjxRmqBY6YpYom/ro=@vger.kernel.org, AJvYcCX9EmEuOJJP4kHRwADFM71yCbW4S4JdFGRJgoeMQu/5x85tML+FV8Dq24QjP6MFiT5IK00+6yokELMa@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXlYxBn06kxFUKHqQent6I9TF84V4XiT3bSHJICLs4BnZbbnCl
+	GUxWVTUOch10uu2/slZrwHzcgxma0ySJPdWHp/aJKPbGiZCLSy3uO5S/jtJyvqnGsp7zwY7dlr5
+	O7OvQA6pksg9QojszMbuOJSICqco=
+X-Gm-Gg: ASbGncsdLCuZEgfVEBFWwqBVbfkGL4UP0tgRKZKwNfePJ/xLOgaUP5uBn9Y93w0xsO5
+	bIbPNlRnvEGsu5Ez8jA858o8T1vO564F9b3e9W+M41EvGe/EjyW+guRgdKmQNaeVe86GDst3m8A
+	==
+X-Google-Smtp-Source: AGHT+IGd3aSb6EVJT9y79hOBqqnlYiGX2mzwTicjMhOTwe0xN57IDbNmeue9tZ+J44tqG/5xONzLJq2CfewOMFhktjk=
+X-Received: by 2002:a5d:588a:0:b0:38f:2073:14a7 with SMTP id
+ ffacd0b85a97d-38f24526be2mr2020172f8f.47.1739428074400; Wed, 12 Feb 2025
+ 22:27:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250212145831.101719-2-phasta@kernel.org>
+References: <20250212075845.11338-1-clamor95@gmail.com> <20250212075845.11338-2-clamor95@gmail.com>
+ <20250212-reprint-underfed-fd723ebf3df3@spud>
+In-Reply-To: <20250212-reprint-underfed-fd723ebf3df3@spud>
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+Date: Thu, 13 Feb 2025 08:27:43 +0200
+X-Gm-Features: AWEUYZmuyAB8gQ5te2zUGxj5B78TV5g_h5KsY5EeG0lXC_QDun0uHJ9JminpPgQ
+Message-ID: <CAPVz0n0-ywJfoXBwQ5H8z7831kHFxbCMfsibanSRNGMoghAkGg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: mfd: Document TI LM3533 MFD
+To: Conor Dooley <conor@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Pavel Machek <pavel@ucw.cz>, 
+	Daniel Thompson <danielt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-leds@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Philipp,
+=D1=81=D1=80, 12 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 21:49 Cono=
+r Dooley <conor@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
+>
+> On Wed, Feb 12, 2025 at 09:58:41AM +0200, Svyatoslav Ryhel wrote:
+> > Add bindings for the LM3533 - a complete power source for
+> > backlight, keypad, and indicator LEDs in smartphone handsets.
+> > The high-voltage inductive boost converter provides the
+> > power for two series LED strings display backlight and keypad
+> > functions.
+> >
+> > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> > ---
+> >  .../devicetree/bindings/mfd/ti,lm3533.yaml    | 221 ++++++++++++++++++
+> >  include/dt-bindings/mfd/lm3533.h              |  19 ++
+> >  2 files changed, 240 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/ti,lm3533.yam=
+l
+> >  create mode 100644 include/dt-bindings/mfd/lm3533.h
+> >
+> > diff --git a/Documentation/devicetree/bindings/mfd/ti,lm3533.yaml b/Doc=
+umentation/devicetree/bindings/mfd/ti,lm3533.yaml
+> > new file mode 100644
+> > index 000000000000..d0307e5894f8
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/ti,lm3533.yaml
+> > @@ -0,0 +1,221 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mfd/ti,lm3533.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: TI LM3533 Complete Lighting Power Solution
+> > +
+> > +description: |
+> > +  The LM3533 is a complete power source for backlight,
+> > +  keypad, and indicator LEDs in smartphone handsets. The
+> > +  high-voltage inductive boost converter provides the
+> > +  power for two series LED strings display backlight and
+> > +  keypad functions.
+> > +  https://www.ti.com/product/LM3533
+> > +
+> > +maintainers:
+> > +  - Johan Hovold <jhovold@gmail.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: ti,lm3533
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  '#address-cells':
+> > +    const: 1
+> > +
+> > +  '#size-cells':
+> > +    const: 0
+> > +
+> > +  enable-gpios:
+> > +    description: GPIO to use to enable/disable the backlight (HWEN pin=
+).
+> > +    maxItems: 1
+> > +
+> > +  ti,boost-ovp:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description:
+> > +      Boost OVP select (16V, 24V, 32V, 40V)
+> > +    enum: [ 0, 1, 2, 3 ]
+> > +    default: 0
+> > +
+> > +  ti,boost-freq:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description:
+> > +      Boost frequency select (500KHz or 1MHz)
+> > +    enum: [ 0, 1 ]
+> > +    default: 0
+>
+> Properties like these should be in units, so some standard voltage-based
+> one for the boost and in hertz for the second. See property-units.yaml
+> in dt-schema.
+>
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - '#address-cells'
+> > +  - '#size-cells'
+> > +  - enable-gpios
+> > +
+> > +patternProperties:
+> > +  "^backlight@[01]$":
+> > +    type: object
+> > +    description:
+> > +      Properties for a backlight device.
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        const: lm3533-backlight
+>
+> Missing vendor prefix
+>
+> > +
+> > +      reg:
+> > +        description: |
+> > +          The control bank that is used to program the two current sin=
+ks. The
+> > +          LM3533 has two control banks (A and B) and are represented a=
+s 0 or 1
+> > +          in this property. The two current sinks can be controlled
+> > +          independently with both banks, or bank A can be configured t=
+o control
+> > +          both sinks with the led-sources property.
+> > +        minimum: 0
+> > +        maximum: 1
+> > +
+> > +      max-current-microamp:
+> > +        description:
+> > +          Maximum current in =C2=B5A with a 800 =C2=B5A step.
+> > +        enum: [ 5000, 5800, 6600, 7400, 8200, 9000, 9800,
+> > +                10600, 11400, 12200, 13000, 13800, 14600,
+> > +                15400, 16200, 17000, 17800, 18600, 19400,
+> > +                20200, 21000, 21800, 22600, 23400, 24200,
+> > +                25000, 25800, 26600, 27400, 28200, 29000,
+> > +                29800 ]
+> > +        default: 5000
+> > +
+> > +      default-brightness:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        description:
+> > +          Default brightness level on boot.
+> > +        minimum: 0
+> > +        maximum: 255
+> > +        default: 255
+> > +
+> > +      pwm:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        description:
+> > +          Default pwm level on boot.
+> > +        minimum: 0
+> > +        maximum: 63
+> > +        default: 0
+>
+> Why is default-brightness /and/ a default for pwm needed? If the pwm
+> drives the backlight, wouldn't you only need one of these two?
+>
+> If it stays, I think it needs a rename to be more clear about what it is
+> doing. "pwm" is very close to "pwms", the property used for phandles to
+> pwm providers but the use is rather different.
+>
+> backlight/common.yaml has standard properties that you could be using,
+> so I'd expect to see a ref here, rather than redefining your own
+> version.
+>
+> > +
+> > +    required:
+> > +      - compatible
+> > +      - reg
+> > +
+> > +    additionalProperties: false
+> > +
+> > +  "^led@[0-3]$":
+> > +    type: object
+> > +    description:
+> > +      Properties for a led device.
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        const: lm3533-leds
+>
+> Ditto here re: compatible.
+>
+> > +
+> > +      reg:
+> > +        description:
+> > +          4 led banks
+> > +        minimum: 0
+> > +        maximum: 3
+> > +
+> > +      max-current-microamp:
+> > +        description:
+> > +          Maximum current in =C2=B5A with a 800 =C2=B5A step.
+> > +        enum: [ 5000, 5800, 6600, 7400, 8200, 9000, 9800,
+> > +                10600, 11400, 12200, 13000, 13800, 14600,
+> > +                15400, 16200, 17000, 17800, 18600, 19400,
+> > +                20200, 21000, 21800, 22600, 23400, 24200,
+> > +                25000, 25800, 26600, 27400, 28200, 29000,
+> > +                29800 ]
+> > +        default: 5000
+> > +
+> > +      default-trigger:
+> > +        $ref: /schemas/types.yaml#/definitions/string
+> > +        description: |
+> > +          This parameter, if present, is a string defining
+> > +          the trigger assigned to the LED. Check linux,default-trigger=
+.
+> > +
+> > +      pwm:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        description:
+> > +          Default pwm level on boot.
+> > +        minimum: 0
+> > +        maximum: 63
+> > +        default: 0
+>
+> Same applies here, leds/common.yaml has some of these already.
+>
+> > +
+> > +    required:
+> > +      - compatible
+> > +      - reg
+> > +
+> > +    additionalProperties: false
+> > +
+> > +  "^light-sensor@[0]$":
+>
+> Not a pattern if it can only have 1 outcome.
+>
+> > +    type: object
+> > +    description:
+> > +      Properties for an illumination sensor.
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        const: lm3533-als
+> > +
+> > +      reg:
+> > +        const: 0
+> > +
+> > +      resistor-value:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        description: |
+> > +          PWM resistor value a linear step in currents
+> > +          of 10 =C2=B5A per code based upon 2V/R_ALS.
+> > +        minimum: 1
+> > +        maximum: 127
+> > +        default: 1
+> > +
+>
+> I'd expect a resistor to be measured in ohms of some sort,
+> hard to tell what the increments actually are here, they don't appear to
+> be a real unit. Are they register values?
+>
+> This and all other custom properties need to have a vendor prefix on
+> them btw.
+>
+> > +      pwm-mode:
+> > +        type: boolean
+> > +        description: Mode in which ALS is running
+>
+> Are there multiple pwm modes? Or is this trying to say that, if set, the
+> sensor is in pwm mode? Hard to tell from the description here, sorry.
+>
+> Cheers,
+> Conor.
+>
 
-kernel test robot noticed the following build errors:
+Acknowledged, thank you.
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.14-rc2 next-20250212]
-[cannot apply to horms-ipvs/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Philipp-Stanner/stmmac-Replace-deprecated-PCI-functions/20250212-230254
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250212145831.101719-2-phasta%40kernel.org
-patch subject: [PATCH] stmmac: Replace deprecated PCI functions
-config: sparc64-randconfig-001-20250213 (https://download.01.org/0day-ci/archive/20250213/202502131415.1kfrLXGp-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250213/202502131415.1kfrLXGp-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502131415.1kfrLXGp-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c: In function 'stmmac_pci_probe':
->> drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c:197:49: error: expected ';' before 'break'
-     197 |                         return PTR_ERR(res.addr)
-         |                                                 ^
-         |                                                 ;
-     198 |                 break;
-         |                 ~~~~~                            
-
-
-vim +197 drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-
-   140	
-   141	/**
-   142	 * stmmac_pci_probe
-   143	 *
-   144	 * @pdev: pci device pointer
-   145	 * @id: pointer to table of device id/id's.
-   146	 *
-   147	 * Description: This probing function gets called for all PCI devices which
-   148	 * match the ID table and are not "owned" by other driver yet. This function
-   149	 * gets passed a "struct pci_dev *" for each device whose entry in the ID table
-   150	 * matches the device. The probe functions returns zero when the driver choose
-   151	 * to take "ownership" of the device or an error code(-ve no) otherwise.
-   152	 */
-   153	static int stmmac_pci_probe(struct pci_dev *pdev,
-   154				    const struct pci_device_id *id)
-   155	{
-   156		struct stmmac_pci_info *info = (struct stmmac_pci_info *)id->driver_data;
-   157		struct plat_stmmacenet_data *plat;
-   158		struct stmmac_resources res = {};
-   159		int i;
-   160		int ret;
-   161	
-   162		plat = devm_kzalloc(&pdev->dev, sizeof(*plat), GFP_KERNEL);
-   163		if (!plat)
-   164			return -ENOMEM;
-   165	
-   166		plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
-   167						   sizeof(*plat->mdio_bus_data),
-   168						   GFP_KERNEL);
-   169		if (!plat->mdio_bus_data)
-   170			return -ENOMEM;
-   171	
-   172		plat->dma_cfg = devm_kzalloc(&pdev->dev, sizeof(*plat->dma_cfg),
-   173					     GFP_KERNEL);
-   174		if (!plat->dma_cfg)
-   175			return -ENOMEM;
-   176	
-   177		plat->safety_feat_cfg = devm_kzalloc(&pdev->dev,
-   178						     sizeof(*plat->safety_feat_cfg),
-   179						     GFP_KERNEL);
-   180		if (!plat->safety_feat_cfg)
-   181			return -ENOMEM;
-   182	
-   183		/* Enable pci device */
-   184		ret = pcim_enable_device(pdev);
-   185		if (ret) {
-   186			dev_err(&pdev->dev, "%s: ERROR: failed to enable device\n",
-   187				__func__);
-   188			return ret;
-   189		}
-   190	
-   191		/* The first BAR > 0 is the base IO addr of our device. */
-   192		for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-   193			if (pci_resource_len(pdev, i) == 0)
-   194				continue;
-   195			res.addr = pcim_iomap_region(pdev, i, STMMAC_RESOURCE_NAME);
-   196			if (IS_ERR(res.addr))
- > 197				return PTR_ERR(res.addr)
-   198			break;
-   199		}
-   200	
-   201		pci_set_master(pdev);
-   202	
-   203		ret = info->setup(pdev, plat);
-   204		if (ret)
-   205			return ret;
-   206	
-   207		res.wol_irq = pdev->irq;
-   208		res.irq = pdev->irq;
-   209	
-   210		plat->safety_feat_cfg->tsoee = 1;
-   211		plat->safety_feat_cfg->mrxpee = 1;
-   212		plat->safety_feat_cfg->mestee = 1;
-   213		plat->safety_feat_cfg->mrxee = 1;
-   214		plat->safety_feat_cfg->mtxee = 1;
-   215		plat->safety_feat_cfg->epsi = 1;
-   216		plat->safety_feat_cfg->edpp = 1;
-   217		plat->safety_feat_cfg->prtyen = 1;
-   218		plat->safety_feat_cfg->tmouten = 1;
-   219	
-   220		return stmmac_dvr_probe(&pdev->dev, plat, &res);
-   221	}
-   222	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> > +
+> > +    required:
+> > +      - compatible
+> > +      - reg
+> > +
+> > +    additionalProperties: false
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    #include <dt-bindings/mfd/lm3533.h>
+> > +
+> > +    i2c {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        led-controller@36 {
+> > +            compatible =3D "ti,lm3533";
+> > +            reg =3D <0x36>;
+> > +
+> > +            enable-gpios =3D <&gpio 110 GPIO_ACTIVE_HIGH>;
+> > +
+> > +            ti,boost-ovp =3D <LM3533_BOOST_OVP_24V>;
+> > +            ti,boost-freq =3D <LM3533_BOOST_FREQ_500KHZ>;
+> > +
+> > +            #address-cells =3D <1>;
+> > +            #size-cells =3D <0>;
+> > +
+> > +            backlight@0 {
+> > +                compatible =3D "lm3533-backlight";
+> > +                reg =3D <0>;
+> > +
+> > +                max-current-microamp =3D <23400>;
+> > +                default-brightness =3D <113>;
+> > +                pwm =3D <0x00>;
+> > +            };
+> > +        };
+> > +    };
+>
