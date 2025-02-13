@@ -1,131 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84968227EB4;
-	Thu, 13 Feb 2025 12:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8C8227EB4;
+	Thu, 13 Feb 2025 12:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739449022; cv=none; b=aQMMWjFUcRpgRAPppAJuTV+jhd0D8vBq6lf04SlFxIMm591/ZZwz45avB8tNhSdBbQVmedjVH4Gy7AKO8ekLOBN7UbNLb4pEe3WY5+NtEFHzqibdo+2mOyfK/CjX75UOgTM9O9VytVdVqvb+GfL4j62C4DZNjLAz9I+XyKFTSZw=
+	t=1739449029; cv=none; b=EhgSIJIkqlxN1V++c5J7HVVLeymcm4wleVG63U65TddQJ0w+A52deI/8he7OVoKbhqzq4xOxZalNKhJ8ZSHhBaSuJVX7YT9jPpzZQ+QWlZSPKhY5Zb+yNptZoDm2Qyzy3trT0ryR3UAB7PCOt+cXhzOYVWRcQsSWtrHMGhCclz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739449022; c=relaxed/simple;
-	bh=PLI4dCWIwEmcxYIFTmNuux/2FCidmxwYyPrRcIjMlZg=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=fJD3NeFPIDqWh6ceCf9oahY77L7mPiuBT7+sjNZB2MRKq5S9m+jrPSdgUdpHrCt6GfxpcJMGVtZThK4ACk8bU3qraMH5Lpf9Tg887yEzf3DCsR3gqOOKP7JEVmj05/KNcq+qS5kLsD5J1H3SqHJHx7D9AlharES3VcUF9SoLHAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OJgxN7Dy; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739449029; c=relaxed/simple;
+	bh=vlhlBzSkIneMGWYQBwFyfnTl25nGWzLsKGHhhsEs/qs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=E6jJV1M3iln5CXusHDIk+9L9WvHDN5ygQXtdHzwl0W3wVM+WYTLyxCGRuw1y2psA0eZcMN/LMQdSZvo6t4VYS5ValGruu9JRIOK9YPrcNuv7BIaaKQREU+KCuOVG4CkWXbZIoGJlzdp2h6djLJLHNaAM54Qhzg3r3A2TbBHhHEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=gj50goYM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KGIXqOEX; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OJgxN7Dy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739449020; x=1770985020;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=PLI4dCWIwEmcxYIFTmNuux/2FCidmxwYyPrRcIjMlZg=;
-  b=OJgxN7DyX9PsuE2nFLZJWuvuyN5OAgYDQrZ58N5Bjhm2vZYni6TDW4rl
-   iHF+daG662SVhANbt3i9ZyzE6wuMdUgf/TghqttLGuOXXnhmjyRss64Ae
-   Zr6XLY43bPO4W7k+zvgmYHmNH6zJO7SusZdklH/NDda8ByQv2kgyj8nmP
-   kXqQSrnO7NTYslj4eB10huOGeZMtYDSkLLLsGWxXsSNdNrjHJfgzq9zis
-   6L4REUBwlVQbAYmMGZ6rvUR7PiaMUFmoW2beE0PzofZVpWLEXC+SK3GnK
-   swGtM5ZxD/xVAwb7A+I3E8/JdkdDYyoc8UT2rEcQbW7+vR7fqe1h11yGk
-   Q==;
-X-CSE-ConnectionGUID: doN4rek1RK+23gPPHNsREQ==
-X-CSE-MsgGUID: 2OruXDcYQ7Ww3aBRMQv+bA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="42983664"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="42983664"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 04:16:59 -0800
-X-CSE-ConnectionGUID: Z9dpytLfRxO+JwlXHozSQw==
-X-CSE-MsgGUID: RovsuE5kSF2RNqWsxCMhgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="112994338"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.48])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 04:16:57 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Thu, 13 Feb 2025 14:14:23 +0200
-Subject: [GIT PULL] platform-drivers-x86 for v6.14-3
-Message-ID: <pdx86-pr-20250213141423-15116495@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="gj50goYM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KGIXqOEX"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 4B8C811401A0;
+	Thu, 13 Feb 2025 07:17:05 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-11.internal (MEProxy); Thu, 13 Feb 2025 07:17:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1739449025;
+	 x=1739535425; bh=vlhlBzSkIneMGWYQBwFyfnTl25nGWzLsKGHhhsEs/qs=; b=
+	gj50goYMrgEWpERcjDoQkgN9f3pgpWRaH9UTa9EeXqLr+vNsHhkSI10rDN2pRbPs
+	0dMsVZxIK8KbQJ+T7z0GfbemKmz7GcdahAp3mx+r+hvixy8hF7f7FN4zuGEm0grg
+	+OIwutIYnvZv9OcE9iL+nhLx7OG2D2dV+ja54OB39VnqKVdjTR/Pl9L2ckVtpLYf
+	nTOuF3/3/bFKCEEYaN6BQIbqw6bhYP6BfvS50t7yqcgctyoWAG4ACjticINh6EMo
+	jyNIMqrJOUGp/xRm9Y81r2U55gJz7ysedkHH4N2Nmfocl6tineRAWXK30FfDarhb
+	QnVbj5L6tsNXrDuw38j+sQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739449025; x=
+	1739535425; bh=vlhlBzSkIneMGWYQBwFyfnTl25nGWzLsKGHhhsEs/qs=; b=K
+	GIXqOEXDGqLOiIjohIg/UsrKcsUsFtJQspSxYVUbqFU2MmRVSknGiAGOdHheWGKY
+	OT68kTYQCcvgc1Hr+5SJm0XWij0WkkhrP9aALWDJRbpMpu57WwTp6Md0Os+bSZ5j
+	v4JCkkKw6HtLiEW7PR0PT8cfTKOV/bw9r3rakcK8c81GB/mO/vWNxso1AwNTIlVP
+	JoTeaL8Kx0XIW8t/zEDvWal1fNogVXF/1apPPdqNUX4KgrCrGwJj1SJAmdDwOT5S
+	+KZxke609KApqoVkYMmInLZvrCjdGUc3chIcZyGQr8gwMJ0BIzXc83ULenyZfDvg
+	edV28qdFhn7EjVVoUkxQA==
+X-ME-Sender: <xms:weKtZxZ2Jx0SogXKgrce2SjWTjH38dKFCmZc39GEp1sDVs3S0TbyhA>
+    <xme:weKtZ4YnIxba5f_D6pt-4Ddpe2s4Uw3nT0sCRfd8VgWa25I8OCEAy8cHqGhtfw3Z-
+    _-vVmtxmZuU-ScxE3g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegieejhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeh
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehmtghhvghhrggsodhhuhgrfigvih
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhr
+    tghpthhtoheplhhinhhugidqrghrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheplhhinhhugidqughotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:weKtZz-QYp083JbvMAwwfYxmY3dIwwRyfVC1pJyvFu4paKpmoSO4jg>
+    <xmx:weKtZ_pwh3ESfCs4C12dD4F52BjHrnepmhkcN64rV-I_fx4sFyqDzw>
+    <xmx:weKtZ8p65zSwpqVmaWg9jlnDriUkxQ4bY-czD3PyRW4ZE5sYXgzvaA>
+    <xmx:weKtZ1Rg_13YwDOe9KgRY6eNSAXZxhNHKHsmkvGB94yG2QK4j3psMQ>
+    <xmx:weKtZ1k722L4lapCobovkiUcJ5fLaEUOUgSgs--Xdnd5DGEk9anU9dE->
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id EFD6F2220072; Thu, 13 Feb 2025 07:17:04 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Thu, 13 Feb 2025 13:16:34 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+ "Linux Doc Mailing List" <linux-doc@vger.kernel.org>,
+ "Jonathan Corbet" <corbet@lwn.net>
+Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org
+Message-Id: <607d3acb-0950-4ce3-b8b4-46fdeca3ce0d@app.fastmail.com>
+In-Reply-To: 
+ <6d69b25e9c720e0e7fc037928695ece7c8a35034.1739447912.git.mchehab+huawei@kernel.org>
+References: <cover.1739447912.git.mchehab+huawei@kernel.org>
+ <6d69b25e9c720e0e7fc037928695ece7c8a35034.1739447912.git.mchehab+huawei@kernel.org>
+Subject: Re: [PATCH RFCv2 1/5] include/asm-generic/io.h: fix kerneldoc markup
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+On Thu, Feb 13, 2025, at 13:06, Mauro Carvalho Chehab wrote:
+> Kerneldoc requires a "-" after the name of a function for it
+> to be recognized as a function.
+>
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Here is a platform-drivers-x86 fixes PR for v6.14.
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-Fixes and new HW support:
-
- - thinkpad_acpi:
-
-     - Fix registration of tpacpi platform driver
-
-     - Support fan speed in ticks per revolution (Thinkpad X120e)
-
-     - Support V9 DYTC profiles (new Thinkpad AMD platforms)
-
- - int3472: Handle GPIO "enable" vs "reset" variation (ov7251)
-
-Regards, i.
-
-
-The following changes since commit a787ab73e2e43c0a3df10bc8d9b9b7a679129d49:
-
-  platform/x86/intel/ifs: Update documentation with image download path (2025-02-04 10:00:45 +0200)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-3
-
-for you to fetch changes up to b3e127dacad60a384c92baafdc74f1508bf7dd47:
-
-  platform/x86: thinkpad_acpi: Fix registration of tpacpi platform driver (2025-02-12 13:49:37 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.14-3
-
-Fixes and new HW support:
-
- - thinkpad_acpi:
-
-     - Fix registration of tpacpi platform driver
-
-     - Support fan speed in ticks per revolution (Thinkpad X120e)
-
-     - Support V9 DYTC profiles (new Thinkpad AMD platforms)
-
- - int3472: Handle GPIO "enable" vs "reset" variation (ov7251)
-
-The following is an automated shortlog grouped by driver:
-
-int3472:
- -  Call "reset" GPIO "enable" for INT347E
- -  Use correct type for "polarity", call it gpio_flags
-
-thinkpad_acpi:
- -  Fix invalid fan speed on ThinkPad X120e
- -  Fix registration of tpacpi platform driver
- -  Support for V9 DYTC platform profiles
-
-----------------------------------------------------------------
-Mark Pearson (2):
-      platform/x86: thinkpad_acpi: Support for V9 DYTC platform profiles
-      platform/x86: thinkpad_acpi: Fix registration of tpacpi platform driver
-
-Sakari Ailus (2):
-      platform/x86: int3472: Use correct type for "polarity", call it gpio_flags
-      platform/x86: int3472: Call "reset" GPIO "enable" for INT347E
-
-Sybil Isabel Dorsett (1):
-      platform/x86: thinkpad_acpi: Fix invalid fan speed on ThinkPad X120e
-
- drivers/platform/x86/intel/int3472/discrete.c | 85 ++++++++++++++++++++-------
- drivers/platform/x86/thinkpad_acpi.c          | 61 ++++++++++++++-----
- 2 files changed, 110 insertions(+), 36 deletions(-)
+I assume this will be merged through the documentation tree,
+let me know if you prefer me to add it to the asm-generic
+tree instead.
