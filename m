@@ -1,121 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C280421D3CF
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55F8227EBA
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739447111; cv=none; b=Xu3DyV3W0ZL8FmfJX2QtqY5wN+KtHOmWpQLB5t9bvOGw6Isr9kiLJ+UraG+m7725eaCVU/aDigXKJtvgUBGCVazPHtIbZLgxX+T/FRkxhA9uUwSlyLPGad/06xsH1HnWvXVapJjcPWqjmzW8i7grqv4TryABjiHRZjbxufNa0/s=
+	t=1739447137; cv=none; b=SlJVkR+5jTe3yGwshfORsb6dHgP0s90GReVX9NXrgTkRnVWu1Ax7SJ0M9tvI3tJcS3jUeTU+0XXK84KxhEFLj2M8T9Pdr8O7Yjb7fnPgMjxA/Jcn0yBX2yNF60BDaIi8h+DKZb6B87MNg02+iupLfBJi6CSLH0WRK9khxbpTTCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739447111; c=relaxed/simple;
-	bh=z4FzBPhL+KmxxVmJsJ8LIv/mETG7bxy17DamwT8n4wE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HNc7aNsBNnfLahoTnrkuDBlJVbXJNM3fJk6KHCdX0wMacFutzAu4c8D02IMnRi8Xy5aAt0KiGMephVGlnAJynRavv5JokYvwLdpNsR8QojD3tHQUH9/2FYhbeTKwJx2l2WFLm3s6QT6aAH5z/i+H6RbNwSR+gb5bl0pvq2xRVL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ROMyeEFg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739447137; c=relaxed/simple;
+	bh=YY+OU/b5R2NZDBv+XG+fDZujvR+B8cCjfW4SIV4pBfI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jbyhubX/0iDmqDSgH4oc3D7hjYa24+zdfMoFDgRpjDIQ5PRxxTbVMzxVKHs5Jt5Y+uqo+X56+dAi3GafrZh84CZHdkFmRsSLjTNfmuGRj82kcJlbsamVMLWL7MDcrOM39norrhxuehzslEy52dbeETx6MxKCRavuO0pHJ+1ZsbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=D3Ygj82W; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ROMyeEFg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739447106;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Ail4YrUpEYkDWqUc8Ez27id76e/8NDgaGRJNAbGRmo=;
-	b=ROMyeEFgkZi945VUofvcCt9ti1yiYBpu0PevTjFx3w/rdNE+GFBJKnvyMbBx0uxk7InI85
-	Lor7WdCEd0RZPPbqrt+97cdwnOfMoH5ef2G+k/zc375ZIDXaH9rZ3JKDZMsrEKflfZf5hO
-	GCmkpmqY1+o16UxE5/Qh+JUIIp9m/3w=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-224-H386ZK1aMSGQQOEDbJxSpg-1; Thu, 13 Feb 2025 06:45:05 -0500
-X-MC-Unique: H386ZK1aMSGQQOEDbJxSpg-1
-X-Mimecast-MFC-AGG-ID: H386ZK1aMSGQQOEDbJxSpg_1739447103
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-439622e9113so3849605e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 03:45:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="D3Ygj82W"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab7ee6f5535so14887366b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 03:45:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1739447133; x=1740051933; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zNK7rLFtZxlsVr2HlY81+ucXl/w9wHCFQRGCafrM+CU=;
+        b=D3Ygj82W+/FoU+wszva4D3Pv4SGz0w68bY9agF1aosOgZAMx5aLqJnslYdZ3hWbzsz
+         XIGEQGN6nU3BS+1NDLrf4XpWwINUoACa1XGP94ZXgHvUHeUtvJSDyQKVK++O1RvAtUZL
+         U7y14eUWvbNIPcgUECwp9sVYDVvbPii6k5Wj5yGTIzy7DXrpaLGlSQqzCFsoQPGPpe8k
+         DyD5Yp8YCJrlC91xhhOCTp+KSU/wDDdP4Lpw1Qg2A5oUtKoq9at31B8uvcOLx8tH53JM
+         QigWfu///41DwuXIw2Dku1Cm1NcPeS+fF3NPJSUwbgP1Q+GTbaV8mLcdRXnSy9/xLF1V
+         WXWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739447103; x=1740051903;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Ail4YrUpEYkDWqUc8Ez27id76e/8NDgaGRJNAbGRmo=;
-        b=D9QOR5qqzCKCrcGSSXNyPMt7DOXsM6EVB182y6jY/lrdBHH8IKM8zp+BIfaoqXP+sa
-         5VPtDUCGVBYQBTdKBjrg4ad33Sz1D6gTxpu6ORmJUNWCT8PdkJk6QWl4GIV2BULALLPg
-         YvQcBGu6fmfi0ai3Zo6+DoZirTH6iLm+r8hg7VfsytMZidWAOv8ny472+DqfWCSqj4YF
-         Pz0jTEpuXniIzOeU8s4TFulbuTJEKw33RWgpbC7ZaXp71umXRZgCS3uXrbRp5C/V9cue
-         83jZKLrwaLfIVBWswy5uUZo24tDW9zhAZfEwXHyQCTx6PSCLp6I3rudZHhEAqS5Agk6S
-         pyQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbm5uSW9i9PJuhkc7HWccNYjd2bwuply5ldE0E3VFDkfT76mVVN5fqbLTQtQRnevVqxmvhFaBoEiB/u3Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcRT2iq3nlMv9umLHSSWhf58sZWsdcof0Kp0hswk/FV2G+m4l3
-	C/mh2GmrzsdiK/eGxgzmGe2oPfD9VRPbFAw5XVbQ9GBksddbkHnOmGwXlEcUimOqlMpHAwWYVPD
-	oYsuFBI9SzKUBN9FWGmBL+Ff2Wvp1UvWmVetQeu6gsWelbCXUOLH6cEmxW0ws8Q==
-X-Gm-Gg: ASbGncu5pYTG1vixiwWjKQQpswn+1cH7PhA8etWcZTQoxYW5up3LuwBR4Vl+IvNBDaj
-	V8dCWOP8992v0t0ts5IpI0mVPqU4jbeMQdK9lEH6tAywCH5GmG1K9+iSDCTE4Nu5Wi2UB0VDUvb
-	pZ479/aw9RdSaDftEBs9wVhfmJmcGVHckPD8HyiNaYeDHdfz/YVQUMCLtAdZGJhhQQTaMvOwHTE
-	/y+ozPoP4oCyl8FPxjP/h1cSvgfPPT+iUuG0YdCevT6HVA1z9ZcbK99lt121AGzvfHjQIkuzmP8
-	XgokVo6gxOkJH2Wit8Kb6FLSCvrbZTVNfGk=
-X-Received: by 2002:a05:600c:3ba8:b0:439:4832:325f with SMTP id 5b1f17b1804b1-43958160560mr57564825e9.1.1739447103150;
-        Thu, 13 Feb 2025 03:45:03 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGsSaO9nwngXTwOiOIOnC4gfeygnFqnmDRDuBNDDrC1cNijFS2fay3xrPf6j87eCOO52vmu/Q==
-X-Received: by 2002:a05:600c:3ba8:b0:439:4832:325f with SMTP id 5b1f17b1804b1-43958160560mr57564445e9.1.1739447102713;
-        Thu, 13 Feb 2025 03:45:02 -0800 (PST)
-Received: from [192.168.88.253] (146-241-31-160.dyn.eolo.it. [146.241.31.160])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439617da91asm15645415e9.2.2025.02.13.03.45.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 03:45:02 -0800 (PST)
-Message-ID: <013921c8-1fd0-410d-9034-278fc56ff8f5@redhat.com>
-Date: Thu, 13 Feb 2025 12:45:01 +0100
+        d=1e100.net; s=20230601; t=1739447133; x=1740051933;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zNK7rLFtZxlsVr2HlY81+ucXl/w9wHCFQRGCafrM+CU=;
+        b=QVXi5HiFw5lRyMi106gvkOS8qVQ8G4RW0pFcT8NcAE7W2M59HEk5ZB8ZBssnIRdZzb
+         0QcLorkwjm2hS4TKQZ4IwMogThAU9uKKYLP9LoTCKEXSLf+F1Of4ynYdiYxrrPQav6gY
+         ie0KDs72M0ya7t5kpqz8Z4IrNUBpxu8Zt3FoaD8CEKIKyZcKpG8zesSH6XjS3s8bDF+W
+         SuUGqs2cM/ksy4rwRNSq1Je/UAlIgp8S996kPZ1Zpw0SAV8guw8xhR3toFRRvvxO6fJr
+         19ffYVLhRVxkMBKS9plLYWMX4kTlEv5DYLWnPEsOsX5O3PkVtNQOJ2NmSUx6ngZOQhOJ
+         fa+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWtJQiElly9aqX+GN6yzbcN6WF4fLRP+cWk/UPnll25aU1oDIk2SZKFv5650DOiRHa6rLvqlKs40hXF+Aw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMAdyIeTmsPnVEZAnubAOJM/1S5qxU3ST3iOumTLPBJDFrGzvD
+	4FMHeGh66M1kce14oUZzl/05mxI0fIcVIarqxzQEkTdn4tpL5kcSzp6VBsKemmM=
+X-Gm-Gg: ASbGnctBAPh02FpCrmAz+mOAle66wDJyGn5PsiQ9JxwJe53rVpC1UiAvzK7jOjyxs/d
+	O5onIi0spOehb5gU2GNv+oMRyDEaHeVB+dHs6XbP4olDWbL818Yw5NhH9pUzkK5hwsRy9D+aYlz
+	uROkJg/WedQChG0dOl4eyIHNMgP+xy8fOmE817f4IdeBfjSyWaOw5hx02fmapRrvhTtWTl1uUjl
+	OId92XSA/S948wfQj4/IZ0stESKn3TTurNwI5a3oku1mp2akSyRlPBU+J6YPcd51QtbqAp2BG5J
+	xLIke1rB0CGALzORu+ld/U/x6Dn3jUAfiCOKbuhqiwDQBil800v+/OGCkozWQ+oTeBRlcMy9bcq
+	14o6tug==
+X-Google-Smtp-Source: AGHT+IFhwk4ltxE1xQ3p0mGfeZawu/5MpD6Z/sNSEWalFb7gtGBPeQtv4gNW8tEYCXMCRKVGAjZ0ow==
+X-Received: by 2002:a17:907:60d2:b0:ab6:eec4:c9c2 with SMTP id a640c23a62f3a-ab7f33cd42emr238790366b.7.1739447133131;
+        Thu, 13 Feb 2025 03:45:33 -0800 (PST)
+Received: from localhost (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5339dec3sm115780666b.157.2025.02.13.03.45.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 03:45:32 -0800 (PST)
+From: Petr Tesarik <ptesarik@suse.com>
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	maple-tree@lists.infradead.org (open list:MAPLE TREE)
+Cc: linux-mm@kvack.org (open list:MAPLE TREE),
+	linux-kernel@vger.kernel.org (open list:LIBRARY CODE),
+	Petr Tesarik <ptesarik@suse.com>
+Subject: [PATCH] maple_tree: Remove a BUG_ON() in mas_alloc_nodes()
+Date: Thu, 13 Feb 2025 12:44:53 +0100
+Message-ID: <20250213114453.1078318-1-ptesarik@suse.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2] documentation: networking: Add NAPI config
-To: Joe Damato <jdamato@fastly.com>, netdev@vger.kernel.org
-Cc: kuba@kernel.org, rdunlap@infradead.org, bagasdotme@gmail.com,
- ahmed.zaki@intel.com, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <CALALjgz_jtONSFLAhOTYFcfL2-UwDct9AxhaT4BFGOnnt2UF8A@mail.gmail.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <CALALjgz_jtONSFLAhOTYFcfL2-UwDct9AxhaT4BFGOnnt2UF8A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/11/25 9:06 PM, Joe Damato wrote:
-> Document the existence of persistent per-NAPI configuration space and
-> the API that drivers can opt into.
-> 
-> Update stale documentation which suggested that NAPI IDs cannot be
-> queried from userspace.
-> 
-> Signed-off-by: Joe Damato <jdamato@fastly.com>
-> ---
->  v2:
->    - Reword the Persistent Napi config section using some suggestions
->      from Jakub.
-> 
->  Documentation/networking/napi.rst | 33 ++++++++++++++++++++++++++++++-
->  1 file changed, 32 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/networking/napi.rst
-> b/Documentation/networking/napi.rst
-> index f970a2be271a..d0e3953cae6a 100644
-> --- a/Documentation/networking/napi.rst
-> +++ b/Documentation/networking/napi.rst
-> @@ -171,12 +171,43 @@ a channel as an IRQ/NAPI which services queues
-> of a given type. For example,
+Remove a BUG_ON() right before a WARN_ON() with the same condition.
 
-It looks like your client mangled the patch; the above lines are
-corrupted (there should be no line split)
+Calling WARN_ON() and BUG_ON() here is definitely wrong.  Since the goal is
+generally to remove BUG_ON() invocations from the kernel, keep only the
+WARN_ON().
 
-Please respin
+Fixes: 067311d33e65 ("maple_tree: separate ma_state node from status")
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ lib/maple_tree.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-/P
+diff --git a/lib/maple_tree.c b/lib/maple_tree.c
+index f7153ade1be5..0f2111d436c4 100644
+--- a/lib/maple_tree.c
++++ b/lib/maple_tree.c
+@@ -1245,7 +1245,6 @@ static inline void mas_alloc_nodes(struct ma_state *mas, gfp_t gfp)
+ 	if (mas->mas_flags & MA_STATE_PREALLOC) {
+ 		if (allocated)
+ 			return;
+-		BUG_ON(!allocated);
+ 		WARN_ON(!allocated);
+ 	}
+ 
+-- 
+2.48.1
 
