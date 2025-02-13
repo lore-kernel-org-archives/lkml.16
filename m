@@ -1,113 +1,105 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A369D245B1B
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A3D1714B7;
+	Thu, 13 Feb 2025 22:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739484566; cv=none; b=BBqjaKZZQ579fnC2HNLO+6oDG3r109mBQN+INedej5lqIjF+QVm3l5CxvnqIFKGkXgx5sRr+j8/poqKvxnddNgizdpNUBcTjGlbhywD71hhGAB5pkG2b6XZixOR6C+l+ua6JBFy8sUc9ZPeXkB8Gkhioe+NZJKSn4MyvVWZqwF8=
+	t=1739484606; cv=none; b=HmFQnBiIiJnXuNmsFZlJZgvemuZ5LgLzhRK1fxky8F8oieRjCFa6eWkqj069IfFofrmMIZcLFAKJfQs/J/NBICkfbZeLHtnxkpMmFLHZztCionY5WafWLa2tW1xZDAhhBlEjU+2iae+5loxYPYKP86k3WpN4aNNlfUDbQEKHYkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739484566; c=relaxed/simple;
-	bh=TiogawfA+d8HAgfcQDsyQvJAW4KatS/M0fvAd2ugozE=;
+	s=arc-20240116; t=1739484606; c=relaxed/simple;
+	bh=tPJVDzkw9dZftCkEk7dg854tzrJWiG4yXXnjKTij19I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZaWf4VVo2IK387CtGOJpZe8R+bKF4SZgU8rk05gZVd7Ips5ZT6MVkFxoFt3vGi6VpfdcQCkiZBGsccDhTSQX6Od0970JbJ/7an7YDEzyFIN+0ffjhD+Pg+DFfuakyDuXeSyVIJ1YP7lC5Y8VQ8Qv8IqnQuhF7c66r0ujMDrdsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OX8Q74YC; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=WOzm+U2/rqVPo76OGg7pLIhZanI1F0gHxnPEfNr7/Zz2rrD/nPttrDDGy7pIpTqZAB7dr6NBg2gLfLUcUwqS0JL4KzxTXUCnSMUUMlxCfRTIgVdBSnZ7ORQlfJVbHuc6PZaw5u+il66ajjjV1ENG3PT+M7YdTjxLd84LesTJI+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nd+3PEos; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OX8Q74YC"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-308ec50eb3dso14683061fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:09:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739484563; x=1740089363; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oxuQQ2aIsssajEjEPLBiy4yR+691Ol3xWx3H0aH87Bo=;
-        b=OX8Q74YCeHUIU+ahbFWfnVFxeyeM+wpFudVhM2USdzBzRuCvi10S9iSKZTzTzNHFAl
-         e/X8HbLGHIZzxAuni+2keviN0t1Azivnc9+6Plo5x9NQ5JzqSpHn8uVOLJVkJSAwDLVA
-         2zmmUSjhLb3yz59HDX2DjkfL5isMynBpbePTel/wM2k2cz78EYgrK+brP7jt3K6/f/2N
-         7Lq49YkMG76pLjyFbqrzI1+4zgUE9zJps0FB0cv0p2C924Z4VKNDZw/c58WYcgWvpuPY
-         G9esM+HtfFdNY6Wp0cxV6ZW3mm6yoXZlmdT2HWk5J/N0ADuQ+qMa/G62Z2bVuiovIQ8X
-         kjmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739484563; x=1740089363;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oxuQQ2aIsssajEjEPLBiy4yR+691Ol3xWx3H0aH87Bo=;
-        b=LaMNY1ShWZFSw8KA7/68bpQudAYIMI+evdN9KHPLHOFaWfwgo9BNTp/jwPWs+kDdYc
-         rsOtoJcp0smhtENqJK4CN3lgUZ8PGSW0U9wqP8H7rLBgFGv3Fr/8yRLbo33vLzk+/VF8
-         h7Bs0s79N2rd4PiyqNvrkA5k1hbzX1ii6Wvg1S24pE+Ke0+V9M2jskZNQjeD2HsUkY/V
-         N75irjAqDxkPlavF/uNTT+v1YAc80iSUWLxQ1AGdn4y4ohlTRAwG7of3+ic/HA+t82Gw
-         aip1LLi5kDxwOCMv6Pn5VJ7tbJDUrDRMFPM04K3v1eS9F2fJ3ywBn0lKk/ckis7KJ9jL
-         uQTw==
-X-Forwarded-Encrypted: i=1; AJvYcCX4b+KBLi+j5nttIvt8WyypSOYCJfiY51XSnG5lK+NZ0Lo57X0c5dA06MDi5CPjztWkstdLlWt0EiMzzXw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeArO++iuM6KNyn4ADOHidKGD7NWOZ1Rb9ZugOu3GdNLqjl6Nd
-	Hb04A3RpyKl1sbs8YcbCBt0+rFHGQ9hoblH2W0qStFZq7+Hw+BKHsBdJyuJRZm8=
-X-Gm-Gg: ASbGncu1qSzACZBGXpIi54Tzu1ucGU+na+tuZDbBFxyd3AjqN39RETNct+OlZCZTdD2
-	LWVZ8i5EIvWSBgfaYS2NkLMk4WMq7m1POo9kVok33bIWkRNUkB9NIaelbfdars9VPwoOSPQQ6N6
-	MkiKlQPF1skdICUS5yg2zZd2oQmbV0ESdjKFB/k1TIpbgZI9GafNMTMcfujYZhyKwuoPO42YNpI
-	2b3VX8SoI9drvzHNs5z+boQx1i7MVWgd2PPsZ5ySTbEx+a2BPFCXtV4WcoILiJc5szQq2/10T00
-	JL3R6/ptLGqHaxLfPN3GkXD2hrIfvPzhoKd7KOkNPAGXfo19fN4r6vqN7pfmZog+UnsPpMc=
-X-Google-Smtp-Source: AGHT+IEQZiaXM9iD4RqwV8Exvhjv8IXXzp3pQe7MYgKZr4kvCi50te+wsM5WWvl1NzvFC4pn4eF+IQ==
-X-Received: by 2002:a2e:bc16:0:b0:300:2a29:d47c with SMTP id 38308e7fff4ca-309036d731bmr35341951fa.24.1739484562644;
-        Thu, 13 Feb 2025 14:09:22 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309100c5751sm3165361fa.14.2025.02.13.14.09.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 14:09:21 -0800 (PST)
-Date: Fri, 14 Feb 2025 00:09:19 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
-Cc: amitk@kernel.org, thara.gopinath@gmail.com, rafael@kernel.org, 
-	daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com, 
-	david.collins@oss.qualcomm.com, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] thermal: qcom-spmi-temp-alarm: add support for LITE
- PMIC peripherals
-Message-ID: <2v2nxdv2ofd2cwvatrpmo6w7o46o26y6w77myioailuin5ymal@z2mabzkbcrgl>
-References: <20250213210403.3396392-1-anjelique.melendez@oss.qualcomm.com>
- <20250213210403.3396392-5-anjelique.melendez@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nd+3PEos"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E24D4C4CED1;
+	Thu, 13 Feb 2025 22:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739484605;
+	bh=tPJVDzkw9dZftCkEk7dg854tzrJWiG4yXXnjKTij19I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Nd+3PEoswO2bSOWtqU91NTcMcpUKScLnvzmglkXZGBL/lgGtdEyJncCYtzQkFC8y2
+	 ztBkkIWQsV6EOVNrYZWhBziAfWf9V2AVNhlhG0VAgJo5B+A3xmzC7W2KWzgTT2m5T3
+	 Lcb1H7+kkPNkkeKrEpwz6SyO1Pxd9oFfRa8ZhpqtIm2lIYsjZoBR/2unKLf5BaiMwF
+	 h3t3dwuiqVza4mAN4PuCyNYOqT81ibL/uKP5IMBh5UXOV5qcOBuSQ/pBc3DbcjYa3n
+	 C3A24+zB5drv7F1CS7O4vg9y/RCBv94jGUjJeWXio4on9p3Ap3ydkgJ8yNRQOVc0ae
+	 mumf/l3P9BLtA==
+Date: Fri, 14 Feb 2025 00:10:00 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+	peterhuewe@gmx.de, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>
+Subject: Re: [PATCH v2 3/3] tpm: Add a driver for Loongson TPM device
+Message-ID: <Z65tuC722nnuhWEO@kernel.org>
+References: <20250212033113.15137-1-zhaoqunqin@loongson.cn>
+ <20250212033113.15137-4-zhaoqunqin@loongson.cn>
+ <Z60SfDaWnbgddUnA@kernel.org>
+ <c825cd7b-a255-d296-baa0-c1a746cb1bce@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250213210403.3396392-5-anjelique.melendez@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c825cd7b-a255-d296-baa0-c1a746cb1bce@loongson.cn>
 
-On Thu, Feb 13, 2025 at 01:04:03PM -0800, Anjelique Melendez wrote:
-> Add support for TEMP_ALARM LITE PMIC peripherals. This subtype
-> utilizes a pair of registers to configure a warning interrupt
-> threshold temperature and an automatic hardware shutdown
-> threshold temperature.
+On Thu, Feb 13, 2025 at 11:56:25AM +0800, Qunqin Zhao wrote:
 > 
-> Signed-off-by: David Collins <david.collins@oss.qualcomm.com>
-> Signed-off-by: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
-> ---
->  drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 204 +++++++++++++++++++-
->  1 file changed, 203 insertions(+), 1 deletion(-)
+> 在 2025/2/13 上午5:28, Jarkko Sakkinen 写道:
+> > On Wed, Feb 12, 2025 at 11:31:13AM +0800, Qunqin Zhao wrote:
+> > > TPM2.0 is implemented in Loongson security engine. This is the driver
+> > TPM 2.0 or just TPM2 (either is fine with me). Quick reminder what
+> > Loongson security engine (I could not know that and it would be nice
+> > to have that in git log).
 > 
-> diff --git a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
-> index a10f368f2039..081db1a85b8a 100644
-> --- a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
-> +++ b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
-> @@ -22,6 +22,7 @@
->  #define QPNP_TM_REG_TYPE		0x04
->  #define QPNP_TM_REG_SUBTYPE		0x05
->  #define QPNP_TM_REG_STATUS		0x08
-> +#define QPNP_TM_REG_IRQ_STATUS		0x10
+> Looks like just TPM2 is better.
 
-Is it a generic register or a LITE one?
+Either is fine :-)
 
-The rest LGTM
+> 
+> Some explanations about Loongson security engine will be added to git log.
+> 
+> > 
+> > > for it.
+> > > 
+> > > Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> > > Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> > > Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> > > ---
+> > >   MAINTAINERS                 |   1 +
+> > >   drivers/char/tpm/Kconfig    |   9 ++++
+> > >   drivers/char/tpm/Makefile   |   1 +
+> > >   drivers/char/tpm/tpm_lsse.c | 104 ++++++++++++++++++++++++++++++++++++
+> > >   4 files changed, 115 insertions(+)
+> > >   create mode 100644 drivers/char/tpm/tpm_lsse.c
+> > > 
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 6493d58436..6aad0f08ad 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -13484,6 +13484,7 @@ LOONGSON CRYPTO DRIVER
+> > >   M:	Qunqin Zhao <zhaoqunqin@loongson.com>
+> > >   L:	linux-crypto@vger.kernel.org
+> > >   S:	Maintained
+> > > +F:	drivers/char/tpm/tpm_lsse.c
+> > >   F:	drivers/crypto/loongson/
+> > >   LOONGSON-2 APB DMA DRIVER
+> > Probably MAINTAINERS update should be a separate patch.
+> 
+> Some  MAINTAINERS updates are not  separated form the driver patch.  Like
+> the submit of "drivers/mfd/max7714*".
+> 
+> So it seems whether the updates to MAINTAINERS  are separated or not is OK.
 
->  #define QPNP_TM_REG_SHUTDOWN_CTRL1	0x40
->  #define QPNP_TM_REG_ALARM_CTRL		0x46
->  
+I'd prefer them separated from code changes. They are separate tasks
+per se.
 
--- 
-With best wishes
-Dmitry
+BR, Jarkko
