@@ -1,148 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9593227EBF;
-	Thu, 13 Feb 2025 11:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4336520AF82
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739447182; cv=none; b=bqC8COPnyoVGYykHWWJEFtfIb5dZBbjS1cd3zZmfvXZblI8FDRSvOxFNwvf42OzGGekbRtnapfdhOMF3lHp0geHxuurjxrPO2/bqHpcxJ9s5slwEuGBHaZxQmUJjeAjwJRpMjM6ELbBAYygCqgV7sAjyzBllyNDZGiCrTNV2s/Y=
+	t=1739447198; cv=none; b=edqvlcQdXOeUu+rpsf1TU4Poq25XD6nkRnUdCWI/RqsxK93M6VRuG98gJva0F3jr7DSptk3CoqZUv7+w9b9O2tMyfA7nae9J3fJ8KxXSw0zHiJ3CiU7DysamMkqIAMwcjFpnbjnIagoihKsAQDJiHBW7oDjZi1BDtzmNs6l7BMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739447182; c=relaxed/simple;
-	bh=icD1tbHklgfoVg8ChOGPCYM5DzUK/4PvPrrR8iiqEjc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pr9V/jgtuh5SzUh4+ATHN3fwxpUoV5zxM7Rdzt2RBMOnECg6C6aOvFXDWG3607UNA3w+dJkt/GvinCdiHjcfPqE5WaQszwIC73SUWpi9eWY6Xpsb3QvJbW4wir4UeQcTjOaqlCEGJkMLM9Io4kFXYcTiQjtwJaw4fZ1Q+S9nQLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bzoxU6x6; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739447198; c=relaxed/simple;
+	bh=Gt0tMFFzR5IlIKVaO3OfCljuPflErhSeAuqyN39sKfo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R+o5MLih7P7En8o+wH1U6YT5pYTgmDShEvJoaJdDKuQz8OcCpTVa2Y4BsgQpdxqMumePZQ/9PaV7b6RROHrz478KvzbljQpy73IuHLp+e0OteJMb71USrYxxxG1EDE4LdNb88f4tqQa9fA3Z/HFBHnc1Uw5rc6HIvxF59ETw3V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=asilKgaf; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bzoxU6x6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739447181; x=1770983181;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=icD1tbHklgfoVg8ChOGPCYM5DzUK/4PvPrrR8iiqEjc=;
-  b=bzoxU6x6jGkHmh9Z5Q+o672Tzex1AKKZoLgKZwA8g6pbbqB86RtI/CSs
-   VaJ+o2Rh8jwfbDNsAizOfHSOUBaeHLv3ray7utu+T64hKvaXKNM6WAu9s
-   ySCGAtCuBanQ/M372kxkejDLVAXdDD3eSAKCt8D8uMOfUINK9/pBc7mWA
-   zvmUy6HEiVK1Z46Eknqnj0MOMo7lxJnFZw2erOyqrQSeL8YKOUTbLOPn8
-   9Z1UEM1VDKXS8gnXzlRSm78I/QNqxhnUVPVKYTeLZpdfJ5mOn43v/I2xW
-   Rpg1rLvSzf1RhgPgpsenmORAwdC9IBME3ItJLGnHLE/zGAbg/VbQtYhMw
-   A==;
-X-CSE-ConnectionGUID: OyTEcKNdRGe4DGk52+Obww==
-X-CSE-MsgGUID: sS1dYMxLRWyuIB/LE/dHZw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="40063853"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="40063853"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 03:46:20 -0800
-X-CSE-ConnectionGUID: rsuNv/eRRx6dEWG6tHIbkg==
-X-CSE-MsgGUID: zGvG/RwpQ/WI50fUi/Fl3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="113786677"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 13 Feb 2025 03:46:18 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id EFAA22CA; Thu, 13 Feb 2025 13:46:16 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	=?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Cc: Samuel Holland <samuel@sholland.org>,
-	Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH v2 2/2] i2c: Unexport i2c_of_match_device()
-Date: Thu, 13 Feb 2025 13:45:05 +0200
-Message-ID: <20250213114613.2646933-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
-In-Reply-To: <20250213114613.2646933-1-andriy.shevchenko@linux.intel.com>
-References: <20250213114613.2646933-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="asilKgaf"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4394a823036so8557485e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 03:46:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openvpn.net; s=google; t=1739447194; x=1740051994; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=pLvkb9HlJyUozDiDHO4/drWQgsoe+VSaExuzLx0XOw4=;
+        b=asilKgafl9i0ISeFFmLW+GbaWANQDfufF85l3jcp/7fMv1EM07FN8Xvu+M777rF55d
+         rjyKhHCLztpaxK6ODjjm9z5bWRfdCoSQtChv3PUc5SVo1Rk74C5dVpgD5nVCHvpoX959
+         V4bUAntmme/R05biFpXM5gxoRCBza5CKpNbBRp7tyTVJR1JQgFYEN8EPwyo8dbXk1tv4
+         znVXNfZFlB0uCbsE6UKxgXlCA/qboU43F9W8a8Iwj5pUG+d5OIPF9w1Bp5YM5/kbPlQG
+         ZQNq5QiTyakSCVd8o9OR+HRWEK4wiGwElK7VfKHpW94ZV2SysvKBG65kQS4lfZ6o5PW2
+         hSPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739447194; x=1740051994;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pLvkb9HlJyUozDiDHO4/drWQgsoe+VSaExuzLx0XOw4=;
+        b=IDcVbzCWAVAieuYeljNPLq9UhofzIhQhVSYtx1YW30p9Oqqf8vMzXKjIKXtbRLWkyX
+         tRexPJajbC87+TAEANZSMcM0ros4fTUinlHuK6any1DyULYM4AJqw9pTHV+zgo+mbv5T
+         WKA+6sUPFzus/j+iZB/J+6kFFayAx9OUDQ8cBoxLcRY8QZtwjvIhorFRP8dGd7njU79N
+         fq8fIz4wiQaTeZW6pCSS//xRTGASeOKwTZAgRAT+X8lZXT1EE2UT6ZGRvsI4O2OoT/JZ
+         tEEQVh5z8L3e6LJ9O+CDxLpYZzD/l5C3v2YkxAjmpcmKib8A4buUFNe+BCI3WoTQFqfB
+         r7kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXMOccS6o4YsD4sGE3mK73T7ef70IkLNOEeli6A4jL6FPakCRkGWweyp3ymihD9f3LjjtklHnJGzY9MII=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUQDAGZmDuY+t1X+MWxJwDKmIop9UBf7B8A5H+j0VqgsqvUx5p
+	Kk46L6gcJzrLqnGZkuOSwYm/RWfou5oxjUjbHogRD7tCS7xazEIOjPtXff0/yvg=
+X-Gm-Gg: ASbGncv0sm+hyxwokDZ4qif0Hw+vxcunxisy9nakwh/2GXoKAWk5PHv+eYdCkZqVXuE
+	pRBvi1/IUpMRaHSwIcoW0F/2GDoOtsexEZ2IxyIMXWtWCKxAQQqhpfDytwr8Qv5w4lRqudWJ8SD
+	/ikJ25J9cuvMKSlDUJ9Qi+ZykYJxojyo/2sy3LW+6KARLNyAf7cj65TIJ5L5sOW+I8ukyUapLI8
+	Y2OWBXITG7XHXTOtVfvPeP1xsMXuVMmiudGK3YLWABTxen2JhJy6l7gZIOU590Hem1twDdcfRt1
+	N+cHNntmEY0rBLcKB7HZtzOoIJSwcstAsj5KSNv/eazgYRVjqeXBYQ==
+X-Google-Smtp-Source: AGHT+IGc0R4jikBYLoD4kdApspmKli3hWqBkBAV/vMF0JaPNaKhRS5GIlRqwwYV+GGz7ZQ8tBLD2Fg==
+X-Received: by 2002:a05:6000:1ace:b0:38d:d0ca:fbad with SMTP id ffacd0b85a97d-38dea270cf3mr6983294f8f.14.1739447194514;
+        Thu, 13 Feb 2025 03:46:34 -0800 (PST)
+Received: from ?IPV6:2001:67c:2fbc:1:9591:8141:43d0:1ca6? ([2001:67c:2fbc:1:9591:8141:43d0:1ca6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259f8217sm1658833f8f.90.2025.02.13.03.46.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 03:46:34 -0800 (PST)
+Message-ID: <090524ac-724d-4915-8699-fe2ae736ab8c@openvpn.net>
+Date: Thu, 13 Feb 2025 12:46:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v19 00/26] Introducing OpenVPN Data Channel
+ Offload
+To: Sabrina Dubroca <sd@queasysnail.net>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Donald Hunter <donald.hunter@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ ryazanov.s.a@gmail.com, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>,
+ steffen.klassert@secunet.com, antony.antony@secunet.com,
+ willemdebruijn.kernel@gmail.com, David Ahern <dsahern@kernel.org>,
+ Andrew Lunn <andrew@lunn.ch>, Shuah Khan <skhan@linuxfoundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+References: <20250211-b4-ovpn-v19-0-86d5daf2a47a@openvpn.net>
+ <Z60wIRjw5Id1VTal@hog>
+Content-Language: en-US
+From: Antonio Quartulli <antonio@openvpn.net>
+Autocrypt: addr=antonio@openvpn.net; keydata=
+ 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
+Organization: OpenVPN Inc.
+In-Reply-To: <Z60wIRjw5Id1VTal@hog>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-i2c_of_match_device() is not used anymore outside of I²C framework,
-unexport it.
+On 13/02/2025 00:34, Sabrina Dubroca wrote:
+> Hello,
+> 
+> 2025-02-11, 01:39:53 +0100, Antonio Quartulli wrote:
+>> All minor and major reported problems have been finally addressed.
+>> Big thanks to Sabrina, who took the time to guide me through
+>> converting the peer socket to an RCU pointer.
+> 
+> Something is off (not sure if it's new to this version): if I use
+> test-tcp.sh to setup a set of interfaces and peers (I stop the test
+> just after setup to keep the environment alive), then remove all netns
+> with "ip -all netns delete", I expect all devices to go away, but they
+> don't. With debug messages enabled I'm seeing some activity from the
+> module ("tun0: sending keepalive to peer 3" and so on), and
+> ovpn_net_uninit/ovpn_priv_free never got called.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/i2c/i2c-core-of.c |  1 -
- drivers/i2c/i2c-core.h    |  9 +++++++++
- include/linux/i2c.h       | 11 -----------
- 3 files changed, 9 insertions(+), 12 deletions(-)
+I can reproduce it. If later I rmmod ovpn I then get all the "Deleting 
+peer" messages.
+So instances are not being purged on netns exit.
 
-diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-index a6c407d36800..02feee6c9ba9 100644
---- a/drivers/i2c/i2c-core-of.c
-+++ b/drivers/i2c/i2c-core-of.c
-@@ -157,7 +157,6 @@ const struct of_device_id
- 
- 	return i2c_of_match_device_sysfs(matches, client);
- }
--EXPORT_SYMBOL_GPL(i2c_of_match_device);
- 
- #if IS_ENABLED(CONFIG_OF_DYNAMIC)
- static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
-diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
-index 36587f38dff3..4797ba88331c 100644
---- a/drivers/i2c/i2c-core.h
-+++ b/drivers/i2c/i2c-core.h
-@@ -84,8 +84,17 @@ static inline void i2c_acpi_remove_space_handler(struct i2c_adapter *adapter) {
- 
- #ifdef CONFIG_OF
- void of_i2c_register_devices(struct i2c_adapter *adap);
-+const struct of_device_id *i2c_of_match_device(const struct of_device_id *matches,
-+					       struct i2c_client *client);
-+
- #else
- static inline void of_i2c_register_devices(struct i2c_adapter *adap) { }
-+static inline
-+const struct of_device_id *i2c_of_match_device(const struct of_device_id *matches,
-+					       struct i2c_client *client)
-+{
-+	return NULL;
-+}
- #endif
- extern struct notifier_block i2c_of_notifier;
- 
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 2b2af24d2a43..997e80649889 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -1029,10 +1029,6 @@ static inline struct i2c_adapter *of_get_i2c_adapter_by_node(struct device_node
- 	return i2c_get_adapter_by_fwnode(of_fwnode_handle(node));
- }
- 
--const struct of_device_id
--*i2c_of_match_device(const struct of_device_id *matches,
--		     struct i2c_client *client);
--
- int of_i2c_get_board_info(struct device *dev, struct device_node *node,
- 			  struct i2c_board_info *info);
- 
-@@ -1053,13 +1049,6 @@ static inline struct i2c_adapter *of_get_i2c_adapter_by_node(struct device_node
- 	return NULL;
- }
- 
--static inline const struct of_device_id
--*i2c_of_match_device(const struct of_device_id *matches,
--		     struct i2c_client *client)
--{
--	return NULL;
--}
--
- static inline int of_i2c_get_board_info(struct device *dev,
- 					struct device_node *node,
- 					struct i2c_board_info *info)
+Will dive into it.
+
+> 
+> [...]
+>> So there is NO risk of deadlock (and indeed nothing hangs), but I
+>> couldn't find a way to make the warning go away.
+> 
+> I've spotted another splat on strparser cleanup that looked like an
+> actual deadlock, but it's not very reproducible. Still looking into
+> it, but I'm not convinced it's ok to call strp_done (as is done from
+> ovpn_tcp_socket_detach) while under lock_sock, because AFAIU
+> cancel_work_sync(&strp->work) may be waiting for a work that needs to
+> lock the socket (cb.lock in do_strp_work). I guess tcp_tx_work would
+> have the same problem.
+
+Will have a look here too.
+
+Thanks!
+
+
 -- 
-2.45.1.3035.g276e886db78b
+Antonio Quartulli
+OpenVPN Inc.
 
