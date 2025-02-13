@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A7324BC1D;
-	Thu, 13 Feb 2025 16:30:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37EC26FA52;
+	Thu, 13 Feb 2025 16:30:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739464206; cv=none; b=MM4qGUjXeDDwLxvWW89oiEi48d92zJT1eSK6HZcNvaJS6Q7AlL9W7Si9ohjQ53x1+8FUP54qwDijBltlop3JIaVlEBpByVqVGrcS25/V83ZjzSJhv0ZPKMs8KJubMYAJQOnKyA6TBNGWVsx4Xf4oa+pYlJI66E8uVLczol9gU9Q=
+	t=1739464210; cv=none; b=QxosQR0dQf6xFr+7T0quuFdKkqK63fRLANqzjIjBcdFuOa2zOVUqNlrHShVL7ik2TSOJZetJIN3WHUO4fqzJsjkPwusd4E35RTX+uDdyAxLnIUoS1FKSbnh3Om6KXgznuNjwdOcKWdF7lsBGx5VqboXgrVeXcwjtuXQ0VN+39Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739464206; c=relaxed/simple;
-	bh=SC+lAll5Fluj1mVmh66LeQmEtzwjo/90oZJB0wQkWIA=;
+	s=arc-20240116; t=1739464210; c=relaxed/simple;
+	bh=Xo8DjJ7dkF4QvlEqmx7HWu1SRPK2cOD4V3F5nnSorQM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JbnFIzHvC888ciPtnle5U1oU+eKvlL6heZhLuG3TPQk2g+8YZgdlrYWU01vr4KmaEjbfv2uKvTjJUakDkmMXKiynfmp3SOueA0j0akxayuEeR0tILl9EEgfXnpAGa3Aekm0OhAAmzUynsb8ecoGoRlIb/AFtemmVZH0fNQUPNHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gMSbx/Wi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=mWV6nqtyUSo2CvN+1c2qkDBS4jKOME89BbweKIPyO9PtLyCw7/O1qFwNJE7FP7rTT35buyxl82X72UZXSBZrfBhneXFsUyO7pAvnkRKswvnAAdsfszwkebdJkH35pc9YUhcKt7Vc4BUDgM+fTxIuls0xEDWTYWG3JgbOe/TzIWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kx8ZFKG3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gMSbx/Wi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34E0FC4CED1;
-	Thu, 13 Feb 2025 16:30:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kx8ZFKG3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76C05C4CEE4;
+	Thu, 13 Feb 2025 16:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739464205;
-	bh=SC+lAll5Fluj1mVmh66LeQmEtzwjo/90oZJB0wQkWIA=;
+	s=k20201202; t=1739464209;
+	bh=Xo8DjJ7dkF4QvlEqmx7HWu1SRPK2cOD4V3F5nnSorQM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=gMSbx/Wi9ekPdTraDbDSLzE/3MQqS3hmdBgrsqo3Sw/Duu30Zq4JLrgCFgi78DaN5
-	 by/0HQ5PMKg1qKgxrKQSBu4rra5GN/z7TobdzjEJjjKvEWfUFy3VHtZUAIEJExddeL
-	 XOxVIonH2PbOxXPSmxS60cTV8ZQf49nKeYKTwF19bK/uhM4Mrz4ZNcqjrKnEuWboGZ
-	 TkRPELvRYLd40zWq/oZo3lYNfFi8oAKVqODzolIbxjO/hUwMjVfUFwrFWkwyRke2s6
-	 ohNwKJcm7CywX7vZ3vbNiY6IjkEKlT6Lt9N2JakYIfosxJ4CjK1SyWUMt2axjla+D1
-	 zPvktC+Sv0jzw==
+	b=kx8ZFKG3JO12fpbDgEZcg4pZJwugnoUKQqXHoLGZa2g5vpq8aJpBrno8DtPHD5k0D
+	 BfqwW+w/St5IYOCzcSgJWyxzkIipI+U1HMs0GKmqqet2rGbns6edELrlrNeCI5b5bB
+	 qIUx9X516wEWmDvBPzTcnzU3bLJAIA3C+jOsIaB3k3nEb0RWxGYIAMiWqDMu0e4mnm
+	 4NI1KPcJVf9GMWjANHJJeBgWZvJFcTCNg4kj5WpT1m96RgUc4uhwmoNOCBTrVlK3UK
+	 NGdlQdfoNtjWq1lijyRoecj0ni3TwWZ/wQFHeJ/VPG/sK/zX9R8YYcrhlA0nUUpSCu
+	 7PWg0JwScNbMw==
 From: Vinod Koul <vkoul@kernel.org>
-To: linux-sound@vger.kernel.org, 
- Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc: vinod.koul@linaro.org, linux-kernel@vger.kernel.org, 
- pierre-louis.bossart@linux.dev, bard.liao@intel.com
-In-Reply-To: <20250205074232.87537-1-yung-chuan.liao@linux.intel.com>
-References: <20250205074232.87537-1-yung-chuan.liao@linux.intel.com>
-Subject: Re: [PATCH 0/2] soundwire: Intel: support more then 1 sdw bus
- clock frequency
-Message-Id: <173946420383.270661.12605891898374994214.b4-ty@kernel.org>
-Date: Thu, 13 Feb 2025 22:00:03 +0530
+To: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+Cc: alsa-devel@alsa-project.org, yung-chuan.liao@linux.intel.com, 
+ pierre-louis.bossart@linux.dev, sanyog.r.kale@intel.com, 
+ Basavaraj.Hiregoudar@amd.com, Sunil-kumar.Dommati@amd.com, 
+ venkataprasad.potturu@amd.com, Mario.Limonciello@amd.com, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250207065841.4718-1-Vijendar.Mukunda@amd.com>
+References: <20250207065841.4718-1-Vijendar.Mukunda@amd.com>
+Subject: Re: [PATCH V4 0/6] soundwire: amd: code improvements and new
+ platform support
+Message-Id: <173946420611.270661.6294707599627839150.b4-ty@kernel.org>
+Date: Thu, 13 Feb 2025 22:00:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,25 +50,33 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Wed, 05 Feb 2025 15:42:30 +0800, Bard Liao wrote:
-> This series set frame shape and divider based on actual clk freq to
-> support dynamic clock change. The revert the commit that limits Intel
-> platform to use fixed clock frequency.
+On Fri, 07 Feb 2025 12:28:35 +0530, Vijendar Mukunda wrote:
+> This patch series consists of code improvements and new platform support
+> for ACP7.0 & ACP7.1 platforms.
 > 
-> Bard Liao (2):
->   soundwire: cadence_master: set frame shape and divider based on actual
->     clk freq
->   Revert "soundwire: intel_auxdevice: start the bus at default
->     frequency"
+> Changes since v3:
+> - Remove extra white line in amd_sdw_manager_start() function.
+> 
+> Changes since v2:
+> - Rebase the patch series after dropping the patch which adds conditional
+>   check for SoundWire manager device resume when wake event is asserted.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/2] soundwire: cadence_master: set frame shape and divider based on actual clk freq
-      commit: e738d77f78b3ac085dfb51be414e93464abba7ec
-[2/2] Revert "soundwire: intel_auxdevice: start the bus at default frequency"
-      commit: d38ea972da679f223ae1e761080e37dd8b582bac
+[1/6] soundwire: amd: change the soundwire wake enable/disable sequence
+      commit: dcc48a73eae7f791b1a6856ea1bcc4079282c88d
+[2/6] soundwire: amd: add debug log for soundwire wake event
+      commit: 19427c08b818c65f579cbfc78062e1ff4c37c768
+[3/6] soundwire: amd: add support for ACP7.0 & ACP7.1 platforms
+      commit: 2c0ae8ef1e5edfd0e42727fba4617694f3aac2eb
+[4/6] soundwire: amd: set device power state during suspend/resume sequence
+      commit: 829c3e1cb4a3f60c5cef11963052009ea50d2941
+[5/6] soundwire: amd: set ACP_PME_EN during runtime suspend sequence
+      commit: 5818ed3636b3c63eddef299223c7369de86eefee
+[6/6] soundwire: amd: add soundwire host wake interrupt enable/disable sequence
+      commit: 3df75289ddc28b46121d51d2812943b78676497b
 
 Best regards,
 -- 
