@@ -1,322 +1,588 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48932139A6
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5328214235
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739437737; cv=none; b=VyOmvHVkBgr6KD8RHjX3azhsZVlnmHOI3rPgdOWHodAM+hdDIQedw03jjOHiyTY1O/uNMtkM3Epw8l5QW/XtqCe6rBu9L5vgDbyt7pybXJh3zdi5Y1bHXne7KaKpACDdPvq8jeMS1+CPQCX7lQ25pybJ0Rb5OOw09xVsUm0uWYE=
+	t=1739437741; cv=none; b=MF+GYKo8EAA3SVMHFmhHSCBo7i10kL/UffduqMnUQDLsIoIwbxx2gJVkaCe0AZ30ruij+BZGLDiKvCvSj3cSRXPPOvw57nZeA38IdLCYlBdIxvAvMMYd6EqoRVkloS2u808MdhtqtiCHHZN0dw5PmHqn5QfEHAtgArbVHRP2gjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739437737; c=relaxed/simple;
-	bh=XfN24f35OJ2vk/m+e6pUtd4T3vptKtMhhNopu2gMhYw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WiCefRcSp2P2ioU5MNYoU0w3rJGYRaPhLDzAQ50ixJ3j75mBg4DvGVJ1QZ5rDpICgE6yRznN9whULkTqmq1Y6/TZFNKolnfB/TtxaMQKR7AKSQzttV0dEw6ePPMP7ZP5m7SLcZnk4+X5oJtP0k1hm8j/dbwbrVNE0BqjPAyfoxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AZkTIhPl; arc=none smtp.client-ip=209.85.218.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+	s=arc-20240116; t=1739437741; c=relaxed/simple;
+	bh=iOXOBA4Z8GL1T8p4Ii+x5OwgZk8kQRbBoXqHcIADvi4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ce5EQmwPQhPeFyu8b/50pmgSdyROBVi4I2lEvnODqtt+dvAIRMkmJbC69iCEQ4bVeoTvvVcUHZ6CyXgySggOEet+Noa9seysyf1SQIKRPyWd8HMNyrv08GJZkpjF23xI07Zt+UOtLrkzH64XedeBjo52DEA8k/jDq9z9nbmTacU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tdyg46JF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AZkTIhPl"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-ab7fab91f3cso68511166b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 01:08:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739437733; x=1740042533; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fgMJGG8J9qWcW3TupvJXIyqnEtZAoqP7JYM6BoJGJhw=;
-        b=AZkTIhPlKAICxka45kVGwQQindk/IfD24e6ylVuJ2Qy41Lyoc0Y8G0hEePhcOU/ffu
-         1e6EE6n4EaGV33DEAPCPHKkL2/SrL9C4iiyrlhWYz3KuEMfmqqDN9AOQDP8KfZ4Zt4Mv
-         VOl6KDnk8DP/DI6SeLA2dxk9PDdO8jAWEMJX29bO2gnMCN6QO6TzFkWMgBtwpdMwZW1g
-         t3YmAtnYn+6HgD+sly9+YvZZFSdHVtRa9dojFWGwUQZr17zthwMx/Vs5Fdz4he0rgBik
-         azsMrK8L2g/JkYyksdksPoHtiAzLoXRpadm3Vokc/4/hoWJRl2cenB83UqyZQKb1ilgf
-         fVhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739437733; x=1740042533;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fgMJGG8J9qWcW3TupvJXIyqnEtZAoqP7JYM6BoJGJhw=;
-        b=cW7NLMwMI04wtazzpzeNqhna+85bTjUQb9by5hE1c8aj7gj7Xn70aP2Orvq3zODCdJ
-         637S63NzOkd82EjobOByzFtw8qcmXFDyGBYzQGPww5wuonnqYx9W6SXF1AC9lF748GBc
-         AiZ0QhmEvYSBJL1f4PzSj9KUNsJr6G4SGRfYgMHK9/I43wF72tVBSBc5EjLGvjCOq/8P
-         rEHpYyaMTnZV+1Vwxj3B2HD4UkS/tasdzoiam8kMIxKkIbBrl3O+csp0LQA2sX1BhQ+A
-         6LAEVp0RbdsDJJDl3CWdhFanQPoXzPTUocPu5Sz/nxvbRsPAiZqIquPanXjrygMP2vj0
-         3LIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUoz012yHtva16NlAvP5O3VAe0BFBh/T7LGkYM4ebR0+YArkjx5mC4znZfYRP3+SaqNc+m9yS+dKLhu3fI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUc60mllkQ3TzIf8BzUTAMIAQ7pn/6TpFAlNsahv9x8TYF+5fd
-	wvcD8lTuUDHK1cMvj66u0T03aPjruVF6XkO5P5dyzVvPdji2noxjn+HZlG5z6kR5mAKg2SJCX7x
-	bIQiavA==
-X-Google-Smtp-Source: AGHT+IESQcCr8+K8FwNJFz7mKQPjJ9j9o1aqQnbiHg2o232jZMxRV6+6jYX0sYilojk6zt9/4a+CTtA4JxXR
-X-Received: from ejv1.prod.google.com ([2002:a17:906:3081:b0:ab7:b298:3b76])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:dab:b0:aa6:8cbc:8d15
- with SMTP id a640c23a62f3a-ab7f338ef2fmr650865366b.14.1739437733104; Thu, 13
- Feb 2025 01:08:53 -0800 (PST)
-Date: Thu, 13 Feb 2025 10:08:22 +0100
-In-Reply-To: <cover.1739437531.git.dvyukov@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tdyg46JF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739437738;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g/YsssohtOccmju7GHCYZkLMX0+5wzeLlF29l2c+xdk=;
+	b=Tdyg46JFyo/gLem+cLXmhZSZfTXpF/L2+T5HgEM/GVKBWgE+qmOIBa9o5jrnqOKXv3qgYk
+	GJ23KFeruBakakhekjiVXjU/usBih3OO6VNPxm0ga6xo4/qdeZ0qnp8g1UsqQhmL9ZTbRd
+	t7jgo0G6owLgcP8I+suno2cz8JJLYAo=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-271-ZLaeuy--ON6mpflTaceY5g-1; Thu,
+ 13 Feb 2025 04:08:55 -0500
+X-MC-Unique: ZLaeuy--ON6mpflTaceY5g-1
+X-Mimecast-MFC-AGG-ID: ZLaeuy--ON6mpflTaceY5g_1739437734
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0DEA9180087C;
+	Thu, 13 Feb 2025 09:08:54 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.81])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AFF421800360;
+	Thu, 13 Feb 2025 09:08:50 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCH v2 04/11] rv: Add option for nested monitors and include sched
+Date: Thu, 13 Feb 2025 10:08:02 +0100
+Message-ID: <20250213090819.419470-5-gmonaco@redhat.com>
+In-Reply-To: <20250213090819.419470-1-gmonaco@redhat.com>
+References: <20250213090819.419470-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1739437531.git.dvyukov@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <7c1cb1c8f9901e945162701ba7269d0f9c70be89.1739437531.git.dvyukov@google.com>
-Subject: [PATCH v7 9/9] perf hist: Shrink struct hist_entry size
-From: Dmitry Vyukov <dvyukov@google.com>
-To: namhyung@kernel.org, irogers@google.com, acme@kernel.org, 
-	ak@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Reorder the struct fields by size to reduce paddings and reduce
-struct simd_flags size from 8 to 1 byte.
+Monitors describing complex systems, such as the scheduler, can easily
+grow to the point where they are just hard to understand because of the
+many possible state transitions.
+Often it is possible to break such descriptions into smaller monitors,
+sharing some or all events. Enabling those smaller monitors concurrently
+is, in fact, testing the system as if we had one single larger monitor.
+Splitting models into multiple specification is not only easier to
+understand, but gives some more clues when we see errors.
 
-This reduces struct hist_entry size by 8 bytes (592->584),
-and leaves a single more usable 6 byte padding hole.
+Add the possibility to create container monitors, whose only purpose is
+to host other nested monitors. Enabling a container monitor enables all
+nested ones, but it's still possible to enable nested monitors
+independently.
+Add the sched monitor as first container, for now empty.
 
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
-Pahole output before:
+ include/linux/rv.h                     |   2 +-
+ kernel/trace/rv/Kconfig                |   1 +
+ kernel/trace/rv/Makefile               |   1 +
+ kernel/trace/rv/monitors/sched/Kconfig |  12 ++
+ kernel/trace/rv/monitors/sched/sched.c |  38 +++++++
+ kernel/trace/rv/monitors/sched/sched.h |   3 +
+ kernel/trace/rv/monitors/wip/wip.c     |   2 +-
+ kernel/trace/rv/monitors/wwnr/wwnr.c   |   2 +-
+ kernel/trace/rv/rv.c                   | 152 +++++++++++++++++++++----
+ kernel/trace/rv/rv.h                   |   4 +
+ kernel/trace/rv/rv_reactors.c          |  28 ++++-
+ 11 files changed, 216 insertions(+), 29 deletions(-)
+ create mode 100644 kernel/trace/rv/monitors/sched/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/sched/sched.c
+ create mode 100644 kernel/trace/rv/monitors/sched/sched.h
 
-struct hist_entry {
-	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
-	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
-	union {
-		struct list_head   node;                 /*    48    16 */
-		struct list_head   head;                 /*    48    16 */
-	} pairs;                                         /*    48    16 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct he_stat             stat;                 /*    64    80 */
-
-	/* XXX last struct has 4 bytes of padding */
-
-	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
-	struct he_stat *           stat_acc;             /*   144     8 */
-	struct map_symbol          ms;                   /*   152    24 */
-	struct thread *            thread;               /*   176     8 */
-	struct comm *              comm;                 /*   184     8 */
-	/* --- cacheline 3 boundary (192 bytes) --- */
-	struct namespace_id        cgroup_id;            /*   192    16 */
-	u64                        cgroup;               /*   208     8 */
-	u64                        ip;                   /*   216     8 */
-	u64                        transaction;          /*   224     8 */
-	s32                        socket;               /*   232     4 */
-	s32                        cpu;                  /*   236     4 */
-	int                        parallelism;          /*   240     4 */
-
-	/* XXX 4 bytes hole, try to pack */
-
-	u64                        code_page_size;       /*   248     8 */
-	/* --- cacheline 4 boundary (256 bytes) --- */
-	u64                        weight;               /*   256     8 */
-	u64                        ins_lat;              /*   264     8 */
-	u64                        p_stage_cyc;          /*   272     8 */
-	u8                         cpumode;              /*   280     1 */
-	u8                         depth;                /*   281     1 */
-
-	/* XXX 2 bytes hole, try to pack */
-
-	int                        mem_type_off;         /*   284     4 */
-	struct simd_flags          simd_flags;           /*   288     8 */
-	_Bool                      dummy;                /*   296     1 */
-	_Bool                      leaf;                 /*   297     1 */
-	char                       level;                /*   298     1 */
-
-	/* XXX 1 byte hole, try to pack */
-
-	filter_mask_t              filtered;             /*   300     2 */
-	u16                        callchain_size;       /*   302     2 */
-	union {
-		struct hist_entry_diff diff;             /*   304   120 */
-		struct {
-			u16        row_offset;           /*   304     2 */
-			u16        nr_rows;              /*   306     2 */
-			_Bool      init_have_children;   /*   308     1 */
-			_Bool      unfolded;             /*   309     1 */
-			_Bool      has_children;         /*   310     1 */
-			_Bool      has_no_entry;         /*   311     1 */
-		};                                       /*   304     8 */
-	};                                               /*   304   120 */
-	/* --- cacheline 6 boundary (384 bytes) was 40 bytes ago --- */
-	char *                     srcline;              /*   424     8 */
-	char *                     srcfile;              /*   432     8 */
-	struct symbol *            parent;               /*   440     8 */
-	/* --- cacheline 7 boundary (448 bytes) --- */
-	struct branch_info *       branch_info;          /*   448     8 */
-	long int                   time;                 /*   456     8 */
-	struct hists *             hists;                /*   464     8 */
-	struct mem_info *          mem_info;             /*   472     8 */
-	struct block_info *        block_info;           /*   480     8 */
-	struct kvm_info *          kvm_info;             /*   488     8 */
-	void *                     raw_data;             /*   496     8 */
-	u32                        raw_size;             /*   504     4 */
-	int                        num_res;              /*   508     4 */
-	/* --- cacheline 8 boundary (512 bytes) --- */
-	struct res_sample *        res_samples;          /*   512     8 */
-	void *                     trace_output;         /*   520     8 */
-	struct perf_hpp_list *     hpp_list;             /*   528     8 */
-	struct hist_entry *        parent_he;            /*   536     8 */
-	struct hist_entry_ops *    ops;                  /*   544     8 */
-	struct annotated_data_type * mem_type;           /*   552     8 */
-	union {
-		struct {
-			struct rb_root_cached hroot_in;  /*   560    16 */
-			/* --- cacheline 9 boundary (576 bytes) --- */
-			struct rb_root_cached hroot_out; /*   576    16 */
-		};                                       /*   560    32 */
-		struct rb_root     sorted_chain;         /*   560     8 */
-	};                                               /*   560    32 */
-	/* --- cacheline 9 boundary (576 bytes) was 16 bytes ago --- */
-	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   592     0 */
-
-	/* size: 592, cachelines: 10, members: 49 */
-	/* sum members: 585, holes: 3, sum holes: 7 */
-	/* paddings: 1, sum paddings: 4 */
-	/* forced alignments: 3 */
-	/* last cacheline: 16 bytes */
-} __attribute__((__aligned__(8)));
-
-After:
-
-struct hist_entry {
-	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
-	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
-	union {
-		struct list_head   node;                 /*    48    16 */
-		struct list_head   head;                 /*    48    16 */
-	} pairs;                                         /*    48    16 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct he_stat             stat;                 /*    64    80 */
-
-	/* XXX last struct has 4 bytes of padding */
-
-	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
-	struct he_stat *           stat_acc;             /*   144     8 */
-	struct map_symbol          ms;                   /*   152    24 */
-	struct thread *            thread;               /*   176     8 */
-	struct comm *              comm;                 /*   184     8 */
-	/* --- cacheline 3 boundary (192 bytes) --- */
-	struct namespace_id        cgroup_id;            /*   192    16 */
-	u64                        cgroup;               /*   208     8 */
-	u64                        ip;                   /*   216     8 */
-	u64                        transaction;          /*   224     8 */
-	u64                        code_page_size;       /*   232     8 */
-	u64                        weight;               /*   240     8 */
-	u64                        ins_lat;              /*   248     8 */
-	/* --- cacheline 4 boundary (256 bytes) --- */
-	u64                        p_stage_cyc;          /*   256     8 */
-	s32                        socket;               /*   264     4 */
-	s32                        cpu;                  /*   268     4 */
-	int                        parallelism;          /*   272     4 */
-	int                        mem_type_off;         /*   276     4 */
-	u8                         cpumode;              /*   280     1 */
-	u8                         depth;                /*   281     1 */
-	struct simd_flags          simd_flags;           /*   282     1 */
-	_Bool                      dummy;                /*   283     1 */
-	_Bool                      leaf;                 /*   284     1 */
-	char                       level;                /*   285     1 */
-	filter_mask_t              filtered;             /*   286     2 */
-	u16                        callchain_size;       /*   288     2 */
-
-	/* XXX 6 bytes hole, try to pack */
-
-	union {
-		struct hist_entry_diff diff;             /*   296   120 */
-		struct {
-			u16        row_offset;           /*   296     2 */
-			u16        nr_rows;              /*   298     2 */
-			_Bool      init_have_children;   /*   300     1 */
-			_Bool      unfolded;             /*   301     1 */
-			_Bool      has_children;         /*   302     1 */
-			_Bool      has_no_entry;         /*   303     1 */
-		};                                       /*   296     8 */
-	};                                               /*   296   120 */
-	/* --- cacheline 6 boundary (384 bytes) was 32 bytes ago --- */
-	char *                     srcline;              /*   416     8 */
-	char *                     srcfile;              /*   424     8 */
-	struct symbol *            parent;               /*   432     8 */
-	struct branch_info *       branch_info;          /*   440     8 */
-	/* --- cacheline 7 boundary (448 bytes) --- */
-	long int                   time;                 /*   448     8 */
-	struct hists *             hists;                /*   456     8 */
-	struct mem_info *          mem_info;             /*   464     8 */
-	struct block_info *        block_info;           /*   472     8 */
-	struct kvm_info *          kvm_info;             /*   480     8 */
-	void *                     raw_data;             /*   488     8 */
-	u32                        raw_size;             /*   496     4 */
-	int                        num_res;              /*   500     4 */
-	struct res_sample *        res_samples;          /*   504     8 */
-	/* --- cacheline 8 boundary (512 bytes) --- */
-	void *                     trace_output;         /*   512     8 */
-	struct perf_hpp_list *     hpp_list;             /*   520     8 */
-	struct hist_entry *        parent_he;            /*   528     8 */
-	struct hist_entry_ops *    ops;                  /*   536     8 */
-	struct annotated_data_type * mem_type;           /*   544     8 */
-	union {
-		struct {
-			struct rb_root_cached hroot_in;  /*   552    16 */
-			struct rb_root_cached hroot_out; /*   568    16 */
-		};                                       /*   552    32 */
-		struct rb_root     sorted_chain;         /*   552     8 */
-	};                                               /*   552    32 */
-	/* --- cacheline 9 boundary (576 bytes) was 8 bytes ago --- */
-	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   584     0 */
-
-	/* size: 584, cachelines: 10, members: 49 */
-	/* sum members: 578, holes: 1, sum holes: 6 */
-	/* paddings: 1, sum paddings: 4 */
-	/* forced alignments: 3 */
-	/* last cacheline: 8 bytes */
-} __attribute__((__aligned__(8)));
----
- tools/perf/util/hist.h   | 8 ++++----
- tools/perf/util/sample.h | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 29d4c7a3d1747..317d06cca8b88 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -239,16 +239,16 @@ struct hist_entry {
- 	u64			cgroup;
- 	u64			ip;
- 	u64			transaction;
--	s32			socket;
--	s32			cpu;
--	int			parallelism;
- 	u64			code_page_size;
- 	u64			weight;
- 	u64			ins_lat;
- 	u64			p_stage_cyc;
-+	s32			socket;
-+	s32			cpu;
-+	int			parallelism;
-+	int			mem_type_off;
- 	u8			cpumode;
- 	u8			depth;
--	int			mem_type_off;
- 	struct simd_flags	simd_flags;
+diff --git a/include/linux/rv.h b/include/linux/rv.h
+index 55d458be53a4c..3452b5e4b29e7 100644
+--- a/include/linux/rv.h
++++ b/include/linux/rv.h
+@@ -56,7 +56,7 @@ struct rv_monitor {
  
- 	/* We are added by hists__add_dummy_entry. */
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 70b2c3135555e..ab756d61cbcd6 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -67,7 +67,7 @@ struct aux_sample {
+ bool rv_monitoring_on(void);
+ int rv_unregister_monitor(struct rv_monitor *monitor);
+-int rv_register_monitor(struct rv_monitor *monitor);
++int rv_register_monitor(struct rv_monitor *monitor, struct rv_monitor *parent);
+ int rv_get_task_monitor_slot(void);
+ void rv_put_task_monitor_slot(int slot);
+ 
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index 8226352a00626..84c98a5327f3e 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -27,6 +27,7 @@ menuconfig RV
+ 
+ source "kernel/trace/rv/monitors/wip/Kconfig"
+ source "kernel/trace/rv/monitors/wwnr/Kconfig"
++source "kernel/trace/rv/monitors/sched/Kconfig"
+ # Add new monitors here
+ 
+ config RV_REACTORS
+diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+index 188b64668e1fa..1c784df03b9a7 100644
+--- a/kernel/trace/rv/Makefile
++++ b/kernel/trace/rv/Makefile
+@@ -5,6 +5,7 @@ ccflags-y += -I $(src)		# needed for trace events
+ obj-$(CONFIG_RV) += rv.o
+ obj-$(CONFIG_RV_MON_WIP) += monitors/wip/wip.o
+ obj-$(CONFIG_RV_MON_WWNR) += monitors/wwnr/wwnr.o
++obj-$(CONFIG_RV_MON_SCHED) += monitors/sched/sched.o
+ # Add new monitors here
+ obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
+ obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
+diff --git a/kernel/trace/rv/monitors/sched/Kconfig b/kernel/trace/rv/monitors/sched/Kconfig
+new file mode 100644
+index 0000000000000..36c371af53f6f
+--- /dev/null
++++ b/kernel/trace/rv/monitors/sched/Kconfig
+@@ -0,0 +1,12 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++config RV_MON_SCHED
++	depends on RV
++	select DA_MON_EVENTS_IMPLICIT
++	bool "sched monitor"
++	help
++	  Collection of monitors to check the scheduler behaves according to specifications.
++	  Enable this to enable all scheduler specification supported by the current kernel.
++
++	  For further information, see:
++	    Documentation/trace/rv/monitor_sched.rst
+diff --git a/kernel/trace/rv/monitors/sched/sched.c b/kernel/trace/rv/monitors/sched/sched.c
+new file mode 100644
+index 0000000000000..905e03c3c934d
+--- /dev/null
++++ b/kernel/trace/rv/monitors/sched/sched.c
+@@ -0,0 +1,38 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/rv.h>
++
++#define MODULE_NAME "sched"
++
++#include "sched.h"
++
++struct rv_monitor rv_sched;
++
++struct rv_monitor rv_sched = {
++	.name = "sched",
++	.description = "container for several scheduler monitor specifications.",
++	.enable = NULL,
++	.disable = NULL,
++	.reset = NULL,
++	.enabled = 0,
++};
++
++static int __init register_sched(void)
++{
++	rv_register_monitor(&rv_sched, NULL);
++	return 0;
++}
++
++static void __exit unregister_sched(void)
++{
++	rv_unregister_monitor(&rv_sched);
++}
++
++module_init(register_sched);
++module_exit(unregister_sched);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
++MODULE_DESCRIPTION("sched: container for several scheduler monitor specifications.");
+diff --git a/kernel/trace/rv/monitors/sched/sched.h b/kernel/trace/rv/monitors/sched/sched.h
+new file mode 100644
+index 0000000000000..ba148dd8d48b1
+--- /dev/null
++++ b/kernel/trace/rv/monitors/sched/sched.h
+@@ -0,0 +1,3 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++extern struct rv_monitor rv_sched;
+diff --git a/kernel/trace/rv/monitors/wip/wip.c b/kernel/trace/rv/monitors/wip/wip.c
+index db7389157c87e..ed758fec8608f 100644
+--- a/kernel/trace/rv/monitors/wip/wip.c
++++ b/kernel/trace/rv/monitors/wip/wip.c
+@@ -71,7 +71,7 @@ static struct rv_monitor rv_wip = {
+ 
+ static int __init register_wip(void)
+ {
+-	rv_register_monitor(&rv_wip);
++	rv_register_monitor(&rv_wip, NULL);
+ 	return 0;
+ }
+ 
+diff --git a/kernel/trace/rv/monitors/wwnr/wwnr.c b/kernel/trace/rv/monitors/wwnr/wwnr.c
+index 3b16994a99845..172f31c4b0f34 100644
+--- a/kernel/trace/rv/monitors/wwnr/wwnr.c
++++ b/kernel/trace/rv/monitors/wwnr/wwnr.c
+@@ -70,7 +70,7 @@ static struct rv_monitor rv_wwnr = {
+ 
+ static int __init register_wwnr(void)
+ {
+-	rv_register_monitor(&rv_wwnr);
++	rv_register_monitor(&rv_wwnr, NULL);
+ 	return 0;
+ }
+ 
+diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+index 8657fc8806e7c..de67b6bd217a8 100644
+--- a/kernel/trace/rv/rv.c
++++ b/kernel/trace/rv/rv.c
+@@ -162,7 +162,7 @@ struct dentry *get_monitors_root(void)
+ /*
+  * Interface for the monitor register.
+  */
+-static LIST_HEAD(rv_monitors_list);
++LIST_HEAD(rv_monitors_list);
+ 
+ static int task_monitor_count;
+ static bool task_monitor_slots[RV_PER_TASK_MONITORS];
+@@ -206,6 +206,28 @@ void rv_put_task_monitor_slot(int slot)
+ 	task_monitor_slots[slot] = false;
+ }
+ 
++/*
++ * Monitors with a parent are nested,
++ * Monitors without a parent could be standalone or containers.
++ */
++bool rv_is_nested_monitor(struct rv_monitor_def *mdef)
++{
++	return mdef->parent != NULL;
++}
++
++/*
++ * We set our list to have nested monitors listed after their parent
++ * if a monitor has a child element its a container.
++ * This function would return false for empty containers but we should
++ * not allow them anyway.
++ */
++bool rv_is_container_monitor(struct rv_monitor_def *mdef)
++{
++	struct rv_monitor_def *next = list_next_entry(mdef, list);
++
++	return next->parent == mdef->monitor;
++}
++
+ /*
+  * This section collects the monitor/ files and folders.
+  */
+@@ -229,7 +251,8 @@ static int __rv_disable_monitor(struct rv_monitor_def *mdef, bool sync)
+ 
+ 	if (mdef->monitor->enabled) {
+ 		mdef->monitor->enabled = 0;
+-		mdef->monitor->disable();
++		if (mdef->monitor->disable)
++			mdef->monitor->disable();
+ 
+ 		/*
+ 		 * Wait for the execution of all events to finish.
+@@ -243,6 +266,60 @@ static int __rv_disable_monitor(struct rv_monitor_def *mdef, bool sync)
+ 	return 0;
+ }
+ 
++static void rv_disable_single(struct rv_monitor_def *mdef)
++{
++	__rv_disable_monitor(mdef, true);
++}
++
++static int rv_enable_single(struct rv_monitor_def *mdef)
++{
++	int retval;
++
++	lockdep_assert_held(&rv_interface_lock);
++
++	if (mdef->monitor->enabled)
++		return 0;
++
++	retval = mdef->monitor->enable();
++
++	if (!retval)
++		mdef->monitor->enabled = 1;
++
++	return retval;
++}
++
++static void rv_disable_container(struct rv_monitor_def *mdef)
++{
++	struct rv_monitor_def *p = mdef;
++	int enabled = 0;
++
++	list_for_each_entry_continue(p, &rv_monitors_list, list) {
++		if (p->parent != mdef->monitor)
++			break;
++		enabled += __rv_disable_monitor(p, false);
++	}
++	if (enabled)
++		tracepoint_synchronize_unregister();
++	mdef->monitor->enabled = 0;
++}
++
++static int rv_enable_container(struct rv_monitor_def *mdef)
++{
++	struct rv_monitor_def *p = mdef;
++	int retval = 0;
++
++	list_for_each_entry_continue(p, &rv_monitors_list, list) {
++		if (retval || p->parent != mdef->monitor)
++			break;
++		retval = rv_enable_single(p);
++	}
++	if (retval)
++		rv_disable_container(mdef);
++	else
++		mdef->monitor->enabled = 1;
++	return retval;
++}
++
+ /**
+  * rv_disable_monitor - disable a given runtime monitor
+  * @mdef: Pointer to the monitor definition structure.
+@@ -251,7 +328,11 @@ static int __rv_disable_monitor(struct rv_monitor_def *mdef, bool sync)
+  */
+ int rv_disable_monitor(struct rv_monitor_def *mdef)
+ {
+-	__rv_disable_monitor(mdef, true);
++	if (rv_is_container_monitor(mdef))
++		rv_disable_container(mdef);
++	else
++		rv_disable_single(mdef);
++
+ 	return 0;
+ }
+ 
+@@ -265,15 +346,10 @@ int rv_enable_monitor(struct rv_monitor_def *mdef)
+ {
+ 	int retval;
+ 
+-	lockdep_assert_held(&rv_interface_lock);
+-
+-	if (mdef->monitor->enabled)
+-		return 0;
+-
+-	retval = mdef->monitor->enable();
+-
+-	if (!retval)
+-		mdef->monitor->enabled = 1;
++	if (rv_is_container_monitor(mdef))
++		retval = rv_enable_container(mdef);
++	else
++		retval = rv_enable_single(mdef);
+ 
+ 	return retval;
+ }
+@@ -336,9 +412,9 @@ static const struct file_operations interface_desc_fops = {
+  * the monitor dir, where the specific options of the monitor
+  * are exposed.
+  */
+-static int create_monitor_dir(struct rv_monitor_def *mdef)
++static int create_monitor_dir(struct rv_monitor_def *mdef, struct rv_monitor_def *parent)
+ {
+-	struct dentry *root = get_monitors_root();
++	struct dentry *root = parent ? parent->root_d : get_monitors_root();
+ 	const char *name = mdef->monitor->name;
+ 	struct dentry *tmp;
+ 	int retval;
+@@ -377,7 +453,11 @@ static int monitors_show(struct seq_file *m, void *p)
+ {
+ 	struct rv_monitor_def *mon_def = p;
+ 
+-	seq_printf(m, "%s\n", mon_def->monitor->name);
++	if (mon_def->parent)
++		seq_printf(m, "%s:%s\n", mon_def->parent->name,
++			   mon_def->monitor->name);
++	else
++		seq_printf(m, "%s\n", mon_def->monitor->name);
+ 	return 0;
+ }
+ 
+@@ -514,7 +594,7 @@ static ssize_t enabled_monitors_write(struct file *filp, const char __user *user
+ 	struct rv_monitor_def *mdef;
+ 	int retval = -EINVAL;
+ 	bool enable = true;
+-	char *ptr;
++	char *ptr, *tmp;
+ 	int len;
+ 
+ 	if (count < 1 || count > MAX_RV_MONITOR_NAME_SIZE + 1)
+@@ -541,6 +621,11 @@ static ssize_t enabled_monitors_write(struct file *filp, const char __user *user
+ 
+ 	retval = -EINVAL;
+ 
++	/* we support 1 nesting level, trim the parent */
++	tmp = strstr(ptr, ":");
++	if (tmp)
++		ptr = tmp+1;
++
+ 	list_for_each_entry(mdef, &rv_monitors_list, list) {
+ 		if (strcmp(ptr, mdef->monitor->name) != 0)
+ 			continue;
+@@ -613,7 +698,7 @@ static void reset_all_monitors(void)
+ 	struct rv_monitor_def *mdef;
+ 
+ 	list_for_each_entry(mdef, &rv_monitors_list, list) {
+-		if (mdef->monitor->enabled)
++		if (mdef->monitor->enabled && mdef->monitor->reset)
+ 			mdef->monitor->reset();
+ 	}
+ }
+@@ -685,18 +770,19 @@ static void destroy_monitor_dir(struct rv_monitor_def *mdef)
+ /**
+  * rv_register_monitor - register a rv monitor.
+  * @monitor:    The rv_monitor to be registered.
++ * @parent:     The parent of the monitor to be registered, NULL if not nested.
+  *
+  * Returns 0 if successful, error otherwise.
+  */
+-int rv_register_monitor(struct rv_monitor *monitor)
++int rv_register_monitor(struct rv_monitor *monitor, struct rv_monitor *parent)
+ {
+-	struct rv_monitor_def *r;
++	struct rv_monitor_def *r, *p = NULL;
+ 	int retval = 0;
+ 
+ 	if (strlen(monitor->name) >= MAX_RV_MONITOR_NAME_SIZE) {
+ 		pr_info("Monitor %s has a name longer than %d\n", monitor->name,
+ 			MAX_RV_MONITOR_NAME_SIZE);
+-		return -1;
++		return -EINVAL;
+ 	}
+ 
+ 	mutex_lock(&rv_interface_lock);
+@@ -704,11 +790,26 @@ int rv_register_monitor(struct rv_monitor *monitor)
+ 	list_for_each_entry(r, &rv_monitors_list, list) {
+ 		if (strcmp(monitor->name, r->monitor->name) == 0) {
+ 			pr_info("Monitor %s is already registered\n", monitor->name);
+-			retval = -1;
++			retval = -EEXIST;
+ 			goto out_unlock;
+ 		}
+ 	}
+ 
++	if (parent) {
++		list_for_each_entry(r, &rv_monitors_list, list) {
++			if (strcmp(parent->name, r->monitor->name) == 0) {
++				p = r;
++				break;
++			}
++		}
++	}
++
++	if (p && rv_is_nested_monitor(p)) {
++		pr_info("Parent monitor %s is already nested, cannot nest further\n",
++			parent->name);
++		return -EINVAL;
++	}
++
+ 	r = kzalloc(sizeof(struct rv_monitor_def), GFP_KERNEL);
+ 	if (!r) {
+ 		retval = -ENOMEM;
+@@ -716,14 +817,19 @@ int rv_register_monitor(struct rv_monitor *monitor)
+ 	}
+ 
+ 	r->monitor = monitor;
++	r->parent = parent;
+ 
+-	retval = create_monitor_dir(r);
++	retval = create_monitor_dir(r, p);
+ 	if (retval) {
+ 		kfree(r);
+ 		goto out_unlock;
+ 	}
+ 
+-	list_add_tail(&r->list, &rv_monitors_list);
++	/* keep children close to the parent for easier visualisation */
++	if (p)
++		list_add(&r->list, &p->list);
++	else
++		list_add_tail(&r->list, &rv_monitors_list);
+ 
+ out_unlock:
+ 	mutex_unlock(&rv_interface_lock);
+diff --git a/kernel/trace/rv/rv.h b/kernel/trace/rv/rv.h
+index db6cb0913dbd5..98fca0a1adbc7 100644
+--- a/kernel/trace/rv/rv.h
++++ b/kernel/trace/rv/rv.h
+@@ -21,6 +21,7 @@ struct rv_interface {
+ #define MAX_RV_REACTOR_NAME_SIZE	32
+ 
+ extern struct mutex rv_interface_lock;
++extern struct list_head rv_monitors_list;
+ 
+ #ifdef CONFIG_RV_REACTORS
+ struct rv_reactor_def {
+@@ -34,6 +35,7 @@ struct rv_reactor_def {
+ struct rv_monitor_def {
+ 	struct list_head	list;
+ 	struct rv_monitor	*monitor;
++	struct rv_monitor	*parent;
+ 	struct dentry		*root_d;
+ #ifdef CONFIG_RV_REACTORS
+ 	struct rv_reactor_def	*rdef;
+@@ -45,6 +47,8 @@ struct rv_monitor_def {
+ struct dentry *get_monitors_root(void);
+ int rv_disable_monitor(struct rv_monitor_def *mdef);
+ int rv_enable_monitor(struct rv_monitor_def *mdef);
++bool rv_is_container_monitor(struct rv_monitor_def *mdef);
++bool rv_is_nested_monitor(struct rv_monitor_def *mdef);
+ 
+ #ifdef CONFIG_RV_REACTORS
+ int reactor_populate_monitor(struct rv_monitor_def *mdef);
+diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.c
+index 7b49cbe388d4c..9501ca886d837 100644
+--- a/kernel/trace/rv/rv_reactors.c
++++ b/kernel/trace/rv/rv_reactors.c
+@@ -158,8 +158,9 @@ static const struct seq_operations monitor_reactors_seq_ops = {
+ 	.show	= monitor_reactor_show
  };
  
- struct simd_flags {
--	u64	arch:1,	/* architecture (isa) */
-+	u8	arch:1,	/* architecture (isa) */
- 		pred:2;	/* predication */
- };
+-static void monitor_swap_reactors(struct rv_monitor_def *mdef, struct rv_reactor_def *rdef,
+-				    bool reacting)
++static void monitor_swap_reactors_single(struct rv_monitor_def *mdef,
++					 struct rv_reactor_def *rdef,
++					 bool reacting, bool nested)
+ {
+ 	bool monitor_enabled;
  
+@@ -179,10 +180,31 @@ static void monitor_swap_reactors(struct rv_monitor_def *mdef, struct rv_reactor
+ 	mdef->reacting = reacting;
+ 	mdef->monitor->react = rdef->reactor->react;
+ 
+-	if (monitor_enabled)
++	/* enable only once if iterating through a container */
++	if (monitor_enabled && !nested)
+ 		rv_enable_monitor(mdef);
+ }
+ 
++static void monitor_swap_reactors(struct rv_monitor_def *mdef,
++				  struct rv_reactor_def *rdef, bool reacting)
++{
++	struct rv_monitor_def *p = mdef;
++
++	if (rv_is_container_monitor(mdef))
++		list_for_each_entry_continue(p, &rv_monitors_list, list) {
++			if (p->parent != mdef->monitor)
++				break;
++			monitor_swap_reactors_single(p, rdef, reacting, true);
++		}
++	/*
++	 * This call enables and disables the monitor if they were active.
++	 * In case of a container, we already disabled all and will enable all.
++	 * All nested monitors are enabled also if they were off, we may refine
++	 * this logic in the future.
++	 */
++	monitor_swap_reactors_single(mdef, rdef, reacting, false);
++}
++
+ static ssize_t
+ monitor_reactors_write(struct file *file, const char __user *user_buf,
+ 		      size_t count, loff_t *ppos)
 -- 
-2.48.1.502.g6dc24dfdaf-goog
+2.48.1
 
