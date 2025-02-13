@@ -1,137 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6285227EA7
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F6F227EA9;
+	Thu, 13 Feb 2025 11:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739446007; cv=none; b=A2+cJEo3sBEf2qRGA/ccuduOw38LCSAEQraSvUs1kxnPjmTyORLoTSf1T53MgcxmZtNt8RRIKY7l7832kVgXeBU1/pm1gGFIv/3ctrih9PY7fUVKPPKlL+x9xA4dJUY1FfsMuoVImoxI1dZD5wr4Ns44EJC7ij3GIulw2xnJduE=
+	t=1739446008; cv=none; b=dy7fnytYaBcxtzeSmqMVR7DE8ZjbK7ZjorIETlnoCMhY4nA8VcPo730hKnpGH8CzkXCCDVdiZXKf2JmEnSP0sAsBCuKXCT4ScV4+KtBamT/pzN78jJcCehgheRz9IQSErBLPbaTDmGovdp3sUGPMBfZ7YmVzVV06HLvrb7jLYMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739446007; c=relaxed/simple;
-	bh=T/VzdehDSWRA0aGA06vWhn/0Ut7V/cx78PErlCsSKag=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m6/L7rOvuuPIKA60NWNn+nyIWxoyWayH5+5+cI9oMGGyauSb2IHkiU+oBVuSaTwRg9Omw3UTfzM8vbzrfSiFuNqzuSAIK/sBrSeR6TDdKG1OX28Oc6bg2FqwCUZKCe6enqKddAAWFNg2HDWVwFn/aC3ydMrcNLsppcTnz3x0AJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QrSCetgd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739446008; c=relaxed/simple;
+	bh=UvF0qyEAeD84uggiYEODW362+ZzeFxJVzIiWPhGyHzc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=U9Pjc/Pl/ALr8wiIbLC/TN49VWLME+ypO+/q0ImXk2c1ZYX0wV4T67RUI1jfAM9DFxetdaShGtnU8VWHytmZp4y3FFalgfRQp+j3k6MD/Vav/TpEOag5j/TPy8JUx8OR+q0tEUI6IywKL1t7FmJvfeAe55V/yGSGFRZ05N0hYeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jmnLr5lU; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QrSCetgd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739446004;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hjY+ONRH1atfrrJreXI58ajWAIpYalA2Orxxyle4Kc8=;
-	b=QrSCetgdTaM3XntfFHXYJOzEHjo6rqnfWeBNNE0sAFiRP4tz858734WnrLvzvvZuAc+6Zk
-	Sh08sIce9ag9axBwN5LH7KCGHmQGFMKjxGBBq/RgIAI8IZ3qRL778+h31xURjOx95A2ZzP
-	ciClHngeHkDy1//zUECLAubh4DjS4fc=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-589-KZ3369r7NHqjqElw0JDtkg-1; Thu,
- 13 Feb 2025 06:26:43 -0500
-X-MC-Unique: KZ3369r7NHqjqElw0JDtkg-1
-X-Mimecast-MFC-AGG-ID: KZ3369r7NHqjqElw0JDtkg
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF5201955F28;
-	Thu, 13 Feb 2025 11:26:41 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.45.225.79])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 47ABD300018D;
-	Thu, 13 Feb 2025 11:26:38 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v4 2/8] drm/i915/display/i9xx: Add a disable_tiling() for i9xx planes
-Date: Thu, 13 Feb 2025 12:19:26 +0100
-Message-ID: <20250213112620.1923927-3-jfalempe@redhat.com>
-In-Reply-To: <20250213112620.1923927-1-jfalempe@redhat.com>
-References: <20250213112620.1923927-1-jfalempe@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jmnLr5lU"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-46c7855df10so12745231cf.3;
+        Thu, 13 Feb 2025 03:26:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739446005; x=1740050805; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LHaCd/GVQXhCshi75jh/YdL77wv4MeC4IivvaIzYoSQ=;
+        b=jmnLr5lU5IaGcx0paRC9MntDoiurx7ANjTaUczkuMJZnNLK9tcScO9GB9JBW7nAnLT
+         xkWyywONA/tNIlW2B91WMnrs1djwDL0yCGZRTAiB3l5BS06JHAU+i2I7bnVgcktlDaCn
+         gj5Kl21KK5legZyTHKasRy9TFcXkc3Raqg5f66m3q0FYUJM+nFlPhh1eoFVu1JH3nTJ/
+         SDgy2UxGJHcAlhashMYKJBsQqLAXuiyBoSTfehHl83B90obKwfChRKXdOToVynKp6z2p
+         1kT52scQmi9Pa7VaQQgA9K4JzK9UkSMPoSRzCUuNBldqTs/U2DKVd5zHtjqqtpraRkht
+         78zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739446005; x=1740050805;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LHaCd/GVQXhCshi75jh/YdL77wv4MeC4IivvaIzYoSQ=;
+        b=p0zSWLsGI/V5a3UTeL2NeZomtgw6dEIARCLy6VhO1TzjZCZILaaAuslz94K0IEa40a
+         iTfZVaHDiunKH2u/hmxx5/3rfU3A88dXfdwPKA6p7wUXnSnA1YXokqr2RHiX9IlezD5G
+         Fa/9qwuRqodsqJFJ4La9NbPIT80mzkxB7pk4Awh63GHYdJRuUtpBs3nZSvoo1ufOBSMQ
+         KJxBbNLyCaqmW1AzWH4hx7zuduurKi0k6+8bh6uRyQv4n+07Dx76IAJEsYtDJHvMCXd1
+         Cfy13eAyYsB7R6gYgT03ExXjDDoOEcyeXYWFqzzognN6xLGKe+RVU+RKiM4zRbKGk5Z1
+         jwzw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1ALHVZqGI5+KIiBW1vfb1F69LcfVP/hXSBgKK3s40WS0swhiTw6aZzTp3sJqukvurKTetaXeuuIKAqco=@vger.kernel.org, AJvYcCWFcmkAUMlMUIwEK58H6ItRJ9EA9P8BPLMYvNuHw+n/8UqDr5mLSkSIJ1+9ZsMt17Cf0G+njxd/nmRy@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIbc1VBhO8lbrRTkzu31fhARZhFA3SDiPpXZIH1eIgPF2etGcd
+	LCV6tGesdq8jaH5L5niq0WZDlyobnlGXm/d4bIkgSXQJgrPnukZo
+X-Gm-Gg: ASbGncuYdaVuiLJ/oOFqv7ttsz5d7p4sKQBVQCUHQfYebFdlP+P7N1sQcVw7pV5RDey
+	2vu39O1jqq5AL0CKzDYazx4aQt+mJTs6SqWXehRbrrBjFDM7btyO4q8ImX96SYoqiGXQ6OWu1vl
+	LzDEnwvsPMm5YI6+QR+P/6s4UhnWozATdgLUly6Aab6OhUmB5e8xaz0wAsbyTKM4xQQRPzpk0Q7
+	g73Zfo9m4FSDX4Sjst92lf2qAFzVKnR+fs95r10ArVv5C8Z3BTYV8YWJD0jnxRzMPIf3lpvvMIv
+	CiTNg8MmcLwgNPJJ+GRht4LywUP2OdL9Gz30weM5tnbXrbgwV4qtNybuUn+E5uWfTVJIYzd0WBC
+	WPl7vT2DLAKQGXJsNe03HHNCXVYM8gmrcWMfg8w==
+X-Google-Smtp-Source: AGHT+IHGRagn7x8eSs7Z/JyfOoyd3nmFtQG9HGa52jb6SXFkz2tqApWeqtO3XMaNdGLZypac/vL7rA==
+X-Received: by 2002:a05:622a:1e85:b0:45d:8be9:b0e6 with SMTP id d75a77b69052e-471bee35d02mr50933101cf.43.1739446005044;
+        Thu, 13 Feb 2025 03:26:45 -0800 (PST)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2600:4041:5be7:7c00:c8d8:9808:e9c7:ed5b])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471c2af335asm6641891cf.55.2025.02.13.03.26.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 03:26:43 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 13 Feb 2025 06:26:41 -0500
+Subject: [PATCH v6] rust: alloc: satisfy POSIX alignment requirement
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250213-aligned-alloc-v6-1-4fd7f248600b@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAPDWrWcC/3XPwWrDMAwG4FcpPs9DlmJ36anvMXawZTk1pElJR
+ tgoefc5PWUuPYlf8P1IdzXLlGVWp8NdTbLkOY9DCe7toPjih050jiUrBLSAYLTvczdILLMfWQe
+ LHJAs8QeqYm6TpPzz6Pv8KvmS5+9x+n3UL2bbvmpajDaa29YfKRGH2Jy7q8/9O49XtTUtuNdYa
+ yza+gTBphgbl2pNe+1qTUUDBwYfgMDFWjc7baDWTdEOWibvkhhqa233+ulyu/1tjUAwxyjyT6/
+ r+gcSwogkogEAAA==
+X-Change-ID: 20250201-aligned-alloc-b52cb2353c82
+To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ DJ Delorie <dj@redhat.com>, Eric Blake <eblake@redhat.com>, 
+ Paul Eggert <eggert@cs.ucla.edu>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>
+Cc: rust-for-linux@vger.kernel.org, linux-man@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-drm_panic draws in linear framebuffer, so it's easier to re-use the
-current framebuffer, and disable tiling in the panic handler, to show
-the panic screen.
+ISO C's `aligned_alloc` is partially implementation-defined; on some
+systems it inherits stricter requirements from POSIX's `posix_memalign`.
 
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+This causes the call added in commit dd09538fb409 ("rust: alloc:
+implement `Cmalloc` in module allocator_test") to fail on macOS because
+it doesn't meet the requirements of `posix_memalign`.
+
+Adjust the call to meet the POSIX requirement and add a comment. This
+fixes failures in `make rusttest` on macOS.
+
+Acked-by: Danilo Krummrich <dakr@kernel.org>
+Fixes: dd09538fb409 ("rust: alloc: implement `Cmalloc` in module allocator_test")
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
- drivers/gpu/drm/i915/display/i9xx_plane.c     | 23 +++++++++++++++++++
- .../drm/i915/display/intel_display_types.h    |  2 ++
- 2 files changed, 25 insertions(+)
+Changes in v6:
+- Replace unsound use of build_error with map_err. (Danilo Krummrich)
+- Link to v5: https://lore.kernel.org/r/20250212-aligned-alloc-v5-1-c51e0b17dee9@gmail.com
 
-diff --git a/drivers/gpu/drm/i915/display/i9xx_plane.c b/drivers/gpu/drm/i915/display/i9xx_plane.c
-index 48e657a80a16d..a6a6513980923 100644
---- a/drivers/gpu/drm/i915/display/i9xx_plane.c
-+++ b/drivers/gpu/drm/i915/display/i9xx_plane.c
-@@ -849,6 +849,27 @@ static const struct drm_plane_funcs i8xx_plane_funcs = {
- 	.format_mod_supported = i8xx_plane_format_mod_supported,
- };
+Changes in v5:
+- Remove errant newline in commit message. (Miguel Ojeda)
+- Use more succinct expression. (Gary Guo)
+- Drop and then add Danilo's Acked-by again.
+- Link to v4: https://lore.kernel.org/r/20250210-aligned-alloc-v4-1-609c3a6fe139@gmail.com
+
+Changes in v4:
+- Revert to `aligned_alloc` and correct rationale. (Miguel Ojeda)
+- Apply Danilo's Acked-by from v2.
+- Rebase on v6.14-rc2.
+- Link to v3: https://lore.kernel.org/r/20250206-aligned-alloc-v3-1-0cbc0ab0306d@gmail.com
+
+Changes in v3:
+- Replace `aligned_alloc` with `posix_memalign` for portability.
+- Link to v2: https://lore.kernel.org/r/20250202-aligned-alloc-v2-1-5af0b5fdd46f@gmail.com
+
+Changes in v2:
+- Shorten some variable names. (Danilo Krummrich)
+- Replace shadowing alignment variable with a second call to
+  Layout::align. (Danilo Krummrich)
+- Link to v1: https://lore.kernel.org/r/20250201-aligned-alloc-v1-1-c99a73f3cbd4@gmail.com
+---
+ rust/kernel/alloc/allocator_test.rs | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/rust/kernel/alloc/allocator_test.rs b/rust/kernel/alloc/allocator_test.rs
+index e3240d16040b..e68775078e90 100644
+--- a/rust/kernel/alloc/allocator_test.rs
++++ b/rust/kernel/alloc/allocator_test.rs
+@@ -62,6 +62,24 @@ unsafe fn realloc(
+             ));
+         }
  
-+static void i9xx_disable_tiling(struct intel_plane *plane)
-+{
-+	struct drm_i915_private *dev_priv = to_i915(plane->base.dev);
-+	enum i9xx_plane_id i9xx_plane = plane->i9xx_plane;
-+	u32 dspcntr;
-+	u32 reg;
++        // ISO C (ISO/IEC 9899:2011) defines `aligned_alloc`:
++        //
++        // > The value of alignment shall be a valid alignment supported by the implementation
++        // [...].
++        //
++        // As an example of the "supported by the implementation" requirement, POSIX.1-2001 (IEEE
++        // 1003.1-2001) defines `posix_memalign`:
++        //
++        // > The value of alignment shall be a power of two multiple of sizeof (void *).
++        //
++        // and POSIX-based implementations of `aligned_alloc` inherit this requirement. At the time
++        // of writing, this is known to be the case on macOS (but not in glibc).
++        //
++        // Satisfy the stricter requirement to avoid spurious test failures on some platforms.
++        let min_align = core::mem::size_of::<*const crate::ffi::c_void>();
++        let layout = layout.align_to(min_align).map_err(|_| AllocError)?.pad_to_align();
++        let layout = layout.pad_to_align();
 +
-+	dspcntr = intel_de_read_fw(dev_priv, DSPCNTR(dev_priv, i9xx_plane));
-+	dspcntr &= ~DISP_TILED;
-+	intel_de_write_fw(dev_priv, DSPCNTR(dev_priv, i9xx_plane), dspcntr);
-+
-+	if (DISPLAY_VER(dev_priv) >= 4) {
-+		reg = intel_de_read_fw(dev_priv, DSPSURF(dev_priv, i9xx_plane));
-+		intel_de_write_fw(dev_priv, DSPSURF(dev_priv, i9xx_plane), reg);
-+
-+	} else {
-+		reg = intel_de_read_fw(dev_priv, DSPADDR(dev_priv, i9xx_plane));
-+		intel_de_write_fw(dev_priv, DSPADDR(dev_priv, i9xx_plane), reg);
-+	}
-+}
-+
- struct intel_plane *
- intel_primary_plane_create(struct drm_i915_private *dev_priv, enum pipe pipe)
- {
-@@ -974,6 +995,8 @@ intel_primary_plane_create(struct drm_i915_private *dev_priv, enum pipe pipe)
- 		plane->disable_flip_done = ilk_primary_disable_flip_done;
- 	}
- 
-+	plane->disable_tiling = i9xx_disable_tiling;
-+
- 	modifiers = intel_fb_plane_get_modifiers(dev_priv, INTEL_PLANE_CAP_TILING_X);
- 
- 	if (DISPLAY_VER(dev_priv) >= 5 || IS_G4X(dev_priv))
-diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers/gpu/drm/i915/display/intel_display_types.h
-index 8271e50e36447..790dedd6f6b1d 100644
---- a/drivers/gpu/drm/i915/display/intel_display_types.h
-+++ b/drivers/gpu/drm/i915/display/intel_display_types.h
-@@ -1500,6 +1500,8 @@ struct intel_plane {
- 			   bool async_flip);
- 	void (*enable_flip_done)(struct intel_plane *plane);
- 	void (*disable_flip_done)(struct intel_plane *plane);
-+	/* For drm_panic */
-+	void (*disable_tiling)(struct intel_plane *plane);
- };
- 
- #define to_intel_atomic_state(x) container_of(x, struct intel_atomic_state, base)
+         // SAFETY: Returns either NULL or a pointer to a memory allocation that satisfies or
+         // exceeds the given size and alignment requirements.
+         let dst = unsafe { libc_aligned_alloc(layout.align(), layout.size()) } as *mut u8;
+
+---
+base-commit: 8a5aae7dbbfb612509c8a2f112f7e0f79029ed45
+change-id: 20250201-aligned-alloc-b52cb2353c82
+
+Best regards,
 -- 
-2.47.1
+Tamir Duberstein <tamird@gmail.com>
 
