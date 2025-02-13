@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77B81FFC7A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA9C20127E;
 	Thu, 13 Feb 2025 16:21:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739463695; cv=none; b=l3TYhY4rtcDrh8U2jPv5jClaDX+EpvKU7EGcp0YRR7yu8eeTuwrn9L6z6r6jcNv9Dx8Qj+AjLdyJ3Qrm8WpF6zsHwy3xZwTXH1M0bPMC3hynusWhNNx3uRHTZYwkvUM7Rq5kKl/ZBlmeAfiCIhEmgD/4UYgDCPZGj8W6yXXM39g=
+	t=1739463695; cv=none; b=qCNNIZlF331mpZSs26CrXHR8vaWXo5hOijgfBIi9yS6tjxbi+iQsT3r0j984xfdKFgTg8bv/0Im6276as2cgBEUj9EAl/pq1Dxi+pvXHFlBCzO3ISvv4KGZpZ6DKVIaz0/YFgIHQiUaGegIdtykJAL+L1P/9S50DjSn1JbDmn6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739463695; c=relaxed/simple;
-	bh=ki5i2OB8DqrRr53FCV5uiJSHnPSRTR4IrOB5Ict3+xQ=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=UyBQz7z3CzXFALiPfegdLpc6+1AiTxoFJ9FGfic7z6Od4PQwDsRvO1iw3C6NeKUki+zN1Yn5okBxU2VgwGgRC2ZjiWR7bf7jyyK4DFV8pgbWmCKclIwTchgXgUmtvn4pY2D9rPvRSuxz5itewJiQJ5FRiLAwCJme744lvsA9a70=
+	bh=adWDEN1xA8RJXsxjA7ajZlW+Xp1KGSevPLjjon+DSOA=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=d7hu5pL7iIYpP+Y8wUpNty+G8kLIRbmhKTBcM7uBRQCxkq3bjciHYrP/Pg6TkDjw+HJdSSVRNWSNirMVEKmNrC++InzNBI7iDKWh32fVIp+ltBLEqud5mcYTAIxxrj4SQ49CXPAg/GnqSpLmNWtJYlPNTZUYbJHQYhsfZ6D3ATQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21D7EC4CED1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C06BC4CEED;
 	Thu, 13 Feb 2025 16:21:35 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tibyD-00000001qZz-1tpJ;
+	id 1tibyD-00000001qbV-43ID;
 	Thu, 13 Feb 2025 11:21:45 -0500
-Message-ID: <20250213162047.306074881@goodmis.org>
+Message-ID: <20250213162145.821148283@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 13 Feb 2025 11:20:47 -0500
+Date: Thu, 13 Feb 2025 11:20:50 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -45,114 +46,222 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Will Deacon <will@kernel.org>,
  Vasily Gorbik <gor@linux.ibm.com>,
  Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: [PATCH v3 0/6] scripts/sorttable: ftrace: Remove place holders for weak functions in available_filter_functions
+Subject: [PATCH v3 3/6] scripts/sorttable: Always use an array for the mcount_loc sorting
+References: <20250213162047.306074881@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-This series removes the place holder __ftrace_invalid_address___ from
-the available_filter_functions file.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-The rewriting of the sorttable.c code to make it more manageable
-has already been merged:
+The sorting of the mcount_loc section is done directly to the section for
+x86 and arm32 but it uses a separate array for arm64 as arm64 has the
+values for the mcount_loc stored in the rela sections of the vmlinux ELF
+file.
 
-  https://git.kernel.org/torvalds/c/c0e75905caf368e19aab585d20151500e750de89
+In order to use the same code to remove weak functions, always use a
+separate array to do the sorting. This requires splitting up the filling
+of the array into one function and the placing the contents of the array
+back into the rela sections or into the mcount_loc section into a separate
+file.
 
-Now this is only for getting rid of the ftrace invalid function place holders.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ scripts/sorttable.c | 122 ++++++++++++++++++++++++++++++++------------
+ 1 file changed, 90 insertions(+), 32 deletions(-)
 
-The first patch adds arm64 sorting, which requires copying the Elf_Rela into
-a separate array and sorting that.
+diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+index f62a91d8af0a..ec02a2852efb 100644
+--- a/scripts/sorttable.c
++++ b/scripts/sorttable.c
+@@ -594,31 +594,19 @@ struct elf_mcount_loc {
+ 	uint64_t stop_mcount_loc;
+ };
+ 
+-/* Sort the relocations not the address itself */
+-static void *sort_relocs(Elf_Ehdr *ehdr, uint64_t start_loc, uint64_t size)
++/* Fill the array with the content of the relocs */
++static int fill_relocs(void *ptr, uint64_t size, Elf_Ehdr *ehdr, uint64_t start_loc)
+ {
+ 	Elf_Shdr *shdr_start;
+ 	Elf_Rela *rel;
+ 	unsigned int shnum;
+-	unsigned int count;
++	unsigned int count = 0;
+ 	int shentsize;
+-	void *vals;
+-	void *ptr;
+-
+-	compare_values = long_size == 4 ? compare_values_32 : compare_values_64;
++	void *array_end = ptr + size;
+ 
+ 	shdr_start = (Elf_Shdr *)((char *)ehdr + ehdr_shoff(ehdr));
+ 	shentsize = ehdr_shentsize(ehdr);
+ 
+-	vals = malloc(long_size * size);
+-	if (!vals) {
+-		snprintf(m_err, ERRSTR_MAXSZ, "Failed to allocate sort array");
+-		pthread_exit(m_err);
+-		return NULL;
+-	}
+-
+-	ptr = vals;
+-
+ 	shnum = ehdr_shnum(ehdr);
+ 	if (shnum == SHN_UNDEF)
+ 		shnum = shdr_size(shdr_start);
+@@ -637,22 +625,18 @@ static void *sort_relocs(Elf_Ehdr *ehdr, uint64_t start_loc, uint64_t size)
+ 			uint64_t offset = rela_offset(rel);
+ 
+ 			if (offset >= start_loc && offset < start_loc + size) {
+-				if (ptr + long_size > vals + size) {
+-					free(vals);
++				if (ptr + long_size > array_end) {
+ 					snprintf(m_err, ERRSTR_MAXSZ,
+ 						 "Too many relocations");
+-					pthread_exit(m_err);
+-					return NULL;
++					return -1;
+ 				}
+ 
+ 				/* Make sure this has the correct type */
+ 				if (rela_info(rel) != rela_type) {
+-					free(vals);
+ 					snprintf(m_err, ERRSTR_MAXSZ,
+ 						"rela has type %lx but expected %lx\n",
+ 						(long)rela_info(rel), rela_type);
+-					pthread_exit(m_err);
+-					return NULL;
++					return -1;
+ 				}
+ 
+ 				if (long_size == 4)
+@@ -660,13 +644,28 @@ static void *sort_relocs(Elf_Ehdr *ehdr, uint64_t start_loc, uint64_t size)
+ 				else
+ 					*(uint64_t *)ptr = rela_addend(rel);
+ 				ptr += long_size;
++				count++;
+ 			}
+ 		}
+ 	}
+-	count = ptr - vals;
+-	qsort(vals, count / long_size, long_size, compare_values);
++	return count;
++}
++
++/* Put the sorted vals back into the relocation elements */
++static void replace_relocs(void *ptr, uint64_t size, Elf_Ehdr *ehdr, uint64_t start_loc)
++{
++	Elf_Shdr *shdr_start;
++	Elf_Rela *rel;
++	unsigned int shnum;
++	int shentsize;
++
++	shdr_start = (Elf_Shdr *)((char *)ehdr + ehdr_shoff(ehdr));
++	shentsize = ehdr_shentsize(ehdr);
++
++	shnum = ehdr_shnum(ehdr);
++	if (shnum == SHN_UNDEF)
++		shnum = shdr_size(shdr_start);
+ 
+-	ptr = vals;
+ 	for (int i = 0; i < shnum; i++) {
+ 		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
+ 		void *end;
+@@ -689,8 +688,32 @@ static void *sort_relocs(Elf_Ehdr *ehdr, uint64_t start_loc, uint64_t size)
+ 			}
+ 		}
+ 	}
+-	free(vals);
+-	return NULL;
++}
++
++static int fill_addrs(void *ptr, uint64_t size, void *addrs)
++{
++	void *end = ptr + size;
++	int count = 0;
++
++	for (; ptr < end; ptr += long_size, addrs += long_size, count++) {
++		if (long_size == 4)
++			*(uint32_t *)ptr = r(addrs);
++		else
++			*(uint64_t *)ptr = r8(addrs);
++	}
++	return count;
++}
++
++static void replace_addrs(void *ptr, uint64_t size, void *addrs)
++{
++	void *end = ptr + size;
++
++	for (; ptr < end; ptr += long_size, addrs += long_size) {
++		if (long_size == 4)
++			w(*(uint32_t *)ptr, addrs);
++		else
++			w8(*(uint64_t *)ptr, addrs);
++	}
+ }
+ 
+ /* Sort the addresses stored between __start_mcount_loc to __stop_mcount_loc in vmlinux */
+@@ -699,14 +722,49 @@ static void *sort_mcount_loc(void *arg)
+ 	struct elf_mcount_loc *emloc = (struct elf_mcount_loc *)arg;
+ 	uint64_t offset = emloc->start_mcount_loc - shdr_addr(emloc->init_data_sec)
+ 					+ shdr_offset(emloc->init_data_sec);
+-	uint64_t count = emloc->stop_mcount_loc - emloc->start_mcount_loc;
++	uint64_t size = emloc->stop_mcount_loc - emloc->start_mcount_loc;
+ 	unsigned char *start_loc = (void *)emloc->ehdr + offset;
++	Elf_Ehdr *ehdr = emloc->ehdr;
++	void *e_msg = NULL;
++	void *vals;
++	int count;
++
++	vals = malloc(long_size * size);
++	if (!vals) {
++		snprintf(m_err, ERRSTR_MAXSZ, "Failed to allocate sort array");
++		pthread_exit(m_err);
++	}
+ 
+ 	if (sort_reloc)
+-		return sort_relocs(emloc->ehdr, emloc->start_mcount_loc, count);
++		count = fill_relocs(vals, size, ehdr, emloc->start_mcount_loc);
++	else
++		count = fill_addrs(vals, size, start_loc);
++
++	if (count < 0) {
++		e_msg = m_err;
++		goto out;
++	}
++
++	if (count != size / long_size) {
++		snprintf(m_err, ERRSTR_MAXSZ, "Expected %u mcount elements but found %u\n",
++			(int)(size / long_size), count);
++		e_msg = m_err;
++		goto out;
++	}
++
++	compare_values = long_size == 4 ? compare_values_32 : compare_values_64;
++
++	qsort(vals, count, long_size, compare_values);
++
++	if (sort_reloc)
++		replace_relocs(vals, size, ehdr, emloc->start_mcount_loc);
++	else
++		replace_addrs(vals, size, start_loc);
++
++out:
++	free(vals);
+ 
+-	qsort(start_loc, count/long_size, long_size, compare_extable);
+-	return NULL;
++	pthread_exit(e_msg);
+ }
+ 
+ /* Get the address of __start_mcount_loc and __stop_mcount_loc in System.map */
+-- 
+2.47.2
 
-There's a slight fix patch that adds using a compare function that checks the
-direct values without swapping bytes as the current method will swap bytes,
-but the copying into the array already did the necessary swapping.
 
-The third patch makes it always copy the section into an array, sort that,
-then copy it back. This allows updates to the values in one place.
-
-The forth patch adds the option "-s <file>" to sorttable.c. Now this code
-is called by:
-
-  ${NM} -S vmlinux > .tmp_vmlinux.nm-sort
-  ${objtree}/scripts/sorttable -s .tmp_vmlinux.nm-sort ${1}
-
-Where the file created by "nm -S" is read, recording the address and the
-associated sizes of each function. It then is sorted, and before sorting the
-mcount_loc table, it is scanned to make sure all symbols in the mcount_loc are
-within the boundaries of the functions defined by nm. If they are not, they
-are zeroed out, as they are most likely weak functions (I don't know what else
-they would be).
-
-Since the KASLR address can be added to the values in this section, when the
-section is read to populate the ftrace records, if the value is zero or equal
-to kaslr_offset() it is skipped and not added.
-
-Before:
-    
- ~# grep __ftrace_invalid_address___ /sys/kernel/tracing/available_filter_functions | wc -l
- 551
-
-After:
-
- ~# grep __ftrace_invalid_address___ /sys/kernel/tracing/available_filter_functions | wc -l
- 0
-
-The last patches are fixes to ftrace accounting to handle the fact that it
-will likely always have skipped values (at least for x86), and to modify the
-code to verify that the amount of skipped and saved records do match the
-calculated allocations necessary.
-
-And finally, to change the reporting of how much was allocated to reflect the
-freed pages that were allocated but not used due to the skipped entries.
-
-Changes since v2: https://lore.kernel.org/linux-trace-kernel/20250102232609.529842248@goodmis.org/
-
-- Rebased on mainline that has the rewriting of sorttable.c
-
-- Added the code to handle the sections being stored in Elf_Rela sections as
-  arm64 uses.
-
-- No longer use the "ftrace_skip_sym" variable to skip over the zeroed out
-  functions and instead just compare with kalsr_offset.
-
-- Sort via an array and not directly in the file's section.
-
-- Update the verification code to make sure the skipped value is correct.
-
-- Update the output to correctly reflect what was allocated.
-
-
-Changes since v1: https://lore.kernel.org/all/20250102185845.928488650@goodmis.org/
-
-- Replaced the last patch with 3 patches.
-
-  The first of the 3 patches removed the hack of reading System.map
-  with properly reading the Elf symbol table to find start_mcount_loc
-  and stop_mcount_loc.
-
-  The second patch adds the call to "nm -S vmlinux" to get the sizes
-  of each function.
-
-  The previous last patch would just check the zeroed out values and compare
-  them to kaslr_offset(). Instead, this time, the last patch adds a new
-  ftrace_mcount_skip that is used to simply skip over the first entries
-  that the sorttable.c moved to the beginning, as they were the weak functions
-  that were found.
-
-
-Steven Rostedt (6):
-      arm64: scripts/sorttable: Implement sorting mcount_loc at boot for arm64
-      scripts/sorttable: Have mcount rela sort use direct values
-      scripts/sorttable: Always use an array for the mcount_loc sorting
-      scripts/sorttable: Zero out weak functions in mcount_loc table
-      ftrace: Update the mcount_loc check of skipped entries
-      ftrace: Have ftrace pages output reflect freed pages
-
-----
- arch/arm64/Kconfig      |   1 +
- kernel/trace/ftrace.c   |  45 +++++-
- scripts/link-vmlinux.sh |   4 +-
- scripts/sorttable.c     | 401 +++++++++++++++++++++++++++++++++++++++++++++++-
- 4 files changed, 437 insertions(+), 14 deletions(-)
