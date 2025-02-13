@@ -1,161 +1,127 @@
-Received: from mx0.infotecs.ru (mx0.infotecs.ru [91.244.183.115])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9351E281353;
-	Thu, 13 Feb 2025 14:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.244.183.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E475C28137D
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739456911; cv=none; b=MKiesUiyyib1KlWoizHDSqmUfUDh6B7IpRlQo1L1JHrW5xl3WbXHIhOVAKk17DpAQX444oXli67e0I7xyW7RWzjW2SWyJzcSs7Gt39dvuaRbLsXOWa2wTHNOuio7qMcmAZMjSG59PiNPDF7Dj+bgszgoqcVRufhnLpgS2fYu/YE=
+	t=1739456914; cv=none; b=XSPxEr8ozCWO2InyQxPlRSV8qv9lzNAbPq9pDu+2bAQQHjfDdJl4WxACisYinG+iZErNpGRPb57nOVkQprnDu9T4SXu63rdX055gydwKiUQe0cHc9oeLxm/6Bw/GqqAIk6mmzBhtygk6n41Hctrc7Mu9opy25LUcnOfyOqTdf/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739456911; c=relaxed/simple;
-	bh=wYD0RUznp+DEaOs1tysjcStXhd821oK1Ob+BaVOmgrk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LRxWEeehKET0R5HuZxcf7y/Ao4YyVScJRu1AO9No8DpDr5CyjceiO7cWkiVfa7vESzkwak6/mdczPvrHwH5eeQ0QoDI8uR3NgFdYBbN2FeVATPWD/mt8t4W9v0orKOZ8fLsWuZnLLSB1oWSzsKq0sLRLxgrf4XvvhpjXE9WxAqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru; spf=pass smtp.mailfrom=infotecs.ru; dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b=O6l3FSKe; arc=none smtp.client-ip=91.244.183.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infotecs.ru
+	s=arc-20240116; t=1739456914; c=relaxed/simple;
+	bh=b0isWpb5YT83qKnli8i3nzCYpYoa2XWShBwoO04S3gM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=muv7VfSFnrPpFvrfyRAO1HEHm0R0TTN9PO1/Gb15fKH3lJXlCiORDXgItLk+Shtu7pgL6W02b1+DKWQJ3HMZQze7iOxHqRjQ5v0cbDIhy0EM9xJe2b+pfdvehTVO8oq8IRUhgOSbIELlUTBpGh+1AfslMXHvKxDtY+PeKaHxPfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=bmcgqduO; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b="O6l3FSKe"
-Received: from mx0.infotecs-nt (localhost [127.0.0.1])
-	by mx0.infotecs.ru (Postfix) with ESMTP id 890C91078C25;
-	Thu, 13 Feb 2025 17:28:18 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx0.infotecs.ru 890C91078C25
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infotecs.ru; s=mx;
-	t=1739456898; bh=wYD0RUznp+DEaOs1tysjcStXhd821oK1Ob+BaVOmgrk=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=O6l3FSKe4V2qSjMWNxIAqxRyOLBLUztEKHAoF2Ov+wSKtOtGRSbLtWmDtLiFWI7mu
-	 Myvslgko+MS0JhpZTa6x1pRPDZhW/2b1v2JO7dqIZis1101kM+XgrkMWT8S+QkJcC8
-	 ihNQFDQbtQtXVvXuK5Bw/x4XIDc1dawYEtv0un6Y=
-Received: from msk-exch-02.infotecs-nt (msk-exch-02.infotecs-nt [10.0.7.192])
-	by mx0.infotecs-nt (Postfix) with ESMTP id 8485A3066066;
-	Thu, 13 Feb 2025 17:28:18 +0300 (MSK)
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-To: Ido Schimmel <idosch@idosch.org>
-CC: Neil Horman <nhorman@tuxdriver.com>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	<horms@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH net] drop_monitor: fix incorrect initialization order
-Thread-Topic: [PATCH net] drop_monitor: fix incorrect initialization order
-Thread-Index: AQHbfiOGmAoQ4r9V1UCj66xAcIdI7g==
-Date: Thu, 13 Feb 2025 14:28:17 +0000
-Message-ID: <899bc3c5-2c10-47c9-b385-5f9124d9c3d0@infotecs.ru>
-References: <20250212134150.377169-1-Ilia.Gavrilov@infotecs.ru>
- <Z639kSZBWuEpNkIP@shredder>
-In-Reply-To: <Z639kSZBWuEpNkIP@shredder>
-Accept-Language: ru-RU, en-US
-Content-Language: ru-RU
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-exclaimer-md-config: 208ac3cd-1ed4-4982-a353-bdefac89ac0a
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <525D52E2123F13499D96452807DA98EC@infotecs.ru>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="bmcgqduO"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51D6qllr002716;
+	Thu, 13 Feb 2025 08:28:08 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=5WuprqZe1ONTquh7n3BbPTabdVlEFNG3sBmN0HjBPqo=; b=
+	bmcgqduOtbQosyTglKwtghFObmSguNvtDDV50XkVb5L6juerKzW7r1xyEiqwk6AL
+	UJcqpbEWVPqX/IXaO/18LXwoK3LyjfaqsLys1BUumQb2bmDiCo/uB9o1+Chw7J/C
+	PXqmZyJ6IReDwZlTlDjiy43BLIhVDwsvUWC/+2fJ3d60wGwN8C9vPcVeeniH0e39
+	GkE5Qozy97vR7e6f5WL/LaBqdx6MyabF6oIklHC2ul+IF+rPUp7YsgzJ2XIwDMn+
+	CSiZaMTdeQkO8t3ePbVdopkQdxHp9vvO9StIacdV7HUWlqenMhh62uk/r+uLaqNI
+	l9AOin0kyCym/lpZMl7Z1g==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44p4jn0mx5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Feb 2025 08:28:07 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 13 Feb
+ 2025 14:28:06 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Thu, 13 Feb 2025 14:28:06 +0000
+Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 3670C82025A;
+	Thu, 13 Feb 2025 14:28:06 +0000 (UTC)
+Message-ID: <e93d1b72-43da-4e96-9523-e1bbf3853031@opensource.cirrus.com>
+Date: Thu, 13 Feb 2025 14:28:06 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KLMS-Rule-ID: 5
-X-KLMS-Message-Action: clean
-X-KLMS-AntiSpam-Status: not scanned, disabled by settings
-X-KLMS-AntiSpam-Interceptor-Info: not scanned
-X-KLMS-AntiPhishing: Clean, bases: 2025/02/13 13:14:00
-X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2025/02/13 08:24:00 #27203088
-X-KLMS-AntiVirus-Status: Clean, skipped
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] firmware: cs_dsp: Remove usage of GFP_DMA
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+        "Simon Trimmer" <simont@opensource.cirrus.com>,
+        Charles Keepax
+	<ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>
+CC: <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>
+References: <20250211-cs_dsp-gfp_dma-v1-0-afc346363832@linutronix.de>
+ <0e9c1cca-592f-4983-93f4-ab2f76a3c97e@opensource.cirrus.com>
+Content-Language: en-GB
+In-Reply-To: <0e9c1cca-592f-4983-93f4-ab2f76a3c97e@opensource.cirrus.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=PNv1+eqC c=1 sm=1 tr=0 ts=67ae0177 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=CEiWSbsPnxP_RA5FPysA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: lbL3nxLd2MH6BPYp1ejrQAsGyxJSs5RE
+X-Proofpoint-ORIG-GUID: lbL3nxLd2MH6BPYp1ejrQAsGyxJSs5RE
+X-Proofpoint-Spam-Reason: safe
 
-T24gMi8xMy8yNSAxNzoxMSwgSWRvIFNjaGltbWVsIHdyb3RlOg0KPiBPbiBXZWQsIEZlYiAxMiwg
-MjAyNSBhdCAwMTo0MTo1MVBNICswMDAwLCBHYXZyaWxvdiBJbGlhIHdyb3RlOg0KPj4gU3l6a2Fs
-bGVyIHJlcG9ydHMgdGhlIGZvbGxvd2luZyBidWc6DQo+Pg0KPj4gQlVHOiBzcGlubG9jayBiYWQg
-bWFnaWMgb24gQ1BVIzEsIHN5ei1leGVjdXRvci4wLzc5OTUNCj4+ICBsb2NrOiAweGZmZmY4ODgw
-NTMwM2YzZTAsIC5tYWdpYzogMDAwMDAwMDAsIC5vd25lcjogPG5vbmU+Ly0xLCAub3duZXJfY3B1
-OiAwDQo+PiBDUFU6IDEgUElEOiA3OTk1IENvbW06IHN5ei1leGVjdXRvci4wIFRhaW50ZWQ6IEcg
-ICAgICAgICAgICBFICAgICA1LjEwLjIwOSsgIzENCj4+IEhhcmR3YXJlIG5hbWU6IFZNd2FyZSwg
-SW5jLiBWTXdhcmUgVmlydHVhbCBQbGF0Zm9ybS80NDBCWCBEZXNrdG9wIFJlZmVyZW5jZSBQbGF0
-Zm9ybSwgQklPUyA2LjAwIDExLzEyLzIwMjANCj4+IENhbGwgVHJhY2U6DQo+PiAgX19kdW1wX3N0
-YWNrIGxpYi9kdW1wX3N0YWNrLmM6NzcgW2lubGluZV0NCj4+ICBkdW1wX3N0YWNrKzB4MTE5LzB4
-MTc5IGxpYi9kdW1wX3N0YWNrLmM6MTE4DQo+PiAgZGVidWdfc3Bpbl9sb2NrX2JlZm9yZSBrZXJu
-ZWwvbG9ja2luZy9zcGlubG9ja19kZWJ1Zy5jOjgzIFtpbmxpbmVdDQo+PiAgZG9fcmF3X3NwaW5f
-bG9jaysweDFmNi8weDI3MCBrZXJuZWwvbG9ja2luZy9zcGlubG9ja19kZWJ1Zy5jOjExMg0KPj4g
-IF9fcmF3X3NwaW5fbG9ja19pcnFzYXZlIGluY2x1ZGUvbGludXgvc3BpbmxvY2tfYXBpX3NtcC5o
-OjExNyBbaW5saW5lXQ0KPj4gIF9yYXdfc3Bpbl9sb2NrX2lycXNhdmUrMHg1MC8weDcwIGtlcm5l
-bC9sb2NraW5nL3NwaW5sb2NrLmM6MTU5DQo+PiAgcmVzZXRfcGVyX2NwdV9kYXRhKzB4ZTYvMHgy
-NDAgW2Ryb3BfbW9uaXRvcl0NCj4+ICBuZXRfZG1fY21kX3RyYWNlKzB4NDNkLzB4MTdhMCBbZHJv
-cF9tb25pdG9yXQ0KPj4gIGdlbmxfZmFtaWx5X3Jjdl9tc2dfZG9pdCsweDIyZi8weDMzMCBuZXQv
-bmV0bGluay9nZW5ldGxpbmsuYzo3MzkNCj4+ICBnZW5sX2ZhbWlseV9yY3ZfbXNnIG5ldC9uZXRs
-aW5rL2dlbmV0bGluay5jOjc4MyBbaW5saW5lXQ0KPj4gIGdlbmxfcmN2X21zZysweDM0MS8weDVh
-MCBuZXQvbmV0bGluay9nZW5ldGxpbmsuYzo4MDANCj4+ICBuZXRsaW5rX3Jjdl9za2IrMHgxNGQv
-MHg0NDAgbmV0L25ldGxpbmsvYWZfbmV0bGluay5jOjI0OTcNCj4+ICBnZW5sX3JjdisweDI5LzB4
-NDAgbmV0L25ldGxpbmsvZ2VuZXRsaW5rLmM6ODExDQo+PiAgbmV0bGlua191bmljYXN0X2tlcm5l
-bCBuZXQvbmV0bGluay9hZl9uZXRsaW5rLmM6MTMyMiBbaW5saW5lXQ0KPj4gIG5ldGxpbmtfdW5p
-Y2FzdCsweDU0Yi8weDgwMCBuZXQvbmV0bGluay9hZl9uZXRsaW5rLmM6MTM0OA0KPj4gIG5ldGxp
-bmtfc2VuZG1zZysweDkxNC8weGUwMCBuZXQvbmV0bGluay9hZl9uZXRsaW5rLmM6MTkxNg0KPj4g
-IHNvY2tfc2VuZG1zZ19ub3NlYyBuZXQvc29ja2V0LmM6NjUxIFtpbmxpbmVdDQo+PiAgX19zb2Nr
-X3NlbmRtc2crMHgxNTcvMHgxOTAgbmV0L3NvY2tldC5jOjY2Mw0KPj4gIF9fX19zeXNfc2VuZG1z
-ZysweDcxMi8weDg3MCBuZXQvc29ja2V0LmM6MjM3OA0KPj4gIF9fX3N5c19zZW5kbXNnKzB4Zjgv
-MHgxNzAgbmV0L3NvY2tldC5jOjI0MzINCj4+ICBfX3N5c19zZW5kbXNnKzB4ZWEvMHgxYjAgbmV0
-L3NvY2tldC5jOjI0NjENCj4+ICBkb19zeXNjYWxsXzY0KzB4MzAvMHg0MCBhcmNoL3g4Ni9lbnRy
-eS9jb21tb24uYzo0Ng0KPj4gIGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsweDYyLzB4
-YzcNCj4+IFJJUDogMDAzMzoweDdmM2Y5ODE1YWVlOQ0KPj4gQ29kZTogZmYgZmYgYzMgNjYgMmUg
-MGYgMWYgODQgMDAgMDAgMDAgMDAgMDAgMGYgMWYgNDAgMDAgNDggODkgZjggNDggODkgZjcgNDgg
-ODkgZDYgNDggODkgY2EgNGQgODkgYzIgNGQgODkgYzggNGMgOGIgNGMgMjQgMDggMGYgMDUgPDQ4
-PiAzZCAwMSBmMCBmZiBmZiA3MyAwMSBjMyA0OCBjNyBjMSBiMCBmZiBmZiBmZiBmNyBkOCA2NCA4
-OSAwMSA0OA0KPj4gUlNQOiAwMDJiOjAwMDA3ZjNmOTcyYmYwYzggRUZMQUdTOiAwMDAwMDI0NiBP
-UklHX1JBWDogMDAwMDAwMDAwMDAwMDAyZQ0KPj4gUkFYOiBmZmZmZmZmZmZmZmZmZmRhIFJCWDog
-MDAwMDdmM2Y5ODI2ZDA1MCBSQ1g6IDAwMDA3ZjNmOTgxNWFlZTkNCj4+IFJEWDogMDAwMDAwMDAy
-MDAwMDAwMCBSU0k6IDAwMDAwMDAwMjAwMDEzMDAgUkRJOiAwMDAwMDAwMDAwMDAwMDA3DQo+PiBS
-QlA6IDAwMDA3ZjNmOTgxYjYzYmQgUjA4OiAwMDAwMDAwMDAwMDAwMDAwIFIwOTogMDAwMDAwMDAw
-MDAwMDAwMA0KPj4gUjEwOiAwMDAwMDAwMDAwMDAwMDAwIFIxMTogMDAwMDAwMDAwMDAwMDI0NiBS
-MTI6IDAwMDAwMDAwMDAwMDAwMDANCj4+IFIxMzogMDAwMDAwMDAwMDAwMDA2ZSBSMTQ6IDAwMDA3
-ZjNmOTgyNmQwNTAgUjE1OiAwMDAwN2ZmZTAxZWU2NzY4DQo+Pg0KPj4gSWYgZHJvcF9tb25pdG9y
-IGlzIGJ1aWx0IGFzIGEga2VybmVsIG1vZHVsZSwgc3l6a2FsbGVyIG1heSBoYXZlIHRpbWUNCj4+
-IHRvIHNlbmQgYSBuZXRsaW5rIE5FVF9ETV9DTURfU1RBUlQgbWVzc2FnZSBkdXJpbmcgdGhlIG1v
-ZHVsZSBsb2FkaW5nLg0KPj4gVGhpcyB3aWxsIGNhbGwgdGhlIG5ldF9kbV9tb25pdG9yX3N0YXJ0
-KCkgZnVuY3Rpb24gdGhhdCB1c2VzDQo+PiBhIHNwaW5sb2NrIHRoYXQgaGFzIG5vdCB5ZXQgYmVl
-biBpbml0aWFsaXplZC4NCj4+DQo+PiBUbyBmaXggdGhpcywgbGV0J3MgcGxhY2UgcmVzb3VyY2Ug
-aW5pdGlhbGl6YXRpb24gYWJvdmUgdGhlIHJlZ2lzdHJhdGlvbg0KPj4gb2YgYSBnZW5lcmljIG5l
-dGxpbmsgZmFtaWx5Lg0KPj4NCj4+IEZvdW5kIGJ5IEluZm9UZUNTIG9uIGJlaGFsZiBvZiBMaW51
-eCBWZXJpZmljYXRpb24gQ2VudGVyDQo+PiAobGludXh0ZXN0aW5nLm9yZykgd2l0aCBTVkFDRS4N
-Cj4+DQo+PiBGaXhlczogOWE4YWZjOGQzOTYyICgiTmV0d29yayBEcm9wIE1vbml0b3I6IEFkZGlu
-ZyBkcm9wIG1vbml0b3IgaW1wbGVtZW50YXRpb24gJiBOZXRsaW5rIHByb3RvY29sIikNCj4+IENj
-OiBzdGFibGVAdmdlci5rZXJuZWwub3JnDQo+PiBTaWduZWQtb2ZmLWJ5OiBJbGlhIEdhdnJpbG92
-IDxJbGlhLkdhdnJpbG92QGluZm90ZWNzLnJ1Pg0KPj4gLS0tDQo+PiAgbmV0L2NvcmUvZHJvcF9t
-b25pdG9yLmMgfCAxMyArKysrKystLS0tLS0tDQo+PiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0
-aW9ucygrKSwgNyBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvbmV0L2NvcmUvZHJv
-cF9tb25pdG9yLmMgYi9uZXQvY29yZS9kcm9wX21vbml0b3IuYw0KPj4gaW5kZXggNmVmZDRjY2Nj
-OWRkLi45NzU1ZDIwMTBlNzAgMTAwNjQ0DQo+PiAtLS0gYS9uZXQvY29yZS9kcm9wX21vbml0b3Iu
-Yw0KPj4gKysrIGIvbmV0L2NvcmUvZHJvcF9tb25pdG9yLmMNCj4+IEBAIC0xNzM0LDYgKzE3MzQs
-MTEgQEAgc3RhdGljIGludCBfX2luaXQgaW5pdF9uZXRfZHJvcF9tb25pdG9yKHZvaWQpDQo+PiAg
-CQlyZXR1cm4gLUVOT1NQQzsNCj4+ICAJfQ0KPj4gIA0KPj4gKwlmb3JfZWFjaF9wb3NzaWJsZV9j
-cHUoY3B1KSB7DQo+PiArCQluZXRfZG1fY3B1X2RhdGFfaW5pdChjcHUpOw0KPj4gKwkJbmV0X2Rt
-X2h3X2NwdV9kYXRhX2luaXQoY3B1KTsNCj4+ICsJfQ0KPj4gKw0KPj4gIAlyYyA9IGdlbmxfcmVn
-aXN0ZXJfZmFtaWx5KCZuZXRfZHJvcF9tb25pdG9yX2ZhbWlseSk7DQo+IA0KPiBUaGlzIG1pZ2h0
-IGJlIGZpbmUgYXMtaXMsIGJ1dCBpdCB3b3VsZCBiZSBjbGVhbmVyIHRvIG1vdmUgdGhlDQo+IHJl
-Z2lzdHJhdGlvbiBvZiB0aGUgbmV0bGluayBmYW1pbHkgdG8gdGhlIGVuZCBvZiB0aGUgbW9kdWxl
-DQo+IGluaXRpYWxpemF0aW9uIGZ1bmN0aW9uLCBzbyB0aGF0IGl0J3MgZXhwb3NlZCB0byB1c2Vy
-IHNwYWNlIGFmdGVyIGFsbA0KPiB0aGUgcHJlcGFyYXRpb25zIGhhdmUgYmVlbiBkb25lLCBpbmNs
-dWRpbmcgdGhlIHJlZ2lzdHJhdGlvbiBvZiB0aGUgbmV0DQo+IGRldmljZSBub3RpZmllci4NCj4g
-DQoNClRoYW5rIHlvdSBmb3IgeW91ciByZXZpZXcuIEknbGwgc2VuZCBpdCBpbiBWMi4NCg0KPj4g
-IAlpZiAocmMpIHsNCj4+ICAJCXByX2VycigiQ291bGQgbm90IGNyZWF0ZSBkcm9wIG1vbml0b3Ig
-bmV0bGluayBmYW1pbHlcbiIpOw0KPj4gQEAgLTE3NDksMTEgKzE3NTQsNiBAQCBzdGF0aWMgaW50
-IF9faW5pdCBpbml0X25ldF9kcm9wX21vbml0b3Iodm9pZCkNCj4+ICANCj4+ICAJcmMgPSAwOw0K
-Pj4gIA0KPj4gLQlmb3JfZWFjaF9wb3NzaWJsZV9jcHUoY3B1KSB7DQo+PiAtCQluZXRfZG1fY3B1
-X2RhdGFfaW5pdChjcHUpOw0KPj4gLQkJbmV0X2RtX2h3X2NwdV9kYXRhX2luaXQoY3B1KTsNCj4+
-IC0JfQ0KPj4gLQ0KPj4gIAlnb3RvIG91dDsNCj4+ICANCj4+ICBvdXRfdW5yZWc6DQo+PiBAQCAt
-MTc3MiwxMyArMTc3MiwxMiBAQCBzdGF0aWMgdm9pZCBleGl0X25ldF9kcm9wX21vbml0b3Iodm9p
-ZCkNCj4+ICAJICogQmVjYXVzZSBvZiB0aGUgbW9kdWxlX2dldC9wdXQgd2UgZG8gaW4gdGhlIHRy
-YWNlIHN0YXRlIGNoYW5nZSBwYXRoDQo+PiAgCSAqIHdlIGFyZSBndWFyYW50ZWVkIG5vdCB0byBo
-YXZlIGFueSBjdXJyZW50IHVzZXJzIHdoZW4gd2UgZ2V0IGhlcmUNCj4+ICAJICovDQo+PiArCUJV
-R19PTihnZW5sX3VucmVnaXN0ZXJfZmFtaWx5KCZuZXRfZHJvcF9tb25pdG9yX2ZhbWlseSkpOw0K
-PiANCj4gU2ltaWxhcmx5LCB1bnJlZ2lzdGVyIHRoZSBuZXRsaW5rIGZhbWlseSBhdCB0aGUgYmVn
-aW5uaW5nIG9mIHRoZSBtb2R1bGUNCj4gZXhpdCBmdW5jdGlvbiwgYmVmb3JlIHVucmVnaXN0ZXJp
-bmcgdGhlIG5ldCBkZXZpY2Ugbm90aWZpZXIuDQo+IA0KPj4gIA0KPj4gIAlmb3JfZWFjaF9wb3Nz
-aWJsZV9jcHUoY3B1KSB7DQo+PiAgCQluZXRfZG1faHdfY3B1X2RhdGFfZmluaShjcHUpOw0KPj4g
-IAkJbmV0X2RtX2NwdV9kYXRhX2ZpbmkoY3B1KTsNCj4+ICAJfQ0KPj4gLQ0KPj4gLQlCVUdfT04o
-Z2VubF91bnJlZ2lzdGVyX2ZhbWlseSgmbmV0X2Ryb3BfbW9uaXRvcl9mYW1pbHkpKTsNCj4+ICB9
-DQo+PiAgDQo+PiAgbW9kdWxlX2luaXQoaW5pdF9uZXRfZHJvcF9tb25pdG9yKTsNCj4+IC0tIA0K
-Pj4gMi4zOS41DQo+Pg0KDQo=
+On 11/02/2025 5:21 pm, Richard Fitzgerald wrote:
+> On 11/02/2025 5:03 pm, Thomas Weißschuh wrote:
+>> Also drop the bounce buffer in cs_dsp_coeff_write_ctrl_raw().
+>>
+>> The bounce buffer in cs_dsp_coeff_write_ctrl_raw() could theoretically
+>> also be removed. That would be a functional change as the output may be
+>> modified in error cases.
+>> As I don't know the driver very well I left that part out.
+>>
+>> Not tested on real hardware.
+>> This came up while porting kunit to mips64.
+>> Apparently GFP_DMA does not work there, but IMO the usage of GFP_DMA by
+
+I would say that is a bug in mips64 that should be fixed in mips64.
+It is not reasonable to expect generic drivers to have special cases for
+platforms that don't handle GFP_DMA.
+
+
+>> cs_dsp is unnecessary in the first place.
+>>
+> 
+> You're sure that all I2C and SPI bus controllers now handle non-DMA-safe
+> buffers correctly?
+> 
+I just tested this.
+
+The spi kernel doc says this:
+
+  * struct spi_transfer - a read/write buffer pair
+  * @tx_buf: data to be written (DMA-safe memory), or NULL
+  * @rx_buf: data to be read (DMA-safe memory), or NULL
+
+On x86_64() a spi_write() fails with -EINVAL if I pass it a non-dma-safe
+buffer of data. But it works if I pass it a buffer allocated with
+GFP_DMA.
+
+So I think it is a bad idea to remove GFP_DMA to workaround mips64.
+
+>> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+>> ---
+>> Thomas Weißschuh (2):
+>>        firmware: cs_dsp: Remove usage of GFP_DMA
+>>        firmware: cs_dsp: Remove bounce buffer in 
+>> cs_dsp_coeff_write_ctrl_raw()
+>>
+>>   drivers/firmware/cirrus/cs_dsp.c | 15 +++------------
+>>   1 file changed, 3 insertions(+), 12 deletions(-)
+>> ---
+>> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+>> change-id: 20250211-cs_dsp-gfp_dma-0581bdd09dd5
+>>
+>> Best regards,
+> 
+
