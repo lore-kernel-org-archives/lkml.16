@@ -1,131 +1,168 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED19720B80D;
-	Thu, 13 Feb 2025 13:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09382227EB3
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739453928; cv=none; b=tuhvtGJHN0ieU3/bmIJ6YfS3/Mza8af82hMw/PiQVSwvc0vmiM3k1GdsQYKEe4Py7zGvCJhgNmt41WnRXAVHnz4pIShrj+ebVLubXg2iB8pnansymwkZhRh64SG32T16tcSQM6kgiIqrBJXHPL1ABSgwc4S/fOHRt7j2ywmkG1w=
+	t=1739453940; cv=none; b=OQ6Q6FpwfOmscttsOOyPMt2EUJsgN7PMu6fEBV9cWmFmbEVCKRxrk+CoeVtXWTJ0SONRX+Dgb+YTmu6UvgRHxge4FyHu1cPcv18htLyJBRnffeJcqfgkMYX8GpHQ9qhw+3r/D/sFf7ostgfALztHaRhf7pcycDd4HzCQRktuZEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739453928; c=relaxed/simple;
-	bh=pzBCvlYbL5cZxHO40BZm6owVnS0Y4kV/DE6Ud4axTWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XHmeE+2/wJ08/wvOAByeqz3v1EESEg8C+UhgMM4TrBeEqdoL90k7LDF0UgB3OrGtKeAgRtV5I+a1IB9ch+qbkGB30dDbugOhvZKCXdBCVoVExx1Ccvm7KwN8GpiawLgKTD7R914hjvap1ad4Zk3VWieAR+pV6FGdJHXCTpFxZ9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B385616F3;
-	Thu, 13 Feb 2025 05:39:04 -0800 (PST)
-Received: from [10.1.30.41] (e127648.arm.com [10.1.30.41])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9188A3F58B;
-	Thu, 13 Feb 2025 05:38:39 -0800 (PST)
-Message-ID: <9629f060-28f4-4743-9e60-688cba039f87@arm.com>
-Date: Thu, 13 Feb 2025 13:38:37 +0000
+	s=arc-20240116; t=1739453940; c=relaxed/simple;
+	bh=0KCJgJ5af6wRATayYbyzVDKznzamxvQlSmE9bHZ7Ppk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RYcVMbIABAiYdt9X3ZB2LLwLyc62/smIzLm68u3Sn3102eGNIrkuoLLNWaPdTzB9kJ+AjXdjwFSdYq1pRYVdZHKB/YsCZMWy7ck3MbZ/J1H0nZ0xQVxs21913zr5u4E0U8sybR+mxRYc20wpFm1GzkexDzN6oFEf3s6+EvVjC+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hU6SxUbb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hU6SxUbb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739453938;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rkdOvVcCYhu0dJAQGSkowwgNwea/vBeQ6njpqnbJ55s=;
+	b=hU6SxUbb9baefpdoTn/yzufPulcmwr8Ne0voJTqgG2flH0N7G4GsdN4gZOIeKyE86mptI3
+	Bw5WvveFtHnx0ByYBJ0M2AHQyVwLkrEs1TAaaGjcex1Mcpj1+qrct2aIMYHG6VxkyvSW9k
+	B3hG2DU6XfGC1H/PUklHnZIpQAp9o+M=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-611-ho6mKEDFPbm3Xwkk6ZeFUg-1; Thu,
+ 13 Feb 2025 08:38:54 -0500
+X-MC-Unique: ho6mKEDFPbm3Xwkk6ZeFUg-1
+X-Mimecast-MFC-AGG-ID: ho6mKEDFPbm3Xwkk6ZeFUg
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 224DF190308C;
+	Thu, 13 Feb 2025 13:38:52 +0000 (UTC)
+Received: from bfoster (unknown [10.22.88.88])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CD0D91955F0F;
+	Thu, 13 Feb 2025 13:38:49 +0000 (UTC)
+Date: Thu, 13 Feb 2025 08:41:15 -0500
+From: Brian Foster <bfoster@redhat.com>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+	jack@suse.cz, linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+	yangerkun@huawei.com, Baokun Li <libaokun@huaweicloud.com>
+Subject: Re: [PATCH] ext4: goto right label 'out_mmap_sem' in ext4_setattr()
+Message-ID: <Z632e360SySsBRSk@bfoster>
+References: <20250213112247.3168709-1-libaokun@huaweicloud.com>
+ <Z63qzaDONxM9fRVl@bfoster>
+ <5e39cc34-99e8-451e-8f61-4f0187a8db6a@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
- for hotplug
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <treding@nvidia.com>,
- Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Koutny <mkoutny@suse.com>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Joel Fernandes (Google)" <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>, Aashish Sharma <shraash@google.com>,
- Shin Kawamura <kawasin@google.com>,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <a305f53d-44d4-4d7a-8909-6a63ec18a04b@nvidia.com>
- <5a36a2e8-bd78-4875-9b9e-814468ca6692@arm.com>
- <db800694-84f7-443c-979f-3097caaa1982@nvidia.com>
- <8ff19556-a656-4f11-a10c-6f9b92ec9cea@arm.com>
- <Z6oysfyRKM_eUHlj@jlelli-thinkpadt14gen4.remote.csb>
- <dbd2af63-e9ac-44c8-8bbf-84358e30bf0b@arm.com>
- <Z6spnwykg6YSXBX_@jlelli-thinkpadt14gen4.remote.csb>
- <285a43db-c36d-400e-8041-0566f089a482@arm.com>
- <Z62PPUOY5DClYo1A@jlelli-thinkpadt14gen4.remote.csb>
- <c8f626ba-1be4-4c25-b283-d1e11a061aac@arm.com>
- <Z630nGN1IHhyYIYl@jlelli-thinkpadt14gen4.remote.csb>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <Z630nGN1IHhyYIYl@jlelli-thinkpadt14gen4.remote.csb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e39cc34-99e8-451e-8f61-4f0187a8db6a@huawei.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 2/13/25 13:33, Juri Lelli wrote:
-> On 13/02/25 12:27, Christian Loehle wrote:
->> On 2/13/25 06:20, Juri Lelli wrote:
->>> On 12/02/25 19:22, Dietmar Eggemann wrote:
->>>> On 11/02/2025 11:42, Juri Lelli wrote:
->>>
->>> ...
->>>
->>>>> What about we actually ignore them consistently? We already do that for
->>>>> admission control, so maybe we can do that when rebuilding domains as
->>>>> well (until we find maybe a better way to deal with them).
->>>>>
->>>>> Does the following make any difference?
->>>>
->>>> It at least seems to solve the issue. And like you mentioned on irc, we
->>>> don't know the bw req of sugov anyway.
->>>>
->>>> So with this change we start with 'dl_bw->total_bw = 0' even w/ sugov tasks.
->>>>
->>>> dl_rq[0]:
->>>>   .dl_nr_running                 : 0
->>>>   .dl_bw->bw                     : 996147
->>>>   .dl_bw->total_bw               : 0       <-- !
->>>>
->>>> IMHO, people who want to run serious DL can always check whether there
->>>> are already these infrastructural DL tasks or even avoid schedutil.
->>>
->>> It definitely not ideal and admittedly gross, but not worse than what we
->>> are doing already considering we ignore sugovs at AC and the current
->>> bandwidth allocation its there only to help with PI. So, duck tape. :/
->>>
->>> A more proper way to work with this would entail coming up with sensible
->>> bandwidth allocation for sugovs, but that's most probably hardware
->>> specific, so I am not sure how we can make that general enough.
->>>
->>> Anyway, looks like Jon was still seeing the issue. I asked him to verify
->>> he is using all the proposed changes. Let's see what he reports.
->>
->> FWIW it also fixes my reproducer.
->>
->> I agree that dummy numbers for sugov bw is futile, but real bw numbers
->> also don't make a lot of sense (what if we exceed them? The system
->> won't be able to change frequency, i.e. might not be able to provide
->> bw for other DL tasks then either?).
->> I'm slightly worried about now allowing the last legal CPU for a sugov
->> cluster to offline, which would lead to a cluster still being active
->> but sugov DL unable to run anywhere. I can't reproduce this currently
->> though. Is this an issue in theory? Or am I missing something?
+On Thu, Feb 13, 2025 at 09:20:21PM +0800, Baokun Li wrote:
+> Hi,
 > 
-> Not sure I get what your worry is, sorry. In my understanding when the
-> last cpu of a policy/cluster gets offlined the corresponding sugov
-> kthread gets stopped as well (sugov_exit)?
+> On 2025/2/13 20:51, Brian Foster wrote:
+> > On Thu, Feb 13, 2025 at 07:22:47PM +0800, libaokun@huaweicloud.com wrote:
+> > > From: Baokun Li <libaokun1@huawei.com>
+> > > 
+> > > Otherwise, if ext4_inode_attach_jinode() fails, a hung task will
+> > > happen because filemap_invalidate_unlock() isn't called to unlock
+> > > mapping->invalidate_lock. Like this:
+> > > 
+> > > EXT4-fs error (device sda) in ext4_setattr:5557: Out of memory
+> > > INFO: task fsstress:374 blocked for more than 122 seconds.
+> > >        Not tainted 6.14.0-rc1-next-20250206-xfstests-dirty #726
+> > > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> > > task:fsstress state:D stack:0     pid:374   tgid:374   ppid:373
+> > >                                    task_flags:0x440140 flags:0x00000000
+> > > Call Trace:
+> > >   <TASK>
+> > >   __schedule+0x2c9/0x7f0
+> > >   schedule+0x27/0xa0
+> > >   schedule_preempt_disabled+0x15/0x30
+> > >   rwsem_down_read_slowpath+0x278/0x4c0
+> > >   down_read+0x59/0xb0
+> > >   page_cache_ra_unbounded+0x65/0x1b0
+> > >   filemap_get_pages+0x124/0x3e0
+> > >   filemap_read+0x114/0x3d0
+> > >   vfs_read+0x297/0x360
+> > >   ksys_read+0x6c/0xe0
+> > >   do_syscall_64+0x4b/0x110
+> > >   entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> > > 
+> > > Fixes: c7fc0366c656 ("ext4: partial zero eof block on unaligned inode size extension")
+> > > Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> > > ---
+> > First off, thank you for catching this. :)
+> Thanks for your review!
+> > 
+> > >   fs/ext4/inode.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> > > index 3cc8da6357aa..04ffd802dbde 100644
+> > > --- a/fs/ext4/inode.c
+> > > +++ b/fs/ext4/inode.c
+> > > @@ -5452,7 +5452,7 @@ int ext4_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+> > >   			    oldsize & (inode->i_sb->s_blocksize - 1)) {
+> > >   				error = ext4_inode_attach_jinode(inode);
+> > >   				if (error)
+> > > -					goto err_out;
+> > > +					goto out_mmap_sem;
+> > >   			}
+> > This looks reasonable to me, but I notice that the immediate previous
+> > error check looks like this:
+> > 
+> > 		...
+> >                  rc = ext4_break_layouts(inode);
+> >                  if (rc) {
+> >                          filemap_invalidate_unlock(inode->i_mapping);
+> >                          goto err_out;
+> >                  }
+> > 		...
+> > 
+> > ... and then the following after the broken logic uses out_mmap_sem.
+> > Could we be a little more consistent here one way or the other? The
+> > change looks functionally correct to me either way:
+> > 
+> > Reviewed-by: Brian Foster <bfoster@redhat.com>
+> > 
+> > Brian
+> Indeed, this is confusing.
+> 
+> The reason is that we don't want to call ext4_std_error() when
+> ext4_break_layouts() fails. So we first store the error in 'rc', and then
+> pass the error to 'error' at the end. (See b9c1c26739ec
+> ("ext4: gracefully handle ext4_break_layouts() failure during truncate"))
+> 
+> However, because 'error' is not assigned, the goto out_mmap_sem label will
+> execute some code that shouldn't be executed. Therefore, in the error
+> handling of ext4_break_layouts(), we unlock and then goto err_out label.
+> 
+> While under normal error conditions, 'error' is assigned, and it should
+> enter the out_mmap_sem label. Therefore, in the error handling of
+> ext4_inode_attach_jinode(), we directly goto out_mmap_sem label.
+> 
+> The handling of 'rc' in this function is indeed very subtle.
 > 
 
-The other way round.
-We may have sugov kthread of cluster [6,7] affined to CPU1. Is it
-guaranteed that we cannot offline CPU1 (while CPU6 or CPU7 are still
-online)?
-Or without the affinity:
-cluster [6,7] with isolcpu=6 (i.e. sugov kthread of that cluster can
-only run on CPU7). Is offlining of CPU6 then prevented (as long as
-CPU7 is online)?
-I don't see how.
-Anyway we probably want to change isolcpu and affinity to merely be 
-a suggestion for the sugov DL case. Fundamentally it belongs to what
-is run on that CPU anyway.
+Ah, indeed.. I glossed over the use of rc in there on my quick read.
+Thanks for the clarification!
+
+Brian
+
+> 
+> Cheers,
+> Baokun
+> > >   			handle = ext4_journal_start(inode, EXT4_HT_INODE, 3);
+> > > -- 
+> > > 2.39.2
+> > > 
+> > > 
+> 
+
