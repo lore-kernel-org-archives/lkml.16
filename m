@@ -1,49 +1,53 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F223326E177
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530972861CC;
+	Thu, 13 Feb 2025 16:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739463449; cv=none; b=a7aG0FLsIcxnzjDRvzQoudO8LBc/RfQFdpIrqVaBWAe1SQInAR7IFFM+6sw85PByFcLD/X1ZbNu8LcDL80Y4LqsYHv+QV5xqtlAlGtfzfhwfZAppPTtrMkepd1/7HFgi941y9I5AT3wbRF7vKVDVbMor22u64a3v14JZzYyyXKk=
+	t=1739463454; cv=none; b=LdOt6JWzYuUst+x/r6een8E9iz8vqr6+qkC/ExfsfBoHqiay/cQ2IwBAXubX3ift3y6ot8SgzPvxriX80KaHqxjBuObnJSGp8KCj19zdNDopai6fJJo89zKOZpIy6fA5yOr366O9TIDDPknTvOaGfMFmO79omPVWKNPCrOHFvBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739463449; c=relaxed/simple;
-	bh=Auerij6VqA92kR9c6kyhLmRb/jviiaUdie5e/5mmxB8=;
+	s=arc-20240116; t=1739463454; c=relaxed/simple;
+	bh=I+uqW9fn3J8TiCxQnKCNml2cNNPv8Ftuwr06Rsc2o1o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l0zIhjVwZ1MlVKvpVmZ7NyIZvUG5gJloXocww1cDCgIJdoPuWh/VJLGoiN9WdHRX9OJqfRfr+V7a6RDait3f0fy3/PTks/quytr1xnltXAivAtB7vahtNo0ExlaFlBDEuNfCZqB6q/oEzxSp6mzdRJkz7mYu45KZf8jRNpmkvx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1tibr7-000000003xx-0QCo;
-	Thu, 13 Feb 2025 11:14:25 -0500
-From: Rik van Riel <riel@surriel.com>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	bp@alien8.de,
-	peterz@infradead.org,
-	dave.hansen@linux.intel.com,
-	zhengqi.arch@bytedance.com,
-	nadav.amit@gmail.com,
-	thomas.lendacky@amd.com,
-	kernel-team@meta.com,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	jackmanb@google.com,
-	jannh@google.com,
-	mhklinux@outlook.com,
-	andrew.cooper3@citrix.com,
-	Rik van Riel <riel@surriel.com>,
-	Manali Shukla <Manali.Shukla@amd.com>
-Subject: [PATCH v11 01/12] x86/mm: make MMU_GATHER_RCU_TABLE_FREE unconditional
-Date: Thu, 13 Feb 2025 11:13:52 -0500
-Message-ID: <20250213161423.449435-2-riel@surriel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250213161423.449435-1-riel@surriel.com>
-References: <20250213161423.449435-1-riel@surriel.com>
+	 MIME-Version; b=e9lOpM1gHebIt6bwW5eQQpHEiI+C/AbXaOYyhfWe2j/yEBgVEH0ZSqrowy/mvWqmI4lubd2S98684sFra1BiPF6d3P/vouQPO+f7H1k42enYrslabq0BQ9SrMQ/xVb3eRSinD53oUpFntC35CBW7u5qeO3lY7pA6XjGbhcNDqA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 964F01756;
+	Thu, 13 Feb 2025 08:17:53 -0800 (PST)
+Received: from e122027.cambridge.arm.com (e122027.cambridge.arm.com [10.1.32.44])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7900C3F6A8;
+	Thu, 13 Feb 2025 08:17:28 -0800 (PST)
+From: Steven Price <steven.price@arm.com>
+To: kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+	Gavin Shan <gshan@redhat.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	Alper Gun <alpergun@google.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Steven Price <steven.price@arm.com>
+Subject: [PATCH v7 37/45] arm64: RME: Initialize PMCR.N with number counter supported by RMM
+Date: Thu, 13 Feb 2025 16:14:17 +0000
+Message-ID: <20250213161426.102987-38-steven.price@arm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250213161426.102987-1-steven.price@arm.com>
+References: <20250213161426.102987-1-steven.price@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,155 +55,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: riel@surriel.com
 
-Currently x86 uses CONFIG_MMU_GATHER_TABLE_FREE when using
-paravirt, and not when running on bare metal.
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-There is no real good reason to do things differently for
-each setup. Make them all the same.
+Provide an accurate number of available PMU counters to userspace when
+setting up a Realm.
 
-Currently get_user_pages_fast synchronizes against page table
-freeing in two different ways:
-- on bare metal, by blocking IRQs, which block TLB flush IPIs
-- on paravirt, with MMU_GATHER_RCU_TABLE_FREE
-
-This is done because some paravirt TLB flush implementations
-handle the TLB flush in the hypervisor, and will do the flush
-even when the target CPU has interrupts disabled.
-
-Always handle page table freeing with MMU_GATHER_RCU_TABLE_FREE.
-Using RCU synchronization between page table freeing and get_user_pages_fast()
-allows bare metal to also do TLB flushing while interrupts are disabled.
-
-Various places in the mm do still block IRQs or disable preemption
-as an implicit way to block RCU frees.
-
-That makes it safe to use INVLPGB on AMD CPUs.
-
-Signed-off-by: Rik van Riel <riel@surriel.com>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Tested-by: Manali Shukla <Manali.Shukla@amd.com>
-Tested-by: Brendan Jackman <jackmanb@google.com>
-Tested-by: Michael Kelley <mhklinux@outlook.com>
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/x86/Kconfig           |  2 +-
- arch/x86/kernel/paravirt.c | 17 +----------------
- arch/x86/mm/pgtable.c      | 27 ++++-----------------------
- 3 files changed, 6 insertions(+), 40 deletions(-)
+ arch/arm64/include/asm/kvm_rme.h | 1 +
+ arch/arm64/kvm/pmu-emul.c        | 3 +++
+ arch/arm64/kvm/rme.c             | 5 +++++
+ 3 files changed, 9 insertions(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 6df7779ed6da..aeb07da762fc 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -278,7 +278,7 @@ config X86
- 	select HAVE_PCI
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
--	select MMU_GATHER_RCU_TABLE_FREE	if PARAVIRT
-+	select MMU_GATHER_RCU_TABLE_FREE
- 	select MMU_GATHER_MERGE_VMAS
- 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
- 	select HAVE_REGS_AND_STACK_ACCESS_API
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 1ccaa3397a67..527f5605aa3e 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -59,21 +59,6 @@ void __init native_pv_lock_init(void)
- 		static_branch_enable(&virt_spin_lock_key);
- }
+diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
+index 67ee38541a82..8a8ec70f3626 100644
+--- a/arch/arm64/include/asm/kvm_rme.h
++++ b/arch/arm64/include/asm/kvm_rme.h
+@@ -84,6 +84,7 @@ struct realm_rec {
+ void kvm_init_rme(void);
+ u32 kvm_realm_ipa_limit(void);
+ u32 kvm_realm_vgic_nr_lr(void);
++u8 kvm_realm_max_pmu_counters(void);
  
--#ifndef CONFIG_PT_RECLAIM
--static void native_tlb_remove_table(struct mmu_gather *tlb, void *table)
--{
--	struct ptdesc *ptdesc = (struct ptdesc *)table;
--
--	pagetable_dtor(ptdesc);
--	tlb_remove_page(tlb, ptdesc_page(ptdesc));
--}
--#else
--static void native_tlb_remove_table(struct mmu_gather *tlb, void *table)
--{
--	tlb_remove_table(tlb, table);
--}
--#endif
--
- struct static_key paravirt_steal_enabled;
- struct static_key paravirt_steal_rq_enabled;
+ u64 kvm_realm_reset_id_aa64dfr0_el1(const struct kvm_vcpu *vcpu, u64 val);
  
-@@ -195,7 +180,7 @@ struct paravirt_patch_template pv_ops = {
- 	.mmu.flush_tlb_kernel	= native_flush_tlb_global,
- 	.mmu.flush_tlb_one_user	= native_flush_tlb_one_user,
- 	.mmu.flush_tlb_multi	= native_flush_tlb_multi,
--	.mmu.tlb_remove_table	= native_tlb_remove_table,
-+	.mmu.tlb_remove_table	= tlb_remove_table,
- 
- 	.mmu.exit_mmap		= paravirt_nop,
- 	.mmu.notify_page_enc_status_changed	= paravirt_nop,
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index 1fef5ad32d5a..b1c1f72c1fd1 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -18,25 +18,6 @@ EXPORT_SYMBOL(physical_mask);
- #define PGTABLE_HIGHMEM 0
- #endif
- 
--#ifndef CONFIG_PARAVIRT
--#ifndef CONFIG_PT_RECLAIM
--static inline
--void paravirt_tlb_remove_table(struct mmu_gather *tlb, void *table)
--{
--	struct ptdesc *ptdesc = (struct ptdesc *)table;
--
--	pagetable_dtor(ptdesc);
--	tlb_remove_page(tlb, ptdesc_page(ptdesc));
--}
--#else
--static inline
--void paravirt_tlb_remove_table(struct mmu_gather *tlb, void *table)
--{
--	tlb_remove_table(tlb, table);
--}
--#endif /* !CONFIG_PT_RECLAIM */
--#endif /* !CONFIG_PARAVIRT */
--
- gfp_t __userpte_alloc_gfp = GFP_PGTABLE_USER | PGTABLE_HIGHMEM;
- 
- pgtable_t pte_alloc_one(struct mm_struct *mm)
-@@ -64,7 +45,7 @@ early_param("userpte", setup_userpte);
- void ___pte_free_tlb(struct mmu_gather *tlb, struct page *pte)
+diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+index 670e5d15ad92..76ce59541e0f 100644
+--- a/arch/arm64/kvm/pmu-emul.c
++++ b/arch/arm64/kvm/pmu-emul.c
+@@ -997,6 +997,9 @@ u8 kvm_arm_pmu_get_max_counters(struct kvm *kvm)
  {
- 	paravirt_release_pte(page_to_pfn(pte));
--	paravirt_tlb_remove_table(tlb, page_ptdesc(pte));
-+	tlb_remove_table(tlb, page_ptdesc(pte));
+ 	struct arm_pmu *arm_pmu = kvm->arch.arm_pmu;
+ 
++	if (kvm_is_realm(kvm))
++		return kvm_realm_max_pmu_counters();
++
+ 	/*
+ 	 * The arm_pmu->cntr_mask considers the fixed counter(s) as well.
+ 	 * Ignore those and return only the general-purpose counters.
+diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+index f236e1776d8c..f620a64551d9 100644
+--- a/arch/arm64/kvm/rme.c
++++ b/arch/arm64/kvm/rme.c
+@@ -87,6 +87,11 @@ u32 kvm_realm_vgic_nr_lr(void)
+ 	return u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_GICV3_NUM_LRS);
  }
  
- #if CONFIG_PGTABLE_LEVELS > 2
-@@ -78,21 +59,21 @@ void ___pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmd)
- #ifdef CONFIG_X86_PAE
- 	tlb->need_flush_all = 1;
- #endif
--	paravirt_tlb_remove_table(tlb, virt_to_ptdesc(pmd));
-+	tlb_remove_table(tlb, virt_to_ptdesc(pmd));
- }
- 
- #if CONFIG_PGTABLE_LEVELS > 3
- void ___pud_free_tlb(struct mmu_gather *tlb, pud_t *pud)
++u8 kvm_realm_max_pmu_counters(void)
++{
++	return u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_PMU_NUM_CTRS);
++}
++
+ u64 kvm_realm_reset_id_aa64dfr0_el1(const struct kvm_vcpu *vcpu, u64 val)
  {
- 	paravirt_release_pud(__pa(pud) >> PAGE_SHIFT);
--	paravirt_tlb_remove_table(tlb, virt_to_ptdesc(pud));
-+	tlb_remove_table(tlb, virt_to_ptdesc(pud));
- }
- 
- #if CONFIG_PGTABLE_LEVELS > 4
- void ___p4d_free_tlb(struct mmu_gather *tlb, p4d_t *p4d)
- {
- 	paravirt_release_p4d(__pa(p4d) >> PAGE_SHIFT);
--	paravirt_tlb_remove_table(tlb, virt_to_ptdesc(p4d));
-+	tlb_remove_table(tlb, virt_to_ptdesc(p4d));
- }
- #endif	/* CONFIG_PGTABLE_LEVELS > 4 */
- #endif	/* CONFIG_PGTABLE_LEVELS > 3 */
+ 	u32 bps = u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_NUM_BPS);
 -- 
-2.47.1
+2.43.0
 
