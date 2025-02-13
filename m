@@ -1,123 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC7B20B1ED;
-	Thu, 13 Feb 2025 08:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0346320A5E2;
+	Thu, 13 Feb 2025 08:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739434052; cv=none; b=tdlRlytyy+YAmAtI9V5+hO5eTf5Jod3Umg3TnywbkAHhSzZqOR5HP8REKbHwaFVigKebna68iXCtLAQXAAgGZL9A17wxtk4Nbu3E5TYSdg7fc79wSnLrDNVnBPBRb+G1P/5/Pc0gxXfKoSMKPDhH/rFLfdS5MRb4e3GSOB/f6k0=
+	t=1739434081; cv=none; b=uCL9qtC1WbXrjIUv5UinxX2hv15c+phGDS4ykjMEP7NikmdRcCSXDJiRO+6doX7H73miwhVADKxkAZgXHDkdJazsXXVm2/iIofXinah7E7ThK9l6mr4s9dTRESBjQXcsEi5HWmJgMuzICn10QocCPs4gWEHuJOrDwerf9ub0Jmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739434052; c=relaxed/simple;
-	bh=usa/ZD9eo6oR2HXcMxracFfe5+vucFm+dr5h2mXZtcE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pgYnw3KSSk10YtkSr0F+DdjsBfeyawlUBxju7OLMoKbdLRjqzRvZ5j0lXGHEuCzHbrDboxCl6k+lYCJwGubo/LsxMn2vINniHUC8OUarQ6LGPzZUYh6MdcfwZQUJ82XnkMoky3VHKTSLfkSSciZPRAeNQidMnvvpZRbcxkkawC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gx27qmYB; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739434081; c=relaxed/simple;
+	bh=eHYDUgn1NAfE1RXTRs/ocY/tgOAAHUvVGHMqhY1CDIA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qhGFtl2b5tQfgwIbrqtAGecn9IOE0IvAAj/mRJVKekH4scNVIBoBZQ13uCPpYwEHm0y0zW5loj1uowhluvMjpV7MG6XHMxjavxZomUOSSMHIcnB7Tu7Nb3SOPTEo8k/DGU1VPHP3ZDOpHDx3DJVdHCdjAS0u+6P99+pxJUtHylA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=p6mB6vqG; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gx27qmYB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739434051; x=1770970051;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=usa/ZD9eo6oR2HXcMxracFfe5+vucFm+dr5h2mXZtcE=;
-  b=Gx27qmYBe1G1vovqJyNXMPK9DcTKIqbcw08ty2mxWEp94cb5pTD2gIEj
-   bguGLwVzM5e/D74KcbeE2xP9JlXhIDHmPaIZQFsdJPZeGP+6ImkhkLFYW
-   bHOvJ81ZQ0MTNZedZSsayUHfd3eAacFiqXqfH/jnUsq391W3XSfnaD5nh
-   3eRrgcUqBUQ+YvBHW0z2b7bsJ3nXv8cFxz28nGHTjns84rx6rIeVLQRgn
-   kDseOa+XQNW3B/SrsLqDMhx+p5guvwzyqaRD8ntJeM3w0TmdzbIW7vJCw
-   k9Y40YA/7APWi+Bv7y+ePXh1qhtRN8I47usiQ9O2/GFLVcrnI3tsu2hMw
-   w==;
-X-CSE-ConnectionGUID: 9p+e3iB1Swen+4vBMC1j1Q==
-X-CSE-MsgGUID: ev/5A+/2TAS8HCExeqRU7w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="51517529"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="51517529"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 00:07:12 -0800
-X-CSE-ConnectionGUID: DE0Db2kJTBuQiCzTf1puqg==
-X-CSE-MsgGUID: ZzeN7gI5RB+dIqKDLQxnLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118258626"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 00:07:10 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tiUFX-0000000B6EX-1V9w;
-	Thu, 13 Feb 2025 10:07:07 +0200
-Date: Thu, 13 Feb 2025 10:07:07 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Felipe Balbi <balbi@kernel.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Ferry Toth <fntoth@gmail.com>
-Subject: Re: [PATCH v2 2/3] usb: dwc3: gadget: Add support for
- snps,reserved-endpoints property
-Message-ID: <Z62oKwwhBC9ufH5c@smile.fi.intel.com>
-References: <20250203191524.3730346-1-andriy.shevchenko@linux.intel.com>
- <20250203191524.3730346-3-andriy.shevchenko@linux.intel.com>
- <20250212011013.xumqgguhluxdslpz@synopsys.com>
- <Z6x5lB4hGpz-9IzS@smile.fi.intel.com>
- <Z6zvcF1oe4TklTlK@smile.fi.intel.com>
- <20250213011736.orc23wbgvjoybrbq@synopsys.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="p6mB6vqG"
+X-UUID: a078b4e8e9e111efbd192953cf12861f-20250213
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=26YmjNwG62Ai1VoB2TZP4oBHj1k46+t5lY3/xow1ns4=;
+	b=p6mB6vqGStOCTMcdSksQ3HMVF57CSOmU5UEkUdWzOnCnJGG/ZTAVhfh184SImlT/5yVQpdccHXVsCQbr2o6ZLqq9TQiPbLGift+qHjjokmmBjN2U9/LSb53CoSS+v6kGIVG2f0tSlGo215H2b648ftVDa1E+AxthY2ou01hOsf4=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.46,REQID:b18ba03a-c3d2-4a97-986a-1a9f85d5b1e4,IP:0,U
+	RL:0,TC:0,Content:0,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:60aa074,CLOUDID:760b4f8f-637d-4112-88e4-c7792fee6ae2,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:1,
+	IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:
+	0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: a078b4e8e9e111efbd192953cf12861f-20250213
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw02.mediatek.com
+	(envelope-from <skylake.huang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1717476209; Thu, 13 Feb 2025 16:07:54 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 13 Feb 2025 16:07:52 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Thu, 13 Feb 2025 16:07:52 +0800
+From: Sky Huang <SkyLake.Huang@mediatek.com>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
+	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
+	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Simon
+ Horman <horms@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>
+CC: Steven Liu <Steven.Liu@mediatek.com>, Sky Huang
+	<skylake.huang@mediatek.com>
+Subject: [PATCH net-next v2 3/5] net: phy: mediatek: Add token ring set bit operation support
+Date: Thu, 13 Feb 2025 16:05:51 +0800
+Message-ID: <20250213080553.921434-4-SkyLake.Huang@mediatek.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250213080553.921434-1-SkyLake.Huang@mediatek.com>
+References: <20250213080553.921434-1-SkyLake.Huang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213011736.orc23wbgvjoybrbq@synopsys.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-On Thu, Feb 13, 2025 at 01:17:41AM +0000, Thinh Nguyen wrote:
-> On Wed, Feb 12, 2025, Andy Shevchenko wrote:
-> > On Wed, Feb 12, 2025 at 12:36:04PM +0200, Andy Shevchenko wrote:
-> > > On Wed, Feb 12, 2025 at 01:10:17AM +0000, Thinh Nguyen wrote:
-> > > > On Mon, Feb 03, 2025, Andy Shevchenko wrote:
+From: Sky Huang <skylake.huang@mediatek.com>
 
-...
+Previously in mtk-ge-soc.c, we set some register bits via token
+ring, which were implemented in three __phy_write().
+Now we can do the same thing via __mtk_tr_set_bits() helper.
 
-> > > > > static bool dwc3_gadget_endpoint_trbs_complete(struct dwc3_ep *dep,
-> > > 
-> > > > >  		for (i = 0; i < DWC3_ENDPOINTS_NUM; i++) {
-> > > > >  			dep = dwc->eps[i];
-> > > > > +			if (!dep)
-> > > > > +				continue;
-> > > > 
-> > > > It should be fine to ignore this check here. Something must be really
-> > > > wrong if there's an interrupt pointing to an endpoint that we shouldn't
-> > > > be touching. If we do add a check, we should print a warn or something
-> > > > here. But that should be a patch separate from this.
-> > > 
-> > > Theoretically everything is possible as it may be HW integration bug,
-> > > for example. But are you asking about separate patch even from the rest
-> > > of the checks? Please, elaborate what do you want to see.
-> > 
-> > Re-reading the code again, I don't understand. If we get to this loop
-> > ever (theoretically it might be an old IP with the reserved endpoints),
-> > we crash the kernel on the first gap in the array. And since the function
-> > is called on an endpoint, it doesn't mean that all endpoints are allocated,
-> > so I do not see the justification to issue a warning here.
-> > Or do you imply that DWC3_VER_IS_PRIOR(DWC3, 183A) may not have an HW
-> > integration similar to what we have on Intel Merrifield?
-> > 
-> > For now I'm going to leave this check as is.
-> 
-> Oops, you are correct. I read this as the same logic as below.
+Signed-off-by: Sky Huang <skylake.huang@mediatek.com>
+---
+ drivers/net/phy/mediatek/mtk-ge-soc.c  | 10 ++++++----
+ drivers/net/phy/mediatek/mtk-phy-lib.c |  7 +++++++
+ drivers/net/phy/mediatek/mtk.h         |  2 ++
+ 3 files changed, 15 insertions(+), 4 deletions(-)
 
-NP. Thank you for the review, and thanks for acking the next version!
-
+diff --git a/drivers/net/phy/mediatek/mtk-ge-soc.c b/drivers/net/phy/mediatek/mtk-ge-soc.c
+index ee335f4..b7bd3e3 100644
+--- a/drivers/net/phy/mediatek/mtk-ge-soc.c
++++ b/drivers/net/phy/mediatek/mtk-ge-soc.c
+@@ -62,6 +62,10 @@
+ /* MasDSPreadyTime */
+ #define MASTER_DSP_READY_TIME_MASK		GENMASK(14, 7)
+ 
++/* ch_addr = 0x1, node_addr = 0xf, data_addr = 0x18 */
++/* EnabRandUpdTrig */
++#define ENABLE_RANDOM_UPDOWN_COUNTER_TRIGGER	BIT(8)
++
+ /* ch_addr = 0x1, node_addr = 0xf, data_addr = 0x20 */
+ /* ResetSyncOffset */
+ #define RESET_SYNC_OFFSET_MASK			GENMASK(11, 8)
+@@ -789,10 +793,8 @@ static void mt798x_phy_common_finetune(struct phy_device *phydev)
+ 			FIELD_PREP(SLAVE_DSP_READY_TIME_MASK, 0x18) |
+ 			FIELD_PREP(MASTER_DSP_READY_TIME_MASK, 0x18));
+ 
+-	/* EnabRandUpdTrig = 1 */
+-	__phy_write(phydev, 0x11, 0x2f00);
+-	__phy_write(phydev, 0x12, 0xe);
+-	__phy_write(phydev, 0x10, 0x8fb0);
++	__mtk_tr_set_bits(phydev, 0x1, 0xf, 0x18,
++			  ENABLE_RANDOM_UPDOWN_COUNTER_TRIGGER);
+ 
+ 	__mtk_tr_modify(phydev, 0x0, 0x7, 0x15,
+ 			NORMAL_MSE_LO_THRESH_MASK,
+diff --git a/drivers/net/phy/mediatek/mtk-phy-lib.c b/drivers/net/phy/mediatek/mtk-phy-lib.c
+index 7275e4e..df8fdad 100644
+--- a/drivers/net/phy/mediatek/mtk-phy-lib.c
++++ b/drivers/net/phy/mediatek/mtk-phy-lib.c
+@@ -69,6 +69,13 @@ void mtk_tr_modify(struct phy_device *phydev, u8 ch_addr, u8 node_addr,
+ }
+ EXPORT_SYMBOL_GPL(mtk_tr_modify);
+ 
++void __mtk_tr_set_bits(struct phy_device *phydev, u8 ch_addr, u8 node_addr,
++		       u8 data_addr, u32 set)
++{
++	__mtk_tr_modify(phydev, ch_addr, node_addr, data_addr, 0, set);
++}
++EXPORT_SYMBOL_GPL(__mtk_tr_set_bits);
++
+ int mtk_phy_read_page(struct phy_device *phydev)
+ {
+ 	return __phy_read(phydev, MTK_EXT_PAGE_ACCESS);
+diff --git a/drivers/net/phy/mediatek/mtk.h b/drivers/net/phy/mediatek/mtk.h
+index af44d1a..2d8e5b9 100644
+--- a/drivers/net/phy/mediatek/mtk.h
++++ b/drivers/net/phy/mediatek/mtk.h
+@@ -72,6 +72,8 @@ void __mtk_tr_modify(struct phy_device *phydev, u8 ch_addr, u8 node_addr,
+ 		     u8 data_addr, u32 mask, u32 set);
+ void mtk_tr_modify(struct phy_device *phydev, u8 ch_addr, u8 node_addr,
+ 		   u8 data_addr, u32 mask, u32 set);
++void __mtk_tr_set_bits(struct phy_device *phydev, u8 ch_addr, u8 node_addr,
++		       u8 data_addr, u32 set);
+ 
+ int mtk_phy_read_page(struct phy_device *phydev);
+ int mtk_phy_write_page(struct phy_device *phydev, int page);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.18.0
 
