@@ -1,166 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F93B158524;
-	Thu, 13 Feb 2025 03:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8B2204C1F
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 03:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739418992; cv=none; b=jQEYKdbbXUKLtD6cVOn3DXO8lB/o3JhXHyOEBkB8PMJWqudQPCpeCoyCwhCtvfELdtaEAfF9jO2JY9Ds9+vcmrNcNIGYsg3nUN4t6L3yt6cabv83MEkPQQVqWYDO8wjQ2PYK+hRdI6Wyl5pwjVid15pEnSmlKyEWk5ZLjmuhJUE=
+	t=1739419014; cv=none; b=Hvho0QIPuPJMeE2nzd8DPRIzzlJ34xGJojo6tNharlCUMW997L3ifN3Xh4WXdiD3AMwGEej/GQ447ddesxs20YjNJDcuguyC7GYa2/o2VT26nZZ3aRv03SXk6a/lL0aV7bsmwwjDBLtpe3Mt1aoah0FlPjyauyVRIhQWY427MSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739418992; c=relaxed/simple;
-	bh=86TVOzPXfe0Uti/VuE/NXi2zKA0oTxee60/qK9YDvWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rh73mlPYOXwD5nVm36YyY47QEaDsSFQ/2J2e7KFHLIzxjPtHrfZ5mi7lDzLEGgskT6+UUo16lUSAeQWVAL9M9n8kVxZoSpjhQmLkUigCfbQqyTq2YvOU3VVX46estFxZ6QGq4N8774iSGe754tSzkegP8On9JGT7Nwj0iWcJj8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jzuV7ZSX; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739419014; c=relaxed/simple;
+	bh=lIp+HsaCTW2c1qH6AV4piTqN68lzAxi9fzfNaYbm8ow=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=drmVWZlzilZXIK3ncyFVps0KHLEGTAEILA4BkU8L7MeBPcV7nDbDqcXRzuD/SHBTagDPB9DQRSl8ciYGbHT84VuHE005XlYcLV6eb2EKZyOIqRVq9iLaQYkMWWxb1lyVLqeasN7i8tviK3A6AOS2RRrPKhMh+niGZYJMBQSStYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XSFQTZss; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jzuV7ZSX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739418991; x=1770954991;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=86TVOzPXfe0Uti/VuE/NXi2zKA0oTxee60/qK9YDvWY=;
-  b=jzuV7ZSXkFAR+MyoYqD7zVceQD90hW79mlN2JiW7gqBixawR9zWpGt5a
-   2KaIQcXx5qoxMGuWr3iZZpj1B6bUp7BaPyMEUeuT8TvA6UZgkBgXkIwxc
-   +bBrFUf9QCtHkabnnY7rRmrEhfyfKF6gdL1TLkmGa76ryJeHraSWYjNJl
-   pOyFHOkm36VNWwy8XodiMWJVQd+6zEMzxgWp/AeklCSsTLvk2HlRtP7Ju
-   XluimtyabmoPzNNCQ/AK6rl3+6YGpRuUBVEz9XpXiWuwfpRG1QEucI22D
-   msGHY7uQ+ASJ/oBg9sczfIoj8eZRkoHiV0Xkyk6zKT2IBbSYGMIl5XEoc
-   Q==;
-X-CSE-ConnectionGUID: Qu5dS8xdRUqIa0+qXeG3ng==
-X-CSE-MsgGUID: 96ZvrqdARiqisyStcqDJOQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="43875992"
-X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
-   d="scan'208";a="43875992"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 19:56:30 -0800
-X-CSE-ConnectionGUID: /WKVDQ8QTZmIJkKFEpYYTQ==
-X-CSE-MsgGUID: SKBb+fb3S/GmRV+qvr8qXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117641992"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 12 Feb 2025 19:56:25 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tiQKt-0016UN-0z;
-	Thu, 13 Feb 2025 03:56:23 +0000
-Date: Thu, 13 Feb 2025 11:55:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Robert Budai <robert.budai@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Nuno Sa <nuno.sa@analog.com>,
-	Ramona Gradinariu <ramona.gradinariu@analog.com>,
-	Antoniu Miclaus <antoniu.miclaus@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v7 3/6] iio: imu: adis: Add DIAG_STAT register
-Message-ID: <202502131146.rXrTvgZr-lkp@intel.com>
-References: <20250211175706.276987-4-robert.budai@analog.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XSFQTZss"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-46c8474d8f6so3274411cf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 19:56:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739419012; x=1740023812; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G4d4nkVlEN0PRY0ICgCFHrYMedwLuqUNW6GLaoppbDo=;
+        b=XSFQTZssj0Gy1OrOQGRuw0u7vhK29FdjpsDKRBjm/Gwd7SORmSyd5dUyTv3MY1PYYT
+         viwR/V2odt9jedbMKfAptzTEArq/hY6pKOLT1ZXfOmw4MnlRdDRshQfkYGy6N5fMYkeL
+         L5T/x++l4dsPTMDse4OX1aH7cPVhWUS6HeTf3QvhPkkh0H7XeNbCPWeM3BLIZqq4/71A
+         9U5YyEe9WBQ0cmvaXr3hIkLtAtaIv32wz5RGdoR9F9d4Zb10qrXO2qis2Jk+7s7x5jL2
+         8rmS9+9hpKvRrZe4KlrQf8CrDiFTPSR0xJn83xAWNJ3dlebCOGwA4qXlQFGyOszzcQRP
+         eMAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739419012; x=1740023812;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G4d4nkVlEN0PRY0ICgCFHrYMedwLuqUNW6GLaoppbDo=;
+        b=qSpB28PwffDDMGlyaP9SZ/hgvP6ouSAjNNsY/r1XfgZIhVBtm4l1Uv2WTg3QbBOwLE
+         kx0094hSefMVCjQO4/yi48APjrk52xFMKAKQRPdA0H3t/H+VHKWQvRyla4wsQq9rFDks
+         5N+/3cJvh5KI3jR/mocvl+Ba3EL28Wltop29pBseTlohXLzpOL3PKaJ0SSflf0fHWHzc
+         Ki3yiPTi+0+C85u0Rkwn8eqruysqm0x/tu2RDdw+9QCk+dNBltSoz4zlXVLSIqn93pn5
+         ezSrBeZmzrBTo1NNy4klOi9ejFWq0OZlvduUrsl2z9nfHBVnyf//q94CZBFbuLBBgAUv
+         b8Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCW+X+40Qo9ES6DnLFySiWmekxQ69NJB6V7gCyMFfuLY87Xjrc0UJxq/ObKRh2MILzJheuJiRCQonMTy+TU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUwXu8nwNubB9ooBcQ+URKChL3qHJKAG3+ARNnlAIXKop10QRQ
+	RdItFpm91f3LtuK9HCmqLbCq0gQMhIuvuAILVwWcW2U1C5CSEnhNbjSFOSE4SlxWu4r3CeP/G6I
+	CHpbyrKviFLmjMGjs1B1mA9p1rtVZF9Q8CCzF
+X-Gm-Gg: ASbGncvOM+96w8Z5OUs8NPztNumRsx4tlOMY1Jf8MKmXHp/WG3JwLH1+J36o7VxH7Sr
+	ps4lgPiINYo3U5t+JEEn0JFo45khLq+l9pNldxIDPd0DHXIUhW0Wy4gb2ypfzpwt6fYqbwldpyK
+	p8GEap0fEFxls7Rsy1RhNi7AQsiAc=
+X-Google-Smtp-Source: AGHT+IFt2SRHcEtHijHYyd/DgImJNa0gqT37F6giMOPmbndZK9qekQVCUW6Tr4TIzTxrmtUuEL8fr09ot7NeHJrgFAQ=
+X-Received: by 2002:a05:622a:6786:b0:471:b411:700f with SMTP id
+ d75a77b69052e-471b411722fmr57144091cf.50.1739419011776; Wed, 12 Feb 2025
+ 19:56:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211175706.276987-4-robert.budai@analog.com>
+References: <20250107042202.2554063-1-suleiman@google.com> <20250107042202.2554063-2-suleiman@google.com>
+ <Z4gtb-Z2GpbEkAsQ@google.com> <CABCjUKDU4b5QodgT=tSgrV-fb_qnksmSxhMK3gNrUGsT9xeitg@mail.gmail.com>
+ <Z4qK4B6taSoZTJMp@google.com> <CABCjUKDDDhXx8mSRKHCa34JjSX1nfM5WMG-UrPu9fjei6gkUJA@mail.gmail.com>
+ <Z5AB-6bLRNLle27G@google.com> <CABCjUKB-4kvAg5U0D2O2aiTgfHnYx5qBTBEJJsK7edZY5g5eTQ@mail.gmail.com>
+ <CABCjUKCDoHtLyX2CvrN+_D4N5ZiL2sLzyg+vY=LMkWZefrP_cA@mail.gmail.com> <Z6QQjmJE4CiWtUpI@google.com>
+In-Reply-To: <Z6QQjmJE4CiWtUpI@google.com>
+From: Suleiman Souhlal <suleiman@google.com>
+Date: Thu, 13 Feb 2025 12:56:40 +0900
+X-Gm-Features: AWEUYZkiJi609h5vUbEhDyMgn7TCz7Lh_NkQvTV6g9hIlv_y3sD6PlGK0_1NurA
+Message-ID: <CABCjUKBd8izT7NF0CDa56qcMVvEd0i8O4A-5GK7ARMsWD-KE9g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] kvm: Introduce kvm_total_suspend_ns().
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Chao Gao <chao.gao@intel.com>, 
+	David Woodhouse <dwmw2@infradead.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ssouhlal@freebsd.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Robert,
+On Thu, Feb 6, 2025 at 10:29=E2=80=AFAM Sean Christopherson <seanjc@google.=
+com> wrote:
+>
+> On Wed, Feb 05, 2025, Suleiman Souhlal wrote:
+> > >
+> > > I tried your suggestion of moving this to a PM notifier and I found
+> > > that it's possible for VCPUs to run after resume but before the PM
+> > > notifier has been called, because the resume notifiers get called
+> > > after tasks are unfrozen. Unfortunately that means that if we were to
+> > > do that, guest TSCs could go backwards.
+>
+> Ugh.  That explains why KVM hooks the CPU online path.
+>
+> > > However, I think it should be possible to keep the existing backwards
+> > > guest TSC prevention code but also use a notifier that further adjust=
+s
+> > > the guest TSCs to advance time on suspends where the TSC did go
+> > > backwards. This would make both s2idle and deep suspends behave the
+> > > same way.
+> >
+> > An alternative might be to block VCPUs from newly entering the guest
+> > between the pre and post suspend notifiers.
+> > Otherwise, some of the steal time accounting would have to be done in
+> > kvm_arch_enable_virtualization_cpu(), to make sure it gets applied on
+> > the first VCPU run, in case that happens before the resume notifier
+> > would have fired. But the comment there says we can't call
+> > ktime_get_boottime_ns() there, so maybe that's not possible.
+>
+> I don't think the PM notifier approach is viable.  It's simply too late. =
+ Without
+> a hook in CPU online, KVM can't even tell which VMs/vCPUs were running be=
+fore the
+> suspend, i.e. which VMs need to be updated.
+>
+> One idea would be to simply fast forward guest TSC to current time when t=
+he vCPU
+> is loaded after suspend+resume.  E.g. this hack appears to work.
 
-kernel test robot noticed the following build warnings:
+That's really interesting!
+One possible concern with this approach is that now each VCPU gets a
+slightly different offset.
+It's possible to avoid that by making sure that only one VCPU computes
+the offset and having the other ones reuse it.
+I'll send a patch. Should it be "Suggested-by:" you or is there
+something else I should do?
 
-[auto build test WARNING on jic23-iio/togreg]
-[also build test WARNING on linus/master v6.14-rc2 next-20250212]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I also wasn't sure if we should do this when the user sets the offset
+with KVM_VCPU_TSC_OFFSET. I guess we probably should.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Robert-Budai/iio-imu-adis-Add-custom-ops-struct/20250212-040235
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-patch link:    https://lore.kernel.org/r/20250211175706.276987-4-robert.budai%40analog.com
-patch subject: [PATCH v7 3/6] iio: imu: adis: Add DIAG_STAT register
-config: arc-randconfig-001-20250213 (https://download.01.org/0day-ci/archive/20250213/202502131146.rXrTvgZr-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250213/202502131146.rXrTvgZr-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502131146.rXrTvgZr-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/iio/imu/adis.c: In function '__adis_check_status':
->> drivers/iio/imu/adis.c:319:42: warning: passing argument 3 of '__adis_read_reg_16' makes pointer from integer without a cast [-Wint-conversion]
-     319 |                                          status_16);
-         |                                          ^~~~~~~~~
-         |                                          |
-         |                                          u16 {aka short unsigned int}
-   In file included from drivers/iio/imu/adis.c:19:
-   include/linux/iio/imu/adis.h:225:43: note: expected 'u16 *' {aka 'short unsigned int *'} but argument is of type 'u16' {aka 'short unsigned int'}
-     225 |                                      u16 *val)
-         |                                      ~~~~~^~~
-
-
-vim +/__adis_read_reg_16 +319 drivers/iio/imu/adis.c
-
-   298	
-   299	/**
-   300	 * __adis_check_status() - Check the device for error conditions (unlocked)
-   301	 * @adis: The adis device
-   302	 *
-   303	 * Returns 0 on success, a negative error code otherwise
-   304	 */
-   305	int __adis_check_status(struct adis *adis)
-   306	{
-   307		unsigned int status;
-   308		int diag_stat_bits;
-   309		u16 status_16;
-   310		int ret;
-   311		int i;
-   312	
-   313		if (adis->data->diag_stat_size)
-   314			ret = adis->ops->read(adis, adis->data->diag_stat_reg, &status,
-   315					      adis->data->diag_stat_size);
-   316		else
-   317		{
-   318			ret = __adis_read_reg_16(adis, adis->data->diag_stat_reg,
- > 319						 status_16);
-   320			status = status_16;
-   321		}
-   322		if (ret)
-   323			return ret;
-   324	
-   325		status &= adis->data->status_error_mask;
-   326	
-   327		if (status == 0)
-   328			return 0;
-   329	
-   330		diag_stat_bits = BITS_PER_BYTE * (adis->data->diag_stat_size ?
-   331						  adis->data->diag_stat_size : 2);
-   332	
-   333		for (i = 0; i < diag_stat_bits; ++i) {
-   334			if (status & BIT(i)) {
-   335				dev_err(&adis->spi->dev, "%s.\n",
-   336					adis->data->status_error_msgs[i]);
-   337			}
-   338		}
-   339	
-   340		return -EIO;
-   341	}
-   342	EXPORT_SYMBOL_NS_GPL(__adis_check_status, "IIO_ADISLIB");
-   343	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-- Suleiman
