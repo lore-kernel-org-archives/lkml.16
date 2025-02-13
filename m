@@ -1,122 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A16281360;
-	Thu, 13 Feb 2025 14:31:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98412281375;
+	Thu, 13 Feb 2025 14:31:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739457108; cv=none; b=jzjrtjgMA0zpDQOrhx1Fl/YcvRoYpTAmDtkyzqElqtG04sDrJAztKY+6/YZ/EJAVC/dmHoLvfNbU8NFwz2SEURL8AXPS84Alv2FTk5PwhCMRkN4nFrN0WC6FkpTxLvKZcicWESd1uEsxfK99pNt4rRvb/W95/FDpQ2tIjfGYCE8=
+	t=1739457117; cv=none; b=tSXIa/AtzSSWJUKtAeA7FqK72Kfvzi2uT9DFl5QBmIUSbpbegWIawCmlirKzqmKTWmxqWcsJFbp5qScWj6y2mO3XH9hil3r8yuWfC7scZdOWIXEEES0Eij7D95LbO19sOoIKWgat8C9zXk6soDloJmD/s+/FMZhiXi6rrlotsCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739457108; c=relaxed/simple;
-	bh=OA53EvUVXv1GhM5nFaZwYKdlhJhq0PlyQ6nM6WoxQ5k=;
+	s=arc-20240116; t=1739457117; c=relaxed/simple;
+	bh=QbYu5tcFJpICXFPEleK/DPk1kwwWWDH/Zmndr3rc+8o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cJtyWu65pryRRB5IFQCyfk+d47obdEI2V0ztKuP0sYyHs7WKPpWJqUUI7oOScquUrL52po2Wl+AbQ4pXHpvv93GGKs26fbYpsQjOt3de+Yd78sXPnhRJ5M7WlgDmkzbX153Bc59FTa05nzrcne50lum3Qh/1Onzd978Qc+3aV0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAcmDLI4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Xuv6vHj59SppblXu2QgUFSpfOZrRoXoTiAOsjH8JWpSXFkLVaM+0vyU5dS3gc4aEY3AB9SHD7xuXunkfyUv/eoLOr8B3u8ONG24ULkIGHYgqfyD4LArL5vwuEkuvxp4Yo071y982tY4m2ONCcqyz0WD2UMm7AVb/BtG4UPCU60w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=u7vCvmRu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NAcmDLI4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 654C1C4CEE8;
-	Thu, 13 Feb 2025 14:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739457107;
-	bh=OA53EvUVXv1GhM5nFaZwYKdlhJhq0PlyQ6nM6WoxQ5k=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="u7vCvmRu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C33E6C4CED1;
+	Thu, 13 Feb 2025 14:31:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739457117;
+	bh=QbYu5tcFJpICXFPEleK/DPk1kwwWWDH/Zmndr3rc+8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NAcmDLI49tnhWxwzXDphQWUBEilB0AbJCqZ9K6H6jvIOO8naxJwJtPt9cM3IfrzWm
-	 GtGGHbCU9ER3G7KV2zY65oplYowGGiD+XVwvhsB2aBpz2M6MP3U+Ota0H2CnnJ+BNk
-	 g0QoaZCKCXEW+nsO2pMweI5bMFk0JCBih2oipLuVaDa/HTF9e0shquxyZ+HW51KCpX
-	 9rsNEkya68f+EHItQFVFLJszS9loxH/1JvBczkJXL8Ks598xN6sL4FjihPURumLbRD
-	 qRd+EPVprlcVbdGEF9Zf0Ldw3GZ+cukfo+yN8aGNUD1FRsjwJw8qn0XyT4nZsHBh5Z
-	 krPQ+swBN9oog==
-From: cel@kernel.org
-To: jlayton@kernel.org,
-	neilb@suse.de,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	linux-nfs@vger.kernel.org,
+	b=u7vCvmRuSXw4hqiJVLVwMMOR6kg+fgLZasX79/KiMON+qIhqzaC/aJiaKVGIPg71q
+	 +n9dSrqzdD1l6eDwUVbxEvgQzCiKvkV2Of0Jvzd6K4Wm7RaXCSdeiD3uFHpeUoKMp2
+	 pBkc6L/oZNT06bJ9MrFJx+m/9eta4g5MUe6v0vLc=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Li Lingfeng <lilingfeng3@huawei.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	yukuai1@huaweicloud.com,
-	houtao1@huawei.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	lilingfeng@huaweicloud.com
-Subject: Re: [PATCH v2] nfsd: put dl_stid if fail to queue dl_recall
-Date: Thu, 13 Feb 2025 09:31:43 -0500
-Message-ID: <173945704787.138332.16372203572251102866.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250213144220.156089-1-lilingfeng3@huawei.com>
-References: <20250213144220.156089-1-lilingfeng3@huawei.com>
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Gavin Shan <gshan@redhat.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.12 005/422] arm64/mm: Ensure adequate HUGE_MAX_HSTATE
+Date: Thu, 13 Feb 2025 15:22:34 +0100
+Message-ID: <20250213142436.629719861@linuxfoundation.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250213142436.408121546@linuxfoundation.org>
+References: <20250213142436.408121546@linuxfoundation.org>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+6.12-stable review patch.  If anyone has any objections, please let me know.
 
-On Thu, 13 Feb 2025 22:42:20 +0800, Li Lingfeng wrote:
-> Before calling nfsd4_run_cb to queue dl_recall to the callback_wq, we
-> increment the reference count of dl_stid.
-> We expect that after the corresponding work_struct is processed, the
-> reference count of dl_stid will be decremented through the callback
-> function nfsd4_cb_recall_release.
-> However, if the call to nfsd4_run_cb fails, the incremented reference
-> count of dl_stid will not be decremented correspondingly, leading to the
-> following nfs4_stid leak:
-> unreferenced object 0xffff88812067b578 (size 344):
->   comm "nfsd", pid 2761, jiffies 4295044002 (age 5541.241s)
->   hex dump (first 32 bytes):
->     01 00 00 00 6b 6b 6b 6b b8 02 c0 e2 81 88 ff ff  ....kkkk........
->     00 6b 6b 6b 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  .kkkkkkk.....N..
->   backtrace:
->     kmem_cache_alloc+0x4b9/0x700
->     nfsd4_process_open1+0x34/0x300
->     nfsd4_open+0x2d1/0x9d0
->     nfsd4_proc_compound+0x7a2/0xe30
->     nfsd_dispatch+0x241/0x3e0
->     svc_process_common+0x5d3/0xcc0
->     svc_process+0x2a3/0x320
->     nfsd+0x180/0x2e0
->     kthread+0x199/0x1d0
->     ret_from_fork+0x30/0x50
->     ret_from_fork_asm+0x1b/0x30
-> unreferenced object 0xffff8881499f4d28 (size 368):
->   comm "nfsd", pid 2761, jiffies 4295044005 (age 5541.239s)
->   hex dump (first 32 bytes):
->     01 00 00 00 00 00 00 00 30 4d 9f 49 81 88 ff ff  ........0M.I....
->     30 4d 9f 49 81 88 ff ff 20 00 00 00 01 00 00 00  0M.I.... .......
->   backtrace:
->     kmem_cache_alloc+0x4b9/0x700
->     nfs4_alloc_stid+0x29/0x210
->     alloc_init_deleg+0x92/0x2e0
->     nfs4_set_delegation+0x284/0xc00
->     nfs4_open_delegation+0x216/0x3f0
->     nfsd4_process_open2+0x2b3/0xee0
->     nfsd4_open+0x770/0x9d0
->     nfsd4_proc_compound+0x7a2/0xe30
->     nfsd_dispatch+0x241/0x3e0
->     svc_process_common+0x5d3/0xcc0
->     svc_process+0x2a3/0x320
->     nfsd+0x180/0x2e0
->     kthread+0x199/0x1d0
->     ret_from_fork+0x30/0x50
->     ret_from_fork_asm+0x1b/0x30
-> Fix it by checking the result of nfsd4_run_cb and call nfs4_put_stid if
-> fail to queue dl_recall.
-> 
-> [...]
+------------------
 
-I replaced the Fixes: tag with Cc: stable.
+From: Anshuman Khandual <anshuman.khandual@arm.com>
 
-Applied to nfsd-testing, thanks!
+[ Upstream commit 1e5823c8e86de83a43d59a522b4de29066d3b306 ]
 
-[1/1] nfsd: put dl_stid if fail to queue dl_recall
-      commit: d520b70859e0fb6d62ca12eee601a3d6ff4a11b6
+This asserts that HUGE_MAX_HSTATE is sufficient enough preventing potential
+hugetlb_max_hstate runtime overflow in hugetlb_add_hstate() thus triggering
+a BUG_ON() there after.
 
---
-Chuck Lever
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+Link: https://lore.kernel.org/r/20241202064407.53807-1-anshuman.khandual@arm.com
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/mm/hugetlbpage.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index 5f1e2103888b7..0a6956bbfb326 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -508,6 +508,18 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+ 
+ static int __init hugetlbpage_init(void)
+ {
++	/*
++	 * HugeTLB pages are supported on maximum four page table
++	 * levels (PUD, CONT PMD, PMD, CONT PTE) for a given base
++	 * page size, corresponding to hugetlb_add_hstate() calls
++	 * here.
++	 *
++	 * HUGE_MAX_HSTATE should at least match maximum supported
++	 * HugeTLB page sizes on the platform. Any new addition to
++	 * supported HugeTLB page sizes will also require changing
++	 * HUGE_MAX_HSTATE as well.
++	 */
++	BUILD_BUG_ON(HUGE_MAX_HSTATE < 4);
+ 	if (pud_sect_supported())
+ 		hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
+ 
+-- 
+2.39.5
+
+
 
