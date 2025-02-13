@@ -1,275 +1,103 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F182B2753EF
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728A72753E4
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739487375; cv=none; b=h23oHqdOpQfvYxge/D8VEa9uxu2vsK06hcmLkCxF7YQzF2qV4EZfsXi6s5ePPOn3VecZpv+2FPvfhkr3RWDP4cI6tnYM25iu1Tk9f2/uP54xmHx4CqlQdNzoQGbUtqdS6U245bMAVchcR6MGFdT7BHcpDBlvcQk1LnO1IWA4aDg=
+	t=1739487480; cv=none; b=IMAnAIdkIxgjjMqYzUpUVVFNYzS7ZeqaQc9v9bW1EQKXQwWgQNZOSuWrEoCmLDmgHpTaln4YZozoqvv0zHxoqZW83mkfq7vb6t19MtIVNGUh4Arls+M4GT3EhVUpgQNstGAVh2QSM1TjrNHiDGY+7hfXYNhGFI7Nw2x3UtBPveA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739487375; c=relaxed/simple;
-	bh=yJUf8ZvNH+Ifa3O6C6OWiDFTgIdTB6badybZkn+parw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f+M4oBdB9EPotPYkgoAvsGn5g2zPIkfZWKo1KMYUiwMIxUMXzmyeqNoAJ5lsegdrgHnEehkX+9F0Qt+Uc0VvenF9nb5owYgUIAltb3JORaR0HUFcEJyAVzVoUKAn1Oe3j8T3sWFG8eIawEU5XiD6Gf6avpu85ui6SbOFoe41urg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tHrhJFb3; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739487480; c=relaxed/simple;
+	bh=Smto5Yxb6vav2wHm0QPt2rfaxx0mEaFrjpQZAsln/As=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SCHQOtRLfZiTBuwH+KkWTnB4aEHG7mriMCpkGGdCzPAmstkladPz8tS943b7UtAQUrURCDsZN8R8hpkBamqJKmXFnVdPAWJlsndF//+qpEHF/vM+SdxFv9VsVzj/yzLwZH5GGfDP33FAWGNS+xXSHqBhSefhRRlTSa+qfwN4mio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org; spf=pass smtp.mailfrom=linuxtx.org; dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b=A3ZV8Ig4; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxtx.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tHrhJFb3"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4718aea0718so115651cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:56:13 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="A3ZV8Ig4"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-854a68f5afcso34178439f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:57:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739487373; x=1740092173; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RadunuMXhRgLPe1WVFuc+K0YnZ/6gncGnMDL+6atVrM=;
-        b=tHrhJFb3GNoJZLeqBGZVq3FjTKdCDzrFNZViiHdjmv33u6ukB025hy7LvKVwde3jeh
-         Sy/SCNii0DI5SoAjnotXrUOljwQmMDBiLPKUUqXVEpOb6CJ5NEinuK53Ojq3rG18ROFG
-         0fSZN0DxBtEL2F27Nm1E9Ek7APQgDVEfv8ao3iGJKfAdP2woO5+ifLEnMWF/iSeplJUh
-         XA6OtS1EypQ/ESsKeBwKAfoNovlOQCJ3F1AiFwR/3a8j1ySiFDGgzv0mu9fYqDwoblrs
-         CKoIDwPBbHXq4sXiYZxFgU/F8ylCrgnwIClzptUzm6aAcChicE6Dqx4yEhUFpMEsNKt4
-         +r7w==
+        d=linuxtx.org; s=google; t=1739487477; x=1740092277; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=giMqNiydqfL6yBj4hJcOnss0/v5CTlMHhDcOLath6f0=;
+        b=A3ZV8Ig4WDV5ijuWyUL2BwAU3PgJ5WHFcnrloyfl1vOYqdBTknPHqwJbH0c8RJwsGE
+         /8iO1vsswiVr1EJOZAlrA9Ie6FqZHHkA8FvNlfX7chz/C0kKVzKTnbFsMZOL3N2rep0t
+         mDp+uvnDuhk+coKCzgJdun7VCGR98KpoNMMns=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739487373; x=1740092173;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739487477; x=1740092277;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RadunuMXhRgLPe1WVFuc+K0YnZ/6gncGnMDL+6atVrM=;
-        b=uFiiw4+TY1f2u/3MlysSf9zP8AuA2d9JMfzEZhniERLimgfOEoBOMQZzAMXYECsI5z
-         Ho747BGS9TCCeup5W5x4mEYWCGfmWPOxYGoTSoyhZe80/n/Ee//mmrDgrrP0R0d+Ngpw
-         Sb9/M7OasH3Dlietf1JVNTw3i+EyTVgPMtF6RZsl1mkVAv5A0W9VGQexpy5Nr7JZKHKv
-         FKUdjBj23GR8+A+3byuznLQtxpGS8X/CJB6eSVbu379Nm+sQdr086ryQFax64QLGAOLk
-         5H58WjwAxuYFAmMaQneN7OLsMb1Ot3mfbnU5JGhZ94zP4XqHkH2Xdp0cO+al+F4V40eP
-         ypFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXC4DFsG6kXQOKn2N7VJYpN7b1PEoY+Xq34UFBg41D7dAlXE1xMW+XgABPn6+9HM4xs4oNtrAtp1zVDMzY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBpBlsBD2iCHGfbK5za+Znc/uwNaucYAAxZVWvoFDdKd/AkgEb
-	fhDg2iH6LRIgT8/vWTpAQ/WSNf1S37Mi38UrtJLnqtKSTxyXu9jy7MyVrXzU+L6A7dyiTA2JVVo
-	3WP9V9AMeoLEUNx41x9Z4PoMBb/uobEA5uwmL
-X-Gm-Gg: ASbGncvdPTGNwdJlzYfa2GjrvzS8Sv5xI1gTR+paaiptl0e42nYLm2fbTuBbfIdpvSl
-	FB1O/RCFVjQLrCCGy/yG2hxP/XWn/4GMB9W03uiuS1vlEr26CbsElm8pZqd88bLwRuQtgxrj0X0
-	MPzeUdZPNorR6g+g9UDYEDrm0wHxI=
-X-Google-Smtp-Source: AGHT+IHInVkShwuEixemWhDH8jh3S8eLtZGvG2UxpKSDDxfRPiRP/pJTrU0zbga+0Ky8fl7GGJViaLe8zH246gT/AvE=
-X-Received: by 2002:a05:622a:1b89:b0:466:975f:b219 with SMTP id
- d75a77b69052e-471ce7c82a3mr1056021cf.8.1739487372551; Thu, 13 Feb 2025
- 14:56:12 -0800 (PST)
+        bh=giMqNiydqfL6yBj4hJcOnss0/v5CTlMHhDcOLath6f0=;
+        b=dq0DovQYBYJjwVoPx2GlvXInaahnzi7sTSsRq7nsr/6xrDSVg4808nwlLb4rNcq6NX
+         hB612SdjlKe+ViDpcrjW+RHn8t2uh4dHCrG1VI0WnRrUkwjE4QL4AcnWfH9HsEeCoWQX
+         0henrJ4Bd4q5TsDbv9jiZ4YeER/hO0apl/SSkdHRt93ddJBytLmNFIITu9ze46OaNT1v
+         BY+zCbdqocn9yxt7C1dQ4BByKyWuyW4wnzGElYmDrY860N8CWnB+mSTtJYifype0oa2r
+         VcS1J+/mk9jzIHJVj6MfSbtTYprU29ZkMYWSuhFiRVgjStlGLb+F5GUsSSWFrS92JuFG
+         /Y0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUkmgy4LN4WqEfzdLd7U+ZLGCnZREbRjYB/gIbX3F3smc0sR9u2lh3/+iv5YpFOfNHDdgVnkUbGdbfTzFY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmTrXo0trgCm81WZMOva5NrBuRD/qLtCv7HDgaE5JyfqX2qF/l
+	2q0Y7Vcv0sGgsDrphBXLbIosn7ClwD9TQ7mRyTLVIQeA0Mgj14rf4ljBlDjtlA==
+X-Gm-Gg: ASbGnctySwyoPw+pOJhJhKbIO1eGi/eAuhwCL6Sg0xvm/P+idDE2/zRT1bZtCxE6G10
+	TrRf/Kz3KN7+7KL8FwoT/bTTYVz6QEuPR/rMAGgl0x7etxc2cXOhge0Cw2hL51AiNqSX6mFLc4j
+	49AGgpNSQIMYF2HNv9B4X72cvB3tum9gIYz3+gWtVidhMuLusJRvjcl97G1j9bJOZe/qX9goxvy
+	M4nJLCwArnf71geA1Z2Mbh4BnOugWSjugsaNsK53QhgxInCqThuiYx+7bEtqw0iCdij5eibudLL
+	Iur4QN/HbNgSrNvs/qoNyHXjZkHsHGAY
+X-Google-Smtp-Source: AGHT+IEzoq0TAA6AIhRAC9HUAPu5NTo0Qc2xIPZ91yk2fGKDrTwVk0kj/so8NbRnYKTQQLoBadEh9A==
+X-Received: by 2002:a05:6e02:3989:b0:3ce:78e5:d36d with SMTP id e9e14a558f8ab-3d18c23b7f1mr50464215ab.12.1739487477453;
+        Thu, 13 Feb 2025 14:57:57 -0800 (PST)
+Received: from fedora64.linuxtx.org ([72.42.103.70])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ed2814883bsm538141173.19.2025.02.13.14.57.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 14:57:57 -0800 (PST)
+Sender: Justin Forbes <jmforbes@linuxtx.org>
+Date: Thu, 13 Feb 2025 15:57:55 -0700
+From: Justin Forbes <jforbes@fedoraproject.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.13 000/443] 6.13.3-rc1 review
+Message-ID: <Z6548yfCM14jmgqs@fedora64.linuxtx.org>
+References: <20250213142440.609878115@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250111042604.3230628-1-surenb@google.com> <20250111042604.3230628-17-surenb@google.com>
- <20250115022703.hqbqdqawvqgrfgxb@master> <CAJuCfpGShzXxqH8up75WQhdMzkr+Y6eE-h37nEEwVWHC6AN89w@mail.gmail.com>
- <edeb55ab-bbef-4542-ac41-b07bfaaf9b96@suse.cz> <CAJuCfpFo0duPPH1Ezms7D7s6JLUiWpCGRRB68L_Ym9njY-po8A@mail.gmail.com>
-In-Reply-To: <CAJuCfpFo0duPPH1Ezms7D7s6JLUiWpCGRRB68L_Ym9njY-po8A@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 13 Feb 2025 14:56:01 -0800
-X-Gm-Features: AWEUYZlo5iRxC39MvzAalKhbTbTcKASclV9SceEdQOsscai-p0KoPtBCDNLbGyQ
-Message-ID: <CAJuCfpG+Zypy+_83UMLpFk9xJca2ptAb9ANV6tp7TG497vaGBQ@mail.gmail.com>
-Subject: Re: [PATCH v9 16/17] mm: make vma cache SLAB_TYPESAFE_BY_RCU
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Wei Yang <richard.weiyang@gmail.com>, willy@infradead.org, 
-	akpm@linux-foundation.org, peterz@infradead.org, liam.howlett@oracle.com, 
-	lorenzo.stoakes@oracle.com, david.laight.linux@gmail.com, mhocko@suse.com, 
-	hannes@cmpxchg.org, mjguzik@gmail.com, oliver.sang@intel.com, 
-	mgorman@techsingularity.net, david@redhat.com, peterx@redhat.com, 
-	oleg@redhat.com, dave@stgolabs.net, paulmck@kernel.org, brauner@kernel.org, 
-	dhowells@redhat.com, hdanton@sina.com, hughd@google.com, 
-	lokeshgidra@google.com, minchan@google.com, jannh@google.com, 
-	shakeel.butt@linux.dev, souravpanda@google.com, pasha.tatashin@soleen.com, 
-	klarasmodin@gmail.com, corbet@lwn.net, linux-doc@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213142440.609878115@linuxfoundation.org>
 
-On Wed, Jan 15, 2025 at 7:10=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Tue, Jan 14, 2025 at 11:58=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz>=
- wrote:
-> >
-> > On 1/15/25 04:15, Suren Baghdasaryan wrote:
-> > > On Tue, Jan 14, 2025 at 6:27=E2=80=AFPM Wei Yang <richard.weiyang@gma=
-il.com> wrote:
-> > >>
-> > >> On Fri, Jan 10, 2025 at 08:26:03PM -0800, Suren Baghdasaryan wrote:
-> > >>
-> > >> >diff --git a/kernel/fork.c b/kernel/fork.c
-> > >> >index 9d9275783cf8..151b40627c14 100644
-> > >> >--- a/kernel/fork.c
-> > >> >+++ b/kernel/fork.c
-> > >> >@@ -449,6 +449,42 @@ struct vm_area_struct *vm_area_alloc(struct mm=
-_struct *mm)
-> > >> >       return vma;
-> > >> > }
-> > >> >
-> > >> >+static void vm_area_init_from(const struct vm_area_struct *src,
-> > >> >+                            struct vm_area_struct *dest)
-> > >> >+{
-> > >> >+      dest->vm_mm =3D src->vm_mm;
-> > >> >+      dest->vm_ops =3D src->vm_ops;
-> > >> >+      dest->vm_start =3D src->vm_start;
-> > >> >+      dest->vm_end =3D src->vm_end;
-> > >> >+      dest->anon_vma =3D src->anon_vma;
-> > >> >+      dest->vm_pgoff =3D src->vm_pgoff;
-> > >> >+      dest->vm_file =3D src->vm_file;
-> > >> >+      dest->vm_private_data =3D src->vm_private_data;
-> > >> >+      vm_flags_init(dest, src->vm_flags);
-> > >> >+      memcpy(&dest->vm_page_prot, &src->vm_page_prot,
-> > >> >+             sizeof(dest->vm_page_prot));
-> > >> >+      /*
-> > >> >+       * src->shared.rb may be modified concurrently when called f=
-rom
-> > >> >+       * dup_mmap(), but the clone will reinitialize it.
-> > >> >+       */
-> > >> >+      data_race(memcpy(&dest->shared, &src->shared, sizeof(dest->s=
-hared)));
-> > >> >+      memcpy(&dest->vm_userfaultfd_ctx, &src->vm_userfaultfd_ctx,
-> > >> >+             sizeof(dest->vm_userfaultfd_ctx));
-> > >> >+#ifdef CONFIG_ANON_VMA_NAME
-> > >> >+      dest->anon_name =3D src->anon_name;
-> > >> >+#endif
-> > >> >+#ifdef CONFIG_SWAP
-> > >> >+      memcpy(&dest->swap_readahead_info, &src->swap_readahead_info=
-,
-> > >> >+             sizeof(dest->swap_readahead_info));
-> > >> >+#endif
-> > >> >+#ifndef CONFIG_MMU
-> > >> >+      dest->vm_region =3D src->vm_region;
-> > >> >+#endif
-> > >> >+#ifdef CONFIG_NUMA
-> > >> >+      dest->vm_policy =3D src->vm_policy;
-> > >> >+#endif
-> > >> >+}
-> > >>
-> > >> Would this be difficult to maintain? We should make sure not miss or=
- overwrite
-> > >> anything.
-> > >
-> > > Yeah, it is less maintainable than a simple memcpy() but I did not
-> > > find a better alternative.
-> >
-> > Willy knows one but refuses to share it :(
->
-> Ah, that reminds me why I dropped this approach :) But to be honest,
-> back then we also had vma_clear() and that added to the ugliness. Now
-> I could simply to this without all those macros:
->
-> static inline void vma_copy(struct vm_area_struct *new,
->                                             struct vm_area_struct *orig)
-> {
->         /* Copy the vma while preserving vma->vm_lock */
->         data_race(memcpy(new, orig, offsetof(struct vm_area_struct, vm_lo=
-ck)));
->         data_race(memcpy(new + offsetofend(struct vm_area_struct, vm_lock=
-),
->                 orig + offsetofend(struct vm_area_struct, vm_lock),
->                 sizeof(struct vm_area_struct) -
->                 offsetofend(struct vm_area_struct, vm_lock));
-> }
->
-> Would that be better than the current approach?
+On Thu, Feb 13, 2025 at 03:22:45PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.13.3 release.
+> There are 443 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 15 Feb 2025 14:23:11 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.3-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-I discussed proposed alternatives with Willy and he prefers the
-current field-by-field copy approach. I also tried using
-kmsan_check_memory() to check for uninitialized memory in the
-vm_area_struct but unfortunately KMSAN stumbles on the holes in this
-structure and there are 4 of them (I attached pahole output at the end
-of this email). I tried unpoisoning holes but that gets very ugly very
-fast. So, I posted v10
-(https://lore.kernel.org/all/20250213224655.1680278-18-surenb@google.com/)
-without changing this part.
+Tested rc1 against the Fedora build system (aarch64, ppc64le, s390x,
+x86_64), and boot tested x86_64. No regressions noted.
 
-struct vm_area_struct {
-        union {
-                struct {
-                      unsigned long vm_start;          /*     0     8 */
-                        unsigned long vm_end;            /*     8     8 */
-                };                                       /*     0    16 */
-                freeptr_t          vm_freeptr;           /*     0     8 */
-        };                                               /*     0    16 */
-        union {
-                struct {
-                        unsigned long      vm_start;             /*
- 0     8 */
-                        unsigned long      vm_end;               /*
- 8     8 */
-                };                                               /*
- 0    16 */
-                freeptr_t                  vm_freeptr;           /*
- 0     8 */
-        };
-
-        struct mm_struct *         vm_mm;                /*    16     8 */
-        pgprot_t                   vm_page_prot;         /*    24     8 */
-        union {
-                const vm_flags_t   vm_flags;             /*    32     8 */
-                vm_flags_t         __vm_flags;           /*    32     8 */
-        };                                               /*    32     8 */
-        union {
-                const vm_flags_t           vm_flags;             /*
- 0     8 */
-                vm_flags_t                 __vm_flags;           /*
- 0     8 */
-        };
-
-        unsigned int               vm_lock_seq;          /*    40     4 */
-
-        /* XXX 4 bytes hole, try to pack */
-
-        struct list_head           anon_vma_chain;       /*    48    16 */
-        /* --- cacheline 1 boundary (64 bytes) --- */
-        struct anon_vma *          anon_vma;             /*    64     8 */
-        const struct vm_operations_struct  * vm_ops;     /*    72     8 */
-        unsigned long              vm_pgoff;             /*    80     8 */
-        struct file *              vm_file;              /*    88     8 */
-        void *                     vm_private_data;      /*    96     8 */
-        atomic_long_t              swap_readahead_info;  /*   104     8 */
-        struct mempolicy *         vm_policy;            /*   112     8 */
-
-        /* XXX 8 bytes hole, try to pack */
-
-        /* --- cacheline 2 boundary (128 bytes) --- */
-        refcount_t                 vm_refcnt
-__attribute__((__aligned__(64))); /*   128     4 */
-
-        /* XXX 4 bytes hole, try to pack */
-
-        struct {
-                struct rb_node     rb __attribute__((__aligned__(8)));
-/*   136    24 */
-                unsigned long      rb_subtree_last;      /*   160     8 */
-        } shared;                                        /*   136    32 */
-        struct {
-                struct rb_node             rb
-__attribute__((__aligned__(8))); /*     0    24 */
-                unsigned long              rb_subtree_last;      /*
-24     8 */
-
-        /* size: 32, cachelines: 1, members: 2 */
-        /* forced alignments: 1 */
-        /* last cacheline: 32 bytes */
-        };
-
-        struct vm_userfaultfd_ctx  vm_userfaultfd_ctx;   /*   168     0 */
-
-        /* size: 192, cachelines: 3, members: 16 */
-        /* sum members: 152, holes: 3, sum holes: 16 */
-        /* padding: 24 */
-        /* forced alignments: 1, forced holes: 1, sum forced holes: 8 */
-};
-
->
-> >
-> > > I added a warning above the struct
-> > > vm_area_struct definition to update this function every time we chang=
-e
-> > > that structure. Not sure if there is anything else I can do to help
-> > > with this.
-> > >
-> > >>
-> > >> --
-> > >> Wei Yang
-> > >> Help you, Help me
-> >
+Tested-by: Justin M. Forbes <jforbes@fedoraproject.org>
