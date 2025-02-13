@@ -1,103 +1,125 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728A72753E4
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6752753EB
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739487480; cv=none; b=IMAnAIdkIxgjjMqYzUpUVVFNYzS7ZeqaQc9v9bW1EQKXQwWgQNZOSuWrEoCmLDmgHpTaln4YZozoqvv0zHxoqZW83mkfq7vb6t19MtIVNGUh4Arls+M4GT3EhVUpgQNstGAVh2QSM1TjrNHiDGY+7hfXYNhGFI7Nw2x3UtBPveA=
+	t=1739487498; cv=none; b=MsVAyzaUaJ1mrkko6440jCj7yF8Tp4FCTTsJO0WsZzfjTobDHOK8tOB64KmaQia/8giA1XKW3bGrNHhT3pPmMyxNcDz9+iublVibfm1D/73JZiSlfItn39V5TwWmJNkkNPUe4QmDBAk9Xqj+4lsr3PwJ4eJ6+kPmxTKJnun1Mt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739487480; c=relaxed/simple;
-	bh=Smto5Yxb6vav2wHm0QPt2rfaxx0mEaFrjpQZAsln/As=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SCHQOtRLfZiTBuwH+KkWTnB4aEHG7mriMCpkGGdCzPAmstkladPz8tS943b7UtAQUrURCDsZN8R8hpkBamqJKmXFnVdPAWJlsndF//+qpEHF/vM+SdxFv9VsVzj/yzLwZH5GGfDP33FAWGNS+xXSHqBhSefhRRlTSa+qfwN4mio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org; spf=pass smtp.mailfrom=linuxtx.org; dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b=A3ZV8Ig4; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxtx.org
+	s=arc-20240116; t=1739487498; c=relaxed/simple;
+	bh=Y27dhfw8v4BA3YPmRiUGr4aKS1BFKwdnmIIc52BuMys=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zcr+gzwV2ELcTErqCgORu7K5FmUvPowCynyw+tQ4fWLphSf2duuvPc36Z9/XVEl/83LoQgERFBYXiSk7xFbhjqrK3cZHRqICz3xw1NvqV8YOVKGJPFlCxwJCLi0lDWCGucChnXMqbJzs/1AhiyWj6OOyRRwRiiEtqfK+Q1H7rC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fcKCaSsh; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="A3ZV8Ig4"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-854a68f5afcso34178439f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:57:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxtx.org; s=google; t=1739487477; x=1740092277; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=giMqNiydqfL6yBj4hJcOnss0/v5CTlMHhDcOLath6f0=;
-        b=A3ZV8Ig4WDV5ijuWyUL2BwAU3PgJ5WHFcnrloyfl1vOYqdBTknPHqwJbH0c8RJwsGE
-         /8iO1vsswiVr1EJOZAlrA9Ie6FqZHHkA8FvNlfX7chz/C0kKVzKTnbFsMZOL3N2rep0t
-         mDp+uvnDuhk+coKCzgJdun7VCGR98KpoNMMns=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739487477; x=1740092277;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=giMqNiydqfL6yBj4hJcOnss0/v5CTlMHhDcOLath6f0=;
-        b=dq0DovQYBYJjwVoPx2GlvXInaahnzi7sTSsRq7nsr/6xrDSVg4808nwlLb4rNcq6NX
-         hB612SdjlKe+ViDpcrjW+RHn8t2uh4dHCrG1VI0WnRrUkwjE4QL4AcnWfH9HsEeCoWQX
-         0henrJ4Bd4q5TsDbv9jiZ4YeER/hO0apl/SSkdHRt93ddJBytLmNFIITu9ze46OaNT1v
-         BY+zCbdqocn9yxt7C1dQ4BByKyWuyW4wnzGElYmDrY860N8CWnB+mSTtJYifype0oa2r
-         VcS1J+/mk9jzIHJVj6MfSbtTYprU29ZkMYWSuhFiRVgjStlGLb+F5GUsSSWFrS92JuFG
-         /Y0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUkmgy4LN4WqEfzdLd7U+ZLGCnZREbRjYB/gIbX3F3smc0sR9u2lh3/+iv5YpFOfNHDdgVnkUbGdbfTzFY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmTrXo0trgCm81WZMOva5NrBuRD/qLtCv7HDgaE5JyfqX2qF/l
-	2q0Y7Vcv0sGgsDrphBXLbIosn7ClwD9TQ7mRyTLVIQeA0Mgj14rf4ljBlDjtlA==
-X-Gm-Gg: ASbGnctySwyoPw+pOJhJhKbIO1eGi/eAuhwCL6Sg0xvm/P+idDE2/zRT1bZtCxE6G10
-	TrRf/Kz3KN7+7KL8FwoT/bTTYVz6QEuPR/rMAGgl0x7etxc2cXOhge0Cw2hL51AiNqSX6mFLc4j
-	49AGgpNSQIMYF2HNv9B4X72cvB3tum9gIYz3+gWtVidhMuLusJRvjcl97G1j9bJOZe/qX9goxvy
-	M4nJLCwArnf71geA1Z2Mbh4BnOugWSjugsaNsK53QhgxInCqThuiYx+7bEtqw0iCdij5eibudLL
-	Iur4QN/HbNgSrNvs/qoNyHXjZkHsHGAY
-X-Google-Smtp-Source: AGHT+IEzoq0TAA6AIhRAC9HUAPu5NTo0Qc2xIPZ91yk2fGKDrTwVk0kj/so8NbRnYKTQQLoBadEh9A==
-X-Received: by 2002:a05:6e02:3989:b0:3ce:78e5:d36d with SMTP id e9e14a558f8ab-3d18c23b7f1mr50464215ab.12.1739487477453;
-        Thu, 13 Feb 2025 14:57:57 -0800 (PST)
-Received: from fedora64.linuxtx.org ([72.42.103.70])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ed2814883bsm538141173.19.2025.02.13.14.57.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 14:57:57 -0800 (PST)
-Sender: Justin Forbes <jmforbes@linuxtx.org>
-Date: Thu, 13 Feb 2025 15:57:55 -0700
-From: Justin Forbes <jforbes@fedoraproject.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.13 000/443] 6.13.3-rc1 review
-Message-ID: <Z6548yfCM14jmgqs@fedora64.linuxtx.org>
-References: <20250213142440.609878115@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fcKCaSsh"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DMvG6j001130;
+	Thu, 13 Feb 2025 22:57:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=5Eh7zljLNWHH82zXNllR4wLMW+pcLetr2vsY7QBQP
+	8M=; b=fcKCaSshWLQCjnh827XCWKFIIXEcrfzpyDiOpg5AycPuGKcxDf68S4UQf
+	bHVMQ0yZqT4D5fGfnIxjQJLIP6D1WouYXvLg5wt+Q+aDkrkPQLHHHo45FE5TomoF
+	rvB3zdn7WnotUpNora2am4YJsXkUmg4YsCgx7QPEXr2+trF6SY0iV+ULnlHoRTWG
+	ZMhNlaLm4p1jV3RQpOpYqi4PUcMURaBW9vakZuH/m8oRN6jpc5xmmnkmRkPKfzE0
+	4W/9Dxk7xnJhHKf886RN0J1bC6BjstCTXGCoGd2yIiG4VPtxxRyijY74isqHxAGJ
+	/+dQvquZXKr9jxUH5c/XR/5+C76fQ==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44saj8n1c5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Feb 2025 22:57:58 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51DKbxjD028758;
+	Thu, 13 Feb 2025 22:57:57 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44pma20a74-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Feb 2025 22:57:57 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51DMvtUJ29819530
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 13 Feb 2025 22:57:55 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 73DFA58055;
+	Thu, 13 Feb 2025 22:57:55 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 486D858043;
+	Thu, 13 Feb 2025 22:57:55 +0000 (GMT)
+Received: from slate16.aus.stglabs.ibm.com (unknown [9.61.104.210])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 13 Feb 2025 22:57:55 +0000 (GMT)
+From: Eddie James <eajames@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, eajames@linux.ibm.com, jk@ozlabs.org,
+        joel@jms.id.au, alistair@popple.id.au, linux-fsi@lists.ozlabs.org,
+        ninad@linux.ibm.com
+Subject: [PATCH v2 RESEND] MAINTAINERS: change maintainer for FSI
+Date: Thu, 13 Feb 2025 16:57:46 -0600
+Message-ID: <20250213225746.2159118-1-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213142440.609878115@linuxfoundation.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: cBI5atXhIrYQCefTMGonVft6czH-SS6a
+X-Proofpoint-ORIG-GUID: cBI5atXhIrYQCefTMGonVft6czH-SS6a
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-13_08,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 mlxlogscore=999 impostorscore=0 malwarescore=0
+ spamscore=0 suspectscore=0 mlxscore=0 bulkscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502130158
 
-On Thu, Feb 13, 2025 at 03:22:45PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.3 release.
-> There are 443 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 15 Feb 2025 14:23:11 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.3-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Due to job transitions, both Joel and Jeremy can no longer maintain
+the FSI subsystem. I will take over.
+I also replaced Alistair with Ninad as a reviewer, as Alistair doesn't
+have access to hardware and hasn't been active.
+I also removed the link to Joel's FSI tree as he won't be maintaining
+it.
 
-Tested rc1 against the Fedora build system (aarch64, ppc64le, s390x,
-x86_64), and boot tested x86_64. No regressions noted.
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Acked-by: Jeremy Kerr <jk@ozlabs.org>
+---
+Sorry for the resend; I forgot Jeremy's ack.
 
-Tested-by: Justin M. Forbes <jforbes@fedoraproject.org>
+Changes since v1:
+ - Remove Alistair as reviewer
+ - Add Ninad as reviewer
+ - Don't add Joel and Jeremy as reviewers.
+
+ MAINTAINERS | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1f65a2a1cde5b..59a6b47e9c278 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9441,14 +9441,11 @@ F:	include/linux/fscrypt.h
+ F:	include/uapi/linux/fscrypt.h
+ 
+ FSI SUBSYSTEM
+-M:	Jeremy Kerr <jk@ozlabs.org>
+-M:	Joel Stanley <joel@jms.id.au>
+-R:	Alistar Popple <alistair@popple.id.au>
+-R:	Eddie James <eajames@linux.ibm.com>
++M:	Eddie James <eajames@linux.ibm.com>
++R:	Ninad Palsule <ninad@linux.ibm.com>
+ L:	linux-fsi@lists.ozlabs.org
+ S:	Supported
+ Q:	http://patchwork.ozlabs.org/project/linux-fsi/list/
+-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/joel/fsi.git
+ F:	drivers/fsi/
+ F:	include/linux/fsi*.h
+ F:	include/trace/events/fsi*.h
+-- 
+2.43.5
+
