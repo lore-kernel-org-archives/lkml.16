@@ -1,132 +1,114 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F661202C53
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BF6202C53;
+	Thu, 13 Feb 2025 16:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739464590; cv=none; b=YoGaQAx2/UoP4q188HYluCMilnQD0rGi6GC0N+kMxoP1e03gWN+2b87lBtTtM/Pks6YySOzKL4MV7HgSkhtXYIUa4ldSZ0vG2LCx3AZtl5G0onGLnBmQTm0jqt/ArgHEVeqGlKQHJ2fE7sm4qdJkyadU9DRB0oijLMwWD5zGpH4=
+	t=1739464632; cv=none; b=EdKADpwuizuzTjhBFbRMQjQJRFnUh3G1momE/fkOe+StTf6OwygoNMCA6SySPvJ4rRr6kxSOHXHKzz685h+lQ7jsBnO4OuK9x2iLpV5bwfA0O+/z1kEkXkiPH6EgiZhZUjJtHHbi2YhaHaR7KahX/YT9IgxVumykn5my7hixu84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739464590; c=relaxed/simple;
-	bh=AQrazMltgXFOO4AhHLQxVg9E2MdXnYe8G96EurERGy4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HSmRrGbg2470wGcB/tNg9HOHvqCH39WFCaGAlIPz197QxuUudUfxBSu+3yAP13n6ccs4RJXoNpFAkQqWELXCQ6DDfcJ7Itq0KtlICmeSQHTgYwNhpMsGa9j4az1oGWlTYyctmr3D40nvKtOiVySSTo03nzEADR9VTqZU0Mxw+L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JNg1ffw5; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739464632; c=relaxed/simple;
+	bh=sbbmkWE/R2bCCyJ/6gUWFB9ZcoZuMGcfquTsn87Iqp0=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rr12oJkikEuZZeLtGr+eM96ks5W7w7jdFqbJmEbqwqUk/OzaVdMUwgzIEx/DQE9+5V84LXxeYM/1qBv+b/dQwG+qqKtsLGntuV5bTgZgQi72Www8GqKAH0qrb7DVFoKxkRSO9RN3xTNsZw0OaXw1L1ty4dJ3XthM5cE5fLkaqpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pc6MGpjb; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JNg1ffw5"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DA2TwF002672
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:36:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	jRC9JvP4VHXNyNMipFwDuEvtSP6Ksiyg5e611bESZ68=; b=JNg1ffw54vq6vn0N
-	HjZdNMLtyascFWWDAvd3gRaNKL6yhM86wZdWNJMFZ4VyfZ1vTnz+U+xJoHIR5hri
-	o2pgpR9RMJjggd+7MRVjOJjEh0d/uB8G8hdGSFtXp8WBOBnwnpQi6aN1kLbbDl9v
-	manfatZU67QSLS/+Fs6iATNYhdOwxuwEyHJe85BeOjGh68DT9w+VZdt+nhLIpW57
-	hhehWoXSbW5VzVcpMykCpR5IT4EK2rGw16kkEsfTpdxfb/Ern9bZ3iW//bQ6K2j+
-	TwHglL3QsTigQrmqHvWYuDfsofyDVsolNFTp9H4L8AB0dbl8sn50XFqxmM83OPSd
-	j/WOgg==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44semp90mu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 16:36:28 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e422f1ceadso3022626d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 08:36:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739464587; x=1740069387;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jRC9JvP4VHXNyNMipFwDuEvtSP6Ksiyg5e611bESZ68=;
-        b=R7dq2yKbcVE8s+CmJa4BRWBLWqEL0VQojR3JNa5HQhBUVnLgC5kzCXRYmrTWc+EnsP
-         f51YXwHDM0VA+mlpFRiW/kVqCRoKZ+s9QsRGTD6Pe8IIDgdckS8o0Tfi+4WLx96tunPx
-         awVvAxsI/uw3NUTSdjUJZeZBJTI1tzhX6sfKlkScmkdp8lxCykfgrJE3U5xsZcJRHZ7A
-         EkKk82bXg//RT6l/PjKydxE58oXWcbh2BrMzJ8h27Kx7ZfqCoHPoiDkdcVHjtZ5JGxbt
-         +1/zIHWftCelTwB4Kdjuv5GnlDEWfb0aNPrbBy5SlbLRTSo+//Lk7WkzLu29lyFb5OFX
-         XU1w==
-X-Forwarded-Encrypted: i=1; AJvYcCXjfwFGsjKDgN9Ndfmzw6A0VZQasyPPNceYy+OMBqt3ZZNsgm7MQNiPv26z6QZ9f1J1xT3QKN5NeDHnnHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXCAedLP4pbSfehTkl8TnHRjfkNVXeHJ4+VKprosuA5R+mxHtd
-	N2b6PNCmabwqIZwZk4+fjAf+DKgMmycYttTvNIF4g8eB6hrLoysft+8sG3SyyncL9GtwN2CRrnD
-	k6HNKXJ0xuc5DXVe3AoLDehGmvZ1bW1AMOt56kh3HQMr0u12KGFWCe/nUV2Cdrz0=
-X-Gm-Gg: ASbGncsEwvtaP1d8ej+RvO2d0urVJ9SDPSIImMdBnkw4oJpOpoHZEz/O87xC4+U+csh
-	sLnW4qLEQKF9Eam6qUXudR9EqQDtKXV/8hhg3ZcQOE0SCq44imfKy4/YmwsQzLrlC2adbIKfTtL
-	Oj5Lc1YGtWUUl5Y/LRPbDYzmNx3OFN+bBAymzms+hL/i07BV/OSQXyODN7Su7K/UUXOwm1OPzqw
-	VAvhkF2qFIyXVyQ6UeOReySDXlQcwGtRvNfiNegogy0rZDuUqZRIjzrCMoHDGCO6Xl6XdOIP6sR
-	HJC39oAAB26eQMtmucIOvshpSl676qVu1ip6g4lxJHAV3cn2Q4Ytup50SdU=
-X-Received: by 2002:a05:622a:1303:b0:467:5d34:aa84 with SMTP id d75a77b69052e-471afe57ae7mr39969281cf.9.1739464586944;
-        Thu, 13 Feb 2025 08:36:26 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE65B4BdI80A2hYuehypNi18VnhTOKeJzxy4QZub8Qv8xnIyZZrKkYGRhBtPZp8LP3QGhc+eA==
-X-Received: by 2002:a05:622a:1303:b0:467:5d34:aa84 with SMTP id d75a77b69052e-471afe57ae7mr39968921cf.9.1739464586479;
-        Thu, 13 Feb 2025 08:36:26 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5339d94asm161583966b.143.2025.02.13.08.36.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 08:36:26 -0800 (PST)
-Message-ID: <2bfaa1ce-0233-456d-ba2e-5b14533f3812@oss.qualcomm.com>
-Date: Thu, 13 Feb 2025 17:36:22 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pc6MGpjb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739464631; x=1771000631;
+  h=date:from:to:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=sbbmkWE/R2bCCyJ/6gUWFB9ZcoZuMGcfquTsn87Iqp0=;
+  b=Pc6MGpjbvZ3XIALdKgbV0wESenyzFtFNzpKdmmiQnYcOK9xSbYPxzv9o
+   Zj4woGdCFG9WUCEFxWm05sluH07TN2x03ylnHF+/HztizO4KxcQNv/iHz
+   0KWtZcMMa1ttLhFr282BivkDnrtmoA3l6LPe5quhqAOGYzfaB45BZto+P
+   nYaejT+itC1I0VyyODGNDCQiPFI/n86Igp6Vy6cixx9KCV0+vLiRZRhtB
+   F1Pmp9Y2JgXGBBMOOGqceKYOpC7fwB46WYfsxrIobR+EWTrNfot7m3b69
+   F7Rfniov+nvtMlkp7mlgC5e8yw2XiGJnDeCaRXoxlYQ8wsYMLFn7Cs9Uq
+   Q==;
+X-CSE-ConnectionGUID: GlYLMqdATnmxGpKLyNe+xQ==
+X-CSE-MsgGUID: f4zWaU/FTa6e/HFAQkTlfQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="51577447"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="51577447"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 08:37:11 -0800
+X-CSE-ConnectionGUID: W3VNhbcRSYeFkWd3XmfLAQ==
+X-CSE-MsgGUID: sEuhhK7cQdiQB1cBIOxlyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="113720797"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 08:37:06 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1ticD0-0000000BDu9-3wkb;
+	Thu, 13 Feb 2025 18:37:02 +0200
+Date: Thu, 13 Feb 2025 18:37:02 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org,
+	Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Kamal Dasu <kamal.dasu@broadcom.com>, Stefan Roese <sr@denx.de>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Subject: Re: [PATCH v2 06/10] i2c: kempld: Use i2c_10bit_addr_*_from_msg()
+ helpers
+Message-ID: <Z64frt9vbdLVYbrB@smile.fi.intel.com>
+References: <20250213141045.2716943-1-andriy.shevchenko@linux.intel.com>
+ <20250213141045.2716943-7-andriy.shevchenko@linux.intel.com>
+ <Z64ajR7CSIDNmIKz@shikoro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] drm/msm/a6xx: Fix gpucc register block for A621
-To: Akhil P Oommen <quic_akhilpo@quicinc.com>,
-        Rob Clark
- <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Caleb Connolly <caleb.connolly@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Jie Zhang <quic_jiezh@quicinc.com>
-References: <20250213-a623-gpu-support-v1-0-993c65c39fd2@quicinc.com>
- <20250213-a623-gpu-support-v1-1-993c65c39fd2@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250213-a623-gpu-support-v1-1-993c65c39fd2@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: iAqADbWj9Y2T-XyWDMwCWxjLN4nH0-1X
-X-Proofpoint-GUID: iAqADbWj9Y2T-XyWDMwCWxjLN4nH0-1X
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-13_07,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- mlxscore=0 bulkscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=832 adultscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502130119
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z64ajR7CSIDNmIKz@shikoro>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 13.02.2025 5:10 PM, Akhil P Oommen wrote:
-> From: Jie Zhang <quic_jiezh@quicinc.com>
+On Thu, Feb 13, 2025 at 05:15:09PM +0100, Wolfram Sang wrote:
+
+...
+
+> >  	/* Second part of 10 bit addressing */
+> >  	if (i2c->state == STATE_ADDR10) {
+> > -		kempld_write8(pld, KEMPLD_I2C_DATA, i2c->msg->addr & 0xff);
+> > +		addr = i2c_10bit_addr_lo_from_msg(msg);
+> > +		i2c->state = STATE_START;
 > 
-> Adreno 621 has a different memory map for GPUCC block. So update
-> a6xx_gpu_state code to dump the correct set of gpucc registers.
+> Any reason you moved this?
+
+Yes, I would like to be in sync in the above state machine case, just upper in
+the code which is not visible in this patch.
+
+> > +		kempld_write8(pld, KEMPLD_I2C_DATA, addr);
 > 
-> Signed-off-by: Jie Zhang <quic_jiezh@quicinc.com>
-> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
-> ---
+> Maybe we could skip using 'addr' here?
 
-So GPU_CC is outside what we consider GPU register region upstream..
+Same reason as above.
 
-And I've heard voices (+Caleb) lately that we should get some clock register
-dumping infrastructure..
+> >  		kempld_write8(pld, KEMPLD_I2C_CMD, I2C_CMD_WRITE);
+> >  
+> > -		i2c->state = STATE_START;
+> >  		return 0;
+> >  	}
 
-So while I'm not against this patch fixing a bug, perhaps we can get rid of
-dumping GPU_CC here in the near future
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Konrad
+
