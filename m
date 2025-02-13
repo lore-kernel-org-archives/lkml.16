@@ -1,110 +1,163 @@
-Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAD9202C4C
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39792211A36;
+	Thu, 13 Feb 2025 17:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739468372; cv=none; b=UGM8EpQYwJ5NPnfGtTSI/TiNkb3fTDXc+7eWqkl2UsvLbtMjPgnQYiml9jdKLkopoCDLDKbwl9P84+kuSt0ZeqEK44Fx2R9qTb6iWtwLvAC5Q2KBt7Lk0AxcuT1fcNMgmFW2Mv2M/kqjrr8V3wAZqb77O7ctFd2kMK98QSlydWw=
+	t=1739468385; cv=none; b=BQ3+z+QkRnuL8MhtVwg3TpIT3WFLouWTaAwETW5TKCHLNXiqtw/X+z2cBkRtg1AfCPbDO0KXULGp7LsHWUxqvLnXYRxm1vo5L8IXqjoe6f8/TyqDc82pw99Zte1e4sfoZvvnEdUxgrDmsZv7hg1oYqG/93uJSOnNGD7fMoI2kpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739468372; c=relaxed/simple;
-	bh=KO5CjaRrsMmSyUYYfavhvo6x6sn7CHl2RDcCF2tZcE8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nYhkFlf2cXga9wb0Knen8nptWTxL8IGq8H7hluyfdMe4cF4s4+tUtBuRV9EO4xPa6jc7q6DjofL6edFUK3KSofsfJN59mIbQskV4yQHPPD3vFnnPnPSnKdqMazzBRup+qWp9dRTVdIsjmq9FSMGDnMMJkwEppwmgOufdNPB0mCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=Eyh1K3WK; arc=none smtp.client-ip=78.40.148.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
+	s=arc-20240116; t=1739468385; c=relaxed/simple;
+	bh=ch3lPgpH9FqpWF5yhIl3KdS/BSZwVZLBNQlPIEZ73z4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JYXd7Etod5swRcnNEz/wB9zitsDMjXwYd2rL02rRtnvdYWhpymkbsTHZdUCaYyAgInkUaF20mmgUggcYE4Ls3KW3ES6G5aXEK140II9wmFrC9srLMIFiOd2g9ymHFQa7ptij6Xql2g5gLieueCZPVvwvJXYOby83fSfZZHIbJvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K5QuN7Ab; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="Eyh1K3WK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=cKiGkcsixPn4QQtTKc7Lsw9RVigZQY9fPXwk3glZ0vE=; b=Eyh1K3WK+bt6eeYNEDl6HFh6MG
-	Pu53wMhcj8neZh7w/pUF5gbJCETid3gJAMO5ZWdY2aWMZe4tqMloacovCGkLmhbzaYKm3m+lB+RHd
-	Vx47vQWHi5WJ4W3znn72Ta73MlQCRb2Rm+oDHOahy1KH6rvvU5khKRlUSMBMGJQggF56VmmZXai3q
-	xz3az8d2FmgVyCykADzIPUgKnuo7Ewmd1gA4qKj88Fe201qa3w+8xNWlGxLoD/pqLStfaZXEt9lB9
-	8bbt7RwbdRdOlV0+RiEEi1pHq1D83YRmAMGO/kR1Bqe2hQ/SsuX9IWBK59m5w10TFAUoF9a3tZ2XF
-	oLlaihcQ==;
-Received: from [167.98.27.226] (helo=[10.35.6.157])
-	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-	id 1ticoo-0081al-LJ; Thu, 13 Feb 2025 17:16:06 +0000
-Message-ID: <a994e94c-3211-4bb4-ab41-71a2c1abebd4@codethink.co.uk>
-Date: Thu, 13 Feb 2025 17:16:05 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5QuN7Ab"
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-726f943b322so607554a34.3;
+        Thu, 13 Feb 2025 09:39:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739468383; x=1740073183; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BnUJdLyMGBvO/hIllptp513IAD0oBTKPE00WpFD+Cy8=;
+        b=K5QuN7AbsNLTWrY0fhyu++9hNFFcqmRl1zRyDzeanHiWYko0YdXJpsIEf7lgZzVyo4
+         nuKJnz6r2CMuactETW1moCoExVaX3jVQgN2DxkR9U22n5Zw3Icm6SCv3lkIjnr1dzg5V
+         HvhaqtTTypABWEspTHB6XpjMEwfZJKAcSMmYamXtvbIMYmT0gsVIAyKJ3PAKiX4jGvmo
+         7jAG0toa8mIEtITN1G55IJdP5mjOJaNWwJr4YCEHmcUSIqyQRFrGOtXR4HLV8x3sxw+D
+         XoHX3kMA44fKaPQj4P5wlCnKaIcIV+W6i9OVUztFWhJx8X1nXaPO5SUPSDtuMQz1bTe6
+         GXrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739468383; x=1740073183;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BnUJdLyMGBvO/hIllptp513IAD0oBTKPE00WpFD+Cy8=;
+        b=tHXxvFqZasPNvEFlxqTMSzvbY2+cf3NoYvkiJdH3hD4GiEhr/9SerEHL9TMDWnkxfo
+         ndptVRHjka8zEXS+bRDieVkBzXpXfohJ5UowF5lfmlmnL1mnokFjRjcWNEkyoziQ+3rS
+         9j9Y9W1PUdmimNsiDuboG3Fv9i/UCmkte7n5T8gPqaDj1Upo0xbuxQRP3IMLlFepY8Ow
+         eDhDF9dPWOrlhfND8serw3/FCrN1cEJYwZZeRzLwHgMn1WHmuYh5QYZor/DNm4SZGmFG
+         himprZad37+Up2QwPa0Hyo9tH0ha3itMJZfqMPKjvo3qjWjvx7TsLZbshg63URZTBeMk
+         2GOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnbN+gVDs+8eATFBkxxIs2CgvFc2udZ/AmDIGk0pJasjPorLApDntSWzpMvARvupzsBvy/IVDEMigQ@vger.kernel.org, AJvYcCWn2H75TdCKQIZEj427b03+euAVz71WLDE9cYWoTgXh54r4+NK5/S0UXv691C3yfvsp/h+sW6LH3WMvCdo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1ABeEwX0aWoVLyilZn7VzaCCJUeckHABmSjVnAvwBkP3wxKuC
+	Ek/FHeJRzqZ+H36smK13fyq53QuFE66khJdAkAR/y1XvBLssujAA
+X-Gm-Gg: ASbGncuoul2fztzf0Y5eZ6pPhVVoMQeXSU0YT2GZ4mSC+EG4Xcwkt8EcNHHnzK0gS/Z
+	CfzUMkbuLHuwHTFikVR4Av0FtZD/3ozGDPKIq2W89KMarkuzzc44mO/jlSriwdZLir3LNTEeWwn
+	vD1n9LQveGSEc8sBvOKZBeNhCvpFv4L4+iOksI5p32FUoOHHqYB/8eiNPkjWd9GzBe/A74rsQUv
+	ZVoc1wAb8zahtj59OhD+DFcV8oTTpGimIIvenAKIkOtVCyq8w+yqnFxee7NJmUIHdAv1RLQcN9t
+	TDtgp/4/7dKlcsHxi1M2kGRa
+X-Google-Smtp-Source: AGHT+IFvYIB/G0KZILSte8pJfISgj42H0XPT9hPv7ZXXXJSfaRjzTFXXOKVJTFw1PnRxrDQlxNbfnw==
+X-Received: by 2002:a05:6830:65c4:b0:726:e951:7b29 with SMTP id 46e09a7af769-726f1cefa51mr5734804a34.18.1739468383260;
+        Thu, 13 Feb 2025 09:39:43 -0800 (PST)
+Received: from linuxsimoes.. ([187.120.154.251])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72700257ff7sm758460a34.54.2025.02.13.09.39.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 09:39:42 -0800 (PST)
+From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+To: scott@spiteful.org,
+	bhelgaas@google.com
+Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] PCI: cpci: remove unused fields
+Date: Thu, 13 Feb 2025 14:39:25 -0300
+Message-Id: <20250213173925.200404-1-trintaeoitogc@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] riscv: implement user_access_begin and families
-To: Cyril Bur <cyrilbur@tenstorrent.com>,
- Charlie Jenkins <charlie@rivosinc.com>
-Cc: palmer@dabbelt.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Jisheng Zhang <jszhang@kernel.org>
-References: <20241118230112.2872978-1-cyrilbur@tenstorrent.com>
- <20241118230112.2872978-2-cyrilbur@tenstorrent.com> <Z4rl8BgoV8tygCn9@ghost>
- <b45aab1e-6d37-4027-9a15-4fa917d806b9@codethink.co.uk>
- <e4a4c688-b78c-468b-8196-68d2df980167@tenstorrent.com>
-Content-Language: en-GB
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-In-Reply-To: <e4a4c688-b78c-468b-8196-68d2df980167@tenstorrent.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Sender: ben.dooks@codethink.co.uk
+Content-Transfer-Encoding: 8bit
 
-On 13/02/2025 17:07, Cyril Bur wrote:
-> 
-> 
-> On 6/2/2025 1:08 am, Ben Dooks wrote:
->> On 17/01/2025 23:21, Charlie Jenkins wrote:
->>> On Mon, Nov 18, 2024 at 11:01:09PM +0000, Cyril Bur wrote:
->>>> From: Jisheng Zhang <jszhang@kernel.org>
->>>>
->>>> Currently, when a function like strncpy_from_user() is called,
->>>> the userspace access protection is disabled and enabled
->>>> for every word read.
->>>>
->>>> By implementing user_access_begin and families, the protection
->>>> is disabled at the beginning of the copy and enabled at the end.
->>>>
->>>> The __inttype macro is borrowed from x86 implementation.
->>>>
->>>> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
->>>> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
->>
->> If we're doing this, then saving the STATUS.SUM flag is going to
->> be more important than before. We had this discussion when the
->> initial user-access with syzbot stress testing turned up.
->>
->> We partially fixed this by rewriting the ordering in the __put_user
->> function to stop the 'x' argument being evaluated inside the area
->> where SUM is enabled, but this is going to make the window of
->> opportunity of a thread switch much bigger and the bug will just
->> come back and bite harder.
->>
->> If you want I can look at re-doing my original patch and resubmitting.
-> 
-> Oh! Could you please link the patch? I haven't seen it and can't seem to 
-> find it now.
+The `get_power()` and `set_power()` function pointers in the
+`cpci_hp_controller ops` struct were declared but never implemented by
+any driver. To improve code readability and reduce resource usage,
+remove this pointers and replace with a `flags` field.
 
-https://lore.kernel.org/linux-riscv/20210318151010.100966-1-ben.dooks@codethink.co.uk/
+Use the new `flags` field in `enable_slot()`, `disable_slot()`, and
+`cpci_get_power_s atus()` to track the slot's power state using the
+`SLOT_ENABLED` macro.
 
-> Thanks.
-> 
->>
->>
-> 
-> 
+Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+---
+ drivers/pci/hotplug/cpci_hotplug.h      |  3 +--
+ drivers/pci/hotplug/cpci_hotplug_core.c | 21 +++++++--------------
+ 2 files changed, 8 insertions(+), 16 deletions(-)
 
-
+diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
+index 03fa39ab0c88..c5cb12cad2b4 100644
+--- a/drivers/pci/hotplug/cpci_hotplug.h
++++ b/drivers/pci/hotplug/cpci_hotplug.h
+@@ -44,8 +44,7 @@ struct cpci_hp_controller_ops {
+ 	int (*enable_irq)(void);
+ 	int (*disable_irq)(void);
+ 	int (*check_irq)(void *dev_id);
+-	u8  (*get_power)(struct slot *slot);
+-	int (*set_power)(struct slot *slot, int value);
++	int flags;
+ };
+ 
+ struct cpci_hp_controller {
+diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
+index d0559d2faf50..87a743c2a5f1 100644
+--- a/drivers/pci/hotplug/cpci_hotplug_core.c
++++ b/drivers/pci/hotplug/cpci_hotplug_core.c
+@@ -27,6 +27,8 @@
+ #define DRIVER_AUTHOR	"Scott Murray <scottm@somanetworks.com>"
+ #define DRIVER_DESC	"CompactPCI Hot Plug Core"
+ 
++#define SLOT_ENABLED 0x00000001
++
+ #define MY_NAME	"cpci_hotplug"
+ 
+ #define dbg(format, arg...)					\
+@@ -71,13 +73,12 @@ static int
+ enable_slot(struct hotplug_slot *hotplug_slot)
+ {
+ 	struct slot *slot = to_slot(hotplug_slot);
+-	int retval = 0;
+ 
+ 	dbg("%s - physical_slot = %s", __func__, slot_name(slot));
+ 
+-	if (controller->ops->set_power)
+-		retval = controller->ops->set_power(slot, 1);
+-	return retval;
++	controller->ops->flags |= SLOT_ENABLED;
++
++	return 0;
+ }
+ 
+ static int
+@@ -109,11 +110,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
+ 	}
+ 	cpci_led_on(slot);
+ 
+-	if (controller->ops->set_power) {
+-		retval = controller->ops->set_power(slot, 0);
+-		if (retval)
+-			goto disable_error;
+-	}
++	controller->ops->flags &= ~SLOT_ENABLED;
+ 
+ 	slot->adapter_status = 0;
+ 
+@@ -129,11 +126,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
+ static u8
+ cpci_get_power_status(struct slot *slot)
+ {
+-	u8 power = 1;
+-
+-	if (controller->ops->get_power)
+-		power = controller->ops->get_power(slot);
+-	return power;
++	return controller->ops->flags & SLOT_ENABLED;
+ }
+ 
+ static int
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+2.34.1
 
-https://www.codethink.co.uk/privacy.html
