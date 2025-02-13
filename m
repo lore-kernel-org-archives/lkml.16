@@ -1,106 +1,137 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC34221723;
-	Thu, 13 Feb 2025 13:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A93B221713
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739455001; cv=none; b=qR8ji2Tuet4YyYSAX7XMcbMKph3AOeC8F0JF1wQHt7gZRkHIitAITY7xECinj8LMDcLlBR5L3R9XVZ4zr3Pp5THLLtGtd80dnrbRsiR0byKyRqiupSBdjLFJ5KxTe4wMOMEI7i11wG+L9ZvP0h+dRQSiWlLywFxuLU7H4jbDKOg=
+	t=1739455001; cv=none; b=nQQNiINdttJUAHOnZKZfplwQyl/dzrvfYdDkLGlOdyGBOcrPlWlKZNRe+37EREfZVRWw34r9sAfUijzb11HwKvla+w0peGV8ojF+51zQCwqv+VPACMfgDdSpK6AGol0QUuu+wlLimroatZwCuEquZQeqt1b1n4wLlM6yQW1F9cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739455001; c=relaxed/simple;
-	bh=0bzOZU9DNoHMGXdrgTJbmYVPmVDfalK27b70a0bjpZ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dB12/SG3ZYqhGIpQIt+27JiXJUk/qkqrJl1G73BXr3IeIEIERBDaCWeTCfkrdMzcNaxN2LbBOzr7wkE1oBPIiA7ILJFZ0WpTMRlKGRCzlhYorYV+XO69SmBNJEEbQTa+ZsAaZZgjFYQUomWwDtLAjRs4dqjYujhjQ4KOl09YLFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AFP4li96; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=w9vGSZWLontM/TI0Nx8tkSpanbwTFyKs+sgDRx/HSl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=IKjb9wSBp3+QOSGIl6MzyuIH3OEblvPIFSEA+dD3fJTs7nZFy2aw0gt6Iswkp1fmoPeuckDGrYCMH2cGcbZlI7iMnO8XljtCMSANiI91NWC5yD4MWI9hjGbPtgVVBBgAqvWXClOspweoM3OEuJu4U5UQPSASa+I8kPwX+x6rdT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JB5Xqdba; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AFP4li96"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-545054d78edso869486e87.1;
-        Thu, 13 Feb 2025 05:56:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739454998; x=1740059798; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=F1KTfs4zph4boLY7TuCFGSOcu6RxZyj8ziUa/3XCpMM=;
-        b=AFP4li96xU4gEK3K7rk05qVgJ+NAa0YJkU+LYXQXGCP1LYf7ioIrRu5cyGZr5Of73d
-         X/+9GP8lWY2PV2Goptj5Y2at8tyQOkr/1E0pV+TfwrmrTDkQNU5ebRgNAbMH78WoaXJ9
-         gfXTxj3G9SO4xvbMEKx2YpBi8sImtjytn5B73a9wfVdYBZjLa/3I6Y6VbP90uXiHpL9L
-         wI1LbHWt0XlJyano63MxI/kyIezo99fJ8ZQxb4k6FXlfaoQqTWt6351EiprbbFTx1Bnr
-         8k8DHQ+e2EM3OZpgDtUmodRpXammd6mCjxiCLebVfiodwd2J4/vHMwC4MT5IPNnBYm+d
-         25Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739454998; x=1740059798;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F1KTfs4zph4boLY7TuCFGSOcu6RxZyj8ziUa/3XCpMM=;
-        b=XIGLqZxozi087SxQlG9EtSyKnBVuv0lrK2RwKLzk37XssZVtojNuH1GNnpXrgwmfzq
-         BjzRimI1dpxBpdQI+oH12Cfse5N4jWx5KXNkQK28rdGsog3O5NVgdpBlJotddgeUqO91
-         D7HxoXVX9NkTaZOXAxuXJsEZGz7ib0V5A34tjzTG8L02XQ7PUDNhW9ennIIT1ipOahy9
-         l3zCiklD9gU3s/lUu7aVbVZva8CCm7ljFoR6IpM07AmdeOCDckInrYk2rFi0x8t90p1Q
-         WQQsWNVLqVOEhSbId9bGDQt5+1ZWobrOVPW9BCDS//8tSxQUFtoWJtroO03TzZvVogfJ
-         EY9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUtxdeDPPMGI2ZboTuvSOA5imyW0/SIxaG6YIk0CjBcAgLX8eBTqM0q2T/vvBdOzswM7shfpTilKuoR@vger.kernel.org, AJvYcCVKDnaBX7FJ98c8dPEzqhK/x7ORdsX91wa3l2g809lpUkoOk5isesYqBsX0P0sJbaa3OmtxGMFJHWDgJc2R@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQB0tRLcEPDNOqM1fqg++4tBZh5CI9n/a7ZcUUyUSLIkrSrIZo
-	UchoAfbZLde/HfoUcgMOnJEBjwck46MJEJPAQtSQtSqZfpbb9gaU
-X-Gm-Gg: ASbGncuzafZteblTnX4LKy8juQlFXNxni+NkShvnqEe3j0e5SfYtV0Yplp7a93tPg02
-	jLcjJVla3luDfRxEGE9kn2oden8v2nVXEGuc1i3ijkQ74BZYViXlQz+BWmjtBwHc5aOTVi1KqFO
-	PyVBTSaCzvaDNRt43i8SyyTd4NX3a9CC+qRBmVNJ7518+q77v3ZG6cmg9vjXi0orPhRMaYGuBPv
-	Janw8wLPKl8TBV9Xh2Hw7sXszIZclY9TvX4xhpJCoT7spfUGg6+VBQt236cVFyFhGR3NkrtGwn0
-	I8Of5Q==
-X-Google-Smtp-Source: AGHT+IFzn93+hkoIo0080/fkr4FMQnCQ6x8hN8CmqeZ02jdczjAd+3TQlbCPIkNbBfAC00Fw+FGzJQ==
-X-Received: by 2002:a05:6512:b97:b0:545:2300:9256 with SMTP id 2adb3069b0e04-54523009450mr123450e87.12.1739454997305;
-        Thu, 13 Feb 2025 05:56:37 -0800 (PST)
-Received: from xeon.. ([188.163.112.51])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5451f105cdcsm177789e87.116.2025.02.13.05.56.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 05:56:36 -0800 (PST)
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/2] drm: bridge: add ssd2825 RGB/DSI bridge support
-Date: Thu, 13 Feb 2025 15:56:03 +0200
-Message-ID: <20250213135605.157650-1-clamor95@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JB5Xqdba"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739454999; x=1770990999;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=w9vGSZWLontM/TI0Nx8tkSpanbwTFyKs+sgDRx/HSl0=;
+  b=JB5XqdbajHyIxLD1a69GL2CjL1fMrbH0CZDo/lMAo3+f08YMVg+RWLmd
+   K2HFq0GslOvpySbFiT1hTmKQla1dAYGNG6Qmn+IpHKn8aApqMYi8+TZDp
+   cvEQrUjDcki02ma/+ZWV60HlPzeTkaeRLGUK9PkGYkavTNsg7kTbkShIp
+   Mr3oRUMtE31Ci6TmbPOqTXddYsuqBSng1zVOnuj9eIiOCTIzjuN57E96i
+   l2HiMnnE+7ONyYM3vODTL2Uz+AnBbWogXLs/I9r3bi+DXRJFFmIrBG1t+
+   i6gQEP6mYPIaHl8Al4sg95POb7NSxKh6hI8v+jXiuqgXlG/NKXPUcGny8
+   g==;
+X-CSE-ConnectionGUID: lqZSd5EeSwC5m6tf5IhbYQ==
+X-CSE-MsgGUID: J7+wpYGVT26ihx5JqObB9Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="57691514"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="57691514"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 05:56:38 -0800
+X-CSE-ConnectionGUID: PGsZJfPITQWKO8bDxF0f8w==
+X-CSE-MsgGUID: f4OfajfITsmpmgQx82z7vw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="136376498"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 13 Feb 2025 05:56:38 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tiZhj-00177H-1i;
+	Thu, 13 Feb 2025 13:56:35 +0000
+Date: Thu, 13 Feb 2025 21:55:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Vinod Koul <vkoul@kernel.org>
+Subject: drivers/dma/fsl-qdma.c:170: warning: Function parameter or struct
+ member '__reserved2' not described in 'fsl_qdma_format'
+Message-ID: <202502132121.B7Z5mQ2y-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Solomon SSD2825 is a RGB to MIPI DSI bridge used in LG Optimus 4D P880
-and LG Optimus Vu P895
+Hi Frank,
 
-Svyatoslav Ryhel (2):
-  dt-bindings: display: bridge: Document Solomon SSD2825
-  drm: bridge: Add support for Solomon SSD2825 RGB/DSI bridge
+FYI, the error/warning still remains.
 
- .../display/bridge/solomon,ssd2825.yaml       | 140 ++++
- drivers/gpu/drm/bridge/Kconfig                |  13 +
- drivers/gpu/drm/bridge/Makefile               |   1 +
- drivers/gpu/drm/bridge/ssd2825.c              | 741 ++++++++++++++++++
- 4 files changed, 895 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml
- create mode 100644 drivers/gpu/drm/bridge/ssd2825.c
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   4dc1d1bec89864d8076e5ab314f86f46442bfb02
+commit: 1878840a0328dac1c85d29fee31456ec26fcc01c dmaengine: fsl-qdma: add __iomem and struct in union to fix sparse warning
+date:   12 months ago
+config: arm-randconfig-004-20230928 (https://download.01.org/0day-ci/archive/20250213/202502132121.B7Z5mQ2y-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250213/202502132121.B7Z5mQ2y-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502132121.B7Z5mQ2y-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/dma/fsl-qdma.c:170: warning: Function parameter or struct member '__reserved2' not described in 'fsl_qdma_format'
+>> drivers/dma/fsl-qdma.c:170: warning: Function parameter or struct member 'cmd' not described in 'fsl_qdma_format'
+
+
+vim +170 drivers/dma/fsl-qdma.c
+
+b092529e0aa098 Peng Ma   2018-10-30  135  
+b092529e0aa098 Peng Ma   2018-10-30  136  #define FSL_QDMA_BLOCK_BASE_OFFSET(fsl_qdma_engine, x)			\
+b092529e0aa098 Peng Ma   2018-10-30  137  	(((fsl_qdma_engine)->block_offset) * (x))
+b092529e0aa098 Peng Ma   2018-10-30  138  
+b092529e0aa098 Peng Ma   2018-10-30  139  /**
+b092529e0aa098 Peng Ma   2018-10-30  140   * struct fsl_qdma_format - This is the struct holding describing compound
+b092529e0aa098 Peng Ma   2018-10-30  141   *			    descriptor format with qDMA.
+b092529e0aa098 Peng Ma   2018-10-30  142   * @status:		    Command status and enqueue status notification.
+b092529e0aa098 Peng Ma   2018-10-30  143   * @cfg:		    Frame offset and frame format.
+b092529e0aa098 Peng Ma   2018-10-30  144   * @addr_lo:		    Holding the compound descriptor of the lower
+b092529e0aa098 Peng Ma   2018-10-30  145   *			    32-bits address in memory 40-bit address.
+b092529e0aa098 Peng Ma   2018-10-30  146   * @addr_hi:		    Same as above member, but point high 8-bits in
+b092529e0aa098 Peng Ma   2018-10-30  147   *			    memory 40-bit address.
+b092529e0aa098 Peng Ma   2018-10-30  148   * @__reserved1:	    Reserved field.
+b092529e0aa098 Peng Ma   2018-10-30  149   * @cfg8b_w1:		    Compound descriptor command queue origin produced
+b092529e0aa098 Peng Ma   2018-10-30  150   *			    by qDMA and dynamic debug field.
+041c4646003e23 Lee Jones 2020-07-14  151   * @data:		    Pointer to the memory 40-bit address, describes DMA
+b092529e0aa098 Peng Ma   2018-10-30  152   *			    source information and DMA destination information.
+b092529e0aa098 Peng Ma   2018-10-30  153   */
+b092529e0aa098 Peng Ma   2018-10-30  154  struct fsl_qdma_format {
+b092529e0aa098 Peng Ma   2018-10-30  155  	__le32 status;
+b092529e0aa098 Peng Ma   2018-10-30  156  	__le32 cfg;
+b092529e0aa098 Peng Ma   2018-10-30  157  	union {
+b092529e0aa098 Peng Ma   2018-10-30  158  		struct {
+b092529e0aa098 Peng Ma   2018-10-30  159  			__le32 addr_lo;
+b092529e0aa098 Peng Ma   2018-10-30  160  			u8 addr_hi;
+b092529e0aa098 Peng Ma   2018-10-30  161  			u8 __reserved1[2];
+b092529e0aa098 Peng Ma   2018-10-30  162  			u8 cfg8b_w1;
+b092529e0aa098 Peng Ma   2018-10-30  163  		} __packed;
+1878840a0328da Frank Li  2024-02-19  164  		struct {
+1878840a0328da Frank Li  2024-02-19  165  			__le32 __reserved2;
+1878840a0328da Frank Li  2024-02-19  166  			__le32 cmd;
+1878840a0328da Frank Li  2024-02-19  167  		} __packed;
+b092529e0aa098 Peng Ma   2018-10-30  168  		__le64 data;
+b092529e0aa098 Peng Ma   2018-10-30  169  	};
+b092529e0aa098 Peng Ma   2018-10-30 @170  } __packed;
+b092529e0aa098 Peng Ma   2018-10-30  171  
+
+:::::: The code at line 170 was first introduced by commit
+:::::: b092529e0aa09829a6404424ce167bf3ce3235e2 dmaengine: fsl-qdma: Add qDMA controller driver for Layerscape SoCs
+
+:::::: TO: Peng Ma <peng.ma@nxp.com>
+:::::: CC: Vinod Koul <vkoul@kernel.org>
 
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
