@@ -1,88 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9687723A9B2;
-	Thu, 13 Feb 2025 17:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81256204C0B
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739467970; cv=none; b=rWdJYvb4UOyp0wjBSg7y6C+4YtEyugm/TaAtQINkufsKeDhDH4MjiRE4T/tUhqfNzEm0Btq9LCc4kFlkx9YQtNYECR8w4baCd5ol2KLdDXWfH0stXhMLI1B/LcBwH5sVyAf1xGFN9wk/Ze8BrWmmqjVBa9JYUusaALnuXKrpdgc=
+	t=1739468016; cv=none; b=WBflQ98CXdiWjEqLaMc3ATKkW2PBvwC6Fy80CdlmniFLfv6iGUEjLhUizZ/4BC7eUiSCTuuf/H44ovxpO4TeMlHPE1x9FkMLcIBXWBNTdnIceaJsiayLkq4KOygW7qO7YDzSguaJFnyubDSt+w0UO+FDow1X9OAOdpNroLl+bQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739467970; c=relaxed/simple;
-	bh=9qGEjUoG7OOHAIhBiFZz2L2hoTWT8k1nUFGC6bGDpBg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=dsKAqcSP+6W3qr/7MoG2VQL2NL/vSOjNQsgrXn63gJh/qp3mas5jzDiduH/rwsSDN+DwYIGxdjxUSNrxlvPzB7Hq1etLR/nqzyo7IPeuFBLX/uHi40yPuSI7C1Fa9R51kA5hk3ScYmR0ZMvDMP/iCg0yKpWTLcLMiGKRMWAjR9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GfynJet7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739468016; c=relaxed/simple;
+	bh=IBE3DqvfPltRFsm3mBAK8i9sdVtPitaS7V/S98s+J1Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BSc/lA3ERIlebKJ5F2tU2P6SsG12ppTbWZMxqmMavDhLu8lAPWBfuZSWNHwNkfov2nigk+RRrVjdzUm0EMTEJ/18/OvYLnAk8J0UWmCOV3/45YoYxn8s5YYqNVloWuYEGeef6VT2L7T871j5r4MsLJA01WrKfrHyNecM9Y2sc/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZAdcG3d2; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GfynJet7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3BAFC4CED1;
-	Thu, 13 Feb 2025 17:32:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739467970;
-	bh=9qGEjUoG7OOHAIhBiFZz2L2hoTWT8k1nUFGC6bGDpBg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=GfynJet7FeUh4MQ2xP0MyM6o5kNumY5A+s+moMXrmjeWj5L46aIX4FR0c7C4t5Bv/
-	 x7+9XSzB1etJfdPnJP3fxX8fGOcJVMCZ8+rvPyINVnGaYfOGrPHHorjtNfDa+9iuvQ
-	 c4UNFR/JBiDeqe7xz2aGMJkq8EMSqpSpGZ72aHNH2P9koDzSG9ocod54BZXek/9vDZ
-	 BNBu5fc3Ykg4LW8T2HQ8s3N6r1aWzsNr5V4BgU4qM5pzQgRiRmXXYJZENnfDuE/7zX
-	 eQejspwEASgIyxjO9fXtRqA/AP0DViLChSq+h7EdBOKYZ+E7A1x9N/xn6ENVpwQwmm
-	 iXRX8+AhD0Tag==
-From: Mark Brown <broonie@kernel.org>
-To: Cezary Rojewski <cezary.rojewski@intel.com>, 
- Liam Girdwood <liam.r.girdwood@linux.intel.com>, 
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
- Bard Liao <yung-chuan.liao@linux.intel.com>, 
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
- Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Thorsten Blum <thorsten.blum@linux.dev>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250212091227.1217-3-thorsten.blum@linux.dev>
-References: <20250212091227.1217-3-thorsten.blum@linux.dev>
-Subject: Re: [PATCH] ASoC: Intel: avs: Use str_on_off() in
- avs_dsp_core_power()
-Message-Id: <173946796758.293721.1718038110681784020.b4-ty@kernel.org>
-Date: Thu, 13 Feb 2025 17:32:47 +0000
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZAdcG3d2"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-545092d763cso6739e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:33:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739468013; x=1740072813; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MGgVrzsAeNL3Ky4gN5+3YPP2m5D+SPcUN3lTNqfCOfc=;
+        b=ZAdcG3d2q4EirvAbbptmx24krGguX6P9vGMVWSJsyrWNpWGCepGpiVTMCx9cflDNX1
+         BxzYrLkAEfOwBkX30FngzCfzwVqA40ZJ3pez0NH9lY+mhl5xCXWy3e512zpsD1sW1zhK
+         Q+CdK78eLODpJXYsqNcS1t7PKCcf4xk0dum6lYg/4EGhEwKYOZzeSisNFdSUv7FHMr6x
+         /YN3lSQ37WP4dfdPqnOaEMrFOsRppUeArScX/QQGOcBYbFBYyAQ6p4qKrh1Y9xkbMj/n
+         +NuNpZ+ZjAPo7Oze3aIpb6nWLvGtp10ZNdQ5jt4Il/bB+Ths88rd0bTksVvmkproLnLm
+         Jmvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739468013; x=1740072813;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MGgVrzsAeNL3Ky4gN5+3YPP2m5D+SPcUN3lTNqfCOfc=;
+        b=A4lRFWGfcTWEI070z22Bw7W/34gxGwomfsjqk+jarLELXS4T1itE9/rfSaeJA8K9Ux
+         QwCkBFAHhupovd8Dv1oyJvcn1mfwYgqLQr6xY9bQ6zc+OXaH6L1fXMg7TbS8zDL3Wfzm
+         Xb/xNfP89HFCjOu39HD+KXWHl7NKrSz94t2au2SZ3EBYp1I1Tb8NCta5Zvz9gqgYabqH
+         LvG4kGgvJ9NroCZRTmifvfoOPKtdnYTCvGnde+bTpP2afY/JnXPhsFuJXVWJIVK30c/h
+         RMnSoAdqWfm+SczhIXHmgIpkE0fY7iiuyC5e7DYgybX/axf/wuv/WbWqLvMdXkTLjN+T
+         Havw==
+X-Forwarded-Encrypted: i=1; AJvYcCVR6Kb3PsPteCezZdFJ7p02xilCt1ffSS7ec8CGHVQ+1M3eVcGdqsi2lUFNJYKh7VMzvpTOCwbXKOrM4oI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU6Z1GMj+lxY6GaojYMGFj3bg5WvjjXTiTJs1AZbhg1QCvkn/Y
+	DjbLM2Z4EUuU+64dsKDMhXmDY51/057YLC4VVJIbsCWklluobmx6haHyLj/hbN8U6m0aSnqGrtN
+	Sf01iei5Io0PcwARPjb7RkPC+efI0u63vxUWY
+X-Gm-Gg: ASbGncv7AVO21aODC3GE5gmu1lPZHE31O0jqip355RAaQEjNcgdcXD90EQCLxQUoqsV
+	Nbm1A1QHyb10MQfNJQWdF0UMr4rifHZ8oEFtePwzgbb5/N1+c9BY0IqHtLEAU9k1V0bbgz9wD97
+	csuP0BVmC+kVvrfXr3KEUBiv6ZTshj
+X-Google-Smtp-Source: AGHT+IET0OV89iYfpu0mSYog4w1SQPmfp2RBaQSQSyY+Bufo1G9ums2tRHgQYhjw7LlG2MpjYEKfhvU+TU3OvVYN8WM=
+X-Received: by 2002:a05:6512:1193:b0:543:e3c3:5a5e with SMTP id
+ 2adb3069b0e04-5451e020774mr343672e87.4.1739468012362; Thu, 13 Feb 2025
+ 09:33:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+References: <20250212000747.3403836-1-vannapurve@google.com>
+ <20250212000747.3403836-3-vannapurve@google.com> <ljdzupgyl2am4qgvirwpdonwuzwjaysemu43icrzxjt5olr3yx@dldbi5tqwhjh>
+In-Reply-To: <ljdzupgyl2am4qgvirwpdonwuzwjaysemu43icrzxjt5olr3yx@dldbi5tqwhjh>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Thu, 13 Feb 2025 09:33:20 -0800
+X-Gm-Features: AWEUYZlhzsA-Sl-KzuUXdz9zcP5QTmYOsipXxAYftqBemHGY7puDNPu9R37JLpc
+Message-ID: <CAGtprH9OVVMXLyPnKXZ+K=S7XuPePHLwco0sXV-irGVj-SCbkQ@mail.gmail.com>
+Subject: Re: [PATCH V4 2/4] x86/tdx: Route safe halt execution via tdx_safe_halt()
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
+	seanjc@google.com, erdemaktas@google.com, ackerleytng@google.com, 
+	jxgao@google.com, sagis@google.com, oupton@google.com, pgonda@google.com, 
+	dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, 
+	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 12 Feb 2025 10:12:26 +0100, Thorsten Blum wrote:
-> Remove hard-coded strings by using the str_on_off() helper function.
-> 
-> 
+On Wed, Feb 12, 2025 at 4:54=E2=80=AFAM Kirill A. Shutemov <kirill@shutemov=
+.name> wrote:
+>
+> On Wed, Feb 12, 2025 at 12:07:45AM +0000, Vishal Annapurve wrote:
+> > Direct HLT instruction execution causes #VEs for TDX VMs which is route=
+d
+> > to hypervisor via TDCALL. safe_halt() routines execute HLT in STI-shado=
+w
+> > so IRQs need to remain disabled until the TDCALL to ensure that pending
+> > IRQs are correctly treated as wake events. So "sti;hlt" sequence needs =
+to
+> > be replaced with "TDCALL; raw_local_irq_enable()" for TDX VMs.
+>
+> The last sentence is somewhat confusing.
+>
+> Maybe drop it and add explanation that #VE handler doesn't have info abou=
+t
+> STI shadow, enables interrupts before TDCALL which can lead to missed
+> wakeup events.
 
-Applied to
+Ack, will fix it in the next version.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+>
+> > @@ -409,6 +410,12 @@ void __cpuidle tdx_safe_halt(void)
+> >               WARN_ONCE(1, "HLT instruction emulation failed\n");
+> >  }
+> >
+> > +static void __cpuidle tdx_safe_halt(void)
+> > +{
+> > +     tdx_halt();
+> > +     raw_local_irq_enable();
+>
+> What is justification for raw_? Why local_irq_enable() is not enough?
+>
+> To very least, it has to be explained.
 
-Thanks!
+Let me replace it with a more suitable arch specific <>_irq_enable()
+function in the next version. Intention here is to just enable
+interrupts.
 
-[1/1] ASoC: Intel: avs: Use str_on_off() in avs_dsp_core_power()
-      commit: 994719ed6d81a6f4677875ab6730254c0bc484ea
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+>
+> --
+>   Kiryl Shutsemau / Kirill A. Shutemov
