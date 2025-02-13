@@ -1,187 +1,122 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C06A20A5DC
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 07:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD931FC0FD
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 07:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739431673; cv=none; b=TA8Xf2cL1K31RxuK+sWYjgfzTkAkWNf+KWccvxTgtRQlz0rTMtC2+DRYupiBQOZpV2/fyLOP0oytdbqt9rIId/KeUE987G/Su72mSBuA9+qjaE6YkWG+97kwjfSZwH8oF/G6D1iuIYPmhxVpiycLvW7Y3kQRWImkJy/rrOMZI8w=
+	t=1739431854; cv=none; b=AMF/lip2SdDGozRwSxip/rVohiNfwlx+wERYMm1JxMEfWyTmmlioJeREk/YMoQ16smzs3qEdtYdlrqj9r0duWeLukeE9sji+BXValAliuX9Qz8/EuOWFXxOxQpQ8eTZKReXnDXcRfAnQuSK4Ya76ycCF7/A7OHHNTfgWoYASRdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739431673; c=relaxed/simple;
-	bh=plxTwgeTq7F6yUyHdWE5jJ10XrQNBo2r7azFr7961V8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NnFOrugyRcFd7w0ZqH62EL6wW6WY3rbxyvh8i1glkECQoZr05xz9MfaHVPTgx3EBaE+hvk8YUBzeZJAmTiwwLozTgqWucWZo7uZM3tvm4MWuByMnXzFTRlt+Vc7SQsfkdU+0j94gb4RM5D1UBATiTDg9GxA+k1d2+XXpBZmUZkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S9TcdN5l; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739431854; c=relaxed/simple;
+	bh=aN3Lr6wUibYnqI/f3UR3bxnxRH352lurFdPMDr3wGpA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X/o79kLmilq+QTQPhv6h7WOre2jAHvJ94ppiBWaPUovPzPd1cQ3mdzK1g+4UIv2bhdQVZlt0j83J3lk5MiZcwqluz5CnS2uGiVdJWDzI67BG2A45AJJ7XgW/6U59Meyv39+KbzPBd6gW6t4UHvlz8OsiNHQ2lj701MoT8e1GxE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=R/0rMqmW; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S9TcdN5l"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d147331fb5so69555ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 23:27:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739431670; x=1740036470; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5FejQoCZenuFrsg8Vi9rlyqVpbgfi4ZA4sjxV11J6CY=;
-        b=S9TcdN5l0rSEc6OuTgEhKE3PgeAMCwlaqW1Te38q/XjLp5qBcBmYVNGXDYxcWHFgW+
-         xl9rbNk7SGg5EUj+U0GL2pYAyE1k7H7rLM3Cb3Xvgb2E2P3pEYxWHw/q7bqn7OxkFGnD
-         j8OlEFd+n9/qLI3vHhnd2+cPAMbd2aDAt5gjjPaaDuh1WEIEhKRrzxs/GWHwmUAxT5UK
-         gP/K1nbk/rzqwGHxDnmudCMXgFzTxiNgTedYIruhEMWBXOMvjN6zUCJR3+jW0akvIy0u
-         /+5+ikdzq7VlGyuh9Xpx/V+nNjtMIIfuFEEUAMH4KL8+KvtD6v5UjJjToTaePoM7yx7a
-         vCFw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="R/0rMqmW"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CJdejQ001528
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 07:30:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	QCNYViztWzNyVGjuZcYvR8osCseZOp+c2iM9vCmfw4k=; b=R/0rMqmW1RSHmyyH
+	u2b1USDPdJ7aSlC531/4GzTs9XfBdPWtR3glJ0GOnjt/hqL99dF5hdHaKgfyYI0R
+	FzdVsIXTqwX0crKqRCYUBJEb16DE4Q4W5akBHjTElbDrllPIe9zXQiWJZUyUXyJG
+	CfCbinO4n0UO4N8++jttlWeufVwsM6Q//Wfpb7F+rkJBheQFrz1kr91/Mez21jgI
+	Ltqk/KlhfDKNTGMg0gvGwDRBkKuFDXEsVljF+UTf69DZ+t3471NYtdm3UH0evOy7
+	499pHdPdtYHmPjAfF3cd/29wFyICf9SfBHP63nt55WI9c6EbnAzp5DT204Dl7e3K
+	vXiC2Q==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44rrnfu1w0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 07:30:51 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-21f6cd48c56so9858065ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2025 23:30:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739431670; x=1740036470;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5FejQoCZenuFrsg8Vi9rlyqVpbgfi4ZA4sjxV11J6CY=;
-        b=ajRhPazDJA8dl5wMREagNqHsz3LlBdpc1CPfclwTQr7l4L2DBJpYALA0iw3ZiuHYY3
-         qJcpvK9ZEhKFlws/BazOaF5dHo8m8CwNDjJ02R3hwBOaqUSROVlj3RXXqlzPHkm3vEdp
-         zVliPuI6dKdATV8B9jNxTY+CKlc1SNfdH76w9tlKzjwsXebbkypq999/73QmHEx157Q+
-         2/h7r4WuTsNEms1z/qgFFmf5KxSt21npM9/6bRsdUyifcT3Hty7s0CSwETTTwnusOgUe
-         ZXmatB0z1bxeYg9SpEQdE9giBPL6sT8g+ArymUFdubm1Cph8K5nB2tRSmxWVFwHw5TLg
-         ISxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWW6BL4JkONPW+kKCkf1Iw/CrrUxbfDwhmpMfnn9HFKyM8/yVinNggcOe83uBdEHNXcoNwsBuDjrxDOBJE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTc+kLJ3VpjK2XHK1pc8muc/WMrv0e6F/J3RHg0COz1RhI8Hfe
-	2jrJBM95xffEDRt/mrUX1SSx86689Gim3bwPP+sPZIZBMIoZq+Atx9MecnvoQmkFnibNGiH5W3L
-	nnRXUpBQKeXVy9IdIQl+OBOfsghMhbEYY96Qh
-X-Gm-Gg: ASbGnct108IbTeMHM2S1PDV1s+Tm8boMUzgmCPkH90i2niR9oMGNr/f0qRsFNOirf1c
-	d5qw5oLUhk3YQAMkh0GdwhSi0+xYFlmakjN57+LNJttUPzUBoHlA4Z7lPLxQ1QzHNgaK5W9cuYw
-	==
-X-Google-Smtp-Source: AGHT+IGTlzfWGThHpMP8V7PEgexl4+UpAdBXGKqVTuU4gjUHt87FerVNVR3Cng+HnAP7JgQJ0VZ+gjZnJrljAcjp1FM=
-X-Received: by 2002:a05:6e02:1c89:b0:3cf:aeb5:c5cb with SMTP id
- e9e14a558f8ab-3d18cc8fc1cmr2822955ab.8.1739431670250; Wed, 12 Feb 2025
- 23:27:50 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739431850; x=1740036650;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QCNYViztWzNyVGjuZcYvR8osCseZOp+c2iM9vCmfw4k=;
+        b=gbrZxu9QnMbO4+VkFwXsMrqv+AHmJkaGAd3kddIZzluDm6yIPvPY1LTXtc6ggguJDN
+         nQj68I4W7x6Nl/XwSPVk7yWMKC3r84o8jxecWNLhSJSYnibzLBPd1vEjfZK+RMnAToo3
+         vybk7voQoagVmCM70K4Q0q0JWK4kn7PLjfBPc6OphPwOHZv/m1x7ZSoVSdfjVYKsOLeF
+         5Se/MHHfaNDDsAsUu5+EZ0GJ1F+Bk35681haLAclklkDZsohnuUYCjFjk1jiVFDyWk96
+         VOqxvzhufT8sXWuf0OU2FjmhhH6oox546JsXZYV7mdm4eU00RSPw6yQu/d15A5iPoZYa
+         2E/g==
+X-Gm-Message-State: AOJu0YzjZLiYAbqs6WYkpOmQkaN4WE8QnPHkbJI2ilufrUo63f6Pfy+u
+	IzR9USQyD27ziqZtLHrGRVEoUNjbcZ1exvolEUGX+bDYhVq5gwJjiMeAH+bpwkT2k9WFVyqyjuc
+	nErU54Qg9GsmyWZWqmSu0QwqKTgazOORj2eHM26bJsmYU+Jq+gK5+oyam6d+7RyA=
+X-Gm-Gg: ASbGncsw6kbhSd7qvVZpyAeD9T/GFlumBEymklWj1MaQDIRlSKrFVKD6dqUQ3d/OfhO
+	j5gFcjYvzW5PGmdiXNQI0/c2Goeven/zc+7TzvufDGW3+JAkgwnBC/OkDJ7bY4gZqFD6XC3cVe1
+	pxF/FtITbGYVaVY75S3YYBMt93Vy617HCPCJuY9R9ASMxKEvIsFNrm120OR1v/dDifqJMMUcFWL
+	dSwTDD6m9JaMef8rgXccB5mvCEApZamewOGHjuH6S7t1JTlnR/yHZQw+nOyw9sOBskh/pHM6gZu
+	7LQ0iCC+IO5ls4Z9yUsKVQODB01aQo19Ax4Vromcu7+FWkKc/IxAJBMmZQ0twcmjqSI+2Ol0NA=
+	=
+X-Received: by 2002:a17:902:e946:b0:215:9379:4650 with SMTP id d9443c01a7336-220bbc8bc56mr100108545ad.42.1739431849916;
+        Wed, 12 Feb 2025 23:30:49 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEXJWllrpEsU7pxBlVyMLO/Rybu/ihb4r1/egz6PdTfhq0gEYZa9CuRi0M1qC1i4D6yi6/26Q==
+X-Received: by 2002:a17:902:e946:b0:215:9379:4650 with SMTP id d9443c01a7336-220bbc8bc56mr100108175ad.42.1739431849521;
+        Wed, 12 Feb 2025 23:30:49 -0800 (PST)
+Received: from [192.168.1.111] (c-73-202-227-126.hsd1.ca.comcast.net. [73.202.227.126])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545d621sm6361875ad.136.2025.02.12.23.30.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 23:30:49 -0800 (PST)
+Message-ID: <85a035e7-fb06-434c-ba26-f813fc4f3200@oss.qualcomm.com>
+Date: Wed, 12 Feb 2025 23:30:48 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z6rAHhAIdlkAryGJ@google.com> <CAP-5=fXjmJ+Rr7ejL6fCMeu6PZSit7n84hQkjh=0jQhkr1on3Q@mail.gmail.com>
- <Z6uOGNO6p7i9Fese@google.com> <CAP-5=fVxFe4nMS_dHmO=6-ddA40XbVdvouPLuOxj5cenjUr8ng@mail.gmail.com>
- <Z6v-mPJq6m61pFA4@google.com> <CAP-5=fU+-4igQomO4Q41=7xo6YWyDdVqJdZd34dcMUS-Ua=N1Q@mail.gmail.com>
- <Z6zslLa8XM1ubwXj@google.com> <CAP-5=fUrzPvV3sD1_wMzQ7dF8xk3hL9_nkdS6toFjt7L+SRsgg@mail.gmail.com>
- <Z60nBQCetMzhRg5b@google.com> <CAP-5=fWG7JOmQhTa+OccOxSLhik6Du-qy9d90q-zhDTu0P=q3A@mail.gmail.com>
- <Z61OeArP-P-I5NjU@google.com>
-In-Reply-To: <Z61OeArP-P-I5NjU@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 12 Feb 2025 23:27:38 -0800
-X-Gm-Features: AWEUYZnMmcb06RsPzW1yAcBRDWFHnL-gV43xQhFBafDLiEBaXsxELUGSHeBzwlg
-Message-ID: <CAP-5=fXTLBb1+PghPCraJQcXY518Jtt3AwPLpoXvjXErW79U5w@mail.gmail.com>
-Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Hao Ge <gehao@kylinos.cn>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>, 
-	Tengda Wu <wutengda@huaweicloud.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] kbuild: fix linux-headers package build when $(CC)
+ cannot link userspace
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>
+References: <20250213062645.325632-1-masahiroy@kernel.org>
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <20250213062645.325632-1-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: YUCkZglDs8mIO8NDt7ohrL_fKZuTPo28
+X-Proofpoint-ORIG-GUID: YUCkZglDs8mIO8NDt7ohrL_fKZuTPo28
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-13_02,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ bulkscore=0 malwarescore=0 mlxlogscore=999 lowpriorityscore=0
+ suspectscore=0 adultscore=0 mlxscore=0 spamscore=0 priorityscore=1501
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502130056
 
-On Wed, Feb 12, 2025 at 5:44=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Wed, Feb 12, 2025 at 03:17:35PM -0800, Ian Rogers wrote:
-> > On Wed, Feb 12, 2025 at 2:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > On Wed, Feb 12, 2025 at 12:00:42PM -0800, Ian Rogers wrote:
-> > > > On Wed, Feb 12, 2025 at 10:46=E2=80=AFAM Namhyung Kim <namhyung@ker=
-nel.org> wrote:
-> > > > > It's not completely broken and works sometimes.
-> > > >
-> > > > No this is the definition of completely broken. If it only works
-> > > > sometimes then you can't use it, we can't put a test on it, there i=
-s
-> > > > no point in it. Even when it doesn't fail on perf_event_open, does =
-it
-> > > > work for processes that start after /proc is scanned? No, it is
-> > > > completely broken.
-> > >
-> > > Ok, we have a different definition for it.  Let's ignore the imaginar=
-y
-> > > users of the broken features.  Have you added a test for this change?
-> > >
-> > > Anyway I've tested your change and found some issues:
-> > >
-> > > 1. It silently exited when BPF-skel is not built.  Better to put some
-> > >    messages at least.
-> > >
-> > >   $ sudo ./perf record -u $(id -u) -- sleep 1
-> > >
-> > > 2. Even with BPF-skel, perf record doesn't work well.  It did somethi=
-ng
-> > >    but failed to get sample data for some reason.
-> > >
-> > >   $ sudo ./perf record -u $(id -u) -- sleep 1
-> > >   [ perf record: Woken up 1 times to write data ]
-> > >   [ perf record: Captured and wrote 0.045 MB perf.data ]
-> > >
-> > >    Oh, I think you now need to pass -a because it now works in
-> > >    system-wide mode and drops samples for other users.
-> >
-> > This is a pre-existing problem, no?
->
-> No, it worked without -a in the past.  Please see my previous reply.
-> I think -u/--uid is one of the supported target in the perf tool (not
-> for the system call) and it used to disable system-wide mode if -u is
-> used at the same time.
+On 2/12/2025 10:26 PM, Masahiro Yamada wrote:
+> Since commit 5f73e7d0386d ("kbuild: refactor cross-compiling
+> linux-headers package"), the linux-headers Debian package fails to
+> build when $(CC) cannot build userspace applications, for example,
+> when using toolchains installed by the 0day bot.
+> 
+> The host programs in the linux-headers package should be rebuilt using
+> the disto's cross-compiler, ${DEB_HOST_GNU_TYPE}-gcc instead of $(CC).
+> Hence, the variable 'CC' must be expanded in this shell script instead
+> of in the top-level Makefile.
+> 
+> Commit f354fc88a72a ("kbuild: install-extmod-build: add missing
+> quotation marks for CC variable") was not a correct fix because
+> CC="ccache gcc" should be unrelated when rebuilding userspace tools.
+> 
+> Fixes: 5f73e7d0386d ("kbuild: refactor cross-compiling linux-headers package")
+> Reported-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+> Closes: https://lore.kernel.org/linux-kbuild/CAK7LNARb3xO3ptBWOMpwKcyf3=zkfhMey5H2KnB1dOmUwM79dA@mail.gmail.com/T/#t
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-As I keep repeating the '-u' option has never worked in the past, it
-either early exited or missed recording new processes.
+Thanks for the quick fix!
 
-The documentation for `perf record` is:
-```
-...
-       -a, --all-cpus
-          System-wide collection from all CPUs (default if no target
-is specified).
-...
-       -u, --uid=3D
-          Record events in threads owned by uid. Name or number.
-...
-```
-So `-a` is implied without a target/workload but you are specifying a
-workload and `-u`. So do you want samples from the workload or from
-the user's processes? I can tell from your command line being sleep
-that you want it to imply `-a` but would that be true if it were a
-benchmark? For the benchmark case you probably don't want `-a`
-implied. If you specify `-p` and `-u` should the processes that don't
-match -u be sampled or are you expecting implicit system wide
-profiling now?
+Tested-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 
-I agree the behavior in the patch series doesn't match the existing
-behavior, but I'm not sure the existing behavior agrees with the
-documentation nor working as expected. Having the `-u` not select
-system wide, as in the patch, seems to agree with the documentation
-better. You have specified a target workload/process/eventual pid and
-you want samples owned by the uid, why should you now start getting
-samples from other processes? With `-p` you wouldn't expect `-a` to
-suddenly get implied, I'm not sure it makes any more sense with any
-target/workload.
-
-> > > 3. With BPF-skel, non-root users will see this.
-> > >
-> > >   $ ./perf record -u $(id -u) -- sleep 1
-> > >   cannot get fd for 'filters' map
-> > >   failed to set filter "BPF" on event cycles:P with 13 (Permission de=
-nied)
-> > >
-> > >    I think it's confusing and better to tell user that you need to ru=
-n
-> > >    'perf record --setup-filter pin' as root first.  But maybe due to =
-the
-> > >    issue #2, you still need to run it as root.
-
-I think that is an okay addition to BPF filters in general. I'm wary
-of having patch series feature crept into requiring the entire tool
-being reimplemented.
-
-Thanks,
-Ian
