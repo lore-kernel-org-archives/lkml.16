@@ -1,141 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B2524BC11;
-	Thu, 13 Feb 2025 19:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739476591; cv=none; b=CQnuFkY/lo2wkA8BNZ4NPjFlsPi4J6ld/YlfaLxw2/VxaJ2qOWVSYLj9ZPDEOENRjA44k8I0Qwyw9cPBW2lDd7vKGgWE77FsKcDdy7AYB+SYI+NA1uJP1rWYfk0PPPQRuBwb1t707OvloApcH+oHE+xKpu8i2+3WRLRovmdSV78=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739476591; c=relaxed/simple;
-	bh=PJmRW2KaIfrpizikoDdSsfo6z+i8RUkbQGWcNuTn1m8=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A64DE24A077;
+	Thu, 13 Feb 2025 19:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739476668; cv=pass; b=R3t3H0EnkdzV8RGt6YP06j43ZqgQcZ05aezc8PoxMntO/NaTLBhNwyb+NDLZRqyyy2SqUzhlvgTK6pQzb0/TtvxSq+gWE/x4wu1z+wVCUQ2FrJw4SJ7ZozDwQu/DD/PyT4UFCEWng5/7yF8pUbg+rO35oSJv0joTuNAnBYYaYtY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739476668; c=relaxed/simple;
+	bh=UUG74ONh30vCq5cOPe65Lz2sQ6Akmb5m/0N/paSXXRQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gYFj9qTE5KMEK5JlhZjflrXMS+Fc+37SK1eL9lgMJQ6nNmnb/fHmWsRjKcalbvdg/TM/3ilD/ez2yR964HP+/3Cb/2b1zV424WkSuzA96H5fbJgo1+Q090kXLiZtUvU0AvmmKSd4LkCEFRm7ByFyfk2Bu5PSVBo8EOvGhQPbSkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j3cQLwhw; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 MIME-Version:Content-Type; b=cXqfV2hMxv57sv4JZhBhBJ6i7hRetXsHw2wl4khLkXwzhIO6jfxHTBDC9u1A4jbX/oOIG1gnwJbZM2SFZQese7LDS44553V0F8kzqjATOt1t0MXNPZ4RzyGBczEEOYgQwbVzmp1HOUeqwU920q9AGn5rt5aSw8KtNCbADtCOpQ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=Q8JxXioJ; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j3cQLwhw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739476589; x=1771012589;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PJmRW2KaIfrpizikoDdSsfo6z+i8RUkbQGWcNuTn1m8=;
-  b=j3cQLwhw9rrmcchGmrcWd9LFA+yE/jHi5WXKAU+LZyv/Iq5oKQzo0waB
-   m7cOsMQ5qPY9s+yy228BGX5RJEtbtLB0i254/wGfrE6a8uhW6iAJg9SwT
-   kQMtTvlaXFw9iuJ6/qrNehe88OworooHFvArOSYrNoLdBIvT/1kYZnzT6
-   f0MUWVjaBiIZL+ysK4lFoIowA4wQveL3ccw+zrGYd0lytFEKdHrVWk3ua
-   PM7pVU/S3tUxTvvp/j+3USpiGNPHOjWOmSPcqwzSZj27uPluMqg40ze+m
-   rxWnJmpqh62MWq5K8jKuT9mmoVVBjTB2nHI0LEiNtKeskZEfQk1vPt6aE
-   g==;
-X-CSE-ConnectionGUID: moXuq2SQShKtqD4nmSPN8w==
-X-CSE-MsgGUID: KuzlKpVdRk6ADCdn4d8gjA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40078548"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="40078548"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 11:56:28 -0800
-X-CSE-ConnectionGUID: I+8HbDY6RvGH7W7Paeh5Rw==
-X-CSE-MsgGUID: AZJKqqLORUODhGoCsOzjWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="150421164"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 13 Feb 2025 11:56:27 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 3E6673BA; Thu, 13 Feb 2025 21:56:22 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Michael Walle <mwalle@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	athieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Subject: [PATCH v1 5/5] gpio: regmap: Allow ngpio to be read from the property
-Date: Thu, 13 Feb 2025 21:48:50 +0200
-Message-ID: <20250213195621.3133406-6-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
-In-Reply-To: <20250213195621.3133406-1-andriy.shevchenko@linux.intel.com>
-References: <20250213195621.3133406-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="Q8JxXioJ"
+ARC-Seal: i=1; a=rsa-sha256; t=1739476614; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=esEGgr+Zc+tPVkIqhiCRV6/3ZsxDc/b/7YtkV3+NUknz0FJERHv4WjoZqgMDr0iDTIxSacyj5IPlCpt8EstN0ogUpvFHCO6Ksp0+hnliTj7wgOIMrvQdvM58YdUb1EBBZDXO2aeKLvNS2t5IrlANkgPMrKZlEmuKcOaOeJOaMv4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739476614; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=O9GUvvUpHX6LI0qZKWX7RNV6qQdN4u6UV5/FG212X8k=; 
+	b=UBUcN6htqFck41lfia/orvBJrZzH5gpvWL+MwUU7ojHmx+66zbMewaJEXL/ZRJyWve49TjgYNRjL2P0vaAdPK2OYYJgowrz0ZFKSyBDU4zl/aH4Konvn2RGJLFn2VQxYQEZY8au4FdJ9Et/985IvHoaa7AOjOSVVPHPx7dX1MR8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
+	dmarc=pass header.from=<detlev.casanova@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739476614;
+	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=O9GUvvUpHX6LI0qZKWX7RNV6qQdN4u6UV5/FG212X8k=;
+	b=Q8JxXioJ4lXs0iSCkgZYzAYIWz6Xdvv38+VFAq1AWFxHY2R8ItKJ6JvNt55lWScE
+	bpnnMnehSwgma3fPFQvuLapE7XTGq1PPmnWWSzq/gNM0A7aBnTrD2ix6ArooKh8Cw+X
+	dB7WkHBWQz34nQuKkmOdnyO8Fk0bPKmBcNhiK1XE=
+Received: by mx.zohomail.com with SMTPS id 1739476611230565.2581804087819;
+	Thu, 13 Feb 2025 11:56:51 -0800 (PST)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: Jonas Karlman <jonas@kwiboo.se>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>, Dragan Simic <dsimic@manjaro.org>,
+ Chris Morgan <macromorgan@hotmail.com>,
+ Kever Yang <kever.yang@rock-chips.com>, Tim Lunn <tim@feathertop.org>,
+ FUKAUMI Naoki <naoki@radxa.com>,
+ Michael Riesch <michael.riesch@wolfvision.net>,
+ Weizhao Ouyang <weizhao.ouyang@arm.com>, Elon Zhang <zhangzj@rock-chips.com>,
+ Alexey Charkov <alchark@gmail.com>, Stephen Chen <stephen@radxa.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, kernel@collabora.com
+Subject:
+ Re: [PATCH v2 2/2] arm64: dts: rockchip: Add Radxa ROCK 4D device tree
+Date: Thu, 13 Feb 2025 14:56:48 -0500
+Message-ID: <5973630.DvuYhMxLoT@trenzalore>
+In-Reply-To: <b5977d21-aa39-4e91-863b-cc7f9dc6938c@kwiboo.se>
+References:
+ <20250213145921.133412-1-detlev.casanova@collabora.com>
+ <20250213145921.133412-3-detlev.casanova@collabora.com>
+ <b5977d21-aa39-4e91-863b-cc7f9dc6938c@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+X-ZohoMailClient: External
 
-GPIOLIB supports the case when number of supported GPIOs can be read
-from the device property. Enable this for drivers that are using
-GPIO regmap layer.
+Hi Jonas,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpio-regmap.c  | 13 +++++++++----
- include/linux/gpio/regmap.h |  2 +-
- 2 files changed, 10 insertions(+), 5 deletions(-)
+On Thursday, 13 February 2025 10:48:10 EST Jonas Karlman wrote:
+> Hi Detlev,
+> 
+> On 2025-02-13 15:57, Detlev Casanova wrote:
+> > From: Stephen Chen <stephen@radxa.com>
+> > 
+> > The Radxa ROCK 4D board is based on the Rockchip rk3576 SoC.
+> > 
+> > The device tree adds support for basic devices:
+> >  - UART
+> >  - SD Card
+> >  - Ethernet
+> >  - USB
+> >  - RTC
+> > 
+> > It has 4 USB ports but only 3 are usable as the top left one is used
+> > for maskrom.
+> > 
+> > It has a USB-C port that is only used for powering the board.
+> > 
+> > Signed-off-by: Stephen Chen <stephen@radxa.com>
+> > Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+> > ---
+> > 
+> >  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+> >  .../boot/dts/rockchip/rk3576-rock-4d.dts      | 651 ++++++++++++++++++
+> >  2 files changed, 652 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3576-rock-4d.dts
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/Makefile
+> > b/arch/arm64/boot/dts/rockchip/Makefile index
+> > def1222c1907e..a112aeb37948a 100644
+> > --- a/arch/arm64/boot/dts/rockchip/Makefile
+> > +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> > @@ -132,6 +132,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) +=
+> > rk3568-wolfvision-pf5-display-vz.dtbo> 
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-io-expander.dtbo
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-armsom-sige5.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-evb1-v10.dtb
+> > 
+> > +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-rock-4d.dtb
+> > 
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3582-radxa-e52c.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-armsom-sige7.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-armsom-w3.dtb
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3576-rock-4d.dts
+> > b/arch/arm64/boot/dts/rockchip/rk3576-rock-4d.dts new file mode 100644
+> > index 0000000000000..f356742f9d643
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3576-rock-4d.dts
+> > @@ -0,0 +1,651 @@
+> 
+> [snip]
+> 
+> > +&gmac0 {
+> > +	phy-mode = "rgmii-id";
+> > +	clock_in_out = "output";
+> > +
+> > +	snps,reset-gpio = <&gpio2 RK_PB5 GPIO_ACTIVE_LOW>;
+> > +	snps,reset-active-low;
+> > +	snps,reset-delays-us = <0 20000 100000>;
+> 
+> The snps,reset- props are deprecated and should be changed to reset-
+> props in the phy node.
 
-diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-index 41ee576e7cd0..856f8569566e 100644
---- a/drivers/gpio/gpio-regmap.c
-+++ b/drivers/gpio/gpio-regmap.c
-@@ -17,6 +17,8 @@
- #include <linux/gpio/driver.h>
- #include <linux/gpio/regmap.h>
- 
-+#include "gpiolib.h"
-+
- struct gpio_regmap {
- 	struct device *parent;
- 	struct regmap *regmap;
-@@ -210,9 +212,6 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
- 	if (!config->parent)
- 		return ERR_PTR(-EINVAL);
- 
--	if (!config->ngpio)
--		return ERR_PTR(-EINVAL);
--
- 	/* we need at least one */
- 	if (!config->reg_dat_base && !config->reg_set_base)
- 		return ERR_PTR(-EINVAL);
-@@ -243,7 +242,6 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
- 	chip->parent = config->parent;
- 	chip->fwnode = config->fwnode;
- 	chip->base = -1;
--	chip->ngpio = config->ngpio;
- 	chip->names = config->names;
- 	chip->label = config->label ?: dev_name(config->parent);
- 	chip->can_sleep = regmap_might_sleep(config->regmap);
-@@ -262,6 +260,13 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
- 		chip->direction_output = gpio_regmap_direction_output;
- 	}
- 
-+	chip->ngpio = config->ngpio;
-+	if (!chip->ngpio) {
-+		ret = gpiochip_get_ngpios(chip, chip->parent);
-+		if (ret)
-+			return ERR_PTR(ret);
-+	}
-+
- 	/* if not set, assume there is only one register */
- 	gpio->ngpio_per_reg = config->ngpio_per_reg;
- 	if (!gpio->ngpio_per_reg)
-diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-index b9240e4156cc..c722c67668c6 100644
---- a/include/linux/gpio/regmap.h
-+++ b/include/linux/gpio/regmap.h
-@@ -21,7 +21,7 @@ struct regmap;
-  *			If not given, the fwnode of the parent is used.
-  * @label:		(Optional) Descriptive name for GPIO controller.
-  *			If not given, the name of the device is used.
-- * @ngpio:		Number of GPIOs
-+ * @ngpio:		(Optional) Number of GPIOs
-  * @names:		(Optional) Array of names for gpios
-  * @reg_dat_base:	(Optional) (in) register base address
-  * @reg_set_base:	(Optional) set register base address
--- 
-2.45.1.3035.g276e886db78b
+Arg, second time I use deprectated props on new things. Are there plans or 
+ways to make dtbs_check warn about those ?
+
+> > +
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&eth0m0_miim
+> > +		     &eth0m0_tx_bus2
+> > +		     &eth0m0_rx_bus2
+> > +		     &eth0m0_rgmii_clk
+> > +		     &eth0m0_rgmii_bus
+> > +		     &ethm0_clk0_25m_out>;
+> > +
+> > +	phy-handle = <&rgmii_phy0>;
+> > +	status = "okay";
+> > +};
+> 
+> [snip]
+> 
+> > +&mdio0 {
+> > +	rgmii_phy0: phy@1 {
+> 
+> Maybe ethernet-phy@1 ?
+
+Indeed.
+
+> > +		compatible = "ethernet-phy-ieee802.3-c22";
+> > +		reg = <0x1>;
+> > +		clocks = <&cru REFCLKO25M_GMAC0_OUT>;
+> 
+> Please add reset- props here.
+> 
+> Changing to use reset- props may cause issue if a RTL8211F PHY is used
+> on the board. Use a ethernet-phy-id compatible or mainline U-Boot to
+> ensure the Ethernet PHY can be discovered during probe.
+
+Using downstream u-boot, with the RTL8211F PHY, linux can still detect the PHY 
+and use it correctly, even with reset-* props at the PHY level.
+
+I guess I can keep those there then, unless the issues you mention are more 
+subtle than that ?
+
+
+Detlev.
+
+
 
