@@ -1,173 +1,204 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2076.outbound.protection.outlook.com [40.107.93.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B549207679
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739447865; cv=none; b=B7eGCVfTduhk5NxaDu4noKLxUUd9h317VTjR5w48ynrUXBVnL1IYta1RBNOt8OMeOgy1nzlahqc3vwezZDEbRNeQxR9m9/NgTigkPqetZXtv+iNlfVdJzEQZROcNJuTm/XoWUMfOf36nB5ONrk0CNu4O7dHOjYtzSZx80BuGY7A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739447865; c=relaxed/simple;
-	bh=yzqgDzTGf/8C6C+JiXBBSxWVkV9g4M2mkZZB9M3Fjgs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=re4gE2tvZlLpYrb/sUR9wWOF1eFKUH1n8udX1V9DcnNfM0rYbQStTR8rp0SkS0d21CdaGfEBOncYe8jXxaEy/cgXrPnvn3VTuFrvl1usyS9pch+Z9tXeHgfj3r3lXmPNUDpZj4LYNe5n3ykc64Etcs2mbBwfvKXNxi0oVfII5yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BmZ8DQav; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4185D1F462A;
+	Thu, 13 Feb 2025 11:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739447895; cv=fail; b=U64CJINE8TkB2PaWS+3uCRVSx5Px1CJd+jVbMV7kUyKb3ZGfMdJNWSHY6OiGJyh+lFlX4hgC83t3bCUZSE5Uzr+Bf3nNavgHaK1AuLSlaFsTs1ijl82GK55AvhLVJdteEk7NLtBk7Bp76K1kMlgwvmYNpMRlWTgr7ZtWsEOs1ps=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739447895; c=relaxed/simple;
+	bh=4H3S8l0csqVIG+MiTWEuXHT9x7d77ETMBL/U6kTdeXM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=r2Zv+CSACmoNnX0M4JXhs7WKLPJ7gaBlZ1OYnpE66BVhc/TOd8GgnZcepx1DDbeIUZivj1I2+06x0uFyF3pmjRFx0q8uEoBAKA565DuRYXKwMWldC2nEFGQ0ku7TXSqXqDndn+C9rKo/ZFHLe/fpFGIegQfpbNXPiv+S+06To6k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AWjz2zvM; arc=fail smtp.client-ip=40.107.93.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BmZ8DQav"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e455bf1f4d3so675891276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 03:57:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739447862; x=1740052662; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nAeTsbP8grO1Y1/oZD12vcfULFlMlyIveKrhN6hNGEI=;
-        b=BmZ8DQavkVD9Z95BQtugJILjJHgagnK1TT4UANbdnVLI0Uvg6IMSMg5U+XGZDA6DRK
-         M8KRZ5U46ho7vaEFIyZ9PT5RskQZMrxtLcPWdOHeJ4CkiinMwKkcnGiKywy8tQxSVkAm
-         A72uCu1Yb8XphMW+usdYrwwgaPGwDK/cdku7rxYsFH3m93DUHLJvImcXSGNqca1dszkt
-         ZhvARr4EimXEmo7ZNXQXz93CeHdl0bH1ucCOcdsC5HiLt2o6y2LGwW3UmsFr5490beZ+
-         L8VvqjIKMa4wUVko9KnZFQC6pnG/3H0dauwUN3Oteih/Qo9RMY05H59It/yJ9qYgMTS+
-         XuBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739447862; x=1740052662;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nAeTsbP8grO1Y1/oZD12vcfULFlMlyIveKrhN6hNGEI=;
-        b=ZyQ1oPhj92fVb5LdXtch6Y8vXOpbVAgVekQzn7Tt7oCcEcT9QRht85zUNu0VlUM884
-         INOl+HpgYMhgrcxrs9tWmXfxMUaDht/nHFlAZO56PyUh1d0uBDx4ae0cLpNuJ06MvOa6
-         hG1fQCaQJp99h8N+zp4i+NMs9EqWiuaxioc8j6MblSQjvI0/wsXlbyP52txzlGK+quWY
-         S95DdNrnKhTE+ivBsD0zIw4ZzmRmueizqmKsrd+IJ+/51BxHQpAcgG7MgRaYl1g/iFPh
-         ygnEKTIS5xo7Pt5aNJPPik+XQr1ncvkOzc27W1RoZGQHVwVDXbM9eOBugnbtWHqWti2w
-         k7NA==
-X-Forwarded-Encrypted: i=1; AJvYcCVYFEMvpKB0iysfH3yHVUrnyUP4P2LABwJF+7MZQvfGzxc5argeixKZMr2mFndfET3yWb2wLP2wD0XAXR8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYvm+GPJRiMFmuQT5566QiYdK25KNFEGY4CD8+TRRyt7H5AOTy
-	A8cCHp5BJ/0g2UBpgQW9uS8snkwXI1YuWLQNHSxbT7RAExLuicwRWBaRjFPKDfaKcA9BftUNh/l
-	6dsLBT3FPs6U0FsZdVKnN6chUhbTE/UH+z5Fp
-X-Gm-Gg: ASbGncvSY90YZiH+NRvLWSki3V0lUqv6e15MCKXxjQ3l1nzz46Pi1mUbCcvEsdq6CSG
-	hhN/EyWFod4Mn7bjwjiSUTiYRUHoQjLBwA1JcZDsuQSTO73YfvkG3slOmATHaHk9iZqAtfg==
-X-Google-Smtp-Source: AGHT+IHTHu2Wq5Nkq1URd0WoKprD88+1HOlz9mbdLilD1o4mfqGQKrXJqnLzk82cnP2aJxrlsMsgC1wNWJ75V9QJuq0=
-X-Received: by 2002:a05:6902:2102:b0:e5a:c5d6:3948 with SMTP id
- 3f1490d57ef6-e5d9efe9db7mr6943660276.0.1739447862000; Thu, 13 Feb 2025
- 03:57:42 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AWjz2zvM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wjU3rHQxZ+1waTZwOlrm4v+t3wc8WTV1jA+PEc0PnKzqhBMW//9j+mfLOKQv3TDlWoMVKhfLnXlJptAsIjClrJ0RlaoEjocyA+TUptrOEeykyuC/K2QBSzTflto4qO9fbHRrspYF2jMOwzB6dGrejsVirb2MIa3M/BYu7RlNm+F5i3JchhW6r+2g7KlfcCDe52cK99a+QKfwpa1YLv1FOKrbrWRDoKlJIsqJ3+p5AKI7c0H/KBReT/RQ2Qma+D5e/cyh3DRVy9mj/qXhwhVRNDSvYK/ecFatWdBkxAvCNO88TEg/GYdAW9G7TK6HjwcCvwdLKiNJJOxSBQTAIkklXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=m5ZSmzDlFmQCH8BH6QllUvFD+plY4qOhGItVy+9IEuY=;
+ b=Bkgf168cSN4ORnuef4vFzVQQc1EFfy/XwJ/M0KnbbLCY1UdNMzqM8Uy9W1usPkajWG7QHCR+RTeAxqTJMJltvBpWGAUGGldp1Q/p4CHK0GOeevJ9H0snjT/KVaFIoDF3XVi6PInEomSL8pXgRNj8VeqHZK5rVqyPxRMWmhNuTwWlp/4VspW2s5wS8robGLKkgCZU7eqDpqQZuwiq6wR22f5UmCKmy8HzqkMwEEpWR6MY3t9RDlY0CjwTPvI7TzOXbtXB2MYezp9R104PNseqMNI70XVeFWiweMNz5AAR8eDdEeegLMCk47MDY77yr6FTbpa/G49Nhx1jctJX4AZZxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m5ZSmzDlFmQCH8BH6QllUvFD+plY4qOhGItVy+9IEuY=;
+ b=AWjz2zvMiG0C0zHeH21FwSWIQDGVEME4Ojpe+Ghl7sSluR8AgpEP5/QBl82Wd25AKXKyx4iQy65br5t/2gVXh7vN8afIgK3NGDRm8pZ1AUbpPtgACNz3Z6WJIZXX11+vUwy8PyZqxer1RhjS3EtBoYHC82Tjb1uqUaHFan2ugEE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4123.namprd12.prod.outlook.com (2603:10b6:5:21f::23)
+ by DS7PR12MB5911.namprd12.prod.outlook.com (2603:10b6:8:7c::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.16; Thu, 13 Feb
+ 2025 11:58:10 +0000
+Received: from DM6PR12MB4123.namprd12.prod.outlook.com
+ ([fe80::512d:6caa:552a:7ebf]) by DM6PR12MB4123.namprd12.prod.outlook.com
+ ([fe80::512d:6caa:552a:7ebf%3]) with mapi id 15.20.8445.013; Thu, 13 Feb 2025
+ 11:58:10 +0000
+Message-ID: <d15ab61b-2656-4c5d-be8a-9e070dfc2b99@amd.com>
+Date: Thu, 13 Feb 2025 17:28:01 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 0/6] soundwire: amd: code improvements and new platform
+ support
+Content-Language: en-US
+To: vkoul@kernel.org
+Cc: alsa-devel@alsa-project.org, yung-chuan.liao@linux.intel.com,
+ pierre-louis.bossart@linux.dev, sanyog.r.kale@intel.com,
+ Basavaraj.Hiregoudar@amd.com, Sunil-kumar.Dommati@amd.com,
+ venkataprasad.potturu@amd.com, Mario.Limonciello@amd.com,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250207065841.4718-1-Vijendar.Mukunda@amd.com>
+From: "Mukunda,Vijendar" <vijendar.mukunda@amd.com>
+In-Reply-To: <20250207065841.4718-1-Vijendar.Mukunda@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0018.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:25::23) To DM6PR12MB4123.namprd12.prod.outlook.com
+ (2603:10b6:5:21f::23)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213114400.v4.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
- <2025021352-dairy-whomever-f8bd@gregkh>
-In-Reply-To: <2025021352-dairy-whomever-f8bd@gregkh>
-From: Hsin-chen Chuang <chharry@google.com>
-Date: Thu, 13 Feb 2025 19:57:15 +0800
-X-Gm-Features: AWEUYZlq75LIFYPIrtEvnz3TB7WFuT6LMkfSPqyFE9VT04sCMSzyEJ2iGUZu7t0
-Message-ID: <CADg1FFdez0OdNDPRFPFxNHL_JcKmHE6KNxnYvt4sK7i+Uw6opA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] Bluetooth: Fix possible race with userspace of
- sysfs isoc_alt
-To: Greg KH <gregkh@linuxfoundation.org>, luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org, 
-	chromeos-bluetooth-upstreaming@chromium.org, 
-	Hsin-chen Chuang <chharry@chromium.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Ying Hsu <yinghsu@chromium.org>, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4123:EE_|DS7PR12MB5911:EE_
+X-MS-Office365-Filtering-Correlation-Id: 70fff2d6-33fa-4702-7d15-08dd4c25af5d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dTJEWTFjY00yUEYyYnRoR0pGeS8wZmhzQnZ5MEllK0VFRVJlaVhuRHVyUjNv?=
+ =?utf-8?B?RFRkR1gwNWRKMkZaZlRPSUZwTnZIbHlGNFpNbDNsOXR3MzYvcXJpM1dLdUhJ?=
+ =?utf-8?B?VUhHZFJ4OUtuQXVNc1A5MzMxZUFxMzkrSGU2UUtYSzUwTUVoUWg1Wk9mU3h0?=
+ =?utf-8?B?UFBmaGk4WmdiSVZPSUl3VXg3c293Mi8vaThVckNraEZsSUlpQTcvWCtuSGZo?=
+ =?utf-8?B?RVhrdVdWazZLUldPN3FMNUxKTHgrblRaaEpBZjJlTm5jd2EvU1daR1E5ZnZN?=
+ =?utf-8?B?cG5xV0F4MWF3QjUzdVdvTWRWS0hJMWN0YnM3ajNoYW9rbWVablY2eXhjYUdQ?=
+ =?utf-8?B?dmZqcGlnS2lLdHpPcTA5Y2JJQS8vQzVsb3ZpRGZhN1FMWHdDVHpZdGJZMk5O?=
+ =?utf-8?B?clZiclQrK0xFdzd1WE9YUHY4QXBxL0NzbnhrbTZsMHduSG1obmJPd2hvNUc3?=
+ =?utf-8?B?dDZTVXFWMUZQanh1ZUdhSjQ0cEtxTVhHRDBkc1loZ05RV2VGNHlHeis3VTFx?=
+ =?utf-8?B?bHZPcWxXTzVPeStMdTFqTnRjQUJ5UlpnQlcrNEVGMUhieFZ1aFVQa0o0WllQ?=
+ =?utf-8?B?U3BoYmpmWE00azNzU0lDaldhN3Q3K1RUcktEYWxUcHpIZ0g5UldQajlLTzdV?=
+ =?utf-8?B?ZFN4Ukp2Z3ZTWGkyeGhvbzBwek5BdVVxaHpIVTN2cjlSRUlxbkl4VFl0emxG?=
+ =?utf-8?B?VWthYXcwUUZyd1lySVgvRE8yS0xCT3ZVcGp6czBrWUwyQms5MlJ3RGlnZFhm?=
+ =?utf-8?B?M1NlMTFzV2o0ZkhXa2dFa2xsRE1ZdWdPL3lxNllueCttTnB4aTdrN1hTcmpl?=
+ =?utf-8?B?YmNkQVJPcjdSWkxZTXFnNWx2cms1djBMSjZPQ05GV0FKcUJtYWlaVVRrWld2?=
+ =?utf-8?B?NXhrOUlZNEgvQWFGOHJhTk04OEpZV2ZkMHgvKzdmQkxvNDZWQ3VtV3JjR3BC?=
+ =?utf-8?B?QkxMMlVoYmZWbnFyTGNLOGFnWXNrMHlzbm9meWl0bEd1eUp2Wlp2R2tqc09J?=
+ =?utf-8?B?K2lCTFJ3b2sxZEx6elZta2I2THRwalBwVmpYWEs5RnREWmp2RWZ2cGpsS1Y3?=
+ =?utf-8?B?VjlaYnk1dHJMNGFZaW5sdXRzUmhmNmlRWk8zbHlBWVltaDZvSVdVWXFLVjVm?=
+ =?utf-8?B?WnZqaEVjNGkzRHVvV0JhVVNxd1BlaC9uSTBLNFZTYlFBTlNmQzZvZWxTbjlD?=
+ =?utf-8?B?akYrZFkzNHlVbE9qV2dXK0lGekNNeGRCaXcyVnQrNStwLzJDOFNFSEhNYWxS?=
+ =?utf-8?B?U0t1Z3dzSnJ5MXVESThKU1Z1T2ZEMmNSTCtwYmtDcU5TU0g0ZmtOaVpTdjda?=
+ =?utf-8?B?N2JjdlhEcHFoeFAwMDRQK1FJVG43UklvKzUyTVRkeHZKS0lWQ2xMYmx5YVJx?=
+ =?utf-8?B?N0l2SUVrN2dOMTllUGRmU2xyWlk3RzZEQVNKZHY3bmhCZ1dQekxPYUNhemxQ?=
+ =?utf-8?B?ZE1oVjRYekZzN1Bab3BFdDA0NHlqa2ZRb0lrclFmS3N4VmlpQzZKR0JGN3N1?=
+ =?utf-8?B?dVVBMFpxSGNGUHJaL0tRaXNjN3VHeUJZQktuWForWERlci9pMlRIN1l6Nk1p?=
+ =?utf-8?B?Nm1TYmhyUlowY1llcWFBTXA4MG9sZFFXS0tCTHl1cENIZzBWZ25sYmFubGV2?=
+ =?utf-8?B?TTJxcVRqU3BMaU9NaWlHOUVOeldxcERNY21ndGQ1MlBYRHdsdzBEc2ViSDBr?=
+ =?utf-8?B?TG9JbWhuaGhhbkJQNlpSclFTdHZrcHNhbm5yMUtET0Rab1Q5YjhISnVLNFV1?=
+ =?utf-8?B?cU9ZbENmY0ovaXpvOVIvU0RkM0haV2lIbWxKOVJsTW5hdjJESm9wSWp6VFR1?=
+ =?utf-8?B?VjZJVEZsUlo1Zy9QSExmSzQ4dm5SUDQ4OElVYU9GV1Z4OWdKeEZzNVdxR2FB?=
+ =?utf-8?Q?m0aAyn/djbxV+?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4123.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SVJTL2FJVnh5Rm9ERHRjQ0tsWFlsYVJwVGplYUZmQkQ1Y3pVbVhBRWs3ekhD?=
+ =?utf-8?B?YkZtUDRxSkRXMnEwMUZ4UzIvTlVnZUcvMEErTExmWjl3Z1JpY1RFQlcrbVBr?=
+ =?utf-8?B?NXJmM3IwUlNUTGFYTkIxcmlUYUhYRHl6TGRUb3dDZGFBRTZzbEFwVHREc2p0?=
+ =?utf-8?B?T0pNNGowSi9hUFFkWUkzbUFFTjYrdEMyOHhmTUw1RCtpSHQ2cDNHNWdCUHAw?=
+ =?utf-8?B?MzVkVTdHbkt2OWNpdVV5dEdJQkRXTllhY3BWWGd2N2laeURnMHZCWGFPRzZ4?=
+ =?utf-8?B?cEhhSDNxaGFONUczSVo3QlRSSmRicERuaTRCWUtYY3FaMkJjMHhLcHlEL0xt?=
+ =?utf-8?B?OHByUWwxZkZwYW5KMDV0b05yZlJ5VjM1dkZRbHVWbHpMaFh2ZDNqMU5yRWhN?=
+ =?utf-8?B?WnRMdHpyQlo4VVVKWjRic0xES1cra0kzYXR3M2M2bm9LREU0eXF5VmxwbUVP?=
+ =?utf-8?B?N2Z4dk9abmJrQnlTSmREYkZnbTNlbkxVTk9ib25VbmNidmYySFNWaVlyR055?=
+ =?utf-8?B?U2lkWUYvK1pxd3RCdjBMbGZXRkNXMVZvQTRzVk4xc0lEbVBzSGpVcjJjWjVx?=
+ =?utf-8?B?eXg3OXRlbW14eHhTTngzemxEUzMzamppSTBIeVJ0cmF2dUlGQUZXekJRb2M0?=
+ =?utf-8?B?QktIdFlMQkhCN0ZUdU51NkJVV2ZwVmFHNGxBenlmK3dyRjF6NElYMWlmTkNp?=
+ =?utf-8?B?TWlBakxvZVkybjZnYVhHMm5oWWpHaE1iby9hcFp5VFlhNkhiTW5xVGNNZHB1?=
+ =?utf-8?B?ZTJUNjhpY1RlOHdtMmxvWWpFWjRwTTZNb2ljdXV0eGEzUUlPdjRqS2NmVDBY?=
+ =?utf-8?B?czJQVUk4YnB2c3JURDJVam5sbHZ6aXhORTNkTTgyaUZjSlo1aUNBeDdVVmdH?=
+ =?utf-8?B?ajY1S2t3ZmhZQmx5TnRMaDRSOWMvaU1CSVRhTjhsclMzZkNXNDJtL0twdmRY?=
+ =?utf-8?B?bGVERi9JbEhiVjFlS0ZTemoxRFpRM0Y5Vyswb25RVG1SS2UrZ2VHYUUrUlpF?=
+ =?utf-8?B?SUZEbmJDNXY5NE0vM2FSZTlyb3NSd2lsTUF6V21WTnlleXZ5Q2pwQW5UbWVy?=
+ =?utf-8?B?c01YRlUwaVZicVdDVEV5bG5PblVUYlhpLzF4TEsxbTBrZVdGYWl3Q3BuUVdC?=
+ =?utf-8?B?a3hIVlBZYzNKckJnKzhvYytVdUtQVXNwNGVySHBpQ0VPTkUva05LbktJbG1M?=
+ =?utf-8?B?RjFwd053alM3QXhMWlJsQWZQUVFkTXB6SUU1a3FrbFFrNk9qT0ZuOFppckJt?=
+ =?utf-8?B?cVJpeVVXeGN3RmhWNGVlOTh6YTRQSVlWSEFRTndGOHZqcko5aEdONnJFVXRO?=
+ =?utf-8?B?OXRJT003S0RrTERSZnJCSlNaUGtvb2lNOG1hZ1ZNQVFmSG43bXE2K3lCOHIr?=
+ =?utf-8?B?NC9BcTcrUEQ3SnU1RzFyTDVLTEtHaDNmTUJmdjRpUkE3Q2dpZTk5VG9lalVC?=
+ =?utf-8?B?eUhXN3FWTjRVYStId3lIWXEva1FCVHp3WVExeGVTdUxnWWM4ZTVzeWc1Yk1V?=
+ =?utf-8?B?U1NUWG5BbE80aERNNzF0VzkycENGT1c5TzhJUEhZV3B4OXMrU0VWdVVZWUp4?=
+ =?utf-8?B?TXNwUVVaWCtYRkU0V2NZVmQ2TUNWbGRMZWtPTHUrYWZLU3RydUgxZk9zNEFV?=
+ =?utf-8?B?OUc3MzRrQ3RiODNXdm1pZkVoVFE4NnQ5WTNOMEJleDZVb1FudGk0VnZHeHdU?=
+ =?utf-8?B?dzR2RFpEY2tNMG52RjRZdkJ1cjA4VGMyTHBnMU53aE4yaHZwOVd4TURoSjBW?=
+ =?utf-8?B?VHkvOHJ2NUk0K3dITGhoMmhCZy9YcDV5S2lSS3Fmc04xYXRENWtBR2o0RlVG?=
+ =?utf-8?B?aG15NStKRGlkQkczZituQlphTEV3SjUrSUNudmRtSkd5eGxnM3o4MUhOUHdi?=
+ =?utf-8?B?cFlGcHlQN3hibnFweExlVml0S3E1ZEdoMGM2QzlnTHFkS0ZLcmo3TjRLWXV4?=
+ =?utf-8?B?aWo3QWlzb0hOeGNsTW9OTDQxdVhpVUU5REplQmFlRG1JZXJUWVM2YUtiVzI2?=
+ =?utf-8?B?NHRwQnpCL2RtRkpORFl5aFJpaWpCRUFCVHY3K3orbTZhbmlUK0tpd3VGUXRC?=
+ =?utf-8?B?K1BYeEJZYkdGNHlwSXBCak1JVVhML3FKZXA5NGNZUHAyb0ZQRkdCTkdrNDc4?=
+ =?utf-8?Q?kNbDU45WdofXaNNorvu34ZimP?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70fff2d6-33fa-4702-7d15-08dd4c25af5d
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4123.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 11:58:10.1209
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sChWbJmB63q44/l490pqcGkuTqAQtEbY3NmWgOKfIMOOCmxNTol4PxykZdsyh7OtHN9oLrBWHz4HnS072NG2Lg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5911
 
-The btusb driver data is allocated by devm_kzalloc and is
-automatically freed on driver detach, so I guess we don't have
-anything to do here.
-Or perhaps we should move btusb_disconnect's content here? Luiz, what
-do you think?
+On 07/02/25 12:28, Vijendar Mukunda wrote:
+> This patch series consists of code improvements and new platform support
+> for ACP7.0 & ACP7.1 platforms.
+>
+> Changes since v3:
+> - Remove extra white line in amd_sdw_manager_start() function.
+>
+> Changes since v2:
+> - Rebase the patch series after dropping the patch which adds conditional
+>   check for SoundWire manager device resume when wake event is asserted.
+>
+> Changes since v1:
+> - Drop white line insertion in the code.
+> - Add a conditional check for SoundWire manager device resume when wake
+>   event is asserted.
+> - Add new patch to set ACP_PME_EN during runtime suspend sequence
+> - Split the existing implementation of host wake interrupt mask
+>   enablement and setting device power state in to two separate patches
+>   and refactor set device power state logic.
+> - Drop PME status clear logic.
 
-On Thu, Feb 13, 2025 at 6:01=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Thu, Feb 13, 2025 at 11:43:59AM +0800, Hsin-chen Chuang wrote:
-> > From: Hsin-chen Chuang <chharry@chromium.org>
-> >
-> > Expose the isoc_alt attr with device group to avoid the racing.
-> >
-> > Now we create a dev node for btusb. The isoc_alt attr belongs to it and
-> > it also becomes the parent device of hci dev.
-> >
-> > Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to control =
-USB alt setting")
-> > Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
-> > ---
-> >
-> > Changes in v4:
-> > - Create a dev node for btusb. It's now hci dev's parent and the
-> >   isoc_alt now belongs to it.
-> > - Since the changes is almost limitted in btusb, no need to add the
-> >   callbacks in hdev anymore.
-> >
-> > Changes in v3:
-> > - Make the attribute exported only when the isoc_alt is available.
-> > - In btusb_probe, determine data->isoc before calling hci_alloc_dev_pri=
-v
-> >   (which calls hci_init_sysfs).
-> > - Since hci_init_sysfs is called before btusb could modify the hdev,
-> >   add new argument add_isoc_alt_attr for btusb to inform hci_init_sysfs=
-.
-> >
-> >  drivers/bluetooth/btusb.c        | 98 +++++++++++++++++++++++++-------
-> >  include/net/bluetooth/hci_core.h |  1 +
-> >  net/bluetooth/hci_sysfs.c        |  3 +-
-> >  3 files changed, 79 insertions(+), 23 deletions(-)
-> >
-> > diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> > index 1caf7a071a73..cb3db18bb72c 100644
-> > --- a/drivers/bluetooth/btusb.c
-> > +++ b/drivers/bluetooth/btusb.c
-> > @@ -920,6 +920,8 @@ struct btusb_data {
-> >       int oob_wake_irq;   /* irq for out-of-band wake-on-bt */
-> >
-> >       struct qca_dump_info qca_dump;
-> > +
-> > +     struct device dev;
-> >  };
-> >
-> >  static void btusb_reset(struct hci_dev *hdev)
-> > @@ -3693,6 +3695,9 @@ static ssize_t isoc_alt_store(struct device *dev,
-> >       int alt;
-> >       int ret;
-> >
-> > +     if (!data->hdev)
-> > +             return -ENODEV;
-> > +
-> >       if (kstrtoint(buf, 10, &alt))
-> >               return -EINVAL;
-> >
-> > @@ -3702,6 +3707,34 @@ static ssize_t isoc_alt_store(struct device *dev=
-,
-> >
-> >  static DEVICE_ATTR_RW(isoc_alt);
-> >
-> > +static struct attribute *btusb_sysfs_attrs[] =3D {
-> > +     NULL,
-> > +};
-> > +ATTRIBUTE_GROUPS(btusb_sysfs);
-> > +
-> > +static void btusb_sysfs_release(struct device *dev)
-> > +{
-> > +     // Resource release is managed in btusb_disconnect
->
-> That is NOT how the driver model works, do NOT provide an empty
-> release() function just to silence the driver core from complaining
-> about it.
->
-> If for some reason the code thinks it is handling devices differently
-> than it should be, fix that instead.
->
-> thanks,
->
-> greg k-h
+Hi Vinod,
 
---=20
-Best Regards,
-Hsin-chen
+ASoC patches (Which adds support for ACP7.0 & ACP7.1 platforms) got
+merged. Could you please help to review the patch series?
+
+Thanks,
+Vijendar
+>
+> Vijendar Mukunda (6):
+>   soundwire: amd: change the soundwire wake enable/disable sequence
+>   soundwire: amd: add debug log for soundwire wake event
+>   soundwire: amd: add support for ACP7.0 & ACP7.1 platforms
+>   soundwire: amd: set device power state during suspend/resume sequence
+>   soundwire: amd: set ACP_PME_EN during runtime suspend sequence
+>   soundwire: amd: add soundwire host wake interrupt enable/disable
+>     sequence
+>
+>  drivers/soundwire/amd_manager.c   | 149 +++++++++++++++++++++++++++++-
+>  drivers/soundwire/amd_manager.h   |  26 ++++++
+>  include/linux/soundwire/sdw_amd.h |   2 +
+>  3 files changed, 172 insertions(+), 5 deletions(-)
+>
+
