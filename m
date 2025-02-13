@@ -1,64 +1,61 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D6121D3E3
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47ADE227E90
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739446036; cv=none; b=t3wotqdCtiljHXvlunZH8MUNfPtIYTORKX50sXMebqZuxuhn9sDe5J1VWdMnxy3d94CGpB2UClgJVwjcWtJrQ86yW2/aYPsob+XsyUFhv4HoJWXra/+x8xk266gFCzG8drY+iSlnBeqAfIECTqe2la1ZKQ8ONI3JXrgpQLGMQRI=
+	t=1739446091; cv=none; b=K+y0Ff9JwN5j/mq9l8jMaQrPOKUGhFr3cDoAIaOPAPagfEmrn0o7Px/m3eqLCuCOTsq2lj6i3xA563n/wdTd6x2RX6W5t8gZrcRFfgGzcEFsXUCzxV8Cs8PWKUU/HdNRYRSoUt/eS9W1sF2BEVU+SIBVFnH0VeVyFARE/ZpfmyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739446036; c=relaxed/simple;
-	bh=Ul+63AoK2YKjrFyQZuNP1qtoNWxqR3iEPEiUJROSL48=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pjrVfTyGiia0clFJk+60j2BRgVeFDB6/gC2T5nWd9Z/48DMdj5BjT1oiD0PwGxTk9nix2k6fjkmu5aOywleWKkHm8h5gjvxtAl9efoRnggc37zwK1wkt1BS0r2tgxI7cRWkUQsPDRMc1qtUCACvN3o42FpzkkS0gDJD56FFdasY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VAZ9eDig; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739446091; c=relaxed/simple;
+	bh=X2bmPGoKkHuDg8cYWq8SnBf/6/7pmLUfnDFqPHvOZ0g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BDTN6ttImAUFQpHEfzIp9AB1tO8xwsuR7hcLol7sTaipY+L/17Ghem6e02j5xwaNQyIo7VEzHTMJ+y99EadEsaqCOzdxnRrZpH9m9fnYPDbNWpoQldyn19dJuxzNEizlm2Y7FK1D5WCRLiqqLyWXtXM3+OVJRsQG4qSZodeXNQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=UqyeZ25X; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VAZ9eDig"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739446033;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1wqsTTOvQM7BrWYKS6CkT4Uf08xeE2cALApyEMlXy3Q=;
-	b=VAZ9eDiglTrKk43OS/ClLkY/RNZhWHUpUsraANNMWuSAezigDBgTot/VOPM7rJsX0/esX3
-	ZA4darKPh38qWWhEI89MHhLG2Jtd/IgHJIKnNPufi+WoMnLu/x2TmrykYtguqT9bDIinDe
-	bDfU+9DY9htN8gbv3Jz5AiWJApGxRGU=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-119-27irw2vKN8u8Ec2WA8Cz8A-1; Thu,
- 13 Feb 2025 06:27:07 -0500
-X-MC-Unique: 27irw2vKN8u8Ec2WA8Cz8A-1
-X-Mimecast-MFC-AGG-ID: 27irw2vKN8u8Ec2WA8Cz8A_1739446026
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4ADD618D95DC;
-	Thu, 13 Feb 2025 11:27:06 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.45.225.79])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C0185300018D;
-	Thu, 13 Feb 2025 11:27:02 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="UqyeZ25X"
+Received: from ldvnode.intra.ispras.ru (unknown [10.10.2.153])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 6F2844226E07;
+	Thu, 13 Feb 2025 11:28:06 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 6F2844226E07
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1739446086;
+	bh=NBjVF3pUP7QFgRHJmaW5T9LW35eN83jOLIfzLRGqYek=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UqyeZ25XgLnLDnU5lA+jWmuz+QkDotd96ydS7w70fCrpO/g+S12Xa9WCDAYTGQesA
+	 tYVmO3BlIuIIDN8KBWLT+6gwiiB4rA7MHRldSmA67QOjJJg6hYg8J2zwJAfxb6/VAy
+	 GsBKn00KMHboRsy4ofbrv7A9RhbIGZYc4gCbKgSU=
+From: Vitalii Mordan <mordan@ispras.ru>
+To: Andrzej Hajda <andrzej.hajda@intel.com>
+Cc: Vitalii Mordan <mordan@ispras.ru>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
 	David Airlie <airlied@gmail.com>,
 	Simona Vetter <simona@ffwll.ch>,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
+	Sui Jingfeng <sui.jingfeng@linux.dev>,
+	Aleksandr Mishin <amishin@t-argos.ru>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Tomi Valkeinen <tomi.valkeinen@ti.com>,
+	Jyri Sarha <jsarha@ti.com>,
+	Quentin Schulz <quentin.schulz@free-electrons.com>,
+	Swapnil Jakhade <sjakhade@cadence.com>,
 	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v4 8/8] drm/i915: Add drm_panic support for 4-tiling with DPT
-Date: Thu, 13 Feb 2025 12:19:32 +0100
-Message-ID: <20250213112620.1923927-9-jfalempe@redhat.com>
-In-Reply-To: <20250213112620.1923927-1-jfalempe@redhat.com>
-References: <20250213112620.1923927-1-jfalempe@redhat.com>
+	linux-kernel@vger.kernel.org,
+	Fedor Pchelkin <pchelkin@ispras.ru>,
+	Alexey Khoroshilov <khoroshilov@ispras.ru>,
+	Vadim Mutilin <mutilin@ispras.ru>,
+	lvc-project@linuxtesting.org
+Subject: [PATCH v2] gpu: cdns-mhdp8546: fix call balance of mhdp->clk handling routines
+Date: Thu, 13 Feb 2025 14:28:01 +0300
+Message-Id: <20250213112801.1611525-1-mordan@ispras.ru>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,65 +63,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Alderlake and later, it's not possible to disable tiling when DPT
-is enabled.
-So this commit implements 4-Tiling support, to still be able to draw
-the panic screen.
+If the clock mhdp->clk was not enabled in cdns_mhdp_probe(), it should not
+be disabled in any path.
 
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+Use the devm_clk_get_enabled() helper function to ensure proper call
+balance for mhdp->clk.
+
+Found by Linux Verification Center (linuxtesting.org) with Klever.
+
+Fixes: fb43aa0acdfd ("drm: bridge: Add support for Cadence MHDP8546 DPI/DP bridge")
+Signed-off-by: Vitalii Mordan <mordan@ispras.ru>
 ---
- .../gpu/drm/i915/display/intel_atomic_plane.c | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+v2: Use devm_clk_get_enabled() helper function, as per Dmitry Baryshkov's
+request.
 
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic_plane.c b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-index d20f0291b50bc..d0340ff2c9aeb 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-@@ -1228,6 +1228,25 @@ static void intel_ytile_set_pixel(struct drm_scanout_buffer *sb, unsigned int x,
- 	iosys_map_wr(&sb->map[0], offset, u32, color);
+ drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
+index d081850e3c03..d4e4f484cbe5 100644
+--- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
++++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
+@@ -2463,9 +2463,9 @@ static int cdns_mhdp_probe(struct platform_device *pdev)
+ 	if (!mhdp)
+ 		return -ENOMEM;
+ 
+-	clk = devm_clk_get(dev, NULL);
++	clk = devm_clk_get_enabled(dev, NULL);
+ 	if (IS_ERR(clk)) {
+-		dev_err(dev, "couldn't get clk: %ld\n", PTR_ERR(clk));
++		dev_err(dev, "couldn't get and enable clk: %ld\n", PTR_ERR(clk));
+ 		return PTR_ERR(clk);
+ 	}
+ 
+@@ -2504,14 +2504,12 @@ static int cdns_mhdp_probe(struct platform_device *pdev)
+ 
+ 	mhdp->info = of_device_get_match_data(dev);
+ 
+-	clk_prepare_enable(clk);
+-
+ 	pm_runtime_enable(dev);
+ 	ret = pm_runtime_resume_and_get(dev);
+ 	if (ret < 0) {
+ 		dev_err(dev, "pm_runtime_resume_and_get failed\n");
+ 		pm_runtime_disable(dev);
+-		goto clk_disable;
++		return ret;
+ 	}
+ 
+ 	if (mhdp->info && mhdp->info->ops && mhdp->info->ops->init) {
+@@ -2590,8 +2588,6 @@ static int cdns_mhdp_probe(struct platform_device *pdev)
+ runtime_put:
+ 	pm_runtime_put_sync(dev);
+ 	pm_runtime_disable(dev);
+-clk_disable:
+-	clk_disable_unprepare(mhdp->clk);
+ 
+ 	return ret;
+ }
+@@ -2632,8 +2628,6 @@ static void cdns_mhdp_remove(struct platform_device *pdev)
+ 	cancel_work_sync(&mhdp->modeset_retry_work);
+ 	flush_work(&mhdp->hpd_work);
+ 	/* Ignoring mhdp->hdcp.check_work and mhdp->hdcp.prop_work here. */
+-
+-	clk_disable_unprepare(mhdp->clk);
  }
  
-+static void intel_4tile_set_pixel(struct drm_scanout_buffer *sb, unsigned int x, unsigned int y,
-+				  u32 color)
-+{
-+	u32 offset;
-+	unsigned int swizzle;
-+	unsigned int width_in_blocks = DIV_ROUND_UP(sb->width, 32);
-+
-+	/* Block offset */
-+	offset = ((y / YTILE_HEIGHT) * width_in_blocks + (x / YTILE_WIDTH)) * YTILE_SIZE;
-+
-+	x = x % YTILE_WIDTH;
-+	y = y % YTILE_HEIGHT;
-+
-+	/* bit order inside a block is y4 y3 x4 y2 x3 x2 y1 y0 x1 x0 */
-+	swizzle = (x & 3) | ((y & 3) << 2) | ((x & 0xc) << 2) | (y & 4) << 4 | ((x & 0x10) << 3) | ((y & 0x18) << 5);
-+	offset += swizzle * 4;
-+	iosys_map_wr(&sb->map[0], offset, u32, color);
-+}
-+
- static void intel_panic_flush(struct drm_plane *plane)
- {
- 	struct intel_plane_state *plane_state = to_intel_plane_state(plane->state);
-@@ -1262,7 +1281,6 @@ static void (*intel_get_tiling_func(u64 fb_modifier))(struct drm_scanout_buffer
- 	case I915_FORMAT_MOD_Y_TILED_GEN12_RC_CCS:
- 	case I915_FORMAT_MOD_Y_TILED_GEN12_MC_CCS:
- 		return intel_ytile_set_pixel;
--	case I915_FORMAT_MOD_X_TILED:
- 	case I915_FORMAT_MOD_4_TILED:
- 	case I915_FORMAT_MOD_4_TILED_DG2_RC_CCS:
- 	case I915_FORMAT_MOD_4_TILED_DG2_MC_CCS:
-@@ -1272,6 +1290,8 @@ static void (*intel_get_tiling_func(u64 fb_modifier))(struct drm_scanout_buffer
- 	case I915_FORMAT_MOD_4_TILED_MTL_MC_CCS:
- 	case I915_FORMAT_MOD_4_TILED_BMG_CCS:
- 	case I915_FORMAT_MOD_4_TILED_LNL_CCS:
-+		return intel_4tile_set_pixel;
-+	case I915_FORMAT_MOD_X_TILED:
- 	case I915_FORMAT_MOD_Yf_TILED:
- 	case I915_FORMAT_MOD_Yf_TILED_CCS:
- 	default:
+ static const struct of_device_id mhdp_ids[] = {
 -- 
-2.47.1
+2.25.1
 
