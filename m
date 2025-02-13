@@ -1,226 +1,247 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4DD15689A;
-	Thu, 13 Feb 2025 17:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5695F201259
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739466937; cv=none; b=hNxmDAUhvM4SaE592sO2OuOvSCnLfFn9YtWHtvi9F1Z36rFcIuIrdw4NmWxxDEJLLGz2VNbsbNrOZ2hjy6BeMVN2jE0M2vTNjc0g9i8q5tsyussTgW/BpwfudDHiSrdPuHRckOkgO832FgTNhjlk5SLzIffOMWbmdP1Hm8Au9Ic=
+	t=1739467016; cv=none; b=rCPtWOgZJnKTKx0FNOKRbc+yub12T50vbUcqpLsbC4UVYUkkkZ6Z2hJ2CC/b5WlKcD2GBWNqUt53nguQE6V1cBngq2TSymw2pt2f8RhonrbtXxLS5ZNDu98788U5VWDr8OdLKortTIm9yEuNk/YFbZOTgHuTspQBvpUiB79b3t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739466937; c=relaxed/simple;
-	bh=sKAH8pxmoLFHVCRS/HFwKo3JD4z1kJnrcgM44SAA0J8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uSuggjntZQcUbPRq5ca+1lrtIUnWPZfWr+Y8zb1NFKM6EXCT2aVws1QxuYnEDCMzIS4WB1ifVV3+KcFMIbDGsnBhtVEH0anOTuXP7wq6MygXS5xm7I/6AcsEY8J6jsI7RE7QS2jMv7zbyCkN/7lDu0adLivuynsfMdff+2KwjRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af065.dynamic.kabel-deutschland.de [95.90.240.101])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id D3C0261CCD7D2;
-	Thu, 13 Feb 2025 18:07:34 +0100 (CET)
-Message-ID: <1430649f-75e2-4edd-afee-87bf4ac7a961@molgen.mpg.de>
-Date: Thu, 13 Feb 2025 18:07:33 +0100
+	s=arc-20240116; t=1739467016; c=relaxed/simple;
+	bh=GnnlHo3AN2X6voTtxaBU3/Xd7w16hkql2u/UErCIXZc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=hwgrvi+HkOqrEw7+LnrUWa0j3oP2cJvhRS0LGklDkF9XV6U5Br3EOYl6w19poy/djltl8TyiVfX5ny0oX07gfIprUkW0z0T+2r1V0tZsta4LLRBd5X7w6dJwCt00YCBmq8IIhSUrlAb3G+O+x7dYWFuKFMckoYgy7FDKba3abmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SjK9gTRg; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SjK9gTRg"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2b8a8c8cf8dso24854fac.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:16:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739467013; x=1740071813; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tBy9giu2XuH33LZCPuALTlrK7I4fNXTlE0NtPV35u4I=;
+        b=SjK9gTRg/q6brHd1qyx/ShNJhosbomtMC4+LFoZM/JeDtEfp184HCA1qnnKq0JEAjj
+         hDeotNdBcFLwYKx4bCrH+734R6NtcmmauojIPf08X5AX0xrbv9BFCulUVPgP5upWsGL8
+         c+0Umv7erJ8e1BKu01c6Q32XC9kGJlEu9GkK4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739467013; x=1740071813;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tBy9giu2XuH33LZCPuALTlrK7I4fNXTlE0NtPV35u4I=;
+        b=sVZ6XRLtpjh74hvESOk3Ffcqoy8k4bLl8qz3tPKIkr/FuqL39PhNqE8Als1Nd4MUvr
+         wwtbVTSGgZLyrbm4+s7U7r9S8Vk/YNvyxNWD9Ds+VfyGtv9v+eTdGIfjRNzCRNzAij5t
+         5niWItyYqGok8HEKGyjoEJ0P37yUw63XB77krLkwCZ4oAx8qsStusx/hRQ7c/aguAxiM
+         9i+utsQbQRM8pywh79wkp8XBMSReyKspZH8AcNUWAPU1sZAacUkCVmzb5edIEUljndO1
+         bY252xfkZbIa3/I1yfYKnq6lLDUPzedxBA78CchvtuiKBc1pvekCSBBRkv+K2mQ/TxEc
+         4MmA==
+X-Forwarded-Encrypted: i=1; AJvYcCVaktNY4anRFtEu5XaJNm7hfR5GNwAkb8OXSmdXsdkaoF1X6EVIEKaORiLHK71X70RLtim9wTwBeFRZWU8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWPfhVsjFDUUoaqx22QJ2pSkOTMpqeC9iLIQH376YVNlgC9tZP
+	lxp2pPsBwPxUMbvN+nlfJuUS3oWVgC8quR92QTGjjQauIUMHdRe8pyBtLU+e0LEk6Ky5XMp6fc+
+	J2lDEqI6nQc5FDXwlCIaOY0GVLk30ZOdElKSg
+X-Gm-Gg: ASbGncubC3hSHi3DS7UqeCJ+kHv8z7jHbo9HS4l6d8eEXkyIpLJ4+PEY8jw1NhbdkpT
+	qDqxQBB18sHGCxMxuC/57c0t7mxSNTtPGqo2FAwhK4uJT76A2J+/XroUDUaGq78m62yuC4vkAOd
+	yvixDZepL+pj1DDnodrgwdTTTuyXOBbw==
+X-Google-Smtp-Source: AGHT+IFgl+AN2r8X6K1wzkDWdEWSCbY3TrGWVYP851EsxR7f08xemuxZwcDGWA0t2Tv/VeZB1tHKMo1KROF0nlz+v0E=
+X-Received: by 2002:a05:6870:648b:b0:2b7:f564:a35b with SMTP id
+ 586e51a60fabf-2b8d67f0b49mr1726124fac.8.1739467013249; Thu, 13 Feb 2025
+ 09:16:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: NOHZ tick-stop error: local softirq work is pending, handler
- #08!!! on Dell XPS 13 9360
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>,
- anna-maria@linutronix.de, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- mingo@kernel.org, tglx@linutronix.de, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Hayes Wang <hayeswang@realtek.com>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org
-References: <20250210124551.3687ae51@foxbook>
- <b0d55f4c-a078-42a0-a0fe-5823700f2837@molgen.mpg.de>
- <Z6n-dWDSxNCjROYV@localhost.localdomain>
- <10de7289-653f-43b1-ad46-2e8a0cd42724@molgen.mpg.de>
- <Z6tmbdl646D_UjrY@localhost.localdomain>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <Z6tmbdl646D_UjrY@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250212032155.1276806-1-jeffxu@google.com> <20250212032155.1276806-2-jeffxu@google.com>
+ <qrxmfa6jvaojedmo6fle2e6vd5k4hzihcuxdc6zk43dclf6nsd@dvuzolusdtz4>
+In-Reply-To: <qrxmfa6jvaojedmo6fle2e6vd5k4hzihcuxdc6zk43dclf6nsd@dvuzolusdtz4>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Thu, 13 Feb 2025 09:15:00 -0800
+X-Gm-Features: AWEUYZk-H7IZgTRLevdACXtvIkKevRsUdXrms45ENhCkHRV0gRY9quOaw4ihuIE
+Message-ID: <CABi2SkUWGXtWAir5j1TO1c7FwOhbNmSwEzwTrxRgzfBydus=2A@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 1/7] mseal, system mappings: kernel config and
+ header change
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
+	keescook@chromium.org, jannh@google.com, torvalds@linux-foundation.org, 
+	vbabka@suse.cz, lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org, 
+	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, hch@lst.de, 
+	ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
+	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
+	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
+	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
+	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
+	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
+	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
+	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
+	mike.rapoport@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear Frederic,
+On Wed, Feb 12, 2025 at 7:05=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
+>
+...
+> >
+> > In this version, we've improved the handling of system mapping sealing =
+from
+> > previous versions, instead of modifying the _install_special_mapping
+> > function itself, which would affect all architectures, we now call
+> > _install_special_mapping with a sealing flag only within the specific
+> > architecture that requires it. This targeted approach offers two key
+> > advantages: 1) It limits the code change's impact to the necessary
+> > architectures, and 2) It aligns with the software architecture by keepi=
+ng
+> > the core memory management within the mm layer, while delegating the
+> > decision of sealing system mappings to the individual architecture, whi=
+ch
+> > is particularly relevant since 32-bit architectures never require seali=
+ng.
+> >
+> > Additionally, this patch introduces a new header,
+> > include/linux/usrprocess.h, which contains the mseal_system_mappings()
+> > function. This function helps the architecture determine if system
+> > mapping is enabled within the current kernel configuration. It can be
+> > extended in the future to handle opt-in/out prctl for enabling system
+> > mapping sealing at the process level or a kernel cmdline feature.
+> >
+> > A new header file was introduced because it was difficult to find the
+> > best location for this function. Although include/linux/mm.h was
+> > considered, this feature is more closely related to user processes
+> > than core memory management. Additionally, future prctl or kernel
+> > cmd-line implementations for this feature would not fit within the
+> > scope of core memory management or mseal.c. This is relevant because
+> > if we add unit-tests for mseal.c in the future, we would want to limit
+> > mseal.c's dependencies to core memory management.
+> >
+...
+> >
+> > diff --git a/include/linux/userprocess.h b/include/linux/userprocess.h
+> > new file mode 100644
+> > index 000000000000..bd11e2e972c5
+> > --- /dev/null
+> > +++ b/include/linux/userprocess.h
+> > @@ -0,0 +1,18 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _LINUX_USER_PROCESS_H
+> > +#define _LINUX_USER_PROCESS_H
+> > +#include <linux/mm.h>
+>
+> Why is this in a new file and not mm.h directly?  Anyone who needs to
+> use this will pull in mm.h anyways, and probably already has mm.h
+> included.
+>
+The commit message includes the reason. I've snipped and left the
+relevant portion for easy reference, please see the beginning of this
+email.
 
+> > +
+> > +/*
+> > + * mseal of userspace process's system mappings.
+> > + */
+> > +static inline unsigned long mseal_system_mappings(void)
+> > +{
+> > +#ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
+> > +     return VM_SEALED;
+> > +#else
+> > +     return 0;
+> > +#endif
+> > +}
+> > +
+> > +#endif
+>
+> Looking in mm.h, there are examples of config checks which either set
+> the bit or set it to 0.  This means you wouldn't need the function at
+> all and the precompiler would do all the work (although with a static
+> inline, I'm not sure it would make a big difference in instructions).
+>
+> For instance, you could do:
+> #ifdef CONFIG_64BIT
+> /* VM is sealed, in vm_flags */
+> #define VM_SEALED       _BITUL(63)
+>
+> #ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
+> #define VM_SYSTEM_SEAL          VM_SEALED
+> else
+> #define VM_SYSTEM_SEAL          VM_NONE
+> #endif
+>
+> #else /* CONFIG_64BIT */
+> #define VM_SYSTEM_SEAL          VM_NONE
+> #endif
+>
+> Then you can use VM_SYSTEM_SEAL in the system mappings function in the
+> list of flags instead of having a variable + calling the static
+> function.
+>
+> I didn't look close enough to see if the 32bit version is necessary.
+>
+I'm aware of the other pattern.
 
-Thank you very much for your help.
+VM_SEALED isn't defined in 32-bit systems, and mseal.c isn't part of
+the build. This is intentional. Any 32-bit code trying to use the
+sealing function or the VM_SEALED flag will immediately fail
+compilation. This makes it easier to identify incorrect usage.
 
-Am 11.02.25 um 16:02 schrieb Frederic Weisbecker:
-> Le Tue, Feb 11, 2025 at 12:57:33PM +0100, Paul Menzel a écrit :
+> > diff --git a/init/Kconfig b/init/Kconfig
+> > index d0d021b3fa3b..892d2bcdf397 100644
+> > --- a/init/Kconfig
+> > +++ b/init/Kconfig
+> > @@ -1882,6 +1882,24 @@ config ARCH_HAS_MEMBARRIER_CALLBACKS
+> >  config ARCH_HAS_MEMBARRIER_SYNC_CORE
+> >       bool
+> >
+> > +config ARCH_HAS_MSEAL_SYSTEM_MAPPINGS
+>
+> ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS is more clear.  HAS may mean it's
+> supported or it could mean it's enabled. SUPPORTS is more clear that
+> this is set if an arch supports the feature.  After all, I think HAS
+> here means it "has support for" mseal system mappings.
+>
+> I see that both are used (HAS and SUPPORTS), but I'm still not sure what
+> HAS means in other contexts without digging.
+>
+The existing pattern is to indicate arch support with
+CONFIG_ARCH_HAS_N and   security/KConfig to have CONFIG_N as the main
+switch. For example, CONFIG_ARCH_HAS_FORTIFY_SOURCE and
+CONFIG_FORTIFY_SOURCE. Since the MSEAL_SYSTEM_MAPPINGS is placed in
+security/Kconfig, hence I'm following the existing pattern in
+security/Kconfig.
 
->> Am 10.02.25 um 14:26 schrieb Frederic Weisbecker:
->>> Le Mon, Feb 10, 2025 at 12:59:42PM +0100, Paul Menzel a écrit :
->>
->>>> Am 10.02.25 um 12:45 schrieb Michał Pecio:
->>>>
->>>>>>>>>>>> On Dell XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022, with Linux 6.9-rc2+
->>>>>
->>>>>> Just for the record, I am still seeing this with 6.14.0-rc1
->>>>>
->>>>> Is this a regression? If so, which versions were not affected?
->>>>
->>>> Unfortunately, I do not know. Right now, my logs go back until September
->>>> 2024.
->>>>
->>>>       Sep 22 13:08:04 abreu kernel: Linux version 6.11.0-07273-g1e7530883cd2 (build@bohemianrhapsody.molgen.mpg.de) (gcc (Debian 14.2.0-5) 14.2.0, GNU ld (GNU Binutils for Debian) 2.43.1) #12 SMP PREEMPT_DYNAMIC Sun Sep 22 09:57:36 CEST 2024
->>>>
->>>>> How hard to reproduce? Wasn't it during resume from hibernation?
->>>>
->>>> It’s not easy to reproduce, and I believe it’s not related with resuming
->>>> from hibernation (which I do not use) or ACPI S3 suspend. I think, I can
->>>> force it more, when having the USB-C adapter with only the network cable
->>>> plugged into it, and then running `sudo powertop --auto-tune`. But sometimes
->>>> it seems unrelated.
->>>>
->>>>> IRQ isuses may be a red herring, this code here is a busy wait under
->>>>> spinlock. There are a few of those, they cause various problems.
->>>>>
->>>>>                   if (xhci_handshake(&xhci->op_regs->status,
->>>>>                                  STS_RESTORE, 0, 100 * 1000)) {
->>>>>                            xhci_warn(xhci, "WARN: xHC restore state timeout\n");
->>>>> 			spin_unlock_irq(&xhci->lock);
->>>>>                            return -ETIMEDOUT;
->>>>>                   }
->>>>>
->>>>> This thing timing out may be close to the root cause of everything.
->>>>
->>>> Interesting. Hopefully the USB folks have an idea.
->>>
->>> Handler #08 is NET_RX. So something raised the NET_RX on some non-appropriate
->>> place, perhaps...
->>>
->>> Can I ask you one more trace dump?
->>>
->>> I need:
->>>
->>> echo 1 > /sys/kernel/tracing/events/irq/softirq_raise/enable
->>> echo 1 > /sys/kernel/tracing/options/stacktrace
->>>
->>> Unfortunately this will also involve a small patch:
->>>
->>> diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
->>> index fa058510af9c..accd2eb8c927 100644
->>> --- a/kernel/time/tick-sched.c
->>> +++ b/kernel/time/tick-sched.c
->>> @@ -1159,6 +1159,9 @@ static bool report_idle_softirq(void)
->>>    	if (local_bh_blocked())
->>>    		return false;
->>> +	trace_printk("STOP\n");
->>> +	trace_dump_stack(0);
->>> +	tracing_off();
->>>    	pr_warn("NOHZ tick-stop error: local softirq work is pending, handler #%02x!!!\n",
->>>    		pending);
->>>    	ratelimit++;
->>
->> Thank you for your help. I applied the patch on top of 6.14-rc2, and was
->> able to reproduce the issue. Please find the Linux messages attached, and
->> the trace can be downloaded [1].
-> 
-> So here is the offender:
-> 
->   => __raise_softirq_irqoff
->   => __napi_schedule
->   => rtl8152_runtime_resume.isra.0
->   => rtl8152_resume
->   => usb_resume_interface.isra.0
->   => usb_resume_both
->   => __rpm_callback
->   => rpm_callback
->   => rpm_resume
->   => __pm_runtime_resume
->   => usb_autoresume_device
->   => usb_remote_wakeup
->   => hub_event
->   => process_one_work
->   => worker_thread
->   => kthread
->   => ret_from_fork
->   => ret_from_fork_asm
-> 
-> It is calling napi_schedule() from a non-interrupt. And since
-> ____napi_schedule() assumes to be called from an interrupt, it
-> raises the softirq accordingly without waking up ksoftirqd.
-> 
-> Can you try the following fix (untested, sorry...) ?
-> 
-> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-> index 468c73974046..8f6ea4e7685c 100644
-> --- a/drivers/net/usb/r8152.c
-> +++ b/drivers/net/usb/r8152.c
-> @@ -8537,8 +8537,11 @@ static int rtl8152_runtime_resume(struct r8152 *tp)
->   		clear_bit(SELECTIVE_SUSPEND, &tp->flags);
->   		smp_mb__after_atomic();
->   
-> -		if (!list_empty(&tp->rx_done))
-> +		if (!list_empty(&tp->rx_done)) {
-> +			local_bh_disable();
->   			napi_schedule(&tp->napi);
-> +			local_bh_enable();
-> +		}
->   
->   		usb_submit_urb(tp->intr_urb, GFP_NOIO);
->   	} else {
-> diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-> index 67964dc4db95..1bd730b881f0 100644
-> --- a/include/linux/lockdep.h
-> +++ b/include/linux/lockdep.h
-> @@ -619,6 +619,17 @@ do {									\
->   		     (!in_softirq() || in_irq() || in_nmi()));		\
->   } while (0)
->   
-> +/*
-> + * Assert to be either in hardirq or in serving softirq or with
-> + * softirqs disabled. Verifies a safe context to queue a softirq
-> + * with __raise_softirq_irqoff().
-> + */
-> +#define lockdep_assert_in_interrupt()				\
-> +do {								\
-> +	WARN_ON_ONCE(__lockdep_enabled && !in_interrupt());	\
-> +} while (0)
-> +
-> +
->   extern void lockdep_assert_in_softirq_func(void);
->   
->   #else
-> @@ -634,6 +645,7 @@ extern void lockdep_assert_in_softirq_func(void);
->   # define lockdep_assert_preemption_enabled() do { } while (0)
->   # define lockdep_assert_preemption_disabled() do { } while (0)
->   # define lockdep_assert_in_softirq() do { } while (0)
-> +# define lockdep_assert_in_interrupt() do { } while (0)
->   # define lockdep_assert_in_softirq_func() do { } while (0)
->   #endif
->   
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index c0021cbd28fc..80e415ccf2c8 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -4666,6 +4666,7 @@ static inline void ____napi_schedule(struct softnet_data *sd,
->   	struct task_struct *thread;
->   
->   	lockdep_assert_irqs_disabled();
-> +	lockdep_assert_in_interrupt();
->   
->   	if (test_bit(NAPI_STATE_THREADED, &napi->state)) {
->   		/* Paired with smp_mb__before_atomic() in
+> > diff --git a/security/Kconfig b/security/Kconfig
+> > index f10dbf15c294..bfb35fc7a3c6 100644
+> > --- a/security/Kconfig
+> > +++ b/security/Kconfig
+> > @@ -51,6 +51,24 @@ config PROC_MEM_NO_FORCE
+> >
+> >  endchoice
+> >
+> > +config MSEAL_SYSTEM_MAPPINGS
+> > +     bool "mseal system mappings"
+> > +     depends on 64BIT
+> > +     depends on ARCH_HAS_MSEAL_SYSTEM_MAPPINGS
+> > +     depends on !CHECKPOINT_RESTORE
+> > +     help
+> > +       Seal system mappings such as vdso, vvar, sigpage, uprobes, etc.
+> > +
+> > +       A 64-bit kernel is required for the memory sealing feature.
+> > +       No specific hardware features from the CPU are needed.
+> > +
+> > +       Note: CHECKPOINT_RESTORE, UML, gVisor are known to relocate or
+> > +       unmap system mapping, therefore this config can't be enabled
+> > +       universally.
+>
+> I guess add rr to the list, since that's also reported to have issues as
+> well.
+>
+sure.
 
-With this diff applied, I wasn’t able to reproduce the issue. Looks 
-promising. Thank you very much.
+Thanks for reviewing.
 
-Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
-
-
-Kind regards,
-
-Paul
+-Jeff
