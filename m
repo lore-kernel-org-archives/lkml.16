@@ -1,203 +1,168 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4B724168D
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1995241680;
+	Thu, 13 Feb 2025 14:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739455222; cv=none; b=E/Xm25jbiSj98c2hRKksc/5SKcrZDifUxBjYjVlfqTF+p5o6RVFUXTFQE3JOLwnQ31prA4XnEo216Z4twoERPSzqInrwgJSJO0TqZtIz8aVAK4I/d7J0sgzRtJAVf6jAWF8PDDT6jZqRzXtk1tVsRsZZxV3SI2Ado8rI8hsZpbE=
+	t=1739455243; cv=none; b=n4uNnUWKdKQizs2rjSTXyjlnM4AnCpIHtyLSWYikrs9ImMFEoVfe93mJS/PYdbeMJ/IenpaEFSU9UHOafYLhzXAZcgO9arDPwnuXU+F5IW3Olo456Z3iTCpP+oiMcmdefptakHeqs0Cjv1QK/bDtckGVzqAOMJ1Cx3q7trYukIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739455222; c=relaxed/simple;
-	bh=Pbs5wodWxm/JR5Tynt+/hc1eTWJ3Bckhjm8JuRL44ho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E+httB6zYJ90ICj9Vn96C+zZjfa0ku5To/jV/A2VrA82mhplizbHzzpukUhCwQOtxmQhQ2lrkqX3+9bK0a3Z4YNk6YTEQ5e0oHfnJFtXE9xId9SYthx/r2puw1w6FggfhkI/X7EMl6Wg+78460pS2IgpligJAe6Xq8BQUaP7u9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GSZF2cJu; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739455243; c=relaxed/simple;
+	bh=YpdB58uyq8tH7ERH2NdQvCyZMv332LF5vwPEXd91SCE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XkUwrKhzOPvo79M0K/AQ9FpNYKf9t+1V2HGpZyFDLDVU6lRHWDlPo5+Osk/ynk+WRrhX9nvg6ZAyrQviR8WpbhjGMZNRlkxVSxxsoJqHg+cRtZJweTMrZ4SjD2fOX5gyZWjrcuVVY6vaTYwAFhoSVaiOYL29VCUM+DPADXu/8Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d3IPWWei; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GSZF2cJu"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51D9Hodi020896
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:00:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	1cZ+v8WZaOBu2XxFF/U6ICJcJSWiyGa45lTYqCiTTmw=; b=GSZF2cJug7eVJgvO
-	O+zNUNLQQN+ooWI1Thb6LbscCytzKIANxt9fR2wYJ7blNR5HccnVzpCfwewdtxfh
-	VRzQP16cz12oT1ZG8L3US19WCSQnbvtL1xoGEL5EcsiEMUgHL9L/e0+uqBlwFpJT
-	WxNKmmd8ZkSG5wYuyyC/IiwWNnijYO8bo7tXFcULeisgJ10n5ELAhO7LJF7aMO46
-	wVCjROX8V0nBXLRSdDbMyyBzCZ3sLztq0X1IQvalYYsmH6SkNJn6KMHbIPtVLoHj
-	3+tVfxX8KdVYRzrWWoz195hZiQDddmSU+mNxEkh4WmHVm2zMeJ51Iph8zDkUHBuw
-	2SjWAQ==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44sdyxrrek-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 14:00:19 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4719ed0f8easo1495161cf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 06:00:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d3IPWWei"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21c2f1b610dso20816535ad.0;
+        Thu, 13 Feb 2025 06:00:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739455241; x=1740060041; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3CnYIC1jW8Yb7MVQSsYlSkO9EcP0G/PW7oItTF3TCFk=;
+        b=d3IPWWeicp3J0Jcviz6wLHLxmocgysJRkglXD7Rg9ZbSbG7sUslMnM7Q88V6dRfTh4
+         sWXA42ulpknChKWpHtXHQIHKl2c6wc6bDzbiMWKAPMhNZiDfVOBEc+y27YLBC5OE0Stv
+         MV7b36Kf41Pe80sBE9D9Mc8LL+62Ix9eqbtnMtc82BzT++hmud0uxCc05jh9S2NVNfoJ
+         aSMiB9bk0l2O9X5eunszS002+u0eXPonn6k/e+yr/hXaHKV6HT/KhcNn+y3h4ECJkxbV
+         bvv8ajqHGgHDHAUyMaCp0d93QnBJUB6LQTN7DY/mqoo7qLerS49qfXyP16pqfBiBlrMS
+         MYSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739455206; x=1740060006;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1cZ+v8WZaOBu2XxFF/U6ICJcJSWiyGa45lTYqCiTTmw=;
-        b=cap3Z6sOaimDxsdFTxaKpB8dK+G19F2zl3QBLCynLfcP7V3JRG9/dnm3CdlKpKzur+
-         8IFcKxWDaocbFPEdXhmGvgTgxB+gAykhQ150rZjFK6jR1b53rNsbeaNus/l4C2+8wgWZ
-         3xJqStYDrF1NuuSdIVwxGHkDlA8MF7lc8BY/kIRPqd2+/bqJSce8YYtlhdI+HR1OQl26
-         aSmptc01Ktms3Dn74mq/tuH4cjuc3EfoMeNNqWnl7Wm6tVK8lVl7sp+2Itdcy2B+Bp+R
-         gvMbOff/VdUN3saxOLKgjYbtrtommt2Q1IMagicYpfZZoQ6ORUkLdygNkfB8rg/ohWZG
-         IvdA==
-X-Forwarded-Encrypted: i=1; AJvYcCXBo7V3exiyT8j5YesGs4bi4sFEmoFvoYnDIySoLJ/pYoT94eciCc2u1dFat0CrYMoxms51jfgkzrKJoc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzM9fWBv63iBgndXw8ktNYc8P3FZQvTfbCK9tG6mY99RYF8fCkm
-	xo11p/JvxlAavVefBMfkLN3s4Mq+vMs6NkGFRhVKypJo6lLlM7c2i2o7wsMMky7hLsM4q6ZSwTy
-	by6W5GuDrunLmYKxpmA0JCTlp5f8EFp7DA/qu0vpdFt6ckFF+H0kNHHT0EFTPFhI=
-X-Gm-Gg: ASbGncvR9s19WouKVVg3G6E2TDGuJ/hXXK8QVJTUgGlnVR6YK9tfqrEjDZ2VOzo74IC
-	Q7sr9OruCUOhAfzbDYDpz2Uo61jsa6LEoAlJ5QxcItmLmZFCquMz7dvikgaDPHyDZYG8VhhnJrv
-	RUpmJLfQagy1I68OAPMIB4fqswv+DVbM4uoK9CLoI+Oym0bxhVjp5t3jKXeCELbm7ZniIJ1GW8X
-	ZWpb/eNjQvnDztGT/341x4C9R/ahmQIf1KSUbIeNewRha/29bg2lNzCvIyYMXnY7UVUS5N0Ik5r
-	6x1cMwqz9ty5W9YZrFVh/IrsXpbTvNW13Dbr+w8vJdA2DlsOo015SvFjRQY=
-X-Received: by 2002:a05:622a:15d6:b0:471:c024:cd4 with SMTP id d75a77b69052e-471c024127fmr16353271cf.14.1739455205665;
-        Thu, 13 Feb 2025 06:00:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGXWuPWhuOM3zr3nn89KwhyQauBwMb8+7/3qbTtER/s8Z2C4MYAvDD3+Y4GoxvHhLzuZR90wg==
-X-Received: by 2002:a05:622a:15d6:b0:471:c024:cd4 with SMTP id d75a77b69052e-471c024127fmr16352991cf.14.1739455205175;
-        Thu, 13 Feb 2025 06:00:05 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba532322f1sm138352966b.19.2025.02.13.06.00.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 06:00:04 -0800 (PST)
-Message-ID: <d674d626-e6a3-4683-8f45-81b09200849f@oss.qualcomm.com>
-Date: Thu, 13 Feb 2025 15:00:00 +0100
+        d=1e100.net; s=20230601; t=1739455241; x=1740060041;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3CnYIC1jW8Yb7MVQSsYlSkO9EcP0G/PW7oItTF3TCFk=;
+        b=QNGvBgMXSrDDS9ReMzrOQKrczj8g9iIH+K092nq47tIU+TzF1IHGLrwfYKmG9DzoNn
+         JU9JZ9UF24B/KCqfRRClwF4bLenNqJPQdT4h/kr233DW9M7gMpPSQwYDSJAgxNwInOmn
+         YWG1pgBPRV6lyJ54Mxwwk8k8hrrAdG9PecPwb9y30G3qaGCLPVJvREK1pbEZRwQ11FG+
+         jSQbdPIU0DQce6D7MVqnySlVEb84S7hfKpM2kbSP5qKuLTMw3JO/FeHzolSOE89qJEuT
+         ro6wDWIw2mhE61XlaBNrwqBzST94ji0gre+ARTj7a3rU7yCK3A5DlNYzjutfkaVjWdSa
+         72UA==
+X-Forwarded-Encrypted: i=1; AJvYcCViCktk41ChWn8yxOt9WLg6lw3nHvCQCMAgEiPtJqudvc3OpKJaGVgx/m9vIKyFzztG7oLbjSnLbxRmhYsKqg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfJV7u7afr3hJ8FzX4H6mD5ApRsSLHB7oKG/9qx/lLWkXFiRFX
+	/+BFbZ2hcTN3kRJbOgX4IFWY74iWX4SkvdBx78GwerfKEsqbdxznGfcMR9or
+X-Gm-Gg: ASbGncskRolmkib9UWpnKj6unVYQxsny/iTKC1rzwS4REjaUmqCjOYvr+dsNTjfHSxV
+	IL4QcrObxBG9p+SpJTGEGAL/PxGo5B5TcKmSp5+PFyhiLf/ZyT6sZfsooB1GHp3gGCJVxONl65V
+	jKaxxM+puke7HK9MErANDXHU3NKRy4kMX+piRxrVoPDo6QakmRDQV65BG/4d8l2EA1egqpxeDO/
+	sHMeqFA6eO/nNVnnwwuujwmZE2YwjZ7SZbcYFWmfcmCjZgZrvIGfvk3GgZS6Viat3TCkpLCV7uT
+	g3W58Vb7cxzdBPLIwQRGTXNXQQ7s0oVZsFtbZ+S49FQb7lvnhx1jW6t8fK6cBmukGOs=
+X-Google-Smtp-Source: AGHT+IFiybmklIR6sXPe5dOMXPko9nq/OxURSSt8JQfw095Ue+kPgwqj+3k15eW2uamc5z4ID2izMg==
+X-Received: by 2002:a17:902:e850:b0:21f:78f:c178 with SMTP id d9443c01a7336-220d1ec1f7bmr52326585ad.3.1739455240643;
+        Thu, 13 Feb 2025 06:00:40 -0800 (PST)
+Received: from mew.. (p3882177-ipxg22501hodogaya.kanagawa.ocn.ne.jp. [180.15.148.177])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d55858d6sm12565225ad.223.2025.02.13.06.00.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 06:00:40 -0800 (PST)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Cc: x86@kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	peterz@infradead.org,
+	hpa@zytor.com,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	tangyouling@loongson.cn,
+	hejinyang@loongson.cn,
+	yangtiezhu@loongson.cn,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu
+Subject: [PATCH v3 0/5] rust: Add bug/warn abstractions
+Date: Thu, 13 Feb 2025 22:57:54 +0900
+Message-ID: <20250213135759.190006-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/8] dt-bindings: dma: qcom: bam-dma: Add missing required
- properties
-To: Stephan Gerhold <stephan.gerhold@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Yuvaraj Ranganathan <quic_yrangana@quicinc.com>,
-        Anusha Rao <quic_anusha@quicinc.com>,
-        Md Sadre Alam
- <quic_mdalam@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luca Weiss <luca.weiss@fairphone.com>
-References: <20250212-bam-dma-fixes-v1-0-f560889e65d8@linaro.org>
- <20250212-bam-dma-fixes-v1-7-f560889e65d8@linaro.org>
- <22ce4c8d-1f3b-42c9-b588-b7d74812f7b0@oss.qualcomm.com>
- <Z6231bBqNhA2M4Ap@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <Z6231bBqNhA2M4Ap@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: A6nHpPayktXL11snnaJAo_hdErPEpMrE
-X-Proofpoint-GUID: A6nHpPayktXL11snnaJAo_hdErPEpMrE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-13_06,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- spamscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
- clxscore=1015 lowpriorityscore=0 phishscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502130107
+Content-Transfer-Encoding: 8bit
 
-On 13.02.2025 10:13 AM, Stephan Gerhold wrote:
-> On Wed, Feb 12, 2025 at 10:01:59PM +0100, Konrad Dybcio wrote:
->> On 12.02.2025 6:03 PM, Stephan Gerhold wrote:
->>> num-channels and qcom,num-ees are required when there are no clocks
->>> specified in the device tree, because we have no reliable way to read them
->>> from the hardware registers if we cannot ensure the BAM hardware is up when
->>> the device is being probed.
->>>
->>> This has often been forgotten when adding new SoC device trees, so make
->>> this clear by describing this requirement in the schema.
->>>
->>> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
->>> ---
->>>  Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml | 4 ++++
->>>  1 file changed, 4 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
->>> index 3ad0d9b1fbc5e4f83dd316d1ad79773c288748ba..5f7e7763615578717651014cfd52745ea2132115 100644
->>> --- a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
->>> +++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
->>> @@ -90,8 +90,12 @@ required:
->>>  anyOf:
->>>    - required:
->>>        - qcom,powered-remotely
->>> +      - num-channels
->>> +      - qcom,num-ees
->>>    - required:
->>>        - qcom,controlled-remotely
->>> +      - num-channels
->>> +      - qcom,num-ees
->>
->> I think I'd rather see these deprecated and add the clock everywhere..
->> Do we know which one we need to add on newer platforms? Or maybe it's
->> been transformed into an icc path?
-> 
-> This isn't feasible, there are too many different setups. Also often the
-> BAM power management is tightly integrated into the consumer interface.
-> To give a short excerpt (I'm sure there are even more obscure uses):
-> 
->  - BLSP BAM (UART, I2C, SPI on older SoCs):
->     1. Enable GCC_BLSP_AHB_CLK
->     -> This is what the bam_dma driver supports currently.
-> 
->  - Crypto BAM: Either
->     OR 1. Vote for single RPM clock
->     OR 1. Enable 3 separate clocks (CE, CE_AHB, CE_AXI)
->     OR 1. Vote dummy bandwidth for interconnect
-> 
->  - BAM DMUX (WWAN on older SoCs):
->     1. Start modem firmware
->     2. Wait for BAM DMUX service to be up
->     3. Vote for power up via the BAM-DMUX-specific SMEM state
->     4. Hope the firmware agrees and brings up the BAM
-> 
->  - SLIMbus BAM (audio on some SoCs):
->     1. Start ADSP firmware
->     2. Wait for QMI SLIMBUS service to be up via QRTR
->     3. Vote for power up via SLIMbus-specific QMI messages
->     4. Hope the firmware agrees and brings up the BAM
-> 
-> Especially for the last two, we can't implement support for those
-> consumer-specific interfaces in the BAM driver. Implementing support for
-> the 3 variants of the Crypto BAM would be possible, but it's honestly
-> the least interesting use case of all these. It's not really clear why
-> we are bothing with the crypto engine on newer SoCs at all, see e.g. [1].
-> 
-> [1]: https://lore.kernel.org/linux-arm-msm/20250118080604.GA721573@sol.localdomain/
-> 
->> Reading back things from this piece of HW only to add it to DT to avoid
->> reading it later is a really messy solution.
-> 
-> In retrospect, it could have been cleaner to avoid describing the BAM as
-> device node independent of the consumer. We wouldn't have this problem
-> if the BAM driver would only probe when the consumer is already ready.
-> 
-> But I think specifying num-channels in the device tree is the cleanest
-> way out of this mess. I have a second patch series ready that drops
-> qcom,num-ees and validates the num-channels once it's safe reading from
-> the BAM registers. That way, you just need one boot test to ensure the
-> device tree description is really correct.
+This patchset adds warn_on and warn_on_once macros with the bug/warn
+abstraction.
 
-Thanks for the detailed explanation!
+Wrapping C's BUG/WARN macros does not work well for x86, RISC-V,
+ARM64, and LoongArch. Rust code needs to directly execute the same
+assembly code used on the C side. To avoid duplicating the assembly
+code, this approach mirrors what the static branch code does: it
+generates the assembly code for Rust using the C preprocessor at
+compile time.
 
-Do you think it could maybe make sense to expose a clock/power-domain
-from the modem/adsp rproc and feed it to the DMUX / SLIM instances when
-an appropriate ping arrives? This way we'd also defer probing the drivers
-until the device is actually accessible.
+The 1st to 4th patches export the BUG/WARN assembly code for Rust on
+each architecture, with no functional changes on the C side. The
+changes for x86 and RISC-V are straightforward. However, the ARM64 and
+LoongArch assembly code are designed differently; they are used by
+both C inline assembly and assembly code. As a result, sharing this
+code with Rust is complicated.
 
-Konrad
+The last patch adds the bug abstraction with warn_on and warn_on_once
+implementations.
+
+This has been tested on x86, ARM64, and RISC-V (QEMU), with only a
+compile test performed for LoongArch.
+
+The assembly code can be used for both BUG and WARN, but currently
+only supports warn_on and warn_on_once. I will work on the remaining
+functionality after this abstraction is merged.
+
+v3:
+- rebased on rust-next
+- use ANNOTATE_REACHABLE macro (replaced ASM_REACHABLE)
+- added Acked-by tag to the x86 change
+v2: https://lore.kernel.org/linux-arm-kernel/20241218062009.2402650-1-fujita.tomonori@gmail.com/
+- remove target_arch cfg by using asm comment
+- clean up the changes to loongarch asm
+v1: https://lore.kernel.org/linux-arm-kernel/20241210001802.228725-1-fujita.tomonori@gmail.com/
+
+FUJITA Tomonori (5):
+  x86/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with
+    Rust
+  riscv/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with
+    Rust
+  arm64/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with
+    Rust
+  loongarch/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing
+    with Rust
+  rust: Add warn_on and warn_on_once
+
+ arch/arm64/include/asm/asm-bug.h              |  33 +++++-
+ arch/loongarch/include/asm/bug.h              |  35 +++++-
+ arch/riscv/include/asm/bug.h                  |  37 ++++---
+ arch/x86/include/asm/bug.h                    |  56 +++++-----
+ rust/Makefile                                 |   8 ++
+ rust/kernel/.gitignore                        |   2 +
+ rust/kernel/bug.rs                            | 100 ++++++++++++++++++
+ rust/kernel/generated_arch_reachable_asm.rs.S |   7 ++
+ rust/kernel/generated_arch_warn_asm.rs.S      |   7 ++
+ rust/kernel/lib.rs                            |   1 +
+ 10 files changed, 235 insertions(+), 51 deletions(-)
+ create mode 100644 rust/kernel/bug.rs
+ create mode 100644 rust/kernel/generated_arch_reachable_asm.rs.S
+ create mode 100644 rust/kernel/generated_arch_warn_asm.rs.S
+
+
+base-commit: beeb78d46249cab8b2b8359a2ce8fa5376b5ad2d
+-- 
+2.43.0
+
