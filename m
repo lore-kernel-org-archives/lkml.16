@@ -1,265 +1,368 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D1820D506
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A3F20E309
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739437721; cv=none; b=Sy01/BDeuTtHot3BtGD/lInc7cKuoovlu69Ci42PbPeRpYqungdtLNt7CGMwXFIuql2yqWQPsJMO0hnHf23IlY7q3+EkmJdzlHG06zL19/fi4xxqRTlPNdO9hYINWxb/eEreDiRneS3rPOPQLTwHnud9136qF9QUPkLtR0BQDK0=
+	t=1739437724; cv=none; b=CqUcS0HRv/7soWfDJSiPX5Izq77rrCN0xr2oDvSULrepiD9o02+qgGw8OiCeSLWSbCzDL4UKs+ZNne2c+llfa+FkAxBZ53i8Ka612A7Vn255dgf+Q+juQENW8DezUXFgx4weHPaJGPPG+o57QZaZk6K88dwtTnHSuxnD4smA9go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739437721; c=relaxed/simple;
-	bh=+21jG0SoLqjF4O0Q3XEjlGr23v4342skTokARZ9UmqE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LJX1DgbIEzu6MlvmsA0IJ+3+IQ0PWmNAyd2zlefDzmUt3zXfFj/vOQXgMhDA+JawmN15ySV0zYmGvXZ1WA9uM+kxzcBfPUtRKKzeTEf9dUYlWtsDDU/deRt5Bf1eNobzJIXN4bmwqeNwxyQfxyGuNKBdymMdvwe1G+E0/p1PCss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dj1FEJkJ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739437724; c=relaxed/simple;
+	bh=9gukdcfV9Nf9Mc/TOrp11xJ/gBhYjmqkZTKk9PTNb30=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=PFHSvAt4BLGnHIulgAsxnjOuyqnEc7Iw6lJdxO1D9fneM82eWox28SK3/B6ACS/p6pIH2F1amGESsHnrLqEH2jX3GGkGuFuRkwkgIDoqDXHvg9sOA2Xqu8CgS2l2qpOAM0GHhpXSMgfBYBS9MPO5sd+IF3ZUswHEcD77CvbPBCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RTbuTTxg; arc=none smtp.client-ip=209.85.218.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dj1FEJkJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739437717;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=RnG+dU3FuNR3QQKixT0ph3PVUAxRSx13aFnhkjUdmrA=;
-	b=dj1FEJkJYFzQaHfCPr+3pOSCpqruOqgRs/JGqmPPfvJSJ5iju2ycC+AWLV0dE3HKOJKEt2
-	CXaDLX3M0Za/5pAXs8qM/ltKVRiQejjYnIHkTNrRr9hFe9irWgKyU6gvE0C5oPPmwQpS9i
-	qBq3ELht7jtDQCS8D7bRWyp4aLgUPIM=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-541-uIFROcN4MF2dVU2wE2pM2g-1; Thu,
- 13 Feb 2025 04:08:36 -0500
-X-MC-Unique: uIFROcN4MF2dVU2wE2pM2g-1
-X-Mimecast-MFC-AGG-ID: uIFROcN4MF2dVU2wE2pM2g
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3815D196E078;
-	Thu, 13 Feb 2025 09:08:35 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.81])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 066821800365;
-	Thu, 13 Feb 2025 09:08:29 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 00/11] rv: Add scheduler specification monitors
-Date: Thu, 13 Feb 2025 10:07:58 +0100
-Message-ID: <20250213090819.419470-1-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RTbuTTxg"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-ab7e1beaa45so73780966b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 01:08:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739437721; x=1740042521; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+9f+e9kCTsyr4pVok6kl9UHneh9IdRYlU7MPwMhOzrI=;
+        b=RTbuTTxgj42tCsc0RiibASyaHCcGotDcIYWy92tBAUuoMnVliuswVCKt/U1WyzOC1V
+         HsLOqVGYOXCFiALMR3lhOn67j8JKfJTSnPwSkLJ48m6GLW3qVRAcwlVu8vxinjdhx2nN
+         mma8D5mksuxHBf5sNO4XWLIVMLyLGKAOnfFw8hNB1P+b0V2HVpbcoAdLvjSlj2wSeux9
+         txWEqePBUi7K/km2IYrG0ZNO63kbuGr+HNefqbhU5mM6TFORv9om42kAMERocx92TOk1
+         u8O3IFESiIX2M6IfnEIK26BgZemo3HkTZRlIKP7FR23pnAgZntFnBTicbXBuuLxYA70+
+         Esqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739437721; x=1740042521;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+9f+e9kCTsyr4pVok6kl9UHneh9IdRYlU7MPwMhOzrI=;
+        b=mQffWQERoFOxhxBuBY1wKn3R4Rmw4IaowJW7n4jRtD2fQFii+N1wvcsgabGOtx8kk0
+         s+VXhRhTXBuekSsJAaoKrIa3atan76HW4kEmMMkVPZUyFAyk2vW9OXaePjSQlFM5K7W6
+         W+nvFWgZql8aJDAPF/T79czhxoL8uAIcGcQXywBORe86xgW4kj87dFFd51O3D0epxals
+         EXKvml99WHQtygel5hMpChgJvF5HeHiN8JWX9ChgfurCcOKjb0XSDdNJ9RD9ea4KCqtZ
+         lWsmNnS83HziqZkznsL70aCoHR3hEWXWv63imv0n7fO9m6xiSlV0cXONeMLlN+7RgADp
+         Zthg==
+X-Forwarded-Encrypted: i=1; AJvYcCWmeQAFtA01DB59W4ZaZru0d0cyPDQFhYtLn0FroKr/wKcIt83rSUwjt2Y9Sr4hPRYGLTDixGiDbv/qm8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/ewtiWSlkTfUI+pgjJxv5q85WqFpfZtYXacc+Qi317DBa+Baw
+	VF4Sk+G4WKmRSs7a6TswxPjV2CSoBLsHalrr2qbXIZHZ0aM7SzSvnih/TqbA993Pmgyl2CoqFCR
+	QFm9uVg==
+X-Google-Smtp-Source: AGHT+IFnZI34vFrDlF4QR8m8y6Jps3gdJLmqcSJyyQ/NTGFCYAh5/9C3IJgivuf4buDViN6P7KIFLY9nD+HL
+X-Received: from edbig14.prod.google.com ([2002:a05:6402:458e:b0:5db:68bc:eb3d])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:1c85:b0:aa6:9624:78f1
+ with SMTP id a640c23a62f3a-ab7f3714978mr662602066b.9.1739437720849; Thu, 13
+ Feb 2025 01:08:40 -0800 (PST)
+Date: Thu, 13 Feb 2025 10:08:17 +0100
+In-Reply-To: <cover.1739437531.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Mime-Version: 1.0
+References: <cover.1739437531.git.dvyukov@google.com>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <e61348985ff0a6a14b07c39e880edbd60a8f8635.1739437531.git.dvyukov@google.com>
+Subject: [PATCH v7 4/9] perf report: Add parallelism filter
+From: Dmitry Vyukov <dvyukov@google.com>
+To: namhyung@kernel.org, irogers@google.com, acme@kernel.org, 
+	ak@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-This patchset starts including adapted scheduler specifications from
-Daniel's task model [1].
-As the model is fairly complicated, it is split in several generators
-and specifications. The tool used to create the model can output a
-unified model, but that would be hardly readable (9k states).
+Add parallelism filter that can be used to look at specific parallelism
+levels only. The format is the same as cpu lists. For example:
 
-RV allows monitors to run and react concurrently. Running the cumulative
-model is equivalent to running single components using the same
-reactors, with the advantage that it's easier to point out which
-specification failed in case of error.
+Only single-threaded samples: --parallelism=1
+Low parallelism only: --parallelism=1-4
+High parallelism only: --parallelism=64-128
 
-We allow this by introducing nested monitors, in short, the sysfs
-monitor folder will contain a monitor named sched, which is nothing but
-an empty container for other monitors. Controlling the sched monitor
-(enable, disable, set reactors) controls all nested monitors.
+Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ tools/perf/builtin-report.c   |  5 ++++-
+ tools/perf/util/event.c       |  2 ++
+ tools/perf/util/hist.c        | 31 +++++++++++++++++++++++++++++++
+ tools/perf/util/hist.h        |  6 +++++-
+ tools/perf/util/sort.c        | 11 +++++++++++
+ tools/perf/util/symbol.c      | 34 ++++++++++++++++++++++++++++++++++
+ tools/perf/util/symbol_conf.h |  4 ++++
+ 7 files changed, 91 insertions(+), 2 deletions(-)
 
-The task model proposed by Daniel includes 12 generators and 33
-specifications. The generators are good for documentation but are
-usually implied in some specifications.
-Not all monitors work out of the box, mainly because of those reasons:
-* need to distinguish if preempt disable leads to schedule
-* need to distinguish if irq disable comes from an actual irq
-* assumptions not always true on SMP
-
-The original task model was designed for PREEMPT_RT and this patchset is
-only tested on an upstream kernel with full preemption enabled.
-
-In patch 4-6 are included only some specifications that work without
-further modifications. Ideally, we would adapt all specifications and
-add them gradually to the sched monitor.
-
-Patch 1 fixes a macro required for some tracepoints
-This patch was already sent and reviewed in [2]
-
-Patch 2 adds some additional tracepoints in the scheduler's code to
-complete the model, the tracepoints were already defined in Daniel's
-patches but, as far as I understand, were never submitted
-
-Patch 3 adds the empty sched monitor container and the infrastructure
-for nested monitors
-
-Patch 4 adds 2 per-cpu monitors using the tracepoints defined in 2
-
-Patch 5 adds a per-task monitor using the tracepoints defined in 2
-
-Patch 6 adds 3 more per-cpu monitors using the tracepoints defined in 2
-and preemptirq tracepoints
-
-Patch 7 adjusts the rv tool to support nested monitors
-
-Patch 8 adjusts the dot2k tool to support nested monitors
-
-Patch 9 adds some documentation for the sched monitors, including
-a description of the included specifications
-
-Patch 10 adapts the rv tool to list also filtering by container
-
-Changes since V1:
-* skip static_branch_unlikely in function exporting the tracepoint
-* rename function and make clear it should not be called directly
-* add missing parameter documentation in rv_register_monitor
-
-Changes since RFC:
-* use static_branch_unlikely to trace set_state via external function
-* allow nested monitors to be disabled via Kconfig
-    - they are enabled by default if the container is enabled
-* remove need_resched tracepoint as it needs a bit more work
-    - will come in a following patch together with a monitor using it
-
-[1] - https://bristot.me/linux-task-model
-[2] - https://lore.kernel.org/linux-trace-kernel/20250128111926.303093-1-gmonaco@redhat.com
-
-To: Steven Rostedt <rostedt@goodmis.org>
-To: Ingo Molnar <mingo@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>
-Cc: Clark Williams <williams@redhat.com>
-Cc: Tomas Glozar <tglozar@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org
-
-Gabriele Monaco (11):
-  tracing: Fix DECLARE_TRACE_CONDITION
-  rv: Add license identifiers to monitor files
-  sched: Add sched tracepoints for RV task model
-  rv: Add option for nested monitors and include sched
-  rv: Add sco and tss per-cpu monitors
-  rv: Add snroc per-task monitor
-  rv: Add scpd, snep and sncid per-cpu monitors
-  tools/rv: Add support for nested monitors
-  verification/dot2k: Add support for nested monitors
-  Documentation/rv: Add docs for the sched monitors
-  tools/rv: Allow rv list to filter for container
-
- Documentation/tools/rv/rv-mon-sched.rst       |  69 +++++
- Documentation/trace/rv/monitor_sched.rst      | 171 ++++++++++++
- include/linux/rv.h                            |   4 +-
- include/linux/sched.h                         |  16 ++
- include/trace/define_trace.h                  |   7 +
- include/trace/events/sched.h                  |  13 +
- kernel/sched/core.c                           |  26 +-
- kernel/trace/rv/Kconfig                       |   7 +
- kernel/trace/rv/Makefile                      |   7 +
- kernel/trace/rv/monitors/sched/Kconfig        |  12 +
- kernel/trace/rv/monitors/sched/sched.c        |  38 +++
- kernel/trace/rv/monitors/sched/sched.h        |   3 +
- kernel/trace/rv/monitors/sco/Kconfig          |  14 +
- kernel/trace/rv/monitors/sco/sco.c            |  88 ++++++
- kernel/trace/rv/monitors/sco/sco.h            |  47 ++++
- kernel/trace/rv/monitors/sco/sco_trace.h      |  15 +
- kernel/trace/rv/monitors/scpd/Kconfig         |  15 +
- kernel/trace/rv/monitors/scpd/scpd.c          |  96 +++++++
- kernel/trace/rv/monitors/scpd/scpd.h          |  49 ++++
- kernel/trace/rv/monitors/scpd/scpd_trace.h    |  15 +
- kernel/trace/rv/monitors/sncid/Kconfig        |  15 +
- kernel/trace/rv/monitors/sncid/sncid.c        |  96 +++++++
- kernel/trace/rv/monitors/sncid/sncid.h        |  49 ++++
- kernel/trace/rv/monitors/sncid/sncid_trace.h  |  15 +
- kernel/trace/rv/monitors/snep/Kconfig         |  15 +
- kernel/trace/rv/monitors/snep/snep.c          |  96 +++++++
- kernel/trace/rv/monitors/snep/snep.h          |  49 ++++
- kernel/trace/rv/monitors/snep/snep_trace.h    |  15 +
- kernel/trace/rv/monitors/snroc/Kconfig        |  14 +
- kernel/trace/rv/monitors/snroc/snroc.c        |  87 ++++++
- kernel/trace/rv/monitors/snroc/snroc.h        |  47 ++++
- kernel/trace/rv/monitors/snroc/snroc_trace.h  |  15 +
- kernel/trace/rv/monitors/tss/Kconfig          |  14 +
- kernel/trace/rv/monitors/tss/tss.c            |  91 +++++++
- kernel/trace/rv/monitors/tss/tss.h            |  47 ++++
- kernel/trace/rv/monitors/tss/tss_trace.h      |  15 +
- kernel/trace/rv/monitors/wip/Kconfig          |   2 +
- kernel/trace/rv/monitors/wip/wip.c            |   2 +-
- kernel/trace/rv/monitors/wip/wip.h            |   1 +
- kernel/trace/rv/monitors/wwnr/Kconfig         |   2 +
- kernel/trace/rv/monitors/wwnr/wwnr.c          |   2 +-
- kernel/trace/rv/monitors/wwnr/wwnr.h          |   1 +
- kernel/trace/rv/rv.c                          | 152 +++++++++--
- kernel/trace/rv/rv.h                          |   4 +
- kernel/trace/rv/rv_reactors.c                 |  28 +-
- kernel/trace/rv/rv_trace.h                    |   6 +
- tools/verification/dot2/dot2k                 |  27 +-
- tools/verification/dot2/dot2k.py              |  80 ++++--
- .../verification/dot2/dot2k_templates/Kconfig |   3 +
- .../verification/dot2/dot2k_templates/main.c  |   4 +-
- .../dot2/dot2k_templates/main_container.c     |  38 +++
- .../dot2/dot2k_templates/main_container.h     |   3 +
- tools/verification/models/sched/sco.dot       |  18 ++
- tools/verification/models/sched/scpd.dot      |  18 ++
- tools/verification/models/sched/sncid.dot     |  18 ++
- tools/verification/models/sched/snep.dot      |  18 ++
- tools/verification/models/sched/snroc.dot     |  18 ++
- tools/verification/models/sched/tss.dot       |  18 ++
- tools/verification/rv/include/in_kernel.h     |   2 +-
- tools/verification/rv/include/rv.h            |   3 +-
- tools/verification/rv/src/in_kernel.c         | 256 ++++++++++++++----
- tools/verification/rv/src/rv.c                |  38 ++-
- 62 files changed, 2027 insertions(+), 127 deletions(-)
- create mode 100644 Documentation/tools/rv/rv-mon-sched.rst
- create mode 100644 Documentation/trace/rv/monitor_sched.rst
- create mode 100644 kernel/trace/rv/monitors/sched/Kconfig
- create mode 100644 kernel/trace/rv/monitors/sched/sched.c
- create mode 100644 kernel/trace/rv/monitors/sched/sched.h
- create mode 100644 kernel/trace/rv/monitors/sco/Kconfig
- create mode 100644 kernel/trace/rv/monitors/sco/sco.c
- create mode 100644 kernel/trace/rv/monitors/sco/sco.h
- create mode 100644 kernel/trace/rv/monitors/sco/sco_trace.h
- create mode 100644 kernel/trace/rv/monitors/scpd/Kconfig
- create mode 100644 kernel/trace/rv/monitors/scpd/scpd.c
- create mode 100644 kernel/trace/rv/monitors/scpd/scpd.h
- create mode 100644 kernel/trace/rv/monitors/scpd/scpd_trace.h
- create mode 100644 kernel/trace/rv/monitors/sncid/Kconfig
- create mode 100644 kernel/trace/rv/monitors/sncid/sncid.c
- create mode 100644 kernel/trace/rv/monitors/sncid/sncid.h
- create mode 100644 kernel/trace/rv/monitors/sncid/sncid_trace.h
- create mode 100644 kernel/trace/rv/monitors/snep/Kconfig
- create mode 100644 kernel/trace/rv/monitors/snep/snep.c
- create mode 100644 kernel/trace/rv/monitors/snep/snep.h
- create mode 100644 kernel/trace/rv/monitors/snep/snep_trace.h
- create mode 100644 kernel/trace/rv/monitors/snroc/Kconfig
- create mode 100644 kernel/trace/rv/monitors/snroc/snroc.c
- create mode 100644 kernel/trace/rv/monitors/snroc/snroc.h
- create mode 100644 kernel/trace/rv/monitors/snroc/snroc_trace.h
- create mode 100644 kernel/trace/rv/monitors/tss/Kconfig
- create mode 100644 kernel/trace/rv/monitors/tss/tss.c
- create mode 100644 kernel/trace/rv/monitors/tss/tss.h
- create mode 100644 kernel/trace/rv/monitors/tss/tss_trace.h
- create mode 100644 tools/verification/dot2/dot2k_templates/main_container.c
- create mode 100644 tools/verification/dot2/dot2k_templates/main_container.h
- create mode 100644 tools/verification/models/sched/sco.dot
- create mode 100644 tools/verification/models/sched/scpd.dot
- create mode 100644 tools/verification/models/sched/sncid.dot
- create mode 100644 tools/verification/models/sched/snep.dot
- create mode 100644 tools/verification/models/sched/snroc.dot
- create mode 100644 tools/verification/models/sched/tss.dot
-
-
-base-commit: 4dc1d1bec89864d8076e5ab314f86f46442bfb02
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 14d49f0625881..2a19abdc869a1 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1390,6 +1390,8 @@ int cmd_report(int argc, const char **argv)
+ 		     symbol__config_symfs),
+ 	OPT_STRING('C', "cpu", &report.cpu_list, "cpu",
+ 		   "list of cpus to profile"),
++	OPT_STRING(0, "parallelism", &symbol_conf.parallelism_list_str, "parallelism",
++		   "only consider these parallelism levels (cpu set format)"),
+ 	OPT_BOOLEAN('I', "show-info", &report.show_full_info,
+ 		    "Display extended information about perf.data file"),
+ 	OPT_BOOLEAN(0, "source", &annotate_opts.annotate_src,
+@@ -1721,7 +1723,8 @@ int cmd_report(int argc, const char **argv)
+ 	}
+ 
+ 	if (report.disable_order || !perf_session__has_switch_events(session)) {
+-		if ((sort_order && strstr(sort_order, "parallelism")) ||
++		if (symbol_conf.parallelism_list_str ||
++				(sort_order && strstr(sort_order, "parallelism")) ||
+ 				(field_order && strstr(field_order, "parallelism"))) {
+ 			if (report.disable_order)
+ 				ui__error("Use of parallelism is incompatible with --disable-order.\n");
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 2f10e31157572..6ceed46acd5a4 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -769,6 +769,8 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
+ 
+ 	/* Account for possible out-of-order switch events. */
+ 	al->parallelism = max(1, min(machine->parallelism, machine__nr_cpus_avail(machine)));
++	if (test_bit(al->parallelism, symbol_conf.parallelism_filter))
++		al->filtered |= (1 << HIST_FILTER__PARALLELISM);
+ 
+ 	if (al->map) {
+ 		if (symbol_conf.dso_list &&
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 6b8f8da8d3b66..446342246f5ee 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -43,6 +43,8 @@ static bool hists__filter_entry_by_symbol(struct hists *hists,
+ 					  struct hist_entry *he);
+ static bool hists__filter_entry_by_socket(struct hists *hists,
+ 					  struct hist_entry *he);
++static bool hists__filter_entry_by_parallelism(struct hists *hists,
++					       struct hist_entry *he);
+ 
+ u16 hists__col_len(struct hists *hists, enum hist_column col)
+ {
+@@ -1457,6 +1459,10 @@ static void hist_entry__check_and_remove_filter(struct hist_entry *he,
+ 		if (symbol_conf.sym_list == NULL)
+ 			return;
+ 		break;
++	case HIST_FILTER__PARALLELISM:
++		if (__bitmap_weight(symbol_conf.parallelism_filter, MAX_NR_CPUS + 1) == 0)
++			return;
++		break;
+ 	case HIST_FILTER__PARENT:
+ 	case HIST_FILTER__GUEST:
+ 	case HIST_FILTER__HOST:
+@@ -1515,6 +1521,9 @@ static void hist_entry__apply_hierarchy_filters(struct hist_entry *he)
+ 	hist_entry__check_and_remove_filter(he, HIST_FILTER__SYMBOL,
+ 					    perf_hpp__is_sym_entry);
+ 
++	hist_entry__check_and_remove_filter(he, HIST_FILTER__PARALLELISM,
++					    perf_hpp__is_parallelism_entry);
++
+ 	hists__apply_filters(he->hists, he);
+ }
+ 
+@@ -1711,6 +1720,7 @@ static void hists__apply_filters(struct hists *hists, struct hist_entry *he)
+ 	hists__filter_entry_by_thread(hists, he);
+ 	hists__filter_entry_by_symbol(hists, he);
+ 	hists__filter_entry_by_socket(hists, he);
++	hists__filter_entry_by_parallelism(hists, he);
+ }
+ 
+ int hists__collapse_resort(struct hists *hists, struct ui_progress *prog)
+@@ -2197,6 +2207,16 @@ static bool hists__filter_entry_by_socket(struct hists *hists,
+ 	return false;
+ }
+ 
++static bool hists__filter_entry_by_parallelism(struct hists *hists,
++					       struct hist_entry *he)
++{
++	if (test_bit(he->parallelism, hists->parallelism_filter)) {
++		he->filtered |= (1 << HIST_FILTER__PARALLELISM);
++		return true;
++	}
++	return false;
++}
++
+ typedef bool (*filter_fn_t)(struct hists *hists, struct hist_entry *he);
+ 
+ static void hists__filter_by_type(struct hists *hists, int type, filter_fn_t filter)
+@@ -2366,6 +2386,16 @@ void hists__filter_by_socket(struct hists *hists)
+ 				      hists__filter_entry_by_socket);
+ }
+ 
++void hists__filter_by_parallelism(struct hists *hists)
++{
++	if (symbol_conf.report_hierarchy)
++		hists__filter_hierarchy(hists, HIST_FILTER__PARALLELISM,
++					hists->parallelism_filter);
++	else
++		hists__filter_by_type(hists, HIST_FILTER__PARALLELISM,
++				      hists__filter_entry_by_parallelism);
++}
++
+ void events_stats__inc(struct events_stats *stats, u32 type)
+ {
+ 	++stats->nr_events[0];
+@@ -2872,6 +2902,7 @@ int __hists__init(struct hists *hists, struct perf_hpp_list *hpp_list)
+ 	hists->entries = RB_ROOT_CACHED;
+ 	mutex_init(&hists->lock);
+ 	hists->socket_filter = -1;
++	hists->parallelism_filter = symbol_conf.parallelism_filter;
+ 	hists->hpp_list = hpp_list;
+ 	INIT_LIST_HEAD(&hists->hpp_formats);
+ 	return 0;
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 4035106a74087..c2236e0d89f2a 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -31,6 +31,7 @@ enum hist_filter {
+ 	HIST_FILTER__HOST,
+ 	HIST_FILTER__SOCKET,
+ 	HIST_FILTER__C2C,
++	HIST_FILTER__PARALLELISM,
+ };
+ 
+ typedef u16 filter_mask_t;
+@@ -112,6 +113,7 @@ struct hists {
+ 	const struct dso	*dso_filter;
+ 	const char		*uid_filter_str;
+ 	const char		*symbol_filter_str;
++	unsigned long		*parallelism_filter;
+ 	struct mutex		lock;
+ 	struct hists_stats	stats;
+ 	u64			event_stream;
+@@ -388,11 +390,13 @@ void hists__filter_by_dso(struct hists *hists);
+ void hists__filter_by_thread(struct hists *hists);
+ void hists__filter_by_symbol(struct hists *hists);
+ void hists__filter_by_socket(struct hists *hists);
++void hists__filter_by_parallelism(struct hists *hists);
+ 
+ static inline bool hists__has_filter(struct hists *hists)
+ {
+ 	return hists->thread_filter || hists->dso_filter ||
+-		hists->symbol_filter_str || (hists->socket_filter > -1);
++		hists->symbol_filter_str || (hists->socket_filter > -1) ||
++		hists->parallelism_filter;
+ }
+ 
+ u16 hists__col_len(struct hists *hists, enum hist_column col);
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 7eef43f5be360..3055496358ebb 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -900,6 +900,16 @@ sort__parallelism_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	return right->parallelism - left->parallelism;
+ }
+ 
++static int hist_entry__parallelism_filter(struct hist_entry *he, int type, const void *arg)
++{
++	const unsigned long *parallelism_filter = arg;
++
++	if (type != HIST_FILTER__PARALLELISM)
++		return -1;
++
++	return test_bit(he->parallelism, parallelism_filter);
++}
++
+ static int hist_entry__parallelism_snprintf(struct hist_entry *he, char *bf,
+ 				    size_t size, unsigned int width)
+ {
+@@ -909,6 +919,7 @@ static int hist_entry__parallelism_snprintf(struct hist_entry *he, char *bf,
+ struct sort_entry sort_parallelism = {
+ 	.se_header      = "Parallelism",
+ 	.se_cmp	        = sort__parallelism_cmp,
++	.se_filter	= hist_entry__parallelism_filter,
+ 	.se_snprintf    = hist_entry__parallelism_snprintf,
+ 	.se_width_idx	= HISTC_PARALLELISM,
+ };
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 49b08adc6ee34..315f74b5bac06 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -18,6 +18,7 @@
+ #include "annotate.h"
+ #include "build-id.h"
+ #include "cap.h"
++#include "cpumap.h"
+ #include "dso.h"
+ #include "util.h" // lsdir()
+ #include "debug.h"
+@@ -2471,6 +2472,36 @@ int symbol__annotation_init(void)
+ 	return 0;
+ }
+ 
++static int setup_parallelism_bitmap(void)
++{
++	struct perf_cpu_map *map;
++	struct perf_cpu cpu;
++	int i, err = -1;
++
++	if (symbol_conf.parallelism_list_str == NULL)
++		return 0;
++
++	map = perf_cpu_map__new(symbol_conf.parallelism_list_str);
++	if (map == NULL) {
++		pr_err("failed to parse parallelism filter list\n");
++		return -1;
++	}
++
++	bitmap_fill(symbol_conf.parallelism_filter, MAX_NR_CPUS + 1);
++	perf_cpu_map__for_each_cpu(cpu, i, map) {
++		if (cpu.cpu <= 0 || cpu.cpu > MAX_NR_CPUS) {
++			pr_err("Requested parallelism level %d is invalid.\n", cpu.cpu);
++			goto out_delete_map;
++		}
++		__clear_bit(cpu.cpu, symbol_conf.parallelism_filter);
++	}
++
++	err = 0;
++out_delete_map:
++	perf_cpu_map__put(map);
++	return err;
++}
++
+ int symbol__init(struct perf_env *env)
+ {
+ 	const char *symfs;
+@@ -2490,6 +2521,9 @@ int symbol__init(struct perf_env *env)
+ 		return -1;
+ 	}
+ 
++	if (setup_parallelism_bitmap())
++		return -1;
++
+ 	if (setup_list(&symbol_conf.dso_list,
+ 		       symbol_conf.dso_list_str, "dso") < 0)
+ 		return -1;
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index a9c51acc722fe..c5b2e56127e22 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -3,6 +3,8 @@
+ #define __PERF_SYMBOL_CONF 1
+ 
+ #include <stdbool.h>
++#include <linux/bitmap.h>
++#include "perf.h"
+ 
+ struct strlist;
+ struct intlist;
+@@ -62,6 +64,7 @@ struct symbol_conf {
+ 			*pid_list_str,
+ 			*tid_list_str,
+ 			*sym_list_str,
++			*parallelism_list_str,
+ 			*col_width_list_str,
+ 			*bt_stop_list_str;
+ 	const char		*addr2line_path;
+@@ -82,6 +85,7 @@ struct symbol_conf {
+ 	int		pad_output_len_dso;
+ 	int		group_sort_idx;
+ 	int		addr_range;
++	DECLARE_BITMAP(parallelism_filter, MAX_NR_CPUS + 1);
+ };
+ 
+ extern struct symbol_conf symbol_conf;
 -- 
-2.48.1
+2.48.1.502.g6dc24dfdaf-goog
 
