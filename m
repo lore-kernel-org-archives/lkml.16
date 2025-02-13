@@ -1,200 +1,803 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D781212FB1;
-	Thu, 13 Feb 2025 11:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B857227EB6;
+	Thu, 13 Feb 2025 11:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739446769; cv=none; b=OdDLi5CT7k28JWvKhVFgfTlbOG6qYk2Jk1SoUHhFngF5hsNBt9kpP5MAD9yuKhwnCWoaiTswleRkjxEb+qfiCF0e+4INUrDTnynkfdacx9GTwQ5VQCoG4MJvpJT1hBHeIiFuUARYNLbzSebK1ZFPrBsI5aLURrpuo3IhD/0A1Do=
+	t=1739446828; cv=none; b=di7AIfRAwbdNxPCZWpwX99fSi5Uhh4Qj98UUS5HKdFQE9cgm39+2YI9QPCbK1+SoufuWM0ki1OAmSFW4I9lvWrdHjfqpoZANp5rGW26z5aOTVS8dRLPxeELPLBFFOwaKZ9k5mmnJdnhax5G1sYqlgXqX/zb+7vLnKhcvg0hjZhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739446769; c=relaxed/simple;
-	bh=x26+TIGrOJ0KNbq5bnCKvaiY72o7bCtil5dql0WTZB8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qtVqCoYVGEu20E4nn0YDoQgJW8gX8aZ54JFlRy73Kqi4Zw2NReFBHRScySIGPJOGUFKTvVYZuaE6YtedOwaO8sqvetb1NqzRSlNwK96gXlRMrpnfl11rSH60z2yCI+XP+pOI5XIq2osHZs6/ZxG5YnCCJxP9xQQ5fhjKGFWZlL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QBQ/NvAF; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739446828; c=relaxed/simple;
+	bh=sMIyI+Y7zHI12V/91kZeFPHPRSLPCwvgHb4ikhg5e/4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HuMozn9Nvq0gwGxPJLG7o6+DnkL89i6Nd3oTC42djmknLZTtt3ohzKtCNShfHx6osBcayaoNknbWnywADe6swax2Il5iN+qyt+SlxKHP+Vdp06Rn40v+tFFUu9V1oN7N8FcDuL3HLPsqRAFs4/kCJR7XmdCoVuv5/v6DensV8e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j3dCh9ol; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QBQ/NvAF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739446768; x=1770982768;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=x26+TIGrOJ0KNbq5bnCKvaiY72o7bCtil5dql0WTZB8=;
-  b=QBQ/NvAFY4hu95eneJj2kfLy8MA+OZO4tswbj1+Li2U6yzfkvNMTmVKi
-   tYQUoGRADrlU9aXEUCAxQXxo2srnQG9DMEE8wziYrQSbF8NOXEBRp+Hvd
-   EnSXvydJ+dXQ+xAFFiH5bfOPHB9GbJjgQphB7jYRt7SF5vwz4WISGB/9N
-   rHXYs5k5xLcpSZsl05A2k5Ce54k1wEl8nlob9Nn4QxqUc72at2Wn6oz6S
-   nbPWHZo4tQAQc5Lyk+bQvhrIEKRn/FjaHsSw5R/n/uImDn15mAXpJ5LC+
-   iActcjxdZp/02N1K8Ccq+pFIb17b6cDJL/hd9t+XDM/ii80DTD9vYUNw5
-   g==;
-X-CSE-ConnectionGUID: UjYpJul0Ty+6NObtRZC0aw==
-X-CSE-MsgGUID: I5i2pIZ2QO6bQlAryj47cQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="40008154"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="40008154"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 03:39:27 -0800
-X-CSE-ConnectionGUID: V46oJ0FCR9maNBzHURCDUg==
-X-CSE-MsgGUID: w7kaAZwJSxGZvwrqs0ebwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="113648995"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 13 Feb 2025 03:39:22 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tiXYu-0016yx-1f;
-	Thu, 13 Feb 2025 11:39:20 +0000
-Date: Thu, 13 Feb 2025 19:39:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Philipp Stanner <phasta@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Yinggang Gu <guyinggang@loongson.cn>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Philipp Stanner <pstanner@redhat.com>
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] stmmac: Replace deprecated PCI functions
-Message-ID: <202502131939.DdTP5mv1-lkp@intel.com>
-References: <20250212145831.101719-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3dCh9ol"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6ddcff5a823so5640806d6.0;
+        Thu, 13 Feb 2025 03:40:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739446825; x=1740051625; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=y5zVpHvgcAH0BMNWi0umNfs9y03Pl5HnIl5IWMmbPx8=;
+        b=j3dCh9olYAOjsh2FTeoYcSHMrJUwCGvLVtayu8qJDxlcFhVPnkKxcGIyF+Rj8U7tjh
+         tGmV53wu6wXJDZiO3ieIDoRPj2RyXjpJHy0RQLjlMCZW5CZfh8VBBuRS8YKi8a/EEUps
+         2V0OZ254zRV+txLfpLzb1Ko35vEQ6kgZ37HgYEfdspWvFzKKzUJoc3jHW+2asQWiDP1t
+         aLaCle4tHIiK2N1ciEA8V2sJ5geMcowJZjUiSZ38OLphFx/KBZhj/mejDtCtF8Rr3kPT
+         lHI2JY+5QaFPOd0hxI6j1VEmQrvybF2NSTd2LR5FSVP2VOLs16kbB5NA/DkMn1djKJI+
+         Aetw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739446825; x=1740051625;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y5zVpHvgcAH0BMNWi0umNfs9y03Pl5HnIl5IWMmbPx8=;
+        b=C0zhI3albn4cmHrrpabFhbNFVJM0jNfl9ojSumRk1ImzCqZYnN4FIvJdxCLdagECzl
+         0KeAXyjmIhKVkJ/rX6fjM+Up/2+roTA+nFujSB0W0UfhC4THThk1S7TyAsRWx3rTw/oN
+         +pCwK/adiaChpJ1be3YxmQnRAh75XMSPIcj/sXHWjibBkiwr/i9kJqJjnBpIdJQLXHk+
+         kixoF/EAHai5Qcfy6JsuREZx3K87H5CHmCkhrvTpyLYtVp5q71kJVx3722O9UvqJ1p1u
+         D7THEeEehHzNlyKY3g3cHs4uolrywaCMr5xG5ibr3eAHeYHm3fjITehoU+ABWw6XCP7u
+         1Tqw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6Zuni2Ss0FWx72IyP/Wq2k6QSkvloqXeHgxBc3e9qoFtJWujgqRuLAPBTGgHvxQ302ulm8RQ8XN68JM2z2qhQ@vger.kernel.org, AJvYcCXh+d7Ev20fLsTCtM5xb7lkhMVlRZw5cgEUs4pEVV0YAIBe1YwV6+/ClPAPWIKf5KNQAcFjx8tP4wc+ytk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzumlfvsUKu1oCvlSW6rzNT48VVFuEUpIRo4if7lTLk2Y34YMCd
+	oF1dHrM4A4cWx8caxMBOjQFT/Ry7W7PMKXP7r2CI6fLfDbh8VaED4jd8xWV7
+X-Gm-Gg: ASbGnctLUCgJztRFkJwiKVV0Jv4VZMeT2UUjtTzdm+E1I5bvPipEc7SWkB1CvDxHoRQ
+	XF5cZo8acE05IwZCxY1ZmGankuwj5YHLe3GAYdF5MAEe06NvKutpMb5hRLIB4uTT0jydmqs1Ofr
+	ObESGYuOcljVJrOPTRQ6gsIVScxucg1e34rUUvRU+3ZHTq3MDqqJgeG6bCzjXEEmupw2Q9ZP/m0
+	Zz/eVWnw2oXFcTQxryrUyPKecK2xt/KNv9ILkMdxygfoOKpuAgYiLwh8kFYp/7rxQxaKLWFDENl
+	/4wcXWGRvF7esX1BZ1GkrFLT7CiVuyyHQF1tUJKlNvm7Nmic1TWPBon5gdPulWiBJALaIC9Shb4
+	ZKVD5WqFvyIW/fb06F566GKQ8pM9qom37xlLZqA==
+X-Google-Smtp-Source: AGHT+IGf1bX4a7Es+lXjI1hcAy6qtKyVIGi/uC7Xiqi36vHFtFlgUzBa7LPxaJk6IBFBvzhdDnpOig==
+X-Received: by 2002:a05:6214:d65:b0:6e4:29f8:3abd with SMTP id 6a1803df08f44-6e46edc2727mr103628696d6.28.1739446825120;
+        Thu, 13 Feb 2025 03:40:25 -0800 (PST)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2600:4041:5be7:7c00:c8d8:9808:e9c7:ed5b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65d78640fsm8159806d6.48.2025.02.13.03.40.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 03:40:24 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 13 Feb 2025 06:40:20 -0500
+Subject: [PATCH v2] ww_mutex: convert self-test to KUnit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250212145831.101719-2-phasta@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250213-ww_mutex-kunit-convert-v2-1-4a60be9d5aae@gmail.com>
+X-B4-Tracking: v=1; b=H4sIACParWcC/3WNQQ6CMBBFr0K6dkw7UYuuvIchpuIAE6U1bSkYw
+ t2txK3L95P/3iwCeaYgTsUsPCUO7GwG3BSi7oxtCfieWaDEvURZwjhe+yHSBI/BcoTa2UQ+glb
+ lDo02hxuhyOeXp4anVXypMnccovPvtZPUd/0plfynTAoUHDU2uasarejc9oaf29r1olqW5QOkG
+ HwcvAAAAA==
+X-Change-ID: 20250208-ww_mutex-kunit-convert-71842a7a6be2
+To: David Gow <davidgow@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+ Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <ndesaulniers@google.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, llvm@lists.linux.dev, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-Hi Philipp,
+Convert this unit test to a KUnit test. This allows the test to benefit
+from the KUnit tooling. Note that care is taken to avoid test-ending
+assertions in worker threads, which is unsafe in KUnit (and wasn't done
+before this change either).
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+I tested this using:
+$ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 ww_mutex
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.14-rc2 next-20250213]
-[cannot apply to horms-ipvs/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+; [12:48:16] ================== ww_mutex (5 subtests) ===================
+; [12:48:16] ======================= test_mutex  ========================
+; [12:48:16] [PASSED] flags=0
+; [12:48:16] [PASSED] flags=1
+; [12:48:16] [PASSED] flags=2
+; [12:48:16] [PASSED] flags=3
+; [12:48:16] [PASSED] flags=4
+; [12:48:17] [PASSED] flags=5
+; [12:48:17] [PASSED] flags=6
+; [12:48:17] [PASSED] flags=7
+; [12:48:17] =================== [PASSED] test_mutex ====================
+; [12:48:17] ========================= test_aa  =========================
+; [12:48:17] [PASSED] lock
+; [12:48:17] [PASSED] trylock
+; [12:48:17] ===================== [PASSED] test_aa =====================
+; [12:48:17] ======================== test_abba  ========================
+; [12:48:17] [PASSED] trylock=0,resolve=0
+; [12:48:17] [PASSED] trylock=1,resolve=1
+; [12:48:17] [PASSED] trylock=0,resolve=0
+; [12:48:17] [PASSED] trylock=1,resolve=1
+; [12:48:17] ==================== [PASSED] test_abba ====================
+; [12:48:17] ======================= test_cycle  ========================
+; [12:48:17] [PASSED] nthreads=2
+; [12:48:17] =================== [PASSED] test_cycle ====================
+; [12:48:21] ========================= stress  ==========================
+; [12:48:21] [PASSED] nlocks=16,nthreads_per_cpu=2,flags=1
+; [12:48:23] [PASSED] nlocks=16,nthreads_per_cpu=2,flags=2
+; [12:48:23] [PASSED] nlocks=2046,nthreads_per_cpu=3,flags=7
+; [12:48:23] ===================== [PASSED] stress ======================
+; [12:48:23] ==================== [PASSED] ww_mutex =====================
+; [12:48:23] ============================================================
+; [12:48:23] Testing complete. Ran 18 tests: passed: 18
+---
+Changes in v2:
+- Avoid KUNIT_ASSERT_* in non-main thread. (David Gow)
+- Include rationale and details in the commit message. (Boqun Feng)
+- Introduce test_abba_param to avoid odd-looking bit shifting. (Dan
+  Carpenter)
+- Rebase on linux-next.
+- Move the test to tests/ per KUnit style guide.
+- Link to v1: https://lore.kernel.org/r/20250210-ww_mutex-kunit-convert-v1-1-972f0201f71e@gmail.com
+---
+ kernel/locking/Makefile                            |   3 +-
+ kernel/locking/tests/Makefile                      |   3 +
+ .../{test-ww_mutex.c => tests/ww_mutex_kunit.c}    | 319 +++++++++++----------
+ lib/Kconfig.debug                                  |  12 +-
+ tools/testing/selftests/locking/ww_mutex.sh        |  19 --
+ 5 files changed, 176 insertions(+), 180 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Philipp-Stanner/stmmac-Replace-deprecated-PCI-functions/20250212-230254
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250212145831.101719-2-phasta%40kernel.org
-patch subject: [PATCH] stmmac: Replace deprecated PCI functions
-config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20250213/202502131939.DdTP5mv1-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250213/202502131939.DdTP5mv1-lkp@intel.com/reproduce)
+diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
+index 0db4093d17b8..b5fa68d18823 100644
+--- a/kernel/locking/Makefile
++++ b/kernel/locking/Makefile
+@@ -30,5 +30,6 @@ obj-$(CONFIG_DEBUG_SPINLOCK) += spinlock.o
+ obj-$(CONFIG_DEBUG_SPINLOCK) += spinlock_debug.o
+ obj-$(CONFIG_QUEUED_RWLOCKS) += qrwlock.o
+ obj-$(CONFIG_LOCK_TORTURE_TEST) += locktorture.o
+-obj-$(CONFIG_WW_MUTEX_SELFTEST) += test-ww_mutex.o
+ obj-$(CONFIG_LOCK_EVENT_COUNTS) += lock_events.o
++
++obj-y += tests/
+diff --git a/kernel/locking/tests/Makefile b/kernel/locking/tests/Makefile
+new file mode 100644
+index 000000000000..8ddde822c793
+--- /dev/null
++++ b/kernel/locking/tests/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++obj-$(CONFIG_WW_MUTEX_KUNIT_TEST) += ww_mutex_kunit.o
+diff --git a/kernel/locking/test-ww_mutex.c b/kernel/locking/tests/ww_mutex_kunit.c
+similarity index 66%
+rename from kernel/locking/test-ww_mutex.c
+rename to kernel/locking/tests/ww_mutex_kunit.c
+index bcb1b9fea588..a8d412231735 100644
+--- a/kernel/locking/test-ww_mutex.c
++++ b/kernel/locking/tests/ww_mutex_kunit.c
+@@ -3,10 +3,10 @@
+  * Module-based API test facility for ww_mutexes
+  */
+ 
+-#include <linux/kernel.h>
+-
++#include <kunit/test.h>
+ #include <linux/completion.h>
+ #include <linux/delay.h>
++#include <linux/kernel.h>
+ #include <linux/kthread.h>
+ #include <linux/module.h>
+ #include <linux/prandom.h>
+@@ -54,12 +54,39 @@ static void test_mutex_work(struct work_struct *work)
+ 	ww_mutex_unlock(&mtx->mutex);
+ }
+ 
+-static int __test_mutex(unsigned int flags)
++static const unsigned int *gen_range(
++	unsigned int *storage,
++	const unsigned int min,
++	const unsigned int max,
++	const int *prev)
++{
++	if (prev != NULL) {
++		if (*prev >= max)
++			return NULL;
++		*storage = *prev + 1;
++	} else {
++		*storage = min;
++	}
++	return storage;
++}
++
++static const void *test_mutex_gen_params(const void *prev, char *desc)
++{
++	static unsigned int storage;
++	const unsigned int *next = gen_range(&storage, 0, __TEST_MTX_LAST - 1, prev);
++
++	if (next != NULL)
++		snprintf(desc, KUNIT_PARAM_DESC_SIZE, "flags=%x", *next);
++	return next;
++}
++
++static void test_mutex(struct kunit *test)
+ {
+ #define TIMEOUT (HZ / 16)
++	const unsigned int *param = test->param_value;
++	const unsigned int flags = *param;
+ 	struct test_mutex mtx;
+ 	struct ww_acquire_ctx ctx;
+-	int ret;
+ 
+ 	ww_mutex_init(&mtx.mutex, &ww_class);
+ 	if (flags & TEST_MTX_CTX)
+@@ -79,53 +106,42 @@ static int __test_mutex(unsigned int flags)
+ 	if (flags & TEST_MTX_SPIN) {
+ 		unsigned long timeout = jiffies + TIMEOUT;
+ 
+-		ret = 0;
+ 		do {
+ 			if (completion_done(&mtx.done)) {
+-				ret = -EINVAL;
++				KUNIT_FAIL(test, "mutual exclusion failure");
+ 				break;
+ 			}
+ 			cond_resched();
+ 		} while (time_before(jiffies, timeout));
+ 	} else {
+-		ret = wait_for_completion_timeout(&mtx.done, TIMEOUT);
++		KUNIT_EXPECT_EQ(test, wait_for_completion_timeout(&mtx.done, TIMEOUT), 0);
+ 	}
+ 	ww_mutex_unlock(&mtx.mutex);
+ 	if (flags & TEST_MTX_CTX)
+ 		ww_acquire_fini(&ctx);
+ 
+-	if (ret) {
+-		pr_err("%s(flags=%x): mutual exclusion failure\n",
+-		       __func__, flags);
+-		ret = -EINVAL;
+-	}
+-
+ 	flush_work(&mtx.work);
+ 	destroy_work_on_stack(&mtx.work);
+-	return ret;
+ #undef TIMEOUT
+ }
+ 
+-static int test_mutex(void)
++static const void *test_aa_gen_params(const void *prev, char *desc)
+ {
+-	int ret;
+-	int i;
+-
+-	for (i = 0; i < __TEST_MTX_LAST; i++) {
+-		ret = __test_mutex(i);
+-		if (ret)
+-			return ret;
+-	}
++	static unsigned int storage;
++	const unsigned int *next = gen_range(&storage, 0, 1, prev);
+ 
+-	return 0;
++	if (next != NULL)
++		snprintf(desc, KUNIT_PARAM_DESC_SIZE, *next ? "trylock" : "lock");
++	return next;
+ }
+ 
+-static int test_aa(bool trylock)
++static void test_aa(struct kunit *test)
+ {
++	const unsigned int *param = test->param_value;
++	const bool trylock = *param;
+ 	struct ww_mutex mutex;
+ 	struct ww_acquire_ctx ctx;
+ 	int ret;
+-	const char *from = trylock ? "trylock" : "lock";
+ 
+ 	ww_mutex_init(&mutex, &ww_class);
+ 	ww_acquire_init(&ctx, &ww_class);
+@@ -133,46 +149,42 @@ static int test_aa(bool trylock)
+ 	if (!trylock) {
+ 		ret = ww_mutex_lock(&mutex, &ctx);
+ 		if (ret) {
+-			pr_err("%s: initial lock failed!\n", __func__);
++			KUNIT_FAIL(test, "initial lock failed, ret=%d", ret);
+ 			goto out;
+ 		}
+ 	} else {
+ 		ret = !ww_mutex_trylock(&mutex, &ctx);
+ 		if (ret) {
+-			pr_err("%s: initial trylock failed!\n", __func__);
++			KUNIT_FAIL(test, "initial trylock failed, ret=%d", ret);
+ 			goto out;
+ 		}
+ 	}
+ 
+-	if (ww_mutex_trylock(&mutex, NULL))  {
+-		pr_err("%s: trylocked itself without context from %s!\n", __func__, from);
++	ret = ww_mutex_trylock(&mutex, NULL);
++	if (ret)  {
++		KUNIT_FAIL(test, "trylocked itself without context, ret=%d", ret);
+ 		ww_mutex_unlock(&mutex);
+-		ret = -EINVAL;
+ 		goto out;
+ 	}
+ 
+-	if (ww_mutex_trylock(&mutex, &ctx))  {
+-		pr_err("%s: trylocked itself with context from %s!\n", __func__, from);
++	ret = ww_mutex_trylock(&mutex, &ctx);
++	if (ret) {
++		KUNIT_FAIL(test, "trylocked itself with context, ret=%d", ret);
+ 		ww_mutex_unlock(&mutex);
+-		ret = -EINVAL;
+ 		goto out;
+ 	}
+ 
+ 	ret = ww_mutex_lock(&mutex, &ctx);
+ 	if (ret != -EALREADY) {
+-		pr_err("%s: missed deadlock for recursing, ret=%d from %s\n",
+-		       __func__, ret, from);
++		KUNIT_FAIL(test, "missed deadlock for recursing, ret=%d", ret);
+ 		if (!ret)
+ 			ww_mutex_unlock(&mutex);
+-		ret = -EINVAL;
+ 		goto out;
+ 	}
+ 
+ 	ww_mutex_unlock(&mutex);
+-	ret = 0;
+ out:
+ 	ww_acquire_fini(&ctx);
+-	return ret;
+ }
+ 
+ struct test_abba {
+@@ -217,11 +229,36 @@ static void test_abba_work(struct work_struct *work)
+ 	abba->result = err;
+ }
+ 
+-static int test_abba(bool trylock, bool resolve)
++union test_abba_param {
++	unsigned int value;
++	struct {
++		unsigned int trylock : 1;
++		unsigned int resolve : 1;
++	};
++};
++
++static const void *test_abba_gen_params(const void *prev, char *desc)
+ {
++	static unsigned int storage;
++	const unsigned int *next = gen_range(&storage, 0b00, 0b11, prev);
++
++	if (next != NULL) {
++		const union test_abba_param param = { .value = *next };
++
++		snprintf(desc, KUNIT_PARAM_DESC_SIZE, "trylock=%d,resolve=%d",
++			 param.trylock, param.resolve);
++	}
++	return next;
++}
++
++static void test_abba(struct kunit *test)
++{
++	const union test_abba_param *param = test->param_value;
++	const bool trylock = param->trylock;
++	const bool resolve = param->resolve;
+ 	struct test_abba abba;
+ 	struct ww_acquire_ctx ctx;
+-	int err, ret;
++	int err;
+ 
+ 	ww_mutex_init(&abba.a_mutex, &ww_class);
+ 	ww_mutex_init(&abba.b_mutex, &ww_class);
+@@ -259,21 +296,17 @@ static int test_abba(bool trylock, bool resolve)
+ 	flush_work(&abba.work);
+ 	destroy_work_on_stack(&abba.work);
+ 
+-	ret = 0;
+ 	if (resolve) {
+ 		if (err || abba.result) {
+-			pr_err("%s: failed to resolve ABBA deadlock, A err=%d, B err=%d\n",
+-			       __func__, err, abba.result);
+-			ret = -EINVAL;
++			KUNIT_FAIL(test, "failed to resolve ABBA deadlock, A err=%d, B err=%d",
++				   err, abba.result);
+ 		}
+ 	} else {
+ 		if (err != -EDEADLK && abba.result != -EDEADLK) {
+-			pr_err("%s: missed ABBA deadlock, A err=%d, B err=%d\n",
+-			       __func__, err, abba.result);
+-			ret = -EINVAL;
++			KUNIT_FAIL(test, "missed ABBA deadlock, A err=%d, B err=%d",
++				   err, abba.result);
+ 		}
+ 	}
+-	return ret;
+ }
+ 
+ struct test_cycle {
+@@ -314,15 +347,25 @@ static void test_cycle_work(struct work_struct *work)
+ 	cycle->result = err ?: erra;
+ }
+ 
+-static int __test_cycle(unsigned int nthreads)
++static const void *test_cycle_gen_params(const void *prev, char *desc)
+ {
++	static unsigned int storage;
++	const unsigned int *next = gen_range(&storage, 2, num_online_cpus(), prev);
++
++	if (next != NULL)
++		snprintf(desc, KUNIT_PARAM_DESC_SIZE, "nthreads=%d", *next);
++	return next;
++}
++
++static void test_cycle(struct kunit *test)
++{
++	const unsigned int *param = test->param_value;
++	const unsigned int nthreads = *param;
+ 	struct test_cycle *cycles;
+ 	unsigned int n, last = nthreads - 1;
+-	int ret;
+ 
+-	cycles = kmalloc_array(nthreads, sizeof(*cycles), GFP_KERNEL);
+-	if (!cycles)
+-		return -ENOMEM;
++	cycles = kunit_kmalloc_array(test, nthreads, sizeof(*cycles), GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, cycles);
+ 
+ 	for (n = 0; n < nthreads; n++) {
+ 		struct test_cycle *cycle = &cycles[n];
+@@ -348,41 +391,24 @@ static int __test_cycle(unsigned int nthreads)
+ 
+ 	flush_workqueue(wq);
+ 
+-	ret = 0;
+ 	for (n = 0; n < nthreads; n++) {
+ 		struct test_cycle *cycle = &cycles[n];
+ 
+ 		if (!cycle->result)
+ 			continue;
+ 
+-		pr_err("cyclic deadlock not resolved, ret[%d/%d] = %d\n",
+-		       n, nthreads, cycle->result);
+-		ret = -EINVAL;
++		KUNIT_FAIL(test, "cyclic deadlock not resolved, ret[%d/%d] = %d",
++			   n, nthreads, cycle->result);
+ 		break;
+ 	}
+ 
+ 	for (n = 0; n < nthreads; n++)
+ 		ww_mutex_destroy(&cycles[n].a_mutex);
+-	kfree(cycles);
+-	return ret;
+-}
+-
+-static int test_cycle(unsigned int ncpus)
+-{
+-	unsigned int n;
+-	int ret;
+-
+-	for (n = 2; n <= ncpus + 1; n++) {
+-		ret = __test_cycle(n);
+-		if (ret)
+-			return ret;
+-	}
+-
+-	return 0;
+ }
+ 
+ struct stress {
+ 	struct work_struct work;
++	struct kunit *test;
+ 	struct ww_mutex *locks;
+ 	unsigned long timeout;
+ 	int nlocks;
+@@ -401,12 +427,12 @@ static inline u32 prandom_u32_below(u32 ceil)
+ 	return ret;
+ }
+ 
+-static int *get_random_order(int count)
++static int *get_random_order(struct kunit *test, int count)
+ {
+ 	int *order;
+ 	int n, r;
+ 
+-	order = kmalloc_array(count, sizeof(*order), GFP_KERNEL);
++	order = kunit_kmalloc_array(test, count, sizeof(*order), GFP_KERNEL);
+ 	if (!order)
+ 		return order;
+ 
+@@ -435,7 +461,8 @@ static void stress_inorder_work(struct work_struct *work)
+ 	struct ww_acquire_ctx ctx;
+ 	int *order;
+ 
+-	order = get_random_order(nlocks);
++	order = get_random_order(stress->test, nlocks);
++	KUNIT_EXPECT_NOT_NULL(stress->test, order);
+ 	if (!order)
+ 		return;
+ 
+@@ -472,13 +499,10 @@ static void stress_inorder_work(struct work_struct *work)
+ 
+ 		ww_acquire_fini(&ctx);
+ 		if (err) {
+-			pr_err_once("stress (%s) failed with %d\n",
+-				    __func__, err);
++			KUNIT_FAIL(stress->test, "lock[%d] failed, err=%d", n, err);
+ 			break;
+ 		}
+ 	} while (!time_after(jiffies, stress->timeout));
+-
+-	kfree(order);
+ }
+ 
+ struct reorder_lock {
+@@ -495,19 +519,19 @@ static void stress_reorder_work(struct work_struct *work)
+ 	int *order;
+ 	int n, err;
+ 
+-	order = get_random_order(stress->nlocks);
++	order = get_random_order(stress->test, stress->nlocks);
++	KUNIT_EXPECT_NOT_NULL(stress->test, order);
+ 	if (!order)
+ 		return;
+ 
+ 	for (n = 0; n < stress->nlocks; n++) {
+-		ll = kmalloc(sizeof(*ll), GFP_KERNEL);
++		ll = kunit_kmalloc(stress->test, sizeof(*ll), GFP_KERNEL);
++		KUNIT_EXPECT_NOT_NULL(stress->test, ll);
+ 		if (!ll)
+-			goto out;
+-
++			return;
+ 		ll->lock = &stress->locks[order[n]];
+ 		list_add(&ll->link, &locks);
+ 	}
+-	kfree(order);
+ 	order = NULL;
+ 
+ 	do {
+@@ -523,8 +547,7 @@ static void stress_reorder_work(struct work_struct *work)
+ 				ww_mutex_unlock(ln->lock);
+ 
+ 			if (err != -EDEADLK) {
+-				pr_err_once("stress (%s) failed with %d\n",
+-					    __func__, err);
++				KUNIT_FAIL(stress->test, "lock failed, err=%d", err);
+ 				break;
+ 			}
+ 
+@@ -538,11 +561,6 @@ static void stress_reorder_work(struct work_struct *work)
+ 
+ 		ww_acquire_fini(&ctx);
+ 	} while (!time_after(jiffies, stress->timeout));
+-
+-out:
+-	list_for_each_entry_safe(ll, ln, &locks, link)
+-		kfree(ll);
+-	kfree(order);
+ }
+ 
+ static void stress_one_work(struct work_struct *work)
+@@ -558,8 +576,7 @@ static void stress_one_work(struct work_struct *work)
+ 			dummy_load(stress);
+ 			ww_mutex_unlock(lock);
+ 		} else {
+-			pr_err_once("stress (%s) failed with %d\n",
+-				    __func__, err);
++			KUNIT_FAIL(stress->test, "lock failed, err=%d", err);
+ 			break;
+ 		}
+ 	} while (!time_after(jiffies, stress->timeout));
+@@ -570,22 +587,41 @@ static void stress_one_work(struct work_struct *work)
+ #define STRESS_ONE BIT(2)
+ #define STRESS_ALL (STRESS_INORDER | STRESS_REORDER | STRESS_ONE)
+ 
+-static int stress(int nlocks, int nthreads, unsigned int flags)
++struct stress_case {
++	int nlocks;
++	int nthreads_per_cpu;
++	unsigned int flags;
++};
++
++static const struct stress_case stress_cases[] = {
++	{ 16, 2, STRESS_INORDER },
++	{ 16, 2, STRESS_REORDER },
++	{ 2046, hweight32(STRESS_ALL), STRESS_ALL },
++};
++
++static void stress_case_to_desc(const struct stress_case *param, char *desc)
+ {
++	snprintf(desc, KUNIT_PARAM_DESC_SIZE, "nlocks=%d,nthreads_per_cpu=%d,flags=%x",
++		 param->nlocks, param->nthreads_per_cpu, param->flags);
++}
++
++KUNIT_ARRAY_PARAM(stress_cases, stress_cases, stress_case_to_desc);
++
++static void stress(struct kunit *test)
++{
++	const struct stress_case *param = test->param_value;
++	const int nlocks = param->nlocks;
++	int nthreads = param->nthreads_per_cpu * num_online_cpus();
++	const unsigned int flags = param->flags;
+ 	struct ww_mutex *locks;
+ 	struct stress *stress_array;
+ 	int n, count;
+ 
+-	locks = kmalloc_array(nlocks, sizeof(*locks), GFP_KERNEL);
+-	if (!locks)
+-		return -ENOMEM;
++	locks = kunit_kmalloc_array(test, nlocks, sizeof(*locks), GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, locks);
+ 
+-	stress_array = kmalloc_array(nthreads, sizeof(*stress_array),
+-				     GFP_KERNEL);
+-	if (!stress_array) {
+-		kfree(locks);
+-		return -ENOMEM;
+-	}
++	stress_array = kunit_kmalloc_array(test, nthreads, sizeof(*stress_array), GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, stress_array);
+ 
+ 	for (n = 0; n < nlocks; n++)
+ 		ww_mutex_init(&locks[n], &ww_class);
+@@ -617,6 +653,7 @@ static int stress(int nlocks, int nthreads, unsigned int flags)
+ 		stress = &stress_array[count++];
+ 
+ 		INIT_WORK(&stress->work, fn);
++		stress->test = test;
+ 		stress->locks = locks;
+ 		stress->nlocks = nlocks;
+ 		stress->timeout = jiffies + 2*HZ;
+@@ -629,70 +666,42 @@ static int stress(int nlocks, int nthreads, unsigned int flags)
+ 
+ 	for (n = 0; n < nlocks; n++)
+ 		ww_mutex_destroy(&locks[n]);
+-	kfree(stress_array);
+-	kfree(locks);
+-
+-	return 0;
+ }
+ 
+-static int __init test_ww_mutex_init(void)
++static int ww_mutex_suite_init(struct kunit_suite *suite)
+ {
+-	int ncpus = num_online_cpus();
+-	int ret, i;
+-
+-	printk(KERN_INFO "Beginning ww mutex selftests\n");
+-
+-	prandom_seed_state(&rng, get_random_u64());
+-
+ 	wq = alloc_workqueue("test-ww_mutex", WQ_UNBOUND, 0);
+ 	if (!wq)
+ 		return -ENOMEM;
+ 
+-	ret = test_mutex();
+-	if (ret)
+-		return ret;
+-
+-	ret = test_aa(false);
+-	if (ret)
+-		return ret;
+-
+-	ret = test_aa(true);
+-	if (ret)
+-		return ret;
+-
+-	for (i = 0; i < 4; i++) {
+-		ret = test_abba(i & 1, i & 2);
+-		if (ret)
+-			return ret;
+-	}
+-
+-	ret = test_cycle(ncpus);
+-	if (ret)
+-		return ret;
+-
+-	ret = stress(16, 2*ncpus, STRESS_INORDER);
+-	if (ret)
+-		return ret;
+-
+-	ret = stress(16, 2*ncpus, STRESS_REORDER);
+-	if (ret)
+-		return ret;
+-
+-	ret = stress(2046, hweight32(STRESS_ALL)*ncpus, STRESS_ALL);
+-	if (ret)
+-		return ret;
++	prandom_seed_state(&rng, get_random_u64());
+ 
+-	printk(KERN_INFO "All ww mutex selftests passed\n");
+ 	return 0;
+ }
+ 
+-static void __exit test_ww_mutex_exit(void)
++static void ww_mutex_suite_exit(struct kunit_suite *suite)
+ {
+-	destroy_workqueue(wq);
++	if (wq)
++		destroy_workqueue(wq);
+ }
+ 
+-module_init(test_ww_mutex_init);
+-module_exit(test_ww_mutex_exit);
++static struct kunit_case ww_mutex_cases[] = {
++	KUNIT_CASE_PARAM(test_mutex, test_mutex_gen_params),
++	KUNIT_CASE_PARAM(test_aa, test_aa_gen_params),
++	KUNIT_CASE_PARAM(test_abba, test_abba_gen_params),
++	KUNIT_CASE_PARAM(test_cycle, test_cycle_gen_params),
++	KUNIT_CASE_PARAM_ATTR(stress, stress_cases_gen_params, {.speed = KUNIT_SPEED_SLOW}),
++	{},
++};
++
++static struct kunit_suite ww_mutex_suite = {
++	.name = "ww_mutex",
++	.suite_init = ww_mutex_suite_init,
++	.suite_exit = ww_mutex_suite_exit,
++	.test_cases = ww_mutex_cases,
++};
++
++kunit_test_suite(ww_mutex_suite);
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Intel Corporation");
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 85b95d645b10..2c9da8647eaf 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1595,16 +1595,18 @@ config LOCK_TORTURE_TEST
+ 	  Say M if you want these torture tests to build as a module.
+ 	  Say N if you are unsure.
+ 
+-config WW_MUTEX_SELFTEST
+-	tristate "Wait/wound mutex selftests"
++config WW_MUTEX_KUNIT_TEST
++	tristate "KUnit test for wait/wound mutex" if !KUNIT_ALL_TESTS
++	depends on KUNIT
++	default KUNIT_ALL_TESTS
+ 	help
+-	  This option provides a kernel module that runs tests on the
+-	  on the struct ww_mutex locking API.
++	  This option provides a KUnit test that exercises the struct
++	  ww_mutex locking API.
+ 
+ 	  It is recommended to enable DEBUG_WW_MUTEX_SLOWPATH in conjunction
+ 	  with this test harness.
+ 
+-	  Say M if you want these self tests to build as a module.
++	  Say M if you want these tests to build as a module.
+ 	  Say N if you are unsure.
+ 
+ config SCF_TORTURE_TEST
+diff --git a/tools/testing/selftests/locking/ww_mutex.sh b/tools/testing/selftests/locking/ww_mutex.sh
+deleted file mode 100755
+index 91e4ac7566af..000000000000
+--- a/tools/testing/selftests/locking/ww_mutex.sh
++++ /dev/null
+@@ -1,19 +0,0 @@
+-#!/bin/sh
+-# SPDX-License-Identifier: GPL-2.0
+-
+-# Kselftest framework requirement - SKIP code is 4.
+-ksft_skip=4
+-
+-# Runs API tests for struct ww_mutex (Wait/Wound mutexes)
+-if ! /sbin/modprobe -q -n test-ww_mutex; then
+-	echo "ww_mutex: module test-ww_mutex is not found [SKIP]"
+-	exit $ksft_skip
+-fi
+-
+-if /sbin/modprobe -q test-ww_mutex; then
+-       /sbin/modprobe -q -r test-ww_mutex
+-       echo "locking/ww_mutex: ok"
+-else
+-       echo "locking/ww_mutex: [FAIL]"
+-       exit 1
+-fi
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502131939.DdTP5mv1-lkp@intel.com/
+---
+base-commit: 7b7a883c7f4de1ee5040bd1c32aabaafde54d209
+change-id: 20250208-ww_mutex-kunit-convert-71842a7a6be2
 
-All warnings (new ones prefixed by >>):
-
-   drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c: In function 'loongson_dwmac_probe':
->> drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c:527:18: warning: unused variable 'i' [-Wunused-variable]
-     527 |         int ret, i;
-         |                  ^
-   drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c: In function 'loongson_dwmac_remove':
-   drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c:604:13: warning: unused variable 'i' [-Wunused-variable]
-     604 |         int i;
-         |             ^
-
-
-vim +/i +527 drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-
-126f4f96c41d2e Yanteng Si      2024-08-07  520  
-30bba69d7db40e Qing Zhang      2021-06-18  521  static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-30bba69d7db40e Qing Zhang      2021-06-18  522  {
-30bba69d7db40e Qing Zhang      2021-06-18  523  	struct plat_stmmacenet_data *plat;
-0ec04d32b5e7f0 Yanteng Si      2024-08-07  524  	struct stmmac_pci_info *info;
-bd83fd598ba34f Philipp Stanner 2025-02-12  525  	struct stmmac_resources res = {};
-803fc61df261de Yanteng Si      2024-08-07  526  	struct loongson_data *ld;
-126f4f96c41d2e Yanteng Si      2024-08-07 @527  	int ret, i;
-30bba69d7db40e Qing Zhang      2021-06-18  528  
-30bba69d7db40e Qing Zhang      2021-06-18  529  	plat = devm_kzalloc(&pdev->dev, sizeof(*plat), GFP_KERNEL);
-30bba69d7db40e Qing Zhang      2021-06-18  530  	if (!plat)
-30bba69d7db40e Qing Zhang      2021-06-18  531  		return -ENOMEM;
-30bba69d7db40e Qing Zhang      2021-06-18  532  
-30bba69d7db40e Qing Zhang      2021-06-18  533  	plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
-30bba69d7db40e Qing Zhang      2021-06-18  534  					   sizeof(*plat->mdio_bus_data),
-30bba69d7db40e Qing Zhang      2021-06-18  535  					   GFP_KERNEL);
-e87d3a1370ce9f Yanteng Si      2023-12-11  536  	if (!plat->mdio_bus_data)
-e87d3a1370ce9f Yanteng Si      2023-12-11  537  		return -ENOMEM;
-e87d3a1370ce9f Yanteng Si      2023-12-11  538  
-30bba69d7db40e Qing Zhang      2021-06-18  539  	plat->dma_cfg = devm_kzalloc(&pdev->dev, sizeof(*plat->dma_cfg), GFP_KERNEL);
-126f4f96c41d2e Yanteng Si      2024-08-07  540  	if (!plat->dma_cfg)
-126f4f96c41d2e Yanteng Si      2024-08-07  541  		return -ENOMEM;
-30bba69d7db40e Qing Zhang      2021-06-18  542  
-803fc61df261de Yanteng Si      2024-08-07  543  	ld = devm_kzalloc(&pdev->dev, sizeof(*ld), GFP_KERNEL);
-803fc61df261de Yanteng Si      2024-08-07  544  	if (!ld)
-803fc61df261de Yanteng Si      2024-08-07  545  		return -ENOMEM;
-803fc61df261de Yanteng Si      2024-08-07  546  
-30bba69d7db40e Qing Zhang      2021-06-18  547  	/* Enable pci device */
-30bba69d7db40e Qing Zhang      2021-06-18  548  	ret = pci_enable_device(pdev);
-30bba69d7db40e Qing Zhang      2021-06-18  549  	if (ret) {
-30bba69d7db40e Qing Zhang      2021-06-18  550  		dev_err(&pdev->dev, "%s: ERROR: failed to enable device\n", __func__);
-126f4f96c41d2e Yanteng Si      2024-08-07  551  		return ret;
-30bba69d7db40e Qing Zhang      2021-06-18  552  	}
-30bba69d7db40e Qing Zhang      2021-06-18  553  
-126f4f96c41d2e Yanteng Si      2024-08-07  554  	pci_set_master(pdev);
-126f4f96c41d2e Yanteng Si      2024-08-07  555  
-30bba69d7db40e Qing Zhang      2021-06-18  556  	/* Get the base address of device */
-bd83fd598ba34f Philipp Stanner 2025-02-12  557  	res.addr = pcim_iomap_region(pdev, 0, DRIVER_NAME);
-bd83fd598ba34f Philipp Stanner 2025-02-12  558  	ret = PTR_ERR_OR_ZERO(res.addr);
-30bba69d7db40e Qing Zhang      2021-06-18  559  	if (ret)
-fe5b3ce8b4377e Yang Yingliang  2022-11-08  560  		goto err_disable_device;
-30bba69d7db40e Qing Zhang      2021-06-18  561  
-803fc61df261de Yanteng Si      2024-08-07  562  	plat->bsp_priv = ld;
-803fc61df261de Yanteng Si      2024-08-07  563  	plat->setup = loongson_dwmac_setup;
-56dbe2c290bc58 Yanteng Si      2024-08-07  564  	ld->dev = &pdev->dev;
-803fc61df261de Yanteng Si      2024-08-07  565  	ld->loongson_id = readl(res.addr + GMAC_VERSION) & 0xff;
-803fc61df261de Yanteng Si      2024-08-07  566  
-0ec04d32b5e7f0 Yanteng Si      2024-08-07  567  	info = (struct stmmac_pci_info *)id->driver_data;
-126f4f96c41d2e Yanteng Si      2024-08-07  568  	ret = info->setup(pdev, plat);
-0ec04d32b5e7f0 Yanteng Si      2024-08-07  569  	if (ret)
-0ec04d32b5e7f0 Yanteng Si      2024-08-07  570  		goto err_disable_device;
-0ec04d32b5e7f0 Yanteng Si      2024-08-07  571  
-126f4f96c41d2e Yanteng Si      2024-08-07  572  	if (dev_of_node(&pdev->dev))
-126f4f96c41d2e Yanteng Si      2024-08-07  573  		ret = loongson_dwmac_dt_config(pdev, plat, &res);
-126f4f96c41d2e Yanteng Si      2024-08-07  574  	else
-126f4f96c41d2e Yanteng Si      2024-08-07  575  		ret = loongson_dwmac_acpi_config(pdev, plat, &res);
-126f4f96c41d2e Yanteng Si      2024-08-07  576  	if (ret)
-0c979e6b55f99f Yanteng Si      2024-08-07  577  		goto err_disable_device;
-30bba69d7db40e Qing Zhang      2021-06-18  578  
-803fc61df261de Yanteng Si      2024-08-07  579  	/* Use the common MAC IRQ if per-channel MSIs allocation failed */
-803fc61df261de Yanteng Si      2024-08-07  580  	if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN)
-803fc61df261de Yanteng Si      2024-08-07  581  		loongson_dwmac_msi_config(pdev, plat, &res);
-803fc61df261de Yanteng Si      2024-08-07  582  
-f2d45fdf9a0ed2 Yang Yingliang  2022-11-08  583  	ret = stmmac_dvr_probe(&pdev->dev, plat, &res);
-f2d45fdf9a0ed2 Yang Yingliang  2022-11-08  584  	if (ret)
-126f4f96c41d2e Yanteng Si      2024-08-07  585  		goto err_plat_clear;
-f2d45fdf9a0ed2 Yang Yingliang  2022-11-08  586  
-126f4f96c41d2e Yanteng Si      2024-08-07  587  	return 0;
-f2d45fdf9a0ed2 Yang Yingliang  2022-11-08  588  
-126f4f96c41d2e Yanteng Si      2024-08-07  589  err_plat_clear:
-126f4f96c41d2e Yanteng Si      2024-08-07  590  	if (dev_of_node(&pdev->dev))
-126f4f96c41d2e Yanteng Si      2024-08-07  591  		loongson_dwmac_dt_clear(pdev, plat);
-803fc61df261de Yanteng Si      2024-08-07  592  	if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN)
-803fc61df261de Yanteng Si      2024-08-07  593  		loongson_dwmac_msi_clear(pdev);
-fe5b3ce8b4377e Yang Yingliang  2022-11-08  594  err_disable_device:
-fe5b3ce8b4377e Yang Yingliang  2022-11-08  595  	pci_disable_device(pdev);
-f2d45fdf9a0ed2 Yang Yingliang  2022-11-08  596  	return ret;
-30bba69d7db40e Qing Zhang      2021-06-18  597  }
-30bba69d7db40e Qing Zhang      2021-06-18  598  
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Tamir Duberstein <tamird@gmail.com>
+
