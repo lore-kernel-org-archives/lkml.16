@@ -1,220 +1,120 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-pl1-f225.google.com (mail-pl1-f225.google.com [209.85.214.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F93E28A2A5
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB28A1FDA76
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739466264; cv=none; b=V8T7pt3Nv19NxX1fYmQdFhOa7rZ+fQOjLHrhLtevaIBBxilJrpHl+KKXz5fYOc+PGR7PT2ylsz3fthLT4JmKWvcMEb2NwKYhD7ce+RH0/BAvnbRBPaiamacFXbeoJ8EjiDo1bjaMAKf6vzwGFfnUANcbddgwOCr0v6PK6/sX2dg=
+	t=1739466334; cv=none; b=UFAEWveKOUOTFydJx5udUR9jUoZ6II7lyaVuCeKUof/SkrQDRZYJ3WhPwTOuLKT1p+k2L2ymKCBjyTs9HAAJglmRwnH5ee+T+Tpf1kOwBUTjgFialyxyjiiMU1tcwVJKOJ+A9C6wYPUSTvmqLB8B/AwjSNTTdrqx6CaKIRXLyg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739466264; c=relaxed/simple;
-	bh=UxujoObsRMePbbJAebzGVUGsG/FjQpg8nn1wclSSvk4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jsa0dRwiKkqdNP3UGj67mjzA3pfPfLs/ugzKJrG3FQOu0jlxi3S+lDIiRIcSOxWWJCCTOVO9MLGWmOf9/D4CnKl9S7Pmvhpkl2tNBWbCSOriCtRF2i3Udw6qlxtjru49PgvnZ1jzIdbVD3lcvSkHXo1+KnhSqUqhX30ZD56yfXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iJNxy26v; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739466334; c=relaxed/simple;
+	bh=2cHiBqkS/LD3shVbQD3h3daEXcL3c6Up7LUMhL+YVg8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iJSlxTqsv1nmD6Sd1WtKRWyHBK9QV9gyRpF9TwDDjwnVV6Fd8mU2zQYqT6qJKyr1UGp35YcXOjhTr8PQYicFscI50fcmOVvpJBSkTPLgajoRZcGQ1HI/eaWwTfNcrAzjyOzQ/LYjXmJ8qclnL7GANmdIr7WaMPzqfOnDgskOb+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=by4eZ+uK; arc=none smtp.client-ip=209.85.214.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iJNxy26v"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4362bae4d7dso7675995e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:04:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="by4eZ+uK"
+Received: by mail-pl1-f225.google.com with SMTP id d9443c01a7336-21f8f3bd828so2474405ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:05:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739466261; x=1740071061; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Oga1ZrT528saYrM/3p6zFxJtS4TBk8uWtZwbddbjGow=;
-        b=iJNxy26vir20C3cTWI0AGPzusr1i07WqreHWVca1PH7W8Z5+V8UmzsuL8NX4W6s6e7
-         MO5oFqisq4sNyQUc7b7rx+3W+b5lNdBZB3/8VEzKrTCuMbyV00HE7nty8Mnh46nnIGKp
-         PJiw7o/YrudSfSkE8s5qiuk6CHc2oRXRUuqkUXRB5wnEbVTiNj5I2d9hWyrqvJkONG3z
-         CdTLFinpjqpROmicGQmlQ1RtODpaVKqE7f+aJdqOkxGyVOqtpuxfcWLvEwNC7DLDP9mF
-         VQA/AwXG13R1NCU22/OLkiqg75WyhnlpNd7OG1no+WMFmZKML2bbcEV7q/y+XEfLMis3
-         olrQ==
+        d=purestorage.com; s=google2022; t=1739466332; x=1740071132; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0guEuJNvlGkwonkHXf3ZKU0sySDKrB2+MAVSsNCun0o=;
+        b=by4eZ+uKuRDeKuXIlo+plEnmebBMsAQfFINrBsTg+93QQNvLNAy61qRTLb8XjJKR3y
+         sLlDwBYrY0pti8XkaNa2L4tjFJo6r3bQ0k8ftz8SYr+vr8qxm1ryU5+xoAXP1psikH9x
+         Ru9j7HeBql9vFNr+LtytsZP86+YENFaFEoWB4LmEDjpmDs02IU5rJDEuOE5u6Eisi1C8
+         SOngDBLftk1apC0gPLPX4D68dTwP5QVy7OkZDQJFDXlYo/wYpqwbC/vEFlzq0O7CkmPO
+         eX8YIIHbRkYbHs/fxcJaRnPZkXe6ajCzV669GSi2dZCTm4eGaMBFCglguI4RzePJkm/U
+         A1UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739466261; x=1740071061;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1739466332; x=1740071132;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Oga1ZrT528saYrM/3p6zFxJtS4TBk8uWtZwbddbjGow=;
-        b=fUCEAPijYzn3MVQEWl3KSFUv0jx5W0sv3yfy5oQIjdHuIe9ptDy1bMRwLfXgEm6nsj
-         RJBBHbJgSrAYTj5V8Sed18bEW3LZDZK3QAhIXYnUKu29JP+gGwKDFQAd6i8fHJV78PlP
-         Rk/numThcd+zPxWIlXkBlBuJaiFP7Ku0Njyl8tTcz/vPeIrXiQfxWdtFjXosBfnGeSYF
-         uvXsGcwOB2+RMXIMWd6vXSsfLp0RNMoeDj5HDWqPRFSb5VURNi/k0+H+XDXWle2gP8gr
-         Zu7I4i5Jsfh5JF3jYZU1ktTlWhrv8W0ywM7uWWxtGrEWyfgafJ0bL+5SC4dp93l6pIcO
-         2stQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5t3GzSRnG2YBz2Is46ddnWYQ9UEIrzR9p0giwi7xOzZVEg/3JFUDsvJ093AEQQILeyuIuheEH880O5Pg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSje5R0FlbjLwBwQS+GfRhzC2Mo/O4gtWpaInoZvXreG0rcdBq
-	od6zQAXRj8IMSMmTkAFz9Nqm7xxTl7hAG2v4bXxp5evh38nLgmD1rUshJdb9+ikItMVnKrDLH2F
-	w
-X-Gm-Gg: ASbGnctkOwTAq5UPMZtbjWmpedNwiKK1wSaF/fc9uKgnB8hpAXf20NAavCG6tR0pqbQ
-	hZSh8n2UaU6fKXv482uclzgRZhcxOTXSysK/filiD5MbvID0nCs6XqHplu8aQk3tMNQadisd7Y2
-	4pG4N3uOJtEAnRB+WbV1oSwGxLAgm1En8Yqs1mFxlCX3WrZOomTkP45VtV0ylbrOTs893dMnm4o
-	4sLcDV1K7KOHyXjaHWd24B4fSIyE94fXszBwH4hJnJpLBn8ucxBopn9Qw4dqN9rqvHP9XpZvBd+
-	rD12f0kicrCqF/XS2U0hU2/RQKC9PQ==
-X-Google-Smtp-Source: AGHT+IH1YMPyiqFwHzUGBiXqMnPayaKJMizJnHFRkvNA08F0Uz2My0MWNu0JzFe3LytxAx8/k0XH5g==
-X-Received: by 2002:a05:600c:450c:b0:434:f3d8:62d0 with SMTP id 5b1f17b1804b1-4395815f428mr85597685e9.3.1739466260444;
-        Thu, 13 Feb 2025 09:04:20 -0800 (PST)
-Received: from [127.0.0.2] ([2a02:2454:ff21:ef41:29d1:1370:c895:9654])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a1b84bcsm55990785e9.40.2025.02.13.09.04.19
+        bh=0guEuJNvlGkwonkHXf3ZKU0sySDKrB2+MAVSsNCun0o=;
+        b=BTlVLErDcy/atOLr2TsTSm7nr8Gx8AZctvsmzZGVUYSAFu3OKoBVZx2I6tgpt7Ed6T
+         MEKPQs1yc4xA/KLTO5rTxnm72kIeP8lhvqdc5bZT4wLxHssJlgUlL77ksnuEWYz0fF+Z
+         LRqQ30xRYuKTl+XY2BKAKNg68nhByEuFByYjDqT0xPW6EfVdOhy+7vA+rxE+RTb9faRD
+         L2Sk/M4ij2/d6MC2DbsH9ug5LMGRlbfvxattfvCpCYQE7RTDx7lBFNn7ua99aH9GC+Md
+         7VMv0DiEbOBd67jXL3lamo1xSxc8JpMvrehkQAnZsRokLnR81iz+7ZyXdaDShl9fx4xk
+         Aa1A==
+X-Forwarded-Encrypted: i=1; AJvYcCWu6DZYQHluQs5vync3DkBGkFDB12SQlMY/EIF8yr5KTx3utBNEknyq/PynC8eDtXV4p5sPplPiLTi6xgc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQeaHhxAun3LrCTIRGkij7CkHIYpYmMf8O3rmdZOrbyUQc4ist
+	hA4K1BKZkq61ABkXuKGZ3PZBL4lvKutsZAxG0qlwqoPDwdlzYreqCB7TP3s6c2fJVOeIFU0Pl07
+	YpDXsilTnomc5y6OsjBX41SIw6TFaY1XS
+X-Gm-Gg: ASbGnctJHnUllDpHXmIzMGNYLRKfshpvgkItKpj4G17cjpe4YVdXwu4dL3acet6KIKD
+	DAfkTDKwcRDrTD8DHQDZmlxysWhqIzdtJA8zqUCl5AVPUeN48XavDyqiJYRF2wULopkd43HNkkB
+	rgv0lo0IJFSiwkYX0rrFtmqNloa9TvT/97ZA6gwTXvJelELaXZeAH+Su9rVVrGjFQ7nRXLYhNkR
+	jtPnQzs7yI4PPY1zi6JEGlnsXalR3yqEF9hjfKHkO6ByL41iUxtbrkhBVUb5sdrrsoVa+ygnaXq
+	YH5bslN9jBQSoj3KLSEu1k8jBu5xoApDz//DMg==
+X-Google-Smtp-Source: AGHT+IHURWcUxjpQh1hRezwaV451EcRATWFvIcuc8EXv7EdaGhXS1xW89EtTfCobKSrnGs0I1/3+UwR9EHZz
+X-Received: by 2002:a17:902:ea01:b0:20c:5da8:47b8 with SMTP id d9443c01a7336-220bbf3284amr50146265ad.5.1739466332019;
+        Thu, 13 Feb 2025 09:05:32 -0800 (PST)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-2faa5d0caa1sm63457a91.1.2025.02.13.09.05.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 09:04:20 -0800 (PST)
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-Date: Thu, 13 Feb 2025 18:04:00 +0100
-Subject: [PATCH] irqchip/qcom-pdc: Workaround hardware register bug on
- X1E80100
+        Thu, 13 Feb 2025 09:05:32 -0800 (PST)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 633E934022D;
+	Thu, 13 Feb 2025 10:05:31 -0700 (MST)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 57A64E416E5; Thu, 13 Feb 2025 10:05:31 -0700 (MST)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] nvme/ioctl: add missing space in err message
+Date: Thu, 13 Feb 2025 10:05:14 -0700
+Message-ID: <20250213170515.4027908-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250213-x1e80100-pdc-hw-wa-v1-1-f8c248a48cba@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAP8lrmcC/x3MQQ5AMBBA0avIrE0yUxrqKmKBDmaDtAlNxN01l
- m/x/wNRgkqErnggyKVRjz2DywLmbdxXQfXZYMhYMsyYWFpiIjz9jNuN94hTU7XeOVlq6yCHZ5B
- F0z/th/f9AK6l91hkAAAA
-X-Change-ID: 20250211-x1e80100-pdc-hw-wa-b738d99ef459
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Rajendra Nayak <quic_rjendra@quicinc.com>, 
- Maulik Shah <quic_mkshah@quicinc.com>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Abel Vesa <abel.vesa@linaro.org>, Johan Hovold <johan.hovold@linaro.org>, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-On X1E80100, there is a hardware bug in the register logic of the
-IRQ_ENABLE_BANK register. While read accesses work on the normal address,
-all write accesses must be made to a shifted address. Without a workaround
-for this, the wrong interrupt gets enabled in the PDC and it is impossible
-to wakeup from deep suspend (CX collapse).
+nvme_validate_passthru_nsid() logs an err message whose format string is
+split over 2 lines. There is a missing space between the two pieces,
+resulting in log lines like "... does not match nsid (1)of namespace".
+Add the missing space between ")" and "of". Also combine the format
+string pieces onto a single line to make the err message easier to grep.
 
-This has not caused problems so far, because the deep suspend state was not
-enabled. We need a workaround now since work is ongoing to fix this.
-
-Introduce a workaround for the problem by matching the qcom,x1e80100-pdc
-compatible and shift the write address by the necessary offset.
-
-Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+Fixes: e7d4b5493a2d ("nvme: factor out a nvme_validate_passthru_nsid helper")
 ---
- drivers/irqchip/qcom-pdc.c | 51 +++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 48 insertions(+), 3 deletions(-)
+v2: combine format string onto one line
 
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index 74b2f124116e3415d77269959c1ed5e7d7efd671..9ce44121db21ac05b370046feb09c17122f80b19 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -21,9 +21,11 @@
- #include <linux/types.h>
- 
- #define PDC_MAX_GPIO_IRQS	256
-+#define PDC_DRV_OFFSET		0x10000
- 
- /* Valid only on HW version < 3.2 */
- #define IRQ_ENABLE_BANK		0x10
-+#define IRQ_ENABLE_BANK_MAX	(IRQ_ENABLE_BANK + BITS_TO_BYTES(PDC_MAX_GPIO_IRQS))
- #define IRQ_i_CFG		0x110
- 
- /* Valid only on HW version >= 3.2 */
-@@ -46,13 +48,20 @@ struct pdc_pin_region {
- 
- static DEFINE_RAW_SPINLOCK(pdc_lock);
- static void __iomem *pdc_base;
-+static void __iomem *pdc_drv1;
- static struct pdc_pin_region *pdc_region;
- static int pdc_region_cnt;
- static unsigned int pdc_version;
-+static bool pdc_x1e_quirk;
-+
-+static void _pdc_reg_write(void __iomem *base, int reg, u32 i, u32 val)
-+{
-+	writel_relaxed(val, base + reg + i * sizeof(u32));
-+}
- 
- static void pdc_reg_write(int reg, u32 i, u32 val)
+ drivers/nvme/host/ioctl.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
+index e8930146847a..b1b46c2713e1 100644
+--- a/drivers/nvme/host/ioctl.c
++++ b/drivers/nvme/host/ioctl.c
+@@ -281,12 +281,11 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+ static bool nvme_validate_passthru_nsid(struct nvme_ctrl *ctrl,
+ 					struct nvme_ns *ns, __u32 nsid)
  {
--	writel_relaxed(val, pdc_base + reg + i * sizeof(u32));
-+	_pdc_reg_write(pdc_base, reg, i, val);
- }
- 
- static u32 pdc_reg_read(int reg, u32 i)
-@@ -60,6 +69,26 @@ static u32 pdc_reg_read(int reg, u32 i)
- 	return readl_relaxed(pdc_base + reg + i * sizeof(u32));
- }
- 
-+static void pdc_x1e_irq_enable_write(u32 bank, u32 enable)
-+{
-+	void __iomem *base = pdc_base; /* DRV2 */
-+
-+	/*
-+	 * Workaround hardware bug in the register logic on X1E80100:
-+	 *  - For bank 0-1, writes need to be made to DRV1, bank 3 and 4.
-+	 *  - For bank 2-4, writes need to be made to DRV2, bank 0-2.
-+	 *  - Bank 5 works as expected.
-+	 */
-+	if (bank <= 1) {
-+		base = pdc_drv1;
-+		bank += 3;
-+	} else if (bank <= 4) {
-+		bank -= 2;
-+	}
-+
-+	_pdc_reg_write(base, IRQ_ENABLE_BANK, bank, enable);
-+}
-+
- static void __pdc_enable_intr(int pin_out, bool on)
- {
- 	unsigned long enable;
-@@ -72,7 +101,11 @@ static void __pdc_enable_intr(int pin_out, bool on)
- 
- 		enable = pdc_reg_read(IRQ_ENABLE_BANK, index);
- 		__assign_bit(mask, &enable, on);
--		pdc_reg_write(IRQ_ENABLE_BANK, index, enable);
-+
-+		if (pdc_x1e_quirk)
-+			pdc_x1e_irq_enable_write(index, enable);
-+		else
-+			pdc_reg_write(IRQ_ENABLE_BANK, index, enable);
- 	} else {
- 		enable = pdc_reg_read(IRQ_i_CFG, pin_out);
- 		__assign_bit(IRQ_i_CFG_IRQ_ENABLE, &enable, on);
-@@ -324,10 +357,21 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
- 	if (res_size > resource_size(&res))
- 		pr_warn("%pOF: invalid reg size, please fix DT\n", node);
- 
-+	if (of_device_is_compatible(node, "qcom,x1e80100-pdc")) {
-+		pdc_drv1 = ioremap(res.start - PDC_DRV_OFFSET, IRQ_ENABLE_BANK_MAX);
-+		if (!pdc_drv1) {
-+			pr_err("%pOF: unable to map PDC DRV1 region\n", node);
-+			return -ENXIO;
-+		}
-+
-+		pdc_x1e_quirk = true;
-+	}
-+
- 	pdc_base = ioremap(res.start, res_size);
- 	if (!pdc_base) {
- 		pr_err("%pOF: unable to map PDC registers\n", node);
--		return -ENXIO;
-+		ret = -ENXIO;
-+		goto fail;
+ 	if (ns && nsid != ns->head->ns_id) {
+ 		dev_err(ctrl->device,
+-			"%s: nsid (%u) in cmd does not match nsid (%u)"
+-			"of namespace\n",
++			"%s: nsid (%u) in cmd does not match nsid (%u) of namespace\n",
+ 			current->comm, nsid, ns->head->ns_id);
+ 		return false;
  	}
  
- 	pdc_version = pdc_reg_read(PDC_VERSION_REG, 0);
-@@ -363,6 +407,7 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
- fail:
- 	kfree(pdc_region);
- 	iounmap(pdc_base);
-+	iounmap(pdc_drv1);
- 	return ret;
- }
- 
-
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250211-x1e80100-pdc-hw-wa-b738d99ef459
-
-Best regards,
+ 	return true;
 -- 
-Stephan Gerhold <stephan.gerhold@linaro.org>
+2.45.2
 
