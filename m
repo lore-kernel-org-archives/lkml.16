@@ -1,30 +1,64 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61AF12080D4;
-	Thu, 13 Feb 2025 10:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8BB41C6A
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 10:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739443920; cv=none; b=iXP0f3w+6gmA3kmfWACx8Dwr5EQmDL4MhPyqhjlSkQT8CPsS1YXd0XkcWaz18gFwqdQsQ/dKtUiF9PApTRmx4Qhb0VvXIdxyuLfDo7DClaap/XsHeU39MU51Q7wkP8H6kzJs7OS2H7sE61xQ/t4RxoEDDgrccw7Js9vQ6Ff7lgQ=
+	t=1739443933; cv=none; b=DJHcf48/vuqoBSyU39LrAGR185KU+3V2+fG5Y/p4bSJtS4ZViwqKMFubkWb97R36FdkCGEkE1qU0B9YKh3/OvJIEwYYTTE0fvOPIdPEohzH9/sXuCgHmpqXkchlwQHp6m/vtBwyFBH0OmcacOI9qtGXU2ynuar8RGsWTQ7umDN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739443920; c=relaxed/simple;
-	bh=77jGrMg0lzb1Lx4EuTwC/BwLlLpMF3/BjBLHWYbPpw8=;
+	s=arc-20240116; t=1739443933; c=relaxed/simple;
+	bh=NNwffCnuthUEjMjoVnRCHsMOFoRrFLd5Mhj8Yauwhdg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=idUzC819jMP/X4dBiiUfSm8c2nHXu/hbSCu7GAWoodbyZgUkFq2fLD0CqdP/d7dhsd7i78pzZhqNwSEgmX4JQAlBQbVRzTnPL8YqwhvVz0weovw4F2s5iOyuvSIpxySmWgdBu4H4tQiFpY3qvWTwddehG+dC7NaSW86RBZmND8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=JfSp7zC+; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	 In-Reply-To:Content-Type; b=qx6pH7Ko5udpVldVoOqkmxtWSDSm2kVobmRJvqCZEJhMWBuwVU8Ia8kCQw+39gv8K2wKVHJE8daEh6PLmFVnSkgECzsRE3g4UzoQMq0Y84F/GXn8PWPx7Vj17/x5+13dpVloU5l6xuVurWxO/y8U7NpJooKxGn763ho6j5VcZqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ql+NBd07; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="JfSp7zC+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=WW56zeZiK66xxYMHrihXMHHhYZ/t9VB0Mu1z7KI8U48=;
-	b=JfSp7zC+MFy3UKREYRZ3+T35oKXvdcyCSK4pwBh6+3Ud0eSpdbnfz3VuCFTX/y
-	m+C8/k1lw0NyZTqQSr6DliSAjAIDEZWzINXElFJYoq6PctAD64fINbaxQoYpuYsz
-	JlXDBYpp6Tca2cn66PWQ9BIsSnViaWvZ9EwTDXpl3uynU=
-Received: from [192.168.31.211] (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wDHoSuEzq1nWqPCLQ--.41111S2;
-	Thu, 13 Feb 2025 18:50:45 +0800 (CST)
-Message-ID: <7f1606ac-23fe-4dff-bf79-ab1bdc84a35e@163.com>
-Date: Thu, 13 Feb 2025 18:50:39 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ql+NBd07"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4394a823036so7946405e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 02:52:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739443929; x=1740048729; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TfW5BGT5pTjwhGTP5m8htmZ9lluyeh+guldKWayNHGg=;
+        b=Ql+NBd07wdb2Wocy3/1v4nmddOreDXblFy8bt9LFQAgaMtumy9PoPw/TQO0gi0kXyZ
+         WmpDSe3A7cmnbEuuZ2SoalS8Ec9vf2RntUiPDVpw+ihmlLuLmuwV+VCDRxYfhK6uTbu0
+         ARS4ZVT6JxsvIRkQHSAfKurRgumkV5ppGtRN7kk7TXWYUhBGF7OEazHrR796YDpztpVf
+         PR+j5EkjVgqYQj+/YdBC45JZypvPjnpfRfJT7DsliPsXiBguXbA998zaTJpBTSkltxeV
+         GRvuAUZJmVvaDMbkR6bF/yCsBwxAvgF5zfSUHuQ6T87nHkiwrJuL46joem0tMS4tVVUh
+         mgOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739443929; x=1740048729;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TfW5BGT5pTjwhGTP5m8htmZ9lluyeh+guldKWayNHGg=;
+        b=TYxxdXD9TNiqv9VTgDbw/SFonDKS1CuIFCG/hVhlOPFoBwW9RcZ0fL6leLty3lJopi
+         /KYAa8wY3FcMRbQp58QtPhG0KQOv9sQJ7k7w8aoGIWjhRw0guTp1mk34Uw1FDfCp1Y2b
+         cFdaN0swGdSaHnY55cRk6Miyilq5x2TVXE/llvclLnK08aaDdc1IZTMp/I6WUMowJydl
+         IecRbLW3FpvD9q+UtIsIxGTTqBqk1b3Yymvh46NHiPrEVixWo0QbeGUm7ePVSgMsEA28
+         cZZYhnO7Cf21Blij9uPkR2LMz1NDyLrDUqLeSGEX/h2AryjL8M237sRpTaXwcL7CQn7g
+         pjOg==
+X-Forwarded-Encrypted: i=1; AJvYcCVScA8VWJWhDZv9MnZUO64KrdRph0LwSg+MqdA/7LGFUuD40DCyYPk6t4iPlstWk3A58FiGsuDuwW5JUGg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznEFJYTZkx+vrkz/ooGL51jXBHbBgeFdGEbP46yjj3IHgTg3YP
+	8BcQgOzfBi7nOyK0CzmWwS98tUWEkEFYuhZyk2G/0QAxSA3w0G3elYmItLo3erw=
+X-Gm-Gg: ASbGncthNFOFMVMVQgrgPmuRrkClV4kY4s8L5Qh4E+RsbaRQyPeUjkAp4QuvaO1y1Fi
+	VJ9G2vGwscSPCtHbgzvnBe75YvF82sPGqxxfJf/DyEJPrXbYxT8sQhFSzvr3dFd1FAYk4Jx6NQm
+	9KbEsoHg43PHe3maSJ1plHdptHAOMae8zGLNObTfmQmp3ULHYHy9Vv6WpKeJw8kfJe2mIwV1+mP
+	KOEFdIqDiURxlN7h3weXmVmyUKiVgnIdrLnDuW6EN2QwMMuWJOYZBvfKfwHilN5Yx9Zc+uktQPm
+	dYA8pdAHLzwIrtyDn3kVrkzYWg==
+X-Google-Smtp-Source: AGHT+IE3cVCMFeTiplAdl6oIol2hwK+z0KRfMjE6tnhaJF9qrn7yWiTvmVjpIcI0wTDSh3lcSVhCfg==
+X-Received: by 2002:a05:600c:19cf:b0:439:5573:9348 with SMTP id 5b1f17b1804b1-439581b88ccmr64782085e9.22.1739443929479;
+        Thu, 13 Feb 2025 02:52:09 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.90.174])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439617ffa28sm13991045e9.14.2025.02.13.02.52.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 02:52:08 -0800 (PST)
+Message-ID: <5f4e90f2-1956-4f12-b2f4-b355012beb6e@linaro.org>
+Date: Thu, 13 Feb 2025 10:52:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,80 +66,109 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
- get_kernel_nofault()
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>,
- Steven Rostedt <rostedt@goodmis.org>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Gabriel de Perthuis <g2p.code@gmail.com>, Mark Rutland
- <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, x86@kernel.org, linux-trace-kernel@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
- <20250206121328.GN7145@noisy.programming.kicks-ass.net>
- <20250206123307.GO7145@noisy.programming.kicks-ass.net>
- <20250207085959.b3e9d922eab33edf885368e3@kernel.org>
- <20250210173016.0ce79bc8@gandalf.local.home>
- <20250211100914.GA29593@noisy.programming.kicks-ass.net>
- <20250211105002.31b5a517@gandalf.local.home>
- <CABCJKudwf11wAbv9NdKh_FN-Z+pLaupMHJxNGtRKK1-1D94hCQ@mail.gmail.com>
- <20250213100836.GC28068@noisy.programming.kicks-ass.net>
- <08422aab-f4a9-4f67-84ef-82ad3663b01f@163.com>
- <20250213104014.GD28068@noisy.programming.kicks-ass.net>
-From: Haiyue Wang <haiyuewa@163.com>
-In-Reply-To: <20250213104014.GD28068@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH] perf vendor events arm64: Fix incorrect CPU_CYCLE in
+ metrics expr
+To: Yangyu Chen <cyy@cyyself.name>, linux-perf-users@vger.kernel.org,
+ irogers@google.com, namhyung@kernel.org
+Cc: acme@kernel.org, adrian.hunter@intel.com,
+ alexander.shishkin@linux.intel.com, fj3333bs@aa.jp.fujitsu.com,
+ fj5100bi@fujitsu.com, john.g.garry@oracle.com, jolsa@kernel.org,
+ kan.liang@linux.intel.com, leo.yan@linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ mark.rutland@arm.com, mike.leach@linaro.org, mingo@redhat.com,
+ peterz@infradead.org, will@kernel.org
+References: <tencent_D4ED18476ADCE818E31084C60E3E72C14907@qq.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <tencent_D4ED18476ADCE818E31084C60E3E72C14907@qq.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDHoSuEzq1nWqPCLQ--.41111S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Aw1UuF1UGr45XrWrKFyUKFg_yoW8GFyfpF
-	9rurs7Gan8J3yxGrnIvr1avw17Xws5Xr45Jryqq34YyFy2qr1ktrZ2gr4a93sFyFs8Ka4U
-	XFWI9a4YkFWrAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UIZXrUUUUU=
-X-CM-SenderInfo: 5kdl53xhzdqiywtou0bp/1tbiSh7ya2etw-7JkAAAsj
 
 
 
-On 2025/2/13 18:40, Peter Zijlstra wrote:
-> On Thu, Feb 13, 2025 at 06:25:41PM +0800, Haiyue Wang wrote:
+On 13/02/2025 8:44 am, Yangyu Chen wrote:
+> Some existing metrics for Neoverse N3 and V3 expressions use CPU_CYCLE
+> to represent the number of cycles, but this is incorrect. The correct
+> event to use is CPU_CYCLES.
 > 
->> It is header file include indirect :-)
->>
->> https://lore.kernel.org/linux-trace-kernel/20250206131711.ea536f165d5b5980b3909acd@kernel.org/T/#t
->>
->> File "asm-prototypes.h" is added to entry.S by 'scripts/Makefile.build',
->> adding the missed declaration header file can also fix the error:
->>
->>   getasmexports =                                                        \
->>      { echo "\#include <linux/kernel.h>" ;                               \
->>        echo "\#include <linux/string.h>" ;                               \
->> +     echo "\#include <linux/uaccess.h>";                               \
->>        echo "\#include <asm/asm-prototypes.h>" ;                         \
->>        $(call getexportsymbols,EXPORT_SYMBOL(\1);) ; }
->>
+> I encountered this issue while working on a patch to add pmu events for
+> Cortex A720 and A520 by reusing the existing patch for Neoverse N3 and
+> V3 by James Clark [1] and my check script [2] reported this issue.
 > 
-> So this is simple enough; but the thread you link to also has another
-> hunk, which makes the whole thing unfortunate.
+> [1] https://lore.kernel.org/lkml/20250122163504.2061472-1-james.clark@linaro.org/
+> [2] https://github.com/cyyself/arm-pmu-check
 > 
-> I'm not entirely sure what this GENDWARFKSYMS nonsense is about, but it
-> should not clutter the code like that.
+> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
 
-By my understanding, the GENDWARFKSYMS design triggers the missing
-header file, even this is inline function, but it will call another
-function. It needs to "see" the header file firstly:
+Thanks for the fix. I'll report this issue on the source data.
 
-So this also fix the error:
+Reviewed-by: James Clark <james.clark@linaro.org>
 
---- a/arch/x86/include/asm/asm-prototypes.h
-+++ b/arch/x86/include/asm/asm-prototypes.h
-@@ -1,7 +1,7 @@
-  /* SPDX-License-Identifier: GPL-2.0 */
--#include <asm/ftrace.h>
-  #include <linux/uaccess.h>
-  #include <linux/pgtable.h>
-+#include <asm/ftrace.h>
-
-
+> ---
+>   .../perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json | 6 +++---
+>   .../perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json | 6 +++---
+>   2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
+> index 1f7c9536cb88..eb3a35f244e7 100644
+> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
+> @@ -169,7 +169,7 @@
+>       },
+>       {
+>           "MetricName": "fp_ops_per_cycle",
+> -        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLE",
+> +        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLES",
+>           "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by any instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
+>           "MetricGroup": "FP_Arithmetic_Intensity",
+>           "ScaleUnit": "1operations per cycle"
+> @@ -383,7 +383,7 @@
+>       },
+>       {
+>           "MetricName": "nonsve_fp_ops_per_cycle",
+> -        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLE",
+> +        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLES",
+>           "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by an instruction that is not an SVE instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
+>           "MetricGroup": "FP_Arithmetic_Intensity",
+>           "ScaleUnit": "1operations per cycle"
+> @@ -421,7 +421,7 @@
+>       },
+>       {
+>           "MetricName": "sve_fp_ops_per_cycle",
+> -        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLE",
+> +        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLES",
+>           "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by SVE instructions. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
+>           "MetricGroup": "FP_Arithmetic_Intensity",
+>           "ScaleUnit": "1operations per cycle"
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json
+> index d022ae25c864..4a671f55eaf3 100644
+> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json
+> @@ -169,7 +169,7 @@
+>       },
+>       {
+>           "MetricName": "fp_ops_per_cycle",
+> -        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLE",
+> +        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLES",
+>           "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by any instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
+>           "MetricGroup": "FP_Arithmetic_Intensity",
+>           "ScaleUnit": "1operations per cycle"
+> @@ -383,7 +383,7 @@
+>       },
+>       {
+>           "MetricName": "nonsve_fp_ops_per_cycle",
+> -        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLE",
+> +        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLES",
+>           "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by an instruction that is not an SVE instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
+>           "MetricGroup": "FP_Arithmetic_Intensity",
+>           "ScaleUnit": "1operations per cycle"
+> @@ -421,7 +421,7 @@
+>       },
+>       {
+>           "MetricName": "sve_fp_ops_per_cycle",
+> -        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLE",
+> +        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLES",
+>           "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by SVE instructions. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
+>           "MetricGroup": "FP_Arithmetic_Intensity",
+>           "ScaleUnit": "1operations per cycle"
 
