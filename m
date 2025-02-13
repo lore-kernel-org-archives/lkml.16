@@ -1,127 +1,158 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47D42661A9
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 21:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7929F194AD5
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 21:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739481030; cv=none; b=EyIkIB2z7KAd1IZjfuaJV/aibLgxIThxXPnaJDw5jA/x2VCxITPWFuxyrYKYvWZh6vXGkZZreyJJFqieRLn3CNyauJ43D4gn+Mh8qUCFUHRx5YKeNhCSpcxgxg5NlEC4gn7dBc3XEK0Gtmhct9BXxGLWvOUDfGQG+V0NlniJrDQ=
+	t=1739481152; cv=none; b=fZZ3NM6//kDXpu+HYT5e9eC5591tGoJzgKEPJ8SjSEdZXXYOyXlIRvEIoEdNOY9/PM2OY0T0qLe4dHNvnO4Oqtd59J24zNeeqfMfMSBxNrP7CJg6PUA2QfFngp2kmfCwXpg0juyCAeE+kurOm4z+P1eoaEEQ6DyRqv2gIAHCkNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739481030; c=relaxed/simple;
-	bh=fbPB2g7+Pf/OZk+WU7lLUYgJUck4kov9uZUxiWM9e4k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OYTow6qQzv50Mn0vKtyUgMoV3zK+SivnwW9jVGoplOFO3bF423NYFIvyXQFCoe9Q+bs9ko/llX6k9A7BQi/9S7Fb/05ZYohET4NaeGHiZEMxrvxOtmaho1Fijd5V4fCPlHsVo/UDI1p8ATSA6LaOlK0EVVI6rxgcNPYm02y3t5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jaMq2gxc; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739481152; c=relaxed/simple;
+	bh=N+TdL3KilayS4rRbQWLK74G3+DHz/OaIh9BFAsERWeg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JjKruzXmo7SAWWGzEejoEA2TYsIu0ujFtVg9XKhIcgrcpggDMmR4AQ15Dd+Mr3j1YMIgoJcJDPvjxli0AnOdBXuiON+XThK5PvdKIg9dYec1F3qqV1Uaf6GqLkZqUVCM0cH33RQY8nwiEA47V5OCJoU4zMu/d9Fkkk6wZNLcIr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=MMIRveN+; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jaMq2gxc"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5ded4a3bf0bso2637a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:10:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="MMIRveN+"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-220c8f38febso24077165ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:12:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739481027; x=1740085827; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e3EIJlcz7W21awhaRwqJUO1L0hARhWCWmvV/tV0cCAM=;
-        b=jaMq2gxchekUWazxN/Y20UmXQQkw7T9qb7u7X0OWj1ohb015bY6GMgiiE6tnWsp/Rx
-         H7ZtC2ECyJl77yAfZdmON437CqPQ80XgzEDVBKQv3eY1b25lxpNrz6dOM1vfV/Pcopn0
-         S4eo8lyafJDgBf6sA8tybbzPzvZy3VFX7b6G5E0gbiQMFjpm9bY7WnktfN3zNF+X8SsY
-         sx5bOvo4wRBygI9ofW0rZPbeBew4yaU36M7bQPRiTadujI5k06ZczmHPzkRy60Dir+mS
-         HKjt/Ig/40pdxu4ZeHxoDKXgTxJAgdKU4wg4122A0vcEZdUPwn5WRaLOq+yN6cpJwxaC
-         Sfjg==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739481150; x=1740085950; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DXY8NgkO9E3uv8b+GWlibE4IZm1ibJ8iHuQXl96QOdc=;
+        b=MMIRveN+Y7OpyvlZEoKdUWtG87Vofp6UWcbWO/eCRWpDBZN52n5sKUxl6h47Pgfnjp
+         7uBILTaaqniiP06H+xNcqNwFmarjLkE8jgxJ9VLWepJ+hOuFkUHWom4KejhPGDRsz9nt
+         NqMZ0guocwcue8HbjnD+L8xR9yFxeFSN8tC6lH81zOLjHQ5aS9jfziLHXbMInpSTxzjV
+         tXNx1wPaXl5wLXRanVKSmkwTmbp7pyKXTiRcUopictL4qrpslXx1KlGYbzfWKu/RZsvV
+         327CdwvI7ayDBPOqhtUJ/NKSFON9vWUz/k7e/g+Ropnagtgli+q9XtbYpuI7B7/7o+zJ
+         7ADg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739481027; x=1740085827;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e3EIJlcz7W21awhaRwqJUO1L0hARhWCWmvV/tV0cCAM=;
-        b=ZIu1rMNo7cuWYZmikN8Erm6sEj2o6PX7z+E7/Tw/Eqb8AQFJgMdjCOFVS5sF68XTBY
-         oZITdg6YzHGuZlhYMHHIHQEL4PlRdql0FA8gW1gfym5nX2FL/3nydmeV2We1DRk5G3kj
-         UxMBCh+0Hdnb+u2vvnR49ZZLb8rpvg6VuKcNo97fpNbcrOQRegROBN67E/07dtm4Yv5S
-         hIP+5dShPS4zItW2SaYT6hQru8KQxRahlO/695tHvpozxRX9jWE0oTkN0jpd5480MAGD
-         JH5Xvh/Kx4Ssc0/wp/rBfk4RxMgMLnwXJ36VpVppKo4pDsl6IHWlbzbH3kUiMZ7MUfJF
-         y/ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrDOnA0TB9svVs84vJ/dZYAzVFtdvVbGi5JwdKd2YLqBjtSLNLBJhdsjwxO9tyO6m0S9N6mxIv7O0bgwI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+HjEHzCO9aBJ7QG9Yx7OBrVE5S4Pvxa4E4Yf1OBbUo5pjxdNf
-	OPX8rZWkRhWvgPgZ7b3HjwtfilomhCUwaNRDXWIuyjwD4433NoGzj4okfg0h8jP/PBDV/i5ZeZ0
-	ULb25mEYaPDjSmzi068YjfpGmZGv/nuA/e/fQ
-X-Gm-Gg: ASbGncv86Tty+43TnOqM5ySxI9pPIEVQZ8G0MWTxcK2PpzwJL/8jJZxMM9ur4SoABy8
-	jhe4r0WUDm6Wq7gQjQkebah36FL9gAEjzl2JakATIazAz6Zre/nb1/TaLpPBIYHzsahnciA==
-X-Google-Smtp-Source: AGHT+IE4EkwbKfc//9+1MZxgEsl4MWNzDPz8faVVQlldBTaEv0zhTQ1aUl8MsNRTyPEjtzoxXm+2TMxNKGca2MElpoE=
-X-Received: by 2002:aa7:d693:0:b0:5de:c2ed:768f with SMTP id
- 4fb4d7f45d1cf-5dedc9d3976mr22730a12.2.1739481026780; Thu, 13 Feb 2025
- 13:10:26 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739481150; x=1740085950;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DXY8NgkO9E3uv8b+GWlibE4IZm1ibJ8iHuQXl96QOdc=;
+        b=esK3Y2PIl/PzjhFjNnKYFKKGtT9DtbQwMv2EfuVDTwZaKyXQYBwxicdR05S+axCSdf
+         Ab9w3svJDwYQjcx4s9SMxVlUuiEoHXiWS+NpFza7QueNfgQ8jwAQPf+6C9opyHts94ym
+         CF1lgDXA2f1xcxgmyImwPxxWZllzPGPHBk6Jb866NcOv1LETKrrHVD/yra0GpecUvO06
+         lsOD7OA5yVdhwBHKj01d+N6ZJwHyO1mvig47kAWJYQ6q15NR+lXtSeZAHlm7zX2id7VM
+         QmywJ90lKjvPfVBOfV+fkI3vELB9v0SMNCbEmI6UesH4FsvxGH00H0FAUtUFO2qlRIXL
+         S0Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCU5/qMggNtz6jil08TyC8ZROG6nSVLDHe8oWhSLcld197gyoZ6EnStON+gV5d6RfUbKFumJxEiRztetbSw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzl7Z69bRYpq1H3lQFslFBsjflT5Bq1gzZLjn1+WnEZJMFimwo9
+	3vkO9wm9vwgRy+R+MAycWePndM028EQtvtt6MFL6aYdSqK960lB/if+sKaFh4Qc=
+X-Gm-Gg: ASbGncsWmYpOt4pu5YEuB4hN1F8i3qDRTZl6K1qPdNteY7jNieqb3HFyVhzXwc5l4bf
+	LwKXBIAu0iCRibprJ4WQFdV839MChRx6TORu4CYgRsx+JnLtVO7JpOgSwXPRf5A8ubKekbwaMIh
+	xEcETYWKsdqV5Tzfx+qsSjg+LP5cy5CC0aznV34zUZP3HlHJHgQQ4MJ2dLyYn4nDGx8kRFi4Fwr
+	0QdWiMg6LGVtweVVjvH6DeXZr9NrTodKgMU/VzQDy0ZI2P6vLeA7iHamflI0T1htJ3zEbbk2Kkh
+	mS9mKGrk0ZVi8hMkh1CO2M6DKLr574k=
+X-Google-Smtp-Source: AGHT+IGRfpGhkXpROr2LFCZmjQ6yXJEuPu44ieVdu48ptWPwcDLD7uVHhk1j5n/6iukOJOuvsriMzA==
+X-Received: by 2002:a05:6a20:d81b:b0:1ed:e7f0:3136 with SMTP id adf61e73a8af0-1ee5e5b9674mr13835109637.20.1739481149808;
+        Thu, 13 Feb 2025 13:12:29 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7324257fdd6sm1758072b3a.76.2025.02.13.13.12.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 13:12:29 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH v3 0/2] tools: Unify top-level quiet infrastructure
+Date: Thu, 13 Feb 2025 13:06:20 -0800
+Message-Id: <20250213-quiet_tools-v3-0-07de4482a581@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202502120752.U3fOKScQ-lkp@intel.com> <20250212005617.GA1701202@google.com>
-In-Reply-To: <20250212005617.GA1701202@google.com>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Thu, 13 Feb 2025 13:09:49 -0800
-X-Gm-Features: AWEUYZliotNteXwj_bjDaPg1_ob8hdfyT5B8Vymq6VI9KK7vl8yMk6AcuNhrdfE
-Message-ID: <CABCJKufs3XXXGfNNocvtLfwh_6W8LLo7JR+SWMn2-MTXe3RMmQ@mail.gmail.com>
-Subject: Re: error: gendwarfksyms: process_module: dwarf_get_units failed: no
- debugging information?
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMxermcC/23MQQ6CMBCF4auQrq1phxSpK+9hjCllKpMoxRYbD
+ eHuFlZqXL6XfP/EIgbCyPbFxAImiuT7PMpNwWxn+gtyavNmIEAJECW/PwjH8+j9NXJtKjS6rZS
+ RmmUxBHT0XGvHU94dxdGH1xpPcnn/d5LkgregbK1VhUqbQ6DkI/V2a/2NLakEH1yKbw6ZN+Bkb
+ Ru3A+N++DzPb70vNXnoAAAA
+X-Change-ID: 20250203-quiet_tools-9a6ea9d65a19
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Quentin Monnet <qmo@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2279; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=N+TdL3KilayS4rRbQWLK74G3+DHz/OaIh9BFAsERWeg=;
+ b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/q6BGMzp13l9kbP6i7tPBtgfEP7jKEat8aaz8/72Utvv
+ 1LZsSy4o5SFQYyLQVZMkYXnWgNz6x39sqOiZRNg5rAygQxh4OIUgIlwbGNkeFDJ1KS3ZuONPxV1
+ Gc+dMgMPTPvtWOlb6PJ39/RoNm8nQUaGm980TC2lch90aD+sPHuCfzbPa80kTdN4vXi19ImzZ7e
+ xAwA=
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-On Tue, Feb 11, 2025 at 4:56=E2=80=AFPM Sami Tolvanen <samitolvanen@google.=
-com> wrote:
->
-> On Wed, Feb 12, 2025 at 07:55:45AM +0800, kernel test robot wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
-git master
-> > head:   09fbf3d502050282bf47ab3babe1d4ed54dd1fd8
-> > commit: 9c3681f9b9fd12cdbc4a542df599f1837512f3d5 kbuild: Add gendwarfks=
-yms as an alternative to genksyms
-> > date:   5 weeks ago
-> > config: s390-randconfig-002-20250212 (https://download.01.org/0day-ci/a=
-rchive/20250212/202502120752.U3fOKScQ-lkp@intel.com/config)
-> > compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 60=
-09708b4367171ccdbf4b5905cb6a803753fe18)
-> > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/arc=
-hive/20250212/202502120752.U3fOKScQ-lkp@intel.com/reproduce)
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
-rsion of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202502120752.U3fOKScQ-l=
-kp@intel.com/
-> >
-> > All error/warnings (new ones prefixed by >>):
-> >
-> > >> error: gendwarfksyms: process_module: dwarf_get_units failed: no deb=
-ugging information?
-> > --
-> >    In file included from <stdin>:3:
-> >    In file included from arch/s390/include/asm/asm-prototypes.h:4:
-> > >> include/linux/kvm_host.h:1908:24: warning: field 'desc' with variabl=
-e sized type 'struct kvm_stats_desc' not at the end of a struct or class is=
- a GNU extension [-Wgnu-variable-sized-type-not-at-end]
-> >     1908 |         struct kvm_stats_desc desc;
-> >          |                               ^
-> >    1 warning generated.
-> > >> error: gendwarfksyms: process_module: dwarf_get_units failed: no deb=
-ugging information?
->
-> The issue appears to be that the files in arch/s390/purgatory are
-> always built without debugging information, even though they include
-> code that uses EXPORT_SYMBOL.
->
-> I suspect the correct solution here is to ignore the object files in
-> this directory when calculating modversions. The quick patch below
-> fixes the build issue for me. Masahiro, does this look reasonable to
-> you?
+The quiet infrastructure was moved out of Makefile.build to accomidate
+the new syscall table generation scripts in perf. Syscall table
+generation wanted to also be able to be quiet, so instead of again
+copying the code to set the quiet variables, the code was moved into
+Makefile.perf to be used globally. This was not the right solution. It
+should have been moved even further upwards in the call chain.
+Makefile.include is imported in many files so this seems like a proper
+place to put it.
 
-Ugh, we should just set __DISABLE_EXPORTS for all the object files,
-not only sha256.o. I'll send a patch.
+To: 
 
-Sami
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+Changes in v3:
+- Add back erroneously removed "silent=1" (Jiri)
+- Link to v2: https://lore.kernel.org/r/20250210-quiet_tools-v2-0-b2f18cbf72af@rivosinc.com
+
+Changes in v2:
+- Fix spacing around Q= (Andrii)
+- Link to v1: https://lore.kernel.org/r/20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com
+
+---
+Charlie Jenkins (2):
+      tools: Unify top-level quiet infrastructure
+      tools: Remove redundant quiet setup
+
+ tools/arch/arm64/tools/Makefile           |  6 -----
+ tools/bpf/Makefile                        |  6 -----
+ tools/bpf/bpftool/Documentation/Makefile  |  6 -----
+ tools/bpf/bpftool/Makefile                |  6 -----
+ tools/bpf/resolve_btfids/Makefile         |  2 --
+ tools/bpf/runqslower/Makefile             |  5 +---
+ tools/build/Makefile                      |  8 +-----
+ tools/lib/bpf/Makefile                    | 13 ----------
+ tools/lib/perf/Makefile                   | 13 ----------
+ tools/lib/thermal/Makefile                | 13 ----------
+ tools/objtool/Makefile                    |  6 -----
+ tools/perf/Makefile.perf                  | 41 -------------------------------
+ tools/scripts/Makefile.include            | 30 ++++++++++++++++++++++
+ tools/testing/selftests/bpf/Makefile.docs |  6 -----
+ tools/testing/selftests/hid/Makefile      |  2 --
+ tools/thermal/lib/Makefile                | 13 ----------
+ tools/tracing/latency/Makefile            |  6 -----
+ tools/tracing/rtla/Makefile               |  6 -----
+ tools/verification/rv/Makefile            |  6 -----
+ 19 files changed, 32 insertions(+), 162 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250203-quiet_tools-9a6ea9d65a19
+-- 
+- Charlie
+
