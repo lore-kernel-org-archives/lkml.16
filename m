@@ -1,121 +1,121 @@
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DE92080E0;
-	Thu, 13 Feb 2025 07:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C222080C4;
+	Thu, 13 Feb 2025 07:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739432230; cv=none; b=r7ylCTODMdUFTViIYzDXSZDJ6qMCZLxuMLVHcM3GulDbXTJ6WuaZIsYBLFmjJx3OBzHYjFP2AvqhJKtlvmiU5L1VL4xuA50whTh0seKo1IdheQtUhD6wm/xsRRdBLMLmoZh2MDgqMzmfRWaNHTkMwlyusbgIhOFgNiU6nXoLxl8=
+	t=1739432277; cv=none; b=ZHdfCowOOhP7IBBaAkr1GTWGbuqKLGBgmqeq1QrYm/L8rk/Bfe5elp+y7OhpGhcUKrRkqMOiktUfYPGUfRoExkAYg22RMocxkyRn/xsJe8dN7qKnfnJW/ZjiYSqTF/FsH79aWmgE9zu069ymRVBGYhR7sDTTY4oAhrwk22aQkD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739432230; c=relaxed/simple;
-	bh=k/s/blXMTPACoapYpKXgCGTKo9aQe999PkUXre5nUcg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jDuaq9dsjDOunMIA45qdoXUnMmIRt+9zdrWChc+pzfgkWGxcN+sJqGBBUYP3b+18US6k4d7lQM5oB8d9eiRQRYAuwwFoTp/aQm1oq6adOr08H/KXCgbsl3d91Cg+AigL6yQ8FhdbT20R3YvFXZDY1PRn8O4igkJtTU+LuRqrwI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=CT1J+47Z; arc=none smtp.client-ip=99.78.197.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1739432277; c=relaxed/simple;
+	bh=ac/bcOZbWbtdspcakhbcX4BAflMcQ4DC4KBda2XPhJc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oxFzjgl6AIKmXZCfS8AwE7t5bpMvhE1rfCRMy+y+cXzvZRUxYqCDu/7gHRVfP8UsyUqzYBUGDyCUTKQ061E/hcjgEtNRg/KOVBKtzDG6kpFuzDw+VodlTYTWTBgVtLGDiheEt22DDOsJf2UAmQdplv9bX1qjKLHbv70nr1WVAhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jpt3COTj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="CT1J+47Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1739432228; x=1770968228;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ru75CHptJLbrNWfq0dXvP+XPh1CZ4Ep9tB4CcYplcjY=;
-  b=CT1J+47Z7eEhstWRqPHwNlR+Aa6lNdT1h9o5DbSAYOmLnKkILk36LKXx
-   ocJliOd6fJZ2pKPLHrvvxFJMp9nfPjbMmPMjahJsAZ4iNI+IJFxRH1uzw
-   4iLYCnmmQk6NaIy5nvCMih/b0oulIT4g0f9CgZtH+EN3zHriIlg40p27R
-   g=;
-X-IronPort-AV: E=Sophos;i="6.13,282,1732579200"; 
-   d="scan'208";a="376947896"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 07:37:07 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:24729]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.23.136:2525] with esmtp (Farcaster)
- id 84cc2de9-53bd-4327-a127-c9735fbdf4bd; Thu, 13 Feb 2025 07:37:06 +0000 (UTC)
-X-Farcaster-Flow-ID: 84cc2de9-53bd-4327-a127-c9735fbdf4bd
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Thu, 13 Feb 2025 07:36:59 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.37.244.7) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 13 Feb 2025 07:36:55 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <leitao@debian.org>
-CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <dsahern@kernel.org>,
-	<edumazet@google.com>, <horms@kernel.org>, <kernel-team@meta.com>,
-	<kuba@kernel.org>, <kuniyu@amazon.co.jp>, <kuniyu@amazon.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, <ushankar@purestorage.com>
-Subject: Re: [PATCH net-next v3 1/3] net: document return value of dev_getbyhwaddr_rcu()
-Date: Thu, 13 Feb 2025 16:36:46 +0900
-Message-ID: <20250213073646.14847-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250212-arm_fix_selftest-v3-1-72596cb77e44@debian.org>
-References: <20250212-arm_fix_selftest-v3-1-72596cb77e44@debian.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jpt3COTj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20B3FC4CEE9;
+	Thu, 13 Feb 2025 07:37:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739432277;
+	bh=ac/bcOZbWbtdspcakhbcX4BAflMcQ4DC4KBda2XPhJc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Jpt3COTj5XIqRj8J7FxBblUc9kDMm4lJbL4O4GCl5+ohj4pqjv/UN731yoBqwchw7
+	 JuIfqTeNDybpFBi9Ata79PsjgswsSXElAXlkfAVq+uRdXJcDMVZBmnmJYKqj1wFjt3
+	 KcApdUI1oQWh5Mck2srm6DlSQXRMYRXSNkxJSk3TBHUd24cBxVOfoTa2Y+18hD5xu9
+	 4V9OmKWKZLJSzV90XWw8tNnu74Fpd9WSUGiw68sHyh7m/GYz21QaDcDk3o+FW1FMBh
+	 jtXacZmwOzWiQKBfMPi7saO1i8UH1ql5joM4OQlJ1HiFlTM5V82q9HpjVIVhumWov+
+	 gFL8JA/VJyslg==
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3cfc8772469so1762445ab.3;
+        Wed, 12 Feb 2025 23:37:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUAUGdOuz03DOlMBnYQQMMOVUKG2e4P5k7pvkq2zm7PIXmXI9Mh7mLFfD9NAX7pinglqaDBkBYnj59faHMw5cOxCQ==@vger.kernel.org, AJvYcCVtiwJZydhnFQOZ2xBrvaUpKpZ7/Ig9BEr764JQikHiQ6U84QiONqQL5YB0Daculrv89W2FdcA099zZ+Mk=@vger.kernel.org, AJvYcCXFnJy8/nAgUXZoMZCmF43aX4+MoEztCza0hSOBo9FrYCucAm5FtzLiYPeZvgJm+JKlxypHo2UkTuh0eK1Uow==@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywxe0Ln2z1Nb2mi9rKGjUVbSpxGidWiy4tRO9nHPZg1q0xU4NaL
+	wmqjs5u8oaqKEgnpvdo4zMffrQrWkcWisIq1uLE5clqSjSXhV44S3UQRIk0pW127qRsNNUX1SjU
+	x0YpsRYMv36eGZGS9xThP6OJ9us4=
+X-Google-Smtp-Source: AGHT+IHsfPIAl5hWCRvJ1RKIS5xF1B4fT6O5wPSPAgwQ1k7iv1KYLuzpzwKngS9b2X7ne3vqVq5fZ0x4mohFd5XnnGk=
+X-Received: by 2002:a05:6e02:12cf:b0:3d0:24c0:bd4d with SMTP id
+ e9e14a558f8ab-3d17bff94f9mr64954095ab.18.1739432276328; Wed, 12 Feb 2025
+ 23:37:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D037UWC001.ant.amazon.com (10.13.139.197) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+References: <20250127213310.2496133-1-wnliu@google.com> <CAPhsuW6S1JPn0Dp+bhJiSVs9iUv7v7HThBSE85iaDAvw=_2TUw@mail.gmail.com>
+ <00fa304d-84bf-4fca-9b9a-f3b56cd97424@oracle.com> <CAPhsuW4ct6W_4B0LFEjLePH1pAeNm4h8ePuQ3HcSoknXhQWN0w@mail.gmail.com>
+ <mb61p1pw21f0v.fsf@kernel.org>
+In-Reply-To: <mb61p1pw21f0v.fsf@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Wed, 12 Feb 2025 23:37:45 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW5VCmuPLd8wwzBp_Divnu=uaZQcrRLsjsEOJ9GmA0TR5A@mail.gmail.com>
+X-Gm-Features: AWEUYZk1153uVA612siWVvTvz5oIJTx1LSxyHmzFbrXM3DQ11Kv4ihFu9Sq_1wM
+Message-ID: <CAPhsuW5VCmuPLd8wwzBp_Divnu=uaZQcrRLsjsEOJ9GmA0TR5A@mail.gmail.com>
+Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: Indu Bhagat <indu.bhagat@oracle.com>, Weinan Liu <wnliu@google.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev, 
+	Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>, linux-toolchains@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org, 
+	joe.lawrence@redhat.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 12 Feb 2025 09:47:24 -0800
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index d5ab9a4b318ea4926c200ef20dae01eaafa18c6b..0b3480a125fcaa6f036ddf219c29fa362ea0cb29 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -1134,8 +1134,8 @@ int netdev_get_name(struct net *net, char *name, int ifindex)
->   *	The returned device has not had its ref count increased
->   *	and the caller must therefore be careful about locking
->   *
-> + *	Return: pointer to the net_device, or NULL if not found
->   */
+On Wed, Feb 12, 2025 at 11:26=E2=80=AFPM Puranjay Mohan <puranjay@kernel.or=
+g> wrote:
+>
+> Song Liu <song@kernel.org> writes:
+>
+> > On Wed, Feb 12, 2025 at 4:10=E2=80=AFPM Indu Bhagat <indu.bhagat@oracle=
+.com> wrote:
+> >>
+> >> On 2/12/25 3:32 PM, Song Liu wrote:
+> >> > I run some tests with this set and my RFC set [1]. Most of
+> >> > the test is done with kpatch-build. I tested both Puranjay's
+> >> > version [3] and my version [4].
+> >> >
+> >> > For gcc 14.2.1, I have seen the following issue with this
+> >> > test [2]. This happens with both upstream and 6.13.2.
+> >> > The livepatch loaded fine, but the system spilled out the
+> >> > following warning quickly.
+> >> >
+> >>
+> >> In presence of the issue
+> >> https://sourceware.org/bugzilla/show_bug.cgi?id=3D32666, I'd expect ba=
+d
+> >> data in SFrame section.  Which may be causing this symptom?
+> >>
+> >> To be clear, the issue affects loaded kernel modules.  I cannot tell f=
+or
+> >> certain - is there module loading involved in your test ?
+> >
+> > The KLP is a module, I guess that is also affected?
+> >
+> > During kpatch-build, we added some logic to drop the .sframe section.
+> > I guess this is wrong, as we need the .sframe section when we apply
+> > the next KLP. However, I don't think the issue is caused by missing
+> > .sframe section.
+>
+> Hi, I did the same testing and did not get the Warning.
+>
+> I am testing on the 6.12.11 kernel with GCC 11.4.1.
 
-I noticed here we still mention RTNL and it should be removed.
+Could you please also try kernel 6.13.2?
 
-Could you update the comment like this to remove RTNL and fix
-mis-aligned notes ?
+> Just to verify, the patch we are testing is:
 
----8<---
-diff --git a/net/core/dev.c b/net/core/dev.c
-index d5ab9a4b318e..c0d6017a3840 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -1123,17 +1123,17 @@ int netdev_get_name(struct net *net, char *name, int ifindex)
- }
- 
- /**
-- *	dev_getbyhwaddr_rcu - find a device by its hardware address
-- *	@net: the applicable net namespace
-- *	@type: media type of device
-- *	@ha: hardware address
-+ * dev_getbyhwaddr_rcu - find a device by its hardware address
-+ * @net: the applicable net namespace
-+ * @type: media type of device
-+ * @ha: hardware address
-  *
-- *	Search for an interface by MAC address. Returns NULL if the device
-- *	is not found or a pointer to the device.
-- *	The caller must hold RCU or RTNL.
-- *	The returned device has not had its ref count increased
-- *	and the caller must therefore be careful about locking
-+ * Search for an interface by MAC address.  The returned device has
-+ * not had its ref count increased and the caller must therefore be
-+ * careful about locking
-  *
-+ * Context: The caller must hold RCU.
-+ * Return: pointer to the net_device, or NULL if not found
-  */
- 
- struct net_device *dev_getbyhwaddr_rcu(struct net *net, unsigned short type,
----8<---
+Yes, this is the test patch.
+>
+> --- >8 ---
+[...]
+> --- 8< ---
+>
+> P.S. - I have a downstream patch for create-diff-object to generate .sfra=
+me sections for
+> livepatch module, will add it to the PR after some cleanups.
 
-Thanks!
+Yeah, I think the .sframe section is still needed.
+
+Thanks,
+Song
