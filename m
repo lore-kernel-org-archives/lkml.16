@@ -1,82 +1,74 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51B824A048
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5A6207DF5
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739474116; cv=none; b=VMPITWKB+kHUteVYQk3pYPaJaXIWFe1P4ygN5adXqnw0eKWg3xsArsEcpYq9Gbnl3SnwDLgupYDPie1fS+CAZ0Y+8Hay5VVV6sp4y9Rw55sdakkTLI0cTTyKf7MdqPKTq4zNGPcFxchFE51o9ZwsR9wAbPZSEBChkRhWhzlRjzg=
+	t=1739474145; cv=none; b=XKplC+COFMrWjIE98ivf+ZiuDdB2fmKNpfT7RSVPhBZ+LWGJ5y20YMfwFHuXLvz9f/lgD/tx6FFXNzZ4fcRCbcKHszj4hqyP5bUM6TJ9SjzfI+YgpPQtc9I8UAK1CHqc0XOx2o0HVvz0bVzXOMr/2yhokYTjWHpIqycdGtfdfuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739474116; c=relaxed/simple;
-	bh=3nHtG7PoyixUCtDxS+Y49PjpO3dsXgDgWOyYmD4MGGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZYgxWp++26PJneodVXto7JI6q/xIt54dvtWecQSSKWlbThIfLqGbKJjExddQ0eRSIR9A2TlvgkIQUxcG+c1gXM/hXcP6n5FnLrNUoYNbDf2snEozQkO36ddjd+VvpI78Sh0c8dAwMSZyy/5DeZyRPhMM8sjPDpvKuIjTOQ3dHkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aYMl15Sn; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739474145; c=relaxed/simple;
+	bh=Mcdq9EaufE8ixupJ8HB9LDd3omoIn5ApfoYJI+Dq5ms=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hrf01Tm2k6+268z96a9OE3kE2NUcau6Pehj3L4/ghY1CaKMC4y1haUbn9vGc/RMIXNN/gdv0dHQ5OZUcQPplNQ0fvqCXD++okQ5qzyWVvoBq08v9JfC5jWGt92HJYY/vd4eJwHFBUhdgCciRiM65mORdPJkzN4rYVvxNHAk+zf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=Oe0txW2P; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYMl15Sn"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5de849a0b6cso2299474a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:15:14 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="Oe0txW2P"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21c2f1b610dso28985335ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 11:15:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739474113; x=1740078913; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9ll3EDDTY/6Dh7a8MWuMvGIgfSvEqbbqhDX1OHStQPk=;
-        b=aYMl15SnQSuN7Wv93pbJ9LZkE/CjHBLpM8uS6bgOBJXzxxhNjKD0gp4quXiH9jZdNq
-         IVd1pKbrYgF0l67VjK5/5mXFHv2YGMYMcE2VoPAkRRlP+lustFkTXxcSS01JWYAb7LGV
-         SmJiC79DuneYNBA0vJNlNtXCRgG30/4+FUlLefW5ePqBL8bUUMpt2+OMz55/+VupUTld
-         hL0Pk/y9Gv5ikefvLiHtwZnqL6/VTWMNFmfoRKW02j9yCTeUo9nlkF7Nio2rBEt1D+Mf
-         Ie9lebxZhOON/6fn7ihm/dEmsJFnUCX3PtZqnQJnIIA1fCW6JqSNvTVJgtIL/WY+aUAu
-         wJww==
+        d=fastly.com; s=google; t=1739474142; x=1740078942; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nyit1NGNsESJfteda0OrtegLwM9G4amK+tirz5wwWg0=;
+        b=Oe0txW2Pp0ST/VpMj2vL6fgepPCPh0jp3I27qk4Be7zwzG6OCpAnVWgbkpDZK/Ycf9
+         BWgMTaxCB8HVgra09+R56P66PEAOIcufak6ETk8g0wOOuELWg/ImowRizTP4GrUNXuWt
+         4jG0eaR2uI0+NUg22g7QCMKkIyQUxaPEyW+NE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739474113; x=1740078913;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9ll3EDDTY/6Dh7a8MWuMvGIgfSvEqbbqhDX1OHStQPk=;
-        b=CQIpMmT6VBYw1QooFBgKzg8g013XO3cQs+AyaXno+QWOl/e+LHdBne7gle5i3ejT5v
-         6HirGclqivrPiPOYw7yZTOzOauqz5/Cai4D0SsBg3xT4SGlxaKsAqqU08pvtUMA4TUTq
-         m4d9TaaMnnnO96at6dbiXIdURG8oFenAlwzCj3ilaTGndXz9LaWyzNOS9YNQzyCf3u/O
-         NnWsrNc3rBe8z3CzjFQ1OOp5GMj+uih9fjSdA7hogNLoQWjTXiRzBZzeCHifCD8iZ5cy
-         s0CZqbShESQrRs3CbV5bYVzdxzgaSjoh/S3oDR4Y/lRT4UJ3PETOiZL4BRBcbCjJnSxw
-         EIGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXimiBdgvr3fg9D3uToLH4cyueJvtFvIZAqvEy1uIgDysEssC7wPyk+DgvJXXPeLpkrLdAoCV+nW592sB0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbQvwmAfdM++GTRbW6vdC0AoWaZW/gIXrzO6VsvbEx8a0CRv+3
-	DjJBf9F0hlBHumTPfz7j3+Yth6S2aibqYLr9KK56BrwOzbuVnpSg
-X-Gm-Gg: ASbGncv/lH6q+U9Ry+A5jLT768OocivYT/Qtw3KQvhr45e/G99WXibszFG72XGOf1L2
-	Jsd6qxI+FOTuUWFG6xIuHjXJ1oqbObz72c9/jETvvRdcR0OXWdt/4c6OmH2SUmfwLnSyA9RVri1
-	Mg9p1H8GR1WXQ2REFfO8RxUpEFrUQJChW1MaPadFCmuQnUL/UhGIzKTzGx4nD64EUAhRZPY6uhz
-	6VaymyCDL1lkqc6yEEfsoiNQMSqM/QObiqw5qDqrqxCDUxcArpCYeRGS32U3w3DiyBIXVsBe4/u
-	Ebmim6qoI7gPHBhIEi2tmH+G
-X-Google-Smtp-Source: AGHT+IExUVZvjx/iFh1WkVP3rRpgO7ilttlIBKKBcGqGbRT5JPyBk2NmKS1r9fk+bJSkDogTrrzUaQ==
-X-Received: by 2002:a05:6402:5d1:b0:5d9:a62:32b with SMTP id 4fb4d7f45d1cf-5dec9d326b0mr4771387a12.7.1739474112708;
-        Thu, 13 Feb 2025 11:15:12 -0800 (PST)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece288e2dsm1634508a12.80.2025.02.13.11.15.11
+        d=1e100.net; s=20230601; t=1739474142; x=1740078942;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Nyit1NGNsESJfteda0OrtegLwM9G4amK+tirz5wwWg0=;
+        b=a5///IH5HedVdjTBQWLId2rYALg4SYNFRV4GT/ogD0+5+OJGwglTPR8Ze1jKJDm4zM
+         DrKKKXcGoZ52vIwKTftyaSd/CsbGfHuMxNkOF+wvuqi+YozSVvY3QR/rZE3+0einZdmv
+         kSzcMr+NUlGB2w7A1C1b4sysEzlyF/FLhjdokLcmfWOFK0hlupxTta0LIdkf8a9bH177
+         myE3Bd8YAsGfhj83Y0zRJkr7alImrrMlBFcl7wj9ZUtMpbYk3BtWlq3xNUcyY8+YLzQ5
+         xRkSdrkLdGRs0JAYQ0l8/IvDs66CTkXKBi2sjWxxTnNl/QBXBs/OTB0W2wblKfA53x7S
+         3Bbg==
+X-Forwarded-Encrypted: i=1; AJvYcCUG+jyJavILB0M4kVZ29h5Kz7TcSPT2kmPNq/XiHF/PMq6/r/u1o9SJu5x8KCb9xZgw7zcgGxDYUFP7JAs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWr54imUm9lTmBeuq/K2vVra1K7tMFK5HMr6VwJFDSQOgZPqqn
+	YjoBcfVF8DcLNgWDWRpmO7qkn3L9nju6n/bDLy9wbZp91GTTbIPS3zmwgaKiBRQ=
+X-Gm-Gg: ASbGncsMcwPGxFTh7iut9MIfoezbMEOJjHHGpEsDZMn7wCvfR+BDG0ufIfpb51qe9S0
+	5j6W1QdobDv4IomWLdKXXbGTXsZk0PzKzxF1lUu0v9Abis/HlwccowRCofhpbhvI2YA65Qf5mvH
+	oAvmZkj/gdPhchnUaE87tRT+6zxothd74t4QMcwzyzr2163FhdB0J/HMooFwCSiXxgvlvf4B3Wj
+	HI3hVQUG/Sl+ljJ1S3ZigfjtdFfVGO8DFIPorkPDeNkqxVS3MlbJlwkXqctc2kS//nMSLUZxtmv
+	iBxUAD+zP7U2KAjlKHSBPH8=
+X-Google-Smtp-Source: AGHT+IHNmMFdpBQPl6o19vnV8i77junBI6CG2QTOtTi2iQjCu5Yp5w2QnY7z2J4pe6EHaQ9BeabrdA==
+X-Received: by 2002:a17:902:ef4c:b0:216:2bd7:1c4a with SMTP id d9443c01a7336-220d20e89f3mr65785415ad.26.1739474142099;
+        Thu, 13 Feb 2025 11:15:42 -0800 (PST)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d556d4d8sm15553035ad.170.2025.02.13.11.15.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 11:15:12 -0800 (PST)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH RESEND 2/2] x86/locking: Use asm_inline for {,try_}cmpxchg{64,128} emulations
-Date: Thu, 13 Feb 2025 20:14:26 +0100
-Message-ID: <20250213191457.12377-2-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20250213191457.12377-1-ubizjak@gmail.com>
-References: <20250213191457.12377-1-ubizjak@gmail.com>
+        Thu, 13 Feb 2025 11:15:41 -0800 (PST)
+From: Joe Damato <jdamato@fastly.com>
+To: netdev@vger.kernel.org
+Cc: kuba@kernel.org,
+	bagasdotme@gmail.com,
+	pabeni@redhat.com,
+	rdunlap@infradead.org,
+	Joe Damato <jdamato@fastly.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next v3] documentation: networking: Add NAPI config
+Date: Thu, 13 Feb 2025 19:15:34 +0000
+Message-ID: <20250213191535.38792-1-jdamato@fastly.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,197 +77,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-According to [1], the usage of asm pseudo directives in the asm template
-can confuse the compiler to wrongly estimate the size of the generated
-code. ALTERNATIVE macro expands to several asm pseudo directives, so
-its usage in {,try_}cmpxchg{64,128} causes instruction length estimate
-to fail by an order of magnitude (the compiler estimates the length of
-an asm to be more than 20 instructions). This wrong estimate further
-causes unoptimal inlining decisions for functions that use these
-locking primitives.
+Document the existence of persistent per-NAPI configuration space and
+the API that drivers can opt into.
 
-Use asm_inline instead of just asm. For inlining purposes, the size of
-the asm is then taken as the minimum size, ignoring how many instructions
-compiler thinks it is.
+Update stale documentation which suggested that NAPI IDs cannot be
+queried from userspace.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Size-of-an-asm.html
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dennis Zhou <dennis@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Signed-off-by: Joe Damato <jdamato@fastly.com>
+Acked-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 ---
- arch/x86/include/asm/cmpxchg_32.h | 32 +++++++------
- arch/x86/include/asm/percpu.h     | 77 +++++++++++++++----------------
- 2 files changed, 55 insertions(+), 54 deletions(-)
+ v3:
+   - Add tags from Jakub and Bagas.
 
-diff --git a/arch/x86/include/asm/cmpxchg_32.h b/arch/x86/include/asm/cmpxchg_32.h
-index fd1282a783dd..95b5f990ca88 100644
---- a/arch/x86/include/asm/cmpxchg_32.h
-+++ b/arch/x86/include/asm/cmpxchg_32.h
-@@ -91,12 +91,14 @@ static __always_inline bool __try_cmpxchg64_local(volatile u64 *ptr, u64 *oldp,
- 	union __u64_halves o = { .full = (_old), },			\
- 			   n = { .full = (_new), };			\
- 									\
--	asm volatile(ALTERNATIVE(_lock_loc				\
--				 "call cmpxchg8b_emu",			\
--				 _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
--		     : ALT_OUTPUT_SP("+a" (o.low), "+d" (o.high))	\
--		     : "b" (n.low), "c" (n.high), [ptr] "S" (_ptr)	\
--		     : "memory");					\
-+	asm_inline volatile(						\
-+		ALTERNATIVE(_lock_loc					\
-+			    "call cmpxchg8b_emu",			\
-+			    _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8)	\
-+		: ALT_OUTPUT_SP("+a" (o.low), "+d" (o.high))		\
-+		: "b" (n.low), "c" (n.high),				\
-+		  [ptr] "S" (_ptr)					\
-+		: "memory");						\
- 									\
- 	o.full;								\
- })
-@@ -119,14 +121,16 @@ static __always_inline u64 arch_cmpxchg64_local(volatile u64 *ptr, u64 old, u64
- 			   n = { .full = (_new), };			\
- 	bool ret;							\
- 									\
--	asm volatile(ALTERNATIVE(_lock_loc				\
--				 "call cmpxchg8b_emu",			\
--				 _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
--		     CC_SET(e)						\
--		     : ALT_OUTPUT_SP(CC_OUT(e) (ret),			\
--				     "+a" (o.low), "+d" (o.high))	\
--		     : "b" (n.low), "c" (n.high), [ptr] "S" (_ptr)	\
--		     : "memory");					\
-+	asm_inline volatile(						\
-+		ALTERNATIVE(_lock_loc					\
-+			    "call cmpxchg8b_emu",			\
-+			    _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
-+		CC_SET(e)						\
-+		: ALT_OUTPUT_SP(CC_OUT(e) (ret),			\
-+				"+a" (o.low), "+d" (o.high))		\
-+		: "b" (n.low), "c" (n.high),				\
-+		  [ptr] "S" (_ptr)					\
-+		: "memory");						\
- 									\
- 	if (unlikely(!ret))						\
- 		*(_oldp) = o.full;					\
-diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index 0ab991fba7de..08f5f61690b7 100644
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -348,15 +348,14 @@ do {									\
- 	old__.var = _oval;						\
- 	new__.var = _nval;						\
- 									\
--	asm qual (ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
--			      "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
--		  : ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
--				  "+a" (old__.low),			\
--				  "+d" (old__.high))			\
--		  : "b" (new__.low),					\
--		    "c" (new__.high),					\
--		    "S" (&(_var))					\
--		  : "memory");						\
-+	asm_inline qual (						\
-+		ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
-+			    "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
-+		: ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
-+				"+a" (old__.low), "+d" (old__.high))	\
-+		: "b" (new__.low), "c" (new__.high),			\
-+		  "S" (&(_var))						\
-+		: "memory");						\
- 									\
- 	old__.var;							\
- })
-@@ -378,17 +377,16 @@ do {									\
- 	old__.var = *_oval;						\
- 	new__.var = _nval;						\
- 									\
--	asm qual (ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
--			      "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
--		  CC_SET(z)						\
--		  : ALT_OUTPUT_SP(CC_OUT(z) (success),			\
--				  [var] "+m" (__my_cpu_var(_var)),	\
--				  "+a" (old__.low),			\
--				  "+d" (old__.high))			\
--		  : "b" (new__.low),					\
--		    "c" (new__.high),					\
--		    "S" (&(_var))					\
--		  : "memory");						\
-+	asm_inline qual (						\
-+		ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
-+			    "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
-+		CC_SET(z)						\
-+		: ALT_OUTPUT_SP(CC_OUT(z) (success),			\
-+				[var] "+m" (__my_cpu_var(_var)),	\
-+				"+a" (old__.low), "+d" (old__.high))	\
-+		: "b" (new__.low), "c" (new__.high),			\
-+		  "S" (&(_var))						\
-+		: "memory");						\
- 	if (unlikely(!success))						\
- 		*_oval = old__.var;					\
- 									\
-@@ -419,15 +417,14 @@ do {									\
- 	old__.var = _oval;						\
- 	new__.var = _nval;						\
- 									\
--	asm qual (ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
--			      "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
--		  : ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
--				  "+a" (old__.low),			\
--				  "+d" (old__.high))			\
--		  : "b" (new__.low),					\
--		    "c" (new__.high),					\
--		    "S" (&(_var))					\
--		  : "memory");						\
-+	asm_inline qual (						\
-+		ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
-+			    "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
-+		: ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
-+				"+a" (old__.low), "+d" (old__.high))	\
-+		: "b" (new__.low), "c" (new__.high),			\
-+		  "S" (&(_var))						\
-+		: "memory");						\
- 									\
- 	old__.var;							\
- })
-@@ -449,19 +446,19 @@ do {									\
- 	old__.var = *_oval;						\
- 	new__.var = _nval;						\
- 									\
--	asm qual (ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
--			      "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
--		  CC_SET(z)						\
--		  : ALT_OUTPUT_SP(CC_OUT(z) (success),			\
--				  [var] "+m" (__my_cpu_var(_var)),	\
--				  "+a" (old__.low),			\
--				  "+d" (old__.high))			\
--		  : "b" (new__.low),					\
--		    "c" (new__.high),					\
--		    "S" (&(_var))					\
--		  : "memory");						\
-+	asm_inline qual (						\
-+		ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
-+			    "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
-+		CC_SET(z)						\
-+		: ALT_OUTPUT_SP(CC_OUT(z) (success),			\
-+				[var] "+m" (__my_cpu_var(_var)),	\
-+				"+a" (old__.low), "+d" (old__.high))	\
-+		: "b" (new__.low), "c" (new__.high),			\
-+		  "S" (&(_var))						\
-+		: "memory");						\
- 	if (unlikely(!success))						\
- 		*_oval = old__.var;					\
-+									\
- 	likely(success);						\
- })
+ v2:
+   - Reword the Persistent Napi config section using some suggestions
+     from Jakub.
+
+ Documentation/networking/napi.rst | 33 ++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/networking/napi.rst b/Documentation/networking/napi.rst
+index f970a2be271a..d0e3953cae6a 100644
+--- a/Documentation/networking/napi.rst
++++ b/Documentation/networking/napi.rst
+@@ -171,12 +171,43 @@ a channel as an IRQ/NAPI which services queues of a given type. For example,
+ a configuration of 1 ``rx``, 1 ``tx`` and 1 ``combined`` channel is expected
+ to utilize 3 interrupts, 2 Rx and 2 Tx queues.
  
++Persistent NAPI config
++----------------------
++
++Drivers often allocate and free NAPI instances dynamically. This leads to loss
++of NAPI-related user configuration each time NAPI instances are reallocated.
++The netif_napi_add_config() API prevents this loss of configuration by
++associating each NAPI instance with a persistent NAPI configuration based on
++a driver defined index value, like a queue number.
++
++Using this API allows for persistent NAPI IDs (among other settings), which can
++be beneficial to userspace programs using ``SO_INCOMING_NAPI_ID``. See the
++sections below for other NAPI configuration settings.
++
++Drivers should try to use netif_napi_add_config() whenever possible.
++
+ User API
+ ========
+ 
+ User interactions with NAPI depend on NAPI instance ID. The instance IDs
+ are only visible to the user thru the ``SO_INCOMING_NAPI_ID`` socket option.
+-It's not currently possible to query IDs used by a given device.
++
++Users can query NAPI IDs for a device or device queue using netlink. This can
++be done programmatically in a user application or by using a script included in
++the kernel source tree: ``tools/net/ynl/pyynl/cli.py``.
++
++For example, using the script to dump all of the queues for a device (which
++will reveal each queue's NAPI ID):
++
++.. code-block:: bash
++
++   $ kernel-source/tools/net/ynl/pyynl/cli.py \
++             --spec Documentation/netlink/specs/netdev.yaml \
++             --dump queue-get \
++             --json='{"ifindex": 2}'
++
++See ``Documentation/netlink/specs/netdev.yaml`` for more details on
++available operations and attributes.
+ 
+ Software IRQ coalescing
+ -----------------------
+
+base-commit: 4079918ae720e842ed7dff65fedeb9980b374995
 -- 
-2.42.0
+2.43.0
 
