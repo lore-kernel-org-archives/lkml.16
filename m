@@ -1,124 +1,131 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E82322170F;
-	Thu, 13 Feb 2025 12:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84968227EB4;
+	Thu, 13 Feb 2025 12:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739449020; cv=none; b=VPoMY3hU5q37rYeYhgojsd057l2y/G9Ar6DgCImGC+Zo0OvoupQpGBL3Oza+ZMqf561cXnKKmufL8z+KBEUuRuJQJBUmC5b5ab05O5nHUHnY9wz9DvvPdvhL4hbbiy+8cSr5vQyZGhKQCi2da1p/mRj1IWRul4pKFPvqL9ixQHQ=
+	t=1739449022; cv=none; b=aQMMWjFUcRpgRAPppAJuTV+jhd0D8vBq6lf04SlFxIMm591/ZZwz45avB8tNhSdBbQVmedjVH4Gy7AKO8ekLOBN7UbNLb4pEe3WY5+NtEFHzqibdo+2mOyfK/CjX75UOgTM9O9VytVdVqvb+GfL4j62C4DZNjLAz9I+XyKFTSZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739449020; c=relaxed/simple;
-	bh=NIEdyetbCs06dTp+Vd4v7oHrstjMbPO12/RYfOF1GpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PJ4u1cQ+QwzbxFiuhzLyzCiKuIMjFmmA9mTbCVWmOPkfW+HLMquvR3FcBGcKQguBTfXoTQSkchLntyKnfrw9mW0/ql9hP30+zeNU4katVcNoSBfnVgpauM6IXPDPJsidaKCxIeKF/wKOcznKC3xFBU8blZEw+gY7/bJcDR8Rb9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1tiXeU-0008Sx-00; Thu, 13 Feb 2025 12:45:06 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id DEB86C03B4; Thu, 13 Feb 2025 12:44:35 +0100 (CET)
-Date: Thu, 13 Feb 2025 12:44:35 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: "Dmitry V. Levin" <ldv@strace.io>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Oleg Nesterov <oleg@redhat.com>, Alexey Gladkov <legion@kernel.org>,
-	Eugene Syromyatnikov <evgsyr@gmail.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, strace-devel@lists.strace.io,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: fix mips_get_syscall_arg() for o32
-Message-ID: <Z63bI66KShw7Au_s@alpha.franken.de>
-References: <alpine.DEB.2.21.2502101732120.65342@angie.orcam.me.uk>
- <20250211230209.GA19616@strace.io>
+	s=arc-20240116; t=1739449022; c=relaxed/simple;
+	bh=PLI4dCWIwEmcxYIFTmNuux/2FCidmxwYyPrRcIjMlZg=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=fJD3NeFPIDqWh6ceCf9oahY77L7mPiuBT7+sjNZB2MRKq5S9m+jrPSdgUdpHrCt6GfxpcJMGVtZThK4ACk8bU3qraMH5Lpf9Tg887yEzf3DCsR3gqOOKP7JEVmj05/KNcq+qS5kLsD5J1H3SqHJHx7D9AlharES3VcUF9SoLHAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OJgxN7Dy; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OJgxN7Dy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739449020; x=1770985020;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=PLI4dCWIwEmcxYIFTmNuux/2FCidmxwYyPrRcIjMlZg=;
+  b=OJgxN7DyX9PsuE2nFLZJWuvuyN5OAgYDQrZ58N5Bjhm2vZYni6TDW4rl
+   iHF+daG662SVhANbt3i9ZyzE6wuMdUgf/TghqttLGuOXXnhmjyRss64Ae
+   Zr6XLY43bPO4W7k+zvgmYHmNH6zJO7SusZdklH/NDda8ByQv2kgyj8nmP
+   kXqQSrnO7NTYslj4eB10huOGeZMtYDSkLLLsGWxXsSNdNrjHJfgzq9zis
+   6L4REUBwlVQbAYmMGZ6rvUR7PiaMUFmoW2beE0PzofZVpWLEXC+SK3GnK
+   swGtM5ZxD/xVAwb7A+I3E8/JdkdDYyoc8UT2rEcQbW7+vR7fqe1h11yGk
+   Q==;
+X-CSE-ConnectionGUID: doN4rek1RK+23gPPHNsREQ==
+X-CSE-MsgGUID: 2OruXDcYQ7Ww3aBRMQv+bA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="42983664"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="42983664"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 04:16:59 -0800
+X-CSE-ConnectionGUID: Z9dpytLfRxO+JwlXHozSQw==
+X-CSE-MsgGUID: RovsuE5kSF2RNqWsxCMhgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="112994338"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.48])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 04:16:57 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Thu, 13 Feb 2025 14:14:23 +0200
+Subject: [GIT PULL] platform-drivers-x86 for v6.14-3
+Message-ID: <pdx86-pr-20250213141423-15116495@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211230209.GA19616@strace.io>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 12, 2025 at 01:02:09AM +0200, Dmitry V. Levin wrote:
-> This makes ptrace/get_syscall_info selftest pass on mips o32 and
-> mips64 o32 by fixing the following two test assertions:
-> 
-> 1. get_syscall_info test assertion on mips o32:
->   # get_syscall_info.c:218:get_syscall_info:Expected exp_args[5] (3134521044) == info.entry.args[4] (4911432)
->   # get_syscall_info.c:219:get_syscall_info:wait #1: entry stop mismatch
-> 
-> 2. get_syscall_info test assertion on mips64 o32:
->   # get_syscall_info.c:209:get_syscall_info:Expected exp_args[2] (3134324433) == info.entry.args[1] (18446744072548908753)
->   # get_syscall_info.c:210:get_syscall_info:wait #1: entry stop mismatch
-> 
-> The first assertion happens due to mips_get_syscall_arg() trying to access
-> another task's context but failing to do it properly because get_user() it
-> calls just peeks at the current task's context.  It usually does not crash
-> because the default user stack always gets assigned the same VMA, but it
-> is pure luck which mips_get_syscall_arg() wouldn't have if e.g. the stack
-> was switched (via setcontext(3) or however) or a non-default process's
-> thread peeked at, and in any case irrelevant data is obtained just as
-> observed with the test case.
-> 
-> mips_get_syscall_arg() ought to be using access_remote_vm() instead to
-> retrieve the other task's stack contents, but given that the data has been
-> already obtained and saved in `struct pt_regs' it would be an overkill.
-> 
-> The first assertion is fixed for mips o32 by using struct pt_regs.args
-> instead of get_user() to obtain syscall arguments.  This approach works
-> due to this piece in arch/mips/kernel/scall32-o32.S:
-> 
->         /*
->          * Ok, copy the args from the luser stack to the kernel stack.
->          */
-> 
->         .set    push
->         .set    noreorder
->         .set    nomacro
-> 
->     load_a4: user_lw(t5, 16(t0))		# argument #5 from usp
->     load_a5: user_lw(t6, 20(t0))		# argument #6 from usp
->     load_a6: user_lw(t7, 24(t0))		# argument #7 from usp
->     load_a7: user_lw(t8, 28(t0))		# argument #8 from usp
->     loads_done:
-> 
->         sw	t5, PT_ARG4(sp)		# argument #5 to ksp
->         sw	t6, PT_ARG5(sp)		# argument #6 to ksp
->         sw	t7, PT_ARG6(sp)		# argument #7 to ksp
->         sw	t8, PT_ARG7(sp)		# argument #8 to ksp
->         .set	pop
-> 
->         .section __ex_table,"a"
->         PTR_WD	load_a4, bad_stack_a4
->         PTR_WD	load_a5, bad_stack_a5
->         PTR_WD	load_a6, bad_stack_a6
->         PTR_WD	load_a7, bad_stack_a7
->         .previous
-> 
-> arch/mips/kernel/scall64-o32.S has analogous code for mips64 o32 that
-> allows fixing the issue by obtaining syscall arguments from struct
-> pt_regs.regs[4..11] instead of the erroneous use of get_user().
-> 
-> The second assertion is fixed by truncating 64-bit values to 32-bit
-> syscall arguments.
-> 
-> Fixes: c0ff3c53d4f9 ("MIPS: Enable HAVE_ARCH_TRACEHOOK.")
-> Signed-off-by: Dmitry V. Levin <ldv@strace.io>
-> ---
-> 
-> This started as a part of PTRACE_SET_SYSCALL_INFO API series[1].
-> It has been rebased on top of [2] as suggested by Maciej in [3].
-> 
-> [1] https://lore.kernel.org/all/20250210113336.GA887@strace.io/
-> [2] https://lore.kernel.org/all/alpine.DEB.2.21.2502101732120.65342@angie.orcam.me.uk/
-> [3] https://lore.kernel.org/all/alpine.DEB.2.21.2502111530080.65342@angie.orcam.me.uk/
-> 
->  arch/mips/include/asm/syscall.h | 32 ++++++++------------------------
->  1 file changed, 8 insertions(+), 24 deletions(-)
+Hi Linus,
 
-applied to mips-fixes
+Here is a platform-drivers-x86 fixes PR for v6.14.
 
-Thomas.
+Fixes and new HW support:
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+ - thinkpad_acpi:
+
+     - Fix registration of tpacpi platform driver
+
+     - Support fan speed in ticks per revolution (Thinkpad X120e)
+
+     - Support V9 DYTC profiles (new Thinkpad AMD platforms)
+
+ - int3472: Handle GPIO "enable" vs "reset" variation (ov7251)
+
+Regards, i.
+
+
+The following changes since commit a787ab73e2e43c0a3df10bc8d9b9b7a679129d49:
+
+  platform/x86/intel/ifs: Update documentation with image download path (2025-02-04 10:00:45 +0200)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-3
+
+for you to fetch changes up to b3e127dacad60a384c92baafdc74f1508bf7dd47:
+
+  platform/x86: thinkpad_acpi: Fix registration of tpacpi platform driver (2025-02-12 13:49:37 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.14-3
+
+Fixes and new HW support:
+
+ - thinkpad_acpi:
+
+     - Fix registration of tpacpi platform driver
+
+     - Support fan speed in ticks per revolution (Thinkpad X120e)
+
+     - Support V9 DYTC profiles (new Thinkpad AMD platforms)
+
+ - int3472: Handle GPIO "enable" vs "reset" variation (ov7251)
+
+The following is an automated shortlog grouped by driver:
+
+int3472:
+ -  Call "reset" GPIO "enable" for INT347E
+ -  Use correct type for "polarity", call it gpio_flags
+
+thinkpad_acpi:
+ -  Fix invalid fan speed on ThinkPad X120e
+ -  Fix registration of tpacpi platform driver
+ -  Support for V9 DYTC platform profiles
+
+----------------------------------------------------------------
+Mark Pearson (2):
+      platform/x86: thinkpad_acpi: Support for V9 DYTC platform profiles
+      platform/x86: thinkpad_acpi: Fix registration of tpacpi platform driver
+
+Sakari Ailus (2):
+      platform/x86: int3472: Use correct type for "polarity", call it gpio_flags
+      platform/x86: int3472: Call "reset" GPIO "enable" for INT347E
+
+Sybil Isabel Dorsett (1):
+      platform/x86: thinkpad_acpi: Fix invalid fan speed on ThinkPad X120e
+
+ drivers/platform/x86/intel/int3472/discrete.c | 85 ++++++++++++++++++++-------
+ drivers/platform/x86/thinkpad_acpi.c          | 61 ++++++++++++++-----
+ 2 files changed, 110 insertions(+), 36 deletions(-)
