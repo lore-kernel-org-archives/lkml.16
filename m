@@ -1,135 +1,105 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A44537E5;
-	Thu, 13 Feb 2025 03:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739418622; cv=pass; b=BT7a7wtopXtmaXh82tWaWJ2ZNDJBn93w55nHNh2U+a+TeUORTj+M7MCJS9IDJHLKqiieb91VhFE2BYp1xe8WMPP19YXpYujuiWrZVVqNgwXsU9E2aBZRWlhnglK1xfyhcu2xmB2BGgCl7f+v7vkaun3MuDpapp6PvnjocKVMgzs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739418622; c=relaxed/simple;
-	bh=WHYu1ZS/p9mxM+ozqemo6cP3PiAvsHAKZpgoXka46AI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mNmIqYOvonyA+885eQ90G+aRnoLQsf+XUsQCE5DhnAN7qersZ8h5fD1ieK1Q3omrLHudNLAF74wcuO+nWXZ5ykZOwOT4AA4t4/vxn8Gfj2HlRiEFG8I0FqMWB0K16cGmfonBNrd4T2SKq6V1584jF/yzoyh8HBVtOhEgwR0wO7c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=BWZ7KxFP; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF8F537E5;
+	Thu, 13 Feb 2025 03:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739418682; cv=none; b=IqnlzV93TtzpV47Z0ouffLwpqfwIQyPfP6P/L1zknFC3H0j7xheZiuqrGIv+xSUjV0f3hzk9mOVGaFur/hasMWQSiSfqgwyjKcmt1bwEXSYylVl0t2z15yrUzY3+7hUwtPjTd7bDcw7GFrKZya+oZ1EQNzxG5JDt7Xde6DAH0nA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739418682; c=relaxed/simple;
+	bh=3bjxMTrhQRmOkk/O2eq2Q3uBmspPWL+W2NfyeRkwbiQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lRYdCV8rB0JjWTXc1qB7hHGGggSl4Wm/0Z+NyXC0+TI6gUadG1dBNfrVS/GcVzDhY5yFIlPmK9tJYzF0WbOpe2yXwFn1wZHIf4HqYaGtneqrpsdc4MMmvWCgZ9F70d7g8kVlE9bFqUIzQGfw2IW5KGb8+PaYjKxRxZhFrXvbZ24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=UtTWIGbE; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="BWZ7KxFP"
-ARC-Seal: i=1; a=rsa-sha256; t=1739418578; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=fbT64vxAHYqVOenrWrvSXND6bw3rDp0EXMcTJOW4r10ZOXOtwVDrbLXw6dIh13dyq2ic+xZp5mAWlYebunyhr1/d9Lu90tb73JFGzZYUmxZobh8wbHSkzbQ2D8WSwShuCf8OuBk89TJC4QenPFgsu3qeNZXr1AH73GMwvIMqcXo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739418578; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=WHYu1ZS/p9mxM+ozqemo6cP3PiAvsHAKZpgoXka46AI=; 
-	b=jjwbtahT8Gdx7JKCLgxQGErqD+rckdyVpC2WOw6G0G0jfjDWpQeCcARlwmo7NWj/nKxPvqsSeClPekq2nesx2AB7QB2EKyrsatk4Mvdieid+NdLz9UBj+Xomq7nrN0wRR7e14hBGPEdlWjpTpOOfipJBujXifczHtd1GRAR8ep4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739418578;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=WHYu1ZS/p9mxM+ozqemo6cP3PiAvsHAKZpgoXka46AI=;
-	b=BWZ7KxFPlgO5GbULTRCma04EoD7+75tnOegirkMZvna3Y7L5YPpONAufuMXrge58
-	lhgYI9NMKUqKXgDYqkZkhd7MuISbzw/RHjh/iYPZO16XZBkJ9KYTrFzTp0TKi7rd32t
-	LYcNn/bx1IHZH9EJt33APXIU2cbC4LOiTC2WpcvYXV0IbqcVZyc3bKBoqvJSs+/tKQ1
-	mom5ncgtAytRKlE7AcglLfl182C7MIt6zRMUBJPJdP4V8R1VxBbXinDZ3ZBOmUr3wj3
-	mlXbckpCrW1cUCuI5shoPAcGdwo6njybqw66USsKfCfE6xXMeZj0iEx+LDkkzGoj81n
-	1YhNg8Eyfw==
-Received: by mx.zohomail.com with SMTPS id 1739418575396322.68472183264555;
-	Wed, 12 Feb 2025 19:49:35 -0800 (PST)
-Message-ID: <d7d1fb8af8857e7ebfdea48213849ea9ba446477.camel@icenowy.me>
-Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
- coherent allocator abstraction.)
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Hector Martin <marcan@marcan.st>, Steven Rostedt <rostedt@goodmis.org>, 
- "Dr. Greg" <greg@enjellic.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Dave Airlie <airlied@gmail.com>, Jason
- Gunthorpe <jgg@nvidia.com>, Greg KH <gregkh@linuxfoundation.org>,
- phasta@kernel.org, Christoph Hellwig <hch@lst.de>,  Miguel Ojeda
- <miguel.ojeda.sandonis@gmail.com>, Abdiel Janulgue
- <abdiel.janulgue@gmail.com>,  daniel.almeida@collabora.com,
- aliceryhl@google.com, robin.murphy@arm.com, 
- rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, Alex
- Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo
- <gary@garyguo.net>, Bj??rn Roy Baron <bjorn3_gh@protonmail.com>, Benno
- Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>,
- Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>, Marek Szyprowski
- <m.szyprowski@samsung.com>,  airlied@redhat.com, "open list:DMA MAPPING
- HELPERS" <iommu@lists.linux.dev>,  DRI Development
- <dri-devel@lists.freedesktop.org>
-Date: Thu, 13 Feb 2025 11:49:20 +0800
-In-Reply-To: <Z6nTxks3u-ErSalQ@cassiopeiae>
-References: <20250131135421.GO5556@nvidia.com>
-	 <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
-	 <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
-	 <CAPM=9tzPR9wd=3Wbjnp-T0W8-dDfGah-H3Ny52G85B+2Ev9ksA@mail.gmail.com>
-	 <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st>
-	 <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
-	 <20250207121638.GA7356@wind.enjellic.com>
-	 <Z6bdCrgGEq8Txd-s@home.goodmis.org>
-	 <1e8452ab-613a-4c85-adc0-0c4a293dbf50@marcan.st>
-	 <07c447b77bdac1f8ade1f93456f853f89d4842ee.camel@icenowy.me>
-	 <Z6nTxks3u-ErSalQ@cassiopeiae>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="UtTWIGbE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=/aA9uaFhMlrSITLwHRpHJ4LMnhEkZpzNgWLzbfUgh2s=; b=UtTWIGbElGYB8PWkCaD9qeERBA
+	JzNYL5yOPRtRaxee6hV2OhCjO67hq99i70F18duj2nwFKtymWTQD/96M4gyBsmGAnZ4VLO5sbWCuR
+	fqYZkwJr0zvyAR6Rz32hYdCRmByubFU3GLmoojhNTF82/zX6cRQA6c3KqEHpm1xK38p9i4nh+QS5U
+	mcVeXaB1IS/2wGvJx9Zua3+ikGkhdsbpYjS2FN0vdgM91t6sacnf4ABumGtA8edJs3fgttCDvV1em
+	0X8EWNtACJOUe2hJe36xY60et4q9t0XCPFRaX6k/NOLHyg4LC896xsqQwFf6kZqvOnk+O+k8pDPGw
+	sf98XLcg==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tiQFw-0000000CQHL-0PdV;
+	Thu, 13 Feb 2025 03:51:16 +0000
+Date: Thu, 13 Feb 2025 03:51:16 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 19/19] nfs: switch to _async for all directory ops.
+Message-ID: <20250213035116.GT1977892@ZenIV>
+References: <20250206054504.2950516-1-neilb@suse.de>
+ <20250206054504.2950516-20-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
-X-ZohoMail-Owner: <d7d1fb8af8857e7ebfdea48213849ea9ba446477.camel@icenowy.me>+zmo_0_
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206054504.2950516-20-neilb@suse.de>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-=E5=9C=A8 2025-02-10=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 11:24 +0100=EF=BC=
-=8CDanilo Krummrich=E5=86=99=E9=81=93=EF=BC=9A
-> On Mon, Feb 10, 2025 at 05:41:30PM +0800, Icenowy Zheng wrote:
-> > Furtherly, the monorepo nature of Linux kernel means to refactor an
-> > interface, it's usually the person changing the callee that need to
-> > change all callers to satify the interface change; having Rust code
-> > in
-> > tree calling the interface effectively means adding the
-> > responsibility
-> > of fixing the Rust code when the interface changes, which could be
-> > not
-> > acceptable by the C-only maintainers. In regards of adding a
-> > maintainer, having more maintainers means more communication.
->=20
-> This is exactly the same as for every new driver / component,
-> regardless of
-> whether it is written in C or in Rust.
->=20
-> It is absolutely common that driver maintainers help with integrating
-> core API
-> changes, if necessary.
->=20
-> I don't see why the same process should not work for Rust
-> abstractions.
+On Thu, Feb 06, 2025 at 04:42:56PM +1100, NeilBrown wrote:
+>  nfs_sillyrename(struct inode *dir, struct dentry *dentry)
+>  {
+>  	static unsigned int sillycounter;
+> @@ -447,7 +451,8 @@ nfs_sillyrename(struct inode *dir, struct dentry *dentry)
+>  	struct dentry *sdentry;
+>  	struct inode *inode = d_inode(dentry);
+>  	struct rpc_task *task;
+> -	int            error = -EBUSY;
+> +	struct dentry *base;
+> +	int error = -EBUSY;
+>  
+>  	dfprintk(VFS, "NFS: silly-rename(%pd2, ct=%d)\n",
+>  		dentry, d_count(dentry));
+> @@ -461,10 +466,11 @@ nfs_sillyrename(struct inode *dir, struct dentry *dentry)
+>  
+>  	fileid = NFS_FILEID(d_inode(dentry));
+>  
+> +	base = d_find_alias(dir);
 
-Because integrating API changes could involve change to contexts of API
-calls, which could be difficult for Rust situation, especially when
-it's not required for core API maintainers to be able to write Rust.
+Huh?  That would better be dentry->d_parent and all operations are in
+that directory, so you don't even need to grab a reference...
 
->=20
-> (Additionally, in this particular case even one of the reviewers of
-> DMA MAPPING HELPERS offered to be a reviewer of the Rust abstractions
-> too, in
-> order to keep eye on the DMA API angle.)
+>  	sdentry = NULL;
+>  	do {
+>  		int slen;
+> -		dput(sdentry);
+> +
+>  		sillycounter++;
+>  		slen = scnprintf(silly, sizeof(silly),
+>  				SILLYNAME_PREFIX "%0*llx%0*x",
+> @@ -474,14 +480,19 @@ nfs_sillyrename(struct inode *dir, struct dentry *dentry)
+>  		dfprintk(VFS, "NFS: trying to rename %pd to %s\n",
+>  				dentry, silly);
+>  
+> -		sdentry = lookup_one_len(silly, dentry->d_parent, slen);
+> -		/*
+> -		 * N.B. Better to return EBUSY here ... it could be
+> -		 * dangerous to delete the file while it's in use.
+> -		 */
+> -		if (IS_ERR(sdentry))
+> -			goto out;
+> -	} while (d_inode(sdentry) != NULL); /* need negative lookup */
+> +		sdentry = lookup_and_lock_one(NULL, silly, slen,
+> +					      base,
+> +					      LOOKUP_CREATE | LOOKUP_EXCL
+> +					      | LOOKUP_RENAME_TARGET
+> +					      | LOOKUP_PARENT_LOCKED);
+> +	} while (PTR_ERR_OR_ZERO(sdentry) == -EEXIST); /* need negative lookup */
 
-Sorry, but I did a fact check on this, and I found that the only
-"reviewer" of DMA MAPPING HELPERS is Robin Murphy, he has only one
-reply in this thread, and the reply only says "Indeed, FWIW it seems
-like the appropriate level of abstraction to me,=20
-judging by the other wrappers living in rust/kernel/ already", he
-didn't offer to be a reviewer, and he still says "Rust folks are happy
-to take responsibility for un-breaking the=20
-Rust build if and when it happens".
-
-He is just saying he's going to accept the abstraction, which should be
-not able to forcibly override Christoph's explicit NACK here.
+What's wrong with sdentry == ERR_PTR(-EEXIST)?
