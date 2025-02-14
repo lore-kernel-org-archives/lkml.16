@@ -1,198 +1,171 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE401FCCE6
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 22:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C041DC99C;
+	Fri, 14 Feb 2025 22:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739572834; cv=none; b=Wgg0/KgjOl6ZZxeqOy+oVloOB0AfM3xEJkvfvXZN/E5E3Avfut5IapDF3KV2JXdjHccRwaNnYs4BZIuadTCiKJCWUpvY98VJCzcGlmcyV96A7THSOKQoSA5r97Sw++Cu3NZw9oHZZgywpjzqDQm6xOKDlvMStO5Y3YMMnhNEVk8=
+	t=1739572941; cv=none; b=p8hT+aheMVsUw4FyXOQNCBnB6ioi+vHvvRb+abmMmXi33dVLsuV2EvNAf1NNA1fP4k0CFJpZFtcPbBt0hhSLS/B6ETJBhctaBydcgTeDc2dDtkN2aYTI0wP32yXMUNa3qUJNJEitPRTOmJTfXD1m8Cx4f9hxBhAhWi0rD0XkahM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739572834; c=relaxed/simple;
-	bh=FkhQen3jMCWKwg3SUUeVcC847PjdOBFyLDHwxk87puw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=guox1ogR/h7as/lh2Vv0J9N9n1e2dgcOpTw0N2y/Og0woQqq4Dw2VJUfPoP0k0rSoDsGAkg3bVeLgusR7yffntzHIWlO9TNMILb/VmfvMYwHYqnFNGLNUHolKG0vkrU0rdHFYHwyBXED0r92SRyqrTchkbFTGCJw4UKAAe443o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=qllAR9dY; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1739572941; c=relaxed/simple;
+	bh=jVleaiTKKT3enhSOUBbAGdgywhYGplbMOXpA7X64DAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uk7FufdmkDP9uJqOhi4YoHtikFwtRwbCZi4oQ4nmKmwL8L82zwzOHdr5ktdzZSRsVqdsem3Zp+hQV2NRDmbY9u8gHrZSkUTBbLO7ng2GOozAPWFE3bKgqsa8uiTvbJ9+HOXIw0XBIs1LclFdMTBVBCR4S+YfhSYYe+LsyUioT2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d7ZyvHwn; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="qllAR9dY"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-439350f1a0bso15936785e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 14:40:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7ZyvHwn"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6dcdf23b4edso22733596d6.0;
+        Fri, 14 Feb 2025 14:42:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1739572831; x=1740177631; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=d2Es7W7rIA+SDUtfarzDyFqNiRUQrkoPh/TZ5m+aaOw=;
-        b=qllAR9dYU8hMk6l/ezrKB87OeELFeIVFPtt23l48p5S8XQtlH9vySkvJYu69VVO9Ib
-         5fsOjh4JOI3OgdtpHdpe8lnLwMNhIOpZC6C59uBi6FOJZ0ziZP7KJTcnJn3V0/bKr/J/
-         xOfLxoh2zHMiUqA8ujquQQRslDjohT9+y85kU=
+        d=gmail.com; s=20230601; t=1739572938; x=1740177738; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5A68drbhTTSVvgdcUc66bx9dD4R166dRvm9VrghY4Q4=;
+        b=d7ZyvHwnKBfNRg+WomFu4aFkzW/Bx/EKEtfRlxAFNliqT6Yo1hFL7css3KdAwtabdn
+         xs3oCH8eWTZnP6YYi1gMnGOqN9Fed32mOYoAaieQMjzsI+S2vnxzH8K4GF/sLfKvpfNV
+         L6apf7MVkv68MYNNUmE4eQxDJgsCHfiPoCNDRcMdT3AGYI9dhLE8O9RJMxmEfif4FuYA
+         xFcrWdYqJ42GD13YfMCCcLS0UrZKol42UXX9v9M9QegQEY7xTAI4g9fAEv/2EKf8hz3n
+         gcUKYe0IWHeujfLijnR+hGQ+ECAK+b4lNsiKIBWGjFQzdPxQuBziC9uhZCZ7rBM2EWfi
+         svUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739572831; x=1740177631;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d2Es7W7rIA+SDUtfarzDyFqNiRUQrkoPh/TZ5m+aaOw=;
-        b=RoV59euEBrwHEHOCML1rcbJRXKyZIJ1UeNodAc8q8nfy7dqDcEXqjkABZoYNRAAu8t
-         fAjpNfiVzoy7G5ykTkyRnhJhMieqsr8XiUBQcD1H+FAYOKm2ib8hQaLqrWbeUbbPSWIQ
-         isC5M86F3GUDUZ4NqTrf0dggoulLP6O9lr6BfrWCw7AgqrWvzs/D3VT9XihEqNOL/fqM
-         seJ89jQZLDu8dJGD7eJMg8sJKYYGlhdDK51qrxdjdtsuSu8fR15HsLnfCW/mEloBq3o5
-         9ibp1vt+Ccs3RKMfIvoSiDT4BHQPJDP0UycnSvvyLSaqTJKXq5E8uV1tKpbxprmZ9Xq8
-         VN1w==
-X-Forwarded-Encrypted: i=1; AJvYcCXpMM0TUeoHtpKDCiaRCU4/7k0BQaq16ec71R1eGw4kSzWw6mmdv66j6PDGMOt+8gWZjfW1jMXr5HYcIBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjWhcDsCrvHAK+BnXbAxpTTPmkoF3EJ37FPdusphNCKUHqhsrk
-	FKTDjXaGoYnI0lwCgc/viUlLIsCada7s6IcymBF8OJhFodmrqs9yWEeUDz/OtGw=
-X-Gm-Gg: ASbGnct+UYMlLErGFg1kTT6OVNDUJnRJSlMU2PCtvwnIJrj8+UunJXFEiGC7EKsRven
-	QE+plkj5WltASQTZujLk3jAwBZ+wjztPQ5VeF3K8pDleVGfSY1BzFOy2UDYbfReqrFOhqf19TnY
-	FhDLAi8CS6xr35bjmwKkvfgy1+iiCIyrk4eUnaCS1wYD3llLMjmMJI7P31uYg2YQIUd3DsBBziw
-	hMSp/KGDKYbdYPMtu04F6cs62B5fB7XYUkYX/ds1jRh2Z2HW/ThPluDANLtQu8yS/ztNu7A4uY+
-	FNccW4LezbKvlfry9i4kUsBUazhjkyM23F0YGGP32ClPTQsqgvpOkI4=
-X-Google-Smtp-Source: AGHT+IE71hgfi9vKmHrPeDtRHLEyfmLXJ+z/aDf94JYukLeP3uNQb4g+Gi67XQkP3nROa1beIZLSUA==
-X-Received: by 2002:a05:600c:214:b0:438:a313:cda9 with SMTP id 5b1f17b1804b1-43960c068d9mr111724805e9.10.1739572831004;
-        Fri, 14 Feb 2025 14:40:31 -0800 (PST)
-Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43961811315sm54926895e9.20.2025.02.14.14.40.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2025 14:40:30 -0800 (PST)
-Message-ID: <7ae6ee84-b5ae-479b-b963-9e9aefcd3bfa@citrix.com>
-Date: Fri, 14 Feb 2025 22:40:28 +0000
+        d=1e100.net; s=20230601; t=1739572938; x=1740177738;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5A68drbhTTSVvgdcUc66bx9dD4R166dRvm9VrghY4Q4=;
+        b=rG2QPCisygsQyUtEctvDZW4TauGbAl6fyk/REk92ovVZbqc5g6VHFO0pnNl8CL2FW5
+         M93VEaBZR4MqfRh2Os4jWTy5NeeJ8GComzG4Nt9tZpSV0Y5SDpuhWu4ehedQ2l5ZyM0F
+         5w1zwFgVu6uXRaTXj4iJo0Q5jHJ/t0kuC2pIkSLhUJ06/XQnHveusSjulaRa3SNQApgl
+         mk6z+F231zvjP3Y6ClMU6kVbXFNAILZlgydCS265M77DbiU+INaK9YvVnbovw26fsoZQ
+         5qjtYwfP1HlxRg4EgRmDjJcQrV1/86k+w/8Ne9DUWR5p+48vBemlJCMBMplYADZUSP0d
+         yTRg==
+X-Forwarded-Encrypted: i=1; AJvYcCV27W9HGzDlwpaheWKAxPxgpMv6F0Ww7G0om+bzKIGgptlJkEJfgcZdyFCbA4fHrKY9MX4X3FArkgVb4EaU@vger.kernel.org, AJvYcCWDFadY7uYd/lH59+YhFofG0DZhb6sRKcm7D/3Ejq6JGpgBaorBKYZwma31qYPkYxDWbnTLC1Ue/S9l@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVEpbI9pwwdmgffasfJQeYJRVkqbq7PeMqJY/ESSE0GkIVIXZG
+	AbgxybSt1H1/VfQreoY78PZwoepgCjwyfXncrsaxx4Ib1BRmIHzZ
+X-Gm-Gg: ASbGnct9AdLJOIT+X6cb9QC+85XhNsLhRj0LgsOUpJqm+pQPai7aUF5E7bKNEwWnDiQ
+	Z3dpp2RfDbbtl59oV75PWZKyRYD+TMWdZ7s5iuH/mvZuAetTGPICzwDA9jcWoF2I7jecZ6lCEbW
+	c/KruIotwm5R8gOJ8TSvM8WWCoe6Rx2JLE6LThwAc2B5Ak4+jSvbLimHQwhb5w3qbkvSxQ2+lHk
+	eW5QnonDSWy3oMGHivqqlm+t5zhN+fhdOLurU5hfO2i+p0P1DkSfRM8b1XoqW5U55g=
+X-Google-Smtp-Source: AGHT+IFdJBJx2BDqksUVhrXVBeP3mAIbgqag9A/szv08TB1nkvkX1A9nZ3tUFl+z87iK3zUv5bUi/A==
+X-Received: by 2002:a05:6214:da1:b0:6e6:60f6:56cf with SMTP id 6a1803df08f44-6e66cc7ff70mr19801366d6.5.1739572938525;
+        Fri, 14 Feb 2025 14:42:18 -0800 (PST)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e65d9f36f5sm25582586d6.75.2025.02.14.14.42.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 14:42:18 -0800 (PST)
+Date: Sat, 15 Feb 2025 06:42:08 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+	AnnanLiu <annan.liu.xdu@outlook.com>, chao.wei@sophgo.com, unicorn_wang@outlook.com, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	Inochi Amaoto <inochiama@gmail.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] riscv: dts: sophgo: add watchdog dt node for CV1800
+Message-ID: <dxxc42mcdw6jlpk4lffyxqci7d6bamc7q5wsfdcx62snacbw2e@jrvrllwdb6t6>
+References: <DM6PR20MB2316366FC9ADCBC7B6E9C289AB7A2@DM6PR20MB2316.namprd20.prod.outlook.com>
+ <f6b036acada7686e1bfd814bd62782890bf35a50.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/kcfi: Require FRED for FineIBT
-To: Kees Cook <kees@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Jennifer Miller <jmill@asu.edu>,
- Sami Tolvanen <samitolvanen@google.com>, Jann Horn <jannh@google.com>,
- Nathan Chancellor <nathan@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Alexei Starovoitov <ast@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250214192210.work.253-kees@kernel.org>
- <5d26bcdf-0e72-45b6-98c5-f90481650f09@citrix.com>
- <202502141345.C78A253D@keescook>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <202502141345.C78A253D@keescook>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <f6b036acada7686e1bfd814bd62782890bf35a50.camel@gmail.com>
 
-On 14/02/2025 9:54 pm, Kees Cook wrote:
-> On Fri, Feb 14, 2025 at 07:39:20PM +0000, Andrew Cooper wrote:
->> On 14/02/2025 7:22 pm, Kees Cook wrote:
->>> diff --git a/arch/x86/include/asm/cfi.h b/arch/x86/include/asm/cfi.h
->>> index ef5e0a698253..dfa2ba4cceca 100644
->>> --- a/arch/x86/include/asm/cfi.h
->>> +++ b/arch/x86/include/asm/cfi.h
->>> @@ -93,7 +93,7 @@
->>>   *
->>>   */
->>>  enum cfi_mode {
->>> -	CFI_AUTO,	/* FineIBT if hardware has IBT, otherwise kCFI */
->>> +	CFI_AUTO,	/* FineIBT if hardware has IBT, FRED, and XOM */
->> You discuss XOM in the commit message, but there's no check ...
->>
->>>  	CFI_OFF,	/* Taditional / IBT depending on .config */
->>>  	CFI_KCFI,	/* Optionally CALL_PADDING, IBT, RETPOLINE */
->>>  	CFI_FINEIBT,	/* see arch/x86/kernel/alternative.c */
->>> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
->>> index 97422292b609..acc12a6efc18 100644
->>> --- a/arch/x86/kernel/alternative.c
->>> +++ b/arch/x86/kernel/alternative.c
->>> @@ -1323,7 +1323,9 @@ static void __apply_fineibt(s32 *start_retpoline, s32 *end_retpoline,
->>>  
->>>  	if (cfi_mode == CFI_AUTO) {
->>>  		cfi_mode = CFI_KCFI;
->>> -		if (HAS_KERNEL_IBT && cpu_feature_enabled(X86_FEATURE_IBT))
->>> +		/* FineIBT requires IBT and will only be safe with FRED */
->>> +		if (HAS_KERNEL_IBT && cpu_feature_enabled(X86_FEATURE_IBT) &&
->>> +		    cpu_feature_enabled(X86_FEATURE_FRED))
->> ... here.
->>
->> Is this meant to be "/* TODO: wire up XOM */" or is that accounted for
->> somewhere else?
-> Yeah, I wasn't sure how to best capture that in here. XOM doesn't exist
-> yet for x86... I could add a TODO like that?
+On Fri, Feb 14, 2025 at 01:58:15PM +0100, Alexander Sverdlin wrote:
+> Hi Annan, Inochi,
+> 
+> On Thu, 2024-01-25 at 17:46 +0800, AnnanLiu wrote:
+> > Add the watchdog device tree node to cv1800 SoC.
+> > 
+> > Signed-off-by: AnnanLiu <annan.liu.xdu@outlook.com>
+> > ---
+> > This patch depends on the clk driver and reset driver.
+> > Clk driver link:
+> > https://lore.kernel.org/all/IA1PR20MB49539CDAD9A268CBF6CA184BBB9FA@IA1PR20MB4953.namprd20.prod.outlook.com/
+> > Reset driver link:
+> > https://lore.kernel.org/all/20231113005503.2423-1-jszhang@kernel.org/
+> > 
+> > Changes since v1:
+> > - Change the name of the watchdog from watchdog0 to watchdog.
+> > - Change the status of watchdog.
+> > v1 link:
+> > https://lore.kernel.org/all/DM6PR20MB23160B8499CC2BFDAE6FCACDAB9EA@DM6PR20MB2316.namprd20.prod.outlook.com/
+> > 
+> > 
+> >  arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts |  4 ++++
+> >  arch/riscv/boot/dts/sophgo/cv1800b.dtsi          | 16 ++++++++++++++++
+> >  2 files changed, 20 insertions(+)
+> > 
+> > diff --git a/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts b/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
+> > index 3af9e34b3bc7..75469161bfff 100644
+> > --- a/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
+> > +++ b/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
+> > @@ -36,3 +36,7 @@ &osc {
+> >  &uart0 {
+> >  	status = "okay";
+> >  };
+> > +
+> > +&watchdog {
+> > +	status = "okay";
+> > +};
+> 
+> It would be necessary in all SoCs unless... [1]
+> 
+> > diff --git a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+> > index aec6401a467b..03ca32cd37b6 100644
+> > --- a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+> > +++ b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+> > @@ -1,6 +1,7 @@
+> >  // SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> >  /*
+> >   * Copyright (C) 2023 Jisheng Zhang <jszhang@kernel.org>
+> > + * Copyright (C) 2024 Annan Liu <annan.liu.xdu@outlook.com>
+> >   */
+> >  
+> >  #include <dt-bindings/interrupt-controller/irq.h>
+> > @@ -103,6 +104,21 @@ uart4: serial@41c0000 {
+> >  			status = "disabled";
+> >  		};
+> >  
+> > +		watchdog: watchdog@3010000{
+> > +			compatible = "snps,dw-wdt";
+> > +			reg = <0x3010000 0x100>;
+> > +			interrupts = <58 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&pclk>;
+> 
+> &osc ?
+> 
 
-I get the feeling that the PKS series would have an easier time starting
-with XOM (even if it hard-codes pkey1=xom and avoids the allocator in
-the short term, seeing as Linux does have a good grasp of where it's
-executable pages are, and how they're accessed) rather than trying to do
-general page hiding.Â  The capability is in 3 generations of Intel CPU now.
+This patch is submitted to early, before the clock driver is
+applied. This reason applies to your all question.
 
->
->> Also, while I hate to come back and contradict myself from earlier...
->>
->> Architecturally, FineIBT without FRED seems to be no improvement over
->> simple IBT.Â  (I'd love to find some way of hardening the entrypoints,
->> but I can't see a robust way of doing so.)
-> If you're just looking at IBT, yes. But kCFI (with or without IBT,
-> but without FineIBT) will do hash checking at the call site, which
-> should make it impossible to reach the entrypoints from an indirect call
-> in the first place, as they have no hash preceding them.
->
->> However, micro-architecturally, FineIBT is still far better than simple
->> IBT for speculation issue, seeing as Intel keep on staunchly refusing to
->> turn off the indirect predictors by default like AMD do.
->>
->> A security conscious user ought to be using FineIBT for this, given a
->> choice, even if it's not perfect in other regards.
-> A security conscious user should use kCFI without FineIBT. :) But I
-> think we might be thinking about different elements of security. I am
-> focusing on control flow, and I think you're considering speculation?
-
-True.Â  The security realist knows they're dammed either way, and gets a
-stiff drink instead.
-
-~Andrew
+> > +			resets = <&rst RST_WDT>;
+> > +			status = "disabled";
+> 
+> [1] ... the status here is dropped. What is the reason for disabling it in the first place?
+> 
+> > +		};
+> > +
+> > +		pclk: pclk {
+> > +			#clock-cells = <0>;
+> > +			compatible = "fixed-clock";
+> > +			clock-frequency = <25000000>;
+> > +		};
+> > +
+> >  		plic: interrupt-controller@70000000 {
+> >  			compatible = "sophgo,cv1800b-plic", "thead,c900-plic";
+> >  			reg = <0x70000000 0x4000000>;
+> 
+> Why didn't it go into cv18xx.dtsi?
+> 
+> -- 
+> Alexander Sverdlin.
+> 
