@@ -1,141 +1,142 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DB48635A;
-	Fri, 14 Feb 2025 16:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343138635A
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739551301; cv=none; b=ru2sRAtkCARZLiyIA//zESp5daVD4pBqP05Yi410RQ78PlFT7cHXglF5ZmUFjDfydGQoM+GT04GMzdhzXRYN1sfabcMLO8C8BiTynqbVodITFIBYWAdN+Wlx2O4sA9gJDXiopwNb2d5fgPoQehd7rloogVcAviBT4L3qipe83Ss=
+	t=1739551409; cv=none; b=SQW1nBlSujFaMatcjo50+f7x1isGlPQlQztS2ODMf2to0k9+X+N6zjKyl0I0kDoutXZ7XF2bjsL8qFv4gbdmziqZEwjmUHFm0KMvmR5qfkWu/TZ4GrkcC6yNpHzfHVlT9jBQBKYm4AmZEF0EkdUxSbfv5Zzlq1bt4WKwCzZSxWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739551301; c=relaxed/simple;
-	bh=vWYUlyzKnZJB5j79G/froqtYYA8MVpZ8A+1xbZe3+/w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T4DcQGp2YQMBXZB4bZX1L084IgMVGB0JvB/tKO69QeDtEqItDlYFGhSEQFQM7ynysfYvnCSwyzB3oq4jRHt5qc1Vjyd6zmuQ2fMmwjy1h9o5QNRjG2E4e2kotTuRdotA0m59QDwKxQGOWfjX7PEn7BSS4JEdxhZuXyqycz4HdD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=S3Yl+E9Y; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739551409; c=relaxed/simple;
+	bh=T0Cc+z6SRVu7e06KR11IEZ4n79dP/59PiGxBJJsikh0=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IxaWzo1E6Z1ISQNuFuwYhpCphxCrF537m6pcAzdYB28ZGT5f1Ypan7RjiPdj9jHXlPC9fT03JjJuLUDp9LVq+RzM4BtpwfU5AaYy2yOTpX1j9kVvug9iS4G49vov5uOcxQ2T7tjO3/aa6JEBi9Pfs7k1/+H7p1VPRPr/yvfVnmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AZYdMw8w; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="S3Yl+E9Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739551297;
-	bh=vWYUlyzKnZJB5j79G/froqtYYA8MVpZ8A+1xbZe3+/w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=S3Yl+E9YyB1uFs+KuY3OJBJx+doxHsAQQpFGaPW/tPn0N8ZngWwUZpTpwJluGiigH
-	 xL+2XP0255p9SxvVaibtUP1oA1WfptKXAWCGNpS/HJC8ZxQxqhUKccOfl0f02SqCFx
-	 GaROX8vqrDbOoUEVp8JH3VoLidg2+hpK/s/oPEQ4hNXsOBVkcGGWZx5FhkGVOahmf2
-	 UDIGgIqcZ+hOuuKNjYrP6e6zMFla80xAV+qWlRlvtVUAURwMd5HtqY+mKrJsDebI1r
-	 J1codIUUBH2v4G/gT8JuDPT7+B0RkrGunAVrH1hAlPHwkbOlJun3UxssNbu2XNYMRX
-	 i4HRxoWxU5xEQ==
-Received: from earth.mtl.collabora.ca (mtl.collabora.ca [66.171.169.34])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: detlev)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1E83317E0FBA;
-	Fri, 14 Feb 2025 17:41:34 +0100 (CET)
-From: Detlev Casanova <detlev.casanova@collabora.com>
-To: linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Alexey Charkov <alchark@gmail.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Dragan Simic <dsimic@manjaro.org>,
-	FUKAUMI Naoki <naoki@radxa.com>,
-	Johan Jonker <jbx6244@gmail.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Algea Cao <algea.cao@rock-chips.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Sugar Zhang <sugar.zhang@rock-chips.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	kernel@collabora.com
-Subject: [PATCH v6 0/3] Add HDMI audio on the rk3588 SoC
-Date: Fri, 14 Feb 2025 11:39:24 -0500
-Message-ID: <20250214164126.533685-1-detlev.casanova@collabora.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AZYdMw8w"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5de63846e56so4208551a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 08:43:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739551405; x=1740156205; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LRqWZT3EBc1tCny87S20bhNlMrhX8IzD8m5JUC/YP94=;
+        b=AZYdMw8wDlSUhHRLXRMOgWEsqhys4efbjNsUbYoGDWZOFFD1xxN2QslDnUvDhQDL9V
+         tzA0UiJ6OQf57/3sLypnrUt7X3ZkIdpMhsL3upcFE1VRXHIxMIRQAEcNZvRJYz/NoPUQ
+         zqtpRxZ0a/fr90L1RDp0gDWd49VUdCm1yNx0UQCqRGriwB6QwHTAs7VoSExSdx/Gn9T8
+         HOMKTKYqB2fWwoJ+YroQ/vWj9P7sEXNbr9VZMbQ95XPfx4WNCk9PEC7YBmO0d1Z68QdP
+         HrP67iqAKjR8JCqY0VSW+7H4PMSBdH1CrcoqaaTa8T5Z6kQ75qRMcTwhiz6T0fI5ched
+         aDcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739551405; x=1740156205;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LRqWZT3EBc1tCny87S20bhNlMrhX8IzD8m5JUC/YP94=;
+        b=tSKqfPqloX+wD9tJV7n1jC48gxRk/ZAmflFJ2oVpU38tVwgCeZSAJgUIjpYPb6esKu
+         Bh0+g0nABLpBya2khLdP1TMtIs6Abqj3mkdlFH7tG4ZeeDKz6JkC01doogupxZwFKK6t
+         dQFjMyIZ1bKpReWgqoFyTmgOcz8N31MueNt3cBSqqruIncbgI8z8cxMChTj4lBjpbd14
+         9Vbf2/dQhIosqlKV9jwDGdPsy1nx7XP2li0FqMyM7lkpvxM6uumhjzdMYRcz8qV0kW4A
+         OLlTistqJrsPLxJ2YucZP3Er+sb8jiTZWxQjyPhEv4ZUhNe2k9zYf/oUqdESS9PLqM2A
+         k0PA==
+X-Forwarded-Encrypted: i=1; AJvYcCVfUHuPy4YWhbDJQFvi5s+LZt1HjVrSdIBkC7ofhIk7EzeUb4fa0P3SwQikwUulXmKTTINPMJXFRzs2itY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeTHoyut3VFFN6hLv9jxEwnQXEzvFEhBZu+5wcQS808uJyftk+
+	T6gKtFr39Ian9m9wbJFcm5X4dy5jYn/KKZ29cyR5JHC6gv9K2xi7b1Hvkq9mZtw=
+X-Gm-Gg: ASbGnctML+gJW3aMFMUKBt9j3lP0iB4aguMy63zQl1ea7IHUaHkdKiomRKTVvB7J2pH
+	Y4gFZXszJX4JLQXNJZXsGLFHukoD+SL8Jc8m1EIbeF5htZR8XcZO2d3uc3FpuUgO9YzNKjnXKIO
+	ZW8lHhVOxc/CDMIj5T3UoSrvb0blkeVovV0mtYk0OxFSeEUvuFix5hEGLyf+H/f0IjY0CdhJ9be
+	467epFwYWWVlEnJq+vQZWeRvJ4tmXkLpajIYvZH6g+vPodmAbsy2jCOrYbVeAhiSwQR27Fzh7oP
+	pr0UhBT2bQJAanRX6AHb8tENf/yFvDGOEMqLaMAjVbxJARD5ljWg6SfG7WlbUU8jqCcJ
+X-Google-Smtp-Source: AGHT+IFJuSESmgIJ+f/guNQjZTVvQM42EUhcNb7YjZIMzJarYW5+AD5ul67Inm+uaDqq7havtVXdPQ==
+X-Received: by 2002:a17:906:c112:b0:aab:eefd:bfd8 with SMTP id a640c23a62f3a-ab7f389f31dmr1360440466b.49.1739551405379;
+        Fri, 14 Feb 2025 08:43:25 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:cd94:8ae7:d2b7:7369? ([2a01:e0a:982:cbb0:cd94:8ae7:d2b7:7369])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb6cb77994sm11523366b.64.2025.02.14.08.43.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2025 08:43:25 -0800 (PST)
+Message-ID: <0dcab844-d9df-421b-bf6d-462b40da7a14@linaro.org>
+Date: Fri, 14 Feb 2025 17:43:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH] arm64: defconfig: enable DRM_DISPLAY_CONNECTOR as a
+ module
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250214-arm64-display-connector-v1-1-306bca76316e@linaro.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250214-arm64-display-connector-v1-1-306bca76316e@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-To support HDMI audio on the rk3588 based devices, the generic HDMI
-Codec framework is used in the dw-hdmi-qp DRM bridge driver.
+On 14/02/2025 15:57, Dmitry Baryshkov wrote:
+> The display connector family of bridges is used on a plenty of ARM64
+> platforms (including, but not being limited to several Qualcomm Robotics
+> and Dragonboard platforms). It doesn't make sense for the DRM drivers to
+> select the driver, so select it via the defconfig.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>   arch/arm64/configs/defconfig | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index cb7da44155999b59aff95966f4cdc9107f2af46a..dfcc754962f7a40377d1f8e0f16983af5ace28f4 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -911,6 +911,7 @@ CONFIG_DRM_PANEL_SAMSUNG_ATNA33XC20=m
+>   CONFIG_DRM_PANEL_SITRONIX_ST7703=m
+>   CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
+>   CONFIG_DRM_PANEL_VISIONOX_VTDR6130=m
+> +CONFIG_DRM_DISPLAY_CONNECTOR=m
+>   CONFIG_DRM_FSL_LDB=m
+>   CONFIG_DRM_ITE_IT6263=m
+>   CONFIG_DRM_LONTIUM_LT8912B=m
+> 
+> ---
+> base-commit: ed58d103e6da15a442ff87567898768dc3a66987
+> change-id: 20250214-arm64-display-connector-c1c1569f9799
+> 
+> Best regards,
 
-The implementation is mainly based on the downstream driver, ported to the
-generic HDMI Codec framework [1] recently merged in the master branch.
-The parameters computation has been kept as is and the data stored in the
-dw_hdmi_qp struct as been cleaned up.
-
-The table for the N values has been edited to reflect N recommended values
-as well as CTS recommended values.
-
-The downstream kernel also implements a machine driver for HDMI audio but
-it is doing exactly what the simple-audio-card driver does, so use that
-instead in the RK3588 SoC device tree.
-
-Based on Linus' master branch.
-
-[1]: https://lore.kernel.org/all/20241224-drm-bridge-hdmi-connector-v10-0-dc89577cd438@linaro.org/
-
-Changes since v5:
- - Simplify audio math computation for N
- - Move hdmi0-sound node up with other address-less nodes
-
-Changes since v4:
- - Moved hdmi0_audio node the rk3588-base.dtsi
- - Enable hdmi0_audio in rk3588-rock-5b.dts
-
-Changes since v3:
- - Renamed function to start with dw_hdmi_qp
-
-Changes since v2:
- - Also clear the audio infoframe
- - Write AUDI_CONTENTS0 to its default value in case it gets overwritten.
- - Store tmds_char_rate in the dw_hdmi_qp struct in atomic_enable
- - Clear tmds_char_rate in atomic_disable and only write registers when
-   tmds_char_rate is not 0.
- - Do not use connector_state duplicates
-
-Changes since v1:
- - Remove useless audio_mutex (was used downstream for multiple drivers access
-   to audio functions)
- - Let hdmi_codec build and setup audio infoframes
- - Only access audio registers when connector is connected
- - Rebased on master branch
-
-Detlev Casanova (2):
-  arm64: dts: rockchip: Add HDMI0 audio output for rk3588 SoC
-  arm64: dts: rockchip: Enable HDMI0 audio output for Rock 5B
-
-Sugar Zhang (1):
-  drm/bridge: synopsys: Add audio support for dw-hdmi-qp
-
- arch/arm64/boot/dts/rockchip/rk3588-base.dtsi |  17 +
- .../boot/dts/rockchip/rk3588-rock-5b.dts      |   8 +
- drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c  | 489 ++++++++++++++++++
- 3 files changed, 514 insertions(+)
-
--- 
-2.48.1
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
