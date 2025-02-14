@@ -1,113 +1,109 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7282E263C65
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 12:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2117204F6E
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 12:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739535506; cv=none; b=TfHnKG3f6ySghM+33ARcKX01JDexxmUNlhWQZa97mg4OZXzxkPPHrveGW5Iks7S4NGewG0v5+Dq0zTWg6MzW1MSh0Kya+p+sI97QpFEsNbbXFpPvRXJCpw3dmjiFPQTot8pOWT2DpvdzdHMI32NxgnuwZSR3+kT0dpJlJKzM5h4=
+	t=1739535614; cv=none; b=grplO+RHKWmChAnGCwwS9HSFHSQfJCQ39wdv6kwjDQF9IgNuliLoD0ff127vhjYlf6VBuaTNM/uPZ1KAl5Y2O5VDtjIhJtAJkl0pG6WYEPHVyJHunhUs4Sr471YSJxHMAavRgJ50AZ3aizZR2wXkzcKH2ZuTDks1idDJ0PNnsF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739535506; c=relaxed/simple;
-	bh=7adhrVeGo6H4LUVbse/IZZXrXiXQD9ZHuQw6udBALFI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K16PjDsVd1ksMPCUtqVyFRSuczEmAQNFq/k/UgrIoErA9XwyGlyr9Yr7zn/VC0kW5EioLo4ikbAu79EOtkRdVImtuIGZrwaq3I7UkoDOu6X6ZVPMZ3MKQn0DuAmIs1SBkDgPlVvt4G5Te7Q7P6xwCrTUdBdDKaUTrNJbjjm/e/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MhAdqCTr; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739535614; c=relaxed/simple;
+	bh=De+vmjaqnFamTkhuUc13zkI64EmpCP/N52/DQmkKJmk=;
+	h=Mime-Version:Subject:From:To:CC:Message-ID:Date:Content-Type:
+	 References; b=CfsOhFIvwgIeXUWMTZCArG8dUSWMmYWvkcnNN3vDUiyD5VMyJ3Q8AfCiSYLYnI9iRV2qucdXMNszMNZi5KFwkk9ycLxhpGPcGVPAYPkmQ2yelEIfKibhkGRZhJhpYQcIgV1RNZtUiD0PwivzzSb659rTHl9Ug2dV4+wQjrINdzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GG2YeyLm; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MhAdqCTr"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-308f4436cb1so30793641fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 04:18:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739535502; x=1740140302; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XrzvjH3l79+hdw58qHfR52BGxRz04Zk6OgyBxJx9CpA=;
-        b=MhAdqCTresI8Ldo2NF1YLJwfP0rr36gW29O2N8ic2ZRptZhWMEUwi0YXqWuHqJ23KC
-         SrLrgKlNxLq0QAxewCsKDPSpV2fmeE973IwWia4/dS0LVBz2+YTcv7hxcTIvTiISQAkK
-         L60qzc8wL28gHsc29Zoq668HQ9Fw8wFFRqd5HqZ19KEUj++XwbD618rS+722WxILLTYp
-         GcZgYheHtSrR5ZMQliYzoFBYJ9KkSymWMNCe4ZuxM+7Pm7VlBqsvI9AE6QaycqnQs8qN
-         cp6hAbVVGjqLIOe7cr/f2Ko9K1h0wnFee9bnJV9v/TxNjPV0qvR3scOVWycozexc2UEV
-         Axqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739535502; x=1740140302;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XrzvjH3l79+hdw58qHfR52BGxRz04Zk6OgyBxJx9CpA=;
-        b=j/qIPasFfdnWPdSnwuCzF7lPmRXVZkAe3xy1UUQixVsSy9DzxMzhWB7hMKvfxN/6YG
-         6hWDyFi5NhmoYYcM/32ky1zOKeIa4a8A8MPotsS901XATy4BkNvqw67gAdfeb/em0gWh
-         LOqmO0DEJHRvfsTicTjfF5lPP9IbBpX+HcwGCZxOKwdqh099FxmeRcY9pl+TmM/DVv5X
-         ZfZnI6/MDB3kmrTnTaN0rcbNPQJrwrhlJmxjW1dIsBm5VY63GTu8Ldozeq+Vj7b+fQ4d
-         LsAP1J30ETDv1OTUnsohFITwwONpyx7f/o5dAumsQF3WWjlE4VK9/8WQ5t8qWfIhChpx
-         sLdA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdZ0xdQtA1v1hb1SQjuwqTvn6U9qgJsb4DZGCfTYbIR/MIDVq0le+0uL2EeQ9vdj7azymfb5EvM+yJGvA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydjlsV46uiBTFvMPKNAa8AB+4NNhEGqYjGaME59qPxSHUNYk9N
-	H+ang7ji023T/WoQmENtEJfXvhy3XqG46qYOWq27OzpnigB5mKwHa8HidCf40Cqz7niARvZRSNQ
-	e
-X-Gm-Gg: ASbGnctQGOXW34PD4GJcyoKl3kbrFn1jEpddUpp4KH7Mj6TCpdLhvaZs9Cjj3+W1xCR
-	EcWdmWGH0QVegIbVnN86H3X9fwqf5lxhwrQXlVNZz2HeRIqz0p7wcKMO2CYzY9k3TDpSt5XAgUS
-	NlwtS7LEATSxXg+dLMxIo4Zc4pdIeydDaBe58zvzCvntC1Phm/AwGz5vPIMxEE8hD0glcwmiyHp
-	2tHnyj0IoBL0zjPegZ6weanqX4+JoV9fAxMAA7F1obKlVW1EDmrR7oXXrJlfJA5lIHFsP59FDFg
-	KTmwBaJiSzZQGnpLYw07ZoV1IGdsz+n5DVnTmCP/G1YPzm1wYwLa2mlMsKqV/yXbUQ==
-X-Google-Smtp-Source: AGHT+IHGwPkIu7AEThobtQDnIS60RAWChZSIkpJXCQDqrg9REU22/CFOX8p/6/pVOccfoi684zy07Q==
-X-Received: by 2002:a2e:7d17:0:b0:309:1f60:82e9 with SMTP id 38308e7fff4ca-3091f60867emr5618761fa.10.1739535502348;
-        Fri, 14 Feb 2025 04:18:22 -0800 (PST)
-Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3092440033fsm777621fa.14.2025.02.14.04.18.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 04:18:21 -0800 (PST)
-From: Ulf Hansson <ulf.hansson@linaro.org>
-To: Linus <torvalds@linux-foundation.org>,
-	linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [GIT PULL] MMC fixes for v6.14-rc3
-Date: Fri, 14 Feb 2025 13:18:20 +0100
-Message-ID: <20250214121820.100545-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GG2YeyLm"
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250214122002epoutp01cd31378e51c8ab13cac0acb0e69f3ffa~kEmoSKUMn1703117031epoutp01S
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 12:20:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250214122002epoutp01cd31378e51c8ab13cac0acb0e69f3ffa~kEmoSKUMn1703117031epoutp01S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739535602;
+	bh=SE3/PBnj+kUlDZG7aR8PEM/EIX4WzDNA2ccU6mMTP4w=;
+	h=Subject:Reply-To:From:To:CC:Date:References:From;
+	b=GG2YeyLmZgLVQ/7PRz244WnciUMXDtV+ZkmQf2oYN4Fy1OyhgCgDuqCzXzQrPiNw5
+	 ymc9W4nU9+RZjY/IyXsxzxB97ezAtqvRD0oqw4PaNBeAysTWuYMKjVlHucpSoe7IIw
+	 Hsqaa3ujhmWEgb0h/kYo46sVoX7YcCtRcAD1Q0f8=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+	20250214122002epcas2p4e0d98b01441ebf8a38e0c9f431b2cee5~kEmn6xulS2864328643epcas2p4h;
+	Fri, 14 Feb 2025 12:20:02 +0000 (GMT)
+Received: from epcpadp1new (unknown [182.195.40.141]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4YvWMk32Frz4x9Pv; Fri, 14 Feb
+	2025 12:20:02 +0000 (GMT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Subject: [PATCH] scsi: ufs: Fix incorrect bit assignment for temperature
+ notifications
+Reply-To: keosung.park@samsung.com
+Sender: Keoseong Park <keosung.park@samsung.com>
+From: Keoseong Park <keosung.park@samsung.com>
+To: "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+	"avri.altman@wdc.com" <avri.altman@wdc.com>, "bvanassche@acm.org"
+	<bvanassche@acm.org>, "beanhuo@micron.com" <beanhuo@micron.com>,
+	"linux@roeck-us.net" <linux@roeck-us.net>, Daejun Park
+	<daejun7.park@samsung.com>, Keoseong Park <keosung.park@samsung.com>
+CC: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <1891546521.01739535602406.JavaMail.epsvc@epcpadp1new>
+Date: Fri, 14 Feb 2025 19:52:19 +0900
+X-CMS-MailID: 20250214105219epcms2p3a60810a14e6181092cb397924ce36019
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250214105219epcms2p3a60810a14e6181092cb397924ce36019
+References: <CGME20250214105219epcms2p3a60810a14e6181092cb397924ce36019@epcms2p3>
 
-Hi Linus,
+According to the UFS specification, the bit positions for
+`UFS_DEV_HIGH_TEMP_NOTIF` and `UFS_DEV_LOW_TEMP_NOTIF` were incorrectly
+assigned. This patch corrects the bit assignment to align with the
+specification.
 
-Here's a PR with a couple of MMC fixes intended for v6.14-rc3. Details about the
-highlights are as usual found in the signed tag.
+If this issue is not fixed, devices that support both high and low
+temperature notifications may function correctly, but devices that
+support only one of them may fail to trigger the corresponding
+exception event.
 
-Please pull this in!
+Fixes: e88e2d32200a ("scsi: ufs: core: Probe for temperature notification support")
+Signed-off-by: Keoseong Park <keosung.park@samsung.com>
+---
+ include/ufs/ufs.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Kind regards
-Ulf Hansson
+diff --git a/include/ufs/ufs.h b/include/ufs/ufs.h
+index d335bff1a310..8a24ed59ec46 100644
+--- a/include/ufs/ufs.h
++++ b/include/ufs/ufs.h
+@@ -385,8 +385,8 @@ enum {
+ 
+ /* Possible values for dExtendedUFSFeaturesSupport */
+ enum {
+-	UFS_DEV_LOW_TEMP_NOTIF		= BIT(4),
+-	UFS_DEV_HIGH_TEMP_NOTIF		= BIT(5),
++	UFS_DEV_HIGH_TEMP_NOTIF		= BIT(4),
++	UFS_DEV_LOW_TEMP_NOTIF		= BIT(5),
+ 	UFS_DEV_EXT_TEMP_NOTIF		= BIT(6),
+ 	UFS_DEV_HPB_SUPPORT		= BIT(7),
+ 	UFS_DEV_WRITE_BOOSTER_SUP	= BIT(8),
+-- 
+2.25.1
 
 
-The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
-
-  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v6.14-rc1
-
-for you to fetch changes up to 3e68abf2b9cebe76c6cd4b1aca8e95cd671035a3:
-
-  mmc: mtk-sd: Fix register settings for hs400(es) mode (2025-02-03 13:34:50 +0100)
-
-----------------------------------------------------------------
-MMC host:
- - mtk-sd: Fix register settings for hs400(es) mode
- - sdhci_am654: Revert patch for start-signal-voltage-switch
-
-----------------------------------------------------------------
-Andy-ld Lu (1):
-      mmc: mtk-sd: Fix register settings for hs400(es) mode
-
-Josua Mayer (1):
-      Revert "mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch"
-
- drivers/mmc/host/mtk-sd.c      | 31 ++++++++++++++++++++-----------
- drivers/mmc/host/sdhci_am654.c | 30 ------------------------------
- 2 files changed, 20 insertions(+), 41 deletions(-)
