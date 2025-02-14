@@ -1,80 +1,101 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C37E263C62
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 13:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D99F507;
+	Fri, 14 Feb 2025 13:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739538277; cv=none; b=L1NClnItMh9lJofFIOsEP5/kZYvweOFwYxG3WA2bRYAgCc0lptmGjtfRqrm5qXd5StMaYkgxvYzfxV4XfuUqH+LBO1OwjRqo2srCYoQWqrt+TDqIU3FkEvAKzIaw0UxVWtBYdFAVX+7imeqSKmuSP56ywVEMKfRJTw5TJeSKfEY=
+	t=1739538324; cv=none; b=fIH2SdtnjadkeaItSBtk2yDbcle7NIAyLuioi9slrKsZGSN1vPwpHFDD4mNOxlkP4zaDnTJ2mE7S+CxMAM5yioI6GJlLxh+C4Y+fkX0x+RKh88eSMbNLwF0PViEbOJ9I+yNvGcglsYbYWXK7YiY3ZiJzPiFKkPN8DrkTOKyhdbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739538277; c=relaxed/simple;
-	bh=kGaoVgiLrAptOxmwP6NwhdVGvRR6+XxpWuwi1Jikbtg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SMXHN9Yoh4egW8pjogxJyMmAcadUnPc/YR5I+6VQLTLDyZhPzyM49MjuoSW1dhcPVPQ5UIY05XtNSIjUXRbGvmLNftPsged8vmPICLAxaMXlCzKl3NoIf30+NvLrA2SYW+UnCiS2p523MxHcmkOxep/lSsMXxp3mCRsfemX8O04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=T2b7UZJc; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="T2b7UZJc"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-46fa734a0b8so17976211cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 05:04:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1739538274; x=1740143074; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vHmrVly4vSIGIYyzUZmKOCsqXSVt8EErpUP4XcPKMr0=;
-        b=T2b7UZJca3LzpCfkJPWK6V5bg+bkr/gLt14DsWvnb/zQXsYybaIz7eN/DjbqJmyBaj
-         P359geUYIxffyWtMCWN42ER2GUW8QJt8RTLiNjENCz3H8JuXUaY93ExY0/y2RJvZ423Y
-         nV2pdm/jtR25QpTj8JOOh+t0cNOIhV2x+XdRM=
+	s=arc-20240116; t=1739538324; c=relaxed/simple;
+	bh=TExxYGL2g1GIs+G42A58gEs8Fv/48l/Y6gh+XSSRzPc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UNde7hBeC86W3p4p+fdbQO8bAv3rMcnFR3JzfNVLinH/vGGLEwgtQQT4kdeDXysNkPG9NRvU9xfDvRtXKFyY/GCl+POkTBk4uDDZM4hucgNMwmKMMjCBqrE7jxDGGFkZ+LCnyxqJwiZB8Dlft8FB+Mhtm6ri5qloDWb5eSOakIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab7c81b8681so351752866b.0;
+        Fri, 14 Feb 2025 05:05:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739538274; x=1740143074;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vHmrVly4vSIGIYyzUZmKOCsqXSVt8EErpUP4XcPKMr0=;
-        b=DHhGMATIH9WAdS4TZHIb2JLDJ2Fk0Noa1fAbjOcDjYovagAheS/6zSU3CxP+ZtYDEB
-         sYoDCA3fLVKNzvRgr9HALq8XHZEumMC2fQO7iMVI2rtRb8MEoQi9t/XXQAB73JYxlg1n
-         oSJEPVIF7DPKN0KHn0YJ1JmwuRlhbCQfSsAU8uBJ7zmab3Brtv0DvzAuNTdvKxSiAjcq
-         9gpWK6pk3iNbiu//muoKkO3h2RHc9MasWm7VOL1glDyE5jpfoUnztZWoodRrkclObI9T
-         qDFvry5G1U+14TDpfvct2Vek6WJdrMGy/8hc0Ha65Dt+KoWRcsp2qqbLywE3R48m/mj7
-         wOBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNx8XKaA2yd12U+8JAfV+qDsoS7zCCp7LOyKiLP5iGQ+CNrilfPZEybjjY1guME9oTvGGn/Kcxhl6GOxU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuGmPYjkZ63QScJh2GlYftFbe+cqv8SkclE8Ls8ieMpslIj9Cj
-	M36I7ibo0fYv6qni1fGcskdJ1tRJ+dpMrGITjtZsoKszP3rIe9HxLjaTVx14C0WbKjYn7L/gO20
-	ttKG/6pNN2xj9pDwd8Wj9faP4gUgSqXs8kKaF9g==
-X-Gm-Gg: ASbGncsAp+7t7gw/9ZBiIfCHTU0rVX9wE26yvDFUmmQN1X5HTUC1rsvgcD/bdEBWJrI
-	zByeHTMU0MQoehHJxwTdtbyg7aoYI2VC2VRAWXx8UIqZWnPDbnZ/5x9yB5z8F3uqKrt5sc1c=
-X-Google-Smtp-Source: AGHT+IG5kEh3YPDEBWIqGR1p6/QdcG8b7Iu1qWbMrjez2iR0FJKFb8x2TLZXC+sfw+BSDXjsMLaUEB6y1UUJwV5p8cA=
-X-Received: by 2002:ac8:5988:0:b0:471:bf91:816b with SMTP id
- d75a77b69052e-471bf9182b2mr119967451cf.32.1739538274221; Fri, 14 Feb 2025
- 05:04:34 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739538321; x=1740143121;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=00ZjsPVy/ck54B3KQOxyx18bQduThNAmRPFGnxfYcmw=;
+        b=TyqRukQriF47yBO/QeZSRm+fICR613qn9Ic5asOGnJ0142kWEylcb121OUIiBrWdsO
+         E1Gy0Klt/3SQQTfHdDZ4Lsp7DjSI/2CoQtfnRBr8mM6VFqnDqZtW05k/ReL9CFae3d9x
+         rCif7mDzrUiz4WIg04wnPy0xAOfAs4ljxRxx9UWq7VOFq3FINHsq+QJEq9q0fQht0o3J
+         Y+RdUKM9JiBa8YysC9tIUjRhbXXOqNxSeKz0Ykepnkkn4fwrIYty+uzZJMg2DFkYSiOY
+         ICamVPD/eCJ18UOHk1940nIiu6qNP8dSqVHki4lyBLnW0a4n31vRAQS1qyy04hAGO42J
+         je0A==
+X-Forwarded-Encrypted: i=1; AJvYcCWNs4hfPYvHqjcs/aB9hop1j3NtMBXO3oJFDY5BQmPOiK/lkTb2zimntcwsO2jrTVNFAy3ZHjEx@vger.kernel.org, AJvYcCWkKZNb8bt3IuQsSPBSEzGZnf8l4TWSM0uY9QXwHhnQGiAdpj8B4q/KK4iVPTPjBTbq3Yq0RnKP9B6oWFc=@vger.kernel.org, AJvYcCXaGO0rqeR6MTWClseOFpGRgZOZvr2ASWyDdLNBkDy1X7KrhiPGgalcO0ER9P9siOT2Eg0vzXfPb7Hn@vger.kernel.org
+X-Gm-Message-State: AOJu0YxF8bY1Qn58blH37BE6ClCVmigvbBHjcyCfveJXiuKdtm/aCxe2
+	AnWid66DWSuTC7b0KwrQFXk/sp90bneI73QngHaJ0Vmd1QK70kQZ
+X-Gm-Gg: ASbGnctoTCsF1g+/dPTrS90r5/z3WKx6sQbvKHzuSLsX1UsYMV59JJs+b6wu6vDRQXU
+	0tBhEQsy7e/MfY9h24MBjqflLfWXC3L5jJXGuZlPrWeXLEc4MRbF0Tatdjr/hKgnBbEhd1dsp03
+	NwasiXbgIHTzZWk/u8OKR8TlY9BAhEz5cGGwoni7IhO7NZZ+QLktT7cOsRFomw+Ii0V7FtylEJZ
+	gtGBQ3KPfq44NmzJhlMzuMBI/wo83rEvWBjgvVbn7wVbNRvuuL60oZDmqHoYz+SzDdEPkBI1WIV
+	nwzO5Ac=
+X-Google-Smtp-Source: AGHT+IHQk+IPmCfAJHCjcco7sECqNGd7fWJltlvwAvnfYmj/VMo7R3fuWFr2fvA/4EBMwe1nk5M9vw==
+X-Received: by 2002:a17:906:dc91:b0:ab7:c4db:a044 with SMTP id a640c23a62f3a-ab7f3714983mr1158317666b.8.1739538311827;
+        Fri, 14 Feb 2025 05:05:11 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:70::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece270967sm2885102a12.55.2025.02.14.05.05.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 05:05:11 -0800 (PST)
+Date: Fri, 14 Feb 2025 05:05:08 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, Hayes Wang <hayeswang@realtek.com>,
+	linux-usb@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 1/2] net: Assert proper context while calling
+ napi_schedule()
+Message-ID: <20250214-belligerent-invaluable-nightingale-cd8d95@leitao>
+References: <20250212174329.53793-1-frederic@kernel.org>
+ <20250212174329.53793-2-frederic@kernel.org>
+ <20250212194820.059dac6f@kernel.org>
+ <20250213-translucent-nightingale-of-upgrade-b41f2e@leitao>
+ <20250213071426.01490615@kernel.org>
+ <20250213-camouflaged-shellfish-of-refinement-79e3df@leitao>
+ <20250213110452.5684bc39@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204-fuse-fixes-v1-1-c1e1bed8cdb7@kernel.org>
- <CAJfpegsOOv7c3R5zQZWWvYEgZxyWGCJyf8z=A8swQQZsGyvuDQ@mail.gmail.com> <2ec361038d22e9ed5dbe8e69b08a0a31685c7274.camel@kernel.org>
-In-Reply-To: <2ec361038d22e9ed5dbe8e69b08a0a31685c7274.camel@kernel.org>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Fri, 14 Feb 2025 14:04:23 +0100
-X-Gm-Features: AWEUYZmahJ6iPY3B9j5L8nh0hKDFOG0aES3WJjmrI2sFzF2I1X0TUqGuRE9Y918
-Message-ID: <CAJfpegvKGa6RzxNKCDER+hXvKCJuMzeHq-xQaRNYzgQr_9yhUg@mail.gmail.com>
-Subject: Re: [PATCH] fuse: don't set file->private_data in fuse_conn_waiting_read
-To: Jeff Layton <jlayton@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213110452.5684bc39@kernel.org>
 
-On Fri, 14 Feb 2025 at 13:58, Jeff Layton <jlayton@kernel.org> wrote:
+On Thu, Feb 13, 2025 at 11:04:52AM -0800, Jakub Kicinski wrote:
+> On Thu, 13 Feb 2025 10:14:02 -0800 Breno Leitao wrote:
+> > > The problem is a bit nasty, on a closer look. We don't know if netcons
+> > > is called in IRQ context or not. How about we add an hrtimer to netdevsim,
+> > > schedule it to fire 5usec in the future instead of scheduling NAPI
+> > > immediately? We can call napi_schedule() from a timer safely.
+> > > 
+> > > Unless there's another driver which schedules NAPI from xmit.
+> > > Then we'd need to try harder to fix this in netpoll.
+> > > veth does use NAPI on xmit but it sets IFF_DISABLE_NETPOLL already.  
+> > 
+> > Just to make sure I follow the netpoll issue. What would you like to fix
+> > in netpoll exactly?
+> 
+> Nothing in netpoll, the problem is that netdevsim calls napi_schedule
 
-> It's just an unnecessary assignment. Nothing will look at or use
-> private_data in this codepath, so there is no need to set it.
+Hm, you said the following above: 
 
-I think the reason it was done this way is to return a sane value even
-in the case of small reads (i.e. char-by-char).  It's unlikely to
-matter in real life, but removing it is not a big enough win to be
-worth risking it.
+	Then we'd need to try harder to fix this in netpoll.
 
-Thanks,
-Miklos
+I was curious about the meaning of that statement?
+
+Thanks
+--breno
