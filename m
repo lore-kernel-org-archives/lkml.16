@@ -1,225 +1,196 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9E82753FD
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 03:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D24114F136
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 03:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739502338; cv=none; b=aXHUh70PDBadDpvsm33UaFFJseWH2zOSujNeGNxcCGsQ6nNB2M7st1qDlvlc1cfArEV8IQJa/HfCiEy/uLXFVOAnMw6OXRxdO+4lgMYZnxZdQVUd+AFnkzVS/+qv5mXDQMB0aqu9KB92BzlfdC1il7Md3EryXlQHcnfIArr5rSA=
+	t=1739502369; cv=none; b=ozz+ybv15mtHCuZxbvQ2dCKis9QWGWE5yEZyiyF8yGtCBY8uqo0BwwblQZW0Gh6oJXkqGPQjb0hiXCcPk+29txPPRMuCUnyaBQolN35ZpMfk6lNzfDTO9vHb7IRfOHBiQTVwTzeCEsc6lu1aWVdVA8MR+JGKplTBhh8AC8828q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739502338; c=relaxed/simple;
-	bh=TJDCSBAj2ec3338N/q1YZZCvJ2Une4i1PCUFYWpwQNY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XnXoYdVLwBzo1HumfXdHDCUpVMAmer75noClJGE4CQ6TMK4MSBXcXavbIl8g0vU1GTq3w8k3SzfaXMIM5/fGqZ6GItlCQQFoV2ZYa1iuYZxwX8mMsJ/STazQcBaXGkrCJx5j1BLxCaridDVetrxri4DL4f+UiyYdyR+PN3OVi/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=GRwzHSOw; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1739502369; c=relaxed/simple;
+	bh=0KK8ie8pUbGRVTOX6wMygelrWyukU8TVfUsQunSLpqk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=LcICbHJf8+5U1YIR+Pj/SOr/mgN6EAMAkw2jrlxwiSjh/+73gheEux1JV+kLy0p04M32bPyfMppNUZDzTE/xnEGgprwC5g065eH57sACsB+v3PAHxLIJxan3GT9QmQC1W4Ob+wNrekpgmOJmlu9T3f2Q/6ysjB8fcLesJ3U2Y0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GTvU44to; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="GRwzHSOw"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fa7465baceso3241292a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:05:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1739502334; x=1740107134; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=880EogUQ7YhTtxOXOr4zFxC4yPI4QQKvoHhCveXLots=;
-        b=GRwzHSOwGUOCdTx1eJgNHclXW8qxNa8otx49Y24oxx94G8lZUn6Rn94o/o/Jrwh+eW
-         SjvTdrdlQwRixDeUKAFs05674s+hwHbNFe/WNZ3MtsTBwStmePCc/O1l04oXGNM1WFVa
-         P+BRcL8BR/wl3AhwVtVyl2T3cYiaOq39l3H+7bR1lEntl/GcN3B+yU315gyGlPcC3/CZ
-         R8X4uv+FxNzdSjIGXhnOXstWALCXxOY2TwuayPdVqzSZ0a/M+ouWeMp7A/70mRFEUrUR
-         dpao/Y6NpUAPTVIkMHsck9wWXEuIqdmb2l15PP0bLAlqsOIz/A5zkswpA0u3fWgi7kxI
-         69Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739502334; x=1740107134;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=880EogUQ7YhTtxOXOr4zFxC4yPI4QQKvoHhCveXLots=;
-        b=i0wTgAQ5ly7ZlXI6g7noXPLGa+Lx7iHEQ9VadgURTDfKiP6jFAQItivFNeLewgNArV
-         ue/42OlH5UQtEOKUqCbNYgL5TByJdNYzqkPLoAaf8oaw46/9vqk7V64cWOgyKq4ih480
-         vK5JodoyCCbeHAbE6Otf8pk65GMwmVHAL6yrwOTML2tWGjm1+jx10/cPRpSElgggdPrf
-         X3+K63YDJZmRcfV0iADC413OFGFF40qxsXTcO21DFcILm8X9zoSUIWiAgEC+OAr8JL2U
-         qa+Ia5If+fnCOkOdbc84xYC1nc7N0tUh0eiMKeUSxTV1yBf4qIZhs8Lo7u8Oh2kScuSn
-         8jFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVX/yrA2H+V9UDgVMiHR7N789pUFUdRMVAE/eCiYpnPwPOYR3VIoVhoEdE3lc6+jsp2lfOwg/UBRxtnHVI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmDBQpoxabxdiqEbZhu0YAmu9tf/KGrxEixHSD9a4vvqqEYS7Y
-	Hl7Qy3VDE/e6c0Z5fGETJbjv8XmjEQvCfa9b8woNecfIk2mPRftLYFJgpL3dJSo=
-X-Gm-Gg: ASbGnctCoLYUF9cLwky+huCmzKflbgjRF9r/xsr/fs2GE87Url45KvvY8TyrOR849Cq
-	TNtEjuUprDuGHoR55mDNLbZ/6erEvKxwC3nk691SEaM5YNgGNOHHKOnbzLqbLS3opMSxSg5v3WR
-	dP9NGetiFHbKlO8cHUTWygTkio69Pp4kiqgvvIzee/WjinwgmMjP+0uQhOj2QsJ0GJRRWcgz4cs
-	3e2rh+9GZ2fe6I2MfO0nwJhg7pZrFid0i6mcHtmEBe4QWfFP7WMiCKOtkjnDwcyrs/Qj+QOnEuh
-	49I3/j/bq5i5V3Qfnio4APOGVDocq1542/6rSMqvFqN0Ti/XnVkNhMBi
-X-Google-Smtp-Source: AGHT+IE0j4ifNKT9H6YLxFTZoD5WzE6IGo9wOiQNtVXNtqnV2ixJQoeneDIT/l4UNMn6vQM3UgH1KQ==
-X-Received: by 2002:a05:6a20:431b:b0:1ee:6032:b1e9 with SMTP id adf61e73a8af0-1ee6b360aa3mr9894032637.21.1739502334088;
-        Thu, 13 Feb 2025 19:05:34 -0800 (PST)
-Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73242568a78sm2130486b3a.55.2025.02.13.19.05.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 19:05:33 -0800 (PST)
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-To: linux@armlinux.org.uk,
-	ezra@easyb.ch,
-	david@redhat.com,
-	hughd@google.com,
-	ryan.roberts@arm.com,
-	akpm@linux-foundation.org,
-	muchun.song@linux.dev
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Ezra Buehler <ezra.buehler@husqvarnagroup.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] arm: pgtable: fix NULL pointer dereference issue
-Date: Fri, 14 Feb 2025 11:03:49 +0800
-Message-Id: <20250214030349.45524-1-zhengqi.arch@bytedance.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GTvU44to"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739502368; x=1771038368;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=0KK8ie8pUbGRVTOX6wMygelrWyukU8TVfUsQunSLpqk=;
+  b=GTvU44to6RbjRDTDuKRzeVbF2l+s8eA3J9gl2W3RfacBX/DMEPCIRaid
+   rteQXAZnN7QHAMf0bLW16Vp1PnJXg+h3n+G9tI2Y0QYAHLNnklywchAc6
+   SvqU55JxbYXi3Ug+Jyptx3fGPbHiq+AfbeG8iRQ6p9T/sEMcs0WpfCA7C
+   0pKzUaOGxZjpzvqFFgvLe7S3hJDRcpwgXNoKrYNp8iE4jfDVRprlXHJfT
+   Q25CMeQUdcoBnnGAUQXBD/QUP2x3V0lPWvGuz5L77FJ7ogLSuemuSDQNl
+   L5C9wZXR5gvMFKeb8DwD2sm3CewLiYvs6zeM/NmToqMosWnnnijmf0kCR
+   w==;
+X-CSE-ConnectionGUID: UtSNGxNNThiCzrwHGCbf8Q==
+X-CSE-MsgGUID: cI24gepUTemVFUFigHBrzQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="50451873"
+X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
+   d="scan'208";a="50451873"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 19:06:07 -0800
+X-CSE-ConnectionGUID: qWsEQ2v7QhSj8A7eVUM5pg==
+X-CSE-MsgGUID: j1rurqN5TXmzGcRaux8hmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="150511842"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 13 Feb 2025 19:06:05 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tim1j-00190b-03;
+	Fri, 14 Feb 2025 03:06:03 +0000
+Date: Fri, 14 Feb 2025 11:05:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nicolas Pitre <npitre@baylibre.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: security/keys/proc.c:211:40: warning: '%llu' directive writing
+ between 1 and 18 bytes into a region of size 16
+Message-ID: <202502141047.JMdfsKrA-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-When update_mmu_cache_range() is called by update_mmu_cache(), the vmf
-parameter is NULL, which will cause a NULL pointer dereference issue in
-adjust_pte():
+Hi Nicolas,
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000030 when read
-Hardware name: Atmel AT91SAM9
-PC is at update_mmu_cache_range+0x1e0/0x278
-LR is at pte_offset_map_rw_nolock+0x18/0x2c
-Call trace:
- update_mmu_cache_range from remove_migration_pte+0x29c/0x2ec
- remove_migration_pte from rmap_walk_file+0xcc/0x130
- rmap_walk_file from remove_migration_ptes+0x90/0xa4
- remove_migration_ptes from migrate_pages_batch+0x6d4/0x858
- migrate_pages_batch from migrate_pages+0x188/0x488
- migrate_pages from compact_zone+0x56c/0x954
- compact_zone from compact_node+0x90/0xf0
- compact_node from kcompactd+0x1d4/0x204
- kcompactd from kthread+0x120/0x12c
- kthread from ret_from_fork+0x14/0x38
-Exception stack(0xc0d8bfb0 to 0xc0d8bff8)
+FYI, the error/warning still remains.
 
-To fix it, do not rely on whether 'ptl' is equal to decide whether to hold
-the pte lock, but decide it by whether CONFIG_SPLIT_PTE_PTLOCKS is
-enabled. In addition, if two vmas map to the same PTE page, there is no
-need to hold the pte lock again, otherwise a deadlock will occur. Just add
-the need_lock parameter to let adjust_pte() know this information.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   68763b29e0a6441f57f9ee652bbf8e7bc59183e5
+commit: 00a31dd3acea0f88f947fc71e268ebb34b59f218 asm-generic/div64: optimize/simplify __div64_const32()
+date:   4 months ago
+config: arm-randconfig-r002-20220811 (https://download.01.org/0day-ci/archive/20250214/202502141047.JMdfsKrA-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250214/202502141047.JMdfsKrA-lkp@intel.com/reproduce)
 
-Reported-by: Ezra Buehler <ezra.buehler@husqvarnagroup.com>
-Closes: https://lore.kernel.org/lkml/CAM1KZSmZ2T_riHvay+7cKEFxoPgeVpHkVFTzVVEQ1BO0cLkHEQ@mail.gmail.com/
-Fixes: fc9c45b71f43 ("arm: adjust_pte() use pte_offset_map_rw_nolock()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
----
-Changes in v2:
- - change Ezra's email address (Ezra Buehler)
- - some cleanups (David Hildenbrand)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502141047.JMdfsKrA-lkp@intel.com/
 
- arch/arm/mm/fault-armv.c | 38 ++++++++++++++++++++++++++------------
- 1 file changed, 26 insertions(+), 12 deletions(-)
+All warnings (new ones prefixed by >>):
 
-diff --git a/arch/arm/mm/fault-armv.c b/arch/arm/mm/fault-armv.c
-index 2bec87c3327d2..ea4c4e15f0d31 100644
---- a/arch/arm/mm/fault-armv.c
-+++ b/arch/arm/mm/fault-armv.c
-@@ -62,7 +62,7 @@ static int do_adjust_pte(struct vm_area_struct *vma, unsigned long address,
- }
- 
- static int adjust_pte(struct vm_area_struct *vma, unsigned long address,
--		      unsigned long pfn, struct vm_fault *vmf)
-+		      unsigned long pfn, bool need_lock)
- {
- 	spinlock_t *ptl;
- 	pgd_t *pgd;
-@@ -99,12 +99,11 @@ static int adjust_pte(struct vm_area_struct *vma, unsigned long address,
- 	if (!pte)
- 		return 0;
- 
--	/*
--	 * If we are using split PTE locks, then we need to take the page
--	 * lock here.  Otherwise we are using shared mm->page_table_lock
--	 * which is already locked, thus cannot take it.
--	 */
--	if (ptl != vmf->ptl) {
-+	if (need_lock) {
-+		/*
-+		 * Use nested version here to indicate that we are already
-+		 * holding one similar spinlock.
-+		 */
- 		spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
- 		if (unlikely(!pmd_same(pmdval, pmdp_get_lockless(pmd)))) {
- 			pte_unmap_unlock(pte, ptl);
-@@ -114,7 +113,7 @@ static int adjust_pte(struct vm_area_struct *vma, unsigned long address,
- 
- 	ret = do_adjust_pte(vma, address, pfn, pte);
- 
--	if (ptl != vmf->ptl)
-+	if (need_lock)
- 		spin_unlock(ptl);
- 	pte_unmap(pte);
- 
-@@ -123,16 +122,18 @@ static int adjust_pte(struct vm_area_struct *vma, unsigned long address,
- 
- static void
- make_coherent(struct address_space *mapping, struct vm_area_struct *vma,
--	      unsigned long addr, pte_t *ptep, unsigned long pfn,
--	      struct vm_fault *vmf)
-+	      unsigned long addr, pte_t *ptep, unsigned long pfn)
- {
- 	struct mm_struct *mm = vma->vm_mm;
- 	struct vm_area_struct *mpnt;
- 	unsigned long offset;
-+	unsigned long pmd_start_addr, pmd_end_addr;
- 	pgoff_t pgoff;
- 	int aliases = 0;
- 
- 	pgoff = vma->vm_pgoff + ((addr - vma->vm_start) >> PAGE_SHIFT);
-+	pmd_start_addr = ALIGN_DOWN(addr, PMD_SIZE);
-+	pmd_end_addr = pmd_start_addr + PMD_SIZE;
- 
- 	/*
- 	 * If we have any shared mappings that are in the same mm
-@@ -141,6 +142,14 @@ make_coherent(struct address_space *mapping, struct vm_area_struct *vma,
- 	 */
- 	flush_dcache_mmap_lock(mapping);
- 	vma_interval_tree_foreach(mpnt, &mapping->i_mmap, pgoff, pgoff) {
-+		/*
-+		 * If we are using split PTE locks, then we need to take the pte
-+		 * lock. Otherwise we are using shared mm->page_table_lock which
-+		 * is already locked, thus cannot take it.
-+		 */
-+		bool need_lock = IS_ENABLED(CONFIG_SPLIT_PTE_PTLOCKS);
-+		unsigned long mpnt_addr;
-+
- 		/*
- 		 * If this VMA is not in our MM, we can ignore it.
- 		 * Note that we intentionally mask out the VMA
-@@ -151,7 +160,12 @@ make_coherent(struct address_space *mapping, struct vm_area_struct *vma,
- 		if (!(mpnt->vm_flags & VM_MAYSHARE))
- 			continue;
- 		offset = (pgoff - mpnt->vm_pgoff) << PAGE_SHIFT;
--		aliases += adjust_pte(mpnt, mpnt->vm_start + offset, pfn, vmf);
-+		mpnt_addr = mpnt->vm_start + offset;
-+
-+		/* Avoid deadlocks by not grabbing the same PTE lock again. */
-+		if (mpnt_addr >= pmd_start_addr && mpnt_addr < pmd_end_addr)
-+			need_lock = false;
-+		aliases += adjust_pte(mpnt, mpnt_addr, pfn, need_lock);
- 	}
- 	flush_dcache_mmap_unlock(mapping);
- 	if (aliases)
-@@ -194,7 +208,7 @@ void update_mmu_cache_range(struct vm_fault *vmf, struct vm_area_struct *vma,
- 		__flush_dcache_folio(mapping, folio);
- 	if (mapping) {
- 		if (cache_is_vivt())
--			make_coherent(mapping, vma, addr, ptep, pfn, vmf);
-+			make_coherent(mapping, vma, addr, ptep, pfn);
- 		else if (vma->vm_flags & VM_EXEC)
- 			__flush_icache_all();
- 	}
+   security/keys/proc.c: In function 'proc_keys_show':
+   security/keys/proc.c:217:45: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
+     217 |                         sprintf(xbuf, "%lluw", div_u64(timo, 60 * 60 * 24 * 7));
+         |                                             ^
+   security/keys/proc.c:217:25: note: 'sprintf' output between 3 and 17 bytes into a destination of size 16
+     217 |                         sprintf(xbuf, "%lluw", div_u64(timo, 60 * 60 * 24 * 7));
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   security/keys/proc.c:215:45: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
+     215 |                         sprintf(xbuf, "%llud", div_u64(timo, 60 * 60 * 24));
+         |                                             ^
+   security/keys/proc.c:215:25: note: 'sprintf' output between 3 and 17 bytes into a destination of size 16
+     215 |                         sprintf(xbuf, "%llud", div_u64(timo, 60 * 60 * 24));
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   security/keys/proc.c:213:44: warning: 'h' directive writing 1 byte into a region of size between 0 and 15 [-Wformat-overflow=]
+     213 |                         sprintf(xbuf, "%lluh", div_u64(timo, 60 * 60));
+         |                                            ^
+   security/keys/proc.c:213:25: note: 'sprintf' output between 3 and 18 bytes into a destination of size 16
+     213 |                         sprintf(xbuf, "%lluh", div_u64(timo, 60 * 60));
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> security/keys/proc.c:211:40: warning: '%llu' directive writing between 1 and 18 bytes into a region of size 16 [-Wformat-overflow=]
+     211 |                         sprintf(xbuf, "%llum", div_u64(timo, 60));
+         |                                        ^~~~
+   security/keys/proc.c:211:39: note: directive argument in the range [0, 576460752303423487]
+     211 |                         sprintf(xbuf, "%llum", div_u64(timo, 60));
+         |                                       ^~~~~~~
+   security/keys/proc.c:211:25: note: 'sprintf' output between 3 and 20 bytes into a destination of size 16
+     211 |                         sprintf(xbuf, "%llum", div_u64(timo, 60));
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +211 security/keys/proc.c
+
+^1da177e4c3f41 Linus Torvalds 2005-04-16  152  
+^1da177e4c3f41 Linus Torvalds 2005-04-16  153  static int proc_keys_show(struct seq_file *m, void *v)
+^1da177e4c3f41 Linus Torvalds 2005-04-16  154  {
+^1da177e4c3f41 Linus Torvalds 2005-04-16  155  	struct rb_node *_p = v;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  156  	struct key *key = rb_entry(_p, struct key, serial_node);
+ab5c69f01313c8 Eric Biggers   2017-09-27  157  	unsigned long flags;
+927942aabbbe50 David Howells  2010-06-11  158  	key_ref_t key_ref, skey_ref;
+074d58989569b3 Baolin Wang    2017-11-15  159  	time64_t now, expiry;
+03dab869b7b239 David Howells  2016-10-26  160  	char xbuf[16];
+363b02dab09b32 David Howells  2017-10-04  161  	short state;
+074d58989569b3 Baolin Wang    2017-11-15  162  	u64 timo;
+06ec7be557a125 Michael LeMay  2006-06-26  163  	int rc;
+06ec7be557a125 Michael LeMay  2006-06-26  164  
+4bdf0bc3003141 David Howells  2013-09-24  165  	struct keyring_search_context ctx = {
+ede0fa98a900e6 Eric Biggers   2019-02-22  166  		.index_key		= key->index_key,
+4aa68e07d84556 Eric Biggers   2017-09-18  167  		.cred			= m->file->f_cred,
+462919591a1791 David Howells  2014-09-16  168  		.match_data.cmp		= lookup_user_key_possessed,
+462919591a1791 David Howells  2014-09-16  169  		.match_data.raw_data	= key,
+462919591a1791 David Howells  2014-09-16  170  		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
+dcf49dbc8077e2 David Howells  2019-06-26  171  		.flags			= (KEYRING_SEARCH_NO_STATE_CHECK |
+dcf49dbc8077e2 David Howells  2019-06-26  172  					   KEYRING_SEARCH_RECURSE),
+4bdf0bc3003141 David Howells  2013-09-24  173  	};
+4bdf0bc3003141 David Howells  2013-09-24  174  
+028db3e290f15a Linus Torvalds 2019-07-10  175  	key_ref = make_key_ref(key, 0);
+927942aabbbe50 David Howells  2010-06-11  176  
+927942aabbbe50 David Howells  2010-06-11  177  	/* determine if the key is possessed by this process (a test we can
+927942aabbbe50 David Howells  2010-06-11  178  	 * skip if the key does not indicate the possessor can view it
+927942aabbbe50 David Howells  2010-06-11  179  	 */
+028db3e290f15a Linus Torvalds 2019-07-10  180  	if (key->perm & KEY_POS_VIEW) {
+028db3e290f15a Linus Torvalds 2019-07-10  181  		rcu_read_lock();
+e59428f721ee09 David Howells  2019-06-19  182  		skey_ref = search_cred_keyrings_rcu(&ctx);
+028db3e290f15a Linus Torvalds 2019-07-10  183  		rcu_read_unlock();
+927942aabbbe50 David Howells  2010-06-11  184  		if (!IS_ERR(skey_ref)) {
+927942aabbbe50 David Howells  2010-06-11  185  			key_ref_put(skey_ref);
+927942aabbbe50 David Howells  2010-06-11  186  			key_ref = make_key_ref(key, 1);
+927942aabbbe50 David Howells  2010-06-11  187  		}
+927942aabbbe50 David Howells  2010-06-11  188  	}
+927942aabbbe50 David Howells  2010-06-11  189  
+4aa68e07d84556 Eric Biggers   2017-09-18  190  	/* check whether the current task is allowed to view the key */
+f5895943d91b41 David Howells  2014-03-14  191  	rc = key_task_permission(key_ref, ctx.cred, KEY_NEED_VIEW);
+06ec7be557a125 Michael LeMay  2006-06-26  192  	if (rc < 0)
+028db3e290f15a Linus Torvalds 2019-07-10  193  		return 0;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  194  
+074d58989569b3 Baolin Wang    2017-11-15  195  	now = ktime_get_real_seconds();
+^1da177e4c3f41 Linus Torvalds 2005-04-16  196  
+028db3e290f15a Linus Torvalds 2019-07-10  197  	rcu_read_lock();
+028db3e290f15a Linus Torvalds 2019-07-10  198  
+^1da177e4c3f41 Linus Torvalds 2005-04-16  199  	/* come up with a suitable timeout value */
+ab5c69f01313c8 Eric Biggers   2017-09-27  200  	expiry = READ_ONCE(key->expiry);
+39299bdd254668 David Howells  2023-12-09  201  	if (expiry == TIME64_MAX) {
+^1da177e4c3f41 Linus Torvalds 2005-04-16  202  		memcpy(xbuf, "perm", 5);
+074d58989569b3 Baolin Wang    2017-11-15  203  	} else if (now >= expiry) {
+^1da177e4c3f41 Linus Torvalds 2005-04-16  204  		memcpy(xbuf, "expd", 5);
+7b1b9164598286 David Howells  2009-09-02  205  	} else {
+074d58989569b3 Baolin Wang    2017-11-15  206  		timo = expiry - now;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  207  
+^1da177e4c3f41 Linus Torvalds 2005-04-16  208  		if (timo < 60)
+074d58989569b3 Baolin Wang    2017-11-15  209  			sprintf(xbuf, "%llus", timo);
+^1da177e4c3f41 Linus Torvalds 2005-04-16  210  		else if (timo < 60*60)
+074d58989569b3 Baolin Wang    2017-11-15 @211  			sprintf(xbuf, "%llum", div_u64(timo, 60));
+^1da177e4c3f41 Linus Torvalds 2005-04-16  212  		else if (timo < 60*60*24)
+074d58989569b3 Baolin Wang    2017-11-15  213  			sprintf(xbuf, "%lluh", div_u64(timo, 60 * 60));
+^1da177e4c3f41 Linus Torvalds 2005-04-16  214  		else if (timo < 60*60*24*7)
+074d58989569b3 Baolin Wang    2017-11-15  215  			sprintf(xbuf, "%llud", div_u64(timo, 60 * 60 * 24));
+^1da177e4c3f41 Linus Torvalds 2005-04-16  216  		else
+074d58989569b3 Baolin Wang    2017-11-15  217  			sprintf(xbuf, "%lluw", div_u64(timo, 60 * 60 * 24 * 7));
+^1da177e4c3f41 Linus Torvalds 2005-04-16  218  	}
+^1da177e4c3f41 Linus Torvalds 2005-04-16  219  
+363b02dab09b32 David Howells  2017-10-04  220  	state = key_read_state(key);
+363b02dab09b32 David Howells  2017-10-04  221  
+
+:::::: The code at line 211 was first introduced by commit
+:::::: 074d58989569b39f04294c90ef36dd82b8c2cc1a security: keys: Replace time_t/timespec with time64_t
+
+:::::: TO: Baolin Wang <baolin.wang@linaro.org>
+:::::: CC: David Howells <dhowells@redhat.com>
+
 -- 
-2.20.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
