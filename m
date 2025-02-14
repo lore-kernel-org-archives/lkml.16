@@ -1,35 +1,35 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from air.basealt.ru (air.basealt.ru [193.43.8.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00261DB92A;
-	Fri, 14 Feb 2025 21:50:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C161940A1;
+	Fri, 14 Feb 2025 21:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.43.8.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739569817; cv=none; b=ZWRWQT7UPH56AIc6JkSjFHmvo/7w+J2QrdQErk4ybculYjjQOedlyo8/iKFTSSb2qxprdKO4w12/yibbgU0h7eMbHvaBscTVXMHjuautfUDZG+psUykKKVs0I0YoiMD/P45Va/xwjrOmHtYpdgFrOjy3OniRkkmPAlr71bWZQzw=
+	t=1739569926; cv=none; b=cm/AYR5zxvm9Pt7t12VfNk71pqjz3oPD39oRVcHb4RTR1mIRxo62yCB60jgOsQdxP9MfIXg5MW9RlQbTXMpZvDfS4HklR5gy5XdIOFOKD7lc6RhxnVaeVtBoImX1iZPGAEyn+rVoPUyx9yKXylz1eTP46p61iEBdZPhpjUsI7OI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739569817; c=relaxed/simple;
-	bh=Kckz2TLbEWVxhN4tyZx07MCeYrJg4RMfeph7RfTIB/I=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=c7saKthS47CyjT2HnKtnuqhsL0JFutyOGvaCFIST8EhpcMITl4gjXDe1JxEV2UjNb+FlLCmIKR68Lb8dGwEoj/VI1CXNWK9CC/WKzWWpIv+ZWfSJHfLp6LNT9W6CE0+sap+pbXlScStPap5b1DWzRf9nts9h3Hc/F7AotC2DPjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cdOhJbgS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdOhJbgS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 408DCC4CED1;
-	Fri, 14 Feb 2025 21:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739569816;
-	bh=Kckz2TLbEWVxhN4tyZx07MCeYrJg4RMfeph7RfTIB/I=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=cdOhJbgSdmNsof0RZWm2bNMcOgyMnbZt+W0tplE2Z42FRnhYN2MMjC/HZid4gAJnv
-	 cXzgJPNOG1t4PpQILLyjXxjR2iCMHRuT8dtOszNUaK1l7M+y1R5CXFcEWykXJVOqoq
-	 0oEZho2DelTmmNg7d7bolAS6148mq2/iyWr1V/ZAMtTvRYwBTFjA5j7AtiohUvk9SB
-	 JZhIv/eEYDTmSx7F9ZN8t38fGLyp2TjWZH+9fUVfjtyhwhBd9NrePCBudywVlg3KIy
-	 AWtEGEuJ2oo5x6guLSRmHSYSf331YWc5PdMca/CEcK/KScLXsHz1uuOA/biVVuPInb
-	 DirROEdI0JIfQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB383380CEE8;
-	Fri, 14 Feb 2025 21:50:46 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1739569926; c=relaxed/simple;
+	bh=G3K95h94iYD9zS9lmKkAWqoCHpM/BvBxxToKhcC252A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KRABveyawN/12lxY7VubfDU8A0aA8H9H580Wh4JvWUF7ta2DEZgrH6KB3mWRbJS5OOvvB42ybxKTyf0cNm0R2Tvbi1SzWnj5+N3yfbSe9Tw8FCFwagUUXc1cwwnGPdYGzTtB8XDteynxRg38vMdQXhAuWVSuBYwSOwOqnnqt9js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=193.43.8.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from altlinux.ipa.basealt.ru (unknown [178.76.204.78])
+	(Authenticated sender: kovalevvv)
+	by air.basealt.ru (Postfix) with ESMTPSA id 7CD582336E;
+	Sat, 15 Feb 2025 00:51:54 +0300 (MSK)
+From: Vasiliy Kovalev <kovalev@altlinux.org>
+To: Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Gao Xiang <xiang@kernel.org>,
+	linux-unionfs@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	kovalev@altlinux.org,
+	syzbot+316db8a1191938280eb6@syzkaller.appspotmail.com
+Subject: [PATCH] ovl: fix UAF in ovl_dentry_update_reval by moving dput() in ovl_link_up
+Date: Sat, 15 Feb 2025 00:51:48 +0300
+Message-Id: <20250214215148.761147-1-kovalev@altlinux.org>
+X-Mailer: git-send-email 2.33.8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,45 +37,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2] net: stmmac: refactor clock management in EQoS
- driver
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173956984555.2115208.11664802737268824641.git-patchwork-notify@kernel.org>
-Date: Fri, 14 Feb 2025 21:50:45 +0000
-References: <20250213041559.106111-1-swathi.ks@samsung.com>
-In-Reply-To: <20250213041559.106111-1-swathi.ks@samsung.com>
-To: Swathi K S <swathi.ks@samsung.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com,
- alexandre.torgue@foss.st.com, rmk+kernel@armlinux.org.uk,
- fancer.lancer@gmail.com, krzk@kernel.org, Joao.Pinto@synopsys.com,
- treding@nvidia.com, ajayg@nvidia.com, Jisheng.Zhang@synaptics.com,
- netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hello:
+The issue was caused by dput(upper) being called before
+ovl_dentry_update_reval(), while upper->d_flags was still
+accessed in ovl_dentry_remote().
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Move dput(upper) after its last use to prevent use-after-free.
 
-On Thu, 13 Feb 2025 09:45:59 +0530 you wrote:
-> Refactor clock management in EQoS driver for code reuse and to avoid
-> redundancy. This way, only minimal changes are required when a new platform
-> is added.
-> 
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Swathi K S <swathi.ks@samsung.com>
-> 
-> [...]
+BUG: KASAN: slab-use-after-free in ovl_dentry_remote fs/overlayfs/util.c:162 [inline]
+BUG: KASAN: slab-use-after-free in ovl_dentry_update_reval+0xd2/0xf0 fs/overlayfs/util.c:167
 
-Here is the summary with links:
-  - [net-next,v2] net: stmmac: refactor clock management in EQoS driver
-    https://git.kernel.org/netdev/net-next/c/a045e40645df
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0xc3/0x620 mm/kasan/report.c:488
+ kasan_report+0xd9/0x110 mm/kasan/report.c:601
+ ovl_dentry_remote fs/overlayfs/util.c:162 [inline]
+ ovl_dentry_update_reval+0xd2/0xf0 fs/overlayfs/util.c:167
+ ovl_link_up fs/overlayfs/copy_up.c:610 [inline]
+ ovl_copy_up_one+0x2105/0x3490 fs/overlayfs/copy_up.c:1170
+ ovl_copy_up_flags+0x18d/0x200 fs/overlayfs/copy_up.c:1223
+ ovl_rename+0x39e/0x18c0 fs/overlayfs/dir.c:1136
+ vfs_rename+0xf84/0x20a0 fs/namei.c:4893
+...
+ </TASK>
 
-You are awesome, thank you!
+Fixes: b07d5cc93e1b ("ovl: update of dentry revalidate flags after copy up")
+Reported-by: syzbot+316db8a1191938280eb6@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=316db8a1191938280eb6
+Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
+---
+ fs/overlayfs/copy_up.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
+index 0c28e5fa34077..d7310fcf38881 100644
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c
+@@ -618,7 +618,6 @@ static int ovl_link_up(struct ovl_copy_up_ctx *c)
+ 	err = PTR_ERR(upper);
+ 	if (!IS_ERR(upper)) {
+ 		err = ovl_do_link(ofs, ovl_dentry_upper(c->dentry), udir, upper);
+-		dput(upper);
+ 
+ 		if (!err) {
+ 			/* Restore timestamps on parent (best effort) */
+@@ -626,6 +625,7 @@ static int ovl_link_up(struct ovl_copy_up_ctx *c)
+ 			ovl_dentry_set_upper_alias(c->dentry);
+ 			ovl_dentry_update_reval(c->dentry, upper);
+ 		}
++		dput(upper);
+ 	}
+ 	inode_unlock(udir);
+ 	if (err)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.42.2
 
