@@ -1,103 +1,133 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A43257420
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9E02505C2;
+	Fri, 14 Feb 2025 09:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739526985; cv=none; b=iBFQLBncVemmh2RsHfQGPfp8IGLZD0vp4M9hNgMLxh/cVns3zv/53l1W4fxhBlaZfOnAJs1tZu8JTBQGgXSNzrhAaDKVRGhagoCe0mRpQ47be76T+RsEmTqi7xUBmgBzIcXPOV1OC+wamsDUP+jnRcDujliUk7e4i3Qm5fbAcRI=
+	t=1739526995; cv=none; b=uLoj/w2vBoK7mwAi4XJOAveQWzBa+CmmZMRzFnP0I2za9PhQKozlm0g/7QTMwhkT14yzy5Bw6dh+NGg2TVBKu30F5GLOHBnROGEN0XFTfo8pfGbiU2eJLLOqYEWHdFmoGNMrShI1HUIs8YOBcT981QLy+VRg1mKHH8GMegdqaqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739526985; c=relaxed/simple;
-	bh=2AsCrWbVyGKPdXvfmBx4a9snB6Aw/WrgC/hdNdtKs30=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J0TpEzVjEFXhyD21CN0z9elePztMtU7HFJCZX1cK/njE93dKdVz73KoYqDKsxgezYaVFFnfz+goaIJldhdGaOqU2NR5rPFhhHR7MreqBoKHkzzRIxItJeR+PgHfaiz/IZ60JLKM6xTmrFTAY/AGZr3A5kTHUggyFduaT7uFHyts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y/8soyW5; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739526995; c=relaxed/simple;
+	bh=Oc3CPskuF4SJ0lcT8B/+DBqNgT7AELX1UbpGKBnfgcU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PZpA6jZXBZRAA03Auduzjb4dH7TN2BQrAxbO/sdb+di3dMhdSHZFEuNG/kqmFUToNw4yXfQRPjPKHKNkywRGwnxJAwpl/zfVnJ6PjEqV6K9lC2HHKqgbJ6L/U9dJcRL/CFyt+7gQxeeG9cE8kfu4DlgPBy4HeUceYAYvkS7JlO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=L15cYguN; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y/8soyW5"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-545284eac3bso461602e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 01:56:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739526981; x=1740131781; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2AsCrWbVyGKPdXvfmBx4a9snB6Aw/WrgC/hdNdtKs30=;
-        b=y/8soyW5CwNUoYqNTFX6lyGU8Qk9Avts8muHSffQeW/9/dTMOKJKVOg7Qok88c2s1V
-         5nw4+Yi/2I18rJ727ag4Cpn1hS+I4uomvGEziAnRkXTRLM+TwzH1xW8X/zNtUQj8n7u5
-         5Tz6GLZ0MnZlJJzbTRuEkPYhz048KOmgTgh9QngV9W/q9Mb+/x8+/o1OwBAAmT5QWO6L
-         njNdK+QjD0AnWIttmNTk+qYIn7Qr1H+5nK/B0DZdHW4CQMA8yeGHO4eMyFAikSFo4TN7
-         bCdquKPd4jaOl6bjjCWt7qpw53/ipnoEJ/6xD33MAGBCd/Jfi2fmt8gbX6kdrWz2lT9h
-         YBWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739526981; x=1740131781;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2AsCrWbVyGKPdXvfmBx4a9snB6Aw/WrgC/hdNdtKs30=;
-        b=Z1nDe+AwVXXKV7GTWKCXNXb5U8alTvLjQXSFV6T4IT/0hZBqrZVUM2IqgUlKUVTPAR
-         2zhyl3PSYwOv8ANtMZfTf1apw1gDh9rz221UIU+jgw2bL7qu0pXBgifcJoZv6V0hs5q1
-         bPtIwPUNlcK2skB2T8NFJfF4ZVJl9okjv4lNgzdJc+qM6o4R+I8P9KRebZrTXLf/hw1r
-         7wRQ2LO/dq5mWNnfq2DvOEmZtKJ/hKFdVD4sv6aNJAe5pv7y7pBJgvDG6oxfaARzlMMH
-         FEuSQ8tR4rtfhP516/aK1Iwx4TMIUoDdyoBfXZDXxceWjoKgf+KC0Pv4ZrItdR9onEe5
-         9EGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWiRaFS/HWi6ViQOucIz9tt6cThJsRuflsoeph+eEwxkt1E9hmtVC9aG12Mrn9rd9LKXhIjUZzyMlokS2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0qGfkIwqINxw2RIbVa5NL5rlVhlHSNTCOxNjIEDV7uf7hxG1J
-	UBOUOOCKAy7xFqbbAyAvr39klS9hlUP9DZRQJTgRRfBSUp7lQvwbBw52pNFvS0FmzQ0lw7fFjrW
-	ad39QQofIzf7zUeVD449KuFq1F7d8eK0jkhwa5Q==
-X-Gm-Gg: ASbGncuByi8ESxYemzvaAosAB4gr2nKor2rKMZufet6H0DVRmiRAqo4/iHLsOzNNQ6s
-	m9CglWbiYGZ+n0mJeIu7suxyMe2aMR7V3ksXU7m6rfd/1ZjW8fOjQ0BU4pX1boPBy0v+BBwB2
-X-Google-Smtp-Source: AGHT+IGBcbrZEU3WtspasRr8y5DGBmF7RSzDcVPvB+A0GtrhyVirdFfGoibdROQWEv1N6aRSxdNWZYR6heUIRHTOP7E=
-X-Received: by 2002:a05:6512:138f:b0:544:ead:e1d6 with SMTP id
- 2adb3069b0e04-54518178efbmr3191247e87.38.1739526981311; Fri, 14 Feb 2025
- 01:56:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="L15cYguN"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51E8WboX020903;
+	Fri, 14 Feb 2025 09:56:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=GrcQVPWHR1eDMyhilPLTVg
+	q3K3Ua7XZ2TdBtfWxlO4E=; b=L15cYguNHlwC/Wa854JEKjuKitFYfXczFFj6bt
+	zU4q+xACwklzwQ34JIlKDlD1ZoiKVw8f7V/sBswrOZ7+i8RnJXOYdz/7Qw7fHT1L
+	330FL52H28dQazKcSKUgcwpyQmVU+DQG6KVwQgOB0KVdUwYSAWdp8oAzg22L+zTi
+	dd8AM2txu1s2tk4l6srZCgMV1ZK4FbZnmVeaejV5CcxLlXkc7xHjKMBdF4HlLq9l
+	BHQdTWJ0llDF3TM+XputMlSIk6AG/2gWvT4pY44WNEMqVb+w+o/vmjR4p8Y+TnEK
+	UzQzCn8L9BMjaz0OioM5bstFNjaQOaLoevj3+QuhMP1vWmTQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44sdyxub7t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 09:56:29 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51E9uSg5000624
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 09:56:28 GMT
+Received: from hu-vikramsa-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 14 Feb 2025 01:56:25 -0800
+From: Vikram Sharma <quic_vikramsa@quicinc.com>
+To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>
+CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_svankada@quicinc.com>
+Subject: [PATCH v1 0/5] media: qcom: camss: Add qcs8300 camss support
+Date: Fri, 14 Feb 2025 15:26:06 +0530
+Message-ID: <20250214095611.2498950-1-quic_vikramsa@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250211-gpio-set-retval-v1-0-52d3d613d7d3@linaro.org>
-In-Reply-To: <20250211-gpio-set-retval-v1-0-52d3d613d7d3@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 14 Feb 2025 10:56:09 +0100
-X-Gm-Features: AWEUYZmo1A8kyC_1nRo1MhdajxMnD6e7V4G-rNnAAebgBMCC6AkDlJN1o-MAiIs
-Message-ID: <CACRpkdYL4odi-00YDi-cFuVgw8uBncA+ZxGYnRRhuYR7eZuBWw@mail.gmail.com>
-Subject: Re: [PATCH 00/14] gpiolib: indicate errors in value setters
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Michael Walle <mwalle@kernel.org>, Bamvor Jian Zhang <bamv2005@gmail.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Keerthy <j-keerthy@ti.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: jkHx_haGpYgfUnNvCFq5MbClO30lofAr
+X-Proofpoint-GUID: jkHx_haGpYgfUnNvCFq5MbClO30lofAr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-14_04,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ spamscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
+ clxscore=1015 lowpriorityscore=0 phishscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502140071
 
-On Tue, Feb 11, 2025 at 1:10=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+QCS8300 is a Qualcomm SoC. This series adds driver changes to bring up
+CSIPHY, TPG, CSID, VFE/RDI interfaces in QCS8300.
 
-> The value setter callbacks (both for single and multiple lines) return
-> void even though we have many types of controllers that can fail to set
-> a line's value: i2c, SPI, USB, etc.
+QCS8300 provides
+- 2 x VFE, 3 RDI per VFE
+- 5 x VFE Lite, 6 RDI per VFE
+- 2 x CSID
+- 5 x CSID Lite
+- 3 x TPG
+- 3 x CSIPHY
 
-Yeah this is a remnant from the design that was done of gpiolib,
-at the time (by David Brownell) assumed to be simple MMIO register
-writes, so not much could go wrong there.
+Dependencies:
+I took below patch series as dependency to test these changes.
+- https://lore.kernel.org/all/20250210155605.575367-1-quic_vikramsa@quicinc.com/
+- https://lore.kernel.org/all/20250210162843.609337-1-quic_vikramsa@quicinc.com/
+- https://lore.kernel.org/all/20250109-qcs8300-mm-patches-new-v4-0-63e8ac268b02@quicinc.com/
+- https://lore.kernel.org/all/20250214094747.2483058-1-quic_vikramsa@quicinc.com
 
-> This series proposes to start the process of converting the setters to
-> returning int thus making it possible to propagate any errors to the
-> user.
+We have tested this on qcs8300-ride board with 'Test Pattern Generator'
+TPG driver support will be posted in a follow up series.
 
-My worry is that this project will be another one that stalls at
-85% completion (like with the eternal descriptor rewrite project)
-but I guess the upside outweighs the downside, and I also trust
-your proven grittiness so:
+Tested with following commands:
+- media-ctl -d /dev/media0 --reset
+- yavta --no-query -w '0x009f0903 0' /dev/v4l-subdev0
+- media-ctl -d /dev/media0 -V '"msm_tpg0":0[fmt:SRGGB10/1920x1080
+  field:none]'
+- media-ctl -d /dev/media0 -V '"msm_csid0":0[fmt:SRGGB10/1920x1080
+  field:none]'
+- media-ctl -d /dev/media0 -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/1920x1080
+  field:none]'
+- media-ctl -d /dev/media0 -l '"msm_tpg0":1->"msm_csid0":0[1]'
+- media-ctl -d /dev/media0 -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
+- yavta --no-query -w '0x009f0903 9' /dev/v4l-subdev0
+- yavta -B capture-mplane -n 5 -f SRGGB10P -s 1920x1080 /dev/video0
+  --capture=7
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-for the series +/- minor nitpicks I may send that I am sure
-you would address anyway.
+Used following tools for the sanity check of these changes.
 
-Yours,
-Linus Walleij
+- make -j32 W=1
+- ./scripts/checkpatch.pl
+
+Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
+
+Vikram Sharma (5):
+  media: qcom: camss: Add qcs8300 compatible
+  media: qcom: camss: Add support for CSIPHY QCS8300
+  media: qcom: camss: Add CSID support for QCS8300
+  media: qcom: camss: Add VFE support for QCS8300
+  media: qcom: camss: Enumerate resources for QCS8300
+
+ .../qcom/camss/camss-csiphy-3ph-1-0.c         |   2 +
+ .../media/platform/qcom/camss/camss-csiphy.c  |   5 +
+ .../media/platform/qcom/camss/camss-csiphy.h  |   1 +
+ drivers/media/platform/qcom/camss/camss-vfe.c |   2 +
+ drivers/media/platform/qcom/camss/camss.c     | 392 ++++++++++++++++++
+ drivers/media/platform/qcom/camss/camss.h     |   1 +
+ 6 files changed, 403 insertions(+)
+
+-- 
+2.25.1
+
