@@ -1,139 +1,93 @@
-Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2EE253B46;
-	Fri, 14 Feb 2025 09:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD68253F0A;
+	Fri, 14 Feb 2025 09:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739526536; cv=none; b=O078vjHXt4KxtpSmphS2xeFC5aNtWF038FVlrUjb9VkzCu3ng5vSeMMVrrZcTOcyjsvhQwA2H6uLpt+l8O+yMy0XJK+vizDaUeJzUPa6GbjIk1u8KJKPrTYFrNo5Lm/u/K2k3resgI3EuUioEk+DLti7JXKQ6Ikb0nDC9g2enCE=
+	t=1739526542; cv=none; b=sQu0IokPHbNWp7xKfdWMQJCc3oSAcdVbr5/cnm2AhysL6MmZFDAyoQb/4sOHzc5Oqd6ULuJqVMrk+Xu9d3fbnbqcJYPM3hyekQgnUORtffJ4knOwx9QmK9UtQCH/H0hALs4d3SrL5ArnN8Yi6nqweDrlbIhbMOgAnJyJueBMzs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739526536; c=relaxed/simple;
-	bh=O/8DIOSl5f/Y31KM1037Yj7JP2uqjIWVBVFxogazJiU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RrUqcPxMncwjJycLAnV8kLCvW6WNoDYw7xXRT+uvuwRabWGwMJ/wQ8DwHZryc53qGfNQjXuDAj4D52gHUQummLKFIQIqj9t8vDJfkZiPeN8bbHXrwzIt22QM4L0I3Mlmnc7VWuE38YJe+RiXn+IbQelqrny+QfexX7pc0K4AWRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=VGWfD1X2; arc=none smtp.client-ip=18.132.163.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1739526542; c=relaxed/simple;
+	bh=00sj+E3Q5oWwqUpdUJf7qVk9/n29myFEzCH8bm0KGr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F2B7FIeYFG5AgohiJpb5ua4PRPO2BS+oPvBLdBY68u8xiIDClgPro9Ihy9F+wKKOmZbGwJ43ejOk1wpFlR/dJ4fWp9hA5eU/MCGojA/+1BdxmERUrPsFjyepA85UZ3D0QGj+nYIWSYdlcVYcXiSwK272vAsW2iB7LSDti8EeaQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OPO8scuN; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="VGWfD1X2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739526496;
-	bh=NAnqMvpz3CgMXnHWGFEBjzdavwVkEzeTJ0xJecoflYw=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=VGWfD1X2NFjRTxsb3x5d2n94r2fkvs1BY9rvVS8O+9ASPXtQVkVH51//ZKVlV9OD8
-	 bX0L+I7uho62jqadSSrWvVkXWv62+KERXT0JLqU9Z93cGXQEHr3uMUcUrNT7lGyL/o
-	 d9+ENqqOPcJDKAOMPWGYwtxTuY+UG5ZXhYorv4NA=
-X-QQ-mid: bizesmtpip2t1739526484tw7hc1n
-X-QQ-Originating-IP: hzoQEaX1BdaUZ8Hg3TePiaMBVM3pnsJ+6yBRy4x28Y8=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 14 Feb 2025 17:48:02 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 14775040142801817448
-From: WangYuli <wangyuli@uniontech.com>
-To: tsbogend@alpha.franken.de
-Cc: linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	macro@orcam.me.uk,
-	masahiroy@kernel.org,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com,
-	chenlinxuan@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [PATCH v2 0/2] MIPS: dec: Only check -msym32 when need compiler
-Date: Fri, 14 Feb 2025 17:47:58 +0800
-Message-ID: <F49F5EE9975F29EA+20250214094758.172055-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OPO8scuN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=4Y5ny06wV2OrX31Zto/f4bDuO3ylRieeq2wUr180jA8=; b=OPO8scuN98RdFWul73hP73sU+N
+	Hqna5iUjeQwNmnAJE96rBoEnob2kznP6Jvd2AvngAchelPQQ+HaA+c1eXBkF4sZome24zldERpRSf
+	/o3NvsObhznBN/NC/iHJhYkVJWvGWx/zolhLFcGmoBupgIGAPyNSB6JlzK/lYKnmJ4KG03sWJuh+v
+	MCtpLJp6M9Vwmt7gk/hDpssh6MhbTCrvkPRM4ZagZvNdnCAIYRXZ05kUPvnJYHscwjwSYdCNMmfuz
+	cps+eRYT1XkCrs6+kwCACUNDdR/N0PgnEcw8rP/WBUWrDYq+GkATi/V9DoFUCzuIPGfVAmc3su4zz
+	8JouRVjg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tisJd-0000000AuRL-2gdb;
+	Fri, 14 Feb 2025 09:48:57 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id EC5D030050D; Fri, 14 Feb 2025 10:48:56 +0100 (CET)
+Date: Fri, 14 Feb 2025 10:48:56 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: David Gow <davidgow@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	Waiman Long <longman@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v2] ww_mutex: convert self-test to KUnit
+Message-ID: <20250214094856.GD21726@noisy.programming.kicks-ass.net>
+References: <20250213-ww_mutex-kunit-convert-v2-1-4a60be9d5aae@gmail.com>
+ <20250213115951.GF28068@noisy.programming.kicks-ass.net>
+ <CAJ-ks9mzYWSvVD=PCvCBohXg77BdFODq4ePMNstkL+70tkU5RA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: N3iD438OGJ7hGK0NaeWMxyTtblKV6UJcTJWX9vlLcuuX1tsrenCVk5Vu
-	gzgUk3pHxm96e5H+kbqXU6MTEoq0TwV/UMyENawIVovmIWaZdfOXxAw+O6h26SxQ0LeJlsD
-	63bvwzuziNd0rjhAsrK84uelaiELd9qeLQ5Y3l5AVpGJyNNhZnGVU2BVPkybhLxgqffraoQ
-	NAWJ4kgKgYo5BBdHXceJH8QazgkZcW7lUY6LBxK81VCRRPwWhE8qpM/hyVTz2hoBj+BeeRa
-	ANN/AhYikjiZap8h0MzhAch8yV1lUZfZLDKLvqJgK7YEpBwuT3lEMlDqJhzU2hIG1asrUuU
-	k31A97N845cS2gu8WtM/DxqKDmAnjfitAirBMYVxFL05QRY03/t96Wbd7AZeT5FrlXZ3kfe
-	2uaUO9jyHiyj+SbYlbbCuj3i2MkPK15ttQPiVZdQwbWmLsSo/Q6+aa+ezblqqvg832gCsRn
-	H3bQtYm5o6NjxEQ7N5tMv/LjLut2NMXG3yCAEn+XR2U2Dy8fDGz+N+xWfbkUatbC/wZrhi4
-	X6IeZ2VS9ekO+Do3qNgXS8eBQyPHZzCpTs56bJg3B8YtNXqFYTSiBg4nlOW+2qDNyPE1pwj
-	VMXALEru0clfuvGzSfJG1vmi4XQzmUudJz+bzUmHS5OUGe2FvNKY/Iohtk0dbqLzeZ/Vxzz
-	ZyKMsRrTc1KEjoc+niSFAZLLy2msdsyMeZK3+Ilw1FabSm7pQwc1ePxLuytcEV4qU5lyEmh
-	66xu/5nha3n+xy5XC+OiQtx9zxzo4vcUSvns5kPOg6LroKBlmmZYvQu8kmIAFcl97jCVAyN
-	T/aQ/jCLwUcvMmNd34K/UemEcywZ/CcgChatxLOHCifEvpgi2zPjpqXDd2GggtbMzfMBq1s
-	VHANzq/WNtvGhgaNsulhTkBorUjptBiwIbOSkM3ur6H+IIBx7imE0zv6gNp8o6LrwS127Ru
-	mwHHg1lpylAYVBJnfPN6zRcxgozQ96TOSV4YSVS+hJUAYx7QoMfUAvkyYKGPyhamZSWxrzu
-	MnvCJ/pOXwcY64fH5aVd29NEgiu8KXdiDMLab3J7JmCjis3RsCQ2EbA7eHPNA=
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <CAJ-ks9mzYWSvVD=PCvCBohXg77BdFODq4ePMNstkL+70tkU5RA@mail.gmail.com>
 
-During make modules_install, the need-compiler variable becomes null,
-so Makefile.compiler isn't included.
-    
-This results in call cc-option-yn returning nothing.
-    
-To get rid of spurious "CONFIG_CPU_DADDI_WORKAROUNDS unsupported
-without -msym32" error, just wrap it into `ifdef need-compiler'.
+On Thu, Feb 13, 2025 at 10:42:24AM -0500, Tamir Duberstein wrote:
+> On Thu, Feb 13, 2025 at 6:59 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Thu, Feb 13, 2025 at 06:40:20AM -0500, Tamir Duberstein wrote:
+> > > Convert this unit test to a KUnit test. This allows the test to benefit
+> > > from the KUnit tooling. Note that care is taken to avoid test-ending
+> > > assertions in worker threads, which is unsafe in KUnit (and wasn't done
+> > > before this change either).
+> >
+> > So this was something simple, and now I need to know how to operate this
+> > kunit nonsense :-(
+> >
+> > How is that an improvement?
+> 
+> Hi Peter,
+> 
+> David enumerated some of the benefits of KUnit in another
+> thread: https://lore.kernel.org/all/CABVgOS=KZrM2dWyp1HzVS0zh7vquLxmTY2T2Ti53DQADrW+sJg@mail.gmail.com/.
+> 
+> My personal reason for preferring KUnit is that it's much easier to
+> run from userspace; the tooling takes care of building, starting the
+> VM, running the tests, and producing a human-friendly report.
 
-Moreover, I also identified an unnecessary check for KBUILD_SYM32
-in this Makefile section. Eliminate it for code simplification.
+Wait what -- you have to run a VM just to use Kunit? That's a hard pass.
 
-
-
-NOTE:
-
-It is particularly important to note that this code fix does not
-imply that we have resolved the problem entirely.
-
-In fact, the entire application of cc-option and its auxiliary
-commands within the kernel codebase currently carries significant
-risk.
-
-When we execute make modules_install, the Makefile for the
-corresponding architecture under arch/subarches/Makefile is
-invariably included. Within these files, there are numerous
-usages of cc-option and its auxiliary commands, all of which will
-return empty strings. The reason other architectures can
-successfully complete compilation under these circumstances is
-purely because they do not, unlike MIPS, check the return values
-of cc-option and its auxiliary commands within their Makefiles
-and halt the compilation process when the expected results are
-not received.
-
-A feasible approach to remediation might be to encapsulate all
-usages of cc-option and its auxiliary commands within conditional
-statements across all architecture Makefiles, preventing their
-execution entirely during make modules_install.
-
-However, this would lead to a massive number of inelegant
-modifications, and these broader implications may require
-deliberation by Masahiro Yamada.
-
-Regardless, this does not preclude us from addressing the
-issue on MIPS first.
-
-Link: https://lore.kernel.org/all/41107E6D3A125047+20250211135616.1807966-1-wangyuli@uniontech.com/
-
-WangYuli (2):
-  MIPS: dec: Only check -msym32 when need compiler
-  MIPS: Eliminate Redundant KBUILD_SYM32 Checks
-
- arch/mips/Makefile | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
----
-Changelog:
- *v1->v2:
-    1). Correct semantic errors.
-    2). Adopted a revised fix: Using a check for need-compiler
-in place of KBUILD_SYM32 check.
-    3). Swap the order of the changes in v1.
-
--- 
-2.47.2
-
+If I can't simply run it natively on my test box, its a no go. And it
+using python also don't help, you shouldn't be needing that to load a
+module.
