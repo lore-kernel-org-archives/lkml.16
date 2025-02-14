@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE441519B5;
-	Fri, 14 Feb 2025 08:48:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F671189B9D;
+	Fri, 14 Feb 2025 08:49:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739522908; cv=none; b=K6fCu0iRJIEqnk9QwxA9x3BWSeFhoYkPw4T69h4MxO91GxWGjMZB6lAuZucPqh/rmqKEOm6hkGgNO8KIra6lk+RFzq6iFT2L+fAQopRN8j0tykdeVwsKSlMUl3qrgjOpdVWe5t/Aie4we3pcuEWFvVa2MmX9ZvdDtD61XnVYAIk=
+	t=1739522941; cv=none; b=PgUDEcuSDal5XlNCcXn2whkaghZC5dmgZlekwevm/cbvNEGC4NvZQH8X55tOc2l4H+hO5iLhpwpj99K0gGFqoAjRiyh6w69GYbyP0Sje0xAhmhZBVLoSO29yZHy1f2FKyQXrUOtTGkOahpsOp+mA8IKTdrhB2j+HEYBNnRKT7aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739522908; c=relaxed/simple;
-	bh=0CcrT2Wlm4tuiPUS1c1qxjhwtvUKk5Qd28xIn++aGYc=;
+	s=arc-20240116; t=1739522941; c=relaxed/simple;
+	bh=WmV04MPnFaon6zaZ8p5gO3YrG+dbYIloJXb1/ltHrvk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IwR5PnEDc5RmzZqeHzRVKnA8yzaCAgs3yKJdZT/t/92MXOqAXGrUAhZcrVtjeFNbFDb9//X8bfKiRctjP4o2DAEBKKYmkyv3N+sJkYTarPxSpRNLjbg8Na0j0cuwdd/Pv8DtM633/xs5BlgmZJl2vv4q/Cy0rDX+pnDV+gCa39I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mWqTQYPh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AGM8jJ7Un3Q+t2H39e75S4KLXhkp1gFqZ2mLRplV6WOEJSSb6Ip1Ux40TqwM2JHwHUe7K/Zt+1ing4tV8QNr0griy8NZiKOK9cXKL7Mjoun0JuWoSKM3MDKLFH9JBnWAoJ+6hGj6xCfiGh+K+RuLaZPzuR3mT23tyIDaIAyro6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PcKuSoQN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mWqTQYPh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1D1EC4CED1;
-	Fri, 14 Feb 2025 08:48:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PcKuSoQN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E9C2C4CEDF;
+	Fri, 14 Feb 2025 08:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739522907;
-	bh=0CcrT2Wlm4tuiPUS1c1qxjhwtvUKk5Qd28xIn++aGYc=;
+	s=k20201202; t=1739522940;
+	bh=WmV04MPnFaon6zaZ8p5gO3YrG+dbYIloJXb1/ltHrvk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mWqTQYPhLMpHVUAWn9+lI+WwXv0GpK5coz0IWSRGmVoS/yyOEqF8pXWKyTNwRgqq/
-	 1yYbAjmPEQNjRC7EHElD6mCfhYSfQfeKjo5X1Y4g5xFupDNPXZXTNypGKrMipamTb1
-	 WeqIo2Bh/57hrJCgyFW1ZJQfDFILZFVXKan3Da+owazDy0wetKYk5TxzM/+boRTfXs
-	 rsT1hUclKurPzWFEBl7TNdESBly5X/B5JnD/XAMsISomqmsJ/rSi3BOZVvlCGWgrIm
-	 MkShT8hiNcHdWxxHpBM+TJ4z1McfHV9kOcynn9oXnZGjBFrmEycJQ/Kt2U7cVs14bF
-	 SoLtIXvTiC4XA==
-Date: Fri, 14 Feb 2025 09:48:24 +0100
+	b=PcKuSoQNuodvlie1cZdUqIFzaaz4Q+bElNQWC7V87q21/j9UNBbO7qdf36O2kDMGi
+	 VlNzxWxCoConcVaj3v5pdyvA5QyV/g0a9qz6NiqJ1+xj9Afzv7rFWoGkxHDt7Z0TGm
+	 gv+bfLlN32A6o/i724hWn1qWHp8OkA4eJfpkwQJF3qQ9p3MGdfZKYvKVfZgNjrQfE2
+	 +q82AMksdN4ALr/a8EJk8i/JNXWKkDAW6W+0weh4ajDYQnQCH2jMJOX0MK++9ib6ne
+	 IILl4Zaac8D8Pw/fqPN6KWGNSOQozr4v1lsqCvhu1uKH31z28IzDMdP/ALfFE/JTzR
+	 wmAEGxSg2pK5Q==
+Date: Fri, 14 Feb 2025 09:48:57 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Wilson Ding <dingwei@marvell.com>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, andrew@lunn.ch, gregory.clement@bootlin.com, 
 	sebastian.hesselbarth@gmail.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
 	p.zabel@pengutronix.de, salee@marvell.com, gakula@marvell.com
-Subject: Re: [PATCH 2/4] [PATCH 2/4] reset: simple: Add support for Armada8K
- reset controller
-Message-ID: <20250214-nimble-loutish-pronghorn-d0e3de@krzk-bin>
+Subject: Re: [PATCH 4/4] [PATCH 4/4] arm64: dts: marvell: cp11x: Add reset
+ controller node
+Message-ID: <20250214-famous-rainbow-pig-d4bd3b@krzk-bin>
 References: <20250214065833.530276-1-dingwei@marvell.com>
- <20250214065833.530276-4-dingwei@marvell.com>
+ <20250214065833.530276-6-dingwei@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,42 +46,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250214065833.530276-4-dingwei@marvell.com>
+In-Reply-To: <20250214065833.530276-6-dingwei@marvell.com>
 
-On Thu, Feb 13, 2025 at 10:58:31PM -0800, Wilson Ding wrote:
-> Armada8k has one register for unit soft-reset configuration within the
-> system controller register area.
+On Thu, Feb 13, 2025 at 10:58:33PM -0800, Wilson Ding wrote:
+> The unit soft-reset configuration register is part of the system
+> controller register.
 > 
 > Signed-off-by: Wilson Ding <dingwei@marvell.com>
 > ---
->  drivers/reset/reset-simple.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  arch/arm64/boot/dts/marvell/armada-cp11x.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-> index e4e777d40a79..a792b913e1b1 100644
-> --- a/drivers/reset/reset-simple.c
-> +++ b/drivers/reset/reset-simple.c
-> @@ -183,6 +183,13 @@ static const struct reset_simple_devdata reset_simple_active_low = {
->  	.status_active_low = true,
->  };
->  
-> +static const struct reset_simple_devdata reset_simple_armada8k = {
-> +	.nr_resets = 32,
-> +	.active_low = true,
-> +	.status_active_low = true,
-> +	.syscon_dev = true,
-> +};
+> diff --git a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+> index 161beec0b6b0..b82003df15e0 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+> @@ -273,6 +273,12 @@ CP11X_LABEL(gpio2): gpio@140 {
+>  					 <&CP11X_LABEL(clk) 1 17>;
+>  				status = "disabled";
+>  			};
 > +
->  static const struct of_device_id reset_simple_dt_ids[] = {
->  	{ .compatible = "altr,stratix10-rst-mgr",
->  		.data = &reset_simple_socfpga },
-> @@ -203,6 +210,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
->  		.data = &reset_simple_active_low },
->  	{ .compatible = "sophgo,sg2042-reset",
->  		.data = &reset_simple_active_low },
-> +	{ .compatible = "marvell,armada8k-reset",
+> +			CP11X_LABEL(soft_reset): soft-reset@268 {
 
-Undocumented compatible.
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+
+Usually: reset-controller
 
 Best regards,
 Krzysztof
