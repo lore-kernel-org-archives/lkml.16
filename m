@@ -1,141 +1,122 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB246266EE1
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:17:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1AF259487
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:17:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739546248; cv=none; b=Ij7vqJLuBq43Q4p6lIasjEy0FUghkymog+U0FaaZ4KraIsqxQv9JZWZvUaju0eHvLTNNflwuP6tAUwSSgQTv+2awT3odNT/Bkv4V4GwR3jHU7+3ex/3hUs6jxeNxW+QwZkT33yZa+frJjvNGDtl2L7qPyN7Cw3JqFWVSV3KT7Xc=
+	t=1739546258; cv=none; b=RxBIyFAEedrQsRxnItzhzPLO5t+GJNW2LwTPM8MOp9vSOghMnSirfIkhe1BkULRH8EDTnidUJ+8HKzBmHMuIPh4ZWVcwoOj1ti7WZCRaEyFUBRdk+rd9Td+Dl3N2TslcTS24UeGYnCqNtuB0SsYRDbVUwVYl8NxqwNc5ybi4hbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739546248; c=relaxed/simple;
-	bh=8Gsx73LZ9WPOVGpMBiCSKKybBmw0f/p67JPch1vqO7A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NWR6jo6u2rqLKdAEBe4O02U7qonYcatRZsdUsjgqLEfTk9/t6A5gCVxVJLqOJhIl0LSxwMBIKtdmf4mOC/UhYkuR6N7A67zQLTbztMQmkSXS25jMocSMjDavXyezGJCw+xxw5aFHhK79fnVtl2QSnz3Rk5P4C6sZQMkTlJgvATU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vikq2uAW; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1739546258; c=relaxed/simple;
+	bh=tUTcWT3xY0aNKKrpAIhOmqVWKwDSg0YFK87E6/nR7Qw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dbSRWL3jHDs2J7Cqfu4BEf2DrGwW7piNZJmFsvooOFbpFr2zqFwvG+dUB80BYfTwIFl5NzbhroE8tWkNaUyWvD/J3Hjb6UjrUFheRxyODH4FI0u7p1wBjUl9rKB+rVC9Q0hcvBx3RDviixlrDoNQMvtZVpNvLwKUXShB/pC08sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iimcNvQl; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vikq2uAW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iimcNvQl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739546246;
+	s=mimecast20190719; t=1739546255;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nrLVSx70Fg0TM3/b/6u0W/Ki7vueT18k7SYrETRcIbc=;
-	b=Vikq2uAWSOEA7m5djieLoY8JBoGQchKtpzRq3RYcZjOIFmkTAxR7M+XI9kGKSRyz2W7258
-	K/EGquX5c3Sj2I4aGnnVWt8/bUT3OxuUM0f+eJiKPWRizVV0AW7/puhlt8RDBipCIcMP2p
-	lhmxlhjgSDXTnNBM9ZsHIZSpF8TdvGw=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-48-trFNyZdhOTWBOp6J3u-xhw-1; Fri,
- 14 Feb 2025 10:17:22 -0500
-X-MC-Unique: trFNyZdhOTWBOp6J3u-xhw-1
-X-Mimecast-MFC-AGG-ID: trFNyZdhOTWBOp6J3u-xhw_1739546240
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 939AA1944D00;
-	Fri, 14 Feb 2025 15:17:20 +0000 (UTC)
-Received: from [127.0.1.1] (unknown [10.45.225.8])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DCA19191D7CE;
-	Fri, 14 Feb 2025 15:17:13 +0000 (UTC)
-From: Sergio Lopez <slp@redhat.com>
-Date: Fri, 14 Feb 2025 16:16:55 +0100
-Subject: [PATCH RFC v2 1/5] virtio_config: add page_size field to
- virtio_shm_region
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=dfZVegvU6qk4m7FwzKbbRj/0F95Jye2At6/Y/AuatDM=;
+	b=iimcNvQlzGQXs+oFBaVy+I0kyTa/sah7vmHGFdlqPgc6u54pDR2cLZopZTcNo10nQ27QDD
+	pu9Ms6b4yVu5eF1hKMdaq1uZCm6fHsAJtS7q/OvmjeS7t4sw8P8Qt2VVtdRaajD0eASEUP
+	IBQTnFGQf9mYldcHET/fdZzquSf9LaA=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-612-fgc0ENj3P_a-_z5vZz_cCw-1; Fri, 14 Feb 2025 10:17:34 -0500
+X-MC-Unique: fgc0ENj3P_a-_z5vZz_cCw-1
+X-Mimecast-MFC-AGG-ID: fgc0ENj3P_a-_z5vZz_cCw_1739546253
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38dd533dad0so2023501f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:17:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739546253; x=1740151053;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dfZVegvU6qk4m7FwzKbbRj/0F95Jye2At6/Y/AuatDM=;
+        b=fmy+Z3Ktd7p4eLiNWkeXdkc3D94EpbZX58/lQO3oAc7LMb2qwVjnXXHi8wiE0NrCkA
+         CZxJrEkDAptUmUeTk3fxuKqkYSNIwV7LNMiCql28xxcineYPna//pjWFJKemtxv2D1Ev
+         zO44A7xB7RuZDbUjanpPLfSsFgoRAi3ZjPFB7Ewl+g8h1AcRa1pxg/y+TRCmdZgOM+Vy
+         YZ2oPU8Ksgtyh91r7T/3lgNbLw3jVBvIFnLkYFouMyWLUbb4M9O9wDAf0o2qGvJWFRDU
+         To3BDNCMMUNNd/jZZYrHM9xA7UHhhHRo+04tSr5I3q0RD3pImkZsUuNNxgGSkj95gLeM
+         1XCg==
+X-Gm-Message-State: AOJu0Yw6gBA2K2PTnxeHb8zceSXCJ5zUjYf6BX9nAdi4nZEfMF+B4UfU
+	fng1C/ewBPGUu0Gi43DgaD+gLzgiXdYjyVMqldgZ9vDGRyMsWOfASaVs0y86URlHFl9bSZOXfR/
+	x9eqAfCdkZm9xR/DiuxnmZv9h4WiPqIYuqcsSlv/chHeLCvh2+z4JXizDNBksh//n2cJh1udaur
+	O9RJ8yPvzTJSLsn6YXoOjppUrQgbSKKYfOQ5ICzzPfKf/S
+X-Gm-Gg: ASbGnctaZ9bz9yVL6CLE3ERVf74grbpwNwMn3oz3+6weVBbuE11ZVjCSUoCwCc9PLYw
+	iH6eXrV7u9eQuNleTQAnqNt3w7a4WISCiUe4UXLY2tv26GMXVsSHLFY2ZYUxgmXZqz7gCgZCvqG
+	DkJmilFmd29oRb2B5XtV9L2LK3ysAqiG7Wk2YmshO/oYWlJ5Qd2ZcuLeDQsmfk0K3QIHu4iPNWM
+	trlzjgPHPjmAObQcfJUw+aHLJnFypen0PBQLekBl2aFoGvpYHSh4gXcWZtF92mMoP+CJzisMqgY
+	8thIfw4AKKKldBWGA9BlAtxmaydYHQ==
+X-Received: by 2002:a05:6000:18a7:b0:38d:dfb8:368d with SMTP id ffacd0b85a97d-38dea2f76ddmr11997628f8f.50.1739546252742;
+        Fri, 14 Feb 2025 07:17:32 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEqA4RqLrxgT7ylPsH/Tx2/hd3i/GaBHUNlAKmeVU3IYJ2UXCjv9nvu6wq2BY2mLXriK9b/Xw==
+X-Received: by 2002:a05:6000:18a7:b0:38d:dfb8:368d with SMTP id ffacd0b85a97d-38dea2f76ddmr11997573f8f.50.1739546252260;
+        Fri, 14 Feb 2025 07:17:32 -0800 (PST)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5655sm4855672f8f.77.2025.02.14.07.17.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 07:17:31 -0800 (PST)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: javier@dowhile0.org,
+	rjones@redhat.com,
+	abologna@redhat.com,
+	spacemit@lists.linux.dev,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Rob Herring <robh@kernel.org>,
+	Yangyu Chen <cyy@cyyself.name>,
+	Yixun Lan <dlan@gentoo.org>,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH 0/2] riscv: dts: spacemit: Add initial support for Milk-V Jupiter
+Date: Fri, 14 Feb 2025 16:16:36 +0100
+Message-ID: <20250214151700.666544-1-javierm@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250214-virtio-shm-page-size-v2-1-aa1619e6908b@redhat.com>
-References: <20250214-virtio-shm-page-size-v2-0-aa1619e6908b@redhat.com>
-In-Reply-To: <20250214-virtio-shm-page-size-v2-0-aa1619e6908b@redhat.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>, 
- Daniel Verkamp <dverkamp@chromium.org>, Jason Wang <jasowang@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
- Gurchetan Singh <gurchetansingh@chromium.org>, 
- Chia-I Wu <olvaffe@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
- Dmitry Osipenko <dmitry.osipenko@collabora.com>, fnkl.kernel@gmail.com
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, Sergio Lopez <slp@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1729; i=slp@redhat.com;
- h=from:subject:message-id; bh=8Gsx73LZ9WPOVGpMBiCSKKybBmw0f/p67JPch1vqO7A=;
- b=owEBbQKS/ZANAwAIAfRpJ40vDAI1AcsmYgBnr15sWESJ+OzItEn3E8aaGSdbpX3pjWcxS8IOP
- b8BlyFqbsSJAjMEAAEIAB0WIQS+1fz3US2GgJFC6KL0aSeNLwwCNQUCZ69ebAAKCRD0aSeNLwwC
- NdCFEACKtfP+IDc9rU4MZKQUdP0BbdgCZvIPrMqQ3S7fOP3xQN6FfkE0nn3/328NZUcR6GioIDs
- dfJH//humQuU77NKJ2b1r8RdCtAcD/zoktVOND1pRocXLBVEthAUnB5849+dTVpQn5gUvlLQjwt
- 2WWkL3GFigTp3FWcHc2eWhfYZbOBVIG56aEvMsXsJvaERigb0mIuMRgm7UdvIgcZTrYwnRRoSUW
- Th/rKyGZBLXEZujoVAvG5ZkJ/yw5GPBC0hv3Jc1XT7glnD56bRcmIrVY+NzMyU4J8uEpr4V9m+E
- 90N6qNYALgXYU9p6qbp70W4RBlLg6RbPbXovzl9fGjbVlJvEw4s3HA9I5C7of4nB6aH5n9G9fIh
- Au4nmVaG/B9C+FOsEbU3macr9EcCQisemNfAA4BFpRLWWZobW8MvJ6y/1vBV32yYyglb/QKjnH2
- X7c30s4RSpdqBSm9qfUz7sf8E472OM7OubFHMEl4IXgWYoGgS6PQZQbJliYtNCvzsoiKKqfWMoV
- 2zMMDNbsPcug6VyQXKTX/v8n+6Rfr/Wlp0ysyPQrfCT2EOr7TfoWXFT/V50OW2w3JA6f9krV8rW
- BRla51VKOG/wdZErOX3fckyC/54y0hgre/gYkbD9nILZKizKRRERN4aIrl08PI9LwZa17tqp9kC
- Y4NLiuXBnbPBDUg==
-X-Developer-Key: i=slp@redhat.com; a=openpgp;
- fpr=BED5FCF7512D86809142E8A2F469278D2F0C0235
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
 
-Add a page_size field to virtio_shm_region to store page size supported
-by the device. This is required to support running VMs with a page size
-smaller than the host, among other potential scenarios.
+Hello,
 
-Signed-off-by: Sergio Lopez <slp@redhat.com>
----
- drivers/virtio/virtio_mmio.c       | 2 ++
- drivers/virtio/virtio_pci_modern.c | 1 +
- include/linux/virtio_config.h      | 1 +
- 3 files changed, 4 insertions(+)
+This patch-set adds a minimal support for the Milk-V Jupiter board.
+which is a Mini ITX computer based on the SpacemiT K1/M1 RISC-V SoC.
 
-diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-index 5d78c2d572abfcfe2b84cdd82df622320fe97d5d..1f594b626d7a7734e8ec58766737a118c26bad94 100644
---- a/drivers/virtio/virtio_mmio.c
-+++ b/drivers/virtio/virtio_mmio.c
-@@ -560,6 +560,8 @@ static bool vm_get_shm_region(struct virtio_device *vdev,
- 
- 	region->addr = addr;
- 
-+	region->page_size = 4096;
-+
- 	return true;
- }
- 
-diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-index 5eaade7578606e4b02af0d66447417ad6aa11064..d7aeb2e50a3c499dfb68d58cb89b829ea2e50454 100644
---- a/drivers/virtio/virtio_pci_modern.c
-+++ b/drivers/virtio/virtio_pci_modern.c
-@@ -862,6 +862,7 @@ static bool vp_get_shm_region(struct virtio_device *vdev,
- 
- 	region->len = len;
- 	region->addr = (u64) phys_addr + offset;
-+	region->page_size = 4096;
- 
- 	return true;
- }
-diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-index 169c7d367facb36dcabf9596068580ea8b8516c7..c1b2ce71ea55e81978e18db05494deab193fa4fb 100644
---- a/include/linux/virtio_config.h
-+++ b/include/linux/virtio_config.h
-@@ -14,6 +14,7 @@ struct irq_affinity;
- struct virtio_shm_region {
- 	u64 addr;
- 	u64 len;
-+	u32 page_size;
- };
- 
- typedef void vq_callback_t(struct virtqueue *);
+The DTS is very basic but at least allows to boot into a serial console
+and get UART output, similar to what exists for other K1 based boards
+such as the BananaPi BPI-F3.
+
+Patch #1 just adds the compatible string for the Milk-V Jupiter to the
+SpacemiT bindings and patch #2 adds the minimal DTS for this computer.
+
+Best regards,
+Javier
+
+
+Javier Martinez Canillas (2):
+  dt-bindings: riscv: spacemit: Add Milk-V Jupiter board compatible
+  riscv: dts: spacemit: Add Milk-V Jupiter board device tree
+
+ .../devicetree/bindings/riscv/spacemit.yaml   |  1 +
+ arch/riscv/boot/dts/spacemit/Makefile         |  1 +
+ .../boot/dts/spacemit/k1-milkv-jupiter.dts    | 27 +++++++++++++++++++
+ 3 files changed, 29 insertions(+)
+ create mode 100644 arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 
 -- 
 2.48.1
