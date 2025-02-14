@@ -1,95 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF621FCFDB
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 22:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4C21FC7F6
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 22:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739573009; cv=none; b=JZqRks/GkB59d//5zrs0mv3YcL6EdMEyVurXcdETma1sfiYNlyu/raTqqwK5r2Ai3IQUjIJhB5XAulEPbp80Qid1Bl8AzXMjBeiqhqGedGm1ek25OQt40VILwqQBCvHGKJ+oCDeZ6WWMSd2P7Gw4kAES9mqpTWq4krFuGBxH3vQ=
+	t=1739573090; cv=none; b=VR0NkFvyXfrysNB5A3YdXX/R0oEFRzhtHm5tCyZXIdMbs7UBGs+3w542ATgdu0ua2AENMJ5lLGoZN4cBteXUrpLdVu1xERDaar9ZEnq5rDhGYs48dufRrrzrs0jGmJxPnYD5RfbvA/z6y+mXP4zzrAjQZSeIwDG9xX3lbw0b1Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739573009; c=relaxed/simple;
-	bh=j4leWUwUUI6z+xPyf91YeQQwCQmtFoGzjCOXiinbHI0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=rSfG+ckCrdt0cqwxy5TvGs0aweg6hnG8/XBLU9PbWXpldMpU6lig5P4s4frEDFiuhP1B7LFjGFJoI2mglva3ZrXBMc8SBrUnX5V3vvsqo1ZncPTd6U7/obEn3qiU6i+x6bRRbu6m0t139yA0ce9RUmOd/1McBPeWWEnFajLzdb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=chMmCTnn; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739573090; c=relaxed/simple;
+	bh=C9A3LWRVVEvM4OBlqT9wYA0yWCdJj2Hpz7Z1pzmG8wU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=MuLbcx6xcEkmCd+Gz8HMZ+IxQ2BULVtdgMDMJe7zc1ibZHzMUpc0rlLMlv8UczFleghxlRQIO6TIv9ADtbG29BJp9w8mADI6VRbVtuC4T1UynvlJDnTBFSgLKWBoYIjFaQ8uQkQssBGgU1SerHQ7mv++Zt7Pdr8nhrnes5SPxtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joshwash.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sj/IziDH; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joshwash.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="chMmCTnn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739573008; x=1771109008;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=j4leWUwUUI6z+xPyf91YeQQwCQmtFoGzjCOXiinbHI0=;
-  b=chMmCTnnlq1ZndFa7wKE04P6eiBsnU4YMYCYEdfV5B0n5Vwz1HIbLWWh
-   3njrp5KrYTn2KO09I2hEn8Wb+7oSF9ace0Rsg0dycS+n5b8n8M7Ep31IR
-   IofYwKeAXH9FekkZ477tpyLaBDRQEPq/zuokQ2VdxbQ2KCVAnvI1kmr/g
-   czdE6LpGKBpiBR6G8s9Spv3FfLSVCYi7oJWJ0Eh90Q+nuifJraoMsvlQt
-   Hl1lBD6GaJILExUfXMoo37+wOcqnZYIPMbXbYwPmh8DNBDTaU4rR0wfpj
-   7Xippk4zPLdif8wG+0AF6FMSCCuvvPFsIHDczMYhkUosVQPqoCaOeQndq
-   g==;
-X-CSE-ConnectionGUID: f1IuQN7NRkqoAOYBS6gVCQ==
-X-CSE-MsgGUID: dRjldbViRdmi95+79jiQqw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40476351"
-X-IronPort-AV: E=Sophos;i="6.13,287,1732608000"; 
-   d="scan'208";a="40476351"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 14:43:27 -0800
-X-CSE-ConnectionGUID: 2iK8Xjg9RLa0Sky8gwf8kg==
-X-CSE-MsgGUID: ceQjlkXBRx+6YcfvvRJZLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="114065853"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 14 Feb 2025 14:43:25 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tj4P5-001AFT-01;
-	Fri, 14 Feb 2025 22:43:23 +0000
-Date: Sat, 15 Feb 2025 06:42:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: ERROR: modpost: "kmsan_handle_dma" [drivers/virtio/virtio_ring.ko]
- undefined!
-Message-ID: <202502150634.qjxwSeJR-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sj/IziDH"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21a7cbe3b56so42533515ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 14:44:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739573088; x=1740177888; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tUNETmfCcN16mATl/cudDdX8wxXBFFNsGuPJIeAzz7o=;
+        b=sj/IziDHroH5kXw5DjtQJdNC0AeZGArJJh2x98x4jO7HBS6Lp7Tzk+QZzpa8dqlUYP
+         jfqLmNconmo8MCmiAOPWrPLU/TCV3nuJNTehQ/OVNXbbLClxjaiAiLNxLKA5WIblBQb6
+         7NoOkVtNjckuuQY10tkKmL4ZsEAR3d5lWYDpM75KGEDAxgp+m2fYP1Z6XITeuCKYkuE6
+         EZvFJYqiDjBQytspQ5rYqzYceWstJ4fS8EdgThrk+ZAyL1e4Qh6ok/h5O40PPUJ0zsCk
+         QI4C36QMidbIjO60BKbHmGiHDc68GtFC1NeQFj5F+cM5sPeA2uzs/3ZHZvbPbRvlR/LM
+         DFmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739573088; x=1740177888;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tUNETmfCcN16mATl/cudDdX8wxXBFFNsGuPJIeAzz7o=;
+        b=m0eomSGNJmsfNev4WAJvMWpGahDpSWclyR9wMmS9DSlIy59epfx0X67dB6TldLWkNA
+         3C4cxJEONuXQ68raPEywXu+zi0UK5lFN5eX5YaAtO/ylC4bAkOyw7n/vHjAT+OnSA2rW
+         mMqV70n/W3ffZtKX4sz1IbawEVB/XQbzHjuQDSS5/+Ud3IEt645gbeEaFyi7c108uH57
+         nkkXRyQEvKw5Qc2YKxBsj2aodVbmHSj6IyHkT4yvJ8aq2EcqRQIWnmWCVFOqBoVqUoBv
+         BbgWFSQ4lytkSaFAm80DMTfWzsfIm1xwinQi/8KbdWQbPk7NEKA2E1QAhf9WCbBWYZ9P
+         J9jg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3slvD8blo5Li2zEpzplfNEV6R8KDfSkze2wrafF7noto1k06aEcDoLj+/xOKHhddkopevR4cDf/GiFxU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzctlyjSc6g4FSV37IcXt5N0v4Sb/LFgRMe75lyFbbF8M2GvHkn
+	Lkt936qAFzPHzP6I6uXUv+I72/7FaxfAi6RK8FfWDNgogUT3PEy6QUMi2lsLj5mulYEHs7U+OB1
+	0IlIFn7Cz5w==
+X-Google-Smtp-Source: AGHT+IFipCMt7qHod8wE+QJEnJFVy+GDVWXm+FNM4uL263Au9RAnEUGi4OFC3Gq37Yk5dRgHAwAYikh+aCfyzw==
+X-Received: from pjbtb14.prod.google.com ([2002:a17:90b:53ce:b0:2ea:756d:c396])
+ (user=joshwash job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:903:986:b0:215:5ea2:6544 with SMTP id d9443c01a7336-22103efa6e3mr14484155ad.7.1739573087787;
+ Fri, 14 Feb 2025 14:44:47 -0800 (PST)
+Date: Fri, 14 Feb 2025 14:43:59 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+Message-ID: <20250214224417.1237818-1-joshwash@google.com>
+Subject: [PATCH net] gve: set xdp redirect target only when it is available
+From: joshwash@google.com
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, kuba@kernel.org, stable@kernel.org, 
+	Joshua Washington <joshwash@google.com>, stable@vger.kernel.org, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Jeroen de Borst <jeroendb@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	Willem de Bruijn <willemb@google.com>, Ziwei Xiao <ziweixiao@google.com>, 
+	Shailend Chand <shailend@google.com>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   04f41cbf03ec7221ab0b179e336f4c805ee55520
-commit: 35772d627b55cc7fb4f33bae57c564a25b3121a9 sched: Enable PREEMPT_DYNAMIC for PREEMPT_RT
-date:   3 months ago
-config: x86_64-buildonly-randconfig-005-20250215 (https://download.01.org/0day-ci/archive/20250215/202502150634.qjxwSeJR-lkp@intel.com/config)
-compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250215/202502150634.qjxwSeJR-lkp@intel.com/reproduce)
+From: Joshua Washington <joshwash@google.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502150634.qjxwSeJR-lkp@intel.com/
+Before this patch the NETDEV_XDP_ACT_NDO_XMIT XDP feature flag is set by
+default as part of driver initialization, and is never cleared. However,
+this flag differs from others in that it is used as an indicator for
+whether the driver is ready to perform the ndo_xdp_xmit operation as
+part of an XDP_REDIRECT. Kernel helpers
+xdp_features_(set|clear)_redirect_target exist to convey this meaning.
 
-All error/warnings (new ones prefixed by >>, old ones prefixed by <<):
+This patch ensures that the netdev is only reported as a redirect target
+when XDP queues exist to forward traffic.
 
-In file included from arch/x86/kvm/cpuid.c:13:
-In file included from include/linux/kvm_host.h:16:
-In file included from include/linux/mm.h:2213:
-include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-|                               ~~~~~~~~~~~ ^ ~~~
-1 warning generated.
->> arch/x86/kvm/cpuid.o: warning: objtool: do_cpuid_func+0x2428: undefined stack state
---
->> ERROR: modpost: "kmsan_handle_dma" [drivers/virtio/virtio_ring.ko] undefined!
+Fixes: 39a7f4aa3e4a ("gve: Add XDP REDIRECT support for GQI-QPL format")
+Cc: stable@vger.kernel.org
+Reviewed-by: Praveen Kaligineedi <pkaligineedi@google.com>
+Reviewed-by: Jeroen de Borst <jeroendb@google.com>
+Signed-off-by: Joshua Washington <joshwash@google.com>
+---
+ drivers/net/ethernet/google/gve/gve.h      | 10 ++++++++++
+ drivers/net/ethernet/google/gve/gve_main.c |  6 +++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
+index 8167cc5fb0df..78d2a19593d1 100644
+--- a/drivers/net/ethernet/google/gve/gve.h
++++ b/drivers/net/ethernet/google/gve/gve.h
+@@ -1116,6 +1116,16 @@ static inline u32 gve_xdp_tx_start_queue_id(struct gve_priv *priv)
+ 	return gve_xdp_tx_queue_id(priv, 0);
+ }
+ 
++static inline bool gve_supports_xdp_xmit(struct gve_priv *priv)
++{
++	switch (priv->queue_format) {
++	case GVE_GQI_QPL_FORMAT:
++		return true;
++	default:
++		return false;
++	}
++}
++
+ /* gqi napi handler defined in gve_main.c */
+ int gve_napi_poll(struct napi_struct *napi, int budget);
+ 
+diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
+index 533e659b15b3..92237fb0b60c 100644
+--- a/drivers/net/ethernet/google/gve/gve_main.c
++++ b/drivers/net/ethernet/google/gve/gve_main.c
+@@ -1903,6 +1903,8 @@ static void gve_turndown(struct gve_priv *priv)
+ 	/* Stop tx queues */
+ 	netif_tx_disable(priv->dev);
+ 
++	xdp_features_clear_redirect_target(priv->dev);
++
+ 	gve_clear_napi_enabled(priv);
+ 	gve_clear_report_stats(priv);
+ 
+@@ -1972,6 +1974,9 @@ static void gve_turnup(struct gve_priv *priv)
+ 		napi_schedule(&block->napi);
+ 	}
+ 
++	if (priv->num_xdp_queues && gve_supports_xdp_xmit(priv))
++		xdp_features_set_redirect_target(priv->dev, false);
++
+ 	gve_set_napi_enabled(priv);
+ }
+ 
+@@ -2246,7 +2251,6 @@ static void gve_set_netdev_xdp_features(struct gve_priv *priv)
+ 	if (priv->queue_format == GVE_GQI_QPL_FORMAT) {
+ 		xdp_features = NETDEV_XDP_ACT_BASIC;
+ 		xdp_features |= NETDEV_XDP_ACT_REDIRECT;
+-		xdp_features |= NETDEV_XDP_ACT_NDO_XMIT;
+ 		xdp_features |= NETDEV_XDP_ACT_XSK_ZEROCOPY;
+ 	} else {
+ 		xdp_features = 0;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1.601.g30ceb7b040-goog
+
