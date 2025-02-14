@@ -1,112 +1,70 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F00AE267AE8;
-	Fri, 14 Feb 2025 16:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF14326773C
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739552290; cv=none; b=pVWwAcY5UAzUenAP9gFvGAIGzPQu1D6r9XV+3nQD9C/QJo490JuWx/ghs94evZJ/lNuNeCuC7/86q6K8zlp+dtgU6ITWXD7Mk1UpuSX2O6aqAZ1c4pO3Wh+2XRK2+l99s++yv2CZuCNygUiQjDqffXJwH/NdByXSbdLf65uhX6Y=
+	t=1739552314; cv=none; b=i/k7oFc9BYAFqwUF7csCz8iLdph235JeKoATejsNz7urvaQucG3LQ8phRyPynuf2Djnxe0C4icbPShHibhSCI3w5vDEl/2Yb+4+1pGmeawBqmnrGHs0lys4je7F0SKNSvVZx+cZ/Qzl/TKYF4HDp9k6J1ssySy5CA9q3rHs8w/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739552290; c=relaxed/simple;
-	bh=pSe80PMMGCIlXIiJ/T3xmK0UbzGta0NRATEdIDVst1U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RRaLVjSD72v4zxvfUhcHteVH3NQdgnL0ELbNbKh7+DWF1QCICfkek5YgSTR1mUdG9oeM0sjalWkgL8AOnh24HaIh6VazpoWzqJESAIkTFZXnB2DxuZwze6CWcBMGu7xYImedQe3rgg1hRMFWXtGXP105tMYb8Old92MemqaXyKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BhocEcok; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1739552314; c=relaxed/simple;
+	bh=uYxbOqSRVZ7RwTmQu8CyGP4M4SHt9+FLmQ3Hk+pyjMA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=hrCvy61DpT8xiceJhBKQjSZ6nA4tmY+vJDCwXcPAiRT7uSEr8dSS15c2JCXjZYYz2hGBktqeVqKxhZboF0tJYQERNBosOONc70dZ874NzGJWuSmNCqoKjo22nivmzCI8vHmtHOlhiO2htu40zoHFz0QnmZr2EhU+GMTcflj9Dh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ts8eHq6m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="BhocEcok"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Y2T2I
-	Ora8hm8MNeTBECuFgUROwdd06PyTIT6wKcB394=; b=BhocEcokkrJDY0VRb0EpI
-	q7hkk/oxXfmf0QpVtJqBD7+snSi/wuFFP5G9/MeTbkbywNw75MSf35W3NaeQ8biX
-	oMnFDm2QklBtrMSc17vh4Qaey03rS0/noMLE3J9gEVgDmcrIUHqY10liz6RDzm5f
-	E8+XBcCtKdp9QdK+tiCVU8=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDn7731da9n74fnMA--.13986S2;
-	Sat, 15 Feb 2025 00:57:26 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org
-Cc: kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	bwawrzyn@cisco.com,
-	cassel@kernel.org,
-	wojciech.jasko-EXT@continental-corporation.com,
-	a-verma1@ti.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rockswang7@gmail.com,
-	Hans Zhang <18255117159@163.com>
-Subject: [v4] PCI: cadence-ep: Fix the driver to send MSG TLP for INTx without data payload
-Date: Sat, 15 Feb 2025 00:57:24 +0800
-Message-Id: <20250214165724.184599-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ts8eHq6m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B94C4CED1;
+	Fri, 14 Feb 2025 16:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739552314;
+	bh=uYxbOqSRVZ7RwTmQu8CyGP4M4SHt9+FLmQ3Hk+pyjMA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ts8eHq6m01HXipowDMzT+hvx9PMLPSnrIZGWu37ZJwG4BhrKpTrZBtqchu+UEa/2p
+	 Md5Gph3BEu2VSW6KKiLoNUnB4wNQGtrFYwrDZ1arjmjFm3jhn7fKwG8CUESz6RAQlc
+	 XDVq/YFwx/XfgDN7uN+v3cDZy3OsRHDdYpI0InHKqgF+IK/5LiFLR0AmhZSqR8cVn9
+	 C5pyIl8F8gAuDrI1x/WIPG2cdHLssbui0Eo33F+JBckjk2DNdTonNB+v7eymK1Ogkd
+	 lBC5Ep6bU04h3M3sr12FsNIHdwfDBgotQp1o/ZaS9G3dBwNfKcQrns3C+eVKH/r8mo
+	 RHkbjrSQBkLfQ==
+Date: Fri, 14 Feb 2025 06:58:33 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [GIT PULL] workqueue: Fixes for v6.14-rc2
+Message-ID: <Z692OY2tsm2GWeCM@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDn7731da9n74fnMA--.13986S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7uF47ZF13Kr13Ww1xJF1fJFb_yoW8tw48pF
-	WUGrySkF1xXrWa9an5Za1UCF13tanxtas7Gw4v9w1fZF13u34UGry3KFyrXFWUGrWvgr17
-	Aw1DtF9rGFsxA3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEGNtDUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWw7zo2evaI68SwAAsc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Cadence reference manual cdn_pcie_gen4_hpa_axi_ips_ug_v1.04.pdf, section
-9.1.7.1 'AXI Subordinate to PCIe Address Translation' mentions that
-axi_s_awaddr bits 16 when set, corresponds to MSG with data and when not
-set, MSG without data.
+The following changes since commit ab18b8fff124c9b76ea12692571ca822dcd92854:
 
-But the driver is doing the opposite and due to this, INTx is never
-received on the host. So fix the driver to reflect the documentation and
-also make INTx work.
+  Merge tag 'auxdisplay-v6.14-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-auxdisplay (2025-01-24 08:03:52 -0800)
 
-Fixes: 37dddf14f1ae ("PCI: cadence: Add EndPoint Controller driver for Cadence PCIe controller")
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-Changes since v3:
-https://lore.kernel.org/linux-pci/20250207103923.32190-1-18255117159@163.com/
+are available in the Git repository at:
 
-- Add Fixes: tag.
-- The patch subject and commit message were modified.
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git/ tags/wq-for-6.14-rc2-fixes
 
-Changes since v1-v2:
-- Change email number and Signed-off-by
----
- drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 +--
- drivers/pci/controller/cadence/pcie-cadence.h    | 2 +-
- 2 files changed, 2 insertions(+), 3 deletions(-)
+for you to fetch changes up to e76946110137703c16423baf6ee177b751a34b7e:
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index e0cc4560dfde..0bf4cde34f51 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -352,8 +352,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
- 	spin_unlock_irqrestore(&ep->lock, flags);
- 
- 	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
--		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code) |
--		 CDNS_PCIE_MSG_NO_DATA;
-+		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code);
- 	writel(0, ep->irq_cpu_addr + offset);
- }
- 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index f5eeff834ec1..39ee9945c903 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -246,7 +246,7 @@ struct cdns_pcie_rp_ib_bar {
- #define CDNS_PCIE_NORMAL_MSG_CODE_MASK		GENMASK(15, 8)
- #define CDNS_PCIE_NORMAL_MSG_CODE(code) \
- 	(((code) << 8) & CDNS_PCIE_NORMAL_MSG_CODE_MASK)
--#define CDNS_PCIE_MSG_NO_DATA			BIT(16)
-+#define CDNS_PCIE_MSG_DATA			BIT(16)
- 
- struct cdns_pcie;
- 
+  workqueue: Put the pwq after detaching the rescuer from the pool (2025-01-24 09:29:46 -1000)
+
+----------------------------------------------------------------
+workqueue: Fixes for v6.14-rc2
+
+- Fix a regression where a worker pool can be freed before rescuer workers
+  are done with it leading to user-after-free.
+
+----------------------------------------------------------------
+Lai Jiangshan (1):
+      workqueue: Put the pwq after detaching the rescuer from the pool
+
+ kernel/workqueue.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 -- 
-2.25.1
-
+tejun
