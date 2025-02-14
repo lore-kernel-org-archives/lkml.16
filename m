@@ -1,132 +1,89 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59E4275401;
-	Fri, 14 Feb 2025 08:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65287227E81;
+	Fri, 14 Feb 2025 08:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739523034; cv=none; b=T80mcKscxwthnWcGt6xkDbxqGVYEf39/f9B1NtsHx9bXl6mNkJlZxUFt6568l8vaI65guaAXFrBoXGHiu6oROl9PvNNO+vAZQ3Tl7g5GPaKR75mpbGRuP3IWcidovdq38ovWjQdOgsfLmXtSSgm5p9fZkFTToH/AQUv3IunO3oc=
+	t=1739523036; cv=none; b=ghdE4MBrZK/ui9dQGi5p0jpGttghNGic08OwKS7biaE3NQ+ZvrpDzGChVtOvtBCv0jwkTbt8+wNGDM6ytgT6IiV62Zpl8bkjaotTbkEqdyFboq89ta13lVN5ZbqLJa6cOZw36ZOL41lVzIFn7yRX+mLwOzfoojbmgsaB0x5X2J8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739523034; c=relaxed/simple;
-	bh=3+AcZdnU8FdOjumClIF2GqlG4CDw+OX6zeEh4DONsJM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=teqISBvNlbOd4gMjXmPpgUSM+sd5bmy9S4VMpefCAUzDbH+2CiV9fvmlM4jAeDAas6+mVmmuLP4WJtmM3eIsYAv26z0PPyelgt7vfGdenRuv2Kxt7DZS4MBUme5UkQRv+IDuOw/IO1RC6QzVsVeY4UW+VaQas+9FRAJ1UAKLa3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WieMddbH; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739523036; c=relaxed/simple;
+	bh=FIiFh48SRloeLYrhX70YWBVGVz+5pKIaMXokOTKVowQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YKvWFJRdUfB9sREXAQr1WCdKaX/oiaIDtpkVhWwKxHTve8afqtSJ0L2d6ySzYcdEL49cUbA/zkvEOXGenVRawx6pMXRQ5uGwxkOgK2fu56LvmFwVdqe0keKOVMm6f20O4dHRgid0N6f/Jf0o/gh/ulRqJA3a8V3SlnotSf9EyWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GnrSKhOp; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WieMddbH"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51E6tEMR008247;
-	Fri, 14 Feb 2025 08:50:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5UFHztiYBs5W6zR2fUSuxAZIpyicf7kYd3Jnr4/XuBE=; b=WieMddbHrkMECZ3h
-	2pK86iWTna+RWPM4WWpSjYAYE0APL+bi9giHcOCe6ImnGpaMOMedvxHMm4GSr6ay
-	g0ENvukalKw253cwkG29G4NR0PtM0deKCS3ZyDNlA/Ir8GPNe175r1W/ob9epu15
-	JYPhk4nHnVaf3DlWPIZBbhiUgvz74/R3m8eoizfAJ0xKJeJld5fB57HBJBfDBzOU
-	8Z1nfUk0osNguaQ0o918geDzRLPzNJVofjhwV1FZGSZi5FjEHGHIloiVhX6uBxX2
-	xFJFQTwwebZZM0ngy/ANhsaqZJ8lCKP3VPCDV/Y4qCwXmW3zTXjDnOVNnR8UdDR2
-	8i9nMg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qewhdgqb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 08:50:19 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51E8oIuJ031881
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 08:50:18 GMT
-Received: from [10.216.33.241] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 14 Feb
- 2025 00:50:12 -0800
-Message-ID: <be824a70-380e-84d0-8ada-f849b9453ac0@quicinc.com>
-Date: Fri, 14 Feb 2025 14:18:48 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GnrSKhOp"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2fa8ada664fso2888584a91.3;
+        Fri, 14 Feb 2025 00:50:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739523034; x=1740127834; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FIiFh48SRloeLYrhX70YWBVGVz+5pKIaMXokOTKVowQ=;
+        b=GnrSKhOpXRnW9oVGxdNH5K+4oCCfFuoa8ckZzl2dk3rtgPg6q0DDrVMc3PuHN8Ar9n
+         IVCtz6J8MY9xkm+lTD2d9HmbN3+c48Dnl2qGGvAj9wxjbFeeN2Vus8P4+YRt/bNCmMtN
+         2EiOGrxZlXYT5DHQOoA9h//FJUbdVtCe0F4+zje3KPNdnibSHg7Kic0LvjJe+yriyTsb
+         LVOMce3FRv1iL6gUf2rz1r3AdLj0tf0IltbeS+M0+tE8kXGT6Z09HyiG8naJ5zzlqKHT
+         sCFRkQy02DO6uqefyFo63eZct+kV/okWjo5hLSSxkASuhVSg5HvkOYbXlrop5/k247rE
+         B9QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739523034; x=1740127834;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FIiFh48SRloeLYrhX70YWBVGVz+5pKIaMXokOTKVowQ=;
+        b=AjvBR6L0Yu1wRFAAflzbwgUoMxAmCx/54HU1UmJkQOUsc+TBqjhhtWsoB5/xuKzYWC
+         He68lkUehgYli7IwC1tiJm/zq3pHY4SZRWJ3+fWQh5rKHAtR2n68LTzT60jrUtBXC4F6
+         2N8qqoJ6pbs9i7HDEe11cAZitX4468Irrhtks1QN4kYNNP+woAb81J1jdjREwovG+jH+
+         m7XdDa1r3sT6zx1Im1ygyoC6TNgvppg7V45yJ3ozKbWDetzjtg0dMlVH5Cq9xmh4iPNE
+         J4hdDGWt0n9oaqIEYb9jJyRQLD98E1svzGniBjBIQrDt2xEzO37GrBVwnsNctph0+V84
+         ejng==
+X-Forwarded-Encrypted: i=1; AJvYcCWA3IhpFPpcQhl0UgcOET9TkSG2yhxk7nMl5EtzOuHKekCD01H8gpcLZCbX3x6tjXXcQ/CBBOR0mH8=@vger.kernel.org, AJvYcCWXoWnIBqgRxgsvxTv/zCS9gcLDKwqVsrMQ/hdzVvvyNF9OpnP+TdIUgMTtDDPSNREqyJDkfCc/QS/CRdpX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyrwnb6U+UMQIG+0mrcHdcbNppIdTSSaHYTxTbjF6cQBCrbxBll
+	LzVtE+DyHihPF/BIlls5H0vE4fDnZ4UvfVq1kQyBtLVBqam/tyzIZA56iskLWAW/wq8je8Z8Ud5
+	rlcQJseWU1hynE0tRcKFgjQQvBoY=
+X-Gm-Gg: ASbGncseFM0hsHmSNUDvN236q7gzybvRKvhzgWs1SJxq5cgyH68KzsgqAmjYfOQEHyS
+	HySpDkhW/xo/522WwmG8lKThw1f80fWSgAN7AkswMm3wr4S4VvG/StDCc1VzCJSJi20XbPg==
+X-Google-Smtp-Source: AGHT+IHiUFULatLaYVTG50OelwewoeambCvXM1mTQ31PiJAH6oiIxTBI5F18bPDN/bN5hq3LikyhjtSIbsUPOxZ5ITU=
+X-Received: by 2002:a17:90b:518d:b0:2f4:43ce:dcea with SMTP id
+ 98e67ed59e1d1-2fbf5c580c0mr16296822a91.25.1739523034540; Fri, 14 Feb 2025
+ 00:50:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v6 1/4] arm64: dts: qcom: x1e80100: Add PCIe lane
- equalization preset properties
-Content-Language: en-US
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "Krishna
- Chaitanya Chundru" <krishna.chundru@oss.qualcomm.com>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Helgaas
-	<bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
-	<kw@linux.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <quic_mrana@quicinc.com>, <quic_vbadigan@quicinc.com>
-References: <20250210-preset_v6-v6-0-cbd837d0028d@oss.qualcomm.com>
- <20250210-preset_v6-v6-1-cbd837d0028d@oss.qualcomm.com>
- <20250214084427.5ciy5ks6oypr3dvg@thinkpad>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20250214084427.5ciy5ks6oypr3dvg@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: -VFvbxQa7YG4cDu-8xuobTdRL3HM24Vb
-X-Proofpoint-GUID: -VFvbxQa7YG4cDu-8xuobTdRL3HM24Vb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-14_03,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- impostorscore=0 mlxlogscore=958 phishscore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 malwarescore=0 bulkscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502140063
+References: <20241206084817.3799312-1-peng.fan@oss.nxp.com> <20250214040457.GC20275@localhost.localdomain>
+In-Reply-To: <20250214040457.GC20275@localhost.localdomain>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Fri, 14 Feb 2025 10:52:08 +0200
+X-Gm-Features: AWEUYZmgsC6Etzl4Yr65LGIQ5Av4XAoNXRv7HFJ-K1y_EhMdzGRHl7TymfpRoOo
+Message-ID: <CAEnQRZD25RrtAzAy4B9WX3+1iUuLdt1cgZ36kCTr4poawP1htA@mail.gmail.com>
+Subject: Re: [PATCH V4 1/2] dmaengine: fsl-edma: cleanup chan after dma_async_device_unregister
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>, 
+	"open list:FREESCALE eDMA DRIVER" <imx@lists.linux.dev>, 
+	"open list:FREESCALE eDMA DRIVER" <dmaengine@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	Peng Fan <peng.fan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Feb 14, 2025 at 4:58=E2=80=AFAM Peng Fan <peng.fan@oss.nxp.com> wro=
+te:
+>
+> Hi Vinod,
+>
+> Any comments?
 
+Hi Peng,
 
-On 2/14/2025 2:14 PM, Manivannan Sadhasivam wrote:
-> On Mon, Feb 10, 2025 at 01:00:00PM +0530, Krishna Chaitanya Chundru wrote:
->> Add PCIe lane equalization preset properties for 8 GT/s and 16 GT/s data
->> rates used in lane equalization procedure.
->>
->> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->> ---
->> This patch depends on the this dt binding pull request which got recently
->> merged: https://github.com/devicetree-org/dt-schema/pull/146
->> ---
->> ---
->>   arch/arm64/boot/dts/qcom/x1e80100.dtsi | 13 +++++++++++++
->>   1 file changed, 13 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
->> index 4936fa5b98ff..1b815d4eed5c 100644
->> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
->> @@ -3209,6 +3209,11 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
->>   			phys = <&pcie3_phy>;
->>   			phy-names = "pciephy";
->>   
->> +			eq-presets-8gts = /bits/ 16 <0x5555 0x5555 0x5555 0x5555>,
->> +					  /bits/ 16 <0x5555 0x5555 0x5555 0x5555>;
-> 
-> Why 2 16bit arrays?
-> 
-Just to keep line length below 100, if I use single line it is crossing
-100 lines.
+Do not send empty pings.
 
-- Krishna Chaitanya.
-> - Mani
-> 
+Just resend the patches marking them as [RESEND PATCH...
+
+Daniel.
