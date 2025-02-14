@@ -1,101 +1,104 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9878013C67E;
-	Fri, 14 Feb 2025 02:14:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478823C17;
+	Fri, 14 Feb 2025 02:18:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739499271; cv=fail; b=Zk4qbcy4U7FaFEKzRv0lSh0LXlZBahbINl3xP+HSjx2B5wLPN3OtOlOGvO4s7coertiEvb4Bmm9znFBnc0cnzA1jID2XR//BWNTjEf4y51SmQgqHZ//XsvML8Wx6eS26Ghpf+F1n+jCii2KhPvH2CH7UIdZzyhSDeYMOKirvow0=
+	t=1739499537; cv=fail; b=X4wlrPQb2klBVvgB+hOXJWgKy1288y+hhy9Hlkt2iJaz4SAEQ/4Icqwy8stbcxZMwzuu6yQPD5oR6ux2v3ZLp0vRgOoNR2It5FRcszF6WcYUKP/lrE4qAz6GrtnMEuR/3XO5TkkzpDsPJtSpMPNybrQJUG2B4bOnpN9j01Ck1OI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739499271; c=relaxed/simple;
-	bh=ZgiZwakUQuufpHJltYUDo6v1E29Wknq7xftfEIAr1BU=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Xs15sLgQTMInKDm8jKC5efGazmuhLMu9a8ZPqOU3yFyr1O1ZUx9SHm0onGp482o8IzloFPaGoBk2xKjX8fxKpbUZvEBtlw1lbJLKrJF0byXStIjzNe7Qje2CdLj3I/nTTB5pxEtlDlclt77ZF1TWTENYoKHbZ5/nMDm8lfOsL8o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RiRXq67q; arc=fail smtp.client-ip=192.198.163.14
+	s=arc-20240116; t=1739499537; c=relaxed/simple;
+	bh=qaJqP71JnHIFkEcxcgDKNWUdDFI0u1MCyJ9Z6Cqz81Y=;
+	h=Date:From:To:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kRwvosXaXTjwicw9e+qOmR2NpWrKZylKYqQRT8SeLUivtuWaPsDFrCg5Fiq3bfIM2kJthWAuB8YmZHf2QZqxTHDEeSdjWzDJsts+kQFCIqL7tEYjDHMaeEnaw2fdPHgFTFTZrcK0cZDGSVWyw+N4o0fZ8dzbITx/6ox5aZEPmBE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bBTIHLgM; arc=fail smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RiRXq67q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bBTIHLgM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739499269; x=1771035269;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
+  t=1739499536; x=1771035536;
+  h=date:from:to:subject:message-id:references:in-reply-to:
    mime-version;
-  bh=ZgiZwakUQuufpHJltYUDo6v1E29Wknq7xftfEIAr1BU=;
-  b=RiRXq67qswJWVHGJzctuLXBN0c1Ng5z5zNqOSycnCJJakdHvR2UBnrcZ
-   PX/9R8mB+hHZ45hF9jBlEiz0UwETUCqUI/OMaIeoLsV2SCamqEbpq7HyR
-   /HHE+X3sFsy+B2RmsVnadalAJ4hoZw02Im7CbjFN8jEccjR3yDk7tNSDP
-   61XwtCbjBRPsEZejJn7jqPB4AsO6FKW2Rh50bgA8eSe4KkcaQA9mip7Yt
-   YOLmKwaMlWR4ukpOW/ZRC19GHmomgl9QaiNMOeezXyF+iS5PBjekYYGMc
-   3X6a6E52YpUhPb5kZz8GCQ8UoSpNKr0ZBhocQ50iDWtOuaZfVCmchbroS
+  bh=qaJqP71JnHIFkEcxcgDKNWUdDFI0u1MCyJ9Z6Cqz81Y=;
+  b=bBTIHLgM9773tUNKsZeAIyu1/tfJAdOokf7G0sG2b0hHd7WpAJtCbpe4
+   jClqrDFLR2au10Q8zjo3kpa6tyB9B+bXy1B53yWd4aN+amMSWiQ/kUAiB
+   aoQgw4gq4EVTOAguoxrkHJM2Dn/MaxbAv77fcfr0K0nZ7bNGirNmmt9TS
+   NmgEa2qCoWmyrVp9GqONMmyNE8J9OFoggDYQAMrO6GPGtGp7cT9kDoMIe
+   CcU3apir06DySx4FFUS+ZPlpqs95k0iHY2LJbRGnE/hOqcmMVEuziZlDt
+   U+gCEH6pFXtL47nvTs+9Wd4NnSwiiDtVI/m8Fbzf4Rw/NlEn40AWUrcQ1
    A==;
-X-CSE-ConnectionGUID: 0HKNna1HRg2UtsNVb8pDCw==
-X-CSE-MsgGUID: jp2qU3XdSjCU3g+OIdk3lA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40496834"
+X-CSE-ConnectionGUID: 20nRFCKtQbGDsY/Ier5BYg==
+X-CSE-MsgGUID: zTT11sUNT8aKf3GsOI0TYQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40497199"
 X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="40496834"
+   d="scan'208";a="40497199"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 18:14:28 -0800
-X-CSE-ConnectionGUID: 44AlKqwmSfuUTo8RhOWkxQ==
-X-CSE-MsgGUID: l9fawTbXQF2wCGXLKFxngA==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 18:18:54 -0800
+X-CSE-ConnectionGUID: 7yIManT9RQOn7YfWY28q0g==
+X-CSE-MsgGUID: /7+Vhl4xTF6C2jzjEljAAQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="118338351"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Feb 2025 18:14:27 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+   d="scan'208";a="118339183"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Feb 2025 18:18:52 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 13 Feb 2025 18:14:27 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ 15.1.2507.44; Thu, 13 Feb 2025 18:18:51 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Thu, 13 Feb 2025 18:18:51 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.171)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 13 Feb 2025 18:14:27 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 13 Feb 2025 18:14:25 -0800
+ 15.1.2507.44; Thu, 13 Feb 2025 18:18:51 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b+qSWNVC3FiHaq+HAvz/dQXY2p5bKc4FLE7WzWecG8oH4r4Ydr5hET9T2ce9xxwNeiCMH2uAM9+ksg0dKYH/QiFLSlNf1B8hvF3u2ftNFgilaSysHaYK8kS3S84/oCZywcfTfnWyV815WbbcWrpK5WDyCW/aSVC56q5PJxmG+wsQP6nGXz1h0cqoQcoIpufTmQ06DPCdlP4UMElw6mJC9HB5l65SB+yJZlMkiwG57RbHcFz13WTU6rLTvge0JvqXLLIYsWE5GXBZTdqhM+0cnynZyLkfVLO/8stntI3poB7vPsfUUKaUgQ/T0j6cKO41JZ4C6MrxrDQ8ZttR/LH2/g==
+ b=ZCzBn5v4ZevcDZpP+zFbkWTwkMyoXfPxi4VdEmmSfwo5yxNUjmMw/zZNOHh4Un1KGoTz0VjpWeFVvY6GtOnSFo4o3LevK02HSGbfjcpCbIV5ykNoP2yLK3+xJNrykFqojmamoI3HgmD6R8MtF+GnTv0naqW5X2CXh8U5KVWLW12iIoJ88QsRhHEnBErSSRHKDwIOc8guGpRG/x2wKNp4f0sM5WJmBefc/d28eFMjwfbqvC5LrHiObpcAT2bgSYY+sYxEsExxP1XWb8w0Tkh4heyOvyNiAoMXsiaA3nEzZF0QfSgjXcueOtAGqdcZ5JSMtzSjYTuxEA1ZVvNam3+HYw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wp3vxsiQuK0KTKhLu+wUI/yQNukY3dHJ3DN6sMRQwWM=;
- b=yFZlIuYzcXx92iFj7UCNhrNvAzd25hmnZwbPSgB3j1aSxBZH/6skawFEJ5LAX+C92VfixWJ4ujZ2WC5US4ZxHikUo46T4+j0lzfmGKJ3nfNpX0B50/MVGdqwE8Vwxe0TKh3/7z4YfqOiwdFn/i7VLMliU8DIjIQGLPKF5ksjU3Z8pPA3IDtVfTh87UH5XhTSuf/z/3eDdK8Fkkk6Mr7vMh0jLyQxM9Rt+XuGquG0GMJ3opNhXGJtsxy+XYOzLBLEBmqomBAF+psJkFJMnltCMPGNJqMF7JIxRTK1TAOw2O8Pd9faWynSxodUBuHxysUFIM8wI9E++5ue/IWdG1WBJQ==
+ bh=fgPRrBpw3FJaF8l8pV470lNWy8kPkEmd76+NUd5A66o=;
+ b=VjpM2Czy0l4lYdQIkHPa9Fd6THRXpuo6VevLLMvDV+1TzSzzr1e+ftyIjT3YUBOITNz8F/sZVCnhqjSFpxEGc3IeD5rVC992Q9gsrUjiC0IJQNniPIfWP1b99hBQRzik8MFfh7lFbiNVbMAQBTNrPiQAEh/eGG3Q0qONiROWc65mQDb6U08ja+grgk2Wp7dbQqEZg3/v5E5QVKVBD07dr4lmuV5nTdzV0PFZL4OybFwzztber2i1kQum88/RMZSCgGkoRLGVrxPrS+VgaLtRjzzf3iGJ4JmadVRcp2Lhna+LGfCaB+e7Jo1CXA+s3ZqNFApIMOkGu5SUsaK1PU5Y0w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by LV3PR11MB8743.namprd11.prod.outlook.com (2603:10b6:408:20e::20) with
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DM4PR11MB6359.namprd11.prod.outlook.com (2603:10b6:8:b9::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.17; Fri, 14 Feb
- 2025 02:13:42 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%3]) with mapi id 15.20.8445.013; Fri, 14 Feb 2025
- 02:13:42 +0000
-Date: Fri, 14 Feb 2025 10:13:28 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: zhangmingyi <zhangmingyi5@huawei.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, Xin Liu <liuxin350@huawei.com>,
-	<netdev@vger.kernel.org>, <bpf@vger.kernel.org>, <mptcp@lists.linux.dev>,
-	<ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
-	<martin.lau@linux.dev>, <song@kernel.org>, <yhs@fb.com>,
-	<john.fastabend@gmail.com>, <kpsingh@kernel.org>, <sdf@google.com>,
-	<haoluo@google.com>, <jolsa@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yanan@huawei.com>, <wuchangye@huawei.com>, <xiesongyang@huawei.com>,
-	<liwei883@huawei.com>, <tianmuyang@huawei.com>, <zhangmingyi5@huawei.com>,
-	<oliver.sang@intel.com>
-Subject: Re: [PATCH v2 1/2] bpf-next: Introduced to support the ULP to get or
- set sockets
-Message-ID: <202502140959.f66e2ba6-lkp@intel.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.11; Fri, 14 Feb
+ 2025 02:18:43 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8445.008; Fri, 14 Feb 2025
+ 02:18:43 +0000
+Date: Thu, 13 Feb 2025 18:18:40 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Terry Bowman <terry.bowman@amd.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<nifan.cxl@gmail.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>
+Subject: Re: [PATCH v7 12/17] cxl/pci: Add error handler for CXL PCIe Port
+ RAS errors
+Message-ID: <67aea8002a005_2d1e29466@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250211192444.2292833-1-terry.bowman@amd.com>
+ <20250211192444.2292833-13-terry.bowman@amd.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250210134550.3189616-2-zhangmingyi5@huawei.com>
-X-ClientProxiedBy: SG3P274CA0010.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::22)
- To LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+In-Reply-To: <20250211192444.2292833-13-terry.bowman@amd.com>
+X-ClientProxiedBy: MW4PR04CA0337.namprd04.prod.outlook.com
+ (2603:10b6:303:8a::12) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -103,279 +106,252 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|LV3PR11MB8743:EE_
-X-MS-Office365-Filtering-Correlation-Id: 63c9b14a-b078-4726-b768-08dd4c9d343b
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB6359:EE_
+X-MS-Office365-Filtering-Correlation-Id: f1ec122e-8d10-4378-3af1-08dd4c9de74c
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?hqkd38RKh4A6vMDsoG3hr6aezeFfzOnWCm6Tm6PCdPjn+DZb83L8kF0yMx62?=
- =?us-ascii?Q?tjhpCtXwKZETXP2qnJrTnUWoXGhPEu0bdghiCFPYaQ3ZR73pcE1Uu9IEzDAy?=
- =?us-ascii?Q?rpWLDYvbueotlMqLzLIOrVtVr7Cymw5CsWEPGzNBx+wZrRCj9dVNvMeMxtD2?=
- =?us-ascii?Q?iVOILFC0zrN+d79jIJ+KmEWhKuS9mVKN8x3DiqKlzFrHKn4S4K1jT/o/q7rU?=
- =?us-ascii?Q?rGuMJJZQDGexXRbn6oYyTdKQFlrw359/QQOgoXtuaiqQHt0uTdQ7rR9vEimy?=
- =?us-ascii?Q?cEmy+kaf2N73OSKheudjUEq7hsJAeLjBvvt74hYQXy4x9t1HF47pNjxKmqDS?=
- =?us-ascii?Q?zPZz5LFVMeADmfoIQ/SX7vfUCCV8fcwrl76KSwqkbiRU/phyo709CS4vGsec?=
- =?us-ascii?Q?i8YjGaFPQXygORaILfhC63cvAuN83MuYTlTvY1AVBfpkTiqzlyc57vrXbrCH?=
- =?us-ascii?Q?Trmnfe0QP9wnhbkEsE3JH6Xax5eSU5oark6zRYg+Wy0jpOaaTw6VH85gaP9Z?=
- =?us-ascii?Q?vx6XzYUMvkO1qUCnJ3lxfK84vsLSPDx8plf1Kyf7S46QYTenVrQdOCXqPdpC?=
- =?us-ascii?Q?dMy+Ttqlr/Gqjh3oWdrguPYUs3A4obIOa9UOYseRDI9qYmY7cKtOV6Z/sn+f?=
- =?us-ascii?Q?x76xNWGxejyEjLD6YJ2vP+7Sqlb03NaaGDzQ75+atQIvs7vEs31SDZeDZUrz?=
- =?us-ascii?Q?yPLd1rfYB3IJUTygNH8vxKEznX/GDYD6i4V4z5suTykMc0Pb/AkjhfNEtKG9?=
- =?us-ascii?Q?kFS0F6AzkM2PsnIKuampqhhPsjsH/wnydSOWtAoqA7/MnW5hjsujzUXiOb6m?=
- =?us-ascii?Q?jyRTb39Q1MZDVd6SmQKQ6fqHZIxruPWXqPMEWO+4V2+jwRJco7T6Yf04ReHc?=
- =?us-ascii?Q?mOo8r2tvHS1wwe+rPzBg3arEwd1ZRIMZRN2uKpqtmuc90O/3ssWNCXs87opW?=
- =?us-ascii?Q?ldqSF8TsrMlfxygSpoZ+CWkRdJzXtyzayL6eClcezAKPx3AlWZtDHrBfCxlF?=
- =?us-ascii?Q?u+JeiSu2aj0MHvGpM4UQTJauNWGkLThaiImACCN+m8SRQ2DRPsO01+RJASyT?=
- =?us-ascii?Q?IMg0xtnAzr58uHUNBcokj1BY7JA/Ko/EG6AZkqxdEMdVNhjOECTFmoWHcbKr?=
- =?us-ascii?Q?tZ5x4JmtV7FZvrdnUcgDtsOusM3JzgTPbmf5z55Qh7lRkJ5ZVyCOqSiAG93t?=
- =?us-ascii?Q?IXJYDK9uozSehv9SSjdC1M3rN6+TeSRdv9N3i7oET7JNefe3GwOyXsUebhCB?=
- =?us-ascii?Q?DobWv4wjDr4X64+H1gdASZEg+xJdZ+x3rZNClwBGYEw0EuUVaAW9KdKBjx8E?=
- =?us-ascii?Q?UH06FDLnRnB4L7kjA1kNdIfHK134z10uWd8fi9MIdfZVOA=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007|921020;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?pM6sKPU5Ey525buA4nZGlQ/+ad4Qrq/qvCSJ435skRXCBm3tdly+9PYDH9+n?=
+ =?us-ascii?Q?D635oQpxeGv6OHqXxVxU3JxQBeeA5T5qAI3z+IXa0qaZG8k8QPtTW8KzPrpN?=
+ =?us-ascii?Q?opvVyEhEYD50PoR1PkBQ0BZxfqWQOv7QHXQZTHOxzDbbFaMU8OpLCpT0uPMi?=
+ =?us-ascii?Q?6OsXYyaQgMQaSPSsGZ3S8nSG0UAz2pK2e1h1BIcNu+X+lb2yZWn23nKFsFom?=
+ =?us-ascii?Q?3ehd/G4Qf9mt4uleX374VugOM3/fb+zvpbdWYw424jjKY284Jss9iSOT7/p1?=
+ =?us-ascii?Q?rqXc8DQ/6GWi5ufVpRepbydwWF/BD/8GgeornWLHhoydL+rnEkC6ts6bZWh7?=
+ =?us-ascii?Q?YIxU8yI0SIwXTGe2Gc58chPqFgpVkp9LlkFP8p+Op6eAyy76/fAUeFcf4z4+?=
+ =?us-ascii?Q?MF6pzlz5456Ch0WXqRNQ+GLeQ4HseGQP8ISR3koPx5woKvYJzPwbwE1uRCdn?=
+ =?us-ascii?Q?+aTNiXsKS6seKqbSH4P/7KJfHM5X99BQSTakKrYBVQPO9tFsKVCC6IlgmCxW?=
+ =?us-ascii?Q?q9JynKFWy39fRtM/atmEzwlmcJzRjyfrVtl4/bOD2h+EQmvLNUYcvSdA0LBE?=
+ =?us-ascii?Q?rnDxpgCU/uRsq2LpF/YIWPk3bo0rdo4T8yAAuptVL/ytYMIsAY7Ql3W+3y9x?=
+ =?us-ascii?Q?gK7wpnQczS8KL/TCuWEm+0x/Tdw58SgUE4YMqCUJbYp0CuGFzkU5Yo8DdLau?=
+ =?us-ascii?Q?DfGZ6wgk8+bgTWfvi7QsZo/nwv9DjgPAfzSvDY8qNAlx1eHRDgZY1gAtfG/d?=
+ =?us-ascii?Q?bIhMJYofMFTFQXJofZvkoZKrh7DXDuopQpXDee5aPeEF1+rjheQj8iwxU4km?=
+ =?us-ascii?Q?xEZfEUVhUItieELuYVRJHIgOURufWzVsSWXBIz507hZyzLcADeEtRDDLgM+k?=
+ =?us-ascii?Q?B2bPBjm6H7pnepnV2sEqTEIDt7ryeiJlapSJMJChpzMVHFa0duJUU2+IaT59?=
+ =?us-ascii?Q?fMBKuTc1KxH0xlM39Gh4K5MoNAh+pjP+e9cXBtTQtTD3R/FK9sN2XqJOUpwQ?=
+ =?us-ascii?Q?QT2H2ky1+1YM8kZax5e0WoEfa3ekNUhB0nF3+RRent4Wwe/17XQ6s16/V0Ki?=
+ =?us-ascii?Q?oCW2CTqYL8muDGl/ZnYubS3JiIcusNrOoFmFjCWCq+lMb4vSbsqbJdFEw7rk?=
+ =?us-ascii?Q?gweFo3kR+3tjvo0mnbH6hiFlcCHQ2hRUGTndfgQRPSZFbKRA8aJGYtJQpDA7?=
+ =?us-ascii?Q?5Npx+TK1JO0ejiUhItFqZGv8THr15G/VjFIlubd64OlaxUDzzJFn7ie8MgWG?=
+ =?us-ascii?Q?pG5ZqtwIgnpJyOpyH+EC4brwAg6Dlvhp0eYB4qU1up4KybuXruwb6t+ovJDP?=
+ =?us-ascii?Q?dhA0FpAKc+8dO/FI+ZXLD1s2aD8+rwIQ8GadECa6hFsh5EEZD/uNgbRxhR6k?=
+ =?us-ascii?Q?JXnZqks0AP53IV9DYB140Zd7grNqgy3jFjQDuju2jcIWhu0NAISNyLUCXkTA?=
+ =?us-ascii?Q?DtcvsW/r7I4=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nzq4F3LrmFo5gRuykN2J6c1juedBaIWF7B+XibKQbi4S6f4ZoY2Vg43JSJI+?=
- =?us-ascii?Q?iCHq94cs2KK5RPrZe18yma03icNkK0grI1ePU2G6ddylotk9rA0c8/Vwh/oY?=
- =?us-ascii?Q?rNbQIXpNuygiVnaYtVFSEGWnk/O8UJPeZYhbT6pPJlNG1GkfmBztd6Xr1qAo?=
- =?us-ascii?Q?twQ4nhCK4lXzS8uRadAWU/mAqZRDCFhSZMeJVGPvSYDTa7Xg6DpUsnsOEsVl?=
- =?us-ascii?Q?yt8oCNE9ayqGvCSvA/+XSJ/pHsmqDcVtbAaiUykU+VVCX0/YjqF6rv124snf?=
- =?us-ascii?Q?PdhkmAPzGwyz0k8/ITWGaW9ybEC/FWMKjLcXPnuXjNf/uHRPDLjphxipC6qM?=
- =?us-ascii?Q?22uYc6yFOQ8SL+wra75SkxjbXGpbJTpQ6T+nrQSK1GZUJiTDJ9MVOQJPBnWI?=
- =?us-ascii?Q?6aOZ91lwu1BvzOm+gHMP8M228VZfFIRcFxA/bRZOiJ4VHFdVjsYPsIFl3/2J?=
- =?us-ascii?Q?G82GWjCVAQbHKDC2lmWP09b3rSaEhaPPlghoftxJG+Y7LsfKzjvwyvC/hBqG?=
- =?us-ascii?Q?K7RilGmuKsl4WoZHuULGgzGJvkWwEO98Y7nJTRwL9QQkPiFfHzX4vGo4F5kV?=
- =?us-ascii?Q?GsbClLpQAx3B80Y8bYOkqVPmre8nu7JQt3YQa0Y+GlHfgopMNFg+sagYn0Ph?=
- =?us-ascii?Q?rnYzL4dxGFvn2irVCFCvcCHEej6xjDltiBvC/NVhdIn5LAfdGrtyiQvRZeQn?=
- =?us-ascii?Q?QMv7pAInVd0hJOsts5FNio4Pun+XEej1E4CwGGtdP1Fl79nYMtLwMpEhDab3?=
- =?us-ascii?Q?puco6wJRQT1FYz11/+tGzYq+ByiJdHmEW0GHtqZ1KkIMYR4Vj4XrcN55jLIJ?=
- =?us-ascii?Q?5rvSA92mc6efOunWezoCqskwLeh50dtkfgbdTaFThhRkYp2MdyiGJY+wQ7IZ?=
- =?us-ascii?Q?Wm6wq0IjmHjYBfbu5smUNVeZGgSeWsBmSa4pUTLUeOsROO94SDNP1phYeHFz?=
- =?us-ascii?Q?PksOUQo/komrp8j9nzqb3HhGhfvUtfe1vM4AWKFDLUTyPFoTlSZQuORDsyWZ?=
- =?us-ascii?Q?k/QJMmyxrwf5odHr3jpMbkOkfuUcVEHdB/YS9e2A0VMrWmz/i3wePyu0rngq?=
- =?us-ascii?Q?zWIQWVmnectXAyNcv9GPsZXLhCpcJhq8SYApXGKTTQNHxE2RBnhk+7aNaLV/?=
- =?us-ascii?Q?2ucmYFqwbqo1YIIu2Gt7F3qqjLmwFWOkiR5ETOeZet4DgTIx1Cba7xWfVWc/?=
- =?us-ascii?Q?aC3zknkuxqUBFYO9JIojz/ivedYB+Hh4ldvDpZeSOF9E0dMXjpWWaq1yEwWh?=
- =?us-ascii?Q?I1YPr5ndtIkDq3gs1X3tukcPd/s1chc3k/mQ747dZxnuGvALtgG6nhvER7I7?=
- =?us-ascii?Q?8gUwDAA5ERcMYVG3DUDCJJZWZ3YrJl/e9/KAAeGTJIf2y/O09LwxZfO7Jogd?=
- =?us-ascii?Q?hYg6AoEqW4kHkq/6S9SwSTz82R/AOCUp7vM5sZptjkqe+pvH3Y4J44fj16rx?=
- =?us-ascii?Q?13L1y/+3+sxT/jV7sjM4y3eDUSotvJvGmsBwfadtkHnLCyHzYiz9P+krTjCc?=
- =?us-ascii?Q?LvPpPqkdCiUuXEFgbqEYdm+poCEYkEaGo7wYkqv229E9IFkgCJPE13QY011P?=
- =?us-ascii?Q?YJFe4M9mWTwuDrJTkTuuDBJe+O3wXc5+5HR+1UR/EYXdv7Wghul0U0x2TW4g?=
- =?us-ascii?Q?3A=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63c9b14a-b078-4726-b768-08dd4c9d343b
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ScXCpuKswVUI3aZ55fBSn+KyKbi51C41+Wp6vRCwGu0auDFzcO6+1Y9Y4NpW?=
+ =?us-ascii?Q?1Lvev4ZE3AgixR3iGBQP0bOWKeYDXlJyIqGb+u/o7QQLBQdvoBKowv+4b7gW?=
+ =?us-ascii?Q?ItC4itsQes0WYCu51yWJuWHzfqnhLttR+dV8O5g3EGv7DMOz0hwp7rJqk/LA?=
+ =?us-ascii?Q?4qdd1DBB4cM+UCIOxl2QoHC7l7Z3EaW1brcB3LnOsX5PDSmQDj8p6ul/8WR4?=
+ =?us-ascii?Q?pt+7aYvtr0r7+KpJG3+p3pVxlojqE5NjxV9umFBNnJQtOW2y1spzDQPelftq?=
+ =?us-ascii?Q?h7fAnoh9N3Rh/8d5SdvxwG6jvEy2Tv3CeAVZbtc42Q0hEI9lHHAcrHIEKNZ0?=
+ =?us-ascii?Q?5t9qthpZSAPajM8yafvARaSyHmoFaL43LWxbnDCs54I4iDgxB1TPHh4GCJgb?=
+ =?us-ascii?Q?DBmG7l+a5nO77QvxOWiEvj77bJ3EmZjPhy4T9kbzZsPlAtvUcIPSHjYixTUL?=
+ =?us-ascii?Q?IAK3fbgu55n9DqtcQqzOS6knIK24ag2Up0xOX5e21uYWtxuaTrBbdU8iBVgG?=
+ =?us-ascii?Q?34YFclA76+1rr6C+GesphsyMmG0dmdctWKbpfCMESDHBl+iyTaaBY/CTL+co?=
+ =?us-ascii?Q?h8mV3iusMpE7zLZVf6JYvSuEKmi1yKRXDAOcnTIUsVNZJyg1ZSjbs7eh6W4I?=
+ =?us-ascii?Q?pIaWLSVG48orYWMob63L2V4ulQJ7EretFZBW9moUy682p9Z7NMMAW3S4+G3g?=
+ =?us-ascii?Q?OrJtdIu8LTix/cq8CFAh/meRFqA5zJ+XYFwbFhCo2pDcdPuXYKs8PDKRF5d0?=
+ =?us-ascii?Q?ljkZ+YZ/u8UUiVGaoYFX44LW5+pFEXdAm/3VAPV3yXkiUdZkBW+X3l62gcah?=
+ =?us-ascii?Q?qbHDuUIifnri+TYwT0W3BN+l/KxrnCDWsX06tye8h5Nm17EwY5hD8kf4evPY?=
+ =?us-ascii?Q?i3RxATEZmjKmJz+BuzvzqNKAB41EkvwSn01noi2ky0wICoYVagiYbPPG+EvB?=
+ =?us-ascii?Q?/Lw2KQLerbGWj4hOVcXensg7m9uTnmMm7FgobpgNbLScGiVRiMlCKJiAb0aH?=
+ =?us-ascii?Q?KQ3aFNZeDMOc80YCwxLqX4ZYsKFJZS2HUVJ/tKSa2MTm47XMEvyLTMlCdG7E?=
+ =?us-ascii?Q?Hx5OWzO7ITrUgYzN7E+2A9sp7fgTBJPS/YRUvJ5+JbRTWBdZlwrJPdcprWky?=
+ =?us-ascii?Q?8SBK16h7S00nwbnslw0HYQ/PQFENLcZWdGQ35S/411OQAW3QA7/XIoGDYLR8?=
+ =?us-ascii?Q?WPxQhmUNPrnmDfXsWt40M6D/gMPp/BGxu4hZoG1Hv4rw3PS224T6kzvEIiPn?=
+ =?us-ascii?Q?Z5v7HUCCAIbc6VowtCzbI62qqybj9uH57xKjAnWs3YfYEWXszea+6aA/csl/?=
+ =?us-ascii?Q?Dup77OO+L/EVzJMGhz+4iP0Ak+8/mjwKmE2sFbfxknA4WNdVIgnPOOdGUorl?=
+ =?us-ascii?Q?QBEgcDuqwj/2skfUYp35zKUxEI0vAr2nPl4Otyc1Fhak7QHQlHjdGvyBFSvU?=
+ =?us-ascii?Q?pkoejE6dqcnHRXzVSLnwWWshALoBj1/IihEuYuqL0yXDqnAhleLb+r8S47Wd?=
+ =?us-ascii?Q?Y61khSpHtGrUCHujRRFTWeil6NVQbktF5Dt8hVzQgyhG7Ny85d3y2txcF7Om?=
+ =?us-ascii?Q?0qeV9AJSF4h+rYLLuqsgIr7Po09yCRjiq7B3w4kF5j5ZFkIjg0de2L/tethO?=
+ =?us-ascii?Q?yw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1ec122e-8d10-4378-3af1-08dd4c9de74c
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 02:13:42.7510
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 02:18:43.2372
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4BXgMw1ZZ/IgNCOHQ8Cits7B+L6eLZPr/wROpyaXX3dcwTqOelSb87U+/B58dBnHjZMadOQZUOP7zxexEq/abA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8743
+X-MS-Exchange-CrossTenant-UserPrincipalName: 63mhanrKKcjaA36Jf6Xy95c/km5V/iRr7X8B3T5U6GZ+Lq4YEB++W+zBC+lN6INBK/gOPckUlRSOl7QlmIFufRjnkBN/rXlQm9rzvi+nOoU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6359
 X-OriginatorOrg: intel.com
 
+Terry Bowman wrote:
+> Introduce correctable and uncorrectable (UCE) CXL PCIe Port Protocol Error
+> handlers.
+> 
+> The handlers will be called with a 'struct pci_dev' parameter
+> indicating the CXL Port device requiring handling. The CXL PCIe Port
+> device's underlying 'struct device' will match the port device in the
+> CXL topology.
+> 
+> Use the PCIe Port's device object to find the matching CXL Upstream Switch
+> Port, CXL Downstream Switch Port, or CXL Root Port in the CXL topology. The
+> matching CXL Port device should contain a cached reference to the RAS
+> register block. The cached RAS block will be used in handling the error.
+> 
+> Invoke the existing __cxl_handle_ras() or __cxl_handle_cor_ras() using
+> a reference to the RAS registers as a parameter. These functions will use
+> the RAS register reference to indicate an error and clear the device's RAS
+> status.
+> 
+> Update __cxl_handle_ras() to return PCI_ERS_RESULT_PANIC in the case
+> an error is present in the RAS status. Otherwise, return
+> PCI_ERS_RESULT_NONE.
 
+So I have been having this nagging feeling while reviewing this set that
+perhaps the CXL error handlers should not be 'struct pci_error_handlers'
+relative to a 'struct pci_driver', but instead 'struct
+cxl_error_handlers' that are added to 'struct cxl_driver', in particular
+'cxl_port_driver'.
 
-Hello,
+See below for what I *think* are insurmountable problems when a PCI
+error handler is tasked with looking up @ras_base in a race free manner.
+Note I say "think" because I could be misreading or missing some other
+circumstance that makes this ok, so do please challenge if you think I
+missed something because what follows below is another major direction
+change.
+  
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ---
+>  drivers/cxl/core/pci.c | 81 +++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 77 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index af809e7cbe3b..3f13d9dfb610 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -699,7 +699,7 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
+>   * Log the state of the RAS status registers and prepare them to log the
+>   * next error status. Return 1 if reset needed.
+>   */
+> -static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+> +static pci_ers_result_t __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+>  {
+>  	u32 hl[CXL_HEADERLOG_SIZE_U32];
+>  	void __iomem *addr;
+> @@ -708,13 +708,13 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+>  
+>  	if (!ras_base) {
+>  		dev_warn_once(dev, "CXL RAS register block is not mapped");
+> -		return false;
+> +		return PCI_ERS_RESULT_NONE;
+>  	}
+>  
+>  	addr = ras_base + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
+>  	status = readl(addr);
+>  	if (!(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK))
+> -		return false;
+> +		return PCI_ERS_RESULT_NONE;
+>  
+>  	/* If multiple errors, log header points to first error from ctrl reg */
+>  	if (hweight32(status) > 1) {
+> @@ -733,7 +733,7 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+>  
+>  	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
+>  
+> -	return true;
+> +	return PCI_ERS_RESULT_PANIC;
+>  }
+>  
+>  static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
+> @@ -782,6 +782,79 @@ static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
+>  	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
+>  }
+>  
+> +static int match_uport(struct device *dev, const void *data)
+> +{
+> +	const struct device *uport_dev = data;
+> +	struct cxl_port *port;
+> +
+> +	if (!is_cxl_port(dev))
+> +		return 0;
+> +
+> +	port = to_cxl_port(dev);
+> +
+> +	return port->uport_dev == uport_dev;
+> +}
+> +
+> +static void __iomem *cxl_pci_port_ras(struct pci_dev *pdev, struct device **dev)
+> +{
+> +	void __iomem *ras_base;
+> +
+> +	if (!pdev || !*dev) {
+> +		pr_err("Failed, parameter is NULL");
+> +		return NULL;
+> +	}
+> +
+> +	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) ||
+> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM)) {
+> +		struct cxl_port *port __free(put_cxl_port);
+> +		struct cxl_dport *dport = NULL;
+> +
+> +		port = find_cxl_port(&pdev->dev, &dport);
 
-kernel test robot noticed "BUG:sleeping_function_called_from_invalid_context_at_kernel/locking/mutex.c" on:
+side comment: please always declare and assign scope-based-cleanup
+variables on the same line, i.e.:
 
-commit: 8f510de3f26b2fabaf47eacd59053469e9c32754 ("[PATCH v2 1/2] bpf-next: Introduced to support the ULP to get or set sockets")
-url: https://github.com/intel-lab-lkp/linux/commits/zhangmingyi/bpf-next-Introduced-to-support-the-ULP-to-get-or-set-sockets/20250210-215203
-base: https://git.kernel.org/cgit/linux/kernel/git/bpf/bpf-next.git master
-patch link: https://lore.kernel.org/all/20250210134550.3189616-2-zhangmingyi5@huawei.com/
-patch subject: [PATCH v2 1/2] bpf-next: Introduced to support the ULP to get or set sockets
+        struct cxl_port *port __free(put_cxl_port) =
+                find_cxl_port(&pdev->dev, &dport);
 
-in testcase: trinity
-version: trinity-i386-abe9de86-1_20230429
-with following parameters:
+Yes, that means violating the coding-style rule of preferring variable
+declarations at the top of blocks. This is for 2 reasons:
 
-	runtime: 300s
-	group: group-03
-	nr_groups: 5
+* The variable is uninitialized. If future refactoring injects an early
+  exit then unitialized garbage gets passed to put_cxl_port().
 
+* The cosmetic order of the declaration is not the unwind order. If
+  future refactoring introduces other scope-based-cleanup variables it
+  requires additional cleanup to move the declaration to satisfy unwind
+  dependencies.
 
+> +		if (!port) {
+> +			pci_err(pdev, "Failed to find root/dport in CXL topology\n");
+> +			return NULL;
+> +		}
+> +
+> +		ras_base = dport ? dport->regs.ras : NULL;
+> +		*dev = &port->dev;
 
-config: i386-randconfig-054-20250212
-compiler: gcc-12
-test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m 4G
+Ok, so here is where the trouble I was alluding to earlier begins. At
+this point we leave this scope which means @port will have its reference
+dropped and may be freed by the time the caller tries to use it.
 
-(please refer to attached dmesg/kmsg for entire log/backtrace)
+Additionally, @ras_base is only valid while @port->dev.driver is set. In
+this set, cxl_do_recovery() is only holding the device lock of @pdev
+which means nothing synchronizes against @ras_base pointing to garbage
+because a cxl_port was unbound / unplugged / disabled while error
+recovery was running.
 
+Both of those problems go away if upon entry to ->error_detected() it
+can already be assumed that the context holds both a 'struct cxl_port'
+object reference, and the device_lock() for that object.
 
-+-----------------------------------------------------------------------------+------------+------------+
-|                                                                             | 9b6cdaf2ac | 8f510de3f2 |
-+-----------------------------------------------------------------------------+------------+------------+
-| BUG:sleeping_function_called_from_invalid_context_at_kernel/locking/mutex.c | 0          | 6          |
-+-----------------------------------------------------------------------------+------------+------------+
+As for how to fix it, one idea is to have the AER core post CXL events
+to their own fifo for the CXL core to handle. Something like have
+aer_isr_one_error(), upon detection of an internal error on a CXL port
+device, post the 'struct aer_err_source' to a new kfifo and wake up a
+CXL core thread to run cxl_do_recovery() against the CXL port device
+topology instead of the PCI device topology.
 
+Essentially, the main point of cxl_do_recovery() is the acknowledgement
+that the PCI core does not have the context to judge the severity of
+CXL events, or fully annotate events with all the potential kernel
+objects impacted by an event. It is also the case that we need a common
+landing spot for PCI AER notified CXL error events and ACPI GHES
+notified CXL CPER records. So both PCI AER, and CPER notified errors
+need to end up in the same cxl_do_recovery() path that walks the CXL
+port topology.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202502140959.f66e2ba6-lkp@intel.com
-
-
-[   71.099773][ T3759] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:562
-[   71.101798][ T3759] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 3759, name: trinity-c4
-[   71.103659][ T3759] preempt_count: 0, expected: 0
-[   71.104658][ T3759] RCU nest depth: 1, expected: 0
-[   71.105669][ T3759] 2 locks held by trinity-c4/3759:
-[ 71.106777][ T3759] #0: ecffcd80 (sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock (include/net/sock.h:1625) 
-[ 71.108460][ T3759] #1: c3500498 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire (include/linux/rcupdate.h:336) 
-[   71.110397][ T3759] CPU: 1 UID: 65534 PID: 3759 Comm: trinity-c4 Tainted: G                T  6.14.0-rc1-00030-g8f510de3f26b #1 8ad64aae41fa4cb8babad52c8f50e0a7d5e34569
-[   71.110406][ T3759] Tainted: [T]=RANDSTRUCT
-[   71.110407][ T3759] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-[   71.110410][ T3759] Call Trace:
-[ 71.110416][ T3759] dump_stack_lvl (lib/dump_stack.c:123) 
-[ 71.110423][ T3759] dump_stack (lib/dump_stack.c:130) 
-[ 71.110428][ T3759] __might_resched (kernel/sched/core.c:8767) 
-[ 71.110440][ T3759] __might_sleep (kernel/sched/core.c:8696 (discriminator 17)) 
-[ 71.110446][ T3759] __mutex_lock (include/linux/kernel.h:73 kernel/locking/mutex.c:562 kernel/locking/mutex.c:730) 
-[ 71.110452][ T3759] ? rcu_read_unlock (include/linux/rcupdate.h:335) 
-[ 71.110462][ T3759] ? mark_held_locks (kernel/locking/lockdep.c:4323) 
-[ 71.110470][ T3759] ? lock_sock_nested (net/core/sock.c:3653) 
-[ 71.110481][ T3759] mutex_lock_nested (kernel/locking/mutex.c:783) 
-[ 71.110486][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[ 71.110494][ T3759] tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[ 71.110505][ T3759] tcp_set_ulp (net/ipv4/tcp_ulp.c:140 net/ipv4/tcp_ulp.c:166) 
-[ 71.110513][ T3759] do_tcp_setsockopt (net/ipv4/tcp.c:3747) 
-[ 71.110534][ T3759] tcp_setsockopt (net/ipv4/tcp.c:4032) 
-[ 71.110542][ T3759] ? sock_common_recvmsg (net/core/sock.c:3833) 
-[ 71.110548][ T3759] sock_common_setsockopt (net/core/sock.c:3838) 
-[ 71.110561][ T3759] do_sock_setsockopt (net/socket.c:2298) 
-[ 71.110577][ T3759] __sys_setsockopt (net/socket.c:2323) 
-[ 71.110592][ T3759] __ia32_sys_setsockopt (net/socket.c:2326) 
-[ 71.110599][ T3759] ia32_sys_call (kbuild/obj/consumer/i386-randconfig-054-20250212/./arch/x86/include/generated/asm/syscalls_32.h:367) 
-[ 71.110607][ T3759] do_int80_syscall_32 (arch/x86/entry/common.c:165 arch/x86/entry/common.c:339) 
-[ 71.110616][ T3759] entry_INT80_32 (arch/x86/entry/entry_32.S:942) 
-[   71.110621][ T3759] EIP: 0xb4014092
-[ 71.110626][ T3759] Code: 00 00 00 e9 90 ff ff ff ff a3 24 00 00 00 68 30 00 00 00 e9 80 ff ff ff ff a3 f8 ff ff ff 66 90 00 00 00 00 00 00 00 00 cd 80 <c3> 8d b4 26 00 00 00 00 8d b6 00 00 00 00 8b 1c 24 c3 8d b4 26 00
-All code
-========
-   0:	00 00                	add    %al,(%rax)
-   2:	00 e9                	add    %ch,%cl
-   4:	90                   	nop
-   5:	ff                   	(bad)
-   6:	ff                   	(bad)
-   7:	ff                   	(bad)
-   8:	ff a3 24 00 00 00    	jmp    *0x24(%rbx)
-   e:	68 30 00 00 00       	push   $0x30
-  13:	e9 80 ff ff ff       	jmp    0xffffffffffffff98
-  18:	ff a3 f8 ff ff ff    	jmp    *-0x8(%rbx)
-  1e:	66 90                	xchg   %ax,%ax
-	...
-  28:	cd 80                	int    $0x80
-  2a:*	c3                   	ret		<-- trapping instruction
-  2b:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
-  32:	8d b6 00 00 00 00    	lea    0x0(%rsi),%esi
-  38:	8b 1c 24             	mov    (%rsp),%ebx
-  3b:	c3                   	ret
-  3c:	8d                   	.byte 0x8d
-  3d:	b4 26                	mov    $0x26,%ah
-	...
-
-Code starting with the faulting instruction
-===========================================
-   0:	c3                   	ret
-   1:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
-   8:	8d b6 00 00 00 00    	lea    0x0(%rsi),%esi
-   e:	8b 1c 24             	mov    (%rsp),%ebx
-  11:	c3                   	ret
-  12:	8d                   	.byte 0x8d
-  13:	b4 26                	mov    $0x26,%ah
-	...
-[   71.110630][ T3759] EAX: ffffffda EBX: 00000134 ECX: 00000006 EDX: 0000001f
-[   71.110634][ T3759] ESI: 08fee650 EDI: 00000004 EBP: 000012cf ESP: bfc1c538
-[   71.110638][ T3759] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000296
-[   71.182507][ T3759]
-[   71.182999][ T3759] =============================
-[   71.183907][ T3759] [ BUG: Invalid wait context ]
-[   71.184819][ T3759] 6.14.0-rc1-00030-g8f510de3f26b #1 Tainted: G        W       T
-[   71.186327][ T3759] -----------------------------
-[   71.187265][ T3759] trinity-c4/3759 is trying to lock:
-[ 71.188287][ T3759] c37b35e0 (tcpv4_prot_mutex){....}-{4:4}, at: tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[   71.189847][ T3759] other info that might help us debug this:
-[   71.191018][ T3759] context-{5:5}
-[   71.191678][ T3759] 2 locks held by trinity-c4/3759:
-[ 71.192635][ T3759] #0: ecffcd80 (sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock (include/net/sock.h:1625) 
-[ 71.194220][ T3759] #1: c3500498 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire (include/linux/rcupdate.h:336) 
-[   71.196078][ T3759] stack backtrace:
-[   71.196797][ T3759] CPU: 0 UID: 65534 PID: 3759 Comm: trinity-c4 Tainted: G        W       T  6.14.0-rc1-00030-g8f510de3f26b #1 8ad64aae41fa4cb8babad52c8f50e0a7d5e34569
-[   71.196807][ T3759] Tainted: [W]=WARN, [T]=RANDSTRUCT
-[   71.196809][ T3759] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-[   71.196812][ T3759] Call Trace:
-[ 71.196818][ T3759] dump_stack_lvl (lib/dump_stack.c:123) 
-[ 71.196825][ T3759] dump_stack (lib/dump_stack.c:130) 
-[ 71.196830][ T3759] __lock_acquire (kernel/locking/lockdep.c:4830 kernel/locking/lockdep.c:4900 kernel/locking/lockdep.c:5178) 
-[ 71.196840][ T3759] lock_acquire (kernel/locking/lockdep.c:469 kernel/locking/lockdep.c:5853) 
-[ 71.196846][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[ 71.196856][ T3759] ? __schedule (kernel/sched/core.c:5380) 
-[ 71.196866][ T3759] __mutex_lock (kernel/locking/mutex.c:587 kernel/locking/mutex.c:730) 
-[ 71.196872][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[ 71.196878][ T3759] ? rcu_read_unlock (include/linux/rcupdate.h:335) 
-[ 71.196885][ T3759] ? mark_held_locks (kernel/locking/lockdep.c:4323) 
-[ 71.196889][ T3759] ? lock_sock_nested (net/core/sock.c:3653) 
-[ 71.196898][ T3759] mutex_lock_nested (kernel/locking/mutex.c:783) 
-[ 71.196904][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[ 71.196909][ T3759] tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[ 71.196916][ T3759] tcp_set_ulp (net/ipv4/tcp_ulp.c:140 net/ipv4/tcp_ulp.c:166) 
-[ 71.196923][ T3759] do_tcp_setsockopt (net/ipv4/tcp.c:3747) 
-[ 71.196934][ T3759] tcp_setsockopt (net/ipv4/tcp.c:4032) 
-[ 71.196939][ T3759] ? sock_common_recvmsg (net/core/sock.c:3833) 
-[ 71.196946][ T3759] sock_common_setsockopt (net/core/sock.c:3838) 
-[ 71.196952][ T3759] do_sock_setsockopt (net/socket.c:2298) 
-[ 71.196961][ T3759] __sys_setsockopt (net/socket.c:2323) 
-[ 71.196967][ T3759] __ia32_sys_setsockopt (net/socket.c:2326) 
-[ 71.196972][ T3759] ia32_sys_call (kbuild/obj/consumer/i386-randconfig-054-20250212/./arch/x86/include/generated/asm/syscalls_32.h:367) 
-[ 71.196979][ T3759] do_int80_syscall_32 (arch/x86/entry/common.c:165 arch/x86/entry/common.c:339) 
-[ 71.196985][ T3759] entry_INT80_32 (arch/x86/entry/entry_32.S:942) 
-[   71.196990][ T3759] EIP: 0xb4014092
-[ 71.196995][ T3759] Code: 00 00 00 e9 90 ff ff ff ff a3 24 00 00 00 68 30 00 00 00 e9 80 ff ff ff ff a3 f8 ff ff ff 66 90 00 00 00 00 00 00 00 00 cd 80 <c3> 8d b4 26 00 00 00 00 8d b6 00 00 00 00 8b 1c 24 c3 8d b4 26 00
-All code
-========
-   0:	00 00                	add    %al,(%rax)
-   2:	00 e9                	add    %ch,%cl
-   4:	90                   	nop
-   5:	ff                   	(bad)
-   6:	ff                   	(bad)
-   7:	ff                   	(bad)
-   8:	ff a3 24 00 00 00    	jmp    *0x24(%rbx)
-   e:	68 30 00 00 00       	push   $0x30
-  13:	e9 80 ff ff ff       	jmp    0xffffffffffffff98
-  18:	ff a3 f8 ff ff ff    	jmp    *-0x8(%rbx)
-  1e:	66 90                	xchg   %ax,%ax
-	...
-  28:	cd 80                	int    $0x80
-  2a:*	c3                   	ret		<-- trapping instruction
-  2b:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
-  32:	8d b6 00 00 00 00    	lea    0x0(%rsi),%esi
-  38:	8b 1c 24             	mov    (%rsp),%ebx
-  3b:	c3                   	ret
-  3c:	8d                   	.byte 0x8d
-  3d:	b4 26                	mov    $0x26,%ah
-	...
-
-Code starting with the faulting instruction
-===========================================
-   0:	c3                   	ret
-   1:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
-   8:	8d b6 00 00 00 00    	lea    0x0(%rsi),%esi
-   e:	8b 1c 24             	mov    (%rsp),%ebx
-  11:	c3                   	ret
-  12:	8d                   	.byte 0x8d
-  13:	b4 26                	mov    $0x26,%ah
-	...
-[   71.196999][ T3759] EAX: ffffffda EBX: 00000134 ECX: 00000006 EDX: 0000001f
-[   71.197004][ T3759] ESI: 08fee650 EDI: 00000004 EBP: 000012cf ESP: bfc1c538
-[   71.197008][ T3759] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000296
-
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250214/202502140959.f66e2ba6-lkp@intel.com
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+The CXL Type-2 series is showing uptake on accelerators registering
+'struct cxl_memdev' objects to report their CXL.mem capabilities. I
+imagine that effort would eventually end up with a scheme that
+accelerators can register a cxl_error_handler instance with that memdev
+to get involved in potentially recovering CXL.mem errors. For example,
+it may be the case that CXL error isolation finally has a viable use
+case when the accelerator knows it is the only device impacted by an
+isolation event and can safely reset that entire host-bridge to recover.
+That is difficult to achieve in the PCI error handler context.
