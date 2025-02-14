@@ -1,161 +1,233 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4010626738A;
-	Fri, 14 Feb 2025 16:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF80245002
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739551654; cv=none; b=qKMuln+igWwa3fXt5TQRGOwjoCA2SVZ+JVUTLmxUKy99Ijx2Y1RIhL91jsMt6VqACXEFXkaHiHXf8obi1nJw2z60L4CbFmU0ZlG5nb5MF5GDQofZttWLt0RAE8kbKb4/18EJYXk135Oqq1aacIY4Da3mjJI4vB2u1MQijcG/Tlg=
+	t=1739551842; cv=none; b=I3nuAluqLYwLdrZI26R53BLuSxDJ4Sx6ec1x15GOTmRIddcCP3LRUPhpPTB4ZVZVd1U5h9EM3UzKD2jsXH+IRFkKtwcyJ1c7t+e0ouAmJdw14CPlj5hkjM8k598xTahE4c1t/gIHhYQbUmHAKlYBbSdOfgo01tDOaU2BgMdDs5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739551654; c=relaxed/simple;
-	bh=/rhhtehKnzVERc8rGOCCGCco2aFpt2BSW0xXHFau/Ho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gc6jvGZxHzzNzRNbtqlU8t24t/liW8Rft2Ivs8m8MbF8nCQuqXjw60DtL1YJOXy5Vd0YwSgJXnJ/yZxZcDLgqewPRRJEnwMy3AxOwkNY/YNUSWEQeecYe6+xIc2acPFTi06W79GK/IWPIfdqVF+cMVS6O6o77DrFLuAXGssqiB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IW63B+KZ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1739551842; c=relaxed/simple;
+	bh=qlMMIibr9KHm9ibM7FFd+UmdB3uLuPPaikSJNH1wDkA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OSW2QBZv8h/0YeapJTYQJ65//SNcj3K1yT9x3DjJwX91FYsLTT0VoYFtdXDmmMyUjkcDbYDOm/cf6jPknoankNDqaCPvabuqkTEnZ/uwINKF8iPwYnxz8wR04Uj9MYPikzIntltviiOT+Ah1WBc/fiObrbX8SmkwABc0IIKY0vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cIVL5YoV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=We6OT8FI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cIVL5YoV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=We6OT8FI; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IW63B+KZ"
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5AB9D203F3FA;
-	Fri, 14 Feb 2025 08:47:32 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5AB9D203F3FA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1739551652;
-	bh=28IvIq5nHgvTTsS1xkW6rKGY+23JWzsECQOgFfIsF5A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IW63B+KZ14zR7bqnRbpO33qkUJyw4qDrPsbj9UBbRpj0a+6lr+6RXpWIDuKREAgzH
-	 2Qg6HF8nC6RiAuSTMsFtmtMVu1yKOWfbHulTasDK13lhcgOfJ2rZeCJKN1EasDLBka
-	 ovOZ+fKPesWAq+xITmqp5mNqjeWSHCgiRBxJSqaY=
-Message-ID: <6e4685fe-68e9-43bd-96c5-b871edb1b971@linux.microsoft.com>
-Date: Fri, 14 Feb 2025 08:47:32 -0800
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cIVL5YoV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="We6OT8FI";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cIVL5YoV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="We6OT8FI"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2D93B210F8;
+	Fri, 14 Feb 2025 16:50:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739551839; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uikJNsa0IsBWSXLjFgb4Adl8m/7KsWzFWxdjjTDyTkI=;
+	b=cIVL5YoVjkvzFr7Efl0axtuYsaDsbq8cx2bwfrepPrZ4jv4bL5eSduLsfzE6bxIRHKl5nR
+	B3xxdVc3xNxH2rBj9noXYQyzRZX+9pQQj7H3TXym+N8k0X9Sj+TwP6kapcHURnU6eNnGbT
+	PbaCVB0VA5XjQLHnamzUSNK1yoWOphk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739551839;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uikJNsa0IsBWSXLjFgb4Adl8m/7KsWzFWxdjjTDyTkI=;
+	b=We6OT8FIsda5aiJFsE/SDB68Tx1jSUFNFc/+i3L0AXI+shYLBTHvK8tbtb3zp5409xXIvo
+	gRB/301CUZzxH2BQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739551839; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uikJNsa0IsBWSXLjFgb4Adl8m/7KsWzFWxdjjTDyTkI=;
+	b=cIVL5YoVjkvzFr7Efl0axtuYsaDsbq8cx2bwfrepPrZ4jv4bL5eSduLsfzE6bxIRHKl5nR
+	B3xxdVc3xNxH2rBj9noXYQyzRZX+9pQQj7H3TXym+N8k0X9Sj+TwP6kapcHURnU6eNnGbT
+	PbaCVB0VA5XjQLHnamzUSNK1yoWOphk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739551839;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uikJNsa0IsBWSXLjFgb4Adl8m/7KsWzFWxdjjTDyTkI=;
+	b=We6OT8FIsda5aiJFsE/SDB68Tx1jSUFNFc/+i3L0AXI+shYLBTHvK8tbtb3zp5409xXIvo
+	gRB/301CUZzxH2BQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AE03E137DB;
+	Fri, 14 Feb 2025 16:50:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id c7UUJ150r2dRUAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 14 Feb 2025 16:50:38 +0000
+Date: Fri, 14 Feb 2025 17:50:33 +0100
+Message-ID: <87seog1ndy.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Vitaly Rodionov <vitalyr@opensource.cirrus.com>
+Cc: Takashi Iwai <tiwai@suse.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	<linux-sound@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	<patches@opensource.cirrus.com>
+Subject: Re: [PATCH 1/2] ALSA: hda/cirrus: Correct the full scale volume set logic
+In-Reply-To: <20250214162354.2675652-1-vitalyr@opensource.cirrus.com>
+References: <20250214162354.2675652-1-vitalyr@opensource.cirrus.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v4 1/6] arm64: hyperv: Use SMCCC to detect
- hypervisor presence
-To: Arnd Bergmann <arnd@arndb.de>, bhelgaas@google.com,
- Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
- Conor Dooley <conor+dt@kernel.org>, Dave Hansen
- <dave.hansen@linux.intel.com>, Dexuan Cui <decui@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, "H. Peter Anvin" <hpa@zytor.com>,
- krzk+dt@kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Ingo Molnar <mingo@redhat.com>, Rob Herring <robh@kernel.org>,
- ssengar@linux.microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
- Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>,
- devicetree@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
-Cc: benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
-References: <20250212014321.1108840-1-romank@linux.microsoft.com>
- <20250212014321.1108840-2-romank@linux.microsoft.com>
- <1b14e3de-4d3e-420c-819c-31ffb2d448bd@app.fastmail.com>
- <593c22ca-6544-423d-84ee-7a06c6b8b5b9@linux.microsoft.com>
- <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.994];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,cirrus.com:email,suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Level: 
+
+On Fri, 14 Feb 2025 17:23:25 +0100,
+Vitaly Rodionov wrote:
+> 
+> This patch corrects the full-scale volume setting logic. On certain
+> platforms, the full-scale volume bit is required. The current logic
+> mistakenly sets this bit and incorrectly clears reserved bit 0, causing
+> the headphone output to be muted.
+> 
+> Signed-off-by: Vitaly Rodionov <vitalyr@opensource.cirrus.com>
+
+Can we have a Fixes tag?
 
 
+thanks,
 
-On 2/14/2025 12:05 AM, Arnd Bergmann wrote:
-> On Fri, Feb 14, 2025, at 00:23, Roman Kisel wrote:
->> On 2/11/2025 10:54 PM, Arnd Bergmann wrote:
-> 
->> index a74600d9f2d7..86f75f44895f 100644
->> --- a/drivers/firmware/smccc/smccc.c
->> +++ b/drivers/firmware/smccc/smccc.c
->> @@ -67,6 +67,30 @@ s32 arm_smccc_get_soc_id_revision(void)
->>    }
->>    EXPORT_SYMBOL_GPL(arm_smccc_get_soc_id_revision);
->>
->> +bool arm_smccc_hyp_present(const uuid_t *hyp_uuid)
-> 
-> The interface looks good to me.
+Takashi
 
-Great :)
-
+> ---
+>  sound/pci/hda/patch_cs8409-tables.c |  6 +++---
+>  sound/pci/hda/patch_cs8409.c        | 20 +++++++++++---------
+>  sound/pci/hda/patch_cs8409.h        |  5 +++--
+>  3 files changed, 17 insertions(+), 14 deletions(-)
 > 
->> +{
->> +	struct arm_smccc_res res = {};
->> +	struct {
->> +		u32 dwords[4]
->> +	} __packed res_uuid;
+> diff --git a/sound/pci/hda/patch_cs8409-tables.c b/sound/pci/hda/patch_cs8409-tables.c
+> index 759f48038273..621f947e3817 100644
+> --- a/sound/pci/hda/patch_cs8409-tables.c
+> +++ b/sound/pci/hda/patch_cs8409-tables.c
+> @@ -121,7 +121,7 @@ static const struct cs8409_i2c_param cs42l42_init_reg_seq[] = {
+>  	{ CS42L42_MIXER_CHA_VOL, 0x3F },
+>  	{ CS42L42_MIXER_CHB_VOL, 0x3F },
+>  	{ CS42L42_MIXER_ADC_VOL, 0x3f },
+> -	{ CS42L42_HP_CTL, 0x03 },
+> +	{ CS42L42_HP_CTL, 0x0D },
+>  	{ CS42L42_MIC_DET_CTL1, 0xB6 },
+>  	{ CS42L42_TIPSENSE_CTL, 0xC2 },
+>  	{ CS42L42_HS_CLAMP_DISABLE, 0x01 },
+> @@ -315,7 +315,7 @@ static const struct cs8409_i2c_param dolphin_c0_init_reg_seq[] = {
+>  	{ CS42L42_ASP_TX_SZ_EN, 0x01 },
+>  	{ CS42L42_PWR_CTL1, 0x0A },
+>  	{ CS42L42_PWR_CTL2, 0x84 },
+> -	{ CS42L42_HP_CTL, 0x03 },
+> +	{ CS42L42_HP_CTL, 0x0D },
+>  	{ CS42L42_MIXER_CHA_VOL, 0x3F },
+>  	{ CS42L42_MIXER_CHB_VOL, 0x3F },
+>  	{ CS42L42_MIXER_ADC_VOL, 0x3f },
+> @@ -371,7 +371,7 @@ static const struct cs8409_i2c_param dolphin_c1_init_reg_seq[] = {
+>  	{ CS42L42_ASP_TX_SZ_EN, 0x00 },
+>  	{ CS42L42_PWR_CTL1, 0x0E },
+>  	{ CS42L42_PWR_CTL2, 0x84 },
+> -	{ CS42L42_HP_CTL, 0x01 },
+> +	{ CS42L42_HP_CTL, 0x0D },
+>  	{ CS42L42_MIXER_CHA_VOL, 0x3F },
+>  	{ CS42L42_MIXER_CHB_VOL, 0x3F },
+>  	{ CS42L42_MIXER_ADC_VOL, 0x3f },
+> diff --git a/sound/pci/hda/patch_cs8409.c b/sound/pci/hda/patch_cs8409.c
+> index 614327218634..b760332a4e35 100644
+> --- a/sound/pci/hda/patch_cs8409.c
+> +++ b/sound/pci/hda/patch_cs8409.c
+> @@ -876,7 +876,7 @@ static void cs42l42_resume(struct sub_codec *cs42l42)
+>  		{ CS42L42_DET_INT_STATUS2, 0x00 },
+>  		{ CS42L42_TSRS_PLUG_STATUS, 0x00 },
+>  	};
+> -	int fsv_old, fsv_new;
+> +	unsigned int fsv;
+>  
+>  	/* Bring CS42L42 out of Reset */
+>  	spec->gpio_data = snd_hda_codec_read(codec, CS8409_PIN_AFG, 0, AC_VERB_GET_GPIO_DATA, 0);
+> @@ -893,13 +893,15 @@ static void cs42l42_resume(struct sub_codec *cs42l42)
+>  	/* Clear interrupts, by reading interrupt status registers */
+>  	cs8409_i2c_bulk_read(cs42l42, irq_regs, ARRAY_SIZE(irq_regs));
+>  
+> -	fsv_old = cs8409_i2c_read(cs42l42, CS42L42_HP_CTL);
+> -	if (cs42l42->full_scale_vol == CS42L42_FULL_SCALE_VOL_0DB)
+> -		fsv_new = fsv_old & ~CS42L42_FULL_SCALE_VOL_MASK;
+> -	else
+> -		fsv_new = fsv_old & CS42L42_FULL_SCALE_VOL_MASK;
+> -	if (fsv_new != fsv_old)
+> -		cs8409_i2c_write(cs42l42, CS42L42_HP_CTL, fsv_new);
+> +	fsv = cs8409_i2c_read(cs42l42, CS42L42_HP_CTL);
+> +	if (cs42l42->full_scale_vol) {
+> +		// Set the full scale volume bit
+> +		fsv |= CS42L42_FULL_SCALE_VOL_MASK;
+> +		cs8409_i2c_write(cs42l42, CS42L42_HP_CTL, fsv);
+> +	}
+> +	// Unmute analog channels A and B
+> +	fsv = (fsv & ~CS42L42_ANA_MUTE_AB);
+> +	cs8409_i2c_write(cs42l42, CS42L42_HP_CTL, fsv);
+>  
+>  	/* we have to explicitly allow unsol event handling even during the
+>  	 * resume phase so that the jack event is processed properly
+> @@ -920,7 +922,7 @@ static void cs42l42_suspend(struct sub_codec *cs42l42)
+>  		{ CS42L42_MIXER_CHA_VOL, 0x3F },
+>  		{ CS42L42_MIXER_ADC_VOL, 0x3F },
+>  		{ CS42L42_MIXER_CHB_VOL, 0x3F },
+> -		{ CS42L42_HP_CTL, 0x0F },
+> +		{ CS42L42_HP_CTL, 0x0D },
+>  		{ CS42L42_ASP_RX_DAI0_EN, 0x00 },
+>  		{ CS42L42_ASP_CLK_CFG, 0x00 },
+>  		{ CS42L42_PWR_CTL1, 0xFE },
+> diff --git a/sound/pci/hda/patch_cs8409.h b/sound/pci/hda/patch_cs8409.h
+> index 5e48115caf09..14645d25e70f 100644
+> --- a/sound/pci/hda/patch_cs8409.h
+> +++ b/sound/pci/hda/patch_cs8409.h
+> @@ -230,9 +230,10 @@ enum cs8409_coefficient_index_registers {
+>  #define CS42L42_PDN_TIMEOUT_US			(250000)
+>  #define CS42L42_PDN_SLEEP_US			(2000)
+>  #define CS42L42_INIT_TIMEOUT_MS			(45)
+> +#define CS42L42_ANA_MUTE_AB			(0x0C)
+>  #define CS42L42_FULL_SCALE_VOL_MASK		(2)
+> -#define CS42L42_FULL_SCALE_VOL_0DB		(1)
+> -#define CS42L42_FULL_SCALE_VOL_MINUS6DB		(0)
+> +#define CS42L42_FULL_SCALE_VOL_0DB		(0)
+> +#define CS42L42_FULL_SCALE_VOL_MINUS6DB		(1)
+>  
+>  /* Dell BULLSEYE / WARLOCK / CYBORG Specific Definitions */
+>  
+> -- 
+> 2.43.0
 > 
-> The structure definition here looks odd because of the
-> unexplained __packed attribute and the nonstandard byteorder.
-> 
-
-Fair points, thank you, will straighten this out!
-
-> The normal uuid_t is defined as an array of 16 bytes,
-> so if you try to represent it in 32-bit words you need to
-> decide between __le32 and __be32 representation.
-> 
->> +	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
->> +		return false;
->> +	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
->> +	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
->> +		return false;
->> +
->> +	res_uuid.dwords[0] = res.a0;
->> +	res_uuid.dwords[1] = res.a1;
->> +	res_uuid.dwords[2] = res.a2;
->> +	res_uuid.dwords[3] = res.a3;
->> +
->> +	return uuid_equal((uuid_t *)&res_uuid, hyp_uuid);
-> 
-> The SMCCC standard defines the four words to be little-endian,
-> so in order to compare them against a uuid byte array, you'd
-> need to declare the array as __le32 and swap the result
-> members with cpu_to_le32().
-> 
-> Alternatively you could pass the four u32 values into the
-> function in place of the uuid.
-> 
-> Since the callers have the same endianess confusion, your
-> implementation ends up working correctly even on big-endian,
-> but I find it harder to follow when you call uuid_equal() on
-> something that is not the actual uuid_t value.
-> 
-
-I'll make sure the implementation is clearer, thanks!
-
->> +
->> +#define ARM_SMCCC_HYP_PRESENT(HYP) 								\
->> +	({															\
->> +		const u32 uuid_as_dwords[4] = {							\
->> +			ARM_SMCCC_VENDOR_HYP_UID_ ## HYP ## _REG_0,			\
->> +			ARM_SMCCC_VENDOR_HYP_UID_ ## HYP ## _REG_1,			\
-> 
-> I don't think using a macro is helpful here, it just makes
-> it impossible to grep for ARM_SMCCC_VENDOR_HYP_UID_* values when
-> reading the source.
-> 
-> I would suggest moving the UUID values into a variable next
-> to the caller like
-> 
-> #define ARM_SMCCC_VENDOR_HYP_UID_KVM \
->      UUID_INIT(0x28b46fb6, 0x2ec5, 0x11e9, 0xa9, 0xca, 0x4b, 0x56, 0x4d, 0x00, 0x3a, 0x74)
-> 
-> and then just pass that into arm_smccc_hyp_present(). (please
-> double-check the endianess of the definition here, I probably
-> got it wrong myself).
-
-Will remove the macro and will use UUID_INIT, appreciate taking the
-time to review the draft and your suggestions on improving it very much!
-
-> 
->       Arnd
-
--- 
-Thank you,
-Roman
-
