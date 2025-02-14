@@ -1,21 +1,22 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51A21523A;
-	Fri, 14 Feb 2025 00:27:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 533ED53BE;
+	Fri, 14 Feb 2025 00:27:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739492878; cv=none; b=attrYDpG+nqSTTjuL6E0G67puGu4I3qt7CZU9DERlA24YRFTgWiZapncE2cxWu5t6jcICD77u5gULP7B3W8JGT8/pXXBOqzttggBzJLSDUzMTHFgXcThPqmNa8Xi9fFvkOIRz9JCMsqtm1mD4R+AB3QH3hvB/JavrKhipxTysZA=
+	t=1739492878; cv=none; b=D8dgTlkzT5dvD5jlVSAEYAxWlm3zOFFg14nAQI7m/08F5Lp5QJUNDvmmSZTQsYjpJSvSpka+rwljU75/i5OLasQnbxj/7BF70qf8EixhPk0frJCm7OTrMKOXNMnFx6+zf/53H+S9Mq8hSNNXJVml7+Fe9Pu1UjcX7s1yEeQhoRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739492878; c=relaxed/simple;
-	bh=WeL1LHcc8sEkQPzhMSDaIxJt+tn9CF57Rhk1EpDs/bc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hh6s6nl+ZKrmZkS8cF+o56trvCcNvB9YV0B+FPBoRvvAqL9kzwbopP5OYjpuGGSKkfLFY9sq05HAiFoj/BRDKFRihczHnmOWEEdotreTl5up5FP+LqvQNAYSqao+C5/f5Jbv1+ee0sPPHpctFNud5+oOHn6kOq6lgVqDT4uAHCI=
+	bh=erurvnKCndlcZUUX0TdrNA0ewd1gfKnrKe9z/7uPwPA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bklr+JqnqOLjKgwHqEuUZcs5wBI5sEIfI1viDcFno9Yv4t2QmCTnCNJ/RRrz0KkxzazuF5p2AT5uD1emrX04BUnQJzIzLl3I45AwWbuEGOjrlGpjBCXzV7VBHU4FsCvrQi78E47Cem5Tu+X+mWPsZXDIj2XtCqoihjL+2vt9Gik=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19153113E;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 427151AED;
 	Thu, 13 Feb 2025 16:28:16 -0800 (PST)
 Received: from beelzebub.ast.arm.com (u203013-lin.austin.arm.com [10.118.28.29])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 83B143F5A1;
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B089C3F5A1;
 	Thu, 13 Feb 2025 16:27:55 -0800 (PST)
 From: Stuart Yoder <stuart.yoder@arm.com>
 To: linux-integrity@vger.kernel.org,
@@ -27,10 +28,12 @@ To: linux-integrity@vger.kernel.org,
 	lenb@kernel.org
 Cc: linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/5] Add support for the TPM FF-A start method
-Date: Thu, 13 Feb 2025 18:27:40 -0600
-Message-Id: <20250214002745.878890-1-stuart.yoder@arm.com>
+Subject: [PATCH v3 2/5] tpm_crb: refactor check for idle support into TPM into inline function
+Date: Thu, 13 Feb 2025 18:27:42 -0600
+Message-Id: <20250214002745.878890-3-stuart.yoder@arm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250214002745.878890-1-stuart.yoder@arm.com>
+References: <20250214002745.878890-1-stuart.yoder@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,62 +42,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Firmware Framework for Arm A-profile (FF-A) is a messaging framework
-for Arm-based systems, and in the context of the TPM CRB driver is used
-to signal 'start' to a CRB-based TPM service which is hosted in an
-FF-A secure partition running in TrustZone.
+Refactor the two checks for whether the TPM supports idle into a single
+inline function.
 
-These patches add support for the CRB FF-A start method defined
-in the TCG ACPI specification v1.4 and the FF-A ABI defined
-in the Arm TPM Service CRB over FF-A (DEN0138) specification:
-https://developer.arm.com/documentation/den0138/latest/
+Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
+---
+ drivers/char/tpm/tpm_crb.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-The first patch adds an FF-A driver to handle the FF-A messaging when
-communicating with a CRB-based TPM secure partition built on FF-A.
-The driver is probed when the TPM secure partition is discovered by
-the Linux FF-A infrastructure.
-
-The second patch consolidates the check for idle support in the CRB
-driver to one place.
-
-The third patch defines the new ACPI start method enumeration for
-CRB over FF-A.
-
-The fourth patch adds support for the FF-A ACPI start method to
-the TPM crb driver.
-
-The fifth patch adds documentation explaining how the CRB driver
-and FF-A relate.
-
-Version 3
--changed prefixes used throughout patch series to tpm_crb_ffa*
-
-Version 2
--updates to cover letter to define FF-A
--added new patch with documentation
--created pull request in ACPIA and added link to the patch
- updating actbl3.h
--added tpm_ prefix to the FF-A CRB driver
-
-Stuart Yoder (5):
-  tpm_crb: implement driver compliant to CRB over FF-A
-  tpm_crb: refactor check for idle support into TPM into inline function
-  ACPICA: add start method for Arm FF-A
-  tpm_crb: add support for the Arm FF-A start method
-  Documentation: tpm: add documentation for the CRB FF-A interface
-
- Documentation/security/tpm/tpm_ffa_crb.rst |  65 +++++
- drivers/char/tpm/Kconfig                   |   9 +
- drivers/char/tpm/Makefile                  |   1 +
- drivers/char/tpm/tpm_crb.c                 |  81 +++++-
- drivers/char/tpm/tpm_crb_ffa.c             | 310 +++++++++++++++++++++
- drivers/char/tpm/tpm_crb_ffa.h             |  30 ++
- include/acpi/actbl3.h                      |   1 +
- 7 files changed, 491 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/security/tpm/tpm_ffa_crb.rst
- create mode 100644 drivers/char/tpm/tpm_crb_ffa.c
- create mode 100644 drivers/char/tpm/tpm_crb_ffa.h
-
+diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+index ea085b14ab7c..d696226906a2 100644
+--- a/drivers/char/tpm/tpm_crb.c
++++ b/drivers/char/tpm/tpm_crb.c
+@@ -115,6 +115,16 @@ struct tpm2_crb_pluton {
+ 	u64 reply_addr;
+ };
+ 
++static inline bool tpm_crb_has_idle(u32 start_method)
++{
++	if ((start_method == ACPI_TPM2_START_METHOD) ||
++	    (start_method == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
++	    (start_method == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
++		return false;
++	else
++		return true;
++}
++
+ static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
+ 				unsigned long timeout)
+ {
+@@ -173,9 +183,7 @@ static int __crb_go_idle(struct device *dev, struct crb_priv *priv)
+ {
+ 	int rc;
+ 
+-	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
+-	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
+-	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
++	if (!tpm_crb_has_idle(priv->sm))
+ 		return 0;
+ 
+ 	iowrite32(CRB_CTRL_REQ_GO_IDLE, &priv->regs_t->ctrl_req);
+@@ -222,9 +230,7 @@ static int __crb_cmd_ready(struct device *dev, struct crb_priv *priv)
+ {
+ 	int rc;
+ 
+-	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
+-	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
+-	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
++	if (!tpm_crb_has_idle(priv->sm))
+ 		return 0;
+ 
+ 	iowrite32(CRB_CTRL_REQ_CMD_READY, &priv->regs_t->ctrl_req);
 -- 
 2.34.1
 
