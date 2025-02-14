@@ -1,109 +1,77 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2117204F6E
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 12:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18DA4263F25;
+	Fri, 14 Feb 2025 12:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739535614; cv=none; b=grplO+RHKWmChAnGCwwS9HSFHSQfJCQ39wdv6kwjDQF9IgNuliLoD0ff127vhjYlf6VBuaTNM/uPZ1KAl5Y2O5VDtjIhJtAJkl0pG6WYEPHVyJHunhUs4Sr471YSJxHMAavRgJ50AZ3aizZR2wXkzcKH2ZuTDks1idDJ0PNnsF8=
+	t=1739535681; cv=none; b=sVngt0D/sYe0I+l+KoTnDB75SuB/lHmJm6zVTwx08zKBmwwodxrHBx7eaRdmlSqucvQ7CIZMLgFtUUq9NB4bj7+hFXQudnqAGK1eX/YzJXfQZoygIe5xYNXWP5aHS2yDEE8DAWbpDpQcq5RxCm1pDOvuIO49ws2MDUG86G0OD8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739535614; c=relaxed/simple;
-	bh=De+vmjaqnFamTkhuUc13zkI64EmpCP/N52/DQmkKJmk=;
-	h=Mime-Version:Subject:From:To:CC:Message-ID:Date:Content-Type:
-	 References; b=CfsOhFIvwgIeXUWMTZCArG8dUSWMmYWvkcnNN3vDUiyD5VMyJ3Q8AfCiSYLYnI9iRV2qucdXMNszMNZi5KFwkk9ycLxhpGPcGVPAYPkmQ2yelEIfKibhkGRZhJhpYQcIgV1RNZtUiD0PwivzzSb659rTHl9Ug2dV4+wQjrINdzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GG2YeyLm; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1739535681; c=relaxed/simple;
+	bh=QVeyAHjLchA7WqNCbOqpcUiyNoAjfJYd0+puryVp7pk=;
+	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=DabkQMa+PO8RHs672Th4oE4CZT45zSpRPWXXhUsp9Rpgiva89OyfaYvBc4+JrFsnCERYyY/tO632IAaiKhX+6Qe+r68h21GvWSH+vZviSifDTu5Z2Qxq8jZf5/v3/qv9BEDfCNhXi4yD0+imz7ST1KEWxDqdsA02ii7syXlN96o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUjk/HNS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GG2YeyLm"
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250214122002epoutp01cd31378e51c8ab13cac0acb0e69f3ffa~kEmoSKUMn1703117031epoutp01S
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 12:20:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250214122002epoutp01cd31378e51c8ab13cac0acb0e69f3ffa~kEmoSKUMn1703117031epoutp01S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1739535602;
-	bh=SE3/PBnj+kUlDZG7aR8PEM/EIX4WzDNA2ccU6mMTP4w=;
-	h=Subject:Reply-To:From:To:CC:Date:References:From;
-	b=GG2YeyLmZgLVQ/7PRz244WnciUMXDtV+ZkmQf2oYN4Fy1OyhgCgDuqCzXzQrPiNw5
-	 ymc9W4nU9+RZjY/IyXsxzxB97ezAtqvRD0oqw4PaNBeAysTWuYMKjVlHucpSoe7IIw
-	 Hsqaa3ujhmWEgb0h/kYo46sVoX7YcCtRcAD1Q0f8=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-	20250214122002epcas2p4e0d98b01441ebf8a38e0c9f431b2cee5~kEmn6xulS2864328643epcas2p4h;
-	Fri, 14 Feb 2025 12:20:02 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4YvWMk32Frz4x9Pv; Fri, 14 Feb
-	2025 12:20:02 +0000 (GMT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUjk/HNS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18DDCC4CEDF;
+	Fri, 14 Feb 2025 12:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739535680;
+	bh=QVeyAHjLchA7WqNCbOqpcUiyNoAjfJYd0+puryVp7pk=;
+	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
+	b=AUjk/HNSoYoQ/6J7hjZcAlA15HEnPLWX8YfTGndmLW2hjnNec5mewKqHd3o4W7hn1
+	 BRejwhFBtkt0Ou/hhrCr7MBj8foKiGnTV43qoiKEdocEbiKnBmgLreJK/YOTEVKPN3
+	 +A143cv0JRt5IesiDDjXgNTavFgIBYxDBRUaN00DB7p+FrFY2uJyHYz5UplrnP2F5q
+	 g7zwJDQKL+1a6+P0N8QeTIIB/O1r8Ld7StCoKkmZ3d4Ixq2ekTm3LtkRLs1vDw8dNS
+	 GehvDSkL6cE4lZUY9EYrRGBPRnZC6rukHydjIItJvaaudbv3dquLg/8mujJzlMYbNH
+	 RxXBM5LjvADdw==
+Message-ID: <c045b5b46c8daf79b124e6da9f951fe8@kernel.org>
+Date: Fri, 14 Feb 2025 12:21:18 +0000
+From: "Maxime Ripard" <mripard@kernel.org>
+To: "Anusha Srivatsa" <asrivats@redhat.com>
+Subject: Re: [PATCH 11/12] drm/vc4: move to devm_platform_ioremap_resource()
+ usage
+In-Reply-To: <20250213-mem-cocci-v3-v1-11-93466d165349@redhat.com>
+References: <20250213-mem-cocci-v3-v1-11-93466d165349@redhat.com>
+Cc: dri-devel@lists.freedesktop.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, linux-tegra@vger.kernel.org, "Alain
+ Volmat" <alain.volmat@foss.st.com>, "Alexandre Torgue" <alexandre.torgue@foss.st.com>, "Alexey
+ Brodkin" <abrodkin@synopsys.com>, "Alison Wang" <alison.wang@nxp.com>, "Andrew
+ Jeffery" <andrew@codeconstruct.com.au>, "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>, "Baolin
+ Wang" <baolin.wang@linux.alibaba.com>, "Chun-Kuang Hu" <chunkuang.hu@kernel.org>, "Chunyan
+ Zhang" <zhang.lyra@gmail.com>, "Dave Stevenson" <dave.stevenson@raspberrypi.com>, "David
+ Airlie" <airlied@gmail.com>, "Fabio Estevam" <festevam@gmail.com>, "Joel
+ Stanley" <joel@jms.id.au>, "John Stultz" <jstultz@google.com>, "Jonathan
+ Corbet" <corbet@lwn.net>, "Jonathan Hunter" <jonathanh@nvidia.com>, "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>, "Marek Vasut" <marex@denx.de>, "Matthias
+ Brugger" <matthias.bgg@gmail.com>, "Maxime Coquelin" <mcoquelin.stm32@gmail.com>, "Maxime
+ Ripard" <mripard@kernel.org>, =?utf-8?b?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, "Mikko
+ Perttunen" <mperttunen@nvidia.com>, "Orson Zhai" <orsonzhai@gmail.com>, "Pengutronix
+ Kernel Team" <kernel@pengutronix.de>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Philippe
+ Cornu" <philippe.cornu@foss.st.com>, "Raphael Gallais-Pou" <raphael.gallais-pou@foss.st.com>, "Raphael
+ Gallais-Pou" <rgallaispou@gmail.com>, "Raspberry Pi Kernel Maintenance" <kernel-list@raspberrypi.com>, "Sascha
+ Hauer" <s.hauer@pengutronix.de>, "Shawn Guo" <shawnguo@kernel.org>, "Simona
+ Vetter" <simona@ffwll.ch>, "Stefan Agner" <stefan@agner.ch>, "Sumit Semwal" <sumit.semwal@linaro.org>, "Thierry
+ Reding" <thierry.reding@gmail.com>, "Thomas Zimmermann" <tzimmermann@suse.de>, "Tian
+ Tao" <tiantao6@hisilicon.com>, "Xinliang Liu" <xinliang.liu@linaro.org>, "Xinwei
+ Kong" <kong.kongxinwei@hisilicon.com>, "Yannick Fertre" <yannick.fertre@foss.st.com>, "Yongqin
+ Liu" <yongqin.liu@linaro.org>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: [PATCH] scsi: ufs: Fix incorrect bit assignment for temperature
- notifications
-Reply-To: keosung.park@samsung.com
-Sender: Keoseong Park <keosung.park@samsung.com>
-From: Keoseong Park <keosung.park@samsung.com>
-To: "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-	"avri.altman@wdc.com" <avri.altman@wdc.com>, "bvanassche@acm.org"
-	<bvanassche@acm.org>, "beanhuo@micron.com" <beanhuo@micron.com>,
-	"linux@roeck-us.net" <linux@roeck-us.net>, Daejun Park
-	<daejun7.park@samsung.com>, Keoseong Park <keosung.park@samsung.com>
-CC: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <1891546521.01739535602406.JavaMail.epsvc@epcpadp1new>
-Date: Fri, 14 Feb 2025 19:52:19 +0900
-X-CMS-MailID: 20250214105219epcms2p3a60810a14e6181092cb397924ce36019
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20250214105219epcms2p3a60810a14e6181092cb397924ce36019
-References: <CGME20250214105219epcms2p3a60810a14e6181092cb397924ce36019@epcms2p3>
 
-According to the UFS specification, the bit positions for
-`UFS_DEV_HIGH_TEMP_NOTIF` and `UFS_DEV_LOW_TEMP_NOTIF` were incorrectly
-assigned. This patch corrects the bit assignment to align with the
-specification.
+On Thu, 13 Feb 2025 19:19:24 -0500, Anusha Srivatsa wrote:
+> Replace platform_get_resource_byname + devm_ioremap_resource
+> with just devm_platform_ioremap_resource()
+> 
+> Used Coccinelle to do this change. SmPl patch:
+> //rule s/(devm_)platform_get_resource_byname +
+> 
+> [ ... ]
 
-If this issue is not fixed, devices that support both high and low
-temperature notifications may function correctly, but devices that
-support only one of them may fail to trigger the corresponding
-exception event.
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-Fixes: e88e2d32200a ("scsi: ufs: core: Probe for temperature notification support")
-Signed-off-by: Keoseong Park <keosung.park@samsung.com>
----
- include/ufs/ufs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/ufs/ufs.h b/include/ufs/ufs.h
-index d335bff1a310..8a24ed59ec46 100644
---- a/include/ufs/ufs.h
-+++ b/include/ufs/ufs.h
-@@ -385,8 +385,8 @@ enum {
- 
- /* Possible values for dExtendedUFSFeaturesSupport */
- enum {
--	UFS_DEV_LOW_TEMP_NOTIF		= BIT(4),
--	UFS_DEV_HIGH_TEMP_NOTIF		= BIT(5),
-+	UFS_DEV_HIGH_TEMP_NOTIF		= BIT(4),
-+	UFS_DEV_LOW_TEMP_NOTIF		= BIT(5),
- 	UFS_DEV_EXT_TEMP_NOTIF		= BIT(6),
- 	UFS_DEV_HPB_SUPPORT		= BIT(7),
- 	UFS_DEV_WRITE_BOOSTER_SUP	= BIT(8),
--- 
-2.25.1
-
-
+Thanks!
+Maxime
