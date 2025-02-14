@@ -1,105 +1,87 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F0E25A35E;
-	Fri, 14 Feb 2025 09:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD5F21D583;
+	Fri, 14 Feb 2025 09:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739527007; cv=none; b=h0vNAnpOVvuy7HD7pEixT4YTv5UJ4nW1Jivz9T3isCredy55lHth7ETvMAXjtXUay65vWlXQynWElmv5l/ippcu0D/FtbRUcorfWSkrHvrafaft6uwV17hNSNWRfCQ+cwk1jUnOJsJZWgnu0sEI5955bk24vnt+TeJzIRKo1zjI=
+	t=1739527075; cv=none; b=KvnKTPtQlvNNTwIpcJ30gflDKOsPml2DbX+E3Temgooagfk1X5vpoqLRnMdlu0UezZxtXpS4qwfIg98/hvKD96CJlR2YDe9Ego2/sfnRq2ykz6KjPF7I5kB8uSH/ts5NDylQOUdChNevZjxi7LQiyzAgeu+2a4YyPg1/cOmH1oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739527007; c=relaxed/simple;
-	bh=2LO0cXJZgVMVTgsRdZr9kQEfeyBkSEdO1XQGhXms6V8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nJbhV3lv+6DFzPjeYxibYWSerje4s5YzFYN1RgPahpOhATMaVBx/2z8DmM/smoyFBl6J0l+IsYEAqTXKFNex8xlVjHTOrgeFkUvpQqTojCsxJH93yMUhqV9ZsK0OSvgONRnxLnMVhkO5+wcfPgG5RVMSW9KeLRkpdjkKWasWZkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cG1dOifW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739527075; c=relaxed/simple;
+	bh=lg5PJMZgDXBJsHXG2leEhfTCxQ3AwRGBAyiq5iYMp8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=OcFh/aS6qLQClQ5V6nTxOUxRLYpdfXq8OyE76XOTwZOCglCDVck3IknWDcAuIgDwpcqKA2zr8SzKWlgT8vx0iZNAfWCHH3ly9FTwX5HmZuKWZT26sNcQ/iy3+03lczXmHnR7EycHFljDbUpc6jLgjECEl7yeoT95g3QRnrbqgzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=BNpZJ+0/; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cG1dOifW"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51E8R23d027806;
-	Fri, 14 Feb 2025 09:56:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rbWj2224SpWSWtxrztfF1M/84AOkSFaVl56P/yckdPo=; b=cG1dOifWdaRdjfjl
-	ErgX9yD5Krbnr3fu2QCh0doKCb4lEyQRHxXJPnW51HYCzN45bOmDMDiWXa6epccY
-	7NLk10nHDYZj9nEXtw3uMSjHi4dnFf7FqQXjwkp3bEXy2NhUoWNMMumi6wLYAR7H
-	RHyzEgu8x1nsvDc83GNEzzcVBT3e4idhM5ceKwXcjhO9Cnfyq2ugu8yM47LnNgZ2
-	bBJaAXK2WGJw/CylOt5OdIdj9uEleQzaq1BRLdCnVZ0g/kkOJTA0Iv8vcqN4OwDA
-	rlv082t9tfIVYflX65qhXBFGoSq8bSzxHwsqQCeTNi8W34Jn5RkASqeCDool3URC
-	YEGT7A==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44sebnbau5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 09:56:42 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51E9ufwc000791
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 09:56:41 GMT
-Received: from hu-vikramsa-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 14 Feb 2025 01:56:39 -0800
-From: Vikram Sharma <quic_vikramsa@quicinc.com>
-To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_svankada@quicinc.com>
-Subject: [PATCH v1 5/5] media: qcom: camss: Enumerate resources for QCS8300
-Date: Fri, 14 Feb 2025 15:26:11 +0530
-Message-ID: <20250214095611.2498950-6-quic_vikramsa@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250214095611.2498950-1-quic_vikramsa@quicinc.com>
-References: <20250214095611.2498950-1-quic_vikramsa@quicinc.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BNpZJ+0/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1739527067;
+	bh=2EFx2eR+q14F87f3v84BNZqBD5bxUeUxRN0LEoo9+Cg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=BNpZJ+0/eZpuafLjhQiszt9oCbz0kdZOZ8kzWq2frsW/+DHFASIwbfHweB9iMa9kJ
+	 lGyA7ixd5w4Xnq3wzTmMmMsuBv8N3eC0QsiqIAIP2L/MHShrHUpEEbmwFRI1xKchXL
+	 hyg+aPXQoxk5bPCAmj1pKzvdE0AAk9/aW86cOhnrSY6dCH6ENlOhTgXE1qd/eeKMbP
+	 Cih6CdiEns5iKJHrEnVXR/yLB78wybx/wjneQPjDbRrMpfrg1ucA64EDPjGlAbbhQ8
+	 p8EkmXZ8olJAefb1IcZaLqXA6dheFQoiwLV0y1ynbpDgiJGokHgjjGB+j0JmM9x1O9
+	 Yzxke7xncfG6A==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YvSCb68F6z4x0t;
+	Fri, 14 Feb 2025 20:57:47 +1100 (AEDT)
+Date: Fri, 14 Feb 2025 20:57:47 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Usama Arif <usamaarif642@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the mm tree
+Message-ID: <20250214205747.62afc7b4@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: OaMLSnJ5kDKdAXi-W_K49TtrHVZGwIzs
-X-Proofpoint-ORIG-GUID: OaMLSnJ5kDKdAXi-W_K49TtrHVZGwIzs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-14_04,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- lowpriorityscore=0 clxscore=1015 mlxlogscore=999 phishscore=0
- suspectscore=0 malwarescore=0 priorityscore=1501 adultscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502140071
+Content-Type: multipart/signed; boundary="Sig_/qx2y_o_ojaXK_m8UuyTYcQ2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Enumerate csiphy, csid and vfe resources for qcs8300.
+--Sig_/qx2y_o_ojaXK_m8UuyTYcQ2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
----
- drivers/media/platform/qcom/camss/camss.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Hi all,
 
-diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
-index 2ac3d8814b35..cef1b0854eaa 100644
---- a/drivers/media/platform/qcom/camss/camss.c
-+++ b/drivers/media/platform/qcom/camss/camss.c
-@@ -4211,7 +4211,14 @@ static const struct camss_resources msm8996_resources = {
- static const struct camss_resources qcs8300_resources = {
- 	.version = CAMSS_8300,
- 	.pd_name = "top",
-+	.csiphy_res = csiphy_res_8300,
-+	.csid_res = csid_res_8300,
-+	.csid_wrapper_res = &csid_wrapper_res_qcs8300,
-+	.vfe_res = vfe_res_8300,
- 	.icc_res = icc_res_qcs8300,
-+	.csiphy_num = ARRAY_SIZE(csiphy_res_8300),
-+	.csid_num = ARRAY_SIZE(csid_res_8300),
-+	.vfe_num = ARRAY_SIZE(vfe_res_8300),
- 	.icc_path_num = ARRAY_SIZE(icc_res_qcs8300),
- 	.link_entities = camss_link_entities
- };
--- 
-2.25.1
+After merging the mm tree, today's linux-next build (htmldocs) produced
+this warning:
 
+include/linux/damon.h:394: warning: Function parameter or struct member 'sz=
+_range' not described in 'damos_filter'
+
+Introduced by commit
+
+  7d745211df6c ("mm/damon: introduce DAMOS filter type hugepage_size")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/qx2y_o_ojaXK_m8UuyTYcQ2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmevE5sACgkQAVBC80lX
+0GzsIwf9EvNiNaR7tyPp5Jf72FmHrwmI4VfdsRsF7c6J1H887WUqnq2FxGptjmNy
+MIZY2oWdw6z9RPnBnbecl/xVR5TBAH54jB5p9rNwVAoDufR546Thk5amH7ofSGEg
+YM8fBqmNMOkPs7qzLod8BzwluXRBzatQ9UdYsz4pz02XrLDQQIkdZ+WcEzPpu3sU
+16QCy0dIjhwB8AkdODQnKqAFnwZzxbeRxN8V5/5OdrLdiP7oNA7oBleDbO28XJzt
+2+jdTsnbqo0FNqohSNIrs57PKnMy26jV8wmNr4w0nfvpdcu4Drbz+cyaiRAuo8ct
+q0rhW4InuwjW68aH9hd/8OJXPn5IRQ==
+=ekwP
+-----END PGP SIGNATURE-----
+
+--Sig_/qx2y_o_ojaXK_m8UuyTYcQ2--
