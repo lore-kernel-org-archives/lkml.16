@@ -1,284 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C69D347CC;
-	Fri, 14 Feb 2025 01:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C641E502;
+	Fri, 14 Feb 2025 01:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739498285; cv=none; b=kLC93qzUsS2InbrY/pAiSt9XS02x5tqsvKFFE91RdEog66TgJiD8F7JZLCAqLigyTmQayDj+lICa2tYYaPOJogZfXlwXxewDiV4LrPNwwwFRfvJTG5Qq9cbpNRK6Ih+nKqOomCLb45obbOiAp5nUKlj2Dy42RuWRBNZKUzGWmZk=
+	t=1739498339; cv=none; b=ADE6urtNouMfyMKDfaO9F/gf/pNbHyYfwiOy1sa7YFotCFWoHwR53eC6gk0VyWHAAXuyvhXFItG8dgiiIc5hSrVy1a3sAe0Tp7TxZKZagykhZ+hxS2N9iYldaYSUVUyRyIXzK/W9ZOtyiF+fxETMKK0LSJkJ64XYgDN+JTuisIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739498285; c=relaxed/simple;
-	bh=xqQr2Py0Wo1dWSI6BF6vAyEUGFaoFkBBl6dgrTsRVoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hwQYICOc5vQZJC9YbyCtJeJG3AQL90+LxEqYxzpKbM3puzE6pjHHRGg2iwYRPh8PwjbXsPNB7W7/J/M/gr6AslQ75JelU4ILaAHJ18VMz27H9OlH08G+I06SSu6UULoERCVZxph6md5GkVqIwJFdHVzONHyUwEcVpQtHTHULFTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hyQzOKky; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739498339; c=relaxed/simple;
+	bh=AtX4TcfqYpcyFBoqwkZl/9Tr2hyNSYfyQ73TsT0oaxY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UJLxJH05+g+fXBCl+Mcme2vfo7xRbTbHjI8Qwce/jtmT/q0KVrW/jx29wQRScoF6HbBPPHye8gnrwduKCIOj/2V3Fa9AnFoKwLtkuSsbcafNPCGLSzSaPvdR2eNDMaBq2OYdQe2bzKqOC0HcyvUSkcgRVj6QjuJiOccNzgFG9S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIrX+yVY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hyQzOKky"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739498284; x=1771034284;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xqQr2Py0Wo1dWSI6BF6vAyEUGFaoFkBBl6dgrTsRVoQ=;
-  b=hyQzOKkykIxMYco/pWXGTK6Hn7urrUEQwW8mHnY0TGy8+RnmsWt9Paol
-   Yo/JZAjCMMnFKdoC2ZEMFHhc1+i5PD7BzHd7xjplFHQ9F6bLvoSM0ITKI
-   rJxVjjzGdoIreEZpiAcZEZ+3II+rlPUmNqEZANTTc1OILue85gAT9DicD
-   ZYDovb/2LhYGFfFln/DDlXZt3HtSua7VmfXrFsIVMif8mBiK04EHg4Yo3
-   Rx3WLl/QIww/TuWx8I3a2cUUaWvGjo/iBCyeWSV2a9ht3r8FN3LCfpNwX
-   cYHVEAvQ0SgeUf9xpCqKreRMzqangOGKwubsOyHPXWgN8+tPyh6R3yTOZ
-   Q==;
-X-CSE-ConnectionGUID: Ct09tW+RQkqSmzTzEGeYLA==
-X-CSE-MsgGUID: AtGUpl7KQMOdV0R+0kLxzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="50878312"
-X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="50878312"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 17:58:03 -0800
-X-CSE-ConnectionGUID: pWp7sM5+TUm0Wd6kPwb4xQ==
-X-CSE-MsgGUID: yTNWeSQwQhimGDFDFr6f9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="113842073"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.202])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 17:58:03 -0800
-Date: Thu, 13 Feb 2025 17:58:00 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, nvdimm@lists.linux.dev,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	SupportedACPI status: linux-hardening@vger.kernel.org;
-Subject: Re: [PATCH v2][next] UAPI: ndctl / acpi: intel: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z66jKIvuTXmNC3Q7@aschofie-mobl2.lan>
-References: <Z66T8tSKjVutr6of@kspp>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIrX+yVY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85BE8C4AF09;
+	Fri, 14 Feb 2025 01:58:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739498338;
+	bh=AtX4TcfqYpcyFBoqwkZl/9Tr2hyNSYfyQ73TsT0oaxY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jIrX+yVYWf1RwTCwUJj45RkaeiCeljgDw36fV1NgqYFjAkzl4tA844QxIw5V5h/8v
+	 2vMo389vb32CV0lTnK0lke6FeQOMPajW64imBOxkDerHs+CcZi+/TmETRwZhfut9yX
+	 GQEbgyQLD2hwF3WQmwJWpfE0I+EO0SOkySN2hIMRL9M5ytO2P5BVxxIHhXECx8zPTl
+	 L0O1ys9thxERhTMz0P1BVXn/aiyl2f2JO9389OYuLZNgsPcrLczEFu7MMJopqnFasm
+	 HKY8MVmp6bvwuJu4g9BfGmbZMM3eh7jQwg6B2PHm6RCxQBvlby5KOw5COjmqJ7vhEp
+	 ByCaRaveCOMhg==
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-8551c57cb8aso27379539f.3;
+        Thu, 13 Feb 2025 17:58:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV76IAtzyPhTxaTGC8nHYJGgH3asPU4uTSwmFriJIHzzehUqMeejSak/zsPih5aLUkf9Hi4+rePyDbtjmFVcg==@vger.kernel.org, AJvYcCWdRUIjkdazyixJQyOfq8LfT/HCDClv3CMnJfWpFnlK+3Bl8+qHnepZFuCI9bpecXMPZ9pc4bAjZZs1/3avpEZBHw==@vger.kernel.org, AJvYcCXcVJLiUfwE8CE1+tDiU1F32pIPDlXO84CogcU7TFQu/K7gbgiHal1hOerH2bpCHnr+xaQxDZS5MeCcqCw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy56uhdRT/ZbjlUZW4uY5nvbWADontoHqm9nrbriEL/LTt7SVrq
+	3Esw7GdrBZUiecmScGQxQT4IVR+wq2nk0zT5zNat9Pd9lxlAGTRb44lShkShZbn4Y6kmfOUA9AR
+	nj3RGJD47O+Gi6kPesehaAJ+8bbg=
+X-Google-Smtp-Source: AGHT+IEqPgzO3lIvmSnLrOqQOZvaJ4xeAqJ3kVghhzVWZb4fCDChRFA3LLGruPGAyM1QQHijD9esbVZGX8Xo8nR1bnE=
+X-Received: by 2002:a05:6e02:184b:b0:3cf:cd3c:bdfd with SMTP id
+ e9e14a558f8ab-3d18c23caa4mr42155035ab.12.1739498337729; Thu, 13 Feb 2025
+ 17:58:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z66T8tSKjVutr6of@kspp>
+References: <20250127213310.2496133-1-wnliu@google.com> <CAPhsuW6S1JPn0Dp+bhJiSVs9iUv7v7HThBSE85iaDAvw=_2TUw@mail.gmail.com>
+ <00fa304d-84bf-4fca-9b9a-f3b56cd97424@oracle.com> <CAPhsuW4ct6W_4B0LFEjLePH1pAeNm4h8ePuQ3HcSoknXhQWN0w@mail.gmail.com>
+ <mb61p1pw21f0v.fsf@kernel.org> <CAPhsuW5VCmuPLd8wwzBp_Divnu=uaZQcrRLsjsEOJ9GmA0TR5A@mail.gmail.com>
+ <mb61pseoiz1cq.fsf@kernel.org> <CAPhsuW7bo4efVYb8uPkQ1v9TE95_CQ6+G3q4kVyt-8g-3JD6Cw@mail.gmail.com>
+ <mb61pr0411o57.fsf@kernel.org>
+In-Reply-To: <mb61pr0411o57.fsf@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Thu, 13 Feb 2025 17:58:46 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW7fBkZaKQzLvBqsrxTvpJsfJfUBfco4i=-=C_on+GdpKg@mail.gmail.com>
+X-Gm-Features: AWEUYZkpF5BMZbHzv8MzSiy1Gtx3WEyGX_vqexyd5VIB8KHI8VbVKVkNRfn3dfk
+Message-ID: <CAPhsuW7fBkZaKQzLvBqsrxTvpJsfJfUBfco4i=-=C_on+GdpKg@mail.gmail.com>
+Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: Indu Bhagat <indu.bhagat@oracle.com>, Weinan Liu <wnliu@google.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev, 
+	Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>, linux-toolchains@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org, 
+	joe.lawrence@redhat.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 14, 2025 at 11:23:06AM +1030, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> So, in order to avoid ending up with flexible-array members in the
-> middle of other structs, we use the `__struct_group()` helper to
-> separate the flexible array from the rest of the members in the
-> flexible structure. We then use the newly created tagged `struct
-> nd_cmd_pkg_hdr` to replace the type of the objects causing trouble:
-> `pkg` in multiple structs.
-> 
-> Below is the before-and-after changes of the memory layout in `struct
-> nd_cmd_pkg`. This to illustrate that the use of `__struct_group()`
-> doesn't alter the layout, ensuring that user space remains unaffected.
-> 
-> Before changes:
-> struct nd_cmd_pkg {
-> 	__u64                      nd_family;            /*     0     8 */
-> 	__u64                      nd_command;           /*     8     8 */
-> 	__u32                      nd_size_in;           /*    16     4 */
-> 	__u32                      nd_size_out;          /*    20     4 */
-> 	__u32                      nd_reserved2[9];      /*    24    36 */
-> 	__u32                      nd_fw_size;           /*    60     4 */
-> 	/* --- cacheline 1 boundary (64 bytes) --- */
-> 	unsigned char              nd_payload[];         /*    64     0 */
-> 
-> 	/* size: 64, cachelines: 1, members: 7 */
-> };
-> 
-> After changes:
-> struct nd_cmd_pkg {
-> 	union {
-> 		struct {
-> 			__u64      nd_family;            /*     0     8 */
-> 			__u64      nd_command;           /*     8     8 */
-> 			__u32      nd_size_in;           /*    16     4 */
-> 			__u32      nd_size_out;          /*    20     4 */
-> 			__u32      nd_reserved2[9];      /*    24    36 */
-> 			__u32      nd_fw_size;           /*    60     4 */
-> 		};                                       /*     0    64 */
-> 		struct nd_cmd_pkg_hdr __hdr;             /*     0    64 */
-> 	};                                               /*     0    64 */
-> 	/* --- cacheline 1 boundary (64 bytes) --- */
-> 	unsigned char              nd_payload[];         /*    64     0 */
-> 
-> 	/* size: 64, cachelines: 1, members: 2 */
-> };
-> 
-> It's also worth mentioning that all members of the struct can still be
-> accessed directly, for example instance->nd_family, instance->nd_command,
-> and so on.
-> 
-> So, with these changes, fix 12 of the following warnings:
-> 
-> drivers/acpi/nfit/intel.c:692:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Thu, Feb 13, 2025 at 2:22=E2=80=AFPM Puranjay Mohan <puranjay@kernel.org=
+> wrote:
+>
+> Song Liu <song@kernel.org> writes:
+>
+> > On Thu, Feb 13, 2025 at 12:38=E2=80=AFAM Puranjay Mohan <puranjay@kerne=
+l.org> wrote:
+> > [...]
+> >>
+> >> P.S. - The livepatch doesn't have copy_process() but only copy_signal(=
+),
+> >> yours had copy_process() somehow.
+> >
+> > In my build, copy_signal is inlined to copy_process, unless I add noinl=
+ine.
+> > If I do add noinline, the issue will not reproduce.
+> >
+> > I tried more combinations. The issue doesn't reproduce if I either
+> > 1) add noinline to copy_signal, so we are not patching the whole
+> >    copy_process function;
+> > or
+> > 2) Switch compiler from gcc 14.2.1 to gcc 11.5.0.
+> >
+> > So it appears something in gcc 14.2.1 is causing live patch to fail
+> > for copy_process().
+>
+> So, can you test your RFC set (without SFRAME) with gcc 14.2.1, so we
+> can be sure that it is not a sframe problem?
+>
+> And about having the .sframe section in the livepatch module, I realised
+> that this set doesn't include support for reading/using sframe data from
+> any module(livepatches included), so the patch I added for generating
+> .sframe in kpatch is irrelevant because it is a no-op with the current se=
+tup.
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Puranjay,
 
+Could you please try the following?
 
-> ---
-> Changes in v2:
->  - Show changes in UAPI first. (Alison)
->  - Update changelog text --add more information about _struct_group()
->    changes. (Alison)
-> 
-> v1:
->  - Link: https://lore.kernel.org/linux-hardening/Z618ILbAR8YAvTkd@kspp/
-> 
->  include/uapi/linux/ndctl.h | 15 +++++++++------
->  drivers/acpi/nfit/intel.c  | 24 ++++++++++++------------
->  2 files changed, 21 insertions(+), 18 deletions(-)
-> 
-> diff --git a/include/uapi/linux/ndctl.h b/include/uapi/linux/ndctl.h
-> index 73516e263627..34c11644d5d7 100644
-> --- a/include/uapi/linux/ndctl.h
-> +++ b/include/uapi/linux/ndctl.h
-> @@ -227,12 +227,15 @@ enum ars_masks {
->   */
->  
->  struct nd_cmd_pkg {
-> -	__u64   nd_family;		/* family of commands */
-> -	__u64   nd_command;
-> -	__u32   nd_size_in;		/* INPUT: size of input args */
-> -	__u32   nd_size_out;		/* INPUT: size of payload */
-> -	__u32   nd_reserved2[9];	/* reserved must be zero */
-> -	__u32   nd_fw_size;		/* OUTPUT: size fw wants to return */
-> +	/* New members MUST be added within the __struct_group() macro below. */
-> +	__struct_group(nd_cmd_pkg_hdr, __hdr, /* no attrs */,
-> +		__u64   nd_family;		/* family of commands */
-> +		__u64   nd_command;
-> +		__u32   nd_size_in;		/* INPUT: size of input args */
-> +		__u32   nd_size_out;		/* INPUT: size of payload */
-> +		__u32   nd_reserved2[9];	/* reserved must be zero */
-> +		__u32   nd_fw_size;		/* OUTPUT: size fw wants to return */
-> +	);
->  	unsigned char nd_payload[];	/* Contents of call      */
->  };
->  
-> diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
-> index 3902759abcba..fe561ce0ddec 100644
-> --- a/drivers/acpi/nfit/intel.c
-> +++ b/drivers/acpi/nfit/intel.c
-> @@ -56,7 +56,7 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
->  	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->  	unsigned long security_flags = 0;
->  	struct {
-> -		struct nd_cmd_pkg pkg;
-> +		struct nd_cmd_pkg_hdr pkg;
->  		struct nd_intel_get_security_state cmd;
->  	} nd_cmd = {
->  		.pkg = {
-> @@ -121,7 +121,7 @@ static int intel_security_freeze(struct nvdimm *nvdimm)
->  {
->  	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->  	struct {
-> -		struct nd_cmd_pkg pkg;
-> +		struct nd_cmd_pkg_hdr pkg;
->  		struct nd_intel_freeze_lock cmd;
->  	} nd_cmd = {
->  		.pkg = {
-> @@ -154,7 +154,7 @@ static int intel_security_change_key(struct nvdimm *nvdimm,
->  		NVDIMM_INTEL_SET_MASTER_PASSPHRASE :
->  		NVDIMM_INTEL_SET_PASSPHRASE;
->  	struct {
-> -		struct nd_cmd_pkg pkg;
-> +		struct nd_cmd_pkg_hdr pkg;
->  		struct nd_intel_set_passphrase cmd;
->  	} nd_cmd = {
->  		.pkg = {
-> @@ -196,7 +196,7 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
->  {
->  	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->  	struct {
-> -		struct nd_cmd_pkg pkg;
-> +		struct nd_cmd_pkg_hdr pkg;
->  		struct nd_intel_unlock_unit cmd;
->  	} nd_cmd = {
->  		.pkg = {
-> @@ -235,7 +235,7 @@ static int intel_security_disable(struct nvdimm *nvdimm,
->  	int rc;
->  	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->  	struct {
-> -		struct nd_cmd_pkg pkg;
-> +		struct nd_cmd_pkg_hdr pkg;
->  		struct nd_intel_disable_passphrase cmd;
->  	} nd_cmd = {
->  		.pkg = {
-> @@ -278,7 +278,7 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
->  	unsigned int cmd = ptype == NVDIMM_MASTER ?
->  		NVDIMM_INTEL_MASTER_SECURE_ERASE : NVDIMM_INTEL_SECURE_ERASE;
->  	struct {
-> -		struct nd_cmd_pkg pkg;
-> +		struct nd_cmd_pkg_hdr pkg;
->  		struct nd_intel_secure_erase cmd;
->  	} nd_cmd = {
->  		.pkg = {
-> @@ -319,7 +319,7 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
->  	int rc;
->  	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->  	struct {
-> -		struct nd_cmd_pkg pkg;
-> +		struct nd_cmd_pkg_hdr pkg;
->  		struct nd_intel_query_overwrite cmd;
->  	} nd_cmd = {
->  		.pkg = {
-> @@ -355,7 +355,7 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
->  	int rc;
->  	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->  	struct {
-> -		struct nd_cmd_pkg pkg;
-> +		struct nd_cmd_pkg_hdr pkg;
->  		struct nd_intel_overwrite cmd;
->  	} nd_cmd = {
->  		.pkg = {
-> @@ -408,7 +408,7 @@ static int intel_bus_fwa_businfo(struct nvdimm_bus_descriptor *nd_desc,
->  		struct nd_intel_bus_fw_activate_businfo *info)
->  {
->  	struct {
-> -		struct nd_cmd_pkg pkg;
-> +		struct nd_cmd_pkg_hdr pkg;
->  		struct nd_intel_bus_fw_activate_businfo cmd;
->  	} nd_cmd = {
->  		.pkg = {
-> @@ -519,7 +519,7 @@ static int intel_bus_fwa_activate(struct nvdimm_bus_descriptor *nd_desc)
->  {
->  	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
->  	struct {
-> -		struct nd_cmd_pkg pkg;
-> +		struct nd_cmd_pkg_hdr pkg;
->  		struct nd_intel_bus_fw_activate cmd;
->  	} nd_cmd = {
->  		.pkg = {
-> @@ -583,7 +583,7 @@ static int intel_fwa_dimminfo(struct nvdimm *nvdimm,
->  		struct nd_intel_fw_activate_dimminfo *info)
->  {
->  	struct {
-> -		struct nd_cmd_pkg pkg;
-> +		struct nd_cmd_pkg_hdr pkg;
->  		struct nd_intel_fw_activate_dimminfo cmd;
->  	} nd_cmd = {
->  		.pkg = {
-> @@ -689,7 +689,7 @@ static int intel_fwa_arm(struct nvdimm *nvdimm, enum nvdimm_fwa_trigger arm)
->  	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->  	struct acpi_nfit_desc *acpi_desc = nfit_mem->acpi_desc;
->  	struct {
-> -		struct nd_cmd_pkg pkg;
-> +		struct nd_cmd_pkg_hdr pkg;
->  		struct nd_intel_fw_activate_arm cmd;
->  	} nd_cmd = {
->  		.pkg = {
-> -- 
-> 2.43.0
-> 
+1. Use gcc 11.4.1;
+2. Add __always_inline to copy_signal();
+3. Build kernel, and livepatch with the same test (we need to
+    add __always_inline to the .patch file).
+4. Run gdb livepatch-xxx.ko
+5. In gdb do disassemble copy_process.
+
+In my tests, both gcc-14.2.1 and gcc-11.5.0 generated a .ko file
+that looks weird in gdb-disassemble. Specifically, readels shows
+copy_process is about 5.5kB, but gdb-disassemble only shows
+140 bytes or so for copy_process. clang doesn't seem to have
+this problem.
+
+I am really curious whether you have the same problem in your
+setup.
+
+Thanks,
+Song
