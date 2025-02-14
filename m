@@ -1,43 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31EC264A90
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 13:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C19D264A90
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 13:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739539072; cv=none; b=Mgj77spaehIHMzmq78aa45pl86zwT1OeCFPfF0OyxVI6gFt3NGZcsM6/nGqnksMdF7/EAmTN42cn+7/ASq1ST6iDptOdmX7898z6i/ZpifUM55OliEqyTLdsU9Kr+6N8XIt5rTm2bK+PDavy1T8o5K/NKUSStugW1jDd8pwCl/M=
+	t=1739539081; cv=none; b=IIZP3BbohWKDtQ7OGqMJfEayItHTW4S8Knmaqb1/85fT5YNGhkXFOixoFNhL49dhWiJ/vwa8wbp7/b+DUEuZGo91vTLl/zVCgHaVOTpVRZF+9BvgbuDHyt9CT9ba6VWVwepR4fpfupQ80DOZkqKUxSb0r2bBFCE3Bm7cdImVGR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739539072; c=relaxed/simple;
-	bh=jqUXucE5Y4nnB+VCTZkmpXrxMC8l+mi2tGy84H4NNcY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FHO4Hy19H4uMWlp4hNGQPtL4d+dhIXxXiIrZwv5+wLK80h4JZKSEtnm9P3OzfHv9mYmSRalLl9PQnLi3no3iSOLRTN78XKiME+O+/jiB1dSy1r1pYbiVpfP9Pe5LaMV5+BEew3TCL7+ZtXqG9yv8SRa7kRO+SVz8O9Zz0F+Uw8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TA6GhCrk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739539081; c=relaxed/simple;
+	bh=L+i2ne6USMbeouYgvh/Dzg8b8EW24qOMAa2/YMn7bNg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PTWv8s5eGjNvG5wj7Dv8NP3OSpJjqArKOBbvqExQrDEx5bg0CtpBwpuPWfka9YPU3AGvGPFUvQohTE8MVra8WONPoqF9EKGMxVHUOOORRMiQVB0HNtyWctRQmXZ3Do/+siZStH8paX16wuxtKmYReR0nW02q/RCwOM+Wjv3vt+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wz1s2EFk; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TA6GhCrk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 734BCC4CED1;
-	Fri, 14 Feb 2025 13:17:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739539072;
-	bh=jqUXucE5Y4nnB+VCTZkmpXrxMC8l+mi2tGy84H4NNcY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=TA6GhCrkdeoyZ5SzBg9K1++CCYtZopNSkfoJKp5TVTl43wxm4RcZRUW7L4mc9XA4j
-	 Cvp7r53ipc1n8369y0LS7agRgFAKbncFPfWorj3pja+EVgr36Ze+ihNdpuBLo3YnZz
-	 t7lwQkzNHaYJnJNTV6DQ7BFsjhIGh+Qitu8Wx2SiAQCL2i8XzEG5w6G/SfPN+6rv0I
-	 0YszU2thKURbZ0BWZABEOxx0FFkThvpXD8q3o//j9vRt/8B9A5jfPk9P8X5XJZTJfw
-	 hln7ZL23ICgjtu+/k1+9/3W8VtJXeIMWSMgkRmF2803s2sCs9f7lLNK1YIPPxn0jOU
-	 xqkI0KWRLUzdw==
-From: Vinod Koul <vkoul@kernel.org>
-To: kishon@kernel.org, heiko@sntech.de, 
- Damon Ding <damon.ding@rock-chips.com>
-Cc: dmitry.baryshkov@linaro.org, linux-phy@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250205105157.580060-1-damon.ding@rock-chips.com>
-References: <20250205105157.580060-1-damon.ding@rock-chips.com>
-Subject: Re: [PATCH v7 0/4] Add eDP mode support for Rockchip Samsung HDPTX
- PHY
-Message-Id: <173953906904.3648.15167583228887227483.b4-ty@kernel.org>
-Date: Fri, 14 Feb 2025 18:47:49 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wz1s2EFk"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38c62ef85daso293169f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 05:17:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739539077; x=1740143877; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WTkVJFJYdKGE2V15GcqWFnLtubHjV8Mv7nfMRm+EoPY=;
+        b=wz1s2EFkFWVsipFgTOefpZkkry/fmwujLStP3uji3xrwBrliD20GlnhSlMTTG4p5Zu
+         5EBRTq0LHffWYBuIwQAKRjRPDMy+k+uon471aCBf2hSc8Qa1HwBz88RXEn6kpfjBc6uu
+         7VBzaD3TX62eQYlr7LxE1XOAmGdeiK+n9cYhGwSbo840tqNL9gE5wuUHhFuLWopWRTPN
+         FyCR/0/rocjWCNTq3Ok25ZxgtUAUC+qMyeMbLUMC5nrbQnXM61LbOJ8KmY0oMhbwDdlv
+         u0c3SUbzx4/PL+BSJ3zWa3JaAwk7TEaXDtAgWwzJ6TWwgBx1vYGOGxB3DJxk/RkFc59C
+         K3yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739539077; x=1740143877;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WTkVJFJYdKGE2V15GcqWFnLtubHjV8Mv7nfMRm+EoPY=;
+        b=FKtrbT5yoT7l/L87yMzKxY0b6kMfbANHUfwmf5w4GjOFfPTrBtiWP3GPNa89lqg/n2
+         RMe0S4x/hTZjLJ+UC30xpQNIZ8aD/4cV47CDXtYfORw7ZnzNv5U9HmWQcWA83QPYMOIQ
+         oUHhRKNRfyPrh9iq/8l3uvXGvMqiCdAkR/DQc3H5fTG8/SUqK5bgakM3qLZbybbJv+z0
+         nfT2GnFPymc5QmuCeklJzfho8SvzNmWXWnrcfQUQC1CY2OI/zpEURF1xoAf+BbDXk9px
+         qL5JqkYJ7J0yvYOuLFGlTN+r3qTmD/AZRnmZExMLnQ17bAcTR1/mDoZlOyZ63VQ5J8Kr
+         f7RA==
+X-Forwarded-Encrypted: i=1; AJvYcCXsZxFEBq43At5xJydDzsKfGey1SgmWryKVOk8LF6ZsA066lbC+o3YbRDwchOSGyzFYTtqPdSMsG7fVQpo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHhTAYf2RYIPyBs+bu9UtdZFw4Gv6mjxBpiFk0DRA8s8jur1fl
+	KmrTpEfVW4YSbFI1iu5R5fzp9rQJbPCcfq3FkqScWWM5sYbR00TD0fZuCyr+WQg=
+X-Gm-Gg: ASbGnctiFkxagfKzmIglZ0Q3awL0jOAk52/o5V0fb59k/RJXwJfj0Ec2HUThF4uJ4eR
+	EyGiaqsvGLgnsvG2PM0OiHVa2VQQUlEM9/gDpi+KwjDYz8xDU+mHu6x1AdOxW3rVessHqT0tKFt
+	UlxudhJZNSWrtM0TdxaeD2jhYnnHIgAu3RJOfqxlK4jbF6r7CRkxdGHQdlUMXMRdF04/IG6B583
+	8fOTtQhxkhouz59e32MKqQo0U2VMo7us8c7eRnRMvRPMJe9YIFsw+9vT9sIX03CvVFRxfdpsGbK
+	209IvDCzM1ik23NIm4ked55d+vQG75E=
+X-Google-Smtp-Source: AGHT+IH+EYmWeA1LWeRvivFdhkovV3JXAQXGbPQOMp0OcWg5nbCX0fAoBV+Te8py0Y7dhNTltTi0vw==
+X-Received: by 2002:a05:6000:400d:b0:382:4e5c:5c96 with SMTP id ffacd0b85a97d-38dea30a188mr5168291f8f.8.1739539077391;
+        Fri, 14 Feb 2025 05:17:57 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.218.144])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5655sm4607690f8f.77.2025.02.14.05.17.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 05:17:56 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 0/4] drm/msm/dsi: Minor cleanups
+Date: Fri, 14 Feb 2025 14:17:43 +0100
+Message-Id: <20250214-drm-msm-cleanups-v2-0-1bec50f37dc1@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,37 +67,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHdCr2cC/32NTQrCMBBGr1Jm7UgSiUVX3kO6iPlpB9qkTDQoJ
+ Xc39gAu34PvfRtkz+QzXLsN2BfKlGIDdejATiaOHsk1BiWUFlKc0fGCS17Qzt7E15rROWODDPb
+ 0MBrabGUf6L0n70PjifIz8Wd/KPJn/8SKRIGqlyFIK0R/0beZouF0TDzCUGv9Aok/QK+xAAAA
+X-Change-ID: 20250106-drm-msm-cleanups-ddacf1fc3ba5
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=822;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=L+i2ne6USMbeouYgvh/Dzg8b8EW24qOMAa2/YMn7bNg=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBnr0J81HBnDmsvJT7ZOq36M79xw8Qu67Y1oNk06
+ cD5OWAmN8aJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ69CfAAKCRDBN2bmhouD
+ 19uGD/9oGzLoFf2LW8iOUbXHjLuJFp73CsojzoPu3vV66wBuA26yHbH6IuKC7nishtJxp4vva5F
+ MRNY+e/lBhDOua+fbak/wzDBvWePwnGCcpZULffj611wOZT99CRPMjXjOleHSfTMtx5gxQqXIvO
+ NH2ciOwgZJR6eVIDzXWtxkrQYLKimA0BVCdVe/jk43at0Hyib9Tk77g/w/geCmRex8+Aa1TjE7j
+ s8HaboZH2FgKAjHltfmTlUjT3PRvPbjMe0rs7LkKL7jg4TTPhL/ol1shTCIsGhMl0J1UCZWrpWO
+ Ry61QJTIzPFKdUEZZoKO+H03PoZfhZ5sGa30O5t5AIYjLlKvFqqC9ZE5enzi+cvgAwl044ln+uF
+ qlJzsfy6Uoj+5E59sRLf1scEXX2cpsJRyZppq9mpE2G+8/WUPhTk8bn9Jfa5mhXVg4y2d+hCUa8
+ dDuhsmzRWnPe9fpKI72iKhLW1VokXkWI5zdg5/JmEjUYYvoj5apU85HYlf74l3yemQfuARUwyTf
+ s5Dm/yCbzBXvjDL08MLsceQoqLkDSEzpFpIAhNqBEjKdQilegsu1dyvBhl6WI7rRQwOTreUMylY
+ VPfYNb+8r+Q0Hn3HsidsL61wKqwESAkIAiF1uofmeVBoKOhw2pE1QfhtcNUBpKAsh7Fl/7hvu+S
+ XuGceCz2ooIa8Cg==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
+Changes in v2:
+- Patch #2: Update commit msg
+- Tags
+- Link to v1: https://lore.kernel.org/r/20250106-drm-msm-cleanups-v1-0-271ff1c00795@linaro.org
 
-On Wed, 05 Feb 2025 18:51:53 +0800, Damon Ding wrote:
-> Picked from:
-> https://patchwork.kernel.org/project/linux-rockchip/list/?series=927102
-> 
-> Damon Ding (4):
->   phy: phy-rockchip-samsung-hdptx: Swap the definitions of LCPLL_REF and
->     ROPLL_REF
->   phy: phy-rockchip-samsung-hdptx: Supplement some register names with
->     their full version
->   phy: phy-rockchip-samsung-hdptx: Add the '_MASK' suffix to all
->     registers
->   phy: phy-rockchip-samsung-hdptx: Add eDP mode support for RK3588
-> 
-> [...]
+Few minor improvements/cleanups why browsing the code.
 
-Applied, thanks!
+Best regards,
+Krzysztof
 
-[1/4] phy: phy-rockchip-samsung-hdptx: Swap the definitions of LCPLL_REF and ROPLL_REF
-      commit: 2947c8065e9efdd3b6434d2817dc8896234a3fc0
-[2/4] phy: phy-rockchip-samsung-hdptx: Supplement some register names with their full version
-      commit: f706024107204cb0b640bac35ea47e7b91b8c71f
-[3/4] phy: phy-rockchip-samsung-hdptx: Add the '_MASK' suffix to all registers
-      commit: 2dc8224e3758c5d6387786ea1d74d2d510149b1a
-[4/4] phy: phy-rockchip-samsung-hdptx: Add eDP mode support for RK3588
-      commit: 8f831f272b4c89aa13b45bd010c2c18ad97a3f1b
+---
+Krzysztof Kozlowski (4):
+      drm/msm/dsi: Drop redundant NULL-ifying of clocks on error paths
+      drm/msm/dsi: Simplify with dev_err_probe()
+      drm/msm/dsi: Minor whitespace and style cleanup
+      drm/msm/dsi: Drop unnecessary -ENOMEM message
+
+ drivers/gpu/drm/msm/dsi/dsi_host.c | 158 ++++++++++++++++---------------------
+ 1 file changed, 68 insertions(+), 90 deletions(-)
+---
+base-commit: 88cdcf93795d293aec92218477e6f857cce9156a
+change-id: 20250106-drm-msm-cleanups-ddacf1fc3ba5
 
 Best regards,
 -- 
-~Vinod
-
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
