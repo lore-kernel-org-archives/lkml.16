@@ -1,37 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29177267703;
-	Fri, 14 Feb 2025 16:47:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8889C267727;
+	Fri, 14 Feb 2025 16:47:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739551627; cv=none; b=QFSeNVRKED95jjiaep/v7IGPEnwElJG2LS0tdcbktla+EfDgz3UApGcAP0DyoieF5bUMiOC/n9aN5eDJwYNL7gBvEI0rA2+1RUSBww/CzT0HXpBqI1dr3OVGBQICMzEB4yRfpiwPMXet5DVcqFksygxH/3DpXJ14zOmCI3IMJEs=
+	t=1739551639; cv=none; b=OUV4w+s+0UEFipLfeT7Fm9gScDp4Jgn8oufAThqgSIK+ocUpO69td9bY+sIHfVW6bI+GRklLslXFHE1zy/nmXp+Zt54qO21P/57WoMo3Z4MHWqgbtFnlDNTeNiAEyW3nvYiM/kOqvtuqvDuNhkCLCdjG3PUBia53yiZ821qVZVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739551627; c=relaxed/simple;
-	bh=e93WMTX324UPBYpzF8zp+DIsYjQOE6P2V+HVCGC9Dvk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VE0qZA7f4/h0HJO2IUS/XGukyfkqkbzrFbcKB99HGz/ks6ZIvBk0oA5u+qWWgD1mUTQOO8tnOaFCwdtcxzj28O8EpyQBOPtSpk696UE6Vw5MOJ0buRwyLd/MNOBmx7qMpPuQUc7pnYDKSWlSiwB8SdwbymIpfeQITxLwqr8mUjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pNEiFYbR; arc=none smtp.client-ip=148.251.105.195
+	s=arc-20240116; t=1739551639; c=relaxed/simple;
+	bh=SrFZdZudr7RArsBjh8BhpE0G7d7aPvrz97c6D+4TCUo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YOyYLRJbZMygZSm0ppx6MXNvneK8j/dZTViXjNwDlRdFd41Bgv2aaYIAHjlrjPpuCg1k5w8cxeE+0XiDifoa3htN/uX4vYb5Sz6ewQi+4A/xriSjmmemePtw7AxYGrGW/T4D9sJk/UjdhiniR2CU0Ai4hQLux7rDlula45D5P6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=F7wEv5iI; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pNEiFYbR"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="F7wEv5iI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739551623;
-	bh=e93WMTX324UPBYpzF8zp+DIsYjQOE6P2V+HVCGC9Dvk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=pNEiFYbR4xbtlhNmC3ZBXWgXW4ymzif8S2mhPyUzPkZGMGLqqP0wkp7wa2ZdisR3X
-	 T+PAVkg9aBZOZOJzZEdNCBgP2YpWB9gpgalb5DfMFzSCco1GDgLO3vlCbyvf8t+uXD
-	 TOMpZlbTmEMGAmHpmPuJQ24QgluhyLtEC6ISv8YCSNzv7N6CE5fQwwop337htcUnrk
-	 piAFL37JB2tkvqWmIHiMVZcBnwqByf0niUJ55c/6crcqBbi4d6Bma0+NP+oyrPbVXf
-	 hYBd8jBXTpPHc80UMPeeu4NP/ViYix9VcNGpR8KZYZCFlYQtUoOjewbHR3NVHhX2Z1
-	 YKtaFJu4jSeuQ==
+	s=mail; t=1739551635;
+	bh=SrFZdZudr7RArsBjh8BhpE0G7d7aPvrz97c6D+4TCUo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=F7wEv5iIWcQpuhRifPwkGwnbfl8wruNabVEmDdQCoHSuC0KvnNTVygl8AsOq87wK3
+	 8hyfaGFgzXMsvmZ577HHmNYrbijTecCApgQQOpXXQimv6jj3AoIr/96B5z96iJMKDB
+	 cDjpFuaZVOUeW04qX1kvFnRCUPLIUwHPUn81rL+BPgIiM8CHJh2aTRI0rxjD1V3iH8
+	 XndAyODRyDpOUzJV6z+xTm81SYnkI/Mt/fWcGoQrwipNdXnsVImh3iKluUIzWdZz5g
+	 zr2RjG5XhixXpMmvxf9AZfgODjfH3OG6zRBoO+H3YVz6/VoV2TXbPdSYcBhAQKoTsD
+	 mlBZs7rx9R7Nw==
 Received: from earth.mtl.collabora.ca (mtl.collabora.ca [66.171.169.34])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: detlev)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 901DD17E0FDF;
-	Fri, 14 Feb 2025 17:46:59 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1D4C717E0B59;
+	Fri, 14 Feb 2025 17:47:12 +0100 (CET)
 From: Detlev Casanova <detlev.casanova@collabora.com>
 To: linux-kernel@vger.kernel.org
 Cc: Rob Herring <robh@kernel.org>,
@@ -66,11 +67,14 @@ Cc: Rob Herring <robh@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
 	dri-devel@lists.freedesktop.org,
-	kernel@collabora.com
-Subject: [PATCH RESEND v6 0/3] Add HDMI audio on the rk3588 SoC
-Date: Fri, 14 Feb 2025 11:43:59 -0500
-Message-ID: <20250214164528.534278-1-detlev.casanova@collabora.com>
+	kernel@collabora.com,
+	Quentin Schulz <quentin.schulz@cherry.de>
+Subject: [PATCH RESEND v6 2/3] arm64: dts: rockchip: Add HDMI0 audio output for rk3588 SoC
+Date: Fri, 14 Feb 2025 11:44:01 -0500
+Message-ID: <20250214164528.534278-3-detlev.casanova@collabora.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250214164528.534278-1-detlev.casanova@collabora.com>
+References: <20250214164528.534278-1-detlev.casanova@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,65 +83,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To support HDMI audio on the rk3588 based devices, the generic HDMI
-Codec framework is used in the dw-hdmi-qp DRM bridge driver.
+Use the simple-audio-card driver with the hdmi0 QP node as CODEC and
+the i2s5 device as CPU.
 
-The implementation is mainly based on the downstream driver, ported to the
-generic HDMI Codec framework [1] recently merged in the master branch.
-The parameters computation has been kept as is and the data stored in the
-dw_hdmi_qp struct as been cleaned up.
+The simple-audio-card,mclk-fs value is set to 128 as it is done in
+the downstream driver.
 
-The table for the N values has been edited to reflect N recommended values
-as well as CTS recommended values.
+The #sound-dai-cells value is set to 0 in the hdmi0 node so that it can be
+used as an audio codec node.
 
-The downstream kernel also implements a machine driver for HDMI audio but
-it is doing exactly what the simple-audio-card driver does, so use that
-instead in the RK3588 SoC device tree.
+Tested-by: Quentin Schulz <quentin.schulz@cherry.de> # RK3588 Tiger Haikou
+Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Based on Linus' master branch.
-
-RESEND because of a network connectivity loss at the wrong time.
-
-[1]: https://lore.kernel.org/all/20241224-drm-bridge-hdmi-connector-v10-0-dc89577cd438@linaro.org/
-
-Changes since v5:
- - Simplify audio math computation for N
- - Move hdmi0-sound node up with other address-less nodes
-
-Changes since v4:
- - Moved hdmi0_audio node the rk3588-base.dtsi
- - Enable hdmi0_audio in rk3588-rock-5b.dts
-
-Changes since v3:
- - Renamed function to start with dw_hdmi_qp
-
-Changes since v2:
- - Also clear the audio infoframe
- - Write AUDI_CONTENTS0 to its default value in case it gets overwritten.
- - Store tmds_char_rate in the dw_hdmi_qp struct in atomic_enable
- - Clear tmds_char_rate in atomic_disable and only write registers when
-   tmds_char_rate is not 0.
- - Do not use connector_state duplicates
-
-Changes since v1:
- - Remove useless audio_mutex (was used downstream for multiple drivers access
-   to audio functions)
- - Let hdmi_codec build and setup audio infoframes
- - Only access audio registers when connector is connected
- - Rebased on master branch
-
-Detlev Casanova (2):
-  arm64: dts: rockchip: Add HDMI0 audio output for rk3588 SoC
-  arm64: dts: rockchip: Enable HDMI0 audio output for Rock 5B
-
-Sugar Zhang (1):
-  drm/bridge: synopsys: Add audio support for dw-hdmi-qp
-
- arch/arm64/boot/dts/rockchip/rk3588-base.dtsi |  17 +
- .../boot/dts/rockchip/rk3588-rock-5b.dts      |   8 +
- drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c  | 489 ++++++++++++++++++
- 3 files changed, 514 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+index 8cfa30837ce72..f9f888dedd8f0 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+@@ -382,6 +382,22 @@ scmi_reset: protocol@16 {
+ 		};
+ 	};
+ 
++	hdmi0_sound: hdmi0-sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,mclk-fs = <128>;
++		simple-audio-card,name = "hdmi0";
++		status = "disabled";
++
++		simple-audio-card,codec {
++			sound-dai = <&hdmi0>;
++		};
++
++		simple-audio-card,cpu {
++			sound-dai = <&i2s5_8ch>;
++		};
++	};
++
+ 	pmu-a55 {
+ 		compatible = "arm,cortex-a55-pmu";
+ 		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH &ppi_partition0>;
+@@ -1394,6 +1410,7 @@ hdmi0: hdmi@fde80000 {
+ 		reset-names = "ref", "hdp";
+ 		rockchip,grf = <&sys_grf>;
+ 		rockchip,vo-grf = <&vo1_grf>;
++		#sound-dai-cells = <0>;
+ 		status = "disabled";
+ 
+ 		ports {
 -- 
 2.48.1
 
