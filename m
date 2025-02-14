@@ -1,67 +1,83 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2061.outbound.protection.outlook.com [40.107.220.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2A7149C7D;
-	Fri, 14 Feb 2025 03:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739505592; cv=fail; b=Owa5zc5d+FTc21davVkv4YDxKz0BAXyDh0wDYVt55+7jno2zMYCL90TZ0mtyjQNCnVQlv36MA6OI5u9uOd12L1oTR7jQEIXq8TvApy3SWLF309Z6y3Fi0H+z1emI6WhTMTuwwGgl+UqMuIWKeZqeAECDVJbD7mRQ3IvYtOY6kcc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739505592; c=relaxed/simple;
-	bh=Y9ujkOxV3KdwYpO+g/9C3TH3sFuhFuFQpWgsljZ3S4Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A3NXkz2Z4Q3zJPmDpW1XW9OeumzIGFsape+WOakaD1iILSmAXvYD1/cua80taL1VJN1kjngXKyh4/nF5q5KOGJS25KGHIT5Q/P3bD6pYgddLWSJlhIy7WNDQMag8PGS/oBL6YTxZYznuKHDdw+rX/jYxlRkYkuxFlJPASsgy4Ao=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YJJopdZ+; arc=fail smtp.client-ip=40.107.220.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76E62753EA;
+	Fri, 14 Feb 2025 04:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739505842; cv=none; b=gB76O6i712oYe54hNbNfHCY0O8UaZrpROtVdRNf6KYs0xO66/YaBtG74I4xJYjN8uCC/0IR9094v3zaUErrg1QxOdEw9JguEig4ri7pB1b2WfDNNriazu9LtrD+EyFnuTyu6I14JA9F8uLdSEnZBUPlYQTG5Fzzc9O0ZerDoGtY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739505842; c=relaxed/simple;
+	bh=egiR+CXl8AF1IHhs1BWoZ6rt762jDgubeayg59ockyY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=u+pUby8bPefSUjGpw28J2gULVtn1f14dwIPeRhjy2uWIxeA2jPjkRydoB23rU9tgunIeulhsX0KF+DbJ31lO5R0ynlGl33lI2mhjucGslmwQI8DKH53wIoZXvbHFaIH4FOQ/nXOZZ17N3167An+Xm49GzQYzAEbFcgy2+AukWvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YCLaMLMc; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YJJopdZ+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UhVXapSyftfOQJ5+OwkfNB2RzV+Db4kXlKQ3EyB3NlcXjpOTYCvBJ2e2eQC8gpcNguQdWumkirwG/CTYZgT57vxoX0tnzvwChPQZBs0npC6jMdEy7RkhqeAVUcxEMX6wPqDAWM5WNADGM3lc86IEG8ts6fNy6bKGwYhoZJ6fDcYewyMjMt1fe0m/8hDpOVojctUh5jpPerEsf26DZbVIvUavqgitR8qpdVoQQj6aXqyP68d/2QqqWqKn8w7eM2YrhdJNXnlK9DcR6RPswJr0WPbPlMSsJv23eSlDntFalOUKe2qoQPqNy9AJXVAU6rbqp91iLuQWqI/L6R0biijRKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=94vFyjtYj12n4PfD/DXCekJzCKn4Jyh5o0dR62PvklU=;
- b=gtkb8SEaldSALtQe/+elNv+6hrAPZ1ZCVO6244LGxLP4AMYVB/UpBChJjByW+f3wqG8aBQ6X3VfRS9Ud2d68muid7bhBCK03YY1XHcqwHBV17cwEqNMHP2WkUikds48+XQFt1xHx9ZVPjTQXHgi4P2Bne+hAmPKyMTt8qtBxJH9EuhsHygQzEwVOI/abjEggaG34U1KPBwmEBebc2taRo06fTByu8DP+ts5k9PTL6XdSCdKdA5y9YO2WVzdogvU16qVqN2SC/E2JhbjIVuiWKZsfEO1OgjzEiVaD9GKY2Z95Myqq0mnxRLouHpQC6cuXaahnYpw37cGZa/fyZsR7pA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=94vFyjtYj12n4PfD/DXCekJzCKn4Jyh5o0dR62PvklU=;
- b=YJJopdZ+XNmFwvL1RZhh1t6UjeWhJUf475s5k9sD5zHg05xTYARPomQi33htFO39Y0jDibllTyp4TIQ2q7sCo+4zWMyS0C6N0xrOYK52B5X+HaySv8DmgX/FhX9pkOUroc3l3Pa9N5gWBIFBJ+hXbguFqqG8qZ3m9hpFrpIIt48=
-Received: from BN9PR03CA0054.namprd03.prod.outlook.com (2603:10b6:408:fb::29)
- by PH0PR12MB7982.namprd12.prod.outlook.com (2603:10b6:510:28d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Fri, 14 Feb
- 2025 03:59:46 +0000
-Received: from BN2PEPF000055DC.namprd21.prod.outlook.com
- (2603:10b6:408:fb:cafe::d4) by BN9PR03CA0054.outlook.office365.com
- (2603:10b6:408:fb::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8445.14 via Frontend Transport; Fri,
- 14 Feb 2025 03:59:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF000055DC.mail.protection.outlook.com (10.167.245.6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8466.0 via Frontend Transport; Fri, 14 Feb 2025 03:59:45 +0000
-Received: from aiemdee.l.aik.id.au (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 13 Feb
- 2025 21:59:43 -0600
-From: Alexey Kardashevskiy <aik@amd.com>
-To: <linux-crypto@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, Ashish Kalra <ashish.kalra@amd.com>, "Tom
- Lendacky" <thomas.lendacky@amd.com>, Alexey Kardashevskiy <aik@amd.com>
-Subject: [PATCH] KVM: SVM: snp_alloc_firmware_pages: memory leak
-Date: Fri, 14 Feb 2025 14:59:32 +1100
-Message-ID: <20250214035932.3414337-1-aik@amd.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCLaMLMc"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-220c665ef4cso22711085ad.3;
+        Thu, 13 Feb 2025 20:04:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739505840; x=1740110640; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GdpJvmwnLmBjouVPztYUe8jkPdTKUze0SWAyHKT6rno=;
+        b=YCLaMLMcPBxvqBAjreZLrYe1pEMqA2mhXDsTQ+uxhk4QcFkvEyLAlPxiV9s9uT8Qrq
+         fkAAuUwpJEgMLZXUh+xVC8CB2Xhw19PQs+pud4pqBD/Xx316F2f1rsH5nVXPt+o7G98a
+         07di60tpbjXeXkQZ5I71gdSYKh+IOye2LNfRnaQ2BB0L6Do9dORn5XkrqTle736v1PvV
+         p+4Uvzij0/lm1vEUxB4bOs5HRvnSiG3r9FTVG0I5ZfUZLcqQJNyTv8S2+Q0lSrAglSeU
+         TBDfkihnnLMVOlKJPViIYtv+qj8tw/t+1WjFyre4d60wiY6Nx8YrOBzQgZ4KwoIcLjW8
+         SKOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739505840; x=1740110640;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GdpJvmwnLmBjouVPztYUe8jkPdTKUze0SWAyHKT6rno=;
+        b=uC1bjXHs2UN4Fugp4NKmEN6wcY++I6KxaoghqxBfBC4xexg3DZBMFp88KXG7lPtDgm
+         ClBqBbZ71UDHIdohKPkKUJQeOOn1Zx6gvUIlhQGWaco5yLAVSGCI5FVrW3aChbVe7izO
+         zSC/uzVr9qv8F2SDEIrmDWWZYphKC2tjlJ4Or/xZnp7vZnj5IzLh8x8J1ht+FZ07MLPH
+         7S3i5EPt6g7yI29gGbJHzZ8jnE2vuoyoGvBYNqQbAF4QjoVtn2N0Ahfl7gRefTLQ7bKn
+         1ibv+09l7Ay1il1YJAJ7uDQKhRLZX/vwgf2kOQ64+WbbduqvQsRzkQvfOv+UPzudrMdt
+         HcBg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+VK2X2h6ut7Ar47u6CDdWmakK3SzGbXvGOaljT8riQtOBAiHUDBU7IoZYhdRYnR3XhMu+Z1BfpsHYHWjC@vger.kernel.org, AJvYcCUabKRHrpToq9mrfKDUF+XcVsEdQBis6a8rW7fTDogbLp6bUDWBp+5b+Ljf5y45J2CHNOHjOii+wX+0@vger.kernel.org, AJvYcCX87vaJVetF5EhfCNdlVANrdMHodJKkktymA/9EiYKUqYiQ5OHsJjJloHOhbqdZ10KhzWJgH4jm/E0Sd4g=@vger.kernel.org, AJvYcCXow1GUswMcu/RDY1IGT4DReWnwyB8gJQZkUk5B71us0gWcyhSPcExyQbdpNmJkFeLYmssrctd5tgt1hA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBUkrNn2hsi8IVQLwLWNRKXTda58/X2OUhyV7bmduk9e9ZLcxG
+	Ookmn/hu7o6oDfvohGlWsFn3ROphujmTCxpxmUIO5TYtLOtu/7ke
+X-Gm-Gg: ASbGncuFCPFhikSQ/o058yTygiY8+ZmnWMDDXyojXKVtqzeluVvgELOTO2MIXk4ZPr4
+	d3jD/c+enaO2vY1GLnmjkDagA7RmNMiFR8F+WiT3MgwJOW+RufnaljrQef4ksAzs+TT1G3RkgOM
+	jjQAlgrmrBaeiVbVwPeCpMVPBWkDpOzw3zzj8RflhnNrEfRrjVSF+Cmbwevi0wutvSG2tbBS0nn
+	e/j9+dmqTTUKaH6H8TjORZ5i2UFZ3f4PvCTZd60SS1s6141dARekBlkorY1lbYGnYPW7E/e/yoy
+	LsqPFTpkSgBwAeQ=
+X-Google-Smtp-Source: AGHT+IG/lvp3REMuEs1TqSkR5QKUuTnGFxemCOEmduTyXWx0aA8kwUQQ7GuOdHz5MXhdcM3OB4TycQ==
+X-Received: by 2002:a05:6a20:c998:b0:1e1:b12e:edb8 with SMTP id adf61e73a8af0-1ee5e666792mr17049651637.30.1739505840029;
+        Thu, 13 Feb 2025 20:04:00 -0800 (PST)
+Received: from nick-mbp.. ([49.130.17.220])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-7324273e3e7sm2181227b3a.91.2025.02.13.20.03.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 20:03:59 -0800 (PST)
+From: Nick Chan <towinchenmi@gmail.com>
+To: Janne Grunau <j@jannau.net>,
+	Sven Peter <sven@svenpeter.dev>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Lee Jones <lee@kernel.org>,
+	Daniel Thompson <danielt@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Pavel Machek <pavel@ucw.cz>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Helge Deller <deller@gmx.de>,
+	Nick Chan <towinchenmi@gmail.com>,
+	asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-fbdev@vger.kernel.org
+Subject: [PATCH v6 0/3] Apple DWI backlight driver
+Date: Fri, 14 Feb 2025 12:02:11 +0800
+Message-ID: <20250214040306.16312-1-towinchenmi@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,81 +85,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000055DC:EE_|PH0PR12MB7982:EE_
-X-MS-Office365-Filtering-Correlation-Id: f8a4c640-5641-48ae-345e-08dd4cac04f6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?VB5BXK5EydO2iU6TlqjSq628/foEsaKwd1Ig8UGsmmYHymgax/oxLjcbSScT?=
- =?us-ascii?Q?bbQHK1XzhFC4AHFbizA+YQz7T7klP7xQXN3hBwKRTHvlK4FEfuShaoxWkNn1?=
- =?us-ascii?Q?0K0X9N4YgPWB6Et6nAPie7jlWYP5TX8vax0TCwW0x/mqYggwNudedrhC0Hur?=
- =?us-ascii?Q?DSKWHcc3wAOP+h0IdLIOxxedR8DZQ2JVuq77zocxOExZZbkIoIu4wCnrLJ46?=
- =?us-ascii?Q?np620zM7kdA3ZpD/phpK8IssbxgLB++KUupSUIphD2xvHtdWDhuu22gog82q?=
- =?us-ascii?Q?u7tgsRB33zikSqJ0dTJXWdJzzxY+WYhuhQJGR8wPTUEhxvCceiSQYFcUXO9I?=
- =?us-ascii?Q?eCN7Y0sbZQIgf+b4vl3zQB5ONqrHkO1yZzj/abF4y64N0kb1ccLsIoIKMZv1?=
- =?us-ascii?Q?yd4gxgYm7BAgZ5E0NDodN0Eza3gAIMiFj83y4lCge0Kifz4yh1x2FEnujHIJ?=
- =?us-ascii?Q?7l4YA+jX2sVusB2PV90bOBlX1ZYPMEWUz1lDE86N35wziteWXEi/iUoM5JwQ?=
- =?us-ascii?Q?dqxrWgGOD3TtYS4aof/jfw6mseXZ7a6hmYdN3hlnSLadaFuCcn22kgPlM0Vf?=
- =?us-ascii?Q?HLLIjq6lo8VuXrE9oPz4eg4tX1gDMZ5Hi/yifBhXh3rqDelU/MF6ILQKLmg0?=
- =?us-ascii?Q?YzaNsKBjAnNFrhIIpOyGkAHcim9xeKoP1MBDPLHNNywDis3K/PHSxokczmrU?=
- =?us-ascii?Q?n0VExJzypduHN+Obp6qhS20c7HDK5gvKx1eCG5V2yCRSHgzNgGtM+ZjQSCRK?=
- =?us-ascii?Q?4J/RIVK5P7vm/Yd+QRWkIOGe7I5gA0m06BpbedBzRt1Z75fUG20S+W38h570?=
- =?us-ascii?Q?ivrPZOEbho1Y6WcKsfO5N/nMIBLXChzOYX4aHQ8FFbYxXPrNFfcjcQwvEUJF?=
- =?us-ascii?Q?TWgWW+EV8A3OlET0+6AoSrK5JVZTWJUxQuk/kJuL4uC0ywUb4b9HwE8dOhcs?=
- =?us-ascii?Q?rOkr108CUp/IGUfzGG/Mw6TBcsmIpGJW/PcCyen1a2r1Lu4KYbaQcDXAJXxo?=
- =?us-ascii?Q?UeRypziZFwMPbrskX7BGiQVkYPDVHMoFYxJ3scOS2jLSker7eGh2Kp/mEJlj?=
- =?us-ascii?Q?Tla6KMGlpSS6uxled/4XeDy9y/PzhzAngw+vcP4hmWNWCXU4mmg9WDeuaRHp?=
- =?us-ascii?Q?cRIT4Zspm9UVcB7SctiT10MJXdZncFPh2AB/VHLj6YPPA+I4iTNOeXHTrWkI?=
- =?us-ascii?Q?g+6lfR0u/ooItTJhpq3OClQ0z7+/0IC5So0BzZOUEXfhB0WRQw2Nvg15g/6/?=
- =?us-ascii?Q?z6q7hdcpDHgl9n+w0PN/nFE0p1Yv2yH9HPzyzoGkfsTq50WH/ODQflFJCHEn?=
- =?us-ascii?Q?3amMc9V+Swb/8Sj/FbXrRvtOGCHxN0qfXy71d1H5n2+k04B8S9H73d1KmMgp?=
- =?us-ascii?Q?OugDidpZmk0zGqF0xFb84HnkK7rFSpQugaux6UEgpbVqUQ2WO91ix9sgBLPI?=
- =?us-ascii?Q?HvzDa+PU+SUuaoRrkokRDFCw7HQx7LUYltZOoMP4LvA3Atu15NhUROcTyqkW?=
- =?us-ascii?Q?zwdtIMf8iEGbU9E=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 03:59:45.7134
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8a4c640-5641-48ae-345e-08dd4cac04f6
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000055DC.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7982
 
-Failure to rmpupdate leads to page(s) leak, fix that.
+Apple SoCs come with a 2-wire interface named DWI. On some iPhones, iPads
+and iPod touches the backlight controller is connected via this interface.
+This series adds a backlight driver for backlight controllers connected
+this way.
 
-Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+Changes since v5:
+- Remove default y from drivers/video/backlight/Kconfig
+
+v5: https://lore.kernel.org/asahi/20250203115156.28174-1-towinchenmi@gmail.com/T
+
+Changes since v4:
+- Change type to BACKLIGHT_PLATFORM since the driver does not directly
+interface with the backlight controller. The actual backlight controller
+can be directly controlled via i2c and is not the same on all hardware
+that supports the dwi interface.
+- Rename file to apple_dwi_bl.c to better match config option.
+- Rename driver to apple-dwi-bl to better match config option
+- Indicate that the backlight scales linearly
+
+v4: https://lore.kernel.org/asahi/20241211113512.19009-1-towinchenmi@gmail.com/T
+
+Changes since v3:
+- $ref to common.yaml in bindings
+- (and then additionalProperties is changed to unevaluatedProperties)
+- Use hex everywhere in bindings example
+- Use sizeof(*dwi_bl) instead of the type of the struct when doing
+devm_kzalloc()
+- Use devm_platform_get_and_ioremap_resource() in driver
+- Fix sorting in drivers/video/backlight/Makefile
+- In drivers/video/backlight/Kconfig, move config to right after
+BACKLIGHT_APPLE
+- Explain this driver being completely different from apple_bl
+
+v3: https://lore.kernel.org/asahi/20241209075908.140014-1-towinchenmi@gmail.com/T
+
+Changes since v2:
+- Add missing includes in driver
+- Fix file path in MAINTAINERS
+
+v2: https://lore.kernel.org/asahi/20241207130433.30351-1-towinchenmi@gmail.com/T
+
+Changes since v1:
+- Fixed dt-bindings $id.
+- Make power-domains an optional property in dt-bindings.
+- Added missing error checking after devm_ioremap_resource() in
+dwi_bl_probe().
+
+v1: https://lore.kernel.org/asahi/20241206172735.4310-1-towinchenmi@gmail.com/T
+
+Nick Chan
+
 ---
- drivers/crypto/ccp/sev-dev.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Nick Chan (3):
+  dt-bindings: leds: backlight: apple,dwi-bl: Add Apple DWI backlight
+  backlight: apple_dwi_bl: Add Apple DWI backlight driver
+  MAINTAINERS: Add entries for Apple DWI backlight controller
 
-diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
-index 2e87ca0e292a..0b5f8ab657c5 100644
---- a/drivers/crypto/ccp/sev-dev.c
-+++ b/drivers/crypto/ccp/sev-dev.c
-@@ -443,8 +443,10 @@ static struct page *__snp_alloc_firmware_pages(gfp_t gfp_mask, int order)
- 		return page;
- 
- 	paddr = __pa((unsigned long)page_address(page));
--	if (rmp_mark_pages_firmware(paddr, npages, false))
-+	if (rmp_mark_pages_firmware(paddr, npages, false)) {
-+		__free_pages(page, order);
- 		return NULL;
-+	}
- 
- 	return page;
- }
+ .../bindings/leds/backlight/apple,dwi-bl.yaml |  57 ++++++++
+ MAINTAINERS                                   |   2 +
+ drivers/video/backlight/Kconfig               |  11 ++
+ drivers/video/backlight/Makefile              |   1 +
+ drivers/video/backlight/apple_dwi_bl.c        | 123 ++++++++++++++++++
+ 5 files changed, 194 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/apple,dwi-bl.yaml
+ create mode 100644 drivers/video/backlight/apple_dwi_bl.c
+
+
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
 -- 
-2.47.1
+2.48.1
 
