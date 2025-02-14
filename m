@@ -1,259 +1,150 @@
-Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA593227BAA;
-	Fri, 14 Feb 2025 08:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CEC421B185
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 08:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739523275; cv=none; b=erH7kI1mjzvR7NCaDcHjDaN/nVRfpy6S2FvcbOprPddG2eBebbUYdc7qYGtntVotMzOH73nUZJJ+8lOWyTPtPAQ1crCIgcjfjxCOotUy9XJyV5stU/dFPomZ0K8Sc26BshsXr4Ym5b2oO1dzGRiDFDbbo1EZktsexYXJstmf/7c=
+	t=1739523282; cv=none; b=ss+2gMIYdXvzvfAEzugz/pSAOng6bX/NcfppH1MYB0sx7EvdWytMgI/kYEwcRp85LUkwQuzDoUHhxKR5+ah/j2nRp8Dr55RXRYP/RZ0xBwEApVqKxbEIqFyiGcrASKiHepgEpsCmeVbZTXRVgnYFdI3BU6D4CFjpv6n2cl3UsJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739523275; c=relaxed/simple;
-	bh=IQ0gfvJlGq/EWoCU475l10nubAs9wvs3rFP/Bmcwx+k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jWq+F/GH42IOVQgZts0XShh/zeQiFkaM/F7lD9jSC4mxPIkRvqeVHL40A/fUj1J2EwCkmlJlc0QxN0WAQ+lJP7DTB/8w0mT6Wkpo4nxPAZpD/B4sWGFiRluqxsy7AH1NhBaXzrZzD1+n5YA+IYd1es01R45Hv1EGnRKOIO+F68Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=IAgOutDX; arc=none smtp.client-ip=162.240.238.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+	s=arc-20240116; t=1739523282; c=relaxed/simple;
+	bh=nottMoCa8aOV6cZJrL7jEgHZtPVKHpnlgSU38rOQ4Rc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bLHsB7dur3sOleboL0qFSikc+DG6orz+ZIu+menoFaZIjIz2PJCUDIebbGNg1zQ4mwjQwwoIHXdj7sX/iKmjSLeq+u98gx4ejukfhxRSRU1O85eerPcaGvTOwLNwHqKtidzVUIXw4L/3yfXM8BD8gJAlXMzMlrd24P/IlUoJobw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=F+c3cKgJ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="IAgOutDX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
-	; s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=TxlRvYVV9khSZoxHTmi6Xm+xr2AQ+F0Z9nuDl3ZM9+Y=; b=IAgOutDXlTV7f8paqVi7ze48Uf
-	QaqjVPTOg+IsBteCrfmS7OXmowYm8gbJEndF8REIZ1kMQ8JWhaxJ5j6YvlYRHQUC8sC6qsL/GTRDN
-	VzDswVN+GAHvJC10L37032/IGF14NXlf10HCqBU44WPZC6vRmTL30205soeSfRZ+l00muCx3PoXbc
-	xysV/NXfghDWiYDjsLU2Iv3cu5/p1UDVzkD2HUkTATgX4184L8ouJ+H5VogMg0PKg2XSenZ4taXfk
-	z6NEG1CfwTTibQ3ptd6LqJ43zI+E0mTwkstVhTJM3XaTXW3DqXWVfHgltwFmHwJBSvD8sARewkcVR
-	rBnMuqjw==;
-Received: from [122.175.9.182] (port=45524 helo=cypher.couthit.local)
-	by server.wki.vra.mybluehostin.me with esmtpa (Exim 4.96.2)
-	(envelope-from <parvathi@couthit.com>)
-	id 1tirSv-00050J-0x;
-	Fri, 14 Feb 2025 14:24:29 +0530
-From: parvathi <parvathi@couthit.com>
-To: danishanwar@ti.com,
-	rogerq@kernel.org,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	nm@ti.com,
-	ssantosh@kernel.org,
-	richardcochran@gmail.com,
-	parvathi@couthit.com,
-	basharath@couthit.com,
-	schnelle@linux.ibm.com,
-	diogo.ivo@siemens.com,
-	m-karicheri2@ti.com,
-	horms@kernel.org,
-	jacob.e.keller@intel.com,
-	m-malladi@ti.com,
-	javier.carrasco.cruz@gmail.com,
-	afd@ti.com,
-	s-anna@ti.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pratheesh@ti.com,
-	prajith@ti.com,
-	vigneshr@ti.com,
-	praneeth@ti.com,
-	srk@ti.com,
-	rogerq@ti.com,
-	krishna@couthit.com,
-	pmohan@couthit.com,
-	mohan@couthit.com
-Subject: [PATCH net-next v3 10/10] soc: ti: PRUSS OCP configuration
-Date: Fri, 14 Feb 2025 14:23:15 +0530
-Message-Id: <20250214085315.1077108-11-parvathi@couthit.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250214054702.1073139-1-parvathi@couthit.com>
-References: <20250214054702.1073139-1-parvathi@couthit.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="F+c3cKgJ"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51E5MRvT032643
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 08:54:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	oj8Yee1gTVBAR2OBaCaP5WIbxHVmvmbfZUuTZOcJOb0=; b=F+c3cKgJcLJCsO7V
+	dgCJtO3SX5tsVp+RlrPGgFkVEJrOR8xqtAkpjPir+M6c6iFwpX5EmUrsG9De5bH8
+	hv3GFCTKM/OOUmk/K6QgcTegivoktt/tbpo0OjojviWkBb+F+CaURrdhm0NmPNZ+
+	2L8oXk/EdjaoexbU2FzUm8VxZIaRbcwxNwGaQnkO0J7hdI7qoJ4HTp1D5gsRr8DV
+	vyo5H1pDwEWMdlE+mPFXAn5uAz7MEx76h0AEjfd5ZgDxfC7pAU+fmpL2qj6pw/sj
+	ZcD5t26lmfkDWBAgTfg9qVL0oh591nSEq1cYIecY9vFTyrwdNxTcCMjXsa3jjXq3
+	BdB2Kg==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44sc7bbghp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 08:54:38 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-21f6890d42dso60740485ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 00:54:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739523277; x=1740128077;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oj8Yee1gTVBAR2OBaCaP5WIbxHVmvmbfZUuTZOcJOb0=;
+        b=btThLXw5lff46jd3Cwl287+6Tw2jNrtx8Js92fz8eV5r5dC8BNGHguhV0QTgDsN7iD
+         /jmZXXJGyywDKjvNz3T/xaFght/yCdxesofJGbrHBdTdMfqx+yIj5EIZhPAR9UyUGcNg
+         68DiL92uhOigwhrQU/V0eaLSj5rYEYEtSLQAWEc2Vk7gRs412o/bQZnNkD6Ot4SLW2Hf
+         pTZlENxgKZrzv6zd8jldTOIXDHoQnMu1hSxygOoeQ7WbWmRnW32yRQGPq/fL24UObQ7H
+         mWRCZ/6DXMjB1CkAZrzER98OXxrxX5UvLFF5IiDHr+eNMmuEUej5s0EAR7Acpaa8gumd
+         23hg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxiD9POzOJsfey1m8AbiNvOt26cyTnj8cKNyn8sHoytWs9lVTqz3jt4LsGYgU0qmUxUo46NvtMa4YRYWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtGc85MEtfJwjTIbeE7cI7221Py+4Qmz8Fzg3eETf6Q6c0PwmT
+	gLsrUFQZUpPxJb46Ne598o9fbjVs2DWUNMPqOXPofKzPfCWExllm9L81lfk2kRo0ocJWRsbCobs
+	oqKoZjJg+QCojb7exhmsHqi1O8wkrJLPl5HkZrit288sw9xvNPu4ZmdQfRF+D9yg=
+X-Gm-Gg: ASbGnctKkDArGnIenNgfdLpX8IzokjUi+S9pD5nem9d2uuY3c8xbWEDhRQ5YFyVgFn+
+	UMRPoXTNcS/bhNR/RamK5JMM2mvCFGW5hG+lOk9F4/RaGJECbBIocJMdvztEmuxgS99MBLJj81X
+	j6c6xqL8Oo1kMRjGi7VxyAsh9jtpBeC60QF4dXnrpyxqp4evCusbwHn5J0DdCE51h7/L3ez+OqO
+	KTSCt2HMaNwBSiFYyrvLQpf0e4pTugxOlr0WYtaxyZRRwhVBl3u6vGMQK8DwmywyHOWuq5cI1vg
+	b7RSEdyGEoG/QDV9nP6oJbIk32utqA==
+X-Received: by 2002:a17:903:189:b0:216:4d1f:5c83 with SMTP id d9443c01a7336-220d2170847mr95303765ad.47.1739523277212;
+        Fri, 14 Feb 2025 00:54:37 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH8WQ+Q0P3Hp8eId28DGCMDHWq1vMwRmUui9erU8zLhPW/BTEuxaCh7jaJut82nv5+tq8vQUA==
+X-Received: by 2002:a17:903:189:b0:216:4d1f:5c83 with SMTP id d9443c01a7336-220d2170847mr95303455ad.47.1739523276763;
+        Fri, 14 Feb 2025 00:54:36 -0800 (PST)
+Received: from [10.218.35.239] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545c8e7sm24344555ad.122.2025.02.14.00.54.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2025 00:54:36 -0800 (PST)
+Message-ID: <bf19304a-c9b7-4647-b33f-cf5e771cfa83@oss.qualcomm.com>
+Date: Fri, 14 Feb 2025 14:24:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - couthit.com
-X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: parvathi@couthit.com
-X-Authenticated-Sender: server.wki.vra.mybluehostin.me: parvathi@couthit.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usb: gadget: u_ether: Set is_suspend flag if remote
+ wakeup fails
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ferry Toth <ftoth@exalondelft.nl>,
+        Ricardo B Marliere <ricardo@marliere.net>, Kees Cook <kees@kernel.org>,
+        linux-usb@vger.kernel.org, Elson Roy Serrao <quic_eserrao@quicinc.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250212100840.3812153-1-prashanth.k@oss.qualcomm.com>
+ <2025021436-seizing-prankish-ebf2@gregkh>
+Content-Language: en-US
+From: Prashanth K <prashanth.k@oss.qualcomm.com>
+In-Reply-To: <2025021436-seizing-prankish-ebf2@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: Xe-4CErGFGgpUcbsQy5iZVW7aUC-E3tK
+X-Proofpoint-GUID: Xe-4CErGFGgpUcbsQy5iZVW7aUC-E3tK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-14_03,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=834
+ phishscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
+ bulkscore=0 mlxscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502140063
 
-From: Roger Quadros <rogerq@ti.com>
 
-Updates OCP master port configuration to enable memory access outside
-of the PRU-ICSS subsystem.
 
-This set of changes configures PRUSS_SYSCFG.STANDBY_INIT bit either
-to enable or disable the OCP master ports (applicable only on SoCs
-using OCP interconnect like the OMAP family).
+On 14-02-25 01:30 pm, Greg Kroah-Hartman wrote:
+> On Wed, Feb 12, 2025 at 03:38:40PM +0530, Prashanth K wrote:
+>> Currently while UDC suspends, u_ether attempts to remote wakeup
+>> the host if there are any pending transfers. However, if remote
+>> wakeup fails, the UDC remains suspended but the is_suspend flag
+>> is not set. And since is_suspend flag isn't set, the subsequent
+>> eth_start_xmit() would queue USB requests to suspended UDC.
+>>
+>> To fix this, bail out from gether_suspend() only if remote wakeup
+>> operation is successful.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 0a1af6dfa077 ("usb: gadget: f_ecm: Add suspend/resume and remote wakeup support")
+>> Signed-off-by: Prashanth K <prashanth.k@oss.qualcomm.com>
+>> ---
+>>  drivers/usb/gadget/function/u_ether.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/usb/gadget/function/u_ether.c b/drivers/usb/gadget/function/u_ether.c
+>> index 09e2838917e2..f58590bf5e02 100644
+>> --- a/drivers/usb/gadget/function/u_ether.c
+>> +++ b/drivers/usb/gadget/function/u_ether.c
+>> @@ -1052,8 +1052,8 @@ void gether_suspend(struct gether *link)
+>>  		 * There is a transfer in progress. So we trigger a remote
+>>  		 * wakeup to inform the host.
+>>  		 */
+>> -		ether_wakeup_host(dev->port_usb);
+>> -		return;
+>> +		if (!ether_wakeup_host(dev->port_usb))
+>> +			return;
+> 
+> What about the other place in the driver where this function is called
+> but the return value is ignored?
+> 
+> thanks,
+> 
+> greg k-h
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
-Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
----
- drivers/soc/ti/pruss.c       | 77 +++++++++++++++++++++++++++++++++++-
- include/linux/pruss_driver.h |  6 +++
- 2 files changed, 82 insertions(+), 1 deletion(-)
+Other than above one, eth_start_xmit() tries to remote wakeup host when
+we have some data to send from n/w layer. In that case we try to wakeup
+host and directly return NETDEV_TX_BUSY to caller. If remote wakeup
+succeeds, then resume() would call netif_start_queue() which again lets
+n/w layer to queue skb. Hence we don't have to check for ret of
+ether_wakeup_host() in that case.
 
-diff --git a/drivers/soc/ti/pruss.c b/drivers/soc/ti/pruss.c
-index d7634bf5413a..a0e233da052c 100644
---- a/drivers/soc/ti/pruss.c
-+++ b/drivers/soc/ti/pruss.c
-@@ -25,14 +25,19 @@
- #include <linux/slab.h>
- #include "pruss.h"
- 
-+#define SYSCFG_STANDBY_INIT	BIT(4)
-+#define SYSCFG_SUB_MWAIT_READY	BIT(5)
-+
- /**
-  * struct pruss_private_data - PRUSS driver private data
-  * @has_no_sharedram: flag to indicate the absence of PRUSS Shared Data RAM
-  * @has_core_mux_clock: flag to indicate the presence of PRUSS core clock
-+ * @has_ocp_syscfg: flag to indicate if OCP SYSCFG is present
-  */
- struct pruss_private_data {
- 	bool has_no_sharedram;
- 	bool has_core_mux_clock;
-+	bool has_ocp_syscfg;
- };
- 
- /**
-@@ -286,6 +291,72 @@ int pruss_cfg_xfr_enable(struct pruss *pruss, enum pru_type pru_type,
- }
- EXPORT_SYMBOL_GPL(pruss_cfg_xfr_enable);
- 
-+/**
-+ * pruss_cfg_ocp_master_ports() - configure PRUSS OCP master ports
-+ * @pruss: the pruss instance handle
-+ * @enable: set to true for enabling or false for disabling the OCP master ports
-+ *
-+ * This function programs the PRUSS_SYSCFG.STANDBY_INIT bit either to enable or
-+ * disable the OCP master ports (applicable only on SoCs using OCP interconnect
-+ * like the OMAP family). Clearing the bit achieves dual functionalities - one
-+ * is to deassert the MStandby signal to the device PRCM, and the other is to
-+ * enable OCP master ports to allow accesses outside of the PRU-ICSS. The
-+ * function has to wait for the PRCM to acknowledge through the monitoring of
-+ * the PRUSS_SYSCFG.SUB_MWAIT bit when enabling master ports. Setting the bit
-+ * disables the master access, and also signals the PRCM that the PRUSS is ready
-+ * for Standby.
-+ *
-+ * Return: 0 on success, or an error code otherwise. ETIMEDOUT is returned
-+ * when the ready-state fails.
-+ */
-+int pruss_cfg_ocp_master_ports(struct pruss *pruss, bool enable)
-+{
-+	const struct pruss_private_data *data;
-+	u32 syscfg_val, i;
-+	int ret;
-+
-+	if (IS_ERR_OR_NULL(pruss))
-+		return -EINVAL;
-+
-+	data = of_device_get_match_data(pruss->dev);
-+
-+	/* nothing to do on non OMAP-SoCs */
-+	if (!data || !data->has_ocp_syscfg)
-+		return 0;
-+
-+       /* assert the MStandby signal during disable path */
-+	if (!enable)
-+		return pruss_cfg_update(pruss, PRUSS_CFG_SYSCFG,
-+					SYSCFG_STANDBY_INIT,
-+					SYSCFG_STANDBY_INIT);
-+
-+	/* enable the OCP master ports and disable MStandby */
-+	ret = pruss_cfg_update(pruss, PRUSS_CFG_SYSCFG, SYSCFG_STANDBY_INIT, 0);
-+	if (ret)
-+		return ret;
-+
-+	/* wait till we are ready for transactions - delay is arbitrary */
-+	for (i = 0; i < 10; i++) {
-+		ret = pruss_cfg_read(pruss, PRUSS_CFG_SYSCFG, &syscfg_val);
-+		if (ret)
-+			goto disable;
-+
-+		if (!(syscfg_val & SYSCFG_SUB_MWAIT_READY))
-+			return 0;
-+
-+		udelay(5);
-+	}
-+
-+	dev_err(pruss->dev, "timeout waiting for SUB_MWAIT_READY\n");
-+	ret = -ETIMEDOUT;
-+
-+disable:
-+	pruss_cfg_update(pruss, PRUSS_CFG_SYSCFG, SYSCFG_STANDBY_INIT,
-+			 SYSCFG_STANDBY_INIT);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(pruss_cfg_ocp_master_ports);
-+
- static void pruss_of_free_clk_provider(void *data)
- {
- 	struct device_node *clk_mux_np = data;
-@@ -570,6 +641,10 @@ static const struct pruss_private_data am437x_pruss0_data = {
- 	.has_no_sharedram = true,
- };
- 
-+static const struct pruss_private_data am57xx_data = {
-+	.has_ocp_syscfg = true,
-+};
-+
- static const struct pruss_private_data am65x_j721e_pruss_data = {
- 	.has_core_mux_clock = true,
- };
-@@ -578,7 +653,7 @@ static const struct of_device_id pruss_of_match[] = {
- 	{ .compatible = "ti,am3356-pruss" },
- 	{ .compatible = "ti,am4376-pruss0", .data = &am437x_pruss0_data, },
- 	{ .compatible = "ti,am4376-pruss1", .data = &am437x_pruss1_data, },
--	{ .compatible = "ti,am5728-pruss" },
-+	{ .compatible = "ti,am5728-pruss", .data = &am57xx_data, },
- 	{ .compatible = "ti,k2g-pruss" },
- 	{ .compatible = "ti,am654-icssg", .data = &am65x_j721e_pruss_data, },
- 	{ .compatible = "ti,j721e-icssg", .data = &am65x_j721e_pruss_data, },
-diff --git a/include/linux/pruss_driver.h b/include/linux/pruss_driver.h
-index 2e18fef1a2e1..15b3c9c58539 100644
---- a/include/linux/pruss_driver.h
-+++ b/include/linux/pruss_driver.h
-@@ -118,6 +118,7 @@ int pruss_cfg_gpimode(struct pruss *pruss, enum pruss_pru_id pru_id,
- int pruss_cfg_miirt_enable(struct pruss *pruss, bool enable);
- int pruss_cfg_xfr_enable(struct pruss *pruss, enum pru_type pru_type,
- 			 bool enable);
-+int pruss_cfg_ocp_master_ports(struct pruss *pruss, bool enable);
- 
- #else
- 
-@@ -172,6 +173,11 @@ static inline int pruss_cfg_xfr_enable(struct pruss *pruss,
- 	return -EOPNOTSUPP;
- }
- 
-+static int pruss_cfg_ocp_master_ports(struct pruss *pruss, bool enable)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
- #endif /* CONFIG_TI_PRUSS */
- 
- #endif	/* _PRUSS_DRIVER_H_ */
--- 
-2.34.1
-
+Regards,
+Prashanth K
