@@ -1,64 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from sdore.me (unknown [95.165.1.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76D32AEE9
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 01:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDEA28E0F
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 01:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.165.1.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739495173; cv=none; b=ChcLxzsxoAd3QS5uHzYAsaC3agOo379iEL2s9os3C+d00d4GqoYyAgpD8nCqJC9CkC9u/LunLIwOBuA/FmfgX7tPxyFpXHQlTJuWokBXecfLOLRNaNlZGD3NcEoTTlHsk9C6rF9Qk52TvhmI28SQviOJFcM4aJuyMgo0v+s5fRU=
+	t=1739495217; cv=none; b=lAALl+bJ6rT8DWXwPNRMy/LYVsDl94JI5HI3EHEBrxHxEK5Ow1K2oIcbW3OTSzhXe6o6EErhpjqIy9LDgeBr4NHRJVnj6BAhdpQMFyWLaGgw+MKBAq0BlXO++W9mNkjYTzmtib8ZbGjNOpXeQa8z5RzaE3xr8rPdF5nSYqisCI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739495173; c=relaxed/simple;
-	bh=B5Gpc6RyYyDt4dpHSTDCQR3ZXs1PU/d6aCFpCUVGGQE=;
+	s=arc-20240116; t=1739495217; c=relaxed/simple;
+	bh=oZ8NyCjs7z+25+3ZAPDoEXaqLtn+ZFW9ddncRWyxRQw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N2DHN4INnyihbu7KumYSoEsAfZPeDfaba6wUNxyyjJedCleLwKgWrwegdseHkg7mxlLuYRDZGQGF74CLiXQa3SgHOdB9ifFMtMUvn+Q6pUjfLovIk8/6SlZcE7RC5VNRGuA7YGyGZZcU7RZBD1FyhYlPRCNXuuXyuQBrookZoFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=miaJoQLn; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 MIME-Version; b=K6n++gEXpcjKBVWWH+pnWeh6q85M9Fj7CePQTrvH2qMfhRKs0CysIXm1p1mRjW1InIBuHK5/TWwGR8brl9ssYzn4ewm+A87ddsCnBdCNyGf9lmeF9/KWcJWkn3uQiW/jUfx9pbVMu1+LJ6phWkBEVVGoVIH6Q9O4ZXJnK7VQ9gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sdore.me; spf=pass smtp.mailfrom=sdore.me; dkim=pass (1024-bit key) header.d=sdore.me header.i=@sdore.me header.b=aneva66j; arc=none smtp.client-ip=95.165.1.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sdore.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sdore.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="miaJoQLn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739495172; x=1771031172;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=B5Gpc6RyYyDt4dpHSTDCQR3ZXs1PU/d6aCFpCUVGGQE=;
-  b=miaJoQLnCAHR2YIymn89LNAV7TXscw5rH2FQqVZAlAzLt4b3H972cP06
-   gFD2r0M4KkdB9fzB16UWqel6ErSnWBeoLxfja1dX14O/v2AEUvDJR+/0o
-   5GlCKGI+GiUagO26Y64rmwSj/NUVUbBqb4RMGK/hi6E4Q/nYehaP6DRtm
-   4xXwis+55QgNauES1DFbxPID7Pg3XujIrmFpkuG37Z93veWqF/P6t8Lrr
-   cUo27WG87/XHyL/kjNN2SDylKGFnzBc8hHYlYqIHJSryJ+xs2PnFCGxV/
-   rVhjuKwMPZRdTY9NCQkoSPwaPVngqaLPM2w/4dEHmlXgK7nrV3igo5vEN
-   w==;
-X-CSE-ConnectionGUID: dYhNWleoTbirboeSeY8pDg==
-X-CSE-MsgGUID: Pli6+5q9Qxua1AWuUB705A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="50442879"
-X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="50442879"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 17:06:11 -0800
-X-CSE-ConnectionGUID: 4aEBIkj4QYa01zgS6z+NTw==
-X-CSE-MsgGUID: n7+6oBP9R9SFAPkI60Pigg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="118402588"
-Received: from cbae1-mobl.amr.corp.intel.com (HELO cbae1-mobl.intel.com) ([10.246.154.132])
-  by fmviesa004.fm.intel.com with ESMTP; 13 Feb 2025 17:06:10 -0800
-From: "Chang S. Bae" <chang.seok.bae@intel.com>
+	dkim=pass (1024-bit key) header.d=sdore.me header.i=@sdore.me header.b="aneva66j"
+Received: by sdore.me (Postfix, from userid 1000)
+	id 07ED8EE8796B7; Fri, 14 Feb 2025 04:06:46 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sdore.me; s=SERV;
+	t=1739495206; bh=oZ8NyCjs7z+25+3ZAPDoEXaqLtn+ZFW9ddncRWyxRQw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=aneva66j9xj4E1eEGIqoEZzyLw1Ylx0+fVPECiK/hqyJ9EHvVJSkzjRXRbn4rT8Vp
+	 R0/qcHitIWllWMtFbb4C0Sq+Wdmmd1wDTkA3V7//INUPKZXuLdypPDbw6sXX+OiDcD
+	 OTX/b73AJIzDDeFks5irfVt9KU7oJaOSmBDdwieU=
+From: Egor Vorontsov <sdoregor@sdore.me>
 To: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	aruna.ramakrishna@oracle.com,
-	TonyWWang-oc@zhaoxin.com,
-	chang.seok.bae@intel.com
-Subject: [PATCH 2/2] x86/pkeys: Simplify PKRU update in signal frame
-Date: Thu, 13 Feb 2025 17:06:07 -0800
-Message-ID: <20250214010607.7067-3-chang.seok.bae@intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250214010607.7067-1-chang.seok.bae@intel.com>
-References: <20250214010607.7067-1-chang.seok.bae@intel.com>
+Cc: dri-devel@lists.freedesktop.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Egor Vorontsov <sdoregor@sdore.me>
+Subject: [PATCH v2 2/2] drm/edid: Refactor DisplayID timing block structs
+Date: Fri, 14 Feb 2025 04:05:45 +0300
+Message-ID: <20250214010545.3793736-1-sdoregor@sdore.me>
+X-Mailer: git-send-email 2.48.0
+In-Reply-To: <7cab8349bc8bb6fa08d2a7127a724efea155f154.camel@sdore.me>
+References: <7cab8349bc8bb6fa08d2a7127a724efea155f154.camel@sdore.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,60 +46,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit ae6012d72fa6 ("x86/pkeys: Ensure updated PKRU value is XRSTOR'd")
-modified the signal delivery logic to always set the PKRU bit in
-xregs_state->header->xfeatures.
+Using le16 instead of u8[2].
+Replaced an error with a printed warning as well.
 
-The change currently derives the bitmask value using XGETBV(1), rather
-than reading the already written value directly from the buffer. Thus,
-this approach induces an unnecessary dependency on XGETBV1 for the PKRU
-feature.
-
-Eliminate the dependency by using the established helper function.
-Subsequently, remove the unused mask argument from
-update_pkru_in_sigframe().
-
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-Cc: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Suggested-by: Jani Nikula <jani.nikula@linux.intel.com>
+Signed-off-by: Egor Vorontsov <sdoregor@sdore.me>
 ---
- arch/x86/kernel/fpu/xstate.h | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/drm_displayid_internal.h | 22 ++++++++--------
+ drivers/gpu/drm/drm_edid.c               | 32 ++++++++++++------------
+ 2 files changed, 27 insertions(+), 27 deletions(-)
 
-diff --git a/arch/x86/kernel/fpu/xstate.h b/arch/x86/kernel/fpu/xstate.h
-index 27e20236bbbb..f3fc3369a135 100644
---- a/arch/x86/kernel/fpu/xstate.h
-+++ b/arch/x86/kernel/fpu/xstate.h
-@@ -84,18 +84,15 @@ static inline int set_xfeature_in_sigframe(struct xregs_state __user *xbuf, u64
- /*
-  * Update the value of PKRU register that was already pushed onto the signal frame.
-  */
--static inline int update_pkru_in_sigframe(struct xregs_state __user *buf, u64 mask, u32 pkru)
-+static inline int update_pkru_in_sigframe(struct xregs_state __user *buf, u32 pkru)
+diff --git a/drivers/gpu/drm/drm_displayid_internal.h b/drivers/gpu/drm/drm_displayid_internal.h
+index 88220c107822..957dd0619f5c 100644
+--- a/drivers/gpu/drm/drm_displayid_internal.h
++++ b/drivers/gpu/drm/drm_displayid_internal.h
+@@ -115,25 +115,25 @@ struct displayid_tiled_block {
+ struct displayid_detailed_timings_1 {
+ 	u8 pixel_clock[3];
+ 	u8 flags;
+-	u8 hactive[2];
+-	u8 hblank[2];
+-	u8 hsync[2];
+-	u8 hsw[2];
+-	u8 vactive[2];
+-	u8 vblank[2];
+-	u8 vsync[2];
+-	u8 vsw[2];
++	__le16 hactive;
++	__le16 hblank;
++	__le16 hsync;
++	__le16 hsw;
++	__le16 vactive;
++	__le16 vblank;
++	__le16 vsync;
++	__le16 vsw;
+ } __packed;
+ 
+ struct displayid_detailed_timing_block {
+ 	struct displayid_block base;
+ 	struct displayid_detailed_timings_1 timings[];
+-};
++} __packed;
+ 
+ struct displayid_formula_timings_9 {
+ 	u8 flags;
+-	__be16 hactive;
+-	__be16 vactive;
++	__le16 hactive;
++	__le16 vactive;
+ 	u8 vrefresh;
+ } __packed;
+ 
+diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+index 9c363df5af9a..54122a12a24f 100644
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -6764,19 +6764,19 @@ static struct drm_display_mode *drm_mode_displayid_detailed(struct drm_device *d
+ 							    bool type_7)
  {
--	u64 xstate_bv;
- 	int err;
+ 	struct drm_display_mode *mode;
+-	unsigned pixel_clock = (timings->pixel_clock[0] |
+-				(timings->pixel_clock[1] << 8) |
+-				(timings->pixel_clock[2] << 16)) + 1;
+-	unsigned hactive = (timings->hactive[0] | timings->hactive[1] << 8) + 1;
+-	unsigned hblank = (timings->hblank[0] | timings->hblank[1] << 8) + 1;
+-	unsigned hsync = (timings->hsync[0] | (timings->hsync[1] & 0x7f) << 8) + 1;
+-	unsigned hsync_width = (timings->hsw[0] | timings->hsw[1] << 8) + 1;
+-	unsigned vactive = (timings->vactive[0] | timings->vactive[1] << 8) + 1;
+-	unsigned vblank = (timings->vblank[0] | timings->vblank[1] << 8) + 1;
+-	unsigned vsync = (timings->vsync[0] | (timings->vsync[1] & 0x7f) << 8) + 1;
+-	unsigned vsync_width = (timings->vsw[0] | timings->vsw[1] << 8) + 1;
+-	bool hsync_positive = (timings->hsync[1] >> 7) & 0x1;
+-	bool vsync_positive = (timings->vsync[1] >> 7) & 0x1;
++	unsigned int pixel_clock = (timings->pixel_clock[0] |
++				    (timings->pixel_clock[1] << 8) |
++				    (timings->pixel_clock[2] << 16)) + 1;
++	unsigned int hactive = le16_to_cpu(timings->hactive) + 1;
++	unsigned int hblank = le16_to_cpu(timings->hblank) + 1;
++	unsigned int hsync = (le16_to_cpu(timings->hsync) & 0x7fff) + 1;
++	unsigned int hsync_width = le16_to_cpu(timings->hsw) + 1;
++	unsigned int vactive = le16_to_cpu(timings->vactive) + 1;
++	unsigned int vblank = le16_to_cpu(timings->vblank) + 1;
++	unsigned int vsync = (le16_to_cpu(timings->vsync) & 0x7fff) + 1;
++	unsigned int vsync_width = le16_to_cpu(timings->vsw) + 1;
++	bool hsync_positive = le16_to_cpu(timings->hsync) & (1 << 15);
++	bool vsync_positive = le16_to_cpu(timings->vsync) & (1 << 15);
  
- 	if (unlikely(!cpu_feature_enabled(X86_FEATURE_OSPKE)))
- 		return 0;
+ 	mode = drm_mode_create(dev);
+ 	if (!mode)
+@@ -6838,8 +6838,8 @@ static struct drm_display_mode *drm_mode_displayid_formula(struct drm_device *de
+ 							   bool type_10)
+ {
+ 	struct drm_display_mode *mode;
+-	u16 hactive = be16_to_cpu(timings->hactive) + 1;
+-	u16 vactive = be16_to_cpu(timings->vactive) + 1;
++	u16 hactive = le16_to_cpu(timings->hactive) + 1;
++	u16 vactive = le16_to_cpu(timings->vactive) + 1;
+ 	u8 timing_formula = timings->flags & 0x7;
  
- 	/* Mark PKRU as in-use so that it is restored correctly. */
--	xstate_bv = (mask & xfeatures_in_use()) | XFEATURE_MASK_PKRU;
--
--	err =  __put_user(xstate_bv, &buf->header.xfeatures);
-+	err = set_xfeature_in_sigframe(buf, XFEATURE_MASK_PKRU);
- 	if (err)
- 		return err;
+ 	/* TODO: support RB-v2 & RB-v3 */
+@@ -6848,7 +6848,7 @@ static struct drm_display_mode *drm_mode_displayid_formula(struct drm_device *de
  
-@@ -316,7 +313,7 @@ static inline int xsave_to_user_sigframe(struct xregs_state __user *buf, u32 pkr
- 	clac();
+ 	/* TODO: support video-optimized refresh rate */
+ 	if (timings->flags & (1 << 4))
+-		return NULL;
++		drm_dbg_kms(dev, "Fractional vrefresh is not implemented, proceeding with non-video-optimized refresh rate");
  
- 	if (!err)
--		err = update_pkru_in_sigframe(buf, mask, pkru);
-+		err = update_pkru_in_sigframe(buf, pkru);
- 
- 	return err;
- }
+ 	mode = drm_cvt_mode(dev, hactive, vactive, timings->vrefresh + 1, timing_formula == 1, false, false);
+ 	if (!mode)
 -- 
-2.45.2
+2.48.0
 
