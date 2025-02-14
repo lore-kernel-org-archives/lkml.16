@@ -1,198 +1,224 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0706D8837
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 03:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CBF8837
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 03:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739504022; cv=none; b=W7OEon5LGkwKlj+Fuey0AXpVP7tm13KVUU6irUUpySiupxyhMpLd4wBeclJe+Wc0T8vJU1ESOUp3skeTrYycDrcqiqvovs0a8VtM9hz6Twm3e56T8m/x8TaJH7PkQ7uKjWIaVc8vgNAVPhJgh1Y9RXaDeGCCutYJpfvt3/6jSqs=
+	t=1739504059; cv=none; b=mE3jsa/joSkTbc/Evw5hc4uaqBmc6DxM3NEDPDu7sTaZ8ZCSddGfTOLU3de6pmXMknPcHT2zzUAjziFplRmVgoUc01dJmsCzmsirHoExis5FxOUaktwyVEoyP38znhH971v4HbafvK2+fcZ4KxjL8TrDHAmuNxkMVQdtDF/pwEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739504022; c=relaxed/simple;
-	bh=3CP6vNBG5tNZM6/S8Q8LiID/LtJNbg0Lf7gVE9Ngjdo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cxj9gnTY8hu130hzZskb6cGAUVeks148zwwWDZXUhYekRbd5DCQedpl4rFyy5yVVxUWVfZx1EUKa30KAWzduaDosnci5ZbCbvMByYdssnrEydwkWdZGUFSXst9l2r4idG0QIIakYyYPZZeTycZcW1wPgHBQSzkSD3NRAM68Sm3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eM5kZLib; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739504059; c=relaxed/simple;
+	bh=zdZ1K83C+vUZuZDlAjW1b/O7SvJ3I6NBaCd43TdWb5M=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=prvGMFdBHy8ySn48FTcRxkQuJQ3q+xumKQcrqbUdxnp7iRpU8E15soX7s757Bl1v6/VZ8tcmKNW6ao28ZmenViQy2gPrqxxa6e14b6QOnNi59sRHtsyYfJ4Egm5nDSoHLppG8deq2QklZ1x2Z3oOsDQAUpQ77REdComnLcVhRgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WUpYRjMp; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eM5kZLib"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f6d2642faso41682385ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:33:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUpYRjMp"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab7483b9bf7so205170666b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:34:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739504020; x=1740108820; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWwj1KR66ci0MimMVTAf+7EryvAhOmVMzbLfi/0Mh9s=;
-        b=eM5kZLibMmKK3ZxBGh5/cfi1EuK7cjMfsP7va6tE8k75znruEhIDNdrgk78+1rhgs5
-         kSvAMxT2ufODgEWntsYrE/kFiAF/YOKOl+5akVg6VQYuAzq2qGt40zz/4epBMi4bz3kJ
-         uzeG7tTdWX1KUYnzGeOd4xeRK8+AuDYXJgvYo=
+        d=gmail.com; s=20230601; t=1739504056; x=1740108856; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Ef52lVD5tbaEZhkFJicIhClRxVWfvA0fP+kz/Eg8/ZY=;
+        b=WUpYRjMpBzqL2xjTHBiMr7DNjUBwEA8f1rt1nqdFfgyYJY5VDbhhgAZTChtT6h/BwZ
+         Aivq104VP7psZ0G6rWixVSw2U0xrWGS94e+dylMpRcyCrrJ4OADu+mFSR8f/05MG7QYR
+         UvD2fE5TMwP2EJPdCnsEqEWrww2Owq5zANnr/oOIdM+9rVb4eldb/8Rz5yxmcVGe9kth
+         RQ0R5nryqM1AqWq9H6ekQuO494qi+fYbh9tX1MlIi2HxMsr4iOPC6ObARwPURKHtmK12
+         ejcU8iPmUMpQpIvxiEQgaE/l2UBkR2X7NXOO6XYpx2hL1Md4CwXzRieliJjgQ2wwzz9W
+         cegA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739504020; x=1740108820;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZWwj1KR66ci0MimMVTAf+7EryvAhOmVMzbLfi/0Mh9s=;
-        b=Y9GUWxFTnuPRzEXJakeosVFT7s/OoCpIH48ZPuh3dfwf25cmqlmZll8Wb//UEiEt5/
-         LDGRhyFO4PCnh/M3tC7cpOLOcDoPh8SWE9buXiEwQj8sZd0oa2860fJsYJ6GRQDv1Mz6
-         lzsyGwT5QQwQVQzB51qD4PG+sl0lAgF9VmdZlYzdf5cEkMJMZnjzLjGcnox3xlV4LQ9Y
-         d4EXTYyQNwEQ8Z/lNWlMagY/6/CuZIP0jTSAYLzKpu0zvtI2nHqet2jVM/C5RDKQIGkm
-         hZwYC9as+RORaZIefyoQqqfEsr3NBMgQcAgtoHcwrxHGsbKJKKYeElma0j7bMNb3NvAP
-         l8lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUjE9/0VtTHQqwKBa3rAOwOjABDW2rf6XCfx2H769fqaH32y8tbK1Wh71ou31+GHTkyaqKq1S43lld4S8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyekszbNYIEeSa0E5qZzUZwWoeXqSLRVnrbBvdCs8w6VNFyzzSy
-	2vQV/W43uA7Cn0V8TSrZUVqQpT7S0BVvOxi8YwSoZc30uXHy3zsRgPD06nd+BA==
-X-Gm-Gg: ASbGncup6/ZimttMWJQYiKpq1sjj4ut6Q478bJs35Qs2QhhlQp5HJbrJas5bJVLncPe
-	18eV3ESJIQNGA9e6jxYV1GNI6EWEeT5ppwX/tda/5sqz4j0fXponDDD3XADI7mhoPH3rVGG/JSS
-	yZY++HkY+o6QpBqwJtIWEhf1Tj2Ll/kaVoNuIMluIOycXiUnXyKtx0QPRScCTPgJ06NWZk0x1rq
-	maLuJTWHRQJxdR85DbuRp4nfgS9vvtxq8ntY7eh/HYGn79695vz1ac8BPA7sVKes8lgoCVt0fw9
-	X65BbDb+kuC7XzJ0+8I=
-X-Google-Smtp-Source: AGHT+IGAMjAyYitJ/PuVWBKWSZI7OXnX7FkQeLCk13N2I5HTwIdj4sYm2eua0ju7hcsVjf476FULhg==
-X-Received: by 2002:a17:902:e74e:b0:20c:9936:f0ab with SMTP id d9443c01a7336-220bbc739cdmr154394835ad.47.1739504020152;
-        Thu, 13 Feb 2025 19:33:40 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:942d:9291:22aa:8126])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d558528asm19680795ad.216.2025.02.13.19.33.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 19:33:39 -0800 (PST)
-Date: Fri, 14 Feb 2025 12:33:33 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Kairui Song <ryncsn@gmail.com>
-Subject: Re: [PATCHv4 14/17] zsmalloc: make zspage lock preemptible
-Message-ID: <sio5jxzi5fsdcfpgbifna6d6ipwvbrxftogeyxpqim74yeptd4@gaqzwxsrkoud>
-References: <Z6ThGFt6wyNpx9xi@google.com>
- <wnffho5jguo24wfy3qv5tvovoargezbu4kcvpk43ludrhyfo6i@6ogtvk5ivfjc>
- <Z6Z2l9uovxAiED6q@google.com>
- <droaoze6w4atf7guiv6t4imhcmkpteyvoaigdnw5p3vdg75ebx@m56xi2y527i4>
- <Z6y_3xS_8pmZ2bCz@google.com>
- <rbco2k74plqedtqvn6ebu6wwssy5urw5mjvsk6n576d3urbjnx@tq43anmdvq35>
- <25268fbedb82a06ba0c13e2c490b164846ef508b@linux.dev>
- <huhxeq3k4q5lscj5xy6lldivku2wps6midxmt4swr67mce4nva@7mxupdxphs5a>
- <y6y67njsxrc3orfpqjkj5jsy2jma77mmwhxirt3vb7h6uhlylx@5ftvcrqmjtce>
- <Z64O3w2p1NrXoicl@google.com>
+        d=1e100.net; s=20230601; t=1739504056; x=1740108856;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ef52lVD5tbaEZhkFJicIhClRxVWfvA0fP+kz/Eg8/ZY=;
+        b=MrKQKy4IY2CNdHbAOfw3ilKXJZ+3lWrDv1wKqWyoKwXzNCWDKD9sygvzp348QPo5yp
+         rl1/InupyYcXDjg44JhrvUL4deXtjGhWPiGkjn0yDXwOT9HGLKDIILkL0a8IrUV165sr
+         rwCxbkKlNlhKE2vM/DMlSJImhs2Xhw50iJiEMuXjAFjEkg54PDfI78+N7/RyWsjYYTjl
+         Q5SlxCSSxM1AXBKGJBM/8KlnHXNrtzk1FzOQbUNn29TdOnL3Pdmq8buwlUr9XmVhChf9
+         Hi+5AQ7gtgGL6K+jFAGZOCfrztwVp69JoAqHA10AqcBMvafbPvVbAUTz0ixybOlxxo3V
+         mA6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVdJG1QJMyMbuctbxOTK0wKKyK7I2qJP+R4EEavPzYaQ/nKuKpmIVq30oUcXSkn/y+ttiLxFuxbHxEtPrM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWPAJS3Sjd/T1klCvVQKla1NiYLzqK25BMgn1gogscPf8pgsWf
+	Nt18LBcydjuBDfYLIlwTOgjBZGITelg0FRRLl6vR3My4TkaNW+ZDKT+BMO0RQr2Tdsky0DmrdVv
+	qK5i/fgHogIr/rM60S5NRxnlqUrGfeVop
+X-Gm-Gg: ASbGncvFBaUo/PPh6t9hOo551nY2E7ZlwNNdNkWmqH0H86OGXWPpOaSaasYBBEub8+y
+	DATbtPMqcbQtJ8P6XH7oSie1IrnGz5bJIDPiLR1ZcNNo9EckaIf9k+k7As+UU0CVfbqJTZ5o=
+X-Google-Smtp-Source: AGHT+IFlURw+eXoPbSOgy1n/F/niJ/VuJ7bAChakLddym2av0Es1RzARThj+8CTS1YydSLt34l2lerM4R2qZjwFFKdQ=
+X-Received: by 2002:a17:907:1909:b0:ab7:8e0d:3d3c with SMTP id
+ a640c23a62f3a-ab7f3473720mr1011985966b.42.1739504055920; Thu, 13 Feb 2025
+ 19:34:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z64O3w2p1NrXoicl@google.com>
+From: Dave Airlie <airlied@gmail.com>
+Date: Fri, 14 Feb 2025 13:34:04 +1000
+X-Gm-Features: AWEUYZl_qKYZfWnQCqMRQwD-8nIedPayc98_RI7-SUbGemV0yuUiFb-cZEKyM2Y
+Message-ID: <CAPM=9txeA4G80xej2orc-_y1=cEBaxY2Hw-48v0sw485UjuWyQ@mail.gmail.com>
+Subject: [git pull] drm fixes for 6.14-rc3
+To: Linus Torvalds <torvalds@linux-foundation.org>, Sima Vetter <sima@ffwll.ch>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On (25/02/13 15:25), Yosry Ahmed wrote:
-> On Thu, Feb 13, 2025 at 05:22:20PM +0900, Sergey Senozhatsky wrote:
-> > On (25/02/13 16:21), Sergey Senozhatsky wrote:
-> > > BASE
-> > > ====
-> > > 
-> > > 1363.64user 157.08system 1:30.89elapsed 1673%CPU (0avgtext+0avgdata 825692maxresident)k
-> > > 
-> > > lock stats
-> > > 
-> > >                               class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-> > >                    &pool->migrate_lock-R:             0              0           0.00           0.00           0.00           0.00          10001         702081           0.14         104.74      125571.64           0.18
-> > >                             &class->lock:             1              1           0.25           0.25           0.25           0.25           6320         840542           0.06         809.72      191214.87           0.23
-> > >                          &zspage->lock-R:             0              0           0.00           0.00           0.00           0.00           6452         664129           0.12         660.24      201888.61           0.30
-> > >                 &zram->table[index].lock:             0              0           0.00           0.00           0.00           0.00        1716362        3096466           0.07         811.10      365551.24           0.12
-> > >                             &zstrm->lock:             0              0           0.00           0.00           0.00           0.00              0         664129           1.68        1004.80    14853571.32          22.37
-> > > 
-> > > PATCHED
-> > > =======
-> > > 
-> > > 1366.50user 154.89system 1:30.33elapsed 1684%CPU (0avgtext+0avgdata 825692maxresident)k
-> > > 
-> > > lock stats
-> > > 
-> > >                               class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-> > >                          &pool->lock#3-R:             0              0           0.00           0.00           0.00           0.00           3648         701979           0.12          44.09      107333.02           0.15
-> > >                             &class->lock:             0              0           0.00           0.00           0.00           0.00           5038         840434           0.06        1245.90      211814.60           0.25
-> > >                          zsmalloc-page-R:             0              0           0.00           0.00           0.00           0.00              0         664078           0.05         699.35      236641.75           0.36
-> > >                         zram-entry->lock:             0              0           0.00           0.00           0.00           0.00              0        3098328           0.06        2987.02      313339.11           0.10
-> > >    &per_cpu_ptr(comp->stream, cpu)->lock:             0              0           0.00           0.00           0.00           0.00             23         664078           1.77        7071.30    14838397.61          22.34
-> > 
-> > So...
-> > 
-> > I added lock-stat handling to zspage->lock and to zram (in zram it's only
-> > trylock that we can track, but it doesn't really bother me).  I also
-> > renamed zsmalloc-page-R to old zspage->lock-R and zram-entry->lock to
-> > old zram->table[index].lock, just in case if anyone cares.
-> > 
-> > Now bounces stats for zspage->lock and zram->table[index].lock look
-> > pretty much like in BASE case.
-> > 
-> > PATCHED
-> > =======
-> > 
-> >                               class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-> >                          &pool->lock#3-R:             0              0           0.00           0.00           0.00           0.00           2702         703841           0.22         873.90      197110.49           0.28
-> >                             &class->lock:             0              0           0.00           0.00           0.00           0.00           4590         842336           0.10        3329.63      256595.70           0.30
-> >                           zspage->lock-R:             0              0           0.00           0.00           0.00           0.00           4750         665011           0.08        3360.60      258402.21           0.39
-> >                  zram->table[index].lock:             0              0           0.00           0.00           0.00           0.00        1722291        3099346           0.12        6943.09      721282.34           0.23
-> >    &per_cpu_ptr(comp->stream, cpu)->lock:             0              0           0.00           0.00           0.00           0.00             23         665011           2.84        7062.18    14896206.16          22.40
-> > 
-> 
-> holdtime-max and holdtime-total are higher in the patched kernel. Not
-> sure if this is just an artifact of lock holders being preemtible. 
+Hi Linus,
 
-Hmm, pool->lock shouldn't be affected at all, however BASE holds it much
-longer than PATCHED
+Weekly drm fixes pull request, nothing too unusual, the hdmi tests
+needs a bit of refactoring after lockdep shouted at them, otherwise
+amdgpu and xe lead and a few misc otherwise.
 
-        holdtime-max            holdtime-total
-BASE    104.74                  125571.64
-PATCHED 44.09                   107333.02
+Thanks,
+Dave.
 
-Doesn't make sense.  I can understand zspage->lock and
-zram->table[index].lock, but for zram->table[index] things look
-strange (comparing run #1 and #2)
+drm-fixes-2025-02-14:
+drm fixes for 6.14-rc3
 
-        holdtime-total
-BASE    365551.24
-PATCHED 313339.11
+amdgpu:
+- Fix shutdown regression on old APUs
+- Fix compute queue hang on gfx9 APUs
+- Fix possible invalid access in PSP failure path
+- Avoid possible buffer overflow in pptable override
 
-And run #3 is in its own league.
+amdkfd:
+- Properly free gang bo in failure path
+- GFX12 trap handler fix
 
+i915:
+- selftest fix: avoid using uninitialized context
 
+xe:
+- Remove bo->clients out of bos_lock area
+- Carve out wopcm portion from the stolen memory
 
-Very likely just a very very bad way to test things.
+tests:
+- fix lockdep with hdmi infrastructure tests
 
+host1x:
+- fix uninitialised mutex usage
 
-Re-based on 6.14.0-rc2-next-20250213.
+panthor:
+- fix uninit variable
 
+hibmc:
+- fix missing Kconfig select
+The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
 
-BASE
-====
+  Linux 6.14-rc2 (2025-02-09 12:45:03 -0800)
 
-PREEMPT_NONE
+are available in the Git repository at:
 
-                              class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-                   &pool->migrate_lock-R:             0              0           0.00           0.00           0.00           0.00           3624         702276           0.15          35.96      126562.90           0.18
-                            &class->lock:             0              0           0.00           0.00           0.00           0.00           5084         840733           0.06         795.26      183238.22           0.22
-                         &zspage->lock-R:             0              0           0.00           0.00           0.00           0.00           5358         664228           0.12          43.71      192732.71           0.29
-                &zram->table[index].lock:             0              0           0.00           0.00           0.00           0.00        1528645        3095862           0.07         764.76      370881.23           0.12
-                            &zstrm->lock:             0              0           0.00           0.00           0.00           0.00              0         664228           2.52        2033.81    14605911.45          21.99
+  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-02-14
 
-PREEMPT_VOLUNTARY
+for you to fetch changes up to 04485cc34868892a823b909c6d5468ba21b63569:
 
-                              class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-                   &pool->migrate_lock-R:             0              0           0.00           0.00           0.00           0.00           3039         699556           0.14          50.78      125553.59           0.18
-                            &class->lock:             0              0           0.00           0.00           0.00           0.00           5259         838005           0.06         943.43      177108.05           0.21
-                         &zspage->lock-R:             0              0           0.00           0.00           0.00           0.00           5581         664096           0.12          81.56      190235.48           0.29
-                &zram->table[index].lock:             0              0           0.00           0.00           0.00           0.00        1731706        3098570           0.07         796.87      366934.54           0.12
-                            &zstrm->lock:             0              0           0.00           0.00           0.00           0.00              0         664096           3.38        5074.72    14472697.91          21.79
+  Merge tag 'drm-xe-fixes-2025-02-13' of
+https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
+(2025-02-14 12:15:59 +1000)
 
-PREEMPT
+----------------------------------------------------------------
+drm fixes for 6.14-rc3
 
-                              class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-                   &pool->migrate_lock-R:             0              0           0.00           0.00           0.00           0.00           2545         701827           0.14         773.56      125463.37           0.18
-                            &class->lock:             0              0           0.00           0.00           0.00           0.00           4697         840281           0.06        1701.18      231657.38           0.28
-                         &zspage->lock-R:             0              0           0.00           0.00           0.00           0.00           4778         664002           0.12         755.62      181215.17           0.27
-                &zram->table[index].lock:             0              0           0.00           0.00           0.00           0.00        1731737        3096937           0.07        1703.92      384633.29           0.12
-                            &zstrm->lock:             0              0           0.00           0.00           0.00           0.00              0         664002           2.85        3603.20    14586900.58          21.97
+amdgpu:
+- Fix shutdown regression on old APUs
+- Fix compute queue hang on gfx9 APUs
+- Fix possible invalid access in PSP failure path
+- Avoid possible buffer overflow in pptable override
 
+amdkfd:
+- Properly free gang bo in failure path
+- GFX12 trap handler fix
 
-So somehow holdtime-max for per-CPU stream is 2.5x higher for PREEMPT_VOLUNTARY
-than for PREEMPT_NONE.  And class->lock holdtime-total is much much higher for
-PREEMPT than for any other preemption models.  And that's BASE kernel, which
-runs fully atomic zsmalloc and zram.  I call this rubbish.
+i915:
+- selftest fix: avoid using uninitialized context
+
+xe:
+- Remove bo->clients out of bos_lock area
+- Carve out wopcm portion from the stolen memory
+
+tests:
+- fix lockdep with hdmi infrastructure tests
+
+host1x:
+- fix uninitialised mutex usage
+
+panthor:
+- fix uninit variable
+
+hibmc:
+- fix missing Kconfig select
+
+----------------------------------------------------------------
+Alex Deucher (3):
+      drm/amdgpu/pm: fix UVD handing in amdgpu_dpm_set_powergating_by_smu()
+      drm/amdgpu/gfx9: manually control gfxoff for CS on RV
+      drm/amdgpu: bump version for RV/PCO compute fix
+
+Arnd Bergmann (1):
+      drm/hisilicon/hibmc: select CONFIG_DRM_DISPLAY_DP_HELPER
+
+Dave Airlie (4):
+      Merge tag 'drm-misc-fixes-2025-02-13' of
+https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
+      Merge tag 'amd-drm-fixes-6.14-2025-02-13' of
+https://gitlab.freedesktop.org/agd5f/linux into drm-fixes
+      Merge tag 'drm-intel-fixes-2025-02-13' of
+https://gitlab.freedesktop.org/drm/i915/kernel into drm-fixes
+      Merge tag 'drm-xe-fixes-2025-02-13' of
+https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
+
+Imre Deak (1):
+      drm: Fix DSC BPP increment decoding
+
+Jiang Liu (2):
+      drm/amdgpu: bail out when failed to load fw in psp_init_cap_microcode()
+      drm/amdgpu: avoid buffer overflow attach in smu_sys_set_pp_table()
+
+Krzysztof Karas (1):
+      drm/i915/selftests: avoid using uninitialized context
+
+Lancelot SIX (1):
+      drm/amdkfd: Ensure consistent barrier state saved in gfx12 trap handler
+
+Maxime Ripard (4):
+      drm/tests: hdmi: Fix WW_MUTEX_SLOWPATH failures
+      drm/tests: hdmi: Remove redundant assignments
+      drm/tests: hdmi: Reorder DRM entities variables assignment
+      drm/tests: hdmi: Fix recursive locking
+
+Nirmoy Das (1):
+      drm/xe: Carve out wopcm portion from the stolen memory
+
+Rupinderjit Singh (1):
+      gpu: host1x: Fix a use of uninitialized mutex
+
+Su Hui (1):
+      drm/panthor: avoid garbage value in panthor_ioctl_dev_query()
+
+Tejas Upadhyay (1):
+      drm/xe/client: bo->client does not need bos_lock
+
+Zhu Lingshan (1):
+      amdkfd: properly free gang_ctx_bo when failed to init user queue
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c            |   3 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c            |   5 +-
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c              |  36 +++-
+ drivers/gpu/drm/amd/amdkfd/cwsr_trap_handler.h     |   3 +-
+ .../gpu/drm/amd/amdkfd/cwsr_trap_handler_gfx12.asm |   4 +
+ .../gpu/drm/amd/amdkfd/kfd_process_queue_manager.c |   2 +-
+ drivers/gpu/drm/amd/pm/amdgpu_dpm.c                |   2 +-
+ drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c          |   3 +-
+ drivers/gpu/drm/display/drm_dp_helper.c            |   2 +-
+ drivers/gpu/drm/hisilicon/hibmc/Kconfig            |   2 +
+ drivers/gpu/drm/i915/selftests/i915_gem_gtt.c      |   4 +-
+ drivers/gpu/drm/panthor/panthor_drv.c              |   1 +
+ drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 200 +++++++++++----------
+ drivers/gpu/drm/xe/xe_drm_client.c                 |   2 +-
+ drivers/gpu/drm/xe/xe_ttm_stolen_mgr.c             |  70 ++++----
+ drivers/gpu/host1x/dev.c                           |   2 +
+ drivers/gpu/host1x/intr.c                          |   2 -
+ include/drm/display/drm_dp.h                       |   1 +
+ 18 files changed, 200 insertions(+), 144 deletions(-)
