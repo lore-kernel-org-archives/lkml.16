@@ -1,85 +1,68 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768432753FC
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 13:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7CF2753FC;
+	Fri, 14 Feb 2025 13:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739538817; cv=none; b=U1Q7mOLSdbzLQBJJ+ONDgCp2A0ghaZDQ8H99A2voaQE662WLZTXa2UcYztuP/Ub5vGkq0gdli652ZYFzwUfZTjg+zqCu5EXrd7pBOfRhz/o4wkn8CUiK2tII1lYWwhx7tOQyNtIMwFjl68NKVKoYWUsMA6QUg3CQUiRrJgKUE04=
+	t=1739538888; cv=none; b=OPvBJnKEuP87yGoZ0E3DFUENFhf7aGsIyQdWn2wl/hPXuAsHiiYNorOQNkWJaJeCcYMPZxJK/Oa3qDecD4dRzjVqrL4mAGQe4xriXwEhwSrfIh+b1ktAq2aryxN/Yovn/r6B0lyA/R86D+DdiRNDE3s7dJGxGjAYibDTc/Aggqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739538817; c=relaxed/simple;
-	bh=0AlT1O7TrgsvxUKgar6f2gcLwXNkDq4nO2XZNybwd+g=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=k8VvvVkaYQLHBpG3l6tX8glDRjKbDdEP7SGwt0wGgMqtl5hb1mxoqf7xymDflRird2//yuA8KG1ImPw5hyhbxn5nFABFh+wmTYY1Sh2BEToWR48Z/7QV1PCij5RSGaoQyuoJm65Mt0mMU9Y+wzUBYqir2aZMgIeefr79iptIqqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=IcI2eyFy; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1739538888; c=relaxed/simple;
+	bh=6oDcW75qUCH8EauoDZEesOlHRIrOTMEnECDTMiOK6J8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XZwLwALj/UwYKw3VxjhmEND/xFGkq8liHQiCKD1IUv8tCXfhGA0I5M5O32kE07aLxod6R5tOl2ggso4JwIprgnoB/870Nr50NqeIb8yioi4lpTEnGyyu4W9W/avJMCCLl8ktIQl+gKmWsu2IRtilmydLuGpu6QeLQfxXRdQgsY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=5y3pZT9x; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="IcI2eyFy"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1tivVL-005M0f-PP; Fri, 14 Feb 2025 14:13:15 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
-	Cc:To:Subject:From:MIME-Version:Date:Message-ID;
-	bh=V/whWYHcOSkvvULaaimZjbjRTzvQ7aYNv8+YZm5uC2s=; b=IcI2eyFyJowLwbk9JUQTWm/Qkb
-	Mza1k3QZTmQZFy3F4YZ8LKts/ISzW7AbUnSB9s5Ob8glVVSmKcyqeadnv7MLv+mTR/Q+66ceh+gKl
-	hZh33f0lGmDFnQrw3KA4Zv6MhEIbYOcvHGs8V4zEnKXOU2xjiSm5GMqN4TZY9xw+EC6aSYf181aPA
-	AkzLBOtF5I8p4145aLLsAFq4f6/wbFyaeuKultByPDSdN+pITbL+8oBDxrrALIKRP9dZ7D0Cz6ts6
-	KsaNI4KPokHv0EcU6jXcNI+j3imQ2MVafWxHaHycX7Dfmd35qeu5S3NksKBuBIZiByzWKa85vrxCE
-	OfDikubA==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1tivVJ-00007b-TW; Fri, 14 Feb 2025 14:13:14 +0100
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1tivVB-00Fbkn-6w; Fri, 14 Feb 2025 14:13:05 +0100
-Message-ID: <d1e1b325-c328-410f-a530-f5cfc86ba753@rbox.co>
-Date: Fri, 14 Feb 2025 14:12:53 +0100
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5y3pZT9x"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=YjsHEfo/qiRRRbNh0TXBs04HjQPppZ55+bcTb3JVFDE=; b=5y3pZT9xEJp+yHFLR6BVPnkZkj
+	5VG5PWgvE0P+qCuoCReQzsiWT7pBT/zLHKnlAczalSXPzOQ4Scj2EXB6SeuV9kMWwxw3J+/6b+E1L
+	ssDIxqUIUdheODYcVVb+sHG3EdwwH41GWndexQ8JLLW3vegHhXgWW+UMsf0LbwDBdl5k=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tivWX-00E4X7-T8; Fri, 14 Feb 2025 14:14:29 +0100
+Date: Fri, 14 Feb 2025 14:14:29 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: xiaopeitux@foxmail.com
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, netdev@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	Pei Xiao <xiaopei01@kylinos.cn>, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] net: freescale: ucc_geth: make ugeth_mac_ops be static
+Message-ID: <8b45aa58-3128-44b0-9408-3d7794436cd4@lunn.ch>
+References: <tencent_832FF5138D392257AC081FEE322A03C84907@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Michal Luczaj <mhal@rbox.co>
-Subject: Re: [PATCH net 4/4] selftest/bpf: Add vsock test for sockmap
- rejecting unconnected
-To: John Fastabend <john.fastabend@gmail.com>,
- Jakub Sitnicki <jakub@cloudflare.com>, Eric Dumazet <edumazet@google.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Paolo Abeni <pabeni@redhat.com>,
- Willem de Bruijn <willemb@google.com>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Simon Horman <horms@kernel.org>, Stefano Garzarella <sgarzare@redhat.com>,
- "Michael S. Tsirkin" <mst@redhat.com>,
- Bobby Eshleman <bobby.eshleman@bytedance.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20250213-vsock-listen-sockmap-nullptr-v1-0-994b7cd2f16b@rbox.co>
- <20250213-vsock-listen-sockmap-nullptr-v1-4-994b7cd2f16b@rbox.co>
-Content-Language: pl-PL, en-GB
-In-Reply-To: <20250213-vsock-listen-sockmap-nullptr-v1-4-994b7cd2f16b@rbox.co>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_832FF5138D392257AC081FEE322A03C84907@qq.com>
 
-On 2/13/25 12:58, Michal Luczaj wrote:
-> ...
-> This does not test datagram vsocks. Even though it hardly matters. VMCI is
-> the only transport that features VSOCK_TRANSPORT_F_DGRAM, but it has an
-> unimplemented vsock_transport::readskb() callback, making it unsupported by
-                                 ^^^^^^^
-Ugh, read_skb().
+On Fri, Feb 14, 2025 at 02:11:07PM +0800, xiaopeitux@foxmail.com wrote:
+> From: Pei Xiao <xiaopei01@kylinos.cn>
+> 
+> sparse warning:
+>     sparse: symbol 'ugeth_mac_ops' was not declared. Should it be
+> static.
+> 
+> Add static to fix sparse warnings.
 
-Sorry,
-Michal
+While you are touching it, can it also be made const?
+
+struct phylink *phylink_create(struct phylink_config *,
+			       const struct fwnode_handle *,
+			       phy_interface_t,
+			       const struct phylink_mac_ops *);
+
+phylink_create() will accept a const struct *.
+
+	Andrew
