@@ -1,174 +1,83 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A60B153803;
-	Fri, 14 Feb 2025 06:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D890201027;
+	Fri, 14 Feb 2025 06:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739514776; cv=none; b=qncZYZGaf2Bk3ty0HEDmy9+eG3VqIxL8L2LzxLiCEkAI1ks0ixK0RM2gQXfPW95muTqt1l1pkptPJ2xY1VgY8GTwn7QZCHVfLEO/8CMhq0Id//EzijRct4ZbJAgNfKtgfK82jmCtSpJkQxHdruTtzB3kP23Tf1zIZjSEYF1PAP0=
+	t=1739514790; cv=none; b=Sl3QJ9xGHTy6Cqd9ixSKUq0Khu1+Y6Kxv2ahJ0VK8g2lQ93O88MDjbRa3PKjRpN6JDJJJw9nTB8sOvqdCCPNgGAl7n2/0OIkso1FFODfkH/NVNShEvyda8MQMGlmZsteCSD5LcxNd5EQcJ9TZSCdpMLi9SCtkydJK+ECFuEpnZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739514776; c=relaxed/simple;
-	bh=hyvDeMOuihb0txnXJaqThDD8Not1D1+IXKBX+xiJxo0=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=oPwyBm7PnfgTkwDuI/fQ78MApw9dfhpyfrn+fXeVLXXaZlVRCZh/09hX/GywWDa2YtCkbUGPS6RSUh88/Xdec2aOePGf28Ix1ts4gI6WFw9qfJzlBTavVrmC+dAbi44vE2U2GPv1nim3jcjE5xDra+cwR+N0M7myYOvdApMJZGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=ZYZTJieX; arc=none smtp.client-ip=220.197.31.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1739514790; c=relaxed/simple;
+	bh=hVCD2rakAAB+o2t0oLvJfPKeC7Lmf1tkRkZ3Y9RnOn8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tkXcrW05uTSYAVJ68P0c1iNe4/05oluOofODoFMFZTSfYKnaCW5FcwjQlBA4C6uX0h3U31iWQZEmHKX4Wr5uhXkKfyzx3ZNCyI2ka5ehvYslcMD1kRDGOnoahqT3EtOEPtMmwWf9CmB2XRKzmVfMTRk73/Sjc5iTLmjN3W8lWeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=TiUxrkqm; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="ZYZTJieX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=t5/NFgvwirXTPslamx
-	of568wydxGxcgJ439GsLJwwTY=; b=ZYZTJieXJhxWhh8S3SfQ0Mnp4T0+i4C7zb
-	qSh25YigieruRXhhNC/0NPCKX9PNOgvUb0SeWLxQ3l9a51QRN/m47QSGR0P2MkiI
-	fANlyCh5VHq9HFsjJupK9wgVlmFiQ+CDxq86s+XUaFvJmkJ2K28zJmHqrRWlhbjY
-	y0Vxt6AlE=
-Received: from hg-OptiPlex-7040.hygon.cn (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PykvCgDnr2Jr465nOc+UAw--.56792S2;
-	Fri, 14 Feb 2025 14:32:12 +0800 (CST)
-From: yangge1116@126.com
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	21cnbao@gmail.com,
-	david@redhat.com,
-	baolin.wang@linux.alibaba.com,
-	muchun.song@linux.dev,
-	osalvador@suse.de,
-	liuzixing@hygon.cn,
-	Ge Yang <yangge1116@126.com>
-Subject: [PATCH] mm/hugetlb: wait for hugepage folios to be freed
-Date: Fri, 14 Feb 2025 14:32:09 +0800
-Message-Id: <1739514729-21265-1-git-send-email-yangge1116@126.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID:PykvCgDnr2Jr465nOc+UAw--.56792S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXryrCFy8Xr45tw4UKr1UAwb_yoWrKFWrpF
-	yUKwnrGrWDJrZakr17Xws5Zr1ay395ZFW2kFWIqw43Z3ZxJw1DKFy2vw1qq3y5ArZ7CFWx
-	ZrWjv3yDuF1UAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRoGQDUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbifhnzG2eu3KhoTQAAsX
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="TiUxrkqm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=kLNIJIGtAonH6TQ7Xn1xNKUdo34Iyv7JaZahEgvr29E=; b=TiUxrkqmOqjnPch01VAvC6YpVN
+	wtHhKJ7km4Ah8MRFIKcLqCm36sTuJNx0DHMKQ94Bt9IMNZGvec7GAJ1Rw5b9UJcGZDdgDoMk1dV3Z
+	LqshzPzd6OX4o+J6yhQKu6kENAnz2XvwP9ZAVV82Y1SPOzg7VhqYIkHyClkdYgx2II4/4Fr89+NX2
+	pC50LkPLnKuRoMVSSi4F/f7CgnLhwqZp19D2bgkSL9WqyvDjal5k+5/pblPrD0Sbr2Z1J1fjOmqoh
+	5IoCgr4/C420V7mC+/K6UJBA+HYtDpsmggz/YzIzRFCwEyw1gM7gMglshR5eDSeWMNJfu/BY7gH/t
+	7CciF5/Q==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tipG6-0000000DRTU-1edj;
+	Fri, 14 Feb 2025 06:33:06 +0000
+Date: Fri, 14 Feb 2025 06:33:06 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3} Change ->mkdir() and vfs_mkdir() to return a dentry
+Message-ID: <20250214063306.GD1977892@ZenIV>
+References: <20250214052204.3105610-1-neilb@suse.de>
+ <20250214060039.GB1977892@ZenIV>
+ <20250214061355.GC1977892@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250214061355.GC1977892@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-From: Ge Yang <yangge1116@126.com>
+On Fri, Feb 14, 2025 at 06:13:55AM +0000, Al Viro wrote:
+> On Fri, Feb 14, 2025 at 06:00:39AM +0000, Al Viro wrote:
+> 
+> > 3) I'm pretty sure that NFS is *not* the only filesystem that returns
+> > unhashed negative in some success cases; will need to go over the instances
+> > to verify that, though.
+> 
+> Definitely so: in cifs_mkdir() we have
+>         if ((server->ops->posix_mkdir) && (tcon->posix_extensions)) {
+>                 rc = server->ops->posix_mkdir(xid, inode, mode, tcon, full_path,
+>                                               cifs_sb);
+>                 d_drop(direntry); /* for time being always refresh inode info */
+>                 goto mkdir_out;
+>         }
+> There might be other cases.  hostfs is definitely like that, I'm pretty
+> sure that kernfs is as well...
 
-Since the introduction of commit b65d4adbc0f0 ("mm: hugetlb: defer freeing
-of HugeTLB pages"), which supports deferring the freeing of HugeTLB pages,
-the allocation of contiguous memory through cma_alloc() may fail
-probabilistically.
+kernfs is actually playing fast and loose with the calling conventions there;
+it does not bother with unhashing and relies upon its ->d_revalidate()
+noticing and unhashing the sucker.
 
-In the CMA allocation process, if it is found that the CMA area is occupied
-by in-use hugepage folios, these in-use hugepage folios need to be migrated
-to another location. When there are no available hugepage folios in the
-free HugeTLB pool during the migration of in-use HugeTLB pages, new folios
-are allocated from the buddy system. A temporary state is set on the newly
-allocated folio. Upon completion of the hugepage folio migration, the
-temporary state is transferred from the new folios to the old folios.
-Normally, when the old folios with the temporary state are freed, it is
-directly released back to the buddy system. However, due to the deferred
-freeing of HugeTLB pages, the PageBuddy() check fails, ultimately leading
-to the failure of cma_alloc().
+Another variant that would work (and follow the calling conventions)
+is to have ->lookup() that leaves negatives unhashed and ->mkdir()
+not bothering to hash or instantiate.
 
-Here is a simplified call trace illustrating the process:
-cma_alloc()
-    ->__alloc_contig_migrate_range() // Migrate in-use hugepage
-        ->unmap_and_move_huge_page()
-            ->folio_putback_hugetlb() // Free old folios
-    ->test_pages_isolated()
-        ->__test_page_isolated_in_pageblock()
-             ->PageBuddy(page) // Check if the page is in buddy
+It really needs a review instance by instance.
 
-To resolve this issue, we have implemented a function named
-wait_for_hugepage_folios_freed(). This function ensures that the hugepage
-folios are properly released back to the buddy system after their migration
-is completed. By invoking wait_for_hugepage_folios_freed() following the
-migration process, we guarantee that when test_pages_isolated() is
-executed, it will successfully pass.
-
-Fixes: b65d4adbc0f0 ("mm: hugetlb: defer freeing of HugeTLB pages")
-Signed-off-by: Ge Yang <yangge1116@126.com>
----
- include/linux/hugetlb.h |  5 +++++
- mm/hugetlb.c            |  7 +++++++
- mm/migrate.c            | 16 ++++++++++++++--
- 3 files changed, 26 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 6c6546b..c39e0d5 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -697,6 +697,7 @@ bool hugetlb_bootmem_page_zones_valid(int nid, struct huge_bootmem_page *m);
- 
- int isolate_or_dissolve_huge_page(struct page *page, struct list_head *list);
- int replace_free_hugepage_folios(unsigned long start_pfn, unsigned long end_pfn);
-+void wait_for_hugepage_folios_freed(struct hstate *h);
- struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 				unsigned long addr, bool cow_from_owner);
- struct folio *alloc_hugetlb_folio_nodemask(struct hstate *h, int preferred_nid,
-@@ -1092,6 +1093,10 @@ static inline int replace_free_hugepage_folios(unsigned long start_pfn,
- 	return 0;
- }
- 
-+static inline void wait_for_hugepage_folios_freed(struct hstate *h)
-+{
-+}
-+
- static inline struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 					   unsigned long addr,
- 					   bool cow_from_owner)
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 30bc34d..64cae39 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -2955,6 +2955,13 @@ int replace_free_hugepage_folios(unsigned long start_pfn, unsigned long end_pfn)
- 	return ret;
- }
- 
-+void wait_for_hugepage_folios_freed(struct hstate *h)
-+{
-+	WARN_ON(!h);
-+
-+	flush_free_hpage_work(h);
-+}
-+
- typedef enum {
- 	/*
- 	 * For either 0/1: we checked the per-vma resv map, and one resv
-diff --git a/mm/migrate.c b/mm/migrate.c
-index fb19a18..5dd1851 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1448,6 +1448,7 @@ static int unmap_and_move_huge_page(new_folio_t get_new_folio,
- 	int page_was_mapped = 0;
- 	struct anon_vma *anon_vma = NULL;
- 	struct address_space *mapping = NULL;
-+	unsigned long size;
- 
- 	if (folio_ref_count(src) == 1) {
- 		/* page was freed from under us. So we are done. */
-@@ -1533,9 +1534,20 @@ static int unmap_and_move_huge_page(new_folio_t get_new_folio,
- out_unlock:
- 	folio_unlock(src);
- out:
--	if (rc == MIGRATEPAGE_SUCCESS)
-+	if (rc == MIGRATEPAGE_SUCCESS) {
-+		size = folio_size(src);
- 		folio_putback_hugetlb(src);
--	else if (rc != -EAGAIN)
-+
-+		/*
-+		 * Due to the deferred freeing of HugeTLB folios, the hugepage 'src' may
-+		 * not immediately release to the buddy system. This can lead to failure
-+		 * in allocating memory through the cma_alloc() function. To ensure that
-+		 * the hugepage folios are properly released back to the buddy system,
-+		 * we invoke the wait_for_hugepage_folios_freed() function to wait for
-+		 * the release to complete.
-+		 */
-+		wait_for_hugepage_folios_freed(size_to_hstate(size));
-+	} else if (rc != -EAGAIN)
- 		list_move_tail(&src->lru, ret);
- 
- 	/*
--- 
-2.7.4
-
+And yes, it does look like ->lookup()-like calling conventions end up better,
+especially if we make an instance return d_splice_alias() result...
