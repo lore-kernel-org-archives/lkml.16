@@ -1,208 +1,194 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70817211497;
-	Fri, 14 Feb 2025 09:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED68722D4F6
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739524100; cv=none; b=uNNwFYgqPX4p8d7oZpW37/5NltZ0MiJa8eis2R2OIAN48s0C1MbIREr0aYaNcZ3PUKQ0EYdtbVQXuTqYyvJDksxU/GKUnF6j42vD/5o0kTj6YzgsFhNVf3UNYtYCxU8iNkG4l89cGYw1qySGoiXGlUvj86TRKa3q5JOR4STqKyY=
+	t=1739524107; cv=none; b=iHwT1oRdQ5BZw5dxNuJRARMnL0dQpgCLie6zt/lK9JCa5aBH5seLXZstNKUClbIRGcleJMSkHY3PH/qVOWhbIRmL/4AAKiv0RgBHwOsZno4zn+RTKLLONsZSRJNolZlBSOqEuiMobq32vj4gDJW57dkUdfElRSRRRYiF2OEIHHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739524100; c=relaxed/simple;
-	bh=0JzTWN6wUPtJeL/o+wpV1b/rj6YfptImOLmfDxUrVzw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VX05VzIRQcx+I4qGAInLznYVatvoeuH2h3iWCWpp7Qrp2knXDsE0MdzWYzKsTkxHqSJRE6eEhjpN+DVcrX53ZN4XPJYCJLXK96roqTyH1kQMHVqrvyF3VfpYwL/1NHremYl167SqHeT4SrjVTRz+NDvEyWJ/T87xnDr46iHhAbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BIqWzvco; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739524107; c=relaxed/simple;
+	bh=S/KKmbMokH0GSXh6+xn2Xwon8nvwaj8CZLF3bojbyFQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=eWGz5+GVFR9O9KQgTxB5AoSerrukdBJM0G+IEU6397Oca/jH1Sb0saR5SroqSw9cE47xIBu5dPe/hlve2rSL2/z/4VB4SDxzr4qp98PpSDd1X6ghctJdn4WL0DJv0raNX3lcjUMPfzjw9zX5uyESnYeacSV337ZDsS6WWDp2IVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=g21e2qMc; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BIqWzvco"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739524098; x=1771060098;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0JzTWN6wUPtJeL/o+wpV1b/rj6YfptImOLmfDxUrVzw=;
-  b=BIqWzvcoy5tUSnqtPBAWswofk8by9aZ+oTv9KPImmxrYKUxTQ5gahzAB
-   dfBnd0PChJWsYD2NnRtmGSJp8g71WwQmlyLe8GwfPNwXWF/nZ0MJ/CMMK
-   2fy5l+43Ac4Khm525svJUr5WJlUT7lmKUn5aIHxw9SnMOKCqLXO/4uW0M
-   56fptTnZtTqdGr9cEqIWVkMcMN9fVYqciINCIHt+xKLhM8Xppik0Q/1VZ
-   9bbgTXgVqJajGIvsZ3+gvEhMgbgtunMkuQKdin8vP9AAOhlNAEDw0Mwwx
-   CP3vFvaOTP7J6xAJ6CEdmMcWvKBalhbaDLFjqX0FnaJeYff3pVKKlLk7D
-   A==;
-X-CSE-ConnectionGUID: s1ePcxSQRiaxa/RdFTieUQ==
-X-CSE-MsgGUID: mN4VDIhARZ+Z2jho7ldsZw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51694738"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="51694738"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 01:08:17 -0800
-X-CSE-ConnectionGUID: HqfMZC/CTr6rJVxU8mrbeQ==
-X-CSE-MsgGUID: 0VJu2ws5RzyDUPPMdRkIRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="114302908"
-Received: from inlubt0246.iind.intel.com ([10.191.24.87])
-  by orviesa008.jf.intel.com with ESMTP; 14 Feb 2025 01:07:56 -0800
-From: subramanian.mohan@intel.com
-To: linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	andriy.shevchenko@linux.intel.com,
-	giometti@enneenne.com,
-	tglx@linutronix.de,
-	corbet@lwn.net
-Cc: eddie.dong@intel.com,
-	christopher.s.hall@intel.com,
-	pandith.n@intel.com,
-	thejesh.reddy.t.r@intel.com,
-	david.zage@intel.com,
-	srinivasan.chinnadurai@intel.com,
-	subramanian.mohan@intel.com
-Subject: [PATCH v14 0/4] Add support for Intel PPS Generator
-Date: Fri, 14 Feb 2025 14:37:51 +0530
-Message-Id: <20250214090755.37450-1-subramanian.mohan@intel.com>
-X-Mailer: git-send-email 2.35.3
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="g21e2qMc"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38dd91c313bso1025528f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 01:08:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739524102; x=1740128902; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FRBZ9LnljeKdyPrMlrMbswWuQjbGiHO54rQVeWsI8fs=;
+        b=g21e2qMcOnjxZ30r+2Yz/IFN7l24CJ6jquAM+mcJDV+f1PvNYP+Om9UUeRFLd1bqaG
+         UJSkxCtfNzv0Ol0tXutTTCCfzAlu9PMysmfVdu1chudjTcmAwyOUXkcOVnd5bzE+GD3O
+         wOBDLLtIbnup6OVo/IzYN+Xu6qAywnsUE2klhzoHpq7M7bB6Kr5TNzypWrMoFBCYpg8M
+         a8wDmi4Sji3Y0X3K3LwqIazymSo7cTLXITUxQu9Kc02DnzL7z4HpbWkW4BVGckB95GME
+         KZ2JPO35slYaxC5vOQeCZcSrWOJIoi37aHQYZ2v6hPnBVYGp5vuwlcFdh6Jou9TUq8Wj
+         keKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739524102; x=1740128902;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FRBZ9LnljeKdyPrMlrMbswWuQjbGiHO54rQVeWsI8fs=;
+        b=L+OTkkUMaJov9GAUYMsp89F8fz2E2tmDP/i/8jmdrQmyaC6Qn4+8NTE6hztHHjWI9Z
+         X/BK+5P/a3qgJ+HPjns+tuiuqq4OHhFuIRllUSa2RUiJusWJy9ywGx2RKlceusQbs86/
+         oXjjtlHyPlqX/Y4ZKTilKEsWjNjpbswsi8Bi9aLyD8QGA5neSorOrTDVys7KKA2sqRjf
+         1E2qU9MoTr95/wNmnm3wmqKIQPKCBLhfRqLSsNhoX0fQUho2BNKTZqpXXt5Jr+yVSmCP
+         JYU6sNp5QzAcik9O4kkR7bXE9ZYuvg3jVs1hK/g9cZHQ2yvHBJ27rUsiE+xUjyWxIW6A
+         FeoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVW8YRffnYJxb4ZLh5rSa/Od31EkXN81RRGVlJLpctNQG+/PPGV3sxnPHAZZAU9xugo0PRNiHzWordTo9A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6SWgT15Z80+xPtaZ2Wb1ztyeNcTbiyWH38R9Gn8RFeTmcB8ha
+	OWWnuAF0vfSYa4Ed6YnLbFtb4PbFnf702fwsciTV2jSPzMgeFPaFS1psqXkCQpU=
+X-Gm-Gg: ASbGnct8KM7V355epMJg55Gox9/qQbwROeSDHukggcoKK29+53YGZQtZkr0GtfgsWxR
+	y5na2gP/3JAmhlOzlFK08ZHM/pWWxflpafT8hCgaLS283vJmK2dDTGU6y90xKC55JOXXhfukq7o
+	1+nClvPyFa6kRFMr0f3K/sbK1258Mk//ZklwgKalsbG7y7Pj90ZBzVILRn8hjbjg1rJ2Tl30NyW
+	ie9YcmXT17ygRVgg43UTnlO1mUMa3UQPX2sCFQkutbCIA1BOXmnkar+xFmRsEx503LxEkJNMKJI
+	kLgPVO5piWSkqZs=
+X-Google-Smtp-Source: AGHT+IE0/rSxXHcT0d8T4npVkX/xeGrYvHZ7lAWe+eAfluyBR05NqZXCHJQG0OjEOL1oPVBXgPrHSg==
+X-Received: by 2002:a05:6000:18a4:b0:38f:3009:61d7 with SMTP id ffacd0b85a97d-38f30096396mr623237f8f.4.1739524100676;
+        Fri, 14 Feb 2025 01:08:20 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:baa6:bc65:b9db:3759])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38f259d8dd6sm4117993f8f.62.2025.02.14.01.08.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 01:08:20 -0800 (PST)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Martijn van Deventer <linux@martijnvandeventer.nl>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,  Michael Turquette
+ <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>,  Kevin Hilman
+ <khilman@baylibre.com>,  Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>,  linux-amlogic@lists.infradead.org,
+  linux-clk@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: meson: g12a: Fix kernel warnings when no display
+ attached
+In-Reply-To: <20250213221702.606-1-linux@martijnvandeventer.nl> (Martijn van
+	Deventer's message of "Thu, 13 Feb 2025 23:17:01 +0100")
+References: <20250213221702.606-1-linux@martijnvandeventer.nl>
+User-Agent: mu4e 1.12.8; emacs 29.4
+Date: Fri, 14 Feb 2025 10:08:19 +0100
+Message-ID: <1jpljkzyf0.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Subramanian Mohan <subramanian.mohan@intel.com>
+On Thu 13 Feb 2025 at 23:17, Martijn van Deventer <linux@martijnvandeventer.nl> wrote:
 
-The goal of the PPS (Pulse Per Second) hardware/software is to generate a
-signal from the system on a wire so that some third-party hardware can
-observe that signal and judge how close the system's time is to another
-system or piece of hardware.
+> When booting SM1 or G12A boards without a dislay attached to HDMI,
+> the kernel shows the following warning:
+>
+> [CRTC:46:meson_crtc] vblank wait timed out
+> WARNING: CPU: 2 PID: 265 at drivers/gpu/drm/drm_atomic_helper.c:1682 drm_atomic_helper_wait_for_vblanks.part.0+0x240/0x264
+> CPU: 2 UID: 0 PID: 265 Comm: setfont Tainted: G         C
+> Tainted: [C]=CRAP
+> pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> pc : drm_atomic_helper_wait_for_vblanks.part.0+0x240/0x264
+> lr : drm_atomic_helper_wait_for_vblanks.part.0+0x240/0x264
+> Call trace:
+>  drm_atomic_helper_wait_for_vblanks.part.0+0x240/0x264
+>  drm_atomic_helper_commit_tail_rpm+0x84/0xa0
+>  commit_tail+0xa4/0x18c
+>  drm_atomic_helper_commit+0x164/0x178
+>  drm_atomic_commit+0xb4/0xec
+>  drm_client_modeset_commit_atomic+0x210/0x270
+>  drm_client_modeset_commit_locked+0x5c/0x188
+>  drm_fb_helper_pan_display+0xb8/0x1d4
+>  fb_pan_display+0x7c/0x120
+>  bit_update_start+0x20/0x48
+>  fbcon_switch+0x418/0x54c
+>  el0t_64_sync+0x194/0x198
+>
+> This happens when the kernel disables the unused clocks.
+> Sometimes this causes the boot to hang.
+>
+> By (re)adding the flag CLK_IGNORE_UNUSED to the VCLK2 clocks, these
+> clocks will not be disabled.
+>
+> This partially reverts commit b70cb1a21a54 ("clk: meson: g12a:
+> make VCLK2 and ENCL clock path configurable by CCF").
 
-Existing methods (like parallel ports) require software to flip a bit at
-just the right time to create a PPS signal. Many things can prevent
-software from doing this precisely. This (Timed I/O) method is better
-because software only "arms" the hardware in advance and then depends on
-the hardware to "fire" and flip the signal at just the right time.
+It looks like DRM needs those clock enabled regardless of connection
+status on HDMI. Even with this change applied, you would get the same
+problem again if the bootloader does not take of turning the clock on,
+which is not a given.
 
-To generate a PPS signal with this new hardware, the kernel wakes up
-twice a second, once for 1->0 edge and other for the 0->1 edge. It does
-this shortly (~10ms) before the actual change in the signal needs to be
-made. It computes the TSC value at which edge will happen, convert to a
-value hardware understands and program this value to Timed I/O hardware.
-The actual edge transition happens without any further action from the
-kernel.
+CLK_IGNORE_UNUSED gives not guarantee a clock will be enabled or stay
+enabled at any point.
 
-The result here is a signal coming out of the system that is roughly
-1,000 times more accurate than the old methods. If the system is heavily
-loaded, the difference in accuracy is larger in old methods.
+A proper fix to this issue should be done in DRM, IMO.
 
-Application Interface:
-The API to use Timed I/O is very simple. It is enabled and disabled by
-writing a '1' or '0' value to the sysfs enable attribute associated with
-the Timed I/O PPS device. Each Timed I/O pin is represented by a PPS
-device. When enabled, a pulse-per-second (PPS) synchronized with the
-system clock is continuously produced on the Timed I/O pin, otherwise it
-is pulled low.
-
-The Timed I/O signal on the motherboard is enabled in the BIOS setup.
-Intel Advanced Menu -> PCH IO Configuration -> Timed I/O <Enable>
-
-References:
-https://en.wikipedia.org/wiki/Pulse-per-second_signal
-https://drive.google.com/file/d/1vkBRRDuELmY8I3FlfOZaEBp-DxLW6t_V/view
-https://youtu.be/JLUTT-lrDqw
-
-Patch 1 Replaced copy of pps-gen info struct with const pointer in
-pps-gen framework..
-Patch 2 adds the pps(pulse per second) generator tio driver to the pps
-subsystem.
-Patch 3 documentation and usage of the pps tio generator module.
-Patch 4 includes documentation for sysfs interface.
-
-These patches are based on the timers/core branch:
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/?h=timers/core
-These changes are dependent on patches that are merged in [1].
-
-Please help to review the changes.
-
-Thanks in advance,
-Subramanian Mohan
-
-Changes from v2:
- - Split patch 1 to remove the functions in later stages.
- - Include required headers in pps_gen_tio.
-
-Changes from v3:
- - Corrections in Documentation.
- - Introducing non-RFC version of the patch series.
-
-Changes from v4:
- - Setting id in ice_ptp
- - Modified conversion logic in convert_base_to_cs.
- - Included the usage of the APIs in the commit message of 2nd patch.
-
-Changes from v5:
- - Change nsecs variable to use_nsecs.
- - Change order of 1&2 patches and modify the commit message.
- - Add sysfs abi file entry in MAINTAINERS file.
- - Add check to find if any event is missed and disable hardware
-   accordingly.
-
-Changes from v6:
- - Split patch 1 into 1&2 patches.
- - Add check for overflow in convert_ns_to_cs().
- - Refine commit messages.
-
-Changes from v7:
- - Split the if condition and return error if current time exceeds
-   expire time.
- - Update kernel version and month in ABI file.
-
-Changes from v8:
- - Add function to enable Timed I/O.
- - Changed the updating of tio->enabled to a centralized place in
-   disable and enable functions.
-
-Changes from v9:
- - use tio->enabled instead of reading ctrl register.
- - change error code in enable_store to -ENODEV.
-
-Changes from v10:
- - Rebased to latest codebase.
-
-Changes from v11:
- - Rebased to latest codebase.
-
-Changes from v12:
- - As part of pps-gen framework, Replaced copy of pps-gen info struct
-   with const pointer.
- - TIO driver adapted to pps-gen framework.
- - Fixed review comments by Andy.
- - Rebased to latest codebase.
-
-Changes from v13:
- - Fixed review comments by Andy.
- - Rebased to latest codebase.
-
-Subramanian Mohan (4):
-  drivers pps/generators: replace copy of pps-gen info struct with const
-    pointer
-  pps: generators: Add PPS Generator TIO Driver
-  Documentation: driver-api: pps: Add Intel Timed I/O PPS generator
-  ABI: pps: Add ABI documentation for Intel TIO
-
- Documentation/ABI/testing/sysfs-pps-gen-tio |   6 +
- Documentation/driver-api/pps.rst            |  27 +-
- MAINTAINERS                                 |   1 +
- drivers/pps/generators/Kconfig              |  16 ++
- drivers/pps/generators/Makefile             |   1 +
- drivers/pps/generators/pps_gen-dummy.c      |   2 +-
- drivers/pps/generators/pps_gen.c            |  14 +-
- drivers/pps/generators/pps_gen_tio.c        | 272 ++++++++++++++++++++
- drivers/pps/generators/sysfs.c              |   6 +-
- include/linux/pps_gen_kernel.h              |   4 +-
- 10 files changed, 334 insertions(+), 15 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-pps-gen-tio
- create mode 100644 drivers/pps/generators/pps_gen_tio.c
+>
+> Fixes: b70cb1a21a54 ("clk: meson: g12a: make VCLK2 and ENCL clock path configurable by CCF").
+> Signed-off-by: Martijn van Deventer <linux@martijnvandeventer.nl>
+> ---
+>  drivers/clk/meson/g12a.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index cfffd434e998..1651898658f5 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -3234,7 +3234,7 @@ static struct clk_regmap g12a_vclk2_div = {
+>  			&g12a_vclk2_input.hw
+>  		},
+>  		.num_parents = 1,
+> -		.flags = CLK_SET_RATE_GATE,
+> +		.flags = CLK_SET_RATE_GATE | CLK_IGNORE_UNUSED,
+>  	},
+>  };
+>  
+> @@ -3270,7 +3270,7 @@ static struct clk_regmap g12a_vclk2 = {
+>  		.ops = &meson_vclk_gate_ops,
+>  		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2_div.hw },
+>  		.num_parents = 1,
+> -		.flags = CLK_SET_RATE_PARENT,
+> +		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+>  	},
+>  };
+>  
+> @@ -3354,7 +3354,7 @@ static struct clk_regmap g12a_vclk2_div1 = {
+>  		.ops = &clk_regmap_gate_ops,
+>  		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2.hw },
+>  		.num_parents = 1,
+> -		.flags = CLK_SET_RATE_PARENT,
+> +		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+>  	},
+>  };
+>  
+> @@ -3368,7 +3368,7 @@ static struct clk_regmap g12a_vclk2_div2_en = {
+>  		.ops = &clk_regmap_gate_ops,
+>  		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2.hw },
+>  		.num_parents = 1,
+> -		.flags = CLK_SET_RATE_PARENT,
+> +		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+>  	},
+>  };
+>  
+> @@ -3382,7 +3382,7 @@ static struct clk_regmap g12a_vclk2_div4_en = {
+>  		.ops = &clk_regmap_gate_ops,
+>  		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2.hw },
+>  		.num_parents = 1,
+> -		.flags = CLK_SET_RATE_PARENT,
+> +		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+>  	},
+>  };
+>  
+> @@ -3396,7 +3396,7 @@ static struct clk_regmap g12a_vclk2_div6_en = {
+>  		.ops = &clk_regmap_gate_ops,
+>  		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2.hw },
+>  		.num_parents = 1,
+> -		.flags = CLK_SET_RATE_PARENT,
+> +		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+>  	},
+>  };
 
 -- 
-2.35.3
-
+Jerome
