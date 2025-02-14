@@ -1,33 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA19185B48;
-	Fri, 14 Feb 2025 07:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517E613A3EC
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739517662; cv=none; b=uYeSZNIepnFuyvqH7Wq5+gqxRKmK8PS8U9nu0zeIapsiFcVeTThq7n3nKL6kh4GQ/c6vYGd5KNmOywzjC+zBo4lwR+LTgnDKBD1nvG5+O4JFN7fFPaMYeze4SHrhBkZM20VcwBOe6PsrwPzKnon93z88BDPO85CHExK/AWMX/vE=
+	t=1739517674; cv=none; b=D+x84QwJ/ttAqZAI/hdyfkEOD20Lcwj9HbNyQVUerenffInL41YUeT/8ExOkuR+lTLuDMxdLtRjtrKACx5JKNLHZ3IhRT9Hae+37NguKiIWpRlFQ3eZvL0K960+VYAChCnS2aCs4S06B2tVRZQuwFmZHNkmmOGlOZFXGLvo+XHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739517662; c=relaxed/simple;
-	bh=WhwhWFassfKgQBbi2dG7qdh9/+mxzvg++tUUcPh4d3Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N76D4r4oi2nIlzMd2XpVzkb0VpiPk46xoP0unw1z2ndO7zknyX0e6jfJqL+PvpiBlYRGHjhvSwNLg8As4Q0xCJUNe+/nXs3fcvkDinRotrvb/qUNfx9YAmwaaCkIXWEVDgpF/tljIdGimYfZBhz+DS7bbhXlOmvVTYiuxBMCQ5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yl07UI8r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739517674; c=relaxed/simple;
+	bh=uh4roUMWMYdqNC0OrZ1qQP4x59xO9f04AC8O9CaKaA8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=pZgC0ykOE9oWfocWEtf2a82grSAtW5AM2GB3eqHaMsFAmyxXzt91xOh8RR9bfnA8HgpkQy2XAnTObw+TVFgZcdO1vP7Lk2zrIi74urjxYtAKbRpI+QxWIUgfBe0yZna/Im/eedFaXMrvPWI8N3lDA74N9HlVWV2paZVifChwZdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=J7/WWZex; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yl07UI8r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96E5CC4CEE8;
-	Fri, 14 Feb 2025 07:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739517662;
-	bh=WhwhWFassfKgQBbi2dG7qdh9/+mxzvg++tUUcPh4d3Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Yl07UI8rhKSCGMyWR7Ep/ndO0yXTn9JuuXrkR4RkyJD0EYwyf/oBkSxFHtL38oRHk
-	 9CvJ5WJoC1wsr4vZiWjhohCQmJ2qS8gVeac/hmLjhbdHBGPGpmLUwVNrZVG9gXEiQS
-	 uLlwHtzlGMIMNVA8ApbrIxbebawMEc/DmmyBfGXADVrvYQ0beKiTtXlCK7scE857Lb
-	 WkO/2CcDUJ2xwoP2VR269Zr/3CU3xtsXreNNMYmsLAtSoGhhi2n1h2qTL6DLI+EXQ8
-	 8L7N/uM/6NlNecqJuJ2uY6rgOBP1BEIHItrMDGshXmYbUqnOeBidl29loqTleyPw3W
-	 7OBxcjmTvJ/lg==
-Message-ID: <b09aeab3-5dc0-4f0f-bf52-d61865c2bbda@kernel.org>
-Date: Fri, 14 Feb 2025 08:20:55 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="J7/WWZex"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51E21e6o014567;
+	Fri, 14 Feb 2025 07:21:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=YnncP6
+	16e8oEecv/+iRtRli894a3zkA8st46Zh9tfGA=; b=J7/WWZexS3aRqFtkQvFILk
+	4q8uQeyDtXly3Jbv8udssCg3+w4sKqTpKsAfuemD14ajGnAKSs7G4eGU3XLxW/Hq
+	yXcR4vGF1zOEyULlZbhdEKZudltfwxzkz+fv7aNOP9893ErEj6Ra522c8XFhEj/e
+	1VjvBBykNkArhhgGbnxAaNHptrUq4myfgwDfSHmoIteXeimRQUx2sqXYByQaf0hZ
+	A5cTgaqeyOVRCY/gE+8EM78qld8o3aOL+fPFrwdg4OVT8+dCJmdv3hRTndvMTTRl
+	W9dL3PSRccFDL0XoiOnK8mqXYBi783/Czr07Ic4UblqMMFs6ougnZwWaXaIMEYHg
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44svp096eh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 07:21:07 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51E6dl5N028204;
+	Fri, 14 Feb 2025 07:21:06 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44phyytkmx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 07:21:06 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51E7L4hV39715244
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Feb 2025 07:21:04 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ACEF52004E;
+	Fri, 14 Feb 2025 07:21:04 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4B1EE20040;
+	Fri, 14 Feb 2025 07:21:03 +0000 (GMT)
+Received: from [9.43.98.203] (unknown [9.43.98.203])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 14 Feb 2025 07:21:02 +0000 (GMT)
+Message-ID: <08077c71-41e0-4bb9-ba20-a856ea8ac4bb@linux.ibm.com>
+Date: Fri, 14 Feb 2025 12:51:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,90 +62,131 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/15] dt-bindings: mfd: syscon: add
- microchip,sama7d65-sfrbu
-To: Conor Dooley <conor@kernel.org>
-Cc: Ryan.Wanner@microchip.com, lee@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, claudiu.beznea@tuxon.dev,
- sre@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
- p.zabel@pengutronix.de, linux@armlinux.org.uk, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-References: <cover.1739221064.git.Ryan.Wanner@microchip.com>
- <4cac19e32295c708d72b9fc6ba342b5c961fb6c3.1739221064.git.Ryan.Wanner@microchip.com>
- <20250211-therapeutic-futuristic-parakeet-204cae@krzk-bin>
- <20250213-shrouded-carnage-65e11cff5bb4@spud>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [linux-next-20250212] syscall kexec_file_load not available
+To: Hari Bathini <hbathini@linux.ibm.com>,
+        Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <8e73069b-5987-4a08-b13d-13fe691092ad@linux.vnet.ibm.com>
+ <77c11ea2-f3ae-497a-aaba-f7b33f46743d@linux.ibm.com>
+ <da9b637a-962a-4a9f-a4bf-b79e6119b29c@linux.ibm.com>
+ <a4bbf5a8-2d16-413e-b69c-5b72388989b2@linux.ibm.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250213-shrouded-carnage-65e11cff5bb4@spud>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <a4bbf5a8-2d16-413e-b69c-5b72388989b2@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: XtGnGGddHBgZaQ4hrSAbTBq407s1Ik-c
+X-Proofpoint-GUID: XtGnGGddHBgZaQ4hrSAbTBq407s1Ik-c
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-14_02,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxscore=0 malwarescore=0 phishscore=0 spamscore=0
+ adultscore=0 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
+ bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502140051
 
-On 13/02/2025 21:30, Conor Dooley wrote:
->>> diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
->>> index 51d896c88dafa..727292ffe092e 100644
->>> --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
->>> +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
->>> @@ -91,6 +91,7 @@ select:
->>>            - microchip,mpfs-sysreg-scb
->>>            - microchip,sam9x60-sfr
->>>            - microchip,sama7d65-ddr3phy
->>> +          - microchip,sama7d65-sfrbu
+
+
+
+On 14/02/25 12:38, Hari Bathini wrote:
+>
+>
+> On 14/02/25 12:15 pm, Sourabh Jain wrote:
+>> Hello Hari,
 >>
->> You got comment on #1 of your v1, so if you make exactly the same
->> mistake in other patches then fix it there as well.
 >>
->> Apply v1 Rob's comments to all your patches.
-> 
-> Actually, this patch v1 did put it in both lists, but here it got
-> dropped from the second list:
-> https://lore.kernel.org/all/20250130233431.GB1868322-robh@kernel.org/
+>> On 14/02/25 12:02, Hari Bathini wrote:
+>>>
+>>>
+>>> On 13/02/25 8:34 pm, Venkat Rao Bagalkote wrote:
+>>>> Greetings!!!
+>>>>
+>>>>  From kernel next-20250210, I am observing syscall kexec_file_load 
+>>>> not available, there by kdump service is failing to start.
+>>>>
+>>>>
+>>>> Logs:
+>>>>
+>>>> [root@ltc-zzci-1 ~]# kexec -p --initrd=/boot/initramfs-6.14.0-rc2- 
+>>>> next-20250212kdump.img /boot/vmlinuz-6.14.0-rc2-next-20250212 -c
+>>>> Warning: append= option is not passed. Using the first kernel root 
+>>>> partition
+>>>> Modified cmdline: elfcorehdr=311424K root=UUID=b5b1f89c- 
+>>>> d479-48b3-90e2-744a2fd05667
+>>>> [root@ltc-zzci-1 ~]# kexec -p --initrd=/boot/initramfs-6.14.0-rc2- 
+>>>> next-20250212kdump.img /boot/vmlinuz-6.14.0-rc2-next-20250212 -s
+>>>> syscall kexec_file_load not available.
+>>>> [root@ltc-zzci-1 ~]# kexec -v
+>>>> kexec-tools 2.0.27
+>>>> [root@ltc-zzci-1 ~]# uname -r
+>>>> 6.14.0-rc2-next-20250212
+>>>>
+>>>
+>>> Is the kernel built with CONFIG_KEXEC_FILE ?
+>>
+>> I am able to reproduce it with CONFIG_KEXEC_FILE enabled.
+>>
+>> Seems like there is something went wrong in next-20250210 and 
+>> next-20250212.
+>>
+>> kexec -p --initrd=/boot/initramfs-6.14.0-rc2-next-20250210kdump.img / 
+>> boot/vmlinuz-6.14.0-rc2-next-20250210 -d -s
+>>
+>> Try gzip decompression.
+>> Try LZMA decompression.
+>> [ 3375.712319] kexec_file: kernel: 00000000e539303c kernel_size: 
+>> 0x2cdacf0
+>> [ 3375.717022] ima: kexec measurement buffer for the loaded kernel at 
+>> 0x0.
+>> [ 3375.717076] kexec_elf: Loaded the kernel at 0x0
+>> [ 3375.717094] kexec_elf: Loaded purgatory at 0x0
+>> [ 3375.717104] Loaded the backup region at 0x0
+>> [ 3375.717130] crash_core: Crash PT_LOAD ELF header. 
+>> phdr=000000004720e656 vaddr=0xc000000000000000, paddr=0x0, sz=0x10000 
+>> e_phnum=18 p_offset=0x0
+>> [ 3375.717156] crash_core: Crash PT_LOAD ELF header. 
+>> phdr=0000000005eb3f14 vaddr=0xc000000000010000, paddr=0x10000, 
+>> sz=0xfff0000 e_phnum=19 p_offset=0x10000
+>> [ 3375.717174] crash_core: Crash PT_LOAD ELF header. 
+>> phdr=000000000ec70071 vaddr=0xc00000001ec20000, paddr=0x1ec20000, 
+>> sz=0x13e0000 e_phnum=20 p_offset=0x1ec20000
+>> [ 3375.717192] crash_core: Crash PT_LOAD ELF header. 
+>> phdr=00000000b66c9c25 vaddr=0xc000000050000000, paddr=0x50000000, 
+>> sz=0x3b0000000 e_phnum=21 p_offset=0x50000000
+>> [ 3375.717215] Loaded elf core header at 0x0, bufsz=0x1000 memsz=0x80000
+>> [ 3375.717229] kexec_elf: Loaded initrd at 0x0
+>> [ 3375.718043] Memory node path: /memory@0
+>> [ 3375.722854] kexec_elf: Loaded device tree at 0x0
+>> syscall kexec_file_load not available.
+>>
+>> Kernel is reporting that all kexec segments are getting loaded at 0x0.
+>>
+>> Running kexec with strace shows that kexec_file_load system return -1 
+>> EINVAL.
+>>
+>> kexec_file_load(3, 4, 1, "\0", KEXEC_FILE_ON_CRASH) = -1 EINVAL 
+>> (Invalid argument)
+>>
+>> Based on the logs printed on the console and kexec_file_load return 
+>> value. I am suspecting
+>> kexec_file_load returned early form sanity_check_segment_list() 
+>> because the segment is 0x0.
+>>
+>> I am investigating further to find how segment.mem for all segment is 
+>> 0x0.
+>>
+>
+> Interesting. Thanks for the update, Sourabh.
+> I believe the error "syscall kexec_file_load not available." is
+> inappropriate and misleading. That should be fixed too.
 
+Agree. It is happening because kexec is handling ENOSYS, EINVAL, 
+ENOEXEC, and ENOTSUP
+as a single case and printing "syscall kexec_file_load not available".
 
-That's even weirder...
+I will send a fix for kexec tool to avoid this confusing error message.
 
-Best regards,
-Krzysztof
+Thanks,
+Sourabh Jain
