@@ -1,130 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF30F25A65B
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CC0230D0A;
+	Fri, 14 Feb 2025 09:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739525225; cv=none; b=LsW4WrKjSrjD8F7KJDhZRySzx+m+auav5N3VZijfeAMQlzbxicfMpq4TafpZ90+Y7Ij5tUBb6IfbH3q4ebULJejaoeLfGjBUFuScPrKDLRLT2pM/fC+uO53k3Z04Gc05xmXvz6acMACAiAN+6S9cq+tt6wODELo2tj49pMVtsTA=
+	t=1739525369; cv=none; b=RSUH8pH7oihU91NtwNnozOj5w9e+5r6Q9S7b25xhJupi9GsUnhnxCeeKaOxzpVXo1ZVTjsbY1n5OoD6e+PIplWUkFAaWqFH3VS6JHFPBcLV7bIDzz1U5Kol6yN5bCP/Xk85bnBO0XuKmEJPg/r+4rstAIxxwZIAzrlfc9ZPqbmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739525225; c=relaxed/simple;
-	bh=uTgUtNO8406O5vWKaN5vokRgtyiqaXrMetNPncVI2JE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r2/L6qEysD1jmoDUu+DidjKE2MY2/LShbj4tjtxjHM8NBtpdu29H3QM8UG+XwpbvkyP+AC9tAbhlVzu0JgzJ4bj6nQnkuLPctWAMm2mstGqBET/eCghMXJHJ+OzomNotsh+MKUtFyoOipdV6VotTF9ZHHOwJOpj+uapFF7XQQEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GK6BEqm5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739525369; c=relaxed/simple;
+	bh=Unj9+KUmPhmjiIcXv9PQ38TPGgztU1T0Q8tpkwODRf0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qANlYOZmzAec+TBKuWnmJyVKO2U7Rv15bEI03SrAdFdeUkZIFlSOkZtG+02PLfjGAWEW1lfpvYRBP1B/gPb4BVzapUtq8hQiu+yGGYuwXkWsCn8xY4COLh5Z3+wXNdZm4B/i258HrHxIBof8GmWHJtKR3obcJqrLpX5zKSqWbsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=pdaduCTi; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GK6BEqm5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739525222;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8gnYcHx8du+Hw1GvMIJpqwsVQPG+9zeooKptV8KqTFM=;
-	b=GK6BEqm5GtzxqxJ07NtZpRyByPBaVte35jt76UbAjKJlkMlm4afJDAgzTFqn+Rb9IVyZ9l
-	Z2CLwkhTwIoO9ykDXz1pn29CJ3UjNxEOlKXYVxxu+3Ttv4zUQTwEqnEZ6358FJnP4UA/Nj
-	k0b5190A3jVmrhN3ULEKakiCgTdS+S8=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-578-nM1hhWhROmW1GiMymFciwA-1; Fri,
- 14 Feb 2025 04:26:56 -0500
-X-MC-Unique: nM1hhWhROmW1GiMymFciwA-1
-X-Mimecast-MFC-AGG-ID: nM1hhWhROmW1GiMymFciwA_1739525215
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1CF011800373;
-	Fri, 14 Feb 2025 09:26:55 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.45.225.79])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9D362180035E;
-	Fri, 14 Feb 2025 09:26:51 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v5 8/8] drm/i915/display: Add drm_panic support for 4-tiling with DPT
-Date: Fri, 14 Feb 2025 10:21:43 +0100
-Message-ID: <20250214092608.2555218-9-jfalempe@redhat.com>
-In-Reply-To: <20250214092608.2555218-1-jfalempe@redhat.com>
-References: <20250214092608.2555218-1-jfalempe@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="pdaduCTi"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739525363; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=b6mdXYOfZ9pTQzmmFy++yT48ZTyBGn00CrwkhOAHtZ4=;
+	b=pdaduCTio49Caiuk75ArWg9RcMmH7nrE1dk1qdwuQDqeEd1/NOT2ST1kjUoOsxYA+tI4L/r6m2DO/fCUEhZFN4BJbuXJkYag+cxPXKxLlPTJeuEglbBvoeQagceR3wX27Te880oj+keTnoIpIEwJFnPYiTYTn5wu8PcQTjyCDAc=
+Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPQRTw-_1739525360 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 14 Feb 2025 17:29:21 +0800
+Message-ID: <dceb65c1-9d8a-4675-9354-574deaf141be@linux.alibaba.com>
+Date: Fri, 14 Feb 2025 17:29:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/4] x86/mce: dump error msg from severities
+To: "Luck, Tony" <tony.luck@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+ "nao.horiguchi@gmail.com" <nao.horiguchi@gmail.com>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "linmiaohe@huawei.com" <linmiaohe@huawei.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
+ "tianruidong@linux.alibaba.com" <tianruidong@linux.alibaba.com>
+References: <20250211060200.33845-1-xueshuai@linux.alibaba.com>
+ <20250211060200.33845-3-xueshuai@linux.alibaba.com>
+ <SJ1PR11MB6083F8EDC173234D31D6708DFCFD2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <SJ1PR11MB6083F8EDC173234D31D6708DFCFD2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Alder Lake and later, it's not possible to disable tiling when DPT
-is enabled.
-So this commit implements 4-Tiling support, to still be able to draw
-the panic screen.
 
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
----
- .../gpu/drm/i915/display/intel_atomic_plane.c | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic_plane.c b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-index 4cb12fdc21fe4..2a319cd319566 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-@@ -1241,6 +1241,25 @@ static void intel_ytile_set_pixel(struct drm_scanout_buffer *sb, unsigned int x,
- 	iosys_map_wr(&sb->map[0], offset, u32, color);
- }
- 
-+static void intel_4tile_set_pixel(struct drm_scanout_buffer *sb, unsigned int x, unsigned int y,
-+				  u32 color)
-+{
-+	u32 offset;
-+	unsigned int swizzle;
-+	unsigned int width_in_blocks = DIV_ROUND_UP(sb->width, 32);
-+
-+	/* Block offset */
-+	offset = ((y / YTILE_HEIGHT) * width_in_blocks + (x / YTILE_WIDTH)) * YTILE_SIZE;
-+
-+	x = x % YTILE_WIDTH;
-+	y = y % YTILE_HEIGHT;
-+
-+	/* bit order inside a block is y4 y3 x4 y2 x3 x2 y1 y0 x1 x0 */
-+	swizzle = (x & 3) | ((y & 3) << 2) | ((x & 0xc) << 2) | (y & 4) << 4 | ((x & 0x10) << 3) | ((y & 0x18) << 5);
-+	offset += swizzle * 4;
-+	iosys_map_wr(&sb->map[0], offset, u32, color);
-+}
-+
- static void intel_panic_flush(struct drm_plane *plane)
- {
- 	struct intel_plane_state *plane_state = to_intel_plane_state(plane->state);
-@@ -1275,7 +1294,6 @@ static void (*intel_get_tiling_func(u64 fb_modifier))(struct drm_scanout_buffer
- 	case I915_FORMAT_MOD_Y_TILED_GEN12_RC_CCS:
- 	case I915_FORMAT_MOD_Y_TILED_GEN12_MC_CCS:
- 		return intel_ytile_set_pixel;
--	case I915_FORMAT_MOD_X_TILED:
- 	case I915_FORMAT_MOD_4_TILED:
- 	case I915_FORMAT_MOD_4_TILED_DG2_RC_CCS:
- 	case I915_FORMAT_MOD_4_TILED_DG2_MC_CCS:
-@@ -1285,6 +1303,8 @@ static void (*intel_get_tiling_func(u64 fb_modifier))(struct drm_scanout_buffer
- 	case I915_FORMAT_MOD_4_TILED_MTL_MC_CCS:
- 	case I915_FORMAT_MOD_4_TILED_BMG_CCS:
- 	case I915_FORMAT_MOD_4_TILED_LNL_CCS:
-+		return intel_4tile_set_pixel;
-+	case I915_FORMAT_MOD_X_TILED:
- 	case I915_FORMAT_MOD_Yf_TILED:
- 	case I915_FORMAT_MOD_Yf_TILED_CCS:
- 	default:
--- 
-2.47.1
+在 2025/2/12 00:44, Luck, Tony 写道:
+>> The message in severities is useful for identifying the type of MCE that
+>> has occurred; dump it if it is valid.
+>>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> ---
+>>   arch/x86/kernel/cpu/mce/core.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+>> index 2919a077cd66..c1319db45b0a 100644
+>> --- a/arch/x86/kernel/cpu/mce/core.c
+>> +++ b/arch/x86/kernel/cpu/mce/core.c
+>> @@ -1456,6 +1456,8 @@ static void queue_task_work(struct mce_hw_err *err, char *msg, void (*func)(stru
+>>        if (count > 1)
+>>                return;
+>>
+>> +     if (msg)
+>> +             pr_err("%s\n", msg);
+>>        task_work_add(current, &current->mce_kill_me, TWA_RESUME);
+>>   }
+> 
+> This is called from the #MC handler. Is that a safe context to print a console
+> message? It wasn't in the past, but maybe changes to how console messages
+> are handled have changed this.
+> 
+> -Tony
 
+#MC is a kind of NMI context, as far as I know, since
+
+commit 42a0bb3f71383b457a7db362f1c69e7afb96732b
+printk/nmi: generic solution for safe printk in NMI
+
+print a console message is safe.
+
+Please correct me if I missed anything.
+
+Thanks.
+Shuai
