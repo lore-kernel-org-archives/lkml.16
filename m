@@ -1,109 +1,146 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F63022A4D2
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 08:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E1E228CB3;
+	Fri, 14 Feb 2025 08:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739523412; cv=none; b=dkwIayAEv3JFWCNUzns1ifebpcDxVyRWia5cDWLFUJW3zE/bKzHCZSxj+O4Bv2528wftuKRvWkJ2U8MgfLQxtoBkpSCh9dzr92dDrdw0ue2HNipUiQxBwgzv3uFGzAqHmFLIqYSn/K6XpiLDfU3wP+yrFpdsW/WVCzGY6HoK2FA=
+	t=1739523412; cv=none; b=RE0Fbl+oBu16sOOSfkSJCdzNCxqJkSYcPKKYN8+0R6QtmvkHdEm3joFIERcruxk7Li21+owTE99DnTzNEzfp1U/MbkKsn9MKgRJ96/wy6JCt2sN8fPubrJtaqGnIxD5Duq+VEqCf06oYDG+mvZU/OHn6qHjikEUK80w0FR6Sqe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739523412; c=relaxed/simple;
-	bh=BS5VTSANEuMoikRIGcCI8M1TbLeytLcfc+uSnp/pT58=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=jV6gyojKTjqu1lGww2VdvNMLjvzwyvx4GB+HMWnvoWDHgsslWzSeAGRQx2e1MIjjVU2utSizJPq+uHBXCgB+LU6fgB0L8PeeCGgGhhegI7gjRo3TeqQnTuD5x9EiRsv8s5eSY/C3JkFktnx9YBxmfyQaWbwPNYviSCBbZ524srk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxjaxJBa9n_TN1AA--.39903S3;
-	Fri, 14 Feb 2025 16:56:41 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBx3MRGBa9nmNARAA--.835S3;
-	Fri, 14 Feb 2025 16:56:39 +0800 (CST)
-Subject: Re: [PATCH] compiler.h: Specify correct attribute for
- .rodata..c_jump_table
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-References: <20240924062710.1243-1-yangtiezhu@loongson.cn>
- <20250212175023.rsxsw7pno57gsxps@jpoimboe>
- <b1e5e3ea-be4b-5dae-cc0d-34693429d060@loongson.cn>
- <20250213023936.lzbpgou4eallaij3@jpoimboe>
- <045d7e22-672c-b9da-38d6-8897e854f262@loongson.cn>
- <20250213185408.m5aogf2trvhvi2td@jpoimboe>
- <439175dc-caf0-3d38-89ba-ade5a364c9bb@loongson.cn>
- <20250214084415.yrffvbop2f6z3du3@jpoimboe>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
- llvm@lists.linux.dev
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <f4f6d6ef-28cd-922d-fa24-6dd451b44607@loongson.cn>
-Date: Fri, 14 Feb 2025 16:56:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	bh=UuVe/NHpjUQBGvgHKZMk6upQjW6kuksHuEMlSdnEBFk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CssS+8Lw3pyERtunUUAP0ax9wR2o3ZIQvrgavOeur+40/xkOpg4zX6BsnBs+LuN1gxv82qZQOwL4vWliQ/bIR4TsJ2+uTNmB7JIvY37BFCO5P/P5yniM3UvBcHg+W6DjaiNrukzAb36zHylGi/gq4ocwpmPrMcu49iOt4V+ew4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLb5V+BP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLb5V+BP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 915AAC4CED1;
+	Fri, 14 Feb 2025 08:56:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739523411;
+	bh=UuVe/NHpjUQBGvgHKZMk6upQjW6kuksHuEMlSdnEBFk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=PLb5V+BPTWLjazx/H83Tlhn74+H9KFyzUk70ajeyViFUEAIYZCVfwNOYniwwZdbDB
+	 PCmyg9F3+AxavgCGQOFIzm7QYLgH8p3WfaJCInKint0/6RkUlEeIth6x8yt+eVlNW4
+	 +nzeWYTsuGLpDt3tjy/6AkA/thvnUMOvuKiEtWKU9URaXha9qC0h5fJfXJa/qAxDS7
+	 ax8uJ00j6qqPPXBmuduhc5J/ZMMXznnWIPCb/tpJCZmKlafaMmFGTHf8EKLuMLDx+U
+	 IARv8fIvL9Z/CPO8DK2rglf1FxrhTSmGU6vyPM/JNiex1/u4PTeRp3kmCfoJeTWrzk
+	 E+vr+SRKF//0w==
+From: Puranjay Mohan <puranjay@kernel.org>
+To: Song Liu <song@kernel.org>
+Cc: Indu Bhagat <indu.bhagat@oracle.com>, Weinan Liu <wnliu@google.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, Mark Rutland
+ <mark.rutland@arm.com>, roman.gushchin@linux.dev, Will Deacon
+ <will@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-toolchains@vger.kernel.org, linux-kernel@vger.kernel.org,
+ live-patching@vger.kernel.org, joe.lawrence@redhat.com,
+ linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
+In-Reply-To: <CAPhsuW7fBkZaKQzLvBqsrxTvpJsfJfUBfco4i=-=C_on+GdpKg@mail.gmail.com>
+References: <20250127213310.2496133-1-wnliu@google.com>
+ <CAPhsuW6S1JPn0Dp+bhJiSVs9iUv7v7HThBSE85iaDAvw=_2TUw@mail.gmail.com>
+ <00fa304d-84bf-4fca-9b9a-f3b56cd97424@oracle.com>
+ <CAPhsuW4ct6W_4B0LFEjLePH1pAeNm4h8ePuQ3HcSoknXhQWN0w@mail.gmail.com>
+ <mb61p1pw21f0v.fsf@kernel.org>
+ <CAPhsuW5VCmuPLd8wwzBp_Divnu=uaZQcrRLsjsEOJ9GmA0TR5A@mail.gmail.com>
+ <mb61pseoiz1cq.fsf@kernel.org>
+ <CAPhsuW7bo4efVYb8uPkQ1v9TE95_CQ6+G3q4kVyt-8g-3JD6Cw@mail.gmail.com>
+ <mb61pr0411o57.fsf@kernel.org>
+ <CAPhsuW7fBkZaKQzLvBqsrxTvpJsfJfUBfco4i=-=C_on+GdpKg@mail.gmail.com>
+Date: Fri, 14 Feb 2025 08:56:45 +0000
+Message-ID: <mb61p7c5sdhv6.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250214084415.yrffvbop2f6z3du3@jpoimboe>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMBx3MRGBa9nmNARAA--.835S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFWxXw4UJry7GF15JF1UJwc_yoW8Jw48pa
-	nrA3s3Kr4UXF93tanFq3WjgrW7J347tr92qFy3KrykArsFqryFkr4fAayjva47XwnxKFWI
-	qF4Sqw4rZF4DZ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
-	JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
-	v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
-	67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
-	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jepB-UUUUU=
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-On 02/14/2025 04:44 PM, Josh Poimboeuf wrote:
-> On Fri, Feb 14, 2025 at 10:23:08AM +0800, Tiezhu Yang wrote:
->> I have a draft diff, I will do more test and send it
->> as a formal patch once the other patches are landed
->> because this patch depends on them.
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Song Liu <song@kernel.org> writes:
+
+> On Thu, Feb 13, 2025 at 2:22=E2=80=AFPM Puranjay Mohan <puranjay@kernel.o=
+rg> wrote:
+>>
+>> Song Liu <song@kernel.org> writes:
+>>
+>> > On Thu, Feb 13, 2025 at 12:38=E2=80=AFAM Puranjay Mohan <puranjay@kern=
+el.org> wrote:
+>> > [...]
+>> >>
+>> >> P.S. - The livepatch doesn't have copy_process() but only copy_signal=
+(),
+>> >> yours had copy_process() somehow.
+>> >
+>> > In my build, copy_signal is inlined to copy_process, unless I add noin=
+line.
+>> > If I do add noinline, the issue will not reproduce.
+>> >
+>> > I tried more combinations. The issue doesn't reproduce if I either
+>> > 1) add noinline to copy_signal, so we are not patching the whole
+>> >    copy_process function;
+>> > or
+>> > 2) Switch compiler from gcc 14.2.1 to gcc 11.5.0.
+>> >
+>> > So it appears something in gcc 14.2.1 is causing live patch to fail
+>> > for copy_process().
+>>
+>> So, can you test your RFC set (without SFRAME) with gcc 14.2.1, so we
+>> can be sure that it is not a sframe problem?
+>>
+>> And about having the .sframe section in the livepatch module, I realised
+>> that this set doesn't include support for reading/using sframe data from
+>> any module(livepatches included), so the patch I added for generating
+>> .sframe in kpatch is irrelevant because it is a no-op with the current s=
+etup.
 >
-> Actually since this is a bug fix, I'm thinking it should be merged in
-> the tip/objtool/urgent branch so it can go in an -rc.  Then it should be
-> trivial for me to rebase your patches on top.
-
-OK, I will send a patch based on tip/objtool/urgent branch ASAP.
-
->> The code looks something like this:
+> Puranjay,
 >
-> Looks good to me.  nit: loongarch can use the C_JUMP_TABLE_SECTION
-> define.
+> Could you please try the following?
+>
+> 1. Use gcc 11.4.1;
+> 2. Add __always_inline to copy_signal();
+> 3. Build kernel, and livepatch with the same test (we need to
+>     add __always_inline to the .patch file).
+> 4. Run gdb livepatch-xxx.ko
+> 5. In gdb do disassemble copy_process.
+>
+> In my tests, both gcc-14.2.1 and gcc-11.5.0 generated a .ko file
+> that looks weird in gdb-disassemble. Specifically, readels shows
+> copy_process is about 5.5kB, but gdb-disassemble only shows
+> 140 bytes or so for copy_process. clang doesn't seem to have
+> this problem.
+>
+> I am really curious whether you have the same problem in your
+> setup.
 
-Yes, thank you, hope you can amend it when applying my original patch,
-maybe like this:
+Hi Song,
 
-diff --git a/tools/objtool/arch/loongarch/special.c 
-b/tools/objtool/arch/loongarch/special.c
-index 27c6473608f3..e39f86d97002 100644
---- a/tools/objtool/arch/loongarch/special.c
-+++ b/tools/objtool/arch/loongarch/special.c
-@@ -131,7 +131,7 @@ static struct reloc 
-*find_reloc_of_rodata_c_jump_table(struct section *sec,
-                 if (reloc_offset(reloc) > offset)
-                         break;
+I did this test and found the same issue as you (gdb assembly broken),
+but I can see this issue even without the inlining. I think GDB tried to
+load the debuginfo and that is somehow broken therefore it fails to
+disassemblt properly.
 
--               if (!strncmp(reloc->sym->sec->name, 
-".rodata..c_jump_table", 21)) {
-+               if (!strcmp(reloc->sym->sec->name, C_JUMP_TABLE_SECTION)) {
-                         *table_size = 0;
-                         return reloc;
-                 }
+But even with inlining, I couldn't see the warning about the refcount
+with my setup.
 
 Thanks,
-Tiezhu
+Puranjay
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iIoEARYKADIWIQQ3wHGvVs/5bdl78BKwwPkjG3B2nQUCZ68FThQccHVyYW5qYXlA
+a2VybmVsLm9yZwAKCRCwwPkjG3B2nWlnAQCVrkv46a1mIlCe/RDFg5P7r37Eq6h/
+l5JEZS8o3EforwEAlJ1jBINFDr3sUWWrWm5r01MsNlkRrRlDUXf93um+dgU=
+=ADzt
+-----END PGP SIGNATURE-----
+--=-=-=--
