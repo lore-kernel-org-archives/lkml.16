@@ -1,83 +1,83 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9172D2753E0
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 12:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF4920C00B;
+	Fri, 14 Feb 2025 12:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739537569; cv=none; b=S/nUMML17b5rbxkjl2RfpmjKrj0JqRnF57aGADkUIkuYr0nje05oY583s8jFGN+wSab8sn7IELByQ5cP2/eS3Oi6rnIPOIWn6kK85LhhX4L1lIvTTaA5C5jMfGnmYlyLJTgyC9cjVhPTotqHd6oz1E1bNBmjJWzuI9EoVZwjOT0=
+	t=1739537583; cv=none; b=V/7aYeamrIwsbVarmhGyFGY+0OksLxTLD/JgvAaFppmPCnUv56DkoX9f+m47AdyiJ4nt00DvZ3c6fuIWsVTNbhYxvwOiNzB0DkCmzFx/xV4HbMSdmJlDQgnNIX0FRyTaOV3vB4O45BPxghDNJbLpNw45baWfzfVa1LWdbTo9/BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739537569; c=relaxed/simple;
-	bh=G9RP4HAdNG5lnGWFyEKBYzLe5LWlSSHiW8Y9+2BxC0M=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=M39M/MsDyA2wkuXNeGR0zUEqBh516MbsXmKSktBSRnTuiAarDosPUsHiWLUBbXHvP1MKa7X6+gFZwTMblM/sYCehYW4QxdWG2wQbZZnSk+RegSjNmrbR8fK8M4k+SwQWpBjXJiMMgZD9HbFAaIOJxyqwT1urK9SmB8cx4wLTIsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=zjVzz1tg; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1739537583; c=relaxed/simple;
+	bh=9ejsueg7AZeHeRrozATskzwELiZK9By16Q2aGUm6HLw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YQW8RwPDeheCgfQdg9kKptTzJnrEVxai7PXUd2l36MSd0uIjE3nCPmGzdMNJ3GTVnPdgqP9RA9rrS1Ha5j89pjzxdbbohwvlZzJ+80ay23quUuo2Kr0MQR3ziixw3JycZVMqbvKCIrSlG1whnHXgAgx0M51w/F+wmxMaMVTYeQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IpuYzaRQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="zjVzz1tg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1739537553; bh=8D6bFUm8Xr4oGQYiTiQbQ47HC4u4PdN6xq2N/Cs+KR8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=zjVzz1tgh3OEj3a6CWAEvdWc9iNRLvHz/pMP0I6G1pzx0lj8v18RtUBa4oaB1uNN0
-	 ug+nC4FCvvYL56zp1p56FeZ1/U5rtEz1ZYMvR3m0MOLRmAa0qHhcoCla314UJH4uSS
-	 9EOa7vNnlrNp0+Qez+s4hkWG0pqSVFmNkxyKjeO0=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
-	id B8D11E77; Fri, 14 Feb 2025 20:46:13 +0800
-X-QQ-mid: xmsmtpt1739537173t4mur07qy
-Message-ID: <tencent_C7123BDDD75DA11956CFE20D8225938DEB07@qq.com>
-X-QQ-XMAILINFO: MyirvGjpKb1j68GC9Fp5X6/XAo65JFxnfeG6UJMKkQF0hQcHYpSz+nqPTQqPj0
-	 eENzJpa4Q/eJUOqOGKQVH36RyzbQJH4eoN05ZzVBrYzdHSfjmZzfIauuuufOXkokjcD+lRdC4fVi
-	 FHpQwwy8PdZaCUPeHPLoFRhWLtPp+8rCLElGXps3ibjrC2SsxkpZQM3regN1JR43j92o+O8VzXjX
-	 wQFi3SZwu9Tng8zsvXPbFElmZ25ceOFOqWpfF2KJE4AxFsJaBHibOt9hpVZULPYtX//hlksLh3zx
-	 Aaeb372eJdB+ElCkxbUDw5VmSU+pDKJfXQHDLyStvq/e+jPei0dr6O48fqP3zXNsqnpdxRBwgJD0
-	 6pxedxCFjtPgBlMREcVA0p6GTrtrs1wmB4glBq1xyju5IqTxXg6ciCbYQ1XoGb5PMTprkxDP2mc8
-	 94+Y3glKvX3b9/LTGxjpwv0jau+LqDSGr+x854EvbsjqFsvEiEI15AGG5sC4MYENd1EcJfHP7j33
-	 1NzOcckyP54KroxGdfbg8yfPdR+v0vM+OXCbj4dxLiMgtymaB2g/A483XcZ4Xm7c4nXPZDiXhsc3
-	 D/Chde1eRrZEOz9bhT5WaS7iDMifukbv7pytvsMo01Cy08TOkEvKQ1e2We++2s9lC23shXaEfW5z
-	 Jhlu++/2neClJdpQJ5AGaNsvUC4A4Li3U35U2vWSCadyU3N7F9w4Q5Ryh6w/9rA1mhYoyvnFwICd
-	 ALYuUSa/7xKtcb+iuPaZdR7k4ePTPP6VFdtvxeqm5+Pl6YzAmfNKEpLeM0098jVbNajKqtLGQq1m
-	 fOIhxNR9be/wKLeD97B3N+8QM1Jd+tpW4C1rYmjMvlvt7G2a6gkuGArMSN8zJnNHmTpGvrg5i2cy
-	 XYot3Sm++R2csrBZgV48HQzF3A6KIVF/s+0tVjj6gW
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+e1dc29a4daf3f8051130@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [netfs?] KASAN: slab-use-after-free Write in io_submit_one
-Date: Fri, 14 Feb 2025 20:46:13 +0800
-X-OQ-MSGID: <20250214124612.826903-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <67aedac7.050a0220.21dd3.002d.GAE@google.com>
-References: <67aedac7.050a0220.21dd3.002d.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IpuYzaRQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3911FC4CED1;
+	Fri, 14 Feb 2025 12:53:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739537583;
+	bh=9ejsueg7AZeHeRrozATskzwELiZK9By16Q2aGUm6HLw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IpuYzaRQGKxX8p3ZBYd6f/v0skISdTN9CYpROzXUd2S/H6kPzb4aeMYNFTLX7VBs1
+	 XTDmqPcd8XinL+OWrmcELEfLFd2ZpCVA/q0Nsi68l8bgXmKyS2TnkoZcVS+R5sqV3s
+	 LoIYEUoT9fjpCzKHzdHwMV/S3v/IH5ybE0/DBldLwmb7Ycqm1+YOPM55Fd5Dv2h3Hq
+	 qCr63M0ieVn95aa3cEyJlh3cehb7XUGv0Hqzm0r+IDlQQIIQV7qjuAAz6vtegJZ0qA
+	 FYZuHLVz9SfxnE5+XOH96nqGunaIJ5c2OXk7YbCdnVA3Bqjg2QRFC2mDmyQC+D628j
+	 YFG7232qNgIow==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tivBw-000000000p3-193H;
+	Fri, 14 Feb 2025 13:53:13 +0100
+Date: Fri, 14 Feb 2025 13:53:12 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Liu Ying <victor.liu@nxp.com>
+Subject: Re: [PATCH] bus: simple-pm-bus: fix forced runtime PM use
+Message-ID: <Z688uKdqVDaQhm5V@hovoldconsulting.com>
+References: <20250214102130.3000-1-johan+linaro@kernel.org>
+ <CAPDyKFr98DraLvOC83rRFa=uKj_hmwS7Lj0L3JqrbqcFuhdWGA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFr98DraLvOC83rRFa=uKj_hmwS7Lj0L3JqrbqcFuhdWGA@mail.gmail.com>
 
-#syz test
+On Fri, Feb 14, 2025 at 01:36:48PM +0100, Ulf Hansson wrote:
+> On Fri, 14 Feb 2025 at 11:21, Johan Hovold <johan+linaro@kernel.org> wrote:
+> >
+> > The simple-pm-bus driver only enables runtime PM for some buses
+> > ('simple-pm-bus') yet has started calling pm_runtime_force_suspend() and
+> > pm_runtime_force_resume() during system suspend unconditionally.
+> >
+> > This currently works, but that is not obvious and depends on
+> > implementation details which may change at some point.
+> >
+> > Add dedicated system sleep ops and only call pm_runtime_force_suspend()
+> > and pm_runtime_force_resume() for buses that use runtime PM to avoid any
+> > future surprises.
+> >
+> > Fixes: c45839309c3d ("drivers: bus: simple-pm-bus: Use clocks")
+> 
+> This doesn't look like it is needed to me. It isn't broken, right?
 
-diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
-index f65affa5a9e4..40c408705f1a 100644
---- a/fs/netfs/read_collect.c
-+++ b/fs/netfs/read_collect.c
-@@ -371,9 +371,13 @@ static void netfs_rreq_assess_dio(struct netfs_io_request *rreq)
- 
- 	if (rreq->iocb) {
- 		rreq->iocb->ki_pos += rreq->transferred;
--		if (rreq->iocb->ki_complete)
-+		if (rreq->iocb->ki_complete) {
-+			if (rreq->transferred < rreq->len)
-+				refcount_add_not_zero(&rreq->iocb->ki_refcnt);
-+
- 			rreq->iocb->ki_complete(
- 				rreq->iocb, rreq->error ? rreq->error : rreq->transferred);
-+		}
- 	}
- 	if (rreq->netfs_ops->done)
- 		rreq->netfs_ops->done(rreq);
+I didn't add a CC stable tag since this currently works, but I still
+consider it a bug to call these helpers unconditionally when not using
+runtime PM.
 
+[ And during rc1 these callbacks were suddenly called and triggered a
+NULL-pointer dereference as you know. [1] ]
+
+Johan
+
+[1] https://lore.kernel.org/lkml/Z6YcjFBWAVVVANf2@hovoldconsulting.com/
