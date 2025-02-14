@@ -1,101 +1,74 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A1E2641C5;
-	Fri, 14 Feb 2025 13:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806AE230D1E;
+	Fri, 14 Feb 2025 13:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739538153; cv=none; b=akbAptXKrR4nycLaVn+sSVnLZFT6DScrWdoxxZWT1BfwNvrrWQml5klzkaj+7iHfx7EL2flc8knDkfUEgR37PHme4TSHlT8oVyJNTZgWAOWL0YL7+2z0nOA1yLTBsfcuMochfIkgDzQ8J7aOVFlBXjQBGYNZ06A3HVPZa6ezoUg=
+	t=1739538231; cv=none; b=cQkvC3Rx/XjsPnG8vD/0mhNYbfVopDZFS7M8EoMWcQIPP+q+J7GvCV332ChENfgZx5x5V6gcicvCaKbRkkA2izrW/oZB/DtZOUlWzKVnKQN9em0oVlzRVUTX1/do831ZpJY5FLt+syrhXNfVrmbmoxYD5a9dgSBf495a++/Veq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739538153; c=relaxed/simple;
-	bh=bvDayo4W7Ir1V06YiXtUNvxaBB7oTUm5Mt6/eLf+GYo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uq6cuA7VHNQuxx+Zz0IPgADOqSkebZrVB+koO4nPltdshMqqkm5vl3vXk7nNTBbqO0kA4IALQKUVLMevz8Sr/Qh9On1JJuQGCY1CwAtA+s3X5HHI41GamlhZBlx1DMx01KjVBm1VINWEG9vrlo01LsuE20MaZIdQKDY/q8X04mA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eI1xvKAL; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739538231; c=relaxed/simple;
+	bh=kFT27GayLKqiCGudO1VGFWKRq+m74lVsk5f5f4cYcl4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L4b6Dep8kKMjvU/6n8EVjwRzsmCllKzdQe0tIKZuuckU7lPM0yQ52qONzEmHPr1xhdCTIJnfFZ/k4ZbD35+LFdog2P4KVeaCda/r2U3Gfusc8vM8kskwoDgUm18jpA80BZMrVPHxo5mAvuHWyoZ0g8a2PVEbFPD+BJ5giUF4W3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qBU4l+Hy; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eI1xvKAL"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38dd14c99c3so983877f8f.3;
-        Fri, 14 Feb 2025 05:02:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739538150; x=1740142950; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VyKRIHbKEkE1QGgK/gObgAcYMvHFgxUHygHIci6W7t4=;
-        b=eI1xvKAL/GWtpIhrDGw6su0VbD/SHtWkVd6wq+xrJjEZjsa8DZpNeDYfhLqI7E75eS
-         +CDh2DD+GdkjxicnKAZgGeevCHOIljohAtNq60oTiVz43/QshlhJGQfKflWUsHcNntmD
-         dplyLkKPeiG3liKXMLYXTHswyYmQmJYBxYzBeOMQuqS8WiuRgox6AX+JgnwICeE1THe0
-         7ema3QwHi7TQ2FJZ2tP4YdS4HtD+WsFKSceJgis1ypEE/3aTnVlSxQU22mhkPdwbaRo5
-         E531f+a1sdAOTvdw4/GIUeY48rD43N1dzDrjYAhvC6vtCOgzIzmowjJS4GmlgBJwiHXV
-         mpog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739538150; x=1740142950;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VyKRIHbKEkE1QGgK/gObgAcYMvHFgxUHygHIci6W7t4=;
-        b=Nq0AD9ERUodwhSrefxI9/aYCBqJK+jGhDFnHrtAGdIXdR6MM3D8Vk1YSqhiGdXyHoP
-         AMaVAunSt1UwQf7x6yIiJTUtCMdKt1UEqT2re0KE95yLIRINmswfysrbVkfrN6L8CcDJ
-         k4ZHEsNseEDtXpPkP1XOkU06GJI2uZevzfYXFeepWbHDV5OGis04B7Uv85ci5hV4ezla
-         ysLJlTglHzifqXTdgrou0LTrv/YaSUqYktc9eptVLtY4wJMk6oC2og2ZZdYwwbSWQ8hc
-         x3xX0TvXbsHHqLDzdYmYP0FCUVRTcIHVY/LUsx+Z/NpM8eIzA9bda/4qOr9m7BfKEYbo
-         RfbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVLQ0iIsSLsklu7ihtJXDkrrWUy/tJ6QX5aOOUUkQX9N0H0MJ4VTcTkysHJ9/LxFUqdmBH49g13Fb3+lO+F1t/d@vger.kernel.org, AJvYcCVWNDZ081YCd4OP3rVvq2LwEigsC1/OXiDnjN2tFtGVCjQjK/QAFmCzwu6ltJaENiHtCM4=@vger.kernel.org, AJvYcCWAdW65HOVhklNF2j4HlanWPYMNeg9E0/u2htRwruD2qz85VTA9MFzF7WSGezkuHm0E58qNov9dJXX/6AMO@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmHMinsupI/qfiMPmReZsTmDHpD+8A8mvU+ili4ug2xRxmGely
-	oT2shHYyUjqIB8ahC16CMd9pA9NkyrBxK2HHODMmwpyhgEL+yV7n
-X-Gm-Gg: ASbGncvK+/zI62r4PxL8oh78+18GLq8jc9mg0Dxn22X5pQh5Wt7pUvPbQ/jhN1U0lJ5
-	xW6SquiVBoQ5EVPMikvuT1wa0S6wzIevgItaEqYPvK4Yfhr8yLjGrY2Cg7jqS0irFBflLYwlAz3
-	H0tfG7t4/CsMQZOdBlD9v7Z2gzEPuoGuGmb1JQJjYD2NBdgEXK/9NEgMafHZ9iO3n4QxQPHao/s
-	ICS8iggXyVwsv4SuYS0yUYi6kPmvMqUdQ1m7soEi0d2FYfZ448hez3N+GM8YfWyW2cyJVIKw9Pm
-	iAuBQ2hob6CGT70G
-X-Google-Smtp-Source: AGHT+IHouc+Aki+tl4UdBdywYmjxaxz/I3TwzUU+dPQ1APxG+jIS4U0D3BOFN/hb0yYCUgHMpoANuA==
-X-Received: by 2002:a05:6000:1863:b0:38b:d9a3:6cff with SMTP id ffacd0b85a97d-38dea26e512mr14714634f8f.16.1739538149352;
-        Fri, 14 Feb 2025 05:02:29 -0800 (PST)
-Received: from localhost ([194.120.133.72])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4396b0aa4e9sm6809285e9.16.2025.02.14.05.02.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 05:02:29 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sean Christopherson <seanjc@google.com>,
-	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] KVM: selftests: Fix spelling mistake "Unabled" -> "Unable"
-Date: Fri, 14 Feb 2025 13:02:01 +0000
-Message-ID: <20250214130201.15903-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qBU4l+Hy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qHEYioWxa/PkvZoqEnIF5GglRRCgOnrOcI7d0vuvT3I=; b=qBU4l+HyWakWvkCgFP4gnTRnRM
+	1q0Whv0LnNlwU9uNczuCbT/FsMzeaGmXvqwQHgzShiuGcthIOovp6HgtGcvhUcZgQthKN16Tzb/VS
+	4nHroTc2PJNXFKV4vI2BLwjtbvsZYa4ptDPye6z9g3M67O8QrMK0U+e5wQF0UsQqc5sNlvA1X0Sal
+	wv2R+gbd6Oh2vTJI/OzEoZx6+oC9utFBa9VS2jglNPWr5d6qJHMltbt+ZFVLxXve35dOzQiFioiI3
+	3SjiyHdDimVraHI+sjNCHateu+QXxsnLSMJIL0oeGudtzPid8FYxIjsjuWMhWjIZpsh9yU78RnZ+4
+	FxMFob3Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tivM9-00000001FMr-41SP;
+	Fri, 14 Feb 2025 13:03:46 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0BE0930050D; Fri, 14 Feb 2025 14:03:45 +0100 (CET)
+Date: Fri, 14 Feb 2025 14:03:44 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Tony Luck <tony.luck@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH] x86/cpu: Add two Intel CPU model numbers
+Message-ID: <20250214130344.GL14028@noisy.programming.kicks-ass.net>
+References: <20240923173750.16874-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240923173750.16874-1-tony.luck@intel.com>
 
-There is a spelling mistake in a TEST_FAIL message. Fix it.
+On Mon, Sep 23, 2024 at 10:37:50AM -0700, Tony Luck wrote:
+> Pantherlake is a mobile CPU. Diamond Rapids next generation Xeon.
+> 
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  arch/x86/include/asm/intel-family.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+> index 44949f972826..1a42f829667a 100644
+> --- a/arch/x86/include/asm/intel-family.h
+> +++ b/arch/x86/include/asm/intel-family.h
+> @@ -135,6 +135,8 @@
+>  
+>  #define INTEL_LUNARLAKE_M		IFM(6, 0xBD)
+>  
+> +#define INTEL_PANTHERLAKE_L		IFM(6, 0xCC)
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/testing/selftests/kvm/lib/kvm_util.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That should have: /* Cougar Cove / Crestmont */ added on.
 
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index b1c3c7260902..279ad8946040 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -2283,7 +2283,7 @@ void kvm_get_stat(struct kvm_binary_stats *stats, const char *name,
- 		return;
- 	}
- 
--	TEST_FAIL("Unabled to find stat '%s'", name);
-+	TEST_FAIL("Unable to find stat '%s'", name);
- }
- 
- __weak void kvm_arch_vm_post_create(struct kvm_vm *vm)
--- 
-2.47.2
-
+Gotta love how Pantherlake is Cougar Cove and DMR is Panther Cove,
+someone must be doing this on purpose to mess with us.
