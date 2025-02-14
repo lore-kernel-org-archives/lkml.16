@@ -1,151 +1,81 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4C21FC7F6
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 22:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB0519CD1D;
+	Fri, 14 Feb 2025 22:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739573090; cv=none; b=VR0NkFvyXfrysNB5A3YdXX/R0oEFRzhtHm5tCyZXIdMbs7UBGs+3w542ATgdu0ua2AENMJ5lLGoZN4cBteXUrpLdVu1xERDaar9ZEnq5rDhGYs48dufRrrzrs0jGmJxPnYD5RfbvA/z6y+mXP4zzrAjQZSeIwDG9xX3lbw0b1Ng=
+	t=1739573133; cv=none; b=WVBfXX9dhuG3/ghzPOXGLFKS/L44rTNGiufgDS4544OnJOdNmsxdWeH6SeJcS1qkFQ8m3+kUDDw5LF80jTvgpC6BtuYGsCMdtY4U2E+QAOqDJjASlapXB3AnHVkWC7w+DjQ++2p88r8tszNWIOuOSp6AMk/taW3GMF4Rc9CHD60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739573090; c=relaxed/simple;
-	bh=C9A3LWRVVEvM4OBlqT9wYA0yWCdJj2Hpz7Z1pzmG8wU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=MuLbcx6xcEkmCd+Gz8HMZ+IxQ2BULVtdgMDMJe7zc1ibZHzMUpc0rlLMlv8UczFleghxlRQIO6TIv9ADtbG29BJp9w8mADI6VRbVtuC4T1UynvlJDnTBFSgLKWBoYIjFaQ8uQkQssBGgU1SerHQ7mv++Zt7Pdr8nhrnes5SPxtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joshwash.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sj/IziDH; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joshwash.bounces.google.com
+	s=arc-20240116; t=1739573133; c=relaxed/simple;
+	bh=W/22sjmQtfW+T3HAcTny5XzHcRdyfDXjRP+3YymyzAc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DeXTmU5JcAKyhx3qO24U3iN1bZA8heDK+qMb1FpZN3IubJppq1T+pRMSvK4E9FLQM9oPUStyj3/fLPwtAltVMpvxnSJXHy5BcEHkxoK6GszrF/xSpFVgeEyKNihJa6bxH08CXdgrXlffd7p7G0NdwDfNQjnQK0C7o7A1SNG5868=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=z0yihNX5; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sj/IziDH"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21a7cbe3b56so42533515ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 14:44:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739573088; x=1740177888; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tUNETmfCcN16mATl/cudDdX8wxXBFFNsGuPJIeAzz7o=;
-        b=sj/IziDHroH5kXw5DjtQJdNC0AeZGArJJh2x98x4jO7HBS6Lp7Tzk+QZzpa8dqlUYP
-         jfqLmNconmo8MCmiAOPWrPLU/TCV3nuJNTehQ/OVNXbbLClxjaiAiLNxLKA5WIblBQb6
-         7NoOkVtNjckuuQY10tkKmL4ZsEAR3d5lWYDpM75KGEDAxgp+m2fYP1Z6XITeuCKYkuE6
-         EZvFJYqiDjBQytspQ5rYqzYceWstJ4fS8EdgThrk+ZAyL1e4Qh6ok/h5O40PPUJ0zsCk
-         QI4C36QMidbIjO60BKbHmGiHDc68GtFC1NeQFj5F+cM5sPeA2uzs/3ZHZvbPbRvlR/LM
-         DFmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739573088; x=1740177888;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tUNETmfCcN16mATl/cudDdX8wxXBFFNsGuPJIeAzz7o=;
-        b=m0eomSGNJmsfNev4WAJvMWpGahDpSWclyR9wMmS9DSlIy59epfx0X67dB6TldLWkNA
-         3C4cxJEONuXQ68raPEywXu+zi0UK5lFN5eX5YaAtO/ylC4bAkOyw7n/vHjAT+OnSA2rW
-         mMqV70n/W3ffZtKX4sz1IbawEVB/XQbzHjuQDSS5/+Ud3IEt645gbeEaFyi7c108uH57
-         nkkXRyQEvKw5Qc2YKxBsj2aodVbmHSj6IyHkT4yvJ8aq2EcqRQIWnmWCVFOqBoVqUoBv
-         BbgWFSQ4lytkSaFAm80DMTfWzsfIm1xwinQi/8KbdWQbPk7NEKA2E1QAhf9WCbBWYZ9P
-         J9jg==
-X-Forwarded-Encrypted: i=1; AJvYcCU3slvD8blo5Li2zEpzplfNEV6R8KDfSkze2wrafF7noto1k06aEcDoLj+/xOKHhddkopevR4cDf/GiFxU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzctlyjSc6g4FSV37IcXt5N0v4Sb/LFgRMe75lyFbbF8M2GvHkn
-	Lkt936qAFzPHzP6I6uXUv+I72/7FaxfAi6RK8FfWDNgogUT3PEy6QUMi2lsLj5mulYEHs7U+OB1
-	0IlIFn7Cz5w==
-X-Google-Smtp-Source: AGHT+IFipCMt7qHod8wE+QJEnJFVy+GDVWXm+FNM4uL263Au9RAnEUGi4OFC3Gq37Yk5dRgHAwAYikh+aCfyzw==
-X-Received: from pjbtb14.prod.google.com ([2002:a17:90b:53ce:b0:2ea:756d:c396])
- (user=joshwash job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:986:b0:215:5ea2:6544 with SMTP id d9443c01a7336-22103efa6e3mr14484155ad.7.1739573087787;
- Fri, 14 Feb 2025 14:44:47 -0800 (PST)
-Date: Fri, 14 Feb 2025 14:43:59 -0800
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="z0yihNX5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=EiUZWzQCMS5pWAnVUksUZCQH8mtcpOOBDIuqxWtAVy4=; b=z0yihNX5H/PiP34II2rBN1l5Fb
+	imItSSpqqg7SQsP0Rn0wEYMsniGGRARDXao/1Vxg6O3u837AbJxKFSJqNn2SAkzEOJURBzimts6VL
+	0nvynPs+LZBM9+XzDxIOXN+JvkckXgY1PeIscObhwFGWGXWxXdBU7Ph/wCZrI/pN3xb5qP1ytK1nB
+	Ko3Vqc/uFEtsCq0oH5NxZvw33MQxwOPZM5NUnmlrsRlyfDZQk/25XjGtmHAKO51g/zfthV0MGBMi/
+	fBW71GPQ3Y8vydgUm3ruGFcS23LIjKhtI6N2qAWDC5ARkdCrdbVgwt9G4i3zOv9DBtAgWEoWbW85w
+	fIRR1XnQ==;
+Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tj4R6-0003TH-4h; Fri, 14 Feb 2025 23:45:28 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	jonas@kwiboo.se
+Subject: Re: [PATCH v2 0/2] Rockchip - add Firefly ROC-RK3576-PC board
+Date: Fri, 14 Feb 2025 23:45:16 +0100
+Message-ID: <173957310724.1747676.2795519057451074241.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250210205126.1173631-1-heiko@sntech.de>
+References: <20250210205126.1173631-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <20250214224417.1237818-1-joshwash@google.com>
-Subject: [PATCH net] gve: set xdp redirect target only when it is available
-From: joshwash@google.com
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, kuba@kernel.org, stable@kernel.org, 
-	Joshua Washington <joshwash@google.com>, stable@vger.kernel.org, 
-	Praveen Kaligineedi <pkaligineedi@google.com>, Jeroen de Borst <jeroendb@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	Willem de Bruijn <willemb@google.com>, Ziwei Xiao <ziweixiao@google.com>, 
-	Shailend Chand <shailend@google.com>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-From: Joshua Washington <joshwash@google.com>
 
-Before this patch the NETDEV_XDP_ACT_NDO_XMIT XDP feature flag is set by
-default as part of driver initialization, and is never cleared. However,
-this flag differs from others in that it is used as an indicator for
-whether the driver is ready to perform the ndo_xdp_xmit operation as
-part of an XDP_REDIRECT. Kernel helpers
-xdp_features_(set|clear)_redirect_target exist to convey this meaning.
+On Mon, 10 Feb 2025 21:51:24 +0100, Heiko Stuebner wrote:
+> This adds a second board based around the rk3576 SoC.
+> 
+> changes in v2:
+> - add Rob's Ack on the binding
+> - move ethernet-phy-reset control into the phy-node (Jonas)
+> - some sorting cleanups
+> 
+> [...]
 
-This patch ensures that the netdev is only reported as a redirect target
-when XDP queues exist to forward traffic.
+Applied, thanks!
 
-Fixes: 39a7f4aa3e4a ("gve: Add XDP REDIRECT support for GQI-QPL format")
-Cc: stable@vger.kernel.org
-Reviewed-by: Praveen Kaligineedi <pkaligineedi@google.com>
-Reviewed-by: Jeroen de Borst <jeroendb@google.com>
-Signed-off-by: Joshua Washington <joshwash@google.com>
----
- drivers/net/ethernet/google/gve/gve.h      | 10 ++++++++++
- drivers/net/ethernet/google/gve/gve_main.c |  6 +++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+[1/2] dt-bindings: arm: rockchip: Add Firefly ROC-RK3576-PC binding
+      commit: 2be4a4171401761cb5fb02225d8b18351f6807c0
+[2/2] arm64: dts: rockchip: Add devicetree for the ROC-RK3576-PC
+      commit: 887ff17cdd8f088a52e2b61e71f2b6c9b9678de6
 
-diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
-index 8167cc5fb0df..78d2a19593d1 100644
---- a/drivers/net/ethernet/google/gve/gve.h
-+++ b/drivers/net/ethernet/google/gve/gve.h
-@@ -1116,6 +1116,16 @@ static inline u32 gve_xdp_tx_start_queue_id(struct gve_priv *priv)
- 	return gve_xdp_tx_queue_id(priv, 0);
- }
- 
-+static inline bool gve_supports_xdp_xmit(struct gve_priv *priv)
-+{
-+	switch (priv->queue_format) {
-+	case GVE_GQI_QPL_FORMAT:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
- /* gqi napi handler defined in gve_main.c */
- int gve_napi_poll(struct napi_struct *napi, int budget);
- 
-diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
-index 533e659b15b3..92237fb0b60c 100644
---- a/drivers/net/ethernet/google/gve/gve_main.c
-+++ b/drivers/net/ethernet/google/gve/gve_main.c
-@@ -1903,6 +1903,8 @@ static void gve_turndown(struct gve_priv *priv)
- 	/* Stop tx queues */
- 	netif_tx_disable(priv->dev);
- 
-+	xdp_features_clear_redirect_target(priv->dev);
-+
- 	gve_clear_napi_enabled(priv);
- 	gve_clear_report_stats(priv);
- 
-@@ -1972,6 +1974,9 @@ static void gve_turnup(struct gve_priv *priv)
- 		napi_schedule(&block->napi);
- 	}
- 
-+	if (priv->num_xdp_queues && gve_supports_xdp_xmit(priv))
-+		xdp_features_set_redirect_target(priv->dev, false);
-+
- 	gve_set_napi_enabled(priv);
- }
- 
-@@ -2246,7 +2251,6 @@ static void gve_set_netdev_xdp_features(struct gve_priv *priv)
- 	if (priv->queue_format == GVE_GQI_QPL_FORMAT) {
- 		xdp_features = NETDEV_XDP_ACT_BASIC;
- 		xdp_features |= NETDEV_XDP_ACT_REDIRECT;
--		xdp_features |= NETDEV_XDP_ACT_NDO_XMIT;
- 		xdp_features |= NETDEV_XDP_ACT_XSK_ZEROCOPY;
- 	} else {
- 		xdp_features = 0;
+Best regards,
 -- 
-2.48.1.601.g30ceb7b040-goog
-
+Heiko Stuebner <heiko@sntech.de>
