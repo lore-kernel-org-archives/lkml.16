@@ -1,158 +1,257 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988D72566D9;
-	Fri, 14 Feb 2025 14:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3542566D9;
+	Fri, 14 Feb 2025 14:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739544335; cv=none; b=fBASM+kBw7OWGpvL0lnHvIECWsBUPzEbRo1uoJOfuxD0VqXEGg3LAmCnDK3bKYY7mh8PxQdWuqTpKDlNWjlXnWehA6UFNzAQhyVy14s3GOexdEFiiPYs+fx/R7727lSGfd4Um8VzV2yOdmGh0klgFpRuabZ/5H/yK3xrF9uXrhk=
+	t=1739544393; cv=none; b=UreQOdh0vdg8f6gOlCrwvE+z3EgvbFAxVdDWkY1h1SCuXxal/bJTrLL2clKe0MU8AZpTwVbwKKzKcseBDyIJtvfF1hJ3dhFFFDMnne16fPPjStoi7R8v2FdML5eHlNYN9XwULYyro+PhoaUp9vtPHo46mkFVwJy9dUV9CpDr1rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739544335; c=relaxed/simple;
-	bh=Ykfmo72lISkSPa3zpie1sR0a60kfyI4PuSZYUX9alk4=;
+	s=arc-20240116; t=1739544393; c=relaxed/simple;
+	bh=1ZIAdu+aSSt1qC8VM5ZVLtO6FmpvBX1T9i94FheNL/I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nIGcbx1cMVgIpwWpwHAiotiBCQu7qLg6BKHTnNbAkx9vB/PIP2XmkdSeo34X+DVmreA3CmSHmpCLvM+nu5U0laepP/WhXVSVxO9MsoFRy16Rgjan+NvKO2H+S9qPNUUQkmfzPjz576v2c49t45t4JlK1N8oPtwZ4k+kPcoyfiIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=alpnH9o2; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HYALHJtJTdwtvYieoYf7czB46eqmRjkJ/ezYi7sZHr5hy7XHE1xVFGLOrOWMN3mrJIQ8rL+EuaDv8C5eEzE7bi9QcEIRFPm1l30++/VcpoClf6mqHG3To+IM/rpcbDxU7OKXreF4uoTWLRhVNvS0M5i8NbGKqADWezwPWtADXzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z/p8TvJm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="alpnH9o2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739544331; x=1771080331;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ykfmo72lISkSPa3zpie1sR0a60kfyI4PuSZYUX9alk4=;
-  b=alpnH9o2I8RjtmjIlGjLxbcfQbQfybRqAyWHvs7JRM9zbUI+XOGCU9QF
-   G6FtKrHuacbxaVOfzDdC28pv58c1wwz+9wjtstTxlokVE5fL0UDv3OVem
-   ZXKCSN87lUDQ1AsrqgBo8a+yYrI9wJklxrrSm4vq5O76+CshneDC2o4iu
-   hM6lyxZ9gRXXVXJF2BtbUWBVB3VJ8E8xQ0hUB68XUN/ND5kd1TXJLZgKJ
-   IbKhqye5i32jqIJVxyaOiUAXzzo1AUuvOjwIrJtCgD6OVNTIIHKNo1Yt+
-   C3x3vJXwK7a+OLfiU9R5SMz2216aL57W2EORIw6lc4FFqH10Vjm1vuYlQ
-   g==;
-X-CSE-ConnectionGUID: 4Wn3qCRmQsmg8dLyAiakhg==
-X-CSE-MsgGUID: 91OHrblMRNmNzit30ymkwA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="51267638"
-X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
-   d="scan'208";a="51267638"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 06:45:30 -0800
-X-CSE-ConnectionGUID: IJwlUep2QqqUcsxnOkvtyg==
-X-CSE-MsgGUID: PJHsz83yRjGTXSfDo8aDpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
-   d="scan'208";a="113992375"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 14 Feb 2025 06:45:26 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tiwwW-0019gR-0N;
-	Fri, 14 Feb 2025 14:45:24 +0000
-Date: Fri, 14 Feb 2025 22:45:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sai Krishna <saikrishnag@marvell.com>, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	sgoutham@marvell.com, gakula@marvell.com, lcherian@marvell.com,
-	jerinj@marvell.com, hkelam@marvell.com, sbhatta@marvell.com,
-	andrew+netdev@lunn.ch, kalesh-anakkur.purayil@broadcom.com
-Cc: oe-kbuild-all@lists.linux.dev, Sai Krishna <saikrishnag@marvell.com>
-Subject: Re: [net-next PATCH v9 3/6] octeontx2-af: CN20k mbox to support AF
- REQ/ACK functionality
-Message-ID: <202502142256.5RFZmK7u-lkp@intel.com>
-References: <20250213170504.3892412-4-saikrishnag@marvell.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z/p8TvJm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 233ADC4CED1;
+	Fri, 14 Feb 2025 14:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739544393;
+	bh=1ZIAdu+aSSt1qC8VM5ZVLtO6FmpvBX1T9i94FheNL/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z/p8TvJmNnyb/FDEwTABnBmhygKIYcRvdQkPr9V6S2Cj4WKiHk+gAAeXdG9pba5ae
+	 r5UoipNEZQlz7bjEHruuyVSodzZquFtQUyEi3Cd1aGE3V8DWwa9deGh41ib77pJkff
+	 GGes0f2dVmm9FWNfkVIuIodx7wVT7ftw9cA/VU2mhBWDUUa4zQT9OlhhFMpS2BuJRb
+	 ME4M7dTaJXcz3/2SOf5ioENWk48PnEhNOjrwgOQrmmDICslKZcWdeymXXlzA2Xflk2
+	 bV9Yr6V5T7LbaD540hmWF3YuYjaDrYh1K6K45s4v/LRq/Onknmh3O/0jVzb8W9APSU
+	 HC6yxiL507AOg==
+Date: Fri, 14 Feb 2025 20:16:23 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Wenbin Yao <quic_wenbyao@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, p.zabel@pengutronix.de,
+	dmitry.baryshkov@linaro.org, abel.vesa@linaro.org,
+	quic_qianyu@quicinc.com, neil.armstrong@linaro.org,
+	manivannan.sadhasivam@linaro.org, quic_devipriy@quicinc.com,
+	konrad.dybcio@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] phy: qcom: qmp-pcie: Add PHY register retention
+ support
+Message-ID: <20250214144623.fvjr2bytliqhektr@thinkpad>
+References: <20250214104539.281846-1-quic_wenbyao@quicinc.com>
+ <20250214104539.281846-3-quic_wenbyao@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250213170504.3892412-4-saikrishnag@marvell.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250214104539.281846-3-quic_wenbyao@quicinc.com>
 
-Hi Sai,
+On Fri, Feb 14, 2025 at 06:45:39PM +0800, Wenbin Yao wrote:
+> From: Qiang Yu <quic_qianyu@quicinc.com>
+> 
+> Some QCOM PCIe PHYs support no_csr reset. Unlike BCR reset which resets the
+> whole PHY (hardware and register), no_csr reset only resets PHY hardware
+> but retains register values, which means PHY setting can be skipped during
+> PHY init if PCIe link is enabled in booltloader and only no_csr is toggled
+> after that.
+> 
+> Hence, determine whether the PHY has been enabled in bootloader by
+> verifying QPHY_START_CTRL register. If it's programmed and no_csr reset is
+> available, skip BCR reset and PHY register setting to establish the PCIe
+> link with bootloader - programmed PHY settings.
+> 
+> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 96 ++++++++++++++++--------
+>  1 file changed, 63 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> index 219266125cf2..b3912c1a6de8 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> @@ -2805,6 +2805,7 @@ struct qmp_pcie {
+>  
+>  	const struct qmp_phy_cfg *cfg;
+>  	bool tcsr_4ln_config;
+> +	bool skip_init;
+>  
+>  	void __iomem *serdes;
+>  	void __iomem *pcs;
+> @@ -3976,7 +3977,9 @@ static int qmp_pcie_init(struct phy *phy)
+>  {
+>  	struct qmp_pcie *qmp = phy_get_drvdata(phy);
+>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
+> +	void __iomem *pcs = qmp->pcs;
+>  	int ret;
+> +	bool phy_initialized;
+>  
+>  	ret = regulator_bulk_enable(cfg->num_vregs, qmp->vregs);
+>  	if (ret) {
+> @@ -3984,10 +3987,18 @@ static int qmp_pcie_init(struct phy *phy)
+>  		return ret;
+>  	}
+>  
+> -	ret = reset_control_bulk_assert(cfg->num_resets, qmp->resets);
+> -	if (ret) {
+> -		dev_err(qmp->dev, "reset assert failed\n");
+> -		goto err_disable_regulators;
+> +	phy_initialized = !!(readl(pcs + cfg->regs[QPHY_START_CTRL]));
+> +	qmp->skip_init = qmp->nocsr_reset && phy_initialized;
+> +	/*
+> +	 * Toggle BCR reset for phy that doesn't support no_csr
 
-kernel test robot noticed the following build errors:
+s/phy/PHY. Here and below.
 
-[auto build test ERROR on net-next/main]
+> +	 * reset or has not been initialized
+> +	 */
+> +	if (!qmp->skip_init) {
+> +		ret = reset_control_bulk_assert(cfg->num_resets, qmp->resets);
+> +		if (ret) {
+> +			dev_err(qmp->dev, "reset assert failed\n");
+> +			goto err_disable_regulators;
+> +		}
+>  	}
+>  
+>  	ret = reset_control_assert(qmp->nocsr_reset);
+> @@ -3998,10 +4009,12 @@ static int qmp_pcie_init(struct phy *phy)
+>  
+>  	usleep_range(200, 300);
+>  
+> -	ret = reset_control_bulk_deassert(cfg->num_resets, qmp->resets);
+> -	if (ret) {
+> -		dev_err(qmp->dev, "reset deassert failed\n");
+> -		goto err_assert_reset;
+> +	if (!qmp->skip_init) {
+> +		ret = reset_control_bulk_deassert(cfg->num_resets, qmp->resets);
+> +		if (ret) {
+> +			dev_err(qmp->dev, "reset deassert failed\n");
+> +			goto err_assert_reset;
+> +		}
+>  	}
+>  
+>  	ret = clk_bulk_prepare_enable(ARRAY_SIZE(qmp_pciephy_clk_l), qmp->clks);
+> @@ -4011,7 +4024,8 @@ static int qmp_pcie_init(struct phy *phy)
+>  	return 0;
+>  
+>  err_assert_reset:
+> -	reset_control_bulk_assert(cfg->num_resets, qmp->resets);
+> +	if (!qmp->skip_init)
+> +		reset_control_bulk_assert(cfg->num_resets, qmp->resets);
+>  err_disable_regulators:
+>  	regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
+>  
+> @@ -4023,7 +4037,10 @@ static int qmp_pcie_exit(struct phy *phy)
+>  	struct qmp_pcie *qmp = phy_get_drvdata(phy);
+>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
+>  
+> -	reset_control_bulk_assert(cfg->num_resets, qmp->resets);
+> +	if (!qmp->nocsr_reset)
+> +		reset_control_bulk_assert(cfg->num_resets, qmp->resets);
+> +	else
+> +		reset_control_assert(qmp->nocsr_reset);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sai-Krishna/octeontx2-Set-appropriate-PF-VF-masks-and-shifts-based-on-silicon/20250214-013817
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20250213170504.3892412-4-saikrishnag%40marvell.com
-patch subject: [net-next PATCH v9 3/6] octeontx2-af: CN20k mbox to support AF REQ/ACK functionality
-config: alpha-randconfig-r051-20250214 (https://download.01.org/0day-ci/archive/20250214/202502142256.5RFZmK7u-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250214/202502142256.5RFZmK7u-lkp@intel.com/reproduce)
+I'd flip the if condition for readability:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502142256.5RFZmK7u-lkp@intel.com/
+	if (qmp->nocsr_reset)
+		...
+	else
+		...
+>  
+>  	clk_bulk_disable_unprepare(ARRAY_SIZE(qmp_pciephy_clk_l), qmp->clks);
+>  
+> @@ -4042,16 +4059,22 @@ static int qmp_pcie_power_on(struct phy *phy)
+>  	unsigned int mask, val;
+>  	int ret;
+>  
+> -	qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
+> -			cfg->pwrdn_ctrl);
+> +	/*
+> +	 * Write CSR register for phy that doesn't support no_csr
+> +	 * reset or has not been initialized
+> +	 */
+> +	if (!qmp->skip_init) {
 
-All errors (new ones prefixed by >>):
+How about:
+	if (qmp->skip_init)
+		goto skip_phy_init;
 
-   drivers/net/ethernet/marvell/octeontx2/af/rvu.c: In function 'rvu_free_hw_resources':
->> drivers/net/ethernet/marvell/octeontx2/af/rvu.c:760:25: error: 'RVU_AFPF' undeclared (first use in this function)
-     760 |         pfvf = &rvu->pf[RVU_AFPF];
-         |                         ^~~~~~~~
-   drivers/net/ethernet/marvell/octeontx2/af/rvu.c:760:25: note: each undeclared identifier is reported only once for each function it appears in
-   drivers/net/ethernet/marvell/octeontx2/af/rvu.c: In function 'rvu_probe':
-   drivers/net/ethernet/marvell/octeontx2/af/rvu.c:3494:47: error: 'RVU_AFPF' undeclared (first use in this function)
-    3494 |         rvu_alloc_cint_qint_mem(rvu, &rvu->pf[RVU_AFPF], BLKADDR_NIX0,
-         |                                               ^~~~~~~~
+This is my personal preference btw. If anyone feels the other way, feel free
+to drop this suggestion.
 
+> +		qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
+> +				cfg->pwrdn_ctrl);
+>  
+> -	if (qmp->mode == PHY_MODE_PCIE_RC)
+> -		mode_tbls = cfg->tbls_rc;
+> -	else
+> -		mode_tbls = cfg->tbls_ep;
+> +		if (qmp->mode == PHY_MODE_PCIE_RC)
+> +			mode_tbls = cfg->tbls_rc;
+> +		else
+> +			mode_tbls = cfg->tbls_ep;
+>  
+> -	qmp_pcie_init_registers(qmp, &cfg->tbls);
+> -	qmp_pcie_init_registers(qmp, mode_tbls);
+> +		qmp_pcie_init_registers(qmp, &cfg->tbls);
+> +		qmp_pcie_init_registers(qmp, mode_tbls);
+> +	}
+>  
+>  	ret = clk_bulk_prepare_enable(qmp->num_pipe_clks, qmp->pipe_clks);
+>  	if (ret)
+> @@ -4063,15 +4086,16 @@ static int qmp_pcie_power_on(struct phy *phy)
+>  		goto err_disable_pipe_clk;
+>  	}
+>  
+> -	/* Pull PHY out of reset state */
+> -	qphy_clrbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+> +	if (!qmp->skip_init) {
 
-vim +/RVU_AFPF +760 drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+	if (qmp->skip_init)
+		goto skip_serdes_start;
 
-   717	
-   718	static void rvu_free_hw_resources(struct rvu *rvu)
-   719	{
-   720		struct rvu_hwinfo *hw = rvu->hw;
-   721		struct rvu_block *block;
-   722		struct rvu_pfvf  *pfvf;
-   723		int id, max_msix;
-   724		u64 cfg;
-   725	
-   726		rvu_npa_freemem(rvu);
-   727		rvu_npc_freemem(rvu);
-   728		rvu_nix_freemem(rvu);
-   729	
-   730		/* Free block LF bitmaps */
-   731		for (id = 0; id < BLK_COUNT; id++) {
-   732			block = &hw->block[id];
-   733			kfree(block->lf.bmap);
-   734		}
-   735	
-   736		/* Free MSIX bitmaps */
-   737		for (id = 0; id < hw->total_pfs; id++) {
-   738			pfvf = &rvu->pf[id];
-   739			kfree(pfvf->msix.bmap);
-   740		}
-   741	
-   742		for (id = 0; id < hw->total_vfs; id++) {
-   743			pfvf = &rvu->hwvf[id];
-   744			kfree(pfvf->msix.bmap);
-   745		}
-   746	
-   747		/* Unmap MSIX vector base IOVA mapping */
-   748		if (!rvu->msix_base_iova)
-   749			return;
-   750		cfg = rvu_read64(rvu, BLKADDR_RVUM, RVU_PRIV_CONST);
-   751		max_msix = cfg & 0xFFFFF;
-   752		dma_unmap_resource(rvu->dev, rvu->msix_base_iova,
-   753				   max_msix * PCI_MSIX_ENTRY_SIZE,
-   754				   DMA_BIDIRECTIONAL, 0);
-   755	
-   756		rvu_reset_msix(rvu);
-   757		mutex_destroy(&rvu->rsrc_lock);
-   758	
-   759		/* Free the QINT/CINt memory */
- > 760		pfvf = &rvu->pf[RVU_AFPF];
-   761		qmem_free(rvu->dev, pfvf->nix_qints_ctx);
-   762		qmem_free(rvu->dev, pfvf->cq_ints_ctx);
-   763	}
-   764	
+> +		/* Pull PHY out of reset state */
+> +		qphy_clrbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+>  
+> -	/* start SerDes and Phy-Coding-Sublayer */
+> -	qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL], SERDES_START | PCS_START);
+> -
+> -	if (!cfg->skip_start_delay)
+> -		usleep_range(1000, 1200);
+> +		/* start SerDes and Phy-Coding-Sublayer */
+> +		qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL], SERDES_START | PCS_START);
+>  
+> +		if (!cfg->skip_start_delay)
+> +			usleep_range(1000, 1200);
+> +	}
+>  	status = pcs + cfg->regs[QPHY_PCS_STATUS];
+>  	mask = cfg->phy_status;
+>  	ret = readl_poll_timeout(status, val, !(val & mask), 200,
+> @@ -4096,16 +4120,22 @@ static int qmp_pcie_power_off(struct phy *phy)
+>  
+>  	clk_bulk_disable_unprepare(qmp->num_pipe_clks, qmp->pipe_clks);
+>  
+> -	/* PHY reset */
+> -	qphy_setbits(qmp->pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+> +	/* If a PHY supports no_csr reset but isn't enabled in the bootloader,
+> +	 * phy settings can be reused during the D3cold -> D0 cycle. So it is
+
+I cannot parse this sentence. If PHY is not initialized, how can you reuse the
+settings? Also what is the D3cold->D0 reference?
+
+> +	 * unnecessary to check qmp->skip_init.
+> +	 */
+> +	if (!qmp->nocsr_reset) {
+
+	if (qmp->nocsr_reset)
+		goto skip_phy_reset;
+
+- Mani
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
