@@ -1,320 +1,273 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369911C861E;
-	Fri, 14 Feb 2025 21:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739568313; cv=fail; b=Fs2LtDE9HOS48eIgLm5JCDfWqGmZI21zE0wwsWf8AkV4TALWvMVDl9Z09qnSvnBI85qybvlSOPzatO1cgoVkuhi1B4sKk6E+oeQCKvG52PxLCQUtNPlFKjFKAulki7i2/I5UAUQHlCIKEp9b8B2dXhOp1Mb9LyInJYEz6nM+igc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739568313; c=relaxed/simple;
-	bh=7iAbgS8aTbSeex1yy6kVJkIPlDv6Cjh3t5J5JBgDUBU=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rLO7YO9zQLSQJvygphkfwkz0kQrhPQoOLqOPkQJPRW3B3DX5IE6iiQh9RLcr4aTpThUUNevwTVQcD9qkbL0JNXaXhAowO/5XiIah9JMvUGrGeOY/ZCs7UrajjH83pOG9BDu2kgZAr+v7BAJs2cJQyfFE/PFpX7t+U0rppKD/OuI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SGC1INWb; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200E9158870
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 21:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739568416; cv=none; b=iCUq6ed0DT2nUSqblQ5/T/lLzAHPMubR432M9bxCtz6JvNAHLP8AOr6y6HeXWJuKXMKK1ltpScz0VrgYExa3GL+64IBsd8i+yPLur7veesbjFnWOAjvo/na+Zl8SLWzEnyqY1dDCapXr5+CzdTXvsO6Y7paT6CLf8iDc0+aEFrc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739568416; c=relaxed/simple;
+	bh=Rk7nIVt1MTtXn0NS72fTOn9EXPvn5d2wl/NC81j0Mms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fuJt1WB1GZHkkXM+sdUrBk6t3rpwqnUx3Nm7b5cnDvrQ+iweh9BbrRSPNDHlrpQpAT0cTlH2D2qWxe5mo3NdAhYRoTdDKmgE20NrWuPYvQ89++5S7ciQXPtD/LZ3GPvj36M0ESlpifUfPss3zBR+ofpy8oGx4G4/4N2f61VKnl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=rC59TEBN; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SGC1INWb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739568311; x=1771104311;
-  h=date:from:to:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=7iAbgS8aTbSeex1yy6kVJkIPlDv6Cjh3t5J5JBgDUBU=;
-  b=SGC1INWbEA1utL8YmKUUT1HGB7J2upbu/HUxUVwTE+6cwG8vcazP4nXx
-   dSU+sF5yIcx7MgDVczHoF80VbW1SHmfayeQjsZSC38OQzcCAu4e9/45Ko
-   1LnjyP+QKYVGbJd5mntoAAS8dqcbnie6zfR4lNdkJRX5EIczMPkWJPmAW
-   tiIPXPUf1thC069/a0WHuQHRoPVsrpJrRVsmbgl4zfcCP6FCYJ9vebQGM
-   evTr/ieUJr5xQG2na/glvXKvSO1dQioxIF4fUz5qUF6DaGdLS32dytMwa
-   wug0JxlrogS56ietkhDc+cci4E9NIcQxBSocu26cRKKP2WLh1TmlNDAU2
-   A==;
-X-CSE-ConnectionGUID: neo1nwgdRRGubuOCS1lw3A==
-X-CSE-MsgGUID: kyDuq8MiQniro92C/kMWIA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40455077"
-X-IronPort-AV: E=Sophos;i="6.13,287,1732608000"; 
-   d="scan'208";a="40455077"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 13:24:49 -0800
-X-CSE-ConnectionGUID: SEOL3RF/R7KIWyEDK9YWbA==
-X-CSE-MsgGUID: pupl057NSOi8trtZKnV0Ww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,287,1732608000"; 
-   d="scan'208";a="113418290"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 14 Feb 2025 13:24:44 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 14 Feb 2025 13:24:43 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 14 Feb 2025 13:24:43 -0800
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 14 Feb 2025 13:24:42 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Gg1Kg6xe+Bd8nD5SYh1wCev9PTdjjk1t/clPysNttzlYc33WPkDaAP+4VadWHrfeEQ4W0ZhVDeDEONtxpBq11jazpEVqnizh2VzG504Silj2QFsmRVgo4ma4mdKBO1KfQjQQrDm8Dss/E6aP+ytYxJ6uuK6Mi3BBIGhvhAUP2bCfyW4f38HgmT0Pnpbju0w+97m3JWXUXybTlFQ54+sdJlyMk4xazcPBvvTj5I5cblHu8krUTcQwdLNUENyNm74+0qzRmmVusQQ9AeQVY2Zj3Y4ctl4s5MdGt7Ol7un7zaQOU1rW2aww/hVoc+Dlo72Mr2AIQlcpRQ77csw0RAVXEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hIRu++3jSuaU98/ldhvXY9BkE/OXO7SyaXmIdVnKXAg=;
- b=g9hlv8+SHbtRi3Tt2cCzpGjkAOq9lgEBiZ6+bJCKlOG9T1hLaP7PPs51MFQb+5isi262AH7H3X4QriUwHCsck08vPAko1OcK83L55ly5SvkXznxq4Kei2+lGIH/Cf1ghPfDJMaf9F2ggMvbs+L55rQdv/bxL+o0nwh0Q7M6+zw4C4E/VhHplTERP5yOEOJVVINMaRt0HFrOX/+CInlz1lhQOTrnE316AHMC3FPX4k/81B6AXCwi04TpWF3POrNYDBtlEInID4C+kVMHp33hoH4ELTGuvMjDBNXVD708YvDtIxAk1ki51YUYpQOrcqKscxsj49JaZDen/RJxXo4ICFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by LV8PR11MB8772.namprd11.prod.outlook.com (2603:10b6:408:200::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.17; Fri, 14 Feb
- 2025 21:24:40 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8445.008; Fri, 14 Feb 2025
- 21:24:40 +0000
-Date: Fri, 14 Feb 2025 13:24:37 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: "Bowman, Terry" <terry.bowman@amd.com>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<nifan.cxl@gmail.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <bhelgaas@google.com>, <mahesh@linux.ibm.com>,
-	<ira.weiny@intel.com>, <oohall@gmail.com>, <Benjamin.Cheatham@amd.com>,
-	<rrichter@amd.com>, <nathan.fontenot@amd.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <lukas@wunner.de>,
-	<ming.li@zohomail.com>, <PradeepVineshReddy.Kodamati@amd.com>
-Subject: Re: [PATCH v7 07/17] cxl/pci: Map CXL PCIe Root Port and Downstream
- Switch Port RAS registers
-Message-ID: <67afb4955252f_2d2c294b2@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250211192444.2292833-1-terry.bowman@amd.com>
- <20250211192444.2292833-8-terry.bowman@amd.com>
- <67abf81f4617b_2d1e2946a@dwillia2-xfh.jf.intel.com.notmuch>
- <609a02bb-3271-4021-9499-8b281a959f62@amd.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <609a02bb-3271-4021-9499-8b281a959f62@amd.com>
-X-ClientProxiedBy: MW4P222CA0011.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:303:114::16) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="rC59TEBN"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-471cdc14e99so14005621cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 13:26:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1739568412; x=1740173212; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cg1ey3aipCNJUc79bD6lrhDndah42SIkSCRK4mNzles=;
+        b=rC59TEBNIV2NcZ7dHQUMZNJeYZ5KyEHemM1vJNlgiTm5cYOA5Oa3NQBfCZ2LZWQt1e
+         Taghw5yX5XaEGEVh7byet3qE8liEmkSCvh6cDe//Om4wa7jU6g/Ok6BxAtzzSm6q+3nH
+         5hK3AiRt0+Y9WQKUcfyUxNSlfmaavbdJOLpl2hqcLHAYkbtNGYAm48j+9+/tbzoJIz8+
+         JA1+DYy6K9XwCpwj4gcm+sDrcwuq+5OtUjZx7YitHuvCEiwJ8LyI49WEkftHN71OrXol
+         qLEUw6yAz1wOlUZdOGO27qPeQB9mPVDhMu0we1bAEv//hQnOJl9Q0cIC+75VBdYE6Jo1
+         6AZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739568412; x=1740173212;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cg1ey3aipCNJUc79bD6lrhDndah42SIkSCRK4mNzles=;
+        b=FUmyHvmrzoJsWjg1CvVwXrmGL9UTl5qWMNcjUNHMgafQNtzJwK6CZdetoRWLZ1wKyq
+         qR3UoKDSBsFkeLzN93Vy7dyT582zUvNrJngKitFyDjCY05Etp8jBxEmzyQjbJKW9dmsh
+         vExEFUvgwWIvYCggNBuQNBp0t/GjcmeNMFUR15m2yB3Mnzj7RLiJDh63OK/xKrEKK6cz
+         RdaWsH1sGW3aW5m3LSGi80sPzQMMlxDUcSHgRreHhMDJWyinvIzfU9VD2GB2j01uuNY9
+         Jo/PCHXCXm0E4YzaZHz72NaXCulV5B75j+/aCK3zXXEY1wagR8L+c+D18c315S1V9dZ9
+         eMIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/HwjI1f9oOE59oeF0U9MyDGgBWvJAr5ZbM9Yq0YTzIaiUyANBSE3u4k3bmf0hUeYpXdTBT8ysyU24g+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaSnJ9W8fE0vi10B1UyKlEfrvSD4NJPrQqc9yf6HAiUVyyqCRK
+	IyaPbpmSBB/+HtbvR3DbjfG3Lt7Kg+NPXiT+KY3LRXYILUsMTzR/VSDAEM+/cD4=
+X-Gm-Gg: ASbGncvANnyz+uV2ednFDzByZFmg44QfhDZRnQIz23e1oH1C1SM/RHtiNACG7SQG7H1
+	ipkCjftlVnjWMnuPXB4kGuV+X18rhBICLdLmi/ZU7JB/b/BJYHA4lgj1+TCGp/MxhIKA3n1LzVZ
+	ZqSag1e9OccOyabBMBt09LbiiEOELjNtS1I6FG+o/JH5Ebo3ip/axwWp4BFg/yBUyAgjYm2XjIX
+	xzXfg1/1Rvt0TYz9KCjC7SPMNfcE2SsV+iobrbAOAqkSR4XxTNaTHwJAkF2vzeRbzUW4HBbHAzd
+	UihdvSxDISFk5w==
+X-Google-Smtp-Source: AGHT+IGKobUtXHluY1sE6yvKOwaoaHY7us7ziVqjKoQwwTgWBzyrPdqWETaIUMUOpE8su1LCqMuAhA==
+X-Received: by 2002:a05:622a:1801:b0:471:887e:fe4 with SMTP id d75a77b69052e-471dc14081amr12129771cf.5.1739568411804;
+        Fri, 14 Feb 2025 13:26:51 -0800 (PST)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-471c2a12436sm21514891cf.23.2025.02.14.13.26.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 13:26:51 -0800 (PST)
+Date: Fri, 14 Feb 2025 16:26:47 -0500
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Brendan Jackman <jackmanb@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Yosry Ahmed <yosry.ahmed@linux.dev>
+Subject: Re: [PATCH] mm/page_alloc: Clarify some migratetype fallback code
+Message-ID: <20250214212647.GB233399@cmpxchg.org>
+References: <20250214-clarify-steal-v1-1-79dc5adf1b79@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|LV8PR11MB8772:EE_
-X-MS-Office365-Filtering-Correlation-Id: df73bdcd-07d5-4d18-c04d-08dd4d3dfdea
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?anNGUzdnUGFpTkNabm1aY2lIak9SZ0Noc0FpNDNHaGFtUWIyYUhjb2FjRkNE?=
- =?utf-8?B?R2hBSkFtNUxxZjd6ZG9GYjEyRk94dFVkbytmME9oaFViTzlrdzNVb3o4Uytp?=
- =?utf-8?B?UGxjZTRKV0VGRUdrbmNGWUNSdDBmNHV2cHBvMzN1Y1hPSDlabysvSTdOUEF4?=
- =?utf-8?B?clFHdUpQOXRrQjRJc0xUd1Bac08vRVp3UENPMHhyeG1nTmszUktGdTZHNVpU?=
- =?utf-8?B?MUZsM3hSb1BuNUM4TWQrWm9COEJVd3U0RC8xM2ZOWXltT0lsU0kzYnFRVnFa?=
- =?utf-8?B?UVpGUzJzMWlraXpzWTRoQyt4TnhaVnk4Y0pjc3lRQXN0TEtQZFdFRVhxS3hC?=
- =?utf-8?B?NVBjVzdvcmt5VTJKblllN1JOTjhPUG90STV2cXE0UFZkZ1hmL2hUTGh0SlFX?=
- =?utf-8?B?YTJva0hOaWU0VE1XTldKV2dyZHNCc2pGYWlic29HODNUZm0rd2drRGpFa3lK?=
- =?utf-8?B?Q09NYUpVRjV5UUI3aVFGUFRiRHYrdjgwQVN1R3VKcDRuNWFYK1ZtS0JzL2JD?=
- =?utf-8?B?ZE9xU1JhU3MyTnllT1RDN0F3NW14Uy9PYVZuVjZkZFRHZ3hCUnh4dWlkU2VL?=
- =?utf-8?B?ZkVHZ0t3MTZVQ1dGRENJcElqMTk2a3FYWnorSDhjUVNVSmVZQnRtNWRlQk02?=
- =?utf-8?B?dmVJZlFZNWpMUDB4YVdhODk1d0lBQVdhWFlJd05YS3ppTDFITmdpa0g1ZTNF?=
- =?utf-8?B?K25KVlg0OEcxWWhQbXRtT2t4WVhhc0V6ZWF4ZjN6eWJ1em94blc2RGlDRGlY?=
- =?utf-8?B?empwZVM4TEhDQjh6ajV4bHFWSENVZ0tYOHRXRllLWEtsbExrSzdXT3Q2Vmh6?=
- =?utf-8?B?UUE1dkptb0M3QVpGY0txOFEyTCt0RXlKSWkyVG4zdXpzcHZmRzNYVkZqWXhQ?=
- =?utf-8?B?dnVFcFhCbHFlYUVTeDN3VWVFeXB2T044YzV4cjVEUTRWcUgrOHcwZTNNZVdQ?=
- =?utf-8?B?OWl3M3dyL0JpNnM0aFppcGtBQ29UVTdGVDlHTnBuMllHY1g2bE0xOWE5QlI5?=
- =?utf-8?B?Ty9DTXVVaVJxQURpc0lWenZucFBlL2pXdEF4S0RaSmtRejYvUSsvbkRPSk1N?=
- =?utf-8?B?dkdJMDdkemt3NHVzWGNrYWFmVGlhS1FHaGJ0NklxWnFWbWtGOUQxeUViTjVY?=
- =?utf-8?B?Vi9lSW1LQ0JSRVlQNzNsOXlIaGI2OTJ0TGd4REVuTDRLa0NTRjlXLzlZam4v?=
- =?utf-8?B?SlZ0S2xydkFZUGUxY1BNZWtVMWdYSHp5bnUwemRFYktHdVFuNmZKZTRYOUF3?=
- =?utf-8?B?ZjFKRWs2OFdZWWRIYmtXSmIwRTdmZzcvVHp0bFFqNVNsalRxR2thWHRBM3FR?=
- =?utf-8?B?bFNuNE45bVdUU0xqaGVpRFVBdWxQSHVkeGEveFJHNFRmUW1ZeDgwcURNaDNF?=
- =?utf-8?B?c1JHYXdSMElOWEdPMThnQnk2SFgxUnNyYXNuTjVZdkpyMU5DeEtoRU1xRVFB?=
- =?utf-8?B?cS9HWUFSaTFld2xkR3lGQ3BlKzFnQ1VPN3lxVzVyOTNaN0svVHBGNk94VXl3?=
- =?utf-8?B?RHFQWGhpNWRhcFBMUWpTWmFRcE5tRHloR2ZhanZFU044eUJ5bTJYNEFYOFY5?=
- =?utf-8?B?elIvaWJuSm9ERjdHamQxV3AraDJ1MzM3d1ptVmQ0V3hSa1dIUjRPM0FiVGMz?=
- =?utf-8?B?eVdmL0J6S3hmbkl3TFNiSkJNQjJDOUJ2bzNBd2dZcmZPZlVkTHduQ0lrci9M?=
- =?utf-8?B?WTZrN29VRE16WjhwTWU4MGk0a3IxVHk4MDJwb0dJM1gzYWdwNDJYRTgyZExZ?=
- =?utf-8?B?UytMcC9kSEpBMk1uZWlUdkV4S2hLQU16bGRONXE2TEZYNUp1U1E0aTkwbTZQ?=
- =?utf-8?B?dlFycmdxcVVEeGh6Tm9oaGZEQlpWQkpLMWJkUEd2cm0zbHVmN01jVCtjSEpH?=
- =?utf-8?B?WjRRZXN0V2JaQ21rSkZ6K2xwVFlRODNqc2p6QU1PeW1qMWZhY2g5VjdHc2ky?=
- =?utf-8?Q?6KZiik+1zH8=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dkNMRWptSkNxQ0hLYk5NcGx3bXpidW9JdlZxK1IrMXZnUFd6WUlaUWtFdlZt?=
- =?utf-8?B?WWYyd1hVNktxWUNiR2Z1RGtyY0QxcjUzcEFlVE5abVlCUzVTRk9zQnpsMzBV?=
- =?utf-8?B?bmcreERuNUdRYjZpT3NHalMzM0cyam0vT0RiMTMvendxRUlQdUtkTHZXL29X?=
- =?utf-8?B?b2x5V1RwbEorUERRaHBEOTlkRVdHUjV6clBtUENINUNWNWpmQTJmbm04bkpJ?=
- =?utf-8?B?Z3hnZ2Q2SUVFK2JYQ2xDOWRITEV6U01BcExCOHJOcXA4dzhwTU93b2JtOU53?=
- =?utf-8?B?dktiQTBDQ2JFUXJjenpBcDZQeEs1dmhBaGlIRklDYWdjemh1ai9kTXBTdnN2?=
- =?utf-8?B?TU93SEVwZU5COVQzemZjZ2RMMDcrb1A3WjlObUJPWFlVYklQcjZtMkhUQjYr?=
- =?utf-8?B?ZUhWd1dkSUhGUXpwL0dOVXNSVWc3Ni9tLy9BTEhWRXFNeDkwUkVZUGgzTEhV?=
- =?utf-8?B?c1JHVGkyYUVFY1VkNy8yZ1hIZmtNNFVVRWh6Vkp2V0ozVDVWaE4zRUh4VEpn?=
- =?utf-8?B?emYrcmFTMXBKb3RDMFhiTlNnTEhUOXRzd1BQRDg1SFBNN3dHejBqbkd6ZzFC?=
- =?utf-8?B?U0MvNG1zaStvS3lkQW9vanN1cHFudE9VVmJxT3N0K0hEc3B0bHFoNWc2WnZn?=
- =?utf-8?B?VjNIdTQ3N2x0MWZNWkxBSUtxb1VrUVFNdnFMTXdxRDh0UTh6VlRIUFBPZTRL?=
- =?utf-8?B?d0diNzJhdk5WQ1RZandiVUFPbjdhcTZNRUd6OERWTy9GRUtKWlhSUW9nb2ZC?=
- =?utf-8?B?WlZxOXo4KzdaK2RqU3MwUUxuNXFyVitrRUczdUNad1hRMTV3N3dQNm5MTmJ6?=
- =?utf-8?B?NmJwd1VxMTM3T3YzZGRYSUhTeHZPKzlib3pOVS9heG93OFEwTFdQMVhzbjE2?=
- =?utf-8?B?RW9FTXRSempWOCtZRHVYRitVaGxZNEk4Ni9maWc2R0RvUlh0bWlwRUg2a25o?=
- =?utf-8?B?dGUyY21EMERtb2o5bVNNU1l2QXoxNlVWSEFwbHVKc2NKWWpwc3dFQkROaFB1?=
- =?utf-8?B?YnY3TnMwYXBpMVFhcjBtYnpoai9qT256V1NnbURuQzFlbzZJUHFoL1dvd0tk?=
- =?utf-8?B?TVMwTmRiQXlhOG8vVXhLeVVUeHg0R0lGYWp1R3BTZnh3WU5WQ3BYQU1IdHJY?=
- =?utf-8?B?dDArVnY2TFRvL21GZEpHSFpZeEhxV284MnU1cFpXdjRWcjNUWmRQYmhIQUs3?=
- =?utf-8?B?cTVaY3VnTDZnUm9UWEo4ZEdhdEJUMnhRc25aUFIrTzFjbzZiVTRmRitOS2xM?=
- =?utf-8?B?SHlNTjVKdlFNUmxMd0lEbmNwN0piNGtIbGJrYXFCVTFCRGhvVUhqZEw5M0xl?=
- =?utf-8?B?bmlrbys2ZHZXdW50eEd3bTB4QTN0aCt3ZnBNK3FOYm8vZmljZHdqclMvUmRR?=
- =?utf-8?B?dDJma3pTaVNHclZWbnNHU1JMVmhDdXIvMlE2TVdTNjRrYTZFT3BIRDd2OFVm?=
- =?utf-8?B?ang4OExwbUg0QzBpdVRSY2VZZjVheU1pUlV2bGsyZTZzVnBlLzJsbW5wLzk3?=
- =?utf-8?B?VTBSbnlsZE9SV3hQZEhOWGE0SnpRVWQ2SGdDQkpkSDQrWmxXY1hFeGxXTmhh?=
- =?utf-8?B?ZzF1bG1KbVcySWcxMnY4UzBXZTlQa3U5cU4yaUtoV0g4YmdFQW9pbURzbitt?=
- =?utf-8?B?c21iMkpUSm80SFRVN3d1K3VKRmh0Z2hYaEl2SnpNU0Jwb0JXaCtLNVEvalRW?=
- =?utf-8?B?ODlNUDFnY3hsRmpaUUp4b2JpMmhpYk45cEI2a0Y4M0NsK1V3MFQvb2xCTjZK?=
- =?utf-8?B?ZEVIUXlZeVZoWkRjeHUrTjN6eDIwT3JmQ2drTm1FTGgvYmpIdWZBZStNY2Ex?=
- =?utf-8?B?OGZ4SzhnY1g1N2lLUnNvcCs4c00xTzBPbG85c2tEQXNGa3VpUWU1TEl2U2RX?=
- =?utf-8?B?U3VjUVdYK1ZWcldTd0VhOThNY0dsLzRwY1lscVpoYlhBejUyOGZ1UkJIYkxq?=
- =?utf-8?B?YzZONmd5cmJqQnkvbDYwSjVhZjlvblVtZUJ4dGpPRFBQYlZxdjZDNUlabEZj?=
- =?utf-8?B?RUw4eXBwV1oxKzFuOHNxekRzMGNVNTJGZllJMDU0cWpmYmgxaU1WNUx1Undw?=
- =?utf-8?B?K2IyUUo5T1hlODBtRlhBTkJMNzEycnlkakRCUE1oOXBGRkkwN2pxOW5vaERt?=
- =?utf-8?B?cis3RUZSUWczR2xHaVhrK2ZRbXdrRGZxUktkTzVrV0dQTlJ6djFuWW5qMnJa?=
- =?utf-8?B?VGc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: df73bdcd-07d5-4d18-c04d-08dd4d3dfdea
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 21:24:40.6621
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /UMqz+vvJ/CexVLp/nYvKOE9yDK/HP6P8vQNQpssRPSWI+yZOhe5OA79ahNzSeCIs3B+543sTzo7prMj/Mkmc1WHxBo/IO4JS2/wSMyLi5I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8772
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250214-clarify-steal-v1-1-79dc5adf1b79@google.com>
 
-Bowman, Terry wrote:
+On Fri, Feb 14, 2025 at 06:14:01PM +0000, Brendan Jackman wrote:
+> This code is rather confusing because:
 > 
+>  1. "Steal" is sometimes used to refer to the general concept of
+>     allocating from a from a block of a fallback migratetype
+>     (steal_suitable_fallback()) but sometimes it refers specifically to
+>     converting a whole block's migratetype (can_steal_fallback()).
+
+Yes, that's ambiguous.
+
+>  2. can_steal_fallback() sounds as though it's answering the question "am
+>     I functionally permitted to allocate from that other type" but in
+>     fact it is encoding a heuristic preference.
+
+Here I don't see that nuance tbh.
+
+>  3. The same piece of data has different names in different places:
+>     can_steal vs whole_block. This reinforces point 2 because it looks
+>     like the different names reflect a shift in intent from "am I
+>     allowed to steal" to "do I want to steal", but no such shift exists.
 > 
-> On 2/11/2025 7:23 PM, Dan Williams wrote:
-> > Terry Bowman wrote:
-> >> The CXL mem driver (cxl_mem) currently maps and caches a pointer to RAS
-> >> registers for the endpoint's Root Port. The same needs to be done for
-> >> each of the CXL Downstream Switch Ports and CXL Root Ports found between
-> >> the endpoint and CXL Host Bridge.
-> >>
-> >> Introduce cxl_init_ep_ports_aer() to be called for each CXL Port in the
-> >> sub-topology between the endpoint and the CXL Host Bridge. This function
-> >> will determine if there are CXL Downstream Switch Ports or CXL Root Ports
-> >> associated with this Port. The same check will be added in the future for
-> >> upstream switch ports.
-> >>
-> >> Move the RAS register map logic from cxl_dport_map_ras() into
-> >> cxl_dport_init_ras_reporting(). This eliminates the need for the helper
-> >> function, cxl_dport_map_ras().
-> > Not sure about the motivation here...
-> >
-> >> cxl_init_ep_ports_aer() calls cxl_dport_init_ras_reporting() to map
-> >> the RAS registers for CXL Downstream Switch Ports and CXL Root Ports.
-> > Ok, makes sense...
-> >
-> >> cxl_dport_init_ras_reporting() must check for previously mapped registers
-> >> before mapping. This is required because multiple Endpoints under a CXL
-> >> switch may share an upstream CXL Root Port, CXL Downstream Switch Port,
-> >> or CXL Downstream Switch Port. Ensure the RAS registers are only mapped
-> >> once.
-> > Sounds broken. Every device upstream-port only has one downstream port.
-> >
-> > A CXL switch config looks like this:
-> >
-> >            │             
-> > ┌──────────┼────────────┐
-> > │SWITCH   ┌┴─┐          │
-> > │         │UP│          │
-> > │         └─┬┘          │
-> > │    ┌──────┼─────┐     │
-> > │    │      │     │     │
-> > │   ┌┴─┐  ┌─┴┐  ┌─┴┐    │
-> > │   │DP│  │DP│  │DP│    │
-> > │   └┬─┘  └─┬┘  └─┬┘    │
-> > └────┼──────┼─────┼─────┘
-> >     ┌┴─┐  ┌─┴┐  ┌─┴┐     
-> >     │EP│  │EP│  │EP│     
-> >     └──┘  └──┘  └──┘     
-> >
-> > ...so how can an endpoint ever find that its immediate parent downstream
-> > port has already been mapped?
+> Fix 1. by avoiding the term "steal" in ambiguous contexts. This fixes
+> 3. automatically since the natural name for can_steal is whole_block.
+
+I'm not a fan of whole_block because it loses the action verb. It
+makes sense in the context of steal_suitable_fallback(), but becomes
+ominous in find_suitable_fallback().
+
+Maybe @block_claimable would be better?
+
+> Fix 2. by using "should" instead of "can", and also rename its
+> parameters and add some commentary to make it more explicit what they
+> mean.
 > 
+> Signed-off-by: Brendan Jackman <jackmanb@google.com>
+> ---
+>  mm/compaction.c |  4 ++--
+>  mm/internal.h   |  2 +-
+>  mm/page_alloc.c | 42 ++++++++++++++++++++++--------------------
+>  3 files changed, 25 insertions(+), 23 deletions(-)
 > 
->             ┌─┴─┐
->             │RP1│
->             └─┬─┘
->   ┌───────────┼───────────┐
->   │SWITCH   ┌─┴─┐         │
->   │         │UP1│         │   RP1 - 0c:00.0
->   │         └─┬─┘         │   UP1 - 0d:00.0
->   │    ┌──────┼─────┐     │   DP1 - 0e:00.0
->   │    │      │     │     │
->   │  ┌─┴─┐  ┌─┴─┐ ┌─┴─┐   │
->   │  │DP1│  │DP2│ │DP3│   │
->   │  └─┬─┘  └─┬─┘ └─┬─┘   │
->   └────┼──────┼─────┼─────┘
->      ┌─┴─┐  ┌─┴─┐ ┌─┴─┐
->      │EP1│  │EP2│ │EP3│
->      └───┘  └───┘ └───┘
-> 
-> 
-> It cant but the root RP and USP have duplicate calls for each EP in the example diagram.
-> The function's purpose is to map RAS registers and cache the address. This reuses the
-> same function for RP and DSP. The DSP will never be previously mapped as you indicated.
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index 12ed8425fa175c5dec50bac3dddb13499abaaa11..8dccb2e388f128dd134ec6f24c924c118c9c93bb 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -2332,7 +2332,7 @@ static enum compact_result __compact_finished(struct compact_control *cc)
+>  	ret = COMPACT_NO_SUITABLE_PAGE;
+>  	for (order = cc->order; order < NR_PAGE_ORDERS; order++) {
+>  		struct free_area *area = &cc->zone->free_area[order];
+> -		bool can_steal;
+> +		bool whole_block;
+>
+>  		/* Job done if page is free of the right migratetype */
+>  		if (!free_area_empty(area, migratetype))
+> @@ -2349,7 +2349,7 @@ static enum compact_result __compact_finished(struct compact_control *cc)
+>  		 * other migratetype buddy lists.
+>  		 */
+>  		if (find_suitable_fallback(area, order, migratetype,
+> -						true, &can_steal) != -1)
+> +						true, &whole_block) != -1)
 
-Are you talking about in the current code, which should have already
-reported problems due to multiple overlapping mappings, or with the
-proposed changes? Can you clarify the sequenece of calls that triggers
-the multiple mappings of RP1?
+This one e.g. would look clearer with &block_claimable.
 
-Also, if EP1 and EP2 race to establish the RP1 mapping, then wouldn't
-EP1 and EP2 also race to tear it down? What prevents EP2 from unmapping
-RP1 if EP1 still needs it mapped?
+Not that it's actually used...
 
-I would prefer that rather than EP1 being responsible for mapping RP1
-RAS, and a lock to prevent EP2 and EP3 from also repeating that, it
-should be UP1 in cxl_switch_port_probe() taking responsibility for
-mapping RP1 RAS.
+> @@ -1948,7 +1948,7 @@ steal_suitable_fallback(struct zone *zone, struct page *page,
+>  	if (boost_watermark(zone) && (alloc_flags & ALLOC_KSWAPD))
+>  		set_bit(ZONE_BOOSTED_WATERMARK, &zone->flags);
+>  
+> -	/* We are not allowed to try stealing from the whole block */
+> +	/* No point in stealing from the whole block */
 
-One of the known problems with cxl_switch_port_probe() is that it
-enumerates all dports regardless of attachment. That would be where I
-would expect problems of dports already going through initialization
-prematurely in advance of an endpoint showing up. However, that's a
-different fix.
+The original comment actually makes more sense to me. Why is there no
+point? It could well find enough free+alike pages to steal the
+block... It's just not allowed to.
 
-[..]
-> >> +
-> >> +	/* dport may have more than 1 downstream EP. Check if already mapped. */
-> >> +	mutex_lock(&ras_init_mutex);
-> > I suspect this lock and check got added to workaround "Failed to request
-> > region" messages coming out of devm_cxl_iomap_block() in testing? Per
-> > above, that's not "more than 1 downstream EPi", that's "failure to clean
-> > up the last mapping for the next cxl_mem_probe() event of the same
-> > endpoint".
-> Synchronization was added to handle the concurrent accesses. I never observed
-> issues due to the race condition for RP and USP but I confirmed through further
-> testing it is a real potential issue for the RP and USP.
+I will say, the current code is pretty hard to reason about:
 
-It is still not clear to me how this singleton lock helps when multiple
-EPs are sharing a resource that both races init and shutdown.
+On one hand we check the block size statically in can_steal_fallback;
+on the other hand, we do that majority scan for compatible pages in
+steal_suitable_fallback(). The effective outcomes are hard to discern,
+and I'm honestly not convinced they're all intentional.
 
-> You recommended, in the next patch, to map USP RAS registers from cxl_endpoint_port_probe().
-> Would you like the RP and DSP mapping to be called from cxl_endpoint_port_probe() as well? Terry
+For example, if we're allowed to steal the block because of this in
+can_steal_fallback():
 
-I think it is broken for an EP to be reaching through a switch to
-initialize a shared resource at the RP level. Each level of the
-hierarchy should take care of its immediate parent. We need this
-bottom-up incremental arrangement due to the way that CXL hides
-register blocks until CXL link up.
+	order >= pageblock_order/2
+
+surely, we'll always satisfy this in steal_suitable_fallback()
+
+	free_pages + alike_pages >= (1 << (pageblock_order-1)
+
+on free_pages alone.
+
+And if the order is less than half a block, we're only allowed an
+attempt at stealing it if this is true in can_steal_fallback():
+
+	start_type == MIGRATE_RECLAIMABLE ||
+	start_type == MIGRATE_UNMOVABLE
+
+So why is the majority scan in steal_suitable_fallback() checking:
+
+	if (start_type == MIGRATE_MOVABLE)
+		alike_pages = movable_pages
+
+Here is how I read the effective rules:
+
+- We always steal the block if at least half of it is free.
+
+- If less than half is free, but more than half is compatible (free +
+  alike), we currently do movable -> non-movable conversions.
+
+  We don't do non-movable -> movable (won't get to the majority scan).
+  This seems reasonable to me, as there seems to be little value in
+  making a new pre-polluted movable block.
+
+- However, we do non-movable -> movable conversion if more than half
+  is free. This is seemingly in conflict with the previous point.
+
+Then there is compaction, which currently uses only the
+find_suitable_fallback() subset of the rules. Namely, for kernel
+allocations, compaction stops as soon as there is an adequately sized
+fallback. Even if the allocator won't convert the block due to the
+majority scan. For movable requests, we'll stop if there is half a
+block to fall back to. I suppose that's reasonable - the old
+utilization vs. fragmentation debate aside...
+
+Did I miss one?
+
+We should be able to encode all this more concisely.
+
+> @@ -1995,12 +1995,14 @@ steal_suitable_fallback(struct zone *zone, struct page *page,
+>  
+>  /*
+>   * Check whether there is a suitable fallback freepage with requested order.
+> - * If only_stealable is true, this function returns fallback_mt only if
+> - * we can steal other freepages all together. This would help to reduce
+> + * Sets *whole_block to instruct the caller whether it should convert a whole
+> + * pageblock to the returned migratetype.
+> + * If need_whole_block is true, this function returns fallback_mt only if
+> + * we would do this whole-block stealing. This would help to reduce
+>   * fragmentation due to mixed migratetype pages in one pageblock.
+>   */
+>  int find_suitable_fallback(struct free_area *area, unsigned int order,
+> -			int migratetype, bool only_stealable, bool *can_steal)
+> +			int migratetype, bool need_whole_block, bool *whole_block)
+>  {
+>  	int i;
+>  	int fallback_mt;
+> @@ -2008,19 +2010,19 @@ int find_suitable_fallback(struct free_area *area, unsigned int order,
+>  	if (area->nr_free == 0)
+>  		return -1;
+>  
+> -	*can_steal = false;
+> +	*whole_block = false;
+>  	for (i = 0; i < MIGRATE_PCPTYPES - 1 ; i++) {
+>  		fallback_mt = fallbacks[migratetype][i];
+>  		if (free_area_empty(area, fallback_mt))
+>  			continue;
+>  
+> -		if (can_steal_fallback(order, migratetype))
+> -			*can_steal = true;
+> +		if (should_steal_whole_block(order, migratetype))
+> +			*whole_block = true;
+>  
+> -		if (!only_stealable)
+> +		if (!need_whole_block)
+>  			return fallback_mt;
+>  
+> -		if (*can_steal)
+> +		if (*whole_block)
+>  			return fallback_mt;
+>  	}
+
+This loop is quite awkward, but I think it actually gets more awkward
+with the new names.
+
+Consider this instead:
+
+		*block_claimable = can_claim_block(order, migratetype);
+		if (*block_claimable || !need_whole_block)
+			return fallback_mt;
+
+Or better yet, inline that function completely. There are no other
+callers, and consolidating the rules into fewer places would IMO go a
+long way of making it easier to follow:
+
+		if (order >= pageblock_order/2 ||
+		    start_mt == MIGRATE_RECLAIMABLE ||
+		    start_mt == MIGRATE_UNMOVABLE)
+			*block_claimable = true;
+
+		if (*block_claimable || !need_whole_block)
+			return fallback_mt;
