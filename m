@@ -1,123 +1,145 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958BF264A9A;
-	Fri, 14 Feb 2025 13:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B982641C5;
+	Fri, 14 Feb 2025 13:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739538092; cv=none; b=nRsduaedp4bNcOXTwCerUm5ejh9yheq2jWXxOKTE6RLyV6fcnPU9RwADrcLbw/6UB9MW+KQyhjiclv7ig1gcfUZbm7NSk5bEf3U6X3CUj9osKhd7nfckSGuu4YUloixoeBPaQyargpkUZ/HgMNruJr4Wy39cnO0MpX57pQDtnvU=
+	t=1739538131; cv=none; b=dEJ/M651NpJZGrsNYkJcMhn/KkDPsb+Q79WuCRgVD7NrXNDlLJ6bAQDJAe0hQAPA1hR9CKYNatyjk8++Uf1LD0vIXd4zcTEkXtO4hic6Keni6XWRp9j7HKG6hh+cEPcckM1pxANZIGK3WjogD2Kuuc+rfo8y1V9qclqLp3ZqNHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739538092; c=relaxed/simple;
-	bh=FIBo4Pn5/bM8NNMW2uzH89Pu3UzY3UHIvwIrPFjcIYk=;
+	s=arc-20240116; t=1739538131; c=relaxed/simple;
+	bh=jPFC/CXt6GIqWxOtYvQTRbjZqJ4fVPkJLkMYclM4tvM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VKDKSlGY/irHND4uCJofoEF+g6InVFdGPC/6LxfsZdL47MFD1bZESUoA14MLR6yOXhfwl33AZXAyy2Ze5DI6TRA843BidtVJ+LLbLwVREUc3+Xf9wP9ifOp/lHsvz+nn6cnw7KIoEjSjS/1o7WJvWLM41NARuzOzxRQSUlXZvPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5dee1626093so1106614a12.1;
-        Fri, 14 Feb 2025 05:01:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739538089; x=1740142889;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SmJSbPjau7GZkUvt4YAQLEQLZ+4k7GSl+yHabGYZeqg=;
-        b=r5b4CCrBRukca8dW6trOReaOCLrjy95fAenMeFpNH/cuEF05cgTBy9FrOVFnJm7xyL
-         sa/qBqRuzu8MD9P+zxdCvsx/RKSggt/hEQS0IrS+D9e7ffLQGciKqhKtsWZLIzaLNf2Z
-         EDHI9M7IysptptsPz2Jtz3geLX/L3s4pZW2KoCFn03e/rydGoPBUF/9Cbaimx0AgPQcg
-         zpghuKwqrYo0HL7p5/mWA43JCaB7Aetehl3XQINF+TLTqN3AuR0klT/uTWS8ly1JxHFe
-         FZm5wVB2VlQ6aCL5aWtAG+a7Ieu17DVdPisb4cwzwV9ieO2vmDxL/VTJ7nZ62oDI7fi7
-         H8tA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgS60VUGlJvtIHcTqU+WP7o4wu/V3jBIoA4agB+lc/o4r74v7djxQwyyphJt2EhT4aQ31ImxEq@vger.kernel.org, AJvYcCWI2b66Rmp1kUmA1j0iCg6HP6hESocDP0jsUsJbj/4Z0vrPzzX1HhZsxxeRpvN6zZo5LdcBG0rJ@vger.kernel.org, AJvYcCWsAj8WAolw6F1YTrxGCpMMM9koqtoIkHhDdkgVWVNUuVtNaIReYtgCHtRHI88DfIGZpoGBwsPu7+BQADo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/bugQ4iL1NM7wCDcP54tAB4oZI/SIpxJ4nPe0SZAfnjs56sG4
-	dZ8C60JB9XFo1kIJjdz+WXZpY4FIjuidsFvIS8y493p0HWl6tbga
-X-Gm-Gg: ASbGnctXpAhgHH8AGQh3GsALmw0qS4hRilyu2VHv4lVND/gZ3RKmkZXrVxfcF5zHzv8
-	eZ9qhPm3I0AlwKs/veW2PgyW7oVlJtZheOQy9KlS5Ug0FYN+mOGQ71FB5fFHR0ouVQlGWLyzg9t
-	0Tz01+hf3hmDC6EvvQA54b8oQ6maUT3rpGz6m5Ujd1kywd/MIAtwlnIo9nBMdCHn+/ZTFu4xzfo
-	+B+4n3/b6pvx4GkCUU4vNQeXyD3UOympEcPO7JgEi6VqLsVO7yJxA2mN5ZOAdlQTgb9ESRSp/84
-	B6sflQ==
-X-Google-Smtp-Source: AGHT+IEirsmfMl6q8OzxN8fXiy6/+vOALKyTI2Z/D3DognQreEPKQsCrns0gsFkYbx+oq0ZFm8aeEA==
-X-Received: by 2002:a17:907:1c1e:b0:ab7:ef47:ed27 with SMTP id a640c23a62f3a-aba50febe2cmr709899666b.13.1739538088320;
-        Fri, 14 Feb 2025 05:01:28 -0800 (PST)
-Received: from gmail.com ([2a03:2880:30ff:5::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba532581cesm334181466b.45.2025.02.14.05.01.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 05:01:27 -0800 (PST)
-Date: Fri, 14 Feb 2025 05:01:25 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>, David Wei <dw@davidwei.uk>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	paulmck@kernel.org, kernel-team@meta.com, stable@vger.kernel.org
-Subject: Re: [PATCH net] netdevsim: disable local BH when scheduling NAPI
-Message-ID: <20250214-daffy-athletic-kakapo-ba9b1b@leitao>
-References: <20250212-netdevsim-v1-1-20ece94daae8@debian.org>
- <CANn89iKnqeDCrEsa4=vf1XV4N6+FUbfB8S6tXG6n8V+LKGfBEg@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QY0ueHfjPH1yE54pCeG1X9j+jMTc8CTWGEmd4XPSvsO+1swmev/GlJ4wlM+onGvW5RV9bcInd2D0EpdVK6gWlA8xjZTyYDoLzFZcDOH9JhdS8yNe1zJV/B2ochQ+UGRblPvNEQryOVslng+CvrH2YDSDBRxHBMGh/tYboUC96bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Uai4bzoc; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Uai4bzoc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=8wSvMtFQcZjUPSELJlJNQC55nbU8FtST3XYdWaOnecE=; b=Uai4bzocQFjVhRo9PWFm4ANw2H
+	wGYoNM5vTn8Sb6CH7IzbU5JlEny7tT3EiysiP5o0QllVIR5T8bCzBfXfaEFHb5VUTuloiVdpJUlm9
+	fVn6eu0QYRkclihh10qoQd6gOnGWJ5ev6pYDbmBlBjGhcXWWf+gz0P0NkJJcxMBgiDwJO8mAax4FX
+	1yFZceCLc1TCmRLjeyXwmnrLrF2PX8pw6gk80dhlzISi/vA2xLRFO58HGJsT7nJmYYakjTy0hWP6X
+	JyPD84eUQVLFWShuBWIdwK2qoD3SaNK2OXvftoz3dBMdKo58MRlnoxcEAps4cHShIV9+u20Dsjkav
+	ZPdn9NJw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tivKY-0000000BKap-07pa;
+	Fri, 14 Feb 2025 13:02:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9BD79300599; Fri, 14 Feb 2025 14:02:05 +0100 (CET)
+Date: Fri, 14 Feb 2025 14:02:05 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
+	"Hansen, Dave" <dave.hansen@intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"patches@lists.linux.dev" <patches@lists.linux.dev>,
+	"x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH] x86/cpu: Add two Intel CPU model numbers
+Message-ID: <20250214130205.GK14028@noisy.programming.kicks-ass.net>
+References: <20240923173750.16874-1-tony.luck@intel.com>
+ <c8545ed5-b822-43a0-a347-d077bccf9d6f@citrix.com>
+ <SJ1PR11MB6083F36D7C68AE8DF5AAA39DFCFC2@SJ1PR11MB6083.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANn89iKnqeDCrEsa4=vf1XV4N6+FUbfB8S6tXG6n8V+LKGfBEg@mail.gmail.com>
+In-Reply-To: <SJ1PR11MB6083F36D7C68AE8DF5AAA39DFCFC2@SJ1PR11MB6083.namprd11.prod.outlook.com>
 
-Hello Eric,
-
-On Wed, Feb 12, 2025 at 07:55:32PM +0100, Eric Dumazet wrote:
-> On Wed, Feb 12, 2025 at 7:34 PM Breno Leitao <leitao@debian.org> wrote:
+On Wed, Feb 12, 2025 at 04:09:11PM +0000, Luck, Tony wrote:
+> >> +/* Family 19 */ +#define INTEL_PANTHERCOVE_X IFM(19, 0x01) /* Diamond
+> >> Rapids */
 > >
-> > --- a/drivers/net/netdevsim/netdev.c
-> > +++ b/drivers/net/netdevsim/netdev.c
-> > @@ -87,7 +87,9 @@ static netdev_tx_t nsim_start_xmit(struct sk_buff *skb, struct net_device *dev)
-> >         if (unlikely(nsim_forward_skb(peer_dev, skb, rq) == NET_RX_DROP))
-> >                 goto out_drop_cnt;
-> >
-> > +       local_bh_disable();
-> >         napi_schedule(&rq->napi);
-> > +       local_bh_enable();
-> >
+> > Is it intentional that this is not INTEL_DIAMONDRAPIDS_X like
+> > Sapphire/Emerald/Granite ?
 > 
-> I thought all ndo_start_xmit() were done under local_bh_disable()
+> Andrew,
+> 
+> PeterZ wants to name based on core, not SoC (at least for mono-core CPUs ... this
+> doesn't work for hybrid).  Argue with him.
 
-I think it depends on the path?
+Argh :-)
 
-> Could you give more details ?
+So yeah, its a trainwreck.
 
-There are several paths to ndo_start_xmit(), and please correct me if
-I am reading the code wrongly here.
+We used to use uarch, and that worked until skylake.
 
-Common path:
+I'm not sure what exactly we continued as, but Kaby Lake was a Skylake
+uarch.
 
-	__dev_direct_xmit()
-		local_bh_disable();
-			netdev_start_xmit()
-				__netdev_start_xmit()
-					ops->ndo_start_xmit(skb, dev);
+The Atoms are uarch and still are, they weren't messed up.
+
+But if you want to do DMR as PANTERCOVE then SPR should've been
+GOLDENCOVE and we didn't do that either.
 
 
-But, in some other cases, I see:
+Also, since DMR is the direct continuation of GRANITERAPIDS, it should
+also come below it.
 
-	netpoll_start_xmit()
-		netdev_start_xmit()
-			....
+Therefore, I'll concur with Andy that this is all highly irregular and
+would propose we do the below.
 
-My reading is that not all cases have local_bh_disable() disabled before
-calling ndo_start_xmit().
+Isn't the only reason we're doing a new Family because we can out of
+module number space? It's not magically different from Fam6.
 
-Question: Must BH be disabled before calling ndo_start_xmit()? If so,
-the problem might be in the netpoll code!? Also, is it worth adding
-a DEBUG_NET_WARN_ON_ONCE()?
+---
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 8359113e3e58..bf431dd4e271 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -115,6 +115,8 @@
+ #define INTEL_GRANITERAPIDS_X		IFM(6, 0xAD)
+ #define INTEL_GRANITERAPIDS_D		IFM(6, 0xAE)
+ 
++#define INTEL_DIAMONDRAPIDS_X		IFM(19, 0x01) /* Panther Cove */
++
+ /* "Hybrid" Processors (P-Core/E-Core) */
+ 
+ #define INTEL_LAKEFIELD			IFM(6, 0x8A) /* Sunny Cove / Tremont */
+@@ -179,9 +181,6 @@
+ /* Family 5 */
+ #define INTEL_QUARK_X1000		IFM(5, 0x09) /* Quark X1000 SoC */
+ 
+-/* Family 19 */
+-#define INTEL_PANTHERCOVE_X		IFM(19, 0x01) /* Diamond Rapids */
+-
+ /* CPU core types */
+ enum intel_cpu_type {
+ 	INTEL_CPU_TYPE_ATOM = 0x20,
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+index dbcd3087aaa4..d4f1e222cdfc 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+@@ -810,7 +810,7 @@ static const struct x86_cpu_id isst_cpu_ids[] = {
+ 	X86_MATCH_VFM(INTEL_GRANITERAPIDS_X,	SST_HPM_SUPPORTED),
+ 	X86_MATCH_VFM(INTEL_ICELAKE_D,		0),
+ 	X86_MATCH_VFM(INTEL_ICELAKE_X,		0),
+-	X86_MATCH_VFM(INTEL_PANTHERCOVE_X,	SST_HPM_SUPPORTED),
++	X86_MATCH_VFM(INTEL_DIAMONDRAPIDS_X,	SST_HPM_SUPPORTED),
+ 	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X,	0),
+ 	X86_MATCH_VFM(INTEL_SKYLAKE_X,		SST_MBOX_SUPPORTED),
+ 	{}
+diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c b/drivers/platform/x86/intel/tpmi_power_domains.c
+index 2f01cd22a6ee..0b3092c264f3 100644
+--- a/drivers/platform/x86/intel/tpmi_power_domains.c
++++ b/drivers/platform/x86/intel/tpmi_power_domains.c
+@@ -83,7 +83,7 @@ static const struct x86_cpu_id tpmi_cpu_ids[] = {
+ 	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT,	NULL),
+ 	X86_MATCH_VFM(INTEL_ATOM_DARKMONT_X,	NULL),
+ 	X86_MATCH_VFM(INTEL_GRANITERAPIDS_D,	NULL),
+-	X86_MATCH_VFM(INTEL_PANTHERCOVE_X,	NULL),
++	X86_MATCH_VFM(INTEL_DIAMONDRAPIDS_X,	NULL),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, tpmi_cpu_ids);
 
-Note: Jakub gave another suggestion on how to fix this, so, I send a v2
-with a different approach:
-
-	https://lore.kernel.org/all/20250213071426.01490615@kernel.org/
-
-Thanks for the review!
---breno
 
