@@ -1,144 +1,164 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6585120B20B;
-	Fri, 14 Feb 2025 09:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3677F23A9AA;
+	Fri, 14 Feb 2025 09:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739525942; cv=none; b=fNHq4Ryi928TBkXebuaFmk3SNwO5Vy/lyjI9y9kxTfYuwAp4HYtPlPAktP+UvSWPA7upnYv1fCqp1q27K6tsCZveis0EmBAxBiwuyxjFsEJUCNfstg4ZyR7AebeljFlR6Cp0sEbCJHX3yweIB78CB9rusefZXG1veEy3Tyg9QM8=
+	t=1739526022; cv=none; b=nQ9u06oyiDNbQYzjDnX3zTl5hwm9IuOeWEqV5u62vt1EyGvRixSwOCvN2fe3b9shLZFjudHcM6xOUqwCPw5i4z8O6ovzjCiiEU1NEacOPj0a5c9XWhjobvjiz92UqlsGcQiub58enSNf1AA/2aUBc9ALpWS8MxZLfX6C73sI2vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739525942; c=relaxed/simple;
-	bh=9ijsm6HczVi5ThTYceuVfLfvKtxB6vu8r1DXvKU3eT4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=uFpTphxMUjtCR9JZgu3d2GghbznQ0JQa+U/qzezu2z5ieIGY7r5k16zMFU10dgZTftmY2nrGgcXpZn0MMz357fL69/O+4S8oAjDbKINOVBU3YNVUL30fmA46ai2YFzITCH5kbZtBAkQKHi4UFQ2udhjkl33oSp+ZRu460N6l3FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MRgDN+vm; dkim=fail (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HW9X1JV7 reason="signature verification failed"; arc=none smtp.client-ip=192.198.163.9; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1739526022; c=relaxed/simple;
+	bh=p5vYy2mrK/o/VT5mJ7ApSVSVL8TdJfYkFtZORYT3q94=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nTRKCxhVjTZJT4T+xTD3JjQZqqevebNJBV68pzXgXz6cySJC9620VaqRjkgYBX4Vmv0wrM4HQ7qq7jy7E0QeuVcszGLtFEbYOnBsxQYHlyHe9ytLZq24LmhfvdTNTinYZEFzz3utzIUVMJflRGb4cUTqo6qAmGmOXbKd+15/wDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ERMmtfFm; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MRgDN+vm";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HW9X1JV7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
-	Content-Type; bh=ylGJXpb+Bo8SVziuzHuBH78Q+ZTnsfQrMC8w/UlfR/I=;
-	b=MRgDN+vmbXHc1Si0FGxPFbZA4tQL3M5f1RMe0D58x/3UBvkG4riMgf6DeqAfMu
-	9naV+K3VEb+seX8wF/dP4eVTlllaZYl6mshvAQEX0e18rP1ExaUAmKe7hB9fEHaP
-	5x0LnKBZXvYKFyCv2rWZEaE8wBmIGDQ3cUJfqbZy4WtNk=
-Received: from os-l3a203-yehs1-dev01.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wBHX9AYD69nO4JaMA--.38086S2;
-	Fri, 14 Feb 2025 17:38:33 +0800 (CST)
-From: Xiaochun Lee <lixiaochun.2888@163.com>
-To: xiaocli@redhat.com,
-	740797925@qq.com,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
-	Igor Mammedov <imammedo@redhat.com>
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 00/25] PCI: Resource fitting/assignment fixes and cleanups
-Date: Fri, 14 Feb 2025 17:59:02 +0800
-Message-ID: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 1.8.3.1
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9]) (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)) (No client certificate requested) by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D46206F09; Mon, 16 Dec 2024 17:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=intel.com; i=@intel.com; q=dns/txt; s=Intel; t=1734371805; x=1765907805; h=from:to:cc:subject:date:message-id:mime-version: content-transfer-encoding; bh=YI6S04K1iTSvj1Cp/dFALikn59iuWUReV9PISgS7tbM=; b=HW9X1JV7+FfLVfK5qDkZGICNeNafmtTGUoDa882sBctqOoJosxyCvpjo vs2uwd/doc5KQb9OiA6dRqJRcltw6lKcg9tqd7qpJmkZ1OC00d9bGTOnu qU7qrePAbJdAiFA3QYfA8rmprKuyw4aZ7seDMUQzT21Qatl1KfrXJSI79 PSDJqZtAiq+NsV6LzkYUuVgz5NGVaCjcB0CH7C+7h+XLBNdtyeA3gQFuq CALYsDZwqQJyXs3J0PDwg4OMiq7FXJtl8s2VGAIxw/FOteEfDtnS3E8Yk wN8gepy0wxJB/1ualpuIfKoMTJJDlaf0fWG5RSBGRLL5NpzYRw2ZuRO3+ g==;
-X-CSE-ConnectionGUID: rx0qJFnjSW+DeTuYoki4RA==
-X-CSE-MsgGUID: 9LfrqKeBRAK+uYCLB+OydQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="45465699"
-X-IronPort-AV: E=Sophos;i="6.12,239,1728975600";  d="scan'208";a="45465699"
-Received: from orviesa006.jf.intel.com ([10.64.159.146]) by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:56:45 -0800
-X-CSE-ConnectionGUID: VpnYpi5JRPSI+feKgInibg==
-X-CSE-MsgGUID: 7k4hsoGrSvOr6eVD+2Atig==
-X-IronPort-AV: E=Sophos;i="6.12,239,1728975600";  d="scan'208";a="97309253"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.29]) by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:56:42 -0800
-X-Mailer: git-send-email 2.39.5
-Precedence: bulk
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ERMmtfFm"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7be3f230436so161680785a.3;
+        Fri, 14 Feb 2025 01:40:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739526020; x=1740130820; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7ltnVdbgyWl/+t2lriesNcGGsbLyc+7ozvoFh97YkJ0=;
+        b=ERMmtfFmbYZOmz4dmZfCebcSzFz0E/Bt+ZNTY9w1clPPKRtgIS9kzfS7m6h/779Tay
+         7vYx0rIBnhxwWwTnq5QIUCc8s2Cj/WPC+XN3zAQUSJE/Q6M2djQnBLTe9n85kfiEoyIL
+         5QeT0VFMF/aVgkOg0Y+GmwjQLW7nh+WSIkMZHDl9iZHXJkUZR25CCON7bcz8aieJR7xT
+         txcOcn5D7/TfAwCLedr5baRD4UX2iW+z/r48yohNsDEUtpUtfsqBP3uwDMFeFOCahNLE
+         i5Zj1ZftR805BR0EWp10zabXB15sGO2Q48QhDEoHRY36EpHLGk0uQBEo4o1UHf/ZyxGe
+         X6NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739526020; x=1740130820;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7ltnVdbgyWl/+t2lriesNcGGsbLyc+7ozvoFh97YkJ0=;
+        b=Qr/YRWVrJAlbBfyEJxQ/uNJvfJhY9XqR1d9+BhYM1nWlg+PA7eDMFk0CFKJ4JuWlzt
+         j+UYgD2IgVJ5ACWUq2ge/LdDpw6b49ueqqjrhvLnwynGiH6W6u1zeAvuyYaZlPzR7ZdJ
+         icTI/HKtup6Sp3bOMZEzgiZm15iPNHr3dB7+5tVqlhEwUG5iEkGpTs9rGq7t+VtwSDr5
+         rG38mEbIQLBh2Q7y0F6DQ9GXm+EaTSZ1io4s86EjliCyQyQ3PMSR6vmhKe0Q5EHIgt5e
+         lH7kKIxptLYb2ApatsRVzvANQBD4OVR0O/R9cMhbG8TRXiFBtA0f6+D9R5K6eq079n47
+         lmsA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVQwiAZrF9CLjvj5Z4HaGtMSlniV/I9wCbE0eAUUqLkM6gJZ/CilruCcq4iFmXqrsTNM4Rt9TvNLZlIUTH@vger.kernel.org, AJvYcCX3uVnuYGF4ymXyiziPKNDWRVfmesG5QeeEG9FTnPF7W7E8zdvIdkEs1W+IhxWAIcKPPo/H/tDK3A4C@vger.kernel.org, AJvYcCXhNLzmRwONjIvcTWFhLimiJg8StWWrclU6Rk4WOCVdsX6BtLhWooTMnnnOdvLdEim0sHlazY8H57a+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNh4D+wT+g4i5qTQ+ZJ5OUa1i9avIVfd6jYAzRFnsHBpdOnZWg
+	YbQflNoSQc5L7DTLHBdPMFygKcxgp0kv7XRqtMZGGuWbIUo3oVml
+X-Gm-Gg: ASbGncuYNNWNsCy3QhZSMRQ6CeWe0kpI9uB8zNosR0kVSmliYD5JmVOl6h5LIsPxkvx
+	iaSvsEJICkAyRlIrzh+of/Yu/zfqpH4BGuLCfOE8NZCakU4owNIVgQ4tOrS/oZaVPk/15fU0Vyc
+	DXE8wA0O9RL0qj7DMQphIFUy9WM04eGKg87KoiNBcR3jfam3tLug2hBFB3uuHURlNjQaXfENrzw
+	J41uVhd+r4spNia1NymCLMtBrHAKhw6meAe+1Za9V6omMj5p3Ckryt+uNDyX/FaHtc=
+X-Google-Smtp-Source: AGHT+IEAaWOHdRIBYEDb2EPJpgpRyzUZ58tWTfkhcKSw9SF80+/uXHiUKELTnqkLF3A1dKQoSa4BIg==
+X-Received: by 2002:a05:620a:2d86:b0:7c0:7207:600c with SMTP id af79cd13be357-7c072076382mr937351085a.41.1739526019938;
+        Fri, 14 Feb 2025 01:40:19 -0800 (PST)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c07c861552sm187614185a.79.2025.02.14.01.40.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 01:40:19 -0800 (PST)
+Date: Fri, 14 Feb 2025 17:40:09 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-rtc@vger.kernel.org
+Cc: Jingbao Qiu <qiujingbao.dlmu@gmail.com>, 
+	Inochi Amaoto <inochiama@gmail.com>, alexandre.belloni@bootlin.com, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, unicorn_wang@outlook.com, 
+	inochiama@outlook.com, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, dlan@gentoo.org, linux-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v11 1/3] dt-bindings: rtc: sophgo: add RTC support for
+ Sophgo CV1800 series SoC
+Message-ID: <t6z6rikut2him5m57b6xubbguw3llczp4i6d5frcpuhlqihf2d@booethzadxsq>
+References: <20250213215655.2311793-1-alexander.sverdlin@gmail.com>
+ <20250213215655.2311793-2-alexander.sverdlin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBHX9AYD69nO4JaMA--.38086S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGFWkCr43XFyDKF43Ar43Jrb_yoW5ZrW3pr
-	WfWw48tFWkJry7Jrs5Aw1xAFs3Xa1vy3y5JFyft3s3Za98ZFy2qrn5tayrX3y3GrWxCF1a
-	vF4jvrn8uFWDAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jUeOJUUUUU=
-X-CM-SenderInfo: 5ol0xtprfk30aosymmi6rwjhhfrp/1tbioAvyQGetuKzg-wABsZ
-Message-ID: <20250214095902.RaapUYfV8MPtw_a4e6c8tQl76NlAC3QhojQEytN8pA0@z>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213215655.2311793-2-alexander.sverdlin@gmail.com>
 
-From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+On Thu, Feb 13, 2025 at 10:56:45PM +0100, Alexander Sverdlin wrote:
+> From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> 
+> Add RTC devicetree binding for Sophgo CV1800 SoC.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+> ---
+>  .../bindings/rtc/sophgo,cv1800-rtc.yaml       | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/sophgo,cv1800-rtc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/sophgo,cv1800-rtc.yaml b/Documentation/devicetree/bindings/rtc/sophgo,cv1800-rtc.yaml
+> new file mode 100644
+> index 000000000000..b36b51a69166
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/sophgo,cv1800-rtc.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/rtc/sophgo,cv1800-rtc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Real Time Clock of the Sophgo CV1800 SoC
+> +
+> +description:
+> +  Real Time Clock (RTC) is an independently powered module
+> +  within the chip, which includes a 32KHz oscillator and a
+> +  Power On Reset/POR submodule. It can be used for time display
+> +  and timed alarm generation. In addition, the hardware state
+> +  machine provides triggering and timing control for chip
+> +  power on, off, and reset.
+> +
+> +maintainers:
+> +  - Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> +
+> +allOf:
+> +  - $ref: rtc.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: sophgo,cv1800-rtc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +
+> +unevaluatedProperties: false
+> +
 
-> Hi all,
-> 
-> This series focuses on PCI resource fitting and assignment algorithms.
-> I've further changes in works to enable handling resizable BARs better
-> during resource fitting built on top of these, but that's still WIP and
-> this series seems way too large as is to have more stuff included.
-> 
-> First there are small tweaks and fixes to the relaxed tail alignment
-> code and applying the lessons learned to other similar cases. They are
-> sort of independent of the rest. Then a large set of pure cleanups and
-> refactoring that are not intended to make any functional changes.
-> Finally, starting from "PCI: Extend enable to check for any optional
-> resource" are again patches that aim to make behavioral changes to fix
-> bridge window sizing to consider expansion ROM as an optional resource
-> (to fix a remove/rescan cycle issue) and improve resource fitting
-> algorithm in general.
-> 
-> The series includes one of the change from Michał Winiarski
-> <michal.winiarski@intel.com> as these changes also touch the same IOV
-> checks.
-> 
-> Please let me know if you'd prefer me to order the changes differently
-> or split it into smaller chunks.
-> 
-> 
-> I've extensively tested this series over the hosts in our lab which
-> have quite heterogeneous PCI setup each. There were no losses of any
-> important resource. Without pci=realloc, there's some churn in which of
-> the disabled expansion ROMs gets a scarce memory space assigned (with
-> pci=realloc, they are all assigned large enough bridge window).
-> 
-> 
-> Ilpo Järvinen (24):
->   PCI: Remove add_align overwrite unrelated to size0
->   PCI: size0 is unrelated to add_align
->   PCI: Simplify size1 assignment logic
->   PCI: Optional bridge window size too may need relaxing
->   PCI: Fix old_size lower bound in calculate_iosize() too
->   PCI: Use SZ_* instead of literals in setup-bus.c
->   PCI: resource_set_range/size() conversions
->   PCI: Check resource_size() separately
->   PCI: Add pci_resource_num() helper
->   PCI: Add dev & res local variables to resource assignment funcs
->   PCI: Converge return paths in __assign_resources_sorted()
->   PCI: Refactor pdev_sort_resources() & __dev_sort_resources()
->   PCI: Use while loop and break instead of gotos
->   PCI: Rename retval to ret
->   PCI: Consolidate assignment loop next round preparation
->   PCI: Remove wrong comment from pci_reassign_resource()
->   PCI: Add restore_dev_resource()
->   PCI: Extend enable to check for any optional resource
->   PCI: Always have realloc_head in __assign_resources_sorted()
->   PCI: Indicate optional resource assignment failures
->   PCI: Add debug print when releasing resources before retry
->   PCI: Use res->parent to check is resource is assigned
->   PCI: Perform reset_resource() and build fail list in sync
->   PCI: Rework optional resource handling
-> 
-> Michał Winiarski (1):
->   PCI: Add a helper to identify IOV resources
-> 
->  drivers/pci/pci.h       |  44 +++-
->  drivers/pci/setup-bus.c | 566 +++++++++++++++++++++++-----------------
->  drivers/pci/setup-res.c |   8 +-
->  3 files changed, 364 insertions(+), 254 deletions(-)
-> 
-Tested-by: Xiaochun XC17 Li <lixc17@lenovo.com>
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    rtc@5025000 {
+> +        compatible = "sophgo,cv1800-rtc";
+> +        reg = <0x5025000 0x2000>;
+> +        interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&osc>;
+> +    };
 > -- 
-> 2.39.5
 
+Just for curiosity, Do you leave a way to implement the
+8051 subsys, since its registers are in rtc. (You can
+check the chapter "8051 subsystem" of the SG2002, which
+can be found at https://github.com/sophgo/sophgo-doc).
 
+Regards,
+Inochi
