@@ -1,141 +1,163 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27DD267703
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB29B2676DF
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739550382; cv=none; b=mLK8TrHgQj6u8nfCzTxX/Npqdw36R4Kf/b7acFid8ncOQgGMb+NXtq+Tl8kN2/ilruKgb+6RPAorFbIqOMSX5o/7JWFWWEI4H+92IV/hTWu5rgahAvSTghWtXRlisnXHbp2qGENhh9+samAZWiAWUYZXSc/8GvV/jKoUcIbPROQ=
+	t=1739550413; cv=none; b=pNqVqwXaS/BQBh0l+zEiMCZO54AnyZHNTfJFUgofvJ/MrS8qySo7I9KtF3+hd6V1R+j45+cUDL3a0oozb7VDMNiS7ig+yaOW+K8gQNI2bfBirpUzkauxaOPFSbgwrlfOba6k+NDrYH5jAqVxFv6gGV7hz8ICHlg9iVcrLOM2O/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739550382; c=relaxed/simple;
-	bh=RdevOzly6prF9MIZ2eWFLCR3amtfHr8cOSz/Kq6PTf4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CIwHqzJUI9/9Fic3xhct+mTWF/tM3fij7DaylkctcB42DY7GbFU6YKZCDuYMQzqxobZIl3R2E/PCXFILvfDIkNpyTg5m+7FZ1U8LXDnmXTO30XeY9Ef0nqq0QQsnEQkCsU2X7pmiM2Y1tJbUqN9cyR90jBEEZvF6AnWR6TesC+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=M6rE+ieh; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739550413; c=relaxed/simple;
+	bh=fqAE2/JMrhghnr7h0URaZiiOx0VrL9ZGjPBLMqFnJro=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kwtEBNpuD0uSXTIaCEW0uqmlYn0GDxFa4hB0Xog7Xx+DcH4/pulylWiyQ0cW4CYhiQK9+UTxAatif2xUSqtQbxy/kWJXxHofF9PINUXgvKVaSOljP8RHn6kPIzknZ+WoxTT7VjigWWREdMwTsSlAZRygEIGjBBUXk8DoHz338e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Wkc1leli; arc=none smtp.client-ip=209.85.221.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M6rE+ieh"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54504bf07cdso2215408e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 08:26:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Wkc1leli"
+Received: by mail-wr1-f67.google.com with SMTP id ffacd0b85a97d-38dc9f3cc80so951846f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 08:26:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739550376; x=1740155176; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IRwOfh6tgHaZL3+E0zLATKEm7zWEPnAJi4nv5EHJNOA=;
-        b=M6rE+iehW35zgIn79hV+5pWMqAfi4H1+yzaysEw1kLordizBalX8ObmWRHoFusehHS
-         vUNti38QPXcaOLPZVAYQYBGgr/j/OP0eNWevjitkz7dV0yiDBRUk428OHj+KQ9VFymIV
-         S1W6QDITiEe/asJwr852+819z7fQWnT3X/sn4=
+        d=suse.com; s=google; t=1739550409; x=1740155209; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=yYahPJ7CPZFZpNoRGXLgzm0+xcyc7qKygSX7eH5P6s0=;
+        b=Wkc1leliZ+w2KIRn+bLsx5HAJjW4tE+MWqMXc08vJk/7jQwQaQAeh+P2Vc4mAACGVm
+         bDF+I815anelrpZyZFhT1Sd2D4PucCh6nRQzJjD3+g6ECOIUw6JwDdCZrIrMSmdHjA++
+         3KZ9fplf+SPRQIPTNWOmCwpOLabFM06K6mMT16dPVU2EhyAiv1nYDZVHzUGvHsDauG6A
+         piTZAeEom7z5NmvGdNclX8CoVDyl7dcsf8bASoaDneuYcM/hTQaTVP8xccLD9Bvv53cn
+         dOJTiWOi7LW+D3PLeRlFTVys0KqQGTyGT42/MVLaut72lr2GJ26ebOaXcw2dHDdPgngP
+         stjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739550376; x=1740155176;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IRwOfh6tgHaZL3+E0zLATKEm7zWEPnAJi4nv5EHJNOA=;
-        b=S6k0i38PKkAu85SKBsVkzWtfmn76y29asDQw5NoJdMdb+gtkXjBK9130Z5rDOfiY6B
-         8kF+FyR9Vdy9x9nEiqhtdCe6mcDHRFGH1AJSV9FGJDGo7Ia5W+Uv2kjh/25GZDkOztKz
-         fXXfjJslBXzmhaNOJ0XEjxj5zvjUZuN/PhNRjVp2XdfUPYARH5l+deHnKoD8jGM/MUFx
-         4TcHfkmCGPDN/J9InxC0dcSohKUJmyJNMnlAdhyOe5YBoW7iw5SRGYNs8fohYeHorPXt
-         oKxJebgE+xipgrBeOFro66lHVU5J1ukvUwNNBLviya1ntf4dibjuYpvWi617ur7m0GbY
-         XDRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWFWW2bV0CciUn3PqZkx7c6J4PvJx6koq8yykY6T9oQL2MjzzPN7fNk6UbvJJZhmPJ3juA78djvLzEq3qk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiY9KTtv7rTbBUhRKalT9MvvGvxSDTs+1moFVrgE3y/O6pXEhk
-	bST/cs0erSvKV6G5iggz9hAXjX8EEQbyvWo278PptyEh96ovyO9mHJaIF7M38qRBRv1s1Uvlijs
-	cQA==
-X-Gm-Gg: ASbGncvJD/soOmqWZHYDBtnPyzqDTeZppZTielHFaxVbT6tuzg6JuWLuqN5dGu7v47e
-	maQB6VUAo5zIr2HxkgqOr1UN1eiWAjUxcerAXBDsmb3zWkdGgtdn7x1qZZKe8uMyjPACrS1EEQO
-	GTHva+WIDwi4VWUfwFiHUe6Km7zWH4HsNrzxoYwnjM27kNrnLzl69rJiRyBRozRRrvP4CRq8V0q
-	q1ha72CxOr1zrZ7AmvOESpO3IC3iirpozb1hhhGCH2/46u68RltRt8Qq9QRPQH3hh0ZhkDtulWm
-	qn8cUepE69DScz9F2qWqn4C97+cDfpBS5E3oKKTeFP/3Oj2xMGb2uXKV9BM=
-X-Google-Smtp-Source: AGHT+IHnbuaFl3Z1WWBuDHy0eut1LMjjEf/Xlu2p6r1j7ljVW5LtWe3hgwIx35/lIe/m52cZXMDsug==
-X-Received: by 2002:a05:6512:234c:b0:545:a1a:5576 with SMTP id 2adb3069b0e04-545181094c8mr3509269e87.22.1739550376073;
-        Fri, 14 Feb 2025 08:26:16 -0800 (PST)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5451f10cc28sm572303e87.201.2025.02.14.08.26.14
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1739550409; x=1740155209;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yYahPJ7CPZFZpNoRGXLgzm0+xcyc7qKygSX7eH5P6s0=;
+        b=lE2Lf3bObccdYKiO2T6+yRg9JuOdl6thoiGnf52RX9bGwmIcsu/f/xljcfjsPr+J29
+         jnYcSeOEPdaStpLRyXDikzt90Ex1dIsNH1VAD7J4VluXaqaKt/I6oTjVLWioR8bK3Ra8
+         Ibuzt0+n1Qf4uu4iZ6b15nYZt10F7aHFAyf3qbj8wdOHCeYcl0a5Jz6BHclih+tP1dkc
+         f6dnmffEJheaFgsY/F/zOQ29DeZjxG/m6ED6Wh0bFINGY/xKSpUsszEOe5V3SNbjDuVZ
+         bDOqwYB3If/u+lrEy1B8O42cFdTYco48ruOuHSKspnQ1hyo7fzaOQGb0sEIEOmyBWymC
+         nWWg==
+X-Forwarded-Encrypted: i=1; AJvYcCX2r0XTx54TSuND61rd+fTjfjJrjgrzQdqyZiNSMpDDZc2rUxIwSSM/SVtp1sNKAa8sVEv74dPDz/YM4MM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxkkb5Pa3HEMxOatB8Rs/qmZIp8JYYv3zcmFKsHZAnXNiMQt3n7
+	JUYIgDw+dwdiOwOqhId7TegHkO8NLqm80Ojsl34UWPaK3rUgvHH9Lt9U565H0wXzsDE8PPPSNDn
+	8FOdK8WhG
+X-Gm-Gg: ASbGncvT4hILu5XPkzXrq8h8hu9fjpVZhZgS394jLPSe+xYf9IvA7vkZpipvzABLVFA
+	XLGw7aOQ56nY2IJlYJq0VKJO4g89lISWuiqm/8boF7C+U1GAPejQ9cCkocwjo5Qu0ocljMOm0ix
+	NVeIjpz3sDx5mv4klPu0cFnFX2TBfVdVNqo2Qr5oPcx1pbVFjWoq5R1pYWIB+98S5r7DDYDH6Jj
+	RAnGcl1fgQP0zt85B1Z7W6duDilJ0G8IMfxC2KwLeL/x4ExlRVO/aFeLCqg9JWeR0c+kz2B2Vm1
+	1FwPxgYAxXVw
+X-Google-Smtp-Source: AGHT+IGD0ZwSKP2SVlV7tCbb67DNu8v1KQBEuuR8bN5t8fbcPighOdQVzKxfEH8x4T2JZ2zth1XX9A==
+X-Received: by 2002:a05:6000:1546:b0:38d:c2d7:b5a1 with SMTP id ffacd0b85a97d-38dea26ecdfmr12656044f8f.19.1739550409013;
+        Fri, 14 Feb 2025 08:26:49 -0800 (PST)
+Received: from [192.168.2.177] ([81.0.8.231])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258dab74sm5084116f8f.32.2025.02.14.08.26.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2025 08:26:14 -0800 (PST)
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-308ee953553so23392481fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 08:26:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVItRPG7hoHD/efEltPUU0VVl8laNDpdQ8m+2lDrDEaItlWkThxY+65wFECorkwXBgABxsiMtQfBuV2W1w=@vger.kernel.org
-X-Received: by 2002:a2e:a163:0:b0:2ff:a89b:4210 with SMTP id
- 38308e7fff4ca-30927a2e355mr545351fa.8.1739550374272; Fri, 14 Feb 2025
- 08:26:14 -0800 (PST)
+        Fri, 14 Feb 2025 08:26:48 -0800 (PST)
+Message-ID: <05ec141f-8d2d-456c-830f-f5ea2adce671@suse.com>
+Date: Fri, 14 Feb 2025 17:26:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
-In-Reply-To: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 14 Feb 2025 08:26:02 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=Vyx8vAeRohw3W11Tuv26_-zi-GV__G2cXFxF+e76MJkw@mail.gmail.com>
-X-Gm-Features: AWEUYZl2UQnH588l_o4dR5jYVzX-zOJ9t0dVCpEUG6Ly_Dd5CIEQRbUnuFK0DTE
-Message-ID: <CAD=FV=Vyx8vAeRohw3W11Tuv26_-zi-GV__G2cXFxF+e76MJkw@mail.gmail.com>
-Subject: Re: [PATCH 00/20] drm/panel: Move to using mipi_dsi_*_multi()
- variants when available
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Joel Selvaraj <jo@jsfamily.in>, Ondrej Jirman <megi@xff.cz>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Jianhua Lu <lujianhua000@gmail.com>, 
-	Robert Chiras <robert.chiras@nxp.com>, Artur Weber <aweber.kernel@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	Tejas Vipin <tejasvipin76@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: riscv: spacemit: Add Milk-V Jupiter
+ board compatible
+To: Javier Martinez Canillas <javierm@redhat.com>,
+ linux-kernel@vger.kernel.org
+Cc: javier@dowhile0.org, rjones@redhat.com, abologna@redhat.com,
+ spacemit@lists.linux.dev, Albert Ou <aou@eecs.berkeley.edu>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Matthias Brugger <matthias.bgg@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Rob Herring <robh@kernel.org>,
+ Yangyu Chen <cyy@cyyself.name>, Yixun Lan <dlan@gentoo.org>,
+ devicetree@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20250214151700.666544-1-javierm@redhat.com>
+ <20250214151700.666544-2-javierm@redhat.com>
+Content-Language: en-US, ca-ES, es-ES
+From: Matthias Brugger <mbrugger@suse.com>
+Autocrypt: addr=mbrugger@suse.com; keydata=
+ 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
+ PVrr2NoUqi/bxI8fFQJD1jVj8K0=
+In-Reply-To: <20250214151700.666544-2-javierm@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-On Thu, Feb 13, 2025 at 12:44=E2=80=AFPM Anusha Srivatsa <asrivats@redhat.c=
-om> wrote:
->
-> A lot of mipi API are deprecated and have a _multi() variant
-> which is the preferred way forward. This covers  TODO in the
-> gpu Documentation:[1]
->
-> An incomplete effort was made in the previous version
-> to address this[2]. It removed on the mipi_dsi_dcs_write_seq()
-> and mipi_dsi_generic_write_seq_multi() with the respective
-> replacemts and not the rest of the API.
 
-You didn't seem to take most of the suggestions I gave in response to
-your v1 [3]. Specifically:
+On 14/02/2025 16:16, Javier Martinez Canillas wrote:
+> Document the compatible string for Milk-V Jupiter board [1], which
+> is a Mini ITX computer based on the SpacemiT K1/M1 RISC-V SoC [2].
+> 
+> Link: https://milkv.io/jupiter [1]
+> Link: https://www.spacemit.com/en/key-stone-k1 [2]
+> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
 
-a) I asked that you CC Tejas. I've added him again.
+Reviewed-by: Matthias Brugger <mbrugger@suse.com>
 
-b) I asked that you CC me on the whole patch series, which you didn't
-do. I can find them, but I'd find it convenient in this case for them
-to be in my Inbox.
+> ---
+> 
+>   Documentation/devicetree/bindings/riscv/spacemit.yaml | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/riscv/spacemit.yaml b/Documentation/devicetree/bindings/riscv/spacemit.yaml
+> index 52e55077af1a..077b94f10dca 100644
+> --- a/Documentation/devicetree/bindings/riscv/spacemit.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/spacemit.yaml
+> @@ -21,6 +21,7 @@ properties:
+>         - items:
+>             - enum:
+>                 - bananapi,bpi-f3
+> +              - milkv,jupiter
+>             - const: spacemit,k1
+>   
+>   additionalProperties: true
 
-The first patch conflicts with what Tejas already landed in
-drm-misc-next. See commit 8025f23728e9 ("drm/panel:
-xinpeng-xpp055c272: transition to mipi_dsi wrapped functions"). The
-second patch _also_ conflicts with what Tejas already landed. See
-commit f4dd4cb79f9e ("drm/panel: visionox-r66451: transition to
-mipi_dsi wrapped functions"). Later patches also also conflict. See
-commit 0d6c9edf9e5b ("drm/panel: ebbg-ft8719: transition to mipi_dsi
-wrapped functions"), commit ce8c69ec90ca ("drm/panel:
-samsung-s6e88a0-ams452ef01: transition to mipi_dsi wrapped
-functions"), and commit 7e3bf00047cd ("drm/panel: sharp-ls060t1sx01:
-transition to mipi_dsi wrapped functions"). Maybe you should sync up
-with drm-misc-next before submitting.
-
-I also questioned whether this really made sense to try to do with a
-Coccinelle script and I still don't think so. It looks like Dmitry has
-already reviewed the first few of your patches and has repeated my
-advice. If you want to help with the effort of addressing this TODO
-item then that's great, but I'll stop reviewing (and start silently
-deleting) any future submissions of yours that say that they're done
-entirely with a Coccinelle script unless you address this point and
-convince me that your Coccinelle script is really smart enough to
-handle all the corner cases. I'll also assert that you should review
-Tejas's submissions to see how these conversions are expected to go.
-
-[3] https://lore.kernel.org/r/CAD=3DFV=3DWkPefg00R_TAQQA6waRqGdD+3e84JXfPLk=
-2i9BRzW6Yg@mail.gmail.com
