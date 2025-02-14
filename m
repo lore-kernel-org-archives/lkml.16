@@ -1,153 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344452586F3
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19AD267384
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739546257; cv=none; b=cCuxgKTtB+PM81hEEERkSMuaIEmvGbXsCh/VMwWQVNz08bv6hA7F3jp6CHp5vRbjA+V8VeGonmMbw0WSbHrh3BZ71JTyi2FBvKXH6ic8Snx+nXoBBGKPdYkMWh7KO9fn93sEQE7+OIR5usQXpAB5GltE0ABo/XCy2QnvZIetYqs=
+	t=1739546260; cv=none; b=qbS5mbulXqyP9tkaly3Wrtp3oHHoWDY7tkKl2OIkTlla1eTnDIY58rViufcO6SYGibCoSH0Uwj4Uv8+3IR2H22eWgo/uDNzurWbAXsV8v2xFOpO0M/1d5DyDM9vnk88JlM3RSB+2ZQ8FieJIx/rv1b69oAWC1VHQyvm+vwBmIrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739546257; c=relaxed/simple;
-	bh=4QcTCYeEiFXjqS+XrMv1FhbL69PRzpsj9vK8zReTdEE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KiCWeoOO2Vpzuunhp5VHI7AE02LjRIuFe0ks3dF0di9dk5hPxXJ68cemduPQao5/lYnc+f8YT4jE2EqhFqp8VOCvx0nzBIvpG4iqvP5jj3NTuv/ciIHUcaykfnKeq+WjaFyseYsZ7/5gSaK+dUuPbSbykbjrtx7f5p9EOcdNnww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TodWrV9A; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1739546260; c=relaxed/simple;
+	bh=YS3dBzS1TIYwOXLmFwToghgmQCECpJ7fllGh6NUtinA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BhrI+oWzgEhyTomT1PkzNLyf+lnI5HIJY1jI0ABKuSWdEDr+hDBP3SIHraJdsJdsiBsi37CDFTu2jyf8fdL/Vsxxbn1+JEs9paaUY6PIpwi332yyQZRKp060kUFVFdjLUVU75+d7VkqhPux/dLlbqnSTEpwTqiSTGDQ/qi03AEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fa7LrF0I; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TodWrV9A"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fa7LrF0I"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739546254;
+	s=mimecast20190719; t=1739546257;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9Uvb7bYa9Ne8SlfnrGE22VOdL8DG3p7aSwPX9jSVaTk=;
-	b=TodWrV9A+Ypv5ei39X6sefWlWsvEWK2c2kGLFXWbBT3KD+WSyO5wfnMDv/Y68cuXxV5WFB
-	/aQrliq+4jTTUAnewtIQn9WhFP2hz5TbOtojxQHSQb7HTYtgFuVa7TaRsYxuAjXs8mmImg
-	PVpz1FqafTTir1NN4VNDKS4FDceO8f0=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-55-f8IZxBFHP5yk8uRYiD9qVQ-1; Fri,
- 14 Feb 2025 10:17:30 -0500
-X-MC-Unique: f8IZxBFHP5yk8uRYiD9qVQ-1
-X-Mimecast-MFC-AGG-ID: f8IZxBFHP5yk8uRYiD9qVQ_1739546247
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 702101800874;
-	Fri, 14 Feb 2025 15:17:27 +0000 (UTC)
-Received: from [127.0.1.1] (unknown [10.45.225.8])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 210F219373C4;
-	Fri, 14 Feb 2025 15:17:20 +0000 (UTC)
-From: Sergio Lopez <slp@redhat.com>
-Date: Fri, 14 Feb 2025 16:16:56 +0100
-Subject: [PATCH RFC v2 2/5] virtio: introduce VIRTIO_F_SHM_PAGE_SIZE
+	bh=rvaWRuIqMubpY/jSrhphDNgLxyWwrcegxArhQIPFoO8=;
+	b=fa7LrF0IFgz1q9WDkzMz2BkVgMt1AWCB97ZCafN/b1DOpEnPVvsI17ZrMbPByuynG8YbZY
+	nMrRtFL1y7tpor5NB6vQsAcZlBnASx5IOLzhPtK1+V8xeDjc6ko57aNZtmVq69cvx1r2rg
+	qMKAORcPzQZp36PIQ7gAX4qmXWdQiDw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-520-U68mvrH2Nga_OgbkrwjI_Q-1; Fri, 14 Feb 2025 10:17:36 -0500
+X-MC-Unique: U68mvrH2Nga_OgbkrwjI_Q-1
+X-Mimecast-MFC-AGG-ID: U68mvrH2Nga_OgbkrwjI_Q_1739546255
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-438e180821aso11985255e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:17:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739546255; x=1740151055;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rvaWRuIqMubpY/jSrhphDNgLxyWwrcegxArhQIPFoO8=;
+        b=aVto/a7dbrUtCQyIAEat7kDRsAQSsneNJ0sjiQfYCpX6xMQyLDRsTOst51EYSDxLxa
+         XTAa2hzT10OxnkTcRKSk6cwKseWS4513jh1LOrDhSPciH41JLz7A2UpvRUPjA1CeW/1m
+         eqMhpPM7czngQxKmxKh8TI0MmKF45yiYr3+xpMGM3OyzH2j6iXChzrf5Odv2Q4pN2vt7
+         NSkPV/m4+pXnpg1sT/cPn18ooFTIpBlTBXdXVfTbJ/KoLI5+pmjYqNGe21LRoj8mvKxd
+         PL+dBioe8qe3ki7Tc5C2bEti89rC5JpfLJkt47mPW1BnPNtxExOijziH9B5n6gn8pnkn
+         K58A==
+X-Gm-Message-State: AOJu0YzJHqQn9+tFVI1j/qWk89BAkSGplxq139pSnIXfImdD/lMFypRu
+	EcpiOzMQcaSh8J0EPyCMnYgEzVt8jUf4RX9ojHwMAVJUYlXQ4NoBmy3k8CqErg8oxZQC+pXOSuy
+	Cps3lqh2Y+cPI1MCimhwh9lh7GWoxoJ/EmZLnN9ACzx681wXOK7+oHBoGxUcv11NW/jijM6IUWt
+	OavFZ0W/IEvuEV0XFocwvfFpxEHeo3SR6D0ym7vmhH969D
+X-Gm-Gg: ASbGncsqk8+k54Dc51SnTuyC1iGuTSRHDFuBmFE7sQikJM33c30tAWgUfAX0SESOL88
+	27qc5eX1jmrGO/swuoxoC8lcb7pfqYPvNr0w0vwLFlRd9xatrfrUadnKUCeEB1K8GAIn5ukBdQD
+	owiZ61HjBQuhX14AOxhXgi76vArd7gogMD5gnc+HawzvLxcZzE5C11KETNqENCDwQNJWUCrneFW
+	4AL//tlkzcBANfsjUwYy/v+Q3Cj3WZDeu4C5I6lA1t3XcPvMzv0jRMqvzpL7S8/eaqmS0wf9d/o
+	qmHueqEZqn8QJDFrLKQ1ekX8MiR99A==
+X-Received: by 2002:a05:600c:8509:b0:439:4858:3c77 with SMTP id 5b1f17b1804b1-439601a12b0mr94439475e9.19.1739546254839;
+        Fri, 14 Feb 2025 07:17:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGZ4cE6b9JE7HQ0foGmfeHs83Ot4ztX8SMgiEIT6K5P9Xu9N3qu7/a9sqVogpzuJ8xgB1pwiQ==
+X-Received: by 2002:a05:600c:8509:b0:439:4858:3c77 with SMTP id 5b1f17b1804b1-439601a12b0mr94438755e9.19.1739546254333;
+        Fri, 14 Feb 2025 07:17:34 -0800 (PST)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258fc7ecsm4808546f8f.49.2025.02.14.07.17.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 07:17:33 -0800 (PST)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: javier@dowhile0.org,
+	rjones@redhat.com,
+	abologna@redhat.com,
+	spacemit@lists.linux.dev,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Rob Herring <robh@kernel.org>,
+	Yangyu Chen <cyy@cyyself.name>,
+	Yixun Lan <dlan@gentoo.org>,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH 1/2] dt-bindings: riscv: spacemit: Add Milk-V Jupiter board compatible
+Date: Fri, 14 Feb 2025 16:16:37 +0100
+Message-ID: <20250214151700.666544-2-javierm@redhat.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250214151700.666544-1-javierm@redhat.com>
+References: <20250214151700.666544-1-javierm@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250214-virtio-shm-page-size-v2-2-aa1619e6908b@redhat.com>
-References: <20250214-virtio-shm-page-size-v2-0-aa1619e6908b@redhat.com>
-In-Reply-To: <20250214-virtio-shm-page-size-v2-0-aa1619e6908b@redhat.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>, 
- Daniel Verkamp <dverkamp@chromium.org>, Jason Wang <jasowang@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
- Gurchetan Singh <gurchetansingh@chromium.org>, 
- Chia-I Wu <olvaffe@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
- Dmitry Osipenko <dmitry.osipenko@collabora.com>, fnkl.kernel@gmail.com
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, Sergio Lopez <slp@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2345; i=slp@redhat.com;
- h=from:subject:message-id; bh=4QcTCYeEiFXjqS+XrMv1FhbL69PRzpsj9vK8zReTdEE=;
- b=owEBbQKS/ZANAwAIAfRpJ40vDAI1AcsmYgBnr15tvWt9Axv+YNZc1miTy/xjWRzL/C+1gA9YT
- fvZe6xw9OiJAjMEAAEIAB0WIQS+1fz3US2GgJFC6KL0aSeNLwwCNQUCZ69ebQAKCRD0aSeNLwwC
- NUWLD/0a6MqcTXdKDD5awJeigZBKrFm0xA1a3LKLfHry0m5xXJwW8mQ74DGHp9xfJtcMl59ZhDy
- 26UXYmVAKc3AAX+mTbg2qHa0MtFsnSf3WbddjQfOKaf9/NDzUHi8CqOVE8w/mv5Gph3eY61d3mF
- pWd9/BAcmh+o5QdlPgzlg0wo0HG/3rfPH9z4yc3x/pHEUj61cbplLrXb5iTCM26WzrzO7Pr/t0E
- 95mBwNMK21+cu0VPXpYacuje2cXqj0A2xQ5Wj7WyhcA0tMOFzXYpSUe+NS/ULNFws0GvBCkUq9e
- 7tHDhOINcocGdmn21+0wDp1rh3hjq4S4i5ODDBUquMYoQ4+0CcfbyYJSE7u6mcOz3iFj0ok7Gwg
- hS7R8Foa7iWI+U0FcYXZc1fOrq8l7IEAVxZ6CvhOe6QJtDAJNVXqXCHBtuxK9947k59aowNloCq
- 4b15XpGnSVJkFYXYg33a8mNxhU5C+1mBJpKiQdXBh8pVDtBcKMuV20s0+ypBdmaSZnxGsZrePOr
- km5c7MB7nZZZq8sjWT1q5fleg6ETy5x/7nOv+zdfXSa5OpqdojBADgReKI0FLcG4ihD6Az6MFzm
- AU21wzwI2uCPVrcTHDaCls5bKCeZ4TSeW0+Mv8qkcelXCTrNK/0QN2UP1UkKVabQ9Pm2xaGUStN
- zyu2o7/TSETOcZA==
-X-Developer-Key: i=slp@redhat.com; a=openpgp;
- fpr=BED5FCF7512D86809142E8A2F469278D2F0C0235
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
 
-Introduce VIRTIO_F_SHM_PAGE_SIZE, a feature bit which indicates that the
-transport provides the page size for SHM regions.
+Document the compatible string for Milk-V Jupiter board [1], which
+is a Mini ITX computer based on the SpacemiT K1/M1 RISC-V SoC [2].
 
-Signed-off-by: Sergio Lopez <slp@redhat.com>
+Link: https://milkv.io/jupiter [1]
+Link: https://www.spacemit.com/en/key-stone-k1 [2]
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
 ---
- drivers/virtio/virtio_pci_modern.c | 3 +++
- drivers/virtio/virtio_ring.c       | 2 ++
- include/uapi/linux/virtio_config.h | 7 ++++++-
- 3 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-index d7aeb2e50a3c499dfb68d58cb89b829ea2e50454..ab0e1d9148057c431676bfacfe5f68cc97eebb12 100644
---- a/drivers/virtio/virtio_pci_modern.c
-+++ b/drivers/virtio/virtio_pci_modern.c
-@@ -367,6 +367,9 @@ static void vp_transport_features(struct virtio_device *vdev, u64 features)
- 
- 	if (features & BIT_ULL(VIRTIO_F_ADMIN_VQ))
- 		__virtio_set_bit(vdev, VIRTIO_F_ADMIN_VQ);
-+
-+	if (features & BIT_ULL(VIRTIO_F_SHM_PAGE_SIZE))
-+		__virtio_set_bit(vdev, VIRTIO_F_SHM_PAGE_SIZE);
- }
- 
- static int __vp_check_common_size_one_feature(struct virtio_device *vdev, u32 fbit,
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index fdd2d2b07b5a2aca864bc917306536685afb66a6..d853d5cf7e553be8bbe0ff461dc7312b258c6e58 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -2983,6 +2983,8 @@ void vring_transport_features(struct virtio_device *vdev)
- 			break;
- 		case VIRTIO_F_NOTIFICATION_DATA:
- 			break;
-+		case VIRTIO_F_SHM_PAGE_SIZE:
-+			break;
- 		default:
- 			/* We don't understand this bit. */
- 			__virtio_clear_bit(vdev, i);
-diff --git a/include/uapi/linux/virtio_config.h b/include/uapi/linux/virtio_config.h
-index 2445f365bce74b4e926c6929322b269252ab6830..3171e3792263c2cd472ac09da18e593ab400751d 100644
---- a/include/uapi/linux/virtio_config.h
-+++ b/include/uapi/linux/virtio_config.h
-@@ -52,7 +52,7 @@
-  * rest are per-device feature bits.
-  */
- #define VIRTIO_TRANSPORT_F_START	28
--#define VIRTIO_TRANSPORT_F_END		42
-+#define VIRTIO_TRANSPORT_F_END		43
- 
- #ifndef VIRTIO_CONFIG_NO_LEGACY
- /* Do we get callbacks when the ring is completely used, even if we've
-@@ -120,4 +120,9 @@
-  */
- #define VIRTIO_F_ADMIN_VQ		41
- 
-+/*
-+ * This feature indicates that the transport provides the SHM page size.
-+ */
-+#define VIRTIO_F_SHM_PAGE_SIZE		42
-+
- #endif /* _UAPI_LINUX_VIRTIO_CONFIG_H */
+ Documentation/devicetree/bindings/riscv/spacemit.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/Documentation/devicetree/bindings/riscv/spacemit.yaml b/Documentation/devicetree/bindings/riscv/spacemit.yaml
+index 52e55077af1a..077b94f10dca 100644
+--- a/Documentation/devicetree/bindings/riscv/spacemit.yaml
++++ b/Documentation/devicetree/bindings/riscv/spacemit.yaml
+@@ -21,6 +21,7 @@ properties:
+       - items:
+           - enum:
+               - bananapi,bpi-f3
++              - milkv,jupiter
+           - const: spacemit,k1
+ 
+ additionalProperties: true
 -- 
 2.48.1
 
