@@ -1,434 +1,218 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A62C215F7A
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739518876; cv=none; b=qiKZQ/NdHyMZ8l4YQp/TQ/9CWxRrvNUZE9HkkQiLGhig8G/X3HU8SpTR8cKwEaYEMSf6/HTwtX6TxIGdtIoJRGaTq9pVzfCtgXupzAKpWH9Ysmsvko4zvrrKOCAkH92hWYgsAwyBONzgrrO/0IGOtaO/7Hz7dGzbzA/WH2w6j8g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B269A21578D;
+	Fri, 14 Feb 2025 07:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=210.61.82.184
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739518876; cv=fail; b=j6pQH9dX+qToxYA1GMwqZBNIpN9baEyvWXS1Y6YnvKiDTejlQTxVLd6MFNX0sjwbt7la+QPSGG96c7QIjJ2dcniyPUfgS/5UotWLlZpYmiGubvQoYDxmW3M4wzrguQCkvgLbUzQLUf7/Q4xiJJH/x191aSlj3L2Irm4tbFfxHPg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739518876; c=relaxed/simple;
-	bh=mB8RljxRBxmoBJH4cSw2Js1xDICxl9o34q0cGW3ygEE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=APtRHC44oHVdGRUbQN7Jr1yjG89qDRQ9xwLycBk5HeqhgRzsxMLXL0Jw2wfrBF5UCYGC1CiFrYWz3qkhuPQ8DOPWkNUnBbtgXY0zE5Vz267JZZP0ordDB9v8js+rdZrGUsXiKtdX2mnlUUDtnG3if4Jo/MTvX8AmgWlTxwhCS/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0Epjxrmu; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
+	bh=1bLNcD3Jg46nvsyVLQHLrycvxjfgeCzMx8FYjbgG6h0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=fLnAxDGHUA8chfiCRU9hDmtIvm+gkqYtyZzaKqRuK4N/4jSCTfmZmuLdBEEuQakT4Wn60ZqONe4C98jGvpSDnyoSDXQ7KTG6EGBKCkltzyZfQZbmHLo7ljOH6rTIH5tPubJPTqTX4gD5wK1J4rz9u7BuE3EFoOHicCDUNZm7nwk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Xb3PWzoQ; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=f+JXnw7V; arc=fail smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0Epjxrmu"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fa6793e8b8so4351184a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 23:41:14 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Xb3PWzoQ";
+	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="f+JXnw7V"
+X-UUID: 0c119998eaa711efbd192953cf12861f-20250214
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=1bLNcD3Jg46nvsyVLQHLrycvxjfgeCzMx8FYjbgG6h0=;
+	b=Xb3PWzoQLrFG/eCNhDTgx37EWH3unnYFh+f8p5waQZInNiPOtiamx5W1hTlTWRTWNyLnGreIzmhEIzsM7i+NXT8/F1DbESfy/C+SKv7JHxPGOWCx5tdyS1HB+USZt7m59IFe3kEWCE7nRf9+8kowQmAKZqqmvRD8pXP3vezokFc=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.46,REQID:deccda47-318e-4426-a746-0873fa9455d2,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:60aa074,CLOUDID:37b0be24-96bd-4ac5-8f2e-15aa1ef9defa,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|50,
+	EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
+	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 0c119998eaa711efbd192953cf12861f-20250214
+Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
+	(envelope-from <chun-jen.tseng@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1431945192; Fri, 14 Feb 2025 15:41:05 +0800
+Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 14 Feb 2025 15:41:04 +0800
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (172.21.101.237)
+ by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Fri, 14 Feb 2025 15:41:04 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=V9xSA3FZe5jS/8SdfZY+YOItNiIhwE6yTGvlTVxkS5vdRQnOF7+IkVcFLv9SUGzM8NXIgwnjGFwEAL08gDtFcarf6zwz+77JqznDS7hPjDZ88frBIJrf2kvzSRigF4NsXYJw6OKprrBx4PdGpsBbbTFsmk5q8Yn5PSswQsD+UAbbIV9vMK/rqi3iEYeyKdFdtUccsBX3pHkrQAxNrJ+HfLKnoCozFUelCUdziWxQurzP3dx6EpFb/gD6/7cbdWT5XPGo2XNiRZ8PBdeHuRUG1ZwXbKG0tRlBMIkNVyBlVHcNadM/825LNjpksmi2MosoV+Cx7KOEtqdFsz7abi5lWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1bLNcD3Jg46nvsyVLQHLrycvxjfgeCzMx8FYjbgG6h0=;
+ b=w1T9VORv6Ajz+AVkW7KlNoJdkmnS1pGxNjumJm4XoBsg/oHDJy5Ff8eT+WFC3P6KJ0cHBolHBkQpmCbHV+yPKQRAlxurjA3LSuerXMrk6UObrfwWf5k8Gv6fJ1Rd6Mi6X3UpaVvdLKLM710B9QCviQvSKDWnF1OXoemkh/KEgNUZDDnn8/1YsCwHl1r+QZgxFuiyzbUrOmyJR+GVappyVBtRSlaAb3y8zEjf0i+Trb3cP1EANrub73Yz+RKsMV192vT6BnMkahz4o4hfEgGP+5O/DR2i3XfjnsrHw9i/+Y2HNtkY4a91cGmVYhsrEYOyIvlwwPLirXcKcqm5tvO4QQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
+ dkim=pass header.d=mediatek.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739518873; x=1740123673; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z7ik/yYHWC4cSFyE677DFM7MwyWnyFWcIyYE5TmEaZk=;
-        b=0EpjxrmucIq27i/HAgti0AJxdhCQyPG6teOuk5C7pHhF1FJSbOUJi1L94QC6xibrjx
-         Rp2/9GFsVbmGq6btRHMd5VrIv+b7lqaxnIOa/fyKgxpb4gYORjxBB/Apv0M7Y4ddMH6/
-         w/l10ihZ+eL0x4O0NP5uaE60jcBRRotd/GYoTw2wMN8H7nsJXB+jYyirk1KOdf4OpXH+
-         rDm6GKYX03GrDXLmBXjZaTcVEDudHNMrZqmNGJFTOFAg175S1SuUL51MgEFH3UsU1zZp
-         8FN669jn36FvK1jE67nNMWZSHLjry1yxmOyxwaXCwZcAZp+3eQgalJhNXEgJ6ZZoP5OA
-         CnAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739518873; x=1740123673;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=z7ik/yYHWC4cSFyE677DFM7MwyWnyFWcIyYE5TmEaZk=;
-        b=Uj3c07XeWI/s71ILTEP/2u8ZyG7Lid3gSL+eaEhs1wDhyfOOE47qji3XJFhNsMNzWx
-         k04NSwVNk811XCRttkfBRUN04uyjrLiKgRQ3T/dZ6noDZtaIQ1KIr2gmMbiCAbgVu5OF
-         JfWOWEobPGfVBi2YagR8KZ7ZpNZ9x+Xg5DjrbtWj4zRjwqjrN2La6q7kRzCbMUDjO43c
-         p54ZFNgBa5Pfw1vOYazW2WB6W3KzxI3yP800KgJCgrSnfaetev0abHYTDzMfmqHyb5DW
-         9Si4bHjBIaNYFxsakDSBBbyj/nQSc7XeXr9XWV2zWlEYmbsTaSCVQYi0vcoABABzglne
-         IQCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgdFzlBUk/1gnZReBS9My8eD91jR7Iblz1LgLoDDWWCVqyhca+MRBWlwo9udHtJzNnG3y588UYyQAYHfQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmuGcf6pv/2F83P+FX14Et1D9qR+/bAVz3UfhXwxBdByAoGzde
-	bHn+DLi/FTFWFf+i7KppKl9sxG2oxvIM4A06UIpW8DjOxhoWnEcUBJYyL80MT2zVfkuG9ATmsiE
-	h7FtGKexu5Q==
-X-Google-Smtp-Source: AGHT+IEkq7g/FMyaZ2HZHq6urtv2X+8U7htg+6MlXR2lMQiyIGoEGu0XsGyyloOVG3YGp790KZP49SnDIa8Qsw==
-X-Received: from pglt1.prod.google.com ([2002:a63:5341:0:b0:ad5:545c:175d])
- (user=davidgow job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:d81b:b0:1e0:d837:c929 with SMTP id adf61e73a8af0-1ee5e530df2mr17087125637.9.1739518873649;
- Thu, 13 Feb 2025 23:41:13 -0800 (PST)
-Date: Fri, 14 Feb 2025 15:40:47 +0800
-In-Reply-To: <20250214074051.1619256-1-davidgow@google.com>
+ d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1bLNcD3Jg46nvsyVLQHLrycvxjfgeCzMx8FYjbgG6h0=;
+ b=f+JXnw7Vn4OGZiYpI3TAlzgnp5vyNvzqBZk0UrLU1tYMyn2i4jsWONHB9h81tioCsLL6aPk0iA/7Zfltitv9kQ369yUh5laLirsjV9s2s6GQ4UaPPPEX3Wj0HnFxQbY1cAGIiwlFF5e8yB+beDY+owSR1rWo7qt+i6B6SYNG2gE=
+Received: from PSAPR03MB5351.apcprd03.prod.outlook.com (2603:1096:301:40::11)
+ by SEZPR03MB7998.apcprd03.prod.outlook.com (2603:1096:101:17b::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.15; Fri, 14 Feb
+ 2025 07:41:02 +0000
+Received: from PSAPR03MB5351.apcprd03.prod.outlook.com
+ ([fe80::c9d6:2574:8710:24fd]) by PSAPR03MB5351.apcprd03.prod.outlook.com
+ ([fe80::c9d6:2574:8710:24fd%5]) with mapi id 15.20.8445.015; Fri, 14 Feb 2025
+ 07:41:01 +0000
+From: =?utf-8?B?Q2h1bi1KZW4gVHNlbmcgKOabvuS/iuS7gSk=?=
+	<Chun-Jen.Tseng@mediatek.com>
+To: "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "AngeloGioacchino Del
+ Regno" <angelogioacchino.delregno@collabora.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>,
+	"kyungmin.park@samsung.com" <kyungmin.park@samsung.com>,
+	"cw00.choi@samsung.com" <cw00.choi@samsung.com>, "matthias.bgg@gmail.com"
+	<matthias.bgg@gmail.com>
+CC: "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org"
+	<linux-mediatek@lists.infradead.org>, "linux-pm@vger.kernel.org"
+	<linux-pm@vger.kernel.org>, Project_Global_Chrome_Upstream_Group
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/4] cpufreq: mediatek: CCI support SoC , the
+ transition_delay set to 10 ms
+Thread-Topic: [PATCH v2 1/4] cpufreq: mediatek: CCI support SoC , the
+ transition_delay set to 10 ms
+Thread-Index: AQHbMakE5dwIegzEA0y6JPSWkG3EArK2mviAgJBpSwA=
+Date: Fri, 14 Feb 2025 07:41:01 +0000
+Message-ID: <6b52c51f4046dda5d9aa3726e9be51c746e9c623.camel@mediatek.com>
+References: <20241108063942.19744-1-chun-jen.tseng@mediatek.com>
+	 <20241108063942.19744-2-chun-jen.tseng@mediatek.com>
+	 <9f9a969f-6ce5-4e6c-89bd-51fe121db693@collabora.com>
+In-Reply-To: <9f9a969f-6ce5-4e6c-89bd-51fe121db693@collabora.com>
+Accept-Language: zh-TW, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mediatek.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PSAPR03MB5351:EE_|SEZPR03MB7998:EE_
+x-ms-office365-filtering-correlation-id: bfe405b5-5b2b-4781-8594-08dd4ccaedff
+x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?RGM5MmQ4M052YnhWdXFXUllxTWVZNHFLbEx2dFRUYnFHWVZENTd1NmFsNUpG?=
+ =?utf-8?B?MVlPOWlZRGFuaFJnVkxBeVBBZXk2K2RqTzc5V1dWejJoTEFjMTlRb3ZsL2ls?=
+ =?utf-8?B?cWtyUTE2NlRqNW1FVS9OY2c0QTlKekt3UkRyYVdhUDJRVS9RZVJsMkJwZHNC?=
+ =?utf-8?B?ZjhpWS95ZlBFbmdjdGpRb2dta2g2VUI0bjlTckdULy9vZVNMVExURHVtdm1h?=
+ =?utf-8?B?UDk3bkprbGxveGNGbDlTKzRRRnBlVkJxaHRIWjhaVVB2QVJzSkNuWmJvZVFn?=
+ =?utf-8?B?a2d1S2s4UjlQVEJKUm92MldNZTJXcTBveDZsUjROUVI5WXZhR0tMUmNBb2lX?=
+ =?utf-8?B?Z2lvdXZKT2ZQSU1OQmJ3U2U4Qi9aMmRiVVpuZkFUa2xxV1RrNkNjNkkveHVU?=
+ =?utf-8?B?TFNWNyt6WllSM054WGFVSU1LbUQvTWZEclVnNStrVjVwakh5Q0Q3MDFZb0Nn?=
+ =?utf-8?B?Tkg4NzJFM1R5T3k1bWRaNlFCQWUxb2k2RnBkR3Rpb1dqbER4aW4zcWdPbmVw?=
+ =?utf-8?B?R0NaVWpidHV2K1p5RDBDaytxVExGaXdmUWtGR2pwd0pZZXJhbXVWcVl6M08w?=
+ =?utf-8?B?aW1zWmZ0MVBuM2Zzd09oOUk4ckdESGozZ0trTnh5Y2dJUUpJUFoyODNWK21I?=
+ =?utf-8?B?MjQxV2QyU200cTR1UG5nLzRycWxycTdmazZxbEZOTE5qTVpVbmZobldlaWtz?=
+ =?utf-8?B?UFlYUnZtOW15WGQzOGpvUXErQWlVY1VwRmg3YTE4U1JOR0w2VTZ3eXp4bE9M?=
+ =?utf-8?B?VlU4bzFhUkYxYVlmNUhjWTI0VlZWdWpCY2NIaTZDS2JVQnB1a0VTUzhINkJ4?=
+ =?utf-8?B?L1IyOUxWeU92YnVVU2xaRXc3NVJIRi80NTRVOTRObDBHenRGT3BVeFMrQXhm?=
+ =?utf-8?B?MnBxaVNVVWVnRjc4ZW5iS0RrNU1NdVBVS09JK3ptcHpENExxQnM5aVpVUTlN?=
+ =?utf-8?B?dWptWEQwaDZUV05ZQWNwWXplelo5ZmQzclFqZFlIV3B4OFJJWVNkL1RTWVNN?=
+ =?utf-8?B?cjBINnRXeU1QMDZZTExoSGNFSjZwMEZsTzBXNnJXSFBBYmhHajNhWFpSaHFD?=
+ =?utf-8?B?eEpsdW5DNUZaRE1Xam01Z3NkMEVBWHNWempscUl6bmYrSDRMYWc0M2hRNkRN?=
+ =?utf-8?B?V2VpVnRUNmRaM0piWE1QNEFrd0t1M2I3b1dBeVJLVlR2b1ZoWG9hdmZUdkJv?=
+ =?utf-8?B?em0ydTFjN2V3cWFlWVNOU3FhajFMaDFWN04rOHNBRzFJU0FIUTFySExyS0Qr?=
+ =?utf-8?B?YzkzNHowVTU0Rm1ockRUOUVxYVhncGl2Q0hWVnVZNmNWWWFJamg3c3lJU0Nu?=
+ =?utf-8?B?R1pUSTFmOFVXLzMxQ0dRYXFtMTArRUN1d0Y1d29VVm1WWG9yeVZwVUE5OWtw?=
+ =?utf-8?B?REJBYXlGaWl2eldNZUoyZ01iWmxHOHovb1JoZW9ZSXlPYS9icHBJTjJHTzZR?=
+ =?utf-8?B?T3dUd05USlI1NHJtTjF5eStNZWQ1SGFweGZUTDlpQ0Z5SlI1eitoczFYbzJl?=
+ =?utf-8?B?M2x1Rk56eXU5ekJ2QmRFT3Y2am1ROHBUTkRCWkNMdXV4WVBteUtSSVlLVUlH?=
+ =?utf-8?B?Zk16VTlDMFhtVnR6VGJ3bnRGbkp3VGlyUk5WZU9kUG8zMWZNRDloN2gza3cx?=
+ =?utf-8?B?MVJRTGhXUDc4RjNPZEc0ZWZxeVh3cVRUSWZ6YlJZZlVxd2p0VW5VTm5CaUcz?=
+ =?utf-8?B?T3JpdUxIOWhTdVF3NXFjeS9VWVJJaWhIcHdnREZMaHEvN1JEUVc0REk5c0Jz?=
+ =?utf-8?B?RXc3OG1GZ0pQc1NjTHNhWGtLZ0poTnpCeS9tYmFseVlXcHFlTjVnY2RLdG41?=
+ =?utf-8?B?TVpFQ3FLczVWaFRSOGtGY2RIVm9Ka3hzakZTcjYxcWVBZm5rcVZSM0p0R1pJ?=
+ =?utf-8?B?NjlMcmtaU1JNUTQ3SVkrLzdmajN6Z2pXUCtPemhmaDFzNjFPRExRZ0lHTyt2?=
+ =?utf-8?Q?U2aqQSn6ZgKJH5AfNknv0aJjW4AkshWO?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR03MB5351.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WHg0RnBzOTJiRDFzeWNPaVd6SCtpTEJXNythZHByY1ZjTnI4NFg1SlBkbXFp?=
+ =?utf-8?B?Wnlabkkrc28zYlRZVlVhK1lxSWV1Q1REam5pNTFkRCtUcVpvdldJUFI0ZFJn?=
+ =?utf-8?B?c09kam5lOWtQVkd1TWZMQVFrVS9URlFvcWdhOHJSckdlLzRuT1pqcEZRV2do?=
+ =?utf-8?B?aXppYU5kNjhWVHM0azhWVmx5cUU1RXdQK1oxejRONXhXQTk2c3l5QWJkT2F4?=
+ =?utf-8?B?RHZYbk5pczNQRHhYUmRRL2pheW9LbzhpSmVwT2sxZFloUkN1ZG52UnFTNEU1?=
+ =?utf-8?B?SktaOFhpNndNcDdFb3pPaTdZVFlYNWpoZSt4Yk9NMFU1NCtPQnJxR3R6bEov?=
+ =?utf-8?B?aEFzRG1sTXhKVlhpekYycGJmcHZIVFZibSsvSERFalE1VytqcGQ0Zml2V3BD?=
+ =?utf-8?B?eVlzTkNHczcvcHNRZzhJcyt5S1JEZmx6Rnh4NW1peG9ra3ZZUzkyYjYvUlFk?=
+ =?utf-8?B?SmtNSEs0WnBReHU3NHoyTE9KaWFVNUxGTm03UVAyMWVYRTZtd3Bua2lBZGZz?=
+ =?utf-8?B?cllFVHlMM0dsMjQ4VTB3T0VWSGtQN0VyRHV3c3c1clBBSERPS2lZcGFHNDRV?=
+ =?utf-8?B?VjN2WUVnNy83b3RZUXVkaWROY0xmbmlTRkhJdHJ3OEZJeEpHQWdSbTRjZjc2?=
+ =?utf-8?B?Tm1oaVFZWEdQRUllcndZTjkza24wOVB1U3RveGpid3dXV0FlZTVLOUFZQVRo?=
+ =?utf-8?B?aWpkekcxTmtNOGR4WFJhOFNwd3pLdDhJWVVvbno3MU9WbDl4WTBUYS9zeFZw?=
+ =?utf-8?B?Qi9uSmR0MU5hMlc3NmR0TkQ3ZHd3ZkdVc1ViMHI4YlRyOThUZ3E1SHRSaG5I?=
+ =?utf-8?B?SEJITytIdDlGQWFPSWN4Mm9CZERRTDBMaC9pMFJyVXBhQlJMd3R1Q0VodG9a?=
+ =?utf-8?B?UkJmTXFWcC9lRzRFT094SkozSzNNVjJmeXZwOWdDQ3pFaXUwc0VBZU9wRmhq?=
+ =?utf-8?B?RWExdVlMV2loa3BsUkJId1JmdEt5M1VlSHVwR1Z5MUJUQ2hMM3ZyME9LQUM0?=
+ =?utf-8?B?TFRHWmZ5bkc0WG9EVFZDRVZuN1NqZVg3S3FVVkpoeWFaK0xTQmFNMGF4NjNJ?=
+ =?utf-8?B?QkFIcmozcGN5TGY3Z0FxTkZvYVliOEt1aEh0anpGMlVNQ3hUVVoxenZUSzVs?=
+ =?utf-8?B?eWh2V0JVTkVQa0hEbXFXODlJUDdqVWlzUm56cXptMVVDbDYrTml3MDN0dmFl?=
+ =?utf-8?B?Q0tSTVd0QkFkWHM5NDE0L09YVUlmQXpES1BteG52NGZic0QrM1VBYW45U0c3?=
+ =?utf-8?B?K0l1M1EwdzJ1MmlSdTZ3U2dYaFpHVjlueW95bHh4VGFRTWpTRWtESlpNemp4?=
+ =?utf-8?B?bVJES2hHV0FCNjBySjlTczJCWDVMV3FaSmlrME1CRHE4NXl4ZFYwTXJGeVFL?=
+ =?utf-8?B?Wm9HZ2JzNTU2MmRrMzAwOTdCcFdBbjdFOW1OemJIcmtIVjZudnFSN2J3NmhQ?=
+ =?utf-8?B?dHNqZnQzdmFLSVRueTFRZnhrNHE0K0pKKy8reFBoTXh0ZHJKV2syZXFVNlNY?=
+ =?utf-8?B?VHRXWkk5c284MkdMWlpNaFBiRUVCS3JaK2RRL0pCZFZxS1RwNm1zcGhNMG4z?=
+ =?utf-8?B?eHYvdlo3RUdLbkJhNFZJaHl6ekpKYmN1d0hteW9QVXVmWkZFVE9nakZ3bVdE?=
+ =?utf-8?B?Vml6KzN5MkhWMW4xRC9qTmhxclg4UHc0V21qNFo4MW1jZXY5MHVjR1BXZ1Bq?=
+ =?utf-8?B?eDVjWVY0cWFtNy8yRVE4SncxZWlvcVZKVVFrOXkvZ2ZScnozS0RZUFdMRHB1?=
+ =?utf-8?B?TVRobTE3WDBkRWtaNGxwQjNzRUhnazlVbHdpWS81UFFVeUgxU3hZa3A4VEhZ?=
+ =?utf-8?B?RW5vNUN3eTdVYVZUakVCR0FaRXF1N2hnOEd5Z2gyR2hjaUZrN0tKMDdBa09h?=
+ =?utf-8?B?SFovbWJQR0NrdmNWY0NjZ0RNQ3pNRjY4QWtwTUlFNVg0ZTVCWHI0MnIvaUdC?=
+ =?utf-8?B?bTNvUlVxMTkwcEYxTFpCc3Ntb0N0RzVHUnJWUU01Z0V2bjE0YkRNN2M0NFpB?=
+ =?utf-8?B?SEthTFpwS0hUdll6QmJkcGdtS1F3bEdoNlpPTkUxMkZKaGc4WnBYWGVOTHBt?=
+ =?utf-8?B?WFRFMTIyYkZRdDJWcFYrTzlxNE1SSW5uOUxCR1ovYXpWSDlOYnV6Z0hrY1RO?=
+ =?utf-8?B?VVZCSVltMkVsTm81TDRZdHN6TGNxTDhRUlMvWjkwTE9idWtSWlZ6MEJNZE1Z?=
+ =?utf-8?B?Tnc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9F13B94DD6FEAF429B75E08218288FA1@apcprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250214074051.1619256-1-davidgow@google.com>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <20250214074051.1619256-3-davidgow@google.com>
-Subject: [PATCH v6 2/3] rust: macros: add macro to easily run KUnit tests
-From: David Gow <davidgow@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>, 
-	"=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?=" <jose.exposito89@gmail.com>, Rae Moar <rmoar@google.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, Benno Lossin <benno.lossin@proton.me>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Matt Gilbride <mattgilbride@google.com>, Brendan Higgins <brendan.higgins@linux.dev>
-Cc: kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PSAPR03MB5351.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bfe405b5-5b2b-4781-8594-08dd4ccaedff
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Feb 2025 07:41:01.5955
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YGpezPUSzqTE8EXAvQ3HPzHMFWejfSbH1/DehFyUibuVnth6OXvYZPlP69ywynN9vOr2t07agHyJZJ/J+AVRmVDylPDJHlZLlZoJ+VupqFo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB7998
 
-From: Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gmail.com>
-
-Add a new procedural macro (`#[kunit_tests(kunit_test_suit_name)]`) to
-run KUnit tests using a user-space like syntax.
-
-The macro, that should be used on modules, transforms every `#[test]`
-in a `kunit_case!` and adds a `kunit_unsafe_test_suite!` registering
-all of them.
-
-The only difference with user-space tests is that instead of using
-`#[cfg(test)]`, `#[kunit_tests(kunit_test_suit_name)]` is used.
-
-Note that `#[cfg(CONFIG_KUNIT)]` is added so the test module is not
-compiled when `CONFIG_KUNIT` is set to `n`.
-
-Reviewed-by: David Gow <davidgow@google.com>
-Signed-off-by: Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gmail.com>
-Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Co-developed-by: Miguel Ojeda <ojeda@kernel.org>
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-Signed-off-by: David Gow <davidgow@google.com>
----
-Changes since v5:
-https://lore.kernel.org/all/20241213081035.2069066-3-davidgow@google.com/
-- Fix some rustfmt-related formatting shenanigans. (Thanks, Miguel)
-- Fix some documentation comment formatting as well. (Thanks, Miguel)
-- Tidy up the generated code to avoid unneeded &mut[] everywhere.
-  (Thanks, Miguel)
-- Fix a new clippy warning for using .as_bytes().len() instead of .len()
-  directly.
-
-Changes since v4:
-https://lore.kernel.org/linux-kselftest/20241101064505.3820737-3-davidgow@g=
-oogle.com/
-- Rebased against 6.13-rc1
-- "Expect" that the sample assert_eq!(1+1, 2) produces a clippy warning
-  due to a redundant assertion. (Thanks Boqun, Miguel)
-
-Changes since v3:
-https://lore.kernel.org/linux-kselftest/20241030045719.3085147-6-davidgow@g=
-oogle.com/
-- The #[kunit_tests()] macro now preserves span information, so
-  errors can be better reported. (Thanks, Boqun!)
-- The example test has been replaced to no longer use assert_eq!() with
-  a constant bool argument (which triggered a clippy warning now we
-  have the span info). It now checks 1 + 1 =3D=3D 2, to match the C example=
-.
-  - (The in_kunit_test() test in the next patch uses assert!() to check
-    a bool, so having something different here seemed to make a better
-    example.)
-
-Changes since v2:
-https://lore.kernel.org/linux-kselftest/20241029092422.2884505-3-davidgow@g=
-oogle.com/
-- Include missing rust/macros/kunit.rs file from v2. (Thanks Boqun!)
-- The proc macro now emits an error if the suite name is too long.
-
-Changes since v1:
-https://lore.kernel.org/lkml/20230720-rustbind-v1-2-c80db349e3b5@google.com=
-/
-- Rebased on top of rust-next
-- Make use of the new const functions, rather than the kunit_case!()
-  macro.
-
----
- MAINTAINERS          |   1 +
- rust/kernel/kunit.rs |  12 ++++
- rust/macros/kunit.rs | 161 +++++++++++++++++++++++++++++++++++++++++++
- rust/macros/lib.rs   |  29 ++++++++
- 4 files changed, 203 insertions(+)
- create mode 100644 rust/macros/kunit.rs
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c8d9e8187eb0..4e7a6d2f2c49 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12677,6 +12677,7 @@ F:	Documentation/dev-tools/kunit/
- F:	include/kunit/
- F:	lib/kunit/
- F:	rust/kernel/kunit.rs
-+F:	rust/macros/kunit.rs
- F:	scripts/rustdoc_test_*
- F:	tools/testing/kunit/
-=20
-diff --git a/rust/kernel/kunit.rs b/rust/kernel/kunit.rs
-index d34a92075174..9e27b74a605b 100644
---- a/rust/kernel/kunit.rs
-+++ b/rust/kernel/kunit.rs
-@@ -40,6 +40,8 @@ pub fn info(args: fmt::Arguments<'_>) {
-     }
- }
-=20
-+use macros::kunit_tests;
-+
- /// Asserts that a boolean expression is `true` at runtime.
- ///
- /// Public but hidden since it should only be used from generated tests.
-@@ -275,6 +277,7 @@ macro_rules! kunit_unsafe_test_suite {
-                 };
-=20
-             #[used]
-+            #[allow(unused_unsafe)]
-             #[link_section =3D ".kunit_test_suites"]
-             static mut KUNIT_TEST_SUITE_ENTRY: *const ::kernel::bindings::=
-kunit_suite =3D
-                 // SAFETY: `KUNIT_TEST_SUITE` is static.
-@@ -282,3 +285,12 @@ macro_rules! kunit_unsafe_test_suite {
-         };
-     };
- }
-+
-+#[kunit_tests(rust_kernel_kunit)]
-+mod tests {
-+    #[test]
-+    fn rust_test_kunit_example_test() {
-+        #![expect(clippy::eq_op)]
-+        assert_eq!(1 + 1, 2);
-+    }
-+}
-diff --git a/rust/macros/kunit.rs b/rust/macros/kunit.rs
-new file mode 100644
-index 000000000000..4f553ecf40c0
---- /dev/null
-+++ b/rust/macros/kunit.rs
-@@ -0,0 +1,161 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Procedural macro to run KUnit tests using a user-space like syntax.
-+//!
-+//! Copyright (c) 2023 Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gmail.com>
-+
-+use proc_macro::{Delimiter, Group, TokenStream, TokenTree};
-+use std::fmt::Write;
-+
-+pub(crate) fn kunit_tests(attr: TokenStream, ts: TokenStream) -> TokenStre=
-am {
-+    let attr =3D attr.to_string();
-+
-+    if attr.is_empty() {
-+        panic!("Missing test name in `#[kunit_tests(test_name)]` macro")
-+    }
-+
-+    if attr.len() > 255 {
-+        panic!(
-+            "The test suite name `{}` exceeds the maximum length of 255 by=
-tes",
-+            attr
-+        )
-+    }
-+
-+    let mut tokens: Vec<_> =3D ts.into_iter().collect();
-+
-+    // Scan for the `mod` keyword.
-+    tokens
-+        .iter()
-+        .find_map(|token| match token {
-+            TokenTree::Ident(ident) =3D> match ident.to_string().as_str() =
-{
-+                "mod" =3D> Some(true),
-+                _ =3D> None,
-+            },
-+            _ =3D> None,
-+        })
-+        .expect("`#[kunit_tests(test_name)]` attribute should only be appl=
-ied to modules");
-+
-+    // Retrieve the main body. The main body should be the last token tree=
-.
-+    let body =3D match tokens.pop() {
-+        Some(TokenTree::Group(group)) if group.delimiter() =3D=3D Delimite=
-r::Brace =3D> group,
-+        _ =3D> panic!("Cannot locate main body of module"),
-+    };
-+
-+    // Get the functions set as tests. Search for `[test]` -> `fn`.
-+    let mut body_it =3D body.stream().into_iter();
-+    let mut tests =3D Vec::new();
-+    while let Some(token) =3D body_it.next() {
-+        match token {
-+            TokenTree::Group(ident) if ident.to_string() =3D=3D "[test]" =
-=3D> match body_it.next() {
-+                Some(TokenTree::Ident(ident)) if ident.to_string() =3D=3D =
-"fn" =3D> {
-+                    let test_name =3D match body_it.next() {
-+                        Some(TokenTree::Ident(ident)) =3D> ident.to_string=
-(),
-+                        _ =3D> continue,
-+                    };
-+                    tests.push(test_name);
-+                }
-+                _ =3D> continue,
-+            },
-+            _ =3D> (),
-+        }
-+    }
-+
-+    // Add `#[cfg(CONFIG_KUNIT)]` before the module declaration.
-+    let config_kunit =3D "#[cfg(CONFIG_KUNIT)]".to_owned().parse().unwrap(=
-);
-+    tokens.insert(
-+        0,
-+        TokenTree::Group(Group::new(Delimiter::None, config_kunit)),
-+    );
-+
-+    // Generate the test KUnit test suite and a test case for each `#[test=
-]`.
-+    // The code generated for the following test module:
-+    //
-+    // ```
-+    // #[kunit_tests(kunit_test_suit_name)]
-+    // mod tests {
-+    //     #[test]
-+    //     fn foo() {
-+    //         assert_eq!(1, 1);
-+    //     }
-+    //
-+    //     #[test]
-+    //     fn bar() {
-+    //         assert_eq!(2, 2);
-+    //     }
-+    // }
-+    // ```
-+    //
-+    // Looks like:
-+    //
-+    // ```
-+    // unsafe extern "C" fn kunit_rust_wrapper_foo(_test: *mut kernel::bin=
-dings::kunit) { foo(); }
-+    // unsafe extern "C" fn kunit_rust_wrapper_bar(_test: *mut kernel::bin=
-dings::kunit) { bar(); }
-+    //
-+    // static mut TEST_CASES: [kernel::bindings::kunit_case; 3] =3D [
-+    //     kernel::kunit::kunit_case(kernel::c_str!("foo"), kunit_rust_wra=
-pper_foo),
-+    //     kernel::kunit::kunit_case(kernel::c_str!("bar"), kunit_rust_wra=
-pper_bar),
-+    //     kernel::kunit::kunit_case_null(),
-+    // ];
-+    //
-+    // kernel::kunit_unsafe_test_suite!(kunit_test_suit_name, TEST_CASES);
-+    // ```
-+    let mut kunit_macros =3D "".to_owned();
-+    let mut test_cases =3D "".to_owned();
-+    for test in &tests {
-+        let kunit_wrapper_fn_name =3D format!("kunit_rust_wrapper_{}", tes=
-t);
-+        let kunit_wrapper =3D format!(
-+            "unsafe extern \"C\" fn {}(_test: *mut kernel::bindings::kunit=
-) {{ {}(); }}",
-+            kunit_wrapper_fn_name, test
-+        );
-+        writeln!(kunit_macros, "{kunit_wrapper}").unwrap();
-+        writeln!(
-+            test_cases,
-+            "    kernel::kunit::kunit_case(kernel::c_str!(\"{}\"), {}),",
-+            test, kunit_wrapper_fn_name
-+        )
-+        .unwrap();
-+    }
-+
-+    writeln!(kunit_macros).unwrap();
-+    writeln!(
-+        kunit_macros,
-+        "static mut TEST_CASES: [kernel::bindings::kunit_case; {}] =3D [\n=
-{test_cases}    kernel::kunit::kunit_case_null(),\n];",
-+        tests.len() + 1
-+    )
-+    .unwrap();
-+
-+    writeln!(
-+        kunit_macros,
-+        "kernel::kunit_unsafe_test_suite!({attr}, TEST_CASES);"
-+    )
-+    .unwrap();
-+
-+    // Remove the `#[test]` macros.
-+    // We do this at a token level, in order to preserve span information.
-+    let mut new_body =3D vec![];
-+    let mut body_it =3D body.stream().into_iter();
-+
-+    while let Some(token) =3D body_it.next() {
-+        match token {
-+            TokenTree::Punct(ref c) if c.as_char() =3D=3D '#' =3D> match b=
-ody_it.next() {
-+                Some(TokenTree::Group(group)) if group.to_string() =3D=3D =
-"[test]" =3D> (),
-+                Some(next) =3D> {
-+                    new_body.extend([token, next]);
-+                }
-+                _ =3D> {
-+                    new_body.push(token);
-+                }
-+            },
-+            _ =3D> {
-+                new_body.push(token);
-+            }
-+        }
-+    }
-+
-+    let mut new_body =3D TokenStream::from_iter(new_body);
-+    new_body.extend::<TokenStream>(kunit_macros.parse().unwrap());
-+
-+    tokens.push(TokenTree::Group(Group::new(Delimiter::Brace, new_body)));
-+
-+    tokens.into_iter().collect()
-+}
-diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
-index d61bc6a56425..50b58259c577 100644
---- a/rust/macros/lib.rs
-+++ b/rust/macros/lib.rs
-@@ -10,6 +10,7 @@
- mod quote;
- mod concat_idents;
- mod helpers;
-+mod kunit;
- mod module;
- mod paste;
- mod pin_data;
-@@ -492,3 +493,31 @@ pub fn paste(input: TokenStream) -> TokenStream {
- pub fn derive_zeroable(input: TokenStream) -> TokenStream {
-     zeroable::derive(input)
- }
-+
-+/// Registers a KUnit test suite and its test cases using a user-space lik=
-e syntax.
-+///
-+/// This macro should be used on modules. If `CONFIG_KUNIT` (in `.config`)=
- is `n`, the target module
-+/// is ignored.
-+///
-+/// # Examples
-+///
-+/// ```ignore
-+/// # use macros::kunit_tests;
-+///
-+/// #[kunit_tests(kunit_test_suit_name)]
-+/// mod tests {
-+///     #[test]
-+///     fn foo() {
-+///         assert_eq!(1, 1);
-+///     }
-+///
-+///     #[test]
-+///     fn bar() {
-+///         assert_eq!(2, 2);
-+///     }
-+/// }
-+/// ```
-+#[proc_macro_attribute]
-+pub fn kunit_tests(attr: TokenStream, ts: TokenStream) -> TokenStream {
-+    kunit::kunit_tests(attr, ts)
-+}
---=20
-2.48.1.601.g30ceb7b040-goog
-
+T24gVGh1LCAyMDI0LTExLTE0IGF0IDExOjIyICswMTAwLCBBbmdlbG9HaW9hY2NoaW5vIERlbCBS
+ZWdubyB3cm90ZToNCg0KaGkgQW5nZWxvLA0KDQpUaGFua3MgeW91ciByZXZpZXcgYW5kIHJlY29t
+bWVuZGF0aW9uLg0KDQpJIHdpbGwgZml4IHRoaXMgaXNzdWUgb24gbmV4dCBwYXRjaC4NCg0KQlJz
+LA0KDQpNYXJrIFRzZW5nDQoNCj4gDQo+IEV4dGVybmFsIGVtYWlsIDogUGxlYXNlIGRvIG5vdCBj
+bGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVudGlsDQo+IHlvdSBoYXZlIHZlcmlmaWVk
+IHRoZSBzZW5kZXIgb3IgdGhlIGNvbnRlbnQuDQo+IA0KPiANCj4gSWwgMDgvMTEvMjQgMDc6Mzks
+IE1hcmsgVHNlbmcgaGEgc2NyaXR0bzoNCj4gPiBTb0Mgd2l0aCBDQ0kgYXJjaGl0ZWN0dXJlIHNo
+b3VsZCBzZXQgdHJhbnNpdGlvbl9kZWxheSB0byAxMCBtcw0KPiA+IGJlY2F1c2UNCj4gPiBjcHVm
+cmVxIG5lZWQgdG8gY2FsbCBkZXZmcmVxIG5vdGlmaWVyIGluIGFzeW5jIG1vZGUuIGlmIGRlbGF5
+IGxlc3MNCj4gPiB0aGFuDQo+ID4gMTAgbXMsIGl0IG1heSBnZXQgd3JvbmcgT1BQLWxldmVsIGlu
+IGRldmZyZXEgcGFzc2l2ZSBnb3Zlcm5vci4NCj4gPiANCj4gDQo+IFRoaXMgbWVhbnMgdGhhdCBN
+ZWRpYVRlayBTb0NzIGNhbiBjaGFuZ2UgdGhlaXIgQ1BVIGZyZXF1ZW5jeSBvbmNlDQo+IGV2ZXJ5
+DQo+IDEwIG1pbGxpc2Vjb25kcz8hPyE/IQ0KPiANCj4gSSBkb24ndCB0aGluayB0aGF0J3MgcmVh
+bGx5IHRoZSBjYXNlLg0KPiANCj4gQmVzaWRlcywgYXJlIHlvdSBhd2FyZSB0aGF0IHRoaXMgd2ls
+bCBoYXZlIGEgKmh1Z2UqIGltcGFjdCBvbiBlaXRoZXINCj4gcG93ZXINCj4gY29uc3VtcHRpb24g
+b3IgcGVyZm9ybWFuY2U/DQo+IFdlJ3JlIGdvaW5nIGZyb20gYSBidW5jaCBvZiBtaWNyb3NlY29u
+ZHMgdG8gKm11bHRpcGxlKiBtaWxsaXNlY29uZHMNCj4gaGVyZS4NCj4gDQo+IFJlZ2FyZHMsDQo+
+IEFuZ2Vsbw0KPiANCg0K
