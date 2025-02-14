@@ -1,171 +1,162 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C041DC99C;
-	Fri, 14 Feb 2025 22:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EA01A83E4;
+	Fri, 14 Feb 2025 22:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739572941; cv=none; b=p8hT+aheMVsUw4FyXOQNCBnB6ioi+vHvvRb+abmMmXi33dVLsuV2EvNAf1NNA1fP4k0CFJpZFtcPbBt0hhSLS/B6ETJBhctaBydcgTeDc2dDtkN2aYTI0wP32yXMUNa3qUJNJEitPRTOmJTfXD1m8Cx4f9hxBhAhWi0rD0XkahM=
+	t=1739572958; cv=none; b=t9ZR8foNufGzx84aw5dcmgmgvTbJMZjJUSypsV6RM85rUyTTqQc3UtOqKEXYMAgKPE0pf6EmkBv8ei/xTpxZVpcKFhwU1IeIXQ+wc1D6s6KYZQwRxPG1GjY0NLxD11yelnqhtXlYW++GLS221FssX2yEXNpMfkQYkcg/WeMa8Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739572941; c=relaxed/simple;
-	bh=jVleaiTKKT3enhSOUBbAGdgywhYGplbMOXpA7X64DAg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uk7FufdmkDP9uJqOhi4YoHtikFwtRwbCZi4oQ4nmKmwL8L82zwzOHdr5ktdzZSRsVqdsem3Zp+hQV2NRDmbY9u8gHrZSkUTBbLO7ng2GOozAPWFE3bKgqsa8uiTvbJ9+HOXIw0XBIs1LclFdMTBVBCR4S+YfhSYYe+LsyUioT2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d7ZyvHwn; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739572958; c=relaxed/simple;
+	bh=7dqr4+v5JkewaML+LxWNkl3XAl9W6+X9tfBXO3LYXGM=;
+	h=Subject:From:To:CC:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rU5dJus3wWICrjnAzPB0MqkOeJ7IZKb/tpoWAT4NENAVmE5E4qqukX/P6s6/L56J9KXEdTLJt39MbgXrEMjkaV6v74i9pRXWqQowX64v8iDg/j55IfJbRyCbK274HR0h1ufBTpln/1am5SGu/rP7eDAhiKzhf+fVMLEod4es0oM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=uVvwIooN; arc=none smtp.client-ip=207.171.184.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7ZyvHwn"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6dcdf23b4edso22733596d6.0;
-        Fri, 14 Feb 2025 14:42:19 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uVvwIooN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739572938; x=1740177738; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5A68drbhTTSVvgdcUc66bx9dD4R166dRvm9VrghY4Q4=;
-        b=d7ZyvHwnKBfNRg+WomFu4aFkzW/Bx/EKEtfRlxAFNliqT6Yo1hFL7css3KdAwtabdn
-         xs3oCH8eWTZnP6YYi1gMnGOqN9Fed32mOYoAaieQMjzsI+S2vnxzH8K4GF/sLfKvpfNV
-         L6apf7MVkv68MYNNUmE4eQxDJgsCHfiPoCNDRcMdT3AGYI9dhLE8O9RJMxmEfif4FuYA
-         xFcrWdYqJ42GD13YfMCCcLS0UrZKol42UXX9v9M9QegQEY7xTAI4g9fAEv/2EKf8hz3n
-         gcUKYe0IWHeujfLijnR+hGQ+ECAK+b4lNsiKIBWGjFQzdPxQuBziC9uhZCZ7rBM2EWfi
-         svUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739572938; x=1740177738;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5A68drbhTTSVvgdcUc66bx9dD4R166dRvm9VrghY4Q4=;
-        b=rG2QPCisygsQyUtEctvDZW4TauGbAl6fyk/REk92ovVZbqc5g6VHFO0pnNl8CL2FW5
-         M93VEaBZR4MqfRh2Os4jWTy5NeeJ8GComzG4Nt9tZpSV0Y5SDpuhWu4ehedQ2l5ZyM0F
-         5w1zwFgVu6uXRaTXj4iJo0Q5jHJ/t0kuC2pIkSLhUJ06/XQnHveusSjulaRa3SNQApgl
-         mk6z+F231zvjP3Y6ClMU6kVbXFNAILZlgydCS265M77DbiU+INaK9YvVnbovw26fsoZQ
-         5qjtYwfP1HlxRg4EgRmDjJcQrV1/86k+w/8Ne9DUWR5p+48vBemlJCMBMplYADZUSP0d
-         yTRg==
-X-Forwarded-Encrypted: i=1; AJvYcCV27W9HGzDlwpaheWKAxPxgpMv6F0Ww7G0om+bzKIGgptlJkEJfgcZdyFCbA4fHrKY9MX4X3FArkgVb4EaU@vger.kernel.org, AJvYcCWDFadY7uYd/lH59+YhFofG0DZhb6sRKcm7D/3Ejq6JGpgBaorBKYZwma31qYPkYxDWbnTLC1Ue/S9l@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVEpbI9pwwdmgffasfJQeYJRVkqbq7PeMqJY/ESSE0GkIVIXZG
-	AbgxybSt1H1/VfQreoY78PZwoepgCjwyfXncrsaxx4Ib1BRmIHzZ
-X-Gm-Gg: ASbGnct9AdLJOIT+X6cb9QC+85XhNsLhRj0LgsOUpJqm+pQPai7aUF5E7bKNEwWnDiQ
-	Z3dpp2RfDbbtl59oV75PWZKyRYD+TMWdZ7s5iuH/mvZuAetTGPICzwDA9jcWoF2I7jecZ6lCEbW
-	c/KruIotwm5R8gOJ8TSvM8WWCoe6Rx2JLE6LThwAc2B5Ak4+jSvbLimHQwhb5w3qbkvSxQ2+lHk
-	eW5QnonDSWy3oMGHivqqlm+t5zhN+fhdOLurU5hfO2i+p0P1DkSfRM8b1XoqW5U55g=
-X-Google-Smtp-Source: AGHT+IFdJBJx2BDqksUVhrXVBeP3mAIbgqag9A/szv08TB1nkvkX1A9nZ3tUFl+z87iK3zUv5bUi/A==
-X-Received: by 2002:a05:6214:da1:b0:6e6:60f6:56cf with SMTP id 6a1803df08f44-6e66cc7ff70mr19801366d6.5.1739572938525;
-        Fri, 14 Feb 2025 14:42:18 -0800 (PST)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e65d9f36f5sm25582586d6.75.2025.02.14.14.42.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 14:42:18 -0800 (PST)
-Date: Sat, 15 Feb 2025 06:42:08 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	AnnanLiu <annan.liu.xdu@outlook.com>, chao.wei@sophgo.com, unicorn_wang@outlook.com, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] riscv: dts: sophgo: add watchdog dt node for CV1800
-Message-ID: <dxxc42mcdw6jlpk4lffyxqci7d6bamc7q5wsfdcx62snacbw2e@jrvrllwdb6t6>
-References: <DM6PR20MB2316366FC9ADCBC7B6E9C289AB7A2@DM6PR20MB2316.namprd20.prod.outlook.com>
- <f6b036acada7686e1bfd814bd62782890bf35a50.camel@gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1739572957; x=1771108957;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version:subject;
+  bh=7dqr4+v5JkewaML+LxWNkl3XAl9W6+X9tfBXO3LYXGM=;
+  b=uVvwIooNP9vigyVDogu9fa21idhXUw7zsV2ZV70WHJfZ/4TNqnuBx4YR
+   YTuOKLPMjzav4vD/rIJyOLfnOkr7ewBep7pXOlLedA41teypFHg/JGaB/
+   6KN7r0aZi7LgyoHwRXC3J3alY06ieXXWboS9URilnj2HQRuueMcbLEP7s
+   A=;
+X-IronPort-AV: E=Sophos;i="6.13,287,1732579200"; 
+   d="scan'208";a="494063818"
+Subject: Re: [PATCH 4/4] arm64: barrier: Add smp_cond_load_acquire_timewait()
+Thread-Topic: [PATCH 4/4] arm64: barrier: Add smp_cond_load_acquire_timewait()
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 22:42:36 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.38.20:46647]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.32.150:2525] with esmtp (Farcaster)
+ id 3dfd354f-13d0-43ce-9a83-fe979d8618ae; Fri, 14 Feb 2025 22:42:36 +0000 (UTC)
+X-Farcaster-Flow-ID: 3dfd354f-13d0-43ce-9a83-fe979d8618ae
+Received: from EX19D032UWA004.ant.amazon.com (10.13.139.56) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Fri, 14 Feb 2025 22:42:35 +0000
+Received: from EX19D032UWA003.ant.amazon.com (10.13.139.37) by
+ EX19D032UWA004.ant.amazon.com (10.13.139.56) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 14 Feb 2025 22:42:35 +0000
+Received: from EX19D032UWA003.ant.amazon.com ([fe80::8e94:8f60:9531:c497]) by
+ EX19D032UWA003.ant.amazon.com ([fe80::8e94:8f60:9531:c497%5]) with mapi id
+ 15.02.1544.014; Fri, 14 Feb 2025 22:42:35 +0000
+From: "Okanovic, Haris" <harisokn@amazon.com>
+To: "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>, "ankur.a.arora@oracle.com"
+	<ankur.a.arora@oracle.com>
+CC: "Okanovic, Haris" <harisokn@amazon.com>, "cl@gentwo.org" <cl@gentwo.org>,
+	"joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
+	"peterz@infradead.org" <peterz@infradead.org>, "memxor@gmail.com"
+	<memxor@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"arnd@arndb.de" <arnd@arndb.de>, "will@kernel.org" <will@kernel.org>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>, "konrad.wilk@oracle.com"
+	<konrad.wilk@oracle.com>, "zhenglifeng1@huawei.com"
+	<zhenglifeng1@huawei.com>, "boris.ostrovsky@oracle.com"
+	<boris.ostrovsky@oracle.com>
+Thread-Index: AQHbdoWTLOnOGDZdP0ajcFsBERkpC7NHdhIA
+Date: Fri, 14 Feb 2025 22:42:35 +0000
+Message-ID: <3b0de6589cb4f1b8bdc87b53fc7ff61a35659941.camel@amazon.com>
+References: <20250203214911.898276-1-ankur.a.arora@oracle.com>
+	 <20250203214911.898276-5-ankur.a.arora@oracle.com>
+In-Reply-To: <20250203214911.898276-5-ankur.a.arora@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <586C842FFADDDB488E24CA520892E0A2@amazon.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f6b036acada7686e1bfd814bd62782890bf35a50.camel@gmail.com>
 
-On Fri, Feb 14, 2025 at 01:58:15PM +0100, Alexander Sverdlin wrote:
-> Hi Annan, Inochi,
-> 
-> On Thu, 2024-01-25 at 17:46 +0800, AnnanLiu wrote:
-> > Add the watchdog device tree node to cv1800 SoC.
-> > 
-> > Signed-off-by: AnnanLiu <annan.liu.xdu@outlook.com>
-> > ---
-> > This patch depends on the clk driver and reset driver.
-> > Clk driver link:
-> > https://lore.kernel.org/all/IA1PR20MB49539CDAD9A268CBF6CA184BBB9FA@IA1PR20MB4953.namprd20.prod.outlook.com/
-> > Reset driver link:
-> > https://lore.kernel.org/all/20231113005503.2423-1-jszhang@kernel.org/
-> > 
-> > Changes since v1:
-> > - Change the name of the watchdog from watchdog0 to watchdog.
-> > - Change the status of watchdog.
-> > v1 link:
-> > https://lore.kernel.org/all/DM6PR20MB23160B8499CC2BFDAE6FCACDAB9EA@DM6PR20MB2316.namprd20.prod.outlook.com/
-> > 
-> > 
-> >  arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts |  4 ++++
-> >  arch/riscv/boot/dts/sophgo/cv1800b.dtsi          | 16 ++++++++++++++++
-> >  2 files changed, 20 insertions(+)
-> > 
-> > diff --git a/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts b/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
-> > index 3af9e34b3bc7..75469161bfff 100644
-> > --- a/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
-> > +++ b/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
-> > @@ -36,3 +36,7 @@ &osc {
-> >  &uart0 {
-> >  	status = "okay";
-> >  };
-> > +
-> > +&watchdog {
-> > +	status = "okay";
-> > +};
-> 
-> It would be necessary in all SoCs unless... [1]
-> 
-> > diff --git a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
-> > index aec6401a467b..03ca32cd37b6 100644
-> > --- a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
-> > +++ b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> >  /*
-> >   * Copyright (C) 2023 Jisheng Zhang <jszhang@kernel.org>
-> > + * Copyright (C) 2024 Annan Liu <annan.liu.xdu@outlook.com>
-> >   */
-> >  
-> >  #include <dt-bindings/interrupt-controller/irq.h>
-> > @@ -103,6 +104,21 @@ uart4: serial@41c0000 {
-> >  			status = "disabled";
-> >  		};
-> >  
-> > +		watchdog: watchdog@3010000{
-> > +			compatible = "snps,dw-wdt";
-> > +			reg = <0x3010000 0x100>;
-> > +			interrupts = <58 IRQ_TYPE_LEVEL_HIGH>;
-> > +			clocks = <&pclk>;
-> 
-> &osc ?
-> 
-
-This patch is submitted to early, before the clock driver is
-applied. This reason applies to your all question.
-
-> > +			resets = <&rst RST_WDT>;
-> > +			status = "disabled";
-> 
-> [1] ... the status here is dropped. What is the reason for disabling it in the first place?
-> 
-> > +		};
-> > +
-> > +		pclk: pclk {
-> > +			#clock-cells = <0>;
-> > +			compatible = "fixed-clock";
-> > +			clock-frequency = <25000000>;
-> > +		};
-> > +
-> >  		plic: interrupt-controller@70000000 {
-> >  			compatible = "sophgo,cv1800b-plic", "thead,c900-plic";
-> >  			reg = <0x70000000 0x4000000>;
-> 
-> Why didn't it go into cv18xx.dtsi?
-> 
-> -- 
-> Alexander Sverdlin.
-> 
+T24gTW9uLCAyMDI1LTAyLTAzIGF0IDEzOjQ5IC0wODAwLCBBbmt1ciBBcm9yYSB3cm90ZToNCj4g
+Q0FVVElPTjogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3JnYW5p
+emF0aW9uLiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91
+IGNhbiBjb25maXJtIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4NCj4g
+DQo+IA0KPiANCj4gQWRkIHNtcF9jb25kX2xvYWRfYWNxdWlyZV90aW1ld2FpdCgpLiBUaGlzIGlz
+IHN1YnN0YW50aWFsbHkgc2ltaWxhcg0KPiB0byBzbXBfY29uZF9sb2FkX2FjcXVpcmUoKSB3aGVy
+ZSB3ZSB1c2UgYSBsb2FkLWFjcXVpcmUgaW4gdGhlIGxvb3ANCj4gYW5kIGF2b2lkIGFuIHNtcF9y
+bWIoKSBsYXRlci4NCj4gDQo+IFRvIGhhbmRsZSB0aGUgdW5saWtlbHkgY2FzZSBvZiB0aGUgZXZl
+bnQtc3RyZWFtIGJlaW5nIHVuYXZhaWxhYmxlLA0KPiBrZWVwIHRoZSBpbXBsZW1lbnRhdGlvbiBz
+aW1wbGUgYnkgZmFsbGluZyBiYWNrIHRvIHRoZSBnZW5lcmljDQo+IF9fc21wX2NvbmRfbG9hZF9y
+ZWxheGVkX3NwaW53YWl0KCkgd2l0aCBhbiBzbXBfcm1iKCkgdG8gZm9sbG93DQo+ICh2aWEgc21w
+X2FjcXVpcmVfX2FmdGVyX2N0cmxfZGVwKCkuKQ0KPiANCj4gQ2M6IFdpbGwgRGVhY29uIDx3aWxs
+QGtlcm5lbC5vcmc+DQo+IENjOiBDYXRhbGluIE1hcmluYXMgPGNhdGFsaW4ubWFyaW5hc0Bhcm0u
+Y29tPg0KPiBDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFNpZ25l
+ZC1vZmYtYnk6IEFua3VyIEFyb3JhIDxhbmt1ci5hLmFyb3JhQG9yYWNsZS5jb20+DQo+IC0tLQ0K
+PiAgYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9iYXJyaWVyLmggfCAzNiArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKykNCj4g
+DQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2luY2x1ZGUvYXNtL2JhcnJpZXIuaCBiL2FyY2gv
+YXJtNjQvaW5jbHVkZS9hc20vYmFycmllci5oDQo+IGluZGV4IDI1NzIxMjc1YTVhMi4uMjJkOTI5
+MWFlZThkIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybTY0L2luY2x1ZGUvYXNtL2JhcnJpZXIuaA0K
+PiArKysgYi9hcmNoL2FybTY0L2luY2x1ZGUvYXNtL2JhcnJpZXIuaA0KPiBAQCAtMjMyLDYgKzIz
+MiwyMiBAQCBkbyB7ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBcDQo+ICAgICAgICAgKHR5cGVvZigqcHRyKSlWQUw7
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwNCj4gIH0pDQo+
+IA0KPiArI2RlZmluZSBfX3NtcF9jb25kX2xvYWRfYWNxdWlyZV90aW1ld2FpdChwdHIsIGNvbmRf
+ZXhwciwgICAgICAgICAgICAgICBcDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgdGltZV9leHByX25zLCB0aW1lX2xpbWl0X25zKSAgIFwNCj4gKyh7ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgXA0KPiArICAgICAgIHR5cGVvZihwdHIpIF9fUFRSID0gKHB0cik7ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBcDQo+ICsgICAgICAgX191bnF1YWxfc2NhbGFyX3R5cGVv
+ZigqcHRyKSBWQUw7ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwNCj4gKyAgICAgICBm
+b3IgKDs7KSB7ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgXA0KPiArICAgICAgICAgICAgICAgVkFMID0gc21wX2xvYWRfYWNxdWlyZShfX1BUUik7
+ICAgICAgICAgICAgICAgICAgICAgICAgICBcDQo+ICsgICAgICAgICAgICAgICBpZiAoY29uZF9l
+eHByKSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwNCj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgYnJlYWs7ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgXA0KPiArICAgICAgICAgICAgICAgX19jbXB3YWl0X3JlbGF4ZWQoX19QVFIsIFZB
+TCk7ICAgICAgICAgICAgICAgICAgICAgICAgICBcDQo+ICsgICAgICAgICAgICAgICBpZiAoKHRp
+bWVfZXhwcl9ucykgPj0gKHRpbWVfbGltaXRfbnMpKSAgICAgICAgICAgICAgICAgIFwNCj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgYnJlYWs7ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgXA0KPiArICAgICAgIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcDQo+ICsgICAgICAgKHR5cGVvZigqcHRy
+KSlWQUw7ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwNCj4g
+K30pDQo+ICsNCj4gIC8qDQo+ICAgKiBGb3IgdGhlIHVubGlrZWx5IGNhc2UgdGhhdCB0aGUgZXZl
+bnQtc3RyZWFtIGlzIHVuYXZhaWxhYmxlLA0KPiAgICogd2FyZCBvZmYgdGhlIHBvc3NpYmlsaXR5
+IG9mIHdhaXRpbmcgZm9yZXZlciBieSBmYWxsaW5nIGJhY2sNCj4gQEAgLTI1NCw2ICsyNzAsMjYg
+QEAgZG8geyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgXA0KPiAgICAgICAgICh0eXBlb2YoKnB0cikpX3ZhbDsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcDQo+ICB9KQ0KPiANCj4g
+KyNkZWZpbmUgc21wX2NvbmRfbG9hZF9hY3F1aXJlX3RpbWV3YWl0KHB0ciwgY29uZF9leHByLCAg
+ICAgICAgICAgICAgICAgXA0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHRpbWVfZXhwcl9ucywgdGltZV9saW1pdF9ucykgICAgICBcDQo+ICsoeyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwN
+Cj4gKyAgICAgICBfX3VucXVhbF9zY2FsYXJfdHlwZW9mKCpwdHIpIF92YWw7ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgXA0KPiArICAgICAgIGludCBfX3dmZSA9IGFyY2hfdGltZXJfZXZ0
+c3RybV9hdmFpbGFibGUoKTsgICAgICAgICAgICAgICAgICAgICBcDQo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IFwNCj4gKyAgICAgICBpZiAobGlrZWx5KF9fd2ZlKSkgeyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgXA0KPiArICAgICAgICAgICAgICAgX3ZhbCA9IF9fc21wX2Nv
+bmRfbG9hZF9hY3F1aXJlX3RpbWV3YWl0KHB0ciwgY29uZF9leHByLCBcDQo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGltZV9leHByX25z
+LCAgIFwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB0aW1lX2xpbWl0X25zKTsgXA0KPiArICAgICAgIH0gZWxzZSB7ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcDQo+ICsgICAgICAg
+ICAgICAgICBfdmFsID0gX19zbXBfY29uZF9sb2FkX3JlbGF4ZWRfc3BpbndhaXQocHRyLCBjb25k
+X2V4cHIsIFwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB0aW1lX2V4cHJfbnMsICAgXA0KPiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRpbWVfbGltaXRfbnMpOyBcDQo+ICsgICAg
+ICAgICAgICAgICBzbXBfYWNxdWlyZV9fYWZ0ZXJfY3RybF9kZXAoKTsgICAgICAgICAgICAgICAg
+ICAgICAgICAgIFwNCj4gKyAgICAgICB9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXA0KPiArICAgICAgICh0eXBlb2YoKnB0cikp
+X3ZhbDsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcDQo+ICt9
+KQ0KPiArDQo+ICsNCj4gICNpbmNsdWRlIDxhc20tZ2VuZXJpYy9iYXJyaWVyLmg+DQo+IA0KPiAg
+I2VuZGlmIC8qIF9fQVNTRU1CTFlfXyAqLw0KPiAtLQ0KPiAyLjQzLjUNCg0KVGVzdGVkIGJvdGgg
+cmVsYXhlZCBhbmQgYWNxdWlyZSB2YXJpYW50cyBvbiBBV1MgR3Jhdml0b24gKEFSTTY0DQpOZW92
+ZXJzZSBWMSkgd2l0aCB5b3VyIFY5IGhhbHRwb2xsIGNoYW5nZXMsIGF0b3AgbWFzdGVyIDEyOGM4
+Zjk2ZWIuDQoNClJldmlld2VkLWJ5OiBIYXJpcyBPa2Fub3ZpYyA8aGFyaXNva25AYW1hem9uLmNv
+bT4NClRlc3RlZC1ieTogSGFyaXMgT2thbm92aWMgPGhhcmlzb2tuQGFtYXpvbi5jb20+DQoNCg==
