@@ -1,120 +1,127 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25E11C84C0
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 19:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD301C84AF
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 19:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739563011; cv=none; b=Agl5EqH8Mk4f39szMnLG0LFbXdRJfDNSVRGWCBuhD4UhgODjVb10R+WU7OMVMjKKxkxDRKx4v9ofw6bFKexsfkIN7pAUHsqGyW0dXh8KtgXWjbN4Gm5hMkQRw4tZ0n70o/+H8xXFfMI1NveocqbLQZ0qSC+/MLoXZgvlRucg4Hg=
+	t=1739563069; cv=none; b=ZJP/AQCjpP0rvOw2YWhtzdBOx0x9NjX/VWFzbMUn2JEeL4nHYoTfzacDtXaTZeowACVQ12GqIhItbxRUUuZvTdcjW4CZuzmVX/H3PL7oCV79p4ztWD9UXDM5UmagejDJKcC7GUlDWEW4Vr61yZz+oFpy+SllPfVrLjPgSLEa5Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739563011; c=relaxed/simple;
-	bh=YBwPeQCDJxOHmq/Co+incHBL3UWPQ6vi3ncG/nUGZ8Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qwHGQUKPmAyYkTjS18YuCU36QrhWN07w6DNHE+YscBklL+JyDmNqRrL4EMCbaEpMm2PvRfZxyt0d+UpOxNM9uk+kqc+7Sl/SoLCr0eZtlrFtufvoF5EmHOnfotq1+82gyBLghFCOyiwWUYdEh6l72qWw/hSzph89z1rN1f/OODs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OAmhUAIa; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739563069; c=relaxed/simple;
+	bh=VHeX8E2rD8a+rLGByF8sKGKr8LeOrdhe7F8Vby0blBA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QkRERGtBitl82RYlr678L73qgAqqINvNnI6kXrgGEdFMQdeTsvum6n5Acob8ZHZkl07/zIjcbt60AgU6YhjRzsjlRQP7ZPwVA0p323cEbTRjeyC+k4LB0Jw4YnxEYlxJNCONt+aEH6N104V8YTPzhY5/z+PbZRPsu/v2u0vXdrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nWohGhZ4; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAmhUAIa"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2fc0ab102e2so532039a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 11:56:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739563009; x=1740167809; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iZe63HKM8wngZcB9fftBtwVVvlWOpcDUXEwsaiq1API=;
-        b=OAmhUAIa+FC9BIkZhoIBligo50PCQbq9YfjLkvd2ofouUh8g4IkZFndJ+LONkcG4TD
-         CIUuRrLrBnX6PHXISlwg/UmfqJJPb6N3RmV/y0w3AAr745r7V/kClCEGyqZhCqyi7Xoa
-         TaJ4OFnyHhdaySa5PY0weQRc8qcqDTPuGXs/4U93LEsdvmCFbfC/wVLbEJqVLGcoO6w6
-         QSIogXSSVt5G5VcC6li++Gu7ucDK2wrdHG+plXXf4E9AhUs1eymJzLbTfwh988dbdCvB
-         cBujqoEqV3EYLLTRllQDlUYf76vvjNshJaKgD9PLnJN6AhvX62vWyBsBquErsxpfG5sY
-         md7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739563009; x=1740167809;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iZe63HKM8wngZcB9fftBtwVVvlWOpcDUXEwsaiq1API=;
-        b=JjdkEsCQfYQD3B0PvHz1rdoNPnyCN0b/h4Na5RtrMf/FCapV5dXSoAiOUi2EU/E6qs
-         +fCphFyzif/D/mt4+8AaksZY2735ckYBkq328dzIY9OptnNoSf5Ksx+Z/v9g0z0WE9ft
-         fJtwYPZ6KyUtN4Xr0F6OOQUrKRl1hC9Kb3EMSeoEqDUJhYOY/0CZrqqAGeu1ViIeMC67
-         8bF2vQB2wbAlfHQo8nmCQIDUVI0XV2B3OnRJcUw3PO3rKhVrMB4clM1YIpe6e9vAeCMD
-         aUE3xVlc2ZbOXfbY6M+KNl00LpAaN+5+TD1PQyN2HXlpzF35Eu0DOb66VWyQcmIiGvA6
-         ZN4w==
-X-Forwarded-Encrypted: i=1; AJvYcCWZedmSiH8Tf/6hnMDEy+GHjgqvYDhwvGMEbTWL60Uwcsq3zYgzM2gB8MEd+BpVsacpEurVfBiswbApNAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1+js0g7f7jG4EoBDlk5MZ7fYpg1F19OtWHwdxL/WgN4c/Kk+9
-	JxejKEYWPiS+Dlnnk9cfQ9iGQQBTeZEy6HZIs+3ZNiDNhfzopcJj
-X-Gm-Gg: ASbGncsNBd5rukM6MHgTaPOpF5efEhNXM79Yu4LCD+ft7JVjGwAl45TVHFWWNxOYv6q
-	fInUFZn9ByqdSRlszTaEtlDZ50UNKBQwQMGJudeD9pe3FvHqvrLpELsuLYGCm8KYLV/vLwukKAV
-	3SIlSmFdYeg6Uq7UPRPlODgjoQOHZ8d39j0DDaDxObkXsonjGmQnTlZaa06JGRP6UdpaDcYzjOA
-	i8jfVXSvy9QNFVLlR0iHubZBrfAt9xlQvmKm9gMbBhJdHKH0qJbC+sjWN7KyQZHpdajRAOWXcDf
-	z7N5p6qrAj1J7Bx3r9PNB3XK2nqPLr4=
-X-Google-Smtp-Source: AGHT+IG+/GJB7UKuBoebjGFibYJBhi5i0M3ekF7jrMwSS7Pg5F3IV+gTj1kHaiZigFpU3lR6DmIt7w==
-X-Received: by 2002:a05:6a00:3e0c:b0:72a:a7a4:99ca with SMTP id d2e1a72fcca58-73261778caamr439948b3a.2.1739563009122;
-        Fri, 14 Feb 2025 11:56:49 -0800 (PST)
-Received: from localhost.lp.veng.com.ar ([200.10.125.114])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73249fe96b4sm2670530b3a.75.2025.02.14.11.56.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 11:56:48 -0800 (PST)
-From: Gaston Gonzalez <gascoar@gmail.com>
-To: linux-staging@lists.linux.dev
-Cc: dpenkler@gmail.com,
-	gregkh@linuxfoundation.org,
-	arnd@arndb.de,
-	dan.carpenter@linaro.org,
-	ajithpv.linux@gmail.com,
-	roheetchavan@gmail.com,
-	niharchaithanya@gmail.com,
-	eleanor15x@gmail.com,
-	everestkc@everestkc.com.np,
-	kees@ijzerbout.nl,
-	skhan@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	gascoar@gmail.com
-Subject: [PATCH v2 5/5] staging: gpib: ines: remove unused variable
-Date: Fri, 14 Feb 2025 16:54:48 -0300
-Message-ID: <20250214195456.104075-11-gascoar@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250214195456.104075-1-gascoar@gmail.com>
-References: <20250214195456.104075-1-gascoar@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nWohGhZ4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739563068; x=1771099068;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VHeX8E2rD8a+rLGByF8sKGKr8LeOrdhe7F8Vby0blBA=;
+  b=nWohGhZ4hF8pQLcK8cTiwQoD59mNt5KawCGsN7QKJ4BqkO+F3IY81LpY
+   +ZcklHiTvjUvfP5GiAWRoCTR5yzRhf7LpXi6XdwnuNwJ2k+PUikfew6XB
+   swC1lygTI7ZUxM8T8UvglWNCm1NOt7V3qo9EzJpNUjVzpUtpTdXX6DMo1
+   EmgVf5VCq5IDEkIxnIpT1sj2erCtdTfA2a09ssJLTPvxtNqLo/U84ZxDe
+   0qmnY8sOjvj9932iGkVq5AMkkriZD2kV1zxqPsOWMcqLMmoK3Pr2Xtlcr
+   KSRm8w/uZGLCRhzFV1ynJfjF6u2GrHhmT5NUA6zFbSXeKPkJ5FkkVDpmD
+   w==;
+X-CSE-ConnectionGUID: FtyN1Q9WSuaOSDqBCkwyuQ==
+X-CSE-MsgGUID: Hg4v5aCxRluMhWCtFtpUdg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="57730777"
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="57730777"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 11:57:47 -0800
+X-CSE-ConnectionGUID: nXEU6dxwQte7N5t79NmDQg==
+X-CSE-MsgGUID: 5pa3RgP/SAGfmjHcRMASNA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="113520739"
+Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.109.21]) ([10.125.109.21])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 11:57:46 -0800
+Message-ID: <25b9d3f5-bfe8-48a9-b11b-819d19cfae1e@intel.com>
+Date: Fri, 14 Feb 2025 11:57:50 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 1/1] x86/vmemmap: Add missing update of PML4 table / PML5
+ table entry
+To: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>, linux-kernel@vger.kernel.org
+Cc: osalvador@suse.de, 42.hyeyoo@gmail.com, byungchul@sk.com,
+ dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+ akpm@linux-foundation.org, max.byungchul.park@sk.com,
+ max.byungchul.park@gmail.com
+References: <20250214195151.168306-1-gwan-gyeong.mun@intel.com>
+ <20250214195151.168306-2-gwan-gyeong.mun@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250214195151.168306-2-gwan-gyeong.mun@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Remove unused variable 'nec_priv' in function 'ines_line_status'.
+On 2/14/25 11:51, Gwan-gyeong Mun wrote:
+> when performing vmemmap populate, if the entry of the PML4 table/PML5 table
+> pointing to the target virtual address has never been updated, a page fault
+> occurs when the memset(start) called from the vmemmap_use_new_sub_pmd()
+> execution flow.
 
-This change removes the following warning:
+"Page fault" meaning oops? Or something that we manage to handle and
+return from without oopsing?
 
-warning: variable ‘nec_priv’ set but not used [-Wunused-but-set-variable]
+> This fixes the problem of using the virtual address without updating the
+> entry in the PML4 table or PML5 table. But this is a temporary solution to
+> prevent page fault problems, and it requires improvement of the routine
+> that updates the missing entry in the PML4 table or PML5 table.
 
-Signed-off-by: Gaston Gonzalez <gascoar@gmail.com>
----
-v2: no changes in this patch.
-
- drivers/staging/gpib/ines/ines_gpib.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/staging/gpib/ines/ines_gpib.c b/drivers/staging/gpib/ines/ines_gpib.c
-index 22a05a287bce..ba07dfb0697a 100644
---- a/drivers/staging/gpib/ines/ines_gpib.c
-+++ b/drivers/staging/gpib/ines/ines_gpib.c
-@@ -26,10 +26,8 @@ int ines_line_status(const gpib_board_t *board)
- 	int status = ValidALL;
- 	int bcm_bits;
- 	struct ines_priv *ines_priv;
--	struct nec7210_priv *nec_priv;
- 
- 	ines_priv = board->private_data;
--	nec_priv = &ines_priv->nec7210_priv;
- 
- 	bcm_bits = ines_inb(ines_priv, BUS_CONTROL_MONITOR);
- 
--- 
-2.48.1
-
+Can we please skip past the band-aid and go to the real fix?
