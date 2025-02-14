@@ -1,206 +1,187 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E211DB54C;
-	Fri, 14 Feb 2025 06:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC6C1DC9BB
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 06:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739513190; cv=none; b=U371IFmWAB44s9EfsWQpn23ASWHaaTuOdauIUABa5DrWSzh0GetsZhvLfPTzaXFVQ94P2FEWLTdCkrnkJGGCq7rFAgicDsnDK5M2kX6L+meO0r6wFRDPgjAHvSDGUxyoCHdMAcDD1TAQejn1Btg6hylqAVuP8bynpEgQJzoLrZA=
+	t=1739513385; cv=none; b=c/KbDVSEv2bDdEgkYml6a6xMFEO4pxFgkIeNPXFt9P2A16ysG/B629oDsVjv76QbZyDTbjlVa/Ue4g+AvCTimOa2QlRZSI7yVLFnx65W+SpOVBvZ1ZBobd1ptV/aZB5xt8yYfbbSGk4BG1Q4MuwQyNh3ay9PPFxiP6olCCXAcR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739513190; c=relaxed/simple;
-	bh=ayIdhlNLb2GKZSSeWxAq9c/c2OPatpC52A3/OfNRRcM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TYHrGbl8u3Xcuo1ChRsxOBB4ix+MfXYyfvhrP3UwPimS4UfEYrjnqu19h6JU7J1+LTaB6EEYkuMvKX0p+zo7NW7koA8Lt2wfsnSFQcXupSUeTxKslAo8TuIYU1oE/xHDMYoKdCi16NWv2cWCFXDnHan1OS1u0e0XWX1ZJPgHgD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dKSwJXxt; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739513385; c=relaxed/simple;
+	bh=gslqCHxXuliK3k42oXZWCxQ/0azTZyYkThTDVb/Huws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xbim6k22YQGVEP7Iy7eE3gnJINiq0tybCzgtOQN4c2nlWUACl7VFg1EhS/T5xoVUOmc/T4kUUElpEUtgssNSsRwT+FWW3O5R9j+htRXLL7SNShR2OfoDZT/0xVCdcqI28ki77SL9yPLbLMzzPWJFgCnVNb0YPCg8f9cG0V3Wdjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fkRaTZ3w; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKSwJXxt"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-307bc125e2eso17505091fa.3;
-        Thu, 13 Feb 2025 22:06:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fkRaTZ3w"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2fc3027c7aeso355371a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:09:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739513187; x=1740117987; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gqAdZtNTVsfW+y8D7cFv5lvL1LQWxEuSxZZ2eTAoaGc=;
-        b=dKSwJXxtgs3O6zhryozE5DEKy0HhaTMp7GZ9RQBzVYcHN4YHr5SM5B/DEq6oaVmqTf
-         Et2Ze8obCjVfkRibTX64S8Ei/+HHWGXov0ct4We9flak1oHiT0SYcUEQ4bkjhg/ZqJ9F
-         kybWic+kO9CcT55AzRym3YLVcMslizRiUYT7hrjXDAjs60a+itxYFuCfcb2od5fSmXXo
-         jiPV2nQh0lNxFY7s1+448GV1g9+G0cjStShyMYdeJ7od5kEIPQolwL7hdA7JNvv5xe/n
-         eWRruyOWKPXD0EpCkycb0ijyP31NXW7+h45M4BsERJBpVMfl9pTGcICtrubv6BrxZODz
-         whaw==
+        d=linaro.org; s=google; t=1739513382; x=1740118182; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Qvr3z8yXwbqcPQYudFZGi2O6Yo/lZbNexZYPGGJGKds=;
+        b=fkRaTZ3w9zDI9tzKrpxo1hsDDxwiw7FHKHfX3XCeT6gi97VuF7yunzRjt76xiip445
+         uBDXWt44VnJH9lHKm+boridLB7EmfKsQTEijoeQC4mRtjjkS3T1C220nGj4rrQKW2tXA
+         OhQTKkAoxFfuaFE9He4LsIgmGLAjBlm6BzAD3uw0VtUVqjb3TXvyIQYOnz3iDXAqeWZW
+         et8wsE95g+tf5tW13JLa2NVjOiHa6gXWXO0aobCKpV+o7SDMV20dBcZtO/OMOIGMVE5O
+         c1I4SE1Ejvt+Q8+BHpwdiSHsov4/AXbdGUa4GmGC7wDQQwxbyhxhPXlvZBiDVFOw9BnL
+         GUkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739513187; x=1740117987;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gqAdZtNTVsfW+y8D7cFv5lvL1LQWxEuSxZZ2eTAoaGc=;
-        b=U4lUJCu5MrkznYy61ZcImRxhqZhdXXLMgpqZsJJduNysP7elkHZAwlB2vrbe3RoB8e
-         32c+2OoeGc5EZ2OuYFJDw+1nUrShK1Fzg74300ZJDZA2Nve8zMG9+Oh9LCtD1s0NDNJI
-         I4HNAR10r6kUZnwTxQQlwIvZOieWSVIF0I4nit7aM8i8qUjaIJWYepXOqmHq+iVsMWLB
-         8/cJ12blDOhqg6axElZIVzWJ/unqpgwMjexhBfu5AXq6Gp5FKzpPPdtZv1vzvYCe/bEu
-         fgAAJX5oPDXgfsnXvdASAXoma3vtD4GbAOpR7YRs1y37ZvjfzBQ+Eou3o7ZevWAFhCM4
-         EiKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWrwp5oVUDAfsELvXra85hq7mkCH4pg8GcM5cfv4k6SX0OcqxkbhMpCR78FlmA6x2Hib6PrsPtNYptbYi8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUwQZPd5ufdSD8P9JDrPB4Zpnxop/rZHmIv41EH41+JT9eM2/1
-	Hn/Sz09pOW3zp3bx5y4yxbGPopdsoE1X8Ice0Ub37hIkvx7VzRVkNdLkLvsr9UKIuFlT+C9SEA5
-	lvxkMZ1GmiY0LbBJ1Xnj7X0gTDa4=
-X-Gm-Gg: ASbGncsRRw5qsazQkBf6vEn/WxX/Bja13IXQKeR1lk6aMT6f7DnXr3qzN6wxSIq/d7s
-	j6xvl9rOAhUdFtFHnvZ5BVLNzmyNBFFP+s5QgICXPqrPTYIk7fNTK7cDzX5XNai0psw+H6wpl
-X-Google-Smtp-Source: AGHT+IHPqui+cXa8lH/ms719wR+czTAzvCdYJZEYAhb8mlpoe3XX6QltZFbLJDP0xvxV6GBUE8HKHPteKhMAAWdehUI=
-X-Received: by 2002:a05:651c:a0a:b0:307:dc1f:e465 with SMTP id
- 38308e7fff4ca-3090dd06af3mr18151961fa.22.1739513186599; Thu, 13 Feb 2025
- 22:06:26 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739513382; x=1740118182;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qvr3z8yXwbqcPQYudFZGi2O6Yo/lZbNexZYPGGJGKds=;
+        b=O9GNfhFmLDicpSPTjBNbfgCWc5C5Oi1wKP4AZVdrO/X8/jQYMjyJPCwjhLz0cfUZAw
+         XhvrDvFiTSVpOwBCq5nrvvm+orGz/kLXD4YnfrVrrrCfVBtCEr2XCQQ8SJ55G+tYs5cU
+         KRgv/VVzM87AeCPnmHBzoQ0HxyXfAw8q1G4mjJeuvbtkGfOGHFb5uq3RizsuZ3LjeA5x
+         ooAz/2rFKGxMtpDfit42P5xdBzDvH+37t48YpAipZpxUsjUw8JJqhehQbFDtuxLCS6v5
+         SHLKyBbiU690RmjZMKqeVi3weMkJSAWPQdAkEEdOoYrH2CwOSIWBzbwnVvuaegWsUg2d
+         Tevg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZzfrCY4D51C1nBInKhW7rjhGmAcY+8+/gkLRWpdPl47KWEykbCk4L677SUIUBGTABSz6S83z2Lx9qWcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3BVkZcH4AU6SfcfBnQ4y7So6WTA+WiDxATBixescS49N1A4Tn
+	0F2Bw0hJ1rnsd2DC9suLxZYymV5StCNROh/HsfFIMVp8g3ypKklkVn3WzOan+FelLKH4ovsbK5M
+	=
+X-Gm-Gg: ASbGncvHCpk4BjieDReLSkR5t+57CCleihSv/tZe65q7sfO6FNOELOnF6M5zaRhr1Yw
+	sMvC7egu54jgLpRrf1+oRoSV6ogBWHVnUsCG5cYB6u6QSNzahYWvi0VqeBLm9UGHQA9YYb5kphe
+	QJaR0CSHEi8ObhRwavsX/t66Pu9256lZkvqnFU4G+sGL7k1tqLKrNZZV+7w2WUTanQ137LJ5fve
+	rE/hRIyMxNoWH5DwTYwl6UPlSwyIIWvxm8d7Q7o5WZtEZoqoLeA9yRTDfjgjZDbBA/bT62UoNBk
+	23BrDcIV3afKhUQSt/D8s3iiGJgT5dQ=
+X-Google-Smtp-Source: AGHT+IGJ3PDtM/43vWXCC0cF5aeFBeRUcz79hhv9m7sp4Xsbx/Vh9naI+GxiQ5/c5A05umj2CLzzHA==
+X-Received: by 2002:a17:90b:2743:b0:2fa:17dd:6afa with SMTP id 98e67ed59e1d1-2fbf5c0f614mr17644772a91.17.1739513382401;
+        Thu, 13 Feb 2025 22:09:42 -0800 (PST)
+Received: from thinkpad ([2409:40f4:304f:ad8a:8cb7:72db:3a5e:1287])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fc13ad7c62sm2228797a91.29.2025.02.13.22.09.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 22:09:41 -0800 (PST)
+Date: Fri, 14 Feb 2025 11:39:35 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Kevin Xie <kevin.xie@starfivetech.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Minda Chen <minda.chen@starfivetech.com>,
+	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
+ IRQ handling
+Message-ID: <20250214060935.cgnc436upawnfzn6@thinkpad>
+References: <20250208140110.2389-1-linux.amoon@gmail.com>
+ <20250210174400.b63bhmtkuqhktb57@thinkpad>
+ <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250125000202.20868-1-coolreader18@gmail.com>
-In-Reply-To: <20250125000202.20868-1-coolreader18@gmail.com>
-From: Daniel Ogorchock <djogorchock@gmail.com>
-Date: Fri, 14 Feb 2025 01:06:14 -0500
-X-Gm-Features: AWEUYZnZBpXqrOIQvba5AWr20SzZvvKiaCRfp898MjSVIAl4QLUruh9S104uiQA
-Message-ID: <CAEVj2t=mHasbuve8cwWpuPRsN=Wvsfrf+u5hLP_16GR3XqkMfg@mail.gmail.com>
-Subject: Re: [PATCH] Enable HW LED blinking for hid-nintendo controllers
-To: Noa <coolreader18@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
 
-Hi Noa,
+On Tue, Feb 11, 2025 at 01:09:04AM +0530, Anand Moon wrote:
+> Hi Manivannan
+> 
+> On Mon, 10 Feb 2025 at 23:14, Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > On Sat, Feb 08, 2025 at 07:31:08PM +0530, Anand Moon wrote:
+> > > kmemleak reported following debug log
+> > >
+> > > $ sudo cat /sys/kernel/debug/kmemleak
+> > > unreferenced object 0xffffffd6c47c2600 (size 128):
+> > >   comm "kworker/u16:2", pid 38, jiffies 4294942263
+> > >   hex dump (first 32 bytes):
+> > >     cc 7c 5a 8d ff ff ff ff 40 b0 47 c8 d6 ff ff ff  .|Z.....@.G.....
+> > >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> > >   backtrace (crc 4f07ff07):
+> > >     __create_object+0x2a/0xfc
+> > >     kmemleak_alloc+0x38/0x98
+> > >     __kmalloc_cache_noprof+0x296/0x444
+> > >     request_threaded_irq+0x168/0x284
+> > >     devm_request_threaded_irq+0xa8/0x13c
+> > >     plda_init_interrupts+0x46e/0x858
+> > >     plda_pcie_host_init+0x356/0x468
+> > >     starfive_pcie_probe+0x2f6/0x398
+> > >     platform_probe+0x106/0x150
+> > >     really_probe+0x30e/0x746
+> > >     __driver_probe_device+0x11c/0x2c2
+> > >     driver_probe_device+0x5e/0x316
+> > >     __device_attach_driver+0x296/0x3a4
+> > >     bus_for_each_drv+0x1d0/0x260
+> > >     __device_attach+0x1fa/0x2d6
+> > >     device_initial_probe+0x14/0x28
+> > > unreferenced object 0xffffffd6c47c2900 (size 128):
+> > >   comm "kworker/u16:2", pid 38, jiffies 4294942281
+> > >
+> > > This patch addresses a kmemleak reported during StarFive PCIe driver
+> > > initialization. The leak was observed with kmemleak reporting
+> > > unreferenced objects related to IRQ handling. The backtrace pointed
+> > > to the `request_threaded_irq` and related functions within the
+> > > `plda_init_interrupts` path, indicating that some allocated memory
+> > > related to IRQs was not being properly freed.
+> > >
+> > > The issue was that while the driver requested IRQs, it wasn't
+> > > correctly handling the lifecycle of the associated resources.
+> >
+> > What resources?
+> >
+> The Microchip PCIe host driver [1] handles  PCI, SEC, DEBUG, and LOCAL
+> hardware events
+> through a dedicated framework [2]. This framework allows the core driver [3]
+> to monitor and wait for these specific events.
+> 
 
-Thanks for this patch. Integrating the firmware LED blinking support
-is something I've wanted the driver to have for a long time.
-Especially for joycond when it places the controller in "pairing"
-mode.
+Microchip driver also has its own 'event_ops' and 'event_irq_chip', so defining
+'request_event_irq()' callback makes sense to me.
 
-Can you prepend the commit title with "HID: nintendo: " to match the
-convention for other commits in the hid folder?
+> [1]: https://github.com/torvalds/linux/blob/master/drivers/pci/controller/plda/pcie-microchip-host.c#L90-L292
+> [2]: https://github.com/torvalds/linux/blob/master/drivers/pci/controller/plda/pcie-microchip-host.c#L374-L499
+> [3]: https://github.com/torvalds/linux/blob/master/drivers/pci/controller/plda/pcie-plda-host.c#L448-L466
+> 
+> StarFive PCIe driver currently lacks the necessary `request_event_irq`
+> implementation
+> to integrate with this event-handling mechanism, which prevents the core driver
+> from properly responding to these events on StarFive platforms.
+> 
+> static const struct plda_event mc_event = {
+> .  request_event_irq = mc_request_event_irq,
+>   .intx_event        = EVENT_LOCAL_PM_MSI_INT_INTX,
+>   .msi_event         = EVENT_LOCAL_PM_MSI_INT_MSI,
+> };
+> 
+> This patch implements dummy `request_event_irq` for the StarFive PCIe driver,
+> Since the core [3] driver is monitoring for these events
+> 
 
-On Fri, Jan 24, 2025 at 7:02=E2=80=AFPM Noa <coolreader18@gmail.com> wrote:
->
-> This is my first patch, so hopefully I'm doing this right. I noticed
-> when trying to use `ledtrig-timer` on the Joycon LEDS that it at times
-> would hang for a while (I assume the firmware isn't a fan of frequent
-> LED subcommands, or something), and I've tested with this patch and it
-> blinks consistently with carefree abandon.
->
-> Separately, I was also thinking about exposing the LEDs as evdev codes,
-> but it doesn't seem like there's any good options of the `LED_*`
-> constants to represent them.
->
-> Signed-off-by: Noa <coolreader18@gmail.com>
-> ---
->  drivers/hid/hid-nintendo.c | 45 ++++++++++++++++++++++++++++++++------
->  1 file changed, 38 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/hid/hid-nintendo.c b/drivers/hid/hid-nintendo.c
-> index 11ac246176ae..83dff0c4f7e1 100644
-> --- a/drivers/hid/hid-nintendo.c
-> +++ b/drivers/hid/hid-nintendo.c
-> @@ -2183,14 +2183,13 @@ static int joycon_input_create(struct joycon_ctlr=
- *ctlr)
->         return 0;
->  }
->
-> -/* Because the subcommand sets all the leds at once, the brightness argu=
-ment is ignored */
-> -static int joycon_player_led_brightness_set(struct led_classdev *led,
-> -                                           enum led_brightness brightnes=
-s)
-> +/* Update the on/flash status of the leds according to their led_classde=
-v fields */
-> +static int joycon_update_player_leds(struct device *dev)
->  {
-> -       struct device *dev =3D led->dev->parent;
->         struct hid_device *hdev =3D to_hid_device(dev);
->         struct joycon_ctlr *ctlr;
->         int val =3D 0;
-> +       int flash =3D 0;
->         int i;
->         int ret;
->
-> @@ -2200,16 +2199,47 @@ static int joycon_player_led_brightness_set(struc=
-t led_classdev *led,
->                 return -ENODEV;
->         }
->
-> -       for (i =3D 0; i < JC_NUM_LEDS; i++)
-> -               val |=3D ctlr->leds[i].brightness << i;
-> +       for (i =3D 0; i < JC_NUM_LEDS; i++) {
-> +               if (ctlr->leds[i].blink_delay_on || ctlr->leds[i].blink_d=
-elay_off)
-> +                       flash |=3D 1 << i;
-> +               else if (ctlr->leds[i].brightness)
-> +                       val |=3D 1 << i;
-> +       }
->
->         mutex_lock(&ctlr->output_mutex);
-> -       ret =3D joycon_set_player_leds(ctlr, 0, val);
-> +       ret =3D joycon_set_player_leds(ctlr, flash, val);
->         mutex_unlock(&ctlr->output_mutex);
->
->         return ret;
->  }
->
-> +static int joycon_player_led_brightness_set(struct led_classdev *led,
-> +                                           enum led_brightness brightnes=
-s)
-> +{
-> +       led->brightness =3D brightness;
-> +
-> +       if (!brightness)
-> +               led->blink_delay_on =3D led->blink_delay_off =3D 0;
-> +
-> +       return joycon_update_player_leds(led->dev->parent);
-> +}
-> +
-> +/* the blink period of the leds can't be changed, and is always these va=
-lues */
-> +static const JC_LED_BLINK_DELAY_ON =3D 500;
-> +static const JC_LED_BLINK_DELAY_OFF =3D 200;
+This still doesn't make sense to me. Under what condition you observed the
+kmemleak? Since it points to devm_request_irq(), I can understand that the
+memory allocated for the IRQ is not freed. But when does it happen?
 
-nit: it might be nice to append the constant names with "_MS" for
-clarity on the time unit used.
+> > > This patch introduces an event IRQ handler and the necessary
+> > > infrastructure to manage these IRQs, preventing the memory leak.
+> > >
+> >
+> > These handles appear pointless to me. What purpose are they serving?
+> >
+> Yes, you are correct, the core event monitoring framework [3] triggered a
+> kernel memory leak. This patch adds a dummy IRQ callback as a
+> placeholder for proper event handling, which can be implemented in a
+> future patch.
+> 
 
+The dummy request_event_irq() callback is not supposed to be needed in the first
+place. So clearly, this patch is not fixing the actual memory leak but trying to
+cover it up.
 
-> +/* the different leds on a joycon can't actually be set to hw blink inde=
-pendently
-> + * of each other, since they all use the same one subcommand, so this fu=
-nction
-> + * actually resets the cycle of all the leds */
-> +static int joycon_player_led_blink_set(struct led_classdev *led,
-> +                                    unsigned long *delay_on,
-> +                                    unsigned long *delay_off)
-> +{
-> +       led->blink_delay_on =3D *delay_on =3D JC_LED_BLINK_DELAY_ON;
-> +       led->blink_delay_off =3D *delay_off =3D JC_LED_BLINK_DELAY_OFF;
-> +
-> +       return joycon_update_player_leds(led->dev->parent);
-> +}
-> +
->  static int joycon_home_led_brightness_set(struct led_classdev *led,
->                                           enum led_brightness brightness)
->  {
-> @@ -2268,6 +2298,7 @@ static int joycon_leds_create(struct joycon_ctlr *c=
-tlr)
->                 led->max_brightness =3D 1;
->                 led->brightness_set_blocking =3D
->                                         joycon_player_led_brightness_set;
-> +               led->blink_set =3D joycon_player_led_blink_set;
->                 led->flags =3D LED_CORE_SUSPENDRESUME | LED_HW_PLUGGABLE;
->
->                 led_val |=3D joycon_player_led_patterns[player_led_patter=
-n][i] << i;
-> --
-> 2.48.1
->
+- Mani
 
-
-Looks good overall to me other than the commit message format.
-
-Thanks,
-Daniel
+-- 
+மணிவண்ணன் சதாசிவம்
