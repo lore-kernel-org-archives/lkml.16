@@ -1,122 +1,163 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083DA14D28C;
-	Fri, 14 Feb 2025 16:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9708A2676F8
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739550308; cv=none; b=TIKCnD/aEX7E7622/ERh3YMahNLmuREpROk2oQSfZdvDDH2pTU531vnxQhLeivm1mngmXqv8bxNZDPTJzf3Li1ArNu3k6gOn1/6r0y113YtXEYGEctXkO+bASJhUonny8+E6QltWtHRuHlxleZg+HcISueoGF6uPzupw1edfO/A=
+	t=1739550355; cv=none; b=nuRdz+i5NFGrejYwAqucYpDUa4Q9bGpsdtZQeVE6z5L4i+ibtYp1qTtmmETdeqIE9hM7qQa2H/X2OLz4UmiVbakzIbI8M2PWJzurmVN0omYKNPYC+uCOS+3nv8ujyhSzBkQX5dLngEGDNwLcpu/ZDB7C8c5SCPHpwZjIcTngp18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739550308; c=relaxed/simple;
-	bh=MvxERc194WQJx36vLWPBEF+DLPnFAKH0/YV6FuaNUNw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GWntc0rYq0HW6tx77mV+/JNenGyush0Gc81wkjklsWfTEKxzSyhKvzTktx5/sqa9IRS+emahu56Wit0OKopBH/KnOsyvA3/qANuxlRfy7UNuD6BeHsQeCqbh9uN81NfcYZY447o100+jUfa357qb9jTAObNlXo4As59VtWOL57E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=R59gBZ+4; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739550355; c=relaxed/simple;
+	bh=xE4Njoyxxxt7h5muOvaecOz2DvQhoas6HmilLX9gMOs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PBVWNgb5ZI00E+uaH2x+ObmbidATZ8lW8sFRdsL8ygGv6OqCAS7WCYNVBfV0cs5XiIXo9mhM36+W9ekxT9pgqiI7HUNFdxvkRnTtpp+AZ5yPLVVX+oI6Y0eBUWuQMY7aWdK8mkwaMFuS2MgOF3nV7+m93vepqJA+lJvo4/DdGPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lqqYUd+I; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="R59gBZ+4"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EFdcek032481;
-	Fri, 14 Feb 2025 16:24:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=yG70bgF4eF0LbCZrC
-	bJjOyXn2pmOX1dHX5jvropnH6A=; b=R59gBZ+4392p79qX19Ph8tJ7FR3iI2W7o
-	J/Ninepujgqw6UHYoorf3Bj6yTIEdBUgdPRhsF2ZJOxlgCnMLsNw+4P2gyUYhJoD
-	O05v4xyRqKB1LYRJdssgwocmKwCOwgQOhqluGowhZxAhp7k0iNurR7WPOFR3TsEg
-	qoWnQ56aUqVGv2Ido9dDCj55/oGz9kgmjgSPtBv/tWiAa9xZt8g8fakzAtpEoqdi
-	kwsN7y2rDuuZFyvpM0ltcvKN9CP7tWb+bzq0EuH/l8KECbVjLWWHN3ZM+n3ciJaF
-	PGvw9jVDrAeXS7PEzIIPCsPjnbrCBSV7lrPFjiYRQ8qq7xNnkpBoQ==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44t8nug6qh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 16:24:55 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51EEbawB028197;
-	Fri, 14 Feb 2025 16:24:54 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44phyyvked-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 16:24:54 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51EGOpoa27329046
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Feb 2025 16:24:52 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D83E55803F;
-	Fri, 14 Feb 2025 16:24:51 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A1AA658061;
-	Fri, 14 Feb 2025 16:24:51 +0000 (GMT)
-Received: from li-4c4c4544-0047-5210-804b-b8c04f323634.lan (unknown [9.61.91.157])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 14 Feb 2025 16:24:51 +0000 (GMT)
-From: Nick Child <nnac123@linux.ibm.com>
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: haren@linux.ibm.com, ricklind@us.ibm.com, nick.child@ibm.com,
-        jacob.e.keller@intel.com, horms@kernel.org,
-        Nick Child <nnac123@linux.ibm.com>
-Subject: [PATCH v2 2/3] hexdump: Use for_each macro in print_hex_dump
-Date: Fri, 14 Feb 2025 10:24:35 -0600
-Message-ID: <20250214162436.241359-3-nnac123@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250214162436.241359-1-nnac123@linux.ibm.com>
-References: <20250214162436.241359-1-nnac123@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lqqYUd+I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739550353; x=1771086353;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xE4Njoyxxxt7h5muOvaecOz2DvQhoas6HmilLX9gMOs=;
+  b=lqqYUd+IjbTepA0kNXZSRnp8yrZQemde9hblMFpLltcra5ccjByylxvs
+   laerryL8twspLx1/qj6+rderDSrUeEqwD9AQVH5MKx5cHPHvkdr+y8Oc5
+   kZdrTMvfzrRTvIIYek9ARBEKvAVq7/0CW1fNtiqIQUlE4G7XIBVLGWYcl
+   mmTwtNydWLByk2dW765rkbkZIkmJ9e0+CfjZsUAespb0jyJsSdw7CTsNS
+   5XcfvZC4wZhwJ69k5BOlnn5u2+SPY5Zhf5b7KME9QEY54GQai8s2HjtsK
+   9Rwuu7klucW/BeYuMJpqpoeCKuyRI2j+F3WE5BC8IjHtrz3OHSNM7Q0Fb
+   w==;
+X-CSE-ConnectionGUID: W11KgWJlQce7b9GhRolSTg==
+X-CSE-MsgGUID: YlVxgHniT0CXsvjXL27WkA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40447113"
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="40447113"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 08:25:52 -0800
+X-CSE-ConnectionGUID: QnpF+3SJQjS0E1pjW7WhkA==
+X-CSE-MsgGUID: WoQgMQ7nTfiHk7j8FRVjcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="113355705"
+Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.125.109.34]) ([10.125.109.34])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 08:25:52 -0800
+Message-ID: <613c2726-a576-4cd8-86a2-c84529b754cd@intel.com>
+Date: Fri, 14 Feb 2025 09:25:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 9LXfp6siklWuK3QkpAUTEsSjRVu61PQb
-X-Proofpoint-ORIG-GUID: 9LXfp6siklWuK3QkpAUTEsSjRVu61PQb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-14_07,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 impostorscore=0 mlxscore=0 mlxlogscore=885
- malwarescore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
- suspectscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502140114
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/12] dmaengine: idxd: Remove unnecessary
+ IOMMU_DEV_FEAT_IOPF
+To: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Zhangfei Gao <zhangfei.gao@linaro.org>,
+ Zhou Wang <wangzhou1@hisilicon.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Vinicius Costa Gomes <vinicius.gomes@intel.com>
+References: <20250214061104.1959525-1-baolu.lu@linux.intel.com>
+ <20250214061104.1959525-10-baolu.lu@linux.intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250214061104.1959525-10-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The looping logic in print_hex_dump can be handled by the macro
-for_each_line_in_hex_dump.
 
-Signed-off-by: Nick Child <nnac123@linux.ibm.com>
----
- lib/hexdump.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/lib/hexdump.c b/lib/hexdump.c
-index c3db7c3a7643..181b82dfe40d 100644
---- a/lib/hexdump.c
-+++ b/lib/hexdump.c
-@@ -263,19 +263,14 @@ void print_hex_dump(const char *level, const char *prefix_str, int prefix_type,
- 		    const void *buf, size_t len, bool ascii)
- {
- 	const u8 *ptr = buf;
--	int i, linelen, remaining = len;
-+	int i;
- 	unsigned char linebuf[32 * 3 + 2 + 32 + 1];
- 
- 	if (rowsize != 16 && rowsize != 32)
- 		rowsize = 16;
- 
--	for (i = 0; i < len; i += rowsize) {
--		linelen = min(remaining, rowsize);
--		remaining -= rowsize;
--
--		hex_dump_to_buffer(ptr + i, linelen, rowsize, groupsize,
--				   linebuf, sizeof(linebuf), ascii);
--
-+	for_each_line_in_hex_dump(i, rowsize, linebuf, sizeof(linebuf),
-+				  groupsize, buf, len) {
- 		switch (prefix_type) {
- 		case DUMP_PREFIX_ADDRESS:
- 			printk("%s%s%p: %s\n",
--- 
-2.48.0
+On 2/13/25 11:11 PM, Lu Baolu wrote:
+> The IOMMU_DEV_FEAT_IOPF implementation in the iommu driver is just a no-op.
+> It will also be removed from the iommu driver in the subsequent patch.
+> Remove it to avoid dead code.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+> ---
+>  drivers/dma/idxd/init.c | 37 ++++++-------------------------------
+>  1 file changed, 6 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index 1e5038cca22c..d44944195807 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -626,21 +626,6 @@ static void idxd_disable_system_pasid(struct idxd_device *idxd)
+>  	idxd->pasid = IOMMU_PASID_INVALID;
+>  }
+>  
+> -static int idxd_enable_sva(struct pci_dev *pdev)
+> -{
+> -	int ret;
+> -
+> -	ret = iommu_dev_enable_feature(&pdev->dev, IOMMU_DEV_FEAT_IOPF);
+> -	if (ret)
+> -		return ret;
+> -	return 0;
+> -}
+> -
+> -static void idxd_disable_sva(struct pci_dev *pdev)
+> -{
+> -	iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_IOPF);
+> -}
+> -
+>  static int idxd_probe(struct idxd_device *idxd)
+>  {
+>  	struct pci_dev *pdev = idxd->pdev;
+> @@ -655,17 +640,13 @@ static int idxd_probe(struct idxd_device *idxd)
+>  	dev_dbg(dev, "IDXD reset complete\n");
+>  
+>  	if (IS_ENABLED(CONFIG_INTEL_IDXD_SVM) && sva) {
+> -		if (idxd_enable_sva(pdev)) {
+> -			dev_warn(dev, "Unable to turn on user SVA feature.\n");
+> -		} else {
+> -			set_bit(IDXD_FLAG_USER_PASID_ENABLED, &idxd->flags);
+> +		set_bit(IDXD_FLAG_USER_PASID_ENABLED, &idxd->flags);
+>  
+> -			rc = idxd_enable_system_pasid(idxd);
+> -			if (rc)
+> -				dev_warn(dev, "No in-kernel DMA with PASID. %d\n", rc);
+> -			else
+> -				set_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
+> -		}
+> +		rc = idxd_enable_system_pasid(idxd);
+> +		if (rc)
+> +			dev_warn(dev, "No in-kernel DMA with PASID. %d\n", rc);
+> +		else
+> +			set_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
+>  	} else if (!sva) {
+>  		dev_warn(dev, "User forced SVA off via module param.\n");
+>  	}
+> @@ -703,8 +684,6 @@ static int idxd_probe(struct idxd_device *idxd)
+>   err:
+>  	if (device_pasid_enabled(idxd))
+>  		idxd_disable_system_pasid(idxd);
+> -	if (device_user_pasid_enabled(idxd))
+> -		idxd_disable_sva(pdev);
+>  	return rc;
+>  }
+>  
+> @@ -715,8 +694,6 @@ static void idxd_cleanup(struct idxd_device *idxd)
+>  	idxd_cleanup_internals(idxd);
+>  	if (device_pasid_enabled(idxd))
+>  		idxd_disable_system_pasid(idxd);
+> -	if (device_user_pasid_enabled(idxd))
+> -		idxd_disable_sva(idxd->pdev);
+>  }
+>  
+>  /*
+> @@ -1248,8 +1225,6 @@ static void idxd_remove(struct pci_dev *pdev)
+>  	free_irq(irq_entry->vector, irq_entry);
+>  	pci_free_irq_vectors(pdev);
+>  	pci_iounmap(pdev, idxd->reg_base);
+> -	if (device_user_pasid_enabled(idxd))
+> -		idxd_disable_sva(pdev);
+>  	pci_disable_device(pdev);
+>  	destroy_workqueue(idxd->wq);
+>  	perfmon_pmu_remove(idxd);
 
