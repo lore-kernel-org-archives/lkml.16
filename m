@@ -1,834 +1,227 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01EF26770C;
-	Fri, 14 Feb 2025 16:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739550022; cv=none; b=csEgXE1C84YFzbpSniKN8bzb7tnfPLVrVgyeRh/xMctoLOhg8qiJf3gg/b/LlYF6XImO85tiv2jkDaVDYMkLxHuYvf402mB/KQHB1bBmBXu9y6uR6ZQ79XLotsES1S6HEOBMIN+ksFqQ06GftHvwLa3DvwzzrfjCpRHeJOji4Xk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739550022; c=relaxed/simple;
-	bh=AhQiOUtEtf8Kfg7ogwG8jjfVbP2I67tNj/tXj8vxYMo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ps8BDD0T0eGnaJL+16txdlSRgFtjc72lRZlsQ3u/YNucxscVcmII2xwz2/l8+oXbksUKCb8Gre0L7gi0lY5V0f0haM5EIc34vxEe9Jk2pi3rRYieXsNH77dW1DiofCGvyYAscGBXjyMxBo9zrDxhnafCYGPNrGpoq6R8oUIWtM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d7XqZv44; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9F7267F43
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739550031; cv=fail; b=SPapYL9n6BSp16xgz6bmDIq5/K4PPeLdE4b1WJPY/EEBk5C6I6XH8gZnANo3T29C5yMqepKo9sWkKDbqhQLRWrGG+BuQ6Bimb6CwM7nx21WUoEXNbcCH+/N5YQCnGf817ussD3gV1iekiDzPDWaObwHSGXQN4lh2gvk2xqUQ5Bc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739550031; c=relaxed/simple;
+	bh=otcb2QFdDouzonegvVwTeUYyJsRpcmghRkbZ96Q8A6Q=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=TQUtPcEvxhrYRy/ZWFAOaQ8dJlTCRq+E+pc2Ajo7cErnXkvpg/Oajrf8adQlagJGw4SSUxhrPPTXL47NSLSqUcPXkoWB5uzSj3Is0Q9aBPax9Vt0YSrtjbrVdBlw8YK00e7w/3xx036qzBpYqgrTQmXgv9wdTUavGZFoki2x2mg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NkvhoYzN; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7XqZv44"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-471d0d123d8so7865081cf.0;
-        Fri, 14 Feb 2025 08:20:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739550018; x=1740154818; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2VCBhSjbpSxxtoIMl4LQSzahtuVSOdMB24YuJYpx5a0=;
-        b=d7XqZv4422RoDMe+At2dtgxpsCDZVRW9syPwZSePLXGAzeK8DmuOTs2qY98PDQnJiy
-         1CP1n7Bw01lBz/PcgIsmMxCVKOIAYKrP99h6pCegNrspghgyB/XLFBk1gDND7a8MnTE9
-         Fpmx6EzYfAAgLH/FuOKRDE+3qeyQhaa9KN6Sbke0aC73ANpD4aUElsSJMWs1ei4WZP1b
-         LY9dHNrLs1TF736BNfS9yJ8hI/4YscixIzPpxLELFIodQCUPGRaFs1uuabELhGXMxCEu
-         0ELuUeM/wa+GzvpVuKdg4dcKXWoxwhrGvLTSC15crnvEt+nQinP3KCc9Y72t/D7oJTST
-         x79g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739550018; x=1740154818;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2VCBhSjbpSxxtoIMl4LQSzahtuVSOdMB24YuJYpx5a0=;
-        b=k68fBam0JK8jBlZ6+dIfoLZyKFq+sOg7uW3Lhw4reWZexgt4CDqOuS89MXYOI/23oV
-         rBE+Pstpd5itP11Iqmpk69nWpUazpBFjBrxT9xpFq/3g48inImxauGjRm4vXFgw11bi8
-         lEhdow3pElsUJb0RW/W72oPjFWQpjiNVuTsHgkK1Sn/dt02TlzImsJugpgU18gYVARLP
-         vBeZEofu1Qa1gCGjY8zldpCwtgvDvKOTOr48Dp63aX7ICZBsu9KrsggSXKp4tTJd+uFN
-         Ot4nX0mQucSXLlI/AxZ4LgzxLk8UJRVfI2YJ5REJ1O+GQ/5KHlE2N7E6/oCbnBfqjLNf
-         10GA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPq58kd4nIH8/3RAJt4IqgIemoxOZ6ARIo5bkS+u0A6dTMRprWITtnA+ECZeYAFHzTKZ+4T6OZLd0wMs+6BBAn@vger.kernel.org, AJvYcCVQUbn8i3QOS+II/h3j4v5Y+AzLG/uobCLKUL5tuUSSHWzNzTkFZ4zmkf9nbv5Wn8LlEOcOm8seMQn8N0w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweLbBVhl+MxtdYIUwULvjeZB4ISoO3IYi6to4c1I5DF45kUl4Z
-	9C0ClV3xVnqKoPWKObPhCrmUkk5BvYVzIdjNoPmGy5YxLGCcQ4hg
-X-Gm-Gg: ASbGncvXELe+2FG110pyKyRtcVtBUFjQrS2XpX4CdIG+kGOR01Hl2pFaNnNOq2jdHKx
-	HavVKe93ibLJ10f5hms7RGybnhAAF+Qa7xRXfidZmrfdO4R8soscuKfw0JY+8nBH6p28yesmJXY
-	OtW3LIP/IKL3mJjiKa0bY+x10ZVGntGUhimV8HgI6j8uEcgjDMw2In4Ptho3rJbgt14G6OLb+kt
-	vEq+pmtD3+HqKvRsw0aMRP9wLAAuhjQoql2eAk832IWXABY/K5SKKqH8ycGDnNjH76cNOL6H8N1
-	bfXqL5sQSEm8jKIuTduj7A6iCs+D10aq8PWkzw==
-X-Google-Smtp-Source: AGHT+IE6T/9N01eDB7ziU4pK0igxY2B5d7EupZB37PemAO66qr7SEcdHk6F4rH85iSDUqK0mf/P31g==
-X-Received: by 2002:ac8:7d4c:0:b0:471:c6c7:4847 with SMTP id d75a77b69052e-471c6c74b42mr100704751cf.2.1739550018386;
-        Fri, 14 Feb 2025 08:20:18 -0800 (PST)
-Received: from [192.168.1.159] ([2600:4041:5be7:7c00:d4df:402c:65f0:87da])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471c2af37c7sm19196911cf.61.2025.02.14.08.20.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 08:20:17 -0800 (PST)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 14 Feb 2025 11:20:00 -0500
-Subject: [PATCH v8 3/4] scanf: convert self-test to KUnit
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NkvhoYzN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739550029; x=1771086029;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=otcb2QFdDouzonegvVwTeUYyJsRpcmghRkbZ96Q8A6Q=;
+  b=NkvhoYzNel88w4n9VWhR6KlL2GEYZJVrX1jdPxQzJ/mjmxSGOPYXB7g9
+   rAM3CzmqQZBnyO1qM58tpSkeN7ayyS14miBmYOCxoCJc1pPiwa6ZDn2Dv
+   XgmuyFK6p8Mn32g7ntTWRGzUbWPia6P2Q9rlVIzf/h4EaIUWA3N70IuJf
+   s8xAeqJfJFyAYYvB4Av37dBoiX0ISP4tbC1cZA22GKWK2Bs7ltfahakiZ
+   UMtnl2ZLJumYRzETdKHJB8ksbML9QCggWKXwqw4ySJogPqXP8GHY72g6Q
+   +F6M2Op9PPQjDtPYaCsqJJGVJd1rUeuDNqNk4CNgUBykSIiwuLnNACOf4
+   g==;
+X-CSE-ConnectionGUID: 9ZIUcGoZQkGld5Vb+4KdLA==
+X-CSE-MsgGUID: tCdLil3kSl6Cy6pCv+OKsg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="50933445"
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="50933445"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 08:20:12 -0800
+X-CSE-ConnectionGUID: XtjGeHN1RtGLCIfuEZJfPA==
+X-CSE-MsgGUID: F6McQCGBRkaKyjx80toFig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="113451375"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 14 Feb 2025 08:20:13 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Fri, 14 Feb 2025 08:20:12 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 14 Feb 2025 08:20:12 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 14 Feb 2025 08:20:11 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OHkVcjMGKZjcnvbfDz33Wbe2TVtK+X5H6/DEz983jS5OsH8KN+fNRn34wK8RV2ym+7twXxYMtgy9PlQnhkus7rGJ23r6etYwqgZb8tOw05paYOpG6SlUBoHlBqisBsoz0x7Lr/waI8OrcoiqWilEDuvTSgFCjufnFfczK48In0QkR6j0Dl3Dk0mWN5EEINNnxlZkwIbIbI1kxxyNZ/MeBdG27e242Oo2xBmVip1XEb93q5D5/QbWu4JyUzQ6zg3kxk9e9UvjxBIMCwcJI7ZjCbiGX80PbEoeuPlYNhAHXJoHgKQAFlwaDAuSTC7Klxf7mceod5GBqb9mJzHReDIl4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=A/IddgDvxjUxGpVPMgM2Q1TWXlpW10VPJ2XFWDtYMgc=;
+ b=C5xzsnf1dI2mbR9xSJSZ5h2WoTfFoHJ17kBx+1duUzQkS6ryblfJ44g+DBz3TMMXTt1u8XJD1bYrwKk3oOc1sxsYyuC5w/TjzT4IlUMmCVZO4otCogHAXCUH54gotWCC7cozr57JSdBwXZFYFBO0idU8q2Q0X/9srf48T5uotYvIUY5Eln7KTvD9EYm5JTFfo8B5bRTBOo/D1BSUKn5VKeSH39a+d6frvX6M3kmDUf8MBPunlC01JoDaUyODnTs4iA/ihyWpxxT8abP/6rgvC20KSsAjBjF4CGAWWCinGSddGpMiWToEWZNdsSxbX+FhuMO0LGP+LbXj12HPkL1p7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB6269.namprd11.prod.outlook.com (2603:10b6:8:97::14) by
+ DM4PR11MB8179.namprd11.prod.outlook.com (2603:10b6:8:18e::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8445.15; Fri, 14 Feb 2025 16:19:54 +0000
+Received: from DS7PR11MB6269.namprd11.prod.outlook.com
+ ([fe80::af1f:dcc:49bf:1a26]) by DS7PR11MB6269.namprd11.prod.outlook.com
+ ([fe80::af1f:dcc:49bf:1a26%3]) with mapi id 15.20.8445.013; Fri, 14 Feb 2025
+ 16:19:54 +0000
+Message-ID: <c2cf2184-7753-454e-ac99-8c4f3c9c3d16@intel.com>
+Date: Fri, 14 Feb 2025 10:19:49 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] tsm: Unified Measurement Register ABI for TVMs
+To: Dave Hansen <dave.hansen@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, "Kirill A. Shutemov"
+	<kirill.shutemov@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-coco@lists.linux.dev>, "Kuppuswamy
+ Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20250212-tdx-rtmr-v1-0-9795dc49e132@intel.com>
+ <15c69d57-4ffb-4ea1-8cbc-0ba6d3d7b14f@intel.com>
+ <be7e3c9d-208a-4bda-b8cf-9119f3e0c4ce@intel.com>
+ <015cdddb-7f74-4205-af8a-b15cad7ddc22@intel.com>
+ <d8f3eb33-d902-4391-adc7-005e4895b471@intel.com>
+ <c7894df2-2b27-4f67-b428-3eca312503f9@intel.com>
+Content-Language: en-US
+From: "Xing, Cedric" <cedric.xing@intel.com>
+In-Reply-To: <c7894df2-2b27-4f67-b428-3eca312503f9@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR13CA0134.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c6::19) To DS7PR11MB6269.namprd11.prod.outlook.com
+ (2603:10b6:8:97::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250214-scanf-kunit-convert-v8-3-5ea50f95f83c@gmail.com>
-References: <20250214-scanf-kunit-convert-v8-0-5ea50f95f83c@gmail.com>
-In-Reply-To: <20250214-scanf-kunit-convert-v8-0-5ea50f95f83c@gmail.com>
-To: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB6269:EE_|DM4PR11MB8179:EE_
+X-MS-Office365-Filtering-Correlation-Id: b2746d10-f7d5-4969-b267-08dd4d136a21
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?MHNrc05sa3hxTno4UHZrNnlkUVZZd3VuWjRIb1Q2WnBBN2tSbGU4cnF2Umxs?=
+ =?utf-8?B?bmx1MStWRTlMc25CZjZ5MHJZNjQvL3pORVBPQ3RJSTRMZWt0WWhTNjhYWWwz?=
+ =?utf-8?B?NDhaa1p1L2RydENrVW40dmIvQXlnK1ZsMit0cjZXemZkUGFDYmx5ME05VllN?=
+ =?utf-8?B?U0xzMUJ5VjZpS3ZNMHJmTys2czlTV0p3dkhGMTFqMTdtTDZSSWVnS0JIQy9T?=
+ =?utf-8?B?dEhYN0RlSVN4QmduS2VzaDk2d2plRko0dTBkdngwMWN3RDhOR3k5cDd3Rncw?=
+ =?utf-8?B?OTFNbjZwbXNNR2RENVZLdFBvMEI0eHhvekkvWS9oLzgrNnNHdDF0OWZ2blRW?=
+ =?utf-8?B?eU9jTmZyY2xzNTdVdTlXblQydzgwL0hxSzRrdFRCczlOVlQ4ZldaRzFVM09u?=
+ =?utf-8?B?VzNvQnUwcnRteEU1SGJXT1JnZ3Z6WmVLRVdvSW5hZ0VmUVM3blowNGg2RjM2?=
+ =?utf-8?B?WjF5Vk9iWVl5TW1IWmwxTHY4NmpRMEVhaXZoam5BYWR1TGgwZWVvbmFFaHBl?=
+ =?utf-8?B?V1YrNUNJOFNDK1dQL0t3TEFkclFhUUhSYkJaU0tBcFEweGNPdmxZYjNVdEZ5?=
+ =?utf-8?B?Z2NJTGlTTVlTWGdRbXZWZnAyY3F4RkM0M3QrY3NEMjFGQTJqMXA0a1ErWUNJ?=
+ =?utf-8?B?ODJVVDN0aWFtMlFkcXBMd2N2azVVZ3Bqb3NtNHhXbTh2c2dTZldpMEFGWmxH?=
+ =?utf-8?B?dDg1amcreGtWMVRRL0pDcmowQTVJOHg0c0xVaWFnd3pxOXhEdkJpNFpjWXBD?=
+ =?utf-8?B?Qkx2Ti9qVFhESlZnMmlZWUZKN3RxUmNkWFhMODdMSkhRUjg3M1YxOUlOMEJ2?=
+ =?utf-8?B?ZGtaUUN0eERoanZlRlFDTGpicDZEMzloaWp5QnZLTzI0eEpQWG9iZTFtcmNZ?=
+ =?utf-8?B?THJqTmtIOHBHemJySWpiTVJoMTBIRlpVOUFQLzU2bHh6SkcxTHU5RjVndFpU?=
+ =?utf-8?B?L0VDSkM4SzFnbnJVMWVORGtKNVJRay9iVE5oSTNFekRBQXhxcG11TXRVeW5y?=
+ =?utf-8?B?OVRVc0FjNUx1Nm51WTMzMS9XN1FkZ2p4TDI3MkRYOTJJZWh1d2x0TE1BQTU5?=
+ =?utf-8?B?Y3JYTWx2Zlh4UDBzS2M1WWdpMmVUMThzRVNxaHArRW9OZVR4Vkl6a1FTY2xp?=
+ =?utf-8?B?UWhTM2ZWWDBqcldsLy9WMkFxMCt5czZPOUtRTWhFZHJCRXB0MlM3VWtrSXF4?=
+ =?utf-8?B?S3ZibUJOaE9UbXEvT3FraEMzWS9EVTF1S0kyU1VmejRFSkcreFJycDFKYzMx?=
+ =?utf-8?B?R1FxTys1S2VTSUd1UW0xNjgvL1M5MS9wdXVkVU4rRUhtQm1wSFM2ZjRJOXlM?=
+ =?utf-8?B?MTFXTXFoWDJaR0tHNEw4bXhjMW5jSWRjU3VKM3B2QVprL0Z2dm1UVUZRZWxC?=
+ =?utf-8?B?ZDI0T3hFWm9oaHEwVERzekVmUU1ORk5uSlhoWjFQdFp1Q0xwNTAwRDRia2Fk?=
+ =?utf-8?B?RDFwakJ3VllKTEl3ZllnQ29iRHF2YmtuaTBaTi9uMjNJampvN1NuYWJ1NVN6?=
+ =?utf-8?B?Mkw5ZDBjSDVLRHFVa3RTQkQ0Ym1WU0Zud0hQYWQ4Wng3THg4WWlFUUZ6cEN0?=
+ =?utf-8?B?enhYYTg4SUdoN2F3cndFQ25ONnQyVVZiSWRnMFV2OVlzbUxkaEtHZG9TOGhj?=
+ =?utf-8?B?REwyQnFGaFdaL0xJdXhFTHBodUtHeUpXTDZ6M0Y0aDJLRnBFOU1GdGoxNlNH?=
+ =?utf-8?B?UVBuZGQ1bnhMMWVxQ1kyd2w1NHlnb1JtdGVaSlRhL3hlWmhVSnhLOW1Jek1t?=
+ =?utf-8?B?NFgxRXJ2eGNhRVFEZncyYk5mUUpESnVlK2RTcm9QQW81d0RtM0tnZEdkMFRG?=
+ =?utf-8?B?Y29JbjNFb2N1Y2NZUEVMbzdJYzVyRHVtZ2xKUnE4ak9sMWdBQnM2bThIWUx2?=
+ =?utf-8?Q?0x4q584qtrKMR?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB6269.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OTlOMEFGZG52SS9HSHV6MUY2Q04xYm5vWVRqaC9BQnNSUHEyMCtZenJsQTZL?=
+ =?utf-8?B?M2ZQbU83YnNjNU0rSHpla2VDUWlwWnN2eXFzSzBIeWczK1YvMk1UemtyTDlY?=
+ =?utf-8?B?bkJsQmd6U3dPbG1MR2NZcUxyblFtZVJIbGlhdkk0SGcwNndCd1RJbE1FRFhJ?=
+ =?utf-8?B?RlB1K1JSV08rc24wZm8zdzRLZVVSM0VlSndGbGU2NUVNakdPRDZoemYxTS9l?=
+ =?utf-8?B?TElrUEZjMVBUcEJ4dWUzME9VY2h3TjMwMEZDOUJ6S1JqbjZJRURFT29TZHY1?=
+ =?utf-8?B?SGVGYTlucFNrdTI0Z3I4M0luSUFOYXBIaWtkMExzSTBkYVVEeUJFc00vK2du?=
+ =?utf-8?B?SUhYcnRaSkhycDhWNVZlSWVhalRBYVdDd1hLek5TcTNhZXYzbXc0cEdBNXJn?=
+ =?utf-8?B?cnhKQm52ODVJL3dlMHNYaG14NC9iZHlwM0dCS09kTmxTS1FvNDJiT2I5VnBv?=
+ =?utf-8?B?bWxkeVVqeVh6TXltZjZGdmlIUkJqdHJWbExRMVBEeUZvSjBTZGNaRktac3Vq?=
+ =?utf-8?B?bUszQmJ5eTBQME5qZktFM0M4ekM5R3Noc1N0U2dRQjd0NHRzRGd0RHZaditj?=
+ =?utf-8?B?ZGI4cVJxK1J4NWtGR004R3BPOVUvYkJmZkkyd1J2Z0syWWFhU1dGZ3RuUlJu?=
+ =?utf-8?B?WTZuY3J1MDZvMmQyWGhVelRubUZvRGF5NkFGSFRUa3hVaStKQlFuMG5NR0hO?=
+ =?utf-8?B?b2lDOWg3bG9wcExTRkQxaG5KNFdMZDlId3p1bURqRFpML2RzQkI3MEpTTUhr?=
+ =?utf-8?B?bDVEbHNERm1yNHgzclRqYVFubWhTZ1U3Q3BzM08rTGRqNjc5WHJmNFpIZlRp?=
+ =?utf-8?B?UzRwVjZzdklUSStHQmw1RDhVcHQrSUZtalJhWmNwakFKYzFSbjBmZUg1MEM2?=
+ =?utf-8?B?bjJnbU1Vc0pKaktWYnRLS2FFMnYzUFN3SGFmcHErL1ZiODB6YitrWmFDYWlJ?=
+ =?utf-8?B?OEJ3OWd2b2NocUI2bVQwT1Z4eUxjZnNhTUdrVnVFdFYwUkRLL2NLZVAwVlNv?=
+ =?utf-8?B?NTY1UGZkekJqZWZjQWhaV25JRk9qRUJRNUk1cTcyMXdIckp5ZkNsZk1qSDRa?=
+ =?utf-8?B?dWkzZnRjcnhPc2x3QW5Xcm5hQ2l0dUZKcW9KU3JidjhwU3RIYzhwbjNPYXl2?=
+ =?utf-8?B?elRSdjZCdjhjK0k4ODVSQ0hwRGx3SStCb09NQ1FJVUlXUW9aaVJ0a2g1QnND?=
+ =?utf-8?B?TGhEdVVjWWdWMUtWK253a09tNytUbUdhVEdvZGt6c1JXK3l2T1dyM3dtQTB1?=
+ =?utf-8?B?OHphZVF0NHU4RDg3YklubTlxbWlRTXVad21pazB0LzZCTE9yTVcyamRpdWdQ?=
+ =?utf-8?B?bHdOTTBQRlpiQk1wQjZiMUhPc25NakVRZWJvQ2REYWlUQmFFSThxWVFnR3NE?=
+ =?utf-8?B?N1lHcGw2SWdTdW1rZGUwclV5d29pR1JmL1pkdkJ6d1g5R3RRaUdnZFgyK2gx?=
+ =?utf-8?B?NkVMdDVDVzBIRGdlNGwxSnhtZEdCNk52ZDNmN3pWbmRtWFNpcnJ4RFltTWE0?=
+ =?utf-8?B?R3ZJOThmVVpHM1VZblMvWXdQa3lJYkhaYmNvaExhbkxTTHFFSU1PdlZTTUFy?=
+ =?utf-8?B?Y2p1MGtaWFZyWG5MbEhxcUxhZmMwUDhWSUMzaFhtRm9oRWw2ZEpWb2k3aWxr?=
+ =?utf-8?B?SnlUMHlrZHhPcVRkVHhPdXFaa3pjQVNPL1hZYWc3MUJ6QjhZR0pqcm9hS3lQ?=
+ =?utf-8?B?aVdVdWNBVU1DS0JRWkpMcERnSDBKUWlEV2dYK0RxTnQvL0dsODBIUVNpYS9p?=
+ =?utf-8?B?QTFJVGNGampUSGJadnFtRkQyeVE1MzdXejcyK3RVc1ljaHM3R1ptM1FLYlhz?=
+ =?utf-8?B?UzNKMXQ0dW0xZTdoNldTWmxkNXNzZVFmZHRETm9Zd1NVNm93Z2VzaUwyZWxY?=
+ =?utf-8?B?bHUySVVKUXpzRWdtdmsxbTJSbGZWOXdJZXpneGpURzhtbTRYQnprSGdiVElk?=
+ =?utf-8?B?WVBwVmpOMDZqRE52WVpmRy9KTkZRaVBNaTIvczNaZWVFZFArdlNCcWJJYzlr?=
+ =?utf-8?B?YVh0NEYvZHIwNHlXaDZJMnFYbS9lUXJJUG5RYS9zdUdYNjZUUUUyNjRVOWpn?=
+ =?utf-8?B?Tmpvd20reEk5V0hGc1BCb1JuRjRiVjBwZ1VwZkt2VTQzRGtUbkpTbGtSem5B?=
+ =?utf-8?Q?KIxTJe2Amm3DvoIht0lOs71Wm?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2746d10-f7d5-4969-b267-08dd4d136a21
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB6269.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 16:19:53.8764
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BKV0XsypVT9mrnjcH8lF2ZYZO2J7p3nG//g0yQx1cD7A7n2qNCKikJrfsY7KpV2oNkOSaEm/l3OuMMlmhJFmug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB8179
+X-OriginatorOrg: intel.com
 
-Convert the scanf() self-test to a KUnit test.
+On 2/13/2025 5:19 PM, Dave Hansen wrote:
+> On 2/13/25 13:50, Xing, Cedric wrote:
+>> On 2/13/2025 10:58 AM, Dave Hansen wrote:
+> ...
+>>> Wait a sec, so there's already ABI for manipulating these? This just
+>>> adds a parallel sysfs interface to the existing ABI?
+>>>
+>> No, this is new. There's no existing ABI for accessing measurement
+>> registers from within a TVM (TEE VM). Currently, on TDX for example,
+>> reading TDX measurement registers (MRs) must be done by getting a TD
+>> quote. And there's no way to extend any RTMRs. Therefore, it would be
+>> much easier end users to debug/diagnose measurement related issues
+>> (which would almost always require reading MRs) with this patch.
+> 
+> Ok, that makes sense.
+> 
+> But if this is for debug, wouldn't these belong better in debugfs? Do we
+> really want to maintain this interface forever? There's no shame in debugfs.
+> 
+There are many other (more important/significant) uses besides debugging.
 
-In the interest of keeping the patch reasonably-sized this doesn't
-refactor the tests into proper parameterized tests - it's all one big
-test case.
+For example, any applications that make use of runtime measurements must 
+extend RTMRs, and this interface provides that exact functionality.
 
-Reviewed-by: David Gow <davidgow@google.com>
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- MAINTAINERS                               |   2 +-
- lib/Kconfig.debug                         |  12 +-
- lib/Makefile                              |   1 -
- lib/tests/Makefile                        |   1 +
- lib/{test_scanf.c => tests/scanf_kunit.c} | 251 +++++++++++++++---------------
- tools/testing/selftests/lib/Makefile      |   2 +-
- tools/testing/selftests/lib/config        |   1 -
- tools/testing/selftests/lib/scanf.sh      |   4 -
- 8 files changed, 134 insertions(+), 140 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 92fc0eca7061..8dc8f597596d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -25466,8 +25466,8 @@ R:	Sergey Senozhatsky <senozhatsky@chromium.org>
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git
- F:	Documentation/core-api/printk-formats.rst
-+F:	lib/tests/scanf_kunit.c
- F:	lib/test_printf.c
--F:	lib/test_scanf.c
- F:	lib/vsprintf.c
- 
- VT1211 HARDWARE MONITOR DRIVER
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 85b95d645b10..bf3b8999a2ac 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2436,6 +2436,15 @@ config ASYNC_RAID6_TEST
- config TEST_HEXDUMP
- 	tristate "Test functions located in the hexdump module at runtime"
- 
-+config SCANF_KUNIT_TEST
-+	tristate "KUnit test scanf() family of functions at runtime" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Enable this option to test the scanf functions at runtime.
-+
-+	  If unsure, say N.
-+
- config STRING_KUNIT_TEST
- 	tristate "KUnit test string functions at runtime" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
-@@ -2452,9 +2461,6 @@ config TEST_KSTRTOX
- config TEST_PRINTF
- 	tristate "Test printf() family of functions at runtime"
- 
--config TEST_SCANF
--	tristate "Test scanf() family of functions at runtime"
--
- config TEST_BITMAP
- 	tristate "Test bitmap_*() family of functions at runtime"
- 	help
-diff --git a/lib/Makefile b/lib/Makefile
-index 961aef91d493..459ca67825f4 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -78,7 +78,6 @@ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
- obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
- obj-$(CONFIG_TEST_DYNAMIC_DEBUG) += test_dynamic_debug.o
- obj-$(CONFIG_TEST_PRINTF) += test_printf.o
--obj-$(CONFIG_TEST_SCANF) += test_scanf.o
- 
- obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
- ifeq ($(CONFIG_CC_IS_CLANG)$(CONFIG_KASAN),yy)
-diff --git a/lib/tests/Makefile b/lib/tests/Makefile
-index 8961fbcff7a4..db9b685f2d88 100644
---- a/lib/tests/Makefile
-+++ b/lib/tests/Makefile
-@@ -30,6 +30,7 @@ obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
- obj-$(CONFIG_MEMCPY_KUNIT_TEST) += memcpy_kunit.o
- CFLAGS_overflow_kunit.o = $(call cc-disable-warning, tautological-constant-out-of-range-compare)
- obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
-+obj-$(CONFIG_SCANF_KUNIT_TEST) += scanf_kunit.o
- obj-$(CONFIG_SIPHASH_KUNIT_TEST) += siphash_kunit.o
- obj-$(CONFIG_SLUB_KUNIT_TEST) += slub_kunit.o
- obj-$(CONFIG_TEST_SORT) += test_sort.o
-diff --git a/lib/test_scanf.c b/lib/tests/scanf_kunit.c
-similarity index 79%
-rename from lib/test_scanf.c
-rename to lib/tests/scanf_kunit.c
-index efdde6f498d9..3bbad9ebe437 100644
---- a/lib/test_scanf.c
-+++ b/lib/tests/scanf_kunit.c
-@@ -3,10 +3,8 @@
-  * Test cases for sscanf facility.
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
-+#include <kunit/test.h>
- #include <linux/bitops.h>
--#include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/overflow.h>
-@@ -15,48 +13,35 @@
- #include <linux/slab.h>
- #include <linux/string.h>
- 
--#include "../tools/testing/selftests/kselftest_module.h"
--
- #define BUF_SIZE 1024
- 
--KSTM_MODULE_GLOBALS();
--static char *test_buffer __initdata;
--static char *fmt_buffer __initdata;
--static struct rnd_state rnd_state __initdata;
-+static char *test_buffer;
-+static char *fmt_buffer;
-+static struct rnd_state rnd_state;
- 
--typedef int (*check_fn)(const char *file, const int line, const void *check_data,
--			const char *string, const char *fmt, int n_args, va_list ap);
-+typedef void (*check_fn)(struct kunit *test, const char *file, const int line,
-+			 const void *check_data, const char *string, const char *fmt, int n_args,
-+			 va_list ap);
- 
--static void __scanf(6, 0) __init
--_test(const char *file, const int line, check_fn fn, const void *check_data, const char *string,
--	const char *fmt, int n_args, ...)
-+static void __scanf(7, 0)
-+_test(struct kunit *test, const char *file, const int line, check_fn fn, const void *check_data,
-+	const char *string, const char *fmt, int n_args, ...)
- {
- 	va_list ap, ap_copy;
- 	int ret;
- 
--	total_tests++;
--
- 	va_start(ap, n_args);
- 	va_copy(ap_copy, ap);
- 	ret = vsscanf(string, fmt, ap_copy);
- 	va_end(ap_copy);
- 
- 	if (ret != n_args) {
--		pr_warn("%s:%d: vsscanf(\"%s\", \"%s\", ...) returned %d expected %d\n",
--			file, line, string, fmt, ret, n_args);
--		goto fail;
-+		KUNIT_FAIL(test, "%s:%d: vsscanf(\"%s\", \"%s\", ...) returned %d expected %d",
-+			   file, line, string, fmt, ret, n_args);
-+	} else {
-+		(*fn)(test, file, line, check_data, string, fmt, n_args, ap);
- 	}
- 
--	ret = (*fn)(file, line, check_data, string, fmt, n_args, ap);
--	if (ret)
--		goto fail;
--
--	va_end(ap);
--
--	return;
--
--fail:
--	failed_tests++;
- 	va_end(ap);
- }
- 
-@@ -65,88 +50,92 @@ do {										\
- 	for (; n_args > 0; n_args--, expect++) {				\
- 		typeof(*expect) got = *va_arg(ap, typeof(expect));		\
- 		if (got != *expect) {						\
--			pr_warn("%s:%d, vsscanf(\"%s\", \"%s\", ...) expected " arg_fmt " got " arg_fmt "\n", \
--				file, line, str, fmt, *expect, got);		\
--			return 1;						\
-+			KUNIT_FAIL(test,					\
-+				   "%s:%d: vsscanf(\"%s\", \"%s\", ...) expected " arg_fmt " got " arg_fmt, \
-+				   file, line, str, fmt, *expect, got);		\
-+			return;							\
- 		}								\
- 	}									\
--	return 0;								\
- } while (0)
- 
--static int __init check_ull(const char *file, const int line, const void *check_data,
--			    const char *string, const char *fmt, int n_args, va_list ap)
-+static void check_ull(struct kunit *test, const char *file, const int line, const void *check_data,
-+		      const char *string, const char *fmt, int n_args, va_list ap)
- {
- 	const unsigned long long *pval = check_data;
- 
- 	_check_numbers_template("%llu", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_ll(const char *file, const int line, const void *check_data,
--			   const char *string, const char *fmt, int n_args, va_list ap)
-+static void check_ll(struct kunit *test, const char *file, const int line, const void *check_data,
-+		     const char *string, const char *fmt, int n_args, va_list ap)
- {
- 	const long long *pval = check_data;
- 
- 	_check_numbers_template("%lld", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_ulong(const char *file, const int line, const void *check_data,
--			      const char *string, const char *fmt, int n_args, va_list ap)
-+static void check_ulong(struct kunit *test, const char *file, const int line,
-+			const void *check_data, const char *string, const char *fmt, int n_args,
-+			va_list ap)
- {
- 	const unsigned long *pval = check_data;
- 
- 	_check_numbers_template("%lu", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_long(const char *file, const int line, const void *check_data,
--			     const char *string, const char *fmt, int n_args, va_list ap)
-+static void check_long(struct kunit *test, const char *file, const int line, const void *check_data,
-+		       const char *string, const char *fmt, int n_args, va_list ap)
- {
- 	const long *pval = check_data;
- 
- 	_check_numbers_template("%ld", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_uint(const char *file, const int line, const void *check_data,
--			     const char *string, const char *fmt, int n_args, va_list ap)
-+static void check_uint(struct kunit *test, const char *file, const int line, const void *check_data,
-+		       const char *string, const char *fmt, int n_args, va_list ap)
- {
- 	const unsigned int *pval = check_data;
- 
- 	_check_numbers_template("%u", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_int(const char *file, const int line, const void *check_data,
--			    const char *string, const char *fmt, int n_args, va_list ap)
-+static void check_int(struct kunit *test, const char *file, const int line, const void *check_data,
-+		      const char *string, const char *fmt, int n_args, va_list ap)
- {
- 	const int *pval = check_data;
- 
- 	_check_numbers_template("%d", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_ushort(const char *file, const int line, const void *check_data,
--			       const char *string, const char *fmt, int n_args, va_list ap)
-+static void check_ushort(struct kunit *test, const char *file, const int line,
-+			 const void *check_data, const char *string, const char *fmt, int n_args,
-+			 va_list ap)
- {
- 	const unsigned short *pval = check_data;
- 
- 	_check_numbers_template("%hu", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_short(const char *file, const int line, const void *check_data,
--			      const char *string, const char *fmt, int n_args, va_list ap)
-+static void check_short(struct kunit *test, const char *file, const int line,
-+			const void *check_data, const char *string, const char *fmt, int n_args,
-+			va_list ap)
- {
- 	const short *pval = check_data;
- 
- 	_check_numbers_template("%hd", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_uchar(const char *file, const int line, const void *check_data,
--			      const char *string, const char *fmt, int n_args, va_list ap)
-+static void check_uchar(struct kunit *test, const char *file, const int line,
-+			const void *check_data, const char *string, const char *fmt, int n_args,
-+			va_list ap)
- {
- 	const unsigned char *pval = check_data;
- 
- 	_check_numbers_template("%hhu", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_char(const char *file, const int line, const void *check_data,
--			     const char *string, const char *fmt, int n_args, va_list ap)
-+static void check_char(struct kunit *test, const char *file, const int line, const void *check_data,
-+		       const char *string, const char *fmt, int n_args, va_list ap)
- {
- 	const signed char *pval = check_data;
- 
-@@ -154,7 +143,7 @@ static int __init check_char(const char *file, const int line, const void *check
- }
- 
- /* Selection of interesting numbers to test, copied from test-kstrtox.c */
--static const unsigned long long numbers[] __initconst = {
-+static const unsigned long long numbers[] = {
- 	0x0ULL,
- 	0x1ULL,
- 	0x7fULL,
-@@ -194,7 +183,7 @@ do {									\
- 	T result = ~expect_val; /* should be overwritten */		\
- 									\
- 	snprintf(test_buffer, BUF_SIZE, gen_fmt, expect_val);		\
--	_test(__FILE__, __LINE__, fn, &expect_val, test_buffer, "%" scan_fmt, 1, &result);	\
-+	_test(test, __FILE__, __LINE__, fn, &expect_val, test_buffer, "%" scan_fmt, 1, &result);\
- } while (0)
- 
- #define simple_numbers_loop(T, gen_fmt, scan_fmt, fn)			\
-@@ -212,7 +201,7 @@ do {									\
- 	}								\
- } while (0)
- 
--static void __init numbers_simple(void)
-+static void numbers_simple(struct kunit *test)
- {
- 	simple_numbers_loop(unsigned long long,	"%llu",	  "llu", check_ull);
- 	simple_numbers_loop(long long,		"%lld",	  "lld", check_ll);
-@@ -265,14 +254,14 @@ static void __init numbers_simple(void)
-  * the raw prandom*() functions (Not mathematically rigorous!!).
-  * Variabilty of length and value is more important than perfect randomness.
-  */
--static u32 __init next_test_random(u32 max_bits)
-+static u32 next_test_random(u32 max_bits)
- {
- 	u32 n_bits = hweight32(prandom_u32_state(&rnd_state)) % (max_bits + 1);
- 
- 	return prandom_u32_state(&rnd_state) & GENMASK(n_bits, 0);
- }
- 
--static unsigned long long __init next_test_random_ull(void)
-+static unsigned long long next_test_random_ull(void)
- {
- 	u32 rand1 = prandom_u32_state(&rnd_state);
- 	u32 n_bits = (hweight32(rand1) * 3) % 64;
-@@ -309,7 +298,7 @@ do {										\
-  * updating buf_pos and returning the number of characters appended.
-  * On error buf_pos is not changed and return value is 0.
-  */
--static int __init __printf(4, 5)
-+static int __printf(4, 5)
- append_fmt(char *buf, int *buf_pos, int buf_len, const char *val_fmt, ...)
- {
- 	va_list ap;
-@@ -331,7 +320,7 @@ append_fmt(char *buf, int *buf_pos, int buf_len, const char *val_fmt, ...)
-  * Convenience function to append the field delimiter string
-  * to both the value string and format string buffers.
-  */
--static void __init append_delim(char *str_buf, int *str_buf_pos, int str_buf_len,
-+static void append_delim(char *str_buf, int *str_buf_pos, int str_buf_len,
- 				char *fmt_buf, int *fmt_buf_pos, int fmt_buf_len,
- 				const char *delim_str)
- {
-@@ -342,7 +331,7 @@ static void __init append_delim(char *str_buf, int *str_buf_pos, int str_buf_len
- #define test_array_8(fn, check_data, string, fmt, arr)				\
- do {										\
- 	BUILD_BUG_ON(ARRAY_SIZE(arr) != 8);					\
--	_test(__FILE__, __LINE__, fn, check_data, string, fmt, 8,		\
-+	_test(test, __FILE__, __LINE__, fn, check_data, string, fmt, 8,		\
- 		&(arr)[0], &(arr)[1], &(arr)[2], &(arr)[3],			\
- 		&(arr)[4], &(arr)[5], &(arr)[6], &(arr)[7]);			\
- } while (0)
-@@ -396,7 +385,7 @@ do {										\
- 	test_array_8(fn, expect, test_buffer, fmt_buffer, result);		\
- } while (0)
- 
--static void __init numbers_list_ll(const char *delim)
-+static void numbers_list_ll(struct kunit *test, const char *delim)
- {
- 	numbers_list_8(unsigned long long, "%llu",   delim, "llu", check_ull);
- 	numbers_list_8(long long,	   "%lld",   delim, "lld", check_ll);
-@@ -406,7 +395,7 @@ static void __init numbers_list_ll(const char *delim)
- 	numbers_list_8(long long,	   "0x%llx", delim, "lli", check_ll);
- }
- 
--static void __init numbers_list_l(const char *delim)
-+static void numbers_list_l(struct kunit *test, const char *delim)
- {
- 	numbers_list_8(unsigned long,	   "%lu",    delim, "lu", check_ulong);
- 	numbers_list_8(long,		   "%ld",    delim, "ld", check_long);
-@@ -416,7 +405,7 @@ static void __init numbers_list_l(const char *delim)
- 	numbers_list_8(long,		   "0x%lx",  delim, "li", check_long);
- }
- 
--static void __init numbers_list_d(const char *delim)
-+static void numbers_list_d(struct kunit *test, const char *delim)
- {
- 	numbers_list_8(unsigned int,	   "%u",     delim, "u", check_uint);
- 	numbers_list_8(int,		   "%d",     delim, "d", check_int);
-@@ -426,7 +415,7 @@ static void __init numbers_list_d(const char *delim)
- 	numbers_list_8(int,		   "0x%x",   delim, "i", check_int);
- }
- 
--static void __init numbers_list_h(const char *delim)
-+static void numbers_list_h(struct kunit *test, const char *delim)
- {
- 	numbers_list_8(unsigned short,	   "%hu",    delim, "hu", check_ushort);
- 	numbers_list_8(short,		   "%hd",    delim, "hd", check_short);
-@@ -436,7 +425,7 @@ static void __init numbers_list_h(const char *delim)
- 	numbers_list_8(short,		   "0x%hx",  delim, "hi", check_short);
- }
- 
--static void __init numbers_list_hh(const char *delim)
-+static void numbers_list_hh(struct kunit *test, const char *delim)
- {
- 	numbers_list_8(unsigned char,	   "%hhu",   delim, "hhu", check_uchar);
- 	numbers_list_8(signed char,	   "%hhd",   delim, "hhd", check_char);
-@@ -446,16 +435,16 @@ static void __init numbers_list_hh(const char *delim)
- 	numbers_list_8(signed char,	   "0x%hhx", delim, "hhi", check_char);
- }
- 
--static void __init numbers_list(const char *delim)
-+static void numbers_list(struct kunit *test, const char *delim)
- {
--	numbers_list_ll(delim);
--	numbers_list_l(delim);
--	numbers_list_d(delim);
--	numbers_list_h(delim);
--	numbers_list_hh(delim);
-+	numbers_list_ll(test, delim);
-+	numbers_list_l(test, delim);
-+	numbers_list_d(test, delim);
-+	numbers_list_h(test, delim);
-+	numbers_list_hh(test, delim);
- }
- 
--static void __init numbers_list_field_width_ll(const char *delim)
-+static void numbers_list_field_width_ll(struct kunit *test, const char *delim)
- {
- 	numbers_list_fix_width(unsigned long long, "%llu",   delim, 20, "llu", check_ull);
- 	numbers_list_fix_width(long long,	   "%lld",   delim, 20, "lld", check_ll);
-@@ -465,7 +454,7 @@ static void __init numbers_list_field_width_ll(const char *delim)
- 	numbers_list_fix_width(long long,	   "0x%llx", delim, 18, "lli", check_ll);
- }
- 
--static void __init numbers_list_field_width_l(const char *delim)
-+static void numbers_list_field_width_l(struct kunit *test, const char *delim)
- {
- #if BITS_PER_LONG == 64
- 	numbers_list_fix_width(unsigned long,	"%lu",	     delim, 20, "lu", check_ulong);
-@@ -484,7 +473,7 @@ static void __init numbers_list_field_width_l(const char *delim)
- #endif
- }
- 
--static void __init numbers_list_field_width_d(const char *delim)
-+static void numbers_list_field_width_d(struct kunit *test, const char *delim)
- {
- 	numbers_list_fix_width(unsigned int,	"%u",	     delim, 10, "u", check_uint);
- 	numbers_list_fix_width(int,		"%d",	     delim, 11, "d", check_int);
-@@ -494,7 +483,7 @@ static void __init numbers_list_field_width_d(const char *delim)
- 	numbers_list_fix_width(int,		"0x%x",	     delim, 10, "i", check_int);
- }
- 
--static void __init numbers_list_field_width_h(const char *delim)
-+static void numbers_list_field_width_h(struct kunit *test, const char *delim)
- {
- 	numbers_list_fix_width(unsigned short,	"%hu",	     delim, 5, "hu", check_ushort);
- 	numbers_list_fix_width(short,		"%hd",	     delim, 6, "hd", check_short);
-@@ -504,7 +493,7 @@ static void __init numbers_list_field_width_h(const char *delim)
- 	numbers_list_fix_width(short,		"0x%hx",     delim, 6, "hi", check_short);
- }
- 
--static void __init numbers_list_field_width_hh(const char *delim)
-+static void numbers_list_field_width_hh(struct kunit *test, const char *delim)
- {
- 	numbers_list_fix_width(unsigned char,	"%hhu",	     delim, 3, "hhu", check_uchar);
- 	numbers_list_fix_width(signed char,	"%hhd",	     delim, 4, "hhd", check_char);
-@@ -518,16 +507,16 @@ static void __init numbers_list_field_width_hh(const char *delim)
-  * List of numbers separated by delim. Each field width specifier is the
-  * maximum possible digits for the given type and base.
-  */
--static void __init numbers_list_field_width_typemax(const char *delim)
-+static void numbers_list_field_width_typemax(struct kunit *test, const char *delim)
- {
--	numbers_list_field_width_ll(delim);
--	numbers_list_field_width_l(delim);
--	numbers_list_field_width_d(delim);
--	numbers_list_field_width_h(delim);
--	numbers_list_field_width_hh(delim);
-+	numbers_list_field_width_ll(test, delim);
-+	numbers_list_field_width_l(test, delim);
-+	numbers_list_field_width_d(test, delim);
-+	numbers_list_field_width_h(test, delim);
-+	numbers_list_field_width_hh(test, delim);
- }
- 
--static void __init numbers_list_field_width_val_ll(const char *delim)
-+static void numbers_list_field_width_val_ll(struct kunit *test, const char *delim)
- {
- 	numbers_list_val_width(unsigned long long, "%llu",   delim, "llu", check_ull);
- 	numbers_list_val_width(long long,	   "%lld",   delim, "lld", check_ll);
-@@ -537,7 +526,7 @@ static void __init numbers_list_field_width_val_ll(const char *delim)
- 	numbers_list_val_width(long long,	   "0x%llx", delim, "lli", check_ll);
- }
- 
--static void __init numbers_list_field_width_val_l(const char *delim)
-+static void numbers_list_field_width_val_l(struct kunit *test, const char *delim)
- {
- 	numbers_list_val_width(unsigned long,	"%lu",	     delim, "lu", check_ulong);
- 	numbers_list_val_width(long,		"%ld",	     delim, "ld", check_long);
-@@ -547,7 +536,7 @@ static void __init numbers_list_field_width_val_l(const char *delim)
- 	numbers_list_val_width(long,		"0x%lx",     delim, "li", check_long);
- }
- 
--static void __init numbers_list_field_width_val_d(const char *delim)
-+static void numbers_list_field_width_val_d(struct kunit *test, const char *delim)
- {
- 	numbers_list_val_width(unsigned int,	"%u",	     delim, "u", check_uint);
- 	numbers_list_val_width(int,		"%d",	     delim, "d", check_int);
-@@ -557,7 +546,7 @@ static void __init numbers_list_field_width_val_d(const char *delim)
- 	numbers_list_val_width(int,		"0x%x",	     delim, "i", check_int);
- }
- 
--static void __init numbers_list_field_width_val_h(const char *delim)
-+static void numbers_list_field_width_val_h(struct kunit *test, const char *delim)
- {
- 	numbers_list_val_width(unsigned short,	"%hu",	     delim, "hu", check_ushort);
- 	numbers_list_val_width(short,		"%hd",	     delim, "hd", check_short);
-@@ -567,7 +556,7 @@ static void __init numbers_list_field_width_val_h(const char *delim)
- 	numbers_list_val_width(short,		"0x%hx",     delim, "hi", check_short);
- }
- 
--static void __init numbers_list_field_width_val_hh(const char *delim)
-+static void numbers_list_field_width_val_hh(struct kunit *test, const char *delim)
- {
- 	numbers_list_val_width(unsigned char,	"%hhu",	     delim, "hhu", check_uchar);
- 	numbers_list_val_width(signed char,	"%hhd",	     delim, "hhd", check_char);
-@@ -581,13 +570,13 @@ static void __init numbers_list_field_width_val_hh(const char *delim)
-  * List of numbers separated by delim. Each field width specifier is the
-  * exact length of the corresponding value digits in the string being scanned.
-  */
--static void __init numbers_list_field_width_val_width(const char *delim)
-+static void numbers_list_field_width_val_width(struct kunit *test, const char *delim)
- {
--	numbers_list_field_width_val_ll(delim);
--	numbers_list_field_width_val_l(delim);
--	numbers_list_field_width_val_d(delim);
--	numbers_list_field_width_val_h(delim);
--	numbers_list_field_width_val_hh(delim);
-+	numbers_list_field_width_val_ll(test, delim);
-+	numbers_list_field_width_val_l(test, delim);
-+	numbers_list_field_width_val_d(test, delim);
-+	numbers_list_field_width_val_h(test, delim);
-+	numbers_list_field_width_val_hh(test, delim);
- }
- 
- /*
-@@ -596,9 +585,9 @@ static void __init numbers_list_field_width_val_width(const char *delim)
-  * of digits. For example the hex values c0,3,bf01,303 would have a
-  * string representation of "c03bf01303" and extracted with "%2x%1x%4x%3x".
-  */
--static void __init numbers_slice(void)
-+static void numbers_slice(struct kunit *test)
- {
--	numbers_list_field_width_val_width("");
-+	numbers_list_field_width_val_width(test, "");
- }
- 
- #define test_number_prefix(T, str, scan_fmt, expect0, expect1, n_args, fn)	\
-@@ -606,14 +595,14 @@ do {										\
- 	const T expect[2] = { expect0, expect1 };				\
- 	T result[2] = { (T)~expect[0], (T)~expect[1] };				\
- 										\
--	_test(__FILE__, __LINE__, fn, &expect, str, scan_fmt, n_args, &result[0], &result[1]);	\
-+	_test(test, __FILE__, __LINE__, fn, &expect, str, scan_fmt, n_args, &result[0], &result[1]);\
- } while (0)
- 
- /*
-  * Number prefix is >= field width.
-  * Expected behaviour is derived from testing userland sscanf.
-  */
--static void __init numbers_prefix_overflow(void)
-+static void numbers_prefix_overflow(struct kunit *test)
- {
- 	/*
- 	 * Negative decimal with a field of width 1, should quit scanning
-@@ -682,24 +671,17 @@ do {										\
- 	T got;									\
- 	char *endp;								\
- 	int len;								\
--	bool fail = false;							\
- 										\
--	total_tests++;								\
- 	len = snprintf(test_buffer, BUF_SIZE, gen_fmt, expect);			\
- 	got = (fn)(test_buffer, &endp, base);					\
- 	if (got != (expect)) {							\
--		fail = true;							\
--		pr_warn(#fn "(\"%s\", %d): got " gen_fmt " expected " gen_fmt "\n", \
--			test_buffer, base, got, expect);			\
-+		KUNIT_FAIL(test, #fn "(\"%s\", %d): got " gen_fmt " expected " gen_fmt, \
-+			   test_buffer, base, got, expect);			\
- 	} else if (endp != test_buffer + len) {					\
--		fail = true;							\
--		pr_warn(#fn "(\"%s\", %d) startp=0x%px got endp=0x%px expected 0x%px\n", \
--			test_buffer, base, test_buffer,				\
--			test_buffer + len, endp);				\
-+		KUNIT_FAIL(test, #fn "(\"%s\", %d) startp=0x%px got endp=0x%px expected 0x%px", \
-+			   test_buffer, base, test_buffer,			\
-+			   test_buffer + len, endp);				\
- 	}									\
--										\
--	if (fail)								\
--		failed_tests++;							\
- } while (0)
- 
- #define test_simple_strtoxx(T, fn, gen_fmt, base)				\
-@@ -715,7 +697,7 @@ do {										\
- 	}									\
- } while (0)
- 
--static void __init test_simple_strtoull(void)
-+static void test_simple_strtoull(struct kunit *test)
- {
- 	test_simple_strtoxx(unsigned long long, simple_strtoull, "%llu",   10);
- 	test_simple_strtoxx(unsigned long long, simple_strtoull, "%llu",   0);
-@@ -724,7 +706,7 @@ static void __init test_simple_strtoull(void)
- 	test_simple_strtoxx(unsigned long long, simple_strtoull, "0x%llx", 0);
- }
- 
--static void __init test_simple_strtoll(void)
-+static void test_simple_strtoll(struct kunit *test)
- {
- 	test_simple_strtoxx(long long, simple_strtoll, "%lld",	 10);
- 	test_simple_strtoxx(long long, simple_strtoll, "%lld",	 0);
-@@ -733,7 +715,7 @@ static void __init test_simple_strtoll(void)
- 	test_simple_strtoxx(long long, simple_strtoll, "0x%llx", 0);
- }
- 
--static void __init test_simple_strtoul(void)
-+static void test_simple_strtoul(struct kunit *test)
- {
- 	test_simple_strtoxx(unsigned long, simple_strtoul, "%lu",   10);
- 	test_simple_strtoxx(unsigned long, simple_strtoul, "%lu",   0);
-@@ -742,7 +724,7 @@ static void __init test_simple_strtoul(void)
- 	test_simple_strtoxx(unsigned long, simple_strtoul, "0x%lx", 0);
- }
- 
--static void __init test_simple_strtol(void)
-+static void test_simple_strtol(struct kunit *test)
- {
- 	test_simple_strtoxx(long, simple_strtol, "%ld",   10);
- 	test_simple_strtoxx(long, simple_strtol, "%ld",   0);
-@@ -752,35 +734,35 @@ static void __init test_simple_strtol(void)
- }
- 
- /* Selection of common delimiters/separators between numbers in a string. */
--static const char * const number_delimiters[] __initconst = {
-+static const char * const number_delimiters[] = {
- 	" ", ":", ",", "-", "/",
- };
- 
--static void __init test_numbers(void)
-+static void test_numbers(struct kunit *test)
- {
- 	int i;
- 
- 	/* String containing only one number. */
--	numbers_simple();
-+	numbers_simple(test);
- 
- 	/* String with multiple numbers separated by delimiter. */
- 	for (i = 0; i < ARRAY_SIZE(number_delimiters); i++) {
--		numbers_list(number_delimiters[i]);
-+		numbers_list(test, number_delimiters[i]);
- 
- 		/* Field width may be longer than actual field digits. */
--		numbers_list_field_width_typemax(number_delimiters[i]);
-+		numbers_list_field_width_typemax(test, number_delimiters[i]);
- 
- 		/* Each field width exactly length of actual field digits. */
--		numbers_list_field_width_val_width(number_delimiters[i]);
-+		numbers_list_field_width_val_width(test, number_delimiters[i]);
- 	}
- 
- 	/* Slice continuous sequence of digits using field widths. */
--	numbers_slice();
-+	numbers_slice(test);
- 
--	numbers_prefix_overflow();
-+	numbers_prefix_overflow(test);
- }
- 
--static void __init selftest(void)
-+static void scanf_test(struct kunit *test)
- {
- 	test_buffer = kmalloc(BUF_SIZE, GFP_KERNEL);
- 	if (!test_buffer)
-@@ -794,18 +776,29 @@ static void __init selftest(void)
- 
- 	prandom_seed_state(&rnd_state, 3141592653589793238ULL);
- 
--	test_numbers();
-+	test_numbers(test);
- 
--	test_simple_strtoull();
--	test_simple_strtoll();
--	test_simple_strtoul();
--	test_simple_strtol();
-+	test_simple_strtoull(test);
-+	test_simple_strtoll(test);
-+	test_simple_strtoul(test);
-+	test_simple_strtol(test);
- 
- 	kfree(fmt_buffer);
- 	kfree(test_buffer);
- }
- 
--KSTM_MODULE_LOADERS(test_scanf);
-+static struct kunit_case scanf_test_cases[] = {
-+	KUNIT_CASE(scanf_test),
-+	{}
-+};
-+
-+static struct kunit_suite scanf_test_suite = {
-+	.name = "scanf",
-+	.test_cases = scanf_test_cases,
-+};
-+
-+kunit_test_suite(scanf_test_suite);
-+
- MODULE_AUTHOR("Richard Fitzgerald <rf@opensource.cirrus.com>");
- MODULE_DESCRIPTION("Test cases for sscanf facility");
- MODULE_LICENSE("GPL v2");
-diff --git a/tools/testing/selftests/lib/Makefile b/tools/testing/selftests/lib/Makefile
-index c52fe3ad8e98..4afda556151f 100644
---- a/tools/testing/selftests/lib/Makefile
-+++ b/tools/testing/selftests/lib/Makefile
-@@ -4,5 +4,5 @@
- # No binaries, but make sure arg-less "make" doesn't trigger "run_tests"
- all:
- 
--TEST_PROGS := printf.sh bitmap.sh prime_numbers.sh scanf.sh
-+TEST_PROGS := printf.sh bitmap.sh prime_numbers.sh
- include ../lib.mk
-diff --git a/tools/testing/selftests/lib/config b/tools/testing/selftests/lib/config
-index 306a3d4dca98..1d17fa85de8f 100644
---- a/tools/testing/selftests/lib/config
-+++ b/tools/testing/selftests/lib/config
-@@ -1,4 +1,3 @@
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_BITOPS=m
-diff --git a/tools/testing/selftests/lib/scanf.sh b/tools/testing/selftests/lib/scanf.sh
-deleted file mode 100755
-index b59b8ba561c3..000000000000
---- a/tools/testing/selftests/lib/scanf.sh
-+++ /dev/null
-@@ -1,4 +0,0 @@
--#!/bin/sh
--# SPDX-License-Identifier: GPL-2.0
--# Tests the scanf infrastructure using test_scanf kernel module.
--$(dirname $0)/../kselftest/module.sh "scanf" test_scanf
-
--- 
-2.48.1
+Another example, a policy may be associated with a TD (e.g., CoCo) by 
+storing its digest in MRCONFIGID, so that the policy could be verified 
+against its digest at runtime. This interface allows applications to 
+read MRCONFIGID.
 
