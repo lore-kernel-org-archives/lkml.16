@@ -1,411 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE67245AFB;
-	Fri, 14 Feb 2025 09:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06AAC22D7BD;
+	Fri, 14 Feb 2025 09:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739524145; cv=none; b=asnyLAVk2AeHuCcC0Ycz3T+F3Bfzu8lH2EMTucnpkVa1PY2TEiljkj90qNRr+uWWRFVoWnwhLPsYXGXX0GyL6wHl3hRHFUO3wwf+JqslKPnWq/mCwWbQT6mlA5K1azrG0NGJuMPzOZDRnWM1P+TqvKc6fEO3235jhwu790wqKKc=
+	t=1739524149; cv=none; b=bLkS+Y8rZG+YnaBYcqfhQWHA/sdtB+WRTVZ5lZ1IebvDvha6/aNsyir/BMsxIt14KLSS7FFLLXjSasdB2jAETokWHcsODaWETUKfJLHFW7MCyckKo/D9zyVHkGw9COLj+DoloCMhlGl4xnHWnl6tbW1LRejxeSr+BV3ATCNhooQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739524145; c=relaxed/simple;
-	bh=1hldPCJsU8qpdSEBPpFTNeUkviNw4gKBkBtSfXT2T5g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AUO96fEfcNFiUD+HV7huvwLCru3pQNKFk8hW/fQnAE0H0TPK6zQb40jZkrKGHzGD7fmAq4ohl1yASaev2SyiT0ARX1dVPMhGFcQRUcnSJEBKUsBCCg1UnkQ7PPjwnfrrJsYHm/pAUQmBr1ZZPLTyoasJSb7pcxiQaG4ls/Mlysc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ElZ+GvpS; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739524149; c=relaxed/simple;
+	bh=zSXL9VavN96hCcGl7o2PD1XEiCklnDkRNAAJzvQiyrI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=FPS4N4Ftk2yh537Ic7az+jw26PMQOHCvrqVx5umSBd7oOb7VrvwEirk78OMe6uQSgfjf0pN49/lsmk/OjIIRO4954CQOdLSV0qAmzenK8cS+3Bd68ZLs0pmSkllIWp2LG4UllHdlgPD4Kkt3K54/rsjtrlTy7YE6nw05MWzrv4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lTG7WkdZ; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ElZ+GvpS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739524144; x=1771060144;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1hldPCJsU8qpdSEBPpFTNeUkviNw4gKBkBtSfXT2T5g=;
-  b=ElZ+GvpSuMnFTys/hgqvpe5XhqTLgrpyAHAIVXHXXguTw+IU5AGE4yVK
-   sgmzYdt+1YKtw022QOKVP7bFP3oqULjCUGSDn5Ay+K2FxjXa+yiM1+SjY
-   YM/xdPzr7TJ5Sfq3AGYTXU/K38zyA9NenF1Yp4N7ErEmTVJ4ZtHBSdzeJ
-   dlF601UdnEI7j9ceLPPqzuXVe6cY37LxFt8HLevHiZp6Xcudw3e4f9yi/
-   EvD9Wl/OPvIa4eeBYuW+975uqCKyiOg5CBgT7daQjYZxM53l0HO5aoJFX
-   SBEHemeA8fZNb1BCAZmJ7aLi3FWqPpxtjK8MOCUj5g7+yI+a13H3cO38r
-   Q==;
-X-CSE-ConnectionGUID: 3CwJSZokQNKpSaDENvcuzg==
-X-CSE-MsgGUID: R4Dye/QCQ/akgogZiXhjbw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="65617722"
-X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
-   d="scan'208";a="65617722"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 01:09:03 -0800
-X-CSE-ConnectionGUID: +2qgHWqaTniGqYZtxGcmag==
-X-CSE-MsgGUID: c+hoKiSGQSyUO0EUKKB9ew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
-   d="scan'208";a="113145478"
-Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by orviesa009.jf.intel.com with ESMTP; 14 Feb 2025 01:08:59 -0800
-Received: from lincoln.igk.intel.com (lincoln.igk.intel.com [10.102.21.235])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id 33FD137B89;
-	Fri, 14 Feb 2025 09:08:58 +0000 (GMT)
-From: Larysa Zaremba <larysa.zaremba@intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	intel-wired-lan@lists.osuosl.org
-Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Mateusz Pacuszka <mateuszx.pacuszka@intel.com>
-Subject: [PATCH iwl-next v4 3/6] ice: receive LLDP on trusted VFs
-Date: Fri, 14 Feb 2025 09:50:37 +0100
-Message-ID: <20250214085215.2846063-4-larysa.zaremba@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250214085215.2846063-1-larysa.zaremba@intel.com>
-References: <20250214085215.2846063-1-larysa.zaremba@intel.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lTG7WkdZ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 621C54330A;
+	Fri, 14 Feb 2025 09:09:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739524145;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zSXL9VavN96hCcGl7o2PD1XEiCklnDkRNAAJzvQiyrI=;
+	b=lTG7WkdZpod3DrN3h495gm9vyE38azAW/vRQVzjl+Q92cWbImYHQY3tgqxcpJpej2hLqyo
+	WRpIZzWPFqRW9bBHGn8d8IvEnTuoppZsBMwrOI/PIfcvorI3nF+FslZltEH2NAk300hYf5
+	03g8j4swULodty03nQtJCZTuhK/LIgyuQWPK/Cmw6zmBBCbfApYTHU5lc11n3Q7i/BPbtr
+	TQS98JIX6qY7hySr0cJNzgMEgJ5Gd2cKBVs6OiWb40yBYH7TGVlTNoeZzfHAVQ7weg17OS
+	E/1/zHhF+8tY7Y5anLz0kuva054ygWSEF1CkrysOddwTxvuD2oKcRUffNYmR1w==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 14 Feb 2025 10:09:01 +0100
+Message-Id: <D7S1UERD0S47.12JDXAO96967F@bootlin.com>
+Subject: Re: [PATCH v2 0/3] Add Variscite i.MX6UL SoM and Concerto board
+ support
+Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <imx@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>
+From: "Antonin Godard" <antonin.godard@bootlin.com>
+To: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Shawn Guo"
+ <shawnguo@kernel.org>, "Sascha Hauer" <s.hauer@pengutronix.de>,
+ "Pengutronix Kernel Team" <kernel@pengutronix.de>, "Fabio Estevam"
+ <festevam@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250127-varsom6ul-concerto-dts-v2-0-4dac29256989@bootlin.com>
+In-Reply-To: <20250127-varsom6ul-concerto-dts-v2-0-4dac29256989@bootlin.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegledvhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffuvefhvffofhgjsehtqhertdertdejnecuhfhrohhmpedftehnthhonhhinhcuifhouggrrhgufdcuoegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvdehtdetteehfefgjeelieelvdeiveeludffjeegueefudejueeffeejfeevgedunecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemjegthegtmeeirgguvgemjeelgeekmeegtdehleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemjegthegtmeeirgguvgemjeelgeekmeegtdehledphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrg
+ hdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
+X-GND-Sasl: antonin.godard@bootlin.com
 
-From: Mateusz Pacuszka <mateuszx.pacuszka@intel.com>
+Hi,
 
-When a trusted VF tries to configure an LLDP multicast address, configure a
-rule that would mirror the traffic to this VF, untrusted VFs are not
-allowed to receive LLDP at all, so the request to add LLDP MAC address will
-always fail for them.
+On Mon Jan 27, 2025 at 4:30 PM CET, Antonin Godard wrote:
+> Add support for the i.MX6UL Variscite SoM (VAR-SOM-6UL) and the
+> Variscite Concerto Carrier Board.
 
-Add a forwarding LLDP filter to a trusted VF when it tries to add an LLDP
-multicast MAC address. The MAC address has to be added after enabling
-trust (through restarting the LLDP service).
+Have you got any updates for this series?
 
-Signed-off-by: Mateusz Pacuszka <mateuszx.pacuszka@intel.com>
-Co-developed-by: Larysa Zaremba <larysa.zaremba@intel.com>
-Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
----
- drivers/net/ethernet/intel/ice/ice_dcb_lib.c  |  2 +-
- drivers/net/ethernet/intel/ice/ice_ethtool.c  |  2 +-
- drivers/net/ethernet/intel/ice/ice_lib.c      | 48 ++++++++++++++---
- drivers/net/ethernet/intel/ice/ice_lib.h      |  3 +-
- drivers/net/ethernet/intel/ice/ice_sriov.c    |  4 ++
- drivers/net/ethernet/intel/ice/ice_vf_lib.c   | 26 +++++++++
- drivers/net/ethernet/intel/ice/ice_vf_lib.h   |  8 +++
- drivers/net/ethernet/intel/ice/ice_virtchnl.c | 53 +++++++++++++++++--
- 8 files changed, 134 insertions(+), 12 deletions(-)
+Thanks,
+Antonin
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_dcb_lib.c b/drivers/net/ethernet/intel/ice/ice_dcb_lib.c
-index a7c510832824..67988c7ab08e 100644
---- a/drivers/net/ethernet/intel/ice/ice_dcb_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_dcb_lib.c
-@@ -846,7 +846,7 @@ int ice_init_pf_dcb(struct ice_pf *pf, bool locked)
- 			goto dcb_init_err;
- 		}
- 
--		ice_cfg_sw_lldp(pf_vsi, false, true);
-+		ice_cfg_sw_rx_lldp(pf, true);
- 
- 		pf->dcbx_cap = ice_dcb_get_mode(port_info, true);
- 		return 0;
-diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-index b0805704834d..ca29684ead21 100644
---- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
-+++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-@@ -1818,7 +1818,7 @@ static int ice_set_priv_flags(struct net_device *netdev, u32 flags)
- 			/* Remove rule to direct LLDP packets to default VSI.
- 			 * The FW LLDP engine will now be consuming them.
- 			 */
--			ice_cfg_sw_lldp(vsi, false, false);
-+			ice_cfg_sw_rx_lldp(vsi->back, false);
- 
- 			/* AQ command to start FW LLDP agent will return an
- 			 * error if the agent is already started
-diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
-index edab19a44707..f55d85f10a06 100644
---- a/drivers/net/ethernet/intel/ice/ice_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_lib.c
-@@ -2065,12 +2065,15 @@ static void ice_vsi_set_tc_cfg(struct ice_vsi *vsi)
- }
- 
- /**
-- * ice_cfg_sw_lldp - Config switch rules for LLDP packet handling
-+ * ice_vsi_cfg_sw_lldp - Config switch rules for LLDP packet handling
-  * @vsi: the VSI being configured
-  * @tx: bool to determine Tx or Rx rule
-  * @create: bool to determine create or remove Rule
-+ *
-+ * Adding an ethtype Tx rule to the uplink VSI results in it being applied
-+ * to the whole port, so LLDP transmission for VFs will be blocked too.
-  */
--void ice_cfg_sw_lldp(struct ice_vsi *vsi, bool tx, bool create)
-+void ice_vsi_cfg_sw_lldp(struct ice_vsi *vsi, bool tx, bool create)
- {
- 	int (*eth_fltr)(struct ice_vsi *v, u16 type, u16 flag,
- 			enum ice_sw_fwd_act_type act);
-@@ -2109,6 +2112,37 @@ void ice_cfg_sw_lldp(struct ice_vsi *vsi, bool tx, bool create)
- 			 vsi->vsi_num, status);
- }
- 
-+/**
-+ * ice_cfg_sw_rx_lldp - Enable/disable software handling of LLDP
-+ * @pf: the PF being configured
-+ * @enable: enable or disable
-+ *
-+ * Configure switch rules to enable/disable LLDP handling by software
-+ * across PF.
-+ */
-+void ice_cfg_sw_rx_lldp(struct ice_pf *pf, bool enable)
-+{
-+	struct ice_vsi *vsi;
-+	struct ice_vf *vf;
-+	unsigned int bkt;
-+
-+	vsi = ice_get_main_vsi(pf);
-+	ice_vsi_cfg_sw_lldp(vsi, false, enable);
-+
-+	if (!test_bit(ICE_FLAG_SRIOV_ENA, pf->flags))
-+		return;
-+
-+	ice_for_each_vf(pf, bkt, vf) {
-+		vsi = ice_get_vf_vsi(vf);
-+
-+		if (WARN_ON(!vsi))
-+			continue;
-+
-+		if (ice_vf_is_lldp_ena(vf))
-+			ice_vsi_cfg_sw_lldp(vsi, false, enable);
-+	}
-+}
-+
- /**
-  * ice_set_agg_vsi - sets up scheduler aggregator node and move VSI into it
-  * @vsi: pointer to the VSI
-@@ -2537,7 +2571,7 @@ ice_vsi_setup(struct ice_pf *pf, struct ice_vsi_cfg_params *params)
- 	if (!ice_is_safe_mode(pf) && vsi->type == ICE_VSI_PF) {
- 		ice_fltr_add_eth(vsi, ETH_P_PAUSE, ICE_FLTR_TX,
- 				 ICE_DROP_PACKET);
--		ice_cfg_sw_lldp(vsi, true, true);
-+		ice_vsi_cfg_sw_lldp(vsi, true, true);
- 	}
- 
- 	if (!vsi->agg_node)
-@@ -2834,9 +2868,11 @@ int ice_vsi_release(struct ice_vsi *vsi)
- 	/* The Rx rule will only exist to remove if the LLDP FW
- 	 * engine is currently stopped
- 	 */
--	if (!ice_is_safe_mode(pf) && vsi->type == ICE_VSI_PF &&
--	    !test_bit(ICE_FLAG_FW_LLDP_AGENT, pf->flags))
--		ice_cfg_sw_lldp(vsi, false, false);
-+	if (!ice_is_safe_mode(pf) &&
-+	    !test_bit(ICE_FLAG_FW_LLDP_AGENT, pf->flags) &&
-+	    (vsi->type == ICE_VSI_PF || (vsi->type == ICE_VSI_VF &&
-+	     ice_vf_is_lldp_ena(vsi->vf))))
-+		ice_vsi_cfg_sw_lldp(vsi, false, false);
- 
- 	ice_vsi_decfg(vsi);
- 
-diff --git a/drivers/net/ethernet/intel/ice/ice_lib.h b/drivers/net/ethernet/intel/ice/ice_lib.h
-index b4c9cb28a016..654516c5fc3e 100644
---- a/drivers/net/ethernet/intel/ice/ice_lib.h
-+++ b/drivers/net/ethernet/intel/ice/ice_lib.h
-@@ -29,7 +29,8 @@ ice_vsi_stop_lan_tx_rings(struct ice_vsi *vsi, enum ice_disq_rst_src rst_src,
- 
- int ice_vsi_stop_xdp_tx_rings(struct ice_vsi *vsi);
- 
--void ice_cfg_sw_lldp(struct ice_vsi *vsi, bool tx, bool create);
-+void ice_vsi_cfg_sw_lldp(struct ice_vsi *vsi, bool tx, bool create);
-+void ice_cfg_sw_rx_lldp(struct ice_pf *pf, bool enable);
- 
- int ice_set_link(struct ice_vsi *vsi, bool ena);
- 
-diff --git a/drivers/net/ethernet/intel/ice/ice_sriov.c b/drivers/net/ethernet/intel/ice/ice_sriov.c
-index 33eac29b6a50..3069045ed222 100644
---- a/drivers/net/ethernet/intel/ice/ice_sriov.c
-+++ b/drivers/net/ethernet/intel/ice/ice_sriov.c
-@@ -62,6 +62,7 @@ static void ice_free_vf_res(struct ice_vf *vf)
- 	if (vf->lan_vsi_idx != ICE_NO_VSI) {
- 		ice_vf_vsi_release(vf);
- 		vf->num_mac = 0;
-+		vf->num_mac_lldp = 0;
- 	}
- 
- 	last_vector_idx = vf->first_vector_idx + vf->num_msix - 1;
-@@ -1405,6 +1406,9 @@ int ice_set_vf_trust(struct net_device *netdev, int vf_id, bool trusted)
- 
- 	mutex_lock(&vf->cfg_lock);
- 
-+	while (!trusted && vf->num_mac_lldp)
-+		ice_vf_update_mac_lldp_num(vf, ice_get_vf_vsi(vf), false);
-+
- 	vf->trusted = trusted;
- 	ice_reset_vf(vf, ICE_VF_RESET_NOTIFY);
- 	dev_info(ice_pf_to_dev(pf), "VF %u is now %strusted\n",
-diff --git a/drivers/net/ethernet/intel/ice/ice_vf_lib.c b/drivers/net/ethernet/intel/ice/ice_vf_lib.c
-index c7c0c2f50c26..589e9d524044 100644
---- a/drivers/net/ethernet/intel/ice/ice_vf_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_vf_lib.c
-@@ -226,6 +226,7 @@ static void ice_vf_clear_counters(struct ice_vf *vf)
- 		vsi->num_vlan = 0;
- 
- 	vf->num_mac = 0;
-+	vf->num_mac_lldp = 0;
- 	memset(&vf->mdd_tx_events, 0, sizeof(vf->mdd_tx_events));
- 	memset(&vf->mdd_rx_events, 0, sizeof(vf->mdd_rx_events));
- }
-@@ -1393,3 +1394,28 @@ struct ice_vsi *ice_get_vf_ctrl_vsi(struct ice_pf *pf, struct ice_vsi *vsi)
- 	rcu_read_unlock();
- 	return ctrl_vsi;
- }
-+
-+/**
-+ * ice_vf_update_mac_lldp_num - update the VF's number of LLDP addresses
-+ * @vf: a VF to add the address to
-+ * @vsi: the corresponding VSI
-+ * @incr: is the rule added or removed
-+ */
-+void ice_vf_update_mac_lldp_num(struct ice_vf *vf, struct ice_vsi *vsi,
-+				bool incr)
-+{
-+	bool lldp_by_fw = test_bit(ICE_FLAG_FW_LLDP_AGENT, vsi->back->flags);
-+	bool was_ena = ice_vf_is_lldp_ena(vf) && !lldp_by_fw;
-+	bool is_ena;
-+
-+	if (WARN_ON(!vsi)) {
-+		vf->num_mac_lldp = 0;
-+		return;
-+	}
-+
-+	vf->num_mac_lldp += incr ? 1 : -1;
-+	is_ena = ice_vf_is_lldp_ena(vf) && !lldp_by_fw;
-+
-+	if (was_ena != is_ena)
-+		ice_vsi_cfg_sw_lldp(vsi, false, is_ena);
-+}
-diff --git a/drivers/net/ethernet/intel/ice/ice_vf_lib.h b/drivers/net/ethernet/intel/ice/ice_vf_lib.h
-index 799b2c1f1184..f4c9ca1f51ce 100644
---- a/drivers/net/ethernet/intel/ice/ice_vf_lib.h
-+++ b/drivers/net/ethernet/intel/ice/ice_vf_lib.h
-@@ -134,6 +134,7 @@ struct ice_vf {
- 	unsigned long vf_caps;		/* VF's adv. capabilities */
- 	u8 num_req_qs;			/* num of queue pairs requested by VF */
- 	u16 num_mac;
-+	u16 num_mac_lldp;
- 	u16 num_vf_qs;			/* num of queue configured per VF */
- 	u8 vlan_strip_ena;		/* Outer and Inner VLAN strip enable */
- #define ICE_INNER_VLAN_STRIP_ENA	BIT(0)
-@@ -180,6 +181,11 @@ static inline u16 ice_vf_get_port_vlan_tpid(struct ice_vf *vf)
- 	return vf->port_vlan_info.tpid;
- }
- 
-+static inline bool ice_vf_is_lldp_ena(struct ice_vf *vf)
-+{
-+	return vf->num_mac_lldp && vf->trusted;
-+}
-+
- /* VF Hash Table access functions
-  *
-  * These functions provide abstraction for interacting with the VF hash table.
-@@ -245,6 +251,8 @@ ice_vf_clear_vsi_promisc(struct ice_vf *vf, struct ice_vsi *vsi, u8 promisc_m);
- int ice_reset_vf(struct ice_vf *vf, u32 flags);
- void ice_reset_all_vfs(struct ice_pf *pf);
- struct ice_vsi *ice_get_vf_ctrl_vsi(struct ice_pf *pf, struct ice_vsi *vsi);
-+void ice_vf_update_mac_lldp_num(struct ice_vf *vf, struct ice_vsi *vsi,
-+				bool incr);
- #else /* CONFIG_PCI_IOV */
- static inline struct ice_vf *ice_get_vf_by_id(struct ice_pf *pf, u16 vf_id)
- {
-diff --git a/drivers/net/ethernet/intel/ice/ice_virtchnl.c b/drivers/net/ethernet/intel/ice/ice_virtchnl.c
-index b6285433307c..30e217073745 100644
---- a/drivers/net/ethernet/intel/ice/ice_virtchnl.c
-+++ b/drivers/net/ethernet/intel/ice/ice_virtchnl.c
-@@ -2242,6 +2242,51 @@ ice_vfhw_mac_add(struct ice_vf *vf, struct virtchnl_ether_addr *vc_ether_addr)
- 	}
- }
- 
-+/**
-+ * ice_is_mc_lldp_eth_addr - check if the given MAC is a multicast LLDP address
-+ * @mac: address to check
-+ *
-+ * Return: true if the address is one of the three possible LLDP multicast
-+ *	   addresses, false otherwise.
-+ */
-+static bool ice_is_mc_lldp_eth_addr(const u8 *mac)
-+{
-+	const u8 lldp_mac_base[] = {0x01, 0x80, 0xc2, 0x00, 0x00};
-+
-+	if (memcmp(mac, lldp_mac_base, sizeof(lldp_mac_base)))
-+		return false;
-+
-+	return (mac[5] == 0x0e || mac[5] == 0x03 || mac[5] == 0x00);
-+}
-+
-+/**
-+ * ice_vc_can_add_mac - check if the VF is allowed to add a given MAC
-+ * @vf: a VF to add the address to
-+ * @mac: address to check
-+ *
-+ * Return: true if the VF is allowed to add such MAC address, false otherwise.
-+ */
-+static bool ice_vc_can_add_mac(const struct ice_vf *vf, const u8 *mac)
-+{
-+	struct device *dev = ice_pf_to_dev(vf->pf);
-+
-+	if (is_unicast_ether_addr(mac) &&
-+	    !ice_can_vf_change_mac((struct ice_vf *)vf)) {
-+		dev_err(dev,
-+			"VF attempting to override administratively set MAC address, bring down and up the VF interface to resume normal operation\n");
-+		return false;
-+	}
-+
-+	if (!vf->trusted && ice_is_mc_lldp_eth_addr(mac)) {
-+		dev_warn(dev,
-+			 "An untrusted VF %u is attempting to configure an LLDP multicast address\n",
-+			 vf->vf_id);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- /**
-  * ice_vc_add_mac_addr - attempt to add the MAC address passed in
-  * @vf: pointer to the VF info
-@@ -2260,10 +2305,8 @@ ice_vc_add_mac_addr(struct ice_vf *vf, struct ice_vsi *vsi,
- 	if (ether_addr_equal(mac_addr, vf->dev_lan_addr))
- 		return 0;
- 
--	if (is_unicast_ether_addr(mac_addr) && !ice_can_vf_change_mac(vf)) {
--		dev_err(dev, "VF attempting to override administratively set MAC address, bring down and up the VF interface to resume normal operation\n");
-+	if (!ice_vc_can_add_mac(vf, mac_addr))
- 		return -EPERM;
--	}
- 
- 	ret = ice_fltr_add_mac(vsi, mac_addr, ICE_FWD_TO_VSI);
- 	if (ret == -EEXIST) {
-@@ -2278,6 +2321,8 @@ ice_vc_add_mac_addr(struct ice_vf *vf, struct ice_vsi *vsi,
- 		return ret;
- 	} else {
- 		vf->num_mac++;
-+		if (ice_is_mc_lldp_eth_addr(mac_addr))
-+			ice_vf_update_mac_lldp_num(vf, vsi, true);
- 	}
- 
- 	ice_vfhw_mac_add(vf, vc_ether_addr);
-@@ -2372,6 +2417,8 @@ ice_vc_del_mac_addr(struct ice_vf *vf, struct ice_vsi *vsi,
- 	ice_vfhw_mac_del(vf, vc_ether_addr);
- 
- 	vf->num_mac--;
-+	if (ice_is_mc_lldp_eth_addr(mac_addr))
-+		ice_vf_update_mac_lldp_num(vf, vsi, false);
- 
- 	return 0;
- }
--- 
-2.43.0
-
+--=20
+Antonin Godard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
