@@ -1,58 +1,108 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57E9C3A8C1
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 01:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A45B22338
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 01:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739495015; cv=none; b=ecKvCEkJ5Hagu5EnECSdGO15mtX37AqXnNz7GCn0EJwfmAFVaPpPIGKNbwaHKFxhcLbBGr+SVDLYY69V1HAz2aPKOiAsKk+jHPezvuDGZYjtQtP2oSPhxnkt5qqIcfG4nPGQW03NxKonUKWLwgzIiPV+klOK45IiANW1ST6ZsrQ=
+	t=1739495171; cv=none; b=MNP8nHIxCISz8Us4XbKizgKT+tfZM8J9loibB25XZZDMoqj4ngzdQlr1L/5UjBw9Zey36/CxOU3UNIM1hH/Y1Viscy/ih5EDkaZS7niJ7Sf5LO1nFizMY5HjA7jh8QYvyEfHz79YTZhdAGt7PN49qGQSNhFHcOM/1/OrBjQgqOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739495015; c=relaxed/simple;
-	bh=epixnDeIsibTYaU/K3pXMNxKkDCO7YvHbG/JpNPMj2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iw/s4e2J3IWq4zeLbzAMh/Y2OnIMPDpd8VDCJC/RuwD6hIDuf3b3NCxIUauVeTGyu0aSjkmBKDS0VdoigQKv8i25WAHuFE+YlLWAct2HYcpan+SIOP+px8PES87HAAtYpVuX2CoS8FwBLoeJ3qY+tPtr0+pLa1AkD3Uhzz7E2II=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 1826C72C99C;
-	Fri, 14 Feb 2025 04:03:26 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-	id 054817CCB3A; Fri, 14 Feb 2025 03:03:25 +0200 (IST)
-Date: Fri, 14 Feb 2025 03:03:25 +0200
-From: "Dmitry V. Levin" <ldv@strace.io>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Dmitry Vyukov <dvyukov@google.com>, Oleg Nesterov <oleg@redhat.com>,
-	Eugene Syromyatnikov <evgsyr@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, Kees Cook <kees@kernel.org>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jinjie Ruan <ruanjinjie@huawei.com>, Arnd Bergmann <arnd@arndb.de>,
-	Ard Biesheuvel <ardb@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/31] ARM: Switch to generic entry
-Message-ID: <20250214010325.GA12626@strace.io>
-References: <20250212-arm-generic-entry-v4-0-a457ff0a61d6@linaro.org>
+	s=arc-20240116; t=1739495171; c=relaxed/simple;
+	bh=3yogtkjeT8EwtXj/Us/3p/Xx6ZRkKcobH+D1mhxZ+1o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ITNSoTXiqCA1kdyMMHx77HQFPlgBa60KKpmu4M6TINJ61+EBMw9v+2r42LY0sg7FUKuNblYUAgT1hTGWOeieD8VGEGimmBneHiJhvbYGzyk0R1F/iOYggpzpSBPfv539g33sN1iymycYNV/5I5hcEIeNrMYdaA3q0MVO6TYx1yU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Stm3WmDg; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Stm3WmDg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739495171; x=1771031171;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3yogtkjeT8EwtXj/Us/3p/Xx6ZRkKcobH+D1mhxZ+1o=;
+  b=Stm3WmDgUcwksks5D71rfCk2BTpOHQkPeUkTKKgSyLgiC7VZFxJ2Q4ZO
+   55LiqxxDlSUrA6Y11InKiSuOhqV9t+FzfDOuHMd0jR8BYEofCr0Li2xq8
+   bXhsE2iI/00yGb9pOziAoo6Dsl4nJsf8mq+gUHnVt4cgR1ANk8vPWfyCh
+   LHaxrl6jpMHGCeJlxN3EE7OxuQ6wvo05JyGB5eESoq7B7BGkv6xpLUvV/
+   UnHQA7PBc3LaZv8l8iBEYQPpkQWz7IuFqHRRh39bYhmHqDYZyW2+ngNg6
+   cYO6ghabNQA92wffdS+Q3Z5BIgNAOsTxRvcgA2lbTZ1WjXB3GTW8MjG2Q
+   g==;
+X-CSE-ConnectionGUID: sr4AjhIPTmqxpnhSIKEBXQ==
+X-CSE-MsgGUID: dhVdbahYTcya/GgM5fDNTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="50442868"
+X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
+   d="scan'208";a="50442868"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 17:06:10 -0800
+X-CSE-ConnectionGUID: DeOkYzj3RQq0swQ+x0fUzg==
+X-CSE-MsgGUID: DZlVDi4iRXeiAd7jiLcrdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
+   d="scan'208";a="118402581"
+Received: from cbae1-mobl.amr.corp.intel.com (HELO cbae1-mobl.intel.com) ([10.246.154.132])
+  by fmviesa004.fm.intel.com with ESMTP; 13 Feb 2025 17:06:08 -0800
+From: "Chang S. Bae" <chang.seok.bae@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	aruna.ramakrishna@oracle.com,
+	TonyWWang-oc@zhaoxin.com,
+	chang.seok.bae@intel.com
+Subject: [PATCH 0/2] x86/pkeys: Remove unnecessary XGETBV1 dependency in signal frame exposition
+Date: Thu, 13 Feb 2025 17:06:05 -0800
+Message-ID: <20250214010607.7067-1-chang.seok.bae@intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250212-arm-generic-entry-v4-0-a457ff0a61d6@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 12, 2025 at 12:22:54PM +0100, Linus Walleij wrote:
-[...]
-> - Tested some ptrace/strace obviously, such as issuing
->   several instances of "ptrace find /" and let this scroll
->   by in the terminal over some 10 minutes or so.
+Hi all,
 
-Could you also run the strace test suite, please?  Given that it used to
-catch quite a few regressions in the past, it could be useful in this case
-as well.
+This series removes an unnecessary dependency on XGETBV1 which was
+brought by commit
+
+    ae6012d72fa6 ("x86/pkeys: Ensure updated PKRU value is XRSTOR'd").
+
+Currently, the PKRU exposure logic overwrites xregs_state->header
+->xfeatures in the signal frame, seemingly to emulate XSAVE behavior:
+combining the requested feature bitmap with a processor-tracked status
+bitmap derived from XGETBV(1).
+
+A previous posting [1] attempted to handle the case where XGETBV(1) is
+disabled or unexposed. However, that approach assumed this dependency was
+necessary and further modified the logic to skip PKRU writes in such
+cases, which appears problematic.
+
+Instead, the XSAVE-written value can be read directly from userspace
+memory, as is already done for legacy states [2]. Thus, tying PKRU
+exposure in the ABI to XGETBV1 is excessive. This series refactors
+reusable code into a helper and applies it to PKRU handling, fully
+eliminating the XGETBV1 dependency.
+
+Thanks,
+Chang
+
+[1]: https://lore.kernel.org/lkml/20250102075419.2559-1-TonyWWang-oc@zhaoxin.com/
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kernel/fpu/signal.c#n139
+
+Chang S. Bae (2):
+  x86/fpu: Refactor xfeature bitmask update code for sigframe XSAVE
+  x86/pkeys: Simplify PKRU update in signal frame
+
+ arch/x86/kernel/fpu/signal.c | 11 +----------
+ arch/x86/kernel/fpu/xstate.h | 21 +++++++++++++++------
+ 2 files changed, 16 insertions(+), 16 deletions(-)
 
 
+base-commit: b36de8b904b8ff2095ece7af6b3cfff8c73c2fb1
 -- 
-ldv
+2.45.2
+
