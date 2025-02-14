@@ -1,116 +1,132 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04379275401;
-	Fri, 14 Feb 2025 08:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59E4275401;
+	Fri, 14 Feb 2025 08:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739523010; cv=none; b=dmeyWP8N7RwvigG8JgUDeHAxwyM8j/alGZjqFw/sqPfESWVctj6FOD29Z4Ru6AdfG51IFKjKDmal6Rvru/qnWTqQaAAu6Ybm/+/SgVNJaYILk0N88MfJyXzejJZ8Ub5JoDhSMx3ZEgOODEx3dBilaIA59GkmsAB+yiO4W4LEano=
+	t=1739523034; cv=none; b=T80mcKscxwthnWcGt6xkDbxqGVYEf39/f9B1NtsHx9bXl6mNkJlZxUFt6568l8vaI65guaAXFrBoXGHiu6oROl9PvNNO+vAZQ3Tl7g5GPaKR75mpbGRuP3IWcidovdq38ovWjQdOgsfLmXtSSgm5p9fZkFTToH/AQUv3IunO3oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739523010; c=relaxed/simple;
-	bh=eHsbsd/eFKbVVaYr4omsL/Cx88B0Q51hlfhaRwPY0RA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WXo9o4MXBkVyE7juKHi/FQxwgCcKEnEj1cB0pid75TXuq5eUpxYBjv/QLzPnHPJ/Kd5Vb3505OYucxe+S0lqD9fkQbieGKzuH7KuQHKxWfR8hxX08Vz0P3Sqr2/Gm0rvbX7FMd5IQMH6+T0BBjc6LOEx2HIxsUGxDWmA93cxQFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=AKsbYQM3; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1739523034; c=relaxed/simple;
+	bh=3+AcZdnU8FdOjumClIF2GqlG4CDw+OX6zeEh4DONsJM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=teqISBvNlbOd4gMjXmPpgUSM+sd5bmy9S4VMpefCAUzDbH+2CiV9fvmlM4jAeDAas6+mVmmuLP4WJtmM3eIsYAv26z0PPyelgt7vfGdenRuv2Kxt7DZS4MBUme5UkQRv+IDuOw/IO1RC6QzVsVeY4UW+VaQas+9FRAJ1UAKLa3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WieMddbH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="AKsbYQM3"
-X-UUID: ae86e8d2eab011efb8f9918b5fc74e19-20250214
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=SZTKFrboegu1pyLSyq2HcY2eKZBWe3hXG4JUqZ8ZU0c=;
-	b=AKsbYQM3lxBAVEii1KIMqewju/FjqyPgdG/pUaVAs7cOTyqevlueh+KQSCI65TLtIhivjCOOuuzUYdB5d+5fHVu5MrdzQY51KAsAfzY7rg+H8OEMPZ3FVdQaFKBqB4WJBRLHBpz4doIJZ9XpXOu4jh5I2K5mizdJqbIUPbMtixQ=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:46e23ee0-5498-40be-8e8a-c3aa7291560b,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:60aa074,CLOUDID:fcecbf24-96bd-4ac5-8f2e-15aa1ef9defa,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: ae86e8d2eab011efb8f9918b5fc74e19-20250214
-Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw01.mediatek.com
-	(envelope-from <macpaul.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 94671838; Fri, 14 Feb 2025 16:50:03 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 14 Feb 2025 16:50:02 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Fri, 14 Feb 2025 16:50:02 +0800
-From: Macpaul Lin <macpaul.lin@mediatek.com>
-To: Sen Chu <sen.chu@mediatek.com>, Macpaul Lin <macpaul.lin@mediatek.com>,
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, Alexandre Mergnat
-	<amergnat@baylibre.com>
-CC: Bear Wang <bear.wang@mediatek.com>, Pablo Sun <pablo.sun@mediatek.com>,
-	Macpaul Lin <macpaul@gmail.com>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<linux-usb@vger.kernel.org>, <stable@vger.kernel.org>, Chris-qj chen
-	<chris-qj.chen@mediatek.com>
-Subject: [PATCH v3] arm64: dts: mediatek: mt6359: fix dtbs_check error for RTC and regulators
-Date: Fri, 14 Feb 2025 16:49:54 +0800
-Message-ID: <20250214084954.1181435-1-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WieMddbH"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51E6tEMR008247;
+	Fri, 14 Feb 2025 08:50:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	5UFHztiYBs5W6zR2fUSuxAZIpyicf7kYd3Jnr4/XuBE=; b=WieMddbHrkMECZ3h
+	2pK86iWTna+RWPM4WWpSjYAYE0APL+bi9giHcOCe6ImnGpaMOMedvxHMm4GSr6ay
+	g0ENvukalKw253cwkG29G4NR0PtM0deKCS3ZyDNlA/Ir8GPNe175r1W/ob9epu15
+	JYPhk4nHnVaf3DlWPIZBbhiUgvz74/R3m8eoizfAJ0xKJeJld5fB57HBJBfDBzOU
+	8Z1nfUk0osNguaQ0o918geDzRLPzNJVofjhwV1FZGSZi5FjEHGHIloiVhX6uBxX2
+	xFJFQTwwebZZM0ngy/ANhsaqZJ8lCKP3VPCDV/Y4qCwXmW3zTXjDnOVNnR8UdDR2
+	8i9nMg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qewhdgqb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 08:50:19 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51E8oIuJ031881
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 08:50:18 GMT
+Received: from [10.216.33.241] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 14 Feb
+ 2025 00:50:12 -0800
+Message-ID: <be824a70-380e-84d0-8ada-f849b9453ac0@quicinc.com>
+Date: Fri, 14 Feb 2025 14:18:48 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v6 1/4] arm64: dts: qcom: x1e80100: Add PCIe lane
+ equalization preset properties
+Content-Language: en-US
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "Krishna
+ Chaitanya Chundru" <krishna.chundru@oss.qualcomm.com>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Helgaas
+	<bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
+	<kw@linux.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <quic_mrana@quicinc.com>, <quic_vbadigan@quicinc.com>
+References: <20250210-preset_v6-v6-0-cbd837d0028d@oss.qualcomm.com>
+ <20250210-preset_v6-v6-1-cbd837d0028d@oss.qualcomm.com>
+ <20250214084427.5ciy5ks6oypr3dvg@thinkpad>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20250214084427.5ciy5ks6oypr3dvg@thinkpad>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: -VFvbxQa7YG4cDu-8xuobTdRL3HM24Vb
+X-Proofpoint-GUID: -VFvbxQa7YG4cDu-8xuobTdRL3HM24Vb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-14_03,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ impostorscore=0 mlxlogscore=958 phishscore=0 clxscore=1015 adultscore=0
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502140063
 
-This patch fixes the following dtbs_check errors:
-1. 'mt6359rtc' do not match any of the regexes: 'pinctrl-[0-9]+'
- - Update 'mt6359rtc' in 'mt6359.dtsi' with a generic device name 'rtc'
-2. 'pmic: regulators: 'compatible' is a required property'
- - Add 'mediatek,mt6359-regulator' to compatible property.
 
-Fixes: 3b7d143be4b7 ("arm64: dts: mt6359: add PMIC MT6359 related nodes")
-Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- arch/arm64/boot/dts/mediatek/mt6359.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Changes for v2:
- - No change.
+On 2/14/2025 2:14 PM, Manivannan Sadhasivam wrote:
+> On Mon, Feb 10, 2025 at 01:00:00PM +0530, Krishna Chaitanya Chundru wrote:
+>> Add PCIe lane equalization preset properties for 8 GT/s and 16 GT/s data
+>> rates used in lane equalization procedure.
+>>
+>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>> ---
+>> This patch depends on the this dt binding pull request which got recently
+>> merged: https://github.com/devicetree-org/dt-schema/pull/146
+>> ---
+>> ---
+>>   arch/arm64/boot/dts/qcom/x1e80100.dtsi | 13 +++++++++++++
+>>   1 file changed, 13 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+>> index 4936fa5b98ff..1b815d4eed5c 100644
+>> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+>> @@ -3209,6 +3209,11 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+>>   			phys = <&pcie3_phy>;
+>>   			phy-names = "pciephy";
+>>   
+>> +			eq-presets-8gts = /bits/ 16 <0x5555 0x5555 0x5555 0x5555>,
+>> +					  /bits/ 16 <0x5555 0x5555 0x5555 0x5555>;
+> 
+> Why 2 16bit arrays?
+> 
+Just to keep line length below 100, if I use single line it is crossing
+100 lines.
 
-Changes for v3:
- - Add "Reviewed-by:" tag, Thanks!
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt6359.dtsi b/arch/arm64/boot/dts/mediatek/mt6359.dtsi
-index 150ad84d5d2b..3d97ca4e2098 100644
---- a/arch/arm64/boot/dts/mediatek/mt6359.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt6359.dtsi
-@@ -19,6 +19,8 @@ mt6359codec: mt6359codec {
- 		};
- 
- 		regulators {
-+			compatible = "mediatek,mt6359-regulator";
-+
- 			mt6359_vs1_buck_reg: buck_vs1 {
- 				regulator-name = "vs1";
- 				regulator-min-microvolt = <800000>;
-@@ -297,7 +299,7 @@ mt6359_vsram_others_sshub_ldo: ldo_vsram_others_sshub {
- 			};
- 		};
- 
--		mt6359rtc: mt6359rtc {
-+		mt6359_rtc: rtc {
- 			compatible = "mediatek,mt6358-rtc";
- 		};
- 	};
--- 
-2.45.2
-
+- Krishna Chaitanya.
+> - Mani
+> 
