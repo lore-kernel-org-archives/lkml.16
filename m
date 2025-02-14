@@ -1,109 +1,139 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE58425A632
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2EE253B46;
+	Fri, 14 Feb 2025 09:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739526521; cv=none; b=PYhwOqaZ5FB2ENTemBU9m1PGAXqIriThiw2PE2jTPlfknc2Gt8nXS4GwGJ+WGfT2KXzDUIIQSCXjEDZWjsbOPgfCOgI6IGF/vU9oJ78rBx4xDM/tmUW1PMP9gakc5whCfiaNbcQTePlcNtQ/nFnb1xIafrx3fRnO4x9nhD3Qma4=
+	t=1739526536; cv=none; b=O078vjHXt4KxtpSmphS2xeFC5aNtWF038FVlrUjb9VkzCu3ng5vSeMMVrrZcTOcyjsvhQwA2H6uLpt+l8O+yMy0XJK+vizDaUeJzUPa6GbjIk1u8KJKPrTYFrNo5Lm/u/K2k3resgI3EuUioEk+DLti7JXKQ6Ikb0nDC9g2enCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739526521; c=relaxed/simple;
-	bh=U/XK9lxux++1rCX/XaU4m5VtyKNJ/y7QLLupUamyVUg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dYDKxk2oMBGSQDhneg7VPoMiszavB0WQt9XtqwSpBiqG7dm5nABA18oj/8eOWXju2nTdQr2nIXgKEvyG3saUUlUg5QcoEd1YVqateaRTF8mBiwmZ9/k2lJ2fy5LpdccWNZFfGj/A6aH8XvMe0B35C/3p4enGGleVmIN4lOAK+uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a3T1Kfd2; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739526536; c=relaxed/simple;
+	bh=O/8DIOSl5f/Y31KM1037Yj7JP2uqjIWVBVFxogazJiU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RrUqcPxMncwjJycLAnV8kLCvW6WNoDYw7xXRT+uvuwRabWGwMJ/wQ8DwHZryc53qGfNQjXuDAj4D52gHUQummLKFIQIqj9t8vDJfkZiPeN8bbHXrwzIt22QM4L0I3Mlmnc7VWuE38YJe+RiXn+IbQelqrny+QfexX7pc0K4AWRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=VGWfD1X2; arc=none smtp.client-ip=18.132.163.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3T1Kfd2"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso311999666b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 01:48:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739526518; x=1740131318; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mkPFoVMQL/mYhcTcaki3q36SMLzV+i7Fu65c+D3vc5A=;
-        b=a3T1Kfd2Lvupf5jb+DYxLKz8w8xDNiIOLsoGqSqhsgVRo3SotZK1RmZ9OgJBYAOCAu
-         ctVGwwV/d7rK9MpSX8JU8VFvZN6zO9QhBZBwG1vshz+yxIV05ojyTVV1jmkAtWvLzObl
-         3+Jqnvvl1peqESMiE1k0k6cS1nlwC2ufykweIhpG3wMMiDX7SatrSLBl7qXATC73jn1C
-         bLaDqqGVeUImBysnRBSZ5DoiTzLZLNgcJOvxStjbS4vvPMcBeG1wqiV8TRky4yspTSuZ
-         ZYO9HWDdPzFcoH3MYtOtau65vHYRtqsgfgwpcb0DE0G+QLD0ik/t9upDppowKUPIjypC
-         LUTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739526518; x=1740131318;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mkPFoVMQL/mYhcTcaki3q36SMLzV+i7Fu65c+D3vc5A=;
-        b=XzSjqAxw7yesYnqmRlZ3MlXBqkWEeCJ/zKCpxLv2CAwISQaAs6JMbpTbqNMu0JgCh3
-         Ts4nk/U8ZCwrSzPaQxi/o96vELOJu4a+Hs7LysDeOzo/Jvv0Y3TvJIL+DBCIX9eFxaX/
-         fVqn4tISzy/MFemLrXeUzzWgtBYIGOAEJ2feeQdEBnGNh0rKOVl946m53Px8liyOFBkQ
-         sEdIv6GQwOex2vI1Wzi5HCmNh5AVThcnDQvpER6L/SotksXbNprkqJo4SATsPsB/39ID
-         7SCOH57MtxYKTEH1/zfjHjd7YIW50b8XrtatYEel8NWFGxCjbUudXcGpZCu7AlVM6WqX
-         yO9Q==
-X-Gm-Message-State: AOJu0YwZ4M2nEkndRXTr4ihaJXE9Bi4jwcie8OPeDWA0Oe7g6xCaDKmU
-	b5H+laiiMCqI5JovPtCqmlbhhFMWUPWkbj8mVdwuK371G2tIi31c
-X-Gm-Gg: ASbGncuZ2fWSHL51WIPU/UWUbeZZVfIFk4SHDkVKq1Ssp+ieGqnnvJac6SIRrGRyRSN
-	hlwKj9zYRCew+fRGMa9WrzeqMjx/4CsSbAMfv+DOVMFru/rdKhREKkVpU7JdQX6I/wh0xidpSZA
-	zVqJaltFw4qvFwsd7vHlKOjIdKM5H7iUDFKm+NPzPfhYZ1DdWZN7AlHJ2PSowitXXQj1tdbgoun
-	rk6epuZHNr5liTzYk/8fvOQLtGpFdVx/d/pvd2BA+ZkJpsAe2U1h6V5mYWuDxkizu8oOKyMM1Xp
-	ff8zdqD/Fug4VD0WXp9r2BtjgaZnBria
-X-Google-Smtp-Source: AGHT+IF/WMNFRvHaiGuGegW339Yn2o6KPOe0XOjLxo/ZqTX+q5ydw7HmVZEF28gC92P39HsPRvsXVA==
-X-Received: by 2002:a17:907:2cc5:b0:ab6:f4e7:52f9 with SMTP id a640c23a62f3a-ab7f33d1874mr1151153666b.25.1739526518067;
-        Fri, 14 Feb 2025 01:48:38 -0800 (PST)
-Received: from giga-mm.home ([2a02:1210:861b:6f00:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5339db66sm309917866b.148.2025.02.14.01.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 01:48:37 -0800 (PST)
-Message-ID: <c07e2096cedc993e8a23ccde44e7f47adbeff99b.camel@gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: update info for SOPHGO DEVICETREES and
- DRIVERS
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To: Inochi Amaoto <inochiama@gmail.com>, Chen Wang <unicorn_wang@outlook.com>
-Cc: linux-kernel@vger.kernel.org, sophgo@lists.linux.dev, Yixun Lan
-	 <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-Date: Fri, 14 Feb 2025 10:48:36 +0100
-In-Reply-To: <20250212022831.244143-1-inochiama@gmail.com>
-References: <20250212022831.244143-1-inochiama@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="VGWfD1X2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1739526496;
+	bh=NAnqMvpz3CgMXnHWGFEBjzdavwVkEzeTJ0xJecoflYw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=VGWfD1X2NFjRTxsb3x5d2n94r2fkvs1BY9rvVS8O+9ASPXtQVkVH51//ZKVlV9OD8
+	 bX0L+I7uho62jqadSSrWvVkXWv62+KERXT0JLqU9Z93cGXQEHr3uMUcUrNT7lGyL/o
+	 d9+ENqqOPcJDKAOMPWGYwtxTuY+UG5ZXhYorv4NA=
+X-QQ-mid: bizesmtpip2t1739526484tw7hc1n
+X-QQ-Originating-IP: hzoQEaX1BdaUZ8Hg3TePiaMBVM3pnsJ+6yBRy4x28Y8=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 14 Feb 2025 17:48:02 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 14775040142801817448
+From: WangYuli <wangyuli@uniontech.com>
+To: tsbogend@alpha.franken.de
+Cc: linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	macro@orcam.me.uk,
+	masahiroy@kernel.org,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	chenlinxuan@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH v2 0/2] MIPS: dec: Only check -msym32 when need compiler
+Date: Fri, 14 Feb 2025 17:47:58 +0800
+Message-ID: <F49F5EE9975F29EA+20250214094758.172055-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: N3iD438OGJ7hGK0NaeWMxyTtblKV6UJcTJWX9vlLcuuX1tsrenCVk5Vu
+	gzgUk3pHxm96e5H+kbqXU6MTEoq0TwV/UMyENawIVovmIWaZdfOXxAw+O6h26SxQ0LeJlsD
+	63bvwzuziNd0rjhAsrK84uelaiELd9qeLQ5Y3l5AVpGJyNNhZnGVU2BVPkybhLxgqffraoQ
+	NAWJ4kgKgYo5BBdHXceJH8QazgkZcW7lUY6LBxK81VCRRPwWhE8qpM/hyVTz2hoBj+BeeRa
+	ANN/AhYikjiZap8h0MzhAch8yV1lUZfZLDKLvqJgK7YEpBwuT3lEMlDqJhzU2hIG1asrUuU
+	k31A97N845cS2gu8WtM/DxqKDmAnjfitAirBMYVxFL05QRY03/t96Wbd7AZeT5FrlXZ3kfe
+	2uaUO9jyHiyj+SbYlbbCuj3i2MkPK15ttQPiVZdQwbWmLsSo/Q6+aa+ezblqqvg832gCsRn
+	H3bQtYm5o6NjxEQ7N5tMv/LjLut2NMXG3yCAEn+XR2U2Dy8fDGz+N+xWfbkUatbC/wZrhi4
+	X6IeZ2VS9ekO+Do3qNgXS8eBQyPHZzCpTs56bJg3B8YtNXqFYTSiBg4nlOW+2qDNyPE1pwj
+	VMXALEru0clfuvGzSfJG1vmi4XQzmUudJz+bzUmHS5OUGe2FvNKY/Iohtk0dbqLzeZ/Vxzz
+	ZyKMsRrTc1KEjoc+niSFAZLLy2msdsyMeZK3+Ilw1FabSm7pQwc1ePxLuytcEV4qU5lyEmh
+	66xu/5nha3n+xy5XC+OiQtx9zxzo4vcUSvns5kPOg6LroKBlmmZYvQu8kmIAFcl97jCVAyN
+	T/aQ/jCLwUcvMmNd34K/UemEcywZ/CcgChatxLOHCifEvpgi2zPjpqXDd2GggtbMzfMBq1s
+	VHANzq/WNtvGhgaNsulhTkBorUjptBiwIbOSkM3ur6H+IIBx7imE0zv6gNp8o6LrwS127Ru
+	mwHHg1lpylAYVBJnfPN6zRcxgozQ96TOSV4YSVS+hJUAYx7QoMfUAvkyYKGPyhamZSWxrzu
+	MnvCJ/pOXwcY64fH5aVd29NEgiu8KXdiDMLab3J7JmCjis3RsCQ2EbA7eHPNA=
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
 
-On Wed, 2025-02-12 at 10:28 +0800, Inochi Amaoto wrote:
-> Add mail list and wiki info for SOPHGO entry. Also change Inochi's
-> email as the old one can not be accessed.
->=20
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+During make modules_install, the need-compiler variable becomes null,
+so Makefile.compiler isn't included.
+    
+This results in call cc-option-yn returning nothing.
+    
+To get rid of spurious "CONFIG_CPU_DADDI_WORKAROUNDS unsupported
+without -msym32" error, just wrap it into `ifdef need-compiler'.
 
-Reviewed-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Moreover, I also identified an unnecessary check for KBUILD_SYM32
+in this Makefile section. Eliminate it for code simplification.
 
-> ---
-> =C2=A0MAINTAINERS | 4 +++-
-> =C2=A01 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 896a307fa065..6b79681877d2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -22097,7 +22097,9 @@ F:	include/linux/sony-laptop.h
-> =C2=A0
-> =C2=A0SOPHGO DEVICETREES and DRIVERS
-> =C2=A0M:	Chen Wang <unicorn_wang@outlook.com>
-> -M:	Inochi Amaoto <inochiama@outlook.com>
-> +M:	Inochi Amaoto <inochiama@gmail.com>
-> +L:	sophgo@lists.linux.dev
-> +W:	https://github.com/sophgo/linux/wiki
-> =C2=A0T:	git https://github.com/sophgo/linux.git
-> =C2=A0S:	Maintained
-> =C2=A0N:	sophgo
 
---=20
-Alexander Sverdlin.
+
+NOTE:
+
+It is particularly important to note that this code fix does not
+imply that we have resolved the problem entirely.
+
+In fact, the entire application of cc-option and its auxiliary
+commands within the kernel codebase currently carries significant
+risk.
+
+When we execute make modules_install, the Makefile for the
+corresponding architecture under arch/subarches/Makefile is
+invariably included. Within these files, there are numerous
+usages of cc-option and its auxiliary commands, all of which will
+return empty strings. The reason other architectures can
+successfully complete compilation under these circumstances is
+purely because they do not, unlike MIPS, check the return values
+of cc-option and its auxiliary commands within their Makefiles
+and halt the compilation process when the expected results are
+not received.
+
+A feasible approach to remediation might be to encapsulate all
+usages of cc-option and its auxiliary commands within conditional
+statements across all architecture Makefiles, preventing their
+execution entirely during make modules_install.
+
+However, this would lead to a massive number of inelegant
+modifications, and these broader implications may require
+deliberation by Masahiro Yamada.
+
+Regardless, this does not preclude us from addressing the
+issue on MIPS first.
+
+Link: https://lore.kernel.org/all/41107E6D3A125047+20250211135616.1807966-1-wangyuli@uniontech.com/
+
+WangYuli (2):
+  MIPS: dec: Only check -msym32 when need compiler
+  MIPS: Eliminate Redundant KBUILD_SYM32 Checks
+
+ arch/mips/Makefile | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+---
+Changelog:
+ *v1->v2:
+    1). Correct semantic errors.
+    2). Adopted a revised fix: Using a check for need-compiler
+in place of KBUILD_SYM32 check.
+    3). Swap the order of the changes in v1.
+
+-- 
+2.47.2
 
