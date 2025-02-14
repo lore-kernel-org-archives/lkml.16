@@ -1,298 +1,232 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB65C14B942;
-	Fri, 14 Feb 2025 18:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4932C2686B3
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 18:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739557088; cv=none; b=E7zDMwGQVLg4rqBM2wv0rwkD5KaDW3ChvEIVkYmpfgL9sasyaPMt8/9hXC4NRWV2ZhzqAmu2yFJ9QIeOE6AsByrNwsfblT/V4XLNfnFTNZiWgrUJP+buLwhTzmAr4FQWf/9hHDtESQ0AmkK3PYhFtkhJJiILluRtrNmnHYUZKcs=
+	t=1739557248; cv=none; b=ddZ9SibAd31D8Ns7lDEHPilxLpuxTvXYmowepAlv/oVJxSvHAopHPJfS0u2zW83xu3NOAQHNyolV3gFkKjfjZeEIGaKZD0AcXoUh+kHh8RkCflGS4ic5QRsEIU+TcDV9ru9p4VN+HotFwxNA8ULECKQps9KE7od9XwPAyCf28oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739557088; c=relaxed/simple;
-	bh=Ic5gJeq/hmjUXYKjE77BAaCqGzsk84AUFkY8a5hRTes=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E77RQK/JWSdg+mYbzRYifTWYw6Vj0WK1Jxt/7NAB6hSuUKo2qpo60wclemzHtObjTf0oY47ZRLaDzYVBvd/4nc8oA/TYn6+ryReOZJwnJk4g02SPMQV5j3O/srBuqtwlRInuhsJf+ZH77Ux2KbSZKE1Z+yQR+z+nCeFMfdLR5IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E4aRYVJM; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739557248; c=relaxed/simple;
+	bh=hGm6bdP44W45VjFKx4g3WtxK7XzlXxi7Onetxlpq+ME=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mHfikz4QpUDOfVTT7cZ2pm0RJPqxeBQPukUaee7ROa7YlyafeNw2cTj7ETd5DCXnrqLL0enVd1vuwIpGXFF59GC3Fdz+t5GsrwzFTDHhA8rvbHkNUKUin2T39j0ITL5onhc3ZtGvtjYbEGbObXFFbvQbwQadfLifEYa4RvswXp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=bsu41QDY; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E4aRYVJM"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e46f491275so38415296d6.3;
-        Fri, 14 Feb 2025 10:18:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="bsu41QDY"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38f32c1c787so214336f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 10:20:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739557085; x=1740161885; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8JmWqruVNU4EPMFiD9C7xsM6jzfCuUrZ2XHs9HxCY5c=;
-        b=E4aRYVJMGQI8XyrKdxsBDXx1T8GcjZ/ZSz/Mpay97PV2sUiWyxvV6iUTle4UP6bn8L
-         iNMQTN+a3TrCuiCvJQRb69LyoglrIwM+MVC9lWaxUFu/4XNMjnQYiVLNa0xux9ubmpmP
-         UzoLji8x0L96ANJui8OYOKti2Etw0mQxYStp4ecdjGcRkbTUAGrwQPqZ1SDAqNo6IHHf
-         6GUmQNcQjviq1Hadtf7+P5Cq75gqaUzVgO1Lb2J8Hw7o81ntS7uIjZ0BQ4DeMsc2LlCL
-         r58FoGkNr9L7cZLIWQ6kOPNhR0C4hbfV1Ldb0ieE37YMZFu/yjM4f9ouhlDtE0SXQsaa
-         oQkw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739557243; x=1740162043; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LiwQPv6ok4yIcjSGgvmUI+UqSRNOd6zqIh/ZijyeTno=;
+        b=bsu41QDYFLNrNhi9hk8XS9pEFPPqCvqc0/JZ2EGSvXH51g6hslzu7hXAQwfDePAZj0
+         F9gKY75BYPZIN2YYH14G+pIFae+MG+sYhs3nVYmjaw41LkVLHigAmJ57DjEG0aE0LrvN
+         nMMOXTwcKBBNUx6ZjCUTWJyMW/ruEFPHqoEw1suNxeQ2+2wpPTHMAx96bRV2reyZ2lJi
+         caTrTacYrbNc2Wfn5wn1xdcWmvFAPIkdx7wdRQ9qpAT0VQXFMHaVbKbYx1RvOFCNBc2d
+         CcHsUFIXLIu9IFud85FIuUxfewBYWKfQJj56Gn8rKQbheYUVe00eGU3ax4ANfU84Cxzd
+         qAVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739557085; x=1740161885;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8JmWqruVNU4EPMFiD9C7xsM6jzfCuUrZ2XHs9HxCY5c=;
-        b=uJjGe0OKT9o6QqwmTzFns4o72sQLkQB8VmBhECl9cj4ly58C/Dqzyfvc43LXNQm8Nd
-         1VgyisxsVuOw0ps4iLrTiNRS+dq5mqZvR0GZC20rlFWFuORLBex4sgVGTvgBAVnOjta+
-         qULTJLk0gmkRvm174nv3AVBO9A9etkspLdN76VaLCL6Cee277SHCsA8hX0jXz1yL3S+F
-         DJCDGSLudrklsjqzqSG1Y8HALgNVPaXXeQYLRIUP+hg+iUl169Nxgcp0WYUKK80ojjcc
-         CRjYDTMUvAIPOWW2hTvMemup9nK+64jQ8NMdKkEWd6Mmk8zACmYkSPsvJeK9BnZ2ogjT
-         e0sw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBEh7B2aGIBkEv90g06gtsB7qMgWvItpG8yv2WRJdo/q/DLyp6gRLk2FD5YyyajOTzrYa1J29VRq0=@vger.kernel.org, AJvYcCUF0FHJyXmntCUs5SMGSEGyqkSLLEfsAMNL8SGQvf88ya+T/tNljHpbrrPLwhd+WtI5jzg=@vger.kernel.org, AJvYcCUcA3Xy6ufJQs3dIT3krkD+d+3KPgDj2s6vU/7Y22tmbqcYphcfEarkUM7kNm0OywlZ8+Ym3y7N7kvETCtX@vger.kernel.org, AJvYcCWwksrRW/KIhFJ7pBuC0kPzrCWjLePBd/lpyFUGLH9LnkW6BBikhfI5C9fMSabaJB54OJaWEtvX++hedE7R4A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyandrBeQqFHahfKL+4MOtmHefn81kbHcys3sJcZJDsYTixjX7b
-	f/kc1+FF7zUxz5jXLmE+WY6NqgUSdSU7mBVhee58ZtnE/qBIkUEmUUhjbhWMZJU=
-X-Gm-Gg: ASbGncuW5M6IlpeTHPkCgDHgdIf8jiBP8jchFF7RzSwm3nGISllpz1515G+Tvg1A6ho
-	ZRyDtBN+YDDLCvBXAy5sB+aV8c0sJFxD11gCTsWeTVU638Asci+ZymwutELmL+pAX2CL0PBmGeG
-	0ok+63ujMl0XgFXTNcwiG6yX9+XXB7g9gvJovBu8TOjttsRj1tBKtryXV98Fhsx3xXLqNVwCJSU
-	WANLUh2ApmvmKQueIsYdaFmRtdfbsyIOkCsYYO9HYrjhM8TnP9AJTMQr2Fi9vAu8mFuM5mVItvr
-	uwqdjfh8kjI+uI1r27KMy8MlO8jKv/M0eWd2zYU7Ugh6WtV7Hh92nTbL/0hs0joUCZpRIhVZsIY
-	t2+4Tn4M=
-X-Google-Smtp-Source: AGHT+IGzjod+G/33V3jUtrDFJ9knjHyMbQE4yzF1qZkf3yP5N2geQeFqVOHZev/nQYcS30sz78pBtQ==
-X-Received: by 2002:a05:6214:21c8:b0:6e1:697c:d9b8 with SMTP id 6a1803df08f44-6e66cc8b653mr4522336d6.9.1739557085377;
-        Fri, 14 Feb 2025 10:18:05 -0800 (PST)
-Received: from stef-kernel-development.. (syn-075-130-252-044.res.spectrum.com. [75.130.252.44])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471c2a30b98sm19905811cf.34.2025.02.14.10.18.03
+        d=1e100.net; s=20230601; t=1739557243; x=1740162043;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LiwQPv6ok4yIcjSGgvmUI+UqSRNOd6zqIh/ZijyeTno=;
+        b=ZA6dIyoe+Cav8jqifzm3GyOKELm8KmOi5Z/e80e+BV6nwSL35C3EqYjNati/+t5Seo
+         ObyfUBB+swzLUGjvVAW1jbZF0JxbMfoO4hlnnICZHtz2rPfn5Zi8/nSLJWXQDvkn381A
+         ckY38GEW878K1dsQB2NplKK4cHxbFmsNBhlTdBPcN8TuEy7KVVpJgw8JmPUw5zA0FStU
+         G4cmsgd6Fn17LCX6hsXTSHKVT0deeLzUgp8gGSrcPXljG9jzFGPJTrhJW2odwfD8g3T3
+         ErUdNgsi/gy/RHdLxBkbEaJ0qW7ZSLmSfij9IG1zG+A1Mo8rcg2hgMc8GrWgvtpd1vaH
+         7n/w==
+X-Forwarded-Encrypted: i=1; AJvYcCU8IeLjAmbl6eW/aaglE+Iql/q+zbKpyf/RyNPcUZytQRhBopUECVjqOalJNHsP2eC1uN7AkwxVNMczMk0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/r8wtymF8nppmI/QxLT4KSG5SK4LtNdMbetIiTwh5Vg2VCapV
+	oHcRHyyxj91OTY2f9l3ZjwjRYL1w91WtLi0kiV/WQi50FY3XUh7Prb9K7B4f5QY=
+X-Gm-Gg: ASbGncsjlakntPl6HeoDpOQnKDLZ61tjjq+j+rjeiSJNBURTlPdWK+giwebjqksKUtk
+	6QklipL91bWX259sE8xMvMZuzJ93VFEnmx9NKBO9GuNyhjo6cwyF/vONx7pM9Cqez9pr8PZaoIG
+	nM0+USFh6JPTyvPp8+6NsYnQEnzeF0pXyT9+GG77ZY0RYbZkykZ3pRd+uAsOJa3JORWOntVTCM8
+	uoWbtuBOc6xf5Ow9HOWj4/9Zeti3Yn2lvzVH5BBepe2J+LA+0QdyFKomTuB6qb6O+QygDIKbLLL
+	Mn/6ngd18TMClQ==
+X-Google-Smtp-Source: AGHT+IHsTHTiL3wJj3nrHf3yF9cKckC3Rmpa9H0r1If+8TaecjIo4Dqny2vOXtw6IlfG2e9gn40oVw==
+X-Received: by 2002:a05:6000:1542:b0:38d:d4b5:84d5 with SMTP id ffacd0b85a97d-38f33f14a9dmr31093f8f.8.1739557243484;
+        Fri, 14 Feb 2025 10:20:43 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:7018:8c7:bdd4:3436])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43961884e88sm49912865e9.26.2025.02.14.10.20.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 10:18:04 -0800 (PST)
-From: Stefano Jordhani <sjordhani@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Stefano Jordhani <sjordhani@gmail.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Joe Damato <jdamato@fastly.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Willem de Bruijn <willemb@google.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Mina Almasry <almasrymina@google.com>,
-	David Wei <dw@davidwei.uk>,
-	linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and infrastructure)),
-	linux-kernel@vger.kernel.org (open list),
-	io-uring@vger.kernel.org (open list:IO_URING),
-	bpf@vger.kernel.org (open list:XDP SOCKETS (AF_XDP))
-Subject: [PATCH net-next v2] net: use napi_id_valid helper
-Date: Fri, 14 Feb 2025 18:17:51 +0000
-Message-ID: <20250214181801.931-1-sjordhani@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Fri, 14 Feb 2025 10:20:42 -0800 (PST)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,  Dave Ertman
+ <david.m.ertman@intel.com>,  "Rafael J. Wysocki" <rafael@kernel.org>,
+  "Stephen Boyd" <sboyd@kernel.org>,  Arnd Bergmann <arnd@arndb.de>,
+  Danilo Krummrich <dakr@kernel.org>,  Conor Dooley
+ <conor.dooley@microchip.com>,  Daire McNamara
+ <daire.mcnamara@microchip.com>,  Philipp Zabel <p.zabel@pengutronix.de>,
+  Douglas Anderson <dianders@chromium.org>,  Andrzej Hajda
+ <andrzej.hajda@intel.com>,  Neil Armstrong <neil.armstrong@linaro.org>,
+  "Robert Foss" <rfoss@kernel.org>,  Laurent Pinchart
+ <Laurent.pinchart@ideasonboard.com>,  Jonas Karlman <jonas@kwiboo.se>,
+  "Jernej Skrabec" <jernej.skrabec@gmail.com>,  Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>,  Maxime Ripard <mripard@kernel.org>,
+  Thomas Zimmermann <tzimmermann@suse.de>,  David Airlie
+ <airlied@gmail.com>,  Simona Vetter <simona@ffwll.ch>,  Hans de Goede
+ <hdegoede@redhat.com>,  Ilpo =?utf-8?Q?J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,
+  Bryan O'Donoghue <bryan.odonoghue@linaro.org>,  Vladimir Kondratiev
+ <vladimir.kondratiev@mobileye.com>,  Gregory CLEMENT
+ <gregory.clement@bootlin.com>,  =?utf-8?Q?Th=C3=A9o?= Lebrun
+ <theo.lebrun@bootlin.com>,
+  Michael Turquette <mturquette@baylibre.com>,  "Abel Vesa"
+ <abelvesa@kernel.org>,  Peng Fan <peng.fan@nxp.com>,  Shawn Guo
+ <shawnguo@kernel.org>,  Sascha Hauer <s.hauer@pengutronix.de>,
+  "Pengutronix Kernel Team" <kernel@pengutronix.de>,  Fabio Estevam
+ <festevam@gmail.com>,  Kevin Hilman <khilman@baylibre.com>,  Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>,
+  <linux-kernel@vger.kernel.org>,  <linux-riscv@lists.infradead.org>,
+  <dri-devel@lists.freedesktop.org>,
+  <platform-driver-x86@vger.kernel.org>,  <linux-mips@vger.kernel.org>,
+  <linux-clk@vger.kernel.org>,  <imx@lists.linux.dev>,
+  <linux-arm-kernel@lists.infradead.org>,
+  <linux-amlogic@lists.infradead.org>
+Subject: Re: [PATCH v3 6/7] clk: clk-imx8mp-audiomix: use the auxiliary
+ device creation helper
+In-Reply-To: <67af6c284c349_1614f3294dd@iweiny-mobl.notmuch> (Ira Weiny's
+	message of "Fri, 14 Feb 2025 10:15:36 -0600")
+References: <20250211-aux-device-create-helper-v3-0-7edb50524909@baylibre.com>
+	<20250211-aux-device-create-helper-v3-6-7edb50524909@baylibre.com>
+	<67af6c284c349_1614f3294dd@iweiny-mobl.notmuch>
+User-Agent: mu4e 1.12.8; emacs 29.4
+Date: Fri, 14 Feb 2025 19:20:40 +0100
+Message-ID: <1jr040xu9z.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-In commit 6597e8d35851 ("netdev-genl: Elide napi_id when not present"),
-napi_id_valid function was added. Use the helper to refactor open-coded
-checks in the source.
+On Fri 14 Feb 2025 at 10:15, Ira Weiny <ira.weiny@intel.com> wrote:
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Stefano Jordhani <sjordhani@gmail.com>
-Reviewed-by: Joe Damato <jdamato@fastly.com>
-Reviewed-by: Jens Axboe <axboe@kernel.dk> # for iouring
----
-v2:
- - Added Joe's and Jens' (for iouring) Reviewed-by tags. 
- - Respinning because my email client mangled my previous patch.
+> Jerome Brunet wrote:
+>> The auxiliary device creation of this driver is simple enough to
+>> use the available auxiliary device creation helper.
+>> 
+>> Use it and remove some boilerplate code.
+>> 
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  drivers/clk/imx/clk-imx8mp-audiomix.c | 56 ++++-------------------------------
+>>  1 file changed, 6 insertions(+), 50 deletions(-)
+>> 
+>> diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
+>> index c409fc7e061869988f83c7df3ef7860500426323..988a5fffeb4e0e481ec57038d9d1f1b43432fc98 100644
+>> --- a/drivers/clk/imx/clk-imx8mp-audiomix.c
+>> +++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
+>> @@ -228,64 +228,20 @@ struct clk_imx8mp_audiomix_priv {
+>>  	struct clk_hw_onecell_data clk_data;
+>>  };
+>>  
+>> -#if IS_ENABLED(CONFIG_RESET_CONTROLLER)
+>
+> I see the Kconfig ...
+>
+>         select AUXILIARY_BUS if RESET_CONTROLLER
+>
+> But I don't see how this code is omitted without AUXILIARY_BUS.  Is this
+> kconfig check safe to remove?
 
- fs/eventpoll.c            | 8 ++++----
- include/net/busy_poll.h   | 4 ++--
- io_uring/napi.c           | 4 ++--
- net/core/dev.c            | 6 +++---
- net/core/netdev-genl.c    | 2 +-
- net/core/page_pool_user.c | 2 +-
- net/core/sock.c           | 2 +-
- net/xdp/xsk.c             | 2 +-
- 8 files changed, 15 insertions(+), 15 deletions(-)
+Ahhh that's what this directive was for.
 
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 7c0980db77b3..2fecf66661e9 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -447,7 +447,7 @@ static bool ep_busy_loop(struct eventpoll *ep, int nonblock)
- 	if (!budget)
- 		budget = BUSY_POLL_BUDGET;
- 
--	if (napi_id >= MIN_NAPI_ID && ep_busy_loop_on(ep)) {
-+	if (napi_id_valid(napi_id) && ep_busy_loop_on(ep)) {
- 		napi_busy_loop(napi_id, nonblock ? NULL : ep_busy_loop_end,
- 			       ep, prefer_busy_poll, budget);
- 		if (ep_events_available(ep))
-@@ -492,7 +492,7 @@ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
- 	 *	or
- 	 * Nothing to do if we already have this ID
- 	 */
--	if (napi_id < MIN_NAPI_ID || napi_id == ep->napi_id)
-+	if (!napi_id_valid(napi_id) || napi_id == ep->napi_id)
- 		return;
- 
- 	/* record NAPI ID for use in next busy poll */
-@@ -546,7 +546,7 @@ static void ep_suspend_napi_irqs(struct eventpoll *ep)
- {
- 	unsigned int napi_id = READ_ONCE(ep->napi_id);
- 
--	if (napi_id >= MIN_NAPI_ID && READ_ONCE(ep->prefer_busy_poll))
-+	if (napi_id_valid(napi_id) && READ_ONCE(ep->prefer_busy_poll))
- 		napi_suspend_irqs(napi_id);
- }
- 
-@@ -554,7 +554,7 @@ static void ep_resume_napi_irqs(struct eventpoll *ep)
- {
- 	unsigned int napi_id = READ_ONCE(ep->napi_id);
- 
--	if (napi_id >= MIN_NAPI_ID && READ_ONCE(ep->prefer_busy_poll))
-+	if (napi_id_valid(napi_id) && READ_ONCE(ep->prefer_busy_poll))
- 		napi_resume_irqs(napi_id);
- }
- 
-diff --git a/include/net/busy_poll.h b/include/net/busy_poll.h
-index 741fa7754700..cab6146a510a 100644
---- a/include/net/busy_poll.h
-+++ b/include/net/busy_poll.h
-@@ -119,7 +119,7 @@ static inline void sk_busy_loop(struct sock *sk, int nonblock)
- #ifdef CONFIG_NET_RX_BUSY_POLL
- 	unsigned int napi_id = READ_ONCE(sk->sk_napi_id);
- 
--	if (napi_id >= MIN_NAPI_ID)
-+	if (napi_id_valid(napi_id))
- 		napi_busy_loop(napi_id, nonblock ? NULL : sk_busy_loop_end, sk,
- 			       READ_ONCE(sk->sk_prefer_busy_poll),
- 			       READ_ONCE(sk->sk_busy_poll_budget) ?: BUSY_POLL_BUDGET);
-@@ -134,7 +134,7 @@ static inline void skb_mark_napi_id(struct sk_buff *skb,
- 	/* If the skb was already marked with a valid NAPI ID, avoid overwriting
- 	 * it.
- 	 */
--	if (skb->napi_id < MIN_NAPI_ID)
-+	if (!napi_id_valid(skb->napi_id))
- 		skb->napi_id = napi->napi_id;
- #endif
- }
-diff --git a/io_uring/napi.c b/io_uring/napi.c
-index b1ade3fda30f..4a10de03e426 100644
---- a/io_uring/napi.c
-+++ b/io_uring/napi.c
-@@ -44,7 +44,7 @@ int __io_napi_add_id(struct io_ring_ctx *ctx, unsigned int napi_id)
- 	struct io_napi_entry *e;
- 
- 	/* Non-NAPI IDs can be rejected. */
--	if (napi_id < MIN_NAPI_ID)
-+	if (!napi_id_valid(napi_id))
- 		return -EINVAL;
- 
- 	hash_list = &ctx->napi_ht[hash_min(napi_id, HASH_BITS(ctx->napi_ht))];
-@@ -87,7 +87,7 @@ static int __io_napi_del_id(struct io_ring_ctx *ctx, unsigned int napi_id)
- 	struct io_napi_entry *e;
- 
- 	/* Non-NAPI IDs can be rejected. */
--	if (napi_id < MIN_NAPI_ID)
-+	if (!napi_id_valid(napi_id))
- 		return -EINVAL;
- 
- 	hash_list = &ctx->napi_ht[hash_min(napi_id, HASH_BITS(ctx->napi_ht))];
-diff --git a/net/core/dev.c b/net/core/dev.c
-index d5ab9a4b318e..bcb266ab2912 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -1008,7 +1008,7 @@ struct net_device *dev_get_by_napi_id(unsigned int napi_id)
- 
- 	WARN_ON_ONCE(!rcu_read_lock_held());
- 
--	if (napi_id < MIN_NAPI_ID)
-+	if (!napi_id_valid(napi_id))
- 		return NULL;
- 
- 	napi = napi_by_id(napi_id);
-@@ -6740,7 +6740,7 @@ static void napi_hash_add(struct napi_struct *napi)
- 
- 	/* 0..NR_CPUS range is reserved for sender_cpu use */
- 	do {
--		if (unlikely(++napi_gen_id < MIN_NAPI_ID))
-+		if (unlikely(!napi_id_valid(++napi_gen_id)))
- 			napi_gen_id = MIN_NAPI_ID;
- 	} while (napi_by_id(napi_gen_id));
- 
-@@ -6911,7 +6911,7 @@ netif_napi_dev_list_add(struct net_device *dev, struct napi_struct *napi)
- 
- 	higher = &dev->napi_list;
- 	list_for_each_entry(pos, &dev->napi_list, dev_list) {
--		if (pos->napi_id >= MIN_NAPI_ID)
-+		if (napi_id_valid(pos->napi_id))
- 			pos_id = pos->napi_id;
- 		else if (pos->config)
- 			pos_id = pos->config->napi_id;
-diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
-index c18bb53d13fd..22ac51356d9f 100644
---- a/net/core/netdev-genl.c
-+++ b/net/core/netdev-genl.c
-@@ -267,7 +267,7 @@ netdev_nl_napi_dump_one(struct net_device *netdev, struct sk_buff *rsp,
- 
- 	prev_id = UINT_MAX;
- 	list_for_each_entry(napi, &netdev->napi_list, dev_list) {
--		if (napi->napi_id < MIN_NAPI_ID)
-+		if (!napi_id_valid(napi->napi_id))
- 			continue;
- 
- 		/* Dump continuation below depends on the list being sorted */
-diff --git a/net/core/page_pool_user.c b/net/core/page_pool_user.c
-index 9d8a3d8597fa..c82a95beceff 100644
---- a/net/core/page_pool_user.c
-+++ b/net/core/page_pool_user.c
-@@ -233,7 +233,7 @@ page_pool_nl_fill(struct sk_buff *rsp, const struct page_pool *pool,
- 		goto err_cancel;
- 
- 	napi_id = pool->p.napi ? READ_ONCE(pool->p.napi->napi_id) : 0;
--	if (napi_id >= MIN_NAPI_ID &&
-+	if (napi_id_valid(napi_id) &&
- 	    nla_put_uint(rsp, NETDEV_A_PAGE_POOL_NAPI_ID, napi_id))
- 		goto err_cancel;
- 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index a197f0a0b878..53c7af0038c4 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2042,7 +2042,7 @@ int sk_getsockopt(struct sock *sk, int level, int optname,
- 		v.val = READ_ONCE(sk->sk_napi_id);
- 
- 		/* aggregate non-NAPI IDs down to 0 */
--		if (v.val < MIN_NAPI_ID)
-+		if (!napi_id_valid(v.val))
- 			v.val = 0;
- 
- 		break;
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index 89d2bef96469..0edf25973072 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -875,7 +875,7 @@ static bool xsk_no_wakeup(struct sock *sk)
- #ifdef CONFIG_NET_RX_BUSY_POLL
- 	/* Prefer busy-polling, skip the wakeup. */
- 	return READ_ONCE(sk->sk_prefer_busy_poll) && READ_ONCE(sk->sk_ll_usec) &&
--		READ_ONCE(sk->sk_napi_id) >= MIN_NAPI_ID;
-+		napi_id_valid(READ_ONCE(sk->sk_napi_id));
- #else
- 	return false;
- #endif
+I thought it was really odd to have an #if on RESET while auxialiary
+device was supposed to properly decouple the clock and reset part.
 
-base-commit: 7a7e0197133d18cfd9931e7d3a842d0f5730223f
+To keep things as they were I'll add an #if on CONFIG_AUXILIARY_BUS I
+wonder if this driver should select CONFIG_AUXILIARY_BUS instead ?
+
+>
+> Ira
+>
+>> -
+>> -static void clk_imx8mp_audiomix_reset_unregister_adev(void *_adev)
+>> -{
+>> -	struct auxiliary_device *adev = _adev;
+>> -
+>> -	auxiliary_device_delete(adev);
+>> -	auxiliary_device_uninit(adev);
+>> -}
+>> -
+>> -static void clk_imx8mp_audiomix_reset_adev_release(struct device *dev)
+>> +static int clk_imx8mp_audiomix_reset_controller_register(struct device *dev)
+>>  {
+>> -	struct auxiliary_device *adev = to_auxiliary_dev(dev);
+>> -
+>> -	kfree(adev);
+>> -}
+>> -
+>> -static int clk_imx8mp_audiomix_reset_controller_register(struct device *dev,
+>> -							 struct clk_imx8mp_audiomix_priv *priv)
+>> -{
+>> -	struct auxiliary_device *adev __free(kfree) = NULL;
+>> -	int ret;
+>> +	struct auxiliary_device *adev;
+>>  
+>>  	if (!of_property_present(dev->of_node, "#reset-cells"))
+>>  		return 0;
+>>  
+>> -	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
+>> -	if (!adev)
+>> -		return -ENOMEM;
+>> -
+>> -	adev->name = "reset";
+>> -	adev->dev.parent = dev;
+>> -	adev->dev.release = clk_imx8mp_audiomix_reset_adev_release;
+>> -
+>> -	ret = auxiliary_device_init(adev);
+>> -	if (ret)
+>> -		return ret;
+>> -
+>> -	ret = auxiliary_device_add(adev);
+>> -	if (ret) {
+>> -		auxiliary_device_uninit(adev);
+>> -		return ret;
+>> -	}
+>> -
+>> -	return devm_add_action_or_reset(dev, clk_imx8mp_audiomix_reset_unregister_adev,
+>> -					no_free_ptr(adev));
+>> -}
+>> -
+>> -#else /* !CONFIG_RESET_CONTROLLER */
+>> +	adev = devm_auxiliary_device_create(dev, "reset", NULL, 0);
+>> +	if (IS_ERR_OR_NULL(adev))
+>> +		return PTR_ERR(adev);
+>>  
+>> -static int clk_imx8mp_audiomix_reset_controller_register(struct device *dev,
+>> -							 struct clk_imx8mp_audiomix_priv *priv)
+>> -{
+>>  	return 0;
+>>  }
+>>  
+>> -#endif /* !CONFIG_RESET_CONTROLLER */
+>> -
+>>  static void clk_imx8mp_audiomix_save_restore(struct device *dev, bool save)
+>>  {
+>>  	struct clk_imx8mp_audiomix_priv *priv = dev_get_drvdata(dev);
+>> @@ -408,7 +364,7 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+>>  	if (ret)
+>>  		goto err_clk_register;
+>>  
+>> -	ret = clk_imx8mp_audiomix_reset_controller_register(dev, priv);
+>> +	ret = clk_imx8mp_audiomix_reset_controller_register(dev);
+>>  	if (ret)
+>>  		goto err_clk_register;
+>>  
+>> 
+>> -- 
+>> 2.45.2
+>> 
+
 -- 
-2.43.0
-
+Jerome
