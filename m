@@ -1,102 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FBB245B0B;
-	Fri, 14 Feb 2025 10:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3844522F388
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 10:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739530263; cv=none; b=ukrsRa3rtFdSmfweaNN06X8pXA7NJ20tnJKXiQZkEozLO2nN4MF1pnYGAvHtxOHEsciz0hyeQR1r9KG878vxOpLMTCw+PtRhYIAcDSAPEXKcFk5e4+cPtHAaaSG1Z2WWK4HyuySkTilRvqP9zaGPKMo6oIvWJYTlyxUBrRPveiA=
+	t=1739530266; cv=none; b=Zf1dua/S9Ktr/weE9+hSORRQvgqve/OMTOyNE2e3cJpPEx2fXpceMS/seXIfKHB3NOjFH68WuehFAxc0ArDJQPpSNRubLn5b+rVV+l8uIut3e/MOhKrTxVRKQ/ky76P+XXilPsmYF1VrxJNm4LQ3+ot96lmQklJh9x7wRlM0xOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739530263; c=relaxed/simple;
-	bh=6Jn8hY/sj0Vyp9Oc8m9BXlUSR+CXepQ6Dz6GoxyvGmM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YMJlFOA8HZ/KJ4J/qgaj4BaCP7e7nIU56JM9GM7HfAgPOC24kwsIPrfFa0xYCbsWDDwVvSSVNnt1fT0PzEHxKE0ECnC0FIPSco449J0OrJANXgB3A60HdjtlLvpERDxrKPLVyeQ0/zcqHWaH/HZd73f5esI4e5tAuFUeiWDiQ5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VRsIYOrX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739530266; c=relaxed/simple;
+	bh=uOmdwsErYI2TXvFPdID0TlewhOZbmAK4WYQksi9Me8k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Oa4IoaWlzy3IwY84t4eEyypYSQmnxFDcvn0Kb4i3F89y1br0Gr7+ANZKsKlgXrlEYpNAm1Hg0j4zQt43JW5m9Y/thNjlqMxBIqVMcQJHrOIN6RGdp+eaXgifkGUZ2DWhjuJtvO67F3Yg8twffS5tbUOXDfFVciBTHns+Rlaqm/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=I/EAPNtQ; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRsIYOrX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C27EC4CEDF;
-	Fri, 14 Feb 2025 10:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739530262;
-	bh=6Jn8hY/sj0Vyp9Oc8m9BXlUSR+CXepQ6Dz6GoxyvGmM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VRsIYOrXB4NBmaHnCnh1uRaIbgK1hXsNVaNz80MfbnD6MVpllwkX+Ak12MXoDJHcV
-	 ys6MmQ9o2cpS8i3Vi7Bu3Lc0qaPCyUl/+Wehmwb+DWyODTsnbbG70xkXTu09G85ek6
-	 oKOzzzEfsyiggpI64zaVrWPSzL7j2WgI8P+RDQH0vdoZuqQ/SL8X7IFVD98QPIX2up
-	 Yymer9b//q1dKe/m4zomdwTDoM8rJOr3/EgutNtanp1n1AQiwty6iUdSBdjPo2XY+M
-	 CQ0VKj0yNlCs2PAom9g9m52G7jyDnzJIpE1f6SMrCUf09pyfQt2/ehewrWeFXSS//H
-	 GhfM6r7edJq/w==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-543e49a10f5so2015147e87.1;
-        Fri, 14 Feb 2025 02:51:02 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUjSLQE5g84o/XvpuGjKIMXRjs3AGrG72dSftBGtZjHKVWkZTEDYX0/IbuJbichzRuAcqMFU7634QQBeARv@vger.kernel.org, AJvYcCUsdSNcKZq+PVIX+9FsZqtU1ovxdK7JxjvT2xyV5yHmTP6PiQjnADJeIssu72modoze9RXEYOwC@vger.kernel.org, AJvYcCWTfDP18vF+23BTbuCFp4V/84x1fE26w5LwEtnxROSQA6AjPdd8t9KDRI42XPqMZKbF9trBMboideJtK/A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrfytJiiN+4YBKs4ilfa7nt5U+/lPAhZRaKAy/f+VUimZ0NpgZ
-	3OrY3e3qydDt6945VXOsGS+huAHI/BtK3SWvROdCtXlmYATCDyf60zjt147jmMERtMqJhRvsqpa
-	Df9vYGiX7vT7GEq2HaUwQBzgCXkc=
-X-Google-Smtp-Source: AGHT+IE51G43p8pR1toPTVSYBg68ovY9ZnGfaoNwwqJs6GgOaOCJnB/+CJEzpaQ+RZJoWPf4T1kKfJId9pTwob2I0YE=
-X-Received: by 2002:a05:6512:1155:b0:545:296e:ac28 with SMTP id
- 2adb3069b0e04-545296eaef4mr578053e87.24.1739530260860; Fri, 14 Feb 2025
- 02:51:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="I/EAPNtQ"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ab7ca64da5dso361304366b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 02:51:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1739530260; x=1740135060; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iKrRYi2DcewiQ8UFnMsHdUIKuoHMXLq1gLMqIZNXnR4=;
+        b=I/EAPNtQ3ZQuUbk3GSDv55zl+qgRzROIp+GBol8h9qQQvCKpL9aUdFAMiUgS4G2VpT
+         LSkT9aFZG/k6qod1d85Z/rDLXU0l1m4lKgURKkMqgCQAko7/EoOA58VDB0hGS6I6iHga
+         5s+AN9AWuiATV3IIzFKSrXiyIUxFv1AmKtGrVcMBWBJaeX08EwkIimetVm2g6+IBF+46
+         FkxqZr0mL1wbRKmklUm5Csl0s1g88KBji8palCc1fj4Taxop8Ld9hoTbamDidpssmNoz
+         pv5E002bXO8tV+jOYKg5hqnBURcfhoEn2FfPTFKu6qxr6zmIuCyvTVM3LYn5JU24wvbj
+         HLWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739530260; x=1740135060;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iKrRYi2DcewiQ8UFnMsHdUIKuoHMXLq1gLMqIZNXnR4=;
+        b=an4MapOY/pCEoGnEv3idRTtH7/XHhjL1OJmE5HwDXZBkWZgAoYn7B9b3wR8eEcloME
+         5ymlXsQo/MWYWYqs6xeReQazU5J+yp/QTvIKP7Sg3hsJ7tI4rl233C3msLJR+PJH1BtV
+         N+8NbVN3nQkmhKL6CVBroe0XEutja7ZibCgyqMpGAC7RfbmCxN2prpSuf5NBLsycOIbG
+         EVR0T2tF3Tb3cO+F8IMPkeeTuh+pRrHlX00XuN9gpGhljwyDxq1lMIkABJiLgbZqBqKT
+         2rL4eZ2TeAvQGP6Sg1R52jTpQ29SM5V+UD5YFlCSO3E+fV7TTep+S2C0C2OXXRIR7aUU
+         uvzA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/d79zU8IDPrvO3aIF3hwbBQKt4eRBlXr9Ee6hsA1s9u6jYtgzyv6ZWDwtK6eOQXCX4jYYlIUsQAakBW0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0sx6rUXJLpVwpW0TD/fYYan+uH1xnBYe8+Ra8fYJvDP7tBRV/
+	pxqgXvCMThD2Kk39ejTV9dtVyAHCOPfp76pSygroqfBPM7J0kIOq41ILR0CYyneVfWm1CKpg+Rc
+	Q
+X-Gm-Gg: ASbGncv5OszSjStgbcQyD4A7R23CydOCXsl3dwXKXRqBhMqtUbloe+vBa3qoVUuTcJZ
+	HbpqOfuYE3LbUHaZmC8vfns4zm86XpBHJev11mitQvjOgYZoqBDAZWHavMX5+hTltbOgZefPK70
+	h9EP+Ggn7vl8ko/T20Z33VzXX3nMywfSXM59qLn4YylkZ9V2tADPH2jIzk6lzfJhp5GMudt6SHL
+	TF0QM00jGcvFhbrm87rR7KDcC2+DU5fgwbBZo4CsFxF3u0nftqUxOcPPloxALv6KrhQkhyhCV8P
+	wJm9UV+usWJgRVW5z5zj0iZMAzT3IbJegnw1ipw=
+X-Google-Smtp-Source: AGHT+IF+nI8uaFR5F3xBn/U31UKTP0rILJYX53CQrzbkQArWkDkAxcpVmIkFW+KNudbG4M+h4swvsA==
+X-Received: by 2002:a17:907:2d88:b0:ab7:b896:b80c with SMTP id a640c23a62f3a-aba50fa0b94mr511634166b.9.1739530260452;
+        Fri, 14 Feb 2025 02:51:00 -0800 (PST)
+Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba532575b8sm314551266b.44.2025.02.14.02.50.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 02:51:00 -0800 (PST)
+From: Marco Crivellari <marco.crivellari@suse.com>
+To: linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: [PATCH 0/1] MIPS: Fix idle VS timer enqueue
+Date: Fri, 14 Feb 2025 11:50:46 +0100
+Message-ID: <20250214105047.150835-1-marco.crivellari@suse.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212154718.44255-1-ebiggers@kernel.org> <Z61yZjslWKmDGE_t@gondor.apana.org.au>
- <20250213063304.GA11664@sol.localdomain> <Z66uH_aeKc7ubONg@gondor.apana.org.au>
- <20250214033518.GA2771@sol.localdomain> <Z669mxPsSpej6K6K@gondor.apana.org.au>
-In-Reply-To: <Z669mxPsSpej6K6K@gondor.apana.org.au>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 14 Feb 2025 11:50:49 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHS+BaLnUSQf9uiTvXhSee=+8W1B-DY5MFHTxgpe1iMyg@mail.gmail.com>
-X-Gm-Features: AWEUYZk9BVG_mnviM5EBJUUBfeH7CmJgTUXwh6dulpUSYK22Lsgwd5629FUH9e4
-Message-ID: <CAMj1kXHS+BaLnUSQf9uiTvXhSee=+8W1B-DY5MFHTxgpe1iMyg@mail.gmail.com>
-Subject: Re: [PATCH v8 0/7] Optimize dm-verity and fsverity using multibuffer hashing
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Eric Biggers <ebiggers@kernel.org>, fsverity@lists.linux.dev, 
-	linux-crypto@vger.kernel.org, dm-devel@lists.linux.dev, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Sami Tolvanen <samitolvanen@google.com>, Alasdair Kergon <agk@redhat.com>, 
-	Mike Snitzer <snitzer@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Mikulas Patocka <mpatocka@redhat.com>, David Howells <dhowells@redhat.com>, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 14 Feb 2025 at 04:51, Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> On Thu, Feb 13, 2025 at 07:35:18PM -0800, Eric Biggers wrote:
-> >
-> > It absolutely is designed for an obsolete form of hardware offload.  Have you
-> > ever tried actually using it?  Here's how to hash a buffer of data with shash:
-> >
-> >       return crypto_shash_tfm_digest(tfm, data, size, out)
-> >
-> > ... and here's how to do it with the SHA-256 library, for what it's worth:
-> >
-> >       sha256(data, size, out)
-> >
-> > and here's how to do it with ahash:
->
-> Try the new virt ahash interface, and we could easily put the
-> request object on the stack for sync algorithms:
->
->         SYNC_AHASH_REQUEST_ON_STACK(req, alg);
->
->         ahash_request_set_callback(req, CRYPTO_TFM_REQ_MAY_SLEEP, NULL, NULL);
->         ahash_request_set_virt(req, data, out, size);
->
->         return crypto_ahash_digest(req);
->
+This patch aims to fix idle routine while the CPU receive an interrupt,
+because __r4k_wait() only checks if TIF_NEED_RESCHED is set before 
+going to sleep.
+The same behavior has been changed in LoongArch [1].
 
-Whatever happened to not adding infrastructure to the kernel without a user?
+Code (cross) compiled successfully and I manage to test it on a VM
+emulating a malta board. I ran QEMU with:
 
-You keep saying how great this will all work for hypothetical cases,
-and from any other contributor, we would expect to see working code
-that demonstrates the advantages of the approach.
+qemu-system-mips64el -M malta -m 2G -kernel vmlinux -serial stdio -drive \
+file=rootfs.ext2,format=raw -append "rootwait root=/dev/sda" -cpu 5Kc
 
-But it seems you have no interest in actually writing this networking
-code, and nor has anybody else, as far as I can tell, which makes your
-claims rather dubious.
+rootfs generated using buildroot (malta default configuration).
 
-IOW, even if all your claims are correct, it really makes no
-difference when nobody can be bothered to take advantage of it, and we
-should just go with Eric's working code.
+- [1] https://github.com/chenhuacai/linux/commit/a8aa673ea46c03b3f62992ffa4ffe810ac84f6e3
+
+Marco Crivellari (1):
+  MIPS: Fix idle VS timer enqueue
+
+ arch/mips/kernel/genex.S | 36 ++++++++++++++++++++----------------
+ arch/mips/kernel/idle.c  |  1 -
+ 2 files changed, 20 insertions(+), 17 deletions(-)
+
+-- 
+2.48.1
+
