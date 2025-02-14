@@ -1,196 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AC6227BA3;
-	Fri, 14 Feb 2025 09:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFB4229B11
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739523721; cv=none; b=AL/BDALQAHsu7r1H3Fgt2Dx/VUfW7VS3psAlUxWJiT+2bfwA7WjA8KgKaG8vaGhD1WmHJZ+b91bVBa/KqAZhuP+lA4UyO6jiZmRRAhP7mVOkf6BmBwMYgElbUnIxgKgiW5iQ2DbBBA7+RVYpsOyACdNJ+kvb07Gv5pxqY7sBbAQ=
+	t=1739523805; cv=none; b=A/MKZBYyydkLg8fMUykPfrgzK0MBm9rlkKOdZRCPLkxxKecHaOc6UyLmgcVhwmjuGYeSp2NSAHPrSRwfrd0VVHGDYfZYqtFTsmqG0/3bJMBIcZroAutpZpK5u6GvSGhnLK93INcnwFctVvVcdVsQylFnCQyA9JzEU8YCf6Rtw3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739523721; c=relaxed/simple;
-	bh=Msx+YmHuz2vc+eqfMfJj/R+QbkCQEJDAFr68K21fjTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H4Og19DRMcqtgyyTDbH48odjs2+8AByMQ3ZH837iQiqR/mk2A02KPE+4byqBeZ055q1cn6qx/070seH/XnlafGciXNLcOLQvZxe5BjyMOI7CP+WMMXi2+jjoROFFy/QalWwq+YQAXoDAzuLqYtuBqZuZIeGNqvysUZ4Jn01wtJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYvSLL/k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739523805; c=relaxed/simple;
+	bh=iTJc0cMLK8/kUGnVlLkEpjMd1IDc2KhUACzQgpu9b34=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J3sf5DsjAKBPuJwbyN3/LMs4dzdHYgicE80KnIukGtpvO43xcBgOlD9XBCikBRViGQGbijnmR5dfZSi0tWtyFp8r+2QVHW/jVyWGBybsSWJj5QjcpZB34un+3xxGWZ/9FQeB48+PiGkWCLY/Gsvo5h0GG3kLewx5w9gn8RJEgwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NJst4X3S; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYvSLL/k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA2A0C4CED1;
-	Fri, 14 Feb 2025 09:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739523721;
-	bh=Msx+YmHuz2vc+eqfMfJj/R+QbkCQEJDAFr68K21fjTI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=iYvSLL/kS+3m7qVerqmAHaPWSmarIMp+MmTwlMLFRbadw3WT991907W5QdKFpX32N
-	 lTMahCBbWU3BYz4XvrvwL/2oc14fdkADjJvfJ+FbYEU12F+HpnKTbRVL0gMmrpu/8p
-	 KrEsFXm2GO2ouIk0/sEXib7u3AS6RbLEEAYERb40JZvZxiObOPq1JXrAdRZ7fxHf7v
-	 ZYU9NeFUB5pljRafyLK1hr39R4f8H6ZAlKZGzLCwxKLb0vZRF5IenjMsL50AsOOTCG
-	 KXDO8IeJQEw/qVfEBT5UJZDLbVppd1diaw3O3sgh+Ywo2bHzk6KEh7lzQep0PmGnd5
-	 7QO/uhBe6HojQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id AB242CE0426; Fri, 14 Feb 2025 01:01:56 -0800 (PST)
-Date: Fri, 14 Feb 2025 01:01:56 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>, rcu <rcu@vger.kernel.org>
-Subject: Re: [PATCH 3/3] rcu/exp: Remove needless CPU up quiescent state
- report
-Message-ID: <fe931d3a-bf97-4be5-8420-f1fcb55e6a46@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250213232559.34163-1-frederic@kernel.org>
- <20250213232559.34163-4-frederic@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NJst4X3S"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30737db1ab1so18648271fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 01:03:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739523800; x=1740128600; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iTJc0cMLK8/kUGnVlLkEpjMd1IDc2KhUACzQgpu9b34=;
+        b=NJst4X3ShKfYilNvdBaAeZUSsNND0v2If27aHRsb398vytgj3Mv6zvMZv/ElAHtpAd
+         gEi16QAbNvI3UrPJTZxa/3Nf26mrJhW7hS5aDIZxPB6dH3tJwSl3LaZGQlIFv6sX5YN/
+         uTEJlU6hbBbDAfkK01+kD57zdhE3+3h3ipqeEh85BMtvW53mFuZGjhNEn8Rp77g94DQt
+         N7IDS8voyAohHxca/hnh3RypNejTYYyyFGd76f82LbuPfZV0Rp1VSi845s9GCykNLV90
+         5bZNXCQt3QkKGIiVSjsqT4q+NC9GwlR2CTT+Osqb+8YLtL1gnS+q3zde+7v66GAOm1wS
+         NUAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739523800; x=1740128600;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iTJc0cMLK8/kUGnVlLkEpjMd1IDc2KhUACzQgpu9b34=;
+        b=f/9y4cNcrLrGj8YgzPUfU6IlxbEo9tT/gVAJeT5jm+UZ1F8V9XTCa4Olk1EoCSbq48
+         Z32rdiV6eZ9sZ7VRp6X64ycLwV6wu2pb0NOE9aVwVCtK4Eh0Sh1ha2FwhL69WORllBnq
+         Ofs+uSSEkMtqsQeGdIbBdO5FDjMDDEN9lgCmNJ49RORLAiVS/7pOFprehlG0IKP2sAI6
+         xnFcXToi5chmK2SRvjv3Y9tap+oNWdrUNf/2o5ij01SLXzA6sP91PbIauQcpmoO5ZmmB
+         6mP6cpg39Q73+/QIjESRnTD/ljRjB87/OwXiwMkN68HlJubGcgNME8YNQHtAliPMGb++
+         LGRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXh9Qf8JI4EmV4jf8rZ1lb9cE7QIZBXj3rPSwAYZwWtC0kn8+KoCRezSGnQtY6cYLRaorq6wT9o+bdEMAk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTJpGfQ8g+TenFreczZJQHwXlxQlvwkWQyGbLcl9qGm90aEgwv
+	XGcmEiwLuw2fEk0BZKM8lncsF6wD4bgxzlyPqiL2sdE4k/IctHWh0i2W8dJDv4xBa1qcFnwrW1E
+	66dDT5d4L2s2SQ2abG8sfjh2973xi7NAILW0hjg==
+X-Gm-Gg: ASbGncvw8n1FHf6GzmsZ7dvJYLEpZL56i/4PLwEw9yvhlpdMOLHwaC04tOZS3Vcbf+6
+	2M5GgKT6/DyK7MxREtOEeNONULqkY6/ONVrf8srQpsQ5YQUNYrE7fJRUi5Odr5clyOk2+qEE+
+X-Google-Smtp-Source: AGHT+IF3HDdrnSW3BLW3bq9cqh3LStu3LTvk4uCfYArhbMCiGtiuvWWNtxSZE4wwSFlSY9sTduBuIBS2XR5LiRCWzdc=
+X-Received: by 2002:a05:651c:221d:b0:300:3a15:8f1f with SMTP id
+ 38308e7fff4ca-30903927410mr38426071fa.32.1739523799914; Fri, 14 Feb 2025
+ 01:03:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213232559.34163-4-frederic@kernel.org>
+References: <20250207-bcm21664-pinctrl-v1-0-e7cfac9b2d3b@gmail.com> <20250207-bcm21664-pinctrl-v1-2-e7cfac9b2d3b@gmail.com>
+In-Reply-To: <20250207-bcm21664-pinctrl-v1-2-e7cfac9b2d3b@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 14 Feb 2025 10:03:08 +0100
+X-Gm-Features: AWEUYZn7NND4I1Mgn5Kpd46GvIrBPpNFG6Ldn40L_YZFFLWpE1zhxOGmLe4jdWE
+Message-ID: <CACRpkdbwVdEa_xgR=wRfkPN2_tpYGnbdpQkTtvgDMRSKPT-GEQ@mail.gmail.com>
+Subject: Re: [PATCH 2/7] pinctrl: bcm281xx: Fix incorrect regmap max_registers value
+To: Artur Weber <aweber.kernel@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Christian Daudt <bcm@fixthebug.org>, 
+	Sherman Yin <syin@broadcom.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Stanislav Jakubek <stano.jakubek@gmail.com>, ~postmarketos/upstreaming@lists.sr.ht
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 14, 2025 at 12:25:59AM +0100, Frederic Weisbecker wrote:
-> A CPU coming online checks for an ongoing grace period and reports
-> a quiescent state accordingly if needed. This special treatment that
-> shortcuts the expedited IPI finds its origin as an optimization purpose
-> on the following commit:
-> 
-> 	338b0f760e84 (rcu: Better hotplug handling for synchronize_sched_expedited()
-> 
-> The point is to avoid an IPI while waiting for a CPU to become online
-> or failing to become offline.
-> 
-> However this is pointless and even error prone for several reasons:
-> 
-> * If the CPU has been seen offline in the first round scanning offline
->   and idle CPUs, no IPI is even tried and the quiescent state is
->   reported on behalf of the CPU.
-> 
-> * This means that if the IPI fails, the CPU just became offline. So
->   it's unlikely to become online right away, unless the cpu hotplug
->   operation failed and rolled back, which is a rare event that can
->   wait a jiffy for a new IPI to be issued.
-> 
-> * But then the "optimization" applying on failing CPU hotplug down only
->   applies to !PREEMPT_RCU.
-> 
-> * This force reports a quiescent state even if ->cpu_no_qs.b.exp is not
->   set. As a result it can race with remote QS reports on the same rdp.
->   Fortunately it happens to be OK but an accident is waiting to happen.
-> 
-> For all those reasons, remove this optimization that doesn't look worthy
-> to keep around.
+On Fri, Feb 7, 2025 at 9:02=E2=80=AFPM Artur Weber <aweber.kernel@gmail.com=
+> wrote:
 
-Thank you for digging into this!
+> The max_registers value does not take into consideration the stride;
+> currently, it's set to the number of the last pin, but this does not
+> accurately represent the final register.
+>
+> Fix this by multiplying the current value by 4.
+>
+> Fixes: 54b1aa5a5b16 ("ARM: pinctrl: Add Broadcom Capri pinctrl driver")
+> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 
-When I ran tests that removed the call to sync_sched_exp_online_cleanup()
-a few months ago, I got grace-period hangs [1].  Has something changed
-to make this safe?
+This looks like it could be causing regressions so I pulled this patch out
+and applied it for fixes.
 
-							Thanx, Paul
-
-[1] https://docs.google.com/document/d/1-JQ4QYF1qid0TWSLa76O1kusdhER2wgm0dYdwFRUzU8/edit?usp=sharing
-
-> Reported-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> ---
->  kernel/rcu/tree.c     |  2 --
->  kernel/rcu/tree_exp.h | 45 ++-----------------------------------------
->  2 files changed, 2 insertions(+), 45 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 8625f616c65a..86935fe00397 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -151,7 +151,6 @@ static void rcu_report_qs_rnp(unsigned long mask, struct rcu_node *rnp,
->  			      unsigned long gps, unsigned long flags);
->  static void invoke_rcu_core(void);
->  static void rcu_report_exp_rdp(struct rcu_data *rdp);
-> -static void sync_sched_exp_online_cleanup(int cpu);
->  static void check_cb_ovld_locked(struct rcu_data *rdp, struct rcu_node *rnp);
->  static bool rcu_rdp_is_offloaded(struct rcu_data *rdp);
->  static bool rcu_rdp_cpu_online(struct rcu_data *rdp);
-> @@ -4259,7 +4258,6 @@ int rcutree_online_cpu(unsigned int cpu)
->  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
->  	if (rcu_scheduler_active == RCU_SCHEDULER_INACTIVE)
->  		return 0; /* Too early in boot for scheduler work. */
-> -	sync_sched_exp_online_cleanup(cpu);
->  
->  	// Stop-machine done, so allow nohz_full to disable tick.
->  	tick_dep_clear(TICK_DEP_BIT_RCU);
-> diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-> index caff16e441d1..a3f962eb7057 100644
-> --- a/kernel/rcu/tree_exp.h
-> +++ b/kernel/rcu/tree_exp.h
-> @@ -751,12 +751,8 @@ static void rcu_exp_handler(void *unused)
->  	struct task_struct *t = current;
->  
->  	/*
-> -	 * First, is there no need for a quiescent state from this CPU,
-> -	 * or is this CPU already looking for a quiescent state for the
-> -	 * current grace period?  If either is the case, just leave.
-> -	 * However, this should not happen due to the preemptible
-> -	 * sync_sched_exp_online_cleanup() implementation being a no-op,
-> -	 * so warn if this does happen.
-> +	 * WARN if the CPU is unexpectedly already looking for a
-> +	 * QS or has already reported one.
->  	 */
->  	ASSERT_EXCLUSIVE_WRITER_SCOPED(rdp->cpu_no_qs.b.exp);
->  	if (WARN_ON_ONCE(!(READ_ONCE(rnp->expmask) & rdp->grpmask) ||
-> @@ -803,11 +799,6 @@ static void rcu_exp_handler(void *unused)
->  	WARN_ON_ONCE(1);
->  }
->  
-> -/* PREEMPTION=y, so no PREEMPTION=n expedited grace period to clean up after. */
-> -static void sync_sched_exp_online_cleanup(int cpu)
-> -{
-> -}
-> -
->  /*
->   * Scan the current list of tasks blocked within RCU read-side critical
->   * sections, printing out the tid of each that is blocking the current
-> @@ -885,38 +876,6 @@ static void rcu_exp_handler(void *unused)
->  	rcu_exp_need_qs();
->  }
->  
-> -/* Send IPI for expedited cleanup if needed at end of CPU-hotplug operation. */
-> -static void sync_sched_exp_online_cleanup(int cpu)
-> -{
-> -	unsigned long flags;
-> -	int my_cpu;
-> -	struct rcu_data *rdp;
-> -	int ret;
-> -	struct rcu_node *rnp;
-> -
-> -	rdp = per_cpu_ptr(&rcu_data, cpu);
-> -	rnp = rdp->mynode;
-> -	my_cpu = get_cpu();
-> -	/* Quiescent state either not needed or already requested, leave. */
-> -	if (!(READ_ONCE(rnp->expmask) & rdp->grpmask) ||
-> -	    READ_ONCE(rdp->cpu_no_qs.b.exp)) {
-> -		put_cpu();
-> -		return;
-> -	}
-> -	/* Quiescent state needed on current CPU, so set it up locally. */
-> -	if (my_cpu == cpu) {
-> -		local_irq_save(flags);
-> -		rcu_exp_need_qs();
-> -		local_irq_restore(flags);
-> -		put_cpu();
-> -		return;
-> -	}
-> -	/* Quiescent state needed on some other CPU, send IPI. */
-> -	ret = smp_call_function_single(cpu, rcu_exp_handler, NULL, 0);
-> -	put_cpu();
-> -	WARN_ON_ONCE(ret);
-> -}
-> -
->  /*
->   * Because preemptible RCU does not exist, we never have to check for
->   * tasks blocked within RCU read-side critical sections that are
-> -- 
-> 2.46.0
-> 
+Yours,
+Linus Walleij
