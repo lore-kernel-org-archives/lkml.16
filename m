@@ -1,105 +1,220 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8592B24291F
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 17:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C88264A9D;
+	Fri, 14 Feb 2025 17:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739552464; cv=none; b=duT8CFS7TGoL6slP7M3TlpJJ9Jec2heCDR2FWtENhQJNS+pwF78RXbMDQPe0La/fc+WiGINS0tKVCa5zeu21tFJ11XysiKS+/sXDhrw4v+sNcKsUy+GUTdM6sIrwDgME7EpibiHRVMiVXIedFgcr0ap6PpYsfq4XPvtfCpTaLNM=
+	t=1739552466; cv=none; b=iO2bwHafBG3qr8vgAkXFcgE/navRTvsAKm6CvLSWI9gEOyNN27VoTdGzvVwFiqwGB5Z1fG6ZxEzzOpZuqOOdSbK9p8n0L5D9/s6mSNIKsbeqMxylfCIX1fkMrws6dYXX3UCb4Ow8koY3Wzrt7kImFZGs/foPFwv0BaLPj6GB5KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739552464; c=relaxed/simple;
-	bh=eGqfS78pmJ/bj5BPsCQeo9hU2Hyn6ObIUQO0AmB2+Co=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b9MnnY1qbAVxcNhPZYBlHInJC4SakvmMyw+QDwG6S2V7PMjNl7wAZaBqPIvKOqgNMJY2b14NBZ4LfQh61OhbrxbYiwrPrrd4OaYRPv64RQgxspqz2XDaM39uAvzeu2tAWD6V9WEPVD3g3eWiCG6M2QUVpqt5dhsmmmACwcQaJwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eZx+tg1j; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739552466; c=relaxed/simple;
+	bh=KieRTUcnMSc5WPsYxL5r2U6ULuh+BG887FXcKaW9vRw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pEcelGBHkMObpcj7ztJvA9DeHXfyoAepbH4FA1j6H5Q6LD9pWpZhr29iLy6ctYDlBMOmGgFJu2eTgIbNP4JLJmDlAXI+8vPg+9dIfjumpF+VqE0Xei4vTfOWYlSmP2bGiesdaDvmr/aRqJFKLt3lNvSMo03R57RirINjjEkX2ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLIZq1cE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eZx+tg1j"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5452c2805bcso767560e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:01:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739552457; x=1740157257; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eGqfS78pmJ/bj5BPsCQeo9hU2Hyn6ObIUQO0AmB2+Co=;
-        b=eZx+tg1j9zZQ9MHcRHSijsUFkraz4PpXJ2sOeL7W2y/rICX+p8mUoCBwol4SIGvCmI
-         q86YkNNI4/2wB02rlX3JIIOkOKdN/W8tOBIjDMnDT2pi+CWQjAiN6sZS+9qUjiQ8ree3
-         uRMsVRQa+s6grJrWy2P1JMKivNt6GcSryccsg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739552457; x=1740157257;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eGqfS78pmJ/bj5BPsCQeo9hU2Hyn6ObIUQO0AmB2+Co=;
-        b=jVQt4n1kH8zh0ycjQvAhvKCHxMfXNXR5mfmIJg/ghv4P8bis7W8fhtzuBDX/tQHot9
-         /jaygRe+T/6x7ZPjDReNLdU1vY4TvhH7CFMnWq4UdHxDOCf+l0hvujikQdg64J5Zgmd1
-         5gI+Xablhg34r7dNBFGyRjiOGvICJQpHVPtCZruSrx0WUwrbjCq1jbtVHEpX1gr9WvS6
-         QEiUO00U8IoRedaEEvbKL1TeZtiFJHwe5Zk0XVaPtYSKIBqkC4+huNPKfWr/JsNwVR+J
-         s0sqv7GmM+VVEZqwdnAOcvxvQP1NCI48wnyqFcjqfEb2S3JzFjknvEkmrj/FpT2Rfuc9
-         Z3zg==
-X-Forwarded-Encrypted: i=1; AJvYcCVF6VIIc1GHAAOhhuhP1FmOGXEVRkcMc1R6eQN6P5YT29u5Vz/3YcKVfJFoKEui7ev67QDO1t8RZdal2iA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxgzSGtVGYv9YUdem8tRMuc6qQmfWxPnDE68rd7FhLD1EYvjXY
-	dO7gmPR+uIxRndaEX5LmUxlW0SjZn2P5vP/U1TQO1s+HABPzirQgc7aNESEhVjJzOfnavd8Ztsc
-	HleMO
-X-Gm-Gg: ASbGncvjS+eraGUtqVDGboEPuBw1blOWsD9XnqitQ/ij5GEL+ziuHazG9JxmIlc+bzg
-	3V8g3Zz1ROpnN2z2ylGqlf2I0UnSqzg14UJC44el84y036dACIEhnyEysUW372h3+29EcEbaMSE
-	jUIiunYtoNLg2WUMaUmkXjSXMatEhdgfKISm5HnhUIiProYllFJpPSHHBaFERuehO/cFwxlQiOq
-	i1CIWnMhRLHSsn87LUoNPdsWdeu2yviNWdPeoZ4/LP0d2YLKYwvU6CQD1O/yHiLjDheN+5ywQ6z
-	LuHwA/1yaot88xmD1o8eL4VEjfU8pDfH9IBRya4BOqBGpont1axzXJ4kWdU=
-X-Google-Smtp-Source: AGHT+IHsCXChSGyrTSit86wzDL7V5UFrFB9QGhjZ65jaf3m7kxP08UyFRKg2BZ0jw2HbuF/cxDox8Q==
-X-Received: by 2002:a05:6512:ba6:b0:545:532:fd2f with SMTP id 2adb3069b0e04-5452fe3659bmr33617e87.12.1739552455965;
-        Fri, 14 Feb 2025 09:00:55 -0800 (PST)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5452ba48767sm219692e87.177.2025.02.14.09.00.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2025 09:00:54 -0800 (PST)
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-307bc125e2eso23016001fa.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:00:46 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXZ709K6mIgtKGTQM5DifnGHNNmnnoxhOz59LNdz17Zp3JlkQC9b3du1ItuX+3W5N1CWZ08THdhjm0b59U=@vger.kernel.org
-X-Received: by 2002:a2e:b2d0:0:b0:308:efdd:b184 with SMTP id
- 38308e7fff4ca-30927a6fa08mr801931fa.10.1739552444566; Fri, 14 Feb 2025
- 09:00:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLIZq1cE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D099C4CED1;
+	Fri, 14 Feb 2025 17:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739552465;
+	bh=KieRTUcnMSc5WPsYxL5r2U6ULuh+BG887FXcKaW9vRw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KLIZq1cEt6U8tRefMY+0psNcrbzgIJnk5h7tNh0e0/upu/T97sRhKjRjePL/YNXyd
+	 9xmzwfFw2qnaA2USdGfA8IxfYvIa4sti7cjp2ffHtTgqy6MBl2JT05efegJbscwd8Y
+	 dMhRu5hbhlJnQGBZvfTfTNgflyTgT0B6xEVjqFT+Ds3esMjbSSXfu0w5y4jM+/VIm0
+	 AoS4MJK/zANf9LXjfHlhiTFeNmgFJD1ImM/Dbm4bq8EHmzs4k9stmg4ymjF40YBoH/
+	 n74ls55wL9q2U6sYam+u83SDTWeSUfu0jJHwR2LXsIGU5T6JP42ZBtdHzM38E/iL1F
+	 ZwZw1gYSNpPAw==
+Date: Fri, 14 Feb 2025 22:30:57 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bo Sun <Bo.Sun.CN@windriver.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kexin.Hao@windriver.com, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH] PCI: controller: Restore PCI_REASSIGN_ALL_BUS when
+ PCI_PROBE_ONLY is enabled
+Message-ID: <20250214170057.o3ffoiuxn4hxqqqe@thinkpad>
+References: <20250117082428.129353-1-Bo.Sun.CN@windriver.com>
+ <20250210103707.c5ubeaowk7xwt6p5@thinkpad>
+ <df5d3c54-d436-43bb-8b40-665c020d6bb5@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213-bridge-connector-v3-0-e71598f49c8f@kernel.org> <20250213-bridge-connector-v3-5-e71598f49c8f@kernel.org>
-In-Reply-To: <20250213-bridge-connector-v3-5-e71598f49c8f@kernel.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 14 Feb 2025 09:00:33 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=U30w51nXWzmqMjimKXEXN1iGCGy+FgvPQJio8nUJwsSw@mail.gmail.com>
-X-Gm-Features: AWEUYZmgW7gsdTTn4UdK692jYlJBK_pdnm3uhZfmTNqc94knOyyM8gyi7aEc-f4
-Message-ID: <CAD=FV=U30w51nXWzmqMjimKXEXN1iGCGy+FgvPQJio8nUJwsSw@mail.gmail.com>
-Subject: Re: [PATCH v3 05/37] drm/bridge: Pass full state to atomic_post_disable
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <df5d3c54-d436-43bb-8b40-665c020d6bb5@windriver.com>
 
-Hi,
+On Wed, Feb 12, 2025 at 03:07:56PM +0800, Bo Sun wrote:
+> On 2/10/25 18:37, Manivannan Sadhasivam wrote:
+> > CAUTION: This email comes from a non Wind River email account!
+> > Do not click links or open attachments unless you recognize the sender and know the content is safe.
+> > 
+> > On Fri, Jan 17, 2025 at 04:24:14PM +0800, Bo Sun wrote:
+> > > On our Marvell OCTEON CN96XX board, we observed the following panic on
+> > > the latest kernel:
+> > > Unable to handle kernel NULL pointer dereference at virtual address 0000000000000080
+> > > Mem abort info:
+> > >    ESR = 0x0000000096000005
+> > >    EC = 0x25: DABT (current EL), IL = 32 bits
+> > >    SET = 0, FnV = 0
+> > >    EA = 0, S1PTW = 0
+> > >    FSC = 0x05: level 1 translation fault
+> > > Data abort info:
+> > >    ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+> > >    CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> > >    GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> > > [0000000000000080] user address but active_mm is swapper
+> > > Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
+> > > Modules linked in:
+> > > CPU: 9 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.13.0-rc7-00149-g9bffa1ad25b8 #1
+> > > Hardware name: Marvell OcteonTX CN96XX board (DT)
+> > > pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > > pc : of_pci_add_properties+0x278/0x4c8
+> > > lr : of_pci_add_properties+0x258/0x4c8
+> > > sp : ffff8000822ef9b0
+> > > x29: ffff8000822ef9b0 x28: ffff000106dd8000 x27: ffff800081bc3b30
+> > > x26: ffff800081540118 x25: ffff8000813d2be0 x24: 0000000000000000
+> > > x23: ffff00010528a800 x22: ffff000107c50000 x21: ffff0001039c2630
+> > > x20: ffff0001039c2630 x19: 0000000000000000 x18: ffffffffffffffff
+> > > x17: 00000000a49c1b85 x16: 0000000084c07b58 x15: ffff000103a10f98
+> > > x14: ffffffffffffffff x13: ffff000103a10f96 x12: 0000000000000003
+> > > x11: 0101010101010101 x10: 000000000000002c x9 : ffff800080ca7acc
+> > > x8 : ffff0001038fd900 x7 : 0000000000000000 x6 : 0000000000696370
+> > > x5 : 0000000000000000 x4 : 0000000000000002 x3 : ffff8000822efa40
+> > > x2 : ffff800081341000 x1 : ffff000107c50000 x0 : 0000000000000000
+> > > Call trace:
+> > >   of_pci_add_properties+0x278/0x4c8 (P)
+> > >   of_pci_make_dev_node+0xe0/0x158
+> > >   pci_bus_add_device+0x158/0x210
+> > >   pci_bus_add_devices+0x40/0x98
+> > >   pci_host_probe+0x94/0x118
+> > >   pci_host_common_probe+0x120/0x1a0
+> > >   platform_probe+0x70/0xf0
+> > >   really_probe+0xb4/0x2a8
+> > >   __driver_probe_device+0x80/0x140
+> > >   driver_probe_device+0x48/0x170
+> > >   __driver_attach+0x9c/0x1b0
+> > >   bus_for_each_dev+0x7c/0xe8
+> > >   driver_attach+0x2c/0x40
+> > >   bus_add_driver+0xec/0x218
+> > >   driver_register+0x68/0x138
+> > >   __platform_driver_register+0x2c/0x40
+> > >   gen_pci_driver_init+0x24/0x38
+> > >   do_one_initcall+0x4c/0x278
+> > >   kernel_init_freeable+0x1f4/0x3d0
+> > >   kernel_init+0x28/0x1f0
+> > >   ret_from_fork+0x10/0x20
+> > > Code: aa1603e1 f0005522 d2800044 91000042 (f94040a0)
+> > > 
+> > > This regression was introduced by commit 7246a4520b4b ("PCI: Use
+> > > preserve_config in place of pci_flags"). On our board, the 002:00:07.0
+> > > bridge is misconfigured by the bootloader. Both its secondary and
+> > > subordinate bus numbers are initialized to 0, while its fixed secondary
+> > > bus number is set to 8.
+> > 
+> > What do you mean by 'fixed secondary bus number'?
+> > 
+> 
+> The 'fixed secondary bus number' refers to the value returned by the
+> function pci_ea_fixed_busnrs(), which reads the fixed Secondary and
+> Subordinate bus numbers from the EA (Extended Attributes) capability, if
+> present.
 
-On Thu, Feb 13, 2025 at 6:44=E2=80=AFAM Maxime Ripard <mripard@kernel.org> =
-wrote:
->
-> It's pretty inconvenient to access the full atomic state from
-> drm_bridges, so let's change the atomic_post_disable hook prototype to
-> pass it directly.
->
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Thanks! It'd be good to mention the EA capability.
 
-From the point of view of ti-sn65dsi86 and parade-ps8640:
+> In the code at drivers/pci/probe.c, line 1439, we have the
+> following:
+> 
+> 		/* Read bus numbers from EA Capability (if present) */
+> 		fixed_buses = pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
+> 		if (fixed_buses)
+> 			next_busnr = fixed_sec;
+> 		else
+> 			next_busnr = max + 1;
+> 
+> > > However, bus number 8 is also assigned to another
+> > > bridge (0002:00:0f.0). Although this is a bootloader issue, before the
+> > > change in commit 7246a4520b4b, the PCI_REASSIGN_ALL_BUS flag was
+> > > set by default when PCI_PROBE_ONLY was enabled, ensuing that all the
+> > > bus number for these bridges were reassigned, avoiding any conflicts.
+> > > 
+> > 
+> > Isn't the opposite? PCI_REASSIGN_ALL_BUS was only added if the PCI_PROBE_ONLY
+> > flag was not set:
+> > 
+> >          /* Do not reassign resources if probe only */
+> >          if (!pci_has_flag(PCI_PROBE_ONLY))
+> >                  pci_add_flags(PCI_REASSIGN_ALL_BUS);
+> > 
+> 
+> Yes, you are correct. It’s a typo; it should be "when PCI_PROBE_ONLY was not
+> enabled." I will fix this in v2.
+> 
+> > 
+> > > After the change introduced in commit 7246a4520b4b, the bus numbers
+> > > assigned by the bootloader are reused by all other bridges, except
+> > > the misconfigured 002:00:07.0 bridge. The kernel attempt to reconfigure
+> > > 002:00:07.0 by reusing the fixed secondary bus number 8 assigned by
+> > > bootloader. However, since a pci_bus has already been allocated for
+> > > bus 8 due to the probe of 0002:00:0f.0, no new pci_bus allocated for
+> > > 002:00:07.0.
+> > 
+> > How come 0002:00:0f.0 is enumerated before 0002:00:07.0 in a depth first manner?
+> > 
+> 
+> The device 0002:00:07.0 is actually enumerated before 0002:00:0f.0, but it
+> appears misconfigured. The kernel attempts to reconfigure it during
+> initialization, which is where the issue arises.
+> 
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Douglas Anderson <dianders@chromium.org>
+Ok, thanks for the clarification. I think the bug is in this part of the code:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/probe.c#n1451
+
+It just reuses the fixed bus number even if the bus already exists, which is
+wrong. I think this should be fixed by evaluating the bus number read from EA
+capability as below:
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index b6536ed599c3..097e2a01faae 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1438,10 +1438,21 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 
+                /* Read bus numbers from EA Capability (if present) */
+                fixed_buses = pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
+-               if (fixed_buses)
+-                       next_busnr = fixed_sec;
+-               else
++               if (fixed_buses) {
++                       /*
++                        * If the fixed bus number is already taken, use the
++                        * next available bus number. This can happen if the
++                        * bootloader has assigned a wrong bus number in EA
++                        * capability of the bridge.
++                        */
++                       child = pci_find_bus(pci_domain_nr(bus), fixed_sec);
++                       if (child)
++                               next_busnr = max + 1;
++                       else
++                               next_busnr = fixed_sec;
++               } else {
+                        next_busnr = max + 1;
++               }
+ 
+                /*
+                 * Prevent assigning a bus number that already exists.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
