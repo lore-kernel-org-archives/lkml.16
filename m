@@ -1,153 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3091C8622
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 19:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF851C84C6
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 19:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739562938; cv=none; b=mYQlhtQbxNAibadH0WB8k15FDdRWXTVrzZ+mk2NG1J0EcVkXUedned8FE6USGGmfDrsT0kwQGgMlcGQHcuh1bf1cgaCux9JFAbAynT0Oeq4kRysRpaMG7cO1A3/Iyw5lYMXRskwO6lC0BgYW99Oe+aOac7XyvDMNEg9DIwiQJxA=
+	t=1739562960; cv=none; b=BJcxj5TwIpTGYhGeTHhQ0b+arvGVQMAX4CB8x75/Swx2OOuilqhG8G58pqTMdBSku5m2efwEMus8ZEyoeKdIHmjaHNJ7OcgpdaZBQVtkrzg487GdpktEKRdVddwM9hc7uP3DKPHRDgo1ou8ztYG0WVDZV1BBXlUOA3+H1KIgN74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739562938; c=relaxed/simple;
-	bh=OYYhEDQ1tch4O5reJkYOXYrvSejqt7GywKWwMTBWQOA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bqmNwd+qNWjglp7naRnCz7tMljrFV/a2I5CKFgc3AjFyk9wY+4MRmXbjF0Ns37iYFCjkAneXOvcqqj7X1V+EkJD+yO44aL+ffmymkyI5NgJIYA2Q0KXQ+3QBf7tSTBCZTmGDYTaOBMu9oD/rFjpcxZ5uJZQVKtRWt0q+CohLdfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iutVvo0X; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739562960; c=relaxed/simple;
+	bh=K7bYDqnR9vXpWMpWttOaWLLbXoQP6llK5irYRI+EMaQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=la696MX9kq39yD4Cbr9fgFnhqr/wFKxoJ2XPW9HvvkJ/23g/5npHnXUFK9ZrfdKeFXMBnM9eKOdUCEbtdQUNEXUOw+dGfGl9/QONqJzsnCxsfwnghbFb7Vvq3bQFfF87tvjEc6eKXFhlqtfQ6HJqMT6lgilZmbQUoVrBF7KlbrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VKeutZql; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iutVvo0X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739562937; x=1771098937;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OYYhEDQ1tch4O5reJkYOXYrvSejqt7GywKWwMTBWQOA=;
-  b=iutVvo0XB+01uTwwzkEBb1cjXF5Ar0+MX5ZGijStWMR3rN7nLG69gUke
-   Cdf5FVjOPweaILJzDKPdEqtxduXuId1Uzxwm18fsvpGaPSQckeBLMbWhi
-   6W9ZF7LhKJ6icMOiCWPUn0P5GJt0bzJzOBdpXjnWGIZNKVGKevATmR5FK
-   O79sZm3YILnN/qsAP1Q2dVVjtmY0LbcAc7pOVdDSxFhq6coZ8VBnPMgzS
-   k5KbgYTB+SVT9BjeJvoDEcYSalUMOzNDY0BZfupeD8LGRyZcIAzaxIdi7
-   D8l894Zd5G2xfnvb4+sZ8YYaUWZBdOw/NAqNjsCeETUUAAiky98vMtasO
-   g==;
-X-CSE-ConnectionGUID: JyxQ8ZpwTe+CDc8zNAtj6g==
-X-CSE-MsgGUID: dsgCJrAeTWSki8x3KOXm4A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40247133"
-X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
-   d="scan'208";a="40247133"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 11:55:36 -0800
-X-CSE-ConnectionGUID: QEDwI6BIQDioSNA4kmn/pQ==
-X-CSE-MsgGUID: Me5V3t4gT4yvmI0AE7PoUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
-   d="scan'208";a="118649613"
-Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.109.21]) ([10.125.109.21])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 11:55:34 -0800
-Message-ID: <c42c314c-3c1b-4e4a-803a-ecf31685d4cc@intel.com>
-Date: Fri, 14 Feb 2025 11:55:38 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VKeutZql"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fc3035e947so209592a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 11:55:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739562958; x=1740167758; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e8eFD8Y0Jdwt006d6ZGfmM2mEuwTtejAwkszA51XpJo=;
+        b=VKeutZqlgF8bdPMCsMgxNQb2yJZKURSYR+DWuYC4c2LBFePNRcHlkSTVSdyR0aSPrs
+         zUE5Qn/Ud4IsnGCTtZEuzfXO0C6VytYHS4ETW2AgY9HcVQgv/vj+V8CWqsNiJ9KQ0Jwh
+         Nnyni0zu4TF0nu5gKzrzAYPoIIyCZnvzi6WOIBGjoR7GrfGA3E8PvXMgpDcyjVXogaEb
+         yJPEnHEJqq0TO2ErTePOHXBtZggqfMqENk04sDJoH7L1uvOmYPm/jveuQLmDyW8DKb4O
+         K9L2ZggzA8LCJg8kQuPSp3INMVcBeodRkBwX0Kx06kh5DjpogTi+yARH7TeJAsW8RdlD
+         /e2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739562958; x=1740167758;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e8eFD8Y0Jdwt006d6ZGfmM2mEuwTtejAwkszA51XpJo=;
+        b=nudMPLCYGiNxhuXYrXB63/qEbmI1XjadV+mwY2508/+cXFOR0Low52gwUFFkR1yOOs
+         3l4/yoUmuQf2EZSg02TtsKhvb5P6KVrN7J2fOnU5Pp/PPrZYwAzfJpqtGIr2HOTMSLU8
+         CCeELGv3Nx5c12ymtg1xWJsy5nq24GQVfpFAxcjtGubjXyUniKO5KxiJE7lbYGy4jbrX
+         Wsv3I5M/LnoNDi0l5IBcOp6TEQ56Vn8YwFD8wbZqnrqFa8cejRj9YvJOojtYS6cD0h+X
+         5e2KFxtfBSaELryDWaJfjrzme/Eu+H8+eTJWEyHSRQnOkLe99DRZOA+Eb+aoTCemVie7
+         0MdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmVi2xn59BPq/x4N3m82lyQJtLNrVeMn92oXvUe0ANKiyjvuzPfLOHGTmllVKyG3vSmfBEuVM6dnVzATE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/mtGPvkkH8b5DUunuFNZDyi06/jvlMeXjd8/1SGwucTrp6EfL
+	n6RDDqe2P0OEEMwML4S0VI27oHK7WzFvH9DKQvcEc0T/aFIrLz0m
+X-Gm-Gg: ASbGncs6hy54zyfiNM9GEXphZ4AprC80MRP5ZgaTAb3VTEyy3cYC4pa1KUZGaW25DBC
+	BnzpmFymVgt0GHTiBRhK1xQnVYN4/IF/IIYI25MRByVDLw34k2eB5SUcWQG6AXWu4lRDJ4thVrf
+	QamM8wyCrEDLM59qnyO0MfPoId65+yypudQsMx6Nd3W/Mh/xQsqcMBcwXj2qP+KwMTyInwMVTNK
+	hTMLccJbqrgULov+k2VO+WE503rd8PtpfdEKP0SkyqGtPeyq5CI8M1sir2WHI/OXK7jzP6SFPNg
+	7iTWYEH2TnNf75CvhNjpQD1BBTxpacY=
+X-Google-Smtp-Source: AGHT+IEDvxqpJwfdkwb18JB4Bmp8msqxbfmJy94sOkKiuSkAxnIjXU1DN01E3qa2U1W6sH9l5reYuQ==
+X-Received: by 2002:a05:6a00:3e24:b0:730:83c1:1f79 with SMTP id d2e1a72fcca58-732618d733bmr422885b3a.3.1739562958288;
+        Fri, 14 Feb 2025 11:55:58 -0800 (PST)
+Received: from localhost.lp.veng.com.ar ([200.10.125.114])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73249fe96b4sm2670530b3a.75.2025.02.14.11.55.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 11:55:57 -0800 (PST)
+From: Gaston Gonzalez <gascoar@gmail.com>
+To: linux-staging@lists.linux.dev
+Cc: dpenkler@gmail.com,
+	gregkh@linuxfoundation.org,
+	arnd@arndb.de,
+	dan.carpenter@linaro.org,
+	ajithpv.linux@gmail.com,
+	roheetchavan@gmail.com,
+	niharchaithanya@gmail.com,
+	eleanor15x@gmail.com,
+	everestkc@everestkc.com.np,
+	kees@ijzerbout.nl,
+	skhan@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	gascoar@gmail.com
+Subject: [PATCH v2 2/5] staging: gpib: eastwood: remove unused variable
+Date: Fri, 14 Feb 2025 16:54:42 -0300
+Message-ID: <20250214195456.104075-5-gascoar@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250214195456.104075-1-gascoar@gmail.com>
+References: <20250214195456.104075-1-gascoar@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 06/12] x86/mm: use INVLPGB for kernel TLB flushes
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
- zhengqi.arch@bytedance.com, nadav.amit@gmail.com, thomas.lendacky@amd.com,
- kernel-team@meta.com, linux-mm@kvack.org, akpm@linux-foundation.org,
- jackmanb@google.com, jannh@google.com, mhklinux@outlook.com,
- andrew.cooper3@citrix.com, Manali Shukla <Manali.Shukla@amd.com>
-References: <20250213161423.449435-1-riel@surriel.com>
- <20250213161423.449435-7-riel@surriel.com>
- <ab55a809-e0d2-4364-84ce-917a40ee299a@intel.com>
- <20250214194013.GA2198@noisy.programming.kicks-ass.net>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250214194013.GA2198@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/14/25 11:40, Peter Zijlstra wrote:
-> On Fri, Feb 14, 2025 at 10:35:40AM -0800, Dave Hansen wrote:
->> On 2/13/25 08:13, Rik van Riel wrote:
->>> -	if (info->end == TLB_FLUSH_ALL)
->>> +	if (broadcast_kernel_range_flush(info))
->>> +		; /* Fall through. */
->>> +	else if (info->end == TLB_FLUSH_ALL)
->>>  		on_each_cpu(do_flush_tlb_all, NULL, 1);
->>>  	else
->>>  		on_each_cpu(do_kernel_range_flush, info, 1);
->> We've got to find a better name for broadcast_kernel_range_flush().
->> Because IPIs are broadcast too. The naming makes it confusing. Why would
->> be broadcast, and then start trying IPIs that are also broadcast?
-> IIRC the more general name is indeed broadcast tlbi; as in other
-> architectures use this naming to mean this very thing too.
-> 
-> But yes, I see the confusion, but I don't think changing the naming
-> really helps a lot here :-/
+Remove unused variable 'nec_priv' in function 'fluke_line_status'.
 
-Fair enough. If we don't have a better name, we can at least do:
+This removes the following warning found compiling with W=1:
 
-	if (new_bad_name()) {
-		new_thing();
-	} else {
-		old_thing();
-	}
+warning: variable ‘nec_priv’ set but not used [-Wunused-but-set-variable]
 
-My real heartburn is with:
+Signed-off-by: Gaston Gonzalez <gascoar@gmail.com>
+---
+v2: no changes in this patch.
 
-	if (new_bad_name()) {
-		new_thing();
-	} else if (need_thing_1()) {
-		old_thing1();
-	} else {
-		old_thing2();
-	}
+ drivers/staging/gpib/eastwood/fluke_gpib.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Where new and old are logically squished together.
+diff --git a/drivers/staging/gpib/eastwood/fluke_gpib.c b/drivers/staging/gpib/eastwood/fluke_gpib.c
+index d5b1a03abf11..65bb79a8fd3c 100644
+--- a/drivers/staging/gpib/eastwood/fluke_gpib.c
++++ b/drivers/staging/gpib/eastwood/fluke_gpib.c
+@@ -194,10 +194,8 @@ static int fluke_line_status(const gpib_board_t *board)
+ 	int status = ValidALL;
+ 	int bsr_bits;
+ 	struct fluke_priv *e_priv;
+-	struct nec7210_priv *nec_priv;
+ 
+ 	e_priv = board->private_data;
+-	nec_priv = &e_priv->nec7210_priv;
+ 
+ 	bsr_bits = fluke_paged_read_byte(e_priv, BUS_STATUS, BUS_STATUS_PAGE);
+ 
+-- 
+2.48.1
+
