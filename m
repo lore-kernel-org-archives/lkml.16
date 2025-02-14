@@ -1,46 +1,46 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0157F1547D8;
-	Fri, 14 Feb 2025 02:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAD514F9E7;
+	Fri, 14 Feb 2025 02:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739500879; cv=none; b=ScbGuvZ0lQZ0sJzIIZF4FTj4/4XSuFbMpmS7qK/DKHCasyg9XrvbCHvpdObiY+8tr/kJrk14HZUzTptSJNpyH1oEJNXtuu3zuFKmR/wqMY76F+6n2JJVM7Gds2t20rOMTtf2vPZVoe+Ki1MwEIMOf12jRNKBKakA+G3KHQtxTJY=
+	t=1739500891; cv=none; b=HSkHKdm4UGcN+vxniJU0YFwF5VGkEZS+le4la/cllFN2MfdaTwJBC2rIlWnT+E4AGgHg+sDzRFgvEvj4pGsOKb8GYEXIL8K71Ppr5kPG1PoA0AP5HTsZuagEBe8/DVb02dORS32I2nzmW74SNpXx/yGbPV1M//GkJTq6h9NsCsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739500879; c=relaxed/simple;
-	bh=2hbBuhR12HCknxy3ZpWFC8nk41wqAjEyvCv4koA/gaw=;
+	s=arc-20240116; t=1739500891; c=relaxed/simple;
+	bh=HEEcfnOq54LR0U51mqX/+LvcTri4c03Xzg8uUxcuZx0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SS4yRvy6M2zXv3gyWJvp5q2kkhJuSv3G8K9Ej3YmLUaOMsLNqtUgwx6vnRcnDmShGoI697ZdOPStqXGcvB6Nn6+/3wiFECe5A4mB6/L2tCjlbHpxps1VwN3a8LnIFuMFxJ+mMyHEV7T6XHhAyv5oMLk385bh/7e1gKj9tHLfr24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PctUttCy; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=RxirpOKeeImGAQzMdBi5RjRFS18LKFOU/ZRxn6jPPitoTfy7XnIcX2ZafrY5PL19NicLxu/a1SBEsdeXBvRtiuXWBUi9feeEfEOLK8H3ZfQhvS1Y2uAnYYDbOXlyKLtc6wEOvoeCvdBPDBawMdmJbZuFbm8xAXuhAlykQ0vmylk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MZ06cFvW; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PctUttCy"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DLTf0X001752;
-	Fri, 14 Feb 2025 02:41:03 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MZ06cFvW"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DLhWOc002169;
+	Fri, 14 Feb 2025 02:41:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	n5s+flF43R133QAlfIXrz56WnUrn/DbnTJQG3zWrhNo=; b=PctUttCydoc1uG5G
-	MtRuyhX9LxFwBuayM5qhQGPp8MuCO52BamBVYlyA/eDnNpp7ZcHCMUinWKilLS+p
-	ZmzW+hJ9mZn3Lv91vzQlmNSE7KMa58rA+RI6DQoI4Ot1Q5Gmt/rnRwKerosx1t9r
-	eAdwrzRqMwJ7eGXNMRGF/xtByETeG46cllULwJ9O166xvDjDsFNaROGPWhFAIxMu
-	DQhjT60Q7udLmSEfTsXuchoLaRcrRfqkqaKvuuF+bqYi4NYD0CjHRijWCIBd9Ch7
-	bHkr2mX+G2JLhaIjYVLrFADp9jkJL2ghdNrHxRwU4YeW4TlKbLQMFXr9n/gaFmkf
-	gcMqng==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44seq026fp-1
+	9T6vDCQgh1gIYQoLsdnmEUZ+H4oulTkXaYpu8/f4F1Q=; b=MZ06cFvWsgnSuBa7
+	cm8yx6AFddqsNA1Iy4nuN0xsfydeNIb1s+QEK1efnHobuw9UnV7SM9G3ytutDhHr
+	gOHwtRV25sh/jNO63/AzqnwVFxKIydttAF8Ffw/duNEoBBc5fITGBeLlEzkArQyJ
+	TmxHraIq4blpqxvXs6SmF02sPpArYr8aGYmb15z/Nakt4D3zmx/XcEJMwxQz63g7
+	v44mIFvNAJDOuQQX1oUXXGePgqcoiTeFjiEgHTf9TkIAH9EpQ2DKZTrMuUV5e8K3
+	UFQisqecTU+Me6LrUdgQnCPDe8ttbRFq85iYhJlJ/vjFoY+02uVTieepiZ4LZCaJ
+	TaBtlA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44s5w4bk5y-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 02:41:03 +0000 (GMT)
+	Fri, 14 Feb 2025 02:41:14 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51E2f21j028465
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51E2fDwY018062
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 02:41:02 GMT
+	Fri, 14 Feb 2025 02:41:13 GMT
 Received: from jiegan-gv.qualcomm.com (10.80.80.8) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 13 Feb 2025 18:40:57 -0800
+ 15.2.1544.9; Thu, 13 Feb 2025 18:41:08 -0800
 From: Jie Gan <quic_jiegan@quicinc.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach
@@ -62,9 +62,9 @@ CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v11 3/7] Coresight: Use coresight_etm_get_trace_id() in traceid_show()
-Date: Fri, 14 Feb 2025 10:40:17 +0800
-Message-ID: <20250214024021.249655-4-quic_jiegan@quicinc.com>
+Subject: [PATCH v11 5/7] dt-bindings: arm: Add Coresight TMC Control Unit hardware
+Date: Fri, 14 Feb 2025 10:40:19 +0800
+Message-ID: <20250214024021.249655-6-quic_jiegan@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250214024021.249655-1-quic_jiegan@quicinc.com>
 References: <20250214024021.249655-1-quic_jiegan@quicinc.com>
@@ -80,69 +80,122 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: aXYSsrG4fz0EXswD1CI3zxIWR2dRI_1b
-X-Proofpoint-ORIG-GUID: aXYSsrG4fz0EXswD1CI3zxIWR2dRI_1b
+X-Proofpoint-GUID: en90kS7C3kE5SsOKQj_26hsTGyVnaTaJ
+X-Proofpoint-ORIG-GUID: en90kS7C3kE5SsOKQj_26hsTGyVnaTaJ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-13_09,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 bulkscore=0 clxscore=1015 priorityscore=1501 adultscore=0
- mlxscore=0 malwarescore=0 phishscore=0 spamscore=0 lowpriorityscore=0
- mlxlogscore=728 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ phishscore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 adultscore=2
+ malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2501170000 definitions=main-2502140017
 
-From: James Clark <james.clark@linaro.org>
+Add binding file to specify how to define a Coresight TMC
+Control Unit device in device tree.
 
-Use the new API, coresight_etm_get_trace_id, to read the traceid of the ETM
-device when call traceid_show via sysfs node.
+It is responsible for controlling the data filter function
+based on the source device's Trace ID for TMC ETR device.
+The trace data with that Trace id can get into ETR's buffer
+while other trace data gets ignored.
 
-Signed-off-by: James Clark <james.clark@linaro.org>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
 ---
- drivers/hwtracing/coresight/coresight-etm3x-sysfs.c | 3 +--
- drivers/hwtracing/coresight/coresight-etm4x-sysfs.c | 4 ++--
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ .../bindings/arm/qcom,coresight-ctcu.yaml     | 84 +++++++++++++++++++
+ 1 file changed, 84 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/qcom,coresight-ctcu.yaml
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-index 68c644be9813..b9006451f515 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-@@ -1190,10 +1190,9 @@ static DEVICE_ATTR_RO(cpu);
- static ssize_t traceid_show(struct device *dev,
- 			    struct device_attribute *attr, char *buf)
- {
--	int trace_id;
- 	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	int trace_id = coresight_etm_get_trace_id(drvdata->csdev, CS_MODE_SYSFS, NULL);
- 
--	trace_id = etm_read_alloc_trace_id(drvdata);
- 	if (trace_id < 0)
- 		return trace_id;
- 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-index c767f8ae4cf1..e5216c0f60da 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-@@ -4,6 +4,7 @@
-  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
-  */
- 
-+#include <linux/coresight.h>
- #include <linux/pid_namespace.h>
- #include <linux/pm_runtime.h>
- #include <linux/sysfs.h>
-@@ -2402,10 +2403,9 @@ static ssize_t trctraceid_show(struct device *dev,
- 			       struct device_attribute *attr,
- 			       char *buf)
- {
--	int trace_id;
- 	struct etmv4_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	int trace_id = coresight_etm_get_trace_id(drvdata->csdev, CS_MODE_SYSFS, NULL);
- 
--	trace_id = etm4_read_alloc_trace_id(drvdata);
- 	if (trace_id < 0)
- 		return trace_id;
- 
+diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-ctcu.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-ctcu.yaml
+new file mode 100644
+index 000000000000..843b52eaf872
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/qcom,coresight-ctcu.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/qcom,coresight-ctcu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: CoreSight TMC Control Unit
++
++maintainers:
++  - Yuanfang Zhang <quic_yuanfang@quicinc.com>
++  - Mao Jinlong <quic_jinlmao@quicinc.com>
++  - Jie Gan <quic_jiegan@quicinc.com>
++
++description: |
++  The Trace Memory Controller(TMC) is used for Embedded Trace Buffer(ETB),
++  Embedded Trace FIFO(ETF) and Embedded Trace Router(ETR) configurations.
++  The configuration mode (ETB, ETF, ETR) is discovered at boot time when
++  the device is probed.
++
++  The Coresight TMC Control unit controls various Coresight behaviors.
++  It works as a helper device when connected to TMC ETR device.
++  It is responsible for controlling the data filter function based on
++  the source device's Trace ID for TMC ETR device. The trace data with
++  that Trace id can get into ETR's buffer while other trace data gets
++  ignored.
++
++properties:
++  compatible:
++    enum:
++      - qcom,sa8775p-ctcu
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: apb
++
++  in-ports:
++    $ref: /schemas/graph.yaml#/properties/ports
++
++    patternProperties:
++      '^port(@[0-1])?$':
++        description: Input connections from CoreSight Trace bus
++        $ref: /schemas/graph.yaml#/properties/port
++
++required:
++  - compatible
++  - reg
++  - in-ports
++
++additionalProperties: false
++
++examples:
++  - |
++    ctcu@1001000 {
++        compatible = "qcom,sa8775p-ctcu";
++        reg = <0x1001000 0x1000>;
++
++        clocks = <&aoss_qmp>;
++        clock-names = "apb";
++
++        in-ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port@0 {
++                reg = <0>;
++                ctcu_in_port0: endpoint {
++                    remote-endpoint = <&etr0_out_port>;
++                };
++            };
++
++            port@1 {
++                reg = <1>;
++                ctcu_in_port1: endpoint {
++                    remote-endpoint = <&etr1_out_port>;
++                };
++            };
++        };
++    };
 -- 
 2.34.1
 
