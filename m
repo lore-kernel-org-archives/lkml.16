@@ -1,64 +1,60 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F3A17E
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 06:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88571487DC
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 06:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739514683; cv=none; b=kMVc4xqNcd5X2xm4LqEmAaeIA9QeCEPqPRz7/UPM+VCNqkRakUHrHO0KhnyPkKPvZffRkF14VupCIdEe7/Xlxjj1MsSOhFT7SxSqavedUnEhsGoTqTQ0i+DDBeFT+YHc+M0VcTRUCw9DKJ2THYsBD4DcQaWL0SajbJYTGFhueHw=
+	t=1739514773; cv=none; b=XL/y1c27OWpRYXOY6e+wmDm/yTChV+5/R7mv9IyyRq7ugZq3PRTmoD3mw9/np1lsQ78m9nMTKYbYYyGDrO3mXODoqcf1V7BhCOHfXRMKWUpSzceskgUCmtb7lvjui8EF/GkSXDElVhNvNqg9VaRgflvY9OK64Oj8VZ0ZGowPXLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739514683; c=relaxed/simple;
-	bh=bd3Ix1OlxqfISy3/YXIyFe4/qznReagdpNKuiCq9fzM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jXLB2Kf8tdzKc+no2dZmbcDQDHNVYN3vlkqN238flJwBAO5aVJi6FFSh7baVQxrqQNe62jlwMwiRsboawTrgzcZl/0qSfhqeK+x9cUIcbMe/KwEKjf4L0dVHYTFbvG6NVldzDvK1KKoBqQrM00IQVbmURtd3kBDdP5/gXPI/QWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GTq+bIyv; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739514773; c=relaxed/simple;
+	bh=MOsG8NVKcVO9UMUYZXQ/FmjYYe0V2HYYkcRn4te3esY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=droNl3083SzbSwJkW2batmUNqXETYgjRgQUfb43H5T1Ax53YI8sXTDbhioAajRcOgwEmxtJswUMVsuAfWFZfp0wr/VKBZrPZWWNfUA8WuE4lGEfmVcC8c4kh2f4zlGpMYfa8X6s2ZL4iLcpFmuNBayeWMgKCS877EzN3sw6h1RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sramY19A; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GTq+bIyv"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5dea50ee572so2465748a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:31:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739514680; x=1740119480; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=RS4NhYdSKIq0ZCVoddU4UM3ba+/5N5wTfgewbJrHpVM=;
-        b=GTq+bIyvVaCw26jlpZ9dhBnWI1Scr3lEuVZhWSEHpar+mQi4qnTNxJiM18DPvM44V5
-         vLaw7lAvoZ5HT3MgnNDZ+q8apl0N2jj1zU22I8OME9DaKcylJ6ZnlQj+wFErF/xYxlf0
-         hdEKG9Q5ZagUhG2331Ixj6hSuLvKgOUuLP4GFD6J7846BqgHTFxwIyALqhU2rBb6dQw1
-         1YHCAthQuli0sOuix8qqKsIbotyIr9QvNu5Ubrl6/0NtYxoTi6FaRsslYgaKK1BAf7ww
-         B7xcpEItFgdl8g3zGMsYD09bL3PBGyl2OpQaVJevPjB0hKqs19dtkStQyxAIOs6c81ji
-         OyqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739514680; x=1740119480;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RS4NhYdSKIq0ZCVoddU4UM3ba+/5N5wTfgewbJrHpVM=;
-        b=H9nxrKxg/8uQlU9B+6jYw3j/p8jFHUQT9Ny2gEnavGTFZ1QyiPWKLk/KfsI8xXPbCS
-         q5e6JcRQu3fN/zJDmc2/Iw0EowSIZYenHKZDjmrX+gUGf2kta62MXn4dO8YJZ6hWMbpH
-         Js98U0S0UZifhraP7HaV1xzKA5JoXJ6SE+dleqaSCr3LvFCwMxQX8az8zUNcpdwhPdiy
-         R07wyGokIJtwv0fU4lKOSyOLyCHkVFcAkn1uEBxNTBL0+xEadAv7ueis+gfO3MweGY+P
-         fy5Fmxozkw7oU3XhzNdJcdcSoz/e7+ScBKmTmKGmnKWqOuS+D1Wfu77ZvcUfv/ky8ViL
-         7ozA==
-X-Forwarded-Encrypted: i=1; AJvYcCWPkCnljv1pTLEb6ftYXW4VAbdAdCml3u24xwMqqK4KuopvvJtQcdtSA85yzBeUjjRC5kZ7yzW4RnY9jCs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFi6mK2JuqzS92Qqxm9GI8lmALz9mxmnWCTWuPNUjT0owFPoW9
-	gGXDgWT4mcm9Vc0qKCrP3Ckr93POljg4VwV75v8ULHE788KFo0DaqvkFGPD5fJc=
-X-Gm-Gg: ASbGncu58GT7pkWKi7JBp83dkcdExVePf+VZFpLfMFwVwMy/QxM+Pu/ytdS9QuksugY
-	8YQ8Ao4JZUC2+9u8Pf3UKqhoTw+jtXSnIuYIBKjldL/d61WaXvcY+DOO4ie6pfuI996xdjzhHZd
-	BgbldtbA7LqaDfSmyhJhwAThSMn2WCIq7PjneCC2QXrZL9YuVCoq/oFzGT2i/w3KXWUBieIvBn6
-	iII/RTKQCT8Q3JrrsAb9O5xzC1oqYLxzYC2XxlTLHXq6cDZLxyFQexoVYFDNkRU7qaK33s2p6u3
-	medZqq6r89IXBI5E+Bzkf6nz
-X-Google-Smtp-Source: AGHT+IEN/RRE5hxQ5xNZNtT7rJsPTV3GPjWwm8qrFkScK0MAqhU1b09AXyINMIOW8g0Zg6OABiY4tw==
-X-Received: by 2002:a17:907:3da8:b0:aa6:79fa:b47d with SMTP id a640c23a62f3a-ab7f336d454mr924285066b.1.1739514680163;
-        Thu, 13 Feb 2025 22:31:20 -0800 (PST)
-Received: from [192.168.0.14] ([79.115.63.124])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece288e38sm2350948a12.79.2025.02.13.22.31.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 22:31:18 -0800 (PST)
-Message-ID: <49ce4bf7-fec2-4d1a-aff0-e342b31c4f57@linaro.org>
-Date: Fri, 14 Feb 2025 06:31:16 +0000
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sramY19A"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51E217tZ013379;
+	Fri, 14 Feb 2025 06:32:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=jN4FaQ
+	FIv+GkbRwAOYMg9naHXIwVApjxx0TVLhKgmUM=; b=sramY19AimOPPPGrbVgwjY
+	b0S+Ll/CUN8nrwKAdMEd28ssBqpswYTitlRJvm58REd1QFbVqjHvq12otrnW8M1M
+	TFc6IzmpgNP8lyYT8n6BWR8kRmp7/MqhtHxcs8JH5bV5MhNPo2esPEj3pu5p0JNz
+	H1LJlCvvBY0muFi789DfhEvLez2xPIJNLgtpzITrGQ9K/Ocx6KPAt25iqvqeNuZe
+	xLZ7oEx+TZGfOVU35fhNGAfS58Xp9370Q4G+yyudvCYnM7FZarsF5A8KOxuG+FTb
+	rA4HCffPMDX+cpVjmA7Q9FnvXMgvcFfxdBaqaoB2WXz+MlswaYjTf73uXJ3UL7hw
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44svp08xbh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 06:32:46 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51E2jV9X016692;
+	Fri, 14 Feb 2025 06:32:45 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44pk3kj6mf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 06:32:45 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51E6WhvH41812402
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Feb 2025 06:32:43 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CB0E72004D;
+	Fri, 14 Feb 2025 06:32:43 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 77EFE20040;
+	Fri, 14 Feb 2025 06:32:42 +0000 (GMT)
+Received: from [9.43.1.221] (unknown [9.43.1.221])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 14 Feb 2025 06:32:42 +0000 (GMT)
+Message-ID: <77c11ea2-f3ae-497a-aaba-f7b33f46743d@linux.ibm.com>
+Date: Fri, 14 Feb 2025 12:02:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,33 +62,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] spi: s3c64xx: add support exynos990-spi to new
- port config data
-To: Denzeel Oliva <wachiturroxd150@gmail.com>, andi.shyti@kernel.org,
- broonie@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, alim.akhtar@samsung.com, linux-spi@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250213204044.660-1-wachiturroxd150@gmail.com>
+Subject: Re: [linux-next-20250212] syscall kexec_file_load not available
+To: Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+References: <8e73069b-5987-4a08-b13d-13fe691092ad@linux.vnet.ibm.com>
 Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20250213204044.660-1-wachiturroxd150@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <8e73069b-5987-4a08-b13d-13fe691092ad@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 8-I0An12dgEe2IHZiXdS89BwQYzIzGcq
+X-Proofpoint-GUID: 8-I0An12dgEe2IHZiXdS89BwQYzIzGcq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-14_02,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxscore=0 malwarescore=0 phishscore=0 spamscore=0
+ adultscore=0 mlxlogscore=854 priorityscore=1501 lowpriorityscore=0
+ bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502140047
 
 
 
-On 2/13/25 8:40 PM, Denzeel Oliva wrote:
-> - Added a default "fifo_depth = 64" to prevent crashes when "fifo-depth"
->   is missing in the device tree (avoids divide-by-zero issues).
+On 13/02/25 8:34 pm, Venkat Rao Bagalkote wrote:
+> Greetings!!!
+> 
+>  From kernel next-20250210, I am observing syscall kexec_file_load not 
+> available, there by kdump service is failing to start.
+> 
+> 
+> Logs:
+> 
+> [root@ltc-zzci-1 ~]# kexec -p --initrd=/boot/initramfs-6.14.0-rc2- 
+> next-20250212kdump.img /boot/vmlinuz-6.14.0-rc2-next-20250212 -c
+> Warning: append= option is not passed. Using the first kernel root 
+> partition
+> Modified cmdline: elfcorehdr=311424K root=UUID=b5b1f89c- 
+> d479-48b3-90e2-744a2fd05667
+> [root@ltc-zzci-1 ~]# kexec -p --initrd=/boot/initramfs-6.14.0-rc2- 
+> next-20250212kdump.img /boot/vmlinuz-6.14.0-rc2-next-20250212 -s
+> syscall kexec_file_load not available.
+> [root@ltc-zzci-1 ~]# kexec -v
+> kexec-tools 2.0.27
+> [root@ltc-zzci-1 ~]# uname -r
+> 6.14.0-rc2-next-20250212
+> 
 
-no, you shouldn't use fifo_depth as a fallback, it's misleading.
-fifo_depth shall be used only if all your SPI instances use the same
-FIFO size. If that's not the case, as in yours, you specify the FIFO
-depth via DT.
+Is the kernel built with CONFIG_KEXEC_FILE ?
 
-You need to determine whether your IP works with 0 sized FIFOs and if
-not, make the the DT fifo-depth mandatory and check that its value is > 0.
+- Hari
 
-If the IP works with 0 sized FIFOs, you need to update the driver to
-allow that and let the fifo-depth property optional in DT.
