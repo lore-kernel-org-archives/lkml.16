@@ -1,244 +1,282 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C981615FA7B
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 18:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22F819750B;
+	Fri, 14 Feb 2025 18:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739558801; cv=none; b=fjwl74d0iBV+EZ+62+0fUZ4vLmAgIUtu7AZPasXy9m/K393dczgYlQDamTPQXqmuUsJdH/Js42wIrq41Zbjq2XENWLGKmxVs7PB5CLNd/x49zk1iUHZtHPWaHVK76ExzDqDV/t2qy371N8A2MIlwfImmlt2Y2uggrSWKI2lTsIQ=
+	t=1739558809; cv=none; b=HvMuz1KVry/xniejI08/29FbL8BYveNlBBoiLP6LkwrQ6n5LEZrzRw7JsnMjTlAOq6uZF80fjR/qPMSrbI0YglCW7xtvpmM1A+IU1goTAVytnKTF9iWb/JLnjNpo8pYXrxwbXzWY0iN5UbUaJrIbuK1I5yr6nOVt4n2JplEBv+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739558801; c=relaxed/simple;
-	bh=9cZUvtkhOJHv3roKzPmiTT0vSfmu08+p+R3fVltJ3J8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vb/60C0n5Or1tXYRbYrdOmEmbrkyac4yRnHc1yoWsTuoJ7CXIqRNXuKs+o7m4kLFmPBVBJmmV3yMLaskvpI9anAzTJOEFxv+oDvQYkO/j4svtbBMQzVdLSjZtAYr6r/vcrnOoxIWF6igUm4Hr2/vQOQG8qNNmPccOb3P9w7GysU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YAqR6H1X; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1739558809; c=relaxed/simple;
+	bh=tKW4TH+LAPY6Tur9AlHrWs1vDbIL8qmHHn4fMeFUVzU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DM0RpRAL0R0cChlqk/kqPIP37oBA59EXp2cYalHa0jqKla6eCPRmocidet6mAs6wguhh6gHx4HGPM/J4H1o22gSa7FGACLvs4xE9v24nQs0geePMPnbJNDc38g5fHT2WN0rCx0Ho1aCGqIFQSs3cLQSuxnyayhLDhSssEZ8Rpvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cn19R4Cq; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YAqR6H1X"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ab7e1286126so416773766b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 10:46:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cn19R4Cq"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-220c665ef4cso36261645ad.3;
+        Fri, 14 Feb 2025 10:46:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1739558797; x=1740163597; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9cZUvtkhOJHv3roKzPmiTT0vSfmu08+p+R3fVltJ3J8=;
-        b=YAqR6H1XQonJU8uXppEoB3Vn/46/GGpTj/iyqt/aR3qHJ95HX8qjdYTsCk1+GvOUX+
-         CH8pevfuJho5J3NF3zy4OHiVV0s9dXQZxWf1mRhO3aEE0eNFmlmjzBcWGyzxryp+CTOz
-         FZUxPK7zMQ1vPO77lffK6vE45g/yXJ0AjXAJbr8TDePIkCee7rplfPrx/0oebszI7CrI
-         quyCzQ1n2HA5oUHpf+TyTngUApwTLbfxr39/0fepbU3OQN3nSE30GmlvhzZt+bAlEGcT
-         FijQXL410D8iTwgrQ1rzdrw+MHALOmIXYE9ghk0TwN+LYwYFzj35qSDC+rGjd47VnCmh
-         9wuQ==
+        d=gmail.com; s=20230601; t=1739558807; x=1740163607; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3AoyiB+ByqlTcNNpk1JUjsGL3GRg2563aZYap+mUJBM=;
+        b=cn19R4CqUGa1DTSsPiQWi4cVb/3adnsb0CEfnwg8M2mirkrq7fBWg6Tl5J+oH+Hrw2
+         DqvrPG3zNPdojXS+SyshbroqVKsK3j7O9quRL5AYWcq2BoQHQu9iYQ+FyEHNDqi5cwS0
+         fj/WoSNXDNi7Jcq+RdZRDA82dAKE+S3ul4zuGk3EpAWIEv6+Okmq2Jgph1Ebsz8kfbdU
+         R7m6RpIHAV8cci9EZeSYZvGnOtplebTqukjn5tKf9C2UKzowRWPN4V8YafKvzMCLXAxW
+         vt45Y8v8iH3lcDhnKIe9gFL1HcNMSYKO8+c2818Iea/MA5PiKPDfVihav2ZUWXWW9MMO
+         13HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739558797; x=1740163597;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9cZUvtkhOJHv3roKzPmiTT0vSfmu08+p+R3fVltJ3J8=;
-        b=o8OxQMeoCSJ6lhc2M/nNLDyA8jk9nXbwiqjHxarOa+1k2jF4Nt2w7SWbCdo80LSWdS
-         ebgQ6PuvF6jE9CGPgnhahQbdBTNrLeUEM33eVSVE4JwIqQh76jpeAnQrN1I73QMRNHr0
-         WF9LToQWqhOeICGOdElZGvSDQs1OIv8B3T/fQesB8No+NydXQGvuc2wg98e1ZnwogT6d
-         N2MElM7LT7Ku7HwynVcAdZzLPFxLuvSV4CysYX+ogNIvFpDZpP+JNIyLbCGD9/V8gAvr
-         FMywPIPuOYAM/0vqHiQtMRFNrSlyWhoOkLgrIUEKwlM/95e4uTh3fxv2NBPHvVvVitva
-         z6Tg==
-X-Gm-Message-State: AOJu0YxrJo33MjvaKUaxHKZktIDfYw4fO3TThn9505X8esmH+PzQcib8
-	Uu00aEEbARnGuOzwXId7eah1/Nm0exZ2+pOwUhnlsfve3eorOp4H2jh631tqYsc=
-X-Gm-Gg: ASbGnctpq4u+giUyrqSqV8TAAEMxZwDOIaEc8p0i03GsWDg0I/VQBuN59NZ+E+kUjfV
-	LA11LJ9tAq55bwOL3M7NVt6MoeYqI9wh/jUiHaXvIEzVf0wgjaBzDjrJlA/5sXTNR6X+63kZxV4
-	AMPIf2y3IkcMFB1kzMpIom5fjJbd+BvF6u00RuHO6/ak3sr6vy22xCQanb9US5HvOpu4L8E7eMv
-	GyGEgBCraNgwgMDBocgFWxiQI0pGxLBIqUNgFxXTuARAGDeSC0LKtw5iYq2R5tOcJKDPIBfFRcR
-	ARY84re/PlGL6POAEQCoVdvRLd79uexjsbxBRVGtW3C4iA8gDNXmGPxKfmHxF+DqZtDxHYV7q4d
-	Df2zuvYgEUYWEdhxV/ZQiWhaPu5KT99gHKzf9ew==
-X-Google-Smtp-Source: AGHT+IEfAE+yGYV4vD1yDlAZH5l0mF9QsP03ia8ReUQjdDC1qLLrJ+fW5yw+yDA5SsCbXSInyOac4Q==
-X-Received: by 2002:a17:906:3112:b0:aaf:ada2:181e with SMTP id a640c23a62f3a-abb70dcfdf8mr12819866b.26.1739558797016;
-        Fri, 14 Feb 2025 10:46:37 -0800 (PST)
-Received: from ?IPV6:2003:e5:8714:500:2aea:6ec9:1d88:c1ef? (p200300e5871405002aea6ec91d88c1ef.dip0.t-ipconnect.de. [2003:e5:8714:500:2aea:6ec9:1d88:c1ef])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba532581acsm391200266b.50.2025.02.14.10.46.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2025 10:46:36 -0800 (PST)
-Message-ID: <e39d6686-deb1-48cd-bdcb-e5ac7e87a38a@suse.com>
-Date: Fri, 14 Feb 2025 19:46:35 +0100
+        d=1e100.net; s=20230601; t=1739558807; x=1740163607;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3AoyiB+ByqlTcNNpk1JUjsGL3GRg2563aZYap+mUJBM=;
+        b=Ps+BOizma4/qny0IVVgLUZ/W7XmF5zMJAyv+9mCNqQd/LHqzc/Y7W/K8QH7hhZ1FcO
+         7Y6PwPlnqBiRrd11ASGE5SqlonislPNOeFO0dhN4h1aR//q4NHQBi5AKgwZQBr4mD44p
+         IVsNr59RPpw5yANpdnP6NoPhzARVb0f7eiywJ1Yu9b7YX1B5WELCwTsghzMYMKVc7SiH
+         Q5eLutycaRIlrbStHPkhsCgRL+y9BSwNcdDyYQikDCyRwBya6Nrk3x3o/RF0lo+Gqnsk
+         52FmIM+uM89uBwabcJQb9XW8dBLGXpy43CcekoTVztPjNvsaop5K0df7vmhn/b7Vaxfo
+         v9hA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ1MrtC3i4NfhW9N/VtdnSKYSLiACn7ZexsDx/nITxH4kxZLybynBqp8YwA7bR3b7Vk5N+60kqQta+86Y=@vger.kernel.org, AJvYcCWbjRSstjYdNEq3i2U11Zn6r1Tb9FlBOQnGxEc/oqNQBk1wazFl2/P4P8+xPiAqLIa1DaCJfEdLf3LUZexsQWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3Ix3aAqMYDHYvEi5qw13xWvpoRHMRtR293kqkD1AC7IGKjS62
+	6ftDKiasqjHROZeGb74JEysJTRCiuGPE+YQTeDu5nvoGDyA6q+jM
+X-Gm-Gg: ASbGncv9XzzAgXTZlP3+VrErRoJZQhZCry6VEMYBkYEsmQVGVN7Pz5ufOXAm/kjfLFj
+	nHNiXX/v60RNBqJ115ku86NvBJMkoMI7DLYVYlCCgWhpRX5UjVQjZ0z1gYAzn9KIvbp+fpx2XSn
+	iznD/uMzGCJHJeYvQfrH6+WnDBRQOPrN9tJgN+EgYCFNCYkfFlPzGTQDv9ZYr4YwgxT9hCUfzDV
+	jo0bHWhjStkwmHoKa1SHundd9/XpkWPUFLL1QQlCFDteCixqjPWu4iBLfXszBBVzemCDTdZvy6o
+	Dq/0F4l2ExF/cMADvPc7u5fO
+X-Google-Smtp-Source: AGHT+IGNJdsTANpgQB9CUn3wHqXnjo+MVrHilYvKJLz9u8VJDAtfjsY4CYzy6l8JTiWrQLPvH4bnMg==
+X-Received: by 2002:a05:6a00:1488:b0:730:949d:2d32 with SMTP id d2e1a72fcca58-73261799882mr761323b3a.6.1739558806844;
+        Fri, 14 Feb 2025 10:46:46 -0800 (PST)
+Received: from linuxsimoes.. ([187.120.159.118])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73242546841sm3438637b3a.1.2025.02.14.10.46.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 10:46:46 -0800 (PST)
+From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+To: a.hindborg@kernel.org,
+	alex.gaynor@gmail.com,
+	aliceryhl@google.com,
+	apw@canonical.com,
+	arnd@arndb.de,
+	aswinunni01@gmail.com,
+	axboe@kernel.dk,
+	benno.lossin@proton.me,
+	bhelgaas@google.com,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	dakr@kernel.org,
+	dwaipayanray1@gmail.com,
+	ethan.twardy@gmail.com,
+	fujita.tomonori@gmail.com,
+	gary@garyguo.net,
+	gregkh@linuxfoundation.org,
+	joe@perches.com,
+	lukas.bulwahn@gmail.com,
+	ojeda@kernel.org,
+	pbonzini@redhat.com,
+	tmgross@umich.edu,
+	walmeida@microsoft.com
+Cc: trintaeoitogc@gmail.com,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Subject: [PATCH V2 1/2] rust: module: change author to be a array
+Date: Fri, 14 Feb 2025 15:45:49 -0300
+Message-Id: <20250214184550.120775-2-trintaeoitogc@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250214184550.120775-1-trintaeoitogc@gmail.com>
+References: <20250214184550.120775-1-trintaeoitogc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] xen: fix usage of devices behind a VMD bridge
-To: Bjorn Helgaas <helgaas@kernel.org>, Roger Pau Monne
- <roger.pau@citrix.com>, Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
- Jonathan Derrick <jonathan.derrick@linux.dev>
-References: <20250214171745.GA157045@bhelgaas>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <20250214171745.GA157045@bhelgaas>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------dFjo1nWKpml6ocFLCg2lFSIE"
+Content-Transfer-Encoding: 8bit
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------dFjo1nWKpml6ocFLCg2lFSIE
-Content-Type: multipart/mixed; boundary="------------1ez97w0veSUCMfLnmAAfkVb4";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Bjorn Helgaas <helgaas@kernel.org>, Roger Pau Monne
- <roger.pau@citrix.com>, Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
- Jonathan Derrick <jonathan.derrick@linux.dev>
-Message-ID: <e39d6686-deb1-48cd-bdcb-e5ac7e87a38a@suse.com>
-Subject: Re: [PATCH v2 0/3] xen: fix usage of devices behind a VMD bridge
-References: <20250214171745.GA157045@bhelgaas>
-In-Reply-To: <20250214171745.GA157045@bhelgaas>
+In the module! macro, the author field has a string type. Once that the
+modules can has more than one author, this is impossible in the current
+scenary.
+Change the author field for accept a array string type and enable module
+creations with more than one author.
+In modules that use the author field, change its value to a string
+array.
 
---------------1ez97w0veSUCMfLnmAAfkVb4
-Content-Type: multipart/mixed; boundary="------------6Nwm3dpB58p7PWOHokdSqgH0"
+Suggested-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Link: https://github.com/Rust-for-Linux/linux/issues/244
+Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+---
+ drivers/block/rnull.rs           | 2 +-
+ rust/kernel/net/phy.rs           | 4 ++--
+ rust/kernel/pci.rs               | 2 +-
+ rust/macros/lib.rs               | 4 ++--
+ rust/macros/module.rs            | 8 +++++---
+ samples/rust/rust_driver_pci.rs  | 2 +-
+ samples/rust/rust_minimal.rs     | 2 +-
+ samples/rust/rust_misc_device.rs | 2 +-
+ samples/rust/rust_print_main.rs  | 2 +-
+ 9 files changed, 15 insertions(+), 13 deletions(-)
 
---------------6Nwm3dpB58p7PWOHokdSqgH0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+diff --git a/drivers/block/rnull.rs b/drivers/block/rnull.rs
+index ddf3629d8894..cb133993f27f 100644
+--- a/drivers/block/rnull.rs
++++ b/drivers/block/rnull.rs
+@@ -27,7 +27,7 @@
+ module! {
+     type: NullBlkModule,
+     name: "rnull_mod",
+-    author: "Andreas Hindborg",
++    author: ["Andreas Hindborg"],
+     description: "Rust implementation of the C null block driver",
+     license: "GPL v2",
+ }
+diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
+index bb654a28dab3..b179ac3a8d00 100644
+--- a/rust/kernel/net/phy.rs
++++ b/rust/kernel/net/phy.rs
+@@ -790,7 +790,7 @@ const fn as_int(&self) -> u32 {
+ ///         DeviceId::new_with_driver::<PhySample>()
+ ///     ],
+ ///     name: "rust_sample_phy",
+-///     author: "Rust for Linux Contributors",
++///     author: ["Rust for Linux Contributors"],
+ ///     description: "Rust sample PHYs driver",
+ ///     license: "GPL",
+ /// }
+@@ -819,7 +819,7 @@ const fn as_int(&self) -> u32 {
+ /// module! {
+ ///     type: Module,
+ ///     name: "rust_sample_phy",
+-///     author: "Rust for Linux Contributors",
++///     author: ["Rust for Linux Contributors"],
+ ///     description: "Rust sample PHYs driver",
+ ///     license: "GPL",
+ /// }
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 4c98b5b9aa1e..1218eaa7be02 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -103,7 +103,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
+ /// kernel::module_pci_driver! {
+ ///     type: MyDriver,
+ ///     name: "Module name",
+-///     author: "Author name",
++///     author: ["Author name"],
+ ///     description: "Description",
+ ///     license: "GPL v2",
+ /// }
+diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
+index d61bc6a56425..8d74e18caf96 100644
+--- a/rust/macros/lib.rs
++++ b/rust/macros/lib.rs
+@@ -36,7 +36,7 @@
+ /// module!{
+ ///     type: MyModule,
+ ///     name: "my_kernel_module",
+-///     author: "Rust for Linux Contributors",
++///     author: ["Rust for Linux Contributors"],
+ ///     description: "My very own kernel module!",
+ ///     license: "GPL",
+ ///     alias: ["alternate_module_name"],
+@@ -69,7 +69,7 @@
+ /// module!{
+ ///     type: MyDeviceDriverModule,
+ ///     name: "my_device_driver_module",
+-///     author: "Rust for Linux Contributors",
++///     author: ["Rust for Linux Contributors"],
+ ///     description: "My device driver requires firmware",
+ ///     license: "GPL",
+ ///     firmware: ["my_device_firmware1.bin", "my_device_firmware2.bin"],
+diff --git a/rust/macros/module.rs b/rust/macros/module.rs
+index cdf94f4982df..09265d18b44d 100644
+--- a/rust/macros/module.rs
++++ b/rust/macros/module.rs
+@@ -94,7 +94,7 @@ struct ModuleInfo {
+     type_: String,
+     license: String,
+     name: String,
+-    author: Option<String>,
++    author: Option<Vec<String>>,
+     description: Option<String>,
+     alias: Option<Vec<String>>,
+     firmware: Option<Vec<String>>,
+@@ -135,7 +135,7 @@ fn parse(it: &mut token_stream::IntoIter) -> Self {
+             match key.as_str() {
+                 "type" => info.type_ = expect_ident(it),
+                 "name" => info.name = expect_string_ascii(it),
+-                "author" => info.author = Some(expect_string(it)),
++                "author" => info.author = Some(expect_string_array(it)),
+                 "description" => info.description = Some(expect_string(it)),
+                 "license" => info.license = expect_string_ascii(it),
+                 "alias" => info.alias = Some(expect_string_array(it)),
+@@ -184,7 +184,9 @@ pub(crate) fn module(ts: TokenStream) -> TokenStream {
+ 
+     let mut modinfo = ModInfoBuilder::new(info.name.as_ref());
+     if let Some(author) = info.author {
+-        modinfo.emit("author", &author);
++        for author in author {
++            modinfo.emit("author", &author);
++        }
+     }
+     if let Some(description) = info.description {
+         modinfo.emit("description", &description);
+diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
+index 1fb6e44f3395..5784677c797b 100644
+--- a/samples/rust/rust_driver_pci.rs
++++ b/samples/rust/rust_driver_pci.rs
+@@ -104,7 +104,7 @@ fn drop(&mut self) {
+ kernel::module_pci_driver! {
+     type: SampleDriver,
+     name: "rust_driver_pci",
+-    author: "Danilo Krummrich",
++    author: ["Danilo Krummrich"],
+     description: "Rust PCI driver",
+     license: "GPL v2",
+ }
+diff --git a/samples/rust/rust_minimal.rs b/samples/rust/rust_minimal.rs
+index 4aaf117bf8e3..74279c3bd039 100644
+--- a/samples/rust/rust_minimal.rs
++++ b/samples/rust/rust_minimal.rs
+@@ -7,7 +7,7 @@
+ module! {
+     type: RustMinimal,
+     name: "rust_minimal",
+-    author: "Rust for Linux Contributors",
++    author: ["Rust for Linux Contributors"],
+     description: "Rust minimal sample",
+     license: "GPL",
+ }
+diff --git a/samples/rust/rust_misc_device.rs b/samples/rust/rust_misc_device.rs
+index 40ad7266c225..e840c12005cc 100644
+--- a/samples/rust/rust_misc_device.rs
++++ b/samples/rust/rust_misc_device.rs
+@@ -116,7 +116,7 @@
+ module! {
+     type: RustMiscDeviceModule,
+     name: "rust_misc_device",
+-    author: "Lee Jones",
++    author: ["Lee Jones"],
+     description: "Rust misc device sample",
+     license: "GPL",
+ }
+diff --git a/samples/rust/rust_print_main.rs b/samples/rust/rust_print_main.rs
+index 7e8af5f176a3..f6d51b0884fb 100644
+--- a/samples/rust/rust_print_main.rs
++++ b/samples/rust/rust_print_main.rs
+@@ -8,7 +8,7 @@
+ module! {
+     type: RustPrint,
+     name: "rust_print",
+-    author: "Rust for Linux Contributors",
++    author: ["Rust for Linux Contributors"],
+     description: "Rust printing macros sample",
+     license: "GPL",
+ }
+-- 
+2.34.1
 
-T24gMTQuMDIuMjUgMTg6MTcsIEJqb3JuIEhlbGdhYXMgd3JvdGU6DQo+IFsrdG8gSnVlcmdl
-biwgTmlybWFsLCArY2MgSm9uYXRoYW5dDQo+IA0KPiBPbiBUdWUsIEphbiAxNCwgMjAyNSBh
-dCAxMTozMzoxMEFNICswMTAwLCBSb2dlciBQYXUgTW9ubmUgd3JvdGU6DQo+PiBIZWxsbywN
-Cj4+DQo+PiBUaGUgZm9sbG93aW5nIHNlcmllcyBzaG91bGQgZml4IHRoZSB1c2FnZSBvZiBk
-ZXZpY2VzIGJlaGluZCBhIFZNRCBicmlkZ2UNCj4+IHdoZW4gcnVubmluZyBMaW51eCBhcyBh
-IFhlbiBQViBoYXJkd2FyZSBkb21haW4gKGRvbTApLiAgSSd2ZSBvbmx5IGJlZW4NCj4+IGFi
-bGUgdG8gdGVzdCBQVi4gSSB0aGluayBQVkggc2hvdWxkIGFsc28gd29yayBidXQgSSBkb24n
-dCBoYXZlIGhhcmR3YXJlDQo+PiBjYXBhYmxlIG9mIHRlc3RpbmcgaXQgcmlnaHQgbm93Lg0K
-Pj4NCj4+IEkgZG9uJ3QgZXhwZWN0IHRoZSBmaXJzdCB0d28gcGF0Y2hlcyB0byBiZSBwcm9i
-bGVtYXRpYywgdGhlIGxhc3QgcGF0Y2gNCj4+IGlzIGxpa2VseSB0byBiZSBtb3JlIGNvbnRy
-b3ZlcnNpYWwuICBJJ3ZlIHRlc3RlZCBpdCBpbnRlcm5hbGx5IGFuZA0KPj4gZGlkbid0IHNl
-ZSBhbnkgaXNzdWVzLCBidXQgbXkgdGVzdGluZyBvZiBQViBtb2RlIGlzIG1vc3RseSBsaW1p
-dGVkIHRvDQo+PiBkb20wLg0KPj4NCj4+IFRoYW5rcywgUm9nZXIuDQo+Pg0KPj4gUm9nZXIg
-UGF1IE1vbm5lICgzKToNCj4+ICAgIHhlbi9wY2k6IGRvIG5vdCByZWdpc3RlciBkZXZpY2Vz
-IHdpdGggc2VnbWVudHMgPj0gMHgxMDAwMA0KPj4gICAgdm1kOiBkaXNhYmxlIE1TSSByZW1h
-cHBpbmcgYnlwYXNzIHVuZGVyIFhlbg0KPj4gICAgcGNpL21zaTogcmVtb3ZlIHBjaV9tc2lf
-aWdub3JlX21hc2sNCj4+DQo+PiAgIGFyY2gveDg2L3BjaS94ZW4uYyAgICAgICAgICAgfCAg
-OCArKy0tLS0tLQ0KPj4gICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jIHwgMTkgKysr
-KysrKysrKysrKysrKysrDQo+PiAgIGRyaXZlcnMvcGNpL21zaS9tc2kuYyAgICAgICAgfCAz
-NyArKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0NCj4+ICAgZHJpdmVycy94
-ZW4vcGNpLmMgICAgICAgICAgICB8IDE5ICsrKysrKysrKysrKysrKysrKw0KPj4gICBpbmNs
-dWRlL2xpbnV4L21zaS5oICAgICAgICAgIHwgIDMgKystDQo+PiAgIGtlcm5lbC9pcnEvbXNp
-LmMgICAgICAgICAgICAgfCAgMiArLQ0KPj4gICA2IGZpbGVzIGNoYW5nZWQsIDY0IGluc2Vy
-dGlvbnMoKyksIDI0IGRlbGV0aW9ucygtKQ0KPiANCj4gV2UgZ290IGFuIGFjayBmcm9tIFRo
-b21hcywgc28gSSdtIGZpbmUgd2l0aCB0aGlzIGZyb20gYSBQQ0kNCj4gcGVyc3BlY3RpdmUu
-ICBIb3cgc2hvdWxkIGl0IGJlIG1lcmdlZD8gIFZpYSBYZW4gb3IgUENJPyAgSSdtIGhhcHB5
-IHRvDQo+IG1lcmdlIHZpYSBQQ0ksIGJ1dCB3b3VsZCBhbHNvIHdhbnQgYWNrcyBmcm9tIEp1
-ZXJnZW4gZm9yIHRoZSBYZW4NCj4gcGllY2UgYW5kIE5pcm1hbCBmb3IgdGhlIFZNRCBwaWVj
-ZS4NCg0KSSdtIGZpbmUgd2l0aCB0aGlzIHRvIGdvIGluIHZpYSB0aGUgUENJIHRyZWUuDQoN
-CkZvciB0aGUgWGVuIHJlbGF0ZWQgcGFydHM6DQoNCkFja2VkLWJ5OiBKdWVyZ2VuIEdyb3Nz
-IDxqZ3Jvc3NAc3VzZS5jb20+DQoNCg0KSnVlcmdlbg0K
---------------6Nwm3dpB58p7PWOHokdSqgH0
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
-
---------------6Nwm3dpB58p7PWOHokdSqgH0--
-
---------------1ez97w0veSUCMfLnmAAfkVb4--
-
---------------dFjo1nWKpml6ocFLCg2lFSIE
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmevj4sFAwAAAAAACgkQsN6d1ii/Ey9q
-hQgAgBseELLevj+jS7i/dM3OQPq6NgU0r0iL7S70aQj6hmIZgyI4saJiooA87zubPJFxnQIL5Hac
-mdqlZDG5ARCn7wx1NjFTJ0WaQbBFpigeU3x0dzONRXcxjWIqQVD5KKnAKGuMjvs56EFp8CxEoQJt
-jX9WfSTEt9SFJ1XGLl/6dJXJ6ZXyWK5wfW+zvlnuwuAHH3lW5xqpENo39eWHJI+s1FaVZAB40ZWH
-BRqA0bKaxiT0hLLTi9dmDL1wzC3/ZC5PGLiStpq7KQB7RlHk/s3fi7OPa0HIkCl9kBOHNf5WzOAC
-CoihculsYAGY/p5rw8Q/WKiWSfPIUOyhMBedfha9cA==
-=rF35
------END PGP SIGNATURE-----
-
---------------dFjo1nWKpml6ocFLCg2lFSIE--
