@@ -1,132 +1,229 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E431C21B8F6;
-	Fri, 14 Feb 2025 07:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3612B20C038
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739519318; cv=none; b=nHVFapKY6DPF/to4WNxrdK5HxRAvdiPQUlX+kONOHDnW53tCM+/Wpx2ePdGEhBSaG6kPms5gw0uw8mpSnELxSReIwV0nCem1bp6Re7wn8qMdAQ/OFCgptIf/9lEd0mOzRswUBwvU6mOOyJ2+KV1SOKylJyOSBiIrXBDpNBqw5PQ=
+	t=1739519619; cv=none; b=HvzwL9IUoOpYoVXZuE0rgQUqlSEGrhv8+aJhcJnMPlGlq11BgqJRxRVz3gywgi5FSOLRm2MGAkODo5PxCTQvz6S8aUXOHjKLO3I6Szu6hBJAw6Ctj6upwrHoNmF0u9kW7HxZbZkcSbuC7ZLrHm68aRNpp8Ef9qAyClY+5oSkmhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739519318; c=relaxed/simple;
-	bh=m1eG8KHMaFDsXpSi9FNYwgNLf+4v4sQjZ2SUbZoKMYg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QOCZmKgT4ZRLfErNGPu1UQi6v+HM6AaxPH3NoV+tDIIpGPwRDb/AtYtjhGib+Fvw8fSpBcV+GI65rcIItJhQvkfJFmcpLwtx8Qkaw6FNXva8pU+o9zCtTwdSGRBeCcFj0vpKKkP+EnYVhIZMKeO9tq1dloM7dFRPZmzu+VLyqsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PJDQZWsv; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739519619; c=relaxed/simple;
+	bh=zxd7MqrUFbwoKk31uJkFvKgEBdNn3QGkrLKashAh8HA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tqsl96junydfBf74SUrNiOPyX1u4GpFSR6Q0A/Ojww+qTUc1gqQV/pCfKcnUaolkH9vgD8MF62O25BTda+Lz7KLPiTUDGfnjwbzNwMgBYzMN/GKacyzmb6zSricXnFg1aBcQZRXT6xT47AN/EPawGF29bUdOKSn8+ccIk7Ja7Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=n2OO5nx/; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PJDQZWsv"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-85571bd0203so35864439f.3;
-        Thu, 13 Feb 2025 23:48:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739519316; x=1740124116; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=731rFs0ET7FwAGuOR3hr8cPMl7QFrpHqNeXFCTqMoFY=;
-        b=PJDQZWsvNoY9yBvrRikwjz+68NwHrN5BFrCLt39dRzLlFp0pUTmsLaHIKZtNHmqArl
-         2jZP1DatEDXTho0mM4VdpZGanPpOnzItIt7IaBSi3laZ80RV6aN9Degq29b3FdZg4Xtu
-         Za5afNUndASwYy+dff0D/qwyXDxvlghBzGgdrXOsdgzEvw8a5Y/d5yPBLRACCJtgPdrB
-         tHC2KYivbhi2boVsq/h+T5kXtWAECkR3tMGJzCw/omTAvT2YIjc5iFEugaxaRfCCj+Cq
-         KkoEhjPYjrdq1uWx4is1uw4a1c6RPty8Pih5pVpuK8MxF48Ib7xitt9Iuv0nAy7ojBrv
-         pKog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739519316; x=1740124116;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=731rFs0ET7FwAGuOR3hr8cPMl7QFrpHqNeXFCTqMoFY=;
-        b=NTkX6BgkBenVdF+jIF1tUvwqDd/7mfpQF5jGM2ekN2G2jmLTntBKYt7B0kIlsZhNwA
-         /QrH6tNZf55hqk3lvaREXF51r+TMqLL7hMuu2gCDGQTqwiP62O4sCiUAUCphE1wb8KYr
-         yTzW3iZVOnYTx0y5UwgjqDQVJXt7Kr/bxm46AnzAoYP05+OOXcqp5+RlNsjT8UZwfS6/
-         +ShGQQauL+rpuEmSZn2AFpTjI2xZTl6z357X8+DQKIG7SERPann1+fjuWJHissaGcBIY
-         XGa794r16pX6e6Cu27oYglaoOzA6kD0MdAInFnDQP/1ahusrHpYJzqdD26PapTbcvWwK
-         OxfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDDmb7XbR/w865H/bBGxVsuCA6O6hLf456J4ZUXM52P00DNgowr0B6zRviR0x/ZrHvyMRk20f5BhnrKN8=@vger.kernel.org, AJvYcCWhtrCiYy0tXHeSdDgEnaWWN3PCm6us1qfD+ZLc34hS3ruktfe1gzl3W/IFrNE0CzAu1L03USt1+1RdXFY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUvj1RBmPCSLvJWTFXTOvpAUu+9oPYCypVC7OCfTlFT6Wz0oJA
-	ATRw0eiSNZMb4d3RemAeUfl5nxG1BIxLoH02GP1nce8cIubbYgZc3mSynUkWpgc8vnqsY0aqZ5V
-	rFOc78/mq1/A3kTSphXqUYLuGLXw=
-X-Gm-Gg: ASbGnctsCiwlYmECHHi42Q2EDGdweuqtBk2FTlDUsAYp4296ZIsgReRNq0XOHyGc/yV
-	ZY5US4zb+iADny30V0kohAySMie6Y0Ttfk26E1Q710qQLCH1IceY5a59QF/nQNlXkv85qDeM/
-X-Google-Smtp-Source: AGHT+IE22ipUxc6uvPnQnBkwGLFiXLKEtvMmYd7z3k09O1lrpjChkZ/Hbhfrn7x//qqetG+GUnCsfUC8k47APTHaH6M=
-X-Received: by 2002:a05:6e02:3689:b0:3d0:11ff:a782 with SMTP id
- e9e14a558f8ab-3d18c231101mr54357335ab.9.1739519315915; Thu, 13 Feb 2025
- 23:48:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="n2OO5nx/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739519615;
+	bh=zxd7MqrUFbwoKk31uJkFvKgEBdNn3QGkrLKashAh8HA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=n2OO5nx/XuislDMe7yVKfiSyUNiY8mY3ItvADBcPtXYsMAl/wY02LjNyQuExuL4xC
+	 elS4VX99PbewQ8D0yqzp3lP9/chJVlmZHPqzrzOSx/bpVr2Yj5FaG8YsNIEWIUTKfw
+	 4ThkYuDdVrx6nLZyTQpDrq3gh2hhOOt9jemtlMgqdLEsLilD1r+CKiOiTDenhoXREp
+	 fSb6Xl9hMb270f5uSTPcu5xJ/ynoi2UezXpt1BhwjZOX98DF1DnDT/XE/2D9P44DtL
+	 C9klEWpmxnNsK2T6eKxELqmroyil31FNIU3aCKroeZYJ1pkKbGMi66yLFysBQdSdNQ
+	 QqO2DvDVJuORw==
+Received: from [192.168.50.250] (unknown [171.76.83.32])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 868B017E0860;
+	Fri, 14 Feb 2025 08:53:30 +0100 (CET)
+Message-ID: <5e5ecd07-9932-4f5e-ba7a-49fbea9edd84@collabora.com>
+Date: Fri, 14 Feb 2025 13:22:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214071747.229719-1-chancel.liu@nxp.com>
-In-Reply-To: <20250214071747.229719-1-chancel.liu@nxp.com>
-From: Shengjiu Wang <shengjiu.wang@gmail.com>
-Date: Fri, 14 Feb 2025 15:48:24 +0800
-X-Gm-Features: AWEUYZm_evk9kNSA0Rf-nfbp1PH6GJ4BxmVu1WRP18sINX7eFOA6CuSK3yph-h8
-Message-ID: <CAA+D8AMbW=iWZ1VCWuZvE2u4EHy9FeEMgDBxpTO9XupZeyUzCA@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: fsl_sai: Rename stream name of dai driver
-To: Chancel Liu <chancel.liu@nxp.com>
-Cc: Xiubo.Lee@gmail.com, festevam@gmail.com, nicoleotsuka@gmail.com, 
-	lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] drm/ci: enable lockdep detection
+To: Helen Mae Koike Fornazier <helen.fornazier@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com,
+ airlied@gmail.com, simona.vetter@ffwll.ch, robdclark@gmail.com,
+ guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
+ valentine.burley@collabora.com, jani.nikula@linux.intel.com,
+ dmitry.baryshkov@linaro.org, mripard@kernel.org, boqun.feng@gmail.com,
+ linux-kernel@vger.kernel.org
+References: <20250211152812.54018-1-vignesh.raman@collabora.com>
+ <20250211152812.54018-4-vignesh.raman@collabora.com>
+ <CAPW4XYZtj7HRhoeOfYguZBEnbqpbRscKrXTn5821aAxvcqNb0g@mail.gmail.com>
+Content-Language: en-US
+From: Vignesh Raman <vignesh.raman@collabora.com>
+In-Reply-To: <CAPW4XYZtj7HRhoeOfYguZBEnbqpbRscKrXTn5821aAxvcqNb0g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 14, 2025 at 3:18=E2=80=AFPM Chancel Liu <chancel.liu@nxp.com> w=
-rote:
->
-> If stream names of dai driver are duplicated there'll be warnings when
-> machine driver tries to add widgets on a route:
->
-> [    8.831335] fsl-asoc-card sound-wm8960: ASoC: sink widget CPU-Playback=
- overwritten
-> [    8.839917] fsl-asoc-card sound-wm8960: ASoC: source widget CPU-Captur=
-e overwritten
->
-> Use different stream names to avoid such warnings.
+Hi Helen,
 
-Only this change should cause issue for imx-audmix driver.
+On 13/02/25 18:13, Helen Mae Koike Fornazier wrote:
+> Hi Vignesh,
+> 
+> thanks for your patch.
+> 
+> Em ter., 11 de fev. de 2025 às 12:29, Vignesh Raman
+> <vignesh.raman@collabora.com> escreveu:
+>>
+>> We have enabled PROVE_LOCKING (which enables LOCKDEP) in drm-ci.
+>> This will output warnings when kernel locking errors are encountered
+>> and will continue executing tests. To detect if lockdep has been
+>> triggered, check the debug_locks value in /proc/lockdep_stats after
+>> the tests have run. When debug_locks is 0, it indicates that lockdep
+>> has detected issues and turned itself off. Check this value, and if
+>> lockdep is detected, exit with an error and configure it as a warning
+>> in GitLab CI.
+>>
+>> GitLab CI ignores exit codes other than 1 by default. Pass the correct
+>> exit code with variable FF_USE_NEW_BASH_EVAL_STRATEGY set to true or
+>> exit on failure.
+>>
+>> Also update the documentation.
+>>
+>> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+>> ---
+>>
+>> v2:
+>>    - Lockdep failures are reported as pipeline warnings,
+>>      and the documentation is updated.
+>>
+>> ---
+>>   Documentation/gpu/automated_testing.rst |  4 ++++
+>>   drivers/gpu/drm/ci/igt_runner.sh        | 11 +++++++++++
+>>   drivers/gpu/drm/ci/test.yml             | 19 ++++++++++++++++---
+>>   3 files changed, 31 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/gpu/automated_testing.rst b/Documentation/gpu/automated_testing.rst
+>> index 6d7c6086034d..62aa3ede02a5 100644
+>> --- a/Documentation/gpu/automated_testing.rst
+>> +++ b/Documentation/gpu/automated_testing.rst
+>> @@ -115,6 +115,10 @@ created (eg. https://gitlab.freedesktop.org/janedoe/linux/-/pipelines)
+>>   5. The various jobs will be run and when the pipeline is finished, all jobs
+>>   should be green unless a regression has been found.
+>>
+>> +6. Warnings in the pipeline indicate that lockdep
+>> +(see Documentation/locking/lockdep-design.rst) issues have been detected
+>> +during the tests.
+>> +
+>>
+>>   How to update test expectations
+>>   ===============================
+>> diff --git a/drivers/gpu/drm/ci/igt_runner.sh b/drivers/gpu/drm/ci/igt_runner.sh
+>> index 68b042e43b7f..2a0599f12c58 100755
+>> --- a/drivers/gpu/drm/ci/igt_runner.sh
+>> +++ b/drivers/gpu/drm/ci/igt_runner.sh
+>> @@ -85,5 +85,16 @@ deqp-runner junit \
+>>      --limit 50 \
+>>      --template "See $ARTIFACTS_BASE_URL/results/{{testcase}}.xml"
+>>
+>> +# Check if /proc/lockdep_stats exists
+>> +if [ -f /proc/lockdep_stats ]; then
+>> +    # If debug_locks is 0, it indicates lockdep is detected and it turns itself off.
+>> +    debug_locks=$(grep 'debug_locks:' /proc/lockdep_stats | awk '{print $2}')
+>> +    if [ "$debug_locks" -eq 0 ] && [ "$ret" -eq 0 ]; then
+>> +        echo "Warning: LOCKDEP issue detected. Please check dmesg logs for more information."
+>> +        cat /proc/lockdep_stats
+>> +        ret=101
+>> +    fi
+>> +fi
+>> +
+>>   cd $oldpath
+>>   exit $ret
+>> diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
+>> index 0eab020a33b9..3af735dbf6bd 100644
+>> --- a/drivers/gpu/drm/ci/test.yml
+>> +++ b/drivers/gpu/drm/ci/test.yml
+>> @@ -1,6 +1,8 @@
+>>   .lava-test:
+>>     extends:
+>>       - .container+build-rules
+>> +  variables:
+>> +    FF_USE_NEW_BASH_EVAL_STRATEGY: 'true'
+>>     timeout: "1h30m"
+>>     rules:
+>>       - !reference [.scheduled_pipeline-rules, rules]
+>> @@ -13,6 +15,9 @@
+>>       - mv -n install/* artifacts/.
+>>       # Override it with our lava-submit.sh script
+>>       - ./artifacts/lava-submit.sh
+>> +  allow_failure:
+>> +    exit_codes:
+>> +      - 101
+> 
+> Maybe we could have this rule more generically instead of just in lava,
+> so we can re-use it in other jobs as well and we don't need to repeat it.
 
-Best regards
-Shengjiu Wang
+Yes agreed. I will post a patch with this update.
 
->
-> Fixes: 15c958390460 ("ASoC: fsl_sai: Add separate DAI for transmitter and=
- receiver")
-> Signed-off-by: Chancel Liu <chancel.liu@nxp.com>
-> ---
->  sound/soc/fsl/fsl_sai.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-> index c4eb87c5d39e..9f33dd11d47f 100644
-> --- a/sound/soc/fsl/fsl_sai.c
-> +++ b/sound/soc/fsl/fsl_sai.c
-> @@ -994,10 +994,10 @@ static struct snd_soc_dai_driver fsl_sai_dai_templa=
-te[] =3D {
->         {
->                 .name =3D "sai-tx",
->                 .playback =3D {
-> -                       .stream_name =3D "CPU-Playback",
-> +                       .stream_name =3D "SAI-Playback",
->                         .channels_min =3D 1,
->                         .channels_max =3D 32,
-> -                               .rate_min =3D 8000,
-> +                       .rate_min =3D 8000,
->                         .rate_max =3D 2822400,
->                         .rates =3D SNDRV_PCM_RATE_KNOT,
->                         .formats =3D FSL_SAI_FORMATS,
-> @@ -1007,7 +1007,7 @@ static struct snd_soc_dai_driver fsl_sai_dai_templa=
-te[] =3D {
->         {
->                 .name =3D "sai-rx",
->                 .capture =3D {
-> -                       .stream_name =3D "CPU-Capture",
-> +                       .stream_name =3D "SAI-Capture",
->                         .channels_min =3D 1,
->                         .channels_max =3D 32,
->                         .rate_min =3D 8000,
-> --
-> 2.47.1
->
+Regards,
+Vignesh
+
+> 
+> 
+> Regards,
+> Helen
+> 
+>>
+>>   .lava-igt:arm32:
+>>     extends:
+>> @@ -88,9 +93,14 @@
+>>       - igt:arm64
+>>     tags:
+>>       - $RUNNER_TAG
+>> +  allow_failure:
+>> +    exit_codes:
+>> +      - 101
+>>
+>>   .software-driver:
+>>     stage: software-driver
+>> +  variables:
+>> +    FF_USE_NEW_BASH_EVAL_STRATEGY: 'true'
+>>     timeout: "1h30m"
+>>     rules:
+>>       - !reference [.scheduled_pipeline-rules, rules]
+>> @@ -108,6 +118,9 @@
+>>       - debian/x86_64_test-gl
+>>       - testing:x86_64
+>>       - igt:x86_64
+>> +  allow_failure:
+>> +    exit_codes:
+>> +      - 101
+>>
+>>   .msm-sc7180:
+>>     extends:
+>> @@ -153,7 +166,7 @@ msm:apq8016:
+>>       BM_KERNEL_EXTRA_ARGS: clk_ignore_unused
+>>       RUNNER_TAG: google-freedreno-db410c
+>>     script:
+>> -    - ./install/bare-metal/fastboot.sh
+>> +    - ./install/bare-metal/fastboot.sh || exit $?
+>>
+>>   msm:apq8096:
+>>     extends:
+>> @@ -167,7 +180,7 @@ msm:apq8096:
+>>       GPU_VERSION: apq8096
+>>       RUNNER_TAG: google-freedreno-db820c
+>>     script:
+>> -    - ./install/bare-metal/fastboot.sh
+>> +    - ./install/bare-metal/fastboot.sh || exit $?
+>>
+>>   msm:sdm845:
+>>     extends:
+>> @@ -181,7 +194,7 @@ msm:sdm845:
+>>       GPU_VERSION: sdm845
+>>       RUNNER_TAG: google-freedreno-cheza
+>>     script:
+>> -    - ./install/bare-metal/cros-servo.sh
+>> +    - ./install/bare-metal/cros-servo.sh || exit $?
+>>
+>>   msm:sm8350-hdk:
+>>     extends:
+>> --
+>> 2.43.0
+>>
+> 
+> 
