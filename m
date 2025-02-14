@@ -1,204 +1,137 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013004.outbound.protection.outlook.com [52.101.67.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200ED1474A9;
-	Fri, 14 Feb 2025 02:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.4
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739501884; cv=fail; b=sUziXP/31TX+lEmCVIZlQMVfGsFVu4IXikuYexTyaAgTC3SjU/S4q9NFLB3X1pT8TK2hPyb8gCbQa0k2RZ2y3OXPagVxoOs5f40cWnZAU/oWlhds9fCfuEE6ZLIgipiZj64tpVrLNYhTNw1DzdopgXf0+sEvu6kBD5dCzDJwreg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739501884; c=relaxed/simple;
-	bh=h0gRQFwK33aCU5OAzywhj/kHgXLZiOEMn9btk28OSJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=bQaCvYWbLuwIrv10NaObEAOA7PlBdO6TpCudRkzsG8CCxwp2oogLajeI7ADl4zhY4OHchOdIu0boxP6as26zQexFb2fWHSO/akXbf3WoYarY9wJSn1UHZq58S2/9hE/W/hFVWerN9YeYF9UPtA6gXADFvREZ7cYgrbm7Qc5+Ypo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=r1UEDWrT; arc=fail smtp.client-ip=52.101.67.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF952753FD
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 03:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739502075; cv=none; b=nZNT3AIREPLc8Gj73gb32c1S8wdjJc4GkdniwmNLUo2zU7hsb81bHgBJ9CQp8QTVXt5iFi9qQ93Fcf6xL7SpdEjb0vsFmhlCJDbeuDOfcjeq5+P/WSl3ayjZEbPxOZ1Mzn1nWlIZUbluU9no2yWClQXu+cvIQ8535HexmLArdiE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739502075; c=relaxed/simple;
+	bh=KJvJysIsmaf/18xTfixy0CXTPEbocyW1TH3mI92lQS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cSJ5hThOcjsaT0EFuq5q/ga0e98mPRQPSQKMf+noiVdZSaRQUyjUEgIL5r+ZeCF1hK5kfmR2vejBSkkMzlb/ry3krPYVDWxaHX3s4qy9Fn1dr3pY/En6MHDC21g7o54+OKpXyD/P05yw4RaQyMH8LqYfU2eiQEy0+jvletYqtms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L5ho3Lu6; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="r1UEDWrT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vJRjaDy3yjujVaNHjJeS8vPaRi5CO+JrL5zi27zIk13yT7sU829os5u7s7cg/xwPIOEQQEUcxV9EJVk5KnTNqq7Vv32smES9bUuvmu9YlGulb92csGBYHRmW4YwlwpfvSEs+wlFoF36B8rObz3yuwTUVxnSxSbPVU+n5VtDRP5Cfxi1GjQhzcgaToT2ykv6+47fX6UXsy54uT+7T+Jq4sYlzkGagn9JP3qf3nnjpRvzFAo5ukTpBangcYibsVcXqLeY39UayvFWgcGtXf0tF9O4wM6zc1f/bZtFKlcKkbPA9EyISvoHtNFd3CnyXTzd2jr1zEogD8Dbr0x25iglfTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mqAOlXogdJrRyWQfjcZh/7P/kRow8OUt3HJHZerEFjM=;
- b=Mbpq/fz+cpO/odMASf+cbVd4F07AA8xPLE1ukmX/ka+LhpG5U+1agOBfx4ZQIJ51zF2Hts5Qp/vTAy96N1eNC3LELcEgKL1mIZF997dcPaLD/Uevu1965UbGdEJ0p/x8YlRPDwQkmsNnoVlkgeMzz1hRD2mUxLIu0b8Hhmeh6lSdUD52PcyGIZod9dqF0/Mfn5UO92UQs0E67R/iCGpN3fLn6P59AyW7xWqZRuFwfuLrvifM+9xPvPXIQSR2RHCkKIEadZmR+ohubh2aCrIHOVDBsN1ccqN3kuGFBqAB7i6trxzo5IDXdBlOu+Gclt97kXsEbim16cRLlhc1/UCPPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mqAOlXogdJrRyWQfjcZh/7P/kRow8OUt3HJHZerEFjM=;
- b=r1UEDWrT6pdjepItSizG0udmWM+EoYE4AZ3k9iMI0myfaNNqZkEqalkv1WqipFAyGMLwUAouMlnQmNZd1wDHYtbY8W486y6mgPiSM/ACop7iwodo3cfQgE6uQxkCj4T7LKZ3aoH/43P9zPOk4FaS/RNBYGRoBMUFiw8GTBU9ev2hPL/jH/jWICPux+ZQ7Cn0IOxhejTZeeeKlCtCFw8gvdQwBzwEaJD1MTZQIFTls9X8raHQhkhIr6tH4uBUnGuMvqZv6uKemG/LbjtqSkM2nimSnxM3a5yxuGp1ZcEM0Th30vICHZdedwqFWLbchVAWEsvIdhKSlBoxPTXKgMZnag==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by PA1PR04MB11012.eurprd04.prod.outlook.com (2603:10a6:102:492::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.16; Fri, 14 Feb
- 2025 02:57:59 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8445.008; Fri, 14 Feb 2025
- 02:57:59 +0000
-Date: Fri, 14 Feb 2025 12:04:57 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-	"open list:FREESCALE eDMA DRIVER" <imx@lists.linux.dev>,
-	"open list:FREESCALE eDMA DRIVER" <dmaengine@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Cc: Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH V4 1/2] dmaengine: fsl-edma: cleanup chan after
- dma_async_device_unregister
-Message-ID: <20250214040457.GC20275@localhost.localdomain>
-References: <20241206084817.3799312-1-peng.fan@oss.nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241206084817.3799312-1-peng.fan@oss.nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SI2P153CA0010.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:140::13) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L5ho3Lu6"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54505a75445so1816707e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 19:01:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739502071; x=1740106871; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CphyPEj/nIGWcbqF531VSGV3qr1xTmbTkezkMFIl3Eo=;
+        b=L5ho3Lu6mXUbTmwggrCtI9W4Px6+JTFFHDPejrJQJvLNHlounyTUVCqYXxzkZY1Ui6
+         XfUabC10xhvnwZhXVdNmsjPoylNUYpIJOaqfjZtCAO8sPcfyXl0c49InSk4Dnt0go4XU
+         2sMXWorlgcGdERb3lJDkCOFJrZLYGnZH8VwXnixoemyDj7VW7XAkLTdGLtTC0hs0gj6s
+         /4lu8khF4QJF3+75oDkLKDz/VFxZ7twb/CO4nTYzWXwucQzkMg+MrmnDDqMZUUJ44iPR
+         YDtgS3q3fK2HN44mQpmQsRDEVNl2EGiF1UPASwBFPtr/hlBsqgj2GGOS2cDcQmP85P9R
+         wXxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739502071; x=1740106871;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CphyPEj/nIGWcbqF531VSGV3qr1xTmbTkezkMFIl3Eo=;
+        b=h21dS4aan2aHwY2KK/M5h7ZEH65kbO3gvoDx0rF86a8oeR/D3nhkDD3BpwobyJcE3P
+         Mop9aQmEUATYKaFeq6e2A/lgZgIxkceKSu7QESzCqtiq+9hHkWtKgvjepdgIhLcCGWBJ
+         C45LctWc2JIr5RbBvc3vNafY2hR28lOTs9ngxeno7JlKc13UbUKLJLjESSpDDa51ZxVO
+         n63f4cAWdmRGddzhAYlkjkwi/mN9XeqDZJgOA9mrPLamQCAfg10PdODIlg1VLHHrdeVu
+         eNj24Yi2W+CKx9tYJwg1t9+YB7pzfCQQHeu+Ms0mK3pGGXb3ryEihjp5sExtVWDT2Jrz
+         7a7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUv3hhoCYqrK8QJWT+6WMtu7z1ECD728217HPcuhVZEyFZnyfJuaNx/FLf4Cgj3msOHTpA58j/BqudcLs4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKL7VdvvGSiM14LJ17ZAsM/ZCyjn+g/mdtd/TJaiN+YEn3/R1+
+	KxEaekvX+X4dM8ZVfJf1YEJDnGre6q15ftboTVAS6ORkb56eUdZaPcRkA7QTLJoJtkpPYilrfwr
+	vALIiuA==
+X-Gm-Gg: ASbGncuasjfeF5MjOUqv/ppz7dZIab/u0tufl/G8dEfW+/HoOPLeXPuPEa3fMXjBK8L
+	yGwVyPzN4fQMt+vb/ewtauqi8QyFY8ZbeY1ZpZ3R4iWhj2OjJrzsIp+PQRV3QcLZZVVr7UFtqBy
+	wCoi4d5Nl2mTZ2ICu7amdIrvB1UcsnXQpsxG43LMmZycTwclQDOOruE3jtc/DOkDGKTWWf7vlvc
+	qgAT97MQTEgAJcih/M/kbKFKHteA4YqcNnEGmAJ4BRdw6aNc4lHbZtjl4bOA9PN9R7WKxgGVrC2
+	J6+wpc0Xr4KSoh2EqchoXuf6Ipqfjoh1ivkXClxxmwGaGNdsuSottMTh38Jg8A0vKJcyaTk=
+X-Google-Smtp-Source: AGHT+IGas8108vTEmDl4sEKFFTKnVpl5R5NBfMLQH3mhDRcxgPA6rZImG+SqWw4u3LxjJ3511SnHWw==
+X-Received: by 2002:a05:6512:31d3:b0:545:271d:f85 with SMTP id 2adb3069b0e04-545271d119fmr268944e87.29.1739502070997;
+        Thu, 13 Feb 2025 19:01:10 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5451f105c9dsm361169e87.121.2025.02.13.19.01.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 19:01:09 -0800 (PST)
+Date: Fri, 14 Feb 2025 05:01:08 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: aruhier@mailbox.org
+Cc: Sebastian Reichel <sre@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] power: supply: qcom_battmgr: abs() on POWER_NOW
+ property
+Message-ID: <p5tszocxa7mcazgxsnt3gnv547m523gde2hj2yekiuoimm6rsy@pzofvxngb4ul>
+References: <20250213-patch-qcomm-bat-uint-power-v1-1-16e7e2a77a02@mailbox.org>
+ <yfbgbdugk4xdjpemozdzcuxczx4xd5aphykuksf3lhn22dsgkf@fcfgddu6gpyt>
+ <ioiy4ixlvx5gxl3f4pqshwxz35ktrqghju2circpnd3qicgemc@oohazfsfvuag>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PA1PR04MB11012:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5645aece-d61b-4f4d-dac6-08dd4ca363b0
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|366016|376014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ui43foWn8pqURvO09Qw23Elnr+S/+YLZhO2jRKVtV9PjhhZcjgVUwHmNzmPx?=
- =?us-ascii?Q?6M1TIc8rDxLmJf97By6yx7oEcK5bHaVSoPtn2iVfoRMPQa3mp+j87qdJb4HU?=
- =?us-ascii?Q?qb/gaFF7LSXPesvW3VEzLhi7Muos+edLDv1K/U/Vuttqa6L1LPbPw1xswRLz?=
- =?us-ascii?Q?r0i7cQJKzR/y2BTw7puRNFjb9evPnH1jgF28frnxJnjzdmELpTNRWrr/FEBZ?=
- =?us-ascii?Q?L063IJJgA/RhvFAGCdNzurWGcGnGZ64k7waQUb9C5GmzmtX7mQqGIM6K9gTC?=
- =?us-ascii?Q?MobDxbaQjrTGubXy466czkXx8mryYtWuDZ+JHGRLq+E2kSyxTne7Duo1MQdg?=
- =?us-ascii?Q?RQhBFVGgdOmP3Fi6+KsUwDPBOXp4bra+zGKWYc6JCd/CV3BPGktt9ghfhx9Y?=
- =?us-ascii?Q?DonLBMoFeR/YYcJzkR4c7f18fZNd1l1TGaMnOnz8N9BygygN6MKxPnbwj4oj?=
- =?us-ascii?Q?tAotPaGD/md/hXCuWXWHLzVfRrKQzKUL1/wkT50e4yo6EC6iWk03XsfFOtnP?=
- =?us-ascii?Q?BcODPFvDBLEoWUIg1CjDpqMR0Mu211gxq4NAiQ7gn6e95Be/GUNeIXp/75bu?=
- =?us-ascii?Q?KPdscv2L8Ir1m81fQqa+0xmmUWZODL68It0jInM712obK1Oezlus0Q4ctFRj?=
- =?us-ascii?Q?i6SlqYQdwfiNQ3WNFL0IMTfANG3KrehIhRN6SHvsrSEGJ9P3Y7glSew6ZcLy?=
- =?us-ascii?Q?dH+bnA4UlnUu/bGQFveWeUmSe3DSU4O1WWv60zbLCEFjEbsu7DNK1TKwkEyE?=
- =?us-ascii?Q?VxOisspjVd4v0oz+evET+1eKJCwLNrZ/d48cpl5/by2bnDWjtHEHdnLgsuUu?=
- =?us-ascii?Q?SshRJSDEZs4aqKHlDrQuYl1H0xUdJo/Xo57P/MBWJXocvGK1qr0rWU4kspmR?=
- =?us-ascii?Q?mN3JOe7POF8PHmddcRQNVReKQbIngF704NeB2ekkgqTMayKX2/76om+8QuGO?=
- =?us-ascii?Q?/NiosCkxvplNNq+JCcs5+520mu5dUWY6RvoaTdNwvnuz/lfx5nbStllN8RPo?=
- =?us-ascii?Q?4ELZZXnNkivCL+4HtK5CkhantKPuCWKzQvkXDIC0kHMaAS15TU0iy+qnwMBg?=
- =?us-ascii?Q?EyADzCoEzg6J7C4lhFL/jEYF72LbkUkgMbYz3xYzbuwdZ1nym4VVX922vLQ8?=
- =?us-ascii?Q?VZ+pcmNsd5tNMcFCNCnGQoxIp8AV/8Nmk5IOnewNDDkE+Q/GECD0TAg3FsZY?=
- =?us-ascii?Q?H0RlzMrcdpFXBEQHJzVWhOqpa4SgaTVDUVt2fOCWZ50AEhnG61bOmXqHdhin?=
- =?us-ascii?Q?uk1nNdTVsYsNriwimgikM0QRoR+trroUdrvShh+V+Os3DR5QPqQ81swvOPKe?=
- =?us-ascii?Q?7avIK4cRJw1fZTYrGB0fabLSi5o95dGzz23sgNr2gwP7PGCvaiW777N4Y/Kt?=
- =?us-ascii?Q?IgPii6Ie6k9aLRzIzJhZ997bgbuGgkMLWaIb9FiBNJS3U6lJoCf9O79D71pG?=
- =?us-ascii?Q?7fuRywHT9I+HEFcjZ9oVDBMppR3pt4MI?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(366016)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Qtb5fuidY9d5ktI5stFW3O5NC0aso3hSIlR83EvN217h2Hm0glaVd7FP0p8x?=
- =?us-ascii?Q?i59sl2oCQj7NjcMIW1irg1F8eqLvaSEz6vWTQ80w5sRVBG+j3dJ+zpFzXauh?=
- =?us-ascii?Q?Htt7XE94y/yXRMyEu95weOiYVDxTCPUzScXzIMnd9MV3/ZOgPc/AadSVV6U1?=
- =?us-ascii?Q?966VrHcN969J26ITSYtOxfjr5WD3FOEbQTK+W/pn7OjgzPdgBV+oEa95Vai3?=
- =?us-ascii?Q?vzRbaCqBQkwdQpc14O8rSI6xes28pZN2vJijX1/3zOnZIoeHu+eJORpo0zlz?=
- =?us-ascii?Q?w1h3xdZ/WzHzBilc/+Fq+8x0RSxRkNU1autDDL1D3SqTFRuim8SXTTeuAJkK?=
- =?us-ascii?Q?q4IQuApoFLhojLQhV2PdfbUKmM7DQIKduypAl/7p4wNmotCIZFLSdLMcDFy5?=
- =?us-ascii?Q?WkRH15703vwct25edUK3DK3Ba15/sU0lDGcKPSF1LLUhDcpfTYeD3AXQwjOv?=
- =?us-ascii?Q?TTwgi41xoxgkDbQrUGPmjWQnur3HmRz0b+GC+YiYf8zoswgJ8nNuyoC/gxzb?=
- =?us-ascii?Q?ZqbAAjSOSOUv6G8BBokMPt4oKyZ5Es1JZm9w9hY1lQf9GWwjxc0vFK7s2Qq3?=
- =?us-ascii?Q?1cdi2LlgBAnS0SywLJYAb7S0B2SF84a0LwRz2zu6OMSoOMKKLr640SAxYPHK?=
- =?us-ascii?Q?gY0Fqk9Acty3ZzNoHAasnA0r0d6QEhUcaohbR8JyEDnC7JhmwNo131NEFvyO?=
- =?us-ascii?Q?C2ZD1IuQYTC879rNq2Guini9qpCH3xlGJVn+OfaB9J1wC0dDev9p824/lLPm?=
- =?us-ascii?Q?BDF1tWuJC7DjC9bob4H6wt0cEvw20vEmY9ru6jISN1Lb+fNCWz9nFE24jSmn?=
- =?us-ascii?Q?sRq7gEk9MTFFMbb7PzlHamtyqCDYC6dgTYaVEFPSWtv0oYRTna97MlEiQkPI?=
- =?us-ascii?Q?NztcR7Brfy3N390FuisApfo2SbhMKl8YMzTIoXT1Ti4SNMsTadaj+K+NEiZ/?=
- =?us-ascii?Q?iYy04YomfJwCagC01zlLxDhj6DNV7IMOxzuhyZqn4o40gpReaSTY0VEIMwfI?=
- =?us-ascii?Q?IbXg/NMlOjGzCGGD6pUWX7FxaSPPvZmOEOihz24pMkxz5UyS98oKVruzJXpo?=
- =?us-ascii?Q?Jk6yAAPrxnLUG/AAhEo+loJmJNMntyGZiG9YNZdFEmyPpFXDTttc32jqGDYV?=
- =?us-ascii?Q?uDRCsH0MK66ntep35kC2C8c84hDfrazmRxSqbnviCrPS4rfzss9sdkzrURFu?=
- =?us-ascii?Q?MYTrxiLm9RuIGdjDUaZ39XqRh7SEbf6UCdQia5Tyy+3t1X/bxuUwppf5fyeO?=
- =?us-ascii?Q?gtcem8KX37Oa6RxWUvX78z9vB3UGb29w0em5AcL+aHI24lR5SJLeAt9aMPYO?=
- =?us-ascii?Q?z4/r4Ak9Kl8VOcxVRDbnZV37rOa5gMGGOS/Y7xB+5tJ4ULDvccnzOrig3D9H?=
- =?us-ascii?Q?0aoF9a2IFyuemIKabcnrHYvSK7Rn4ahblFHh+Mrc7XgCZPvHW3fI/XFJsP5D?=
- =?us-ascii?Q?/RosPHpC4XyrCbTdvbnem8Bb7rxoYtUKZdQPFJQ7+zLdV2Ko8OBolFA8V0tS?=
- =?us-ascii?Q?ecbYL57ZlUvKciPZArmNty03CX5XyIdAISEbrSRqi7pqGKxiZerQj/8qAURf?=
- =?us-ascii?Q?U5sJGIUuwwKqqhX17TQVKPMQi4ojFIBX1/syVyZv?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5645aece-d61b-4f4d-dac6-08dd4ca363b0
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 02:57:59.3750
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: smO9SnFCn2JQiZHS/gZxFGkmQPunM3xYIFCt1PyIuhRJ5AacKbC4QcLsyrramRfrlzCF0pmTZqXiPr6vNrCnOg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB11012
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ioiy4ixlvx5gxl3f4pqshwxz35ktrqghju2circpnd3qicgemc@oohazfsfvuag>
 
-Hi Vinod,
-
-Any comments?
-
-Thanks,
-Peng
-
-On Fri, Dec 06, 2024 at 04:48:15PM +0800, Peng Fan (OSS) wrote:
->From: Peng Fan <peng.fan@nxp.com>
->
->There is kernel dump when do module test:
->sysfs: cannot create duplicate filename
->/devices/platform/soc@0/44000000.bus/44000000.dma-controller/dma/dma0chan0
-> __dma_async_device_channel_register+0x128/0x19c
-> dma_async_device_register+0x150/0x454
-> fsl_edma_probe+0x6cc/0x8a0
-> platform_probe+0x68/0xc8
->
->fsl_edma_cleanup_vchan will unlink vchan.chan.device_node, while
->dma_async_device_unregister  needs the link to do
->__dma_async_device_channel_unregister. So need move fsl_edma_cleanup_vchan
->after dma_async_device_unregister to make sure channel could be freed.
->
->So clean up chan after dma_async_device_unregister to address this.
->
->Fixes: 6f93b93b2a1b ("dmaengine: fsl-edma: kill the tasklets upon exit")
->Reviewed-by: Frank Li <Frank.Li@nxp.com>
->Signed-off-by: Peng Fan <peng.fan@nxp.com>
->---
->V4:
-> None
->V3:
-> Add R-b
->V2:
-> Update commit log
->
-> drivers/dma/fsl-edma-main.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
->index 60de1003193a..3966320c3d73 100644
->--- a/drivers/dma/fsl-edma-main.c
->+++ b/drivers/dma/fsl-edma-main.c
->@@ -668,9 +668,9 @@ static void fsl_edma_remove(struct platform_device *pdev)
-> 	struct fsl_edma_engine *fsl_edma = platform_get_drvdata(pdev);
+On Fri, Feb 14, 2025 at 02:36:17AM +0100, aruhier@mailbox.org wrote:
+> On Fri, Feb 14, 2025 at 12:24:18AM +0200, Dmitry Baryshkov wrote:
+> > On Thu, Feb 13, 2025 at 05:51:38PM +0100, Anthony Ruhier via B4 Relay wrote:
+> > > From: Anthony Ruhier <aruhier@mailbox.org>
+> > >
+> > > The value for the POWER_NOW property is by default negative when the
+> > > battery is discharging, positive when charging.
+> > >
+> > > However on x1e laptops it breaks several userland tools that give a
+> > > prediction of the battery run time (such as the acpi command, powertop
+> > > or the waybar battery module), as these tools do not expect a negative
+> > > value for /sys/class/power_supply/qcom-battmgr-bat/power_now. They
+> > > estimate the battery run time by dividing the value of energy_full by
+> > > power_now. The battery percentage is calculated by dividing energy_full
+> > > by energy_now, therefore it is not impacted.
+> > >
+> > > While having a negative number during discharge makes sense, it is not
+> > > standard with how other battery drivers expose it. Instead, it seems
+> > > standard to have a positive value for power_now, and rely on the status
+> > > file instead to know if the battery is charging or discharging. It is
+> > > what other x86 laptops do.
+> >
+> > Documentation/ABI does not define ABI for the power_now. However for
+> > current_now it clearly defines that it can be positive or negative.
+> >
+> > >
+> > > Without the patch:
+> > >     $ acpi
+> > >     Battery 0: Discharging, 98%, discharging at zero rate - will never fully discharge.
+> > >
+> > > With the patch:
+> > >     $ acpi
+> > >     Battery 0: Discharging, 97%, 10:18:27 remaining
+> > >
+> > > ---
+> > > Signed-off-by: Anthony Ruhier <aruhier@mailbox.org>
+> > > ---
+> > >  drivers/power/supply/qcom_battmgr.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > --
+> > With best wishes
+> > Dmitry
 > 
-> 	fsl_edma_irq_exit(pdev, fsl_edma);
->-	fsl_edma_cleanup_vchan(&fsl_edma->dma_dev);
-> 	of_dma_controller_free(np);
-> 	dma_async_device_unregister(&fsl_edma->dma_dev);
->+	fsl_edma_cleanup_vchan(&fsl_edma->dma_dev);
-> 	fsl_disable_clocks(fsl_edma, fsl_edma->drvdata->dmamuxs);
-> }
+> I see. But as it breaks existing tools when power_now is negative, should we
+> change the behavior of these tools or adapt the driver?
 > 
->-- 
->2.37.1
->
->
+> As it does not seem common that power_now and current_now are negative in
+> other drivers, tools using these values rely on the status anyway. I'm
+> wondering if it provides anything to keep this behavior.
+
+I think it is a problem of the 'acpi' tool. At least 'upower -d' uses
+fabs internally since the initial commit in 2008.
+
+-- 
+With best wishes
+Dmitry
