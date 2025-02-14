@@ -1,181 +1,173 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2795F2673B9
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088B93595C
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739545759; cv=none; b=tDGldhlQP1f+J1HEFBnWELsanHLVEdp4vVLLeBoXMkW4bhyKKFHFivBgSL9D4lnYtV2HEGfeImfX4UKU5b/IbaJeO0CC7djhJWDcEzytzYtlrC/ESk93zW+D5G8sGEdA5zJp2cUlBUiYQNoJqAFrNwjhWECRxQWUkofZueV2cZY=
+	t=1739545782; cv=none; b=cXMNWyZQh7+3Xu44r4Hxs56eAZRDV7FWPE0RxfWmVFEPXvD0vmgsVPthhaO+KdjiPvO5aZkpVpBhzdtmOevFPpWi+mKGbHIlFpg3/dMTxXMZNBPVdItPiKsDh9+1u/bDTRz4WDFh9x/DM8IEJ8g1JhBNYc1zbcEWJiaD/LdGzeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739545759; c=relaxed/simple;
-	bh=2CBa9IBMibbcITCTnBXKA4ai81Vo/pmWYs2riYsXCmg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tYcTyFxy762IG1JYz7N3ITRerd+faWYbeVALtyZKlpBUL+pnrfgKsnI4ONG8X3Ki8gXEXm0MW56fV7VNHIwHxUt8GHm28ZKcsFghKJXiQrZOIrONcIpckyD0RVPlcKqUnjU5cYdpOJCsRDvuN/+rdz95CjJZKPDNCUnVddTjNb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WNuS80tN; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739545782; c=relaxed/simple;
+	bh=4o44pkpKgmGJCdX6x5UPw6PoMPdQ6qFQXtbkaMpfRnM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QFmzMF8QMG5/996b3Y304XI/A6nqN21ZjFaua0eXZSr5f3p6/CW2RWn3JxtJSNCO5/SYcoywmtPmo8eB0Oi7zwcNPTSTZiwBzk6ByPFdR1qpgVZSoaXCfzoqddhZ4HWF7Xw7b2iHnEE6V1hRyL2qCdiA07NE9aYE//HYzlgDOIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eq5HTiYN; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WNuS80tN"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abb64620031so810566b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:09:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eq5HTiYN"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38f1e8efe82so2551756f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:09:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739545754; x=1740150554; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B7jsGzrzWA2UpjfP518+Ys9Fu8SxTav8yjO65ThpneE=;
-        b=WNuS80tNfTlW7WceVU/9Fxvy0fkxRA0xVSw8+D8ymEo3WTBVsYHqvdTEvrVpCKn4dL
-         U9YYgx7bpUjlZfhETbzZjHMCUHT4LA97BU73W1Q4J8kQz0i0iKZr1EMdHtAh0T+puU25
-         joYGueXy0y8d/KnIqNoqeT+nCoFU5hHIdsrKdid25cZlV4kGUkfcn8Bs02tUqaGkw96S
-         6JjxV4B/P+OzYiPJTgQBaOF/4oFSVJjfEYDisijetllLxPZy3agMOtK6gGJC9ZIwvlU2
-         uWSP7qZlAm0AWiOT6+8wgoz4qmcfDILKjYGLsV9mQqz3nCRJfXBABPaLSKC72+GP+4De
-         YH/g==
+        d=gmail.com; s=20230601; t=1739545779; x=1740150579; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UVqMZ+3Mpmpk9SfLsBXSOCQc7oNYAD8Y16TaUhOCH8Y=;
+        b=eq5HTiYNRzQmHgVEaImWbwr5AQu2jIdjfG6qn6Xh/IgO8Iyt72hRFwlsASTXmtJ6OS
+         NEospOcTUMFA1UbSkjFPWssADTOsbYNx99ZZq9hsHNQ//NXRsRl1ejaTBMv+i7uFkmQV
+         KR1458wbffQPLEvkGZqfWQEDtOM48lIOLN6vSbZk68AfaBjB02bAznM9RDzHwNQQJ3gj
+         PYHGYe/W4jFagMt0Yq40GFDIQj8GfvpC8GVgzYZYZJMPNC1HSWtOATje3eWoEjNVpx/I
+         FR6SKob/q3POMlrWvcZuOE0+yuoTLWVNX8rFgvZPdsGjFBWxMdsgYsLjH7rv4t3iboj8
+         b6lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739545754; x=1740150554;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B7jsGzrzWA2UpjfP518+Ys9Fu8SxTav8yjO65ThpneE=;
-        b=Jnx0vPbCLyuTeX5oM78se9s69RBZcgn6gNeQd5n/Y5E4PY+K7Dz5aRny/MgOVLBkT8
-         sKK+1ix/wBKlGq+K77IqkTzOapsKF5xhjyLcejBkY7kp8KE+jgTcv7xvISAUX3myc/91
-         fSI+tvtDAhEWlm7oTTzzf5SKhyoBYfXMqcT968c+d2an9gHjcTQx7PGSYvAG563ZUn2h
-         cnklCi2o3jhcOByoesR3hYA011FhPMuFOFZ954bNLxK7RRC6xbuW8WUdfsamToaJ4iMY
-         5hMnLpLazf5zDu5xUd/S7GoHRlQthT8f19K1L66eXbaSzzfxXSNEtHgtBp0gzMgK0U+t
-         97LA==
-X-Forwarded-Encrypted: i=1; AJvYcCX6RfWAXGXHa+/wEwCCiOaRjCY1iRF+gXG8g68wtAjQQqUiq8qADP0vGVrcH4AMZYZZLN+xF2O78jRjXck=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw72+9gfa+ZMoiwGVtq7zzRhNXNJ30WExcBonBv7VvPyckDPOrV
-	qiyZWEj08azKxVXsr7dxn8oQfER7t8IXSE+7kjiIudVZUCpVMOkAqdnLoRcICzo=
-X-Gm-Gg: ASbGncvsaSlAE9s5t9T1huqRm6OG8gfjJhzkrEM++0jFF6b4Qs9hEpPoGCnpN9+1FG1
-	4ot9XWCAtRy5aIPY6r8Mw1Gpyk2kA/7PddN/mzELFUNR9icv/n0SWRWqHK6mvK2760t9WrLlnML
-	q+rWI2TAsHdfxvNXxZ0XOF0vVjLahX4quSmeOMIgvP1nnoTr+WtAiUdFvWWrd/ELuthphbCZl1d
-	W0HFlVFSH8yziboSIxvzJA/n4y++U5k2tU+T/FtOn0pk4tavTpwQvrAMmCk2zizK6MmXlYS1vtV
-	mImoNA1+Nh5GsS58082iofg/cgvasUM=
-X-Google-Smtp-Source: AGHT+IE7JU7OBLRkos654tOsr2eurVNX6fP97fyobBh9cWCTtMYkOpMH7QEK2km71kJRMzG661dyZw==
-X-Received: by 2002:a17:907:9490:b0:aa6:6f12:aa45 with SMTP id a640c23a62f3a-ab7f33cee90mr468424866b.7.1739545753005;
-        Fri, 14 Feb 2025 07:09:13 -0800 (PST)
-Received: from [127.0.1.1] ([178.197.218.144])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba533bf70asm356266766b.180.2025.02.14.07.09.10
+        d=1e100.net; s=20230601; t=1739545779; x=1740150579;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UVqMZ+3Mpmpk9SfLsBXSOCQc7oNYAD8Y16TaUhOCH8Y=;
+        b=YPoTzZivQpUFm+UYcbuJoTUHqnPqsgpc7Iz+jaVLC5cXcyW8IuN7Hh771skDegJjz6
+         n4SwZ4tiQuD6noVHM1MTopLgUIuJeLJzECGOjpEJuzs3iCwQ3caTc/w7H+2Q1a2+efA8
+         aHXjf30zA2JE4JfXu2rLvbZHryLfVMM/qsZAQbUApIZARNXZQHFzWE822UQDKEL+6Wvb
+         Bcd8BefOxk5upFjjfEVb/QZwXE2uBo40y012W78ex8mRNnOg8SKHZInvCvH3nox5RF0+
+         3MACO8vInT5TLoof6IaPdoJDx4VOauiiT+eIzGmcsQ9prGVlUKwmrpWeRiPbZOD4i+uc
+         c5ww==
+X-Forwarded-Encrypted: i=1; AJvYcCXmSAIph5B6bx44uIkF8lOwxpwBvSmIRql3N32jwZLJhxw4dzg1JfoJ7/EGAhUP7I7LkoijsT78Gb8U5sQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEUo5MyypRPq+ms0myzVpxS1WWh1jvO7wq29tCgdpkMF3OMzSG
+	wGCGFsxKJPFDNXk//cu3HvrzMj91OMNPXR0eGvqgZ8oJPKDMtt1n
+X-Gm-Gg: ASbGnctHKRmy5YSYZTbnveWch02yvzqlJXRET1GraWDLcJaqABv6CEHiFrRti/rx978
+	qsURCWKGtHxZEwG091FyfDsSODdYsimVj3PpebBFs0v9Im40BdQpZzLKkSaB25VgcILfvPXili9
+	86VIbflqAKD6kp8gNVP8njjbQFZEnaIlU97w2RbubVit5ULNOQmkNQqcjTzLMLy/fOqlOUNuBe8
+	VtwZNWFWqeiVnUrsHLHy0xdrxyefNnFT95oV3TE29rRjxJ90e59DIqMzvFFSoMFvKnq7mxLsyBz
+	5UpH+qhwkvxrrfoFAhRl3igZ
+X-Google-Smtp-Source: AGHT+IEXQWbeVAMShMrrzZEIZ97y+Aoj4EgRTTgtulGM8VILACGiWcO0VRckkcgDb+WqEeYDbjg47w==
+X-Received: by 2002:a05:6000:1568:b0:38f:2095:2fe7 with SMTP id ffacd0b85a97d-38f244e502fmr9519949f8f.12.1739545778732;
+        Fri, 14 Feb 2025 07:09:38 -0800 (PST)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba533bee9dsm357447266b.173.2025.02.14.07.09.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 07:09:12 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Fri, 14 Feb 2025 16:08:44 +0100
-Subject: [PATCH v3 4/4] drm/msm/dsi/phy: Define PHY_CMN_CLK_CFG[01]
- bitfields and simplify saving
+        Fri, 14 Feb 2025 07:09:38 -0800 (PST)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH v2 1/2] x86/locking: Use ALT_OUTPUT_SP() for percpu_{,try_}cmpxchg{64,128}_op()
+Date: Fri, 14 Feb 2025 16:07:46 +0100
+Message-ID: <20250214150929.5780-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250214-drm-msm-phy-pll-cfg-reg-v3-4-0943b850722c@linaro.org>
-References: <20250214-drm-msm-phy-pll-cfg-reg-v3-0-0943b850722c@linaro.org>
-In-Reply-To: <20250214-drm-msm-phy-pll-cfg-reg-v3-0-0943b850722c@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Jonathan Marek <jonathan@marek.ca>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Rob Clark <robdclark@chromium.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3653;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=2CBa9IBMibbcITCTnBXKA4ai81Vo/pmWYs2riYsXCmg=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBnr1yNPOoysNFKaCqU06xwyIbjOpzjtXtIKu6ny
- 4+bnqJO1UuJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ69cjQAKCRDBN2bmhouD
- 1yGpD/wMzzZRoNEJddfIEvdwKtLRihZJNRYkTaNYECkfJYQ6wVhuz/xiDFeQ/SsAKz9pXIik4SF
- r1dMnA02Sdxyt8TCDLtpJK0u3ExejMBuU8qebOKqizCR+eo6R0DPttheCsrYtVrbdFF3AdnlwzG
- gAz+vQprz0JP0P0HRcUQ6Lr7dLKjgGlJTEnUD/BA2haAPIeNL65suMKARExE7XPqcKfKKW2rerR
- bP+5YlODHhXC8Ed9PZUTBZeKswlrHetbg+K6sXYVVeiZlrSaHxaAiBKwqRG3aZDmGTck+fXDxAc
- wtArZ7WcsYip5uEe+3IpEMbhKj30Y63CHWBXqhEF3Yy7whUzFW7Y/MidDXE5b6H54iOl1FFTA1M
- ygz7rypxFuKTIhwjjQMwTRwmi7QmB8lYQwO0AXuNjogTa/87fzaHB0ZksZL08OGx7pdzSkD2FVF
- H70bF7zWAVrubgHNrd7dq7mVvW7fUagqjVZgQ4zt0qZyKGq9tfdF32WqOjQzuKP8KTOuJDjzz53
- GU8w3jameWwtUdx94rwQWUwBSybUxrlEFt/u3CyrfAQuJREuLn63Um71DBvnAUeGy5WMAuoceSJ
- 0gyuPMvDvi+/l74qISVy8ROY5hlboH4ec0KxaguKF40BhO8oR2imSsOJkhGsagTK+4ZDRJmNgS7
- o1B5XGYPuyYdueA==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-Add bitfields for PHY_CMN_CLK_CFG0 and PHY_CMN_CLK_CFG1 registers to
-avoid hard-coding bit masks and shifts and make the code a bit more
-readable.  While touching the lines in dsi_7nm_pll_save_state()
-resulting cached->pix_clk_div assignment would be too big, so just
-combine pix_clk_div and bit_clk_div into one cached state to make
-everything simpler.
+percpu_{,try_}cmpxchg{64,128}() macros use CALL instruction inside
+asm statement in one of their alternatives. Use ALT_OUTPUT_SP()
+macro to add required dependence on %esp register.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ALT_OUTPUT_SP() implements the above dependence by adding
+ASM_CALL_CONSTRAINT to its arguments. This constraint should be used
+for any inline asm which has a CALL instruction, otherwise the
+compiler may schedule the asm before the frame pointer gets set up
+by the containing function, causing objtool to print a "call without
+frame pointer save/setup" warning.
 
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Dennis Zhou <dennis@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 ---
-
-Changes in v3:
-1. Use FIELD_GET
-2. Keep separate bit_clk_div and pix_clk_div
-3. Rebase (some things moved to previous patches)
-
-Changes in v2:
-1. New patch
+v2: Expand commit message with the explanation of ASM_CALL_CONSTRAINT.
 ---
- drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c             | 12 +++++++-----
- drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml |  1 +
- 2 files changed, 8 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/percpu.h | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-index 798168180c1ab6c96ec2384f854302720cb27932..a8a5b41b63fb78348038c8f9fbb141aab2b07c7a 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-@@ -572,11 +572,11 @@ static void dsi_7nm_pll_save_state(struct msm_dsi_phy *phy)
- 	cached->pll_out_div &= 0x3;
- 
- 	cmn_clk_cfg0 = readl(phy_base + REG_DSI_7nm_PHY_CMN_CLK_CFG0);
--	cached->bit_clk_div = cmn_clk_cfg0 & 0xf;
--	cached->pix_clk_div = (cmn_clk_cfg0 & 0xf0) >> 4;
-+	cached->bit_clk_div = FIELD_GET(DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_3_0__MASK, cmn_clk_cfg0);
-+	cached->pix_clk_div = FIELD_GET(DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_7_4__MASK, cmn_clk_cfg0);
- 
- 	cmn_clk_cfg1 = readl(phy_base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
--	cached->pll_mux = cmn_clk_cfg1 & 0x3;
-+	cached->pll_mux = cmn_clk_cfg1 & DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL__MASK;
- 
- 	DBG("DSI PLL%d outdiv %x bit_clk_div %x pix_clk_div %x pll_mux %x",
- 	    pll_7nm->phy->id, cached->pll_out_div, cached->bit_clk_div,
-@@ -598,7 +598,8 @@ static int dsi_7nm_pll_restore_state(struct msm_dsi_phy *phy)
- 	dsi_pll_cmn_clk_cfg0_write(pll_7nm,
- 				   DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_3_0(cached->bit_clk_div) |
- 				   DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_7_4(cached->pix_clk_div));
--	dsi_pll_cmn_clk_cfg1_update(pll_7nm, 0x3, cached->pll_mux);
-+	dsi_pll_cmn_clk_cfg1_update(pll_7nm, DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL__MASK,
-+				    cached->pll_mux);
- 
- 	ret = dsi_pll_7nm_vco_set_rate(phy->vco_hw,
- 			pll_7nm->vco_current_rate,
-@@ -739,7 +740,8 @@ static int pll_7nm_register(struct dsi_pll_7nm *pll_7nm, struct clk_hw **provide
- 		u32 data;
- 
- 		data = readl(pll_7nm->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
--		writel(data | 3, pll_7nm->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
-+		writel(data | DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL__MASK,
-+		       pll_7nm->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
- 
- 		phy_pll_out_dsi_parent = pll_post_out_div;
- 	} else {
-diff --git a/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml b/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml
-index 35f7f40e405b7dd9687725eae754522a7136725e..d2c8c46bb04159da6e539bfe80a4b5dc9ffdf367 100644
---- a/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml
-+++ b/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml
-@@ -17,6 +17,7 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
- 		<bitfield name="CLK_EN" pos="5" type="boolean"/>
- 		<bitfield name="CLK_EN_SEL" pos="4" type="boolean"/>
- 		<bitfield name="BITCLK_SEL" low="2" high="3" type="uint"/>
-+		<bitfield name="DSICLK_SEL" low="0" high="1" type="uint"/>
- 	</reg32>
- 	<reg32 offset="0x00018" name="GLBL_CTRL"/>
- 	<reg32 offset="0x0001c" name="RBUF_CTRL"/>
-
+diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+index e525cd85f999..0ab991fba7de 100644
+--- a/arch/x86/include/asm/percpu.h
++++ b/arch/x86/include/asm/percpu.h
+@@ -350,9 +350,9 @@ do {									\
+ 									\
+ 	asm qual (ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
+ 			      "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
+-		  : [var] "+m" (__my_cpu_var(_var)),			\
+-		    "+a" (old__.low),					\
+-		    "+d" (old__.high)					\
++		  : ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
++				  "+a" (old__.low),			\
++				  "+d" (old__.high))			\
+ 		  : "b" (new__.low),					\
+ 		    "c" (new__.high),					\
+ 		    "S" (&(_var))					\
+@@ -381,10 +381,10 @@ do {									\
+ 	asm qual (ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
+ 			      "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
+ 		  CC_SET(z)						\
+-		  : CC_OUT(z) (success),				\
+-		    [var] "+m" (__my_cpu_var(_var)),			\
+-		    "+a" (old__.low),					\
+-		    "+d" (old__.high)					\
++		  : ALT_OUTPUT_SP(CC_OUT(z) (success),			\
++				  [var] "+m" (__my_cpu_var(_var)),	\
++				  "+a" (old__.low),			\
++				  "+d" (old__.high))			\
+ 		  : "b" (new__.low),					\
+ 		    "c" (new__.high),					\
+ 		    "S" (&(_var))					\
+@@ -421,9 +421,9 @@ do {									\
+ 									\
+ 	asm qual (ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
+ 			      "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
+-		  : [var] "+m" (__my_cpu_var(_var)),			\
+-		    "+a" (old__.low),					\
+-		    "+d" (old__.high)					\
++		  : ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
++				  "+a" (old__.low),			\
++				  "+d" (old__.high))			\
+ 		  : "b" (new__.low),					\
+ 		    "c" (new__.high),					\
+ 		    "S" (&(_var))					\
+@@ -452,10 +452,10 @@ do {									\
+ 	asm qual (ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
+ 			      "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
+ 		  CC_SET(z)						\
+-		  : CC_OUT(z) (success),				\
+-		    [var] "+m" (__my_cpu_var(_var)),			\
+-		    "+a" (old__.low),					\
+-		    "+d" (old__.high)					\
++		  : ALT_OUTPUT_SP(CC_OUT(z) (success),			\
++				  [var] "+m" (__my_cpu_var(_var)),	\
++				  "+a" (old__.low),			\
++				  "+d" (old__.high))			\
+ 		  : "b" (new__.low),					\
+ 		    "c" (new__.high),					\
+ 		    "S" (&(_var))					\
 -- 
-2.43.0
+2.42.0
 
