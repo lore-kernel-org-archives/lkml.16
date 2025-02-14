@@ -1,36 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4541632C8;
-	Fri, 14 Feb 2025 08:17:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D6A84037;
+	Fri, 14 Feb 2025 08:18:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739521058; cv=none; b=SMX1vVgb8XTj9Coctl+jZEa7NHvz9HAWaf+e3ksmWJyIJfdWfXbhfMkBw/2YTBtt7hMNAWuxlDXcrfFaq1oFaI8pXj5xea1mlz//QZ495LIXN4KOY6EgrnzhyhF4LZIoTU9k4orKbbjV6mQ3OcmNAQCtpljpVwH503CFSTNoymU=
+	t=1739521105; cv=none; b=D05JD7ropzKuDcfoWwcK8g9Lq9rudfBIhWQe7vWraoz096nH/2TCyEI6BSPNax4nLEH/8LIFTo2bGJ6kG0raim1FqwGb71b+6vgyw70uq215xYxBz0KFE/8RwRMW09kMC9k4lWCIopKWgmTnDjpY9PWGQHP3M2lR3TfCJ7Oq9ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739521058; c=relaxed/simple;
-	bh=khYMJXUxdpUbOJ86mSDRqOVUZc/qDY6VXDZ1TZcdXVs=;
+	s=arc-20240116; t=1739521105; c=relaxed/simple;
+	bh=ZVf/pYT2VCVOUbytrd/xzKgcYYVFcGofwMyImLokvu0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gu8r9B48HEaJ3RO16JzAw3WW5vV55Pn1NQ0atSlYxiZM4zVKZM6XNOe/pzrQ0HK8jVmuj+/4uWVPsWGY48AKNCg/3cm2pPtUPSVEabKAXcbH0Ia87neQLlj2BfVrsBdO4u2ouxLaVF7QNGFgY9t0buW6pCTw0Rn4W21jo7b8194=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PUiTRinQ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jcq/x/81ntcOVjOlNmE/FBW3ws/y8zs/d31G6aKNaG7qL/gLTT/YxXQrbGeQq2/xEuKHg3ShHojFTpX5ShDEkacZEAr5nPQ1wmR037N6cnwZWpZelS7TUmlX68OWkvBmeRY4OVpWY//2McNjNzIShu/WNksQD31BJkvovu83Q8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Un5xPtTe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PUiTRinQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6017DC4CED1;
-	Fri, 14 Feb 2025 08:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739521057;
-	bh=khYMJXUxdpUbOJ86mSDRqOVUZc/qDY6VXDZ1TZcdXVs=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Un5xPtTe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59DD4C4CED1;
+	Fri, 14 Feb 2025 08:18:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739521104;
+	bh=ZVf/pYT2VCVOUbytrd/xzKgcYYVFcGofwMyImLokvu0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PUiTRinQ1+tt1IaSn3skunbhIMUsgSSE5TD5R+Dox1etBqXuqFjkV0z3SguBPqAH2
-	 yqiw710qUk91e3AdWoV6nLCK1Tup7C/bomAbu1IH6q4j7A4IBI6vGMDWe7FuEHZ1L/
-	 IknxjsGeAa5hIr1mylb22Q7OIixdht+Hby1EudOA=
-Date: Fri, 14 Feb 2025 09:17:34 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Miao Li <limiao870622@163.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Miao Li <limiao@kylinos.cn>
-Subject: Re: [PATCH] usb: quirks: Add NO_LPM quirk for Teclast disk
-Message-ID: <2025021425-payroll-confining-b677@gregkh>
-References: <20250213101259.239530-1-limiao870622@163.com>
+	b=Un5xPtTeTcQT08Wzaiz3QvzOu6B6fYCH0Iu53XN/KpXlw3RymwRkTjnNJGscoOQct
+	 xnWOZdzXATzTC2A3Pfwn3+rKmE7n92SOrF+Xgq57XABQgcHLVavwm1ZwqFDW52GZUU
+	 oU7b57eIR8D7CnpzJ7jcFHPIeVtN+VYJKfJhNq64bS+BsJoXyxSK9R3Io5ac/b+9+/
+	 NZTemZ5inPwMp5F7oPPovHh+56PJTbjKMazxJPRvASeruJLFnzbQH4FoFZe6N0u251
+	 SNW0DsIhNQ44FMw3YKmra6WbzbZYVw0Y5aTDa07PiGiGLPaqPK3DkTAGOQqsUzNle5
+	 zPP46PaDPS+Yg==
+Date: Fri, 14 Feb 2025 10:18:20 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stuart Yoder <stuart.yoder@arm.com>
+Cc: linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+	sudeep.holla@arm.com, rafael@kernel.org, lenb@kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] tpm_crb: refactor check for idle support into TPM
+ into inline function
+Message-ID: <Z678TKuFTJ4vgHqH@kernel.org>
+References: <20250214002745.878890-1-stuart.yoder@arm.com>
+ <20250214002745.878890-3-stuart.yoder@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,38 +45,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250213101259.239530-1-limiao870622@163.com>
+In-Reply-To: <20250214002745.878890-3-stuart.yoder@arm.com>
 
-On Thu, Feb 13, 2025 at 06:12:59PM +0800, Miao Li wrote:
-> From: Miao Li <limiao@kylinos.cn>
+On Thu, Feb 13, 2025 at 06:27:42PM -0600, Stuart Yoder wrote:
+> Refactor the two checks for whether the TPM supports idle into a single
+> inline function.
 > 
-> Teclast disk which the VID:PID is in 1f75:0917 will encounter work trouble
-> used on Huawei hisi platforms with LPM enabled, applying NO_LPM quirk for
-> this device fixed the problem.
-> 
-> Signed-off-by: Miao Li <limiao@kylinos.cn>
+> Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
 > ---
->  drivers/usb/core/quirks.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/char/tpm/tpm_crb.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
-> index 67732c791c93..3927c7d66dac 100644
-> --- a/drivers/usb/core/quirks.c
-> +++ b/drivers/usb/core/quirks.c
-> @@ -525,6 +525,9 @@ static const struct usb_device_id usb_quirk_list[] = {
->  	/* Blackmagic Design UltraStudio SDI */
->  	{ USB_DEVICE(0x1edb, 0xbd4f), .driver_info = USB_QUIRK_NO_LPM },
+> diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+> index ea085b14ab7c..d696226906a2 100644
+> --- a/drivers/char/tpm/tpm_crb.c
+> +++ b/drivers/char/tpm/tpm_crb.c
+> @@ -115,6 +115,16 @@ struct tpm2_crb_pluton {
+>  	u64 reply_addr;
+>  };
 >  
-> +	/* Teclast disk */
-> +	{ USB_DEVICE(0x1f75, 0x0917), .driver_info = USB_QUIRK_NO_LPM },
+> +static inline bool tpm_crb_has_idle(u32 start_method)
+> +{
+> +	if ((start_method == ACPI_TPM2_START_METHOD) ||
+
+Unnecessary parentheses in each condition.
+
+> +	    (start_method == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
+> +	    (start_method == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
+> +		return false;
+> +	else
+> +		return true;
+> +}
+
+Could be just plain
+
+/*
+ * Returns true, if the start method supports idle.
+ */
+static inline bool tpm_crb_has_idle(u32 start_method)
+{
+	return start_method == ACPI_TPM2_START_METHOD ||
+	       start_method == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD ||
+	       start_method == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC;
+}
+
 > +
->  	/* Hauppauge HVR-950q */
->  	{ USB_DEVICE(0x2040, 0x7200), .driver_info =
->  			USB_QUIRK_CONFIG_INTF_STRINGS },
+>  static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
+>  				unsigned long timeout)
+>  {
+> @@ -173,9 +183,7 @@ static int __crb_go_idle(struct device *dev, struct crb_priv *priv)
+>  {
+>  	int rc;
+>  
+> -	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
+> -	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
+> -	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
+
+Right, those parentheses come from legacy code. Still, they should be
+removed. Also with this afaik checkpatch.pl --strict should give you
+a complain.
+
+> +	if (!tpm_crb_has_idle(priv->sm))
+>  		return 0;
+>  
+>  	iowrite32(CRB_CTRL_REQ_GO_IDLE, &priv->regs_t->ctrl_req);
+> @@ -222,9 +230,7 @@ static int __crb_cmd_ready(struct device *dev, struct crb_priv *priv)
+>  {
+>  	int rc;
+>  
+> -	if ((priv->sm == ACPI_TPM2_START_METHOD) ||
+> -	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD) ||
+> -	    (priv->sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC))
+> +	if (!tpm_crb_has_idle(priv->sm))
+>  		return 0;
+>  
+>  	iowrite32(CRB_CTRL_REQ_CMD_READY, &priv->regs_t->ctrl_req);
 > -- 
-> 2.25.1
-> 
+> 2.34.1
 > 
 
-This was also sent a day before:
-	https://lore.kernel.org/r/20250212093829.7379-1-huanglei814@163.com
+BR, Jarkko
