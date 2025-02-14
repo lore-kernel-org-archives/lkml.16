@@ -1,213 +1,485 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531C32153E1;
-	Fri, 14 Feb 2025 07:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AE52165EC;
+	Fri, 14 Feb 2025 07:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739519043; cv=none; b=Lr7I2yunXNkrL45g+vYTABtwCr43jHhB305F/pdLPYfR1Xl2I9nS5sDpD9q0HzTfS0y7/hLD3bjqDVHQ+PI7irNSoMccPFUZQTH17iAIiKciap+YvzRHwhwaN6O0uumZ55cKzrky/1TCddQqZbL8EhuusKbK2nO5GvQu98aamEA=
+	t=1739519045; cv=none; b=ZjZhyeHYRtGTj3Xu2KmEXpYBHHZgC4fxAoisXgG6C/X+Voo4OIdNFFlaMo19iTxwIgczwLfAlx4/6OAjwGeUF2AsXqfhxYYYXhwbl/VZnAvh9OMFu7Uy9JasSeiT24eWBIuakZmMzTSZwu/p4XtYCQEhCulaZALJNSdOB6W17rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739519043; c=relaxed/simple;
-	bh=dpnzSrNVQ5Sn2enMYiJ+zZux/fL5MEa7//LADi4zEes=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=arRrRnq+yPXXfKK8nuFA0uh6e0TJGyM6sudRQ16kn5vpRlwrGKD12M0Hg/S6Z6cOYQJC5kvF0BqfiW6B4xUUYZe40+HFMCeg2u1cmgbBfgtHiQbzwSEj2a/lcmnQ/hRBYJGmrNwYpgzGMsEGU2ofeZAhIhvU7HFziH3jyxlwyKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=fWFzqQRG; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1739519045; c=relaxed/simple;
+	bh=CQ04R7o32thyXn6bddZEdJWm+5pi7eHPG15u8q+Lfmw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aXwr9HFwJD8rCRlKdkvPkVps9KpVgtJDw6xx6DGOzL99xEQQ210/BdwztrxuvuUzcwihqbx+67JDqlHnlOoxje1HWm305HiZl5Kbr4l1NqYRhsIpQ2LixlhS4v9F/UduyhNjZPf59Xeb0SdDmj77pVcjASj8sjD7qiCWaF0Dkhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVfnyg83; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fWFzqQRG"
-X-UUID: 7134b6f2eaa711efbd192953cf12861f-20250214
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=yGx9P0mJqQozpBOCmZwQ+5UxE4Q0iSbhG8oMKQTzU8s=;
-	b=fWFzqQRGObW4P4gC1w8gwsRWpBKonwEy8O2vypG0kwi2GrAZNkAOiKlM7k6ymwIhXiXlGU6D+r9g4o5uLMQL5GlPEkmQp+OzT/pd5bqJJzqBX21Stu7TCh99eiz3LCmZNk6z4CZcPwAT9wx2eCihsYbGFLEU94O4CKK6edWKcDM=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:76351ebd-f443-4171-8f1d-209379665dbf,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:60aa074,CLOUDID:09de5b88-f9ab-4ac1-951b-e3a689bed90c,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 7134b6f2eaa711efbd192953cf12861f-20250214
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw02.mediatek.com
-	(envelope-from <chun-jen.tseng@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 663570915; Fri, 14 Feb 2025 15:43:55 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 14 Feb 2025 15:43:53 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Fri, 14 Feb 2025 15:43:53 +0800
-From: Mark Tseng <chun-jen.tseng@mediatek.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>, Viresh Kumar
-	<viresh.kumar@linaro.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin
- Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<chun-jen.tseng@mediatek.com>
-Subject: [PATCH v3 1/3] cpufreq: mediatek: using global lock avoid race condition
-Date: Fri, 14 Feb 2025 15:43:32 +0800
-Message-ID: <20250214074353.1169864-2-chun-jen.tseng@mediatek.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250214074353.1169864-1-chun-jen.tseng@mediatek.com>
-References: <20250214074353.1169864-1-chun-jen.tseng@mediatek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVfnyg83"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A26BC4CEDF;
+	Fri, 14 Feb 2025 07:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739519045;
+	bh=CQ04R7o32thyXn6bddZEdJWm+5pi7eHPG15u8q+Lfmw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pVfnyg83XbZu+JFwBxCWU6KBKPrNrH0fZbwl6INVwMeT8XxmPkmLuOOjldQ1nInXC
+	 X1CHVFKOSWfT1WYVKrfSBD5zzwGKREh0n5V3Bcd7fmEOn1nO27QUdtzKQaH7DDrnjr
+	 dH/cpTkv4+FF9piDluxFqdSLCkAVoof5Ke85tiAN0zl5WEQglp5/UUvydOlvway+FS
+	 z/y/f2cwvj+UJ/P9kELkHa4+5btrdXJ2dKl+KjarVBzlAoBWCEvp4qeutkJqZL0sZ0
+	 PrRxenClO40lMrqHaVmQV19in6mMMdbtHBaobqMf8+uDvrHrr3v8zohLmzE/UTKlXR
+	 HAt/qyYCCXLTA==
+Date: Fri, 14 Feb 2025 09:44:00 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stuart Yoder <stuart.yoder@arm.com>
+Cc: linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+	sudeep.holla@arm.com, rafael@kernel.org, lenb@kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] tpm_crb: implement driver compliant to CRB over
+ FF-A
+Message-ID: <Z670QLo_FefvuNb8@kernel.org>
+References: <20250214002745.878890-1-stuart.yoder@arm.com>
+ <20250214002745.878890-2-stuart.yoder@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250214002745.878890-2-stuart.yoder@arm.com>
 
-In mtk_cpufreq_set_target() is re-enter function but the mutex lock
-decalre in mtk_cpu_dvfs_info structure for each policy. It should
-change to global variable for critical session avoid race condition
-with 2 or more policy.
+On Thu, Feb 13, 2025 at 06:27:41PM -0600, Stuart Yoder wrote:
+> The Arm specification TPM Service CRB over FF-A specification
+> defines the FF-A messages to interact with a CRB-based TPM
+> implemented as an FF-A secure partition.
+> 
+> Spec URL:
+> https://developer.arm.com/documentation/den0138/latest/
+> 
+> This driver is probed when a TPM Secure Partition is
+> discovered by the FF-A subsystem. It exposes APIs
+> used by the TPM CRB driver to send notifications to
+> the TPM.
+> 
+> Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
+> ---
+>  drivers/char/tpm/Kconfig       |   9 +
+>  drivers/char/tpm/Makefile      |   1 +
+>  drivers/char/tpm/tpm_crb_ffa.c | 310 +++++++++++++++++++++++++++++++++
+>  drivers/char/tpm/tpm_crb_ffa.h |  30 ++++
+>  4 files changed, 350 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_crb_ffa.c
+>  create mode 100644 drivers/char/tpm/tpm_crb_ffa.h
+> 
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index 0fc9a510e059..4c85b8c00b12 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -210,6 +210,15 @@ config TCG_CRB
+>  	  from within Linux.  To compile this driver as a module, choose
+>  	  M here; the module will be called tpm_crb.
+>  
+> +config TCG_ARM_CRB_FFA
+> +	tristate "TPM CRB over Arm FF-A Transport"
+> +	depends on ARM_FFA_TRANSPORT
+> +	default y if (TCG_CRB && ARM_FFA_TRANSPORT)
+> +	help
+> +	  If the Arm FF-A transport is used to access the TPM say Yes.
+> +	  To compile this driver as a module, choose M here; the module
+> +	  will be called tpm_crb_ffa.
+> +
+>  config TCG_VTPM_PROXY
+>  	tristate "VTPM Proxy Interface"
+>  	depends on TCG_TPM
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index 9bb142c75243..2b004df8c04b 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -42,5 +42,6 @@ obj-$(CONFIG_TCG_IBMVTPM) += tpm_ibmvtpm.o
+>  obj-$(CONFIG_TCG_TIS_ST33ZP24) += st33zp24/
+>  obj-$(CONFIG_TCG_XEN) += xen-tpmfront.o
+>  obj-$(CONFIG_TCG_CRB) += tpm_crb.o
+> +obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
+>  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+>  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+> diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
+> new file mode 100644
+> index 000000000000..3bd9fd81ec21
+> --- /dev/null
+> +++ b/drivers/char/tpm/tpm_crb_ffa.c
+> @@ -0,0 +1,310 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2024 Arm Ltd.
+> + *
+> + * Maintained by: <tpmdd-devel@lists.sourceforge.net>
+> + *
+> + * This device driver implements the TPM CRB start method
+> + * as defined in the TPM Service Command Response Buffer
+> + * Interface Over FF-A (DEN0138).
+> + */
+> +
+> +#define pr_fmt(fmt) "CRB_FFA: " fmt
+> +
+> +#include <linux/arm_ffa.h>
+> +#include "tpm_crb_ffa.h"
+> +
+> +/* TPM service function status codes */
+> +#define CRB_FFA_OK			0x05000001
+> +#define CRB_FFA_OK_RESULTS_RETURNED	0x05000002
+> +#define CRB_FFA_NOFUNC			0x8e000001
+> +#define CRB_FFA_NOTSUP			0x8e000002
+> +#define CRB_FFA_INVARG			0x8e000005
+> +#define CRB_FFA_INV_CRB_CTRL_DATA	0x8e000006
+> +#define CRB_FFA_ALREADY			0x8e000009
+> +#define CRB_FFA_DENIED			0x8e00000a
+> +#define CRB_FFA_NOMEM			0x8e00000b
+> +
+> +#define CRB_FFA_VERSION_MAJOR	1
+> +#define CRB_FFA_VERSION_MINOR	0
+> +
+> +/* version encoding */
+> +#define CRB_FFA_MAJOR_VERSION_MASK  GENMASK(30, 16)
+> +#define CRB_FFA_MINOR_VERSION_MASK  GENMASK(15, 0)
+> +#define CRB_FFA_MAJOR_VERSION(x)    ((u16)(FIELD_GET(CRB_FFA_MAJOR_VERSION_MASK, (x))))
+> +#define CRB_FFA_MINOR_VERSION(x)    ((u16)(FIELD_GET(CRB_FFA_MINOR_VERSION_MASK, (x))))
+> +
+> +/*
+> + * Normal world sends requests with FFA_MSG_SEND_DIRECT_REQ and
+> + * responses are returned with FFA_MSG_SEND_DIRECT_RESP for normal
+> + * messages.
+> + *
+> + * All requests with FFA_MSG_SEND_DIRECT_REQ and FFA_MSG_SEND_DIRECT_RESP
+> + * are using the AArch32 SMC calling convention with register usage as
+> + * defined in FF-A specification:
+> + * w0:    Function ID (0x8400006F or 0x84000070)
+> + * w1:    Source/Destination IDs
+> + * w2:    Reserved (MBZ)
+> + * w3-w7: Implementation defined, free to be used below
+> + */
+> +
+> +/*
+> + * Returns the version of the interface that is available
+> + * Call register usage:
+> + * w3:    Not used (MBZ)
+> + * w4:    TPM service function ID, CRB_FFA_GET_INTERFACE_VERSION
+> + * w5-w7: Reserved (MBZ)
+> + *
+> + * Return register usage:
+> + * w3:    Not used (MBZ)
+> + * w4:    TPM service function status
+> + * w5:    TPM service interface version
+> + *        Bits[31:16]: major version
+> + *        Bits[15:0]: minor version
+> + * w6-w7: Reserved (MBZ)
+> + *
+> + * Possible function status codes in register w4:
+> + *     CRB_FFA_OK_RESULTS_RETURNED: The version of the interface has been
+> + *                                  returned.
+> + */
+> +#define CRB_FFA_GET_INTERFACE_VERSION 0x0f000001
+> +
+> +/*
+> + * Return information on a given feature of the TPM service
+> + * Call register usage:
+> + * w3:    Not used (MBZ)
+> + * w4:    TPM service function ID, CRB_FFA_START
+> + * w5:    Start function qualifier
+> + *            Bits[31:8] (MBZ)
+> + *            Bits[7:0]
+> + *              0: Notifies TPM that a command is ready to be processed
+> + *              1: Notifies TPM that a locality request is ready to be processed
+> + * w6:    TPM locality, one of 0..4
+> + *            -If the start function qualifier is 0, identifies the locality
+> + *             from where the command originated.
+> + *            -If the start function qualifier is 1, identifies the locality
+> + *             of the locality request
+> + * w6-w7: Reserved (MBZ)
+> + *
+> + * Return register usage:
+> + * w3:    Not used (MBZ)
+> + * w4:    TPM service function status
+> + * w5-w7: Reserved (MBZ)
+> + *
+> + * Possible function status codes in register w4:
+> + *     CRB_FFA_OK: the TPM service has been notified successfully
+> + *     CRB_FFA_INVARG: one or more arguments are not valid
+> + *     CRB_FFA_INV_CRB_CTRL_DATA: CRB control data or locality control
+> + *         data at the given TPM locality is not valid
+> + *     CRB_FFA_DENIED: the TPM has previously disabled locality requests and
+> + *         command processing at the given locality
+> + */
+> +#define CRB_FFA_START 0x0f000201
+> +
+> +struct tpm_crb_ffa {
+> +	struct ffa_device *ffa_dev;
+> +	u16 major_version;
+> +	u16 minor_version;
+> +	struct mutex msg_data_lock;
+> +	struct ffa_send_direct_data direct_msg_data;
+> +};
+> +
+> +static struct tpm_crb_ffa *tpm_crb_ffa;
+> +
+> +static int tpm_crb_ffa_to_linux_errno(int errno)
+> +{
+> +	int rc;
+> +
+> +	switch (errno) {
+> +	case CRB_FFA_OK:
+> +		rc = 0;
+> +		break;
+> +	case CRB_FFA_OK_RESULTS_RETURNED:
+> +		rc = 0;
+> +		break;
+> +	case CRB_FFA_NOFUNC:
+> +		rc = -ENOENT;
+> +		break;
+> +	case CRB_FFA_NOTSUP:
+> +		rc = -EPERM;
+> +		break;
+> +	case CRB_FFA_INVARG:
+> +		rc = -EINVAL;
+> +		break;
+> +	case CRB_FFA_INV_CRB_CTRL_DATA:
+> +		rc = -ENOEXEC;
+> +		break;
+> +	case CRB_FFA_ALREADY:
+> +		rc = -EEXIST;
+> +		break;
+> +	case CRB_FFA_DENIED:
+> +		rc = -EACCES;
+> +		break;
+> +	case CRB_FFA_NOMEM:
+> +		rc = -ENOMEM;
+> +		break;
+> +	default:
+> +		rc = -EINVAL;
+> +	}
+> +
+> +	return rc;
+> +}
+> +
+> +int tpm_crb_ffa_init(void)
+> +{
+> +	if (tpm_crb_ffa == NULL)
+> +		return -ENOENT;
+> +
+> +	if (IS_ERR_VALUE(tpm_crb_ffa))
+> +		return -ENODEV;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(tpm_crb_ffa_init);
 
-add mtk_cpufreq_get() replace cpufreq_generic_get() and use global lock
-avoid return wrong clock.
+Should be documented given export [1].
 
-Signed-off-by: Mark Tseng <chun-jen.tseng@mediatek.com>
----
- drivers/cpufreq/mediatek-cpufreq.c | 39 ++++++++++++++++++++++--------
- 1 file changed, 29 insertions(+), 10 deletions(-)
+> +
+> +static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
+> +		unsigned long a0, unsigned long a1, unsigned long a2)
+> +{
+> +	int ret;
+> +	const struct ffa_msg_ops *msg_ops;
 
-diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-index 2656b88db378..07d5958e106a 100644
---- a/drivers/cpufreq/mediatek-cpufreq.c
-+++ b/drivers/cpufreq/mediatek-cpufreq.c
-@@ -49,8 +49,6 @@ struct mtk_cpu_dvfs_info {
- 	bool need_voltage_tracking;
- 	int vproc_on_boot;
- 	int pre_vproc;
--	/* Avoid race condition for regulators between notify and policy */
--	struct mutex reg_lock;
- 	struct notifier_block opp_nb;
- 	unsigned int opp_cpu;
- 	unsigned long current_freq;
-@@ -59,6 +57,9 @@ struct mtk_cpu_dvfs_info {
- 	bool ccifreq_bound;
- };
- 
-+/* Avoid race condition for regulators between notify and policy */
-+static DEFINE_MUTEX(mtk_policy_lock);
-+
- static struct platform_device *cpufreq_pdev;
- 
- static LIST_HEAD(dvfs_info_list);
-@@ -209,12 +210,12 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
- 	long freq_hz, pre_freq_hz;
- 	int vproc, pre_vproc, inter_vproc, target_vproc, ret;
- 
-+	mutex_lock(&mtk_policy_lock);
-+
- 	inter_vproc = info->intermediate_voltage;
- 
- 	pre_freq_hz = clk_get_rate(cpu_clk);
- 
--	mutex_lock(&info->reg_lock);
--
- 	if (unlikely(info->pre_vproc <= 0))
- 		pre_vproc = regulator_get_voltage(info->proc_reg);
- 	else
-@@ -308,7 +309,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
- 	info->current_freq = freq_hz;
- 
- out:
--	mutex_unlock(&info->reg_lock);
-+	mutex_unlock(&mtk_policy_lock);
- 
- 	return ret;
- }
-@@ -316,19 +317,20 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
- static int mtk_cpufreq_opp_notifier(struct notifier_block *nb,
- 				    unsigned long event, void *data)
- {
--	struct dev_pm_opp *opp = data;
-+	struct dev_pm_opp *opp;
- 	struct dev_pm_opp *new_opp;
- 	struct mtk_cpu_dvfs_info *info;
- 	unsigned long freq, volt;
- 	struct cpufreq_policy *policy;
- 	int ret = 0;
- 
-+	mutex_lock(&mtk_policy_lock);
-+	opp = data;
- 	info = container_of(nb, struct mtk_cpu_dvfs_info, opp_nb);
- 
- 	if (event == OPP_EVENT_ADJUST_VOLTAGE) {
- 		freq = dev_pm_opp_get_freq(opp);
- 
--		mutex_lock(&info->reg_lock);
- 		if (info->current_freq == freq) {
- 			volt = dev_pm_opp_get_voltage(opp);
- 			ret = mtk_cpufreq_set_voltage(info, volt);
-@@ -336,7 +338,6 @@ static int mtk_cpufreq_opp_notifier(struct notifier_block *nb,
- 				dev_err(info->cpu_dev,
- 					"failed to scale voltage: %d\n", ret);
- 		}
--		mutex_unlock(&info->reg_lock);
- 	} else if (event == OPP_EVENT_DISABLE) {
- 		freq = dev_pm_opp_get_freq(opp);
- 
-@@ -361,6 +362,7 @@ static int mtk_cpufreq_opp_notifier(struct notifier_block *nb,
- 			}
- 		}
- 	}
-+	mutex_unlock(&mtk_policy_lock);
- 
- 	return notifier_from_errno(ret);
- }
-@@ -495,7 +497,6 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
- 	info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
- 	dev_pm_opp_put(opp);
- 
--	mutex_init(&info->reg_lock);
- 	info->current_freq = clk_get_rate(info->cpu_clk);
- 
- 	info->opp_cpu = cpu;
-@@ -607,13 +608,31 @@ static void mtk_cpufreq_exit(struct cpufreq_policy *policy)
- 	dev_pm_opp_free_cpufreq_table(info->cpu_dev, &policy->freq_table);
- }
- 
-+static unsigned int mtk_cpufreq_get(unsigned int cpu)
-+{
-+	struct mtk_cpu_dvfs_info *info;
-+	unsigned long current_freq;
-+
-+	mutex_lock(&mtk_policy_lock);
-+	info = mtk_cpu_dvfs_info_lookup(cpu);
-+	if (!info) {
-+		mutex_unlock(&mtk_policy_lock);
-+		return 0;
-+	}
-+
-+	current_freq = info->current_freq / 1000;
-+	mutex_unlock(&mtk_policy_lock);
-+
-+	return current_freq;
-+}
-+
- static struct cpufreq_driver mtk_cpufreq_driver = {
- 	.flags = CPUFREQ_NEED_INITIAL_FREQ_CHECK |
- 		 CPUFREQ_HAVE_GOVERNOR_PER_POLICY |
- 		 CPUFREQ_IS_COOLING_DEV,
- 	.verify = cpufreq_generic_frequency_table_verify,
- 	.target_index = mtk_cpufreq_set_target,
--	.get = cpufreq_generic_get,
-+	.get = mtk_cpufreq_get,
- 	.init = mtk_cpufreq_init,
- 	.exit = mtk_cpufreq_exit,
- 	.register_em = cpufreq_register_em_with_opp,
--- 
-2.45.2
+Reverse tree-order would be easier for brain.
 
+> +
+> +	if (tpm_crb_ffa == NULL)
+
+You probably did not run checkpatch.pl with '--strict', did you? ;-)
+
+> +		return -ENOENT;
+> +
+> +	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
+> +
+> +	memset(&tpm_crb_ffa->direct_msg_data, 0x00,
+> +			sizeof(struct ffa_send_direct_data));
+> +
+> +	tpm_crb_ffa->direct_msg_data.data1 = func_id;
+> +	tpm_crb_ffa->direct_msg_data.data2 = a0;
+> +	tpm_crb_ffa->direct_msg_data.data3 = a1;
+> +	tpm_crb_ffa->direct_msg_data.data4 = a2;
+> +
+> +	ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
+> +			&tpm_crb_ffa->direct_msg_data);
+> +	if (!ret)
+> +		ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
+> +
+> +	return ret;
+> +}
+> +
+> +int tpm_crb_ffa_get_interface_version(uint16_t *major, uint16_t *minor)
+> +{
+> +	int rc;
+> +
+> +	if (tpm_crb_ffa == NULL)
+> +		return -ENOENT;
+> +
+> +	if (IS_ERR_VALUE(tpm_crb_ffa))
+> +		return -ENODEV;
+> +
+> +	if (major == NULL || minor == NULL)
+> +		return -EINVAL;
+> +
+> +	guard(mutex)(&tpm_crb_ffa->msg_data_lock);
+> +
+> +	rc = __tpm_crb_ffa_send_recieve(CRB_FFA_GET_INTERFACE_VERSION, 0x00, 0x00, 0x00);
+> +	if (!rc) {
+> +		*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
+> +		*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
+> +	}
+> +
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_GPL(tpm_crb_ffa_get_interface_version);
+
+Ditto.
+
+> +
+> +int tpm_crb_ffa_start(int request_type, int locality)
+> +{
+> +	if (tpm_crb_ffa == NULL)
+> +		return -ENOENT;
+> +
+> +	if (IS_ERR_VALUE(tpm_crb_ffa))
+> +		return -ENODEV;
+> +
+> +	guard(mutex)(&tpm_crb_ffa->msg_data_lock);
+> +
+> +	return __tpm_crb_ffa_send_recieve(CRB_FFA_START, request_type, locality, 0x00);
+> +}
+> +EXPORT_SYMBOL_GPL(tpm_crb_ffa_start);
+
+Ditto.
+
+> +
+> +static int tpm_crb_ffa_probe(struct ffa_device *ffa_dev)
+> +{
+> +	int rc;
+> +	struct tpm_crb_ffa *p;
+> +
+> +	/* only one instance of a TPM partition is supported */
+> +	if (tpm_crb_ffa && !IS_ERR_VALUE(tpm_crb_ffa))
+> +		return -EEXIST;
+> +
+> +	tpm_crb_ffa = ERR_PTR(-ENODEV); // set tpm_crb_ffa so we can detect probe failure
+> +
+> +	if (!ffa_partition_supports_direct_recv(ffa_dev)) {
+> +		pr_err("TPM partition doesn't support direct message receive.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	p = kzalloc(sizeof(*tpm_crb_ffa), GFP_KERNEL);
+> +	if (!p)
+> +		return -ENOMEM;
+> +	tpm_crb_ffa = p;
+> +
+> +	mutex_init(&tpm_crb_ffa->msg_data_lock);
+> +	tpm_crb_ffa->ffa_dev = ffa_dev;
+> +	ffa_dev_set_drvdata(ffa_dev, tpm_crb_ffa);
+> +
+> +	/* if TPM is aarch32 use 32-bit SMCs */
+> +	if (!ffa_partition_check_property(ffa_dev, FFA_PARTITION_AARCH64_EXEC))
+> +		ffa_dev->ops->msg_ops->mode_32bit_set(ffa_dev);
+> +
+> +	/* verify compatibility of TPM service version number */
+> +	rc = tpm_crb_ffa_get_interface_version(&tpm_crb_ffa->major_version,
+> +			&tpm_crb_ffa->minor_version);
+> +	if (rc) {
+> +		pr_err("failed to get crb interface version. rc:%d", rc);
+> +		goto out;
+> +	}
+> +
+> +	pr_info("ABI version %u.%u", tpm_crb_ffa->major_version,
+> +		tpm_crb_ffa->minor_version);
+> +
+> +	if ((tpm_crb_ffa->major_version != CRB_FFA_VERSION_MAJOR) ||
+> +	    (tpm_crb_ffa->minor_version < CRB_FFA_VERSION_MINOR)) {
+> +		pr_err("Incompatible ABI version");
+> +		goto out;
+> +	}
+> +
+> +	return 0;
+> +
+> +out:
+> +	kfree(tpm_crb_ffa);
+> +	tpm_crb_ffa = ERR_PTR(-ENODEV);
+> +	return -EINVAL;
+> +}
+> +
+> +static void tpm_crb_ffa_remove(struct ffa_device *ffa_dev)
+> +{
+> +	kfree(tpm_crb_ffa);
+> +	tpm_crb_ffa = NULL;
+> +}
+> +
+> +static const struct ffa_device_id tpm_crb_ffa_device_id[] = {
+> +	/* 17b862a4-1806-4faf-86b3-089a58353861 */
+> +	{ UUID_INIT(0x17b862a4, 0x1806, 0x4faf,
+> +		    0x86, 0xb3, 0x08, 0x9a, 0x58, 0x35, 0x38, 0x61) },
+> +	{}
+> +};
+> +
+> +static struct ffa_driver tpm_crb_ffa_driver = {
+> +	.name = "ffa-crb",
+> +	.probe = tpm_crb_ffa_probe,
+> +	.remove = tpm_crb_ffa_remove,
+> +	.id_table = tpm_crb_ffa_device_id,
+> +};
+> +
+> +module_ffa_driver(tpm_crb_ffa_driver);
+> +
+> +MODULE_AUTHOR("Arm");
+> +MODULE_DESCRIPTION("FFA CRB driver");
+> +MODULE_VERSION("1.0");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/char/tpm/tpm_crb_ffa.h b/drivers/char/tpm/tpm_crb_ffa.h
+> new file mode 100644
+> index 000000000000..da73c299c48c
+> --- /dev/null
+> +++ b/drivers/char/tpm/tpm_crb_ffa.h
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2024 Arm Ltd.
+> + *
+> + * Authors:
+> + * Stuart Yoder <stuart.yoder@arm.com>
+> + *
+> + * Maintained by: <tpmdd-devel@lists.sourceforge.net>
+
+Please, rip off this authors and maintainers clutter:
+
+1. Git maintains authorship
+2. MAINTAINERS takes care of the rest.
+
+> 
+> + *
+> + * This device driver implements the TPM CRB start method
+> + * as defined in the TPM Service Command Response Buffer
+> + * Interface Over FF-A (DEN0138).
+> + */
+> +#ifndef _TPM_CRB_FFA_H
+> +#define _TPM_CRB_FFA_H
+> +
+> +#if IS_ENABLED(CONFIG_TCG_ARM_CRB_FFA)
+> +int tpm_crb_ffa_init(void);
+> +int tpm_crb_ffa_get_interface_version(uint16_t *major, uint16_t *minor);
+> +int tpm_crb_ffa_start(int request_type, int locality);
+> +#else
+> +static inline int tpm_crb_ffa_init(void) { return 0; }
+> +static inline int tpm_crb_ffa_get_interface_version(uint16_t *major, uint16_t *minor) { return 0; }
+> +static inline int tpm_crb_ffa_start(int request_type, int locality) { return 0; }
+> +#endif
+> +
+> +#define CRB_FFA_START_TYPE_COMMAND 0
+> +#define CRB_FFA_START_TYPE_LOCALITY_REQUEST 1
+> +
+> +#endif
+> -- 
+> 2.34.1
+> 
+> 
+
+[1] https://www.kernel.org/doc/Documentation/kernel-doc-nano-HOWTO.txt
+
+BR, Jarkko
