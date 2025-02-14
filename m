@@ -1,345 +1,76 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A99B263F2C;
-	Fri, 14 Feb 2025 11:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA2F275412;
+	Fri, 14 Feb 2025 11:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739533825; cv=none; b=rEORddKVbdTDx93FcCQd1qca88Fvga+KMTcgvtZLk1QfTfkWlSZC+1ICS+lOGr9zuPK70RORmjmZ91ctTZP6HpKUNZab2bCDssZTpvWnxTEpQxA2A1VfGPtanb8WIkoPu5RsjJfjfm6+hZTzMmNCb7zmLNAnkdNIM2wzfc9D6qo=
+	t=1739534004; cv=none; b=oDYy8NpvaLyM3xh4pUg51exdedk9Q1VrQxYO6R7SwELTmid6X/vS8KCrfjjYkpqh294z8btUUcP//pMfTjbu54/RwAeQPCfILvgT6LtQk1qM4BRDvnZFxPnwu1IjinyiSlZGWWAj5cKp/rjRwuc5HOM4coFWh9M27i8ic/gBCIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739533825; c=relaxed/simple;
-	bh=t/EuLZQlpOe/LmOn/GZ77df/7tGyTGkWiw9+9XzVGCU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qGek3ueVCCqStY1ij5txNQBOcXrkCtLALIkx7hkV89n+JPJPXMuCOksQ+ULcqEIBD7qmjSLahOsihYu+Jwk8Zh2brHdgxUMSC6APxqZHN81pkwL7iT+gJMDmKEfDuPEDCBFf+Ub3UL9iQjxW17T4C1Et1GJk6Vhe8uaClDk2D0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kWwxQrjT; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1739534004; c=relaxed/simple;
+	bh=md5n2k/tf1pks0MeAndLT0GhIynJyuMazB/ncs9fZG0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=c29S2/OdbIgX2kt3GI+TbHLxmAisFd1xYjemWd/uDK1Y6lvbK40bnLG2W8POjeq+K/ewOTzQkFFFJs0RD5cKEwCuQ9hYYwCMqhtyz7vqt4XxXKHJPWZRcY40b2oEG2EliW3hlBTB35G+BC+m9jCzqp4qN90Y+eFMJcU4k+U1eYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N8QhK/y4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EwcgCNJz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kWwxQrjT"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7E95D44299;
-	Fri, 14 Feb 2025 11:50:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739533813;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N8QhK/y4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EwcgCNJz"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739534001;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zhAfL6p2Tu5CbkRFq/4tIEg0OmDK9rfhbiyVWYECfuM=;
-	b=kWwxQrjTkeU8P8uyg2zVtlWcs1TVhdU1FzA5WaIufSWq1oVFDjdYAsE0apwQvraHqz5wts
-	wbTxCfLkpH/oCKPmLftQH4yRpSQS7lWcF9SOxf8PhYLJMsqHtZQhpcyG41/PP8Cq0cu/V3
-	d1vWzWu4oYDMv05AC4CMXb74VLUT6nSU99I66PIVD3vn9519T8HEUAw6M3gv1OCKIhZRQH
-	4lD68av5+UOfMfQsqNYtcfS9pddcdIbgtjuj12sz7NHgkZH/00Z4CnpTatx6JCp9MMJd2W
-	LKiOiRem58N2ks/fYQtNxgJ5XJnZwMWH5gLSfpKMQQthjVhPtcgXDz/WmMS+6Q==
-From: mathieu.dubois-briand@bootlin.com
-Date: Fri, 14 Feb 2025 12:49:53 +0100
-Subject: [PATCH v4 03/10] pwm: max7360: Add MAX7360 PWM support
+	bh=lWEz1ZWdWkion5MIyu8qQHqr+FAKdZJBuw4TfNzpQAw=;
+	b=N8QhK/y4dwnmr4ugopa5yoykfbkMb8irN7O3zRSTu/OhAxgGch6PkMzgo5jTSnzvPacPST
+	v3jPvkpIUXQS3zrDSU3W3BUS/djaZCd4dnn2t2Y3Md/hao3nIhs+R2LB3Vy1/lHaVJuXEs
+	FLpI6P5RnGaeBUaQqCTNSD4hLsjWTXfZIKURDbpzH4NN8PgUcWQryMdczRnRbB3pEepWtJ
+	DmBDZnV8fvk1jX1KtjWR+ylmkeBIDzaSYufyW4gslApJDYkdL87HhwfwXIjC+qXcCxl0e9
+	fr7b0WjrkvdcgA3Qsb94A3uHLxp/2J4H4a3M9ntP9i+e0euRUfxd+Qzmr5SaZQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739534001;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lWEz1ZWdWkion5MIyu8qQHqr+FAKdZJBuw4TfNzpQAw=;
+	b=EwcgCNJzpir6XiFKZvbnPTawfCwZpEXo80qK9V1v65lBdmcVUHhzp/u/6wMu7bLxiQYVJ6
+	6J0zFKm64ELGmNDQ==
+To: Bjorn Helgaas <helgaas@kernel.org>, Roger Pau Monne <roger.pau@citrix.com>
+Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-pci@vger.kernel.org, Juergen Gross <jgross@suse.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v2 3/3] pci/msi: remove pci_msi_ignore_mask
+In-Reply-To: <20250205151731.GA915292@bhelgaas>
+References: <20250205151731.GA915292@bhelgaas>
+Date: Fri, 14 Feb 2025 12:53:20 +0100
+Message-ID: <87y0y8ivyn.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250214-mdb-max7360-support-v4-3-8a35c6dbb966@bootlin.com>
-References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
-In-Reply-To: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Kamel Bouhara <kamel.bouhara@bootlin.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739533806; l=7974;
- i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=CxMsleng0cZ3BeZymcuuErbxiPnn4kKb8ceRlh9SgXg=;
- b=Xf0beUWgYo9vw+zVjpW9nw5AzwSlbfq7WymEaxfdXlfS9/YO42oRReLTA62OxjSOzw36JU7W/
- 4p9p03wKfBWAx2klJz8/khdfvwl4odUMreQ8DuokEv6yWBLflI5htJv
-X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
- pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegleehjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmnecuggftrfgrthhtvghrnhepveehffetteetffeftedvleeltddttdfhvefhgfelheefvdevudduhfehudfgleegnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdefpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlr
- dhorhhgpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+On Wed, Feb 05 2025 at 09:17, Bjorn Helgaas wrote:
+>> Albeit Devices behind a VMD bridge are not known to Xen, that doesn't me=
+an
+>> Linux cannot use them.  By inhibiting the usage of
+>> VMD_FEAT_CAN_BYPASS_MSI_REMAP and the removal of the pci_msi_ignore_mask
+>> bodge devices behind a VMD bridge do work fine when use from a Linux Xen
+>> hardware domain.  That's the whole point of the series.
+>>=20
+>> Signed-off-by: Roger Pau Monn=C3=A9 <roger.pau@citrix.com>
+>
+> Needs an ack from Thomas.
 
-Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
-8 independent PWM outputs.
+No objections from my side (aside of your change log comments).
 
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
----
- drivers/pwm/Kconfig       |  10 +++
- drivers/pwm/Makefile      |   1 +
- drivers/pwm/pwm-max7360.c | 213 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 224 insertions(+)
-
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 0915c1e7df16..fac811ee46b5 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -745,4 +745,14 @@ config PWM_XILINX
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-xilinx.
- 
-+config PWM_MAX7360
-+	tristate "MAX7360 PWMs"
-+	depends on MFD_MAX7360
-+	help
-+	  PWM driver for Maxim Integrated MAX7360 multifunction device, with
-+	  support for up to 8 PWM outputs.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-max7360.
-+
- endif
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 9081e0c0e9e0..ae8908ffc892 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
- obj-$(CONFIG_PWM_LPSS)		+= pwm-lpss.o
- obj-$(CONFIG_PWM_LPSS_PCI)	+= pwm-lpss-pci.o
- obj-$(CONFIG_PWM_LPSS_PLATFORM)	+= pwm-lpss-platform.o
-+obj-$(CONFIG_PWM_MAX7360)	+= pwm-max7360.o
- obj-$(CONFIG_PWM_MESON)		+= pwm-meson.o
- obj-$(CONFIG_PWM_MEDIATEK)	+= pwm-mediatek.o
- obj-$(CONFIG_PWM_MICROCHIP_CORE)	+= pwm-microchip-core.o
-diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
-new file mode 100644
-index 000000000000..f1257c20add2
---- /dev/null
-+++ b/drivers/pwm/pwm-max7360.c
-@@ -0,0 +1,213 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright 2024 Bootlin
-+ *
-+ * Author: Kamel BOUHARA <kamel.bouhara@bootlin.com>
-+ * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-+ *
-+ * Limitations:
-+ * - Only supports normal polarity.
-+ * - The period is fixed to 2 ms.
-+ * - Only the duty cycle can be changed, new values are applied at the beginning
-+ *   of the next cycle.
-+ * - When disabled, the output is put in Hi-Z.
-+ */
-+#include <linux/err.h>
-+#include <linux/math.h>
-+#include <linux/mfd/max7360.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+
-+#define MAX7360_NUM_PWMS			8
-+#define MAX7360_PWM_MAX_RES			255
-+#define MAX7360_PWM_PERIOD_NS			2000000 /* 500 Hz */
-+#define MAX7360_PWM_COMMON_PWN			BIT(5)
-+#define MAX7360_PWM_CTRL_ENABLE(n)		BIT(n)
-+#define MAX7360_PWM_PORT(n)			BIT(n)
-+
-+struct max7360_pwm {
-+	struct device *parent;
-+	struct regmap *regmap;
-+};
-+
-+struct max7360_pwm_waveform {
-+	u8 duty_steps;
-+};
-+
-+static inline struct max7360_pwm *max7360_pwm_from_chip(struct pwm_chip *chip)
-+{
-+	return pwmchip_get_drvdata(chip);
-+}
-+
-+static int max7360_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct max7360_pwm *max7360_pwm;
-+	int ret;
-+
-+	max7360_pwm = max7360_pwm_from_chip(chip);
-+	ret = max7360_port_pin_request(max7360_pwm->parent, pwm->hwpwm, true);
-+	if (ret) {
-+		dev_warn(&chip->dev, "failed to request pwm-%d\n", pwm->hwpwm);
-+		return ret;
-+	}
-+
-+	ret = regmap_write_bits(max7360_pwm->regmap,
-+				MAX7360_REG_PWMCFG(pwm->hwpwm),
-+				MAX7360_PWM_COMMON_PWN,
-+				0);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_write_bits(max7360_pwm->regmap, MAX7360_REG_PORTS,
-+				 MAX7360_PWM_PORT(pwm->hwpwm),
-+				 MAX7360_PWM_PORT(pwm->hwpwm));
-+}
-+
-+static void max7360_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct max7360_pwm *max7360_pwm;
-+
-+	max7360_pwm = max7360_pwm_from_chip(chip);
-+	max7360_port_pin_request(max7360_pwm->parent, pwm->hwpwm, false);
-+}
-+
-+static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
-+					   struct pwm_device *pwm,
-+					   const struct pwm_waveform *wf,
-+					   void *_wfhw)
-+{
-+	struct max7360_pwm_waveform *wfhw = _wfhw;
-+	u64 duty_steps;
-+
-+	/*
-+	 * Ignore user provided values for period_length_ns and duty_offset_ns:
-+	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of
-+	 * 0.
-+	 */
-+
-+	duty_steps = mul_u64_u64_div_u64(wf->duty_length_ns, MAX7360_PWM_MAX_RES,
-+					 MAX7360_PWM_PERIOD_NS);
-+
-+	wfhw->duty_steps = min(MAX7360_PWM_MAX_RES, duty_steps);
-+
-+	return 0;
-+}
-+
-+static int max7360_pwm_round_waveform_fromhw(struct pwm_chip *chip, struct pwm_device *pwm,
-+					     const void *_wfhw, struct pwm_waveform *wf)
-+{
-+	const struct max7360_pwm_waveform *wfhw = _wfhw;
-+
-+	wf->period_length_ns = MAX7360_PWM_PERIOD_NS;
-+	wf->duty_offset_ns = 0;
-+	wf->duty_length_ns = DIV64_U64_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERIOD_NS,
-+						MAX7360_PWM_MAX_RES);
-+
-+	return 0;
-+}
-+
-+static int max7360_pwm_write_waveform(struct pwm_chip *chip,
-+				      struct pwm_device *pwm,
-+				      const void *_wfhw)
-+{
-+	const struct max7360_pwm_waveform *wfhw = _wfhw;
-+	struct max7360_pwm *max7360_pwm;
-+	unsigned int val;
-+	int ret;
-+
-+	max7360_pwm = max7360_pwm_from_chip(chip);
-+
-+	val = (wfhw->duty_steps == 0) ? 0 : MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm);
-+	ret = regmap_write_bits(max7360_pwm->regmap, MAX7360_REG_GPIOCTRL,
-+				MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm), val);
-+
-+	if (!ret && wfhw->duty_steps != 0) {
-+		ret = regmap_write(max7360_pwm->regmap, MAX7360_REG_PWM(pwm->hwpwm),
-+				   wfhw->duty_steps);
-+	}
-+
-+	return ret;
-+}
-+
-+static int max7360_pwm_read_waveform(struct pwm_chip *chip,
-+				     struct pwm_device *pwm,
-+				     void *_wfhw)
-+{
-+	struct max7360_pwm_waveform *wfhw = _wfhw;
-+	struct max7360_pwm *max7360_pwm;
-+	unsigned int val;
-+	int ret;
-+
-+	max7360_pwm = max7360_pwm_from_chip(chip);
-+
-+	ret = regmap_read(max7360_pwm->regmap, MAX7360_REG_GPIOCTRL, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (val & MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm)) {
-+		ret = regmap_read(max7360_pwm->regmap, MAX7360_REG_PWM(pwm->hwpwm),
-+				  &val);
-+		val = wfhw->duty_steps;
-+	} else {
-+		wfhw->duty_steps = 0;
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct pwm_ops max7360_pwm_ops = {
-+	.request = max7360_pwm_request,
-+	.free = max7360_pwm_free,
-+	.round_waveform_tohw = max7360_pwm_round_waveform_tohw,
-+	.round_waveform_fromhw = max7360_pwm_round_waveform_fromhw,
-+	.read_waveform = max7360_pwm_read_waveform,
-+	.write_waveform = max7360_pwm_write_waveform,
-+};
-+
-+static int max7360_pwm_probe(struct platform_device *pdev)
-+{
-+	struct max7360_pwm *max7360_pwm;
-+	struct pwm_chip *chip;
-+	int ret;
-+
-+	if (!pdev->dev.parent)
-+		return dev_err_probe(&pdev->dev, -ENODEV, "no parent device\n");
-+
-+	chip = devm_pwmchip_alloc(pdev->dev.parent, MAX7360_NUM_PWMS,
-+				  sizeof(*max7360_pwm));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	chip->ops = &max7360_pwm_ops;
-+
-+	max7360_pwm = max7360_pwm_from_chip(chip);
-+	max7360_pwm->parent = pdev->dev.parent;
-+
-+	max7360_pwm->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!max7360_pwm->regmap)
-+		return dev_err_probe(&pdev->dev, -ENODEV,
-+				     "could not get parent regmap\n");
-+
-+	ret = devm_pwmchip_add(&pdev->dev, chip);
-+	if (ret != 0)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "failed to add PWM chip\n");
-+
-+	return 0;
-+}
-+
-+static struct platform_driver max7360_pwm_driver = {
-+	.driver = {
-+		.name = "max7360-pwm",
-+	},
-+	.probe = max7360_pwm_probe,
-+};
-+module_platform_driver(max7360_pwm_driver);
-+
-+MODULE_DESCRIPTION("MAX7360 PWM driver");
-+MODULE_AUTHOR("Kamel BOUHARA <kamel.bouhara@bootlin.com>");
-+MODULE_AUTHOR("Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>");
-+MODULE_LICENSE("GPL");
-
--- 
-2.39.5
-
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
