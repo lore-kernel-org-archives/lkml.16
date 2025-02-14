@@ -1,122 +1,141 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F5D263F5F;
-	Fri, 14 Feb 2025 15:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AFD3595C
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739545730; cv=none; b=mKbd4agPGElijUnbAcMSDyAtO7zlOvMeMlUwetSrov61+BLobX12V5rRnQaE4dy/jYNM9vKJ3VdWPSfe++oaSPLhAH3eGfUWoLlM6DAau9gqOzbxppwflVH9oBZCx8m0TVQQhiLY6iaq33cXOE7OMWF9z+7A8c/KOxAfZgLRutA=
+	t=1739545747; cv=none; b=osZ/QIZAlXJJolk4elTGHCnxoGIGzkSvg26x7cRW580bxRtCtbZZFJ243uCwKWa/+xfr5WgTlOgnjPuuDdRDGOlfwvNy9Zs5leABiwpbgkbSW928AuGlLGwEz1Wb5qqMG0378MxTUvLioWa8h1oP1eZoamnWFxGxmJUGgQptlf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739545730; c=relaxed/simple;
-	bh=LKmJYpF6Ms1YYPsbwTNlYp8uGcun5qCX0fO2WBelQFo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Ydile4X9n7Euhp07OMnIC4gFF8IqO51cRsbp74+zb0FXBH5YCPswoocOe8MfG8yHQKZo9N/z7PB1Ee6AHUsk1qZyLGqmEN7tBzyeFRTsvBloHwnihJDOo528fFjiIUVRIffWIO2+ihoPekE9TLV6u7Phci7p3GijN3gX1UB7Vd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=GzC2Xguz; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1739545747; c=relaxed/simple;
+	bh=u4YT2mRDI9vOEz0E0V9HN6GrYA7SOM0GmXxkYSP3BpE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bridY8AqMPfSOO8o3xui9T2Q0VitWlqKV7ZcD4i2TIGDZ6hiDZqRK44kK1kfXSQPcjIfBQkAz0NKeoq7gcv+uo4+NFPRjyodL5TPPbM4gcDIFYZMpYKX5tK3sxVsd3VMY/24uJoEYdNSqJx+OnGw+kfWR0Y1KwCvDrszZM9J8rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v1UY37yn; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="GzC2Xguz"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51ECjotE010500;
-	Fri, 14 Feb 2025 16:08:19 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	YXS1HGsTHr9/1Ngx2AF+DGBdFhZg7bub1m4HSTPuIuc=; b=GzC2Xguz8yBpUIFF
-	RI+aUtN4T9Bu5IcWJFA7srIVliH9g502kTSXOpj5TcB1vaVujiMXGWT1U1Udz6TL
-	kF0YOJVywNexGSdQ4wOypyYaSiXoTXXXd9+OgkGfD5L6qWjNXTXKdiigY256aWgI
-	KmdUlXRh3dlXsKs8Bf1hNHSq0IEyKpADMBVSY2ijAd9YAAkkB+MSNjvbM2fLtq6Z
-	5jRfdYkTttU+MRuwACRlGwyOFV9p5nFkZ29vT8YtVfVgTfuqEB1LrDhMpOLPzP/i
-	LC4Y6qkrwwqd6/blvFlPjuGbINnAsuXkER1ht2L1mjbOBbdK7ux0k7skdjbXq+gG
-	bxYN4A==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44rrh3uwgf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 16:08:19 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 775EC4002D;
-	Fri, 14 Feb 2025 16:07:10 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AAADE2DB172;
-	Fri, 14 Feb 2025 16:06:16 +0100 (CET)
-Received: from [10.48.87.120] (10.48.87.120) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 14 Feb
- 2025 16:06:15 +0100
-Message-ID: <450d2efa-f38b-4f3a-b308-f2fb01fdb8f7@foss.st.com>
-Date: Fri, 14 Feb 2025 16:06:15 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v1UY37yn"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab7bf29883aso35798766b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:09:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739545744; x=1740150544; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yTE3gACjDkJBHSXQFkTCbxcnRZQf61xIHWSy/iDp6UQ=;
+        b=v1UY37ynH5e79M0GZ4U496POAWl0fVacHSsgcG5Y/ccVDQKxiCzSrEBbDLC4BCFnO+
+         SYe/6N6WBt4sXLQBYFno33liaJ+W7JVVIJ/XxncJcZaYyVZq52LE2cBU/A4OwEWcNSvq
+         bwSWneIwodaFg79iJVOUKPRJMGqxM4xWPAMSth9G7Tw86WOm2Ikn2UVFtoJxVh9CaM74
+         FCHVCByGX7TlT1ojJQMddMktZ5+EUDbYNZtqTcRisD72o1SpzlGzrmWh8T5cshsB+kCi
+         QghAdep6HfRsFcpvLYBINsuDeWtzqZGrVDz1A+qke5Nba/Dhop0SGpiKeROZY7jFX54a
+         iSxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739545744; x=1740150544;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yTE3gACjDkJBHSXQFkTCbxcnRZQf61xIHWSy/iDp6UQ=;
+        b=EVC71KJIDLsVDaPtd+dccWKr/MewdGBllbOdZaopDHE5gai1Hz2wo8WB3u1BBTTQX2
+         uh7GagYKIyfU5uGS7rd7QB5ORJueLoRT+UBjBYt1LbE994dVHbu+q62magjNEfR6uLcN
+         E0vMWe3ZanWQV6Eb59Ex6PabOp3u2A95DOKkq82XRCsFEHb2XUZHA2nFhOLfRDujWn0Y
+         ETgYOwxa+5dJhi8OJ5bOA2jCVQ+9iXNfdf8MJcBTvjIJ2O+MvyN44ljZS6ocT3rNiY/G
+         DEO5NdB5D/3/TmxZQVe5VHFcAS2Sy0Gmw8mqcbYFRorIgTFdHZPPMZYcalDtHoxJzVXv
+         SW2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUf2P2fR9Ti1v3qyuTWVLPhjiMuH3g/HeB++9n2ZJqrslHJhCwW7q9EoEIiMo/eZBCLWr7lndiArpKzk/A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkLaBhQDpHpolEQx0dij5y5UJbLLXOFlX+9pv/0BwVLELNlpqf
+	yZpO/vHLpQUVx80g5zIkekXQRuVhfbB9VsFBBr5XjwWZgEsqAHcbWt1WX4nzxV4=
+X-Gm-Gg: ASbGncujTgCsG4SGglnAzJQDqZNkVfSOGStNhUum8jihK6oSInBIAw7btU8dJI/YZUt
+	lC/ubu/EzH5sHtzy3931lh3XO+BL/7c2I5dj7DPKMtGoKdb9/g+mqI1pg0rDqEafEIZGTShPaZd
+	hRR85+G3xQM4ov37t3rzBtbvfePrjDiHK7XH6QTtS+6XSCpeYcXUrIih0xERNxKwT7l4UgYOfBt
+	dtZ03SG4Nu8rKRCrLTvyJ6ypgACgs/30KkIXrpf/fQpCdXL5z5wNA0T8qjlTQepE91IJBBbOIbL
+	pyXNeREBgFPZ/Ws2wHswLnIqgBIpO4w=
+X-Google-Smtp-Source: AGHT+IHzgKaRbHiTLvYxrSndh1cA0zCykbFaeMqxfMqSMgTgRMaXFYxANRLGE/AUS2gP7blBaOGXAg==
+X-Received: by 2002:a17:907:8686:b0:ab7:cd83:98bb with SMTP id a640c23a62f3a-aba6939dff4mr107008966b.5.1739545744014;
+        Fri, 14 Feb 2025 07:09:04 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.218.144])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba533bf70asm356266766b.180.2025.02.14.07.09.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 07:09:03 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 0/4] drm/msm/dsi/phy: Improvements around concurrent
+ PHY_CMN_CLK_CFG[01]
+Date: Fri, 14 Feb 2025 16:08:40 +0100
+Message-Id: <20250214-drm-msm-phy-pll-cfg-reg-v3-0-0943b850722c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/10] arm64: Kconfig: expand STM32 Armv8 SoC with
- STM32MP21 SoCs family
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>
-References: <20250210-b4-stm32mp2_new_dts-v1-0-e8ef1e666c5e@foss.st.com>
- <20250210-b4-stm32mp2_new_dts-v1-7-e8ef1e666c5e@foss.st.com>
- <20250213-polite-spiked-dingo-ce0f3a@krzk-bin>
-Content-Language: en-US
-From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-In-Reply-To: <20250213-polite-spiked-dingo-ce0f3a@krzk-bin>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-14_06,2025-02-13_01,2024-11-22_01
+X-B4-Tracking: v=1; b=H4sIAHhcr2cC/4XNQQqDMBCF4atI1p2STIjVrnqP0kU0Ew2okaSEi
+ nj3Rjeli9Ll/2C+WVmk4Ciya7GyQMlF56cc8lSwttdTR+BMboYcFRdSgAkjjHGEuV9gHgZobQe
+ BOriQaqzSuja2ZPl6DmTd65Dvj9y9i08fluNREvv630wCOMimrslSg1SZ2+AmHfzZh47taMIPh
+ Fz+hjBDVYmNkGWrDOIXtG3bG7tTcx4IAQAA
+X-Change-ID: 20250131-drm-msm-phy-pll-cfg-reg-7e5bf5aa9df6
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Jonathan Marek <jonathan@marek.ca>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Rob Clark <robdclark@chromium.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1419;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=u4YT2mRDI9vOEz0E0V9HN6GrYA7SOM0GmXxkYSP3BpE=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBnr1yHLLYyDJehS+Lyl5tVRCFBKAPeBmUjWYfvx
+ 4mbFH7/R6SJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ69chwAKCRDBN2bmhouD
+ 16LiEACVvDtCLRMfuiT8VpQkuEZNPQh4VQo2O3u0UY/cT0x4qq2KF8l36vj4gL5Dt+BVNgdw0S5
+ h3f3cq22DDVS1SqE7I4jIq25kHBHC7so1BPzOGChBxRbhjshsWDVwsTMDdURwLcPYFpZ+I4J7RP
+ 7HfNUR5lBUz+DRnITEtsfrEnG2xo6+GQZFxD0OynwUUyv3+TvK4maJGI7IEHYDOY5oRgYMRESkm
+ UTOchy/Pt7bbmzXCKyO7/9VToAh07H31wz/OCkkyYiUveXSH7jPrIoD5vwhCMAf2k/dHHTa8tec
+ xAOuSD6Di44KoxAQgEl4hbAW6GCCC39rXAEVEiJj45iw1KfjiR8q8d9luZhFjEOjLskntN/YiZE
+ HB1/hNkErm3URpdzohJfncZWf+KGeGQXg70GpsFj3HPQiDqAsHxWwWN0Lz7z7/8UDY91R3X3Q3e
+ Xq/gydE4d2uJGTr5XDo83fmWKKtLTlFarHqH+g9yErvskpQ3kKuSO783sqabF0pBxs61NcPbvAg
+ cBHZMYvA3BPSSXOutPYBvWXvh3iN62uQbguq8NzNNzpyjMQ52TeZqsW3h/8udSQf08yQNH/dByj
+ fZUBLRk2bbtR/vyDTT8241tFnwQ9BKBPo0kaebPofsmWzm8SL7pHQADR5zRzLg4WMQNqbjG48Yq
+ N8x4UNYoVNrekKA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On 2/13/25 10:02, Krzysztof Kozlowski wrote:
-> On Mon, Feb 10, 2025 at 04:21:01PM +0100, Amelie Delaunay wrote:
->> Expand config ARCH_STM32 with the new STM32MP21 SoCs family which is
->> composed of STM32MP211, STM32MP213 and STM32MP215 SoCs.
->>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
->> ---
->>   arch/arm64/Kconfig.platforms | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
->> index 844a39620cfea8bfc031a545d85e33894ef20994..f788dbc09c9eb6f5801758ccf6b0ffe50a96090e 100644
->> --- a/arch/arm64/Kconfig.platforms
->> +++ b/arch/arm64/Kconfig.platforms
->> @@ -325,6 +325,8 @@ config ARCH_STM32
->>   			- STM32MP251, STM32MP253, STM32MP255 and STM32MP257.
->>   		- STM32MP23:
->>   			- STM32MP231, STM32MP233, STM32MP235.
->> +		- STM32MP21:
-> 
-> Squash it with previous patch and keep some sort of order.
->
+Changes in v3:
+- Define bitfields in patches 1-3, so move there parts from patch #4
+- Use FIELD_GET
+- Keep separate cached->bit_clk_div and pix_clk_div
+- I think this implements entire feedback from Dmitry
+- Link to v2: https://lore.kernel.org/r/20250203-drm-msm-phy-pll-cfg-reg-v2-0-862b136c5d22@linaro.org
 
-Ok for squashing with patch 3.
-Do you mean to keep the current chronological order used here or to 
-change the order because "chronological" is not an appropriate order? In 
-this case, would the alphanumeric order be fine?
+Changes in v2:
+- Add Fixes tag
+- New patch #4
+- Link to v1: https://lore.kernel.org/r/20250131-drm-msm-phy-pll-cfg-reg-v1-0-3b99efeb2e8d@linaro.org
 
->> +			- STM32MP211, STM32MP213, STM32MP215.
->>   
->>   config ARCH_SYNQUACER
->>   	bool "Socionext SynQuacer SoC Family"
->>
->> -- 
->> 2.25.1
->>
+Calling these improvements, not fixes, because I don't think we ever hit
+actual concurrency issue.  Although if we ever hit it, it would be very
+tricky to debug and find the cause.
 
-Regards,
-Amelie
+Best regards,
+Krzysztof
+
+---
+Krzysztof Kozlowski (4):
+      drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG0 updated from driver side
+      drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG1 against clock driver
+      drm/msm/dsi/phy: Do not overwite PHY_CMN_CLK_CFG1 when choosing bitclk source
+      drm/msm/dsi/phy: Define PHY_CMN_CLK_CFG[01] bitfields and simplify saving
+
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c          | 63 ++++++++++++++--------
+ .../gpu/drm/msm/registers/display/dsi_phy_7nm.xml  | 12 ++++-
+ 2 files changed, 52 insertions(+), 23 deletions(-)
+---
+base-commit: 883d3876ff4bb50d1b9431f525b4d3b257ead6f5
+change-id: 20250131-drm-msm-phy-pll-cfg-reg-7e5bf5aa9df6
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
