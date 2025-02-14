@@ -1,175 +1,107 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CD3376F1;
-	Fri, 14 Feb 2025 00:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382851FC3;
+	Fri, 14 Feb 2025 00:47:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739494065; cv=none; b=hTnITv6SCx2yUsVUUKoxDhpeaRDueIjrgKTdEAUlUR/Axw6Xy6vkHE0SCzvEL3K8xws1Qa4Nkq+LFmBNU5taXhq0o0H5A9bEMcNJQcei0QQJciJikRDH5A5v0jMyN7vox9ACViaWDPhoAh0j43CeHYLkCEj+ieZB8SAMLPoblfA=
+	t=1739494076; cv=none; b=QCLfoieJz1o2fZkRKZoCIYchKXTI7K2ZBUouDx5WE/6Hmo96d+7tqhZstNqD+p0pPz6QgFN1JmplSQXCarnQdL5D0KCzZNlvqP22zXiEt0zUjjhZdxra8+ZF08pl6LtFQVhN+5mgXIaXHUNBSGYFtcMFTDhPRuJO52yi12HxmyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739494065; c=relaxed/simple;
-	bh=jV2OgockIS22bc1/QTx6TvziCGvVdfSHkDIYwh0FkQU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rKobzF+qUT8snsVX5tPNIV0CTucfwp4mW3sRmQ4ZWt5EPxrRfb2J2RlO+znnnFbfOWi3IHnp3wQYtjTREr2yFh4pmn2J7WaE0sEyGpxm8vMHgNczr5XHdKI3BPb7z10c6NNDhWO52leBD9VPGHmH609khqCnCCr/BI/5Cb/uvdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=N31zAUT1; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739494076; c=relaxed/simple;
+	bh=t8P3tZaQxu3mQlHu1ICaIX21HqUXbzlMLNshFSmQ/Ig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f7vl/agGL71rC09tWWk5apsT1+NDCgxcjQbcXHY6bacOjZ6ECAXi+UQNTjnt6YkzVG54CCeAlZgkiJxc8fYgkQoghxN2TVsWaoNzGQvKf0DdDv7z/agU54S9/ittrXEsE9TnrvGflbk+GRRvD2T0+jCQCws4d9BYCGe76ymT2lM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=BAa5G0IU; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="N31zAUT1"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DCD476B5;
-	Fri, 14 Feb 2025 01:46:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739493983;
-	bh=jV2OgockIS22bc1/QTx6TvziCGvVdfSHkDIYwh0FkQU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N31zAUT1V3mbe/FZggXQpJDGysupZ19TuNspvw0RBSRLbsGuznfSNP0kdj4lt4lXV
-	 kW1Cdd0ttqCvqyLuTjtqmyQEQ0MMg5I6+XOVEpGMdq/fkH821/0riVa4XUlIZaUfxQ
-	 4o2RjjDrAi9EKhL9eLHHlOSaG0RHWLOgi79OGeco=
-Date: Fri, 14 Feb 2025 02:47:29 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Tommaso Merciai <tomm.merciai@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-	biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/8] media: rzg2l-cru: csi2: Use temporary variable for
- struct device in rzg2l_csi2_probe()
-Message-ID: <20250214004729.GD8393@pendragon.ideasonboard.com>
-References: <20250210114540.524790-1-tommaso.merciai.xr@bp.renesas.com>
- <20250210114540.524790-6-tommaso.merciai.xr@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="BAa5G0IU"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so1020389f8f.0;
+        Thu, 13 Feb 2025 16:47:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1739494073; x=1740098873; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=terIPvdWa1fSylHgnwuIdhWYMuV0yExm2ENY3Z+tYgI=;
+        b=BAa5G0IU5objHvyS0n1uLMSFoiOjKB0RZIyh9GoJO9INRIGgXzOGo74TMMPgep3/GU
+         YhpIMLH6KmC1+33j39sT/REZTLf9Kw12ZekVhm9iJIjJAtYlOgxgXEVSxYRdr9l9IlUK
+         NRQyTMUeVmo7ZXHoe8nwkmKaWcCmhYAtkUOzJABzYTEZSoqwpgMLBrtv7g9gJz9y6rYY
+         PdpohVPS0mGvOG71TlFsOEy2Xy2EmQTwfqxllab6BfxWYQfG2TuMdQ81WxeGB7+kxXr6
+         7v8+uTGpPfaIhuZtuOTH5OWOhPJAEgCBsOxCUTG1F5SnzmYmMl9koV3T6HeR9mVC00n/
+         C3EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739494073; x=1740098873;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=terIPvdWa1fSylHgnwuIdhWYMuV0yExm2ENY3Z+tYgI=;
+        b=TJcLA9KQuYnT7qscqKNK9OVz/Ek3vRXDrkZ48JAOheerqIrLiB/5iC6wtyLDma0TKD
+         /BYSzZ1pMW4YhNwKmLLl7ucX5hxMx3F2w252oWS279jsL4cVhnOoqTVNQp6S3Atw2iSs
+         FWTDfIkXvE6GRDG/KL5yJhmlJvRd07pZPAISH6eClXdLbKL0ovR9TjO2NvasjniDjCAe
+         olvzR9vGzcdT37Yzih5MZLBXV8IRNg8h42ZomsEA7wcvDolHT0g3G4eEQ0AYiIOsxtQw
+         1UB3EKWBKF2aJL2pOFFgGfcYM+/Bl5DNFtzp0RkFuSIJRzpmRYEFq34AjavFFthcAKgq
+         11Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCUprdNjoB0hj5dq/AA4ibGGUfavLfqXSemQsgoMsbq1HYU0meVZ1IuC06+O+1rSEWogJllH7Qj1@vger.kernel.org, AJvYcCWNFPzaTLrsmIIMzWrOfqo/gEwNI8KhoCg2Qx/tS1Y3LWanWN5P8VzJ5Qiq5RzryLrfhDYF5gMgqpgqWak=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgeE4jRoVpXk/GmFuiMzSGm+/4yywuGlnRUSB/DXfya2CFU2qb
+	2Nvss04r5npZt2Z7dcXmVr+tPlJb1iQV+yK2McpCb/WdiSZnJ8Y=
+X-Gm-Gg: ASbGncuGayl9TMUzLFYXtuqL9JK1uQQ9W/OCxwaP+qZh1f9yDI5mNsRkZtzBBaRQ70k
+	H7aO2D31rLXQPJyrp+7PzZbAGttK84C1MlMOe/Kl8cR7Lk02+0z5QdIXodaGuhe3lN3EAobohe7
+	vbjUmeqAmwHWo13miQ9JaoIGne7Y1VQYxqdusIi6m0RXdLBXEuyqy/OpKb46b6v78kRvLXaY5kd
+	MMrFYJNGTnySb9KBQQ3y0R3EOdT6GfQEjglJL4Lt+OPB4QJTTiGLl2w8vjPVJdG04cTF1sxYeFI
+	RimZ6SzpNF/yOjttJ557Hq+XAFqW5hGK+0CM5riFl6gXhx2qD5dQWUwhtNA8QuRzvtmi
+X-Google-Smtp-Source: AGHT+IEv3hJWqhg4cLIRV0joUfQfZVf2QbqCq9tySua4HLVAtEybpZVVKs0jk8uNSOvxRlm1HNaTzg==
+X-Received: by 2002:a05:6000:1a8e:b0:38f:2a84:7542 with SMTP id ffacd0b85a97d-38f2a847693mr2946055f8f.28.1739494073222;
+        Thu, 13 Feb 2025 16:47:53 -0800 (PST)
+Received: from [192.168.1.3] (p5b2b4779.dip0.t-ipconnect.de. [91.43.71.121])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f25913eb6sm3226913f8f.51.2025.02.13.16.47.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 16:47:51 -0800 (PST)
+Message-ID: <7ce031ee-c9e0-4e52-8151-265dd3ef1637@googlemail.com>
+Date: Fri, 14 Feb 2025 01:47:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250210114540.524790-6-tommaso.merciai.xr@bp.renesas.com>
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.6 000/273] 6.6.78-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250213142407.354217048@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250213142407.354217048@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Tommaso, Prabhakar,
+Am 13.02.2025 um 15:26 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.6.78 release.
+> There are 273 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Thank you for the patch.
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-On Mon, Feb 10, 2025 at 12:45:37PM +0100, Tommaso Merciai wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> Use a temporary variable for the struct device pointers to avoid
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-s/temporary/local/ (in the subject message too).
 
-> dereferencing.
-
-The only advantage of this is shortened lines. That's a coding style
-preference, and I'm fine with this patch, but the commit message should
-mention this, not "avoid dereferencing".
-
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-> ---
->  .../platform/renesas/rzg2l-cru/rzg2l-csi2.c   | 31 ++++++++++---------
->  1 file changed, 16 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
-> index 881e910dce02..948f1917b830 100644
-> --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
-> +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
-> @@ -764,10 +764,11 @@ static const struct media_entity_operations rzg2l_csi2_entity_ops = {
->  
->  static int rzg2l_csi2_probe(struct platform_device *pdev)
->  {
-> +	struct device *dev = &pdev->dev;
->  	struct rzg2l_csi2 *csi2;
->  	int ret;
->  
-> -	csi2 = devm_kzalloc(&pdev->dev, sizeof(*csi2), GFP_KERNEL);
-> +	csi2 = devm_kzalloc(dev, sizeof(*csi2), GFP_KERNEL);
->  	if (!csi2)
->  		return -ENOMEM;
->  
-> @@ -775,28 +776,28 @@ static int rzg2l_csi2_probe(struct platform_device *pdev)
->  	if (IS_ERR(csi2->base))
->  		return PTR_ERR(csi2->base);
->  
-> -	csi2->cmn_rstb = devm_reset_control_get_exclusive(&pdev->dev, "cmn-rstb");
-> +	csi2->cmn_rstb = devm_reset_control_get_exclusive(dev, "cmn-rstb");
->  	if (IS_ERR(csi2->cmn_rstb))
-> -		return dev_err_probe(&pdev->dev, PTR_ERR(csi2->cmn_rstb),
-> +		return dev_err_probe(dev, PTR_ERR(csi2->cmn_rstb),
->  				     "Failed to get cpg cmn-rstb\n");
->  
-> -	csi2->presetn = devm_reset_control_get_shared(&pdev->dev, "presetn");
-> +	csi2->presetn = devm_reset_control_get_shared(dev, "presetn");
->  	if (IS_ERR(csi2->presetn))
-> -		return dev_err_probe(&pdev->dev, PTR_ERR(csi2->presetn),
-> +		return dev_err_probe(dev, PTR_ERR(csi2->presetn),
->  				     "Failed to get cpg presetn\n");
->  
-> -	csi2->sysclk = devm_clk_get(&pdev->dev, "system");
-> +	csi2->sysclk = devm_clk_get(dev, "system");
->  	if (IS_ERR(csi2->sysclk))
-> -		return dev_err_probe(&pdev->dev, PTR_ERR(csi2->sysclk),
-> +		return dev_err_probe(dev, PTR_ERR(csi2->sysclk),
->  				     "Failed to get system clk\n");
->  
-> -	csi2->vclk = devm_clk_get(&pdev->dev, "video");
-> +	csi2->vclk = devm_clk_get(dev, "video");
->  	if (IS_ERR(csi2->vclk))
-> -		return dev_err_probe(&pdev->dev, PTR_ERR(csi2->vclk),
-> +		return dev_err_probe(dev, PTR_ERR(csi2->vclk),
->  				     "Failed to get video clock\n");
->  	csi2->vclk_rate = clk_get_rate(csi2->vclk);
->  
-> -	csi2->dev = &pdev->dev;
-> +	csi2->dev = dev;
->  
->  	platform_set_drvdata(pdev, csi2);
->  
-> @@ -804,18 +805,18 @@ static int rzg2l_csi2_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> -	pm_runtime_enable(&pdev->dev);
-> +	pm_runtime_enable(dev);
->  
->  	ret = rzg2l_validate_csi2_lanes(csi2);
->  	if (ret)
->  		goto error_pm;
->  
-> -	csi2->subdev.dev = &pdev->dev;
-> +	csi2->subdev.dev = dev;
->  	v4l2_subdev_init(&csi2->subdev, &rzg2l_csi2_subdev_ops);
->  	csi2->subdev.internal_ops = &rzg2l_csi2_internal_ops;
-> -	v4l2_set_subdevdata(&csi2->subdev, &pdev->dev);
-> +	v4l2_set_subdevdata(&csi2->subdev, dev);
->  	snprintf(csi2->subdev.name, sizeof(csi2->subdev.name),
-> -		 "csi-%s", dev_name(&pdev->dev));
-> +		 "csi-%s", dev_name(dev));
->  	csi2->subdev.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
->  
->  	csi2->subdev.entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
-> @@ -852,7 +853,7 @@ static int rzg2l_csi2_probe(struct platform_device *pdev)
->  	v4l2_async_nf_cleanup(&csi2->notifier);
->  	media_entity_cleanup(&csi2->subdev.entity);
->  error_pm:
-> -	pm_runtime_disable(&pdev->dev);
-> +	pm_runtime_disable(dev);
->  
->  	return ret;
->  }
-> 
+Beste Grüße,
+Peter Schneider
 
 -- 
-Regards,
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
-Laurent Pinchart
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
