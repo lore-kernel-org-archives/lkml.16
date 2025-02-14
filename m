@@ -1,155 +1,100 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98FD2673AB;
-	Fri, 14 Feb 2025 16:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6D570831;
+	Fri, 14 Feb 2025 16:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739549269; cv=none; b=uGlGww18DhXvklDJVc+JeI3CVqLI6BnMGdmrtr2XTATRLxNpla98zgQCsEOqp83iv7ojaoxivto2aJuVmTPKEJeoCewpQ+eryAEToyKz8CahEWLd1HQ/FUYe4d3R+b7EKJcTfR0HjR+yfL5aBTooVDSkVeKA04bNZvjLBbVCYWc=
+	t=1739549366; cv=none; b=TEOvX4nW0lym4PGP3CDG/N2k0R40uGu+FyGtbhG6LWa7VNZNQ+OoeBM6lReN/AwW1VXIb/W80WxOE/c+K25RatUTHCr4zW6vgDPh3YI/uyv83NUySFKPsBQ+rGHpAd8u63XY0LnM4Jhm6QUSx60jT8oswS2h+RJqTHKOgm5q+jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739549269; c=relaxed/simple;
-	bh=Ao7LE4+tbfQL8T8CQHg0pXYdVblJlSaOPMAuV6uc1GI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GtXK4GRqzBUv6l3QD3VXe2/K3jBO4m7XgD/G25equV3pz4EEbwclRvGPmAa00h0KvBGOqolQGwPcbjdudSTAMTXQw19QNJL61ARTr8SMoRJ0zWH0aIvCeN3fUZvOfbEAhOjRWgcm8cYTHix58lJjhf89quGF9U5KmoH9zktXuFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YvcMH13hZz6H7YC;
-	Sat, 15 Feb 2025 00:04:59 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7BA1F140A77;
-	Sat, 15 Feb 2025 00:07:27 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Feb
- 2025 17:07:26 +0100
-Date: Fri, 14 Feb 2025 16:07:25 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Robert Richter <rrichter@amd.com>
-CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
- Bueso" <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, "Fabio M.
- De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
-	<terry.bowman@amd.com>
-Subject: Re: [PATCH v3 07/18] cxl/region: Avoid duplicate call of
- cxl_find_decoder_early()
-Message-ID: <20250214160725.0000662f@huawei.com>
-In-Reply-To: <20250211095349.981096-8-rrichter@amd.com>
-References: <20250211095349.981096-1-rrichter@amd.com>
-	<20250211095349.981096-8-rrichter@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1739549366; c=relaxed/simple;
+	bh=XvfaTAUytr9K0t1F7rHIR0kQJhJKplPtZaVtQLmMrM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HqTUHPl5AJoCY+PpfP3zPwKUHADpYMIS74hOJh4UvwZBhksMu+22kDG4+Rjj8rID8Zad051/oMZeLFyeSUeg74VxpiZXXwZQ4hSndlZ6euKiMi1FMbMugrVc/YsP5qL09KW1FdeaWgw9JEI0h8eSIeihCGuqWgRPxAKjUOiI4RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5de4a8b4f86so3191958a12.2;
+        Fri, 14 Feb 2025 08:09:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739549363; x=1740154163;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JF5FufNPsiom+i34fThs/hUtAnyWEdYBJTAnC8Bz9ik=;
+        b=dmPjI6e1tjg7FR5MFZ5oGl7aS0LrCF8qGLAq7PvMREUcfMhWE8r2rKpMiTNOcv3TBr
+         wR0ja2pxIcsTaQqruY+v3xvxCs2h3EZBuWdAlhYLsiqKXYuHKv4hNxXN6Kl8YDtEQLsG
+         UAifeiJWsXAZ7lsw4cPSRhuoP5t4PBVH2q2N3Vkz2rOuyO1/2wAe+GpEh1l8ZXkbSSuy
+         /ldFKPL/pmtjb3z0mZjLC93vetbg9i2t3hwUyUwZj+4/BwJDGQQ+27+nCBShT1EIkleG
+         qn7mouvBM72HG+9Oetq6h3UO8zHBUV+FUYiPnbcstmnbkVmUmbFskccE+Z1Z/yft/Al+
+         a0OA==
+X-Forwarded-Encrypted: i=1; AJvYcCVeKKRfHnM/GQnLMHvbO/xZGR+JuPPvHlqaz6/mNJm4SbHqqg8fwX5fyvKRJ217eAiaA3RMYO+HNhpgLCc=@vger.kernel.org, AJvYcCW2KYadxojFaPLqlcAPcAbn6JPHpwCWyTwEASbW5IF0jlhxU9xBaSHvtroqYuEhGo+UJ/6IdP0R@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN3HTyCWm+agN8XQ9D0q2jBG7LWj/kZMX+BptF8ccspUuNB4Wx
+	VJxUsuMhzTjZ9vWTa9ezfehL6/x+ZCodMqnmTBhhA+bZNXyigHqCziAxnw==
+X-Gm-Gg: ASbGncsMOaAc37KJPCFCFF2Xr7WTJ+WYOY78AStE0OWoHw2iOFuYj4ZSb2iMvxKfNFI
+	sKZqL5Zr1NzR8wrps6bNu1GbGSbKhr7oj8zHa50M5udrW5Px9fHevcCKqcwy+UK3e7prqNmSkLi
+	F2kScp73tH+3l+G5DkFiADEbLttU36RYr681JSd0MeI0Pv8frFknjBk32OeK3bj55K1D8CWoem8
+	FyNdIKCufuAAxEu/KOTVQNUBQdhYxv3ianC1bBVDDqiVeIrztDk5zE6ftZkloR4w8koN5nninOH
+	K9NuWQ==
+X-Google-Smtp-Source: AGHT+IFvmEPPfznVRo+H6qDRmrc/GS0dcen0jjnB7DIo3iaqoZEyzMgj9gc8pj+yIVY8o82BeznEJw==
+X-Received: by 2002:a17:907:7f06:b0:ab7:d5e3:cbac with SMTP id a640c23a62f3a-ab7f34aeb1amr1192297066b.54.1739549362472;
+        Fri, 14 Feb 2025 08:09:22 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:4::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5323226asm370036566b.8.2025.02.14.08.09.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 08:09:22 -0800 (PST)
+Date: Fri, 14 Feb 2025 08:09:19 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Nicolas Dichtel <nicolas.dichtel@6wind.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: Remove redundant variable declaration in
+ __dev_change_flags()
+Message-ID: <20250214-bald-mammoth-of-opportunity-48a0bb@leitao>
+References: <20250214-old_flags-v1-1-29096b9399a9@debian.org>
+ <1d7e3018-9c82-4a00-8e10-3451b4a19a0d@lunn.ch>
+ <20250214-civet-of-regular-refinement-23b247@leitao>
+ <943abc29-d5af-4064-8853-5f3c365bf6d6@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <943abc29-d5af-4064-8853-5f3c365bf6d6@lunn.ch>
 
-On Tue, 11 Feb 2025 10:53:37 +0100
-Robert Richter <rrichter@amd.com> wrote:
-
-> Function cxl_find_decoder_early() is called twice, in
-> alloc_region_ref() and cxl_rr_alloc_decoder(). Move it out there and
-
-out where?  I'd make it clear that both these calls are in
-cxl_port_attach_region()
-
-> instead pass the decoder as function argument to both.
+On Fri, Feb 14, 2025 at 04:02:10PM +0100, Andrew Lunn wrote:
+> > But I agree with you, if you needed to look at it, it means the message
+> > is NOT good enough. I will update it.
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Tested-by: Gregory Price <gourry@gourry.net>
-
-I think this is fine but it's not immediately obvious so a request
-inline for some more details in this description.
-
-> ---
->  drivers/cxl/core/region.c | 31 +++++++++++++++----------------
->  1 file changed, 15 insertions(+), 16 deletions(-)
+> Thanks.
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 13e3ba984a53..b8201c2faa87 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -908,7 +908,8 @@ static bool auto_order_ok(struct cxl_port *port, struct cxl_region *cxlr_iter,
->  
->  static struct cxl_region_ref *
->  alloc_region_ref(struct cxl_port *port, struct cxl_region *cxlr,
-> -		 struct cxl_endpoint_decoder *cxled)
-> +		 struct cxl_endpoint_decoder *cxled,
-> +		 struct cxl_decoder *cxld)
->  {
->  	struct cxl_region_params *p = &cxlr->params;
->  	struct cxl_region_ref *cxl_rr, *iter;
-> @@ -922,9 +923,6 @@ alloc_region_ref(struct cxl_port *port, struct cxl_region *cxlr,
->  			continue;
->  
->  		if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-> -			struct cxl_decoder *cxld;
-> -
-> -			cxld = cxl_find_decoder_early(port, cxled, cxlr);
+> > 
+> > > > Fixes: 991fb3f74c142e ("dev: always advertise rx_flags changes via netlink")
+> > > 
+> > > I suppose there is also a danger here this code has at some point in
+> > > the past has been refactored, such that the outer old_flags was used
+> > > at some point? Backporting this patch could then break something?  Did
+> > > you check for this? Again, a comment in the commit message that you
+> > > have checked this is safe to backport would be nice.
+> > 
+> > I haven't look at this, and I don't think this should be backported,
+> > thus, that is why I sent to net-next and didn't cc: stable.
+> > 
+> > That said, I don't think this should be backported, since it is not
+> > a big deal. Shouldn't I add the Fixes: in such case?
+> 
+> The danger of adding a Fixes: is that the ML bot will see the Fixes:
+> tag and might select it for backporting, even if we did not explicitly
+> queue it up for back porting. So i suggest dropping the tag.
 
+Makes sense. I will drop the Fixes: tag and send a v2 to net-next.
 
-This is buried a little deep to be obviously fine to lift out.
-Seems like it should always have been done outside the xa_for_each()
-loop in here.  So I think this is fine but maybe some more in the
-patch description is needed to make that point.
-
->  			if (auto_order_ok(port, iter->region, cxld))
->  				continue;
->  		}
-> @@ -1008,17 +1006,9 @@ static int cxl_rr_ep_add(struct cxl_region_ref *cxl_rr,
->  
->  static int cxl_rr_alloc_decoder(struct cxl_port *port, struct cxl_region *cxlr,
->  				struct cxl_endpoint_decoder *cxled,
-> -				struct cxl_region_ref *cxl_rr)
-> +				struct cxl_region_ref *cxl_rr,
-> +				struct cxl_decoder *cxld)
->  {
-> -	struct cxl_decoder *cxld;
-> -
-> -	cxld = cxl_find_decoder_early(port, cxled, cxlr);
-> -	if (!cxld) {
-> -		dev_dbg(&cxlr->dev, "%s: no decoder available\n",
-> -			dev_name(&port->dev));
-> -		return -EBUSY;
-> -	}
-> -
->  	if (cxld->region) {
->  		dev_dbg(&cxlr->dev, "%s: %s already attached to %s\n",
->  			dev_name(&port->dev), dev_name(&cxld->dev),
-> @@ -1109,7 +1099,16 @@ static int cxl_port_attach_region(struct cxl_port *port,
->  			nr_targets_inc = true;
->  		}
->  	} else {
-> -		cxl_rr = alloc_region_ref(port, cxlr, cxled);
-> +		struct cxl_decoder *cxld;
-> +
-> +		cxld = cxl_find_decoder_early(port, cxled, cxlr);
-> +		if (!cxld) {
-> +			dev_dbg(&cxlr->dev, "%s: no decoder available\n",
-> +				dev_name(&port->dev));
-> +			return -EBUSY;
-> +		}
-> +
-> +		cxl_rr = alloc_region_ref(port, cxlr, cxled, cxld);
->  		if (IS_ERR(cxl_rr)) {
->  			dev_dbg(&cxlr->dev,
->  				"%s: failed to allocate region reference\n",
-> @@ -1118,7 +1117,7 @@ static int cxl_port_attach_region(struct cxl_port *port,
->  		}
->  		nr_targets_inc = true;
->  
-> -		rc = cxl_rr_alloc_decoder(port, cxlr, cxled, cxl_rr);
-> +		rc = cxl_rr_alloc_decoder(port, cxlr, cxled, cxl_rr, cxld);
->  		if (rc)
->  			goto out_erase;
->  	}
-
+Thanks Andrew,
+--breno
