@@ -1,99 +1,144 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 571213234;
-	Fri, 14 Feb 2025 15:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC3D245002
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739548299; cv=none; b=oOdeob9aZsb93+rorVY7RE5dNBWEpC8jY/d/dZqFzq3RkXsri1xtQSItNqsE/hFnnazib2mCrtmNSSq2J4SMEXhXoRUjjECduvXXPLK+5cbHSpeSLu6gMnlUNSOQ+vGjBLWd5X+BGPipAm9LLSygUg3D9ym2rgOvXnruq24yCmI=
+	t=1739548367; cv=none; b=LpNcLfj9n1+re4JVoLrFbPltIEGIB0mffGau8v8gevxyC7uZTPJZdILV5gkwNYYyMse3OVg5RkTbs0aWTFm8VBRcHIcag7VOjYOOJUXx3vIOu+h2mPeovJZxcUmDDzgKy0qsuSvta02MvRtWL0dPW7yjKf8XKH0AbE2rKikeB2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739548299; c=relaxed/simple;
-	bh=IDTr1Eq3cziq+DUkNqSv2uD2a5GpF3XqUFMvXRcIcAM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gQk9OVcIclWOSdeIuj/Rg8WF0NSPYfJc1iqrp1gqyBv0SxjRVni/MDzy3LTVrwU07yFP+p74Bdna3ZM3rC/M3qb1jg2h8ensPW9MHp202oaTaea41lpmSc3oXcX+7c4etq2ifRoOvZIJpypgtO2EOD3pr3OZE/yEX3lw0I56FaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=cOgvKaT2; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1739548367; c=relaxed/simple;
+	bh=3d5yNh+7mmkzMBeCsstHX2sTs31Ph92UicrtFLPMvh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u2dhgRjdYOt97/zCkrsZNeXzjsJ6dwe8hrlbrDt7kCBKxNlkdh9t/duEv0WwtzkYPEXYqY/DrTFm3HzP7dI20+xJiuYdXf4LYU6wTi16ehxCoRLvCANKIG6lXf0GHqbLwvdJRuYetNB64pvOxV5Sa7KNq3j8QX0wHltztape62A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GkqUT5uk; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="cOgvKaT2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=ifmXkuEVqR4hvNL7Ti3tLm85mmbETlFEp0sPfcah6gI=;
-	b=cOgvKaT21pxQzx1r0FRbiRUvxkkM0LYZvifYm1R9KLN5V3jr2UcS4qloeWdFS7
-	eTAiuA/1wupeLxloNnxZFm9Sdh3rUdAhH/6SoOfa2bgY5ACeNtDPzTkBdTNjsaCa
-	oXLM5gs+r/tEjHuy8rCrYAKjYh6fpRzLA1xiSewHp0AxI=
-Received: from [192.168.71.44] (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wC3+S_AZa9nvmfeMA--.26732S2;
-	Fri, 14 Feb 2025 23:48:17 +0800 (CST)
-Message-ID: <3d3d8772-08ba-4e5a-bf1f-71821cf056e7@163.com>
-Date: Fri, 14 Feb 2025 23:48:16 +0800
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GkqUT5uk"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ab7e3d0921bso394163266b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:52:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1739548364; x=1740153164; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fPQDSWdyumx+7kZtAbOyAbWC8fKUL0iK50FAOdUwRCA=;
+        b=GkqUT5ukZkKR6mvWShznmI3n+bEZzR+OiIYdPNGd39OABUsTtc3DEXp9VwDReB4l7k
+         pNhpx2eMiEcriuZyHgevYItOUP/zZR2PGL3FCm8WfTmmcimweU/cU81es7+1VuMezVME
+         4jkuOaV+0F2rXLncrirYBcoOFr/PaAp6TUVNjxbi9nbfSlAROqBox4wKWarhjgAFcGlu
+         HGcyoULfWBNcBdsQF5VfdUVFtJ0ShGkJ8JlZRySNJVjrBTTdWVCYciW6rW/nESPCuRgL
+         sJgaukFHyG4ngpHAllhpQpIrXDC1q4x9yhQHqK5E7+D+lXdm4rBscAnjlE6df9vSfTr1
+         aLrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739548364; x=1740153164;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fPQDSWdyumx+7kZtAbOyAbWC8fKUL0iK50FAOdUwRCA=;
+        b=XEfqQIjpBCtWQTCsQaKOLytvd4J6TS3iy50FTedvHRk/fhndfV5GvbbpHmm0c0YiMa
+         Mazs5n/vtLRb/6ADTb/lcKK5Kd5liKPTQ38OwzFj1QAb60uIzpyEyS8uNSObr2pSmdZ9
+         4tAFSIO0gbS2FSsMw06en9Vc+GbnbDDRfnZLS6rXsajR4wOSfw2j2DhiN5mAcou56RzM
+         qC0KpgxB/HF+zZx4UkZDXQ7HmWtfxdcRatJRrgXfbYHdkW+qnRiiYBDuTNoxCCPBdIsQ
+         /BiFA3L3UGMNs54nkahMMIPQggcKEg6QRQU7hLOoxpPKHHdJXopcbxfBPcB/w/8llrLX
+         auHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMoEYH6sI6/V/Lh8TgRtFt0c6LmsMqxuKhDpi46MCoJq3RWC9UeZJbfByo2GKdXeKVTNLPxipxhKNTqZE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxekpOV/BwDBIuAeriUq7kXcWzzARON/Z1BX+IwzrYtBKl+JFon
+	r5ayk0fcTPH8+W/bv87aQ52TGID4qH4hmbL51b2/WYlTwyBZd7XnB48N2MKAbJg=
+X-Gm-Gg: ASbGncsSnWbmQoA3oZQroaCZqmIiv1wLhWzDOxDZAczyHexhLdA02EAiC94jzq8OH0L
+	0IESBK8zoBvGk+TDiT/dmvOCKtCcB9h6dRU2z0W9J04JjEzZPzeBhYjF0bWCHNarW5eE/SCqwt1
+	k2vtoSl52zl8oDL7HCDNHSaLpa6UJ5/C06j050RbTPWD2L9Z07+0f0yk3ZvFFs00GgzbRmwG4ZX
+	/VepbjFrfh8Upe9IwK3f0EgoDM02z+wKEj/2GWlfXO0NDzPiJM9qViJB9uNpz5fJ3O1x95A18cC
+	CNk7MjaAtdF5lGH4cT+vrbo8VR1w
+X-Google-Smtp-Source: AGHT+IGM4zyda7P3q+Y2IYo5LojVyQ2Ld4whAaXWvkt3be7ScN0HjwuroYqtgMUfJbnJWY08Yx4Lvg==
+X-Received: by 2002:a17:907:94cc:b0:ab7:da56:af9f with SMTP id a640c23a62f3a-aba501a9dc2mr940172666b.49.1739548363814;
+        Fri, 14 Feb 2025 07:52:43 -0800 (PST)
+Received: from localhost (109-81-86-120.rct.o2.cz. [109.81.86.120])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-aba533bee4asm365187166b.170.2025.02.14.07.52.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 07:52:43 -0800 (PST)
+Date: Fri, 14 Feb 2025 16:52:42 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Dennis Zhou <dennis@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>, Filipe Manana <fdmanana@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm, percpu: do not consider sleepable allocations atomic
+Message-ID: <Z69mygllBATJ6dsm@tiehlicka>
+References: <20250206122633.167896-1-mhocko@kernel.org>
+ <Z6u5OJIQBw8QLGe_@slm.duckdns.org>
+ <Z6zS4Dtyway78Gif@tiehlicka>
+ <Z6zlC3juT46dLHr9@slm.duckdns.org>
+ <Z60KQCuPCueqRwzc@tiehlicka>
+ <Z60S4NMUzzKbW5HY@slm.duckdns.org>
+ <Z60VE9SJHXEtfIbw@snowbird>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v3] PCI: cadence: Fix sending message with data or without data
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
- bwawrzyn@cisco.com, cassel@kernel.org,
- wojciech.jasko-EXT@continental-corporation.com, a-verma1@ti.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
-References: <20250207103923.32190-1-18255117159@163.com>
- <20250214073030.4vckeq2hf6wbb4ez@thinkpad>
- <7eb9fedc-67c9-4886-9470-d747273f136c@163.com>
- <20250214132115.fpiqq65tqtowl2wa@thinkpad>
- <332ec463-ebd9-477c-8b10-157887343225@163.com>
- <20250214153103.4cjlawksw4xobc2l@thinkpad>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250214153103.4cjlawksw4xobc2l@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wC3+S_AZa9nvmfeMA--.26732S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ur18JFyxCw1rAF1UGw4fGrg_yoW8Xr1kpa
-	9xKa4Skws5KrZYvF1xZr1IqrnrGFWfXa15Cry8ZryFyws09FyFkryIka1jga4rGw1rAFWY
-	vryjgFZrAa12vFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVMKtUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiDwTzo2evZK4OwQAAsW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z60VE9SJHXEtfIbw@snowbird>
 
-
-
-On 2025/2/14 23:31, Manivannan Sadhasivam wrote:
-> On Fri, Feb 14, 2025 at 10:28:11PM +0800, Hans Zhang wrote:
->> Sorry Mani, I shouldn't have spread this SOC bug. This is a bug in RTL
->> design, the WSTRB signal of AXI bus is not connected correctly, so the first
->> generation SOC cannot send message, because we mainly use RC mode, and we
->> cannot send PME_Turn_OFF, that is, our SOC does not support L2. I have no
->> choice about this, I entered the company relatively late, and our SOC has
->> already TO.
+On Wed 12-02-25 13:39:31, Dennis Zhou wrote:
+> Hello,
 > 
-> Ok. Just to clear my head, this patch is needed irrespective of the hw issue,
-> right? And with or without this patch, first revision hw cannot send any MSG
-> TLPs?
-
-Yes, that was a problem with our own SOC design, the Cadence RTL bug.	
-
-> If so, it is fine. But is there a way we could detect those first generation IPs
-> and flag it to users about broken MSG TLP support? Atleast, that would make the
-> users aware of broken hw.
-
-I don't know how to do it, but here are the questions that were actually 
-tested.
-
->>
->> This patch is to solve the Cadence common code bug, and does not conform to
->> Cadence documentation.
+> On Wed, Feb 12, 2025 at 11:30:08AM -1000, Tejun Heo wrote:
+> > Hello,
+> > 
+> > On Wed, Feb 12, 2025 at 09:53:20PM +0100, Michal Hocko wrote:
+> > ...
+> > > > Hmm... you'd a better judge on whether that'd be okay or not but it does
+> > > > bother me that we might be increasing the chance of allocation failures for
+> > > > GFP_KERNEL users at least under memory pressure.
+> > > 
+> > > Nope, this will not change the allocation failure mode. Reclaim
+> > > constrains do not change the failure mode they just change how much the
+> > > allocation might struggle to reclaim to succeed. 
+> > >
+> > > My undocumented assumption (another dept on my end) is that pcp
+> > > allocations are no hot paths. So the worst case is that GFP_KERNEL
+> > > pcp_allocation could have been satisfied _easier_ (i.e. faster) because
+> > > it could have reclaimed fs/io caches and now it needs to rely on kswapd
+> > > to do that on memory tight situations. On the other hand we have a
+> > > situation when NOIO/FS allocations fail prematurely so there is
+> > > certainly some pros and cons.
+> > 
+> > I'm having a hard time following. Are you saying that it won't increase the
+> > likelihood of allocation failures even under memory pressure but that it
+> > might just make allocations take longer to succeed?
+> > 
+> > NOFS/IO prevents allocation attempt from entering fs/io reclaim paths,
+> > right? It would still trigger kswapd for reclaim but can the allocation
+> > attempt wait for that to finish? If so, wouldn't that constitute a
+> > dependency cycle all the same?
+> > 
+> > All in all, percpu allocations taking longer under memory pressure is fine.
+> > Becoming more prone to allocation failures, especially for GFP_KERNEL
+> > callers, probably isn't great.
+> > 
 > 
-> you mean 'does'?
-> 
+> Wait, I think I'm interpreting this change differently. This is
+> preventing the worker from allocating backing pages via GFP_KERNEL. It
+> isn't preventing an allocation via alloc_percpu() from being GFP_KERNEL
+> and providing those flags down to the backing page code. alloc_percpu()
+> for GFP_KERNEL allocations will populate the pages before returning.
 
-What I mean is that common code bit16=1 is to send a message without 
-data, while Cadence's development document says that bit16=0 is to send 
-a message without data. This is not consistent with the documentation 
-description, and the final verification results, the development 
-documentation described is correct.
+Correct.
+ 
+> I'm reading this as potentially making atomic percpu allocations fail as
+> we might be low on backing pages. This change makes the worker now need
+> to wait for kswapd to give it pages. Consequently, if there are a lot of
+> allocations coming in when it's low, we might burn a bit of cpu from the
+> worker now.
 
-Best regards
-Hans
+Yes, this is potential side effect. On the other hand NOFS/NOIO requests
+wouldn't be considered atomic anymore and they wouldn't fail that
+easily. Maybe that is an odd case not worth the additional worker
+overhead. As I've said I am not familiar with the pcp internals to know
+how often the worker is really required
 
+-- 
+Michal Hocko
+SUSE Labs
