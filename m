@@ -1,59 +1,59 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE8C269AE8
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 17:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2857269B04
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 17:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739554820; cv=none; b=HBGHZp7AbqboLlULpCzuV9ZK+1syeOmo1kRSVnaKyCT3HtOUBR1Cp5Kyz+e+zIVqloAdwwWun5dkbG6O1Wu82IBHqQ1eEB6+CAbM/gudbYOMLEEnT3zgVeMu3vD8M89ArNR20bCMSiNmNF4/7cEwLRWyUFCIxJmgceRcP/4xQSo=
+	t=1739554824; cv=none; b=ltvxCdmWMvsn0FJOVlWz3wFO6CZ2EVMVF5JPfqEX+jHYKbIFdBAztwSBs3uXPF4HwRIoTZbvMeDhnQ54EPSsJNkSx4YTZH+KXCoFMz/PVdKAfbBOicEPB0M8yURqZrxIT1vaywMrRPo1PspnyQ6Xzw6pt/Xdso/hr5zYu1/xRjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739554820; c=relaxed/simple;
-	bh=fGgqLUYQ3l+rbJFzjKjU0U0rU073XUhDX3WKSwxzq9s=;
+	s=arc-20240116; t=1739554824; c=relaxed/simple;
+	bh=WBgjH17iGQ0M1wewIalhrW/3ZOyyZII+ENhL+eX1Ijw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MfuVhNZr6qSchquLpidK0YbwsVmwoGF9D1/E3ypQ1zhw9fVHqpOlVbPdODEgd7YIummBLnIVVHpBu5fNTImwqgEvoNdSAvgqZ5nE2oJz3uzr1sXv4MEkhaciTVjrjdLk6ECfN3ZfknjfcMKygJ0Lgh4sZwa+ADj3nv8GH0psZ0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=WNz0kbvw; arc=none smtp.client-ip=209.85.161.52
+	 MIME-Version; b=L0Uk4gIBrU1J2Zf55BayHGcSk1Mfw5LwX34mYLlbOd88C+BOTTc3argMmulUTC9SFOc4ZSJsTYZ/5RQjQCnElYfFjl1tt+Hw5t7bfVPrBA3F5QLhULTYxXIYcEviXar6ati5gLLODTWOqYTCRpsH7zVvkcfPLpzzPveNnI7SitE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=MccvvWWk; arc=none smtp.client-ip=209.85.161.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WNz0kbvw"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5fcc45803easo47437eaf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:40:18 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MccvvWWk"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5fa28eaa52cso1469722eaf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:40:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1739554817; x=1740159617; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1739554822; x=1740159622; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CSW4cfeQPfDzJdrXVnX+xGV7pqYpNxrZbvVlU0rLzgU=;
-        b=WNz0kbvwBnyrv74gM3mFoS7i0v1Nqp8BWww4jLMV1PHqf+eqzo6tSn1Yb2S4MsCLbo
-         xJzfKDhD9Rc5il7WDrrdEaP3sUyn0PjEBjSVQCKmDIrm0DX/67XHllFYyebMtdTjRQcu
-         N+ujAQJHQByLxsLI5bUsBOrY9UNr5aFmtDF0Q=
+        bh=QAlxapwLw5ouznsWC8StdUePnEcSqjOB1MsFoZtsKuc=;
+        b=MccvvWWkba1jaXhQjmFDjVTdwupoV43LxdUks5tnbAyN2fBm5ggrfW8ZlyHB+ybXgg
+         MBu434jR97+ZJZqJUo0VWhy4BAbpE56yz0d/zmifrxm/p0Zznn0XHdRxO94iRwD8ahkU
+         deXGp3Bg0xmOgt9DHvoqYMqvER4Bl8+zA1lc4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739554817; x=1740159617;
+        d=1e100.net; s=20230601; t=1739554822; x=1740159622;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CSW4cfeQPfDzJdrXVnX+xGV7pqYpNxrZbvVlU0rLzgU=;
-        b=NqVkblARQC36SxJEZm6GIDar6HWXwhIS/CLnuV8T2t8Qc+oFULXlhAUNMBhAj9TQoP
-         Wb4SuTqFZFO3adqiYlAGFEjNZoy4rTzlhPORoS718vVyuNbEjCazs13kQDkeU6LZ4hbw
-         6t6yEVET76Na+IM80xjAkJe40w/Uu+yRTYlTEGhAdG+/3bJWMI/BaqAdKKm6XzktIB4B
-         z7L+Siil3y308SuzJ+KQN9AfyaxO5oSbnJdUw7dCCJjRVNIGA1H25OFPu9V1IecAigb3
-         TcGPocnJixsV8VoIkNaAyfl0CQYq+kubHXMXSsU2VFzoqQIUxZeGXYeI09jiGYbCuwEb
-         ed3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVPrHOM3uMHk8erD3hizsjUFnb3h2/JtMR6FUCh69whA/zdhGLW6omQIy/XJM0qwRvkpDkG5AukB5jwZS4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXU3zUxrXhISlV/IedA2C0HxBxGvR+XuLmugDFDDNT/4HGn+iw
-	lSQ5sqmI07VL8V3QMGiWq3bjZo8L3JP2g2IuIF83VJDOjOwcaRWmxAyCJeo01Q==
-X-Gm-Gg: ASbGncs+/2/aVnZaa5Re+zsYcscZNPxiItBCDiRrwpN7EgrEC5renq1T6DmoNRfkY3z
-	fwgqvSyrRgt5y1ioqO+5d+Zaj8riycLfEHuBKm00S/bqvOJbSCWD6pFOJx4zfK5XPN/dpF55rwv
-	pNH2qLVeiUXBAgeCPoi+0SHrTkumrmkXly9IDa+FcGF7NQTKAbeJ7hUtba6i4+GlVyPTKeFuhOx
-	4wEs8wrJIFlxf4kn+XNOFlUKRV2XuIgIFaC+hH58oYOq8JLQR54tkOav7dTFHzmeXZaYRyaNZi2
-	3cZ/C2A9zUvlEAcCxcXoqx/pOhcai+/tfdLAAkEfIGU4Poq8mMDc3cD/NatupWgWuH2/Ux4=
-X-Google-Smtp-Source: AGHT+IGzGxY4gVdlR82gAdB7cjaGdcaL5kCbohfl9gRTT5OL6p6gaqIDXsIm/04V9i6hRIlQvRjbtQ==
-X-Received: by 2002:a05:6820:1c8f:b0:5fc:98ab:2b27 with SMTP id 006d021491bc7-5fcaf54776dmr4801224eaf.6.1739554817648;
-        Fri, 14 Feb 2025 09:40:17 -0800 (PST)
+        bh=QAlxapwLw5ouznsWC8StdUePnEcSqjOB1MsFoZtsKuc=;
+        b=e2BxXBu8L8hdJp5Eo1M/8XgR7l/X0RuahdqjI9HXxVxVWxZzClT81wCiCm67vn4EBm
+         EyDBi0Oci3Q+jj4pGab2i0sHCrZZRxlu5cwHZKZQy2gt+7EVI/6jOPe4Nb2D0djSnnLy
+         b6IURCX4wFB18/L3YSS6omfwJNkiiU6wvj7Te8BGu4rQaR685Bf69VJ5ZUv1KcLdsfZD
+         9zA6ZaOIlc+M2udQTp7UgKjpqq7YuwckfvJ5Zo1A1si2v6VygUTcWXQyYCBrCyBgNQHG
+         tqcgJ3j5F7oiz2steWEYhVIAbbkcO9gzsA0rbJGXwv/+yEYvsP7bdslSaz5wdmFe9Dhm
+         /cng==
+X-Forwarded-Encrypted: i=1; AJvYcCVmCKYvVKvcj6nNQQuyTrggiZGgJTJ8XnzL5KiT4dgKtoGf/PMxYR7RA28LmseEIoKk1uajXkDFgr0Z4PI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3w6roS8VWpS8+HpYiLjfr4OP4kLWvsxnD9XbxnthkQu/NLxne
+	uuFACo5h00JP4o4fhJ6D8GIYKnGHr/YCiWuzx+ALX6wyFL90DVtZ3R4CPVyrDw==
+X-Gm-Gg: ASbGnctwNTW9bvcodpf5/ihKSKP/nDyZdGWTX7RzNdPFcoKaD4zFUkTVyiETJ6P9j8n
+	ahmYBdWFzqaH6eAND2q8gF/yauSzrLDoNHDe8o7o1jo8GQDAsFO1qUYbGqTQZKasL4V7WhWUeWi
+	VKAPud9HFOT9a4XD7fGQ7w2dFgYXCJB6lh5GozAZwyVC1sZOhHxjoBa+Szrz9CgMVQYd8BvsF2E
+	EjZC2AYc04Pga8wDnT4uVvys7RLPraWvVROty/iLJpWURvZY8QR4sBWaJPMG3PvgZHX3GYc7Q5X
+	RFDqwjesIIn4RBBj6RmRVfJDL0s7dES5xhvlwN40YA57Nt1v6B5FBqA6EWHSxUuJD14Cin8=
+X-Google-Smtp-Source: AGHT+IF8Xjib64lmMqD097Fqb8iAnB8oVv8SuKUplvbq9RXROblxeeVuY5j8JISp/0552IXX4jSipA==
+X-Received: by 2002:a4a:e68b:0:b0:5fc:a7d4:d788 with SMTP id 006d021491bc7-5fca7d4d8cdmr5224730eaf.7.1739554821727;
+        Fri, 14 Feb 2025 09:40:21 -0800 (PST)
 Received: from stbsrv-and-02.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fcb17a4ca4sm1284073eaf.30.2025.02.14.09.40.14
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fcb17a4ca4sm1284073eaf.30.2025.02.14.09.40.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 09:40:16 -0800 (PST)
+        Fri, 14 Feb 2025 09:40:20 -0800 (PST)
 From: Jim Quinlan <james.quinlan@broadcom.com>
 To: linux-pci@vger.kernel.org,
 	Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -72,9 +72,9 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 7/8] PCI: brcmstb: Make two changes in MDIO register fields
-Date: Fri, 14 Feb 2025 12:39:35 -0500
-Message-ID: <20250214173944.47506-8-james.quinlan@broadcom.com>
+Subject: [PATCH v2 8/8] PCI: brcmstb: Clarify conversion of irq_domain_set_info() param
+Date: Fri, 14 Feb 2025 12:39:36 -0500
+Message-ID: <20250214173944.47506-9-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250214173944.47506-1-james.quinlan@broadcom.com>
 References: <20250214173944.47506-1-james.quinlan@broadcom.com>
@@ -86,47 +86,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The HW team has decided to "tighten" some field definitions in the MDIO
-packet format.  Fortunately these two changes may be made in a backwards
-compatible manner.
-
-The CMD field used to be 12 bits and now is one.  This change is backwards
-compatible because the field's starting bit position is unchanged and the
-only commands we've used have values 0 and 1.
-
-The PORT field's width has been changed from four to five bits.  When
-written, the new bit is not contiguous with the other four.  Fortunately,
-this change is backwards compatible because we have never used anything
-other than 0 for the port field's value.
+Just make it clear to the reader that there is a conversion happening, in
+this case from an int type to an irq_hw_number_t, an unsigned long int.
 
 Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pcie-brcmstb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 923ac1a03f85..cb897d4b2579 100644
+index cb897d4b2579..f790d5252e9f 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -175,8 +175,9 @@
- #define MDIO_PORT0			0x0
- #define MDIO_DATA_MASK			0x7fffffff
- #define MDIO_PORT_MASK			0xf0000
-+#define MDIO_PORT_EXT_MASK		0x200000
- #define MDIO_REGAD_MASK			0xffff
--#define MDIO_CMD_MASK			0xfff00000
-+#define MDIO_CMD_MASK			0x00100000
- #define MDIO_CMD_READ			0x1
- #define MDIO_CMD_WRITE			0x0
- #define MDIO_DATA_DONE_MASK		0x80000000
-@@ -327,6 +328,7 @@ static u32 brcm_pcie_mdio_form_pkt(int port, int regad, int cmd)
- {
- 	u32 pkt = 0;
+@@ -559,7 +559,7 @@ static int brcm_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 		return hwirq;
  
-+	pkt |= FIELD_PREP(MDIO_PORT_EXT_MASK, port >> 4);
- 	pkt |= FIELD_PREP(MDIO_PORT_MASK, port);
- 	pkt |= FIELD_PREP(MDIO_REGAD_MASK, regad);
- 	pkt |= FIELD_PREP(MDIO_CMD_MASK, cmd);
+ 	for (i = 0; i < nr_irqs; i++)
+-		irq_domain_set_info(domain, virq + i, hwirq + i,
++		irq_domain_set_info(domain, virq + i, (irq_hw_number_t)hwirq + i,
+ 				    &brcm_msi_bottom_irq_chip, domain->host_data,
+ 				    handle_edge_irq, NULL, NULL);
+ 	return 0;
 -- 
 2.43.0
 
