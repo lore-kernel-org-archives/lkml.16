@@ -1,115 +1,117 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC0B186E54
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 18:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD78186E54
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 18:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739556148; cv=none; b=ZZ2lGNpMcZBW40XpmakIqtJs1moVVga83Y3s3ZSMLyMSeODM82ROl9JcyncbnA00BJxceB8BIsD5nOXtJz44iu2ZVFdVLqDG5qOG48dr6zX96zSa4hXao1s43nMOdjfct2aLSywgnrHXXK6twVSF/LOx73NXJlKB9L5g4HJIqCY=
+	t=1739556205; cv=none; b=oM2lBqGPyr69aatq3AY0bYgxq6t2Rr0UtP1Ul9xBEM9xY6upAJ3+gnMZNYEWTx0Xwq1zlnNu7vT+CRbIK20mowUGBn+w/GFTyHCXECmLGT01S1AAjsamNe2ekxmnEY+ldqMYtnXMFym83H8XV0ST23GzUld7vR+fHqC0ObFCf5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739556148; c=relaxed/simple;
-	bh=etqL7V7nrXBSQqvhsurbEg8PBIPMtF+lODvRJts82Qk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GHF1GiJOqhFm4vayjGhpODvqi4tRmjTcl6TWPgQFk+7jY5UFzxqeneb5XepZg3WUJyihrOXyFTfHAhPPbuiYLfIHlEhj5nQ8xg1YxL/R14KzAcP0mme1/UrRR75AC9+OG6vzVUa20poJmEPbb97MM8vjEBqcQAM4sQH6oNQB6+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FvV47Q/t; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvV47Q/t"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21f78b1fb7dso41739045ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 10:02:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739556147; x=1740160947; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nBQH5VHol9Sdy2GzM8vx3OvDWRGPw+FY6f/YuiHtKWE=;
-        b=FvV47Q/thv3z/PaCAIg9WUkJS8rTUZ+h2v3evhpkO85x3rNgrWKfB2OLvIUnuvvd9b
-         ch/YK+NmNzIQHoy06sNxPlOho6lCRovaplGoedF2phcG2diwnX4rShMiDZPcgllxIhOE
-         Oqa8ElSb+P1/JwPEc//LonKAjnI7f18x67DnwJcDpoTemIPv903DsT9j34Yi1Okujib7
-         4B/BPJn3Ett+PtutJ07adhd54ZvTL65ftW3Ze9yNofgc7iLFyu9hoyw8Tf2m2f5stQ5i
-         dpCeoFDP2yEu7C5RUHdRhBJnwzkKXEgkGmVlBbwClqKBEXkE7rDfWHddBS0dPYhiZk0T
-         TlOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739556147; x=1740160947;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nBQH5VHol9Sdy2GzM8vx3OvDWRGPw+FY6f/YuiHtKWE=;
-        b=FNW7dtFSaO/zsMtx45BDOcH7BcKoEIhQR2vWGMnSsfwCH6i8R3fmNW4t8JrIZH4TYL
-         gKsWUz8N9iH2tnzrwwboGByr0BY/VQCshSq5SccKu1lsi8jTxZZzGQE+lBQRDpOgVT+t
-         fRPtYiv0FlDslO+BnedHp3ucdF1VRLeGmQ7aOi0XuV7QD2DC/k2sY6uKo97kiE8f/wqZ
-         y07xlEQI6paFvB8PYy3vFlUvg2xme0zADKC7KoKobHJirpTyXbUy4KFNxt7tusTHlgfz
-         DSgvQiwASaBvTXHT3YvgppSdjxATap5/bXGoQqbVy7kZ1sSPmwv5G5MtO5TaSi9+Jzzr
-         sffQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJZaZGflFutEDKY4p2m1ZNmSBl+CDvoqWiImTkG+WTAwF35rf9rygftFoZor/G2dwiNsgi1J3ZWFZczDI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yye6cY0+I7w8AzsVptqf6vswDEgCCYym9LcpuU5VUaBjjVANqRF
-	2RiwI1rjgpPFcyswwwvkx0W6ltfCdFBhCmi8oiEOokexmEUOYh62EtxZiCrI
-X-Gm-Gg: ASbGncsiBvtpNgdBT9le29AhwsO6wIjTzqAM1/XhDiAWsc5Rhpv12GfSZQy2VuMNVwr
-	fpiYAb+GJAUW4ufcrypw4AqCstbmlsenHKdBNVFndls0NB76UEmq5Hfmi49CJ9VQ4C8MyZKxH84
-	DnAogboe0KvrlRkFaP7QiUhEnC0lu1WkoDU0016jC8eV1tM5LA0HuH9xeUYJZqP3vGJ3LvasrTN
-	TLo7sKq2bVE2/MAQtOtyzYA9yk+e0osIYteSYhAysl8IOAwLQVRLR3IQfuv4HMWLsPSQObe8uvz
-	R8l/QOeANomYHyDqRyMPCLTdV3f49dUjUMAijs8Id+PU
-X-Google-Smtp-Source: AGHT+IEcGatS8pZQbY70jYbOTPwZaM1+8LGbomVwjepju1SgOpwsjAln6GB7YoY92sOxZ2TKDIfUXA==
-X-Received: by 2002:a17:903:440d:b0:220:d272:5343 with SMTP id d9443c01a7336-22104062cc8mr2446735ad.27.1739556146523;
-        Fri, 14 Feb 2025 10:02:26 -0800 (PST)
-Received: from localhost.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5591e97sm31514855ad.244.2025.02.14.10.02.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 10:02:26 -0800 (PST)
-From: Jeongjun Park <aha310510@gmail.com>
-To: akpm@linux-foundation.org
-Cc: Liam.Howlett@Oracle.com,
-	brauner@kernel.org,
-	lorenzo.stoakes@oracle.com,
-	willy@infradead.org,
-	davidlohr.bueso@hp.com,
-	linux-kernel@vger.kernel.org,
-	Jeongjun Park <aha310510@gmail.com>
-Subject: [PATCH] ipc: fix to protect IPCS lookups using RCU instead of semaphore
-Date: Sat, 15 Feb 2025 03:01:57 +0900
-Message-ID: <20250214180157.10288-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1739556205; c=relaxed/simple;
+	bh=k8MEGxuiLlmPuqpoYOTE5EbOg9Iz3g5ldM672B1/FXg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XrLzcrTyr6gMXm5h0ONucGFmb5yJLfnoGxoxA2gc4SkQxBIPNGN/ZadlaY7egq0l/0FRjnFUh/j9saj5XXyn3jFnVqUigxzDeVeWDThqV74rq/NctwqXLyiOoHd1O64oKEAbWFi4D3pIJmOT4WYyQBaQISoH6C83oSAGY3GU24M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tj025-0000CI-3a; Fri, 14 Feb 2025 19:03:21 +0100
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tj021-000xHw-2A;
+	Fri, 14 Feb 2025 19:03:17 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tj021-000BqJ-1u;
+	Fri, 14 Feb 2025 19:03:17 +0100
+Message-ID: <8a9518fdfda805f52b96e93649c9ee39274f5844.camel@pengutronix.de>
+Subject: Re: [PATCH 1/4] [PATCH 1/4] reset: simple: Add syscon device
+ compatible
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Wilson Ding <dingwei@marvell.com>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
+	 <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	 <linux-arm-kernel@lists.infradead.org>
+Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "gregory.clement@bootlin.com"
+ <gregory.clement@bootlin.com>, "sebastian.hesselbarth@gmail.com"
+ <sebastian.hesselbarth@gmail.com>, "robh@kernel.org" <robh@kernel.org>, 
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+ <conor+dt@kernel.org>, Sanghoon Lee <salee@marvell.com>, Geethasowjanya
+ Akula <gakula@marvell.com>
+Date: Fri, 14 Feb 2025 19:03:17 +0100
+In-Reply-To: <BY3PR18MB4673C5C5CA684C64B2C218AAA7FE2@BY3PR18MB4673.namprd18.prod.outlook.com>
+References: <20250214065833.530276-1-dingwei@marvell.com>
+	 <20250214065833.530276-3-dingwei@marvell.com>
+	 <6dd9ed2750abe1f5174805673411ccb919ee5461.camel@pengutronix.de>
+	 <BY3PR18MB4673C5C5CA684C64B2C218AAA7FE2@BY3PR18MB4673.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-In shm_destroy_orphaned(), we are not performing updates to the IPCS and are
-only calling idr_for_each(), which can be protected by the RCU read-critical
-section.
+On Fr, 2025-02-14 at 17:13 +0000, Wilson Ding wrote:
+>=20
+> > -----Original Message-----
+> > From: Philipp Zabel <p.zabel@pengutronix.de>
+> > Sent: Friday, February 14, 2025 3:54 AM
+> > To: Wilson Ding <dingwei@marvell.com>; linux-kernel@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> > Cc: andrew@lunn.ch; gregory.clement@bootlin.com;
+> > sebastian.hesselbarth@gmail.com; robh@kernel.org; krzk+dt@kernel.org;
+> > conor+dt@kernel.org; Sanghoon Lee <salee@marvell.com>; Geethasowjanya
+> > Akula <gakula@marvell.com>
+> > Subject: [EXTERNAL] Re: [PATCH 1/4] [PATCH 1/4] reset: simple: Add sysc=
+on
+> > device compatible
+> >=20
+> > On Do, 2025-02-13 at 22:58 -0800, Wilson Ding wrote:
+> > > Introduce the new ops for updating reset line and getting status.
+> > > Thus, the reset controller can be accessed through either direct I/O
+> > > or regmap interfaces.
+> >=20
+> > Please don't add a new layer of function pointer indirection, just add =
+a new
+> > struct reset_control_ops for the regmap variant.
+> >=20
+>=20
+> If just adding a new struct reset_control_ops for the regmap variant, alm=
+ost
+> all the functions will be duplicated for regmap variant.=20
+> Besides reset_simple_regmap_assert/deassert(), we also need to have the
+> regmap version of reset_simple_update().
 
-And if idr_for_each() is not protected by the RCU read-critical section,
-then when radix_tree_node_free() is called to free the struct radix_tree_node
-through call_rcu(), the node will be freed immediately, and when reading the
-next node in radix_tree_for_each_slot(), the memory that has already been
-freed may be read. 
+Yes. You could also duplicate/fold update() into assert/deassert().
+It is trivial enough and the compiler will do that anyway.
 
-Therefore, I think it is appropriate to use RCU instead of semaphore to
-protect it.
+> Since reset_simple_reset() invokes
+> reset_simple_regmap_assert/deassert(), it also needs to be
+> duplicated.
 
-Fixes: d9a605e40b13 ("ipc: rename ids->rw_mutex")
-Signed-off-by: Jeongjun Park <aha310510@gmail.com>
----
- ipc/shm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+That one could go through the data->rcdev.ops->assert/deassert function
+pointers and be reused. But I wonder if that one function is worth the
+added complexity.
 
-diff --git a/ipc/shm.c b/ipc/shm.c
-index 99564c870084..8fd87c4e5dc8 100644
---- a/ipc/shm.c
-+++ b/ipc/shm.c
-@@ -430,10 +430,10 @@ static int shm_try_destroy_orphaned(int id, void *p, void *data)
- 
- void shm_destroy_orphaned(struct ipc_namespace *ns)
- {
--	down_write(&shm_ids(ns).rwsem);
-+	rcu_read_lock();
- 	if (shm_ids(ns).in_use)
- 		idr_for_each(&shm_ids(ns).ipcs_idr, &shm_try_destroy_orphaned, ns);
--	up_write(&shm_ids(ns).rwsem);
-+	rcu_read_unlock();
- }
- 
- /* Locking assumes this will only be called with task == current */
---
+> In this case, there will be too many redundant codes in this file. I doub=
+t if
+> it is worth to use the reset simple code. Maybe it's better to fork a new=
+ file
+> for the syscon device, such as 'reset-simple-syscon.c'. What do you say?
+
+That sounds sensible to me.
+
+regards
+Philipp
