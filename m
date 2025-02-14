@@ -1,315 +1,274 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842CA15198F;
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD3371C84B3;
 	Fri, 14 Feb 2025 02:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739498515; cv=none; b=bMVyBzyru9pQKFQCX2Ake7e2CCpzw1Fn1jiEoY/u5Uj1/+X4LlSP/JYQDD6EqwYRhgXuIb6pBjkfzFMui0+kn6JrbjVDbuLQEOEsHYX32a6j8vns2vVta4ICdVrvU4FpBaP8G4sw+FRno5dyGTVuwQgGYOXZTOdfMgL9aWOsJjE=
+	t=1739498517; cv=none; b=fzb2DE+prRmnjAYi6LYeLuFSi43BhUO8yEOnRAUG9UzTFn0OzFwVB3qBcOVwbYStlX46kp67aIMxd6KlsvzwaLAjX/5Gt86SXe9Y0aFaperjAkCk7b9HJk8lticTXWWuecGVUIPUX8bvFs2ehcBgwZIas2sPiauAw0tgsjmbeEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739498515; c=relaxed/simple;
-	bh=g2PttUoHfnqw6SnqMLDp+K12QyiZh4H10a6CHRcsYTg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OjOBaqIoLkgqXIZ2oDC+fGYsH1MRkF5bYn/spfso38JGE9G4Z7P0SO6abxoOLK8xypdk2e7sObRaYiEYrlxeh3qSs/4ZOcJsaRAHqJUWsqzsPoSeVYRhy6r53nMTOXQAG4hzrdjZtpYoDBXgVdwLfHDB/ws1ND1gECs7CUEu890=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bTrjxuBp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bTrjxuBp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B245AC4CEE5;
-	Fri, 14 Feb 2025 02:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739498513;
-	bh=g2PttUoHfnqw6SnqMLDp+K12QyiZh4H10a6CHRcsYTg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=bTrjxuBpLILwvM/oSF38Xc4WP6m8TQVkNlwYU6GZkxirnAjjw2QVbRddjzzl3i6Nm
-	 iP3D0Hi4poKjtIAtBtpMsU6RkswFclcPa7MYwNHhhmKly2wlGRCUUTzRaT78OrFJIT
-	 1EaUMlzZ4RiQBH12RFen30Q1FcH4cG9WcJzHrHhkGk5iKfXiC61lsMDsYf2v4QbW9U
-	 +oPCT1upxZLJEWXcYccOmcG256wKsQYdRKyry9VKeSJHHZOobNM0v9jhZGi6d5WiTm
-	 UD0TDtCpfLLk1Pd1kh0y99zM4FANN9JAOFnBDebxnb1EqhdUXpam8DDlFiTKFq0P8/
-	 r+GYyq9Bio86A==
-From: Mark Brown <broonie@kernel.org>
-Date: Fri, 14 Feb 2025 01:57:57 +0000
-Subject: [PATCH v4 14/27] KVM: arm64: Implement SME vector length
- configuration
+	s=arc-20240116; t=1739498517; c=relaxed/simple;
+	bh=ZE9DTuhDWstzNdK90QT+57H0tQM4qJ4K+AMQJHk6Xjc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NNNjMgRC6/52dOlYLG90+w6yeKgo3GpPhXwqaZrBPKCZHUMZPj36Drvu/r/gcLkmKADx97S51EnVTBvYTjBL7BBXexEGDptix0bso/CJFJBTxidS9cZ2MioTBmj3Pc9xpS8pt0SWm5BM5cYg1ro2/Xs8BHEJyciBojDC8j+olyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 178991682;
+	Thu, 13 Feb 2025 18:02:13 -0800 (PST)
+Received: from [10.163.92.186] (unknown [10.163.92.186])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 47AC03F58B;
+	Thu, 13 Feb 2025 18:01:39 -0800 (PST)
+Message-ID: <71490f8c-f234-4032-bc2a-f6cffa491fcb@arm.com>
+Date: Fri, 14 Feb 2025 07:31:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250214-kvm-arm64-sme-v4-14-d64a681adcc2@kernel.org>
-References: <20250214-kvm-arm64-sme-v4-0-d64a681adcc2@kernel.org>
-In-Reply-To: <20250214-kvm-arm64-sme-v4-0-d64a681adcc2@kernel.org>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
- Joey Gouly <joey.gouly@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, Will Deacon <will@kernel.org>, 
- Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <shuah@kernel.org>
-Cc: Dave Martin <Dave.Martin@arm.com>, Fuad Tabba <tabba@google.com>, 
- Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, 
- kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-1b0d6
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9149; i=broonie@kernel.org;
- h=from:subject:message-id; bh=g2PttUoHfnqw6SnqMLDp+K12QyiZh4H10a6CHRcsYTg=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBnrqPLx4OmjNsnE5cvIuDx1F+d9FNxtMS8i4IpGRPn
- Ry4M1PuJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZ66jywAKCRAk1otyXVSH0J+tCA
- CCaZ+HHp/euJCO+F6Xpu5NLPoFlg7MWvEJGOJGcWVNmgl+cewD/IaYbb33bIVRSyBC+6rG7lNh1Prh
- KzGvM7XWq19wVZzdzB9UzgNHyNt+1+FKYK9Y5KE3GvbtJqFwE1QlkvahA7ArTC/W3gh5OuQJMQCpbY
- x8BiGtR/tH/k3FKxN5oJFKHGC0SFeyNbUy/Ze3s6wFeB3OzsYJeoQtYbb+l0MRubD7Ii2taGk2doXE
- SBZtEVF6wGCtTqfihOu/F5hjmmQq+JyT+ILwFWa7/1IncL/+ZAmrcScC6A5RMBae+Yz+2TvKbtONcI
- RhOPptHlNdPhLBgQnl/Jusk0MWMlVa
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 0/9] khugepaged: mTHP support
+To: Nico Pache <npache@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, ryan.roberts@arm.com, anshuman.khandual@arm.com,
+ catalin.marinas@arm.com, cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com,
+ apopple@nvidia.com, dave.hansen@linux.intel.com, will@kernel.org,
+ baohua@kernel.org, jack@suse.cz, srivatsa@csail.mit.edu,
+ haowenchao22@gmail.com, hughd@google.com, aneesh.kumar@kernel.org,
+ yang@os.amperecomputing.com, peterx@redhat.com, ioworker0@gmail.com,
+ wangkefeng.wang@huawei.com, ziy@nvidia.com, jglisse@google.com,
+ surenb@google.com, vishal.moola@gmail.com, zokeefe@google.com,
+ zhengqi.arch@bytedance.com, jhubbard@nvidia.com, 21cnbao@gmail.com,
+ willy@infradead.org, kirill.shutemov@linux.intel.com, david@redhat.com,
+ aarcange@redhat.com, raquini@redhat.com, sunnanyong@huawei.com,
+ usamaarif642@gmail.com, audra@redhat.com, akpm@linux-foundation.org,
+ rostedt@goodmis.org, mathieu.desnoyers@efficios.com, tiwai@suse.de
+References: <20250211003028.213461-1-npache@redhat.com>
+ <5a995dc9-fee7-442f-b439-c484d9de1750@arm.com>
+ <CAA1CXcCo3eCH-5axnw3WUqPfL-EPCbLVFo_AFYXkbnExfX=KLQ@mail.gmail.com>
+ <4ba52062-1bd3-4d53-aa28-fcbbd4913801@arm.com>
+ <CAA1CXcCeFjCx-6VDCjOUUniLHXMUYpjesOhcHQapMS5i7=RR4A@mail.gmail.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <CAA1CXcCeFjCx-6VDCjOUUniLHXMUYpjesOhcHQapMS5i7=RR4A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-SME implements a vector length which architecturally looks very similar
-to that for SVE, configured in a very similar manner.  This controls the
-vector length used for the ZA matrix register, and for the SVE vector
-and predicate registers when in streaming mode.  The only substantial
-difference is that unlike SVE the architecture does not guarantee that
-any particular vector length will be implemented.
 
-Configuration for SME vector lengths is done using a virtual register as
-for SVE, hook up the implementation for the virtual register.  Since we
-do not yet have support for any of the new SME registers stub register
-access functions are provided that only allow VL configuration.  These
-will be extended as the SME specific registers, as for SVE.
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- arch/arm64/include/asm/kvm_host.h | 11 +++++
- arch/arm64/include/uapi/asm/kvm.h |  9 ++++
- arch/arm64/kvm/guest.c            | 94 +++++++++++++++++++++++++++++++--------
- 3 files changed, 95 insertions(+), 19 deletions(-)
+On 14/02/25 1:09 am, Nico Pache wrote:
+> On Thu, Feb 13, 2025 at 1:26 AM Dev Jain <dev.jain@arm.com> wrote:
+>>
+>>
+>>
+>> On 12/02/25 10:19 pm, Nico Pache wrote:
+>>> On Tue, Feb 11, 2025 at 5:50 AM Dev Jain <dev.jain@arm.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 11/02/25 6:00 am, Nico Pache wrote:
+>>>>> The following series provides khugepaged and madvise collapse with the
+>>>>> capability to collapse regions to mTHPs.
+>>>>>
+>>>>> To achieve this we generalize the khugepaged functions to no longer depend
+>>>>> on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
+>>>>> (defined by MTHP_MIN_ORDER) that are utilized. This info is tracked
+>>>>> using a bitmap. After the PMD scan is done, we do binary recursion on the
+>>>>> bitmap to find the optimal mTHP sizes for the PMD range. The restriction
+>>>>> on max_ptes_none is removed during the scan, to make sure we account for
+>>>>> the whole PMD range. max_ptes_none will be scaled by the attempted collapse
+>>>>> order to determine how full a THP must be to be eligible. If a mTHP collapse
+>>>>> is attempted, but contains swapped out, or shared pages, we dont perform the
+>>>>> collapse.
+>>>>>
+>>>>> With the default max_ptes_none=511, the code should keep its most of its
+>>>>> original behavior. To exercise mTHP collapse we need to set max_ptes_none<=255.
+>>>>> With max_ptes_none > HPAGE_PMD_NR/2 you will experience collapse "creep" and
+>>>>> constantly promote mTHPs to the next available size.
+>>>>>
+>>>>> Patch 1:     Some refactoring to combine madvise_collapse and khugepaged
+>>>>> Patch 2:     Refactor/rename hpage_collapse
+>>>>> Patch 3-5:   Generalize khugepaged functions for arbitrary orders
+>>>>> Patch 6-9:   The mTHP patches
+>>>>>
+>>>>> ---------
+>>>>>     Testing
+>>>>> ---------
+>>>>> - Built for x86_64, aarch64, ppc64le, and s390x
+>>>>> - selftests mm
+>>>>> - I created a test script that I used to push khugepaged to its limits while
+>>>>>       monitoring a number of stats and tracepoints. The code is available
+>>>>>       here[1] (Run in legacy mode for these changes and set mthp sizes to inherit)
+>>>>>       The summary from my testings was that there was no significant regression
+>>>>>       noticed through this test. In some cases my changes had better collapse
+>>>>>       latencies, and was able to scan more pages in the same amount of time/work,
+>>>>>       but for the most part the results were consistant.
+>>>>> - redis testing. I tested these changes along with my defer changes
+>>>>>      (see followup post for more details).
+>>>>> - some basic testing on 64k page size.
+>>>>> - lots of general use. These changes have been running in my VM for some time.
+>>>>>
+>>>>> Changes since V1 [2]:
+>>>>> - Minor bug fixes discovered during review and testing
+>>>>> - removed dynamic allocations for bitmaps, and made them stack based
+>>>>> - Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
+>>>>> - Updated trace events to include collapsing order info.
+>>>>> - Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
+>>>>> - No longer require a chunk to be fully utilized before setting the bit. Use
+>>>>>       the same max_ptes_none scaling principle to achieve this.
+>>>>> - Skip mTHP collapse that requires swapin or shared handling. This helps prevent
+>>>>>       some of the "creep" that was discovered in v1.
+>>>>>
+>>>>> [1] - https://gitlab.com/npache/khugepaged_mthp_test
+>>>>> [2] - https://lore.kernel.org/lkml/20250108233128.14484-1-npache@redhat.com/
+>>>>>
+>>>>> Nico Pache (9):
+>>>>>      introduce khugepaged_collapse_single_pmd to unify khugepaged and
+>>>>>        madvise_collapse
+>>>>>      khugepaged: rename hpage_collapse_* to khugepaged_*
+>>>>>      khugepaged: generalize hugepage_vma_revalidate for mTHP support
+>>>>>      khugepaged: generalize alloc_charge_folio for mTHP support
+>>>>>      khugepaged: generalize __collapse_huge_page_* for mTHP support
+>>>>>      khugepaged: introduce khugepaged_scan_bitmap for mTHP support
+>>>>>      khugepaged: add mTHP support
+>>>>>      khugepaged: improve tracepoints for mTHP orders
+>>>>>      khugepaged: skip collapsing mTHP to smaller orders
+>>>>>
+>>>>>     include/linux/khugepaged.h         |   4 +
+>>>>>     include/trace/events/huge_memory.h |  34 ++-
+>>>>>     mm/khugepaged.c                    | 422 +++++++++++++++++++----------
+>>>>>     3 files changed, 306 insertions(+), 154 deletions(-)
+>>>>>
+>>>>
+>>>> Does this patchset suffer from the problem described here:
+>>>> https://lore.kernel.org/all/8abd99d5-329f-4f8d-8680-c2d48d4963b6@arm.com/
+>>> Hi Dev,
+>>>
+>>> Sorry I meant to get back to you about that.
+>>>
+>>> I understand your concern, but like I've mentioned before, the scan
+>>> with the read lock was done so we dont have to do the more expensive
+>>> locking, and could still gain insight into the state. You are right
+>>> that this info could become stale if the state changes dramatically,
+>>> but the collapse_isolate function will verify it and not collapse.
+>>
+>> If the state changes dramatically, the _isolate function will verify it,
+>> and fallback. And this fallback happens after following this costly
+>> path: retrieve a large folio from the buddy allocator -> swapin pages
+>> from the disk -> mmap_write_lock() -> anon_vma_lock_write() -> TLB flush
+>> on all CPUs -> fallback in _isolate().
+>> If you do fail in _isolate(), doesn't it make sense to get the updated
+>> state for the next fallback order immediately, because we have prior
+>> information that we failed because of PTE state? What your algorithm
+>> will do is *still* follow the costly path described above, and again
+>> fail in _isolate(), instead of failing in hpage_collapse_scan_pmd() like
+>> mine would.
+> 
+> You do raise a valid point here, I can optimize my solution by
+> detecting certain collapse failure types and jump to the next scan.
+> I'll add that to my solution, thanks!
+> 
+> As for the disagreement around the bitmap, we'll leave that up to the
+> community to decide since we have differing opinions/solutions.
+> 
+>>
+>> The verification of the PTE state by the _isolate() function is the "no
+>> turning back" point of the algorithm. The verification by
+>> hpage_collapse_scan_pmd() is the "let us see if proceeding is even worth
+>> it, before we do costly operations" point of the algorithm.
+>>
+>>>   From my testing I found this to rarely happen.
+>>
+>> Unfortunately, I am not very familiar with performance testing/load
+>> testing, I am fairly new to kernel programming, so I am getting there.
+>> But it really depends on the type of test you are running, what actually
+>> runs on memory-intensive systems, etc etc. In fact, on loaded systems I
+>> would expect the PTE state to dramatically change. But still, no opinion
+>> here.
+> 
+> Yeah there are probably some cases where it happens more often.
+> Probably in cases of short lived allocations, but khugepaged doesn't
+> run that frequently so those won't be that big of an issue.
+> 
+> Our performance team is currently testing my implementation so I
+> should have more real workload test results soon. The redis testing
+> had some gains and didn't show any signs of obvious regressions.
+> 
+> As for the testing, check out
+> https://gitlab.com/npache/khugepaged_mthp_test/-/blob/master/record-khuge-performance.sh?ref_type=heads
+> this does the tracing for my testing script. It can help you get
+> started. There are 3 different traces being applied there: the
+> bpftrace for collapse latencies, the perf record for the flamegraph
+> (not actually that useful, but may be useful to visualize any
+> weird/long paths that you may not have noticed), and the trace-cmd
+> which records the tracepoint of the scan and the collapse functions
+> then processes the data using the awk script-- the output being the
+> scan rate, the pages collapsed, and their result status (grouped by
+> order).
+> 
+> You can also look into https://github.com/gormanm/mmtests for
+> testing/comparing kernels. I was running the
+> config-memdb-redis-benchmark-medium workload.
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 84aa728718e13b99b4f17f5fdffa81e380834e69..5cc1014120ca6de249093b3e34437a99bc8bf935 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -715,8 +715,15 @@ struct kvm_vcpu_arch {
- 	 * low 128 bits of the SVE Z registers.  When the core
- 	 * floating point code saves the register state of a task it
- 	 * records which view it saved in fp_type.
-+	 *
-+	 * If SME support is also present then it provides an
-+	 * alternative view of the SVE registers accessed as for the Z
-+	 * registers when PSTATE.SM is 1, plus an additional set of
-+	 * SME specific state in the matrix register ZA and LUT
-+	 * register ZT0.
- 	 */
- 	void *sve_state;
-+	void *sme_state;
- 	enum fp_type fp_type;
- 	unsigned int max_vl[ARM64_VEC_MAX];
- 
-@@ -984,7 +991,11 @@ struct kvm_vcpu_arch {
- #define vcpu_vec_max_vq(vcpu, type) sve_vq_from_vl((vcpu)->arch.max_vl[type])
- 
- #define vcpu_sve_max_vq(vcpu)	vcpu_vec_max_vq(vcpu, ARM64_VEC_SVE)
-+#define vcpu_sme_max_vq(vcpu)	vcpu_vec_max_vq(vcpu, ARM64_VEC_SME)
- 
-+#define vcpu_max_vl(vcpu) max((vcpu)->arch.max_vl[ARM64_VEC_SVE], \
-+			      (vcpu)->arch.max_vl[ARM64_VEC_SME])
-+#define vcpu_max_vq(vcpu) sve_vq_from_vl(vcpu_max_vl(vcpu))
- 
- #define vcpu_sve_zcr_elx(vcpu)						\
- 	(unlikely(is_hyp_ctxt(vcpu)) ? ZCR_EL2 : ZCR_EL1)
-diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
-index ea5aaa4b1cfe82862883678bbe47373d53c005f6..ff7c4bcee542befae6961fae9eec2eb9bc8e2eb3 100644
---- a/arch/arm64/include/uapi/asm/kvm.h
-+++ b/arch/arm64/include/uapi/asm/kvm.h
-@@ -353,6 +353,15 @@ struct kvm_arm_counter_offset {
- #define KVM_ARM64_SVE_VLS_WORDS	\
- 	((KVM_ARM64_SVE_VQ_MAX - KVM_ARM64_SVE_VQ_MIN) / 64 + 1)
- 
-+/* SME registers */
-+#define KVM_REG_ARM64_SME		(0x17 << KVM_REG_ARM_COPROC_SHIFT)
-+
-+/* Vector lengths pseudo-register: */
-+#define KVM_REG_ARM64_SME_VLS		(KVM_REG_ARM64 | KVM_REG_ARM64_SME | \
-+					 KVM_REG_SIZE_U512 | 0xffff)
-+#define KVM_ARM64_SME_VLS_WORDS	\
-+	((KVM_ARM64_SVE_VQ_MAX - KVM_ARM64_SVE_VQ_MIN) / 64 + 1)
-+
- /* Bitmap feature firmware registers */
- #define KVM_REG_ARM_FW_FEAT_BMAP		(0x0016 << KVM_REG_ARM_COPROC_SHIFT)
- #define KVM_REG_ARM_FW_FEAT_BMAP_REG(r)		(KVM_REG_ARM64 | KVM_REG_SIZE_U64 | \
-diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-index e9f17b8a6fba476a472d3f09691611228ee9d203..62df7830d11e6e7d01d175566e4b6a771ac2ec6d 100644
---- a/arch/arm64/kvm/guest.c
-+++ b/arch/arm64/kvm/guest.c
-@@ -310,22 +310,20 @@ static int set_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- #define vq_mask(vq) ((u64)1 << ((vq) - SVE_VQ_MIN) % 64)
- #define vq_present(vqs, vq) (!!((vqs)[vq_word(vq)] & vq_mask(vq)))
- 
--static int get_sve_vls(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
-+static int get_vec_vls(enum vec_type vec_type, struct kvm_vcpu *vcpu,
-+		      const struct kvm_one_reg *reg)
- {
- 	unsigned int max_vq, vq;
- 	u64 vqs[KVM_ARM64_SVE_VLS_WORDS];
- 
--	if (!vcpu_has_sve(vcpu))
--		return -ENOENT;
--
--	if (WARN_ON(!sve_vl_valid(vcpu->arch.max_vl[ARM64_VEC_SVE])))
-+	if (WARN_ON(!sve_vl_valid(vcpu->arch.max_vl[vec_type])))
- 		return -EINVAL;
- 
- 	memset(vqs, 0, sizeof(vqs));
- 
--	max_vq = vcpu_sve_max_vq(vcpu);
-+	max_vq = vcpu_vec_max_vq(vcpu, vec_type);
- 	for (vq = SVE_VQ_MIN; vq <= max_vq; ++vq)
--		if (sve_vq_available(vq))
-+		if (vq_available(vec_type, vq))
- 			vqs[vq_word(vq)] |= vq_mask(vq);
- 
- 	if (copy_to_user((void __user *)reg->addr, vqs, sizeof(vqs)))
-@@ -334,18 +332,13 @@ static int get_sve_vls(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- 	return 0;
- }
- 
--static int set_sve_vls(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
-+static int set_vec_vls(enum vec_type vec_type, struct kvm_vcpu *vcpu,
-+		       const struct kvm_one_reg *reg)
- {
- 	unsigned int max_vq, vq;
- 	u64 vqs[KVM_ARM64_SVE_VLS_WORDS];
- 
--	if (!vcpu_has_sve(vcpu))
--		return -ENOENT;
--
--	if (kvm_arm_vcpu_vec_finalized(vcpu))
--		return -EPERM; /* too late! */
--
--	if (WARN_ON(vcpu->arch.sve_state))
-+	if (WARN_ON(!sve_vl_valid(vcpu->arch.max_vl[vec_type])))
- 		return -EINVAL;
- 
- 	if (copy_from_user(vqs, (const void __user *)reg->addr, sizeof(vqs)))
-@@ -356,18 +349,18 @@ static int set_sve_vls(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- 		if (vq_present(vqs, vq))
- 			max_vq = vq;
- 
--	if (max_vq > sve_vq_from_vl(kvm_max_vl[ARM64_VEC_SVE]))
-+	if (max_vq > sve_vq_from_vl(kvm_max_vl[vec_type]))
- 		return -EINVAL;
- 
- 	/*
- 	 * Vector lengths supported by the host can't currently be
- 	 * hidden from the guest individually: instead we can only set a
--	 * maximum via ZCR_EL2.LEN.  So, make sure the available vector
-+	 * maximum via xCR_EL2.LEN.  So, make sure the available vector
- 	 * lengths match the set requested exactly up to the requested
- 	 * maximum:
- 	 */
- 	for (vq = SVE_VQ_MIN; vq <= max_vq; ++vq)
--		if (vq_present(vqs, vq) != sve_vq_available(vq))
-+		if (vq_present(vqs, vq) != vq_available(vec_type, vq))
- 			return -EINVAL;
- 
- 	/* Can't run with no vector lengths at all: */
-@@ -375,11 +368,33 @@ static int set_sve_vls(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- 		return -EINVAL;
- 
- 	/* vcpu->arch.sve_state will be alloc'd by kvm_vcpu_finalize_sve() */
--	vcpu->arch.max_vl[ARM64_VEC_SVE] = sve_vl_from_vq(max_vq);
-+	vcpu->arch.max_vl[vec_type] = sve_vl_from_vq(max_vq);
- 
- 	return 0;
- }
- 
-+static int get_sve_vls(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
-+{
-+	if (!vcpu_has_sve(vcpu))
-+		return -ENOENT;
-+
-+	return get_vec_vls(ARM64_VEC_SVE, vcpu, reg);
-+}
-+
-+static int set_sve_vls(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
-+{
-+	if (!vcpu_has_sve(vcpu))
-+		return -ENOENT;
-+
-+	if (kvm_arm_vcpu_vec_finalized(vcpu))
-+		return -EPERM; /* too late! */
-+
-+	if (WARN_ON(vcpu->arch.sve_state))
-+		return -EINVAL;
-+
-+	return set_vec_vls(ARM64_VEC_SVE, vcpu, reg);
-+}
-+
- #define SVE_REG_SLICE_SHIFT	0
- #define SVE_REG_SLICE_BITS	5
- #define SVE_REG_ID_SHIFT	(SVE_REG_SLICE_SHIFT + SVE_REG_SLICE_BITS)
-@@ -533,6 +548,45 @@ static int set_sve_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- 	return 0;
- }
- 
-+static int get_sme_vls(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
-+{
-+	if (!vcpu_has_sme(vcpu))
-+		return -ENOENT;
-+
-+	return get_vec_vls(ARM64_VEC_SME, vcpu, reg);
-+}
-+
-+static int set_sme_vls(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
-+{
-+	if (!vcpu_has_sme(vcpu))
-+		return -ENOENT;
-+
-+	if (kvm_arm_vcpu_vec_finalized(vcpu))
-+		return -EPERM; /* too late! */
-+
-+	if (WARN_ON(vcpu->arch.sme_state))
-+		return -EINVAL;
-+
-+	return set_vec_vls(ARM64_VEC_SME, vcpu, reg);
-+}
-+
-+static int get_sme_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
-+{
-+	/* Handle the KVM_REG_ARM64_SME_VLS pseudo-reg as a special case: */
-+	if (reg->id == KVM_REG_ARM64_SME_VLS)
-+		return get_sme_vls(vcpu, reg);
-+
-+	return -EINVAL;
-+}
-+
-+static int set_sme_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
-+{
-+	/* Handle the KVM_REG_ARM64_SME_VLS pseudo-reg as a special case: */
-+	if (reg->id == KVM_REG_ARM64_SME_VLS)
-+		return set_sme_vls(vcpu, reg);
-+
-+	return -EINVAL;
-+}
- int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
- {
- 	return -EINVAL;
-@@ -775,6 +829,7 @@ int kvm_arm_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- 	case KVM_REG_ARM_FW_FEAT_BMAP:
- 		return kvm_arm_get_fw_reg(vcpu, reg);
- 	case KVM_REG_ARM64_SVE:	return get_sve_reg(vcpu, reg);
-+	case KVM_REG_ARM64_SME:	return get_sme_reg(vcpu, reg);
- 	}
- 
- 	if (is_timer_reg(reg->id))
-@@ -795,6 +850,7 @@ int kvm_arm_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- 	case KVM_REG_ARM_FW_FEAT_BMAP:
- 		return kvm_arm_set_fw_reg(vcpu, reg);
- 	case KVM_REG_ARM64_SVE:	return set_sve_reg(vcpu, reg);
-+	case KVM_REG_ARM64_SME:	return set_sme_reg(vcpu, reg);
- 	}
- 
- 	if (is_timer_reg(reg->id))
+Thanks. I'll take a look.
 
--- 
-2.39.5
+> 
+>>
+>>>
+>>> Also, khugepaged, my changes, and your changes are all a victim of
+>>> this. Once we drop the read lock (to either allocate the folio, or
+>>> right before acquiring the write_lock), the state can change. In your
+>>> case, yes, you are gathering more up to date information, but is it
+>>> really that important/worth it to retake locks and rescan for each
+>>> instance if we are about to reverify with the write lock taken?
+>>
+>> You said "reverify": You are removing the verification, so this step
+>> won't be reverification, it will be verification. We do not want to
+>> verify *after* we have already done 95% of latency-heavy stuff, only to
+>> know that we are going to fail.
+>>
+>> Algorithms in the kernel, in general, are of the following form: 1)
+>> Verify if a condition is true, resulting in taking a control path -> 2)
+>> do a lot of stuff -> "no turning back" step, wherein before committing
+>> (by taking locks, say), reverify if this is the control path we should
+>> be in. You are eliminating step 1).
+>>
+>> Therefore, I will have to say that I disagree with your approach.
+>>
+>> On top of this, in the subjective analysis in [1], point number 7 (along
+>> with point number 1) remains. And, point number 4 remains.
+> 
+> for 1) your worst case of 1024 is not the worst case. There are 8
+> possible orders in your implementation, if all are enabled, that is
+> 4096 iterations in the worst case.
+
+Yes, that is exactly what I wrote in 1). I am still not convinced that 
+the overhead you produce + 512 iterations is going to beat 4096 
+iterations. Anyways, that is hand-waving and we should test this.
+
+> This becomes WAY worse on 64k page size, ~45,000 iterations vs 4096 in my case.
+
+Sorry, I am missing something here; how does the number of iterations 
+change with page size? Am I not scanning the PTE table, which is 
+invariant to the page size?
+
+>>
+>> [1]
+>> https://lore.kernel.org/all/23023f48-95c6-4a24-ac8b-aba4b1a441b4@arm.com/
+>>
+>>>
+>>> So in my eyes, this is not a "problem"
+>>
+>> Looks like the kernel scheduled us for a high-priority debate, I hope
+>> there's no deadlock :)
+>>
+>>>
+>>> Cheers,
+>>> -- Nico
+>>>
+>>>
+>>>>
+>>>
+>>
+> 
 
