@@ -1,69 +1,76 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64B31DC19F
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 23:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EBD1FDA8B
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 23:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739576518; cv=none; b=j3pBssjNsAXK/SpjYKZ9qE2cX5Ul3f3aJCO7zka5FkOX32rp/NXJgbu/w4sIcjBPzL6dyjWgXWpwo1a3OQO9ch3bs64gEFtchVUWXmBDALLL8CVil6bzVuRWuZcwV0GTZ/ptdg5qBuubOZKM03UoO1zVb4LlcK9arwwGQZUKTqM=
+	t=1739576704; cv=none; b=TZQ3rfYW5iRK3px7eHv9CZP0PI++H1wjo9Wp28auuyae8X8HZzKtreh29KQZX0i+Mg/jdB+6suNiQ0+cQtaM1F79SSdI1P4xOz/LXldctODmSUGlbQ5H/dK0sWZJ6zC7S1pXh5DF6ssx7WhM+ZwMrrcy8UYIInK5j2tOy/6HICk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739576518; c=relaxed/simple;
-	bh=cyh9GNwkSeiWX8VVWJet6cmrStrv1Y1BhHYKMAKCy08=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XsDO7vy07gLC9f3zoRhFRhyVyDuWUjoMmvj2opdOBV0rpAevqeCL+llv8Xe6T9qbDGLisNbotcFMZgMpPLopeDbB+Yn0fTA/vAvLcDWo6V/CQDq66hAXW2KY8s9FAKJZmehuxjhyfgkoSmB2Y7DiYNkChdzP28PSHhEEczd7Rt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CH/ddxgW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CH/ddxgW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739576515;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cyh9GNwkSeiWX8VVWJet6cmrStrv1Y1BhHYKMAKCy08=;
-	b=CH/ddxgWfs5yY+CelhGY6YsXpxyi2rOZYLSqF6SKn2USvOdzMjifPvzkLViHUxoJlcE4AC
-	7WgZmpJ2v0XdTOGGKxvzvQGlwWqdVPaPTO8wHaiXB1hU1kAE5B6vIjjx/lFYFfLgtgl3qs
-	8Y1TKo3zI4wt9LQ8g+wNguGdksoBY3A=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-302-9P3SI80JMEmV33ESfQD9wA-1; Fri,
- 14 Feb 2025 18:41:50 -0500
-X-MC-Unique: 9P3SI80JMEmV33ESfQD9wA-1
-X-Mimecast-MFC-AGG-ID: 9P3SI80JMEmV33ESfQD9wA_1739576509
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF60118EB2C3;
-	Fri, 14 Feb 2025 23:41:48 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 05E051800365;
-	Fri, 14 Feb 2025 23:41:47 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	John Stultz <jstultz@google.com>,
-	Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH] KVM: x86: Load DR6 with guest value only before entering .vcpu_run() loop
-Date: Fri, 14 Feb 2025 18:40:58 -0500
-Message-ID: <20250214234058.2074135-1-pbonzini@redhat.com>
-In-Reply-To: <20250125011833.3644371-1-seanjc@google.com>
-References: 
+	s=arc-20240116; t=1739576704; c=relaxed/simple;
+	bh=vM6H85OVLBa7BjeuJYB74bqffgQN78O6o6P/21fDMh8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=XkvZGjbJm54rBmHnHVdNWb2j0O4b3H8hQS2lFB8IBgvtSt/iVPT1PeXZI+x+YxMyZg/DmeXzEKESCUh4WynR3OUpD57o5N5tq1/N7RMl/5ngQKDSsG98X4aY1YCEledhjO4gQyUzIdb+dleWSVQVjM1Kr3rOMls3I5+Xn3bselg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3cfba1ca53bso18115945ab.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:45:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739576702; x=1740181502;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8yMxngIg2JTVms49ljpbNhXGW8SV3qc9K4TvCl5Kb3o=;
+        b=alsO6DeezHNe0NKgyFu2wazhMWSpiUttHttl+2nCRclJBuR2a7XrS7YnTSK53oM8EZ
+         NngNmkbCnBDZKuBqwG9z1s6ePi41dXYL0A0mt1tGzSbcknhpzpKaS2QInzbjDJdq1WFy
+         8ZUWKtH0AtKNzTVYoTu1Ftv0FA+uj0iTsYhqnGGoZRip6vSARQqCw74HbONqF7SL+cHV
+         q+/dlBbvDYzAxxSVcoJSxbV4xISsE68HgiEIgAsA39Vn7bsxMRims7moxy8Vs1GYmh1r
+         1BSMMmOKblJ5biDn4yyb9A4kUgM0c3QNoiZZyA67fhg9LvRbkNoxePDNhtlLYGAi9W/y
+         Gfyg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmng8Iwr+py3Kzon6Tm54aFly4dknCJCC6YelgdAyv+ThIOt9vA+NezzQS8NsZpvL4Gaa0lmhi2Qov7Ls=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb5k77ZkJCNznQnO39BIZXxWeAL75lCtbyeFfo0y0ufwFUN1n9
+	ZslCNoVirloRCWc58Mku74BiE35ukIhnZ7Z9DlksmAbbmPsiO5JTff3Pz9hAYwW65WSzFEWdsA4
+	HLeKEUiBbWgf6y5ce3QbR68foMk5KfCOxGPofYZqXGVuX+9uTVm7WTns=
+X-Google-Smtp-Source: AGHT+IEK0ZGWzR4L4MhxblUm09RQOtCzOSWvOEr0Ph/sr7WYMYRVAG5gQmmnlJ6tZZ/C262JMxuxOLZOGntRQCBglNMem1seUhyV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Received: by 2002:a05:6e02:b2a:b0:3d1:9cee:3d24 with SMTP id
+ e9e14a558f8ab-3d28090697dmr9412395ab.11.1739576702465; Fri, 14 Feb 2025
+ 15:45:02 -0800 (PST)
+Date: Fri, 14 Feb 2025 15:45:02 -0800
+In-Reply-To: <25D9A5BF-7108-455C-8A2E-B04A3A4DF5F2@nvidia.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67afd57e.050a0220.21dd3.005a.GAE@google.com>
+Subject: Re: [syzbot] [mm?] general protection fault in shmem_mapping
+From: syzbot <syzbot+012c6245eaea0e23f7f9@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, hughd@google.com, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com, ziy@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
 
-Queued, thanks.
+Hello,
 
-Paolo
+syzbot tried to test the proposed patch but the build/boot failed:
+
+failed to checkout kernel repo git@github.com:x-y-z/linux-1gb-thp.git/syzkaller_fix_20250114: failed to run ["git" "fetch" "--force" "21c4e043f63ee530c32221be8efae42773de1c65" "syzkaller_fix_20250114"]: exit status 128
+Host key verification failed.
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
 
 
+
+Tested on:
+
+commit:         [unknown 
+git tree:       git@github.com:x-y-z/linux-1gb-thp.git syzkaller_fix_20250114
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2cd616b6e736ca7
+dashboard link: https://syzkaller.appspot.com/bug?extid=012c6245eaea0e23f7f9
+compiler:       
+
+Note: no patches were applied.
