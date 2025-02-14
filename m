@@ -1,141 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0067136E;
-	Fri, 14 Feb 2025 00:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047DEBE4E;
+	Fri, 14 Feb 2025 00:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739494076; cv=none; b=XOIYNa7pKYBNyo29K4NiEiFxleFMmfLNGWOsxCALsZsCqN/yRZdGmp117D3vw2cjWGUC8UYfqU9WNXDUkVl7/H9u0+0Tzo+fZGVF2wOQIVxyun758d9NATzZETIWtTh2V42yGEZRdY7njeYnZQMmdEbhK5fly8WjLsfewoDMFYU=
+	t=1739494126; cv=none; b=PhtT+cswj8p7KQdEWajqR4fTIAljSPfYpdYlAmPK/+cMB0eeGt9Yto4gtQ4dwwKVDMIWeheIvMxcuGsCXIzXlPN/6PUMb5/l1emqR/WrUYbnbdtfxyyFeLBkjlRrdkXIvkgOxLVEnaV0+u7Rqj+k0aKqxHu4I2cB9Z18S5ez/hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739494076; c=relaxed/simple;
-	bh=1ZPbTiIT14B33E2ZMSCbjGG/Gue/VzNdDfqwdUL1J3A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gvd9RSdVEqrStSkEGDen95RYd0XzGnT2cyARRZy4rrVfv5ZqWuCsl1Mvm016bQfjylSnRBbpI9NLLEE6OchcDWufdrThq6fxse2u6xArd7oyl6MQMqJEPTs+eCYGUhn/SavMBjV2m526ZWaE/AqZo+DwR25xoZ5Jgv2scEsUapA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ed3WcOqo; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739494126; c=relaxed/simple;
+	bh=1b6oyV/lNrhpBqmCDwXCZ4UdmZ6g6j7KKXWMttWKEJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mNTdTPa1fvAO/ztogaK6Udo87XtiCxLZAOl2wn3h0IjcOg1WBoy6g0yZwkFWTOlaI+QRokEcGb/0du1+C1C6+7C0mJzjRBWmYuAPqjcx2ZcvPJJ/8kw+d5aCKeKk0KlWHw/UjGGfd73b+SxZQxYM84TN90S70PQJpdEQd/FkA4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Zowa30gA; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ed3WcOqo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739494075; x=1771030075;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1ZPbTiIT14B33E2ZMSCbjGG/Gue/VzNdDfqwdUL1J3A=;
-  b=Ed3WcOqo637B2uMzwDtYnVrXa0psdRfZK48dTX5vS4SBiLoGBfN+Qjtz
-   iZ7jQEnKZhnq7YNfrFhbRsnioziyUD1LU6cmFEVlS4xs2j0ZsM3MQjkL3
-   6vmCCb2jbnk6mfkMTgesX1x59d5s5IpBjH4Mu12zxcqfg/5AIPoLumru2
-   WrdCpgjZ33HMQZ4HGDiNIaKBrHrhraqc99/wgT7AnjOQozpHoqX4y4Ija
-   0i7Fmd0y8Y5H8tgJ6f5CWize+X44FnF21UyzaeHjFeQ8kakpJ7ztXs8JG
-   gzfBKnd+U0leEkSisIgALfD/TV498jNNX5Kkb7Z9X4nrRnegyfkD1VUb1
-   w==;
-X-CSE-ConnectionGUID: NnL89+2lSCeFMKDA1XI4wQ==
-X-CSE-MsgGUID: bhiv4gGERpm/IVATyyfeiw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="50873076"
-X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="50873076"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 16:47:54 -0800
-X-CSE-ConnectionGUID: fsDQ7aYFQSGRB2m11xCHig==
-X-CSE-MsgGUID: EzNcB3vWSBSd16I4zSs6ew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="150484353"
-Received: from unknown (HELO [10.238.9.235]) ([10.238.9.235])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 16:47:51 -0800
-Message-ID: <aa6a2af0-fa4b-42a7-98d6-d295efbb2732@linux.intel.com>
-Date: Fri, 14 Feb 2025 08:47:47 +0800
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Zowa30gA"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id AAB8D6B5;
+	Fri, 14 Feb 2025 01:47:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1739494044;
+	bh=1b6oyV/lNrhpBqmCDwXCZ4UdmZ6g6j7KKXWMttWKEJU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zowa30gAITBauLzwsEzDShfWfTdRi0ML5SwXaJc45zcaHI4Sw7O/BVG/1moVli8e3
+	 ROgKVXYJzyQWo4W9W9SCbsjimGi28tWQhUxCNRkqSL4NaM7OL1nJVl0+9gHktwi+l9
+	 jMfhC0CBAUciXFKBki8XUK+tFscdsJq7Bg+jzV0U=
+Date: Fri, 14 Feb 2025 02:48:31 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tommaso Merciai <tomm.merciai@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+	biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com,
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/8] media: rzg2l-cru: csi2: Use devm_pm_runtime_enable()
+Message-ID: <20250214004831.GE8393@pendragon.ideasonboard.com>
+References: <20250210114540.524790-1-tommaso.merciai.xr@bp.renesas.com>
+ <20250210114540.524790-7-tommaso.merciai.xr@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 8/8] KVM: TDX: Handle TDX PV MMIO hypercall
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- "Gao, Chao" <chao.gao@intel.com>
-Cc: "seanjc@google.com" <seanjc@google.com>, "Huang, Kai"
- <kai.huang@intel.com>, "Chatre, Reinette" <reinette.chatre@intel.com>,
- "Li, Xiaoyao" <xiaoyao.li@intel.com>,
- "Hunter, Adrian" <adrian.hunter@intel.com>,
- "Lindgren, Tony" <tony.lindgren@intel.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "Yamahata, Isaku" <isaku.yamahata@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Zhao, Yan Y" <yan.y.zhao@intel.com>
-References: <20250211025442.3071607-1-binbin.wu@linux.intel.com>
- <20250211025442.3071607-9-binbin.wu@linux.intel.com>
- <Z6wHZdQ3YtVhmrZs@intel.com>
- <fd496d85-b24f-4c6f-a6c9-3c0bd6784a1d@linux.intel.com>
- <da350e731810aa6726ff7f5dfc489e1969a85afb.camel@intel.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <da350e731810aa6726ff7f5dfc489e1969a85afb.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250210114540.524790-7-tommaso.merciai.xr@bp.renesas.com>
 
+Hi Tommaso,
 
+Thank you for the patch.
 
-On 2/14/2025 5:41 AM, Edgecombe, Rick P wrote:
-> On Wed, 2025-02-12 at 10:39 +0800, Binbin Wu wrote:
->>> IIRC, a TD-exit may occur due to an EPT MISCONFIG. Do you need to
->>> distinguish
->>> between a genuine EPT MISCONFIG and a morphed one, and handle them
->>> differently?
->> It will be handled separately, which will be in the last section of the KVM
->> basic support.  But the v2 of "the rest" section is on hold because there is
->> a discussion related to MTRR MSR handling:
->> https://lore.kernel.org/all/20250201005048.657470-1-seanjc@google.com/
->> Want to send the v2 of "the rest" section after the MTRR discussion is
->> finalized.
-> I think we can just put back the original MTRR code (post KVM MTRR removal
-> version) for the next posting of the rest. The reason being Sean was pointing
-> that it is more architecturally correct given that the CPUID bit is exposed. So
-> we will need that regardless of the guest solution.
-The original MTRR code before removing is:
-https://lore.kernel.org/kvm/81119d66392bc9446340a16f8a532c7e1b2665a2.1708933498.git.isaku.yamahata@intel.com/
+On Mon, Feb 10, 2025 at 12:45:38PM +0100, Tommaso Merciai wrote:
+> Use newly added devm_pm_runtime_enable() into rzg2l_csi2_probe() and
+> drop error path accordingly. Drop also unnecessary pm_runtime_disable()
+> from rzg2l_csi2_remove().
+> 
+> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
 
-It enforces WB as default memtype and disables fixed/variable range MTRRs.
-That means this solution doesn't allow guest to use MTRRs as a communication
-channel if the guest firmware wants to program some ranges to UC for legacy
-devices.
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
+> ---
+>  drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
+> index 948f1917b830..4ccf7c5ea58b 100644
+> --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
+> +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
+> @@ -805,11 +805,13 @@ static int rzg2l_csi2_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> -	pm_runtime_enable(dev);
+> +	ret = devm_pm_runtime_enable(dev);
+> +	if (ret)
+> +		return ret;
+>  
+>  	ret = rzg2l_validate_csi2_lanes(csi2);
+>  	if (ret)
+> -		goto error_pm;
+> +		return ret;
+>  
+>  	csi2->subdev.dev = dev;
+>  	v4l2_subdev_init(&csi2->subdev, &rzg2l_csi2_subdev_ops);
+> @@ -834,7 +836,7 @@ static int rzg2l_csi2_probe(struct platform_device *pdev)
+>  	ret = media_entity_pads_init(&csi2->subdev.entity, ARRAY_SIZE(csi2->pads),
+>  				     csi2->pads);
+>  	if (ret)
+> -		goto error_pm;
+> +		return ret;
+>  
+>  	ret = v4l2_subdev_init_finalize(&csi2->subdev);
+>  	if (ret < 0)
+> @@ -852,8 +854,6 @@ static int rzg2l_csi2_probe(struct platform_device *pdev)
+>  	v4l2_async_nf_unregister(&csi2->notifier);
+>  	v4l2_async_nf_cleanup(&csi2->notifier);
+>  	media_entity_cleanup(&csi2->subdev.entity);
+> -error_pm:
+> -	pm_runtime_disable(dev);
+>  
+>  	return ret;
+>  }
+> @@ -867,7 +867,6 @@ static void rzg2l_csi2_remove(struct platform_device *pdev)
+>  	v4l2_async_unregister_subdev(&csi2->subdev);
+>  	v4l2_subdev_cleanup(&csi2->subdev);
+>  	media_entity_cleanup(&csi2->subdev.entity);
+> -	pm_runtime_disable(&pdev->dev);
+>  }
+>  
+>  static int rzg2l_csi2_pm_runtime_suspend(struct device *dev)
 
-How about to allow TDX guests to access MTRR MSRs as what KVM does for
-normal VMs?
+-- 
+Regards,
 
-Guest kernels may use MTRRs as a crutch to get the desired memtype for devices.
-E.g., in most KVM-based setups, legacy devices such as the HPET and TPM are
-enumerated via ACPI.  And in Linux kernel, for unknown reasons, ACPI auto-maps
-such devices as WB, whereas the dedicated device drivers map memory as WC or
-UC.  The ACPI mappings rely on firmware to configure PCI hole (and other device
-memory) to be UC in the MTRRs to end up UC-, which is compatible with the
-drivers' requested WC/UC-.
-
-So KVM needs to allow guests to program the desired value in MTRRs in case
-guests want to use MTRRs as a communication channel between guest firmware
-and the kernel.
-
-Allow TDX guests to access MTRR MSRs as what KVM does for normal VMs, i.e.,
-KVM emulates accesses to MTRR MSRs, but doesn't virtualize guest MTRR memory
-types.  One open is whether enforce the value of default MTRR memtype as WB.
-
-However, TDX disallows toggling CR0.CD.  If a TDX guest wants to use MTRRs
-as the communication channel, it should skip toggling CR0.CD when it
-programs MTRRs both in guest firmware and guest kernel.  For a guest, there
-is no reason to disable caches because it's in a virtual environment.  It
-makes sense for guest firmware/kernel to skip toggling CR0.CD when it
-detects it's running as a TDX guest.
-
-
-
->
-> But it would probably would be good to update this before re-posting:
-> https://lore.kernel.org/kvm/20241210004946.3718496-19-binbin.wu@linux.intel.com/#t
->
-> Given the last one got hardly any comments and the mostly recent patches are
-> already in kvm-coco-queue, I say we try to review that version a bit more. This
-> is different then previously discussed. Any objections?
-
+Laurent Pinchart
