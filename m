@@ -1,186 +1,220 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDB7266EE4
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A442676D6
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739547819; cv=none; b=J1Xtp7Oe+E1OQDM1Xy2v+Qk4zOwjmOxWMvSTMHuvqw/Fz1grgNuEaBUg1J1GrkZTt3aMmb8yw2UIdu/xA8Ae7FtOSh0++gxTdymN3CM4BkmwD4HlSDWkQlyLFRlnA1ucUGLkjtZE62GSInI+AUHnjbVR1GWsYKHyD6F+ol19zlI=
+	t=1739547862; cv=none; b=Fjuvs8S40gtVD4E7SimfAEbLQo7F/q68HuZ0e+A8R1F1dR/sHpohcKTvXV7Jpemoti7/5eXXTH8qJfLjmtZ6Yr6bMPcdi1Yr3reRzBjCUyAGL2x1tUyx4n1aW+zp6406aB57gcbjeKpSt7pcJu+upyaO9eDcUoVLu3+Ga8b9UJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739547819; c=relaxed/simple;
-	bh=eyeqT9bAiWphbubS3AQn/VYc0wKOesENvM0ZbTIaFNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=PhlhBEP0xlaVvDvU1zrZApWb2l4ohKlHfwqbprcV/uqmke/djYpWAjPM6c/LUfquamdP7krV3BuOXjn5hkRDydjqQ75D4zp5dacibGQa2VVpxx+ecbY6ElUbq53dNtJ4+JIXr6oBhq6RpPS1F5kPo/0/HwTvn1tezcihfVAuMYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fJSdhLhL; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739547862; c=relaxed/simple;
+	bh=ICPSdwDUGRWx0WbCUm7OSHgLTbyXZAg7jqUc+PtH/J0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aLPiYjTFQB8+qgqarFkI0k+KbUkNY/6N5pN0MrYhjpCOfAh8SAAtus5lOHaOHibHMbaHW6BsblrJokNsLRnMviCDN5aZScpk4dVGTL9AilEGG7HngvE9pFKr6CZZjWjL20jnalfe3IDfOb1x0eDzANhQtRdzm3wkD070Zxy/4dM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ip4h4PR+; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fJSdhLhL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739547818; x=1771083818;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=eyeqT9bAiWphbubS3AQn/VYc0wKOesENvM0ZbTIaFNI=;
-  b=fJSdhLhL16Zkq5LtIptcTdLNNDk06u5bzmYbDeFN9QKc7qjG2f4VobdN
-   JAf0RHmmRB6gUa1Ak0DOTfi7YwALHubAh1n095DjJTyA7cqQ4ML41IlnV
-   4d+zYbBiOLkD9xDGp3HbwTLdYCLHPluIdDoE+lqZDifjPdaqmqHCHxBbr
-   VYNB5z6/HcJAp3UWyVTGRGHt4TQXPwt9k8YNZe0kYLGY3arQxD1XKYAws
-   ++loGYDFTB3fG7ihQG8K5FE8UECeczTqP0LShnr1Z/0jk4z9dm6H8GR1+
-   Qf9an1YIoE361zdCcWQR+fUucPXdC5khQcIGywc1WmYV/Yz97AQKpD/Ok
-   A==;
-X-CSE-ConnectionGUID: PSLKAulmQb6faZ8xgt36ng==
-X-CSE-MsgGUID: 2OAu7DZZTemeOlSARvQyhw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40225774"
-X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
-   d="scan'208";a="40225774"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 07:43:37 -0800
-X-CSE-ConnectionGUID: CEVNlNB7Ts+IY+LZhFj2ug==
-X-CSE-MsgGUID: bQPqVNujRUaVieTvSIDlgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
-   d="scan'208";a="113685192"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 14 Feb 2025 07:43:35 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tixqn-0019ng-0B;
-	Fri, 14 Feb 2025 15:43:33 +0000
-Date: Fri, 14 Feb 2025 23:42:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Petlozu Pravareshwar <petlozup@nvidia.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Thierry Reding <treding@nvidia.com>,
-	Stefan Kristiansson <stefank@nvidia.com>
-Subject: drivers/soc/tegra/pmc.c:467: warning: Function parameter or struct
- member 'syscore' not described in 'tegra_pmc'
-Message-ID: <202502142305.JI9507hZ-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ip4h4PR+"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43948021a45so23135605e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:44:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739547859; x=1740152659; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=j+d3zRv5P3gfitT19aXZo9yCUhUwKlCUptW0UeMXsxs=;
+        b=Ip4h4PR+YRV22zOU1E0eSc2fDmEknUeYpoOjKWLLsORb/mGuaI0CVnK00hGfmefytX
+         K0rsRtE5podiHyTjAs1u71IghlHI+FZRmtoRzObRA/l28Ot1cfSqUf+zk5MERIaIxYuf
+         5vSHDfW1WbeIicwGwPpOGXQF7rXpAhresG6DhRtR9DhH6q1JaIzNhxLtJnWkCZgNak0H
+         LiRhbujMtkGtyFTyShq/CeUm0LHJePhmAY0eO2NmYrYn1U1SKK9ToDkJ32X1zu7gnYvL
+         8y6/liZ+W5zpm2n8i0oto0qiW1zGjXaH/lu23ycm3KC/zSN5S1pNmPC1SU4IWpDEcu6v
+         Dekg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739547859; x=1740152659;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j+d3zRv5P3gfitT19aXZo9yCUhUwKlCUptW0UeMXsxs=;
+        b=smT/K4BHmkwNkgTbcQsdg6o/OBLFO5PdE3Z+9ZnmJzgS+bBPa5qwDhg8Drbqg/NLQI
+         WwNuvaePIytt95fyqdkm0b3dZpIB7uc9SX1ZddH6NoYARO9BLO7f23AiBdsFp+uhcGR6
+         yShjMVrPSP0CPlaRQyHUWhbfKtYIx5Tn5dJ9l2rKOP/dwLxlH0kM4Jpwbi5XVTuuBWJ1
+         clsfZ9vV9xTlIYyTXcpF3z8o4oNqtd3EAW/2ZpdQWD/BnQObdNJRbyGQfTCytSTo3WjK
+         8zSNLKmFpw8SFfpEq1LfAyndAXPRqn8A0Sp/0PN4jk8aTQ+uZTnIVSECb4D2qj4ou0L5
+         iILw==
+X-Forwarded-Encrypted: i=1; AJvYcCX62+fEScrjsdv+1qLEOdZO4ZDTaWq0WtKjw4dCDo+/7nTt3CcyR7WiiR31rB6AokWLxbzq5LEpzq1gVdU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbUvaVMWgz63D5FTO2K7pHZXlIJ/r2WV2XYJcvMgX43b/2WWZr
+	WFABVdgVP5FRrPDYI7izmvpHkmQZTwaze1VnBPz74JTauKOvGsdD
+X-Gm-Gg: ASbGncvcudd5ouLS42kUDfE0dffNFQOiJnKqXumYo2V6YUj70V6DcAqjlHdk+G1Tfge
+	OJ+m6JEHLw6xhfPCWe1kcA9CSSLNMazTeXWi+VtCZUObm+9eLYuiNQRYLTzkIIJ3dYEZ7FJzKEd
+	t5pnXS7Z4ckww8odQFTBueMT0vTTBW1Z/Nik3+4+jqljTIbuuZ9g6wRMe1P34TdbbTS9K1pFwbY
+	l5qSj9gr+fHhdaMDM/kRtK9NAfkc8fZufAI8fj54GdDgRDof8LE+ZvTWtSufSLUD4/l9s4SWgrJ
+	M9lcAYFQT33QGG4=
+X-Google-Smtp-Source: AGHT+IEPDbRl8m66IACo1TTA+yK/jZSJ/d+D7h5IGK7nYLNMQUiXFMMLindZv6/sZrNAAZ37oy1A1w==
+X-Received: by 2002:a05:600c:3b1d:b0:439:6d7c:48fd with SMTP id 5b1f17b1804b1-4396d7c5247mr10913135e9.4.1739547858283;
+        Fri, 14 Feb 2025 07:44:18 -0800 (PST)
+Received: from fedora ([213.94.27.232])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258dab74sm4993013f8f.32.2025.02.14.07.44.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 07:44:17 -0800 (PST)
+Date: Fri, 14 Feb 2025 16:44:16 +0100
+From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>, hamohammed.sa@gmail.com,
+	simona@ffwll.ch, melissa.srw@gmail.com,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	airlied@gmail.com, sylphrenadin@gmail.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/vkms: Fix use after free and double free on init
+ error
+Message-ID: <Z69k0MLER7CYN5fx@fedora>
+References: <20250212084912.3196-1-jose.exposito89@gmail.com>
+ <bfc71d72-2f23-4c8c-b278-7e9aad3bf72d@suse.de>
+ <3af06a6e-adb9-4e72-ab4d-23dbf37258b4@bootlin.com>
+ <Z64LmAJlf-B6wQkL@louis-chauvet-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z64LmAJlf-B6wQkL@louis-chauvet-laptop>
 
-Hi Petlozu,
+On Thu, Feb 13, 2025 at 04:11:20PM +0100, Louis Chauvet wrote:
+> On 12/02/25 - 15:06, Louis Chauvet wrote:
+> > 
+> > 
+> > Le 12/02/2025 à 09:53, Thomas Zimmermann a écrit :
+> > > 
+> > > 
+> > > Am 12.02.25 um 09:49 schrieb José Expósito:
+> > > > If the driver initialization fails, the vkms_exit() function might
+> > > > access an uninitialized or freed default_config pointer and it might
+> > > > double free it.
+> > > > 
+> > > > Fix both possible errors by initializing default_config only when the
+> > > > driver initialization succeeded.
+> > > > 
+> > > > Reported-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> > > > Link: https://lore.kernel.org/all/Z5uDHcCmAwiTsGte@louis-chauvet-laptop/
+> > > > Fixes: 2df7af93fdad ("drm/vkms: Add vkms_config type")
+> > > > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+> > > 
+> > > Reviewed-by: Thomas Zimmermann <tzimmremann@suse.de>
+> > 
+> > Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> > 
+> > lore.kernel.org is broken currently, to avoid doing mistakes, I will wait
+> > for it to be working again so I can apply your patch using dim+b4.
+> > 
+> > (I removed danvet.vetter@ffwl.ch from CC, the mail server rejected the mail)
+> > 
+> > Thanks!
+> > Louis Chauvet
+> 
+> Hello,
+> 
+> I tried to apply the commit, but I have a strange issue:
+> 
+> 	$ dim push
+> 	Enumerating objects: 13, done.
+> 	Counting objects: 100% (13/13), done.
+> 	Delta compression using up to 20 threads
+> 	Compressing objects: 100% (7/7), done.
+> 	Writing objects: 100% (7/7), 1.67 KiB | 113.00 KiB/s, done.
+> 	Total 7 (delta 6), reused 0 (delta 0), pack-reused 0 (from 0)
+> 	remote:
+> 	remote: ========================================================================
+> 	remote:
+> 	remote:    Equinix is shutting down its operations with us on April 30, 2025.
+> 	remote:    They have graciously supported us for almost 5 years, but all good
+> 	remote:    things come to an end. Given the time frame, it's going to be hard
+> 	remote:       to make a smooth transition of the cluster to somewhere else
+> 	remote: ([TBD](https://gitlab.freedesktop.org/freedesktop/freedesktop/-/issues/2011)).
+> 	remote:     Please expect in the next months some hiccups in the service and
+> 	remote:    probably at least a full week of downtime to transfer gitlab to a
+> 	remote:                different place. All help is appreciated.
+> 	remote:
+> 	remote: ========================================================================
+> 	remote:
+> 	To gitlab.freedesktop.org:drm/misc/kernel.git
+> 	   ff3881cc6a58..ed15511a773d  drm-misc-next -> drm-misc-next
+> 	Pushing drm-misc-fixes to for-linux-next-fixes... Everything up-to-date
+> 	Done.
+> 	Out of merge window. Pushing drm-misc-next to for-linux-next... 
+> 	remote:
+> 	remote: ========================================================================
+> 	remote:
+> 	remote: ERROR: Internal API unreachable
+> 	
+> 	remote:
+> 	remote: ========================================================================
+> 	remote:
+> 	fatal: Could not read from remote repository.
+> 	
+> 	Please make sure you have the correct access rights
+> 	and the repository exists.
+> 
+> Is this expected?
 
-FYI, the error/warning still remains.
+I guess you managed to fix the issue. I git pull-ed this morning and
+the patch was applied.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   128c8f96eb8638c060cd3532dc394d046ce64fe1
-commit: 1ddb8f6d44ff482c9953a06f800453bc372cfead soc/tegra: pmc: Fix dual edge triggered wakes
-date:   2 years, 3 months ago
-config: arm-randconfig-004-20250102 (https://download.01.org/0day-ci/archive/20250214/202502142305.JI9507hZ-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250214/202502142305.JI9507hZ-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502142305.JI9507hZ-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/soc/tegra/pmc.c:467: warning: Function parameter or struct member 'syscore' not described in 'tegra_pmc'
-
-
-vim +467 drivers/soc/tegra/pmc.c
-
-5f84bb1a4099e2 Sandipan Patra       2018-10-24  383  
-7232398abc6a71 Thierry Reding       2014-07-11  384  /**
-7232398abc6a71 Thierry Reding       2014-07-11  385   * struct tegra_pmc - NVIDIA Tegra PMC
-35b67291b4a85d Jon Hunter           2015-12-04  386   * @dev: pointer to PMC device structure
-7232398abc6a71 Thierry Reding       2014-07-11  387   * @base: pointer to I/O remapped register region
-bbe5af60041cae Thierry Reding       2019-01-25  388   * @wake: pointer to I/O remapped region for WAKE registers
-bbe5af60041cae Thierry Reding       2019-01-25  389   * @aotag: pointer to I/O remapped region for AOTAG registers
-bbe5af60041cae Thierry Reding       2019-01-25  390   * @scratch: pointer to I/O remapped region for scratch registers
-7232398abc6a71 Thierry Reding       2014-07-11  391   * @clk: pointer to pclk clock
-35b67291b4a85d Jon Hunter           2015-12-04  392   * @soc: pointer to SoC data structure
-e247deae1a5508 Mikko Perttunen      2019-01-25  393   * @tz_only: flag specifying if the PMC can only be accessed via TrustZone
-3195ac6d9cbeef Jon Hunter           2015-12-04  394   * @debugfs: pointer to debugfs entry
-7232398abc6a71 Thierry Reding       2014-07-11  395   * @rate: currently configured rate of pclk
-7232398abc6a71 Thierry Reding       2014-07-11  396   * @suspend_mode: lowest suspend mode available
-7232398abc6a71 Thierry Reding       2014-07-11  397   * @cpu_good_time: CPU power good time (in microseconds)
-7232398abc6a71 Thierry Reding       2014-07-11  398   * @cpu_off_time: CPU power off time (in microsecends)
-7232398abc6a71 Thierry Reding       2014-07-11  399   * @core_osc_time: core power good OSC time (in microseconds)
-7232398abc6a71 Thierry Reding       2014-07-11  400   * @core_pmu_time: core power good PMU time (in microseconds)
-7232398abc6a71 Thierry Reding       2014-07-11  401   * @core_off_time: core power off time (in microseconds)
-7232398abc6a71 Thierry Reding       2014-07-11  402   * @corereq_high: core power request is active-high
-7232398abc6a71 Thierry Reding       2014-07-11  403   * @sysclkreq_high: system clock request is active-high
-7232398abc6a71 Thierry Reding       2014-07-11  404   * @combined_req: combined power request for CPU & core
-7232398abc6a71 Thierry Reding       2014-07-11  405   * @cpu_pwr_good_en: CPU power good signal is enabled
-7232398abc6a71 Thierry Reding       2014-07-11  406   * @lp0_vec_phys: physical base address of the LP0 warm boot code
-7232398abc6a71 Thierry Reding       2014-07-11  407   * @lp0_vec_size: size of the LP0 warm boot code
-a38045121bf421 Jon Hunter           2016-03-30  408   * @powergates_available: Bitmap of available power gates
-7232398abc6a71 Thierry Reding       2014-07-11  409   * @powergates_lock: mutex for power gate register access
-bbe5af60041cae Thierry Reding       2019-01-25  410   * @pctl_dev: pin controller exposed by the PMC
-bbe5af60041cae Thierry Reding       2019-01-25  411   * @domain: IRQ domain provided by the PMC
-bbe5af60041cae Thierry Reding       2019-01-25  412   * @irq: chip implementation for the IRQ domain
-e57a243f5d896f Dmitry Osipenko      2019-09-26  413   * @clk_nb: pclk clock changes handler
-d3a20dcbca4880 Thierry Reding       2022-05-06  414   * @core_domain_state_synced: flag marking the core domain's state as synced
-d3a20dcbca4880 Thierry Reding       2022-05-06  415   * @core_domain_registered: flag marking the core domain as registered
-1ddb8f6d44ff48 Petlozu Pravareshwar 2022-09-30  416   * @wake_type_level_map: Bitmap indicating level type for non-dual edge wakes
-1ddb8f6d44ff48 Petlozu Pravareshwar 2022-09-30  417   * @wake_type_dual_edge_map: Bitmap indicating if a wake is dual-edge or not
-1ddb8f6d44ff48 Petlozu Pravareshwar 2022-09-30  418   * @wake_sw_status_map: Bitmap to hold raw status of wakes without mask
-1ddb8f6d44ff48 Petlozu Pravareshwar 2022-09-30  419   * @wake_cntrl_level_map: Bitmap to hold wake levels to be programmed in
-1ddb8f6d44ff48 Petlozu Pravareshwar 2022-09-30  420   *     cntrl register associated with each wake during system suspend.
-7232398abc6a71 Thierry Reding       2014-07-11  421   */
-7232398abc6a71 Thierry Reding       2014-07-11  422  struct tegra_pmc {
-3568df3d31d62b Mikko Perttunen      2015-01-06  423  	struct device *dev;
-7232398abc6a71 Thierry Reding       2014-07-11  424  	void __iomem *base;
-c641ec6eab8587 Thierry Reding       2017-08-30  425  	void __iomem *wake;
-c641ec6eab8587 Thierry Reding       2017-08-30  426  	void __iomem *aotag;
-5be2255676bf2b Thierry Reding       2017-08-30  427  	void __iomem *scratch;
-7232398abc6a71 Thierry Reding       2014-07-11  428  	struct clk *clk;
-3195ac6d9cbeef Jon Hunter           2015-12-04  429  	struct dentry *debugfs;
-7232398abc6a71 Thierry Reding       2014-07-11  430  
-7232398abc6a71 Thierry Reding       2014-07-11  431  	const struct tegra_pmc_soc *soc;
-e247deae1a5508 Mikko Perttunen      2019-01-25  432  	bool tz_only;
-7232398abc6a71 Thierry Reding       2014-07-11  433  
-7232398abc6a71 Thierry Reding       2014-07-11  434  	unsigned long rate;
-7232398abc6a71 Thierry Reding       2014-07-11  435  
-7232398abc6a71 Thierry Reding       2014-07-11  436  	enum tegra_suspend_mode suspend_mode;
-7232398abc6a71 Thierry Reding       2014-07-11  437  	u32 cpu_good_time;
-7232398abc6a71 Thierry Reding       2014-07-11  438  	u32 cpu_off_time;
-7232398abc6a71 Thierry Reding       2014-07-11  439  	u32 core_osc_time;
-7232398abc6a71 Thierry Reding       2014-07-11  440  	u32 core_pmu_time;
-7232398abc6a71 Thierry Reding       2014-07-11  441  	u32 core_off_time;
-7232398abc6a71 Thierry Reding       2014-07-11  442  	bool corereq_high;
-7232398abc6a71 Thierry Reding       2014-07-11  443  	bool sysclkreq_high;
-7232398abc6a71 Thierry Reding       2014-07-11  444  	bool combined_req;
-7232398abc6a71 Thierry Reding       2014-07-11  445  	bool cpu_pwr_good_en;
-7232398abc6a71 Thierry Reding       2014-07-11  446  	u32 lp0_vec_phys;
-7232398abc6a71 Thierry Reding       2014-07-11  447  	u32 lp0_vec_size;
-a38045121bf421 Jon Hunter           2016-03-30  448  	DECLARE_BITMAP(powergates_available, TEGRA_POWERGATE_MAX);
-7232398abc6a71 Thierry Reding       2014-07-11  449  
-7232398abc6a71 Thierry Reding       2014-07-11  450  	struct mutex powergates_lock;
-4a37f11c8f57ff Aapo Vienamo         2018-08-10  451  
-4a37f11c8f57ff Aapo Vienamo         2018-08-10  452  	struct pinctrl_dev *pctl_dev;
-19906e6b166721 Thierry Reding       2018-09-17  453  
-19906e6b166721 Thierry Reding       2018-09-17  454  	struct irq_domain *domain;
-19906e6b166721 Thierry Reding       2018-09-17  455  	struct irq_chip irq;
-e57a243f5d896f Dmitry Osipenko      2019-09-26  456  
-e57a243f5d896f Dmitry Osipenko      2019-09-26  457  	struct notifier_block clk_nb;
-41bafa698ddd07 Dmitry Osipenko      2021-06-01  458  
-41bafa698ddd07 Dmitry Osipenko      2021-06-01  459  	bool core_domain_state_synced;
-41bafa698ddd07 Dmitry Osipenko      2021-06-01  460  	bool core_domain_registered;
-1ddb8f6d44ff48 Petlozu Pravareshwar 2022-09-30  461  
-1ddb8f6d44ff48 Petlozu Pravareshwar 2022-09-30  462  	unsigned long *wake_type_level_map;
-1ddb8f6d44ff48 Petlozu Pravareshwar 2022-09-30  463  	unsigned long *wake_type_dual_edge_map;
-1ddb8f6d44ff48 Petlozu Pravareshwar 2022-09-30  464  	unsigned long *wake_sw_status_map;
-1ddb8f6d44ff48 Petlozu Pravareshwar 2022-09-30  465  	unsigned long *wake_cntrl_level_map;
-1ddb8f6d44ff48 Petlozu Pravareshwar 2022-09-30  466  	struct syscore_ops syscore;
-7232398abc6a71 Thierry Reding       2014-07-11 @467  };
-7232398abc6a71 Thierry Reding       2014-07-11  468  
-
-:::::: The code at line 467 was first introduced by commit
-:::::: 7232398abc6a7186e315425638c367d50c674718 ARM: tegra: Convert PMC to a driver
-
-:::::: TO: Thierry Reding <treding@nvidia.com>
-:::::: CC: Thierry Reding <treding@nvidia.com>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Jose
+ 
+> Thanks,
+> Louis Chauvet
+> 
+> > > Thanks for posting this patch separately.
+> > > 
+> > > Best regards
+> > > Thomas
+> > > 
+> > > > ---
+> > > >    drivers/gpu/drm/vkms/vkms_drv.c | 15 +++++++++------
+> > > >    1 file changed, 9 insertions(+), 6 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+> > > > index 7c142bfc3bd9..b6de91134a22 100644
+> > > > --- a/drivers/gpu/drm/vkms/vkms_drv.c
+> > > > +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> > > > @@ -235,17 +235,19 @@ static int __init vkms_init(void)
+> > > >    	if (!config)
+> > > >    		return -ENOMEM;
+> > > > -	default_config = config;
+> > > > -
+> > > >    	config->cursor = enable_cursor;
+> > > >    	config->writeback = enable_writeback;
+> > > >    	config->overlay = enable_overlay;
+> > > >    	ret = vkms_create(config);
+> > > > -	if (ret)
+> > > > +	if (ret) {
+> > > >    		kfree(config);
+> > > > +		return ret;
+> > > > +	}
+> > > > -	return ret;
+> > > > +	default_config = config;
+> > > > +
+> > > > +	return 0;
+> > > >    }
+> > > >    static void vkms_destroy(struct vkms_config *config)
+> > > > @@ -269,9 +271,10 @@ static void vkms_destroy(struct vkms_config *config)
+> > > >    static void __exit vkms_exit(void)
+> > > >    {
+> > > > -	if (default_config->dev)
+> > > > -		vkms_destroy(default_config);
+> > > > +	if (!default_config)
+> > > > +		return;
+> > > > +	vkms_destroy(default_config);
+> > > >    	kfree(default_config);
+> > > >    }
+> > > 
+> > 
+> > -- 
+> > Louis Chauvet, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+> > 
