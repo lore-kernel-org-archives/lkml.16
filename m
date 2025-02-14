@@ -1,42 +1,42 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DAF4D8C8;
-	Fri, 14 Feb 2025 15:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93B5266592;
+	Fri, 14 Feb 2025 15:15:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739546112; cv=none; b=Qpv430EByG9SDltxEKkhURiBls+7GD7E016kUDlpVMa43noU895cPHXwZBsXwjsj70cpvAZCfo2CPNFLD487yl6xZ+J1bX+pRPgnA6z6R13oqKJnug8/hvSkTk71h5FuXzDXNp0ndJe4YPMFhtlUbnXQqtgCdxS1kWzE/Mbos9U=
+	t=1739546114; cv=none; b=bAFZSZ2d20Iu5uwbXGV3U0hjvyALZEPCp4xiaT/Kr+sRjfjnPsIFDOD0Wk/YCt3Uzkj8guHxlOUmed/EXcGpvQ44GWTbt1v4xdS2nCcUgDQre77WJ41foSAKSzU5cRxRZdm6JJwptksDZskdiuxHumuxh9ZSZAAurAEH1s4KMxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739546112; c=relaxed/simple;
-	bh=1cUFcziT3zrnD+e35Cx7WF4WHOMgoKt3qtHlcGUUGnQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ssHh46KLy8GXYV80mxkA27BIcP0jiz36pgd0Ae450kz/7Db31DQ1ErOQaaPVfv/Lkc4ip9FDB9K1OXP5d+dARm5S7hZuKibOBisLXB51uieOvvBTdj4zA5y4yn2LJ72qsKEWfKWsVdMnGnXhV+Obsao8b94XAhgLSxeOD6Wf9Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JJHA0bKo; arc=none smtp.client-ip=148.251.105.195
+	s=arc-20240116; t=1739546114; c=relaxed/simple;
+	bh=LrLIXtRuehdwykIBttWuiZuw5wRuaIW9+FNl6glcXx0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Lt1gJ3c4tMOzg48c2PNualGH6kDnvUrlnXFt4qs2twncQueH5Kz57EEsNNgZ2rN/koNuT/wRlPBDHp1yVroZcX+MJUEb2cXAG+ZteueMqtPb3J7Za7Fi4BhOwc8tptOLlHsfsYBj7X++aROSjtZcbdeA0gcjrF8/R3ZiP7bEvAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NVl3gfVd; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JJHA0bKo"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NVl3gfVd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739546101;
-	bh=1cUFcziT3zrnD+e35Cx7WF4WHOMgoKt3qtHlcGUUGnQ=;
-	h=From:Subject:Date:To:Cc:From;
-	b=JJHA0bKog9zGlUr7gL/WMoMeolufzIwP8ZGvn3AUoqgFT8um3Kdoa9j8QFsDRjMv+
-	 OZOdXFEVUXsb1m9dadA+4DPzH9VsDVweFx3105N9PZLNL2VXChq+5UW0KrF2hpGQYD
-	 Beql8elsN8f72k8rCxqPg9EMfJd/tc0o6MakV94fFXXw+3GS+bpwb/stOvUOoxE/Ky
-	 VuMJIj+Amfbog5LIixjVRWOBV8FVn8so4LHO9pavtbDpACjFqxX4KHuqjxXOFdniGD
-	 Dxne1f81sthen5pOSWhKOoBpahrI7K5u+xOd63jc7A9DTwCs5c1ZnMIlpVjE5ZNgKg
-	 T7guYNRz4tWFw==
+	s=mail; t=1739546109;
+	bh=LrLIXtRuehdwykIBttWuiZuw5wRuaIW9+FNl6glcXx0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=NVl3gfVdX0tAUHmBP+Ujt/sbBjxJhyiDXGHoqG64RegmsUc5nYqGcH5kQlVWquV8T
+	 um5om9ZCOmuH7BYvISmlO0DyBEH/BAfl1hMzCXyCNNH8IbFVzxWPMuY1PjvVz5KHpn
+	 rQ41DTxZbJ90M06ao+a20OwuWsI4luK3x4HyJqkw2pgQ4Tawd5QDvzQo8mUhKHxROt
+	 QN5rbMOeF4ljfHlPotsV3hDYwfn5WjdDHlHa6Eiu9S8+ldNakIhtojI3sn+WRMkKgZ
+	 H784A0aidpwU73e5rI7CbDujADRYf9UwX2idcoNvCrJ+RTNGNFbXJFvJuHbS8TYnM2
+	 ZRsBBpTS4NMMA==
 Received: from [192.168.0.47] (unknown [IPv6:2804:14c:1a9:53ee::1003])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id B46C317E0ECF;
-	Fri, 14 Feb 2025 16:14:57 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8426B17E0FDF;
+	Fri, 14 Feb 2025 16:15:06 +0100 (CET)
 From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Subject: [PATCH 0/3] Allow retrieving accessory detection reference on
- MT8188
-Date: Fri, 14 Feb 2025 12:14:28 -0300
-Message-Id: <20250214-mt8188-accdet-v1-0-6bbd5483855b@collabora.com>
+Date: Fri, 14 Feb 2025 12:14:30 -0300
+Subject: [PATCH 2/3] ASoC: mediatek: common: Handle mediatek,accdet
+ property
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,10 +45,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIANRdr2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDI0MT3dwSC0MLC93E5OSU1BJdk5TUxKQkC1NTY5MUJaCegqLUtMwKsHn
- RsbW1ANH1iY9fAAAA
-X-Change-ID: 20250214-mt8188-accdet-4deabb85534d
+Message-Id: <20250214-mt8188-accdet-v1-2-6bbd5483855b@collabora.com>
+References: <20250214-mt8188-accdet-v1-0-6bbd5483855b@collabora.com>
+In-Reply-To: <20250214-mt8188-accdet-v1-0-6bbd5483855b@collabora.com>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -59,38 +58,73 @@ To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
 Cc: kernel@collabora.com, linux-sound@vger.kernel.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>, 
- Zoran Zhan <zoran.zhan@mediatek.com>
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
 X-Mailer: b4 0.14.2
 
-This series enables the MT8188-MT6359 sound driver to retrieve the
-MT6359 ACCDET sound component from a mediatek,accdet DT property, which
-allows detecting jack insertion/removal.
-
-Patch 1 describes the new property in the binding. Patch 2 implements
-the sound component retrieval in the common MTK soundcard driver. Patch
-3 updates the MT8188-MT6359 sound driver to register the audio jack and
-initialize the ACCDET driver for detection, if the property is present.
-
-Tested on the Genio 700 EVK board.
+Handle the optional mediatek,accdet property. When present, retrieve the
+sound component from its phandle, so the machine sound driver can use it
+to register the audio jack and initialize the MT6359 ACCDET for jack
+detection.
 
 Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 ---
-Nícolas F. R. A. Prado (3):
-      ASoC: dt-bindings: mediatek,mt8188-mt6359: Add mediatek,accdet
-      ASoC: mediatek: common: Handle mediatek,accdet property
-      ASoC: mediatek: mt8188-mt6359: Add headset jack detect support
+ sound/soc/mediatek/common/mtk-soc-card.h         |  1 +
+ sound/soc/mediatek/common/mtk-soundcard-driver.c | 15 ++++++++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
- .../bindings/sound/mediatek,mt8188-mt6359.yaml     |  6 +++
- sound/soc/mediatek/common/mtk-soc-card.h           |  1 +
- sound/soc/mediatek/common/mtk-soundcard-driver.c   | 15 +++++++-
- sound/soc/mediatek/mt8188/mt8188-mt6359.c          | 43 ++++++++++++++++++++++
- 4 files changed, 64 insertions(+), 1 deletion(-)
----
-base-commit: 7a6b5c348058d075ce0b20710f027a055d33a71d
-change-id: 20250214-mt8188-accdet-4deabb85534d
+diff --git a/sound/soc/mediatek/common/mtk-soc-card.h b/sound/soc/mediatek/common/mtk-soc-card.h
+index 3f6e24dd22df13ddb3aef1625a77d2e29e46fccf..a1d2794ac1f717997fb47023d5951a9ac4897788 100644
+--- a/sound/soc/mediatek/common/mtk-soc-card.h
++++ b/sound/soc/mediatek/common/mtk-soc-card.h
+@@ -16,6 +16,7 @@ struct mtk_soc_card_data {
+ 	const struct mtk_sof_priv *sof_priv;
+ 	struct list_head sof_dai_link_list;
+ 	struct mtk_platform_card_data *card_data;
++	struct snd_soc_component *accdet;
+ 	void *mach_priv;
+ };
+ 
+diff --git a/sound/soc/mediatek/common/mtk-soundcard-driver.c b/sound/soc/mediatek/common/mtk-soundcard-driver.c
+index f4314dddc46075d554b4e3f3aae8bcb5498f8ab5..4e1c546a994f5e6b7068f70ac8dc2af7e87d141a 100644
+--- a/sound/soc/mediatek/common/mtk-soundcard-driver.c
++++ b/sound/soc/mediatek/common/mtk-soundcard-driver.c
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_platform.h>
+ #include <sound/soc.h>
+ 
+ #include "mtk-dsp-sof-common.h"
+@@ -192,7 +193,9 @@ EXPORT_SYMBOL_GPL(mtk_soundcard_common_capture_ops);
+ 
+ int mtk_soundcard_common_probe(struct platform_device *pdev)
+ {
+-	struct device_node *platform_node, *adsp_node;
++	struct device_node *platform_node, *adsp_node, *accdet_node;
++	struct snd_soc_component *accdet_comp;
++	struct platform_device *accdet_pdev;
+ 	const struct mtk_soundcard_pdata *pdata;
+ 	struct mtk_soc_card_data *soc_card_data;
+ 	struct snd_soc_dai_link *orig_dai_link, *dai_link;
+@@ -250,6 +253,16 @@ int mtk_soundcard_common_probe(struct platform_device *pdev)
+ 
+ 	soc_card_data->card_data->jacks = jacks;
+ 
++	accdet_node = of_parse_phandle(pdev->dev.of_node, "mediatek,accdet", 0);
++	if (!IS_ERR(accdet_node)) {
++		accdet_pdev = of_find_device_by_node(accdet_node);
++		if (!IS_ERR(accdet_pdev)) {
++			accdet_comp = snd_soc_lookup_component(&accdet_pdev->dev, NULL);
++			if (!IS_ERR(accdet_comp))
++				soc_card_data->accdet = accdet_comp;
++		}
++	}
++
+ 	platform_node = of_parse_phandle(pdev->dev.of_node, "mediatek,platform", 0);
+ 	if (!platform_node)
+ 		return dev_err_probe(&pdev->dev, -EINVAL,
 
-Best regards,
 -- 
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
+2.48.1
 
