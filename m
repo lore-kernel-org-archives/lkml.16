@@ -1,48 +1,48 @@
 Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B472054F0;
-	Fri, 14 Feb 2025 06:59:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93002054F9;
+	Fri, 14 Feb 2025 06:59:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739516378; cv=none; b=hAiMkQ4QM6W7+hUm7BMIBGvTZIf8AKcH0wh7uHXSQOkyQuO/Gs2Xf0qlk/BV3LZ2xth4kfZThAB+Z4dO8LnUxDt9jv7TyqayWhHcNtAqno1GyAm5WrPpTqrD7emr2tFPRXlNqkld8xdGrvaQFDJVSvyg8ml4lULxg/XOMA4Nk0o=
+	t=1739516379; cv=none; b=lf0vk4Xz2drakAZxTuvbDuLVnB9wntCxPQ0l0c0J515zF6h4y1tLdb87tFH9EHa9W8k9GCLUzaRmzNqSoSmW8wf8iXQlvcQsGAQEIMpKHwA3pS9j7gYnC2NZdU4UhUxwBj7i5ARyg5qzCgGMQgIGBDdR8w9O9RNUeAvP4q++iDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739516378; c=relaxed/simple;
-	bh=VD6419GwC3op+1NsNa8YOPceiCy14z1AxbjSC8sFaRs=;
+	s=arc-20240116; t=1739516379; c=relaxed/simple;
+	bh=6RJCkEJOTQ+9WOXhz16VaQjspPm76n7dlp+/1rHiQGU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a0AN0rtuc6WKKEgnS6oGuRR5CQ7E+QpBG60BRd04Q5/M6UcnVRrxzDVkqYZcgFnN3aMuMq4cR0K9Efhk+FjodmK6AFg+j6KwQwJ8SFMmBN2MQXOwYlIDgbtlVOmQ1JHgshkFDTnhNM8XtAVurUEtus/GyuKF6GiJl+jN32NpJ9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=BKpiAB4x; arc=none smtp.client-ip=67.231.148.174
+	 MIME-Version:Content-Type; b=Fn2AvqcM79LNw//wj+OSJHswMxEacsl7I1WJD8Pc7OwjTOZVr43SQgN1dxUah+Dha8zblWW6bFyuyH6qipwIoY6BoAC5yHSsYXLC8208zeaZTI1FHFAdgnl3GJZ/yZRKFHziFexb7S3wnziQyw6lLSYqZIf5Id43KY5osE0ri1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=iVoZvPyO; arc=none smtp.client-ip=67.231.148.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="BKpiAB4x"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="iVoZvPyO"
 Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51E5nqkZ012347;
-	Thu, 13 Feb 2025 22:59:25 -0800
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51E5nqka012347;
+	Thu, 13 Feb 2025 22:59:26 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=U
-	qntbEvQ4oDjd8z8ktk+NOdbapcG49CuahKXXtXd4jQ=; b=BKpiAB4xIa5QqogLo
-	C6r4rd/+YvuQA4tLdceE3VIxYFSGvQj4lW9PTY7A7iXzqgaLPAvIuDSNsTipnVHK
-	phmO/xjJmBDeSj/YBRtGV66vsUOajrFur2S6teqVLSVfzjgpZRL/ZM9wJZjU0fg8
-	xngwXZjd8xmkiJdxhZRj8ZDnOGe59K82bmzmSY3BebSYWJZq5077PlBALM6Cf7ts
-	wQlCMO0/ooEjh4lzqr+k0wPHdR2CRAF1yLOP8kQdC8z9XfmNpVYnSys9Xc+RkKzq
-	d3/CryUU8hah3vqgVS65WItESWgcS9Dk4WXLZM1ePOROGn1YoemJzatZz8blYmSl
-	Ahaqw==
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=h
+	MLO/iCmOTSngQQNsGrK0MQ2i9rDTojv8dggzu/KvcQ=; b=iVoZvPyOX4Mc48EsP
+	y5jXce9IbS1KNO4Kbpjzjpw/u9ZhFTXNvU8xB+JwPQOsM30s3vytvzbXjBgbyutb
+	Gp+n8+5rIpHNVPhq2PWvIB0TIRNa8UAwQwvSDxpfT63BoXJ2RLz2EyC2qvwDY3UU
+	6mknYtRZNpCHQz5b9MBsCL8pgry+zcsWkRuuEJgcs/EWaaJPMnXLEptHenbkxaE7
+	ViGEKYs5TyAQRQzcxtASiu3dcKqIAfS/astCSAxAifrPrjrE9tN7+byx070raF2I
+	HxY/o3iA61AKsl6EYpmk+pplp7uhvu/WzPFtpsj65PHHDFLG0flxEVBVhpjVhXmB
+	eLpQw==
 Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 44t01f03fa-4
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 44t01f03fa-5
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 13 Feb 2025 22:59:25 -0800 (PST)
 Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
  DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 13 Feb 2025 22:58:48 -0800
+ 15.2.1544.4; Thu, 13 Feb 2025 22:58:51 -0800
 Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
  (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Thu, 13 Feb 2025 22:58:48 -0800
+ Transport; Thu, 13 Feb 2025 22:58:51 -0800
 Received: from wd-ubuntu-24-04.marvell.com (wd-ubuntu-24-04.marvell.com [10.111.132.113])
-	by maili.marvell.com (Postfix) with ESMTP id B61653F7090;
-	Thu, 13 Feb 2025 22:58:48 -0800 (PST)
+	by maili.marvell.com (Postfix) with ESMTP id 206103F7090;
+	Thu, 13 Feb 2025 22:58:51 -0800 (PST)
 From: Wilson Ding <dingwei@marvell.com>
 To: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
@@ -51,9 +51,9 @@ CC: <andrew@lunn.ch>, <gregory.clement@bootlin.com>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <p.zabel@pengutronix.de>,
         <salee@marvell.com>, <gakula@marvell.com>,
         Wilson Ding <dingwei@marvell.com>
-Subject: [PATCH 2/4] [PATCH 2/4] reset: simple: Add support for Armada8K reset controller
-Date: Thu, 13 Feb 2025 22:58:31 -0800
-Message-ID: <20250214065833.530276-4-dingwei@marvell.com>
+Subject: [PATCH 4/4] [PATCH 4/4] arm64: dts: marvell: cp11x: Add reset controller node
+Date: Thu, 13 Feb 2025 22:58:33 -0800
+Message-ID: <20250214065833.530276-6-dingwei@marvell.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250214065833.530276-1-dingwei@marvell.com>
 References: <20250214065833.530276-1-dingwei@marvell.com>
@@ -65,47 +65,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: 1FHO47QsLdwd09cmpuryZ2amASV6Uwg3
-X-Proofpoint-GUID: 1FHO47QsLdwd09cmpuryZ2amASV6Uwg3
+X-Proofpoint-ORIG-GUID: UucUwbdaaezb49L7FSoaz7o8m4tbpU_3
+X-Proofpoint-GUID: UucUwbdaaezb49L7FSoaz7o8m4tbpU_3
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-14_02,2025-02-13_01,2024-11-22_01
 
-Armada8k has one register for unit soft-reset configuration within the
-system controller register area.
+The unit soft-reset configuration register is part of the system
+controller register.
 
 Signed-off-by: Wilson Ding <dingwei@marvell.com>
 ---
- drivers/reset/reset-simple.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/marvell/armada-cp11x.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-index e4e777d40a79..a792b913e1b1 100644
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -183,6 +183,13 @@ static const struct reset_simple_devdata reset_simple_active_low = {
- 	.status_active_low = true,
- };
- 
-+static const struct reset_simple_devdata reset_simple_armada8k = {
-+	.nr_resets = 32,
-+	.active_low = true,
-+	.status_active_low = true,
-+	.syscon_dev = true,
-+};
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+index 161beec0b6b0..b82003df15e0 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+@@ -273,6 +273,12 @@ CP11X_LABEL(gpio2): gpio@140 {
+ 					 <&CP11X_LABEL(clk) 1 17>;
+ 				status = "disabled";
+ 			};
 +
- static const struct of_device_id reset_simple_dt_ids[] = {
- 	{ .compatible = "altr,stratix10-rst-mgr",
- 		.data = &reset_simple_socfpga },
-@@ -203,6 +210,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
- 		.data = &reset_simple_active_low },
- 	{ .compatible = "sophgo,sg2042-reset",
- 		.data = &reset_simple_active_low },
-+	{ .compatible = "marvell,armada8k-reset",
-+		.data = &reset_simple_armada8k },
- 	{ /* sentinel */ },
- };
++			CP11X_LABEL(soft_reset): soft-reset@268 {
++				compatible = "marvell,armada8k-reset";
++				offset = <0x268>;
++				#reset-cells = <1>;
++			};
+ 		};
  
+ 		CP11X_LABEL(syscon1): system-controller@400000 {
 -- 
 2.43.0
 
