@@ -1,60 +1,64 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841A538DC8
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 06:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A76D1714D0
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 06:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739515544; cv=none; b=j3UFbkNf9WjTsYf7mWRdKjZ/luSIcB9iZlh59ROW8IH0LC7y4d3gGK8VApvVCpHqnXlMcLcKKsu7vN+MJm2aAEHPc4lLpoSTw02Ch3kx/WAbktbS5gVWIIPDPgikBezaLZGitJohqVxFStiO/niCE+K3PyzsRkReOBGUyHS/frE=
+	t=1739515788; cv=none; b=Hna6KWvh9A2/IE4+EfLu0CLlt7EhFfjK2lvfZzEug+Q56uwNgwVOVpr/AuLuQcLU0GXxAOFXUTh5B15w9gIm5t5O0JEn1AppL1jzpt0rzeDwgv80kkxJZsuksFDtZyiQP6Sdu5PaXWRHUGL0RHr8OL4kERAqjrvtDnS9KqvAb8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739515544; c=relaxed/simple;
-	bh=jOmbKth323p3ll54Dd79pmXsuHR6esurCD30oTyo46U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=oTPbe+qgU69j7r4ioPU9QXCvRIrCTRMN+vBVF5h4toIf4lh6g7g49RYMcmkk2IZWa58OI3Wb7SVCXi9Ym43OoQfVfRDnNazYr3Bc4LbJH+6zJ231Yl4fotHxcVof8Xx9aBVXNptAPmYVvWzLjp3Wg9DL9ujEYI/lNKB9SlvmfkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nOzAgVgy; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739515788; c=relaxed/simple;
+	bh=Xs5or6MPmdNngz9M/73X/9SEiBgnuHt1Tu1I11/i0G0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b4TtqrT/Xaz5UPyQD6y5teQmRT1DweRj9NCG9K80EdUBDl1fXgBYifmFQOSVRgeuAo4Ex8WZS6HM2nCpUq2bJfeVEYFhPpyT6ujdeSoWreG68G4IemZ+NCo+jcCZCsPueDYBMrOrB3MdiMiNX6MHK9z0Z+oRxFvZkUmkhDaDRd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vs7K4ElC; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nOzAgVgy"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51E5OUVt010341;
-	Fri, 14 Feb 2025 06:45:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=suLyps
-	BSmE6AszeJZb1uWjabD9IlIqQQNel8XNX6nn4=; b=nOzAgVgyaX+gzuT5QVtcD3
-	J98N8pL4g9Cvc8NTC/w+/GPGjrok2HnaQPUo6xkmrZELV8o6Xtb5IOz4kNIsn/Qm
-	rPyQy+JYbrBuyyOTfRY8SY3tWB1bupnp9LhSyFYNL6+iTzF95rnUJCChPxXNd60j
-	0M6JTXqJaHkya2+r8nl+TtGavUNIIx3FcWtJT5CwOGvgxGnouqoo3tBsgIRGe0DC
-	SH79efu0HdhLs93fjjCNwh6/W81FMMpSZd8TcSbmUV8Vd4lrCC7r8PiU+0YNfXWN
-	XhIvRtvDrhAd7MzenG/lBCHVhqFmhLBLhy0oq5Kr4+ShTYRpSJ46b73PLRNvlfZQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44syn80964-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 06:45:37 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51E2U3n5000978;
-	Fri, 14 Feb 2025 06:45:36 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44pjknj9ce-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 06:45:36 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51E6jYHk18415972
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Feb 2025 06:45:34 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 98E1E20067;
-	Fri, 14 Feb 2025 06:45:34 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 448872004F;
-	Fri, 14 Feb 2025 06:45:33 +0000 (GMT)
-Received: from [9.43.98.203] (unknown [9.43.98.203])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 14 Feb 2025 06:45:32 +0000 (GMT)
-Message-ID: <da9b637a-962a-4a9f-a4bf-b79e6119b29c@linux.ibm.com>
-Date: Fri, 14 Feb 2025 12:15:31 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vs7K4ElC"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5de5e3729ecso3426926a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 22:49:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739515785; x=1740120585; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Gawkt9In8aJG8h+rAcH7YnbMFtyCA6IgsBVkBeTJrC8=;
+        b=vs7K4ElCka9yq4vnbriN9nknHdak8yUnNbebAZITCT30Ha8yFOwL660MHmTzLvfSz/
+         lhJlnqR8T/JCjhao58BmeT0iqFFYiOiwTtKJg7dUBTDhDGb/3w7ClCXG9IKVVaU6Nhul
+         ntL5vlcBW6tuXFLSnRVuFqxfhUs5JqUEr2QF1f+yQedh7jL3wUVmIJZmsGx4kUegVEM2
+         srVs+ncOSsaaMRY4vOTRS5T7tfIgi86bLa6cY607BSwgwA7O1PfeYkXgNyT6Bd6ajTb+
+         V5V9lua9e3Cip9k+yUo1tD9VdO0Zymb8i6ZXlveTbT/vrxfDNvR3U7Ace9o3cZ1bD/iv
+         GWag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739515785; x=1740120585;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gawkt9In8aJG8h+rAcH7YnbMFtyCA6IgsBVkBeTJrC8=;
+        b=MotmXQ8jFQTf3VKti0QVZJI0RnCDqMAzz/s6TUFHxxd8OYaEejIZB9E7xla9g6Edep
+         nlZC0aHNF6sgGlgxSIsJ8H9sGgyAqh1Bx/54bo/SR9G8+DZkEc2XnAtK/OvjX5u1IpR4
+         9ZC15aUPQyMUwCdvP9+sZhj9+owMpyF0l8sJdn6RGmTCp1YICOUyTuACGoPfsT2abSlm
+         rnLg6fM7OGP4mAA59kSZRpuSrcqtymWVOIQveuUTXRHOYkcAY5N62+OfMBTZDY2LE9dY
+         xu4osI/D+X57PkCW1EAlM/y6Z/ZIzUnJbgEuMWUtvWNSNSThe4Kn9N7I3fX3Nqm83Nk0
+         dnRg==
+X-Forwarded-Encrypted: i=1; AJvYcCURZKNH/VOyZAyFZwViOaN2T2VJxlwNzMmGkpvW0sc+10NAF2p0pGqZsq00pVTnM/lfhLnIWoZaVlCZ/To=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHkvUh0WP3V8ZuL62jCN7Pg/6KWxcAFDkP1tyE80zhJanGnKPR
+	PnCx0wiJSLHvG8MPaXjT+YsihuHkY0VUNSgfPVDoZdWJRz05WEk4XDhHNimXuSo=
+X-Gm-Gg: ASbGncvl0rGd+wxpj3QYaX+TrKC614yBACRolzfzA5P45Mrm3s2MvF0csx2w60+41Wf
+	9xNaXskzInXvDe2s9UKvQ6paeTPFh/XoOHUP2QtZqFwVsBs/5YW5bMlW7I/JRrqv0pEbDCaaxjw
+	m1vYpKCMbZM3G83D3QdmatTgENMVErJ53fCIJzM/6jcq87/n7hEXDQJ6MeezfI5PBS995lSZUUA
+	nCIg+4M1r6LYwgEfGmlutgE5h4uGq5Y9sf9yrOVHuBx8ycFi0gFoMgRWn2mMZ20rmdW406DYuAH
+	2BXFPch8kvDiTrdarxqC1CC8
+X-Google-Smtp-Source: AGHT+IFxiW3VpQW8qQ1jo57FdhoTZVGZoXp1u38iJkHijnUvtqdcxoOB5BNSokQAT/jC+GtZYlbZyQ==
+X-Received: by 2002:a05:6402:274d:b0:5de:5263:ae79 with SMTP id 4fb4d7f45d1cf-5deb08813d5mr8694445a12.12.1739515784670;
+        Thu, 13 Feb 2025 22:49:44 -0800 (PST)
+Received: from [192.168.0.14] ([79.115.63.124])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece287cebsm2386431a12.74.2025.02.13.22.49.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 22:49:43 -0800 (PST)
+Message-ID: <2ed6c5d8-b559-4ffc-b08e-412bab1f7917@linaro.org>
+Date: Fri, 14 Feb 2025 06:49:41 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,110 +66,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [linux-next-20250212] syscall kexec_file_load not available
-To: Hari Bathini <hbathini@linux.ibm.com>,
-        Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <8e73069b-5987-4a08-b13d-13fe691092ad@linux.vnet.ibm.com>
- <77c11ea2-f3ae-497a-aaba-f7b33f46743d@linux.ibm.com>
+Subject: Re: [PATCH v1 3/3] arm64: dts: exynos990: define all PERIC USI nodes
+To: Denzeel Oliva <wachiturroxd150@gmail.com>
+Cc: alim.akhtar@samsung.com, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ gregkh@linuxfoundation.org, jirislaby@kernel.org, krzk+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+ robh@kernel.org, semen.protsenko@linaro.org
+References: <20250212234034.284-1-wachiturroxd150@gmail.com>
+ <20250212234034.284-4-wachiturroxd150@gmail.com>
+ <40370a0e-775b-42e3-bb6c-8cacaa0482cf@linaro.org>
+ <Z67f+lDxISVubiJJ@droid-r8s>
 Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <77c11ea2-f3ae-497a-aaba-f7b33f46743d@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: nuSfUP2hAdQ0LcOA-ozi6cFpn48kU42J
-X-Proofpoint-GUID: nuSfUP2hAdQ0LcOA-ozi6cFpn48kU42J
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-14_02,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 lowpriorityscore=0 mlxscore=0 spamscore=0 bulkscore=0
- impostorscore=0 malwarescore=0 suspectscore=0 clxscore=1015
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502140047
-
-Hello Hari,
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <Z67f+lDxISVubiJJ@droid-r8s>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-On 14/02/25 12:02, Hari Bathini wrote:
->
->
-> On 13/02/25 8:34 pm, Venkat Rao Bagalkote wrote:
->> Greetings!!!
+
+On 2/14/25 6:17 AM, Denzeel Oliva wrote:
+> On Thu, Feb 13, 2025 at 07:38:35AM +0000, Tudor Ambarus wrote:
+
+>> node properties shall be specified in a specific order. Follow similar
+>> nodes that are already accepted, gs101 is one.
+> 
+> Not all Exynos SoCs will follow the same order
+
+you an fix them then. Please follow
+https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
+
+> 
+>> <&cmu_peric0 CLK_GOUT_PERIC0_TOP0_IPCLK_4>;
+> 
+> Is
+> 
+> GATE(CLK_GOUT_PERIC0_TOP0_IPCLK_4, "gout_peric0_top0_ipclk_4",
+>      "dout_peric0_uart_dbg",
+>      CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP0_IPCLKPORT_IPCLK_4,
+>      21, 0, 0), [Mainline CLK]
+
+I don't get this reasoning, sorry.
+> 
+> You can find it in the cmucal-node.c driver downstream of the kernel. [0]
+> 
+>>> +			};
+>>> +		};
+>>> +
+>>> +		usi0: usi@105500c0 {
+
+cut
+
+>>> +			serial_2: serial@10550000 {
 >>
->>  From kernel next-20250210, I am observing syscall kexec_file_load 
->> not available, there by kdump service is failing to start.
+>> why not serial_0 since you're in USI0.
+> 
+> Because it is simply displayed in the exynos9830-usi.dtsi [1]
+
+I don't think it matters what downstream specifies for labels. Use what
+common sense says.
+
+> 
+>>> +		};
+>>> +
+>>> +		usi_i2c_0: usi@105600c0 {
+>>> +			compatible = "samsung,exynos990-usi", "samsung,exynos850-usi";
+>>> +			reg = <0x105600c0 0x20>;
+>>> +			samsung,sysreg = <&sysreg_peric0 0x1008>;
+>>> +			samsung,mode = <USI_V2_I2C>;
+>>> +			#address-cells = <1>;
+>>> +			#size-cells = <1>;
+>>> +			ranges;
+>>> +			clocks = <&cmu_peric0 CLK_GOUT_PERIC0_TOP0_PCLK_6>,
+>>> +				 <&cmu_peric0 CLK_GOUT_PERIC0_TOP0_IPCLK_6>;
+>>> +			clock-names = "pclk", "ipclk";
+>>> +			status = "disabled";
+>>> +
+>>> +			hsi2c_1: i2c@10560000 {
+>>> +				compatible = "samsung,exynos990-hsi2c",
+>>> +					     "samsung,exynosautov9-hsi2c";
+>>> +				reg = <0x10560000 0xc0>;
+>>> +				interrupts = <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>;
+>>> +				pinctrl-names = "default";
+>>> +				pinctrl-0 = <&hsi2c1_bus>;
+>>> +				clocks = <&cmu_peric0 CLK_GOUT_PERIC0_TOP0_IPCLK_6>,
+>>> +					 <&cmu_peric0 CLK_GOUT_PERIC0_TOP0_PCLK_6>;
+>>> +				clock-names = "hsi2c", "hsi2c_pclk";
+>>> +				#address-cells = <1>;
+>>> +				#size-cells = <0>;
+>>> +				status = "disabled";
+>>> +			};
 >>
->>
->> Logs:
->>
->> [root@ltc-zzci-1 ~]# kexec -p --initrd=/boot/initramfs-6.14.0-rc2- 
->> next-20250212kdump.img /boot/vmlinuz-6.14.0-rc2-next-20250212 -c
->> Warning: append= option is not passed. Using the first kernel root 
->> partition
->> Modified cmdline: elfcorehdr=311424K root=UUID=b5b1f89c- 
->> d479-48b3-90e2-744a2fd05667
->> [root@ltc-zzci-1 ~]# kexec -p --initrd=/boot/initramfs-6.14.0-rc2- 
->> next-20250212kdump.img /boot/vmlinuz-6.14.0-rc2-next-20250212 -s
->> syscall kexec_file_load not available.
->> [root@ltc-zzci-1 ~]# kexec -v
->> kexec-tools 2.0.27
->> [root@ltc-zzci-1 ~]# uname -r
->> 6.14.0-rc2-next-20250212
->>
->
-> Is the kernel built with CONFIG_KEXEC_FILE ?
+>> shouldn't you define serial and SPI too?
+> 
+> As shown in the node it only uses i2c which
+> corresponds to the exynos9830-usi.dts. [2]
 
-I am able to reproduce it with CONFIG_KEXEC_FILE enabled.
-
-Seems like there is something went wrong in next-20250210 and next-20250212.
-
-kexec -p --initrd=/boot/initramfs-6.14.0-rc2-next-20250210kdump.img 
-/boot/vmlinuz-6.14.0-rc2-next-20250210 -d -s
-
-Try gzip decompression.
-Try LZMA decompression.
-[ 3375.712319] kexec_file: kernel: 00000000e539303c kernel_size: 0x2cdacf0
-[ 3375.717022] ima: kexec measurement buffer for the loaded kernel at 0x0.
-[ 3375.717076] kexec_elf: Loaded the kernel at 0x0
-[ 3375.717094] kexec_elf: Loaded purgatory at 0x0
-[ 3375.717104] Loaded the backup region at 0x0
-[ 3375.717130] crash_core: Crash PT_LOAD ELF header. 
-phdr=000000004720e656 vaddr=0xc000000000000000, paddr=0x0, sz=0x10000 
-e_phnum=18 p_offset=0x0
-[ 3375.717156] crash_core: Crash PT_LOAD ELF header. 
-phdr=0000000005eb3f14 vaddr=0xc000000000010000, paddr=0x10000, 
-sz=0xfff0000 e_phnum=19 p_offset=0x10000
-[ 3375.717174] crash_core: Crash PT_LOAD ELF header. 
-phdr=000000000ec70071 vaddr=0xc00000001ec20000, paddr=0x1ec20000, 
-sz=0x13e0000 e_phnum=20 p_offset=0x1ec20000
-[ 3375.717192] crash_core: Crash PT_LOAD ELF header. 
-phdr=00000000b66c9c25 vaddr=0xc000000050000000, paddr=0x50000000, 
-sz=0x3b0000000 e_phnum=21 p_offset=0x50000000
-[ 3375.717215] Loaded elf core header at 0x0, bufsz=0x1000 memsz=0x80000
-[ 3375.717229] kexec_elf: Loaded initrd at 0x0
-[ 3375.718043] Memory node path: /memory@0
-[ 3375.722854] kexec_elf: Loaded device tree at 0x0
-syscall kexec_file_load not available.
-
-Kernel is reporting that all kexec segments are getting loaded at 0x0.
-
-Running kexec with strace shows that kexec_file_load system return -1 
-EINVAL.
-
-kexec_file_load(3, 4, 1, "\0", KEXEC_FILE_ON_CRASH) = -1 EINVAL (Invalid 
-argument)
-
-Based on the logs printed on the console and kexec_file_load return 
-value. I am suspecting
-kexec_file_load returned early form sanity_check_segment_list() because 
-the segment is 0x0.
-
-I am investigating further to find how segment.mem for all segment is 0x0.
-
-Thanks,
-Sourabh Jain
-
-
+If you can't specify all the protocol modes for all the USI nodes, then
+make it clear in the commit message.
 
