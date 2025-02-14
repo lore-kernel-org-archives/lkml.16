@@ -1,83 +1,124 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D281519AB;
-	Fri, 14 Feb 2025 02:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AA2139D0A;
+	Fri, 14 Feb 2025 02:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739500756; cv=none; b=oINcZkNy9rQeReUZo8av2L4qPmppx4ejtPv8MpwS8ebMJnnKzIry5obTduVrtTfy+439eYyRyrfE4aeDasokzPvfPmU23mmGNkP/jMp3aAEBpjIzbUA8JltrkARI9qZeosNVFDh2K28/4/u3lm/S4NIycOj9Wtfu3OUeECVYOxM=
+	t=1739500874; cv=none; b=DoD+XVt472zw1nJLd2UGdX4CnGzfw0lMWA52Vo9Lywy6ljW7J4/B3TNnkuLpOvygDXEs7FtMrN2AFZ6L/6e5H6M118knjBiuL0mH28zOfcVkfXK/1YH81nJdKiNVuJ/viFIFcCdvTbentFXSO4ce2QakmxZwHb11rITfMos+kmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739500756; c=relaxed/simple;
-	bh=ggqllBKY0hZPDPykZ9eDSe4dSq6P5GCFoSX8bpONkyQ=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=HD1lqdSJCD/eqUleBtsxWGY5cA9fo6oKstlWy3hT/zHlnB1NErZIWVTCGxz9uH8C+hML1cJ73cqosp7GKzMVTBcEoZLKhFE5ov9jSegz7+jQNKqEy2nyw3xGkdzcvdp4qgxBDXKszl/9X4GxPGvqZIHCb5wa6pV4bfjGytxhL54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4YvGNK5P6Mz1W5kg;
-	Fri, 14 Feb 2025 10:34:41 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id E02B3140121;
-	Fri, 14 Feb 2025 10:39:10 +0800 (CST)
-Received: from [10.67.120.192] (10.67.120.192) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+	s=arc-20240116; t=1739500874; c=relaxed/simple;
+	bh=avuDxrX+bDgNvLafMJuvmb3oYf4uTe94mdHy6Nw7USo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LRb+9ZQz1WZ5ABKV1DpoaidABqtHXg/m5xoGRuu8vOAI5ITavaj0C7S5G9uivWCD2qo7FsSVVN6mV2/kYLj8dKbdyjZE3/wQAJEPhwkFDZEMiHBYeHnb1U+Mgks8FYABN+Tgz5zy6uv5GKhYlo9jr1dB5ZQLjogKPEAEMY5X4HM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JypPqhgz; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JypPqhgz"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DJhlIN020887;
+	Fri, 14 Feb 2025 02:40:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qQMOQZffzsMfKn3CfdTJ9UbXMyLWAPH3pYBo3aDkzCI=; b=JypPqhgzfDOh/AMl
+	b1+Dlk8yXTNoDoLEbni+9uHRzHXPNGXuag2KgYksXofLjtNFv513Qlx7eEfHrgm/
+	VR3jAu9kQpwymrXXFhPL/O2d4gMLb/+7wW0b6GoKghHyvB1/a5NINkvjzYQ7iSAj
+	bg3Sf7qb1xGA6zVgArlv5+zmYtC+xbrDfUlhkZDPNvlUphWhvtdWoSmzCdDRmCfJ
+	K4IrhJFGr5zrbxUs5NToYYR6d/U8soe1LdN9H4tQMmnKy/O6f/1rPY6eZTSa356w
+	mM+nPcsC9vpRnVZ/7N1xGZE9Xmef3ENmWYI2lxr2YywJlzW3crSCrGM+fW+TDQx5
+	5BwU2g==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44sdyxtbvw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 02:40:52 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51E2epco019775
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 02:40:51 GMT
+Received: from jiegan-gv.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 14 Feb 2025 10:39:09 +0800
-Message-ID: <1d82f748-2173-4e24-9f4c-e2dd71c02c44@huawei.com>
-Date: Fri, 14 Feb 2025 10:39:09 +0800
+ 15.2.1544.9; Thu, 13 Feb 2025 18:40:46 -0800
+From: Jie Gan <quic_jiegan@quicinc.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>,
+        "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
+        Jinlong Mao
+	<quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v11 1/7] Coresight: Add support for new APB clock name
+Date: Fri, 14 Feb 2025 10:40:15 +0800
+Message-ID: <20250214024021.249655-2-quic_jiegan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250214024021.249655-1-quic_jiegan@quicinc.com>
+References: <20250214024021.249655-1-quic_jiegan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <shaojijie@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <andrew+netdev@lunn.ch>,
-	<horms@kernel.org>, <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
-	<liuyonglong@huawei.com>, <chenhao418@huawei.com>, <sudongming1@huawei.com>,
-	<xujunsheng@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
-	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 5/7] net: hibmcge: Add mac link exception
- handling feature in this module
-To: Andrew Lunn <andrew@lunn.ch>
-References: <20250213035529.2402283-1-shaojijie@huawei.com>
- <20250213035529.2402283-6-shaojijie@huawei.com>
- <dc22a252-2889-4b20-b72c-5e4d44d24f88@lunn.ch>
-From: Jijie Shao <shaojijie@huawei.com>
-In-Reply-To: <dc22a252-2889-4b20-b72c-5e4d44d24f88@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: jp_RqyWEcwChu8lEVTclDoeBtTQsk_K9
+X-Proofpoint-GUID: jp_RqyWEcwChu8lEVTclDoeBtTQsk_K9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-13_09,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ spamscore=0 bulkscore=0 suspectscore=0 mlxlogscore=850 priorityscore=1501
+ clxscore=1015 lowpriorityscore=0 phishscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502140017
 
+Add support for new APB clock-name. If the function fails
+to obtain the clock with the name "apb_pclk", it will
+attempt to acquire the clock with the name "apb".
 
-on 2025/2/14 4:05, Andrew Lunn wrote:
->> +int hbg_reset_phy(struct hbg_priv *priv)
->> +{
->> +	struct phy_device *phydev = priv->mac.phydev;
->> +
->> +	if (phydev->drv->soft_reset)
->> +		return phydev->drv->soft_reset(phydev);
->> +
->> +	return genphy_soft_reset(phydev);
->> +}
-> A MAC driver should not be doing a soft reset on a PHY. For some
-> devices, this clears out all the settings. I would suggest you use
-> phy_stop(), phy_start() which are functions a MAC driver is allowed to
-> use.
->
-> 	Andrew
+Reviewed-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
+---
+ include/linux/coresight.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Well, I think your advice is helpful.
-
-It is also a good practice to restart the PHY, which also triggers link relinking.
-
-Thank you. I'll test this method.
-
-Thanks,
-Jijie Shao
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 17276965ff1d..157c4bd009a1 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -459,8 +459,11 @@ static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
+ 	int ret;
+ 
+ 	pclk = clk_get(dev, "apb_pclk");
+-	if (IS_ERR(pclk))
+-		return NULL;
++	if (IS_ERR(pclk)) {
++		pclk = clk_get(dev, "apb");
++		if (IS_ERR(pclk))
++			return NULL;
++	}
+ 
+ 	ret = clk_prepare_enable(pclk);
+ 	if (ret) {
+-- 
+2.34.1
 
