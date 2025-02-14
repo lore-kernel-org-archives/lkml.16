@@ -1,111 +1,101 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward203b.mail.yandex.net (forward203b.mail.yandex.net [178.154.239.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BE238DD8;
-	Fri, 14 Feb 2025 05:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6216538DD8;
+	Fri, 14 Feb 2025 05:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739511205; cv=none; b=qwB5JS8ywoJ5rDLo6oQOnxBzQjqPXihzv3E/xVren/ydjhdcpjGaKlF0OqZLZjxARzsz/6HSDZTRBpBsXayxvqy4ms5zRgur5E/FCu15cqs8sR3gdQrrgUk26Dfng0m8YVVFRIqOKC5WZ0m3RdPxZ4GfC02ouJIgC8WCr/YHRoQ=
+	t=1739511369; cv=none; b=u0nm6p5V+xVXpKY8UA0FwDY4qfKUEuniwFq2dSQ7XEyBLt2hHcGGVQqPAV6kwhGHdK/PqDGHwNl87GiRNqGC4ixNxB6QKpq6+GM1GChPx6laoRVG42XfC/v1Mwu6Qc+gpvvinwm8QogSxg7tKcQcyzwRsh8OwEyvlrjC+WHRVx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739511205; c=relaxed/simple;
-	bh=L5pk5X30gpJ7gnywIkkEXwpQTjt3ETXHwQhi5SLhsWs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u0NsNTmQEzDWxyZR2lVdZdvzzsI3nZ3acAiAdkYoV+YmCGnTVeK4pDFjxQRwZ0RenrIv5LwhNJhaaXm4tknvvL6uluifEfbVty1Js7pbDJqyuMe4xkul/sG8gS65Evb573rCRCB0X//qTw3KFnYQrLFHBUZSwtfaWES+fGU3VIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UV1h6rkn; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UV1h6rkn"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38dcc6bfbccso909875f8f.0;
-        Thu, 13 Feb 2025 21:33:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739511202; x=1740116002; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GZKSZtODxM+noN2/9IveqzmmDuQqERiRvMNYTlwLCo4=;
-        b=UV1h6rknrFvTR+T/QoqHxgOk6Xdmhh+kf4GLBeXAPgK9fnbk798FbjEKHHcXHjEI/L
-         KQKj3ADc+iQPHQJeB3aBgCh0inRhvTzXXHOkiMeuURy7saYwfM+wQ3mjliJAUSRGIIR+
-         MI1SO+zxSOjN7HtoZCZnZ3HM/w8EyndqmV9TqZ0ATnyyVbeA1hbMibvGIUfq3zKclqGa
-         CW/ON+4cSDlqZLxxeHoUKL202Do17UgpRdOnfJoaFmmbSEPxO/0p8GOq8vihFkwMAicw
-         rg1vCjfFNyptBukwegCQ+m6j9ZqE6V6lZb0eBeGmD8Ogs6PEvSidFyfZNbDObE6p/O/E
-         ZK5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739511202; x=1740116002;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GZKSZtODxM+noN2/9IveqzmmDuQqERiRvMNYTlwLCo4=;
-        b=OSZktYNAaxjNVvLo134Nc69dV3YCqrY5FOTGnHOSXyYMRMw7yYQpxuCjc9Mp8pSWYR
-         sLxUQhy7lTYWy1PBPsOmrSAaaqT5i+2oUmvPExssxIquGDG++MRclaTuzy3n5ow2OV0+
-         7sVz6ppMsyILWk3uNzV0/OmnKNP7qYGq2yrq4UB5/6t5MSoTn7AuGs9eygU/L+J4Dnb2
-         +a9e4xrlK4aagLA/sHw3sJbh4y19JL8Yz3O1nFEhec96E5jU3L8Bz81X/2QzTS5HB1jN
-         az2EfWEQBd29dM7nw6GnYzGFf3jU3eoWWcCM4AvjxEYZ1v3UhntE+60gJYApr0EJk59T
-         nHqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxL88bZ0LvRlTjeV5B1EeNZ4S677joDyw2ZnfuOSHcMOOUHxIG5ItLAtLqNRpr/dlGTaU=@vger.kernel.org, AJvYcCVB32lpA//pOYhMQEYuc23baCNdW2qcuMDuqhKe/ymgIW63onbHkb5blrhutuklGO+T3u0NAvRHn+tUdg==@vger.kernel.org, AJvYcCVxP9xD06WI5+Qpe4XcVMWZQfs3duKEXtBOkUdaFZywDeENkfxLX+WvF7f+rX4uztZTBXAMe/6a@vger.kernel.org, AJvYcCXyKmwErJ10/qwI7PKiKVgFqJqPbfVBwodGZMLAH6KNOCbIcR5XXGvLp3NsoQ80cmGKkD84m9hm+Fh4Vh/u@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIpZvw06TxPQp7MkTp/Tq1CvCRbn0s7+RFusZpxt6k8XAk8fh8
-	LJhzuln2gtY78ziJVAJ545tCxEGAP2+4QAKzXoUkf0X4B0XUDDSH1eDqqIiS63yCqFTbyl5xRfW
-	lzZUKEuWak1IC81QeHBqLmrHMqh8=
-X-Gm-Gg: ASbGncu/SnXZsSiMHBC/fLG69b9IrS6MhoKG1wBuBxoZ7Y8F69GDnod9YY6q/ffRTsX
-	xrz7Xpojg68C7Mh8ovUI3mtEr6ZwDuPpeCJYXpe3s56SU7mQLOAZ1yWKn/am50wgITZ8qlilall
-	VYTw6ic9S8GWYnuY6TJku7RfqyQlrc
-X-Google-Smtp-Source: AGHT+IEF5LAqGZmkuhURa/S2hwHJ3FXPr8eM2F/6SJFL1O8hdpGxlppS11AKZcoalYHBSjqsDU4mE66s2+Zk1tcfVGI=
-X-Received: by 2002:a5d:5226:0:b0:38d:b9c5:797f with SMTP id
- ffacd0b85a97d-38dea26e79bmr7916643f8f.18.1739511201973; Thu, 13 Feb 2025
- 21:33:21 -0800 (PST)
+	s=arc-20240116; t=1739511369; c=relaxed/simple;
+	bh=WF7uhb8I9k24A6Ug7P71/E89BkMWktvvfObKO86Tpo0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gUilSTb88tGQTKTfn74srVdouvrZlh6L0I0pqhnMIhqXIBcoa/XUTpC+EPN6vjwvAL05XpFI97R15raK2beIHh8KulxZ5Vz+Sr/Gh+VCagG1fMK5XfKrtA+PXCfus+rcUU0Dc8C6saICt41Vio8nQHKCXqDuUy/y56YGCn5PLIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=travitia.xyz; spf=none smtp.mailfrom=travitia.xyz; arc=none smtp.client-ip=178.154.239.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=travitia.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=travitia.xyz
+Received: from forward103b.mail.yandex.net (forward103b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d103])
+	by forward203b.mail.yandex.net (Yandex) with ESMTPS id 4D31C65545;
+	Fri, 14 Feb 2025 08:30:17 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net [IPv6:2a02:6b8:c10:2d9f:0:640:f6ce:0])
+	by forward103b.mail.yandex.net (Yandex) with ESMTPS id 1FE6A60911;
+	Fri, 14 Feb 2025 08:30:09 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 5UJF7UBMgqM0-7Fljlxsf;
+	Fri, 14 Feb 2025 08:30:07 +0300
+X-Yandex-Fwd: 1
+Authentication-Results: mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net; dkim=pass
+From: Jens Reidel <adrian@travitia.xyz>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bastien Nocera <hadess@hadess.net>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Luca Weiss <luca.weiss@fairphone.com>,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	phone-devel@vger.kernel.org,
+	linux@mainlining.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Jens Reidel <adrian@travitia.xyz>
+Subject: [PATCH v2 0/2] Add Goodix Berlin-A series support
+Date: Fri, 14 Feb 2025 06:29:57 +0100
+Message-ID: <20250214052959.222668-1-adrian@travitia.xyz>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214160714.4cd44261@canb.auug.org.au>
-In-Reply-To: <20250214160714.4cd44261@canb.auug.org.au>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 13 Feb 2025 21:33:11 -0800
-X-Gm-Features: AWEUYZl4EytNCpTfs7QcXZ1uBLgvuERgrbd8OHm-WiZUZgkdL7qNGZkC194Ee4w
-Message-ID: <CAADnVQJhh+An8uorGh-WQfJybqAu84MOREXZtCxep7fZtyMd6A@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the bpf-next tree with the bpf tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, bpf <bpf@vger.kernel.org>, 
-	Networking <netdev@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 13, 2025 at 9:07=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
->
-> Hi all,
->
-> Today's linux-next merge of the bpf-next tree got a conflict in:
->
->   kernel/bpf/btf.c
->
-> between commit:
->
->   5da7e15fb5a1 ("net: Add rx_skb of kfree_skb to raw_tp_null_args[].")
->
-> from the bpf tree and commit:
->
->   c83e2d970bae ("bpf: Add tracepoints with null-able arguments")
->
-> from the bpf-next tree.
->
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+This series adds support for the Goodix Berlin-A series touch ICs
+(gt9897). This was tested on a Xiaomi 11 Lite 5G NE (xiaomi-lisa),
+which uses the gt9897 IC connected over SPI. I am not aware of any
+device that has gt9897 connected over I2C and therefore could not
+test it, so I didn't add a compatible in the I2C driver.
 
-Thanks for headsup.
+Changes in v2:
+- Added Rob's A-b tag (patch no. 1)
+- Added Luca's T-b tag (patch no. 2)
+- Updated the i2c and spi device id tables with the driver data and
+  switched to spi_get_device_match_data where possible (requested by
+  Neil)
+- Switched to device_get_match_data in goodix_berlin_core.c
+- Move all revision specific addresses and other properties into the
+  goodix_berlin_ic_data struct (requested by Dmitry)
+- Link to v1:
+  https://lore.kernel.org/all/20250203174309.21574-1-adrian@travitia.xyz/
 
-Jiri,
-what should we do ?
-I feel that moving c83e2d970bae into bpf tree would be the best ?
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Bastien Nocera <hadess@hadess.net>
+To: Hans de Goede <hdegoede@redhat.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Luca Weiss <luca.weiss@fairphone.com>
+Cc: linux-input@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: phone-devel@vger.kernel.org
+Cc: linux@mainlining.org
+Cc: ~postmarketos/upstreaming@lists.sr.ht
+Signed-off-by: Jens Reidel <adrian@travitia.xyz>
 
-Pls warn me next time of conflicts.
+Jens Reidel (2):
+  dt-bindings: input: goodix,gt9916: Document gt9897 compatible
+  Input: goodix_berlin - Add support for Berlin-A series
+
+ .../input/touchscreen/goodix,gt9916.yaml      |  1 +
+ drivers/input/touchscreen/goodix_berlin.h     | 13 ++++++
+ .../input/touchscreen/goodix_berlin_core.c    | 15 ++++---
+ drivers/input/touchscreen/goodix_berlin_i2c.c |  9 +++-
+ drivers/input/touchscreen/goodix_berlin_spi.c | 45 ++++++++++++++-----
+ 5 files changed, 62 insertions(+), 21 deletions(-)
+
+-- 
+2.48.1
+
