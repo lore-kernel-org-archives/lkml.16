@@ -1,133 +1,98 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44D1263F28
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 13:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE664263C9F
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 13:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739539129; cv=none; b=sgR4CscGyOl4c/fwrWGYPvloWpEB9feeClDefHsY8jDvEoHofIKyc9yWltk3atsYYeE9eXh29RBDCqONzQlbfvLI6DxYaUnxyEPsQS/fnkwK4IOSyxlYgB+tsosV5yGvTsV/Sc4WQG0bJQhbW5Atza6UQQv/wgZgkvtSshVcmAk=
+	t=1739539216; cv=none; b=cOIepR/yMk1MVeHAu1dAps2WH77q2p8uR7P1Y7KGI9pOEuXcj/p1kczuaXxgWeDdba75bclN9H1QpVViuMJeFABw7+HnRA+kvW/dhnfRQtJ36StFkSZ9bjdDIM6mqstRCmOxe98uwISIuf7f3TfqF9ZYyJHTASyOz0uTIfgKvto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739539129; c=relaxed/simple;
-	bh=pToG4Ksx6o1gvuZY9Gnggq0zrKIa+mtMW6XKamS6PUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KWxg/T7V1lvV4DgjwlG4BisM9KTtXfUbUr8CZGXGnTYHPMBwzI8O1NQFNnrwDrldLqUZRUG96PMkAnV4spO745r4NdccBqg/8QJqWDZWoK7hjKJSP/G+e5gKd3bO0dsMlhV5NkRW/IclYFFzgJYDqmkgZPPzHrWNxyXWhqPhmC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ctv0z7XD; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739539216; c=relaxed/simple;
+	bh=LJDfth7mwVclpXHFDxPtqz2sjNg3HySlIQhTKo6hMgI=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=GQc7D731T7tcadBwIlYZsHvY4V25BwVSkuxrOYdhDoM+9bo3yqQK1cfnPTsdf94/GxytdE7WKDL7fDRwBj5KRNYwsUevh7D/4dXgNTT/gST5lJoDyDgYUCkd2LnYJrHShC+Rgct7x2PwdBYlz19Jj28xnvbAPicK3caJPd0A+oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=Ytw8eBJa; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ctv0z7XD"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-220d398bea9so28100985ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 05:18:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="Ytw8eBJa"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2f441791e40so2985136a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 05:20:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739539127; x=1740143927; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=UIFBSo0KZ65tGs7lIwblNS9Ead+3QceXTUKjiZlNVB8=;
-        b=ctv0z7XDuXK31acl9Devz0DHtUVZ3OKiM/qZGpi4P7YQjA5VxyuHJWoei3OQG2YNzt
-         Rg8vJ9t9t5wemGYZs8kL1aPvfR1AHMUBKqo2yJ3tcobva2pkiKFUkOO6XDUm82s+Kzla
-         qfxId+xZqpCpQdeZnfHQf+mTzlw7YPVLpy2kMBA2h6qOY7d2exzHYP+/sTSCYAzwEhaS
-         DaUsm/LD3+S1NvEPeOFZkJ4GyGzxe3jSZtEZLJO1GYS5TxIchAn543+h8R034+mtfnBP
-         Ii/wQGcOWrjzh8op1Psicu5G9uUIPmmfyJzQnXV7My2ubez36cZLnHL+ua7sA3Ve7cEZ
-         a9jQ==
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1739539214; x=1740144014; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6r8x3zxj8rfgJpz/X4WBbZ2ZvxPjPV23GP7TSjrfJWc=;
+        b=Ytw8eBJaENW6FyauHVDqaV63jq9DBVDga4bJfhF8hk0B3vqQt1o9VZMcbV1m3u4Da7
+         KMOF/+k7UUBWeWqEu0yMFNjaJgeX9EHmF68TPqjPwmr97Prl+xmvHYRogGHfadoBsGN5
+         7KQKqELt3z0X7+nVNfm95YFStiaVi4368qUTF0N4GdlRs/Kua3KDabrYSrFnBes7DGK9
+         CZ62Frck3tJsMVuY6jvesP2pvqpQ68I617S60xoLPU16sVPvnzrAv8vrrcQp82RImAOY
+         7w8IXCEd7YVJUTc948ngtJ5C59PPUKcJsl7UZ3w1X+aPzexleUFjhIIJo4E9T6nmyO8v
+         t4Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739539127; x=1740143927;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UIFBSo0KZ65tGs7lIwblNS9Ead+3QceXTUKjiZlNVB8=;
-        b=VOx6zPqfDaHx74tOuB8pPx6MjoXYjCiIhXvnBwashPkteaeBkROMVtGE/Kp+ZBsUl5
-         9EqJ1/CbNWEwIfa33Y2kSVezzFpwiW8yDkwVWuk9YOywHjNJeUlbrRY6VkrUcLzpf12J
-         qRfaaeKu/BQNEaXg5qoOniJSAlSsMjeEaBdtnqgrRdFElD7RjDxMV95Rg2R91y7gv2ci
-         DNA+MwxMzQl4C1sVqcTaVzWKr4vu+9WX+B2r/87yCEpTEzXGrxRyTZtBdDinj3iFP8mL
-         2OBxX4FESzoxpb0DdjScRSde+D5sr4g7VUVnsZHm/yQ0IlHvQECtTb6ATq8hOQzarlea
-         Z4iA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrdYqbt7Norm8MnEXvMOjP6HH5uR8ho/wQB+dQ2FlL+NZgCZxRrcaeyetfkRP7NSyhiPrnvBaBIxUj+a4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1c9vg0nQhGDbUViVXACl9P3t7uihSvByFjJ3eOTQyyQq8FRG1
-	rQKatTN/LCjjYJFCJmUn/h/DTK4Fb1aljWjYGYON1oRbBIgzHFU7IfjHZHEfKg==
-X-Gm-Gg: ASbGnct0T1MZS6pyYYz2JVZpyBpJZIOTbC20KoiZcZH2iwi/QDPH2UmQ833DKujQhIo
-	rdaHtBw6zWhaPC1eNNt3iBUMYNJoVPibArKN3yqe/PJt/uW7I7utYxZSajIB4FxkE/TS4K/cvvR
-	p6H5zBJuDkpafylKA5W+M81gNaScLLJRHZsf+AHhIV2QY8tfrhrGkLciz0fsCkTjkncW0V7Rmgj
-	hmBE5ebEPay/KHyRJieE8whxhB1Sociwx9ZgRqRgSISMpV0T2aT7hQ3wrZq5T4eI1bC6gJGxlME
-	37hSOx+F0rCb8siWkZQB1nnTaijkNCo=
-X-Google-Smtp-Source: AGHT+IEEFI+Q6slwYq+gvb8gGXdWQdiInLwAAJ5utThRzTzCUAO3SUSNbGpqXGLiGQM61ve1oAUoYA==
-X-Received: by 2002:a17:902:e887:b0:220:e8a1:c819 with SMTP id d9443c01a7336-220e8a1cb06mr72616895ad.34.1739539127170;
-        Fri, 14 Feb 2025 05:18:47 -0800 (PST)
-Received: from thinkpad ([2409:40f4:304f:ad8a:250c:8408:d2ac:10db])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d53491ecsm28668465ad.9.2025.02.14.05.18.43
+        d=1e100.net; s=20230601; t=1739539214; x=1740144014;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6r8x3zxj8rfgJpz/X4WBbZ2ZvxPjPV23GP7TSjrfJWc=;
+        b=LXCz9/cge2S7f+G90gUkm6N9ecpidXbrf5HgPxUlpgF+OQAKZYv3eJr2L2iuN7XjSx
+         YE71p6AvnwN0koYz0E68WGejriAe83XkgIh4eV8ZGdtMiAe78H69bAOMU55IzVNNvR60
+         wwhD3UxvWNSEePQnAR5VZ3fv/YWtIm8SnzERknlv8vnbuFLRc56IybfPk93xpKxxCaq+
+         iYifCYQfsoGzuT3arTmKo0XqPoViiQ3TcS41IyDjKZmytqRe/pwsyiBT+DkBZiUDm7i2
+         dQ2+Xj4nYujAEo/AQTxF5H6MLSmZUXCiD6HsRwK8REzwOpAXpeRQ1i0DCQs41wRWjeWB
+         hYTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfdwSgXe1m8JzC4TfUOhW5siSURwWyNS6EkclBeJ1dW+Hxpy/ejhCXbaISAFySbGhmYhkBhFYxozKprno=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZxurmhoLHLf2bZmEu5LQKUYF1tq9jmazS4EvSASJHAth5QW3p
+	DuUB2NuDq5QucIYF3LmZr4ryx0YYO/s7qE8xiv6UZCOhUWaySkBZwQri//RQ24rg3tLITnJOFPg
+	H
+X-Gm-Gg: ASbGncvLOXA5hRSFK0n3/iKvPhQ2AcAixyFNxYVkdBvN1hk3pWUZ7ENa+OcYJVzfjKP
+	mfTqANNdnr9vxGlbQYZ/v83TFf5qO0fAm7qWRQcOGWYNtSq1AnmD1AltdpZS013XPqlk75Q7eEF
+	r6ZcQ0ZbGO81a4BlOHz6pkHYHuDZO/OWKlo9QA2hopbP7SNXspLDqHnVMk4mDL4CeyPT0RqqIAL
+	qy2lUTkHpN3T+H8FM8DM5pKpvPc0N9iuUkxXDJvihI8bpzyyV2raJxpB8gSUwAz1JmtFgc73gTB
+	ZrVcBB1M/A92
+X-Google-Smtp-Source: AGHT+IFAu9PBC3XJNgx4mWEdV9pMcuKKbaayr4w8bIyWW5djqyfxrKy7LSzRf+42OO9NVLq/OxD9yA==
+X-Received: by 2002:a17:90a:d88c:b0:2ee:a6f0:f54 with SMTP id 98e67ed59e1d1-2fbf5bf82e9mr17025020a91.13.1739539213982;
+        Fri, 14 Feb 2025 05:20:13 -0800 (PST)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fc13ad726bsm2958481a91.28.2025.02.14.05.20.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 05:18:46 -0800 (PST)
-Date: Fri, 14 Feb 2025 18:48:40 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Komal Bajaj <quic_kbajaj@quicinc.com>
-Cc: bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
-	mchehab@kernel.org, rric@kernel.org, andy.gross@linaro.org,
-	vnkgutta@codeaurora.org, linux-arm-msm@vger.kernel.org,
-	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] qcom: llcc/edac: Correct interrupt enable register
- configuration
-Message-ID: <20250214131840.desyshjr3dbb5lyl@thinkpad>
-References: <20241119064608.12326-1-quic_kbajaj@quicinc.com>
+        Fri, 14 Feb 2025 05:20:13 -0800 (PST)
+Date: Fri, 14 Feb 2025 05:20:13 -0800 (PST)
+X-Google-Original-Date: Fri, 14 Feb 2025 05:20:11 PST (-0800)
+Subject:     Re: linux-next: duplicate patch in the jc_docs tree
+In-Reply-To: <20250214161032.1ef4902e@canb.auug.org.au>
+CC: corbet@lwn.net, Paul Walmsley <paul.walmsley@sifive.com>,
+  linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Message-ID: <mhng-60a3c06c-7d2b-4fee-9012-6ed036e756ba@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241119064608.12326-1-quic_kbajaj@quicinc.com>
 
-On Tue, Nov 19, 2024 at 12:16:08PM +0530, Komal Bajaj wrote:
-> The previous implementation incorrectly configured the cmn_interrupt_2_enable
-> register for interrupt handling. Using cmn_interrupt_2_enable to configure Tag,
-> Data RAM ECC interrupts would lead to issues like double handling of the
-> interrupts (EL1 and EL3) as cmn_interrupt_2_enable is meant to be configured
-> for interrupts which needs to be handled by EL3.
-> 
-> EL1 LLCC EDAC driver needs to use cmn_interrupt_0_enable register to
-> configure Tag, Data RAM ECC interrupts instead of cmn_interrupt_2_enable.
-> 
+On Thu, 13 Feb 2025 21:10:32 PST (-0800), Stephen Rothwell wrote:
+> Hi all,
+>
+> The following commit is also in the risc-v-fixes tree as a different
+> commit (but the same patch):
+>
+>   b48e0f696b71 ("Documentation: riscv: Remove KPROBES_ON_FTRACE")
+>
+> This is commit
+>
+>   ccc71244f95c ("Documentation: riscv: Remove KPROBES_ON_FTRACE")
+>
+> in the risc-v-fixes tree.
 
-Cc: stable@vger.kernel.org
+Sorry about that, I dropped it from the RISC-V tree.
 
-> Fixes: 27450653f1db ("drivers: edac: Add EDAC driver support for QCOM SoCs")
-> Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-- Mani
-
-> ---
->  drivers/edac/qcom_edac.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/edac/qcom_edac.c b/drivers/edac/qcom_edac.c
-> index a9a8ba067007..0fd7a777fe7d 100644
-> --- a/drivers/edac/qcom_edac.c
-> +++ b/drivers/edac/qcom_edac.c
-> @@ -95,7 +95,7 @@ static int qcom_llcc_core_setup(struct llcc_drv_data *drv, struct regmap *llcc_b
->  	 * Configure interrupt enable registers such that Tag, Data RAM related
->  	 * interrupts are propagated to interrupt controller for servicing
->  	 */
-> -	ret = regmap_update_bits(llcc_bcast_regmap, drv->edac_reg_offset->cmn_interrupt_2_enable,
-> +	ret = regmap_update_bits(llcc_bcast_regmap, drv->edac_reg_offset->cmn_interrupt_0_enable,
->  				 TRP0_INTERRUPT_ENABLE,
->  				 TRP0_INTERRUPT_ENABLE);
->  	if (ret)
-> @@ -113,7 +113,7 @@ static int qcom_llcc_core_setup(struct llcc_drv_data *drv, struct regmap *llcc_b
->  	if (ret)
->  		return ret;
-> 
-> -	ret = regmap_update_bits(llcc_bcast_regmap, drv->edac_reg_offset->cmn_interrupt_2_enable,
-> +	ret = regmap_update_bits(llcc_bcast_regmap, drv->edac_reg_offset->cmn_interrupt_0_enable,
->  				 DRP0_INTERRUPT_ENABLE,
->  				 DRP0_INTERRUPT_ENABLE);
->  	if (ret)
-> --
-> 2.46.0
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+>
+> -- 
+> Cheers,
+> Stephen Rothwell
