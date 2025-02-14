@@ -1,238 +1,121 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDFA2641FC;
-	Fri, 14 Feb 2025 18:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDCA2641FC
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 18:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739556442; cv=none; b=VnArLOjEd6FwUtY4bUsUVA3yni4ubv8VpyCxai49oLhutMkkLWJQn5pqYrs1B8l29BP48049IRDOoRoAUN9JEgWF8aLb8f9PDIErwCnK9l9NfHOE8HZ+YH3smMqwXLsZ1+bJSnvj9z59u76ZE4+TAYPlHwlLOBUsbXolN+ro0qQ=
+	t=1739556450; cv=none; b=iY4ud3rPAv9J2g1YvP5GghYnhxmCrNrHG6VTZ90TEpCo7c5KLddzqmHnCpUeD8qIGl19DDdXSGDgwPWZhUR9WmPy8kYbTK9qaGaIsZOCc6+QKtiMgWbVSW6buI5rZRsYk+QwnFesTVx5N423qjxZcLOuekcWaFyCbwP10J+wz5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739556442; c=relaxed/simple;
-	bh=aS2et3sdTcDv6c0Pc/Jkbrw2ogfMwC7cpOQktzXYM0s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LYT3K+jNzjTiBOMDQUXDU0imDdOePqiAg/x2Apx7Kvt38WJZ9RHzulz9v026jpX8aj79I/HdPRVKou0ZH5vnZ2zvR8tz1/8DfYlUI6joc7a4Tz48C6EMpzO8Mf1BQg/7oNqy+NGUesyEfRCP5AyP2JYffrSAYh45NwgqIzwZEmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XgW3NX+r; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739556450; c=relaxed/simple;
+	bh=h6OUqOhwd9RZ6Pz/Vm7CxoSwl5EfLkLrNYFaXI0zqVY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K4e1YFVCWSUMY7C8R3k7intu/iu0YhQ2RFKiquS+YsFgLiS2CZDOrGoeQg/uX9Nf1E7OkuEno0z3C836TG5RcLCVmI+cminT8wZzdDczS928qb/s06tQbLC3OqNWE46V/BHVI/Z2Rvpwo72YMn0k16jXLEASpIbpnz6kyAfkL5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QlPgqy5t; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XgW3NX+r"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21f5660c2fdso49263715ad.2;
-        Fri, 14 Feb 2025 10:07:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739556439; x=1740161239; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lfkth+47eeKTd8VKQPOUJFH4ytd9GsqpmcPtCYPL/YY=;
-        b=XgW3NX+rmK0VYHyVEQuUOK1u4uyVBWKIT90GkwFgfrEurFCM32taha5Up/j5d3A380
-         HSgnkZ3SyGMl3HXtg2pi1odV51xr+EtP2a5umTSDwmu0ecJzB/zGofeG8K3BRKpFLCec
-         JagUQjJuwqqN1BHUSE8PxtYnU804lzaDK3qHuTf2kTjXHAoyIfkrMXA9wQDp2Y6Kurit
-         j+vLsrupPWb9eRclMAzIyyjFuoOImKVL5B5L75aag3gSeQnXQ2V499mTzV944mO0vFJj
-         qd7Uaot7pvUyvYwzYL9R6BAT+eVYSldA9ynlpKXIIMJeqdbRILA761JKheRUjI6eOIpe
-         dJ1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739556439; x=1740161239;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lfkth+47eeKTd8VKQPOUJFH4ytd9GsqpmcPtCYPL/YY=;
-        b=rikl2KUGoalFsFzdoL6VxugfAQUoB6+fDzXP00eqVQF1uf8LcfU2GSkbIRWVoXBJP+
-         CWM097yqK71lqp51hvyK134qH+idPBb7l5ReKbsEqp67haHG7lrpOyzkAcR5/wtu0Eov
-         KUkpfMnGe85+t08e4xoSpfRDYpZcFkmecYwZnJupZ/u+DNp8Sna7zyhVLy28UsHQl2XV
-         xk+E057iZRVQ39yB/jHljN+PvgcIWZ1HFw7kLG3XjFu6CSR/xU0LLoLCXpS0Mdv2CWDM
-         9VpLZv0dFX6maDR+2jCl6+4caWhCoI8gIpahbajLRcfjxc/4Y6gufXKqkUaGTFXg277G
-         xXOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUl5PgkSpVTyQ3W0fskgJW5AOXl1b1sh6B1KcXcYedX53u4C75yk/9KOJVyNSMxDa0dLkPNLnm95y3ERTY=@vger.kernel.org, AJvYcCUyrIicq+NgD7MprBpN7xamPLc6zY582CxvO58gJ3dBgur0g9zLyIRoU3w4Ibq0wKqBp3tCKQk1Rqfh/ttT@vger.kernel.org, AJvYcCXDw85QsSBHPPmgZyBOo5wNNGQyQqbn5HLFspTW1aeXOwJadtNo2cwsxQIFSjg10t5XC7Xo6ywSe7tdO3zS@vger.kernel.org, AJvYcCXvhWdziqDc4Yo0uQSQz91NyTLw3OuMaPl+JEqg2H2Lpg2jTS4XYkPOSYV+OH1pkOVWABeeAp1MWp2SEpMbKtFEiM//zQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrT40mSHVWI4pxSFgSu1OwKn+2kmu7gSwmuaouXcynh2mUZlNl
-	sbm9lMxnHDPwb2BlhfXFK1rYE+CPODzE4Xoztds/4oyWtNEeUdQf
-X-Gm-Gg: ASbGnctthtxHHveZEvgJUiDaftoWQl2B5twexhnTDZ6KYLN1UpYgYfpnqw2+VL4LGSP
-	g+ZYkQsUK9+Nv+SJNLUfdE9HzsSpwog5BM07aRqt2x1eZVNWV4WKou6ilv8R9Vigxoh5XzUv26d
-	cKAWZMXbKScbLmQalK53hjD+xLqDU79E9YyCDTv1GZzlMzOkL0rk9qZk0+83trzWb2/21wuvt3d
-	Jk88G2MyIlnJt+2JmP/afThLmLRGoukCW27P8BQ/J//F4b4GKPqUXYaMo8S+mPnFsA1I8640lBb
-	zCFQamiNG4nhDYw1
-X-Google-Smtp-Source: AGHT+IGs41aiJggp97Bmkp4S1uTDDS4feFVYSFFs01IVlRm+VFP0cL7WBeL6u2o0Ft7QBTawpzUI/g==
-X-Received: by 2002:a17:902:e841:b0:215:9470:7e82 with SMTP id d9443c01a7336-22103efebeemr3388145ad.4.1739556438806;
-        Fri, 14 Feb 2025 10:07:18 -0800 (PST)
-Received: from SC8280XP.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545d051sm31599105ad.108.2025.02.14.10.07.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 10:07:18 -0800 (PST)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=83=C2=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	Pengyu Luo <mitltlatltl@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v7 1/3] dt-bindings: platform: Add Huawei Matebook E Go EC
-Date: Sat, 15 Feb 2025 02:06:54 +0800
-Message-ID: <20250214180656.28599-2-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250214180656.28599-1-mitltlatltl@gmail.com>
-References: <20250214180656.28599-1-mitltlatltl@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QlPgqy5t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739556449; x=1771092449;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=h6OUqOhwd9RZ6Pz/Vm7CxoSwl5EfLkLrNYFaXI0zqVY=;
+  b=QlPgqy5t7AtboS/LmJSS8+av7N5S9RU6IGzutpczKkVIoKlfQPnp5pWe
+   9AHKaE10L17hYstMc1OBzw1UQb6zk5zBTESCQ+phCt7G7bnwkvnNw2tGp
+   mmTE+rdtIKvqT1Yo/5fmkfePiXp3Qb5QQEyNur5z9TjtAv3I2vbyP7DKw
+   qDgMg5OeheBcohG0Z9ZYLmLZy/0aJeqbWcbVT+UNlJ95t8AsPD37+cxJB
+   inn+UefvQ35YQCVHWUZTYKQq1YBhkplTFQgmfGdmVWtdfrQayngwsjhV9
+   RUsSsbEeKSxwFyUk6Hni1ImikaNpXpiZJxxpU1RdLU1Jjd97WCxIEkbiN
+   g==;
+X-CSE-ConnectionGUID: MPE8TYVVRSSc6IBVXIPkfA==
+X-CSE-MsgGUID: wsc2XBH1Td2qZuUkrG49yw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="65668517"
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="65668517"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 10:07:28 -0800
+X-CSE-ConnectionGUID: S0KmD6zTSqeR4/7Gn7+rKA==
+X-CSE-MsgGUID: 9YMIBWkaQzGn7674Nn8G7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117649868"
+Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.109.21]) ([10.125.109.21])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 10:07:27 -0800
+Message-ID: <8ed78428-7f3d-4fd2-a690-456da62ff7c3@intel.com>
+Date: Fri, 14 Feb 2025 10:07:30 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 03/12] x86/mm: consolidate full flush threshold
+ decision
+To: Rik van Riel <riel@surriel.com>, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, bp@alien8.de, peterz@infradead.org,
+ dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+ nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+ linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
+ jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com
+References: <20250213161423.449435-1-riel@surriel.com>
+ <20250213161423.449435-4-riel@surriel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250213161423.449435-4-riel@surriel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add binding for the EC found in the Huawei Matebook E Go and
-Huawei Matebook E Go LTE 2-in-1 tablets, the former one is a QS sc8280xp
-based tablet, the latter one is a QS sc8180x based tablet.
+On 2/13/25 08:13, Rik van Riel wrote:
+> Reduce code duplication by consolidating the decision point
+> for whether to do individual invalidations or a full flush
+> inside get_flush_tlb_info.
 
-This series has a codename, gaokun. More information about gaokun, please
-check https://bugzilla.kernel.org/show_bug.cgi?id=219645
+Looks sane.  Not a ton of code savings, but it does look a lot nicer:
 
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../bindings/platform/huawei,gaokun-ec.yaml   | 124 ++++++++++++++++++
- 1 file changed, 124 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/platform/huawei,gaokun-ec.yaml
-
-diff --git a/Documentation/devicetree/bindings/platform/huawei,gaokun-ec.yaml b/Documentation/devicetree/bindings/platform/huawei,gaokun-ec.yaml
-new file mode 100644
-index 000000000..4a03b0ee3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/platform/huawei,gaokun-ec.yaml
-@@ -0,0 +1,124 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/platform/huawei,gaokun-ec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Huawei Matebook E Go Embedded Controller
-+
-+maintainers:
-+  - Pengyu Luo <mitltlatltl@gmail.com>
-+
-+description:
-+  Different from other Qualcomm Snapdragon sc8180x and sc8280xp-based
-+  machines, the Huawei Matebook E Go tablets use embedded controllers
-+  while others use a system called PMIC GLink which handles battery,
-+  UCSI, USB Type-C DP Alt Mode. In addition, Huawei's implementation
-+  also handles additional features, such as charging thresholds, FN
-+  lock, smart charging, tablet lid status, thermal sensors, and more.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - huawei,gaokun3-ec
-+
-+  reg:
-+    const: 0x38
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  interrupts:
-+    maxItems: 1
-+
-+patternProperties:
-+  '^connector@[01]$':
-+    $ref: /schemas/connector/usb-connector.yaml#
-+
-+    properties:
-+      reg:
-+        maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        embedded-controller@38 {
-+            compatible = "huawei,gaokun3-ec";
-+            reg = <0x38>;
-+
-+            interrupts-extended = <&tlmm 107 IRQ_TYPE_LEVEL_LOW>;
-+
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            connector@0 {
-+                compatible = "usb-c-connector";
-+                reg = <0>;
-+                power-role = "dual";
-+                data-role = "dual";
-+
-+                ports {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+
-+                    port@0 {
-+                        reg = <0>;
-+
-+                        ucsi0_ss_in: endpoint {
-+                            remote-endpoint = <&usb_0_qmpphy_out>;
-+                        };
-+                    };
-+
-+                    port@1 {
-+                        reg = <1>;
-+
-+                        ucsi0_sbu: endpoint {
-+                            remote-endpoint = <&usb0_sbu_mux>;
-+                        };
-+                    };
-+                };
-+            };
-+
-+            connector@1 {
-+                compatible = "usb-c-connector";
-+                reg = <1>;
-+                power-role = "dual";
-+                data-role = "dual";
-+
-+                ports {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+
-+                    port@0 {
-+                        reg = <0>;
-+
-+                        ucsi1_ss_in: endpoint {
-+                            remote-endpoint = <&usb_1_qmpphy_out>;
-+                        };
-+                    };
-+
-+                    port@1 {
-+                        reg = <1>;
-+
-+                        ucsi1_sbu: endpoint {
-+                            remote-endpoint = <&usb1_sbu_mux>;
-+                        };
-+                    };
-+                };
-+            };
-+        };
-+    };
--- 
-2.48.1
-
+Acked-by: Dave Hansen <dave.hansen@intel.com>
