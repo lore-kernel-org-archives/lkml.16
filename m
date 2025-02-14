@@ -1,117 +1,105 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE528635A
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF538635A;
+	Fri, 14 Feb 2025 16:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739551119; cv=none; b=PLoiZJU5W2VURK8/99kvh1w8PLVS+wd04rjBTwWlxQE4z5OV0gOw+pY5KVTKxtk4to/g7iBI3xFRivGyg4OzsLisVGnI+mT4LF1VkikrwknCJykr/rUB71JUjYqi7djcIT1vib7JbuxGiIoxSUY3+zzvXVW3T/Vc2o9XR3A12B0=
+	t=1739551258; cv=none; b=eLdog/w3IUgMqZRdLcBoaanVqme55XBokV6DTJv5Zix4fhUPWBovnMg5XcD2kUyldHeJxWaXOFa1lo5NdjU8YbiSWB7KehHLIzCGAAnH2TS6wIiUjRud+K9MpP0qVAN37byoGp/sVjgMSLtF3iwfQyQMKvvmAd1ZG2qxTKi94vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739551119; c=relaxed/simple;
-	bh=VKYl3Nsn2NimvcdgEDGnOcpoDd1TswHbuLrWgbVs/kU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K97MiyeY5ldfXGIvFHrhx8E6OuK5dtOE36var964aiKjlURdiHrKhaTu3J8zMIu+UvlNJ2W7tw8aSgLwOZYOTJxPqNAWqJ81bX8ydtpcBaF1rGbxeDGl4pdgDAPNAtosPn3jFLqml+qlAhcxcLM7kq9hSvukNGg32NdTbQIaxok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZHkaS6kK; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739551258; c=relaxed/simple;
+	bh=/y7JAaYrGInoVscQnRHBfAri7jMrt1aiFJaMRA8uESk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gHxLnoeb/8qZY+JD0gjLUIWdy6jckI+/uqto8bSKC2vN9w/ZrO89qyJlNbLDJ0p23j3xmHlMxZ4ee9vdTHgq4tQwYLEDvHSqIk+Erp+/kAa4n+/8mh/3+li6gN7ProOy/mdm2NQjxCKFAHGdKYbVxxMySSR6Qp+a+dAq2WTNoHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nuvHwFnq; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZHkaS6kK"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54527a7270eso953090e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 08:38:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739551113; x=1740155913; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oiENR5Ei6ZKv4VQ0yGfBeOiN7n/8XjskxjvRSd0fnk0=;
-        b=ZHkaS6kKKrjfplzU15q5GzsXrI4iG7SCvN9j0xg1/bCCAv8W1dbHyBlwHVIOM3gdfs
-         im4BgYgntpokCNaybS4I6yzKu7FVs+7tg5ZqPDmLWYfh6tXw/K7v6VRjp2YRM+FpPIVn
-         g5wLSF6+cZoC6i7khRr7owRy4qzwVrqEZtkhM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739551113; x=1740155913;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oiENR5Ei6ZKv4VQ0yGfBeOiN7n/8XjskxjvRSd0fnk0=;
-        b=QXCHi2i7iR24Kd9Amg9mOJACG1tSpQsSlGz5+i/6RIEjvxeRkKyyYF3KEHXgEpVcq8
-         r0mCzSgo5MMIyfxrCKQI3PFBaddR4CsnvIyjeyF0BtzL2HELpyHyLMceQIIRz4duz5Ch
-         c14LTzvFkTh0YirJprpqI6iNSbN/CH//JKVWTdm/GkPeqaE1ypChyRRvDSQ/B8RLbzXj
-         AhOtd94PRO585G5V3D52oCxEUPQA9P2JbY7C0AGNii1VK3LpWcJ/uZhr4+ZeBAEJvD4P
-         1XYj/o+UMzNuvHwxgeR0F5Hse9K/o+g7YFjDqzcBs4ZSXYUGLYpuVP07Br7H7AXZdtAO
-         T5+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVXmNYdnIAt5pmUOuE9PFn6QVVPKuw79BHGu7afAZJ8qJ5EtqRDecKKo1wfmG5hkEYCg4w3LvEfmMyBxVE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqZPeVI95u20OuiXuWIqAjtUZi/y6cj3NsPQk5S2iJDTYu1v6j
-	IxowN8FqDy19MIfKJzDiFlJXJX8ZOngLsoM6cLGLhmbKk+iLDOZgZvXKbXFoSsr8g7kwm/UXnOr
-	xJg==
-X-Gm-Gg: ASbGncvwEw7SHTD6MWWbEKRUOUHeppZ+ApARbTuwp96PWKlsHirYQoJPgowPAm2o5ob
-	+SNBzlVmTz7fMrkQVAz/Tjia2ep1sWnUiJpFusOsNWiquyxyhovX3vERD9PAiOay/YrfAlHDXLZ
-	xN60nj6p9N/xYxXeSblhrToaxqXTa8PzSThpFBTUdTnpWr/b1fq7b3G9v79abk0ohKvhwyAYjcT
-	/+mTpwFHws0FdU2FBI30o7kH8gXhdBhMwpswR2cnX6q6mSjlcNrl4j1sWVNvLlXzCCuKTLNhorY
-	ZHkDrIMcnZQnnMuZp7njkj277pYDhHpzmGsYaDLSQ0OGqvnjeqhsXJfw/Z8=
-X-Google-Smtp-Source: AGHT+IFkEIukqamkIlk1pwOLJ4fIcxN1a6zVfQtJzAk4NuLMFDMKpz4GRJZXPBTsv4yRiqVo3u6JDA==
-X-Received: by 2002:a05:6512:1394:b0:545:f70:8aa7 with SMTP id 2adb3069b0e04-5451818942dmr4844769e87.32.1739551113313;
-        Fri, 14 Feb 2025 08:38:33 -0800 (PST)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5452f676aa5sm51974e87.50.2025.02.14.08.38.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2025 08:38:32 -0800 (PST)
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-309025ec288so21426961fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 08:38:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXRWRyYOAN/zUZb+bGjT90VwSSpJFUeSmppuUJS825lDn6Hqt+6a0XbeA62h2HFbN8oeYotQ7WxaUhLbag=@vger.kernel.org
-X-Received: by 2002:a2e:9246:0:b0:300:330d:a5c4 with SMTP id
- 38308e7fff4ca-30927a49b85mr626221fa.10.1739551108840; Fri, 14 Feb 2025
- 08:38:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nuvHwFnq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739551257; x=1771087257;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/y7JAaYrGInoVscQnRHBfAri7jMrt1aiFJaMRA8uESk=;
+  b=nuvHwFnqA5n/djh9oXrGzbjGUk7tcNz9pioYBXGrQd5Q3Pjcm6nkzpLF
+   +oBsKhWwdkhtur7epOl51zE8pmNXc2exBVG5kYQvyYxgLq3vZuFGxcDBS
+   48fTpmR2mbOLqKJHZq1uI4gye3Ak5S7/ZRFbq/b2kjysrlQVAholTTYOA
+   MRLOb6/7u+9PKkyXYf+wgv0zP+3c5gdMqDKAzMiu4+K81h5W0BPYkKk3b
+   uCh0DuyFmk6YwohYiyg5Z8pTtxlVqeH1epPbTFZ41XRk6Io6BWcwOPbi/
+   udncH/wfw0URMUABLOfUq1XQP+1DMNPzGBrMyy40XX0rumZDK+GWMAjjO
+   A==;
+X-CSE-ConnectionGUID: eZ7zCmU5QfWglN5d08LlBA==
+X-CSE-MsgGUID: Ssxe9efKRc2paWHUMCdC6Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="50517758"
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="50517758"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 08:40:56 -0800
+X-CSE-ConnectionGUID: n3gj9s/0STSvKFmRAm98cw==
+X-CSE-MsgGUID: Sn/k8tdVQnyi4Cfc/dDVZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="114139844"
+Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.125.109.34]) ([10.125.109.34])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 08:40:55 -0800
+Message-ID: <c5116977-a10b-4a56-a8f1-fed337a5bb9c@intel.com>
+Date: Fri, 14 Feb 2025 09:40:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213-bridge-connector-v3-0-e71598f49c8f@kernel.org> <20250213-bridge-connector-v3-37-e71598f49c8f@kernel.org>
-In-Reply-To: <20250213-bridge-connector-v3-37-e71598f49c8f@kernel.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 14 Feb 2025 08:38:17 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=Uwq3BZNmESmB0Ra5y-jJCb5bi-UTLknrRhVsUbuVbvCA@mail.gmail.com>
-X-Gm-Features: AWEUYZkDTyh9KPW7vj9obdMVUza9a_l0OTDPgjC_IVV9XEkSBuB7Tzn1y-D7bMw
-Message-ID: <CAD=FV=Uwq3BZNmESmB0Ra5y-jJCb5bi-UTLknrRhVsUbuVbvCA@mail.gmail.com>
-Subject: Re: [PATCH v3 37/37] drm/bridge: ti-sn65dsi86: Use bridge_state crtc pointer
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/5] dmaengine: idxd: fix memory leak in error handling
+ path of idxd_setup_groups
+To: Shuai Xue <xueshuai@linux.alibaba.com>, vkoul@kernel.org,
+ Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250110082237.21135-1-xueshuai@linux.alibaba.com>
+ <20250110082237.21135-4-xueshuai@linux.alibaba.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250110082237.21135-4-xueshuai@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-On Thu, Feb 13, 2025 at 6:45=E2=80=AFAM Maxime Ripard <mripard@kernel.org> =
-wrote:
->
-> The TI sn65dsi86 driver follows the drm_encoder->crtc pointer that is
-> deprecated and shouldn't be used by atomic drivers.
->
-> This was due to the fact that we did't have any other alternative to
-> retrieve the CRTC pointer. Fortunately, the crtc pointer is now provided
-> in the bridge state, so we can move to atomic callbacks and drop that
-> deprecated pointer usage.
->
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+
+On 1/10/25 1:22 AM, Shuai Xue wrote:
+> Memory allocated for groups is not freed if an error occurs during
+> idxd_setup_groups(). To fix it, free the allocated memory in the reverse
+> order of allocation before exiting the function in case of an error.
+> 
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
 > ---
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 58 +++++++++++++++++++++++------=
-------
->  1 file changed, 39 insertions(+), 19 deletions(-)
+>  drivers/dma/idxd/init.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index 12df895dcbe9..04a7d7706e53 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -326,6 +326,7 @@ static int idxd_setup_groups(struct idxd_device *idxd)
+>  		rc = dev_set_name(conf_dev, "group%d.%d", idxd->id, group->id);
+>  		if (rc < 0) {
+>  			put_device(conf_dev);
+> +			kfree(group);
+>  			goto err;
+>  		}
+>  
+> @@ -350,7 +351,10 @@ static int idxd_setup_groups(struct idxd_device *idxd)
+>  	while (--i >= 0) {
+>  		group = idxd->groups[i];
+>  		put_device(group_confdev(group));
+> +		kfree(group);
+>  	}
+> +	kfree(idxd->groups);
+> +
+>  	return rc;
+>  }
+>  
 
-While I'm not an expert on all the concepts addressed in this series,
-the patch does look reasonable to me from the point of view of
-ti-sn65dsi86. Thus:
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-I can confirm that on sc7180-trogdor-coachz that the display still
-comes up after this patch:
-
-Tested-by: Douglas Anderson <dianders@chromium.org>
