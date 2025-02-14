@@ -1,41 +1,41 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACD22698A3;
-	Fri, 14 Feb 2025 18:08:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953F4269AEF;
+	Fri, 14 Feb 2025 18:08:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739556530; cv=none; b=ar4PaIWQOXJJrfCaHVeJ8b+4AtdGOWMROCS3XUD48Qw+Gp6hnnkgXlTHufd/mVJVk3r1YwsJPYzcuky7U+PdujkXcSo8jZnWiuHsVds2nOU+wx8D5GTeb8soGSgqwhu1T8sTzwUoWc88xk3i6GNjoN0U5E9MXgmvlxrelouhamg=
+	t=1739556531; cv=none; b=VcftWcby9CYVCffDvZ7tHk0c85nkTpSewCCfXTnliMO4l3rItKwP486MrWNxrGMzLaoO1YuLK8wd7xsmgeOeQsW81gWGdxmWDTHqPysd0CfGcdnsjPvsA1LEchtEWvujjHELoMRh1ZMh9q15xzRDdvWshjrfyh0usktvo/yPDf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739556530; c=relaxed/simple;
-	bh=K6+jsMBEPeG5a4vof3OQyYuJjApw91RkV7RMLdW/B2Q=;
+	s=arc-20240116; t=1739556531; c=relaxed/simple;
+	bh=RVSWb8fwoMmHWM5arqdcYZ9wwDPFb0IQdvCLd5ewN/0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nA4k5UWypXTh8e9GKOHJeK1L+02bDYC2jc8ZC5Ozcsr8chlV3QwC9ZfpUudPi5BPRPM6miV3ns4irxXV9H7tboOkzAZcfLMRyiKNKyyBecigkiW9MkF0FLZ8KTbbOzvoO7aVQWr/AQEEAhYo7lLybZ1gH6nEbSKoHS22DrmhEs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=x0pEMlnI; arc=none smtp.client-ip=68.232.153.233
+	 MIME-Version:Content-Type; b=L2LBE2aorptInSRWeaW+izr/u9SYGdGRvn+5wWbcyC9EG52YXxwxlyVJL3eNRJh+qFF9jFBiveiEg1CX5CBuyQiHKWSa1g+uV/N7zntuWIzmq9nTQIqncvWHkJFaW4tHyTvHZ4dqLk6SrRMRtTHSvHWB16hIHi/XugWQGb5G838=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Uu8n5TI2; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="x0pEMlnI"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Uu8n5TI2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1739556529; x=1771092529;
+  t=1739556530; x=1771092530;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=K6+jsMBEPeG5a4vof3OQyYuJjApw91RkV7RMLdW/B2Q=;
-  b=x0pEMlnIE9LQBWoZ5sSDSrlFOh++9AcQX0fpkhcoZBlQDtlrg40keNkJ
-   /VrItGDavoQMaeWKBpKcQhnOk8wPKG+A6ewkQCihmED4I9cEjCoRhn8n/
-   293whzNlGrFof4wYNkmrZRzXuHYqHSdS/Hko9KHO1xkqqhWFgGnaxa6jm
-   m9+jgaQ4uFiP/jA22fzZJqwjXsWxKOFrVKzRsbkW2BhBkuCYocli8iiyH
-   bzbaUv72gTy9ru/aJhxmcCFF+cYKpMfXy3ZIn3FF+f5Nd4ntAqTLGL2kZ
-   t8oA6WrkfTDsDuToV/TGYAxgBS55RtdKED9/BH/rjjaJS33AT1fK1/p6Y
-   g==;
+  bh=RVSWb8fwoMmHWM5arqdcYZ9wwDPFb0IQdvCLd5ewN/0=;
+  b=Uu8n5TI2tZ8dUi+KA8zEMPA3fqMgW1ZQW6nSkkGXFnSytcKHiTqVnSZ7
+   iuY10NzFvI9n4mikAZ6ohcq4VXw+IdXGE4qFCwjx8LfuFNj8rlB6QPkt3
+   L1RLVwm/RbX7hGD+oqrdbG97cT77wxLULdeZQCxej1/ChbebpfFUkqFCV
+   XfkdU9978ghx+KjeQR30+cHoXtocqwcpfUQaScSwuAv0u9bx7QocnwvMc
+   UZwgpPMzG+BJoDWmIb5AXIRzu3L/KWDWwGkmZDIwZpGNwV4bRXovFs2wn
+   QrL8/BunWPgxGdhR/NLGDVLRUKXVbevwFIB5VH0X8KbEKmtsHl7/WlSaz
+   Q==;
 X-CSE-ConnectionGUID: afEECSQvQkGMMmDvtHvTFg==
-X-CSE-MsgGUID: Vy7NjoOqR+iWKMmSPvhT5w==
+X-CSE-MsgGUID: gfHqDAcxTA+RqH/t2Tkv0g==
 X-IronPort-AV: E=Sophos;i="6.13,286,1732604400"; 
-   d="scan'208";a="37700931"
+   d="scan'208";a="37700933"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Feb 2025 11:08:40 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Feb 2025 11:08:41 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
@@ -51,9 +51,9 @@ To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
 CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
 	<linux-watchdog@vger.kernel.org>, Ryan Wanner <Ryan.Wanner@microchip.com>
-Subject: [PATCH 6/8] ARM: dts: microchip: sama7d65: Add watchdog for sama7d65
-Date: Fri, 14 Feb 2025 11:08:19 -0700
-Message-ID: <05431cf86beb742a9a53336c4ec792be8bde14e2.1739555984.git.Ryan.Wanner@microchip.com>
+Subject: [PATCH 8/8] ARM: dts: microchip: sama7d65: Enable DMAs
+Date: Fri, 14 Feb 2025 11:08:21 -0700
+Message-ID: <e233ab028123bd91b1de7b0f02eb966d719cc0af.1739555984.git.Ryan.Wanner@microchip.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1739555984.git.Ryan.Wanner@microchip.com>
 References: <cover.1739555984.git.Ryan.Wanner@microchip.com>
@@ -68,31 +68,36 @@ Content-Type: text/plain
 
 From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-Add watchdog timer support for SAMA7D65 SoC.
+Enable DMA interface for sama7d65_curiosity board.
 
 Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
 ---
- arch/arm/boot/dts/microchip/sama7d65.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../boot/dts/microchip/at91-sama7d65_curiosity.dts   | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/microchip/sama7d65.dtsi b/arch/arm/boot/dts/microchip/sama7d65.dtsi
-index b1b236e1f6e38..d06a51972d363 100644
---- a/arch/arm/boot/dts/microchip/sama7d65.dtsi
-+++ b/arch/arm/boot/dts/microchip/sama7d65.dtsi
-@@ -83,6 +83,13 @@ clk32k: clock-controller@e001d500 {
- 			#clock-cells = <1>;
- 		};
+diff --git a/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts b/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
+index 0f86360fb733a..0c21e3ed3a95a 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
+@@ -32,6 +32,18 @@ memory@60000000 {
+ 	};
+ };
  
-+		ps_wdt: watchdog@e001d180 {
-+			compatible = "microchip,sama7d65-wdt", "microchip,sama7g5-wdt";
-+			reg = <0xe001d000 0x30>;
-+			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk32k 0>;
-+		};
++&dma0 {
++	status = "okay";
++};
 +
- 		chipid@e0020000 {
- 			compatible = "microchip,sama7d65-chipid";
- 			reg = <0xe0020000 0x8>;
++&dma1 {
++	status = "okay";
++};
++
++&dma2 {
++	status = "okay";
++};
++
+ &flx6 {
+ 	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
+ 	status = "okay";
 -- 
 2.43.0
 
