@@ -1,38 +1,39 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF7026560A
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 12:58:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFFD2641CE
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 12:58:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739537886; cv=none; b=ZHhdyXtvI42PAyx0GBkNSva5AB7Pqk3sqp2P3AkESc/EgtiLLBX3/2cawFvDMsEqQeM7JdjIput3B1bVCxPyhgvaJbzz7kkSciH8syTPaG8vIiEq/NaMqpVyqz0GvSn20hmKBrtY0g2DQUySEdh+YnYuoj0nTDBU4DNgg2iI8rI=
+	t=1739537886; cv=none; b=a+OHtYZyvXYC88Q4bWvBa6c85zTUf5QRQa1BPpY7Xg2HhhQ44KWVCflylCxLmyavlGO+q+ktHLXay+Rdjhw1nk7z7kj6dMlb38jUOCqZNgvt57aroReN4xZ/n8ZjeUdLu8xhI8aPdVkbwA2TgDEighaUC1cv46hEn9BxhKmfcP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739537886; c=relaxed/simple;
-	bh=WeG+xIq4E6+fXivmPHi4gXH+Fvjs4td13sxY3PRmQXI=;
+	bh=4OfjmEmNqfaYU26iq5VL/Xfywrvc6e2px0GY8BZqz90=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GA4qTQpfU/U1ZeMJxK6tccYWVYN08iukUhsJnpIdc1aqRqH3UugoVVJidWo2el8wXTxMp1uxivpEOQm60lgVuYg7LRvIsckgES9JaRCY6X03BCLhK0/nixFCJou8qEy3abgMLsMr96orMnOk6rh0TIr+4UJe4Xbik+tyoX9toyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TEIvV9Kl; arc=none smtp.client-ip=217.70.183.199
+	 In-Reply-To:To:Cc; b=Tfaf6QZ7KgwS0myX3bACXd03BHVsga/biyAeIBWcmk9hRd2nxwM2TRfy0CkAEEY4bRqzP+STSgvbq6jaocDlhww19LrwclQBjTcOdhyvK1JlxUYfx2FnNSp3IDAq1Emnppf3Kr1E071jwlCi/+zs4OrA94pV1Ophmn0A+mf7lkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KbJJsf6L; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TEIvV9Kl"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8FDE44421C;
-	Fri, 14 Feb 2025 12:57:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KbJJsf6L"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2EE2B43284;
+	Fri, 14 Feb 2025 12:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739537876;
+	t=1739537882;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=onB3uCMe5fNuIKVd1pvoXRtYWsds+w8iJGPbfsGuiOo=;
-	b=TEIvV9KluqS88QHyy0pLR15yhFMbIFXTrWMNLK2eIl4LaPE4VjnNxtgkSqzskbxWWUwmi6
-	Rc4EJu3MJbBlA4ePTKqUbyZbiYKJcEbeB34Veb9aUx5jD6Ypu18rSLCaYXR2eyWzFVDCWr
-	zqgKGfuwxfNFWNW6NWSrDpXK1JvXBzmcUdu5OEtz5ggIUNce2M4vsCB3+/0+Pjyw0c7Y2p
-	KlQj3ZMUlTWkqLxqolUxs2QmtPOchfpk8Agw5QSuSp9Hfj9ApUZUxW+kBPMAke3d1Yg+Xu
-	kVlxe4POG7Q4ennq8hrgsh4stDoIr+RGMcxf8mg7NH/mHt2fhjeXRCuhU9CvbA==
+	bh=KyQCgUS1MybpUVXVT/LSuOicMg7kvzuy+1Qn1HR86tw=;
+	b=KbJJsf6L5oLSV9Vz/SXni44dNvYnXEGy03t7/xaOilguPYL+21tta7fztXLjzRm7pG4S0I
+	Eq0S2tYJEBNZNsF87NKFzMR4dFJxu7xUfnVwwVDuUaIugGa3jGPGT9/rFUfVV0QIRbOQNd
+	KD1AkeA93VTAzZwuJBjrcXhuuu7PmnaCpo381z/5P/2uxAWOOsWNVdZCO9zEblsSVAv3RL
+	BlJLqONzx1v6o2VsMjOWby6m8jRbvnDOK389L24h9GWEXV9AUgPNkVs/1KGnk30+hBQGnt
+	Ftg7aZ76WPAB+DzmoP4yQ1bPUkcnYxQ4OU+fZFyD53d8nnsaPoHoBcJ7SPRILw==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Fri, 14 Feb 2025 13:57:40 +0100
-Subject: [PATCH v7 1/5] drm/debugfs: fix printk format for bridge index
+Date: Fri, 14 Feb 2025 13:57:44 +0100
+Subject: [PATCH v7 5/5] drm/bridge: panel: forbid initializing a panel with
+ unknown connector type
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250214-drm-assorted-cleanups-v7-1-88ca5827d7af@bootlin.com>
+Message-Id: <20250214-drm-assorted-cleanups-v7-5-88ca5827d7af@bootlin.com>
 References: <20250214-drm-assorted-cleanups-v7-0-88ca5827d7af@bootlin.com>
 In-Reply-To: <20250214-drm-assorted-cleanups-v7-0-88ca5827d7af@bootlin.com>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -59,36 +60,58 @@ Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegleejudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieeiuedvffetgfeuudelheeutefggfejieettdetteekueeuueeukeevvedvueevnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedruddukegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudejpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvv
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegleejudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieeiuedvffetgfeuudelheeutefggfejieettdetteekueeuueeukeevvedvueevnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedruddukegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudejpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvv
  gguvghskhhtohhprdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopefnrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
 X-GND-Sasl: luca.ceresoli@bootlin.com
 
-idx is an unsigned int, use %u for printk-style strings.
+Having an DRM_MODE_CONNECTOR_Unknown connector type is considered bad, and
+drm_panel_bridge_add_typed() and derivatives are deprecated for this.
+
+drm_panel_init() won't prevent initializing a panel with a
+DRM_MODE_CONNECTOR_Unknown connector type. Luckily there are no in-tree
+users doing it, so take this as an opportinuty to document a valid
+connector type must be passed.
+
+Returning an error if this rule is violated is not possible because
+drm_panel_init() is a void function. Add at least a warning to make any
+violations noticeable, especially to non-upstream drivers.
 
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
 
-Changes in v7: none
+Changed in v7:
+- fix typo in commit message
+- rebased on v6 (applies to drm_panel, not bridge/panel.c)
 
 This patch was added in v6.
 ---
- drivers/gpu/drm/drm_debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_panel.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
-index 536409a35df406dae0dd7ade01b3f3d1e2c9e8f9..6b2178864c7ee12db9aa1f562e106b2f604439f8 100644
---- a/drivers/gpu/drm/drm_debugfs.c
-+++ b/drivers/gpu/drm/drm_debugfs.c
-@@ -748,7 +748,7 @@ static int bridges_show(struct seq_file *m, void *data)
- 	unsigned int idx = 0;
- 
- 	drm_for_each_bridge_in_chain(encoder, bridge) {
--		drm_printf(&p, "bridge[%d]: %ps\n", idx++, bridge->funcs);
-+		drm_printf(&p, "bridge[%u]: %ps\n", idx++, bridge->funcs);
- 		drm_printf(&p, "\ttype: [%d] %s\n",
- 			   bridge->type,
- 			   drm_get_connector_type_name(bridge->type));
+diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+index 9940e96d35e302080c32b49154bbf19a51c0665e..c627e42a7ce70459f50eb5095fffc806ca45dabf 100644
+--- a/drivers/gpu/drm/drm_panel.c
++++ b/drivers/gpu/drm/drm_panel.c
+@@ -50,7 +50,7 @@ static LIST_HEAD(panel_list);
+  * @dev: parent device of the panel
+  * @funcs: panel operations
+  * @connector_type: the connector type (DRM_MODE_CONNECTOR_*) corresponding to
+- *	the panel interface
++ *	the panel interface (must NOT be DRM_MODE_CONNECTOR_Unknown)
+  *
+  * Initialize the panel structure for subsequent registration with
+  * drm_panel_add().
+@@ -58,6 +58,9 @@ static LIST_HEAD(panel_list);
+ void drm_panel_init(struct drm_panel *panel, struct device *dev,
+ 		    const struct drm_panel_funcs *funcs, int connector_type)
+ {
++	if (connector_type == DRM_MODE_CONNECTOR_Unknown)
++		DRM_WARN("%s: %s: a valid connector type is required!\n", __func__, dev_name(dev));
++
+ 	INIT_LIST_HEAD(&panel->list);
+ 	INIT_LIST_HEAD(&panel->followers);
+ 	mutex_init(&panel->follower_lock);
 
 -- 
 2.48.1
