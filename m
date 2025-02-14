@@ -1,171 +1,192 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7932D25D539;
-	Fri, 14 Feb 2025 11:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421EA25D54C
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 11:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739531438; cv=none; b=ftg4dXxg4D/TXtXtr3QT213O5Azw3ZtE+ciPKa2/v2QzcUcuIaAYxEM1L/lReYLm4GSe8oaNSwvgszIP8WFumruBktHlAOtxpaF0Q4SCq6hya8MjvaQjj0YbeinPKPqldQUVI1ndfKLrVXfHuZTu0h1vIh+O1mDaUqrK7sXv7J8=
+	t=1739531463; cv=none; b=Lnq/MjF+tKlJoPO9tlaXpruEikn6f1nlCmPYYUoPUEpawlD5MqpbO5VmTo49uVvjuN/edQWSDAc/o/of00scogAbO6euAWJII6OoiRIZ6DaMV+1h+f2N0Swecew1Omr7yw8/vnigGqE17Txqj8ldrNsqwBHQs7NURl5EwlCIJk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739531438; c=relaxed/simple;
-	bh=hdsgSjQQ8qgcIp8XrQEUL7+bx/XSkrcszbmnaoinpo4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OTACUON0S9b2/1hwURkwaq/Y/en56w2Ix+F3c0NaMa/4c3DKSJiGjD0nvrXNORXouKNJxvj8+FNhLxKhJe3KnT0qfoI+zpaxzPxaVyb/DW+2Z2H2hGVSuM85uvNqkgcsrrKyHsTXX7w3LoaOb70+WPSY1yaHQ/R+v4VwD7cXHpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3f3b93e4e32so1796708b6e.0;
-        Fri, 14 Feb 2025 03:10:36 -0800 (PST)
+	s=arc-20240116; t=1739531463; c=relaxed/simple;
+	bh=DxZVOhLjEJPHFDpuJdpUVc9PaIyKgLPZGxYXktC7+mI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uFTUSQnfwaPx9mDk9PtV2dAUdflnpjbfxz825d9jHurlkYs432rPK57OrTxM16lrFgG3U8bxTlSD245psyLeijPmEey8PJvPanvyRHag+cjkAqcChzIax2Fx/kxX+4HZC5RhGe0Ow9JuA0sRLKjt4t/03RVbbJqcb6fu+9Bv+CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QeaxT/w6; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QeaxT/w6"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4395817a7f2so12865185e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 03:11:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739531459; x=1740136259; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qeZsog2iIKuGpA11cPJmZ8pu44QO3rd34voFuR0wY1Q=;
+        b=QeaxT/w6OprTesd9CwkH8JgU/2xvdKNyWCwHnlsCR7CcbohOJOAjxRKrXQ/nscm3VK
+         C/8pukwZz8fUcdXkBIYovXG1Paw2GT3yvL69EzoO6b9uVJGERPdNsjJF8d2KLDkDXW3v
+         Js0AiKZVmP3XmGktHFqWk7NM1mqNSi1JhRp0gQg0jcDHbGuem6d0/N3Q8cuVwoupDHEr
+         7/ZPqJafoQ1PVq7kn846JwCguplWfKwgU6cx9xbdDQRDjHh7YsDK6qmuO7XhIt33RFfJ
+         X23dG7oZPk22I01q5v2q5OrFLGsJIJz3x+uvwmcZ4ZFCjYjmEnf3mK7OQouSioM5VS3Y
+         9h6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739531435; x=1740136235;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r+/2I2hmbkU9zkmHuYX1t9oqaBOTTvF7uTNap3Wsbsk=;
-        b=n+gFbF+9HQy32m63+iRfU7baomTogRZt8Q0x+8p1o1I9VNtjyMgiSGmrWFtaOCJWOx
-         dbXd7ASszWZp7+nJFerhuQlESYXG1au5TAw8zwj0rnqkNbDHNjTW/zvBrVJgbh8jK5v+
-         hTPxf4M+elrzhwfKUADHYwCg6zdPhc1FPuR9yoxDOSbNdZ/ZrYnkxfln5pEr0258OWP+
-         ObRSjx7bTgA+uxEdA7EmOtmi6IUqhJkfbZSlWuVesMmpuqqmcxUBhvphOIzgD9SmpOr+
-         Lwc1LYPyG4BnC15MkYla0AxiBBxq/3hmajbV0X6Xa6xu4p0DsZk7RSp79XKK2vc4ai+R
-         R4wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDVCUK6c/F3iml1NpIaVqopvbCyJAh8oxLb9I3BOXnjFJic1zL0taRowjbrVA1MN9gPwp4Ow3VqssDNqY=@vger.kernel.org, AJvYcCUbTOYIh1mG8TPX0Bi4c5rn5098w8UcKyqORjVAaFM6JCLn+hHFFsIHaVUAey5iUsTrMdJHJD1VP5m2@vger.kernel.org, AJvYcCUiHv7z7osjvN7WSDwCff0AV7rGVxgWHrJvyZ9rTEQKdFwO6pTmPaQfAIoLZDiUUPvNRm7eYV0CP3U=@vger.kernel.org, AJvYcCVKS/5ZYXsPcouogUjX1/7d56V4NXP/ZjViLwkHqpkfOss36i9fu9SRTbrEmpmaWJPmKDlOCowPguWnDfof@vger.kernel.org, AJvYcCVguviZY4vRnP70NorWp75Xw2fv1Z+mhtQ7r/c2apzkZCIQeecTjcRkaiJlyVgLCQFH0O4os6pGlYjO7xOcHtk83Y8=@vger.kernel.org, AJvYcCW5cx1lF5pOHqZKo0CKzLdtS/2tTkQ6kcS3kq/p/UyobKPe/lUIHCDmYAQxQPsWHXXO8AV9FC2r+Q853Q==@vger.kernel.org, AJvYcCWnpjvqjCh5ARprm5JFHRwhBOZw3EWQkHBoFYxXJRJFUA8O2rUsa4QoCi2nZTZVKsp5NHQFDhR8yHSAhCCq@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6f0rdew3/WcRh9++9RoN6tQciQDyRPIlq7sLsYoQfh066Cs8g
-	Mc0oOV5ObrC61jrHfYNxtQuyyPVwW88b2iJhchQVVmOUJIQawZk50r4Pyts8Tp0=
-X-Gm-Gg: ASbGncvRkLVEyhKe5BvrB7ocx1yBnp4UQJczt0gdj48+Ag/O7lqsGg/ePTEm1kgz3c0
-	p3RJHBPUXeN8tSav7dtbLxFOJWGeOr0WVXhfOP6ITcqod3O6QC3CtR557+tbHvpKoFjUcSzMaXZ
-	AeqtIXfz7q7Y6TKq0TFL9I8quBxoQkeLzI04g/Ec8PUB70GM0TrYmX44/DgwLPu6R3RHTTPxHCf
-	djR4v9ZsrpWL6gwYqW4KN1lmRXKWW7zWH7pUWTxavgT8zJHZR/P0rYWqWoXGDrqA8F4gNRZqa4t
-	CB+P+cFPzq4PT0nIHeCdhOREwjqDTcQj71p5JtdawaCDM4Tk4l0PKA==
-X-Google-Smtp-Source: AGHT+IEmOpncqw55JDATPBMdgoevFZbTsL+l4QREB3q5EOlWtwZuqK0wyAgTzC8TAmqM9FoNpjSQ/g==
-X-Received: by 2002:a05:6808:2508:b0:3f3:b97d:769e with SMTP id 5614622812f47-3f3d90dc9b8mr4185959b6e.7.1739531435211;
-        Fri, 14 Feb 2025 03:10:35 -0800 (PST)
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com. [209.85.160.51])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f3daa1a4b8sm1191927b6e.49.2025.02.14.03.10.34
+        d=1e100.net; s=20230601; t=1739531459; x=1740136259;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qeZsog2iIKuGpA11cPJmZ8pu44QO3rd34voFuR0wY1Q=;
+        b=Od3tYzc64xG3dQtIlQ3oRxvUbkQfDjvhB3+8aTsOkt/ORu+vrTppNl+VIu1ys7DjsV
+         B8jHzkry11a/iDA5sKsMT3kI4ufweZPeUMtkbKFjhLrDSu8EOnp/BZAc5tCbWTqEDybQ
+         3bca3gFu1FVuoBgnaYfHj4nBRSLxm4HfNa/FMSijOaEnElimtBoDL+N642Mrd3ukvFLG
+         tHe6RfIFL74Wj2eP6alCrI+Kh3/+THoy0KX4aYehKUFW5Tej5tUNVF7CCh691UKuOp/9
+         ZoSliHaM2DYN4okHMUZVnOJMcPS86YnjpMlCf7T5kKmDPBoKtl/Xh47yxK7oHNL2RGPd
+         T70w==
+X-Forwarded-Encrypted: i=1; AJvYcCXfIzDKivY6PNXr0QTbGK28a2O5P7VTeuExqUokinuX0oUjr69XwOtyyBu7++D2wUz1VQcPQK13FTSpQ6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywl9Eidx21+JfUtoJlFzsOB3JZ6aV3y98JSTOUGVDt6vCPPnowR
+	fuu8UUNzg2SWwLDJ9hxxBMbK1xLMjcE9S9k+9HjcV+TAMCUva/Vr+gZRkzlW4XU=
+X-Gm-Gg: ASbGncthAnz+QOA6wj3y749LIM66nA2CTwTUFMgSzGt4MrQ6dpf4o/KR+xTvL7Sym5E
+	6F1V9wAPJxn/jbIUITI7OE8qbo1z1nN3zFRuxewry4XSfBTfcTHo6l8ECWrxV/F/GzUsogfKUNK
+	6j9ya6nGojsJNJ4iA9exyjNjPZM76OORIw0uPO3J/4/d6SSnpqNNwVG+e6CmYJxlly/qh9yKxwn
+	R42Ex70Ns8SXhKZWDnvhp7EzBqyEx6LDNwtUSVlD5NVYnmbVE0uZ3Jydb2gAxXRVvEVCnXCasX6
+	Xauw9Z7mcpRsCLVVp310011BYw==
+X-Google-Smtp-Source: AGHT+IG0FqoM1XNBiFLdY+14wrQsmMAdQi4bqFYD8ks4h0kO06myymwcWJElrH0RMxv71I5w/kY5xw==
+X-Received: by 2002:a5d:6484:0:b0:38d:e48b:1766 with SMTP id ffacd0b85a97d-38f244d5466mr8728379f8f.6.1739531459463;
+        Fri, 14 Feb 2025 03:10:59 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.90.202])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5e92sm4398625f8f.66.2025.02.14.03.10.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2025 03:10:34 -0800 (PST)
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2bc607b3190so788701fac.1;
-        Fri, 14 Feb 2025 03:10:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUy1lu/GJ6ERAmnfIqzVmu3C/Md9NgZanbZ9AlBkuxSikVLdWVTmv16zY9OytdJ9x+1bOD1xBdZoVtQDc2H@vger.kernel.org, AJvYcCVgqycNxfL55R6c69VsRIV//3UbVnRy1LsM6IXcdNZYTodYYbT5innUZI6qyiaXzFTDRrBAWAEYH0aK@vger.kernel.org, AJvYcCVpGAmsVWktjDWORoOa8SWbZwR93fR8IPXy2OueOJIEQibrvap3HctBV43GhtrSUSFdRoQjJT5SbI6afK3k8MmVtH0=@vger.kernel.org, AJvYcCWWolf/nrJ/6oXgSTgl4K14aY2GU29mdny1O3QmYSTUlOy83g0aI8cAUH46uNcAE8RT4WEzhyw79zid0g==@vger.kernel.org, AJvYcCWpxs59d1sDbltZAD01S8wzlCfefYW8qP+/tZshXhdVgrZs0TFBeWYfiGZaBJEEMeoH8TTdo0ifxNACHlY5@vger.kernel.org, AJvYcCXjdZfphJOJxdL4qtr/C2vSJUbLZss3zvveDNYzH/+JwLUMPqZ4sgGhNUqedcDrwir7VegLfNqsyVQ=@vger.kernel.org, AJvYcCXnbvOjDVxkbOaz9rzFBCQak2a0XzV/FMhTNT9F6vcz8d4anXpU42wkjTw7eso94fv0n53k7Wnu03YBCgE=@vger.kernel.org
-X-Received: by 2002:a05:6102:829:b0:4bb:c670:7ef4 with SMTP id
- ada2fe7eead31-4bc04dbedfdmr3900426137.3.1739531008576; Fri, 14 Feb 2025
- 03:03:28 -0800 (PST)
+        Fri, 14 Feb 2025 03:10:59 -0800 (PST)
+Message-ID: <44123d40-aae3-4248-95c9-21fb9335020a@linaro.org>
+Date: Fri, 14 Feb 2025 11:10:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738329458.git.geert+renesas@glider.be> <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
- <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr> <Z5-xMUqrDuaE8Eo_@thinkpad>
- <74cab7d1ec31e7531cdda0f1eb47acdebd5c8d3f.camel@sipsolutions.net>
- <45920591-e1d6-4337-a906-35bb5319836c@wanadoo.fr> <CAMuHMdXZKNtAmiMP8uuSngZMsDLGcYwrLS0xNWzN4UfLaccdyA@mail.gmail.com>
- <16e1568d-8747-41e0-91b9-ce23c5592799@wanadoo.fr> <Z6DzQHebEKBb12Wo@thinkpad>
-In-Reply-To: <Z6DzQHebEKBb12Wo@thinkpad>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 14 Feb 2025 12:03:16 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVFG57rUVC-XXk6bsZupVTeV0YAcue=zKWGnm4owjDiEA@mail.gmail.com>
-X-Gm-Features: AWEUYZnx82TO-9m0J2Kj8kCR7cxX7DuFclptN97k0_3_zHZhXPo2iBI5bXbywtI
-Message-ID: <CAMuHMdVFG57rUVC-XXk6bsZupVTeV0YAcue=zKWGnm4owjDiEA@mail.gmail.com>
-Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
- field_{prep,get}() helpers
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, Johannes Berg <johannes@sipsolutions.net>, 
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	qat-linux@intel.com, linux-gpio@vger.kernel.org, 
-	linux-aspeed@lists.ozlabs.org, linux-iio@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	"David S . Miller" <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, 
-	Andrew Jeffery <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Shan-Chun Hung <schung@nuvoton.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Alex Elder <elder@ieee.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 0/7] Coresight: Add Coresight TMC Control Unit driver
+To: Jie Gan <quic_jiegan@quicinc.com>
+Cc: Tingwei Zhang <quic_tingweiz@quicinc.com>,
+ Jinlong Mao <quic_jinlmao@quicinc.com>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+References: <20250214024021.249655-1-quic_jiegan@quicinc.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250214024021.249655-1-quic_jiegan@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hu Yury,
 
-On Mon, 3 Feb 2025 at 17:48, Yury Norov <yury.norov@gmail.com> wrote:
-> On Tue, Feb 04, 2025 at 12:41:55AM +0900, Vincent Mailhol wrote:
-> > On 03/02/2025 at 22:59, Geert Uytterhoeven wrote:
-> > > On Mon, 3 Feb 2025 at 14:37, Vincent Mailhol <mailhol.vincent@wanadoo.fr> wrote:
-> > >> On 03/02/2025 at 16:44, Johannes Berg wrote:
-> > >>> On Sun, 2025-02-02 at 12:53 -0500, Yury Norov wrote:
-> > >>>>> Instead of creating another variant for
-> > >>>>> non-constant bitfields, wouldn't it be better to make the existing macro
-> > >>>>> accept both?
-> > >>>>
-> > >>>> Yes, it would definitely be better IMO.
-> > >>>
-> > >>> On the flip side, there have been discussions in the past (though I
-> > >>> think not all, if any, on the list(s)) about the argument order. Since
-> > >>> the value is typically not a constant, requiring the mask to be a
-> > >>> constant has ensured that the argument order isn't as easily mixed up as
-> > >>> otherwise.
-> > >>
-> > >> If this is a concern, then it can be checked with:
-> > >>
-> > >>   BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask) &&
-> > >>                    __builtin_constant_p(_val),
-> > >>                    _pfx "mask is not constant");
-> > >>
-> > >> It means that we forbid FIELD_PREP(non_const_mask, const_val) but allow
-> > >> any other combination.
-> > >
-> > > Even that case looks valid to me. Actually there is already such a user
-> > > in drivers/iio/temperature/mlx90614.c:
-> > >
-> > >     ret |= field_prep(chip_info->fir_config_mask, MLX90614_CONST_FIR);
-> > >
-> > > So if you want enhanced safety, having both the safer/const upper-case
-> > > variants and the less-safe/non-const lower-case variants makes sense.
->
-> I agree with that. I just don't want the same shift-and operation to be
-> opencoded again and again.
->
-> What I actually meant is that I'm OK with whatever number of field_prep()
-> macro flavors, if we make sure that they don't duplicate each other. So
-> for me, something like this would be the best solution:
->
->  #define field_prep(mask, val) \
->        (((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask))
->
->  #define FIELD_PREP(mask, val)                                         \
->          (                                                             \
->                  FIELD_PREP_INPUT_CHECK(_mask, _val,);                 \
->                  field_prep(mask, val);                                \
->          )
->
-> #define FIELD_PREP_CONST(_mask, _val)                                  \
->         (                                                              \
->                 FIELD_PREP_CONST_INPUT_CHECK(mask, val);
->                 FIELD_PREP(mask, val); // or field_prep()
->         )
->
-> We have a similar macro GENMASK() in linux/bits.h. It is implemented
-> like this:
->
->  #define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((l) > (h)))
->  #define GENMASK(h, l) \
->          (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
->
-> And it works just well. Can we end up with a similar approach here?
 
-Note that there already exists a FIELD_PREP_CONST() macro, which is
-intended for struct member initialization.
+On 14/02/2025 2:40 am, Jie Gan wrote:
+> From: Jie Gan <jie.gan@oss.qualcomm.com>
+> 
+> The Coresight TMC Control Unit(CTCU) device hosts miscellaneous configuration
+> registers to control various features related to TMC ETR device.
+> 
+> The CTCU device works as a helper device physically connected to the TMC ETR device.
+> ---------------------------------------------------------
+>               |ETR0|             |ETR1|
+>                . \                 / .
+>                .  \               /  .
+>                .   \             /   .
+>                .    \           /    .
+> ---------------------------------------------------
+> ETR0ATID0-ETR0ATID3     CTCU    ETR1ATID0-ETR1ATID3
+> ---------------------------------------------------
+> Each ETR has four ATID registers with 128 bits long in total.
+> e.g. ETR0ATID0-ETR0ATID3 registers are used by ETR0 device.
+> 
+> Based on the trace id which is programed in CTCU ATID register of
+> specific ETR, trace data with that trace id can get into ETR's buffer
+> while other trace data gets ignored. The number of CTCU ATID registers
+> depends on the number of defined TMC ETR devices. For example, two TMC
+> ETR devices need eight ATID registers. ETR0 with ETR0ATID0-ETR0ATID3
+> and ETR1 with ETR1ATID0-ETRATID3.
+> 
+> The significant challenge in enabling the data filter function is how
+> to collect the trace ID of the source device. The introduction of
+> trace_id callback function addresses this challenge. The callback function
+> collects trace ID of the device and return it back. The trace ID will be
+> stored in the structure called coresight_path and transmitted to helper
+> and sink devices.
+> 
+> The coresight_path structure is created to address how to transmit
+> parameters needs by coresight_enable_path/coresight_disbale_path
+> functions.
+> 
+> Here is the definition of the struct coresight_path:
+> /**
+>   * struct coresight_path - data needed by enable/disable path
+>   * @path:               path from source to sink.
+>   * @trace_id:           trace_id of the whole path.
+>   */
+> struct coresight_path {
+>          struct list_head                *path;
+>          u8                              trace_id;
+> };
+> 
+> The atid_offset mentioned before is the offset to ATID register in CTCU
+> device.
+> 
+> Enabling the source device will configure one bit in the ATID register based
+> on its trace ID.
+> Disabling the source devices will reset the bit in the AITD register
+> based on its trace ID.
+> 
+> Useage:
+> Enable:
+> STM device with trace ID 5 and ETR0 is activated.
+> Bitmap before the enablement:
+> ETR0ATID0:
+> 31..................543210
+> ==========================
+> 0000000000000000000000...0
+> ==========================
+> 
+> Bitmap after the enablement:
+> 31..................543210
+> ==========================
+> 0000000000000...0000100000
+> ==========================
+> 
+> The bit 5 of the ETR0ATID0 register is configured to 1 when enabling the
+> STM device.
+> 
+> Disable:
+> STM device with trace ID 5 and ETR0 is activated.
+> Bitmap before the disablement:
+> ETR0ATID0:
+> 31................6543210
+> =========================
+> 000000000010111...0100000
+> =========================
+> 
+> Bitmap after the disablement
+> ETR0ATID0:
+> 31................6543210
+> =========================
+> 000000000010111...0000000
+> =========================
+> 
+> The bit 5 of the ETR0ATID0 register is reset to 0 when disabling the STM
+> device.
+> 
+> Sincere thanks to James Clark for providing an excellent idea to handle
+> the trace_id of the path.
+> 
 
-Gr{oetje,eeting}s,
+No worries! Thanks for working on Coresight too.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
