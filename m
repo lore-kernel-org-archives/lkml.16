@@ -1,69 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071081FCD02;
-	Fri, 14 Feb 2025 22:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D87520E6EE
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 22:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739572723; cv=none; b=lFwKCLcf5QGuz8Nrd6IrdSgzCihQ72V4id9hkmhEmzAZlKMaaQ+lM0eEVly3M4v2leOcv1r+oSInFaLPEky5vqKgn/mX7pO/s4tzHO5t6OSWeBNYwm0Kk/B44BDUKMyL/+zmkAnTKE5bO45HYqf3rufkb1unkR4ytkwOxvUv240=
+	t=1739572723; cv=none; b=V+yROP2s1IbebTB+1qFcjKlD9R5qre2MB7oGpFWf9K1Pp/E6H/qsxby7vdlUWrf8JZ0wdZAbvV3K2LmDMeNcBufTiPfz+ywOH1Xixo8BcrqDXqI1ZhdcWH7oxfOZyZecYlCQ/g98IlUvBlmbg8HzLz2soDoGll5CRQshc396Ao4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739572723; c=relaxed/simple;
-	bh=VzBMLeb5z+KMQPY2zQfZDVg1KR9+EV8WKi5QGYuPy7o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KJp8n9/XlobjVowA3IRzkmo/rPFPyhfcpCzn0sLQ4v7SPMxP9YasoWdSnE22cSQEDUN+GVxLDg8XYrthNbpHp+Kq2IWzuhOB3efY38vUQeOt8l+uhoxmttPvalp4pAb7156Amvs7HlmUCQ5Nb1GHgYWXEbvVn8MdTosygSvCoJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tfo5mQ7T; arc=none smtp.client-ip=10.30.226.201
+	bh=C9A3LWRVVEvM4OBlqT9wYA0yWCdJj2Hpz7Z1pzmG8wU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=LRvDKpxmKUN1/NXRqTVsT4SCm8/3hTRtF02RPnECmaD3Pp1bGv+iX4xVStAmP2IvDWKhpojjnPsJho3RNJQs8LrOWoLGROrL9oh/giS4dqPa6zP+IPm8kMDqFavvQqV64IJAjo3TqcN55inApIX3HPdEfpmK9boywML70HsPv3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joshwash.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sxcAraYI; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joshwash.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tfo5mQ7T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB601C4CEE7;
-	Fri, 14 Feb 2025 22:38:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739572722;
-	bh=VzBMLeb5z+KMQPY2zQfZDVg1KR9+EV8WKi5QGYuPy7o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tfo5mQ7TAp0HkVRtX+J2Ts8uFlZINxKZVSQRCrtFnqo+zmfvqyB3w2kOx0eQt+Y0P
-	 lsb6lFQOGelYDvuIySzWt14ZoUpZ3OJ/7fI3/4TfA1ESOkP4LME54SFqq1EIayQE6N
-	 30jOmX6Yh6eKk9dXDzhPLfE+bQwAQ6L9X/2IIxhIqQrdhrK7/rA8Wq3rwtMZfVRnRj
-	 PP1FWxAJRAFFDd3oQCIyGp+yyp0+peJ+NKnrWgdBY7ZpuP9YSEJvEw0VopiAsgvd9x
-	 ekJzi8BYPCjUppE2hpHscYCNwIbfpcGjj90D3UFly/b5LgNgfuuAMc00f5zdvafiXt
-	 LmT4sQDLm0ZMA==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
-	Trilok Soni <quic_tsoni@quicinc.com>,
-	Melody Olvera <quic_molvera@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jishnu Prakash <quic_jprakash@quicinc.com>
-Subject: Re: (subset) [PATCH 0/2] arm64: dts: qcom: sm8750: Document and describe PMIC glink
-Date: Fri, 14 Feb 2025 16:38:24 -0600
-Message-ID: <173957268929.110887.1281779145233312590.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250113-sm8750_gpmic_master-v1-0-ef45cf206979@quicinc.com>
-References: <20250113-sm8750_gpmic_master-v1-0-ef45cf206979@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sxcAraYI"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22101839788so9659105ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 14:38:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739572720; x=1740177520; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tUNETmfCcN16mATl/cudDdX8wxXBFFNsGuPJIeAzz7o=;
+        b=sxcAraYIu8e44pbbpWvNWlVzGDnWXj9fvzGXJoI3ud6pQhIXCm3l1OyrxGN97VUurH
+         j69o/zPBGz3+GMwqj26NfTzpsVEsCQj3/9gvxgptvmXPmbewn0l6AEoOwqyacqddFdRG
+         KPT4uL+TfceQGU3IIRu2eWBlGcyMJkLz06GWFP8up+JJOBw18bcFs/D1Cs+WmyyzkrAl
+         fusNzDskDpaR13JYdQDSCit5r/ltMjyhJdTsJxanznqxe9JbsZlM7H1nKOJB8QcZzo1j
+         jEhvfjV4ytx485xPX6MnJVmLf3bjTGsuiKV4BN9V30ZvPMDLuhXIJG0tcglJJk5Q06AL
+         4lkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739572720; x=1740177520;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tUNETmfCcN16mATl/cudDdX8wxXBFFNsGuPJIeAzz7o=;
+        b=rikuj5jmGpphl5KtBjMR2LBi+pzfQSwAVyA4iZ5qNKQUC23poND0GmVc2U76fCzVux
+         LwFAZ9nrsrBTddtDtcYl38n4fUOcvFAVUw4iylL51goh9ju/yF+XMYXBJcViTrPVNWOr
+         mcXGh6ciduowPXqDst7ZyBuNvKNFPY6UKhE5/BovABMV/lZLEPyn3h9iVU1AeiB9Y0I+
+         58HGbWnXxrfzNA8xDiJ6vdVhED4yEIbFkKbvOjfgdhdimyz2AXLClvepLnJsqvSJ+v/V
+         rQOaiPjcP2HpKxYvvuIi9WcBkcHca8ACJrTl8Tu+OJavNOgO1uQc749CiVJs5ZlIP9r1
+         ujWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGqPeWZlZmOqwogLZAjlzUXJUX6nevFE3ds7iV5Wa8Ozk52UtlOTlDxag4mmZGntTsAZGK6yT2nay+fvU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfIpm3ZIN6yd8XzN3OxkFMWZQNRuI3MDdqwt1FRyzXjTu5C6Xt
+	9+nQd0St+3PuUP7i+Qd8Nb0oRYTZEMLSUkXlLuIzvxmclEN2TkMKOvfWJ2ytgdveAvF+e0b6j/M
+	2J570xQHF6w==
+X-Google-Smtp-Source: AGHT+IGx5EUUJ6Z4zMDYclDQP+PzCMwRDfETHpFgm91+oQRalpeSgNTUDtjKw58EJXrDOCaT//TmCaudpiMQ9Q==
+X-Received: from pfbdn12.prod.google.com ([2002:a05:6a00:498c:b0:730:92d9:52e3])
+ (user=joshwash job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a20:1583:b0:1ee:8a27:364c with SMTP id adf61e73a8af0-1ee8cbe7e09mr2160416637.34.1739572719877;
+ Fri, 14 Feb 2025 14:38:39 -0800 (PST)
+Date: Fri, 14 Feb 2025 14:38:10 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+Message-ID: <20250214223829.1195855-1-joshwash@google.com>
+Subject: [PATCH] gve: set xdp redirect target only when it is available
+From: joshwash@google.com
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, kuba@kernel.org, stable@kernel.org, 
+	Joshua Washington <joshwash@google.com>, stable@vger.kernel.org, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Jeroen de Borst <jeroendb@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	Willem de Bruijn <willemb@google.com>, Ziwei Xiao <ziweixiao@google.com>, 
+	Shailend Chand <shailend@google.com>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+From: Joshua Washington <joshwash@google.com>
 
-On Mon, 13 Jan 2025 13:22:21 -0800, Melody Olvera wrote:
-> Document and describe the PMIC glink available on the SM8750 SoC.
-> 
-> 
+Before this patch the NETDEV_XDP_ACT_NDO_XMIT XDP feature flag is set by
+default as part of driver initialization, and is never cleared. However,
+this flag differs from others in that it is used as an indicator for
+whether the driver is ready to perform the ndo_xdp_xmit operation as
+part of an XDP_REDIRECT. Kernel helpers
+xdp_features_(set|clear)_redirect_target exist to convey this meaning.
 
-Applied, thanks!
+This patch ensures that the netdev is only reported as a redirect target
+when XDP queues exist to forward traffic.
 
-[1/2] dt-bindings: soc: qcom: qcom,pmic-glink: Document SM8750 compatible
-      commit: 707fb1f227aae7df81d658f7898b4284b9b61064
+Fixes: 39a7f4aa3e4a ("gve: Add XDP REDIRECT support for GQI-QPL format")
+Cc: stable@vger.kernel.org
+Reviewed-by: Praveen Kaligineedi <pkaligineedi@google.com>
+Reviewed-by: Jeroen de Borst <jeroendb@google.com>
+Signed-off-by: Joshua Washington <joshwash@google.com>
+---
+ drivers/net/ethernet/google/gve/gve.h      | 10 ++++++++++
+ drivers/net/ethernet/google/gve/gve_main.c |  6 +++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-Best regards,
+diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
+index 8167cc5fb0df..78d2a19593d1 100644
+--- a/drivers/net/ethernet/google/gve/gve.h
++++ b/drivers/net/ethernet/google/gve/gve.h
+@@ -1116,6 +1116,16 @@ static inline u32 gve_xdp_tx_start_queue_id(struct gve_priv *priv)
+ 	return gve_xdp_tx_queue_id(priv, 0);
+ }
+ 
++static inline bool gve_supports_xdp_xmit(struct gve_priv *priv)
++{
++	switch (priv->queue_format) {
++	case GVE_GQI_QPL_FORMAT:
++		return true;
++	default:
++		return false;
++	}
++}
++
+ /* gqi napi handler defined in gve_main.c */
+ int gve_napi_poll(struct napi_struct *napi, int budget);
+ 
+diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
+index 533e659b15b3..92237fb0b60c 100644
+--- a/drivers/net/ethernet/google/gve/gve_main.c
++++ b/drivers/net/ethernet/google/gve/gve_main.c
+@@ -1903,6 +1903,8 @@ static void gve_turndown(struct gve_priv *priv)
+ 	/* Stop tx queues */
+ 	netif_tx_disable(priv->dev);
+ 
++	xdp_features_clear_redirect_target(priv->dev);
++
+ 	gve_clear_napi_enabled(priv);
+ 	gve_clear_report_stats(priv);
+ 
+@@ -1972,6 +1974,9 @@ static void gve_turnup(struct gve_priv *priv)
+ 		napi_schedule(&block->napi);
+ 	}
+ 
++	if (priv->num_xdp_queues && gve_supports_xdp_xmit(priv))
++		xdp_features_set_redirect_target(priv->dev, false);
++
+ 	gve_set_napi_enabled(priv);
+ }
+ 
+@@ -2246,7 +2251,6 @@ static void gve_set_netdev_xdp_features(struct gve_priv *priv)
+ 	if (priv->queue_format == GVE_GQI_QPL_FORMAT) {
+ 		xdp_features = NETDEV_XDP_ACT_BASIC;
+ 		xdp_features |= NETDEV_XDP_ACT_REDIRECT;
+-		xdp_features |= NETDEV_XDP_ACT_NDO_XMIT;
+ 		xdp_features |= NETDEV_XDP_ACT_XSK_ZEROCOPY;
+ 	} else {
+ 		xdp_features = 0;
 -- 
-Bjorn Andersson <andersson@kernel.org>
+2.48.1.601.g30ceb7b040-goog
+
