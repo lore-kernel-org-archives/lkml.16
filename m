@@ -1,162 +1,134 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220802676F5
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 17:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591B12676F5
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 17:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739553258; cv=none; b=OuaHMtKbrqIIIkrwdTmuio74XRGZVMzBMPxkRBOawfMbuXgiPFydbuJQgYHvRfp2O7Lh/9a5K2AcBzL0tpk3F+ZdWGeZ2pHRE4DwMN80rRj4F7DJDDgEvPNkjZuhJ9Un7Vnkp2gmkYfZ1Fg4YE9wtvZq+kp1/o6m9gDo8WiATyI=
+	t=1739553285; cv=none; b=L9L85Vmx9zBe3SqA/XVxlydS/SU14UnpCMstftEvrtn2Phn835TnJwkvh6pgqX1g/T01aVtrEWu0JglupC3yqYezI3Q51v6x5TnLajLbnNaq31T2VMid8bF25NWrmc8973Ao7jBXUe9IkBhqrg42FjIbP8nrNaOc3GXU1DuO+TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739553258; c=relaxed/simple;
-	bh=GCT3tjmLaUYH2vmBJeZHXbttCdIkYNXzAdwNeEZ+HwI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r3LCaekhUAyORsyNOOULPkMXdwdqX9Jcc6WLhxPJirR/NJo3rGvvLlPVys7W78Dq6RuTEqvcK+kosB5DmjsqK9/jQIdugvRpvwOSg+MZnWgRFyVJqFRSOXqEkjBpTv0WnSnQ9aRkBwAzgsGKDKRcDXgCOLblrnq4Fo26OdH/tGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZKUaBru4; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739553285; c=relaxed/simple;
+	bh=VCSMWeZ5ubkR7/YoAU13MVMrPXgbHa6YakFHLZU7G/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=cOqxCrpHySJxVsEm10xBZGNfZPpv13XXxpM7R+W5b0xWlT3JUUEQTbb7hMDApj+5ndYi5zsEPgiP0xoyu7vBhrovXIr2sHZJ4iL4OAr8N/2BOlZS/V7sSMvKSWkHJolzfEH/65rma30MWoF6h/9Tg3A5UDKcCtUq+OVTDEW21Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hsw7BtbD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZKUaBru4"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-220c8eb195aso46633545ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:14:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739553256; x=1740158056; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=73h6zgdjYwKV/mV0oFHEsq1W810FrZfJYhYEewVFptA=;
-        b=ZKUaBru44S9sCHWC+mMzy7pfykjEvSR1+6AKvetGONum7hQyEdJnbIn0Wy6RUJmc9e
-         jZvJh29g0hn2JYku5RS+w3KVwtqQkgoMXYXsMaEmf5g29V/wf481ScU6B99bj2f3sVNW
-         XkXo4qtNgPQVQOtfhVf7te/gGbBlFBYJITOM3n/lFkKMs1SY9TT/hjt2yFlfQya8jhg3
-         IOzC4YG5f5UGQyEJuQdbE5BM2Jinlpu9GEbjz8A0CrnRx3ez0ogoa5j05tQpi2RhjtlR
-         mXqu/ofXiaLoHv+Rn8QGAcOut+lxR53eM00l2JFgk5eezsvbdUTMQLJecvocAkrwBsUD
-         EqbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739553256; x=1740158056;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=73h6zgdjYwKV/mV0oFHEsq1W810FrZfJYhYEewVFptA=;
-        b=vkj9G2h66v9w+QCPb/0bAbHDvx2NI3LyewFu0p69E1mB5Mflxj8O6pIHL8+VfUZjf+
-         4f3mls415IZu00FaZbJcWCvrhWc+n/EX8s30CNkOiinMcBtq2nwjh994oSvqyO5xWNOb
-         gFAprUcy8t+wPcMAFWfk0Dd1Swg/cJ9M7UJ8Paf5xIRxCUk/ALBecBEouaOp5qqj6fDU
-         +5HBDjyN6RI2JWG5uSdxHeBBe3/7p0ira92LiE7NbxOjK9PNgzMiNTmPSyZgOSK6Md8l
-         foVG5EpU+yD1eSz/Mzya2RpMZf1p5WzZiHCGO3Qms1oN3zhNXE9AKQfgzmCQelWf+I7C
-         iK2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVbJVu5SoZZl25vEr4OBrKPwSAv09LF3kOcfI0NAxTDde4B1AztO/BWVwefSq6vIfTAIqqazcLnfukqRKE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4C2eXV5iQzBv7/llmrDZ2bmeuj6DS+rCvlynfFzzYQDAio78z
-	I961GgzhjjA7GMGzHiwi95GbdUvaYtD7/6YuDynvOVd968Z9V2uG9vKSTMr7pw==
-X-Gm-Gg: ASbGncuM5IcboH87Dqa3xAOMVCTSLw3/fFzH/xgZv9W4NBKkLpxTUBaC84KiXqWEcfV
-	WcvveEgjiAl0K4MO8d5K6t3s9NbxazzOWflPRxM2vWsXRqfNUa4yltojGlyVLpR7rMUst7M7HYD
-	PMzPbMVIbVeksDRBvnVewRrrfQZYk9Crcwp8EOuIwbG7i7ZDHgiLRZwtPBqTjQ0A3Gh3L5m7AMN
-	jB4Ekhwmpps+2UwEVlsB0bFbtq+uKd+szqaZzgFALqybUm/nY/fFWurYQjV+qC8HE+mGM07zcvH
-	Y0++JJpO3JfabKjgi+A/yJpTsu4=
-X-Google-Smtp-Source: AGHT+IGEjW1+nSnm03Sb/7JjOqd2fLGFWNtn2pSYwsh2yOQR3S+BitUF4p8rbuVp0ACw3TNqwyLoRw==
-X-Received: by 2002:a05:6a00:4fd2:b0:732:1f45:fcca with SMTP id d2e1a72fcca58-732618fa57dmr185138b3a.21.1739553256278;
-        Fri, 14 Feb 2025 09:14:16 -0800 (PST)
-Received: from thinkpad ([120.60.134.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73249fe96b4sm2520712b3a.75.2025.02.14.09.14.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 09:14:15 -0800 (PST)
-Date: Fri, 14 Feb 2025 22:44:05 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Vitalii Mordan <mordan@ispras.ru>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Amit Singh Tomar <amittomer25@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-actions@lists.infradead.org,
-	Fedor Pchelkin <pchelkin@ispras.ru>,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>,
-	Vadim Mutilin <mutilin@ispras.ru>, lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] tty: owl-uart: fix call balance of owl_port->clk
- handling routines
-Message-ID: <20250214171405.kvyyespxtfqxhapc@thinkpad>
-References: <20250213112416.1610678-1-mordan@ispras.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hsw7BtbD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5253C4CED1;
+	Fri, 14 Feb 2025 17:14:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739553284;
+	bh=VCSMWeZ5ubkR7/YoAU13MVMrPXgbHa6YakFHLZU7G/E=;
+	h=Date:From:To:Cc:Subject:From;
+	b=hsw7BtbDGp3WmtTyK5aQE8AUATia4HTQhPPIzqSKgBZdYp5xAVwx9CC/jf6Zpz/aS
+	 TeeImij2NQ1LTV4I5gAytpHMAi8g9GmTV8LJuRjgWPCbyPkMK5NA2z5GQUz1ChmBif
+	 D3gkB+Oum5tZpDQaSnfnaC4mllK9FKC57N4AoXS/vACvKNymeyYCj//vzC0h6Nr58H
+	 35PE8Cm55yi3omaU5TwLxrmK3S0sdRJHmQday8HbXvYI7BsMafXxvoiwJ9onKeKtkj
+	 38E+DbdP/pWtyAn+xu8ajvoloPC5CLq1rAdZDmB2Z2LKp2p1KU1Z99ggCeK77gldDa
+	 bw3spRcB6yrOQ==
+Date: Fri, 14 Feb 2025 07:14:43 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, David Vernet <void@manifault.com>,
+	Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Subject: [GIT PULL] sched_ext: Fixes for v6.14-rc2
+Message-ID: <Z696A62FFj_UkApm@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250213112416.1610678-1-mordan@ispras.ru>
 
-On Thu, Feb 13, 2025 at 02:24:16PM +0300, Vitalii Mordan wrote:
-> If owl_port->clk was enabled in owl_uart_probe(), it must be disabled in
-> all error paths to ensure proper cleanup. However, if uart_add_one_port()
-> returns an error in owl_uart_probe(), the owl_port->clk clock will not be
-> disabled.
-> 
-> Use the devm_clk_get_enabled() helper function to ensure proper call
-> balance for owl_port->clk.
-> 
+The following changes since commit ab18b8fff124c9b76ea12692571ca822dcd92854:
 
-Do not use newly introduced APIs to fix old bugs. The bug should be fixed
-separately to allow backporting and the conversion should be done on top.
+  Merge tag 'auxdisplay-v6.14-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-auxdisplay (2025-01-24 08:03:52 -0800)
 
-- Mani
+are available in the Git repository at:
 
-> Found by Linux Verification Center (linuxtesting.org) with Klever.
-> 
-> Fixes: abf42d2f333b ("tty: serial: owl: add "much needed" clk_prepare_enable()")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Vitalii Mordan <mordan@ispras.ru>
-> ---
->  drivers/tty/serial/owl-uart.c | 12 ++----------
->  1 file changed, 2 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/owl-uart.c b/drivers/tty/serial/owl-uart.c
-> index 0542882cfbbe..64446820437c 100644
-> --- a/drivers/tty/serial/owl-uart.c
-> +++ b/drivers/tty/serial/owl-uart.c
-> @@ -680,18 +680,12 @@ static int owl_uart_probe(struct platform_device *pdev)
->  	if (!owl_port)
->  		return -ENOMEM;
->  
-> -	owl_port->clk = devm_clk_get(&pdev->dev, NULL);
-> +	owl_port->clk = devm_clk_get_enabled(&pdev->dev, NULL);
->  	if (IS_ERR(owl_port->clk)) {
-> -		dev_err(&pdev->dev, "could not get clk\n");
-> +		dev_err(&pdev->dev, "could not get and enable clk\n");
->  		return PTR_ERR(owl_port->clk);
->  	}
->  
-> -	ret = clk_prepare_enable(owl_port->clk);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "could not enable clk\n");
-> -		return ret;
-> -	}
-> -
->  	owl_port->port.dev = &pdev->dev;
->  	owl_port->port.line = pdev->id;
->  	owl_port->port.type = PORT_OWL;
-> @@ -701,7 +695,6 @@ static int owl_uart_probe(struct platform_device *pdev)
->  	owl_port->port.uartclk = clk_get_rate(owl_port->clk);
->  	if (owl_port->port.uartclk == 0) {
->  		dev_err(&pdev->dev, "clock rate is zero\n");
-> -		clk_disable_unprepare(owl_port->clk);
->  		return -EINVAL;
->  	}
->  	owl_port->port.flags = UPF_BOOT_AUTOCONF | UPF_IOREMAP | UPF_LOW_LATENCY;
-> @@ -725,7 +718,6 @@ static void owl_uart_remove(struct platform_device *pdev)
->  
->  	uart_remove_one_port(&owl_uart_driver, &owl_port->port);
->  	owl_uart_ports[pdev->id] = NULL;
-> -	clk_disable_unprepare(owl_port->clk);
->  }
->  
->  static struct platform_driver owl_uart_platform_driver = {
-> -- 
-> 2.25.1
-> 
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git/ tags/sched_ext-for-6.14-rc2-fixes
+
+for you to fetch changes up to f5717c93a1b999970f3a64d771a1a9ee68cc37d0:
+
+  sched_ext: Use SCX_CALL_OP_TASK in task_tick_scx (2025-02-13 06:57:33 -1000)
+
+----------------------------------------------------------------
+sched_ext: Fixes for v6.14-rc2
+
+- Fix lock imbalance in a corner case of dispatch_to_local_dsq().
+
+- Migration disabled tasks were confusing some BPF schedulers and its
+  handling had a bug. Fix it and simplify the default behavior by
+  dispatching them automatically.
+
+- ops.tick(), ops.disable() and ops.exit_task() were incorrectly disallowing
+  kfuncs that require the task argument to be the rq operation is currently
+  operating on and thus is rq-locked. Allow them.
+
+- Fix autogroup migration handling bug which was occasionally triggering a
+  warning in the cgroup migration path.
+
+- tools/sched_ext, selftest and other misc updates.
+
+----------------------------------------------------------------
+Andrea Righi (5):
+      sched_ext: Include task weight in the error state dump
+      selftests/sched_ext: Fix enum resolution
+      tools/sched_ext: Add helper to check task migration state
+      sched_ext: selftests/dsp_local_on: Fix selftest on UP systems
+      sched_ext: Fix lock imbalance in dispatch_to_local_dsq()
+
+Atul Kumar Pant (1):
+      sched_ext: Fixes typos in comments
+
+Changwoo Min (1):
+      sched_ext: Fix incorrect time delta calculation in time_delta()
+
+Chuyi Zhou (2):
+      sched_ext: Fix the incorrect bpf_list kfunc API in common.bpf.h.
+      sched_ext: Use SCX_CALL_OP_TASK in task_tick_scx
+
+Devaansh Kumar (1):
+      sched_ext: selftests: Fix grammar in tests description
+
+Tejun Heo (5):
+      sched_ext: selftests/dsp_local_on: Fix sporadic failures
+      sched_ext: Fix incorrect autogroup migration detection
+      sched_ext: Implement auto local dispatching of migration disabled tasks
+      sched_ext: Fix migration disabled handling in targeted dispatches
+      sched_ext: Fix incorrect assumption about migration disabled tasks in task_can_run_on_remote_rq()
+
+ kernel/sched/autogroup.c                           |   4 +-
+ kernel/sched/core.c                                |   7 +-
+ kernel/sched/ext.c                                 | 113 ++++++++++++++-------
+ kernel/sched/ext.h                                 |   4 +-
+ kernel/sched/sched.h                               |   2 +-
+ tools/sched_ext/include/scx/common.bpf.h           |  25 ++++-
+ tools/testing/selftests/sched_ext/create_dsq.c     |  10 +-
+ .../selftests/sched_ext/ddsp_bogus_dsq_fail.c      |   7 +-
+ .../selftests/sched_ext/ddsp_vtimelocal_fail.c     |   7 +-
+ .../testing/selftests/sched_ext/dsp_local_on.bpf.c |   2 +-
+ tools/testing/selftests/sched_ext/dsp_local_on.c   |   1 +
+ .../selftests/sched_ext/enq_last_no_enq_fails.c    |  10 +-
+ .../selftests/sched_ext/enq_select_cpu_fails.c     |  10 +-
+ tools/testing/selftests/sched_ext/exit.c           |   1 +
+ tools/testing/selftests/sched_ext/hotplug.c        |   6 +-
+ .../selftests/sched_ext/init_enable_count.c        |  27 ++---
+ tools/testing/selftests/sched_ext/maximal.c        |   7 +-
+ tools/testing/selftests/sched_ext/maybe_null.c     |   2 +-
+ tools/testing/selftests/sched_ext/minimal.c        |  10 +-
+ tools/testing/selftests/sched_ext/prog_run.c       |  10 +-
+ tools/testing/selftests/sched_ext/reload_loop.c    |   9 +-
+ tools/testing/selftests/sched_ext/select_cpu_dfl.c |   7 +-
+ .../sched_ext/select_cpu_dfl_nodispatch.c          |   7 +-
+ .../selftests/sched_ext/select_cpu_dispatch.c      |   7 +-
+ .../sched_ext/select_cpu_dispatch_bad_dsq.c        |   7 +-
+ .../sched_ext/select_cpu_dispatch_dbl_dsp.c        |   7 +-
+ .../testing/selftests/sched_ext/select_cpu_vtime.c |   7 +-
+ 27 files changed, 198 insertions(+), 118 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+tejun
