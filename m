@@ -1,125 +1,104 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682BC253B51;
-	Fri, 14 Feb 2025 10:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3BF186E40;
+	Fri, 14 Feb 2025 10:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739527379; cv=none; b=XaIYIuNNnJygFUmbA6ky3U74zlJvqw18vEF1gYgVMtIUbuVn+YT5TyRTMocSgIymUZWqEQI95Ws6oJ5OA1WJd6QDb2fvEe1UTp0lvIuHImoDebeu76Oj6S693UfUyFQ3Oz+ROW27YJfrVp7hrkG0iIn/qrRpDBzSmWnhQJlrIWk=
+	t=1739527391; cv=none; b=QyQDd/tAvYeZ+pikeU89YPVlcmPJQpicz3mxPGrqJI9/b/hOfG2ukHI0BQJKAD8LXhHBIk+B3Tg51rGXog+KBbr3ic9mmY5huRexC0YBQuV150qCZxJ62QinbT1TB3d/pjvS3Hp2FXR7fondZtHDKIy5fotdqGJDaZDRmHjGJO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739527379; c=relaxed/simple;
-	bh=+IjmgDqeVgSyvVDQ9e6EOVq4U2JIS3lAvxc1XVEMgVo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VzOEsfbRHL6Mec1UgPd9PDwKtz3sbMDbUpGauq8muCgiHVSZ+3fMy6uXhK+pi5SfqNjQ+k7EMSJQA6UdDoSiSJdJA66emE6V3PyOVLlRtWb9Uf2E6WUnTtq+bQKHQdyO1ljUXtuQ+Xt7HeQikg1DALFQy+pSR4nNrpeFAfZX+P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CVwsWe5H; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CVwsWe5H"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51E2nlN8016442;
-	Fri, 14 Feb 2025 10:02:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=ra/Dx+WxOY1D7TZc+vQhA7pPWzHT7U
-	ffFBZk9LGvtVs=; b=CVwsWe5HmaN7MxHB6a/tRHrUZYu4sxkab46TGw25hnKi9S
-	rhNByw8aqMUcqYBu+5A279T84f2ec5gz+fRSpKlLtRCJ/mRedvbJIptA0yhOu2lP
-	COoIB4iEP7P+GXGxG8m2N0CHDf1V8R0ejCOvIUUu62H+IufSPlhU6RV4Iw3NaOgg
-	uy0yWLoMR8nJGrBpq6xTXvAyKsQndYhcAuMrHPITKcgTRQ6akqrhGnwg+ma+FzXO
-	jCRvxMzKueF1Q7oHRt+mSPlduEdC3ch3jxbODQj0MmAJkro7xGiv6ZP8n8F/c4fI
-	4nTfJI8xKT3sY+bpQw4Y0+7Q1tFNwkXhGUCRy8ug==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44skjuvk3x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 10:02:41 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51E9xeF9031418;
-	Fri, 14 Feb 2025 10:02:41 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44skjuvk3v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 10:02:41 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51E7IJup001051;
-	Fri, 14 Feb 2025 10:02:40 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44pjknk0ay-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 10:02:40 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51EA2a9a55378420
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Feb 2025 10:02:36 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 71A6F2005A;
-	Fri, 14 Feb 2025 10:02:36 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 48BF920063;
-	Fri, 14 Feb 2025 10:02:35 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.2.165])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 14 Feb 2025 10:02:35 +0000 (GMT)
-Date: Fri, 14 Feb 2025 11:02:33 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Frank van der Linden <fvdl@google.com>
-Cc: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, yuzhao@google.com,
-        usamaarif642@gmail.com, joao.m.martins@oracle.com,
-        roman.gushchin@linux.dev, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: Re: [PATCH v3 03/28] mm/cma: introduce cma_intersects function
-Message-ID: <Z68UuZQJs6dpuHC8@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20250206185109.1210657-1-fvdl@google.com>
- <20250206185109.1210657-4-fvdl@google.com>
+	s=arc-20240116; t=1739527391; c=relaxed/simple;
+	bh=srSZy0fGEMt6o4wncQG0hGfi+JWU6PXfZLThmo6ElvY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RtLWJ9TmOEsOTBZc88dwyReImWJej8C4sFJHrtp54ihhloB+sDROBtzrfJP4F96T9y3lojaTJKM9ydKW39r75FN/hO5THG4N6nWnyFUvp+w++GCrQxMg41D2nRo0+A/UiEWGQL3ljxrol0O/d6Nvt4+Mkm+W++veDkKgL/rB5LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4bd3763900aso54129137.2;
+        Fri, 14 Feb 2025 02:03:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739527387; x=1740132187;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GwRMJibn/gtsGcl7fkUZirnJvkIAEeTn8KQ8iBAEz8s=;
+        b=LEcdAuNAd+dHbT2Ydiy7rqiU/5jSPbx5H5OxDVfrTfiJCj9iBzFKm1QYZxdm+sictK
+         AQSGUlh6QWb6u66kKx3i0vC9VEgVSiKAeg4RXhLIv17FTurfdzmMHi5gEzPg9iEn9gHO
+         Yk37M57+KoTTf2+BtbYij+qvrXhh8g1hWQ3fRAwml68FAOTNc4JpdsBynhZWiCJSjWJv
+         j87YkHM2NxrXItd2Ht/ATBzURjrRr7DC5ipzswy8nMjqaQAyJwzxZBJk/emV0VI+EWel
+         1pDvCdbEAPUhUpT2cDSEFVqtLHAw8h/xaTSsz3uBvWPmT1ebZfih5ASu6GWR2+NIYocd
+         FfPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTDLtcDNh9n6oe0Mgc5rAvR1fCOdPLi7TC535PI3BaO2OCn4bZmpMHX/FfQw7FG4YvoiDFL7x0qj8=@vger.kernel.org, AJvYcCUw+Y9FUuyI21PkzBztnkOYinidmhy9/8M9OrS8CODdFOmC6CP1HBzehwRvZGRzn+bRutb2tRWXo+ZaUvNU@vger.kernel.org, AJvYcCWaY9duM++PzMMwyv9ePODq7gPXboUqatJeXjJiLwPjCe2oJINB2KARg2gRqPpH4YFWnMkw0MmMyOtDQeBphBlNk7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0v0VjIyOU/zi5P2fCRLJMFQx8OudX2zU836Yh9TLpHF63Ab+g
+	+eYSRPQdlsCphYtWKWNbK+dqn2UXkWgl9PeokEXw89OFgxQOp4V11O9hPTfdj40=
+X-Gm-Gg: ASbGncuyJxg9VklCXHCRBS/3ANIZpQjUC/nAaTL3m3KNkwlmm50JCy8rAX8qQSGqG7D
+	FK1N0LrKlO7VXDKaBLaYHYlqiM4Uiji1MTLBT9CMtaSa26RsWX7ihvGBtEkveVNijMHXUysx9Tb
+	dr4QvWtxBh3Sa2Kaccah+FXs+xDRymJ8j/kRF1/c5sfJBoMM4kwdhomd3c4ymQMG6FPsQd2hB5i
+	oIt5wMWEtsccjRIDrJtg/g3P/dIRk+Tn+GucqfuP6tCSF984yqEc6tMR1OzynXGK9mR1GBnhP+v
+	lVZkFO2nppbIf1EhNHt62IZn/1bqhtrXSVzIC+Q4KhmpZ60+pPgoMg==
+X-Google-Smtp-Source: AGHT+IHq8XR3Kph+vnEd4RKcMTxuWlJ7MVRPl/PLwlJfmK0GghznfW/ibJW8XiBapor41l2Xq8aYqA==
+X-Received: by 2002:a05:6102:3f0a:b0:4af:c519:4e7f with SMTP id ada2fe7eead31-4bbf22e8233mr10005831137.18.1739527386837;
+        Fri, 14 Feb 2025 02:03:06 -0800 (PST)
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-868e86d4e8asm468119241.34.2025.02.14.02.03.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2025 02:03:06 -0800 (PST)
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-864e4f5b253so568741241.1;
+        Fri, 14 Feb 2025 02:03:06 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU7mlo89iWa3qrQ6KaheF6w6uJiKZMPYATHmeZ4IRN0fmD8PHEMVeQtsi3F+iUbCgiyxgSyfW6HhZKTCwlt@vger.kernel.org, AJvYcCWRvbrwEmgzUSMeBoz+Ftms1FI5OdU2vZBPHBfv+UULTprXD6wJNV+bWi+8r7uhTv0M8PYiWMM0qrTGqR+a2krdOhA=@vger.kernel.org, AJvYcCXiU/567wF6YE2BeZZz382AvqOrHSIqdL6Xs15Ouib3MtMC8xn4tzpN5D8JFlRCjtoZuOGtS1BFGkY=@vger.kernel.org
+X-Received: by 2002:a05:6102:c8b:b0:4ba:9689:872e with SMTP id
+ ada2fe7eead31-4bbf21cdc3cmr9180315137.10.1739527386255; Fri, 14 Feb 2025
+ 02:03:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206185109.1210657-4-fvdl@google.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: t-In3U_tmNjyWhY_yTRmtH3LI7-89WMB
-X-Proofpoint-ORIG-GUID: SYQ8donj5--N2ryoZQafKeRuOJfV_YtY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-14_03,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
- mlxlogscore=501 lowpriorityscore=0 mlxscore=0 spamscore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 malwarescore=0 adultscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502140067
+References: <20250211105603.195905-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250211105603.195905-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250211105603.195905-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 14 Feb 2025 11:02:53 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUhOzjpo=a5C9A_aA8gRYsdi-EM9OznjW8_EyH5nrdMsQ@mail.gmail.com>
+X-Gm-Features: AWEUYZmmfFvEem34T251UJV6mok-YPnbeecChTnVC_3e7-TqeMladahr6o0pfBM
+Message-ID: <CAMuHMdUhOzjpo=a5C9A_aA8gRYsdi-EM9OznjW8_EyH5nrdMsQ@mail.gmail.com>
+Subject: Re: [PATCH] clk: renesas: rzv2h-cpg: Update error message
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 06, 2025 at 06:50:43PM +0000, Frank van der Linden wrote:
-> Now that CMA areas can have multiple physical ranges,
-> code can't assume a CMA struct represents a base_pfn
-> plus a size, as returned from cma_get_base.
-> 
-> Most cases are ok though, since they all explicitly
-> refer to CMA areas that were created using existing
-> interfaces (cma_declare_contiguous_nid or
-> cma_init_reserved_mem), which guarantees they have just
-> one physical range.
-> 
-> An exception is the s390 code, which walks all CMA
-> ranges to see if they intersect with a range of memory
-> that is about to be hotremoved. So, in the future,
-> it might run in to multi-range areas. To keep this check
-> working, define a cma_intersects function. This just checks
-> if a physaddr range intersects any of the ranges.
-> Use it in the s390 check.
-> 
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-> Cc: linux-s390@vger.kernel.org
-> Signed-off-by: Frank van der Linden <fvdl@google.com>
-> ---
->  arch/s390/mm/init.c | 13 +++++--------
->  include/linux/cma.h |  1 +
->  mm/cma.c            | 21 +++++++++++++++++++++
->  3 files changed, 27 insertions(+), 8 deletions(-)
+Hi Prabhakar,
 
-Acked-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Thanks for your patch!
+
+On Tue, 11 Feb 2025 at 11:56, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Update the error message in `rzv2h_mod_clock_endisable()` to provide
+> clearer debugging information. Instead of printing only the register
+> address, include both the `GET_CLK_ON_OFFSET(reg)` offset and the
+
+Indeed, printing the obfuscated virtual address is useless.
+
+> corresponding `clk` name (`%pC`). This enhances readability and aids
+> in debugging clock enable failures.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk for v6.15.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
