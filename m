@@ -1,255 +1,816 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2069.outbound.protection.outlook.com [40.107.101.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B151F2690DF
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 17:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739555930; cv=fail; b=YO8JiyMxX8zYm/xoo/FAqB0txqUui7RB9d+pG/Md0BztQoT3yMjLm85kLg6HLeIW6NL2BntFgcIHKe0yfMsvaDYYWyr9hMG4tnMlrTJUW93I3il28KEtLuJBWydnw6RW79D65Lex/VSLt4dADg/KIZVoxxyYjFj9zMQcLCWmPoM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739555930; c=relaxed/simple;
-	bh=V65lCqwe0kHeK3CrMbTjSbrUZ3VoQ9Q0vRMmMA7prDE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70B42686A8
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 17:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739555936; cv=none; b=JZD+zNc2Etv0BWyzTHdfd66p2tOGGr4WCCvVSc6L4mtHa0lZyXVtoFptCn3rVHI5UXPRai9J0UczBU/dpJTutQc+o/0E6O+eLYWx54M4T+dCyS4WY2O2NHVptG/jnziDsitSNxT0M36DXNY4CmhhPsgix0nnJfMKZne5QlxXAvU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739555936; c=relaxed/simple;
+	bh=5zF08hI2n5nDivExTXRxFcFb2fHoATW+k0qZ9b0JEn0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PyXbxzBSOvebsNCJDPSCVU/ejkhoLUy6CRlsQzIaRJDSSnzgc1CDtrO+y7WLYEEFLPz+pZDVaFVyRhzS96Oz2WJszamSbq26tg0Wz8TAgs29GXMhcVXJ01ypTs4n9P3pJSW0ahezTO0CP+D59c+wlR1DV/mwOKiLbx16wOv8Skg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JS055DuB; arc=fail smtp.client-ip=40.107.101.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	 MIME-Version; b=VxbWEO3uokXBg62s5GoU+Fh5GA/qkyTUhk6VnfDa8iRKNKlVByR0AJwxzGan+qa1F05hORtewFpnViiXIVB2vSThRQgZLne5MV8Izv1/K/vfPYG1Gxnd1rnEU9GY325B56L+MqtRFgI2MGFCRaZtPdF7oDra00jPkz41ojq5eFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jhYDuFEV; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JS055DuB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Vdy5pzZDEiWPhL3BcwZh6G0P1QRbs5M3f7dwcDbecqjBACeZHBhLAbEvEkgWIlSpfndy9c9zYqrnJBWEBa00UZQvqQ4bBbV/oCUt1Ir2Pm0GvbJM0KWpFIWfWWxriaBqIwvGmPwRZtG3xo/ojLASZ77IgD28XwEn7EsfjJZqt4IvOcgQeXNuIa8Sl/2Bv+vjoDbusaIYxAhh1K4wkY6F93GQbAel69+2bwsnsiDsDpifXsFoCuKeuknOU4hdTB++Iox9WlQ9AB8J5U/BdJ34oDsF1RpBiM6Em9A+h1GGfakSHJAJ53+xwMu1NlNB165ZqSYUT/cPjWRrzofb/u1Vig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eh4fK6MvOEJzGRVFM9xO68BnwtpVCxxWfD5SYB2AlS4=;
- b=JBHQtiCGQ2WN8cyHtjNJvQZjY8iOqI0GkLcrlSop8rgGzTHgPblAWdOn2VaV8pI15zyRneFiMQ8MlSdUUsaw04XX8wB2cUxZd0GBFUDE8n6cNp5xnIMI168lfC89uW7hjUmJRFMh17WRylzGD3EijQbfncB8ll0bWSGKdZAqCjZ00ApwAOkykki1g7qjJAmAN0wBPeTfI4d6npoEW2x1kFg5WMCpZRXo+xcZld9Ez+gDFrL1EBABUg6TVkO6P/6/ZT1KYFjzd9YwsyOKpJ/GoVMj4os51pjJW8wo7yAzknEbR7JIQpV6FHb5HhtZixhd88FjztwedGNeLhhfjl1nqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eh4fK6MvOEJzGRVFM9xO68BnwtpVCxxWfD5SYB2AlS4=;
- b=JS055DuBEKsrj7d6hRtyci4Eoi8V0nPZ1G7Lyga6FGLZDcDfQg5Og8Xt16fKiAj/MaQWlsTFcqhuhJmzi3J2bc+g2p4qPkQBQQlwIOb8pg5w7fal2Ueka7bJ8gnuuLIVTUmhOjj+1TlOyTLJxd5pExXTjagkuZ5QveUflBtUV6XL+2CiGXjTNpmvpJz98jFy19jdFoiMU8IwcYNkyWNYIFlKdDF1As9mEdYUpptRxy6MIeV2uDv8yrPZkr7RXT3Znjq3RCXU+Oj53X6cHUrCPCjqsPXyDIYftwlrta0GHD5npNDXcApWxQoJal133uu+F6QP2gU35W0KYWJyY1H5cg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- LV8PR12MB9111.namprd12.prod.outlook.com (2603:10b6:408:189::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.16; Fri, 14 Feb
- 2025 17:58:44 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8445.016; Fri, 14 Feb 2025
- 17:58:44 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
- Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] mm/page_isolation: make page isolation a
- standalone bit.
-Date: Fri, 14 Feb 2025 12:58:38 -0500
-X-Mailer: MailMate (2.0r6222)
-Message-ID: <88EFE47D-17FB-4C11-8C5C-F04845819EF6@nvidia.com>
-In-Reply-To: <20250214164541.GA233399@cmpxchg.org>
-References: <20250214154215.717537-1-ziy@nvidia.com>
- <20250214154215.717537-2-ziy@nvidia.com>
- <20250214164541.GA233399@cmpxchg.org>
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BY1P220CA0015.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:5c3::10) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhYDuFEV"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-220e83d65e5so31089525ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:58:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739555933; x=1740160733; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IrxkWCsY2BG0TogE7kDNIlucXg1dBLFmlliY7Uuharg=;
+        b=jhYDuFEVkjkmCg4ilJ+EYeimGpSs3uEsZHY0U6KlPqSc1XZTT6GSSnlurnS9K5aLJa
+         l6recFLTgbCaFrEql6riFawQNbfaVZgA91lfakxcZfYWpTulN4WZE92exCsxEFIuPs44
+         E3DUht/yTXFZg4Bds94rQeqOgoToJAcFur6JS3KHw3rDbSucBUxDsnHDmZDv+30kA/a8
+         Hyc10SzBtt6BF5xbCIjgJ8MOBtOuo39NpduYaVrp6RKB/o7AWJDYMQRV26uAKiiTaV9p
+         J59tvttxyo4Q45LDACfo0An04AtDV/HHbnBG9fWzkpVrWiWkH+gjVSkfJOqEHKDy953N
+         2bIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739555933; x=1740160733;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IrxkWCsY2BG0TogE7kDNIlucXg1dBLFmlliY7Uuharg=;
+        b=Hok6fCwSAc8LPMiKmuc9p/IT8X4AyJ5YLgziBSE9UCAGcAKCnjXqdRJJzOGUaIEuIv
+         7SmLBnjmMMx/TV1Mw6OuSHlmkAcHdOIppkrafHkKiqJ0n7S+9dMEVsg5i0dvs655KHDX
+         1wo9h0Eo1lrVcGsYneVfg+6+/eH31f0H2p2n6RPq9yxgD3nbOrJYLz4LSwP3FZNYrDhN
+         v/sZUmM35796/pj/WkyjqE1Rpbe1qs2wxDPQup1kcd6KZCn7q1HzGZQMwL3RC1AjrNqf
+         7sGPgPY+DIySO0tGLksrT6zZGV7qh4W7xvp+c01SrzqwL5MVb0yXFMfW6rs7Dw9FKVir
+         RKKg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2+bPsbW7qfuNb16XG+hNg21OpSOeCoV3YR6vyRIUkz/g9UBZE4b5QOoeAbzxIik3R/rbTyWKDEyBtvwA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyrkn5k4VwOLFTrdFb2vAe5X+y7uWFq5niZRzYmOJKbmS92uk5L
+	Pe+qcg7w8Jp29An+O5SgnDFntiGpiGIq4PcbCjswecaQP4M0AUQX
+X-Gm-Gg: ASbGnctf3ZBHVMkfyNMM7azBem1zffXyskFwsf4IaEpQ7XxupR0ZRgDmmxa+lMpzZvq
+	c8LIWYajJg5VWhOxNay5YDrkk1xPUU1zrvBwXSBkJhvNc+JLst4nWgTdD+3Jc3bN/MZke2PVozD
+	HTt9xDoTxbhqDULQQZqG531n3bpaKy1enQxEcxmuOOh81SjR69NL4t2QnYs+v81BjANPDfd8s5v
+	lC1uTqpT6paAjNemIkBCj/4anF/FI69byC0LjKBQXxaxl0F08EEwP74wGHynvArBnncySeoHA6g
+	KU688lG0Mf4IxuMtH/+Q2Qyi+fAlfe5U4rk3
+X-Google-Smtp-Source: AGHT+IFU/H/3lJEuxMEyY0X4vY4k43jZAun4SfbIvrjpzUIvreDXgYLIc7CySd22D5UQYi76P8WUVQ==
+X-Received: by 2002:a17:902:cccc:b0:220:be86:a42d with SMTP id d9443c01a7336-22104048ecemr2911695ad.21.1739555932901;
+        Fri, 14 Feb 2025 09:58:52 -0800 (PST)
+Received: from KASONG-MC4.tencent.com ([106.37.120.226])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d55943b5sm31216605ad.246.2025.02.14.09.58.48
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 14 Feb 2025 09:58:52 -0800 (PST)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Chris Li <chrisl@kernel.org>,
+	Barry Song <v-songbaohua@oppo.com>,
+	Hugh Dickins <hughd@google.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Baoquan He <bhe@redhat.com>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Kalesh Singh <kaleshsingh@google.com>,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH 6/7] mm, swap: remove swap slot cache
+Date: Sat, 15 Feb 2025 01:57:08 +0800
+Message-ID: <20250214175709.76029-7-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250214175709.76029-1-ryncsn@gmail.com>
+References: <20250214175709.76029-1-ryncsn@gmail.com>
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|LV8PR12MB9111:EE_
-X-MS-Office365-Filtering-Correlation-Id: 75faf91e-62e4-42fc-68b0-08dd4d2138d4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?rFF7TppwZYvv0yJ+XF+Vze2xRONlkmcXHSFChPUK5Xiw3vtJ0LnFD7vN4HJS?=
- =?us-ascii?Q?ThKeLlKgDQKq2q8QfsNmC4xBGPgwZAkq/O1COuJEvtjShJ3WvOYZFjoJYhaP?=
- =?us-ascii?Q?wPW+3OVpaJJiicYLEfz+QxBflcJQtnBFL7RODNrHXBUmOoYooVjsU/r6YSNC?=
- =?us-ascii?Q?2zSWGJMB+eV3Ly0oAESnWbS7gfHDy+6qE69qkHxLtqZmGXL/M50X75zGGKtg?=
- =?us-ascii?Q?dGlsrIV9VP1OLq/DDOA/bsZrjfSuvpPcBeP78dmQl+cfT+yHuFaxI2RIQ+KB?=
- =?us-ascii?Q?hV/vtUYJf5Li+fYcdnIZ/Yv/PpPYslLaGYoVWyuJjEZ81/0V4KZGjtyUtFek?=
- =?us-ascii?Q?gmPgSMFcYkbHzu2doO/O6odD9StDeYDH0GRiim5jmFlBGytRsb0UfnXoiuxV?=
- =?us-ascii?Q?8bwDBwINz2cKGP+hbpxwFeXEHPOb9d0ziFy9/B9Vi9qABC5xftvYv6HHToJN?=
- =?us-ascii?Q?C3oK8OQNPCJNePoawOBFjYWutbglI7+HmbMYaGkwcrfBVpiPGIbblS2bilPq?=
- =?us-ascii?Q?Pz5cyUtqzGL65lkGfXQAflTJsvjwXtbX/nhvXATI7CTWdtMOhEZju5qV7Ie6?=
- =?us-ascii?Q?1qOpj/GSiYeUWlJ8VBM15lBEbfnFr4xtUsXjNm1L0/rs9fJIJhdreQkGXTXs?=
- =?us-ascii?Q?57Px8B9gEzBF1tWp4yw4Pg2sziUbsP9rw1Bg5WU8QXBA6w0zjkKfZmzf0drQ?=
- =?us-ascii?Q?M6ro64tB7czAKELJCdiA20HfEb4YS1p4xjOWH2Eo8fiBVn7FVsL4K/QgM68+?=
- =?us-ascii?Q?GJimNyARzcAty0tx863H1BxAEocq45z5VdErQPBwLJmJRak0NetsjwBFNdCx?=
- =?us-ascii?Q?O39LjrHec96octjelpcc1FsGvazbKmssnojfEJH9Eh8X+czzCh+oV+VO34tg?=
- =?us-ascii?Q?3dXLqhweKapx4u9A4ri8LjSXZo0OsjCtr0cWntdstoj9Ni4jLJNRNsZqpD05?=
- =?us-ascii?Q?bGTGfPnV42Q5iqt/ZrvMHz7aMGGRUl3DQs+XQ5mSo+vkhGR2BWoZI5NmG+f1?=
- =?us-ascii?Q?GRgXLwzULOvLkBy0PXK90TRGnYSDW2Bjg+O3fMGJY+J2eZdgvEtW1l2rQ6od?=
- =?us-ascii?Q?EV7BGXcR/kV9fldpWQMt/YIIxrAWC0YJLoABxc4WuKOB47+4j6hyK80S0JAc?=
- =?us-ascii?Q?xwhG8FrxlXQkzED1hDcgBe7qHGaFE/FIn+FGl5AHCrlyGH6+9oy1YBMfnMfg?=
- =?us-ascii?Q?UIRNnL6+63V9aom76qISzl7eTZQwhuVMOHVwKXdesR5n+iwq5Bda+KbBq6RZ?=
- =?us-ascii?Q?lXGMS1SM9Pn6OpL2TbMxAJ7umbT4X/XwvhxWwmnUaVhrRKdGpD91cj+iG6js?=
- =?us-ascii?Q?m2oY/tmJUvAPhfKn69xpxlE8j6m4Aw8NVF/25/mnSVweapZtaEFIw8lUoUkj?=
- =?us-ascii?Q?vq5LiMLPIY2TPiT6J6q83BhA+Rr0?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?knhiesYKo3rLIETRKzkjShrjrTlZjeDeBcym+MfQTCbSB9nbPItu65cH/HBn?=
- =?us-ascii?Q?7FqiIhO0YiDJzNtAkN3nBILYOUZsTkflnjLgSMYYZxBaPcXrXZpPp1Y3PEMc?=
- =?us-ascii?Q?mw8VQ/4mCpCInOYEai1YVp2GtbHIlcTsZyfrLe7KfoMQk/cxntHvFg2VGQ4F?=
- =?us-ascii?Q?53Z1oGYP6ausFCySJZ4HfbUQlT5QKUrGcAvvxUJaDqnPaR4DxorKD136zZSH?=
- =?us-ascii?Q?Vkbe7lFiByupz+LjUFDmOoSxqNW0SzRQNhldAAflKKpyPhR7BEXNgC6jd6vQ?=
- =?us-ascii?Q?7FQ9E26RcAet73KyHL2nRU23nkARzueUHAzkb/7JrFLhRZB9qXB+m3kniuFA?=
- =?us-ascii?Q?8PJLyFzSgSLDheQXywEu62WOyNYnsUBoH8ncXotssnNa2Q5yweegSkHqLRzS?=
- =?us-ascii?Q?B2Cs0fxzC/7+24gzCFO8KP/REiL1H6Td8WBSVauJNkvEjd3M5UFYZnAvqMhr?=
- =?us-ascii?Q?IUehIuLUt4NnpGcyoi9P1eSzBMsANxbqxa2GZ/cx6R3A2Gjad15/0277NGFm?=
- =?us-ascii?Q?biID82zHz8UMCuco6blWd5UjXMA5hC9LhYmRVyn+wS+xnqqogOjYlAI+JnBB?=
- =?us-ascii?Q?iWmEgMQYfMy3GCtSmp+jdNO4fiHb3PuH2VBA/e1bYnxHqBOob3GPdhFGOecD?=
- =?us-ascii?Q?o478ZaLRTSfegyw5f44l/z20jG3s7RzkizGMnKBDIu3H1bnROhK9neU9E1Iy?=
- =?us-ascii?Q?5DclqdLKGBqSGKdVNGTvIFMIwVOthWTjpRYyNGZlAGVU+oFBwEqUcGW18ypG?=
- =?us-ascii?Q?u92urBsyvmecjvJg1uI9IMSrOBIsndn7zUxzJ4VLaDqGdrdEVJSTEMK2shrR?=
- =?us-ascii?Q?24QQoJnT1dpnQlF9unPfww2/qTxDjTYil/qAPcf/4vJLfwP1J8K2yhbn7VO7?=
- =?us-ascii?Q?29SpFlA1lACLLUEXY7BIC+ykx/jvJ+CbKKdqtmtsFjamguzzFj2FfHNgrXLm?=
- =?us-ascii?Q?im9KmKc2DnU+WDsM2maHRuKa3/juknaR1022cXs6B+RIyqzBo1cdaU2gqufF?=
- =?us-ascii?Q?vqgZSC9hH5oj8pMEG8mctHk09yWHnqU3PZkAXWdOBk0oqNLg/S4hSBmvy6hW?=
- =?us-ascii?Q?lmZsPDVS12MLNiDC3Lr4d5xf3yXeWyeOqRE23toljybywFcOaDOgdQEFWHCD?=
- =?us-ascii?Q?BernrZfpw2bP1+TW3AKw4CgLB3iRGcpBR7mlXeFzro8bYoFfgxSJzxbX9AXh?=
- =?us-ascii?Q?p7kvhA+D317zKssGDds2KrZvUI7cMuhgiflvxM33rmV4/Rp1A5gJl1O/Rfxj?=
- =?us-ascii?Q?mnLmZjej3kN7M2goAckdWolG//d2AkONEO+f5Ch41HcLQSsCk1BrvQaVDT50?=
- =?us-ascii?Q?SnNf1lwjLaTId3YEx+qOmqVwoHB48MytlH3SqCF1VsbX8mHD/fPssq9ZQ4Ln?=
- =?us-ascii?Q?2977JslHB03X8q8UdCNJWzj72hrr1KWEC/2mP+cJ8FMFfOdXQ8xJ0k2JhVOP?=
- =?us-ascii?Q?Z3k50TW/x7McG/KTyQJe0AQH4jI/TKf5+38Slz3gY71asxRza/KfwiARsEeo?=
- =?us-ascii?Q?b7JA+eOLvH7u7CyMuiQG9z6dxUeGrOpFAO3nM4y+vwAcaruEHM8FjPg3XGE4?=
- =?us-ascii?Q?9zZ3RoVPqky3MNxDsSflTu7nz8re2WyfZnGaw/XO?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75faf91e-62e4-42fc-68b0-08dd4d2138d4
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 17:58:44.1127
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WhPXecgm7tjEE4rstPKUy4Bz5GjskKpe7vMizFRK6riBhnTrfwQcQfOsh0d9sXxA
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9111
+Content-Transfer-Encoding: 8bit
 
-On 14 Feb 2025, at 11:45, Johannes Weiner wrote:
+From: Kairui Song <kasong@tencent.com>
 
-> On Fri, Feb 14, 2025 at 10:42:12AM -0500, Zi Yan wrote:
->> During page isolation, the original migratetype is overwritten, since
->> MIGRATE_* are enums. Change MIGRATE_ISOLATE to be a standalone bit lik=
-e
->> PB_migrate_skip. pageblock bits needs to be word aligned, so expand
->> the number of pageblock bits from 4 to 8 and make migrate isolate bit =
-7.
->>
->> Signed-off-by: Zi Yan <ziy@nvidia.com>
->> ---
->>  include/linux/mmzone.h          | 18 +++++++++++++-----
->>  include/linux/page-isolation.h  |  2 +-
->>  include/linux/pageblock-flags.h | 33 ++++++++++++++++++++++++++++++++=
+Slot cache is no longer needed now, removing it and all related code.
+
+- vm-scalability with: `usemem --init-time -O -y -x -R -31 1G`,
+12G memory cgroup using simulated pmem as SWAP (32G pmem, 32 CPUs),
+16 test runs for each case, measuring the total throughput:
+
+                      Before (KB/s) (stdev)  After (KB/s) (stdev)
+Random (4K):          424907.60 (24410.78)   414745.92  (34554.78)
+Random (64K):         163308.82 (11635.72)   167314.50  (18434.99)
+Sequential (4K, !-R): 6150056.79 (103205.90) 6321469.06 (115878.16)
+
+The performance changes are below noise level.
+
+- Build linux kernel with make -j96, using 4K folio with 1.5G memory
+cgroup limit and 64K folio with 2G memory cgroup limit, on top of tmpfs,
+12 test runs, measuring the system time:
+
+                  Before (s) (stdev)  After (s) (stdev)
+make -j96 (4K):   6445.69 (61.95)     6408.80 (69.46)
+make -j96 (64K):  6841.71 (409.04)    6437.99 (435.55)
+
+Similar to above, 64k mTHP case showed a slight improvement.
+
+Signed-off-by: Kairui Song <kasong@tencent.com>
+---
+ include/linux/swap.h       |   2 -
+ include/linux/swap_slots.h |  28 ----
+ mm/Makefile                |   2 +-
+ mm/swap_slots.c            | 295 -------------------------------------
+ mm/swap_state.c            |   8 +-
+ mm/swapfile.c              | 173 ++++++++--------------
+ 6 files changed, 64 insertions(+), 444 deletions(-)
+ delete mode 100644 include/linux/swap_slots.h
+ delete mode 100644 mm/swap_slots.c
+
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index a8d84f22357e..456833705ea0 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -465,7 +465,6 @@ void free_pages_and_swap_cache(struct encoded_page **, int);
+ extern atomic_long_t nr_swap_pages;
+ extern long total_swap_pages;
+ extern atomic_t nr_rotate_swap;
+-extern bool has_usable_swap(void);
+ 
+ /* Swap 50% full? Release swapcache more aggressively.. */
+ static inline bool vm_swap_full(void)
+@@ -489,7 +488,6 @@ extern void swap_shmem_alloc(swp_entry_t, int);
+ extern int swap_duplicate(swp_entry_t);
+ extern int swapcache_prepare(swp_entry_t entry, int nr);
+ extern void swap_free_nr(swp_entry_t entry, int nr_pages);
+-extern void swapcache_free_entries(swp_entry_t *entries, int n);
+ extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
+ int swap_type_of(dev_t device, sector_t offset);
+ int find_first_swap(dev_t *device);
+diff --git a/include/linux/swap_slots.h b/include/linux/swap_slots.h
+deleted file mode 100644
+index 840aec3523b2..000000000000
+--- a/include/linux/swap_slots.h
++++ /dev/null
+@@ -1,28 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _LINUX_SWAP_SLOTS_H
+-#define _LINUX_SWAP_SLOTS_H
 -
->>  mm/page_alloc.c                 | 21 +++++++++++++++++++--
->>  4 files changed, 65 insertions(+), 9 deletions(-)
->>
->> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
->> index 8aecbbb0b685..3c7d3f22ccb2 100644
->> --- a/include/linux/mmzone.h
->> +++ b/include/linux/mmzone.h
->> @@ -106,14 +106,22 @@ static inline bool migratetype_is_mergeable(int =
-mt)
->>
->>  extern int page_group_by_mobility_disabled;
->>
->> -#define MIGRATETYPE_MASK ((1UL << PB_migratetype_bits) - 1)
->> +#ifdef CONFIG_MEMORY_ISOLATION
->> +#define MIGRATETYPE_NO_ISO_MASK (BIT(PB_migratetype_bits) - 1)
->> +#define MIGRATETYPE_MASK (MIGRATETYPE_NO_ISO_MASK | PB_migrate_isolat=
-e_bit)
->> +#else
->> +#define MIGRATETYPE_NO_ISO_MASK (BIT(PB_migratetype_bits) - 1)
->> +#define MIGRATETYPE_MASK (BIT(PB_migratetype_bits) - 1)
->> +#endif
->
-> There is no user of the NO_ISO_MASK until the last patch. Can you
-> please defer introduction until then?
+-#include <linux/swap.h>
+-#include <linux/spinlock.h>
+-#include <linux/mutex.h>
+-
+-#define SWAP_SLOTS_CACHE_SIZE			SWAP_BATCH
+-#define THRESHOLD_ACTIVATE_SWAP_SLOTS_CACHE	(5*SWAP_SLOTS_CACHE_SIZE)
+-#define THRESHOLD_DEACTIVATE_SWAP_SLOTS_CACHE	(2*SWAP_SLOTS_CACHE_SIZE)
+-
+-struct swap_slots_cache {
+-	bool		lock_initialized;
+-	struct mutex	alloc_lock; /* protects slots, nr, cur */
+-	swp_entry_t	*slots;
+-	int		nr;
+-	int		cur;
+-	int		n_ret;
+-};
+-
+-void disable_swap_slots_cache_lock(void);
+-void reenable_swap_slots_cache_unlock(void);
+-void enable_swap_slots_cache(void);
+-
+-extern bool swap_slot_cache_enabled;
+-
+-#endif /* _LINUX_SWAP_SLOTS_H */
+diff --git a/mm/Makefile b/mm/Makefile
+index 53392d2af3a5..ea16e472b294 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -75,7 +75,7 @@ ifdef CONFIG_MMU
+ 	obj-$(CONFIG_ADVISE_SYSCALLS)	+= madvise.o
+ endif
+ 
+-obj-$(CONFIG_SWAP)	+= page_io.o swap_state.o swapfile.o swap_slots.o
++obj-$(CONFIG_SWAP)	+= page_io.o swap_state.o swapfile.o
+ obj-$(CONFIG_ZSWAP)	+= zswap.o
+ obj-$(CONFIG_HAS_DMA)	+= dmapool.o
+ obj-$(CONFIG_HUGETLBFS)	+= hugetlb.o
+diff --git a/mm/swap_slots.c b/mm/swap_slots.c
+deleted file mode 100644
+index 9c7c171df7ba..000000000000
+--- a/mm/swap_slots.c
++++ /dev/null
+@@ -1,295 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Manage cache of swap slots to be used for and returned from
+- * swap.
+- *
+- * Copyright(c) 2016 Intel Corporation.
+- *
+- * Author: Tim Chen <tim.c.chen@linux.intel.com>
+- *
+- * We allocate the swap slots from the global pool and put
+- * it into local per cpu caches.  This has the advantage
+- * of no needing to acquire the swap_info lock every time
+- * we need a new slot.
+- *
+- * There is also opportunity to simply return the slot
+- * to local caches without needing to acquire swap_info
+- * lock.  We do not reuse the returned slots directly but
+- * move them back to the global pool in a batch.  This
+- * allows the slots to coalesce and reduce fragmentation.
+- *
+- * The swap entry allocated is marked with SWAP_HAS_CACHE
+- * flag in map_count that prevents it from being allocated
+- * again from the global pool.
+- *
+- * The swap slots cache is protected by a mutex instead of
+- * a spin lock as when we search for slots with scan_swap_map,
+- * we can possibly sleep.
+- */
+-
+-#include <linux/swap_slots.h>
+-#include <linux/cpu.h>
+-#include <linux/cpumask.h>
+-#include <linux/slab.h>
+-#include <linux/vmalloc.h>
+-#include <linux/mutex.h>
+-#include <linux/mm.h>
+-
+-static DEFINE_PER_CPU(struct swap_slots_cache, swp_slots);
+-static bool	swap_slot_cache_active;
+-bool	swap_slot_cache_enabled;
+-static bool	swap_slot_cache_initialized;
+-static DEFINE_MUTEX(swap_slots_cache_mutex);
+-/* Serialize swap slots cache enable/disable operations */
+-static DEFINE_MUTEX(swap_slots_cache_enable_mutex);
+-
+-static void __drain_swap_slots_cache(void);
+-
+-#define use_swap_slot_cache (swap_slot_cache_active && swap_slot_cache_enabled)
+-
+-static void deactivate_swap_slots_cache(void)
+-{
+-	mutex_lock(&swap_slots_cache_mutex);
+-	swap_slot_cache_active = false;
+-	__drain_swap_slots_cache();
+-	mutex_unlock(&swap_slots_cache_mutex);
+-}
+-
+-static void reactivate_swap_slots_cache(void)
+-{
+-	mutex_lock(&swap_slots_cache_mutex);
+-	swap_slot_cache_active = true;
+-	mutex_unlock(&swap_slots_cache_mutex);
+-}
+-
+-/* Must not be called with cpu hot plug lock */
+-void disable_swap_slots_cache_lock(void)
+-{
+-	mutex_lock(&swap_slots_cache_enable_mutex);
+-	swap_slot_cache_enabled = false;
+-	if (swap_slot_cache_initialized) {
+-		/* serialize with cpu hotplug operations */
+-		cpus_read_lock();
+-		__drain_swap_slots_cache();
+-		cpus_read_unlock();
+-	}
+-}
+-
+-static void __reenable_swap_slots_cache(void)
+-{
+-	swap_slot_cache_enabled = has_usable_swap();
+-}
+-
+-void reenable_swap_slots_cache_unlock(void)
+-{
+-	__reenable_swap_slots_cache();
+-	mutex_unlock(&swap_slots_cache_enable_mutex);
+-}
+-
+-static bool check_cache_active(void)
+-{
+-	long pages;
+-
+-	if (!swap_slot_cache_enabled)
+-		return false;
+-
+-	pages = get_nr_swap_pages();
+-	if (!swap_slot_cache_active) {
+-		if (pages > num_online_cpus() *
+-		    THRESHOLD_ACTIVATE_SWAP_SLOTS_CACHE)
+-			reactivate_swap_slots_cache();
+-		goto out;
+-	}
+-
+-	/* if global pool of slot caches too low, deactivate cache */
+-	if (pages < num_online_cpus() * THRESHOLD_DEACTIVATE_SWAP_SLOTS_CACHE)
+-		deactivate_swap_slots_cache();
+-out:
+-	return swap_slot_cache_active;
+-}
+-
+-static int alloc_swap_slot_cache(unsigned int cpu)
+-{
+-	struct swap_slots_cache *cache;
+-	swp_entry_t *slots;
+-
+-	/*
+-	 * Do allocation outside swap_slots_cache_mutex
+-	 * as kvzalloc could trigger reclaim and folio_alloc_swap,
+-	 * which can lock swap_slots_cache_mutex.
+-	 */
+-	slots = kvcalloc(SWAP_SLOTS_CACHE_SIZE, sizeof(swp_entry_t),
+-			 GFP_KERNEL);
+-	if (!slots)
+-		return -ENOMEM;
+-
+-	mutex_lock(&swap_slots_cache_mutex);
+-	cache = &per_cpu(swp_slots, cpu);
+-	if (cache->slots) {
+-		/* cache already allocated */
+-		mutex_unlock(&swap_slots_cache_mutex);
+-
+-		kvfree(slots);
+-
+-		return 0;
+-	}
+-
+-	if (!cache->lock_initialized) {
+-		mutex_init(&cache->alloc_lock);
+-		cache->lock_initialized = true;
+-	}
+-	cache->nr = 0;
+-	cache->cur = 0;
+-	cache->n_ret = 0;
+-	/*
+-	 * We initialized alloc_lock and free_lock earlier.  We use
+-	 * !cache->slots or !cache->slots_ret to know if it is safe to acquire
+-	 * the corresponding lock and use the cache.  Memory barrier below
+-	 * ensures the assumption.
+-	 */
+-	mb();
+-	cache->slots = slots;
+-	mutex_unlock(&swap_slots_cache_mutex);
+-	return 0;
+-}
+-
+-static void drain_slots_cache_cpu(unsigned int cpu, bool free_slots)
+-{
+-	struct swap_slots_cache *cache;
+-
+-	cache = &per_cpu(swp_slots, cpu);
+-	if (cache->slots) {
+-		mutex_lock(&cache->alloc_lock);
+-		swapcache_free_entries(cache->slots + cache->cur, cache->nr);
+-		cache->cur = 0;
+-		cache->nr = 0;
+-		if (free_slots && cache->slots) {
+-			kvfree(cache->slots);
+-			cache->slots = NULL;
+-		}
+-		mutex_unlock(&cache->alloc_lock);
+-	}
+-}
+-
+-static void __drain_swap_slots_cache(void)
+-{
+-	unsigned int cpu;
+-
+-	/*
+-	 * This function is called during
+-	 *	1) swapoff, when we have to make sure no
+-	 *	   left over slots are in cache when we remove
+-	 *	   a swap device;
+-	 *      2) disabling of swap slot cache, when we run low
+-	 *	   on swap slots when allocating memory and need
+-	 *	   to return swap slots to global pool.
+-	 *
+-	 * We cannot acquire cpu hot plug lock here as
+-	 * this function can be invoked in the cpu
+-	 * hot plug path:
+-	 * cpu_up -> lock cpu_hotplug -> cpu hotplug state callback
+-	 *   -> memory allocation -> direct reclaim -> folio_alloc_swap
+-	 *   -> drain_swap_slots_cache
+-	 *
+-	 * Hence the loop over current online cpu below could miss cpu that
+-	 * is being brought online but not yet marked as online.
+-	 * That is okay as we do not schedule and run anything on a
+-	 * cpu before it has been marked online. Hence, we will not
+-	 * fill any swap slots in slots cache of such cpu.
+-	 * There are no slots on such cpu that need to be drained.
+-	 */
+-	for_each_online_cpu(cpu)
+-		drain_slots_cache_cpu(cpu, false);
+-}
+-
+-static int free_slot_cache(unsigned int cpu)
+-{
+-	mutex_lock(&swap_slots_cache_mutex);
+-	drain_slots_cache_cpu(cpu, true);
+-	mutex_unlock(&swap_slots_cache_mutex);
+-	return 0;
+-}
+-
+-void enable_swap_slots_cache(void)
+-{
+-	mutex_lock(&swap_slots_cache_enable_mutex);
+-	if (!swap_slot_cache_initialized) {
+-		int ret;
+-
+-		ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "swap_slots_cache",
+-					alloc_swap_slot_cache, free_slot_cache);
+-		if (WARN_ONCE(ret < 0, "Cache allocation failed (%s), operating "
+-				       "without swap slots cache.\n", __func__))
+-			goto out_unlock;
+-
+-		swap_slot_cache_initialized = true;
+-	}
+-
+-	__reenable_swap_slots_cache();
+-out_unlock:
+-	mutex_unlock(&swap_slots_cache_enable_mutex);
+-}
+-
+-/* called with swap slot cache's alloc lock held */
+-static int refill_swap_slots_cache(struct swap_slots_cache *cache)
+-{
+-	if (!use_swap_slot_cache)
+-		return 0;
+-
+-	cache->cur = 0;
+-	if (swap_slot_cache_active)
+-		cache->nr = get_swap_pages(SWAP_SLOTS_CACHE_SIZE,
+-					   cache->slots, 0);
+-
+-	return cache->nr;
+-}
+-
+-swp_entry_t folio_alloc_swap(struct folio *folio)
+-{
+-	swp_entry_t entry;
+-	struct swap_slots_cache *cache;
+-
+-	entry.val = 0;
+-
+-	if (folio_test_large(folio)) {
+-		if (IS_ENABLED(CONFIG_THP_SWAP))
+-			get_swap_pages(1, &entry, folio_order(folio));
+-		goto out;
+-	}
+-
+-	/*
+-	 * Preemption is allowed here, because we may sleep
+-	 * in refill_swap_slots_cache().  But it is safe, because
+-	 * accesses to the per-CPU data structure are protected by the
+-	 * mutex cache->alloc_lock.
+-	 *
+-	 * The alloc path here does not touch cache->slots_ret
+-	 * so cache->free_lock is not taken.
+-	 */
+-	cache = raw_cpu_ptr(&swp_slots);
+-
+-	if (likely(check_cache_active() && cache->slots)) {
+-		mutex_lock(&cache->alloc_lock);
+-		if (cache->slots) {
+-repeat:
+-			if (cache->nr) {
+-				entry = cache->slots[cache->cur];
+-				cache->slots[cache->cur++].val = 0;
+-				cache->nr--;
+-			} else if (refill_swap_slots_cache(cache)) {
+-				goto repeat;
+-			}
+-		}
+-		mutex_unlock(&cache->alloc_lock);
+-		if (entry.val)
+-			goto out;
+-	}
+-
+-	get_swap_pages(1, &entry, 0);
+-out:
+-	if (mem_cgroup_try_charge_swap(folio, entry)) {
+-		put_swap_folio(folio, entry);
+-		entry.val = 0;
+-	}
+-	return entry;
+-}
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index 50840a2887a5..2b5744e211cd 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -20,7 +20,6 @@
+ #include <linux/blkdev.h>
+ #include <linux/migrate.h>
+ #include <linux/vmalloc.h>
+-#include <linux/swap_slots.h>
+ #include <linux/huge_mm.h>
+ #include <linux/shmem_fs.h>
+ #include "internal.h"
+@@ -447,13 +446,8 @@ struct folio *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+ 
+ 		/*
+ 		 * Just skip read ahead for unused swap slot.
+-		 * During swap_off when swap_slot_cache is disabled,
+-		 * we have to handle the race between putting
+-		 * swap entry in swap cache and marking swap slot
+-		 * as SWAP_HAS_CACHE.  That's done in later part of code or
+-		 * else swap_off will be aborted if we return NULL.
+ 		 */
+-		if (!swap_entry_swapped(si, entry) && swap_slot_cache_enabled)
++		if (!swap_entry_swapped(si, entry))
+ 			goto put_and_return;
+ 
+ 		/*
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 791cd7ed5bdf..66c8869ef346 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -37,7 +37,6 @@
+ #include <linux/oom.h>
+ #include <linux/swapfile.h>
+ #include <linux/export.h>
+-#include <linux/swap_slots.h>
+ #include <linux/sort.h>
+ #include <linux/completion.h>
+ #include <linux/suspend.h>
+@@ -892,6 +891,13 @@ static unsigned long cluster_alloc_swap_entry(struct swap_info_struct *si, int o
+ 	struct swap_cluster_info *ci;
+ 	unsigned int offset, found = 0;
+ 
++	/*
++	 * Swapfile is not block device so unable
++	 * to allocate large entries.
++	 */
++	if (order && !(si->flags & SWP_BLKDEV))
++		return 0;
++
+ 	if (!(si->flags & SWP_SOLIDSTATE)) {
+ 		/* Serialize HDD SWAP allocation for each device. */
+ 		spin_lock(&si->global_cluster_lock);
+@@ -1155,43 +1161,6 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
+ 	swap_usage_sub(si, nr_entries);
+ }
+ 
+-static int scan_swap_map_slots(struct swap_info_struct *si,
+-			       unsigned char usage, int nr,
+-			       swp_entry_t slots[], int order)
+-{
+-	unsigned int nr_pages = 1 << order;
+-	int n_ret = 0;
+-
+-	if (order > 0) {
+-		/*
+-		 * Should not even be attempting large allocations when huge
+-		 * page swap is disabled.  Warn and fail the allocation.
+-		 */
+-		if (!IS_ENABLED(CONFIG_THP_SWAP) ||
+-		    nr_pages > SWAPFILE_CLUSTER) {
+-			VM_WARN_ON_ONCE(1);
+-			return 0;
+-		}
+-
+-		/*
+-		 * Swapfile is not block device so unable
+-		 * to allocate large entries.
+-		 */
+-		if (!(si->flags & SWP_BLKDEV))
+-			return 0;
+-	}
+-
+-	while (n_ret < nr) {
+-		unsigned long offset = cluster_alloc_swap_entry(si, order, usage);
+-
+-		if (!offset)
+-			break;
+-		slots[n_ret++] = swp_entry(si->type, offset);
+-	}
+-
+-	return n_ret;
+-}
+-
+ static bool get_swap_device_info(struct swap_info_struct *si)
+ {
+ 	if (!percpu_ref_tryget_live(&si->users))
+@@ -1212,54 +1181,53 @@ static bool get_swap_device_info(struct swap_info_struct *si)
+  * Fast path try to get swap entries with specified order from current
+  * CPU's swap entry pool (a cluster).
+  */
+-static int swap_alloc_fast(swp_entry_t entries[],
++static int swap_alloc_fast(swp_entry_t *entry,
+ 			   unsigned char usage,
+-			   int order, int n_goal)
++			   int order)
+ {
+ 	struct swap_cluster_info *ci;
+ 	struct swap_info_struct *si;
+-	unsigned int offset, found;
+-	int n_ret = 0;
+-
+-	n_goal = min(n_goal, SWAP_BATCH);
++	unsigned int offset, found = SWAP_ENTRY_INVALID;
+ 
+ 	si = __this_cpu_read(percpu_swap_cluster.si);
+ 	offset = __this_cpu_read(percpu_swap_cluster.offset[order]);
+ 	if (!si || !offset || !get_swap_device_info(si))
+-		return 0;
++		return false;
+ 
+-	while (offset) {
+-		ci = lock_cluster(si, offset);
+-		found = alloc_swap_scan_cluster(si, ci, offset, order, usage);
+-		if (!found)
+-			break;
+-		entries[n_ret++] = swp_entry(si->type, found);
+-		if (n_ret == n_goal)
+-			break;
+-		offset = __this_cpu_read(percpu_swap_cluster.offset[order]);
+-	}
++	ci = lock_cluster(si, offset);
++	found = alloc_swap_scan_cluster(si, ci, offset, order, usage);
++	if (found)
++		*entry = swp_entry(si->type, found);
+ 
+ 	put_swap_device(si);
+-	return n_ret;
++	return !!found;
+ }
+ 
+-int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_order)
++swp_entry_t folio_alloc_swap(struct folio *folio)
+ {
+-	int order = swap_entry_order(entry_order);
+-	unsigned long size = 1 << order;
++	unsigned int order = folio_order(folio);
++	unsigned int size = 1 << order;
+ 	struct swap_info_struct *si, *next;
+-	int n_ret = 0;
++	swp_entry_t entry = {};
++	unsigned long offset;
+ 	int node;
+ 
++	if (order) {
++		/*
++		 * Should not even be attempting large allocations when huge
++		 * page swap is disabled. Warn and fail the allocation.
++		 */
++		if (!IS_ENABLED(CONFIG_THP_SWAP) || size > SWAPFILE_CLUSTER) {
++			VM_WARN_ON_ONCE(1);
++			return entry;
++		}
++	}
++
+ 	/* Fast path using percpu cluster */
+ 	local_lock(&percpu_swap_cluster.lock);
+-	n_ret = swap_alloc_fast(swp_entries,
+-				SWAP_HAS_CACHE,
+-				order, n_goal);
+-	if (n_ret == n_goal)
+-		goto out;
++	if (swap_alloc_fast(&entry, SWAP_HAS_CACHE, order))
++		goto out_alloced;
+ 
+-	n_goal = min_t(int, n_goal - n_ret, SWAP_BATCH);
+ 	/* Rotate the device and switch to a new cluster */
+ 	spin_lock(&swap_avail_lock);
+ start_over:
+@@ -1268,11 +1236,14 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_order)
+ 		plist_requeue(&si->avail_lists[node], &swap_avail_heads[node]);
+ 		spin_unlock(&swap_avail_lock);
+ 		if (get_swap_device_info(si)) {
+-			n_ret += scan_swap_map_slots(si, SWAP_HAS_CACHE, n_goal,
+-					swp_entries + n_ret, order);
++			offset = cluster_alloc_swap_entry(si, order, SWAP_HAS_CACHE);
+ 			put_swap_device(si);
+-			if (n_ret || size > 1)
+-				goto out;
++			if (offset) {
++				entry = swp_entry(si->type, offset);
++				goto out_alloced;
++			}
++			if (order)
++				goto out_failed;
+ 		}
+ 
+ 		spin_lock(&swap_avail_lock);
+@@ -1291,10 +1262,20 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_order)
+ 			goto start_over;
+ 	}
+ 	spin_unlock(&swap_avail_lock);
+-out:
++out_failed:
++	local_unlock(&percpu_swap_cluster.lock);
++	return entry;
++
++out_alloced:
+ 	local_unlock(&percpu_swap_cluster.lock);
+-	atomic_long_sub(n_ret * size, &nr_swap_pages);
+-	return n_ret;
++	if (mem_cgroup_try_charge_swap(folio, entry)) {
++		put_swap_folio(folio, entry);
++		entry.val = 0;
++	} else {
++		atomic_long_sub(size, &nr_swap_pages);
++	}
++
++	return entry;
+ }
+ 
+ static struct swap_info_struct *_swap_info_get(swp_entry_t entry)
+@@ -1590,25 +1571,6 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry)
+ 	unlock_cluster(ci);
+ }
+ 
+-void swapcache_free_entries(swp_entry_t *entries, int n)
+-{
+-	int i;
+-	struct swap_cluster_info *ci;
+-	struct swap_info_struct *si = NULL;
+-
+-	if (n <= 0)
+-		return;
+-
+-	for (i = 0; i < n; ++i) {
+-		si = _swap_info_get(entries[i]);
+-		if (si) {
+-			ci = lock_cluster(si, swp_offset(entries[i]));
+-			swap_entry_range_free(si, ci, entries[i], 1);
+-			unlock_cluster(ci);
+-		}
+-	}
+-}
+-
+ int __swap_count(swp_entry_t entry)
+ {
+ 	struct swap_info_struct *si = swp_swap_info(entry);
+@@ -1849,6 +1811,7 @@ void free_swap_and_cache_nr(swp_entry_t entry, int nr)
+ swp_entry_t get_swap_page_of_type(int type)
+ {
+ 	struct swap_info_struct *si = swap_type_to_swap_info(type);
++	unsigned long offset;
+ 	swp_entry_t entry = {0};
+ 
+ 	if (!si)
+@@ -1856,8 +1819,13 @@ swp_entry_t get_swap_page_of_type(int type)
+ 
+ 	/* This is called for allocating swap entry, not cache */
+ 	if (get_swap_device_info(si)) {
+-		if ((si->flags & SWP_WRITEOK) && scan_swap_map_slots(si, 1, 1, &entry, 0))
+-			atomic_long_dec(&nr_swap_pages);
++		if (si->flags & SWP_WRITEOK) {
++			offset = cluster_alloc_swap_entry(si, 0, 1);
++			if (offset) {
++				entry = swp_entry(si->type, offset);
++				atomic_long_dec(&nr_swap_pages);
++			}
++		}
+ 		put_swap_device(si);
+ 	}
+ fail:
+@@ -2623,16 +2591,6 @@ static bool __has_usable_swap(void)
+ 	return !plist_head_empty(&swap_active_head);
+ }
+ 
+-bool has_usable_swap(void)
+-{
+-	bool ret;
+-
+-	spin_lock(&swap_lock);
+-	ret = __has_usable_swap();
+-	spin_unlock(&swap_lock);
+-	return ret;
+-}
+-
+ /*
+  * Called after clearing SWP_WRITEOK, ensures cluster_alloc_range
+  * see the updated flags, so there will be no more allocations.
+@@ -2724,8 +2682,6 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
+ 
+ 	wait_for_allocation(p);
+ 
+-	disable_swap_slots_cache_lock();
+-
+ 	set_current_oom_origin();
+ 	err = try_to_unuse(p->type);
+ 	clear_current_oom_origin();
+@@ -2733,12 +2689,9 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
+ 	if (err) {
+ 		/* re-insert swap space back into swap_list */
+ 		reinsert_swap_info(p);
+-		reenable_swap_slots_cache_unlock();
+ 		goto out_dput;
+ 	}
+ 
+-	reenable_swap_slots_cache_unlock();
+-
+ 	/*
+ 	 * Wait for swap operations protected by get/put_swap_device()
+ 	 * to complete.  Because of synchronize_rcu() here, all swap
+@@ -3487,8 +3440,6 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+ 		putname(name);
+ 	if (inode)
+ 		inode_unlock(inode);
+-	if (!error)
+-		enable_swap_slots_cache();
+ 	return error;
+ }
+ 
+-- 
+2.48.1
 
-Sure.
-
->
->> -#define get_pageblock_migratetype(page)					\
->> -	get_pfnblock_flags_mask(page, page_to_pfn(page), MIGRATETYPE_MASK)
->> +#define get_pageblock_migratetype(page) \
->> +		get_pfnblock_flags_mask(page, page_to_pfn(page), \
->> +			MIGRATETYPE_MASK)
->>
->> -#define folio_migratetype(folio)				\
->> -	get_pfnblock_flags_mask(&folio->page, folio_pfn(folio),		\
->> +#define folio_migratetype(folio) \
->> +		get_pfnblock_flags_mask(&folio->page, folio_pfn(folio), \
->>  			MIGRATETYPE_MASK)
->
-> That's a spurious change currently. I assume you tweaked the
-> MIGRATETYPE_MASK parameter during development, but I can't see a
-> functional difference now.
-
-Right, will remove it.
->
->> @@ -373,7 +374,13 @@ unsigned long get_pfnblock_flags_mask(const struc=
-t page *page,
->>  	 * racy, are not corrupted.
->>  	 */
->>  	word =3D READ_ONCE(bitmap[word_bitidx]);
->> -	return (word >> bitidx) & mask;
->> +	flags =3D (word >> bitidx) & mask;
->> +
->> +#ifdef CONFIG_MEMORY_ISOLATION
->> +	if (flags & PB_migrate_isolate_bit)
->> +		return MIGRATE_ISOLATE;
->> +#endif
->> +	return flags;
->>  }
->>
->>  static __always_inline int get_pfnblock_migratetype(const struct page=
- *page,
->> @@ -397,8 +404,18 @@ void set_pfnblock_flags_mask(struct page *page, u=
-nsigned long flags,
->>  	unsigned long bitidx, word_bitidx;
->>  	unsigned long word;
->>
->> +#ifdef CONFIG_MEMORY_ISOLATION
->> +	BUILD_BUG_ON(NR_PAGEBLOCK_BITS !=3D 8);
->> +	/* keep other migratetype bits if MIGRATE_ISOLATE is set */
->> +	if (flags =3D=3D MIGRATE_ISOLATE) {
->> +		mask &=3D ~((1UL << PB_migratetype_bits) - 1);
->> +		flags =3D PB_migrate_isolate_bit;
->> +	}
->
-> Please change the callers in both cases to pass the appropriate masks
-> of interest instead.
->
-> That's likely a bit of churn in the allocator code, but adding caller
-> specifics to this function violates abstraction layering rules.
-
-Basically, expose this to the caller. Namely, if it is setting
-MIGRATE_ISOLATE, it should use the MIGRATETYPE_ISO_ONLY_MASK. Otherwise,
-use MIGRATETYPE_MASK. Maybe adds two helper functions for
-setting pageblock isolation and clearing pageblock isolation, like
-{set,clear}_pageblock_skip()? I thought about it and did not do that
-due to code churn, but now you ask for it explicitly, I am going to
-do that.
-
-Thank you for the review.
-
-Best Regards,
-Yan, Zi
