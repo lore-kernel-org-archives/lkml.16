@@ -1,112 +1,79 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7FC2153FA
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 12:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9175C22B8CF;
+	Fri, 14 Feb 2025 12:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739536228; cv=none; b=mvZuRgfRZtg8r7QD7FODzxrGcsDLC3MT7PbM1aIaA2HnlLSu4MEgMRIQLqJfStlEOrvU4msNDwJlTs4idl2kOczUiK37dUCVWkH109cEe1JrDxKJiLD6ISPyaZR4/Vw2BJ5E3CmpufeqZofSryOZoKboaAUkpC1Vln8dMBX/c1k=
+	t=1739536265; cv=none; b=GfNSxyInkQR7lTOAxCyjPJjJK4NtnpDOJz5uvt8JWjg9KOA7qoX8Nvs0fm08xGh9l/dDUMpmOcK9pDOfaZ3EptfZPGdZ4YdBwcE4n9IaZPxYOanUWG785NjSBAE14b/b4XjyLPonIw19Ulboz7BQN9p14ZdYDgJ4NiIaCrsUgts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739536228; c=relaxed/simple;
-	bh=Zo5kkoJMHUcshaZGn3DkGww9825pA4WmX/wLhxJ3KVE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZVOJz1wvOtocHVK1sBAad8wEtegd7+KldR0sTSPJ2aG00L9qllLbvR1IDsrf+qHRMn5RnQWNFNlngjnBHC6X12DYhCgeze+J5TB6O5vw7GnhgAmSut3/ll+ubG2RJdN5gXO8quO7KnD2dLqauUEMtwbQnaYf9Ij3fru02Whhzfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fireburn.co.uk; spf=none smtp.mailfrom=fireburn.co.uk; dkim=pass (2048-bit key) header.d=fireburn-co-uk.20230601.gappssmtp.com header.i=@fireburn-co-uk.20230601.gappssmtp.com header.b=KjXgz75g; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fireburn.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fireburn.co.uk
+	s=arc-20240116; t=1739536265; c=relaxed/simple;
+	bh=XVvR1UZVOeAsb4IoS3qSYew0K2L8dYRU8cdhlHhTJ84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fcscHRuDkW5S9oCxGrP6oJZZ7ra9K18+2kYgSlY/1sUKtJZybAcOV4zKnaU2JF0HzeojeN301FA2XjrQVCbzNGjZYd02ZRGSrGdAJ9loyPHD29yjvkBrkY2h5FjcdA8rUvXq9i7I7z8JXifkhOD+Rr2N5+3yMS5+sWz/OatPU9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CgPgNxAd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fireburn-co-uk.20230601.gappssmtp.com header.i=@fireburn-co-uk.20230601.gappssmtp.com header.b="KjXgz75g"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43948021a45so20892145e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 04:30:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fireburn-co-uk.20230601.gappssmtp.com; s=20230601; t=1739536225; x=1740141025; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z2dI+7x4cPYMDMuQzFVTVbgprvZXCQoq2S3VN/z2cAM=;
-        b=KjXgz75gllUYXGom3hc2+4su8eL44BooPCwMn9ZNAglkz69omxYV0NJmTA6fWmT2H6
-         XaMWKX3qd0u8ZkQ6X64IoO2wAxkX3eSKNEGaEC21jc2+q4iMld87w6D+XbSneZ4Y9rQm
-         C8Yyy82xeZG7DfaTgt0N4QGXrLIEkocv//rmCsIEbN4SLVhhFDAL9U1UcQ6ZBhoCNC7V
-         oERvvc48P0P020MsAuwHOIN4hn0olb8fDDwvRTPyNb5LJ6nUYzSdV/TOo3Il9fcFUPzS
-         OBKA+NPJ0/6fPMeDy1S+VVtQcgh6KQs1cN7t0St6LybQshVKzfe0oSvYEv/KS7XwF7vA
-         C2HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739536225; x=1740141025;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z2dI+7x4cPYMDMuQzFVTVbgprvZXCQoq2S3VN/z2cAM=;
-        b=DD8Gvj8uV96qdT7JG9aZ1xdAqS0z3wS4LbrNxH6CrrYxz6Wm30kOW/aARPh0vv7cqH
-         7eQZ4QO5OJclH5g2349x/ylfLFHWYJI29toSjl+vdPS/Ume4GSykDyropgTWrzy4Bn5a
-         fWZSI1GsKDF+IILHh1bdwYycl6gKskVnNCeBG0ZV7e2C0iccYzF0ulQdAzBtgb0OZUg5
-         FSYRVF4awbqKMetgX1nKe3X5AwV0PaEDW/4rwnjcRiGtyDmTR3KV4Bqnw2MrnQzI0equ
-         LdzZV3zxNO0d5ErDpavAUQq80yFVRc6MU3V/28yQrmRDxSu/K8bA9hyfJ+AhPb794fRe
-         Udbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUiF5YhTC3WothizefIajAlnxZU7eWZfsWfavETZ5GDL14bwrpJhIjDQK/pKenRhTk3BRRw+PL0VF2UmWE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRHhdUPTc3Su7Fl8ke1Q0jV2CQHXXXq37sGWmzHr7nfIhrCJNj
-	m/jTS6M/jtrYii6rFmnFSyhOURjOYFq1b5g7+2oX6o5rv6mMOYLTpGx9hy8unA==
-X-Gm-Gg: ASbGncuoiPOcASRyKur197fyCRp4Y4TzzIR0ifEUhbctQEYefYRy6jnERkcAC4nCGPr
-	ScBcDCoo8W2zRmNvvzshun0r2rbqECiRdCU6t1nY/xk/r/bg/5AULu0ThL3HODmnhLOzaahVHRJ
-	Ux/M+8LO8cdYtcvssv49WuC7nmxnS4cCi+HaqaRVgZSZJxZaBNCGXYLN0K21v0GpdCePw3PF9uf
-	ydJVCeevbogSNpt454yR6Ju+4At591hiDvaY7lRVgHIszFsJ/9FtB4j1pnIlX/mcm1n1QqbKtgC
-	hy7HeKE3Os/Yg30mJXNQuMfSzL0gDlc=
-X-Google-Smtp-Source: AGHT+IGCQD77xku+meOzyrI1bcUCnZgHXnIz38TFV3FtoQW1Y7REKBbrlYtu4VB3khtjgBNZ2tNWgg==
-X-Received: by 2002:a05:600c:5597:b0:439:59cf:8e16 with SMTP id 5b1f17b1804b1-43959cf9023mr117883055e9.23.1739536225188;
-        Fri, 14 Feb 2025 04:30:25 -0800 (PST)
-Received: from axion.fireburn.co.uk ([2a01:4b00:d309:1c00:8363:ff71:698c:eb67])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258f5efdsm4445049f8f.43.2025.02.14.04.30.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 04:30:24 -0800 (PST)
-From: Mike Lothian <mike@fireburn.co.uk>
-To: dri-devel@lists.freedesktop.org,
-	Elizabeth Figura <zfigura@codeweavers.com>,
-	Arnd Bergmann <arnd@arndb.de>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CgPgNxAd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01BFCC4CED1;
+	Fri, 14 Feb 2025 12:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739536264;
+	bh=XVvR1UZVOeAsb4IoS3qSYew0K2L8dYRU8cdhlHhTJ84=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CgPgNxAd6of1YhhLPS5KYtQRFixV9ttF5g0h8lktuoa7Y42fUiPwPMqLOduemYIf+
+	 08sgUtNsqlIMrFtZs//FCFBwma+6LIvZqQ8SZmfZBbHi84LDnz/L6a/He9M9HgP4aT
+	 +dclcxn3686f5UUUzkeTA2ZUgHrn3DBpp9vSk88jFsrPEMYMDg3M+1a292rI+qDAJy
+	 twIwGEH5JFPiTZVMRfktjzRXGUUagiiIy+gvqf/J9z+gmjZBljJRlwq0Og2Y3Rd7G/
+	 Gz+8pnnPkbFTwvDX1kM5cWZTpj6TcLsObIUe0/izxhsRdKl3eyvUCX9wtu61J7r4+k
+	 hLdsCd5yBglLQ==
+Date: Fri, 14 Feb 2025 18:00:59 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Mike Lothian <mike@fireburn.co.uk>,
-	linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	wine-devel@winehq.org,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
-	"Wolfram Sang" <wsa@kernel.org>,
-	"Arkadiusz Hiler" <ahiler@codeweavers.com>,
-	"Peter Zijlstra" <peterz@infradead.org>,
-	"Andy Lutomirski" <luto@kernel.org>,
-	"Randy Dunlap" <rdunlap@infradead.org>,
-	"Ingo Molnar" <mingo@redhat.com>,
-	"Will Deacon" <will@kernel.org>,
-	"Waiman Long" <longman@redhat.com>,
-	"Boqun Feng" <boqun.feng@gmail.com>
-Subject: [PATCH] ntsync: Set the permissions to be 0666
-Date: Fri, 14 Feb 2025 12:28:00 +0000
-Message-ID: <20250214122759.2629-2-mike@fireburn.co.uk>
-X-Mailer: git-send-email 2.48.1
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org
+Subject: Re: (subset) [PATCH v3 0/3] Add support for USB controllers on QCS615
+Message-ID: <Z683g5yuSu1Pi0pM@vaman>
+References: <20241224084621.4139021-1-krishna.kurapati@oss.qualcomm.com>
+ <173505391861.950293.11120368190852109172.b4-ty@kernel.org>
+ <anfqf3jvh7timbvbfqfidylb4iro47cdinbb2y64fdalbiszum@2s3n7axnxixb>
+ <Z2sJK9g7hiHnPwYA@vaman>
+ <i7gptvn2fitpqypycjhsyjnp63s2w5omx4jtpubylfc3hx3m5l@jbuin5uvxuoc>
+ <Z2sOl9ltv0ug4d82@vaman>
+ <318620fc-e174-4ef3-808a-69fe1d4e1df5@oss.qualcomm.com>
+ <f607aa9b-018c-4df6-9921-725693353f65@oss.qualcomm.com>
+ <CAA8EJpr48k_tHKk-uVpAH7TMcp0-V97x6ztdFrbv0Go0a6kD2g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA8EJpr48k_tHKk-uVpAH7TMcp0-V97x6ztdFrbv0Go0a6kD2g@mail.gmail.com>
 
-This allows ntsync to be usuable by non-root processes out of the box
+On 23-01-25, 09:23, Dmitry Baryshkov wrote:
+> On Thu, 23 Jan 2025 at 09:00, Krishna Kurapati
+> <krishna.kurapati@oss.qualcomm.com> wrote:
 
-Signed-off-by: Mike Lothian <mike@fireburn.co.uk>
----
- drivers/misc/ntsync.c | 1 +
- 1 file changed, 1 insertion(+)
+> > > As mentioned in the cover letter, the bindings of phy have been merged
+> > > from v1.
+> >
+> > Hi Vinod,
+> >
+> >   Can you help in taking in the patch-3. As mentioned in previous mail,
+> > the bindings are merged and present in linux-next.
 
-diff --git a/drivers/misc/ntsync.c b/drivers/misc/ntsync.c
-index 055395cde42b..586b86243e1d 100644
---- a/drivers/misc/ntsync.c
-+++ b/drivers/misc/ntsync.c
-@@ -1208,6 +1208,7 @@ static struct miscdevice ntsync_misc = {
- 	.minor		= MISC_DYNAMIC_MINOR,
- 	.name		= NTSYNC_NAME,
- 	.fops		= &ntsync_fops,
-+	.mode		= 0666, // Setting file permissions to 0666
- };
- 
- module_misc_device(ntsync_misc);
+Can you pls post it after rebasing
+
 -- 
-2.48.1
-
+~Vinod
