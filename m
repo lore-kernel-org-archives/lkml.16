@@ -1,203 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4FF3C17;
-	Fri, 14 Feb 2025 02:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739499697; cv=fail; b=aqub0f2/GHjLrNwno+3QfFJ7MeOA2I5bZcQQdYjSF360m5zt6Q3Eku84F08Gnkp76DBJmxXjfxrEXlL8Ti/zA8RlGMo4PF3QkGRggCm0uagjhGnYJ/g8iqYsbv0kI1aJy3b1tB2kFf54KA+6LU+6OJriKXfi7JrJB5xC3XatL6E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739499697; c=relaxed/simple;
-	bh=kg0oEL0X2d2HTpQE/Vc8Ld7agNj0hWvEA21FWlg6lrc=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=hBiNt2nvdDk6PcLnRfmh8fP/kVGDhowlUKKlJtKCfMoCBi+02oOTCx2Kpwn+etcnCb3IwLvpf/+RlZ8nO9Yq4FNGcBaFNplOzJUwi+u1kdCRfWZU9D/SDMawpVhvkLLduRajTq4tVVLi094fLOUq1OVVLIFXttZ1lRrLDt2HqLg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MmlHwXlG; arc=fail smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MmlHwXlG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739499694; x=1771035694;
-  h=date:from:to:subject:message-id:references:in-reply-to:
-   mime-version;
-  bh=kg0oEL0X2d2HTpQE/Vc8Ld7agNj0hWvEA21FWlg6lrc=;
-  b=MmlHwXlGGaPEKAKu/YxGKnEvz3z4WBN2K3uRaZOEXberrfQE3c9R3zXa
-   G5LDRLsA14El2ifAur0ERvof8FGl/qd+wr5QJFx63HDqZweoqP83e5j3C
-   fnX2Qk6hLggFL67eMgP4gfNp6GcfhP8bqFLT31AgkYP9R4hqFha2r8xKf
-   +Gf+QYzv8rPnKY+RYitp5NjPEMGbKI1gj6tzeCUMkNAYkJ0b5BOWMFv5u
-   Qr9K+9Uu4uRNmbhFhwY9UeEm/JLQNQYrdGUFiFjZjsLyWjpEhsGLKWxCy
-   kZh6pmS/sXWzeCFaBtPqCdfnhoswTV/WpRDa29SQnr8lwXUgImeaPHKwK
-   A==;
-X-CSE-ConnectionGUID: FruYImS6TjSdeNyeqRJ1Kg==
-X-CSE-MsgGUID: VeQiI2R9Sr6roPkdPkr2RA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="44166397"
-X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="44166397"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 18:21:33 -0800
-X-CSE-ConnectionGUID: HXmltPqVQeGAsSmf9IrjZA==
-X-CSE-MsgGUID: ny2dtxnMTdO25hbLHka7KA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113812457"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Feb 2025 18:21:34 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 13 Feb 2025 18:21:29 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Thu, 13 Feb 2025 18:21:29 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.45) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 13 Feb 2025 18:21:22 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VqOfKRM5UVuh7UZ3o3VZkYtD6gkdEgotsQS141jj1D9U8HPP6rT3VK/vTRxkXqaRn3D7yyaOD1vkf3rOxI/Jzvtn0Nk6cPXBVYbSS3dLvLznur1X6RyvEOhW6KP/YNjuRJRg5B5vB1CeEk1lQWlOW9fWZeULJrHMk/rfPRA8O2MC7ubWy1/NEHvbKwJta6rV0Q1mwa68Yszfg+wln13UMtPh1U5sS3tlN8fFa3N4+fn7VHzRIjkEanVkVBTCF2tHiDz8VbCiMddPQUDQo+RzKAFiUqV54Yss82srKBjDE1ODKVyE9qcr7hXqKF+U6Yj9F+Fbna2+zPptBiMbD3b9Iw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+R7F4xmtyMy1O150mKCC4Kbc123z286BrxjWMwi4NSM=;
- b=I5VvmGOfpLo0i96QpUSq8QetdAxn/NpI4ud/jEgwu/If6gspA7Y+ixQzFdK26dwls1koggsvVgyEE68y8Pb1JZX5avbHCEAy4NeEm4XNeiajUmO3U13R0pdU3XxpsJxQG2TLECba05sB+Bybkvf/LGsbnszk3SmBfrGu1DFPPnwx0hEeDa6p9G8rCLijBuAf4JsYolbQQjjl48SGv4u7W/0H8XnAkgmN9vzSCZaZyKWMmhXp1bsEmwJTKB7uKt2A0RLjNLzPtiMXKyeVR1mDbCLgaJc/ahPwmrXyON5M64O+JLlFKZFrRcA4MNnVkV+C70Nc8WZlTjf8CEkuBU9t1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM4PR11MB6359.namprd11.prod.outlook.com (2603:10b6:8:b9::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.11; Fri, 14 Feb
- 2025 02:21:15 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8445.008; Fri, 14 Feb 2025
- 02:21:15 +0000
-Date: Thu, 13 Feb 2025 18:21:11 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Terry Bowman <terry.bowman@amd.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<nifan.cxl@gmail.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<lukas@wunner.de>, <ming.li@zohomail.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>
-Subject: Re: [PATCH v7 13/17] cxl/pci: Add trace logging for CXL PCIe Port
- RAS errors
-Message-ID: <67aea897cfe55_2d1e294ca@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250211192444.2292833-1-terry.bowman@amd.com>
- <20250211192444.2292833-14-terry.bowman@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250211192444.2292833-14-terry.bowman@amd.com>
-X-ClientProxiedBy: MW4PR03CA0029.namprd03.prod.outlook.com
- (2603:10b6:303:8f::34) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 920C53C17
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 02:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739499796; cv=none; b=Znh16w3BRTDlKdpy5IFlT61qcmxgz42mE+sLq2eoUZagY4I2Uv3vipB/6ZbxbAA6sQMWnMadp2/1ueKpPAaC9IVpACJZTsyzvApcScoUBbQCKczSKLOU8fLUU44rN5up90Z0CSFoCggD4vpVClb8u7E5mQkGhHaK2XhT1ZNxZ4g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739499796; c=relaxed/simple;
+	bh=K2sW+nCWLQQlXtFqt9fV432uBOm2kyFomu7ox24gfGc=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=IFtjG4pp0hXgUF83OKzpUrtAkDmHe9grwA7sy6rnYx/zCfosK8C+sDc/ZKqcmfBXhWiOB6FpLL4/RYvzfQQa2YhFwaODBUVhSsLl2CaroOxmmLGQBEXiVyEberXThjU/ke3dgk5vOg/wKTemeHyhaHwiwoYch2jzXrxM8QFJhL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxqmoNqa5nufN0AA--.6842S3;
+	Fri, 14 Feb 2025 10:23:09 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMDxH+UMqa5nFkIRAA--.2062S3;
+	Fri, 14 Feb 2025 10:23:08 +0800 (CST)
+Subject: Re: [PATCH] compiler.h: Specify correct attribute for
+ .rodata..c_jump_table
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+References: <20240924062710.1243-1-yangtiezhu@loongson.cn>
+ <20250212175023.rsxsw7pno57gsxps@jpoimboe>
+ <b1e5e3ea-be4b-5dae-cc0d-34693429d060@loongson.cn>
+ <20250213023936.lzbpgou4eallaij3@jpoimboe>
+ <045d7e22-672c-b9da-38d6-8897e854f262@loongson.cn>
+ <20250213185408.m5aogf2trvhvi2td@jpoimboe>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+ llvm@lists.linux.dev
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <439175dc-caf0-3d38-89ba-ade5a364c9bb@loongson.cn>
+Date: Fri, 14 Feb 2025 10:23:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB6359:EE_
-X-MS-Office365-Filtering-Correlation-Id: 360e7b0f-d54c-44e6-3a37-08dd4c9e41bb
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|921020;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?xLS/bI35ie7cPlQK0IdbeozbwXpHF/5Q0AUehWtMGpuxLTAct7VUAXzb8A1N?=
- =?us-ascii?Q?LVMI5/qQ0Ap4oN+RMcRJKah7xnBLzC95Ps8/22E54ZN9mKQdOlMmitcinB7F?=
- =?us-ascii?Q?+KKefIm33pvfrX3sjaAgeWZmgAoOkLs7hsAjUr18gFeNsSbwuaMCvIcIqLOC?=
- =?us-ascii?Q?ZnR/beWTgVCMIAKlPuCijgOkm1XZjUH6t1ONjJpEpPPLPUEM+F+lL3vCwMHm?=
- =?us-ascii?Q?kx6j6UeTVgoF6Wm09OLn4TpGRPo/cjXTjGdYhINEEdqIAI+eKvrFDAS9nlom?=
- =?us-ascii?Q?ra7lPe9OaBAKxQA4HCDildOD4e3N1rCUNBTCMV001ec6M4eyISEipSKvgrWQ?=
- =?us-ascii?Q?kY02RJKtv0dgmROpWw6Qumfue+pIHaAwy2mCQDleMGvDWWeNUPRJKt5sYUol?=
- =?us-ascii?Q?wC15p4SsxRZNYtSYWcux3+nkUy2eA/u4fhBSDs3ygGIzhaVxtSBMAy6L/6P2?=
- =?us-ascii?Q?Uv6a/WJfFLdjtLJSOsmFW/VRupebbhVvUOinz68pjKy3Rlsul6oY5qqtZDtS?=
- =?us-ascii?Q?PWip61MNN5CYBkJhDbjTnjUhyUgr1kPOeJj31g6ki86WgeBgxRQI62RccT6h?=
- =?us-ascii?Q?wC8dq19emdfk/ptaQYzepYU6oGiaGOfi6mZFZ40MC4/whj+WPwLmOnsc3IOx?=
- =?us-ascii?Q?5/4cjfL7YX6Gsis5f9NSaaIPzx+pRpqjrj3QEfJvO+9N8gybtJastvz24VTT?=
- =?us-ascii?Q?QeOJNlbM9rtM1ZnNUZiAViyopBFfI/cOrb4tkcZ6GTMP6pXN6aDF39+eIsUA?=
- =?us-ascii?Q?TkD5NV2WNanoJouLFBnn8ZVwj5FdQd3Mu0GrEzupPcXWL4U5Am9CamqOvfWz?=
- =?us-ascii?Q?umfNHc+fpEWBQfe1iiZs4NRjvpva5YXy+EFxcQAy3z9oFVNn+mstg6tQH9hf?=
- =?us-ascii?Q?F0IBFsHcUGO1g3RmLmjcWdxldtCCTMeZjRRnJHnngc3afhVr5r1RfhaHStfX?=
- =?us-ascii?Q?Qlxcc7i2WlbA+EKMXSqSHRxkOzBJGJlSTq7aDC0z+hQvlJ0jniGT59u6865N?=
- =?us-ascii?Q?asKMrygQINmvwht6bbVmWE35wUaz+14buyTZY7iahItDavJKodCQDwn27q/s?=
- =?us-ascii?Q?1hBx9d61mPeWxz/myx4qCd4tYt9dtW4NlU4o9cIqJX1S0Zx0JglZsWs1jloB?=
- =?us-ascii?Q?yR8gSOx+98fZxlFPCaZp3zk361kb3DRz/E/PJmZMu4rr4il8NcvDf0d8GdjC?=
- =?us-ascii?Q?GXTNYauPqDLQEBag/R3HBq+WjUxrBivFSveYa4SJU0K07kt2fWnQsoirPOlB?=
- =?us-ascii?Q?AKwd8U7FCL+d4PW91/PKudgPpngBbXBA/F4aUHw/Ts4QyFtx2iPMWanYNNiE?=
- =?us-ascii?Q?XjtMv1S6koTMJ0HgUbj8E042Ihm5E7q0e8QSWW/5xpy9twhJYZ4MoshA+w03?=
- =?us-ascii?Q?/y/dJxPKG5JiafbFRESyc+EExhOYm0wGH0AaT/sYOTg2/2NnoJvF5IlzpNcN?=
- =?us-ascii?Q?GQF3QDfHHB8=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Fhb9JFYMfXX963uoKMuxJ8dS5I3bLSB/AjH4Jf/N2RuzJFpnsXAbfKu1DJ2E?=
- =?us-ascii?Q?JmEXAZYveW/EXNiEEp7J0vVLeqjURP910D6NAtOCqjJS9++hxU5Vid+a0qn5?=
- =?us-ascii?Q?qsd8F6jSniEzA0msxAZBv8yuF3eLkQwAYjRP0fePkvto0Y52YCUv9Ul+Mv25?=
- =?us-ascii?Q?aPpSyp1W3D8YhSO0yqXYY8d15uXvsHYoq09qpUKYgonwOPdcis+0dGcfLQjt?=
- =?us-ascii?Q?JHHU1CovW+OHFgcy+8mfD4hBxW2lTDrUDDVzbWoqZwfMJ1Jo4ySZMlL3AzsD?=
- =?us-ascii?Q?GqwIhxqtAa6EJiDvJ4xIMdO2T7LGmU6b/sF7MZGIT339Qs8j14eVdT58EIYO?=
- =?us-ascii?Q?4Hqa/r0qZOyjuZNbpm7JfVc2XudECoXu00ei3zRuzbiveUg8YTppf4phqtdN?=
- =?us-ascii?Q?aEKjYW86mU4vjU4FoWmA0oPGwDo9dlt6A9Mh1bRhPcOUeVZ1cgizgIIwd/Vl?=
- =?us-ascii?Q?Jk6Bq/Yn3DWp9wMml227BauMjRqJQuZ0SkJdsIGxi5JuRLPb9dObFH+XuktI?=
- =?us-ascii?Q?FfX1QneIEQNdQXYaLd5SZRh7DBwRjHk9RK3xdSymKpmSyV1eMW0VFHu0HoUj?=
- =?us-ascii?Q?7i+aJaj/G8F52s1oqwkJ/ILndIp+f+/K9vSNMgoxeTYwbMPFT2nKkFNhwnIU?=
- =?us-ascii?Q?Xz5LAKoZtv3DMsItoPs/urmjZb2KtNuf3kR33mFn5+C1YH7W6qKjHwLufglR?=
- =?us-ascii?Q?EgrUCpz3aCNSK88scofb15rVMJiQ3wVa+EVQzEHgV/jqSUabWFpaQ25jxOGh?=
- =?us-ascii?Q?DYFQhhX9khnykI/eNlG9OfwIdusOEtJUpZsZSQz7tufXk9FmvuXtl3ptsYo7?=
- =?us-ascii?Q?gLvcT2022/wwUR65HNOgUp2m/djAldvl7s/4tVIeHJyPkYH+drjMjFiFDpdE?=
- =?us-ascii?Q?a08oyasq4k5x7M/nDPIEbjmH0wuvPL/bGGukbIVilIX523S0MTAOP2LtG3qx?=
- =?us-ascii?Q?JUITTQupQtOHUP1WVCd8ptTr8rBcyMhB4K5ebCgEzQuoqOd7/tFFjd2jBzyN?=
- =?us-ascii?Q?sPz5hXpTQFaGYNtrgY46kNYHGmGwjJVj7XqJxPPOtxS0v0mSG4NjyRL39EsL?=
- =?us-ascii?Q?xRk3TzifwmiHG03VOJwZ4O0xiAoaGaRb4Iocib0mbe+e2sePc6SXtQxPWjTY?=
- =?us-ascii?Q?+brPHL5Xzm4A5FIDj+xZaOQkOeZl/nx1J53PqICDUm+pV/S+5NdTi1m8IPq7?=
- =?us-ascii?Q?BCS8ZKXRJxQmffpXruwp342aQvGw0zttxsI1qJD+E9grqznTO4WCAwKCR12W?=
- =?us-ascii?Q?hWTDuX4nn7FVdnvSHWh6wSkywPiqp4tE45BCCx5rL+QwNuJJgb6hcuJWFX0M?=
- =?us-ascii?Q?0bm3KqWSFoxzWzzBYE/mXxpNmk3DAt6ggzQYvoFurwlC61GXG6gCm2Mn4cEn?=
- =?us-ascii?Q?YSgklf09rN8zmIngh6u0fa/ek5tvj2BRLsk0HRDis/M2pR3Mn88G7MhdQVky?=
- =?us-ascii?Q?k34KmwiEWocthdrFzn1rPZ9Urqqh4C5npaPNjzQVYVbrN8CiDGB3dvuuw/ab?=
- =?us-ascii?Q?addT6sCHXU91PeqMRAbpTC4OgNM/e2xUjZqJK3w/YBTZXrNBs2aY49J/9nFC?=
- =?us-ascii?Q?9f1muCKofyiuKmcQCyQkjQQ6WuAqsci7Zj3VNZ+wVP9B+FcCOxFgghMVXeoy?=
- =?us-ascii?Q?ng=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 360e7b0f-d54c-44e6-3a37-08dd4c9e41bb
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 02:21:14.9423
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5isXhH1Hd3w6tfG2xAJTb3K3EAmXqW7uFXsD08H4bAV6KQqlEHNhcdvB/6dMHQPd9XAWsc5dxlvl9njehw/zY2cjx/9UTSGRZiHFEfgXY4U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6359
-X-OriginatorOrg: intel.com
+In-Reply-To: <20250213185408.m5aogf2trvhvi2td@jpoimboe>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMDxH+UMqa5nFkIRAA--.2062S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJF1xurWkWF1fAFy3GrWrCrX_yoWrCrWrpF
+	Wq9r97Krs0qFyfWw1xJ3WYkrW3X3y7Kr1UKryDt34UAr42qr1IgFs7CayUtFyvgwsxXFyI
+	qFs2gr4UGF4DZ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8m9aDUUUUU==
 
-Terry Bowman wrote:
-> The CXL drivers use kernel trace functions for logging Endpoint and
-> Restricted CXL host (RCH) Downstream Port RAS errors. Similar functionality
-> is required for CXL Root Ports, CXL Downstream Switch Ports, and CXL
-> Upstream Switch Ports.
-> 
-> Introduce trace logging functions for both RAS correctable and
-> uncorrectable errors specific to CXL PCIe Ports. Additionally, update
-> the CXL Port Protocol Error handlers to invoke these new trace functions.
-> 
-> Examples of the output from these changes is below.
-> 
-> Correctable error:
-> cxl_port_aer_correctable_error: device=port1 parent=root0 status='Received Error From Physical Layer'
-> 
-> Uncorrectable error:
-> cxl_port_aer_uncorrectable_error: device=port1 parent=root0 status: 'Memory Byte Enable Parity Error' first_error: 'Memory Byte Enable Parity Erro'
+On 02/14/2025 02:54 AM, Josh Poimboeuf wrote:
+> On Thu, Feb 13, 2025 at 08:38:22PM +0800, Tiezhu Yang wrote:
+>> Based on the above analysis, in order to avoid changing the behavior of
+>> GNU assembler and silence the GNU assembler warning, is it possible to
+>> rename ".rodata..c_jump_table" to ".c_jump_table"?
+>
+> Yeah, though for the final vmlinux link we'd still need it to end up in
+> .rodata so it remains read-only at runtime.
+>
+> So we'd basically just have to add it to the RO_DATA() macro in
+> include/asm-generic/vmlinux.lds.h.
+>
+> Does it still work if we call it ..rodata.c_jump_table or so?  Then we
+> could just add "*(..rodata.*) to RO_DATA().  That would be somewhat less
+> surprising, and would also create a standard way for other code to do
+> the same thing by prefixing with "..rodata.".
 
-Oh, so this solves the problem I was worried about earlier where it
-looked like protocol errors only got notified if the event was a memdev.
-I still think it would be worthwhile to make this one unified
-trace-event rather than multiple.
+"..rodata.c_jump_table" works well with GCC and Clang,
+there is no assembler warning for GCC and the section
+name is normal for Clang.
+
+I have a draft diff, I will do more test and send it
+as a formal patch once the other patches are landed
+because this patch depends on them.
+
+The code looks something like this:
+
+-- >8 --
+diff --git a/include/asm-generic/vmlinux.lds.h 
+b/include/asm-generic/vmlinux.lds.h
+index 02a4adb4a999..0af80d6627fa 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -457,7 +457,7 @@ defined(CONFIG_AUTOFDO_CLANG) || 
+defined(CONFIG_PROPELLER_CLANG)
+         . = ALIGN((align));                                             \
+         .rodata           : AT(ADDR(.rodata) - LOAD_OFFSET) {           \
+                 __start_rodata = .;                                     \
+-               *(.rodata) *(.rodata.*)                                 \
++               *(.rodata) *(.rodata.*) *(..rodata.*)                   \
+                 SCHED_DATA                                              \
+                 RO_AFTER_INIT_DATA      /* Read only after init */      \
+                 . = ALIGN(8);                                           \
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 200fd3c5bc70..9b56788bf3f1 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -110,7 +110,8 @@ void ftrace_likely_update(struct ftrace_likely_data 
+*f, int val,
+  /* Unreachable code */
+  #ifdef CONFIG_OBJTOOL
+  /* Annotate a C jump table to allow objtool to follow the code flow */
+-#define __annotate_jump_table 
+__section(".rodata..c_jump_table,\"a\",@progbits #")
++#define __annotate_jump_table __section("..rodata.c_jump_table")
++#endif
+  #else /* !CONFIG_OBJTOOL */
+  #define __annotate_jump_table
+  #endif /* CONFIG_OBJTOOL */
+diff --git a/tools/objtool/arch/loongarch/special.c 
+b/tools/objtool/arch/loongarch/special.c
+index 27c6473608f3..d3e10ad3a9bf 100644
+--- a/tools/objtool/arch/loongarch/special.c
++++ b/tools/objtool/arch/loongarch/special.c
+@@ -131,7 +131,7 @@ static struct reloc 
+*find_reloc_of_rodata_c_jump_table(struct section *sec,
+                 if (reloc_offset(reloc) > offset)
+                         break;
+
+-               if (!strncmp(reloc->sym->sec->name, 
+".rodata..c_jump_table", 21)) {
++               if (!strncmp(reloc->sym->sec->name, 
+"..rodata.c_jump_table", 21)) {
+                         *table_size = 0;
+                         return reloc;
+                 }
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 7174dcb7496e..a8b67b4c5726 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2482,12 +2482,13 @@ static void mark_rodata(struct objtool_file *file)
+          *
+          * - .rodata: can contain GCC switch tables
+          * - .rodata.<func>: same, if -fdata-sections is being used
+-        * - .rodata..c_jump_table: contains C annotated jump tables
++        * - ..rodata.c_jump_table: contains C annotated jump tables
+          *
+          * .rodata.str1.* sections are ignored; they don't contain jump 
+tables.
+          */
+         for_each_sec(file, sec) {
+-               if (!strncmp(sec->name, ".rodata", 7) &&
++               if ((!strncmp(sec->name, ".rodata", 7) ||
++                   !strncmp(sec->name, "..rodata", 8)) &&
+                     !strstr(sec->name, ".str1.")) {
+                         sec->rodata = true;
+                         found = true;
+diff --git a/tools/objtool/include/objtool/special.h 
+b/tools/objtool/include/objtool/special.h
+index e7ee7ffccefd..34acf4ae5fab 100644
+--- a/tools/objtool/include/objtool/special.h
++++ b/tools/objtool/include/objtool/special.h
+@@ -10,7 +10,7 @@
+  #include <objtool/check.h>
+  #include <objtool/elf.h>
+
+-#define C_JUMP_TABLE_SECTION ".rodata..c_jump_table"
++#define C_JUMP_TABLE_SECTION "..rodata.c_jump_table"
+
+  struct special_alt {
+         struct list_head list;
+
+Thanks,
+Tiezhu
+
