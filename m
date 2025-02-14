@@ -1,108 +1,99 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0DC3234;
-	Fri, 14 Feb 2025 15:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 571213234;
+	Fri, 14 Feb 2025 15:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739548286; cv=none; b=BL7IL42d2ItGECqooXtkn9nEiPXvecUbM42IA1YU+3cfKpw4d1yxbY7Zrmg6U1jnfHAuKTVfqqP82OGDK9U4ElbZHopbcpgDDQclyjg2UcomqgzCD3k4ljQs/tjlAnk964SxW6hPX5tsMbjmWGchDh6ptJgoB/nNSDY6GZSav2I=
+	t=1739548299; cv=none; b=oOdeob9aZsb93+rorVY7RE5dNBWEpC8jY/d/dZqFzq3RkXsri1xtQSItNqsE/hFnnazib2mCrtmNSSq2J4SMEXhXoRUjjECduvXXPLK+5cbHSpeSLu6gMnlUNSOQ+vGjBLWd5X+BGPipAm9LLSygUg3D9ym2rgOvXnruq24yCmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739548286; c=relaxed/simple;
-	bh=vjnuBrumtfsgor7A614WXlzdEEf3Hl7TFnCVC3KT2wE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PRJw0Mh/gq2y++5Ik3N1WheCKhgC/3jkX6j6n9gXyxOANbV7uqH0R0jlxb6KJ1SgKx4n8GfU9WoWCpOQOQScjbzefcVl9ca2t+COaDBLS8dDCt7dIZXmHwwSbXv8ZeL/p/nAEBtoXGbOeBB1tst4daCtmR/UGgFBubh3R82BnQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Yvc201Rc8z6HJgB;
-	Fri, 14 Feb 2025 23:50:00 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E0C4F1401F1;
-	Fri, 14 Feb 2025 23:51:21 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Feb
- 2025 16:51:21 +0100
-Date: Fri, 14 Feb 2025 15:51:20 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Robert Richter <rrichter@amd.com>
-CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
- Bueso" <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, "Fabio M.
- De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
-	<terry.bowman@amd.com>
-Subject: Re: [PATCH v3 04/18] cxl/pci: Add comments to cxl_hdm_decode_init()
-Message-ID: <20250214155120.00004461@huawei.com>
-In-Reply-To: <20250211095349.981096-5-rrichter@amd.com>
-References: <20250211095349.981096-1-rrichter@amd.com>
-	<20250211095349.981096-5-rrichter@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1739548299; c=relaxed/simple;
+	bh=IDTr1Eq3cziq+DUkNqSv2uD2a5GpF3XqUFMvXRcIcAM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gQk9OVcIclWOSdeIuj/Rg8WF0NSPYfJc1iqrp1gqyBv0SxjRVni/MDzy3LTVrwU07yFP+p74Bdna3ZM3rC/M3qb1jg2h8ensPW9MHp202oaTaea41lpmSc3oXcX+7c4etq2ifRoOvZIJpypgtO2EOD3pr3OZE/yEX3lw0I56FaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=cOgvKaT2; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="cOgvKaT2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=ifmXkuEVqR4hvNL7Ti3tLm85mmbETlFEp0sPfcah6gI=;
+	b=cOgvKaT21pxQzx1r0FRbiRUvxkkM0LYZvifYm1R9KLN5V3jr2UcS4qloeWdFS7
+	eTAiuA/1wupeLxloNnxZFm9Sdh3rUdAhH/6SoOfa2bgY5ACeNtDPzTkBdTNjsaCa
+	oXLM5gs+r/tEjHuy8rCrYAKjYh6fpRzLA1xiSewHp0AxI=
+Received: from [192.168.71.44] (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wC3+S_AZa9nvmfeMA--.26732S2;
+	Fri, 14 Feb 2025 23:48:17 +0800 (CST)
+Message-ID: <3d3d8772-08ba-4e5a-bf1f-71821cf056e7@163.com>
+Date: Fri, 14 Feb 2025 23:48:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v3] PCI: cadence: Fix sending message with data or without data
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+ bwawrzyn@cisco.com, cassel@kernel.org,
+ wojciech.jasko-EXT@continental-corporation.com, a-verma1@ti.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
+References: <20250207103923.32190-1-18255117159@163.com>
+ <20250214073030.4vckeq2hf6wbb4ez@thinkpad>
+ <7eb9fedc-67c9-4886-9470-d747273f136c@163.com>
+ <20250214132115.fpiqq65tqtowl2wa@thinkpad>
+ <332ec463-ebd9-477c-8b10-157887343225@163.com>
+ <20250214153103.4cjlawksw4xobc2l@thinkpad>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250214153103.4cjlawksw4xobc2l@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-CM-TRANSID:_____wC3+S_AZa9nvmfeMA--.26732S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ur18JFyxCw1rAF1UGw4fGrg_yoW8Xr1kpa
+	9xKa4Skws5KrZYvF1xZr1IqrnrGFWfXa15Cry8ZryFyws09FyFkryIka1jga4rGw1rAFWY
+	vryjgFZrAa12vFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVMKtUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiDwTzo2evZK4OwQAAsW
 
-On Tue, 11 Feb 2025 10:53:34 +0100
-Robert Richter <rrichter@amd.com> wrote:
 
-> There are various configuration cases of HDM decoder registers causing
-> different code paths. Add comments to cxl_hdm_decode_init() to better
-> explain them.
+
+On 2025/2/14 23:31, Manivannan Sadhasivam wrote:
+> On Fri, Feb 14, 2025 at 10:28:11PM +0800, Hans Zhang wrote:
+>> Sorry Mani, I shouldn't have spread this SOC bug. This is a bug in RTL
+>> design, the WSTRB signal of AXI bus is not connected correctly, so the first
+>> generation SOC cannot send message, because we mainly use RC mode, and we
+>> cannot send PME_Turn_OFF, that is, our SOC does not support L2. I have no
+>> choice about this, I entered the company relatively late, and our SOC has
+>> already TO.
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Tested-by: Gregory Price <gourry@gourry.net>
-> ---
->  drivers/cxl/core/pci.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+> Ok. Just to clear my head, this patch is needed irrespective of the hw issue,
+> right? And with or without this patch, first revision hw cannot send any MSG
+> TLPs?
+
+Yes, that was a problem with our own SOC design, the Cadence RTL bug.	
+
+> If so, it is fine. But is there a way we could detect those first generation IPs
+> and flag it to users about broken MSG TLP support? Atleast, that would make the
+> users aware of broken hw.
+
+I don't know how to do it, but here are the questions that were actually 
+tested.
+
+>>
+>> This patch is to solve the Cadence common code bug, and does not conform to
+>> Cadence documentation.
 > 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index c49efc419285..6333a01e4f19 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -416,9 +416,17 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
->  	if (global_ctrl & CXL_HDM_DECODER_ENABLE || (!hdm && info->mem_enabled))
->  		return devm_cxl_enable_mem(&port->dev, cxlds);
->  
-> +	/*
-> +	 * If the HDM Decoder Capability does not exist and DVSEC was
-> +	 * not setup, the DVSEC based emulation cannot be used.
-> +	 */
->  	if (!hdm)
->  		return -ENODEV;
->  
-> +	/*
-> +	 * The HDM Decoder Capability exists but is globally disabled.
-> +	 */
-> +
->  	/*
->  	 * Per CXL 2.0 Section 8.1.3.8.3 and 8.1.3.8.4 DVSEC CXL Range 1 Base
->  	 * [High,Low] when HDM operation is enabled the range register values
-> @@ -426,7 +434,8 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
->  	 * DVSEC Range 1,2 to HDM Decoder Range 0,1. So, non-zero info->ranges
->  	 * are expected even though Linux does not require or maintain that
->  	 * match. If at least one DVSEC range is enabled and allowed, skip HDM
-> -	 * Decoder Capability Enable.
-> +	 * Decoder Capability Enable. Else, use the HDM Decoder Capability and
-> +	 * enable it.
+> you mean 'does'?
+> 
 
-As per previous.  Having an 'else' comment that refers to what happens if the
-following if is true, just adds to confusion :(
+What I mean is that common code bit16=1 is to send a message without 
+data, while Cadence's development document says that bit16=0 is to send 
+a message without data. This is not consistent with the documentation 
+description, and the final verification results, the development 
+documentation described is correct.
 
-So if you are going to move the comment it needs a more substantial rewrite
-to reflect that we care 'here' about that last bit only.
-
->  	 */
->  	if (!info->mem_enabled) {
->  		rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
+Best regards
+Hans
 
