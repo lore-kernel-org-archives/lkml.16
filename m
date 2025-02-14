@@ -1,133 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2445022E3F1
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC5D266B4D;
+	Fri, 14 Feb 2025 15:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739546276; cv=none; b=tYzqWGPhyr+2P4jUBqNbpz8rJLrajbcW89772Y7PxPJV0Q+rlcERY9TPP5sTb5a9WG8aFr0301EdJGW1nJ0iRYWMOZMmrcGlIPpDh5MjkOjIEX3+2/AUi0Mq3LslhHY7+WyS5c10XCLn+67Oreq6TyeXObBnSsNUKUMY4ECce/8=
+	t=1739546308; cv=none; b=a0knkq46tv03i2gGRsHYqiaE2PQzrwjNxAqyy/Yy+PMn4fgu75M+yGpZfS+bLA9O7/OlznxDVI+poS70gojmDfx2iedGsEHh5xzEsyk2awqj94aD13E4HwGQS1CsSKFn18pKRT3Hgd5KxdJwv7vufw4DYntVj80+iouxHcR+0ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739546276; c=relaxed/simple;
-	bh=/aoLSKIJznnbsjZ5Jh4GqZ88soBWly62WzaVs9lwiik=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BkuRdbuzPmvNxKk2Q3oByVg89ReCgzKmx3k3xC+MvxW1tQAogdP3K++NMD/Pdl5gw72eF3W2nEFC1R70akPyzobrS1HWh+k6PpMAD3ZdGc2GHAPAstED9EA7VHaP7NV0LJ3xNxDx4e0TF5yZySMPnPxHpe8TSATGbdHl/ULUKs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GaVtVsqe; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739546308; c=relaxed/simple;
+	bh=Ccy4yBddiH1ImFNY9Pm+Nr1mImwwalRXFCXZ00/riwg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H3iBTCEU+JBmD24aaCWv7Us03n5QC3Wmttvrnu7oHbEyTKubIF610/QcJXptXcFRNyA9TIHhFHD10kDAu3Go4SLbEK9bx7fa6640Pis8cMrFmYMnn1bBVpvUMj/tnkpW8QsU4htwVwmixO1cwaNVI8J7sIcccFR5Wao3J+Oy0MQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eftJfU1C; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GaVtVsqe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739546274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PjmfsPFlVVF5AWgzzAtVJttyvI0k7JVXMhFtVMQApJc=;
-	b=GaVtVsqem7zTZ0qdsiZlzGXrwSGPOCAkCf15FSfI2Ex44haa8ErU6xHcSGmQvn+P89B2g0
-	g+XIlqIc0BvBhiLSYblkLdc1UC6TH//RsaNFuoR5nsfyst560fJMauUNmZdLgul5Jf4tVj
-	2+0rYVREoW7lPSm9FkE7dMX9Y3FREx0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-66-Tj8BzwX_MPymrsacXgN4bg-1; Fri,
- 14 Feb 2025 10:17:50 -0500
-X-MC-Unique: Tj8BzwX_MPymrsacXgN4bg-1
-X-Mimecast-MFC-AGG-ID: Tj8BzwX_MPymrsacXgN4bg_1739546269
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A444318D9585;
-	Fri, 14 Feb 2025 15:17:48 +0000 (UTC)
-Received: from [127.0.1.1] (unknown [10.45.225.8])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E508919373C4;
-	Fri, 14 Feb 2025 15:17:41 +0000 (UTC)
-From: Sergio Lopez <slp@redhat.com>
-Date: Fri, 14 Feb 2025 16:16:59 +0100
-Subject: [PATCH RFC v2 5/5] drm/virtio: add
- VIRTGPU_PARAM_HOST_SHM_PAGE_SIZE to params
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eftJfU1C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739546308; x=1771082308;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ccy4yBddiH1ImFNY9Pm+Nr1mImwwalRXFCXZ00/riwg=;
+  b=eftJfU1CIxY8uPbX6x7NhsIFqunEcl6hNEdssPGBkuzhA3bkHnYTqvvn
+   erMrvZe78odwlNFz7G1WjmpqO+X/deGRSLVbRNRvA4pbpU0IeulXln1mz
+   tYLtt4c1rDFTU9ehTxOUNFppAW78adOwPY5q7DghctUmY9kAQ/8PSU1t+
+   uT2eYu+nqgvWoUe1jWxkQ9sEC60YhfzA6T5gW1Oo2WhUIyIdwK4GFQUxs
+   oujue67UNyv4jnm2PJAEEdoPd2btwGjADsDVC9ss8bcueGgmRA9+FMev5
+   4+tJyFkiHjt81ZiB+CYl33lM3Sr2ruT7HRCosuiUe3K7TSNNGuXh7KQpU
+   Q==;
+X-CSE-ConnectionGUID: vPXqW9CPSue6iAuCMCSGMw==
+X-CSE-MsgGUID: RSpD4nYjTiKgqmGet3/zog==
+X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40005253"
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="40005253"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 07:18:27 -0800
+X-CSE-ConnectionGUID: 12OXvvsISZ6LDtN9Vlx7Jw==
+X-CSE-MsgGUID: dG/E/93STyKP7B6gt/kBaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113970982"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 07:18:21 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1tixSL-0000000BWmd-40hj;
+	Fri, 14 Feb 2025 17:18:17 +0200
+Date: Fri, 14 Feb 2025 17:18:17 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 06/10] regmap: irq: Add support for chips without
+ separate IRQ status
+Message-ID: <Z69eue2dV37vw61v@smile.fi.intel.com>
+References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
+ <20250214-mdb-max7360-support-v4-6-8a35c6dbb966@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250214-virtio-shm-page-size-v2-5-aa1619e6908b@redhat.com>
-References: <20250214-virtio-shm-page-size-v2-0-aa1619e6908b@redhat.com>
-In-Reply-To: <20250214-virtio-shm-page-size-v2-0-aa1619e6908b@redhat.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>, 
- Daniel Verkamp <dverkamp@chromium.org>, Jason Wang <jasowang@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
- Gurchetan Singh <gurchetansingh@chromium.org>, 
- Chia-I Wu <olvaffe@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
- Dmitry Osipenko <dmitry.osipenko@collabora.com>, fnkl.kernel@gmail.com
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, Sergio Lopez <slp@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1826; i=slp@redhat.com;
- h=from:subject:message-id; bh=/aoLSKIJznnbsjZ5Jh4GqZ88soBWly62WzaVs9lwiik=;
- b=owEBbQKS/ZANAwAIAfRpJ40vDAI1AcsmYgBnr15wk7cRkC8T/4bZJS1Sw62+SpzC/oEbqVusM
- iKcBZiAxJSJAjMEAAEIAB0WIQS+1fz3US2GgJFC6KL0aSeNLwwCNQUCZ69ecAAKCRD0aSeNLwwC
- Nf33EAC1hAU5vFGUYPj0EZ6y7b8HSZ+J+/SSavSEjVx4NxdlUjeQA4kK8+A3wJh5g8gpPN0vgU4
- I/+B6kZVyAPIYGHvkdioxNXNE4QLCqn7QAzuCSAxC3akm9cetbveC9AZgjUab4/j1QC5Wl1rRv9
- SmdpYcN8gsVx5BeE4+UiE/5UA97nx+RonYYYIXau8nJjtTksRRIMBgmP8r4lK9YdzsJecuvVeOJ
- cul3DhmClUpcrc/LjdWHxggus6HgNGcpOnJUnEJIlOWfBFFAIZOp6JybOb6rM5J3A18xhtZLrst
- gW9LR2g2n8ASZeLisMwrfxovc4nGCbgLsy4Z8yH8PBGtcn7TZN8FFGlvYEr/8z6J1unkuHBxLDZ
- CIVVhVtPT3sXBN/wRs1pX6Y5aV8DWMjhj3hiNolLqp3wsZ+QrVdSeMkZpOWY5stAZ8nVNk83Tdp
- PlnhQdya6zCw67j9gbfmFq0QdPWxksH3NkzwPySH6OdoeUFRuuTyAiB08w53UbmkOT8RrMzlEhb
- 0ApQWtNOFNbtS01aM0TdHfNJk2yUMhrSt/rxuQjoLME7b2UkpmYtesH3Rc3UbrR+vFNulZ6HaHY
- mWa6RT/VU9jMsKyT/gOvYzGljtaxdXJja6dSmOFFTGa/gWaTrB77oWvM+NqxEwDo1m6xdyIWhjl
- eQltadZ/+ZIcf7w==
-X-Developer-Key: i=slp@redhat.com; a=openpgp;
- fpr=BED5FCF7512D86809142E8A2F469278D2F0C0235
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250214-mdb-max7360-support-v4-6-8a35c6dbb966@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Add VIRTGPU_PARAM_HOST_SHM_PAGE_SIZE as a param that can be read with
-VIRTGPU_GETPARAM by userspace applications running in the guest to
-obtain the host's page size and find out the right alignment to be used
-in shared memory allocations.
+On Fri, Feb 14, 2025 at 12:49:56PM +0100, Mathieu Dubois-Briand wrote:
+> Some GPIO chips allow to rise an IRQ on GPIO level changes but do not
+> provide an IRQ status for each separate line: only the current gpio
+> level can be retrieved.
+> 
+> Add support for these chips, emulating IRQ status by comparing GPIO
+> levels with the levels during the previous interrupt.
 
-Signed-off-by: Sergio Lopez <slp@redhat.com>
----
- drivers/gpu/drm/virtio/virtgpu_ioctl.c | 5 +++++
- include/uapi/drm/virtgpu_drm.h         | 1 +
- 2 files changed, 6 insertions(+)
+Thanks, this will help to convert more drivers to regmap
+(e.g., gpio-pca953x that seems use similar approach).
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index c33c057365f85a2ace536f91655c903036827312..4b49635b4fe1d4256f219823341cef8e5fa8f029 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -117,6 +117,11 @@ static int virtio_gpu_getparam_ioctl(struct drm_device *dev, void *data,
- 	case VIRTGPU_PARAM_EXPLICIT_DEBUG_NAME:
- 		value = vgdev->has_context_init ? 1 : 0;
- 		break;
-+	case VIRTGPU_PARAM_HOST_SHM_PAGE_SIZE:
-+		if (!vgdev->has_host_visible)
-+			return -EINVAL;
-+		value = vgdev->host_visible_region.page_size;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/include/uapi/drm/virtgpu_drm.h b/include/uapi/drm/virtgpu_drm.h
-index c2ce71987e9bb816d13a300679336cb756f1cbcf..72db6b3339e0dcaf550acbf5ac4381a6e5c2216d 100644
---- a/include/uapi/drm/virtgpu_drm.h
-+++ b/include/uapi/drm/virtgpu_drm.h
-@@ -98,6 +98,7 @@ struct drm_virtgpu_execbuffer {
- #define VIRTGPU_PARAM_CONTEXT_INIT 6 /* DRM_VIRTGPU_CONTEXT_INIT */
- #define VIRTGPU_PARAM_SUPPORTED_CAPSET_IDs 7 /* Bitmask of supported capability set ids */
- #define VIRTGPU_PARAM_EXPLICIT_DEBUG_NAME 8 /* Ability to set debug name from userspace */
-+#define VIRTGPU_PARAM_HOST_SHM_PAGE_SIZE 9 /* Host SHM page size, with format PAGE_SIZE >> 12 */
- 
- struct drm_virtgpu_getparam {
- 	__u64 param;
+...
+
+> +static irqreturn_t regmap_irq_thread(int irq, void *d)
+> +{
+> +	struct regmap_irq_chip_data *data = d;
+> +	const struct regmap_irq_chip *chip = data->chip;
+> +	struct regmap *map = data->map;
+> +	int ret, i;
+
+	unsigned int i;
+?
+
+> +	bool handled = false;
+> +	u32 reg;
+> +
+> +	if (chip->handle_pre_irq)
+> +		chip->handle_pre_irq(chip->irq_drv_data);
+> +
+> +	if (chip->runtime_pm) {
+> +		ret = pm_runtime_get_sync(map->dev);
+> +		if (ret < 0) {
+
+> +			dev_err(map->dev, "IRQ thread failed to resume: %d\n",
+> +				ret);
+
+Can be one line.
+
+> +			goto exit;
+> +		}
+> +	}
+> +
+> +	ret = read_irq_data(data);
+> +	if (ret < 0)
+> +		goto exit;
+> +
+> +	if (chip->status_is_level) {
+> +		for (i = 0; i < data->chip->num_regs; i++) {
+> +			unsigned int val = data->status_buf[i];
+> +
+> +			data->status_buf[i] ^= data->prev_status_buf[i];
+> +			data->prev_status_buf[i] = val;
+> +		}
+> +	}
+
+...
+
+> +		for (i = 0; i < d->chip->num_regs; i++)
+> +			d->prev_status_buf[i] = d->status_buf[i];
+
+Hmm... Wouldn't memcpy() suffice?
+But okay, this seems to be not a hot path and the intention is clear.
 
 -- 
-2.48.1
+With Best Regards,
+Andy Shevchenko
+
 
