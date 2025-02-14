@@ -1,64 +1,50 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1D421CA1A
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF002505C2;
+	Fri, 14 Feb 2025 09:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739525210; cv=none; b=mzLNJ8wHpJDMVE6lPbA+1PxgUXqbI9CuI/WCm7m3QKaStDhFyC60hKJYU9bIpTMP1VNin1BznuX7Xqd9yIMm5S6XdwalRHSFemL26yz+zvSkd2ZXqrhNH9rthcYNliDmLBOn3py959UqChcqinsOtMQGAiUCpe84KihcZgKdUGc=
+	t=1739525211; cv=none; b=QeOqKD3anB9ppGapCDFJULDlY4deLUYsQ/scMn6V2PpuzbtQF5AeezUkYJUcJNG5Ifv3ppkZIzPxHpHs/eKYTYOSK8jMXxMZrAMVmKwRrwDSsyPAY6A52OQDezs5fGJ6wcSZMTk0WtOzOjzZt5f4a9P22NI9CtEiKunzPAgCl6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739525210; c=relaxed/simple;
-	bh=7pdd5oxuurCob/RFmaKp0KZkEnXfk+3n7/jmARok0RE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uo5RHuGv1pk0yImHz4e3SMoYIt1uw2DQFfVPr+42PzE1JuM56x+/uT8Z7W70TNe8BVkVnVnCBKu+vyLiBuNGjDJrzodAuIOFs03ees5RZe0AkI6irCCtYZraMZKIoViWAgI2BWwYYGkS5chRGBtXzOVKgcaCteH7CASvnYkMzrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NUSGK0Vi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739525211; c=relaxed/simple;
+	bh=mZEb4O/8MxgRPHsOLUCLNOkrcRFguNnDZADJYJu30Gs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HcK5nF0ZPM5trE/62sgLRb/ebg8dprwuqFqqjZCDQ2beBLR0nR9yxKCsShV8GH0+d27EVWtgJ5ED24nh5VNoU2h5tQAQjQXVx2eFHcZ1IRix4RIkpkmeguLrpc4RpjAErBwYrv3fDK9zuPgSuEJJJfuKcrH4MoX5PJ0f1wHRhW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=AmukW2CB; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NUSGK0Vi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739525205;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cljvOunHkcBa9woq0FiiQutQPylQmYDTVJOhtMnpXNw=;
-	b=NUSGK0ViXud97zUe7XhkGsnrIrWtRljUT7gS7SNaIQeUIqmcPAQqxNgZ2Px121//n46rPV
-	cXUqO6nlO4h5DdmC6d7hpTyy2CMs9IWs8jQ3VdD0YPBXU2HfQA8XSaB+oKkGBm4u0SHM4S
-	j5P4sTHggFkI5r117/H+fpQRf8krvC4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-240-XukAi42oM1CMxtiSixwG_A-1; Fri,
- 14 Feb 2025 04:26:40 -0500
-X-MC-Unique: XukAi42oM1CMxtiSixwG_A-1
-X-Mimecast-MFC-AGG-ID: XukAi42oM1CMxtiSixwG_A_1739525199
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E4718180087C;
-	Fri, 14 Feb 2025 09:26:38 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.45.225.79])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 711A9180035E;
-	Fri, 14 Feb 2025 09:26:35 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="AmukW2CB"
+Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 8BA3320065;
+	Fri, 14 Feb 2025 10:26:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1739525200;
+	bh=G+g0OfrAh01X9LwRyhzYOGvgNaAers3h/+McghiIB40=; h=From:To:Subject;
+	b=AmukW2CBRrfj8omVeMRErQo3AsjpN00p0iN162Kslp9UgCnOyfrZToWCNE4Q7CS/q
+	 kCqd32ORmH8GRQIl3JZL2tJglARTb6ZFQlfdVIIyLIphSBchRg73JhWO7hNoovOzQO
+	 5YvOk0dlOeqj3iieFS5HPycsJsq0bLg7MgmGn9EimnaRQ2JUYHFHlYOi2uQ5OTjP0Y
+	 4r1AfwBzfRxhwHArtp7rYgibENZ3OlO2IQMlQLwjh7KvOGGWo7dL1VUIAQUUIqNCcG
+	 veBVzRxfM0iM/HPHsBsbSG69atBVe3vGOeprVMdPsuSP/XyzkV7jepGkYaOTYvJapN
+	 UDgOCe51FjM0w==
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Frank Li <Frank.li@nxp.com>
+Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v5 4/8] drm/i915/gem: Add i915_gem_object_panic_map()
-Date: Fri, 14 Feb 2025 10:21:39 +0100
-Message-ID: <20250214092608.2555218-5-jfalempe@redhat.com>
-In-Reply-To: <20250214092608.2555218-1-jfalempe@redhat.com>
-References: <20250214092608.2555218-1-jfalempe@redhat.com>
+Subject: [PATCH v1] arm64: dts: freescale: imx8mm-verdin: Remove LVDS panel and backlight
+Date: Fri, 14 Feb 2025 10:26:34 +0100
+Message-Id: <20250214092634.12414-1-francesco@dolcini.it>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,120 +52,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Prepare the work for drm_panic support. This is used to map the
-current framebuffer, so the CPU can overwrite it with the panic
-message.
+From: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+Remove LVDS panel and backlight nodes from the Verdin iMX8M Mini SoM
+dtsi file, those two hardware components are not part of the SoM,
+therefore they should not be present in this file.
+
+This is solving a dtb checker warning about panel-lvds compatible.
+
+Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 ---
+ .../boot/dts/freescale/imx8mm-verdin.dtsi     | 21 -------------------
+ 1 file changed, 21 deletions(-)
 
-v5:
- * Use iosys_map for intel_bo_panic_map().
-
- drivers/gpu/drm/i915/display/intel_bo.c    |  5 ++++
- drivers/gpu/drm/i915/display/intel_bo.h    |  1 +
- drivers/gpu/drm/i915/gem/i915_gem_object.h |  2 ++
- drivers/gpu/drm/i915/gem/i915_gem_pages.c  | 29 ++++++++++++++++++++++
- drivers/gpu/drm/xe/display/intel_bo.c      | 10 ++++++++
- 5 files changed, 47 insertions(+)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_bo.c b/drivers/gpu/drm/i915/display/intel_bo.c
-index fbd16d7b58d95..ac904e9ec7d51 100644
---- a/drivers/gpu/drm/i915/display/intel_bo.c
-+++ b/drivers/gpu/drm/i915/display/intel_bo.c
-@@ -57,3 +57,8 @@ void intel_bo_describe(struct seq_file *m, struct drm_gem_object *obj)
- {
- 	i915_debugfs_describe_obj(m, to_intel_bo(obj));
- }
-+
-+void intel_bo_panic_map(struct drm_gem_object *obj, struct iosys_map *map)
-+{
-+	i915_gem_object_panic_map(to_intel_bo(obj), map);
-+}
-diff --git a/drivers/gpu/drm/i915/display/intel_bo.h b/drivers/gpu/drm/i915/display/intel_bo.h
-index ea7a2253aaa57..5b6c63d99786a 100644
---- a/drivers/gpu/drm/i915/display/intel_bo.h
-+++ b/drivers/gpu/drm/i915/display/intel_bo.h
-@@ -23,5 +23,6 @@ struct intel_frontbuffer *intel_bo_set_frontbuffer(struct drm_gem_object *obj,
- 						   struct intel_frontbuffer *front);
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
+index c528594ac442..7251ad3a0017 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
+@@ -18,20 +18,6 @@ aliases {
+ 		rtc1 = &snvs_rtc;
+ 	};
  
- void intel_bo_describe(struct seq_file *m, struct drm_gem_object *obj);
-+void intel_bo_panic_map(struct drm_gem_object *obj, struct iosys_map *map);
+-	backlight: backlight {
+-		compatible = "pwm-backlight";
+-		brightness-levels = <0 45 63 88 119 158 203 255>;
+-		default-brightness-level = <4>;
+-		/* Verdin I2S_2_D_OUT (DSI_1_BKL_EN/DSI_1_BKL_EN_LVDS, SODIMM 46) */
+-		enable-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_i2s_2_d_out_dsi_1_bkl_en>;
+-		power-supply = <&reg_3p3v>;
+-		/* Verdin PWM_3_DSI/PWM_3_DSI_LVDS (SODIMM 19) */
+-		pwms = <&pwm1 0 6666667 PWM_POLARITY_INVERTED>;
+-		status = "disabled";
+-	};
+-
+ 	/* Fixed clock dedicated to SPI CAN controller */
+ 	clk40m: oscillator {
+ 		compatible = "fixed-clock";
+@@ -66,13 +52,6 @@ hdmi_connector: hdmi-connector {
+ 		status = "disabled";
+ 	};
  
- #endif /* __INTEL_BO__ */
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_object.h b/drivers/gpu/drm/i915/gem/i915_gem_object.h
-index a5f34542135ce..b16092707ea5a 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_object.h
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_object.h
-@@ -692,6 +692,8 @@ i915_gem_object_unpin_pages(struct drm_i915_gem_object *obj)
- int __i915_gem_object_put_pages(struct drm_i915_gem_object *obj);
- int i915_gem_object_truncate(struct drm_i915_gem_object *obj);
- 
-+void i915_gem_object_panic_map(struct drm_i915_gem_object *obj, struct iosys_map *map);
-+
- /**
-  * i915_gem_object_pin_map - return a contiguous mapping of the entire object
-  * @obj: the object to map into kernel address space
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_pages.c b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
-index 8780aa2431053..718bea6474d7f 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_pages.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
-@@ -355,6 +355,35 @@ static void *i915_gem_object_map_pfn(struct drm_i915_gem_object *obj,
- 	return vaddr ?: ERR_PTR(-ENOMEM);
- }
- 
-+/* Map the current framebuffer for CPU access. Called from panic handler, so no
-+ * need to pin or cleanup.
-+ */
-+void i915_gem_object_panic_map(struct drm_i915_gem_object *obj, struct iosys_map *map)
-+{
-+	enum i915_map_type has_type;
-+	void *ptr;
-+
-+	ptr = page_unpack_bits(obj->mm.mapping, &has_type);
-+
-+
-+	if (!ptr) {
-+		if (i915_gem_object_has_struct_page(obj))
-+			ptr = i915_gem_object_map_page(obj, I915_MAP_WB);
-+		else
-+			ptr = i915_gem_object_map_pfn(obj, I915_MAP_WB);
-+
-+		if (IS_ERR(ptr))
-+			return;
-+
-+		obj->mm.mapping = page_pack_bits(ptr, I915_MAP_WB);
-+	}
-+
-+	if (i915_gem_object_has_iomem(obj))
-+		iosys_map_set_vaddr_iomem(map, (void __iomem *) ptr);
-+	else
-+		iosys_map_set_vaddr(map, ptr);
-+}
-+
- /* get, pin, and map the pages of the object into kernel space */
- void *i915_gem_object_pin_map(struct drm_i915_gem_object *obj,
- 			      enum i915_map_type type)
-diff --git a/drivers/gpu/drm/xe/display/intel_bo.c b/drivers/gpu/drm/xe/display/intel_bo.c
-index b463f5bd4eed1..bde276bc896b1 100644
---- a/drivers/gpu/drm/xe/display/intel_bo.c
-+++ b/drivers/gpu/drm/xe/display/intel_bo.c
-@@ -59,3 +59,13 @@ void intel_bo_describe(struct seq_file *m, struct drm_gem_object *obj)
- {
- 	/* FIXME */
- }
-+
-+void intel_bo_panic_map(struct drm_gem_object *obj, struct iosys_map *map)
-+{
-+	struct xe_bo *bo = gem_to_xe_bo(obj);
-+	int ret;
-+
-+	ret = ttm_bo_vmap(&bo->ttm, map);
-+	if (ret)
-+		iosys_map_clear(map);
-+}
+-	panel_lvds: panel-lvds {
+-		compatible = "panel-lvds";
+-		backlight = <&backlight>;
+-		data-mapping = "vesa-24";
+-		status = "disabled";
+-	};
+-
+ 	/* Carrier Board Supplies */
+ 	reg_1p8v: regulator-1p8v {
+ 		compatible = "regulator-fixed";
 -- 
-2.47.1
+2.39.5
 
