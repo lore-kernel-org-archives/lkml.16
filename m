@@ -1,60 +1,68 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E81A267739;
-	Fri, 14 Feb 2025 16:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F5B267393;
+	Fri, 14 Feb 2025 16:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739550259; cv=none; b=UHFJi7bu5taWkEalA5AU/WTRV9uc/DISisZO9Pd69mqe71uHIOTdJK/MJ9jx/5lhsde9305+0TyDEn0Olttm4m7Z3CZGAnc58pmwePlMHK7XdVJrkNCplAqYg+/WC1wCBqJGB3dBFzOlfskPH8cgn297XsSz3+IVtZGIYcUKakI=
+	t=1739550299; cv=none; b=d6FxkI6aFVLJAHY/5+k3zv+jmazcFwRdHPsOfmc3TLpNe5M11edVM76i/FFmemwDVLGLfJqFUduBlwKowBzCdRE3a/k0nf2jXYFUvMGdqD0+jhk0TNuU08hJmnpBmC5EoqufBJjgQUYI8qVxC2+PzC3P2Bac0sgEuLwYiMq8tQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739550259; c=relaxed/simple;
-	bh=7AgIKn7csdyYxmF3m/Q7J4+PJzNeiOLf9q091XJ4E/4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y8yQpiuHIkBfBS/ffAmrf/r/4rMDbIknuS4xhRWl4VjGdvlNPx40oZMR3vGF+9SFhNGvydRPMKJ97jX++utD+dZORFhGa5kDCrgzh9xTb2xEEg+G9KQlWh8tszSahov7xlJRi6KK+TMxK4cypVo4DG8H+T+LD3oWSToGlzu1G/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=H105/2Jg; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1739550299; c=relaxed/simple;
+	bh=0mTy7aT2DO+MQw1h7heKPjMWt+yyZdSNOVwiqs1Gz2s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KHO4KTkpYXgCVEHM+/4sg6EWv/BTa7ruOUnNRZiwYu/sh/ugwwCE1tNm1cH6q+PKWqV4/B3ref9S4JO5k9G+8C40EC2pR/XMVe+4X0vyqIywUVcGMUbjoQqitVe23xfkvVa8n+7J/k92A4UCWyvWAn6h2JNiGzONooYIPr+d+W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=X6fS5qwO; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="H105/2Jg"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51E4od4M018291;
-	Fri, 14 Feb 2025 10:24:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=0VhoGhsglbZJj1oXUFMWOU4f5t2yztkzd93wyUTPzZY=; b=
-	H105/2JgbrA/WYv3hsQb3DdrPqxFmYe1eURYuGZwqywplmHsLdBRy7SFG9rAX3SV
-	+ajzfrON5XUCtGCY3F7M1H5CleZrlaKPvCT32uO+X3WzWfsFhhN3O2QzXAFMflZh
-	ZOuijwwZCAltfP9iqSFe83mohBzkECHICoAfeEWY7urydM+6ob7ZDASYQxg3MtMx
-	clwzASLLgSQX4LPvObjDmzVLidWbAQ+454btL23XAIAoeIVp8ZdEo28wZQ36cU/7
-	E6Y90VqqB8K9eKiqP3xsEeB3Nr4j109JD8ur8VyL1Bz8IyEoG6ZQlKacSsXCf1Zg
-	tmrL7BHnYgnecvNlYXl6yw==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 44rpsvcvvs-1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="X6fS5qwO"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EAo29a032741;
+	Fri, 14 Feb 2025 16:24:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=yFfZClgTIGahWWAji
+	gU50EkYWifUgFkD4IIJI/BSD+c=; b=X6fS5qwO9I/mubzqM6sdbFIPwsB1Y+mQE
+	mcUGeBIqMKM5Hp4HsPSorcXSgFMKT6wJdNpD0cVrluqYbrQr4IaJKCrQk8VnSlOj
+	oaV4IWx3LJZPLbEiwfNyVrAB3sFJ9kDT+IpKdMcLil5+bMaPphw3JSx4xslVMjtl
+	sZqet8LAUpKE254hYzPsMy+F5lpt7SPTU+F/+EmLhd1DbAuhAQAf0R/7SzPr1Pvb
+	i2Wiq2taCP8AE8DPrItwNFd+qKJ7pIp+DB/NXR/28pID/rgi/0iCvfBY4uvqjUb1
+	VK7Fo3tAlgzdUpcbyOqcvRvZsS//ff2xmB1KiuAgRwr82bHr+Sp5g==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ssvacbb9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 10:24:04 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 14 Feb
- 2025 16:24:02 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Fri, 14 Feb 2025 16:24:02 +0000
-Received: from lonswws03.ad.cirrus.com (lonswws03.ad.cirrus.com [198.90.188.34])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 2A48B82025A;
-	Fri, 14 Feb 2025 16:24:02 +0000 (UTC)
-From: Vitaly Rodionov <vitalyr@opensource.cirrus.com>
-To: Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>
-CC: <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>,
-        Vitaly Rodionov
-	<vitalyr@opensource.cirrus.com>
-Subject: [PATCH 2/2] ALSA: hda/cirrus: Reduce codec resume time
-Date: Fri, 14 Feb 2025 16:23:26 +0000
-Message-ID: <20250214162354.2675652-2-vitalyr@opensource.cirrus.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250214162354.2675652-1-vitalyr@opensource.cirrus.com>
-References: <20250214162354.2675652-1-vitalyr@opensource.cirrus.com>
+	Fri, 14 Feb 2025 16:24:55 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51EEXLrf028236;
+	Fri, 14 Feb 2025 16:24:53 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44phyyvkea-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 16:24:53 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51EGOp5w27329044
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Feb 2025 16:24:51 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9A71858056;
+	Fri, 14 Feb 2025 16:24:51 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6BDA15805A;
+	Fri, 14 Feb 2025 16:24:51 +0000 (GMT)
+Received: from li-4c4c4544-0047-5210-804b-b8c04f323634.lan (unknown [9.61.91.157])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 14 Feb 2025 16:24:51 +0000 (GMT)
+From: Nick Child <nnac123@linux.ibm.com>
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: haren@linux.ibm.com, ricklind@us.ibm.com, nick.child@ibm.com,
+        jacob.e.keller@intel.com, horms@kernel.org,
+        Nick Child <nnac123@linux.ibm.com>
+Subject: [PATCH 1/3] hexdump: Implement macro for converting large buffers
+Date: Fri, 14 Feb 2025 10:24:34 -0600
+Message-ID: <20250214162436.241359-2-nnac123@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250214162436.241359-1-nnac123@linux.ibm.com>
+References: <20250214162436.241359-1-nnac123@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,98 +70,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=O73DvA9W c=1 sm=1 tr=0 ts=67af6e24 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=U9z2HhxXZIhU2ysfx1IA:9 a=+jEqtf1s3R9VXZ0wqowq2kgwd+I=:19 a=GIWBuCPpE9siKy2bWEcf:22
- a=YXXWInSmI4Sqt1AkVdoW:22
-X-Proofpoint-ORIG-GUID: yjz1QX87CfhbG4UR3NR9bStIaeQ14Hgh
-X-Proofpoint-GUID: yjz1QX87CfhbG4UR3NR9bStIaeQ14Hgh
-X-Proofpoint-Spam-Reason: safe
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: NgG4kIDWrONo9mMbLfKZvrBJbv4GqcbG
+X-Proofpoint-ORIG-GUID: NgG4kIDWrONo9mMbLfKZvrBJbv4GqcbG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-14_07,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 mlxscore=0 spamscore=0 bulkscore=0 suspectscore=0
+ malwarescore=0 lowpriorityscore=0 phishscore=0 clxscore=1011
+ impostorscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502140114
 
-This patch reduces the resume time by half and introduces an option to
-include a delay after a single write operation before continuing.
+Define for_each_line_in_hex_dump which loops over a buffer and calls
+hex_dump_to_buffer for each segment in the buffer. This allows the
+caller to decide what to do with the resulting string and is not
+limited by a specific printing format like print_hex_dump.
 
-Signed-off-by: Vitaly Rodionov <vitalyr@opensource.cirrus.com>
+Signed-off-by: Nick Child <nnac123@linux.ibm.com>
 ---
- sound/pci/hda/patch_cs8409-tables.c | 6 +++---
- sound/pci/hda/patch_cs8409.c        | 6 +++++-
- sound/pci/hda/patch_cs8409.h        | 2 +-
- 3 files changed, 9 insertions(+), 5 deletions(-)
+ include/linux/printk.h | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/sound/pci/hda/patch_cs8409-tables.c b/sound/pci/hda/patch_cs8409-tables.c
-index 621f947e3817..09240138e087 100644
---- a/sound/pci/hda/patch_cs8409-tables.c
-+++ b/sound/pci/hda/patch_cs8409-tables.c
-@@ -131,7 +131,7 @@ static const struct cs8409_i2c_param cs42l42_init_reg_seq[] = {
- 	{ CS42L42_RSENSE_CTL3, 0x00 },
- 	{ CS42L42_TSENSE_CTL, 0x80 },
- 	{ CS42L42_HS_BIAS_CTL, 0xC0 },
--	{ CS42L42_PWR_CTL1, 0x02 },
-+	{ CS42L42_PWR_CTL1, 0x02, 10000 },
- 	{ CS42L42_ADC_OVFL_INT_MASK, 0xff },
- 	{ CS42L42_MIXER_INT_MASK, 0xff },
- 	{ CS42L42_SRC_INT_MASK, 0xff },
-@@ -328,7 +328,7 @@ static const struct cs8409_i2c_param dolphin_c0_init_reg_seq[] = {
- 	{ CS42L42_RSENSE_CTL3, 0x00 },
- 	{ CS42L42_TSENSE_CTL, 0x80 },
- 	{ CS42L42_HS_BIAS_CTL, 0xC0 },
--	{ CS42L42_PWR_CTL1, 0x02 },
-+	{ CS42L42_PWR_CTL1, 0x02, 10000 },
- 	{ CS42L42_ADC_OVFL_INT_MASK, 0xff },
- 	{ CS42L42_MIXER_INT_MASK, 0xff },
- 	{ CS42L42_SRC_INT_MASK, 0xff },
-@@ -384,7 +384,7 @@ static const struct cs8409_i2c_param dolphin_c1_init_reg_seq[] = {
- 	{ CS42L42_RSENSE_CTL3, 0x00 },
- 	{ CS42L42_TSENSE_CTL, 0x80 },
- 	{ CS42L42_HS_BIAS_CTL, 0xC0 },
--	{ CS42L42_PWR_CTL1, 0x06 },
-+	{ CS42L42_PWR_CTL1, 0x06, 10000 },
- 	{ CS42L42_ADC_OVFL_INT_MASK, 0xff },
- 	{ CS42L42_MIXER_INT_MASK, 0xff },
- 	{ CS42L42_SRC_INT_MASK, 0xff },
-diff --git a/sound/pci/hda/patch_cs8409.c b/sound/pci/hda/patch_cs8409.c
-index b760332a4e35..e50006757a2c 100644
---- a/sound/pci/hda/patch_cs8409.c
-+++ b/sound/pci/hda/patch_cs8409.c
-@@ -346,6 +346,11 @@ static int cs8409_i2c_bulk_write(struct sub_codec *scodec, const struct cs8409_i
- 
- 		if (cs8409_i2c_wait_complete(codec) < 0)
- 			goto error;
-+		/* Certain use cases may require a delay
-+		 * after a write operation before proceeding.
-+		 */
-+		if (seq[i].delay)
-+			fsleep(seq[i].delay);
- 	}
- 
- 	mutex_unlock(&spec->i2c_mux);
-@@ -888,7 +893,6 @@ static void cs42l42_resume(struct sub_codec *cs42l42)
- 
- 	/* Initialize CS42L42 companion codec */
- 	cs8409_i2c_bulk_write(cs42l42, cs42l42->init_seq, cs42l42->init_seq_num);
--	msleep(CS42L42_INIT_TIMEOUT_MS);
- 
- 	/* Clear interrupts, by reading interrupt status registers */
- 	cs8409_i2c_bulk_read(cs42l42, irq_regs, ARRAY_SIZE(irq_regs));
-diff --git a/sound/pci/hda/patch_cs8409.h b/sound/pci/hda/patch_cs8409.h
-index 14645d25e70f..e4bd2e12110b 100644
---- a/sound/pci/hda/patch_cs8409.h
-+++ b/sound/pci/hda/patch_cs8409.h
-@@ -229,7 +229,6 @@ enum cs8409_coefficient_index_registers {
- #define CS42L42_I2C_SLEEP_US			(2000)
- #define CS42L42_PDN_TIMEOUT_US			(250000)
- #define CS42L42_PDN_SLEEP_US			(2000)
--#define CS42L42_INIT_TIMEOUT_MS			(45)
- #define CS42L42_ANA_MUTE_AB			(0x0C)
- #define CS42L42_FULL_SCALE_VOL_MASK		(2)
- #define CS42L42_FULL_SCALE_VOL_0DB		(0)
-@@ -291,6 +290,7 @@ enum {
- struct cs8409_i2c_param {
- 	unsigned int addr;
- 	unsigned int value;
-+	unsigned int delay;
- };
- 
- struct cs8409_cir_param {
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index 4217a9f412b2..559d4bfe0645 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -755,6 +755,27 @@ enum {
+ extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
+ 			      int groupsize, char *linebuf, size_t linebuflen,
+ 			      bool ascii);
++/**
++ * for_each_line_in_hex_dump - iterate over buffer, converting into hex ASCII
++ * @i: offset in @buff
++ * @rowsize: number of bytes to print per line; must be 16 or 32
++ * @linebuf: where to put the converted data
++ * @linebuflen: total size of @linebuf, including space for terminating NUL
++ *		IOW >= (@rowsize * 2) + ((@rowsize - 1 / @groupsize)) + 1
++ * @groupsize: number of bytes to print at a time (1, 2, 4, 8; default = 1)
++ * @buf: data blob to dump
++ * @len: number of bytes in the @buf
++ */
++ #define for_each_line_in_hex_dump(i, rowsize, linebuf, linebuflen, groupsize, \
++				   buf, len) \
++	for ((i) = 0;							\
++	     (i) < (len) &&						\
++	     hex_dump_to_buffer((unsigned char *)(buf) + (i),		\
++				min((len) - (i), rowsize),		\
++				(rowsize), (groupsize), (linebuf),	\
++				(linebuflen), false);			\
++	     (i) += (rowsize) == 16 || (rowsize) == 32 ? (rowsize) : 16	\
++	    )
+ #ifdef CONFIG_PRINTK
+ extern void print_hex_dump(const char *level, const char *prefix_str,
+ 			   int prefix_type, int rowsize, int groupsize,
 -- 
-2.43.0
+2.48.0
 
