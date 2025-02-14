@@ -1,88 +1,95 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D9A212D67
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 10:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04EB4245026
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 10:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739529824; cv=none; b=RYvLztfLJRchUUcgPEaRVEU/1pCEq5+0uoKy1c/sBWUNL2hTJZ/U+P8Z0ljYskjoOr2mCS7AcegOQ+DOgXnOnYYXVxCgArlbM6IaQUEQ19aYbHqlPuNbWcnLyMexW0LMqOaK0pLuB5wj/TI4z2s7qzRSCkK2ZR73dStxI05iBZY=
+	t=1739529900; cv=none; b=q6+P+WZg43IWa/mLqeyWpI0xVlGJYT36lV9f1Nu7HV56qQc3BuEQhg3T1SkypQKvkLuOYB5gBacjzw1AJ0XU5Qy0Ntp1wXzW4EcsESy/N/4yu48N/UyZE8rvgfRbG+97IDdVHz6ql8dJPtK7j3cbVyWkuCIBLgeTqf1ZH9OMBoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739529824; c=relaxed/simple;
-	bh=258ESUmkji2A70iQi0WVuGZY6DzAzC9+BBeqUcHI3MU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pq48a8UT6+ohR08fA/EYrWdPv8IVkYBgBhu5JhBG5qJ8RqVPVoy2fUQjoHH2VUkEVWg0lrxouesJuefJH5LCzq/CUmCc9751aYgRMcg7Ar7yqdlB44nS8/rWETnt3sq5sDtzxiGe6176BYuICd3lGh2BQzzySIaawVuCbAHtSQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yg68Gh7v; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739529900; c=relaxed/simple;
+	bh=+BvG3kvZrnvFsxPS5WNy03PrHQwz56aOzhsaPLPxqYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jKLK1qfQCkTu/rxYGZ5GcQ0Ebw2dEcZXbWMJ6MPDB8KG57FgayWEoyPAH/1H8qZVwbXDOWJeZoY+WjsWL04nsGTVIYsEuVrcGe9815u16GiRNkY5EgQymtWWxCeZZcgsE0mMW6h+RQjQGwsNsr1qGT/u0TJoTDqHYmuo4LMYHAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h4/hgGHg; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yg68Gh7v"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-308dc0878dfso19926991fa.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 02:43:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739529821; x=1740134621; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=258ESUmkji2A70iQi0WVuGZY6DzAzC9+BBeqUcHI3MU=;
-        b=Yg68Gh7vH67KKH73fZDYm7O4pMoRUqhXWo7yWx8VJqAkXgLAu+wNXOxqTeV6cuoPGu
-         DiYjj1e5FqP5sPZU6GibHiY7r01GRsNprprcw+JA9SONoCGIE57WXrm6xzI7LL6Q02D6
-         x9/jVvGFgsSU21K7EZgV3BaaKzObeVc1e7XwP6CAYv6Uj3htJmYGDQYi2RcovrD2a/yu
-         yZ/xy3IdPmaUVIrGlvtM3iHYtAnV36hda1spXVpQcHd9FfXdd1bBWOJPLKxLoeLA9HrF
-         s3Lc9UGHljiigxciCF8oj5lAH15q9+jLp8IITd9rrF2/kuP8htqBrNi+XAAm4kNHlKvU
-         gTvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739529821; x=1740134621;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=258ESUmkji2A70iQi0WVuGZY6DzAzC9+BBeqUcHI3MU=;
-        b=w4hu6l8AVo9tmOT4oTOXc1hGZQXu2K2pfUWRFFjSs5bNxaWR8eW2VmWjHTn4YofQIv
-         utrsc2RDYSc9uYIT6yCJyFPO57Y+nW+RgesvbZQim9WjuqA3W83S4mnZdS2VgGaDnTHx
-         myd/xKHA6JJA6hZMX5U1RFL4pw2o+R8jyNMxO95jLB0hSVAHAaj+81/2oe5ojZVzwue2
-         soyw/futmqfEDJVUeM/oBO7RFL24XzcgOj6MHiKpi1GbFDipE9u8FpwA10T6DB+Zch6Z
-         /skGrYIh5ngMCBai/1abpXpE2/OyGmZHYvpjg2sGGoHL8jHQvu/mfCPg5SvQXBGgoehw
-         duTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWpuCSKd4p111BsPS/qSwGRRPATUToAH4MqeDLOME+BwdVVEAK/hKTV1EHFAfIe/DtMhsowh+RCPVGnYV8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXp1cmbOt7ammrzIZsWrLn3M/f8rLEC9TP27I4pBlwWoqtVOLj
-	OdpdxSiuRMGlqT0whBm6I4OQVkzu4ZWaAPDGZnR9lqS5mbIrzltKHPeXOtZXtpEIxNg98BVN2Mc
-	9lpyUbThYUuzDrgeVXa+x527StvL6TTlEmIB8jA==
-X-Gm-Gg: ASbGncvFqmWAIgdhibZALv2KsUdy2QriFUuPHxvrQ/EVBMQI1CvYqumw+xsFhOZ8NdJ
-	tRHf6gOrP61tLyV4vVwuXaPzqzaIJrenRPoJSCk6Vni6AuQ7+aBnax1GqWRJQDgnHrzYQeizB
-X-Google-Smtp-Source: AGHT+IHIrJlrERpgwzo5wAuMDjjakD4AlBHd/8GGQfZyq2/tG9XCbPSB3xq9CnfI5XcNnXqNyGNdI7PPACfZeC6FfKw=
-X-Received: by 2002:a2e:be06:0:b0:308:fedf:8c12 with SMTP id
- 38308e7fff4ca-30903630e55mr39608221fa.5.1739529820875; Fri, 14 Feb 2025
- 02:43:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h4/hgGHg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739529899; x=1771065899;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=+BvG3kvZrnvFsxPS5WNy03PrHQwz56aOzhsaPLPxqYY=;
+  b=h4/hgGHgYc8HD5RXyewftP03o5aO7tXabAoCT+GlVx6TaHjPqtPMeb4j
+   mcR3Jt8PeQtg5h0mQ9z5mF3VD9eryhPVecBLxhugP0INI18szIXqfyp9z
+   SY6kfYlKpc7qIucyxFhf3S+QdplVnCNteqaVKsEFq9dsPtwtKZ9r1A6sZ
+   4TA3vrI3SwUSGGvIK/Wt1F9vMb1Wkj9DxAFSGgXHfDGHa6FWHehQn6LIP
+   94kMBA6ShOJXZU9LOiKdss6P3DJd0cbDdRBrM+2c3nu4tApQpUlK39DdA
+   W2MQMDVXGejuMDFB8yQ0s0ey1aRPy/h8T+pL0Wa6GTFvMjidi9aKHtLuc
+   g==;
+X-CSE-ConnectionGUID: tJpkKKSkTmuxoJpzMaJTXA==
+X-CSE-MsgGUID: jxH7Z1QdTeeNrzPqPkd/zw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40197170"
+X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
+   d="scan'208";a="40197170"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 02:44:59 -0800
+X-CSE-ConnectionGUID: eTA1lSYcSAmm13TchfgM2g==
+X-CSE-MsgGUID: cS0hJAW3S/GoMe2faqICNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="114326137"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 14 Feb 2025 02:44:56 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1titBm-0019PN-1s;
+	Fri, 14 Feb 2025 10:44:54 +0000
+Date: Fri, 14 Feb 2025 18:44:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Yang Li <yang.lee@linux.alibaba.com>
+Subject: kernel/vmcore_info.c:117 paddr_vmcoreinfo_note() warn: unsigned '_x'
+ is never less than zero.
+Message-ID: <202502141843.5QoKdQ7g-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213182527.3092371-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250213182527.3092371-1-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 14 Feb 2025 11:43:30 +0100
-X-Gm-Features: AWEUYZn045uEEhfW31xBwMEeZrHA-IrXYXkIgwYU0XEIBbh_Wqus8rfEf1lz-KQ
-Message-ID: <CACRpkdZj2TtWh2CFb4f4DewO90C70e_3YdKr_DZYuQ6J4+z0Lg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] gpiolib: Make code more robust by using for_each_if()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Alexandru Ardelean <aardelean@baylibre.com>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, Feb 13, 2025 at 7:25=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   128c8f96eb8638c060cd3532dc394d046ce64fe1
+commit: 443cbaf9e2fdbef7d7cae457434a6cb8a679441b crash: split vmcoreinfo exporting code out from crash_core.c
+date:   12 months ago
+config: riscv-randconfig-r073-20250213 (https://download.01.org/0day-ci/archive/20250214/202502141843.5QoKdQ7g-lkp@intel.com/config)
+compiler: riscv32-linux-gcc (GCC) 14.2.0
 
-> Instead of opencoding with long lines, use for_each_if() macro
-> which makes intention clearer and less error prone.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502141843.5QoKdQ7g-lkp@intel.com/
 
-Excellent patch series.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+smatch warnings:
+kernel/vmcore_info.c:117 paddr_vmcoreinfo_note() warn: unsigned '_x' is never less than zero.
 
-Yours,
-Linus Walleij
+vim +/_x +117 kernel/vmcore_info.c
+
+   114	
+   115	phys_addr_t __weak paddr_vmcoreinfo_note(void)
+   116	{
+ > 117		return __pa(vmcoreinfo_note);
+   118	}
+   119	EXPORT_SYMBOL(paddr_vmcoreinfo_note);
+   120	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
