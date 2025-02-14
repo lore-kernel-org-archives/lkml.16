@@ -1,169 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA02715FA7B
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 19:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70AD15FA7B
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 19:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739561088; cv=none; b=RT3HD5AD5rc2olInr+KGpwkwg2tXWf2c1yYmiEtisP/9CZ5YSOxy2M6a0g/Nbx1AfSLETEIfVAWY0PrzWlJkOBcay+a4lzRx+SMCC54M5VPicHBoNSbnfhYudA5HrzgQlsmTRa7E1lMLUG4rSjHNux2RKR+K6MPCH/X9PDi1rik=
+	t=1739561228; cv=none; b=UM7JR4350FM+3uv3rdVtzCDVcJ4BlVIzDVUsAvn/i7D61vniP+LNMTru0NH/CS7OBLcHFCCbAdKnbt8PbHzQFS0pjFFMjI5zuP980LOtu0MZGbPsSLZ7fKC6MqZBlqcuP0Bi45FQaqYcE0UHE7DGBgkctV1qlnF3fb5w7OsX9vI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739561088; c=relaxed/simple;
-	bh=d7eLa+l0BgxHNOGpkfo2U7Ib7OXM+0lkMqMNR9qYx4s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L6Awyz4FRmCB60jFLzcADcRG6dGMqIwuBB0jQMlhrho5m6G5hJgRp06X3UNyMf2qR80FUVvogjzhh0tPQMUEj5UoCikWiPWRwsUyqxNGE0igQuaSEZLynVBobNL0u/6osX83pTNbOw+6NSSjniUZ2TX5JAOiRB7V4/P7aCyrytU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RTDRXme/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739561228; c=relaxed/simple;
+	bh=55jqhg240yOgqtQp2hkMhDJI7bwzW3oaSKWgrwuFEsM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jZaDMrOD20v3DDMxfkbXp7ynVUvVq5Ou/PcEi45Y/o0FltW2dpJo9gi9uMWUIaxjg8lU8vBGVAGFHdLdv55naM+bpT3dkLk3HIJxT9/oMiKzYpMhxcbkjhyUV5RN2c+zGPCEuMQaIevZHD4Mmq+3Fq6L/mlHEPPhLK7cbFz+QDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Mt2nO6ae; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RTDRXme/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739561085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=uU18PgJHAWxgzCn1GD8uryQE/mKTabOBU2mLmRwwGxI=;
-	b=RTDRXme/4Ck8Pu33B3KhyWdGgMGk9I0efkGPUwN/CVFFULma2xAxYfv0d9NjJ0QjNXg59g
-	IGgeBGVAkleqHYjhq4mveJwcalSL3mq9kHwwJvhPA5OVayVY7RLmtnUUgyzclLUeh6oksD
-	1peLQ/xuB1Z9eobD6Hb0hy/13EdD624=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-77-dfWXpf46OYOZdi8cUPKRNw-1; Fri,
- 14 Feb 2025 14:24:41 -0500
-X-MC-Unique: dfWXpf46OYOZdi8cUPKRNw-1
-X-Mimecast-MFC-AGG-ID: dfWXpf46OYOZdi8cUPKRNw_1739561080
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F129A19039C5;
-	Fri, 14 Feb 2025 19:24:39 +0000 (UTC)
-Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.89.30])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AB8FB1800365;
-	Fri, 14 Feb 2025 19:24:37 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Don Brace <don.brace@microchip.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: storagedev@microchip.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH] scsi: smartpqi: Add lun_reset_key to initialize ctrl_info->lun_reset_mutex
-Date: Fri, 14 Feb 2025 14:23:24 -0500
-Message-ID: <20250214192324.2471148-1-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Mt2nO6ae"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c0848d475cso118508885a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 11:27:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1739561226; x=1740166026; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=q54C682wupKw2fn+9hJZ17sdX89XEBbDkpwzhueywsk=;
+        b=Mt2nO6aeycPPfnCy1bujlM1UYhiHUIljw6VZR48g1zYy7uo5waceIvFPpk457M4jeQ
+         FOLSEXC7Hzeh6OwOdFmQzrYp4eLRyNG03hDEOcKA6hb5r84Y4RemgNUr/Rw/1I69DkGi
+         bZl3hdwcRsRh1TXisDohs3AKG3ClrGD0URCCyifSMD3lkvIE+E1BOQiqLHfjQxv96qJ9
+         xKfCmih7c0TR+QhlljWIycxTyDfuXUg7kU1dfzeCrFJinSf1nB7baunhUFi/VANVk+yW
+         2ZEmZSxVfELs3RRUPokNWrEZNfrWhY9sG/EPQEGHP+WylhLWxZq9ffmzkRYPZN411bZY
+         BThg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739561226; x=1740166026;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q54C682wupKw2fn+9hJZ17sdX89XEBbDkpwzhueywsk=;
+        b=Mu+akIziLgUXXyIco5akAipvT8Tx8WbQmGXnsiASw5zjfx2J9mj1e8Nt/DLhXDwpIn
+         vwp+PVQRPbP+wjfEaWjIF6RTzMlS7sfuOCd+i8enDtUsw69nIhpfqBn5sy/hZfHWOKKN
+         96rrLXaMoHu4qXi72Z4YgRyEeaH0uDao4AF/n1LreuuxXZyLrtHba5D5CnZuJjFQ1CkT
+         UuQGc77vjRj3lbfFCHWWuuFUos768xzSCs00Dfg/pMhcxTUKmvvn293ERB0TX3tlEzux
+         QWPnzNPFC3rv7noDRI78od/heQ3XrE1hgN9wCbmI+UJqgARIZXKUIgDIxoo4BT8VcMsx
+         ZULA==
+X-Forwarded-Encrypted: i=1; AJvYcCXC/oPnJdouMaxinhOfJ4pWRNsB8H9OAZJzfzWAK0gbHkGyko/1DcDoZES2Ab0LG4JSmmk0x3F50tAzOzM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTLezrhTESWqolbcsf3V6azZJ92xEwaausgpKC6E/zp8a/K/8O
+	I2z3zqmZFU5OiSdlvSRuwVMfUF/AZ29sVvT/ItH0XNfH96Qh9zICQ05lBGbGa9Y=
+X-Gm-Gg: ASbGncsBb7PqdnfL0pCiVG0D4H4S5Ak+h9pNf5o3JdhTcNzdG+OFB7Ub3mzV0RVgAaw
+	CjGzap3DdqPdRRplg4pUDOVkxORvU4O0GHegBNiITEBWjDAXz4QAWIw7E5H0pQ6JZ4pwHqd9Xqf
+	kQRTT0Yc2L9iEJeSdDw4gb4jIxo0r8wCpcxeAYvjsB/lLu4uUbb6KOSAPnkYADIOXIpn9ePjnjs
+	/qqU1AFVm74PIIrKj8T7h7+7mD61SWVugvflDff4Juba7GKe/kPnohX2ZGLJ8UhO9ZuQWthI1M/
+	pkaHxcQYQSXcaCcajxLJdkvkY/KrKAVGFPfe58HhvHCD4R7idf/M0HVCqMiaP/Kv
+X-Google-Smtp-Source: AGHT+IGP6EIu6D5/X4T1lXUP3TqCWP6QCFadGFyDUhKfkvIRhoG4FICvPgxc52H21XaC8VTPwxK1CA==
+X-Received: by 2002:a05:620a:2691:b0:7bc:df55:2cd0 with SMTP id af79cd13be357-7c08aa9f850mr103218785a.48.1739561225699;
+        Fri, 14 Feb 2025 11:27:05 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c07c86155dsm235281185a.87.2025.02.14.11.27.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 11:27:05 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tj1L6-0000000GmO1-2uwa;
+	Fri, 14 Feb 2025 15:27:04 -0400
+Date: Fri, 14 Feb 2025 15:27:04 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, peterx@redhat.com,
+	mitchell.augustin@canonical.com, clg@redhat.com,
+	akpm@linux-foundation.org, linux-mm@kvack.org
+Subject: Re: [PATCH 5/5] vfio/type1: Use mapping page mask for pfnmaps
+Message-ID: <20250214192704.GD3696814@ziepe.ca>
+References: <20250205231728.2527186-1-alex.williamson@redhat.com>
+ <20250205231728.2527186-6-alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205231728.2527186-6-alex.williamson@redhat.com>
 
-A lockdep recursive locking splat happens when shutting down a debug kernel
-on some systems.
+On Wed, Feb 05, 2025 at 04:17:21PM -0700, Alex Williamson wrote:
+> @@ -590,15 +592,23 @@ static int vaddr_get_pfns(struct mm_struct *mm, unsigned long vaddr,
+>  	vma = vma_lookup(mm, vaddr);
+>  
+>  	if (vma && vma->vm_flags & VM_PFNMAP) {
+> -		ret = follow_fault_pfn(vma, mm, vaddr, pfn, prot & IOMMU_WRITE);
+> +		unsigned long pgmask;
+> +
+> +		ret = follow_fault_pfn(vma, mm, vaddr, pfn, &pgmask,
+> +				       prot & IOMMU_WRITE);
+>  		if (ret == -EAGAIN)
+>  			goto retry;
+>  
+>  		if (!ret) {
+> -			if (is_invalid_reserved_pfn(*pfn))
+> -				ret = 1;
+> -			else
+> +			if (is_invalid_reserved_pfn(*pfn)) {
+> +				unsigned long epfn;
+> +
+> +				epfn = (((*pfn << PAGE_SHIFT) + ~pgmask + 1)
+> +					& pgmask) >> PAGE_SHIFT;
 
- ============================================
- WARNING: possible recursive locking detected
- --------------------------------------------
- reboot/15103 is trying to acquire lock:
- ffff8881435af8c8 (&ctrl_info->lun_reset_mutex){+.+.}-{3:3}, at: pqi_shutdown+0x112/0x4b0 [smartpqi]
+That seems a bit indirect
 
- but task is already holding lock:
- ffff8888929278c8 (&ctrl_info->lun_reset_mutex){+.+.}-{3:3}, at: pqi_shutdown+0x112/0x4b0 [smartpqi]
+ epfn = ((*pfn) | (~pgmask >> PAGE_SHIFT)) + 1;
 
-  other info that might help us debug this:
-   Possible unsafe locking scenario:
+?
 
-         CPU0
-         ----
-    lock(&ctrl_info->lun_reset_mutex);
-    lock(&ctrl_info->lun_reset_mutex);
+> +				ret = min_t(int, npages, epfn - *pfn);
 
-   *** DEADLOCK ***
+It is nitty but the int's here should be long, and npages should be
+unsigned long..
 
-   May be due to missing lock nesting notation
-
-  4 locks held by reboot/15103:
-   #0: ffffffff8db76f40 (system_transition_mutex){+.+.}-{3:3}, at: __do_sys_reboot+0x12b/0x2f0
-   #1: ffff8888929278c8 (&ctrl_info->lun_reset_mutex){+.+.}-{3:3}, at: pqi_shutdown+0x112/0x4b0 [smartpqi]
-   #2: ffff88810a8921a8 (&dev->mutex){....}-{3:3}, at: device_shutdown+0x1de/0x540
-   #3: ffff88810a9141a8 (&dev->mutex){....}-{3:3}, at: device_shutdown+0x1ec/0x540
-  Call Trace:
-
-   dump_stack_lvl+0x6f/0xb0
-   print_deadlock_bug.cold+0xbd/0xca
-   validate_chain+0x37b/0x570
-   __lock_acquire+0x55b/0xac0
-   lock_acquire.part.0+0xf5/0x2b0
-   mutex_lock_nested+0x4b/0x190
-   pqi_shutdown+0x112/0x4b0 [smartpqi]
-   pci_device_shutdown+0x76/0x110
-   device_shutdown+0x2ea/0x540
-   kernel_restart+0x64/0xa0
-   __do_sys_reboot+0x1d8/0x2f0
-   do_syscall_64+0x92/0x180
-
-The fact that there are two dev->mutex'es acquired in device_shutdown()
-means both a parent and a child devices are being worked on and
-likely that the lun_reset_mutex'es of these two devices are being
-acquired here too. However, the way lun_reset_mutex is initialized in
-pqi_alloc_ctrl_info() will casue all the lun_reset_mutex'es to be treated
-as in the same class leading to this false positive warning. Fix that
-by initializing each instance of lun_reset_mutex with its own unique
-key so that they will be treated as different by lockdep.
-
-Also call mutex_destroy() and lockdep_unregister_key() in
-pqi_free_ctrl_info() before ctrl_info is freed.
-
-With this patch applied, the lockdep splat no longer happens.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- drivers/scsi/smartpqi/smartpqi.h      | 1 +
- drivers/scsi/smartpqi/smartpqi_init.c | 8 +++++++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/smartpqi/smartpqi.h b/drivers/scsi/smartpqi/smartpqi.h
-index fae6db20a6e9..fb75de53d401 100644
---- a/drivers/scsi/smartpqi/smartpqi.h
-+++ b/drivers/scsi/smartpqi/smartpqi.h
-@@ -1359,6 +1359,7 @@ struct pqi_ctrl_info {
- 
- 	struct mutex	scan_mutex;
- 	struct mutex	lun_reset_mutex;
-+	struct lock_class_key lun_reset_key;
- 	bool		controller_online;
- 	bool		block_requests;
- 	bool		scan_blocked;
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index 0da7be40c925..5c54dee67e54 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -8789,9 +8789,11 @@ static struct pqi_ctrl_info *pqi_alloc_ctrl_info(int numa_node)
- 		return NULL;
- 
- 	mutex_init(&ctrl_info->scan_mutex);
--	mutex_init(&ctrl_info->lun_reset_mutex);
- 	mutex_init(&ctrl_info->ofa_mutex);
- 
-+	lockdep_register_key(&ctrl_info->lun_reset_key);
-+	mutex_init_with_key(&ctrl_info->lun_reset_mutex, &ctrl_info->lun_reset_key);
-+
- 	INIT_LIST_HEAD(&ctrl_info->scsi_device_list);
- 	spin_lock_init(&ctrl_info->scsi_device_list_lock);
- 
-@@ -8830,6 +8832,10 @@ static struct pqi_ctrl_info *pqi_alloc_ctrl_info(int numa_node)
- 
- static inline void pqi_free_ctrl_info(struct pqi_ctrl_info *ctrl_info)
- {
-+	mutex_destroy(&ctrl_info->scan_mutex);
-+	mutex_destroy(&ctrl_info->ofa_mutex);
-+	mutex_destroy(&ctrl_info->lun_reset_mutex);
-+	lockdep_unregister_key(&ctrl_info->lun_reset_key);
- 	kfree(ctrl_info);
- }
- 
--- 
-2.48.1
-
+Jason
