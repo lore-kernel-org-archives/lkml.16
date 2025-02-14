@@ -1,198 +1,170 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6948225A645
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 14:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F9024166E;
+	Fri, 14 Feb 2025 14:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739542537; cv=none; b=Qu5e6ksmnIOSC3VC37bxwJdD3QbWRULnT4SU6OArADIp21t6erHsvuzo25MXtaEAwcBaoBQGz+GECXkZ1ojOgQBWqXB5mcttquQTgSeWDahDaSVmd/M0mxiRht/KRsv+EeKXsHY5PLkU2RS+cCEybD1L/pH3YJuphrciQiS3KGw=
+	t=1739542589; cv=none; b=lRrm3T+q8rEpw+6CI9ouJWZhUl1eTR12ozcw7FSQx6P3daWXOfrGrYiXiiR7bKtcK+vF03Ax8UbWC6L6LuEh976mOyDiSv4IQKMTMoOwnn4XWRB9JtFiUbY2XETtszFYeeYlFSL2Y7OhEL1VYYjBF5wiyA6mAGkIxrGzKgZO9c0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739542537; c=relaxed/simple;
-	bh=Vg3CFjgZ4NjWXgslmVJ4H6JEVnL4fXVyeFPaL3zku7U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dgqnUipH6RF19pYwe1SrVuyFSIlpNIbzOv9DOidNv9vaUqdjK6zHoVTyAGZSuxkF9vm+qnkF9nDhywZH2ZKAKzwmiIGA+4Zc3hLtmyi8pt9gDaX3t0TnxG6OJIEDuiICOEYojF2ipTqgtWaU7pQH4rAy08dyIvRDE1BsiiV8VFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PcZvAbHA; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739542589; c=relaxed/simple;
+	bh=QIMA8HSuryzyn1y+ASb9er9Vg5M2gtiAh7i6VC48zzk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MtX+Wg8unGrOKNemqSQu03YNT6K06k1witrBdTO2HhOgdlClVrF11cGrn63kCQQXKEW69QBU6Fn0D4AQYkMc4rVFZJ/19tJyUIXnVM7SM0ITU2p83SHpGZL8wCuiCjATIZpUpqnRd54yq2oTwUZurhTHFBbPz+VxXNIFO/ELqGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=mDeX57ug; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PcZvAbHA"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3f3deb13b87so74786b6e.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 06:15:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739542534; x=1740147334; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jUSHq3jaDRKrxbHBpMUUMtmLRZDuG6csEtNLoVlgBlw=;
-        b=PcZvAbHAhWaVh3TBvScKKHci3ZLEkVWkpaJYLA8Drl5X9+HdqEk2xY5PROIFGAE1Op
-         ih1FAc6mf59rAuEl9gp33d+D5i2uR/O1pOrq18gBSC7ItVXtKrhDvS2KyiSglJ5LsXuT
-         Wy9VzC6qg3jm7GWcxYcOFA9rwoIQUfpXAruHI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739542534; x=1740147334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jUSHq3jaDRKrxbHBpMUUMtmLRZDuG6csEtNLoVlgBlw=;
-        b=ERb9Z1UEWHXuAaPKDaOKsdcngkBI0mi4iyOz4BJjKhW51NpG9Kj3z9r/IwcoEH+3IS
-         p2/Z85Ez/2gDuNLtbaXlWctx5l9yXut+SNwJh6AiLvzQPV1qujLJZiIlwwiKp66yqAz3
-         B3s5I6hWMK50B8AU9ygCw0ldXulVNolHM761bIkKnRxP3jrmBgtON2dBgVDrO29SrWTd
-         TaSe3kmKJts4jYK7KGEVAKtKliuubgNO/eAs4tYojJuM/YNA+4dhUhfX4zCVZjj5VcXe
-         5u1wkNrHAYTrsL8hqIJSGfdV6PMAmZWuJzSQCbK3zuUH5/vWLytYnEQwojccG0NMk966
-         7OIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOfnnWgMlR/adJ0e0g9wMPwI8F1ejfoXX92TUZyS89gWIy/OXi7ZQ1ghzDgULZJFAHRPPTYwzkgg3eDM8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsUnFkxWqwyEwyi2EUq95SGRcDJkZMeYYoymMtzwtZpZ5LDrEg
-	/FPdjeqAjL+xoDdLFvCRw0nYBUHjlG1BIC39/2LQzYlMfiaZg5u2PYbBPjF0MYeGdSK3zmOqyZU
-	eVvJVh9cEZxDgYZONDIp39e21wPEfAvqHxN90
-X-Gm-Gg: ASbGncsRw4dI2pT/i4Ty2zB21mdYyG3EEmEIr1VE4cawu20aMXoF+cz6sJdilUtW74e
-	Y0hnWJQco4O4WZrna81jwbX+6YKvtkPKOCh4Qm9Y0e/wNvYDkuMtlYJzoTiaYGWdBrn8996CJ15
-	d4XLtn2evp49CMIf45xz+0u/diXrnzUA==
-X-Google-Smtp-Source: AGHT+IGWTatZC4i6Xeclni+qSZuML5VogNMExsBKztM0nMedMyzeMcfxgLKyTArA7nCZqL1C62QN50G8Y+0AaZqQ5oc=
-X-Received: by 2002:a05:6808:2223:b0:3f3:d712:ed1d with SMTP id
- 5614622812f47-3f3d712eec2mr2215561b6e.3.1739542534360; Fri, 14 Feb 2025
- 06:15:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="mDeX57ug"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51ECk2If002159;
+	Fri, 14 Feb 2025 15:15:55 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	wwHVwCdc4/Na+JqMuJs/rM97AN1e37TSauY+tsEiMZg=; b=mDeX57ugP7b3YAfT
+	oj7mOSZi/VqovNPGLChvfywQBemHEZ6ypH3glLTI6nkIraIIsWq/uFV7/7LJuUgu
+	EVsNUaC4hepUTX/Qbu6vSkG0jyRHq0Ul50PNWwY0mfYVWi+9gJeZsa/Zt3TovvMl
+	zPKAc953mE9PMnJ0DsUnyd5s2HpOa0mi7zC/NP3EZ4ui1NxvchupqLHLC/xEgQUu
+	GLZ5T2yTLUEhJZ5c5dRrGIuOdB6DmPBMkzFivir5NE0wX8Ca6nG+TIk9/xvMZzNU
+	pjSoPabQI/YjtEFNvna3fKMutO8Vazcr8z43C5SwLxoCxojzt50cL3BTckybHA5e
+	Yv0W5A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44p0q0bgt7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 15:15:54 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1E12740048;
+	Fri, 14 Feb 2025 15:14:58 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 956D02CF588;
+	Fri, 14 Feb 2025 15:13:58 +0100 (CET)
+Received: from [10.48.87.120] (10.48.87.120) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 14 Feb
+ 2025 15:13:57 +0100
+Message-ID: <e3d320a4-9e8e-438f-b85f-47cfa1219684@foss.st.com>
+Date: Fri, 14 Feb 2025 15:13:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212032155.1276806-1-jeffxu@google.com> <20250212032155.1276806-3-jeffxu@google.com>
- <20250212135000-861e6353-6e0a-43c3-9b28-649ae4dfc607@linutronix.de>
- <CABi2SkUCviiTbd1roeBiqSk98S87R1WwSP9rUYh4t3JfSD+2ZA@mail.gmail.com>
- <35C0FD0B-0483-4663-AD60-701AB8D9247A@kernel.org> <CABi2SkU0kW8yAoucxLjkqXpFJMJzGDmKZZhgMJGobaALNVTGvA@mail.gmail.com>
- <462A068C-489E-400D-9E82-F54F46E77DF3@kernel.org>
-In-Reply-To: <462A068C-489E-400D-9E82-F54F46E77DF3@kernel.org>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Fri, 14 Feb 2025 06:15:00 -0800
-X-Gm-Features: AWEUYZnCbHWd4NfDRp5Q7loL4F7IOU0imN4RIPXvJI6KVbMK6gXuf6iKqHba70I
-Message-ID: <CABi2SkXjiJ-fmJxTFdzHRyT9opxUYbYJ1zEmRameDhHECLtJdg@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 2/7] selftests: x86: test_mremap_vdso: skip if vdso
- is msealed
-To: Kees Cook <kees@kernel.org>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
-	torvalds@linux-foundation.org, vbabka@suse.cz, lorenzo.stoakes@oracle.com, 
-	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, 
-	avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
-	sroettger@google.com, hch@lst.de, ojeda@kernel.org, adobriyan@gmail.com, 
-	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
-	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
-	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
-	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
-	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
-	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
-	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
-	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
-	mike.rapoport@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/10] arm64: dts: st: add stm32mp235f-dk board support
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+References: <20250210-b4-stm32mp2_new_dts-v1-0-e8ef1e666c5e@foss.st.com>
+ <20250210-b4-stm32mp2_new_dts-v1-6-e8ef1e666c5e@foss.st.com>
+ <20250213-truthful-accurate-gaur-bd118f@krzk-bin>
+Content-Language: en-US
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+In-Reply-To: <20250213-truthful-accurate-gaur-bd118f@krzk-bin>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-14_06,2025-02-13_01,2024-11-22_01
 
-On Thu, Feb 13, 2025 at 6:52=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
->
->
-> On February 13, 2025 2:20:01 PM PST, Jeff Xu <jeffxu@chromium.org> wrote:
-> >On Thu, Feb 13, 2025 at 11:28=E2=80=AFAM Kees Cook <kees@kernel.org> wro=
-te:
-> >>
-> >>
-> >>
-> >> On February 13, 2025 6:14:00 AM PST, Jeff Xu <jeffxu@chromium.org> wro=
-te:
-> >> >On Wed, Feb 12, 2025 at 5:04=E2=80=AFAM Thomas Wei=C3=9Fschuh
-> >> ><thomas.weissschuh@linutronix.de> wrote:
-> >> >>
-> >> >> On Wed, Feb 12, 2025 at 03:21:50AM +0000, jeffxu@chromium.org wrote=
-:
-> >> >> > From: Jeff Xu <jeffxu@chromium.org>
-> >> >> >
-> >> >> > Add code to detect if the vdso is memory sealed, skip the test
-> >> >> > if it is.
-> >> >> >
-> >> >> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> >> >> > ---
-> >> >> >  .../testing/selftests/x86/test_mremap_vdso.c  | 38 +++++++++++++=
-++++++
-> >> >> >  1 file changed, 38 insertions(+)
-> >> >> >
-> >> >> > diff --git a/tools/testing/selftests/x86/test_mremap_vdso.c b/too=
-ls/testing/selftests/x86/test_mremap_vdso.c
-> >> >> > index d53959e03593..c68077c56b22 100644
-> >> >> > --- a/tools/testing/selftests/x86/test_mremap_vdso.c
-> >> >> > +++ b/tools/testing/selftests/x86/test_mremap_vdso.c
-> >> >> > @@ -14,6 +14,7 @@
-> >> >> >  #include <errno.h>
-> >> >> >  #include <unistd.h>
-> >> >> >  #include <string.h>
-> >> >> > +#include <stdbool.h>
-> >> >> >
-> >> >> >  #include <sys/mman.h>
-> >> >> >  #include <sys/auxv.h>
-> >> >> > @@ -55,13 +56,50 @@ static int try_to_remap(void *vdso_addr, unsi=
-gned long size)
-> >> >> >
-> >> >> >  }
-> >> >> >
-> >> >> > +#define VDSO_NAME "[vdso]"
-> >> >> > +#define VMFLAGS "VmFlags:"
-> >> >> > +#define MSEAL_FLAGS "sl"
-> >> >> > +#define MAX_LINE_LEN 512
-> >> >> > +
-> >> >> > +bool vdso_sealed(FILE *maps)
-> >> >> > +{
-> >> >> > +     char line[MAX_LINE_LEN];
-> >> >> > +     bool has_vdso =3D false;
-> >> >> > +
-> >> >> > +     while (fgets(line, sizeof(line), maps)) {
-> >> >> > +             if (strstr(line, VDSO_NAME))
-> >> >> > +                     has_vdso =3D true;
-> >> >> > +
-> >> >> > +             if (has_vdso && !strncmp(line, VMFLAGS, strlen(VMFL=
-AGS))) {
-> >> >> > +                     if (strstr(line, MSEAL_FLAGS))
-> >> >> > +                             return true;
-> >> >> > +
-> >> >> > +                     return false;
-> >> >>
-> >> >> This only tests that any mapping after the vdso is sealed.
-> >> >
-> >> >The code above begins by searching for the "[vdso]" string, then look=
-s
-> >> >for the first line that starts with "VmFlags:", and looks for the "sl=
-"
-> >> >substring within that line. We're assuming the format of smaps won't
-> >> >change from release to release.
-> >>
-> >> Oh, I missed this in my reviews: nothing _resets_ has_vdso to false, s=
-o if any other mapping follows vdso that happens to be sealed, this will re=
-turn true...
-> >>
-> >It won't return the next mapping's sealing flag.
-> >After finding the "[vdso]", if the next line that contains VMFLAGS
-> >doesn't have the "sl" flag, the function returns false immediately.
->
-> Oh! Agh, yes. You are right, this is all fine.
->
-> >I can switch to vm_util, I will need to add a new parsing function in
-> >vm_util, the existing __get_smap_entry() only searches for vm's
-> >starting address, not name.
->
-> Unless someone feels strongly about this, my instinct is to avoid the hig=
-her complexity of a cross-test thing.
->
-OK. I will keep the existing test.
+On 2/13/25 10:03, Krzysztof Kozlowski wrote:
+> On Mon, Feb 10, 2025 at 04:21:00PM +0100, Amelie Delaunay wrote:
+>> Add STM32MP235F Discovery Kit board support. It embeds a STM32MP235FAK
+>> SoC, with 4GB of LPDDR4, 2*USB typeA, 1*USB3 typeC, 1*ETH, wifi/BT
+>> combo, DSI HDMI, LVDS connector ...
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+>> ---
+>>   arch/arm64/boot/dts/st/Makefile           |   1 +
+>>   arch/arm64/boot/dts/st/stm32mp235f-dk.dts | 115 ++++++++++++++++++++++++++++++
+>>   2 files changed, 116 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/st/Makefile b/arch/arm64/boot/dts/st/Makefile
+>> index 0cc12f2b1dfeea6510793ea26f599f767df77749..06364152206997863d0991c25589de73c63494fb 100644
+>> --- a/arch/arm64/boot/dts/st/Makefile
+>> +++ b/arch/arm64/boot/dts/st/Makefile
+>> @@ -1,4 +1,5 @@
+>>   # SPDX-License-Identifier: GPL-2.0-only
+>>   dtb-$(CONFIG_ARCH_STM32) += \
+>> +	stm32mp235f-dk.dtb \
+>>   	stm32mp257f-dk.dtb \
+>>   	stm32mp257f-ev1.dtb
+>> diff --git a/arch/arm64/boot/dts/st/stm32mp235f-dk.dts b/arch/arm64/boot/dts/st/stm32mp235f-dk.dts
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..08e330d310749506c5b0e7a1fb2f80dfa134400a
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/st/stm32mp235f-dk.dts
+>> @@ -0,0 +1,115 @@
+>> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+>> +/*
+>> + * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
+>> + * Author: Amelie Delaunay <amelie.delaunay@foss.st.com> for STMicroelectronics.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/leds/common.h>
+>> +#include "stm32mp235.dtsi"
+>> +#include "stm32mp23xf.dtsi"
+>> +#include "stm32mp25-pinctrl.dtsi"
+>> +#include "stm32mp25xxak-pinctrl.dtsi"
+>> +
+>> +/ {
+>> +	model = "STMicroelectronics STM32MP235F-DK Discovery Board";
+>> +	compatible = "st,stm32mp235f-dk", "st,stm32mp235";
+>> +
+>> +	aliases {
+>> +		serial0 = &usart2;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = "serial0:115200n8";
+>> +	};
+>> +
+>> +	gpio-keys {
+>> +		compatible = "gpio-keys";
+>> +
+>> +		button-user-1 {
+>> +			label = "User-1";
+>> +			linux,code = <BTN_1>;
+>> +			gpios = <&gpioc 5 GPIO_ACTIVE_HIGH>;
+>> +			status = "okay";
+> 
+> Where is it disabled?
+> 
+>> +		};
+>> +
+>> +		button-user-2 {
+>> +			label = "User-2";
+>> +			linux,code = <BTN_2>;
+>> +			gpios = <&gpioc 11 GPIO_ACTIVE_HIGH>;
+>> +			status = "okay";
+> 
+> Same question
+> 
+>> +		};
+>> +	};
+> 
+> Best regards,
+> Krzysztof
+> 
 
-If we decide to use vm_util, it would be best to refactor it
-separately later on. The existing vm_util can't be used as is for my
-needs, so some refactoring would be necessary.
+Will drop status property.
 
-
-Thanks
--Jeff
-
-> -Kees
->
->
-> --
-> Kees Cook
+Regards,
+Amelie
