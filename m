@@ -1,77 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0EC266EE0;
-	Fri, 14 Feb 2025 16:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30956266EE0
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 16:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739548955; cv=none; b=FWeyveDAJlU1OKj7LUyCj7RSS4ind8DuMxc+2K9rZ4TdQERJBIcfb2yeC37I5OmkTCvEGFpEamDU8BdyNDCAbu08sKcNV5OouNyXYVhUCLPdAPjqPr2z8HL95KLM+G9UEsw9zSn4i3f3hvCAsGCyKsw/PaeNtj34GOcbKu2oz9Y=
+	t=1739548964; cv=none; b=Z/0eIC7u4YosAo4XtMVOtn2p75+4H8oJ+Nr25i9qNeFA97/fBFx5JE66kxana9aemvv93B9Usqgg5BcX8pnfpS48Dug6xjFPlw8fFI2PBfBMnWC4aO9VOc7nlULFoLN4Nz+sQPw6ExdrX6/N7y4Zgtz48y7c2t0HgE3hkg/MXsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739548955; c=relaxed/simple;
-	bh=BP0F6Q1wNrUjUl3+JXUo0rphKo1JR7S7n/NVPl/WTLQ=;
+	s=arc-20240116; t=1739548964; c=relaxed/simple;
+	bh=7McRpc8Sf91JR5HwdKzNfIMCUoHTJyI13yOxt2JXQwA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P83qv+xa0B3cTI6tUowqmEoHphMrAEAWAc9Gcn8OZvFju3eP6hYiqLuvKGFOZWThDPsK5INACdUDY8lM5edENUl71y7gdxA1R7m5c92Zi+GGpd3iFjY45m61LgK+ILiwFNkiYJokPzxXoGPSo1RFBTV5b8Vmk1Dqg+z3T8HhLqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YaMKWUHG; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jrhx8X6O5nfNstLJM61nVNiqvNuQ8k+32vNOLjAUjCsLhxpLHO+HgC8gGQA/DozgkuPyHfEhM/0K1HarHouXWtZRJfeF4CglUtIELZfEHctF0xNnL8UpC2xfIFY5oVpMCakkeC3Wqrx/q1vQUAVLIxwlCPZuv39KO25b8w40Gpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rcyOfamJ; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YaMKWUHG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739548954; x=1771084954;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BP0F6Q1wNrUjUl3+JXUo0rphKo1JR7S7n/NVPl/WTLQ=;
-  b=YaMKWUHGGAhkb1IVrQBCbav7/076W16jA3FMFD2jJ+TW1oArBA9WFBuX
-   ETpuRJkUna/RbM/Gy3r+dwHlm8B6ldNAA3m1avSTDyHniUrumDkWBe4c5
-   SuQu8UCZu4/+An94yRtDddmnAZwzbxdOFqf8v911qX5phVW+vxyxbnVxS
-   L16kWao0w9eEZeaI8lhNamG0BYVhLCBpVROYVY5HTqDdOisHWzaQNeZ1l
-   EzR4uvoh0i6rk6+xHolvUunqisYiMStBZjM9Dq8D5MY+G67JOSoLuTLSP
-   h00GPSBT9l4SG6XFhpTa/BNY+hOQH4xJTF7xcgt18nLnatur/mWZ/MMtz
-   w==;
-X-CSE-ConnectionGUID: nvNWeIfgTVm7chGPby15hw==
-X-CSE-MsgGUID: 49bTjfIlRL++AwzlBo//RQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="27902468"
-X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
-   d="scan'208";a="27902468"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 08:01:30 -0800
-X-CSE-ConnectionGUID: +xTXFr+5SXO11Fa5Mdq1nw==
-X-CSE-MsgGUID: uC30yGarSOyVHPzD+Hscrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
-   d="scan'208";a="114132370"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 08:01:14 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tiy7q-0000000BXQx-1JPb;
-	Fri, 14 Feb 2025 18:01:10 +0200
-Date: Fri, 14 Feb 2025 18:01:10 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Tamir Duberstein <tamird@gmail.com>,
-	Arpitha Raghunandan <98.arpi@gmail.com>,
-	David Gow <davidgow@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3 0/2] printf: convert self-test to KUnit
-Message-ID: <Z69oxhkUzTfJ6YKi@smile.fi.intel.com>
-References: <20250210-printf-kunit-convert-v3-0-ee6ac5500f5e@gmail.com>
- <Z69isDf_6Vy8gGcS@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rcyOfamJ"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-307325f2436so18408171fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 08:02:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739548960; x=1740153760; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ni8M+7fnHjZEMfJNA97DV1PZ1vn01NK3p1wwHVgLyMQ=;
+        b=rcyOfamJpXrPwb2DhmgIPU6E0QXk9K5tj8sYoDBGSwfwLPw6FNzu9LSDUg803NpLwF
+         C831p9E4cgH9MrRBfSadqbZpvo0YcXUa9u6NJZR7zRot0TaisDFsig1v4+nERYdw2i9M
+         VDy3XMxAX+flwy4qXwqcUctD5bUmotaCnV7PjDMFNKKXDVxTWkwrJ8IBRSsuqchRkB3n
+         f0n6kNg2ldVuGB26Bxsr3oBm+rtBouoBCaRb6qTfQEBzO00RDuxTT6uWG0RQc0muYIog
+         SJSoNCDI+4VK0ZiKK+4DL2UpM8BcrL6vxVVuWk5l/GRG0rgQKP4ZAadduB3VmqqiaPZQ
+         1h/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739548960; x=1740153760;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ni8M+7fnHjZEMfJNA97DV1PZ1vn01NK3p1wwHVgLyMQ=;
+        b=HIvtBvg/eePQ9iZ8Z8l7RznAlr5lQjQr0TuRgImoJUuXRJO0FzksYyQcd6HzFUF+xd
+         MHD3zR6Dl2+54y7T47mIS6iAIwOFtb6a4HQ6atVg0TcwYKGy9prpQdQdJgLjzmTMoZAl
+         nMCpjRD8/BmdtUUY4+haYxrpq2cXSShG1Z3KScCG579K5d49O3dAj+sZKAOg9QwM4yFd
+         hz8xpK744ufZRSM6+QFZu7Hn9H2l2n+c1/OTzzvA935I8syeubtH/W9qB+A9S3wv3e7S
+         O1RHWJwOeJgLpwCn32shFQrG99g6T/hzgyA2l4BKyhbcoga92w7q94RnnE8CxMV4zTJ/
+         BM5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWDGGle2xPgnOkLy26S5H7FqzvHO+QUsvAJ5LyZoki31mSl1h1SGhPxmG2pTHlYOsm/uiilAfRn3HIA+Vo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEsVlZCaZitO/yxifg6d98571V43VQcuy8qlIeMSxzuOoCyRUd
+	VcC+q9gUuSsHzp5YNIoDVOufzA5/PLwnLyNrFVnJQrIkXdzjAGZwH9KV9wnWKKk=
+X-Gm-Gg: ASbGncuAh+WzbwnaQi4vLZMa0nhwfO7EyjFi1ZR7XMKssKKGLZt4W9qBf2/pMEcm33J
+	1QSQp7gYsBTI0QuR7YiHOsbh/dKvTn1M7OrjR6ljtJUE4VQaxxT8apbm0DGsHTvq1R2EZ9ZU0zg
+	CNg6IOvRse8aJVb1YqT1c2e1M6JYoZ/qGbpGk2tJH8WKGgo+p24ld8/IyclFTNuRhvYf28Ah0fe
+	WmjhTL/0Sjr+N2WUHkNpwaU0nXefFyu+wEJ5SP+5zsT4Ngdda4AXwluKqG++USPH00+M4oB+tLR
+	cRN+cPS40pYUCk0zj6avoYd+RvD/DEQXvgx6Te6Q0fQEnmIWTr7S+R1GmtSLWmh/zLSxu2Q=
+X-Google-Smtp-Source: AGHT+IGn28EmgkCJxbojbPnsNpKARzTvTVEWepxmZw6Bez7lrsTqmABZYK92VlugVR6Dz8Cxy1cCRw==
+X-Received: by 2002:a2e:bc18:0:b0:308:f4cc:951b with SMTP id 38308e7fff4ca-3090373a8f8mr40478541fa.23.1739548958674;
+        Fri, 14 Feb 2025 08:02:38 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309100eabcbsm6136591fa.24.2025.02.14.08.02.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 08:02:37 -0800 (PST)
+Date: Fri, 14 Feb 2025 18:02:35 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Vitalii Mordan <mordan@ispras.ru>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sui Jingfeng <sui.jingfeng@linux.dev>, Aleksandr Mishin <amishin@t-argos.ru>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, 
+	Jyri Sarha <jsarha@ti.com>, Quentin Schulz <quentin.schulz@free-electrons.com>, 
+	Swapnil Jakhade <sjakhade@cadence.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Fedor Pchelkin <pchelkin@ispras.ru>, Alexey Khoroshilov <khoroshilov@ispras.ru>, 
+	Vadim Mutilin <mutilin@ispras.ru>, lvc-project@linuxtesting.org
+Subject: Re: [PATCH v3] gpu: cdns-mhdp8546: fix call balance of mhdp->clk
+ handling routines
+Message-ID: <kwrxxcjgjqvkwapfb7hrytf32ike3wqptjkr7mm3m4rz56xifi@ahbrdjt4cytk>
+References: <20250214154632.1907425-1-mordan@ispras.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,31 +83,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z69isDf_6Vy8gGcS@pathway.suse.cz>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250214154632.1907425-1-mordan@ispras.ru>
 
-On Fri, Feb 14, 2025 at 04:35:12PM +0100, Petr Mladek wrote:
-> On Mon 2025-02-10 13:23:21, Tamir Duberstein wrote:
-> > This is one of just 3 remaining "Test Module" kselftests (the others
-> > being bitmap and scanf), the rest having been converted to KUnit.
-> > 
-> > I tested this using:
-> > 
-> > $ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 printf
-> > 
-> > I have also sent out a series converting scanf[0].
-> > 
-> > Link: https://lore.kernel.org/all/20250204-scanf-kunit-convert-v3-0-386d7c3ee714@gmail.com/T/#u [0]
-> > 
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+On Fri, Feb 14, 2025 at 06:46:32PM +0300, Vitalii Mordan wrote:
+> If the clock mhdp->clk was not enabled in cdns_mhdp_probe(), it should not
+> be disabled in any path.
 > 
-> I have just quickly tested this before leaving for a week.
-> And I am fine with the result.
+> The return value of clk_prepare_enable() is not checked. If mhdp->clk was
+> not enabled, it may be disabled in the error path of cdns_mhdp_probe()
+> (e.g., if cdns_mhdp_load_firmware() fails) or in cdns_mhdp_remove() after
+> a successful cdns_mhdp_probe() call.
+> 
+> Use the devm_clk_get_enabled() helper function to ensure proper call
+> balance for mhdp->clk.
+> 
+> Found by Linux Verification Center (linuxtesting.org) with Klever.
+> 
+> Fixes: fb43aa0acdfd ("drm: bridge: Add support for Cadence MHDP8546 DPI/DP bridge")
+> Signed-off-by: Vitalii Mordan <mordan@ispras.ru>
+> ---
+> v2: Use devm_clk_get_enabled() helper function, as per Dmitry Baryshkov's
+> request.
+> v3: Describe the paths that lead to unbalanced clock handling routines,
+> as requested by Dmitry Baryshkov
+> 
+>  drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c | 12 +++---------
+>  1 file changed, 3 insertions(+), 9 deletions(-)
+> 
 
-Seems reasonable to me. But I want a consensus with Rasmus.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+With best wishes
+Dmitry
