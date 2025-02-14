@@ -1,103 +1,103 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9C32586D2;
-	Fri, 14 Feb 2025 09:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A43257420
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739526977; cv=none; b=bQ6TlRidZpoIUT0TCXQ2yjSP4wAAK+RhawqhgmjaIk1RRNwGSEEMq3MJGzn88nxn6JRl8iGjJV5IYDfs/yG7BxqSCfyJQLePH8WaCtacb1FxklZLsyK9LX0QIppSYqNkf9o877WnfCkL2bGowCWyG6BHQi3XVHKuCG9zHxjnKvs=
+	t=1739526985; cv=none; b=iBFQLBncVemmh2RsHfQGPfp8IGLZD0vp4M9hNgMLxh/cVns3zv/53l1W4fxhBlaZfOnAJs1tZu8JTBQGgXSNzrhAaDKVRGhagoCe0mRpQ47be76T+RsEmTqi7xUBmgBzIcXPOV1OC+wamsDUP+jnRcDujliUk7e4i3Qm5fbAcRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739526977; c=relaxed/simple;
-	bh=/PufZwqWVimIvDJ4/wjK3f7QfsYqtKpkCV8G3C59qHM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YaOuJU6fP/pPByXe1u1/Kw/YP1J0uogacactsX0d1TjT4n0XV+vdUdphE/aOUqANk/LxEzK9565Zv/pyzjSep4hquDVW1KI6mGFWpHu4mnnkpQcuLBIrRvrmOi1K8iNlLm76rnNEpMD9qNG5g6AA849VMmcmWT2kUWRzhwinXdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=HDPpDJFs; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1739526985; c=relaxed/simple;
+	bh=2AsCrWbVyGKPdXvfmBx4a9snB6Aw/WrgC/hdNdtKs30=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J0TpEzVjEFXhyD21CN0z9elePztMtU7HFJCZX1cK/njE93dKdVz73KoYqDKsxgezYaVFFnfz+goaIJldhdGaOqU2NR5rPFhhHR7MreqBoKHkzzRIxItJeR+PgHfaiz/IZ60JLKM6xTmrFTAY/AGZr3A5kTHUggyFduaT7uFHyts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y/8soyW5; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="HDPpDJFs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739526943;
-	bh=rWxgDkWT3SNrx50PWh9YGg/Cq7PqeLp2YzPZdThzNAI=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=HDPpDJFsIuJ6i74NBFqsX+OPmvGjl2rlnP2DNROpvINXUcAQJZ2CKh9DXF2uKlvja
-	 TJUKwrTRPVIjvM1cnvYILuTDHVbCMgLlygpeLsemBiuMGxH+HQYLAOw7R3qW6FfBW3
-	 zvjZigk/KjNA/S6gxQrbUlthunRyYkjUBpnJ+Rrg=
-X-QQ-mid: bizesmtpip2t1739526933t1d2myj
-X-QQ-Originating-IP: kHvtQo+ABm9+6mqznQlCq5NZW+eJquBxVSU3r1vqfB4=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 14 Feb 2025 17:55:30 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 2994338102361065913
-From: WangYuli <wangyuli@uniontech.com>
-To: wangyuli@uniontech.com
-Cc: chenlinxuan@uniontech.com,
-	guanwentao@uniontech.com,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	macro@orcam.me.uk,
-	masahiroy@kernel.org,
-	niecheng1@uniontech.com,
-	tsbogend@alpha.franken.de,
-	zhanjun@uniontech.com
-Subject: [PATCH v2 2/2] MIPS: Eliminate Redundant KBUILD_SYM32 Checks
-Date: Fri, 14 Feb 2025 17:55:23 +0800
-Message-ID: <36DD6436DDFA21E6+20250214095523.175229-2-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <F49F5EE9975F29EA+20250214094758.172055-1-wangyuli@uniontech.com>
-References: <F49F5EE9975F29EA+20250214094758.172055-1-wangyuli@uniontech.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y/8soyW5"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-545284eac3bso461602e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 01:56:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739526981; x=1740131781; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2AsCrWbVyGKPdXvfmBx4a9snB6Aw/WrgC/hdNdtKs30=;
+        b=y/8soyW5CwNUoYqNTFX6lyGU8Qk9Avts8muHSffQeW/9/dTMOKJKVOg7Qok88c2s1V
+         5nw4+Yi/2I18rJ727ag4Cpn1hS+I4uomvGEziAnRkXTRLM+TwzH1xW8X/zNtUQj8n7u5
+         5Tz6GLZ0MnZlJJzbTRuEkPYhz048KOmgTgh9QngV9W/q9Mb+/x8+/o1OwBAAmT5QWO6L
+         njNdK+QjD0AnWIttmNTk+qYIn7Qr1H+5nK/B0DZdHW4CQMA8yeGHO4eMyFAikSFo4TN7
+         bCdquKPd4jaOl6bjjCWt7qpw53/ipnoEJ/6xD33MAGBCd/Jfi2fmt8gbX6kdrWz2lT9h
+         YBWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739526981; x=1740131781;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2AsCrWbVyGKPdXvfmBx4a9snB6Aw/WrgC/hdNdtKs30=;
+        b=Z1nDe+AwVXXKV7GTWKCXNXb5U8alTvLjQXSFV6T4IT/0hZBqrZVUM2IqgUlKUVTPAR
+         2zhyl3PSYwOv8ANtMZfTf1apw1gDh9rz221UIU+jgw2bL7qu0pXBgifcJoZv6V0hs5q1
+         bPtIwPUNlcK2skB2T8NFJfF4ZVJl9okjv4lNgzdJc+qM6o4R+I8P9KRebZrTXLf/hw1r
+         7wRQ2LO/dq5mWNnfq2DvOEmZtKJ/hKFdVD4sv6aNJAe5pv7y7pBJgvDG6oxfaARzlMMH
+         FEuSQ8tR4rtfhP516/aK1Iwx4TMIUoDdyoBfXZDXxceWjoKgf+KC0Pv4ZrItdR9onEe5
+         9EGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWiRaFS/HWi6ViQOucIz9tt6cThJsRuflsoeph+eEwxkt1E9hmtVC9aG12Mrn9rd9LKXhIjUZzyMlokS2U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0qGfkIwqINxw2RIbVa5NL5rlVhlHSNTCOxNjIEDV7uf7hxG1J
+	UBOUOOCKAy7xFqbbAyAvr39klS9hlUP9DZRQJTgRRfBSUp7lQvwbBw52pNFvS0FmzQ0lw7fFjrW
+	ad39QQofIzf7zUeVD449KuFq1F7d8eK0jkhwa5Q==
+X-Gm-Gg: ASbGncuByi8ESxYemzvaAosAB4gr2nKor2rKMZufet6H0DVRmiRAqo4/iHLsOzNNQ6s
+	m9CglWbiYGZ+n0mJeIu7suxyMe2aMR7V3ksXU7m6rfd/1ZjW8fOjQ0BU4pX1boPBy0v+BBwB2
+X-Google-Smtp-Source: AGHT+IGBcbrZEU3WtspasRr8y5DGBmF7RSzDcVPvB+A0GtrhyVirdFfGoibdROQWEv1N6aRSxdNWZYR6heUIRHTOP7E=
+X-Received: by 2002:a05:6512:138f:b0:544:ead:e1d6 with SMTP id
+ 2adb3069b0e04-54518178efbmr3191247e87.38.1739526981311; Fri, 14 Feb 2025
+ 01:56:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MWxexosv2xAzR66ufJOV9v17pHqcG5/T5P+R7jXzDzXNC7Qq3uJqnk/4
-	k95A5Wmx+h1Xo6Y3Npwkw6ubj4b/Y681oHT8vtxSC6sJ7aBaVsJhDiJIT6ehr1g3dUYfP0F
-	Tj+IWtSLuxnfh773OqiU+6RhpxFZPQ7IS7BspMrfPslWxDtMO3Ps1DPUnFw6dhYp7ylPxYn
-	2NjREB/qWMIg+kg1dkqWyBhC3uK6Lbn7hFH3rZ0RhU9yrlDj9FA/swRlGVgSZf294Ufxqw9
-	924oFF/bedq4yJZtmhlQYBjEqqIMDchnUbI/8pRuTnUZO1WN2IohDAKzv3eMqmuchr8tilz
-	u29cMEY6C8zh6JS927wZRN3/B3ibJg9f1/ph0Jgvb8Pilzy75PXKMw6yflJwYrmK5/MgwSg
-	Iffv/NDTjsQRMk4uWekOWWc5UVFSGR4IaZTbXuXGAnnnixjX3wcZsK4tddF3entGmQ8Zfe3
-	AdOZg3+ni88aIt+Pk0ISQXlcsqdZC2glIYNe51h6xow0uCf2fRPz5cFbG9abXqkpZTfRlLT
-	YchJGy/Os/4FyPtcmj3GoTlErECmCigihEVLLFjDPHXez3GXTogvOhkclIsymHzCJ4CThi0
-	NcfYSlLLZByqI1/4ScZx6a47msLSEbfIjZbjSmnIZUx1TguVYE2bSETmBGTeJ8+dvbFQcqQ
-	LJKBMcrUfcT7Pm0R4bupQa/uS+w/mNbDRof4wt0nQTqAY30QgBUInyj08nMCQE3/dM+q0VD
-	u/XfgszC9QQrfPZFoZ7sY1Q8Kr9swh6wahQaM7ZzA5xAh5dqbDj/oG1NX9umoQDZYvhkg8H
-	zn971JHuvV/eIO6lc88sNwtDCRwOH+P8fasjcpGwjrQuIpkafoOZqf2SX5shKuPzjQTVh6B
-	HciK+I4c0HtTmlxt4tC0D6JxZTQYWul1iVKk0WGfXNTHiHNw15mmhhU5a7E4vdN8BupAXrl
-	/8dTpVZUaUNXX2VZi7wKSCFPccPBiYqX056BiO6hr0DhVLar6u+8Ob3tGhF7ibQFqrkIoiv
-	IRcDsgNlKD58wDkZ3AHvgbb3WCFFGb8aODz3X+0an9mVt6+SUgeSwE0/eNHSy35RnKNFiZS
-	+lFRrqSc7DoWSDntukHHvx7TvV1CGVA6A==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+References: <20250211-gpio-set-retval-v1-0-52d3d613d7d3@linaro.org>
+In-Reply-To: <20250211-gpio-set-retval-v1-0-52d3d613d7d3@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 14 Feb 2025 10:56:09 +0100
+X-Gm-Features: AWEUYZmo1A8kyC_1nRo1MhdajxMnD6e7V4G-rNnAAebgBMCC6AkDlJN1o-MAiIs
+Message-ID: <CACRpkdYL4odi-00YDi-cFuVgw8uBncA+ZxGYnRRhuYR7eZuBWw@mail.gmail.com>
+Subject: Re: [PATCH 00/14] gpiolib: indicate errors in value setters
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Michael Walle <mwalle@kernel.org>, Bamvor Jian Zhang <bamv2005@gmail.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Keerthy <j-keerthy@ti.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Given that KBUILD_SYM32=y is a prerequisite for this statement to be
-executed, it's logically redundant to verify KBUILD_SYM32 is y again.
+On Tue, Feb 11, 2025 at 1:10=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- arch/mips/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> The value setter callbacks (both for single and multiple lines) return
+> void even though we have many types of controllers that can fail to set
+> a line's value: i2c, SPI, USB, etc.
 
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index 4d8339d2f20f..005174ae3892 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -302,7 +302,7 @@ ifdef CONFIG_64BIT
-   endif
- 
-   ifeq ($(KBUILD_SYM32), y)
--    cflags-$(KBUILD_SYM32) += -msym32 -DKBUILD_64BIT_SYM32
-+    cflags-y += -msym32 -DKBUILD_64BIT_SYM32
-   else
- # Do not fiddle with the compilation flags when no compiler is
- # going to be used. To get rid of spurious errors.
--- 
-2.47.2
+Yeah this is a remnant from the design that was done of gpiolib,
+at the time (by David Brownell) assumed to be simple MMIO register
+writes, so not much could go wrong there.
 
+> This series proposes to start the process of converting the setters to
+> returning int thus making it possible to propagate any errors to the
+> user.
+
+My worry is that this project will be another one that stalls at
+85% completion (like with the eternal descriptor rewrite project)
+but I guess the upside outweighs the downside, and I also trust
+your proven grittiness so:
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+for the series +/- minor nitpicks I may send that I am sure
+you would address anyway.
+
+Yours,
+Linus Walleij
