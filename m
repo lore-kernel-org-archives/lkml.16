@@ -1,83 +1,106 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293CF77F11;
-	Fri, 14 Feb 2025 02:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D47370825
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 02:47:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739501199; cv=none; b=fxxk8Sg+EcVZA6pCXTaUJBtv7vtk22sJ/zHNKBx+yGR0hwoy6xFYMv9L5GT+4ziUv37VoXm79rMpDcfnokcaImbVhU/fVARMMf7DiwkkRTfiWmh2XfFaMaHdJCL0QVDnhvYpWN1Am+hy3N7sv57aB1tpelyE8mqxPFpImqGA9gg=
+	t=1739501236; cv=none; b=dqaS9kS5RjnhgnTLka2+Uv/Lw6QZTNbJVhSmVaR7QsIP5u2EHaCMZ58kZJx9s8t2jH6jfJKvINIJWee8YgR/mnljp6igKYC0i9ZdGqllO8Y4xPuEY7XDnCasLkuAQLwioRDP2kYMbSvSoaaWOYg4pRQoEkJK0nwjGnzk4qF/Dgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739501199; c=relaxed/simple;
-	bh=r6tl0D5Ohz++OnApacxTTWWCjiyFXxwaFc8dAcN1aS0=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=l2To77wVKoj0S6iol7V5HW3Acjg18f6ALWTOEHE87KKaED09thgNjgMbBhNNXmynTLf0XALw0aVqiEXGR06BPpfOJE7MBLcXQBrhmiMSV4GVSHHDGcV15D0Jkc9WzwPMsYsr0mO9p23XlCYUdvd1SwXPTHV6Y7bUxwr9MPlznHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4YvGZf4SvzzRmdp;
-	Fri, 14 Feb 2025 10:43:38 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 72ECE180087;
-	Fri, 14 Feb 2025 10:46:33 +0800 (CST)
-Received: from [10.67.120.192] (10.67.120.192) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 14 Feb 2025 10:46:32 +0800
-Message-ID: <842c3542-95a6-4112-9c50-70226b0caadc@huawei.com>
-Date: Fri, 14 Feb 2025 10:46:31 +0800
+	s=arc-20240116; t=1739501236; c=relaxed/simple;
+	bh=OBDOMbCu/54QoG/82en1R6lfwoODk1RsBgQAU745tNg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=VS8J+4RktG0NVdwb8kxq24kCCobMGhJ5U+fugA/eFHnE47k2fo3gee0AJBc++5S9lwHsejxogqgb91f1vkCAjczTjAM2QmziKt0lWHdDkntmVUX8mCCaNpjmVlYig9Q3hZiDK1y0AZWvfswgn++dztDM8OPhxwVFLyDf4XickmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C1S5aCJg; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C1S5aCJg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739501235; x=1771037235;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=OBDOMbCu/54QoG/82en1R6lfwoODk1RsBgQAU745tNg=;
+  b=C1S5aCJgTem/QSKdIQIHH/Uf7zuHpKQeXTcUOAI3ZycDofblH/TRHI4+
+   7cJBrUNj3PwDA0EKJtYrug4MGF2ESnuHms+4A+JT6rzW1EKneLApIn3/v
+   TocKDKk4mORMy3WQCmk05NAX8F/mGQ/0ckZsPYbLxDE7THk6Ap6p9wtoc
+   Hlt6T9KhDXKm064WgkRxL5SwhYjWiMTX7Loz1Fy0pm5JPp1mO0lQR4+CV
+   7KUnhCwzqFg20AhtEDY8rBFTTtpBFeeB2fJ8GUe4piex8Sbl9rQveIDEK
+   MCgGyZUL+sQl1UMowfXZbdtOcTVlx6GD/CE2EnQI3wcvGiMBvbbQ3oMc5
+   Q==;
+X-CSE-ConnectionGUID: IMnDEBTDTKq9AbJED7XEmg==
+X-CSE-MsgGUID: VsvPVnExQTKZSIOJaEaEVw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40386787"
+X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
+   d="scan'208";a="40386787"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 18:47:15 -0800
+X-CSE-ConnectionGUID: rIF8BeCIQQKZqDbCSuTZdg==
+X-CSE-MsgGUID: HOpTxSljQwCD9pY4XIjBNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
+   d="scan'208";a="113320191"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 13 Feb 2025 18:45:03 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tilhN-0018zJ-0C;
+	Fri, 14 Feb 2025 02:45:01 +0000
+Date: Fri, 14 Feb 2025 10:44:11 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Chinner <dchinner@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Chandan Babu R <chandanbabu@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>
+Subject: fs/xfs/xfs_linux.h:280 kmem_to_page() warn: unsigned '_x' is never
+ less than zero.
+Message-ID: <202502141023.Rdalsdag-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <shaojijie@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <andrew+netdev@lunn.ch>,
-	<horms@kernel.org>, <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
-	<liuyonglong@huawei.com>, <chenhao418@huawei.com>, <sudongming1@huawei.com>,
-	<xujunsheng@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
-	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 2/7] net: hibmcge: Add self test supported in
- this module
-To: Andrew Lunn <andrew@lunn.ch>
-References: <20250213035529.2402283-1-shaojijie@huawei.com>
- <20250213035529.2402283-3-shaojijie@huawei.com>
- <6501012c-fecf-42b3-a70a-2c8a968b6fbd@lunn.ch>
-From: Jijie Shao <shaojijie@huawei.com>
-In-Reply-To: <6501012c-fecf-42b3-a70a-2c8a968b6fbd@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   68763b29e0a6441f57f9ee652bbf8e7bc59183e5
+commit: afdc115559c57a48ad697219cec1d16962ad9e30 xfs: move kmem_to_page()
+date:   1 year ago
+config: riscv-randconfig-r073-20250213 (https://download.01.org/0day-ci/archive/20250214/202502141023.Rdalsdag-lkp@intel.com/config)
+compiler: riscv32-linux-gcc (GCC) 14.2.0
 
-on 2025/2/14 3:59, Andrew Lunn wrote:
-> On Thu, Feb 13, 2025 at 11:55:24AM +0800, Jijie Shao wrote:
->> This patch supports many self test: Mac, SerDes and Phy.
->>
->> To implement self test, this patch implements a simple packet sending and
->> receiving function in the driver. By sending a packet in a specific format,
->> driver considers that the test is successful if the packet is received.
->> Otherwise, the test fails.
->>
->> The SerDes hardware is on the BMC side, Therefore, when the SerDes loopback
->> need enabled, driver notifies the BMC through an event message.
->>
->> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-> Please take a look at the work Gerhard Engleder is doing, and try not
-> to reinvent net/core/selftest.c
->
->      Andrew
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502141023.Rdalsdag-lkp@intel.com/
 
-I actually knew about this, but after browsing the source code, I gave up using it.
+New smatch warnings:
+fs/xfs/xfs_linux.h:280 kmem_to_page() warn: unsigned '_x' is never less than zero.
+fs/xfs/xfs_linux.h:280 kmem_to_page() warn: unsigned '_x' is never less than zero.
+fs/xfs/xfs_linux.h:280 kmem_to_page() warn: unsigned '_x' is never less than zero.
 
-I have an additional requirement: serdes loopback and mac loopback.
-However, they are not supported in net/core/selftest.c.
+Old smatch warnings:
+fs/xfs/xfs_buf.c:724 xfs_buf_get_map() error: we previously assumed 'bp' could be null (see line 707)
+arch/riscv/include/asm/atomic.h:204 arch_atomic_fetch_add_unless() warn: inconsistent indenting
+arch/riscv/include/asm/atomic.h:204 arch_atomic_fetch_add_unless() warn: inconsistent indenting
 
-Thanks,
-Jijie Shao
+vim +/_x +280 fs/xfs/xfs_linux.h
 
+   271	
+   272	/*
+   273	 * Helper for IO routines to grab backing pages from allocated kernel memory.
+   274	 */
+   275	static inline struct page *
+   276	kmem_to_page(void *addr)
+   277	{
+   278		if (is_vmalloc_addr(addr))
+   279			return vmalloc_to_page(addr);
+ > 280		return virt_to_page(addr);
+   281	}
+   282	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
