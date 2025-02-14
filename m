@@ -1,116 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F10267AEA;
-	Fri, 14 Feb 2025 17:03:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95250267707;
+	Fri, 14 Feb 2025 17:03:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739552612; cv=none; b=VsWM4mRTalxnThXON0K04xrcAQhfeUJZckr/vosejKbYV7FOKPVJxzFw2nyEXIu/kiIuaCKPexRR3zjHM2dKbLQEqt7dYXbbzd3Ik8ryuuhyNA57KMbK+WL9FhXcnlgaFecoaP8PtCavRt9T5Y/Q9kBOWwSOcX4dg3L2ga2OZ+U=
+	t=1739552619; cv=none; b=aTKFtk04I675M4cTOOZsN5Ckhsueu0hmwPqVtMYDfXBz5czeCuAM8CI68WxF5LhVNOBRuio2lukDigduMe8OAh9LjaGAQtb1ck8YL6+9Twx8N0oDmYGCOeJP+KvNdx1OMsZd8LOwdEpEbvZ6jINk8NWce1DAD9BeS0+aVK0NgKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739552612; c=relaxed/simple;
-	bh=eQv9BUPy9s4YbE7/4SzCwlxnlCvlPoKPIg/Dq5xy/5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iUf2YWsvBgdcx2kSCMgK0VmwUcqqGRmEG180+zKdoeo46kSz/r7U6Eoh4T8tXaJifbJYnmmb/IP9BMYVKlku/LhDertZX6iJFriBKXRyes9KXgupORQbyEDyE3igNYzowcupGOrE9d8sqOsDmPjOzxYKj2Yhqzs0KiETkr8QTx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BurkNfgK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739552619; c=relaxed/simple;
+	bh=U5JMJWrzoqdHSV4ua/wsROD8syqzejqOaNgi9KR3RnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Z7WwYJR9evcF8Y7whab1wxN3HeJ3IQGpRiv2JcOiKB4HUH4OXpKIKt1iJTQkuYBCiONxjtQeBz2L7GK3K6dZh6IkYBkCFQsW++b85ja/d5pOcvPBWbz5hWzy+TZf7E1knbbu4SwDn1Hkd1hDhYNQjGn0Lf1qqBh4Fs9iQyqd7wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtpWsG3n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BurkNfgK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD9C5C4CED1;
-	Fri, 14 Feb 2025 17:03:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtpWsG3n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E24F4C4CEDF;
+	Fri, 14 Feb 2025 17:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739552611;
-	bh=eQv9BUPy9s4YbE7/4SzCwlxnlCvlPoKPIg/Dq5xy/5c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BurkNfgKSgiYxiUJreHOcmzvTDiua1q2hh6ZOtVl9TpZIP9B9WxrQGX79q590S1SB
-	 Dcr0K6PmBr7j6PZGG5UYzvCIyuFtu6xq5Wdi5x32JRkCjBcHxH9eL9FzhmrAjdWl89
-	 X9EckMeaNeSnfJCJN8lNG2hwq65TRKe1CzNJpmBZdP7hOFjHrQab/+bU3X7YL1NHYf
-	 4ZZKXeR8LTk0WojnG8JAbk2vu33LK05/PgAxzMRuhx3mLApG5UjapRB3xBwX18SwvA
-	 V1moAtgyVHYgdnFl7K5WcJb1RGTAJ1OnKNgZD5ru0e66Of2mLmWSGJ6WB0Z8mb36QK
-	 TW/QiZJ2Ccx9w==
-Date: Fri, 14 Feb 2025 22:33:22 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, bhelgaas@google.com, bwawrzyn@cisco.com,
-	cassel@kernel.org, wojciech.jasko-EXT@continental-corporation.com,
-	a-verma1@ti.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rockswang7@gmail.com
-Subject: Re: [v4] PCI: cadence-ep: Fix the driver to send MSG TLP for INTx
- without data payload
-Message-ID: <20250214170322.efgjw56fsofrk4b6@thinkpad>
-References: <20250214165724.184599-1-18255117159@163.com>
+	s=k20201202; t=1739552618;
+	bh=U5JMJWrzoqdHSV4ua/wsROD8syqzejqOaNgi9KR3RnM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=jtpWsG3nOOD2nqtuMAeJZ+8JwFuElwY2Y0oS7CJH8HSOShrOCm8a/ZXU49sxPLmvd
+	 9FgvA/DW6P54CvctuaQjvxWaOctvT9ZGc0HwZ4mfOO4W/dYUffYqsP8BRO8F+CjXIu
+	 l5myHXi95MneuUuq2/d2StZaDPcOrncA4mQ6UB+UuY2/GUM95I/mmpeak3wNElIKP3
+	 eAKYA62X0UcdrQyAKi2+nwCyflLqSQDgEv4kN4taIYa2Q/Natv6HDWVJAPCBLHIh7S
+	 3guf3RiWQv91QSEgFelVF8q4aFPXrza8TEHe1GfaA9eDNyNRZ51Snhg8+Oer7oQQdV
+	 d5UP+b27l3s7g==
+Date: Fri, 14 Feb 2025 07:03:37 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	cgroups@vger.kernel.org
+Subject: [GIT PULL] cgroup: Fixes for v6.14-rc2
+Message-ID: <Z693aRJLusQVW9iZ@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250214165724.184599-1-18255117159@163.com>
 
-On Sat, Feb 15, 2025 at 12:57:24AM +0800, Hans Zhang wrote:
-> Cadence reference manual cdn_pcie_gen4_hpa_axi_ips_ug_v1.04.pdf, section
-> 9.1.7.1 'AXI Subordinate to PCIe Address Translation' mentions that
-> axi_s_awaddr bits 16 when set, corresponds to MSG with data and when not
-> set, MSG without data.
-> 
-> But the driver is doing the opposite and due to this, INTx is never
-> received on the host. So fix the driver to reflect the documentation and
-> also make INTx work.
-> 
-> Fixes: 37dddf14f1ae ("PCI: cadence: Add EndPoint Controller driver for Cadence PCIe controller")
-> Signed-off-by: Hans Zhang <18255117159@163.com>
+The following changes since commit a86bf2283d2c9769205407e2b54777c03d012939:
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+  Merge tag 'pull-misc' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs (2025-02-01 15:07:56 -0800)
 
-- Mani
+are available in the Git repository at:
 
-> ---
-> Changes since v3:
-> https://lore.kernel.org/linux-pci/20250207103923.32190-1-18255117159@163.com/
-> 
-> - Add Fixes: tag.
-> - The patch subject and commit message were modified.
-> 
-> Changes since v1-v2:
-> - Change email number and Signed-off-by
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 +--
->  drivers/pci/controller/cadence/pcie-cadence.h    | 2 +-
->  2 files changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> index e0cc4560dfde..0bf4cde34f51 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> @@ -352,8 +352,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
->  	spin_unlock_irqrestore(&ep->lock, flags);
->  
->  	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
-> -		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code) |
-> -		 CDNS_PCIE_MSG_NO_DATA;
-> +		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code);
->  	writel(0, ep->irq_cpu_addr + offset);
->  }
->  
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index f5eeff834ec1..39ee9945c903 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -246,7 +246,7 @@ struct cdns_pcie_rp_ib_bar {
->  #define CDNS_PCIE_NORMAL_MSG_CODE_MASK		GENMASK(15, 8)
->  #define CDNS_PCIE_NORMAL_MSG_CODE(code) \
->  	(((code) << 8) & CDNS_PCIE_NORMAL_MSG_CODE_MASK)
-> -#define CDNS_PCIE_MSG_NO_DATA			BIT(16)
-> +#define CDNS_PCIE_MSG_DATA			BIT(16)
->  
->  struct cdns_pcie;
->  
-> 
-> -- 
-> 2.25.1
-> 
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/ tags/cgroup-for-6.14-rc2-fixes
+
+for you to fetch changes up to db5fd3cf8bf41b84b577b8ad5234ea95f327c9be:
+
+  cgroup: Remove steal time from usage_usec (2025-02-07 11:02:17 -1000)
+
+----------------------------------------------------------------
+cgroup: Fixes for v6.14-rc2
+
+- Fix a race window where a newly forked task could escape cgroup.kill.
+
+- Remove incorrectly included steal time from cpu.stat::usage_usec.
+
+- Minor update in selftest.
+
+----------------------------------------------------------------
+Bharadwaj Raju (1):
+      selftests/cgroup: use bash in test_cpuset_v1_hp.sh
+
+Muhammad Adeel (1):
+      cgroup: Remove steal time from usage_usec
+
+Shakeel Butt (1):
+      cgroup: fix race between fork and cgroup.kill
+
+ include/linux/cgroup-defs.h                         |  6 +++---
+ include/linux/sched/task.h                          |  1 +
+ kernel/cgroup/cgroup.c                              | 20 ++++++++++++--------
+ kernel/cgroup/rstat.c                               |  1 -
+ tools/testing/selftests/cgroup/test_cpuset_v1_hp.sh |  2 +-
+ 5 files changed, 17 insertions(+), 13 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+tejun
