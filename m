@@ -1,179 +1,118 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70031C84C5
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 19:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6452F1C84D3
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 19:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739563106; cv=none; b=VBTDhfqaB4hRgtd4fdREitlCvOrOnzdxWvv9FVMryQ4OLbyvb3lItbBMfhPx5sTTDO/tPzmdVF0v8lWqx39PTp8u8iIOfb9Y+FeZ9qRkN/AAbUtIhLAO7K4DLyUjjqZiaXw8SHzZweag2gpaUje0zDGWqrHG+mny/OQHNhkReXo=
+	t=1739563169; cv=none; b=C/vscgUMtEw30CegfYah9GZ7FPGlT+E6g2grtdnwv/+wyQ9FOgmc85sWZBz5HNe/E9IXs9XqHAngPGwYb4EsEwdS8MesprvU0fQpgk4vCEcKmIvEVcpIaSrgU0y25rmiV0hvGIsBpTTgQcEgwTTBkXc9mLyuWeg9nTVPFQnBhZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739563106; c=relaxed/simple;
-	bh=/gvLMjNcFaFz6dSz0rcCsU90lvPIvHm6x7oqcQQ33LE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=rnMWNQ7Lg30ZSJ99jTuqa25zuk0+d+ZQPrmwwnKK0f1MUi361XlC+RMJQbOidNqAHvKUKVtX9Cz13bb3S/ko7ymJt3vYpORr6XSbtE7NOhsL7n+JpiAgoELHzIlzHuyheop74dmqRafwYlBEQkU0yOvWeoTpogGFFch8MtMxNh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+	s=arc-20240116; t=1739563169; c=relaxed/simple;
+	bh=HoneSYfjwCkyxow6qUqJHiU1p+vYZNaUKdcEgAjc16w=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PWHs2+jwEMywDIZAwir5EGCn0iJP+R5jRqmoKe4jItBb2H8x33A4fCkweT4b7Bne6qKPhF8efCOeU5rQLQCdOHTCTXOCB0qD6uCbE4vmwf8+0fkqSggfM1lgx0vbUwKnBJ3uUwGYfYzOavwxmIMeGq2VPxaoaM15OL33x0BMeCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-855635c9cfaso397375739f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 11:58:24 -0800 (PST)
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d197cf2ec9so11668995ab.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 11:59:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739563104; x=1740167904;
+        d=1e100.net; s=20230601; t=1739563167; x=1740167967;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MDKODr4MuLZ3lyXb732mvfwv2AIo0qNyeX+9y10itI0=;
-        b=BIpziWaHz625L/9OTxtR61h+P9TkzJhCAIIeg4AzMy3EzPFJtWnAtDZcnu/RQdj13i
-         fMSjUdghyKH88IUP1FZy7v8Nl/5x5vgMDMwWMd8CubKlsnKhIOeWfsMdxpRwOSodhN6o
-         OCfGR2cVrsfdSac2IrvHJf7eiKl6NXS0eZ6qcYP5modlOX5NTuL9BkFZZtFrwvC1l6KN
-         TnPzeEN9kARk4cyyH8omkSkXHgpmYqzDdI5CgkxQvrcNV4K95bcIx7BtQCHoBnfYERv+
-         yZMHs6GUEAYQvuxu952bh4AiXnzQKcNG5bdK6cXZtSFBz/79KKz2eK1ghBf4dFrevl9P
-         JR6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXhgW9tXM0e6Vzur+RanM59BiMGOxIvaZ/liqZru0GqFvVKbFyhsTESXUb9qoTZAx36vACvf/Ap0bGuAOA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz38lrUWSIDnS9Bn2DEoOwN6ahfv8xM2qE7LbFkPxFVIyO9ra46
-	BVYRGuFYQ7ITj5cAp6XfeqOb6wmXlQb7Xb69KzpCR+31j4/myxKEGAIUyZ7yFs71T32QQbOE4Sg
-	6zeCZOViEmcIA212zAyjNgyPgbHPSUxSFvBAQ+hD0g4Sh3glEYhrnWB0=
-X-Google-Smtp-Source: AGHT+IHPEHBkcThOnyMELL0sTNAQVybE1JUAN60KrS4NfXcaUpqP+6td3DDS5uFItpcG8I/oH6uW5Ggq//Z8vhI6nZlfZpZpk5BR
+        bh=s07l8WUdCDWeg84onPgx9DdCyplfGFjkRssez/Y+2Q0=;
+        b=hrroLxhdZZa18rlMT3/oZxdnMN86YpfjmJ7xGJ9eZPONuU7w561KDjWGAnW+CbUucN
+         jW227U70ED0ZIixjvNELuoYEerlMDt90zIetOvL73mzn/jsRrdt20QV/wox8UTH7qn1o
+         hN/NYEALCH+bt8uCZv6ByltNcSl1r0WgvMBAZ10baLqSzNKyAILnkEqFFEHuq/OJLQDh
+         /g0G3ZfxuUnsH7MfYnt3vBRX+Dxo1x6sfkNvSHhPKEibjRgHOY+kBhktWPFfAv6EokDZ
+         j16i/1jB6E8acXCXymVyjWojMQFbhyA1k6y/AEWDOxQ5nptHeI+Nzjxv748p0+iQhz3F
+         YrrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4x7Y2qS7CECSGjyWRspQbayzFr9MmXDUKvNMuOvi43/viHh+Bn/H2BkEVu51JPI5ZsCr2cy+VNmZQO3I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWwrZ5/duzdfIa0IlrRYfCHfGcxHOEdpUa7MilJn1zdlUMlUFg
+	FtWJ912YIpmLFjYXpHG/QySkkY2znO9q5Bro5wS4u7pAGaiS5+1Cf3mjamZB+0JDASb7gd6tfMC
+	PhRS2kJdn/wM72abu/SvJ4TENecRe7NiWE2pUpezoR7E4OqJz8MwXmDU=
+X-Google-Smtp-Source: AGHT+IFkN/W3gTpyyK01vHXOqHLRzhc2iFiGs3oj7eJXqkptUA0tXVE41WoMma3TkNsH7oXX8/Aty0a/vxWl4NscjCXSooYkgQ22
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c8c:b0:3d0:21aa:a756 with SMTP id
- e9e14a558f8ab-3d2807aba07mr6590265ab.5.1739563103999; Fri, 14 Feb 2025
- 11:58:23 -0800 (PST)
-Date: Fri, 14 Feb 2025 11:58:23 -0800
+X-Received: by 2002:a05:6e02:3c05:b0:3d0:443d:a5c3 with SMTP id
+ e9e14a558f8ab-3d2807642aamr6015945ab.3.1739563167662; Fri, 14 Feb 2025
+ 11:59:27 -0800 (PST)
+Date: Fri, 14 Feb 2025 11:59:27 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67afa05f.050a0220.21dd3.0050.GAE@google.com>
-Subject: [syzbot] [udf?] BUG: unable to handle kernel paging request in lookup_one_qstr_excl
-From: syzbot <syzbot+2d18bb4b8a11cab7ab13@syzkaller.appspotmail.com>
-To: anna@kernel.org, brauner@kernel.org, jack@suse.com, jack@suse.cz, 
-	linkinjeon@kernel.org, linux-cifs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, neilb@suse.de, senozhatsky@chromium.org, 
-	sfrench@samba.org, syzkaller-bugs@googlegroups.com, tom@talpey.com, 
-	trondmy@kernel.org, viro@zeniv.linux.org.uk
+Message-ID: <67afa09f.050a0220.21dd3.0054.GAE@google.com>
+Subject: [syzbot] [kernfs?] [bcachefs?] UBSAN: shift-out-of-bounds in radix_tree_delete_item
+From: syzbot <syzbot+b581c7106aa616bb522c@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tj@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    7b7a883c7f4d Add linux-next specific files for 20250213
-git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=116913f8580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5fce2f4fd0c881e1
-dashboard link: https://syzkaller.appspot.com/bug?extid=2d18bb4b8a11cab7ab13
+HEAD commit:    09fbf3d50205 Merge tag 'tomoyo-pr-20250211' of git://git.c..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12cd63f8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c516b1c112a81e77
+dashboard link: https://syzkaller.appspot.com/bug?extid=b581c7106aa616bb522c
 compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17f8fbdf980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=156913f8580000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11e449b0580000
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/f96ca702937a/disk-7b7a883c.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/901577be06a5/vmlinux-7b7a883c.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/61175f206a2f/bzImage-7b7a883c.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/31908970193f/mount_0.gz
-
-The issue was bisected to:
-
-commit 22d9d5e93d0eaf7e8662602713b24e9b6171759f
-Author: NeilBrown <neilb@suse.de>
-Date:   Fri Feb 7 03:36:48 2025 +0000
-
-    VFS: add common error checks to lookup_one_qstr_excl()
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=114ba1a4580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=134ba1a4580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=154ba1a4580000
+disk image: https://storage.googleapis.com/syzbot-assets/f952dd0d3577/disk-09fbf3d5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/15b571b9069e/vmlinux-09fbf3d5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/299fb2913d4e/bzImage-09fbf3d5.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/40dabaf4539b/mount_0.gz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2d18bb4b8a11cab7ab13@syzkaller.appspotmail.com
-Fixes: 22d9d5e93d0e ("VFS: add common error checks to lookup_one_qstr_excl()")
+Reported-by: syzbot+b581c7106aa616bb522c@syzkaller.appspotmail.com
 
-UDF-fs: error (device loop0): udf_read_tagged: tag checksum failed, block 99: 0x27 != 0x4d
-UDF-fs: INFO Mounting volume 'LinuxUDF', timestamp 2022/11/22 14:59 (1000)
-UDF-fs: error (device loop0): udf_verify_fi: directory (ino 1376) has entry where CRC length (63772) does not match entry length (28)
-BUG: unable to handle page fault for address: ffffffffffffff8b
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD e93c067 P4D e93c067 PUD e93e067 PMD 0 
-Oops: Oops: 0000 [#1] PREEMPT SMP KASAN PTI
-CPU: 0 UID: 0 PID: 5835 Comm: syz-executor196 Not tainted 6.14.0-rc2-next-20250213-syzkaller #0
+bcachefs (loop2): missing subvolume 1
+bcachefs (loop2): inconsistency detected - emergency read only at journal seq 10
+bcachefs (loop2): bch2_fs_get_tree(): error mounting: error getting root inode ENOENT_bkey_type_mismatch
+bcachefs (loop2): shutting down
+------------[ cut here ]------------
+UBSAN: shift-out-of-bounds in lib/radix-tree.c:88:31
+shift exponent 112 is too large for 64-bit type 'unsigned long'
+CPU: 1 UID: 0 PID: 6088 Comm: syz.2.18 Not tainted 6.14.0-rc2-syzkaller-00039-g09fbf3d50205 #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-RIP: 0010:__d_entry_type include/linux/dcache.h:416 [inline]
-RIP: 0010:d_is_miss include/linux/dcache.h:421 [inline]
-RIP: 0010:d_is_negative include/linux/dcache.h:467 [inline]
-RIP: 0010:lookup_one_qstr_excl+0x162/0x370 fs/namei.c:1696
-Code: d3 66 90 48 85 c0 0f 85 58 01 00 00 e8 17 dd 84 ff 4c 89 f0 48 c1 e8 03 42 0f b6 04 28 84 c0 0f 85 57 01 00 00 bb 00 00 38 00 <41> 23 1e 44 89 fd 81 e5 00 00 02 00 89 de 09 ee 31 ff e8 27 e1 84
-RSP: 0018:ffffc90003f2fcb8 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000380000 RCX: ffff888034c01e00
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000001
-RBP: ffff888074918164 R08: ffff88807ab8fe1b R09: 1ffff1100f571fc3
-R10: dffffc0000000000 R11: ffffed100f571fc4 R12: ffff88807ab8fd60
-R13: dffffc0000000000 R14: ffffffffffffff8b R15: 0000000000060000
-FS:  0000555565c15380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffff8b CR3: 00000000776ac000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
  <TASK>
- filename_create+0x282/0x480 fs/namei.c:4091
- do_mkdirat+0xbd/0x3a0 fs/namei.c:4322
- __do_sys_mkdir fs/namei.c:4350 [inline]
- __se_sys_mkdir fs/namei.c:4348 [inline]
- __x64_sys_mkdir+0x6c/0x80 fs/namei.c:4348
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ ubsan_epilogue lib/ubsan.c:231 [inline]
+ __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:468
+ radix_tree_descend lib/radix-tree.c:88 [inline]
+ __radix_tree_lookup lib/radix-tree.c:766 [inline]
+ radix_tree_delete_item+0x1df/0x3f0 lib/radix-tree.c:1420
+ kernfs_put+0x1ba/0x370 fs/kernfs/dir.c:575
+ kernfs_remove_by_name_ns+0xe4/0x160 fs/kernfs/dir.c:1696
+ bch2_dev_unlink fs/bcachefs/super.c:1270 [inline]
+ __bch2_fs_stop+0x1d8/0x5c0 fs/bcachefs/super.c:638
+ bch2_fs_get_tree+0xd10/0x1740 fs/bcachefs/fs.c:2303
+ vfs_get_tree+0x90/0x2b0 fs/super.c:1814
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3560
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:4088
  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fd68a577a57
-Code: ff ff 77 07 31 c0 c3 0f 1f 40 00 48 c7 c2 b8 ff ff ff f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffc24c81108 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fd68a577a57
-RDX: 0000000000000000 RSI: 00000000000001ff RDI: 0000400000000080
-RBP: 0000400000000080 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007ffc24c811a0 R14: 0000000000000000 R15: 0000000000000000
+RIP: 0033:0x7f89e278e58a
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 1a 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f89e3673e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f89e3673ef0 RCX: 00007f89e278e58a
+RDX: 00004000000058c0 RSI: 0000400000005900 RDI: 00007f89e3673eb0
+RBP: 00004000000058c0 R08: 00007f89e3673ef0 R09: 0000000000010000
+R10: 0000000000010000 R11: 0000000000000246 R12: 0000400000005900
+R13: 00007f89e3673eb0 R14: 0000000000005912 R15: 00004000000001c0
  </TASK>
-Modules linked in:
-CR2: ffffffffffffff8b
----[ end trace 0000000000000000 ]---
-RIP: 0010:__d_entry_type include/linux/dcache.h:416 [inline]
-RIP: 0010:d_is_miss include/linux/dcache.h:421 [inline]
-RIP: 0010:d_is_negative include/linux/dcache.h:467 [inline]
-RIP: 0010:lookup_one_qstr_excl+0x162/0x370 fs/namei.c:1696
-Code: d3 66 90 48 85 c0 0f 85 58 01 00 00 e8 17 dd 84 ff 4c 89 f0 48 c1 e8 03 42 0f b6 04 28 84 c0 0f 85 57 01 00 00 bb 00 00 38 00 <41> 23 1e 44 89 fd 81 e5 00 00 02 00 89 de 09 ee 31 ff e8 27 e1 84
-RSP: 0018:ffffc90003f2fcb8 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000380000 RCX: ffff888034c01e00
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000001
-RBP: ffff888074918164 R08: ffff88807ab8fe1b R09: 1ffff1100f571fc3
-R10: dffffc0000000000 R11: ffffed100f571fc4 R12: ffff88807ab8fd60
-R13: dffffc0000000000 R14: ffffffffffffff8b R15: 0000000000060000
-FS:  0000555565c15380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffff8b CR3: 00000000776ac000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	d3 66 90             	shll   %cl,-0x70(%rsi)
-   3:	48 85 c0             	test   %rax,%rax
-   6:	0f 85 58 01 00 00    	jne    0x164
-   c:	e8 17 dd 84 ff       	call   0xff84dd28
-  11:	4c 89 f0             	mov    %r14,%rax
-  14:	48 c1 e8 03          	shr    $0x3,%rax
-  18:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax
-  1d:	84 c0                	test   %al,%al
-  1f:	0f 85 57 01 00 00    	jne    0x17c
-  25:	bb 00 00 38 00       	mov    $0x380000,%ebx
-* 2a:	41 23 1e             	and    (%r14),%ebx <-- trapping instruction
-  2d:	44 89 fd             	mov    %r15d,%ebp
-  30:	81 e5 00 00 02 00    	and    $0x20000,%ebp
-  36:	89 de                	mov    %ebx,%esi
-  38:	09 ee                	or     %ebp,%esi
-  3a:	31 ff                	xor    %edi,%edi
-  3c:	e8                   	.byte 0xe8
-  3d:	27                   	(bad)
-  3e:	e1 84                	loope  0xffffffc4
+---[ end trace ]---
 
 
 ---
@@ -183,7 +122,6 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this issue. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
 If the report is already addressed, let syzbot know by replying with:
 #syz fix: exact-commit-title
