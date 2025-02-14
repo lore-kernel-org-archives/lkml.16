@@ -1,68 +1,144 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51A120B1EA
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6585120B20B;
+	Fri, 14 Feb 2025 09:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739525830; cv=none; b=Nrcv9IrcvY7kk1TQogWYoH+8r5yn7uKElxOeDo6PeP6wbRwBSiIcpte0t2GwhLHsqi0IlzAaZ/ZnGBTMfs8C3IRv2eW9s+ZIL2hwHfekL18HsaSaaT5LDe/Sj2NL+rbE3FZwUX7eCUJyjaEfSK7jYTr0jjqg3k1fqIFqP9LTmgY=
+	t=1739525942; cv=none; b=fNHq4Ryi928TBkXebuaFmk3SNwO5Vy/lyjI9y9kxTfYuwAp4HYtPlPAktP+UvSWPA7upnYv1fCqp1q27K6tsCZveis0EmBAxBiwuyxjFsEJUCNfstg4ZyR7AebeljFlR6Cp0sEbCJHX3yweIB78CB9rusefZXG1veEy3Tyg9QM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739525830; c=relaxed/simple;
-	bh=C36Hk0vdfiBT1Qwd0ce4cmV/SSAbVEs3+H/35Y0ePHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gfy59C/9aqSao3quDAmhnPaC/x2oI8OsdVvdrIrvFUI6xorjmkux4h9rmeVFMROQ9w+ES/0sW3gHa2Yul2yNAZJq8OI1JWCJMGPLtXQCnZvy5pKNds3Jb+k8V8Cwbs/gSY93GH9HYks4hfCRPTPD7fzGQ8ycUZF93WD4a3a618U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qjh/QZgM; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1739525942; c=relaxed/simple;
+	bh=9ijsm6HczVi5ThTYceuVfLfvKtxB6vu8r1DXvKU3eT4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=uFpTphxMUjtCR9JZgu3d2GghbznQ0JQa+U/qzezu2z5ieIGY7r5k16zMFU10dgZTftmY2nrGgcXpZn0MMz357fL69/O+4S8oAjDbKINOVBU3YNVUL30fmA46ai2YFzITCH5kbZtBAkQKHi4UFQ2udhjkl33oSp+ZRu460N6l3FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MRgDN+vm; dkim=fail (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HW9X1JV7 reason="signature verification failed"; arc=none smtp.client-ip=192.198.163.9; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qjh/QZgM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=C36Hk0vdfiBT1Qwd0ce4cmV/SSAbVEs3+H/35Y0ePHA=; b=qjh/QZgMzIyqybLyhapCS12NsX
-	qEuSJB7iTB9Gnm/pr314F6+PTG3NZJaA927qipz/viewSEMxr36vMxAz0Cx1woX5HyjFv+maFXkrO
-	MvEyBoy7y1JL2AT9oYphLwPxSJVr7l4RzwxaWE9ev1WdcuwJYtcuYGq2nN6aeJYgPrX4kJsDOzNFX
-	aSUoZ4lJuzMFZnGIJXGJe7yqDV5S7BTHYeUoo9wd/ulSBW5gB9mAW1yH01OnA2XIuye9B7IeBky48
-	ykyDm7SnnE+UXGSEQD+oXCgPIXc07qj2WVa32B5W1GV7g15ZobD+ix13ZOxZyk+ua/qDEM0+MygLP
-	rsWgeJlg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tis7s-00000001DQR-2WIC;
-	Fri, 14 Feb 2025 09:36:48 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2FA3B3002F0; Fri, 14 Feb 2025 10:36:48 +0100 (CET)
-Date: Fri, 14 Feb 2025 10:36:48 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Rik van Riel <riel@surriel.com>
-Cc: Brendan Jackman <jackmanb@google.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, bp@alien8.de,
-	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
-	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
-	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com,
-	mhklinux@outlook.com, andrew.cooper3@citrix.com
-Subject: Re: [PATCH v11 00/12] AMD broadcast TLB invalidation
-Message-ID: <20250214093648.GC21726@noisy.programming.kicks-ass.net>
-References: <20250213161423.449435-1-riel@surriel.com>
- <CA+i-1C3DRvustO9eH4PFyASD_SRoR4iv22BMfvu9BSKDK_SFLw@mail.gmail.com>
- <5d6130a40f173e341306faca897a0e42f8cd5a20.camel@surriel.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MRgDN+vm";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HW9X1JV7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=ylGJXpb+Bo8SVziuzHuBH78Q+ZTnsfQrMC8w/UlfR/I=;
+	b=MRgDN+vmbXHc1Si0FGxPFbZA4tQL3M5f1RMe0D58x/3UBvkG4riMgf6DeqAfMu
+	9naV+K3VEb+seX8wF/dP4eVTlllaZYl6mshvAQEX0e18rP1ExaUAmKe7hB9fEHaP
+	5x0LnKBZXvYKFyCv2rWZEaE8wBmIGDQ3cUJfqbZy4WtNk=
+Received: from os-l3a203-yehs1-dev01.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wBHX9AYD69nO4JaMA--.38086S2;
+	Fri, 14 Feb 2025 17:38:33 +0800 (CST)
+From: Xiaochun Lee <lixiaochun.2888@163.com>
+To: xiaocli@redhat.com,
+	740797925@qq.com,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
+	Igor Mammedov <imammedo@redhat.com>
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH 00/25] PCI: Resource fitting/assignment fixes and cleanups
+Date: Fri, 14 Feb 2025 17:59:02 +0800
+Message-ID: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 1.8.3.1
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9]) (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)) (No client certificate requested) by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D46206F09; Mon, 16 Dec 2024 17:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=intel.com; i=@intel.com; q=dns/txt; s=Intel; t=1734371805; x=1765907805; h=from:to:cc:subject:date:message-id:mime-version: content-transfer-encoding; bh=YI6S04K1iTSvj1Cp/dFALikn59iuWUReV9PISgS7tbM=; b=HW9X1JV7+FfLVfK5qDkZGICNeNafmtTGUoDa882sBctqOoJosxyCvpjo vs2uwd/doc5KQb9OiA6dRqJRcltw6lKcg9tqd7qpJmkZ1OC00d9bGTOnu qU7qrePAbJdAiFA3QYfA8rmprKuyw4aZ7seDMUQzT21Qatl1KfrXJSI79 PSDJqZtAiq+NsV6LzkYUuVgz5NGVaCjcB0CH7C+7h+XLBNdtyeA3gQFuq CALYsDZwqQJyXs3J0PDwg4OMiq7FXJtl8s2VGAIxw/FOteEfDtnS3E8Yk wN8gepy0wxJB/1ualpuIfKoMTJJDlaf0fWG5RSBGRLL5NpzYRw2ZuRO3+ g==;
+X-CSE-ConnectionGUID: rx0qJFnjSW+DeTuYoki4RA==
+X-CSE-MsgGUID: 9LfrqKeBRAK+uYCLB+OydQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="45465699"
+X-IronPort-AV: E=Sophos;i="6.12,239,1728975600";  d="scan'208";a="45465699"
+Received: from orviesa006.jf.intel.com ([10.64.159.146]) by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:56:45 -0800
+X-CSE-ConnectionGUID: VpnYpi5JRPSI+feKgInibg==
+X-CSE-MsgGUID: 7k4hsoGrSvOr6eVD+2Atig==
+X-IronPort-AV: E=Sophos;i="6.12,239,1728975600";  d="scan'208";a="97309253"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.29]) by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:56:42 -0800
+X-Mailer: git-send-email 2.39.5
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d6130a40f173e341306faca897a0e42f8cd5a20.camel@surriel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBHX9AYD69nO4JaMA--.38086S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGFWkCr43XFyDKF43Ar43Jrb_yoW5ZrW3pr
+	WfWw48tFWkJry7Jrs5Aw1xAFs3Xa1vy3y5JFyft3s3Za98ZFy2qrn5tayrX3y3GrWxCF1a
+	vF4jvrn8uFWDAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jUeOJUUUUU=
+X-CM-SenderInfo: 5ol0xtprfk30aosymmi6rwjhhfrp/1tbioAvyQGetuKzg-wABsZ
+Message-ID: <20250214095902.RaapUYfV8MPtw_a4e6c8tQl76NlAC3QhojQEytN8pA0@z>
 
-On Thu, Feb 13, 2025 at 03:02:40PM -0500, Rik van Riel wrote:
+From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-> Peter, do you prefer a v12, or should
-> additional small fixes and improvements
-> just be sent in follow-up patches at
-> this point?
+> Hi all,
+> 
+> This series focuses on PCI resource fitting and assignment algorithms.
+> I've further changes in works to enable handling resizable BARs better
+> during resource fitting built on top of these, but that's still WIP and
+> this series seems way too large as is to have more stuff included.
+> 
+> First there are small tweaks and fixes to the relaxed tail alignment
+> code and applying the lessons learned to other similar cases. They are
+> sort of independent of the rest. Then a large set of pure cleanups and
+> refactoring that are not intended to make any functional changes.
+> Finally, starting from "PCI: Extend enable to check for any optional
+> resource" are again patches that aim to make behavioral changes to fix
+> bridge window sizing to consider expansion ROM as an optional resource
+> (to fix a remove/rescan cycle issue) and improve resource fitting
+> algorithm in general.
+> 
+> The series includes one of the change from Michał Winiarski
+> <michal.winiarski@intel.com> as these changes also touch the same IOV
+> checks.
+> 
+> Please let me know if you'd prefer me to order the changes differently
+> or split it into smaller chunks.
+> 
+> 
+> I've extensively tested this series over the hosts in our lab which
+> have quite heterogeneous PCI setup each. There were no losses of any
+> important resource. Without pci=realloc, there's some churn in which of
+> the disabled expansion ROMs gets a scarce memory space assigned (with
+> pci=realloc, they are all assigned large enough bridge window).
+> 
+> 
+> Ilpo Järvinen (24):
+>   PCI: Remove add_align overwrite unrelated to size0
+>   PCI: size0 is unrelated to add_align
+>   PCI: Simplify size1 assignment logic
+>   PCI: Optional bridge window size too may need relaxing
+>   PCI: Fix old_size lower bound in calculate_iosize() too
+>   PCI: Use SZ_* instead of literals in setup-bus.c
+>   PCI: resource_set_range/size() conversions
+>   PCI: Check resource_size() separately
+>   PCI: Add pci_resource_num() helper
+>   PCI: Add dev & res local variables to resource assignment funcs
+>   PCI: Converge return paths in __assign_resources_sorted()
+>   PCI: Refactor pdev_sort_resources() & __dev_sort_resources()
+>   PCI: Use while loop and break instead of gotos
+>   PCI: Rename retval to ret
+>   PCI: Consolidate assignment loop next round preparation
+>   PCI: Remove wrong comment from pci_reassign_resource()
+>   PCI: Add restore_dev_resource()
+>   PCI: Extend enable to check for any optional resource
+>   PCI: Always have realloc_head in __assign_resources_sorted()
+>   PCI: Indicate optional resource assignment failures
+>   PCI: Add debug print when releasing resources before retry
+>   PCI: Use res->parent to check is resource is assigned
+>   PCI: Perform reset_resource() and build fail list in sync
+>   PCI: Rework optional resource handling
+> 
+> Michał Winiarski (1):
+>   PCI: Add a helper to identify IOV resources
+> 
+>  drivers/pci/pci.h       |  44 +++-
+>  drivers/pci/setup-bus.c | 566 +++++++++++++++++++++++-----------------
+>  drivers/pci/setup-res.c |   8 +-
+>  3 files changed, 364 insertions(+), 254 deletions(-)
+> 
+Tested-by: Xiaochun XC17 Li <lixc17@lenovo.com>
+> -- 
+> 2.39.5
 
-I think I'm mostly okay at this point, but DaveH was wanting to have a
-look at this thing. Dave did you get around to reading one of these
-recent versions, wdyt?
+
