@@ -1,90 +1,146 @@
-Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702B126869A
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 17:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.193.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF0426772B
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 17:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739553992; cv=none; b=n3tEQe3yqqkEr7z+SIj9k09+W2CsQrEPP8589dSdXZALHFJvQI1YpqPVoR9efFgLfToy4XcwS3ELg8GVcBRYFOmfPVvdoTk7Url011JdDQAaeSpUzpkYYLsPeXpeFZCh9rKRrdTo9I+8cszz6XewUoulVVNWOTkIeQ3fN+e57M4=
+	t=1739554057; cv=none; b=M7uNiGd4a3x+vUJpA0xqx4Hylc82OJv9LO3TbIt/jBT7KnGXB/hN4dVBs75rvPSMDF6Hwhz7MSgjqb2RZ1+QcTNiVgt3oPWL4b+FJRtAQaIiGL2y1D4OxAsC65OGi1g8C787XloOPYt8pk89/XtT5xSG/8Psh05F+rx2ZRmnRpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739553992; c=relaxed/simple;
-	bh=5X9po93482aFLpIrgTxkENTzyprq/G/AXnwXeW493MQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NBdqO9v+dby6/ghxb964T/IcpGPhADzJwK2FrHE/2J3wL6bKJQ/BLGAq7X3c3Lq5SHTbuJGzfVCsEl1rnNDH9hSvp9OpdZdEmgasGKGIKQbT/dsw/bUQeBWr9LlU03uYwpcA72R0GTXg8jkr3TQd6rEsiC52ulKZ9ypkk3PzXyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=kYADpheO; arc=none smtp.client-ip=34.202.193.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mentallysanemainliners.org
+	s=arc-20240116; t=1739554057; c=relaxed/simple;
+	bh=cQ8t+tOviT72vLT9F0rQyeend8uSfiR5OEb4vEMwexQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o+9DOIr9olBG/yo/D5BD37qB/gHuFeWJJWtQXiti1EUpRWcRScGy6ME87bUCXYZ4riGE59e1AD3xiSEZoH2PQ75XSB47BSbrS9ITyDdC0ftGRURRZl9KIWce6s3ajOgT4jfxP+iftwkJ5+sokJHgSPtP2DpSCJ1yIXHAVJ4MNQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=onAIE9yE; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="kYADpheO"
-Authentication-Results: purelymail.com; auth=pass
-DKIM-Signature: a=rsa-sha256; b=kYADpheOkBDJni8Szoosijy04sibwNBeGQWE6vO7rL/BnzUnasL9y0+BSK+2Y2bequjxW0dY8mrDVQ6GGQMXedpnchHOawMFYUx2lOqg1TPy+P2CJ53/obEdHc3UciJz1CUsJFfDY1q20HbP1JWlk1y03SyDOGxYWe71GCWnQ9w/W7E+H3xRdJ2j6cyzxuvSWAKAp+GibSYVni4g4sgyDKVi4PCIq3xxgCgYaAETr5zGsXJJFOJv/8WXJOANaYSU9Oh/vN7zZocWMpN/2vZPc8jA8824iS82U6OxT14t1V6REiPY0s2VTXTXxFCEsdU3YQCsSO3yXbBatu74Dei+QQ==; s=purelymail3; d=purelymail.com; v=1; bh=5X9po93482aFLpIrgTxkENTzyprq/G/AXnwXeW493MQ=; h=Feedback-ID:Received:From:Subject:Date:To;
-Feedback-ID: 68247:10037:null:purelymail
-X-Pm-Original-To: linux-kernel@vger.kernel.org
-Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id -1457029256;
-          (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
-          Fri, 14 Feb 2025 17:25:49 +0000 (UTC)
-From: Igor Belwon <igor.belwon@mentallysanemainliners.org>
-Subject: [PATCH 0/2] USB PHY support for Exynos990 SoCs
-Date: Fri, 14 Feb 2025 18:21:06 +0100
-Message-Id: <20250214-exynos990-dwusb-v1-0-d68282c51ba8@mentallysanemainliners.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="onAIE9yE"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-220c2a87378so34072265ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 09:27:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739554055; x=1740158855; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1GpDHw6J3mUy22yUtyZke9IY17leDB0BRZkF2rjC414=;
+        b=onAIE9yE6uN3/TFAN6M8rpGQDzZBx7WgCgIeFWCQt1kQcOS/cuIy7HKjIh7s0cUHoa
+         FmmBIbuuO2x6087+i7yY7NnfDspDBt4VRnhEcQDqKko0bnBkoqkIGAZWhO4Pr2GRL5RR
+         AZseXc5YwW/U0UKAOQnAJbpox7/0NbgLZyp+F1eg0H3bNNlrwKd5tSUfHvLgnFWT8xnP
+         gNabYDiZcaWUVm1E50bYbimhE1aPmDRrqDT+NyA0S1cYKYQwvmeP+n/mfx0SHk4Kes2k
+         ibiLy5AiconCr+gwfSGNr+0jll7qvCao8vTT6YW0z5ohLz4AVE8ZCZ3oWmbWFpRCc3hu
+         qXaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739554055; x=1740158855;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1GpDHw6J3mUy22yUtyZke9IY17leDB0BRZkF2rjC414=;
+        b=A2ozxX0zvAYTULCKJwGoIgijIcLJigUrCy7wU0fsv3LLZWUx8cMcEv3Mw2aHUoOFPa
+         8f+SfIUUjG9OveajwZJWvv9n+dIjyeIp2GlGjDoSyoRW2R3s7aiQPOjcPvWcSnplBzN+
+         3hSdW7fR4oirp7JIR5SJqA2BaZhg7nA7YD5/y/NpTEJZ/J2DHVfb6xGO1C4vHxHZNJjx
+         kcv5nIKp/hH3GTnxQvQq1anUfPS1g9ixH+Ah3n5uaRDYS4yRg7af6macBOlK9izdtSSJ
+         Aqi52nHxci/w8ZMRhYok+7AMLww6VDXD6igQChUyzE+W1+bpBDe47Vh9z4cdcoQLjciJ
+         GwxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWR7h9fxnKO+QHQs9KxzDcRFQ3xu18WVok0IX7ZKUiepzAwX4URmkZ1GqDIuSyXivKP6JiUtiRVGYBRCf8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUCsXwQaAWa6xLHkaJvqnvT19fsss/SdzVMC8QB8XXpfIZToI2
+	hOa3iPzn6udd3k60mQfhLfCQmMMefBidiYvwkQWJkrUWuvEP/jMjcIBUawiW3w==
+X-Gm-Gg: ASbGncvfKXxbER+T/RtkS/mFfbZFcggTtHUwebMQ3Ymb93l2m9GZ3KU0AYOHM3SlBKl
+	2eyJf08AgUd9/jcecb3rWNi+JBsjE5S27ecqTaA5+PV8PWkclqFn6pkJgvTv9tExxuSIu1/Sly/
+	Z2Iy7A2LgRAyig9nsZBbrXREWPZklQvWKMtJkJ8X6I4Yg1QRK15fJ0QmqAAMBeqZLHvv2ERaUhv
+	ltQ3Ib3f8FQTndhp+s8OgGaW6JlAClfbfY3mNVWE27QGdG0fj7Ub5basXjukmoR3mvqj/JlNb7Z
+	Ci48xbNBLUxuBnVBFPho/vjTGto=
+X-Google-Smtp-Source: AGHT+IG0qxpZdABP9Ny/lA/qYPEQ22sP8szSsdMW0s5lNGbuvWIfvFPxqar16iAicbQzxIjTZOBiRg==
+X-Received: by 2002:a05:6a00:92a8:b0:730:9424:ea3e with SMTP id d2e1a72fcca58-732617bfaadmr275238b3a.11.1739554055056;
+        Fri, 14 Feb 2025 09:27:35 -0800 (PST)
+Received: from thinkpad ([120.60.134.139])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7324273e2dbsm3492000b3a.98.2025.02.14.09.27.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 09:27:34 -0800 (PST)
+Date: Fri, 14 Feb 2025 22:57:30 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] misc: pci_endpoint_test: Remove global irq_type
+Message-ID: <20250214172730.7xzxlmrhrznxpkw5@thinkpad>
+References: <20250210075812.3900646-1-hayashi.kunihiko@socionext.com>
+ <20250210075812.3900646-5-hayashi.kunihiko@socionext.com>
+ <Z6opssGJ91MVWgRC@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIJ7r2cC/x3MPQ6AIAxA4auYzpIU1AGvYhxEqnYBQ+NfiHeXO
- H7DexmEEpNAX2VIdLJwDAW6rmDeprCSYl8MBk2HRreK7idEsRaVvw5xqnEasbPGOq+hVHuihe/
- /OIzv+wHja1l7YQAAAA==
-X-Change-ID: 20250214-exynos990-dwusb-3b1005929bd1
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Marek Szyprowski <m.szyprowski@samsung.com>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- Igor Belwon <igor.belwon@mentallysanemainliners.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739553946; l=1223;
- i=igor.belwon@mentallysanemainliners.org; s=20241206;
- h=from:subject:message-id; bh=5X9po93482aFLpIrgTxkENTzyprq/G/AXnwXeW493MQ=;
- b=6ZfuY4P71D86TEPrjhPZjctQE9+ZypUwPq2J3pR9ULWDbxiK2N+X4bZ+QTsdcnN8fRhpMtiuS
- VNy1XxJ654VCw2hwiOUwmEWUJMEVf8Mv/oFb8QAjlzIa7YoHhWgLZ//
-X-Developer-Key: i=igor.belwon@mentallysanemainliners.org; a=ed25519;
- pk=qKAuSTWKTaGQM0vwBxV0p6hPKMN4vh0CwZ+bozrG5lY=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6opssGJ91MVWgRC@ryzen>
 
-Hi all!
+On Mon, Feb 10, 2025 at 05:30:42PM +0100, Niklas Cassel wrote:
+> On Mon, Feb 10, 2025 at 04:58:11PM +0900, Kunihiko Hayashi wrote:
+> > The global variable "irq_type" preserves the current value of
+> > ioctl(GET_IRQTYPE), however, it's enough to use test->irq_type.
+> > Remove the variable, and replace with test->irq_type.
+> 
+> I think the commit message is missing the biggest point.
+> 
+> ioctl(SET_IRQTYPE) sets test->irq_type.
+> PCITEST_WRITE/PCITEST_READ/PCITEST_COPY all use test->irq_type when
+> writing the PCI_ENDPOINT_TEST_IRQ_TYPE register in test_reg_bar.
+> 
+> The endpoint function driver (pci-epf-test) will look at
+> PCI_ENDPOINT_TEST_IRQ_TYPE register in test_reg_bar when determining
+> which type of IRQ it should raise.
+> 
+> This means that the kernel module parameter is basically useless,
+> since it is unused if anyone has called ioctl(SET_IRQTYPE).
+> 
+> Both the old pcitest.sh and the new pci_endpoint_test kselftest call
+> ioctl(SET_IRQTYPE), so in practice the irq_type kernel module parameter
+> is dead code.
+> 
 
-This patchset adds support for the USB 2.0 PHY of the Exynos990 SoC.
-This SoC has a combo PHY that supports highspeed, superspeed USB and
-DisplayPort, however due to my inability to test the superspeed part of
-the combo phy (device always enumerated as high-speed, even on the
-vendor kernels/bootloaders) only the highspeed part is brought up.
++1
 
-These changes have been tested and confirmed working (with the USB_ETH
-gadget and telnet/ssh in a ramdisk) on a device from the hubble family
-(x1s) and also a device from the canvas family (c1s).
+> 
+> > 
+> > The ioctl(GET_IRQTYPE) returns an error if test->irq_type has
+> > IRQ_TYPE_UNDEFINED.
+> > 
+> > Suggested-by: Niklas Cassel <cassel@kernel.org>
+> > Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > ---
+> >  drivers/misc/pci_endpoint_test.c | 13 ++++---------
+> >  1 file changed, 4 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> > index 6a0972e7674f..8d98cd18634d 100644
+> > --- a/drivers/misc/pci_endpoint_test.c
+> > +++ b/drivers/misc/pci_endpoint_test.c
+> > @@ -100,10 +100,6 @@ static bool no_msi;
+> >  module_param(no_msi, bool, 0444);
+> >  MODULE_PARM_DESC(no_msi, "Disable MSI interrupt in pci_endpoint_test");
+> 
+> Considering that you are removing the irq_type kernel module parameter,
+> it doesn't make sense to keep the no_msi kernel module parameter IMO.
+> 
+> The exact same argument for why we are removing irq_type, can be made for
+> no_msi.
+> 
 
-Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
----
-Igor Belwon (2):
-      dt-bindings: phy: samsung,usb3-drd-phy: Add exynos990 compatible
-      phy: exynos5-usbdrd: Add support for the Exynos990 usbdrd phy
+Right.
 
- .../bindings/phy/samsung,usb3-drd-phy.yaml         |  2 ++
- drivers/phy/samsung/phy-exynos5-usbdrd.c           | 32 ++++++++++++++++++++++
- include/linux/soc/samsung/exynos-regs-pmu.h        |  3 ++
- 3 files changed, 37 insertions(+)
----
-base-commit: 5cbcf2652f4cd84eac21f5e88fe2a0baecc601fb
-change-id: 20250214-exynos990-dwusb-3b1005929bd1
+- Mani
 
-Best regards,
 -- 
-Igor Belwon <igor.belwon@mentallysanemainliners.org>
-
+மணிவண்ணன் சதாசிவம்
