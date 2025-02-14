@@ -1,69 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB78C22D78E;
-	Fri, 14 Feb 2025 09:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1D922D793;
+	Fri, 14 Feb 2025 09:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739524120; cv=none; b=GnGYDrd1f73raz/Qdcg91SgoXnrkBUE4gTBgEBBlF0qvF8ZEcMYzUPk5ZGtXCoyOpfNfcTg5NCvGe0jQBPObPGJYd5G4le5JLzFNJ+0BRTIzIRuY9TnNlznRIehnmviHlhJE9CAlrlG6CJpT6TH+LF/6f+BfvAsPvdO5usV1Zyg=
+	t=1739524134; cv=none; b=cxuWRLr4lbhrle0yhGMCcQBL/2h3q56uxteksCprs/V4otcITKc089U5b8bsVv92l7EU/243MQ8F7p1JEZm7GhX9pM6bYdmf+p2+ooKa0xd3IV7p6dpBeNByJP1H3Ib/r6sXvKFDWXM6Zg4Alx7dItP1TkWxExEFMhXN6Hyv/50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739524120; c=relaxed/simple;
-	bh=BUMwJBFmmCgIajK9QzBHIVRRQQs+ucHortjyYy4kOlA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CYZcCjSBOpTH+Tlfws089Aj064ss1OaTgy2RqrkOC1N/UayGTujVLWoLqLgS4lj4gMfs7zPbEv1txlQMoMjebiuj7SUn799olTmvxL01Bo9Y1gqjMhVb+vKoIMkGDD7vV2qEZNqeIialyEA8bjzWyMkBEpYZFJh/LZGEzIGXbUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lW5Sqw8u; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1739524134; c=relaxed/simple;
+	bh=Eo5DuTvQ0qKs2Jp3vi/N35mfegrhtFBJq5aOGSjyD2I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sPAB2g4kCcJcEZLq82ivO9y4pXCoJmT/QANp9ZrCkfxs5wZBAQ6aB+V8jXd8fYfA4s4rkq1eT2mYPXj55vKx5eoNREzeQ32NotvwQ3FZf2ghUm8nMzoAeVAStXW8wpKIh2yxJybOM/IMlwprl6lOcjE846x1TykOv06ARvzDTnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZE+Z5v5O; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lW5Sqw8u"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZE+Z5v5O"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739524118; x=1771060118;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BUMwJBFmmCgIajK9QzBHIVRRQQs+ucHortjyYy4kOlA=;
-  b=lW5Sqw8u3VYG3ORmeDG7C/rInQ3sFMmhMj2CkmtMesEwjnjIKKNjWxEv
-   r0jOKUwihzreKPIBU7obTHvwPxONni2GISh0oV/iTCNk+nFXGOaKYA0na
-   5zvUyOOF35osxUCytmSSov9BSoPP38Hb6+1d4UhuMf/EXk2fvkmUvFhrH
-   BH/addoc/zanekB1a57rS10bo7im53siD3jMBEij0iJSJ2LsNG845syul
-   VMDwn29W3w9/3GHvqgOBnnjVnzAQA5RP0NeonIWUZakAU5OyLhNL4v/tb
-   5DOhoxL5opBOO/Z6rZmiodWWXoMOpkH3n1d4TO22NayqnK86C6u7JycM7
+  t=1739524133; x=1771060133;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Eo5DuTvQ0qKs2Jp3vi/N35mfegrhtFBJq5aOGSjyD2I=;
+  b=ZE+Z5v5O6jYf5J3H/abx0p6pnhQoVSHc3wxN9M/D4Mmn0oUp5tzLLEuC
+   Mz7NfGvnhMedgKy7xY5l1HZ+ZYdQ/9k9hKG8d0j9jS/GJ8QRYNeaxpaaR
+   ViqX3xUxxQyN6RP1e9npinRq+vTIRuFV9IPfd1/HdBVagdTXKOXp0DRRy
+   ooos4cQyCqM3rJApCl9WQGh+w/I8yB9vUcrp9ToyP29i8ODglvWt+gTqn
+   N9ZsCxBazXJsvzHIeHYUwfC2E8ydA22ci8qjtDGV9BXw4Qq3004yKZkZX
+   kn3xRacPSL3MXYY6oKfXbo9Pz51MpdgbgfCXi+Rt95baYJN7IKgyWQ3+f
    Q==;
-X-CSE-ConnectionGUID: YZnCUAjESD+tX50x9hC0nA==
-X-CSE-MsgGUID: LftW7VUFSXWRWhluL5dCrA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51694826"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="51694826"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 01:08:37 -0800
-X-CSE-ConnectionGUID: xEU9KErcT6WzBy7ZE4IcHA==
-X-CSE-MsgGUID: DBiIPmSkQxajPbyzEHgpIA==
+X-CSE-ConnectionGUID: 92jHz167SmWlbQZ06OMJUg==
+X-CSE-MsgGUID: bzCd5kikQvebxo4kg+FalQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="65617699"
+X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
+   d="scan'208";a="65617699"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 01:08:52 -0800
+X-CSE-ConnectionGUID: ob2CyOKURkuqgQey6bTE+A==
+X-CSE-MsgGUID: l9XtpCizQ6iCBPA9lcT5XA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="114303155"
-Received: from inlubt0246.iind.intel.com ([10.191.24.87])
-  by orviesa008.jf.intel.com with ESMTP; 14 Feb 2025 01:08:19 -0800
-From: subramanian.mohan@intel.com
-To: linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	andriy.shevchenko@linux.intel.com,
-	giometti@enneenne.com,
-	tglx@linutronix.de,
-	corbet@lwn.net
-Cc: eddie.dong@intel.com,
-	christopher.s.hall@intel.com,
-	pandith.n@intel.com,
-	thejesh.reddy.t.r@intel.com,
-	david.zage@intel.com,
-	srinivasan.chinnadurai@intel.com,
-	subramanian.mohan@intel.com
-Subject: [PATCH v14 4/4] ABI: pps: Add ABI documentation for Intel TIO
-Date: Fri, 14 Feb 2025 14:37:55 +0530
-Message-Id: <20250214090755.37450-5-subramanian.mohan@intel.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20250214090755.37450-1-subramanian.mohan@intel.com>
-References: <20250214090755.37450-1-subramanian.mohan@intel.com>
+X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
+   d="scan'208";a="113145423"
+Received: from irvmail002.ir.intel.com ([10.43.11.120])
+  by orviesa009.jf.intel.com with ESMTP; 14 Feb 2025 01:08:49 -0800
+Received: from lincoln.igk.intel.com (lincoln.igk.intel.com [10.102.21.235])
+	by irvmail002.ir.intel.com (Postfix) with ESMTP id 6789F37B80;
+	Fri, 14 Feb 2025 09:08:47 +0000 (GMT)
+From: Larysa Zaremba <larysa.zaremba@intel.com>
+To: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	intel-wired-lan@lists.osuosl.org
+Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Mateusz Pacuszka <mateuszx.pacuszka@intel.com>
+Subject: [PATCH iwl-next v4 0/6] ice: LLDP support for VFs
+Date: Fri, 14 Feb 2025 09:50:34 +0100
+Message-ID: <20250214085215.2846063-1-larysa.zaremba@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,42 +71,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Subramanian Mohan <subramanian.mohan@intel.com>
+Allow to:
+* receive LLDP packets on a VF in legacy mode
+* receive LLDP packets on a VF in switchdev mode
+* transmit LLDP from a VF in switchdev mode
 
-Document sysfs interface for Intel Timed I/O PPS driver.
+Many VSIs can receive LLDP packets, but only one VSI
+per port can transmit LLDP, therefore LLDP TX from VF
+requires adding an egress drop rule to the PF, this is
+implemented in these series too.
 
-Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-Signed-off-by: Subramanian Mohan <subramanian.mohan@intel.com>
----
- Documentation/ABI/testing/sysfs-pps-gen-tio | 6 ++++++
- MAINTAINERS                                 | 1 +
- 2 files changed, 7 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-pps-gen-tio
+There are no patches that explicitly address LLDP RX in
+switchdev mode, because it just works after adding support
+in legacy mode.
 
-diff --git a/Documentation/ABI/testing/sysfs-pps-gen-tio b/Documentation/ABI/testing/sysfs-pps-gen-tio
-new file mode 100644
-index 000000000000..3c34ff17a335
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-pps-gen-tio
-@@ -0,0 +1,6 @@
-+What:		/sys/class/pps-gen/pps-genx/enable
-+Date:		April 2025
-+KernelVersion:	6.15
-+Contact:	Subramanian Mohan<subramanian.mohan@intel.com>
-+Description:
-+		Enable or disable PPS TIO generator output.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 25c86f47353d..d4280facbe51 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18916,6 +18916,7 @@ S:	Maintained
- W:	http://wiki.enneenne.com/index.php/LinuxPPS_support
- F:	Documentation/ABI/testing/sysfs-pps
- F:	Documentation/ABI/testing/sysfs-pps-gen
-+F:	Documentation/ABI/testing/sysfs-pps-gen-tio
- F:	Documentation/devicetree/bindings/pps/pps-gpio.yaml
- F:	Documentation/driver-api/pps.rst
- F:	drivers/pps/
+Usage
+
+To receive LLDP packets on VF in legacy mode:
+On host:
+ip link set dev <pf_ifname> vf <n> trust on
+On VM:
+service lldpd restart
+
+To receive LLDP packets on VF in switchdev mode (host config):
+tc qdisc add dev <pf_ifname> clsact
+tc filter add dev <pf_ifname> protocol lldp ingress \\
+   flower skip_sw action mirred egress mirror dev <repr_ifname>
+
+To transmit LLDP packets from VF (host config):
+tc qdisc add dev <pf_ifname> clsact
+tc qdisc add dev <repr_ifname> clsact
+tc filter add dev <pf_ifname> egress protocol lldp \\
+   flower skip_sw action drop
+tc filter add dev <repr_ifname> ingress protocol lldp \\
+   flower skip_sw action mirred egress redirect dev <pf_ifname>
+
+For all abovementioned functionalities to work, private flag
+fw-lldp-agent must be off.
+
+v3->v4:
+* add "Return: " to the touched kernel-doc
+* reunite return type and declaration for ice_add_cls_flower()
+  and ice_del_cls_flower()
+
+v2->v3:
+* fix sparse warning caused by part of .sw_act members being initialized
+  inside the curly braces and others being initialized directly
+* reorder members inside the rinfo initializer according to struct
+  definition in ice_drop_vf_tx_lldp(), while fixing the warning above
+
+v1->v2:
+* get rid of sysfs control
+* require switchdev for VF LLDP Tx
+* in legacy mode, for VF LLDP Rx rely on configured MAC addresses
+
+Larysa Zaremba (4):
+  ice: do not add LLDP-specific filter if not necessary
+  ice: remove headers argument from ice_tc_count_lkups
+  ice: support egress drop rules on PF
+  ice: enable LLDP TX for VFs through tc
+
+Mateusz Pacuszka (2):
+  ice: fix check for existing switch rule
+  ice: receive LLDP on trusted VFs
+
+ drivers/net/ethernet/intel/ice/ice.h          |   1 +
+ drivers/net/ethernet/intel/ice/ice_common.c   |  14 +-
+ drivers/net/ethernet/intel/ice/ice_common.h   |   3 +-
+ drivers/net/ethernet/intel/ice/ice_dcb_lib.c  |   2 +-
+ drivers/net/ethernet/intel/ice/ice_eswitch.c  |   6 +
+ drivers/net/ethernet/intel/ice/ice_ethtool.c  |   2 +-
+ drivers/net/ethernet/intel/ice/ice_lib.c      |  71 ++++-
+ drivers/net/ethernet/intel/ice/ice_lib.h      |   3 +-
+ drivers/net/ethernet/intel/ice/ice_main.c     |  63 ++++-
+ drivers/net/ethernet/intel/ice/ice_repr.c     |  10 +-
+ drivers/net/ethernet/intel/ice/ice_sriov.c    |   4 +
+ drivers/net/ethernet/intel/ice/ice_switch.c   |   4 +-
+ drivers/net/ethernet/intel/ice/ice_tc_lib.c   | 258 +++++++++++++++---
+ drivers/net/ethernet/intel/ice/ice_tc_lib.h   |  11 +-
+ drivers/net/ethernet/intel/ice/ice_txrx.c     |  17 +-
+ drivers/net/ethernet/intel/ice/ice_vf_lib.c   |  26 ++
+ drivers/net/ethernet/intel/ice/ice_vf_lib.h   |  12 +
+ drivers/net/ethernet/intel/ice/ice_virtchnl.c |  53 +++-
+ 18 files changed, 480 insertions(+), 80 deletions(-)
+
 -- 
-2.35.3
+2.43.0
 
