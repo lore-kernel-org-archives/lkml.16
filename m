@@ -1,133 +1,169 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DC8230985
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 12:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337001EA91
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 12:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739537636; cv=none; b=dgidpSZObBqsayLDlAYooe1OIb8symXnDvvP1b+qmx0kiXpY15s5WzQBlbJsysWhrFiJ4qM9AQyaWGclCewsJdB6dLFaJtUiWfwdKiPNWsdtFuq8JYdoigFkQIpsujSRBTEZzZ+6hD/LJD12x3ev/NUHQ1t/c8J6XckOOKSDHLE=
+	t=1739537663; cv=none; b=oCSmezAinTTinBk2uRKzsYZMJoK3icoRInyx+zUvTzX0wQthezxjNoAzEDRVrjul7M6aGKRHmdkUQIiWkhJzXwBJjqMLYVfmHT69c+ugAVFX8BsbgA7SmiD2XJIn8sbKYIxJQgfbSwxhTmX0Nsf2CDCyNFi0Y2m2KWCnPZxli28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739537636; c=relaxed/simple;
-	bh=xWW33JH6vP/O0Pr3K9QTselo2p3m+l18GsNLSTsnBCc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c+b8FtuPmXS8GiNEc7VU4GxAcbxkeXD5h8O8QQw5JgLiNZFEQsqVZpCEgClK15jXtQ7NNqZRRW+YzTEsWC/I0dKJrhPUrVr+Y4uGdBCEEZqb8RjCvFKFA1sIbkSfUanMcB85WxBrF98QN799g/IrHnrMyu5fKIJY0R+OrT9spSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XUX7IPjM; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1739537663; c=relaxed/simple;
+	bh=EWzn8T8wkAbVAiA4txJzP3ETH8av+74Rp35RKVO/xwE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qNB1WhFmTn4l/dt6EUzUh6rLPm/+2p+7V6KLwSvHYKgpWznKm+1NG6g0/0v33AEK5OngBokYuOeYp4pQczFuoNVTydyGiTKfxt1BQlDNOK8uFh424iSfDW/1fWyEa28q+cgXL8+0weIHAIceLo7EnGIIxWxDtJEQwl/vU/vOk34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FaAzXhG6; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XUX7IPjM"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EB7VWw013089;
-	Fri, 14 Feb 2025 12:53:13 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FaAzXhG6"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51EAPt9H000666;
+	Fri, 14 Feb 2025 12:54:12 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=K/vHlx
-	tp8u2AsFXYa5DpBNIqpU2zSvYFe8jdl1RRDL4=; b=XUX7IPjM1KRdHKzc4SqX70
-	fE+vn3LRBcAf+Qj8YRC98Tnkwa54F96gwKheFYWxDEYaaS4yU/Y4msAdjCbL5oRa
-	+OhkoVWFwnhcI+0n9YcFvyT1Ju8qcieeWG/4ccGOw45T0JYtaw9S/alsgb2CzQhR
-	XK/LTc89wxJgs3t5i4BP1Zd33CGw0niVhjcmLdJHdH9gI+1gDxuzspbAf5EPxf9T
-	C19MaIivT3oOwVMFDoFdIx2RduJKN8COoJZJznM50NczUv3e/vGVhBr1SSLofWfA
-	U8YUmpCRfuUzqCrDvBYI1iV6C4IXg2JC6+28jzlH/h/WWMxa2EawmLJN/18ns1pQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44svp0ambn-1
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=FjT8dSaAT+lOi/YMEolFGYFqGJzx8VOdPbUby3MGc
+	6M=; b=FaAzXhG6jighwx/li5GEt566XZkWqYU+oFNuTzHc+Wocu9L2NFfIReCES
+	nm8A6EfvWFz2GUtWlXL15i3A16w2MdXljcaBliVlSDYChMYUAhe+Bhho44tN0t/4
+	+d9n3AJgDoPr7rGYSnTX5VPbf7mXJA8t6cV+ymfGOXFZTyjEWel5g4PODMZ3MMEQ
+	nhgROOwgGJIUxl3kpW7a5DpTJI9+iUgRZYLeRQmap+2bSPSUEI70kFobRt4nnBEw
+	dRD67fyqZu4rUnFkapGf+xrCI785ZZuGfnrUhaGlgAdFwH5/99K5PMuUVXGpZzaS
+	u8Snu4Ey+sicoCGQ8fR4OShgsf4fw==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ssvab9b2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 12:53:13 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51ECr6YH003082;
-	Fri, 14 Feb 2025 12:53:12 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44svp0ambm-1
+	Fri, 14 Feb 2025 12:54:12 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51E8vDDF028667;
+	Fri, 14 Feb 2025 12:54:11 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44pma23732-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 12:53:12 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51EAX7pc028244;
-	Fri, 14 Feb 2025 12:53:12 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44phyyurww-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Feb 2025 12:53:12 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51ECrAH351970326
+	Fri, 14 Feb 2025 12:54:11 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51ECs7HW42926508
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Feb 2025 12:53:10 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 184CA20043;
-	Fri, 14 Feb 2025 12:53:10 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A6BA720040;
-	Fri, 14 Feb 2025 12:53:05 +0000 (GMT)
-Received: from li-c439904c-24ed-11b2-a85c-b284a6847472.ibm.com.com (unknown [9.43.125.185])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 14 Feb 2025 12:53:05 +0000 (GMT)
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
-        Naveen N Rao <naveen@kernel.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Erhard Furtner <erhard_f@mailbox.org>
-Subject: Re: [PATCH v2] powerpc/code-patching: Fix KASAN hit by not flagging text patching area as VM_ALLOC
-Date: Fri, 14 Feb 2025 18:23:03 +0530
-Message-ID: <173953661683.199877.9730863250927440226.b4-ty@linux.ibm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <06621423da339b374f48c0886e3a5db18e896be8.1739342693.git.christophe.leroy@csgroup.eu>
-References: <06621423da339b374f48c0886e3a5db18e896be8.1739342693.git.christophe.leroy@csgroup.eu>
+	Fri, 14 Feb 2025 12:54:08 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D812920043;
+	Fri, 14 Feb 2025 12:54:07 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E647C20040;
+	Fri, 14 Feb 2025 12:54:04 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.78.252])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 14 Feb 2025 12:54:04 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: akpm@linux-foundation.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>,
+        Alexander Graf <graf@amazon.com>, Baoquan he <bhe@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] kexec: Fix kexec_locate_mem_hole() for missing CONFIG_KEXEC_HANDOVER
+Date: Fri, 14 Feb 2025 18:24:02 +0530
+Message-ID: <20250214125402.90709-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: RRd7hmEcIPgC1HcBVjzk2ByDOy6x_H5c
-X-Proofpoint-GUID: OUzYFy5Itgqmw9uNZPi0y7RtKoOzsu1V
+X-Proofpoint-GUID: ERu89rXI1toBcblDuM23P6X9jJATPNiB
+X-Proofpoint-ORIG-GUID: ERu89rXI1toBcblDuM23P6X9jJATPNiB
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-14_05,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 mlxscore=0 malwarescore=0 phishscore=0 spamscore=0
- adultscore=0 mlxlogscore=538 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502140092
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 mlxscore=0 spamscore=0 bulkscore=0 suspectscore=0
+ malwarescore=0 lowpriorityscore=0 phishscore=0 clxscore=1011
+ impostorscore=0 mlxlogscore=777 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502140092
 
-On Wed, 12 Feb 2025 07:46:28 +0100, Christophe Leroy wrote:
-> Erhard reported the following KASAN hit while booting his PowerMac G4
-> with a KASAN-enabled kernel 6.13-rc6:
-> 
->   BUG: KASAN: vmalloc-out-of-bounds in copy_to_kernel_nofault+0xd8/0x1c8
->   Write of size 8 at addr f1000000 by task chronyd/1293
-> 
->   CPU: 0 UID: 123 PID: 1293 Comm: chronyd Tainted: G        W          6.13.0-rc6-PMacG4 #2
->   Tainted: [W]=WARN
->   Hardware name: PowerMac3,6 7455 0x80010303 PowerMac
->   Call Trace:
->   [c2437590] [c1631a84] dump_stack_lvl+0x70/0x8c (unreliable)
->   [c24375b0] [c0504998] print_report+0xdc/0x504
->   [c2437610] [c050475c] kasan_report+0xf8/0x108
->   [c2437690] [c0505a3c] kasan_check_range+0x24/0x18c
->   [c24376a0] [c03fb5e4] copy_to_kernel_nofault+0xd8/0x1c8
->   [c24376c0] [c004c014] patch_instructions+0x15c/0x16c
->   [c2437710] [c00731a8] bpf_arch_text_copy+0x60/0x7c
->   [c2437730] [c0281168] bpf_jit_binary_pack_finalize+0x50/0xac
->   [c2437750] [c0073cf4] bpf_int_jit_compile+0xb30/0xdec
->   [c2437880] [c0280394] bpf_prog_select_runtime+0x15c/0x478
->   [c24378d0] [c1263428] bpf_prepare_filter+0xbf8/0xc14
->   [c2437990] [c12677ec] bpf_prog_create_from_user+0x258/0x2b4
->   [c24379d0] [c027111c] do_seccomp+0x3dc/0x1890
->   [c2437ac0] [c001d8e0] system_call_exception+0x2dc/0x420
->   [c2437f30] [c00281ac] ret_from_syscall+0x0/0x2c
->   --- interrupt: c00 at 0x5a1274
->   NIP:  005a1274 LR: 006a3b3c CTR: 005296c8
->   REGS: c2437f40 TRAP: 0c00   Tainted: G        W           (6.13.0-rc6-PMacG4)
->   MSR:  0200f932 <VEC,EE,PR,FP,ME,IR,DR,RI>  CR: 24004422  XER: 00000000
-> 
-> [...]
+While adding KHO support, commit 7d128945e003 ("kexec: add KHO support
+to kexec file loads") returns early from kexec_locate_mem_hole() if
+CONFIG_KEXEC_HANDOVER is not defined.
 
-Applied to powerpc/fixes.
+Due to this, kexec_locate_mem_hole() does not locate a hole for the
+kexec segment, and kbuf.mem holds 0x0. This leads to a kexec_file_load
+syscall failure in sanity_check_segment_list(). This impacts both
+kexec and kdump kernels.
 
-[1/1] powerpc/code-patching: Fix KASAN hit by not flagging text patching area as VM_ALLOC
-      https://git.kernel.org/powerpc/c/d262a192d38e527faa5984629aabda2e0d1c4f54
+Without this patch included:
+----------------------------
+kexec --initrd=initrd.img ./vmlinuz --append="`cat /proc/cmdline`" -lsd
+Try gzip decompression.
+Try LZMA decompression.
+[   59.745154] kexec_file: kernel: 000000003473b9a0 kernel_size: 0x2cdacf0
+[   59.753713] ima: kexec measurement buffer for the loaded kernel at 0x0.
+[   59.753759] kexec_elf: Loaded the kernel at 0x0
+[   59.753777] kexec_elf: Loaded purgatory at 0x0
+[   59.753783] kexec_elf: Loaded initrd at 0x0
+[   59.758657] kexec_elf: Loaded device tree at 0x0
+syscall kexec_file_load not available.
 
-Thanks
+With this patch included:
+-------------------------
+kexec --initrd=initrd.img ./vmlinuz --append="`cat /proc/cmdline`" -lsd
+Try gzip decompression.
+Try LZMA decompression.
+[  112.091308] kexec_file: kernel: 000000009eb0432d kernel_size: 0x2cdacf0
+[  112.099881] ima: kexec measurement buffer for the loaded kernel at 0x3fd9c0000.
+[  112.099935] kexec_elf: Loaded the kernel at 0x2f60000
+[  112.099953] kexec_elf: Loaded purgatory at 0x3fd9b0000
+[  112.099969] kexec_elf: Loaded initrd at 0x5eb0000
+[  112.104993] kexec_elf: Loaded device tree at 0x3fd650000
+[  113.484422] kexec_file: nr_segments = 5
+[  113.484452] kexec_file: segment[0]: buf=0x00000000b6970fc9 bufsz=0x82 mem=0x3fd9c0000 memsz=0x10000
+[  113.484473] kexec_file: segment[1]: buf=0x00000000cabe3fe7 bufsz=0x2cc9ca4 mem=0x2f60000 memsz=0x2f50000
+[  113.489144] kexec_file: segment[2]: buf=0x00000000deec4aaf bufsz=0x310 mem=0x3fd9b0000 memsz=0x10000
+[  113.489195] kexec_file: segment[3]: buf=0x0000000081960708 bufsz=0x581a9c6 mem=0x5eb0000 memsz=0x5820000
+[  113.498768] kexec_file: segment[4]: buf=0x00000000c1be9ac7 bufsz=0x6632 mem=0x3fd650000 memsz=0x10000
+[  113.498819] kexec_file: kexec_file_load: type:0, start:0x3fd9b0000 head:0x5f1c0002 flags:0x8
+
+To fix this, return 1 from kexec_locate_mem_hole() in kexec_internal.h.
+This ensures that kexec_locate_mem_hole() locates a memory hole if
+CONFIG_KEXEC_HANDOVER is not defined.
+
+Note: The kexec tool printing "kexec_file_load not available" does not
+necessarily mean that the kernel lacks support for the kexec_file_load
+syscall. Instead, it occurs because multiple errors are handled under
+the same condition.
+
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>
+Closes: https://lore.kernel.org/all/8e73069b-5987-4a08-b13d-13fe691092ad@linux.vnet.ibm.com/
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: Alexander Graf <graf@amazon.com>
+Cc: Baoquan he <bhe@redhat.com>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Cc: kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+
+Rebased on top of next-20250213
+
+---
+ kernel/kexec_internal.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+index c535dbd3b5bd..66ce6872fda1 100644
+--- a/kernel/kexec_internal.h
++++ b/kernel/kexec_internal.h
+@@ -50,7 +50,7 @@ int kho_fill_kimage(struct kimage *image);
+ static inline int kho_locate_mem_hole(struct kexec_buf *kbuf,
+ 				      int (*func)(struct resource *, void *))
+ {
+-	return 0;
++	return 1;
+ }
+ 
+ static inline int kho_fill_kimage(struct kimage *image) { return 0; }
+-- 
+2.48.1
+
