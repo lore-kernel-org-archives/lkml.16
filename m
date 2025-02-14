@@ -1,307 +1,266 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB84266583
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 15:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5728E26659A;
+	Fri, 14 Feb 2025 15:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739545784; cv=none; b=guWRnARwb6DFNUqHD3/t9BRu1/veQjY8rmQ3heNQ5aYYltC8VVH4nrQziLRE5qMD4Bsy152qf+mouH7pkU59aG7XojCC7q4LLCEJWUhLYe3M1XueBgurP16ApeKPjYro50BkuviTI+PWC86BMa2kTWqG9MOGPEh/3EP/PArHBcg=
+	t=1739545825; cv=none; b=EPiEs52aQLJQwBPETT+lmLb92TlH5Mgiy2mwXw8LCvTZFjyecofaZBNxIui+IkdrWRJZUu/SNL5ZgfqS2UUhs4xks+F3iIsPoOckMtTKRLglyXM0/Ffr67CAueze5LoNo1VtUbP4ZyhcauCO7U9P+HKNDVHxnPoS9vtG/iIqJEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739545784; c=relaxed/simple;
-	bh=H60mwQfTdpJyI1H0dbAxC/qfJBS9DleIJCQJMqM2cRY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eOlbNPUBhZdaeDejoYLq2ttHZpzaW6DkasYob7JPcrZqJOHEUb+4biHfZAzt/KRv7igwilLLtRQCyeOvxE06WWX52n1oLx30GvvOmFD9WHLc+0q5p2EYGWLL6wnAEffDzkUi5hlpO3GovOE6LfmuOR7856yhWRDSdBuX2RgH9jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V/YbsMXR; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739545825; c=relaxed/simple;
+	bh=D+uHq0k343FqJFRy9KVkDXZiYD6MshK/nRMVZIrXXp0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z8QQtBAd2uZpaR3wuVq7Mp7CSQBpkUyY5iWt+WX9AFak3tnICskAHFlAfPGexhebtse0AxJMVqj54RyP1aR8a1J1A6mJ6weZbd29DBe9DEJpHRA+/pSWpl/opH4FcU7Vv0hI4F7Qm8eyIkGWArk/gyoXDGBv9aSWzdrCxwv6iWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eq4KpSyL; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/YbsMXR"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4396424d173so19320585e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:09:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739545781; x=1740150581; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2zJBQ4YpMD9soorm1behI7kialp0O7eXmIoL4a6+Dak=;
-        b=V/YbsMXRLngFfeqEsd1mQurbl5XKqYcmbgzKxkoeXOErcLzkj/4cXSF8v6sz38eaus
-         J/2Lw0dmakd7KsTuhYBlZEtZo+ehO//PE1NTStox3pFMxqe2zN1Fr3CjND8tt0zyEjd8
-         V3L4/96shQdHhZAwc/kMIKL0j6ae9QN7yrLgKs5AeRQe1kLG9byjZ9JKHmjl+Or1eNXf
-         xuIj6psq/7AN125tTuviyyPf0gCTKHZ5E3fKqxM0MbsReEd1qY+vcrzNR6Uj7WF9DQ1k
-         NDOSHyv/y17Y1Y6ylJ53Eq5uYHT7DwLrki0TRXDUSDgeMUniLAProD+9Odb/a/jfclUd
-         TreA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739545781; x=1740150581;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2zJBQ4YpMD9soorm1behI7kialp0O7eXmIoL4a6+Dak=;
-        b=ZAzaZItI2J9IsJO08UULDN57ipLSuyfiBCXYlWr8+EIxyzk4wp6QfAvqGTxCwpVRde
-         hwJ5x/5ZFx/8MUtzIdkM/+xm7B+XhyDTkF3UgUWf5FUzQXS0cngzP9q14XXsjHbY+kv5
-         EdA7mQ++dbZhWSTst85UOTFzU/GCd3UPOCAEYZnThQhT03hwlMfHqvyS77dy8Zv/+zxz
-         7LGfXYhO4OdcbiHBY2MCXI3h4GhVOcJyV06RENdSWWFALf9O89MYOaupDk42mUa/ksEI
-         c4QcE3lU/z4gGUzvkE1tbAmuQvaWBzfwaOw2LYINZ0PGsTh1eN4AjREs2bWI7i0wrZRV
-         CGvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYLiGBHcZSnha8a5sSKRfJQwdUXiuH/fkrtYbF4dYSY2IPUwnyVVrzHGiy85TRyPh4sZe4jaLrPovVMSY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0ZC7QZf5E9Oba72n6J99ACptJG6PZAQAX/JC8ro79WCgIwWDA
-	xcGsNS+W1EeUdsonb4I3Bg25kQ22RjG9ZCJADDDX/YtHuULmljH2
-X-Gm-Gg: ASbGncvDC8g7Vuv5nLY2RxEnKVtR3vW0iZahEjZCopKbDFo+zuIEIIboBxbffJLcC+0
-	PJGMANDKRHHTKL69VjeJYgWbivhZfGxOnZqrqc/nRj7cRSqTjnCinl9ty6LuCEjKNf1rBszNSln
-	PullvDfat7M2GIGPE3iOPf+EGJKY0R6BZhcy335a2CRrwZKfOJEPApXI7uReRRc4ptHFmvmWQPO
-	MegwfQz7PhL92x6ob7S/hqpf5oK63sKA7DXy/UEv313IhhnWqqB/GvPkArb17m+eAvmpWpty/Qz
-	AWX/+NhPZM9bdeWK73wLlpSq
-X-Google-Smtp-Source: AGHT+IFum9XwSDM3eHz0B6ljntzlQn+pA3NOKxdBCEjZBiROAFX1QudujE8vXpbeAXil4HYQjBINIg==
-X-Received: by 2002:a5d:47c9:0:b0:38d:d5af:29b4 with SMTP id ffacd0b85a97d-38f24526116mr10583092f8f.45.1739545780313;
-        Fri, 14 Feb 2025 07:09:40 -0800 (PST)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba533bee9dsm357447266b.173.2025.02.14.07.09.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 07:09:39 -0800 (PST)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH v2 2/2] x86/locking: Use asm_inline for {,try_}cmpxchg{64,128} emulations
-Date: Fri, 14 Feb 2025 16:07:47 +0100
-Message-ID: <20250214150929.5780-2-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20250214150929.5780-1-ubizjak@gmail.com>
-References: <20250214150929.5780-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eq4KpSyL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739545824; x=1771081824;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=D+uHq0k343FqJFRy9KVkDXZiYD6MshK/nRMVZIrXXp0=;
+  b=Eq4KpSyLTmr6CDKFavQHb0blNVwY316Z8T1WMBKnNUg5Ty2jn8La6/k1
+   LCoJe4mS/gyX+g+KkzD7cZFLw1FoG3vrS+iEn3auHmFQluxaEnM7ayzEv
+   X+OHHAY5Y91p1skPpP5PI2OVpsWZRer8QARorgmjZKx03nzvgZjGCZ7Re
+   TyPy/+VXPaM9P23M8ZQ/MhrofpAYu/yhWWimchziUTVdW7nE/NZVnVpbi
+   ugZ6NPpapoBEGrS5LsBLAOfKY8hCUIWspoKosO5PCEutWy2bfi7X5JmPq
+   V9gsw8Isx73vaZtCXJYprL954AlRz6AIYV9I/SFWPdNFblVgGC/AIFJ7g
+   A==;
+X-CSE-ConnectionGUID: 9BgsUX/dRXOoaCI7slF53Q==
+X-CSE-MsgGUID: KsHhVcguSSWuGoDzCp5rOQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="50510459"
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="50510459"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 07:10:23 -0800
+X-CSE-ConnectionGUID: 2wKz+ewVQo66/w6hC1ftIw==
+X-CSE-MsgGUID: K+awIMD6TmCr9xRtkbSDsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="118410858"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 07:10:16 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1tixKW-0000000BWep-3HVY;
+	Fri, 14 Feb 2025 17:10:12 +0200
+Date: Fri, 14 Feb 2025 17:10:12 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: mathieu.dubois-briand@bootlin.com
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 03/10] pwm: max7360: Add MAX7360 PWM support
+Message-ID: <Z69c1BQHmlbmwUYf@smile.fi.intel.com>
+References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
+ <20250214-mdb-max7360-support-v4-3-8a35c6dbb966@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250214-mdb-max7360-support-v4-3-8a35c6dbb966@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-According to [1], the usage of asm pseudo directives in the asm template
-can confuse the compiler to wrongly estimate the size of the generated
-code.  ALTERNATIVE macro expands to several asm pseudo directives,
-so its usage in {,try_}cmpxchg{64,128} causes instruction length estimate
-to fail by an order of magnitude (the specially instrumented compiler
-reports the estimated length of these asm templates to be more than 20
-instructions long). This wrong estimate further causes unoptimal inlining
-decisions, unoptimal instruction scheduling and unoptimal code block
-alignments for functions that use these locking primitives.
+On Fri, Feb 14, 2025 at 12:49:53PM +0100, mathieu.dubois-briand@bootlin.com wrote:
+> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> 
+> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
+> 8 independent PWM outputs.
 
-Use asm_inline [2], a feature that makes GCC pretend some inline
-assembler code is tiny (while it would think it is huge), instead of
-just asm. For code size estimation, the size of the asm is then taken as
-the minimum size of one instruction, ignoring how many instructions
-compiler thinks it is.
+...
 
-The effect of this patch on x86_64 target is minor, since 128-bit
-functions are rarely used on this target. The code size of the resulting
-defconfig object file stays the same:
++ bits.h
 
-   text    data     bss     dec     hex filename
-27456612        4638523  814148 32909283        1f627e3 vmlinux-old.o
-27456612        4638523  814148 32909283        1f627e3 vmlinux-new.o
++ dev_printk.h
 
-but the patch has minor effect on code layout due to the different
-scheduling decisions in functions containing changed macros.
+> +#include <linux/err.h>
 
-There is no effect on x64_32 target, the code size of the resulting
-defconfig object file and the code layout stays the same:
 
-   text    data     bss     dec     hex filename
-18883870        2679275 1707916 23271061        1631695 vmlinux-old.o
-18883870        2679275 1707916 23271061        1631695 vmlinux-new.o
+> +#include <linux/math.h>
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Size-of-an-asm.html
-[2] https://gcc.gnu.org/pipermail/gcc-patches/2018-December/512349.html
+Other way around, id est you need math64.h (see below).
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dennis Zhou <dennis@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
----
-v2: Expand commit message with the explanation of asm_inline
-    the explanation of benefits of the patch and with some code
-    size measurements.
----
- arch/x86/include/asm/cmpxchg_32.h | 32 +++++++------
- arch/x86/include/asm/percpu.h     | 77 +++++++++++++++----------------
- 2 files changed, 55 insertions(+), 54 deletions(-)
+> +#include <linux/mfd/max7360.h>
 
-diff --git a/arch/x86/include/asm/cmpxchg_32.h b/arch/x86/include/asm/cmpxchg_32.h
-index fd1282a783dd..95b5f990ca88 100644
---- a/arch/x86/include/asm/cmpxchg_32.h
-+++ b/arch/x86/include/asm/cmpxchg_32.h
-@@ -91,12 +91,14 @@ static __always_inline bool __try_cmpxchg64_local(volatile u64 *ptr, u64 *oldp,
- 	union __u64_halves o = { .full = (_old), },			\
- 			   n = { .full = (_new), };			\
- 									\
--	asm volatile(ALTERNATIVE(_lock_loc				\
--				 "call cmpxchg8b_emu",			\
--				 _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
--		     : ALT_OUTPUT_SP("+a" (o.low), "+d" (o.high))	\
--		     : "b" (n.low), "c" (n.high), [ptr] "S" (_ptr)	\
--		     : "memory");					\
-+	asm_inline volatile(						\
-+		ALTERNATIVE(_lock_loc					\
-+			    "call cmpxchg8b_emu",			\
-+			    _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8)	\
-+		: ALT_OUTPUT_SP("+a" (o.low), "+d" (o.high))		\
-+		: "b" (n.low), "c" (n.high),				\
-+		  [ptr] "S" (_ptr)					\
-+		: "memory");						\
- 									\
- 	o.full;								\
- })
-@@ -119,14 +121,16 @@ static __always_inline u64 arch_cmpxchg64_local(volatile u64 *ptr, u64 old, u64
- 			   n = { .full = (_new), };			\
- 	bool ret;							\
- 									\
--	asm volatile(ALTERNATIVE(_lock_loc				\
--				 "call cmpxchg8b_emu",			\
--				 _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
--		     CC_SET(e)						\
--		     : ALT_OUTPUT_SP(CC_OUT(e) (ret),			\
--				     "+a" (o.low), "+d" (o.high))	\
--		     : "b" (n.low), "c" (n.high), [ptr] "S" (_ptr)	\
--		     : "memory");					\
-+	asm_inline volatile(						\
-+		ALTERNATIVE(_lock_loc					\
-+			    "call cmpxchg8b_emu",			\
-+			    _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
-+		CC_SET(e)						\
-+		: ALT_OUTPUT_SP(CC_OUT(e) (ret),			\
-+				"+a" (o.low), "+d" (o.high))		\
-+		: "b" (n.low), "c" (n.high),				\
-+		  [ptr] "S" (_ptr)					\
-+		: "memory");						\
- 									\
- 	if (unlikely(!ret))						\
- 		*(_oldp) = o.full;					\
-diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index 0ab991fba7de..08f5f61690b7 100644
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -348,15 +348,14 @@ do {									\
- 	old__.var = _oval;						\
- 	new__.var = _nval;						\
- 									\
--	asm qual (ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
--			      "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
--		  : ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
--				  "+a" (old__.low),			\
--				  "+d" (old__.high))			\
--		  : "b" (new__.low),					\
--		    "c" (new__.high),					\
--		    "S" (&(_var))					\
--		  : "memory");						\
-+	asm_inline qual (						\
-+		ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
-+			    "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
-+		: ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
-+				"+a" (old__.low), "+d" (old__.high))	\
-+		: "b" (new__.low), "c" (new__.high),			\
-+		  "S" (&(_var))						\
-+		: "memory");						\
- 									\
- 	old__.var;							\
- })
-@@ -378,17 +377,16 @@ do {									\
- 	old__.var = *_oval;						\
- 	new__.var = _nval;						\
- 									\
--	asm qual (ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
--			      "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
--		  CC_SET(z)						\
--		  : ALT_OUTPUT_SP(CC_OUT(z) (success),			\
--				  [var] "+m" (__my_cpu_var(_var)),	\
--				  "+a" (old__.low),			\
--				  "+d" (old__.high))			\
--		  : "b" (new__.low),					\
--		    "c" (new__.high),					\
--		    "S" (&(_var))					\
--		  : "memory");						\
-+	asm_inline qual (						\
-+		ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
-+			    "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
-+		CC_SET(z)						\
-+		: ALT_OUTPUT_SP(CC_OUT(z) (success),			\
-+				[var] "+m" (__my_cpu_var(_var)),	\
-+				"+a" (old__.low), "+d" (old__.high))	\
-+		: "b" (new__.low), "c" (new__.high),			\
-+		  "S" (&(_var))						\
-+		: "memory");						\
- 	if (unlikely(!success))						\
- 		*_oval = old__.var;					\
- 									\
-@@ -419,15 +417,14 @@ do {									\
- 	old__.var = _oval;						\
- 	new__.var = _nval;						\
- 									\
--	asm qual (ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
--			      "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
--		  : ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
--				  "+a" (old__.low),			\
--				  "+d" (old__.high))			\
--		  : "b" (new__.low),					\
--		    "c" (new__.high),					\
--		    "S" (&(_var))					\
--		  : "memory");						\
-+	asm_inline qual (						\
-+		ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
-+			    "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
-+		: ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
-+				"+a" (old__.low), "+d" (old__.high))	\
-+		: "b" (new__.low), "c" (new__.high),			\
-+		  "S" (&(_var))						\
-+		: "memory");						\
- 									\
- 	old__.var;							\
- })
-@@ -449,19 +446,19 @@ do {									\
- 	old__.var = *_oval;						\
- 	new__.var = _nval;						\
- 									\
--	asm qual (ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
--			      "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
--		  CC_SET(z)						\
--		  : ALT_OUTPUT_SP(CC_OUT(z) (success),			\
--				  [var] "+m" (__my_cpu_var(_var)),	\
--				  "+a" (old__.low),			\
--				  "+d" (old__.high))			\
--		  : "b" (new__.low),					\
--		    "c" (new__.high),					\
--		    "S" (&(_var))					\
--		  : "memory");						\
-+	asm_inline qual (						\
-+		ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
-+			    "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
-+		CC_SET(z)						\
-+		: ALT_OUTPUT_SP(CC_OUT(z) (success),			\
-+				[var] "+m" (__my_cpu_var(_var)),	\
-+				"+a" (old__.low), "+d" (old__.high))	\
-+		: "b" (new__.low), "c" (new__.high),			\
-+		  "S" (&(_var))						\
-+		: "memory");						\
- 	if (unlikely(!success))						\
- 		*_oval = old__.var;					\
-+									\
- 	likely(success);						\
- })
- 
++ minmax.h
+
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+
+> +#include <linux/of.h>
+
+Is this used? Cargo cult?
+
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+
++ types.h
+
+...
+
+> +#define MAX7360_PWM_PERIOD_NS			2000000 /* 500 Hz */
+
+Comment is superfluous, if you need HZ units, define the respective one.
+Also you can use something like (2 * NSEC_PER_MSEC) which will immediately
+gives a hint of how long this is and reduces potential 0:s miscalculations.
+This will need time.h
+
+...
+
+> +#define MAX7360_PWM_CTRL_ENABLE(n)		BIT(n)
+> +#define MAX7360_PWM_PORT(n)			BIT(n)
+
+Personally I find these macros overkill. The value of them much shorter and
+equally readable.
+
+...
+
+> +struct max7360_pwm {
+
+> +	struct device *parent;
+
+Is it not the same as you can derive from regmap?
+
+> +	struct regmap *regmap;
+
+Btw, have you checked the code generation if you place regmap the first in the
+structure? It might affect it.
+
+> +};
+
+...
+
+> +	/*
+> +	 * Ignore user provided values for period_length_ns and duty_offset_ns:
+> +	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of
+
+> +	 * 0.
+
+Easy to read with 0 be on previous line.
+
+> +	 */
+
+> +
+
+No need for this blank line.
+
+> +	duty_steps = mul_u64_u64_div_u64(wf->duty_length_ns, MAX7360_PWM_MAX_RES,
+> +					 MAX7360_PWM_PERIOD_NS);
+
+This comes from math64.h
+
+> +
+> +	wfhw->duty_steps = min(MAX7360_PWM_MAX_RES, duty_steps);
+
+...
+
+> +static int max7360_pwm_write_waveform(struct pwm_chip *chip,
+> +				      struct pwm_device *pwm,
+> +				      const void *_wfhw)
+> +{
+> +	const struct max7360_pwm_waveform *wfhw = _wfhw;
+> +	struct max7360_pwm *max7360_pwm;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	max7360_pwm = max7360_pwm_from_chip(chip);
+> +
+> +	val = (wfhw->duty_steps == 0) ? 0 : MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm);
+> +	ret = regmap_write_bits(max7360_pwm->regmap, MAX7360_REG_GPIOCTRL,
+> +				MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm), val);
+
+> +
+> +	if (!ret && wfhw->duty_steps != 0) {
+> +		ret = regmap_write(max7360_pwm->regmap, MAX7360_REG_PWM(pwm->hwpwm),
+> +				   wfhw->duty_steps);
+> +	}
+> +
+> +	return ret;
+
+Please, improve readability by rewriting like this:
+
+	ret = regmap_write_bits(max7360_pwm->regmap, MAX7360_REG_GPIOCTRL,
+				MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm), val);
+	if (ret)
+		return ret;
+
+	if (wfhw->duty_steps)
+		return regmap_write(max7360_pwm->regmap, MAX7360_REG_PWM(pwm->hwpwm),
+				    wfhw->duty_steps);
+
+	return 0;
+
+> +}
+
+...
+
+> +static int max7360_pwm_probe(struct platform_device *pdev)
+> +{
+
+With
+
+	struct device *dev = &pdev->dev;
+
+all below will look shorter and nicer.
+
+> +	struct max7360_pwm *max7360_pwm;
+> +	struct pwm_chip *chip;
+> +	int ret;
+> +
+> +	if (!pdev->dev.parent)
+> +		return dev_err_probe(&pdev->dev, -ENODEV, "no parent device\n");
+> +
+> +	chip = devm_pwmchip_alloc(pdev->dev.parent, MAX7360_NUM_PWMS,
+> +				  sizeof(*max7360_pwm));
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	chip->ops = &max7360_pwm_ops;
+> +
+> +	max7360_pwm = max7360_pwm_from_chip(chip);
+> +	max7360_pwm->parent = pdev->dev.parent;
+> +
+> +	max7360_pwm->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!max7360_pwm->regmap)
+> +		return dev_err_probe(&pdev->dev, -ENODEV,
+> +				     "could not get parent regmap\n");
+
+Will become one line (with the above suggestion).
+
+> +	ret = devm_pwmchip_add(&pdev->dev, chip);
+
+> +	if (ret != 0)
+
+Please, be consistent with the style, and moreover this style is unusual.
+
+> +		return dev_err_probe(&pdev->dev, ret,
+> +				     "failed to add PWM chip\n");
+> +
+> +	return 0;
+> +}
+
 -- 
-2.42.0
+With Best Regards,
+Andy Shevchenko
+
 
