@@ -1,40 +1,78 @@
-Received: from smtp134-31.sina.com.cn (smtp134-31.sina.com.cn [180.149.134.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4FC1FC7C1
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 23:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.149.134.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C659136347;
+	Fri, 14 Feb 2025 23:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739574902; cv=none; b=ljI2R4H/DIgX9+GGEF49p3ju/QYv9OxJxEQZwCn5fMVWn3szV1oD4M+buHTFSnPA/wNFFyivg1x0g/Qu9n1pxhNJYUOkcUDsDqHMo3VSgdd5KAONxcO3xotJmMKd26vf1UbsD3SAsG7cV1aDB+pT70evLTa2SL+Q9/PFi7jIfE8=
+	t=1739575103; cv=none; b=ocAMB2r0gfypgxMCDju1lCIU/McFpQLOSgKmGGRAO9x6KmLVX3KGNFrBVZqLBo/aX352Ifi3aGopw3jeqDXDSfGyiFJScIM+U250IUgUFUJAf+SJKjdLU2WnBVzu0kEtAvuHhShVtXU1rKwbrc7jjhPIC4082/T+HQmjWI0R5hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739574902; c=relaxed/simple;
-	bh=4X471InxMmtfF4A7bgweUnPLjIAku6Oe2oJBgud8gCQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T0P+3IEk7TW4dC93h9Q04Nv4elCFhmNYaNC9bDO/45LcHUe5LP7RPkK/+4Qj/pB/nXNbm/gzpFXmhS1XOXK4aCAwYputPX2IUp8c6UI/oCAMev2pJnrm+aziY5HhE5PguDcks4cMMKUtMkc/bmPK5XMPoM/I3ieDW02X59qqEYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=180.149.134.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.88.48.83])
-	by sina.com (10.185.250.21) with ESMTP
-	id 67AFCE3E00003E80; Fri, 15 Feb 2025 07:14:09 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 335883408230
-X-SMAIL-UIID: D2D8C46820C44DE5B594D046E3844EE2-20250215-071409-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+d9890527385ab9767e03@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [netfs?] WARNING: refcount bug in netfs_put_subrequest
-Date: Sat, 15 Feb 2025 07:13:53 +0800
-Message-ID: <20250214231356.2285-1-hdanton@sina.com>
-In-Reply-To: <67aee51d.050a0220.21dd3.002f.GAE@google.com>
-References: 
+	s=arc-20240116; t=1739575103; c=relaxed/simple;
+	bh=iKdwg7caL+Z5MhsUZ93wp99hJvluEHifUiLblOZmBMU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R2+2o548FANbS+8n+9qd0c/nAWpV4ZyYE+eA1S42u5t4ao+Iki4aBpU7NhJ+7yVBiRk/KnLvwAhQSJrtjwwRSXmnVujAFtzgrB+H1KYe7V8PW9p4Np+bCosIQzRn+oD3LIGT93ezIHKnF+c1KstKn3iuOyrEdOJEdK10A/3+UUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NNZcNG01; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NNZcNG01"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6e66b82547cso1066036d6.0;
+        Fri, 14 Feb 2025 15:18:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739575100; x=1740179900; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xMEwzQYn4zO616CMfe0CcyNuWl1q/UQBw4c2wx2/Dpk=;
+        b=NNZcNG01KRbiLOx5ck35srf+32kU3XKptPX415vdyFh9y5m7L0uz6jCeVA2T1GqaV2
+         A7shdEdI8WlVf4qVV5R7lYahd5kaPcgM/Kg13Gl5PeFIiHfSwmqS4ZzT+tlInA6hqf0r
+         E/lfY81VYG5vFv2E/Mc53yLabBSo1vWi6NnSMwRnMaL2FBZPtevzZDJgCW+ILgtDj8CA
+         tbwtZS8WBfyANhUVE237WGpuaPu1TmpTs4P+As1kc06p+pg9i0J5knmXpevWAylHBRQ+
+         NCsMRIDlRGX6YkA/amiDq+RPc3l03rJdd/QToHaXKtSaFQHSA21HClIXP4ScZzcd3u2o
+         1lyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739575100; x=1740179900;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xMEwzQYn4zO616CMfe0CcyNuWl1q/UQBw4c2wx2/Dpk=;
+        b=X7eLkeOaFp878fWXh60aQLwcZxMmVpAdTojspW9RoTN4QnGhQ+yzSfJgK3CzhDETQV
+         0kP7FzJBlynVmK5UOjdMvfhKbCfBvQ6COgnOdrl2QzmW8YQ1BnGfAFPrmEMraZZ96hZl
+         jb6wTU3hv5EsCh5FUf+7DVoQLU4gtkiaAphoqWn9Q2WkqFVlbQrM8jvBTF5a+rdmWE07
+         xj3QlCC4zYBain0WjS85dvQ/IUNJ326EOiyMLHVsMCShmez5QxduLHVhjlwadK7Teh/G
+         QZYPT8xb5pxev2dO25SnbkhangoK3qMGxJquwpYSNniGzBDbw+63zXtvZL2Yaf78AwOF
+         76tg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxqy9h9IzcuugOXQV6JENxlW7O4cbpm3gWfONd/gUTECm4vC7aBnF9yNqxWPaFfUpG8RsNo84s81Rx1XA=@vger.kernel.org, AJvYcCVupnzJOQAO5ilWXByycRlI6ednd1oKXSRhMQhE1DDIxzD7V0zGnQCUsH32AwLtrt4t10Q5zs74Cnzh3S0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeamnI+f+z2kw+sm2gjn1HVDvbY3rWxFJszDLcaka7TGtxs6ox
+	I/76g0zwW5LMLiqPKvOPA4j2D1xpljTnYhI74095QuZRQ0tymFkB
+X-Gm-Gg: ASbGncvtaTFLIZgYCg+BAcplBMBV2EEX7/8Qgw3OoM4iYYMh4wtuheAw38hHpIBIvQX
+	Vhmnh0Twr6fP5SqJgQX2+We7dyuTagSOJ4irtkjGwBh7lsDv7jYiTN9dVZB5i2AsUutxKGxZyUQ
+	2PWr0BMQdnJe9//NC8DPyYO2QaFSzPme6W3ylGkiztQjdIFg4CG5vIMQXuquCMDaK6ZKZtVN9vv
+	ce2RSd8+RFU9F2jLWCdVB3CHKTEPL0wPFgLfGOz4QeFTKtZiZIgaDiecXD4q4laJ4T8xQrJlrsm
+	V5C61X54+JimyOQEeR/y0xxdM5gmdgwVYa0Tsy3QfLUP4aORksuR5l8R
+X-Google-Smtp-Source: AGHT+IGqGDUKzGVDrn1hiBwRzg72mEtRCGzOpfcx7Tvn4SR6uuQjF8AXDua9Gm6UHAAjchJKgT/vdA==
+X-Received: by 2002:a05:620a:4113:b0:7c0:7818:8557 with SMTP id af79cd13be357-7c08aa823e3mr74609685a.10.1739575100368;
+        Fri, 14 Feb 2025 15:18:20 -0800 (PST)
+Received: from matt-Z87X-UD4H.mynetworksettings.com ([2600:1002:a012:94a2:4db7:5f35:9da:d13a])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c07c861221sm257829785a.85.2025.02.14.15.18.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 15:18:19 -0800 (PST)
+From: Matthew Majewski <mattwmajewski@gmail.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	"Uwe Kleine-Konig" <u.kleine-koenig@baylibre.com>,
+	Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>
+Cc: devicetree@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Matthew Majewski <mattwmajewski@gmail.com>
+Subject: [PATCH v2 0/2] media: m2m-deinterlace: add device-tree support
+Date: Fri, 14 Feb 2025 18:17:57 -0500
+Message-Id: <20250214231759.119481-1-mattwmajewski@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,53 +81,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Thu, 13 Feb 2025 22:39:25 -0800
-> syzbot found the following issue on:
-> 
-> HEAD commit:    69b54314c975 Merge tag 'kbuild-fixes-v6.14' of git://git.k..
-> git tree:       upstream
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13aafdf8580000
+Hello all, this patch series adds device-tree support for the generic
+m2m-deinterlace driver.
 
-#syz test upstream   master
+A specific dma controller channel can now be provided to the driver
+via the dt, but the driver still supports the original dma query if an
+of_node is not present. This should preserve backwards compatibility
+with platform drivers that directly instantiate the device.
 
---- x/fs/netfs/read_collect.c
-+++ y/fs/netfs/read_collect.c
-@@ -289,6 +289,10 @@ reassess:
- 		/* Remove if completely consumed. */
- 		stream->source = front->source;
- 		spin_lock(&rreq->lock);
-+		if (front != stream->front) {
-+			spin_unlock(&rreq->lock);
-+			goto reassess;
-+		}
- 
- 		remove = front;
- 		trace_netfs_sreq(front, netfs_sreq_trace_discard);
-@@ -345,6 +349,7 @@ static void netfs_rreq_assess_dio(struct
- 	struct netfs_io_subrequest *subreq;
- 	struct netfs_io_stream *stream = &rreq->io_streams[0];
- 	unsigned int i;
-+	struct kiocb *iocb = NULL;
- 
- 	/* Collect unbuffered reads and direct reads, adding up the transfer
- 	 * sizes until we find the first short or failed subrequest.
-@@ -369,12 +374,16 @@ static void netfs_rreq_assess_dio(struct
- 		}
- 	}
- 
-+	spin_lock(&rreq->lock);
- 	if (rreq->iocb) {
- 		rreq->iocb->ki_pos += rreq->transferred;
- 		if (rreq->iocb->ki_complete)
--			rreq->iocb->ki_complete(
--				rreq->iocb, rreq->error ? rreq->error : rreq->transferred);
-+			iocb = rreq->iocb;
-+		rreq->iocb = NULL;
- 	}
-+	spin_unlock(&rreq->lock);
-+	if (iocb)
-+		iocb->ki_complete(iocb, rreq->error ? rreq->error : rreq->transferred);
- 	if (rreq->netfs_ops->done)
- 		rreq->netfs_ops->done(rreq);
- 	if (rreq->origin == NETFS_DIO_READ)
---
+Probing the m2m-deinterlace device via device-tree was tested on the
+BeagleBone Black with an m2m-appropriate edma channel.
+
+Changes From v1 [1]:
+ - [PATCH 1/2] media: dt-bindings: Add dt bindings for m2m-deinterlace
+   - clarify device description and commit message for dt bindings
+   - correct format error reported by yamllint for dt bindings
+ - [PATCH 2/2] media: m2m-deinterlace: add device-tree support
+   - no changes
+
+[1] https://lore.kernel.org/linux-media/20250212170901.3881838-1-mattwmajewski@gmail.com/
+
+Best,
+
+Matthew Majewski
+
+Matthew Majewski (2):
+  media: dt-bindings: Add dt bindings for m2m-deinterlace device
+  media: m2m-deinterlace: add device-tree support
+
+ .../bindings/media/m2m-deinterlace.yaml       | 44 +++++++++++++++++++
+ drivers/media/platform/m2m-deinterlace.c      | 25 ++++++++---
+ 2 files changed, 63 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/m2m-deinterlace.yaml
+
+-- 
+2.25.1
+
