@@ -1,114 +1,297 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4505E1DF242
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 06:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76A81DDA32
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 06:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739513470; cv=none; b=aRc3eKBpmcwNq/zxK5YuZ6JOCPcbR22kks62IG9EByapiRUGEgHOy3wMyrk4K0ENWyLqKTuD3zifaEkOs94oSUmNC5NHlwhGhAv/b5oVl25T8/UG2GG3OAo9wrBlaKILO2Vn1QNN6hThnCYPQ4KHWOv9koQJxFk3SmdwKJk6vsM=
+	t=1739513472; cv=none; b=c5pZFglG9Z2vURh2X6jvjICSMGCC4W6ohUlVYolQUbuMtYheXq6LYzIbL/s9ZEoIL34QpHllJqEsUy1AYLcwG5aMdJIl6xk94u53O6eXYaZpNAILPYgn7s+0LqPRMlaWD01aMZc43Oh5aLCLXCydNOdp/sxDDz4X0goskWzi09g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739513470; c=relaxed/simple;
-	bh=EpxQNILeQf4iHUHF9psqZqh37LlM3snSG06cnd2ZXVU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GiVIzrBOXxodOTIUC1cmncMYOosv/5k7253rGLAGjCq6LovKe93QU8WlcCl3eBxOcDHL3wF6qKWtL5BNSL8NzfNoAhHw7p0b6BROTz5kpAfQJAko16xceMS1u6bqFfsgX+JFO1+QIXh8TNsv5RbrVVtOOpOhF5lkEqyVOtxBQWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=DtQBJAsp; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1739513472; c=relaxed/simple;
+	bh=Ae7CCwklY2u5LEf02DzBnSRtB2PBYlj9DOJ8QQ3Rb2A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uLQpLmH2i9uoBIc+oN05rJ5txh5xDBp5s1Uj9uF8jbugcsAFj+Lbo5bIofB+xSLq3kAK/8OvaWEqD3gL13ceLD4On0yy+UsuOL4exKISMpNKuqihlTyNT7MpZKmHzx8LN7Ylue2UmkjY170YZM/gZmdcl43hA9e3ES4NQMLruv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E2kNuEqO; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="DtQBJAsp"
-Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
-	by cmsmtp with ESMTPS
-	id imaZtJJclWuHKiotIthI0w; Fri, 14 Feb 2025 06:09:32 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id iotHtbNJGs5XHiotHt47nZ; Fri, 14 Feb 2025 06:09:31 +0000
-X-Authority-Analysis: v=2.4 cv=avG0CzZV c=1 sm=1 tr=0 ts=67aede1b
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=4041MwwcWqwrnTXoSgMA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=hHhUPKIyS1IaI5YCk9QFOAYvzJTNPcTF17M8bgIhefM=; b=DtQBJAspRl58PPehvPSBt/e0f1
-	bpLT5TqJiF8fvFOY7qXuVJDAcuRcIw9RDu17gL6XX0JYfnOhgeZqLZ+DlL8qnY47vidoh06/L8Zqz
-	+9RYsv5E6kaki0lPyLiP5siIro/acUrfmCnr8uXI/ewUF+mxE72lpUwuALyCbYb3da93T6Z3wZr+v
-	gdEvrvpCnEhPfQ7vJilCTvgNwOEvAa4e83Pu1evDbB09Nhs+FBO+mVnTALHrNNIcQFyZjTtOxNtoT
-	+KQyXykLjxg1fIgOEnuIwZEGx7/ShhJjzTkza6BaMTNJgh1WCOYIbvpJIhoHzSvfxtNCQqxK0Vdpk
-	+Yb+a4KQ==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:38664 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1tiotF-003d6P-1k;
-	Thu, 13 Feb 2025 23:09:29 -0700
-Message-ID: <31805c47-3245-4b92-87c8-8bcd6a049ac3@w6rz.net>
-Date: Thu, 13 Feb 2025 22:09:25 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E2kNuEqO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739513471; x=1771049471;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Ae7CCwklY2u5LEf02DzBnSRtB2PBYlj9DOJ8QQ3Rb2A=;
+  b=E2kNuEqORzLe/F9IG9wdDyTPaJI0OjklU3s2BlRJFks/7SaWdDs8bwGK
+   Lk8Vf1JWZB2Xtkb9U2nZky9gRK6lIFzbg1rYIAYg0gWLUFX0W4bNH4A87
+   hXkRBka9nvo986hHDWIouQ8abkVVvuiRp5FuOekAUMqHZUQnq73weAELj
+   W0O6E/ifYbKjq1QVoVb3PbByK9/+nFAEFANtQOXXi+cqPiagWX3N8C7Dc
+   aOi8uKo7cbGCU9tC66i5IhR6pOJLEXP4MueDHyZW7v9vq0tLxL3wyI+zt
+   wFrlgh35cV7z49cGQKiisIyhnIz11Nhj5oRKtMl7U4MhfabGwRo8mCigs
+   w==;
+X-CSE-ConnectionGUID: 3RBovnRyTlaeoqcvC+DsJg==
+X-CSE-MsgGUID: STJqhHcNQ+qG6Bf3BK3MgA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40124496"
+X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
+   d="scan'208";a="40124496"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 22:11:11 -0800
+X-CSE-ConnectionGUID: EKoubrT0R5OJcCKse+6KVA==
+X-CSE-MsgGUID: ATOI6KNXSyKTaAUUlsf+6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="114268092"
+Received: from allen-box.sh.intel.com ([10.239.159.52])
+  by orviesa008.jf.intel.com with ESMTP; 13 Feb 2025 22:11:07 -0800
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Zhangfei Gao <zhangfei.gao@linaro.org>,
+	Zhou Wang <wangzhou1@hisilicon.com>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 03/12] iommu: Remove IOMMU_DEV_FEAT_SVA
+Date: Fri, 14 Feb 2025 14:10:55 +0800
+Message-ID: <20250214061104.1959525-4-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250214061104.1959525-1-baolu.lu@linux.intel.com>
+References: <20250214061104.1959525-1-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.13 000/443] 6.13.3-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250213142440.609878115@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250213142440.609878115@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1tiotF-003d6P-1k
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:38664
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 16
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfDftexOh2t/8v485G0sDNKY74cIugOcyoTNgIZqiRrfg88IyENQG0uq6CC/A+TPoCRqLZTbXIZdoz+Z4sdjGTvxrR+yxrq74gjB4zWy9VLteliRBPWL2
- 6jtPx1ne/1QAl+z5SSAQJqggqNW/xoyGZNJsrvLM/t2sNhQ5IfK+OD6Zuh/xhkdA2iibpH3BcT7xyiG98nOOP+KT35iY0sdvx10=
+Content-Transfer-Encoding: 8bit
 
-On 2/13/25 06:22, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.3 release.
-> There are 443 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 15 Feb 2025 14:23:11 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.3-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+From: Jason Gunthorpe <jgg@nvidia.com>
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+None of the drivers implement anything here anymore, remove the dead code.
 
-Tested-by: Ron Economos <re@w6rz.net>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ drivers/accel/amdxdna/aie2_pci.c            | 13 ++-----------
+ drivers/dma/idxd/init.c                     |  8 +-------
+ drivers/iommu/amd/iommu.c                   |  2 --
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c |  2 --
+ drivers/iommu/intel/iommu.c                 |  6 ------
+ drivers/iommu/iommu-sva.c                   |  3 ---
+ drivers/misc/uacce/uacce.c                  |  9 ---------
+ include/linux/iommu.h                       |  9 +--------
+ 8 files changed, 4 insertions(+), 48 deletions(-)
+
+diff --git a/drivers/accel/amdxdna/aie2_pci.c b/drivers/accel/amdxdna/aie2_pci.c
+index 5a058e565b01..c6cf7068d23c 100644
+--- a/drivers/accel/amdxdna/aie2_pci.c
++++ b/drivers/accel/amdxdna/aie2_pci.c
+@@ -512,12 +512,6 @@ static int aie2_init(struct amdxdna_dev *xdna)
+ 		goto release_fw;
+ 	}
+ 
+-	ret = iommu_dev_enable_feature(&pdev->dev, IOMMU_DEV_FEAT_SVA);
+-	if (ret) {
+-		XDNA_ERR(xdna, "Enable PASID failed, ret %d", ret);
+-		goto free_irq;
+-	}
+-
+ 	psp_conf.fw_size = fw->size;
+ 	psp_conf.fw_buf = fw->data;
+ 	for (i = 0; i < PSP_MAX_REGS; i++)
+@@ -526,14 +520,14 @@ static int aie2_init(struct amdxdna_dev *xdna)
+ 	if (!ndev->psp_hdl) {
+ 		XDNA_ERR(xdna, "failed to create psp");
+ 		ret = -ENOMEM;
+-		goto disable_sva;
++		goto free_irq;
+ 	}
+ 	xdna->dev_handle = ndev;
+ 
+ 	ret = aie2_hw_start(xdna);
+ 	if (ret) {
+ 		XDNA_ERR(xdna, "start npu failed, ret %d", ret);
+-		goto disable_sva;
++		goto free_irq;
+ 	}
+ 
+ 	ret = aie2_mgmt_fw_query(ndev);
+@@ -584,8 +578,6 @@ static int aie2_init(struct amdxdna_dev *xdna)
+ 	aie2_error_async_events_free(ndev);
+ stop_hw:
+ 	aie2_hw_stop(xdna);
+-disable_sva:
+-	iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_SVA);
+ free_irq:
+ 	pci_free_irq_vectors(pdev);
+ release_fw:
+@@ -601,7 +593,6 @@ static void aie2_fini(struct amdxdna_dev *xdna)
+ 
+ 	aie2_hw_stop(xdna);
+ 	aie2_error_async_events_free(ndev);
+-	iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_SVA);
+ 	pci_free_irq_vectors(pdev);
+ }
+ 
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index b946f78f85e1..1e5038cca22c 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -633,17 +633,11 @@ static int idxd_enable_sva(struct pci_dev *pdev)
+ 	ret = iommu_dev_enable_feature(&pdev->dev, IOMMU_DEV_FEAT_IOPF);
+ 	if (ret)
+ 		return ret;
+-
+-	ret = iommu_dev_enable_feature(&pdev->dev, IOMMU_DEV_FEAT_SVA);
+-	if (ret)
+-		iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_IOPF);
+-
+-	return ret;
++	return 0;
+ }
+ 
+ static void idxd_disable_sva(struct pci_dev *pdev)
+ {
+-	iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_SVA);
+ 	iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_IOPF);
+ }
+ 
+diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+index b48a72bd7b23..e3653bdfcd7d 100644
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -2990,7 +2990,6 @@ static int amd_iommu_dev_enable_feature(struct device *dev,
+ 
+ 	switch (feat) {
+ 	case IOMMU_DEV_FEAT_IOPF:
+-	case IOMMU_DEV_FEAT_SVA:
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+@@ -3006,7 +3005,6 @@ static int amd_iommu_dev_disable_feature(struct device *dev,
+ 
+ 	switch (feat) {
+ 	case IOMMU_DEV_FEAT_IOPF:
+-	case IOMMU_DEV_FEAT_SVA:
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+index 75b2f7c609ca..ee945a9db641 100644
+--- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
++++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+@@ -3627,7 +3627,6 @@ static int arm_smmu_dev_enable_feature(struct device *dev,
+ 
+ 	switch (feat) {
+ 	case IOMMU_DEV_FEAT_IOPF:
+-	case IOMMU_DEV_FEAT_SVA:
+ 		return 0;
+ 	default:
+ 		return -EINVAL;
+@@ -3644,7 +3643,6 @@ static int arm_smmu_dev_disable_feature(struct device *dev,
+ 
+ 	switch (feat) {
+ 	case IOMMU_DEV_FEAT_IOPF:
+-	case IOMMU_DEV_FEAT_SVA:
+ 		return 0;
+ 	default:
+ 		return -EINVAL;
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index a4048de66378..16dd8f0de76d 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -3970,9 +3970,6 @@ intel_iommu_dev_enable_feat(struct device *dev, enum iommu_dev_features feat)
+ 	case IOMMU_DEV_FEAT_IOPF:
+ 		return intel_iommu_enable_iopf(dev);
+ 
+-	case IOMMU_DEV_FEAT_SVA:
+-		return 0;
+-
+ 	default:
+ 		return -ENODEV;
+ 	}
+@@ -3985,9 +3982,6 @@ intel_iommu_dev_disable_feat(struct device *dev, enum iommu_dev_features feat)
+ 	case IOMMU_DEV_FEAT_IOPF:
+ 		return intel_iommu_disable_iopf(dev);
+ 
+-	case IOMMU_DEV_FEAT_SVA:
+-		return 0;
+-
+ 	default:
+ 		return -ENODEV;
+ 	}
+diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
+index 503c5d23c1ea..331be2761a75 100644
+--- a/drivers/iommu/iommu-sva.c
++++ b/drivers/iommu/iommu-sva.c
+@@ -63,9 +63,6 @@ static struct iommu_mm_data *iommu_alloc_mm_data(struct mm_struct *mm, struct de
+  * reference is taken. Caller must call iommu_sva_unbind_device()
+  * to release each reference.
+  *
+- * iommu_dev_enable_feature(dev, IOMMU_DEV_FEAT_SVA) must be called first, to
+- * initialize the required SVA features.
+- *
+  * On error, returns an ERR_PTR value.
+  */
+ struct iommu_sva *iommu_sva_bind_device(struct device *dev, struct mm_struct *mm)
+diff --git a/drivers/misc/uacce/uacce.c b/drivers/misc/uacce/uacce.c
+index bdc2e6fda782..2a1db2abeeca 100644
+--- a/drivers/misc/uacce/uacce.c
++++ b/drivers/misc/uacce/uacce.c
+@@ -479,14 +479,6 @@ static unsigned int uacce_enable_sva(struct device *parent, unsigned int flags)
+ 		dev_err(parent, "failed to enable IOPF feature! ret = %pe\n", ERR_PTR(ret));
+ 		return flags;
+ 	}
+-
+-	ret = iommu_dev_enable_feature(parent, IOMMU_DEV_FEAT_SVA);
+-	if (ret) {
+-		dev_err(parent, "failed to enable SVA feature! ret = %pe\n", ERR_PTR(ret));
+-		iommu_dev_disable_feature(parent, IOMMU_DEV_FEAT_IOPF);
+-		return flags;
+-	}
+-
+ 	return flags | UACCE_DEV_SVA;
+ }
+ 
+@@ -495,7 +487,6 @@ static void uacce_disable_sva(struct uacce_device *uacce)
+ 	if (!(uacce->flags & UACCE_DEV_SVA))
+ 		return;
+ 
+-	iommu_dev_disable_feature(uacce->parent, IOMMU_DEV_FEAT_SVA);
+ 	iommu_dev_disable_feature(uacce->parent, IOMMU_DEV_FEAT_IOPF);
+ }
+ 
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 38c65e92ecd0..1d0dde49168d 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -303,18 +303,11 @@ struct iommu_iort_rmr_data {
+ 
+ /**
+  * enum iommu_dev_features - Per device IOMMU features
+- * @IOMMU_DEV_FEAT_SVA: Shared Virtual Addresses
+- * @IOMMU_DEV_FEAT_IOPF: I/O Page Faults such as PRI or Stall. Generally
+- *			 enabling %IOMMU_DEV_FEAT_SVA requires
+- *			 %IOMMU_DEV_FEAT_IOPF, but some devices manage I/O Page
+- *			 Faults themselves instead of relying on the IOMMU. When
+- *			 supported, this feature must be enabled before and
+- *			 disabled after %IOMMU_DEV_FEAT_SVA.
++ * @IOMMU_DEV_FEAT_IOPF: I/O Page Faults such as PRI or Stall.
+  *
+  * Device drivers enable a feature using iommu_dev_enable_feature().
+  */
+ enum iommu_dev_features {
+-	IOMMU_DEV_FEAT_SVA,
+ 	IOMMU_DEV_FEAT_IOPF,
+ };
+ 
+-- 
+2.43.0
 
