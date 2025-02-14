@@ -1,104 +1,214 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0C4186E40;
-	Fri, 14 Feb 2025 10:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8FA202C43
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 10:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739527353; cv=none; b=ix5Ir7RYkP2Wul7pxt0x2OMJgVOGz3vDSbW4NdY5zADADl+HcXf/A3CPn7x1gctxpoLuE+39cKrSAZbIqSDn82k7OHqjMJgiWI5cQwFfNyFox+u2nOSrnJ7HC/rp4ruh0Jbj2c0lVbHQkl2I+Jl0IOhLu/7RIE3mYdU2d6WLv4M=
+	t=1739527374; cv=none; b=o5b+/WRh8VgAHuOIHdjInqogyJKVCIOauMnHNG50ynw2ZidtZ+Rwgi1E3stOXHc27M3Wxrv7sWaIPNElO0KhL4KPqKYNWypLIkC/+VDK07Lrp16aHpZlYOvtU4KgYie3qp8oQlLKym+eTpMxVEMrh2rlgilAaCTDbxnWLMQdTqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739527353; c=relaxed/simple;
-	bh=JhfJ/xemf5hEn+B3JYxhTSlRToZIjtBcYuHFPAzmDQg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S60g/WeYRDTraZ3e/v+Ly475iUexjcbMv2RJ9/I5vkKgNvM549fRrkiyVm7BugNHyRMgaKjCYmHPvCBcj/kGM1aZGoAPjYf/jA0XJdO0hamwn/QiIMkgu5vMkD2CIgMZFm15w+yQFMXN/WdkT3NdO02FRQ5QcE2q5IDbeloOYk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5203bbb969cso536710e0c.3;
-        Fri, 14 Feb 2025 02:02:31 -0800 (PST)
+	s=arc-20240116; t=1739527374; c=relaxed/simple;
+	bh=6IIJKgD/OctiPI/Am9zaDQvl6XDddiVDhmizBXie3+w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TdCBY8Vx1QaKF7D5eoXf8EwENah+1T8zTGri9D1DF6Se/ow2PXdidBgRFhsgMOzTOb7HJWZvV7FE++hSDTv7etZTTtCpDcVDaAADpqHFjsSnpynMrVXhLHOjBNBFp/ScE12IjK0WiPNS1U7ozSRZIAcdcqA0gvcs49gP9vGg+hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RMNgjBdm; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RMNgjBdm"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4395f81db4dso11229925e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 02:02:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739527369; x=1740132169; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WX8WwYpC/7CDpNuf00AfcD8uPd4813egQtu1K93XN+I=;
+        b=RMNgjBdmi14GdXF/e/FXOgFkspcAfCbTV6mCByCmutlxIded49f6GkLeesW3gdp/Yw
+         D/0cH5oMOQTqyO9QxDy4Mc20zgVLWO7YFbq7xC8fWUvR5050IE1uKIAYzgQ7G824Wg63
+         1lkkjYfFHiSU4sdkA5RRu3DVsQDwXOfopaezW2XVyyDQYyqRuyzki56mbsMBK4hL+tTS
+         RkH2yZodiqLDCsKfQdNxYXJJ+naScWDikIF8e2YQVZ2kz4KgsXDSM+S8pdQ8pnEo/St3
+         iWPXAGzhJYGDtHWYMtKRI8RzgJa3ZGT9StPC6eVWu1I8twf9sTA85F0CPGXCMioyoDz8
+         DWJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739527350; x=1740132150;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zSu4DvWv010H270v34dYFFy5+XnYa2dAhDT5eUP1bFs=;
-        b=iq74xe8S2IKIeFAHdbwsbxybiIv2GOPi1rVHjbO7OPlO3sYyrQu4e3uvUWovXiLnw4
-         At9AaWzN9GfamMbaE9W6mtsrFuWNcL03F49fg4DAfVMk7co/WebT1Ds+8p20Tn39LMoG
-         JeiRf3HTpus1H7YEAl4LAmvw28PvnQoJRDRvgRrEDkvXFj8cPVeLvgocUHQu+dTnQ/gS
-         e4pMfwXCaLp1FvBAtBAX/lfayY4ZmSgvRfRo9/NBzQvWu+0m/nHSLLPZVqFXoTGS/w7L
-         xo+orAKp3jH6od4liKmRZJ/U6FIh7aaFCK+LI7AIgf7RyEjIhrqC65HaeTszy1LsJY07
-         tHcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAhLXadfFoBlDQe/lnDnBNwm28YbotZhV7R2JScgL/Mof+fyU0FXoo6WV9quQd6gbTN1SKUC1/78MaIv2yB82zbvQ=@vger.kernel.org, AJvYcCVU1M1AJzWsuM/gvTVv+Lz98l/M15/8QCdxmJrQDtgVNsyInzYinqK7CCCF4zRovOlIOfnHTdtG2is=@vger.kernel.org, AJvYcCVmFctTyg3Hggbz7szxBXyCe5oiXt1a0c847dZHMEus3lWq/JrNTsb5lhVF/l/5OPYoBhH62RJfOX1Sy75R@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6GvK8AcEjJOkgMslLPPIu0kD0kQkfoPZ+WZCJRf0+9pO6MKNZ
-	iHrkC7RcLZtLcDqUtJOKz4CVBsPs3HqjYTtlpvdUBP1o3xr97eTDotHPexXp3LU=
-X-Gm-Gg: ASbGncvh/yIzKLfF5zJTiyggujW92jY7lnPZmawDkN+QpT2bFaPSd8lIuKMcwvMI7MC
-	uXpQMIkRlc1kMeu6ZjCxtn6/7lWHO432yaYFVGJOnSIZs1F5pUXmb95ovw/mj0iOJDdV0fbtzh8
-	tF1NVX0sfzWrkrGqBFuORGgTyebiYSIdYlIZvhnnxIlXYBaat6z76XcVuitpr+n8QidXDeR9FLa
-	MkwL1KXOGzAXVBVaKSXlcaUPfb/SfbTxb+WAtIWV7YkfqV/580jsFf+THWRId9wztl5nru7u0Id
-	mYuzZsA7Ehr3YguQgLfTilt2OD1IoM0XJl8+rQTYALZSl8s0tRc7xw==
-X-Google-Smtp-Source: AGHT+IGuWLy5kANRaOVyjG0tnar50nhcO391oZ3+U/xymlLK8DM05oDVMXTmbADmGQMuYDSF3mdAGw==
-X-Received: by 2002:a05:6122:7c7:b0:520:4539:4b4c with SMTP id 71dfb90a1353d-52067d3efd1mr9353290e0c.9.1739527350496;
-        Fri, 14 Feb 2025 02:02:30 -0800 (PST)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5207aa60600sm526239e0c.13.2025.02.14.02.02.30
+        d=1e100.net; s=20230601; t=1739527369; x=1740132169;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WX8WwYpC/7CDpNuf00AfcD8uPd4813egQtu1K93XN+I=;
+        b=ki8bUJZnZa4zioCqxuRw+KeZdnhCMQmmSdjC6w0f90HCUx3Qg1B76pSqtWfdwpsfA2
+         MryN9Hyuy662+E4SoGwaqFzYMAxrJtdc1wJnZLbGkTJyML6ruEfPtaqYOuV5Kn73WPAa
+         Dyg6wlt0oYjNyzw5c95uXdTOROQ43UzbfRCiNKREQsOysts/aTWq8kEKUvyoQdrINtRF
+         FwsQP+OYfgicqxd8EAYlylgw5Mq+bk9zIJktrj1ZhxngZH6cgwKTNQsAJ2OtqMfO60Xt
+         MGKNOeh/0tlMDB4U9lSh1NAAl3wVHNIns06PKe12ZSyjQ+lejFNp8K5oMFf4TFF7CkZF
+         1fOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXTbZCstPEOOiV+KJYpvm61RmRo+/2RxocBaS0GEbFBzDqDgXj2QLzPHLIHcfU5fqhsin1ShUSUW91HFPw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQ2OKqBqd7l3qUFl8rp3/D1vAtqlmj2CqGhUas//gPyjCYzUZ4
+	aKoyrC6ZImFa2Xdt4F4IuivLjxex/ch7/PRZoYufZT7Y0BFMRjddaC2OGazO0MNitSrEUPBlQto
+	KWn4=
+X-Gm-Gg: ASbGncsWi21RIaQysww43eTrgv5B6J9IOhKMyXDM2tm247BBFo8z66F36MBUUHp7Yja
+	FKLiLZv5Gk3Kc5dw/GFOQNCE5NmjjSPU0TXrNXiB/SjKs7LIWe1vCodPhNh5Bp+UKtfX0XOmxqz
+	7zdSmQyzPjLcdmBNeSoURCzBQlABAD0bCjZuAIcOC1HGU9vO9vLthgF1otHxBRVCnBO+pRtx3at
+	PFeZ6Rc6ZQVuut3EgCHwZXrUrY7ssRmVbhRVV3nrtQ3oSRfzpYWDMLzldUceXU26KjzIJtfB3Mk
+	2+o+mIsE0f1pfInIdTH3Kvjs0g==
+X-Google-Smtp-Source: AGHT+IGXbOvw8S2GyqkxFIBv52Dq7Q6IHtiiNKaFsB5EmhnCm9g3CNMhqRiW6G3yKYM1hCJUjhidtA==
+X-Received: by 2002:a05:600c:a0c:b0:434:f1bd:1e40 with SMTP id 5b1f17b1804b1-43960e81b92mr70034575e9.6.1739527369462;
+        Fri, 14 Feb 2025 02:02:49 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.90.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4396b5267b6sm1615605e9.0.2025.02.14.02.02.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2025 02:02:30 -0800 (PST)
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-866e924f735so525314241.2;
-        Fri, 14 Feb 2025 02:02:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVHo4oHEPxMGbzDKRmLmJ1ZNBdqwxUzxMFCDK9KREPT9PaqV+bre92pJ8pu8tk3c+EILvnbc/8X7SU=@vger.kernel.org, AJvYcCVccfvaHQ687KnstZXRaROfBFsHULBoDBbRJLwrJGi/fQPsMI894tiM64eu5GuosiuyV1GP9BIWx1vQbKSv@vger.kernel.org, AJvYcCXS9BKXhiVtyfSSLxxbYIcaCkHXPPAhE4z7QRdBPo/pV/BxUgKBpMf1X9f19ZDjR6/Tb+9na2B4I2C0ej5xExfULOI=@vger.kernel.org
-X-Received: by 2002:a05:6102:e13:b0:4bb:d688:9bf8 with SMTP id
- ada2fe7eead31-4bbf2221a24mr9261052137.13.1739527349879; Fri, 14 Feb 2025
- 02:02:29 -0800 (PST)
+        Fri, 14 Feb 2025 02:02:47 -0800 (PST)
+Message-ID: <1b8b234f-6435-45cf-83e7-8e86c84f075f@linaro.org>
+Date: Fri, 14 Feb 2025 10:02:44 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250211105603.195905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250211105603.195905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 14 Feb 2025 11:02:17 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdULQ03BRuXyB-Upa8+zwSAd6rKPkzWm9BQCXjjXb-Tr4Q@mail.gmail.com>
-X-Gm-Features: AWEUYZlsz7XVMYiuBo1xlm6v-a2FrYjtwXrLlPVaaTiJqKiwxQ00C-AoLRGkSvI
-Message-ID: <CAMuHMdULQ03BRuXyB-Upa8+zwSAd6rKPkzWm9BQCXjjXb-Tr4Q@mail.gmail.com>
-Subject: Re: [PATCH] clk: renesas: rzg2l-cpg: Update error message
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] perf vendor events arm64: Add A720/A520
+ events/metrics
+To: Yangyu Chen <cyy@cyyself.name>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Liang Kan <kan.liang@linux.intel.com>,
+ Yoshihiro Furudera <fj5100bi@fujitsu.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <tencent_5360DA048EE5B8CF3104213F8D037C698208@qq.com>
+ <Z66YjGvjD_yzEHUg@google.com>
+ <tencent_45B4E91CA370C563D6420A1A25F992056D09@qq.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <tencent_45B4E91CA370C563D6420A1A25F992056D09@qq.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Prabhakar,
 
-Thanks for your patch!
 
-On Tue, 11 Feb 2025 at 11:56, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Update the error message in `rzg2l_mod_clock_endisable()` to provide
-> clearer debugging information. Instead of printing only the register
-> address, include both the `CLK_ON_R(reg)` offset and the corresponding
+On 14/02/2025 5:49 am, Yangyu Chen wrote:
+> 
+> 
+>> On 14 Feb 2025, at 09:12, Namhyung Kim <namhyung@kernel.org> wrote:
+>>
+>> Hello,
+>>
+>> On Thu, Feb 13, 2025 at 11:11:01PM +0800, Yangyu Chen wrote:
+>>> This patchset adds the perf JSON files for the Cortex-A720 and Cortex-A520
+>>> processors. Some events have been tested on Raxda Orion 6 with Cix P1 SoC
+>>> (8xA720 + 4xA520) running mainline Kernel with ACPI mode.
+>>
+>> I'm curious how the name of PMUs look like.  It is cortex_a720 (or a520)?
+> 
+> The name of PMUs comes from Arm's documentation. I have included these
+> links in each patch.
+> 
+>> I remember there's a logic to check the length of hex digits at the end.
+>>
+> 
+> Could you provide more details about this?
+> 
+>> Ian, are you ok with this?
+>>
 
-Indeed, printing the obfuscated virtual address is useless.
+I think they wouldn't be merged because they're core PMUs, so should be 
+fine? Even though they would otherwise be merged because they're more 
+than 3 hex digits.
 
-> `clk` name (`%pC`). This enhances readability and aids in debugging
-> clock enable failures.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>> Thanks,
+>> Namhyung
+>>
+>>>
+>>> Yangyu Chen (2):
+>>>   perf vendor events arm64: Add Cortex-A720 events/metrics
+>>>   perf vendor events arm64: Add Cortex-A520 events/metrics
+>>>
+>>> .../arch/arm64/arm/cortex-a520/bus.json       |  26 ++
+>>> .../arch/arm64/arm/cortex-a520/exception.json |  18 +
+>>> .../arm64/arm/cortex-a520/fp_operation.json   |  14 +
+>>> .../arch/arm64/arm/cortex-a520/general.json   |   6 +
+>>> .../arch/arm64/arm/cortex-a520/l1d_cache.json |  50 ++
+>>> .../arch/arm64/arm/cortex-a520/l1i_cache.json |  14 +
+>>> .../arch/arm64/arm/cortex-a520/l2_cache.json  |  46 ++
+>>> .../arch/arm64/arm/cortex-a520/l3_cache.json  |  21 +
+>>> .../arch/arm64/arm/cortex-a520/ll_cache.json  |  10 +
+>>> .../arch/arm64/arm/cortex-a520/memory.json    |  58 +++
+>>> .../arch/arm64/arm/cortex-a520/metrics.json   | 373 +++++++++++++++
+>>> .../arch/arm64/arm/cortex-a520/pmu.json       |   8 +
+>>> .../arch/arm64/arm/cortex-a520/retired.json   |  90 ++++
+>>> .../arm64/arm/cortex-a520/spec_operation.json |  70 +++
+>>> .../arch/arm64/arm/cortex-a520/stall.json     |  82 ++++
+>>> .../arch/arm64/arm/cortex-a520/sve.json       |  22 +
+>>> .../arch/arm64/arm/cortex-a520/tlb.json       |  78 ++++
+>>> .../arch/arm64/arm/cortex-a520/trace.json     |  32 ++
+>>> .../arch/arm64/arm/cortex-a720/bus.json       |  18 +
+>>> .../arch/arm64/arm/cortex-a720/exception.json |  62 +++
+>>> .../arm64/arm/cortex-a720/fp_operation.json   |  22 +
+>>> .../arch/arm64/arm/cortex-a720/general.json   |  10 +
+>>> .../arch/arm64/arm/cortex-a720/l1d_cache.json |  50 ++
+>>> .../arch/arm64/arm/cortex-a720/l1i_cache.json |  14 +
+>>> .../arch/arm64/arm/cortex-a720/l2_cache.json  |  62 +++
+>>> .../arch/arm64/arm/cortex-a720/l3_cache.json  |  22 +
+>>> .../arch/arm64/arm/cortex-a720/ll_cache.json  |  10 +
+>>> .../arch/arm64/arm/cortex-a720/memory.json    |  54 +++
+>>> .../arch/arm64/arm/cortex-a720/metrics.json   | 436 ++++++++++++++++++
+>>> .../arch/arm64/arm/cortex-a720/pmu.json       |   8 +
+>>> .../arch/arm64/arm/cortex-a720/retired.json   |  90 ++++
+>>> .../arch/arm64/arm/cortex-a720/spe.json       |  42 ++
+>>> .../arm64/arm/cortex-a720/spec_operation.json |  90 ++++
+>>> .../arch/arm64/arm/cortex-a720/stall.json     |  82 ++++
+>>> .../arch/arm64/arm/cortex-a720/sve.json       |  50 ++
+>>> .../arch/arm64/arm/cortex-a720/tlb.json       |  74 +++
+>>> .../arch/arm64/arm/cortex-a720/trace.json     |  32 ++
+>>> .../arch/arm64/common-and-microarch.json      |  15 +
+>>> tools/perf/pmu-events/arch/arm64/mapfile.csv  |   2 +
+>>> 39 files changed, 2263 insertions(+)
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/bus.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/exception.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/fp_operation.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/general.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1d_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1i_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l2_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l3_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/ll_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/memory.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/metrics.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/pmu.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/retired.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/spec_operation.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/stall.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/sve.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/tlb.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/trace.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/bus.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/exception.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/fp_operation.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/general.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1d_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1i_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l2_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l3_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/ll_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/memory.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/metrics.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/pmu.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/retired.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spe.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spec_operation.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/stall.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/sve.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/tlb.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/trace.json
+>>>
+>>> -- 
+>>> 2.47.2
+>>>
+> 
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v6.15.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
