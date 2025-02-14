@@ -1,141 +1,100 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F8D127E18
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2025 07:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79909127E18;
+	Fri, 14 Feb 2025 07:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739516697; cv=none; b=KZFqZHR5WkCRqlUJiNz4jif+H8Bbq6n3rBX2ryxECMwBe8girz9rDQse1OExASu9pbYfgC7ipS5VlngWr8KUHTk4e8HPx2Q5fF2A3jxVGQT/HWUlytwDBNYhgnagdwwO9WAAsDZxpo30pKtwMY1UVzKeBRnNmlIkyh5YzKRUFfo=
+	t=1739516751; cv=none; b=K/TY5dgctNTIMe9ZGVkApeGxON+im/RdUQBH8mcrhQddVq9QQst1WvdRw6VfuFWuCFv+muvUfVjPuW0V6+xpK3KRXfolEyDDIRR6CRMDguj5xf6gDog9iDkg+jVO3HR8prqdkkzfImiHqb6eChTP0xTLhkeWqhHBzfwD32C6kB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739516697; c=relaxed/simple;
-	bh=inoYxAUSZL0MSsh61jRPAz7Xi/ChSIhVE59oDoIvQIg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BUBdGSyYp+2nXJh0hnPG15UEAJB1v56D+bJG2UrBZBCT6Q+kz6RBT996R3MEyfXEd/a8SCtPcwPXutvo7dZiI0y9KQtlFq5CG65R4FoLhUPYlc9FNFzBKLhKV/OvcMY3IcydGtH3dBaP4lEUsiYIV2E6+fQwad+Be2XE86YfVpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sVXza/pq; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739516751; c=relaxed/simple;
+	bh=sIeyQ748uOHN9Yw7tn8MENTS3cxbr1xHZGRbHO32tFM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eYAJ8USIQz7tJ8SXKIrKviW1aFc27X+BxURvcY/nzEWLv6T6ttbqrzkO+mn2adZW2z3z6L9jFT7WKL8/fg06lo5gi3w0fI66GS8uUNHIMFMMCfBHV+wXpt05KyODf5WP73T/PlmnzBYpD87iZ8iS7W4CzWoCclwfJfOQ82ETqIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mkO95cr2; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sVXza/pq"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-220ec47991aso7181145ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2025 23:04:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739516695; x=1740121495; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=P0N0X3RdIUpKTp5bovKhP0i6D22WIPGqOlaqXbJdgtw=;
-        b=sVXza/pqbI+UVLxjlslCjCdoQ40KT3F5oDRhgB4yLRWP8+V9E1bYA/3pn0yN16l/sO
-         X1H215pgmEV5lKp5DMCXJyhf1PzpLEUtSFYsMrTgH2ro+xIjSuleSbFaLdVyRZa3zQTz
-         yj2V6ytUeL5HiptcsaM3irYrJo+0uw/ruuLez8/R4RTREpcmOwQ1UWsOvlN13Os2xQNB
-         X7F0RmzQXK+zUvN3FoXtJfeSW9uFPT4cBuQC8hAqNClihALjpSWFc0ERhzKA54ezlmDx
-         MqsJLUl6leQqYPtKHyJWrR3iG8QPRKwWAsJyJ7lzqrHkFU0DHMqpymeQiVPodn/nlews
-         3Zwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739516695; x=1740121495;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P0N0X3RdIUpKTp5bovKhP0i6D22WIPGqOlaqXbJdgtw=;
-        b=gaVwpZaeMtfdo/oHj7lHpFhuK+cbAki4ZCK0W07sKBiGV+Y/txV3FLgoOcg5sfru3J
-         AoZ72LmVCZNC9s6Is4P05juVHDlSsCoTij/m+Z3r3mLHIZDuZRlxDw7spL7YSnY8Dyzo
-         NDCVGjhkkmXBV6dd2OxFLyIt1YemjEylyJi3Z/ghRtW6Onzv7If5IDzEww/nV5ivbCfq
-         q18gm3BzfLpt/hknCwWMcAf7TJlms1YYqQbPUqLmmlVocyjhY45pO7rT+bFgGMkj2VnP
-         9VZlMFqrxlczlwPxYGHQzEQE23jMENBDPapbl0ecLVOeBWSxZfFHRe8E0MHL2aL3lj9M
-         onZw==
-X-Forwarded-Encrypted: i=1; AJvYcCVu2EaIxgHy/5w7wEoGjxYUSVIIct8mKUzKzkbW8kitFTOHi3XIAe7GwjpK2WyOj3/t916sJ60Y5Euz3LI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdG8ptVxnllH67XqvgzU52cLlErTdWFgySqRki4qRiFqIGlmON
-	juEbl/o2AyMLxzNP5+EinhArDmC8XQShyNXXaRkLW40rBRM/ava+kN7QLn7Fmg==
-X-Gm-Gg: ASbGnctgR6s8nUqDzfqLphGfGw3xQTL4pW8wzL9dd1NMnBzThDxW8h5zKJZ1LDmg+Em
-	AkOGl3HHVDbYAzopx7eZdfpflzeUYsPaG//4bOMMjY5y6xS4WdUv3CcgH1T4HUXDwD3kXdIqgV5
-	yaYeFdxM3UmdnfzdEAAA8/mbtqi8BjHMHpAWkS6/b1kyHUScAtoDAVZVQqQVMRZH3ODnzkpZR4E
-	6WiQ6LN5GoVTPJ+JYkKibn5QinSnOXrgueIXE+Eg5BbN+vv38yTyR8S8oQrSNnTXkGUflktiB7e
-	wdbvU36KOsSVhhaavC+xX3CKSQPJySo=
-X-Google-Smtp-Source: AGHT+IGuqMZgZlagRCyTIKxDvOSsuvPGqcUxE8dosYx3w84r1nGN21q6LfaA+OlbApLZ3lRcHCSUbA==
-X-Received: by 2002:a17:903:950:b0:220:e63c:5b08 with SMTP id d9443c01a7336-220e63c5e07mr59800745ad.11.1739516694826;
-        Thu, 13 Feb 2025 23:04:54 -0800 (PST)
-Received: from thinkpad ([2409:40f4:304f:ad8a:8cb7:72db:3a5e:1287])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d537ca99sm22711205ad.106.2025.02.13.23.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 23:04:54 -0800 (PST)
-Date: Fri, 14 Feb 2025 12:34:47 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Johan Hovold <johan@kernel.org>,
-	Loic Poulain <loic.poulain@linaro.org>,
-	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
-	kernel@collabora.com, ath11k@lists.infradead.org,
-	jjohnson@kernel.org
-Subject: Re: [BUG REPORT] MHI's resume from hibernate is broken
-Message-ID: <20250214070447.scs6lpytjtecz3ko@thinkpad>
-References: <59c036b6-a3d6-403b-8bb0-566a17f72abc@collabora.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mkO95cr2"
+Received: from [100.79.129.26] (unknown [4.194.122.144])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 162C8203F3F0;
+	Thu, 13 Feb 2025 23:05:46 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 162C8203F3F0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739516749;
+	bh=vBNwj7q3wx/FZIcFsg5bD7IyTSXSX3CJHg4bb5/9iLs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mkO95cr29qnDXMfYva0Q/KnoPwNJ2OEapz/U3/51PNX8VVV9coXfdE5VEbswqUk+N
+	 z4NLIjk0pdYxCiAt8i16ZmBlfKKQgKFOZxxVDrQO9XHe7wEAndcY5RKWxnwkUKUZ3q
+	 7eWG4OPPFzov1NF3GRy0KXSxdPv3DFqicyETYrtQ=
+Message-ID: <bb1c122e-e1bb-43fb-a71d-dde8f7aa352b@linux.microsoft.com>
+Date: Fri, 14 Feb 2025 12:35:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <59c036b6-a3d6-403b-8bb0-566a17f72abc@collabora.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] uio_hv_generic: Fix sysfs creation path for ring
+ buffer
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Stephen Hemminger <stephen@networkplumber.org>,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>
+References: <20250214064351.8994-1-namjain@linux.microsoft.com>
+ <2025021455-tricky-rebalance-4acc@gregkh>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <2025021455-tricky-rebalance-4acc@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-+ ath11k list and Jeff
 
-On Tue, Feb 11, 2025 at 01:15:55PM +0500, Muhammad Usama Anjum wrote:
-> Hi,
+On 2/14/2025 12:21 PM, Greg Kroah-Hartman wrote:
+> On Fri, Feb 14, 2025 at 12:13:51PM +0530, Naman Jain wrote:
+>> On regular bootup, devices get registered to vmbus first, so when
+>> uio_hv_generic driver for a particular device type is probed,
+>> the device is already initialized and added, so sysfs creation in
+>> uio_hv_generic probe works fine. However, when device is removed
+>> and brought back, the channel rescinds and again gets registered
+>> to vmbus. However this time, the uio_hv_generic driver is already
+>> registered to probe for that device and in this case sysfs creation
+>> is tried before the device gets initialized completely. Fix this by
+>> deferring sysfs creation till device gets initialized completely.
+>>
+>> Problem path:
+>> vmbus_device_register
+>>      device_register
+>>          uio_hv_generic probe
+>> 		    sysfs_create_bin_file (fails here)
 > 
-> I've been digging in the MHI code to find the reason behind broken
-> resume from hibernation for MHI. The same resume function is used
-> for both resume from suspend and resume from hibernation. The resume
-> from suspend works fine because at resume time the state of MHI is 
-> MHI_STATE_M3. On the other hand, the state is MHI_STATE_RESET when
-> we resume from hibernation.
+> Ick, that's the issue, you shouldn't be manually creating sysfs files.
+> Have the driver core do it for you at the proper time, which should make
+> your logic much simpler, right?
 > 
-> It seems resume from MHI_STATE_RESET state isn't correctly supported.
-> The channel state is MHI_CH_STATE_ENABLED at this point. We get error
-> while switching channel state from MHI_CH_STATE_ENABLE to
-> MHI_CH_STATE_RUNNING. Hence, channel state change fails and later mhi
-> resume fails as well. 
+> Set the default attribute groups instead of manually creating this and
+> see if that works out better.
 > 
-> I've put some debug prints to understand the issue. These may be
-> helpful:
+> thanks,
 > 
-> [  669.032683] mhi_update_channel_state: switch to MHI_CH_STATE_TYPE_START[2] channel state not possible cuzof channel current state[1]. mhi state: [0] Return -EINVAL
-> [  669.032685] mhi_prepare_channel: mhi_update_channel_state to MHI_CH_STATE_TYPE_START[2] returned -22
-> [  669.032693] qcom_mhi_qrtr mhi0_IPCR: failed to prepare for autoqueue transfer -22
-> 
+> greg k-h
 
-Thanks for the report!
+Thanks for reviewing Greg. I tried this approach and here are my
+observations:
 
-Could you please enable the MHI and ath11k debug logs and share the full dmesg
-to help us understand the issue better?
+What I could create with ATTRIBUTE_GROUPS:
+/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/ring
 
-> This same error has been reported on some fix patches [1] [2]. Are there
-> any patches which I should test? 
-> 
-> Is officially hibernation use case supported at all?
-> 
+The one we have right now:
+/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/channels/6/ring
 
-Yes. The hibernation support was tested with x86 host machine for both MHI
-modems and WLAN chipsets (especially ath11k devices).
+I could not find a way to tweak attributes to create the "ring" under 
+above path. I could see the variations of sys_create_* which provides a
+way to pass kobj and do that, but that is something we are already
+using.
 
-> In my view, this path may not have gotten tested and can be fixed easily
-> as we need to perform, more or less the same steps which were performed
-> at init time. But I've not found much documentation around MHI protocol
-> and its state machine, how is mhi state related to mhi channels support.
-> 
-
-During hibernation, the power to the device could be lost. But it should be
-handled by the ath11k driver. Maybe the debug logs could help us know what is
-going wrong.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Regards,
+Naman
